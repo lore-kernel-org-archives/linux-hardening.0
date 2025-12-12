@@ -1,53 +1,53 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013060.outbound.protection.outlook.com [40.107.162.60])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013044.outbound.protection.outlook.com [52.101.72.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CCD312821;
-	Fri, 12 Dec 2025 22:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C0030E837;
+	Fri, 12 Dec 2025 22:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765578396; cv=fail; b=hhkh0KFwfwsaYs2FhHEgAwyQmFAOQjUiNnUqjFcioavxDgZxNIDEAFv+4j47zocQ9hO8Sp6G8+0YqCOiK6CMBZyhGaM1DqiHn3l5UOaHlYRCFXdZeCQr6s1MBpy5n+RSlGwaX3PHLKwbY6Vh4u2x1Yw6q/3HVFY2YiWvYdmAEIo=
+	t=1765578399; cv=fail; b=EeFQMIPO9iso7A7GNwfJG8t0TMsMyq/dIGHZXwnyBm4QMEZMXqj2+CoysbLKH77Pm0qJ8MsfN+GIr5d8QQ9MZIXWN1BatOKuR0b4+lMIJTXQD7FIYQnEwnDG6j0Fnq4cK0T5rPd++rl84xAu3aNHh4tB+3dEQXxH2GvBqH5Xxfw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765578396; c=relaxed/simple;
-	bh=Sn/GabRX7BNWFcJWwGbQB+v4PtaxhlGTzNFSiUMk1y0=;
+	s=arc-20240116; t=1765578399; c=relaxed/simple;
+	bh=fBnDw+EYXXwidHZp+qpRCDOlLUT7tA11elPIfsFmgOI=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=o0fM/6JpQGXo5GC2OtxHDBRy0CF/3l4VsqXw7guH1JH745HHt7qlU3qscRP3T7q9jsY/6VdbXBzxiieF1WAMqc0GkPdoVhnlsFIl2cb9yyLi8l/wRKKXbtJTS7twq+ykNVla4zIUdcS5WtSPyXp2zAEri5LKXi2dOFUfeAMI+X0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CB4K9HfI; arc=fail smtp.client-ip=40.107.162.60
+	 To:Cc:MIME-Version; b=s23mD3pHCz68lQRE/eemjyhwBiT9bACgn12CrzIfV1EYA+QWrCr8THMkPxu5wG239R0OmWTNtW42K6AdG6k90IFaNr8byT2/6QqECEwT8XymZv+NQAeqLINocXvi1RFuPVHZ2uiqsJYgEH51dgfX5n7Lg6hVBTczBV9ENihwklw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=R7CjMmQ2; arc=fail smtp.client-ip=52.101.72.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CB4K9HfI"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="R7CjMmQ2"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HtErbvgqUva9R9PgI295pwCQWmwbwean9eQI/1liwh5V0LY5Ls/9i/34zz2yCph0f8OGiBdf0j3nWZOOiPJrTqpZgi4qxan597qhlbxAK2xyjLjhEN1IoKdxmFDgPW6IUaYDRwemseoSg8tL1HtB+R8PVAVmUgvtArvf9kas307xqcmU134/e2FN8mp1VBqxTMJD97kVY+ruXNeyHxlnDB6TphzpTQ+3oX8h+PvVSW7KAUcNCgbNXVljUwWFhIfg/IziUw3pbPff5Gfs5L1vVZOe90NkIkU/w+3XqbAvOlC/avTt6pHWJ9qIDwRDm9SxNLYAj0NNMikcaGbhMR8HOA==
+ b=ccYfR679rMm2M62f1DFPIsBWMeV3qQMM3oNRhyiBGPmk6y9qCvb85xqcXQKQgPr1ki9e6BEPr4+vCdyw+Dcf2MVhPq3lVZLc9p40CqmbCTOiJuXB/B18GZoKGE81dCUga5fUjYaTgnWq0+E+af/+2IdWC4308Bu3XXny+hHaDiXSZf4s/JI1DCrWs2NNwB6UJzC/J2dJ1bgbJAg4GL/HTgjEbtKZKk23iOwIp1HE6F4HGbgkeIT+Qqot+F6Q3i145531daYgryDdPtUljZ6rsn6x3rErcVHO2mTlm4xehQM9Jesph5kZa22V7Hha6p9timHxcsIwK/sZyX8/lOEUZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jdHF1bJHb2SnhhFi/q3JvimqVgVenpa/dEP9w08caNM=;
- b=Z05+AZiYMO5kUKQKqvjb/vOfqfkuju6DURZomYdla/Ux35y6WOb/QLxnXtkvu6sK07bM3c/ooLvuVaKB4MceJjHYJoA6ZWqiZY0ZH5wqK0LINb+ZbeTt6zxwnUrQJoa/O/sF2rd0ZWY48cCpCcGfZe/u6LJPf0GgtuGp8RXMmjbhiWNVfoF3CgwakuvxaBQpRLM9zgdFFdkWhr5S9eLeU6niBGKzajExFMvN3sKEHHeq3q/et6f5kq3YF/N27sBQ1kMyndgGuKLpqgIXc65pCracPjS/gWuQ8IT0ACa3XdJFutooIsORMTPlEHuxRZN0lXoezC9bH4+1/rIXyuHGkg==
+ bh=2aaTcnBPbk1/yznMwK2s0xZBU4acTu94pWz9k0dT5Lw=;
+ b=Ny2aBRGho2JbgmOoYCz49WGpL4GmLqnJGj/rw3uACV9sbgOEUZQPNGsivFrdhubAvN8gX+9yMhnoCf1g3EWXHP51yOB+LUI7EyyTdpCSnPCt4+0TDQI++hRR03BWKZReM0qoTEqa9YINl10+D09me+yalVit/8Gt8UjyYj9OxYCR3ZKil+ReglF7cprEjN5rpBeM0XpevgqJXZkjTqio2YyKqA5h7eK/krGCbVFwRrll1g/D41r2jg0MQt9abkkrW7Dyfzn02Eefw8k7iRaBdiKwKhNHS/vUz1Y4z90ZF3zEMY+iFhiyzqsDPrk+NxJaflu7EjGDQhdLTXBkplUnYg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jdHF1bJHb2SnhhFi/q3JvimqVgVenpa/dEP9w08caNM=;
- b=CB4K9HfIxp6QxJBx9rqhYOe+FaXosAC9N3LlkqeXN+ic2sroaotlNlrli2A61oSROzU1bjXIo0w99G5+8/IOyW0cKx1k8SEym7BY0jojcrArEfDbZpIAXNjKd3V7N1Cw4Wjvw48jK2a+IuHw8C5nNC1PA5CaQHpltMnCYnrk7IHIIaTM77OXHcD3oIThKVbUZxXTnaZkpbx9+1zOONdpf17TLVrmtpx86KZ8R5KV//sHvz0KiPxfAanDOCMJDW0JuB3Jh6mLms7QxPWGLjOkNYHP+ltKfixbgXQy2pMLxTYh+cuAwW5Wkl07X3nUHMX8lUJ+CxBBTJNIrSEut+1/3Q==
+ bh=2aaTcnBPbk1/yznMwK2s0xZBU4acTu94pWz9k0dT5Lw=;
+ b=R7CjMmQ2X+8AL5ZfTljBytCseMruQdZzTpDod1ibRL0gMcyr2B4kEFxkWuY664h+0Ci33V5SvyUOGYcQdDTw71jAa6vXM4g5TWKyssBaLTuNTXmyCL3IBF/zmeTB3dDFwin/Cf9TvTuicIpsfBo924/6poCQvz6VcASgaCbeH5+qh/3AeRT5YG6R7px9nbBHCNAVysHaHqSgHFxVoMvbYCav6aN1JDeTx8DytkQC7BOPbtvlbXPXgF062UvWpUunW7OKCsUseDfBtSOCmcxYffmLVbRzUYCi+MlM1LTfdJnAwTmzYaYsWzynv88ubAMIPXNBrCHGfnuYUvQByBNxxA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
  by GV1PR04MB9053.eurprd04.prod.outlook.com (2603:10a6:150:1c::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.12; Fri, 12 Dec
- 2025 22:25:34 +0000
+ 2025 22:25:42 +0000
 Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
  ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
  ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9412.011; Fri, 12 Dec 2025
- 22:25:34 +0000
+ 22:25:42 +0000
 From: Frank Li <Frank.Li@nxp.com>
-Date: Fri, 12 Dec 2025 17:24:47 -0500
-Subject: [PATCH 08/11] dmaengine: dw-edma: Add new callback to fill link
- list entry
+Date: Fri, 12 Dec 2025 17:24:49 -0500
+Subject: [PATCH 10/11] dmaengine: dw-edma: Use burst array instead of
+ linked list
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251212-edma_ll-v1-8-fc863d9f5ca3@nxp.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20251212-edma_ll-v1-10-fc863d9f5ca3@nxp.com>
 References: <20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com>
 In-Reply-To: <20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com>
 To: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
@@ -62,11 +62,11 @@ Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-nvme@lists.infradead.org, imx@lists.linux.dev, 
  Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1765578298; l=6121;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1765578298; l=7729;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=Sn/GabRX7BNWFcJWwGbQB+v4PtaxhlGTzNFSiUMk1y0=;
- b=a2YUmB4WwA+skM1MwjYhlVEUgTbmNMsMmi0aZoRULqtqxc6XeKW2g8oHi2epHKUTa+j6x2z2e
- 2x86xCwKso/AN2Kt7JJ6JtGq8m58oMPXIL/Vymdvt+4iCNp748jNPio
+ bh=fBnDw+EYXXwidHZp+qpRCDOlLUT7tA11elPIfsFmgOI=;
+ b=59ClHemqGAxN3jGQmNRzPhXp2YFJJaFaK9Cy1+ZLd27N0XiYIVwTkzN4MQnYGMnzKelMknIcA
+ cnipDLtYtF0AEwxKR/XazcHFq80uqonC3mWNeq7kVHOx5Ee1dvZmg5r
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
 X-ClientProxiedBy: BY5PR20CA0025.namprd20.prod.outlook.com
@@ -80,283 +80,364 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|GV1PR04MB9053:EE_
-X-MS-Office365-Filtering-Correlation-Id: 076597ac-708d-46d7-3746-08de39cd5e22
+X-MS-Office365-Filtering-Correlation-Id: ea324ba9-39e6-4551-7256-08de39cd62ed
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|19092799006|366016|376014|7416014|52116014|1800799024|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cmtBSGZFOGVSYVZuc2RCaXpVakJITVVsVCt2K2g3c2NLRjZOSTJBbDB4ZnFo?=
- =?utf-8?B?c2tvM3phdFpjeXJidjM4aWJRZXZrODF5NVlzdVhTZ2VFakxNRVJNcjU2cnFL?=
- =?utf-8?B?MWdxZWd5azRzSDNhcXN6TkZ5MHlSZVRybHllSzdZbStXWHJVS1doTEt0V2Zk?=
- =?utf-8?B?MVhLZkVhbElsUFd5ZGhGa1dhUkQvQzJ0emVFMHFFY2dhOXlPN3MvVEpreFZ6?=
- =?utf-8?B?ZjltZE5MQXU4czhmV3QzRFMyVDZsMk5DWFdSTGtabFJ1eHYrOXU5WEhNS2w1?=
- =?utf-8?B?Mkhia2p6a25oVFlmeXFsSkJ6ZjhkODV5L1dBK3Zqd25aN1l5ZGhHSHF5MXpi?=
- =?utf-8?B?ck1SMVRUT21CeGV5Q1VSc1JrZGdoZHJ5eDByZzVmVmpHQVBiQTVuVjhQVnVk?=
- =?utf-8?B?dnQyazJsMnZkdlYxMTkwNi9lbS9TcFRSd29VUFlDSGVkZXByRHQzbHp2bHFt?=
- =?utf-8?B?RWU4S1dTTFp0V0lUOEF6c1hBT0ZCQmkvMXoySkhmU1Q5UU9URGtSd1VLZHVX?=
- =?utf-8?B?cno4cnZYU2ZpTE1QQUJ4dE1JR1djRUZtZzRkNEZlckpRRy9vRm5UWCtXSTlH?=
- =?utf-8?B?YTlsODlib0xZeW5NdktJMlhQT0VSUXN1WE9kL3VXTlpsd0dxdWJEczc2L1Vr?=
- =?utf-8?B?RE9UN09jamVub1RoQk4xNkRwUGRIb056M05kUjNsdTVwZS8rVERDN2xiL0ZJ?=
- =?utf-8?B?MFpNRzlNUHE2enJEbmxCTVF3Tk5VaGlSejNzVVFmeVRDcHIvTWpUUkpINHBY?=
- =?utf-8?B?UWFiWFJpeGg1VkxsZXFNKzJibXpKN2diTEVncXV3c21HMHJ1UlRqL0JEVWds?=
- =?utf-8?B?VHVvRXNqTUxlV25KbTU3S3dlTVgyVjJUVEVTY05tRzlXQ3FlZ21aeTNCTG1w?=
- =?utf-8?B?ZHlzZG5hNmE5MlJQblRhZHIwL0tRSU9GL1J2Skh6RExtcC9sb0kyZFdSQmo0?=
- =?utf-8?B?VHYyMFNTM1YzVzRVS3BLZmo3clRjcWNBMDUwN0g3ZUp2MWpWd21Cc3BUN1Z0?=
- =?utf-8?B?WFUvVzFFUTBkTGtudDVta1RzMG5XcmVjVDlya1hMbVp4Ymg3aFpURTl5U3lB?=
- =?utf-8?B?cTlzaGNtOCtVT2kyOXp1T20yd2ZDTjdadWJGOVlFOExybkg5enV3ejJmUVRw?=
- =?utf-8?B?VjRsRUhRMkd6elhKSytRTS9MOVpDdkFVMlNFOW93S055cEtacnM2ZmlmTWth?=
- =?utf-8?B?RjlvTG5ra0ZCR1pCQmIvZzIvWWZTQmk3RnV6M0N0WEtTVXhNc1hPenZ5SUdy?=
- =?utf-8?B?bmtkMldLcTVFZ1EzUDd6R0FsWTIvVlpVVGY3T0h5bHZyaWlPSzJkMlROQUIv?=
- =?utf-8?B?L1dKYzhicnozSGNMNTU5Y0p0K25pTlNMbU1STy9JYnkwLy84OWtNNThOYmhX?=
- =?utf-8?B?aTlnYWhMd09IL0VMb1VNWnFiQnRKUmYzQ3lLbkcxTmdoUXVnY1REbFh5RVps?=
- =?utf-8?B?SStERW5Celc4WUw1emtLQk1yaDVFa2FLYjB4eWtha0dvSnh3MTNjd3c0UkFt?=
- =?utf-8?B?ejZvREVWNHNZSEh0cW9ZVkdNRXVPZ1NMSXZ0bTBsZFZpNDgyV0Vzc1doeHNX?=
- =?utf-8?B?NE1XWHhWVEx5aFFabWR0eDdCa3pSLzhHb2t5cVJ4UWZiMkkwMGFqU2F2T3VE?=
- =?utf-8?B?MXhoejkzcnU3WklSd2VPcmV3MHVaU3dhLzJTc3lJNi95TldvNTdLcXJYRHI4?=
- =?utf-8?B?MXdQTkF3eFNjTUVMZFZGR0cyZThFbW95ZTZPMkVBUDFGQlY4T0EyWVNDN3V6?=
- =?utf-8?B?YTFWT2ptV01xS213Z095NW5KK25KR0tyRk9FNDRUdE84eUpiNnNWc2dORVZW?=
- =?utf-8?B?b2hKYms2bjduSHpsME1HcDN2UVRaU2JVcy8ySVo0ODZQQTVjOHR4OE0zVHNO?=
- =?utf-8?B?YUNLc0Y2WkR4ZUhObjl4SUpRK01zYXl6Y0xxQU11RXBWUk1CUERsd0IzcmFT?=
- =?utf-8?B?RU1yMnJ6SnJLVUFLM0xobk1HekVIZGhQWms3T2tJbnRiMlB0U3NkRS8wMWpi?=
- =?utf-8?B?cXNNcVhHckZoVHVCS2pYUENycXVRT08xb3BJTDV2MzBuaGF0aGFYRjZuNEZC?=
- =?utf-8?B?QmJwaEc3V2IxTlJhL1BpdnFVWHZ4N2xDdUY0QT09?=
+	=?utf-8?B?Z0xldnNPUldHT2ZrT3RjMlFBUTNyZzVuNjR0OWZYVDVJU3VtOUg0azNiUU1m?=
+ =?utf-8?B?d1VHMlBqNE9SeHM4WU9rRkFrMFlOcHhjSWhpRDMwMXZTNmlyNHZpTFZjNjc3?=
+ =?utf-8?B?Smh5bStWRUxPQWJLK3RxTjBUZ2hvOVUzM0V1VzE3V0dSNkJFcmVVaElsVUpL?=
+ =?utf-8?B?TjB5Y3BLYjMyS3hiNzhBWTFjVExrVzc3YWY2SlB2MnVhVDhxenJ1dTVlSm5z?=
+ =?utf-8?B?NXBQSjd4TTFlbmQ5cXJqTFczd0lVL1NWd3gyRVRweUJDQ1NlNGYrSyttd0xY?=
+ =?utf-8?B?NlBwams3MVprbzc0cEI3ZmV6azdlQUpoQ0lyVVI0SlZNVlN5NGhXNTJaVjVS?=
+ =?utf-8?B?dUhBOE1NNERjWHFSTXZNMFkrL2MvcGYvcFNjTkRHRkV3UTIybkNpUXVxN0ND?=
+ =?utf-8?B?bk5HRjBTalBIZjdrN3hXUDRIanovY2dlY1RXbmZIUTZ2eUZlM0Z0YURMUEVi?=
+ =?utf-8?B?dmxmczVRL3JkR3djcXJobERnNE00ZEh3dWN4ZktKelcxSUxIUkVESmpTN0ZL?=
+ =?utf-8?B?a2RHR1NoSk8zMDZQU2NZRDF4a0Q2aTA3a2ZuSzV4NFQ3K2JJcEVCdWQ1a25o?=
+ =?utf-8?B?clkrbFpZalFndmhkdVpYRzViMlZudjdPbktVOEdDV1FQV2tLRGc4bzBtM1Z2?=
+ =?utf-8?B?MXpuTlZ6dS83aTFKVTJwUWpNRWtjTWxIMyt3cUhyUzcwd3l4aEpSL3FzVW13?=
+ =?utf-8?B?SkE4aDM5MSs0dTNNUURzS1pRa09WVmc5U3AwYjBUZjhmK295aG1neFp3UlQ1?=
+ =?utf-8?B?Nm5BTFRnY0dsdUNFWmhCWnhkU1NsQThyckpiN1ZDdmU2QmNVZVl3RmJTSUNo?=
+ =?utf-8?B?dGFmWUc3dzQwcW4ybC9JWVZzWUdGSEU2WU4rZU4vVHpWdDN5c3VLYi8vT1RK?=
+ =?utf-8?B?bmszV3lKM0pIOCtnUTNrb3dFMTVwUjkvOTFtT3VQZmhPd2JJQUxKakpOWGNw?=
+ =?utf-8?B?czQybkYxR1p4L3VkeWxYeFFTUW5LS1cway9GSnpFcE9BTmlCd3ZQekZHR2I5?=
+ =?utf-8?B?ZUdqY2FieDZ3V3JlekFOYUFXcENzcGV2VnFzV2VieWFLTmFSbXA1a0dnS3FP?=
+ =?utf-8?B?TGlYY2s5QTNueC9Ld0toSmF1TU1rZDJEZzdiTGJGbnNuUm5aeVhxeEgzbTFS?=
+ =?utf-8?B?YXhEQ3RMQ1kyeDRNNkkxZWl2QUZTNHBTL3pRc25KemR1Z0pxQVpmVVhGY24x?=
+ =?utf-8?B?cmNUY25hRkQ4Um1RVDlzVm9kM2tCdmQydEgwMUl3aW9LWDZYODdtUytDc25z?=
+ =?utf-8?B?V2FsbE9NcTA0eGZPbXo2dURVOHIzbE4xUE1HanRaY2xtL2lyMW9yN1J3ak9C?=
+ =?utf-8?B?Mi9iQkZMRGJXNUI3UmorcFZvNVhRMUJlR0llcXlLdEdYSEVieFVpZis0RVFW?=
+ =?utf-8?B?N1IvRjhHUExMZnQwelNGU3RQYWY5enRkaTFFb2F5US9RYUdKTndMNUpYT3py?=
+ =?utf-8?B?VGFvcml5YnRWT01zem1uWWd3K0V0bEIxTjZSK0YveklOdUovMkV2dnA4Yko3?=
+ =?utf-8?B?Uzk5azQzQk1rUklnR2pKNjM4dis2YjFSMG5ueU9sMFNyckhMbVNGRFkxeHJH?=
+ =?utf-8?B?elRENk5oVmFQdTIyZWJhdDU1UEE1UmRaZkpCczd4QzZwcGRnVVRDTzBhQ3hh?=
+ =?utf-8?B?VXR0WTNCQzNDa3UyWEQyazYyMlFDbzZjc29ZTW4zVkM2RDBEc1ZHUy9vT3p0?=
+ =?utf-8?B?OXRiQWVuODlFcVRwSkVER2lWaEp1Y1pRSGlBK1BGWlhGZTU1TjVlcHJwTVM4?=
+ =?utf-8?B?elliZ3BtWWc4MlFyd0hSaEpNVGl1SGVKSlhpc0FQOURxcU8wZGJWV2lKbUxx?=
+ =?utf-8?B?VnNZeVR1MHhKV2xWbzRCRXFPMFlrbDk4SkZ1WWpXZmhrK1lNME1JY2p2OTdC?=
+ =?utf-8?B?Vk5oZ2hoR3FGN0JjRGtFNnZXYVNFZVc0OW5ORjRiY1NPZDZPOG53R0x4cTNG?=
+ =?utf-8?B?NXdGTUtnL0xrdDZWQS9nSHBaTWlpRHBkaUZ1Q0NEQVlZSmVzL3pPaSs0Ukcv?=
+ =?utf-8?B?Wm04UTJqWVNoc2VIZWlNUG1oSDRYN1p1b0s1WW9YQzV0MDlnaW9IV1p3c1JT?=
+ =?utf-8?B?aE05TG1nVUkvclpKTGJuVlR6enhSaENwK2FYUT09?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(376014)(7416014)(52116014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WS84SDhMRWxPRWZOeWR6S0srOC9GVG9SbW9PU1orKzJDVkJKdUNTaERIUS9i?=
- =?utf-8?B?TkVQSWdPNkRrd1ZtWTFhck0zczBzaTJBZ3h4RGVQTENxakJub3laODNIRnoz?=
- =?utf-8?B?ZFFId2g5anBad0MrRE13RG05eGFzOWRQZ1Z2ckNQR05GZWVyNi9xT3pCL0lN?=
- =?utf-8?B?empVR3pQcFlQQVQ3MGN5VlkzR2JXK2pZaC94ZWdhalJkdmw3RWtoWHk1bkdO?=
- =?utf-8?B?OTFybkhwYWtVTllqb0lHRjMxdUFmakZGYlZ5WlllYUhaODBiM1NIV0hZYVdn?=
- =?utf-8?B?b2syU1IzTUk0VlphdlZhRy9MSTBEUFpCcUxnMTZnNGVxSGpMZFUzamdTWlFa?=
- =?utf-8?B?bWtydjhXSmp5Mzdmb1ZseXhkaWF0Zm52KzNLQktCS0R2NXI0VCt3S2xQUXhH?=
- =?utf-8?B?ektnSnc4Tkl0V0picGhhL2JIZHVwaWl3Ri9pSWV5azZqNElUWDd2OENFbzV3?=
- =?utf-8?B?blU3eUtYREh2UDN1WGJneVZtUEtIeVZpM3cyUjRDZXJQOVBIYU01dGh6bS9Q?=
- =?utf-8?B?U3N2T1JKdFBKa05DY2IvdklRNDJudmordXIvYjBuaU5GRld3bk1vdndhRkZE?=
- =?utf-8?B?U0hvUTk5V2RRelBsYWRFMVlJRm5OYmpONVh4RXZIVzhMVmkyUUNLb2ZDK3BX?=
- =?utf-8?B?OVExeHFWZ0N1RmF3blNydDhIWkY0czlpdktUajc3QjlQOFl3NzZmM0hGNTdS?=
- =?utf-8?B?SGp5eTNGeFlLZWJEYWJhSEJSSTA3Mnc0emd0dHE3S1BpbjR4c25sRG1CblpO?=
- =?utf-8?B?S3U4RTJxUWhab3JrS0dFdXlmRUZldFdnL1BGd1gwUUhhQUN4Q01uMHVVVG9K?=
- =?utf-8?B?dWJUMnlaa3B6VkNpZFhiaFlCZ25acEo0SUxOVmgwbGsrNEtXMHJHVFV1L3Rn?=
- =?utf-8?B?TlZsUEwyK1lFdm5yQzZpOTZtbFdRSENjUG1PYm9GVU5QSis1OW5QVFNxRTZH?=
- =?utf-8?B?RUpoQ3JtemhUTzhrdm1oNGQ2T0FZNWd0eGRuc0Fsei9pK0t1T3c3TzBYT0hU?=
- =?utf-8?B?eVdPQy9mdGNhRGovSXJLQzBxQU5CUVZkK1Fac2JsZ1FwNGlpUks2NU1Ndkxh?=
- =?utf-8?B?VEZLVXFFRTFnc2ROMlNIcEZLZ09LcVo3WWNVUklqeE8zYVllRWx6VU1PdWwx?=
- =?utf-8?B?V2tkZFZSb1RjdXVoN25yaC9DUHJTdy93M2ZYazU2aklQcTg0bCtUWjQ0blBp?=
- =?utf-8?B?ZzUrTUwvc1Y1cnNHSW1wZStiam8zcFpad3hUVTJVYjczbWhGZFVsMHgxS05C?=
- =?utf-8?B?aWtpdFhka1dRYVhIeDEyYSs5eTZLZjIrREVudVhRczVCalloZ1UzSTd0WEhV?=
- =?utf-8?B?TEdtZHZZZGZwZ3YzV0V4TTVkbTJCZTA1TjNwYlVJVDdhRndhWXhUTS80aTdK?=
- =?utf-8?B?VFZPcTNWRzV1S09LWThoZmxoZlozM0FnVEFRcU9WaG5aTnJMYWlHNW5zNGxR?=
- =?utf-8?B?Wm40WlJjNU1PTElzMlJxUjVGSlFlMlVwK1lSaU1jcG5FM0NtTHY3ai9rZitm?=
- =?utf-8?B?MmxmYkdTME9WTFErVjN1ZHpXTm9Fam56bCs1b1YwSDlVWnV0Wk9odmYzRFFz?=
- =?utf-8?B?cjJEa3ZLaVMyVWhIbHB4YlBCUHY4VmJrZldwbHN1bHBMdmdxVGJnMkplcFVK?=
- =?utf-8?B?MkdaSlVxbXdOWnBWckU1SVBycnlQaGtDUE5jUGF5R0tPVkt6Qmdxc2owa05q?=
- =?utf-8?B?VkFMUUYxMkNqdG41RkJ6SVNqeTJyN3JKZ2tZRW5SajdxQ1BuenZhNzNlZWZN?=
- =?utf-8?B?TE82L1Y2S0E2Skl3NUVIRFVXR3Q5MUR1M2p3Y2FYY2VaeUZ1QzFJYzVJMisv?=
- =?utf-8?B?SEJoUVppU1lqSFM1WlppRlZwdTYyb2loOGo0VnZNRzVPdkFKUFBlUXljd1l2?=
- =?utf-8?B?WXF4QUJxTkVKcDQxb0F3L0tXOUVBVldmMzcwYmc5Z3VjQjg1dXE5RVJ1TjUv?=
- =?utf-8?B?TFVlalVtTmhUUmpmVDlwemY2RzVmeUZVOTNlcHpKbTZ1K2ZOQjNmQmVqdll3?=
- =?utf-8?B?V0lhbmVOYWJ1eFVrejA5dXlJQ1U5YUQ5RldOYTRMcGZrREpNeWpXdHczTUwz?=
- =?utf-8?B?OVB4d3I0MUsyc2dacXRBTTYyczJvM0JORWd2UDJ3Z2ZHczRUS2NxM0pZeWUy?=
- =?utf-8?Q?ciL0=3D?=
+	=?utf-8?B?OVNxb0h5aWFjeU5KT1A1MHRpL010bTEwZG5zd21IZHNDUHF2WEs0clIrTG55?=
+ =?utf-8?B?NStWVHppc3JyY1NxRFZpYzVWc04vZy9VMjl6b3pBd2J0aVdDenBHejlvYXZn?=
+ =?utf-8?B?bXlrVjJOWkR2akhWZXRNSjVGZDhxcEZNdFlLNmhJR293UlE4Z3QvWmNmU0hp?=
+ =?utf-8?B?RjB1RzFxdGRNTUxkSThJaUU3UGNDQktIdXFlT1p2Tk05SmhxZHVCUi9Pb0J6?=
+ =?utf-8?B?UUZvdTBFa3BsYWRsQWxxQ1BHUk41dDZDL3dZeDR2UU5jTUhqVjNZRDlpRmcx?=
+ =?utf-8?B?TFN1YkVDMEZRKzhRZHh6YWQ0TVJaWSs3ZzZaU3FXWWo1SXRIT01kN04vRU9E?=
+ =?utf-8?B?anU1K1VsbCtPK00rVGtvb1l0R1dNamh2ZFBQNzJselNpN0VBN1YveWhoN2FL?=
+ =?utf-8?B?dEhsQ0QyUVVHU3pBcUxGL1drcThwdnpkNlkvT3pFejFreUdxT216UGxTaHFR?=
+ =?utf-8?B?aXMxYVNlcXBmZUUyczhlQ0JPRXhqTFdGYlZibXRXT3cwQlVsWWRnYW1VYm00?=
+ =?utf-8?B?eFk0WW9Ccjk5b0dZaWZIQkFyZDRaWHRnQVBhTXVDMHlLNVpOemJGNkN2OTA0?=
+ =?utf-8?B?U1F4RmhIQlA0WVpQZmVZZW9sOXNaMnRhbWdTeWVCMUhTRVpUMXp1UjRTenVE?=
+ =?utf-8?B?Y202T0I1ODNCL25qYXhHViswaXRqaGgxL0hRWkdsYTl3RGdKaGxESVBrVDJG?=
+ =?utf-8?B?SEs1K2dackxGQ2l6UUhpeU00TjlEbmtqeUNzNzl6SXdHeGZkaHJxcCtEWmZm?=
+ =?utf-8?B?dnd5cHc5aHYrZDlHckVGb2pDcWg2dFY3V2VmVktZdFcxT1Jqays5VHlMZzFW?=
+ =?utf-8?B?QldROFFkTDlQVjQ4NlV4aytjSmxWYm9xam0rYk5PMVJmY212TEdxeEVZbjlu?=
+ =?utf-8?B?OHdZNTM4OEZUTFovVEUvWHRPQnlEd01RWTkvZDJXQXg4VnRIRnB6MjlleHVT?=
+ =?utf-8?B?dkduZS9uYjd6cDBPeHNYMGZWbEw4VWVmKzFhQ2JFVlcxZEptL21hM1dqcGZQ?=
+ =?utf-8?B?S2pWSkhkQnZKNFdEamVrTDlqaFIycVhLSmpxK01mWmdsM2ltNVVNSFZyRFlq?=
+ =?utf-8?B?SHJ3Q3pTSTA3aThhNUpzU0oxbHEydlFMVk1QQ0NrejVzNlNFZ2E1b2tQMGhK?=
+ =?utf-8?B?cUxURms0UkptaWdxREdaWnl4QlhwU09GUUNYcUdRWTRmYUNOSHIxY2NpWjRO?=
+ =?utf-8?B?RXB4M2FUczZWKzB6UUY3VVA2R0JJY0x5OUlhZzJ2ZnpVQmFnclpxRC9QejEy?=
+ =?utf-8?B?UzAyZXpjZkVnSmFqNXI1YlFjek95YVJ3V1RZdGd5WnVya0lReWhJZ1lwd1I3?=
+ =?utf-8?B?cWo5bCt5eUM3OXdycDlaWGRZWUtnejFnMWVGd0ZmS0Y1aVZad3Q5N21EdWhp?=
+ =?utf-8?B?TGxuWWU3aDlJMEZIbTlrNlljNkR0WnF2VnRXVXVjcmhLQUVFMFVFYm9mWkYv?=
+ =?utf-8?B?cmo5TG02NDMxQklCcVFhTXFic0pNM0xOMnFBU1dUQ3E4ejBhTnkwTlB6ZUJ6?=
+ =?utf-8?B?Qkk5eGpnbktGd1YzTkhTWGgzT2FVZHI5SWxjN1MrRGhxSk9QYlBCZkEzc3Rs?=
+ =?utf-8?B?MFZieXpNUG8vVGNJRUM4YmV1ajM5U05kcVNFckdnVVVob085eFVDMElUZ0g2?=
+ =?utf-8?B?emR1K0Y3S25kNXJxOXd1YU5xVytVa1MzT0Vqcml4Q0t0d0tUU2U0QU1BUDZk?=
+ =?utf-8?B?Y2liTzh4dFMzTnV5S1c5U2xQQVg2dVpadkFNZTMxNVgvZnJGNHg5NlRad2Fj?=
+ =?utf-8?B?SnBseVkrcmtDYSs2RU9yK3ZXWThtVDJQZGdkdjFUL2sxbmMwRFp0dk1scmJW?=
+ =?utf-8?B?dXAvN012UkpXSnZ6Mk5BbU5sRUlsS1UxN2FqL0oybytsY2REYXRZSk4xdlN5?=
+ =?utf-8?B?QzN5NHZiMWlBbS96ZUdvTWdsc3VBSE8xaktQb011Wk1wVEQxYUJUaWVtTzJj?=
+ =?utf-8?B?M2ttUWVVT2tibFJTWkhiT3daeE9UNE5XM0VxbGpWZVVEMjJ2b09Hb0JRSGFG?=
+ =?utf-8?B?dVluRDh2MDhJNFpYa2VYNlNoR2x6RFdwRnFjVmd1S2NyM3F2UU5Gb1NVNmNh?=
+ =?utf-8?B?VnRZS3J4L0RNOENoaXBzZVR5OXhaZ3MwRlhTSjFiK2F6aGlEVC9oRm1Bb0tF?=
+ =?utf-8?Q?/maA=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 076597ac-708d-46d7-3746-08de39cd5e22
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea324ba9-39e6-4551-7256-08de39cd62ed
 X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 22:25:34.4748
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 22:25:42.5824
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eesT8mEQT5c4Cm1sKUBqUklKonb41ErcXexAp/BE3oTBhpU8wBL7zb1ItLle1qTqVpPXe9EvBHaSPxj47rzoXA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: D/zTaA4J/7pWu8ry82jksiOVRMri+5hSZhB5OSXfmuf2wjuowvR+SUGHbpGuo+Vu8pMN49z/VTakOSj0Zu3Gfg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9053
 
-Introduce a new callback to fill a link list entry, preparing for the
-future replacement of dw_(edma|hdma)_v0_core_start().
+The current descriptor layout is:
 
-Filling link entries will become more complex, and both the EDMA and HDMA
-paths would otherwise need to duplicate the same logic. Add a fill-entry
-callback so that common code can be moved into dw-edma-core.c and shared
-cleanly.
+  struct dw_edma_desc *desc
+   └─ chunk list
+        └─ burst list
+
+Creating a DMA descriptor requires at least three kzalloc() calls because
+each burst is allocated as a linked-list node. Since the number of bursts
+is already known when the descriptor is created, a linked list is not
+necessary.
+
+Allocate a burst array when creating each chunk to simplify the code and
+eliminate one kzalloc() call.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/dma/dw-edma/dw-edma-core.h    | 31 +++++++++++++++++++++++
- drivers/dma/dw-edma/dw-edma-v0-core.c | 46 +++++++++++++++++++++++++++++++++++
- drivers/dma/dw-edma/dw-hdma-v0-core.c | 38 +++++++++++++++++++++++++++++
- 3 files changed, 115 insertions(+)
+ drivers/dma/dw-edma/dw-edma-core.c | 114 +++++++------------------------------
+ drivers/dma/dw-edma/dw-edma-core.h |   9 +--
+ 2 files changed, 24 insertions(+), 99 deletions(-)
 
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index 37918f733eb4d36c7ced6418b85a885affadc8f7..9e65155fd93d69ddbc8235fad671fad4dc120979 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -40,38 +40,15 @@ u64 dw_edma_get_pci_address(struct dw_edma_chan *chan, phys_addr_t cpu_addr)
+ 	return cpu_addr;
+ }
+ 
+-static struct dw_edma_burst *dw_edma_alloc_burst(struct dw_edma_chunk *chunk)
+-{
+-	struct dw_edma_burst *burst;
+-
+-	burst = kzalloc(sizeof(*burst), GFP_NOWAIT);
+-	if (unlikely(!burst))
+-		return NULL;
+-
+-	INIT_LIST_HEAD(&burst->list);
+-	if (chunk->burst) {
+-		/* Create and add new element into the linked list */
+-		chunk->bursts_alloc++;
+-		list_add_tail(&burst->list, &chunk->burst->list);
+-	} else {
+-		/* List head */
+-		chunk->bursts_alloc = 0;
+-		chunk->burst = burst;
+-	}
+-
+-	return burst;
+-}
+-
+-static struct dw_edma_chunk *dw_edma_alloc_chunk(struct dw_edma_desc *desc)
++static struct dw_edma_chunk *dw_edma_alloc_chunk(struct dw_edma_desc *desc, u32 nburst)
+ {
+ 	struct dw_edma_chan *chan = desc->chan;
+ 	struct dw_edma_chunk *chunk;
+ 
+-	chunk = kzalloc(sizeof(*chunk), GFP_NOWAIT);
++	chunk = kzalloc(struct_size(chunk, burst, nburst), GFP_NOWAIT);
+ 	if (unlikely(!chunk))
+ 		return NULL;
+ 
+-	INIT_LIST_HEAD(&chunk->list);
+ 	chunk->chan = chan;
+ 	/* Toggling change bit (CB) in each chunk, this is a mechanism to
+ 	 * inform the eDMA HW block that this is a new linked list ready
+@@ -81,20 +58,10 @@ static struct dw_edma_chunk *dw_edma_alloc_chunk(struct dw_edma_desc *desc)
+ 	 */
+ 	chunk->cb = !(desc->chunks_alloc % 2);
+ 
+-	if (desc->chunk) {
+-		/* Create and add new element into the linked list */
+-		if (!dw_edma_alloc_burst(chunk)) {
+-			kfree(chunk);
+-			return NULL;
+-		}
+-		desc->chunks_alloc++;
+-		list_add_tail(&chunk->list, &desc->chunk->list);
+-	} else {
+-		/* List head */
+-		chunk->burst = NULL;
+-		desc->chunks_alloc = 0;
+-		desc->chunk = chunk;
+-	}
++	chunk->nburst = nburst;
++
++	list_add_tail(&chunk->list, &desc->chunk_list);
++	desc->chunks_alloc++;
+ 
+ 	return chunk;
+ }
+@@ -108,53 +75,23 @@ static struct dw_edma_desc *dw_edma_alloc_desc(struct dw_edma_chan *chan)
+ 		return NULL;
+ 
+ 	desc->chan = chan;
+-	if (!dw_edma_alloc_chunk(desc)) {
+-		kfree(desc);
+-		return NULL;
+-	}
+ 
+-	return desc;
+-}
++	INIT_LIST_HEAD(&desc->chunk_list);
+ 
+-static void dw_edma_free_burst(struct dw_edma_chunk *chunk)
+-{
+-	struct dw_edma_burst *child, *_next;
+-
+-	/* Remove all the list elements */
+-	list_for_each_entry_safe(child, _next, &chunk->burst->list, list) {
+-		list_del(&child->list);
+-		kfree(child);
+-		chunk->bursts_alloc--;
+-	}
+-
+-	/* Remove the list head */
+-	kfree(child);
+-	chunk->burst = NULL;
++	return desc;
+ }
+ 
+-static void dw_edma_free_chunk(struct dw_edma_desc *desc)
++static void dw_edma_free_desc(struct dw_edma_desc *desc)
+ {
+ 	struct dw_edma_chunk *child, *_next;
+ 
+-	if (!desc->chunk)
+-		return;
+-
+ 	/* Remove all the list elements */
+-	list_for_each_entry_safe(child, _next, &desc->chunk->list, list) {
+-		dw_edma_free_burst(child);
++	list_for_each_entry_safe(child, _next, &desc->chunk_list, list) {
+ 		list_del(&child->list);
+ 		kfree(child);
+ 		desc->chunks_alloc--;
+ 	}
+ 
+-	/* Remove the list head */
+-	kfree(child);
+-	desc->chunk = NULL;
+-}
+-
+-static void dw_edma_free_desc(struct dw_edma_desc *desc)
+-{
+-	dw_edma_free_chunk(desc);
+ 	kfree(desc);
+ }
+ 
+@@ -166,15 +103,11 @@ static void vchan_free_desc(struct virt_dma_desc *vdesc)
+ static void dw_edma_core_start(struct dw_edma_chunk *chunk, bool first)
+ {
+ 	struct dw_edma_chan *chan = chunk->chan;
+-	struct dw_edma_burst *child;
+ 	u32 i = 0;
+-	int j;
+ 
+-	j = chunk->bursts_alloc;
+-	list_for_each_entry(child, &chunk->burst->list, list) {
+-		j--;
+-		dw_edma_core_ll_data(chan, child, i++, chunk->cb, !j);
+-	}
++	for (i = 0; i < chunk->nburst; i++)
++		dw_edma_core_ll_data(chan, &chunk->burst[i], i, chunk->cb,
++				     i == chunk->nburst - 1);
+ 
+ 	dw_edma_core_ll_link(chan, i, chunk->cb, chan->ll_region.paddr);
+ 
+@@ -198,14 +131,13 @@ static int dw_edma_start_transfer(struct dw_edma_chan *chan)
+ 	if (!desc)
+ 		return 0;
+ 
+-	child = list_first_entry_or_null(&desc->chunk->list,
++	child = list_first_entry_or_null(&desc->chunk_list,
+ 					 struct dw_edma_chunk, list);
+ 	if (!child)
+ 		return 0;
+ 
+ 	dw_edma_core_start(child, !desc->xfer_sz);
+ 	desc->xfer_sz += child->xfer_sz;
+-	dw_edma_free_burst(child);
+ 	list_del(&child->list);
+ 	kfree(child);
+ 	desc->chunks_alloc--;
+@@ -375,13 +307,13 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
+ 	struct dw_edma_chan *chan = dchan2dw_edma_chan(xfer->dchan);
+ 	enum dma_transfer_direction dir = xfer->direction;
+ 	struct scatterlist *sg = NULL;
+-	struct dw_edma_chunk *chunk;
++	struct dw_edma_chunk *chunk = NULL;
+ 	struct dw_edma_burst *burst;
+ 	struct dw_edma_desc *desc;
+ 	u64 src_addr, dst_addr;
+ 	size_t fsz = 0;
+ 	u32 cnt = 0;
+-	int i;
++	u32 i;
+ 
+ 	if (!chan->configured)
+ 		return NULL;
+@@ -441,10 +373,6 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
+ 	if (unlikely(!desc))
+ 		goto err_alloc;
+ 
+-	chunk = dw_edma_alloc_chunk(desc);
+-	if (unlikely(!chunk))
+-		goto err_alloc;
+-
+ 	if (xfer->type == EDMA_XFER_INTERLEAVED) {
+ 		src_addr = xfer->xfer.il->src_start;
+ 		dst_addr = xfer->xfer.il->dst_start;
+@@ -472,15 +400,15 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
+ 		if (xfer->type == EDMA_XFER_SCATTER_GATHER && !sg)
+ 			break;
+ 
+-		if (chunk->bursts_alloc == chan->ll_max) {
+-			chunk = dw_edma_alloc_chunk(desc);
++		if (!(i % chan->ll_max)) {
++			u32 n = min(cnt - i, chan->ll_max);
++
++			chunk = dw_edma_alloc_chunk(desc, n);
+ 			if (unlikely(!chunk))
+ 				goto err_alloc;
+ 		}
+ 
+-		burst = dw_edma_alloc_burst(chunk);
+-		if (unlikely(!burst))
+-			goto err_alloc;
++		burst = chunk->burst + (i % chan->ll_max);
+ 
+ 		if (xfer->type == EDMA_XFER_CYCLIC)
+ 			burst->sz = xfer->xfer.cyclic.len;
 diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index e074a6375f8a6853c212e65d2d54cb3e614b1483..2b5defae133c360f142394f9fab35c4748a893da 100644
+index 7a0d8405eb7feaedf4b19fd83bbeb5d24781bb7b..1930c3bce2bf33fdfbf4e8d99002483a4565faed 100644
 --- a/drivers/dma/dw-edma/dw-edma-core.h
 +++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -125,6 +125,12 @@ struct dw_edma_core_ops {
- 	irqreturn_t (*handle_int)(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
- 				  dw_edma_handler_t done, dw_edma_handler_t abort);
- 	void (*start)(struct dw_edma_chunk *chunk, bool first);
-+	void (*ll_data)(struct dw_edma_chan *chan, struct dw_edma_burst *burst,
-+			u32 idx, bool cb, bool irq);
-+	void (*ll_link)(struct dw_edma_chan *chan, u32 idx, bool cb, u64 addr);
-+	void (*ch_doorbell)(struct dw_edma_chan *chan);
-+	void (*ch_enable)(struct dw_edma_chan *chan);
-+
- 	void (*ch_config)(struct dw_edma_chan *chan);
- 	void (*debugfs_on)(struct dw_edma *dw);
- };
-@@ -201,6 +207,31 @@ void dw_edma_core_ch_config(struct dw_edma_chan *chan)
- 	chan->dw->core->ch_config(chan);
- }
+@@ -43,7 +43,6 @@ struct dw_edma_chan;
+ struct dw_edma_chunk;
  
-+static inline void
-+dw_edma_core_ll_data(struct dw_edma_chan *chan, struct dw_edma_burst *burst,
-+		     u32 idx, bool cb, bool irq)
-+{
-+	chan->dw->core->ll_data(chan, burst, idx, cb, irq);
-+}
-+
-+static inline void
-+dw_edma_core_ll_link(struct dw_edma_chan *chan, u32 idx, bool cb, u64 addr)
-+{
-+	chan->dw->core->ll_link(chan, idx, cb, addr);
-+}
-+
-+static inline
-+void dw_edma_core_ch_doorbell(struct dw_edma_chan *chan)
-+{
-+	chan->dw->core->ch_doorbell(chan);
-+}
-+
-+static inline
-+void dw_edma_core_ch_enable(struct dw_edma_chan *chan)
-+{
-+	chan->dw->core->ch_enable(chan);
-+}
-+
- static inline
- void dw_edma_core_debugfs_on(struct dw_edma *dw)
- {
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-index cd99bb34452d19eb9fd04b237609545ab1092eaa..59ee219f1abddd48806dec953ce96afdc87ffdab 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-@@ -509,6 +509,48 @@ static void dw_edma_v0_core_ch_config(struct dw_edma_chan *chan)
- 	}
- }
- 
-+static void
-+dw_edma_v0_core_ll_data(struct dw_edma_chan *chan, struct dw_edma_burst *burst,
-+			u32 idx, bool cb, bool irq)
-+{
-+	u32 control = 0;
-+
-+	if (cb)
-+		control |= DW_EDMA_V0_CB;
-+
-+	if (irq) {
-+		control |= DW_EDMA_V0_LIE;
-+
-+		if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-+			control |= DW_EDMA_V0_RIE;
-+	}
-+
-+	dw_edma_v0_write_ll_data(chan, idx, control, burst->sz, burst->sar,
-+				 burst->dar);
-+}
-+
-+static void
-+dw_edma_v0_core_ll_link(struct dw_edma_chan *chan, u32 idx, bool cb, u64 addr)
-+{
-+	u32 control = DW_EDMA_V0_LLP | DW_EDMA_V0_TCB;
-+
-+	if (!cb)
-+		control |= DW_EDMA_V0_CB;
-+
-+	dw_edma_v0_write_ll_link(chan, idx, control, chan->ll_region.paddr);
-+}
-+
-+static void dw_edma_v0_core_ch_doorbell(struct dw_edma_chan *chan)
-+{
-+	struct dw_edma *dw = chan->dw;
-+
-+	dw_edma_v0_sync_ll_data(chan);
-+
-+	/* Doorbell */
-+	SET_RW_32(dw, chan->dir, doorbell,
-+		  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
-+}
-+
- /* eDMA debugfs callbacks */
- static void dw_edma_v0_core_debugfs_on(struct dw_edma *dw)
- {
-@@ -521,6 +563,10 @@ static const struct dw_edma_core_ops dw_edma_v0_core = {
- 	.ch_status = dw_edma_v0_core_ch_status,
- 	.handle_int = dw_edma_v0_core_handle_int,
- 	.start = dw_edma_v0_core_start,
-+	.ll_data = dw_edma_v0_core_ll_data,
-+	.ll_link = dw_edma_v0_core_ll_link,
-+	.ch_doorbell = dw_edma_v0_core_ch_doorbell,
-+	.ch_enable = dw_edma_v0_core_ch_enable,
- 	.ch_config = dw_edma_v0_core_ch_config,
- 	.debugfs_on = dw_edma_v0_core_debugfs_on,
+ struct dw_edma_burst {
+-	struct list_head		list;
+ 	u64				sar;
+ 	u64				dar;
+ 	u32				sz;
+@@ -52,18 +51,16 @@ struct dw_edma_burst {
+ struct dw_edma_chunk {
+ 	struct list_head		list;
+ 	struct dw_edma_chan		*chan;
+-	struct dw_edma_burst		*burst;
+-
+-	u32				bursts_alloc;
+-
+ 	u8				cb;
+ 	u32				xfer_sz;
++	u32                             nburst;
++	struct dw_edma_burst            burst[] __counted_by(nburst);
  };
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-index 953868ef424250c1b696b9e61b72ba9a9c7c38c9..94350bb2bdcd6e29d8a42380160a5bd77caf4680 100644
---- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-@@ -287,6 +287,40 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
- 	SET_CH_32(dw, chan->dir, chan->id, msi_msgdata, chan->msi.data);
- }
  
-+static void
-+dw_hdma_v0_core_ll_data(struct dw_edma_chan *chan, struct dw_edma_burst *burst,
-+			u32 idx, bool cb, bool irq)
-+{
-+	u32 control = 0;
-+
-+	if (cb)
-+		control |= DW_HDMA_V0_CB;
-+
-+	dw_hdma_v0_write_ll_data(chan, idx, control, burst->sz, burst->sar,
-+				 burst->dar);
-+}
-+
-+static void
-+dw_hdma_v0_core_ll_link(struct dw_edma_chan *chan, u32 idx, bool cb, u64 addr)
-+{
-+	u32 control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
-+
-+	if (!cb)
-+		control |= DW_HDMA_V0_CB;
-+
-+	dw_hdma_v0_write_ll_link(chan, idx, control, chan->ll_region.paddr);
-+}
-+
-+static void dw_hdma_v0_core_ch_doorbell(struct dw_edma_chan *chan)
-+{
-+	struct dw_edma *dw = chan->dw;
-+
-+	dw_hdma_v0_sync_ll_data(chan);
-+
-+	/* Doorbell */
-+	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
-+}
-+
- /* HDMA debugfs callbacks */
- static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
- {
-@@ -299,6 +333,10 @@ static const struct dw_edma_core_ops dw_hdma_v0_core = {
- 	.ch_status = dw_hdma_v0_core_ch_status,
- 	.handle_int = dw_hdma_v0_core_handle_int,
- 	.start = dw_hdma_v0_core_start,
-+	.ll_data = dw_hdma_v0_core_ll_data,
-+	.ll_link = dw_hdma_v0_core_ll_link,
-+	.ch_doorbell = dw_hdma_v0_core_ch_doorbell,
-+	.ch_enable = dw_hdma_v0_core_ch_enable,
- 	.ch_config = dw_hdma_v0_core_ch_config,
- 	.debugfs_on = dw_hdma_v0_core_debugfs_on,
- };
+ struct dw_edma_desc {
+ 	struct virt_dma_desc		vd;
+ 	struct dw_edma_chan		*chan;
+-	struct dw_edma_chunk		*chunk;
++	struct list_head		chunk_list;
+ 
+ 	u32				chunks_alloc;
+ 
 
 -- 
 2.34.1
