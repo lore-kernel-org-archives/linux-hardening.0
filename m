@@ -1,127 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AE0223324
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Dec 2025 02:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FBD1946DF
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Dec 2025 06:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765593018; cv=none; b=mDBh4IbPo3IQrop6ZEzypl3YDBSOylqzWVwmEDW+9qYi2ljlejahUIxETWw2TcKy496qyzF511zaBl6EUSEuLpmZsNUGp4BIu+744G4jAdsOAF/jQEObcuevW9X7JWPf9ZCxIXGf1N98bIy9nq7B9G25THOxf47UR7qeP9e7xjc=
+	t=1765608525; cv=none; b=omoQGB5ZsT30fBdwoEj94DVB0aF2Cg3wakcUKMkmnVQOCMIbEvU0c0+AZSPbZZ2LoP9LSf1J6lw3gYQ7/WoHQlyURZI3m/zjT6raSwtT+oUV03+Z8vWDP0yS/KKiZe0L89vxS38hofuhRSfS6/Vj/sFCY2TkCQgzv/7lZqIgbrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765593018; c=relaxed/simple;
-	bh=plGV2E1TrMujnirMQg/rh+JN5ilbZGGF2F+AIxuNVFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZU1jUO/R6oAYoTd2EU1z9i94QsPGBglobGdVXdKDydl+Xy+P2EYSorWxNhFHILDGN0+XbT+2B92dmkkp1WnzWGSJhzdHhJ1P7pJCdMO+VY9vOcCD7Vz/ZrtuBdK9Utk4GkWRZuLultRO1yoCuti0X9J8zCTz0MTsfWMrsrDq8kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dt9tOGX9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765608525; c=relaxed/simple;
+	bh=OSPLFg4W3QR5ByFn0Z+25izVWJy4kGkKLbWih19PHZA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nmTfwaRrsK5yIW5UVa02fAUIQWUZtfXfUSCVz9nVcV/bvyVI/jRGareeys770LZwc2sXCG6kb57FgTcSMhQ9Yc9d3JA6HHOuyFBVrlvOqn917k3B9CCIN7UTXZ3gPQKn3wNxuJFOIOh69f8KDq70MR2buEifuuR7FP0AyG7/k8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V/rv/PvX; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dt9tOGX9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E95C4CEF1;
-	Sat, 13 Dec 2025 02:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765593018;
-	bh=plGV2E1TrMujnirMQg/rh+JN5ilbZGGF2F+AIxuNVFI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dt9tOGX91sxsMIqGeLT/XTSZYVW3dMtn7C2JrJIcBrcm4zxCbHuH8ChBHm+o0L/A9
-	 yU3T2Lh7oEOUi58s3WBjYMCszDagbJkEXBfExVtM7XA5YO5B/VT1tMV+mXkQXcqQdx
-	 v329Qs8FQEfOxAhcSCMUbUSq22cL2Q5XpBDKDwKvTHUBcgzPxGHyJQ1moZXGHTlMX4
-	 Pjb5Y3pg4cS22w7n4gICCwbpdeRK7r8mdbV9aThvvudOMVViZLB7i1PxzEbrRTBHv3
-	 sU7EBtjebtVfj9a4F4ejHuKqTarxB3Rl3p4YuWooJPBMdGsZtBoHe2Ha0OeiEn9/gJ
-	 PD9VhddiGTwTw==
-Date: Fri, 12 Dec 2025 18:30:17 -0800
-From: Kees Cook <kees@kernel.org>
-To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-Cc: Qing Zhao <qing.zhao@oracle.com>, Uros Bizjak <ubizjak@gmail.com>,
-	Joseph Myers <josmyers@redhat.com>,
-	Richard Biener <rguenther@suse.de>,
-	Jeff Law <jeffreyalaw@gmail.com>, Andrew Pinski <pinskia@gmail.com>,
-	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
-	"Constable, Scott D" <scott.d.constable@intel.com>,
-	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v9 2/7] kcfi: Add core Kernel Control Flow Integrity
- infrastructure
-Message-ID: <202512121756.68957E18@keescook>
-References: <20251210022025.harder.803-kees@kernel.org>
- <20251210022035.331892-2-kees@kernel.org>
- <CALvbMcAd-03ZtYKBCecUKGLfna+kNe4TgYqkV80sVNQ+J-M-7A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V/rv/PvX"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7baf61be569so2377572b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Dec 2025 22:48:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1765608523; x=1766213323; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OSPLFg4W3QR5ByFn0Z+25izVWJy4kGkKLbWih19PHZA=;
+        b=V/rv/PvXawv5NhhkAlMigL5A3ymTVqMjUYFcMQfTez04D7GoxsMFc3nHxvrRxu0+Bx
+         q/ag4Oils+4vYzzLAYkocXSctwh95tJIk7AfzCjE9g4pD/crZacOKcamExzMPbbSjgdU
+         KpahdKnZjsNP57dPYv7jaInJnq5iLcW9+0ZWmvT2OozAB0E1wIJitV0Dv73h8kHCl6Je
+         gm6vdMhqnhnrGP6jyc/R+pcvBWKNWf5P9e8+76Dii1eOMderlpgnbFv5KVQKR9ZZP1Q2
+         +7GgkROGYw6lLjhmPRcJU5vV3NKGCV2mkB6SwBClNERHoV9nzTfyhH/Rn2nie3gdTSjk
+         kIXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765608523; x=1766213323;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OSPLFg4W3QR5ByFn0Z+25izVWJy4kGkKLbWih19PHZA=;
+        b=TXGxz752bAfkBLCxX54GZTR2U7kc6lkrbTL4mo36H0IJ2lITz0bEdMN4uZASIOeDvT
+         cLI/qWkgYRz8YUTltfiPPGTIpLSnyrjLvgJKqcLnvOZsWfD6ID6FVq7kqX9FjvqhEwMQ
+         mAtrXzxGcgNiTml7XN2WOMJA8fHIYEqnVQKvaLB6yIgGGgt2BFd7RpKXdd2ND+tT8Gtk
+         Z52/YtuJcCfGhRyLd3zeClsGuF9E8bc0X/9J1mrKzQVgFzrI09iQzIV0d+Ar/az/4CYo
+         MiklEEpouXcV0Ruub42FAortb7w1VHtfuFbDhntNaNYvpgb3XifxQ+cUwBQYlbLF2Up4
+         LnxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFrvtCiv78/xQXIepMovaOnL4NSHOGETIgaJXHPYpER+1b+exY6s9ipIYxNDaPv4VeXX4rR51DsLmoMZkpIFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD+yPYeBwwsSzGakAur/qGlyUbSeQLtYUv7cnAwcrIwRVALSwB
+	HFZLjPCuTvgI5qv6JAoBLEqc8ss1ZIFrpY/2SjFxh80gBYXM/V3X0fDIhhr4aqhGns8=
+X-Gm-Gg: AY/fxX70jmQnPsa1856znQW1hHc/RUkZ/4D7DhEK/GN7MQpOYfR659H5s+UYObrTY9k
+	OXoSh/VhaMqvZriTZjdhRz+FsGF6XMQCKgKhAmHC2AGp43SHRtQnvICH5SGiSYEj5VDemoqwEgx
+	NnKSZBkRqcxwtifA/KyqXayF+oFVSMkMl/7Yrko5bShirf78T8Lc69sMyUpAiJdZBR/41nhMT/p
+	WzL3ops4qeOG2AptkOf0ngSJoZIXZQw1zD2NA96i8HgTfV3VDLQvyuBCqL7LJCdmqHBSWLKeQAw
+	XP4vXWnvUiV3kDU+qkiooCf1PhgjRCQx6QOmM3tm1ZsDImfEeVREU5DbDMuLRiA+rn8l4/b1eU4
+	X/3CpQbNFDs1I7+PuC6K9EmxRucz3shDSvjfzUHGPeN5ZlrcAD/u1c7t4fKjoiOhXpmQrcCQR0m
+	1ASLOJAv2fS4ifMEheNZAozHBx7Sm/B/Ml1Hs96Q32vIQ1zWiYcwI8YUDqwIufiA==
+X-Google-Smtp-Source: AGHT+IHwMXPg7Qn0Ef9xWbq83SFpsB1sFhZLa5C8vjkRdWjkXJZFN6bz1qhctibBoHiLjB/xaNqEfg==
+X-Received: by 2002:a05:6a00:1c99:b0:7e8:4471:ae56 with SMTP id d2e1a72fcca58-7f6694a964bmr3530338b3a.34.1765608522549;
+        Fri, 12 Dec 2025 22:48:42 -0800 (PST)
+Received: from [10.200.3.203] (p99250-ipoefx.ipoe.ocn.ne.jp. [153.246.134.249])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7f4c4ab52aasm6927000b3a.38.2025.12.12.22.48.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Dec 2025 22:48:41 -0800 (PST)
+Message-ID: <bf00eec5-e9fe-41df-b758-7601815b24a0@linaro.org>
+Date: Sat, 13 Dec 2025 08:48:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALvbMcAd-03ZtYKBCecUKGLfna+kNe4TgYqkV80sVNQ+J-M-7A@mail.gmail.com>
-
-On Tue, Dec 09, 2025 at 08:00:28PM -0800, Andrew Pinski wrote:
-> On Tue, Dec 9, 2025 at 6:24 PM Kees Cook <kees@kernel.org> wrote:
-> [...]
-> > diff --git a/gcc/rtl.def b/gcc/rtl.def
-> > index 15ae7d10fcc1..af643d187b95 100644
-> > --- a/gcc/rtl.def
-> > +++ b/gcc/rtl.def
-> > @@ -318,6 +318,12 @@ DEF_RTL_EXPR(CLOBBER, "clobber", "e", RTX_EXTRA)
-> >
-> >  DEF_RTL_EXPR(CALL, "call", "ee", RTX_EXTRA)
-> >
-> > +/* KCFI wrapper for call expressions.
-> > +   Operand 0 is the call expression.
-> > +   Operand 1 is the KCFI type ID (const_int).  */
-> > +
-> > +DEF_RTL_EXPR(KCFI, "kcfi", "ee", RTX_EXTRA)
-> 
-> You don't document this new rtl in doc/rtl.texi.
-> Also I think it would be better if it was:
-> DEF_RTL_EXPR(KCFI, "kcfi", "ei", RTX_EXTRA)
-> 
-> So you don't need an extra indirection to the KCFI type ID. You can
-> just access it like `XUINT (kcficall, 2)`.
-> const_int seems too heavy weight for this.
-> I assume it fits in `unsigned int`.
-
-I can't figure out how to do the RTL matching when it's not a const_int
-expr. For stand-alone stuff ("match_dup") I think I see it, but that seems
-to be for stand-alone hard-coded values? Specifically what I can't figure
-out is how to change the .md pattern matching with match_operand which
-expects RTX operands, to something else. Format specifier i stores a raw
-integer, not an RTX, so it can't be matched with match_operand. This
-also breaks define_subst, which also seems to require patterns using
-match_operand.
-
-As always, I'm open to alternatives, but right now I don't see how to
-do this with "ei".
-
-> > +    case KCFI:
-> > +      /* For KCFI wrapper, check both the wrapped call and the type ID.  */
-> > +      return (reg_overlap_mentioned_p (x, XEXP (body, 0))
-> > +             || reg_overlap_mentioned_p (x, XEXP (body, 1)));
-> 
-> Isn't the type ID always a const_int if so then you don't need to
-> check if reg_overlap_mentioned_p here.
-
-True, yes. I've adjusted this now. I wasn't sure if I needed this to check
-the const_int value too, but testing seems to suggest I didn't need that
-part.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/26] Introduce meminspect
+To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
+ pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net, david@redhat.com,
+ mhocko@suse.com
+Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org,
+ Trilok Soni <tsoni@quicinc.com>, Kaushal Kumar <kaushalk@qti.qualcomm.com>,
+ Shiraz Hashim <shashim@qti.qualcomm.com>,
+ Peter Griffin <peter.griffin@linaro.org>, stephen.s.brennan@oracle.com,
+ Will McVicker <willmcvicker@google.com>,
+ "stefan.schmidt@linaro.org" <stefan.schmidt@linaro.org>
+References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
+From: Eugen Hristev <eugen.hristev@linaro.org>
+Content-Language: en-US
+In-Reply-To: <20251119154427.1033475-1-eugen.hristev@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
--Kees
 
--- 
-Kees Cook
+On 11/19/25 17:44, Eugen Hristev wrote:
+> meminspect is a mechanism which allows the kernel to mark specific memory
+> areas for memory dumping or specific inspection, statistics, usage.
+> Once regions are marked, meminspect keeps an internal list with the regions
+> in a dedicated table.
+
+[...]
+
+
+> I will present this version at Plumbers conference in Tokyo on December 13th:
+> https://lpc.events/event/19/contributions/2080/
+> I am eager to discuss it there face to face.
+
+Summary of the discussions at LPC talk on Dec 13th:
+
+One main idea on the static variables annotation was to do some linker
+magic, to create a list of variables in the tree, that would be parsed
+by some script, the addresses and sizes would be then stored into the
+dedicated section at the script level, without having any C code change.
+Pros: no C code change, Cons: it would be hidden/masked from the code,
+easy to miss out, which might lead to people's variables being annotated
+without them knowing
+
+Another idea was to have variables directly stored in a dedicated
+section which would be added to the table.
+e.g. static int __attribute(section (...)) nr_irqs;
+Pros: no more meminspect section Cons: have to keep all interesting
+variables in a separate section, which might not be okay for everyone.
+
+On dynamic memory, the memblock flag marking did not receive any obvious
+NAKs.
+
+On dynamic memory that is bigger in size than one page, as the table
+entries are registered by virtual address, this would be non-contiguous
+in physical memory. How is this solved?
+-> At the moment it's left for the consumer drivers to handle this
+situation. If the region is a VA and the size > PAGE_SIZE, then the
+driver needs to handle the way it handles it. Maybe the driver that
+parses the entry needs to convert it into multiple contiguous entries,
+or just have virtual address is enough. The inspection table does not
+enforce or limit the entries to contiguous entries only.
+
+On the traverse/notifier system, the implementation did not receive any
+obvious NAKs
+
+General comments:
+
+Trilok Soni from Qualcomm mentioned they will be using this into their
+software deliveries in production.
+
+Someone suggested to have some mechanism to block specific data from
+being added to the inspection table as being sensitive non-inspectable
+data.
+[Eugen]: Still have to figure out how that could be done. Stuff is not
+being added to the table by default.
+
+Another comment was about what use case there is in mind, is this for
+servers, or for confidential computing, because each different use case
+might have different requirements, like ignoring some regions is an
+option in one case, but bloating the table in another case might not be
+fine.
+[Eugen]: The meminspect scenario should cover all cases and not be too
+specific. If it is generic enough and customizable enough to care for
+everyone's needs then I consider it being a success. It should not
+specialize in neither of these two different cases, but rather be
+tailored by each use case to provide the mandatory requirements for that
+case.
+
+Another comment mentioned that this usecase does not apply to many
+people due to firmware or specific hardware needed.
+[Eugen]: one interesting proposed usecase is to have a pstore
+driver/implementation that would traverse the inspection table at panic
+handler time, then gather data from there to store in the pstore
+(ramoops, mtdoops or whatever backend) and have it available to the
+userspace after reboot. This would be a nice use case that does not
+require firmware nor specific hardware, just pstore backend support.
+
+Ending note was whether this implementation is going in a good direction
+and what would be the way to having it moving upstream.
+
+Thanks everyone who attended and came up with ideas and comments.
+There are a few comments which I may have missed, so please feel free to
+reply to this email to start a discussion thread on the topic you are
+interested in.
+
+Eugen
