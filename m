@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2899219CD06
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Dec 2025 01:40:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B9015624B
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Dec 2025 01:43:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765590052; cv=none; b=YPBRwCtH3o/xPlHP9jIpNR71FNXFA11Ot+wbmMcfN1NLzSWPslPu/HDc80AXHh9hthL0B42hUZyG4FoTW8DtY8MlqvVhUc2e828lyq3Ao2pLMCf9HERAYxOKKgghRmR9VFZDl+fT8Aatk36iFjFZRyXnwtnsvhf7G8UTUCUCICM=
+	t=1765590197; cv=none; b=uMeqdnMYg01InIH7lGMFdUtwIeKX5VqJY4Qo55ddyW0ZbG0YTHKJpEgy54P2LJu7AdGJrzzBpoxb+Dtgz0Z7+K/DUYd625R18uudPqnrCZzm0lTIcW0ehQH7w1U22vY1Wrl2gV85o0mV0pGdpXJvb7x+7z+9QdOdNS9phZRT5BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765590052; c=relaxed/simple;
-	bh=AdXSrMPN4V5AQHZPHttYGtOBS+VgutdGUgFfjMUR0oM=;
+	s=arc-20240116; t=1765590197; c=relaxed/simple;
+	bh=4OnBVLm1BOQYvCC/fvIACN8Nylv8Dv4NSID41lmL63A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XYu54shd6GF2c2BryJ/bOLnbYX2/4C2bd5DXaOufEzAMAoVNRe0hasYrYWUuGuQET0wnPY62QKcNlF0JEdNTdbAXgNxTGqkkgiTg/uE7x5l/j59bPaEQV0yZHiEmCNaCByoOO5fSzmhAsEhyFrslGwQtWkqthTJ866IRGCqmmW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caysVnEu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TktoB4ekWjm99Jam1IpGT3yqt5ilH2CwgmuRoKmwqt3ObnFuvu3MPX/hb+JZuo19kvbz0fqHR6KhwDb9kNGucyj588CPqwsuwbeMLhHbpjeQFJzohBtaQ6l9IDPRs4cHzCDxqJfoWA+DQ5psowqR6AGYc1fjqcrw4JenXOlAWvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pag4KYwp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caysVnEu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF57BC4CEF1;
-	Sat, 13 Dec 2025 01:40:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pag4KYwp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679C5C4CEF1;
+	Sat, 13 Dec 2025 01:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765590050;
-	bh=AdXSrMPN4V5AQHZPHttYGtOBS+VgutdGUgFfjMUR0oM=;
+	s=k20201202; t=1765590195;
+	bh=4OnBVLm1BOQYvCC/fvIACN8Nylv8Dv4NSID41lmL63A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=caysVnEu5xo/RlepHwYOhdNexZFZo5ep2bavwv9VrwGuOMAQHszuhrx7aQiE0oESt
-	 oagq7FWDCZP9BIFws+JqX2M381tPelffQ3V08tNneqtf9HqOH6Axj9e6VlOfN0jK+e
-	 mqvrLWslxbCJKisIqepCk42MZqJ/9sDcEgwJ0N8mIOq9tVtz0zFoMBPRgNnj/4ikVg
-	 WnsCqceuuLbjwZTUenPK2c2zZazba71dI81tc0bEVKmExMC8Opi23Q5ghYX1dQCEk6
-	 jIZr4kWvm0nTuc8HyGuuI/kHmWrvGQJoPC04YABomFenQMLpB1a3LgXO912nykMz9K
-	 OLZM1DNdZSBhA==
-Date: Fri, 12 Dec 2025 17:40:50 -0800
+	b=pag4KYwpr2QdnXZhu/YoM4NF8fLf9vsa0G2h//13S3kdKl4dSopgFD5Gg1dLpvCsU
+	 JaQPaW0gcc4E2pU1q98HfmJpo3NTXO17CYylgoqe2MOgngZZ7P4rKfsp5MqNlIVZ3Y
+	 MlrP2ayFf9OYc5d60r2f+zuyJOI61QEHwN+5mTo3Lfobl2moRlhKerOKSE+Mgx9rNK
+	 ZpI81jiRY9W76zD7HvYm2p37GH+9jPkWjfwio6tKLphuAi/V70z2yiEGEI57uOXNKv
+	 vdyoBC2B46bTi39ymyoPqhZQ2QAd2SGHk5oLiJP9XWiOAzXiIKXADEKXXOUaf9Ljb0
+	 XGhsetYjyyD3w==
+Date: Fri, 12 Dec 2025 17:43:15 -0800
 From: Kees Cook <kees@kernel.org>
 To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
 Cc: Qing Zhao <qing.zhao@oracle.com>, Uros Bizjak <ubizjak@gmail.com>,
@@ -53,12 +53,13 @@ Cc: Qing Zhao <qing.zhao@oracle.com>, Uros Bizjak <ubizjak@gmail.com>,
 	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
 	"Constable, Scott D" <scott.d.constable@intel.com>,
 	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v9 5/7] aarch64: Add AArch64 Kernel Control Flow
- Integrity implementation
-Message-ID: <202512121725.9CC129F0@keescook>
+Subject: Re: [PATCH v9 1/7] typeinfo: Introduce KCFI typeinfo mangling API
+Message-ID: <202512121741.5583E7D@keescook>
 References: <20251210022025.harder.803-kees@kernel.org>
- <20251210022035.331892-5-kees@kernel.org>
- <CALvbMcCFQbBO2McnTfWVHEcVvZfy+U6FSM7jMPyG-1-N9RP14A@mail.gmail.com>
+ <20251210022035.331892-1-kees@kernel.org>
+ <CALvbMcCNEf_r5kAQXAihxwMcSWC5msVcSBfBax78N2CZc6k9Kw@mail.gmail.com>
+ <202512121709.F5617B17D@keescook>
+ <CALvbMcBYSzi=fb0XmGrgh_aP=rR9H+f-7PbX7cnvTm_T+vZynw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,102 +69,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALvbMcCFQbBO2McnTfWVHEcVvZfy+U6FSM7jMPyG-1-N9RP14A@mail.gmail.com>
+In-Reply-To: <CALvbMcBYSzi=fb0XmGrgh_aP=rR9H+f-7PbX7cnvTm_T+vZynw@mail.gmail.com>
 
-On Fri, Dec 12, 2025 at 02:47:57PM -0800, Andrew Pinski wrote:
-> On Tue, Dec 9, 2025 at 6:23 PM Kees Cook <kees@kernel.org> wrote:
-> > Implement AArch64-specific KCFI backend.
-> [...]
+On Fri, Dec 12, 2025 at 05:29:43PM -0800, Andrew Pinski wrote:
+> On Fri, Dec 12, 2025 at 5:24 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > On Fri, Dec 12, 2025 at 03:07:51PM -0800, Andrew Pinski wrote:
+> > > On Tue, Dec 9, 2025 at 6:27 PM Kees Cook <kees@kernel.org> wrote:
+> > > [...]
+> > > > +uint32_t
+> > > > +typeinfo_get_hash (tree type)
+> > > > +{
+> > > > +  gcc_assert (type != NULL_TREE);
+> > > > +  uint32_t hash_state = 2166136261U; /* FNV-1a 32-bit offset basis.  */
+> > > > +
+> > > > +  mangle_type (type, nullptr, &hash_state);
+> > > > +  return hash_state;
+> > > > +}
+> > >
+> > > It might make sense to do a few self_test here instead of (in addition
+> > > to) having a testcase.
+> > > This way the testing is done earlier.
+> >
+> > I tried to do this back in v2 and could not make it work. See [1] for
+> > more details on what I found, but basically I don't have access to the
+> > parser itself in the selftests, so I couldn't build end-to-end testing
+> > of arbitrary C (testing node types isn't really a sufficient test in my
+> > view). I could to basic type tests, but it would be redundant to what
+> > I ended up with in dg, and I didn't want to split up the testing.
 > 
-> From an aarch64 point of view this is ok (except for a few minor
-> things [see below in the patch itself] which can be bundled up with
-> the fixes for the review of the middle-end parts and don't need an
-> extra approval).
-
-Thanks! I will go through these and fix them up for v10.
-
-> The only open question with the aarch64 side of things (and other
-> targets) is how to represent the kfci calls, should there be wrapping
-> or not.
-> Right now I am ok with the wrapping but I am not a fan of it because
-> it introduces complexity to the call patterns. It is definitely
-> something that should be looked into but I am not going to block this
-> set of patches for it.
-> And using define_subst/define_subst_attr if we decide to stay with the
-> wrapping with the kfci rtl, is something to look into but that can
-> wait too.
-
-Yeah, I would love more guidance on this; Uros suggested using
-define_subst during the x86 review, and I was able to use it there
-because x86's expansion and call patterns don't use PARALLEL. When I
-tried to apply define_subst to the other architectures with PARALLEL it
-got extremely complex, and ended up being more complicated than what I
-already had. See this for my (brief) comments on this attempt in v7:
-https://lore.kernel.org/linux-hardening/20251117201219.makes.617-kees@kernel.org/
-
-Maybe I just didn't see the right way to do it, so I'm happy to try
-something different here if there's a better method.
-
-> [...]
-> > +const char *
-> > +aarch64_output_kcfi_insn (rtx_insn *insn, rtx *operands)
-> > +{
-> > +  /* Target register is operands[0].  */
-> > +  rtx target_reg = operands[0];
-> > +  gcc_assert (REG_P (target_reg));
-> > +
-> > +  /* Get KCFI type ID from operand[3].  */
-> > +  uint32_t type_id = (uint32_t) INTVAL (operands[3]);
+> I am asking for self-tests of the API and not depending on the C
+> parser. So generating some FUNCTION_TYPE types and then getting back
+> the hash and/or name.
 > 
-> Use UINTVAL .
+> > (testing node types isn't really a sufficient test in my view)
+> It might not be a fully sufficient test in itself; it does not mean it
+> is NOT a useful test to have. This is why I mentioned in addition to.
+> Testing the API outside of the end-to-end testing is a good thing and
+> can find bugs early on.  GCC does not have enough self-tests really
+> and folks don't use it as much as we should.
 
-Now fixed (for all archs).
-
-> > +
-> > +  /* Calculate typeid offset from call target.  */
-> > +  HOST_WIDE_INT offset = -kcfi_get_typeid_offset ();
-> > +
-> > +  /* Get unique label number for this KCFI check.  */
-> > +  int labelno = kcfi_next_labelno ();
-> > +
-> > +  /* Generate custom label names.  */
-> > +  char trap_name[32];
-> > +  char call_name[32];
-> > +  ASM_GENERATE_INTERNAL_LABEL (trap_name, "Lkcfi_trap", labelno);
-> > +  ASM_GENERATE_INTERNAL_LABEL (call_name, "Lkcfi_call", labelno);
-> > +
-> > +  /* Load actual type into w16 from memory at offset using ldur.  */
-> > +  rtx temp_operands[2];
-> > +  temp_operands[0] = target_reg;
-> > +  temp_operands[1] = GEN_INT (offset);
-> > +  output_asm_insn ("ldur\tw16, [%0, #%1]", temp_operands);
-> > +
-> > +  /* Load expected type into w17 using mov/movk sequence.  */
-> > +  fprintf (asm_out_file, "\tmov\tw17, #%u\n", type_id & 0xFFFF);
-> > +  fprintf (asm_out_file, "\tmovk\tw17, #%u, lsl #16\n", (type_id >> 16) & 0xFFFF);
-> > +
-> > +  /* Compare types.  */
-> > +  fprintf (asm_out_file, "\tcmp\tw16, w17\n");
-> > +
-> > +  /* Output conditional branch to call label.  */
-> > +  fputs ("\tb.eq\t", asm_out_file);
-> > +  assemble_name (asm_out_file, call_name);
-> > +  fputc ('\n', asm_out_file);
-> > +
-> > +  /* Output trap label and BRK instruction.  */
-> > +  ASM_OUTPUT_LABEL (asm_out_file, trap_name);
-> > +
-> > +  /* Calculate and emit BRK with ESR encoding.  */
-> > +  unsigned type_index = R17_REGNUM;
-> > +  unsigned addr_index = REGNO (target_reg) - R0_REGNUM;
-> > +  unsigned esr_value = 0x8000 | ((type_index & 31) << 5) | (addr_index & 31);
-> > +
-> > +  fprintf (asm_out_file, "\tbrk\t#%u\n", esr_value);
-> 
-> It might be useful to print the hex instead of the decimal here.
-> Either way is ok.
-
-Yeah, that's more human-readable. Now changed.
+Okay, yeah, if doing this kind of "manual" construction is viewed as
+meaningful, I'll give it a shot to augment the existing tests.
 
 -Kees
 
