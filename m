@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B9015624B
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Dec 2025 01:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AE0223324
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Dec 2025 02:30:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765590197; cv=none; b=uMeqdnMYg01InIH7lGMFdUtwIeKX5VqJY4Qo55ddyW0ZbG0YTHKJpEgy54P2LJu7AdGJrzzBpoxb+Dtgz0Z7+K/DUYd625R18uudPqnrCZzm0lTIcW0ehQH7w1U22vY1Wrl2gV85o0mV0pGdpXJvb7x+7z+9QdOdNS9phZRT5BY=
+	t=1765593018; cv=none; b=mDBh4IbPo3IQrop6ZEzypl3YDBSOylqzWVwmEDW+9qYi2ljlejahUIxETWw2TcKy496qyzF511zaBl6EUSEuLpmZsNUGp4BIu+744G4jAdsOAF/jQEObcuevW9X7JWPf9ZCxIXGf1N98bIy9nq7B9G25THOxf47UR7qeP9e7xjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765590197; c=relaxed/simple;
-	bh=4OnBVLm1BOQYvCC/fvIACN8Nylv8Dv4NSID41lmL63A=;
+	s=arc-20240116; t=1765593018; c=relaxed/simple;
+	bh=plGV2E1TrMujnirMQg/rh+JN5ilbZGGF2F+AIxuNVFI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TktoB4ekWjm99Jam1IpGT3yqt5ilH2CwgmuRoKmwqt3ObnFuvu3MPX/hb+JZuo19kvbz0fqHR6KhwDb9kNGucyj588CPqwsuwbeMLhHbpjeQFJzohBtaQ6l9IDPRs4cHzCDxqJfoWA+DQ5psowqR6AGYc1fjqcrw4JenXOlAWvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pag4KYwp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZU1jUO/R6oAYoTd2EU1z9i94QsPGBglobGdVXdKDydl+Xy+P2EYSorWxNhFHILDGN0+XbT+2B92dmkkp1WnzWGSJhzdHhJ1P7pJCdMO+VY9vOcCD7Vz/ZrtuBdK9Utk4GkWRZuLultRO1yoCuti0X9J8zCTz0MTsfWMrsrDq8kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dt9tOGX9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pag4KYwp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679C5C4CEF1;
-	Sat, 13 Dec 2025 01:43:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dt9tOGX9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E95C4CEF1;
+	Sat, 13 Dec 2025 02:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765590195;
-	bh=4OnBVLm1BOQYvCC/fvIACN8Nylv8Dv4NSID41lmL63A=;
+	s=k20201202; t=1765593018;
+	bh=plGV2E1TrMujnirMQg/rh+JN5ilbZGGF2F+AIxuNVFI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pag4KYwpr2QdnXZhu/YoM4NF8fLf9vsa0G2h//13S3kdKl4dSopgFD5Gg1dLpvCsU
-	 JaQPaW0gcc4E2pU1q98HfmJpo3NTXO17CYylgoqe2MOgngZZ7P4rKfsp5MqNlIVZ3Y
-	 MlrP2ayFf9OYc5d60r2f+zuyJOI61QEHwN+5mTo3Lfobl2moRlhKerOKSE+Mgx9rNK
-	 ZpI81jiRY9W76zD7HvYm2p37GH+9jPkWjfwio6tKLphuAi/V70z2yiEGEI57uOXNKv
-	 vdyoBC2B46bTi39ymyoPqhZQ2QAd2SGHk5oLiJP9XWiOAzXiIKXADEKXXOUaf9Ljb0
-	 XGhsetYjyyD3w==
-Date: Fri, 12 Dec 2025 17:43:15 -0800
+	b=dt9tOGX91sxsMIqGeLT/XTSZYVW3dMtn7C2JrJIcBrcm4zxCbHuH8ChBHm+o0L/A9
+	 yU3T2Lh7oEOUi58s3WBjYMCszDagbJkEXBfExVtM7XA5YO5B/VT1tMV+mXkQXcqQdx
+	 v329Qs8FQEfOxAhcSCMUbUSq22cL2Q5XpBDKDwKvTHUBcgzPxGHyJQ1moZXGHTlMX4
+	 Pjb5Y3pg4cS22w7n4gICCwbpdeRK7r8mdbV9aThvvudOMVViZLB7i1PxzEbrRTBHv3
+	 sU7EBtjebtVfj9a4F4ejHuKqTarxB3Rl3p4YuWooJPBMdGsZtBoHe2Ha0OeiEn9/gJ
+	 PD9VhddiGTwTw==
+Date: Fri, 12 Dec 2025 18:30:17 -0800
 From: Kees Cook <kees@kernel.org>
 To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
 Cc: Qing Zhao <qing.zhao@oracle.com>, Uros Bizjak <ubizjak@gmail.com>,
@@ -53,13 +53,12 @@ Cc: Qing Zhao <qing.zhao@oracle.com>, Uros Bizjak <ubizjak@gmail.com>,
 	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
 	"Constable, Scott D" <scott.d.constable@intel.com>,
 	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v9 1/7] typeinfo: Introduce KCFI typeinfo mangling API
-Message-ID: <202512121741.5583E7D@keescook>
+Subject: Re: [PATCH v9 2/7] kcfi: Add core Kernel Control Flow Integrity
+ infrastructure
+Message-ID: <202512121756.68957E18@keescook>
 References: <20251210022025.harder.803-kees@kernel.org>
- <20251210022035.331892-1-kees@kernel.org>
- <CALvbMcCNEf_r5kAQXAihxwMcSWC5msVcSBfBax78N2CZc6k9Kw@mail.gmail.com>
- <202512121709.F5617B17D@keescook>
- <CALvbMcBYSzi=fb0XmGrgh_aP=rR9H+f-7PbX7cnvTm_T+vZynw@mail.gmail.com>
+ <20251210022035.331892-2-kees@kernel.org>
+ <CALvbMcAd-03ZtYKBCecUKGLfna+kNe4TgYqkV80sVNQ+J-M-7A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,48 +68,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALvbMcBYSzi=fb0XmGrgh_aP=rR9H+f-7PbX7cnvTm_T+vZynw@mail.gmail.com>
+In-Reply-To: <CALvbMcAd-03ZtYKBCecUKGLfna+kNe4TgYqkV80sVNQ+J-M-7A@mail.gmail.com>
 
-On Fri, Dec 12, 2025 at 05:29:43PM -0800, Andrew Pinski wrote:
-> On Fri, Dec 12, 2025 at 5:24 PM Kees Cook <kees@kernel.org> wrote:
+On Tue, Dec 09, 2025 at 08:00:28PM -0800, Andrew Pinski wrote:
+> On Tue, Dec 9, 2025 at 6:24 PM Kees Cook <kees@kernel.org> wrote:
+> [...]
+> > diff --git a/gcc/rtl.def b/gcc/rtl.def
+> > index 15ae7d10fcc1..af643d187b95 100644
+> > --- a/gcc/rtl.def
+> > +++ b/gcc/rtl.def
+> > @@ -318,6 +318,12 @@ DEF_RTL_EXPR(CLOBBER, "clobber", "e", RTX_EXTRA)
 > >
-> > On Fri, Dec 12, 2025 at 03:07:51PM -0800, Andrew Pinski wrote:
-> > > On Tue, Dec 9, 2025 at 6:27 PM Kees Cook <kees@kernel.org> wrote:
-> > > [...]
-> > > > +uint32_t
-> > > > +typeinfo_get_hash (tree type)
-> > > > +{
-> > > > +  gcc_assert (type != NULL_TREE);
-> > > > +  uint32_t hash_state = 2166136261U; /* FNV-1a 32-bit offset basis.  */
-> > > > +
-> > > > +  mangle_type (type, nullptr, &hash_state);
-> > > > +  return hash_state;
-> > > > +}
-> > >
-> > > It might make sense to do a few self_test here instead of (in addition
-> > > to) having a testcase.
-> > > This way the testing is done earlier.
+> >  DEF_RTL_EXPR(CALL, "call", "ee", RTX_EXTRA)
 > >
-> > I tried to do this back in v2 and could not make it work. See [1] for
-> > more details on what I found, but basically I don't have access to the
-> > parser itself in the selftests, so I couldn't build end-to-end testing
-> > of arbitrary C (testing node types isn't really a sufficient test in my
-> > view). I could to basic type tests, but it would be redundant to what
-> > I ended up with in dg, and I didn't want to split up the testing.
+> > +/* KCFI wrapper for call expressions.
+> > +   Operand 0 is the call expression.
+> > +   Operand 1 is the KCFI type ID (const_int).  */
+> > +
+> > +DEF_RTL_EXPR(KCFI, "kcfi", "ee", RTX_EXTRA)
 > 
-> I am asking for self-tests of the API and not depending on the C
-> parser. So generating some FUNCTION_TYPE types and then getting back
-> the hash and/or name.
+> You don't document this new rtl in doc/rtl.texi.
+> Also I think it would be better if it was:
+> DEF_RTL_EXPR(KCFI, "kcfi", "ei", RTX_EXTRA)
 > 
-> > (testing node types isn't really a sufficient test in my view)
-> It might not be a fully sufficient test in itself; it does not mean it
-> is NOT a useful test to have. This is why I mentioned in addition to.
-> Testing the API outside of the end-to-end testing is a good thing and
-> can find bugs early on.  GCC does not have enough self-tests really
-> and folks don't use it as much as we should.
+> So you don't need an extra indirection to the KCFI type ID. You can
+> just access it like `XUINT (kcficall, 2)`.
+> const_int seems too heavy weight for this.
+> I assume it fits in `unsigned int`.
 
-Okay, yeah, if doing this kind of "manual" construction is viewed as
-meaningful, I'll give it a shot to augment the existing tests.
+I can't figure out how to do the RTL matching when it's not a const_int
+expr. For stand-alone stuff ("match_dup") I think I see it, but that seems
+to be for stand-alone hard-coded values? Specifically what I can't figure
+out is how to change the .md pattern matching with match_operand which
+expects RTX operands, to something else. Format specifier i stores a raw
+integer, not an RTX, so it can't be matched with match_operand. This
+also breaks define_subst, which also seems to require patterns using
+match_operand.
+
+As always, I'm open to alternatives, but right now I don't see how to
+do this with "ei".
+
+> > +    case KCFI:
+> > +      /* For KCFI wrapper, check both the wrapped call and the type ID.  */
+> > +      return (reg_overlap_mentioned_p (x, XEXP (body, 0))
+> > +             || reg_overlap_mentioned_p (x, XEXP (body, 1)));
+> 
+> Isn't the type ID always a const_int if so then you don't need to
+> check if reg_overlap_mentioned_p here.
+
+True, yes. I've adjusted this now. I wasn't sure if I needed this to check
+the const_int value too, but testing seems to suggest I didn't need that
+part.
+
 
 -Kees
 
