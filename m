@@ -1,223 +1,326 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0373E238171
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Dec 2025 07:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AB6273F9;
+	Sun, 14 Dec 2025 11:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765610589; cv=none; b=WljoAVdhNPJelNEBPXZTVCxZDx/pPhCGjm+hJu+/Sj2+2iUYSdBBoi1JV5wPnxoUXWPLsaYACY3XuHYE0DExrUt+iRiTFdzT6A7cShXA2rgbeZ+o9BOPaHJ2cjfll1zV46aeu57B7fkUTxRmA0eIPsYBpNUN0TAcMkKG2r2UJhc=
+	t=1765713116; cv=none; b=h1RjDE5w14SaMqFHSNH0jlgz0e2ZI3cG5MHBNs9M0Xrlz2BnXN/o2+HUwtHk5JQ341GR55ZTpy2EYajpUPdmB6WGwlgDvlxoCyTmIEyrIfRrI26MhGftH9qobRo85u02i6InCLpkWe2C9jwLooVT2zWHCA/T1DxgQkdPShWU4+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765610589; c=relaxed/simple;
-	bh=9Qa+PthUmnTltiZTazohO99moG5pdpcX7qRMBsxF/ys=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EnJ2EbyZ/T+mUWr/RNnlp3haDMj32CgcNIndo0bFIf6V8y4pYBjijxVaCGWigoq4RkohOUhzAPHw6FWC1d9lDCgyJI1EV1ifyK0ommmYSySnpOF46VCy13CPmqUlZRl8C1cQzcBdESFhAkzxXf0ks/QJ9cYbvlt9ancUuoMViXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hd5IO/Ik; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1765713116; c=relaxed/simple;
+	bh=B8pn83D7Yy67lmNF8MQiKBTy4XDuUoCznztEvqwwgV4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pZnc3rN9LPcHxqgt2dOcHvaEwymkdev4BU/ZMLVXQbrmbXE+j44EOELVANgEYi42iGkR0WT8BRB4Lp15zWpx0QjVQZgvBz7rp2U43HOidZwqlUjq8yYnKyFYJQziGPFKmiAoOne1iQ2rNf4cusRzKeQc1n1e2AuFZqBE9NlBt/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dd/Vgl8L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hd5IO/Ik"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-29f102b013fso22074665ad.2
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Dec 2025 23:23:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765610587; x=1766215387; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qS/a8O0BbZSZZsXyGtd7peZrK8putFww9+X+USFCeDw=;
-        b=hd5IO/IkAS9Cts2py6hsAvieVf9h9ZCCP+wq7vdZv7lGLHc5Ult5/ZSoGo16bFFEi9
-         IIUP5p/qP+Cq74AfbT8Ijn1rQt0YfoBujNP+PLlo3DLIZgqZe7QLOTGgzVNnX3XPq6y2
-         OxFZMhGSuLqL7C7N7X12CxPkge2OnVhZsr7umtXcTGBiifiHTF4A/bT//HVcNSx+lxPM
-         2SKqJ39F7qwfflmuEa+va62mlcfawqpEBCEFusZvUhYwhLYHjcTiAwl7s1RfyM8dQElg
-         l5zPl8kSkv77Dr4s+Jtq4y76qqnXkYlH0D0Bu0RvCUpoVs2eiIwOW/k9hLe6EUNWi5O4
-         F52Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765610587; x=1766215387;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qS/a8O0BbZSZZsXyGtd7peZrK8putFww9+X+USFCeDw=;
-        b=m7yA6Pwen4LIlu7Hl1RyBjIkmZqZrGIbTRlKSD1yA3/mE8gD+nFKhGvhclu/WFpoJJ
-         f4iVkbMAWj5m7Qo3+r4e0LAMkvGUQ0uwQVfiqkZTjoXDL1AO7EoPMwe6JHzMp1HSoDaC
-         00durjQhG91uIf07SFhL8N/XWJ/X7zFdO+DyftzLi9L41zW1GB4bGT0xIRpyw8iSVygf
-         Y7KYJRSq5PkJORMj+qMtfkrG9pSHSqw8qU/vOFkLi5QHqSDKWkQDRYgHHSzt6RDFGHsQ
-         N8Fg0dsYryz3IDojpW9kMRmcqM8cbuW5BevlB9a097t6Q1aeS2QNMjhpy7PfdNGxAn3B
-         rd2g==
-X-Forwarded-Encrypted: i=1; AJvYcCV5cblf5D3R28znDlhw3XszsooUTH3doosVeOUP/6ATCsem7mJHj2VZoSuzKSws8AFwN078+4A1pffZ1jvSO94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeQDfcBDWaRkx3HWWfapWcvznkDOWeF7aszMCNa1o7epTGO7Q6
-	5CM8xunVCvuXgaKWipuT4puyDlnkdp0fvjJfMYR67uacMT6hvBID6NPZzKcEdJUFU2w=
-X-Gm-Gg: AY/fxX5w3I/HU2azoFmW112JNyUmdEjaCE0fGLKD8i9bKa0XXlfOMoaV0A54ns7KYL7
-	Bpn7AopD2Gl1PV30aiyaFDDLbZaeLl2G2v0f5lNox0OsRLtDpKe9jdNqin5IDqbzrjuKBSsA+AZ
-	8w3EL7H3zTSdznAuN+NkbQHu0MC2g2VbCvJqzmKKYo7nktvStfF8YBQtmEsg1jxZUUBUmQGUk2v
-	hJ1WxkAvoz0wIvCvxMO7aMUzTuGvUSphZ6Yc0XruGH94e53J5TtOsIR2AtgsiJzRfNe2O44cslc
-	P4Py75ztEDYOMQTTa3YiqdXrbsEyWKyAzfFaPDn7jYRC0M655nY1EpwWuRQp+GWTZqrMJ5EhlbF
-	ZEeYwG4aXZdMuYvpcCnT808XXVX1dW4jXu4UimIkkhKA0GzhlQ2g3WwcA+bxl9u1VZmxIEJYH3J
-	GQ00LXdKvdZp+G9egashclDEeBw8tHh6OxmIgGMREUQqvXCY2SnCs=
-X-Google-Smtp-Source: AGHT+IF5ZAK05FTZM7z1I/Tfu2uwtqip2Rr6c/twbgvqZujsfkv8PIP29+IUmV2/Et+MT9YWs2FBBQ==
-X-Received: by 2002:a17:903:2c07:b0:29d:df04:fcdf with SMTP id d9443c01a7336-29f2436dfb5mr47558295ad.42.1765610586985;
-        Fri, 12 Dec 2025 23:23:06 -0800 (PST)
-Received: from [10.200.3.203] (p99250-ipoefx.ipoe.ocn.ne.jp. [153.246.134.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29f2563b116sm39121255ad.102.2025.12.12.23.22.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Dec 2025 23:23:06 -0800 (PST)
-Message-ID: <c3db6ccd-dfc7-4a6a-82b7-3d615f8cab4f@linaro.org>
-Date: Sat, 13 Dec 2025 09:22:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dd/Vgl8L"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 90B5FC19421;
+	Sun, 14 Dec 2025 11:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765713115;
+	bh=B8pn83D7Yy67lmNF8MQiKBTy4XDuUoCznztEvqwwgV4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Dd/Vgl8L3h5pvA8ByVrBqE+L5k+OFLaVl5W7mLKnZyKkD+vpM5wr50Ef9Nu6xVTkD
+	 +rbZ7CLhG6fb/yRUDE2cNfQrQ8DvxxIEy1jE2wkC6Q89/PJCjOOSTp++0JLZmDxmHm
+	 IXVO421T7I9noXSoKbQuK9r/JShBei3K6YJbIrNTLqMgIK7LN9PwlELTzYvEnJw9J8
+	 jdfyaxKm3KdTF00R5F5QDfo9vprzmeHwkSJS3O+m7YYq8z6b9p6a2U8nSp7PBCypIF
+	 m4YImZKB8GFJ8t4w8ctBl8Fp6MD7wupMTOkDjbPHLJnsx6xxidlO6GAj7flLLWCbzV
+	 fLUs13n/D4IGg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81230D5B16D;
+	Sun, 14 Dec 2025 11:51:55 +0000 (UTC)
+From: Sven Peter <sven@kernel.org>
+Date: Sun, 14 Dec 2025 11:51:35 +0000
+Subject: [PATCH v3 2/3] dt-bindings: phy: Add Apple Type-C PHY
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/26] Introduce meminspect
-To: Randy Dunlap <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
- andersson@kernel.org, pmladek@suse.com, corbet@lwn.net, david@redhat.com,
- mhocko@suse.com
-Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org,
- Trilok Soni <tsoni@quicinc.com>, Kaushal Kumar <kaushalk@qti.qualcomm.com>,
- Shiraz Hashim <shashim@qti.qualcomm.com>,
- Peter Griffin <peter.griffin@linaro.org>, stephen.s.brennan@oracle.com,
- Will McVicker <willmcvicker@google.com>,
- "stefan.schmidt@linaro.org" <stefan.schmidt@linaro.org>
-References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
- <bf00eec5-e9fe-41df-b758-7601815b24a0@linaro.org>
- <5903a8e1-71c6-4546-ac50-35effa078dda@infradead.org>
-From: Eugen Hristev <eugen.hristev@linaro.org>
-Content-Language: en-US
-In-Reply-To: <5903a8e1-71c6-4546-ac50-35effa078dda@infradead.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20251214-b4-atcphy-v3-2-ba82b20e9459@kernel.org>
+References: <20251214-b4-atcphy-v3-0-ba82b20e9459@kernel.org>
+In-Reply-To: <20251214-b4-atcphy-v3-0-ba82b20e9459@kernel.org>
+To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
+ Neal Gompa <neal@gompa.dev>, Vinod Koul <vkoul@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8195; i=sven@kernel.org;
+ h=from:subject:message-id;
+ bh=B8pn83D7Yy67lmNF8MQiKBTy4XDuUoCznztEvqwwgV4=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ6bdkmvvY79c0nGeVs61OP6Vv9pZW73uxi3XLAqz1P60/
+ IrPiP/bUcrCIMbBICumyLJ9v73pk4dvBJduuvQeZg4rE8gQBi5OAZiI6HGG/yX8Lw4ttfwgM/lE
+ ybGibMZTBzwj72w0t3a0tdx9e8Psxb8Z/ntW36lrO83ENCldi98k2jSMo2PZxamW07d/LeU1PGS
+ zhhsA
+X-Developer-Key: i=sven@kernel.org; a=openpgp;
+ fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
+X-Endpoint-Received: by B4 Relay for sven@kernel.org/default with
+ auth_id=407
+
+Apple's Type-C PHY (ATCPHY) is a PHY for USB 2.0, USB 3.x,
+USB4/Thunderbolt, and DisplayPort connectivity found in Apple Silicon
+SoCs.
+
+The PHY handles muxing between these different protocols and also provides
+the reset controller for the attached dwc3 USB controller.
+
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Sven Peter <sven@kernel.org>
+---
+ .../devicetree/bindings/phy/apple,atcphy.yaml      | 222 +++++++++++++++++++++
+ MAINTAINERS                                        |   1 +
+ 2 files changed, 223 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/apple,atcphy.yaml b/Documentation/devicetree/bindings/phy/apple,atcphy.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..0acac7e3ee67ef2f03ffe1e04b0ac0fb414af362
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/apple,atcphy.yaml
+@@ -0,0 +1,222 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/apple,atcphy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Apple Type-C PHY (ATCPHY)
++
++maintainers:
++  - Sven Peter <sven@kernel.org>
++
++description: >
++  The Apple Type-C PHY (ATCPHY) is a combined PHY for USB 2.0, USB 3.x,
++  USB4/Thunderbolt, and DisplayPort connectivity via Type-C ports found in
++  Apple Silicon SoCs.
++
++  The PHY handles muxing between these different protocols and also provides the
++  reset controller for the attached DWC3 USB controller.
++
++  It is designed for USB4 operation and does not handle individual differential
++  pairs as distinct DisplayPort lanes. Any reference to lane in this binding
++  hence refers to two differential pairs (RX and TX) as used in USB terminology.
++
++  In order to correctly setup these lanes for the various modes calibration
++  values copied from Apple's firmware and converted to the format described
++  below by our bootloader m1n1 are required. Without these only USB2 operation
++  is possible.
++
++allOf:
++  - $ref: /schemas/usb/usb-switch.yaml#
++
++$defs:
++  apple,tunable:
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    items:
++      items:
++        - description: Register offset
++        - description: Mask to be applied to the register value
++        - description: Bits to be set after applying the mask
++    description: >
++      List of (register offset, mask, value) tuples copied from Apple's Device
++      Tree by our bootloader m1n1 and used to configure the PHY. These values
++      even vary for a single product/device and likely contain calibration
++      values determined by Apple at manufacturing time.
++      Unless otherwise noted these tunables are always applied to the core
++      register region.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - apple,t6000-atcphy
++              - apple,t6020-atcphy
++              - apple,t8112-atcphy
++          - const: apple,t8103-atcphy
++      - const: apple,t8103-atcphy
++
++  reg:
++    items:
++      - description: Common controls for all PHYs (USB2/3/4, DisplayPort, TBT)
++      - description: DisplayPort Alternate Mode PHY specific controls
++      - description: Type-C PHY AXI to Apple Fabric interconnect controls
++      - description: USB2 PHY specific controls
++      - description: USB3 PIPE interface controls
++
++  reg-names:
++    items:
++      - const: core
++      - const: lpdptx
++      - const: axi2af
++      - const: usb2phy
++      - const: pipehandler
++
++  "#phy-cells":
++    const: 1
++
++  "#reset-cells":
++    const: 0
++
++  mode-switch: true
++  orientation-switch: true
++
++  power-domains:
++    maxItems: 1
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++    properties:
++      port@0:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: Outgoing connection to the SS port of the Type-C connector.
++
++      port@1:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: Incoming endpoint from the USB3 controller.
++
++      port@2:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: Incoming endpoint from the DisplayPort controller.
++
++      port@3:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: Incoming endpoint from the USB4/Thunderbolt controller.
++
++  apple,tunable-common-a:
++    $ref: "#/$defs/apple,tunable"
++    description: >
++      Common tunables required for all modes, applied before tunable-axi2af.
++
++  apple,tunable-axi2af:
++    $ref: "#/$defs/apple,tunable"
++    description: >
++      AXI to Apple Fabric tunables, required for all modes. Unlike all other
++      tunables these are applied to the axi2af region.
++
++  apple,tunable-common-b:
++    $ref: "#/$defs/apple,tunable"
++    description: >
++      Common tunables required for all modes, applied after tunable-axi2af.
++
++  apple,tunable-lane0-usb:
++    $ref: "#/$defs/apple,tunable"
++    description: USB3 tunables for lane 0.
++
++  apple,tunable-lane1-usb:
++    $ref: "#/$defs/apple,tunable"
++    description: USB3 tunables for lane 1.
++
++  apple,tunable-lane0-cio:
++    $ref: "#/$defs/apple,tunable"
++    description: USB4/Thunderbolt ("Converged IO") tunables for lane 0.
++
++  apple,tunable-lane1-cio:
++    $ref: "#/$defs/apple,tunable"
++    description: USB4/Thunderbolt ("Converged IO") tunables for lane 1.
++
++  apple,tunable-lane0-dp:
++    $ref: "#/$defs/apple,tunable"
++    description: >
++      DisplayPort tunables for lane 0.
++
++      Note that lane here refers to a USB RX and TX pair re-used for DisplayPort
++      and not to an individual DisplayPort differential lane.
++
++  apple,tunable-lane1-dp:
++    $ref: "#/$defs/apple,tunable"
++    description: >
++      DisplayPort tunables for lane 1.
++
++      Note that lane here refers to a USB RX and TX pair re-used for DisplayPort
++      and not to an individual DisplayPort differential lane.
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - "#phy-cells"
++  - "#reset-cells"
++  - orientation-switch
++  - mode-switch
++  - power-domains
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    phy@83000000 {
++      compatible = "apple,t8103-atcphy";
++      reg = <0x83000000 0x4c000>,
++            <0x83050000 0x8000>,
++            <0x80000000 0x4000>,
++            <0x82a90000 0x4000>,
++            <0x82a84000 0x4000>;
++      reg-names = "core", "lpdptx", "axi2af", "usb2phy",
++                  "pipehandler";
++
++      #phy-cells = <1>;
++      #reset-cells = <0>;
++
++      orientation-switch;
++      mode-switch;
++      power-domains = <&ps_atc0_usb>;
++
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        port@0 {
++          reg = <0>;
++
++          endpoint {
++            remote-endpoint = <&typec_connector_ss>;
++          };
++        };
++
++        port@1 {
++          reg = <1>;
++
++          endpoint {
++            remote-endpoint = <&dwc3_ss_out>;
++          };
++        };
++
++        port@2 {
++          reg = <2>;
++
++          endpoint {
++            remote-endpoint = <&dcp_dp_out>;
++          };
++        };
++
++        port@3 {
++          reg = <3>;
++
++          endpoint {
++            remote-endpoint = <&acio_tbt_out>;
++          };
++        };
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5b11839cba9de1e9e43f63787578edd8c429ca39..5c68ab187d406d5fd6d042672848197c1b6957a1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2471,6 +2471,7 @@ F:	Documentation/devicetree/bindings/nvme/apple,nvme-ans.yaml
+ F:	Documentation/devicetree/bindings/nvmem/apple,efuses.yaml
+ F:	Documentation/devicetree/bindings/nvmem/apple,spmi-nvmem.yaml
+ F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
++F:	Documentation/devicetree/bindings/phy/apple,atcphy.yaml
+ F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+ F:	Documentation/devicetree/bindings/power/apple*
+ F:	Documentation/devicetree/bindings/power/reset/apple,smc-reboot.yaml
+
+-- 
+2.34.1
 
 
-
-On 12/13/25 08:57, Randy Dunlap wrote:
-> Hi,
-> 
-> On 12/12/25 10:48 PM, Eugen Hristev wrote:
->>
->>
->> On 11/19/25 17:44, Eugen Hristev wrote:
->>> meminspect is a mechanism which allows the kernel to mark specific memory
->>> areas for memory dumping or specific inspection, statistics, usage.
->>> Once regions are marked, meminspect keeps an internal list with the regions
->>> in a dedicated table.
->>
->> [...]
->>
->>
->>> I will present this version at Plumbers conference in Tokyo on December 13th:
->>> https://lpc.events/event/19/contributions/2080/
->>> I am eager to discuss it there face to face.
->>
->> Summary of the discussions at LPC talk on Dec 13th:
->>
->> One main idea on the static variables annotation was to do some linker
->> magic, to create a list of variables in the tree, that would be parsed
->> by some script, the addresses and sizes would be then stored into the
->> dedicated section at the script level, without having any C code change.
->> Pros: no C code change, Cons: it would be hidden/masked from the code,
->> easy to miss out, which might lead to people's variables being annotated
->> without them knowing
->>
->> Another idea was to have variables directly stored in a dedicated
->> section which would be added to the table.
->> e.g. static int __attribute(section (...)) nr_irqs;
->> Pros: no more meminspect section Cons: have to keep all interesting
->> variables in a separate section, which might not be okay for everyone.
->>
->> On dynamic memory, the memblock flag marking did not receive any obvious
->> NAKs.
->>
->> On dynamic memory that is bigger in size than one page, as the table
->> entries are registered by virtual address, this would be non-contiguous
->> in physical memory. How is this solved?
->> -> At the moment it's left for the consumer drivers to handle this
->> situation. If the region is a VA and the size > PAGE_SIZE, then the
->> driver needs to handle the way it handles it. Maybe the driver that
->> parses the entry needs to convert it into multiple contiguous entries,
->> or just have virtual address is enough. The inspection table does not
->> enforce or limit the entries to contiguous entries only.
->>
->> On the traverse/notifier system, the implementation did not receive any
->> obvious NAKs
->>
->> General comments:
->>
->> Trilok Soni from Qualcomm mentioned they will be using this into their
->> software deliveries in production.
->>
->> Someone suggested to have some mechanism to block specific data from
->> being added to the inspection table as being sensitive non-inspectable
->> data.
->> [Eugen]: Still have to figure out how that could be done. Stuff is not
->> being added to the table by default.
->>
->> Another comment was about what use case there is in mind, is this for
->> servers, or for confidential computing, because each different use case
->> might have different requirements, like ignoring some regions is an
->> option in one case, but bloating the table in another case might not be
->> fine.
->> [Eugen]: The meminspect scenario should cover all cases and not be too
->> specific. If it is generic enough and customizable enough to care for
->> everyone's needs then I consider it being a success. It should not
->> specialize in neither of these two different cases, but rather be
->> tailored by each use case to provide the mandatory requirements for that
->> case.
->>
->> Another comment mentioned that this usecase does not apply to many
->> people due to firmware or specific hardware needed.
->> [Eugen]: one interesting proposed usecase is to have a pstore
->> driver/implementation that would traverse the inspection table at panic
->> handler time, then gather data from there to store in the pstore
->> (ramoops, mtdoops or whatever backend) and have it available to the
->> userspace after reboot. This would be a nice use case that does not
->> require firmware nor specific hardware, just pstore backend support.
->>
->> Ending note was whether this implementation is going in a good direction
->> and what would be the way to having it moving upstream.
->>
->> Thanks everyone who attended and came up with ideas and comments.
->> There are a few comments which I may have missed, so please feel free to
->> reply to this email to start a discussion thread on the topic you are
->> interested in.
->>
->> Eugen
->>
-> 
-> Maybe you or someone else has already mentioned this. If so, sorry I missed it.
-> 
-> How does this compare or contrast to VMCOREINFO?
-> 
-> thanks.
-
-This inspection table could be created in an VMCOREINFO way, the patch
-series here[1] is something that would fit it best .
-
-The drawbacks are :
-some static variables have to be registered to VMCOREINFO in their file
-of residence. This means including vmcoreinfo header and adding
-functions/code there, and everywhere that would be needed , or , the
-variables have to be un-static'ed , which is a no-go.
-This received more negative opinions on that particular patch series.
-The annotation idea seemed cleaner and simpler, and more generic.
-
-We could add more and more entries to the vmcoreinfo table, but that
-would mean expanding it a lot, which it would maybe defy its purpose,
-and be getting too big, especially for the cases where custom drivers
-would like to register data.
-
-How I see it, is that maybe the vmcoreinfo init function, could also
-parse the inspection table and create more entries if that is needed.
-So somehow memory inspection is a superset or generalization , while
-VMCOREINFO is a more particular use case that would fit here.
-
-Do you think of some better way to integrate the meminspect table into
-VMCOREINFO ?
-
-[1]
-https://lore.kernel.org/all/20250912150855.2901211-1-eugen.hristev@linaro.org/
