@@ -1,99 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EB0331202;
-	Mon, 15 Dec 2025 13:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 411ED28B3E2;
+	Mon, 15 Dec 2025 16:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765807169; cv=none; b=pASUxFxdXLkhDp+pSUYH2KONQbBiFh+iZT/Yc0Rt9x6xmLwzhhfsbXJzddOnNXTHanJFZQHbjDehez83BDVS94js3M+dJcucmVcqjsneMM6Ywi5missIMkuES6F0CFEJ98bMB3Rmo0+iQukhDnY/C+0vcX0QNjQ2n9LAmgEyUcE=
+	t=1765816541; cv=none; b=ktlAO09yiYs6Brb3M/gXV35hyUZS5p5nHNdicT6frZnpyk3nNUscVaPeO2aTYU3kT3dWtxH1Iv4An+IE0v0FZLgSK/e1VCx+OZWL/s8HlOqr71+48DY9NGTXNa/U3hrYBQ8b15mdY6yt8TCDvGx/odlW5eeEp/8Pnsm98RHjdms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765807169; c=relaxed/simple;
-	bh=cfJDm4wYiGitWnngtHNxkthZHqnlQgjzwLU69mBly90=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HvxX6lnMYMtzQt2GSYuo8JVhhiHPsAkxGzmUruQkV/NIf17i+N3Oa6lBpNa4IaOzbwTroitBr01lmihu779vKaOcUDpAcXlpDX9jRL0s+/2TJsnerSfbuduUAl8+BdI7RQLPPl9039tDqPYBbroVzLRpzeTC219HEscKfKbAvsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OdV9YeSs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OdV9YeSs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE3BC4CEF5;
-	Mon, 15 Dec 2025 13:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765807167;
-	bh=cfJDm4wYiGitWnngtHNxkthZHqnlQgjzwLU69mBly90=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=OdV9YeSsdQmu7/bQcVmD8XlVXOq3y/rwXUDJUbHHLgin2Oo8ssgtvwDFQ9n1/6Fjd
-	 AKc1xgWoASmNyybhSks9k6oDzfiiaj8iy8Y9uLuDbpmf0wWJ/nWT5PQfq7XlCfP1rG
-	 vae+9jtWehpPHxlLiX4Y46vVMfZoO/+560L0Yhof29O3RYHURNzDsl4EXv/Kcg8e0T
-	 TGTXx30ZWIfvhJPusm7xLeuV5/o3G8cthFfb7NGf+jUnd/IBHU9xCI95psT4oTqJjr
-	 ZfLJw7hivwWdRJlLyB9oUGBwmFTBl3X36/NFj7HTJr2OR8NbBt7CcHbO1rV4CUB5Rr
-	 6QuvKgv7j2haQ==
-From: Mark Brown <broonie@kernel.org>
-To: frank.li@nxp.com, mkl@pengutronix.de, shawnguo@kernel.org, 
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
- kees@kernel.org, gustavoars@kernel.org, Carlos Song <carlos.song@nxp.com>
-Cc: linux-spi@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20251203085949.2922166-1-carlos.song@nxp.com>
-References: <20251203085949.2922166-1-carlos.song@nxp.com>
-Subject: Re: [PATCH v3 0/6] Support ECSPI dynamic burst feature for DMA
- mode
-Message-Id: <176580716540.161463.10558713364568567703.b4-ty@kernel.org>
-Date: Mon, 15 Dec 2025 22:59:25 +0900
+	s=arc-20240116; t=1765816541; c=relaxed/simple;
+	bh=h7YVrvePnITJ14SiwAjoVcfMwNTOP1EnaiwZkFEXsZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jXQPt2hqkSFT1ioQlO7hvItSsnaHlVY/3Fce4cXGya6nMPkGxKSg6U6VO01IsHyF9NOxEoiDhdL48e9xBKM1caEP7fDvBp2Bgs4zzkee+CvXX3Ol6lmDzUmV+GH3xljMg42fvXt4A/7pI+wYWu3c72Ne/uUtcj0iEUBqcWVjBME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECF2EFEC;
+	Mon, 15 Dec 2025 08:35:29 -0800 (PST)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24DE43F694;
+	Mon, 15 Dec 2025 08:35:33 -0800 (PST)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jeremy Linton <jeremy.linton@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 0/3] Fix bugs and performance of kstack offset randomisation
+Date: Mon, 15 Dec 2025 16:35:14 +0000
+Message-ID: <20251215163520.1144179-1-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-47773
+Content-Transfer-Encoding: 8bit
 
-On Wed, 03 Dec 2025 16:59:43 +0800, Carlos Song wrote:
-> ECSPI has a low throughput because of no dynamic burst support, it
-> transfers only one word per frame in DMA mode, causing SCLK stalls
-> between words due to BURST_LENGTH updates.
-> 
-> This patch set is to support ECSPI dynamic burst feature to help improve
-> the ECSPI DMA mode performance.
-> 
-> [...]
+Hi All,
 
-Applied to
+As I reported at [1], kstack offset randomisation suffers from a couple of bugs
+and, on arm64 at least, the performance is poor. This series attempts to fix
+both; patch 1 provides back-portable fixes for the functional bugs. Patches 2-3
+propose a performance improvement approach.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+I've looked at a few different options but ultimately decided that Jeremy's
+original prng approach is the fastest. I made the argument that this approach is
+secure "enough" in the RFC [2] and the responses indicated agreement.
 
-Thanks!
+More details in the commit logs.
 
-[1/6] spi: imx: group spi_imx_dma_configure() with spi_imx_dma_transfer()
-      commit: c64f62b036aed30626cb30fa82d3ec4a13fa83df
-[2/6] spi: imx: introduce helper to clear DMA mode logic
-      commit: 5395bb7f7c361310d0f329c8169d2190809b05c1
-[3/6] spi: imx: avoid dmaengine_terminate_all() on TX prep failure
-      commit: a5f298581d454c5ea77c5fb6f4ee1bff61eb2b2c
-[4/6] spi: imx: handle DMA submission errors with dma_submit_error()
-      commit: a450c8b77f929f5f9f5236861761a8c5cab22023
-[5/6] spi: imx: support dynamic burst length for ECSPI DMA mode
-      commit: faa8e404ad8e686cb98c51dc507fdcacfb8020ce
-[6/6] spi: imx: enable DMA mode for target operation
-      commit: ba9b28652c75b07383e267328f1759195d5430f7
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Performance
+===========
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Mean and tail performance of 3 "small" syscalls was measured. syscall was made
+10 million times and each individually measured and binned. These results have
+low noise so I'm confident that they are trustworthy.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The baseline is v6.18-rc5 with stack randomization turned *off*. So I'm showing
+performance cost of turning it on without any changes to the implementation,
+then the reduced performance cost of turning it on with my changes applied.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+**NOTE**: The below results were generated using the RFC patches but there is no
+meaningful change, so the numbers are still valid.
+
+arm64 (AWS Graviton3):
++-----------------+--------------+-------------+---------------+
+| Benchmark       | Result Class |   v6.18-rc5 | per-task-prng |
+|                 |              | rndstack-on |               |
+|                 |              |             |               |
++=================+==============+=============+===============+
+| syscall/getpid  | mean (ns)    |  (R) 15.62% |     (R) 3.43% |
+|                 | p99 (ns)     | (R) 155.01% |     (R) 3.20% |
+|                 | p99.9 (ns)   | (R) 156.71% |     (R) 2.93% |
++-----------------+--------------+-------------+---------------+
+| syscall/getppid | mean (ns)    |  (R) 14.09% |     (R) 2.12% |
+|                 | p99 (ns)     | (R) 152.81% |         1.55% |
+|                 | p99.9 (ns)   | (R) 153.67% |         1.77% |
++-----------------+--------------+-------------+---------------+
+| syscall/invalid | mean (ns)    |  (R) 13.89% |     (R) 3.32% |
+|                 | p99 (ns)     | (R) 165.82% |     (R) 3.51% |
+|                 | p99.9 (ns)   | (R) 168.83% |     (R) 3.77% |
++-----------------+--------------+-------------+---------------+
+
+Because arm64 was previously using get_random_u16(), it was expensive when it
+didn't have any buffered bits and had to call into the crng. That's what caused
+the enormous tail latency.
+
+
+x86 (AWS Sapphire Rapids):
++-----------------+--------------+-------------+---------------+
+| Benchmark       | Result Class |   v6.18-rc5 | per-task-prng |
+|                 |              | rndstack-on |               |
+|                 |              |             |               |
++=================+==============+=============+===============+
+| syscall/getpid  | mean (ns)    |  (R) 13.32% |     (R) 4.60% |
+|                 | p99 (ns)     |  (R) 13.38% |    (R) 18.08% |
+|                 | p99.9 (ns)   |      16.26% |    (R) 19.38% |
++-----------------+--------------+-------------+---------------+
+| syscall/getppid | mean (ns)    |  (R) 11.96% |     (R) 5.26% |
+|                 | p99 (ns)     |  (R) 11.83% |     (R) 8.35% |
+|                 | p99.9 (ns)   |  (R) 11.42% |    (R) 22.37% |
++-----------------+--------------+-------------+---------------+
+| syscall/invalid | mean (ns)    |  (R) 10.58% |     (R) 2.91% |
+|                 | p99 (ns)     |  (R) 10.51% |     (R) 4.36% |
+|                 | p99.9 (ns)   |  (R) 10.35% |    (R) 21.97% |
++-----------------+--------------+-------------+---------------+
+
+I was surprised to see that the baseline cost on x86 is 10-12% since it is just
+using rdtsc. But as I say, I believe the results are accurate.
+
+
+Changes since v1 (RFC) [2]
+==========================
+
+- Introduced patch 2 to make prandom_u32_state() __always_inline (needed since
+  its called from noinstr code)
+- In patch 3, prng is now per-cpu instead of per-task (per Ard)
+
+
+[1] https://lore.kernel.org/all/dd8c37bc-795f-4c7a-9086-69e584d8ab24@arm.com/
+[2] https://lore.kernel.org/all/20251127105958.2427758-1-ryan.roberts@arm.com/
 
 Thanks,
-Mark
+Ryan
+
+
+Ryan Roberts (3):
+  randomize_kstack: Maintain kstack_offset per task
+  prandom: Convert prandom_u32_state() to __always_inline
+  randomize_kstack: Unify random source across arches
+
+ arch/Kconfig                         |  5 +--
+ arch/arm64/kernel/syscall.c          | 11 -----
+ arch/loongarch/kernel/syscall.c      | 11 -----
+ arch/powerpc/kernel/syscall.c        | 12 ------
+ arch/riscv/kernel/traps.c            | 12 ------
+ arch/s390/include/asm/entry-common.h |  8 ----
+ arch/x86/include/asm/entry-common.h  | 12 ------
+ include/linux/prandom.h              | 19 ++++++++-
+ include/linux/randomize_kstack.h     | 61 ++++++++++++----------------
+ init/main.c                          |  2 +-
+ kernel/fork.c                        |  1 +
+ lib/random32.c                       | 19 ---------
+ 12 files changed, 49 insertions(+), 124 deletions(-)
+
+--
+2.43.0
 
