@@ -1,51 +1,37 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B3F2DF138
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Dec 2025 03:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132D333556D;
+	Tue, 16 Dec 2025 06:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765854029; cv=none; b=RordhVI5XfQmCAyxnasiNHzSN4NFY/zf1FJ5eMCgRdm2W7kdTuTThGBrn7mTNiFtFpq3Qc8WHkSVc76ts9fDhyg429ZJL6jzo4dTGwdIaPkHf6y8rUl3Kv7+Aa51tyPUvzZ+5SAePTwQx7Fo7O+3gWQL65bcFM29qNdgnYN3Wt0=
+	t=1765868074; cv=none; b=cvcDdSFC8PJ1fODn7DA3Yr5MIYoqRTMzFVzLOzqNcl14+WE496t8OhXpfoV1QEFsFbpAp9mjlFM6Oe9vLnLzypOLaFfgWrpFVIapjlSaVdVjgoer0eq7ajcpB/aFAvoCCEXi/9g+WBj0eoBS8U+4yQo8s9UtvS9ZpP1VLUzuieI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765854029; c=relaxed/simple;
-	bh=nSNHqt3Dath+fYr+MNVMjbKePREvVtOoT4gZgfyJKbE=;
+	s=arc-20240116; t=1765868074; c=relaxed/simple;
+	bh=CkWhfFXzA8/BEk61uxGLX5BnD38ZUjhdbL7cfP1q454=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jHJ/7qFZKs9CO/uDZCfSfCYVjHA6vzlNV9BIQxwOmrsT3OnYY5Y4Emi/fNhocPa36B2FWoYJVIwm9hXV2ua0/W1d9x3FTBY7PpB0qmV5vzrp5hPZWVFjgOAyXbU2SeSPu0/khwyimflkbqosg/vhlms1MD/VyARE3I1cBr2cbiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=gF4/mIzU; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=WpjYjKlyYCQx6bp008I7WyBNrQE6U8/bROJEISa79s60+vT1Vb62ECSAgcbPx1KVWvnq2pF/LH31tgoNUwtpzNYgAJjLx0WKByJOUr9cz/028qViSUnzwRQBfXdfl0Osfss/F4WlQrwDJfwQrMcpOlFtz1LzRvr1QojLdzWf9+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MO/94LMd; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gF4/mIzU"
-Received: from eig-obgw-5004b.ext.cloudfilter.net ([10.0.29.208])
-	by cmsmtp with ESMTPS
-	id VAPTvkj4BVCBNVLISv15CO; Tue, 16 Dec 2025 03:00:21 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id VLIRvUIvwqfpWVLISv9Uyw; Tue, 16 Dec 2025 03:00:20 +0000
-X-Authority-Analysis: v=2.4 cv=A55sP7WG c=1 sm=1 tr=0 ts=6940cb44
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=5TVvHJhSY-PbQlZ89gMA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MO/94LMd"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PsjzeEqvjX0PgDjgXUpv1lzs6nM5Lg9h/IvyfHZ2a9g=; b=gF4/mIzUYheUAddQQ9l/51rh5m
-	B75Ctq5Fr2WsH8McbRrMs6MhX0N3fQ0XDvVaTL8vTohXLvjp90M57J4vwWaQTCU26/2mA34F6cQux
-	G37STXArEsf9MFajWPtsp5hUhQhOKBdGCaT8/Cyh0daHEXgLycVfM4x13oq+fBa2Dqxux/8MpMSFm
-	b8gd3qPBh8Eyy14BmqsKeyWsSXque44g4XkU0g/uZ06ajLGlpnE+KgpcUsGKZ372UAHgdtVJbSoOk
-	O7OFDp6opQdkpVKoQX8Kf1azFXz+wbbm0p2oqhl7IbBRZiu9DHYNdelV6dlRx+PXFclUcHWx7Jg1c
-	ficOHYbA==;
-Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:62552 helo=[10.83.24.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vVLIR-00000001Tqd-1dwi;
-	Mon, 15 Dec 2025 21:00:19 -0600
-Message-ID: <8aa5928f-4338-4ab5-a144-e6ab3b9644d6@embeddedor.com>
-Date: Tue, 16 Dec 2025 11:59:50 +0900
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=3RuRVgDnSJ1WklbtVGpQY94ttgAeXmiQnAu2DWxJ2NU=; b=MO/94LMd2nNmSyM4b6pq0LPNfu
+	lV+QLoNiqXLSxCSNVu9EwOfy/hKL9SpVyDdXKqXajYgK6W1juh/UmKkJl+m4KKNQ6UnUIpOB5WtDR
+	zecmPUTTTIbWy0RXejw1baiKOkrL0aG5Voi0hSGlJompsJdF/WhTofMygz4bVBMlZmFXP3hTjl6wL
+	lsqbsez7H5H7BehsNr/qAuorNFJd70QVQAUzQcof01bOk2Q2hCA4hhIc6vxaGd6z4611dePHGUG0p
+	/1aPsVCtQ/SLgsVD6P2ObLgyO7kiyggEbfwHAem8Oaypq5Gvjn9Kstp31v3t0vmVeGLLLg0eF0G3s
+	OpiXVZ0Q==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vVOwz-00000004o6W-06pX;
+	Tue, 16 Dec 2025 06:54:25 +0000
+Message-ID: <b74aef93-9138-413a-8327-36c746d67e10@infradead.org>
+Date: Mon, 15 Dec 2025 22:54:24 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,117 +39,166 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] hyperv: Avoid -Wflex-array-member-not-at-end
- warning
-To: Wei Liu <wei.liu@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
- Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aTu54qH2iHLKScRW@kspp>
- <20251215184759.GA654575@liuwe-devbox-debian-v2.local>
+Subject: Re: [PATCH 00/26] Introduce meminspect
+To: Eugen Hristev <eugen.hristev@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
+ andersson@kernel.org, pmladek@suse.com, corbet@lwn.net, david@redhat.com,
+ mhocko@suse.com
+Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org,
+ Trilok Soni <tsoni@quicinc.com>, Kaushal Kumar <kaushalk@qti.qualcomm.com>,
+ Shiraz Hashim <shashim@qti.qualcomm.com>,
+ Peter Griffin <peter.griffin@linaro.org>, stephen.s.brennan@oracle.com,
+ Will McVicker <willmcvicker@google.com>,
+ "stefan.schmidt@linaro.org" <stefan.schmidt@linaro.org>
+References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
+ <bf00eec5-e9fe-41df-b758-7601815b24a0@linaro.org>
+ <5903a8e1-71c6-4546-ac50-35effa078dda@infradead.org>
+ <c3db6ccd-dfc7-4a6a-82b7-3d615f8cab4f@linaro.org>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251215184759.GA654575@liuwe-devbox-debian-v2.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <c3db6ccd-dfc7-4a6a-82b7-3d615f8cab4f@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 118.18.233.1
-X-Source-L: No
-X-Exim-ID: 1vVLIR-00000001Tqd-1dwi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:62552
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPUaGa/nUNoIKQI+W9OuDN4EByX5EZWnUvrtrBPxaGP7Wi5evue0lGAmjpY4RLtZJeEkr+U/EKRtGMWu0zhF2OJirNsUjcmaFV/V/CcNmY88Tid4Q6yB
- f6E8XHBDKqwQZlsrohl1qPayHwar+/uPhiQarvIlRLHzYQQMG9nDHNAXC2ojUN87ttOKwVbSt2Ml9YNcvVBfdA+5c0dAxMZD+zsq78iOhTHx2MRFFkih8vcK
 
 
 
-On 12/16/25 03:47, Wei Liu wrote:
-> On Fri, Dec 12, 2025 at 03:44:50PM +0900, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the new __TRAILING_OVERLAP() helper to fix the following warning:
->>
->> include/hyperv/hvgdk_mini.h:581:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> This helper creates a union between a flexible-array member (FAM) and a
->> set of MEMBERS that would otherwise follow it.
->>
->> This overlays the trailing MEMBER u64 gva_list[]; onto the FAM
->> struct hv_tlb_flush_ex::hv_vp_set.bank_contents[], while keeping
->> the FAM and the start of MEMBER aligned.
->>
->> The static_assert() ensures this alignment remains, and it's
->> intentionally placed inmediately after the related structure --no
->> blank line in between.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On 12/12/25 11:22 PM, Eugen Hristev wrote:
 > 
-> Gustavo, what is your build command? I would like to incorporate that
-> into my own build tests.
-
-I'm using the following patch (which is the one I'll actually submit
-upstream once all these warnings are fixed).
-
-diff --git a/Makefile b/Makefile
-index e404e4767944..0d6a0d8f791b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1086,6 +1086,8 @@ KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
-  # Allow including a tagged struct or union anonymously in another struct/union.
-  KBUILD_CFLAGS += -fms-extensions
-
-+KBUILD_CFLAGS += $(call cc-option, -Wflex-array-member-not-at-end)
-+
-  # disable invalid "can't wrap" optimizations for signed / pointers
-  KBUILD_CFLAGS  += -fno-strict-overflow
-
-
-Thanks
--Gustavo
-
 > 
-> Thanks,
-> Wei
+> On 12/13/25 08:57, Randy Dunlap wrote:
+>> Hi,
+>>
+>> On 12/12/25 10:48 PM, Eugen Hristev wrote:
+>>>
+>>>
+>>> On 11/19/25 17:44, Eugen Hristev wrote:
+>>>> meminspect is a mechanism which allows the kernel to mark specific memory
+>>>> areas for memory dumping or specific inspection, statistics, usage.
+>>>> Once regions are marked, meminspect keeps an internal list with the regions
+>>>> in a dedicated table.
+>>>
+>>> [...]
+>>>
+>>>
+>>>> I will present this version at Plumbers conference in Tokyo on December 13th:
+>>>> https://lpc.events/event/19/contributions/2080/
+>>>> I am eager to discuss it there face to face.
+>>>
+>>> Summary of the discussions at LPC talk on Dec 13th:
+>>>
+>>> One main idea on the static variables annotation was to do some linker
+>>> magic, to create a list of variables in the tree, that would be parsed
+>>> by some script, the addresses and sizes would be then stored into the
+>>> dedicated section at the script level, without having any C code change.
+>>> Pros: no C code change, Cons: it would be hidden/masked from the code,
+>>> easy to miss out, which might lead to people's variables being annotated
+>>> without them knowing
+>>>
+>>> Another idea was to have variables directly stored in a dedicated
+>>> section which would be added to the table.
+>>> e.g. static int __attribute(section (...)) nr_irqs;
+>>> Pros: no more meminspect section Cons: have to keep all interesting
+>>> variables in a separate section, which might not be okay for everyone.
+>>>
+>>> On dynamic memory, the memblock flag marking did not receive any obvious
+>>> NAKs.
+>>>
+>>> On dynamic memory that is bigger in size than one page, as the table
+>>> entries are registered by virtual address, this would be non-contiguous
+>>> in physical memory. How is this solved?
+>>> -> At the moment it's left for the consumer drivers to handle this
+>>> situation. If the region is a VA and the size > PAGE_SIZE, then the
+>>> driver needs to handle the way it handles it. Maybe the driver that
+>>> parses the entry needs to convert it into multiple contiguous entries,
+>>> or just have virtual address is enough. The inspection table does not
+>>> enforce or limit the entries to contiguous entries only.
+>>>
+>>> On the traverse/notifier system, the implementation did not receive any
+>>> obvious NAKs
+>>>
+>>> General comments:
+>>>
+>>> Trilok Soni from Qualcomm mentioned they will be using this into their
+>>> software deliveries in production.
+>>>
+>>> Someone suggested to have some mechanism to block specific data from
+>>> being added to the inspection table as being sensitive non-inspectable
+>>> data.
+>>> [Eugen]: Still have to figure out how that could be done. Stuff is not
+>>> being added to the table by default.
+>>>
+>>> Another comment was about what use case there is in mind, is this for
+>>> servers, or for confidential computing, because each different use case
+>>> might have different requirements, like ignoring some regions is an
+>>> option in one case, but bloating the table in another case might not be
+>>> fine.
+>>> [Eugen]: The meminspect scenario should cover all cases and not be too
+>>> specific. If it is generic enough and customizable enough to care for
+>>> everyone's needs then I consider it being a success. It should not
+>>> specialize in neither of these two different cases, but rather be
+>>> tailored by each use case to provide the mandatory requirements for that
+>>> case.
+>>>
+>>> Another comment mentioned that this usecase does not apply to many
+>>> people due to firmware or specific hardware needed.
+>>> [Eugen]: one interesting proposed usecase is to have a pstore
+>>> driver/implementation that would traverse the inspection table at panic
+>>> handler time, then gather data from there to store in the pstore
+>>> (ramoops, mtdoops or whatever backend) and have it available to the
+>>> userspace after reboot. This would be a nice use case that does not
+>>> require firmware nor specific hardware, just pstore backend support.
+>>>
+>>> Ending note was whether this implementation is going in a good direction
+>>> and what would be the way to having it moving upstream.
+>>>
+>>> Thanks everyone who attended and came up with ideas and comments.
+>>> There are a few comments which I may have missed, so please feel free to
+>>> reply to this email to start a discussion thread on the topic you are
+>>> interested in.
+>>>
+>>> Eugen
+>>>
+>>
+>> Maybe you or someone else has already mentioned this. If so, sorry I missed it.
+>>
+>> How does this compare or contrast to VMCOREINFO?
+>>
+>> thanks.
 > 
->> ---
->>   include/hyperv/hvgdk_mini.h | 7 +++++--
->>   1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
->> index 04b18d0e37af..30fbbde81c5c 100644
->> --- a/include/hyperv/hvgdk_mini.h
->> +++ b/include/hyperv/hvgdk_mini.h
->> @@ -578,9 +578,12 @@ struct hv_tlb_flush {	 /* HV_INPUT_FLUSH_VIRTUAL_ADDRESS_LIST */
->>   struct hv_tlb_flush_ex {
->>   	u64 address_space;
->>   	u64 flags;
->> -	struct hv_vpset hv_vp_set;
->> -	u64 gva_list[];
->> +	__TRAILING_OVERLAP(struct hv_vpset, hv_vp_set, bank_contents, __packed,
->> +		u64 gva_list[];
->> +	);
->>   } __packed;
->> +static_assert(offsetof(struct hv_tlb_flush_ex, hv_vp_set.bank_contents) ==
->> +	      offsetof(struct hv_tlb_flush_ex, gva_list));
->>   
->>   struct ms_hyperv_tsc_page {	 /* HV_REFERENCE_TSC_PAGE */
->>   	volatile u32 tsc_sequence;
->> -- 
->> 2.43.0
->>
+> This inspection table could be created in an VMCOREINFO way, the patch
+> series here[1] is something that would fit it best .
+> 
+> The drawbacks are :
+> some static variables have to be registered to VMCOREINFO in their file
+> of residence. This means including vmcoreinfo header and adding
+> functions/code there, and everywhere that would be needed , or , the
+> variables have to be un-static'ed , which is a no-go.
+> This received more negative opinions on that particular patch series.
+> The annotation idea seemed cleaner and simpler, and more generic.
+> 
+> We could add more and more entries to the vmcoreinfo table, but that
+> would mean expanding it a lot, which it would maybe defy its purpose,
+> and be getting too big, especially for the cases where custom drivers
+> would like to register data.
+> 
+> How I see it, is that maybe the vmcoreinfo init function, could also
+> parse the inspection table and create more entries if that is needed.
+> So somehow memory inspection is a superset or generalization , while
+> VMCOREINFO is a more particular use case that would fit here.
+> 
+> Do you think of some better way to integrate the meminspect table into
+> VMCOREINFO ?
+
+No, I just wanted to make sure that you or someone had looked into that.
+Thanks for your summary.
+
+> [1]
+> https://lore.kernel.org/all/20250912150855.2901211-1-eugen.hristev@linaro.org/
+
+-- 
+~Randy
 
