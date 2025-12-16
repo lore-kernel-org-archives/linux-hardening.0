@@ -1,253 +1,90 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2908733A6F7
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Dec 2025 07:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2784A347FD7;
+	Tue, 16 Dec 2025 08:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765870042; cv=none; b=I7AIMBs9MDCqI9hExIokmTRg0Qz3XsTpeiL64gqPX9mq9dmHPfTV4geVU1CKh5GBHau9tvttqkNJMAdge4QlH4uTPX6HdKAEoRlLqyTKaT25y3ZnLTenkgeQKIo5UR1Cnm7PU5qOskZE8oPsjrd+De2f7sw3DUdR/znqmUu4LW4=
+	t=1765872201; cv=none; b=gk2ywLjzUIVATq2sPWcSXSa7DC3No5iNPqp7JU8zCU7xNoazhFfBQxzWZNIG5acZsTTweJknmx4hYtJtlM9ptgW4lffhBcrWI89A/nptWC5wif1rdocdyG1M0jTtsC0jGcuYgXSXN6QA1MHWpQPUi+e3UZG5kUhKT9b6tEtNNiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765870042; c=relaxed/simple;
-	bh=0kPUYHQ/G4RfpscPzI7pr0OmdhWbcBqqBUxeWAMHLZc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aF6Rm9hwzu9gS8bM4MTAoN9P1uezYB3/M/hqxFCdA0Wp9AIUTvsxgPlQ+sBvxmVQjQrf06NW8oKd62GEFXivpUnZOZiHnA+ANkyVx6NwJRux5S8fSmNbfaQyiYilwjucSzaM/R3vwBN8Y5wKROYMfWhq1/+EakyHhcc/cM1rPnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lm5xSb2X; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1765872201; c=relaxed/simple;
+	bh=5OeYvXMSFntRvGG5qfE6GBqZZ5Co1CPYfzo/K+UvU6w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rKoGdXwvsw0l76bK+OXwFpE4RaW9FhdfXK1szs6xYOYUukzKI8qEh0tl96ADT/XVqpdIz5DiqrGDcIxazq5CORJShRadSiRBOWPCiBjzxUV6IOA1MOgiFyopycnl8WSWMJmRSn2LywLimv+FxkQw0xMZjVPgg3Fcdg15P+WmNGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMkSjah8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lm5xSb2X"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2a12ed4d205so7866845ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Dec 2025 23:27:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765870037; x=1766474837; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PJCA2xXmtdABe9cuOOw6HKVAFYxYWKkv6zuIQkQSiJk=;
-        b=lm5xSb2XbgVJJua1CVQR22c9ySMunRfdv1obZuP3q9tqFUszoVK2AI81SnQikH6oQo
-         MtZz3tXiWDkspnAJG9pRyQ4Ltm06lq4i0Y/1r6nrQ7n4NUfmCokCI9OJPNpEk+hVlTjr
-         XtN9sbaOTK5KT0dqsURNXid7bpMHi3fCUu0lY49pRKjE2znj9nJwumsy+1PDrz2nnb/l
-         4qpvGvPntnl1xo+o7Y4hi81Lvd+3SOYfrOEWvRsh6zm87jsFXDWgQIMlAfslkwc275NP
-         L8+hfzcADz4BBx0QSc8lGEPh4F8coTr0wJC7uaehXSjP/n37CM9ALb0Izpzc84CUHXKo
-         sm/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765870037; x=1766474837;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PJCA2xXmtdABe9cuOOw6HKVAFYxYWKkv6zuIQkQSiJk=;
-        b=nRuZCWF3VFun+NfI+8W7UTAH611ebo4X+tBa20RpY17OBb5xSar2W8W4PI6mw/VXGn
-         ePKY8agZhr3oiNL59tlz1IREppzxCsz39n2PjxhdWrIRpUSuKxLfKN6BjvPiC3qUUz9N
-         qaySUbtboslMvclSzYCE2lRaQjY8x/757GH+59gPfu/v+Z20jJmnG3pFqU2lCDSYUk50
-         dqq66GwDQ2RGh5pWmCpUAMypBg//1swYbVzzgCGzhwHyDWLVyrVlGnxCzLPdyo47tabE
-         zDrb13CH8lSzvZ4vDLg/TRTyu7NvyvHXFO/gXDOGAleQjzt1nQn606nGGf/rT0KNVQnL
-         Glag==
-X-Forwarded-Encrypted: i=1; AJvYcCXMmXtNg0pTSyum/148xcyupvEZOI2h+5DwU4t17NF+KlTTPxrpA1WJaLGuTsx0XAsfdb1G8XflXj1awb2Imss=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRyThCBVnBqTEDM0nL9R8jgvNnWVM7UHGkI3Wbk/5I+xNEU4iq
-	PRsaiiWOLja3a3Ug4FCftSkpT/8UEaEPCqREkC326vWny0SZlM6mWeFuExM55y0hDCA=
-X-Gm-Gg: AY/fxX6/EMBmySwV4ypMamGIBxVPBzH8XEx+BMDfrLOD08tSY0J8FsUB70v8R/IHaDB
-	tbdfULh1pVX97IUv5Pv6uDG1YQ9ql+qXu9WBcvN1tRuazPNJ3XFCO6ZqA/C62YBOy/WCCGuxVys
-	YWeSPbzUX1uBf0XquZ5ebfIfk1JIPXTo/ymjO7Fa1z/v8wC62nAmrGaZ72uNba03J4aN5ExrwO7
-	DmGNJZPeLMMQOR3vx60DBP3iwL+iueGsrk7Rxf1ZIbwNwMKnep9bqCmL5vNRbwHWSMMQbu8Ke1V
-	tag/5T8rKFhm88L49YWoiZ+DGEi5amlNoJ2PlXekt0eOKU3RoPuaJulHxgQ+o/p5WuGWz86z+0/
-	Cafy7/IIajPQvZfBa7KNI4qvxUa8qVBMY1+Z2+VA+W2FAArD/rIR6nRx2UeHedZbN9c8/Kkqhu+
-	rteizg5Gju0vQFhWKumVxoYGeWZNZ2Zj037cJniEhybQ9vIxvLyyRMSg==
-X-Google-Smtp-Source: AGHT+IG0XHPlxrZ19+Thmc35PPwHSeilDW9jn34WiJoQPAtDXf3ILNz55k3pKMcPVzcVte7yg4mphg==
-X-Received: by 2002:a17:902:ea0b:b0:297:dabf:9900 with SMTP id d9443c01a7336-29f23bde313mr144794935ad.0.1765870036820;
-        Mon, 15 Dec 2025 23:27:16 -0800 (PST)
-Received: from [192.168.10.197] (14-201-17-74.static.tpgi.com.au. [14.201.17.74])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29ee9b36a80sm155735495ad.19.2025.12.15.23.27.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Dec 2025 23:27:16 -0800 (PST)
-Message-ID: <93297eb0-1ad4-40ba-9438-ac02aa6b1d6b@linaro.org>
-Date: Tue, 16 Dec 2025 09:27:03 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMkSjah8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 91513C113D0;
+	Tue, 16 Dec 2025 08:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765872200;
+	bh=5OeYvXMSFntRvGG5qfE6GBqZZ5Co1CPYfzo/K+UvU6w=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=aMkSjah8vnsdLaFUzroWf0jvqN1ZvuIuEICVU7DNc7L9zybmy2P5Gb3y6/NCee6iX
+	 oUj1+003mOAtr5NRXY+QSS784eo4dcFYJI9OPFiYICGHr0eFW0GkmP2MZK3uF7IkyE
+	 3x6+ie6pTkTU75mqFfKXCMlnjvcPVFNfKlkZLbNcljn+I3M4BHmWDq4vXbeDRuIO/n
+	 aC/12ae1uID564LQ2Lm8Kys/LLXSWzx7wjzjiZHEqeUsoJwj5fdoePgVh0jcz/SIaF
+	 3nCT2Ml6RDq8oKvCgmPOVs1sV8QIqZuk6MWZqlmCk35Ch+qhoi8RC/f8okjwlJ82i6
+	 pA+D9yuIXyp9g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687B9D5B16C;
+	Tue, 16 Dec 2025 08:03:20 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH 0/3] Add Amlogic general DMA
+Date: Tue, 16 Dec 2025 08:03:16 +0000
+Message-Id: <20251216-amlogic-dma-v1-0-e289e57e96a7@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/26] Introduce meminspect
-To: Randy Dunlap <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
- andersson@kernel.org, pmladek@suse.com, corbet@lwn.net, david@redhat.com,
- mhocko@suse.com, linux-debuggers@vger.kernel.org,
- "kees@kernel.org" <kees@kernel.org>
-Cc: tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org,
- Trilok Soni <tsoni@quicinc.com>, Kaushal Kumar <kaushalk@qti.qualcomm.com>,
- Shiraz Hashim <shashim@qti.qualcomm.com>,
- Peter Griffin <peter.griffin@linaro.org>, stephen.s.brennan@oracle.com,
- Will McVicker <willmcvicker@google.com>,
- "stefan.schmidt@linaro.org" <stefan.schmidt@linaro.org>
-References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
- <bf00eec5-e9fe-41df-b758-7601815b24a0@linaro.org>
- <5903a8e1-71c6-4546-ac50-35effa078dda@infradead.org>
- <c3db6ccd-dfc7-4a6a-82b7-3d615f8cab4f@linaro.org>
- <b74aef93-9138-413a-8327-36c746d67e10@infradead.org>
- <93682055-4a6d-4098-b74f-afef735d1699@infradead.org>
-From: Eugen Hristev <eugen.hristev@linaro.org>
-Content-Language: en-US
-In-Reply-To: <93682055-4a6d-4098-b74f-afef735d1699@infradead.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEQSQWkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1NDI0NT3cTcnPz0zGTdlNxEXXNLE3PzFNPkFCMzEyWgjoKi1LTMCrBp0bG
+ 1tQAShWYnXQAAAA==
+X-Change-ID: 20251215-amlogic-dma-79477d5cd264
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1765872198; l=826;
+ i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
+ bh=5OeYvXMSFntRvGG5qfE6GBqZZ5Co1CPYfzo/K+UvU6w=;
+ b=wWM4MMb1w1IBw2bhpp5tF6jlfbiSZWVDh/2dF4DWMbv9j6YXf0iFkErQOd59LS4px15OCDLq6
+ r7c5aLSdljMBKVGwXcMBrmumCstimx/SqopZrkCoRZLQWYEzlw7Ci2p
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
+ auth_id=578
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
+Add DMA driver and bindigns for the Amlogic SoCs.
 
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+Xianwei Zhao (3):
+      dt-bindings: dma: Add Amlogic general DMA
+      dma: amlogic: Add general DMA driver for SoCs
+      MAINTAINERS: Add an entry for Amlogic DMA driver
 
-On 12/16/25 09:00, Randy Dunlap wrote:
-> 
-> 
-> On 12/15/25 10:54 PM, Randy Dunlap wrote:
->>
->>
->> On 12/12/25 11:22 PM, Eugen Hristev wrote:
->>>
->>>
->>> On 12/13/25 08:57, Randy Dunlap wrote:
->>>> Hi,
->>>>
->>>> On 12/12/25 10:48 PM, Eugen Hristev wrote:
->>>>>
->>>>>
->>>>> On 11/19/25 17:44, Eugen Hristev wrote:
->>>>>> meminspect is a mechanism which allows the kernel to mark specific memory
->>>>>> areas for memory dumping or specific inspection, statistics, usage.
->>>>>> Once regions are marked, meminspect keeps an internal list with the regions
->>>>>> in a dedicated table.
->>>>>
->>>>> [...]
->>>>>
->>>>>
->>>>>> I will present this version at Plumbers conference in Tokyo on December 13th:
->>>>>> https://lpc.events/event/19/contributions/2080/
->>>>>> I am eager to discuss it there face to face.
->>>>>
->>>>> Summary of the discussions at LPC talk on Dec 13th:
->>>>>
->>>>> One main idea on the static variables annotation was to do some linker
->>>>> magic, to create a list of variables in the tree, that would be parsed
->>>>> by some script, the addresses and sizes would be then stored into the
->>>>> dedicated section at the script level, without having any C code change.
->>>>> Pros: no C code change, Cons: it would be hidden/masked from the code,
->>>>> easy to miss out, which might lead to people's variables being annotated
->>>>> without them knowing
->>>>>
->>>>> Another idea was to have variables directly stored in a dedicated
->>>>> section which would be added to the table.
->>>>> e.g. static int __attribute(section (...)) nr_irqs;
->>>>> Pros: no more meminspect section Cons: have to keep all interesting
->>>>> variables in a separate section, which might not be okay for everyone.
->>>>>
->>>>> On dynamic memory, the memblock flag marking did not receive any obvious
->>>>> NAKs.
->>>>>
->>>>> On dynamic memory that is bigger in size than one page, as the table
->>>>> entries are registered by virtual address, this would be non-contiguous
->>>>> in physical memory. How is this solved?
->>>>> -> At the moment it's left for the consumer drivers to handle this
->>>>> situation. If the region is a VA and the size > PAGE_SIZE, then the
->>>>> driver needs to handle the way it handles it. Maybe the driver that
->>>>> parses the entry needs to convert it into multiple contiguous entries,
->>>>> or just have virtual address is enough. The inspection table does not
->>>>> enforce or limit the entries to contiguous entries only.
->>>>>
->>>>> On the traverse/notifier system, the implementation did not receive any
->>>>> obvious NAKs
->>>>>
->>>>> General comments:
->>>>>
->>>>> Trilok Soni from Qualcomm mentioned they will be using this into their
->>>>> software deliveries in production.
->>>>>
->>>>> Someone suggested to have some mechanism to block specific data from
->>>>> being added to the inspection table as being sensitive non-inspectable
->>>>> data.
->>>>> [Eugen]: Still have to figure out how that could be done. Stuff is not
->>>>> being added to the table by default.
->>>>>
->>>>> Another comment was about what use case there is in mind, is this for
->>>>> servers, or for confidential computing, because each different use case
->>>>> might have different requirements, like ignoring some regions is an
->>>>> option in one case, but bloating the table in another case might not be
->>>>> fine.
->>>>> [Eugen]: The meminspect scenario should cover all cases and not be too
->>>>> specific. If it is generic enough and customizable enough to care for
->>>>> everyone's needs then I consider it being a success. It should not
->>>>> specialize in neither of these two different cases, but rather be
->>>>> tailored by each use case to provide the mandatory requirements for that
->>>>> case.
->>>>>
->>>>> Another comment mentioned that this usecase does not apply to many
->>>>> people due to firmware or specific hardware needed.
->>>>> [Eugen]: one interesting proposed usecase is to have a pstore
->>>>> driver/implementation that would traverse the inspection table at panic
->>>>> handler time, then gather data from there to store in the pstore
->>>>> (ramoops, mtdoops or whatever backend) and have it available to the
->>>>> userspace after reboot. This would be a nice use case that does not
->>>>> require firmware nor specific hardware, just pstore backend support.
->>>>>
->>>>> Ending note was whether this implementation is going in a good direction
->>>>> and what would be the way to having it moving upstream.
->>>>>
->>>>> Thanks everyone who attended and came up with ideas and comments.
->>>>> There are a few comments which I may have missed, so please feel free to
->>>>> reply to this email to start a discussion thread on the topic you are
->>>>> interested in.
->>>>>
->>>>> Eugen
->>>>>
->>>>
->>>> Maybe you or someone else has already mentioned this. If so, sorry I missed it.
->>>>
->>>> How does this compare or contrast to VMCOREINFO?
->>>>
->>>> thanks.
->>>
->>> This inspection table could be created in an VMCOREINFO way, the patch
->>> series here[1] is something that would fit it best .
->>>
->>> The drawbacks are :
->>> some static variables have to be registered to VMCOREINFO in their file
->>> of residence. This means including vmcoreinfo header and adding
->>> functions/code there, and everywhere that would be needed , or , the
->>> variables have to be un-static'ed , which is a no-go.
->>> This received more negative opinions on that particular patch series.
->>> The annotation idea seemed cleaner and simpler, and more generic.
->>>
->>> We could add more and more entries to the vmcoreinfo table, but that
->>> would mean expanding it a lot, which it would maybe defy its purpose,
->>> and be getting too big, especially for the cases where custom drivers
->>> would like to register data.
->>>
->>> How I see it, is that maybe the vmcoreinfo init function, could also
->>> parse the inspection table and create more entries if that is needed.
->>> So somehow memory inspection is a superset or generalization , while
->>> VMCOREINFO is a more particular use case that would fit here.
->>>
->>> Do you think of some better way to integrate the meminspect table into
->>> VMCOREINFO ?
->>
->> No, I just wanted to make sure that you or someone had looked into that.
->> Thanks for your summary.
-> 
-> Although you copied Stephen Brennan on this, I think it would be a good idea
-> to copy the linux-debuggers@vger.kernel.org mailing list also to see if
-> there are any other comments about it. [now done]
+ .../bindings/dma/amlogic,general-dma.yaml          |  70 +++
+ MAINTAINERS                                        |   7 +
+ drivers/dma/Kconfig                                |   8 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/amlogic-dma.c                          | 567 +++++++++++++++++++++
+ 5 files changed, 653 insertions(+)
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20251215-amlogic-dma-79477d5cd264
 
-Thanks . I copied Stephen because we had a discussion at LPC at his talk
-and he also attended my talk.
+Best regards,
+-- 
+Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-I also had a nice talk with Kees Cook and he was very interested in
-having pstore as a backend for meminspect. (copied now as well)
-
-> 
->>> [1]
->>> https://lore.kernel.org/all/20250912150855.2901211-1-eugen.hristev@linaro.org/
->>
-> 
 
