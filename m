@@ -1,98 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2334348458;
-	Tue, 16 Dec 2025 08:03:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D7DE55A;
+	Tue, 16 Dec 2025 08:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765872202; cv=none; b=JEvO5rJjJkUVJf//ONIPHT+E6Ko4QTi3p+AwiQTEuahIIDBugxMzP+66eUxfh0wb+nQiHKMMdE/m9cx1xRCFdQVoHVSeynrTaLpijYkaItfTWT5p5oJzCINHryCCxL8bh74QbEmmLRer5/kRUsIzXFzPw8Zs2LXbVZO7FLUz6FU=
+	t=1765873659; cv=none; b=hQOBUD/qLv058UmIxc2jTVPqIiuEi5RwH5/cP4rXAwdBoclmnqRkYbJx9LImkIPjQtisrqnxqzdBa8AajL0vDqRN5MUDZL/8K4L0WkyPLryR/7aTKBIRyJDwESREXsqPK1c0xddMr7MSwnXs6YDTXpXMFouiTq5g4wW1P5eR/OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765872202; c=relaxed/simple;
-	bh=uqORFx2rOlGaU1rPovioax/w0dRcQGqNILNOAxN6eUo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IPkyfeYAYSyM943Cw/658XDL8DT1HJm5WRH1lFrdWDkX+jFOiTznNqIixFOyb9hgvsYtJkp4ixuA+vHwG4+gGb1ASR4F66ZWt5Zkulwcs6TGr7JKPZjgjOXM2vSvF/eZqsmu7ks43LLr8vFnlsR8OD0AH49oJQZ0k5VSkYJLWfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnPf5Gv+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765873659; c=relaxed/simple;
+	bh=rE9Ya5hAlvxFBkqWRdp1h1Tw4atfvwW4q7E/otCHqMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JcrilEhQmbgWf2hIZA0puSJdCc8dR4buVE+Xx2gcQHDd6KlVLzGrukaMcwH20gPrukzpW/60szYgNAtchYqoFmrJBfrQhCIVBjiBQMJRXNPpg9v1w8VbYWVuzu4EZRkmrEvrimvX9yzCJnkePDGuPV53sBGSYQaiY+UOPphcCU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpH0ju1F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnPf5Gv+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B3C80C2BCB0;
-	Tue, 16 Dec 2025 08:03:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpH0ju1F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC4B5C4CEF1;
+	Tue, 16 Dec 2025 08:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765872201;
-	bh=uqORFx2rOlGaU1rPovioax/w0dRcQGqNILNOAxN6eUo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=CnPf5Gv+/gj4b4XzQiZWd7V26J+0IAtigmCzuuxhwCvZPthj9k75Uxrtyzq0eEwUw
-	 XBX3uILfiNA/kuLhisga6pQjwFzwm/QU7OF8P6B4RjNOmYrkDFTspUW7NnLVbVL0vI
-	 sL9NsIhrkrjlWwa8/lbqVwu7eM/saKGSIy7C7iQULoNPNq9J2rS+BfDG/aiL2PMJT0
-	 AIRnQGrB3leg7OngwF8WnDJWhMG1ljGSDq/afM7lGZfXRifO8Rl2g0eYk3RouPBgIu
-	 hsr20YdbAhGlA2rZc3JtPX9VsOqWmG4JSeAfnfcmw23LxrWRH94jusTWaPe1csL195
-	 GYJp2m9jvG0rQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972FCD5C0D0;
-	Tue, 16 Dec 2025 08:03:21 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Tue, 16 Dec 2025 08:03:19 +0000
-Subject: [PATCH 3/3] MAINTAINERS: Add an entry for Amlogic DMA driver
+	s=k20201202; t=1765873658;
+	bh=rE9Ya5hAlvxFBkqWRdp1h1Tw4atfvwW4q7E/otCHqMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JpH0ju1F8NUs3civI5pVZ0tGQuWRgVmJea/HUdFrdPkxzabRyvvWngSvPwbNCTYPM
+	 LJhIccwNtxPnFVZsJpjcpGl6URl9HoPyZlVGLkXNQioxIxUlUHqExaKN17uE1o+paN
+	 YIuIEHbyBtzPN2eAcDgL7HhmXY/jt4Sh4cJXRHafAOdEeo3X/RvSkX8KvfVxqYwkN0
+	 JX856NBteLWPccrXuACAGyV7qGbQ2wZXIYL2a0xP9lOzCYR16+RdIzhXRdd/aRzbla
+	 ShNeBUsczzSfo6Dy7whFpMq3VOLTjncclOgtP5L92fUVPRhMUtuHyyH7Dk+zoItnnq
+	 rMHeQFc4RhbtA==
+Date: Tue, 16 Dec 2025 00:27:38 -0800
+From: Kees Cook <kees@kernel.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jeremy Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] randomize_kstack: Unify random source across
+ arches
+Message-ID: <202512160024.B688A8D0@keescook>
+References: <20251215163520.1144179-1-ryan.roberts@arm.com>
+ <20251215163520.1144179-4-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251216-amlogic-dma-v1-3-e289e57e96a7@amlogic.com>
-References: <20251216-amlogic-dma-v1-0-e289e57e96a7@amlogic.com>
-In-Reply-To: <20251216-amlogic-dma-v1-0-e289e57e96a7@amlogic.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1765872198; l=796;
- i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
- bh=gtytR4NUYl71zEdxW3qz6sET8405pfbFKpANdMYABG8=;
- b=3oYzCundtIihsisvn6/mvf0uZASrPiKzqf4iJ4R33WfBYEDEpv0qPCL4lp4j5YJqYcBLpJwRO
- vUiH197Ico/A61qhC0l2iPk6K5PaFf0MWw7Dqp7P7dGDNYtKTbNnkDh
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
- auth_id=578
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251215163520.1144179-4-ryan.roberts@arm.com>
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Mon, Dec 15, 2025 at 04:35:17PM +0000, Ryan Roberts wrote:
+> [...]
+> @@ -45,9 +46,22 @@ DECLARE_STATIC_KEY_MAYBE(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
+>  #define KSTACK_OFFSET_MAX(x)	((x) & 0b1111111100)
+>  #endif
+>  
+> +DECLARE_PER_CPU(struct rnd_state, kstack_rnd_state);
+> +
+> +static __always_inline u32 get_kstack_offset(void)
+> +{
+> +	struct rnd_state *state;
+> +	u32 rnd;
+> +
+> +	state = &get_cpu_var(kstack_rnd_state);
+> +	rnd = prandom_u32_state(state);
+> +	put_cpu_var(kstack_rnd_state);
+> +
+> +	return rnd;
+> +}
+> [...]
+> -static inline void random_kstack_task_init(struct task_struct *tsk)
+> +static int random_kstack_init(void)
+>  {
+> -	tsk->kstack_offset = 0;
+> +	prandom_seed_full_state(&kstack_rnd_state);
+> +	return 0;
+>  }
+> +
+> +late_initcall(random_kstack_init);
 
-Add Amlogic DMA controller entry to MAINTAINERS to clarify
-the maintainers.
-
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5b11839cba9d..f522a34c780c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1305,6 +1305,13 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
- F:	drivers/perf/amlogic/
- F:	include/soc/amlogic/
- 
-+AMLOGIC DMA DRIVER
-+M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
-+L:	linux-amlogic@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/dma/amlogic,general-dma.yaml
-+F:	drivers/dma/amlogic-dma.c
-+
- AMLOGIC ISP DRIVER
- M:	Keke Li <keke.li@amlogic.com>
- L:	linux-media@vger.kernel.org
+Doesn't this need to be run for every CPU? (And how does hotplug work
+for such things?) And doesn't it need a get_cpu_var?
 
 -- 
-2.52.0
-
-
+Kees Cook
