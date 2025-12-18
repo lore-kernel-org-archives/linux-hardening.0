@@ -1,98 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428B4285CB9;
-	Thu, 18 Dec 2025 15:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A807364E9F;
+	Thu, 18 Dec 2025 16:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766073387; cv=none; b=rwNL9HPnp6O3MDSJkbitbCE0wM9hEnIu46tyxLMVQCaiLciMewQqqBc/kskrcTcyDTDeZji4gMfTi8Hu/PzGDTvgcUhs+i+qage/hHmyEqw8ozQRyXlnkS68ilfcRGsgv2YC6MD1PWuJ5As4UsiNKCjp8L3B4OGxy6BOl69/QsM=
+	t=1766074184; cv=none; b=iWYliqpX3aATxBkUatnTFaxVyr2tRfWsmDzt854vAT6HtVYczVxHtdfdvgMMgviSC94H2+/1TOhGtr7AqRN77CK40Gf+lVDB7qSa++1gLpoEVJ7QGe4zQCu6DUBOCp+wfYk+fXReQF1nCn4lYjHF9SH3Yrdx+tIXyJolw1vaOEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766073387; c=relaxed/simple;
-	bh=GZll0z/En2rKdyHIaCAvdOkQU78HXLv1Q7anHBfqUf8=;
+	s=arc-20240116; t=1766074184; c=relaxed/simple;
+	bh=OaX0M6d+7wMRlYS/BEZvp7zxg3HdWlfzOwJQjdKkB0I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fHXht9JQWCFPUlncZ2+jJlRQBJMm6oKlAI2Ob6NWbrSbvE5fxOmVZzxFRE0KhK/EJPWYZUUmlqContuZ6Rv8+ge6+52yrXgMJUNjHPZpUa1bbY7vD4JjiSky4arV/tpVUjfpnldKjgWwTMU0MWYjzLvphn8CT/esL+TBz9Z96bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V5Hlguoy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rpiUCN1VHRhn7G2UVw3O8Ntxc6KWtE4swoF/m1jew0T4MBMD1AUfdugMD+uPhFqjBzTuqhcFRyTa+5wEumKetF20ISkuO9dk2WDSjwe9ea89LDBrzmpBA6sfTTq8EIUfqW//KfZ959gy0LcnKbho7NGXan5hLEdQP20DnJfDKxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfaA/7lv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V5Hlguoy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66770C4CEFB;
-	Thu, 18 Dec 2025 15:56:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfaA/7lv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDCD6C4CEFB;
+	Thu, 18 Dec 2025 16:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766073386;
-	bh=GZll0z/En2rKdyHIaCAvdOkQU78HXLv1Q7anHBfqUf8=;
+	s=k20201202; t=1766074183;
+	bh=OaX0M6d+7wMRlYS/BEZvp7zxg3HdWlfzOwJQjdKkB0I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V5HlguoyJtHAX8xeX4vrFWcc25b42A0RjfqVhCzGzsOMBmGcfFs7LFm0HrZtVOFZ0
-	 1lv2qhh9Ht1R72l1vxjpEp1U11aTPxJDeiNI2csNDs6XA9rMS55se+uUgZeWNSGJ1n
-	 IsU4trjjR0SgNTG5yGL32N7lATSOJm86xZxLs03nZIFUTeaxytx86H+dmCc8Nninlc
-	 MTwG7wPWBId2YC1qjM3kBs9ZIEGereqQK0uGmr2r0N5sVCtHn+wbv9JJykTFU2BpGk
-	 7EcdkTOUYVBwKVwU5fUD0Mtk+ijOGlxL4v6LjKHmz0bvKrJhTaDgc4q+Ec1zVbQspj
-	 SDBMnCqoZ7fAA==
-Date: Thu, 18 Dec 2025 17:56:23 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <20251218155623.GC400630@unreal>
-References: <aRKu5lNV04Sq82IG@kspp>
- <20251202181334.GA1162842@nvidia.com>
- <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
- <20251204130559.GA1219718@nvidia.com>
- <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
- <2191ee0f-a528-4187-ae5b-5aba18741701@linux.dev>
- <7e3a294f-5dc2-4e8c-aacc-0286c1592038@linux.dev>
+	b=UfaA/7lvQ4zwujLRnNiSihgZPv9+hb3oQujvQCQ7MbSfuq5VjHVuk92ousa78YHGq
+	 IlVft4liH03uKYNTHhHiOxm+p/nB322TQCTuXPAA2JdfNdZPMykmvui88q2njJybTU
+	 CdaWDv1JSzE3eY+q0KCN3bknpZRv3ZWa6ivoOJvOWGDb8CGrO/GCUxS4NY+bcqxQNG
+	 8UVzCrD759+mFttAVLQh+I/S9/wXlHu+XW9KMbQm0J0ZRDKKdog3xp2AvS7tJPzszC
+	 CMx36v8HjnDa0xBvWhaAUXL1khoSmQ6D/nzh/ddVaC2GxolhagP4dF2LjwQpZCpTyR
+	 SzxBTTNW3laOg==
+Date: Thu, 18 Dec 2025 06:09:42 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Chen Ridong <chenridong@huaweicloud.com>
+Cc: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH 3/4] cgroup: Use __counted_by for cgroup::ancestors
+Message-ID: <aUQnRqJsjh9p9Vhb@slm.duckdns.org>
+References: <20251217162744.352391-1-mkoutny@suse.com>
+ <20251217162744.352391-4-mkoutny@suse.com>
+ <87cc0370-1924-4d33-bbf1-7fc2b03149e3@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7e3a294f-5dc2-4e8c-aacc-0286c1592038@linux.dev>
+In-Reply-To: <87cc0370-1924-4d33-bbf1-7fc2b03149e3@huaweicloud.com>
 
-On Sun, Dec 14, 2025 at 09:00:51PM -0800, Zhu Yanjun wrote:
-> 
-> 
-> 在 2025/12/5 20:41, Zhu Yanjun 写道:
-> > 
-> > 
-> > 在 2025/12/4 9:48, yanjun.zhu 写道:
-> > > On 12/4/25 5:05 AM, Jason Gunthorpe wrote:
-> > > > On Wed, Dec 03, 2025 at 09:08:45PM -0800, Zhu Yanjun wrote:
-> > > > > >        unsigned int        res_head;
-> > > > > >        unsigned int        res_tail;
-> > > > > >        struct resp_res        *res;
-> > > > > > +
-> > > > > > +    /* SRQ only. srq_wqe.dma.sge is a flex array */
-> > > > > > +    struct rxe_recv_wqe srq_wqe;
-> > > > > 
-> > > > > drivers/infiniband/sw/rxe/rxe_resp.c: In function get_srq_wqe:
-> > > > > drivers/infiniband/sw/rxe/rxe_resp.c:289:41: error: struct
-> > > > > rxe_recv_wqe has
-> > > > > no member named wqe
-> > > > >    289 |         qp->resp.wqe = &qp->resp.srq_wqe.wqe;
-> > > > >        |                                         ^
-> > > > 
-> > > > I didn't try to fix all the typos, you will need to do that.
-> > > 
-> > > Exactly. I will fix this problem. This weekend, I will send out an
-> > > official commit.
-> > Hi, Jason
-> > 
-> > The followings are based on your commits and Leon's commits. And it can
-> > pass the rdma-core tests.
-> > 
-> > I am not sure if this commit is good or not.
-> 
-> Hi, Jason && Leon
-> 
-> Any update? If this looks good to you, I will send out an official commit
-> based on the following commit.
+On Thu, Dec 18, 2025 at 03:09:32PM +0800, Chen Ridong wrote:
+> Note that this level may already be used in existing BPF programs (e.g.,
+> tools/testing/selftests/bpf/progs/task_ls_uptr.c). Do we need to consider compatibility here?
 
-You are RXE maintainer, send the official patch.
+That's a good point. Is __counted_by instrumentation tied to some compiler
+flag? If so, might as well make it an optional extra field specifically for
+the annotation rather than changing the meaning of an existing field.
 
-Thanks
+Thanks.
+
+-- 
+tejun
