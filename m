@@ -1,136 +1,188 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013023.outbound.protection.outlook.com [40.93.196.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836E027A462
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Dec 2025 16:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766075561; cv=none; b=apYRvYqCArve+P4p0A3+MNQ4wOYY7SpjraVWj+F/jsr7Aib8oUEjAxSR7ydg+Ip4BcKuS9uvoKl7aaPN9soijl++oNJjUAfuU+lyLG9q+cmh+gFdB8Sv/8NIWrP8TxSuIxCszCMtORXCDFINynWp7eRF87jJ5y+y7MLZyguSj9Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766075561; c=relaxed/simple;
-	bh=SNnvyZ9vkTGATvlgI4Ih8b7/uG92hbaNc/B311zzepU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gR0pCM0u4A5useIFzS9o/kwKa8Ze8v2sN/KQrjGz7zCnDgqUx7Lttm2AebNBVj9R7C3xZUF8SmhKNElJ5GwqQctfyvyQzH6MfvpFXSq1WDrwVdoMvY2UgLVbyTuDqU0ZlL/Q/Do2Qkmza1qnp+KUu/u3+e0E5yvk+GRLUvubjH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D782mtL/; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2EE239594;
+	Thu, 18 Dec 2025 19:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.23
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766084802; cv=fail; b=lIDxevqYCN9TguhSKKEgA1rGCrwtK//7M+EELwz2FZfIHkhY9xY9a/Y2xaPFL+l2901qjnnNEAGnCVg13aSoDyocQv1u0xmkjFU0kukSiJoU1cyRjxTYAiIVMUwZ+GzJRrZEy0txgttkN3nLceiY8H9+Gqaxip80cW80i9mm+Dc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766084802; c=relaxed/simple;
+	bh=ok5sGxDZ/Lotlm6giwAsuLyRsQj5z/mAPu6qsSULFkU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oGuwKt8+DRHIHvdNFGDpsMmVuGEMpFidnaEExAnmajncf/yC8ReVLStjt6a+FhYKPrmt94DbmNPIF/TgNV5OvPLW0KA6o9g+E7ajxbh8yT3W3w/xRh0S59bHv5+Hm0S/CXSPTD48/xS4pKwXlwBkJoLIhfCIggQ6C+pS10YKesQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rW1NzNKD; arc=fail smtp.client-ip=40.93.196.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D782mtL/"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-430f5ecaa08so418867f8f.3
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Dec 2025 08:32:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1766075558; x=1766680358; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNnvyZ9vkTGATvlgI4Ih8b7/uG92hbaNc/B311zzepU=;
-        b=D782mtL/0ZUX8YYPZ1H1eLcMeww7bod9ij0QGI4iXtW+5WEPQSf+6rYFqSCD+Dy3We
-         zn9SQ1X17Ho3YeOxa4eoLrhysiIkUvzunkQlvn8QxV7YoUaNtS0jZYH9R5SrSO5oUMPb
-         x7+hiUSajTjs3vc6YM9MyAlNQY2UaEL5v8kV6XfCsZGUN8q1T1SQ8Tzn+8rZKylZbb7d
-         ZMOieMRTNF4gdRDiJQN9uYOL9SViVY9Gt7eE/WpeA9f2ZQ43RXkeT3YlDvRLlwhOizdE
-         EKXGpzoWEphNbfrWWJrY5mQFpLDfZi+ZvxZf1t0M42WwXzLIKElkx3ObQK8nsDY4FSnF
-         8UQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766075558; x=1766680358;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SNnvyZ9vkTGATvlgI4Ih8b7/uG92hbaNc/B311zzepU=;
-        b=JK0Pr6bUH7iNhkBrATCfTkqrX2AeUvuVV3mLCTHcXgOGRiHNZHxw9X0kaq/O5cqenp
-         S49Qg/VrVnnhL7MPmA5pSRONMxXySiff3vHUIlK7T1geKHTz6fPjncAtn3D/eXA+E910
-         pHVfDZ9fhIG4JqRifVu5FUpEJP0oN+kNzaeT9XqFpK9Qv3gvrJg1HcUPiOFfITK1AwDW
-         nevXlk3JGaTI3NSDjQa8wfBHCdESiHVhidi0fCDsJJBXtlBBBTQb6BQKl76/EPB8X5tv
-         yVHAcwUkpEcmvxvfO1O3L5Nlsdi2p1HkGtdL0LyHRxLqe5mnHCrIfccqGpQSP0APDSUS
-         aydw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdQBe/9OyqgAdFLfmOUaEs1u4tb56ikPyYCV/2OWdgR0ILMARXpTgUF2pwFOyZG4b9Q6jaIrFVQBCbwbaPy2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfcDSxPZ2xq6dmo5t4a3LrIPXRlvcy+/jHWLmIVTUXkUH3tadE
-	rYZmWkzOxA8GkeHpOQWyqIwZ0nULAfgFNTa0tRWlWKaOZtW3TYucteK8wCT+mZMtXJI=
-X-Gm-Gg: AY/fxX6JjB4uJXBv3QX1l6NzJCU30x2nbrZfXy4eFoNklL/7ts/vGmhW2zAnOqh9FQd
-	rV70fEsEMxH5eUegwBA/E9R6KnmFmCnMEiupDv6csP3QC7HlDy3ElilPBBNGUmhdmW3baebQrt5
-	5rJG9bWL3tYuiL0FkzL/I4AopTkfnrTu0QlM172LM/49Gi6tM0KU4m5E2VGqO9I/p29FDFoVSqn
-	G1cVj5HBLgDSw7ugrIqPUyCDzAGB0bdNwdeVaPlck8chNqZ8BqHhHmWkzTOtr4j4KFh2R+/ltMP
-	DqBQ5YKJfSGFf1BHw5+tMpotKbInByahu7f1zfkH66T76E0jaDl7v/G603L18e6ZRwbrnQxQfdD
-	JL1JDV8ZdCH6fCIWvzs+nw1i3htYv9g1CIH/ySNb7w7TzV0PaLnsDXo6TjfCbpaeefMCmtt2izz
-	7u2I0trtCLPItyUzZYfjWwk1IsrKEjg+E=
-X-Google-Smtp-Source: AGHT+IEDIDE4KTVKDsejMKejh4/aXt3graRane6v6z7goX6BJROYVpK3YamMTvz3oWiatc+Kg89G9w==
-X-Received: by 2002:a05:6000:420c:b0:42f:9e75:8605 with SMTP id ffacd0b85a97d-4324e45d3efmr154078f8f.0.1766075557754;
-        Thu, 18 Dec 2025 08:32:37 -0800 (PST)
-Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432449adacesm5659879f8f.38.2025.12.18.08.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Dec 2025 08:32:37 -0800 (PST)
-Date: Thu, 18 Dec 2025 17:32:35 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Tejun Heo <tj@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Chen Ridong <chenridong@huaweicloud.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Johannes Weiner <hannes@cmpxchg.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH 3/4] cgroup: Use __counted_by for cgroup::ancestors
-Message-ID: <ecrvq2zi3tyewmjis6wdwxsvzkosobzowrm4xoxzxq35hhobev@m6kroxwbnfa7>
-References: <20251217162744.352391-1-mkoutny@suse.com>
- <20251217162744.352391-4-mkoutny@suse.com>
- <87cc0370-1924-4d33-bbf1-7fc2b03149e3@huaweicloud.com>
- <aUQnRqJsjh9p9Vhb@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rW1NzNKD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Zgl4X1XUS77ZiFAThMu9FD6tenU0Ou/oPNoKpaWaLIns6kRqk7H2ymKWj4kM6xQ7xMrZVFq+Cb2nbPv7WcxCHorZCZOpKnF8sRv5ow/y8k//R0UaKXxJYfBbcjI1/4qu2b1GeaQHgQHsiHfOWW1OGFX/55ws2K4/BGzOru6aXTSSzuNTv9eQlEpjTmlL91K9ED/3sscAv5Uiv9DdSPSt0y9Fu4lPCngRwlSuzdEGcxIreu+Ya08yKgg/4ljTAVNQcFZKMjmcQ73K/CAZH9TEJRGs4A9z5MUS1pBOlC1kiaKoTpU6ce6bjhHN3hyMhaj7RJ2/0VrJEWx3QZGIJxeLCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y4ZWrplrKjhn1wiOYK1o6hkrsh+RZtZMd0Vjrhy0H+U=;
+ b=FK6KPl4njxjpRP4DG3Mf5K/ubTd5sDNr2Fwy6Nn4Br9WzMtwgGGZ57HmvwSTsk/7NZ3ft8f2D+APiD8j1Ws4kMNv34IRA6kHRx95fi/BjreNz3QG3rouYBFae//vxzsmnnmwEXZv8yeD+/mJukw3xJpzQWVfEDwuRtib25ye0gfwFVXUsa7uHlYxiwR3i5kKUH/R0Im/qUq3OSAhwXxdAhUDkKFBqnQGE75fusDDM2YsGSWAwJ1d/ILZUHbWZCbfZvKvhgrstTMAuXVwpG+ZPzzLmxpngF0p8ArUJllmaqRAlFpF5tQoJ/mDMePEWywAbY5/C7pfqPkxCF+AFxCk5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.21.194) smtp.rcpttodomain=kernel.org smtp.mailfrom=ti.com; dmarc=pass
+ (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y4ZWrplrKjhn1wiOYK1o6hkrsh+RZtZMd0Vjrhy0H+U=;
+ b=rW1NzNKD3/gHU2Mxx3e/uEej1hpFloCrxP00T2ATUzQTmMSS0tTErF/3YTZRGoBrqdYyCdxzKbRJFncvuZIQXGslG92T2VptoPmiZgIVo/KfA4jTXvYnzk1KJHawL4CKnk4u2jPtfOrEqh2OZaVIIEQBRzvAEYY2Pt9sEOhfG20=
+Received: from BN0PR02CA0057.namprd02.prod.outlook.com (2603:10b6:408:e5::32)
+ by DS0PR10MB7512.namprd10.prod.outlook.com (2603:10b6:8:165::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.8; Thu, 18 Dec
+ 2025 19:06:33 +0000
+Received: from BN1PEPF00006003.namprd05.prod.outlook.com
+ (2603:10b6:408:e5:cafe::ab) by BN0PR02CA0057.outlook.office365.com
+ (2603:10b6:408:e5::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9434.8 via Frontend Transport; Thu,
+ 18 Dec 2025 19:06:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
+Received: from flwvzet200.ext.ti.com (198.47.21.194) by
+ BN1PEPF00006003.mail.protection.outlook.com (10.167.243.235) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9434.6 via Frontend Transport; Thu, 18 Dec 2025 19:06:32 +0000
+Received: from DFLE202.ent.ti.com (10.64.6.60) by flwvzet200.ext.ti.com
+ (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 18 Dec
+ 2025 13:06:27 -0600
+Received: from DFLE212.ent.ti.com (10.64.6.70) by DFLE202.ent.ti.com
+ (10.64.6.60) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 18 Dec
+ 2025 13:06:27 -0600
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE212.ent.ti.com
+ (10.64.6.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Thu, 18 Dec 2025 13:06:27 -0600
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5BIJ6RIw3861637;
+	Thu, 18 Dec 2025 13:06:27 -0600
+Date: Thu, 18 Dec 2025 13:06:27 -0600
+From: Nishanth Menon <nm@ti.com>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, Andrew Lunn <andrew@lunn.ch>,
+	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+	<linux@ew.tq-group.com>, Tero Kristo <kristo@kernel.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: ti: Add TQ-Systems TQMa62xx SoM and
+ MBa62xx carrier board Device Trees
+Message-ID: <20251218190627.4nun3fduu6z6yyl3@tingly>
+References: <cover.1762775119.git.matthias.schiffer@ew.tq-group.com>
+ <0079cc291c78b94068f3d8c59df103e951247acc.1762775119.git.matthias.schiffer@ew.tq-group.com>
+ <d13a95659bdd1c840dfaa46afd6d8583f1b7c88f.camel@ew.tq-group.com>
+ <671625aa-f5da-4e34-9c8c-7a1da282aa5e@ti.com>
+ <637f14d1c77c2a1d19f7ea221addbbea51392bd9.camel@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wgk3s36crhaoc44i"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <aUQnRqJsjh9p9Vhb@slm.duckdns.org>
+In-Reply-To: <637f14d1c77c2a1d19f7ea221addbbea51392bd9.camel@ew.tq-group.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00006003:EE_|DS0PR10MB7512:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4efbd111-8d0f-4345-2b09-08de3e688e84
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ygfnB3FR0ekFDbCrMFZrI46Q/AvEgqcUGEKQWurVcGqRFDa12lqfeUt1C+ru?=
+ =?us-ascii?Q?oZdH0ngxtDQ1EXjeCjN74oK49Cg8xTdVIt4s42Q0J+hxH21FqH36F44xTFFF?=
+ =?us-ascii?Q?sgrVBwOXRqxMdW8eHm/2GFZKOf6MLNg1u/4JqnhGvzGFsZHCgB5OTbZFlbD/?=
+ =?us-ascii?Q?3rv4P0F6v0paCb1tYF/QWA7dHYG/JFy/hPC+GFeWwmRDyAYx+OoMQTIJ3SEr?=
+ =?us-ascii?Q?KeHNz3r16POPBmkkFpkmgba3yM1hF3cV18flHyie6+gzyyOYMgLPqWd5cY10?=
+ =?us-ascii?Q?5ocJpfScy3O24J9V4jAOfM0RuCSDyLxXNFTUAjuEV6hgOXKfTuK9DJ1gVWcM?=
+ =?us-ascii?Q?DSx6kdiC6Ojn7ydCHJr73uAMDmTJ6Ak6WykRIo/8ZCaeobnpyqnhEOSY0gOu?=
+ =?us-ascii?Q?9TH2zGmEbr4fOiS/9F04rIxG9vpZZ7OVoPFIxoAYUOJA0eHe//7PvM4VDUep?=
+ =?us-ascii?Q?rZN9owEZKchL2oNN58WFuYUKmP4eWgGG9bWU3/kIx0s254xVcXnwuUxK15pz?=
+ =?us-ascii?Q?v5zU5zjng/VPL2mA12D/JZXUR4U/dmU1XnLjlKp5OrS/ETWuWfz726Eqnbfd?=
+ =?us-ascii?Q?l0j+b9cHtSCWnV3zT6h7U09bHyWKwPtSwuT+7hUDa70sAgdc09s/dokGy8ft?=
+ =?us-ascii?Q?PmqMV1kpOOt7iKRVOb+t2H7EKRuKgSR8zfGBa6mu+0vCdbS+aLiu+m/9gWsm?=
+ =?us-ascii?Q?yvYOaRyHsCfIy7/+XTufwRPy0llW/dcZd8RE2CrOB1jFOnubelQ+nwuh76Jc?=
+ =?us-ascii?Q?tbp67+jt0Oy6TER7nBV4SeoUWZluZAyvHNnFUwXVkUjALqX8dtcHXkPAAM2w?=
+ =?us-ascii?Q?djkFsJVX+fATcfo3aMRWByrqpu1037MB5xEfpWaihh/Y5shLJOQ3uuy5Bo17?=
+ =?us-ascii?Q?vIEiAMCcF5zSMH6aCQZ8hTCyc0+Grwh3b0R8R+AkENLjJQEVZ5J3WOGyx+vN?=
+ =?us-ascii?Q?DCBMnQnqX9Tt1k5UWZd3mi/FfGaKfki4rj40N6QI8SwMGI+/0J5U+KYgoN1s?=
+ =?us-ascii?Q?9Cjgr6xIHU/qhvUqqaKQAvYw+4oTIKT/FCawjDh0SvBPV5Z2vLNYoWgqfCnu?=
+ =?us-ascii?Q?V+0D7FOzew/mZvomE7kg4CV/Jb6s7kajERmbktiahaS5M35PskKkZZWV+hWh?=
+ =?us-ascii?Q?ZptN/eBrCYxuEBR6+LsRLzQfo4exLQskk9gtAtMeL5ObrDLW6VRD39Wy9jGU?=
+ =?us-ascii?Q?U2Ne+AcZId5iafJ5Dy0FjqVEaPzhtZyIlkvrOzIcXG1pEwGojb6cdwEsMtWC?=
+ =?us-ascii?Q?WeqifYD/yBIzJQXx/rQObheDTrdhwiqgnWJFhmht7sBRO0Rb94kwI1hQRUpb?=
+ =?us-ascii?Q?jlVk5XKYDnZgMcqeBrLI7IxbrSe84IWGarM1BiU1wV+7+AwA94BycyK+M9Wv?=
+ =?us-ascii?Q?OCmyvLoR4AOOr4ClFGsmqCoUn5nbHXMz5A3qc9Jd1aUnn78dsY7s0rJRzh1r?=
+ =?us-ascii?Q?gvThkHFgtjwuzIqrte2AnSMGHLK1XExmU6d14wJ0K95mIAp9IhrfNbwQ2fC8?=
+ =?us-ascii?Q?zyLhVHaZe8Cct1awMyA5HCt2UX+mUTnFeiVmsPFRcGtzlq00K2z4XLpV4IGo?=
+ =?us-ascii?Q?JypOrBNbaRQIM7miuMg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2025 19:06:32.0625
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4efbd111-8d0f-4345-2b09-08de3e688e84
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00006003.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7512
 
+On 10:10-20251217, Matthias Schiffer wrote:
+> On Wed, 2025-11-26 at 10:47 +0530, Vignesh Raghavendra wrote:
+> > Hi Matthias,
+> > 
+> > On 25/11/25 15:32, Matthias Schiffer wrote:
+> > > On Mon, 2025-11-10 at 12:49 +0100, Matthias Schiffer wrote:
+> > > > The TQMa62xx is a SoM family with a pluggable board connector based on the
+> > > > TI AM62x SoCs. Add DTS(I) for the AM625 (2x Cortex-A53) variant and its
+> > > > combination with our MBa62xx carrier board.
+> > > 
+> > > Hi Vignesh,
+> > > 
+> > > do you have any further comments? Can we get this in for 6.19?
+> > > 
+> > 
+> > Oops, this somehow fell through the crack, my apologies!
+> > 
+> > I have already sent out the PRs for v6.19. Sorry, this would need to
+> > wait for v6.20 cycle.
+> > 
+> > [...]
+> > 
+> > 
+> 
+> Hi Vignesh,
+> 
+> will these patches by applied for v6.20 (if there aren't any more review
+> comments)? Should I resend them?
 
---wgk3s36crhaoc44i
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/4] cgroup: Use __counted_by for cgroup::ancestors
-MIME-Version: 1.0
+Yes please, Please resend after rebasing to latest next. Vignesh and I
+switch picking patches, so the v6.20 window, i am picking them up, will
+be good  to repost them so they appear in my private patchworks for me
+to track.
 
-On Thu, Dec 18, 2025 at 06:09:42AM -1000, Tejun Heo <tj@kernel.org> wrote:
-> On Thu, Dec 18, 2025 at 03:09:32PM +0800, Chen Ridong wrote:
-> > Note that this level may already be used in existing BPF programs (e.g.,
-> > tools/testing/selftests/bpf/progs/task_ls_uptr.c). Do we need to consid=
-er compatibility here?
->=20
-> That's a good point.
+Please note that there are additional checks in place so, will be good
+to rerun dtbs_check prior to posting.
 
-I wouldn't be concerned about this particular aspect. The commit
-e6ac2450d6dee ("bpf: Support bpf program calling kernel function")
-excludes ABIs, the example program uses ksyms (not kfuncs), so there
-could even apply Documentation/process/stable-api-nonsense.rst.
-OTOH, the semantics of level is unchanged for BPF helpers (that are the
-official API).
-
-
-> Is __counted_by instrumentation tied to some compiler flag? If so,
-> might as well make it an optional extra field specifically for the
-> annotation rather than changing the meaning of an existing field.
-
-Honestly, I can see benefit mainly in the first patch of the series
-(posted the rest for discussion).
-
-I'd like to ask Gustavo whether __counted_by here buys us anything or
-whether it's more useful in other parts of kernel (e.g. flexible
-allocations in networking code with outer sources of data).
-
-Thanks,
-Michal
-
---wgk3s36crhaoc44i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJEEABYKADkWIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaUQsoRsUgAAAAAAEAA5t
-YW51MiwyLjUrMS4xMSwyLDIACgkQfj0C55Tb+AinigEAif7sDzj0YSa/E6aI3SHN
-mYIMVmAgfmHtGztVSPBZk2sA/0ZdHU/Uf6jg2QruCsbrQ7Xq1DBM5nc6er4+hPGS
-UhwN
-=ZHnQ
------END PGP SIGNATURE-----
-
---wgk3s36crhaoc44i--
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+https://ti.com/opensource
