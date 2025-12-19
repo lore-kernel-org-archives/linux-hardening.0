@@ -1,52 +1,33 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6A92BF3DF
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Dec 2025 09:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214E52D323F;
+	Fri, 19 Dec 2025 12:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766138115; cv=none; b=oEcGEEvXbHm85PzhXCdgQmdwuUArEDIrsDU1AFZBQPXUrHPs1nW2ESZQjGIamvpm7IXCb4gmPiCTgDkSl5kTzKVmAWfoW9xLTfvDgNJo/h8p7P4wnumdUGSed4rsMZiltkLK0gb/WIV+h5kegfcJ+y/pj1qbhydEZyFVV2SEJxE=
+	t=1766147370; cv=none; b=XGjrmJHMj4go22dznSB3Nhx+R99VcZ4LMUCO7hxcCGdm3jSXePB4DBVnBG08PxP9KRpPPVrOyZEQNue3w7O5dbMWIW5+vYzsx75LIx/dwSyoP0ob5rPqi3xGjee46htM02zaxTKFBr1ZdoodWQMIcWFcVYl6T+Tn0AAh1Q+0jOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766138115; c=relaxed/simple;
-	bh=LfPMAZQwG2CDhO0livSrqtZCmM4kbIyrEnve/M5Z09o=;
+	s=arc-20240116; t=1766147370; c=relaxed/simple;
+	bh=5snV2hnts8wQy3pn7dDyRNapTGA2u4S2fB1CiR8N34w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f4aueAcXHmpn+5eGtYa7M3Cq+BnnPKokdBHwxX91S+JnUJrC4AlV+xCp7H1bIXfeI/YF1ZYpb8/OmVPtaAyYhp8cHoI3OhhDAZUyCb5jpMgMJMTRyLzAOcLokg04ZTQmKkKMW82fHrcmn+GBl+MyDxjrhXw8NmqE/5Zry+osQNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=MSrDkswr; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=HXvLUXYQOE2joMd/vxNArzeYXl1xixlOiIYaJiI9IHVJbyZ79ow4Qbmd6NdPfhavLYiX0zPZ4jHesmia7bxz7MyHen201z50GY6ZlPsjuPt1xjsZYNQ6Y8PVcqk8yt0S3qJKfINhivVUglpGM6SExMYdvFkhhHngQltwGwIYMOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JntpCx6W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MSrDkswr"
-Received: from eig-obgw-5004b.ext.cloudfilter.net ([10.0.29.208])
-	by cmsmtp with ESMTPS
-	id WRHDvKVOTSkcfWXCavpcrh; Fri, 19 Dec 2025 09:55:12 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id WXCZvZiZBqfpWWXCav4Kkm; Fri, 19 Dec 2025 09:55:12 +0000
-X-Authority-Analysis: v=2.4 cv=A55sP7WG c=1 sm=1 tr=0 ts=69452100
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=_Wotqz80AAAA:8 a=qPglhVzjI8gqfWa7ntcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=buJP51TR1BpY-zbLSsyS:22 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Zi+7Rw0hPdq+BgnCCkLlPOiKXJVsrPVfrI28uMIfdY8=; b=MSrDkswrK7HG4GXVjaaIekbFup
-	AVjqjEZeYE/yrPBzXTIMyFMQ0uwgFeomKsBWPsaSLb+U9o4TuUWtemkFp+QJyql192ixI+A1ZQABb
-	ugQkUZFIZyqbEqnDswVxMf6D0NlexK/cM4slZCXxKzjOtmDEeOlkg4pMeQm5UfViW8duUlkeTMKPr
-	c1R1sX2trPe/Nia5Er2j/vzQvjRALS8M83QR1eu+7ywv8pHTPbuPN4VdV9LBJp9HItv5h1WA8RZ+O
-	x8FLyTKP5qXQjcP9oT2/7jhtwDaaC0U8weuxRTVzUpdNWMLcALF7bRJOoXiQ6U5vuTouMJZM/PgIl
-	4LRx0rfw==;
-Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:61112 helo=[10.83.24.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vWXCZ-00000002Zn5-0tMF;
-	Fri, 19 Dec 2025 03:55:11 -0600
-Message-ID: <ad8987ae-b7fe-47af-a1d2-5055749011c0@embeddedor.com>
-Date: Fri, 19 Dec 2025 18:55:01 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JntpCx6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC4CC4CEF1;
+	Fri, 19 Dec 2025 12:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766147369;
+	bh=5snV2hnts8wQy3pn7dDyRNapTGA2u4S2fB1CiR8N34w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JntpCx6WVFB6NbpwjKrIZJJyUGJgVcpjuBm6pPla+HRgV+d+CEgB8+L0L5ybZY+Ai
+	 4AugsyuDKYQvyUh00X51CcPlv4bNDtG1HYk8v96zkOh3K7Eyawb7CgdzNIGb4QjIUC
+	 gOS1b4QUEUzCzm9PKtsrMqB+Rp6yr72i6/Q/z+XRq43MSOdgvS7wfcggdOrBDOwmWl
+	 t2iFsjXmuAbKGQq4kzw3hu5txugYmvP3Ayq2m/QvASTAOTzjFJB+oe9ifJVoXVIjLJ
+	 rqMOXvFo1XiqW3zOPJ1Eh7O5nVRFiEk6t7y2jED6y/Qstaz6BhNhLPX+4raDkKvaTQ
+	 VfUelcX/B4wLg==
+Message-ID: <47a2f0c7-c25f-4734-840b-fdefc2f3c4a9@kernel.org>
+Date: Fri, 19 Dec 2025 13:29:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,122 +35,163 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Zhu Yanjun <mounter625@163.com>, Zhu Yanjun <yanjun.zhu@linux.dev>,
- Leon Romanovsky <leon@kernel.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Zhu Yanjun <zyjzyj2000@gmail.com>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
- <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
- <20251204130559.GA1219718@nvidia.com>
- <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
- <2191ee0f-a528-4187-ae5b-5aba18741701@linux.dev>
- <7e3a294f-5dc2-4e8c-aacc-0286c1592038@linux.dev>
- <20251218155623.GC400630@unreal>
- <5d950681-7f16-4b1e-a512-b118c747ffd7@linux.dev>
- <cbb0ec98-0291-4ec4-9633-690e9199248b@embeddedor.com>
- <6f15e334-8902-4d1d-adab-aa9ab8f009d6@linux.dev>
- <d569b5fd-fcca-4dd0-b94b-a6df4e52d940@embeddedor.com>
- <01b419f6-264e-4faa-b4df-480fdf952d14@linux.dev>
- <8470c362-8c41-4b99-8c05-0903285c1b6c@embeddedor.com>
- <1bef81ba-be81-49df-9d86-3cc0cc4bf864@163.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <1bef81ba-be81-49df-9d86-3cc0cc4bf864@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 118.18.233.1
-X-Source-L: No
-X-Exim-ID: 1vWXCZ-00000002Zn5-0tMF
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:61112
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfO4oSuqjG9ff0R0aYZpF97JUpnl3vsTbXu9fpQseJN4PExnsSX6Fs2M8gHa+U7dkTSJFz0TwHnf+i0E7FgsafEbm/ZPvYUMKXfTSSffp6fXSOOz5qv8C
- n2Xz/5R83kjfn/FzL+dSBl7M5HreT98nx9+7hK74ZXIC6E2QY7kOOpBq6CQdg4HsBxOSgrubSzW8ptgHrWlLGFO9zQZ4UcRzSKD/iIBNy9hzxNMJ/1Q16rqD
+Subject: Re: [PATCH v2 3/3] module: Add compile-time check for embedded NUL
+ characters
+Content-Language: en-GB, fr-BE
+To: Kees Cook <kees@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Rusty Russell <rusty@rustcorp.com.au>, Petr Pavlu <petr.pavlu@suse.com>,
+ Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ linux-modules@vger.kernel.org, Hans Verkuil <hverkuil+cisco@kernel.org>,
+ Malcolm Priestley <tvboxspy@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans Verkuil <hverkuil@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+ Chris Li <sparse@chrisli.org>, linux-sparse@vger.kernel.org
+References: <20251010030348.it.784-kees@kernel.org>
+ <20251010030610.3032147-3-kees@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20251010030610.3032147-3-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi Kees, Dan,
+
+Sorry to react on an oldish patch, but I have a question about it, see
+below.
+
+On 10/10/2025 05:06, Kees Cook wrote:
+> Long ago, the kernel module license checks were bypassed by embedding a
+> NUL character in the MODULE_LICENSE() string[1]. By using a string like
+> "GPL\0proprietary text", the kernel would only read "GPL" due to C string
+> termination at the NUL byte, allowing proprietary modules to avoid kernel
+> tainting and access GPL-only symbols.
+> 
+> The MODULE_INFO() macro stores these strings in the .modinfo ELF
+> section, and get_next_modinfo() uses strcmp()-family functions
+> which stop at the first NUL. This split the embedded string into two
+> separate .modinfo entries, with only the first part being processed by
+> license_is_gpl_compatible().
+> 
+> Add a compile-time check using static_assert that compares the full
+> string length (sizeof - 1) against __builtin_strlen(), which stops at
+> the first NUL. If they differ, compilation fails with a clear error
+> message.
+> 
+> While this check can still be circumvented by modifying the ELF binary
+> post-compilation, it prevents accidental embedded NULs and forces
+> intentional abuse to require deliberate binary manipulation rather than
+> simple source-level tricks.
+> 
+> Build tested with test modules containing both valid and invalid license
+> strings. The check correctly rejects:
+> 
+>     MODULE_LICENSE("GPL\0proprietary")
+> 
+> while accepting normal declarations:
+> 
+>     MODULE_LICENSE("GPL")
+> 
+> Link: https://lwn.net/Articles/82305/ [1]
+> Suggested-by: Rusty Russell <rusty@rustcorp.com.au>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Petr Pavlu <petr.pavlu@suse.com>
+> Cc: Daniel Gomez <da.gomez@kernel.org>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: <linux-modules@vger.kernel.org>
+> ---
+>  include/linux/moduleparam.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+> index 6907aedc4f74..915f32f7d888 100644
+> --- a/include/linux/moduleparam.h
+> +++ b/include/linux/moduleparam.h
+> @@ -26,6 +26,9 @@
+>  
+>  /* Generic info of form tag = "info" */
+>  #define MODULE_INFO(tag, info)					  \
+> +	static_assert(						  \
+> +		sizeof(info) - 1 == __builtin_strlen(info),	  \
+> +		"MODULE_INFO(" #tag ", ...) contains embedded NUL byte"); \
+
+When checking MPTCP code on top of Linus tree, I get this new warning
+with all MPTCP KUnit tests (net/mptcp/*_test.c), e.g.
+
+$ touch net/mptcp/crypto_test.c && make C=1 net/mptcp/crypto_test.o
+  CC [M]  net/mptcp/crypto_test.o
+  CHECK   net/mptcp/crypto_test.c
+net/mptcp/crypto_test.c:72:1: error: bad integer constant expression
+net/mptcp/crypto_test.c:72:1: error: static assertion failed: "MODULE_INFO(license, ...) contains embedded NUL byte"
+net/mptcp/crypto_test.c:73:1: error: bad integer constant expression
+net/mptcp/crypto_test.c:73:1: error: static assertion failed: "MODULE_INFO(description, ...) contains embedded NUL byte"
 
 
+I'm using Sparse last development version with Dan's commit:
 
-On 12/19/25 15:59, Zhu Yanjun wrote:
-> 
-> 在 2025/12/18 21:48, Gustavo A. R. Silva 写道:
->>
->>> The struct rxe_recv_wqe is as below.
->>>
->>> struct rxe_recv_wqe {
->>>      __aligned_u64       wr_id;
->>>      __u32           reserved;
->>>      __u32           padding;
->>>      struct rxe_dma_info dma;
->>
->> Expand struct rxe_dma_info here.
-> 
-> Thanks. In struct rxe_dma_info, the struct is
-> 
-> struct rxe_sge {
->         __aligned_u64 addr;
->         __u32   length;
->         __u32   lkey;
-> };
-> 
-> But in your commit, struct ib_sge is used.
-> 
-> struct ib_sge {
->      u64 addr;
->      u32 length;
->      u32 lkey;
-> };
-> __aligned_u64 is a 64-bit integer with a guaranteed 8-byte alignment,
-> 
-> used to preserve ABI correctness across architectures and between
-> 
-> userspace and kernel, while u64 has architecture-dependent alignment.
-> 
-> I am not sure if we can treate "struct rxe_sge" as the same with "struct ib_sge".
+$ sparse --version
+v0.6.4-73-gfbdde312
 
-Just notice that the original code is the one actually doing that.
-See my response in this same thread:
+=> fbdde312 ("builtin: implement __builtin_strlen() for constants")
 
-https://lore.kernel.org/linux-hardening/d3336e9d-2b84-4698-a799-b49e3845f38f@embeddedor.com/
 
-So, if that code is fine, this is fine. If the original code is wrong,
-then that code should be fixed first.
+And the two lines causing the warnings don't have "\0":
 
--Gustavo
+    72  MODULE_LICENSE("GPL");
+    73  MODULE_DESCRIPTION("KUnit tests for MPTCP Crypto");
 
-> 
-> 
-> Leon and Jason, please comment on it.
-> 
-> 
-> Yanjun.Zhu
-> 
->>
->>> };
->>>
->>> But I can not find dma.sge in the above struct. Can you explain it?
->>>
->>> To be honest, I read your original commit for several times, but I can not get it.  Can you explain the MACRO TRAILING_OVERLAP? And how can it replace the 
->>> following struct?
->>
->> This is clearly explained in the changelog text. I think what you're
->> missing will be clear once you understand how nested structures
->> work. See my comment above.
->>
->> -Gustavo
-> 
+
+Am I missing something?
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
