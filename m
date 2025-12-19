@@ -1,124 +1,76 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E969126F2A8
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Dec 2025 05:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38744192590;
+	Fri, 19 Dec 2025 06:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766123327; cv=none; b=uIo/ALHf5HLez8RnRR2bKZJtx6qnjkHBTnvqCFRnVV58i1hhAdcswZPlB0LI8U4DEj41YhOQfVncAgnaTRdo3Y++d43mIgM1ZRN2ST2NdYaVTawYe1j7mVLsxKamRETCP9paNfFnFVQ1x+rHu52S4aWuKVFvPVXfA58mnPU62gM=
+	t=1766127470; cv=none; b=otJ11qjYLLhwd2n5r5SQOAa1slVE9DoRU1SbK/VDW2ii/usKHWcd34bRb1rkAPVEjv1O4L5ufC7GvHwcId3+1iUqj/5XnU/F9JWBpJqiZORWDZnSkuBYv5zSiCA1zlBOtWTi9+aS5qmWikvLN3Uk1QUNYrvCl2fDUSDdFkQ5OIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766123327; c=relaxed/simple;
-	bh=f4tJcY0zeyT2kIqUw9BwvcPuvmg7ZanfgE/69b1zWdk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pkl2FymLUZwutxYCufYzJP539Y6Lzwp2Ycyy6gxyW2cH0A5FRkDl3jTJF9aVaMvjzk+S/YSfrkMV0WQGz59PM98tfCLvjIy1Lq49D/Q9uyNpOWkczkBfq0nQdhK+/5V2eMVZOqV/cpjnRhnaf8WsDCWr0KI5s8f5T4wIpiEg4tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=XEiNg+fp; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1766127470; c=relaxed/simple;
+	bh=kbjjyQuzWBinAet1szxeXnXhq1PmwGftyu/8TpkguZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lnooluy03ovdut5jsLtP5tm181KULG5DmD3foSdOEmkz/iSjWLLqFmE/6ZzIixX6XCN2xvg1CywrJIR5cMViyfWFiiotpM4Mv7lPOYbLbp7RhekeL548lUxt1i1/r9yxAMMpYAZeqo4P3eJ+prpLMkLSZeat+HZQpJQrxyIocgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=htqLg5rX; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="XEiNg+fp"
-Received: from eig-obgw-6006b.ext.cloudfilter.net ([10.0.30.211])
-	by cmsmtp with ESMTPS
-	id W4FHvXuHBv724WTM4v6sIK; Fri, 19 Dec 2025 05:48:45 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id WTM4vwzrWvXvHWTM4vEL2Y; Fri, 19 Dec 2025 05:48:44 +0000
-X-Authority-Analysis: v=2.4 cv=e4IGSbp/ c=1 sm=1 tr=0 ts=6944e73c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10
- a=sCnCf3pnyfLPVqDf7dUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=2aFnImwKRvkU0tJ3nQRT:22
+	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="htqLg5rX"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Q1TkFPTfRwhSUh6QMJT32hEY62qRYKxTLZnluHvILIE=; b=XEiNg+fpj/bPghrBO1Oqyh9XsO
-	vdukHCfqYd/iItoXJgXHnTCnNEJKrkorP8ue621UdPVLkGMQMIPJgJFuXqmo/OXqXmviN4tZ01mq3
-	bQYmn+r6/UPdXwaCpd4FJyOM2Njxr+YxS16iiIjDupznV9DtKSgw9DsoSPlHDKaP+DTPNoazKTv5h
-	+TRK3+aTRNVEq03KH+1qIa/TvHQpf78FNbn7MHlU5//2PMR9fcDiu6L6ngRSGAVmow0wQ64spe0g+
-	KGx08W74oUGHMNAy2IrzxCrxB45lRo5xfWnXbNSDLSTpmQ4uTO9C4QQR8STWOrvwHyG30z1+D4TRF
-	8H+KiC+g==;
-Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:61583 helo=[10.83.24.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vWTM3-00000002JVZ-1XmM;
-	Thu, 18 Dec 2025 23:48:43 -0600
-Message-ID: <8470c362-8c41-4b99-8c05-0903285c1b6c@embeddedor.com>
-Date: Fri, 19 Dec 2025 14:48:31 +0900
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=ydNqyxUFdrrM5NmvtRGrmnQ8TJksDK8qnN2PqeuyVJI=; 
+	b=htqLg5rX8KgfAnUbhK1bTeOiy8MDNGBjd/3Bq9ARketVpk0zK9Adi9KH8rv3fZfqoLlkOCv6XdX
+	bVFZPuO4QXxob+ejna7PxyIx0FCXr3rYqki8eLX5/3EeXz7RALcw44mUTD8MeNgv15nbOdckfZWFk
+	Pb9P2ICThE2fJkqyUBc5QGwH7J96g+keW+jjV2iC95d2VIdKmQcaf7C2ltcNgfpR1yYZQpVLjQCF/
+	77nCcjxBQ1BE+/nO+mGxfFMUeHEF0qwh6URkQ43UfmiPlGEc4HjQjZXX7oyEZ9ZeXSSkUDbtBv7l3
+	YeOIKPp+n43xQ24IGKLU3ojwVseZ4kz5vorA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1vWUQi-00BEYh-1u;
+	Fri, 19 Dec 2025 14:57:37 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 19 Dec 2025 14:57:36 +0800
+Date: Fri, 19 Dec 2025 14:57:36 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jia Jie Ho <jiajie.ho@starfivetech.com>,
+	William Qiu <william.qiu@starfivetech.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] crypto: starfive - Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <aUT3YBNG1dhWzL5U@gondor.apana.org.au>
+References: <aR_i5fbRzQztlaHz@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Zhu Yanjun <yanjun.zhu@linux.dev>, Leon Romanovsky <leon@kernel.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Zhu Yanjun <zyjzyj2000@gmail.com>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
- <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
- <20251204130559.GA1219718@nvidia.com>
- <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
- <2191ee0f-a528-4187-ae5b-5aba18741701@linux.dev>
- <7e3a294f-5dc2-4e8c-aacc-0286c1592038@linux.dev>
- <20251218155623.GC400630@unreal>
- <5d950681-7f16-4b1e-a512-b118c747ffd7@linux.dev>
- <cbb0ec98-0291-4ec4-9633-690e9199248b@embeddedor.com>
- <6f15e334-8902-4d1d-adab-aa9ab8f009d6@linux.dev>
- <d569b5fd-fcca-4dd0-b94b-a6df4e52d940@embeddedor.com>
- <01b419f6-264e-4faa-b4df-480fdf952d14@linux.dev>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <01b419f6-264e-4faa-b4df-480fdf952d14@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 118.18.233.1
-X-Source-L: No
-X-Exim-ID: 1vWTM3-00000002JVZ-1XmM
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:61583
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFVvX2ZXBpNKfIXdVMZtUqzGLHpdiTcubM5ISSurf+lrrheY5mKj7i1TIIgvucUL7nDiXWyOBKzTIZ3Y6mML8GOFMVQCv0vOXnBJBdFF9NvzKn750z8h
- ZgYpLOKO2PAjXWHk+v+P5ouJbTVCrliY8h070LQATtnDJAt2KgZzhaVRhgNKqdqyaDI63MNZyab48utylOM3ShCq/LBEQT+cZA1/nQCfoYFDnribG9MV3IX4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aR_i5fbRzQztlaHz@kspp>
 
-
-> The struct rxe_recv_wqe is as below.
+On Fri, Nov 21, 2025 at 12:56:21PM +0900, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> struct rxe_recv_wqe {
->      __aligned_u64       wr_id;
->      __u32           reserved;
->      __u32           padding;
->      struct rxe_dma_info dma;
-
-Expand struct rxe_dma_info here.
-
-> };
+> Move the conflicting declaration to the end of the corresponding
+> structure. Notice that `struct ahash_request` is a flexible structure,
+> this is a structure that contains a flexible-array member.
 > 
-> But I can not find dma.sge in the above struct. Can you explain it?
+> With these changes fix the following warning:
 > 
-> To be honest, I read your original commit for several times, but I can not get it.  Can you explain the MACRO TRAILING_OVERLAP? And how can it replace the 
-> following struct?
+> drivers/crypto/starfive/jh7110-cryp.h:219:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/crypto/starfive/jh7110-cryp.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-This is clearly explained in the changelog text. I think what you're
-missing will be clear once you understand how nested structures
-work. See my comment above.
-
--Gustavo
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
