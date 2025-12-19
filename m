@@ -1,75 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5422923F422;
-	Fri, 19 Dec 2025 09:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6A92BF3DF
+	for <linux-hardening@vger.kernel.org>; Fri, 19 Dec 2025 09:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766136251; cv=none; b=eqKNX5tp1fJFHhqhcw3Jm7luOxe5TddGJHWIy4IvmJQjKuAV7tHdGUOqzSViQRFkDNYYm70H1JlQzMW+hUZ7ymd9QzMOKwN/XRbhv9lnySpMuSsrHfKLe34dMXlUEILXoerHYWcfwQ/NTsgSdhZqzCMUgbUBywTAaevpP2nGWuA=
+	t=1766138115; cv=none; b=oEcGEEvXbHm85PzhXCdgQmdwuUArEDIrsDU1AFZBQPXUrHPs1nW2ESZQjGIamvpm7IXCb4gmPiCTgDkSl5kTzKVmAWfoW9xLTfvDgNJo/h8p7P4wnumdUGSed4rsMZiltkLK0gb/WIV+h5kegfcJ+y/pj1qbhydEZyFVV2SEJxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766136251; c=relaxed/simple;
-	bh=Q7Tat+DlNEr9zwMi10HMp4z6C9OLetF7wpcLmG3Nr6o=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=FwQSafTfd4dalOHLti1/yWiRqvQEtkWVVY4jC+kPBn26kx8+zhnEw+TbZMOgx06ZCScPL5s2a0m3/5s/NAzloL53VO/Azgx406b0o8w8dvU/puJOdzUdE3iNC5KzEKGnnVqRYGerOMdxqPdDviNjb4jqxfFuvgsySGFve5GJnBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJeGBQSm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766138115; c=relaxed/simple;
+	bh=LfPMAZQwG2CDhO0livSrqtZCmM4kbIyrEnve/M5Z09o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f4aueAcXHmpn+5eGtYa7M3Cq+BnnPKokdBHwxX91S+JnUJrC4AlV+xCp7H1bIXfeI/YF1ZYpb8/OmVPtaAyYhp8cHoI3OhhDAZUyCb5jpMgMJMTRyLzAOcLokg04ZTQmKkKMW82fHrcmn+GBl+MyDxjrhXw8NmqE/5Zry+osQNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=MSrDkswr; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJeGBQSm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57B4DC4CEF1;
-	Fri, 19 Dec 2025 09:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766136250;
-	bh=Q7Tat+DlNEr9zwMi10HMp4z6C9OLetF7wpcLmG3Nr6o=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=iJeGBQSmHJ7xw1ebYcMUv3OrvqEJD8ApYHkRX1ViM7KpcnS7B1rgP9tfs5oxhCWxG
-	 Rm4PC/W74o0ejiM5LppZqRSXCRA3mkvKrEqhBNHF71/01oLwgSlur+w8TiPru/pfNA
-	 u6gD2qSIkrLr/pl0EqJdTRIO8VIvSkp7K+EKwRy+3CX8K6jyknqpEOkcpvKCfSjXuU
-	 O7A015VxRzBIkWTt7M5mRFS65Q2fWGTO7PtKfATaKOMZ9P7oS7GZMVehzzLliUCnad
-	 dP+OOoFlqnFYcbQVr75YsMhKxRupFcTd8VU1IytrRfG1l56lCgntqqYmaXktA3+9wo
-	 TD0xhhbb/eLhg==
-Date: Fri, 19 Dec 2025 17:33:24 +0900
-From: Kees Cook <kees@kernel.org>
-To: Tejun Heo <tj@kernel.org>, Chen Ridong <chenridong@huaweicloud.com>
-CC: =?ISO-8859-1?Q?Michal_Koutn=FD?= <mkoutny@suse.com>, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH 3/4] cgroup: Use __counted_by for cgroup::ancestors
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aUQnRqJsjh9p9Vhb@slm.duckdns.org>
-References: <20251217162744.352391-1-mkoutny@suse.com> <20251217162744.352391-4-mkoutny@suse.com> <87cc0370-1924-4d33-bbf1-7fc2b03149e3@huaweicloud.com> <aUQnRqJsjh9p9Vhb@slm.duckdns.org>
-Message-ID: <6387B54B-7524-4AB9-AB05-4AB529353EF4@kernel.org>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MSrDkswr"
+Received: from eig-obgw-5004b.ext.cloudfilter.net ([10.0.29.208])
+	by cmsmtp with ESMTPS
+	id WRHDvKVOTSkcfWXCavpcrh; Fri, 19 Dec 2025 09:55:12 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id WXCZvZiZBqfpWWXCav4Kkm; Fri, 19 Dec 2025 09:55:12 +0000
+X-Authority-Analysis: v=2.4 cv=A55sP7WG c=1 sm=1 tr=0 ts=69452100
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=_Wotqz80AAAA:8 a=qPglhVzjI8gqfWa7ntcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=buJP51TR1BpY-zbLSsyS:22 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Zi+7Rw0hPdq+BgnCCkLlPOiKXJVsrPVfrI28uMIfdY8=; b=MSrDkswrK7HG4GXVjaaIekbFup
+	AVjqjEZeYE/yrPBzXTIMyFMQ0uwgFeomKsBWPsaSLb+U9o4TuUWtemkFp+QJyql192ixI+A1ZQABb
+	ugQkUZFIZyqbEqnDswVxMf6D0NlexK/cM4slZCXxKzjOtmDEeOlkg4pMeQm5UfViW8duUlkeTMKPr
+	c1R1sX2trPe/Nia5Er2j/vzQvjRALS8M83QR1eu+7ywv8pHTPbuPN4VdV9LBJp9HItv5h1WA8RZ+O
+	x8FLyTKP5qXQjcP9oT2/7jhtwDaaC0U8weuxRTVzUpdNWMLcALF7bRJOoXiQ6U5vuTouMJZM/PgIl
+	4LRx0rfw==;
+Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:61112 helo=[10.83.24.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vWXCZ-00000002Zn5-0tMF;
+	Fri, 19 Dec 2025 03:55:11 -0600
+Message-ID: <ad8987ae-b7fe-47af-a1d2-5055749011c0@embeddedor.com>
+Date: Fri, 19 Dec 2025 18:55:01 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: Zhu Yanjun <mounter625@163.com>, Zhu Yanjun <yanjun.zhu@linux.dev>,
+ Leon Romanovsky <leon@kernel.org>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Zhu Yanjun <zyjzyj2000@gmail.com>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
+ <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
+ <20251204130559.GA1219718@nvidia.com>
+ <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
+ <2191ee0f-a528-4187-ae5b-5aba18741701@linux.dev>
+ <7e3a294f-5dc2-4e8c-aacc-0286c1592038@linux.dev>
+ <20251218155623.GC400630@unreal>
+ <5d950681-7f16-4b1e-a512-b118c747ffd7@linux.dev>
+ <cbb0ec98-0291-4ec4-9633-690e9199248b@embeddedor.com>
+ <6f15e334-8902-4d1d-adab-aa9ab8f009d6@linux.dev>
+ <d569b5fd-fcca-4dd0-b94b-a6df4e52d940@embeddedor.com>
+ <01b419f6-264e-4faa-b4df-480fdf952d14@linux.dev>
+ <8470c362-8c41-4b99-8c05-0903285c1b6c@embeddedor.com>
+ <1bef81ba-be81-49df-9d86-3cc0cc4bf864@163.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <1bef81ba-be81-49df-9d86-3cc0cc4bf864@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 118.18.233.1
+X-Source-L: No
+X-Exim-ID: 1vWXCZ-00000002Zn5-0tMF
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:61112
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfO4oSuqjG9ff0R0aYZpF97JUpnl3vsTbXu9fpQseJN4PExnsSX6Fs2M8gHa+U7dkTSJFz0TwHnf+i0E7FgsafEbm/ZPvYUMKXfTSSffp6fXSOOz5qv8C
+ n2Xz/5R83kjfn/FzL+dSBl7M5HreT98nx9+7hK74ZXIC6E2QY7kOOpBq6CQdg4HsBxOSgrubSzW8ptgHrWlLGFO9zQZ4UcRzSKD/iIBNy9hzxNMJ/1Q16rqD
 
 
 
-On December 19, 2025 1:09:42 AM GMT+09:00, Tejun Heo <tj@kernel=2Eorg> wro=
-te:
->On Thu, Dec 18, 2025 at 03:09:32PM +0800, Chen Ridong wrote:
->> Note that this level may already be used in existing BPF programs (e=2E=
-g=2E,
->> tools/testing/selftests/bpf/progs/task_ls_uptr=2Ec)=2E Do we need to co=
-nsider compatibility here?
->
->That's a good point=2E Is __counted_by instrumentation tied to some compi=
-ler
->flag? If so, might as well make it an optional extra field specifically f=
-or
->the annotation rather than changing the meaning of an existing field=2E
->
->Thanks=2E
->
+On 12/19/25 15:59, Zhu Yanjun wrote:
+> 
+> 在 2025/12/18 21:48, Gustavo A. R. Silva 写道:
+>>
+>>> The struct rxe_recv_wqe is as below.
+>>>
+>>> struct rxe_recv_wqe {
+>>>      __aligned_u64       wr_id;
+>>>      __u32           reserved;
+>>>      __u32           padding;
+>>>      struct rxe_dma_info dma;
+>>
+>> Expand struct rxe_dma_info here.
+> 
+> Thanks. In struct rxe_dma_info, the struct is
+> 
+> struct rxe_sge {
+>         __aligned_u64 addr;
+>         __u32   length;
+>         __u32   lkey;
+> };
+> 
+> But in your commit, struct ib_sge is used.
+> 
+> struct ib_sge {
+>      u64 addr;
+>      u32 length;
+>      u32 lkey;
+> };
+> __aligned_u64 is a 64-bit integer with a guaranteed 8-byte alignment,
+> 
+> used to preserve ABI correctness across architectures and between
+> 
+> userspace and kernel, while u64 has architecture-dependent alignment.
+> 
+> I am not sure if we can treate "struct rxe_sge" as the same with "struct ib_sge".
 
-CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS use the information for inst=
-rumentation=2E
+Just notice that the original code is the one actually doing that.
+See my response in this same thread:
 
---=20
-Kees Cook
+https://lore.kernel.org/linux-hardening/d3336e9d-2b84-4698-a799-b49e3845f38f@embeddedor.com/
+
+So, if that code is fine, this is fine. If the original code is wrong,
+then that code should be fixed first.
+
+-Gustavo
+
+> 
+> 
+> Leon and Jason, please comment on it.
+> 
+> 
+> Yanjun.Zhu
+> 
+>>
+>>> };
+>>>
+>>> But I can not find dma.sge in the above struct. Can you explain it?
+>>>
+>>> To be honest, I read your original commit for several times, but I can not get it.  Can you explain the MACRO TRAILING_OVERLAP? And how can it replace the 
+>>> following struct?
+>>
+>> This is clearly explained in the changelog text. I think what you're
+>> missing will be clear once you understand how nested structures
+>> work. See my comment above.
+>>
+>> -Gustavo
+> 
+
