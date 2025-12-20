@@ -1,111 +1,91 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78938267AF2
-	for <linux-hardening@vger.kernel.org>; Sat, 20 Dec 2025 04:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995A315ECCC;
+	Sat, 20 Dec 2025 06:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766204419; cv=none; b=uc/TLV+u67ddHYB5cnhpTNKC6WIn+Ti+MlgBKA++KNYJj1jaDRND/pxwr3C8v3X6ci3W5cxV171f8mUQ4jqdWpjDltmXugGr6lwBPUf7m0VnSwET4A7OH5e3nKVYuZSMAhFHai0JA3pEJ9t+Ut1VJ6qrpfvTnqvNJPpAM65umng=
+	t=1766212915; cv=none; b=uqij0RlxdmV+2ib1tKtRdXoiMVdnFMIvxJbJ+gzE2JcYdqICeRp7+zBQ86RFjs8GKbeYe2Mt/xOAGDfqoocRHoF2FZvJLg640sx0as4xH7pY3yc1uV4mOhCUqFrG5gwa3D++MOz8MlRFFYtH1XyyRbnK7OkwmzkbZWtPdZK/osc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766204419; c=relaxed/simple;
-	bh=icrpJhOrHzN1w/BxS6MLquQdQ/XVQQ8eBSbQkS8B3d0=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=YbOYHD67aAhjDABiIQj23xkBtmTkCimtQJdjdXvD6Va++daVFAntVBXDyfExyFtRTB22gRwpQXYwNqujh4tK1Bho2I415zMF1yzOSEC5RRwjIgFVb/6NTQEC6ezSt8+4AngmFlHDUpiXSuUfaAXA1i8WySxDayNn8u9PlFYxjRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=atoIBtVN; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1766212915; c=relaxed/simple;
+	bh=0cYM1OGkisWER17OI/JlqgHBJhvaSLpBwGWv79i5mOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BZ4PodzudSygnEfcm96nHYrVWeNkhHLLmPrD7iyAitgYjFg/YEDyS/yXTjOKSRhCANhhwk1qRQCcr8It3f22j0XpOCpvU+XSY9PQaBIsyhqZx64Zh3IHgV49kmjs1KD+wrQQxoDTFf+WpclgYEMq7erF4Bw5/vzpFPJ47LDXsVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6Q8HXfT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="atoIBtVN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:Subject:From:To:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=fKaEL6Ojgmgiqu/WwkiRMd6jGBm5hHntfnKxlBYkrCU=; b=atoIBtVNujKhQiOrhoJ5szAG/T
-	TCYdGsIokV+flOtJqhzm5eH696frcvaxT4WQ0Mq2LREhS0tlSziL0HHrOl0BStk3iUOPW/1fYZq8E
-	nnb3TWCLjL+tvcuqBNy8SbVGtAfeMEHl8RyIwp8gZCzLQZ/+naC1WDIelhELYzfircr58k9ZQWofn
-	WdgL1x1SaAl5eikyugiAqoBcVrlj3eRRVFnl46BF+zyeY67dubfB8bDKWuKA8GeJCoGYHZgMO+aUX
-	IbJcxGbad+pSuE7se/Puvw2bubyeawyCL9rqWtMs20R/wCDU30lh8dMcnDdKAZL7onst5TJScnvjM
-	nSD7gWDQ==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWoRy-0000000BI34-3G7H;
-	Sat, 20 Dec 2025 04:20:14 +0000
-Message-ID: <90e419ad-4036-4669-a4cc-8ce5d29e464b@infradead.org>
-Date: Fri, 19 Dec 2025 20:20:13 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6Q8HXfT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 579CBC4CEF5;
+	Sat, 20 Dec 2025 06:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766212915;
+	bh=0cYM1OGkisWER17OI/JlqgHBJhvaSLpBwGWv79i5mOY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=R6Q8HXfTaM1mxlpJVIInwBxbjdVI3LZKbiEc4Y9Ka11Ok7k0FSQjGLVXkZLaWWm+s
+	 EJlfpPDnsCIxsbC9wWD/yEQ0Y0X9XSLmF1DcJ9PW/auxENjIieuwt1xXSH6pigyefK
+	 h1PYhZcRXnUPfEK2PxEjlUgbNIX9di3ZTDq1uRF+aO2rBOF0DNPLJuy3Colf+piyjB
+	 NChFEH7uIp9NFUIESMXvrAzhIkh+wi2E6QPq9xzfkvUt/z1jaUHQFAEKSJku1puAv/
+	 eq3stnViZdZrpWZ11mjaZZ1dWzZsYhKG7RRlke9BqHJhVW986sYBEUjlhn4UNmrSFI
+	 IGv4/SkPwBD0w==
+Date: Sat, 20 Dec 2025 15:41:49 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Raag Jadav <raag.jadav@intel.com>, Tomas Winkler <tomasw@gmail.com>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] mtd: intel-dg: fix array-index-out-of-bounds in
+ intel_dg_mtd_probe()
+Message-ID: <aUZFLezigzZQVt55@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>, kasan-dev@googlegroups.com,
- linux-hardening@vger.kernel.org
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: UBSAN: array-index-out-of-bounds
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Fix the UBSAN: array-index-out-of-bounds issue below by updating
+counter nvm->nregions before the first access to flexible-array
+member nvm->regions[].
 
 from kernel bugzilla:
 https://bugzilla.kernel.org/show_bug.cgi?id=220823
 
-
 Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
 
+Notice that this flexible array is annotated with the counted_by()
+attribute, hence the counter must always be updated before the
+first access to the array.
 
-(from drivers/mtd/devices/mtd_intel_dg.c:)
+Cc: stable@vger.kernel.org
+Fixes: ceb5ab3cb646 ("mtd: add driver for intel graphics non-volatile memory device")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Closes: https://lore.kernel.org/linux-hardening/90e419ad-4036-4669-a4cc-8ce5d29e464b@infradead.org/
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/mtd/devices/mtd_intel_dg.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-	nvm = kzalloc(struct_size(nvm, regions, nregions), GFP_KERNEL);
-...
-
-	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
-		if (!invm->regions[i].name)
-			continue;
-
-		char *name = kasprintf(GFP_KERNEL, "%s.%s",
-				       dev_name(&aux_dev->dev), invm->regions[i].name);
-		if (!name)
-			continue;
-750:		nvm->regions[n].name = name;
-		nvm->regions[n].id = i;
-		n++;
-	}
-	nvm->nregions = n;
-
-
-regions is a flexible array in struct intel_dg_nvm *nvm; [see below]
-regions is counted_by nvm->nregions.
-
-Question: does UBSAN use the value of the counted_by variable for array bounds
-checking?
-If so, that means nvm->nregions must be updated before the array entry
-is used. Is that correct?
-
-If not, how does UBSAN do array-bounds checking in cases like this?
-
-
-struct intel_dg_nvm {
-	struct kref refcnt;
-	struct mtd_info mtd;
-	struct mutex lock; /* region access lock */
-	void __iomem *base;
-	void __iomem *base2;
-	bool non_posted_erase;
-
-	size_t size;
-	unsigned int nregions;
-	struct {
-		const char *name;
-		u8 id;
-		u64 offset;
-		u64 size;
-		unsigned int is_readable:1;
-		unsigned int is_writable:1;
-	} regions[] __counted_by(nregions);
-};
-
-thanks.
+diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
+index 2bab30dcd35f..d3e89fe324b8 100644
+--- a/drivers/mtd/devices/mtd_intel_dg.c
++++ b/drivers/mtd/devices/mtd_intel_dg.c
+@@ -768,6 +768,9 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
+ 	if (!nvm)
+ 		return -ENOMEM;
+ 
++	/* Update nvm->nregions before first access to nvm->regions[] below. */
++	nvm->nregions = nregions;
++
+ 	kref_init(&nvm->refcnt);
+ 	mutex_init(&nvm->lock);
+ 
 -- 
-~Randy
+2.43.0
 
