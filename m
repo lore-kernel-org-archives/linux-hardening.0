@@ -1,111 +1,230 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6046B16DEB1;
-	Sat, 20 Dec 2025 07:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC19242D97
+	for <linux-hardening@vger.kernel.org>; Sat, 20 Dec 2025 07:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766214371; cv=none; b=BxMjL+YaSP1ScRby2pd+M+iGak4ySO8U31Rgixa0336y7Ycp2q1D7PwEDaJspevM/qAhuOt/DZOXO3FWMx9OQAKldPQRa2QmEjHP+OsMq4mdcYsxhboeOrtu57KT5Y8Gk3flVVuXtRNbGJkYdfgPdecjFp0TZZpL7fbB+a8sy8E=
+	t=1766214459; cv=none; b=VUmXGXEmY4ziYNho6CFf3TJhbneQlxfUKh5VondblP/6ezYzpxh+OXfZIARyqCoS0wKM+rhOSDle5WA7I1AgMnefYjba9GU+alUDFDO+zx1ZyaAV/wWIGY2ahouhyLIjYEui1xAn9fbbxUeJO8/zS/H4AU/d4wTNNypLJDXeUOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766214371; c=relaxed/simple;
-	bh=5HPtk7P1MQhfYYpNQ+aRBt3SOFYRkcoz+oUgANhExbc=;
+	s=arc-20240116; t=1766214459; c=relaxed/simple;
+	bh=x2cZeTt8nfXahNIgP5U//Vv6JqbmrMLmOmquVJbMeiA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gskULrw+zRrfz+MGh5wSdlzGmJl6lXHj3eVyfviaF/bzCW0hbQWWb1eTJGHoHYMAKDi0HUSrikX4M/x6dhZqf5BWqzgMp9H48R/ooTPlGUHShmnDnQJKyzo/so2M78x+XxzUdNUkq2XS0xPXs1JbDGI92IXVrnKZDuHYny61e38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W0Pk8TN1; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=gDqOiqWSwI/oS1LKCpxLdJewP8SK1FYLIQ4zPAomWwxKrfjPYD9H+0VZk7RNgkVPT1rSDNaidszPbZUqKMsrFjimE6Ffcr/1kvkSKd09VPBm816vzMlZcER30T4AsSIyFGWCJSvDiZmhU2qhVbYqF/OuBucFJhB8T2FVhzV+t7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RqjUwU9Y; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W0Pk8TN1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=LGmUSJpqfSghi8dPluTD5nrQMLOMVKkVqZ7TQk/EQmI=; b=W0Pk8TN1P4moUdKu29bhiK2pNi
-	++OinAB3HpCklcEta+BiPfmSIe0FqYc4pJEbYXlE1105YlMA9OHi0rx8UjhyEflzJ/Tj9SrKsS5hf
-	APqzC0IxnOmQx2Y7Kg5MemJj4xlYLiqk/jByWlmIZ55exeRi2U4eqAeMc+nNA/VnsMeDbIbqepAw/
-	ynfmLhulNHvEiiJiuiup6PJURbrl2cUDaZdo5PYQ+/jzX2ymWJMQXBmlA83+Zr62JPslnVPoUdLNF
-	3nR5K3IN5H7iTQddg1trjcYZ7+mNzRVLh4sDk8E1GEi//te7L6iYmz//Fa9y/WGDYSCY4ryUZzaQF
-	LZZbhgpQ==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWr2N-0000000BN9l-0ZY9;
-	Sat, 20 Dec 2025 07:05:59 +0000
-Message-ID: <4cf65ead-b236-4973-b81b-a45128959a65@infradead.org>
-Date: Fri, 19 Dec 2025 23:05:58 -0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RqjUwU9Y"
+Message-ID: <ee5a3dbe-af8c-46e5-98ea-8165fbeeeccd@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1766214449;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kUR73nv2KAuFsmcIH3gF6bSkayK0unPfWf5p0TiVjAg=;
+	b=RqjUwU9Y1KAuHQ1VKk0KdcGlIPuEIp7HZ69zu2eptfO7tmZia6188/YVg45pmv5FHDGIal
+	83RYISe8fJZ+uK/3aJY17xrg0dlj8nriVvOTC/QdB/FeI8wJnnJSqBaZVgsqk2pSmjgQf0
+	jomiDVFCdCCkkfKVBgNlr08+hdi3weI=
+Date: Fri, 19 Dec 2025 23:07:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mtd: intel-dg: fix array-index-out-of-bounds in
- intel_dg_mtd_probe()
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Alexander Usyskin <alexander.usyskin@intel.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Raag Jadav <raag.jadav@intel.com>,
- Tomas Winkler <tomasw@gmail.com>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aUZFLezigzZQVt55@kspp>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <aUZFLezigzZQVt55@kspp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Zhu Yanjun <mounter625@163.com>, Leon Romanovsky <leon@kernel.org>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Zhu Yanjun <zyjzyj2000@gmail.com>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
+ <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
+ <20251204130559.GA1219718@nvidia.com>
+ <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
+ <2191ee0f-a528-4187-ae5b-5aba18741701@linux.dev>
+ <7e3a294f-5dc2-4e8c-aacc-0286c1592038@linux.dev>
+ <20251218155623.GC400630@unreal>
+ <5d950681-7f16-4b1e-a512-b118c747ffd7@linux.dev>
+ <cbb0ec98-0291-4ec4-9633-690e9199248b@embeddedor.com>
+ <6f15e334-8902-4d1d-adab-aa9ab8f009d6@linux.dev>
+ <d569b5fd-fcca-4dd0-b94b-a6df4e52d940@embeddedor.com>
+ <01b419f6-264e-4faa-b4df-480fdf952d14@linux.dev>
+ <8470c362-8c41-4b99-8c05-0903285c1b6c@embeddedor.com>
+ <1bef81ba-be81-49df-9d86-3cc0cc4bf864@163.com>
+ <ad8987ae-b7fe-47af-a1d2-5055749011c0@embeddedor.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <ad8987ae-b7fe-47af-a1d2-5055749011c0@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
-
-On 12/19/25 10:41 PM, Gustavo A. R. Silva wrote:
-> Fix the UBSAN: array-index-out-of-bounds issue below by updating
-> counter nvm->nregions before the first access to flexible-array
-> member nvm->regions[].
-
-Yeah, I suspected something like that but didn't find any in-tree
-documentation about it.
-
-> from kernel bugzilla:
-> https://bugzilla.kernel.org/show_bug.cgi?id=220823
+在 2025/12/19 1:55, Gustavo A. R. Silva 写道:
 > 
-> Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
 > 
-> Notice that this flexible array is annotated with the counted_by()
-> attribute, hence the counter must always be updated before the
-> first access to the array.
+> On 12/19/25 15:59, Zhu Yanjun wrote:
+>>
+>> 在 2025/12/18 21:48, Gustavo A. R. Silva 写道:
+>>>
+>>>> The struct rxe_recv_wqe is as below.
+>>>>
+>>>> struct rxe_recv_wqe {
+>>>>      __aligned_u64       wr_id;
+>>>>      __u32           reserved;
+>>>>      __u32           padding;
+>>>>      struct rxe_dma_info dma;
+>>>
+>>> Expand struct rxe_dma_info here.
+>>
+>> Thanks. In struct rxe_dma_info, the struct is
+>>
+>> struct rxe_sge {
+>>         __aligned_u64 addr;
+>>         __u32   length;
+>>         __u32   lkey;
+>> };
+>>
+>> But in your commit, struct ib_sge is used.
+>>
+>> struct ib_sge {
+>>      u64 addr;
+>>      u32 length;
+>>      u32 lkey;
+>> };
+>> __aligned_u64 is a 64-bit integer with a guaranteed 8-byte alignment,
+>>
+>> used to preserve ABI correctness across architectures and between
+>>
+>> userspace and kernel, while u64 has architecture-dependent alignment.
+>>
+>> I am not sure if we can treate "struct rxe_sge" as the same with 
+>> "struct ib_sge".
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: ceb5ab3cb646 ("mtd: add driver for intel graphics non-volatile memory device")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Closes: https://lore.kernel.org/linux-hardening/90e419ad-4036-4669-a4cc-8ce5d29e464b@infradead.org/
-
-More appropriately:
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220823
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/mtd/devices/mtd_intel_dg.c | 3 +++
->  1 file changed, 3 insertions(+)
+> Just notice that the original code is the one actually doing that.
+> See my response in this same thread:
 > 
-> diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
-> index 2bab30dcd35f..d3e89fe324b8 100644
-> --- a/drivers/mtd/devices/mtd_intel_dg.c
-> +++ b/drivers/mtd/devices/mtd_intel_dg.c
-> @@ -768,6 +768,9 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
->  	if (!nvm)
->  		return -ENOMEM;
->  
-> +	/* Update nvm->nregions before first access to nvm->regions[] below. */
-> +	nvm->nregions = nregions;
-> +
->  	kref_init(&nvm->refcnt);
->  	mutex_init(&nvm->lock);
->  
+> https://lore.kernel.org/linux-hardening/d3336e9d-2b84-4698-a799- 
+> b49e3845f38f@embeddedor.com/
+> 
+> So, if that code is fine, this is fine. If the original code is wrong,
+> then that code should be fixed first.
 
--- 
-~Randy
+Thanks a lot. Because struct ib_sge and struct ib_sge is different,
+struct ib_sge {
+     u64 addr; <--- u64 has architecture-dependent alignment
+     u32 length;
+     u32 lkey;
+};
+
+struct rxe_sge {
+        __aligned_u64 addr;   <---guaranteed 8-byte alignment,
+
+used to preserve ABI correctness across architectures and between
+
+userspace and kernel
+
+        __u32   length;
+        __u32   lkey;
+};
+
+and struct rxe_sge is used in rxe_mr, it is working between userspace 
+and kernel, thus, I want to keep struct rxe_mr in rxe_mr.
+
+But in other places, I want to replace struct rxe_sge with struct 
+ib_sge. The commit is as below.
+
+In short, the commit "RDMA/rxe: Avoid -Wflex-array-member-not-at-end 
+warnings" && the following commit will work well. I have made tests in 
+my local host. It can work well.
+
+Please Leon and Jason comment.
+
+diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c 
+b/drivers/infiniband/sw/rxe/rxe_mr.c
+index b1df05238848..390ae01f549d 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mr.c
++++ b/drivers/infiniband/sw/rxe/rxe_mr.c
+@@ -341,7 +341,7 @@ int copy_data(
+         enum rxe_mr_copy_dir    dir)
+  {
+         int                     bytes;
+-       struct rxe_sge          *sge    = &dma->sge[dma->cur_sge];
++       struct ib_sge *sge      = &dma->sge[dma->cur_sge];
+         int                     offset  = dma->sge_offset;
+         int                     resid   = dma->resid;
+         struct rxe_mr           *mr     = NULL;
+@@ -580,7 +580,7 @@ enum resp_states rxe_mr_do_atomic_write(struct 
+rxe_mr *mr, u64 iova, u64 value)
+
+  int advance_dma_data(struct rxe_dma_info *dma, unsigned int length)
+  {
+-       struct rxe_sge          *sge    = &dma->sge[dma->cur_sge];
++       struct ib_sge *sge      = &dma->sge[dma->cur_sge];
+         int                     offset  = dma->sge_offset;
+         int                     resid   = dma->resid;
+
+diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c 
+b/drivers/infiniband/sw/rxe/rxe_resp.c
+index 711f73e0bbb1..74f5b695da7a 100644
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@ -283,7 +283,7 @@ static enum resp_states get_srq_wqe(struct rxe_qp *qp)
+                 rxe_dbg_qp(qp, "invalid num_sge in SRQ entry\n");
+                 return RESPST_ERR_MALFORMED_WQE;
+         }
+-       size = sizeof(*wqe) + wqe->dma.num_sge*sizeof(struct rxe_sge);
++       size = sizeof(*wqe) + wqe->dma.num_sge*sizeof(struct ib_sge);
+         memcpy(&qp->resp.srq_wqe, wqe, size);
+
+         qp->resp.wqe = &qp->resp.srq_wqe.wqe;
+diff --git a/include/uapi/rdma/rdma_user_rxe.h 
+b/include/uapi/rdma/rdma_user_rxe.h
+index bb092fccb813..360839498441 100644
+--- a/include/uapi/rdma/rdma_user_rxe.h
++++ b/include/uapi/rdma/rdma_user_rxe.h
+@@ -154,7 +154,7 @@ struct rxe_dma_info {
+         union {
+                 __DECLARE_FLEX_ARRAY(__u8, inline_data);
+                 __DECLARE_FLEX_ARRAY(__u8, atomic_wr);
+-               __DECLARE_FLEX_ARRAY(struct rxe_sge, sge);
++               __DECLARE_FLEX_ARRAY(struct ib_sge, sge);
+         };
+  };
+
+
+To this commit, plus the above commit, it should work well.
+
+Yanjun.Zhu
+
+> 
+> -Gustavo
+> 
+>>
+>>
+>> Leon and Jason, please comment on it.
+>>
+>>
+>> Yanjun.Zhu
+>>
+>>>
+>>>> };
+>>>>
+>>>> But I can not find dma.sge in the above struct. Can you explain it?
+>>>>
+>>>> To be honest, I read your original commit for several times, but I 
+>>>> can not get it.  Can you explain the MACRO TRAILING_OVERLAP? And how 
+>>>> can it replace the following struct?
+>>>
+>>> This is clearly explained in the changelog text. I think what you're
+>>> missing will be clear once you understand how nested structures
+>>> work. See my comment above.
+>>>
+>>> -Gustavo
+>>
+> 
+
