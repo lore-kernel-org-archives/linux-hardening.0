@@ -1,116 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5037F2F261F;
-	Sat, 20 Dec 2025 07:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49DD2F618D
+	for <linux-hardening@vger.kernel.org>; Sat, 20 Dec 2025 07:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766214461; cv=none; b=X5+OveFtcoIsDQs7R8md5LtQFYxKkbAWiak4+oMNPT1v4gHvYOsSx04WDv4XbEbtoUzvOnhNZ/fxtNeI+g9rVOQhlDwVQaYejdDRROIAmahEnduyG5LJoZP5XHJQhix/APOJxPmwZ2JpkyMKnSM5FEkHeVMquPX5hXkol6S1o6k=
+	t=1766214773; cv=none; b=maJ9w73I+VSDxT1D/15OHiZGgZet62vPRNCYxEjKyct/cR6KUI6P24AE795orPNnnZTOR8hKHzgvO1giWlYGdex5p5EOESdoQGXPoW+y55DlzYSJfGxoK/LialUru1n4P55RO/F7VDLFu1eU/BakQG076g6K8TpORrjz25NNYug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766214461; c=relaxed/simple;
-	bh=+PkVN5dAeIa6PcQRAR/h8NFlO87MJ14rZ0rEoov89XU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXF7cv35icnNlv0wpiDnglLamby20yeeDxs2nzgfD4YN87vAA7MmDMrJkJReVSU3+K+qFa79FLx7wNqXZMwFgfSilLZCA37dANiDQ7g3rvEuHznbg4WGo2Wsn+0hp7EBbwIj7rumF3ixP5PV6wNjKLQQHXwgHE242sXt3Fa6KQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dw3mOkTD; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1766214773; c=relaxed/simple;
+	bh=WPMO3B2heEngDGPZXTvUi5d9N9T47ScEsGe5CAP7NVw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pLg5FBa1r+PUoVsB8q8a3TJTpPORC3KOZetD6/lnlop0Sx4YR2zFQvOOZi1WXBEIWQACSGC+T/gNYWs5bR2ch4ky6ABwjWxva32A41xz8t3bZFiZGUUB3qROxaVQuWQz2uvtITS2TLSHfxo+jfVuCQgXeGmGVjevqK9eYLzQy1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=npYhtjZP; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dw3mOkTD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766214459; x=1797750459;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+PkVN5dAeIa6PcQRAR/h8NFlO87MJ14rZ0rEoov89XU=;
-  b=Dw3mOkTDFCKMHaLiMRmjieeGizT1IFwiGcowVNPW+ZBiJwM1ghfeGkiL
-   yZH0kaUEdMUaamoAiTgNn9H9+qav0onIU/yktU3hZ1ga2/BYwi99UpeIi
-   NWGGTmGeYxKsktprLzga3udRpA9UvjfRsHfTzW8eJowDqyRMm1jPHFOEO
-   7n1KzxIC6e5djE78aMDsQtlYnR69lhH8f8qo313hggjefG+M1wocNSSDy
-   cnQi+lohoeNoAydJTnTPZFQltUK/QZcaEj78oHIZIHSc3SCnG/Hj0CfdT
-   z9AYxYw1W5iLLnhMjyscIG0dOXvBrdxev9kqw1eDFw+PxUsZUH5ivbTXZ
-   A==;
-X-CSE-ConnectionGUID: YpUmJJh/RiqeHWKLSJVWRg==
-X-CSE-MsgGUID: d/37ZJJ1QJ2Zm0m9iUdXcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11647"; a="71797666"
-X-IronPort-AV: E=Sophos;i="6.21,162,1763452800"; 
-   d="scan'208";a="71797666"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 23:07:38 -0800
-X-CSE-ConnectionGUID: MLbRm28JTwyDYpid8YBTEA==
-X-CSE-MsgGUID: Ybu/NrVQTYOD1I6qwTUdNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,162,1763452800"; 
-   d="scan'208";a="199289986"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 23:07:36 -0800
-Date: Sat, 20 Dec 2025 08:07:33 +0100
-From: Raag Jadav <raag.jadav@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tomas Winkler <tomasw@gmail.com>, linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mtd: intel-dg: fix array-index-out-of-bounds in
- intel_dg_mtd_probe()
-Message-ID: <aUZLNTOMgvJ8WrIy@black.igk.intel.com>
-References: <aUZFLezigzZQVt55@kspp>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="npYhtjZP"
+Received: from eig-obgw-6002b.ext.cloudfilter.net ([10.0.30.203])
+	by cmsmtp with ESMTPS
+	id WqEVv9tktVCBNWr8uvn1eK; Sat, 20 Dec 2025 07:12:44 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id Wr8tvIFedPL32Wr8tvfgrv; Sat, 20 Dec 2025 07:12:43 +0000
+X-Authority-Analysis: v=2.4 cv=MqhS63ae c=1 sm=1 tr=0 ts=69464c6b
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=QyXUC8HyAAAA:8 a=DfK0_ZNNswAGoXOUU8MA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+ a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=n1Zq/KZ9c9/IpwF7BqDD4sGMIcr8Lqe8exdAPZLEG84=; b=npYhtjZPM4YDM//6yNLsz9nxjd
+	uuUToOf3Fg27jdf1T3OAC1nIL3vh/PRBsKq6h5apacClDHdHbhOzWgdKULNJb4WpsTQB1Vu0yP1YZ
+	kDfle+VkCHzEfY8pS60ppGfN5K/GRcufwrzWWnqNQMLqaoxPHPj/VYitAIMN4IcpRidDBm07FCKfq
+	TX2rozqEbiy8vpe9N2HhVWk/xGhH+LUDLlcCwe6drrZ4j9VmJMjeXP/S1v+Ky2JeW4vCuAiFr6Q/5
+	SdY02XZSJjkajJUvLp0fa6lMSibcZbsCP8efuVpSig0/pKIYbj3vBve4fDl0w/5aNXw5gwk7faf9h
+	7wcaKqIw==;
+Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:60170 helo=[10.83.24.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vWr8r-00000002tT6-3vUy;
+	Sat, 20 Dec 2025 01:12:42 -0600
+Message-ID: <c8190aae-25d8-469d-8efa-6d1ff9482347@embeddedor.com>
+Date: Sat, 20 Dec 2025 16:12:33 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aUZFLezigzZQVt55@kspp>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mtd: intel-dg: fix array-index-out-of-bounds in
+ intel_dg_mtd_probe()
+To: Raag Jadav <raag.jadav@intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+ Alexander Usyskin <alexander.usyskin@intel.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tomas Winkler <tomasw@gmail.com>,
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aUZFLezigzZQVt55@kspp> <aUZLNTOMgvJ8WrIy@black.igk.intel.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <aUZLNTOMgvJ8WrIy@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 118.18.233.1
+X-Source-L: No
+X-Exim-ID: 1vWr8r-00000002tT6-3vUy
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:60170
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNRcF0vBcb7RqzVV07bJXqEG6RZM7MhI2LCRJl+NUCRNHgnjqg9Kv6EUgs52HHUTJcdB6M745V/U8qJIVmCMWtsQMuR0nDV0JcoarSnEkPZFZxG6kP+V
+ W23hPCW39VzGPxLZ6I8h0DbBCVEhMyU/Tf7CZ8ndlt0kz+GtcIzMQlDGnvdADW2BlBI1DGBkWF6PpVmM3T92MZiIBqVUhsGURAmdYTJAN0atWDrHUYTFcsDO
 
-On Sat, Dec 20, 2025 at 03:41:49PM +0900, Gustavo A. R. Silva wrote:
-> Fix the UBSAN: array-index-out-of-bounds issue below by updating
-> counter nvm->nregions before the first access to flexible-array
-> member nvm->regions[].
-> 
-> from kernel bugzilla:
-> https://bugzilla.kernel.org/show_bug.cgi?id=220823
-> 
-> Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
-> 
-> Notice that this flexible array is annotated with the counted_by()
-> attribute, hence the counter must always be updated before the
-> first access to the array.
 
-Already fixed[1], but not sure if it's landed yet.
 
-[1] https://lore.kernel.org/linux-mtd/20251111-mtd-nregions-v1-1-61db61e78c63@intel.com/
-
-Raag
-
-> Cc: stable@vger.kernel.org
-> Fixes: ceb5ab3cb646 ("mtd: add driver for intel graphics non-volatile memory device")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Closes: https://lore.kernel.org/linux-hardening/90e419ad-4036-4669-a4cc-8ce5d29e464b@infradead.org/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/mtd/devices/mtd_intel_dg.c | 3 +++
->  1 file changed, 3 insertions(+)
+On 12/20/25 16:07, Raag Jadav wrote:
+> On Sat, Dec 20, 2025 at 03:41:49PM +0900, Gustavo A. R. Silva wrote:
+>> Fix the UBSAN: array-index-out-of-bounds issue below by updating
+>> counter nvm->nregions before the first access to flexible-array
+>> member nvm->regions[].
+>>
+>> from kernel bugzilla:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=220823
+>>
+>> Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
+>>
+>> Notice that this flexible array is annotated with the counted_by()
+>> attribute, hence the counter must always be updated before the
+>> first access to the array.
 > 
-> diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
-> index 2bab30dcd35f..d3e89fe324b8 100644
-> --- a/drivers/mtd/devices/mtd_intel_dg.c
-> +++ b/drivers/mtd/devices/mtd_intel_dg.c
-> @@ -768,6 +768,9 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
->  	if (!nvm)
->  		return -ENOMEM;
->  
-> +	/* Update nvm->nregions before first access to nvm->regions[] below. */
-> +	nvm->nregions = nregions;
-> +
->  	kref_init(&nvm->refcnt);
->  	mutex_init(&nvm->lock);
->  
-> -- 
-> 2.43.0
+> Already fixed[1], but not sure if it's landed yet.
 > 
+> [1] https://lore.kernel.org/linux-mtd/20251111-mtd-nregions-v1-1-61db61e78c63@intel.com/
+
+Great! :)
+
+Thanks
+-Gustavo
+
