@@ -1,142 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D3218FDAF;
-	Fri, 19 Dec 2025 22:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78938267AF2
+	for <linux-hardening@vger.kernel.org>; Sat, 20 Dec 2025 04:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766184044; cv=none; b=qmD04eOssYUBEoR5sXU00u33ErBkL+l8ikJF/RrIAiaZv+c7V8VIdV+z/m0KVtmn3HKM/X4iWV69hL3NG3RQcSdksh8PTY4sVYJ7ImTB+wsKnP/Q1heN1u1IMgY2lDwdHm9Zgv8KPPPY2N76kLobbdJD50b8ib0M3bjS6hQVDfw=
+	t=1766204419; cv=none; b=uc/TLV+u67ddHYB5cnhpTNKC6WIn+Ti+MlgBKA++KNYJj1jaDRND/pxwr3C8v3X6ci3W5cxV171f8mUQ4jqdWpjDltmXugGr6lwBPUf7m0VnSwET4A7OH5e3nKVYuZSMAhFHai0JA3pEJ9t+Ut1VJ6qrpfvTnqvNJPpAM65umng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766184044; c=relaxed/simple;
-	bh=uAEpBNv+CmgIxmDyHDHgY/r2XzHv2JsQOvxnxQ6j1fI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h19Ce6YpYUb50H+Edc4WwLWJdYO28QbSCiiS7bsVk9EQ6bw+0YfzcAwef6+v6ahDyKCXqicVB2zIahN4gBLoybmgktdtnL47oBGq7Qt/sOyTA3K810MwOVGvd88b2QBnBsskMSz/+dvm9TPRNJK+wh90futFhOYuXYphtfdwI0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qi2gCD/z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766204419; c=relaxed/simple;
+	bh=icrpJhOrHzN1w/BxS6MLquQdQ/XVQQ8eBSbQkS8B3d0=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=YbOYHD67aAhjDABiIQj23xkBtmTkCimtQJdjdXvD6Va++daVFAntVBXDyfExyFtRTB22gRwpQXYwNqujh4tK1Bho2I415zMF1yzOSEC5RRwjIgFVb/6NTQEC6ezSt8+4AngmFlHDUpiXSuUfaAXA1i8WySxDayNn8u9PlFYxjRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=atoIBtVN; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qi2gCD/z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18457C113D0;
-	Fri, 19 Dec 2025 22:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766184044;
-	bh=uAEpBNv+CmgIxmDyHDHgY/r2XzHv2JsQOvxnxQ6j1fI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Qi2gCD/zXBNO6PpRplvsyMGPz4YlZ4NQsZq6oJc4WREI1MKf9btW+c0LqUWho8zCy
-	 fMUJ9C7ItN8pdGW9Gg8DiDfbpfqgCcS0ceHQLNXiPQ1xDlDri08JV54M9xr8hrLRgk
-	 xbKpWZrLZMJaAP7JqFYbI0RPXwx7nswt3hlY7Sp99Ul9uCbLKS6kyqRnA0Mhpep8mN
-	 qgMibLS2l3Fk/tPA5vPv08KDPTLUA9HhCHBEIuCvJN1dU9uux0k8V0nSUmjz4OaiEC
-	 MubUbbeHUPFKXNiwdNWROxW4MWuMXgCraVGscMz47UftT+HOFKoj4U3Sz2V/nftcZL
-	 ibYGLe4brERxg==
-From: Vincent Mailhol <mailhol@kernel.org>
-Date: Fri, 19 Dec 2025 23:39:48 +0100
-Subject: [PATCH v2 4/4] minmax: remove useless cast in __is_nonneg()
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="atoIBtVN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:Subject:From:To:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=fKaEL6Ojgmgiqu/WwkiRMd6jGBm5hHntfnKxlBYkrCU=; b=atoIBtVNujKhQiOrhoJ5szAG/T
+	TCYdGsIokV+flOtJqhzm5eH696frcvaxT4WQ0Mq2LREhS0tlSziL0HHrOl0BStk3iUOPW/1fYZq8E
+	nnb3TWCLjL+tvcuqBNy8SbVGtAfeMEHl8RyIwp8gZCzLQZ/+naC1WDIelhELYzfircr58k9ZQWofn
+	WdgL1x1SaAl5eikyugiAqoBcVrlj3eRRVFnl46BF+zyeY67dubfB8bDKWuKA8GeJCoGYHZgMO+aUX
+	IbJcxGbad+pSuE7se/Puvw2bubyeawyCL9rqWtMs20R/wCDU30lh8dMcnDdKAZL7onst5TJScnvjM
+	nSD7gWDQ==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vWoRy-0000000BI34-3G7H;
+	Sat, 20 Dec 2025 04:20:14 +0000
+Message-ID: <90e419ad-4036-4669-a4cc-8ce5d29e464b@infradead.org>
+Date: Fri, 19 Dec 2025 20:20:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>, kasan-dev@googlegroups.com,
+ linux-hardening@vger.kernel.org
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: UBSAN: array-index-out-of-bounds
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251219-remove_wtype-limits-v2-4-2e92b3f566c5@kernel.org>
-References: <20251219-remove_wtype-limits-v2-0-2e92b3f566c5@kernel.org>
-In-Reply-To: <20251219-remove_wtype-limits-v2-0-2e92b3f566c5@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
- linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Vincent Mailhol <mailhol@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3094; i=mailhol@kernel.org;
- h=from:subject:message-id; bh=uAEpBNv+CmgIxmDyHDHgY/r2XzHv2JsQOvxnxQ6j1fI=;
- b=owGbwMvMwCV2McXO4Xp97WbG02pJDJmuVzxNZFtvnF3k4jDx27zFjimNTiyq3zXCrI4nRH1+V
- dqSvLm1YyILgxgXg6WYIsuyck5uhY5C77BDfy1h5rAygQyRFmlgAAIWBr7cxLxSIx0jPVNtQz1D
- Qx0gk4GLUwCm+qE0w1/pFp3T5387dN47sNlnk0aYYfO5KfZrjk1svKgoPkVqdfY1RoatvjXXS3i
- WnCzmPbUxuFEsZoJjz2mdlXX9B/btOBj4dRYnAA==
-X-Developer-Key: i=mailhol@kernel.org; a=openpgp;
- fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
 
-The function like macro __is_nonneg() casts its argument to (long long)
-in an attempt to silence -Wtype-limits warnings on unsigned values.
 
-But this workaround is incomplete as proven here:
+from kernel bugzilla:
+https://bugzilla.kernel.org/show_bug.cgi?id=220823
 
-  $ cat foo.c
-  #include <linux/minmax.h>
 
-  int foo(unsigned int a)
-  {
-  	return __is_nonneg(a);
-  }
-  $ make CFLAGS_KERNEL="-Wtype-limits" foo.o
-    CALL    scripts/checksyscalls.sh
-    DESCEND objtool
-    INSTALL libsubcmd_headers
-    CC      foo.o
-  foo.c: In function 'foo':
-  ./include/linux/minmax.h:68:57: warning: comparison is always true due to limited range of data type [-Wtype-limits]
-     68 | #define __is_nonneg(ux) statically_true((long long)(ux) >= 0)
-        |                                                         ^~
-  ./include/linux/compiler.h:350:50: note: in definition of macro 'statically_true'
-    350 | #define statically_true(x) (__builtin_constant_p(x) && (x))
-        |                                                  ^
-  foo.c:5:16: note: in expansion of macro '__is_nonneg'
-      5 |         return __is_nonneg(a);
-        |                ^~~~~~~~~~~
-  ./include/linux/minmax.h:68:57: warning: comparison is always true due to limited range of data type [-Wtype-limits]
-     68 | #define __is_nonneg(ux) statically_true((long long)(ux) >= 0)
-        |                                                         ^~
-  ./include/linux/compiler.h:350:57: note: in definition of macro 'statically_true'
-    350 | #define statically_true(x) (__builtin_constant_p(x) && (x))
-        |                                                         ^
-  foo.c:5:16: note: in expansion of macro '__is_nonneg'
-      5 |         return __is_nonneg(a);
-        |                ^~~~~~~~~~~
+Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
 
-And because -Wtype-limits is now globally disabled, such a workaround
-now becomes useless. Remove the __is_nonneg()'s cast and its related
-comment.
 
-Signed-off-by: Vincent Mailhol <mailhol@kernel.org>
----
-Changelog:
+(from drivers/mtd/devices/mtd_intel_dg.c:)
 
-  v1 -> v2: new patch
----
- include/linux/minmax.h | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+	nvm = kzalloc(struct_size(nvm, regions, nregions), GFP_KERNEL);
+...
 
-diff --git a/include/linux/minmax.h b/include/linux/minmax.h
-index a0158db54a04..3e2e3e539ba1 100644
---- a/include/linux/minmax.h
-+++ b/include/linux/minmax.h
-@@ -52,9 +52,6 @@
- /*
-  * Check whether a signed value is always non-negative.
-  *
-- * A cast is needed to avoid any warnings from values that aren't signed
-- * integer types (in which case the result doesn't matter).
-- *
-  * On 64-bit any integer or pointer type can safely be cast to 'long long'.
-  * But on 32-bit we need to avoid warnings about casting pointers to integers
-  * of different sizes without truncating 64-bit values so 'long' or 'long long'
-@@ -65,7 +62,7 @@
-  * but they are handled by the !is_signed_type() case).
-  */
- #if __SIZEOF_POINTER__ == __SIZEOF_LONG_LONG__
--#define __is_nonneg(ux) statically_true((long long)(ux) >= 0)
-+#define __is_nonneg(ux) statically_true((ux) >= 0)
- #else
- #define __is_nonneg(ux) statically_true( \
- 	(typeof(__builtin_choose_expr(sizeof(ux) > 4, 1LL, 1L)))(ux) >= 0)
+	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
+		if (!invm->regions[i].name)
+			continue;
 
+		char *name = kasprintf(GFP_KERNEL, "%s.%s",
+				       dev_name(&aux_dev->dev), invm->regions[i].name);
+		if (!name)
+			continue;
+750:		nvm->regions[n].name = name;
+		nvm->regions[n].id = i;
+		n++;
+	}
+	nvm->nregions = n;
+
+
+regions is a flexible array in struct intel_dg_nvm *nvm; [see below]
+regions is counted_by nvm->nregions.
+
+Question: does UBSAN use the value of the counted_by variable for array bounds
+checking?
+If so, that means nvm->nregions must be updated before the array entry
+is used. Is that correct?
+
+If not, how does UBSAN do array-bounds checking in cases like this?
+
+
+struct intel_dg_nvm {
+	struct kref refcnt;
+	struct mtd_info mtd;
+	struct mutex lock; /* region access lock */
+	void __iomem *base;
+	void __iomem *base2;
+	bool non_posted_erase;
+
+	size_t size;
+	unsigned int nregions;
+	struct {
+		const char *name;
+		u8 id;
+		u64 offset;
+		u64 size;
+		unsigned int is_readable:1;
+		unsigned int is_writable:1;
+	} regions[] __counted_by(nregions);
+};
+
+thanks.
 -- 
-2.51.2
+~Randy
 
