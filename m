@@ -1,91 +1,99 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2C83016F4
-	for <linux-hardening@vger.kernel.org>; Mon, 22 Dec 2025 20:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AF7225785
+	for <linux-hardening@vger.kernel.org>; Mon, 22 Dec 2025 23:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766435097; cv=none; b=QP1oy+AeLJ0SI+eieuVe1ixLRZe7yHUyPphZLOz+Y4KGa86SiZVYg0E1mV7ADW/qaICvXaa1RRpJezdY6FNRvdQHvd4vwWVwmNaaW6nO1dky/F9ndRFvmoc3W9dbY6pVGcWLkl/FWukZJBQQgecJhOVJkhEsJdw4ZpzLp3JXr2I=
+	t=1766446121; cv=none; b=fqOD+dxnni8CC/dgBuLgv3yv4tewW5BmxKOijLizL7BkdQuJ7WQ1OB7N3NMWMN6uzW/MLNTGhL6jk8Wx2KibKVSVbHpAN8oue4C4UTB/BtGQjGliVXBlLj/R7Pan6syw52/mwwSYH3yQX64uFgTfvgBwtp+V5lZpUqy+MxaQnhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766435097; c=relaxed/simple;
-	bh=n4uTk6JujUshZIHOvlYzInxYcuTU4c5NJcNylTC9QPM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WWa7MwMb0mDG4j+uFvFlQJ/xaL4bTV0Isgv5BmGHEAv8MRKapx049CLmuK/7Cz5jdJz1/FNQxJmhsxlxrScViVRysAPkXWQ7FZQn8SdVW83/liUCXEi+yTr0euOtHEc6p641eYYbdEqnMHEURlmS0dJ2942NYf9XeyOYDmCzRP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A5+IgbhD; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
+	s=arc-20240116; t=1766446121; c=relaxed/simple;
+	bh=R3fe91pMWYmRZPN32QqlJWbZt+q2EYCEmx6Y8mW/T00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dc0r7SZH7ZAd8w9F2IBF3HgWzYVmUp8PvF/FMjYAl82JC0/98rzZ0aycvqWAk9p5zKX8erfHEW2szSDZE4L/iUNjE14RguFMQrEiml6zpzCYzPPhZ0njhHAY+6ubcgJU4uthrLJ/Tppk+I2w9BvaAyOtUXUIe1VE84zjzK/WlMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LFtXiYEe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A5+IgbhD"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34c48a76e75so9640139a91.1
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Dec 2025 12:24:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1766435096; x=1767039896; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QJyrOGxlu0ScfVIWQXAbbLBtlLqeU/M6daVE2o6S+8M=;
-        b=A5+IgbhDFW1GBrOYCd9yoeP6LVpa6uEkMQavd8EA+mlgm4e0HqlSMqap4Ks8f/TFm9
-         m09wn6mc4y/vor+HQ8Yi6b5KTJdmsyu4jyLdn+xRvOM6smlXJIZnskBbjQPsSd8j11Uh
-         2zYEqImfX8ctuw+GpIZ9efiaB7OFFlYNljuQ6hD76KNdN5TvYnFTCmd+xDibr5xN+1Lz
-         kC9yvkb1BrKjajskcyxLyV9rkwecNyDX+InsIh0vYdZce7G/pQIh22ykI5xL6rSa/2T1
-         uSERd8axDwRSNrqkouO3EW9tsAlJ8yrJTH0tgksCGyv6eErNKJSa/J3NQ4CiFC9gaX4P
-         egkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766435096; x=1767039896;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QJyrOGxlu0ScfVIWQXAbbLBtlLqeU/M6daVE2o6S+8M=;
-        b=E1E72cQzWQlCobBZ3gL4G0/bdMqAJmbSbw1pd2piqs0GIw5doCoDP+TFO3QShR08aN
-         MUkpnXWF8lfvKR0AdYMw1x2EiELXRImAPtOSWKBh9WYNp84BwLpBTCJ/mWfbG0Dd2/Sq
-         wzAlB3IHwbUH6ftn/onu3Mh+ZmWze2XRUSUqxUS/pBv1N9YYgVjg9+gK7Vnzxm/AJ/ZE
-         0ov3TXf9VlnF3n3EIjY854xTBQZeJmnkFqIP3svuWQfOy7JViBuD4ZYaWg4lnDkRumU2
-         jt8VumgTei1yUxJQ3BAId5dsQJFvvcjeyGtqjZek/ohQTBST/bBP4slbVIEwysYXEufP
-         qQOg==
-X-Forwarded-Encrypted: i=1; AJvYcCV24Y1JDtYsbBfLIPBkX2RMMvPIBujx3ZGoA617owWJBFzO/2yxpiHJyEveruYdWgpZwNr6ulrodQ7Xs0yUjVw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOo8ilc/tx9fWcWY30nGDW9iXWXQ+jDjOvSChsBGbSl91Bs/RP
-	5ISwnftTCGrVYrsTeKZfDrYr3dglCsJQm3KiQSdlaiSFkUJ+qQ8xW17+QfEX34QQSGv39q6QgO1
-	/8UYqTMwWaYZ+7aq6H6GlB8qFx+7gbA==
-X-Google-Smtp-Source: AGHT+IHuYKdQ5x164yb7PryotVkYr394zzpivyA8SkPxp1eaMzgRUNIdpkWI9Pa38anpX/MBv/MMg98T9PztL+Gp/ug=
-X-Received: from dlc23.prod.google.com ([2002:a05:7022:397:b0:120:5f59:867])
- (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:701b:2714:b0:11a:962:99c2 with SMTP id a92af1059eb24-121723091efmr8988677c88.38.1766435095697;
- Mon, 22 Dec 2025 12:24:55 -0800 (PST)
-Date: Mon, 22 Dec 2025 20:24:15 +0000
-In-Reply-To: <20251119225439.work.741-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LFtXiYEe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40145C4CEF1;
+	Mon, 22 Dec 2025 23:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766446121;
+	bh=R3fe91pMWYmRZPN32QqlJWbZt+q2EYCEmx6Y8mW/T00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LFtXiYEe09n4obtayrA1VVdpvDSsbqosxKdYWzQ+CL7Rrz20MI5u+rugv3JjL9xil
+	 luNgVWDao/fwI9lZD3BKtrlsACFVgMmljsOvKXf7HXAc9clzrSr0iJ+mQrGpHwWB7c
+	 5X6QKLQNMvj0LnW4Lb+pigQ9g6yAHOwA5JVi9AHCIOhV4q7ka/ScBTR+6rERsPkXPE
+	 mv4wTfypX+mNGqolcc76B+ZJ3/2U4V+xT704MQjWi/DRBCXt3oS2H6Gy1nUVPKfrYm
+	 YI50dcKptOMHDF3YT6zJNEXhLCPnPfXzDBEYCFecb1K0A1EL6GHrdzmedv4BluHfnb
+	 5gYGWR9UrPO8A==
+Date: Mon, 22 Dec 2025 15:28:40 -0800
+From: Kees Cook <kees@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: UBSAN: array-index-out-of-bounds
+Message-ID: <202512221526.451D1BE1B@keescook>
+References: <90e419ad-4036-4669-a4cc-8ce5d29e464b@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251119225439.work.741-kees@kernel.org>
-X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=291; i=samitolvanen@google.com;
- h=from:subject:message-id; bh=n4uTk6JujUshZIHOvlYzInxYcuTU4c5NJcNylTC9QPM=;
- b=owGbwMvMwCUWxa662nLh8irG02pJDJmeKz5PZdF4l+zJ15V2zFL8buuP17Nyf2yfoLvd6d/ao
- kcfJVsrOkpZGMS4GGTFFFlavq7euvu7U+qrz0USMHNYmUCGMHBxCsBE6tkZGTatk/qcHSPI/miV
- KcOeG/ltBfcX6Jb+U/xlI7xNYceZn2wM/7T/Hi9ccc5n9vRDHw30FDLV7qTNyJn0/bEwW2GOUXb yahYA
-X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
-Message-ID: <176643400582.1902051.3878925092193822803.b4-ty@google.com>
-Subject: Re: [PATCH] module/decompress: Avoid open-coded kvrealloc()
-From: Sami Tolvanen <samitolvanen@google.com>
-To: Petr Pavlu <petr.pavlu@suse.com>, Kees Cook <kees@kernel.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	Daniel Gomez <da.gomez@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <90e419ad-4036-4669-a4cc-8ce5d29e464b@infradead.org>
 
-On Wed, 19 Nov 2025 14:54:43 -0800, Kees Cook wrote:
-> Replace open-coded allocate/copy with kvrealloc().
+On Fri, Dec 19, 2025 at 08:20:13PM -0800, Randy Dunlap wrote:
+> 
+> from kernel bugzilla:
+> https://bugzilla.kernel.org/show_bug.cgi?id=220823
 > 
 > 
+> Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
+> 
+> 
+> (from drivers/mtd/devices/mtd_intel_dg.c:)
+> 
+> 	nvm = kzalloc(struct_size(nvm, regions, nregions), GFP_KERNEL);
 
-Applied to modules-next, thanks!
+Yes, this needs to be immediately followed with:
 
-[1/1] module/decompress: Avoid open-coded kvrealloc()
-      commit: 68e85558587e6bbb5c3ea3c8b4c71ab852e4b53e
+	nvm->nregions = nregions;
 
-Best regards,
+> ...
+> 
+> 	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
+> 		if (!invm->regions[i].name)
+> 			continue;
+> 
+> 		char *name = kasprintf(GFP_KERNEL, "%s.%s",
+> 				       dev_name(&aux_dev->dev), invm->regions[i].name);
+> 		if (!name)
+> 			continue;
+> 750:		nvm->regions[n].name = name;
+> 		nvm->regions[n].id = i;
+> 		n++;
+> 	}
+> 	nvm->nregions = n;
+> 
+> 
+> regions is a flexible array in struct intel_dg_nvm *nvm; [see below]
+> regions is counted_by nvm->nregions.
 
-	Sami
+Now, will nregions change again after this point? There is a question of
+whether nvm->nregions represents the _allocation_ size or the _valid_
+size. It seems like a max is allocated but then only populated up to a
+certain point?
 
+> Question: does UBSAN use the value of the counted_by variable for array bounds
+> checking?
+
+Yes.
+
+> If so, that means nvm->nregions must be updated before the array entry
+> is used. Is that correct?
+
+Yes.
+
+-- 
+Kees Cook
