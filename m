@@ -1,66 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C635D233134;
-	Sat, 20 Dec 2025 18:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A592A2FE04E;
+	Mon, 22 Dec 2025 10:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766254963; cv=none; b=VwZJqLDDcJ9fkEBRJanuM1zIbwgcX+yTjLR3OrOQG6V4D3BFaj4f+Aq2OsW1TiA5z6rhEdRr+HXmiFTt+F0StSzggW3XdSYVKm0AXzub0yyaTP6VpS3sak7guKAI8CQb7qXj8c85naPAkONK07WMvIhQSl426NwjHOGiT2hPTCY=
+	t=1766397878; cv=none; b=Gs7LzYzqLSBrDQF4WVrEEV2rcHDk65ZHM2Kr2yBmasbvIUv1/7fCwJbAcSh6H4A/3lB6PRGc/djfV/k/Beq3H76bBWgItuiJehzA2XG/ZI8udyQKjtwrlFeWiJAxslK3Q+W7HPNQRslkm/wcnYN51FJ6AiowY7hOJUwbQ01tEtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766254963; c=relaxed/simple;
-	bh=jwD9JF1XWRo08bLaqC1IP6DQSrv2Y2f69IjjEBAuUTs=;
+	s=arc-20240116; t=1766397878; c=relaxed/simple;
+	bh=J1EZZVCwpTiIbAyrMOpmNy+FRRI8Ai9A8vQMUUkNmH0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iVFxEyDyECWc/+XFBenWFciMKdBFJxIFWEAaxgntJGLaPfeF+WDSv5F1jU3a6qa6CFu9FWPZXBmotnximDO5AeZTZVo1V8Rt5TD35A4NBpFpWM2oe4rDDJNladPkn++ISYXy7ZSR49HobeAWdJpr0jIzwtKzyhO5pLGmf4XctE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X+2V9U4i; arc=none smtp.client-ip=198.175.65.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSWTiXFnd30+aaVlqtvoqWj1p3UCXDzQ3RM4OTgoDqoDHTjp4SwOTRmKoHFFWE4YP0haMFYRWjv03j9p4UsIODFOLokLUdusTntZM8JfOlb0OkofPGP6g2VJeBO4jzGkWNQ5gGBR5HycrH87xjBN4ic9tLCGxmhsE5+Y+RZH07M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DX3xwYra; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X+2V9U4i"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DX3xwYra"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766254961; x=1797790961;
+  t=1766397876; x=1797933876;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=jwD9JF1XWRo08bLaqC1IP6DQSrv2Y2f69IjjEBAuUTs=;
-  b=X+2V9U4ilXZ62z4oprkds/3ER5YR9WVfFjSoD29UzAeArVOtQRdIgbEZ
-   I51pkoIyt4L/HQ64EPpYSBJcz2iM2POZOCmKc47X3SlMuh21ADDTOtTwF
-   SQbRR+gkbzg/7YxmGxBoJSsjfBjMDneVH+jWlpm17lSeY6CWKWtygE/Hw
-   623cuo6vrfDi4z/oUvF4OjQlIjDvqKL4z6K6Dou9srgXPx9symKe0uCGq
-   CEQTCUtvMAKT/6p7gG1h8iOew58nm1dlHDBMGLi9Vu6qwiA9XwqxwFXRv
-   XWTJcIYbFUc4uffslPTQJCd0emlPCEEpkAKiQ0ELr9zFaswU+QrUvMmMy
+  bh=J1EZZVCwpTiIbAyrMOpmNy+FRRI8Ai9A8vQMUUkNmH0=;
+  b=DX3xwYraDdOg7VESPHMr33rlqhhNbppdLOtjw1WzT0k1mYAcMNnAhkVk
+   rQStC4xW7BdQeIsHLb0DcXK8TwD/2kRhC/0MZhoHB7xenrd+KebeiO9Zo
+   SxkqvOUhipJLJJTTiQRXOaf5NghgOmwjcz82j4M0aoNKZWbqgxA7ai11E
+   7RcRFMQMSaAGFOQ1TApGjXnrYD3NrhFSNULv7tCxGEZoZFBxEWCUEofjo
+   Mmdnf4qbDMnDN7TX915Jo4igKHm4JD3rPreuamYEP0ZeJ9xGYBLU/aNAe
+   a/8GHxoJ9zWCkhmaca4af9Pijy4tjoMFjhXsrO0gJ46Gts9kHwbCFkmJv
    g==;
-X-CSE-ConnectionGUID: Woa9krmbSCiVYfBpU+hFKg==
-X-CSE-MsgGUID: /qBsMdQ1SAKHdjVnY9v7HQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11648"; a="68334610"
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="68334610"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2025 10:22:41 -0800
-X-CSE-ConnectionGUID: eZWzadxLTG6eqk7+ipkMVQ==
-X-CSE-MsgGUID: 7F/cbxTQSpuWktK5vEPTeg==
+X-CSE-ConnectionGUID: PEWuh9piQhKmScX5SyFXqQ==
+X-CSE-MsgGUID: csPj7wriT8SLUGrwk/MfBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11649"; a="71883096"
+X-IronPort-AV: E=Sophos;i="6.21,167,1763452800"; 
+   d="scan'208";a="71883096"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 02:04:36 -0800
+X-CSE-ConnectionGUID: SENbKwQ2TGuu/Q2AuFUCmg==
+X-CSE-MsgGUID: nfxshazyT4av5RHtxHYyhw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="236556869"
-Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 20 Dec 2025 10:22:38 -0800
-Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
+X-IronPort-AV: E=Sophos;i="6.21,167,1763452800"; 
+   d="scan'208";a="222977989"
+Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 22 Dec 2025 02:04:31 -0800
+Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vX1b9-0000000050X-00FL;
-	Sat, 20 Dec 2025 18:22:35 +0000
-Date: Sun, 21 Dec 2025 02:21:44 +0800
+	id 1vXcmC-000000000MH-2wzD;
+	Mon, 22 Dec 2025 10:04:28 +0000
+Date: Mon, 22 Dec 2025 18:03:51 +0800
 From: kernel test robot <lkp@intel.com>
-To: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+To: Vincent Mailhol <mailhol@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Chris Mason <chris.mason@fusionio.com>,
+	David Sterba <dsterba@suse.com>, Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>
-Subject: Re: [PATCH 2/3] dma: amlogic: Add general DMA driver for SoCs
-Message-ID: <202512210111.1UZxHivt-lkp@intel.com>
-References: <20251216-amlogic-dma-v1-2-e289e57e96a7@amlogic.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org,
+	linux-sparse@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-btrfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Vincent Mailhol <mailhol@kernel.org>
+Subject: Re: [PATCH v3 3/3] overflow: Remove is_non_negative() and
+ is_negative()
+Message-ID: <202512221735.mRV4BZqB-lkp@intel.com>
+References: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,51 +79,68 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251216-amlogic-dma-v1-2-e289e57e96a7@amlogic.com>
+In-Reply-To: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
 
-Hi Xianwei,
+Hi Vincent,
 
-kernel test robot noticed the following build errors:
+kernel test robot noticed the following build warnings:
 
-[auto build test ERROR on 8f0b4cce4481fb22653697cced8d0d04027cb1e8]
+[auto build test WARNING on 3e7f562e20ee87a25e104ef4fce557d39d62fa85]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Xianwei-Zhao-via-B4-Relay/dt-bindings-dma-Add-Amlogic-general-DMA/20251216-163238
-base:   8f0b4cce4481fb22653697cced8d0d04027cb1e8
-patch link:    https://lore.kernel.org/r/20251216-amlogic-dma-v1-2-e289e57e96a7%40amlogic.com
-patch subject: [PATCH 2/3] dma: amlogic: Add general DMA driver for SoCs
-config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20251221/202512210111.1UZxHivt-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251221/202512210111.1UZxHivt-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Mailhol/kbuild-remove-gcc-s-Wtype-limits/20251220-190509
+base:   3e7f562e20ee87a25e104ef4fce557d39d62fa85
+patch link:    https://lore.kernel.org/r/20251220-remove_wtype-limits-v3-3-24b170af700e%40kernel.org
+patch subject: [PATCH v3 3/3] overflow: Remove is_non_negative() and is_negative()
+config: x86_64-randconfig-161-20251222 (https://download.01.org/0day-ci/archive/20251222/202512221735.mRV4BZqB-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512210111.1UZxHivt-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512221735.mRV4BZqB-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+smatch warnings:
+fs/libfs.c:1628 generic_check_addressable() warn: unsigned '*_d' is never less than zero.
+fs/libfs.c:1628 generic_check_addressable() warn: unsigned '_a' is never less than zero.
+mm/vmalloc.c:4708 remap_vmalloc_range_partial() warn: unsigned '*_d' is never less than zero.
+mm/vmalloc.c:4708 remap_vmalloc_range_partial() warn: unsigned '_a' is never less than zero.
 
->> drivers/dma/amlogic-dma.c:132:41: error: argument 'chan_ns' to the 'counted_by' attribute is not a field declaration in the same structure as 'aml_chans'
-     132 |         struct aml_dma_chan             aml_chans[]__counted_by(chan_ns);
-         |                                         ^~~~~~~~~
+vim +1628 fs/libfs.c
 
-
-vim +132 drivers/dma/amlogic-dma.c
-
-   120	
-   121	struct aml_dma_dev {
-   122		struct dma_device		dma_device;
-   123		void __iomem			*base;
-   124		struct regmap			*regmap;
-   125		struct clk			*clk;
-   126		int				irq;
-   127		struct platform_device		*pdev;
-   128		struct aml_dma_chan		*aml_rch[MAX_CHAN_ID];
-   129		struct aml_dma_chan		*aml_wch[MAX_CHAN_ID];
-   130		unsigned int			chan_nr;
-   131		unsigned int			chan_used;
- > 132		struct aml_dma_chan		aml_chans[]__counted_by(chan_ns);
-   133	};
-   134	
+1b061d9247f71c Christoph Hellwig   2010-05-26  1613  
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1614  /**
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1615   * generic_check_addressable - Check addressability of file system
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1616   * @blocksize_bits:	log of file system block size
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1617   * @num_blocks:		number of blocks in file system
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1618   *
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1619   * Determine whether a file system with @num_blocks blocks (and a
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1620   * block size of 2**@blocksize_bits) is addressable by the sector_t
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1621   * and page cache of the system.  Return 0 if so and -EFBIG otherwise.
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1622   */
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1623  int generic_check_addressable(unsigned blocksize_bits, u64 num_blocks)
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1624  {
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1625  	u64 last_fs_block = num_blocks - 1;
+25050181b61aa0 Pankaj Raghav       2025-06-30  1626  	u64 last_fs_page, max_bytes;
+25050181b61aa0 Pankaj Raghav       2025-06-30  1627  
+25050181b61aa0 Pankaj Raghav       2025-06-30 @1628  	if (check_shl_overflow(num_blocks, blocksize_bits, &max_bytes))
+25050181b61aa0 Pankaj Raghav       2025-06-30  1629  		return -EFBIG;
+25050181b61aa0 Pankaj Raghav       2025-06-30  1630  
+25050181b61aa0 Pankaj Raghav       2025-06-30  1631  	last_fs_page = (max_bytes >> PAGE_SHIFT) - 1;
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1632  
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1633  	if (unlikely(num_blocks == 0))
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1634  		return 0;
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1635  
+25050181b61aa0 Pankaj Raghav       2025-06-30  1636  	if (blocksize_bits < 9)
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1637  		return -EINVAL;
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1638  
+a33f13efe05192 Joel Becker         2010-08-16  1639  	if ((last_fs_block > (sector_t)(~0ULL) >> (blocksize_bits - 9)) ||
+a33f13efe05192 Joel Becker         2010-08-16  1640  	    (last_fs_page > (pgoff_t)(~0ULL))) {
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1641  		return -EFBIG;
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1642  	}
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1643  	return 0;
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1644  }
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1645  EXPORT_SYMBOL(generic_check_addressable);
+30ca22c70e3ef0 Patrick J. LoPresti 2010-07-22  1646  
 
 -- 
 0-DAY CI Kernel Test Service
