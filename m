@@ -1,159 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156411A76DE;
-	Sat, 27 Dec 2025 08:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4068F313E33
+	for <linux-hardening@vger.kernel.org>; Sat, 27 Dec 2025 12:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766825428; cv=none; b=AIr2+Z+ptbnVucQbkGEAmYKCd2CosxngleXcj1br+esSzGOGVHN81Eg7j+DLG/oXV3Bi3xH0TMkwLV6ZhbeJUHMG5oQ1FAHJfOLGA69VZEKJE5AXmh3vZRKei+4bkvqtzUmCm9JVRblp5R/RTPaHM9w3c8HGRIw7gtJW50OXg68=
+	t=1766837811; cv=none; b=YkgKwiPCKkYybOqVLmBPt28W9dFsfL7UuH6zObGnoe3KEPApuoSqa1Dsz50CSaEzljyI3lEc4TnL4BsKRqiQ3Kk58JlMAGphC5uRbG20piV/mX4CNjOPh3PdUogwiHM2O9qZMH4ZyX29jQN22PO/ZluyPWhZ64QGF2VvPqMhNZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766825428; c=relaxed/simple;
-	bh=RTojEMiAD/uiUEkVv8WCKlz5qD03a5+9MsYox/dtBt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W4lE+B0mytYq8j/+TIuxfUN7h6wm6Atg6QG9/i11d41tFn0itTxf0YKLKgju3c8XgaUCt67tlBVwlPJ3F3YmnT5uh239YD8TYcLt2Zxp4D/DLJTmz46h2UTbeoqkRKLBwkbHjwbjEmT5qfk36MXJzMLms8JOgLISUNx7hlf38U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J7XzFEBN; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1766837811; c=relaxed/simple;
+	bh=pGCwrx7s/pzxpnqEvxnowKr5kIMRsCkFnk8/FBkLNPk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gEqmawIXwPKQa3/Qvv2skhJPFElnc7d6Hn6tTvlSAiLVzruHP0GCLolxbegFRD8GZHxOHiZjAijzuLFpb0/RA34z/D6+e/9NeeWHWNPcxAQgiSSuEGXwIleUwa+CwZbD+UHANWxfmpg9G5ysMrsY+vGjmNVkNwLvGnSPedY77nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MojoTYPn; arc=none smtp.client-ip=209.85.128.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J7XzFEBN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766825425; x=1798361425;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RTojEMiAD/uiUEkVv8WCKlz5qD03a5+9MsYox/dtBt0=;
-  b=J7XzFEBN4EFbFyu+gkedVrIxTnIvhzmlMicx/TMWkSRZy563N2RZIrdC
-   WfTY6ZiCv7XYwlEAS9y4377hLtdu4g8dFfuEHlYjyulYEL30wNaOPk3Tf
-   Zq90gdkf7KesmkBL/rD94oA3kK7+obReSD0j88RnKZQW3bll8XoOOcA8D
-   QY/iBeptoKLaWzn2lzz96Vn6TjgvH1Z2+lqt+8c+KePdJCYh321BOHQhJ
-   noBMgVRhYecmS4E94haG+YHHM8TPqv/S4soWAbw7ovW87P+KfeIexWsgw
-   M44CqGouQupe3UU6a2WFAAxhjXnKtTapjm6yfn5qoibFQnekcNfWIbIJu
-   g==;
-X-CSE-ConnectionGUID: ud7rBzVkTzy1HLH1izU0hw==
-X-CSE-MsgGUID: uz49ghO4RbC6JFiaEa/liw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11653"; a="85957970"
-X-IronPort-AV: E=Sophos;i="6.21,180,1763452800"; 
-   d="scan'208";a="85957970"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 00:50:24 -0800
-X-CSE-ConnectionGUID: kEUaqMdDROuKkw6VwT9uhg==
-X-CSE-MsgGUID: tYrD3lycQiO3GJGRIEib5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,180,1763452800"; 
-   d="scan'208";a="237927639"
-Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 27 Dec 2025 00:50:19 -0800
-Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vZQ04-000000005hJ-2JLG;
-	Sat, 27 Dec 2025 08:50:13 +0000
-Date: Sat, 27 Dec 2025 16:49:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vincent Mailhol <mailhol@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Chris Mason <chris.mason@fusionio.com>,
-	David Sterba <dsterba@suse.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org,
-	linux-sparse@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-btrfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Vincent Mailhol <mailhol@kernel.org>
-Subject: Re: [PATCH v3 3/3] overflow: Remove is_non_negative() and
- is_negative()
-Message-ID: <202512271618.33YepxDC-lkp@intel.com>
-References: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MojoTYPn"
+Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-477b198f4bcso49241335e9.3
+        for <linux-hardening@vger.kernel.org>; Sat, 27 Dec 2025 04:16:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1766837808; x=1767442608; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZTn0eoJ78H/BcwAZAT5V21TN0j41vlUozcdKxdaozdI=;
+        b=MojoTYPn/vh9i9P9d2ImtnGnIixYN91e76gt2hx7oaH6OJ6IrXG/HqKhGa8E2Rlgqr
+         0u6TwhL3XPT1GJyH6xI2vueGEO1Ois6gdP0nCZ0QW3Hrkv8E+F3OrqxZDTeAmuBOfrb+
+         IVLZ98txfxesz5mk5+jkFuBBJ0Zdd2qgv4ODqJs/ETAw85AwtInKw+meS8G/qfIU2zJm
+         14RrfzVhuh0eq2+/nj8qikylbPxilDSo1g4HvWw4qMehcNb3eAIAb2HpO8V/mxNhEeUd
+         Yjf+9cHbWyLW7ED7Hqbq7IgFTD/CMdflMGEHQR/XPHZ56X9uP8I0U0iBy2VlkDZ+X+wa
+         KQWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766837808; x=1767442608;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZTn0eoJ78H/BcwAZAT5V21TN0j41vlUozcdKxdaozdI=;
+        b=EHaoroe7k4h7DSv9fibzisFL9h9cP9lelbJK2ZrlqT/CHWsU5ne+4SQGBzY1RuN911
+         rlsrwudfyXIY2O9KaL/uE/s7ldMdJJRFa2MQQQUfCQexJZUWAIam2nhX0hKuWEYIjYHj
+         oe+DDmq9DQH5cberoAoCVotl1q1qBJdtE8Yf9kRf8ZSqM4Ond9IxzTsWJfpbKuq8kdU7
+         RgZ96ZvP5MPyzSc8/kbz6sOj2qZSUwicIaGrEnJGJD/RN6Kz0MCtZ/pI3ijGhb5whaNw
+         AsLe1GAsMiP6EMHu51xOA4BI8GMy/LnUIxrVd40lIzMrSUSRrczDq9A8Q+ujUlREndYq
+         TkTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVoK/nmQkSFh4/2H2CAMsYaPfb6r/fitgZnxYyr+0ERIuJg/6punb0LZRcZ21FKRK+UbresJBlnFJnS0X1YvGo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQLywfHu4NneXZFCe3x9CNWz9pte8FpUvzPF8HEB6rxdYsu/Ip
+	coarnmyq4/yKKWMwYZNarcCMck8beIbUcTtSmkhIeWnDYui3qEtcmrwXYG0BNXue+ew=
+X-Gm-Gg: AY/fxX4qP2098ufmAx23iucVAxAubGuXz4/HVqhKuBcetbw6PajstTs64Yh6vF427vQ
+	mxd4mOMJ05+DUTZALNOiRsPsJoOLWBSds4NetdirYZlpUTdQkc674+X9vbZxzCJIdcVNOxa9TrG
+	B7yfEaimoWAIjBiIZE8RAuXS0fTmLeDBTo5pJWtnk2H4mkAtGJ5fv/5JKysKsiHqaTqbff1qss1
+	hLxyNo67xil3EtOEoHkbeGVDqzyZQRX0VY0iNEflDDz8+t3iXc38E7LkB3CSB4kFb1c24hF0WmC
+	Bg6VAlGafry1E8dzduMEfCkHv36Q7Uo67gp9wVVQqwsWExLo3zhpfomx4Hi4/3Y5PogQFFBecVq
+	GeXz8Pdpsb9DSlKLhRUKuBkNypNhC52nQaLI1Pz2AYmNXLvZ7UDItqOHOPZKIt29uvpzlNj0BCq
+	u6N6BYvVGNIjaJl0FsWcM=
+X-Google-Smtp-Source: AGHT+IGAwYPYNfJmaY9Q33nFH+RhwoM5QU0IvIHlZhMLVrSDLSWfjJCihtYGJekOl50CWdODgpBmVA==
+X-Received: by 2002:a05:600c:c086:b0:47b:e0ff:60f9 with SMTP id 5b1f17b1804b1-47d19577114mr202487205e9.20.1766837807525;
+        Sat, 27 Dec 2025 04:16:47 -0800 (PST)
+Received: from [127.0.0.1] ([2804:5078:811:d400:58f2:fc97:371f:2])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-121724cfdd0sm97940127c88.4.2025.12.27.04.16.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Dec 2025 04:16:46 -0800 (PST)
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+Subject: [PATCH 00/19] printk cleanup - part 3
+Date: Sat, 27 Dec 2025 09:16:07 -0300
+Message-Id: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAfOT2kC/x2MwQpAQBBAf0VzNmVsHPyKHAaDidY2i5T8u83l1
+ Tu890AUU4nQZA+YXBp190koz2BY2M+COiaHsigrSsBg6o8Vh03YnwED2+FQmKjuiXrHNaQ0mEx
+ 6/9u2e98PHmJw7WYAAAA=
+X-Change-ID: 20251202-printk-cleanup-part3-ea116b11b3a6
+To: Richard Weinberger <richard@nod.at>, 
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jason Wessel <jason.wessel@windriver.com>, 
+ Daniel Thompson <danielt@kernel.org>, 
+ Douglas Anderson <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ John Ogness <john.ogness@linutronix.de>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Andreas Larsson <andreas@gaisler.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>, 
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+ linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ sparclinux@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+ Marcos Paulo de Souza <mpdesouza@suse.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1766837798; l=4070;
+ i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
+ bh=pGCwrx7s/pzxpnqEvxnowKr5kIMRsCkFnk8/FBkLNPk=;
+ b=DtTvQmWwxI8nBiz56K8JWeAXva4ZUTP1TZfMsHc/t23MukO3Q9HDBbWL5zjE/2eZrLFOXevOl
+ 63plshGMBJVDC6pfWYfhJHhdbEMnrJWz9+G+dP9Hv10iWAGuGbiHgYC
+X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
+ pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
 
-Hi Vincent,
+The parts 1 and 2 can be found here [1] and here[2].
 
-kernel test robot noticed the following build warnings:
+The changes proposed in this part 3 are mostly to clarify the usage of
+the interfaces for NBCON, and use the printk helpers more broadly.
+Besides it, it also introduces a new way to register consoles
+and drop thes the CON_ENABLED flag. It seems too much, but in reality
+the changes are not complex, and as the title says, it's basically a
+cleanup without changing the functional changes.
 
-[auto build test WARNING on 3e7f562e20ee87a25e104ef4fce557d39d62fa85]
+This patchset includes a patch from part 2 that needed more work [3], as
+suggested by Petr Mladek.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Mailhol/kbuild-remove-gcc-s-Wtype-limits/20251220-190509
-base:   3e7f562e20ee87a25e104ef4fce557d39d62fa85
-patch link:    https://lore.kernel.org/r/20251220-remove_wtype-limits-v3-3-24b170af700e%40kernel.org
-patch subject: [PATCH v3 3/3] overflow: Remove is_non_negative() and is_negative()
-config: sparc-randconfig-r072-20251227 (https://download.01.org/0day-ci/archive/20251227/202512271618.33YepxDC-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 15.1.0
+These changes were tested by reverting f79b163c4231
+("Revert "serial: 8250: Switch to nbcon console""), and used qemu to test
+suspend/resume cycles, and everything worked as expected.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512271618.33YepxDC-lkp@intel.com/
+PS: b4 --auto-to-cc added a bunch of people as CC, so I'm not sure if
+I should remove some or not, so I'm leaving the list as it is. If the
+patchset needs a v2, and you feel that you don't need to copied, just
+let me know.
 
-smatch warnings:
-drivers/block/nbd.c:1612 __nbd_ioctl() warn: unsigned '_a' is never less than zero.
+Thanks for checking the patches, and happy holidays!
 
-vim +/_a +1612 drivers/block/nbd.c
+[1]: https://lore.kernel.org/lkml/20250226-printk-renaming-v1-0-0b878577f2e6@suse.com/#t
+[2]: https://lore.kernel.org/linux-serial/20251121-printk-cleanup-part2-v2-0-57b8b78647f4@suse.com/
+[3]: https://lore.kernel.org/linux-serial/aSgeqM3DWvR8-cMY@pathway.suse.cz/
 
-55313e92bd17a87 Mike Christie     2019-08-13  1591  
-9442b739207aab6 Josef Bacik       2017-02-07  1592  /* Must be called with config_lock held */
-9442b739207aab6 Josef Bacik       2017-02-07  1593  static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
-9442b739207aab6 Josef Bacik       2017-02-07  1594  		       unsigned int cmd, unsigned long arg)
-9442b739207aab6 Josef Bacik       2017-02-07  1595  {
-5ea8d10802ec4c1 Josef Bacik       2017-04-06  1596  	struct nbd_config *config = nbd->config;
-fad7cd3310db309 Baokun Li         2021-08-04  1597  	loff_t bytesize;
-5ea8d10802ec4c1 Josef Bacik       2017-04-06  1598  
-9442b739207aab6 Josef Bacik       2017-02-07  1599  	switch (cmd) {
-9442b739207aab6 Josef Bacik       2017-02-07  1600  	case NBD_DISCONNECT:
-29eaadc0364943b Josef Bacik       2017-04-06  1601  		return nbd_disconnect(nbd);
-9442b739207aab6 Josef Bacik       2017-02-07  1602  	case NBD_CLEAR_SOCK:
-0c1c9a27ce909e3 Christoph Hellwig 2023-08-11  1603  		nbd_clear_sock_ioctl(nbd);
-29eaadc0364943b Josef Bacik       2017-04-06  1604  		return 0;
-9442b739207aab6 Josef Bacik       2017-02-07  1605  	case NBD_SET_SOCK:
-e46c7287b1c2768 Josef Bacik       2017-04-06  1606  		return nbd_add_socket(nbd, arg, false);
-9442b739207aab6 Josef Bacik       2017-02-07  1607  	case NBD_SET_BLKSIZE:
-dcbddf541f18e36 Christoph Hellwig 2020-11-16  1608  		return nbd_set_size(nbd, config->bytesize, arg);
-9442b739207aab6 Josef Bacik       2017-02-07  1609  	case NBD_SET_SIZE:
-41e76c6a3c83c85 Nick Desaulniers  2021-09-20  1610  		return nbd_set_size(nbd, arg, nbd_blksize(config));
-9442b739207aab6 Josef Bacik       2017-02-07  1611  	case NBD_SET_SIZE_BLOCKS:
-41e76c6a3c83c85 Nick Desaulniers  2021-09-20 @1612  		if (check_shl_overflow(arg, config->blksize_bits, &bytesize))
-fad7cd3310db309 Baokun Li         2021-08-04  1613  			return -EINVAL;
-41e76c6a3c83c85 Nick Desaulniers  2021-09-20  1614  		return nbd_set_size(nbd, bytesize, nbd_blksize(config));
-9442b739207aab6 Josef Bacik       2017-02-07  1615  	case NBD_SET_TIMEOUT:
-55313e92bd17a87 Mike Christie     2019-08-13  1616  		nbd_set_cmd_timeout(nbd, arg);
-9442b739207aab6 Josef Bacik       2017-02-07  1617  		return 0;
-9442b739207aab6 Josef Bacik       2017-02-07  1618  
-9442b739207aab6 Josef Bacik       2017-02-07  1619  	case NBD_SET_FLAGS:
-5ea8d10802ec4c1 Josef Bacik       2017-04-06  1620  		config->flags = arg;
-9442b739207aab6 Josef Bacik       2017-02-07  1621  		return 0;
-9442b739207aab6 Josef Bacik       2017-02-07  1622  	case NBD_DO_IT:
-2a852a693f8839b Christoph Hellwig 2022-03-30  1623  		return nbd_start_device_ioctl(nbd);
-^1da177e4c3f415 Linus Torvalds    2005-04-16  1624  	case NBD_CLEAR_QUE:
-4b2f0260c74324a Herbert Xu        2006-01-06  1625  		/*
-4b2f0260c74324a Herbert Xu        2006-01-06  1626  		 * This is for compatibility only.  The queue is always cleared
-4b2f0260c74324a Herbert Xu        2006-01-06  1627  		 * by NBD_DO_IT or NBD_CLEAR_SOCK.
-4b2f0260c74324a Herbert Xu        2006-01-06  1628  		 */
-^1da177e4c3f415 Linus Torvalds    2005-04-16  1629  		return 0;
-^1da177e4c3f415 Linus Torvalds    2005-04-16  1630  	case NBD_PRINT_DEBUG:
-fd8383fd88a2fd8 Josef Bacik       2016-09-08  1631  		/*
-fd8383fd88a2fd8 Josef Bacik       2016-09-08  1632  		 * For compatibility only, we no longer keep a list of
-fd8383fd88a2fd8 Josef Bacik       2016-09-08  1633  		 * outstanding requests.
-fd8383fd88a2fd8 Josef Bacik       2016-09-08  1634  		 */
-^1da177e4c3f415 Linus Torvalds    2005-04-16  1635  		return 0;
-^1da177e4c3f415 Linus Torvalds    2005-04-16  1636  	}
-1a2ad21128bb4eb Pavel Machek      2009-04-02  1637  	return -ENOTTY;
-1a2ad21128bb4eb Pavel Machek      2009-04-02  1638  }
-1a2ad21128bb4eb Pavel Machek      2009-04-02  1639  
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+---
+Marcos Paulo de Souza (19):
+      printk/nbcon: Use an enum to specify the required callback in console_is_usable()
+      printk: Introduce console_is_nbcon
+      printk: Drop flags argument from console_is_usable
+      printk: Reintroduce consoles_suspended global state
+      printk: Add more context to suspend/resume functions
+      printk: Introduce register_console_force
+      drivers: netconsole: Migrate to register_console_force helper
+      debug: debug_core: Migrate to register_console_force helper
+      m68k: emu: nfcon.c: Migrate to register_console_force helper
+      fs: pstore: platform: Migrate to register_console_force helper
+      powerpc: kernel: udbg: Migrate to register_console_force helper
+      sparc: kernel: btext: Migrate to register_console_force helper
+      um: drivers: mconsole_kern.c: Migrate to register_console_force helper
+      drivers: hwtracing: stm: console.c: Migrate to register_console_force helper
+      drivers: tty: serial: mux.c: Migrate to register_console_force helper
+      drivers: tty: serial: ma35d1_serial: Migrate to register_console_force helper
+      drivers: tty: ehv_bytechan: Migrate to register_console_force helper
+      drivers: braille: console: Drop CON_ENABLED console flag
+      printk: Remove CON_ENABLED flag
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ arch/m68k/emu/nfcon.c                           |   5 +-
+ arch/powerpc/kernel/udbg.c                      |   4 +-
+ arch/sparc/kernel/btext.c                       |   4 +-
+ arch/um/drivers/mconsole_kern.c                 |   3 +-
+ arch/um/kernel/kmsg_dump.c                      |   2 +-
+ drivers/accessibility/braille/braille_console.c |   1 -
+ drivers/hwtracing/stm/console.c                 |   4 +-
+ drivers/net/netconsole.c                        |  13 +--
+ drivers/tty/ehv_bytechan.c                      |   4 +-
+ drivers/tty/serial/ma35d1_serial.c              |   4 +-
+ drivers/tty/serial/mux.c                        |   4 +-
+ drivers/tty/tty_io.c                            |   6 +-
+ fs/proc/consoles.c                              |   1 -
+ fs/pstore/platform.c                            |   6 +-
+ include/linux/console.h                         | 143 +++++++++++++++++++-----
+ kernel/debug/debug_core.c                       |   6 +-
+ kernel/debug/kdb/kdb_io.c                       |   6 +-
+ kernel/printk/nbcon.c                           |  17 +--
+ kernel/printk/printk.c                          | 140 ++++++++++++-----------
+ 19 files changed, 230 insertions(+), 143 deletions(-)
+---
+base-commit: 93d65587479cfc97c0d7e41b5e8c6378ca681632
+change-id: 20251202-printk-cleanup-part3-ea116b11b3a6
+
+Best regards,
+--  
+Marcos Paulo de Souza <mpdesouza@suse.com>
+
