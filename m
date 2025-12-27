@@ -1,68 +1,67 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837E6328B55
-	for <linux-hardening@vger.kernel.org>; Sat, 27 Dec 2025 12:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCE0329387
+	for <linux-hardening@vger.kernel.org>; Sat, 27 Dec 2025 12:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766837980; cv=none; b=OBCg8hjfi/jKWF3dT1FXg9eh7jDkg1peJRMil+yjvF7qjv6lGn5iygdehx54vMuCAZe6bGZ5Cw+vS7ThdXIsCQa0dWBjTB0zvSpjBHcTAeUrTMm3I1FJ4LiXMu1Gc0kW8MKxepwFxJ/HgumDlHKLN5N6eUWZVGByJK8spOrVqt4=
+	t=1766837987; cv=none; b=nJ0MaCn6PO/88tZn7yOL3fkRjcFHuha7gN5vlIkPLrt3UasvqBBAYMQgnRqt8UCKYH6VDV0kRlVyGhd2EgL6C0kmt662yFdHmuMfSSlUw1/wsXWtF/qsOmHBvWvJR+o5C8v0lAM49oDcpazf8G0IBORdpEaiXP/fa8Yfc5GIqOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766837980; c=relaxed/simple;
-	bh=M+RAaPiD4L8bkGcekgUNUpTeF+sJQV6vQniznC8VslM=;
+	s=arc-20240116; t=1766837987; c=relaxed/simple;
+	bh=jfxXivsE45EkgkvCbI8I2BEVFtLSwL83e0mmBVPuH+w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hq3G4/IgjXKyC1XW2qoMbCcvMyt9zeG3U8QnypMTht4PKYJ4TrjnfalyXbs7RkV53X8LMTKJsKWLlc8VSwW4609wVq/vtEa3+gf/WZr9ZZAWVKF1dm3xr8umD3k/eHhfeAoxfm8ldy2Gz3cPaCIUlYViH/3OflVtrXGfX5QYMVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RnSJgO5f; arc=none smtp.client-ip=209.85.128.52
+	 In-Reply-To:To:Cc; b=YvGOI+Vjy9ocZlFxrM14P8UvI4LIknROWSzW70is54e+VH/JIfbGPmWjGcXx2XM2qId9vp1k9/m4zucWevDR2Fal5fs6XRn1kRl60LzDMRNgGIgag26StNs1oZDwJ/YKymA/9mMI0usMZvjbitTm7A/DR+qd6hFWD9v1zv2Cj/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Y2jxOsoA; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RnSJgO5f"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-477b198f4bcso49248695e9.3
-        for <linux-hardening@vger.kernel.org>; Sat, 27 Dec 2025 04:19:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Y2jxOsoA"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47aa03d3326so49893775e9.3
+        for <linux-hardening@vger.kernel.org>; Sat, 27 Dec 2025 04:19:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1766837974; x=1767442774; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1766837983; x=1767442783; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ltdd8M4LmPmBXDEHAaMGtcqMVaDk3ISf2NYRX3F1G54=;
-        b=RnSJgO5f3vtUewM4rvTV3gj9+yMbOKfC+MYezexVwjrMMLylt/VPAyyHXH1YzFUumt
-         QXxRzkBUdgGbSc6jSzUsYa3jXKAwZa4Bqp8TNo6cmEn0wTHDc7Kwx7Tv6JxfQPBXSK1Z
-         Qm0UOn9K3FCagDp9yEtJZ0PgTwmlFVmfIa3bZbJLozDjG0MYnrvBOj6fARSSOgW9ISLM
-         TDx3DmRqR+dAYOLhMLlQRJaunF1kHWlswsvoFGluPHPnjD4wBz+hVljhInUYK2dzJj0r
-         yyuvtBwmOGTxCPGWEQwBTqKOH47FDqb650jLrsWlgqlnlGTtx51xlzhAVlIMAzFUvQdR
-         obXA==
+        bh=xV/54pzRS8Etay7a+DmZn75b0ho6rdI/NPswC/OMCoI=;
+        b=Y2jxOsoAqRMTW++xm1Ay/yJuOOy1RSw0vAWWwUTSoUdqeEIwZSjwXqHgWVjjub24Xt
+         tvEle8RLwQq+JVMFzL2UdOd39wmI2bQPQB/y7ZCPP5/qPa08n3JBtR7hf9NZwKtyMEId
+         VP6fkG41KKpMrDeK3NBqOietavOHxnvDbCiiXwiJNAp8W5QcMSdkmn6eOFGuPCrdo4AI
+         gdT3+a4IdhDS3EqM4Qo+VK1RbtzGLkZ+zEjadZix0mfjy9qZVtQ+5StVGaM5rUepKSH2
+         dGcBC7BKh2ZqIAEOYoAZVj949A89y+06+4DQVOA2+IQHfSf6hf2P4WdYkJCU1zsH5RaT
+         Wteg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766837974; x=1767442774;
+        d=1e100.net; s=20230601; t=1766837983; x=1767442783;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Ltdd8M4LmPmBXDEHAaMGtcqMVaDk3ISf2NYRX3F1G54=;
-        b=qvqgFZobrSjcppHVpk67YgFAVoDjw3TqyjYeuSiy/eHGBLWtbJWhd0kYjY9xUS+0ZY
-         YGmPUHcuMhNl96xA5o3LlzJLDaIb+h3nSnbq8dH+k48uC7o8f5QtbuZ7fY97B5k/bBhW
-         NPTHMRanDeJ07s8JCiqkAv7hu+xg0OtTMUvwjyJ2/tAQ+1p2jiHOQN+tpadhE7wm92SR
-         cRfBmBPJfU3Na42lT0vHSIWmcaYG+w9neEKAwZJxBEJE8lGkjhVCN3QsR41x+gKkuTR7
-         QWwF4dRQkHDl19ZAfQz2K2mCEZiWAZFUfZ4fE7xOoTWWyayQVtkm1DIrPj5U1bN9BTMQ
-         RREA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGXTiQSftgXsz2yLRM6kQmMe2QZ0nawsUzti0CRrNCrwrMfagxQG8wkG/PddyU4/XU+IaoOW18//tbBnPnmng=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvx4Qf4+x7mlGjK4JubVO4TM4131rbhLsWSyQqlG1IHJTIMqMP
-	5Aarahdmx7G2hA44Owa7C5814wunZfEW1gpM4yfCjvVXnolDA0ssnscHU360b0GV2y8=
-X-Gm-Gg: AY/fxX6W3gipb9sKIHbK/rTPBwAM8YRQBS7dfbpusWT7hGpw9FZsJcuIAVdgFBTjdfO
-	tGz2xZn85kMUz/rK6EVQJ8YU0316aJi3delt7kQH1q71Y4N9p9rZnhuoRHQ5u3lG4HJ5QWNfIIV
-	x7HTDkfzh34e6fCiK9Yj3hq5OV+CkXrNaWaV98evAvjSHDTBCkqRzEmBgQGUijYsXoqyHlJWYlF
-	7lFsLCKwZ90YCtBotg8A0Xp0mzq7sHtPeLCXyku2v12Vm2V2HiNLW/FE5+8o/eB7Y66GY6qG81x
-	bPK+DPjBuzdZBDxIlALf3N62c0ONLHnZobMxt3lFJwRGOldZKhHzeOa5qaNoE//ExGLdWTg2AU8
-	HGB+djM4XVz9YLlDnkoW8efpl31xlsARvQUNzXBZyBP0FSNKXSr9RIWUCxcqIEQrRAWN8+vgDS8
-	UEjeZu0Waw
-X-Google-Smtp-Source: AGHT+IHMLS3VfYivW6iZyjAkGRbHMebp8EGQujmDyd6LpCoRzo/q2pR4OLsY4m1yHd+Dy1qj+iz1Lw==
-X-Received: by 2002:a05:600c:5288:b0:47a:75b6:32c with SMTP id 5b1f17b1804b1-47d19532f91mr239061855e9.2.1766837974046;
-        Sat, 27 Dec 2025 04:19:34 -0800 (PST)
+        bh=xV/54pzRS8Etay7a+DmZn75b0ho6rdI/NPswC/OMCoI=;
+        b=Cu2OhPtJkPeuzVl1q8F4ejvyzbwPqnD+2i/qBJ+HB2USr9nA4vYIgUdcpwxEwMt6qQ
+         PX67MEMkcG57oIhnQGxZ1wjzJAQ6E8CVoIpcRdghQ7WLoWRNgv2PSuz6FiptibrJ2fzf
+         x1jbkZKanhgB3U6revLG2BsW21hvF9ipoUufvPjNfe8CEdrcGZpNx6jZkNdiw0KlJvDn
+         KpO/+NRu2rUAh1+5Gn8jMgKw0iHGI8LrnL5r6QRxOV3O5RStCSjFeD/vuHjcnUreuuiJ
+         g7LuOn4Ho2trqmxTSs4Al/7XT+9+ZCKxJiVQb4l4iknMZSWss0ZBKxl7xDS5l0oosEA+
+         1eTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDl1H9AtP0re9ZrmnGQsKhsb20PiOsErm7zDP7B+VBQlw6B1raUMPxeQ5Lm9jBlQNd6a+eEdxP+V88Sum3FdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp/tDdbycNddh7hT2Cst03J8WlL9WFBTDCWREMj2E8Q41S4fne
+	kBKDu4M7o09d4FsekukrEhDLGuHQcl00qr+XlMind6/ueW+bIQzl5yn4vu9GG0GXyf4=
+X-Gm-Gg: AY/fxX5t6ZeyCHpIQwNPsyH2WRrFnCguR837xbg/2W4IJ2Hrst950DgcJ2XdcvlOlFk
+	7akSCc3Nm+y47XmHL72j3pvr1aT88pQBmPhgdQ6o/MfVb4lA3v/SZjHm9G6LnNPnXptDH3tnYaQ
+	y+K3B2RObR1gk9oEx6sqWfbjgwi5N9RT8ipGOy+XjyD36IpEb5V7ssQdKVeDEl1BB9WUD+GTQrv
+	bUahcXq/JuDDvTz9nv5Smkwa1NFIDieS/Zlp2335X5feNqueD+78WHKr2lMPeNskT96LfGsDqI+
+	wMpXlJL0n6H6lthIKRmGDNccEExh2N1bLgDb5P1LIHYc5K8MFRBysVIS3JXMLfHGHW3LCmw0CvL
+	0Wssigv0oFBurYkuww95bFa33s5L6ax9uD2BxBOsqwRcvIG/eyA1AWMz2ZHUDcQxFK4B5hbACnO
+	oxyNPtF20nYbP8Jp14KZc=
+X-Google-Smtp-Source: AGHT+IH8iMWTGKOo0ODMODi1rEzmJGgWpFcndwFU+BLf6Q6Oiy3SLl7fhkZeY72om2wNWMGGrFeTWQ==
+X-Received: by 2002:a05:600d:8:b0:477:5897:a0c4 with SMTP id 5b1f17b1804b1-47d1c13fcfdmr225764485e9.4.1766837983269;
+        Sat, 27 Dec 2025 04:19:43 -0800 (PST)
 Received: from [127.0.0.1] ([2804:5078:811:d400:58f2:fc97:371f:2])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-121724cfdd0sm97940127c88.4.2025.12.27.04.19.25
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-121724cfdd0sm97940127c88.4.2025.12.27.04.19.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Dec 2025 04:19:33 -0800 (PST)
+        Sat, 27 Dec 2025 04:19:42 -0800 (PST)
 From: Marcos Paulo de Souza <mpdesouza@suse.com>
-Date: Sat, 27 Dec 2025 09:16:25 -0300
-Subject: [PATCH 18/19] drivers: braille: console: Drop CON_ENABLED console
- flag
+Date: Sat, 27 Dec 2025 09:16:26 -0300
+Subject: [PATCH 19/19] printk: Remove CON_ENABLED flag
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,7 +70,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251227-printk-cleanup-part3-v1-18-21a291bcf197@suse.com>
+Message-Id: <20251227-printk-cleanup-part3-v1-19-21a291bcf197@suse.com>
 References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
 In-Reply-To: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
 To: Richard Weinberger <richard@nod.at>, 
@@ -108,35 +107,165 @@ Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
  Marcos Paulo de Souza <mpdesouza@suse.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1766837798; l=917;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1766837798; l=5342;
  i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
- bh=M+RAaPiD4L8bkGcekgUNUpTeF+sJQV6vQniznC8VslM=;
- b=VNcSKbW4wn0ZJDPmlW3fCDrj2qqqMiKzMUpnoUVSmYqwNJRukKGa+p9lja5itToGTVwI9LN+2
- mQPFka3TIBIDqDnH2JmGqErVL6l4YMmEx/hbdpLg4Ll2XIa+vBtsfSS
+ bh=jfxXivsE45EkgkvCbI8I2BEVFtLSwL83e0mmBVPuH+w=;
+ b=L4bmhgBbhK4MabaljXOFYoWoPA/F2Ms1Hw5KRZJ0wiLbS51oCxDTE2j2nmUG21whYB1lNSvfW
+ KXB3PChlBf2AMEmTwaAmskLdw1SadRBF3zXvV826sJWL27JOeadfagz
 X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
  pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
 
-The braille console doesn't take the same path on register_console
-that other console drivers. At this point, it only registers the console
-and do not receive any printk message, so we can drop the CON_ENABLED.
+All remaining usages of CON_ENABLED were removed from console drivers
+that were being registered without being specified on boot using console=
+argument.
+
+The usefulness of the flag was questionable since at first it meant that
+the console was ready to print records. Later on, console drivers started
+to set the flag when registering the console to make sure that the
+console would be registered even without being specified by a kernel
+argument.
+
+With the inclusion a global state for system wide suspend/resume
+in place, with console_{suspend,resume} handling CON_SUSPEND, and with
+console_is_usable helper being more used, the CON_ENABLED flag can be
+safely removed.
 
 Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 ---
- drivers/accessibility/braille/braille_console.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/proc/consoles.c      |  1 -
+ include/linux/console.h | 27 ++++++++++-----------------
+ kernel/printk/printk.c  | 15 ++-------------
+ 3 files changed, 12 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/accessibility/braille/braille_console.c b/drivers/accessibility/braille/braille_console.c
-index 06b43b678d6e..0b7ec68b305c 100644
---- a/drivers/accessibility/braille/braille_console.c
-+++ b/drivers/accessibility/braille/braille_console.c
-@@ -360,7 +360,6 @@ int braille_register_console(struct console *console, int index,
- 		if (ret != 0)
- 			return ret;
+diff --git a/fs/proc/consoles.c b/fs/proc/consoles.c
+index b7cab1ad990d..b6916ed7957b 100644
+--- a/fs/proc/consoles.c
++++ b/fs/proc/consoles.c
+@@ -18,7 +18,6 @@ static int show_console_dev(struct seq_file *m, void *v)
+ 		short flag;
+ 		char name;
+ 	} con_flags[] = {
+-		{ CON_ENABLED,		'E' },
+ 		{ CON_CONSDEV,		'C' },
+ 		{ CON_BOOT,		'B' },
+ 		{ CON_NBCON,		'N' },
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 7d374a29a625..0ab02f7ba307 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -164,9 +164,6 @@ static inline void con_debug_leave(void) { }
+  *			consoles or read by userspace via syslog() syscall.
+  * @CON_CONSDEV:	Indicates that the console driver is backing
+  *			/dev/console.
+- * @CON_ENABLED:	Indicates if a console is allowed to print records. If
+- *			false, the console also will not advance to later
+- *			records.
+  * @CON_BOOT:		Marks the console driver as early console driver which
+  *			is used during boot before the real driver becomes
+  *			available. It will be automatically unregistered
+@@ -192,14 +189,13 @@ static inline void con_debug_leave(void) { }
+ enum cons_flags {
+ 	CON_PRINTBUFFER		= BIT(0),
+ 	CON_CONSDEV		= BIT(1),
+-	CON_ENABLED		= BIT(2),
+-	CON_BOOT		= BIT(3),
+-	CON_ANYTIME		= BIT(4),
+-	CON_BRL			= BIT(5),
+-	CON_EXTENDED		= BIT(6),
+-	CON_SUSPENDED		= BIT(7),
+-	CON_NBCON		= BIT(8),
+-	CON_NBCON_ATOMIC_UNSAFE	= BIT(9),
++	CON_BOOT		= BIT(2),
++	CON_ANYTIME		= BIT(3),
++	CON_BRL			= BIT(4),
++	CON_EXTENDED		= BIT(5),
++	CON_SUSPENDED		= BIT(6),
++	CON_NBCON		= BIT(7),
++	CON_NBCON_ATOMIC_UNSAFE	= BIT(8),
+ };
+ 
+ /**
+@@ -522,9 +518,9 @@ extern bool consoles_suspended;
+  *
+  * Requires console_srcu_read_lock to be held, which implies that @con might
+  * be a registered console. The purpose of holding console_srcu_read_lock is
+- * to guarantee that the console state is valid (CON_SUSPENDED/CON_ENABLED)
+- * and that no exit/cleanup routines will run if the console is currently
+- * undergoing unregistration.
++ * to guarantee that the console state is valid (CON_SUSPENDED) and that no
++ * exit/cleanup routines will run if the console is currently undergoing
++ * unregistration.
+  *
+  * If the caller is holding the console_list_lock or it is _certain_ that
+  * @con is not and will not become registered, the caller may read
+@@ -706,9 +702,6 @@ static inline bool __console_is_usable(struct console *con, short flags,
+ 	if (all_suspended)
+ 		return false;
+ 
+-	if (!(flags & CON_ENABLED))
+-		return false;
+-
+ 	if ((flags & CON_SUSPENDED))
+ 		return false;
+ 
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index c5c05e4d0a67..9cb0911997e5 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3890,21 +3890,17 @@ static int try_enable_preferred_console(struct console *newcon,
+ 			if (err)
+ 				return err;
+ 		}
+-		newcon->flags |= CON_ENABLED;
+ 		if (i == preferred_console)
+ 			newcon->flags |= CON_CONSDEV;
+ 		return 0;
  	}
--	console->flags |= CON_ENABLED;
- 	console->index = index;
- 	braille_co = console;
- 	register_keyboard_notifier(&keyboard_notifier_block);
+ 
+-	if (force)
+-		newcon->flags |= CON_ENABLED;
+-
+ 	/*
+ 	 * Some consoles, such as pstore and netconsole, can be enabled even
+ 	 * without matching. Accept the pre-enabled consoles only when match()
+ 	 * and setup() had a chance to be called.
+ 	 */
+-	if (newcon->flags & CON_ENABLED && c->user_specified == user_specified)
++	if (force && c->user_specified == user_specified)
+ 		return 0;
+ 
+ 	return -ENOENT;
+@@ -3919,8 +3915,6 @@ static void try_enable_default_console(struct console *newcon)
+ 	if (console_call_setup(newcon, NULL) != 0)
+ 		return;
+ 
+-	newcon->flags |= CON_ENABLED;
+-
+ 	if (newcon->device)
+ 		newcon->flags |= CON_CONSDEV;
+ }
+@@ -3977,10 +3971,8 @@ static u64 get_init_console_seq(struct console *newcon, bool bootcon_registered)
+ 				for_each_console(con) {
+ 					u64 seq;
+ 
+-					if (!(con->flags & CON_BOOT) ||
+-					    !(con->flags & CON_ENABLED)) {
++					if (!(con->flags & CON_BOOT))
+ 						continue;
+-					}
+ 
+ 					if (con->flags & CON_NBCON)
+ 						seq = nbcon_seq_read(con);
+@@ -4233,9 +4225,6 @@ static int unregister_console_locked(struct console *console)
+ 				     consoles_suspended, NBCON_USE_ATOMIC))
+ 		__pr_flush(console, 1000, true);
+ 
+-	/* Disable it unconditionally */
+-	console_srcu_write_flags(console, console->flags & ~CON_ENABLED);
+-
+ 	if (res < 0)
+ 		return res;
+ 
 
 -- 
 2.52.0
