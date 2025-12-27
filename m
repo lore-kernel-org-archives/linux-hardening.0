@@ -1,84 +1,159 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225E1156237
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Dec 2025 06:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156411A76DE;
+	Sat, 27 Dec 2025 08:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766729649; cv=none; b=rhPZrD/sak/f9EySzDrFiUZ65PldlV6m01yWZsbGBzvbm58Cb5pvTismv0pgnUR9e8uC19JZd6NGGba1EGMjxgIg0unL2aSCshELM6demJjGT1meUgSBhdrOI5vwHTrf861Tvk2DnVjf+1JfQvjkzBQBfoQsuBZHWKQngePuxBI=
+	t=1766825428; cv=none; b=AIr2+Z+ptbnVucQbkGEAmYKCd2CosxngleXcj1br+esSzGOGVHN81Eg7j+DLG/oXV3Bi3xH0TMkwLV6ZhbeJUHMG5oQ1FAHJfOLGA69VZEKJE5AXmh3vZRKei+4bkvqtzUmCm9JVRblp5R/RTPaHM9w3c8HGRIw7gtJW50OXg68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766729649; c=relaxed/simple;
-	bh=535xoqcKcYrPQXsntCWwNVnjVyQ4BpkcbelfQpPn0bY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZZt/bVjWQYHWHcFtpdQgyVmX8xEceV7s3JPda3P5gZeDOnk7sPa75xw5PhyD0DK01kF0NWy0bcQwRH+BICxqsPi1UJwXcUbekK9rJ5ZBjl8TkK7JD8WTocaPpEzjdtU3265UdEOTH5h87WRMhm7P++MfWpycWsGSxT2z5g9hbzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a/kpibou; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1766825428; c=relaxed/simple;
+	bh=RTojEMiAD/uiUEkVv8WCKlz5qD03a5+9MsYox/dtBt0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W4lE+B0mytYq8j/+TIuxfUN7h6wm6Atg6QG9/i11d41tFn0itTxf0YKLKgju3c8XgaUCt67tlBVwlPJ3F3YmnT5uh239YD8TYcLt2Zxp4D/DLJTmz46h2UTbeoqkRKLBwkbHjwbjEmT5qfk36MXJzMLms8JOgLISUNx7hlf38U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J7XzFEBN; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a/kpibou"
-Message-ID: <fa979d2f-150d-4e9b-80dc-b6a34191da08@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1766729644;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tfYE72kf/YHok1dgp72c9MA+z2NRqHpakm9XDgwtvRw=;
-	b=a/kpibouIisaP/WAgPGwZdHT+JJBsAdBmJF6HIXUZ8pe/8WeB0MCxfXLQK6JiGJmGa0zC1
-	38ImyqTCgjZV+oaSwC3txF2BZJ7rx3guXdqtcpf87ZIwJuU6e+xCG1j3AF3yloVo1cTiVg
-	wMtUPKhVLFt2uR7M0rSP8azmHzZHXXI=
-Date: Thu, 25 Dec 2025 22:13:56 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J7XzFEBN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766825425; x=1798361425;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RTojEMiAD/uiUEkVv8WCKlz5qD03a5+9MsYox/dtBt0=;
+  b=J7XzFEBN4EFbFyu+gkedVrIxTnIvhzmlMicx/TMWkSRZy563N2RZIrdC
+   WfTY6ZiCv7XYwlEAS9y4377hLtdu4g8dFfuEHlYjyulYEL30wNaOPk3Tf
+   Zq90gdkf7KesmkBL/rD94oA3kK7+obReSD0j88RnKZQW3bll8XoOOcA8D
+   QY/iBeptoKLaWzn2lzz96Vn6TjgvH1Z2+lqt+8c+KePdJCYh321BOHQhJ
+   noBMgVRhYecmS4E94haG+YHHM8TPqv/S4soWAbw7ovW87P+KfeIexWsgw
+   M44CqGouQupe3UU6a2WFAAxhjXnKtTapjm6yfn5qoibFQnekcNfWIbIJu
+   g==;
+X-CSE-ConnectionGUID: ud7rBzVkTzy1HLH1izU0hw==
+X-CSE-MsgGUID: uz49ghO4RbC6JFiaEa/liw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11653"; a="85957970"
+X-IronPort-AV: E=Sophos;i="6.21,180,1763452800"; 
+   d="scan'208";a="85957970"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 00:50:24 -0800
+X-CSE-ConnectionGUID: kEUaqMdDROuKkw6VwT9uhg==
+X-CSE-MsgGUID: tYrD3lycQiO3GJGRIEib5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,180,1763452800"; 
+   d="scan'208";a="237927639"
+Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 27 Dec 2025 00:50:19 -0800
+Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vZQ04-000000005hJ-2JLG;
+	Sat, 27 Dec 2025 08:50:13 +0000
+Date: Sat, 27 Dec 2025 16:49:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vincent Mailhol <mailhol@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Chris Mason <chris.mason@fusionio.com>,
+	David Sterba <dsterba@suse.com>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org,
+	linux-sparse@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-btrfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Vincent Mailhol <mailhol@kernel.org>
+Subject: Re: [PATCH v3 3/3] overflow: Remove is_non_negative() and
+ is_negative()
+Message-ID: <202512271618.33YepxDC-lkp@intel.com>
+References: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH][next] RDMA/rxe: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Jason Gunthorpe <jgg@nvidia.com>,
- "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Zhu Yanjun <zyjzyj2000@gmail.com>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aRKu5lNV04Sq82IG@kspp> <20251202181334.GA1162842@nvidia.com>
- <5ac954bb-ad4d-4b4c-b23b-47350b428404@linux.dev>
- <20251204130559.GA1219718@nvidia.com>
- <80620d09-8187-45b1-a490-07c52733ac21@linux.dev>
- <2191ee0f-a528-4187-ae5b-5aba18741701@linux.dev>
- <7e3a294f-5dc2-4e8c-aacc-0286c1592038@linux.dev>
- <20251218155623.GC400630@unreal>
- <5d950681-7f16-4b1e-a512-b118c747ffd7@linux.dev>
- <cbb0ec98-0291-4ec4-9633-690e9199248b@embeddedor.com>
- <20251219142600.GC254720@nvidia.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20251219142600.GC254720@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
 
-在 2025/12/19 6:26, Jason Gunthorpe 写道:
-> On Fri, Dec 19, 2025 at 11:51:54AM +0900, Gustavo A. R. Silva wrote:
-> 
->>>>> Any update? If this looks good to you, I will send out an official commit
->>>>> based on the following commit.
->>>> You are RXE maintainer, send the official patch.
->>>
->>> Will do. I will send it out very soon.
->>
->> I don't see how this addresses the flex-array in the middle issue that
->> originated this discussion.
-> 
-> ??
-> 
-> It moved it to the end of every struct it is part of?
+Hi Vincent,
 
-Any update?
+kernel test robot noticed the following build warnings:
 
-Yanjun.Zhu
+[auto build test WARNING on 3e7f562e20ee87a25e104ef4fce557d39d62fa85]
 
-> 
-> Jason
+url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Mailhol/kbuild-remove-gcc-s-Wtype-limits/20251220-190509
+base:   3e7f562e20ee87a25e104ef4fce557d39d62fa85
+patch link:    https://lore.kernel.org/r/20251220-remove_wtype-limits-v3-3-24b170af700e%40kernel.org
+patch subject: [PATCH v3 3/3] overflow: Remove is_non_negative() and is_negative()
+config: sparc-randconfig-r072-20251227 (https://download.01.org/0day-ci/archive/20251227/202512271618.33YepxDC-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 15.1.0
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512271618.33YepxDC-lkp@intel.com/
+
+smatch warnings:
+drivers/block/nbd.c:1612 __nbd_ioctl() warn: unsigned '_a' is never less than zero.
+
+vim +/_a +1612 drivers/block/nbd.c
+
+55313e92bd17a87 Mike Christie     2019-08-13  1591  
+9442b739207aab6 Josef Bacik       2017-02-07  1592  /* Must be called with config_lock held */
+9442b739207aab6 Josef Bacik       2017-02-07  1593  static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+9442b739207aab6 Josef Bacik       2017-02-07  1594  		       unsigned int cmd, unsigned long arg)
+9442b739207aab6 Josef Bacik       2017-02-07  1595  {
+5ea8d10802ec4c1 Josef Bacik       2017-04-06  1596  	struct nbd_config *config = nbd->config;
+fad7cd3310db309 Baokun Li         2021-08-04  1597  	loff_t bytesize;
+5ea8d10802ec4c1 Josef Bacik       2017-04-06  1598  
+9442b739207aab6 Josef Bacik       2017-02-07  1599  	switch (cmd) {
+9442b739207aab6 Josef Bacik       2017-02-07  1600  	case NBD_DISCONNECT:
+29eaadc0364943b Josef Bacik       2017-04-06  1601  		return nbd_disconnect(nbd);
+9442b739207aab6 Josef Bacik       2017-02-07  1602  	case NBD_CLEAR_SOCK:
+0c1c9a27ce909e3 Christoph Hellwig 2023-08-11  1603  		nbd_clear_sock_ioctl(nbd);
+29eaadc0364943b Josef Bacik       2017-04-06  1604  		return 0;
+9442b739207aab6 Josef Bacik       2017-02-07  1605  	case NBD_SET_SOCK:
+e46c7287b1c2768 Josef Bacik       2017-04-06  1606  		return nbd_add_socket(nbd, arg, false);
+9442b739207aab6 Josef Bacik       2017-02-07  1607  	case NBD_SET_BLKSIZE:
+dcbddf541f18e36 Christoph Hellwig 2020-11-16  1608  		return nbd_set_size(nbd, config->bytesize, arg);
+9442b739207aab6 Josef Bacik       2017-02-07  1609  	case NBD_SET_SIZE:
+41e76c6a3c83c85 Nick Desaulniers  2021-09-20  1610  		return nbd_set_size(nbd, arg, nbd_blksize(config));
+9442b739207aab6 Josef Bacik       2017-02-07  1611  	case NBD_SET_SIZE_BLOCKS:
+41e76c6a3c83c85 Nick Desaulniers  2021-09-20 @1612  		if (check_shl_overflow(arg, config->blksize_bits, &bytesize))
+fad7cd3310db309 Baokun Li         2021-08-04  1613  			return -EINVAL;
+41e76c6a3c83c85 Nick Desaulniers  2021-09-20  1614  		return nbd_set_size(nbd, bytesize, nbd_blksize(config));
+9442b739207aab6 Josef Bacik       2017-02-07  1615  	case NBD_SET_TIMEOUT:
+55313e92bd17a87 Mike Christie     2019-08-13  1616  		nbd_set_cmd_timeout(nbd, arg);
+9442b739207aab6 Josef Bacik       2017-02-07  1617  		return 0;
+9442b739207aab6 Josef Bacik       2017-02-07  1618  
+9442b739207aab6 Josef Bacik       2017-02-07  1619  	case NBD_SET_FLAGS:
+5ea8d10802ec4c1 Josef Bacik       2017-04-06  1620  		config->flags = arg;
+9442b739207aab6 Josef Bacik       2017-02-07  1621  		return 0;
+9442b739207aab6 Josef Bacik       2017-02-07  1622  	case NBD_DO_IT:
+2a852a693f8839b Christoph Hellwig 2022-03-30  1623  		return nbd_start_device_ioctl(nbd);
+^1da177e4c3f415 Linus Torvalds    2005-04-16  1624  	case NBD_CLEAR_QUE:
+4b2f0260c74324a Herbert Xu        2006-01-06  1625  		/*
+4b2f0260c74324a Herbert Xu        2006-01-06  1626  		 * This is for compatibility only.  The queue is always cleared
+4b2f0260c74324a Herbert Xu        2006-01-06  1627  		 * by NBD_DO_IT or NBD_CLEAR_SOCK.
+4b2f0260c74324a Herbert Xu        2006-01-06  1628  		 */
+^1da177e4c3f415 Linus Torvalds    2005-04-16  1629  		return 0;
+^1da177e4c3f415 Linus Torvalds    2005-04-16  1630  	case NBD_PRINT_DEBUG:
+fd8383fd88a2fd8 Josef Bacik       2016-09-08  1631  		/*
+fd8383fd88a2fd8 Josef Bacik       2016-09-08  1632  		 * For compatibility only, we no longer keep a list of
+fd8383fd88a2fd8 Josef Bacik       2016-09-08  1633  		 * outstanding requests.
+fd8383fd88a2fd8 Josef Bacik       2016-09-08  1634  		 */
+^1da177e4c3f415 Linus Torvalds    2005-04-16  1635  		return 0;
+^1da177e4c3f415 Linus Torvalds    2005-04-16  1636  	}
+1a2ad21128bb4eb Pavel Machek      2009-04-02  1637  	return -ENOTTY;
+1a2ad21128bb4eb Pavel Machek      2009-04-02  1638  }
+1a2ad21128bb4eb Pavel Machek      2009-04-02  1639  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
