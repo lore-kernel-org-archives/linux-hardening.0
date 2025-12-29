@@ -1,76 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269A515B971;
-	Sun, 28 Dec 2025 01:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FC42253B0;
+	Mon, 29 Dec 2025 06:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766886103; cv=none; b=EGtd4or/Z1hZ1pYb04HTHSfE2zpa5xokRuPH9ODFeNmTfeZIrVQAruSegC8GS/0M8O1CrPND+SAOytDPBaVKOoa9DCodeSNCnS4enb69wXJpnyrn6D0wJXDfbLfms5wuoLwwPyO83i4HCXg/N67s3pAWL7DZneEzp74wE4VhKyU=
+	t=1766991405; cv=none; b=Ew+ajhjNDyRPuZC/NKO4hNbPY8HFJV7N3l+XpRUJj5ONmXHPL4i3TGRjpbMiTkbWUBo/AdFrk7nkP7UjcxGNK8zseP7UC2Tb7u7z+JSMi+A3khG29JAKlpIe147vsz0aVq+oAW4WcLQJG+z5tzvO6Js5P+Dytdtzsijldp4B0Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766886103; c=relaxed/simple;
-	bh=XGPDATEJoD0Tjpv7B97lYqqg0PSD96XgRnmEqo5BcEk=;
+	s=arc-20240116; t=1766991405; c=relaxed/simple;
+	bh=2L8Mk5WlWQlOwro+lzGpqFESnl7Z8ZzqFs5ya2vJbDQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HjlqB/m6YRVIo5uXlFQZBi8ytMdFluHMSgHAncJwzS1YkAQj9y6UT2G11FldE6te9Co+pf4lfdcBHbQiZnM3NrbmCGfye8hagwqoz4cZ5wweATGVXmKWQuEnIHJhZ6rqsz5Gh2an7uDUAn7sowEvUEwx9zSvD0h2K1DqvCUuP1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C/WvCQAZ; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=puLkiYa8q/2Y8TP0MnFevoh7FAuUfMl4WZl/zDpFnk8TwLNLIUby4+m6/JJPXwY/2HZJiefThOL4m69d+DN7Y9h0BttSX5MQgWTTtPHMjZpmXS645mbX2LFV5rQHl+OkksD2T52DzJ/SdUM9SHjN0t49sRTTQceKMoYTcjtoI2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUntOqUx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C/WvCQAZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766886100; x=1798422100;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XGPDATEJoD0Tjpv7B97lYqqg0PSD96XgRnmEqo5BcEk=;
-  b=C/WvCQAZPvXs0IzxZyjiKeXXeEw8FkX9dxfsDna7ke67YekWqUQi+yS2
-   zm4ptN9jsxIN4xxxRtpnN7iTTnfwmHXiHw9L5HZuQaPuyfne0fpM9oCfz
-   +0ryAqIdUsQhzFFuNirqnJqUcPVyZOtSOHm+JX20LfDsFLfdMPN4HdQBw
-   nYBqDCcmvn3GBtX3dPQusyudQR+9roasNg3ruImZkHG+QwaUlpBFWOIzC
-   6RMrthFKoLeqEmp0J81hQ93UGyQ77bxfYNayfrSCwREqH8dWBz0air55Z
-   MkV6YKZhrgw62HENtsTMEoSnkLFfUh8YpAC429HI17+jU0u2G+E2YQXog
-   w==;
-X-CSE-ConnectionGUID: D9UShO3uT6mxO6zR1IuDBg==
-X-CSE-MsgGUID: jpGoS+6pRGiUrlXfiQj9WA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11654"; a="56128929"
-X-IronPort-AV: E=Sophos;i="6.21,182,1763452800"; 
-   d="scan'208";a="56128929"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 17:41:39 -0800
-X-CSE-ConnectionGUID: xxgYEPKsT9mW/owCO/TLhw==
-X-CSE-MsgGUID: pT9BLpqlRbGBwYqXnI3Q/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,182,1763452800"; 
-   d="scan'208";a="200267571"
-Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
-  by fmviesa007.fm.intel.com with ESMTP; 27 Dec 2025 17:41:34 -0800
-Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vZfme-000000006BJ-2pmJ;
-	Sun, 28 Dec 2025 01:41:28 +0000
-Date: Sun, 28 Dec 2025 09:41:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vincent Mailhol <mailhol@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Chris Mason <chris.mason@fusionio.com>,
-	David Sterba <dsterba@suse.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org,
-	linux-sparse@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-btrfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Vincent Mailhol <mailhol@kernel.org>
-Subject: Re: [PATCH v3 3/3] overflow: Remove is_non_negative() and
- is_negative()
-Message-ID: <202512280906.wt7UNpya-lkp@intel.com>
-References: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUntOqUx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29BF0C4CEF7;
+	Mon, 29 Dec 2025 06:56:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766991404;
+	bh=2L8Mk5WlWQlOwro+lzGpqFESnl7Z8ZzqFs5ya2vJbDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cUntOqUx88jhIghah0BtHV123Tman5cFwnDzVOOMvAYksaJNRnWq3CjmRgean4N04
+	 iqBLRzsOdMTU3ApunWnlX+Bxep76Drrj3bbErnOEUHKj70mMeVRFGcbNvY3xbUz2aR
+	 WAj1+AQac4O+dn36O7LVQJUH2awM38yGe/04UBJ3WJbWcANLHTDv1LS+mLBD8qIIq5
+	 /IsjB1NXRI9IJzDgLplHWc7WmtEBGwCqwThO1YR7/smhHyy8w0NEidVyVyHCbhTFKB
+	 ot1wOsmC7rNnr2/wlnCU8Nn7gUTB/bs0BUNZCqANofZZ2Jp49o7HJ6H/nXcX0sXTiN
+	 DODwXttylU7BQ==
+Date: Mon, 29 Dec 2025 08:56:34 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Eugen Hristev <eugen.hristev@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
+	pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net,
+	david@redhat.com, mhocko@suse.com, tudor.ambarus@linaro.org,
+	mukesh.ojha@oss.qualcomm.com, linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org, jonechou@google.com,
+	rostedt@goodmis.org, linux-doc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org
+Subject: Re: [PATCH 18/26] mm/memblock: Add MEMBLOCK_INSPECT flag
+Message-ID: <aVImIneFgOngYdSn@kernel.org>
+References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
+ <20251119154427.1033475-19-eugen.hristev@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -79,56 +50,122 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+In-Reply-To: <20251119154427.1033475-19-eugen.hristev@linaro.org>
 
-Hi Vincent,
+Hi Eugen,
 
-kernel test robot noticed the following build warnings:
+On Wed, Nov 19, 2025 at 05:44:19PM +0200, Eugen Hristev wrote:
+> This memblock flag indicates that a specific block is registered
+> into an inspection table.
+> The block can be marked for inspection using memblock_mark_inspect()
+> and cleared with memblock_clear_inspect()
 
-[auto build test WARNING on 3e7f562e20ee87a25e104ef4fce557d39d62fa85]
+Can you explain why memblock should treat memory registered for inspection
+differently?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Mailhol/kbuild-remove-gcc-s-Wtype-limits/20251220-190509
-base:   3e7f562e20ee87a25e104ef4fce557d39d62fa85
-patch link:    https://lore.kernel.org/r/20251220-remove_wtype-limits-v3-3-24b170af700e%40kernel.org
-patch subject: [PATCH v3 3/3] overflow: Remove is_non_negative() and is_negative()
-config: arm-randconfig-r071-20251224 (https://download.01.org/0day-ci/archive/20251228/202512280906.wt7UNpya-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512280906.wt7UNpya-lkp@intel.com/
-
-smatch warnings:
-fs/xfs/xfs_mount.c:144 xfs_sb_validate_fsb_count() warn: unsigned '*_d' is never less than zero.
-fs/xfs/xfs_mount.c:144 xfs_sb_validate_fsb_count() warn: unsigned '_a' is never less than zero.
-
-vim +144 fs/xfs/xfs_mount.c
-
-27174203f570b9 Christoph Hellwig 2009-03-30  130  
-4cc929ee305c69 Nathan Scott      2007-05-14  131  /*
-4cc929ee305c69 Nathan Scott      2007-05-14  132   * Check size of device based on the (data/realtime) block count.
-4cc929ee305c69 Nathan Scott      2007-05-14  133   * Note: this check is used by the growfs code as well as mount.
-4cc929ee305c69 Nathan Scott      2007-05-14  134   */
-4cc929ee305c69 Nathan Scott      2007-05-14  135  int
-4cc929ee305c69 Nathan Scott      2007-05-14  136  xfs_sb_validate_fsb_count(
-4cc929ee305c69 Nathan Scott      2007-05-14  137  	xfs_sb_t	*sbp,
-c8ce540db5f67d Darrick J. Wong   2017-06-16  138  	uint64_t	nblocks)
-4cc929ee305c69 Nathan Scott      2007-05-14  139  {
-cebf9dacd5c3ce Pankaj Raghav     2024-08-22  140  	uint64_t		max_bytes;
-cebf9dacd5c3ce Pankaj Raghav     2024-08-22  141  
-4cc929ee305c69 Nathan Scott      2007-05-14  142  	ASSERT(sbp->sb_blocklog >= BBSHIFT);
-4cc929ee305c69 Nathan Scott      2007-05-14  143  
-cebf9dacd5c3ce Pankaj Raghav     2024-08-22 @144  	if (check_shl_overflow(nblocks, sbp->sb_blocklog, &max_bytes))
-cebf9dacd5c3ce Pankaj Raghav     2024-08-22  145  		return -EFBIG;
-cebf9dacd5c3ce Pankaj Raghav     2024-08-22  146  
-d5cf09baced0ef Christoph Hellwig 2014-07-30  147  	/* Limited by ULONG_MAX of page cache index */
-cebf9dacd5c3ce Pankaj Raghav     2024-08-22  148  	if (max_bytes >> PAGE_SHIFT > ULONG_MAX)
-2451337dd04390 Dave Chinner      2014-06-25  149  		return -EFBIG;
-4cc929ee305c69 Nathan Scott      2007-05-14  150  	return 0;
-4cc929ee305c69 Nathan Scott      2007-05-14  151  }
-^1da177e4c3f41 Linus Torvalds    2005-04-16  152  
+> Signed-off-by: Eugen Hristev <eugen.hristev@linaro.org>
+> ---
+>  include/linux/memblock.h |  7 +++++++
+>  mm/memblock.c            | 36 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 43 insertions(+)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 221118b5a16e..c3e55a4475cf 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -51,6 +51,10 @@ extern unsigned long long max_possible_pfn;
+>   * memory reservations yet, so we get scratch memory from the previous
+>   * kernel that we know is good to use. It is the only memory that
+>   * allocations may happen from in this phase.
+> + * @MEMBLOCK_INSPECT: memory region is annotated in kernel memory inspection
+> + * table. This means a dedicated entry will be created for this region which
+> + * will contain the memory's address and size. This allows kernel inspectors
+> + * to retrieve the memory.
+>   */
+>  enum memblock_flags {
+>  	MEMBLOCK_NONE		= 0x0,	/* No special request */
+> @@ -61,6 +65,7 @@ enum memblock_flags {
+>  	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
+>  	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
+>  	MEMBLOCK_KHO_SCRATCH	= 0x40,	/* scratch memory for kexec handover */
+> +	MEMBLOCK_INSPECT	= 0x80,	/* memory selected for kernel inspection */
+>  };
+>  
+>  /**
+> @@ -149,6 +154,8 @@ unsigned long memblock_addrs_overlap(phys_addr_t base1, phys_addr_t size1,
+>  bool memblock_overlaps_region(struct memblock_type *type,
+>  			      phys_addr_t base, phys_addr_t size);
+>  bool memblock_validate_numa_coverage(unsigned long threshold_bytes);
+> +int memblock_mark_inspect(phys_addr_t base, phys_addr_t size);
+> +int memblock_clear_inspect(phys_addr_t base, phys_addr_t size);
+>  int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+>  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+>  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index e23e16618e9b..a5df5ab286e5 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/memblock.h>
+>  #include <linux/mutex.h>
+> +#include <linux/meminspect.h>
+>  
+>  #ifdef CONFIG_KEXEC_HANDOVER
+>  #include <linux/libfdt.h>
+> @@ -1016,6 +1017,40 @@ static int __init_memblock memblock_setclr_flag(struct memblock_type *type,
+>  	return 0;
+>  }
+>  
+> +/**
+> + * memblock_mark_inspect - Mark inspectable memory with flag MEMBLOCK_INSPECT.
+> + * @base: the base phys addr of the region
+> + * @size: the size of the region
+> + *
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +int __init_memblock memblock_mark_inspect(phys_addr_t base, phys_addr_t size)
+> +{
+> +	int ret;
+> +
+> +	ret = memblock_setclr_flag(&memblock.memory, base, size, 1, MEMBLOCK_INSPECT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	meminspect_lock_register_pa(base, size);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * memblock_clear_inspect - Clear flag MEMBLOCK_INSPECT for a specified region.
+> + * @base: the base phys addr of the region
+> + * @size: the size of the region
+> + *
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +int __init_memblock memblock_clear_inspect(phys_addr_t base, phys_addr_t size)
+> +{
+> +	meminspect_lock_unregister_pa(base, size);
+> +
+> +	return memblock_setclr_flag(&memblock.memory, base, size, 0, MEMBLOCK_INSPECT);
+> +}
+> +
+>  /**
+>   * memblock_mark_hotplug - Mark hotpluggable memory with flag MEMBLOCK_HOTPLUG.
+>   * @base: the base phys addr of the region
+> @@ -2704,6 +2739,7 @@ static const char * const flagname[] = {
+>  	[ilog2(MEMBLOCK_RSRV_NOINIT)] = "RSV_NIT",
+>  	[ilog2(MEMBLOCK_RSRV_KERN)] = "RSV_KERN",
+>  	[ilog2(MEMBLOCK_KHO_SCRATCH)] = "KHO_SCRATCH",
+> +	[ilog2(MEMBLOCK_INSPECT)] = "INSPECT",
+>  };
+>  
+>  static int memblock_debug_show(struct seq_file *m, void *private)
+> -- 
+> 2.43.0
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sincerely yours,
+Mike.
