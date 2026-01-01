@@ -1,176 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D03414F9D6;
-	Tue, 30 Dec 2025 17:01:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144342D0607;
+	Thu,  1 Jan 2026 15:10:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767114097; cv=none; b=scfGsHnddlYbGdiggECcSoJ7EXgx2b8QY90K9k5zPs5uF4UIB/1PQXIFqpOCkUY8NNqQQYStnEsQVbSmjuj/Dsw0KOGVEOFoe0Xjol5TQwglfFCz1X5FjGnv8hPqYCqLLIv1ao7mBVnDea6wyOptTDX28KjKWTuu4knSQ5oH3mg=
+	t=1767280245; cv=none; b=M3yQ5+MRD7swcLQ8s+V2thOGVHoEO9O9w5oTaZ83oi5j8J2QgVbwx9pPW/XTTUBcaMRbPdAXeqfLF2Yi1dhjRS0G7Olq+3vICVPT0kAcdmppVtXRj+hRyIM3lXgW7Av+xhmPXgSeAyOMwS+p/DmwqBpu9Tz57CqeN5e9ByVzRDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767114097; c=relaxed/simple;
-	bh=3VnALxAJ8sDGakcD3yctJqlVkoErim7xAtZJILR5H+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fAvS+V8f4BLkJ+1wdMG2GLtBc2S7DWFFzGWJ2J1eQtTbsqpoqwHGdHCZJpWnjkV4HcpfkJauy00uHQWeKr9nAFxs7emOCpYQtLcPQlYzHG1S2mMlqWkTJt0gGzcPgJHQHfPh6lG3CYDlSX7faBwb9RHUvRvpWdQaP8RzJnYXlrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JoO1GjzU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767280245; c=relaxed/simple;
+	bh=Hsig7qMqvEeHA2BrqJU8yUjptGfEzJylfzi+6cxd0ug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UAhNo7V/rG0WLtdds9TziWGsIBNfm26Du0BEaHk95s+qRD0vbLhfKhKrUO741IFoYWS9J9h7hc+3lFlyQBGLEyqVGO4KWruzjqPyw6/3ubyQiQfkLwyynhzi4G+2jIVzJwqDHM4tRY/cj+zCuNHxVbKZZovK7Dbl02mRvZGILJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPtWOjyC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JoO1GjzU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325D1C116C6;
-	Tue, 30 Dec 2025 17:01:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPtWOjyC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79F6FC4CEF7;
+	Thu,  1 Jan 2026 15:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767114096;
-	bh=3VnALxAJ8sDGakcD3yctJqlVkoErim7xAtZJILR5H+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JoO1GjzUeqE3X2GEOY3/uDYes/7Zxk14dxSgVOozzH4No14e2fcAwneozcN7jAJX3
-	 ylMysOfStPwrepIt0IZPMyvP9kv9r3fQgRB1audzsvE4+PBBShJBwJcCbJ9WV4y+CE
-	 vfUP7Zo2rlDgwRdPF7CPDVxVuZESHJOrO7Oj8451bV0BSzmZ3i91A8H+yTItJ0I3W0
-	 kJes6QwItTE0I+eZXOz+nmNVtOfxDlWu7wgpkANQ5JzUUo3N5M34Ne2hpctGiLD78W
-	 gWq2yfEKpsVqkE7gBQrEbFW/MoI/FrG2q1pyIdPkRDrflAPCzv0Bm8j2WM/8MFKLPt
-	 +Nkdn4ioJtIRA==
-Date: Tue, 30 Dec 2025 22:31:28 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Christoph Hellwig <hch@lst.de>, Niklas Cassel <cassel@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH 11/11] dmaengine: dw-edma: Remove struct dw_edma_chunk
-Message-ID: <5l2vl7sfnqjylmhve47pyi6tchqkn2n77zskkdisyynfxx3ftp@x55amadqlxph>
-References: <20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com>
- <20251212-edma_ll-v1-11-fc863d9f5ca3@nxp.com>
+	s=k20201202; t=1767280244;
+	bh=Hsig7qMqvEeHA2BrqJU8yUjptGfEzJylfzi+6cxd0ug=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qPtWOjyCCVoSbrgS2By+iC+tj/ZvF1ekBhMhWNic+UdxunQzjzXupcVisCiQw0WRF
+	 NfSFKZz3L6tMfm8jaTLqv9GRWlQOL6xHpYie5zd8kkt+JMjfhzXY1jmpw/Q4DpBLlP
+	 LExnq3NxIvOMw1FV0XWjOJzHC+6/SZimsEdhk6znVGM2FLupF4/j+R3Zfb/gRIGx6m
+	 cHTfRSzxvhQlZZ/JDvl7RU+A01rNwqRhEzPduJideLi32KeSMEyc6JOB+VeSwoe2GU
+	 cORzzmAL15U743KQLWeY8vsDe6JTTeSrK8tHZY16Q/5hg8/0vTkrOJyxvGwfccZQqF
+	 Qyd0UTVRBtdog==
+Message-ID: <acdd84b2-e893-419c-8a46-da55d695dda2@kernel.org>
+Date: Thu, 1 Jan 2026 16:10:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] overflow: Remove is_non_negative() and
+ is_negative()
+To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org,
+ linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
+References: <20251220-remove_wtype-limits-v3-0-24b170af700e@kernel.org>
+ <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+From: Vincent Mailhol <mailhol@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=mailhol@kernel.org; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
+ fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
+ F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
+ 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
+ YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
+ dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
+ zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251212-edma_ll-v1-11-fc863d9f5ca3@nxp.com>
 
-On Fri, Dec 12, 2025 at 05:24:50PM -0500, Frank Li wrote:
-> The current descriptor layout is:
+On 20/12/2025 at 12:02, Vincent Mailhol wrote:
+> The is_non_negative() and is_negative() function-like macros just
+> exist as a workaround to silence the -Wtype-limits warning. Now that
+> this warning is disabled, those two macros have lost their raison
+> d'être. Remove them.
 > 
->   struct dw_edma_desc *desc
->    └─ chunk list
->         └─ burst[]
+> This reverts commit dc7fe518b049 ("overflow: Fix -Wtype-limits
+> compilation warnings").
 > 
-> Creating a DMA descriptor requires at least two kzalloc() calls because
-> each chunk is allocated as a linked-list node. Since the number of bursts
-> is already known when the descriptor is created, this linked-list layer is
-> unnecessary.
-> 
-> Move the burst array directly into struct dw_edma_desc and remove the
-> struct dw_edma_chunk layer entirely.
-> 
-> Use start_burst and done_burst to track the current bursts, which current
-> are in the DMA link list.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Suggested-by: Nicolas Schier <nsc@kernel.org>
+> Link: https://lore.kernel.org/all/aUT_yWin_xslnOFh@derry.ads.avm.de
+> Signed-off-by: Vincent Mailhol <mailhol@kernel.org>
+
+So at the end, this patch got five kernel test robot reports:
+
+  https://lore.kernel.org/all/202512221735.mRV4BZqB-lkp@intel.com/
+  https://lore.kernel.org/all/202512230342.Lgha2HGH-lkp@intel.com/
+  https://lore.kernel.org/all/202512251340.UApIFw9R-lkp@intel.com/
+  https://lore.kernel.org/all/202512271618.33YepxDC-lkp@intel.com/
+  https://lore.kernel.org/all/202512280906.wt7UNpya-lkp@intel.com/
+
+All these are the same smatch warning just triggered from a different
+place. I think it is still too early to undo that workaround in
+include/linux/overflow.h, otherwise developers would be getting that
+smatch report too often.
+
+I will send a v4 in which I will drop this patch. This basically means
+that the v4 is a revert to v1...
+
 > ---
->  drivers/dma/dw-edma/dw-edma-core.c | 130 ++++++++++++-------------------------
->  drivers/dma/dw-edma/dw-edma-core.h |  24 ++++---
->  2 files changed, 57 insertions(+), 97 deletions(-)
+> Changelog:
+> 
+>   v1 -> v2: new patch
+> ---
+>  include/linux/overflow.h | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 736f633b2d5f..ab142d60c6b5 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -36,12 +36,6 @@
+>  #define __type_min(T) ((T)((T)-type_max(T)-(T)1))
+>  #define type_min(t)	__type_min(typeof(t))
+>  
+> -/*
+> - * Avoids triggering -Wtype-limits compilation warning,
+> - * while using unsigned data types to check a < 0.
+> - */
+> -#define is_non_negative(a) ((a) > 0 || (a) == 0)
+> -#define is_negative(a) (!(is_non_negative(a)))
+>  
+>  /*
+>   * Allows for effectively applying __must_check to a macro so we can have
+> @@ -201,9 +195,9 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>  	typeof(d) _d = d;						\
+>  	unsigned long long _a_full = _a;				\
+>  	unsigned int _to_shift =					\
+> -		is_non_negative(_s) && _s < 8 * sizeof(*d) ? _s : 0;	\
+> +		_s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;		\
+>  	*_d = (_a_full << _to_shift);					\
+> -	(_to_shift != _s || is_negative(*_d) || is_negative(_a) ||	\
+> +	(_to_shift != _s || *_d < 0 || _a < 0 ||			\
+>  	(*_d >> _to_shift) != _a);					\
+>  }))
+>  
 > 
 
-[...]
+Yours sincerely,
+Vincent Mailhol
 
->  static struct dma_async_tx_descriptor *
-> @@ -551,8 +499,14 @@ static void dw_hdma_set_callback_result(struct virt_dma_desc *vd,
->  		return;
->  
->  	desc = vd2dw_edma_desc(vd);
-> -	if (desc)
-> -		residue = desc->alloc_sz - desc->xfer_sz;
-> +	residue = desc->alloc_sz;
-
-Now you dereference desc without checking for NULL.
-
-> +
-> +	if (desc) {
-> +		if (result == DMA_TRANS_NOERROR)
-> +			residue -= desc->burst[desc->start_burst - 1].xfer_sz;
-> +		else if (desc->done_burst)
-> +			residue -= desc->burst[desc->done_burst - 1].xfer_sz;
-> +	}
->  
->  	res = &vd->tx_result;
->  	res->result = result;
-> @@ -571,7 +525,7 @@ static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
->  		switch (chan->request) {
->  		case EDMA_REQ_NONE:
->  			desc = vd2dw_edma_desc(vd);
-> -			if (!desc->chunks_alloc) {
-> +			if (desc->start_burst >= desc->nburst) {
->  				dw_hdma_set_callback_result(vd,
->  							    DMA_TRANS_NOERROR);
->  				list_del(&vd->node);
-> @@ -936,7 +890,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  		goto err_irq_free;
->  
->  	/* Turn debugfs on */
-> -	dw_edma_core_debugfs_on(dw);
-> +	//dw_edma_core_debugfs_on(dw);
-
-debug code?
-
->  
->  	chip->dw = dw;
->  
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 1930c3bce2bf33fdfbf4e8d99002483a4565faed..ba83c42dee5224dccdf34cec6481e9404a607702 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -46,15 +46,8 @@ struct dw_edma_burst {
->  	u64				sar;
->  	u64				dar;
->  	u32				sz;
-> -};
-> -
-> -struct dw_edma_chunk {
-> -	struct list_head		list;
-> -	struct dw_edma_chan		*chan;
-> -	u8				cb;
-> +	/* precalulate summary of previous burst total size */
->  	u32				xfer_sz;
-> -	u32                             nburst;
-> -	struct dw_edma_burst            burst[] __counted_by(nburst);
->  };
->  
->  struct dw_edma_desc {
-> @@ -66,6 +59,12 @@ struct dw_edma_desc {
->  
->  	u32				alloc_sz;
->  	u32				xfer_sz;
-> +
-> +	u32				done_burst;
-> +	u32				start_burst;
-> +	u8				cb;
-> +	u32				nburst;
-> +	struct dw_edma_burst            burst[] __counted_by(nburst);
->  };
->  
->  struct dw_edma_chan {
-> @@ -126,7 +125,6 @@ struct dw_edma_core_ops {
->  	void (*ll_link)(struct dw_edma_chan *chan, u32 idx, bool cb, u64 addr);
->  	void (*ch_doorbell)(struct dw_edma_chan *chan);
->  	void (*ch_enable)(struct dw_edma_chan *chan);
-> -
->  	void (*ch_config)(struct dw_edma_chan *chan);
->  	void (*debugfs_on)(struct dw_edma *dw);
->  };
-> @@ -166,6 +164,14 @@ struct dw_edma_chan *dchan2dw_edma_chan(struct dma_chan *dchan)
->  	return vc2dw_edma_chan(to_virt_chan(dchan));
->  }
->  
-> +static inline u64 dw_edma_core_get_ll_paddr(struct dw_edma_chan *chan)
-
-No need of inline.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
