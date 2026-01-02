@@ -1,101 +1,116 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E425C2DF3DA
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Jan 2026 11:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D539276051;
+	Fri,  2 Jan 2026 12:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767351885; cv=none; b=cJWbPNh3HkvySwzEpXd4NQNVIWSZm1G9Qzab1bBkn2G2xQiVCq059ASZUYwXeHLTGUWTk5ZHoQ8xsrIruXDbhkK+DT+iqRsy9nPWG0S23BZqKDwWrqwCmDf9V6YoNwTOTO1S+JgbXJPGSfwyK3wYGoo8yM4Z38rJi7q3abOkrU8=
+	t=1767358721; cv=none; b=dxAJWOqOWCWGuZBEpd73Vq54tJFLTYrHHE4Tnoite3Zu2r0xKj/l8y5H6gf505sVr2wxXuMpIUjA1BGdCLzBQJVn1jzyqfVwDYvRc7ZGDgpkSeHJREQSRm9cjOZ1Rz0vJwVBTCMKvjZwoMC4PaHWNvmaCw3DOtmPngX2rBLHX1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767351885; c=relaxed/simple;
-	bh=wSApN7eIEmxe+ZlkFun1Wolx+BI8xxAaYv9APOnMXbc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZpyAz8k3ufIGIZ2WpN8+mvMMBFGlSjY5pHVWh/jEajpAyw2qpt4jqu2wdCa9h2EgkKVEJjnSFCDmBT0FX+tFG/+D4D0cU9V0vFJWgX+tYIIi0XCEBZNGkujYbV2ApVJdOIZON63A5gRu4cxIoT4V3ptOLNtgt5VDa6VgcrGhmg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipCfHJYf; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipCfHJYf"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2a07fb1527cso30758635ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Jan 2026 03:04:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767351882; x=1767956682; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FIDs7EpZgwjKHQTJkjqicwJWn0vuoECrubEqmgA+6vU=;
-        b=ipCfHJYf8oQoFqMJ+NDl0a9F86WRdEFeyHHJECOrCJTgF9zJ/8gSfv2wupCMMIxJfj
-         eku/SNf83ymrhL/SQUYtzhPbgVk4ruSA1LYT9k/bKsYW9SrdCKgZevYG4Cg9TNfQwqoS
-         caWuMb+pHVQgf1AW/BKGS9coLPWn9/MleoZ1hUJ6cuzG1lK59asRwBtVKq9C43ayEBWR
-         qdj7iEyYMLFOU/K0uf6CjK8jVAxXEukfQluV/1sjZCjrJvwffOAohbgoIDdSsiOO13MX
-         Ie2peETA/AJYICK2qlJpeNUpGfgbkOJ95hXdXg9xP1mWPAXH/MUYeYL6CVBcOSxhjMgz
-         2WTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767351882; x=1767956682;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FIDs7EpZgwjKHQTJkjqicwJWn0vuoECrubEqmgA+6vU=;
-        b=wH+sK+sueZZhRCfMtKnQF6YYJw2urFyHXObV3upgtdLM3fSswY300iNUTrr28GKAL6
-         7CcPnYfp4J+xKMuTstyn5cnzM8HHEm1PuanDPmbcWrg6F/2aCVFyV60SZHDjKgqo0kF3
-         Eniq7d9kg1gBOx8idur3DAux5nv/RrspX4sDANt2eyCA7r8kLplp+IJMGKLOcMnOxty0
-         uGBwvyTPj39lrMrBXyLti1UVbL48brL5u50cEt1897K8Utjrbi04LPAHBPpZMrbFL3sI
-         ul24ZyQBeGSzKiThIXZQmQs6UuC8OF/aGfEZG2ZkV8o0WmXQVsPAmV91TNhsGzdm4kWp
-         bpGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmaBnaoaNXf/DwfgLzzhRZGraYhzAD6776DyNvgqJUYc5fpISpZmRXBQFscVTe5Hn/XLLIQAViVhcUXMJhSpc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsXd+GRRa4H0eNBvRNBoLCFQzk+dpsz77Ow7tCDdmkqTWyeWOa
-	GpW530ThFwOyy5GunPa13OYbY2IIvNsYiWosSW+MxDiapKIU3NSI3PGjzSUiiQ9uYJkY0EDSzl2
-	EHnLi1v5DUq+oDepXUeTiwlnNAjuS7vk=
-X-Gm-Gg: AY/fxX76BDWHy/2qobJUIbbUlUr31BfNwilcigTMsT+JBWG9IbImHzGNj4xxblIjSgH
-	O31kmq90/K06VbSFCXILwEemd1sbaBW7wCGTXGOFzt4fOIsMgsH0whb5LQRK9ObMYG7pFmqCMLL
-	BrS6TKbWBW95mjJTbzlDH8Fca5BZA3H8yvA6L0iNuitNK4I5kIYHPoRZDUcj5ySZ0zQ6wq7OmXi
-	2pa/1Ek/qabS1/QlI70IULPx+SgabYaP6V9TKlrppyLXYMpPx0emBtWBtzOjKqHdC3WHfpQ5CTM
-	O78exYy2nnDcTB2fgizeanDqYA1OHIcfb6axFhYYbS2Mh0GNivSIbkg0SkKvLi9vEidoWjCS4SC
-	3/5piENpRy/Ns
-X-Google-Smtp-Source: AGHT+IEZHP2Tt0L93hKtfLRSYNZV76m0YyhGtrMg6HK8YOKF7WDdzMO7LFlzqH2gnVcYBfD5MuH9A9W3GVedPNVkD/I=
-X-Received: by 2002:a05:7301:1509:b0:2a4:3592:cf89 with SMTP id
- 5a478bee46e88-2b05ea19892mr15172023eec.0.1767351882060; Fri, 02 Jan 2026
- 03:04:42 -0800 (PST)
+	s=arc-20240116; t=1767358721; c=relaxed/simple;
+	bh=ditwgOA9BujE7Ln+5ZTlpsZZZAx+WuGc26hWEh8Pa7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CcjCvdaDfiN/EjxX+HR0iuOrdIfKBcwMt7NDpEZ/TF6jMG1OvSNtlQ5SZWLw0EteFkFVap7wFyZ25HizmjoDkgjmNMmJJlHwybtAjE/s1XsW0pGShUuBuJsnTUugL5iBh7TylcfuXa8DTKJrAqONXCgq83Tu2EB4DuXCJ4JSUkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81774497;
+	Fri,  2 Jan 2026 04:58:31 -0800 (PST)
+Received: from [10.57.94.221] (unknown [10.57.94.221])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9905D3F5A1;
+	Fri,  2 Jan 2026 04:58:33 -0800 (PST)
+Message-ID: <581a0fac-7891-4644-af65-0354e22b9311@arm.com>
+Date: Fri, 2 Jan 2026 12:58:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251220-remove_wtype-limits-v3-0-24b170af700e@kernel.org>
- <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
- <acdd84b2-e893-419c-8a46-da55d695dda2@kernel.org> <20260101-futuristic-petrel-of-ecstasy-23db5f@lindesnes>
-In-Reply-To: <20260101-futuristic-petrel-of-ecstasy-23db5f@lindesnes>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 2 Jan 2026 12:04:28 +0100
-X-Gm-Features: AQt7F2rb7qQrF04KAinb0u8Ra4qw05S31gwaEul2jMZEj1pMA4QwOapz60W1DHs
-Message-ID: <CANiq72=jRT+6+2PBgshsK-TpxPiRK70H-+3D6sYaN-fdfC83qw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] overflow: Remove is_non_negative() and is_negative()
-To: Nicolas Schier <nicolas@fjasle.eu>
-Cc: Vincent Mailhol <mailhol@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] randomize_kstack: Unify random source across
+ arches
+Content-Language: en-GB
+To: kernel test robot <lkp@intel.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Jeremy Linton <jeremy.linton@arm.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20251215163520.1144179-4-ryan.roberts@arm.com>
+ <202512170038.vJZdUhEN-lkp@intel.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <202512170038.vJZdUhEN-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 1, 2026 at 9:13=E2=80=AFPM Nicolas Schier <nicolas@fjasle.eu> w=
-rote:
->
-> thanks!  I think it's a bit sad to keep code only to make some checker
-> tooling happy, but for now it seems to be the right thing to do.
+On 16/12/2025 16:31, kernel test robot wrote:
+> Hi Ryan,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on tip/sched/core]
+> [also build test ERROR on akpm-mm/mm-everything linus/master v6.19-rc1 next-20251216]
+> [cannot apply to kees/for-next/hardening kees/for-next/execve]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/prandom-Convert-prandom_u32_state-to-__always_inline/20251216-013546
+> base:   tip/sched/core
+> patch link:    https://lore.kernel.org/r/20251215163520.1144179-4-ryan.roberts%40arm.com
+> patch subject: [PATCH v2 3/3] randomize_kstack: Unify random source across arches
+> config: x86_64-rhel-9.4-ltp (https://download.01.org/0day-ci/archive/20251217/202512170038.vJZdUhEN-lkp@intel.com/config)
+> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251217/202512170038.vJZdUhEN-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202512170038.vJZdUhEN-lkp@intel.com/
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>>> arch/x86/boot/startup/sev-startup.o: warning: objtool: section .discard.addressable has absolute relocation at offset 0x0
+> --
+>    In file included from include/linux/device/driver.h:21,
+>                     from include/linux/device.h:32,
+>                     from include/linux/blk_types.h:11,
+>                     from include/linux/writeback.h:13,
+>                     from include/linux/memcontrol.h:23,
+>                     from include/linux/resume_user_mode.h:8,
+>                     from include/linux/entry-virt.h:6,
+>                     from include/linux/kvm_host.h:5,
+>                     from arch/x86/kvm/svm/svm.c:3:
+>>> include/linux/module.h:132:49: error: redefinition of '__inittest'
+>      132 |         static inline initcall_t __maybe_unused __inittest(void)                \
+>          |                                                 ^~~~~~~~~~
+>    arch/x86/kvm/svm/svm.c:5509:1: note: in expansion of macro 'module_init'
+>     5509 | module_init(svm_init)
+>          | ^~~~~~~~~~~
+>    include/linux/module.h:132:49: note: previous definition of '__inittest' with type 'int (*(void))(void)'
+>      132 |         static inline initcall_t __maybe_unused __inittest(void)                \
+>          |                                                 ^~~~~~~~~~
+>    include/linux/module.h:125:41: note: in expansion of macro 'module_init'
+>      125 | #define late_initcall(fn)               module_init(fn)
+>          |                                         ^~~~~~~~~~~
+>    include/linux/randomize_kstack.h:86:1: note: in expansion of macro 'late_initcall'
+>       86 | late_initcall(random_kstack_init);
+>          | ^~~~~~~~~~~~~
 
-Perhaps a patch to add a comment explaining Vincent's findings would
-be a good outcome, i.e. explaining the reason it needs to remain in
-place for the moment (even a link to lore.kernel.org to this thread
-would help).
+Oops, this is due to having put late_initcall() in the header file. I'll move
+this to a c file for the next version.
 
-Cheers,
-Miguel
+Thanks for the report!
+
