@@ -1,109 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A3D2586C2;
-	Fri,  2 Jan 2026 22:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565A920B212
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Jan 2026 22:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767392974; cv=none; b=k3lgJOVvV03swZFhYftdG5mRd7hyfuKv0220/qHPHOxcysbKHKSb34ohgvNiY+xxZq9jwQs7Xclkk4ViDNdS6lAlW9Vw+7gvTyKlQ+y0gPlTi2qMD7qiVvUx8a/Xw2dBteCZ65ZF7MvQ4lC9nYqHvsT1bnihPl95RP5Kl5w/K8Q=
+	t=1767394449; cv=none; b=pUdNT2JSK/bjqlTl6fzcQ3NPiu6sTTCTc9hJdLjyYdwoyxEykIVsMr0ktbbP7qPAU2l3OeWgfl/+9ffh4zDVyLxHtq2fRl25P08f/d/RH8MFvWkoFk9q6aaNKDKf2XP6G1zShOC/HfxSk6DX7bG5k9qeKQAwsfXscv2Il9XV/L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767392974; c=relaxed/simple;
-	bh=wi+zGA27YppCjQQtK+30G05+hgFYfWmU162gQdX9VIc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TibCgME42uPX1ZEHF3v1hhfKurHu05t9YDG9GFuHLbofs3k+obr2pAz6XRIHb6DmThkCj/fpdH2Ji9W0uupkNSBy83kpH89HrzUgZZOFF11zk+rYAZNWA1psQvwgvqXbNtGAYiBMRoyDdqv9GoG6thc2unf1jEr+yP83D10Bwro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6xLlHJf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767394449; c=relaxed/simple;
+	bh=kPMxx2R7Gx5ZxYwa7SRt+S3sFaD5KMccJKMZB0MZviE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fA29PwsGDdcsCSHXgzsjlx4bOUJ9BSpEioVNXUKq3exGdWxDKr/BZ0qyo9tA+3IMKFIa5oD2y4hcoAKEQz0KAcus9OOQwYUs3xO8kkU3PSTkL+s6y0ZqNBxduTLjMCgqrjk6mCd7HPl/+s8EhEfyHXj/BsAev5KlwIIgwPQuhpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SYXCMywc; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6xLlHJf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 103E9C116B1;
-	Fri,  2 Jan 2026 22:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767392973;
-	bh=wi+zGA27YppCjQQtK+30G05+hgFYfWmU162gQdX9VIc=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=k6xLlHJfFRCChTKp+B5AYlpXseY4uf2Hlg1cFksKenkPt/OihX+c8AQ5bispHZo/J
-	 y9/YDyyESH9iGb5KkzAP1+KkW5Qaaz0h1Og6++sqskN2etK3bB7b47yxEeR+T5l7x5
-	 V9Exgs8Dn+yVof+XpyP1Bt9NtGgFnHEt8kW564V8LPEVJuiodMBABT0M5C9hnHa55G
-	 feyuKfgjRr9ekIKi+eHb7erZGDotRTIxQJmvm5dBnYx7LBMhiiHYg4QNnqTvYkJNRp
-	 RDm1H53jcgogjaxWNzlS8WFUWhC1rzXzyruEA3pn0jT9w5GnZlCEFiRa1XvHTYoVwh
-	 tGLPBlsMc398A==
-Message-ID: <b6b35138-2c37-4b82-894e-59e897ec7d58@kernel.org>
-Date: Fri, 2 Jan 2026 23:29:23 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYXCMywc"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42fb0fc5aa9so5089889f8f.1
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Jan 2026 14:54:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767394446; x=1767999246; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=StGZh5UIhFdeUEf/ngmSy2NSY5Z+LAPTFt5BciOr9oI=;
+        b=SYXCMywc3jtTL3eeoySGXWzOryGNIh716Yk2bb5NqvXUeaI0YVh7snV0fnf7BsuMOa
+         PIDk0tLAD/eNgqSMUAfaEYm6bsGmlCYPJ4SAP7mTO5V2ihUnjtY0paWhTe5U7mzXQGOF
+         NXEO87yUbnAAxGQBEhwheV5eHqRRan5hrOmPSvYBaa6Zdyp1r1YfLjYOuR4x1j+yZh/h
+         jzmvLp0XizDEgpnSmob3rsXlXJnnIaojUNjILlYXZq2Xbv990ROsc/xZEmRc733xZj3Z
+         +IZHI69tinmTsmuc6iIiX48zrFX4tuN4Xe+UG4HvVwjsp5JWOQVZGscpJTZ23SeejvmI
+         jL4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767394446; x=1767999246;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=StGZh5UIhFdeUEf/ngmSy2NSY5Z+LAPTFt5BciOr9oI=;
+        b=JdHoSbcc3ToRQVkiLwaix1Va7cqmSFgHIKHrosVYtKwbScvGU8RE6OXbfeP5q2kB/X
+         AMesEAkTLVx3FUOwzw+bI3arVO/2Q0+o1bfUbNaWh4a+ElPFeh8HdSqtoVldb3ujHYFc
+         iYt7IwHwuHj5Fgpb6qu3h5vyGtIkoHZccRXMItGgGzsfgyCN4hAYy5x1L7RQtsvtXTXm
+         hQ25S+QnwM+ZiPl18Y699SBikA1/H9oNoy53ByoXu0vFKSN00mSG9Wp8IoH82WjlY333
+         t9WzlvyzWWUrwtVSltoQ3wv6ikL66UsL4uVAlJf6Z4iO7vdrIZY5SzvMVekXV/FbB4X6
+         bp0w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+ycDfmONYzv0AQ2KRJHKrwwTJMx1ByWbIlvfuGm8f8HBGGv/Hb1O2WP6Hbatoo67hOnayn5z17blSJrE7600=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDUQ2LQL2Yht/QJ0OLNvpYjQCXTDSpOdxG0jsvS2/u286nX1fJ
+	FloeMIFU+oCKbSZdp05hqDO3MG8H0EOZZoB1wOv9qK/thLRRa+s41vi3
+X-Gm-Gg: AY/fxX4jUDq4DXWczjjx+oPT9J6MOoHepWgGJa+5+SQFEZA/+R58s+cZCSnadEtynRA
+	69xGeDmrnzedyM/ru0W9ly9b5JX98CUi6aMHX0YoBPTonP662DRritv1g16BhjjzPeCMrQUPoIe
+	y8Bszz8k0n6xp9oZiyMKjdaQkPPpmSVzq3gleIRyKIIgM9TinFfqg/sDzERC99bpId7r18ZZZs+
+	4NW/Oxtd9iIrqRXRtVCnkp2f55YUgqD9QcsdSIKmU7eJfLT/qRdiYjfOkNT1//iTgebIxTZpCRM
+	LTtw2sMN4Nhf0o8PzNvJa1YNR+snwMhG+ZOF3GNINHotSEqoxMIeWQCy2XoadGE9AuMI79U6CJl
+	p+mqNVbKFbz0QG6O7Q82wtTi1iqa/uCcYdIKpXJ7fqFgKTAFAdtBiLSTJiqf0/O29ZetrTu9GbD
+	gO92G+yemEoAn8b+t1YggC8vstUWj1FnymT53WQUPDijWHXE4QqDmf
+X-Google-Smtp-Source: AGHT+IHhZlcstoHojBz97OFk5owjy0cbb1cp4fYnQEbcnWo+WUycqSneA9mdGDNlnSrZ5xQclO2tXg==
+X-Received: by 2002:a5d:5392:0:b0:42f:edb6:3642 with SMTP id ffacd0b85a97d-4324e704c03mr44422531f8f.60.1767394445433;
+        Fri, 02 Jan 2026 14:54:05 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eab2ebfsm86000586f8f.40.2026.01.02.14.54.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jan 2026 14:54:05 -0800 (PST)
+Date: Fri, 2 Jan 2026 22:54:03 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko
+ Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
+ Gordeev <agordeev@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland
+ <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton
+ <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] prandom: Convert prandom_u32_state() to
+ __always_inline
+Message-ID: <20260102225403.78e26214@pumpkin>
+In-Reply-To: <CAHmME9qHiVZwf4TAringRHSZ-yqHuPwmP=Wnx98n09jv7Vu_Rg@mail.gmail.com>
+References: <20260102131156.3265118-1-ryan.roberts@arm.com>
+	<20260102131156.3265118-3-ryan.roberts@arm.com>
+	<CAHmME9qHiVZwf4TAringRHSZ-yqHuPwmP=Wnx98n09jv7Vu_Rg@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH] overflow: Update is_non_negative() and is_negative() comment
-From: Vincent Mailhol <mailhol@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Nicolas Schier <nicolas@fjasle.eu>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org,
- linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20251220-remove_wtype-limits-v3-0-24b170af700e@kernel.org>
- <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
- <acdd84b2-e893-419c-8a46-da55d695dda2@kernel.org>
- <20260101-futuristic-petrel-of-ecstasy-23db5f@lindesnes>
- <CANiq72=jRT+6+2PBgshsK-TpxPiRK70H-+3D6sYaN-fdfC83qw@mail.gmail.com>
- <b549e430-5623-4c60-acb1-4b5e095ae870@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=mailhol@kernel.org; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
- fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
- F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
- 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
- YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
- dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
- zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <b549e430-5623-4c60-acb1-4b5e095ae870@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The is_non_negative() and is_negative() function-like macros initially
-exist as a workaround to silence the -Wtype-limits warning. Now that
-this warning is disabled, those two macros have lost their raison
-d'être. Or so we thought.
+On Fri, 2 Jan 2026 14:39:21 +0100
+"Jason A. Donenfeld" <Jason@zx2c4.com> wrote:
 
-In reality, smatch still produces a similar warning and so, it is
-unfortunately still too early to undo this workaround.
+> Hi Ryan,
+...
+> > +static __always_inline u32 prandom_u32_state(struct rnd_state *state)  
+> 
+> Why not just normal `inline`? Is gcc disagreeing with the inlinability
+> of this function?
 
-Update the comment to point to smatch instead of GCC's -Wtype-limits.
-Add a link to the thread in which this was discovered.
+gcc has a mind of its own when it comes to inlining.
+If there weren't some massive functions marked 'inline' that should never
+really be inlined then making 'inline' '__always_inline' would make sense.
+But first an audit would be needed.
+(This has come up several times in the past.)
+But if you need a function to be inlined (for any reason) it needs to be
+always_inline.
 
-Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Link: https://lore.kernel.org/all/CANiq72=jRT+6+2PBgshsK-TpxPiRK70H-+3D6sYaN-fdfC83qw@mail.gmail.com/
-Signed-off-by: Vincent Mailhol <mailhol@kernel.org>
----
- include/linux/overflow.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Whether there should be an non-inlined 'option' here is another matter.
+There could be a normal function that calls the inlined version.
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 736f633b2d5f..d84194fc783b 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -37,8 +37,8 @@
- #define type_min(t)	__type_min(typeof(t))
- 
- /*
-- * Avoids triggering -Wtype-limits compilation warning,
-- * while using unsigned data types to check a < 0.
-+ * Avoids triggering "unsigned 'a' is never less than zero" smatch warning,
-+ * Link: https://lore.kernel.org/all/acdd84b2-e893-419c-8a46-da55d695dda2@kernel.org
-  */
- #define is_non_negative(a) ((a) > 0 || (a) == 0)
- #define is_negative(a) (!(is_non_negative(a)))
--- 
-2.52.0
+	David
+
+
+> 
+> Jason
+> 
+
