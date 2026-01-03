@@ -1,98 +1,49 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B306D4315A
-	for <linux-hardening@vger.kernel.org>; Sat,  3 Jan 2026 17:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E01217C220;
+	Sat,  3 Jan 2026 19:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767459712; cv=none; b=XLtP2q2mq5xOYw0fWTo2qyr05EVQ86PPMYa3H2MubtycL7yjEDUBu2ZE10pKFICpnfx28FJyVqumzqSn7eh7aDA6q+WslB3+A8wq+/QUYSbo254W1AvDoPFHP8Mvz63CFqrr37aIIR9zbYh7sXZQgfhBYIwrBneLz3bnS2MGEG4=
+	t=1767468213; cv=none; b=UEbgsCGgc2t5NAUK49yS96HjRNqKHXxpZXvW6jjqH1uVWSfR0cbZChlsmQSzVkwZKutLiW+TLXpQ8jgmj1dAnOTdsh1iriBcL9fzHjMTmsiyppW5e3EpDL6cCkykst4KKdUacgjOBIhQsW8Ms+0rBVKHlOFg7n6It9go4FWA3zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767459712; c=relaxed/simple;
-	bh=KQXl8jGs3GODk15tB6KTtrgOeAb6Hys26tY1ny9AYdM=;
+	s=arc-20240116; t=1767468213; c=relaxed/simple;
+	bh=kFPBzT8l+WwHu+3My5hbLBVwoqHKka5P/1LTiFfRdf8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o6lnvnSv747GInzqMrtaJoXXArbGRDZXIHnxpGqZy1vywvQrc65mxsbUX57xXzyYy1qy0G1IW0BlWMuAUM8raGE4EMRtR+zLJnL9m1tiGlyTr1mvcGBYI9tIbGweRO4EAPPT8Ob70NchOxSsPrzPoVLZD66ZFp6v4oQJTZLfKdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O9Cget1S; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pzef/c9M9RvuBIT9wjPtea1Itbkds1prcCftI0SZfP9fEK04e9XMakl31fZLe0XCN0VJUtJQZ4AB9X9e60Ysh/9leNbnDw+1oDQCEiuzkiRlX5qhfW139hxXTvyliPQZNquYEGpVbmJIS4Li1IPlZ9AP0vEj74E0dEWD0/S+RQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngReHhb0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O9Cget1S"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b3d7c1321so7623453f8f.3
-        for <linux-hardening@vger.kernel.org>; Sat, 03 Jan 2026 09:01:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1767459709; x=1768064509; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yHSQMnJBQHG3fEabcx1jHr7yPb3RERixhfZ5sKkWzqY=;
-        b=O9Cget1SxzflOyoG1iBj4tgeldJE8YEv+KCX/Po0HJ5CjxayvO5ZpmNW3teQ0qYoGp
-         Mhgzx7wb53SdYQTHxLiyCXeRNd9TCYn/BtVvHVIQx9kaCd49JhuG0ztiudTYv7QjEGN1
-         CgpT1i8bIeNPIoj9zDuMftOMgJ5UFx1oiZWH1c9LC2kqI1kQnURHDQPAPCBrwX5bTHkm
-         vXEkYDhDCsCZ1ArZTs+a0y4gY2BYAMifW5QJUP9q3eoVRY6y3aDljX3v9JxK7S6LlLnS
-         agYbSMbNTXAlpQnMn9yGLzIenQjT0k9MCqA8g5+hiOJLFtfHVa2hjin0LA9KmHsvp+ZX
-         qqIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767459709; x=1768064509;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yHSQMnJBQHG3fEabcx1jHr7yPb3RERixhfZ5sKkWzqY=;
-        b=wdCtggrkFgUuhqwsnlTxkdTwfo6qpnQuJyKJh8T1dX7KHq0iIXjUgKM5npZwu6xkq8
-         Ip8JR7lJojGmLKIUMfJIYUCG2vvDLcVlrW6hCRnqL7Vi+Oge3yVzSSyiV8/EZUvouzNr
-         BUdwsTHbJStfrPWoat8YwIYlCIhDTZ+b72AoTaag/2iG6W58Md39z+7+3XLsIU8adg8W
-         rb04h4RYDXhHB3x1UxyOM4mEQB+ZT1R3RY0Mo7Oq4T/SCtcCrypihRWS+hdqc4coc1qe
-         YDfNaO5W+Xwk5L5K5o3tAFda0qWwam+JxPr4nwN20JAAGTm7eV3veaprILWc75LAIDUq
-         EZqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJIhhoyygnaeHUmOhWgefTSamoDiWbyIeRdd5B0V6X8vGo2czPmTNFrmXjZCD4o1aBUPioXIXT0pk4HT8v3fA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbSw+ETr6ilOQwtrW0GPpq7H+wAUVlMlcFUN19nTtTJfZqETpn
-	cYTZ9N+f0cVUq9k849L48HeQW2uteto5zd/myrG1zVpA8oJ5mGASSjs6xAiJfN3C4Uo=
-X-Gm-Gg: AY/fxX5YVBMitLETWqlqTEzXcTccSNh4lC2K9u8xOLfiQW58jbttPX1AT6+QC1Fw/fo
-	ltB46FIcg3Hzhvh4DIxSxUZlmL+FxppAAtaSLYkuSk82JTsZEuBoQml8YPF4dla1gJYeAzlBVFy
-	wOCMpn8sLPGsUkJbKf0jErPpBq0YJuTgirv8rz3qUE5WNEMjB3RRMXMYILcR/iZq+gLIMXuS9v+
-	3NxLpd+xwxbjpREM6bi+lFMJIFtv+QDanU4NOdyRGYTxsSBv2ilQwjijiuMo4OXsQjZ1A4z682w
-	G8deR+gTIIz8W0c4FhOwefShbfJ64YSWbDWIAnGOw3iwtEN+Xl4cYuHP6RmFKkVcSuktHPohpoy
-	Vw2jxDeViWRwbD87Mz0KYui8U0IGeUqOZMktXfbLq3ZeGRT2+JA+yLG4H+2iOGP+wMxjs1TRFVI
-	K9/PNgb0YhlWTl/we0
-X-Google-Smtp-Source: AGHT+IH76r9upX5LgpHZ/fOST6gsEDX5p5oGk436/qE1kT4SAaRLVvV1SuOGoIs6C86iZ8FylfCo5w==
-X-Received: by 2002:a05:6000:2c0f:b0:431:54c:6f0 with SMTP id ffacd0b85a97d-4324e4c739emr61327273f8f.4.1767459708384;
-        Sat, 03 Jan 2026 09:01:48 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4325b6bfe88sm82459187f8f.19.2026.01.03.08.56.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Jan 2026 09:01:47 -0800 (PST)
-Date: Sat, 3 Jan 2026 19:56:45 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Vincent Mailhol <mailhol@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] overflow: Update is_non_negative() and is_negative()
- comment
-Message-ID: <aVlKTculhgJzuZJy@stanley.mountain>
-References: <20251220-remove_wtype-limits-v3-0-24b170af700e@kernel.org>
- <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
- <acdd84b2-e893-419c-8a46-da55d695dda2@kernel.org>
- <20260101-futuristic-petrel-of-ecstasy-23db5f@lindesnes>
- <CANiq72=jRT+6+2PBgshsK-TpxPiRK70H-+3D6sYaN-fdfC83qw@mail.gmail.com>
- <b549e430-5623-4c60-acb1-4b5e095ae870@kernel.org>
- <b6b35138-2c37-4b82-894e-59e897ec7d58@kernel.org>
- <903ba91b-f052-4b1c-827d-6292965026c5@moroto.mountain>
- <c84557e6-aa92-42e9-8768-e246676ec1e9@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngReHhb0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DA3C113D0;
+	Sat,  3 Jan 2026 19:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767468212;
+	bh=kFPBzT8l+WwHu+3My5hbLBVwoqHKka5P/1LTiFfRdf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ngReHhb0xBx1x5fvYtOfgcpLEILzqu49lQW1bMb2wRc3+BW1vWJdoV/liivSukWbi
+	 Wr1u0+WC02baG/7qzxuTHFHic6PVnSamdiPxhEqTgA1S2pA1eqYyInnK8Yq7O5/pa1
+	 cl2RU6O4se6+wNz0wv5fa0sTosXv7JI6nHpQxOqCzUdzlR3V5lzLornbt5v4CC52Wv
+	 K6NU1UCrStxzBWELoCL6XaOEUwgpoF1/dezzddv3CKdw8etbedWu0aGGeJ5bgKxD0h
+	 Hx+Y7xYCdQlhaa0yCF5YVhge9J70WfDqFLK3pVNIX1+38Kw2MCSO0IgV/T3FqAtpNA
+	 9fVyAIlQ2ZFFg==
+Date: Sat, 3 Jan 2026 21:23:21 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Eugen Hristev <eugen.hristev@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
+	pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net,
+	david@redhat.com, mhocko@suse.com, tudor.ambarus@linaro.org,
+	mukesh.ojha@oss.qualcomm.com, linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org, jonechou@google.com,
+	rostedt@goodmis.org, linux-doc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org
+Subject: Re: [PATCH 18/26] mm/memblock: Add MEMBLOCK_INSPECT flag
+Message-ID: <aVlsqdgXSBLIE9Xi@kernel.org>
+References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
+ <20251119154427.1033475-19-eugen.hristev@linaro.org>
+ <aVImIneFgOngYdSn@kernel.org>
+ <4b8953ac-567b-4d68-9c25-72a69afdf1b3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -101,42 +52,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c84557e6-aa92-42e9-8768-e246676ec1e9@kernel.org>
+In-Reply-To: <4b8953ac-567b-4d68-9c25-72a69afdf1b3@linaro.org>
 
-On Sat, Jan 03, 2026 at 12:10:45PM +0100, Vincent Mailhol wrote:
-> On 03/01/2026 at 11:02, Dan Carpenter wrote:
-> > Thanks Randy, for sending this to me.  I'm on the sparse list, but
-> > I've been on vacation and haven't caught up with my email. 
+On Sat, Jan 03, 2026 at 08:36:40AM +0200, Eugen Hristev wrote:
 > 
-> Welcome back, hope you enjoyed your holidays!
 > 
-> >I can easily silence this in Smatch.
+> On 12/29/25 08:56, Mike Rapoport wrote:
+> > Hi Eugen,
+> > 
+> > On Wed, Nov 19, 2025 at 05:44:19PM +0200, Eugen Hristev wrote:
+> >> This memblock flag indicates that a specific block is registered
+> >> into an inspection table.
+> >> The block can be marked for inspection using memblock_mark_inspect()
+> >> and cleared with memblock_clear_inspect()
+> > 
+> > Can you explain why memblock should treat memory registered for inspection
+> > differently?
 > 
-> Thanks. I ran this locally, I can confirm that this silences the
-> warning. So:
+> It should not, at a first glance.
 > 
-> Tested-by: Vincent Mailhol <mailhol@kernel.org>
-> 
-> > diff --git a/check_unsigned_lt_zero.c b/check_unsigned_lt_zero.c
-> > index bfeb3261f91d..ac3e650704ce 100644
-> > --- a/check_unsigned_lt_zero.c
-> > +++ b/check_unsigned_lt_zero.c
-> > @@ -105,7 +105,8 @@ static bool is_allowed_zero(struct expression *expr)
-> >  	    strcmp(macro, "STRTO_H") == 0 ||
-> >  	    strcmp(macro, "SUB_EXTEND_USTAT") == 0 ||
-> >  	    strcmp(macro, "TEST_CASTABLE_TO_TYPE_VAR") == 0 ||
-> > -	    strcmp(macro, "TEST_ONE_SHIFT") == 0)
-> > +	    strcmp(macro, "TEST_ONE_SHIFT") == 0 ||
-> > +	    strcmp(macro, "check_shl_overflow") == 0)
-> 
-> But, for the long term, wouldn't it better to just ignore all the code
-> coming from macro extensions instead of maintaining this allow-list?
-> 
+> The purpose of the flag is to let memblock be aware of it.
+> The flag is there to have a "memblock way" of registering the memory,
+> which inside memblock , it can translate to a meminspect way of
+> registering the memory. It's just an extra layer on top of meminspect.
+> With this, it would be avoided to call meminspect all over the places it
+> would be required, but rather use the memblock API.
 
-Of course, that idea occured to me, but so far the allow list is not
-very burdensome to maintain.  I maybe should disable it for all
-macros unless the --spammy option is used...
+memblock APIs are not available after boot on many architectures, most
+notable being x86.
 
-regards,
-dan carpenter
+But regardless, I can't say I understand why using memblock APIs for
+meminspect is better than using meminspect directly.
+I'd imagine that using meminspect register APIs would actually make it more
+consistent and it would be easier to identify what memory is registered
+with meminspect.
 
+In the end, memblock_alloc*() returns dynamically allocated memory, just
+like kmalloc(), the difference is that memblock is active very early at
+boot and disappears after core MM initialization.
+
+> And further, inside memblock, it would be a single point where
+> meminspect can be disabled (while preserving a no-op memblock flag), or
+> easily changed to another API if needed.
+> Ofcourse, one can call here directly the meminspect API if this is desired.
+> Do you think it would be better to have it this way ?
+> 
+> Thanks for looking into it,
+> Eugen
+
+-- 
+Sincerely yours,
+Mike.
