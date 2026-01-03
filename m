@@ -1,105 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E01217C220;
-	Sat,  3 Jan 2026 19:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADDB3A1E72;
+	Sat,  3 Jan 2026 19:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767468213; cv=none; b=UEbgsCGgc2t5NAUK49yS96HjRNqKHXxpZXvW6jjqH1uVWSfR0cbZChlsmQSzVkwZKutLiW+TLXpQ8jgmj1dAnOTdsh1iriBcL9fzHjMTmsiyppW5e3EpDL6cCkykst4KKdUacgjOBIhQsW8Ms+0rBVKHlOFg7n6It9go4FWA3zs=
+	t=1767469227; cv=none; b=HUA9Eou3UAaI4eDAGwUfzJVdiRIgiO2VDvSnayp0yi1f1t2C5dTJ9PMpmNWHS8J+RRl+X5AMxM+irx4qafSEk3uwtdW/cOh6iUq3PaonCBqRYsH5YsqkE8jdyRFw/vLUvDo1r2VfXd4jpBSJ9ItMJ8OuJ/F6zhMuMiDr1fXaI+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767468213; c=relaxed/simple;
-	bh=kFPBzT8l+WwHu+3My5hbLBVwoqHKka5P/1LTiFfRdf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pzef/c9M9RvuBIT9wjPtea1Itbkds1prcCftI0SZfP9fEK04e9XMakl31fZLe0XCN0VJUtJQZ4AB9X9e60Ysh/9leNbnDw+1oDQCEiuzkiRlX5qhfW139hxXTvyliPQZNquYEGpVbmJIS4Li1IPlZ9AP0vEj74E0dEWD0/S+RQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngReHhb0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767469227; c=relaxed/simple;
+	bh=tkpnTK4Qj656t1SjViYdrojmOrUb4VMdsQ1vCgGZFaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JpB80xk6phQC6rXRixGV7d+rD3udH77sco7mA11vQGDtVs4ghgVA/6Mm9RQshnxjK/QkA4FfoyNjpW+v0l4oqgRSXdsP+8lC26XzaDi7SwjKvQoEHA/Y+It/aXWOHOIuEzGs68vThqbOIo7T0qL/FhmzS/DF/EiGXG0EFXENyP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ptk8Eq01; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngReHhb0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DA3C113D0;
-	Sat,  3 Jan 2026 19:23:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ptk8Eq01"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2700C113D0;
+	Sat,  3 Jan 2026 19:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767468212;
-	bh=kFPBzT8l+WwHu+3My5hbLBVwoqHKka5P/1LTiFfRdf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ngReHhb0xBx1x5fvYtOfgcpLEILzqu49lQW1bMb2wRc3+BW1vWJdoV/liivSukWbi
-	 Wr1u0+WC02baG/7qzxuTHFHic6PVnSamdiPxhEqTgA1S2pA1eqYyInnK8Yq7O5/pa1
-	 cl2RU6O4se6+wNz0wv5fa0sTosXv7JI6nHpQxOqCzUdzlR3V5lzLornbt5v4CC52Wv
-	 K6NU1UCrStxzBWELoCL6XaOEUwgpoF1/dezzddv3CKdw8etbedWu0aGGeJ5bgKxD0h
-	 Hx+Y7xYCdQlhaa0yCF5YVhge9J70WfDqFLK3pVNIX1+38Kw2MCSO0IgV/T3FqAtpNA
-	 9fVyAIlQ2ZFFg==
-Date: Sat, 3 Jan 2026 21:23:21 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Eugen Hristev <eugen.hristev@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
-	pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net,
-	david@redhat.com, mhocko@suse.com, tudor.ambarus@linaro.org,
-	mukesh.ojha@oss.qualcomm.com, linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, jonechou@google.com,
-	rostedt@goodmis.org, linux-doc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org
-Subject: Re: [PATCH 18/26] mm/memblock: Add MEMBLOCK_INSPECT flag
-Message-ID: <aVlsqdgXSBLIE9Xi@kernel.org>
-References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
- <20251119154427.1033475-19-eugen.hristev@linaro.org>
- <aVImIneFgOngYdSn@kernel.org>
- <4b8953ac-567b-4d68-9c25-72a69afdf1b3@linaro.org>
+	s=k20201202; t=1767469226;
+	bh=tkpnTK4Qj656t1SjViYdrojmOrUb4VMdsQ1vCgGZFaM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ptk8Eq017hq7LXx1dg/UvM82Pt2sJPL5TWUcNecJF4hcdqsylreXB1vc6LxpYKW/R
+	 9BFtTUrUfQ6lI82kt6wwlhqf7M65pT8tHi9NtuTo7kfe+tZuRamjzVaBj8o2/xOmMS
+	 LaoevR3U2LqszzHyshrbiae4H/vyhmY377Eo5dqooqKzC+noeELYMVY4t02yU2o+5C
+	 qtYwbFBsNY0o0tndQO1CLdFe7U5Ma1IxgGojOEUmf4U6vKfryh1yieUj4B5oJplZ5N
+	 grGmU4u6Dmx9hrkVInJgl38oRemDeRkyJojpy+NB09Tc3smQe+7xN7WuoL6oL+li+0
+	 Drx6RpyJAa6UQ==
+Message-ID: <e66bd09b-9879-4562-a71e-a1e1a964f3f2@kernel.org>
+Date: Sat, 3 Jan 2026 20:40:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b8953ac-567b-4d68-9c25-72a69afdf1b3@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] overflow: Update is_non_negative() and is_negative()
+ comment
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Nicolas Schier <nicolas@fjasle.eu>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nsc@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org,
+ linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
+References: <20251220-remove_wtype-limits-v3-0-24b170af700e@kernel.org>
+ <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+ <acdd84b2-e893-419c-8a46-da55d695dda2@kernel.org>
+ <20260101-futuristic-petrel-of-ecstasy-23db5f@lindesnes>
+ <CANiq72=jRT+6+2PBgshsK-TpxPiRK70H-+3D6sYaN-fdfC83qw@mail.gmail.com>
+ <b549e430-5623-4c60-acb1-4b5e095ae870@kernel.org>
+ <b6b35138-2c37-4b82-894e-59e897ec7d58@kernel.org>
+ <903ba91b-f052-4b1c-827d-6292965026c5@moroto.mountain>
+ <c84557e6-aa92-42e9-8768-e246676ec1e9@kernel.org>
+ <aVlKTculhgJzuZJy@stanley.mountain>
+From: Vincent Mailhol <mailhol@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=mailhol@kernel.org; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
+ fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
+ F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
+ 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
+ YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
+ dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
+ zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <aVlKTculhgJzuZJy@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jan 03, 2026 at 08:36:40AM +0200, Eugen Hristev wrote:
+On 03/01/2026 at 17:56, Dan Carpenter wrote:
+> On Sat, Jan 03, 2026 at 12:10:45PM +0100, Vincent Mailhol wrote:
+>> On 03/01/2026 at 11:02, Dan Carpenter wrote:
+>>> Thanks Randy, for sending this to me.  I'm on the sparse list, but
+>>> I've been on vacation and haven't caught up with my email. 
+>>
+>> Welcome back, hope you enjoyed your holidays!
+>>
+>>> I can easily silence this in Smatch.
+>>
+>> Thanks. I ran this locally, I can confirm that this silences the
+>> warning. So:
+>>
+>> Tested-by: Vincent Mailhol <mailhol@kernel.org>
+>>
+>>> diff --git a/check_unsigned_lt_zero.c b/check_unsigned_lt_zero.c
+>>> index bfeb3261f91d..ac3e650704ce 100644
+>>> --- a/check_unsigned_lt_zero.c
+>>> +++ b/check_unsigned_lt_zero.c
+>>> @@ -105,7 +105,8 @@ static bool is_allowed_zero(struct expression *expr)
+>>>  	    strcmp(macro, "STRTO_H") == 0 ||
+>>>  	    strcmp(macro, "SUB_EXTEND_USTAT") == 0 ||
+>>>  	    strcmp(macro, "TEST_CASTABLE_TO_TYPE_VAR") == 0 ||
+>>> -	    strcmp(macro, "TEST_ONE_SHIFT") == 0)
+>>> +	    strcmp(macro, "TEST_ONE_SHIFT") == 0 ||
+>>> +	    strcmp(macro, "check_shl_overflow") == 0)
+>>
+>> But, for the long term, wouldn't it better to just ignore all the code
+>> coming from macro extensions instead of maintaining this allow-list?
+>>
 > 
-> 
-> On 12/29/25 08:56, Mike Rapoport wrote:
-> > Hi Eugen,
-> > 
-> > On Wed, Nov 19, 2025 at 05:44:19PM +0200, Eugen Hristev wrote:
-> >> This memblock flag indicates that a specific block is registered
-> >> into an inspection table.
-> >> The block can be marked for inspection using memblock_mark_inspect()
-> >> and cleared with memblock_clear_inspect()
-> > 
-> > Can you explain why memblock should treat memory registered for inspection
-> > differently?
-> 
-> It should not, at a first glance.
-> 
-> The purpose of the flag is to let memblock be aware of it.
-> The flag is there to have a "memblock way" of registering the memory,
-> which inside memblock , it can translate to a meminspect way of
-> registering the memory. It's just an extra layer on top of meminspect.
-> With this, it would be avoided to call meminspect all over the places it
-> would be required, but rather use the memblock API.
+> Of course, that idea occured to me, but so far the allow list is not
+> very burdensome to maintain.
 
-memblock APIs are not available after boot on many architectures, most
-notable being x86.
+Indeed, but my concern was more on how people would treat such smatch
+warnings coming from the kernel test robot. It is very uncommon to have
+an allow-list hard coded into the static analyzer. Actually, this is the
+first time I see this. My fear here is that people will just uglify the
+code rather than sending a patch to extend the allow list in smatch.
 
-But regardless, I can't say I understand why using memblock APIs for
-meminspect is better than using meminspect directly.
-I'd imagine that using meminspect register APIs would actually make it more
-consistent and it would be easier to identify what memory is registered
-with meminspect.
+> I maybe should disable it for all macros unless the --spammy option is used...
 
-In the end, memblock_alloc*() returns dynamically allocated memory, just
-like kmalloc(), the difference is that memblock is active very early at
-boot and disappears after core MM initialization.
+IMHO, that would be an even better approach. That said, I am happy
+enough with your previous patch which resolves my issue and which is way
+better than updating the is_non_negative() and is_negative() comments as
+I did in my patch!
 
-> And further, inside memblock, it would be a single point where
-> meminspect can be disabled (while preserving a no-op memblock flag), or
-> easily changed to another API if needed.
-> Ofcourse, one can call here directly the meminspect API if this is desired.
-> Do you think it would be better to have it this way ?
-> 
-> Thanks for looking into it,
-> Eugen
 
--- 
-Sincerely yours,
-Mike.
+Yours sincerely,
+Vincent Mailhol
+
