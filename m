@@ -1,281 +1,142 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B85D27456
-	for <linux-hardening@vger.kernel.org>; Sat,  3 Jan 2026 12:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B306D4315A
+	for <linux-hardening@vger.kernel.org>; Sat,  3 Jan 2026 17:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767443848; cv=none; b=VRxisMkrTjJQ226V4kju99rK79eMMfIW5hct825kALsQOaMOpIR2IrCBXlII/3+bSmjHudOw8H6EB2mqyhchfRxjFTEJ5wCkOd7FBtY0fQgdEyW5QY9GapEtIlHmQqp2vGnguJWJ1OVheos2EGD5beB/U2e8Laf3OPTnV/B1NAk=
+	t=1767459712; cv=none; b=XLtP2q2mq5xOYw0fWTo2qyr05EVQ86PPMYa3H2MubtycL7yjEDUBu2ZE10pKFICpnfx28FJyVqumzqSn7eh7aDA6q+WslB3+A8wq+/QUYSbo254W1AvDoPFHP8Mvz63CFqrr37aIIR9zbYh7sXZQgfhBYIwrBneLz3bnS2MGEG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767443848; c=relaxed/simple;
-	bh=ScVTnTxnS4MitNX89pIhAWFQE70UKJmQcXTuOT/ApqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PpdJ8fQUUmcO6IoDkWOgtCbmyny759cHczsxkA4rwiqQ8LCf+7hQhKh8v1q4lFK5VrNYFTsrF8Dk9n5IcTCYHK/arMTCBIgGhqpRwYh5SonqDwahlxApZBxkXZpUA3RI40tKwjxNYFc2eQrMHp4A4Ho4JHB0aTj7y0YMVQS25BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SsCaABP/; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767459712; c=relaxed/simple;
+	bh=KQXl8jGs3GODk15tB6KTtrgOeAb6Hys26tY1ny9AYdM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o6lnvnSv747GInzqMrtaJoXXArbGRDZXIHnxpGqZy1vywvQrc65mxsbUX57xXzyYy1qy0G1IW0BlWMuAUM8raGE4EMRtR+zLJnL9m1tiGlyTr1mvcGBYI9tIbGweRO4EAPPT8Ob70NchOxSsPrzPoVLZD66ZFp6v4oQJTZLfKdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O9Cget1S; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsCaABP/"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-595819064cdso907069e87.0
-        for <linux-hardening@vger.kernel.org>; Sat, 03 Jan 2026 04:37:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O9Cget1S"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b3d7c1321so7623453f8f.3
+        for <linux-hardening@vger.kernel.org>; Sat, 03 Jan 2026 09:01:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767443844; x=1768048644; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7AGEQXVff4Cjra/LEG8aFJKzdBMi+jbn5H5NG2dDiwk=;
-        b=SsCaABP/w8Aj7BLcPK1hZLsUejjjIhe+VM+iRmU5TqfYJ7+soGBEBjpk05AC9xuzUZ
-         mJtO6wveR0I2M+YuC4j5whxem/l5VxKz/sUQLkOCzw5T0Qr1XQf8Lz5E3HIZxQktoLeZ
-         KzJfkLxUXITC2FN6o0zNRoAWa3ydpUsI/YMK+TSscsKKo0R/vRuml/9koLayQqwqDcu1
-         2cT3qfPeiEWzVtRm+k4yPluLZe3JnlLQvXzpBdfBG4W69TsCPbP0muOj0zpR7YUUfaml
-         A4xuDPamqRogntPPopshUIOQCVXJPILYE6WMmmx9qVH1twasApgzidSsgL6OjfhsOU59
-         S2yQ==
+        d=linaro.org; s=google; t=1767459709; x=1768064509; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yHSQMnJBQHG3fEabcx1jHr7yPb3RERixhfZ5sKkWzqY=;
+        b=O9Cget1SxzflOyoG1iBj4tgeldJE8YEv+KCX/Po0HJ5CjxayvO5ZpmNW3teQ0qYoGp
+         Mhgzx7wb53SdYQTHxLiyCXeRNd9TCYn/BtVvHVIQx9kaCd49JhuG0ztiudTYv7QjEGN1
+         CgpT1i8bIeNPIoj9zDuMftOMgJ5UFx1oiZWH1c9LC2kqI1kQnURHDQPAPCBrwX5bTHkm
+         vXEkYDhDCsCZ1ArZTs+a0y4gY2BYAMifW5QJUP9q3eoVRY6y3aDljX3v9JxK7S6LlLnS
+         agYbSMbNTXAlpQnMn9yGLzIenQjT0k9MCqA8g5+hiOJLFtfHVa2hjin0LA9KmHsvp+ZX
+         qqIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767443844; x=1768048644;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7AGEQXVff4Cjra/LEG8aFJKzdBMi+jbn5H5NG2dDiwk=;
-        b=tO/bc2HcJ9FuqLNpFSiBCVnCQRNU+45MyZSKSYVv3ydUBdjP1DYVEhEmzdcoGtcvR1
-         jtV/mJAytzONnyUh7us89NfE2svLZcXX1ss5zaLvzi3s7uGH++7o4awVrBZ+xRAIm07e
-         JH5U9jUBjdayqspi0qo9UIvYkkQssUts6NcGGywNRHz0+JSAYakOyVyFTWyxSrb8LS5w
-         0D2WJqFRHD5s3ePGHBWA6bvCrBRz8AH3w95xTaaqp35IjC+0Ar1LfoPZ4R1fNpFTcO1B
-         mdKSgS4s1FnaebnSDO0HhTGxfsBbNel51br1NqqR6jZbOSZCnHgCGnnd2Ff4XpAxG989
-         SRGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwIzzBGiV8idzgfexYDELKkbcWy4UzQC66V4qFz7L2l5UnY1n2adOyKzic6h/aXqxd0LxP6tjchH9QIy3wFiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4559Wtzy02w7lupu8JEZdvYm1JoaxpOXyEgSZOMHMGhZKB4AC
-	1eJs/JVOM4bBR5gEYs1bII7TPZy8wUYv92ZHf2Z5pIcRrdGDKdqgpbeAimJWiw==
-X-Gm-Gg: AY/fxX6e9vIvo/qLx/GJqWt13v3BjoXSB/oWb5KTqS3+Ta7XBj+mBtCtR3LweFnkKSX
-	akk2x1wER9fA3+3QJ4Rh1WcCoCC72301atH+9jRefudDaCncKHDe9DGehEWIjjFtcB5eK8XMuu9
-	klFCZm47RtXJAggYWbrMboHrOrEZ/TL9MR4Y5tSI4Zqc5MXoh+oTR+PvmV2XqyaGk+lI9sc8BmA
-	MhMpL1kfr2GGuWddO2hjxVqrjWwHG59dvA/h1h8/kIPnCXgfe0lZ2VhrHKquVibtWXM9pHdT1qK
-	qcxUzbRthr0bkhxxXBPXn9VEfaod+srzM0ZSw/1zSAD2Xh8gP6Jrew3ZFZBsdDlfieX89AwgOrD
-	9fAjory7VksBU8YILUHzx23kviCIuWg2xKMaGW2jTGkF6LMiqo+13hpgSYY+CtMJpnpTzh4N4xw
-	wHpYvTYOIIg9viqATAiykMfwqUlimtJITs1dIkzkX3A7dwK/nvS9ln
-X-Google-Smtp-Source: AGHT+IGuPwj5c90N/yOSzvW/fHyvSi9BbZ6Md54mttsoAORSkjxjxsJYQaWeJvjkrO56uLXSAEKKNQ==
-X-Received: by 2002:a05:600c:198a:b0:477:9fa0:7495 with SMTP id 5b1f17b1804b1-47d6c803ca7mr16959765e9.14.1767437190097;
-        Sat, 03 Jan 2026 02:46:30 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d6c0c148bsm13448405e9.18.2026.01.03.02.46.28
+        d=1e100.net; s=20230601; t=1767459709; x=1768064509;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yHSQMnJBQHG3fEabcx1jHr7yPb3RERixhfZ5sKkWzqY=;
+        b=wdCtggrkFgUuhqwsnlTxkdTwfo6qpnQuJyKJh8T1dX7KHq0iIXjUgKM5npZwu6xkq8
+         Ip8JR7lJojGmLKIUMfJIYUCG2vvDLcVlrW6hCRnqL7Vi+Oge3yVzSSyiV8/EZUvouzNr
+         BUdwsTHbJStfrPWoat8YwIYlCIhDTZ+b72AoTaag/2iG6W58Md39z+7+3XLsIU8adg8W
+         rb04h4RYDXhHB3x1UxyOM4mEQB+ZT1R3RY0Mo7Oq4T/SCtcCrypihRWS+hdqc4coc1qe
+         YDfNaO5W+Xwk5L5K5o3tAFda0qWwam+JxPr4nwN20JAAGTm7eV3veaprILWc75LAIDUq
+         EZqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJIhhoyygnaeHUmOhWgefTSamoDiWbyIeRdd5B0V6X8vGo2czPmTNFrmXjZCD4o1aBUPioXIXT0pk4HT8v3fA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbSw+ETr6ilOQwtrW0GPpq7H+wAUVlMlcFUN19nTtTJfZqETpn
+	cYTZ9N+f0cVUq9k849L48HeQW2uteto5zd/myrG1zVpA8oJ5mGASSjs6xAiJfN3C4Uo=
+X-Gm-Gg: AY/fxX5YVBMitLETWqlqTEzXcTccSNh4lC2K9u8xOLfiQW58jbttPX1AT6+QC1Fw/fo
+	ltB46FIcg3Hzhvh4DIxSxUZlmL+FxppAAtaSLYkuSk82JTsZEuBoQml8YPF4dla1gJYeAzlBVFy
+	wOCMpn8sLPGsUkJbKf0jErPpBq0YJuTgirv8rz3qUE5WNEMjB3RRMXMYILcR/iZq+gLIMXuS9v+
+	3NxLpd+xwxbjpREM6bi+lFMJIFtv+QDanU4NOdyRGYTxsSBv2ilQwjijiuMo4OXsQjZ1A4z682w
+	G8deR+gTIIz8W0c4FhOwefShbfJ64YSWbDWIAnGOw3iwtEN+Xl4cYuHP6RmFKkVcSuktHPohpoy
+	Vw2jxDeViWRwbD87Mz0KYui8U0IGeUqOZMktXfbLq3ZeGRT2+JA+yLG4H+2iOGP+wMxjs1TRFVI
+	K9/PNgb0YhlWTl/we0
+X-Google-Smtp-Source: AGHT+IH76r9upX5LgpHZ/fOST6gsEDX5p5oGk436/qE1kT4SAaRLVvV1SuOGoIs6C86iZ8FylfCo5w==
+X-Received: by 2002:a05:6000:2c0f:b0:431:54c:6f0 with SMTP id ffacd0b85a97d-4324e4c739emr61327273f8f.4.1767459708384;
+        Sat, 03 Jan 2026 09:01:48 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4325b6bfe88sm82459187f8f.19.2026.01.03.08.56.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Jan 2026 02:46:29 -0800 (PST)
-Date: Sat, 3 Jan 2026 10:46:27 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
- Gordeev <agordeev@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland
- <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton
- <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] prandom: Convert prandom_u32_state() to
- __always_inline
-Message-ID: <20260103104627.2f385d20@pumpkin>
-In-Reply-To: <719b7b99-3615-46cd-84d9-8b8fc21e3ce9@arm.com>
-References: <20260102131156.3265118-1-ryan.roberts@arm.com>
-	<20260102131156.3265118-3-ryan.roberts@arm.com>
-	<CAHmME9qHiVZwf4TAringRHSZ-yqHuPwmP=Wnx98n09jv7Vu_Rg@mail.gmail.com>
-	<719b7b99-3615-46cd-84d9-8b8fc21e3ce9@arm.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Sat, 03 Jan 2026 09:01:47 -0800 (PST)
+Date: Sat, 3 Jan 2026 19:56:45 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Vincent Mailhol <mailhol@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] overflow: Update is_non_negative() and is_negative()
+ comment
+Message-ID: <aVlKTculhgJzuZJy@stanley.mountain>
+References: <20251220-remove_wtype-limits-v3-0-24b170af700e@kernel.org>
+ <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+ <acdd84b2-e893-419c-8a46-da55d695dda2@kernel.org>
+ <20260101-futuristic-petrel-of-ecstasy-23db5f@lindesnes>
+ <CANiq72=jRT+6+2PBgshsK-TpxPiRK70H-+3D6sYaN-fdfC83qw@mail.gmail.com>
+ <b549e430-5623-4c60-acb1-4b5e095ae870@kernel.org>
+ <b6b35138-2c37-4b82-894e-59e897ec7d58@kernel.org>
+ <903ba91b-f052-4b1c-827d-6292965026c5@moroto.mountain>
+ <c84557e6-aa92-42e9-8768-e246676ec1e9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c84557e6-aa92-42e9-8768-e246676ec1e9@kernel.org>
 
-On Fri, 2 Jan 2026 14:09:26 +0000
-Ryan Roberts <ryan.roberts@arm.com> wrote:
+On Sat, Jan 03, 2026 at 12:10:45PM +0100, Vincent Mailhol wrote:
+> On 03/01/2026 at 11:02, Dan Carpenter wrote:
+> > Thanks Randy, for sending this to me.  I'm on the sparse list, but
+> > I've been on vacation and haven't caught up with my email. 
+> 
+> Welcome back, hope you enjoyed your holidays!
+> 
+> >I can easily silence this in Smatch.
+> 
+> Thanks. I ran this locally, I can confirm that this silences the
+> warning. So:
+> 
+> Tested-by: Vincent Mailhol <mailhol@kernel.org>
+> 
+> > diff --git a/check_unsigned_lt_zero.c b/check_unsigned_lt_zero.c
+> > index bfeb3261f91d..ac3e650704ce 100644
+> > --- a/check_unsigned_lt_zero.c
+> > +++ b/check_unsigned_lt_zero.c
+> > @@ -105,7 +105,8 @@ static bool is_allowed_zero(struct expression *expr)
+> >  	    strcmp(macro, "STRTO_H") == 0 ||
+> >  	    strcmp(macro, "SUB_EXTEND_USTAT") == 0 ||
+> >  	    strcmp(macro, "TEST_CASTABLE_TO_TYPE_VAR") == 0 ||
+> > -	    strcmp(macro, "TEST_ONE_SHIFT") == 0)
+> > +	    strcmp(macro, "TEST_ONE_SHIFT") == 0 ||
+> > +	    strcmp(macro, "check_shl_overflow") == 0)
+> 
+> But, for the long term, wouldn't it better to just ignore all the code
+> coming from macro extensions instead of maintaining this allow-list?
+> 
 
-> On 02/01/2026 13:39, Jason A. Donenfeld wrote:
-> > Hi Ryan,
-> >=20
-> > On Fri, Jan 2, 2026 at 2:12=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.c=
-om> wrote: =20
-> >> context. Given the function is just a handful of operations and doesn'=
-t =20
-> >=20
-> > How many? What's this looking like in terms of assembly?  =20
->=20
-> 25 instructions on arm64:
->=20
-> 0000000000000000 <prandom_u32_state>:
->    0:	29401403 	ldp	w3, w5, [x0]
->    4:	aa0003e1 	mov	x1, x0
->    8:	29410002 	ldp	w2, w0, [x0, #8]
->    c:	531e74a4 	lsl	w4, w5, #2
->   10:	530e3468 	lsl	w8, w3, #18
->   14:	4a0400a5 	eor	w5, w5, w4
->   18:	4a031863 	eor	w3, w3, w3, lsl #6
->   1c:	53196047 	lsl	w7, w2, #7
->   20:	53134806 	lsl	w6, w0, #13
->   24:	4a023442 	eor	w2, w2, w2, lsl #13
->   28:	4a000c00 	eor	w0, w0, w0, lsl #3
->   2c:	121b6884 	and	w4, w4, #0xffffffe0
->   30:	120d3108 	and	w8, w8, #0xfff80000
->   34:	121550e7 	and	w7, w7, #0xfffff800
->   38:	120c2cc6 	and	w6, w6, #0xfff00000
->   3c:	2a456c85 	orr	w5, w4, w5, lsr #27
->   40:	2a433504 	orr	w4, w8, w3, lsr #13
->   44:	2a4254e3 	orr	w3, w7, w2, lsr #21
->   48:	2a4030c2 	orr	w2, w6, w0, lsr #12
->   4c:	4a020066 	eor	w6, w3, w2
->   50:	4a050080 	eor	w0, w4, w5
->   54:	4a0000c0 	eor	w0, w6, w0
->   58:	29001424 	stp	w4, w5, [x1]
->   5c:	29010823 	stp	w3, w2, [x1, #8]
->   60:	d65f03c0 	ret
+Of course, that idea occured to me, but so far the allow list is not
+very burdensome to maintain.  I maybe should disable it for all
+macros unless the --spammy option is used...
 
-That is gcc, clang seems to generate something horrid (from godbolt).
-I'm not sure what it has tried to do (and maybe it can't in kernel)
-but it clearly doesn't help!
-.LCPI0_0:
-        .word   18
-        .word   2
-        .word   7
-        .word   13
-.LCPI0_1:
-        .word   6
-        .word   2
-        .word   13
-        .word   3
-.LCPI0_2:
-        .word   4294443008
-        .word   4294967264
-        .word   4294965248
-        .word   4293918720
-.LCPI0_3:
-        .word   4294967283
-        .word   4294967269
-        .word   4294967275
-        .word   4294967284
-prandom_u32_state:
-        adrp    x9, .LCPI0_1
-        ldr     q0, [x0]
-        adrp    x10, .LCPI0_3
-        ldr     q1, [x9, :lo12:.LCPI0_1]
-        adrp    x9, .LCPI0_0
-        ldr     q3, [x10, :lo12:.LCPI0_3]
-        ldr     q2, [x9, :lo12:.LCPI0_0]
-        adrp    x9, .LCPI0_2
-        mov     x8, x0
-        ushl    v1.4s, v0.4s, v1.4s
-        ushl    v2.4s, v0.4s, v2.4s
-        eor     v0.16b, v1.16b, v0.16b
-        ldr     q1, [x9, :lo12:.LCPI0_2]
-        and     v1.16b, v2.16b, v1.16b
-        ushl    v0.4s, v0.4s, v3.4s
-        orr     v0.16b, v0.16b, v1.16b
-        ext     v1.16b, v0.16b, v0.16b, #8
-        str     q0, [x8]
-        eor     v1.8b, v0.8b, v1.8b
-        fmov    x9, d1
-        lsr     x10, x9, #32
-        eor     w0, w9, w10
-        ret
-
-The x86 versions are a little longer (arm's barrel shifter helps a lot).
-
->=20
-> > It'd also be
-> > nice to have some brief analysis of other call sites to have
-> > confirmation this isn't blowing up other users. =20
->=20
-> I compiled defconfig before and after this patch on arm64 and compared th=
-e text
-> sizes:
->=20
-> $ ./scripts/bloat-o-meter -t vmlinux.before vmlinux.after
-> add/remove: 3/4 grow/shrink: 4/1 up/down: 836/-128 (708)
-> Function                                     old     new   delta
-> prandom_seed_full_state                      364     932    +568
-> pick_next_task_fair                         1940    2036     +96
-> bpf_user_rnd_u32                             104     196     +92
-> prandom_bytes_state                          204     260     +56
-> e843419@0f2b_00012d69_e34                      -       8      +8
-> e843419@0db7_00010ec3_23ec                     -       8      +8
-> e843419@02cb_00003767_25c                      -       8      +8
-> bpf_prog_select_runtime                      448     444      -4
-> e843419@0aa3_0000cfd1_1580                     8       -      -8
-> e843419@0aa2_0000cfba_147c                     8       -      -8
-> e843419@075f_00008d8c_184                      8       -      -8
-> prandom_u32_state                            100       -    -100
-> Total: Before=3D19078072, After=3D19078780, chg +0.00%
->=20
-> So 708 bytes more after inlining.
-
-Doesn't look like there are many calls.
-
-> The main cost is prandom_seed_full_state(),
-> which calls prandom_u32_state() 10 times (via prandom_warmup()). I expect=
- we
-> could turn that into a loop to reduce ~450 bytes overall.
-
-That would always have helped the code size.
-And I suspect the other costs of that code make unrolling the loop pointles=
-s.
-
->=20
-> I'm not really sure if 708 is good or bad...
->=20
-> >  =20
-> >> +static __always_inline u32 prandom_u32_state(struct rnd_state *state)=
- =20
-> >=20
-> > Why not just normal `inline`? Is gcc disagreeing with the inlinability
-> > of this function? =20
->=20
-> Given this needs to be called from a noinstr function, I didn't want to g=
-ive the
-> compiler the opportunity to decide not to inline it, since in that case, =
-some
-> instrumentation might end up being applied to the function body which wou=
-ld blow
-> up when called in the noinstr context.
->=20
-> I think the other 2 options are to keep prandom_u32_state() in the c file=
- but
-> mark it noinstr or rearrange all the users so that thay don't call it unt=
-il
-> instrumentation is allowable. The latter is something I was trying to avo=
-id.
->=20
-> There is some previous discussion of this at [1].
->=20
-> [1] https://lore.kernel.org/all/aS65LFUfdgRPKv1l@J2N7QTR9R3/
->=20
-> Perhaps keeping prandom_u32_state() in the c file and making it noinstr i=
-s the
-> best compromise?
-
-Or define prandom_u32_state_inline() as always_inline and have the
-real function:
-u32 prandom_u32_state(struct rnd_state *state)
-{
-	return prandom_u32_state_inline(state);
-}
-
-So that the callers can pick the inline version if it really matters.
-
-	David
-
->=20
-> Thanks,
-> Ryan
->=20
-> >=20
-> > Jason =20
->=20
->=20
+regards,
+dan carpenter
 
