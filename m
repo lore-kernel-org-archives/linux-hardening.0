@@ -1,44 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B63273F9;
-	Mon,  5 Jan 2026 06:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299292D77FE
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Jan 2026 07:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767595533; cv=none; b=Q9OXhDL4QpAWoFLPkJu+gw/t6xna8q3QuzopGgNTtpHqZ7VRAeJiorbJwwc39B+qAW6PV5YS326iVAo3sQxbsUbT9YPai7DL5J8Is0PsgvKeP5yQtz9vHAPtDhPWEWGjxqn0/nAFhaoiwknqfYvNhfrfB0w//XQFU6ozfYk7RVU=
+	t=1767597977; cv=none; b=Op/l1dRoqm0sPrt92GT7sN4n2RUTrzxwfcXlUXkLQ/pG4r86morzsPtkGAxjw4Q60OJa2I3YB6sOWjTa9hl/fYM3S/p+aXovR/IiD2d5lu/Xu0Psv8fm3UdkhKOcXVHQJuFKmqV1aOHFa89s2MZCeHZ/guRvNGG94jbCtL7a0I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767595533; c=relaxed/simple;
-	bh=39+dp+LyKV9XXcRP1+Darn1hWmdC9rX82dbhenXJ4ik=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hgeQZcn2K38t6HnI2fwloXILhwMgRqPctjFpH/eQxfaVf8H/CB3FFt2k5rKoIRCbMlUD/K+8cVGHA3dIFgkpkpYvGL6JdrtG2hjW/+c6Enwgy1JxcF/r5IN2m9ACfrYX7wa7FEB/G5VVoX5spmwqwC84r6n5G0N7DF1pQt5Wj9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjaBVkgA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767597977; c=relaxed/simple;
+	bh=J+0zgzblPWcILdaJe+sS8PZ3YqSBzV7Z4n11YbyV75A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sJFBHV3UEThWJX+Qtr7Fz9qd4KNjiRkmd6DUiiBsCHIUEzMX4NBNlv5+hyL8TWylSY/VQQ57zT7NziL5j8vf2l9sHmZc+lbUPtjNVYHdKQDfhsDrxUA1VB5YRrkIQImEKDj8n3Mnq0xVS0VY2gH59vgQPD+XdmJ3Q2uvwbFhvYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e5wBrHfr; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjaBVkgA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6905CC19421;
-	Mon,  5 Jan 2026 06:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767595533;
-	bh=39+dp+LyKV9XXcRP1+Darn1hWmdC9rX82dbhenXJ4ik=;
-	h=Date:From:To:Cc:Subject:From;
-	b=DjaBVkgAKoLplSExx5GK+fkIILn2fyoXuziP/zthkg3qO3Ku5XWdFNiILMjAuesFD
-	 ni+SUfq9C7jAT4GKcvBTZZRN5B/EbCmj4Srr9sHpon7yzCzek9rTjP88hCFyMkxPP1
-	 V2PosWUUeU59qeUEq0RbWKK0UjKlM/Z30K+R2ZNcQsAFREgrzUVVV8k7F085fvSGEm
-	 MXkZ+GfXIu39DY+6eNsdilu2L85Mj1p6mO+1UmRJpYnaqA0A0sW6MeT5o8janyZoId
-	 K+1ClpbZZL5PvY3bN/uNCCCzcGXPtZuU0Acn98aoXlZCmXB1dE5Opvss9ANaFFyCrf
-	 5uloDS7ggNAEA==
-Date: Mon, 5 Jan 2026 15:45:25 +0900
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e5wBrHfr"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-477619f8ae5so87361965e9.3
+        for <linux-hardening@vger.kernel.org>; Sun, 04 Jan 2026 23:26:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1767597971; x=1768202771; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tqXPGRlmqIR2c73hehXqAT4WnRWsCFlwnXSzbZ1gZgI=;
+        b=e5wBrHfr2i2YxmjC/xSZl8aZSdU/c0xU0A0qfCMbcYd6VYpTU+XKBer8Ge7syUWmu/
+         KyD6yBdkixqrcBJPL+OMgoZfI2M3afqS+wO8+88CAbNgPgR1iLJsVjvSGVdQQmIQ5ESx
+         0ElZAULoxYK7l2f+9R9btlhNco1OYiU0JmT33Hc0QNQIC1KTOxe8FHD4MXi1MLXWTgFP
+         98Zzs77itmNp3mMSfKDl7UfEkX0nljzsflDfQ/cCojXoA4hvX9safE2PuEsku50tGmXe
+         GaIaJ2HPYfi1wYIDpU2eNdTLx6g+gZNK1bGT4YR7siJL6ElJ873WKWdBI2neDTYYXHfz
+         LH0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767597971; x=1768202771;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tqXPGRlmqIR2c73hehXqAT4WnRWsCFlwnXSzbZ1gZgI=;
+        b=Pvmk4SGVgiFwYJ4LIZez+XSZ0e1oH5HK5G5cDjUUr6WJkW+UjNVmUnqIKNaxfBlPtM
+         PkJe1dKbvIglVXWhatQyNbA88E/sc+NTO5+5i1+sB9OXedbBgClPwqKcreovqFIv/7Ku
+         bd6wWpzqBu4QxljvxJwm7Zawb3ee5rP/WPcQmF91eejKgPQBznb36zQqATXBdFxsaF6m
+         APLgwtHqhePYy89Zlj/KtUAlgKvGv0fN7RW6Ha8ct9MfB34Nfv8imfP9LebqhpkIstuH
+         c8odggD0zNbqjvb0MUICAjy0vgdwBeKRVhDXeGHAv44w4GtKoefKHE/k9kIg0dQ+N3cj
+         Xa4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXMHxneHmiVjIGa2wLziDvts6bPY39Tiq5Qxe6R/DNVOeHr5hsvPCba4awEHvMYnR5tGtBVGbQqhHtwaUsscPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy6tnPVV8lGX23o1c2F2MTh2G40KtJX+Crsk5vYuHJc2w1cUu8
+	D4bWHsow54jf+sujEgE61hwHHKGSLTjF4rghV5mnD9Mc8RIjRWj+itv3KdhYXetJgV4=
+X-Gm-Gg: AY/fxX7/6smzpn55om7Le8JvUj+Fl19hE3lI8pM5r0PB7ELdoFMnZtonGmcKsSPCBmV
+	3BXsP4bh/m8mMy8OGCstc0YzdOlBOfl1RfpRoXpaMG4Yr5mJAyi8U8H+fENS4EgcUg2l/F8fdVM
+	n8li2VkyBt6vh+hKrjTHRi/65hYaHYI5Rn51qFQDZYeQi4lFcFiP2gtT//X68gkbyaOuSqFFCqb
+	Dbp9jQJzEe41YsyV4YNRqvyraaz9TaqlxA5A63jpt25EcOVJZUjnDFhWAynZbkczdvRK/0bK8Ck
+	tEbm8tFzjXJLCx31+nw3T6JHcRYAYe9gDHDT817bgIfMwagnTxEmMVFg0wv8VRuy/qpmqZK4EBm
+	dhDIHu1fGWUKMak3Vgv1l6qsNR8S3t6hvM7FQSL9eY4AT3IxuXxryIEEB91Ehsx0Ait8dYvhPSk
+	81VWy+d5itrrNV/0JN
+X-Google-Smtp-Source: AGHT+IFrdZFxzxTrmRZMpsP27Ztfl7Uoc6pbDtE/T7BSP5JYGzpyq/KpLAX/yGG7sIYcOpNE6ZVEuA==
+X-Received: by 2002:a05:600c:1d1d:b0:477:8ba7:fe0a with SMTP id 5b1f17b1804b1-47d1957da90mr604728865e9.24.1767597970515;
+        Sun, 04 Jan 2026 23:26:10 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d6d45bb57sm148423745e9.14.2026.01.04.23.26.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Jan 2026 23:26:09 -0800 (PST)
+Date: Mon, 5 Jan 2026 10:26:06 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Vincent Mailhol <mailhol@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: [PATCH v2][next] ipv4/inet_sock.h: Avoid thousands of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aVteBadWA6AbTp7X@kspp>
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] overflow: Update is_non_negative() and is_negative()
+ comment
+Message-ID: <aVtnjgJOjMp9cMDn@stanley.mountain>
+References: <20251220-remove_wtype-limits-v3-3-24b170af700e@kernel.org>
+ <acdd84b2-e893-419c-8a46-da55d695dda2@kernel.org>
+ <20260101-futuristic-petrel-of-ecstasy-23db5f@lindesnes>
+ <CANiq72=jRT+6+2PBgshsK-TpxPiRK70H-+3D6sYaN-fdfC83qw@mail.gmail.com>
+ <b549e430-5623-4c60-acb1-4b5e095ae870@kernel.org>
+ <b6b35138-2c37-4b82-894e-59e897ec7d58@kernel.org>
+ <903ba91b-f052-4b1c-827d-6292965026c5@moroto.mountain>
+ <c84557e6-aa92-42e9-8768-e246676ec1e9@kernel.org>
+ <aVlKTculhgJzuZJy@stanley.mountain>
+ <e66bd09b-9879-4562-a71e-a1e1a964f3f2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,440 +102,94 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <e66bd09b-9879-4562-a71e-a1e1a964f3f2@kernel.org>
 
-Use DEFINE_RAW_FLEX() to avoid thousands of -Wflex-array-member-not-at-end
-warnings.
+On Sat, Jan 03, 2026 at 08:40:17PM +0100, Vincent Mailhol wrote:
+> On 03/01/2026 at 17:56, Dan Carpenter wrote:
+> > On Sat, Jan 03, 2026 at 12:10:45PM +0100, Vincent Mailhol wrote:
+> >> On 03/01/2026 at 11:02, Dan Carpenter wrote:
+> >>> Thanks Randy, for sending this to me.  I'm on the sparse list, but
+> >>> I've been on vacation and haven't caught up with my email. 
+> >>
+> >> Welcome back, hope you enjoyed your holidays!
+> >>
+> >>> I can easily silence this in Smatch.
+> >>
+> >> Thanks. I ran this locally, I can confirm that this silences the
+> >> warning. So:
+> >>
+> >> Tested-by: Vincent Mailhol <mailhol@kernel.org>
+> >>
+> >>> diff --git a/check_unsigned_lt_zero.c b/check_unsigned_lt_zero.c
+> >>> index bfeb3261f91d..ac3e650704ce 100644
+> >>> --- a/check_unsigned_lt_zero.c
+> >>> +++ b/check_unsigned_lt_zero.c
+> >>> @@ -105,7 +105,8 @@ static bool is_allowed_zero(struct expression *expr)
+> >>>  	    strcmp(macro, "STRTO_H") == 0 ||
+> >>>  	    strcmp(macro, "SUB_EXTEND_USTAT") == 0 ||
+> >>>  	    strcmp(macro, "TEST_CASTABLE_TO_TYPE_VAR") == 0 ||
+> >>> -	    strcmp(macro, "TEST_ONE_SHIFT") == 0)
+> >>> +	    strcmp(macro, "TEST_ONE_SHIFT") == 0 ||
+> >>> +	    strcmp(macro, "check_shl_overflow") == 0)
+> >>
+> >> But, for the long term, wouldn't it better to just ignore all the code
+> >> coming from macro extensions instead of maintaining this allow-list?
+> >>
+> > 
+> > Of course, that idea occured to me, but so far the allow list is not
+> > very burdensome to maintain.
+> 
+> Indeed, but my concern was more on how people would treat such smatch
+> warnings coming from the kernel test robot. It is very uncommon to have
+> an allow-list hard coded into the static analyzer. Actually, this is the
+> first time I see this. My fear here is that people will just uglify the
+> code rather than sending a patch to extend the allow list in smatch.
+> 
 
-Remove struct ip_options_data, and adjust the rest of the code so that
-flexible-array member struct ip_options_rcu::opt.__data[] ends last
-in struct icmp_bxm.
+People need to learn to ignore false positives.  The zero day bot sends
+a one time email and if you just delete it, then it's gone forever.
+Forget about it.
 
-Compensate for this by using the DEFINE_RAW_FLEX() helper to define each
-on-stack struct instance that contained struct ip_options_data as a member,
-and to define struct ip_options_rcu with a fixed on-stack size for its
-nested flexible-array member opt.__data[].
+It's really limitting to try be totally static checker clean.  Things
+like passing a zero to ERR_PTR() for example.  It's a perfectly valid way
+to return NULL and the fs/ subsystem uses this a lot.  But 80% when you
+see it in new code, then it's a bug where they returned the wrong
+variable or something.  It's a high quality warning.  The solution is to
+look at it one time, when the code is fresh and then never look at it
+again.
 
-Also, add a couple of code comments to prevent people from adding members
-to a struct after another member that contains a flexible array.
+In this case when I disable the unsigned < 0 checking for macros then it
+means that if someone does if (WARN_ON(u32_var < 0)) { it's silenced.  I
+don't want that.
 
-With these changes, fix 2600 warnings of the following type:
+I could create a much better way to silence false positives like this
+if I passed an expression pointer to the sm_warning()...  It's a bit of
+a re-work.
 
-include/net/inet_sock.h:65:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+regards,
+dan carpenter
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use the DEFINE_RAW_FLEX() helper.
- - Update subject and changelog text.
 
- include/net/inet_sock.h |   9 ++--
- net/ipv4/icmp.c         | 108 +++++++++++++++++++++-------------------
- net/ipv4/ip_output.c    |  13 ++---
- net/ipv4/ping.c         |   7 +--
- net/ipv4/raw.c          |   7 +--
- net/ipv4/udp.c          |   7 +--
- 6 files changed, 81 insertions(+), 70 deletions(-)
 
-diff --git a/include/net/inet_sock.h b/include/net/inet_sock.h
-index ac1c75975908..3370159556b8 100644
---- a/include/net/inet_sock.h
-+++ b/include/net/inet_sock.h
-@@ -26,6 +26,8 @@
- #include <net/tcp_states.h>
- #include <net/l3mdev.h>
- 
-+#define IP_OPTIONS_DATA_FIXED_SIZE 40
-+
- /** struct ip_options - IP Options
-  *
-  * @faddr - Saved first hop address
-@@ -58,12 +60,9 @@ struct ip_options {
- 
- struct ip_options_rcu {
- 	struct rcu_head rcu;
--	struct ip_options opt;
--};
- 
--struct ip_options_data {
--	struct ip_options_rcu	opt;
--	char			data[40];
-+	/* Must be last as it ends in a flexible-array member. */
-+	struct ip_options opt;
- };
- 
- struct inet_request_sock {
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index 4abbec2f47ef..19c9c838967f 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -112,7 +112,9 @@ struct icmp_bxm {
- 		__be32	       times[3];
- 	} data;
- 	int head_len;
--	struct ip_options_data replyopts;
-+
-+	/* Must be last as it ends in a flexible-array member. */
-+	struct ip_options_rcu replyopts;
- };
- 
- /* An array of errno for error messages from dest unreach. */
-@@ -353,9 +355,12 @@ void icmp_out_count(struct net *net, unsigned char type)
- static int icmp_glue_bits(void *from, char *to, int offset, int len, int odd,
- 			  struct sk_buff *skb)
- {
--	struct icmp_bxm *icmp_param = from;
-+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.__data,
-+			IP_OPTIONS_DATA_FIXED_SIZE);
- 	__wsum csum;
- 
-+	icmp_param = from;
-+
- 	csum = skb_copy_and_csum_bits(icmp_param->skb,
- 				      icmp_param->offset + offset,
- 				      to, len);
-@@ -413,7 +418,7 @@ static void icmp_reply(struct icmp_bxm *icmp_param, struct sk_buff *skb)
- 	int type = icmp_param->data.icmph.type;
- 	int code = icmp_param->data.icmph.code;
- 
--	if (ip_options_echo(net, &icmp_param->replyopts.opt.opt, skb))
-+	if (ip_options_echo(net, &icmp_param->replyopts.opt, skb))
- 		return;
- 
- 	/* Needed by both icmpv4_global_allow and icmp_xmit_lock */
-@@ -435,10 +440,10 @@ static void icmp_reply(struct icmp_bxm *icmp_param, struct sk_buff *skb)
- 	daddr = ipc.addr = ip_hdr(skb)->saddr;
- 	saddr = fib_compute_spec_dst(skb);
- 
--	if (icmp_param->replyopts.opt.opt.optlen) {
--		ipc.opt = &icmp_param->replyopts.opt;
-+	if (icmp_param->replyopts.opt.optlen) {
-+		ipc.opt = &icmp_param->replyopts;
- 		if (ipc.opt->opt.srr)
--			daddr = icmp_param->replyopts.opt.opt.faddr;
-+			daddr = icmp_param->replyopts.opt.faddr;
- 	}
- 	memset(&fl4, 0, sizeof(fl4));
- 	fl4.daddr = daddr;
-@@ -491,8 +496,8 @@ static struct rtable *icmp_route_lookup(struct net *net, struct flowi4 *fl4,
- 	int err;
- 
- 	memset(fl4, 0, sizeof(*fl4));
--	fl4->daddr = (param->replyopts.opt.opt.srr ?
--		      param->replyopts.opt.opt.faddr : iph->saddr);
-+	fl4->daddr = (param->replyopts.opt.srr ?
-+		      param->replyopts.opt.faddr : iph->saddr);
- 	fl4->saddr = saddr;
- 	fl4->flowi4_mark = mark;
- 	fl4->flowi4_uid = sock_net_uid(net, NULL);
-@@ -775,9 +780,10 @@ icmp_ext_append(struct net *net, struct sk_buff *skb_in, struct icmphdr *icmph,
- void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 		 const struct inet_skb_parm *parm)
- {
-+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.__data,
-+			IP_OPTIONS_DATA_FIXED_SIZE);
- 	struct iphdr *iph;
- 	int room;
--	struct icmp_bxm icmp_param;
- 	struct rtable *rt = skb_rtable(skb_in);
- 	bool apply_ratelimit = false;
- 	struct sk_buff *ext_skb;
-@@ -906,7 +912,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 					   iph->tos;
- 	mark = IP4_REPLY_MARK(net, skb_in->mark);
- 
--	if (__ip_options_echo(net, &icmp_param.replyopts.opt.opt, skb_in,
-+	if (__ip_options_echo(net, &icmp_param->replyopts.opt, skb_in,
- 			      &parm->opt))
- 		goto out_unlock;
- 
-@@ -915,21 +921,21 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	 *	Prepare data for ICMP header.
- 	 */
- 
--	icmp_param.data.icmph.type	 = type;
--	icmp_param.data.icmph.code	 = code;
--	icmp_param.data.icmph.un.gateway = info;
--	icmp_param.data.icmph.checksum	 = 0;
--	icmp_param.skb	  = skb_in;
--	icmp_param.offset = skb_network_offset(skb_in);
-+	icmp_param->data.icmph.type	 = type;
-+	icmp_param->data.icmph.code	 = code;
-+	icmp_param->data.icmph.un.gateway = info;
-+	icmp_param->data.icmph.checksum	 = 0;
-+	icmp_param->skb	  = skb_in;
-+	icmp_param->offset = skb_network_offset(skb_in);
- 	ipcm_init(&ipc);
- 	ipc.tos = tos;
- 	ipc.addr = iph->saddr;
--	ipc.opt = &icmp_param.replyopts.opt;
-+	ipc.opt = &icmp_param->replyopts;
- 	ipc.sockc.mark = mark;
- 
- 	rt = icmp_route_lookup(net, &fl4, skb_in, iph, saddr,
- 			       inet_dsfield_to_dscp(tos), mark, type, code,
--			       &icmp_param);
-+			       icmp_param);
- 	if (IS_ERR(rt))
- 		goto out_unlock;
- 
-@@ -942,7 +948,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	room = dst_mtu(&rt->dst);
- 	if (room > 576)
- 		room = 576;
--	room -= sizeof(struct iphdr) + icmp_param.replyopts.opt.opt.optlen;
-+	room -= sizeof(struct iphdr) + icmp_param->replyopts.opt.optlen;
- 	room -= sizeof(struct icmphdr);
- 	/* Guard against tiny mtu. We need to include at least one
- 	 * IP network header for this message to make any sense.
-@@ -950,15 +956,15 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	if (room <= (int)sizeof(struct iphdr))
- 		goto ende;
- 
--	ext_skb = icmp_ext_append(net, skb_in, &icmp_param.data.icmph, room,
-+	ext_skb = icmp_ext_append(net, skb_in, &icmp_param->data.icmph, room,
- 				  parm->iif);
- 	if (ext_skb)
--		icmp_param.skb = ext_skb;
-+		icmp_param->skb = ext_skb;
- 
--	icmp_param.data_len = icmp_param.skb->len - icmp_param.offset;
--	if (icmp_param.data_len > room)
--		icmp_param.data_len = room;
--	icmp_param.head_len = sizeof(struct icmphdr);
-+	icmp_param->data_len = icmp_param->skb->len - icmp_param->offset;
-+	if (icmp_param->data_len > room)
-+		icmp_param->data_len = room;
-+	icmp_param->head_len = sizeof(struct icmphdr);
- 
- 	/* if we don't have a source address at this point, fall back to the
- 	 * dummy address instead of sending out a packet with a source address
-@@ -969,7 +975,7 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 
- 	trace_icmp_send(skb_in, type, code);
- 
--	icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
-+	icmp_push_reply(sk, icmp_param, &fl4, &ipc, &rt);
- 
- 	if (ext_skb)
- 		consume_skb(ext_skb);
-@@ -1206,7 +1212,8 @@ static enum skb_drop_reason icmp_redirect(struct sk_buff *skb)
- 
- static enum skb_drop_reason icmp_echo(struct sk_buff *skb)
- {
--	struct icmp_bxm icmp_param;
-+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.__data,
-+			IP_OPTIONS_DATA_FIXED_SIZE);
- 	struct net *net;
- 
- 	net = skb_dst_dev_net_rcu(skb);
-@@ -1214,18 +1221,18 @@ static enum skb_drop_reason icmp_echo(struct sk_buff *skb)
- 	if (READ_ONCE(net->ipv4.sysctl_icmp_echo_ignore_all))
- 		return SKB_NOT_DROPPED_YET;
- 
--	icmp_param.data.icmph	   = *icmp_hdr(skb);
--	icmp_param.skb		   = skb;
--	icmp_param.offset	   = 0;
--	icmp_param.data_len	   = skb->len;
--	icmp_param.head_len	   = sizeof(struct icmphdr);
-+	icmp_param->data.icmph	   = *icmp_hdr(skb);
-+	icmp_param->skb		   = skb;
-+	icmp_param->offset	   = 0;
-+	icmp_param->data_len	   = skb->len;
-+	icmp_param->head_len	   = sizeof(struct icmphdr);
- 
--	if (icmp_param.data.icmph.type == ICMP_ECHO)
--		icmp_param.data.icmph.type = ICMP_ECHOREPLY;
--	else if (!icmp_build_probe(skb, &icmp_param.data.icmph))
-+	if (icmp_param->data.icmph.type == ICMP_ECHO)
-+		icmp_param->data.icmph.type = ICMP_ECHOREPLY;
-+	else if (!icmp_build_probe(skb, &icmp_param->data.icmph))
- 		return SKB_NOT_DROPPED_YET;
- 
--	icmp_reply(&icmp_param, skb);
-+	icmp_reply(icmp_param, skb);
- 	return SKB_NOT_DROPPED_YET;
- }
- 
-@@ -1353,7 +1360,8 @@ EXPORT_SYMBOL_GPL(icmp_build_probe);
-  */
- static enum skb_drop_reason icmp_timestamp(struct sk_buff *skb)
- {
--	struct icmp_bxm icmp_param;
-+	DEFINE_RAW_FLEX(struct icmp_bxm, icmp_param, replyopts.opt.__data,
-+			IP_OPTIONS_DATA_FIXED_SIZE);
- 	/*
- 	 *	Too short.
- 	 */
-@@ -1363,19 +1371,19 @@ static enum skb_drop_reason icmp_timestamp(struct sk_buff *skb)
- 	/*
- 	 *	Fill in the current time as ms since midnight UT:
- 	 */
--	icmp_param.data.times[1] = inet_current_timestamp();
--	icmp_param.data.times[2] = icmp_param.data.times[1];
--
--	BUG_ON(skb_copy_bits(skb, 0, &icmp_param.data.times[0], 4));
--
--	icmp_param.data.icmph	   = *icmp_hdr(skb);
--	icmp_param.data.icmph.type = ICMP_TIMESTAMPREPLY;
--	icmp_param.data.icmph.code = 0;
--	icmp_param.skb		   = skb;
--	icmp_param.offset	   = 0;
--	icmp_param.data_len	   = 0;
--	icmp_param.head_len	   = sizeof(struct icmphdr) + 12;
--	icmp_reply(&icmp_param, skb);
-+	icmp_param->data.times[1] = inet_current_timestamp();
-+	icmp_param->data.times[2] = icmp_param->data.times[1];
-+
-+	BUG_ON(skb_copy_bits(skb, 0, &icmp_param->data.times[0], 4));
-+
-+	icmp_param->data.icmph	   = *icmp_hdr(skb);
-+	icmp_param->data.icmph.type = ICMP_TIMESTAMPREPLY;
-+	icmp_param->data.icmph.code = 0;
-+	icmp_param->skb		   = skb;
-+	icmp_param->offset	   = 0;
-+	icmp_param->data_len	   = 0;
-+	icmp_param->head_len	   = sizeof(struct icmphdr) + 12;
-+	icmp_reply(icmp_param, skb);
- 	return SKB_NOT_DROPPED_YET;
- 
- out_err:
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index ff11d3a85a36..75fcb58795bb 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -1606,7 +1606,8 @@ void ip_send_unicast_reply(struct sock *sk, const struct sock *orig_sk,
- 			   const struct ip_reply_arg *arg,
- 			   unsigned int len, u64 transmit_time, u32 txhash)
- {
--	struct ip_options_data replyopts;
-+	DEFINE_RAW_FLEX(struct ip_options_rcu, replyopts, opt.__data,
-+			IP_OPTIONS_DATA_FIXED_SIZE);
- 	struct ipcm_cookie ipc;
- 	struct flowi4 fl4;
- 	struct rtable *rt = skb_rtable(skb);
-@@ -1615,18 +1616,18 @@ void ip_send_unicast_reply(struct sock *sk, const struct sock *orig_sk,
- 	int err;
- 	int oif;
- 
--	if (__ip_options_echo(net, &replyopts.opt.opt, skb, sopt))
-+	if (__ip_options_echo(net, &replyopts->opt, skb, sopt))
- 		return;
- 
- 	ipcm_init(&ipc);
- 	ipc.addr = daddr;
- 	ipc.sockc.transmit_time = transmit_time;
- 
--	if (replyopts.opt.opt.optlen) {
--		ipc.opt = &replyopts.opt;
-+	if (replyopts->opt.optlen) {
-+		ipc.opt = replyopts;
- 
--		if (replyopts.opt.opt.srr)
--			daddr = replyopts.opt.opt.faddr;
-+		if (replyopts->opt.srr)
-+			daddr = replyopts->opt.faddr;
- 	}
- 
- 	oif = arg->bound_dev_if;
-diff --git a/net/ipv4/ping.c b/net/ipv4/ping.c
-index ad56588107cc..7e2812668350 100644
---- a/net/ipv4/ping.c
-+++ b/net/ipv4/ping.c
-@@ -690,6 +690,8 @@ EXPORT_IPV6_MOD_GPL(ping_common_sendmsg);
- 
- static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- {
-+	DEFINE_RAW_FLEX(struct ip_options_rcu, opt_copy, opt.__data,
-+			IP_OPTIONS_DATA_FIXED_SIZE);
- 	struct net *net = sock_net(sk);
- 	struct flowi4 fl4;
- 	struct inet_sock *inet = inet_sk(sk);
-@@ -697,7 +699,6 @@ static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	struct icmphdr user_icmph;
- 	struct pingfakehdr pfh;
- 	struct rtable *rt = NULL;
--	struct ip_options_data opt_copy;
- 	int free = 0;
- 	__be32 saddr, daddr, faddr;
- 	u8 scope;
-@@ -746,9 +747,9 @@ static int ping_v4_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		rcu_read_lock();
- 		inet_opt = rcu_dereference(inet->inet_opt);
- 		if (inet_opt) {
--			memcpy(&opt_copy, inet_opt,
-+			memcpy(opt_copy, inet_opt,
- 			       sizeof(*inet_opt) + inet_opt->opt.optlen);
--			ipc.opt = &opt_copy.opt;
-+			ipc.opt = opt_copy;
- 		}
- 		rcu_read_unlock();
- 	}
-diff --git a/net/ipv4/raw.c b/net/ipv4/raw.c
-index 5998c4cc6f47..e20c41206e29 100644
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -481,6 +481,8 @@ static int raw_getfrag(void *from, char *to, int offset, int len, int odd,
- 
- static int raw_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- {
-+	DEFINE_RAW_FLEX(struct ip_options_rcu, opt_copy, opt.__data,
-+			IP_OPTIONS_DATA_FIXED_SIZE);
- 	struct inet_sock *inet = inet_sk(sk);
- 	struct net *net = sock_net(sk);
- 	struct ipcm_cookie ipc;
-@@ -491,7 +493,6 @@ static int raw_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	__be32 daddr;
- 	__be32 saddr;
- 	int uc_index, err;
--	struct ip_options_data opt_copy;
- 	struct raw_frag_vec rfv;
- 	int hdrincl;
- 
-@@ -561,9 +562,9 @@ static int raw_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		rcu_read_lock();
- 		inet_opt = rcu_dereference(inet->inet_opt);
- 		if (inet_opt) {
--			memcpy(&opt_copy, inet_opt,
-+			memcpy(opt_copy, inet_opt,
- 			       sizeof(*inet_opt) + inet_opt->opt.optlen);
--			ipc.opt = &opt_copy.opt;
-+			ipc.opt = opt_copy;
- 		}
- 		rcu_read_unlock();
- 	}
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index ffe074cb5865..591527ae811c 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1269,6 +1269,8 @@ EXPORT_IPV6_MOD_GPL(udp_cmsg_send);
- 
- int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- {
-+	DEFINE_RAW_FLEX(struct ip_options_rcu, opt_copy, opt.__data,
-+			IP_OPTIONS_DATA_FIXED_SIZE);
- 	struct inet_sock *inet = inet_sk(sk);
- 	struct udp_sock *up = udp_sk(sk);
- 	DECLARE_SOCKADDR(struct sockaddr_in *, usin, msg->msg_name);
-@@ -1286,7 +1288,6 @@ int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	int corkreq = udp_test_bit(CORK, sk) || msg->msg_flags & MSG_MORE;
- 	int (*getfrag)(void *, char *, int, int, int, struct sk_buff *);
- 	struct sk_buff *skb;
--	struct ip_options_data opt_copy;
- 	int uc_index;
- 
- 	if (len > 0xFFFF)
-@@ -1368,9 +1369,9 @@ int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		rcu_read_lock();
- 		inet_opt = rcu_dereference(inet->inet_opt);
- 		if (inet_opt) {
--			memcpy(&opt_copy, inet_opt,
-+			memcpy(opt_copy, inet_opt,
- 			       sizeof(*inet_opt) + inet_opt->opt.optlen);
--			ipc.opt = &opt_copy.opt;
-+			ipc.opt = opt_copy;
- 		}
- 		rcu_read_unlock();
- 	}
--- 
-2.43.0
 
+
+
+
+
+
+
+
+
+It's really limitting
+if we can only check 
+
+> > I maybe should disable it for all macros unless the --spammy option is used...
+> 
+> IMHO, that would be an even better approach. That said, I am happy
+> enough with your previous patch which resolves my issue and which is way
+> better than updating the is_non_negative() and is_negative() comments as
+> I did in my patch!
+> 
+> 
+> Yours sincerely,
+> Vincent Mailhol
