@@ -1,51 +1,52 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D415EEACD
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Jan 2026 06:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392F93009C1
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Jan 2026 06:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767679825; cv=none; b=HwyH/bYX7oHLHcaAb0fR/Lb7aB6dgynftw7Px9koJc/C+z1PMaMHIhmoQ9fAKqii7cXyagCX3ByP4nHOIv1c2/TdZhP9VdL9NMdNQ3XMIeU6KU5OcYCH6aG3KipwJ0DxFkgOulWImPdlvuijhJf19n19SZ/XrcSUxSM8U1tdDoE=
+	t=1767682537; cv=none; b=Px4bzKUO+2k6zRZmxc7ukcdd7txYRYFRPjVuw14BNkfVkRMqrvmHO+zBexb1oblLRL2WkRHtPXkfr2jnbRdE3tnrVkQEzr3+myJq8L1WocKlrMDN4nj+6qb7G5fYDT1ohLXuAityvJLftHWsu4TwC3XrA3MqC7g4haDVcs3n+cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767679825; c=relaxed/simple;
-	bh=uoaDcGYmrnZZPxHNIF+eZ5Y/J1kgmmdivJggtW6KKvs=;
+	s=arc-20240116; t=1767682537; c=relaxed/simple;
+	bh=ujjuPqYl39O51N9nKa7JvPk5vIzxNM+20Uw4oY+Agl4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FGg0q47GgDUakveWJZ+2VQXtT1xAxAY4Q9HsM6+2Q8vDGoKxcryKxz4H+zhL5qVDbu1MsCnSn87xEd9suv0D0m81KVh3IkIZ6TicXzowVdLuGHYrIttQcs5fBQ5xEaUlQzO1QSdpQOhibEdqosXdZ7jXgHsVnDpl3IVJZcH4y+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=pUw0IcUm; arc=none smtp.client-ip=44.202.169.39
+	 In-Reply-To:Content-Type; b=e/OfWPcZt6wn5nfot3VPJo8bkALYeoQnZUZsNrn+jiO437JQGA+GAoTi6+2InkhrWouc/jVFn7WSejqh9FPaHfaEFsRgpKkGUzDT//W1LEFY1TCf726Bd39Rb8I8ctj19svk0QZpUWMQebPXkzp3Fg4hycUBgHlQvHjyb7HJjlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=G/vez5mI; arc=none smtp.client-ip=35.89.44.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pUw0IcUm"
-Received: from eig-obgw-5003b.ext.cloudfilter.net ([10.0.29.155])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="G/vez5mI"
+Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
 	by cmsmtp with ESMTPS
-	id cr8lvyyYav724d0FLvkIfs; Tue, 06 Jan 2026 06:08:47 +0000
+	id d06tvey9dipkCd0x6v2eJi; Tue, 06 Jan 2026 06:54:00 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id d0FLvZHRe2l0kd0FLvc0LD; Tue, 06 Jan 2026 06:08:47 +0000
-X-Authority-Analysis: v=2.4 cv=UfRRSLSN c=1 sm=1 tr=0 ts=695ca6ef
+	id d0x5vG8rIjAxud0x5vTgwB; Tue, 06 Jan 2026 06:53:59 +0000
+X-Authority-Analysis: v=2.4 cv=EoDSrTcA c=1 sm=1 tr=0 ts=695cb187
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Aea70ojWhvW6xI+oM0giEQ==:17
  a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=9vlq1VobPfUJAe141Q0A:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+ a=fgAqcRqT0STgUfz1giMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=2aFnImwKRvkU0tJ3nQRT:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=T8hG9y1BZklptsV/xBAiq/b+CBwDpXaK8p7nFH8qK/k=; b=pUw0IcUmyudnHEzadV7E5DiBFg
-	NbxFokoAaw+dTAVWMOgnejpkK8g5Penu+9YGaRwrvUk3pN6HSR6U8CR0wP9HKSi6SROBuD39pHXKk
-	oWMLarjaq710D+WwgE2G3o0doo4nc9jXiEeXNjIpBpXmcB/Dkv6hpwn/yyCZUpTTDr7mw6EkPMCoY
-	9ae1pU31x35kKTk0QDqjuVfYs0Hp2bqfNpq5mLUG486O2d9A84bwTzCKM0goxDBC2N37l2SOqCLIf
-	sRX7RGJQMxg/H+rfufKCMQyCIAxrSl2acbH6BrE25L97lXIP9+wHW+Ur2iYnkcIs2uSSHkUNbko/u
-	2eBobKXQ==;
-Received: from flh4-122-130-137-161.osk.mesh.ad.jp ([122.130.137.161]:60510 helo=[10.221.196.44])
+	bh=MCst0vXTrl54MA5QK689mpZvQYuCeJQ5rEPbETOOHlY=; b=G/vez5mIJoapC1BKyFfPstgQf/
+	yfFBDEawZrWjFtrTRNPEHqqUYrjgMg563y1RjKy3rofPcvBGYieRFV65EvDyvpkaM1BLqOXQ4b6J9
+	y9Sc5uWkYWr/zOarUe5e8v3Pati9zuNbHpxvg5IrYBEDNNjSqWVtljju5sn+hGpBXCZ3quwTyLqq2
+	yUAD9Ma4Rgb3/45VPmt0YxaOauUpBYyUjFSZkiqrymsHgZpi7qvyWnjVCTd8HNdZpcE2W5MmSCrSD
+	kvIpLc8/1eS3djEQ0Jh+mOk/WDosBov94Sc9SL75BQPoZ1FUGoJo5s9J3OEP+hD0MCamd1XrEeZZ5
+	1qleFl5A==;
+Received: from flh4-122-130-137-161.osk.mesh.ad.jp ([122.130.137.161]:55764 helo=[10.221.196.44])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.98.1)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1vd0FK-00000002wEp-24z5;
-	Tue, 06 Jan 2026 00:08:46 -0600
-Message-ID: <e1009d16-cadb-4446-aef5-4a52197551a4@embeddedor.com>
-Date: Tue, 6 Jan 2026 15:08:41 +0900
+	id 1vd0x4-00000003kxS-1fbV;
+	Tue, 06 Jan 2026 00:53:59 -0600
+Message-ID: <8ac82e29-b193-4484-9bf4-19988d0141d6@embeddedor.com>
+Date: Tue, 6 Jan 2026 15:53:50 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,19 +54,23 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3][next] drm/nouveau: fifo: Avoid
- -Wflex-array-member-not-at-end warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aJ17oxJYcqqr3946@kspp>
+Subject: Re: [PATCH 3/4] cgroup: Use __counted_by for cgroup::ancestors
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Tejun Heo <tj@kernel.org>
+Cc: Chen Ridong <chenridong@huaweicloud.com>, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Johannes Weiner <hannes@cmpxchg.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20251217162744.352391-1-mkoutny@suse.com>
+ <20251217162744.352391-4-mkoutny@suse.com>
+ <87cc0370-1924-4d33-bbf1-7fc2b03149e3@huaweicloud.com>
+ <aUQnRqJsjh9p9Vhb@slm.duckdns.org>
+ <ecrvq2zi3tyewmjis6wdwxsvzkosobzowrm4xoxzxq35hhobev@m6kroxwbnfa7>
 Content-Language: en-US
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <aJ17oxJYcqqr3946@kspp>
+In-Reply-To: <ecrvq2zi3tyewmjis6wdwxsvzkosobzowrm4xoxzxq35hhobev@m6kroxwbnfa7>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
 X-AntiAbuse: Original Domain - vger.kernel.org
@@ -74,68 +79,53 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 122.130.137.161
 X-Source-L: No
-X-Exim-ID: 1vd0FK-00000002wEp-24z5
+X-Exim-ID: 1vd0x4-00000003kxS-1fbV
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: flh4-122-130-137-161.osk.mesh.ad.jp ([10.221.196.44]) [122.130.137.161]:60510
+X-Source-Sender: flh4-122-130-137-161.osk.mesh.ad.jp ([10.221.196.44]) [122.130.137.161]:55764
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
+X-Email-Count: 15
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFQzUxh2Ey99sSy7rtfCdzQ92NC/Yp/xjCE/L1p1wkXB2fPY5BqfYCp52demOnxQoCJqgOvrXfEGFb2tbSGc9Sji5n416JphFyade6Jn0HL69nfQLJKr
- ViZu0ARMmxLVllwmuPgd0oR5VBFQr3jhRtxr1TCTDn6YjUjiawafLiTu1T+ITVO/utG7LQxkqSOpOL8sP1q3O4oKeo9+6MCSK9qO8gurT3w2NrKRcuCH/kGc
+X-CMAE-Envelope: MS4xfKthT7HDsJXoQ0IVK7GsTZFzM44KEhtvGkeVoQkIDWkKFTHVp6su+alibz1RSCkjtGjvePtWna9w/GHCIQllc4lXEIMQLH0CL5iF8KN++Uvwuug9sIIF
+ itzP27kzlMD3BTQNLEn0tx6W228rQAGkQRpoCdaoTcl7tGiPwtbFKi5BM4x3GM01H784G+fg9yk4OpGLAzYt9J9B5BCjvfZd9MFIdpQZsxa4LebcyfLb4MQy
 
-Hi all,
 
-Friendly ping: who can take this, please?
+
+On 12/19/25 01:32, Michal Koutný wrote:
+> On Thu, Dec 18, 2025 at 06:09:42AM -1000, Tejun Heo <tj@kernel.org> wrote:
+>> On Thu, Dec 18, 2025 at 03:09:32PM +0800, Chen Ridong wrote:
+>>> Note that this level may already be used in existing BPF programs (e.g.,
+>>> tools/testing/selftests/bpf/progs/task_ls_uptr.c). Do we need to consider compatibility here?
+>>
+>> That's a good point.
+> 
+> I wouldn't be concerned about this particular aspect. The commit
+> e6ac2450d6dee ("bpf: Support bpf program calling kernel function")
+> excludes ABIs, the example program uses ksyms (not kfuncs), so there
+> could even apply Documentation/process/stable-api-nonsense.rst.
+> OTOH, the semantics of level is unchanged for BPF helpers (that are the
+> official API).
+> 
+> 
+>> Is __counted_by instrumentation tied to some compiler flag? If so,
+>> might as well make it an optional extra field specifically for the
+>> annotation rather than changing the meaning of an existing field.
+> 
+> Honestly, I can see benefit mainly in the first patch of the series
+> (posted the rest for discussion).
+> 
+> I'd like to ask Gustavo whether __counted_by here buys us anything or
+> whether it's more useful in other parts of kernel (e.g. flexible
+> allocations in networking code with outer sources of data).
+
+Ideally, all structures containing a flexible-array member (FAM) should
+be annotated. However, if this is too much of a hassle right now, I'd
+say the priority is to avoid the -Wflex-array-member-not-at-end warnings,
+first.
 
 Thanks
 -Gustavo
-
-On 8/14/25 15:01, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the new TRAILING_OVERLAP() helper to fix the following warning:
-> 
-> drivers/gpu/drm/nouveau/nvif/fifo.c:29:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> This helper creates a union between a flexible-array member (FAM)
-> and a set of members that would otherwise follow it. This overlays
-> the trailing members onto the FAM while preserving the original
-> memory layout.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v3:
->   - Use the new TRAILING_OVERLAP() helper.
-> 
-> Changes in v2:
->   - Adjust heap allocation.
-> 
->   drivers/gpu/drm/nouveau/nvif/fifo.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nvif/fifo.c b/drivers/gpu/drm/nouveau/nvif/fifo.c
-> index a463289962b2..b0ab80995d98 100644
-> --- a/drivers/gpu/drm/nouveau/nvif/fifo.c
-> +++ b/drivers/gpu/drm/nouveau/nvif/fifo.c
-> @@ -25,13 +25,12 @@ static int
->   nvif_fifo_runlists(struct nvif_device *device)
->   {
->   	struct nvif_object *object = &device->object;
-> -	struct {
-> -		struct nv_device_info_v1 m;
-> +	TRAILING_OVERLAP(struct nv_device_info_v1, m, data,
->   		struct {
->   			struct nv_device_info_v1_data runlists;
->   			struct nv_device_info_v1_data runlist[64];
->   		} v;
-> -	} *a;
-> +	) *a;
->   	int ret, i;
->   
->   	if (device->runlist)
 
