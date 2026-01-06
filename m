@@ -1,92 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40CD2EFD95;
-	Mon,  5 Jan 2026 23:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D415EEACD
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Jan 2026 06:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767657412; cv=none; b=tUwNy2ZAWVuXCeYWcTGpWwDSC8t0mxq2mkA863YdVvu3GvVgDLkm3WGKeGlaAKe8pnDXLMLJNtAeqoBkGRyWzl0f4U4QFy38yR3oHWZrvYdI/r1eJ5WDeSt/FsG1sHsbCgh/UQMJtt5GKI6letdftmw7XWwJ42GLaRIytlQboRo=
+	t=1767679825; cv=none; b=HwyH/bYX7oHLHcaAb0fR/Lb7aB6dgynftw7Px9koJc/C+z1PMaMHIhmoQ9fAKqii7cXyagCX3ByP4nHOIv1c2/TdZhP9VdL9NMdNQ3XMIeU6KU5OcYCH6aG3KipwJ0DxFkgOulWImPdlvuijhJf19n19SZ/XrcSUxSM8U1tdDoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767657412; c=relaxed/simple;
-	bh=HBefWBHNf4ymkXE1PWUOS9//5AiwqnDSrYphgTjisOw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CEUZrwbwO4Knkxh5+yATwEKppzRLRnBRXzHNbrx/Qr3mo7s03jsAlRTSdGWhhh+QnzunEtudaXJIAbnvPeR0dvh05N++57sEMUt1VkQq7JPrHZZheQ7c0DPJzKhIG7YZuVyiqc0tuqs9FxIRyPdOQxmX5o/gu76SDClYzGc1J3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDg/o9QI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767679825; c=relaxed/simple;
+	bh=uoaDcGYmrnZZPxHNIF+eZ5Y/J1kgmmdivJggtW6KKvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FGg0q47GgDUakveWJZ+2VQXtT1xAxAY4Q9HsM6+2Q8vDGoKxcryKxz4H+zhL5qVDbu1MsCnSn87xEd9suv0D0m81KVh3IkIZ6TicXzowVdLuGHYrIttQcs5fBQ5xEaUlQzO1QSdpQOhibEdqosXdZ7jXgHsVnDpl3IVJZcH4y+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=pUw0IcUm; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDg/o9QI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30CAFC16AAE;
-	Mon,  5 Jan 2026 23:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767657411;
-	bh=HBefWBHNf4ymkXE1PWUOS9//5AiwqnDSrYphgTjisOw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=nDg/o9QIX94RGxQ8o4uWO4940lF6rBh8EFCk3iRRe/0G/kimpAVyxBjGu72E209mZ
-	 Y5ZOLi28OSOum6l7U3P09kVpW9Q2LnDDcyqt2OhvRjROl0Bsj0UVcBzi6NDmpBKrsB
-	 wf4GUjw9MHOHelPU40BYYO+3r9YrNQurpm2lKJojrcAOM+sEOw0Q/9F5DhoFZCzoo9
-	 fWxBGf1doRNqR/a1PAaLfulyfPTtPLgYKbwz4s8i0O3VXiS5pQElQ7gweku3dkN4Tg
-	 GSi+yG3RZnvRpG6OOh+KtL4zREbWF6dmCW/spLJ7som9azTud0QYzBXHd/gIFvWwez
-	 +2YeHHtpWUTjw==
-From: Nathan Chancellor <nathan@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Vincent Mailhol <mailhol@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
- linux-kbuild@vger.kernel.org, linux-sparse@vger.kernel.org, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20251220-remove_wtype-limits-v3-0-24b170af700e@kernel.org>
-References: <20251220-remove_wtype-limits-v3-0-24b170af700e@kernel.org>
-Subject: Re: [PATCH v3 0/3] kbuild: remove gcc's -Wtype-limits
-Message-Id: <176765740692.3236304.10853846154010651497.b4-ty@kernel.org>
-Date: Mon, 05 Jan 2026 16:56:46 -0700
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pUw0IcUm"
+Received: from eig-obgw-5003b.ext.cloudfilter.net ([10.0.29.155])
+	by cmsmtp with ESMTPS
+	id cr8lvyyYav724d0FLvkIfs; Tue, 06 Jan 2026 06:08:47 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id d0FLvZHRe2l0kd0FLvc0LD; Tue, 06 Jan 2026 06:08:47 +0000
+X-Authority-Analysis: v=2.4 cv=UfRRSLSN c=1 sm=1 tr=0 ts=695ca6ef
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Aea70ojWhvW6xI+oM0giEQ==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=9vlq1VobPfUJAe141Q0A:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=T8hG9y1BZklptsV/xBAiq/b+CBwDpXaK8p7nFH8qK/k=; b=pUw0IcUmyudnHEzadV7E5DiBFg
+	NbxFokoAaw+dTAVWMOgnejpkK8g5Penu+9YGaRwrvUk3pN6HSR6U8CR0wP9HKSi6SROBuD39pHXKk
+	oWMLarjaq710D+WwgE2G3o0doo4nc9jXiEeXNjIpBpXmcB/Dkv6hpwn/yyCZUpTTDr7mw6EkPMCoY
+	9ae1pU31x35kKTk0QDqjuVfYs0Hp2bqfNpq5mLUG486O2d9A84bwTzCKM0goxDBC2N37l2SOqCLIf
+	sRX7RGJQMxg/H+rfufKCMQyCIAxrSl2acbH6BrE25L97lXIP9+wHW+Ur2iYnkcIs2uSSHkUNbko/u
+	2eBobKXQ==;
+Received: from flh4-122-130-137-161.osk.mesh.ad.jp ([122.130.137.161]:60510 helo=[10.221.196.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vd0FK-00000002wEp-24z5;
+	Tue, 06 Jan 2026 00:08:46 -0600
+Message-ID: <e1009d16-cadb-4446-aef5-4a52197551a4@embeddedor.com>
+Date: Tue, 6 Jan 2026 15:08:41 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3][next] drm/nouveau: fifo: Avoid
+ -Wflex-array-member-not-at-end warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aJ17oxJYcqqr3946@kspp>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <aJ17oxJYcqqr3946@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 122.130.137.161
+X-Source-L: No
+X-Exim-ID: 1vd0FK-00000002wEp-24z5
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: flh4-122-130-137-161.osk.mesh.ad.jp ([10.221.196.44]) [122.130.137.161]:60510
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFQzUxh2Ey99sSy7rtfCdzQ92NC/Yp/xjCE/L1p1wkXB2fPY5BqfYCp52demOnxQoCJqgOvrXfEGFb2tbSGc9Sji5n416JphFyade6Jn0HL69nfQLJKr
+ ViZu0ARMmxLVllwmuPgd0oR5VBFQr3jhRtxr1TCTDn6YjUjiawafLiTu1T+ITVO/utG7LQxkqSOpOL8sP1q3O4oKeo9+6MCSK9qO8gurT3w2NrKRcuCH/kGc
 
-On Sat, 20 Dec 2025 12:02:18 +0100, Vincent Mailhol wrote:
-> I often read on the mailing list people saying "who cares about W=2
-> builds anyway?". At least I do. Not that I want to fix all of them,
-> but on some occasions, such as new driver submissions, I have often
-> found a couple valid diagnostics in the W=2 output.
+Hi all,
+
+Friendly ping: who can take this, please?
+
+Thanks
+-Gustavo
+
+On 8/14/25 15:01, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> That said, the annoying thing is that W=2 is heavily polluted by one
-> warning: -Wtype-limits. Try a gcc W=2 build on any file and see the
-> results for yourself. I suspect this to be the reason why so few
-> people are using W=2.
+> Use the new TRAILING_OVERLAP() helper to fix the following warning:
 > 
-> [...]
-
-Applied to
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kbuild/linux.git kbuild-next
-
-Thanks!
-
-[1/3] kbuild: remove gcc's -Wtype-limits
-      https://git.kernel.org/kbuild/c/660e899103e29
-[2/3] kbuild: cleanup local -Wno-type-limits exceptions
-      https://git.kernel.org/kbuild/c/34a1bd0b6b2c0
-[3/3] overflow: Remove is_non_negative() and is_negative()
-      https://git.kernel.org/kbuild/c/5ce3218d4f102
-
-Please look out for regression or issue reports or other follow up
-comments, as they may result in the patch/series getting dropped or
-reverted.
-
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
+> drivers/gpu/drm/nouveau/nvif/fifo.c:29:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> This helper creates a union between a flexible-array member (FAM)
+> and a set of members that would otherwise follow it. This overlays
+> the trailing members onto the FAM while preserving the original
+> memory layout.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v3:
+>   - Use the new TRAILING_OVERLAP() helper.
+> 
+> Changes in v2:
+>   - Adjust heap allocation.
+> 
+>   drivers/gpu/drm/nouveau/nvif/fifo.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nvif/fifo.c b/drivers/gpu/drm/nouveau/nvif/fifo.c
+> index a463289962b2..b0ab80995d98 100644
+> --- a/drivers/gpu/drm/nouveau/nvif/fifo.c
+> +++ b/drivers/gpu/drm/nouveau/nvif/fifo.c
+> @@ -25,13 +25,12 @@ static int
+>   nvif_fifo_runlists(struct nvif_device *device)
+>   {
+>   	struct nvif_object *object = &device->object;
+> -	struct {
+> -		struct nv_device_info_v1 m;
+> +	TRAILING_OVERLAP(struct nv_device_info_v1, m, data,
+>   		struct {
+>   			struct nv_device_info_v1_data runlists;
+>   			struct nv_device_info_v1_data runlist[64];
+>   		} v;
+> -	} *a;
+> +	) *a;
+>   	int ret, i;
+>   
+>   	if (device->runlist)
 
