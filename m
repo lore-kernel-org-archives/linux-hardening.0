@@ -1,136 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13DD327BF6;
-	Wed,  7 Jan 2026 12:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD48322B6F
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Jan 2026 14:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767788625; cv=none; b=KnMGo8cPiGsTP/wH5SHDw4JnzbVPLb22vu2TdXFAenT7qo5iqHKWccRScBt0pHo//nrwgo04xqO46g7O/jed0FlN7R6Rc+sQPOE6G3IXKjIvScU3r64paH54dtD7SUIipizhetDxS8tavzzKHTH2TZgZPy96TnN1H7lqhOQQePI=
+	t=1767794740; cv=none; b=UOpb523a+4ZW/BQNaldnai9q9vVngCi5MzdIPninNyztgEML/69ZsNhpPfpGEr4j+zQ5MqBBZ6AGgsV6erb6wkAsnUnZVbnf57XvUe/vfY2ssicgG9pRWzzrgmHeI2leT5TY0am+HfWZqej4SUorpmtnlChnYMdKLgHaphN7ims=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767788625; c=relaxed/simple;
-	bh=U+amxbSOoYQbK/xsz0wmkUqTLQp0tiL1lBiG3B9K0nk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YVZS6XRdl3+PS/smYfXfkLauRNK64JxkBjlp5psC8aMkKaik9dAnk/MlDSRiICNk/MyOBHWP9W/ibcGQLLJe+tK5suaq3PZVkSNAkrenoQRm30kPmXbe0c9iUe9rXBwbOZo1Y/gsjrTuR5nXonWc3x72y/51RmChKcBlsJER+Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q41OJl5w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767794740; c=relaxed/simple;
+	bh=XhP5nLUztDYAIoAO0lAhA+v0Sp7AtQN0TG10F7Z+85I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VyPZWZ0ERoOyzWGm7qM26XLcPS0GCIuxOcgCWJrC7vhZN0MWYDab3o4Y2jr4Ip14UbNKCZL6sFA1fmy9CupI2VGHmqP25FjsdbbPusWobr6D3W0wR7PqAxoPr+Yv4JNKE9NXc6kGhKppIwjvcV70I4psB8xc1Lck96f2LKweZOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PRy82LdA; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q41OJl5w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D62BFC19422;
-	Wed,  7 Jan 2026 12:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767788625;
-	bh=U+amxbSOoYQbK/xsz0wmkUqTLQp0tiL1lBiG3B9K0nk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q41OJl5w7VkYd4FjA2qYUC7vz/pZwWhX3C8Suuom+WLMcUNk7owgmQH9EpuVIil/Q
-	 ZLNnnA3U4lXTkGAytypr4npJrQ/7bUs1OijZDZw/bBzbt0JWdzsCJYbweBBfRRzQbc
-	 v2XOOniMcbwCsWbgj4jjA415aZKljbY7AX1dVyTxE+eLhHqrm9jB0ZRKo1LXVOqtGZ
-	 mumRWJ67sOf1t1L4j6H4h1+dKEU+wPlzY5DA9MdJA1Ve5Bq1wr5lhOfaeXCEZtj9Eb
-	 cQ92gCQ9db3s5k3M0bjON4WVUM30Q3JaxI9pI6x+S6GlEqSF4Rclqt+8PuPBT62WSl
-	 EXU53e0m02YYw==
-Date: Wed, 7 Jan 2026 17:53:32 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, 
-	Mika Westerberg <westeri@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
-Message-ID: <o6zgxnr7gmzd5mwmkccbe7ch7baj3lxuecltzo24ukj2vfujxu@bxnaci5oqsic>
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <fimuvblfy2cmn7o4wzcxjzrux5mwhvlvyxfsgeqs6ore2xg75i@ax46d3sfmdux>
- <uc7utm7tbtmkk6osaoydibd5evtpm246sjrpkx3lpclpk4srea@a4g65oduswau>
- <p4fwvwbhwbdpiqvspjq4stjyuxy5pqvdei3wfianw4aeujmgbx@utumnrffangf>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRy82LdA"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47d6a1f08bbso8148995e9.2
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Jan 2026 06:05:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767794737; x=1768399537; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nTerFL81XHMixYnvh7u2MldwUCD+ZWdDPLrHKRPjXbw=;
+        b=PRy82LdAgq/iXJWmIscUYgGuSCdwXSV/g4BsZy2X7xXeHXz8o1Vf3eZ+2E1H3VSTZb
+         nxU+GUe7bvSVVoewfrHd9OfnKBoyh0q+tOuScahipIqYyiAHRyZKxulZpPZkajCq99Og
+         CBfaQLmHtcItb3OWEboCpo3ZNb7XDiicjCI9lYzvMI7+Oq83pVPh5psQsfBy0kJudDgP
+         Z5n18foIQxD8vJLs6d0BNZMZLrZw/eI22udUetwoURBFTKZuWK6aJuhoJVViw77Eqy6U
+         rP6y7snd0xzOuFPpo0Fz/eTR+C1sss8SjZ7hG/NXwz0hX7o43OPeEhFH7dwEjfftLVaZ
+         4Mug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767794737; x=1768399537;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nTerFL81XHMixYnvh7u2MldwUCD+ZWdDPLrHKRPjXbw=;
+        b=O3sfHxTjdIZDdzbixynwzHMGspzSCjEV2fU8TGqV9XCNUS17jfhCmLBLiM8rmVEMLy
+         W/4Q7ThgEWQ+3Up4scfSxBaBgB0NHDZHk5sRSc2X6+Y98YsimniMT6LR8TSVFGGiOgXn
+         qLEky9lRizjjsPTvINXf8DoZBnbkJxxTXQ6TmUXs/xMQpUUqgZAEEEugAk/xzwKhrAmD
+         vZ2iSI+MM+SE0IjNlPM3xPP0lXod5qkj97EZqi+LjC9w3ua6a8GKnn/TGujH49giP1W7
+         oCqyviE4zKgh7e4GYb3X24KvbEFNl11RJpcs0s00nEQJZmGS6lkNEoNk6S4uHy2xeT4v
+         Qkfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXospjHLXWcPPTi0olb2MAQRbYkLcUo1NFebZ/5mQA9NI/Ocrz4adid5oBVAsEkejOpTA6tlRvtu2FCXzNFJRg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycZvSWqYS346qxLV9izsdKEV1EyjTE5zSeeSLhzM7Ei7r2+QA2
+	cYsRStCr2vfc6iQlbvwNcdJOMRiXXprM3NYEUKWH9lIvD4ADj5yInp8Cesvpmg==
+X-Gm-Gg: AY/fxX7BpVJ2LjABEBvB1vTsQtWvR7yJYthxu3S54eGHoLhbeXDFGJItHXrUxFGEvD5
+	y/3qhAzbk//TZ0Ks/O1blYTxOiY9GGnn4NXF1Jr9HNNWxTwo4N8Lwg7d48iU/1HLOi3ECgD1rtU
+	9hiTumV4zktzWVxIdPJJ5kUK4nWfcYijLAVX1roFwVf2sMJoK8/v6vGzD7ZucGvmow6fINr0t3W
+	sX2CbhJLw0jyw6Z/pX5/Lc0sb3EFB0K4/Sn0G8/zO+R2fbdxtRKeZtuAd4DNdLcAIOwlfZJ/MMo
+	skJeeCxxnvKibfOgnBsMCbQ3VydIAOqtSsARNCWQBMNcLwJRMbXpMEBSLZrizkSwh6yE0HBm34q
+	Ais7GLMJhI86rdIUnSfvFXfxuVMo8r62qwXp5cSlnUJydQHhA+X+agXDmLPy8IMA7cYePiDbFfp
+	JEmK1AGrEhIAz9VaP45fNRJTPQ7NOz8Rla2qdVumkJqC7c1UIYd+Vr
+X-Google-Smtp-Source: AGHT+IFJHEaZoRkhHw4zj9EBxNV/rp8ncSP4Ef47XQLiJPMu3j1wMm2BAE3otGmVGJMIybtQwjSgsQ==
+X-Received: by 2002:a05:600c:8b6d:b0:47a:814c:eea1 with SMTP id 5b1f17b1804b1-47d84b4a7b4mr30796025e9.35.1767794736254;
+        Wed, 07 Jan 2026 06:05:36 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d87167832sm13555455e9.7.2026.01.07.06.05.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 06:05:35 -0800 (PST)
+Date: Wed, 7 Jan 2026 14:05:33 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley
+ <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "Jason A.
+ Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
+ Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] randomize_kstack: Unify random source across
+ arches
+Message-ID: <20260107140533.2b3c46a1@pumpkin>
+In-Reply-To: <20260104230136.7aaf8886@pumpkin>
+References: <20260102131156.3265118-1-ryan.roberts@arm.com>
+	<20260102131156.3265118-4-ryan.roberts@arm.com>
+	<20260104230136.7aaf8886@pumpkin>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <p4fwvwbhwbdpiqvspjq4stjyuxy5pqvdei3wfianw4aeujmgbx@utumnrffangf>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 07, 2026 at 02:12:28PM +0200, Dmitry Baryshkov wrote:
-> On Wed, Jan 07, 2026 at 05:17:09PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Nov 26, 2025 at 06:27:13PM +0200, Dmitry Baryshkov wrote:
-> > > On Wed, Nov 12, 2025 at 02:55:29PM +0100, Bartosz Golaszewski wrote:
-> > > > Bjorn, Konrad: I should have Cc'ed you on v1 but I just went with what
-> > > > came out of b4 --auto-to-cc. It only gave me arm-msm. :( Patch 7 from
-> > > > this series however impacts Qualcomm platforms. It's a runtime dependency
-> > > > of patches 8 and 9. Would you mind Acking it so that I can take it into
-> > > > an immutable branch that I'll make available to Mark Brown for him to
-> > > > take patches 8-10 through the ASoC and regulator trees for v6.19?
-> > > > 
-> > > > Problem statement: GPIOs are implemented as a strictly exclusive
-> > > > resource in the kernel but there are lots of platforms on which single
-> > > > pin is shared by multiple devices which don't communicate so need some
-> > > > way of properly sharing access to a GPIO. What we have now is the
-> > > > GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
-> > > > doesn't do any locking or arbitration of access - it literally just hand
-> > > > the same GPIO descriptor to all interested users.
-> > > > 
-> > > > The proposed solution is composed of three major parts: the high-level,
-> > > > shared GPIO proxy driver that arbitrates access to the shared pin and
-> > > > exposes a regular GPIO chip interface to consumers, a low-level shared
-> > > > GPIOLIB module that scans firmware nodes and creates auxiliary devices
-> > > > that attach to the proxy driver and finally a set of core GPIOLIB
-> > > > changes that plug the former into the GPIO lookup path.
-> > > > 
-> > > > The changes are implemented in a way that allows to seamlessly compile
-> > > > out any code related to sharing GPIOs for systems that don't need it.
-> > > > 
-> > > > The practical use-case for this are the powerdown GPIOs shared by
-> > > > speakers on Qualcomm db845c platform, however I have also extensively
-> > > > tested it using gpio-virtuser on arm64 qemu with various DT
-> > > > configurations.
-> > > > 
-> > > > I'm Cc'ing some people that may help with reviewing/be interested in
-> > > > this: OF maintainers (because the main target are OF systems initially),
-> > > > Mark Brown because most users of GPIOD_FLAGS_BIT_NONEXCLUSIVE live
-> > > > in audio or regulator drivers and one of the goals of this series is
-> > > > dropping the hand-crafted GPIO enable counting via struct
-> > > > regulator_enable_gpio in regulator core), Andy and Mika because I'd like
-> > > > to also cover ACPI (even though I don't know about any ACPI platform that
-> > > > would need this at the moment, I think it makes sense to make the
-> > > > solution complete), Dmitry (same thing but for software nodes), Mani
-> > > > (because you have a somewhat related use-case for the PERST# signal and
-> > > > I'd like to hear your input on whether this is something you can use or
-> > > > maybe it needs a separate, implicit gpio-perst driver similar to what
-> > > > Krzysztof did for reset-gpios) and Greg (because I mentioned this to you
-> > > > last week in person and I also use the auxiliary bus for the proxy
-> > > > devices).
-> > > 
-> > > Hi,
-> > > 
-> > > I'm sorry if this was already reported and fixed. On Qualcomm RB5
-> > > platform with this patchset in place I'm getting the following backtrace
-> > > (and then a lockup):
-> > > 
-> > 
-> > On Rb3Gen2 this breaks UFS:
-> > 
-> > 	ufshcd-qcom 1d84000.ufshc: cannot find GPIO chip gpiolib_shared.proxy.4, deferring
+On Sun, 4 Jan 2026 23:01:36 +0000
+David Laight <david.laight.linux@gmail.com> wrote:
+
+> On Fri,  2 Jan 2026 13:11:54 +0000
+> Ryan Roberts <ryan.roberts@arm.com> wrote:
 > 
-> CONFIG_GPIO_SHARED_PROXY=y ?
+> > Previously different architectures were using random sources of
+> > differing strength and cost to decide the random kstack offset. A number
+> > of architectures (loongarch, powerpc, s390, x86) were using their
+> > timestamp counter, at whatever the frequency happened to be. Other
+> > arches (arm64, riscv) were using entropy from the crng via
+> > get_random_u16().
+> > 
+> > There have been concerns that in some cases the timestamp counters may
+> > be too weak, because they can be easily guessed or influenced by user
+> > space. And get_random_u16() has been shown to be too costly for the
+> > level of protection kstack offset randomization provides.
+> > 
+> > So let's use a common, architecture-agnostic source of entropy; a
+> > per-cpu prng, seeded at boot-time from the crng. This has a few
+> > benefits:
+> > 
+> >   - We can remove choose_random_kstack_offset(); That was only there to
+> >     try to make the timestamp counter value a bit harder to influence
+> >     from user space.
+> > 
+> >   - The architecture code is simplified. All it has to do now is call
+> >     add_random_kstack_offset() in the syscall path.
+> > 
+> >   - The strength of the randomness can be reasoned about independently
+> >     of the architecture.
+> > 
+> >   - Arches previously using get_random_u16() now have much faster
+> >     syscall paths, see below results.
+> > 
+> > There have been some claims that a prng may be less strong than the
+> > timestamp counter if not regularly reseeded. But the prng has a period
+> > of about 2^113. So as long as the prng state remains secret, it should
+> > not be possible to guess. If the prng state can be accessed, we have
+> > bigger problems.  
 > 
+> If you have 128 bits of output from consecutive outputs I think you
+> can trivially determine the full state using (almost) 'school boy' maths
+> that could be done on pencil and paper.
+> (Most of the work only has to be done once.)
+> 
+> The underlying problem is that the TAUSWORTHE() transformation is 'linear'
+> So that TAUSWORTHE(x ^ y) == TAUSWORTHE(x) ^ TAUSWORTHE(y).
+> (This is true of a LFSR/CRC and TOUSWORTH() is doing some subset of CRCs.)
+> This means that each output bit is the 'xor' of some of the input bits.
+> The four new 'state' values are just xor of the the bits of the old ones.
+> The final xor of the four states gives a 32bit value with each bit just
+> an xor of some of the 128 state bits.
+> Get four consecutive 32 bit values and you can solve the 128 simultaneous
+> equations (by trivial substitution) and get the initial state.
+> The solution gives you the 128 128bit constants for:
+> 	u128 state = 0;
+> 	u128 val = 'value returned from 4 calls';
+> 	for (int i = 0; i < 128; i++)
+> 		state |= parity(const128[i] ^ val) << i;
+> You don't need all 32bits, just accumulate 128 bits.  
+> So if you can get the 5bit stack offset from 26 system calls you know the
+> value that will be used for all the subsequent calls.
 
-Ah, it was selected as =m and not part of initramfs, so it didn't get loaded.
-Building it as =y fixed the issue. But that was such an implicit dependency.
+Some of the state bits don't get used, so you only need 123 bits.
+The stack offset is 6 bits - so you need the values from 19 calls.
 
-Also, it should only be used for shared GPIOs, isn't it? But on my board, UFS is
-not using a shared GPIO. So why is it coming into the picture?
+> Simply changing the final line to use + not ^ makes the output non-linear
+> and solving the equations a lot harder.
+> 
+> I might sit down tomorrow and see if I can actually code it...
 
-- Mani
+Finally done:
 
--- 
-மணிவண்ணன் சதாசிவம்
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+typedef unsigned int u32;
+typedef unsigned long long u64;
+typedef unsigned __int128 u128;
+
+struct rnd_state { u32 s1; u32 s2; u32 s3; u32 s4; };
+u32 prandom_u32_state(struct rnd_state *state)
+{
+#define TAUSWORTHE(s, a, b, c, d) ((s & c) << d) ^ (((s << a) ^ s) >> b)
+        state->s1 = TAUSWORTHE(state->s1,  6U, 13U, 4294967294U, 18U);
+        state->s2 = TAUSWORTHE(state->s2,  2U, 27U, 4294967288U,  2U);
+        state->s3 = TAUSWORTHE(state->s3, 13U, 21U, 4294967280U,  7U);
+        state->s4 = TAUSWORTHE(state->s4,  3U, 12U, 4294967168U, 13U);
+
+        return (state->s1 ^ state->s2 ^ state->s3 ^ state->s4);
+}
+
+#define X(n, hi, lo) [n] = (u128)0x##hi << 64 | 0x##lo
+u128 map[128] = {
+        X(  1, 23acb122e4a76, e206c3f6fe435cb6),
+	...
+        X(127, 00d3276d8a76a, e560d1975675be24) };
+
+u128 parity_128(u128 v)                 
+{                               
+        return __builtin_parityll(v) ^ __builtin_parityll(v >> 64);
+}
+
+int main(int argc, char **argv)
+{
+        struct rnd_state s = {};
+        u128 s0, v, r = 0;
+
+        read(open("/dev/urandom", O_RDONLY), &s, sizeof s);
+        // Remove low bits that get masked by the (s & c) term.
+        s.s1 &= ~1; s.s2 &= ~7; s.s3 &= ~15; s.s4 &= ~127;
+        s0 = (((u128)s.s4 << 32 | s.s3) << 32 | s.s2) << 32 | s.s1;
+        v = prandom_u32_state(&s);
+        v |= (u128)prandom_u32_state(&s) << 32;
+        v |= (u128)prandom_u32_state(&s) << 64;
+        v |= (u128)prandom_u32_state(&s) << 96;
+
+        for (int n = 0; n < 128; n++)
+                r |= parity_128(v & map[n]) << n;
+
+        printf("%016llx%016llx\n", (u64)(s0 >> 64), (u64)s0);
+        printf("values%s match\n", r == s0 ? "" : " do not");
+
+        return r != s0;
+}
+
+I've trimmed the initialiser - it is very boring.
+The code to create the initialiser is actually slightly smaller than it is.
+Doable by hand provided you can do 128bit shift and xor without making
+any mistakes.
+
+I've just done a quick search through the kernel sources and haven't found
+many uses of prandom_u32_state() outside of test code.
+There is sched_rng() which uses a per-cpu rng to throw a 1024 sized die.
+bpf also has a per-cpu one for 'unprivileged user space'.
+net/sched/sch_netem.c seems to use one - mostly for packet loss generation.
+
+Since the randomize_kstack code is now using a per-task rng (initialised
+by clone?) that could be used instead of all the others provided they
+are run when 'current' is valid.
+
+But the existing prandom_u32_state() needs a big health warning that
+four outputs leak the entire state.
+That is fixable by changing the last line to:
+        return state->s1 + state->s2 + state->s3 + state->s4;
+That only affects the output value, the period is unchanged.
+
+	David
+
+
