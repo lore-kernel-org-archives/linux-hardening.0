@@ -1,177 +1,119 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AEE2580EE;
-	Wed,  7 Jan 2026 02:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C738122256F
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Jan 2026 06:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767753355; cv=none; b=C/Lt4p++KSEulBYrW65Imlj3qP9XZ/cDYJkZInCYloBcJPZMWA9NqtRl+w7G23S1/5t/3V/Ox84n4fkzC7MEhRu+Qd/jnnhjKUS8V3F3OSWi7dKnJ/MQKa9YOsAgAyyqek4owLxDD9RWXHfjC1vHZDOlcFhjjuOpp8HLrZGKUbE=
+	t=1767767744; cv=none; b=aleCOEk3Gzj6FRp8ch1kGaZ4ysKsCrErn2baAaZIv7/cdYx/GEHQqlBuY7n8cagUYoyj1SRLsFCCtJHtuZm4DQtqEt1POusOy/CjyZlEIqrfN1Q/eonkcktEF2E+THlDiGq0F4YVtPTh1FmRkqlxJFovdls+NpbChJOtEHLoxjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767753355; c=relaxed/simple;
-	bh=8VOL0Zs2hpEUWFrxw5LD+5zqYAq782+6NeoCBbvPCt0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DqXgFrBmPUXcs51AnPFUu1VlFDkMnOLLDPV+PxAaAx3bFPQU2WLLoPqwiIrFBFFEFxWYpSxhVRv62SrNxW94Y0OtZ2ElKl8mZqDloDitGREfvE9XsLgPS00u/0yu1cxPnReZTs4+UpxaVpyTaaCwR5q4C5UwKcFddyZIumiN0tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 923367ceeb7111f0a38c85956e01ac42-20260107
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:b69f9738-a2c9-47ec-a0bd-91c176332fd6,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:a9d874c,CLOUDID:d05ce87a718a31b61ee8308145217926,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|898,TC:nil,Content:0|15|50
-	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
-	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 923367ceeb7111f0a38c85956e01ac42-20260107
-X-User: jiangfeng@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <jiangfeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 989859053; Wed, 07 Jan 2026 10:35:46 +0800
-From: Feng Jiang <jiangfeng@kylinos.cn>
-To: pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	kees@kernel.org,
-	andy@kernel.org,
-	jiangfeng@kylinos.cn,
-	ebiggers@kernel.org,
-	martin.petersen@oracle.com,
-	Jason@zx2c4.com,
-	conor.dooley@microchip.com,
-	samuel.holland@sifive.com,
-	charlie@rivosinc.com,
-	ajones@ventanamicro.com,
-	nathan@kernel.org,
-	linus.walleij@linaro.org
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 5/5] riscv: lib: add strrchr implementation
-Date: Wed,  7 Jan 2026 10:35:17 +0800
-Message-Id: <20260107023517.46840-6-jiangfeng@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260107023517.46840-1-jiangfeng@kylinos.cn>
-References: <20260107023517.46840-1-jiangfeng@kylinos.cn>
+	s=arc-20240116; t=1767767744; c=relaxed/simple;
+	bh=n19rBwOUFS5MWHHdA6EWPQt2WCD2IaZH6ebEDIkfGPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fyrLHoSr1i086PPTVHIShfRuVz6Q9YRXWBQ1SPnLwXtoYD9i1HLF1FrpQzKVKG5DIGw98MJDbr6oOE/3yrHrb6KmKi4ZUAd+TuB90I+tTwifVbqcYWHEpXncyb1HkmPvOyqoOHQhimKRlVD1uC0yU1TCea7XBcogRUBZHtgLBT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=l4kevgBy; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="l4kevgBy"
+Received: from eig-obgw-5001b.ext.cloudfilter.net ([10.0.29.181])
+	by cmsmtp with ESMTPS
+	id dIkqv6EJgv724dN8qvwrmy; Wed, 07 Jan 2026 06:35:36 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id dN8pv7hBKSqlVdN8qv6KaS; Wed, 07 Jan 2026 06:35:36 +0000
+X-Authority-Analysis: v=2.4 cv=I7FlRMgg c=1 sm=1 tr=0 ts=695dfeb8
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Aea70ojWhvW6xI+oM0giEQ==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=0GjfSR-a_gbzBSTCPL8A:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=b61X3jZlNTO3XN8ImRNF8VeXxeNII79YjBB4Nfpnz6I=; b=l4kevgByUnt+MnUp1PWZPYh+Ej
+	GogpXA0x4KEirmi1SRHjzg7R2rWbOlUNVZv2MkUsephPC3PXaAi72eTErLIeBusmenntGC1OdPjjy
+	Igi6sGc5j/b4MYzpg0VSivUKiH0LQsFkK1V3nH+Y4zamhICOdm3u7xoGfh/ceadFaee3zLp1qr950
+	P0ye8BDFX5OvuMjBW/Tk+z1TEYbpxGkLRi8ro3gXmL1OZYz2J8MWa3vs4nn2CkCxXGB/17MdJRSJx
+	nafW+1rPJqAwr2G05Aj0bTMpoyhfKa0bYGL8fZa6GSrqwQscf4ToTWzO7IKPNnijY7uztlRl0F4be
+	jm0haj1A==;
+Received: from flh4-122-130-137-161.osk.mesh.ad.jp ([122.130.137.161]:45860 helo=[10.221.196.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vdN8p-00000003Gyh-0fE5;
+	Wed, 07 Jan 2026 00:35:35 -0600
+Message-ID: <69342e4a-3a2f-4fa4-a7a9-76d05a15e985@embeddedor.com>
+Date: Wed, 7 Jan 2026 15:35:24 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3][next] drm/nouveau: fifo: Avoid
+ -Wflex-array-member-not-at-end warning
+To: Kees Cook <kees@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aJ17oxJYcqqr3946@kspp>
+ <e1009d16-cadb-4446-aef5-4a52197551a4@embeddedor.com>
+ <b4e596b0-4e6d-40b8-933c-f407f2cc0980@kernel.org>
+ <202601061220.EDD0476@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202601061220.EDD0476@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 122.130.137.161
+X-Source-L: No
+X-Exim-ID: 1vdN8p-00000003Gyh-0fE5
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: flh4-122-130-137-161.osk.mesh.ad.jp ([10.221.196.44]) [122.130.137.161]:45860
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHaSFDbwcmONeBZsk41Ov7Dx2qCHG1MQN/ZXHvHq0Lkbxs3OPZWECWri3eCG+ARQp4KKqdS5vgC6264nRD/e/XuFzn2z1oZNQiGeL6kuBFyRi2ibmz1R
+ Xdk6QnwPZPsXLieRduivqsnq6XE2iFv2t9Sh97eupSONptdRn9gwRlKfq6QQ8MtebZOGxi+UxVNHmtOn3rQwZmwpgOHz5axqfpCjLRmkb8eNm+RZ+lX8vUae
 
-Add a basic assembly implementation of strrchr() for RISC-V.
-This provides a functional byte-by-byte version as a foundation
-for future optimizations.
 
-Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
----
- arch/riscv/include/asm/string.h |  3 +++
- arch/riscv/lib/Makefile         |  1 +
- arch/riscv/lib/strrchr.S        | 37 +++++++++++++++++++++++++++++++++
- arch/riscv/purgatory/Makefile   |  5 ++++-
- 4 files changed, 45 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/lib/strrchr.S
 
-diff --git a/arch/riscv/include/asm/string.h b/arch/riscv/include/asm/string.h
-index ca3ade82b124..764ffe8f6479 100644
---- a/arch/riscv/include/asm/string.h
-+++ b/arch/riscv/include/asm/string.h
-@@ -34,6 +34,9 @@ extern asmlinkage __kernel_size_t strnlen(const char *, size_t);
- 
- #define __HAVE_ARCH_STRCHR
- extern asmlinkage char *strchr(const char *, int);
-+
-+#define __HAVE_ARCH_STRRCHR
-+extern asmlinkage char *strrchr(const char *, int);
- #endif
- 
- /* For those files which don't want to check by kasan. */
-diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
-index b7f804dce1c3..735d0b665536 100644
---- a/arch/riscv/lib/Makefile
-+++ b/arch/riscv/lib/Makefile
-@@ -9,6 +9,7 @@ lib-y			+= strlen.o
- lib-y			+= strncmp.o
- lib-y			+= strnlen.o
- lib-y			+= strchr.o
-+lib-y			+= strrchr.o
- endif
- lib-y			+= csum.o
- ifeq ($(CONFIG_MMU), y)
-diff --git a/arch/riscv/lib/strrchr.S b/arch/riscv/lib/strrchr.S
-new file mode 100644
-index 000000000000..ac58b20ca21d
---- /dev/null
-+++ b/arch/riscv/lib/strrchr.S
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+/*
-+ * Copyright (C) 2025 Feng Jiang <jiangfeng@kylinos.cn>
-+ */
-+
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+
-+/* char *strrchr(const char *s, int c) */
-+SYM_FUNC_START(strrchr)
-+	/*
-+	 * Parameters
-+	 *	a0 - The string to be searched
-+	 *	a1 - The character to seaerch for
-+	 *
-+	 * Returns
-+	 *	a0 - Address of last occurrence of 'c' or 0
-+	 *
-+	 * Clobbers
-+	 *	t0, t1
-+	 */
-+	andi	a1, a1, 0xff
-+	mv	t1, a0
-+	li	a0, 0
-+1:
-+	lbu	t0, 0(t1)
-+	bne	t0, a1, 2f
-+	mv	a0, t1
-+2:
-+	addi	t1, t1, 1
-+	bnez	t0, 1b
-+	ret
-+SYM_FUNC_END(strrchr)
-+
-+SYM_FUNC_ALIAS_WEAK(__pi_strrchr, strrchr)
-+EXPORT_SYMBOL(strrchr)
-diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
-index e7b3d748c913..b0358a78f11a 100644
---- a/arch/riscv/purgatory/Makefile
-+++ b/arch/riscv/purgatory/Makefile
-@@ -2,7 +2,7 @@
- 
- purgatory-y := purgatory.o sha256.o entry.o string.o ctype.o memcpy.o memset.o
- ifeq ($(CONFIG_KASAN_GENERIC)$(CONFIG_KASAN_SW_TAGS),)
--purgatory-y += strcmp.o strlen.o strncmp.o strnlen.o strchr.o
-+purgatory-y += strcmp.o strlen.o strncmp.o strnlen.o strchr.o strrchr.o
- endif
- 
- targets += $(purgatory-y)
-@@ -38,6 +38,9 @@ $(obj)/strnlen.o: $(srctree)/arch/riscv/lib/strnlen.S FORCE
- $(obj)/strchr.o: $(srctree)/arch/riscv/lib/strchr.S FORCE
- 	$(call if_changed_rule,as_o_S)
- 
-+$(obj)/strrchr.o: $(srctree)/arch/riscv/lib/strrchr.S FORCE
-+	$(call if_changed_rule,as_o_S)
-+
- CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
- CFLAGS_string.o := -D__DISABLE_EXPORTS
- CFLAGS_ctype.o := -D__DISABLE_EXPORTS
--- 
-2.25.1
+On 1/7/26 05:21, Kees Cook wrote:
+> On Tue, Jan 06, 2026 at 09:14:36PM +0100, Danilo Krummrich wrote:
+>> On 1/6/26 7:08 AM, Gustavo A. R. Silva wrote:
+>>> Friendly ping: who can take this, please?
+>> For some reason this patch wasn't tagged for applying in my inbox -- seems like
+>> it slipped through.
+>>
+>> I was about to pick it up, but recognized just in time that Kees already took it
+>> through his hardening tree.
+> 
+> Ah great!
+> 
+>> Sorry for the delay; thanks Kees for picking it up. Even though already applied,
+>> please consider this patch:
+>>
+>> 	Acked-by: Danilo Krummrich <dakr@kernel.org>
+> 
+> Thanks! I had figured it was slipping through the cracks so I snagged
+> it. I'll add your Ack. :) If you'd rather take it, just say the word and
+> I can drop it from my tree.
 
+Thank you both!
+
+-Gustavo
