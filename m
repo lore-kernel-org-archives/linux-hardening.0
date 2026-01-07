@@ -1,151 +1,102 @@
-Received: from mx-relay60-hz1.antispameurope.com (mx-relay60-hz1.antispameurope.com [94.100.133.230])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3754227FB32
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Jan 2026 08:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=94.100.133.230
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767773709; cv=pass; b=JPVWHOrPNjPn9yygt8fGhFfLOrcRe90Q7koKn2bg28IalFbayrECyZVdUc0wWaH48LJk2UGmN4wdwBqv3yoVN/B4H3Ft9Ry5Giy3mahW05GUi3mBjJ8BW6TjADrEQr4PDIQJ6Idt/uiiFsRaUP9J0lqC4qjvD9z5pqVa8gFPksc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767773709; c=relaxed/simple;
-	bh=7u8exuXQjSXGB/DyVWcwOa1yDoZ2QjCtK0ZqC7RyvUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uh3RRrUC3k3AFII0bQn2pbGREEUYLUtPvQJVR6RxRRYBY4ZhPJDkwbdRL1ReqXvSP2djmamQqela+SOcQisOxNbPBEdF0Lik6QGcnOS7KrjckskHXWouK7sMu8PJrz4qNWXve4BMcY6l56kUUb/f+MP4QT+IRbGt3YyhMtiRsfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Aw0oqcXO; arc=pass smtp.client-ip=94.100.133.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20A1326933;
+	Wed,  7 Jan 2026 10:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767781819; cv=none; b=tSFmpAhYG6Jnwt1p5O0feAcRYa+Fd9jrA72fSYvQFXmN9m5KR+N0tCEXAtgWnct0thsVOBafW1mnSk8IlgYxMzPz5IMiE+nGYzW45DVey+t65iLxuN6iUjSKIWWDJZbuB8lE99MhDCySGdoatb4zbnxBlzLS0IvuId40J4hI7VA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767781819; c=relaxed/simple;
+	bh=QDNik1P9OvsgAtFchTw4BckF/mSE1cSKBVO0iEJIHME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mzm63Kc2/EyFtIP7D43GS3+oqppwzBuC1PWMzdpv+tsy2xMirsMcmABJ8FWinKmSYxaRllfxQclfe/O0adFOnVHEQvua182APa5IxC79EMy/ISgKuUVHuLCYjJWkgckfKT9MGi1+ETAsy74wHmaxv56diRDhDOVV8eN9SzzWzf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=GapqslJR reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Aw0oqcXO"
-ARC-Authentication-Results: i=1; mx-gate60-hz1.hornetsecurity.com 1; spf=pass
- reason=mailfrom (ip=94.100.132.6, headerfrom=ew.tq-group.com)
- smtp.mailfrom=ew.tq-group.com
- smtp.helo=hmail-p-smtp01-out04-hz1.hornetsecurity.com; dmarc=pass
- header.from=ew.tq-group.com orig.disposition=pass
-ARC-Message-Signature: a=rsa-sha256;
- bh=qugGupbuLuQZHC/ObrVWEf0IOnY90j2BdMV7Fr/z0ho=; c=relaxed/relaxed;
- d=hornetsecurity.com; h=from:to:date:subject:mime-version:; i=1; s=hse1;
- t=1767773677;
- b=HwgY/rMUgIXtUD/c/YPJd/I9hx/XZSiuDRIAmsxJiAYZDmLWUmt0w3XKlxhNkK7uqWDkFs+D
- GI00jvgPowV24VjPaOjj8C/Ih1fh1/GDHFuqTvmyLqt8qVY9XSVuN68e4I4GHyXjxgaHhipggW/
- uz7Ot/fwebCOmoLoPdn0Y0Zj0QM0+spOY0o4hCS0wdtrvd++a1on9m4hdsedh8/iWDZpQ55fjtu
- lge9CqoDOoJpHfF12+X/TBfUsoXzo7knekv8/3QZTwSwjK66v9K5Th6zW9QSGY3jdqOAyF7eCvw
- LtJw28RGTzorlu1LQOvjVMFjNiRfpDS0CZAUQVtrTYmjA==
-ARC-Seal: a=rsa-sha256; cv=none; d=hornetsecurity.com; i=1; s=hse1;
- t=1767773677;
- b=qcKgLJTJNlf5n7xSfm1YFcld7+kt7U/Or+2v8eIkR6usv1c1bD/NiF1UW66CaQuP6jT74oy9
- i8S1tef0unD0z4qIi9ABuYmdnzH5TxtoKcUCWawCZXY/xKmTXMj+pqAGkNyNi29THikcsRMy2hw
- WzwXXLzZpFblWETVAP6LJwnGjsVDEoGpash5TRK0ffAWWHTolS+I1zIYrTL8WU5xVbsLOSdzYYp
- T+YIGRH5q2m03Qgl1m4O2ii/QMpnyMnwyJI3TC2H6PhEeb5jDhtc2wj++qoFgU9UQSaNk9zDP+t
- AXIxprnZ0BsM6AhWGBoaEgLG7lN+OBJ/Y8dAZ+Q22l4dg==
-Received: from he-nlb01-hz1.hornetsecurity.com ([94.100.132.6]) by mx-relay60-hz1.antispameurope.com;
- Wed, 07 Jan 2026 09:14:37 +0100
-Received: from schifferm-ubuntu.tq-net.de (host-82-135-125-110.customer.m-online.net [82.135.125.110])
-	(Authenticated sender: matthias.schiffer@ew.tq-group.com)
-	by hmail-p-smtp01-out04-hz1.hornetsecurity.com (Postfix) with ESMTPSA id B030C220D37;
-	Wed,  7 Jan 2026 09:14:21 +0100 (CET)
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux@ew.tq-group.com,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH v5 0/2] TQ-Systems TQMa62xx SoM and MBa62xx board
-Date: Wed,  7 Jan 2026 09:14:00 +0100
-Message-ID: <cover.1767627010.git.matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="GapqslJR"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4dmPHX1tZwz1DDr1;
+	Wed,  7 Jan 2026 11:22:48 +0100 (CET)
+Received: from [10.10.15.21] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4dmPHS5YrMz1DDdR;
+	Wed,  7 Jan 2026 11:22:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=simplycom2; t=1767781367;
+	bh=5sCdqnj/RCGcOZ4N1FNFLLmFTy7auxTIhL2QEEcNqFg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=GapqslJRt7PAo/OPdy40/uiS8yl/fdKamd8Ti7v8KhTSWM+dyJpM0kA09WqDkvmTF
+	 JDac2AP0hk4IXLuaOc19G85CIClqVXmQFScccHC7rgNcYdl16DovAFndj0u/scyZuZ
+	 rFnlzmQeoXkgQ81qRhHQTXrNih6T2iluIH43PJMds/ZZIo6rm/VM9YDeYihibbVdmg
+	 uDvdrF41naRrcWhAD/3/BJoa7qr9vCUPqLxuLP48CDDioxfF0rw5/F8n0Js/OfpQsy
+	 f1VR1SCUMB9l0JY24lstr5qvSKP50VGC6KkhF0cw5Ng7hX+p9V4PT5L0p7hEJpFlek
+	 UmVwAHzAgacCA==
+Message-ID: <836139d1-1425-4381-bb84-6c2654a4d239@gaisler.com>
+Date: Wed, 7 Jan 2026 11:22:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/19] printk cleanup - part 3
+To: Marcos Paulo de Souza <mpdesouza@suse.com>,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jason Wessel <jason.wessel@windriver.com>,
+ Daniel Thompson <danielt@kernel.org>,
+ Douglas Anderson <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>, John Ogness
+ <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook <kees@kernel.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+ netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ sparclinux@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-cloud-security-sender:matthias.schiffer@ew.tq-group.com
-X-cloud-security-recipient:linux-hardening@vger.kernel.org
-X-cloud-security-crypt: load encryption module
-X-cloud-security-Mailarchiv: E-Mail archived for: matthias.schiffer@ew.tq-group.com
-X-cloud-security-Mailarchivtype:outbound
-X-cloud-security-Virusscan:CLEAN
-X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay60-hz1.antispameurope.com with 4dmLRL38j6z28w5w
-X-cloud-security-connect: he-nlb01-hz1.hornetsecurity.com[94.100.132.6], TLS=1, IP=94.100.132.6
-X-cloud-security-Digest:772d89e85c1e185e9e888a8d7af96ee7
-X-cloud-security:scantime:1.844
-DKIM-Signature: a=rsa-sha256;
- bh=qugGupbuLuQZHC/ObrVWEf0IOnY90j2BdMV7Fr/z0ho=; c=relaxed/relaxed;
- d=ew.tq-group.com;
- h=content-type:mime-version:subject:from:to:message-id:date; s=hse1;
- t=1767773677; v=1;
- b=Aw0oqcXOj9O2fEpo4nouqM5QK838qmYMzbDzx78e70MyO3OXh2KAvq+OEOqEEAYpdWdu7+IF
- di11Mc08LPyFMUfdEUViigCNO1t2Hq/ih5j1h6ARNvdHfOnuC3Vbh2XXJp9o56dTOogNZ3Yv3V6
- nd7Dwc6mWHE+ho41TFSCZh14+98SfyT3HKoc10nJi/A/1+yOG2o3Xc0AOnEfKTURygf/iz/MiYG
- xxAsjsa1HH1pNhcpf4x/yGPz1ocEDBEcrvU3YBFparjheR6rhxLjk3cTdPlB+j1eROsovjcxDjX
- tx2OlWHfKNFfGl8F+Ijfrx6KSfePSiqQ2dNqixXFTx3hg==
+Content-Transfer-Encoding: 7bit
 
-This adds Device Trees for our AM62x-based SoM TQMa62xx and its
-reference carrier board MBa62xx.
+On 2025-12-27 13:16, Marcos Paulo de Souza wrote:
+> The parts 1 and 2 can be found here [1] and here[2].
+> 
+> The changes proposed in this part 3 are mostly to clarify the usage of
+> the interfaces for NBCON, and use the printk helpers more broadly.
+> Besides it, it also introduces a new way to register consoles
+> and drop thes the CON_ENABLED flag. It seems too much, but in reality
+> the changes are not complex, and as the title says, it's basically a
+> cleanup without changing the functional changes.
 
-Not yet included are overlays to enable LVDS display output and MIPI-CSI
-camera input.
+Hi,
 
-Changes in v5:
-- Rebase onto latest ti-k3-dts-next
+Patches 7-17 all say "replacing the CON_ENABLE flag" in their
+descriptions, which should rather be "replacing the CON_ENABLED flag".
 
-Changes in v4:
-- Rebase onto latest ti-k3-dts-next
-- Reorder boot phase tags after other standard DT properties
-- Add missing supply regulators in SPI-NOR flash and USB hub
-- Set status = "okay" in &cpsw3g, as it is disabled in k3-am62-main.dtsi
-  now
-- Add disabled 1400MHz OPP entry (will be enabled by bootloader if
-  supported by PMIC configuration)
-- Update copyright years in new files
+Cheers,
+Andreas
 
-Changes in v3:
-- Rebased onto ti-k3-dt-for-v6.18
-- 3 of the 5 patches in v2 have been applied already and are dropped
-- Include k3-am62-ti-ipc-firmware.dtsi, drop now redundant configuration
-- Change node name for MCU reserved memory to 'memory'
-- Use rgmii-id PHY mode
-- Drop now redundant ti,rx-internal-delay
-- Update simple-audio-card,name to match other TQ SOMs with compatible
-  configuration
-- Reference dss_pins in dss node (actual display support will be added
-  in a follow-up patch series)
-- Consistently use GPIO_ACTIVE_HIGH define
-- Drop unneeded usb0 quirk flags
-- Add boot phase tags
-
-Changes in v2:
-- Collected acks and reviews
-- Rebased onto v6.13-rc1
-
-Matthias Schiffer (2):
-  dt-bindings: arm: ti: Add compatible for AM625-based TQMa62xx SOM
-    family and carrier board
-  arm64: dts: ti: Add TQ-Systems TQMa62xx SoM and MBa62xx carrier board
-    Device Trees
-
- .../devicetree/bindings/arm/ti/k3.yaml        |   7 +
- arch/arm64/boot/dts/ti/Makefile               |   1 +
- .../boot/dts/ti/k3-am625-tqma62xx-mba62xx.dts | 930 ++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am625-tqma62xx.dtsi | 331 +++++++
- 4 files changed, 1269 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am625-tqma62xx-mba62xx.dts
- create mode 100644 arch/arm64/boot/dts/ti/k3-am625-tqma62xx.dtsi
-
--- 
-TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht München, HRB 105018
-Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-https://www.tq-group.com/
