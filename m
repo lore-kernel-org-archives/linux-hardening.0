@@ -1,76 +1,48 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward202d.mail.yandex.net (forward202d.mail.yandex.net [178.154.239.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51F9339B4F
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Jan 2026 17:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2DF313E07;
+	Wed,  7 Jan 2026 18:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767805334; cv=none; b=Ri0/OBhTODP0FylLZ9ITN1no+YJC28pDzy4rQ0hh77FKX5Cx/9XHHLZhbr/OPmjzUXcWXx6usWsFOnn553Xug3Fac7dZIlbavB0rHJpL7fFB0vrUH77MLZn8cFjjCBid0UTCz5bhFTHz+ojXXxRC/evQuWsEO9n9kr+DDlH3Sks=
+	t=1767811416; cv=none; b=EIjzRq16jnYgOzqMyS8hVzevIHhyDhcwgmj/9E2WzWt2xtKJFyKkVgyTCTmtkYoAKxod0egXv6PF/KjZC1Nrn+8oVAl8IdeOfAy32dfT+Hp/eoXW0R1syFyAbeWTurb/kMshPpzeLxyBH9vEh3gxC9yRYLdo2FpQG/URzvD/SKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767805334; c=relaxed/simple;
-	bh=tWFeLnDDz/em1zg/E8BbEXwCSep7COgZ1jMf56WRGho=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OTCHxxpOpXu81iczIXr8R+Y4bba/Ohj6pp4QxSzSbeH6HhWr2+PaqT4yHxa2coCWsgfttfp4d9H7YwngB/AhKaHuTQ8Be43Q7KH8Zoo3hD4F1g9weOjZ3NGyCEXTAQlF5pNvzEjpl4edQU8qcLuOOFxNJ7qOw0oTZRTyxHceaew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BSIwDP13; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1767811416; c=relaxed/simple;
+	bh=a90Z8nQ2W052PHISezo3OIlyc6anDAZ5L4dIv147JsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DuhNE1rYARZhr4ixWBICtS9Z/La4nhaLR3CbXlzmn1fiVKZFPlQaw97kiLkxETGrUO1Itb5pkfGD9FD7T7BGc906OYyOz6lkdE/YqeJdIS0DUODmcgbnDKVDatwKYAJarHfISBC2btjmLJcIZet3/6Sl9NZLUCSH9S3hnfo/Mkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=qRHJX/Go; arc=none smtp.client-ip=178.154.239.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BSIwDP13"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47775fb6cb4so13322635e9.0
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Jan 2026 09:02:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1767805327; x=1768410127; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=L49E8GK0L61Xb+Ow/6X+q4Ipvp5Im1cS6u2eq6FB63A=;
-        b=BSIwDP13V9ZT/6Ty4pe8Lo2nBLjfq8yruRndt7Ac3Fy8AewH0VdfHMW0yuLJHBIQ5F
-         2da3wM/wTqoEqrIoa2tdMuELM4UTUtdOX2zdvGZIpjjgvPuqCv8GSC3Olr1nKRQGAXsl
-         +5IHXf7qOokkWifqL2bRmwxKc8mFvxiz1MXtLBoAyALgK33eCkrpdjAER+infMPfT5QN
-         NkN6L9e7MWX+OHnZcYuOy6WUn3iwj2L0zopuadpwD6z4dgGsqlwPdRnVvCBDnU4VLIKQ
-         DNEl4ZBVphVc2tiK33cO6XAdafPKn9f3B1tEDnJOynIO9nQrxKubgMEFlEOMnbh1ST4Q
-         ArmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767805327; x=1768410127;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L49E8GK0L61Xb+Ow/6X+q4Ipvp5Im1cS6u2eq6FB63A=;
-        b=tB5vEGzB1jV4iDteMCHDr6Pcgn+EQhMQlH0LS+NxcglzRYAz+ozPJieUK5tT71czDE
-         d9upeoPPEKr8V67AgkyvO7A6x/oCKolEPqVD6/gQRcy4eByDmkEkEf5pgvAE64zIGhIY
-         Tvpkmjj/9sFh96gyRfyuI2aW5z6dOY3xvRvlYEz3z/wUW3SFbli+wJjYuTyIWFxY81Ar
-         MM8jx1H5k2E3IxZmUCQfM6uU9LHhZq9KMO7uyWnjTQbh6PhE1+e/oyB+4cuA7AlekfU7
-         iTXZvKkf2ko1xgeGysH9i/W+muilMlC0Iga8rEq9vAp0flXOUQA2k+/JTl230RRkXNEO
-         WmJg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2LGRLQzmSgzEluj+N6+//Z2t8TtR+9W76xD/Eazp1LrN8BDowAObugZdOClAbUktNKg2TWxeaoyZze6RqhBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqBl8MBD0y6g9TexNfhhOCAP8v5z+jmdiuKWPnFo5nQ17348fc
-	dHsOipQBPhq9WrOoYEIUeHUbZ4uMmxA72DJHLQmGz1+jBG+3CfYKsjffMYxS9T9UVC8=
-X-Gm-Gg: AY/fxX51Ph+1p/QGjRGd733y5FI8QM4QsK6VbfAPz6kdxHqgy5pZOV3dSRESaQqNYhY
-	GLAZuA/XTL8niTkM4eUteb45tGh1OHkRk/bV9IsOj5f+l+CPNyH0cUxZDf+izMDIr2u5wq0oXSA
-	ZhJi6UV8de3WlpaJWblsaoblPL6O6dtcZmxf5J51gIAr1AEBqwWSfJa6J4MAXAnVFaAF6HHNh+L
-	OfTVW8seoBfEFeDeVpP/l9Rop51kCjba4rNyPMGU+2+NxkBrfTLgKL1pKF/PxuBsudBdfCiuNXK
-	gfpR9JZ0seFxQhztrNtWoxH2qWABHiEyOA543aNXWMSxbHM4HFTI/LdTQCNsQPT11xBNwEVgJcf
-	l8lqadE+CNeKLwrae0AbZk8RA3m+djTavuCI1xbzoBUDzdZO0e84VU2fYQbXR6UgrK5b18GrKj0
-	i4RAUdgqm8BbYP+84JoaQep55y85TnZy0=
-X-Google-Smtp-Source: AGHT+IEg3eq4eSlFYkLOWLPuVP+Buf7OIMrTZ/OdJp8hfUfEblFjlugkX6dHGbDV+Go/PXS4KGbfpQ==
-X-Received: by 2002:a05:600c:3b28:b0:477:8a2a:123e with SMTP id 5b1f17b1804b1-47d84b41bbfmr39523105e9.33.1767805326694;
-        Wed, 07 Jan 2026 09:02:06 -0800 (PST)
-Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f6f0e15sm103041885e9.10.2026.01.07.09.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jan 2026 09:02:06 -0800 (PST)
-From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Kees Cook <kees@kernel.org>
-Subject: [PATCH v2] cgroup: Eliminate cgrp_ancestor_storage in cgroup_root
-Date: Wed,  7 Jan 2026 17:59:41 +0100
-Message-ID: <20260107165942.95340-1-mkoutny@suse.com>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="qRHJX/Go"
+Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d100])
+	by forward202d.mail.yandex.net (Yandex) with ESMTPS id C3D5486E01;
+	Wed, 07 Jan 2026 21:36:38 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:2dcb:0:640:715b:0])
+	by forward100d.mail.yandex.net (Yandex) with ESMTPS id 26157C0051;
+	Wed, 07 Jan 2026 21:36:30 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id SaSuiV7Gl8c0-3UejPh7x;
+	Wed, 07 Jan 2026 21:36:29 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1767810989; bh=CNwylmWZiMvqp9zMGa86ZSqv3JoZzXkcWAYbmEN7tbs=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=qRHJX/GoFBFqqLdNW9P7i9hUsNhXHX+18Z7k2/s9wl1yNxb6yZau7KE+jB29AFWOH
+	 +9z/rt7Z2AbP1KoUy077xr/QCLu7mDBirkgIEvL/+4+jOy6fRXMwzLL+Lrw2kTI9+S
+	 ooYTEHYqL1rFbQQ6urFid7SHmrzOAlhqPGiORm+E=
+Authentication-Results: mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Carlos Maiolino <cem@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-xfs@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH] lib: introduce simple error-checking wrapper for memparse()
+Date: Wed,  7 Jan 2026 21:36:13 +0300
+Message-ID: <20260107183614.782245-1-dmantipov@yandex.ru>
 X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -78,104 +50,63 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The cgrp_ancestor_storage has two drawbacks:
-- it's not guaranteed that the member immediately follows struct cgrp in
-  cgroup_root (root cgroup's ancestors[0] might thus point to a padding
-  and not in cgrp_ancestor_storage proper),
-- this idiom raises warnings with -Wflex-array-member-not-at-end.
+Introduce 'memvalue()' which uses 'memparse()' to parse a string with
+optional memory suffix into a number and returns this number or ULLONG_MAX
+if the number is negative or an unrecognized character was encountered.
 
-Instead of relying on the auxiliary member in cgroup_root, define the
-0-th level ancestor inside struct cgroup (needed for static allocation
-of cgrp_dfl_root), deeper cgroups would allocate flexible
-_low_ancestors[].  Unionized alias through ancestors[] will
-transparently join the two ranges.
-
-The above change would still leave the flexible array at the end of
-struct cgroup inside cgroup_root, so move cgrp also towards the end of
-cgroup_root to resolve the -Wflex-array-member-not-at-end.
-
-Link: https://lore.kernel.org/r/5fb74444-2fbb-476e-b1bf-3f3e279d0ced@embeddedor.com/
-Reported-by: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Closes: https://lore.kernel.org/r/b3eb050d-9451-4b60-b06c-ace7dab57497@embeddedor.com/
-Cc: David Laight <david.laight.linux@gmail.com>
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
 ---
- include/linux/cgroup-defs.h | 25 ++++++++++++++-----------
- kernel/cgroup/cgroup.c      |  2 +-
- 2 files changed, 15 insertions(+), 12 deletions(-)
+ include/linux/string.h |  1 +
+ lib/cmdline.c          | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-Changes from v1 (https://lore.kernel.org/r/20251217162744.352391-1-mkoutny@suse.com
-- drop __counted_by patches (2--4), too intrusive rework (Michal)
-- utilize DECLARE_FLEX_ARRAY (Gustavo)
-- trailers
-
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index b760a3c470a56..f7cc60de00583 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -626,7 +626,13 @@ struct cgroup {
- #endif
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 1b564c36d721..c63bcff820a1 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -319,6 +319,7 @@ DEFINE_FREE(argv_free, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
+ extern int get_option(char **str, int *pint);
+ extern char *get_options(const char *str, int nints, int *ints);
+ extern unsigned long long memparse(const char *ptr, char **retptr);
++extern unsigned long long memvalue(const char *ptr);
+ extern bool parse_option_str(const char *str, const char *option);
+ extern char *next_arg(char *args, char **param, char **val);
  
- 	/* All ancestors including self */
--	struct cgroup *ancestors[];
-+	union {
-+		DECLARE_FLEX_ARRAY(struct cgroup *, ancestors);
-+		struct {
-+			struct cgroup *_root_ancestor;
-+			DECLARE_FLEX_ARRAY(struct cgroup *, _low_ancestors);
-+		};
-+	};
- };
+diff --git a/lib/cmdline.c b/lib/cmdline.c
+index 90ed997d9570..e2455a6d17ff 100644
+--- a/lib/cmdline.c
++++ b/lib/cmdline.c
+@@ -190,6 +190,27 @@ unsigned long long memparse(const char *ptr, char **retptr)
+ }
+ EXPORT_SYMBOL(memparse);
  
- /*
-@@ -647,16 +653,6 @@ struct cgroup_root {
- 	struct list_head root_list;
- 	struct rcu_head rcu;	/* Must be near the top */
- 
--	/*
--	 * The root cgroup. The containing cgroup_root will be destroyed on its
--	 * release. cgrp->ancestors[0] will be used overflowing into the
--	 * following field. cgrp_ancestor_storage must immediately follow.
--	 */
--	struct cgroup cgrp;
--
--	/* must follow cgrp for cgrp->ancestors[0], see above */
--	struct cgroup *cgrp_ancestor_storage;
--
- 	/* Number of cgroups in the hierarchy, used only for /proc/cgroups */
- 	atomic_t nr_cgrps;
- 
-@@ -668,6 +664,13 @@ struct cgroup_root {
- 
- 	/* The name for this hierarchy - may be empty */
- 	char name[MAX_CGROUP_ROOT_NAMELEN];
++/**
++ *	memvalue -  Wrap memparse() with simple error detection
++ *	@ptr: Where parse begins
++ *
++ *	Unconditionally returns ULLONG_MAX for a presumably negative value.
++ *	Otherwise uses memparse() to parse a string into a number and returns
++ *	this number or ULLONG_MAX if an unrecognized character was encountered.
++ */
 +
-+	/*
-+	 * The root cgroup. The containing cgroup_root will be destroyed on its
-+	 * release. This must be embedded last due to flexible array at the end
-+	 * of struct cgroup.
-+	 */
-+	struct cgroup cgrp;
- };
- 
- /*
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index e717208cfb185..554a02ee298ba 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -5847,7 +5847,7 @@ static struct cgroup *cgroup_create(struct cgroup *parent, const char *name,
- 	int ret;
- 
- 	/* allocate the cgroup and its ID, 0 is reserved for the root */
--	cgrp = kzalloc(struct_size(cgrp, ancestors, (level + 1)), GFP_KERNEL);
-+	cgrp = kzalloc(struct_size(cgrp, _low_ancestors, level), GFP_KERNEL);
- 	if (!cgrp)
- 		return ERR_PTR(-ENOMEM);
- 
++unsigned long long memvalue(const char *ptr)
++{
++	unsigned long long ret;
++	char *end;
++
++	if (*ptr == '-')
++		return ULLONG_MAX;
++	ret = memparse(ptr, &end);
++	return *end ? ULLONG_MAX : ret;
++}
++EXPORT_SYMBOL(memvalue);
++
+ /**
+  *	parse_option_str - Parse a string and check an option is set or not
+  *	@str: String to be parsed
 -- 
 2.52.0
 
