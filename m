@@ -1,65 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BB7333431;
-	Wed,  7 Jan 2026 20:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE0E22127B;
+	Wed,  7 Jan 2026 20:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767816535; cv=none; b=PFhogYU86JTy9cLRIOOnohgaAuEpuMY/r3NK/cuvJGORzGTFJf6CWVCFL9+Tmx3DgtxjS9RDMfgbUVpRVJ83vtuy5XtO6QmOfc6i/IzQleWDUQfT4s0vBSBwjatcDSkXKC824De/88m6ZexRj0R6IQy8+wj/J1g9/mDU8et1iIE=
+	t=1767816993; cv=none; b=Uuq4PaGdsChKfrx6t3FUQuu/wt+zX1BYRs25fBE45+hucbzTPhS6HuwoMyuQWgsRsHnlCt+V00xBHWnKybvrPtg/fq5yO23B+hv5d9wWKLvCrstzd+rQ/apS6gImfa2h3jbTxftNPU7XfolV4blR/patYZsQX+fYvl2pCr3Dmk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767816535; c=relaxed/simple;
-	bh=suiBVf8rdljWGmCx6x7pZWDICn1WiNPdKfSGtKjr49M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DplkjgQrwcg5ViKFnJfa2WweHvc+X2G5yDdrfKAr1ctzLYlJRXoSifO2Yr0gzR6nElwa6if3gxfZUmG0Q093b9ccNicrK74U85RzyB6ULHmr2gZmAXKayWkSum+OvohyV55FWpu/MFDH4AOq0Jc6tAmohs5L+Mv51ruc7gNs3Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9OGphUD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767816993; c=relaxed/simple;
+	bh=yXE5mW6EU0Dkm7yRJUPHiFhRN1r3a4GwncQdDCSjnBI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kg+P2+xMDIKaSWvJRkhuYt5zz7QzKa+PIcyfSBzMLth+JV1DCJT96FF3ikj+hOQhe+VJtxv5o6F+pipetI2MY5BS4R4Mz+1vUQ1g1hC7CdvaKrhJHsFzVcFksT4XIaW2wiZ37ro2KL85jtXPhJmiMjbSNLdZ21YbECkseIF/0dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=raoxuYrp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9OGphUD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF9D2C16AAE;
-	Wed,  7 Jan 2026 20:08:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="raoxuYrp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739CCC4CEF1;
+	Wed,  7 Jan 2026 20:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767816534;
-	bh=suiBVf8rdljWGmCx6x7pZWDICn1WiNPdKfSGtKjr49M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g9OGphUD6tlLyT6hyKyk204VkOZ9TJBG75kizlc6h8C1Rtbr5JlUoxrMDKCDWINiC
-	 lcYocZm7gtlA95MRspXWf8MOG7/S8UAPhMJiwc/zYNNSmdg6Qp5KinSVHHasT4WOF2
-	 gz5hahXMxLC2BsTcogQq9VisyUrSZ1niriyAucP/E30JMsIrx1Za5ZiJ8xO2RngVEg
-	 D1i5+bzs5mE+osk8Tdjwn3Mhlcg8NCCJz7WVC4fRTgD1DPokWpUQBz4TjGnuay99lc
-	 XqNKwrDBnp/HuAkVApxDHApPGC1WTSESYpxcL3turcXvR1QYRO5LIcBEif7gPjMbiA
-	 bz5qdh92H39fw==
-Date: Wed, 7 Jan 2026 12:08:54 -0800
+	s=k20201202; t=1767816991;
+	bh=yXE5mW6EU0Dkm7yRJUPHiFhRN1r3a4GwncQdDCSjnBI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=raoxuYrpsIpxtlJZ8zMpgmhnpALQ6FoZqYiVM4BVUlXNM8xB0crPIT/hFt5lw2tV/
+	 BUCi1dzBjWsxM+4RgRYpFuVtCX7+nGPcPg4howVeubk1bCgTykGTuQ91NxyjD8rres
+	 /GewoK53bv3hxpLAiBdWp8RE9+SzGbFoW3m0Gi85FMq38LA5SVeXh311pgaYQbVZUl
+	 d2FaDrnkjVE0klPFfPGlFPkZB2JoDNU0inQyMkCxr2WSAGvMmO9v/ZEye5/mOYUKLS
+	 PwbNKVxeVlMJOFsMVLzRf2a2OUJGmlOcK9BH/MtTBcZDkcrU0Zk7YmPsaxu0AfcLMI
+	 RyGaPn6O1K7wQ==
 From: Kees Cook <kees@kernel.org>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-	Andy Shevchenko <andy@kernel.org>,
+To: Stefan Wiehler <stefan.wiehler@nokia.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lib: introduce simple error-checking wrapper for
- memparse()
-Message-ID: <202601071206.87F85EF2C@keescook>
-References: <20260107183614.782245-1-dmantipov@yandex.ru>
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Kconfig.ubsan: Remove CONFIG_UBSAN_REPORT_FULL from documentation
+Date: Wed,  7 Jan 2026 12:16:28 -0800
+Message-Id: <176781698614.1598418.16480180348554919684.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260107114833.2030995-1-stefan.wiehler@nokia.com>
+References: <20260107114833.2030995-1-stefan.wiehler@nokia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260107183614.782245-1-dmantipov@yandex.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 07, 2026 at 09:36:13PM +0300, Dmitry Antipov wrote:
-> Introduce 'memvalue()' which uses 'memparse()' to parse a string with
-> optional memory suffix into a number and returns this number or ULLONG_MAX
-> if the number is negative or an unrecognized character was encountered.
+On Wed, 07 Jan 2026 12:48:33 +0100, Stefan Wiehler wrote:
+> There is no indication in the history that such an option was merged to
+> mainline.
+> 
+> 
 
-ULLONG_MAX is a valid address, though. I don't like this as an error
-canary. How about using __must_check with 0/negative return value and
-put the parsed value into a passed-by-reference variable instead? This
-has the benefit of also performing type checking on the variable so that
-a returned value can never be truncated accidentally:
+Applied to for-next/hardening, thanks!
 
+[1/1] Kconfig.ubsan: Remove CONFIG_UBSAN_REPORT_FULL from documentation
+      https://git.kernel.org/kees/c/1d1fd1886912
 
-int __must_check memvalue(const char *ptr, unsigned long long *addr);
+Take care,
 
 -- 
 Kees Cook
+
