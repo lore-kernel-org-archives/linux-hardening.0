@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FF8392C3B;
-	Thu,  8 Jan 2026 09:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91023C00A8;
+	Thu,  8 Jan 2026 09:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767864481; cv=none; b=XmBBFJY6jqDu97xiGJ1n+P0U+c+abrPpQ83tbcp0l+VkRP69QutCRBmyrYwWkWqdCWIo4XElJ2sX+QLqApkyKBM0iX5v3btcV2NdrwJS/feJnd+UtZ3Ggh1sL9AWBuS2NYnA+Bcr/mm8gdL3b+Zgr5I51a7FDZl1CB+zWEIyeIk=
+	t=1767864486; cv=none; b=FiPzz45+9XPkh22Gcyqp5rMSfHCSEfeVkiDU2Dd+0PhKxd7+OeZTQKdFlq5ciGFcf8kR9v9HlYaEOiA2CsAe2NnUHVN7bkNAp5JZh8Fb6CR+oFtymGC2MAIMlCwuW//o8R5/tYCl/PzzkFe4LfULShK/oEKfY+QLoWF/qljFtQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767864481; c=relaxed/simple;
-	bh=LIWaGlDwxDrRIOQ2ENfbyEPGJfDdv0Ixn8QIg1dqQ+A=;
+	s=arc-20240116; t=1767864486; c=relaxed/simple;
+	bh=s1Q/RZ3WGfrQNkmrGvRKRmUOXkb9B504DHaeNuHZ02g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NWANXZo9V85aDhMGxuVw5o+0yqfxi8m6QKkXkxAQq7ujDEJXBDrAXySPOZ+LwPsyukOSiPrSTE/iVyv7gEGJ4L1xqEzlq6Alh5yEHMjmJ0zNSAFze24gQ5TUWPufUQ+/8AsQujwKBoE4eCGZeQ0miXRfFFjCiuK1u1tMJ7svbNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWKXMyZy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ajlhw4N0H24rgS5KnqGq9xkDpY6H0AELQWPdDku+qOvt3Oc9jHNcPR0K2XRWG2hTl8Osk2R6Nr5wzzudmXnfdOazyaC9QYrq7r/XWUpDPQeHWcuuNM5DsF+lD0P7AY6ohS0SnCSQl+kW6/7cY5RW9lhi5BisHKdutETPcY15ulc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5BFwaAU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWKXMyZy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E827C2BC9E;
-	Thu,  8 Jan 2026 09:27:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5BFwaAU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42B38C116C6;
+	Thu,  8 Jan 2026 09:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767864478;
-	bh=LIWaGlDwxDrRIOQ2ENfbyEPGJfDdv0Ixn8QIg1dqQ+A=;
+	s=k20201202; t=1767864481;
+	bh=s1Q/RZ3WGfrQNkmrGvRKRmUOXkb9B504DHaeNuHZ02g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WWKXMyZy9pqFBFMOa2ahL+nToST/u3c7vhv/BG1IPtskU1Uuv8vvJQgPNP2F4jfCk
-	 PVYruYKGw4DofjT4u4Xu5DtSui+dyShu4khDx5e3N3kcp01erpWJ0ltAoUK4WAPfea
-	 opK9aCQTdUhOe5ke3mI+Lv2pABWZM17SGuHKnRRyeb9KSktENRsrIJ4+IgZe3IKGMm
-	 EPsdHqtd9+yUyEntlDNU5o29IixyT0CwBn1+TCqWX1+2piIxXm4oXtL1fTNl9wGdKe
-	 3S8B5jEGplQYD+rQv3GJ4Fp/K7dLmJqKmwcr1z+EA7FpTTESSSvjmpgNjwJy7X780p
-	 8NIAzO9CudCTw==
+	b=N5BFwaAU3EK8knYcn+8QRpi0McB4l6KJSJSuzaEYudb3VaohSOcV6vOQWbWA6+vTX
+	 nremnB8J0dgLHRA3DLEcwoKpmiBbujE0+RkWbwfQhR1iVdma8l1U02QGgV2+ORTLeO
+	 QjNEWEo3u06Jz/4C49ZUOR+iM9TM2sVLQKheOAdtCeGTQKL8K95YyPKtoLT79BWKHW
+	 a3VKsjPJbYSMZzuQRxCQnhcfHPN61UyZmEJCUQOBPVY9zYa5UyaZbzv3O0+KAAqIr2
+	 RVIjH9UufDjOBuAPiONBNu6rt/uDA1+gA7OD4xGQtzWUfVfIdA1Ajom4X7Hk+saTFq
+	 /mFUfJKHmmmIA==
 From: Ard Biesheuvel <ardb@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org,
@@ -41,9 +41,9 @@ Cc: x86@kernel.org,
 	Uros Bizjak <ubizjak@gmail.com>,
 	Brian Gerst <brgerst@gmail.com>,
 	linux-hardening@vger.kernel.org
-Subject: [RFC/RFT PATCH 01/19] x86/idt: Move idt_table to __ro_after_init section
-Date: Thu,  8 Jan 2026 09:25:28 +0000
-Message-ID: <20260108092526.28586-22-ardb@kernel.org>
+Subject: [RFC/RFT PATCH 02/19] x86/sev: Don't emit BSS_DECRYPT section unless it is in use
+Date: Thu,  8 Jan 2026 09:25:29 +0000
+Message-ID: <20260108092526.28586-23-ardb@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260108092526.28586-21-ardb@kernel.org>
 References: <20260108092526.28586-21-ardb@kernel.org>
@@ -53,51 +53,68 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1585; i=ardb@kernel.org; h=from:subject; bh=LIWaGlDwxDrRIOQ2ENfbyEPGJfDdv0Ixn8QIg1dqQ+A=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JITO+gkPTzyzVon2vQ8KJrtWzv27Z+XznVKZ7EZJcctKSX JO1mg91lLIwiHExyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgInEdzAyfBC9+ebj1o+XrmlG sst9+SSc6hdb55UQWOhoI8r7y4nbieF/xcG2vJWx2yasTE6zT72k++bp6d63Tr5rDUSPXr1Z8eU QLwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1993; i=ardb@kernel.org; h=from:subject; bh=s1Q/RZ3WGfrQNkmrGvRKRmUOXkb9B504DHaeNuHZ02g=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JITO+gvNxyPTu10E34uMPcLx9qxqys+fYIuWT9Xu6y2O07 tZU/jzRUcrCIMbFICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACby6w7Df7dZNw45X7+Yp1b8 6/jv1Q6s6zOqU7mDWM06nITE/HafKGT4K5/DcsBog1iZNFOgWcHWmRe17lyQU3/wvGFCzpf0zfk 6/AA=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 
-Currently, idt_table is allocated as page-aligned .bss, and remapped
-read-only after init. This breaks a 2 MiB large page into 4k page
-mappings, which defeats some of the effort done at boot to map the
-kernel image using large pages, for improved TLB efficiency.
+The BSS_DECRYPT section that gets emitted into .bss will be empty if
+CONFIG_AMD_MEM_ENCRYPT is not defined. However, due to the fact that it
+is injected into .bss rather than emitted as a separate section, the
+2 MiB alignment that it specifies is still taken into account
+unconditionally, pushing .bss out to the next 2 MiB boundary, leaving a
+gap that is never freed.
 
-Mark this allocation as __ro_after_init instead, so it will be made
-read-only automatically after boot, without breaking up large page
-mappings.
-
-This also fixes a latent bug on i386, where the size of idt_table is
-less than a page, and so remapping it read-only could potentially affect
-other read-write variables too, if those are not page-aligned as well.
+So only emit a non-empty BSS_DECRYPT section if it is going to be used.
+In that case, it would still be nice to free the padding, but that is
+left for later.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/kernel/idt.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S | 21 +++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index f445bec516a0..d6da25d7964f 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -170,7 +170,7 @@ static const __initconst struct idt_data apic_idts[] = {
- };
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index d7af4a64c211..3a24a3fc55f5 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -67,7 +67,18 @@ const_cpu_current_top_of_stack = cpu_current_top_of_stack;
  
- /* Must be page-aligned because the real IDT is used in the cpu entry area */
--static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
-+static gate_desc idt_table[IDT_ENTRIES] __aligned(PAGE_SIZE) __ro_after_init;
+ #define ALIGN_ENTRY_TEXT_BEGIN	. = ALIGN(PMD_SIZE);
+ #define ALIGN_ENTRY_TEXT_END	. = ALIGN(PMD_SIZE);
++#else
++
++#define X86_ALIGN_RODATA_BEGIN
++#define X86_ALIGN_RODATA_END					\
++		. = ALIGN(PAGE_SIZE);				\
++		__end_rodata_aligned = .;
  
- static struct desc_ptr idt_descr __ro_after_init = {
- 	.size		= IDT_TABLE_SIZE - 1,
-@@ -308,9 +308,6 @@ void __init idt_setup_apic_and_irq_gates(void)
- 	idt_map_in_cea();
- 	load_idt(&idt_descr);
++#define ALIGN_ENTRY_TEXT_BEGIN
++#define ALIGN_ENTRY_TEXT_END
++#endif
++
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ /*
+  * This section contains data which will be mapped as decrypted. Memory
+  * encryption operates on a page basis. Make this section PMD-aligned
+@@ -88,17 +99,9 @@ const_cpu_current_top_of_stack = cpu_current_top_of_stack;
+ 	__pi___end_bss_decrypted = .;				\
  
--	/* Make the IDT table read only */
--	set_memory_ro((unsigned long)&idt_table, 1);
+ #else
 -
- 	idt_setup_done = true;
- }
- 
+-#define X86_ALIGN_RODATA_BEGIN
+-#define X86_ALIGN_RODATA_END					\
+-		. = ALIGN(PAGE_SIZE);				\
+-		__end_rodata_aligned = .;
+-
+-#define ALIGN_ENTRY_TEXT_BEGIN
+-#define ALIGN_ENTRY_TEXT_END
+ #define BSS_DECRYPTED
+-
+ #endif
++
+ #if defined(CONFIG_X86_64) && defined(CONFIG_KEXEC_CORE)
+ #define KEXEC_RELOCATE_KERNEL					\
+ 	. = ALIGN(0x100);					\
 -- 
 2.47.3
 
