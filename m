@@ -1,88 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward501d.mail.yandex.net (forward501d.mail.yandex.net [178.154.239.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7191465F67
-	for <linux-hardening@vger.kernel.org>; Thu,  8 Jan 2026 12:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00FA218821;
+	Thu,  8 Jan 2026 13:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767874767; cv=none; b=Mx4+hB8fnRqf0mVoBnyybrIkBiFwve8FIp3k50bSVOMwNqEL84l/aQ+/dNk4a62QdL9e+SYJZc2fc2rPE8/X7/aabSJIBnTg2vBfSA2/Sognh6spHK+z09xAMCS+CXMsYaDIb+mx76f6TKY2uamm6KPkkYDKqJCEa6mYB73l8Io=
+	t=1767878554; cv=none; b=BUNJmcekDnDMwsCy259ZC4WLFN3IylkashB6UfSUzfLD4lEIYAJqD03jg/yMrMed7OMZ5quCYkgSjm+c/y3t+k+aslP8fSYSjGjvEUm1kbux3cAMX4b/WvlLY7xCPfcEY1SHT+l/hq4jiQ+wemIQx6OKL/gth3s5aHFbLODyFmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767874767; c=relaxed/simple;
-	bh=cJQJkndsCeAK6yj/3t9R/gTo/9xR0Q84xYZxZvdj0d4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ty6XzkBPmQ/7P2X1URNPl08vfBTCnumridctas1xqMCtrIEBcqVDt3ZrLQixrf4jBkTvaTSTJanVwZLuxQ3j+e4dtREe+DXJGZ6yuexSXjUkpAuw4GEDqfyhXLa5a9bUOMgiregYNSRG+PI4p7Ll3AgScZPaTnlyUdYxxUU0nac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qru693K1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767878554; c=relaxed/simple;
+	bh=rB/7dBYnjsXJysIoFU+ZXW1TEz/5v5zPCYllT69IJ6s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VZamc5+3tEhOha5Yjkj8wpuIqsmowxzlfWlibrjJUnHPtTxIpjvzqB1rJsHtBto1NBNhm5CyrEbUQe53lsFrSt0b8Qz3AJMx18K/+dBgbU/Q9V01tfxgjww6GG2PzFeofwiiOVEHQ8f0Z8gsewWr3rqcQZKs3vB58xwKVi4FIpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=SWiqU7Bs; arc=none smtp.client-ip=178.154.239.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qru693K1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60641C2BCB3
-	for <linux-hardening@vger.kernel.org>; Thu,  8 Jan 2026 12:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767874766;
-	bh=cJQJkndsCeAK6yj/3t9R/gTo/9xR0Q84xYZxZvdj0d4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qru693K1lmTB2v29DqSy3hkhCbN4DW7J73G5z1rt5L852KE+izqjUajyJNCvBMIds
-	 s47XzUcj+GS04/2rnuG93cwYm1EzXe1LhThbOXAfIR9ymREUzAfv0i90DdjgMJGoqk
-	 MICLyaHjx2muNgavkPzYN0PM5OuLFwduz6zMS5pRb2xLZjMr5q9+Ij3PpOrheW8HvT
-	 yHSKoBdneDfM0UqfrZMWsuX0laAVUylvbUCEkAsm2xF2Cbt56DrBQF8gW9/CXqbHxd
-	 HKNYbxRsXF/ASfK6vYckuNeHAqwWz50b5skReil8ovQSVRFDlgs5yJESPFACeSocIA
-	 cXUl6qwZGfvqQ==
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-34c21417781so2324286a91.3
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Jan 2026 04:19:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVbKC0v2Xt7EwDoJGPHx0j4XBpYNCc+im8jNUGpPRuy1l9cC/+5MjLT/oig8oGcNduiXhEIjGwiCdQratUmZZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmGYwmYxk6QXlTxV3SfVImYMPmTqsEFQDsiIzR3vlI0CZd+6ry
-	n0KT7A5W8haAbKtqSTM78iDBezHYs79eJr4AIIsQCbD/bHH5mfesEJ/Ps8nimZm9EF8eEO4rk5P
-	Dq2tccU2vlRoEaPuIPTnrqXZALYs2Ndc=
-X-Google-Smtp-Source: AGHT+IGY9I09ghB/OKAnX6IKZSUHulDd50CRsCJgEvmpi4fEki7tUR1qnbJfSumjAQRkbj4/MlmmcxycGPoWFIHIkFk=
-X-Received: by 2002:a17:90b:1c87:b0:34c:a35d:de16 with SMTP id
- 98e67ed59e1d1-34f68c282c6mr5650429a91.11.1767874765813; Thu, 08 Jan 2026
- 04:19:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="SWiqU7Bs"
+Received: from mail-nwsmtp-smtp-production-main-95.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-95.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:2a21:0:640:9c41:0])
+	by forward501d.mail.yandex.net (Yandex) with ESMTPS id 58B1C81129;
+	Thu, 08 Jan 2026 16:14:37 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-95.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ZEOOH9EGkeA0-4RhGBvzp;
+	Thu, 08 Jan 2026 16:14:37 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1767878077; bh=rB/7dBYnjsXJysIoFU+ZXW1TEz/5v5zPCYllT69IJ6s=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=SWiqU7Bs11vrs8iEB5XaFT4NM6iTYpBgr2tTvrP+i3WY6inLkzZWovhUuRSCRhLhO
+	 Uo/kNop5LzoioAtP1cqRqR+ginwO2OiM5xYyhBMvQucdjnmhFtLygRKm1Jka0QCsx8
+	 uPVQbh5EFgOITOtkUa6AI0kAQ7dQ6JQR34RmtFgw=
+Authentication-Results: mail-nwsmtp-smtp-production-main-95.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <5d38ad4fa77fc9c3c6a0c28d649d852ee889a172.camel@yandex.ru>
+Subject: Re: [PATCH] lib: introduce simple error-checking wrapper for
+ memparse()
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+  Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ linux-xfs@vger.kernel.org, 	linux-hardening@vger.kernel.org
+Date: Thu, 08 Jan 2026 16:14:35 +0300
+In-Reply-To: <20260107104802.91735989425034c858730b8f@linux-foundation.org>
+References: <20260107183614.782245-1-dmantipov@yandex.ru>
+	 <20260107104802.91735989425034c858730b8f@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108092526.28586-21-ardb@kernel.org> <20260108092526.28586-32-ardb@kernel.org>
- <20260108120829.6ea6aa0a@pumpkin> <CAMj1kXFY=Os10Ov6Wv6XNxqLqbEAWTOjkdaohxL3SvveCLWnLA@mail.gmail.com>
-In-Reply-To: <CAMj1kXFY=Os10Ov6Wv6XNxqLqbEAWTOjkdaohxL3SvveCLWnLA@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 8 Jan 2026 13:19:14 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEVw-+S7S83ipn0vqxwz=ud2bLSKeZQLvy91BMVkVKy-g@mail.gmail.com>
-X-Gm-Features: AQt7F2r36v5pc9VFMJGXotydZ1MiCabtOFiw9ODZvPQYjU1PUwN9wuOOTgHL42c
-Message-ID: <CAMj1kXEVw-+S7S83ipn0vqxwz=ud2bLSKeZQLvy91BMVkVKy-g@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH 11/19] x86/rethook: Use RIP-relative reference for
- fake return address
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
-	Uros Bizjak <ubizjak@gmail.com>, Brian Gerst <brgerst@gmail.com>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 8 Jan 2026 at 13:10, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Thu, 8 Jan 2026 at 13:08, David Laight <david.laight.linux@gmail.com> wrote:
-> >
-> > On Thu,  8 Jan 2026 09:25:38 +0000
-> > Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > > Pushing an immediate absolute address to the stack is not permitted when
-> > > linking x86_64 code in PIE mode. Usually, the address can be taken using
-> > > a RIP-relative LEA instruction, but this is not possible here as there
-> > > are no available registers.
-> > >
-> > > So instead, take the address into a static global, and push it onto the
-> > > stack using a RIP-relative memory operand.
-> >
-> > The comment implies the address is 'fake'.
-> > Does that mean it could just be a constant?
->
-> It could be, but it isn't, across all architectures.
->
-> > Clearly the unwinder would need the same change.
-> >
->
-> Why? The value being pushed is the same.
+On Wed, 2026-01-07 at 10:48 -0800, Andrew Morton wrote:
 
-Never mind - I guess you meant 'the unwinder would need to use the constant too'
+> I'm not understanding why negative numbers get this treatment - could
+> you please add the reasoning to the code comment?
+
+Hm. I suppose that memvalue() may (and hopefully will) be used to parse
+and return an amount of "actually used" (for some particular task) memory,
+allowing 0 with possible "use some default value" treatment in the caller.
+Negative values just introduces some confusion (and possible weird effects
+caused by an erroneous conversion of negative values to huge positive ones)=
+.=20
+If someone needs some special treatment of, say, "memsize=3D-32M" somewhere=
+,
+there should be a kind of an extra handling beyond memvalue().=20
+
+> Presumably it's because memvalue() returns ULL, presumably because
+> memparse() returns ULL?=C2=A0 Maybe that's all wrong, and memparse() shou=
+ld
+> have returned LL - negative numbers are a bit odd, but why deny that
+> option.=C2=A0 With the new memvalue() we get to partially address that?
+
+I would rather try
+
+int __must_check memvalue(const char *ptr, unsigned long long *addr);
+
+as suggested by Kees.=20
+
+Dmitry
