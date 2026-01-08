@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D693C00BD;
-	Thu,  8 Jan 2026 09:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA0A4418D3;
+	Thu,  8 Jan 2026 09:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767864492; cv=none; b=NEPEksHlfT2n1gKFUOrKnABqYofYy5byZN5ehi14eIne7E+OmeFXW66yTsg1SmBvIcyVTRAqMzJ55w3Io8OQXB9jRbrThk5GdQ/lrzlHKKle9V3L1CQdBBksh0Rv6vfIzahV8r0X/Fa8dG1GRkGCYce6QLRmUvH4UIiMjU3i7qw=
+	t=1767864495; cv=none; b=IVTCCCKv7YWMOWyNH4GK0cs9GgOGWtwGVmHKHgKMr/QvIgiZGfOuR9G1JcdTfKhdZqFXU3qEeAhaVb6UTQ0J5JlPqeBlN8rE4E85zIrRPXpPJBu28NaNmemRjvUmfNW89NBTXPmatEeL6x430jd/a0mSAxDHb70YT5elji5Wv2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767864492; c=relaxed/simple;
-	bh=y7+ntK2Mt9pILeLN4kBUmNH8SM9X4UPDlejQNxGasJ4=;
+	s=arc-20240116; t=1767864495; c=relaxed/simple;
+	bh=kuiwqDzl2f73n2rx6IkFHqKYsd+dEBHyHn/U0wchG6U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C6w/ukgLkqUTiFV+MYZ5uXlkV0xDQLhd2NWCtIF06q6MqfoM7V0JdcuT0i/xWFs1wM8+4s3tT66RKIv4PqYYOj9whNvhlH8TqC5MdmylH0+HrODYuAw/VRVhr+EmynwIJoYbw8/s2Jnr1duIOMRdCAZcGNFaK4ASHBpFCDbQq/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsC3ggSJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cpBHAfjunS1BogVKzlzPlWITcy9wqkll+RPMZOUlr7dDsgvu3liSAkWEUAOa3zhB0sYrrsS1RaKQN1t+9BehY3DziX2MRaoLtPDiQp/Z/Y71r9bb/KXlTKMQEarvmKv4wYS2bP8qe+xqmV+U9XLIte4ZDHMZkgUzEcA36GeSemI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YE4g3NZI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsC3ggSJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86249C116C6;
-	Thu,  8 Jan 2026 09:28:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YE4g3NZI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A643C16AAE;
+	Thu,  8 Jan 2026 09:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767864489;
-	bh=y7+ntK2Mt9pILeLN4kBUmNH8SM9X4UPDlejQNxGasJ4=;
+	s=k20201202; t=1767864492;
+	bh=kuiwqDzl2f73n2rx6IkFHqKYsd+dEBHyHn/U0wchG6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OsC3ggSJUJoRtalHOVJReVeodhSqFx019MuAGLoupQYSBgGSW6nES1QJvHzLr9UNG
-	 7ae3prPAfNetXGub/D1Ak/AY3lbQZ7diNheQEWgZNjxHgt0XUPMiY4DVX3+ypWGeSj
-	 KfFPD+0wkU3/EhL4R8rksiQtymz0AU7R5mP8H4ZslvtvOLEHT0oGBIPFOGxpUGrE2n
-	 3GmdDCcBwr8uU18MTMzYl7ZaqfjGDc9DcQJdqA0wW5fbkjOjSNU3QW2MA0KyncaauB
-	 kNMx5t9jDdX+T8JIIH2lg5zJKipNnPUwZKX4iNYSL4LC3QU91uk3cpB2agkDRxFh6G
-	 fuXFFFCURtp6A==
+	b=YE4g3NZIjUSbMFNAkVY+33hZ8GREkvXwF5nm2RP85oba55ABb5lq/mx14Pm3eltvZ
+	 8yjjVnFbKJoEi5IeB2E9KHSlm8+eZA6DCNFLUr+IMnc7u7H25uoYz1U4c6aGXDjms/
+	 SCWotGS11nbtnb7kzWIQc/WZUV7G449kV7HWeLt+eRjNAZAf5XvXiuUiiDOzPOfGL1
+	 U+vjBX3G4iXETKeOCFApwS0nZd9GqcGO6DmJSCKw2WT8Xab28lEn8bWSFPSMhd0MTV
+	 rECob5syJECEtpotW6FXM6EMreXGssMvZGLARcLs7ZGKdisMNZP7HBOdpMyAQxYkko
+	 5svd1/4WZlM2Q==
 From: Ard Biesheuvel <ardb@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org,
@@ -41,9 +41,9 @@ Cc: x86@kernel.org,
 	Uros Bizjak <ubizjak@gmail.com>,
 	Brian Gerst <brgerst@gmail.com>,
 	linux-hardening@vger.kernel.org
-Subject: [RFC/RFT PATCH 05/19] x86/efistub: Simplify early remapping of kernel text
-Date: Thu,  8 Jan 2026 09:25:32 +0000
-Message-ID: <20260108092526.28586-26-ardb@kernel.org>
+Subject: [RFC/RFT PATCH 06/19] alloc_tag: Use __ prefixed ELF section names
+Date: Thu,  8 Jan 2026 09:25:33 +0000
+Message-ID: <20260108092526.28586-27-ardb@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260108092526.28586-21-ardb@kernel.org>
 References: <20260108092526.28586-21-ardb@kernel.org>
@@ -53,100 +53,152 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4107; i=ardb@kernel.org; h=from:subject; bh=y7+ntK2Mt9pILeLN4kBUmNH8SM9X4UPDlejQNxGasJ4=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JITO+gvfZrNboPT8O+zuI83B0R2Z+WBL0aYdFw5Fk9cv7e IJMp13oKGVhEONikBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABNRzWJkaE+NzTzx4LFJ72y9 KyUfjLiPSvKvemDzovpr6OR3lR335BkZJrmuWvF1z503r0zXc6mFMGzeu2997tegCYqft7wKOeJ nxQQA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5229; i=ardb@kernel.org; h=from:subject; bh=kuiwqDzl2f73n2rx6IkFHqKYsd+dEBHyHn/U0wchG6U=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JITO+gr+/J608YJGRXc/NN5tidyxgut2atMbF+d2CIHN1n ewrG/07SlkYxLgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwERs6hgZ1i4IWMCjp7YoLjqD KdjzEo9s7QT9vjn3uEIE9St5M3yqGP6XO1YIvZPPuqQxac+2y+skmOWmTWR9biBz8kzvqdDkK3e ZAA==
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 
-Now that the kernel's .text, .rodata and .inittext are all covered by a
-single ELF segment, there is no need to remap .inittext separately.
-Instead, remap the entire region in a single call.
+The compiler will emit static relocations related to a section .foo into
+a separate section called .rela.foo, i.e., it just appends the section
+name to the string ".rela"
 
-This remapping is needed because the EFI stub hands over to the core
-kernel while running in long mode, using the page tables provided by the
-firmware.  Recent so-called 'MS secured core' (tm) PCs are more strict
-when it comes to separating writable from executable mappings, and so
-for compatibility with such systems, any code that may be callable
-during early boot (i.e., before the kernel switches to its own page
-tables) must be remapped executable explicitly.
+When section names start with . or __, this results in section names
+that are correctly matched by the various pattern rules in the various
+linker scripts across the tree.
+
+Without any such leading delimiter, it may lead to spurious warnings
+such as
+
+  >> ld: warning: orphan section `.relaalloc_tags' from `init/main.o' being placed in section `.rela.dyn'
+     ld: warning: dot moved backwards before `.rela.dyn'
+     ld: .tmp_vmlinux1: section `.rela.dyn' can't be allocated in segment 1
+
+Fix this by renaming the section to __alloc_tags. While at it, tweak the
+headers so that the definition appears only a single time.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/Makefile       | 2 +-
- arch/x86/boot/compressed/misc.c         | 4 +---
- arch/x86/include/asm/boot.h             | 2 --
- arch/x86/kernel/vmlinux.lds.S           | 2 --
- drivers/firmware/efi/libstub/x86-stub.c | 4 +---
- 5 files changed, 3 insertions(+), 11 deletions(-)
+ include/asm-generic/codetag.lds.h | 14 +++++++++-----
+ include/linux/alloc_tag.h         | 11 ++++++-----
+ lib/alloc_tag.c                   |  6 +++---
+ 3 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 68f9d7a1683b..bc071bdcd11e 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -76,7 +76,7 @@ LDFLAGS_vmlinux += -T
- hostprogs	:= mkpiggy
- HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+diff --git a/include/asm-generic/codetag.lds.h b/include/asm-generic/codetag.lds.h
+index a14f4bdafdda..d7ff181862da 100644
+--- a/include/asm-generic/codetag.lds.h
++++ b/include/asm-generic/codetag.lds.h
+@@ -2,6 +2,10 @@
+ #ifndef __ASM_GENERIC_CODETAG_LDS_H
+ #define __ASM_GENERIC_CODETAG_LDS_H
  
--sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABbCDGRSTtVW] \(_text\|__start_rodata\|_sinittext\|__inittext_end\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
-+sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABbCDGRSTtVW] \(_text\|__data_segment_start\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
++#include <linux/compiler_types.h>
++
++#define ALLOC_TAG_SECTION_NAME	__alloc_tags
++
+ #ifdef CONFIG_MEM_ALLOC_PROFILING
+ #define IF_MEM_ALLOC_PROFILING(...) __VA_ARGS__
+ #else
+@@ -10,15 +14,15 @@
  
- quiet_cmd_voffset = VOFFSET $@
-       cmd_voffset = $(NM) $< | sed -n $(sed-voffset) > $@
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index d37569e7ee10..1ea419cf88fe 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -329,9 +329,7 @@ static size_t parse_elf(void *output)
- 	return ehdr.e_entry - LOAD_PHYSICAL_ADDR;
- }
+ #define SECTION_WITH_BOUNDARIES(_name)	\
+ 	. = ALIGN(8);			\
+-	__start_##_name = .;		\
++	__PASTE(__start_, _name) = .;	\
+ 	KEEP(*(_name))			\
+-	__stop_##_name = .;
++	__PASTE(__stop_, _name) = .;
  
--const unsigned long kernel_text_size = VO___start_rodata - VO__text;
--const unsigned long kernel_inittext_offset = VO__sinittext - VO__text;
--const unsigned long kernel_inittext_size = VO___inittext_end - VO__sinittext;
-+const unsigned long kernel_text_size = VO___data_segment_start - VO__text;
- const unsigned long kernel_total_size = VO__end - VO__text;
+ #define CODETAG_SECTIONS()		\
+-	IF_MEM_ALLOC_PROFILING(SECTION_WITH_BOUNDARIES(alloc_tags))
++	IF_MEM_ALLOC_PROFILING(SECTION_WITH_BOUNDARIES(ALLOC_TAG_SECTION_NAME))
  
- static u8 boot_heap[BOOT_HEAP_SIZE] __aligned(4);
-diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
-index f7b67cb73915..02b23aa78955 100644
---- a/arch/x86/include/asm/boot.h
-+++ b/arch/x86/include/asm/boot.h
-@@ -82,8 +82,6 @@
- #ifndef __ASSEMBLER__
- extern unsigned int output_len;
- extern const unsigned long kernel_text_size;
--extern const unsigned long kernel_inittext_offset;
--extern const unsigned long kernel_inittext_size;
- extern const unsigned long kernel_total_size;
- 
- unsigned long decompress_kernel(unsigned char *outbuf, unsigned long virt_addr,
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 1dee2987c42b..6772fe9a9957 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -196,8 +196,6 @@ SECTIONS
- 	 */
- 	.altinstr_aux : AT(ADDR(.altinstr_aux) - LOAD_OFFSET) {
- 		*(.altinstr_aux)
--		. = ALIGN(PAGE_SIZE);
--		__inittext_end = .;
+ #define MOD_SEPARATE_CODETAG_SECTION(_name)	\
+-	.codetag.##_name : {			\
++	.codetag._name : {			\
+ 		SECTION_WITH_BOUNDARIES(_name)	\
  	}
  
- 	DATA_SEGMENT_START
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index cef32e2c82d8..ffe30ef73fda 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -890,9 +890,7 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry,
+@@ -28,6 +32,6 @@
+  * unload them individually once unused.
+  */
+ #define MOD_SEPARATE_CODETAG_SECTIONS()		\
+-	IF_MEM_ALLOC_PROFILING(MOD_SEPARATE_CODETAG_SECTION(alloc_tags))
++	IF_MEM_ALLOC_PROFILING(MOD_SEPARATE_CODETAG_SECTION(ALLOC_TAG_SECTION_NAME))
  
- 	*kernel_entry = addr + entry;
+ #endif /* __ASM_GENERIC_CODETAG_LDS_H */
+diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
+index d40ac39bfbe8..f39d85b05b8a 100644
+--- a/include/linux/alloc_tag.h
++++ b/include/linux/alloc_tag.h
+@@ -15,6 +15,9 @@
+ #include <linux/static_key.h>
+ #include <linux/irqflags.h>
  
--	return efi_adjust_memory_range_protection(addr, kernel_text_size) ?:
--	       efi_adjust_memory_range_protection(addr + kernel_inittext_offset,
--						  kernel_inittext_size);
-+	return efi_adjust_memory_range_protection(addr, kernel_text_size);
- }
++/* for ALLOC_TAG_SECTION_NAME */
++#include <asm-generic/codetag.lds.h>
++
+ struct alloc_tag_counters {
+ 	u64 bytes;
+ 	u64 calls;
+@@ -74,8 +77,6 @@ static inline void set_codetag_empty(union codetag_ref *ref)
  
- static void __noreturn enter_kernel(unsigned long kernel_addr,
+ #ifdef CONFIG_MEM_ALLOC_PROFILING
+ 
+-#define ALLOC_TAG_SECTION_NAME	"alloc_tags"
+-
+ struct codetag_bytes {
+ 	struct codetag *ct;
+ 	s64 bytes;
+@@ -98,7 +99,7 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ 
+ #define DEFINE_ALLOC_TAG(_alloc_tag)						\
+ 	static struct alloc_tag _alloc_tag __used __aligned(8)			\
+-	__section(ALLOC_TAG_SECTION_NAME) = {					\
++	__section(__stringify(ALLOC_TAG_SECTION_NAME)) = {			\
+ 		.ct = CODE_TAG_INIT,						\
+ 		.counters = &_shared_alloc_tag };
+ 
+@@ -108,7 +109,7 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ 
+ #define DEFINE_ALLOC_TAG(_alloc_tag)						\
+ 	static struct alloc_tag _alloc_tag __used __aligned(8)			\
+-	__section(ALLOC_TAG_SECTION_NAME) = {					\
++	__section(__stringify(ALLOC_TAG_SECTION_NAME)) = {			\
+ 		.ct = CODE_TAG_INIT,						\
+ 		.counters = NULL };
+ 
+@@ -117,7 +118,7 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ #define DEFINE_ALLOC_TAG(_alloc_tag)						\
+ 	static DEFINE_PER_CPU(struct alloc_tag_counters, _alloc_tag_cntr);	\
+ 	static struct alloc_tag _alloc_tag __used __aligned(8)			\
+-	__section(ALLOC_TAG_SECTION_NAME) = {					\
++	__section(__stringify(ALLOC_TAG_SECTION_NAME)) = {			\
+ 		.ct = CODE_TAG_INIT,						\
+ 		.counters = &_alloc_tag_cntr };
+ 
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index 27fee57a5c91..3eff7e912521 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -15,8 +15,8 @@
+ 
+ #define ALLOCINFO_FILE_NAME		"allocinfo"
+ #define MODULE_ALLOC_TAG_VMAP_SIZE	(100000UL * sizeof(struct alloc_tag))
+-#define SECTION_START(NAME)		(CODETAG_SECTION_START_PREFIX NAME)
+-#define SECTION_STOP(NAME)		(CODETAG_SECTION_STOP_PREFIX NAME)
++#define SECTION_START(NAME)		(CODETAG_SECTION_START_PREFIX #NAME)
++#define SECTION_STOP(NAME)		(CODETAG_SECTION_STOP_PREFIX #NAME)
+ 
+ #ifdef CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
+ static bool mem_profiling_support = true;
+@@ -810,7 +810,7 @@ static inline void sysctl_init(void) {}
+ static int __init alloc_tag_init(void)
+ {
+ 	const struct codetag_type_desc desc = {
+-		.section		= ALLOC_TAG_SECTION_NAME,
++		.section		= __stringify(ALLOC_TAG_SECTION_NAME),
+ 		.tag_size		= sizeof(struct alloc_tag),
+ #ifdef CONFIG_MODULES
+ 		.needs_section_mem	= needs_section_mem,
 -- 
 2.47.3
 
