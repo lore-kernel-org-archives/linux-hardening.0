@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D850443CD3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAFD443CDC;
 	Thu,  8 Jan 2026 09:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767864521; cv=none; b=bLrXPzheg0yTNT7NVViM0gdkloPTTggOkQ1W/91/NKwxzMppv221HL/MvkLXCJjRPlUnl9sHmFqckEgTHth8osox9yYagXCuaA7evTuKZrFlVz3n/OS/U+sQWf0+auu4AIRBapJyuueVCk86Kt68uKzziQb1UjqzP+5wmpa76JU=
+	t=1767864521; cv=none; b=rD+oR0kXjq8QhVRccrcfyAakNPDhEvU7PlIRDqt/Rbi9KxhAk851hSKgq4QkNxVQZC5eM/Qxk8t1RlGR+rSFxtAp6ly5T6KVKjqp8e8hE911v7SYcu+TfMtZGUUrB3zelT5C521A5ou2RwqLJyW1LBCE2/gG3+R1LuBdDpsUmqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1767864521; c=relaxed/simple;
-	bh=Me24Xe8jlmsEJjlmbTQiFymbguEG0EEq4PfTyqWGNgg=;
+	bh=myFOVNSBDPjvkqKce6iB/ppwMkoexRyj2C6Vu/MTr94=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pr2LkVM1lLfaE/UDvQZUiCMjaBPGmaIqUS7+kGJ+xdMpNOOBgkKt5cZiqtJv+2H6va5jlAFGiWz5BT/d99VuucUEiJyCaYRQmyzmBKySMfXn43QykaDmDEiFVSRHmLV1xUh+Q6PQZ3FmmItzOwmvo2MTa625USLjcdzp9HSrmGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIjAAvpY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XrBmo8+Xbdj/yMyan9R/44tuLj0oymhdJu4c+6Ijh8ZWPb9v4H0x63RoF8zLQuTOQw8ne1BES3JQL8vGeGNiNGCipaX/q8rS41eRChf/WUqYIjDSRIC0fnXBPIno7pqyWtLRRqUxiyPxtBOSFb0Kd85044NdvJSKi0o2r6q53iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtxB0+D3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIjAAvpY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D19FC16AAE;
-	Thu,  8 Jan 2026 09:28:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtxB0+D3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 433E4C116C6;
+	Thu,  8 Jan 2026 09:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767864520;
-	bh=Me24Xe8jlmsEJjlmbTQiFymbguEG0EEq4PfTyqWGNgg=;
+	s=k20201202; t=1767864517;
+	bh=myFOVNSBDPjvkqKce6iB/ppwMkoexRyj2C6Vu/MTr94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gIjAAvpY/cJ9+muqPobtVjzBZDh6MSC5vwV4o/rqtNneRFQJmcW+TlUKxNIBewyBJ
-	 66c8+ysys9upa/25hVQfSkO8rBKTOg7FQqAKEHBqj2MhB1Ahzpd+9U4gmsr7xuRj98
-	 2XSYD2B9ofk7OB8a7hlX8UNsp06w5eoPpLnSRNAcN145deJSvZSDBQO7yMJKB3Z5WK
-	 o6v5xkM2u8wf7gB/jL+eHJE4eAajmmw7FfZ7QDfchqfIDmnV1K/5ohXn3HvRst5QU0
-	 5HBx9LaAMHVC/H73IB/akhYDZ9uTDn5Q4TAfY2kMlAlpAwIyCFIYmcJ0qG5qED4Dxo
-	 PP76ZWnxj46Hg==
+	b=WtxB0+D36MMYwbk09SqTbMQnN1/jkA2LcpXbXKeapCcyDt8AHHWLDUUbyiC9GfbYC
+	 vgGnS/Cl45q7ir4PJrcBIKZKrx8IdXel4G2trIUtu7wReBtC32t1sXvSxWJcvNAsKh
+	 6hD21Cb64KGJiCLFFsFmA99hHxO9gVqzjc5ihQ79flSoFy6U3BYLdeyFqDcL2c4HMv
+	 ovzUOhIINpPfuJujBM6hoGJIkH9S5UFa90QqnQ8YpF8cce8c1yoZNI9KuFeZ2JK6Wm
+	 oBStLOTEIvG5kA3vxz0H3NKt1yfamRKi8UWW7QWXuhNy7m+ap3MJbWqLFlygioovkF
+	 xyzK7Ea2Zsz/Q==
 From: Ard Biesheuvel <ardb@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org,
@@ -41,9 +41,9 @@ Cc: x86@kernel.org,
 	Uros Bizjak <ubizjak@gmail.com>,
 	Brian Gerst <brgerst@gmail.com>,
 	linux-hardening@vger.kernel.org
-Subject: [RFC/RFT PATCH 16/19] x86/kexec: Use 64-bit wide absolute reference from relocated code
-Date: Thu,  8 Jan 2026 09:25:43 +0000
-Message-ID: <20260108092526.28586-37-ardb@kernel.org>
+Subject: [RFC/RFT PATCH 15/19] x64/acpi: Use PIC-compatible references in wakeup_64.S
+Date: Thu,  8 Jan 2026 09:25:42 +0000
+Message-ID: <20260108092526.28586-36-ardb@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260108092526.28586-21-ardb@kernel.org>
 References: <20260108092526.28586-21-ardb@kernel.org>
@@ -53,33 +53,79 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=919; i=ardb@kernel.org; h=from:subject; bh=Me24Xe8jlmsEJjlmbTQiFymbguEG0EEq4PfTyqWGNgg=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JITO+Qoa9260i3M7Rs9vyys20PzuTFlg3MsybIlq6o0Gbb 4Fu5JqOUhYGMS4GWTFFFoHZf9/tPD1RqtZ5lizMHFYmkCEMXJwCMJHmcEaGR5/uJ55saGL/NzXK itdX0uXAOu1i61OrSpQPRwYHX5W0Z2RY5rpGhdde8o1VhuzhOzwTZX5+Pne7J/NVcsmmqdc/LWb lAgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2095; i=ardb@kernel.org; h=from:subject; bh=myFOVNSBDPjvkqKce6iB/ppwMkoexRyj2C6Vu/MTr94=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JITO+QvpUotLx3eZMygfvNUyYseTwhO2t65c9bvlXtFYu6 5L1pyfbO0pZGMS4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBEcq4w/LNdUTjl++vb/7ky k/KX2j4OOXV77Se317XdJ711/9c5np3C8FdAgWG5ukr5T4VNArOcJDuvVnx4nv3aVdP/NIPnjPU N8zgB
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 
-The virtual_mapped() kexec routine runs from a different virtual address
-than it was linked at, and so it needs to use an absolute reference to
-load the address of 'saved_context'. Change this reference to a 64-bit
-wide one, to make the code compatible with linking in PIE mode.
+Use ordinary RIP-relative references to make the code compatible with
+running the linker in PIE mode.
+
+Note that wakeup_long64() runs in the kernel's ordinary virtual mapping
+so there is no need to record the address of .Lresume_point in a global
+variable. And fix the comment while at it.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/acpi/wakeup_64.S | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 4ffba68dc57b..3fc1a3002e32 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -311,7 +311,7 @@ SYM_CODE_START_LOCAL_NOALIGN(virtual_mapped)
+diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
+index 04f561f75e99..15233a4e1c95 100644
+--- a/arch/x86/kernel/acpi/wakeup_64.S
++++ b/arch/x86/kernel/acpi/wakeup_64.S
+@@ -14,7 +14,7 @@
  
- #ifdef CONFIG_KEXEC_JUMP
- 	/* Saved in save_processor_state. */
--	movq    $saved_context, %rax
-+	movabsq $saved_context, %rax
- 	lgdt    saved_context_gdt_desc(%rax)
- #endif
+ .code64
+ 	/*
+-	 * Hooray, we are in Long 64-bit mode (but still running in low memory)
++	 * Hooray, we are in Long 64-bit mode
+ 	 */
+ SYM_FUNC_START(wakeup_long64)
+ 	ANNOTATE_NOENDBR
+@@ -41,7 +41,7 @@ SYM_FUNC_START(wakeup_long64)
+ 	movq	saved_rsi(%rip), %rsi
+ 	movq	saved_rbp(%rip), %rbp
  
+-	movq	saved_rip(%rip), %rax
++	leaq	.Lresume_point(%rip), %rax
+ 	ANNOTATE_RETPOLINE_SAFE
+ 	jmp	*%rax
+ SYM_FUNC_END(wakeup_long64)
+@@ -52,7 +52,7 @@ SYM_FUNC_START(do_suspend_lowlevel)
+ 	xorl	%eax, %eax
+ 	call	save_processor_state
+ 
+-	movq	$saved_context, %rax
++	leaq	saved_context(%rip), %rax
+ 	movq	%rsp, pt_regs_sp(%rax)
+ 	movq	%rbp, pt_regs_bp(%rax)
+ 	movq	%rsi, pt_regs_si(%rax)
+@@ -71,8 +71,6 @@ SYM_FUNC_START(do_suspend_lowlevel)
+ 	pushfq
+ 	popq	pt_regs_flags(%rax)
+ 
+-	movq	$.Lresume_point, saved_rip(%rip)
+-
+ 	movq	%rsp, saved_rsp(%rip)
+ 	movq	%rbp, saved_rbp(%rip)
+ 	movq	%rbx, saved_rbx(%rip)
+@@ -90,7 +88,7 @@ SYM_FUNC_START(do_suspend_lowlevel)
+ .Lresume_point:
+ 	ANNOTATE_NOENDBR
+ 	/* We don't restore %rax, it must be 0 anyway */
+-	movq	$saved_context, %rax
++	leaq	saved_context(%rip), %rax
+ 	movq	saved_context_cr4(%rax), %rbx
+ 	movq	%rbx, %cr4
+ 	movq	saved_context_cr3(%rax), %rbx
+@@ -139,7 +137,6 @@ saved_rsi:		.quad	0
+ saved_rdi:		.quad	0
+ saved_rbx:		.quad	0
+ 
+-saved_rip:		.quad	0
+ saved_rsp:		.quad	0
+ 
+ SYM_DATA(saved_magic,	.quad	0)
 -- 
 2.47.3
 
