@@ -1,72 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82629277026;
-	Thu,  8 Jan 2026 17:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ECE2E3B15;
+	Thu,  8 Jan 2026 17:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767894164; cv=none; b=t4olgFOwrS34+ocCyJYkWXiikw5PXw/Gs+Rk78GMWITBb6JimxRSuU3JWBf8NSO7e7wLQFuzgdOD5b4DVldZ6bz5PBXL4Far+BXM5ah9ibP/eD2a8tElihxEb9aQctIFEmE4qbUO1VGhTldsXIW0MK9AL4axzGlc7mQ2J1qBQAI=
+	t=1767894597; cv=none; b=XfkHwCUVBkjzp4ZsS/Q0ewZn+et6v3HG8QX6mNEhptCbP7cKG1lW0UXQf7CmTZU0d23MV9mSBq0gSwNoCFESvrrzVUzGvvrglUqWMWWbBYzLiyswPaeGbJ6WsnW3jlZZXrX3qo/FtXCsCtXim2qSks7OkXfQZqGI5AcfSsyujSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767894164; c=relaxed/simple;
-	bh=pYz7bPQ229+xCZYZnABcoD8uPSXkrI6ezjFjQSAr92s=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LM6V9KeFupfF5JJTXUxl0Easw9MuxrsxpeDreq3sU1XiUVM8KJJ9/xAaLZLiGm9onsWwP+0GWwjElSJbz2uO7oJ9pVp5j/6Nk0gUB5g8xHD+cNoKRRfuU2aXUv4slWFJ981yWqLrPQ4Cy0W1WdJ7G7LtfbGpZgWfqQZvnD89MaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bekqnZbI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767894597; c=relaxed/simple;
+	bh=yHXzZ4miF7zh5XwZfOW7e/mH9PaCOotHUPX6zGX/Uos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmGK8y97Z2eu1prHCbZcwCOK43fj2gULz4Sr3rBTuY05dHRWk+uc+Seg/QjKSTIsU8N/lNGaVUBVDUZBP4SkrNtkuIbnVM+6C3+1A/OZ5diC2PPitP+Mhfbn3ytAV9I0dfNb6AkeGO1ULv+UBpUwP7ceTS2UAC+3DIx2Rb3IDkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKg1kNbf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bekqnZbI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C03C116C6;
-	Thu,  8 Jan 2026 17:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1767894163;
-	bh=pYz7bPQ229+xCZYZnABcoD8uPSXkrI6ezjFjQSAr92s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bekqnZbIcrXqB9BcIe4vXmhaNtQqYGfi/kA97kRwrhH1ZMUT3Ang7sLVamp2ia82A
-	 z34Z7pUroFRX4Pifzp5wqvq1ZLv2dCOwU44K3oByK62YNh7ZN6Id8TsaRsEtXTr/Wb
-	 vbH++Zgz1ItNnQZYaNsjm01ESNLlBcCvSeow+ldI=
-Date: Thu, 8 Jan 2026 09:42:42 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Dmitry Antipov <dmantipov@yandex.ru>, Carlos Maiolino <cem@kernel.org>,
- Christoph Hellwig <hch@infradead.org>, Andy Shevchenko <andy@kernel.org>,
- linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] lib: introduce simple error-checking wrapper for
- memparse()
-Message-Id: <20260108094242.8b043d248e7877235f606416@linux-foundation.org>
-In-Reply-To: <202601080905.D1CC8CC@keescook>
-References: <20260108165216.1054625-1-dmantipov@yandex.ru>
-	<202601080905.D1CC8CC@keescook>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKg1kNbf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5788C116C6;
+	Thu,  8 Jan 2026 17:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767894597;
+	bh=yHXzZ4miF7zh5XwZfOW7e/mH9PaCOotHUPX6zGX/Uos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AKg1kNbfR7AwjZlLXGLigURd6geItf/1jIcBGUAQTH+bRwf8/Q8/8CCSOmoky3qX9
+	 KeCK9KH5x9DbICdcKOqRZ1OVmeysHblEGw8bOMB/mbaJhvC2Sgntiej5Bxg+PI/6UZ
+	 XKG9QlGnN9x5K8l7FBDByJLSV7CNjc70R4MOJIKhLbvS5x8c7jGYKNVthyuwGTIn7B
+	 +Xi6C3MjUPd2vMQ1Od3L4DUL9pV0nYQJH/mIxKLcneX+0l65StmljCEt4qE1caNvUJ
+	 /9Aa4J99EJG+sPw+bYcAVPcWLUephad2ahlaEJV9ncUZCNpzuwxV5HOmszziUICAB8
+	 0C0w6a1tJRVkA==
+Date: Thu, 8 Jan 2026 11:49:54 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Sean Paul <sean@poorly.run>, Akhil P Oommen <akhilpo@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+	Jessica Zhang <jesszhan0024@gmail.com>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v3 2/3] soc: qcom: ubwc: Get HBB from SMEM
+Message-ID: <b2pqfrs2ptaoxxeanzumxyibmydsoiqslcsg6yrm4hihynowj4@mzazqnrptnyf>
+References: <20260108-topic-smem_dramc-v3-0-6b64df58a017@oss.qualcomm.com>
+ <20260108-topic-smem_dramc-v3-2-6b64df58a017@oss.qualcomm.com>
+ <you4xijwc5g4ngcnhxm4ecn7opexnsdfayvd5wiiqpl7734r7w@bdkpjqmlzxre>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <you4xijwc5g4ngcnhxm4ecn7opexnsdfayvd5wiiqpl7734r7w@bdkpjqmlzxre>
 
-On Thu, 8 Jan 2026 09:06:49 -0800 Kees Cook <kees@kernel.org> wrote:
-
-> On Thu, Jan 08, 2026 at 07:52:15PM +0300, Dmitry Antipov wrote:
-> > Introduce 'memvalue()' which uses 'memparse()' to parse a string
-> > with optional memory suffix into a non-negative number. If parsing
-> > has succeeded, returns 0 and stores the result at the location
-> > specified by the second argument. Otherwise returns -EINVAL and
-> > leaves the location untouched.
+On Thu, Jan 08, 2026 at 04:45:49PM +0200, Dmitry Baryshkov wrote:
+> On Thu, Jan 08, 2026 at 03:21:51PM +0100, Konrad Dybcio wrote:
+> > From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > > 
-> > Suggested-by: Christoph Hellwig <hch@infradead.org>
-> > Suggested-by: Kees Cook <kees@kernel.org>
-> > Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> > To make sure the correct settings for a given DRAM configuration get
+> > applied, attempt to retrieve that data from SMEM (which happens to be
+> > what the BSP kernel does, albeit with through convoluted means of the
+> > bootloader altering the DT with this data).
+> > 
+> > Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> > 
+> > ---
+> > I'm not sure about this approach - perhaps a global variable storing
+> > the selected config, which would then be non-const would be better?
 > 
-> LGTM, thanks!
+> I'd prefer if const data was const, split HBB to a separate API.
 > 
-> Reviewed-by: Kees Cook <kees@kernel.org>
 
-Thanks, I'll add both these to mm.git's mm-nonmm-unstable branch for
-testing.
+I agree, but I'd prefer to avoid a separate API for it.
 
-If XFS people would prefer to take [2/2] via the xfs tree then please
-lmk and I'll send it over when [1/2] is upstreamed.  Or we can take
-both patches via the xfs tree.  Or something.  Sending out an acked-by:
-would be simplest!
+Instead I'd like to either return the struct by value (after updating
+the hbb), but we then loose the ability to return errors, or by changing
+the signature to:
 
+int qcom_ubwc_config_get_data(struct qcom_ubwc_cfg_data *data)
+
+This costs us an additional 16 bytes in each client (as the pointer is
+replaced with the data), but I think it's a cleaner API.
+
+Regards,
+Bjorn
