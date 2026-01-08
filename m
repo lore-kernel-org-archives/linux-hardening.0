@@ -1,84 +1,51 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1D472602;
-	Wed,  7 Jan 2026 23:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE4C1A9FAF;
+	Thu,  8 Jan 2026 01:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767827870; cv=none; b=JKot+J9pOA2RVtovibAx8IQV2YjQvNCzlWyEyx/pTuccWAxuOFHY6ZGRU1Aa8KVa8Ggr32+VAvxB7Y78mBgyD9BPX3rlLTN0LJa32As9AWGG40U7FNpJzCRxEVHqYowDtHXyFNvn4OeR5szRgCxP7yrljPoxAzB6y+fmwFexd04=
+	t=1767834846; cv=none; b=GPlTrGp61isBo3HCe4L/V8bMrryBXTJwDB2dftTz07b8VFWiuUltliaruPn3+yQwGu7XvoeRFW4o1alnSyuKb4Tm8gcHkuj86gR2x4BHXQgLMpv3fhZGqPJDw5vonMy74O1UYF9ZI0s8PV004la9ZUHCQlzfHzWSczVPf3eVamE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767827870; c=relaxed/simple;
-	bh=mkmuQuz2ZFVKgV3+h+OhAvSFwWRtBK7BIH9M+9qIwCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sVtwy86C3SUjZayzG8HIWtP4cQzbW6RwtiSF2/8uf23cqRyhG65gKvhnkgs9fMSEHquynp8eZJ/vUCu9zKHVk1ZZXT4vSJRKRmB2HYTumbQH36nWFFPqBOZAU5vOYyKRw5zeaKUmsDdIqa8z4Cn+uVBFDkDrBEEo39Gaw9FqZD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d0UFsdwR; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1767834846; c=relaxed/simple;
+	bh=KF2UrLW7G3OTeR58wF359dV9iCsu8txsl4QyOYJ22OQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References; b=VIxhwLrViHMyUCInhegZwOtxNFENznuut9m058K7eTHoY2TDjbf8weBgXX5wVChMDOPWCV+Kb+9aa7VQ+mwd4SrZ60JORPj6GvmQxMg900Br1XgVbVcIT1TeYYleNu3BEftbLFNBqiZSdyH3ixS7ckxrEkTe3UyRXuNWiJ0p/0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=thzsBwxw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d0UFsdwR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=u9oqDzdWLMAHZKw1pYtMhK8kbCuIv9Fr17Zy6yD2XJs=; b=d0UFsdwRbX2pajK1yrceb6LD6B
-	1Ta240KTHyvMrSZfbHNnpReUPk0GFR8acnuj9eedEFtTuUO/c1tWKqUR4Ce6QpXPl4SAyX9TrzODG
-	xzJHwsyabj1u/6KIBSTx+29NBGRG8emQi6l72gY24Cy+HtfAF5W3KhaafskaaNT9CD5VS8AscIpPG
-	9nOYqXc2KhWWvZL5sef0z84gogBAAw+bmp2ZdYzUqCu09Xk0vxwR3toY2Cn9kDKjJBcEQb2HErSaN
-	EtbJlEgquYeiaZt+n2aYjKlNdU5d+UaLbQT/UEimxnBV3mYMgyEbDZmuVKg44cdUWiwb/n3rCk/8X
-	Ee3lnMyw==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdcmc-0000000Fjuo-1HKt;
-	Wed, 07 Jan 2026 23:17:42 +0000
-Message-ID: <0c69b711-4c88-4e64-afe7-f7de147a490b@infradead.org>
-Date: Wed, 7 Jan 2026 15:17:40 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="thzsBwxw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC70C4CEF1;
+	Thu,  8 Jan 2026 01:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767834845;
+	bh=KF2UrLW7G3OTeR58wF359dV9iCsu8txsl4QyOYJ22OQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=thzsBwxwB73atw3xz6pwmlOq46JnxPT22rLj+U5nv38k6csnruuqML3fmFaVcHhWX
+	 B8E8r19X4SfU2fdShg7PyB9QDZZoMp5KRVfBGwV0omOkgRkEQWWz7fiNcNviah+waY
+	 lq4wSlRRwGjS6iOpCzMZ7P5BYymC+K5ClzYrkDhJoigMyVc/JYo5F+KoyWx7hfvEGc
+	 MMlWWVgJe3Aqo3XAsvInxVAMND6/PZ8pcySxJXBTjMqpEC8EYUo+3mhvGVx4t2kOZh
+	 fwuvWkq9Ortm8z9oHKUDsKVPBoD6Vtatr+dXLOqnekJeOJiGk/FNuLwcJMtWvLXe9L
+	 cPtf+Iqtt4RAQ==
+Date: Wed, 07 Jan 2026 15:14:04 -1000
+Message-ID: <54df5bae11fdb5a9c92ea2cdd7a45e9e@kernel.org>
+From: Tejun Heo <tj@kernel.org>
+To: Michal Koutný <mkoutny@suse.com>
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ David Laight <david.laight.linux@gmail.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH v2] cgroup: Eliminate cgrp_ancestor_storage in cgroup_root
+In-Reply-To: <20260107165942.95340-1-mkoutny@suse.com>
+References: <20260107165942.95340-1-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mtd: intel-dg: fix array-index-out-of-bounds in
- intel_dg_mtd_probe()
-To: Raag Jadav <raag.jadav@intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Alexander Usyskin <alexander.usyskin@intel.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tomas Winkler <tomasw@gmail.com>,
- linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aUZFLezigzZQVt55@kspp> <aUZLNTOMgvJ8WrIy@black.igk.intel.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <aUZLNTOMgvJ8WrIy@black.igk.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi,
+Applied to cgroup/for-6.19-fixes.
 
-On 12/19/25 11:07 PM, Raag Jadav wrote:
-> On Sat, Dec 20, 2025 at 03:41:49PM +0900, Gustavo A. R. Silva wrote:
->> Fix the UBSAN: array-index-out-of-bounds issue below by updating
->> counter nvm->nregions before the first access to flexible-array
->> member nvm->regions[].
->>
->> from kernel bugzilla:
->> https://bugzilla.kernel.org/show_bug.cgi?id=220823
->>
->> Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
->>
->> Notice that this flexible array is annotated with the counted_by()
->> attribute, hence the counter must always be updated before the
->> first access to the array.
-> 
-> Already fixed[1], but not sure if it's landed yet.
-> 
-> [1] https://lore.kernel.org/linux-mtd/20251111-mtd-nregions-v1-1-61db61e78c63@intel.com/
+Thanks.
 
-What's the status of this patch, please?
-
--- 
-~Randy
-
+--
+tejun
