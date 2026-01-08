@@ -1,80 +1,80 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61998414645
-	for <linux-hardening@vger.kernel.org>; Thu,  8 Jan 2026 14:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA674D77A5
+	for <linux-hardening@vger.kernel.org>; Thu,  8 Jan 2026 14:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767880865; cv=none; b=rYfmnOBckyo3U+JubYCuJZOcNklyTPoym1drEsvyCirMMU+3SxJuDMlZUIweTlP1qgZXiYGCeTAyUmbAhlGEQkTXLk/kjCXhO3RdiyUu9awgLnQg1loMG/Pa/Lo3OfuZUfx8j60fqx0Sf6OTG0AdJtpygJb75VAqexkU7dN/Gtg=
+	t=1767881197; cv=none; b=q6pcMbbGIi9KdLxmM9ytWWiMQd2GI4VolHvR86sLd4s4zfBToekJG1/3gS+NByaxvPCOg1g4ON+dLcCJiq4W9LeHKur3N8dshsfhUijFpnjAzKFf9fn4ahy5ZltA8rm5jXrVM3Y/yPU+lnLH/6/i2GJmKNlIsv0w5eM/wLmxmms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767880865; c=relaxed/simple;
-	bh=r3ASZkcLqOjMoLgkFEEEzNDAJd84lx1IU1DdLkR/OS4=;
+	s=arc-20240116; t=1767881197; c=relaxed/simple;
+	bh=3FIkjO3NG+obkV87quC4g5/nDfuPMgijvg6hZGLxtLs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WFWk+fVDX9bjgmeFBRQnENaGz5jdamoluPlHbw/M6x240b0XBtn2XImZnAfoR17fe0vQIRRdtWFARNhOpSsqQVodjdvRpt302Qa/UUJ+lspzrRavGIP/7kR6WXSfteuJt1irtuiL5fXoZJpDsS5AENyjQ9dhy88x3JqTNlZtNKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f61WHfum; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fwF0WUmQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f61WHfum; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fwF0WUmQ; arc=none smtp.client-ip=195.135.223.130
+	 In-Reply-To:Content-Type; b=Xj461fdF7IKZ7ABRPZa2f5SkAhizCkqNobdeL1DDos/XzXYMfUmzsy94gkKMdOsz6vJPhbKkkYvnzoswCdtNc902BAPsWRrDGOinOxvPeyS8Q9YiB4i/7QiWUVuPde+auzhUPu/yGj9cpmK8SZL8qH8Acbk5RlLA6VoDCU6Qrpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=G0E35x40; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PPQOD48M; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=s55YAOHo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+uW1vKPV; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f61WHfum";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fwF0WUmQ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f61WHfum";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fwF0WUmQ"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="G0E35x40";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PPQOD48M";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="s55YAOHo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+uW1vKPV"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 889F7341AE;
-	Thu,  8 Jan 2026 14:01:01 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C4DBB5C26E;
+	Thu,  8 Jan 2026 14:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1767880861; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1767881193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vBk9ih3r9seCOiNygirQu746xQraSi7ZSoKlBv+Xuu0=;
-	b=f61WHfumwhNs6hry5yoHQBa2/gl8BUg5Bt1YFhacbETnavMVLd+R3Kn6+QrHY13rsCXUMO
-	Sg1waxGFZXPvP/1L2DCVv8K5iVnsCS9QGvf2hcB3RZyKqj7FDPBGoPlst5v1vkbfvumaA3
-	Ocqk6cjGeQ3K8ecI7LyZmdwatTCkSQI=
+	bh=wMbTKpF62EVlMIvP9rtTlI1EHLuFDiABCZ/3ZLwBSXU=;
+	b=G0E35x40ABgPN7d1+hSLMpkhOXy+wYSw3ZDtIcDPS+FQwF23mhrRPgH/9PGGa1RXE2Xxm3
+	ULah/KYOrmmc0c+fopDjYWIAxgQTMquQx9ENYoCnH5ykA/L5RtvGO5M/6pOxHlUD0JzyPB
+	zYO54zK5XD2B/wKfFeuDRhmP0hzo73k=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1767880861;
+	s=susede2_ed25519; t=1767881193;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vBk9ih3r9seCOiNygirQu746xQraSi7ZSoKlBv+Xuu0=;
-	b=fwF0WUmQ1CkW4SoSy0UhBoGU7EXmMsXS1hIY993NUBqrWcvrHXaiwe3LzxR8wjVPbL13d2
-	4UeL6G7kpfLAYdAA==
-Authentication-Results: smtp-out1.suse.de;
+	bh=wMbTKpF62EVlMIvP9rtTlI1EHLuFDiABCZ/3ZLwBSXU=;
+	b=PPQOD48MICWsjSFTJkfF8VoEWSxtifm8GqhaJLS4wIvbOGwh5y2ObjbaPyRzV7lLabqDCA
+	2pK71hGmsaXZGWBw==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1767880861; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1767881192; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vBk9ih3r9seCOiNygirQu746xQraSi7ZSoKlBv+Xuu0=;
-	b=f61WHfumwhNs6hry5yoHQBa2/gl8BUg5Bt1YFhacbETnavMVLd+R3Kn6+QrHY13rsCXUMO
-	Sg1waxGFZXPvP/1L2DCVv8K5iVnsCS9QGvf2hcB3RZyKqj7FDPBGoPlst5v1vkbfvumaA3
-	Ocqk6cjGeQ3K8ecI7LyZmdwatTCkSQI=
+	bh=wMbTKpF62EVlMIvP9rtTlI1EHLuFDiABCZ/3ZLwBSXU=;
+	b=s55YAOHo9ZYPli6YQzIU1mejK2dZaw2pbIbEeExXeMOHQU+KOTJlAJaAhQm/loYLWq7w5Z
+	JJSEYe7gMWiFrZZCJzaSsi1a8kGEpW9q8RTCKYvfofMhUGjh6z5fM8QLJ8WqErmV2/jE/A
+	iPyFXCNIqiifXZlvcfJf6qg5LpGFM9w=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1767880861;
+	s=susede2_ed25519; t=1767881192;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vBk9ih3r9seCOiNygirQu746xQraSi7ZSoKlBv+Xuu0=;
-	b=fwF0WUmQ1CkW4SoSy0UhBoGU7EXmMsXS1hIY993NUBqrWcvrHXaiwe3LzxR8wjVPbL13d2
-	4UeL6G7kpfLAYdAA==
+	bh=wMbTKpF62EVlMIvP9rtTlI1EHLuFDiABCZ/3ZLwBSXU=;
+	b=+uW1vKPVQAynozdn/ZUDUxZbcwDyfNzKQuHIXV7VEMzMa4hi8XlEAzdLnWwddCnWTC45MT
+	gSI5HgJUbbephDAg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4A9703EA63;
-	Thu,  8 Jan 2026 14:01:01 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 59BBB3EA63;
+	Thu,  8 Jan 2026 14:06:32 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id q+PKEZ24X2lMKQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 08 Jan 2026 14:01:01 +0000
-Message-ID: <960729bb-0746-4709-a40c-2e254f963deb@suse.cz>
-Date: Thu, 8 Jan 2026 15:01:00 +0100
+	id fa07Fei5X2kpLgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 08 Jan 2026 14:06:32 +0000
+Message-ID: <f1f06db9-a12c-4999-9723-1fca5e8383a4@suse.cz>
+Date: Thu, 8 Jan 2026 15:06:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -82,35 +82,35 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/5] slab: Introduce kmalloc_obj() and family
+Subject: Re: [PATCH v6 4/5] slab: Introduce kmalloc_flex() and family
 Content-Language: en-US
 To: Kees Cook <kees@kernel.org>
-Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Jann Horn <jannh@google.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Marco Elver <elver@google.com>,
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter
+ <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org,
  Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
  Randy Dunlap <rdunlap@infradead.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
  Matthew Wilcox <willy@infradead.org>, John Hubbard <jhubbard@nvidia.com>,
- Joe Perches <joe@perches.com>, Vegard Nossum <vegard.nossum@oracle.com>,
- Harry Yoo <harry.yoo@oracle.com>, Nathan Chancellor <nathan@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
- Yafang Shao <laoar.shao@gmail.com>, Tony Ambardar <tony.ambardar@gmail.com>,
+ Joe Perches <joe@perches.com>, Christoph Lameter <cl@linux.com>,
+ Marco Elver <elver@google.com>, Vegard Nossum <vegard.nossum@oracle.com>,
+ Pekka Enberg <penberg@kernel.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Jann Horn <jannh@google.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Jakub Kicinski <kuba@kernel.org>, Yafang Shao <laoar.shao@gmail.com>,
+ Tony Ambardar <tony.ambardar@gmail.com>,
  Alexander Lobakin <aleksander.lobakin@intel.com>,
  Jan Hendrik Farr <kernel@jfarr.cc>, Alexander Potapenko <glider@google.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-doc@vger.kernel.org, llvm@lists.linux.dev
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 References: <20251203233029.it.641-kees@kernel.org>
- <20251203233036.3212363-1-kees@kernel.org>
+ <20251203233036.3212363-4-kees@kernel.org>
 From: Vlastimil Babka <vbabka@suse.cz>
 Autocrypt: addr=vbabka@suse.cz; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -151,164 +151,212 @@ Autocrypt: addr=vbabka@suse.cz; keydata=
  rywqgzTUhHFKKF6/9L/lYtrNcHU8Z6Y4Ju/MLUiNYkmtrGIMnkjKCiRqlRrZE/v5YFHbayRD
  dJKXobXTtCBYpLJM4ZYRpGZXne/FAtWNe4KbNJJqxMvrTOrnIatPj8NhBVI0RSJRsbilh6TE
  m6M14QORSWTLRg==
-In-Reply-To: <20251203233036.3212363-1-kees@kernel.org>
+In-Reply-To: <20251203233036.3212363-4-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.79 / 50.00];
+X-Spamd-Result: default: False [-2.80 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.19)[-0.962];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
 	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[39];
-	FREEMAIL_CC(0.00)[linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,intel.com,linuxfoundation.org,kvack.org,infradead.org,nvidia.com,perches.com,oracle.com,lwn.net,jfarr.cc,vger.kernel.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLtz7ce9b89hw8xzamye9qeynd)];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_TWELVE(0.00)[40];
 	TAGGED_RCPT(0.00)[lkml];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:email]
+	R_RATELIMIT(0.00)[to_ip_from(RLwn5r54y1cp81no5tmbbew5oc)];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[lwn.net,linux-foundation.org,gentwo.org,google.com,linux.dev,oracle.com,kernel.org,vger.kernel.org,kvack.org,infradead.org,intel.com,nvidia.com,perches.com,linux.com,lge.com,linuxfoundation.org,gmail.com,jfarr.cc,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,linux.dev:email,suse.cz:mid,suse.cz:email]
 X-Spam-Flag: NO
-X-Spam-Score: -2.79
+X-Spam-Score: -2.80
 X-Spam-Level: 
 
 On 12/4/25 00:30, Kees Cook wrote:
-> Introduce type-aware kmalloc-family helpers to replace the common
-> idioms for single object and arrays of objects allocation:
+> As done for kmalloc_obj*(), introduce a type-aware allocator for flexible
+> arrays, which may also have "counted_by" annotations:
 > 
-> 	ptr = kmalloc(sizeof(*ptr), gfp);
-> 	ptr = kmalloc(sizeof(struct some_obj_name), gfp);
-> 	ptr = kzalloc(sizeof(*ptr), gfp);
-> 	ptr = kmalloc_array(count, sizeof(*ptr), gfp);
-> 	ptr = kcalloc(count, sizeof(*ptr), gfp);
+> 	ptr = kmalloc(struct_size(ptr, flex_member, count), gfp);
 > 
-> These become, respectively:
+> becomes:
 > 
-> 	ptr = kmalloc_obj(*ptr, gfp);
-> 	ptr = kmalloc_obj(*ptr, gfp);
-> 	ptr = kzalloc_obj(*ptr, gfp);
-> 	ptr = kmalloc_objs(*ptr, count, gfp);
-> 	ptr = kzalloc_objs(*ptr, count, gfp);
+> 	ptr = kmalloc_flex(*ptr, flex_member, count, gfp);
 > 
-> Beyond the other benefits outlined below, the primary ergonomic benefit
-> is the elimination of needing "sizeof" nor the type name, and the
-> enforcement of assignment types (they do not return "void *", but rather
-> a pointer to the type of the first argument). The type name _can_ be
-> used, though, in the case where an assignment is indirect (e.g. via
-> "return"). This additionally allows[1] variables to be declared via
-> __auto_type:
+> The internal use of __flex_counter() allows for automatically setting
+> the counter member of a struct's flexible array member when it has
+> been annotated with __counted_by(), avoiding any missed early size
+> initializations while __counted_by() annotations are added to the
+> kernel. Additionally, this also checks for "too large" allocations based
+> on the type size of the counter variable. For example:
 > 
-> 	__auto_type ptr = kmalloc_obj(struct foo, gfp);
+> 	if (count > type_max(ptr->flex_counter))
+> 		fail...;
+> 	size = struct_size(ptr, flex_member, count);
+> 	ptr = kmalloc(size, gfp);
+> 	ptr->flex_counter = count;
 > 
-> Internal introspection of the allocated type now becomes possible,
-> allowing for future alignment-aware choices to be made by the allocator
-> and future hardening work that can be type sensitive. For example,
-> adding __alignof(*ptr) as an argument to the internal allocators so that
-> appropriate/efficient alignment choices can be made, or being able to
-> correctly choose per-allocation offset randomization within a bucket
-> that does not break alignment requirements.
+> becomes (n.b. unchanged from earlier example):
 > 
-> Link: https://lore.kernel.org/all/CAHk-=wiCOTW5UftUrAnvJkr6769D29tF7Of79gUjdQHS_TkF5A@mail.gmail.com/ [1]
+> 	ptr = kmalloc_flex(*ptr, flex_member, count, gfp);
+> 	ptr->flex_count = count;
+
+             ^ flex_counter ?
+
+But if it was "too large", ptr is NULL so this will oops?
+
+> Note that manual initialization of the flexible array counter is still
+> required (at some point) after allocation as not all compiler versions
+> support the __counted_by annotation yet. But doing it internally makes
+> sure they cannot be missed when __counted_by _is_ available, meaning
+> that the bounds checker will not trip due to the lack of "early enough"
+> initializations that used to work before enabling the stricter bounds
+> checking. For example:
+> 
+> 	ptr = kmalloc_flex(*ptr, flex_member, count, gfp);
+> 	fill(ptr->flex, count);
+> 	ptr->flex_count = count;
+> 
+> This works correctly before adding a __counted_by annotation (since
+> nothing is checking ptr->flex accesses against ptr->flex_count). After
+> adding the annotation, the bounds sanitizer would trip during fill()
+> because ptr->flex_count wasn't set yet. But with kmalloc_flex() setting
+> ptr->flex_count internally at allocation time, the existing code works
+> without needing to move the ptr->flex_count assignment before the call
+> to fill(). (This has been a stumbling block for __counted_by adoption.)
+> 
 > Signed-off-by: Kees Cook <kees@kernel.org>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-How do you plan to handle this series? Given minimal slab changes (just
-wrappers) but there being also changes elsewhere, want to use your hardening
-tree? I wouldn't mind.
-
+> ---
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Christoph Lameter <cl@gentwo.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Harry Yoo <harry.yoo@oracle.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: <workflows@vger.kernel.org>
+> Cc: <linux-doc@vger.kernel.org>
+> Cc: <linux-mm@kvack.org>
+> Cc: <linux-hardening@vger.kernel.org>
+> ---
+>  Documentation/process/deprecated.rst |  7 ++++
+>  include/linux/slab.h                 | 48 ++++++++++++++++++++++++++++
+>  2 files changed, 55 insertions(+)
+> 
+> diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+> index 91c628fa2d59..fed56864d036 100644
+> --- a/Documentation/process/deprecated.rst
+> +++ b/Documentation/process/deprecated.rst
+> @@ -387,6 +387,7 @@ allocations. For example, these open coded assignments::
+>  	ptr = kzalloc(sizeof(*ptr), gfp);
+>  	ptr = kmalloc_array(count, sizeof(*ptr), gfp);
+>  	ptr = kcalloc(count, sizeof(*ptr), gfp);
+> +	ptr = kmalloc(struct_size(ptr, flex_member, count), gfp);
+>  	ptr = kmalloc(sizeof(struct foo, gfp);
+>  
+>  become, respectively::
+> @@ -395,4 +396,10 @@ become, respectively::
+>  	ptr = kzalloc_obj(*ptr, gfp);
+>  	ptr = kmalloc_objs(*ptr, count, gfp);
+>  	ptr = kzalloc_objs(*ptr, count, gfp);
+> +	ptr = kmalloc_flex(*ptr, flex_member, count, gfp);
+>  	__auto_type ptr = kmalloc_obj(struct foo, gfp);
+> +
+> +If `ptr->flex_member` is annotated with __counted_by(), the allocation
+> +will automatically fail if `count` is larger than the maximum
+> +representable value that can be stored in the counter member associated
+> +with `flex_member`.
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 726457daedbd..2656ea610b68 100644
 > --- a/include/linux/slab.h
 > +++ b/include/linux/slab.h
-> @@ -12,6 +12,7 @@
->  #ifndef _LINUX_SLAB_H
->  #define	_LINUX_SLAB_H
->  
-> +#include <linux/bug.h>
->  #include <linux/cache.h>
->  #include <linux/gfp.h>
->  #include <linux/overflow.h>
-> @@ -965,6 +966,63 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
->  void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node);
->  #define kmalloc_nolock(...)			alloc_hooks(kmalloc_nolock_noprof(__VA_ARGS__))
+> @@ -982,6 +982,33 @@ void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node);
+>  	(TYPE *)KMALLOC(__obj_size, GFP);				\
+>  })
 >  
 > +/**
-> + * __alloc_objs - Allocate objects of a given type using
-> + * @KMALLOC: which size-based kmalloc wrapper to allocate with.
+> + * __alloc_flex - Allocate an object that has a trailing flexible array
+> + * @KMALLOC: kmalloc wrapper function to use for allocation.
 > + * @GFP: GFP flags for the allocation.
-> + * @TYPE: type to allocate space for.
-> + * @COUNT: how many @TYPE objects to allocate.
+> + * @TYPE: type of structure to allocate space for.
+> + * @FAM: The name of the flexible array member of @TYPE structure.
+> + * @COUNT: how many @FAM elements to allocate space for.
 > + *
-> + * Returns: Newly allocated pointer to (first) @TYPE of @COUNT-many
-> + * allocated @TYPE objects, or NULL on failure.
+> + * Returns: Newly allocated pointer to @TYPE with @COUNT-many trailing
+> + * @FAM elements, or NULL on failure or if @COUNT cannot be represented
+> + * by the member of @TYPE that counts the @FAM elements (annotated via
+> + * __counted_by()).
 > + */
-> +#define __alloc_objs(KMALLOC, GFP, TYPE, COUNT)				\
+> +#define __alloc_flex(KMALLOC, GFP, TYPE, FAM, COUNT)			\
 > +({									\
-> +	const size_t __obj_size = size_mul(sizeof(TYPE), COUNT);	\
-
-I assume with the hardcoded 1 for COUNT, this size_mul() will be eliminated
-by the compiler and not add unnecessary runtime overhead? Otherwise we
-should have two core #define variants.
-
-I also noted that the existing kmalloc_array() and kvmalloc_array() do
-check_mul_overflow() and return NULL silently on overflow. This AFAIU will
-make SIZE_MAX passed to the underlying kmalloc/kvmalloc and thus will cause
-a warning. That's IMHO a good thing.
-
-> +	(TYPE *)KMALLOC(__obj_size, GFP);				\
+> +	const size_t __count = (COUNT);					\
+> +	const size_t __obj_size = struct_size_t(TYPE, FAM, __count);	\
+> +	TYPE *__obj_ptr;						\
+> +	if (WARN_ON_ONCE(overflows_flex_counter_type(TYPE, FAM,	__count))) \
+> +		__obj_ptr = NULL;					\
+> +	else								\
+> +		__obj_ptr = KMALLOC(__obj_size, GFP);			\
+> +	if (__obj_ptr)							\
+> +		__set_flex_counter(__obj_ptr->FAM, __count);		\
+> +	__obj_ptr;							\
 > +})
 > +
+>  /**
+>   * kmalloc_obj - Allocate a single instance of the given type
+>   * @VAR_OR_TYPE: Variable or type to allocate.
+> @@ -1005,23 +1032,44 @@ void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node);
+>  #define kmalloc_objs(VAR_OR_TYPE, COUNT, GFP)		\
+>  	__alloc_objs(kmalloc, GFP, typeof(VAR_OR_TYPE), COUNT)
+>  
 > +/**
-> + * kmalloc_obj - Allocate a single instance of the given type
-> + * @VAR_OR_TYPE: Variable or type to allocate.
+> + * kmalloc_flex - Allocate a single instance of the given flexible structure
+> + * @VAR_OR_TYPE: Variable or type to allocate (with its flex array).
+> + * @FAM: The name of the flexible array member of the structure.
+> + * @COUNT: How many flexible array member elements are desired.
 > + * @GFP: GFP flags for the allocation.
 > + *
-> + * Returns: newly allocated pointer to a @VAR_OR_TYPE on success, or NULL
-> + * on failure.
+> + * Returns: newly allocated pointer to @VAR_OR_TYPE on success, NULL on
+> + * failure. If @FAM has been annotated with __counted_by(), the allocation
+> + * will immediately fail if @COUNT is larger than what the type of the
+> + * struct's counter variable can represent.
 > + */
-> +#define kmalloc_obj(VAR_OR_TYPE, GFP)			\
-> +	__alloc_objs(kmalloc, GFP, typeof(VAR_OR_TYPE), 1)
+> +#define kmalloc_flex(VAR_OR_TYPE, FAM, COUNT, GFP)	\
+> +	__alloc_flex(kmalloc, GFP, typeof(VAR_OR_TYPE),	FAM, COUNT)
 > +
-> +/**
-> + * kmalloc_objs - Allocate an array of the given type
-> + * @VAR_OR_TYPE: Variable or type to allocate an array of.
-> + * @COUNT: How many elements in the array.
-> + * @FLAGS: GFP flags for the allocation.
-> + *
-> + * Returns: newly allocated pointer to array of @VAR_OR_TYPE on success,
-> + * or NULL on failure.
-> + */
-> +#define kmalloc_objs(VAR_OR_TYPE, COUNT, GFP)		\
-> +	__alloc_objs(kmalloc, GFP, typeof(VAR_OR_TYPE), COUNT)
-> +
-> +/* All kzalloc aliases for kmalloc_(obj|objs|flex). */
-> +#define kzalloc_obj(P, GFP)				\
-> +	__alloc_objs(kzalloc, GFP, typeof(P), 1)
-> +#define kzalloc_objs(P, COUNT, GFP)			\
-> +	__alloc_objs(kzalloc, GFP, typeof(P), COUNT)
-> +
-> +/* All kvmalloc aliases for kmalloc_(obj|objs|flex). */
-> +#define kvmalloc_obj(P, GFP)				\
-> +	__alloc_objs(kvmalloc, GFP, typeof(P), 1)
-> +#define kvmalloc_objs(P, COUNT, GFP)			\
-> +	__alloc_objs(kvmalloc, GFP, typeof(P), COUNT)
-> +
-> +/* All kvzalloc aliases for kmalloc_(obj|objs|flex). */
-> +#define kvzalloc_obj(P, GFP)				\
-> +	__alloc_objs(kvzalloc, GFP, typeof(P), 1)
-> +#define kvzalloc_objs(P, COUNT, GFP)			\
-> +	__alloc_objs(kvzalloc, GFP, typeof(P), COUNT)
-> +
+>  /* All kzalloc aliases for kmalloc_(obj|objs|flex). */
+>  #define kzalloc_obj(P, GFP)				\
+>  	__alloc_objs(kzalloc, GFP, typeof(P), 1)
+>  #define kzalloc_objs(P, COUNT, GFP)			\
+>  	__alloc_objs(kzalloc, GFP, typeof(P), COUNT)
+> +#define kzalloc_flex(P, FAM, COUNT, GFP)		\
+> +	__alloc_flex(kzalloc, GFP, typeof(P), FAM, COUNT)
+>  
+>  /* All kvmalloc aliases for kmalloc_(obj|objs|flex). */
+>  #define kvmalloc_obj(P, GFP)				\
+>  	__alloc_objs(kvmalloc, GFP, typeof(P), 1)
+>  #define kvmalloc_objs(P, COUNT, GFP)			\
+>  	__alloc_objs(kvmalloc, GFP, typeof(P), COUNT)
+> +#define kvmalloc_flex(P, FAM, COUNT, GFP)		\
+> +	__alloc_flex(kvmalloc, GFP, typeof(P), FAM, COUNT)
+>  
+>  /* All kvzalloc aliases for kmalloc_(obj|objs|flex). */
+>  #define kvzalloc_obj(P, GFP)				\
+>  	__alloc_objs(kvzalloc, GFP, typeof(P), 1)
+>  #define kvzalloc_objs(P, COUNT, GFP)			\
+>  	__alloc_objs(kvzalloc, GFP, typeof(P), COUNT)
+> +#define kvzalloc_flex(P, FAM, COUNT, GFP)		\
+> +	__alloc_flex(kvzalloc, GFP, typeof(P), FAM, COUNT)
+>  
 >  #define kmem_buckets_alloc(_b, _size, _flags)	\
 >  	alloc_hooks(__kmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE))
->  
 
