@@ -1,73 +1,102 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD388352FA2;
-	Thu,  8 Jan 2026 09:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82299443035;
+	Thu,  8 Jan 2026 10:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767864717; cv=none; b=JX5ajdu6NB/SxINxw75N30tp5QT61ZgtRRfW01RWc1nFoqXcWuCF5lAyKvv8HuABfe4p1X61+sslKjq+lNmw0JMvD6F9rwE3AjVLE6QoQ8+YEp0DhK3ogf2NPmEJyv6uc4CMJ8MD9+ZyUHITqARt6S/GXhs34Ka9aiwtxWz6kis=
+	t=1767866439; cv=none; b=qwAzIVTSvm7iWcRSV0UF5Chq0qVFKgZzkWyJdU7GIW7TAMWHYvrohmeO6Z7Mbnc0ahUCWIInNv2kdr7q7Sjv5pahyTjSke6eyNkBnSxwWek2Jl1Oz436aGxOjQqICna3RGTJRncALs69sFPCXOCp1f2Mu+3C6bfSLwyZB3OtFrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767864717; c=relaxed/simple;
-	bh=oeKeDBtbJsxMuVccxt4H15KcOWa4Nm2gmiNrX9a4CP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oDD3O41FweKTXcZAhUILmRYgZpaE7SL6HNCRL02iuz7EkIPVr5L34x3ycW+uqDeFrk24wNAhnbnjGN65OV3h9lCR+KZnCU4wwi9k2MuDJ5tDd7P+tIPUWj5jVi9ijOYIynb8ZQWTGqPgaQYC4iOPRUVy2TTz9PgDJ9IuZM0QNTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kYwP/VEp; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kYwP/VEp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lCi5oih30trQMErsg6OvdEammxa8+qV12gojfJ7yuTc=; b=kYwP/VEpnsbv8Ml8SFYUSDXi0k
-	mNGrRTp9Z1GCX4EZwusk9rCF+554QRBCZDeMOEJOKBCN6AQMZbDfGaNh9Nej4OOqHiZzfMLXIYPCU
-	SYXEqDi9anniObYSLSIsKsccm72Mi+1cEIsLJXrE5q4BLk+FM8sVpz8WgFlSI78rM3vN1sWiMR3dH
-	u5SmPi1LWmXyE+BaSuokJGC2aqEPIERx+GviZywg9rDvnO1bMTQ5SCoS5sM7vqjpVgYpvtU5NPUKC
-	mYfs7bdi3kjWeWek/19OBAOzOhrMJvPOEcuatf1hdk9BNuIZilEbn4nZ+e0vCw8zB2NdEoup4nyeb
-	J8pGiV+g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdmMx-0000000GTec-0UU7;
-	Thu, 08 Jan 2026 09:31:51 +0000
-Date: Thu, 8 Jan 2026 01:31:51 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Dmitry Antipov <dmantipov@yandex.ru>, Carlos Maiolino <cem@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lib: introduce simple error-checking wrapper for
- memparse()
-Message-ID: <aV95h8JyKvGkDfBw@infradead.org>
-References: <20260107183614.782245-1-dmantipov@yandex.ru>
- <202601071206.87F85EF2C@keescook>
+	s=arc-20240116; t=1767866439; c=relaxed/simple;
+	bh=h2tBfMZ9a3jUBDKYBsVoZXdDvUxBJkWrbiilRaVF76I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ze5QTQ00OpyczbXut9BzK81OGOj3Zy53aLMghTEfbrws7iXV2gBS6Ks4oU496dOTksfNZC4S7MJYfDa4vDQGqXdZypEZiwO0shTH/KfVxJ9Egua5CkLQjJ92MfStNX8fpb3TRBff+ziOwnqH4e34XsBDQp8bQgG3pkg9eA4TfeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: d9ba585cec7811f0a38c85956e01ac42-20260108
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:92d9c349-e32f-4ee6-b4bd-7d53920b3c09,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:cd288c550dff6a7cd085b327586eb50b,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
+	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
+	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: d9ba585cec7811f0a38c85956e01ac42-20260108
+X-User: jiangfeng@kylinos.cn
+Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <jiangfeng@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 12501923; Thu, 08 Jan 2026 18:00:24 +0800
+Message-ID: <e02320c8-eff2-44af-a66c-a3c7ca9ca0ea@kylinos.cn>
+Date: Thu, 8 Jan 2026 18:00:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202601071206.87F85EF2C@keescook>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] lib/string_kunit: add test case for strnlen
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, pjw@kernel.org,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, kees@kernel.org,
+ andy@kernel.org, ebiggers@kernel.org, martin.petersen@oracle.com,
+ Jason@zx2c4.com, conor.dooley@microchip.com, samuel.holland@sifive.com,
+ charlie@rivosinc.com, ajones@ventanamicro.com, nathan@kernel.org,
+ linus.walleij@linaro.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260107023517.46840-1-jiangfeng@kylinos.cn>
+ <20260107023517.46840-3-jiangfeng@kylinos.cn>
+ <CAHp75VfxT+K1QRc5ayZGc4joB9vFJrk7kjQ4gAgUHOT1boFbmA@mail.gmail.com>
+ <b419c6db-0f3f-4666-8f7c-156f7eda2b5b@kylinos.cn>
+ <aV9cQ2QMA-jwFNUO@smile.fi.intel.com>
+Content-Language: en-US
+From: Feng Jiang <jiangfeng@kylinos.cn>
+In-Reply-To: <aV9cQ2QMA-jwFNUO@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 07, 2026 at 12:08:54PM -0800, Kees Cook wrote:
-> On Wed, Jan 07, 2026 at 09:36:13PM +0300, Dmitry Antipov wrote:
-> > Introduce 'memvalue()' which uses 'memparse()' to parse a string with
-> > optional memory suffix into a number and returns this number or ULLONG_MAX
-> > if the number is negative or an unrecognized character was encountered.
+On 2026/1/8 15:26, Andy Shevchenko wrote:
+> On Thu, Jan 08, 2026 at 02:53:58PM +0800, Feng Jiang wrote:
+>> On 2026/1/7 19:56, Andy Shevchenko wrote:
+>>> On Wed, Jan 7, 2026 at 4:35 AM Feng Jiang <jiangfeng@kylinos.cn> wrote:
 > 
-> ULLONG_MAX is a valid address, though. I don't like this as an error
-> canary. How about using __must_check with 0/negative return value and
-> put the parsed value into a passed-by-reference variable instead? This
-> has the benefit of also performing type checking on the variable so that
-> a returned value can never be truncated accidentally:
+> ...
 > 
+>>>> Add a KUnit test for strnlen() to verify correctness across
+>>>> different string lengths and memory alignments.
+>>>
+>>> Same comment as per patch 1 (it would probably require to call for
+>>> arch_strnlen() or something like this).
+>>
+>> Thanks, makes sense.
+>>
+>> I'll add the performance benchmarking (random filling + timing) in V2.
+>>
+>> Since string functions are typically exported directly by each architecture
+>> without an arch_ prefix, I'll introduce a generic_strnlen() (based on
+>> lib/string.c) within the test for comparison.
 > 
-> int __must_check memvalue(const char *ptr, unsigned long long *addr);
+> Probably you want to make the existing one to have that name and use it inside
+> the test and in the fallback wrapper. We don't want to have duplicate code, it
+> is bad from maintenance perspective.
+> 
 
-That does sound pretty nice as an API.  Should addr better be an
-u64 instead of unsligned long long, though?
+Thanks for the suggestions!
+
+To avoid code duplication, I'll rename the generic implementation in lib/string.c
+to __generic_strnlen() and keep the original strnlen() as a wrapper. Then I'll use
+the generic one in the KUnit test for comparison.
+
+Does this approach look good to you?
+
+-- 
+With Best Regards,
+Feng Jiang
 
