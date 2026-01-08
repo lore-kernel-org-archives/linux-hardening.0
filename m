@@ -1,81 +1,92 @@
-Received: from forward501d.mail.yandex.net (forward501d.mail.yandex.net [178.154.239.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00FA218821;
-	Thu,  8 Jan 2026 13:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6768343D78
+	for <linux-hardening@vger.kernel.org>; Thu,  8 Jan 2026 13:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767878554; cv=none; b=BUNJmcekDnDMwsCy259ZC4WLFN3IylkashB6UfSUzfLD4lEIYAJqD03jg/yMrMed7OMZ5quCYkgSjm+c/y3t+k+aslP8fSYSjGjvEUm1kbux3cAMX4b/WvlLY7xCPfcEY1SHT+l/hq4jiQ+wemIQx6OKL/gth3s5aHFbLODyFmM=
+	t=1767879218; cv=none; b=bdHa43nwJwMt3HhiXGbOD4OmE6OLcb1k1Yq0oaCGfaTBpdG80iElinSCWH4gGpKHGonMWOTmpLRRNsa2nYt4CLpbyM2tFeb/GIJZ5L1NXcJGx4gqJSGmRwaNo5Joo/+UxC0gSl/k6Xz5im6XYwxSqsPGSzY63BWFuTj2t+ihZpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767878554; c=relaxed/simple;
-	bh=rB/7dBYnjsXJysIoFU+ZXW1TEz/5v5zPCYllT69IJ6s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VZamc5+3tEhOha5Yjkj8wpuIqsmowxzlfWlibrjJUnHPtTxIpjvzqB1rJsHtBto1NBNhm5CyrEbUQe53lsFrSt0b8Qz3AJMx18K/+dBgbU/Q9V01tfxgjww6GG2PzFeofwiiOVEHQ8f0Z8gsewWr3rqcQZKs3vB58xwKVi4FIpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=SWiqU7Bs; arc=none smtp.client-ip=178.154.239.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1767879218; c=relaxed/simple;
+	bh=ndFWMjzooieb5xyGu4cJGAmspejtFb892UHQx8ZDIZg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n6/nlwCnKXYEl3dPU0XQOozEvE9rsilBYaILD7EFPQjnOYsj/Y8Q88RvCT+pZFw/2kYQHN67vA4xEgtGyr2/e8JEg8OqjpQtrNpBO5+WZl8BqDL04xp6AFxRnmKcHSSPm3yUdysIOhcYtNuL9bcfSByz5Rc4tbaC0bF5y9Anq5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/EdmpCV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="SWiqU7Bs"
-Received: from mail-nwsmtp-smtp-production-main-95.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-95.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:2a21:0:640:9c41:0])
-	by forward501d.mail.yandex.net (Yandex) with ESMTPS id 58B1C81129;
-	Thu, 08 Jan 2026 16:14:37 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-95.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ZEOOH9EGkeA0-4RhGBvzp;
-	Thu, 08 Jan 2026 16:14:37 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1767878077; bh=rB/7dBYnjsXJysIoFU+ZXW1TEz/5v5zPCYllT69IJ6s=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=SWiqU7Bs11vrs8iEB5XaFT4NM6iTYpBgr2tTvrP+i3WY6inLkzZWovhUuRSCRhLhO
-	 Uo/kNop5LzoioAtP1cqRqR+ginwO2OiM5xYyhBMvQucdjnmhFtLygRKm1Jka0QCsx8
-	 uPVQbh5EFgOITOtkUa6AI0kAQ7dQ6JQR34RmtFgw=
-Authentication-Results: mail-nwsmtp-smtp-production-main-95.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <5d38ad4fa77fc9c3c6a0c28d649d852ee889a172.camel@yandex.ru>
-Subject: Re: [PATCH] lib: introduce simple error-checking wrapper for
- memparse()
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-  Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- linux-xfs@vger.kernel.org, 	linux-hardening@vger.kernel.org
-Date: Thu, 08 Jan 2026 16:14:35 +0300
-In-Reply-To: <20260107104802.91735989425034c858730b8f@linux-foundation.org>
-References: <20260107183614.782245-1-dmantipov@yandex.ru>
-	 <20260107104802.91735989425034c858730b8f@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/EdmpCV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85308C19425
+	for <linux-hardening@vger.kernel.org>; Thu,  8 Jan 2026 13:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767879217;
+	bh=ndFWMjzooieb5xyGu4cJGAmspejtFb892UHQx8ZDIZg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=r/EdmpCVAgDo4biXkfjQarc2stbaiMWQEmRJ1angulctDwmO0To9YiVUXM47LcQAz
+	 9JumEOXs+aGTeBjDskczURd/bqn3+g8H8y7vfo3tMeTr29Nx1pLHPn7QruMeppGtW2
+	 DiQTYhRsJAjxAjVZHz5qn+ScVq6zT8sjyj3u4MaK9IanNX94b0iWq7c6IGjmYSqr9g
+	 Q7dLbBjzeQo0oxuHwhpjzYikcdjeEmq6dhNPvJDYpcgQY32A4kTqVez6TOT/+P1oe7
+	 egLt3HUrsxgq1X0SFmgaYPyOxXYSB6nyKKEGnKDLg6yNn1eIYBdDHU5IPtXEHyZI51
+	 QAiIbX0qWNS2A==
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-c525de78ebaso535235a12.3
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Jan 2026 05:33:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWBvm6ySSVNkJ2h/PgRMn4FbK7GG2KQRWy9JIm5pQKsbvqKiet1BmpPMovd544YaWY75qd453lvDjCE4FjPcXk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCxCq2VFfpZEeKbrXYD1eeR8I0dAWMbTgA+t3G2ZHHDkQqF1pJ
+	LP8gLLI+6FVSCcStcLIVec/bKLb9VYSLrtRS0Rsdc/9E9i+vgf4t6+z7DCWgtik3yCWhxGg5adC
+	tbsiikEipuRqjDYq7rPl+rYf8nziymLo=
+X-Google-Smtp-Source: AGHT+IGHIvVUprNBdrwsC9Pu7WwhWkbld3sZP0htQ2g4aAHDfX7s6G/JSDmknZne1WKYYALnNgfSsY07pebvo+Z3TWg=
+X-Received: by 2002:a05:6a20:4308:b0:366:14b2:30e with SMTP id
+ adf61e73a8af0-3898f9cd7ddmr6454679637.65.1767879217085; Thu, 08 Jan 2026
+ 05:33:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251211040935.1288349-2-ardb@kernel.org> <CALxfFW4gyv3gSc1JhkPNqk4LL6S6gZbDRJx2y21PFZ8-8_9s_A@mail.gmail.com>
+In-Reply-To: <CALxfFW4gyv3gSc1JhkPNqk4LL6S6gZbDRJx2y21PFZ8-8_9s_A@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 8 Jan 2026 14:33:25 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXG+6CYVSV-2ZSqrEm+B=az+54=fNwHpC_6qQZ-z2=3Zgw@mail.gmail.com>
+X-Gm-Features: AQt7F2oKLqFPgsT5ujde-bH1gL-fZZo30xTo_SHI9xAc2C3fpX2TG9hkL1r-C9c
+Message-ID: <CAMj1kXG+6CYVSV-2ZSqrEm+B=az+54=fNwHpC_6qQZ-z2=3Zgw@mail.gmail.com>
+Subject: Re: [RFC PATCH] arm64: Bring back linear map randomization using
+ PArange override
+To: Seth Jenkins <sethjenkins@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+	mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org, 
+	kees@kernel.org, Liz Prucka <lizprucka@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2026-01-07 at 10:48 -0800, Andrew Morton wrote:
+On Tue, 16 Dec 2025 at 19:14, Seth Jenkins <sethjenkins@google.com> wrote:
+>
+> > This is posted as an RFC because there are obvious shortcomings to this
+> > approach. However, before I spend more time on this, I'd like to gauge
+> > if there is any consensus that bringing this back is a good idea.
+> I may be a minority, but I do think bringing this back is a good idea.
+> It has now been 9+ years since hardware side channels for bypassing
+> KASLR were discovered, and it still appears that real-world attackers
+> overwhelmingly prefer alternative strategies - such as this one.
+>
+> I'm under no illusion that if we just do this one thing KASLR will be
+> secure again, but I think this patch would still have a meaningful
+> real-world impact in terms of making exploits significantly harder to
+> write.
+>
 
-> I'm not understanding why negative numbers get this treatment - could
-> you please add the reasoning to the code comment?
+Thanks for the feedback.
 
-Hm. I suppose that memvalue() may (and hopefully will) be used to parse
-and return an amount of "actually used" (for some particular task) memory,
-allowing 0 with possible "use some default value" treatment in the caller.
-Negative values just introduces some confusion (and possible weird effects
-caused by an erroneous conversion of negative values to huge positive ones)=
-.=20
-If someone needs some special treatment of, say, "memsize=3D-32M" somewhere=
-,
-there should be a kind of an extra handling beyond memvalue().=20
+I was hoping to get some other views on this matter, but sending the
+patch during plumbers and right before the holidays probably didn't
+help in that regard, I'm afraid.
 
-> Presumably it's because memvalue() returns ULL, presumably because
-> memparse() returns ULL?=C2=A0 Maybe that's all wrong, and memparse() shou=
-ld
-> have returned LL - negative numbers are a bit odd, but why deny that
-> option.=C2=A0 With the new memvalue() we get to partially address that?
+Any thoughts on the desirability of this feature wrt randomization of
+the placement of vmlinux in physical memory? AIUI, the main issue
+being addressed here is predictable placement of statically allocated
+kernel objects in the virtual address space, which could be solved in
+either way. Or are there other concerns here?
 
-I would rather try
+Just trying to elicit as much input as possible on the list, so the
+maintainers can make an informed decision.
 
-int __must_check memvalue(const char *ptr, unsigned long long *addr);
-
-as suggested by Kees.=20
-
-Dmitry
+Thanks,
+Ard.
