@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAFD42E4BD;
-	Thu,  8 Jan 2026 09:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D693C00BD;
+	Thu,  8 Jan 2026 09:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767864491; cv=none; b=m1rIdKxppSptmr5H4laa50KZ/r7IqCV3oFPmBunyynvZpMe3gx83CvoCbOhs0rtZat0egJ7o6z0oel5SGFnj4CMP7G3rSZjBVyEQZMaWvt81vbvIdfvkKymCggEHN4GFxEk5UZJtFWvvQd9fHqYqFAJM/oaukdo01Ejsl7BrpBU=
+	t=1767864492; cv=none; b=NEPEksHlfT2n1gKFUOrKnABqYofYy5byZN5ehi14eIne7E+OmeFXW66yTsg1SmBvIcyVTRAqMzJ55w3Io8OQXB9jRbrThk5GdQ/lrzlHKKle9V3L1CQdBBksh0Rv6vfIzahV8r0X/Fa8dG1GRkGCYce6QLRmUvH4UIiMjU3i7qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767864491; c=relaxed/simple;
-	bh=a+iRDcQFjVTEhia5ujevgzffPacAq1ZV18BVECjd1m8=;
+	s=arc-20240116; t=1767864492; c=relaxed/simple;
+	bh=y7+ntK2Mt9pILeLN4kBUmNH8SM9X4UPDlejQNxGasJ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e4/bUkwKCE7KQVUlF4IyEqGBjriJwpYoIbIjL9eDtMr0ILgPOTwhU6BLiObQe4NLcwLuXKa1dMHBGVmDnbFB4GjWaNH6q1lE3XhPx4xvP0+j13W0FJ4bnoPQoJrlzwbN42FcWdkRvMb1rubUXhbTndn5uJph5ZryzEojntBDbuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilhdXDzT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C6w/ukgLkqUTiFV+MYZ5uXlkV0xDQLhd2NWCtIF06q6MqfoM7V0JdcuT0i/xWFs1wM8+4s3tT66RKIv4PqYYOj9whNvhlH8TqC5MdmylH0+HrODYuAw/VRVhr+EmynwIJoYbw8/s2Jnr1duIOMRdCAZcGNFaK4ASHBpFCDbQq/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsC3ggSJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilhdXDzT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C159FC19424;
-	Thu,  8 Jan 2026 09:28:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsC3ggSJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86249C116C6;
+	Thu,  8 Jan 2026 09:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767864487;
-	bh=a+iRDcQFjVTEhia5ujevgzffPacAq1ZV18BVECjd1m8=;
+	s=k20201202; t=1767864489;
+	bh=y7+ntK2Mt9pILeLN4kBUmNH8SM9X4UPDlejQNxGasJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ilhdXDzTZC4TYjd5qMZgDnGow11a9Dz4cMm/Ik7MyzvYLLo60RCrcBWdGBf2mF9zz
-	 4gLvnVVi/rlyppRcVEtsOvmkHXFa6JhHAdS9clbJ/BCd0qsc3M/4qthZAh63thZAyA
-	 pRE+CcHOxtJ6SVagsLyMjxPiFgQ3A+vSzqWsd/9+Q0voYek7nRYK3ROF1I1Pa3xN5G
-	 tyG3w31yNP9OFJGdXzHxh65dBJbXORz9oSsBU9FF3OOxl5i6UOnl7FFwypsXE2j138
-	 JQe8XRoR1/j9alyAPXr94Xgs0tXD0u/1i4bqujdSAMPUzQWfrMrxEWfTEacfNU3s9n
-	 wn6QcuCBALo1Q==
+	b=OsC3ggSJUJoRtalHOVJReVeodhSqFx019MuAGLoupQYSBgGSW6nES1QJvHzLr9UNG
+	 7ae3prPAfNetXGub/D1Ak/AY3lbQZ7diNheQEWgZNjxHgt0XUPMiY4DVX3+ypWGeSj
+	 KfFPD+0wkU3/EhL4R8rksiQtymz0AU7R5mP8H4ZslvtvOLEHT0oGBIPFOGxpUGrE2n
+	 3GmdDCcBwr8uU18MTMzYl7ZaqfjGDc9DcQJdqA0wW5fbkjOjSNU3QW2MA0KyncaauB
+	 kNMx5t9jDdX+T8JIIH2lg5zJKipNnPUwZKX4iNYSL4LC3QU91uk3cpB2agkDRxFh6G
+	 fuXFFFCURtp6A==
 From: Ard Biesheuvel <ardb@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org,
@@ -41,9 +41,9 @@ Cc: x86@kernel.org,
 	Uros Bizjak <ubizjak@gmail.com>,
 	Brian Gerst <brgerst@gmail.com>,
 	linux-hardening@vger.kernel.org
-Subject: [RFC/RFT PATCH 04/19] x86: Make the 64-bit bzImage always physically relocatable
-Date: Thu,  8 Jan 2026 09:25:31 +0000
-Message-ID: <20260108092526.28586-25-ardb@kernel.org>
+Subject: [RFC/RFT PATCH 05/19] x86/efistub: Simplify early remapping of kernel text
+Date: Thu,  8 Jan 2026 09:25:32 +0000
+Message-ID: <20260108092526.28586-26-ardb@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260108092526.28586-21-ardb@kernel.org>
 References: <20260108092526.28586-21-ardb@kernel.org>
@@ -53,212 +53,100 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8005; i=ardb@kernel.org; h=from:subject; bh=a+iRDcQFjVTEhia5ujevgzffPacAq1ZV18BVECjd1m8=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JITO+gmeGmv/pgBX375f/rsycqqm//d7LeBnLp6bNToLaN ufP/CjpKGVhEONikBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABPp3cXwv/CMX0lJeZzbfOuy +mOT/j6OFVjy/p70iph7si85JnceP83I0N9TFnBo2ouzk9xDTndzRT8J05rvoZy0gnfL+b9O/17 e4wQA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4107; i=ardb@kernel.org; h=from:subject; bh=y7+ntK2Mt9pILeLN4kBUmNH8SM9X4UPDlejQNxGasJ4=; b=owGbwMvMwCVmkMcZplerG8N4Wi2JITO+gvfZrNboPT8O+zuI83B0R2Z+WBL0aYdFw5Fk9cv7e IJMp13oKGVhEONikBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABNRzWJkaE+NzTzx4LFJ72y9 KyUfjLiPSvKvemDzovpr6OR3lR335BkZJrmuWvF1z503r0zXc6mFMGzeu2997tegCYqft7wKOeJ nxQQA
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 
-On x86_64, the physical placement of the kernel is independent from its
-mapping in the 'High Kernel Mapping' range. This means that even a
-position dependent kernel built without boot-time relocation support can
-run from any suitably aligned physical address, and there is no need to
-make this behavior dependent on whether or not the kernel is virtually
-relocatable.
+Now that the kernel's .text, .rodata and .inittext are all covered by a
+single ELF segment, there is no need to remap .inittext separately.
+Instead, remap the entire region in a single call.
 
-On i386, the situation is different, given that the physical and virtual
-load offsets must be equal, and so only a relocatable kernel can be
-loaded at a physical address that deviates from its build-time default.
-
-Clarify this in Kconfig and in the code, and advertise the 64-bit
-bzImage as loadable at any physical offset regardless of whether
-CONFIG_RELOCATABLE is set. In practice, this makes little difference,
-given that it defaults to 'y' and is a prerequisite for EFI_STUB and
-RANDOMIZE_BASE, but it will help with some future refactoring of the
-relocation code.
+This remapping is needed because the EFI stub hands over to the core
+kernel while running in long mode, using the page tables provided by the
+firmware.  Recent so-called 'MS secured core' (tm) PCs are more strict
+when it comes to separating writable from executable mappings, and so
+for compatibility with such systems, any code that may be callable
+during early boot (i.e., before the kernel switches to its own page
+tables) must be remapped executable explicitly.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/Kconfig                   | 40 ++++++++++++--------
- arch/x86/boot/compressed/head_64.S |  4 --
- arch/x86/boot/compressed/misc.c    |  8 ++--
- arch/x86/boot/header.S             |  8 +---
- 4 files changed, 29 insertions(+), 31 deletions(-)
+ arch/x86/boot/compressed/Makefile       | 2 +-
+ arch/x86/boot/compressed/misc.c         | 4 +---
+ arch/x86/include/asm/boot.h             | 2 --
+ arch/x86/kernel/vmlinux.lds.S           | 2 --
+ drivers/firmware/efi/libstub/x86-stub.c | 4 +---
+ 5 files changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 80527299f859..bf51e17d5813 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1931,7 +1931,7 @@ config EFI
- config EFI_STUB
- 	bool "EFI stub support"
- 	depends on EFI
--	select RELOCATABLE
-+	select RELOCATABLE if X86_32
- 	help
- 	  This kernel feature allows a bzImage to be loaded directly
- 	  by EFI firmware without the use of a bootloader.
-@@ -2028,8 +2028,9 @@ config PHYSICAL_START
- 	help
- 	  This gives the physical address where the kernel is loaded.
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 68f9d7a1683b..bc071bdcd11e 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -76,7 +76,7 @@ LDFLAGS_vmlinux += -T
+ hostprogs	:= mkpiggy
+ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
  
--	  If the kernel is not relocatable (CONFIG_RELOCATABLE=n) then bzImage
--	  will decompress itself to above physical address and run from there.
-+	  If the kernel is not relocatable (CONFIG_RELOCATABLE=n) and built for
-+	  i386, then the bzImage will decompress itself to the above physical
-+	  address and run from there.
- 	  Otherwise, bzImage will run from the address where it has been loaded
- 	  by the boot loader. The only exception is if it is loaded below the
- 	  above physical address, in which case it will relocate itself there.
-@@ -2064,16 +2065,22 @@ config PHYSICAL_START
- 	  Don't change this unless you know what you are doing.
+-sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABbCDGRSTtVW] \(_text\|__start_rodata\|_sinittext\|__inittext_end\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
++sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABbCDGRSTtVW] \(_text\|__data_segment_start\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
  
- config RELOCATABLE
--	bool "Build a relocatable kernel"
--	default y
-+	bool "Build a relocatable kernel" if X86_32
-+	default X86_32
- 	help
--	  This builds a kernel image that retains relocation information
--	  so it can be loaded someplace besides the default 1MB.
-+	  This builds a kernel image that retains relocation information so it
-+	  can be placed someplace besides the default PAGE_OFFSET + 1MB. This
-+	  is a prerequisite for KASLR.
- 	  The relocations tend to make the kernel binary about 10% larger,
- 	  but are discarded at runtime.
- 
--	  One use is for the kexec on panic case where the recovery kernel
--	  must live at a different physical address than the primary
-+	  On i386, where the virtual and physical load offset of the kernel
-+	  must be equal, this also allows the kernel image to be placed at a
-+	  physical load address that differs from the compile time default. On
-+	  x86_64, this is always permitted.
-+
-+	  One use is for the kexec on panic case on i386, where the recovery
-+	  kernel must live at a different physical address than the primary
- 	  kernel.
- 
- 	  Note: If CONFIG_RELOCATABLE=y, then the kernel runs from the address
-@@ -2082,7 +2089,7 @@ config RELOCATABLE
- 
- config RANDOMIZE_BASE
- 	bool "Randomize the address of the kernel image (KASLR)"
--	depends on RELOCATABLE
-+	select RELOCATABLE
- 	default y
- 	help
- 	  In support of Kernel Address Space Layout Randomization (KASLR),
-@@ -2118,7 +2125,7 @@ config RANDOMIZE_BASE
- # Relocation on x86 needs some additional build support
- config X86_NEED_RELOCS
- 	def_bool y
--	depends on RANDOMIZE_BASE || (X86_32 && RELOCATABLE)
-+	depends on RELOCATABLE
- 	select ARCH_VMLINUX_NEEDS_RELOCS
- 
- config PHYSICAL_ALIGN
-@@ -2131,12 +2138,13 @@ config PHYSICAL_ALIGN
- 	  where kernel is loaded and run from. Kernel is compiled for an
- 	  address which meets above alignment restriction.
- 
--	  If bootloader loads the kernel at a non-aligned address and
--	  CONFIG_RELOCATABLE is set, kernel will move itself to nearest
--	  address aligned to above value and run from there.
-+	  If the bootloader loads the kernel at a non-aligned address and it
-+	  is built for x86_64 or CONFIG_RELOCATABLE is set, the kernel will
-+	  move itself to the nearest address aligned to above value and run
-+	  from there.
- 
--	  If bootloader loads the kernel at a non-aligned address and
--	  CONFIG_RELOCATABLE is not set, kernel will ignore the run time
-+	  If the bootloader loads the i386 kernel at a non-aligned address and
-+	  CONFIG_RELOCATABLE is not set, the kernel will ignore the run time
- 	  load address and decompress itself to the address it has been
- 	  compiled for and run from there. The address for which kernel is
- 	  compiled already meets above alignment restrictions. Hence the
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index d9dab940ff62..8a964a4d45c2 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -143,7 +143,6 @@ SYM_FUNC_START(startup_32)
-  * for safe in-place decompression.
-  */
- 
--#ifdef CONFIG_RELOCATABLE
- 	movl	%ebp, %ebx
- 	movl	BP_kernel_alignment(%esi), %eax
- 	decl	%eax
-@@ -152,7 +151,6 @@ SYM_FUNC_START(startup_32)
- 	andl	%eax, %ebx
- 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
- 	jae	1f
--#endif
- 	movl	$LOAD_PHYSICAL_ADDR, %ebx
- 1:
- 
-@@ -312,7 +310,6 @@ SYM_CODE_START(startup_64)
- 	 */
- 
- 	/* Start with the delta to where the kernel will run at. */
--#ifdef CONFIG_RELOCATABLE
- 	leaq	startup_32(%rip) /* - $startup_32 */, %rbp
- 	movl	BP_kernel_alignment(%rsi), %eax
- 	decl	%eax
-@@ -321,7 +318,6 @@ SYM_CODE_START(startup_64)
- 	andq	%rax, %rbp
- 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
- 	jae	1f
--#endif
- 	movq	$LOAD_PHYSICAL_ADDR, %rbp
- 1:
- 
+ quiet_cmd_voffset = VOFFSET $@
+       cmd_voffset = $(NM) $< | sed -n $(sed-voffset) > $@
 diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 0f41ca0e52c0..d37569e7ee10 100644
+index d37569e7ee10..1ea419cf88fe 100644
 --- a/arch/x86/boot/compressed/misc.c
 +++ b/arch/x86/boot/compressed/misc.c
-@@ -314,12 +314,10 @@ static size_t parse_elf(void *output)
- 			if ((phdr->p_align % 0x200000) != 0)
- 				error("Alignment of LOAD segment isn't multiple of 2MB");
- #endif
--#ifdef CONFIG_RELOCATABLE
--			dest = output;
--			dest += (phdr->p_paddr - LOAD_PHYSICAL_ADDR);
--#else
- 			dest = (void *)(phdr->p_paddr);
--#endif
-+			if (IS_ENABLED(CONFIG_X86_64) ||
-+			    IS_ENABLED(CONFIG_RELOCATABLE))
-+				dest += (unsigned long)output - LOAD_PHYSICAL_ADDR;
- 			memmove(dest, output + phdr->p_offset, phdr->p_filesz);
- 			break;
- 		default: /* Ignore other PT_* */ break;
-diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-index 9bea5a1e2c52..b72e6055e103 100644
---- a/arch/x86/boot/header.S
-+++ b/arch/x86/boot/header.S
-@@ -332,7 +332,7 @@ initrd_addr_max: .long 0x7fffffff
- kernel_alignment:  .long CONFIG_PHYSICAL_ALIGN	#physical addr alignment
- 						#required for protected mode
- 						#kernel
--#ifdef CONFIG_RELOCATABLE
-+#if defined(CONFIG_RELOCATABLE) || defined(CONFIG_X86_64)
- relocatable_kernel:    .byte 1
- #else
- relocatable_kernel:    .byte 0
-@@ -342,14 +342,10 @@ min_alignment:		.byte MIN_KERNEL_ALIGN_LG2	# minimum alignment
- xloadflags:
- #ifdef CONFIG_X86_64
- # define XLF0 XLF_KERNEL_64			/* 64-bit kernel */
--#else
--# define XLF0 0
--#endif
--
--#if defined(CONFIG_RELOCATABLE) && defined(CONFIG_X86_64)
-    /* kernel/boot_param/ramdisk could be loaded above 4g */
- # define XLF1 XLF_CAN_BE_LOADED_ABOVE_4G
- #else
-+# define XLF0 0
- # define XLF1 0
- #endif
+@@ -329,9 +329,7 @@ static size_t parse_elf(void *output)
+ 	return ehdr.e_entry - LOAD_PHYSICAL_ADDR;
+ }
  
+-const unsigned long kernel_text_size = VO___start_rodata - VO__text;
+-const unsigned long kernel_inittext_offset = VO__sinittext - VO__text;
+-const unsigned long kernel_inittext_size = VO___inittext_end - VO__sinittext;
++const unsigned long kernel_text_size = VO___data_segment_start - VO__text;
+ const unsigned long kernel_total_size = VO__end - VO__text;
+ 
+ static u8 boot_heap[BOOT_HEAP_SIZE] __aligned(4);
+diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+index f7b67cb73915..02b23aa78955 100644
+--- a/arch/x86/include/asm/boot.h
++++ b/arch/x86/include/asm/boot.h
+@@ -82,8 +82,6 @@
+ #ifndef __ASSEMBLER__
+ extern unsigned int output_len;
+ extern const unsigned long kernel_text_size;
+-extern const unsigned long kernel_inittext_offset;
+-extern const unsigned long kernel_inittext_size;
+ extern const unsigned long kernel_total_size;
+ 
+ unsigned long decompress_kernel(unsigned char *outbuf, unsigned long virt_addr,
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 1dee2987c42b..6772fe9a9957 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -196,8 +196,6 @@ SECTIONS
+ 	 */
+ 	.altinstr_aux : AT(ADDR(.altinstr_aux) - LOAD_OFFSET) {
+ 		*(.altinstr_aux)
+-		. = ALIGN(PAGE_SIZE);
+-		__inittext_end = .;
+ 	}
+ 
+ 	DATA_SEGMENT_START
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index cef32e2c82d8..ffe30ef73fda 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -890,9 +890,7 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry,
+ 
+ 	*kernel_entry = addr + entry;
+ 
+-	return efi_adjust_memory_range_protection(addr, kernel_text_size) ?:
+-	       efi_adjust_memory_range_protection(addr + kernel_inittext_offset,
+-						  kernel_inittext_size);
++	return efi_adjust_memory_range_protection(addr, kernel_text_size);
+ }
+ 
+ static void __noreturn enter_kernel(unsigned long kernel_addr,
 -- 
 2.47.3
 
