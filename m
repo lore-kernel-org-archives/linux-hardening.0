@@ -1,98 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7FB320A1F;
-	Fri,  9 Jan 2026 15:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7D4311C2A;
+	Fri,  9 Jan 2026 15:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767971292; cv=none; b=jNiclR8J4T467FA6BGxWtueNpyq15fiE+cmOfl3a3KLzZhElq5q+moKWoCTaCHko3V9fy/l+vnG5+GvUXgLffMO+w3aZ+SV0NifaFWJ8EP3wbU/tOmHzpHPQwN5UK9PJTUCp49ue1fdtlqdQUNWNLznEg6GCfqTXnglJKLzE7Nw=
+	t=1767971803; cv=none; b=D8mxFTjv/9opVmSoRKFqUvaV301W8+zfBkazE4Tv94GW+NVU71tozogE5B1bJtxf+n8Bb74hV7PumLzwZ5l31OPQGpp8gOchX3IKqNqu2Aobl+GHhB/bkds8BlynanLQjLzkmwauGaHdTC6nccT3EDJhP5JkfAttPdM83c4Ahw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767971292; c=relaxed/simple;
-	bh=+yYivR6m7de4bVDJo8K4370S1d12YvRa0ve7K/19OdA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=WdMbhCBKSAAkw2sJaI4/DSJqCT8uXcgrtlc+z/n7y8RYOIPL613Ckt1Kq1MC1BSrhL5mvUH85ghMd3g4W63yQLooXo/D0BqTLmxE4VxVAcMApHBCokzktvVNupR/kH5FtfFSdIqAz0cZ7HGyjwFS8IjimkJZCWCKQo7jF8k7bL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHPNztUN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767971803; c=relaxed/simple;
+	bh=TwCIHc4FDKyAmychWf6wK9UKfVVSINwm2NA+GwALIUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fudEYO3rzOSFyqKblWKx40X9wHLvNBl7w3O6EDmehYY44q/JsNM7x+7D6paImN+GAvi3nymStr31iJYmJ0hNn0y0Bly7Nf16kjVpsGzvg8/OSVaVuLhoC5iD0RXzSUo0vF1aHcmP1ATi2NbHi+vUBFAsLd3BZARO8TeDfoz8UmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AUfxyBIV; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHPNztUN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2E2C4CEF1;
-	Fri,  9 Jan 2026 15:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767971291;
-	bh=+yYivR6m7de4bVDJo8K4370S1d12YvRa0ve7K/19OdA=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=rHPNztUNBvwrgM0+tRT43MKzu+mXAx8v7Lt9DNa4Z11mWqsBgqYXFdOwknanHxt8h
-	 xbQ+zcfZOdDV9rRQ/PFWBjxLzN0goMyVYNufIck5vIT+c2JDzBmkf+jNrUZ2SD3exR
-	 t9xSQpiEvKToocxG/iOHoTui6oawpqrQ2FYY8kpkBjz4HJSn1dQMZWg/uWo2Ynwjv/
-	 5eNuHBce79tUeJlVpeV6tda5gFVTIiuKnxXKjsvF1ZOBaC6p2tH6C0otpMhovgdKz8
-	 ez547ye1cbQArVuQK+dby5qd0afLjaykn72q5lBEZsWA6RionYN6Y2FOjEEfZBm7RR
-	 DvoH40ihTouFw==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AUfxyBIV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767971802; x=1799507802;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TwCIHc4FDKyAmychWf6wK9UKfVVSINwm2NA+GwALIUQ=;
+  b=AUfxyBIVlEBTW69zTXeLMrRVhUWdrgClQQQmYO0d0jCjH2All6g4O6sB
+   hgmhCj5WGU1N2td9Y57gxFxr0+3bR/o0asoYst10siSpN7CVTFnuQ5n+A
+   /7HkO3M8LtSde7Y9D3+eKS0nn0P/5TSPsKf9piXl42MH43jwiMKrztjQj
+   RiX48gZ25ggHcH9hBekFmE2zfbmrgH2osj4qmnbjKjTfFnep75lm498QE
+   N/yEA3C9+loFvDN7UdqON32axiO7IpF+cQledYDRg633yGiBDXIG8X/kL
+   lygJLo7FtqQRVBx8RmDFYn1vCl4Bxg/EDl0XRj2HY6T/WSZddmK3+yoes
+   g==;
+X-CSE-ConnectionGUID: ICvFJD9LR4esFOO1jL//Lw==
+X-CSE-MsgGUID: RpSvfQ8xT7auzRez2YyOEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="68553657"
+X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
+   d="scan'208";a="68553657"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 07:16:41 -0800
+X-CSE-ConnectionGUID: rAY08spDT1KBcZcWw1GZ7Q==
+X-CSE-MsgGUID: 8ZEnHRCBRnGnY0nObmfolA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
+   d="scan'208";a="203778588"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 07:16:39 -0800
+Date: Fri, 9 Jan 2026 16:16:36 +0100
+From: Raag Jadav <raag.jadav@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tomas Winkler <tomasw@gmail.com>, linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mtd: intel-dg: fix array-index-out-of-bounds in
+ intel_dg_mtd_probe()
+Message-ID: <aWEb1BF786hX6gmo@black.igk.intel.com>
+References: <aUZFLezigzZQVt55@kspp>
+ <aUZLNTOMgvJ8WrIy@black.igk.intel.com>
+ <0c69b711-4c88-4e64-afe7-f7de147a490b@infradead.org>
+ <aWDNNOoYTa0Mi7LM@black.igk.intel.com>
+ <87a4ymyjxh.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=409e69e9e42622a8efaea00c6722208abb1f34df3b9e30332a381e829f3b;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Fri, 09 Jan 2026 16:08:07 +0100
-Message-Id: <DFK5IKWIJYLM.2CCXMRAXS0LYI@kernel.org>
-Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
-Cc: "Kees Cook" <kees@kernel.org>, "Mika Westerberg" <westeri@kernel.org>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Saravana Kannan" <saravanak@google.com>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Andy Shevchenko"
- <andy@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, "Srinivas Kandagatla" <srini@kernel.org>, "Liam
- Girdwood" <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>,
- "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- "Alexey Klimov" <alexey.klimov@linaro.org>, "Bjorn Andersson"
- <andersson@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>,
- <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-sound@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>, "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Bartosz Golaszewski" <brgl@kernel.org>
-X-Mailer: aerc 0.20.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <DFJAFK3DTBOZ.3G2P3A5IH34GF@kernel.org>
- <CAMRc=MeQ_zr047PxFFGhfZ43TuHoKG-9VLLefxVyScpO5ZxjzQ@mail.gmail.com>
- <DFK4Y3EOXTFL.1M25VAPJAS2BU@kernel.org>
- <CAMRc=MeG9fPaq8M8ACq7_9+ysmYX+aRRzZVgApv5YMGtjx72Mw@mail.gmail.com>
-In-Reply-To: <CAMRc=MeG9fPaq8M8ACq7_9+ysmYX+aRRzZVgApv5YMGtjx72Mw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87a4ymyjxh.fsf@bootlin.com>
 
---409e69e9e42622a8efaea00c6722208abb1f34df3b9e30332a381e829f3b
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Fri, Jan 09, 2026 at 02:50:18PM +0100, Miquel Raynal wrote:
+> On 09/01/2026 at 10:41:08 +01, Raag Jadav <raag.jadav@intel.com> wrote:
+> > On Wed, Jan 07, 2026 at 03:17:40PM -0800, Randy Dunlap wrote:
+> >> Hi,
+> >> 
+> >> On 12/19/25 11:07 PM, Raag Jadav wrote:
+> >> > On Sat, Dec 20, 2025 at 03:41:49PM +0900, Gustavo A. R. Silva wrote:
+> >> >> Fix the UBSAN: array-index-out-of-bounds issue below by updating
+> >> >> counter nvm->nregions before the first access to flexible-array
+> >> >> member nvm->regions[].
+> >> >>
+> >> >> from kernel bugzilla:
+> >> >> https://bugzilla.kernel.org/show_bug.cgi?id=220823
+> >> >>
+> >> >> Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in
+> >> >> /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
+> >> >>
+> >> >> Notice that this flexible array is annotated with the counted_by()
+> >> >> attribute, hence the counter must always be updated before the
+> >> >> first access to the array.
+> >> > 
+> >> > Already fixed[1], but not sure if it's landed yet.
+> >> > 
+> >> > [1] https://lore.kernel.org/linux-mtd/20251111-mtd-nregions-v1-1-61db61e78c63@intel.com/
+> >> 
+> >> What's the status of this patch, please?
+> >
+> > I'm assuming it'll go through mtd tree? Miquel?
+> 
+> It should indeed. However only the mtd list has been included, so it
+> won't appear in "my" todo list. Lucas can you please resend, and use a
+> tool such as b4 to manage the series or at least run get_maintainers.pl?
 
->> Not sure this is still valid. Because I've just learned that
->> apparently, the arm64 Image shall be made smaller and thus "need
->> a driver for rootfs" isn't a valid reason for =3Dy anymore.
->>
->
-> Is a switch to disable shared GPIO management entirely via Kconfig
-> (depending on CONFIG_EXPERT) good enough for you?
+Lucas is no longer with Intel. Sasha, would you be up for it?
 
-I don't really need that (as I'd also need a PMIC driver, which
-probably won't be accepted either as =3Dy), maybe other do. Not sure,
-up to you.
-
--michael
-
---409e69e9e42622a8efaea00c6722208abb1f34df3b9e30332a381e829f3b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaWEZ1xIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/jb6QF/cKSDNHxnvueWH5aVmuyPcce5VtwNVM28
-ulztUB/LQdv1McH02EzbRVwRhh0VAP+PAX9TgaecNELyf37cr7SC2SmZQ15ZqBwR
-xXpQ0WmkfDXKsuE5DRyyGgZF13/qGopvROE=
-=If2G
------END PGP SIGNATURE-----
-
---409e69e9e42622a8efaea00c6722208abb1f34df3b9e30332a381e829f3b--
+Raag
