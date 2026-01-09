@@ -1,110 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7D4311C2A;
-	Fri,  9 Jan 2026 15:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583AC1D5141
+	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 15:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767971803; cv=none; b=D8mxFTjv/9opVmSoRKFqUvaV301W8+zfBkazE4Tv94GW+NVU71tozogE5B1bJtxf+n8Bb74hV7PumLzwZ5l31OPQGpp8gOchX3IKqNqu2Aobl+GHhB/bkds8BlynanLQjLzkmwauGaHdTC6nccT3EDJhP5JkfAttPdM83c4Ahw0=
+	t=1767972138; cv=none; b=AW2/gIOXdS8IOIp8MXVSyIiyqt61FB+Kh83RJNeL6BlPAmTuyiKdPdR2UEHBJTnN+mUO4VuVqT858C8eir6QO4CNyhizQUnhbu98EDOs8PmFaFbdq6eW6hy/qF8yKIic2q1RN1NfzOcH+q7hiz8ioAAPMG8OLNtMT+tuLqLYeqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767971803; c=relaxed/simple;
-	bh=TwCIHc4FDKyAmychWf6wK9UKfVVSINwm2NA+GwALIUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fudEYO3rzOSFyqKblWKx40X9wHLvNBl7w3O6EDmehYY44q/JsNM7x+7D6paImN+GAvi3nymStr31iJYmJ0hNn0y0Bly7Nf16kjVpsGzvg8/OSVaVuLhoC5iD0RXzSUo0vF1aHcmP1ATi2NbHi+vUBFAsLd3BZARO8TeDfoz8UmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AUfxyBIV; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1767972138; c=relaxed/simple;
+	bh=/0dRPRjqg3IHIqgYOrn2vyyviwdlxxFzHDkKNcZEB7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uxX8mP0L57zluyyA4KPkLQoFIcaeYK2CMV3wUI5xWCU0gcudkSWteCgeoPSzVKeTrigmtJEdQpPIkx6YdZ8VpsS1hORV36ljMaH4oHDFPiU9Tt+4M8Vb/NREDS0T7dT1m1tMPi/KNO/3RuP15+lpdgqpZdHqqm7h57It4OxsOqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KOcCxIYH; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AUfxyBIV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767971802; x=1799507802;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TwCIHc4FDKyAmychWf6wK9UKfVVSINwm2NA+GwALIUQ=;
-  b=AUfxyBIVlEBTW69zTXeLMrRVhUWdrgClQQQmYO0d0jCjH2All6g4O6sB
-   hgmhCj5WGU1N2td9Y57gxFxr0+3bR/o0asoYst10siSpN7CVTFnuQ5n+A
-   /7HkO3M8LtSde7Y9D3+eKS0nn0P/5TSPsKf9piXl42MH43jwiMKrztjQj
-   RiX48gZ25ggHcH9hBekFmE2zfbmrgH2osj4qmnbjKjTfFnep75lm498QE
-   N/yEA3C9+loFvDN7UdqON32axiO7IpF+cQledYDRg633yGiBDXIG8X/kL
-   lygJLo7FtqQRVBx8RmDFYn1vCl4Bxg/EDl0XRj2HY6T/WSZddmK3+yoes
-   g==;
-X-CSE-ConnectionGUID: ICvFJD9LR4esFOO1jL//Lw==
-X-CSE-MsgGUID: RpSvfQ8xT7auzRez2YyOEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="68553657"
-X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
-   d="scan'208";a="68553657"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 07:16:41 -0800
-X-CSE-ConnectionGUID: rAY08spDT1KBcZcWw1GZ7Q==
-X-CSE-MsgGUID: 8ZEnHRCBRnGnY0nObmfolA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
-   d="scan'208";a="203778588"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 07:16:39 -0800
-Date: Fri, 9 Jan 2026 16:16:36 +0100
-From: Raag Jadav <raag.jadav@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOcCxIYH"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2a2ea96930cso31252815ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 07:22:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767972137; x=1768576937; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l02srCpqwS/PPVAYoAwmWqO0txf7t8pnFoogY5rh/QA=;
+        b=KOcCxIYH7ZfzPZW1EgMeCaHB8qzTB4V8M6dVzLqboXwd/Hov8grmVhhBnWFEZruIAI
+         PMH0+w7EJVtTiszm0ibb3c6A+OO7Fbgdc6nvKgbjcB/ADx8G31SitVtH4IoVhgsx4gvb
+         sXkIFHmq2xukww/+00iDj7O+MzukW+exdkkWyyC64XiVGnGYNfn3cvvHzInhciOS9u7m
+         lSCrsIQ4YHxdDejbHnoGFTEbDhuoPsCCCRQ1KbvSzb+cS9Yc91uEZeq2K22cxB9sA84Y
+         4MUtGye4XgcRrX8rQ/8/62/jgNMMSPOVG4ORPFgv9S9137O29rxrOFAkUd3PXIWZlr4r
+         9Tcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767972137; x=1768576937;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l02srCpqwS/PPVAYoAwmWqO0txf7t8pnFoogY5rh/QA=;
+        b=MrbjvcfUpBC93YSWyaQ5wczE5tqGgWK1983rD88zEvbmhUqWBi2dnogIGAMnbyOc9h
+         GCMvkuhQk1Nmm6In7iePw/wc7appfhinUD4DLlro8PlPLRqWFZktS1cymwusZHdmuNop
+         Tlt6bhrW7GCTvbaXKjJhegtmaFKyrLCF2aqckj0qEHryWzeHudOHtu3F07drcz8/dTQ8
+         LVJz2E3mUg45k55qTzhWVKGorS4IH0qZUJ2PJRRLG/QQwa/V5JikG6UtFWUdhWrRyc0r
+         pFqMimB0sEbYmt4f+VyvvGtpfCSuVWdb9vv2gBgVMolzyjSdbcFh9veQq7RoLxfVGBrK
+         nC6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVghMuwxYJmfvZs9moUsXpOrjOMLefsrX2FrX8/O0U+MSLSx5/PFt5YXRiX0mhyhXVrOIyPd5JrS3Wy05vcXfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2MTKMDBPAT9BTvPbKERBbQS78+P6gRvNBwqphiT3AmfGPGpMt
+	lIkrt5Rgp7SoCzEp2IGIdvTTQ0E5fRLJfkeeESm8mdsHvgz3dk8dp8AD
+X-Gm-Gg: AY/fxX7ssnj3C/tfH+cC1RL+czkOPGCV6NB9u8bbCKSD7az3gi5AV+wYBrJyWC1GtU/
+	N1IxBwXeyvUlJy4lTQHriVNOgjXgcgsHT8IARcrBZbVAm3vibNHWVXrPnlHVdjfSMod6WTGvEUQ
+	LOSDFZ6GUN96HEL8KnjGUW26d3GmQg03t++wHUv41oxXNsR6rEkkLrfEB8HOCGriQXCx8oCm5nI
+	hPzHw6vbMdjhO14203crUZ9NAn0TEwCxk1x3SV9hveEtklGIwnruEoeP/AbxHs9C1SFFOzRjncS
+	Gluycwhb5FbMg4s+Jr1snFdLTpS1kjEiFOQ6D3Cmah0tzNB/3p6gttyU6dMfRu7UkWQapNo3PVP
+	uWK8wr9K0wYg2Yc53D+XLueUWiXQfE6AZHzVm/J17Ew3Rw0IW1guP0Uf9aqANllXEaMk82PBeVS
+	g1R63LHud8mTPl9jpafxKg02Mw4dfDt3RykBfCENe6
+X-Google-Smtp-Source: AGHT+IFjwhs5i9G743dkgLzBhWBTZ55yy5yc6JsaoH2/JUYyPH+SQo8zbecqIuA/7HClY6kISME1yw==
+X-Received: by 2002:a17:903:478d:b0:2a0:b438:fc15 with SMTP id d9443c01a7336-2a3ee468407mr97193875ad.11.1767972136629;
+        Fri, 09 Jan 2026 07:22:16 -0800 (PST)
+Received: from fedora ([103.120.31.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cc87f8sm108021895ad.77.2026.01.09.07.22.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jan 2026 07:22:16 -0800 (PST)
+From: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
+To: netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tomas Winkler <tomasw@gmail.com>, linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mtd: intel-dg: fix array-index-out-of-bounds in
- intel_dg_mtd_probe()
-Message-ID: <aWEb1BF786hX6gmo@black.igk.intel.com>
-References: <aUZFLezigzZQVt55@kspp>
- <aUZLNTOMgvJ8WrIy@black.igk.intel.com>
- <0c69b711-4c88-4e64-afe7-f7de147a490b@infradead.org>
- <aWDNNOoYTa0Mi7LM@black.igk.intel.com>
- <87a4ymyjxh.fsf@bootlin.com>
+	Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
+Subject: [PATCH RESEND net-next] selftests/net/ipsec: Fix variable size type not at the end of struct
+Date: Fri,  9 Jan 2026 20:52:01 +0530
+Message-ID: <20260109152201.15668-1-ankitkhushwaha.linux@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a4ymyjxh.fsf@bootlin.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 09, 2026 at 02:50:18PM +0100, Miquel Raynal wrote:
-> On 09/01/2026 at 10:41:08 +01, Raag Jadav <raag.jadav@intel.com> wrote:
-> > On Wed, Jan 07, 2026 at 03:17:40PM -0800, Randy Dunlap wrote:
-> >> Hi,
-> >> 
-> >> On 12/19/25 11:07 PM, Raag Jadav wrote:
-> >> > On Sat, Dec 20, 2025 at 03:41:49PM +0900, Gustavo A. R. Silva wrote:
-> >> >> Fix the UBSAN: array-index-out-of-bounds issue below by updating
-> >> >> counter nvm->nregions before the first access to flexible-array
-> >> >> member nvm->regions[].
-> >> >>
-> >> >> from kernel bugzilla:
-> >> >> https://bugzilla.kernel.org/show_bug.cgi?id=220823
-> >> >>
-> >> >> Dec 15 22:01:52 orpheus kernel: UBSAN: array-index-out-of-bounds in
-> >> >> /var/tmp/portage/sys-kernel/gentoo-kernel-6.18.1/work/linux-6.18/drivers/mtd/devices/mtd_intel_dg.c:750:15
-> >> >>
-> >> >> Notice that this flexible array is annotated with the counted_by()
-> >> >> attribute, hence the counter must always be updated before the
-> >> >> first access to the array.
-> >> > 
-> >> > Already fixed[1], but not sure if it's landed yet.
-> >> > 
-> >> > [1] https://lore.kernel.org/linux-mtd/20251111-mtd-nregions-v1-1-61db61e78c63@intel.com/
-> >> 
-> >> What's the status of this patch, please?
-> >
-> > I'm assuming it'll go through mtd tree? Miquel?
-> 
-> It should indeed. However only the mtd list has been included, so it
-> won't appear in "my" todo list. Lucas can you please resend, and use a
-> tool such as b4 to manage the series or at least run get_maintainers.pl?
+The "struct alg" object contains a union of 3 xfrm structures:
 
-Lucas is no longer with Intel. Sasha, would you be up for it?
+	union {
+		struct xfrm_algo;
+		struct xfrm_algo_aead;
+		struct xfrm_algo_auth;
+	}
 
-Raag
+All of them end with a flexible array member used to store key material,
+but the flexible array appears at *different offsets* in each struct.
+bcz of this, union itself is of variable-sized & Placing it above
+char buf[...] triggers:
+
+ipsec.c:835:5: warning: field 'u' with variable sized type 'union
+(unnamed union at ipsec.c:831:3)' not at the end of a struct or class
+is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
+  835 |                 } u;
+      |                   ^
+
+one fix is to use "TRAILING_OVERLAP()" which works with one flexible
+array member only.
+
+But In "struct alg" flexible array member exists in all union members,
+but not at the same offset, so TRAILING_OVERLAP cannot be applied.
+
+so the fix is to explicitly overlay the key buffer at the correct offset
+for the largest union member (xfrm_algo_auth). This ensures that the
+flexible-array region and the fixed buffer line up.
+
+No functional change.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
+---
+CCed Gustavo and linux-hardening as suggested by Simon.
+
+Previous patch: https://lore.kernel.org/all/aSiXmp4mh7M3RaRv@horms.kernel.org/t/#u
+---
+ tools/testing/selftests/net/ipsec.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/net/ipsec.c b/tools/testing/selftests/net/ipsec.c
+index 0ccf484b1d9d..f4afef51b930 100644
+--- a/tools/testing/selftests/net/ipsec.c
++++ b/tools/testing/selftests/net/ipsec.c
+@@ -43,6 +43,10 @@
+
+ #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+
++#ifndef offsetof
++#define offsetof(TYPE, MEMBER)	__builtin_offsetof(TYPE, MEMBER)
++#endif
++
+ #define IPV4_STR_SZ	16	/* xxx.xxx.xxx.xxx is longest + \0 */
+ #define MAX_PAYLOAD	2048
+ #define XFRM_ALGO_KEY_BUF_SIZE	512
+@@ -827,13 +831,16 @@ static int xfrm_fill_key(char *name, char *buf,
+ static int xfrm_state_pack_algo(struct nlmsghdr *nh, size_t req_sz,
+ 		struct xfrm_desc *desc)
+ {
+-	struct {
++	union {
+ 		union {
+ 			struct xfrm_algo	alg;
+ 			struct xfrm_algo_aead	aead;
+ 			struct xfrm_algo_auth	auth;
+ 		} u;
+-		char buf[XFRM_ALGO_KEY_BUF_SIZE];
++		struct {
++			unsigned char __offset_to_FAM[offsetof(struct xfrm_algo_auth, alg_key)];
++			char buf[XFRM_ALGO_KEY_BUF_SIZE];
++		};
+ 	} alg = {};
+ 	size_t alen, elen, clen, aelen;
+ 	unsigned short type;
+--
+2.52.0
+
