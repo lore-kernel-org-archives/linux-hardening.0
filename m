@@ -1,297 +1,68 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from forward502a.mail.yandex.net (forward502a.mail.yandex.net [178.154.239.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC32337BB4
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 10:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0837D339705;
+	Fri,  9 Jan 2026 11:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767953714; cv=none; b=JAXpJtTULTdBNK665U4pzc8kK55yDf2Tqr/s7dsjqkadyc7+ippD9/MEesplbagDgn+OUN+g2rUZpf48Kq799q70peEKZfLfQFdS2lvffIn2v04uaAYq3rPCjwKoXj1aRAEewigO0S46ifSLfON4pgYghjEEY/th1DEl3TplEXk=
+	t=1767956755; cv=none; b=hsonG8LUP0cvv1Hllomld+edyRwGDpr5x9tLqoseTpKrw7/BG5O5fEW++qhmeTHsD82rpj65cLqPCLH+Tp+pnwYPIwPnSRjVTg33KmlBpo7kSwOhXhyUCnHh7c1hmZ+w8dEvXNAUVOazCedyY+u4YmzFfRoLF4KFY3v1kfJB3nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767953714; c=relaxed/simple;
-	bh=ZyFBpyLdbmxF4q1S84VBkVEAwIdbn3sylLoQzPhCTps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j6IIXniy5v73mAhjZEotTjmyW1n+o3nw/+VGqJw6bJSMGjFj6zl1cBUY7qb2+Y00oNMQRV433weRT+bkvki4VV/8ISvg+uyMHzW/TPb+CB9eLBmTumrYlHTA3TcKbXS6clAGtFMdwBrOxYoK01l7nG9b1V++7tH+T1nRmFI72Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CjQU2HeW; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=FrkQKgs2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1767956755; c=relaxed/simple;
+	bh=9/YxxR/HXhkR8WEEHc2OzMEtkpwZUKddsXABh16T0KU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WZkZnjQFlONcK3GyPpNZZ9+Vyck07/jCSAZ+8YVcfieeKc7MePrPO/ddJyTI3+XV/bzZSUNS90m3zqcCtF1IC3Al/mQAPQL1tXyr1HBRSN2+xGYW+dJYAqN9X0dwd6TGXiC7+/8K/RStH33wYwk1vifevT6B+wGMubFNgaZRKx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=U2x03vGA; arc=none smtp.client-ip=178.154.239.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CjQU2HeW";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="FrkQKgs2"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6096QwEa3142579
-	for <linux-hardening@vger.kernel.org>; Fri, 9 Jan 2026 10:15:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PrskKRW4Uelq9Mbdgi8O2eVhyYrlJ63nQrd4PplXr84=; b=CjQU2HeWo/Mh8/Sh
-	vHHbRJ17dlZW3mjmMItl7GDcTtbsJAinojHKbUtxMXtjWN+l+i56IZo87ASh2p7x
-	Zbuj72GIoeeKcnC6iREWCHgQYldsOQpJE/yns7pND7BwVRqxxB74YeAXhAwxhzvg
-	OHti7K5mzCuyBaidbsljJVVs513X3WTK67RbbQAALg0tBpQ6Beqk5gA36Dgxy/+h
-	CsDLlCghGzMxYrcV1OGy43Sn0xdA47gj1rt5llyfAF/GrKGSQOvrp+/9YZphclBL
-	tcWcqCxcoJvEHAoc7d7q2n7l5EDnOwMRwFqMxzqv0PKBTL9eXi51ipX62KBgNvRP
-	b60CNw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjj8j2903-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 10:15:07 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8bedacab1e0so132420585a.1
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 02:15:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767953707; x=1768558507; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PrskKRW4Uelq9Mbdgi8O2eVhyYrlJ63nQrd4PplXr84=;
-        b=FrkQKgs2dM32athq1agvAu9Q/cOQ9fvUF57afPECDb5m3xF8WDkGFdZSknQz44D1u+
-         zUHgVac+AFAlHbhbIC8jNCBv+08RuJan5poGunAPM7lTq1zJmEHdsHl1YQpgR1I4SWAn
-         STbrHjq4r70O6cqN7PdnFDdvFkycJIR6QLJQhweFzxXz2XSQzU/J09jVZdT8p3DZZJcA
-         bDLDpWB/HWsItmsGjXwjBc5RfkFB1pXfPjMgdMte/dUhf7BDhJI78fdzszyPOD+pyY0a
-         yEyb4kPNADemaziqR7YRrlfhF0GTNfRi0mvLWayaUhgg+q69lUMAECkHuFbKTVsm2ddC
-         Qxkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767953707; x=1768558507;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PrskKRW4Uelq9Mbdgi8O2eVhyYrlJ63nQrd4PplXr84=;
-        b=dzc6mRZ3FlBsqVkgOAxZBjNp0qot5ckqk7vddSaiL3715zC6GIJCGU2m0wgJowQUaz
-         As7NrWMfD4kEDD8dRhmWwdY530wYmRT7Tx8jLOEPKcCThKfaPM3apEx21rAgQBIon5Ik
-         Ex/VlIO7ZcIUt2njn0uIFdWDtYk6XPMR4/qG/OEeqCKqfi1vxlO7y22gIAOl5Yzqvs6h
-         sxX89k9oKG2Z64wpqp08Gp4OJiI1klhcv0NTmjToKrnaTDsBFLLS94wznAxA8DisSSbp
-         5qklpQ4UF0JzbO4kvPUBq2z5mXPbfgDhuvHvOrsYJvhK8wkeoYESkcej9sFa1slV77KZ
-         RF9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWyG58NxOuSVbFcqnAk5MJbJzBV+bBqXHr/+pjhahUj0WmuCGaKBAAOzZ836ZDiYup7aseXs25xCLpY9/PmYNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyueSQlVjj5R/6xWUB/CLsz/BRyRS/7V28P1whKHDbC6drl1tnN
-	XbR7UnrGrhKaQxUk+zmxF4Sv/gD9P1drunOoFb7/TBljSretq9gJTLQbIgn1pXmnx+MdejdKf1j
-	Q5oBRqAbiUU8hgeJov23gGo52Ov1JvlR0UwdR/Zh94p7Tjuevq/dTXypxZPra0hvB4oBnSnQ=
-X-Gm-Gg: AY/fxX7XQhztxPudnnIWB33gT0dMEUJWe/1YJsP72XVMo01BR59E0AU2S68KoyDi505
-	PhpziSwxJQqwHcQgY8u8+V6QoCfxBzcyLnawAxNLpDxxnEhq+3DY60kXqULVmGBQonFlygzuRa0
-	DTaU2t4n0nnReVDmcKM5XuurLFTBu8+QN2QCJT9PDoaNR291tnvGatVm2g//gzQTt8pxr8fn2zL
-	662Mq0sQMXn9IvoUX4B7L7St1d4UbWLgkiLuy8TDrBqp1fwRM7LYBWCOmNyOFTM3Y8Q0HzFqhG7
-	lrcBH8K1OrCQ/dKC+mKMBig2VkD20BLs0DI6ylz3rzBpVUOEAATj1CgQgc9aj7hvVhW6MP/wteO
-	8rR/XZW2m/cpNfVEeiIM6AKvYkx201cRvSctCT6j8q2WmdVxJ10HzrGWXak1uyBBWDdo=
-X-Received: by 2002:a05:620a:254a:b0:8b2:ec2f:cb3d with SMTP id af79cd13be357-8c389458e23mr817189885a.10.1767953707060;
-        Fri, 09 Jan 2026 02:15:07 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG9on5U3y21CcX9YejXMliDvFoINV1is4LvnnTNYcp38uzjMU928ZhdCqbIX4PU5m/DU5Itlg==
-X-Received: by 2002:a05:620a:254a:b0:8b2:ec2f:cb3d with SMTP id af79cd13be357-8c389458e23mr817186685a.10.1767953706597;
-        Fri, 09 Jan 2026 02:15:06 -0800 (PST)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b842a511085sm1057781466b.46.2026.01.09.02.15.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jan 2026 02:15:05 -0800 (PST)
-Message-ID: <701000c2-11c1-4690-8d6e-0ac79572cea5@oss.qualcomm.com>
-Date: Fri, 9 Jan 2026 11:15:03 +0100
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="U2x03vGA"
+Received: from mail-nwsmtp-smtp-production-main-94.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-94.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:290e:0:640:f317:0])
+	by forward502a.mail.yandex.net (Yandex) with ESMTPS id 1DA80811D8;
+	Fri, 09 Jan 2026 14:05:43 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-94.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id f5NLscOGqKo0-CFqranw5;
+	Fri, 09 Jan 2026 14:05:42 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1767956742; bh=9/YxxR/HXhkR8WEEHc2OzMEtkpwZUKddsXABh16T0KU=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=U2x03vGA/9xWgQpTPAmREoFW2Ikwnnbp/5x+wizKpy1Cl2vDLMB+n3zNL7dy3sbNB
+	 6czuodSgkDwO5ZzZu2C00ulE804azqW4ADLedcGzPGZKiL6ARQR0zx4GjJWtbJV20X
+	 nX6F75kCRN0+BTPi/2sw87I3SlCroR3kVpYK4Dc4=
+Authentication-Results: mail-nwsmtp-smtp-production-main-94.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <89207e33051803a21b0703987bf2a91208e8cf70.camel@yandex.ru>
+Subject: Re: [PATCH v3 1/2] lib: introduce simple error-checking wrapper for
+ memparse()
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+  Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Andrew
+ Morton	 <akpm@linux-foundation.org>, linux-xfs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Fri, 09 Jan 2026 14:05:41 +0300
+In-Reply-To: <aWAPOyJwhpfKpqPy@smile.fi.intel.com>
+References: <20260108165216.1054625-1-dmantipov@yandex.ru>
+	 <aWAPOyJwhpfKpqPy@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] Retrieve information about DDR from SMEM
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
-        Akhil P Oommen <akhilpo@oss.qualcomm.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar
- <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jesszhan0024@gmail.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-References: <20260108-topic-smem_dramc-v3-0-6b64df58a017@oss.qualcomm.com>
- <6ef89318-5fa4-47f5-8027-04a91656d81e@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <6ef89318-5fa4-47f5-8027-04a91656d81e@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDA3MyBTYWx0ZWRfX0fbbAte5iZOo
- /ZslQZaiwuo9XseSTFe8qbwwsKz5bCP9DpUOc6AfT9CBdRAF6dVV3Fe8MSUNX4n6plFVAPN0Ibd
- niM7pLDLllGZs5OstGuZfL4UK5wRKEWD1NkcD5Eh0ihv/FsAPoHReziyiwnBOTLCfSSi3fYj1i5
- /epzR7hQzc/SfTcHkze/TozNSomy05ZIroDmXAD2FHe//yAZsbKW5TjySBYhKUPdp4hGqdo+x4V
- zp5e3W74HZLjrHQxtGQ4vcI8ePB1VOqrTwDHnoirOlh5XKwGzgsKFugb2g/vl0iSaMUlY66tcQO
- LjexA+gtcYmq6w/ZTTf48dKcOcvHJSlOet4eniq2ZEbuIzZpxdr/iWe3T5oIRnXDSx4pt1ArWNf
- 9HG8tfOLmrOeq9NKZ/OXSZLJiBXOLS4OIQOK3SR1lTs2TWIPuRgi6Yi7jCRSfzn/QwC1shDDYwD
- rmhOKqk7SzsJhEu0lxw==
-X-Authority-Analysis: v=2.4 cv=JIs2csKb c=1 sm=1 tr=0 ts=6960d52b cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=P3zdcL2LA7wxMbYDQFIA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: SCWmzR3zOLidbny1nXtrnQftKn-jmZoz
-X-Proofpoint-ORIG-GUID: SCWmzR3zOLidbny1nXtrnQftKn-jmZoz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-09_03,2026-01-08_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- impostorscore=0 bulkscore=0 adultscore=0 spamscore=0 clxscore=1015
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
- definitions=main-2601090073
 
-On 1/9/26 9:20 AM, Neil Armstrong wrote:
-> Hi,
-> 
-> On 1/8/26 15:21, Konrad Dybcio wrote:
->> SMEM allows the OS to retrieve information about the DDR memory.
->> Among that information, is a semi-magic value called 'HBB', or Highest
->> Bank address Bit, which multimedia drivers (for hardware like Adreno
->> and MDSS) must retrieve in order to program the IP blocks correctly.
->>
->> This series introduces an API to retrieve that value, uses it in the
->> aforementioned programming sequences and exposes available DDR
->> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
->> information can be exposed in the future, as needed.
->>
->> Patch 3 should really be merged after 1&2
-> 
-> 
-> While trying it, I got the following warning:
-> 
-> In function ‘smem_dram_parse_v3_data’,
->     inlined from ‘smem_dram_parse’ at drivers/soc/qcom/smem_dramc.c:380:3:
-> drivers/soc/qcom/smem_dramc.c:216:31: warning: iteration 13 invokes undefined behavior [-Waggressive-loop-optimizations]
->   216 |                 if (freq_entry->freq_khz && freq_entry->enabled)
->       |                     ~~~~~~~~~~^~~~~~~~~~
-> drivers/soc/qcom/smem_dramc.c:213:27: note: within this loop
->   213 |         for (int i = 0; i < num_freq_entries; i++) {
->       |                         ~~^~~~~~~~~~~~~~~~~~
+On Thu, 2026-01-08 at 22:10 +0200, Andy Shevchenko wrote:
 
-clang didn't seem to care..
+> Hmm... Why not -ERANGE (IIRC this what kstrto*() returns when it doesn't =
+match
+> the given range).
 
-A (really grumpy) solution would be to add:
+Well, I've always treated -ERANGE closer to formal math, i.e. "return -ERAN=
+GE
+if X is not in [A:B)", rather than using it to denote something which makes
+no practical sense in some particular context, like negative amount of memo=
+ry
+or negative string length.
 
-diff --git a/drivers/soc/qcom/smem_dramc.c b/drivers/soc/qcom/smem_dramc.c
-index 017bb894a91b..dc2cd7e13b88 100644
---- a/drivers/soc/qcom/smem_dramc.c
-+++ b/drivers/soc/qcom/smem_dramc.c
-@@ -78,7 +78,7 @@ struct ddr_freq_table {
- 
- /* V3 */
- struct ddr_freq_plan_v3 {
--	struct ddr_freq_table ddr_freq[MAX_DDR_FREQ_NUM_V3]; /* NOTE: some have 14 like v5 */
-+	struct ddr_freq_table ddr_freq[MAX_DDR_FREQ_NUM_V3];
- 	u8 num_ddr_freqs;
- 	phys_addr_t clk_period_address;
- };
-@@ -91,6 +91,21 @@ struct ddr_details_v3 {
- 	u8 num_channels;
- };
- 
-+/* Some V3 structs have an additional frequency level */
-+struct ddr_freq_plan_v3_14freqs {
-+	struct ddr_freq_table ddr_freq[MAX_DDR_FREQ_NUM_V3 + 1];
-+	u8 num_ddr_freqs;
-+	phys_addr_t clk_period_address;
-+};
-+
-+struct ddr_details_v3_14freqs {
-+	u8 manufacturer_id;
-+	u8 device_type;
-+	struct ddr_part_details ddr_params[MAX_CHAN_NUM];
-+	struct ddr_freq_plan_v3_14freqs ddr_freq_tbl;
-+	u8 num_channels;
-+};
-+
- /* V4 */
- struct ddr_details_v4 {
- 	u8 manufacturer_id;
-@@ -201,16 +216,11 @@ int qcom_smem_dram_get_hbb(void)
- }
- EXPORT_SYMBOL_GPL(qcom_smem_dram_get_hbb);
- 
--static void smem_dram_parse_v3_data(struct smem_dram *dram, void *data, bool additional_freq_entry)
-+static void smem_dram_parse_v3_data(struct smem_dram *dram, void *data)
- {
--	/* This may be 13 or 14 */
--	int num_freq_entries = MAX_DDR_FREQ_NUM_V3;
- 	struct ddr_details_v3 *details = data;
- 
--	if (additional_freq_entry)
--		num_freq_entries++;
--
--	for (int i = 0; i < num_freq_entries; i++) {
-+	for (int i = 0; i < MAX_DDR_FREQ_NUM_V3; i++) {
- 		struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
- 
- 		if (freq_entry->freq_khz && freq_entry->enabled)
-@@ -218,6 +228,18 @@ static void smem_dram_parse_v3_data(struct smem_dram *dram, void *data, bool add
- 	}
- }
- 
-+static void smem_dram_parse_v3_14freqs_data(struct smem_dram *dram, void *data)
-+{
-+	struct ddr_details_v3_14freqs *details = data;
-+
-+	for (int i = 0; i < MAX_DDR_FREQ_NUM_V3 + 1; i++) {
-+		struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
-+
-+	if (freq_entry->freq_khz && freq_entry->enabled)
-+		dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
-+	}
-+}
-+
- static void smem_dram_parse_v4_data(struct smem_dram *dram, void *data)
- {
- 	struct ddr_details_v4 *details = data;
-@@ -273,8 +295,7 @@ static int smem_dram_infer_struct_version(size_t size)
- 	if (size == sizeof(struct ddr_details_v3))
- 		return INFO_V3;
- 
--	if (size == sizeof(struct ddr_details_v3)
--		 + sizeof(struct ddr_freq_table))
-+	if (size == sizeof(struct ddr_details_v3_14freqs))
- 		return INFO_V3_WITH_14_FREQS;
- 
- 	if (size == sizeof(struct ddr_details_v4))
-@@ -374,10 +395,10 @@ struct dentry *smem_dram_parse(struct device *dev)
- 
- 	switch (ver) {
- 	case INFO_V3:
--		smem_dram_parse_v3_data(dram, data, false);
-+		smem_dram_parse_v3_data(dram, data);
- 		break;
- 	case INFO_V3_WITH_14_FREQS:
--		smem_dram_parse_v3_data(dram, data, true);
-+		smem_dram_parse_v3_14freqs_data(dram, data);
- 		break;
- 	case INFO_V4:
- 		smem_dram_parse_v4_data(dram, data);
-
-A less grumpy one that I'm not sure would make the compiler happy would be:
-
-diff --git a/drivers/soc/qcom/smem_dramc.c b/drivers/soc/qcom/smem_dramc.c
-index 017bb894a91b..3653402fa70c 100644
---- a/drivers/soc/qcom/smem_dramc.c
-+++ b/drivers/soc/qcom/smem_dramc.c
-@@ -206,15 +206,16 @@ static void smem_dram_parse_v3_data(struct smem_dram *dram, void *data, bool add
- 	/* This may be 13 or 14 */
- 	int num_freq_entries = MAX_DDR_FREQ_NUM_V3;
- 	struct ddr_details_v3 *details = data;
-+	struct ddr_freq_table *freq_entry;
- 
- 	if (additional_freq_entry)
- 		num_freq_entries++;
- 
--	for (int i = 0; i < num_freq_entries; i++) {
--		struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
-+	freq_entry = details->ddr_freq_tbl.ddr_freq;
- 
-+	for (int i = 0; i < num_freq_entries; i++) {
- 		if (freq_entry->freq_khz && freq_entry->enabled)
--			dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
-+			dram->frequencies[dram->num_frequencies++] = 1000 * (freq_entry++)->freq_khz;
- 	}
- }
- 
-WDYT?
-
-Konrad
+Dmitry
