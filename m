@@ -1,100 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A272EC0B5;
-	Thu,  8 Jan 2026 20:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A315D1F95C;
+	Fri,  9 Jan 2026 00:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767903041; cv=none; b=U+UhF2qNFILsWbI73pTl2YhG4I/Vf7ek1mzVWhoj/eMoQT9Wu+uDNC9vWbBZS++RZH5dxpdAGexKBDTtV3tKDQEpjEEY6x9DxrhyLQqHslCIh9S5ZIhzZ3RCG1QCHsXV/B+6hfC3x1Q8kycZjE36gl+UDeNa/JxzPbbTBpqZEOQ=
+	t=1767919059; cv=none; b=GejX1pmVMyilaKhQ3GMafyQpVHyFQeuLaQOwG0cipo1JgH64l8H07DVXKyviReSKjtWW7ZWFGg4qUxhR/v9YLVsOpb6JtWuuIbXvN/Pm9ZzhUynWX4/cFZcDq6frgtKyjmJpM5wr6beO7oGiv2TUqxcGc8LS+d0jl09U+rKEGWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767903041; c=relaxed/simple;
-	bh=xzrAd3JaP9XwxrzniHGiKv1TyecTNJ3c+MOLnmdydtg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JTuLbgWXWzcU+cbWCqo89O134z30do7t4bZu33T56w23r4yEWpEo6E7Ex0/Xvj5TR4z+PbEGlNYvsAb7qrYONskk6SXa+OmTIDGlNhfxz6V51ECb3BdCAlqy6y9xzl2WzYWhrBnbe053jtox3//mB+6MacEIv/LJ2GnO961aoeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ACaiqn9J; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1767919059; c=relaxed/simple;
+	bh=hclOahF0a7HxPthLzFJ+58DJukrIVIhcuu0DY9kBmXI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eHzdHyuEkp45Vxo1efq3ZQMBtemEdCoevJxCc/5VAcNqdgIavBmYkG1/xL9xBHLDDNK1DJrhSOA+qEOssiTVN3O0Is0jjbNwFKKX5kRKpMAOKkkL5WsUoe0BR1e63LJ/C+q7oWa/uUIbaf3RbQlHpnGjrkQ9NIDKLDTJmvEhlkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=h2o7j6DH; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ACaiqn9J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767903039; x=1799439039;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xzrAd3JaP9XwxrzniHGiKv1TyecTNJ3c+MOLnmdydtg=;
-  b=ACaiqn9JqVI2qSK2c3M+5CZoRupOvgPBiUbRj3x/ysx4arUYUVa7RV24
-   n30ogtt/OgrYyCvR8n7yBuM1kpGNaF+9cgPmGMXsgLqhceWjoB5DHfdHR
-   Rk5+EiV/YHIlfX+XSeU5wiCOYyW+vMGBZI9fIziV/PYiB7kHKzteVf6S6
-   M1vHXFzWLCyf1ka1C0k7JkFo0XH7ZlnTp0oU/QOG6gscWaQk0pysaeBUl
-   IxD97sBfG5++6SpCFBIykjtKvB1ciX0uxOaRZW1/iLA1nDQOF23UU5g1l
-   bZ19kQssmJU/J26npcw9rvYRKN0pb5tPKFGJ9ie8BPeC05QUpfXoO3BM/
-   A==;
-X-CSE-ConnectionGUID: 98B9asiNRwiEIoCVzdC2mw==
-X-CSE-MsgGUID: PZPVRWB9SFupMf+C0f3OKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="91951264"
-X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
-   d="scan'208";a="91951264"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 12:10:39 -0800
-X-CSE-ConnectionGUID: qFct2FWaR0y0oolvZ9sBeg==
-X-CSE-MsgGUID: MmAKrT7FQVW0OVENg8yOHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
-   d="scan'208";a="208132785"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.60])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 12:10:37 -0800
-Date: Thu, 8 Jan 2026 22:10:35 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] lib: introduce simple error-checking wrapper for
- memparse()
-Message-ID: <aWAPOyJwhpfKpqPy@smile.fi.intel.com>
-References: <20260108165216.1054625-1-dmantipov@yandex.ru>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="h2o7j6DH"
+Received: from [172.27.2.41] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 6090a44a2711877
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 8 Jan 2026 16:36:25 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 6090a44a2711877
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025122301; t=1767918986;
+	bh=BFfFAwJAy7ijpDZN7KkK3xe0NjVXlkZUy/s/4NjXQSw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h2o7j6DHpkjf8jgi3/eFhxStw4AJKe/hV+dRsaoH3QHhpAkq3VS02vjeL+GUH+vTL
+	 oIV8RODisE07CjJnMQUwBGE67bF91eFgGTYzSI8tM4eP8loxpjmolhGuIh6iXxrlUK
+	 tbJuoVe6PC/b6BkEL47uQAaW3SDzAMf0BD8PWP0Ovm+zzs7ZiAnVxAgYcc+MIHyii/
+	 n0IrUiXfoTi3nykrZ28Iud3BEF9pZ/q6vEuvtQv3HskfwWgGwVwxqmPIXy3d8rzFdp
+	 0KVI8IncrGVeiEgLS0BVLGUk8PoyktjCKdAmazbPu/Qoobmute6I1uYASjcqHSgekN
+	 cdxc2VEOhirSg==
+Message-ID: <0658071f-0664-442d-b93c-6841f011454d@zytor.com>
+Date: Thu, 8 Jan 2026 16:36:03 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108165216.1054625-1-dmantipov@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC/RFT PATCH 00/19] Link the relocatable x86 kernel as PIE
+To: Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
+        Uros Bizjak <ubizjak@gmail.com>, Brian Gerst <brgerst@gmail.com>,
+        linux-hardening@vger.kernel.org
+References: <20260108092526.28586-21-ardb@kernel.org>
+Content-Language: en-US, sv-SE
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20260108092526.28586-21-ardb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 08, 2026 at 07:52:15PM +0300, Dmitry Antipov wrote:
-> Introduce 'memvalue()' which uses 'memparse()' to parse a string
-> with optional memory suffix into a non-negative number. If parsing
-> has succeeded, returns 0 and stores the result at the location
-> specified by the second argument. Otherwise returns -EINVAL and
-> leaves the location untouched.
+On 2026-01-08 01:25, Ard Biesheuvel wrote:
+> This series is a follow-up to a series I sent a bit more than a year
+> ago, to switch to PIE linking of x86_64 vmlinux, which is a prerequisite
+> for further hardening measures, such as fg-kaslr [1], as well as further
+> harmonization of the boot protocols between architectures [2].
 
-...
+Kristin Accardi had fg-kasrl running without that, didn't she?
 
-> +int __must_check memvalue(const char *ptr, unsigned long long *valptr)
-> +{
-> +	unsigned long long ret;
-> +	char *end;
-> +
-> +	if (*ptr == '-')
-> +		return -EINVAL;
+From your footnotes, it looks like what you are *really* asking for is to
+pessimize x86 code to benefit other architectures. That isn't inherently
+wrong, but stating it as you have above is dishonest.
 
-Hmm... Why not -ERANGE (IIRC this what kstrto*() returns when it doesn't match
-the given range).
+> The main sticking point is the fact that PIE linking on x86_64 requires
+> PIE codegen, and that was shot down before on the basis that
+> a) GOTs in fully linked binaries are stupid
+> b) the code size increase would be prohibitive
+> c) the performance would suffer.
+> 
+> This series implements PIE codegen without permitting the use of GOT
+> slots. The code size increase is between 0.2% (clang) and 0.5% (gcc),
+> and I could not identify any performance regressions (using hackbench)
+> on various different micro-architectures that I tried it on.
+> (Suggestions for other benchmarks/test cases are welcome)
 
-> +	ret = memparse(ptr, &end);
-> +	if (*end)
-> +		return -EINVAL;
-> +	*valptr = ret;
-> +	return 0;
-> +}
+Could you show some examples of how the code changes?
 
--- 
-With Best Regards,
-Andy Shevchenko
+	-hpa
+> 
+> [1] There have been a few attempts at landing fine grained KASLR for
+> x86, but the main problem is that it was tied to the x86 relocation
+> format, which deviates from how fully linked relocatable ELF binaries
+> are generally constructed (using PIE). Implementing fgkaslr in the ELF
+> domain would make it suitable for other architectures too, as well as
+> other use cases (bare metal or hosted) where no dynamic linking is
+> performed (firmware, hypervisors). In order to implement this properly,
+> i.e., with debugging support etc, it needs support from the tooling
+> side. (Fine grained KASLR in combination with execute-only code mappings
+> makes it extremely difficult for an attacker to subvert the control flow
+> in the kernel in a way that can be meaningfully exploited).
+> 
+> [2] EFI zboot is already used by various architectures that have no
+> decompressor stage at all (arm64, RISC-V, LoongArch), and this format
+> can be combined with an ELF payload too. EFI zboot accommodates non-EFI
+> boot chains by describing the size, offset, payload type and compression
+> type in its header, so that it can be extracted and booted by other
+> means.
+
+The bzImage format already have that for all practical purposes. We *really*
+don't want to introduce a new binary format for the x86 kernel. A bunch of
+such attempts have been done in the past, and it is nothing but a mess that
+breaks things, because now you are encouraging different bootloaders to
+support a non-overlapping set of binary formats.
+
+STRONG NAK on that one.
+
+	-hpa
 
 
