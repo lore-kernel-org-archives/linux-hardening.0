@@ -1,119 +1,95 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF99E50097A
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 16:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CDC7E0E8;
+	Fri,  9 Jan 2026 17:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767975915; cv=none; b=ofOsE20rdXQs85YA+zE9GJpV90558lsgSbjoNQNx9KFW+ZfjitIdZzJM3OPUAXOjNf4BrsgkyFpqBJrpyM+2LrURTThcAp4lcXyH757mV8mU4/VqKLYcx1fqREmi2LV06pYJkYEfZAkJavIJcE2ENB5xxlIZSvGzWT4OPO09bfk=
+	t=1767978594; cv=none; b=N/AtWFRFuJUd9XIlDIiso7N8or4DtQS2MWRbwWd1pWlABcqHBYztEQL4u9TgKByXenaAf/ioRkH0gTbHJmUg+q+Btrvv5X5Tttkl5TEISgRr39Y8IzI2pTGl8WQvHFigIQYLkhcb5iwYNqAq6iRV7QvDZ1J/S9r8fSP8w16EA/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767975915; c=relaxed/simple;
-	bh=Or8X45fb6JlVhvwqZAuCoEFTeOy7bGSil/GKg+EO6P8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e1UToRh0MGe4ynQ+Y23rRqDE3NIsr4vaJUNlMNCWL8O21yMWDDG4GTgUvZiyt/jMMNVnDbh7mca58z0rOW/s7kGpBqX85pryaFInJ1QrnU/5VjTOdwuJE4ZttH8Fc2mZKpO93+zJnJ1/z0Rwt0DEoGiWpQ2nI8WGCd3eYq/Q6FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMMKCFnB; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767978594; c=relaxed/simple;
+	bh=MvwACpTFJu57vsNGjYn4XJh1yUD/ap8AVrYYA/Vbv1E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PiCTmsjEWSXB0ETelvcIBJvUvlYnlAhxKLb3BsPVaNtQIhxFWBE0JeJQhh655TDXPwxH5BMSUMlyy1BhRq8xbEcpbwBWu6XTr/kr44LzQ1TEP4cmCX7hYnf5u16x5hBjPytSu8hp+TPMywnvvpyP10cTLkL06y69YD28dLytToo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fqh/uNXm; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMMKCFnB"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-431048c4068so1975212f8f.1
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 08:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767975912; x=1768580712; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6D61jCcPKdIzLOh1VTWA3yx/fr9rhqVqmFGIMjfLvdI=;
-        b=aMMKCFnBkmxn4AGCpgSrpRFjV7QMPvs2OZDEWFqMUbI1OwAzEPbYDqDgyf3VelNMne
-         O15hjCmUIhq2R7AY0laRbYesA1FhGzlqXSSPCEY5bELtSmGzF1M+6Iaeh8wQYIw/hRF+
-         Y3l0KGnrcaShQ8/2HpOxWu4VR0tFoEqRokEkFTFUNZadvVluqUnkeY/zT1s4XmW93h2U
-         yY4pmU4MldfSgYtjt6zBjtpFMa35L45m8rFZf8zJaJFChdjY3fXh/7iLlprw/wbuQ4ST
-         700zoBzrnTW7u+sUxenOA5dUmPbpEoQUPJmiHcEK1OH/4Vr79mSXFJploSDWOq4cJV6U
-         Nlzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767975912; x=1768580712;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6D61jCcPKdIzLOh1VTWA3yx/fr9rhqVqmFGIMjfLvdI=;
-        b=ZI+Dbn8GmfzXN/gIdSCvdmg9P8JO7myCuRsXFm0BmAEM4fBOru0YeHh/debQiSzkZQ
-         Dz2a6+YRHyysrU2kza4wTnlqNt6HM2LVgBHoK8/j0TXK9nBZWS2QqF78I9uchx3fZWEs
-         WpJnfcfxt/DLUsgXQ6dhPp2rVRpt0GqcEl6vWwX+w+/hTx9DYNRNYeeBgMfOmE5Zkd02
-         5H1V9WOnlOBkKDOY4GD/++AX2LadntDm/KxvLOEUYNHQy1/dZaMXRhQTTe7tfbRTDlVF
-         7+JXQZw5cd32ntrrQIBvenQ1qZUzw79JdFlcH/pHEZ14Hl7MaO1koUyHpKQXwzfyOouL
-         eFRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU74Rga4TOgWCpZYnrnVF1pNtfzzZUEuG3wL8/G9ENUv2DKhMCyNyrXcikPmo58O1eGHUDP0LbMEmlCO+64aP8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLWjYZPWtb2mw6qkPmnsEA+CTLtBOHRnlGg9ApAD+8eqOqxsP3
-	qfJaYq/XH2jgBZXEMlrt7Cj5ZRTK9AZTMTuPRQMVnfpJoQyY2xgLNL8T
-X-Gm-Gg: AY/fxX5tg+5oAZFgh7W8HbjInmrmOZZ8kDV4uIw5PgOpmHyYgumd/TidORj5/DcqcC7
-	jw3JX7R4lMUq/9cdNIWz4GXb4/Rc/pjxw8gipqkBHI2YrGLrBAyQ+4CXWkxykn5wKK3iwqNa4/s
-	rH/DlXhBbgvuWL/t3+PyjFfL2YXqXV3vHcmDh3IUVopF0DQurXtMXnK+JPv2s4Akg3tNaIb/odk
-	cXbFJJh22P/AUWT2DgUWp47cXD4nuaZbDt1H+IJB+1ZMvTqTd503oDBG4Sx6k/SV+mvKiKgn/rl
-	3lCDf5biV1EOk3PLjGpYJXHk6KYefhRwfqEi8TfJdxAhKBknhuSMHsgWst7+Le+0T7EhxxJKoLV
-	gQZnkdbOz3/soXUbkhcEgFi46R+FWxz+VaCMy/mygFz5wsc2mWLELrxKXP0rBrRfyH+tkL/sRJP
-	jlUXwY+vjFMQVY+SP10WmzZ5eA
-X-Google-Smtp-Source: AGHT+IETHFe1bt83p7OLl4C3e0be5VCh+jmS63D91zqEYAh74kxUAD5M7+gilHthbzHGo+uLzSlcbA==
-X-Received: by 2002:a05:6000:2010:b0:431:f5:c36f with SMTP id ffacd0b85a97d-432bcfe4cfamr17880196f8f.31.1767975911920;
-        Fri, 09 Jan 2026 08:25:11 -0800 (PST)
-Received: from Arch-Spectre.dur.ac.uk ([129.234.0.168])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5ff0b2sm23201743f8f.42.2026.01.09.08.25.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jan 2026 08:25:11 -0800 (PST)
-From: Yicong Hui <yiconghui@gmail.com>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	skhan@linuxfoundation.org,
-	david.hunter.linux@gmail.com,
-	linux-hardening@vger.kernel.org,
-	Yicong Hui <yiconghui@gmail.com>
-Subject: [PATCH] drm/amdgpu: Replace deprecated strcpy() in amdgpu_virt_write_vf2pf_data
-Date: Fri,  9 Jan 2026 16:25:14 +0000
-Message-ID: <20260109162514.308143-1-yiconghui@gmail.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fqh/uNXm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767978593; x=1799514593;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MvwACpTFJu57vsNGjYn4XJh1yUD/ap8AVrYYA/Vbv1E=;
+  b=Fqh/uNXmkt9OrP00NskbiEXSBuEQXQmR7kGyyn8ivUlPlvoMNsmlPIhu
+   ka4RX1/Flfs/P0NG5IZn8VHuB9pSRjIBFdrKXaIPuR8ijmhkVAfpbw0GQ
+   bXv3RtLZahv2FUQYUrO/WqdfgMgmDylC+VeogMrLmfq3mJkYGWW+Bn22z
+   JEaBzrt/AMCxVsKrVM+AcGCju/nLb+s8bm+JoVz/3C5sHs+luGAEAG83m
+   KzMr/YXo/mUq1k1PsAaQDYKq5TmFKd2Zk1Wns0dgrU0gAwCwB00B72coQ
+   k0l9LY0RINGWuFlJ4bNA4bIUurSk0yhfttBd+nDJIWMlURlAYKHWsaaPw
+   g==;
+X-CSE-ConnectionGUID: Saaa0k9xQwSNiwOzL6DNEA==
+X-CSE-MsgGUID: qOfhSowWRiyhCGaPxu+R5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="79998928"
+X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
+   d="scan'208";a="79998928"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 09:09:52 -0800
+X-CSE-ConnectionGUID: l0uHdrCfT3y7OOcZOb4l6Q==
+X-CSE-MsgGUID: z5356kS5Sjm7TTPAmyRFlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
+   d="scan'208";a="203140989"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 09:09:50 -0800
+Date: Fri, 9 Jan 2026 19:09:48 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] lib: introduce simple error-checking wrapper for
+ memparse()
+Message-ID: <aWE2XPoJInL9aAZd@smile.fi.intel.com>
+References: <20260108165216.1054625-1-dmantipov@yandex.ru>
+ <aWAOJwMURdOl_lqG@smile.fi.intel.com>
+ <a0fb5777b167803debb2c6b77f41e82967fba3b7.camel@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0fb5777b167803debb2c6b77f41e82967fba3b7.camel@yandex.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-strcpy() is deprecated as it does not do any bounds checking (as
-specified in Documentation/process/deprecated.rst).
+On Fri, Jan 09, 2026 at 02:41:55PM +0300, Dmitry Antipov wrote:
+> On Thu, 2026-01-08 at 22:05 +0200, Andy Shevchenko wrote:
+> 
+> > 1) inherited one with strange indentation;
+> 
+> Hm...where? AFAICS everything is properly indented with TABs.
 
-There is a risk of buffer overflow in the case that the value for
-THIS_MODULE->version exceeds the 64 characters. This is unlikely, but
-replacing the deprecated function will pre-emptively remove this risk
-entirely.
+Should be with one space, and not one tab.
 
-Replace both instances of strcpy() with the safer strscpy() function.
+> > 2) missing Return section (run kernel-doc validator with -Wreturn,
+> > for example).
+> 
+> Good point. Should checkpatch.pl call kernel-doc (always or perhaps
+> if requested using command-line option)?
+> 
+> OTOH 1) lib/cmdline.c violates kernel-doc -Wreturn almost everywhere
+> :-( and 2) IIUC this patch is already queued by Andrew. I would
+> prefer to fix kernel-doc glitches immediately after memvalue() and
+> its first real use case (presumably XFS) both reaches an upstream.
 
-Changes have been compile tested.
-
-Signed-off-by: Yicong Hui <yiconghui@gmail.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c
-index 47a6ce4fdc74..1c4e74e35cf3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c
-@@ -604,10 +604,10 @@ static int amdgpu_virt_write_vf2pf_data(struct amdgpu_device *adev)
- 
- #ifdef MODULE
- 	if (THIS_MODULE->version != NULL)
--		strcpy(vf2pf_info->driver_version, THIS_MODULE->version);
-+		strscpy(vf2pf_info->driver_version, THIS_MODULE->version);
- 	else
- #endif
--		strcpy(vf2pf_info->driver_version, "N/A");
-+		strscpy(vf2pf_info->driver_version, "N/A");
- 
- 	vf2pf_info->pf2vf_version_required = 0; // no requirement, guest understands all
- 	vf2pf_info->driver_cert = 0;
 -- 
-2.52.0
+With Best Regards,
+Andy Shevchenko
+
 
