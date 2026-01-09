@@ -1,68 +1,68 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B632F1FEC
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 08:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDBB2F0C49
+	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 08:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767946870; cv=none; b=sMivoHTKLSHMrHpZCOeFnE+z5rrVwbW+pS3J2+5SKsZn9ZZQsn6v+U7f6R1e1fbPYDml8zjKqinqrgm3neUPshKa44dH5OujuY/RgD8bjytd1G+8kRzqnwkhN7i7u98yYF7MCroGYVBoqdQv/km0Hm5Cwk56ZnIS9TLwqjE2dqg=
+	t=1767947479; cv=none; b=BQmvRSrkSVvTqXDSmS8gq2xnw1NbGNOldUOe7sWdQMNNwrBckSffduhYUqNL2e7Z/JOMslcFnETMw5rwEluD2CqxfWcojZwEscGbCEF4F2I/n3tsNaanTab2i8vM6i7yYUvWFIxbayIC1NurnhybaeIlV3W7PogSa6mh54lj++w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767946870; c=relaxed/simple;
-	bh=V+nTC5fnYyAOKAK26TFNavyMLrrdiUNFL/Z+gDdCvi0=;
+	s=arc-20240116; t=1767947479; c=relaxed/simple;
+	bh=8Ir031mERsf5MEJmywx1zKdown+2TYY7hzl6HdzcWPs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=obhFGs6/j7iBi7Bfu38/xPLquIcmk1BJgzbNNIstRc+XO0N4Vaz7xZQhtO79T9Zx14iMqpsvrM74fSofOsrq5HKBbUELsM0DtB+hxMzcyHWg5jLhDt4aBzvipEGJRLuGFQO7MOj3vxcaKHKzvUCY9YfpZ/ntmfm2HmYJmMejOCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YJqv7fl4; arc=none smtp.client-ip=209.85.128.65
+	 In-Reply-To:Content-Type; b=daMtoIEM+hxgtOUiFW/oTeZMkwM8vQC9unqLoWULI0uVROQSG7yjx1MXHQXjkiige87t3AEdaKxBuKLSZ5/NWNq8vJEn5O9FNof5E0gxsvDHdsSmRj7hoYqm3Epk4fTMYXmnAk8D2BxO5sei/bKxZhECnVvmXt/2t3Hk1ov8XfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rDEzenbI; arc=none smtp.client-ip=209.85.221.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YJqv7fl4"
-Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-4779cb0a33fso42684205e9.0
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 00:21:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rDEzenbI"
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-430fbb6012bso2908752f8f.1
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 00:31:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1767946861; x=1768551661; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1767947473; x=1768552273; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:reply-to:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=f9uKMSt4+hDezkXTZIi9m3T1AtMKx1vNqIx/d02r4Ps=;
-        b=YJqv7fl4paMm4GeTI/uJ+ymJmki0AAl6cVMa8BG6GO8arBlr4pxHKz4nlQKRcnmy/5
-         QfLLQFq1UlBsUyzs7bEf6V+hZ6Vo6v1Q3pEz7Yk/aUzlnrpKoCAimtevT8MmaPvXpGsv
-         MYCdi2FRErwHOLTD9BOFu812bh3WAIJbaVCuCYAQ6baTt4KDfup4SclQ6gXXuFKEw+7u
-         LL6Sr8KmTIVudztdQgVVxfjRJpxrrD3E723Gi6+9PrPFgDnqjNHmQd+TIKj207y13Sm9
-         TFrDWu+rm9vbdgfCT42P5UZj/KocJw64Arf4eYZ2NxuSVVSeSVLolAWkfNQGa1DOFo+t
-         LXhg==
+        bh=ScHhY7gthksnfmgH6uljC923NNYDsVbTgY/cHmeyxX0=;
+        b=rDEzenbI8v5cV495DYGLf1YGwAdMDgzrgk7EMD9O84enJyS5sXmH8QyIlsZkOBWYf5
+         cFzrHdUXmyYmB+vPX0ytA95c25fyk5tpVRrUyzZJXVfcgO78UJ2Q4MGafatFvKFrjbCg
+         f1ybE5E7Exr7cc7MTpvcVeijzF5/UkMEvEQvhiex9zoOB7GWW9pHN7g3qtlcb90OyvIu
+         ikvn5gZ4iR6wgs/+YVHFc3vu7/csAsb0nmC23AY1N5V3Tm+8SulYcDRDm2FhyeX4t7m8
+         W1rWvBTdJMZS18jOwqC8XdzF+QwAEIEGYMGaxP6fPvCYoNtwiPpbQ6c/h2FBqH2XDbn9
+         dlBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767946861; x=1768551661;
+        d=1e100.net; s=20230601; t=1767947473; x=1768552273;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:reply-to:user-agent
          :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f9uKMSt4+hDezkXTZIi9m3T1AtMKx1vNqIx/d02r4Ps=;
-        b=Icyn5y3p9AfRhYj3el4rqEB8+O7XkxQiiRibS5I2ZhIqLvqB/CY2gf90tylEp7P7Kv
-         61D75viMbPSNWcK31tc1lUUSiCCo3vAVQHLqr+jD//Ylu6ecF1YN7uf+hrQGJseniGWK
-         pIpNEejZa60WnGoG51vAD6OvstsS5NRQGQmsEGxNP/785DJ98RypcDaNTno+8YKD3Zkq
-         +5Qiji3NdO8ENb0iVpzav+EgqkQcwHvNEGP7BssjDk1Kad6uvMs2a9Jauvzhhuk2l8le
-         y8gvM/0G7ByDJO5Sq+0vyuUFZhUT+amncGYPBEg6iJy7uIFLnlQxXfSLahuXmUcYsBkd
-         RrUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVsUgiSR269riFH08TVi+y/PKfIdN5CsVUPJ0FtOFQ2+HRdNj9I1Y0bcqgW5EHWcIiiE4ZCNRCmHYZo+Q4Am4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtIiNcFLu78XJXv8jmPw8RXpoJdVU1VwEUPRE5yhpM40oqEsPF
-	+GQdIbGJqKCs2TXj3irazXTAnVZo3IXSMJcBFYfApeiPraD+lacl3h31yGq4X+TRoqY=
-X-Gm-Gg: AY/fxX7SBzQRYb5KK6xIJZihXxeYR67H+tE/LaUIUqUkFYYIgiGMOHEk6u7hjsitQIx
-	lCbOS4An+bH5hspPisXbtyvXrt8gEEJwl7BM/TmzclhSxKzk3fYPMQJZoISw/4l94gCeu9sJ0b6
-	A4JmwyWXMx7nPwhr2WuYcsb2dw91xeqNnEK4oMbA803iIeI3bd+4FZZ+ro1th7cx5aO8ZnImByv
-	o3j2KizUIrkd60vecS/B195TlOBjwnSVuz1j++d6HqNdkMnf6LuZJbq1t1h//hGGzyM38feSJxo
-	STVdLZdjphgNJ+5+0W40tb33TE2WY3/zkU+KWjbf9cEcPZHoVYaO0/X9JFtUEwptB2BdhPjLxXL
-	IS6WYH4BNi9npcq6zS8XYWezKadc95OiudV0k0IfJG68bVGnqmyl9o7MbyQXBJ8oUdlHvryc8Pf
-	Kb7I0JtMmOFfmtwW5XW9OYOeh2dmbEH71QmGnl2RXstgnRsF4lKdh33kpaPH4FogM=
-X-Google-Smtp-Source: AGHT+IH0OJfkjAgMzQqRakprSyrN6tCPxBuCGvpfdT55BzOyLssSQCuBpAQ8A1Mu0tIEefB/dW4VNw==
-X-Received: by 2002:a05:600c:8b43:b0:479:1ac2:f9b8 with SMTP id 5b1f17b1804b1-47d84b33b7bmr99212625e9.21.1767946860895;
-        Fri, 09 Jan 2026 00:21:00 -0800 (PST)
+        bh=ScHhY7gthksnfmgH6uljC923NNYDsVbTgY/cHmeyxX0=;
+        b=uikQTMGfUQpuoMJiyyVpjoIZlN8BHtPvYaqCb54vCgSX6S9qmsffYcjSf6zmPca9ab
+         gfWcFyZVVzwCQJKOFMA01ZHq/oK46ePmKnR2rkwx8eVLinN0AvTNQdN+Q2yJmwUfIZjv
+         45Py12TSnXQQNw499E5Gqzk0NChxR1fg5Kd5ErxfYAP9DFhE3LhfSz5B+r5XXGC6whsp
+         lkktgHHTwV5OZVFkiDfeS/H7T3TCc8sI8e7cPE57RK3Dv4mYkKpV95NKru2jWkc0hLOp
+         xJIXOPz4jb9QVXTMCoMis1MjSeR1jHgLIBG8LHmkCWoRmQL2Dq42MeEZ6+Dv085Vp0de
+         dkbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVL8/SmqLiIzMaMF4bZNuGBtzXMfCaxoTb2lKXUVccZonfUKa850lRAnyWeNizsTnnkBqpc+H6QqiT71YZSAN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5sQIwc66V38B0m5bHC6kQzV7pmmJLBjtE+ZRuKTbVoppspXR5
+	C2I1zkTHF5KWXFhaM2NePTB21olpeCmeLoImNfeaa7DMzZPuNkUQjaqr3iYOFQm52gQ=
+X-Gm-Gg: AY/fxX6jFIlqy7ki9KiYLoiH1R3OtL9GVmmHAXkviuHVa7R76/722VJ6/vrcT855ah7
+	Ka1BvTa51i6hs45X0NZgKAGWtKW7btIaYlCnk02ZTFZ51jPukFHBDvFv0vrbpAHTThGCGrZelHM
+	16nC78dwmlBkJ8PVa7DsAHBurWZdxBMcDb9l2tUwp4LC8A6ywKj71mq7pzyyg0FyNLsHpavQDLC
+	xT9qLflo5VsLBw6j0OEun3LmF2gh9Q3zHpKW8liqlnT7eERKHtwqG31wMGWylhuZmyTkX8fbadK
+	cSElAh9+bSTsAbquuEXSOeaA+/rp9oJQ3fnAHNiFAXf9Bf8kYWUfG4PVlsuDIEqA1pcOWxOBAQ4
+	yZC8leoBn6j/z9R2//6yo5mteJudLgJmA2ORxA8YBJE5SQEe5Z6rzhXWVXSgKV3gEdFAMTLcTY6
+	LSsJpGa9AsUEniTKToJzYbi+xhK37jqSHk3SpooyVxvbVRYY3WBhgqVwJSIopWQfo=
+X-Google-Smtp-Source: AGHT+IHsXjfVMgqUU883lNdJMdHku+hLNkk+zQ+G0NK84h/s8sm1XXRkmzNxWJiENK0PtpaJaMtafw==
+X-Received: by 2002:a05:6000:26ca:b0:430:f5ed:83fc with SMTP id ffacd0b85a97d-432c3760facmr12321898f8f.11.1767947473278;
+        Fri, 09 Jan 2026 00:31:13 -0800 (PST)
 Received: from ?IPV6:2a01:e0a:3d9:2080:d283:7a7e:4c57:678d? ([2a01:e0a:3d9:2080:d283:7a7e:4c57:678d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d86c6ff40sm123761785e9.2.2026.01.09.00.20.59
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0e16f4sm21785092f8f.11.2026.01.09.00.31.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jan 2026 00:21:00 -0800 (PST)
-Message-ID: <6ef89318-5fa4-47f5-8027-04a91656d81e@linaro.org>
-Date: Fri, 9 Jan 2026 09:20:59 +0100
+        Fri, 09 Jan 2026 00:31:13 -0800 (PST)
+Message-ID: <34590271-0e34-45cd-ac6f-6f901e833087@linaro.org>
+Date: Fri, 9 Jan 2026 09:31:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -115,9 +115,7 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
 Organization: Linaro
 In-Reply-To: <20260108-topic-smem_dramc-v3-0-6b64df58a017@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Hi,
+Content-Transfer-Encoding: 7bit
 
 On 1/8/26 15:21, Konrad Dybcio wrote:
 > SMEM allows the OS to retrieve information about the DDR memory.
@@ -131,21 +129,6 @@ On 1/8/26 15:21, Konrad Dybcio wrote:
 > information can be exposed in the future, as needed.
 > 
 > Patch 3 should really be merged after 1&2
-
-
-While trying it, I got the following warning:
-
-In function ‘smem_dram_parse_v3_data’,
-     inlined from ‘smem_dram_parse’ at drivers/soc/qcom/smem_dramc.c:380:3:
-drivers/soc/qcom/smem_dramc.c:216:31: warning: iteration 13 invokes undefined behavior [-Waggressive-loop-optimizations]
-   216 |                 if (freq_entry->freq_khz && freq_entry->enabled)
-       |                     ~~~~~~~~~~^~~~~~~~~~
-drivers/soc/qcom/smem_dramc.c:213:27: note: within this loop
-   213 |         for (int i = 0; i < num_freq_entries; i++) {
-       |                         ~~^~~~~~~~~~~~~~~~~~
-
-Neil
-
 > 
 > Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > ---
@@ -188,3 +171,23 @@ Neil
 > 
 > Best regards,
 
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
+
+root@qemuarm64:~# cat /sys/kernel/debug/qcom_smem/
+dram_frequencies  hbb
+root@qemuarm64:~# cat /sys/kernel/debug/qcom_smem/dram_frequencies
+200000000
+547200000
+768000000
+1555200000
+1708800000
+2092800000
+2736000000
+3187200000
+3686400000
+4224000000
+root@qemuarm64:~# cat /sys/kernel/debug/qcom_smem/hbb
+16
+
+Thanks,
+Neil
