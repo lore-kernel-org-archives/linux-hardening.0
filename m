@@ -1,193 +1,233 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDBB2F0C49
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 08:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8785357A50
+	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 09:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767947479; cv=none; b=BQmvRSrkSVvTqXDSmS8gq2xnw1NbGNOldUOe7sWdQMNNwrBckSffduhYUqNL2e7Z/JOMslcFnETMw5rwEluD2CqxfWcojZwEscGbCEF4F2I/n3tsNaanTab2i8vM6i7yYUvWFIxbayIC1NurnhybaeIlV3W7PogSa6mh54lj++w=
+	t=1767950521; cv=none; b=hgoCuIk42noTTYdlEds31TWGuqSUFXcmn7uY8+5XZ674yDpwhBV9TkP+EG4SI7PVUup+NYaf1K+EruIoX1sl6RpPAI7FzBuafiDffY0sOq1EgX6rJ2FcyVwQRd9S5ne0FN2r37xz6Op5ePBmQuxCCM5AAxjaZq+jhlbR983wttY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767947479; c=relaxed/simple;
-	bh=8Ir031mERsf5MEJmywx1zKdown+2TYY7hzl6HdzcWPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=daMtoIEM+hxgtOUiFW/oTeZMkwM8vQC9unqLoWULI0uVROQSG7yjx1MXHQXjkiige87t3AEdaKxBuKLSZ5/NWNq8vJEn5O9FNof5E0gxsvDHdsSmRj7hoYqm3Epk4fTMYXmnAk8D2BxO5sei/bKxZhECnVvmXt/2t3Hk1ov8XfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rDEzenbI; arc=none smtp.client-ip=209.85.221.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1767950521; c=relaxed/simple;
+	bh=BfammgutHkAleeTe5+j/9vtNmlrE0g2LPvXZDmEa1vo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=urClD84GYtRzSJ2SMswOc/hlx2+v2/al+DDz9Dhfo7ITT9FNcZc7noGnl2WBQqydDCoGmbTNvv+hxYqCyZnbaYSkmZYo5UmvLbY9nY56G42XqJa+hS3RD5WdrPBX9YHl4v/xff0UntltZrZK1IPFppw79tc7bB5teyYFUwGGhLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSyj97/t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rDEzenbI"
-Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-430fbb6012bso2908752f8f.1
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 00:31:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1767947473; x=1768552273; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:reply-to:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ScHhY7gthksnfmgH6uljC923NNYDsVbTgY/cHmeyxX0=;
-        b=rDEzenbI8v5cV495DYGLf1YGwAdMDgzrgk7EMD9O84enJyS5sXmH8QyIlsZkOBWYf5
-         cFzrHdUXmyYmB+vPX0ytA95c25fyk5tpVRrUyzZJXVfcgO78UJ2Q4MGafatFvKFrjbCg
-         f1ybE5E7Exr7cc7MTpvcVeijzF5/UkMEvEQvhiex9zoOB7GWW9pHN7g3qtlcb90OyvIu
-         ikvn5gZ4iR6wgs/+YVHFc3vu7/csAsb0nmC23AY1N5V3Tm+8SulYcDRDm2FhyeX4t7m8
-         W1rWvBTdJMZS18jOwqC8XdzF+QwAEIEGYMGaxP6fPvCYoNtwiPpbQ6c/h2FBqH2XDbn9
-         dlBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767947473; x=1768552273;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:reply-to:user-agent
-         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ScHhY7gthksnfmgH6uljC923NNYDsVbTgY/cHmeyxX0=;
-        b=uikQTMGfUQpuoMJiyyVpjoIZlN8BHtPvYaqCb54vCgSX6S9qmsffYcjSf6zmPca9ab
-         gfWcFyZVVzwCQJKOFMA01ZHq/oK46ePmKnR2rkwx8eVLinN0AvTNQdN+Q2yJmwUfIZjv
-         45Py12TSnXQQNw499E5Gqzk0NChxR1fg5Kd5ErxfYAP9DFhE3LhfSz5B+r5XXGC6whsp
-         lkktgHHTwV5OZVFkiDfeS/H7T3TCc8sI8e7cPE57RK3Dv4mYkKpV95NKru2jWkc0hLOp
-         xJIXOPz4jb9QVXTMCoMis1MjSeR1jHgLIBG8LHmkCWoRmQL2Dq42MeEZ6+Dv085Vp0de
-         dkbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVL8/SmqLiIzMaMF4bZNuGBtzXMfCaxoTb2lKXUVccZonfUKa850lRAnyWeNizsTnnkBqpc+H6QqiT71YZSAN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5sQIwc66V38B0m5bHC6kQzV7pmmJLBjtE+ZRuKTbVoppspXR5
-	C2I1zkTHF5KWXFhaM2NePTB21olpeCmeLoImNfeaa7DMzZPuNkUQjaqr3iYOFQm52gQ=
-X-Gm-Gg: AY/fxX6jFIlqy7ki9KiYLoiH1R3OtL9GVmmHAXkviuHVa7R76/722VJ6/vrcT855ah7
-	Ka1BvTa51i6hs45X0NZgKAGWtKW7btIaYlCnk02ZTFZ51jPukFHBDvFv0vrbpAHTThGCGrZelHM
-	16nC78dwmlBkJ8PVa7DsAHBurWZdxBMcDb9l2tUwp4LC8A6ywKj71mq7pzyyg0FyNLsHpavQDLC
-	xT9qLflo5VsLBw6j0OEun3LmF2gh9Q3zHpKW8liqlnT7eERKHtwqG31wMGWylhuZmyTkX8fbadK
-	cSElAh9+bSTsAbquuEXSOeaA+/rp9oJQ3fnAHNiFAXf9Bf8kYWUfG4PVlsuDIEqA1pcOWxOBAQ4
-	yZC8leoBn6j/z9R2//6yo5mteJudLgJmA2ORxA8YBJE5SQEe5Z6rzhXWVXSgKV3gEdFAMTLcTY6
-	LSsJpGa9AsUEniTKToJzYbi+xhK37jqSHk3SpooyVxvbVRYY3WBhgqVwJSIopWQfo=
-X-Google-Smtp-Source: AGHT+IHsXjfVMgqUU883lNdJMdHku+hLNkk+zQ+G0NK84h/s8sm1XXRkmzNxWJiENK0PtpaJaMtafw==
-X-Received: by 2002:a05:6000:26ca:b0:430:f5ed:83fc with SMTP id ffacd0b85a97d-432c3760facmr12321898f8f.11.1767947473278;
-        Fri, 09 Jan 2026 00:31:13 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:3d9:2080:d283:7a7e:4c57:678d? ([2a01:e0a:3d9:2080:d283:7a7e:4c57:678d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0e16f4sm21785092f8f.11.2026.01.09.00.31.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jan 2026 00:31:13 -0800 (PST)
-Message-ID: <34590271-0e34-45cd-ac6f-6f901e833087@linaro.org>
-Date: Fri, 9 Jan 2026 09:31:12 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSyj97/t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64EE0C16AAE
+	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 09:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767950521;
+	bh=BfammgutHkAleeTe5+j/9vtNmlrE0g2LPvXZDmEa1vo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oSyj97/tawFyhC7/pamE6OZ2BibUTW1RzbCcsAiANiEAOS2pmaM1A4cZlRQppusQ2
+	 JzOabf6KgDX3efPZaciYtYtMGKbalq3b2cvyqo7RxyzN9+u3nrKCgxoP5Fw16BASeA
+	 rK8DI9GMOBylquNE1hGy8aonM14kJvCh83ca2ygr7m6yxZ5awgKjFNicfKEdRIk/OR
+	 KtGXx1MEuLIfcKO7ZnhPkW5+3STRXKHwsV21FwnZH4nSaCO3/NPy8u4brIQDj7sxkt
+	 L4ItijuwI2cUqJBj0KqqBrzNwjNlGzihYTGzei8x+M7DNbtl0kcqJj2jfh3hQPbtK1
+	 ISBR27C8u6xgw==
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-34f63ad6f51so1454315a91.0
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 01:22:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWnZUBaeZHa+nC6fw/tc3O5aKh/x2lHbeex/smhRSamTgV4VaHOPwm6NaEjBryq+sxlUjfGivwgbLz2YYPzrRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1k3OR0DGazNOMNmCY2RwtkiOITRTXkjzm87eiRA2iO26fBFw5
+	FQeOiB2TuKdTM540KH+LZmtxYRdl0kp9d4zu947e33nTUsatTcYY1MGnlJdeJnkSUU93kbQtcaA
+	uYwzgAcznAyHmge5OEjN7bFMndmHQqOI=
+X-Google-Smtp-Source: AGHT+IH9ca6ppS5maHZDAsr49ugvJlcB+3MlS0UJI986JTi2KwPjkV994Ytw7mry5x69YSnqyj3oBkuPflAPO0ghQyw=
+X-Received: by 2002:a17:90b:264a:b0:341:315:f4ed with SMTP id
+ 98e67ed59e1d1-34f68b68176mr8028463a91.10.1767950520860; Fri, 09 Jan 2026
+ 01:22:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 0/3] Retrieve information about DDR from SMEM
-To: Konrad Dybcio <konradybcio@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
- Akhil P Oommen <akhilpo@oss.qualcomm.com>,
- Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar
- <abhinav.kumar@linux.dev>, Jessica Zhang <jesszhan0024@gmail.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20260108-topic-smem_dramc-v3-0-6b64df58a017@oss.qualcomm.com>
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20260108-topic-smem_dramc-v3-0-6b64df58a017@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260108092526.28586-21-ardb@kernel.org> <0658071f-0664-442d-b93c-6841f011454d@zytor.com>
+In-Reply-To: <0658071f-0664-442d-b93c-6841f011454d@zytor.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 9 Jan 2026 10:21:49 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHTK2r5P6-vXp=JHVK7pfCvr=1jmR5dgDZTgvseG=8hPg@mail.gmail.com>
+X-Gm-Features: AQt7F2rNgMTTHHGYZYY_Av3OOuW4AAfSKNJJwBhyV4uNJlxeKG3ZpFSmdo9faj8
+Message-ID: <CAMj1kXHTK2r5P6-vXp=JHVK7pfCvr=1jmR5dgDZTgvseG=8hPg@mail.gmail.com>
+Subject: Re: [RFC/RFT PATCH 00/19] Link the relocatable x86 kernel as PIE
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, Uros Bizjak <ubizjak@gmail.com>, 
+	Brian Gerst <brgerst@gmail.com>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/8/26 15:21, Konrad Dybcio wrote:
-> SMEM allows the OS to retrieve information about the DDR memory.
-> Among that information, is a semi-magic value called 'HBB', or Highest
-> Bank address Bit, which multimedia drivers (for hardware like Adreno
-> and MDSS) must retrieve in order to program the IP blocks correctly.
-> 
-> This series introduces an API to retrieve that value, uses it in the
-> aforementioned programming sequences and exposes available DDR
-> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
-> information can be exposed in the future, as needed.
-> 
-> Patch 3 should really be merged after 1&2
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
-> Changes in v3:
-> - Support v6 and v7 DDRInfo (v7 is used on e.g. Hamoa)
-> - Handle rare cases of DDRInfo v5 with additional trailing data
-> - Rebase/adjust to SSoT UBWC
-> - Expose hbb value in debugfs
-> - cosmetic changes
-> - Link to v2: https://lore.kernel.org/r/20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com
-> 
-> Changes in v2:
-> - Avoid checking for < 0 on unsigned types
-> - Overwrite Adreno UBWC data to keep the data shared with userspace
->    coherent with what's programmed into the hardware
-> - Call get_hbb() in msm_mdss_enable() instead of all UBWC setup
->    branches separately
-> - Pick up Bjorn's rb on patch 1
-> - Link to v1: https://lore.kernel.org/r/20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com
-> 
-> ---
-> Konrad Dybcio (3):
->        soc: qcom: smem: Expose DDR data from SMEM
->        soc: qcom: ubwc: Get HBB from SMEM
->        drm/msm/adreno: Trust the SSoT UBWC config
-> 
->   drivers/gpu/drm/msm/adreno/a5xx_gpu.c   |  11 +-
->   drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  82 +------
->   drivers/gpu/drm/msm/adreno/adreno_gpu.h |   5 -
->   drivers/soc/qcom/Makefile               |   3 +-
->   drivers/soc/qcom/smem.c                 |  14 +-
->   drivers/soc/qcom/smem.h                 |   9 +
->   drivers/soc/qcom/smem_dramc.c           | 408 ++++++++++++++++++++++++++++++++
->   drivers/soc/qcom/ubwc_config.c          |  69 ++++--
->   include/linux/soc/qcom/smem.h           |   4 +
->   9 files changed, 485 insertions(+), 120 deletions(-)
-> ---
-> base-commit: fc4e91c639c0af93d63c3d5bc0ee45515dd7504a
-> change-id: 20250409-topic-smem_dramc-6467187ac865
-> 
-> Best regards,
+On Fri, 9 Jan 2026 at 01:37, H. Peter Anvin <hpa@zytor.com> wrote:
+>
+> On 2026-01-08 01:25, Ard Biesheuvel wrote:
+> > This series is a follow-up to a series I sent a bit more than a year
+> > ago, to switch to PIE linking of x86_64 vmlinux, which is a prerequisite
+> > for further hardening measures, such as fg-kaslr [1], as well as further
+> > harmonization of the boot protocols between architectures [2].
+>
+> Kristin Accardi had fg-kasrl running without that, didn't she?
+>
 
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
+Yes, as a proof of concept. But it is tied to the x86 approach of
+performing runtime relocations based on build time relocation data,
+which is problematic now that linkers have started to perform
+relaxations, as these cannot always be translated 1:1. For instance,
+we already have a latent bug in the x86 relocs tool, which ignores
+GOTPCREL relocations on the basis that the relocation is relative.
+However, this is only true for Clang/lld, which does not update the
+static relocation tables after performing relaxations. ld.bfd does
+attempt to keep those tables in sync, and so a GOTPCREL relocation
+should be flagged as a bug when encountered, because it means there is
+a GOT slot somewhere with no relocation associated with it.
 
-root@qemuarm64:~# cat /sys/kernel/debug/qcom_smem/
-dram_frequencies  hbb
-root@qemuarm64:~# cat /sys/kernel/debug/qcom_smem/dram_frequencies
-200000000
-547200000
-768000000
-1555200000
-1708800000
-2092800000
-2736000000
-3187200000
-3686400000
-4224000000
-root@qemuarm64:~# cat /sys/kernel/debug/qcom_smem/hbb
-16
+One could argue that this example is just a Clang bug, but it is very
+difficult to make that case with the toolchain developers, given that
+--emit-relocs (which is what tells the linker to emit the relocations
+that it received as input) has no specification, and some linker
+relaxations are not representable as static relocations to begin with
+(but to be fair, that currently mostly affects other architectures,
+but there is no reason this could never happen on x86)
 
-Thanks,
-Neil
+Doing fgkaslr properly (IMHO) means supporting things like live patch
+and debug seamlessly, and in a portable manner. Toolchain support is
+critical, and securing that for a one-off x86 implementation rather
+than one that can be used across architectures and other bare-metal
+projects is going to be difficult.
+
+> From your footnotes, it looks like what you are *really* asking for is to
+> pessimize x86 code to benefit other architectures. That isn't inherently
+> wrong, but stating it as you have above is dishonest.
+>
+
+I was hoping to save the ad-hominems for later in the thread, when
+things *really* heat up.
+
+The point is not to benefit other architectures. The point is to
+implement something once, and deploy it on all architectures in the
+same way. ELF is the greatest common denominator across the entire
+ecosystem, and so using idiomatic ELF to describe how to load the
+image and how to move it around in the virtual address space is on
+obvious choice.
+
+> > The main sticking point is the fact that PIE linking on x86_64 requires
+> > PIE codegen, and that was shot down before on the basis that
+> > a) GOTs in fully linked binaries are stupid
+> > b) the code size increase would be prohibitive
+> > c) the performance would suffer.
+> >
+> > This series implements PIE codegen without permitting the use of GOT
+> > slots. The code size increase is between 0.2% (clang) and 0.5% (gcc),
+> > and I could not identify any performance regressions (using hackbench)
+> > on various different micro-architectures that I tried it on.
+> > (Suggestions for other benchmarks/test cases are welcome)
+>
+> Could you show some examples of how the code changes?
+>
+
+Taking the address of a symbol (same code size)
+
+   0: 48 c7 c0 00 00 00 00 mov    $0x0,%rax
+3: R_X86_64_32S sym
+
+
+   7: 48 8d 05 00 00 00 00 lea    0x0(%rip),%rax        # 0xe
+a: R_X86_64_PC32
+
+
+Loading a global variable from memory (one byte shorter in PIC)
+
+   e: 48 8b 04 25 00 00 00 mov    0x0,%rax
+  15: 00
+12: R_X86_64_32S sym
+
+
+  16: 48 8b 05 00 00 00 00 mov    0x0(%rip),%rax        # 0x1d
+19: R_X86_64_PC32 sym-0x4
+
+
+Indexing a global array (3 bytes longer in PIC, needs an additional
+GPR if source and destination are the same)
+
+  1d: 48 8b 04 c5 00 00 00 mov    0x0(,%rax,8),%rax
+  24: 00
+21: R_X86_64_32S array
+
+
+  25: 48 8d 15 00 00 00 00 lea    0x0(%rip),%rdx        # 0x2c
+28: R_X86_64_PC32 array-0x4
+  2c: 48 8b 04 c2          mov    (%rdx,%rax,8),%rax
+
+
+Pushing the address of a symbol to the stack ((3 bytes longer in PIC,
+needs an additional GPR)
+
+  30: 68 00 00 00 00        push   $0x0
+31: R_X86_64_32S sym
+
+
+  35: 48 8d 05 00 00 00 00 lea    0x0(%rip),%rax        # 0x3c
+38: R_X86_64_PC32 sym-0x4
+  3c: 50                    push   %rax
+
+
+Jump tables look completely different, but the table itself is only
+half the size. Even for non-PIC, jump tables are problematic for
+objtool, and so these need to be annotated by the compiler. I have
+some unfinished Clang patches that implement this, which I hope to get
+back to soon.
+
+The asm patches in the series should give a good impression of how the
+code changes.
+
+
+> >
+> > [1] There have been a few attempts at landing fine grained KASLR for
+> > x86, but the main problem is that it was tied to the x86 relocation
+> > format, which deviates from how fully linked relocatable ELF binaries
+> > are generally constructed (using PIE). Implementing fgkaslr in the ELF
+> > domain would make it suitable for other architectures too, as well as
+> > other use cases (bare metal or hosted) where no dynamic linking is
+> > performed (firmware, hypervisors). In order to implement this properly,
+> > i.e., with debugging support etc, it needs support from the tooling
+> > side. (Fine grained KASLR in combination with execute-only code mappings
+> > makes it extremely difficult for an attacker to subvert the control flow
+> > in the kernel in a way that can be meaningfully exploited).
+> >
+> > [2] EFI zboot is already used by various architectures that have no
+> > decompressor stage at all (arm64, RISC-V, LoongArch), and this format
+> > can be combined with an ELF payload too. EFI zboot accommodates non-EFI
+> > boot chains by describing the size, offset, payload type and compression
+> > type in its header, so that it can be extracted and booted by other
+> > means.
+>
+> The bzImage format already have that for all practical purposes. We *really*
+> don't want to introduce a new binary format for the x86 kernel. A bunch of
+> such attempts have been done in the past, and it is nothing but a mess that
+> breaks things, because now you are encouraging different bootloaders to
+> support a non-overlapping set of binary formats.
+>
+> STRONG NAK on that one.
+>
+
+I think it should be feasible to implement a hybrid bzImage/EFI zboot
+format. There is already prior art in loaders that decompress the ELF
+payload directly (Xen).
+
+Given that a x86_64 bootloader running in long mode needs to do very
+little beyond loading the ELF at some arbitrary 2M aligned offset and
+calling the entrypoint with a struct bootparams in %RDI, most of the
+logic in the decompressor is really only needed when booting in 32-bit
+mode.
+
+So I think there is value in having a generic boot format that can be
+consumed by EFI directly, or by a generic ELF vmlinux loader (library)
+that understands the EFI zboot format and knows how to extract the ELF
+payload. I'd strongly prefer only a single idiom for describing the
+relocations in the image.
+
+On other architectures (i.e., without decompressor), EFI zboot would
+be a prerequisite for fgkaslr, but it is up to the platform to decide
+whether to boot via EFI or load the ELF and apply the relocations. On
+x86_64, the same tooling would work seamlessly, but the decompressor
+could apply the relocations itself as well.
