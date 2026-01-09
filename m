@@ -1,138 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0492D641C
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 14:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7FB320A1F;
+	Fri,  9 Jan 2026 15:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767970269; cv=none; b=W+DJmXwvdUKD6O4orsDXflJZSqumfDAl//3V3RG8SKmhZ/lL77m/8RVXJPtEX0KjS5pH1HdnIA2qexw2fWaewwaIHyXgn9E0nhNk8lMPTmNknXIpnmCTeZ5qu4v793r2lNofCWHPdRE8c1St+iUIzQxLhJk5HmLz88TSNp6tWoc=
+	t=1767971292; cv=none; b=jNiclR8J4T467FA6BGxWtueNpyq15fiE+cmOfl3a3KLzZhElq5q+moKWoCTaCHko3V9fy/l+vnG5+GvUXgLffMO+w3aZ+SV0NifaFWJ8EP3wbU/tOmHzpHPQwN5UK9PJTUCp49ue1fdtlqdQUNWNLznEg6GCfqTXnglJKLzE7Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767970269; c=relaxed/simple;
-	bh=ffSIdQ2PNsRvxyqqOyb02+48iytTLOKjoT6hEyjMSVs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qPskgAED2tj0puBATIu5faNdJX7GLgxKIKe88G+uiWu7QY2xOiZDasooyaTErfw9kilHAsJfoxgXm5hwTYhP+vLBChwraexBdElCrz36YjfQjJ87KqJh0EJRVVBFct4F/Z64w0hqF4no5WzLX1r40mN5MM/cZ5+6uYadh95Lx/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbGMHRlL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767971292; c=relaxed/simple;
+	bh=+yYivR6m7de4bVDJo8K4370S1d12YvRa0ve7K/19OdA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=WdMbhCBKSAAkw2sJaI4/DSJqCT8uXcgrtlc+z/n7y8RYOIPL613Ckt1Kq1MC1BSrhL5mvUH85ghMd3g4W63yQLooXo/D0BqTLmxE4VxVAcMApHBCokzktvVNupR/kH5FtfFSdIqAz0cZ7HGyjwFS8IjimkJZCWCKQo7jF8k7bL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHPNztUN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbGMHRlL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8294EC4CEF1
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Jan 2026 14:51:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHPNztUN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2E2C4CEF1;
+	Fri,  9 Jan 2026 15:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767970269;
-	bh=ffSIdQ2PNsRvxyqqOyb02+48iytTLOKjoT6hEyjMSVs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mbGMHRlLhqYS2ya4PyuJMIiYA0doc95NeLBSKbWu72RoIOpYxxZelGFa1RhLnEDMb
-	 DcOYX4T7pxbpP1KEJKt8yUk/ELRsg9xKd8WzbwxwKqkNt0Y9X+k9HQnhZ+Gcl5s0Y6
-	 uq4V5NEO6nSo0b7r7soNLkfc2P+N5Dnw7iwytQA9BUOYy3TFjxRXyZqnuOIy4tlfae
-	 cA3rsav9akK4sFTS5cv526uys25TkXRsk4E0JUHTnWhU/nbOmQQT+YKxmBdNWdikQS
-	 FjKKYgy24mrSYdfVfl8DTK/MC2V77OUiBnnO/w7JGwBogtzAVqHaSYXvCG22Ne4UNB
-	 peJVTULZiLheA==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-59b78886454so2249233e87.2
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Jan 2026 06:51:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVQ0nnbjW/GZ4lB14wamtZgP+1TdawmsDa+djIvI+nsLaSzBNm6pV/cb/BzQvj4d8N9OZqYZXwwqOEvfac0YcA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ/IUy52awtYOI/580Hr67EysbYJF0pDVupg4f6g1/3FTME7a9
-	HBolKSA8clloqP8vs5UWmGcQh5HZt843oeQrug2rqhnVL87w+BWopzNWHMXW4l7RPE+g9LG9dmx
-	h4H+qu0aBNJMMqMWj7XMoWymxTULWdULIDD9bFotBcw==
-X-Google-Smtp-Source: AGHT+IFWLhfvuow8qIMZYK/7g5CiMgRDievFLnj4NheWNLi/FbbvnO/XWEOCiomEy5A3LhBVoz3hWrlHQBZegWrkP4Q=
-X-Received: by 2002:a05:6512:39c5:b0:59b:7df0:112d with SMTP id
- 2adb3069b0e04-59b7df012d7mr1084680e87.44.1767970267847; Fri, 09 Jan 2026
- 06:51:07 -0800 (PST)
+	s=k20201202; t=1767971291;
+	bh=+yYivR6m7de4bVDJo8K4370S1d12YvRa0ve7K/19OdA=;
+	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
+	b=rHPNztUNBvwrgM0+tRT43MKzu+mXAx8v7Lt9DNa4Z11mWqsBgqYXFdOwknanHxt8h
+	 xbQ+zcfZOdDV9rRQ/PFWBjxLzN0goMyVYNufIck5vIT+c2JDzBmkf+jNrUZ2SD3exR
+	 t9xSQpiEvKToocxG/iOHoTui6oawpqrQ2FYY8kpkBjz4HJSn1dQMZWg/uWo2Ynwjv/
+	 5eNuHBce79tUeJlVpeV6tda5gFVTIiuKnxXKjsvF1ZOBaC6p2tH6C0otpMhovgdKz8
+	 ez547ye1cbQArVuQK+dby5qd0afLjaykn72q5lBEZsWA6RionYN6Y2FOjEEfZBm7RR
+	 DvoH40ihTouFw==
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <DFJAFK3DTBOZ.3G2P3A5IH34GF@kernel.org> <CAMRc=MeQ_zr047PxFFGhfZ43TuHoKG-9VLLefxVyScpO5ZxjzQ@mail.gmail.com>
- <DFK4Y3EOXTFL.1M25VAPJAS2BU@kernel.org>
-In-Reply-To: <DFK4Y3EOXTFL.1M25VAPJAS2BU@kernel.org>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 9 Jan 2026 15:50:53 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MeG9fPaq8M8ACq7_9+ysmYX+aRRzZVgApv5YMGtjx72Mw@mail.gmail.com>
-X-Gm-Features: AQt7F2p7IS6vaLQ0dmPwJ8037-3GQtwV1AnCbiyFDt_1RcT0ou-6dHscMRpm2ns
-Message-ID: <CAMRc=MeG9fPaq8M8ACq7_9+ysmYX+aRRzZVgApv5YMGtjx72Mw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=409e69e9e42622a8efaea00c6722208abb1f34df3b9e30332a381e829f3b;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Fri, 09 Jan 2026 16:08:07 +0100
+Message-Id: <DFK5IKWIJYLM.2CCXMRAXS0LYI@kernel.org>
 Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
-To: Michael Walle <mwalle@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc: "Kees Cook" <kees@kernel.org>, "Mika Westerberg" <westeri@kernel.org>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Saravana Kannan" <saravanak@google.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Andy Shevchenko"
+ <andy@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
+ Deacon" <will@kernel.org>, "Srinivas Kandagatla" <srini@kernel.org>, "Liam
+ Girdwood" <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>,
+ "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ "Alexey Klimov" <alexey.klimov@linaro.org>, "Bjorn Andersson"
+ <andersson@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>,
+ <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-sound@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>, "Bartosz
+ Golaszewski" <bartosz.golaszewski@linaro.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Bartosz Golaszewski" <brgl@kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+ <DFJAFK3DTBOZ.3G2P3A5IH34GF@kernel.org>
+ <CAMRc=MeQ_zr047PxFFGhfZ43TuHoKG-9VLLefxVyScpO5ZxjzQ@mail.gmail.com>
+ <DFK4Y3EOXTFL.1M25VAPJAS2BU@kernel.org>
+ <CAMRc=MeG9fPaq8M8ACq7_9+ysmYX+aRRzZVgApv5YMGtjx72Mw@mail.gmail.com>
+In-Reply-To: <CAMRc=MeG9fPaq8M8ACq7_9+ysmYX+aRRzZVgApv5YMGtjx72Mw@mail.gmail.com>
+
+--409e69e9e42622a8efaea00c6722208abb1f34df3b9e30332a381e829f3b
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Fri, Jan 9, 2026 at 3:41=E2=80=AFPM Michael Walle <mwalle@kernel.org> wr=
-ote:
+>> Not sure this is still valid. Because I've just learned that
+>> apparently, the arm64 Image shall be made smaller and thus "need
+>> a driver for rootfs" isn't a valid reason for =3Dy anymore.
+>>
 >
-> > I am aware of the issue where
-> > false-positive shared GPIOs are detected, I posted a fix for that too.
-> > Without logs, I can't really tell if that's the case for you though.
-> > :(
->
-> What I mean is, GPIO_SHARED is automatically selected by ARCH_QCOM (and
-> probably others in the future). But GPIO_SHARED_PROXY is
-> selectable by the user and it can be deselected. But you cannot
-> specifically deactivate GPIO_SHARED. So there is no way to go back
-> to the former hacky shared gpio handling; which might be intended :)
->
-> If so, shouldn't be GPIO_SHARED_PROXY be either y or m if GPIO_SHARED=3Dy=
- ?
-> I.e. don't allow it to be deselected.
->
+> Is a switch to disable shared GPIO management entirely via Kconfig
+> (depending on CONFIG_EXPERT) good enough for you?
 
-Fair point. I'll send a patch.
+I don't really need that (as I'd also need a PMIC driver, which
+probably won't be accepted either as =3Dy), maybe other do. Not sure,
+up to you.
 
-> >>
-> >> This broke my board (using the arm64 defconfig, works without
-> >> GPIO_SHARED of course). I'm seeing two issues here with my board
-> >> (arch/arm64/boot/dts/ti/k3-am67a-kontron-sa67*):
-> >>
-> >>  (1) It's GPIO controller (gpio-davinci) doesn't support
-> >>      .get_direction so I'm getting ENOTSUPP during probing of the
-> >>      (some?) shared GPIOs.
-> >>
-> >
-> > Unless this board really shares GPIOs, it may be due to the
-> > false-positives that will be fixed by this patch[1]. If you enable
->
-> Yeah this board shares an enable GPIO for two regulators
-> (regulator-5 and regulator-6,
-> arch/arm64/boot/dts/ti/k3-am67a-kontron-sa67-base.dts).
->
-> > CONFIG_DEBUG_GPIO and post the kernel log, I'll be able to tell for
-> > sure.
->
-> See end of this mail. I've applied the mentioned patch.
->
+-michael
 
-Yes, I see there are indeed shared pins.
+--409e69e9e42622a8efaea00c6722208abb1f34df3b9e30332a381e829f3b
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > Though thanks for bringing this to my attention as I now see there is
-> > indeed an issue when the proxied chip doesn't support .get_direction()
-> > as well as a duplicated check in GPIO core. I'll fix it too.
-> >
-> >>  (2) GPIO_SHARED_PROXY is default m in the defconfig, but I need the
-> >>      pins for the root filesystem medium, i.e. the SD card regulators.
-> >>
-> >
-> > I'll take care of this is you confirm, the issue persists even with pat=
-ch[1].
->
-> Not sure this is still valid. Because I've just learned that
-> apparently, the arm64 Image shall be made smaller and thus "need
-> a driver for rootfs" isn't a valid reason for =3Dy anymore.
->
+-----BEGIN PGP SIGNATURE-----
 
-Is a switch to disable shared GPIO management entirely via Kconfig
-(depending on CONFIG_EXPERT) good enough for you?
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaWEZ1xIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/jb6QF/cKSDNHxnvueWH5aVmuyPcce5VtwNVM28
+ulztUB/LQdv1McH02EzbRVwRhh0VAP+PAX9TgaecNELyf37cr7SC2SmZQ15ZqBwR
+xXpQ0WmkfDXKsuE5DRyyGgZF13/qGopvROE=
+=If2G
+-----END PGP SIGNATURE-----
 
-Bart
+--409e69e9e42622a8efaea00c6722208abb1f34df3b9e30332a381e829f3b--
