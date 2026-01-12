@@ -1,233 +1,244 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2718930EF94;
-	Mon, 12 Jan 2026 12:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5E4242D7C;
+	Mon, 12 Jan 2026 13:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768220794; cv=none; b=k0TCoolMgUI7n4662iadRdJXzSb3Shot6bJ3YS/s19wD0JZm4CQXmYcH2PWMFSbT7+tTmtWKClAGkN3vROW5MKB2p8gilu2yL50+RsQgTHS4+0P/zhuOy6PXs3g8wm3fORusQRH7eX7Ctq5tSr5HhUZM2anwUxb+9agGxUr+F7I=
+	t=1768223265; cv=none; b=hEovR9QcdbpnihDeT+vfJDoS6y3Zcb0+l+rZO4qjckIyK1VaEWUbIa/bEgy/bJ8cnk/t/SAz1jUEa2m6Vu8sE/V3bE4HszNq1HkwOqBBEAOnzk8XLwM4PjxbMBdegiG1VukxKQdJVoJ8f3dNmNnSSLCYJmTWqDkiQ5dTzupd520=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768220794; c=relaxed/simple;
-	bh=IOz/0cRFYtfPIWNv1W0KIDRSBDCMapaNOnPEZTHhwuY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=euZlsKUg8DfQqU0n1vfZxjle4IFj/awv8Gi76+yBhIOjeEXyJ01yggzxXNguv0VJVg2nKYmAM5kOF2lNdccaYGvR/12++68dyy0BlJY3VP57VVQ1O5M0lDxsrBwsNlNs9o/0h3GYjO6mycRXIzVXBPuZgIB/TR47e6VUso9uaY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D88E497;
-	Mon, 12 Jan 2026 04:26:25 -0800 (PST)
-Received: from [10.57.95.123] (unknown [10.57.95.123])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6C913F59E;
-	Mon, 12 Jan 2026 04:26:27 -0800 (PST)
-Message-ID: <09de87bc-d952-41e7-9657-852c2924aaa7@arm.com>
-Date: Mon, 12 Jan 2026 12:26:26 +0000
+	s=arc-20240116; t=1768223265; c=relaxed/simple;
+	bh=ix17Ps1qtfC2pvVqBCQ7IXMPmGDF8eNKN/QEJpT2JfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sieJu4lnAn0Dym3wuXH/FihT7lhd4BWA3Imu5B/NQjz1iGqF5I+FTaY4NXHNyJDFQv+YYWyDPTy3ZUCZzx7zsAiI0bojNzOfEy2044ye/grW6ylhVP+sYRhKY33+yLkz46N6Dp9+t6ZTfAURfR0GHGGtuQ/Mjr/J9Gr3aacZ2zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bm7GSpVX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bm7GSpVX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A53D4C16AAE;
+	Mon, 12 Jan 2026 13:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768223264;
+	bh=ix17Ps1qtfC2pvVqBCQ7IXMPmGDF8eNKN/QEJpT2JfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bm7GSpVXCKIS8pRomJHB+z84Bs6F+FgKNOySpLfK8U7Qg9PsOBtaawYpkhUo7ZK+q
+	 LRlnnrmWG9ESGWup87GMrfYC76XMWFfP2pr7pGR2eB3NXSGF9F7hZfNiKNf/BvD7wY
+	 5XirUTRbadEcT1N2C4MxEHk7BfLb1CijMEHtWtna5xbBsvvVLOhQQTMxwsEKsWmjmd
+	 UNdys7S70CgZuBhlN1gysNPDuMVzDMruYhGHRxhMBZE5UYA+bAi7Wxn1lbzZsOGf94
+	 68ax68PfiPzDnvVuPmLAxU33EZ8hyT6xTPEo+C8VGNNUzQWd8i9PpxxiW6MJsW5DTT
+	 +UgK/ibdrNvkw==
+Date: Mon, 12 Jan 2026 14:07:38 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-nvme@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH v2 00/11] dmaengine: dw-edma: flatten desc structions and
+ simple code
+Message-ID: <aWTyGpGN6WqtVCfN@ryzen>
+References: <20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] randomize_kstack: Unify random source across
- arches
-Content-Language: en-GB
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
- Jeremy Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260102131156.3265118-1-ryan.roberts@arm.com>
- <20260102131156.3265118-4-ryan.roberts@arm.com>
- <20260104230136.7aaf8886@pumpkin> <20260107140533.2b3c46a1@pumpkin>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20260107140533.2b3c46a1@pumpkin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com>
 
-On 07/01/2026 14:05, David Laight wrote:
-> On Sun, 4 Jan 2026 23:01:36 +0000
-> David Laight <david.laight.linux@gmail.com> wrote:
-> 
->> On Fri,  2 Jan 2026 13:11:54 +0000
->> Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->>> Previously different architectures were using random sources of
->>> differing strength and cost to decide the random kstack offset. A number
->>> of architectures (loongarch, powerpc, s390, x86) were using their
->>> timestamp counter, at whatever the frequency happened to be. Other
->>> arches (arm64, riscv) were using entropy from the crng via
->>> get_random_u16().
->>>
->>> There have been concerns that in some cases the timestamp counters may
->>> be too weak, because they can be easily guessed or influenced by user
->>> space. And get_random_u16() has been shown to be too costly for the
->>> level of protection kstack offset randomization provides.
->>>
->>> So let's use a common, architecture-agnostic source of entropy; a
->>> per-cpu prng, seeded at boot-time from the crng. This has a few
->>> benefits:
->>>
->>>   - We can remove choose_random_kstack_offset(); That was only there to
->>>     try to make the timestamp counter value a bit harder to influence
->>>     from user space.
->>>
->>>   - The architecture code is simplified. All it has to do now is call
->>>     add_random_kstack_offset() in the syscall path.
->>>
->>>   - The strength of the randomness can be reasoned about independently
->>>     of the architecture.
->>>
->>>   - Arches previously using get_random_u16() now have much faster
->>>     syscall paths, see below results.
->>>
->>> There have been some claims that a prng may be less strong than the
->>> timestamp counter if not regularly reseeded. But the prng has a period
->>> of about 2^113. So as long as the prng state remains secret, it should
->>> not be possible to guess. If the prng state can be accessed, we have
->>> bigger problems.  
->>
->> If you have 128 bits of output from consecutive outputs I think you
->> can trivially determine the full state using (almost) 'school boy' maths
->> that could be done on pencil and paper.
->> (Most of the work only has to be done once.)
->>
->> The underlying problem is that the TAUSWORTHE() transformation is 'linear'
->> So that TAUSWORTHE(x ^ y) == TAUSWORTHE(x) ^ TAUSWORTHE(y).
->> (This is true of a LFSR/CRC and TOUSWORTH() is doing some subset of CRCs.)
->> This means that each output bit is the 'xor' of some of the input bits.
->> The four new 'state' values are just xor of the the bits of the old ones.
->> The final xor of the four states gives a 32bit value with each bit just
->> an xor of some of the 128 state bits.
->> Get four consecutive 32 bit values and you can solve the 128 simultaneous
->> equations (by trivial substitution) and get the initial state.
->> The solution gives you the 128 128bit constants for:
->> 	u128 state = 0;
->> 	u128 val = 'value returned from 4 calls';
->> 	for (int i = 0; i < 128; i++)
->> 		state |= parity(const128[i] ^ val) << i;
->> You don't need all 32bits, just accumulate 128 bits.  
->> So if you can get the 5bit stack offset from 26 system calls you know the
->> value that will be used for all the subsequent calls.
-> 
-> Some of the state bits don't get used, so you only need 123 bits.
-> The stack offset is 6 bits - so you need the values from 19 calls.
-> 
->> Simply changing the final line to use + not ^ makes the output non-linear
->> and solving the equations a lot harder.
->>
->> I might sit down tomorrow and see if I can actually code it...
-> 
-> Finally done:
-> 
-> #include <stdio.h>
-> #include <unistd.h>
-> #include <fcntl.h>
-> 
-> typedef unsigned int u32;
-> typedef unsigned long long u64;
-> typedef unsigned __int128 u128;
-> 
-> struct rnd_state { u32 s1; u32 s2; u32 s3; u32 s4; };
-> u32 prandom_u32_state(struct rnd_state *state)
-> {
-> #define TAUSWORTHE(s, a, b, c, d) ((s & c) << d) ^ (((s << a) ^ s) >> b)
->         state->s1 = TAUSWORTHE(state->s1,  6U, 13U, 4294967294U, 18U);
->         state->s2 = TAUSWORTHE(state->s2,  2U, 27U, 4294967288U,  2U);
->         state->s3 = TAUSWORTHE(state->s3, 13U, 21U, 4294967280U,  7U);
->         state->s4 = TAUSWORTHE(state->s4,  3U, 12U, 4294967168U, 13U);
-> 
->         return (state->s1 ^ state->s2 ^ state->s3 ^ state->s4);
-> }
-> 
-> #define X(n, hi, lo) [n] = (u128)0x##hi << 64 | 0x##lo
-> u128 map[128] = {
->         X(  1, 23acb122e4a76, e206c3f6fe435cb6),
-> 	...
->         X(127, 00d3276d8a76a, e560d1975675be24) };
-> 
-> u128 parity_128(u128 v)                 
-> {                               
->         return __builtin_parityll(v) ^ __builtin_parityll(v >> 64);
-> }
-> 
-> int main(int argc, char **argv)
-> {
->         struct rnd_state s = {};
->         u128 s0, v, r = 0;
-> 
->         read(open("/dev/urandom", O_RDONLY), &s, sizeof s);
->         // Remove low bits that get masked by the (s & c) term.
->         s.s1 &= ~1; s.s2 &= ~7; s.s3 &= ~15; s.s4 &= ~127;
->         s0 = (((u128)s.s4 << 32 | s.s3) << 32 | s.s2) << 32 | s.s1;
->         v = prandom_u32_state(&s);
->         v |= (u128)prandom_u32_state(&s) << 32;
->         v |= (u128)prandom_u32_state(&s) << 64;
->         v |= (u128)prandom_u32_state(&s) << 96;
-> 
->         for (int n = 0; n < 128; n++)
->                 r |= parity_128(v & map[n]) << n;
-> 
->         printf("%016llx%016llx\n", (u64)(s0 >> 64), (u64)s0);
->         printf("values%s match\n", r == s0 ? "" : " do not");
-> 
->         return r != s0;
-> }
-> 
-> I've trimmed the initialiser - it is very boring.
-> The code to create the initialiser is actually slightly smaller than it is.
-> Doable by hand provided you can do 128bit shift and xor without making
-> any mistakes.
-> 
-> I've just done a quick search through the kernel sources and haven't found
-> many uses of prandom_u32_state() outside of test code.
-> There is sched_rng() which uses a per-cpu rng to throw a 1024 sized die.
-> bpf also has a per-cpu one for 'unprivileged user space'.
-> net/sched/sch_netem.c seems to use one - mostly for packet loss generation.
-> 
-> Since the randomize_kstack code is now using a per-task rng (initialised
-> by clone?) that could be used instead of all the others provided they
-> are run when 'current' is valid.
-> 
-> But the existing prandom_u32_state() needs a big health warning that
-> four outputs leak the entire state.
-> That is fixable by changing the last line to:
->         return state->s1 + state->s2 + state->s3 + state->s4;
-> That only affects the output value, the period is unchanged.
+Hello Frank,
 
-Hi David,
+Thanks for doing this work!
 
-This all seems interesting, but I'm not clear that it is a blocker for this
-series. As I keep saying, we only use 6 bits for offset randmization so it is
-trival to brute force, regardless of how easy it is to recover the prng state.
+Sorry for pointing out a lot of typos here.
+However, I do think it gives a better impression if there are fewer typos.
 
-Perhaps we can decouple these 2 things and make them independent:
 
- - this series, which is motivated by speeding up syscalls on arm64; given 6
-   bits is not hard to brute force, spending a lot of cycles calculating those
-   bits is unjustified.
+On Fri, Jan 09, 2026 at 10:28:20AM -0500, Frank Li wrote:
 
- - Your observation that that the current prng could be improved to make
-   recoving it's state harder.
+Subject: dmaengine: dw-edma: flatten desc structions and simple code
 
-What do you think?
+s/structions/structures/
+s/simple/simplify/
 
-Thanks,
-Ryan
+
+> This patch week depend on the below serise.
+
+s/serise/series/
+
+
+> https://lore.kernel.org/imx/20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com/
+
+Should this not be based on:
+https://lore.kernel.org/dmaengine/20260105-dma_prep_config-v3-0-a8480362fd42@nxp.com/
+instead?
 
 
 > 
-> 	David
+> Basic change
 > 
+> struct dw_edma_desc *desc
+>        └─ chunk list
+>             └─ burst list
 > 
+> To
+> 
+> struct dw_edma_desc *desc
+>             └─ burst[n]
+> 
+> And reduce at least 2 times kzalloc() for each dma descriptor create.
 
+s/create/creation/
+
+
+> 
+> I only test eDMA part, not hardware test hdma part.
+> 
+> The finial goal is dymatic add DMA request when DMA running. So needn't
+
+s/finial/final/
+
+Here and many other places:
+s/dymatic/dynamic/
+
+Also in patch 1/11:
+s/dynamtic/dynamic/
+
+
+> wait for irq for fetch next round DMA request.
+> 
+> This work is neccesary to for dymatic DMA request appending.
+
+s/to/too/
+s/neccessary/necessary/
+
+> 
+> The post this part first to review and test firstly during working dymatic
+> DMA part.
+> 
+> performance is little bit better. Use NVME as EP function
+
+s/NVME/NVMe/
+
+
+> 
+> Before
+> 
+>   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6660, BW=26.0MiB/s (27.3MB/s)
+>   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
+>   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
+>   Rnd read,  128KB,  QD=1, 1 job :  IOPS=914, BW=114MiB/s (120MB/s)
+>   Rnd read,  128KB, QD=32, 1 job :  IOPS=1204, BW=151MiB/s (158MB/s)
+>   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1255, BW=157MiB/s (165MB/s)
+>   Rnd read,  512KB,  QD=1, 1 job :  IOPS=248, BW=124MiB/s (131MB/s)
+>   Rnd read,  512KB, QD=32, 1 job :  IOPS=353, BW=177MiB/s (185MB/s)
+>   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=388, BW=194MiB/s (204MB/s)
+>   Rnd write,   4KB,  QD=1, 1 job :  IOPS=6241, BW=24.4MiB/s (25.6MB/s)
+>   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.7k, BW=96.5MiB/s (101MB/s)
+>   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=26.9k, BW=105MiB/s (110MB/s)
+>   Rnd write, 128KB,  QD=1, 1 job :  IOPS=780, BW=97.5MiB/s (102MB/s)
+>   Rnd write, 128KB, QD=32, 1 job :  IOPS=987, BW=123MiB/s (129MB/s)
+>   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1021, BW=128MiB/s (134MB/s)
+>   Seq read,  128KB,  QD=1, 1 job :  IOPS=1190, BW=149MiB/s (156MB/s)
+>   Seq read,  128KB, QD=32, 1 job :  IOPS=1400, BW=175MiB/s (184MB/s)
+>   Seq read,  512KB,  QD=1, 1 job :  IOPS=243, BW=122MiB/s (128MB/s)
+>   Seq read,  512KB, QD=32, 1 job :  IOPS=355, BW=178MiB/s (186MB/s)
+>   Seq read,    1MB, QD=32, 1 job :  IOPS=191, BW=192MiB/s (201MB/s)
+>   Seq write, 128KB,  QD=1, 1 job :  IOPS=784, BW=98.1MiB/s (103MB/s)
+>   Seq write, 128KB, QD=32, 1 job :  IOPS=1030, BW=129MiB/s (135MB/s)
+>   Seq write, 512KB,  QD=1, 1 job :  IOPS=216, BW=108MiB/s (114MB/s)
+>   Seq write, 512KB, QD=32, 1 job :  IOPS=295, BW=148MiB/s (155MB/s)
+>   Seq write,   1MB, QD=32, 1 job :  IOPS=164, BW=165MiB/s (173MB/s)
+>   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=250, BW=126MiB/s (132MB/s)
+>   IOPS=261, BW=132MiB/s (138MB/s
+> 
+> After
+>   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6780, BW=26.5MiB/s (27.8MB/s)
+>   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
+>   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
+>   Rnd read,  128KB,  QD=1, 1 job :  IOPS=1188, BW=149MiB/s (156MB/s)
+>   Rnd read,  128KB, QD=32, 1 job :  IOPS=1440, BW=180MiB/s (189MB/s)
+>   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1282, BW=160MiB/s (168MB/s)
+>   Rnd read,  512KB,  QD=1, 1 job :  IOPS=254, BW=127MiB/s (134MB/s)
+>   Rnd read,  512KB, QD=32, 1 job :  IOPS=354, BW=177MiB/s (186MB/s)
+>   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=388, BW=194MiB/s (204MB/s)
+>   Rnd write,   4KB,  QD=1, 1 job :  IOPS=6282, BW=24.5MiB/s (25.7MB/s)
+>   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.9k, BW=97.5MiB/s (102MB/s)
+>   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=27.4k, BW=107MiB/s (112MB/s)
+>   Rnd write, 128KB,  QD=1, 1 job :  IOPS=1098, BW=137MiB/s (144MB/s)
+>   Rnd write, 128KB, QD=32, 1 job :  IOPS=1195, BW=149MiB/s (157MB/s)
+>   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1120, BW=140MiB/s (147MB/s)
+>   Seq read,  128KB,  QD=1, 1 job :  IOPS=936, BW=117MiB/s (123MB/s)
+>   Seq read,  128KB, QD=32, 1 job :  IOPS=1218, BW=152MiB/s (160MB/s)
+>   Seq read,  512KB,  QD=1, 1 job :  IOPS=301, BW=151MiB/s (158MB/s)
+>   Seq read,  512KB, QD=32, 1 job :  IOPS=360, BW=180MiB/s (189MB/s)
+>   Seq read,    1MB, QD=32, 1 job :  IOPS=193, BW=194MiB/s (203MB/s)
+>   Seq write, 128KB,  QD=1, 1 job :  IOPS=796, BW=99.5MiB/s (104MB/s)
+>   Seq write, 128KB, QD=32, 1 job :  IOPS=1019, BW=127MiB/s (134MB/s)
+>   Seq write, 512KB,  QD=1, 1 job :  IOPS=213, BW=107MiB/s (112MB/s)
+>   Seq write, 512KB, QD=32, 1 job :  IOPS=273, BW=137MiB/s (143MB/s)
+>   Seq write,   1MB, QD=32, 1 job :  IOPS=168, BW=168MiB/s (177MB/s)
+>   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=255, BW=128MiB/s (134MB/s)
+>    IOPS=266, BW=135MiB/s (141MB/s)
+> 
+> To: Manivannan Sadhasivam <mani@kernel.org>
+> To: Vinod Koul <vkoul@kernel.org>
+> To: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+> To: Kees Cook <kees@kernel.org>
+> To: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
+> To: Manivannan Sadhasivam <mani@kernel.org>
+> To: Krzysztof Wilczyński <kwilczynski@kernel.org>
+> To: Kishon Vijay Abraham I <kishon@kernel.org>
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> To: Christoph Hellwig <hch@lst.de>
+> To: Niklas Cassel <cassel@kernel.org>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-nvme@lists.infradead.org
+> Cc: imx@lists.linux.dev
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Changes in v2:
+> - use 'eDMA' and 'HDMA' at commit message
+> - remove debug code.
+> - keep 'inline' to avoid build warning
+> - Link to v1: https://lore.kernel.org/r/20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com
+> 
+> ---
+> Frank Li (11):
+>       dmaengine: dw-edma: Add spinlock to protect DONE_INT_MASK and ABORT_INT_MASK
+>       dmaengine: dw-edma: Move control field update of DMA link to the last step
+>       dmaengine: dw-edma: Add xfer_sz field to struct dw_edma_chunk
+>       dmaengine: dw-edma: Remove ll_max = -1 in dw_edma_channel_setup()
+>       dmaengine: dw-edma: Move ll_region from struct dw_edma_chunk to struct dw_edma_chan
+>       dmaengine: dw-edma: Pass down dw_edma_chan to reduce one level of indirection
+>       dmaengine: dw-edma: Add helper dw_(edma|hdma)_v0_core_ch_enable()
+>       dmaengine: dw-edma: Add callbacks to fill link list entries
+>       dmaengine: dw-edma: Use common dw_edma_core_start() for both eDMA and HDMA
+>       dmaengine: dw-edma: Use burst array instead of linked list
+>       dmaengine: dw-edma: Remove struct dw_edma_chunk
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c    | 203 +++++++----------------------
+>  drivers/dma/dw-edma/dw-edma-core.h    |  64 +++++++---
+>  drivers/dma/dw-edma/dw-edma-v0-core.c | 234 +++++++++++++++++-----------------
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 147 +++++++++++----------
+>  4 files changed, 292 insertions(+), 356 deletions(-)
+> ---
+> base-commit: 5498240f25c3ccbd33af3197bec1578d678dc34d
+> change-id: 20251211-edma_ll-0904ba089f01
+> 
+> Best regards,
+> --
+> Frank Li <Frank.Li@nxp.com>
+> 
