@@ -1,194 +1,120 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542E138F923
-	for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 12:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0196439340C
+	for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 14:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768308116; cv=none; b=sSdtVAItlF7hTzdIgUikMWQ5mqTTOCOSrjsqvu0O/InmfhcVc5y19KpJNrVpSiuoHA5eMmICZKLl5B8EBc2HN++HmDdYzA4mRsBbUEt3fsh5mRFA0/anuKMLp+PwwfZZBArtCHtx6MWLk01cZHxwmbCB1YMnGo5SB5xFvclKnVM=
+	t=1768313649; cv=none; b=OoLkyM6BjFJrfmWlUcR7I7GTMK45i+DKWja1ZpkxMRBHNUOhK1/ZaryMAW9EWFA6okeiIHboCZPH6X+hmSZb1tho6jYlbFhWMJ4xUdOMyAufYlCG6nEv/eHmw/Z6v9ADnY0aRbpGKUyP5E3F+ZdxdM4XcQFuXX9nUlC547rzw84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768308116; c=relaxed/simple;
-	bh=4O/QKnJy0mgeinip5BHk/HuNTgwgeS2i878VGcuximU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R4tZJ9gQ1eLDZhpcnLkpRJzWU/1K62Vd0MyJhEtmFC+LEyZWQq1IXxDefMxZn1n5kDIMM6SBe7z+pSt79isPVMDtELKKZSfqLjY/tC2bymAZm8NY0CZA0XME33KSZKVMLJnBkfWgqVj72vdePyYvhYi25e6i1jNsT20xehh3sL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fRVKHqti; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1768313649; c=relaxed/simple;
+	bh=Yh/skuOQuC/zZ/fQfc54UBUifN3ebScHgpu0xUQPYSk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HVtpZGXfDsIVWw5sj9FS+Am6jgHi7/oWxnRxbr6tHeULtYL6WKTL+0iYAH4dLjn100lq2TdyBVAbKBOQUqev7fxBSznydOpIP1TbXIEvCbfQCmFv7nnM1kg85ZdkR2mWyLBk0ZU7ZbpI3K5sAASZnGlRv8mVPwZv0R18aFMJky0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FkK2yDQ0; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fRVKHqti"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so63072075e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 04:41:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkK2yDQ0"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-bc4b952cc9dso3224884a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 06:14:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768308113; x=1768912913; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2dC4SplNK0CZduFW6/ZkQ29d/9pNlTULD+NHFTfquXY=;
-        b=fRVKHqtitRt7aDAXPRYu506G5Ytwzf8hcFy27vH8i+FlRo+tkbAGjcjtXvKoMHUPci
-         RHxMzomlVLe76t9tcFgiVsqr2QxQqxck+pSkDKfh9VNKxojK/Smo2Z5AmrptYdJI59M3
-         A6y+LbDMWuXyXpbzNdgaPeAgxmE+RJuxtW+xoegjeajNbe1ANij7BBQPRW61gwEXxV4o
-         A+t4h7l4xZoC3ymVTqnksmU0IvSChVgNeDGoL0j/XFaShdI6SUjv3CyUiA5rwq7FAJQ0
-         L92eXpwJU2MbdacV3ijX3WwllU7V1dRBFwbPgHQJbmPP8Lfa6zjxFsRTB0kQn2Qr8oqF
-         O/dw==
+        d=gmail.com; s=20230601; t=1768313643; x=1768918443; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yh/skuOQuC/zZ/fQfc54UBUifN3ebScHgpu0xUQPYSk=;
+        b=FkK2yDQ0gdrvpsMBaScW+qvQ/ok3On1tPM9wAIf9HZvAfV+wz8Cg0/AeF0+qhQ3zDj
+         J8pLhylFsLI76gMWMb/tTQ2Gp4WGPQ/Rhvie5wfnhWQ0GF+XgEFs6O80iSSOpyGdEmbh
+         ECrhFW/bDJrpJzYCDk7Vhde2GE6Dl7qxnIndtsGfGfgR/7ryxFIJSMSAmqyt5FEEAjDD
+         Xbkesv9BQ1mPoHIc4OGx5GyoIrxxWc1cWXJPcCwlw3bYE4mq/XRMBVLITr5e+DW4mlhz
+         RZxeNxUmaA+bgbGVXI4gTWAApRStrrLRoTJi+GIAt36sC+yWxiJD7ie7FMg8Ffj1/Rry
+         NRWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768308113; x=1768912913;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2dC4SplNK0CZduFW6/ZkQ29d/9pNlTULD+NHFTfquXY=;
-        b=XXII3jEwiI5PXZlL9zhmVEA+WV/IcSFbLmIPb80CVc+/Ju1fAt/yFWiXlK97C0Uj0y
-         GsjxYLAwIgXa8v5tW5DWgUa1TmOvFR0TdtYS/l/spw6YAc+0YGYDaH2WM7JNuNnA1xoi
-         XQVCf/egTMipeSh5SbG0WD1F4PkpY/hfO301O9MYAcBbGVAZhl1aTkwmc+8vuGMpdicP
-         wuf1NUk6trr3zeAimMFbhPT6Sao84fePA/iS803HzpR9pPU6xAszRUIBVjLiEfVRjfDG
-         Gk1yoTap8lVhO306mYRGuIuWmpER/oAsHkwZl/HxVgkEFl/5O04fr1XyMYJI8c7lCx2g
-         aNXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOfRKnqFKNrFRov+xj+J9qEF3JIMlCdAlJ0wYvVLDIu/mPXEPsnKuKr/h0qw/KHKvoun9WyRsQWWfwwzlHVuI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6ExajC1om6iGmyo9OmsbROM/hcS3xpzI+adXwrn27pOFsaZLZ
-	mg/fbzvk1FgipNooUDS8b4zTIb4BfmFYdYThUV0Dqag9585Ycz549P4X8tJ/WY0VdQo=
-X-Gm-Gg: AY/fxX6YxGwctcoPNf7hJN0wKeK3oJURQNSw97BPay8cHoNUceEKM+ArhMHoXIAcsno
-	Xt4/kkUFxqt4CxB4ol+UKSkg27O19almlnKReDtb6+rDtE12nIW+WmyGLZVeqUmbizNu9x+DL+y
-	x/FJd4rqDssR1k5B5AFFzQemioITFnTWPunxIt5KGZr0n6XrvZZCtZUjergrAzy8qzOzMlWe+Ce
-	6C2EwEblJ1V1x9N/XDuUx1Gz6Drqs+x6HqNShbnCzJpG25JyxNg9PwZs4ofTF0ymMpDbEdci00O
-	EDq0udqvI7Nhy0hvQ4ccGZThMIi90Bw5DwM7s1krfmr1EyizN/NM/0vJMvPdpCmNe9DJUw4a55g
-	bqEp54gx9vmS8Lqm1kUFoSk5/p2LRoribcGthsrRkN6Ou9Wk8TWrp4mdoE1UabtMeaE82nPWpwu
-	MxgKP6DhoRxDyd6cLrVbPKmFTTV4H60GyyWwGAt9lvgg==
-X-Google-Smtp-Source: AGHT+IFNQeuw9WMG2h1Davmi36cm1P3WLycSIMCVChnxdfpM9EbZrc4Y9nv7bv2r6hTzREDcGxTpbg==
-X-Received: by 2002:a05:600c:a08:b0:477:79c7:8994 with SMTP id 5b1f17b1804b1-47d84b4900bmr279773315e9.30.1768308112530;
-        Tue, 13 Jan 2026 04:41:52 -0800 (PST)
-Received: from [192.168.3.33] (218.37.160.45.gramnet.com.br. [45.160.37.218])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5013bd680a1sm10831771cf.16.2026.01.13.04.41.37
+        d=1e100.net; s=20230601; t=1768313643; x=1768918443;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Yh/skuOQuC/zZ/fQfc54UBUifN3ebScHgpu0xUQPYSk=;
+        b=EteK1Yym8EIxqCve9naJel231286DcKkyHXqYllucJREN37Z2BtCWVtuxeXFgAJex+
+         a48h/0SVIUMQrEE03dtme29bPoGlamPedqxQCHkgTZZgS37TAlbDZoos/6VFvlmXPAPV
+         +U/elGspmBMh8Z5BQNKnugw/LLkLhfGit3HFHkhlXNxy5cqnrXdh//HeV4rLv12iWD1w
+         YluGrLM8EiWGd78S2px8uefzy3lAXmVRPTCbyR1tDvM47y8cL+ivmFNGmJpt2zk2zOh7
+         kjp+eLoaErgyDOBaUlf7lA8OqnKF88mJMrtjlJDWGKLGpqDit49WmDlsCPDTfIZuer61
+         tEWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIoviSA7iQWHWmImWf3KmXnHGvV0f5hAvDGE/4arlDZgTtYtjhdeNTNylH10b3THeE6U7KF24BL6kZtxW17Fw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVymOyfasbEgPtgg2C5uRkKRMzW9M1Zx+RvTYYDG99WYWpV0jc
+	HTaUyDoN6BEt8b2kDtaHKA1J9a6/si4ekdY9ijDf7Sj/L61USvkkObPr
+X-Gm-Gg: AY/fxX6ipjAQrO57dWizbzSmjiex+G5/+6fEti52PJJzPUiqiGFlK17xnaFy2alcnb7
+	4g/O5kRQWXpQNfLxJxG3ol/540QQJJwRgceO9h3Z1tapgeJk5wb7UjpxyBSlke9bP2nt9X1BiRo
+	hvyaDxitz0WhwoR6EtmQqWvrmIZ6qUsTR1DkHD//DynFCIuVKH5Nw/UuF+iBAp42Ellzqbjasry
+	dPf/4f1JVpIGLXA2RzPwwV+TauNZ9JonFnwvukF4nal6LHx7QMhEYG3lrMEF7epe4ioWiDuxObH
+	7px/vtJhreVnfdiF4RbNkjI8RDT6EvyBTWJq9iA0bEl84XhnZcBkaEjY0DGexZTQwG5vhhnAg1m
+	msKgB20RWGoQcCAMoVXDe3KQDUzWxmtGOlIT9JDX9TUKqGbBcyd4ZaC8GCS4aC2Jqykak7U6NLA
+	b0Tdv0ZPwXIg==
+X-Google-Smtp-Source: AGHT+IG7buq9CzX9ZRTrAw60UgkpwZAGNd7i/rZuf8pczHAcg2auSyZzQR/xxashE4pdHuR2UKZuqQ==
+X-Received: by 2002:a17:902:da8d:b0:2a2:f2a5:4136 with SMTP id d9443c01a7336-2a3ee45b2f6mr207785705ad.22.1768313642789;
+        Tue, 13 Jan 2026 06:14:02 -0800 (PST)
+Received: from ArchLinux ([45.113.100.103])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-2a3e3cd495dsm205884225ad.96.2026.01.13.06.13.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 04:41:51 -0800 (PST)
-Message-ID: <a5d83903fe2d2c2eb21de1527007913ff00847c5.camel@suse.com>
-Subject: Re: [PATCH 00/19] printk cleanup - part 3
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-To: Daniel Thompson <daniel@riscstar.com>
-Cc: Richard Weinberger <richard@nod.at>, Anton Ivanov	
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jason Wessel <jason.wessel@windriver.com>,
- Daniel Thompson	 <danielt@kernel.org>, Douglas Anderson
- <dianders@chromium.org>, Petr Mladek	 <pmladek@suse.com>, Steven Rostedt
- <rostedt@goodmis.org>, John Ogness	 <john.ogness@linutronix.de>, Sergey
- Senozhatsky <senozhatsky@chromium.org>,  Jiri Slaby <jirislaby@kernel.org>,
- Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook	
- <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"	
- <gpiccoli@igalia.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy	 <christophe.leroy@csgroup.eu>, Andreas Larsson
- <andreas@gaisler.com>,  Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue	
- <alexandre.torgue@foss.st.com>, Jacky Huang <ychuang3@nuvoton.com>, 
- Shan-Chun Hung <schung@nuvoton.com>, Laurentiu Tudor
- <laurentiu.tudor@nxp.com>, linux-um@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net, 
-	linux-serial@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, 	linux-fsdevel@vger.kernel.org
-Date: Tue, 13 Jan 2026 09:41:34 -0300
-In-Reply-To: <aVvF2hivCm0vIlfE@aspen.lan>
-References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
-	 <aVuz_hpbrk8oSCVC@aspen.lan> <aVvF2hivCm0vIlfE@aspen.lan>
-Autocrypt: addr=mpdesouza@suse.com; prefer-encrypt=mutual;
- keydata=mDMEZ/0YqhYJKwYBBAHaRw8BAQdA4JZz0FED+JD5eKlhkNyjDrp6lAGmgR3LPTduPYGPT
- Km0Kk1hcmNvcyBQYXVsbyBkZSBTb3V6YSA8bXBkZXNvdXphQHN1c2UuY29tPoiTBBMWCgA7FiEE2g
- gC66iLbhUsCBoBemssEuRpLLUFAmf9GKoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- QemssEuRpLLWGxwD/S1I0bjp462FlKb81DikrOfWbeJ0FOJP44eRzmn20HmEBALBZIMrfIH2dJ5eM
- GO8seNG8sYiP6JfRjl7Hyqca6YsE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (by Flathub.org) 
+        Tue, 13 Jan 2026 06:14:02 -0800 (PST)
+From: Biswapriyo Nath <nathbappai@gmail.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Biswapriyo Nath <nathbappai@gmail.com>,
+	barnabas.czeman@mainlining.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Gabriel Gonzales <semfault@disroot.org>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	linux@mainlining.org
+Subject: Re: [PATCH 4/6] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Fix reserved gpio ranges
+Date: Tue, 13 Jan 2026 14:13:36 +0000
+Message-ID: <20260113141342.11057-1-nathbappai@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <e4f9cdc4-1b3a-44b0-83f1-315c934985ba@oss.qualcomm.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2026-01-05 at 14:08 +0000, Daniel Thompson wrote:
-> On Mon, Jan 05, 2026 at 12:52:14PM +0000, Daniel Thompson wrote:
-> > Hi Marcos
-> >=20
-> > On Sat, Dec 27, 2025 at 09:16:07AM -0300, Marcos Paulo de Souza
-> > wrote:
-> > > The parts 1 and 2 can be found here [1] and here[2].
-> > >=20
-> > > The changes proposed in this part 3 are mostly to clarify the
-> > > usage of
-> > > the interfaces for NBCON, and use the printk helpers more
-> > > broadly.
-> > > Besides it, it also introduces a new way to register consoles
-> > > and drop thes the CON_ENABLED flag. It seems too much, but in
-> > > reality
-> > > the changes are not complex, and as the title says, it's
-> > > basically a
-> > > cleanup without changing the functional changes.
-> >=20
-> > I ran this patchset through the kgdb test suite and I'm afraid it
-> > is
-> > reporting functional changes.
-> >=20
-> > Specifically the earlycon support for kdb has regressed (FWIW the
-> > problem bisects down to the final patch in the series where
-> > CON_ENABLED
-> > is removed).
-> >=20
-> > Reproduction on x86-64 KVM outside of the test suite should be
-> > easy:
-> >=20
-> > =C2=A0=C2=A0=C2=A0 make defconfig
-> > =C2=A0=C2=A0=C2=A0 scripts/config \
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 --enable DEBUG_INFO \
-> > 	--enable DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
-> > 	--enable DEBUG_FS \
-> > 	--enable KALLSYMS_ALL \
-> > 	--enable MAGIC_SYSRQ \
-> > 	--enable KGDB \
-> > 	--enable KGDB_TESTS \
-> > 	--enable KGDB_KDB \
-> > 	--enable KDB_KEYBOARD \
-> > 	--enable LKDTM \
-> > 	--enable SECURITY_LOCKDOWN_LSM
-> > =C2=A0=C2=A0=C2=A0 make olddefconfig
-> > =C2=A0=C2=A0=C2=A0 make -j$(nproc)
-> > =C2=A0=C2=A0=C2=A0 qemu-system-x86_64 \
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -m 1G -smp 2 -nographic \
-> > 	-kernel arch/x86/boot/bzImage \
-> > 	-append "console=3DttyS0,115200 kgdboc=3DttyS0
-> > earlycon=3Duart8250,io,0x3f8 kgdboc_earlycon kgdbwait"
->=20
-> Actually I realized there was a simpler reproduction (hinted at by
-> the
-> missing "printk: legacy bootconsole [uart8250] enabled" in the
-> regressed
-> case). It looks like the earlycon simply doesn't work and that means
-> the
-> reproduction doesn't require anything related to kgdb at all. Simply:
->=20
-> =C2=A0=C2=A0=C2=A0 make defconfig
-> =C2=A0=C2=A0=C2=A0 make -j$(nproc)
-> =C2=A0=C2=A0=C2=A0 qemu-system-x86_64 -m 1G -smp 2 -nographic -kernel
-> arch/x86/boot/bzImage \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -append "earlycon=3Duart8250,i=
-o,0x3f8"
->=20
-> With the part 3 patchset applied I get no output from the earlycon
-> (without the patch set I get the early boot messages which, as
-> expected,
-> stop when tty0 comes up).
+On Tue, 13 Jan 2026 10:45:02 +0100 Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
 
-Hi Daniel, sorry for the late reply! Lots of things to check lately :)
+> I was referring to the NFC eSE (embedded Secure Element) which usually
+> has a separate connection to the SoC
 
-Ok, I reproduced here, thanks a lot for testing kgdboc, it's a quick
-way to check that the new register_console_force is not working. Let me
-take a look to find what's wrong. Thanks a lot for finding this issue!
+Yes, gpio 0-4 are connected to NFC eSE and gpio 30-34 are for
+fingerprint scanner. Here is the list of reserved gpio and their
+functions according to the device's schematic.
 
->=20
->=20
-> Daniel.
+0 - ESE_SPI_MISO
+1 - ESE_SPI_MOSI
+2 - ESE_SPI_SCLK
+3 - ESE_SPI_CS_N
+
+30 - FP_SPI_MISO
+31 - FP_SPI_MOSI
+32 - FP_SPI_SCLK
+33 - FP_SPI_CS_N
+
+Though Redmi Note 8 does not have NFC, kernel crashes if 0-4 gpios
+are not reserved.
+
+Tested-by: Biswapriyo Nath <nathbappai@gmail.com>
+
+Thanks.
