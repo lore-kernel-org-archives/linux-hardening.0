@@ -1,49 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56E23803D8;
-	Tue, 13 Jan 2026 08:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0071326D70;
+	Tue, 13 Jan 2026 08:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768293720; cv=none; b=gHA/tCKTQk7pfjPykSyeL5nIueSZCgFEkZNPtSkyIz1kF+VVf+fqN/JnNL2LfstbfZJyKi1Y3zyiu5GDPQdGsDQOmGWVZrr38JQGaDx4cEQ+v+S+ZswPBPDwzQCEinsbzdBjEzCzl73kraT3o0ef1eu4GapvJKCVCHCw6N4pI/0=
+	t=1768293985; cv=none; b=ivPK9KJNexU2VkQ3RBpwz1zXfe61VtOFPUIqVpTra0q5P8rXpbYxnpH3YpukYS9TiEPuFhJeZSoM9lPixCn+MGXNAWUFCcM1mo9KSB7g8vMulMBGs5g578OH0YPg8aPgHjOpnVqJgn0CqVe5WOCpQaNCTkJPP3l7Y3qBzU+ytcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768293720; c=relaxed/simple;
-	bh=rdCdfQup+4kSnpj06pCND7wWAwUHXOWyknYZJSfjJv8=;
+	s=arc-20240116; t=1768293985; c=relaxed/simple;
+	bh=LuR1U+G1fxeaAcVaesDQDX6kj+hiGYDQWKnGdmCi+hw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k5+HYA72MNIsga/53rVl2F0zHGD3LTt4B35QTKz2HQM0Iqwf4z46pUwSH38cY0cnDR3sdwp+H97XCeC2VWY4OQZEeoW58c1ZRGzW+5sm5vDlREOc6JP4vp9C4J8a5HTtgZxc2wTaUCsIci5hcKNSzm2x/1lRHSqF4DfT62HL4N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EnIrWxB3; arc=none smtp.client-ip=198.175.65.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZZOKLOVw33ypsJcfS2cUND/hBfWA2UIlNwuxNYEU0IA0zINdWsZuldNo/vLg7fGENby+1VLvSYabnxK7W1AFd+o37FynVEZ1taN9gk0FzKd1XhjkRuSL7c/VJWOmprbHeazEFeP7SEsTcV52k0WfBNZlgO4eSF7wa8h+PlK4CeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UjUVLWmb; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EnIrWxB3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjUVLWmb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768293719; x=1799829719;
+  t=1768293984; x=1799829984;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=rdCdfQup+4kSnpj06pCND7wWAwUHXOWyknYZJSfjJv8=;
-  b=EnIrWxB3Rq4/Ew1AHNU5Q9UL/DOkD73KfA5eJ+o8rl7MwusUxK7En0iO
-   z6qnqVd1c0ReQ2RkXCUK/PhQcN6FwEUB/FtXZbF9COGUEcZym8ShiqEvS
-   IQ97FSWuG1zHBhMoMi74GUzwY+YQoVEaEt5An7aQWRrgrdzgz07A5fSdh
-   Jlj3RCcHO3NVLBwMKyZXJlWReNkvgR7LLi/DvXne4GHMgSJOeYdZoCeDn
-   AuI7zxVdsHenGnl+0v1UY/KFNwCsXrk3AmlxXPZzBl/CwrmhZkR3XUbCf
-   8EooqBkuLoydryKzl6r/8xLzKUt2BKOxqMCmBklMILD9uM7anQFtkBg34
+  bh=LuR1U+G1fxeaAcVaesDQDX6kj+hiGYDQWKnGdmCi+hw=;
+  b=UjUVLWmbYOTBnqciRznWo0ogqmUPtTHUic/MsIrXr+7bHOGhi01dNED4
+   i+xWIPNLLMShlri1qu8bxa2kCg9YPd+W+bj0AYcF5wijL1LSQSOcTdBEV
+   yW4sHhrBFLombVNoav9ZS1oWz17se9NNmyoToxY0pWcgq9pw0JFQsGfO0
+   hj9HHewqAxLgZHZVH+TDSnnOgDPA2JZx0MgMv0HgwrqWEEVFVijLgq7JQ
+   omyKHldPgT2m/zs9+j4wsQbMd5L31CtLxK5D6NnPr8egYSfxm78wYJvBH
+   wqyYms4FaIAr+AKJJzWhvqJobrc01/rbBwNlzriDLxIV6410tisP/sxp9
    Q==;
-X-CSE-ConnectionGUID: hj9BpbxaQVa71UbeiIYtOg==
-X-CSE-MsgGUID: juc3Ly7MQ2Gnmt7qMb0G2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="79870679"
+X-CSE-ConnectionGUID: YISHqdh5SxWocAiS3I1IeA==
+X-CSE-MsgGUID: hCMyrUD2Srm6a5n4TLx7lw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="86989589"
 X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="79870679"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 00:41:58 -0800
-X-CSE-ConnectionGUID: 3c4fC4lWTUy29UxPmIOjBw==
-X-CSE-MsgGUID: h02g43C1RH2fpv29WtVzxg==
+   d="scan'208";a="86989589"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 00:46:23 -0800
+X-CSE-ConnectionGUID: ZzFm8NyUTlK/FhfmXPjeIA==
+X-CSE-MsgGUID: OOPd+QWlR/OVKWtJe7hJBw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="204136155"
+   d="scan'208";a="203483672"
 Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.177])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 00:41:53 -0800
-Date: Tue, 13 Jan 2026 10:41:51 +0200
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 00:46:19 -0800
+Date: Tue, 13 Jan 2026 10:46:16 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Feng Jiang <jiangfeng@kylinos.cn>
 Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
@@ -54,11 +54,11 @@ Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
 	samuel.holland@sifive.com, linus.walleij@linaro.org,
 	nathan@kernel.org, linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 06/14] lib/string_kunit: add correctness test for
- strnlen
-Message-ID: <aWYFT1yoktjDLFTm@smile.fi.intel.com>
+Subject: Re: [PATCH v2 08/14] lib/string_kunit: add performance benchmark for
+ strlen()
+Message-ID: <aWYGWLEekWh3jJVf@smile.fi.intel.com>
 References: <20260113082748.250916-1-jiangfeng@kylinos.cn>
- <20260113082748.250916-7-jiangfeng@kylinos.cn>
+ <20260113082748.250916-9-jiangfeng@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,40 +67,72 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260113082748.250916-7-jiangfeng@kylinos.cn>
+In-Reply-To: <20260113082748.250916-9-jiangfeng@kylinos.cn>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Jan 13, 2026 at 04:27:40PM +0800, Feng Jiang wrote:
-> Add a KUnit test for strnlen() to verify correctness across
-> different string lengths and memory alignments.
+On Tue, Jan 13, 2026 at 04:27:42PM +0800, Feng Jiang wrote:
+> Introduce a benchmark to compare the architecture-optimized strlen()
+> implementation against the generic C version (__generic_strlen).
+> 
+> The benchmark uses a table-driven approach to evaluate performance
+> across different string lengths (short, medium, and long). It employs
+> ktime_get() for timing and get_random_bytes() followed by null-byte
+> filtering to generate test data that prevents early termination.
+> 
+> This helps in quantifying the performance gains of architecture-specific
+> optimizations on various platforms.
 
 ...
 
-> +	for (offset = 0; offset < STRING_TEST_MAX_OFFSET; offset++) {
-> +		for (len = 0; len <= STRING_TEST_MAX_LEN; len++) {
-> +			s[offset + len] = '\0';
+> +static void string_test_strlen_bench(struct kunit *test)
+> +{
+> +	char *buf;
+> +	size_t buf_len, iters;
+> +	ktime_t start, end;
+> +	u64 time_arch, time_generic;
+> +
+> +	buf_len = get_max_bench_len(bench_cases, ARRAY_SIZE(bench_cases)) + 1;
+> +
+> +	buf = kunit_kzalloc(test, buf_len, GFP_KERNEL);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf);
+> +
+> +	for (size_t i = 0; i < ARRAY_SIZE(bench_cases); i++) {
+> +		get_random_nonzero_bytes(buf, bench_cases[i].len);
+> +		buf[bench_cases[i].len] = '\0';
+> +
+> +		iters = bench_cases[i].iterations;
+> +
+> +		/* 1. Benchmark the architecture-optimized version */
+> +		start = ktime_get();
+> +		for (unsigned int j = 0; j < iters; j++) {
+> +			OPTIMIZER_HIDE_VAR(buf);
+> +			(void)strlen(buf);
 
-This should be one or two characters further so you check should also check for
-non-NUL terminated strings...
+First Q: Are you sure the compiler doesn't replace this with __builtin_strlen() ?
 
-> +			if (len > 0)
-> +				KUNIT_EXPECT_EQ(test, strnlen(s + offset, len - 1), len - 1);
-
-...or make more tests, with len - 2 at least.
-
-> +			KUNIT_EXPECT_EQ(test, strnlen(s + offset, len), len);
-
-> +			KUNIT_EXPECT_EQ(test, strnlen(s + offset, len + 1), len);
-
-I would also add + 2 test case.
-
-> +			KUNIT_EXPECT_EQ(test, strnlen(s + offset, len + 10), len);
-
-> +			s[offset + len] = 'A';
 > +		}
+> +		end = ktime_get();
+> +		time_arch = ktime_to_ns(ktime_sub(end, start));
+> +
+> +		/* 2. Benchmark the generic C version */
+> +		start = ktime_get();
+> +		for (unsigned int j = 0; j < iters; j++) {
+> +			OPTIMIZER_HIDE_VAR(buf);
+> +			(void)__generic_strlen(buf);
+> +		}
+
+Are you sure the warmed up caches do not affect the benchmark? I think you need
+to flush / make caches dirty or so on each iteration.
+
+> +		end = ktime_get();
+> +		time_generic = ktime_to_ns(ktime_sub(end, start));
+> +
+> +		string_bench_report(test, "strlen", &bench_cases[i],
+> +				time_arch, time_generic);
 > +	}
 > +}
+
 
 -- 
 With Best Regards,
