@@ -1,109 +1,106 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8392B2FB0B3
-	for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 16:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAED13803DE
+	for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 17:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768321751; cv=none; b=U8gpoyb2+FR1/250GoPy3FO8jWivLqAea2xSM5mPurGR+kBtgTP3Jk5GEvdATrkNB/5wQ2Ib091bIKbWavF3Z0/tIGbCp0szgLdp9nEWcrEt0CqmMbG/PmorvJ/k5nOpnkd4FOGUX9q+PWc5nV2VzcjivV/MOCxSsk9bm/tIfYg=
+	t=1768325844; cv=none; b=m9M8PGtXgjv8Z5w6z5jC7IMhcUrL73oOw2OToCHRyBeVFusVAwgRFza8be/xR9WMZz1SSGsQaJFdGZTgqA5+P3yd//vXapEAP1dvtcaPVQrKdAseapyVMasoDtl+OH/ye8C4paqwT7M991FCO5OuB2mX91s2tcp3bmbARbN5ozI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768321751; c=relaxed/simple;
-	bh=oUPYwQN15xpKqjNWtjDqdTFQd7zC6BoxdsN91zpf55A=;
+	s=arc-20240116; t=1768325844; c=relaxed/simple;
+	bh=ICK4ui9NDNRZmZPvqUFhVVRYDzu3U7vjvh8uoefFqv4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qR+Z/fFk4HYMtL7C9AjM3VK+lLKqa1m+MSr/oFNHTBT/vlY741O9HXcSSRbc48DagdgsnXEOsd5pv/6IRB+T0EGpiRMsCOsoiWEnxRWSUNF1UVHbYAMFCQtkFKYu4eXu0faFEZuVEC/R1R8GmGyQagqaydiW+GhgsrgGdWvcvR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=h6MtjU47; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=SnwxYO17; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uPnS1Jo4Xor7iO0oJQpiBwAlwCL4avP0VkUdTKkMOwcsE/u20aYqfKWWS1sFgvbnFVmvwF6dMyLa5Kkydoqtt5Xx8OiMEc5+KKn+NX/zpS2n0+Eax0o4IwDpubl3a43E6njDNhfhtYGygfrqP4WNdzKe84p+n518jPFXKlDnoM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ru2sEbeo; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="h6MtjU47";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="SnwxYO17"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60DG5CKM1294998
-	for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 16:29:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=cIn5H/EXHlleEAeuN1rT2GBX
-	pPo6fP2DFr4Mp6yQNT0=; b=h6MtjU47w1PHnUFq0KDb/GRAfBi1JEHu2lTMIpyc
-	cqAD+bc1LGy8/TG/gfUjoEiqzQmuk+kyMYsqOX6aqMyevJPuhwCkJUFBj3Rt8aVG
-	+ufCmNSUcu+UF5tCQSOyhiPWfUC4Kn0Wa5H23HJdxo72W0y6hF5B8xdfnvsYdi2W
-	ipinFNeNUHPEZnaabab9G93Qcw9UdAI8Zaa+c6cbmoGJRFLcfkx3Y0pp5I+Ujoe8
-	GNlxjYt69KuxsvIiz2/W3J6fNXVd/LXNyHBlosiUcMffL4FX2PoPw2okX7CUh2Mq
-	it8SOOvW2CCXVHDJFUqdg+DIgO4SiK2RZDGAlLEcFDFeSw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bns8v02vw-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 16:29:08 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8b2e2342803so2031395685a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 08:29:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ru2sEbeo"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-430f57cd471so3943963f8f.0
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 09:37:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1768321748; x=1768926548; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1768325840; x=1768930640; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cIn5H/EXHlleEAeuN1rT2GBXpPo6fP2DFr4Mp6yQNT0=;
-        b=SnwxYO170M9LFflaroEXzk1rTMzypq+UXVKvow77N9DVUg6tTSIZ50XRPgBQwAoEoT
-         Ued+nDHEL6wFiIGGwwEG4Xaq12tPtEb9+oEtpRITZgVyzeFdlxd5R3EY8D5nQf1uTR3b
-         Slr6f/YfHDI41Bu5UheoDjczlGQEBhBGzvM6xQCmnFsfah9eQ8TLg9yxASW5595q3/C6
-         Jlb28AY1sI+SMJMiZxgclSlJmyhdt6cIhh+8Dl2dcaH8NodMeXtKFMxr64ghCHq2kCBF
-         UQ/vHjvVSryPq56oDAlh/EXmGkFpD2/ULpu3Nni1JATq+UKZ3GycKuC1AmK1nEXfbgRo
-         ToAw==
+        bh=/CVOy4tPw1zWY0e6rYcKRwtfrfRvUlKFzd8YTNoGp5w=;
+        b=Ru2sEbeo3aF1V5dVdmZ8y7qebfvXyJmIOu3zKjZ0L9VDAaRDnX70AwM7BG2MTCNZwb
+         Wt2M0HgSorW10TpGQfsg9caRtjEHGygzZnBCUoVZVtJ9cb0vr93mesbIAhkVPGacjxdE
+         7HU2OwKQxMCRd8/BsuI9FzZju+1UH8Go43H+kiq9CHCnMXgCIpF7/w0CTdPzN1DW1Rpm
+         vJFnt7QVkUwAiqmRpO4P0wQ4QtHunX4dgFkC5Y5pl2pjWjZOPmVYlIv+L2228OrXc7FR
+         T3QgLrVe14c5TYcEkEJYXN3hig3ZqFkIKuc/jaTuv7lqME1z4P3n4adyHDJ+f9c9YNAe
+         Bvig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768321748; x=1768926548;
+        d=1e100.net; s=20230601; t=1768325840; x=1768930640;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cIn5H/EXHlleEAeuN1rT2GBXpPo6fP2DFr4Mp6yQNT0=;
-        b=bSCZnSOBwiCii9V/gq++q/tCO7iLgmg+eg9N+azUGvTQ8XxFidYZwETdQH7Qza44qa
-         5VgUWUJwxl4peqsAYgEzWcEDoSrWt6w5TwtCSjq6kkN16kSoFZFBnCn0wftNmAlrnVZy
-         7QwqGQh80b1RqDsegVs9iskjD4Da6s/zwht11tcYJ4sGe4njMGftdBJ5gFJA+Twgm47t
-         jMZFd0NhgS9lnUPKEDt3QpCe1XMC7P2WZGxtl/UxOouX1gBkJNIB4yfX2X3NDSDxUhnE
-         jMgmki4icYOi7tRSrcWJtW4HZy6WvBIc9KZIK2qRyHC5kGNZUKHVc7oqWJl5DIpii4SM
-         b+gg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZnQrwzjT5p4JJeBHOcePHHwoCcnRARF7b9WGQnoa3ymLpIundfjVpswfEIGnZ+iXpJbN6N7nelTwEfEeg0/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp825umeW3/qHHuVfj98K51/zl+lW4Jk7dLM7/Znhr6AFAutBI
-	vrbWWTY7M38jMON+G9VSdb32iRkupqoz4t2EUrjoHYbxqvff1/VD5ElVqINw+rlXGBRmS0FrzU7
-	DXhXfJofJ+1VvLTB7eRsSL4+z/GP/rYtEqUE1V4BT50h+Z+PXm21QSdu70JiPiozbt5uwE2Q=
-X-Gm-Gg: AY/fxX5THRy/I0nS9zdubHE3jwKSXCCZEW3w3gKEjWEFbvpuhkyalxfMMsF9xr1G8It
-	M7yvvyt8vaJviiF6VxFF6QtY26BVeYb6c8lUTtiqzPqPqVPBNEv3Gd42qOragpMFFx9ku4qCl7Q
-	V60cTc8on2J6wh7+UIbPNnQMyqvKbropNfSoMyApgQvKOOgKq4ejAZy6AYZxMQyOxt9pbzwPv8/
-	RI3iSzle+f/stHTAoUmz7INoGx61J/a8cMYqHlnWx54K4VTPiTROIZjOz9RsJoL0xwpnoRJEGwW
-	OxJdub91XNT8vnD48UkHDeqNOWK1wRylO4SHPtA7KIyYtN36/d9vvYdCPjQRgIx0rW9/ig+hRUg
-	mI7v0QKPZuGSJoVdaxcP9AjV/v+cRaUrtvY2bfk/t2ERIOb/0/0Ttw6CTQzQRFK4OLNWBQ49Bg9
-	7RaU52YRogEGUky1ZhC+Sh14s=
-X-Received: by 2002:a05:620a:1a97:b0:8a3:8a0:a4fe with SMTP id af79cd13be357-8c3893840f2mr2997452185a.32.1768321747703;
-        Tue, 13 Jan 2026 08:29:07 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHVkPsQcxQkr+cU1eJ0h1aQeUhC2BF2dJvRQ4lN+2W+Xk0GRhFMTy0HCKzKnUPMS0T43c+GdQ==
-X-Received: by 2002:a05:620a:1a97:b0:8a3:8a0:a4fe with SMTP id af79cd13be357-8c3893840f2mr2997446685a.32.1768321747192;
-        Tue, 13 Jan 2026 08:29:07 -0800 (PST)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59b9fc41011sm71902e87.69.2026.01.13.08.29.05
+        bh=/CVOy4tPw1zWY0e6rYcKRwtfrfRvUlKFzd8YTNoGp5w=;
+        b=qtPyxFakqIyVhRsIoyYKL0ARTW2koj2QmL4gLZ/HCDZfLT28xmhEdK4kftc1Uz8LvL
+         HO33w0JYEETSJDll7bmcPgrdLkkqYKjSFLZYHNda8k3Rr+K14FnNJR64DAr1QoCjgKKX
+         8sMibDPYW1mpBc9yDd6d5C7tJdx3O4iQBuwcbLLEK7oejblekPvZW46wYx8R/6TuXoSO
+         +oMxVQkfbJ26i7Yxc6u5hSsaXWgGCMHcLpYJZ36zZeBErkSgvUNwCrts/BeDjDxECN35
+         HG6f8NGTRuguEtd17AS0gtUlhZ7tMkRpeYLmBk1Agezq5uiHpbTffclzj9USdJ8+eMq+
+         Dhrg==
+X-Forwarded-Encrypted: i=1; AJvYcCWbMNTtwJDrq8CFll/mE30nW5AIF89RXO+k/oFzgPq+2Bp8nF79/AlfrhvpEtML2mMhbg3D3YU9l8U+9/+zpTc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZJClMHfxbO+QWOQJ0tJd9x693TlAwIv6WlbG52S7wN4Ezue6J
+	X/t/FhNa8dyaPoNZrPkvPKvZBAP01n2J6cpW/TLB40JBrYUqTAOShI3l0C2+OoA7V6w=
+X-Gm-Gg: AY/fxX5wyeLGgX3+dtWVBz4AMW8XB2vBs3qEHEhSf3abb9tO7+sjbFIs5wgWcFH1V4L
+	mPxEsMWUCrJ6HFTZ5z5y2LASwE68Ovu27xRn57yOgwjUhprfqdZozpx+31CAFPbDubrklHahnsq
+	N/LPkcF/50yVEDTnoOakjjCGUwzhARfcjCU6iy7E9N6DnIyXxLxuh9/vyalmNKSZNhOxQGaj5YF
+	F5SKyR1NvUo2hbl7DxJJmdpykljq3DrU+Ic8+z62f+4xIHcOEktTtlxhcDPWQUG7DV5AGQtA4bh
+	KL8QyxXOU+vdyEApk+2QBgTczuabAdwAQ9c45gwbQwMNgxNBU1QaBbsYDkqvwIeNmfIBOY/OI/F
+	ricdTK/pWKS/6wyQ0pw2E0hlP0UtAUgt/tmR45Hfbt1LEOFQ+Jrl9CVcJVMxrbcAYKlJ76p8dcY
+	Pr0GyuxZxoRcCwDA==
+X-Google-Smtp-Source: AGHT+IHUReQqvVgC0db5F0/UgqAPwHgCcpq2ZD0lhm0g7XnDeEa3Phlj1/GEitKl8zvqkUFbSZC6XA==
+X-Received: by 2002:a05:6000:2dc9:b0:430:fced:902 with SMTP id ffacd0b85a97d-432c36436fbmr29258778f8f.26.1768325840268;
+        Tue, 13 Jan 2026 09:37:20 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432d9610671sm28342147f8f.34.2026.01.13.09.37.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 08:29:06 -0800 (PST)
-Date: Tue, 13 Jan 2026 18:29:04 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
-        Akhil P Oommen <akhilpo@oss.qualcomm.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jesszhan0024@gmail.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH v3 2/3] soc: qcom: ubwc: Get HBB from SMEM
-Message-ID: <iqg6jpq4i3olwugnlnsczisbrbysxzik6otby3pgkv5uqsez3f@diwpjgf26mk3>
-References: <20260108-topic-smem_dramc-v3-0-6b64df58a017@oss.qualcomm.com>
- <20260108-topic-smem_dramc-v3-2-6b64df58a017@oss.qualcomm.com>
- <you4xijwc5g4ngcnhxm4ecn7opexnsdfayvd5wiiqpl7734r7w@bdkpjqmlzxre>
- <b2pqfrs2ptaoxxeanzumxyibmydsoiqslcsg6yrm4hihynowj4@mzazqnrptnyf>
- <hunbpvbfkcxzbnwr676z6fncgdhfumjedx7jp5izojusg3rj7f@5te77lmqcdaa>
- <cleh7dolqus3grexqfchtavvnj6wef6rlslgv3r7gesfuyxhs5@5b6z5gwtn36b>
- <nhgxvv5bm3bevq4qkqnew6gaqlwiaicrs7yjckg26fgwnffqj5@u2phabfukljx>
- <befc5600-5cfd-4134-928c-80e3b1b4102a@oss.qualcomm.com>
+        Tue, 13 Jan 2026 09:37:19 -0800 (PST)
+Date: Tue, 13 Jan 2026 18:37:17 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+	netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	sparclinux@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 02/19] printk: Introduce console_is_nbcon
+Message-ID: <aWaCzZ8_UuyAa6xp@pathway.suse.cz>
+References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
+ <20251227-printk-cleanup-part3-v1-2-21a291bcf197@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -112,170 +109,83 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <befc5600-5cfd-4134-928c-80e3b1b4102a@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=aY5sXBot c=1 sm=1 tr=0 ts=696672d4 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EUspDBNiAAAA:8 a=yH33JR1JA9jB6mUk05kA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-ORIG-GUID: GfUL2HmThzzLmRUooZiUBHUD0K-QMpDB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTEzMDEzNyBTYWx0ZWRfX3q3WHFyVwi/e
- eGm/Y48TUd5/QpQEtQyaeXHXjL1tn5y9II3Mh3EOIuyFUb0QBp6PWkmVd10vOfrssIwDc8ySZQM
- qxtUyXkmKEFkqcZr2uK/b8bkrt6uidofWs4AQA6uHrtx8yxDcneetSQQdygOofkCKWgQv1wGgN5
- oGuNVn/6bQoZF/aWvbaYAa5SLWz6qEMXOVUJOovHKtjiPUamgMUPeove9mwHeZN99WcjhfTmNI6
- FVSpojHMZ/TgqWushP12lre9KjR52PSngxQEPeQEesgWfUCN7uFt4IW913Z+L88gFQQHoEC+AvF
- Rwwbra9HbDcug/OCobs8wESMSPMlcMxSAdUWqTLtYoVMe+tidxYwj5Zuenu9FCME38bcrNl7Q3r
- +oVad2JjgiLyIFhMftsnN61uwGUshZ3LuudAprVdTiR6NJkwN9jDEEqDC7OT/IXx1y19EsPPjAW
- BinAvkzz2GB7aGaIpPA==
-X-Proofpoint-GUID: GfUL2HmThzzLmRUooZiUBHUD0K-QMpDB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-13_04,2026-01-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 suspectscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 phishscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601130137
+In-Reply-To: <20251227-printk-cleanup-part3-v1-2-21a291bcf197@suse.com>
 
-On Tue, Jan 13, 2026 at 04:31:15PM +0100, Konrad Dybcio wrote:
-> On 1/10/26 11:45 AM, Dmitry Baryshkov wrote:
-> > On Fri, Jan 09, 2026 at 11:50:46AM -0600, Bjorn Andersson wrote:
-> >> On Fri, Jan 09, 2026 at 05:21:10AM +0200, Dmitry Baryshkov wrote:
-> >>> On Thu, Jan 08, 2026 at 11:49:54AM -0600, Bjorn Andersson wrote:
-> >>>> On Thu, Jan 08, 2026 at 04:45:49PM +0200, Dmitry Baryshkov wrote:
-> >>>>> On Thu, Jan 08, 2026 at 03:21:51PM +0100, Konrad Dybcio wrote:
-> >>>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>>>>
-> >>>>>> To make sure the correct settings for a given DRAM configuration get
-> >>>>>> applied, attempt to retrieve that data from SMEM (which happens to be
-> >>>>>> what the BSP kernel does, albeit with through convoluted means of the
-> >>>>>> bootloader altering the DT with this data).
-> >>>>>>
-> >>>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>>>>
-> >>>>>> ---
-> >>>>>> I'm not sure about this approach - perhaps a global variable storing
-> >>>>>> the selected config, which would then be non-const would be better?
-> >>>>>
-> >>>>> I'd prefer if const data was const, split HBB to a separate API.
-> >>>>>
-> >>>>
-> >>>> I agree, but I'd prefer to avoid a separate API for it.
-> >>>>
-> >>>> Instead I'd like to either return the struct by value (after updating
-> >>>> the hbb), but we then loose the ability to return errors, or by changing
-> >>>> the signature to:
-> >>>>
-> >>>> int qcom_ubwc_config_get_data(struct qcom_ubwc_cfg_data *data)
-> >>>>
-> >>>> This costs us an additional 16 bytes in each client (as the pointer is
-> >>>> replaced with the data), but I think it's a cleaner API.
-> >>>
-> >>> What about:
-> >>>
-> >>> const struct qcom_ubwc_cfg_data qcom_ubwc_config_get_data(u32 *hbb)
-> >>>
-> >>> I really want to keep the data as const and, as important, use it as a
-> >>> const pointer.
-> >>>
-> >>
-> >> I guess the question is what are you actually trying to achive; my goal
-> >> was to keep the base data constant, but I'm guessing that you also want
-> >> to retain the "const" classifier in the client's context struct (e.g.
-> >> the "mdss" member in struct dpu_kms)
-> >>
-> >> If we're returning the data by value, there's no way for you to mark
-> >> it as "const" in the calling code's context object (as by definition you
-> >> shouldn't be able to change the value after initializing the object).
-> > 
-> > And I, of course, misssed one star:
-> > 
-> > const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(u32 *hbb)
-> > 
-> > This leaks the knowledge that HBB is slightly different kind of property
-> > than the rest of UBWC data.
-> > 
-> >>
-> >> You also can't return the data by value and then track it by reference -
-> >> as that value lives on the stack. This has the benefit of making the
-> >> lifecycle of that object clear (it lives in each client) - but perhaps
-> >> not a goal of ours... 
-> >>
-> >> How come the ubwc config is const but the hbb isn't?
-> >>
-> >>
-> >> If we want both the per-target data to remain const and data in the
-> >> client's context to be carrying the const qualifier, the one solution I
-> >> can see is:
-> >>
-> >> const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void)
-> >> {
-> >>         const struct qcom_ubwc_cfg_data *data;
-> >>         static struct qcom_ubwc_cfg_data cfg;
-> >>         int hbb;
-> >>
-> >>         ...
-> >>
-> >>         data = of_machine_get_match_data(qcom_ubwc_configs);
-> >>         ...
-> >>
-> >>         hbb = qcom_smem_dram_get_hbb();
-> >> 	...
-> >>
-> >>         cfg = *data;
-> >>         cfg.highest_bank_bit = hbb;
-> >>
-> >>         return &cfg;
-> >> }
-> >>
-> >> But we'd need to deal with the race in cfg assignment...
-> > 
-> > static struct qcom_ubwc_cfg_data *cfg;
-> > static DEFINE_MUTEX(cfg_mutex);
-> > const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void)
-> > {
-> >         const struct qcom_ubwc_cfg_data *data;
-> >         int hbb;
-> > 
-> > 	guard(mutex)(&cfg_mutex);
-> > 
-> > 	if (cfg)
-> > 		return cfg;
-> > 
-> >         data = of_machine_get_match_data(qcom_ubwc_configs);
-> > 	if (!data)
-> > 		return ERR_PTR(-ENOMEM);
-> > 
-> >         hbb = qcom_smem_dram_get_hbb();
-> > 	if (hbb = -ENODATA)
-> > 		hbb = 15; /* I think it was default */
-> > 	else if (hbb < 0)
-> > 		return ERR_PTR(hbb);
-> > 
-> >         cfg = kmemdup(data, sizeof(*data), GFP_KERNEL);
-> > 	if (!cfg)
-> > 		return ERR_PTR(-ENOMEM);
-> > 
-> >         cfg->highest_bank_bit = hbb;
-> > 
-> > 	return cfg;
-> > }
-> > 
-> > This potentially leaks sizeof(*data) memory if the module gets removed.
-> > Granted that all users also use qcom_ubwc_config_get_data() symbol, it
-> > should be safe to kfree(cfg) on module removal.
+On Sat 2025-12-27 09:16:09, Marcos Paulo de Souza wrote:
+> Besides checking if the current console is NBCON or not, console->flags
+> is also being read in order to serve as argument of the console_is_usable
+> function.
 > 
-> I really don't understand why you'd want a separate API for hbb, if
-> hbb is already available from the larger struct *and* if a driver needs
-> to know about the value of hbb, it really needs to know about all the
-> other values as well
+> But CON_NBCON flag is unique: it's set just once in the console
+> registration and never cleared. In this case it can be possible to read
+> the flag when console_srcu_lock is held (which is the case when using
+> for_each_console).
+> 
+> This change makes possible to remove the flags argument from
+> console_is_usable in the next patches.
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> ---
+>  include/linux/console.h   | 27 +++++++++++++++++++++++++++
+>  kernel/debug/kdb/kdb_io.c |  2 +-
+>  kernel/printk/nbcon.c     |  2 +-
+>  kernel/printk/printk.c    | 15 ++++++---------
+>  4 files changed, 35 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/linux/console.h b/include/linux/console.h
+> index 35c03fc4ed51..dd4ec7a5bff9 100644
+> --- a/include/linux/console.h
+> +++ b/include/linux/console.h
+> @@ -561,6 +561,33 @@ static inline void console_srcu_write_flags(struct console *con, short flags)
+>  	WRITE_ONCE(con->flags, flags);
+>  }
+>  
+> +/**
+> + * console_srcu_is_nbcon - Locklessly check whether the console is nbcon
 
-Please take another look, qcom_ubwc_config_get_data() is the only public
-API, qcom_smem_dram_get_hbb() is an internal API.
+There is _srcu in the function name, see below.
 
-My goal is to keep having UBWC db which keeps const data and which which
-also returns a const pointer.
+> + * @con:	struct console pointer of console to check
+> + *
+> + * Requires console_srcu_read_lock to be held, which implies that @con might
+> + * be a registered console. The purpose of holding console_srcu_read_lock is
+> + * to guarantee that no exit/cleanup routines will run if the console
+> + * is currently undergoing unregistration.
+> + *
+> + * If the caller is holding the console_list_lock or it is _certain_ that
+> + * @con is not and will not become registered, the caller may read
+> + * @con->flags directly instead.
+> + *
+> + * Context: Any context.
+> + * Return: True when CON_NBCON flag is set.
+> + */
+> +static inline bool console_is_nbcon(const struct console *con)
 
--- 
-With best wishes
-Dmitry
+And here it is without _srcu.
+
+I would prefer the variant with _srcu to make it clear that it
+can be called only under _srcu. Similar to console_srcu_read_flags(con).
+
+> +{
+> +	WARN_ON_ONCE(!console_srcu_read_lock_is_held());
+> +
+> +	/*
+> +	 * The CON_NBCON flag is statically initialized and is never
+> +	 * set or cleared at runtime.
+> +	 */
+> +	return data_race(con->flags & CON_NBCON);
+> +}
+> +
+>  /* Variant of console_is_registered() when the console_list_lock is held. */
+>  static inline bool console_is_registered_locked(const struct console *con)
+>  {
+
+Otherwise, it looks good to me.
+
+With a consistent name, feel free to use:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
