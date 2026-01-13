@@ -1,191 +1,72 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAED13803DE
-	for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 17:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13E1347DD;
+	Tue, 13 Jan 2026 19:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768325844; cv=none; b=m9M8PGtXgjv8Z5w6z5jC7IMhcUrL73oOw2OToCHRyBeVFusVAwgRFza8be/xR9WMZz1SSGsQaJFdGZTgqA5+P3yd//vXapEAP1dvtcaPVQrKdAseapyVMasoDtl+OH/ye8C4paqwT7M991FCO5OuB2mX91s2tcp3bmbARbN5ozI=
+	t=1768334001; cv=none; b=ELA7+xvCY/VEpHkiboolrbzF0ZgYApB3CdPjC0kqVV8pAwNaWaIC3/RHKQIWUfSRD2vMJgW6SOXzu+fVgZT4tp32H5Trr2G2/EZMVnoeR7DnQ1hQLvJK4u7SMnOOHSMxHZsdGKp6Sh/Bcne1eJJrmTxSWNa2JGihL43oxoTf7Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768325844; c=relaxed/simple;
-	bh=ICK4ui9NDNRZmZPvqUFhVVRYDzu3U7vjvh8uoefFqv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uPnS1Jo4Xor7iO0oJQpiBwAlwCL4avP0VkUdTKkMOwcsE/u20aYqfKWWS1sFgvbnFVmvwF6dMyLa5Kkydoqtt5Xx8OiMEc5+KKn+NX/zpS2n0+Eax0o4IwDpubl3a43E6njDNhfhtYGygfrqP4WNdzKe84p+n518jPFXKlDnoM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ru2sEbeo; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1768334001; c=relaxed/simple;
+	bh=aqxAaSrsDCNdUxD2Za4yUVZQTHnN15yZjNCOZxWZuHc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WXJL7i2v2Ar6cnxuJm86ZSPtpQg+8zXlnAdlKw7KjPyF8bSbwINymuYlxvqcVSpE60CoQ0YMe9ntefJLrgvSE/RtUpFnuhmwnp0ASoddUtcEze86YH/MMt+Tis2dKhwQxNXL8q4KryZ35WAUTii+PwN8kvRgvyxAwnqup49HRTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVhj80jr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ru2sEbeo"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-430f57cd471so3943963f8f.0
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Jan 2026 09:37:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768325840; x=1768930640; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/CVOy4tPw1zWY0e6rYcKRwtfrfRvUlKFzd8YTNoGp5w=;
-        b=Ru2sEbeo3aF1V5dVdmZ8y7qebfvXyJmIOu3zKjZ0L9VDAaRDnX70AwM7BG2MTCNZwb
-         Wt2M0HgSorW10TpGQfsg9caRtjEHGygzZnBCUoVZVtJ9cb0vr93mesbIAhkVPGacjxdE
-         7HU2OwKQxMCRd8/BsuI9FzZju+1UH8Go43H+kiq9CHCnMXgCIpF7/w0CTdPzN1DW1Rpm
-         vJFnt7QVkUwAiqmRpO4P0wQ4QtHunX4dgFkC5Y5pl2pjWjZOPmVYlIv+L2228OrXc7FR
-         T3QgLrVe14c5TYcEkEJYXN3hig3ZqFkIKuc/jaTuv7lqME1z4P3n4adyHDJ+f9c9YNAe
-         Bvig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768325840; x=1768930640;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/CVOy4tPw1zWY0e6rYcKRwtfrfRvUlKFzd8YTNoGp5w=;
-        b=qtPyxFakqIyVhRsIoyYKL0ARTW2koj2QmL4gLZ/HCDZfLT28xmhEdK4kftc1Uz8LvL
-         HO33w0JYEETSJDll7bmcPgrdLkkqYKjSFLZYHNda8k3Rr+K14FnNJR64DAr1QoCjgKKX
-         8sMibDPYW1mpBc9yDd6d5C7tJdx3O4iQBuwcbLLEK7oejblekPvZW46wYx8R/6TuXoSO
-         +oMxVQkfbJ26i7Yxc6u5hSsaXWgGCMHcLpYJZ36zZeBErkSgvUNwCrts/BeDjDxECN35
-         HG6f8NGTRuguEtd17AS0gtUlhZ7tMkRpeYLmBk1Agezq5uiHpbTffclzj9USdJ8+eMq+
-         Dhrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbMNTtwJDrq8CFll/mE30nW5AIF89RXO+k/oFzgPq+2Bp8nF79/AlfrhvpEtML2mMhbg3D3YU9l8U+9/+zpTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZJClMHfxbO+QWOQJ0tJd9x693TlAwIv6WlbG52S7wN4Ezue6J
-	X/t/FhNa8dyaPoNZrPkvPKvZBAP01n2J6cpW/TLB40JBrYUqTAOShI3l0C2+OoA7V6w=
-X-Gm-Gg: AY/fxX5wyeLGgX3+dtWVBz4AMW8XB2vBs3qEHEhSf3abb9tO7+sjbFIs5wgWcFH1V4L
-	mPxEsMWUCrJ6HFTZ5z5y2LASwE68Ovu27xRn57yOgwjUhprfqdZozpx+31CAFPbDubrklHahnsq
-	N/LPkcF/50yVEDTnoOakjjCGUwzhARfcjCU6iy7E9N6DnIyXxLxuh9/vyalmNKSZNhOxQGaj5YF
-	F5SKyR1NvUo2hbl7DxJJmdpykljq3DrU+Ic8+z62f+4xIHcOEktTtlxhcDPWQUG7DV5AGQtA4bh
-	KL8QyxXOU+vdyEApk+2QBgTczuabAdwAQ9c45gwbQwMNgxNBU1QaBbsYDkqvwIeNmfIBOY/OI/F
-	ricdTK/pWKS/6wyQ0pw2E0hlP0UtAUgt/tmR45Hfbt1LEOFQ+Jrl9CVcJVMxrbcAYKlJ76p8dcY
-	Pr0GyuxZxoRcCwDA==
-X-Google-Smtp-Source: AGHT+IHUReQqvVgC0db5F0/UgqAPwHgCcpq2ZD0lhm0g7XnDeEa3Phlj1/GEitKl8zvqkUFbSZC6XA==
-X-Received: by 2002:a05:6000:2dc9:b0:430:fced:902 with SMTP id ffacd0b85a97d-432c36436fbmr29258778f8f.26.1768325840268;
-        Tue, 13 Jan 2026 09:37:20 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432d9610671sm28342147f8f.34.2026.01.13.09.37.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 09:37:19 -0800 (PST)
-Date: Tue, 13 Jan 2026 18:37:17 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-	netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	sparclinux@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 02/19] printk: Introduce console_is_nbcon
-Message-ID: <aWaCzZ8_UuyAa6xp@pathway.suse.cz>
-References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
- <20251227-printk-cleanup-part3-v1-2-21a291bcf197@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVhj80jr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E09C116C6;
+	Tue, 13 Jan 2026 19:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768334000;
+	bh=aqxAaSrsDCNdUxD2Za4yUVZQTHnN15yZjNCOZxWZuHc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YVhj80jraWPdpRMmQGptuKQ2otdLmhbQxbG+8F9GyfxT3+d8kV8w9DffXVUZItqxS
+	 V66eFy2BfMJQDVmuvtg9ZoNzeH0CazMUU6iNSP5+xKkTqvr61oIBEW2IY+GsrG/hbA
+	 OKzae86/nV9UbILWK8sVkfhOQS3saSEPAbmYScu1jrWpJBYemDQtuJ23aj3fa3ZWmQ
+	 cJHd/8E844oerPxLJtLDVDotbIjkdec68BHvQ507q7qRQ3eYM1zNXII6QlBMDIfb8e
+	 wLIcE48Hz3FJP6jSDM/QwTtk32FqTc/aa05lEjCJ6qW4m0hjawoTWSnxLbgp+e8b3w
+	 AaZDxuwzy7P5w==
+From: Kees Cook <kees@kernel.org>
+To: Tyler Hicks <code@tyhicks.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Kees Cook <kees@kernel.org>,
+	ecryptfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ecryptfs: Annotate struct ecryptfs_message with __counted_by
+Date: Tue, 13 Jan 2026 11:53:18 -0800
+Message-Id: <176833399676.1997306.7599866273501067094.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260112115314.739612-2-thorsten.blum@linux.dev>
+References: <20260112115314.739612-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251227-printk-cleanup-part3-v1-2-21a291bcf197@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat 2025-12-27 09:16:09, Marcos Paulo de Souza wrote:
-> Besides checking if the current console is NBCON or not, console->flags
-> is also being read in order to serve as argument of the console_is_usable
-> function.
+On Mon, 12 Jan 2026 12:53:11 +0100, Thorsten Blum wrote:
+> Add the __counted_by() compiler attribute to the flexible array member
+> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 > 
-> But CON_NBCON flag is unique: it's set just once in the console
-> registration and never cleared. In this case it can be possible to read
-> the flag when console_srcu_lock is held (which is the case when using
-> for_each_console).
 > 
-> This change makes possible to remove the flags argument from
-> console_is_usable in the next patches.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> ---
->  include/linux/console.h   | 27 +++++++++++++++++++++++++++
->  kernel/debug/kdb/kdb_io.c |  2 +-
->  kernel/printk/nbcon.c     |  2 +-
->  kernel/printk/printk.c    | 15 ++++++---------
->  4 files changed, 35 insertions(+), 11 deletions(-)
-> 
-> diff --git a/include/linux/console.h b/include/linux/console.h
-> index 35c03fc4ed51..dd4ec7a5bff9 100644
-> --- a/include/linux/console.h
-> +++ b/include/linux/console.h
-> @@ -561,6 +561,33 @@ static inline void console_srcu_write_flags(struct console *con, short flags)
->  	WRITE_ONCE(con->flags, flags);
->  }
->  
-> +/**
-> + * console_srcu_is_nbcon - Locklessly check whether the console is nbcon
 
-There is _srcu in the function name, see below.
+Applied to for-next/hardening, thanks!
 
-> + * @con:	struct console pointer of console to check
-> + *
-> + * Requires console_srcu_read_lock to be held, which implies that @con might
-> + * be a registered console. The purpose of holding console_srcu_read_lock is
-> + * to guarantee that no exit/cleanup routines will run if the console
-> + * is currently undergoing unregistration.
-> + *
-> + * If the caller is holding the console_list_lock or it is _certain_ that
-> + * @con is not and will not become registered, the caller may read
-> + * @con->flags directly instead.
-> + *
-> + * Context: Any context.
-> + * Return: True when CON_NBCON flag is set.
-> + */
-> +static inline bool console_is_nbcon(const struct console *con)
+[1/1] ecryptfs: Annotate struct ecryptfs_message with __counted_by
+      https://git.kernel.org/kees/c/574d944d2ff3
 
-And here it is without _srcu.
+Take care,
 
-I would prefer the variant with _srcu to make it clear that it
-can be called only under _srcu. Similar to console_srcu_read_flags(con).
+-- 
+Kees Cook
 
-> +{
-> +	WARN_ON_ONCE(!console_srcu_read_lock_is_held());
-> +
-> +	/*
-> +	 * The CON_NBCON flag is statically initialized and is never
-> +	 * set or cleared at runtime.
-> +	 */
-> +	return data_race(con->flags & CON_NBCON);
-> +}
-> +
->  /* Variant of console_is_registered() when the console_list_lock is held. */
->  static inline bool console_is_registered_locked(const struct console *con)
->  {
-
-Otherwise, it looks good to me.
-
-With a consistent name, feel free to use:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Best Regards,
-Petr
