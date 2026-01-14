@@ -1,81 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C531373;
-	Wed, 14 Jan 2026 02:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1204535503F;
+	Wed, 14 Jan 2026 06:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768357020; cv=none; b=Lc7gpxf8fMb24Q/c1dgcKmHqzrfWz1WbpnWvY+e8/keqAhqJcVwr0t9lQWkbTZvu+fR2eQsIrj5m3paxtMV/M1EDLF7aD9YuOIgHXgu2+NuXQuB1EeP+cSIOyVwDqrod5x3M3ZklSy3EY5YzvlNf7dwjccLoQ6vepMKtVVgUzgM=
+	t=1768371269; cv=none; b=VTH45UUtlzG8bxoK2nc0+LcTYbZfcSPhJ05Mz63IdfEh1euxE8rq5r5k9o+ZzXO3VEkr80SxCvkYVbXJ9lwLdZchkfSO9ukZqkDyPTltQzxmdjQmE3IhpCsUSsKmCq4/4XUkAXPg676cPOB1BX9lJH7hkXwdWTMMNE1ef3Y2C0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768357020; c=relaxed/simple;
-	bh=vrYvvSPxxxKS+qRXC9HBcSZDdR6f8CDo23l/715VS6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FT03/7oUJYj9ZmlBaxEcCYQkCtSudh5Xd9RfBOxFOaCc0ReLqK3Ma7zwrDAR19hl0MD3pO7S1Wq6QgJXBbidw6keX18rQPQ4L21kL8IslBnNurHV3N6ttZRd8QUVaUOanA7Kf52GBlB9DKMS7IkOX6h+wQB3r8ehObp4hS2uE98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PM0HU06w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PM0HU06w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC03C116C6;
-	Wed, 14 Jan 2026 02:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768357020;
-	bh=vrYvvSPxxxKS+qRXC9HBcSZDdR6f8CDo23l/715VS6c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PM0HU06wUcT9eRu2x+ScRPl1gTWvOWA77eXPaA9gHzW7sTJ0sYth9CHPzU/MRnNjQ
-	 pMxOeFaf8sHZZxkTly9OUq22HKxm/AXsTjWlYIxmK3SFeqBJieFCnFzGiRUkRkyCY7
-	 KRRi20LWEEDq25TNPYJahWtKMrxOY09uZPEubavwhpuvqep/isRt5hN//MSZ0uzy2k
-	 8pCtI6eHNzWPFEa2Uo0YzYurG64Al4y8+DQRV2Gu9wLq9565ONgQuTlJKQQn1z91NG
-	 esIAwaEkt1tod36g50gSA2YO0+dMGM61IASbo5f27xNoqf8uMwFI/O8UFp3PemV8yp
-	 4wy9FgILreuXQ==
-Date: Tue, 13 Jan 2026 18:16:58 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Akihiko
- Odaki <akihiko.odaki@daynix.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Kees Cook
- <kees@kernel.org>
-Subject: Re: [PATCH v2][next] virtio_net: Fix misalignment bug in struct
- virtnet_info
-Message-ID: <20260113181658.0b65b96e@kernel.org>
-In-Reply-To: <916a6c1a-681e-4e5e-8d49-75d0de5c46a1@redhat.com>
-References: <aWIItWq5dV9XTTCJ@kspp>
-	<e9607915-892c-4724-b97f-7c90918f86fe@redhat.com>
-	<20260113093839-mutt-send-email-mst@kernel.org>
-	<916a6c1a-681e-4e5e-8d49-75d0de5c46a1@redhat.com>
+	s=arc-20240116; t=1768371269; c=relaxed/simple;
+	bh=vGLbyT5ssO3VlUO2Yro4AyC2gfC+ZR9XdKKGexYkkBE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QkG/evWSZm7i4aUC6gGvKEiJQvZsCtPH2AHjD09kINQQEAtEwO93IpTG7CyFQ7fcv9EmpTuAUG2mYDg0pEckGNROkD7txDO97D3sLzuLsM04G9rwjPAFInFwoSIpjcyuKLYNzsxXYy4eXwGOM7IGG2cijfiDBfb6EW7klra3Hqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3cc0f4d8f11011f0a38c85956e01ac42-20260114
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:727fcca2-2ac5-41a2-913f-7a0d34e91650,IP:0,UR
+	L:0,TC:0,Content:2,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:2
+X-CID-META: VersionHash:a9d874c,CLOUDID:2e6b599c24fb5439d3edbe9de9908b30,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:4|15|
+	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
+	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 3cc0f4d8f11011f0a38c85956e01ac42-20260114
+X-User: jiangfeng@kylinos.cn
+Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <jiangfeng@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 1733740910; Wed, 14 Jan 2026 14:14:08 +0800
+Message-ID: <b06e4a63-85c2-4420-8077-f4c059ef33fb@kylinos.cn>
+Date: Wed, 14 Jan 2026 14:14:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/14] lib/string_kunit: add performance benchmark for
+ strlen()
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
+ ebiggers@kernel.org, martin.petersen@oracle.com, ardb@kernel.org,
+ ajones@ventanamicro.com, conor.dooley@microchip.com,
+ samuel.holland@sifive.com, linus.walleij@linaro.org, nathan@kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260113082748.250916-1-jiangfeng@kylinos.cn>
+ <20260113082748.250916-9-jiangfeng@kylinos.cn>
+ <aWYGWLEekWh3jJVf@smile.fi.intel.com>
+Content-Language: en-US
+From: Feng Jiang <jiangfeng@kylinos.cn>
+In-Reply-To: <aWYGWLEekWh3jJVf@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 13 Jan 2026 16:06:05 +0100 Paolo Abeni wrote:
-> > Probably but I'm yet to properly review it. The thing that puzzles me at
-> > a first glance is how are things working right now then?  
+On 2026/1/13 16:46, Andy Shevchenko wrote:
+> On Tue, Jan 13, 2026 at 04:27:42PM +0800, Feng Jiang wrote:
+>> Introduce a benchmark to compare the architecture-optimized strlen()
+>> implementation against the generic C version (__generic_strlen).
+>>
+>> The benchmark uses a table-driven approach to evaluate performance
+>> across different string lengths (short, medium, and long). It employs
+>> ktime_get() for timing and get_random_bytes() followed by null-byte
+>> filtering to generate test data that prevents early termination.
+>>
+>> This helps in quantifying the performance gains of architecture-specific
+>> optimizations on various platforms.
 > 
-> Apparently they aren't ?!?
+> ...
 > 
-> rss self-tests for virtio_net are failing:
+>> +static void string_test_strlen_bench(struct kunit *test)
+>> +{
+>> +	char *buf;
+>> +	size_t buf_len, iters;
+>> +	ktime_t start, end;
+>> +	u64 time_arch, time_generic;
+>> +
+>> +	buf_len = get_max_bench_len(bench_cases, ARRAY_SIZE(bench_cases)) + 1;
+>> +
+>> +	buf = kunit_kzalloc(test, buf_len, GFP_KERNEL);
+>> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf);
+>> +
+>> +	for (size_t i = 0; i < ARRAY_SIZE(bench_cases); i++) {
+>> +		get_random_nonzero_bytes(buf, bench_cases[i].len);
+>> +		buf[bench_cases[i].len] = '\0';
+>> +
+>> +		iters = bench_cases[i].iterations;
+>> +
+>> +		/* 1. Benchmark the architecture-optimized version */
+>> +		start = ktime_get();
+>> +		for (unsigned int j = 0; j < iters; j++) {
+>> +			OPTIMIZER_HIDE_VAR(buf);
+>> +			(void)strlen(buf);
 > 
-> https://netdev-ctrl.bots.linux.dev/logs/vmksft/drv-hw-dbg/results/471521/15-rss-api-py/stdout
+> First Q: Are you sure the compiler doesn't replace this with __builtin_strlen() ?
 > 
-> but the result is into the CI reported as success (no idea why?!?)
+>> +		}
+>> +		end = ktime_get();
+>> +		time_arch = ktime_to_ns(ktime_sub(end, start));
+>> +
+>> +		/* 2. Benchmark the generic C version */
+>> +		start = ktime_get();
+>> +		for (unsigned int j = 0; j < iters; j++) {
+>> +			OPTIMIZER_HIDE_VAR(buf);
+>> +			(void)__generic_strlen(buf);
+>> +		}
+> 
+> Are you sure the warmed up caches do not affect the benchmark? I think you need
+> to flush / make caches dirty or so on each iteration.
+> 
+>> +		end = ktime_get();
+>> +		time_generic = ktime_to_ns(ktime_sub(end, start));
+>> +
+>> +		string_bench_report(test, "strlen", &bench_cases[i],
+>> +				time_arch, time_generic);
+>> +	}
+>> +}
+> 
+> 
 
-To be clear this is a HW test so the fact that it shows up in CI as
-green means just that the 2 sub cases (per [1]) which the CI judged 
-to be stable and passing are still passing. The other 10 sub cases 
-have never passed and still don't. IDK if you QEMU doesn't support 
-RSS or it's something else but AFAICT this patch doesn't appear to 
-make a difference to us.
+Thank you for the catch. You are absolutely correct—the 2500x figure is heavily
+distorted and does not reflect real-world performance.
 
-[1] https://netdev.bots.linux.dev/devices.html
+I've found that by using a volatile function pointer to call the implementations
+(instead of direct calls), the results returned to a realistic range. It appears
+the previous benchmark logic allowed the compiler to over-optimize the test loop
+in ways that skewed the data.
 
-You can see the per-case breakdown of the history here (including 
-the ignored sub-cases):
-https://netdev.bots.linux.dev/flakes.html?tn-needle=drv-hw%2Fselftests-drivers-net-hw%2Frss-api-py&min-flip=0&br-pfx=net-next-hw&ld-cases=1
+I will refactor the benchmark logic in v3, specifically referencing the crc32
+KUnit implementation (e.g., using warm-up loops and adding preempt_disable()
+to eliminate context-switch interference) to ensure the data is robust and accurate.
+
+-- 
+With Best Regards,
+Feng Jiang
+
