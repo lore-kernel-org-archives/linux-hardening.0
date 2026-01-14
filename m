@@ -1,158 +1,81 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B1D2EA731;
-	Wed, 14 Jan 2026 01:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C531373;
+	Wed, 14 Jan 2026 02:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768354885; cv=none; b=i+Lh0Y3Uwt0R/0FZMNX3j7etRlqA/YaFSWAE7qWaUUdCE2bPSqO+T/EzhPPMAEUTu7Zu5VE3DzAR0fE63a50aZAVHrO/74DRkhD0ORaAzm8zSSoxdof3hQGHIK/AAtaHOhxcmQtWdVEcd92U43ajXdT/2x6ecmIGrPC2jdZFzrk=
+	t=1768357020; cv=none; b=Lc7gpxf8fMb24Q/c1dgcKmHqzrfWz1WbpnWvY+e8/keqAhqJcVwr0t9lQWkbTZvu+fR2eQsIrj5m3paxtMV/M1EDLF7aD9YuOIgHXgu2+NuXQuB1EeP+cSIOyVwDqrod5x3M3ZklSy3EY5YzvlNf7dwjccLoQ6vepMKtVVgUzgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768354885; c=relaxed/simple;
-	bh=+wVd870v69N8nTMS3HKPV9LYIALc5m4XDy6qEigIMcE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FgrN34fT93Wf3MuVKucA3rrLJQ1J7q2e4MRqQ/wxfIIKW3ecyRIc4HN1PDEN3TbGfaMxLod5vJ/y45Y+zDfJVfr5ndlOjptf6OOEZF919SBu6W9i0GORFalu3JWCarHz6qBrZepqRG8mZ3Lw0KMjoSojeHaG5Oxp//zErJSmVag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 1a45c698f0ea11f0a38c85956e01ac42-20260114
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:d47cd477-592e-44c6-aa76-f9be07a91177,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:c2b2352c259325bd87ffd9242c7194a2,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
-	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 1a45c698f0ea11f0a38c85956e01ac42-20260114
-X-User: jiangfeng@kylinos.cn
-Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <jiangfeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 2023845300; Wed, 14 Jan 2026 09:41:10 +0800
-Message-ID: <3cd30ebc-0f85-4a0d-88cd-76783b872053@kylinos.cn>
-Date: Wed, 14 Jan 2026 09:41:07 +0800
+	s=arc-20240116; t=1768357020; c=relaxed/simple;
+	bh=vrYvvSPxxxKS+qRXC9HBcSZDdR6f8CDo23l/715VS6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FT03/7oUJYj9ZmlBaxEcCYQkCtSudh5Xd9RfBOxFOaCc0ReLqK3Ma7zwrDAR19hl0MD3pO7S1Wq6QgJXBbidw6keX18rQPQ4L21kL8IslBnNurHV3N6ttZRd8QUVaUOanA7Kf52GBlB9DKMS7IkOX6h+wQB3r8ehObp4hS2uE98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PM0HU06w; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PM0HU06w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC03C116C6;
+	Wed, 14 Jan 2026 02:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768357020;
+	bh=vrYvvSPxxxKS+qRXC9HBcSZDdR6f8CDo23l/715VS6c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PM0HU06wUcT9eRu2x+ScRPl1gTWvOWA77eXPaA9gHzW7sTJ0sYth9CHPzU/MRnNjQ
+	 pMxOeFaf8sHZZxkTly9OUq22HKxm/AXsTjWlYIxmK3SFeqBJieFCnFzGiRUkRkyCY7
+	 KRRi20LWEEDq25TNPYJahWtKMrxOY09uZPEubavwhpuvqep/isRt5hN//MSZ0uzy2k
+	 8pCtI6eHNzWPFEa2Uo0YzYurG64Al4y8+DQRV2Gu9wLq9565ONgQuTlJKQQn1z91NG
+	 esIAwaEkt1tod36g50gSA2YO0+dMGM61IASbo5f27xNoqf8uMwFI/O8UFp3PemV8yp
+	 4wy9FgILreuXQ==
+Date: Tue, 13 Jan 2026 18:16:58 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Akihiko
+ Odaki <akihiko.odaki@daynix.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Kees Cook
+ <kees@kernel.org>
+Subject: Re: [PATCH v2][next] virtio_net: Fix misalignment bug in struct
+ virtnet_info
+Message-ID: <20260113181658.0b65b96e@kernel.org>
+In-Reply-To: <916a6c1a-681e-4e5e-8d49-75d0de5c46a1@redhat.com>
+References: <aWIItWq5dV9XTTCJ@kspp>
+	<e9607915-892c-4724-b97f-7c90918f86fe@redhat.com>
+	<20260113093839-mutt-send-email-mst@kernel.org>
+	<916a6c1a-681e-4e5e-8d49-75d0de5c46a1@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/14] lib/string: extract generic strlen() into
- __generic_strlen()
-To: Eric Biggers <ebiggers@kernel.org>, andy@kernel.org
-Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
- martin.petersen@oracle.com, ardb@kernel.org, ajones@ventanamicro.com,
- conor.dooley@microchip.com, samuel.holland@sifive.com,
- linus.walleij@linaro.org, nathan@kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260113082748.250916-1-jiangfeng@kylinos.cn>
- <20260113082748.250916-2-jiangfeng@kylinos.cn> <20260114000151.GB2178@quark>
-Content-Language: en-US
-From: Feng Jiang <jiangfeng@kylinos.cn>
-In-Reply-To: <20260114000151.GB2178@quark>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2026/1/14 08:01, Eric Biggers wrote:
-> On Tue, Jan 13, 2026 at 04:27:35PM +0800, Feng Jiang wrote:
->> To support performance benchmarking in KUnit tests, extract the
->> generic C implementation of strlen() into a standalone function
->> __generic_strlen(). This allows tests to compare architecture-optimized
->> versions against the generic baseline without duplicating code.
->>
->> Suggested-by: Andy Shevchenko <andy@kernel.org>
->> Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
->> ---
->>  include/linux/string.h |  1 +
->>  lib/string.c           | 10 ++++++++--
->>  2 files changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/string.h b/include/linux/string.h
->> index 1b564c36d721..961645633b4d 100644
->> --- a/include/linux/string.h
->> +++ b/include/linux/string.h
->> @@ -197,6 +197,7 @@ extern char * strstr(const char *, const char *);
->>  #ifndef __HAVE_ARCH_STRNSTR
->>  extern char * strnstr(const char *, const char *, size_t);
->>  #endif
->> +extern __kernel_size_t __generic_strlen(const char *);
->>  #ifndef __HAVE_ARCH_STRLEN
->>  extern __kernel_size_t strlen(const char *);
->>  #endif
->> diff --git a/lib/string.c b/lib/string.c
->> index b632c71df1a5..047ecb38e09b 100644
->> --- a/lib/string.c
->> +++ b/lib/string.c
->> @@ -412,8 +412,7 @@ char *strnchr(const char *s, size_t count, int c)
->>  EXPORT_SYMBOL(strnchr);
->>  #endif
->>  
->> -#ifndef __HAVE_ARCH_STRLEN
->> -size_t strlen(const char *s)
->> +size_t __generic_strlen(const char *s)
->>  {
->>  	const char *sc;
->>  
->> @@ -421,6 +420,13 @@ size_t strlen(const char *s)
->>  		/* nothing */;
->>  	return sc - s;
->>  }
->> +EXPORT_SYMBOL(__generic_strlen);
->> +
->> +#ifndef __HAVE_ARCH_STRLEN
->> +size_t strlen(const char *s)
->> +{
->> +	return __generic_strlen(s);
->> +}
->>  EXPORT_SYMBOL(strlen);
+On Tue, 13 Jan 2026 16:06:05 +0100 Paolo Abeni wrote:
+> > Probably but I'm yet to properly review it. The thing that puzzles me at
+> > a first glance is how are things working right now then?  
 > 
-> A similar problem exists with the architecture-optimized CRC and crypto
-> functions.  Historically, these subsystems exported both generic and
-> architecture-optimized functions.
+> Apparently they aren't ?!?
 > 
-> We've actually been moving away from that design to simplify things.
-> For example, for CRC-32C there's now just the crc32c() function which
-> delegates to the "best" CRC-32C implementation, with no direct access to
-> the generic implementation of CRC-32C.
+> rss self-tests for virtio_net are failing:
 > 
-> crc_kunit then just tests and benchmarks crc32c().  To check how the
-> performance of crc32c() changes when its implementation changes (whether
-> the change is the addition of an arch-optimized implementation or a
-> change in an existing arch-optimized implementation), the developer just
-> needs to run crc_kunit with two kernels, before and after.
+> https://netdev-ctrl.bots.linux.dev/logs/vmksft/drv-hw-dbg/results/471521/15-rss-api-py/stdout
 > 
-> I suggest just doing that.  In that case there would be no need to
-> export the generic implementations of these functions.
-> 
-> (Also note that *if* the generic functions are exported, they probably
-> should be exported only when the KUnit test is enabled.  There's no need
-> to include them in the kernel image when the test isn't enabled.)
-> 
-> - Eric
+> but the result is into the CI reported as success (no idea why?!?)
 
-Hi Eric, Andy,
+To be clear this is a HW test so the fact that it shows up in CI as
+green means just that the 2 sub cases (per [1]) which the CI judged 
+to be stable and passing are still passing. The other 10 sub cases 
+have never passed and still don't. IDK if you QEMU doesn't support 
+RSS or it's something else but AFAICT this patch doesn't appear to 
+make a difference to us.
 
-Thanks for the insights. I agree with Eric's point on keeping the internal
-implementations encapsulated. It's a cleaner design for the long term.
-In v3, I will drop the __generic_* exports and simplify the patchset
-to benchmark only the standard functions.
+[1] https://netdev.bots.linux.dev/devices.html
 
-To address Andy's concern regarding performance, I will provide a "Before
-vs. After" comparison in the v3 cover letter. This should demonstrate
-the speedup while keeping the core kernel code tidy. I'll also refine the
-benchmark logic to ensure more realistic results as discussed.
-
-This seems to be the most robust way to validate the optimizations without
-adding unnecessary exports.
-
--- 
-With Best Regards,
-Feng Jiang
-
+You can see the per-case breakdown of the history here (including 
+the ignored sub-cases):
+https://netdev.bots.linux.dev/flakes.html?tn-needle=drv-hw%2Fselftests-drivers-net-hw%2Frss-api-py&min-flip=0&br-pfx=net-next-hw&ld-cases=1
