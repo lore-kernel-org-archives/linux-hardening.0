@@ -1,63 +1,63 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7468339A801
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 13:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3907D396D08
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 13:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768396346; cv=none; b=edf/2EGtRgqGcacNaQbu4Sp3BEeEDWQXaN5NB+8anbG3DXdGzZTVPOEenB7afHFYeKeqXhlBfj2nHzCYw0Bbf9P6R7jTB7F1Cpm0Yr6hkgM3GO3Ppq6aETgDe7HOBSut3N1CuBACE5kv6pPMYJuFNZKTCTNioZXysE8CXN8Y98o=
+	t=1768396821; cv=none; b=WpYz4ugCxVjX4g6+6Usyoxd6buVWFWPp+avhVn9LzP436Aaqf3L8kaR18oYTVjgbLhs6WPqL+SW/BfaC4GCX+OV01CH/sXpKZG+YYd1bE6zCMVdmad1MGzlKVNPuDYPJorDb4MCk+VbtNIn5T1MMYaNIucTL+aaBbLXmmmwpulE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768396346; c=relaxed/simple;
-	bh=qVQVDrDK8GQt0EFjDkN2BeDB9NxS3hqaAC/BXhJUBXA=;
+	s=arc-20240116; t=1768396821; c=relaxed/simple;
+	bh=tXOp5Q+91Ev71kEJDwNUHqTl/QTwmM0CMtRXuMN58II=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VDvtgNbCk1aqgyy6TtRqx0/ZqM+9lRAS6dANC/PK1+t9eFvvOQWdT1BoSZWb8n/BfiGp0CysOi8xcFzpLKq/Dwf7zrvHO9jO9wCgRtqIMAZho2NV1xIuI5/01Lze0TST1ohBEGeA+n6ENFXI8uOVPORfXQFyAYT6K6gdqr+9iQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=L1iB/yNj; arc=none smtp.client-ip=209.85.128.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=es4PXDKi1uNty+1pc6M438JxMnvh1pWVZ1Ud4LvtJlEokgVqdapPrYaUcKtoa2NKZV2c1p7wV0RDqhbtd01ntIi2LxSOLfaaEualLIVgqoTNov+inUxSHkkAiuwFNV/SvTinfKiMk/B0U6JjweZdakLZNLZnWW8/gnB8Mp6gB2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GlebQonK; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="L1iB/yNj"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47796a837c7so59384075e9.0
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 05:12:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GlebQonK"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-43284ed32a0so4500617f8f.3
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 05:20:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768396343; x=1769001143; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1768396817; x=1769001617; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ucpTGToIn8N6Wm60fm7MZ05SRRlKYptl+ek5X25PfwQ=;
-        b=L1iB/yNjYqm3FvqWymV6AoNf5MtA+Y6/OWs/RJg3e7CYxfZqQFULHvSUfTEk4onLe3
-         K8kZuPagmhqvDJFtw9c9UTxqcd+qJZkw4PQl4BUg5k4yF9scQKi9RHMwyVcofMOLNmf9
-         pbhNXDMXDshXlT74Wh0bXiV5vvKeLUf6p39IJ8wY5dpK6KBsy4W3IFGstIqmYoUCnIw4
-         nqRilxwC37pzPLIWVgJsrDbAi5fP08rSd1LIYgBshYGZ1PcyNhk5nl3IPlrRV45sac/Z
-         Yxfv6Z4RUlHmbXdVWT3j7gI66pAgzx3k3AqR7HGarevdhb1crqPGqGHXY8Pe43pEFeZ4
-         oD0g==
+        bh=sWiGwjTB0ZEpbDkwRFO+MVJzM9uZpDrSFPQIlzRZfsU=;
+        b=GlebQonK1BdB5DbGUyi9LiHoN8EziU92CFCkVI0QFOq3zEhwH6N5lbaRdR+rY/gCBJ
+         Fg2NFXOcXLM1sjMYh2EL+pPASArlb7dn5JYQ7xAsAHxn9ooNPyk8HFEWSqJ0AKiLb8Jy
+         OQSWVcr/+nNTLUeQmGlmWpTFmRkrVv42YP0mJNxo52tq3Z9CmAHgnisMw8pXZTj3j6iw
+         W9dqlfWz3lgvzZ7jhta9fOBYyatVRtFEe5eB3muxZaEykIAOGsy8r+eNHdfFZhS6yWUF
+         ROqkPhLwPP8lxjeZu4RqCxL6fdAD5MnzbZZlLD2XpYbBoT63LePeeYvof/5bXqQB6xDM
+         DGoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768396343; x=1769001143;
+        d=1e100.net; s=20230601; t=1768396817; x=1769001617;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ucpTGToIn8N6Wm60fm7MZ05SRRlKYptl+ek5X25PfwQ=;
-        b=wAKtqwOp3IayqcnXkrCQXg7nn+toGCvbPbkylr/vPn23+nbfiG/2hpi6NFnkaYbKpd
-         0CdfW8dxv/ePpnfZrRVtfDEXskN2tIFIcRtGUhYy6QRIJyapnrP/VAbgEdr6o/aqVOv0
-         5udEhITx2lYYVIheay6dY3swi94rpS17BnYTM9ABSNep2/wkjk35OWXRuVAR7AkaTHMg
-         r5HuFfyz0TQSvylbLu5umJFg7/CnU4kPaa9m9sP0Y89bIuSpXQFwCX7Lk9WkO4WfVFgl
-         7C614ZY8+QHRIlJQomp/cIS9DPFqgDZvbaDX+2W2Yis/LzoG8OUrl19Fi1she1M04SOF
-         2n9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXrfwax2bvGrWjLNLUROnkfoimJWPqE6g+vhZiVYX7oUi/F8aniSUzqQ+4NVCNOdCyECMihXiDSk9RtmKnIwDA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2ntzKq04rTOElm0rLJxWQ0EZxQEpxlwsye+tUkSN7W/G76+CU
-	nA5IIPkdtpm0y2wxfMnY6OLxNIEn0iAUqZliegmc3eYz2PZKpWzbcDYWMCm0sD7EJWg=
-X-Gm-Gg: AY/fxX7TGecrYXS9qJ+2Ztb3VBC0kRbzLKMwJm/mt7Gnf9mvWnnvhDTzMyPrWzE30XO
-	0JJvdeeIyOg9aX++b1nCYw44evv5bbMB4hVGJSZNYzhhQkncszzJw4YHKNDK18wBfhA0D0xwCsE
-	mQkc33burjPOM1M49T8GAEjd6Yhudat/RW6oc9jt1yPOmbvHiL9bC9idjRl8hB7Yd0gfk9u1XIc
-	CUMEh2CkhxpGuxzuB9d9tycKwTqVJGl69Gw6PwJi9K18Cwn4fstAs3nUG+d1DKdF5DAED45EsGI
-	rd29V1njMES2eVWxBc8yLf9G4jQ8wQOGVakz6haYo1GeK0ozI4Hg+8qdwi3tulO+FAz0Eh0bb0H
-	jwjFOuOUArr5FbPY0JTiukRooBPklCx0taBfCjPrgIvMmJAkHpmsvvparufMEGXPDm5TL2bpD2F
-	pbhWsQ9FOFZXXunbFEpCLn7LX4
-X-Received: by 2002:a05:600c:5490:b0:479:3876:22a8 with SMTP id 5b1f17b1804b1-47ee3356d5dmr36820375e9.16.1768396341643;
-        Wed, 14 Jan 2026 05:12:21 -0800 (PST)
+        bh=sWiGwjTB0ZEpbDkwRFO+MVJzM9uZpDrSFPQIlzRZfsU=;
+        b=sPkZh8PiJuSHJKdk5TBIc03Mhiv6NFIomaJmfL++at/5Gm3Ssrr7ks3WDsf+nBC0g7
+         aC/Z5mblTR4V7ftxe5ld3RlcOjGe0EXWIPXXvR2eNh5dujf2zcP4a3DbQcgtmg+A1Epx
+         6W0QuwUmpNM6eXOmNkjouWjG2NOn4Qfe/ovwQLgVqf3ojzqG28QqeNE78MKMTycbWPah
+         4vqAk6tGDn1iqRO78N75dgCy5ZZ6rkmGQ/yocpGIZlEB6rNBS7Biu9ISB4CqYYG4kOAx
+         WTdj9memCRC/PL6Hd5vQ7YbNQknYqvbIjg/8iAyH6+XjI6vxjC7OAKO51eAzV4E7fHfm
+         3qEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVShUgZMF54ITnvKm9eIcTb24M/U+qDIGeyOcplEkta3HjuZ3fY46BS6PuNoXGh94lQnxOuS+R5MOE0rBfvFJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWY3YvDOaObIn0UjTm/ARf+Gp8Zy3ENeF8h/bMi+B/CbZoqqGV
+	OC89AyWvelJw/HIjtaQp4PbovRrF+8RwR0oet2yrcdILxCN3AnSqsbxW2odotekJJMw=
+X-Gm-Gg: AY/fxX7X6gyuYowKbMVSBhRu5D/lS0T6+pCf54hF++8Ynm+Oj9Nrx+YNvBbyDAv8iX/
+	PbTis/LQuxTDIjWNJ+pd6s+/X7fTMI+rZpoYrvIT9uo8POyRCZsOt2BUzS0U2w0AThYekJHUDT1
+	S+5ju1PGLobV8r/LfUpi39LAFTR6sPzi0l6SqNstdHZ6MuqV7XotJq61OcFg8oQ9O8bhci0d4wc
+	jJTzujl/DKLFsfC8lCsPS8kTyhOkoRodjc1AkfgB9OCsDMUJb39ST8hCcNn4/h4RT2R5WZZHBmO
+	HpDO0mJQ77Pyv9VCuZyB1A6qhgS2or7LuCew3jSX78GhVzPWDToD6cLGfVIa1F4H1sIIcVO8NYw
+	hWPIwNMN+wQ49B7LYUWF70ixYDia9ftQFDJr3bvDgR9Yy8uqYbcLTyzJlK+Kg+6dyn0TaiSjd+P
+	b7lqQUzkuTDyk0fA==
+X-Received: by 2002:a05:6000:2511:b0:431:9b2:61c0 with SMTP id ffacd0b85a97d-4342d5b2ab9mr2581603f8f.24.1768396817421;
+        Wed, 14 Jan 2026 05:20:17 -0800 (PST)
 Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee54b8c9bsm27274065e9.3.2026.01.14.05.12.19
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0dacd1sm49153435f8f.4.2026.01.14.05.20.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 05:12:21 -0800 (PST)
-Date: Wed, 14 Jan 2026 14:12:18 +0100
+        Wed, 14 Jan 2026 05:20:16 -0800 (PST)
+Date: Wed, 14 Jan 2026 14:20:14 +0100
 From: Petr Mladek <pmladek@suse.com>
 To: Marcos Paulo de Souza <mpdesouza@suse.com>
 Cc: Richard Weinberger <richard@nod.at>,
@@ -96,10 +96,11 @@ Cc: Richard Weinberger <richard@nod.at>,
 	sparclinux@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 04/19] printk: Reintroduce consoles_suspended global state
-Message-ID: <aWeWMga1VaT0sYwj@pathway.suse.cz>
+Subject: Re: [PATCH 05/19] printk: Add more context to suspend/resume
+ functions
+Message-ID: <aWeYDoMsdBNkJEqO@pathway.suse.cz>
 References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
- <20251227-printk-cleanup-part3-v1-4-21a291bcf197@suse.com>
+ <20251227-printk-cleanup-part3-v1-5-21a291bcf197@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -108,77 +109,21 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251227-printk-cleanup-part3-v1-4-21a291bcf197@suse.com>
+In-Reply-To: <20251227-printk-cleanup-part3-v1-5-21a291bcf197@suse.com>
 
-On Sat 2025-12-27 09:16:11, Marcos Paulo de Souza wrote:
-> This change partially reverts commit 9e70a5e109a4
-> ("printk: Add per-console suspended state"). The intent of the original
-> commit was to move the management of the console suspended state to the
-> consoles themselves to be able to use SRCU instead of console lock.
+On Sat 2025-12-27 09:16:12, Marcos Paulo de Souza wrote:
+> The new comments clarifies from where the functions are supposed to be
+> called.
 > 
-> But having a global state is still useful when checking if the global
-> suspend was triggered by power management. This way, instead of setting
-> the state of each individual console, the code would only set/read from the
-> global state.
-> 
-> Along with this change, two more fixes are necessary: change
-> console_{suspend,resume} to set/clear CON_SUSPEND instead of setting
-> CON_ENABLED and change show_cons_active to call __console_is_usable to
-> check console usefulness.
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-I would invert the logic a bit. I think that the main motivation
-is to replace CON_ENABLE -> CON_SUSPEND.
+The improved comments would have helped to understand the previous patch.
+I would either merge it into the previous patch or switch the
+ordering.
 
-<proposal>
-The flag CON_ENABLE is cleared when serial drivers get suspended. This
-"hack" has been added by the commit 33c0d1b0c3ebb6 ("[PATCH] Serial
-driver stuff") back in v2.5.28.
+If this stays as a separate patch, feel free to use:
 
-Stop hijacking CON_ENABLE flag and use the CON_SUSPEND flag instead.
-
-Still allow to distinguish when:
-
-  - the backing device is being suspended, see console_suspend().
-
-  - the power management wants to calm down all consoles using
-    a big-hammer, see console_suspend_all().
-
-And restore the global "consoles_suspended" flag which was removed
-by the commit 9e70a5e109a4 ("printk: Add per-console suspended state").
-
-The difference is that accesses to the new global flag are
-synchronized the same way as to the CON_SUSPEND flag. It allows
-to read it under console_srcu_read_lock().
-
-Finally, use __console_is_usable() in show_cons_active(). It is the
-last location where the CON_ENABLED flag was checked directly.
-
-The patch should not change the existing behavior because all users check
-the state of the console using console_is_usable().
-</proposal>
-
-> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-> index e2d92cf70eb7..7d2bded75b75 100644
-> --- a/drivers/tty/tty_io.c
-> +++ b/drivers/tty/tty_io.c
-> @@ -3552,9 +3552,9 @@ static ssize_t show_cons_active(struct device *dev,
->  	for_each_console(c) {
->  		if (!c->device)
->  			continue;
-> -		if (!(c->flags & CON_NBCON) && !c->write)
-> -			continue;
-> -		if ((c->flags & CON_ENABLED) == 0)
-> +		if (!__console_is_usable(c, c->flags,
-> +					 consoles_suspended,
-> +					 NBCON_USE_ANY))
-
-It would be better to move this into a separate patch.
-
->  			continue;
->  		cs[i++] = c;
->  		if (i >= ARRAY_SIZE(cs))
-
-Otherwise, it looks good.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
 Best Regards,
 Petr
