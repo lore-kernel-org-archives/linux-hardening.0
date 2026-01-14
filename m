@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D041E25F9;
-	Wed, 14 Jan 2026 13:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E3927E04C;
+	Wed, 14 Jan 2026 13:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768399050; cv=none; b=uJl8iKqMNAMvHT5SQ1/6Ax1wGDSX+bXmgGOSYFyGXlZdNCXGQ/HNESbEn0UDgG9wSLwFduYMb8/DI4iLL5m59sdmrOeIhnGBlQS9y6nbRrPo114yiWv9ahWgIikeDwSoZPHLzzORXBkUe9JI9deNgfVhR/rZ6JiiJydEtktCyiI=
+	t=1768399053; cv=none; b=g1VTRkxqWoK3zGtH9kciKrVyPo3A17LwFISXdxg5Kzmge0dQ7DN4Ni0WAdI7W2SQ4UEn4/cpq6JD12MeW6Lm3MJvSzG0kOaBfr3xzCSibYEEBtYJTTNgKjP8mVtFovlfyCx606XirPwBryL163UNxedoWHrINB2RuDcbfMxR6Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768399050; c=relaxed/simple;
-	bh=sv6so1kAWDstRTHH9n09D8fRDroRVEa1x32rvkw/VJA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gHIthNO2eRBtqXRwNhbjwJXFd0fpCB8CQ1R6xQVu8maNJu3LujDof+lNhDvO4Ad//LuS+Y5LXt8wpIm1cYPoCo+GdV7amex3SNuypFuuvoJGNrOn/O1Eeo+r0Z6/935LHqth3xVlXdf/KGxrtmNRgy3+C9P++KuaainugWjYpeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fu7NPq6/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768399053; c=relaxed/simple;
+	bh=3NPWjgIFeC3ixFYQv9odPWjjjUGvpIy2yYLgVym9m6A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Xbf6bT/9x7mtVs8MVwWYoH0Jv6cWsgMLLgHM5+vbkovY1XVwvWSnwTsvzNZLTRRBPzza62uEqT99wUbDPTwcq2hqhNtvDITQWCw4mrQHzWNXNsDD2Gy4XRFAxz/eoJMLlwlIv9KTlfw2dhmNw5PSDNv/tG2wYrmlJmFg0d88Q6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/91mWpE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fu7NPq6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6D82C16AAE;
-	Wed, 14 Jan 2026 13:57:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/91mWpE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70891C4CEF7;
+	Wed, 14 Jan 2026 13:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768399050;
-	bh=sv6so1kAWDstRTHH9n09D8fRDroRVEa1x32rvkw/VJA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fu7NPq6/5Yz27+CRF235QGwz8QhQzdXAyCsYF3xmHYlXix6wwXg3JMFFQ2zU3azST
-	 n7XQuB5LnysRQURFB3HIPnt+2inoAy5uYkIZ6ynobBuDqmJzPJ0V1649SgQqKe2loA
-	 sBobkyBECVksGERwvQPaZ3n7su7jOYar84fzHAEquF55veYToZ8A1QId6BeonN97eM
-	 esysauvxCYv5d58U9xZNeBSMnIL9UJQKWwL7QH92TZpvvqSd5NF4nFGyA0Ub07OaaH
-	 8zSS5LcPBiw+meCaIeCZsZ8AasAr7iumYYNYGK+4crDjmH461g3hELxSNfZDQq9zkX
-	 N9xtU4IJKIkKw==
+	s=k20201202; t=1768399052;
+	bh=3NPWjgIFeC3ixFYQv9odPWjjjUGvpIy2yYLgVym9m6A=;
+	h=From:Subject:Date:To:Cc:From;
+	b=U/91mWpEHbp+Usz+siKT3npthvIf0V9TeX0zXWhhNn8otNI/8PTzt4W+rLHE/8ysm
+	 HBh2JYhwp9FaSCrEI3+Yg8aQ3FNYPFxOGNgi0Y2E2RTTgbFudviJstsHyua5J2xi38
+	 JxbqBpM1VVePkCt4ovmxc8E66BM5XFvPGjAn0vwVLTXNUREk6ZFHv5E4n55LZ787Ss
+	 Dqdz3rCK2rZObJuKuCACMKKR8jr3P1QLT5w94Tdfs07Q0EXh6xlisxcL7mvlpnQf/v
+	 S6PwHto4ZdYeZYWriemnGGx37AVm2HpqyFNw/W1PCvuBzu19wMLJwpppBZ3ZGLZWiZ
+	 XEuWpsOsawuRg==
 From: Nicolas Schier <nsc@kernel.org>
-Date: Wed, 14 Jan 2026 14:57:15 +0100
-Subject: [PATCH v2 2/2] fortify: Cleanup temp file also on non-successful
- exit
+Subject: [PATCH v2 0/2] fortify: test_fortify.sh: Improve handling of
+ tempfile
+Date: Wed, 14 Jan 2026 14:57:13 +0100
+Message-Id: <20260114-fortify-improve-handling-of-tempfile-v2-0-63b86c4dbd0e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,48 +38,51 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260114-fortify-improve-handling-of-tempfile-v2-2-63b86c4dbd0e@kernel.org>
-References: <20260114-fortify-improve-handling-of-tempfile-v2-0-63b86c4dbd0e@kernel.org>
-In-Reply-To: <20260114-fortify-improve-handling-of-tempfile-v2-0-63b86c4dbd0e@kernel.org>
+X-B4-Tracking: v=1; b=H4sIALmgZ2kC/5WNSw6DMAwFr4KyritI6XfVe1QsTOKAVUiQg6Iix
+ N2bcoMu5+lpZlWRhCmqR7EqocSRg8+gD4UyPfqOgG1mpUt9rip9AxdkZrcAj5OERJBPdmDfQXA
+ w0zg5Hgi01WgudYs1osqqScjxZ8+8msw9xznIsldT9Vv/DKQKSsDr3Zb2hK1B83yTeBqOQTrVb
+ Nv2BeEgx+bZAAAA
+X-Change-ID: 20251128-fortify-improve-handling-of-tempfile-2d2ac64ba4aa
 To: Kees Cook <kees@kernel.org>
 Cc: linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Nicolas Schier <nsc@kernel.org>, 
  WangYuli <wangyuli@aosc.io>, Nathan Chancellor <nathan@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768399036; l=1024;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768399036; l=1095;
  i=nsc@kernel.org; s=20250924; h=from:subject:message-id;
- bh=sv6so1kAWDstRTHH9n09D8fRDroRVEa1x32rvkw/VJA=;
- b=1TtsteheMDjFq0FlufKyn5Ge631Q8bpNrEyQg4F61tMMYLvq961Z2cyy+NNtS6R6aMCHlBPh/
- wOYyBwBypzlBoOzwM+gdG+2Go6Ynsx0jiBMnpra3ZIa2/lFrEtx6B+y
+ bh=3NPWjgIFeC3ixFYQv9odPWjjjUGvpIy2yYLgVym9m6A=;
+ b=eCqsmUA0L3BCmqQEQhLSowRycXWao9aLzZ+DkQO7nJNkUpa6S5Q1anL1idqijgNGE6rAIjuV2
+ V599/SXbLjHCUK6fEPc1Ee42mSynahQeKg8LYTqfbw3LZmjshzI68Q2
 X-Developer-Key: i=nsc@kernel.org; a=ed25519;
  pk=+0ar7sBdSzOoVoXxW8B+48yZbV4azT4joSEm8UyP7z4=
 
-Ensure cleanup of test_fortify.sh's temporary file also on script
-interruption, or some common signals.
+WangYuli reported [1] that the temporary file created by test_fortify.sh
+is recognised by git as untracked file, especially if it remains after
+non-common exits of test_fortify.sh (e.g. killed by signal).
 
-Reported-by: WangYuli <wangyuli@aosc.io>
-Closes: https://lore.kernel.org/linux-kbuild/20251112114725.287349-1-wangyuli@aosc.io/
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Reviewed-by: WangYuli <wangyuli@aosc.io>
+The following two patches handle that by renaming the temporary file and
+by cleaning up the file in more situations.
+
+Link: https://lore.kernel.org/linux-kbuild/20251112114725.287349-1-wangyuli@aosc.io/ # [1]
 Signed-off-by: Nicolas Schier <nsc@kernel.org>
 ---
- lib/test_fortify/test_fortify.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+  * Fixed author/trailer inconsistency (Nathan)
+  * Added review trailers
+  * Link to v1: https://patch.msgid.link/20251128-fortify-improve-handling-of-tempfile-v1-0-a79d0d3abcac@kernel.org
 
-diff --git a/lib/test_fortify/test_fortify.sh b/lib/test_fortify/test_fortify.sh
-index 368d07d9acbf737be376756b39def87f12f4e9bf..ad6dd44fa31c0ad3a063cd0caab3a4664f9f3f31 100644
---- a/lib/test_fortify/test_fortify.sh
-+++ b/lib/test_fortify/test_fortify.sh
-@@ -29,7 +29,7 @@ shift
- __cleanup() {
- 	rm -f "$TMP"
- }
--trap __cleanup EXIT
-+trap __cleanup EXIT HUP INT QUIT TERM
- 
- # Function names in warnings are wrapped in backticks under UTF-8 locales.
- # Run the commands with LANG=C so that grep output will not change.
+---
+Nicolas Schier (2):
+      fortify: Rename temporary file to match ignore pattern
+      fortify: Cleanup temp file also on non-successful exit
 
+ lib/test_fortify/test_fortify.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+---
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+change-id: 20251128-fortify-improve-handling-of-tempfile-2d2ac64ba4aa
+
+Best regards,
 -- 
-2.47.3
+Nicolas
 
