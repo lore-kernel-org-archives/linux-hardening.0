@@ -1,105 +1,71 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF772D9EC5
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 14:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7CD2701DA;
+	Wed, 14 Jan 2026 16:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768400586; cv=none; b=H5+pAnzogQu/PA+hGA3PFFHi+67UycjB1FAOcc2bukQwfXrMKnepZt/qwAwkYjlQdmRyTjIc40cO8S8dAgA4xDRUE6on9E10M1oeYzTRZa5OKpIM22Sw95liROR51OQU3cD8cltyfizu4LsuXJWxbZ1E/0ruldyRUgXG9v+PfvM=
+	t=1768408627; cv=none; b=bXur48JfHQJU7Zn5cA3/UdPnV+8//OZo2MIp5PhCqCejk42/vOAKxlp2QbWJEEDR4adBD9Iwz81ZvzC+iM/zn1HTRwRTFliJMGAXajMZIYfXiAseY+2rUYkyNfJ8b+H1fqnUk+pJpngmyFwhbsBXf9A0yX4PIWX9jTf8bSJ3wH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768400586; c=relaxed/simple;
-	bh=DfrdswblHy1q9UZ6D1iDapX7djYN6NrxRY58tdu4Ov8=;
+	s=arc-20240116; t=1768408627; c=relaxed/simple;
+	bh=E8RIcN9R+L5K9uirA6NlzA+r2qmPrPFCBl8xyWyV8yY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bjAWIShbQTOt8pFlr6f+G7GO0w/qpP2EJrjBBrDZLfV1DCVsoNAdqx6ba/UEl5wdmt+SrL5EK2jylcDJysqDhpxSprhpwWMKsSI9nvK3hMZ13NEHLVlmDeoB348nmXHgnnBItHtzNw6xuOlJz0NmswkevuF96QftVdySl4V6qH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HHqfcaHC; arc=none smtp.client-ip=209.85.221.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qo9mwxh3FZ0z2HiFJ/LBJFUUeiG6c8YviyQO8trtzurdEgiIBQZ1LkKbCfTdSI4GriMrvRfskpkYlx6dHapOr2hRWaIcpvdi6yyI0y/tY8zjZAolmvJY36BMKLQTZbGVsfu9zzS/HJiFNw5Y0Byuu5kKTjHBG++z1C4AOS1t7yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VObgL1A3; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HHqfcaHC"
-Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-432d2c7a8b9so4909821f8f.2
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 06:23:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768400583; x=1769005383; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rjJ0doliNf6plVmMYQkV7IlLiBwqr6x+viyB7m/anSs=;
-        b=HHqfcaHCDZ4C/25aiu2LLUMRB6a3JGJWGhQfFT6QaEtcdkNlMy33Eg5S1g6VGmzYXo
-         hpfCXuvsZWvysbszR52KoZ2Hm1zuNEeCpDbVwfZG4XIIepu7J6DwkkZTdV4+WvGZUfb2
-         J50i9CArQzRD7a32Tos9uS2iTNN+n78n5NdtroiOypIe6+cM2D5E/4P5BmzBG0Y1OMZi
-         TF2vHM81yG5bimXpDBncf/8rbHqG0I7eJ966s7d0iQ2MM9s31pdW7eDgXOSxl6kdp6c/
-         Y/on+swJawD0gJ25otHcu9wX57o6bpwey1K2T1Em/Ha1Hnr4ql+oU5YXD54Y+M9nX783
-         +Gyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768400583; x=1769005383;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rjJ0doliNf6plVmMYQkV7IlLiBwqr6x+viyB7m/anSs=;
-        b=EBHuL+dBldveDW3sWeTmNz7ug/oUuKuZqjjoWlfCn4L8lWoOfDnR0ehsrFK/7gXPbR
-         jvJpPhauv5oRTlnu4w2OIbhJ0E6UB6w+Wo8x1x6LryMSDuQaKI+YxaCocLBn4Kfkys4k
-         5SQuZM9S34F2WITI+Il498F2/HPBZXZ50aZ8oTiZ54ZUflohrzJ980TKjuBuaYPBCc9u
-         BUYZNJBUrfq7ag61X0MLnn4O/gk/HDab1r02iXA3lvLkuAPA0MkA4FPNwoXBh15TgHPL
-         pJFK/q+FzVzW1fuaczNK6+YHOR+oE0XGYzoBeVA/7BBdO3I+a7J0hjyjD3co7fY56iIh
-         WADA==
-X-Forwarded-Encrypted: i=1; AJvYcCWa96xK+PLKzOckzIhEptnty20YCeZifQMMamQm1juJnksKm7X9/tnTDayeIEjPFGkRZR0eZpzwEB8Vl+i/W2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgfIwGCJYA8SJDRR+XiNqMFJqvyCGZlZMt8UFoakNTSfcIddoZ
-	5vsJCS2/FiKIYet6eCW11UHQHFsN/4NPqBtZvcq/YSwiXLwOVOwd9mjoBaWgpJHD3a0=
-X-Gm-Gg: AY/fxX6TCniO2X1w7LQ1t3YHYRN3XtKnVUbpvwgc/Ikh6KRe66QCaMpwsdVyJXR1xSN
-	MlB6wb6OatVNz9NbQqi98sC1KZozQpFqbfUFmkgIPuyr6m+Qiw/6T8HYNWn7Lz0HNfw4ti52EVI
-	sQQkcl/+QXw1b4Tsxm4kDvg9rjf0omtF2kKzgKyv7As/tHkpWaIeTwU3P1/y2Q2HJS/GJ7536Th
-	VozN75ZYnJrRcDnPOimcGJLV2Q1tEUi73SjtD5hmk7lYpar79s1kSRvq0Qyf1MyEqiGyEu3rue6
-	Ps9RCQI+ZNT6AUxOOglUdqwKTkNsQWj3yYnv8MUFtkPQy7eUX/eRz/KPMiiQ4/OqAhN8Yxt1GSB
-	aIYVKDMKV1fFbyZgX3VAk6LB8nuGWVNkPf0WuvryF0KLTx1ztY29uUbUuBZgzTldbdNTJ89rXUz
-	dnr9JqnZnrRx6ARw==
-X-Received: by 2002:a05:6000:3105:b0:431:104:6dd5 with SMTP id ffacd0b85a97d-4342c5728e2mr3256518f8f.58.1768400582935;
-        Wed, 14 Jan 2026 06:23:02 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0dacd1sm49446446f8f.4.2026.01.14.06.23.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 06:23:02 -0800 (PST)
-Date: Wed, 14 Jan 2026 15:22:59 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-	netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	sparclinux@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 06/19] printk: Introduce register_console_force
-Message-ID: <aWemw2ZCwtAd17I1@pathway.suse.cz>
-References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
- <20251227-printk-cleanup-part3-v1-6-21a291bcf197@suse.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VObgL1A3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768408626; x=1799944626;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=E8RIcN9R+L5K9uirA6NlzA+r2qmPrPFCBl8xyWyV8yY=;
+  b=VObgL1A3/mVnxixgO00z27BGHpqPL7vekDprwQnsi880TFys4XgM7sWP
+   eAQSiCLLeWCmaIa3OfOFEMN+tJcLYCwbg9ffcaBcXJOE99lw4LV7RkiZQ
+   6kx4wEWu6VPAJHiqZ/dq9eJ9jAVKpVa3XRVcz5GFWnGwGw1aZAaQ/1LrD
+   EImkU+5ImnXaeTSrYAhRD+DsPQK78hby7g2XAci0oevr2H9IXrM0GfoRW
+   9SHrzjDS0hjgD8hYqAFnyjIRfPJxOhgv3Uh1fErzFLqJiS/nncD8v/mV5
+   +806/ZRXcB4XPVFLFRJ1EEC2ADUJQuwFdEAKmKfsIe4bvw1H9wR/ICf19
+   Q==;
+X-CSE-ConnectionGUID: E0aGOjDZTxiBu0/FeYzv5w==
+X-CSE-MsgGUID: ZNjH2srcQPmQZc57LnC1gQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="92381916"
+X-IronPort-AV: E=Sophos;i="6.21,225,1763452800"; 
+   d="scan'208";a="92381916"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 08:37:05 -0800
+X-CSE-ConnectionGUID: CKbvLsaSQMiv2EPNqWL0Xw==
+X-CSE-MsgGUID: mBjtWAiQTpqONdYkXrUgVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,225,1763452800"; 
+   d="scan'208";a="209193588"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 14 Jan 2026 08:37:00 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vg3re-00000000Gei-1aER;
+	Wed, 14 Jan 2026 16:36:58 +0000
+Date: Thu, 15 Jan 2026 00:36:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Sean Paul <sean@poorly.run>,
+	Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: Re: [PATCH v3 1/3] soc: qcom: smem: Expose DDR data from SMEM
+Message-ID: <202601150105.Pod3agMP-lkp@intel.com>
+References: <20260108-topic-smem_dramc-v3-1-6b64df58a017@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -108,146 +74,223 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251227-printk-cleanup-part3-v1-6-21a291bcf197@suse.com>
+In-Reply-To: <20260108-topic-smem_dramc-v3-1-6b64df58a017@oss.qualcomm.com>
 
-On Sat 2025-12-27 09:16:13, Marcos Paulo de Souza wrote:
-> The register_console_force function will register a console even if it
-> wasn't specified on boot. The new function will act like all consoles
-> being registered were using the CON_ENABLED flag.
+Hi Konrad,
 
-I am a bit confused by the last sentence. It might be bacause I am not
-a native speaker. I wonder if the following is more clear:
+kernel test robot noticed the following build warnings:
 
-<proposal>
-The register_console_force() function will register a console even if it
-wasn't preferred via the command line, SPCR, or device tree. Currently,
-certain drivers pre-set the CON_ENABLE flag to achieve this.
-</proposal>
+[auto build test WARNING on fc4e91c639c0af93d63c3d5bc0ee45515dd7504a]
 
-> The CON_ENABLED flag will be removed in the following patches and the
-> drivers that use it will migrate to register_console_force instead.
-> 
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -3858,7 +3858,7 @@ static int console_call_setup(struct console *newcon, char *options)
->   * enabled such as netconsole
->   */
->  static int try_enable_preferred_console(struct console *newcon,
-> -					bool user_specified)
-> +					bool user_specified, bool force)
->  {
->  	struct console_cmdline *c;
->  	int i, err;
-> @@ -3896,12 +3896,15 @@ static int try_enable_preferred_console(struct console *newcon,
->  		return 0;
->  	}
->  
-> +	if (force)
-> +		newcon->flags |= CON_ENABLED;
-> +
+url:    https://github.com/intel-lab-lkp/linux/commits/Konrad-Dybcio/soc-qcom-smem-Expose-DDR-data-from-SMEM/20260108-222445
+base:   fc4e91c639c0af93d63c3d5bc0ee45515dd7504a
+patch link:    https://lore.kernel.org/r/20260108-topic-smem_dramc-v3-1-6b64df58a017%40oss.qualcomm.com
+patch subject: [PATCH v3 1/3] soc: qcom: smem: Expose DDR data from SMEM
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20260115/202601150105.Pod3agMP-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260115/202601150105.Pod3agMP-lkp@intel.com/reproduce)
 
-This makes sense because the pre-enabled CON_ENABLED flag is handled
-right below.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601150105.Pod3agMP-lkp@intel.com/
 
->  	/*
->  	 * Some consoles, such as pstore and netconsole, can be enabled even
->  	 * without matching. Accept the pre-enabled consoles only when match()
->  	 * and setup() had a chance to be called.
->  	 */
-> -	if (newcon->flags & CON_ENABLED && c->user_specified ==	user_specified)
-> +	if (newcon->flags & CON_ENABLED && c->user_specified == user_specified)
->  		return 0;
+All warnings (new ones prefixed by >>):
 
-But this location was not a good idea in the first place. It hides an unexpected
-side-effect into this function. It is easy to miss. A good example is
-the regression caused by the last patch in this patch set, see
-https://lore.kernel.org/all/89409a0f48e6998ff6dd2245691b9954f0e1e435.camel@suse.com/
+   In function 'smem_dram_parse_v3_data',
+       inlined from 'smem_dram_parse' at drivers/soc/qcom/smem_dramc.c:380:3:
+>> drivers/soc/qcom/smem_dramc.c:216:31: warning: iteration 13 invokes undefined behavior [-Waggressive-loop-optimizations]
+     216 |                 if (freq_entry->freq_khz && freq_entry->enabled)
+         |                     ~~~~~~~~~~^~~~~~~~~~
+   drivers/soc/qcom/smem_dramc.c:213:27: note: within this loop
+     213 |         for (int i = 0; i < num_freq_entries; i++) {
+         |                         ~~^~~~~~~~~~~~~~~~~~
+--
+>> Warning: drivers/soc/qcom/smem.c:293 struct member 'debugfs_dir' not described in 'qcom_smem'
+>> Warning: drivers/soc/qcom/smem.c:293 struct member 'debugfs_dir' not described in 'qcom_smem'
 
-I actually have a patch removing this side-effect:
 
-From d24cd6b812967669900f9866f6202e8b0b65325a Mon Sep 17 00:00:00 2001
-From: Petr Mladek <pmladek@suse.com>
-Date: Mon, 24 Nov 2025 17:34:25 +0100
-Subject: [PATCH] printk/console: Do not rely on
- try_enable_preferred_console() for pre-enabled consoles
+vim +216 drivers/soc/qcom/smem_dramc.c
 
-try_enable_preferred_console() has non-obvious side effects. It returns
-success for pre-enabled consoles.
+   203	
+   204	static void smem_dram_parse_v3_data(struct smem_dram *dram, void *data, bool additional_freq_entry)
+   205	{
+   206		/* This may be 13 or 14 */
+   207		int num_freq_entries = MAX_DDR_FREQ_NUM_V3;
+   208		struct ddr_details_v3 *details = data;
+   209	
+   210		if (additional_freq_entry)
+   211			num_freq_entries++;
+   212	
+   213		for (int i = 0; i < num_freq_entries; i++) {
+   214			struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
+   215	
+ > 216			if (freq_entry->freq_khz && freq_entry->enabled)
+   217				dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
+   218		}
+   219	}
+   220	
+   221	static void smem_dram_parse_v4_data(struct smem_dram *dram, void *data)
+   222	{
+   223		struct ddr_details_v4 *details = data;
+   224	
+   225		/* Rank 0 channel 0 entry holds the correct value */
+   226		dram->hbb = details->highest_bank_addr_bit[0][0];
+   227	
+   228		for (int i = 0; i < MAX_DDR_FREQ_NUM_V3; i++) {
+   229			struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
+   230	
+   231			if (freq_entry->freq_khz && freq_entry->enabled)
+   232				dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
+   233		}
+   234	}
+   235	
+   236	static void smem_dram_parse_v5_data(struct smem_dram *dram, void *data)
+   237	{
+   238		struct ddr_details_v5 *details = data;
+   239		struct ddr_regions_v5 *region = &details->ddr_regions;
+   240	
+   241		dram->hbb = region[0].highest_bank_addr_bit;
+   242	
+   243		for (int i = 0; i < MAX_DDR_FREQ_NUM_V5; i++) {
+   244			struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
+   245	
+   246			if (freq_entry->freq_khz && freq_entry->enabled)
+   247				dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
+   248		}
+   249	}
+   250	
+   251	static void smem_dram_parse_v7_data(struct smem_dram *dram, void *data)
+   252	{
+   253		struct ddr_details_v7 *details = data;
+   254		struct ddr_regions_v5 *region = &details->ddr_regions;
+   255	
+   256		dram->hbb = region[0].highest_bank_addr_bit;
+   257	
+   258		for (int i = 0; i < MAX_DDR_FREQ_NUM_V5; i++) {
+   259			struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
+   260	
+   261			if (freq_entry->freq_khz && freq_entry->enabled)
+   262				dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
+   263		}
+   264	}
+   265	
+   266	/* The structure contains no version field, so we have to perform some guesswork.. */
+   267	static int smem_dram_infer_struct_version(size_t size)
+   268	{
+   269		/* Some early versions provided less bytes of less useful data */
+   270		if (size < sizeof(struct ddr_details_v3))
+   271			return -EINVAL;
+   272	
+   273		if (size == sizeof(struct ddr_details_v3))
+   274			return INFO_V3;
+   275	
+   276		if (size == sizeof(struct ddr_details_v3)
+   277			 + sizeof(struct ddr_freq_table))
+   278			return INFO_V3_WITH_14_FREQS;
+   279	
+   280		if (size == sizeof(struct ddr_details_v4))
+   281			return INFO_V4;
+   282	
+   283		if (size == sizeof(struct ddr_details_v5)
+   284			 + 4 * sizeof(struct ddr_region_v5))
+   285			return INFO_V5;
+   286	
+   287		if (size == sizeof(struct ddr_details_v5)
+   288			 + 4 * sizeof(struct ddr_region_v5)
+   289			 + sizeof(struct ddr_xbl2quantum_smem_data)
+   290			 + sizeof(struct shub_freq_plan_entry))
+   291			return INFO_V5;
+   292	
+   293		if (size == sizeof(struct ddr_details_v5)
+   294			 + 6 * sizeof(struct ddr_region_v5))
+   295			return INFO_V5_WITH_6_REGIONS;
+   296	
+   297		if (size == sizeof(struct ddr_details_v5)
+   298			 + 6 * sizeof(struct ddr_region_v5)
+   299			 + sizeof(struct ddr_xbl2quantum_smem_data)
+   300			 + sizeof(struct shub_freq_plan_entry))
+   301			return INFO_V5_WITH_6_REGIONS;
+   302	
+   303		if (size == sizeof(struct ddr_details_v5)
+   304			 + 6 * sizeof(struct ddr_region_v5)
+   305			 + sizeof(struct ddr_misc_info_v6)
+   306			 + sizeof(struct shub_freq_plan_entry))
+   307			return INFO_V6;
+   308	
+   309		if (size == sizeof(struct ddr_details_v7)
+   310			 + 4 * sizeof(struct ddr_region_v5)
+   311			 + sizeof(struct ddr_misc_info_v6)
+   312			 + sizeof(struct shub_freq_plan_entry))
+   313			return INFO_V7;
+   314	
+   315		if (size == sizeof(struct ddr_details_v7)
+   316			 + 6 * sizeof(struct ddr_region_v5)
+   317			 + sizeof(struct ddr_misc_info_v6)
+   318			 + sizeof(struct shub_freq_plan_entry))
+   319			return INFO_V7_WITH_6_REGIONS;
+   320	
+   321		return INFO_UNKNOWN;
+   322	}
+   323	
+   324	static int smem_dram_frequencies_show(struct seq_file *s, void *unused)
+   325	{
+   326		struct smem_dram *dram = s->private;
+   327	
+   328		for (int i = 0; i < dram->num_frequencies; i++)
+   329			seq_printf(s, "%lu\n", dram->frequencies[i]);
+   330	
+   331		return 0;
+   332	}
+   333	DEFINE_SHOW_ATTRIBUTE(smem_dram_frequencies);
+   334	
+   335	static int smem_hbb_show(struct seq_file *s, void *unused)
+   336	{
+   337		struct smem_dram *dram = s->private;
+   338	
+   339		if (!dram->hbb)
+   340			return -EINVAL;
+   341	
+   342		seq_printf(s, "%d\n", dram->hbb);
+   343	
+   344		return 0;
+   345	}
+   346	DEFINE_SHOW_ATTRIBUTE(smem_hbb);
+   347	
+   348	struct dentry *smem_dram_parse(struct device *dev)
+   349	{
+   350		struct dentry *debugfs_dir;
+   351		enum ddr_info_version ver;
+   352		struct smem_dram *dram;
+   353		size_t actual_size;
+   354		void *data = NULL;
+   355	
+   356		/* No need to check qcom_smem_is_available(), this func is called by the SMEM driver */
+   357		data = qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_DDR_INFO_ID, &actual_size);
+   358		if (IS_ERR_OR_NULL(data))
+   359			return ERR_PTR(-ENODATA);
+   360	
+   361		ver = smem_dram_infer_struct_version(actual_size);
+   362		if (ver < 0) {
+   363			/* Some SoCs don't provide data that's useful for us */
+   364			return ERR_PTR(-ENODATA);
+   365		} else if (ver == INFO_UNKNOWN) {
+   366			/* In other cases, we may not have added support for a newer struct revision */
+   367			pr_err("Found an unknown type of DRAM info struct (size = %zu)\n", actual_size);
+   368			return ERR_PTR(-EINVAL);
+   369		}
+   370	
+   371		dram = devm_kzalloc(dev, sizeof(*dram), GFP_KERNEL);
+   372		if (!dram)
+   373			return ERR_PTR(-ENOMEM);
+   374	
+   375		switch (ver) {
+   376		case INFO_V3:
+   377			smem_dram_parse_v3_data(dram, data, false);
+   378			break;
+   379		case INFO_V3_WITH_14_FREQS:
+ > 380			smem_dram_parse_v3_data(dram, data, true);
 
-Move the check for pre-enabled consoles to register_console(). It makes
-the handling of pre-enabled consoles more obvious.
-
-Also it will allow call try_enable_preferred_console() only when there
-is an entry in preferred_consoles[] array. But it would need some more
-changes.
-
-It is part of the code clean up. It should not change the existing
-behavior.
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- kernel/printk/printk.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index abf1b93de056..d6b1d0a26217 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3826,14 +3826,6 @@ static int try_enable_preferred_console(struct console *newcon,
- 		return 0;
- 	}
- 
--	/*
--	 * Some consoles, such as pstore and netconsole, can be enabled even
--	 * without matching. Accept the pre-enabled consoles only when match()
--	 * and setup() had a chance to be called.
--	 */
--	if (newcon->flags & CON_ENABLED && pc->user_specified == user_specified)
--		return 0;
--
- 	return -ENOENT;
- }
- 
-@@ -4022,6 +4014,14 @@ void register_console(struct console *newcon)
- 	if (err == -ENOENT)
- 		err = try_enable_preferred_console(newcon, false);
- 
-+	/*
-+	 * Some consoles, such as pstore and netconsole, can be enabled even
-+	 * without matching. Accept them at this stage when they had a chance
-+	 * to match() and call setup().
-+	 */
-+	if (err == -ENOENT && (newcon->flags & CON_ENABLED))
-+		err = 0;
-+
- 	/* printk() messages are not printed to the Braille console. */
- 	if (err || newcon->flags & CON_BRL) {
- 		if (newcon->flags & CON_NBCON)
 -- 
-2.52.0
-
-
-It would be better to do the above change 1st. Then the @force
-parameter might be checked in __register_console() directly, like:
-
-	/*
-	 * Some consoles, such as pstore and netconsole, can be enabled even
-	 * without matching. Accept them at this stage when they had a chance
-	 * to match() and call setup().
-	 */
-	if (err == -ENOENT && (force || newcon->flags & CON_ENABLED))
-		err = 0;
-
-You might just remove the check of CON_ENABLED in the last patch.
-I think that this should actually fix the regression. It will
-handle also the case when the console was enabled by
-try_enable_default_console() and try_enable_preferred_console()
-returned -ENOENT.
-
-Note: I have some more patches which clean up this mess. But they are
-      more complicated because of how the Braille console support
-      is wired. They still need some love. Anyway, the above patch should
-      be good enough for removing CON_ENABLED flag.
-
-Best Regards,
-Petr
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
