@@ -1,434 +1,253 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD4E2FF154
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 14:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF772D9EC5
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 14:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768400245; cv=none; b=bNnB1OXWPWsBuflMhwOMKkyzzT1su59bdS0PVSK7fxOlvJdzXJ4iqMszAdSA4kz0HyQGhPMrKgGG7RuavFGIq3ZzoH80A+G/ELfwRpup9HELqeoGxhIfPJ7MsDX1ewGRxIFLYUn7E0uCrlBZo51NJ4aKeUPZxuiK/FBDIDx41rk=
+	t=1768400586; cv=none; b=H5+pAnzogQu/PA+hGA3PFFHi+67UycjB1FAOcc2bukQwfXrMKnepZt/qwAwkYjlQdmRyTjIc40cO8S8dAgA4xDRUE6on9E10M1oeYzTRZa5OKpIM22Sw95liROR51OQU3cD8cltyfizu4LsuXJWxbZ1E/0ruldyRUgXG9v+PfvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768400245; c=relaxed/simple;
-	bh=5H0lgDSUScoa7O0SKdxLcVIZHcB9BT1ur3Jx/KZwF8M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ERisOCByAQ6TO7YQN48VrTYjEy4k/7Ekxm2OtnZ271v6cobjIKZ2ZGIHIHWq4uM5s3Cfhrxu+5BBOpubPcukSMtprlb+VOyIR6BZlV8Hw5RBZ94qJd+So9diAmX+dLXxXaBMQmrhakXQWW0PjCKt3c+WHeNaHIhiKvUZMQpwPxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hj5jePee; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1768400586; c=relaxed/simple;
+	bh=DfrdswblHy1q9UZ6D1iDapX7djYN6NrxRY58tdu4Ov8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjAWIShbQTOt8pFlr6f+G7GO0w/qpP2EJrjBBrDZLfV1DCVsoNAdqx6ba/UEl5wdmt+SrL5EK2jylcDJysqDhpxSprhpwWMKsSI9nvK3hMZ13NEHLVlmDeoB348nmXHgnnBItHtzNw6xuOlJz0NmswkevuF96QftVdySl4V6qH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HHqfcaHC; arc=none smtp.client-ip=209.85.221.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hj5jePee"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-47d493a9b96so50291055e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 06:17:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HHqfcaHC"
+Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-432d2c7a8b9so4909821f8f.2
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 06:23:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768400238; x=1769005038; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v0+/JV08+r5HaiYcZ+Llw+TpfRxTE/NUdH0Ba5F1Ndg=;
-        b=hj5jePeemiULmluJjNB+Ul6OncGKaSlXLPwMX7K/cILlYGNRpEaXjZ4ANDi2Vd99Fu
-         XOxUAH0AV8BGww98b7Kk7kPukaznZHnqulIxphKRB5TpF0ROv3+KR0V/NUbFeo29CByh
-         co8xZSioa4sZgu0XeblM7ZQZKTF+EbpD3orUTS4PzXeVU1n8PLlYYHeyy++mqvgLEUBa
-         JHDQQ6KXJkW14my9GvgomG3HH2GcY9b/6y9GXv1uUsBn4AkLbmmPjxYGrHMZ+PmVoWH5
-         eQ7QhzzE10vAMyNNyLwMGSPvCFI9/4SCD1X9MlepUaEGLTiEp+T9vk6HGq918uZpWy8P
-         GH6w==
+        d=suse.com; s=google; t=1768400583; x=1769005383; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rjJ0doliNf6plVmMYQkV7IlLiBwqr6x+viyB7m/anSs=;
+        b=HHqfcaHCDZ4C/25aiu2LLUMRB6a3JGJWGhQfFT6QaEtcdkNlMy33Eg5S1g6VGmzYXo
+         hpfCXuvsZWvysbszR52KoZ2Hm1zuNEeCpDbVwfZG4XIIepu7J6DwkkZTdV4+WvGZUfb2
+         J50i9CArQzRD7a32Tos9uS2iTNN+n78n5NdtroiOypIe6+cM2D5E/4P5BmzBG0Y1OMZi
+         TF2vHM81yG5bimXpDBncf/8rbHqG0I7eJ966s7d0iQ2MM9s31pdW7eDgXOSxl6kdp6c/
+         Y/on+swJawD0gJ25otHcu9wX57o6bpwey1K2T1Em/Ha1Hnr4ql+oU5YXD54Y+M9nX783
+         +Gyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768400238; x=1769005038;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=v0+/JV08+r5HaiYcZ+Llw+TpfRxTE/NUdH0Ba5F1Ndg=;
-        b=e5K2wMwaecrHssBODqoCJ6V7bm3iPm9rXTRH9KrPLI91bXzh4/xf2aaP994TPLzOdf
-         V2/LyVFk+zCLq35lA1iwPRCEDjl9KtQjEHbUUyS4uXLUHtW0Bs2ZYgGtMYJb4hGY+ymO
-         /9SziNQoOW2yhdxR1LgIcb58kewelfaKsweQCTzhhAVEkgsPxQg5YzLkdJVnTtL2Z03h
-         GvF9t+CUPJPKmv9Cxm96SL5LiGrWDWpS056RtYE/5j/2f40iEfc9hepXFJR4iQJFua6p
-         CMJquXXX+RPKrw/XFzPdRGUw2PXK7efxrU1t6oo8k65OrgHG7IBMVoUx3M+PffU6tIbN
-         UJag==
-X-Forwarded-Encrypted: i=1; AJvYcCXx/3XkSppZwpNORgQZeqfucN19nZoYUqe/B5l8KxMN091W6o56OtSjOMIHUGp54Nb0VIppZePk466GI/6S6Io=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynAMmPhCHDpD89mmdqlpmanxLR7j0bIkJN7Wdk5ZZE0WiiSvob
-	mVDVOfcFucEj5W8fkS5exG8EGJjED8CPl7oBgFeijX8LgHBHB4w4rpIMiD5eJubCVLw=
-X-Gm-Gg: AY/fxX4ldmb5aNWUDrOpc0igJUxNddyVSrcDwTIaw69tQembdR63wVCTzJZU5FdrAdY
-	YZrc4IExkUyPu+hufg8E1kDwm2MB4+Ul1m/fuy0BJRm59W1w2Aq7zWhOaNOFLQ0u5dCXTYqTS1J
-	JDwoNABwcBSeo8YraCOwstOGLBhFLrc4S2oMLyMIfnerKqQslkw9oOsx0AuP/DOiuFcCXUa1f0h
-	93uKJJ4lizA5Ffnr9XjOpoDVT+5WPX4bqJ0K/qVkZvvNpWgAlsh7j7WDYPQJFLOJ7hCftiLuUnx
-	pr4e8GI9msIFVa8RbyKBq16BlA1jpl0bXF/DAbaKVbNmcOTYTWeqXaqG0AYvUfsWggc+DAbOJek
-	YHTzmXccLSIOhmDp5F1b7wpDnknjoPzjteXZRLfEDf2c8wczV2oj2eZLjkgVzWTxHxdC2XDlVeV
-	+uyVe2FJdsGSdkNcgqIrzMhB4aalJv7f2RwfNeCNYPgbxM3DmTy0zcYytUaebOWA6Q3Y4PZw==
-X-Received: by 2002:a05:600c:870b:b0:471:9da:5232 with SMTP id 5b1f17b1804b1-47ee3349d27mr34823075e9.15.1768400238402;
-        Wed, 14 Jan 2026 06:17:18 -0800 (PST)
-Received: from ta2.c.googlers.com (164.102.240.35.bc.googleusercontent.com. [35.240.102.164])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee57a2613sm29595445e9.6.2026.01.14.06.17.17
+        d=1e100.net; s=20230601; t=1768400583; x=1769005383;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rjJ0doliNf6plVmMYQkV7IlLiBwqr6x+viyB7m/anSs=;
+        b=EBHuL+dBldveDW3sWeTmNz7ug/oUuKuZqjjoWlfCn4L8lWoOfDnR0ehsrFK/7gXPbR
+         jvJpPhauv5oRTlnu4w2OIbhJ0E6UB6w+Wo8x1x6LryMSDuQaKI+YxaCocLBn4Kfkys4k
+         5SQuZM9S34F2WITI+Il498F2/HPBZXZ50aZ8oTiZ54ZUflohrzJ980TKjuBuaYPBCc9u
+         BUYZNJBUrfq7ag61X0MLnn4O/gk/HDab1r02iXA3lvLkuAPA0MkA4FPNwoXBh15TgHPL
+         pJFK/q+FzVzW1fuaczNK6+YHOR+oE0XGYzoBeVA/7BBdO3I+a7J0hjyjD3co7fY56iIh
+         WADA==
+X-Forwarded-Encrypted: i=1; AJvYcCWa96xK+PLKzOckzIhEptnty20YCeZifQMMamQm1juJnksKm7X9/tnTDayeIEjPFGkRZR0eZpzwEB8Vl+i/W2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgfIwGCJYA8SJDRR+XiNqMFJqvyCGZlZMt8UFoakNTSfcIddoZ
+	5vsJCS2/FiKIYet6eCW11UHQHFsN/4NPqBtZvcq/YSwiXLwOVOwd9mjoBaWgpJHD3a0=
+X-Gm-Gg: AY/fxX6TCniO2X1w7LQ1t3YHYRN3XtKnVUbpvwgc/Ikh6KRe66QCaMpwsdVyJXR1xSN
+	MlB6wb6OatVNz9NbQqi98sC1KZozQpFqbfUFmkgIPuyr6m+Qiw/6T8HYNWn7Lz0HNfw4ti52EVI
+	sQQkcl/+QXw1b4Tsxm4kDvg9rjf0omtF2kKzgKyv7As/tHkpWaIeTwU3P1/y2Q2HJS/GJ7536Th
+	VozN75ZYnJrRcDnPOimcGJLV2Q1tEUi73SjtD5hmk7lYpar79s1kSRvq0Qyf1MyEqiGyEu3rue6
+	Ps9RCQI+ZNT6AUxOOglUdqwKTkNsQWj3yYnv8MUFtkPQy7eUX/eRz/KPMiiQ4/OqAhN8Yxt1GSB
+	aIYVKDMKV1fFbyZgX3VAk6LB8nuGWVNkPf0WuvryF0KLTx1ztY29uUbUuBZgzTldbdNTJ89rXUz
+	dnr9JqnZnrRx6ARw==
+X-Received: by 2002:a05:6000:3105:b0:431:104:6dd5 with SMTP id ffacd0b85a97d-4342c5728e2mr3256518f8f.58.1768400582935;
+        Wed, 14 Jan 2026 06:23:02 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0dacd1sm49446446f8f.4.2026.01.14.06.23.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 06:17:17 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Wed, 14 Jan 2026 14:16:35 +0000
-Subject: [PATCH 7/8] arm64: dts: exynos: gs101: Add thermal management unit
+        Wed, 14 Jan 2026 06:23:02 -0800 (PST)
+Date: Wed, 14 Jan 2026 15:22:59 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+	netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	sparclinux@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 06/19] printk: Introduce register_console_force
+Message-ID: <aWemw2ZCwtAd17I1@pathway.suse.cz>
+References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
+ <20251227-printk-cleanup-part3-v1-6-21a291bcf197@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260114-acpm-tmu-v1-7-cfe56d93e90f@linaro.org>
-References: <20260114-acpm-tmu-v1-0-cfe56d93e90f@linaro.org>
-In-Reply-To: <20260114-acpm-tmu-v1-0-cfe56d93e90f@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Peter Griffin <peter.griffin@linaro.org>, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com, 
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768400224; l=9008;
- i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=5H0lgDSUScoa7O0SKdxLcVIZHcB9BT1ur3Jx/KZwF8M=;
- b=HXnagG3gv/1lLforBYx+5nePgwHPOp9Z1Gwl0BqqQvYoXOb/bhmpCS7TdePLVZg19tC4RNUjf
- WV7Y7zCenC7CfdPS4WtdHlZAotXST1JrJmm7B/XOVq99Prf7aEloUTU
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
- pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251227-printk-cleanup-part3-v1-6-21a291bcf197@suse.com>
 
-Add the Thermal Management Unit (TMU) nodes for the Google GS101 SoC.
+On Sat 2025-12-27 09:16:13, Marcos Paulo de Souza wrote:
+> The register_console_force function will register a console even if it
+> wasn't specified on boot. The new function will act like all consoles
+> being registered were using the CON_ENABLED flag.
 
-This includes:
-- The top-level TMU sensor node linked to the ACPM block.
-- The TMU syscon node for direct interrupt register access.
-- Thermal zones for the CPU clusters (little, mid, big) with associated
-  trip points and cooling maps.
+I am a bit confused by the last sentence. It might be bacause I am not
+a native speaker. I wonder if the following is more clear:
 
-This enables thermal monitoring and mitigation on GS101 based devices.
+<proposal>
+The register_console_force() function will register a console even if it
+wasn't preferred via the command line, SPCR, or device tree. Currently,
+certain drivers pre-set the CON_ENABLE flag to achieve this.
+</proposal>
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> The CON_ENABLED flag will be removed in the following patches and the
+> drivers that use it will migrate to register_console_force instead.
+> 
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -3858,7 +3858,7 @@ static int console_call_setup(struct console *newcon, char *options)
+>   * enabled such as netconsole
+>   */
+>  static int try_enable_preferred_console(struct console *newcon,
+> -					bool user_specified)
+> +					bool user_specified, bool force)
+>  {
+>  	struct console_cmdline *c;
+>  	int i, err;
+> @@ -3896,12 +3896,15 @@ static int try_enable_preferred_console(struct console *newcon,
+>  		return 0;
+>  	}
+>  
+> +	if (force)
+> +		newcon->flags |= CON_ENABLED;
+> +
+
+This makes sense because the pre-enabled CON_ENABLED flag is handled
+right below.
+
+>  	/*
+>  	 * Some consoles, such as pstore and netconsole, can be enabled even
+>  	 * without matching. Accept the pre-enabled consoles only when match()
+>  	 * and setup() had a chance to be called.
+>  	 */
+> -	if (newcon->flags & CON_ENABLED && c->user_specified ==	user_specified)
+> +	if (newcon->flags & CON_ENABLED && c->user_specified == user_specified)
+>  		return 0;
+
+But this location was not a good idea in the first place. It hides an unexpected
+side-effect into this function. It is easy to miss. A good example is
+the regression caused by the last patch in this patch set, see
+https://lore.kernel.org/all/89409a0f48e6998ff6dd2245691b9954f0e1e435.camel@suse.com/
+
+I actually have a patch removing this side-effect:
+
+From d24cd6b812967669900f9866f6202e8b0b65325a Mon Sep 17 00:00:00 2001
+From: Petr Mladek <pmladek@suse.com>
+Date: Mon, 24 Nov 2025 17:34:25 +0100
+Subject: [PATCH] printk/console: Do not rely on
+ try_enable_preferred_console() for pre-enabled consoles
+
+try_enable_preferred_console() has non-obvious side effects. It returns
+success for pre-enabled consoles.
+
+Move the check for pre-enabled consoles to register_console(). It makes
+the handling of pre-enabled consoles more obvious.
+
+Also it will allow call try_enable_preferred_console() only when there
+is an entry in preferred_consoles[] array. But it would need some more
+changes.
+
+It is part of the code clean up. It should not change the existing
+behavior.
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- arch/arm64/boot/dts/exynos/google/gs101-tmu.dtsi | 209 +++++++++++++++++++++++
- arch/arm64/boot/dts/exynos/google/gs101.dtsi     |  22 +++
- 2 files changed, 231 insertions(+)
+ kernel/printk/printk.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101-tmu.dtsi b/arch/arm64/boot/dts/exynos/google/gs101-tmu.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..6262c3b890aa2f7ad572c32b30bf926df804ec1e
---- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/google/gs101-tmu.dtsi
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Google GS101 TMU configurations device tree source
-+ *
-+ * Copyright 2020 Samsung Electronics Co., Ltd.
-+ * Copyright 2020 Google LLC.
-+ * Copyright 2026 Linaro Ltd.
-+ */
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+/ {
-+	thermal-zones {
-+		cpucl2-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tmu_top 0>;
-+
-+			trips {
-+				big_cold: big-cold {
-+					temperature = <20000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				big_switch_on: big-switch-on {
-+					temperature = <70000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+
-+				big_control_temp: big-control-temp {
-+					temperature = <90000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+
-+				big_pre_switch_on: big-pre-switch-on {
-+					temperature = <55000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+
-+				big_alert2: big-alert2 {
-+					temperature = <95000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				big_hw_throttling: big-hw-throttling {
-+					temperature = <103000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				big_pause: big-pause {
-+					temperature = <108000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				big_hot: big-hot {
-+					temperature = <115000>;
-+					hysteresis = <3000>;
-+					type = "hot";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&big_control_temp>;
-+					cooling-device = <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		cpucl1-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tmu_top 1>;
-+
-+			trips {
-+				mid_cold: mid-cold {
-+					temperature = <20000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				mid_switch_on: mid-switch-on {
-+					temperature = <70000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+
-+				mid_control_temp: mid-control-temp {
-+					temperature = <90000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+
-+				mid_pre_switch_on: mid-pre-switch-on {
-+					temperature = <55000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+
-+				mid_alert2: mid-alert2 {
-+					temperature = <95000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				mid_hw_throttling: mid-hw-throttling {
-+					temperature = <98000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				mid_pause: mid-pause {
-+					temperature = <108000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				mid_hot: mid-hot {
-+					temperature = <115000>;
-+					hysteresis = <3000>;
-+					type = "hot";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+				     trip = <&mid_control_temp>;
-+					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			       };
-+			};
-+		};
-+
-+		cpucl0-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tmu_top 2>;
-+
-+			trips {
-+				little_cold: little-cold {
-+					temperature = <20000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				little_switch_on: little-switch-on {
-+					temperature = <70000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+
-+				little_control_temp: little-control-temp {
-+					temperature = <95000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+
-+				little_pre_switch_on: little-pre-switch-on {
-+					temperature = <55000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+
-+				little_alert2: little-alert2 {
-+					temperature = <100000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				little_alert5: little-alert5 {
-+					temperature = <103000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				little_alert6: little-alert6 {
-+					temperature = <110000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				little_hot: little-hot {
-+					temperature = <115000>;
-+					hysteresis = <3000>;
-+					type = "hot";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&little_control_temp>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-index 48f3819590cf8c05d6bd7241cfed8720149c7db4..a2d5ed832588b83ec47e8c6833073c9ec95f2517 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-+++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-@@ -74,6 +74,7 @@ cpu0: cpu@0 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x0000>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL0>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&ananke_cpu_sleep>;
- 			capacity-dmips-mhz = <250>;
-@@ -86,6 +87,7 @@ cpu1: cpu@100 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x0100>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL0>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&ananke_cpu_sleep>;
- 			capacity-dmips-mhz = <250>;
-@@ -98,6 +100,7 @@ cpu2: cpu@200 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x0200>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL0>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&ananke_cpu_sleep>;
- 			capacity-dmips-mhz = <250>;
-@@ -110,6 +113,7 @@ cpu3: cpu@300 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x0300>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL0>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&ananke_cpu_sleep>;
- 			capacity-dmips-mhz = <250>;
-@@ -122,6 +126,7 @@ cpu4: cpu@400 {
- 			compatible = "arm,cortex-a76";
- 			reg = <0x0400>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL1>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&enyo_cpu_sleep>;
- 			capacity-dmips-mhz = <620>;
-@@ -134,6 +139,7 @@ cpu5: cpu@500 {
- 			compatible = "arm,cortex-a76";
- 			reg = <0x0500>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL1>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&enyo_cpu_sleep>;
- 			capacity-dmips-mhz = <620>;
-@@ -146,6 +152,7 @@ cpu6: cpu@600 {
- 			compatible = "arm,cortex-x1";
- 			reg = <0x0600>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL2>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&hera_cpu_sleep>;
- 			capacity-dmips-mhz = <1024>;
-@@ -158,6 +165,7 @@ cpu7: cpu@700 {
- 			compatible = "arm,cortex-x1";
- 			reg = <0x0700>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL2>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&hera_cpu_sleep>;
- 			capacity-dmips-mhz = <1024>;
-@@ -489,6 +497,14 @@ acpm_ipc: power-management {
- 			#clock-cells = <1>;
- 			mboxes = <&ap2apm_mailbox>;
- 			shmem = <&apm_sram>;
-+
-+			tmu_top: thermal-sensor {
-+				compatible = "google,gs101-tmu-top";
-+				clocks = <&cmu_misc CLK_GOUT_MISC_TMU_TOP_PCLK>;
-+				interrupts = <GIC_SPI 769 IRQ_TYPE_LEVEL_HIGH 0>;
-+				syscon = <&tmu_top_syscon>;
-+				#thermal-sensor-cells = <1>;
-+			};
- 		};
- 	};
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index abf1b93de056..d6b1d0a26217 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3826,14 +3826,6 @@ static int try_enable_preferred_console(struct console *newcon,
+ 		return 0;
+ 	}
  
-@@ -639,6 +655,11 @@ watchdog_cl1: watchdog@10070000 {
- 			status = "disabled";
- 		};
+-	/*
+-	 * Some consoles, such as pstore and netconsole, can be enabled even
+-	 * without matching. Accept the pre-enabled consoles only when match()
+-	 * and setup() had a chance to be called.
+-	 */
+-	if (newcon->flags & CON_ENABLED && pc->user_specified == user_specified)
+-		return 0;
+-
+ 	return -ENOENT;
+ }
  
-+		tmu_top_syscon: syscon@100a0000 {
-+			compatible = "google,gs101-tmu-syscon", "syscon";
-+			reg = <0x100a0000 0x800>;
-+		};
+@@ -4022,6 +4014,14 @@ void register_console(struct console *newcon)
+ 	if (err == -ENOENT)
+ 		err = try_enable_preferred_console(newcon, false);
+ 
++	/*
++	 * Some consoles, such as pstore and netconsole, can be enabled even
++	 * without matching. Accept them at this stage when they had a chance
++	 * to match() and call setup().
++	 */
++	if (err == -ENOENT && (newcon->flags & CON_ENABLED))
++		err = 0;
 +
- 		trng: rng@10141400 {
- 			compatible = "google,gs101-trng",
- 				     "samsung,exynos850-trng";
-@@ -1844,3 +1865,4 @@ timer {
- };
- 
- #include "gs101-pinctrl.dtsi"
-+#include "gs101-tmu.dtsi"
-
+ 	/* printk() messages are not printed to the Braille console. */
+ 	if (err || newcon->flags & CON_BRL) {
+ 		if (newcon->flags & CON_NBCON)
 -- 
-2.52.0.457.g6b5491de43-goog
+2.52.0
 
+
+It would be better to do the above change 1st. Then the @force
+parameter might be checked in __register_console() directly, like:
+
+	/*
+	 * Some consoles, such as pstore and netconsole, can be enabled even
+	 * without matching. Accept them at this stage when they had a chance
+	 * to match() and call setup().
+	 */
+	if (err == -ENOENT && (force || newcon->flags & CON_ENABLED))
+		err = 0;
+
+You might just remove the check of CON_ENABLED in the last patch.
+I think that this should actually fix the regression. It will
+handle also the case when the console was enabled by
+try_enable_default_console() and try_enable_preferred_console()
+returned -ENOENT.
+
+Note: I have some more patches which clean up this mess. But they are
+      more complicated because of how the Braille console support
+      is wired. They still need some love. Anyway, the above patch should
+      be good enough for removing CON_ENABLED flag.
+
+Best Regards,
+Petr
