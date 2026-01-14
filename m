@@ -1,143 +1,172 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C67938737F
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 10:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB3838944F
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 10:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768386130; cv=none; b=POoXF9mR440J6hkblU9ig1rVT9nXFuXT/v921UwdcqTAMY982uevuzOMPe5CoVXklbPJSyiLPqT+5ZrWp8/xZi09BZC3nSJGOt2kwV5yIrKXoYRyUKhB4WaW/VtxnqYP/rrWoeq+kirAjlvo1DrxggGRUsHYa7/KR+Du2uwdYWs=
+	t=1768386505; cv=none; b=h+M57hGw7KtZaczXzduBp48J1XH4CIE6r4vR7rXD74TDSXiD2cv2SiYQhFDuwsrZRVyv0zi56+4moemFkF/UrUmxtCU2OenQ7NSpoX96hpeViCRv7skLgzFB9l84tp5BdCNIK1A17/5PaM6qmBxJbL569Xzk8KiVT1ePtr06xXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768386130; c=relaxed/simple;
-	bh=y/Tx52YVSUIzWNI8DzLbQiG3rqi2DQ3nJ4pmqX4O5XI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XnS0KwKVLOeCOX+lJZNgqsDyloyDnR9CtdEKNl83Yz1YMq9lbEk87iMsBzY7Kx+ObFFdzkkB1xA5BVXHBvMniC1i9S2s6VU4gKuUrnakFWezTrHeV2untFXG4F/QIB4BjPELfjznDVefRcFfrLEcZ1JHeZ8yuEfhqHU6fOfaNE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INXHe+GX; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768386505; c=relaxed/simple;
+	bh=0CbyshIj1CFfi3rZ8711K9DQYajBFEov2AFFETZzmJI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ahl9gTZTE6ZQrU+PmUn7iGd4sZo18ALyF9oSeWgOSM68B1nZlYMVNqa2n4XUw/hDLJYdTQEE9oUAqHHziL+ea5XbcXtd+9vG0XJOr1tMCKggU7oOczEkGS6LtT75gtkeTwESqhgY+PTPhXeH6+kqRRSb0d8uf6EYscPCfh/Awyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L4Y7jY8t; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=LJAHklZW; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INXHe+GX"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42fb2314eb0so7088591f8f.2
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 02:21:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L4Y7jY8t";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="LJAHklZW"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60E85oVh1943025
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 10:28:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	L2rUIWP734jgyS7kfTHkz2k68tE+yGXTA1ZKqPQH6og=; b=L4Y7jY8tZjq7r/mD
+	hQzFvYOFvfU9JrUK5CwE6O+iHhAC4cIrR8X3ek6CvmLs47DY8JgtEvl7AE+O3b0b
+	MHxQ1dfKobRAoPJJWcLf/DMlK3umedQYtsj29x5yhxJHnQPaQUNGrWAs5heJzhHH
+	kvY7iPbdQ6dNfb0jKPpNyoNMrW1hTyCDRWriWzvvHBidunOZfxXsYX4EpScElBd6
+	CWxOdT445z7cz6NaXJ7tMNhcgMpJJHXsY0LL2wxvXW/5RKdHqtUqLrG1BquFdw03
+	iEfftDnx/92CsZMudse3feCnXVI8dDlITb+BcGvZRPB5cbS0r0fIa2TpA1WlvLX9
+	IDjfXA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bp7b6rj2u-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 10:28:22 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8c536c9d2f7so1899385a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 02:28:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768386116; x=1768990916; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aby9hG1Lpv1OF3fYnEo/Zyk0Fv/I6aSt+58OzVwNuFQ=;
-        b=INXHe+GXjxIhAFebKhydD0fRRa9e/N8q/qvefQjDgi6WvdfNZyh+Ow4j6jFYzvcZEo
-         83L+80NP768ACYYWD1mC0RogfAJ7tsHOwJVmgg346bjaNTkav/BH8pno/k6vDJJwWf8q
-         QK6CHpzmoBfTkLgYue+xXK8bw2lf5zGfyEvcvSReD7Q8ks2RVUQq6tx50kwn39CTbQG/
-         8+6IZ/O3uRc0qn9ZbjOXp0RnG7gZq2cpYpvY4hLY/Zmaz2ZbNM2fQFmTFIPGzQOB89J6
-         ZVjpWAacWZr49S+pANnPUl/u210G42b7Fu1Mtxf6Hz1BU1QCbAo29+ZWdITojpDufhPC
-         BdQg==
+        d=oss.qualcomm.com; s=google; t=1768386502; x=1768991302; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L2rUIWP734jgyS7kfTHkz2k68tE+yGXTA1ZKqPQH6og=;
+        b=LJAHklZWs8jmKxAxN233zesN+nxbeA5DORiXTA2x++5bJ/4COzWqMSLCxl9fAh13DR
+         YPVk1aRkXxMS7l4sTcGU9dk0/g4u7NsWCqGVZlrtBuf5evgBvXZKTYpB4B67w5CWz59N
+         4v4R4sjGks9ks141s2+kwJU6dsDe+MkBOLlcUB0rtcrQ3m+qhuRPl1naTq9Z9xrtaZZz
+         /96Ga6Q+1io/v+a1Cosfleyz8GUJ38bXJ2pZrtx0psDxx2B137NZ2uOiSycS+eN2IinC
+         ScEqyScklGOvlIIoQwxHmajepLiKXTSQirpOvFiXORZGo1/+VjF/6TyEFPkUsqCy6GWc
+         HlhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768386116; x=1768990916;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aby9hG1Lpv1OF3fYnEo/Zyk0Fv/I6aSt+58OzVwNuFQ=;
-        b=satOvsDdeIB5DXAVCr1UDMIlIXk+HQceI+1+1mbxIys7gcmali4hsx/RmPoZR0b8Qf
-         /zuHsKl0T6juhUmXsx9HfFngq1/fiK5V4zNrUKFDsGGumvTkrt5taBgDBbw8dKnFFqDI
-         xldDvm8TxDc6VHC+Z/34SP5fFAUVKbkU8jyd30FQdKxqJT7KeHc/8JCxM1E7MqKb9l5U
-         ANoECD4T/KVTZECx10Prd4Z71bqm9beuJ5j1mVxPwl7MBiV7CAN4vzCDDzduFzdue/YG
-         w8S5x5RCoCbD2CWM6xVjSOqGWOotoFgdqMdB/MYjIshq33QBwu7VXc+n+gLuJ4vPKMuj
-         Joew==
-X-Forwarded-Encrypted: i=1; AJvYcCXVJri9oYikPZ0Qtnwt5mZpgSo1pUjUV2US5j2sJEb+NibhindZL6rx2dI39oRSO0FDgudJg41CwrJy5fqHduU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN2RgGzVBfwNfOw/iJz0lHOP7vAvBa2ywc4mJOSprJKcq2wXzo
-	yWKyfINlg6+rW0DcOZgzjx4MEsg6dvEu7vG1GCglhGoO4T8YFcGXvOfO
-X-Gm-Gg: AY/fxX6vyGVgDYBBM20BsVulNWKlnwaB4AOGS36QRmA1frUKUbmO+RP/XgUwnuXO9wl
-	mssnS8DyMK5sJAFW78TnksB2yoo3W3cGSAPtuSvfAMdMCosYbrv5mKkIG93nmVjwuaCHPQvM6pF
-	ON5PvQ+beVB2+9hnlwmcnQNzeugXHkYMqEBThRs3jxbvjWzmt9ZjW83USop5Y8WfX6VR/0MRErQ
-	lMQYHbIgKCxvwcmWdvuNrPaweANXvBkAy355x1p1dLXtexDXCkJxGCnxc9xYz2cIVwEMxo2lYMu
-	PWRcDHL+3yvID/xI+rQuI1yJGWP5NNcC7MHsBosht4nyvdi7mUGZ5HA03zpL1ivcsRk/sWwdZBQ
-	1AFP9IVMjuLQOR5bfIPFeS7D1xi5A2r0y/xhiqubafTKZ1mGYR3I74mSZj86XXvMxZiKZI4NTf8
-	SsdLBIKOnkLJIFRQgqtGm7miIkWauzNOD2yhGJ/zVw9J8P34u5NzA7
-X-Received: by 2002:a05:6000:1789:b0:433:42d1:f71f with SMTP id ffacd0b85a97d-4342c543bc2mr2513654f8f.38.1768386116121;
-        Wed, 14 Jan 2026 02:21:56 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0860f5sm48694254f8f.0.2026.01.14.02.21.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 02:21:55 -0800 (PST)
-Date: Wed, 14 Jan 2026 10:21:54 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Feng Jiang <jiangfeng@kylinos.cn>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, kees@kernel.org,
- andy@kernel.org, akpm@linux-foundation.org, ebiggers@kernel.org,
- martin.petersen@oracle.com, ardb@kernel.org, ajones@ventanamicro.com,
- conor.dooley@microchip.com, samuel.holland@sifive.com,
- linus.walleij@linaro.org, nathan@kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 08/14] lib/string_kunit: add performance benchmark
- for strlen()
-Message-ID: <20260114102154.251082c6@pumpkin>
-In-Reply-To: <a58e97ad-a69e-498d-9382-2be4914569b0@kylinos.cn>
-References: <20260113082748.250916-1-jiangfeng@kylinos.cn>
-	<20260113082748.250916-9-jiangfeng@kylinos.cn>
-	<aWYGWLEekWh3jJVf@smile.fi.intel.com>
-	<b06e4a63-85c2-4420-8077-f4c059ef33fb@kylinos.cn>
-	<a58e97ad-a69e-498d-9382-2be4914569b0@kylinos.cn>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1768386502; x=1768991302;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L2rUIWP734jgyS7kfTHkz2k68tE+yGXTA1ZKqPQH6og=;
+        b=PhPctJ5VeJm0M3lbIjh1iSMYSK4SLUgkKo3Rtjtb2DRVjA7bjjUVsjyNW5VToXbH1S
+         ps5NpCjQZ8OrYm5Z3KtIBr9dm9yiquzd9zP/7SOZ/ltyN6l6vt2YmBR9Y/Y6tl/iUJaw
+         hD+cpbBKUtLX5B25TfZGUq1ObXRtSTx8y5PalF45M2xU5RGsAAe3lgV1YO2olpVx0Bnm
+         w8aAH5hENY5n9NzVk/Ag4Z2V3uG3MyBu+tJo6TqDKHGM69hmQLJIWNNZ12OANRtw4Crn
+         8zc1jcsQSQBKMTADm5621TJVVliR+zUuMXyQUNAu4NI7yXd2Olz+0YQigvr9NHcTl4WS
+         2JXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzMchUjlJoXC3ruZtdf089shhsealhRLgB07sZej4gkw+AYC+1GV6Ezisahv2g64VEayKcPL48aQv86Vp5wG0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3mliL/awCF9llJ0jpuWwrjskaT2ohmWplDzkeMCEpCFxfO4oJ
+	JuDWAKy2t3LnBdxRX3+UX6GggU/9FlSKsaabtRTGmWisXinGJFDN3vQo9YYbcUSagmrB0Ri3eok
+	dRZ6DTYbNSs+d1WPW90jMTYfPu+bLb+Nw9YdzDwm0MA4BhgrLTdlsG/p1Yz4SQmm9mXPx2MY=
+X-Gm-Gg: AY/fxX6IG9ABL6wbuX6RX6wSJvpwPfDPOiAWuzss78/B9hXRdhCl/AAMOxOYmQPKCIN
+	Kozl0Hlu4dm67iAN0H04gyQswJYvIU1QycX13gSyz/3GllSbQG1/gI9yna6AThCUG6RGgrHLz1b
+	be4DQKLAgr6p2U2EmjUJQ5oXaXZhQJCogFO+ujD+u58/tmdXwPmVQz8+E8qwC1QLAodfS4ANEZo
+	xgqOLORpqnuiq/+TAHpWm2DIt9xHqW14Hmy6Wrc1kOHiefzx4ugzNlf5ZwKX8URxWHXpMID4vgS
+	JSapYQvAxY8Npfbf1AmOVzKtLv3a69PPRp7URvEmA3oFdSA9qqz9Om9d21e7oeqA7oR1zHGKG7m
+	WaoOu9L6YZGyWeEBnIwJSAnl2KSkoAqsCW+TaKKR+0LaGRvMxOBr0iMa8axwTh3L8vuU=
+X-Received: by 2002:a05:620a:2945:b0:89f:5a1b:1ec9 with SMTP id af79cd13be357-8c52fafd3d0mr237609685a.1.1768386502245;
+        Wed, 14 Jan 2026 02:28:22 -0800 (PST)
+X-Received: by 2002:a05:620a:2945:b0:89f:5a1b:1ec9 with SMTP id af79cd13be357-8c52fafd3d0mr237607585a.1.1768386501828;
+        Wed, 14 Jan 2026 02:28:21 -0800 (PST)
+Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b86ebfd007fsm1275650366b.31.2026.01.14.02.28.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Jan 2026 02:28:21 -0800 (PST)
+Message-ID: <ff4d697c-2007-4b2a-b66b-dc86053a20a6@oss.qualcomm.com>
+Date: Wed, 14 Jan 2026 11:28:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
+ reserved memory ranges
+To: David Heidelberg <david@ixit.cz>,
+        =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Gabriel Gonzales <semfault@disroot.org>, Kees Cook <kees@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Biswapriyo Nath <nathbappai@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        linux@mainlining.org
+References: <20260112-xiaomi-willow-v1-0-8e4476897638@mainlining.org>
+ <20260112-xiaomi-willow-v1-2-8e4476897638@mainlining.org>
+ <723357fc-a785-45d6-8d49-4c00dd4f340c@ixit.cz>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <723357fc-a785-45d6-8d49-4c00dd4f340c@ixit.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: oHrFyxXzSEFndpxNSfO-g9E1zpIQ8NQX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE0MDA4NSBTYWx0ZWRfX0f+qrLpopB5T
+ Mc2zKPRQDJuW0l4RN8q73T9qAUlyFXb6uCybhXUJsNopGtAJrcmustzCEzN0F26N4823TgnzP09
+ rmPCdrvhHymD4WkBUo5F28lNFqtC+fa15mnP8lDu50lzDRYQSdQ7Wj01yysbJtFKGNQqVjNZW45
+ TM9nSS/A83AoL+kbL/KkAivWeHW/pOcjTMlP1f5WXhQqpl2v04DHWhSdihxpZ6ZXsdkYkikeDQx
+ 9LgnR0xhgMpAW4wfvbFB81AX7ZTHgYH/eVfQwXMeiK64buyA95QEK1rW+2gzoPq7AJO70tR5eDv
+ PpwRYNAGTKakF/Ml9ElMYHzh4ZUgVvQGpAhjv0Eil6exKoKIhgfOngR3pN9yEavqn9qmcyQnIML
+ Gfwph1wx1/3To0PShYQRqIIbhTfAnf9F9SQxHtRMk5ueR3EiX0i1GYdiUtSmKezNfxaL5f4wmlQ
+ sDkhG+ta4OooseTlY0w==
+X-Authority-Analysis: v=2.4 cv=W+w1lBWk c=1 sm=1 tr=0 ts=69676fc6 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=OuZLqq7tAAAA:8 a=za1BG0YIFsB6r-OV5FEA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+ a=AKGiAy9iJ-JzxKVHQNES:22
+X-Proofpoint-GUID: oHrFyxXzSEFndpxNSfO-g9E1zpIQ8NQX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-14_03,2026-01-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
+ definitions=main-2601140085
 
-On Wed, 14 Jan 2026 15:04:58 +0800
-Feng Jiang <jiangfeng@kylinos.cn> wrote:
+On 1/14/26 11:15 AM, David Heidelberg wrote:
+> On 12/01/2026 21:13, BarnabÃ¡s CzÃ©mÃ¡n wrote:
+>> The device was crashing on high memory load because the reserved memory
+>> ranges was wrongly defined. Correct the ranges for avoid the crashes.
+>> Change the ramoops memory range to match with the values from the recovery
+>> to be able to get the results from the device.
+>>
+>> Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
 
-> On 2026/1/14 14:14, Feng Jiang wrote:
-> > On 2026/1/13 16:46, Andy Shevchenko wrote:  
-> >> On Tue, Jan 13, 2026 at 04:27:42PM +0800, Feng Jiang wrote:  
-> >>> Introduce a benchmark to compare the architecture-optimized strlen()
-> >>> implementation against the generic C version (__generic_strlen).
-> >>>
-> >>> The benchmark uses a table-driven approach to evaluate performance
-> >>> across different string lengths (short, medium, and long). It employs
-> >>> ktime_get() for timing and get_random_bytes() followed by null-byte
-> >>> filtering to generate test data that prevents early termination.
-> >>>
-> >>> This helps in quantifying the performance gains of architecture-specific
-> >>> optimizations on various platforms.  
-...
-> Preliminary results with this change look much more reasonable:
+[...]
+
+> Hello!
 > 
->     ok 4 string_test_strlen
->     # string_test_strlen_bench: strlen performance (short, len: 8, iters: 100000):
->     # string_test_strlen_bench:   arch-optimized: 4767500 ns
->     # string_test_strlen_bench:   generic C:      5815800 ns
->     # string_test_strlen_bench:   speedup:        1.21x
->     # string_test_strlen_bench: strlen performance (medium, len: 64, iters: 100000):
->     # string_test_strlen_bench:   arch-optimized: 6573600 ns
->     # string_test_strlen_bench:   generic C:      16342500 ns
->     # string_test_strlen_bench:   speedup:        2.48x
->     # string_test_strlen_bench: strlen performance (long, len: 2048, iters: 10000):
->     # string_test_strlen_bench:   arch-optimized: 7931000 ns
->     # string_test_strlen_bench:   generic C:      35347300 ns
-
-That is far too long.
-In 35ms you are including a lot of timer interrupts.
-You are also just testing the 'hot cache' case.
-The kernel runs 'cold cache' a lot of the time - especially for instructions.
-
-To time short loops (or even single passes) you need a data dependency
-between the 'start time' and the code being tested (easy enough, just add
-(time & non_compile_time_zero) to a parameter), and between the result of
-the code and the 'end time' - somewhat harder (doable in x86 if you use
-the pmc cycle counter).
-
-	David
-
-
->     # string_test_strlen_bench:   speedup:        4.45x
->     ok 5 string_test_strlen_bench
+> I suggest one more nice to have improvement:
 > 
-> I will adopt this pattern in v3, along with cache warm-up and preempt_disable(),
-> to stay consistent with existing kernel benchmarks and ensure robust measurements.
+> you could label framebuffer cont_splash_mem since you already touching the node and testing the series.
 > 
+> Then in additional commit, you can replace manually defined `reg` in chosen > framebuffer node with
+> 
+> memory-region = <&cont_splash_mem>;
+> 
+> For example you can look at sdm845-oneplus-common.dtsi
+> 
+> Tell me what u think
 
+If you wanna do that, please call it framebuffer_mem, "cont_splash" is a
+Qualcomm-specific name for (roughly) flicker-free bootup
+
+Konrad
