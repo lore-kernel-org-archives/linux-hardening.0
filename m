@@ -1,247 +1,156 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ixit.cz (ixit.cz [185.100.197.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321822C08D0
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 19:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094E13A9006;
+	Wed, 14 Jan 2026 21:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.100.197.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768419447; cv=none; b=Rtf6K1dMhaZXisy82tTGLcXTHU002Gwj+cHDJfEhGn+yaCnKSWzqepEd4jmfnzs2DJ3w5h9K1OR+e35ZBbcFAzmaUTP0Y99U2zV3Pjuz5Ma+lc0rGrKw6DN2woSv8nOJOojhjBOAYX11brqFcKmm/fmZPW26HBwBqo/WicNkFLk=
+	t=1768427763; cv=none; b=bpQzypP+PJdhNRSzzOHae0LJPwQx4j5uhIuRqj4u+1BT984Lw5oOLR/OcrkyERdHJH/z6MicXEhpHXF14CGfKu4Z9wXPmWuYCc870ewD9AsLKQf6PfLiu1q+js8ZsZp/VO8KZB1qN6cQqEFfyoD9ejw6hof9ItdqG5bNrKkwO4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768419447; c=relaxed/simple;
-	bh=EQdSM0yOXS8C3leRvmeb2QGrjb/3aaIMy7AzLXYJTsQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 Cc:Content-Type; b=L8yfaPqA17e5Hgmi9HO6wjyOIvOLk806jjqQWNvi43ebBND9TggdUsV5s4tZ12zPZNOjxszkiojgR+jyjj71bFzXUgAgqT67fBsX/i+eJQ0PlmDtan/nGbZNJxayuwRNcBwlgc5TYLNuWAm/vqwt/tEK0pww1scppJhp8JcqJGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z7A8N232; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
+	s=arc-20240116; t=1768427763; c=relaxed/simple;
+	bh=eJvRVgYexvXbW/FzpS/CEbUmGz1bMp4wCVNPxvkDEBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=na0CvOtDot49nonCVrXXbz9hEBRvaaFK9XukLVP+Go+VYo2DeeABPxtXhhGx6hj27Hn9o3bTjeX2Dw1s1kDycg0qthK/Y/2+6okFxdv1lG1ZTN1StQ9Az4ss5trQ/qDCYNy3SeHO4DlDZWPJDmN5NXcvIq9NnKLlZjKvTlAIkgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=talcyt8o; arc=none smtp.client-ip=185.100.197.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z7A8N232"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c5539b9adc3so113661a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 11:37:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768419445; x=1769024245; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PJ1Oy9t9P+wnGwZGZn0q3AykJg67xBsGj9QaYqlCMiU=;
-        b=z7A8N232L456+7aKqdZMR7IV2lngaQQ1Qda+5ci5SPpwgSYCFaLyqEHGzgLqJEk0J2
-         QB2o4k3Iip8W6NQi6//LK47ZAp/PhN4VQ2f7jtEp+vO4S0F7zc0adUwDmg7lMemNWH38
-         8GiU658LcyJVVMdCNrCh/lYaBx9G9I7XjYXOTr+zMvpqMTm4g1nAvYe2oRNDJW7eo9qe
-         nsvVoaiOuW7X96fKr12yt+WPdlZtdeXvQo6MRhIfs3/BU4W+A2r8YzIs8y4q0FDecqjI
-         WSTqIVQ6KgV+xAaE3mBfM28AvVsVwqGqDOf6mrl0zx99mnkfjVcV7QnYT3pbDdk3GLCj
-         PVYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768419445; x=1769024245;
-        h=content-transfer-encoding:cc:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PJ1Oy9t9P+wnGwZGZn0q3AykJg67xBsGj9QaYqlCMiU=;
-        b=Z8brSKviqifuXZHJlfX9dvDR/UvH7JYzlqPp15pSAOGwZdholY5v6FUoodVP925Gth
-         cNf2/9NE5euLXBVq8YosuSuwc08Im5F97al5odJWv2QQPqBxV7sYor7sF5MS7MmiOlZM
-         baWB231aycFAE4vYM7dHD1Jq+JLDA8cY8BsQUyvg2+u8qetE42LTsd4DVykA+/ly31SQ
-         WYEE0Cah5XnRDMAekdML0lyGYPmJ3us7GnASoDbFKUoXRmk59GkxMUZIBq61xSO4gJDh
-         LAUDKDQ1tdkOa66gGbxtfDAQfgffXYzHJlDbr2OR9F6GvcIgzHSqXbok1uPpb8cRHJQ1
-         1uyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqw8rQkLukrks1EeTGp6ceZeCue+/uf8uBQw/9kaiXnk16RomioTAzHBDrWTLaD9JSKJtGaZ2sDLGhaIg5VwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWwPgqdbt19Z+vXznTOMIp6TBZzJSjJsFYcBzDMO9g3VlSd5KX
-	tar8S9McunxYcOwacak5LICXn0HScaYZ6ELEy3nYBLpvT8GewWjUXMPAtobibkfS+5dYsds6dnc
-	M
-X-Received: from pgnd16.prod.google.com ([2002:a63:7350:0:b0:bfe:d576:aabd])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7f97:b0:38b:d95d:efd7
- with SMTP id adf61e73a8af0-38bed1b9f0emr4607629637.44.1768419445289; Wed, 14
- Jan 2026 11:37:25 -0800 (PST)
-Date: Wed, 14 Jan 2026 19:36:47 +0000
-In-Reply-To: <20251121195504.1661783-1-morbo@google.com>
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="talcyt8o"
+Received: from [10.0.0.200] (unknown [10.88.125.21])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange x25519)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id F36545340655;
+	Wed, 14 Jan 2026 22:55:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1768427741;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=iiN9gFZLOlmxbnHcFa6MY5VIQEpjCBS6iflBPdm23jI=;
+	b=talcyt8od7Qm7lJ0QNA6JQC/LMNMJ69dZ2BjsWgxPxT5+HAYqu2T8197GhTDSL4deD+3NP
+	AnIhD7lW+xX/NES/3Bxk8HSGv8Z/ZAp2CbE0T9djs3Rnbv+Juu/u9gVYZ+mKIM8qox8U2k
+	W487eFtraXlMfPj/vRFoNIqDYbWoo7E=
+Message-ID: <0da3c96e-4f20-4bd0-836e-73d20581954f@ixit.cz>
+Date: Wed, 14 Jan 2026 22:55:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251121195504.1661783-1-morbo@google.com>
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260114193716.1740684-1-morbo@google.com>
-Subject: [PATCH 1/2] Compiler Attributes: Add __counted_by_ptr macro
-From: Bill Wendling <morbo@google.com>
-Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Marc Herbert <Marc.Herbert@linux.intel.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Tejun Heo <tj@kernel.org>, Jeff Xu <jeffxu@chromium.org>, 
-	"=?UTF-8?q?Michal=20Koutn=C3=BD?=" <mkoutny@suse.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	"=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?=" <thomas.weissschuh@linutronix.de>, John Stultz <jstultz@google.com>, 
-	Christian Brauner <brauner@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Brian Gerst <brgerst@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
-	Nicolas Schier <nsc@kernel.org>, Tamir Duberstein <tamird@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Naman Jain <namjain@linux.microsoft.com>, Eric Dumazet <edumazet@google.com>, 
-	Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Douglas Anderson <dianders@chromium.org>, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
+ reserved memory ranges
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Gabriel Gonzales <semfault@disroot.org>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Biswapriyo Nath <nathbappai@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ linux@mainlining.org
+References: <20260112-xiaomi-willow-v1-0-8e4476897638@mainlining.org>
+ <20260112-xiaomi-willow-v1-2-8e4476897638@mainlining.org>
+ <723357fc-a785-45d6-8d49-4c00dd4f340c@ixit.cz>
+ <ff4d697c-2007-4b2a-b66b-dc86053a20a6@oss.qualcomm.com>
+Content-Language: en-US
+From: David Heidelberg <david@ixit.cz>
+Autocrypt: addr=david@ixit.cz; keydata=
+ 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
+In-Reply-To: <ff4d697c-2007-4b2a-b66b-dc86053a20a6@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Introduce __counted_by_ptr(), which works like __counted_by(), but for
-pointer struct members.
+On 14/01/2026 11:28, Konrad Dybcio wrote:
+> On 1/14/26 11:15 AM, David Heidelberg wrote:
+>> On 12/01/2026 21:13, BarnabÃ¡s CzÃ©mÃ¡n wrote:
+>>> The device was crashing on high memory load because the reserved memory
+>>> ranges was wrongly defined. Correct the ranges for avoid the crashes.
+>>> Change the ramoops memory range to match with the values from the recovery
+>>> to be able to get the results from the device.
+>>>
+>>> Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
+>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>> ---
+> 
+> [...]
+> 
+>> Hello!
+>>
+>> I suggest one more nice to have improvement:
+>>
+>> you could label framebuffer cont_splash_mem since you already touching the node and testing the series.
+>>
+>> Then in additional commit, you can replace manually defined `reg` in chosen > framebuffer node with
+>>
+>> memory-region = <&cont_splash_mem>;
+>>
+>> For example you can look at sdm845-oneplus-common.dtsi
+>>
+>> Tell me what u think
+> 
+> If you wanna do that, please call it framebuffer_mem, "cont_splash" is a
+> Qualcomm-specific name for (roughly) flicker-free bootup
 
-struct foo {
-	int a, b, c;
-	char *buffer __counted_by_ptr(bytes);
-	short nr_bars;
-	struct bar *bars __counted_by_ptr(nr_bars);
-	size_t bytes;
-};
+I have feeling someone recommended me to stick with cont_splash_mem.
 
-Because "counted_by" can only be applied to pointer members in very
-recent compiler versions, its application ends up needing to be distinct
-from flexibe array "counted_by" annotations, hence a separate macro.
+I think, since we'll be doing the mdss reset anyway in sdm845 (which I 
+used as an example), I can do the rename in our sdm845 too then without 
+any harm? (no it's not flicker-free takeover :D )
 
-Note that Clang's support for "void *" members will be in version 22.
-So, when using Clang, you'll need to wait until its release before using
-the feature with "void *". No such restriction applies to GCC's version
-16.
+David
 
-This is a reworking of Kees' previous patch [1].
+> 
+> Konrad
 
-Link: https://lore.kernel.org/all/20251020220118.1226740-1-kees@kernel.org/=
- [1]
-Co-developed-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Bill Wendling <morbo@google.com>
----
-Cc: Kees Cook <kees@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Marc Herbert <Marc.Herbert@linux.intel.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Jeff Xu <jeffxu@chromium.org>
-Cc: "Michal Koutn=C3=BD" <mkoutny@suse.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: "Thomas Wei=C3=9Fschuh" <thomas.weissschuh@linutronix.de>
-Cc: John Stultz <jstultz@google.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
-Cc: llvm@lists.linux.dev
----
-v3 - Replace the previous code with a modified version of Kees' previous pa=
-tch
-     [1].
-   - The question about the naming of the macro was considered, but we deci=
-ded
-     to keep the original naming (__counted_by_ptr), because it mirrors the=
- current
-     macros like "__counted_by_{le,be}".
-v2 - Add support for GCC.
----
- Makefile                       |  6 ++++++
- include/linux/compiler_types.h | 18 +++++++++++++++++-
- include/uapi/linux/stddef.h    |  4 ++++
- init/Kconfig                   |  7 +++++++
- 4 files changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 9d38125263fb..6b029f694bc2 100644
---- a/Makefile
-+++ b/Makefile
-@@ -952,6 +952,12 @@ KBUILD_CFLAGS	+=3D $(CC_AUTO_VAR_INIT_ZERO_ENABLER)
- endif
- endif
-=20
-+ifdef CONFIG_CC_IS_CLANG
-+ifdef CONFIG_CC_HAS_COUNTED_BY_PTR
-+KBUILD_CFLAGS	+=3D -fexperimental-late-parse-attributes
-+endif
-+endif
-+
- # Explicitly clear padding bits during variable initialization
- KBUILD_CFLAGS +=3D $(call cc-option,-fzero-init-padding-bits=3Dall)
-=20
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.=
-h
-index d3318a3c2577..e597c814d60b 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -369,7 +369,7 @@ struct ftrace_likely_data {
-  * Optional: only supported since clang >=3D 18
-  *
-  *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D108896
-- * clang: https://github.com/llvm/llvm-project/pull/76348
-+ * clang: https://clang.llvm.org/docs/AttributeReference.html#counted-by-c=
-ounted-by-or-null-sized-by-sized-by-or-null
-  *
-  * __bdos on clang < 19.1.2 can erroneously return 0:
-  * https://github.com/llvm/llvm-project/pull/110497
-@@ -383,6 +383,22 @@ struct ftrace_likely_data {
- # define __counted_by(member)
- #endif
-=20
-+/*
-+ * Runtime track number of objects pointed to by a pointer member for use =
-by
-+ * CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS.
-+ *
-+ * Optional: only supported since gcc >=3D 16
-+ * Optional: only supported since clang >=3D 21.1
-+ *
-+ *   gcc: https://gcc.gnu.org/pipermail/gcc-patches/2025-April/681727.html
-+ * clang: https://github.com/llvm/llvm-project/pull/137250
-+ */
-+#ifdef CONFIG_CC_HAS_COUNTED_BY_PTR
-+#define __counted_by_ptr(member)	__attribute__((__counted_by__(member)))
-+#else
-+#define __counted_by_ptr(member)
-+#endif
-+
- /*
-  * Optional: only supported since gcc >=3D 15
-  * Optional: not supported by Clang
-diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
-index 9a28f7d9a334..111b097ec00b 100644
---- a/include/uapi/linux/stddef.h
-+++ b/include/uapi/linux/stddef.h
-@@ -72,6 +72,10 @@
- #define __counted_by_be(m)
- #endif
-=20
-+#ifndef __counted_by_ptr
-+#define __counted_by_ptr(m)
-+#endif
-+
- #ifdef __KERNEL__
- #define __kernel_nonstring	__nonstring
- #else
-diff --git a/init/Kconfig b/init/Kconfig
-index fa79feb8fe57..dc27b998d111 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -143,6 +143,13 @@ config CC_HAS_COUNTED_BY
- 	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D108896
- 	default y if CC_IS_GCC && GCC_VERSION >=3D 150100
-=20
-+config CC_HAS_COUNTED_BY_PTR
-+	bool
-+	# supported since clang 21.1.0
-+	default y if CC_IS_CLANG && CLANG_VERSION >=3D 210100
-+	# supported since gcc 16.0.0
-+	default y if CC_IS_GCC && GCC_VERSION >=3D 160000
-+
- config CC_HAS_MULTIDIMENSIONAL_NONSTRING
- 	def_bool $(success,echo 'char tag[][4] __attribute__((__nonstring__)) =3D=
- { };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
-=20
---=20
-2.52.0.457.g6b5491de43-goog
+-- 
+David Heidelberg
 
