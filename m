@@ -1,216 +1,143 @@
-Received: from ixit.cz (ixit.cz [185.100.197.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF432347DD;
-	Wed, 14 Jan 2026 10:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.100.197.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C67938737F
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 10:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768385731; cv=none; b=L17mbFL1lvNTTu9eHMPOSxugksPgjvZxuLcBr0flTeO2MZa/IYX+ljZ/sxHxzgWANwuK7BxpOQStLkcM4XRCkl0/IMj2o8mOyXwmi44+qpNOvvl4Qkj65e1mjGUSwBJMwaCeVZ6juDroRVE9pgftcKbzUb/WBh/egClwVaYH8tY=
+	t=1768386130; cv=none; b=POoXF9mR440J6hkblU9ig1rVT9nXFuXT/v921UwdcqTAMY982uevuzOMPe5CoVXklbPJSyiLPqT+5ZrWp8/xZi09BZC3nSJGOt2kwV5yIrKXoYRyUKhB4WaW/VtxnqYP/rrWoeq+kirAjlvo1DrxggGRUsHYa7/KR+Du2uwdYWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768385731; c=relaxed/simple;
-	bh=BSlpfIrK5dRI6lkCxT0jZZqToalipGqymJE051q+zds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=idX37TAHQsZ+o4uzDEhuTOKEwAI6kH7RqgnYE773sVsiijE1dJZm2JFJAQTXf7aWGU2Ip5FcICOXm2xRL4QE4XG6r3R6ahjlN06X5JTUdCkgJU34ZeQaiL/27OJpzpE13J8qrtVBOLW16Z0rWuXfhek41YgydE49SYcKKebqWQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=Ipkxpsp4; arc=none smtp.client-ip=185.100.197.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	s=arc-20240116; t=1768386130; c=relaxed/simple;
+	bh=y/Tx52YVSUIzWNI8DzLbQiG3rqi2DQ3nJ4pmqX4O5XI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XnS0KwKVLOeCOX+lJZNgqsDyloyDnR9CtdEKNl83Yz1YMq9lbEk87iMsBzY7Kx+ObFFdzkkB1xA5BVXHBvMniC1i9S2s6VU4gKuUrnakFWezTrHeV2untFXG4F/QIB4BjPELfjznDVefRcFfrLEcZ1JHeZ8yuEfhqHU6fOfaNE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INXHe+GX; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="Ipkxpsp4"
-Received: from [10.0.0.200] (unknown [10.88.125.21])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 99FF95340113;
-	Wed, 14 Jan 2026 11:15:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1768385713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IiQVuVyJ2TE0ifLICuSzvGyHRIfP+uV5vL19S8pfuH0=;
-	b=Ipkxpsp4skDmER8ZTTM7sV3oyMRg10OByBe/rOqktVbeDdd8IuFBQ8v5p0D85tXZlb1RKO
-	bCwCz4d7pIgOBHoUrsy45po+nWBGzmAXKNd+UtQB8OAzbI+9tAXI/3GN9iUqLrHFm275vx
-	llUcvrlw+6i9UZk/mUM9v1JvRg+3n5c=
-Message-ID: <723357fc-a785-45d6-8d49-4c00dd4f340c@ixit.cz>
-Date: Wed, 14 Jan 2026 11:15:13 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INXHe+GX"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42fb2314eb0so7088591f8f.2
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 02:21:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768386116; x=1768990916; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aby9hG1Lpv1OF3fYnEo/Zyk0Fv/I6aSt+58OzVwNuFQ=;
+        b=INXHe+GXjxIhAFebKhydD0fRRa9e/N8q/qvefQjDgi6WvdfNZyh+Ow4j6jFYzvcZEo
+         83L+80NP768ACYYWD1mC0RogfAJ7tsHOwJVmgg346bjaNTkav/BH8pno/k6vDJJwWf8q
+         QK6CHpzmoBfTkLgYue+xXK8bw2lf5zGfyEvcvSReD7Q8ks2RVUQq6tx50kwn39CTbQG/
+         8+6IZ/O3uRc0qn9ZbjOXp0RnG7gZq2cpYpvY4hLY/Zmaz2ZbNM2fQFmTFIPGzQOB89J6
+         ZVjpWAacWZr49S+pANnPUl/u210G42b7Fu1Mtxf6Hz1BU1QCbAo29+ZWdITojpDufhPC
+         BdQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768386116; x=1768990916;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=aby9hG1Lpv1OF3fYnEo/Zyk0Fv/I6aSt+58OzVwNuFQ=;
+        b=satOvsDdeIB5DXAVCr1UDMIlIXk+HQceI+1+1mbxIys7gcmali4hsx/RmPoZR0b8Qf
+         /zuHsKl0T6juhUmXsx9HfFngq1/fiK5V4zNrUKFDsGGumvTkrt5taBgDBbw8dKnFFqDI
+         xldDvm8TxDc6VHC+Z/34SP5fFAUVKbkU8jyd30FQdKxqJT7KeHc/8JCxM1E7MqKb9l5U
+         ANoECD4T/KVTZECx10Prd4Z71bqm9beuJ5j1mVxPwl7MBiV7CAN4vzCDDzduFzdue/YG
+         w8S5x5RCoCbD2CWM6xVjSOqGWOotoFgdqMdB/MYjIshq33QBwu7VXc+n+gLuJ4vPKMuj
+         Joew==
+X-Forwarded-Encrypted: i=1; AJvYcCXVJri9oYikPZ0Qtnwt5mZpgSo1pUjUV2US5j2sJEb+NibhindZL6rx2dI39oRSO0FDgudJg41CwrJy5fqHduU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN2RgGzVBfwNfOw/iJz0lHOP7vAvBa2ywc4mJOSprJKcq2wXzo
+	yWKyfINlg6+rW0DcOZgzjx4MEsg6dvEu7vG1GCglhGoO4T8YFcGXvOfO
+X-Gm-Gg: AY/fxX6vyGVgDYBBM20BsVulNWKlnwaB4AOGS36QRmA1frUKUbmO+RP/XgUwnuXO9wl
+	mssnS8DyMK5sJAFW78TnksB2yoo3W3cGSAPtuSvfAMdMCosYbrv5mKkIG93nmVjwuaCHPQvM6pF
+	ON5PvQ+beVB2+9hnlwmcnQNzeugXHkYMqEBThRs3jxbvjWzmt9ZjW83USop5Y8WfX6VR/0MRErQ
+	lMQYHbIgKCxvwcmWdvuNrPaweANXvBkAy355x1p1dLXtexDXCkJxGCnxc9xYz2cIVwEMxo2lYMu
+	PWRcDHL+3yvID/xI+rQuI1yJGWP5NNcC7MHsBosht4nyvdi7mUGZ5HA03zpL1ivcsRk/sWwdZBQ
+	1AFP9IVMjuLQOR5bfIPFeS7D1xi5A2r0y/xhiqubafTKZ1mGYR3I74mSZj86XXvMxZiKZI4NTf8
+	SsdLBIKOnkLJIFRQgqtGm7miIkWauzNOD2yhGJ/zVw9J8P34u5NzA7
+X-Received: by 2002:a05:6000:1789:b0:433:42d1:f71f with SMTP id ffacd0b85a97d-4342c543bc2mr2513654f8f.38.1768386116121;
+        Wed, 14 Jan 2026 02:21:56 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0860f5sm48694254f8f.0.2026.01.14.02.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jan 2026 02:21:55 -0800 (PST)
+Date: Wed, 14 Jan 2026 10:21:54 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Feng Jiang <jiangfeng@kylinos.cn>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, pjw@kernel.org,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, kees@kernel.org,
+ andy@kernel.org, akpm@linux-foundation.org, ebiggers@kernel.org,
+ martin.petersen@oracle.com, ardb@kernel.org, ajones@ventanamicro.com,
+ conor.dooley@microchip.com, samuel.holland@sifive.com,
+ linus.walleij@linaro.org, nathan@kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 08/14] lib/string_kunit: add performance benchmark
+ for strlen()
+Message-ID: <20260114102154.251082c6@pumpkin>
+In-Reply-To: <a58e97ad-a69e-498d-9382-2be4914569b0@kylinos.cn>
+References: <20260113082748.250916-1-jiangfeng@kylinos.cn>
+	<20260113082748.250916-9-jiangfeng@kylinos.cn>
+	<aWYGWLEekWh3jJVf@smile.fi.intel.com>
+	<b06e4a63-85c2-4420-8077-f4c059ef33fb@kylinos.cn>
+	<a58e97ad-a69e-498d-9382-2be4914569b0@kylinos.cn>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
- reserved memory ranges
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Gabriel Gonzales <semfault@disroot.org>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Biswapriyo Nath <nathbappai@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- linux@mainlining.org
-References: <20260112-xiaomi-willow-v1-0-8e4476897638@mainlining.org>
- <20260112-xiaomi-willow-v1-2-8e4476897638@mainlining.org>
-Content-Language: en-US
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- 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
-In-Reply-To: <20260112-xiaomi-willow-v1-2-8e4476897638@mainlining.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 12/01/2026 21:13, BarnabÃ¡s CzÃ©mÃ¡n wrote:
-> The device was crashing on high memory load because the reserved memory
-> ranges was wrongly defined. Correct the ranges for avoid the crashes.
-> Change the ramoops memory range to match with the values from the recovery
-> to be able to get the results from the device.
+On Wed, 14 Jan 2026 15:04:58 +0800
+Feng Jiang <jiangfeng@kylinos.cn> wrote:
+
+> On 2026/1/14 14:14, Feng Jiang wrote:
+> > On 2026/1/13 16:46, Andy Shevchenko wrote:  
+> >> On Tue, Jan 13, 2026 at 04:27:42PM +0800, Feng Jiang wrote:  
+> >>> Introduce a benchmark to compare the architecture-optimized strlen()
+> >>> implementation against the generic C version (__generic_strlen).
+> >>>
+> >>> The benchmark uses a table-driven approach to evaluate performance
+> >>> across different string lengths (short, medium, and long). It employs
+> >>> ktime_get() for timing and get_random_bytes() followed by null-byte
+> >>> filtering to generate test data that prevents early termination.
+> >>>
+> >>> This helps in quantifying the performance gains of architecture-specific
+> >>> optimizations on various platforms.  
+...
+> Preliminary results with this change look much more reasonable:
 > 
-> Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
->   arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts | 44 ++++++++++++++++-------
->   1 file changed, 32 insertions(+), 12 deletions(-)
+>     ok 4 string_test_strlen
+>     # string_test_strlen_bench: strlen performance (short, len: 8, iters: 100000):
+>     # string_test_strlen_bench:   arch-optimized: 4767500 ns
+>     # string_test_strlen_bench:   generic C:      5815800 ns
+>     # string_test_strlen_bench:   speedup:        1.21x
+>     # string_test_strlen_bench: strlen performance (medium, len: 64, iters: 100000):
+>     # string_test_strlen_bench:   arch-optimized: 6573600 ns
+>     # string_test_strlen_bench:   generic C:      16342500 ns
+>     # string_test_strlen_bench:   speedup:        2.48x
+>     # string_test_strlen_bench: strlen performance (long, len: 2048, iters: 10000):
+>     # string_test_strlen_bench:   arch-optimized: 7931000 ns
+>     # string_test_strlen_bench:   generic C:      35347300 ns
+
+That is far too long.
+In 35ms you are including a lot of timer interrupts.
+You are also just testing the 'hot cache' case.
+The kernel runs 'cold cache' a lot of the time - especially for instructions.
+
+To time short loops (or even single passes) you need a data dependency
+between the 'start time' and the code being tested (easy enough, just add
+(time & non_compile_time_zero) to a parameter), and between the result of
+the code and the 'end time' - somewhat harder (doable in x86 if you use
+the pmc cycle counter).
+
+	David
+
+
+>     # string_test_strlen_bench:   speedup:        4.45x
+>     ok 5 string_test_strlen_bench
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-> index bf03226a6f85..4c548cb5f253 100644
-> --- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-> @@ -13,6 +13,12 @@
->   #include "sm6125.dtsi"
->   #include "pm6125.dtsi"
->   
-> +/delete-node/ &adsp_pil_mem;
-> +/delete-node/ &cont_splash_mem;
-> +/delete-node/ &gpu_mem;
-> +/delete-node/ &ipa_fw_mem;
-> +/delete-node/ &ipa_gsi_mem;
-> +
->   / {
->   	model = "Xiaomi Redmi Note 8";
->   	compatible = "xiaomi,ginkgo", "qcom,sm6125";
-> @@ -36,28 +42,42 @@ framebuffer0: framebuffer@5c000000 {
->   	};
->   
->   	reserved-memory {
-> -		debug_mem: debug@ffb00000 {
-> -			reg = <0x0 0xffb00000 0x0 0xc0000>;
-> +		adsp_pil_mem: adsp_pil_mem@55300000 {
-> +			reg = <0x0 0x55300000 0x0 0x2200000>;
->   			no-map;
->   		};
->   
-> -		last_log_mem: lastlog@ffbc0000 {
-> -			reg = <0x0 0xffbc0000 0x0 0x80000>;
-> +		ipa_fw_mem: ipa_fw_mem@57500000 {
-> +			reg = <0x0 0x57500000 0x0 0x10000>;
->   			no-map;
->   		};
->   
-> -		pstore_mem: ramoops@ffc00000 {
-> -			compatible = "ramoops";
-> -			reg = <0x0 0xffc40000 0x0 0xc0000>;
-> -			record-size = <0x1000>;
-> -			console-size = <0x40000>;
-> -			pmsg-size = <0x20000>;
-> +		ipa_gsi_mem: ipa_gsi_mem@57510000 {
-> +			reg = <0x0 0x57510000 0x0 0x5000>;
-> +			no-map;
->   		};
->   
-> -		cmdline_mem: memory@ffd00000 {
-> -			reg = <0x0 0xffd40000 0x0 0x1000>;
-> +		gpu_mem: gpu_mem@57515000 {
-> +			reg = <0x0 0x57515000 0x0 0x2000>;
->   			no-map;
->   		};
-> +
-> +		framebuffer@5c000000 {
-> +			reg = <0x0 0x5c000000 0x0 (2340 * 1080 * 4)>;
-> +			no-map;
-> +		};
-
-Hello!
-
-I suggest one more nice to have improvement:
-
-you could label framebuffer cont_splash_mem since you already touching 
-the node and testing the series.
-
-Then in additional commit, you can replace manually defined `reg` in 
-chosen > framebuffer node with
-
-memory-region = <&cont_splash_mem>;
-
-For example you can look at sdm845-oneplus-common.dtsi
-
-Tell me what u think
-
-David
-
-> +
-> +		/*
-> +		 * Matching with recovery values
-> +		 * to be able to get the results.
-> +		 */
-> +		ramoops@61600000 {
-> +			compatible = "ramoops";
-> +			reg = <0x0 0x61600000 0x0 0x400000>;
-> +			record-size = <0x80000>;
-> +			pmsg-size = <0x200000>;
-> +			console-size = <0x100000>;
-> +		};
->   	};
->   
->   	extcon_usb: extcon-usb {
+> I will adopt this pattern in v3, along with cache warm-up and preempt_disable(),
+> to stay consistent with existing kernel benchmarks and ensure robust measurements.
 > 
-
--- 
-David Heidelberg
 
