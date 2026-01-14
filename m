@@ -1,182 +1,221 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFBD37F729
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 08:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4EA381719
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 08:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768380267; cv=none; b=LK2fS2gJXo7hmitnJsMwuVZ3CaIochcJ3+y3Dt0/i1nXTlFbazOGjPa2ah3TjYikTc+MZDdKt0lkXfF3FisQu4hLvJu7bZcVk76E7aUv1zh54QTUPBCqPjTOZoA886VVoyLHseAGun3CGhoUlUxzYkaeS69yYaluRieoXF8+9vQ=
+	t=1768380834; cv=none; b=ScM4vmBF1ghw6blr6j7lgN3JH9RDan44eBtBGNgee+nJ6JWNmnKra8QpOAGED9FVQLkwp0p4rqKLS7WDAQb1uNNsnJaTCDYyRgO7ydXE458hpMpwxIqknJ2zkF9BrDTbH/u61L//JtgEmwHnVjsuE6kEtSZteM04VQsK5s3M1wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768380267; c=relaxed/simple;
-	bh=ysd4WYTvCh9+HsQ1AtbOfW5FzL4/iKQHwd6lm5bPF7A=;
+	s=arc-20240116; t=1768380834; c=relaxed/simple;
+	bh=eZ/xPxHf7fjSZecBeCp895uuqc9lBzIafLMnDn+UmVc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mMKl21FZ2PlsvMC51eq5MIUxVMwqseTwS2IkzSc0uHty13CVtvuprx5vf+OXCIgMwiWXWGDteW9IgqYjdQ0c67/66vZdxk760n5jxt+mr5IunsSVK8x2VZZWtj5ofjPbb3KcmKiAzRbXCnHSzdPSoXOH41/Y7erjk10C/hFrbpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UJDpRkoJ; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type:Content-Disposition; b=Ck+V6n3HM/VInf1hPm114avEf09gn8xyuytmdInjcJrS+jVzazaVrU9V36l+tL6spaH3Je8uaNshUA25JS+eaQP19LDWIAKNGeRQ8fOOWVN/6CU0Up7IjeQUbHp8FvE7vR7C63UkDPWfr4hakdN/BGkrdOzKghpCHGolnj8wY8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TsmucC2k; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UJDpRkoJ"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-432d2c7dd52so4502163f8f.2
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 00:44:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768380255; x=1768985055; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Nn9M/VPDoeuifL+P7no8o5FApQZk7zNKYvSR+p2CRU=;
-        b=UJDpRkoJ07RgspaR1NhfCpR626ZyVYHDm/91x63cM8gsy5+B8MAqHavRm979cqv826
-         adfCBmE4P0x6kfOJf6QVKQ+F73K8lwHrXn3rzPWHcqFa3N4E1nvvheWr+fvWlsfjnG3d
-         q5I4aa3r8n+1bnVHkuJKjH4VnxEE0Ax/OlO+0AlsTNmjx9JmMpIQmGfXyFrUV7bjE4AG
-         b+aIpJVdS5yOciq4wFCdKoOH2ygYDkIIMtINtTrq5bEwn2hZxdIsOnH1Mevl7p3aXRkT
-         mmHrpfvAEIKMqwJsI6Dxxcv5mSGvyKeQIfwtfaMbksOr61rqb70D/17uospsX2LrpTOB
-         fjgA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TsmucC2k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768380828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fIBj+gi/FdScoTtSUNm5kkkcHpY61usILCwaxo9FKtg=;
+	b=TsmucC2kWB0ChhoeKSZ1nsJpEdt7bVfm7MN7ZZPkrfNKL2zKGisB+p4MM+dzmX463lM/hm
+	fbQCZwvZ+l4UboprMG77Q2+46r+fCjfkKV5xLYbxpBAnXh5nWHzTH3lIKMHjSdzp940C/S
+	6akAh8wWcLWE19EHkm87iYLb23eLWJw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-370-IFRyiHKzN-KuE1dHt4YEkA-1; Wed, 14 Jan 2026 03:53:46 -0500
+X-MC-Unique: IFRyiHKzN-KuE1dHt4YEkA-1
+X-Mimecast-MFC-AGG-ID: IFRyiHKzN-KuE1dHt4YEkA_1768380826
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-430ffa9fccaso6880704f8f.1
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 00:53:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768380255; x=1768985055;
+        d=1e100.net; s=20230601; t=1768380825; x=1768985625;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/Nn9M/VPDoeuifL+P7no8o5FApQZk7zNKYvSR+p2CRU=;
-        b=mCa4wadt+rhFDvBje1uPx+rAk6K+xH/zxs/GeWXbcoQ0s7JB/oZ6/cRrvk7L4uvQGs
-         LqN0dWXdF6yL6tDqTMRa9Q4yfIG0W8b+U2MkfKyB9IKpV5WEcfqeiDaauOPVgBts3T7B
-         KGOTwi13PjHzM5KUW/JsYYm5f4TBZ6PnVaxdE3CKh10RjIjQwmg5OpNAoB1h5lvr2o9K
-         SBA7sH/LSDPbS9/7yKxJ03nSJY4vQXDpayig4qqIaIxd44ax1MCA6AzL6ZVPHTU6S2Mn
-         s84Qhp5DosQGhPseMoaHf9xV4QcMg/Lqzbe63wSAacO35ozJEm2xjPSiNvbZudUh1hJY
-         U4dw==
-X-Forwarded-Encrypted: i=1; AJvYcCXF4vbcHj6VcpE0ZlVOHTSisnu6YtsxoMTxnm6Ud4taDWF2VqMF7X69DKUp+94vTfIcd+17fm5ugyedpPzFcns=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE0mJNbCAayX6eRub85z2vAw8nX7Yl+Y9oRBKKLHaYz4sJXcjK
-	a8Im5GADB2IRpCq1BEz982d7bdJ1VeVCT/Rdbllb95Le/CoXbaDH9GrWHgt+twq8gic=
-X-Gm-Gg: AY/fxX5DuJ8qLY/ksKrPgN34BuidnbMl0GMipYVCGpPcKYrWGbvOdXbdvPFmGflHmLW
-	mMFqkZMMiR8ZrdLS/nTMH1nSBJ4bMrCJ3LybI1GOZiTO1wyPIyQrWO5GAk8PvRO64FvyNtY8t1J
-	t8vkg6g5NDeI6ZbkdixULzMlEH9dVWSjQzUA6vh+HL3JtOK6DER1TDWLmngdQoguRkeU4Y7+qiu
-	7e0phu5ikyxMS95zJCGtRDfVvQVztJTFjKEt2FDQ3E1uBO6f0aM22Au6qBFpm5wUV2xTbQA5nhu
-	VcsS6w45tSz7AJqkTE+vOH4sIyU/7k8nlvfUKnKxQT0Iki3MBJY2SCtPEZPwcNyd+5X4rlqmuHX
-	5Eu03ksVSsHbP7ip82EtPjblCIOdzpXdgBY65vJXGFFJyKLENTAtAbitHZtyLD67A5pQNYeuKbD
-	4HYg+YEob2l7laQA==
-X-Received: by 2002:a05:6000:61e:b0:431:a38:c2f7 with SMTP id ffacd0b85a97d-4342c574bedmr1500621f8f.59.1768380254886;
-        Wed, 14 Jan 2026 00:44:14 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5ee5e3sm48685590f8f.35.2026.01.14.00.44.13
+        bh=fIBj+gi/FdScoTtSUNm5kkkcHpY61usILCwaxo9FKtg=;
+        b=U8kTeep0Q4meYB04er8L073oM8gaPJczrgIVFJPDff1lYIbm2sUlT3IYTR6WrLOPoR
+         7SWj11FGdzf2Q5IOcnxg+xJ5CB8LtmdhSu2yPeVmN0IUqGStsswG3Tzs1W3X+Dm3Srxc
+         FPlAgPyteHH3jXQX26Tj0y4jqXjuuK/eHquGKuEtBKzsWMSPAwfdLSpnHdyQG+1PAmrs
+         P7lYeUzz1J3i8qF/erRBgVlV1gbtaBQpXwPU0r2ZlqV02b3+jt/LwOfLZ41zR39r8VrB
+         GVlahNZ2He1CWfT9AoJLwkhyvC1LYzon1gu1HJglj2Eu/6m152YEz//gxASrs9Vd/5tM
+         cRMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXy5k9EWbEAF2KwMRRBR3X44LIzKDwctmkw6vX/mIITCpfBOETk6Wz96YUQjQJEw93HE3WGQf62+FerIuCVllQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywqwF5ld7YeMGX80mWzTOrNif+huXfeycXF+/rmtxan36/PfwX
+	YjMoJep9bfp0ILaYNbghgoZ1U9JzbYS2heEnOYa0GZpsQh2zyzT3sMWujEB1IwUwfF1kzl5zdkP
+	fmOIB4uiaYYlwZ7j7MMH69upQ82oM8RxtUdh29TJEsIKON8k+0kGTxyzO1w8h8c/71GYPDQ==
+X-Gm-Gg: AY/fxX5PHzHmvFrCSM9J8aUei/UL5MjoWBmMQPlL19tUKp6swO4Y5LnGPgBe/YZwPMU
+	5NfxegE9eWF/HYTbwm9TAHYyBlHzZQz14twG8GGFtBwVERFZvx0Cz3OigoIo5P+oscUbrTBSYo0
+	rGdVP95KLWdBwutHBWnVsVws5ZQCEm4sFcdIlTJoGxwCVFYWZwmlL1FKy0R1vT617qO9BsVqTKf
+	OjCX/GfH0fZyYD6GsM1MmrRSVOlsbv59Xyeqz4eOaOPwNQqUuWBus5DsLS0yf3KqxCPfESkNdGd
+	aR2MM9xq4uS0zjOJXEgR0aCPc/FHUbGa4f2CeIOa9ls5qGm0w7QPV6xEvmJQrJNCCIu4nSHTPOI
+	EWZ1tyV/ABdPI8xutBL3j9UPFAokWnIg=
+X-Received: by 2002:a05:600c:a088:b0:47b:da85:b9ef with SMTP id 5b1f17b1804b1-47ee47d3988mr16789265e9.16.1768380825322;
+        Wed, 14 Jan 2026 00:53:45 -0800 (PST)
+X-Received: by 2002:a05:600c:a088:b0:47b:da85:b9ef with SMTP id 5b1f17b1804b1-47ee47d3988mr16788915e9.16.1768380824817;
+        Wed, 14 Jan 2026 00:53:44 -0800 (PST)
+Received: from redhat.com (IGLD-80-230-35-22.inter.net.il. [80.230.35.22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee54b90d5sm17411505e9.2.2026.01.14.00.53.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 00:44:14 -0800 (PST)
-Date: Wed, 14 Jan 2026 09:44:11 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
+        Wed, 14 Jan 2026 00:53:44 -0800 (PST)
+Date: Wed, 14 Jan 2026 03:53:41 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-	netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	sparclinux@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 03/19] printk: Drop flags argument from console_is_usable
-Message-ID: <aWdXW6ohfQ7_z2B_@pathway.suse.cz>
-References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
- <20251227-printk-cleanup-part3-v1-3-21a291bcf197@suse.com>
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH v2][next] virtio_net: Fix misalignment bug in struct
+ virtnet_info
+Message-ID: <20260114035310-mutt-send-email-mst@kernel.org>
+References: <aWIItWq5dV9XTTCJ@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <aWIItWq5dV9XTTCJ@kspp>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 7jvTk76JC5myVinAAJS_5OUJleoECADiBrXyC6S3yak_1768380826
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251227-printk-cleanup-part3-v1-3-21a291bcf197@suse.com>
 
-On Sat 2025-12-27 09:16:10, Marcos Paulo de Souza wrote:
-> The flags argument was also used to check if CON_NBCON was set, but their
-> usage was fixed in the last commit. All current users are reading the
-> variable just to call console_is_usable.
+On Sat, Jan 10, 2026 at 05:07:17PM +0900, Gustavo A. R. Silva wrote:
+> Use the new TRAILING_OVERLAP() helper to fix a misalignment bug
+> along with the following warning:
 > 
-> By calling console_srcu_read_flags inside console_is_usable makes the
-> code cleaner and removes one argument from the function.
+> drivers/net/virtio_net.c:429:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > 
-> Along with it, create a variant called __console_is_usable that can be
-> used under console_list_lock(), like unregister_console_locked.
+> This helper creates a union between a flexible-array member (FAM)
+> and a set of members that would otherwise follow it (in this case
+> `u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];`). This
+> overlays the trailing members (rss_hash_key_data) onto the FAM
+> (hash_key_data) while keeping the FAM and the start of MEMBERS aligned.
+> The static_assert() ensures this alignment remains.
 > 
-> --- a/include/linux/console.h
-> +++ b/include/linux/console.h
-> @@ -656,13 +656,8 @@ extern bool nbcon_kdb_try_acquire(struct console *con,
->  				  struct nbcon_write_context *wctxt);
->  extern void nbcon_kdb_release(struct nbcon_write_context *wctxt);
+> Notice that due to tail padding in flexible `struct
+> virtio_net_rss_config_trailer`, `rss_trailer.hash_key_data`
+> (at offset 83 in struct virtnet_info) and `rss_hash_key_data` (at
+> offset 84 in struct virtnet_info) are misaligned by one byte. See
+> below:
+> 
+> struct virtio_net_rss_config_trailer {
+>         __le16                     max_tx_vq;            /*     0     2 */
+>         __u8                       hash_key_length;      /*     2     1 */
+>         __u8                       hash_key_data[];      /*     3     0 */
+> 
+>         /* size: 4, cachelines: 1, members: 3 */
+>         /* padding: 1 */
+>         /* last cacheline: 4 bytes */
+> };
+> 
+> struct virtnet_info {
+> ...
+>         struct virtio_net_rss_config_trailer rss_trailer; /*    80     4 */
+> 
+>         /* XXX last struct has 1 byte of padding */
+> 
+>         u8                         rss_hash_key_data[40]; /*    84    40 */
+> ...
+>         /* size: 832, cachelines: 13, members: 48 */
+>         /* sum members: 801, holes: 8, sum holes: 31 */
+>         /* paddings: 2, sum paddings: 5 */
+> };
+> 
+> After changes, those members are correctly aligned at offset 795:
+> 
+> struct virtnet_info {
+> ...
+>         union {
+>                 struct virtio_net_rss_config_trailer rss_trailer; /*   792     4 */
+>                 struct {
+>                         unsigned char __offset_to_hash_key_data[3]; /*   792     3 */
+>                         u8         rss_hash_key_data[40]; /*   795    40 */
+>                 };                                       /*   792    43 */
+>         };                                               /*   792    44 */
+> ...
+>         /* size: 840, cachelines: 14, members: 47 */
+>         /* sum members: 801, holes: 8, sum holes: 35 */
+>         /* padding: 4 */
+>         /* paddings: 1, sum paddings: 4 */
+>         /* last cacheline: 8 bytes */
+> };
+> 
+> As a result, the RSS key passed to the device is shifted by 1
+> byte: the last byte is cut off, and instead a (possibly
+> uninitialized) byte is added at the beginning.
+> 
+> As a last note `struct virtio_net_rss_config_hdr *rss_hdr;` is also
+> moved to the end, since it seems those three members should stick
+> around together. :)
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: ed3100e90d0d ("virtio_net: Use new RSS config structs")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+
+Seems to belong in net, not next.
+
+Besides that:
+
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+
+> Changes in v2:
+>  - Update subject and changelog text (include feedback from Simon and
+>    Michael --thanks folks)
+>  - Add Fixes tag and CC -stable.
+> 
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/aLiYrQGdGmaDTtLF@kspp/
+> 
+>  drivers/net/virtio_net.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 22d894101c01..5cbcc9926a23 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -425,9 +425,6 @@ struct virtnet_info {
+>  	u16 rss_indir_table_size;
+>  	u32 rss_hash_types_supported;
+>  	u32 rss_hash_types_saved;
+> -	struct virtio_net_rss_config_hdr *rss_hdr;
+> -	struct virtio_net_rss_config_trailer rss_trailer;
+> -	u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];
 >  
-> -/*
-> - * Check if the given console is currently capable and allowed to print
-> - * records. Note that this function does not consider the current context,
-> - * which can also play a role in deciding if @con can be used to print
-> - * records.
-> - */
-> -static inline bool console_is_usable(struct console *con, short flags,
-> +/* Variant of console_is_usable() when the console_list_lock is held. */
-
-Nit: The comment is a bit misleading because this function is called
-     also from console_is_usable() under console_srcu_read_lock().
-
-     I would say something like:
-
-/*
- * The caller must ensure that @con can't disappear either by taking
- * console_list_lock() or console_srcu_read_lock(). See also
- * console_is_usable().
- */
-> +static inline bool __console_is_usable(struct console *con, short flags,
->  				     enum nbcon_write_cb nwc)
->  {
->  	if (!(flags & CON_ENABLED))
-> @@ -707,6 +702,18 @@ static inline bool console_is_usable(struct console *con, short flags,
->  	return true;
->  }
+>  	/* Has control virtqueue */
+>  	bool has_cvq;
+> @@ -493,7 +490,16 @@ struct virtnet_info {
+>  	struct failover *failover;
 >  
-> +/*
-> + * Check if the given console is currently capable and allowed to print
-> + * records. Note that this function does not consider the current context,
-> + * which can also play a role in deciding if @con can be used to print
-> + * records.
-
-And I would add here something like:
-
- *
- * Context: Must be called under console_srcu_read_lock().
-
-> + */
-> +static inline bool console_is_usable(struct console *con,
-> +				     enum nbcon_write_cb nwc)
-> +{
-> +	return __console_is_usable(con, console_srcu_read_flags(con), nwc);
-> +}
+>  	u64 device_stats_cap;
 > +
->  #else
->  static inline void nbcon_cpu_emergency_enter(void) { }
->  static inline void nbcon_cpu_emergency_exit(void) { }
+> +	struct virtio_net_rss_config_hdr *rss_hdr;
+> +
+> +	/* Must be last as it ends in a flexible-array member. */
+> +	TRAILING_OVERLAP(struct virtio_net_rss_config_trailer, rss_trailer, hash_key_data,
+> +		u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];
+> +	);
+>  };
+> +static_assert(offsetof(struct virtnet_info, rss_trailer.hash_key_data) ==
+> +	      offsetof(struct virtnet_info, rss_hash_key_data));
+>  
+>  struct padded_vnet_hdr {
+>  	struct virtio_net_hdr_v1_hash hdr;
+> -- 
+> 2.43.0
 
-Otherwise, it looks good. It is a nice clean up.
-
-Best Regards,
-Petr
