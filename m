@@ -1,240 +1,218 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0753557EF
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 16:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3DD3B9613
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 16:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768493433; cv=none; b=kHZf6RJKtnYi91OwAfWbMo9vt2eVHM1PZ+1+0Xt/E2P8COPC05SIf4hy9pNHGkIi54eDXaiIDxXijUxJ/hAdRD8B0kaouGzcN2O+TvMEdhahlO859FkvWiwACds7OdbDWQpHWguW4i+1FhLp+NF5pfzlk+fyBd4HY6qjyW1HrU4=
+	t=1768494534; cv=none; b=jngueJ3WaQPPopwRDlHULJfyNr0SPb/JI3/XZya010LvE07j+ReLPJySP4htICvCKqAWayEs8GjfaYtUsIaflsRt2IHvwws4XbgdiXKR3wvG80I4I0lxer40i1zrzaz8icNRI1zHoA7XeZzMGWiGndFJ0BWdA9P4G9jr3BnloTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768493433; c=relaxed/simple;
-	bh=46O3WGNI/I2BanZJr/n1NSM5aWJGCML3xJV6mE9CS8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TKHvDdCaKZwGCxkqTyJ0X1JMxnLOtyu8hZnS7Uy/YVN5/j1t2aCMwkCoWaX25Xix4chDm6ptL8xkJWzBoQ/bRa9MGHBPKaK8mXwyTwxTnkcjjgVNkOP/McfiJJYLiZ8QJLIKAZDsWoOtsGNIUM5u1wySU/I2MWtIOeJY9HtTvnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sb1ml4z6; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1768494534; c=relaxed/simple;
+	bh=JFb4SbeyltssbTkVrC2fePq+++qLD9rMapcGslFduHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SHsJDH81oLL1ZqoSGl3ew8bCPiLNvvvFswlC8w8HihTIVgs9fpqfVvhZGJpolTX/jUVfR2Y2tnSGf0KrfwulBtBZ9kKgJcea6PTCvElmkhz1ccGNNpXNnKw18rv95bB4EoshRkzW+G5d8VsHdNYXVZRN+3qcQTenYH6+pMQl2p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PPZfacP/; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sb1ml4z6"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4801d98cf39so1891065e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 08:10:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PPZfacP/"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-432d2c7dd52so967718f8f.2
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 08:28:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768493428; x=1769098228; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gQXGgSx7jpUFKQjZ6iyGO811lP9xodhRioXDBaDurfQ=;
-        b=sb1ml4z6vGndnWJE9lAodrXq7lQY4NB7xUzD+qbG/mAnWxwn9H+pYjdvJSz5wuJ9Gi
-         tLuM4acpgB8RUY9wnN1+Qe7FH4KmcEAcV841PS0tuyQDRiL9XTTT/RgXxAGJY0bUd75l
-         mcc8ysaCAe3O6o0JTqvYPjwLMDUwWba9JBR622/w8/8Zngd1U5IgtLbzQZaQ7I0kPwsm
-         cX8+yVFf0NUlujbTHc/UsJA1Tdm95062IZHl62NlAyTA9yyMVYvzgcsKT/3+kipYPF2r
-         VPIShMNkBaTznpraj5F4CxjIEam7A9I/pyqBodi3IPq3nAXhXFAEmIeCofSNM3Ari+E8
-         bf2Q==
+        d=suse.com; s=google; t=1768494529; x=1769099329; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=URJX5xTHolO9FC46ryjpGruJ5TGEDEyfrbwATuqwgLQ=;
+        b=PPZfacP/bGzplc0450JH455dYiEUnNfUxQqSjlpjqIKonKjZZywOVZdLqzEqshSlls
+         Ng7iaUezeoXcgC+iB7m0WMJ6ykwFWxA8At1owBUUOwZAxNVxjbgWzjhlXwNMYvqZi2OE
+         1qLM/T5yL/TBaIDqILptRNIvkdq6D6rKbWpYKWU4BDWKEnYE4+NZWzUF6Y9lq57tHzDw
+         Axkb44kDQ4rki3qmMn5r1sROBVEhjCLZfJOCj4iqJnE0/pl5vp5aJ9SiE7GDxUnHkjis
+         zWUX/6b8cJF2C2PSJU45/ekSzDP88TQ0YgX721XUAeD0HKGBg8j+H+zy+GVab8afwPsu
+         0QUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768493428; x=1769098228;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gQXGgSx7jpUFKQjZ6iyGO811lP9xodhRioXDBaDurfQ=;
-        b=Xcxb1yBZs10isNttzEMldn+mGuMbiVE4h/xMrgVzy8SQI8/gYsjRKqpoJHH4Rk23bf
-         6OIIGkodTyllA4IDo04x7e0IQbuS+jkkXUWmq3Cps9TIJdL400PlqBifNwEklwiG/WRx
-         oC/CxHdmaqUWNEoXKyO+SBAHU0Gs6B7L0Y8wJW8oJL2vLHiR126aWwDww832gN8ohy9w
-         f4oyQpTEb+tuA7TaVJXze2NtioBDMIo3WZiIteprYlzXZE5Ds4juXom1cdVGmJ0CiZ5s
-         RlIwva66uGzPXoWj38EcvNADUFZ/3FLmof94dEpqhH03lleU7lAovW1Wmb4NQCTOD4Es
-         2MkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAna1S5cjmHlA406QSILa1Y1Ccdg+c+qhQuSx+/3lnxfZi0ROSBB1Zc0vAB5hFgnX5AEPV5HLWDNA0gq85Kmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2BBIG3s4gS71M74XELYjIEf3FBHi0TzcMGZymKe5nNPvmjhep
-	RTM5W0+4dB19Xja26H44Wej8WKkNJ3V39wAE23yrK1usDtsr+cWskgIofxLhfHHpD3k=
-X-Gm-Gg: AY/fxX56TYfTF6oBnMhtSLhgFVq/h2iTOWEPx/5zrWbjDmqiQkjqKUIlyzzt/j6r3va
-	mvP/o6OPgueZBxpB/h3o4CBYXpqppDMi2nK6cs0O6kqObxXYaGdTBZO9w9IZdAnSBLxpJTbRma3
-	Ym8mwYmDzW2SA2XNClQlJdZqM0AfZMN8GJ46dKEXLMq19xXQTHev7otLhmOwZpf9FWTBOHchj7a
-	P+OUVxA1McCL6UPIB8mFWQ6Z1HLgrJgHx7jmSld2mKqp/59h5ZOQraFxS9Mi6XafGaN/JqRsXam
-	UKoyfk+5nylPHVC1XtwOzCuIvbgYAWVim44+8eg24Eve/yzG8JM0xHqzTuPIuGwzch8jI1z4aTV
-	Bbe+V7rDDuuq5hhUYut9lMbOFDhC5jopz+CGFxMUVcjObhyKODKrdDSPrnd7q6sY7NXccEvl1sR
-	I+yVfxLjlCoSGZU5MRjw==
-X-Received: by 2002:a05:600c:c162:b0:475:de14:db1e with SMTP id 5b1f17b1804b1-4801e3387cdmr3797345e9.24.1768493427759;
-        Thu, 15 Jan 2026 08:10:27 -0800 (PST)
-Received: from [10.11.12.107] ([86.127.43.8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f4289b789sm53724735e9.1.2026.01.15.08.10.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jan 2026 08:10:27 -0800 (PST)
-Message-ID: <fcc5405e-189d-4195-8db0-3acf35bbc0a9@linaro.org>
-Date: Thu, 15 Jan 2026 18:10:24 +0200
+        d=1e100.net; s=20230601; t=1768494529; x=1769099329;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=URJX5xTHolO9FC46ryjpGruJ5TGEDEyfrbwATuqwgLQ=;
+        b=cWqeb12fNJJPdR77F+uowTFpyHfP4v3odZlr513Mn15JoBa/enjBpaD278ebcAw6qL
+         z5h4p03z+9PCl54eWUVhu2kNXjYb1yuTXHRipcgk8PuBF0Cdznt4oF45tmfJjdMYDx1O
+         9qEYwXRyVU2dxiJ1zo0ig8nbRAX7p93k1ldzqZnx+qDQDSH88pfInNwzeNUTlD8NlrwU
+         cXO1LYvc54ylIdlUulAGJDkhHigys/JBn0ItE9UHzXokDahkaG6plq+ZHARRsfrr+mLz
+         GVC0whAgyp7LHn2EQcl1qwToNonYP2SkO+8ruM8dBiUNX8vP+N8swKYjzU5V36d/CJeZ
+         nU/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXPyZtgUwyCsZLuG9ibgftVd8+s37tZ6fVObv/gn57i/OEqFSyO/VO2gpk3dD1P8gfiu5KcquRDjzOw4wfN69o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGn54+krBTGmQ60Svj1S8+/qAKZdANhMfR9z+F23gw6X6TvnWz
+	2eVbAtTVrDOxX0vbff1Af3yKrV5xhsGJEalP8tMUMlzao/N4FQtnPU/fLEBbtU9zZwM=
+X-Gm-Gg: AY/fxX6myAsEOurtC0PFRYnfj+TzV8jLq/MBkcwXgkKSCl0g4/i4iS54oX9VDpIs+N2
+	1GJ/6wO07M7mfuxP3tXD2R2woiyOTUkpCWo80HA3iq3vpFKzOnKNpzvUefwX+ljD5TuSY1UpcDW
+	BZB+wk9IUx03j+BGt64aseaFpGaNC2psdCcma/jqKSzm3AtJ8AigBwcb40syiPNcA2aiSudsv5J
+	xBdyz3uy2YvfnQhKF8oR1LKfZCGo78FCz9owkGpU3kJg6LeR2lNCKoRaMdo3IGf1l+apKQDOgUf
+	R5s52O6/X4oG7VinvnxloIBj5Ld5uBgScy4JxVRHBaiH0qEenN6rYGMTWbK3BeiYS6tdp5YYE4/
+	rfHCdIx6dizWXXn7t0XmD0oAQPClMqC9Nn6p1SCfdTczDSfiFaVyrQkjwnmaA7d49G3Vetes8yy
+	7RHNeVBnxxq8zz2g==
+X-Received: by 2002:a5d:64c5:0:b0:430:fd0f:2910 with SMTP id ffacd0b85a97d-4342c501a57mr9777353f8f.26.1768494528600;
+        Thu, 15 Jan 2026 08:28:48 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-434af6e148bsm6604069f8f.33.2026.01.15.08.28.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 08:28:47 -0800 (PST)
+Date: Thu, 15 Jan 2026 17:28:44 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>, linux-um@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+	linux-serial@vger.kernel.org, netdev@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 16/19] drivers: tty: serial: ma35d1_serial: Migrate to
+ register_console_force helper
+Message-ID: <aWkVvCu74HhV7W9s@pathway.suse.cz>
+References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
+ <20251227-printk-cleanup-part3-v1-16-21a291bcf197@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] dt-bindings: mfd: Add Google GS101 TMU Syscon
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, willmcvicker@google.com,
- jyescas@google.com, shin.son@samsung.com, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260114-acpm-tmu-v1-0-cfe56d93e90f@linaro.org>
- <20260114-acpm-tmu-v1-3-cfe56d93e90f@linaro.org>
- <20260115-slim-denim-potoo-cad9cb@quoll>
- <200d34bf-150e-4f8a-b400-2f54863502ac@linaro.org>
- <e2f028d6-774f-4773-889f-7d56b833067e@kernel.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <e2f028d6-774f-4773-889f-7d56b833067e@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251227-printk-cleanup-part3-v1-16-21a291bcf197@suse.com>
 
-
-
-On 1/15/26 5:34 PM, Krzysztof Kozlowski wrote:
-> On 15/01/2026 15:53, Tudor Ambarus wrote:
->>
->>
->> On 1/15/26 3:36 PM, Krzysztof Kozlowski wrote:
->>> On Wed, Jan 14, 2026 at 02:16:31PM +0000, Tudor Ambarus wrote:
->>>> Document the bindings for the Thermal Management Unit (TMU) System
->>>> Controller found on Google GS101 SoCs.
->>>>
->>>> This memory-mapped block exposes the registers required for reading
->>>> thermal interrupt status bits. It functions as a syscon provider,
->>>
->>> I don't think this is syscon, but the actual TMU. Syscon is various,
->>> unrelated system configuration registers.
->>>
->>>> allowing the main thermal driver to access these registers while
->>>> the firmware manages the core thermal logic.
->>>>
->>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
->>>> ---
->>>>  .../bindings/mfd/google,gs101-tmu-syscon.yaml      | 37 ++++++++++++++++++++++
->>>>  1 file changed, 37 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mfd/google,gs101-tmu-syscon.yaml b/Documentation/devicetree/bindings/mfd/google,gs101-tmu-syscon.yaml
->>>> new file mode 100644
->>>> index 0000000000000000000000000000000000000000..6a11e43abeaa23ee473be2153478436856277714
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mfd/google,gs101-tmu-syscon.yaml
->>>
->>> Not MFD either, but soc.
->>
->> You are right, it's not a syscon, it's just a normal thermal IP block
->> from which I need to access the interrupt pending registers.
->>
->> Then I guess I shall describe the new binding in bindings/thermal/,
->> please correct me if I'm wrong.
->>
->>>
->>>> @@ -0,0 +1,37 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/mfd/google,gs101-tmu-syscon.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Google GS101 TMU System Controller
->>>> +
->>>> +maintainers:
->>>> +  - Tudor Ambarus <tudor.ambarus@linaro.org>
->>>> +
->>>> +description: |
->>>
->>> Drop |
->>>
->>>> +  The TMU System Controller provides a memory-mapped interface for
->>>> +  accessing the interrupt status registers of the Thermal Management
->>>> +  Unit. It is used as a syscon provider for the main TMU driver.
->>>
->>> No, it is not a syscon provider. Entire last sentence is incorrect. You
->>> must describe here hardware and this hardware does not provide any sort
->>> of syscon to any sort of driver.
->>>
->>
->> Indeed.
->>
->> I'm going to link the ACPM TMU child node with the TMU node via a
->> "samsung,tmu-regs" property.
+On Sat 2025-12-27 09:16:23, Marcos Paulo de Souza wrote:
+> The register_console_force function was introduced to register consoles
+> even on the presence of default consoles, replacing the CON_ENABLE flag
+> that was forcing the same behavior.
 > 
-> This could be fine, but I actually wonder what's there. What registers
-> exactly. For example modern Exynos 88xx, already with APM block, still
-> have exactly the same TMU unit at 0x1008{04}000 with all typical
-> triminfo, current temperature and thresholds.
+> No functional changes.
 > 
-
-It's the same for gs101, the TMU instances have all the typical registers,
-it's just that everything is handled via ACPM but the intpend registers.
-
->>
->> Some concern that I have is that I describe the clocks and interrupts in
->> the ACPM TMU child node. Usually the clocks and interrupts belong to the
->> node that contains the reg property. But I guess that's alright because
->> the interrupts property is expected to be in the node that the driver
->> binds to. For the clocks, by placing it in the ACPM child node, I allow
->> runtime PM to manage it.
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> ---
+>  drivers/tty/serial/ma35d1_serial.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> You have to first know whether these clocks and interrupts are going TO
-> the ACPM node.
+> diff --git a/drivers/tty/serial/ma35d1_serial.c b/drivers/tty/serial/ma35d1_serial.c
+> index 285b0fe41a86..d1e03dee5579 100644
+> --- a/drivers/tty/serial/ma35d1_serial.c
+> +++ b/drivers/tty/serial/ma35d1_serial.c
+> @@ -633,7 +633,7 @@ static struct console ma35d1serial_console = {
+>  	.write   = ma35d1serial_console_write,
+>  	.device  = uart_console_device,
+>  	.setup   = ma35d1serial_console_setup,
+> -	.flags   = CON_PRINTBUFFER | CON_ENABLED,
+> +	.flags   = CON_PRINTBUFFER,
+>  	.index   = -1,
+>  	.data    = &ma35d1serial_reg,
+>  };
+> @@ -657,7 +657,7 @@ static void ma35d1serial_console_init_port(void)
+>  static int __init ma35d1serial_console_init(void)
+>  {
+>  	ma35d1serial_console_init_port();
+> -	register_console(&ma35d1serial_console);
+> +	register_console_force(&ma35d1serial_console);
 
-They aren't, the clocks and interrupts are going to the TMU node.
+Sigh, I am afraid that this is not enough.
 
-> 
-> All this looks like designing for drivers, sorry.
-> 
+I double checked how "ma35d1serial_console" was used. I guess
+that it could get registered also via the generic uart device
+driver code. I see the following:
 
-It's fine, I'm not looking to cut corners. Thanks for the feedback, it
-helps us coming up to a better solution.
+#ifdef CONFIG_SERIAL_NUVOTON_MA35D1_CONSOLE
+[...]
+#define MA35D1SERIAL_CONSOLE    (&ma35d1serial_console)
+#else
+#define MA35D1SERIAL_CONSOLE    NULL
+#endif
 
->>
->> Do you think the below description is accurate?
->>
->> soc: soc@0 {
->>     tmu_top: thermal-sensor@100a0000 {
->>         compatible = "google,gs101-tmu-top";
->>         reg = <0x100a0000 0x800>;
->>     };
->> };
->>
->> firmware {
->>     acpm_ipc: power-management {
->>         compatible = "google,gs101-acpm-ipc";
->>         /* ... */
->>
->>         thermal-sensor {
->>             compatible = "google,gs101-acpm-tmu-top";
->>             clocks = <&cmu_misc CLK_GOUT_MISC_TMU_TOP_PCLK>;
->>             interrupts = <GIC_SPI 769 IRQ_TYPE_LEVEL_HIGH 0>;
-> 
-> This I doubt, really. Why would ACPM child be hooked via CPU clock and
-> interrupts?
-> 
+static struct uart_driver ma35d1serial_reg = {
+[...]
+	.cons         = MA35D1SERIAL_CONSOLE,
+[...]
+};
 
-Yeah, that was my concern as well. Then the clocks and interrupts will
-be described in the TMU node, not in the ACPM TMU child. The bindings
-are clear to me now, thanks.
+static int __init ma35d1serial_init(void)
+{
+[...]
+	ret = uart_register_driver(&ma35d1serial_reg);
+[...]
+	ret = platform_driver_register(&ma35d1serial_driver);
+[...]
+}
 
-In what concerns the interrupts, I can obtain them via the phandle to the
-TMU node.
+And the gneric code:
 
-The trickier part will be on how to handle runtime pm, I can no longer use
-pm_runtime_get_sync(dev) in the ACPM child. But I think I can handle it with
-device links. Get a pointer to the TMU device node and use device links:
+uart_configure_port(struct uart_driver *drv, struct uart_state *state,
+		    struct uart_port *port)
+{
+[...]
+		/*
+		 * If this driver supports console, and it hasn't been
+		 * successfully registered yet, try to re-register it.
+		 * It may be that the port was not available.
+		 */
+		if (port->cons && !console_is_registered(port->cons))
+			register_console(port->cons);
 
-device_link_add(acpm_dev, &tmu_pdev->dev, DL_FLAG_PM_RUNTIME | DL_FLAG_AUTOREMOVE_CONSUMER);
+[...]
+}
 
-This tells the kernel that when the ACPM TMU driver is active, the TMU
-hardware block must also be active.
+, which can called via from:
 
-Please let me know if this sounds reasonable. I'll start reworking the set.
+  + mux_probe()
+    + uart_add_one_port()
+      + serial_ctrl_register_port()
+	+serial_core_register_port()
+	  + serial_core_add_one_port()
+	    + uart_configure_port()
+	      + register_console()
 
-Thanks for the help, I appreciate it!
-ta
+
+Honestly, I am not 100% sure. The struct console is assigned to
+.cons in struct uart_driver. And uart_configure_port() function
+passes port->cons from struct uart_port *port. But I believe
+that they can get assigned somewhere in the maze of
+the init/probe code.
+
+I would feel more comfortable if we kept the information as
+as flag in struct console so that even the generic callbacks
+could use it.
+
+Anyway, it makes sense to create a sepate flag for this
+purpose, e.g. CON_FORCE or CON_FORCE_ENABLE.
+
+>  	return 0;
+>  }
+>  console_initcall(ma35d1serial_console_init);
+
+Best Regards,
+Petr
