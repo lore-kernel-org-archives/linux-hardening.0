@@ -1,126 +1,127 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4646C396D34
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 12:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993D739449C
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 13:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768480184; cv=none; b=qR6Qblq9CLINNI99bFuGQsNpf7K0HlDAZWkHu4mA09pmT2kT1eroI4PsR9m47P0VDV6eeUx5mqUzN3rSPA4+uslQBKmw9HmfV5ylLuS6aMCCxVFw+tD6cm1lWS5hEbN+Eta96MTcBjqvoEo2sYSlchqUJ3JCKgI0SSAKMXr5tq8=
+	t=1768483266; cv=none; b=Y4yB19F46/10SJM6r4WkcvKNP6O0v8YXepZY+L4JkYBBsrTtohVrDPh16AitdKSf6i6P8uWVsehi/nQdi9wu5fSvX5QupJACPNQevNqcpE5TGaOVZG01Oo+ZkCJwDc8jQokZRc/8w+oB14NZOQfhK8t9S37RvwCthAEce4//H/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768480184; c=relaxed/simple;
-	bh=vYsdvT7Esg+O4+yVXNphLK0YKxhLuEHhcRTW8Mb/9K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=docbcg4ta2Qa9/231+L5kLLqHd51v43aSfmfpiE9ZXqCRvgpvTjiIUW1xmc2we8o6eC85ACmWveKZYr7PvKOrE1l2dRZs/jsMDvarianfQBQpGy14qsRMAcLnW2dA2YLjxu20bHoVZaFC0W2CKbH66PNG3YC0YBEydXjnLUO9hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YWoqPUwR; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1768483266; c=relaxed/simple;
+	bh=abcUDzMsgI0NC3SXlFQOTmLmr7KJcSauM8GeBtGxewE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LPwlaVWuD9+fdcTlsjY3cY9hsmznKlCKNvuwBaipPGOsvkffJh3wFZ9PhG8dLHHBlhTAXnIOlDkVm06O18Z5qhATEaML194qGy7zhFHXMyTAJpzSMlFMPUqC/cfUQa5SbCZDRFueXMvR2dDqbwc6QPgSHY5ZpxgiqVCfpQH+hWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jlAon3Pp; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YWoqPUwR"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4801bbbdb4aso2459265e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 04:29:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jlAon3Pp"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b876b691fbcso182706666b.1
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 05:21:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768480181; x=1769084981; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ld+As4KXLNBvjLuNePKBkF4h3CZ3gGNkmAsVzP6KebE=;
-        b=YWoqPUwRhFjDNetwPJSdKBHF/sh7S1EgP7tlt+wR//RGEkO9N4XmFTkKsELsXCN+Wh
-         tAaa3ENOSjTUpPILgZg/y++6goGL+uSgamekIXw8LmEugXqkm+977/byxDPFL1eoqlch
-         cGOXGBs3zphBNNZNyLq/ZN0EehjhFZAUYOQqw+DHgPeteIljG+U4TPt1rzkLOeMvmZ27
-         1O7Yw5joixwU3lRrqJFdpDK0eX4HermI+x+n3JLmTrJSvtJqL+AZ+HvmrKi9QhTt/+v6
-         TP50tRwd+Z2mmYQDTI3Bo6Q51iA8Biw9ePX1ylXoopdCQ6oTxMlph+beE7QlfFLDppB4
-         0k0w==
+        d=linaro.org; s=google; t=1768483263; x=1769088063; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=po4SDkFceK6L+A0r9CoW5e+XAeuKVFUf0lqkYgvkprY=;
+        b=jlAon3PpurmiNxWJFMaLDcAYNMKICmkJqYtl9t8bvsbkTI8e2QStLKRG0ix0u4K+Xf
+         FBT0a6gsS02xlw9J3T2s8hOvnUqxmYldl+HR07gQZ8syA9WxINMNlg2I7+46eHx95N4Q
+         LzxwsVNdqW28NDIhereW4XkwFVDmmLBCd2en05MpuevG9pYEQ0nS/AGeiahTOclholuP
+         4yaVkClhSr7kTI/5eyV782R8c5LteKYjKeNkGxayIFTrgY7FBixIj3B5KPdpEIMWXwah
+         fJ7qqfSHUFEP5zEHILOd4i446EEYZ9HFzFgWPMFhNw5opMHvTIwvXZmg0Gnorv+5R2J9
+         HArw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768480181; x=1769084981;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ld+As4KXLNBvjLuNePKBkF4h3CZ3gGNkmAsVzP6KebE=;
-        b=bnGyq21mEuOmzeoJOdeG15b5FOUqoDsntkJDOydQW1ZkxkBXhWMUJ22N0cD0vtYUpY
-         Vkl904s+7F3ZzwA7Ztnk/5bhT3/4bqJh7pGMklGHPg4YLluM2fLZmrazH60cwpqNO6he
-         nKH5T5t0PDRMrKpQNdDwaSTgV3U7iPoqIcCPj9Hl+1CLxJx7M5YQribmfL/5VfYxyPbm
-         N+lr3ef51qj1JOeI2f1ialtDVXlHiHiijOJZBOqb9LmKZoRuuf57DaEtbn/WNa1p3uxy
-         v5nm2gaqbs9/mMSRtG6PwWzd4aMroDI731hW+fTl3ulkyyerfcF3vLAqcl0wSGkOMnAg
-         VobQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7CpYFUlX634+I7MBvewlRrnZIv3WPiFUrinQmtYkwuT34AIB8bPaEZnSr+I128SRcD4nCbU/pHo062QNLst8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuvZHGVig0aUqOHliY+ozrVhLckzJ/TWbWwNZZEbLpf4kACMf4
-	8dooFEMsHW2xxVHx6tIRvFOZuCV5xQVInmBizp30YI+Ig+8QvtAHID3k4JS8RhdLUX8=
-X-Gm-Gg: AY/fxX4208VB4vya54iHw8qi2R15F7TrjGjuHXPwDY3GauEDXInfsSZZF+SyQIPznO8
-	qOq2z/tS5cnRu5n2GLNIwlOSBiuHLviTBuVmlVN5IHc9yGEXD4VsO0QDjsLnVHl/Y3DdZ0Hze07
-	dJo4yd+0KG+RSOWNYkymkssEQWT8HutSGG6gHnR0Dl9i+sYU5Ndy2RPiRYEuwiEsAT2fTvBEbgF
-	Ln4etcxnOmJucwi+PUmg+HRqQOT7mXRavt41lLrLz2iGVcTvpPOs71pw1XJ8szaHuilcu0JadhY
-	WQvSP/Kt9I6TccQWbDb3D2lr3Nzt7bc2kyjI6N64Nc99hNCk7DAxqj83kbZT3WEVPEczwe0108L
-	Wo6vlU1lKaHBHlNetjNPui5m6F1r9wAgTWpWW9ipBbTRKc3z35TLMh3f9A146jEfr76OO+nfNy4
-	Fehysq14Aybz9pRQ==
-X-Received: by 2002:a05:6000:420a:b0:42f:f627:3a88 with SMTP id ffacd0b85a97d-434ce7324b4mr3823468f8f.4.1768480180633;
-        Thu, 15 Jan 2026 04:29:40 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-434af653576sm5965022f8f.17.2026.01.15.04.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jan 2026 04:29:40 -0800 (PST)
-Date: Thu, 15 Jan 2026 13:29:37 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>, linux-um@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-	linux-serial@vger.kernel.org, netdev@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 14/19] drivers: hwtracing: stm: console.c: Migrate to
- register_console_force helper
-Message-ID: <aWjdsbYev_5zfKEC@pathway.suse.cz>
-References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
- <20251227-printk-cleanup-part3-v1-14-21a291bcf197@suse.com>
+        d=1e100.net; s=20230601; t=1768483263; x=1769088063;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=po4SDkFceK6L+A0r9CoW5e+XAeuKVFUf0lqkYgvkprY=;
+        b=Hx2+v9n1w2QtCnLND6/rn48/yNF1n8KK1phCYapprkcxOmRtqcbbDHqA8hAHZfUDs0
+         RknSA6Ydj3BxpLqWuGZF6KTbhRI2HMWCV1+fAOhQFShD/xtNs4HWr+nWTzOwQSlIVt4C
+         byqbZMnwZ2fs5+yuWouW/OZDG+vKpw3g4hJfX5Lexp5uyuxzmz4TdgQuHVp+mCGXCrtF
+         NU817n63+/Tcw2iAN7myVs0Xwj/fMZbmhbmOmoytDMtrqYsDOyheL7GqUK3X23To6lWq
+         aeeqbAb/0lN9Gqvut/ghbsQlKUQ1cXYRix44IFd0MRQZjp9q8KMjNhyzkMQeKzK1lNKv
+         l/7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVh3b2kNYa9DB7ufinBPuN3lxGP9S/Q7x7ssrWszgkEAhSxdolY8rdm6S3zad2WRLDDajMxWLMs6UEKfTsyw4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzukspe6kkYsci8GNYnvQ5AJv1Kt8mcy6S585yitVegkCTjoIW8
+	GTmo6Iwf083svwrQD+DCDkwe2sVJFbQRCZ3zMtjr2u0IVp7jUqfTuFnQi8TMOSbx3e0=
+X-Gm-Gg: AY/fxX6QdWp62p2NtEniGsPvY27c4/IsvfHYMg4B9ms9cgHgK6RlOd2HrzqMTggwVno
+	s88iwljOVL2sHJmQoGVw/JR9eCRiW8jBej2JMbx/lPZ4syf3N1ttqI03jmVUketvdPyUOfckTh/
+	LG9bLFLYUC14aCbdh/orHxeLv6bV8cvuXVn0Yp7iwRwwGdbF8ecxHJdfUwVsXigjFyR9eUdzwNt
+	3exNFFTYWDtt5WE3Xyle7+Ts5qkbgxz99X8xwwyJRHFsVWFxiDVeR2C/RanwRvtZ5c2QPOC/SlJ
+	uqW7TT/EPM3fhplU3uumH8Rn/CUc8067iBKec97joSPHIb7B8SiGlghvlHdo3Qv5n1Vn5+2SoqF
+	hNpwMWZ+RJzM+meHGtkoZhNYmfsgYEi5R5Js7UlrOE03rOR2atESnq46YVw/t8xZRIXG5zAmAkm
+	xHTCbYHFnA5Gs/R76S4g==
+X-Received: by 2002:a17:906:f58a:b0:b7a:39a2:7f50 with SMTP id a640c23a62f3a-b876113a364mr534982066b.39.1768483262801;
+        Thu, 15 Jan 2026 05:21:02 -0800 (PST)
+Received: from [10.11.12.107] ([86.127.43.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8767042186sm467121766b.0.2026.01.15.05.21.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Jan 2026 05:21:02 -0800 (PST)
+Message-ID: <f7d75089-732b-42c8-a5f6-2e42e6e82c26@linaro.org>
+Date: Thu, 15 Jan 2026 15:21:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251227-printk-cleanup-part3-v1-14-21a291bcf197@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 8/8] arm64: defconfig: enable Exynos ACPM thermal support
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
+ <alim.akhtar@samsung.com>, Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260114-acpm-tmu-v1-0-cfe56d93e90f@linaro.org>
+ <20260114-acpm-tmu-v1-8-cfe56d93e90f@linaro.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20260114-acpm-tmu-v1-8-cfe56d93e90f@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat 2025-12-27 09:16:21, Marcos Paulo de Souza wrote:
-> The register_console_force function was introduced to register consoles
-> even on the presence of default consoles, replacing the CON_ENABLE flag
-> that was forcing the same behavior.
+
+
+On 1/14/26 4:16 PM, Tudor Ambarus wrote:
+> Enable the Exynos ACPM thermal driver (CONFIG_EXYNOS_ACPM_THERMAL)
+> to allow temperature monitoring and thermal management on Samsung
+> Exynos SoCs that use the Alive Clock and Power Manager (ACPM)
+> protocol.
 > 
-> No functional changes.
+> This ensures that thermal zones are properly exposed and handled on
+> platforms such as the GS101.
 > 
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 45288ec9eaf7365427d98195c48e2f8065a8bb1b..1bfe37857f51663c9d745cd575f107fef183008f 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -752,6 +752,7 @@ CONFIG_BCM2711_THERMAL=m
+>  CONFIG_BCM2835_THERMAL=m
+>  CONFIG_BRCMSTB_THERMAL=m
+>  CONFIG_EXYNOS_THERMAL=y
+> +CONFIG_EXYNOS_ACPM_THERMAL=y
 
-LGTM, nice cleanup!
+I should have made this a module. Will update after I get some feedback
+on the rest of the patches.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+>  CONFIG_TEGRA_SOCTHERM=m
+>  CONFIG_TEGRA_BPMP_THERMAL=m
+>  CONFIG_GENERIC_ADC_THERMAL=m
+> 
 
-Best Regards,
-Petr
