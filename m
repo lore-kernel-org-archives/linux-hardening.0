@@ -1,313 +1,217 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D6D3559F8
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 14:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB05E3A9D97;
+	Thu, 15 Jan 2026 15:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768489012; cv=none; b=LDG23me5x02qOcaw/fCuDz1AhbLgPNvZt0Xf7pWBBMXQ6/NpzZdXNR4fbZrTC6knE5PmFhk0yeUAfSl0y1mKovOgP4IY+5oPSOQbtr5w9o2GCWrHHeHtpPPLXvXtiawRUGz2xxqnS6MqsgtPIAFfENee0ZP/zROJDGPoYbhpqTk=
+	t=1768491287; cv=none; b=Kq+/cjYz8eI84yaqPcBRY4+SEQZYJAV6vwyZtTzRToA3gTYNi5PFy/ZOvoS9lTE/sz6PW1rCtld0e0Jq+uf7EaupeulUDLmqD5KaV/1lqvoD05H10OftS5yvoD2ZG1dduRhDgGVFqjivFeIm3KgN+LXwyA/vNwUhY9Iulz3WiqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768489012; c=relaxed/simple;
-	bh=1A4d1VSmOCShrpaLQeDQZwtWSNwbFeVyAhEckUApNGo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BYzIF0YH/2QWjpEbA3Cl+OCHN/6gSxbCDqm+h7+L56MuXVqv2FJRtM60Bm70cocHgk1GUr6/eR4xUqpngtexU2LCw61NHHlZ55fy2lGl7Bpi1MeWdDNU13BVsg6efVW4YYWIclfXHo+GbDS+g1rNwQOJlr0ZlUOrJSWuFEvZpe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HK73wbyc; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1768491287; c=relaxed/simple;
+	bh=0JxRnZ4zP0bNYiDg6+YLfy06LKhjX39gyT0+B2N4vG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gJPnZzM//n0lR2W0R6fWxVshx5aWP64YKr7Kxk8TKt5UXAsY4IzKNub+yc00jOQvs2maMwsJ3XRYBdqw2+kqAG1nYtWoiJJRNJtrKyXMerQk0jZgtS+dpA9pBR3cdJws7JA6mq2UEKmhYOoOHaJK/XwJkK2EtO/vs/UsbDxiPZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPMKsVzD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HK73wbyc"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4801ad6e51cso5720415e9.2
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 06:56:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768489008; x=1769093808; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SA6ElcVXY//w17kDQpxuQgqXT5ypm5HeC9y8TP4Q5C0=;
-        b=HK73wbyc50x07j0a6J6drcFq1r/+H0Y7e/aaA8ICs05RFM96Dd9hd/8Hoex0nwrxl3
-         UoYm4tqBQ41ttVuZu9bjhEpDYZnq/BjhaYveAxKCoG1pjjJVfuBta2gvYRk+BRgChwVS
-         D+79jcNj2M5I/03XSrAlXOna97N7cJ3+0NuUoF1xXFYVdvAfl9CUWD91UAWtSpfSbPFp
-         zxM+ajhNAOK4lTKUkLZDlmhP40gsoWBbthRYifTetmZdeAkxdOyLCslKU5gUbiwapSKE
-         sackvCVQ57O/fGYUZ2z30Qqiaw8oCnPaGcJHpEfhMafjUaZywuYEnxvuEem3FpOxWel4
-         mD/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768489008; x=1769093808;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SA6ElcVXY//w17kDQpxuQgqXT5ypm5HeC9y8TP4Q5C0=;
-        b=eHUWaNjzn+YRWsj2o24XHllA3W93ndfF72YtYoivK7ZBnUa1H5nJUHqzN6MvWT9oz3
-         O+n9Q+7lHQ4GmXTN89v4WJvdgYR+fDm9L1nkBddEY+7huno2WM/zj+v3psrmfOj3O6JO
-         fppJ6O7GneL3E6W+OcHAMirZu1zA855avar82ZLyBBuQHQdGcGl9A59OWbDcpIiVsvkB
-         AKuCsMrJrjF8ya6L3hJRAdg3YSGdUKhLf4j2s+Q9+SW5q4SfId/OCpmTaU3n0gVsxYR0
-         YGBW7t9AojgxfG1tCB87soEtpeGPASEFyvIlgugRBSue/SDjCbjZrAJpNWqqcI8AgKF+
-         52gw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2qLnriOrc+2g9qkRAkxrn6wDUZxJEnt5zUcBzVUtPWqCtgvrpRtS65trNX7I0YRuq/8bmKlB742oflh8pM4U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6L4wNZcRlKHYaIBgKwsrZtkY9ty1UcnyPoF5HUMFholUgrDW6
-	Sc0bdbx1Yd7RQYlistUgTwnlNScvh20QjUjiXW/cBsTJE/udwi5we6IEj5wWzZJiE8Mnq2PbAQ=
-	=
-X-Received: from wmkn13.prod.google.com ([2002:a7b:c5cd:0:b0:475:d8de:fe5b])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:8b8c:b0:46f:c55a:5a8d
- with SMTP id 5b1f17b1804b1-4801e2efd61mr366125e9.4.1768489008570; Thu, 15 Jan
- 2026 06:56:48 -0800 (PST)
-Date: Thu, 15 Jan 2026 15:56:45 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPMKsVzD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC273C116D0;
+	Thu, 15 Jan 2026 15:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768491286;
+	bh=0JxRnZ4zP0bNYiDg6+YLfy06LKhjX39gyT0+B2N4vG8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oPMKsVzDcCt+ji0XfhGCxdFchmNMT8/iu5YPNYfGkGwthPZPabD/negWeDvxnRiXM
+	 xQip8+Hs8JehnqDmYpBQhtLttYVYQtSVRljY35Gf6PTJkck9zfxe9h+OcXPee7IRxW
+	 NHxuqZ8jsWMFtcb8uOnUuD1vgL4zjn1efTGjxEP8ZnYDRPy6ZJbvcepFVb9wesUvt+
+	 LjCzV7ZyCawnDLw7i4RS3aK/GLRL9lFvJia0I5E4Cvh95KwPThGbIKQZoA+T2NPh4P
+	 zMblEjwY1yEe74hbSaLTSlUK6zAXCxesj5sZJMrAK4Og3wQseLMN5Gd9uARNI3zxTY
+	 uu0rWf1GEuXZg==
+Message-ID: <e2f028d6-774f-4773-889f-7d56b833067e@kernel.org>
+Date: Thu, 15 Jan 2026 16:34:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8267; i=ardb@kernel.org;
- h=from:subject; bh=JQh/o3J7K5or68zacsDujOIa4cJei5v51gLnNLh9Imk=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JITOTQZfRPy585vxah7brLccTDv15fzxT+bHutaagpqX/v
- iY/3mHbUcrCIMbFICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACbik8/w3yei55CgHo+L0V3p
- H9YOH0UfL5Fb+F2iiMHdJcvrritLByPDiXWnmC999z239f4K7cMbz32Y1fZ+ptBqY7OsjBd77e+ 38AMA
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260115145644.1749948-2-ardb+git@google.com>
-Subject: [PATCH] kallsyms: Get rid of kallsyms relative base
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Kees Cook <kees@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] dt-bindings: mfd: Add Google GS101 TMU Syscon
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, willmcvicker@google.com,
+ jyescas@google.com, shin.son@samsung.com, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260114-acpm-tmu-v1-0-cfe56d93e90f@linaro.org>
+ <20260114-acpm-tmu-v1-3-cfe56d93e90f@linaro.org>
+ <20260115-slim-denim-potoo-cad9cb@quoll>
+ <200d34bf-150e-4f8a-b400-2f54863502ac@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <200d34bf-150e-4f8a-b400-2f54863502ac@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On 15/01/2026 15:53, Tudor Ambarus wrote:
+> 
+> 
+> On 1/15/26 3:36 PM, Krzysztof Kozlowski wrote:
+>> On Wed, Jan 14, 2026 at 02:16:31PM +0000, Tudor Ambarus wrote:
+>>> Document the bindings for the Thermal Management Unit (TMU) System
+>>> Controller found on Google GS101 SoCs.
+>>>
+>>> This memory-mapped block exposes the registers required for reading
+>>> thermal interrupt status bits. It functions as a syscon provider,
+>>
+>> I don't think this is syscon, but the actual TMU. Syscon is various,
+>> unrelated system configuration registers.
+>>
+>>> allowing the main thermal driver to access these registers while
+>>> the firmware manages the core thermal logic.
+>>>
+>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>>> ---
+>>>  .../bindings/mfd/google,gs101-tmu-syscon.yaml      | 37 ++++++++++++++++++++++
+>>>  1 file changed, 37 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/google,gs101-tmu-syscon.yaml b/Documentation/devicetree/bindings/mfd/google,gs101-tmu-syscon.yaml
+>>> new file mode 100644
+>>> index 0000000000000000000000000000000000000000..6a11e43abeaa23ee473be2153478436856277714
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mfd/google,gs101-tmu-syscon.yaml
+>>
+>> Not MFD either, but soc.
+> 
+> You are right, it's not a syscon, it's just a normal thermal IP block
+> from which I need to access the interrupt pending registers.
+> 
+> Then I guess I shall describe the new binding in bindings/thermal/,
+> please correct me if I'm wrong.
+> 
+>>
+>>> @@ -0,0 +1,37 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/mfd/google,gs101-tmu-syscon.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Google GS101 TMU System Controller
+>>> +
+>>> +maintainers:
+>>> +  - Tudor Ambarus <tudor.ambarus@linaro.org>
+>>> +
+>>> +description: |
+>>
+>> Drop |
+>>
+>>> +  The TMU System Controller provides a memory-mapped interface for
+>>> +  accessing the interrupt status registers of the Thermal Management
+>>> +  Unit. It is used as a syscon provider for the main TMU driver.
+>>
+>> No, it is not a syscon provider. Entire last sentence is incorrect. You
+>> must describe here hardware and this hardware does not provide any sort
+>> of syscon to any sort of driver.
+>>
+> 
+> Indeed.
+> 
+> I'm going to link the ACPM TMU child node with the TMU node via a
+> "samsung,tmu-regs" property.
 
-When the kallsyms relative base was introduced, per-CPU variable
-references on x86_64 SMP were implemented as offsets into the respective
-per-CPU region, rather than offsets relative to the location of the
-variable's template in the kernel image, which is how other
-architectures implement it.
+This could be fine, but I actually wonder what's there. What registers
+exactly. For example modern Exynos 88xx, already with APM block, still
+have exactly the same TMU unit at 0x1008{04}000 with all typical
+triminfo, current temperature and thresholds.
 
-This required kallsyms to reason about the difference between the two,
-and the sign of the value in the kallsyms_offsets[] array was used to
-distinguish them. This meant that negative offsets were not permitted
-for ordinary variables, and so it was crucial that the relative base was
-chosen such that all offsets were positive numbers.
+> 
+> Some concern that I have is that I describe the clocks and interrupts in
+> the ACPM TMU child node. Usually the clocks and interrupts belong to the
+> node that contains the reg property. But I guess that's alright because
+> the interrupts property is expected to be in the node that the driver
+> binds to. For the clocks, by placing it in the ACPM child node, I allow
+> runtime PM to manage it.
 
-This is no longer needed: instead, the offsets can simply be encoded as
-values in the range -/+ 2 GiB, which is precisely what PC32 relocations
-provide on most architectures. So it is possible to simplify the logic,
-and just use _text as the anchor directly, and let the linker calculate
-the final value based on the location of the entry itself.
+You have to first know whether these clocks and interrupts are going TO
+the ACPM node.
 
-Some toy architectures do not support place-relative relocations at all,
-but these are all 32-bit, and on those architectures, there is no need
-for place-relative relocations in the first place, and the actual symbol
-value can just be stored directly.
+All this looks like designing for drivers, sorry.
 
-This makes all entries in the kallsyms_offsets[] array visible as
-place-relative references in the ELF metadata, which will be important
-when implementing ELF-based fg-kaslr.
+> 
+> Do you think the below description is accurate?
+> 
+> soc: soc@0 {
+>     tmu_top: thermal-sensor@100a0000 {
+>         compatible = "google,gs101-tmu-top";
+>         reg = <0x100a0000 0x800>;
+>     };
+> };
+> 
+> firmware {
+>     acpm_ipc: power-management {
+>         compatible = "google,gs101-acpm-ipc";
+>         /* ... */
+> 
+>         thermal-sensor {
+>             compatible = "google,gs101-acpm-tmu-top";
+>             clocks = <&cmu_misc CLK_GOUT_MISC_TMU_TOP_PCLK>;
+>             interrupts = <GIC_SPI 769 IRQ_TYPE_LEVEL_HIGH 0>;
 
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nsc@kernel.org>
-Cc: Kees Cook <kees@kernel.org>
-Cc: linux-kbuild@vger.kernel.org 
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- kernel/kallsyms.c                   |  6 +-
- kernel/kallsyms_internal.h          |  1 -
- kernel/vmcore_info.c                |  1 -
- scripts/kallsyms.c                  | 64 ++++++--------------
- scripts/link-vmlinux.sh             |  4 ++
- tools/perf/tests/vmlinux-kallsyms.c |  1 -
- 6 files changed, 25 insertions(+), 52 deletions(-)
+This I doubt, really. Why would ACPM child be hooked via CPU clock and
+interrupts?
 
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 049e296f586c..6125724aadb1 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -151,8 +151,10 @@ static unsigned int get_symbol_offset(unsigned long pos)
- 
- unsigned long kallsyms_sym_address(int idx)
- {
--	/* values are unsigned offsets */
--	return kallsyms_relative_base + (u32)kallsyms_offsets[idx];
-+	/* non-relocatable 32-bit kernels just embed the value directly */
-+	if (!IS_ENABLED(CONFIG_64BIT) && !IS_ENABLED(CONFIG_RELOCATABLE))
-+		return (u32)kallsyms_offsets[idx];
-+	return (unsigned long)offset_to_ptr(kallsyms_offsets + idx);
- }
- 
- static unsigned int get_symbol_seq(int index)
-diff --git a/kernel/kallsyms_internal.h b/kernel/kallsyms_internal.h
-index 9633782f8250..81a867dbe57d 100644
---- a/kernel/kallsyms_internal.h
-+++ b/kernel/kallsyms_internal.h
-@@ -8,7 +8,6 @@ extern const int kallsyms_offsets[];
- extern const u8 kallsyms_names[];
- 
- extern const unsigned int kallsyms_num_syms;
--extern const unsigned long kallsyms_relative_base;
- 
- extern const char kallsyms_token_table[];
- extern const u16 kallsyms_token_index[];
-diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-index fe9bf8db1922..f114719f6cb5 100644
---- a/kernel/vmcore_info.c
-+++ b/kernel/vmcore_info.c
-@@ -238,7 +238,6 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_SYMBOL(kallsyms_token_table);
- 	VMCOREINFO_SYMBOL(kallsyms_token_index);
- 	VMCOREINFO_SYMBOL(kallsyms_offsets);
--	VMCOREINFO_SYMBOL(kallsyms_relative_base);
- #endif /* CONFIG_KALLSYMS */
- 
- 	arch_crash_save_vmcoreinfo();
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 4b0234e4b12f..047d1b1ff40f 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -46,7 +46,6 @@ struct addr_range {
- };
- 
- static unsigned long long _text;
--static unsigned long long relative_base;
- static struct addr_range text_ranges[] = {
- 	{ "_stext",     "_etext"     },
- 	{ "_sinittext", "_einittext" },
-@@ -57,6 +56,7 @@ static struct addr_range text_ranges[] = {
- static struct sym_entry **table;
- static unsigned int table_size, table_cnt;
- static int all_symbols;
-+static int pc_relative;
- 
- static int token_profit[0x10000];
- 
-@@ -280,7 +280,7 @@ static void read_map(const char *in)
- static void output_label(const char *label)
- {
- 	printf(".globl %s\n", label);
--	printf("\tALGN\n");
-+	printf("\t.balign 4\n");
- 	printf("%s:\n", label);
- }
- 
-@@ -343,15 +343,6 @@ static void write_src(void)
- 	unsigned int *markers, markers_cnt;
- 	char buf[KSYM_NAME_LEN];
- 
--	printf("#include <asm/bitsperlong.h>\n");
--	printf("#if BITS_PER_LONG == 64\n");
--	printf("#define PTR .quad\n");
--	printf("#define ALGN .balign 8\n");
--	printf("#else\n");
--	printf("#define PTR .long\n");
--	printf("#define ALGN .balign 4\n");
--	printf("#endif\n");
--
- 	printf("\t.section .rodata, \"a\"\n");
- 
- 	output_label("kallsyms_num_syms");
-@@ -434,34 +425,24 @@ static void write_src(void)
- 	output_label("kallsyms_offsets");
- 
- 	for (i = 0; i < table_cnt; i++) {
--		/*
--		 * Use the offset relative to the lowest value
--		 * encountered of all relative symbols, and emit
--		 * non-relocatable fixed offsets that will be fixed
--		 * up at runtime.
--		 */
--
--		long long offset;
--
--		offset = table[i]->addr - relative_base;
--		if (offset < 0 || offset > UINT_MAX) {
--			fprintf(stderr, "kallsyms failure: "
--				"relative symbol value %#llx out of range\n",
--				table[i]->addr);
--			exit(EXIT_FAILURE);
-+		if (pc_relative) {
-+			long long offset = table[i]->addr - _text;
-+
-+			if (offset < INT_MIN || offset > INT_MAX) {
-+				fprintf(stderr, "kallsyms failure: "
-+					"relative symbol value %#llx out of range\n",
-+					table[i]->addr);
-+				exit(EXIT_FAILURE);
-+			}
-+			printf("\t.long\t_text - . + %#x\t/* %s */\n",
-+			       (int)offset, table[i]->sym);
-+		} else {
-+			printf("\t.long\t%#x\t/* %s */\n",
-+			       (unsigned int)table[i]->addr, table[i]->sym);
- 		}
--		printf("\t.long\t%#x\t/* %s */\n", (int)offset, table[i]->sym);
- 	}
- 	printf("\n");
- 
--	output_label("kallsyms_relative_base");
--	/* Provide proper symbols relocatability by their '_text' relativeness. */
--	if (_text <= relative_base)
--		printf("\tPTR\t_text + %#llx\n", relative_base - _text);
--	else
--		printf("\tPTR\t_text - %#llx\n", _text - relative_base);
--	printf("\n");
--
- 	sort_symbols_by_name();
- 	output_label("kallsyms_seqs_of_names");
- 	for (i = 0; i < table_cnt; i++)
-@@ -701,22 +682,12 @@ static void sort_symbols(void)
- 	qsort(table, table_cnt, sizeof(table[0]), compare_symbols);
- }
- 
--/* find the minimum non-absolute symbol address */
--static void record_relative_base(void)
--{
--	/*
--	 * The table is sorted by address.
--	 * Take the first symbol value.
--	 */
--	if (table_cnt)
--		relative_base = table[0]->addr;
--}
--
- int main(int argc, char **argv)
- {
- 	while (1) {
- 		static const struct option long_options[] = {
- 			{"all-symbols",     no_argument, &all_symbols,     1},
-+			{"pc-relative",     no_argument, &pc_relative,     1},
- 			{},
- 		};
- 
-@@ -734,7 +705,6 @@ int main(int argc, char **argv)
- 	read_map(argv[optind]);
- 	shrink_table();
- 	sort_symbols();
--	record_relative_base();
- 	optimize_token_table();
- 	write_src();
- 
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 4ab44c73da4d..73531cb63efc 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -143,6 +143,10 @@ kallsyms()
- 		kallsymopt="${kallsymopt} --all-symbols"
- 	fi
- 
-+	if is_enabled CONFIG_64BIT || is_enabled CONFIG_RELOCATABLE; then
-+		kallsymopt="${kallsymopt} --pc-relative"
-+	fi
-+
- 	info KSYMS "${2}.S"
- 	scripts/kallsyms ${kallsymopt} "${1}" > "${2}.S"
- 
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 74cdbd2ce9d0..524d46478364 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -27,7 +27,6 @@ static bool is_ignored_symbol(const char *name, char type)
- 		 * stable symbol list.
- 		 */
- 		"kallsyms_offsets",
--		"kallsyms_relative_base",
- 		"kallsyms_num_syms",
- 		"kallsyms_names",
- 		"kallsyms_markers",
--- 
-2.52.0.457.g6b5491de43-goog
 
+Best regards,
+Krzysztof
