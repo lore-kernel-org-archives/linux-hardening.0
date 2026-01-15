@@ -1,266 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F95136358;
-	Thu, 15 Jan 2026 04:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137E223ABBF
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 04:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768449655; cv=none; b=nJb9RYvybbnAUyk68gjX5xRtinPbQ0ctOxwaWD+V7Mq6iqAfZLwN+UYLNo/GWnNYNGA5MAtZnIdU3x2C4roDXDAOkXWg20Vfkppk0Xpa4n0VtiRXp0ZT8wv8lEibbSnw/BfeZAChkDeN8Ac/HVlKXjtj1aBD0Htz1lCmtu33k4c=
+	t=1768452234; cv=none; b=QfTJ73wcF/8f0dUoG50Ub3IpbOlDTdMlYWnhaJYxG+fHKxamunmmOwXNRBbmfGju8lCQqM/t2jjX1d0J9UPqmIJIisx+uYf6Z4nCZ72XraSgZdXKhhpFrpjuGZLTqTF5E/ZzefWwzjhxYKoEY9dTD70dhwbtHbYjjt3j3qLaw0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768449655; c=relaxed/simple;
-	bh=alpvrE4MA5mOr3g4huj8ydkWW+lT29ccJ07tRex1/nk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3/qxucZaPE+qDVshHsuej1RQZVyUuHeeNx8p30hoM22eFSXtAXDWNy+lyXxrb7JfoxVmjh9NPzDRmYezT49wSX50bKm97eab4lpBwinyZBrMRSTiB5MiCqNupDVP9I/dW8j3pAgRrPcuExGYIrO/2Hq/xymAHr5DVUuE+tpFlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ih5KFo+k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768452234; c=relaxed/simple;
+	bh=YKP2CZ3wzEHkWugF5eHJ0l3w6WM3TJ/wJevNxb3ZCQk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BNYUPsG0tcdJMkMic+gofrw7fUltML2QaukSuEu/hmlioTdRoOXdoxJ7JGohVP1PD/2UtfiuKK2SOivlp0EW7+KJpyPArs8TNvMYViSo4Ic+6Eq+sQCjWiEaqKtH/44CvE3JlCYCGGf8q69hefYqJUZ9ze5gF5GtnloA82T9nTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au; spf=pass smtp.mailfrom=gmail.com; dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b=dkFE+eb6; arc=none smtp.client-ip=74.125.224.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ih5KFo+k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A309C116D0;
-	Thu, 15 Jan 2026 04:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768449654;
-	bh=alpvrE4MA5mOr3g4huj8ydkWW+lT29ccJ07tRex1/nk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ih5KFo+kzCZ0Ds0LFPydQdIUXSVyjQEowKpzDaqO+dPRAkwOCd5Pbr37CaYuxoSQd
-	 3kMsJDUgje4NfAzIKG0bmGRiwMou2Ct/fay6QpUhktTEInZXk3YuaG9vWA0YiLC16v
-	 /e39LY5fgiPW/7/X/B/RgzrBv96pMnSH1cq7eTXxuc+snlQuOfxFKXsl7G4MTXqe2x
-	 PH+HGyP1YfpY0XVWAt7Dbj5JVypcXAYvVrEH1iWBpiqFfI1huj8IsYh44aOMeEJOFP
-	 UpGZKwhcn5p5EXasKdSbMFZ9/XhDpz9C7aq7ZWBnTKJd9z9Coqg4zmAOLME5T4WRuu
-	 +prqWbqdopzOQ==
-Date: Wed, 14 Jan 2026 20:00:54 -0800
-From: Kees Cook <kees@kernel.org>
-To: Bill Wendling <morbo@google.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Marc Herbert <Marc.Herbert@linux.intel.com>,
-	Uros Bizjak <ubizjak@gmail.com>, Tejun Heo <tj@kernel.org>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	John Stultz <jstultz@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev, Nicolas Schier <nsc@kernel.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Naman Jain <namjain@linux.microsoft.com>,
-	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 1/2] Compiler Attributes: Add __counted_by_ptr macro
-Message-ID: <202601141956.A798BFF@keescook>
-References: <20251121195504.1661783-1-morbo@google.com>
- <20260114193716.1740684-1-morbo@google.com>
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="dkFE+eb6"
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-64669a2ecb5so508671d50.1
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Jan 2026 20:43:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google; t=1768452232; x=1769057032; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YKP2CZ3wzEHkWugF5eHJ0l3w6WM3TJ/wJevNxb3ZCQk=;
+        b=dkFE+eb6K8Vr9w34FdNnLgifhR4sQyUmjNTdW9doQwE1FvVZDjWfIZefg+qFh1Hs9t
+         uBm1N6nGHWOhKGnnSwE9QZnBjemOOincWA7PpgNFEfu+UAfhnVVe4thYJUwonS70dNXl
+         eB4xMSQTXR6dzJ6o62RocA5CB77bi0/fPjoQQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768452232; x=1769057032;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YKP2CZ3wzEHkWugF5eHJ0l3w6WM3TJ/wJevNxb3ZCQk=;
+        b=JqAqlAk+kH36WkgFu8tO1+Q5w2da2HeyLWmPaS8wDuWn7bd4IFMDEhy/9nd2FMuUgK
+         beFExYrJ6nRtPr6jI95WVxWueU7KqFBxxbzvGZHDyTOa5f5Grx2c9BH3X0S3xsm8U8o+
+         LP5n+waeO56ByDZe8LAKV9+k/bSNeqXpoWR8v8wzrjcdAwjsznx80u9l6DsP9ddEJMM6
+         jK/l/UluMHVOaShRS05Kcy9PSCD5dmwdZyxAhxPUdAq38bKpXZDs085Tbo2EZdMzvPAu
+         WLrTIV8F3XXaPd1pEEvTXSzfH5y0J6m0ydXdPtM7tR8sam4Xxr6iOlLsoaP8LbyhHyjQ
+         oPuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVN0YgazWcqWddR22447Iiy6xfr40hM5dJ7TaNyD5RMre1h+VaOx4trrckjrQwtEV/fSA0CDEJoPfQc4kIXNTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7e2MrZgnwObCrwRIM9Q7iqyGE7UrDtIkFBmBIISjqU2k1Sydi
+	WFblRmpY6m4XnSM5AWqm0TuMSWA9uoNbz0UYL6+oG7VH8bIady1vzjgPFWwpC92abxAjM4VuVlu
+	O3mNop6kwYLsNEbKkdG8qCHbL/ou5bLc=
+X-Gm-Gg: AY/fxX5Xf1omAwN94JpFFmiNb68m36KDlnW5mEylZbsML2AQMNd29XFZNCEypIEIgKA
+	2IG7rcVV0zl3+maTnYPXU5jGB4JzyAxZt73WsGCM33FsSjJYDaMOjQ3skP8dBTJTh6cmvj8aT0N
+	zvbMa9kowVBkyqTfsXbGe435aZYGo9Hf0CtDU/2Q3/ufxYGOFKVoNyrF6PmG0/DSG0OWkFm9Wrp
+	fAohRkWJ7d7yXsePEEmA/yg1DetSm3beqhE7w7XWBxzbEfrb5dG+VmnyR3ye2d8sS02WdIDfNKZ
+	npdaIa5iN8m1Ofj18lrhBngIZudKYiX34AyZuw3Z9wgAPlZIpQz3Cssa
+X-Received: by 2002:a05:690e:128b:b0:644:60d9:7523 with SMTP id
+ 956f58d0204a3-6490a66cdfbmr1340966d50.48.1768452232029; Wed, 14 Jan 2026
+ 20:43:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260114193716.1740684-1-morbo@google.com>
+References: <20260113082748.250916-1-jiangfeng@kylinos.cn>
+In-Reply-To: <20260113082748.250916-1-jiangfeng@kylinos.cn>
+From: Joel Stanley <joel@jms.id.au>
+Date: Thu, 15 Jan 2026 15:13:40 +1030
+X-Gm-Features: AZwV_QhRSZoPQL1K1c2MUsNo1Uz-3GL8JoVUdSP7701Va_qmB_GYFJWYR5xt3qQ
+Message-ID: <CACPK8Xc2inE8=mbPFt+iTtgOqF_1U9m+76014aDaQxVyTYy2UQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/14] riscv: optimize string functions and add kunit tests
+To: Feng Jiang <jiangfeng@kylinos.cn>
+Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
+	kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org, 
+	ebiggers@kernel.org, martin.petersen@oracle.com, ardb@kernel.org, 
+	ajones@ventanamicro.com, conor.dooley@microchip.com, 
+	samuel.holland@sifive.com, linus.walleij@linaro.org, nathan@kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, 
+	"dfustini@oss.tenstorrent.com" <dfustini@oss.tenstorrent.com>, Michael Ellerman <mpe@oss.tenstorrent.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 14, 2026 at 07:36:47PM +0000, Bill Wendling wrote:
-> Introduce __counted_by_ptr(), which works like __counted_by(), but for
-> pointer struct members.
-> 
-> struct foo {
-> 	int a, b, c;
-> 	char *buffer __counted_by_ptr(bytes);
-> 	short nr_bars;
-> 	struct bar *bars __counted_by_ptr(nr_bars);
-> 	size_t bytes;
-> };
-> 
-> Because "counted_by" can only be applied to pointer members in very
-> recent compiler versions, its application ends up needing to be distinct
-> from flexibe array "counted_by" annotations, hence a separate macro.
-> 
-> Note that Clang's support for "void *" members will be in version 22.
-> So, when using Clang, you'll need to wait until its release before using
-> the feature with "void *". No such restriction applies to GCC's version
-> 16.
+On Tue, 13 Jan 2026 at 18:58, Feng Jiang <jiangfeng@kylinos.cn> wrote:
+>
+> This series introduces optimized assembly implementations for strnlen,
+> strchr, and strrchr on the RISC-V architecture. To support a rigorous
+> verification process, the series also significantly expands the
+> string_kunit test suite with both functional correctness tests and
+> performance benchmarks.
 
-I think to keep operational parity, we should limit counted_ptr on Clang
-to version 22 then, otherwise we'll have problems using it on void *.
+I ran the kunit tests on Ascalon, a RVA23 CPU, in emulation. The arch
+optimised version showed significant improvements over the plain
+version.
 
-> This is a reworking of Kees' previous patch [1].
+I didn't have time to investigate if the numbers made sense. As Andy
+noted, the 'long' benchmark had a much higher ratio improvement than
+the short and medium.
 
-Thanks for this!
+Tested-by: Joel Stanley <joel@jms.id.au>
 
-> 
-> Link: https://lore.kernel.org/all/20251020220118.1226740-1-kees@kernel.org/ [1]
-> Co-developed-by: Kees Cook <kees@kernel.org>
+Cheers,
 
-This needs to be followed by my S-o-b, I think? checkpatch.pl ought to
-check this.
-
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> ---
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Marc Herbert <Marc.Herbert@linux.intel.com>
-> Cc: Uros Bizjak <ubizjak@gmail.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Jeff Xu <jeffxu@chromium.org>
-> Cc: "Michal Koutný" <mkoutny@suse.com>
-> Cc: Shakeel Butt <shakeel.butt@linux.dev>
-> Cc: "Thomas Weißschuh" <thomas.weissschuh@linutronix.de>
-> Cc: John Stultz <jstultz@google.com>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Brian Gerst <brgerst@gmail.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> Cc: llvm@lists.linux.dev
-> ---
-> v3 - Replace the previous code with a modified version of Kees' previous patch
->      [1].
->    - The question about the naming of the macro was considered, but we decided
->      to keep the original naming (__counted_by_ptr), because it mirrors the current
->      macros like "__counted_by_{le,be}".
-> v2 - Add support for GCC.
-> ---
->  Makefile                       |  6 ++++++
->  include/linux/compiler_types.h | 18 +++++++++++++++++-
->  include/uapi/linux/stddef.h    |  4 ++++
->  init/Kconfig                   |  7 +++++++
->  4 files changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 9d38125263fb..6b029f694bc2 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -952,6 +952,12 @@ KBUILD_CFLAGS	+= $(CC_AUTO_VAR_INIT_ZERO_ENABLER)
->  endif
->  endif
->  
-> +ifdef CONFIG_CC_IS_CLANG
-> +ifdef CONFIG_CC_HAS_COUNTED_BY_PTR
-> +KBUILD_CFLAGS	+= -fexperimental-late-parse-attributes
-> +endif
-> +endif
-> +
->  # Explicitly clear padding bits during variable initialization
->  KBUILD_CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
->  
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index d3318a3c2577..e597c814d60b 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -369,7 +369,7 @@ struct ftrace_likely_data {
->   * Optional: only supported since clang >= 18
->   *
->   *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-> - * clang: https://github.com/llvm/llvm-project/pull/76348
-> + * clang: https://clang.llvm.org/docs/AttributeReference.html#counted-by-counted-by-or-null-sized-by-sized-by-or-null
->   *
->   * __bdos on clang < 19.1.2 can erroneously return 0:
->   * https://github.com/llvm/llvm-project/pull/110497
-> @@ -383,6 +383,22 @@ struct ftrace_likely_data {
->  # define __counted_by(member)
->  #endif
->  
-> +/*
-> + * Runtime track number of objects pointed to by a pointer member for use by
-> + * CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS.
-> + *
-> + * Optional: only supported since gcc >= 16
-> + * Optional: only supported since clang >= 21.1
-
-As I mention above, let's make this 22
-
-> + *
-> + *   gcc: https://gcc.gnu.org/pipermail/gcc-patches/2025-April/681727.html
-> + * clang: https://github.com/llvm/llvm-project/pull/137250
-
-Oh, hm, did the docs for
-https://clang.llvm.org/docs/AttributeReference.html#counted-by-counted-by-or-null-sized-by-sized-by-or-null
-not get updated by the above PR? Docs should get added to LLVM for this
-so we can link to the same AttributeReference.html as above.
-
-And, actually, same question for GCC, now that I'm looking at this...
-
-
-> + */
-> +#ifdef CONFIG_CC_HAS_COUNTED_BY_PTR
-> +#define __counted_by_ptr(member)	__attribute__((__counted_by__(member)))
-> +#else
-> +#define __counted_by_ptr(member)
-> +#endif
-> +
->  /*
->   * Optional: only supported since gcc >= 15
->   * Optional: not supported by Clang
-> diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
-> index 9a28f7d9a334..111b097ec00b 100644
-> --- a/include/uapi/linux/stddef.h
-> +++ b/include/uapi/linux/stddef.h
-> @@ -72,6 +72,10 @@
->  #define __counted_by_be(m)
->  #endif
->  
-> +#ifndef __counted_by_ptr
-> +#define __counted_by_ptr(m)
-> +#endif
-> +
->  #ifdef __KERNEL__
->  #define __kernel_nonstring	__nonstring
->  #else
-> diff --git a/init/Kconfig b/init/Kconfig
-> index fa79feb8fe57..dc27b998d111 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -143,6 +143,13 @@ config CC_HAS_COUNTED_BY
->  	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
->  	default y if CC_IS_GCC && GCC_VERSION >= 150100
->  
-> +config CC_HAS_COUNTED_BY_PTR
-> +	bool
-> +	# supported since clang 21.1.0
-> +	default y if CC_IS_CLANG && CLANG_VERSION >= 210100
-
-Let's do 22
-
-> +	# supported since gcc 16.0.0
-> +	default y if CC_IS_GCC && GCC_VERSION >= 160000
-> +
->  config CC_HAS_MULTIDIMENSIONAL_NONSTRING
->  	def_bool $(success,echo 'char tag[][4] __attribute__((__nonstring__)) = { };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
->  
-> -- 
-> 2.52.0.457.g6b5491de43-goog
-> 
-
-Great! Once this is fixed up, I'll snag the other 2 patches from my
-original series too.
-
-Thanks!
-
--Kees
-
--- 
-Kees Cook
+Joel
