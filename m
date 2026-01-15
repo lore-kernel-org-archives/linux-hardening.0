@@ -1,85 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3473194C96;
-	Thu, 15 Jan 2026 09:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886B5361DDB
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 10:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768469015; cv=none; b=qV50Z7O0ZrJoSDTK/22/3oaUZ+EubL3kL9r9roxK7ICNtw1iRZiQ0opPcUs3p8mMrmhCYmuA/BQKOn/Xe9ef1mD7vZpRhPW1egnxSD+B+hqHtEo52hoflMA62/vetlR51XPC3k9DIK88GSwSzceGv6yMhMYCY0KsQqCSzAoTlBU=
+	t=1768472200; cv=none; b=aFaYxQctelyaoyrENs1HBSw0LcEUocioVzm3JRj9lrNR6i4IvdosF1pQx+yxg0efrFFBivDnFH6kX4KoHWK/8oRBo3FHGDdmJBkF3GjPpCKiq4CWwwskBmeRqQO9Z4QeYKbYPWZt7TrRPzmVkvbrq35ZzqN1zHSuRCkxnLdu03Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768469015; c=relaxed/simple;
-	bh=miltPV5ioscPhzK8fYXxRBZ8d9NkdZfloQ+E3Ux4pEE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=l9YaykZph6SSpVLvZ9Bo8krE97oN7j6Yp3TspsGaGopkTn0qzn0lKqJNIu0LHYKllkSb+mAjLbY0/rXVlh9fJhXHJD7PTHS1NgrrxrVvqbfraCxOz/DOkNmfPh3Hcxl4RNxwErmk02pIaWoy3iIAvGraqTWh2SW7nVSeUSEWkrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLM1TZbV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768472200; c=relaxed/simple;
+	bh=zwLrvsF0GMvPSCBeAjAWQZcmbWMJVYh05GZu4CqMmyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5WtWgKAEYHEydSGyRLzub0j6gYWMFWlY1ITN7mErGUjKnECbzLiraeXqTWVOuOJF1fQ+hliXjxFXobBbFq+cwhKFBvYAHiJYyVIAJSA5fbfpE59JnG+4cgiA5UE04eL35NyHjDbdaLYz2J0r2FxCfcwYwQjVw4kKB/DQfhullk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=O1AfzI1f; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLM1TZbV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D3EC116D0;
-	Thu, 15 Jan 2026 09:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768469015;
-	bh=miltPV5ioscPhzK8fYXxRBZ8d9NkdZfloQ+E3Ux4pEE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=rLM1TZbVSio0vaB22gnHH9qmbRho1mD5hjCP2ZSiL1h6HpH4tc1xOtEOHf6OoNrUW
-	 lIcFSrAgZc9kQjfVJ1bKE3WwkBd3cfc+8gB/W8UITZ2lhG6SwOOvt4wpYH8OPGazVB
-	 23pzCCqF7SFAfIBFtVZLwXBBi076uak6dD6VTVoJsl2LTPXXeX/vPlVYSvgdh8KpF9
-	 OVeSfuANgWu72doNvRBIsZtlIcXcSy8NhsmwZTCtoolfHDezNVGqSZ22k+OL2HQlqh
-	 0TLdXTMKWABsN2lT5yUkkPsbYBFHnho1fXtrBBbkpkSnw089DasQh83+A+u4ztxDj8
-	 cH67C40HkTnOw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3B9EA380A957;
-	Thu, 15 Jan 2026 09:20:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="O1AfzI1f"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4801d24d91bso257985e9.2
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Jan 2026 02:16:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1768472195; x=1769076995; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zwLrvsF0GMvPSCBeAjAWQZcmbWMJVYh05GZu4CqMmyk=;
+        b=O1AfzI1fLMDVa3SD3LO45cvIiavE+LKVM93UrB7hJYcD0m6yOptHdhokkT8bTYka6C
+         3sXJ7mv88zLWCKOA1K4tTNEUpgl5sRbxQkPkY/JxJ39NJl8UGOMFq8kcmDmf/klRNfzu
+         nJ2y1cuRJKr4oZuTg+fls6YXgf7Cmk8scFvR14UdHkOvJCMLVgfHdOWaDArlFHS8i+in
+         /rjDe30x+8k/vU2nriXmVzYvgsK75zbtsHQliWEWoqaCQIzSRCmZBSVIuTAHgBAk/qqa
+         BhvMnVF7Ni7MX4Rr/TPuFFrwopkxq3IhJQiQJ1qEZjzsylkwRiXGFMLOKcT5/GAwd0bX
+         FnhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768472195; x=1769076995;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zwLrvsF0GMvPSCBeAjAWQZcmbWMJVYh05GZu4CqMmyk=;
+        b=e9rhxo7TOKe7S58C2cuBd+Ohu2kR+oiF2MjZB2TX4c+kZYkGP6UjYHQsqTrgjvuv9v
+         qXTES1xCsCuAiDQTlFSDnqq1Z/DXz9EOzGV150xOZRw19Ig2u1JuhHPN3HGOgxTMpAp2
+         g9YccM+8l2/iIq8gDJWqYEpAE3ErwaOSjy8lT/tDKZMT/iqKNLBZ1q9ZeErCMnKlH+Tk
+         VK5QKKJ3eJDgtWWTSq6X4q1SP1JHJwdhlLqkUVODzLLgiBtKFSiv7xdgXY/skMCobURd
+         b2UJqd0eQ56kGVVIXZgonyU0vaw0/vt87ljxHwJtX8db8h6ir3gKYm4fIkBCeMl7O2kL
+         CItw==
+X-Forwarded-Encrypted: i=1; AJvYcCVb9GN7nRmyiJ1o4553SlM1Q2Y89tsGCO4iySuNCkcDGqcdxqXlSjOaG4y1QbtR5WR/dc+XFyLySxK8unPyxWc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAoEK8le9gRRrmmBlRqvcRK9enb8DGj5BnFEa0AvXfDWwnctqA
+	uetphgPfHESBl1Hr6tdlzfGJZOqaH2KTWxtw3Phh0iduOlGeDOWT0cUy/mF0nyUtV1w=
+X-Gm-Gg: AY/fxX5Kl5u7LIZm7uIUGNzTfmqlYgvsI0fafwfFkIX9mgw6v/NCO5rjWlShkXDRO0p
+	OXZU4OWQc+/8FNgr5riwLrvm5vQeb4jN4qrP6kY2V5ZuRTgE8DhySaHkE3GvR7CuRjBGf/cWA0i
+	y5uCbmaOVUnL4PpVT9W04Z/GXbSXAPob+yo8FFVMH/wXUWL7PDtL0Vh8AAefGhuohbNv8vtELVd
+	TOSCp8yEjt0potdf0QBmwt5znMFuyjmrlp4vraqLJ0kTwZDTLuFaVJlNxtUHolvUJV5y0VHn7ME
+	egcW6WjZ1bupXIMUTt4qozjUBvMhki7IlcozOd90bt+FQmaJwOYFz+B2ejXXvOZgfawr/Lst3Gl
+	t73gqWfPM6PfdFeH69VEsPczoDEgQ4/RZXTBEw5WmAjETEfh+EzNRS0fEe3uv2vC+84huckhUqt
+	WjUpBW8VnBHLx2xYJTeoOVrN5x
+X-Received: by 2002:a05:600c:608c:b0:477:a246:8398 with SMTP id 5b1f17b1804b1-47ee32e0829mr58296485e9.2.1768472195426;
+        Thu, 15 Jan 2026 02:16:35 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee28144aasm39739585e9.11.2026.01.15.02.16.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 02:16:34 -0800 (PST)
+Date: Thu, 15 Jan 2026 11:16:31 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>, linux-um@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+	linux-serial@vger.kernel.org, netdev@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 07/19] drivers: netconsole: Migrate to
+ register_console_force helper
+Message-ID: <aWi-f9LBJtxGWgWs@pathway.suse.cz>
+References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
+ <20251227-printk-cleanup-part3-v1-7-21a291bcf197@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2][next] virtio_net: Fix misalignment bug in struct
- virtnet_info
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176846880805.3904091.8567285524155232438.git-patchwork-notify@kernel.org>
-Date: Thu, 15 Jan 2026 09:20:08 +0000
-References: <aWIItWq5dV9XTTCJ@kspp>
-In-Reply-To: <aWIItWq5dV9XTTCJ@kspp>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: mst@redhat.com, jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
- eperezma@redhat.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- akihiko.odaki@daynix.com, horms@kernel.org, netdev@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, kees@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251227-printk-cleanup-part3-v1-7-21a291bcf197@suse.com>
 
-Hello:
+On Sat 2025-12-27 09:16:14, Marcos Paulo de Souza wrote:
+> The register_console_force function was introduced to register consoles
+> even on the presence of default consoles, replacing the CON_ENABLE flag
+> that was forcing the same behavior.
 
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+I would add "No functional changes." like you did in the other
+similar patches ;-)
 
-On Sat, 10 Jan 2026 17:07:17 +0900 you wrote:
-> Use the new TRAILING_OVERLAP() helper to fix a misalignment bug
-> along with the following warning:
-> 
-> drivers/net/virtio_net.c:429:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> This helper creates a union between a flexible-array member (FAM)
-> and a set of members that would otherwise follow it (in this case
-> `u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];`). This
-> overlays the trailing members (rss_hash_key_data) onto the FAM
-> (hash_key_data) while keeping the FAM and the start of MEMBERS aligned.
-> The static_assert() ensures this alignment remains.
-> 
-> [...]
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-Here is the summary with links:
-  - [v2,next] virtio_net: Fix misalignment bug in struct virtnet_info
-    https://git.kernel.org/netdev/net/c/4156c3745f06
+Nice clean up!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-
+Best Regards,
+Petr
