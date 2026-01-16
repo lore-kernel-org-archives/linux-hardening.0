@@ -1,93 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6633D263C8F;
-	Fri, 16 Jan 2026 00:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6222A41;
+	Fri, 16 Jan 2026 00:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768522475; cv=none; b=CGT3adT8tqndZSbfXqE5GuO2ch+m/3zdKYoz4gdIZZ2Ie8oB3gDY2iQSDy5X1VIrixhX0jZdc6hAm+DzUzf+tScNtJkmhDwtQ4nUqjjIJDFBtP9w8q3hTe17cwhP8aIRgbMUWKwya+cs68eqjMZ3YP+c8v0sOT50j0zlGyQALDY=
+	t=1768523275; cv=none; b=Fip/87iGhMUDHaV96t+1eD960N6GyEwXtmSgYz4cZge/mSsvs3HAv+HHsNs1HkKTi1Q6YgH65o5Uh4pMSGsBiGSxt7OixgXK+RZKlN5qt5fe+Djnt3wFpN4Xaynb9l/9lpaTqiBB21SOmO5Wd56HCfGY9BygF/QbYBVWtxFrPpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768522475; c=relaxed/simple;
-	bh=AJVJaIau4oUE8+USI5LB6aUb5QRcK7sa1qDRt8591bI=;
+	s=arc-20240116; t=1768523275; c=relaxed/simple;
+	bh=GQqQa1BA3FsYTwmNjMFHMnRFUdbPu9ZzF5yHNk2DtKU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CJFbRHvCvuD/JPsC89tbbUmyzX+HH9lHjZDzYFw5d9UDb8YF2Z+OhAasdIdcX9lBsZKYN6FcXWU0BOyJMGB1VdBvklwnru9Elw/B8wkjuFDLbMq2+2ivbMJbHH9AG9fPZAraOcPoHq1cJFW2ikZhe9991Mq1ToNxFnYli2u3/4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHowNiP9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CXlalnOCs2a9OzP3tF9f2aWWRHnu+W/K58bHP+jLXKW6xGVfl1iOVyY7VnCM0egboHrxsBNg6F+ca8XE0/VEUL+0EyqVfbSQHuFf82AmvaRI4z2pjRq9LzWjS/sUXWD1CyMIps3UD0NeQjUA9C9bRjzQKnHffIjRKSLz1npLXjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCWQX/h5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHowNiP9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C564AC116D0;
-	Fri, 16 Jan 2026 00:14:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCWQX/h5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DFCFC116D0;
+	Fri, 16 Jan 2026 00:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768522474;
-	bh=AJVJaIau4oUE8+USI5LB6aUb5QRcK7sa1qDRt8591bI=;
+	s=k20201202; t=1768523274;
+	bh=GQqQa1BA3FsYTwmNjMFHMnRFUdbPu9ZzF5yHNk2DtKU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uHowNiP9qCHOA92hm4tcQ0MWft9mQiNxQYzPJtuz6EMr6Mmh+QbT5G/4ITxn83YSA
-	 doR7AZWZyoyBxLar5gja86cWgGPjYsQNaevJt+7NeISlzc0GbkJpHY5HaCOe20ET5l
-	 j32C7erP4BCTqQv48GtH34YP1TfT+KXQeLW6CsXZfAjTJubSNpwJPLbcVxiuVxSjQ+
-	 ELxOBDYCK1ynyGJRNfEXBDGQ3AElOPYz56KKyQIiiGC1GcvagpTsNPq5LQyK7B1IAG
-	 Dp8YfuwWw3hcUbJQN0ubNYQcOqxys7bLTBdrgBD/BrjhX3usMljh1CtJni7Cochle3
-	 Mwn4xpKDO7+xg==
-Date: Thu, 15 Jan 2026 16:14:34 -0800
+	b=lCWQX/h5Il6pOvoGcJMhQd+rjmDmeMT8WgIbfw8fEAHY5906GowZr2aitm3f/m+u1
+	 T2bRA8GsI0bVJjgdc7bkAWlenI4i5r8CZxw5z72lHpCdi0fJ4VGHtkpjtJ5xQ1RbcJ
+	 dr0oKsTT0/bXmdWKFesimrAy9KQZEOXUTJLGB2jTzg6IB9XpuyiwtbRPV61r5qkRQN
+	 Ex5BYbrr9UdOHg1WOVjjR9BZMmKL1U868HxvR7G9RijYdrXyrrcI/bI6melmvwRMTw
+	 XurazmWvapAc61YAdWSghWVtEeXhLGv3ziVrMfVzwMJIzsssWC5QpDxV2ZN5udV3QT
+	 yZAtAegpk/OQw==
+Date: Thu, 15 Jan 2026 16:27:54 -0800
 From: Kees Cook <kees@kernel.org>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kenneth Feng <kenneth.feng@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] drm/amd/pm: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <202601151612.79AAC91869@keescook>
-References: <Z678TNhCbTk363Tw@kspp>
- <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
- <217b00f5-d03d-4624-9ba9-d838199ef7b9@embeddedor.com>
- <CADnq5_M5Jv4A5CXAKY2Qd-dhrfmecnauRtVY_ghSsut7i=KNww@mail.gmail.com>
- <d07b4edc-6048-4c10-b8ac-dcccd5a932d3@embeddedor.com>
- <d43dac3e-122d-4c16-9c1e-760eac91b8da@embeddedor.com>
- <CADnq5_Mqa2HWWKrAYTAfjdvEQTMUeB1MBnhtRxJZjXLWcz1nmg@mail.gmail.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ath6kl: wmi: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <202601151627.99DFE54@keescook>
+References: <aR153k4ExCD-QTMq@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADnq5_Mqa2HWWKrAYTAfjdvEQTMUeB1MBnhtRxJZjXLWcz1nmg@mail.gmail.com>
+In-Reply-To: <aR153k4ExCD-QTMq@kspp>
 
-On Wed, Aug 13, 2025 at 08:57:58AM -0400, Alex Deucher wrote:
-> On Wed, Aug 13, 2025 at 1:12 AM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
-> >
-> > Hi!
-> >
-> > On 22/04/25 23:58, Gustavo A. R. Silva wrote:
-> > >
-> > >
-> > > On 16/04/25 09:04, Alex Deucher wrote:
-> > >> Can you resend, I can't seem to find the original emails.
-> > >> Additionally, all of the NISLANDS structures are unused in amdgpu, so
-> > >> those could be removed.
-> >
-> > I'm taking a look at this, and it seems that those NISLANDS structs are actually
-> > needed in amdgpu code. For instance, `struct si_power_info` contains a member
-> > of the type of `struct ni_power_info`, and this latter struct contains a
-> > member of the type of `NISLANDS_SMC_STATETABLE`, thus `NISLANDS_SMC_SWSTATE`
-> > and `NISLANDS_SMC_HW_PERFORMANCE_LEVEL` are needed, and so on.
-> >
-> > So, it seems that all those structs should stay. What do you think?
+On Wed, Nov 19, 2025 at 05:03:42PM +0900, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> They are not used for programming the hardware.  They were just
-> inherited from radeon.  All of the NI SMC stuff can be dropped.
+> Move the conflicting declaration (which happens to be in a union, so
+> we're moving the entire union) to the end of the corresponding
+> structure. Notice that `struct bss_bias_info` is a flexible structure,
+> this is a structure that contains a flexible-array member.
+> 
+> With these changes fix the following warning:
+> 
+> drivers/net/wireless/ath/ath6kl/wmi.h:1658:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/wireless/ath/ath6kl/wmi.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
+> index 3080d82e25cc..0e7810b9372f 100644
+> --- a/drivers/net/wireless/ath/ath6kl/wmi.h
+> +++ b/drivers/net/wireless/ath/ath6kl/wmi.h
+> @@ -1649,6 +1649,9 @@ struct low_rssi_scan_params {
+>  } __packed;
+>  
+>  struct roam_ctrl_cmd {
+> +	u8 roam_ctrl;
+> +
+> +	/* Must be last as it ends in a flexible-array member. */
+>  	union {
+>  		u8 bssid[ETH_ALEN]; /* WMI_FORCE_ROAM */
+>  		u8 roam_mode; /* WMI_SET_ROAM_MODE */
+> @@ -1656,7 +1659,6 @@ struct roam_ctrl_cmd {
+>  		struct low_rssi_scan_params params; /* WMI_SET_LRSSI_SCAN_PARAMS
+>  						     */
+>  	} __packed info;
+> -	u8 roam_ctrl;
+>  } __packed;
 
-(Looking through patchwork...)
+It looks like this is a hardware interface, so I don't think roam_ctrl
+can be moved like that. See ath6kl_wmi_set_roam_lrssi_cmd().
 
-It's not obvious for me how to drop that stuff. It seems pretty
-integral? What's wanted here?
+-Kees
 
 -- 
 Kees Cook
