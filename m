@@ -1,36 +1,37 @@
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92FD336ECC;
-	Fri, 16 Jan 2026 15:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028E433EB19;
+	Fri, 16 Jan 2026 15:55:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768578921; cv=none; b=RhDWwPvOkZqI0LimyVlbUEmqCgLdehfX2l4h3A2QG0HLfqtg0zfyUZX4eOqy68G/wCgYqa3CIA6wgkXusd54ZKLHWxnKLluw1xdNU3Hi8sqmsqRvAGQ7SJfHqrnvom/4N1vbN36NWZeM2a4pZh8Z+Tsthw4KjlPsOJos+NTThPA=
+	t=1768578937; cv=none; b=nNEienPado3hi5AwYwwAuG7wG4QnJvw6OiIFdl2+wDdKH4QyJqd82ef0MnlPRHVemcJ6zJKbJaT0+tJXn91u3itJo9e67mgcuk+XwDK6gLmDEg5cyaN7edVKG3Ois6WRPgSmNJ7rhEzOEgEpYixP5lZ/qvMiwFvCAokAQJQW95g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768578921; c=relaxed/simple;
-	bh=0a7Ln2IQ+ULHMcFlg3pO/pu1NhhH2XNCYS7MzyzCSMU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=faM3I/yi1T4XoFl6DUrVTsqZ3YNNffu5341TIDGR6x8j/I2TqnXDFtTrmUUJX8YLpPg89pz0Js8O4PFqiMyOau/fsjdm/FoFLOVuldHU9iNK9jdBowVICF+aqcfQSRpVS45i6Hpr1mi2H9CGc9oX/6Z/l2mGvzRF15jgIgCNTw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=AysNId5Q; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=R1ErBm+N; arc=none smtp.client-ip=5.75.144.95
+	s=arc-20240116; t=1768578937; c=relaxed/simple;
+	bh=AI08IkOBl0qOSd+3jS8CDcsc00XmegnRfZyCxiTlrCE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GiM3VCwHwUBNVemSV+9fNbwT9FKKMGPUC89t3YcgbtjsFlxnAohUpI0WTS+6LsD7G0ICyPy0fmoRa4MW02HL4D+0QcJysZhOB4hSa0EIOgNPGlHDkoAHy7T6YRNvt5omVIL8Vlm4uEXGeg5079MU4rzoyszHvWACZAhtj/2k8Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=AYHUiOts; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=sQTqPHWy; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="AysNId5Q";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="R1ErBm+N"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="AYHUiOts";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="sQTqPHWy"
 DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Date:Subject:From; t=1768578901; bh=N9G4ZZoCgxEpfbozwnENOe3
-	fyIB/koZiAJncSp/Rc6A=; b=AysNId5QDNvmT1YvwE+x+8EP1OEw5n5GDzMeNyvxyYRe+b3dXb
-	SFlCPTv24LzVBG8bldXmK6xwkK5PR/ifUWBEMNEqPh/+jmphEBeDI+54RWXuqKiUQtpyzRAOWKl
-	1UkO1yP5964UXUpLN9nCBOmqd29Nq5UdE9y7x+S33NoK3E/mxf4VtBrNtHowZUMgqwYhNKP6Zbd
-	FCQzlfn7LIoDVLnHputahpG4phV2aMiBCHcsmKE3VuELkidRuP0hxpT+TZy23DX2HDjrUubTFLn
-	oGyJPDMAQ+egdkmmra3ehBaR5PEXBYoQwos2AKQKt034zYuOSIKbBnKlYiu1lEgVv9Q==;
+	h=To:Message-Id:Subject:Date:From; t=1768578904; bh=B9kHDeY0RRWjO0vnPw/JSqR
+	ut4T9DvCelaqB2mnG9v0=; b=AYHUiOts+w7Zo4bGl2fBauAkVMiMgLKPdbizdpOyJmaSu4Zzp3
+	4rkzUXc9spbX1uQIAHOMgnyXivKT+R89xKcCc3trP9ql3j32kY384bmmHqyRNoGIjWtwSYXl36A
+	MsvZpXK0c0LtfeFz50YZ75AyADcT42vMA8Y/V95bBw0B5ccPmeWZjsBzgvzTYazt+VbD6AiwceR
+	MYDhXUk74vvEAu9qjD7dCjjn61czCbQstbih+9U1J4+7qFEM0/ea14YF/iiQEdYR0Rl2kThrccX
+	QkR64eDWTOX13WyDfCYSmlzxTzj3LfoAIUXxUfh7tnM2lgk7u2rZ8ytvD5pn1d2gZvg==;
 DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Date:Subject:From; t=1768578901; bh=N9G4ZZoCgxEpfbozwnENOe3
-	fyIB/koZiAJncSp/Rc6A=; b=R1ErBm+Nox4z8T+BSE6w0jcDIMyr2KkY7yjdFb5qJsR7dRzUZO
-	D5Arc19cLJC1dDxNDR3cLG3D02YHcEBIg1Cw==;
+	h=To:Message-Id:Subject:Date:From; t=1768578904; bh=B9kHDeY0RRWjO0vnPw/JSqR
+	ut4T9DvCelaqB2mnG9v0=; b=sQTqPHWy+Xu/WMreQjbMKiuKcl6iK4SCcAWgaogBWx55nS8ifA
+	HvB+fdchq3PckgwDlPiIIDv+GcX8ciXimHBQ==;
 From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Subject: [PATCH v2 0/7] Initial Redmi Note 8T support and more
-Date: Fri, 16 Jan 2026 16:54:42 +0100
-Message-Id: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
+Date: Fri, 16 Jan 2026 16:54:46 +0100
+Subject: [PATCH v2 4/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Remove
+ extcon
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,12 +40,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/12Oy26DMBBFfwV5XSPb9SsoqvIfVRYGxmQUwI1NS
- EKUf68h6qabke6V5tzzJAkiQiJV8SQRZkwYxhzER0Gakxs7oNjmTAQTmnHO6R1dGJDesO/DjUp
- plRKeCaMFyT8/ETzeN973MecTpinEx4af+dr+kcQ/0swpoxakNNrujP60h8Hh2OOIY1eG2JHj6
- 82PcLlmzek9QgZIyW2aVbHPbMWF2HEpLNOlkJxZSwU9x+WRlin48hyWvJbOeAgplZer65swDGU
- +X6t/7RLQtcGpKrzkpjbeNzV40xpds9ZazRS3XrHWAQMDClqX1V6/xgh6BkkBAAA=
-X-Change-ID: 20260111-xiaomi-willow-448552f02762
+Message-Id: <20260116-xiaomi-willow-v2-4-4694feb70cdb@mainlining.org>
+References: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
+In-Reply-To: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -60,63 +58,51 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
  Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768578900; l=2335;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768578900; l=1174;
  i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=0a7Ln2IQ+ULHMcFlg3pO/pu1NhhH2XNCYS7MzyzCSMU=;
- b=5PLRU611elBsIRKYDhIELXU9upt7+sSL4vzm3BngkYsDv/SmYD3LuTr4kLOo276zVtoovizM7
- rYweg/ImwBqBB9N1IaT0TVaXwhIU2qHwgg3rqY1ze0wZiTghR/GuglF
+ bh=AI08IkOBl0qOSd+3jS8CDcsc00XmegnRfZyCxiTlrCE=;
+ b=z9/1qgfGUmndHIinosZRN5cIaL7w5mLgMT3QEqA6U4UGOl/8Dj8bFpDlTA9NqSzQbJRH654a/
+ m6u3SxTc4P5DatFBCHbisO26OAiYP9jCHpnBm7eEn8QLttuLYUM2CS6
 X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
  pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-Redmi Note 8 and 8T are sibling devices the only difference
-is Redmi Note 8T have NFC.
-This patch series is commonizing Redmi Note 8 devicetree
-for a base for both devices.
+GPIO pin 102 is related to DisplayPort what is not supported
+by this device and it is also disabled at downstream,
+remove the unnecessary extcon-usb node.
 
-The patch series also contains some fixes for Redmi Note 8:
-- Fix reserved memory ranges, they were wrongly defined.
-- Remove board-id, board-id is not neccessary for the bootloader.
-- Fix reserved-gpio-ranges the reserved ranges was wrongly
-defined what caused the device crash on the boot.
-- Remove unnecessary usb-extcon, gpio102 is related to DisplayPort
-what is not supported by these devices.
-- Use memory-region property for framebuffer.
-
-Depends on:
-[1] https://lore.kernel.org/all/20251229142806.241088-2-krzysztof.kozlowski@oss.qualcomm.com/
-
+Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 ---
-Changes in v2:
-- Fix copyright in sm6125-xiaomi-ginkgo.dts as requested.
-- Use memory-region property for the framebuffer.
-- Add comment about the NFC.
-- Remove msm-id change in favor of [1].
-- Link to v1: https://lore.kernel.org/r/20260112-xiaomi-willow-v1-0-8e4476897638@mainlining.org
+ arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts | 9 ---------
+ 1 file changed, 9 deletions(-)
 
----
-Barnabás Czémán (7):
-      arm64: dts: qcom: sm6125-xiaomi-ginkgo: Remove board-id
-      arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct reserved memory ranges
-      arm64: dts: qcom: sm6125-xiaomi-ginkgo: Set memory-region for framebuffer
-      arm64: dts: qcom: sm6125-xiaomi-ginkgo: Remove extcon
-      arm64: dts: qcom: sm6125-xiaomi-ginkgo: Fix reserved gpio ranges
-      dt-bindings: arm: qcom: Add Xiaomi Redmi Note 8T
-      arm64: dts: qcom: Add Redmi Note 8T
+diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+index 4e1444abc29b..a9b6e648fe3b 100644
+--- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
++++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+@@ -77,11 +77,6 @@ ramoops@61600000 {
+ 		};
+ 	};
+ 
+-	extcon_usb: extcon-usb {
+-		compatible = "linux,extcon-usb-gpio";
+-		id-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+-	};
+-
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 
+@@ -304,7 +299,3 @@ &tlmm {
+ &usb3 {
+ 	status = "okay";
+ };
+-
+-&usb3_dwc3 {
+-	extcon = <&extcon_usb>;
+-};
 
- Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
- arch/arm64/boot/dts/qcom/Makefile                  |   3 +-
- .../boot/dts/qcom/sm6125-xiaomi-ginkgo-common.dtsi | 301 +++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts  | 285 +------------------
- arch/arm64/boot/dts/qcom/sm6125-xiaomi-willow.dts  |  15 +
- 5 files changed, 320 insertions(+), 285 deletions(-)
----
-base-commit: f417b7ffcbef7d76b0d8860518f50dae0e7e5eda
-change-id: 20260111-xiaomi-willow-448552f02762
-prerequisite-message-id: <20251229142806.241088-2-krzysztof.kozlowski@oss.qualcomm.com>
-prerequisite-patch-id: 1bc49c0e2bec1a47667df776e1ab265b0699ea35
-
-Best regards,
 -- 
-Barnabás Czémán <barnabas.czeman@mainlining.org>
+2.52.0
 
