@@ -1,65 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B19307AE9;
-	Fri, 16 Jan 2026 00:43:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF1518024;
+	Fri, 16 Jan 2026 00:49:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768524226; cv=none; b=KJAkpYcobn1K1pbpBMKs1lspjssBM/bmruGEDQ1GClShnXNfuW18P8QGY6hexIv4GshdUz7IsPN19r47ighL6D+kzL7jemIYjrhigbLElF2TMRCM0WNCzjIPBioZ2sn2AutN8ADhRmYEGhqDPlTFN92NNquz+TnxftWxo9eRveU=
+	t=1768524550; cv=none; b=kXiwqbzsNK71kXTjwEPAtX33qkqVgprZPqMfjIs3Ae2/mSlyK+wX5bmM1CoNk6d35JTHwi9+63Yrcm/K3JQKs4grR1GL8QlrnUfxz1JQMZMRVDP0Va4KKTxcM8YCEbehhi5y2R1ihCU9Nr/UbuAVi3+evLfwWoDPtnknnFWgjDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768524226; c=relaxed/simple;
-	bh=WgoVEt3XjcqdkgY52KH+uOERdgttmKm3Bau8OK/fRgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRobQe7u5rC1EB8Ih/2ZD9sbxB1YupMKIO7q8kk9LrVXMTN2o5E6+HF82mn3D2EkbnUPVjWCGCSSj7KDbE+o1ykB4ie9j9paoBiVUDbUuOF1d5zxZu1GI0N+XWniyhI0Y3Ut3IRNoXIce2xdS1+uaLYUF9xLTLbnWHqtTRoeg0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRRWhTGV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768524550; c=relaxed/simple;
+	bh=c/iR+WuctXgCv8wSCh30Fb2j7NHxGjCYQkGC2UPAJBk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oDAA4IRJh4RtDMkRzZbD16I/dcKjrLFIT6FKy4n58J545faVQNl5TyuZkA8l/5lTIiyZa+T+FH4D6KuM3JC1cbqbCUKqyzhZhV5Dp3k6771JSI97ik79VMfWpMhQB7FARwXyPiM/A0qnFFQduT4YcB/IHyGcFVpEZVrzfufLyUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGuPUjDQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRRWhTGV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78EACC116D0;
-	Fri, 16 Jan 2026 00:43:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGuPUjDQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED476C116D0;
+	Fri, 16 Jan 2026 00:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768524226;
-	bh=WgoVEt3XjcqdkgY52KH+uOERdgttmKm3Bau8OK/fRgM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DRRWhTGVEYSeAWzOVPk824YhRGL9siGopxdRikDeh3BB7hNp3LIhjAziJqQLYvA8G
-	 r7o8FodItIQQoMf6QBdfAIG/bpzO8hFyj0VAGLevCb/tE4VAJaZ95Wveg2V5JIBEja
-	 /9d3hiVa7/aN41SNSWsxFHurSVJLBkoU2+t5MNsvYmp6GJqCtRWUQghNmW+FaQFVQ5
-	 cvwXfjXNhpq/DqCJkxMDllSd0T3iVDf3NXOoTBeJ2v3TYIXXqxQPkwD8YddnLz9Hf0
-	 B2XS1MP+SdPfovZ08Kbr66+Xpzq/cF906oA5gzMQN5QckjUsJZVN8ZmQ4KjvtajUeg
-	 uutaZ/1w8Wdqw==
-Date: Thu, 15 Jan 2026 16:43:46 -0800
+	s=k20201202; t=1768524550;
+	bh=c/iR+WuctXgCv8wSCh30Fb2j7NHxGjCYQkGC2UPAJBk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KGuPUjDQZ6nOjt0uvjTMfeI5ARIpeyZZjFgiywpIkEo/Eah0KxeawvfQVrHrBcTqx
+	 MWUyjarLMhAbU+7d9Qw3LlzJ/j5lcueS+ZDcsZTBayTQL9lwBzII5iT9SpHwMM7FnB
+	 Ds7xDH0E0VQlfVurmkmedThcU7Ubn+JWwV1XyrIwCV4Gj4MSS+rsHY5ft/KO5KZu7U
+	 0paXfa7DTgaOPTXHPXqSYYKCHi4Sy2TU7OCy0RQKR5dIuUDHinQV6QLCS9PRDE4Cck
+	 fvv1/qMuhmlOKvfBgJDp8cn4xghTg+utoV9eVznn2Xt1+P9eVC6PTavVGaZc8bECFv
+	 Ixoim0pv09W+A==
 From: Kees Cook <kees@kernel.org>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] overflow: extend shift helpers and add size_shl()
-Message-ID: <202601151635.9C323403@keescook>
-References: <20251128033830.331426-1-rafael.v.volkmer@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	oss-drivers@corigine.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] nfp: tls: Avoid -Wflex-array-member-not-at-end warnings
+Date: Thu, 15 Jan 2026 16:48:49 -0800
+Message-Id: <176852452747.3062255.8603964657157273318.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <aSfDqouLFcA4h8JX@kspp>
+References: <aSfDqouLFcA4h8JX@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251128033830.331426-1-rafael.v.volkmer@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 28, 2025 at 12:38:28AM -0300, Rafael V. Volkmer wrote:
-> while experimenting with check_shl_overflow() on an architecture with
-> native __int128 support, I noticed that the helper always reports
-> overflow as soon as the promoted type of @a/@d is wider than 64 bits,
-> even when *@d is actually able to represent the shifted value.
+On Thu, 27 Nov 2025 12:21:14 +0900, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> So, in order to avoid ending up with flexible-array members in the
+> middle of other structs, we use the `struct_group_tagged()` helper
+> to separate the flexible array from the rest of the members in the
+> flexible structure. We then use the newly created tagged `struct
+> nfp_crypto_req_add_front_hdr` to replace the type of the objects
+> causing trouble in a couple of structures.
+> 
+> [...]
 
-Ah, whoops. Yeah. Can you add some tests for int128 to
-lib/tests/overflow_kunit.c (see how check_one_op() uses:
-	check_ ## op ## _overflow
+Applied to for-next/hardening, thanks!
 
-there's a bunch of type checking in there but nothing uses int128, so
-there might be more than just shl?
+[1/1] nfp: tls: Avoid -Wflex-array-member-not-at-end warnings
+      https://git.kernel.org/kees/c/cfbb53d25cfa
 
-> On a toolchain and architecture that support __int128, this reports
-
-What's the right way to attempt such testing?
+Take care,
 
 -- 
 Kees Cook
+
