@@ -1,86 +1,39 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from ixit.cz (ixit.cz [185.100.197.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6F23659F5
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 11:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2A7322B84;
+	Fri, 16 Jan 2026 11:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.100.197.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768561414; cv=none; b=LlKG5kDpF22LvjgdFVtZwnmUI8UKphxLtyiucyWxYEjsCUeCvfIdXitWNHRgwZwswP3tFfpw5VclrBM+dvtAFtw9kHPMS7immxk5x1Ke3lrLKhmlSSLfuFMMJlktwvuO0rMSz6fX0sdieA5zJeapv6GHI+UAafoWlv2sUD/0qHs=
+	t=1768562482; cv=none; b=nAuhSNzX0x5wvYS4g7t/hjhOspbMUsCgNAPZI9F68LBld1HJB7T8NL8UGrea0hewu4l22pT+d7mDNtFOH3R8Z4EtJ4q0E37hxBw/dAeZLzphwZcAnlVgCLarQaZXxhj4KBZF8gnN/jSzvvMQxc834pDQEa27mh2+PCkin6J8pH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768561414; c=relaxed/simple;
-	bh=wkttBCxXM8dTQdQm3j+z6AowSIu29ht81aasYp8uVgc=;
+	s=arc-20240116; t=1768562482; c=relaxed/simple;
+	bh=XB418OZiWZ0sl8+2mtmr5ooZZpqJ6VnSv+B+J0IB6XU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YUYQzdxnnFWMbhv9j5JJJ64yrRKOovHWSyGlE8faUCYqBPE1zOCuVq0eviJqEHPQZa0bX+rVYP/BI5cs/1bL09LbRTrFRTyTtPQL8VO9IBf4kQQ4engdfsxikW59Ygi6mhNceUNiJNRqidL1Uezym5ZIz36aji7Is3n0GQJ/G5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TBkpSpO2; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Hsb/E/Gs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=TGZdttCPIRC7Uh8uWfa+2dR/7H9a7A6PEJpYGfNpOl5RYaB30jZIQVgtnWhB7T1xLGaSY05qJSMg9pW31tE9fffvpLQyn+A0wFcarle1zOlk6GM4JbUuj+xqokOvDUZBiYfJ51zDig1tV7Jy74v0bnML0yQBXhFEeXCw58MAh5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=cmNUu0lB; arc=none smtp.client-ip=185.100.197.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TBkpSpO2";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Hsb/E/Gs"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60G83pRe4016233
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 11:03:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wkttBCxXM8dTQdQm3j+z6AowSIu29ht81aasYp8uVgc=; b=TBkpSpO2DkrbGZ14
-	K5ts32Hoq95Zc6Uki0n5ai5uo0q9aLC5j4DinRI/mEEs8Ib/hYC49jG4g+fUFjoS
-	ySbIwPAGZ5sFYs4JBZW/udn4YZHashOZXRqqyuxFt0aE6RAeZJFCdo9jdiYBHshM
-	Qh7RNRKI0t4/kIf3EKVFATRluxuYPqRqekQhN0Cm6xE2r7+sdfBLXrbQ5bxa1pm7
-	swRLxffrYl06hK8Bg3llf2WkysWFHLzZBCYLs9BL0RtCFYdjZN98JmoSIQqLxA8W
-	NBerynusykHi6M2FAtVmY0liLhm7RLnwZC9ONEr9aL2R2uyYtxKEsDQKnqOiS7Ae
-	I+hlhA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bq98y9v67-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 11:03:30 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8c532029e50so63125285a.1
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 03:03:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1768561410; x=1769166210; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wkttBCxXM8dTQdQm3j+z6AowSIu29ht81aasYp8uVgc=;
-        b=Hsb/E/GsqxKOHUkXqGomyNMMfs13632LqB/iHkR5mrK8l+HhFOnkRUeWOzMkT9p8/3
-         ATgQeI/u5sEGeHHLftXKuXb4J1ErSO3DpxoMHCNFTF5Z6aRlSfAaAHXQY00Uzvc0X6xi
-         dSRQlej1BF8pSRXGfvr5cT3ZJ3QtvedRM6p+aZXUkwrSWXjzTQgBoK53xdbU3GOvhhNX
-         viSttIOvzCiqkuxQHwgYNGuVh+UUjDtaOevET890+htRDaou5CQ8NnW1rIQPKcruDuNO
-         pKKJCvJDjnR6r4uJXh3/th8zTsiIbzRftIlYxfU2L2YcRbojQabbSA3Bjd9wjMB1l3/y
-         ++tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768561410; x=1769166210;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wkttBCxXM8dTQdQm3j+z6AowSIu29ht81aasYp8uVgc=;
-        b=O7c2CT1pH9m6pb2vMzWdH/FZNfO2cV7p7mhn86ql4s+Vo74iwVIjE1JDOpap8ZxzRd
-         IA4l7OLg6/Q36MtDnosUUAeMpwGIYLpDS6ZeQTWXAoY/yVURorG+cIk/Ya4hHE1kn8ql
-         F3wz93yBhlwABG5Wo5KUgXvk1nXy/umOwwMTrtWCVCk3in9g9UwpDRdO/g7l59YeXmHC
-         uqn6L+vu4JY5UWUf27NnrrzYQ+aJBuD02OC9rjCDFdzLrEj69xeT2QkzCE40FvC7TtFq
-         7ytY2HYympvoKb+MnzUFfQJpGVYp9+uEPoYjuTgb3R/MTlAjvgd+SAuMxq4z7uAxrFwZ
-         wswA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKL+mbj2TBNvu56esaXhTr7V/2FLDY5QRuBf7zQ2MymWH52rK7+aP4QsHQ+HS8sW7j14mLRZJ/tKo4z9mJ71w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrqU0WzFzVjuOc139mCWoSogUxBTORxynhCVTArGV0bGETU9Ot
-	6Wl3A3o0N8uAYudQA9rnFoc5S5KAyoihhPvSHRrVMBhsaO7QAOIaJtoOrgofxsVGlpJ4bHZ47+L
-	SnBC8VBVNRfzaJyIPMmKbQQPiVB5jekaXYRX1a5x2b/cFrWvYaL51HRZTa0OzpC65ypPrO2s=
-X-Gm-Gg: AY/fxX7VkS/vheMrCk7z/omln3KoBNz+LbtoFcobHzy6WtKSAGOR1m4WddOgzkQRz1w
-	5unkXKT8nRucbKe5p3pcQF05Y4twI/hp+10qqaW9TozNOY/b3/FnWWvP1plQEx6YEl0dhWSZPB3
-	6xFvDUi53Gu6lDj5WaCNp8NbGcXPbzTicf+mQEMUt1uNSlMoNfHIrvLHYYGMKtwx3t3Qn4PzJMM
-	NnSN+rA1SwZng1LIZL7Cj2b+FM8cYml7/C1PgBBP4kDDSgLP7JoQc1yOAS/Asy4NiRizpMotVh6
-	BgucMln4s9BhbVEQdpJDwwjD8jvFsTxeunSrhO9UP2rD43Fk69OuI09onCXpYnuMY480EgCuP1j
-	2izItGGOYZ/oXpxXJs/qq8XpD18G/1oCha+sSMv1NphuopDUpVUO7u/N3knlJi0BEQrQ=
-X-Received: by 2002:a05:620a:448e:b0:8b2:ea2d:a5 with SMTP id af79cd13be357-8c6a6787653mr248883485a.7.1768561409819;
-        Fri, 16 Jan 2026 03:03:29 -0800 (PST)
-X-Received: by 2002:a05:620a:448e:b0:8b2:ea2d:a5 with SMTP id af79cd13be357-8c6a6787653mr248879385a.7.1768561409279;
-        Fri, 16 Jan 2026 03:03:29 -0800 (PST)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8795a214e8sm204861366b.60.2026.01.16.03.03.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Jan 2026 03:03:28 -0800 (PST)
-Message-ID: <8751c6ff-93db-41cf-919b-8486ed06eb72@oss.qualcomm.com>
-Date: Fri, 16 Jan 2026 12:03:25 +0100
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="cmNUu0lB"
+Received: from [IPV6:2a02:f000:10bd:e301::f31] (unknown [IPv6:2a02:f000:10bd:e301::f31])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id 66B98534263B;
+	Fri, 16 Jan 2026 12:21:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1768562466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5lZnwkdLH3b+TOYAqiIuiKx22CIpLMS9Txseti9DIow=;
+	b=cmNUu0lBdHh4dvC9Y1Hi1C0lgvMH9W4qvlVC20wVlrpJ0snslQaqM+eae6AbY891OPpX/z
+	FIMt/NCFBcx/0jNNQkzWZS2EixpfXBvbjpF/FwU1Gn+W9jnZf7ESk8UYhai4/DTc2Z88d4
+	BP7cPwjiMhIzRaOzkyy2o9sVjEq0Ma4=
+Message-ID: <d90872ae-968f-4340-8348-aa83de92a3de@ixit.cz>
+Date: Fri, 16 Jan 2026 12:21:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -88,94 +41,130 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] arm64: dts: qcom: Add Redmi Note 8T
-To: barnabas.czeman@mainlining.org
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Gabriel Gonzales <semfault@disroot.org>, Kees Cook <kees@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Biswapriyo Nath <nathbappai@gmail.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
+ reserved memory ranges
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Gabriel Gonzales <semfault@disroot.org>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Biswapriyo Nath <nathbappai@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ linux@mainlining.org
 References: <20260112-xiaomi-willow-v1-0-8e4476897638@mainlining.org>
- <20260112-xiaomi-willow-v1-6-8e4476897638@mainlining.org>
- <ff8fbdb9-dd03-4811-b9cc-4ec0dabf9353@oss.qualcomm.com>
- <4cb609391559a88a4a6f1e2f550f8450@mainlining.org>
- <253d0cbf-f65a-4f60-b874-4191e552c191@oss.qualcomm.com>
- <f2188ad4346e31a679fb6a082c9d32fb@mainlining.org>
+ <20260112-xiaomi-willow-v1-2-8e4476897638@mainlining.org>
+ <723357fc-a785-45d6-8d49-4c00dd4f340c@ixit.cz>
+ <ff4d697c-2007-4b2a-b66b-dc86053a20a6@oss.qualcomm.com>
+ <0da3c96e-4f20-4bd0-836e-73d20581954f@ixit.cz>
+ <e0f33ac2-331f-4ab4-a960-6bd8bcac7306@oss.qualcomm.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <f2188ad4346e31a679fb6a082c9d32fb@mainlining.org>
-Content-Type: text/plain; charset=UTF-8
+From: David Heidelberg <david@ixit.cz>
+Autocrypt: addr=david@ixit.cz; keydata=
+ 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
+In-Reply-To: <e0f33ac2-331f-4ab4-a960-6bd8bcac7306@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=FscIPmrq c=1 sm=1 tr=0 ts=696a1b02 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=OuZLqq7tAAAA:8 a=LpNgXrTXAAAA:8
- a=6jRqbQYc-3tA15-qs5wA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=AKGiAy9iJ-JzxKVHQNES:22 a=LqOpv0_-CX5VL_7kjZO3:22
-X-Proofpoint-ORIG-GUID: fRX8SWo2ah1AvCfnfgcNovYBADZSWAvV
-X-Proofpoint-GUID: fRX8SWo2ah1AvCfnfgcNovYBADZSWAvV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE2MDA4MCBTYWx0ZWRfX6Gnq+uD4hvHY
- 22uSZxUJvnAGwf6QV/rQ1tmv5aCIiOKUd6l34TZi6R8OpeV0tj9nBoAZTbXZkAYvdp96OXEQXts
- sP1wWxdiHubScNlpxwavqyVb/f7M2l+pxpdx+YC2oCH6g001R/uG5S1g/L2rY+R6a9Ut961BARm
- a38jMZEA48U4mNhmGAzz+ZBNfKLHCO6qwryXmRKKdJswgxnbxpH5YrgHfQSvzo20eh6uPlkt5ll
- IUyIjFBvk04+5DX2vDwysWwltATTB8HyJDi+7g5V8Y+EgPjc3FTpUqDTMHkzTrJ+7qH2B0/CcxD
- +5h1UvBM1emtugSW+gEpOIALgShe6x68RTy21Bpv5pt5/JMCZVR1IWZA4zhwb8SaGWti9nU+IuB
- rW35ld7u2mKodk8vWuBWQzFcNCQ3DjkmQ8MVFocVFcdzt6VALTx8DUOz27jKncnjCW4wiKIVWvb
- 8ufGzrQkmWbfykWEbqg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-16_03,2026-01-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601160080
 
-On 1/16/26 11:51 AM, barnabas.czeman@mainlining.org wrote:
-> On 2026-01-16 10:53, Konrad Dybcio wrote:
->> On 1/16/26 7:53 AM, barnabas.czeman@mainlining.org wrote:
->>> On 2026-01-13 10:04, Konrad Dybcio wrote:
->>>> On 1/12/26 9:13 PM, Barnabás Czémán wrote:
->>>>> Redmi Note 8T (willow) is very similar to Redmi Note 8 (ginkgo)
->>>>> the only difference is willow have NFC.
->>>>> Make a common base from ginkgo devicetree for both device.
+On 16/01/2026 10:52, Konrad Dybcio wrote:
+> On 1/14/26 10:55 PM, David Heidelberg wrote:
+>> On 14/01/2026 11:28, Konrad Dybcio wrote:
+>>> On 1/14/26 11:15 AM, David Heidelberg wrote:
+>>>> On 12/01/2026 21:13, BarnabÃ¡s CzÃ©mÃ¡n wrote:
+>>>>> The device was crashing on high memory load because the reserved memory
+>>>>> ranges was wrongly defined. Correct the ranges for avoid the crashes.
+>>>>> Change the ramoops memory range to match with the values from the recovery
+>>>>> to be able to get the results from the device.
 >>>>>
+>>>>> Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
 >>>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 >>>>> ---
+>>>
+>>> [...]
+>>>
+>>>> Hello!
 >>>>
->>>> [...]
+>>>> I suggest one more nice to have improvement:
 >>>>
->>>>> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
->>>>> index 163ecdc7fd6c..70be19357d11 100644
->>>>> --- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
->>>>> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
->>>>> @@ -1,304 +1,12 @@
->>>>>  // SPDX-License-Identifier: BSD-3-Clause
->>>>>  /*
->>>>> - * Copyright (c) 2025, Gabriel Gonzales <semfault@disroot.org>
->>>>> + * Copyright (c) 2026, Barnabas Czeman
+>>>> you could label framebuffer cont_splash_mem since you already touching the node and testing the series.
 >>>>
->>>> Is there a reason for you to remove Gabriel's copyright from the 5 LoC
->>>> that remain in this file?
->>> The original file was renamed to sm6125-xiaomi-ginkgo-common.dtsi.
->>> I have not removed it, it is a new file with the old file name but
->>> i can add Gabriel's copyright here also, would that be fine?
+>>>> Then in additional commit, you can replace manually defined `reg` in chosen > framebuffer node with
+>>>>
+>>>> memory-region = <&cont_splash_mem>;
+>>>>
+>>>> For example you can look at sdm845-oneplus-common.dtsi
+>>>>
+>>>> Tell me what u think
+>>>
+>>> If you wanna do that, please call it framebuffer_mem, "cont_splash" is a
+>>> Qualcomm-specific name for (roughly) flicker-free bootup
 >>
->> Well you certainly don't seem to have contributed anything additionally
->> in this specific patch, other than splitting a source file into two
->> source files, so the rule of the land is to generally keep the copyrights
->> as-is
-> I have kept the Copyright in the original file. The question is should I add it here also?
+>> I have feeling someone recommended me to stick with cont_splash_mem.
+>>
+>> I think, since we'll be doing the mdss reset anyway in sdm845 (which I used as an example), I can do the rename in our sdm845 too then without any harm? (no it's not flicker-free takeover :D )
+> 
+> It's not flicker-free because the OS must cooperate in that process,
+> whereas we currently reset and re-initialize the entire display subsystem
 
-This new file that you created is nothing new (i.e. it's still *really* the
-original author's work), so I would expect you keep the copyright of the
-old file too (as your change isn't copyrightable).
+Sure.
 
-Konrad
+Previously I was thinking, that after doing proper panel driver with 
+proper initialization sequences etc. etc., we could have device-tree 
+property such as "linux,takeover-from-bootloader", where we could skip 
+mdss reset, panel reset and just continue from the point what bootloader 
+set (for devices where bootloader does the right job).
+
+David
+
+
+> 
+> Konrad
+
+-- 
+David Heidelberg
+
