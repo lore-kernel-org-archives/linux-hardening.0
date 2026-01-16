@@ -1,59 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739E729D289;
-	Fri, 16 Jan 2026 00:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6AA188735;
+	Fri, 16 Jan 2026 00:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768524735; cv=none; b=e06uz84KeawIzBXqj3k7z+4HlvsZ/vXV/p0v5zDGNZ+FNn0aLi39ZewhXF6qSVfAj2VTJS9lygLCTY17FDFkGAVfzo8lx1lvG0oJNli/fZZkRIwKmovpJrAoOcgYGlw1yxBKpdQlS4O+TSUkbcnCQ7yEjfxUtHSnieDOG1JWnPc=
+	t=1768524996; cv=none; b=G8D6tWiyuCMwA7hzLqrClsm5HD8YzwQuoYfTV3D2mLiLoZHO3JyWGCzzDN4DLILdBlx7tianldogEtzfnvyYUFNKX1Ubgeo/I/rLlddQyFH5BpJkFsAoNPTc9xS54AHqZSbekwJB1SDsnpfvoClUr2nRUZlnTS0VTfwf4bWLps8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768524735; c=relaxed/simple;
-	bh=K60EpeW1OnCTHNDlSQ02tOAQsYSCiDrib7sXMBvJMtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0dVMJa/av9CyWIHpq/V0UK6qc3kA99deGZl//2431163v66GP4OpBDyP7JB9t6bRVG1iSTcRVOn1fk/CIk3xQWm5L6zTIo+A3EvMfs+K0Mg7H3eB4maJZNRpK3Jyw3WIMioFRDkVxOh4tP1DDrgqTqjdflyNwF5TzG7m/K4i2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tS7E2Pw1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768524996; c=relaxed/simple;
+	bh=mYox5MYpkOddmossMivdO5FmTxbPtTyeWN9spmG5Hr4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UseTV+QOloW6JkejROh0A1RBtLVU8tPpasiF4Ro0/Eyc/K/6nbVRlvN8haTyOqDeMFdxoPhM2raS+UpzlnZvfSzviU+gVojZ+5wzKNpnCIrKMsII9U4h2osOrT+CfuPxS3xyjzgxfBB3Q7/Njgo+3ME/m75JGq+bNLB0ctBBt1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+JRnoKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tS7E2Pw1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07D25C116D0;
-	Fri, 16 Jan 2026 00:52:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+JRnoKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC9E4C116D0;
+	Fri, 16 Jan 2026 00:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768524735;
-	bh=K60EpeW1OnCTHNDlSQ02tOAQsYSCiDrib7sXMBvJMtE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tS7E2Pw164OqZKCU6eE4nwPSy/8EY2d+tsW2YoRuhLHQMN4zv9n0LyAQaSg665B42
-	 n47GhZ2OKPqw8i9JnS9sVjGDunlaVK47TWkcMr+ZR+nVf1PWDB5KeraSD/GFU505KJ
-	 HqG9VM0kQLl/NebDxY/0/dyHW9rx/fN7ScGjWruZ/tE1A+kOwVYZk7+EIZeZU3mCFU
-	 ko4Tfcg6bbcZtnF9In/5k+zFkJWg9F/HDSJSX9S153zz5vJaRLz4IHxS5tirvKbdDq
-	 HWP+NgdwNYPebutLDfhB9+LFaAhYcgEhejUNAv8YGiT8PslNNj2I0taU5I0ArJgUv/
-	 CzsYnjrrW8MXQ==
-Date: Thu, 15 Jan 2026 16:52:14 -0800
+	s=k20201202; t=1768524996;
+	bh=mYox5MYpkOddmossMivdO5FmTxbPtTyeWN9spmG5Hr4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=G+JRnoKN9iAIOb3d+CF3ntkwoG9QgdBVcCsh9WpLVMQOIgvNDGPcBmLET2DwlcBG5
+	 k04UJurWHMsU+8crOpbzzPNh1E9Y5gQNd8yHHsSiUmy1cOGif4K70dLNG5VJcV4ktQ
+	 zuaiDg6R0hYtvw3I6JAM7ME41O20Ix28em+sB/knN4u+DfyQKAum7G3uP+okgodrvA
+	 27TbzWg3K84BaRJrBTRIEOFTfWtT6BrIqd/FzSpJS12H2kFrjf6z5pJzns2ZBqq4DS
+	 2eGf9DCbzCggtWoinruRb7HuKGrWgHkhv/DB5XgrhaJRQD2yIJg6P6GcLdsGs5ugKp
+	 iICHkKHGkXKtQ==
 From: Kees Cook <kees@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>, linux-kbuild@vger.kernel.org,
+To: Tony Luck <tony.luck@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kallsyms: Get rid of kallsyms relative base
-Message-ID: <202601151651.C156DC5D7@keescook>
-References: <20260115145644.1749948-2-ardb+git@google.com>
+Subject: [PATCH] MAINTAINERS: pstore: Remove L: entry
+Date: Thu, 15 Jan 2026 16:56:32 -0800
+Message-Id: <20260116005631.work.387-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260115145644.1749948-2-ardb+git@google.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=959; i=kees@kernel.org; h=from:subject:message-id; bh=mYox5MYpkOddmossMivdO5FmTxbPtTyeWN9spmG5Hr4=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmZPfv15hpr9CVnaFoEZPFdErfbPeEjn8KVk7P/THa7l fzI9c+jjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgImUZzL8UzSxkzHTWjYhdZ7e 2iCp+U+uPLlYEnpIQqr8Xe+lju05bQz/yy1ku1cctHTwcZM8oH5JbrmdplZt693dxwvkSwUaf9x lBgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 15, 2026 at 03:56:45PM +0100, Ard Biesheuvel wrote:
-> This makes all entries in the kallsyms_offsets[] array visible as
-> place-relative references in the ELF metadata, which will be important
-> when implementing ELF-based fg-kaslr.
+A lot of SoC series end up getting CCed to the hardening list due to
+their mention of "pstore" in device tree or similar, and this noise isn't
+worth making sure I don't lose pstore patches by having them show up in
+the hardening patchwork. ;) I can use better email filters instead!
 
-This makes things a lot simpler.
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-Reviewed-by: Kees Cook <kees@kernel.org>
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dc731d37c8fe..02c2cb7accb8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20961,7 +20961,6 @@ PSTORE FILESYSTEM
+ M:	Kees Cook <kees@kernel.org>
+ R:	Tony Luck <tony.luck@intel.com>
+ R:	Guilherme G. Piccoli <gpiccoli@igalia.com>
+-L:	linux-hardening@vger.kernel.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
+ F:	Documentation/admin-guide/pstore-blk.rst
 -- 
-Kees Cook
+2.34.1
+
