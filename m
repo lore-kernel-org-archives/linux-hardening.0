@@ -1,140 +1,96 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEFD285074
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 13:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DF533BBC8;
+	Fri, 16 Jan 2026 15:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768571670; cv=none; b=YRrbyj7qjYXpEDcozb7geNo+95gNP3axzyvqhg7mGGP5DPi7Uemhkxx3y6QJgvnJHqPGlvYrUBmCcN/YR023VWtjJGBulybLGcCXf7qs5540WQhooU091azlYSfCEZMO7h+pe37xzYmx7nXCuO4OBte4zAzkjWTyu+C1bG8Y9WY=
+	t=1768578919; cv=none; b=cCBaan5g4ShsnvIN1/NU6v2CvqcEhjcNQBGwreYu2QWEDas/tvwVpyvveqACQK8hQcuaSgpaXnH2D1al4D84PMglzxdcPQC3EPCO4mla5KodS67IJ9A6wdZIwfrUzRvTxpWwovSJeHhMhWYmLD7AJUfBf2c8zJBcn3QFwcTR1t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768571670; c=relaxed/simple;
-	bh=2Jyc4vjPWHQ8N29GFPPd4QPUxfDxmdAZddY3K56YrUM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZcJLsmF6785zCEs/sUYt2S8MGxJw3y9k86n55A5xalymGE6NWINa84svYZRfHLuf1oTrDd6VRWMc2VPFklxyIKnZP1xuCzVNzB5BQXONhfprtDKUXG42eFA7kGP6grB9IykE+l7pQ4Hgz+LPMgbhnzNUBG5gwN36nXU78YXowCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=K9BQh4a8; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1768578919; c=relaxed/simple;
+	bh=KmSGZAPOA/EmLr4+XusNqLJfnRxNxjmUq0BkrQWKJl8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mhlZAWHG/22MGp+M/k917MOyoIeMCxbzpIhEc9RCatzogGBQ25Wm4B6U7qcr29xIIQp0ZmYF+FaaHOrXL43QG7pqzRZa0IjI1qjbskBkQuaTnKmioCWE8OXe06I2eAptHymDNdOzvTzTGVDuNR0WbNHlHzyBOlDAEZW3bD19iu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=mXqsJiHy; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=6YZwMJxC; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="K9BQh4a8"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42fbc544b09so1465860f8f.1
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 05:54:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768571667; x=1769176467; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2Jyc4vjPWHQ8N29GFPPd4QPUxfDxmdAZddY3K56YrUM=;
-        b=K9BQh4a8aZ5mcKvc22cHMHLYT6xwWRlRDeFBc2yLrCgG0AD47CVxTHoudVy98hUYOc
-         8bz86qaXlX2ZPMbs6RD/y5QKpWaA2GaVWL1SlttExDux1BkhdSSjJGj5/ElT8LfTRm0+
-         dj11njKu65iXAGj2QJJmrd4/HlC/cezwhU90d5bCTuuOxZZguFikqJKi4Zt3Q+he34s/
-         x546B1I5RhsHx3bVNBC5pay8PP+oIJKrC3sfGWazehRAVlttZgr5xF9YLRMrNBHA/fzP
-         SOvipZeJoypOVTD+4P+zmxHD/tNOqnJRl42CfhiuvQllYWg/t6psKMiZNwSnWmO4I2BZ
-         kWNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768571667; x=1769176467;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Jyc4vjPWHQ8N29GFPPd4QPUxfDxmdAZddY3K56YrUM=;
-        b=bUo4yXj52LlZSRaRpoEzqOOI6JjN6EeDqCqZB/6TCO2v8K0viAT21IZVPaqEzGrATS
-         7vbXxJ937mfGkjldGzRzqOm0vUAAi12dDbe4BqUE31qzaOLIWBBQD1UNZK2rXmgLf/f3
-         S2jCT+GvrusEHnJpS7FgupnRNiBwlO3KDiVnhOXgJEGKmQNFiTMaweCtwypOywMiBIpv
-         6X4906Sb5KkCB90FI/9haafJY9f3S05vNorYsygF0IzS6NEofpt6ZD11AHXLH9hKrlUD
-         XCWvEpqDbe8MjKyUhGPBYZ+UZ0dKuYLmMyqv1F01b/cqrPpGPR9Fk4CzLtvdH7G961R+
-         Wy1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW9J15e7aR3B8LyB8vTCpugXanxobGuJk8uwQZ49kGOsNOJB542Dqap4N2HssLutPhgbC3ULTD8nPe5pIIVLUo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4pdhOGLWO7GbNpCwsQTHJbJN7wYq1ytT4hvQJdoeTlNkisjCR
-	Q2fAe7y2XvC1kXsZyqwF9K5BiJUTs2tNxoAw/EghLmss5+k7lkMcrshhPOv9w3lmEhE=
-X-Gm-Gg: AY/fxX7kaS8ed5Pj5a8b2WCv6Dg7ARm1yrlBTRo9Eqd19OQL1MyzhoyhAGF9KGmHPXh
-	/QcmhEaKpYPvKvktaH4RnrWm8nNCWXjsPzhJAhGMQHSL2+Obw6jyQY57CBNvLKongtXSQh4pcwD
-	NSikQetJbUAZSrCHCwKLSgMLG/WwKIjjrKeO5FRLiKu6BkxefH0uCgiM2gyEDV48aNMsOix52CR
-	tbI+PLAixHksjGe/9ihay9n/9WAVCmy+1GQHNbyaiJuEmf0t31dZnFNxmU+WvXktSfVvTeONohC
-	Wpeg/0FvWTTC0mtohee/rRKRhiUNSzCRagP+dTG7Az2VUWODshamk+88hHJ6Xgw++nhL+3kB+Hk
-	9pRYJZR+9jUi/j/xWK7QwY5pRdu7Yb7OP5O9Q7LBgnn2+TFtUHvbXnj7cI6zjreEQKLGIl9dquE
-	hQhMqcj8mqNPYji4HvgdHAGp4Fm3pyyUT5YErE4Js=
-X-Received: by 2002:a05:6000:4387:b0:431:1ae:a3d0 with SMTP id ffacd0b85a97d-435699810a1mr3695386f8f.25.1768571667158;
-        Fri, 16 Jan 2026 05:54:27 -0800 (PST)
-Received: from [192.168.3.33] (97.36.160.45.gramnet.com.br. [45.160.36.97])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435696fbea8sm5433542f8f.0.2026.01.16.05.54.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jan 2026 05:54:26 -0800 (PST)
-Message-ID: <6168099632390068c8544b48f2e81bf737aa10d7.camel@suse.com>
-Subject: Re: [PATCH 14/19] drivers: hwtracing: stm: console.c: Migrate to
- register_console_force helper
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Richard
- Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg	
- <johannes@sipsolutions.net>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  Jason Wessel <jason.wessel@windriver.com>,
- Daniel Thompson <danielt@kernel.org>, Douglas Anderson	
- <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, Steven Rostedt	
- <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, Jiri Slaby <jirislaby@kernel.org>,
- Breno Leitao <leitao@debian.org>,  Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet	
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni	
- <pabeni@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook	
- <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"	
- <gpiccoli@igalia.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy	 <christophe.leroy@csgroup.eu>, Andreas Larsson
- <andreas@gaisler.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Jacky Huang	
- <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>, Laurentiu
- Tudor	 <laurentiu.tudor@nxp.com>
-Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	sparclinux@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Date: Fri, 16 Jan 2026 10:54:14 -0300
-In-Reply-To: <83zf6daetu.fsf@black.igk.intel.com>
-References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
-	 <20251227-printk-cleanup-part3-v1-14-21a291bcf197@suse.com>
-	 <83zf6daetu.fsf@black.igk.intel.com>
-Autocrypt: addr=mpdesouza@suse.com; prefer-encrypt=mutual;
- keydata=mDMEZ/0YqhYJKwYBBAHaRw8BAQdA4JZz0FED+JD5eKlhkNyjDrp6lAGmgR3LPTduPYGPT
- Km0Kk1hcmNvcyBQYXVsbyBkZSBTb3V6YSA8bXBkZXNvdXphQHN1c2UuY29tPoiTBBMWCgA7FiEE2g
- gC66iLbhUsCBoBemssEuRpLLUFAmf9GKoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- QemssEuRpLLWGxwD/S1I0bjp462FlKb81DikrOfWbeJ0FOJP44eRzmn20HmEBALBZIMrfIH2dJ5eM
- GO8seNG8sYiP6JfRjl7Hyqca6YsE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="mXqsJiHy";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="6YZwMJxC"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=To:Message-Id:Subject:Date:From; t=1768578902; bh=Mve4+ZS70I8fnOLJmWTrmWC
+	2UftHU3YU4RPNj6SKMZo=; b=mXqsJiHyuKYeJh905T2y2duBH4FQBK06li2B6ViKuX7meXoHjb
+	Z4HxQPPIDvqKFEREDPq/S2ievgNSZDM2v8D9dKjRFqU8YfhJr39e67DrAq4JPC8FhZ77YBTQIvU
+	ZBQdZEN/ghI9CJhT5gU0BufAojJ6Th8oj2mx1j29t4SszJmmCAJQokDIgLjXMAWtzl8sinThRYw
+	gPYUjTSlxmo0Lj7+VN/wrSm56B4SqeORO2rXC8kNzrL7D4Qi0J+XoLA2Tx5hT8rIVznq/GDQS4u
+	Zn+ZcujkHc8cSMoBlwuJjiaviY1SGW8lCuI24eKsYGbv5V6g22UsA6EOOwH2/vEGnjw==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=To:Message-Id:Subject:Date:From; t=1768578902; bh=Mve4+ZS70I8fnOLJmWTrmWC
+	2UftHU3YU4RPNj6SKMZo=; b=6YZwMJxCDPZQYlKJyuQ2dQqt9SC4gFhTYhzEJ5Jl2sWPyNeW9J
+	7PiUgcuyE0Lri1GHWat0TewN35a4AwVfoKCQ==;
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Date: Fri, 16 Jan 2026 16:54:43 +0100
+Subject: [PATCH v2 1/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Remove
+ board-id
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260116-xiaomi-willow-v2-1-4694feb70cdb@mainlining.org>
+References: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
+In-Reply-To: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Gabriel Gonzales <semfault@disroot.org>, 
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Biswapriyo Nath <nathbappai@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ linux@mainlining.org, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768578900; l=996;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=KmSGZAPOA/EmLr4+XusNqLJfnRxNxjmUq0BkrQWKJl8=;
+ b=zgZ1vqo8W5dM2rSFXbhSuMApV9aie5HRCKMemmJJrXXbFT4tNpfCQgwndUsPTe+EmdjhaimA3
+ ClNiz8ljpvoBxwGohsvv4LEZIoB/jgtqJmaquaDzxY+N+MR06zeJ1hu
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-On Fri, 2026-01-16 at 14:04 +0100, Alexander Shishkin wrote:
-> Marcos Paulo de Souza <mpdesouza@suse.com> writes:
->=20
-> > The register_console_force function was introduced to register
-> > consoles
-> > even on the presence of default consoles, replacing the CON_ENABLE
-> > flag
-> > that was forcing the same behavior.
-> >=20
-> > No functional changes.
-> >=20
-> > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
->=20
-> Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Remove board-id it is not necessary for the bootloader.
 
-Thanks Alexander!
+Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+ arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
->=20
-> Should I pick this up or will you send this with the rest of the
-> series?
+diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+index 6b68e391cf3e..bf03226a6f85 100644
+--- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
++++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+@@ -18,9 +18,7 @@ / {
+ 	compatible = "xiaomi,ginkgo", "qcom,sm6125";
+ 	chassis-type = "handset";
+ 
+-	/* required for bootloader to select correct board */
+ 	qcom,msm-id = <QCOM_ID_SM6125 0x10000>;
+-	qcom,board-id = <22 0>;
+ 
+ 	chosen {
+ 		#address-cells = <2>;
 
-I'll need a v2, since some things will also change in other parts of
-the patchset, so I would wait for the next version.
+-- 
+2.52.0
 
->=20
-> Cheers,
-> --
-> Alex
