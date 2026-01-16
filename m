@@ -1,130 +1,108 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8545F33A03A
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 09:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB6916DC28
+	for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 09:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768555109; cv=none; b=EMWxxY7Z7ccGNVu3nV5E+5u0vuCER3EsXx6beHK/EVsTZyZyP01jD8M3seoPyYHr/ajA6b71Fd4Erm21iz/MQ40ii8J4SG3z8gZGvsKYJz83lEvO3Erh6E50zI0n5lxY4iLCWPA3oL+YQJj0fuIHFYbI3vQoTuiIJ1D+n9R9csk=
+	t=1768556063; cv=none; b=bpCWQ04mxzdDxvtWWcDTyHk9KFGXo0AQRcRl/bCq3uRV7tFnBWMps0CdH4Bbqv7jUKGt1FzJPvq1ng8LH9tX0P3eModAjDY3L+uZ3CF8lphR9Lmkj4Z2EhpBUIlDHKB9cVpopkhAY/lGHFJI/hzkJMarfCErul3MxWvQBdeUYkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768555109; c=relaxed/simple;
-	bh=AghABfkarHqDZQKCjjyiZmDcR7FwtgnGUdqMcOQ//v0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LsA9RF8QHXjg9BdZ2EfoR/sY9su1pMAj8BLAaMRvifnXR1R7D4CdtjiA//bce64N9XZm3Fad7i4QmD6ZQAMcnbc0nLmPVfqSwpv/pJBnR7XAlh2Xg11OViVWnBDQy91aLjxJNrg7JVJ8ydk329Uk800tFCILFuii4ft7Rkt2Vu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pPaj2LfF; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1768556063; c=relaxed/simple;
+	bh=pbj3poqSA6w0rLBL9Xjc+o+0Qy8FGE4aZbcHYXFFjrA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=t1pMRdk4kDGxKxgzwygrbc1XUUz3Qx/NeDzUM0K+RFJvtpglM8TmQxnNYxfhJag6UcIhiySIWiXW7CRklovjHU8+e0A8iZ4G94znvTc7QhBWUtB2ylB2rVV3aq1aClx4dVxi4fpTZt+9DxF/hrUOg3HnLKzekkkTQUdhZ+dpt/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OHqUGt+1; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pPaj2LfF"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47ee974e230so15959165e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 01:18:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OHqUGt+1"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-47edee0b11cso9207385e9.1
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Jan 2026 01:34:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768555106; x=1769159906; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z+AGXRtrMXkyrXKzRmoE9z026WTEqpV4D7gQD8MxXK4=;
-        b=pPaj2LfFQNsV88/GHrQq8j7NyFSfU/ZTDN+4B8nBIYcZJrzTPueWLPTs/Q0d1gyv/c
-         HgdMyYHx8FLjkpzE2hY7VFzLJSKVDHDMSNa42+8Y919PDLXNcAJOOW8jrU9NM0z0c5o4
-         FvXWiuzEtD6EjoYC+U1BUyQPd2te4/iiWI43aai+IbYvMOYO+ii4DcpPGFqhWUo0fx9J
-         DnAqW2ZeVyRho43aCwDPZrtXkPsUdcW9XHNnm1R00tYWW5jJmTzPJCvJa72QG84mYyvV
-         424yZJ8tX3V5N/hjMCH0pRxE0qZ9m/edSu5OLEXRJ7UNVcViOY4YPedEMQW7eEoyWAG9
-         2mkQ==
+        d=google.com; s=20230601; t=1768556060; x=1769160860; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SM6NKFa+8czj9hhtBF0xXJOx+gqzzPlF6ypX+t4zEPw=;
+        b=OHqUGt+1xfUCMc++xzWDe3jQhdRFl8fI8g1rjZCFkBXSMGZfrmKJ6nmx0WWqz7qpzn
+         o52fygM3kCEjhXRwMiDqhFxsMVXWORC/jt95agXIVV+kxxJ4Aydo+kHLYLCrwE6GNvri
+         +4IB9eDcKbM9HO9ZrcoAhou7vyy0u5v+mntHx9TobjQsNGwRk7HIuqOGiLavKDkFNz+T
+         KAck+khopMfgBylKjpsUgWNDbiWuMEJDjE7hAQOVsezOnzXJWi99XyhS1+xzJ6IPteWN
+         6g/+AsskhBsq3eNs3G+JS3eLrHtv1FKtR0vNj29AEXRjGH1CLGOs7RUNRkEFBC7LfIpL
+         nyaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768555106; x=1769159906;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z+AGXRtrMXkyrXKzRmoE9z026WTEqpV4D7gQD8MxXK4=;
-        b=dZ/O4h6H3ajUttfEgikaVxlfPTcpQ2CQUJvcZ1wKeMuiiqcvuQyBHnZpbPHC+utMlu
-         FOm6GIn/Yc7XJr/bqC28xrok4mKrfCNISvaV5gD37IW5lLPoR1Udr9uAJXMYscm5tQ4z
-         nCv2bnMF3ZSM5Wk+2ThfclYvC+AePfybqjzYUinZMPULX/3cEp4vRiTo0Wlkp2+1N9BX
-         gwXZrU4RGZnUNxyMPe6hz3sU1txsmE8s5NqjLEr91VoEzvVacpVncFgSMU+Kr6QyQRaS
-         wuFKC/7ixAlyCEqzhKKnLKsehFt44RvgrrsEN4hUglbcjuJ6ZB+wUrG2sOpONvOoz3FQ
-         EkPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYGPUg44git5BYXQpIZ64zOO7CcYMUNF3kmq/FRoijZrH9XU0pqANZqqGUhCLrZEf93ODvLCp3VSUPZFdY0/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEuznV4qF6tKG3bxeJf83xeNOb0sGgSEhY4bw4v0DOyajfrcaS
-	hcBZEdv2JjEoSv7VBO91r8uVxH1LuhmMpM8j5SuIzA9CHO5bthdZX90FQcED2n8nohM=
-X-Gm-Gg: AY/fxX6bKi3WptAVeCZnf/4gPxRPzKtEbT2Emqwa2gb4C2Qyv4T/Axcz3ZzI5Xjrh79
-	Pe/SJK7/hB5ObOmY+tXbDRlNWUwThgOtZu0Kc2S2lqCdOuocG6lgxpM9k061NOOa/pfbWSjlxJk
-	J/ldtXoR7cxCqNvESnnzKik1IUMD+1Guw0Zrb1H6BOSom/tXMxuJX0WUdd5erjK6m6viE5YgPhw
-	UyHdpp3I1OG5hC3UjsYCvvYlp++E+BO+QeKy+9F2HUwnsXWTFqbuQGPsdgdCYnI3xR44u59u6ow
-	0cqXD4h6CAOjff1iMuNE069Ahtq0BquYP5FqN0YZYKo0Ro0jGJzr/i0HDyP+1yIeHOsfFvUrhTx
-	W1ZZm/LOXC+QgA1wX+D48m2pV92wGtoSySIwaOzcE14fbf62agEA6otoerZQk0Lv4kJx7RpvdAw
-	+ZZIKdnBunCp2M9U6j3A==
-X-Received: by 2002:a05:600c:6209:b0:477:641a:1402 with SMTP id 5b1f17b1804b1-48023ea2fc7mr6725565e9.4.1768555105706;
-        Fri, 16 Jan 2026 01:18:25 -0800 (PST)
-Received: from [10.11.12.107] ([86.127.43.8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f429071besm87551575e9.10.2026.01.16.01.18.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Jan 2026 01:18:25 -0800 (PST)
-Message-ID: <d3dedf5e-ada3-4d33-b1a5-7556ba80ffb1@linaro.org>
-Date: Fri, 16 Jan 2026 11:18:22 +0200
+        d=1e100.net; s=20230601; t=1768556060; x=1769160860;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SM6NKFa+8czj9hhtBF0xXJOx+gqzzPlF6ypX+t4zEPw=;
+        b=TV7te4zCniI1eGCuyxuZlVgsMJmJRNGgSH+EWFfhHLTDVnpiez95K79GnPiPCKbMTt
+         Isg6R4dUFNaploxIe5h4IrnJDBbs2jQOxY4MfJJh6uCJyrDyDHdDq5IZAXMbhgO8Rmdk
+         7+uwAA5HAQ8pxhGWHdtGEVqHX2OLZaTQvgrp+uwyvA5rd25tEQeLPUW2FkKxHE5E+V5t
+         jVc0S/Q1vius+75ptx+RlPAgJhXdjthuQN7gVbTxFJcEllESvs46k7JOGK5G7ZHVq4vy
+         /JAv8gMMNUaxWDNSHtFWpGeLDkzLerQT/SwWOhx2F2OYZMAsMkhXWI4z97rr5v5Kt26V
+         06TA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWiKCCDUhr1cv8NTMNepqeGBRSRSn7O3nwEiJDLqmtGENwbKfBUPiWhocuLuZhlYax2qzpWCz0bJ6SvRKnuOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyIi0xGsrpKomHSlLyu4QtAeaqAqO2e15JcqlGdStJTouQ56af
+	OxW2I7ClHni1vt52FSBROUmdj0tOo4eOxthDCmOHL9RZiK5GhGO747W1sCJc7qB6YaTUZCaObg=
+	=
+X-Received: from wmol18.prod.google.com ([2002:a05:600c:47d2:b0:47d:56a1:4296])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:474d:b0:477:7b16:5f77
+ with SMTP id 5b1f17b1804b1-4801eab5193mr17103645e9.3.1768556059765; Fri, 16
+ Jan 2026 01:34:19 -0800 (PST)
+Date: Fri, 16 Jan 2026 10:34:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] dt-bindings: mfd: Add Google GS101 TMU Syscon
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, willmcvicker@google.com,
- jyescas@google.com, shin.son@samsung.com, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260114-acpm-tmu-v1-0-cfe56d93e90f@linaro.org>
- <20260114-acpm-tmu-v1-3-cfe56d93e90f@linaro.org>
- <20260115-slim-denim-potoo-cad9cb@quoll>
- <200d34bf-150e-4f8a-b400-2f54863502ac@linaro.org>
- <e2f028d6-774f-4773-889f-7d56b833067e@kernel.org>
- <fcc5405e-189d-4195-8db0-3acf35bbc0a9@linaro.org>
- <26d86470-aaa2-46e3-9940-010a903df4fd@linaro.org>
- <0176a63a-6b04-4e30-b718-847133882050@kernel.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <0176a63a-6b04-4e30-b718-847133882050@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1149; i=ardb@kernel.org;
+ h=from:subject; bh=jkgJW8J3bxHcweCYNOTK5wmG7iWn+bGurzq2dxW/Ks8=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JITOLjd3oQEH61f11LpI9KzYYHPANVmiYrsv/3v7rZsYfj
+ RZvMg53lLIwiHExyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIms4mX479Qdzc256uPJqW3P
+ 9rDInFucu7B18r2/4n90uZf4nQ39kMnwT7/q+KQJdTaP7uf0nwvX2yLoXL9+j3jQOaNTjTrr37/ /wgIA
+X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+Message-ID: <20260116093359.2442297-4-ardb+git@google.com>
+Subject: [PATCH v2 0/2] Simplify kallsyms offset table generation
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+From: Ard Biesheuvel <ardb@kernel.org>
 
+v2:
+- implement minimal PC32 support for MIPS so it can tolerate the symbol
+  references emitted by kallsyms
+- use signed decimal to represent the offset, so that symbols appearing
+  before _text can be represented correctly.
+- add Kees's ack
 
-On 1/16/26 11:14 AM, Krzysztof Kozlowski wrote:
-> On 16/01/2026 09:50, Tudor Ambarus wrote:
->>
->> Because of the hybrid approach I'm arguing the ACPM child node does not
->> fully describe the hardware, and it's just a firmware abstraction.
->> So option 2/ would be to have just the TMU IP block described with a
->> phandle to the ACPM IPC:
->>
->> soc: soc@0 {
->>     tmu@100a0000 {
->>         compatible = "google,gs101-tmu-top";
->>         reg = <0x100a0000 0x800>;
->>         clocks = <&cmu_misc CLK_GOUT_MISC_TMU_TOP_PCLK>;
->>         interrupts = <GIC_SPI 769 IRQ_TYPE_LEVEL_HIGH 0>;
->>         
->>         /* The "Firmware Phandle" approach */
->>         samsung,acpm-ipc = <&acpm_ipc>;
->>         
->>         #thermal-sensor-cells = <1>;
-> 
-> Yes, this one, I think it's the best representation.
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nsc@kernel.org>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Kees Cook <kees@kernel.org>
+Cc: linux-kbuild@vger.kernel.org 
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
 
-I was leaning towards this as well. Thank you! I'll start reworking the
-patches.
+Ard Biesheuvel (2):
+  mips: Add support for PC32 relocations in vmlinux
+  kallsyms: Get rid of kallsyms relative base
 
-Cheers,
-ta
+ arch/mips/boot/tools/relocs.c       |  2 +
+ arch/mips/include/asm/elf.h         |  2 +
+ kernel/kallsyms.c                   |  6 +-
+ kernel/kallsyms_internal.h          |  1 -
+ kernel/vmcore_info.c                |  1 -
+ scripts/kallsyms.c                  | 64 ++++++--------------
+ scripts/link-vmlinux.sh             |  4 ++
+ tools/perf/tests/vmlinux-kallsyms.c |  1 -
+ 8 files changed, 29 insertions(+), 52 deletions(-)
+
+-- 
+2.52.0.457.g6b5491de43-goog
 
