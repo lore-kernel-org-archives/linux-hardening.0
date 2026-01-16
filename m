@@ -1,37 +1,37 @@
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C8D33DEE1;
-	Fri, 16 Jan 2026 15:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26DB33BBC8;
+	Fri, 16 Jan 2026 15:56:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768578990; cv=none; b=eaDMZrMkVmusYptQddtDQstHh8YZQLmgAVEHA9gdhyv1ICC1GKoAciEIH8l5c0LsK1Tz2Hv/gmtD8iy4RwbF0cqWpip47Sxekucd1p0NnsMaogY9Jx3tBWJCfC8ZLOn7OSqsPPC1s7Ivw8M6xxqw395Oig1w+2vjNSDC4+6K9L4=
+	t=1768579006; cv=none; b=fnNdQ1Idw7lzxcwUWhmHOWRO7gcHfkJwQEW62haBi0dANu9Uyai71l45rKylgn70WIClMxQ8DVVnBzQ/XcGjqJMR+5EO03Cmqn2d6uoeKYR/ebuInRLcQ9KwpD8W7tDYIMTyRC9gHNUY07LtNtnZt50eD49Gg1EswFdjgAZ9ZeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768578990; c=relaxed/simple;
-	bh=VFaCfbTzspjIFLkBNe5/3NnB7u2/yZK1b0qYCRgmDKk=;
+	s=arc-20240116; t=1768579006; c=relaxed/simple;
+	bh=qt3inedUq/MmQoKO9566ag23yZ8vQbct6HmDG26LUVU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XB7xd+YCHdlRZUmA03g8m3HZWfuK29EKyAFKuynLDEZWLLVTrL/fxHhCSZiPj/+KqsFjchbRwUG573mSSF5KtcFbfAY3V2gTv/Ax5yWwmjSFPEP7sOoaAk5BCpPU5nBuG/Jfz8H6A3H2PucGu2FYWLOjw/B+Uc/OaIIZscscJvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=UUtAsG7F; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=xs4C8Uw5; arc=none smtp.client-ip=5.75.144.95
+	 In-Reply-To:To:Cc; b=NP0A2aE11tZfdNx8YERFZMUXuD/KaCzS040hYjAz0zIZOFVbA7irwaLtoDjyYBM4ocSbxpgoUvnL2KHZezlFw7shSmwux83Y5+d7ATFblTHsv+AGk0SpkujdumBF6IYkvjk9Yh5w9kkRK7SXtYt/QnWo1qg+ys/RsbthiTK0X3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=JyMSeUZr; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=JVPAEds1; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="UUtAsG7F";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="xs4C8Uw5"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="JyMSeUZr";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="JVPAEds1"
 DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Subject:Date:From; t=1768578903; bh=jshATM7V8XA6Arha5w1nsKi
-	ECHnRPyTHQJ0toZfe/yM=; b=UUtAsG7Fur9PaC/NnjdEYqUA8dKVgYVNN2T2vDhmxzx17ieoRD
-	DJxma1Yy+oW8hG/Edn4x7jABVx2Ilwwy9B/A0mLRQ8RJJpzo97keHXXmuYXHvziqhkXC8v4yhzF
-	APU5w1A5ERXcFrQ9yHnu5BYmyRshL+1nWxF4G6VrQHEupp+oms9F73p4Me77ldYi7Dd1lYR/2O4
-	tPFPTgY018spCLlYwLU0+cNhpP53DtxrKgbAf3NayA84eSdoIpeKMYzfmTr9j+OJEcaDbLs6Hze
-	46yihQg93T+F4pdk88vckNfWFAMbI6bEZLLGW5ZF8fyDksezkMFqX0Gh3z2IXE4TfLg==;
+	h=To:Message-Id:Subject:Date:From; t=1768578905; bh=uKgpy2R20j2XQr08PTw877G
+	gR32Ngtgrcb0QG9cVHRc=; b=JyMSeUZraSyAu4hGlEFqT1dCfJgkjCGPd4duYSyg5vjim1rohF
+	xt8zdweztXkUEOlhtqBUhQqVLupOTS5ScRjqiuXk4t3lBJODJ7LgkZonClKC8y1KlVHEJER4IhG
+	E0za1FVCUa5pDX8juoTr/Lh6OPgQvAiS7EJCA7J7kl38oeaIZ9w/0zskbNSQwYIvKNiPmmfnd/W
+	BFakq48WN1b9pguwoXJ9S/EQbZaO8Adlg9adGVzoMGJAZtgGM7rDbEMCdwhzzSCaxXu7BHJ/Vsk
+	hh0r0NkKXToiGyUeYA6hUbKXp+JDNCxvDO1dR6KoYgh9SBeKBOflt+BZt0WNlsoTpew==;
 DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Subject:Date:From; t=1768578903; bh=jshATM7V8XA6Arha5w1nsKi
-	ECHnRPyTHQJ0toZfe/yM=; b=xs4C8Uw5/eiGq3DrvbXtmC47XdU4W10/KBaZ4MtbdxRAqN+04l
-	ieTKZoVBGJlirC9g3qnnRd4qwnF6jJ6ZQWBA==;
+	h=To:Message-Id:Subject:Date:From; t=1768578905; bh=uKgpy2R20j2XQr08PTw877G
+	gR32Ngtgrcb0QG9cVHRc=; b=JVPAEds1t9FOW2kbOFlr1gCur/F1vUz3+YT62QtovBOfSqVvjg
+	0vRHGStPLYP4UABeP1gGw0b7NSjckyX/I4DQ==;
 From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Date: Fri, 16 Jan 2026 16:54:45 +0100
-Subject: [PATCH v2 3/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Set
- memory-region for framebuffer
+Date: Fri, 16 Jan 2026 16:54:47 +0100
+Subject: [PATCH v2 5/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Fix
+ reserved gpio ranges
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260116-xiaomi-willow-v2-3-4694feb70cdb@mainlining.org>
+Message-Id: <20260116-xiaomi-willow-v2-5-4694feb70cdb@mainlining.org>
 References: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
 In-Reply-To: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -56,43 +56,37 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux@mainlining.org, 
  =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768578900; l=1017;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768578900; l=891;
  i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=VFaCfbTzspjIFLkBNe5/3NnB7u2/yZK1b0qYCRgmDKk=;
- b=zvweg9i4g2cKm4m8iUeBk9LLhgZ5WacUq0LYcO93maS9jjiMcalYKG25t/3t/CRDpeGebAiKt
- 4IDuLiVvHHQBJnzarHf+DSSfKvZy/cI+nWmYbCWdFPimmO92gzLA2D4
+ bh=qt3inedUq/MmQoKO9566ag23yZ8vQbct6HmDG26LUVU=;
+ b=hPOatdeWy0rnjVlIQcz/OaED0jutOeuKhbzkOL+quAmxNk/RYlYnT/3zu5nWmsZkkdoIaJOR6
+ 9X6Db66fW0NB/lGI0M1nNqwlpOEVTJAVo1Nv2OGeuTgk8rYRPsE+iah
 X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
  pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-Use memory-region property for framebuffer instead of reg.
+The device was crashing on boot because the reserved gpio ranges
+was wrongly defined. Correct the ranges for avoid pinctrl crashing.
 
+Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
+Tested-by: Biswapriyo Nath <nathbappai@gmail.com>
 Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 ---
- arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-index d5e5abdb3b2f..4e1444abc29b 100644
+index a9b6e648fe3b..2605d0c942fe 100644
 --- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
 +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-@@ -33,7 +33,7 @@ chosen {
+@@ -293,7 +293,7 @@ &sdhc_2 {
+ };
  
- 		framebuffer0: framebuffer@5c000000 {
- 			compatible = "simple-framebuffer";
--			reg = <0 0x5c000000 0 (2340 * 1080 * 4)>;
-+			memory-region = <&framebuffer_mem>;
- 			width = <1080>;
- 			height = <2340>;
- 			stride = <(1080 * 4)>;
-@@ -62,7 +62,7 @@ gpu_mem: gpu_mem@57515000 {
- 			no-map;
- 		};
+ &tlmm {
+-	gpio-reserved-ranges = <22 2>, <28 6>;
++	gpio-reserved-ranges = <0 4>, <30 4>;
+ };
  
--		framebuffer@5c000000 {
-+		framebuffer_mem: framebuffer@5c000000 {
- 			reg = <0x0 0x5c000000 0x0 (2340 * 1080 * 4)>;
- 			no-map;
- 		};
+ &usb3 {
 
 -- 
 2.52.0
