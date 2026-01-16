@@ -1,94 +1,100 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEA834EEE1;
-	Fri, 16 Jan 2026 06:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16F72248AF;
+	Fri, 16 Jan 2026 08:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768546468; cv=none; b=C3U4sM3oZGmg6Dx/AjPduO7We0T7tXGtFRChWUgm4+9qLL7iVv9fN+Wmhmv8wz4wn0nV58D4WdLP+q0NiYYdFeKsgJDG9FclAWHV6QCQkZQVri2OjaRUBcFz5m55KnQgQlNy3WmixIT7SXHMH9a0iEm4LfDUPdyINoupTScAl1w=
+	t=1768552527; cv=none; b=WUitxXhO2jV5YT41/6FoXeUQacfSf45SpAyXT2nxnNNRt/Ufx0Mr2eI+H7FrPQV2dZmCnBAPYu9666GGimZUgg1oLc4t473HEr3dZC6CUrv/W7RJhbcwXHnuZWowzKaFsHxquDdrA3H9S+hsBE3IgHll7YKutWM+bjJt/0mnJKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768546468; c=relaxed/simple;
-	bh=w5JngHceOOcSW/+RZ3zyvzQHqORDZxt7MZGUX2p4Mfw=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=IpDyzu5SpJb+/yzEFd0mhdU5WI1NV2hbqBs2CBl+wfbsvQFWr1Am1kF8OJmSSeXbNNAKAWTq8bfhAOf8kPD3VbsbNURBOx0Ne8ruZ07BZ4511+VO237bz55GW2CG0khPd//tZ2seVxLzxvAz4WKm32OWGWNjeqe1hXY4w+kiL7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=rzV7ZLoL; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=p3WzcOjR; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1768552527; c=relaxed/simple;
+	bh=MfiC48edpB9sTJfMsLlAMB/nKxE5voranOulwGp0Hls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bP5GJqMKgLzGoE/KIDmmrSNXvemEDIiz8x6xAEy+sKGC9OrNIrhQjuu3X54cfD+GFuwKCM6SJTXWRe8xhENJmUIgtYSK3+PVx0chtJY3QTrAtAsyg5W+xfwGzD5/NYqja3fEok4A/iNkCascEDj/FQRwb/Pmmm5IaDs6Mz+yw4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XPjanmFR; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="rzV7ZLoL";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="p3WzcOjR"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1768546425; bh=poSUto4ivxkV4hnP4TvlfPA
-	+aNmV/yklwHDXnK0uwaI=; b=rzV7ZLoL+61BFyqW3zR2P85PQP40tnNjk5kOJHlvXBWmIOU7yG
-	L/QTKPOl5PZ/bP/G0x2kHnUYzLZ5zpOFFJ5V7KKrAo/y4kH1p2y1OQzLMz+yl5hpUC7AkN18M4b
-	VSeupnJ5OYVAvZhP6fJwQIgN7mf9o1wPTpJN0Yg6Qq5+ZXFMlfUl4UhrW11Tk8QEf/7Lr78k3rs
-	X0xaw8CDlDd2/fQ9xUeWrmmXHyiNPxQFeSSmurbUpzDci8X8q0gsGgnzP8wisBSY9yJJfBokAfn
-	KElpYuMGuqRF2RQAY+PQN7DFBc64aJRzG//r/kp6+YAws3YOAVDQYRtfYFB7VWM/HYg==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1768546425; bh=poSUto4ivxkV4hnP4TvlfPA
-	+aNmV/yklwHDXnK0uwaI=; b=p3WzcOjR6iHjkxEcM9XdK6BfhcclB8BSKNeOfZhpB3Z7n9Fq5z
-	eIPMpmj+ezFokigSzUrPmv7ByRxVrZ11BgBA==;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XPjanmFR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=/VsCbWyWdcxFjd+Uge5eeXc6nn7oO1+NFmqAbfOwDU8=; b=XPjanmFR+snAbWtctULtoif8sf
+	4/p4rRkN7qUGngefg6Tbxss3aSrrjzvR/pbAWkjAunHDrcJ5Vst+yLPJwPRwpLGwtGlSVCDXY5ekc
+	VGs56PCvrUyiHEL4OHEeubjbQ9XmQ0kxS2QkFIH3dd0nQOFteZv/kSG/D/CuOZh9NBzlVlZZMg3Ga
+	L+gW4lx8KtWzRUXrfpHm/LkKkXgvAGe8gSFqjTouz1roCRqg7P3KiqT2pBDrNGer5Y/bPkjcIVzhc
+	Qm3tTqbTpt2+IlAJw8QxsWyVGKhaXB7RorVsJBWbntOHQPJ+0faEEC1Je2FK3uZn24Az4GASRocdN
+	cke9Q64g==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vgfIa-00000008Isk-3mWk;
+	Fri, 16 Jan 2026 08:35:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5271230065D; Fri, 16 Jan 2026 09:35:16 +0100 (CET)
+Date: Fri, 16 Jan 2026 09:35:16 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
+	Kees Cook <kees@kernel.org>, Qing Zhao <qing.zhao@oracle.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Marc Herbert <Marc.Herbert@linux.intel.com>,
+	Uros Bizjak <ubizjak@gmail.com>, Tejun Heo <tj@kernel.org>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	John Stultz <jstultz@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	Jan Hendrik Farr <kernel@jfarr.cc>
+Subject: Re: [PATCH v2 1/2] Compiler Attributes: Add __counted_by_ptr macro
+Message-ID: <20260116083516.GI830755@noisy.programming.kicks-ass.net>
+References: <20251121193957.1655580-2-morbo@google.com>
+ <20251121195504.1661783-1-morbo@google.com>
+ <CANiq72=kqJApbOJ0hmC_mAYe6DO8YqXSFaLJOsbPhkXfxmvJHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 16 Jan 2026 07:53:45 +0100
-From: barnabas.czeman@mainlining.org
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
- <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Gabriel Gonzales
- <semfault@disroot.org>, Kees Cook <kees@kernel.org>, Tony Luck
- <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Biswapriyo Nath <nathbappai@gmail.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org
-Subject: Re: [PATCH 6/6] arm64: dts: qcom: Add Redmi Note 8T
-In-Reply-To: <ff8fbdb9-dd03-4811-b9cc-4ec0dabf9353@oss.qualcomm.com>
-References: <20260112-xiaomi-willow-v1-0-8e4476897638@mainlining.org>
- <20260112-xiaomi-willow-v1-6-8e4476897638@mainlining.org>
- <ff8fbdb9-dd03-4811-b9cc-4ec0dabf9353@oss.qualcomm.com>
-Message-ID: <4cb609391559a88a4a6f1e2f550f8450@mainlining.org>
-X-Sender: barnabas.czeman@mainlining.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72=kqJApbOJ0hmC_mAYe6DO8YqXSFaLJOsbPhkXfxmvJHQ@mail.gmail.com>
 
-On 2026-01-13 10:04, Konrad Dybcio wrote:
-> On 1/12/26 9:13 PM, Barnabás Czémán wrote:
->> Redmi Note 8T (willow) is very similar to Redmi Note 8 (ginkgo)
->> the only difference is willow have NFC.
->> Make a common base from ginkgo devicetree for both device.
->> 
->> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->> ---
+On Fri, Nov 21, 2025 at 10:47:45PM +0100, Miguel Ojeda wrote:
+> On Fri, Nov 21, 2025 at 8:55 PM Bill Wendling <morbo@google.com> wrote:
+> >
+> > +/*
+> > + * Optional: only supported since clang >= 21
+> > + *
+> > + * clang: https://github.com/llvm/llvm-project/pull/137250
+> > + */
+> > +#ifdef CONFIG_CC_HAS_COUNTED_BY_FOR_POINTER
+> > +#define __counted_by_ptr(member)       __attribute__((__counted_by__(member)))
+> > +#else
+> > +#define __counted_by_ptr(member)
+> > +#endif
 > 
-> [...]
+> I guess there is a reason for this name, but it sounds to me a bit
+> like the thing between parenthesis is a pointer, i.e. that perhaps it
+> is the pointee that one that counts.
 > 
->> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts 
->> b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
->> index 163ecdc7fd6c..70be19357d11 100644
->> --- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
->> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
->> @@ -1,304 +1,12 @@
->>  // SPDX-License-Identifier: BSD-3-Clause
->>  /*
->> - * Copyright (c) 2025, Gabriel Gonzales <semfault@disroot.org>
->> + * Copyright (c) 2026, Barnabas Czeman
-> 
-> Is there a reason for you to remove Gabriel's copyright from the 5 LoC
-> that remain in this file?
-The original file was renamed to sm6125-xiaomi-ginkgo-common.dtsi.
-I have not removed it, it is a new file with the old file name but
-i can add Gabriel's copyright here also, would that be fine?
+> Hmm... what about `__ptr_counted_by`?
 
-> 
-> Adding your own to an existing file in a commit that mostly moves code
-> around is also odd. It would look considerably better if you did so in
-> one of the previous commits that fixed things, as those contributions
-> are easier to perceive as non-trivial.
-> 
-> Konrad
+Kees promised to drop this attribute once GCC-16 releases by basically
+doing 's/__counted_by_ptr/__counted_by/' and unifying things again.
+
+This split out state will only exist for a very short while until GCC
+has a release with this feature on.
