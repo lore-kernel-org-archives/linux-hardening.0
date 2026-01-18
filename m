@@ -1,93 +1,93 @@
-Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F9F23B63F
-	for <linux-hardening@vger.kernel.org>; Sun, 18 Jan 2026 22:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00347234994
+	for <linux-hardening@vger.kernel.org>; Sun, 18 Jan 2026 22:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.181
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768776400; cv=pass; b=lSj+0BwXBlSWXKg5MEon7QTxprWBQkfjKBiKDHZV6iXzwfvmKoirZgpr8qYmozoSYoQOK7LLkehI0V+RQQcX2Zv2ISuPr+pQO7B6vThGx+wAokzIey+EqEODmF3idIbQifXaWD2Hqz0T1OqxqN2ksrKMQ2sfS51b/g1i9HO3vBA=
+	t=1768776464; cv=pass; b=fNqHGSnPD6fkp58q6IBwAL392EgE4Ge+z00CDqNfREwfnJWHC9wHFOxfA2fXrcUePX6tIl+eKCQriTESk2kgAoqsHjsT5CWHEFZEb8w8fWE6ym7FoXfcbWrJcfte05mJ8ePIUt26fGB2ms9nVn4DXILTgp2GcVyUMSZsW4aJWgY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768776400; c=relaxed/simple;
-	bh=2g/7cFlPY2ZAdPsMyWoE68vAlVX/dSFDy6oQHwex+sI=;
+	s=arc-20240116; t=1768776464; c=relaxed/simple;
+	bh=ZBpaIs1HHystnXkMKIEfn8j6ZfCRA6e9fwxUVVxwxeQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g+EmLovnpgekWOtST2K1u3zIqhU5+zCFgAMUZEdt/cw2xZGztFDH/BdiWHucRnR1Iqk0MnLxnYWsSo/GRrI8sqXzp/V3eRwW15ETfGC3RKkf2iS8FQ/JkDoERhNFiBdSboKRc4z6j6tL1rkhG+MpC4/e04+EEOHmMJWmt8oaouU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RiNKT7sU; arc=pass smtp.client-ip=74.125.82.180
+	 To:Cc:Content-Type; b=Um2TvWX+pktAvjffRSvJZl762GDb8TKLE0JIc/vsQyaw3LPru3MKYHt/EFht712kWOr+ODbYiQmExRceO+VAp9Wo/yCSSrfhpOfHVtWvImfZ8HKY7yP5eEt1xgKlsgCNo8xDUs0InvazMuxQYbivuTDY3Ki7JBfCHUdjZawqX1E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JcU1bc9y; arc=pass smtp.client-ip=74.125.82.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiNKT7sU"
-Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-2b6c1ec0dd6so186788eec.1
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Jan 2026 14:46:38 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768776398; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcU1bc9y"
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-2ae5283dae8so234919eec.2
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Jan 2026 14:47:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768776462; cv=none;
         d=google.com; s=arc-20240605;
-        b=Hhb6nV2KuIFJyKUdjPsaRZ4Iw2tOuhO2a7jN2B8mq+aZnSG5YEbJpiwDecSkw26K4J
-         0C6Y7kSKgsN3nfIi1AIL4bx8qt0i+NKeSLNkwzX6BoaEmmGfLWZZSKn71Wyu1cT+OWn0
-         z4RQ2kCgC4Oz8Bei8d+HSN7McEUq0Csn/gzE/AuWyIHTN3a30J1KKwVyLprY2IyngpQ2
-         6IS43O7LKrU6xK7kqV07sMxoCbq2KF3p6O0w3Kn37g3Q/LGR/gnOHSjhGA1EpDqgw1jD
-         1VgGqDQ1T+yAbjSvptuW8UWWc470fUQdCxp4Tptyk2MojJ/kwmFSA7x6U771b55caVCG
-         qrcw==
+        b=EtxZZjPqmm69K0kva5WJbr4Lq0pAIMwb06RTe+6RXo+0h+0UPr/Vrtn62/xOqu3hhr
+         EVuZ3SYNa4R/zBOiTAtqD7AzEX02YXAkpAzqcswW5B8d77NST4LcxWN1TsN0Eo30pzap
+         fgQBG2wZv73tuZ3PZwGph6laVjXV9XNPtm0nX98zN3VbQtNyua7Z3KzZ2G1FbPv0ghbL
+         fxglN6wRyBagMpMTvwWfC7cg+3l4ernJbd1vEgwpcbrBfM7J9LmMmYBwSFTg99cyKaKU
+         gOMxAg+kD5m21IadUHlo6kRooq4PXkTrdII+DTRhjuhNccjbdbYPZaG5e5/MrkM4Ylg7
+         npcQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=HtVEsLC63/IRG9ePaQ4Wz532UEWlaB8YwqF2YosYYDk=;
-        fh=64y5h7EjpUQ6q/te/f3H0g18aFWD8RmD2beJSu5yJfQ=;
-        b=fgztMN4EsI84dQdXehk2g58qKjCgP2uD9DvfMwgGLpjqKjHeRymBcHj+fl8YOs//RU
-         KqB7i4qetfMXRYhSykq3wClrleczi4Vpgy1S6CpN7YW2Ew8Rr2VIs6nFdaLEu+fq5Gq1
-         dcAoog8kuv5Ij86hv7RsKFQ6lLfPij2/LbF/ukGQWPWD13qD9YW42pdhgBeS6BGtqpEm
-         LdOHh5+gPJbRvvOevJ13pRhIRkbsEPbI6NvYz8/cYTc8IR+iXKpRFBHZS+NUdiEtB+BP
-         fEoUIGNYO2nwkfr879cBCrMX5Q8iTYnhRdKzaQ0G+PJ8qMrWushN9Ds4DLd0JhZ53QZ6
-         MZ8w==;
+        bh=ZBpaIs1HHystnXkMKIEfn8j6ZfCRA6e9fwxUVVxwxeQ=;
+        fh=7c7JmT5SGOs8qcgMR4HPspUiW/JU56+YIEcMeqgpL/U=;
+        b=klDO4qbtZkT5iLoJTXPQIfOmJp02ggnR122gDn9AeGDiUcPaJIC02lMZLhsuTa8JJy
+         8ODBtyEK26aiHImP/1lxMwv3leIhdHYTgOgBjFx5Db6+JY4dxSQeAfgzq6QxSTySi8fe
+         B7uq34WdMO5GGXfQ5XitEjv9mYoRCFlu3nqnj79BAWeFwc12G8keY0S0+uxnACGYL0CB
+         xy+jVI8dnKublZOKVEeMuUgYWpWbfm2s3dQmYH/TklgphhTt0GRGxp+h6ib8RV+Q0Yhj
+         h3iaQT17asA87UQppm4wVrVOD1CITAa1OvGTvm9vu1ltW10sd0GufyeqwI9qVk6jfBEn
+         FFCA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768776398; x=1769381198; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768776462; x=1769381262; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HtVEsLC63/IRG9ePaQ4Wz532UEWlaB8YwqF2YosYYDk=;
-        b=RiNKT7sUt0UeJxtr9eAMht9VCrKQxQwvjkYqg+Nh+EbYjqdbFXEy5RFdOZLtYlL7P3
-         tXtCh949D7x6+iVHHwyHcEczfLbRkvZtV0NAKl5Zj7TRa76H/4xfpm1SYn1lZMb6mx/1
-         qMI3KdykDFWJdkkZyKN1BoeutmHCs3yInnJG0ieWD9cVmooCLIgU5A3SeGJhzay2jaru
-         g6tkBAiZ4pA54ZnCrjBv2m3ZPGAgLMbYIWUISmhV+Rq+QJVl1BpPJp8k/kXSW5swbiuQ
-         yufYPKVNBXGCSzWfIxIYSo58LXSpzBaDc1LVwzNj80Uop/iL/jnArEjMlP1r9z2WujU1
-         nBpg==
+        bh=ZBpaIs1HHystnXkMKIEfn8j6ZfCRA6e9fwxUVVxwxeQ=;
+        b=JcU1bc9yLzSAF9cw+PoTE81AfRM8da4lFwqQDFoCrw2XBK/zQOjcL4qo67uHdUq5sk
+         /NjtTOYTRzFYZuovWkmvWjBZqF0Axh1/WL53w+stBRAMXjzCGQLI3espVlnMSIfXV2R0
+         ER/NubyBJrQFf5oXDI6I65IJCtGv4r+2XBZYuskMf+sVL40uAUwjXaSu4s56z6bkFpoN
+         Q66DP8PoRgYb2HjNbzxy2qNTX4VtMd0irqOhnnN3Flr5CyuA0E67LFMD2ed5j6MVZK6A
+         0mCg1Hqx92KreKtrlQIFXxnf3eRQa0t4eG63Ol+GjA1pa8W30Ktag1YS7wwYd1n7Enfc
+         RiUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768776398; x=1769381198;
+        d=1e100.net; s=20230601; t=1768776462; x=1769381262;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=HtVEsLC63/IRG9ePaQ4Wz532UEWlaB8YwqF2YosYYDk=;
-        b=YhW+EcOhRgvghPFK4EA0rs5i+VIQZ8ls1Zsc9FAmHIXkVBk0xfQ2EgVXCzJPlEElME
-         r5hAWnCsh/sEHo8V3Q+PhIIPtYuLQ5eojMFXzk+QnB7UMy1/pLQekP/9H3f/5x0z+oi2
-         UK0IkHbrrbRADlBqIWTlAS0fzPjf6xrgvEhe7h33iz2P68IDfS90/xzTM4AJqZtLwcdk
-         c9ElyAQqcC5RYyGRXk80EtHRblxPL1Xw88Q1+uFmj2bZGnGxCD0ncELGZmwH1jXm33rq
-         bXQGSjeqzb3VD+suMX7KRrjh964p55ajKcoZTzEzh/t3I0HvUt2+jKG5ENt7BqiwdAJ9
-         NaCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW65P45ge7m3b22HDCq8+SyeZGX0InDgabTAb0IttFp2kMqtgXrrxS2xUksq8M3aTcTzAWEtHd68O2HwrkAHms=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7qd2b5cJrZwYaHux/yss6xcfFHCpYuNeM1giTjuy/efd2qwHQ
-	6kbtRTM8EM+GOmapWtJkS+t5SCW6FZhcMfPyl+2fX2wuRLra7nJ7kpwgEbnN0Q5ofHfMrxcXF6y
-	PQF28nPLxC777v2M8GRyiLmFu3MheMR8=
-X-Gm-Gg: AY/fxX78Q12ibrpo8tNqAacktuh4tuR5afR2wXg1LWr6AHVLDjQxUbu6WEcyMn6Bu6o
-	Sx0q6JOLiENCMkGiVTj8+bvTmr2bUaIV/pofQPBsotXtKrZun/9396d4b11ySYZM3LAUlgyrc+l
-	LZrFnkZNkWSGr8z8/6FCaE1pKto44/7hEpEY5QsSDrTSKKm39TcwesmaJ7gj6e06HRcLK/rp6mk
-	gALrye4xCIzgF2mbmZsZys8BhUNIscCeSkiioh7dl/6iI9/6nubDfiAsot1Gz0IE/UyoUQwBsYf
-	w3FbvEGMZZNHk9pny8W6ooz4N4ocgsHr2EXX6FPDIhQ1TMhTj406XAqp0b3Cs/z6FHiH4IJSmM8
-	ZecENrDyQpOiiHDqQVAzPTKk=
-X-Received: by 2002:a05:7300:f18f:b0:2a6:cb65:1974 with SMTP id
- 5a478bee46e88-2b6b3ecafe4mr3840431eec.1.1768776398161; Sun, 18 Jan 2026
- 14:46:38 -0800 (PST)
+        bh=ZBpaIs1HHystnXkMKIEfn8j6ZfCRA6e9fwxUVVxwxeQ=;
+        b=d1qI+ZmyPe9MpmEyriPDQkax4XoaRII+p1fomInkQqLg8h8K6LFigpuw5NBDAP6zxp
+         JwMu37UFdeSJq1HzjcQxBFF6jynkIBOfaHxabPbcAyp563xL4aT5lsUMmPGSYeAwAdjL
+         sP0pwJdD0voChqKrXweYoykahZm2Rv1rHZmfYrjmgNSsWGX1/rx4atzx4RTI3hvu0hok
+         OqckVEv5MuTEAm0iaykgrvH67ReTcyyhKqoGqEz/TotrCD1YtOb4fQnpBgKJYFJ/2WbP
+         HE2dx7/v90oAcyAMIQgpOvO1+07PejzmlisIl4lM5Jralo4Uvi/DAsvYocizPfNZa3W9
+         zFPA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7ejhnNQR/qO5R8fgTvLApN9/HWAq7uPv38c5wGOTysdXSWZ67ocNpDVyxWE8W4Emqs6vZLm33UY59pCv41ic=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrjjPqu6JjR9H+85fqrUDwxVP8orsJkarNF+lAVif8TQkYKtXX
+	tlwmCSQK0XqC6/CTlOYo7ERonSH+hguaDixZXnyGS7MPSG0/5vHpbM2HPLcV93pdXg3v3BW6Fzp
+	5621/XKSB+hO+KZEkjmAaMH1Fc3Lad6Y=
+X-Gm-Gg: AY/fxX4zm/XiVPbmf5mLbVz3Rwpo7n/dStlSHzg5BbAmV4mbprSZzRzMb/7RHdpAw1k
+	fS99KifJhR94g5yDiQujcqghAI7yMlItg/n97QHbI1uDYy4aXks1SCq3zBDvp2lHsukt+aEFaxO
+	1xIT/F1QIYtH2U8cZtJ4X353ZhfhKCUUgmLAMivjGok+8FZ/j/pH/4R/bKl9LAFq3ceP+Yg7Yhy
+	0DohfEg078qozHFqr81huNB1iCIOGyZ3KrmlzAXOOkvIGg5vRqHbbGXnRWDf4ymjbOjXpMWzu7G
+	xh49jP6EFVS1P2xMwj1OhrDDtCF35i6qcsWLQoVcGefT6iqCmesC1xgxFnQ4TBNTZZgagk9aaqH
+	S/87jbFXTvNW1
+X-Received: by 2002:a05:7300:5712:b0:2ae:5dd5:c178 with SMTP id
+ 5a478bee46e88-2b6b3ef8367mr4547407eec.2.1768776462060; Sun, 18 Jan 2026
+ 14:47:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251221081659.1742800-1-stijn@linux-ipv6.be>
-In-Reply-To: <20251221081659.1742800-1-stijn@linux-ipv6.be>
+References: <20251221081659.1742800-1-stijn@linux-ipv6.be> <CANiq72nqwqTmCzKb=rhRhUDg8pju_RB2zzCKnJ5hDrVTUVnhPA@mail.gmail.com>
+In-Reply-To: <CANiq72nqwqTmCzKb=rhRhUDg8pju_RB2zzCKnJ5hDrVTUVnhPA@mail.gmail.com>
 From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 18 Jan 2026 23:46:25 +0100
-X-Gm-Features: AZwV_QgLttooLq08ae1MGIYSqi9xhNf1UwvXHTfzNO4Jj3FY48KQmYnqWrzcVhA
-Message-ID: <CANiq72nqwqTmCzKb=rhRhUDg8pju_RB2zzCKnJ5hDrVTUVnhPA@mail.gmail.com>
+Date: Sun, 18 Jan 2026 23:47:29 +0100
+X-Gm-Features: AZwV_QimENAu73eyfoDTdWFMk-4fufF1OWMRqN4JWmKaT7_EDgF1MS6gjjBEJlk
+Message-ID: <CANiq72kw1Fg3wGOfa7E4tOtf7Ko8BNCZffV+XVgQRqW4PoOfYA@mail.gmail.com>
 Subject: Re: [PATCH] rust: bindgen: disable GCC latent entropy plugin
 To: stijn@linux-ipv6.be, Kees Cook <kees@kernel.org>, 
 	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, Emese Revfy <re.emese@gmail.com>
@@ -97,35 +97,12 @@ Cc: ojeda@kernel.org, rust-for-linux@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Dec 21, 2025 at 9:17=E2=80=AFAM <stijn@linux-ipv6.be> wrote:
+On Sun, Jan 18, 2026 at 11:46=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> When CONFIG_GCC_PLUGIN_LATENT_ENTROPY and CONFIG_RUST are enabled, rust
-> bindgen fails due to latent_entropy being undeclared:
->
->   BINDGEN rust/bindings/bindings_generated.rs
-> ./include/linux/random.h:24:39: error: use of undeclared identifier 'late=
-nt_entropy'
-> ./include/linux/random.h:24:62: error: use of undeclared identifier 'late=
-nt_entropy'
-> Unable to generate bindings: clang diagnosed error: ./include/linux/rando=
-m.h:24:39: error: use of undeclared identifier 'latent_entropy'
-> ./include/linux/random.h:24:62: error: use of undeclared identifier 'late=
-nt_entropy'
->
-> Fix this by adding DISABLE_LATENT_ENTROPY_PLUGIN to
-> bindgen_extra_c_flags.
->
-> Fixes: 2f7ab1267dc9 ("Kbuild: add Rust support")
-> Signed-off-by: Stijn Tintel <stijn@linux-ipv6.be>
+> change the signature of the functions (and even for variables it just
 
-Cc'ing plugins and Kbuild.
-
-Kees, Emese: from a quick look at the plugin, it doesn't seem to
-change the signature of the functions (and even for variables it just
-initializes), so it seems OK to ignore it for `bindgen` purposes, at
-least naively. So I think this sounds fine.
-
-Thanks!
+And by "signature", I should have written "ABI".
 
 Cheers,
 Miguel
