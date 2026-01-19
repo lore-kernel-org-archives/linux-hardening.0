@@ -1,63 +1,61 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453671B81D3
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 05:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7610420C48A
+	for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 05:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768799060; cv=none; b=hTFlrXwARpljjnro97OwrOuYwQgf87F+SEauL73K1a6x0u+SERvy9pUiMhBw6y1RKrU+i1PvW0N8mdmjDC3K7LpiZITf88CIaQcDLFDFiFFolqggLFVMDOEpkshJC7xleEKSSRHA6ab665lQl708G/A1mAuvhAXDu7X6XKdH4Bk=
+	t=1768799876; cv=none; b=BE3Sit2CougL7r/RfzZdJXn7PFuereqZM2jIbfFupgejENFBvcZ8VG1XX33QlempJ5yMeIFxaBcN9Bwz2U9pTK9d69e0sAlFOnZgyK18bRBzGL5cVjX+rW9XH4YQH5rIlicUjybvgJnhgNXR7FrRcKQpH5ExF+NqeF/kZOg24FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768799060; c=relaxed/simple;
-	bh=XPqSO6ltsflLuii08AxfHx9bR9Jyu12AqRI7lojBLBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S4SdmUD5nGnRXECTO9z/Vil6RHzOburuzWeMfj+4tg2aZJo1V/BbH0aDeb2QnlUvDI1JaELevN195ZSwQDVXHO1Pr/XBdPlVY51h1PCHB46k+FM2EXjgy2iGzMzkVmt/89w675Plru4+9RyX51jF6jbZXLPGGcuqoBC85nnAm1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xww/JQYv; arc=none smtp.client-ip=209.85.219.49
+	s=arc-20240116; t=1768799876; c=relaxed/simple;
+	bh=Kth4TdY7BKRrFKvA30wZ10JzAU9o9teCxEq+81T6jOI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RQNocfBVXkLqmMASDUjBz9wlh1RQaiDhL55z9ffBVvxHPzYqre2OqImzXiMvnPHndmZlYs5lF3uBb3Flr24yooWYvUn62blpmg8ugQAe7Z3BdTMxh38nPsCFxj18a26ggP9WJ04tEl8leG053LioxygZnp+nC/bvYr0M0UYVh5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAtQRyNU; arc=none smtp.client-ip=209.85.222.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xww/JQYv"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-8907fb0188fso41950266d6.1
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Jan 2026 21:04:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAtQRyNU"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-8c6a822068eso352779485a.3
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Jan 2026 21:17:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768799058; x=1769403858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KcbVa3268lyqxBGM305ylj+tBhZM3T/QjOKg0r4LL34=;
-        b=Xww/JQYvixd01fcQ8H7k1MeraXcTyGCvRosqGgu2A/ASeLb2Me5uyq1TtIFAY5sukm
-         pHQeCu59Lu9o+a2ZKg0X9Wj/Xyjg32uj38+c6VCJVFs6HvOWjDaz6tbFCl7GI90Kg2Oe
-         Mc68RKOWbpxwkey6bwpiJVPjf7nu4m4yPElo5NoyrU6LR49rLdaRJSZqXzzTDha96gsf
-         ufvPdfxsHqhXRRCRcsNZBu67Pbpk1fPAxbZPapt0KSp5gngOh6lg3qoH2+xEGUSZ1+wg
-         /v8EPGfcP2ZXXD/20+XwrIC4TBoQp5wJboLdzbH2UsdDNjoEjo8lZO6I41Sc5QQSxLKr
-         WoQA==
+        d=gmail.com; s=20230601; t=1768799874; x=1769404674; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=knOhHJnYgS3NfXJV6CmNIci8LqgQNdPXN9K0tc0/Z54=;
+        b=bAtQRyNUGmC5JXB53120zBC1UR7KeHEjVp0iRes/LPRHpgeXg0b/l1mRc9iDoHvLvH
+         Xd7nvrHrD+jndpyMgJsRciIOIVh2XP/bCK7vNzOdRpBxZXmLlm53zqbztYNNpxwZDK3T
+         jCyxMwE2I9wSoUAkHCKNKdOJqjL8CatZKatbX4ngHlDYnmTfN2OKc9zd41mnRGU6GTuk
+         AtHJ+Ch6zn26zD5CtKLAK/OWMDCAY5WS8gQM1ubvxQ97IeYH8q0YdWwjMMNKg7g1eSPt
+         Jr2HgpkoZIhtrJNAkPf1w9EDBB78GEA6IL5xrT8IFuZpjBS1Nf1sfDmH2UVuhxTTH6Xp
+         kLhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768799058; x=1769403858;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KcbVa3268lyqxBGM305ylj+tBhZM3T/QjOKg0r4LL34=;
-        b=GCpP9MMTeDGTu7EHoHnZwSHR4I9jyYDhPgJdWAzxu2VDJWjf51I7B0UrsR2kgUkPfU
-         vt4YC3sB6GEseH97MiqrwWAzT7fGZQzh8Vo5/iXZMCawXOdsgaiAmngbcFcKGWIe5fNU
-         Ay2oOFwfnbfCLAVsrC/0Cq8kwxFgt+l1xntr4HHWOjDcIE5F0GFQkB5ZrJxLyIQHC8ty
-         hf7BsyUTFHKKrXImEL8ZvUGbew+JctxFb8Tkf6rOpjn01qhjBYFCuQZwKdIhyi6YWy83
-         JXZd0yBq9WQqtk0i88+NQslhotCKBBmhbGMwReOlAlY9FS8JWNjMhZVx0RQINqATEEli
-         w1Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCXX/f63jg7P7avim6KdoRdLTH8bqwf+1sYR8eStnp+GPtF6unY20UMIKWvIYX60nE0LyJdWE5WKPyr0KC452b0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzsi9Uw90INxpFJFt/D7hNwr+tw4pWxTmCFFdwu1zkRSs+x0V3
-	+gjLCbRgk0WaNa/bcfroxdidO+q986ZWoubU9iDyFPn2ExEllD1e3PZP9IT97Q==
-X-Gm-Gg: AY/fxX5TIejENdjyWNK9+LHLKJAa/Lfq1W0f7ZspfLGepA3VK96WAND/+nwQqu1fxe3
-	IdxUADg8SWPjm18FOfrahFbD88so+o13OhJYPmEXlw/doi5CAz2zagtm+nB2if0EpsBNYbe+ay6
-	AXZEwBodQ1G1XRY5CUirIgMg8XBOxb5wHeSR1Nmc4YS8IWytlFM5uuWn+C/2N39eBYolSeuVweo
-	TZa1Heae6kq9KjM3eOI9gaL98SCkdhShRCd9wPqBBHXiKZIEDzqRnsZqjd2mFz/7XuP6hENfFlP
-	AuOvKAUajkKMcjTC8TCkgzDjEDaebdgQ4cLz6pOonoCGF9JKMueJD/zHxcm11iBGA3rup2sgFlO
-	Eli0A4ZXHahHH6m79Qu374yrKFC0+q5n7dUo3WzeEQa5kAQfs7OWY3CXNjc7AtcTQc7OL6rl9Pl
-	DpwJaCpzXWrhz8cWzO20AN55nu2D+QK6bNMztmtDpkrKClA9W+wnPj/jGWAdJYdxSDTj0=
-X-Received: by 2002:a05:620a:4490:b0:8c5:c9a0:ac28 with SMTP id af79cd13be357-8c6a68ea37dmr1331140285a.21.1768793442571;
-        Sun, 18 Jan 2026 19:30:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768799874; x=1769404674;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=knOhHJnYgS3NfXJV6CmNIci8LqgQNdPXN9K0tc0/Z54=;
+        b=RAtAdhwcgjU6ImxATipKRmjdL4b0f0sfL5krd4DvJ3DKe5FR2QGD+aGCRltRvUg7Xi
+         BnmZsfba0ZktNJwT1BF5ZJe8zIOdqryXt0pbnAORJWDijgU99yucrGly0T25MjiHn2ge
+         GJuREvKFku1kOnB//WdrtiQp6H8Pnx3l6cCsJgod1pQJywmvW7sDon05mUF2jbdES55m
+         3iz6xUDxb0hrA24QMOot+L+I+5ooMDU5JkOSS5UJBURIpp5RmYmu8n+AQPZ2GX8If5kl
+         ycrfAQQ3DHkFFOZsInMooaWfIH3WIk//P6wDBvY+lp7AAMWVfGfo2sMhjU7Gk1V7f8pV
+         5b9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW3sDVwNLG7C+1uwDwDinsfUABTCng02OfcDeg4xTOr8dLAfjdMKcbXUh0EvyPYXsuxuDKuqQPoGdgEfd5duPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfHLgTeX90n2csjwUXCNVa/wZ2qeZCty5WFAYZN6X9K+9GueXC
+	QcAeq6ofVsg0IqLtMFiqN37LtBV+kZDM93yF2E+19E1N+yYFo/3uG5IsC/sAcw==
+X-Gm-Gg: AY/fxX6+kENBD+0iGUNQpaKm9JUU6C1JGfPBEns1caNZt5PXr1oX8UOJQjG3Eh5tdDf
+	9Vs3Gp6W9T+0bdCIqY4325Oib/pwfdlVv/swNLrRZfUdaDCumt0sG9VPtTRBlaC228g/ObTJzqt
+	PN7AhiaCa/iyL3ozxzUQ69/tDRDxysxon7XpZqd4PHciZWGMUyE7GZY+nHev3O1dv7EBSG8DyTx
+	dEwKzBNMpA+9w0AWrTmxP3MC8fTqpJ7oKWhuePJTIG1HuPYPoQfuEk8Eu0lTAmSnuGVfROKMxRZ
+	xt8WQWacIf8tTj2DBm4A6QynY4K90CmDwfoV428phnr6ajwd/6BsEA9ytS45FypRQ90tKvvf2cj
+	E6mHVHomo49Sgoxf8ntoXxhHo1wMlvReL63t+ZXrtcZ38Gzui5UGMKGwJx2IR5Tpf8SIGUHQRzh
+	Itp2JDr9h1C1JLCa6QMMt7bwI9j2eFuQEQ4p2HO+UncP0LSDairIkCOGfWM+9th3fA3RI=
+X-Received: by 2002:a05:620a:178a:b0:8b1:1585:2252 with SMTP id af79cd13be357-8c6a68d35f7mr1336428085a.1.1768793440895;
+        Sun, 18 Jan 2026 19:30:40 -0800 (PST)
 Received: from mighty.localdomain (nat-130-245-192-1.resnet.stonybrook.edu. [130.245.192.1])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c6a71ab20dsm724706885a.5.2026.01.18.19.30.41
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c6a71ab20dsm724706885a.5.2026.01.18.19.30.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Jan 2026 19:30:42 -0800 (PST)
+        Sun, 18 Jan 2026 19:30:40 -0800 (PST)
 From: Mithil Bavishi <bavishimithil@gmail.com>
 To: aaro.koskinen@iki.fi,
 	andreas@kemnade.info,
@@ -86,12 +84,10 @@ Cc: linux-omap@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
 	linux-hardening@vger.kernel.org
-Subject: 
-Date: Sun, 18 Jan 2026 22:30:25 -0500
-Message-ID: <20260119033035.57538-2-bavishimithil@gmail.com>
+Subject: [PATCH v4 00/10] Initial support for Samsung Galaxy Tab 2 series
+Date: Sun, 18 Jan 2026 22:30:24 -0500
+Message-ID: <20260119033035.57538-1-bavishimithil@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260119033035.57538-1-bavishimithil@gmail.com>
-References: <20260119033035.57538-1-bavishimithil@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -100,7 +96,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Subject: [PATCH v4 00/10] Initial support for Samsung Galaxy Tab 2 series
+From: Mithil <bavishimithil@gmail.com>
 
 This series adds initial support for the Samsung Galaxy Tab 2
 (samsung-espresso7/10) series of devices. It adds support for 6 variants
@@ -162,20 +158,22 @@ Mithil Bavishi (10):
   ARM: dts: ti: omap: samsung-espresso10: Add initial support for Galaxy
     Tab 2 10.1
 
- .../devicetree/bindings/arm/ti/omap.yaml      |   2 +
- .../bindings/display/bridge/lvds-codec.yaml   |   1 +
- .../bindings/display/panel/panel-lvds.yaml    |   4 +
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/arm/boot/dts/ti/omap/Makefile            |   2 +
- .../omap/omap4-samsung-espresso-common.dtsi   | 762 ++++++++++++++++++
- .../dts/ti/omap/omap4-samsung-espresso10.dts  | 104 +++
- .../dts/ti/omap/omap4-samsung-espresso7.dts   |  70 ++
- arch/arm/boot/dts/ti/omap/twl6032.dtsi        |  77 ++
- 9 files changed, 1024 insertions(+)
+ .../devicetree/bindings/arm/ti/omap.yaml      |    2 +
+ .../bindings/display/bridge/lvds-codec.yaml   |    1 +
+ .../bindings/display/panel/panel-lvds.yaml    |    4 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ arch/arm/boot/dts/ti/omap/Makefile            |    2 +
+ .../omap/omap4-samsung-espresso-common.dtsi   |  762 ++
+ .../dts/ti/omap/omap4-samsung-espresso10.dts  |  104 +
+ .../dts/ti/omap/omap4-samsung-espresso7.dts   |   70 +
+ arch/arm/boot/dts/ti/omap/twl6032.dtsi        |   77 +
+ arch/arm/configs/espresso_defconfig           | 7506 +++++++++++++++++
+ 10 files changed, 8530 insertions(+)
  create mode 100644 arch/arm/boot/dts/ti/omap/omap4-samsung-espresso-common.dtsi
  create mode 100644 arch/arm/boot/dts/ti/omap/omap4-samsung-espresso10.dts
  create mode 100644 arch/arm/boot/dts/ti/omap/omap4-samsung-espresso7.dts
  create mode 100644 arch/arm/boot/dts/ti/omap/twl6032.dtsi
+ create mode 100644 arch/arm/configs/espresso_defconfig
 
 -- 
 2.43.0
