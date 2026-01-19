@@ -1,125 +1,143 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CB035A944
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 12:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A81145355
+	for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 12:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768824543; cv=none; b=n96eeGXw7nMd4tn6v5GNwEhn0Co7a+/3QRGEQoXCV/6i9ateRLr8pVvhPQU4e3aTl6PVArzPJdvrdE9W2d3BXR+ME/nTMzJBGhqix4NQtjl78WuhDqtPcJBDI7kxGqnq+0qLKrOqPp4/wzvlb3a9L9W+SlQxw7rrTBS3MhMBWEA=
+	t=1768825376; cv=none; b=BipAw5VmFxPyu4yh6SaNZxOQA/pjtxwsWwECqh1lRoizCv2K2eD/JbkOQcNLoSdYp3yE9kz0WQ3/yWw8Sly7E8zL1aqqJY0ytlfWvkkQGtQJ0GboiRkOucFTwZjOr+fPcdZoc84vMrQtgNR1TiubjPJLKA7pRrEfIJr88nnxf8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768824543; c=relaxed/simple;
-	bh=glFQ4Oo7aFXvg4qCxUzDyhw63Eric2ZNI22jQtPmJhg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Oz8jEsAqHIMDD31WtlnBPXXIhLjJWxWU+gm74J1aw/pQwRli/WoJsfQese3p+StV5Z0VxTKHIpMsifXzKXEeYnIGKFijhdIL54dS7o29J8fGt3hjAUUOINa6FwzGpzQEi/2hjKUwmrZtyrXYEDHC99ymRM5FdpsPhO+xJJal+nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RZb3CUCH; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1768825376; c=relaxed/simple;
+	bh=iL5a5vWD3elCqNsh2PkBrIKfV1bPfWFLdSevvtw348k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=THXfbiwr1SD8lmLhq8SbZJKYkEdmbzSeOp2EVbQuIQVPVN8ak7ROuX2p1/Wv2PEFIRZjEJ2bX2brbCgp5oykg9eEMI4dMezOveN3X8brw6e0mwnmD9HqHder9TqNbNo39M7Nfaym/JWo7BVONUVGdcSOikMa+jDtNvJD6lMKH+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PCF69CPM; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RZb3CUCH"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-432d2c7a8b9so3691413f8f.2
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 04:09:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PCF69CPM"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47d6a1f08bbso13758175e9.2
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 04:22:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768824538; x=1769429338; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Lathu7eoQ9hnN88L9AXE9/ZDnozq7El9GXLKl/+ubdI=;
-        b=RZb3CUCHS8XY/w6prvniPZsJeLa0F3ecDqlXKS5V18u1ARwlecbTcvfkMSSNc4zo2e
-         UufpYWCk8WYq83Icb5O9z6Ilv47FMH77Q+RTgM6IusnK+ht1cE+t7wwyS07BtmIMQNEY
-         zI+xu/b3CCv8fxsv9Z3+vLTeBwyKifeuKRg+4pct0sYuqz2X4NTmsPhitNF82Kg1auTn
-         zbQZC1CBLDmCSrh9hR0uhM9xC2D/0whgDNNNeDOz7NOf+FCh1Nai1DFMHvbQ7dJem49c
-         kdswX6eFkJ6Ek5/OZ9Vi1JYIQlkgLIgTaY5ktp53Rx7wdG+TdEXrHFmml+idHlmiyUnQ
-         yk4w==
+        d=gmail.com; s=20230601; t=1768825373; x=1769430173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hizH6Y0dclm/GlFu897aCLzhsPW9G/RqQepyEMFpeE8=;
+        b=PCF69CPM0lLs+Yyg0Fgq0uDLVyEcxNqGvMHx3WNWpGAwuvvmvejaa8o6vuVCtJb2Sw
+         E/kvMsMgdmn0sm8yAPQ7PB5tELTzEgycup8KYF+X6xNlkQpwT1AGLCdOb21Sd5rkq+Rm
+         aMLnzCs7uaQCvxz7u/1RLjh/mLcmehTR2XEzC5To/r15Cbb70osJCX1imhRhwPUywwAw
+         qlIAYhR8b6yl7vO8ZGIAIPtX5NKLPUvrxHLE0E7Lc+wh9Yw0UY4MORlhoY3y4YyrRUh4
+         jw+92nCjcUMpVaZj+gTR1A2ofZw/aKwhaEqhk6ARhOKdbwVshW4z97MF2o/x2bmst2nb
+         3CAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768824538; x=1769429338;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Lathu7eoQ9hnN88L9AXE9/ZDnozq7El9GXLKl/+ubdI=;
-        b=fVl1GT3ADKnvD5VTrXujRxyZuM0Um/idEC2Iq6IyMopBd13o9TpfsVkrV/iYyt0dI1
-         uaF7//vIJL40XtaaHScm8AtQE+AStf0o+gn0DeGyRfSMCFHqXfD7oNnGrTMpw/Kp7IKY
-         89Ds0EQZns+itR6YMLD8ADLHUbZyaRyxl+073CfW2nOOpChhkF7T4a2NIe0RdFaXVJxw
-         cHXZfEOZCtnPKHmaJ14RvPGtKaPrbaX4HZo0SXrNpsZmgq6xbvGVP6k2b2NDFV6QeAQO
-         9vPlfO7q9U1YG3Ci+pkpSFLEFI9VarZWRj+ssOIxnziwaBQadP8Op4NCSDfOyMY3SrEF
-         966Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVlifPCA+o1TM+LUSwvfJxBuussry1wWmABY6Bu+dLdzmozQYQOMF50+KL6jOiNl8lSn6A+nHKar5BnH84W4QY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMM67hAZYnV3m/rJHBXEVrvuqcPqXoBcbO4jgp291BENWFs5E6
-	Zxf9UcR/jYyemL8poPtJRy+B4ueyOgKt/8sH9L2xVN3vGlEAQw0wagPxh92GL8ozvss=
-X-Gm-Gg: AZuq6aLqfFDWvR2WMmjCibI41cfRBjOuBTGLR1q5y8L/FgJ9SgJtDjaYtOn/WJv/T5Z
-	50uCNvKDwqMdEGsQrnsY1EsLlYjbYSJV/ASNet1vjemorfF8tjFi1UaHgh/XeY1XJ4E2NAkJYuA
-	Agfhyh/7PFgjs2rANl31hzY0ub2UF8MPWD/qjE0ehaWnpBkWi3mM6iVx8XfOo+OYEvtcclyWm1K
-	nuOBKvWV9Ga4uDolslpV+I+h4sQ5sZiIMOmD/GDotfZui6AMssTD/cilg3WFWiDx6aQji24LhwX
-	W1a4qoJ8h7kmJazj+Z8qqxTT8pSraXvMHVjKseztab3/IEt44BUuI//G30pLk53VC1k08ItYxZY
-	5bdHvlFwSpOxH4JdVS3J0gnQpUX+CSA1FDiIxD0XF1bYxoI8op1c8+foFqf5N3jRPFHk2nE2gGM
-	ap7bx2f9aMlCVYc3XyL0OCOfwfubx8N3/CTxlXIW7O3mi2CugSsbTF792B6cVo5stHDVSzRg==
-X-Received: by 2002:a05:6000:144b:b0:431:8f8:7f2f with SMTP id ffacd0b85a97d-4356a07743emr11227404f8f.34.1768824538122;
-        Mon, 19 Jan 2026 04:08:58 -0800 (PST)
-Received: from ta2.c.googlers.com (164.102.240.35.bc.googleusercontent.com. [35.240.102.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997e664sm20698421f8f.30.2026.01.19.04.08.57
+        d=1e100.net; s=20230601; t=1768825373; x=1769430173;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=hizH6Y0dclm/GlFu897aCLzhsPW9G/RqQepyEMFpeE8=;
+        b=ZpkTWHPn6iICHPAL7Pp22tTOxqGPdQkdo6ZiuVXZja259aJpKs2y7pll0F8eUp0oNk
+         N0wq9OYgxCzGGEb9atJgcEWVtfZ9tgxqLUsXd5GbkyN5EpywT9SGztx6GZq4vDqyJQUC
+         DqpPXVvgZE5THeGPobYNtQiNIRzN5IhxBmkBe0RimK40D1vu32MNCOgfS26aIQBxi5hj
+         lHyFymaQwn+Mcbcwsp8lc8ou3Tveoii2Mk/hp+ggaXrFdgP7WrmjzxTZzC3pDbRynRGe
+         exhIV7sXCHZ/nld9iTwq/I4eAQDmuzfqMDOZpiZdDcrCnR3QeEDhy55dN+P0Upy+IITU
+         MiRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTHttigph8cMHa785Wa8BoROjHFerZj8zZRXL0CX9giuyf+7PMFyDinmqkMcRkUznfYHLz6DqcZDCNmjwtXDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP2U1CA/M1zeKtYCa0fk0a3YH0W8D3lHJCwqaaFZUmfDhoeClX
+	7EtPr6jHUhxEuXpWvx/SIkK2lSgDjPMAr6V13b8oL7gczUOKSSaVQABc
+X-Gm-Gg: AY/fxX6arpcpX82kmAf0mgNojhY8RATA+5ZdG1iT9QN5RNH9OysePN0t8IOmgBsFI8Z
+	ZycQSYU0ILvGZLw4QO4tfCsAaMJBjNRWKzJMK2yv8rrG9ia0EAj9kJGX4Tbm/LjPmsALyrjc1Df
+	IEEmM6jkIfhhLMhnfjq+RSmE4kR2wY342mKXqXopLoTxwjNlRCh+5IidrVUs2YlqNTNP+aiTuFE
+	ZTxt4l4pe53sFZZuG4QFNju0VIf4T9g1NbpepVNffCztjqjVWbTTj1n6wrCrI0ZOuJ3sihdFjQY
+	L8UVolwFIBDWTKGUFvv7z4mTn9lskdRCj1xzFQz+9dJy8FXF+sYPpjTZ3CmeCCm8XNhiwjA7E7s
+	/kBq21nmbK23nuSWNXtP+TeDXGnNa4/FD9C/CM2hGh33fzR4ijO0Vm2yIngwmO8KbfNq3lSue7K
+	I1XodOWeCgeuuatAR7pnyYMeIrB1tVtoOepDqkBE0IxQF6Pybt/UUl
+X-Received: by 2002:a05:600c:3509:b0:47a:94fc:d057 with SMTP id 5b1f17b1804b1-4801eab54e2mr107589925e9.2.1768825373288;
+        Mon, 19 Jan 2026 04:22:53 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801fe67780sm78105625e9.16.2026.01.19.04.22.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 04:08:57 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Mon, 19 Jan 2026 12:08:53 +0000
-Subject: [PATCH v2 7/7] arm64: defconfig: enable Exynos ACPM thermal
- support
+        Mon, 19 Jan 2026 04:22:52 -0800 (PST)
+Date: Mon, 19 Jan 2026 12:22:48 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, Kees Cook <kees@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley
+ <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "Gustavo
+ A. R. Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Jason
+ A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
+ Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Fix bugs and performance of kstack offset
+ randomisation
+Message-ID: <20260119122248.30974c78@pumpkin>
+In-Reply-To: <aW4NC9P3K7Ab_e8j@J2N7QTR9R3>
+References: <20260102131156.3265118-1-ryan.roberts@arm.com>
+	<aW4NC9P3K7Ab_e8j@J2N7QTR9R3>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260119-acpm-tmu-v2-7-e02a834f04c6@linaro.org>
-References: <20260119-acpm-tmu-v2-0-e02a834f04c6@linaro.org>
-In-Reply-To: <20260119-acpm-tmu-v2-0-e02a834f04c6@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Peter Griffin <peter.griffin@linaro.org>, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com, 
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768824532; l=868;
- i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=glFQ4Oo7aFXvg4qCxUzDyhw63Eric2ZNI22jQtPmJhg=;
- b=jGWmIQ3VJe/OIr58mGBQinzVZCX659HJK8MtuuaHM01fhgkcacEuB8bWVtLq4hLL7aAt8CY7o
- ND/UZrRnDGbDYAMpf2MIYS7MwKUlOKLihzJnMnIfQ6vWHwzkx5s2HTQ
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
- pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
-Enable the Exynos ACPM thermal driver (CONFIG_EXYNOS_ACPM_THERMAL)
-to allow temperature monitoring and thermal management on Samsung
-Exynos SoCs that use the Alive Clock and Power Manager (ACPM)
-protocol.
+On Mon, 19 Jan 2026 10:52:59 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> On Fri, Jan 02, 2026 at 01:11:51PM +0000, Ryan Roberts wrote:
+> > Hi All,  
+> 
+> Hi Ryan,
+> 
+> > As I reported at [1], kstack offset randomisation suffers from a couple of bugs
+> > and, on arm64 at least, the performance is poor. This series attempts to fix
+> > both; patch 1 provides back-portable fixes for the functional bugs. Patches 2-3
+> > propose a performance improvement approach.
+> > 
+> > I've looked at a few different options but ultimately decided that Jeremy's
+> > original prng approach is the fastest. I made the argument that this approach is
+> > secure "enough" in the RFC [2] and the responses indicated agreement.  
+> 
+> FWIW, the series all looks good to me. I understand you're likely to
+> spin a v4 with a couple of minor tweaks (fixing typos and adding an
+> out-of-line wrapper for a prandom function), but I don't think there's
+> anything material that needs to change.
+> 
+> I've given my Ack on all three patches. I've given the series a quick
+> boot test (atop v6.19-rc4) with a bunch of debug options enabled, and
+> all looks well.
+> 
+> Kees, do you have any comments? It would be nice if we could queue this
+> up soon.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 45288ec9eaf7365427d98195c48e2f8065a8bb1b..68fefe4bf49501500362fcb0b490a684ea469b26 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -752,6 +752,7 @@ CONFIG_BCM2711_THERMAL=m
- CONFIG_BCM2835_THERMAL=m
- CONFIG_BRCMSTB_THERMAL=m
- CONFIG_EXYNOS_THERMAL=y
-+CONFIG_EXYNOS_ACPM_THERMAL=m
- CONFIG_TEGRA_SOCTHERM=m
- CONFIG_TEGRA_BPMP_THERMAL=m
- CONFIG_GENERIC_ADC_THERMAL=m
+I don't want to stop this being queued up in its current form.
+But I don't see an obvious need for multiple per-cpu prng
+(there are a couple of others lurking), surely one will do.
 
--- 
-2.52.0.457.g6b5491de43-goog
+How much overhead does the get_cpu_var() add?
+I think it has to disable pre-emption (or interrupts) which might
+be more expensive on non-x86 (which can just do 'inc %gs:address').
 
+I'm sure I remember a version that used a per-task prng.
+That just needs 'current' - which might be known and/or be cheaper
+to get.
+(Although I also remember a reference some system where it was slow...)
+
+The other option is just to play 'fast and loose' with the prng data.
+Using the state from the 'wrong cpu' (if the code is pre-empted) won't
+really matter.
+You might get a RrwW (or even RrwrwW) sequence, but the prng won't be used
+for anything 'really important' so it shouldn't matter.
+
+	David
