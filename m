@@ -1,143 +1,193 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A81145355
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 12:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCEC35E538
+	for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 12:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768825376; cv=none; b=BipAw5VmFxPyu4yh6SaNZxOQA/pjtxwsWwECqh1lRoizCv2K2eD/JbkOQcNLoSdYp3yE9kz0WQ3/yWw8Sly7E8zL1aqqJY0ytlfWvkkQGtQJ0GboiRkOucFTwZjOr+fPcdZoc84vMrQtgNR1TiubjPJLKA7pRrEfIJr88nnxf8A=
+	t=1768826713; cv=none; b=ESRBd/rz2TLR1wCNpdq0LI8qI9tkwi+4UAlF1R3U9SwDVO92OwZvU486OaWtZVS0kLpkeO1/DjPf1Jl3cF/hGG0De6awkWW8v1gdpTISRIz8mNh1M/bvG0TWLy1EAu/9HBORaULmWutpqYRd9lPflOlSUhtCKK3oyTuhIKXG/rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768825376; c=relaxed/simple;
-	bh=iL5a5vWD3elCqNsh2PkBrIKfV1bPfWFLdSevvtw348k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=THXfbiwr1SD8lmLhq8SbZJKYkEdmbzSeOp2EVbQuIQVPVN8ak7ROuX2p1/Wv2PEFIRZjEJ2bX2brbCgp5oykg9eEMI4dMezOveN3X8brw6e0mwnmD9HqHder9TqNbNo39M7Nfaym/JWo7BVONUVGdcSOikMa+jDtNvJD6lMKH+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PCF69CPM; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768826713; c=relaxed/simple;
+	bh=58zqf0QRhFos7cRmq8vTrHcguHAy4GxQXQGtoEUAomg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m4pQk/OMe3/CcFxFgOCEDpTzfYqNTowcvQGjvoKBo8YH07o919C2l40tcwd9RcKjILB4bhNV2aO+ki7NlFfU69hjo8uuppLwa1La/tIPdBGN4QxnoqJOj6wgpgCYVRVkqbotYqnDmOhC5SHVqnnOI7cmxA1d0NlwkGy1xy0VG88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BtWO1BDm; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PCF69CPM"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47d6a1f08bbso13758175e9.2
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 04:22:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BtWO1BDm"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4801eb2c0a5so24234045e9.3
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Jan 2026 04:45:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768825373; x=1769430173; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hizH6Y0dclm/GlFu897aCLzhsPW9G/RqQepyEMFpeE8=;
-        b=PCF69CPM0lLs+Yyg0Fgq0uDLVyEcxNqGvMHx3WNWpGAwuvvmvejaa8o6vuVCtJb2Sw
-         E/kvMsMgdmn0sm8yAPQ7PB5tELTzEgycup8KYF+X6xNlkQpwT1AGLCdOb21Sd5rkq+Rm
-         aMLnzCs7uaQCvxz7u/1RLjh/mLcmehTR2XEzC5To/r15Cbb70osJCX1imhRhwPUywwAw
-         qlIAYhR8b6yl7vO8ZGIAIPtX5NKLPUvrxHLE0E7Lc+wh9Yw0UY4MORlhoY3y4YyrRUh4
-         jw+92nCjcUMpVaZj+gTR1A2ofZw/aKwhaEqhk6ARhOKdbwVshW4z97MF2o/x2bmst2nb
-         3CAQ==
+        d=linaro.org; s=google; t=1768826710; x=1769431510; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jGK/JHtGxCZWFp0R8SxdcXdTEhWhNtsWilx8eiq1+lY=;
+        b=BtWO1BDmiVo2a+LE6cgUTsZ8jaxNUH9MtBX8uJ1u8xKxB38JPizBLil9z4kOjX+B57
+         wr4BaAuKf7MirYS275jTJPtH27QPbiXjHk4xAFZx/bY0HuKYE5oXctZXiW45y02/Hdwp
+         xSMBZcMaGe0a8bmC7B4nLLEZFVKX7L1SIuvTcXvZ1gfzyT/iIIDTh4g7iZnNOw0/HmcQ
+         f1TMHoR//S+BUUJ/uWNvG2Ay1vLfHYYcVeXf2MvTJ8z1QixnebAPMdyACfuAu9FglG2R
+         DQDiGe/rSLVXnlNYjtHElIVTYzuhqQaUxv1pxlXwPrEnWlPoP83GJmNCRVqeWprxu79k
+         wNPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768825373; x=1769430173;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hizH6Y0dclm/GlFu897aCLzhsPW9G/RqQepyEMFpeE8=;
-        b=ZpkTWHPn6iICHPAL7Pp22tTOxqGPdQkdo6ZiuVXZja259aJpKs2y7pll0F8eUp0oNk
-         N0wq9OYgxCzGGEb9atJgcEWVtfZ9tgxqLUsXd5GbkyN5EpywT9SGztx6GZq4vDqyJQUC
-         DqpPXVvgZE5THeGPobYNtQiNIRzN5IhxBmkBe0RimK40D1vu32MNCOgfS26aIQBxi5hj
-         lHyFymaQwn+Mcbcwsp8lc8ou3Tveoii2Mk/hp+ggaXrFdgP7WrmjzxTZzC3pDbRynRGe
-         exhIV7sXCHZ/nld9iTwq/I4eAQDmuzfqMDOZpiZdDcrCnR3QeEDhy55dN+P0Upy+IITU
-         MiRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTHttigph8cMHa785Wa8BoROjHFerZj8zZRXL0CX9giuyf+7PMFyDinmqkMcRkUznfYHLz6DqcZDCNmjwtXDc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP2U1CA/M1zeKtYCa0fk0a3YH0W8D3lHJCwqaaFZUmfDhoeClX
-	7EtPr6jHUhxEuXpWvx/SIkK2lSgDjPMAr6V13b8oL7gczUOKSSaVQABc
-X-Gm-Gg: AY/fxX6arpcpX82kmAf0mgNojhY8RATA+5ZdG1iT9QN5RNH9OysePN0t8IOmgBsFI8Z
-	ZycQSYU0ILvGZLw4QO4tfCsAaMJBjNRWKzJMK2yv8rrG9ia0EAj9kJGX4Tbm/LjPmsALyrjc1Df
-	IEEmM6jkIfhhLMhnfjq+RSmE4kR2wY342mKXqXopLoTxwjNlRCh+5IidrVUs2YlqNTNP+aiTuFE
-	ZTxt4l4pe53sFZZuG4QFNju0VIf4T9g1NbpepVNffCztjqjVWbTTj1n6wrCrI0ZOuJ3sihdFjQY
-	L8UVolwFIBDWTKGUFvv7z4mTn9lskdRCj1xzFQz+9dJy8FXF+sYPpjTZ3CmeCCm8XNhiwjA7E7s
-	/kBq21nmbK23nuSWNXtP+TeDXGnNa4/FD9C/CM2hGh33fzR4ijO0Vm2yIngwmO8KbfNq3lSue7K
-	I1XodOWeCgeuuatAR7pnyYMeIrB1tVtoOepDqkBE0IxQF6Pybt/UUl
-X-Received: by 2002:a05:600c:3509:b0:47a:94fc:d057 with SMTP id 5b1f17b1804b1-4801eab54e2mr107589925e9.2.1768825373288;
-        Mon, 19 Jan 2026 04:22:53 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801fe67780sm78105625e9.16.2026.01.19.04.22.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 04:22:52 -0800 (PST)
-Date: Mon, 19 Jan 2026 12:22:48 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Kees Cook <kees@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley
- <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "Gustavo
- A. R. Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Jason
- A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
- Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Fix bugs and performance of kstack offset
- randomisation
-Message-ID: <20260119122248.30974c78@pumpkin>
-In-Reply-To: <aW4NC9P3K7Ab_e8j@J2N7QTR9R3>
-References: <20260102131156.3265118-1-ryan.roberts@arm.com>
-	<aW4NC9P3K7Ab_e8j@J2N7QTR9R3>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1768826710; x=1769431510;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jGK/JHtGxCZWFp0R8SxdcXdTEhWhNtsWilx8eiq1+lY=;
+        b=ffwDKx0pw17KMbBEIJh1ogDOmr+Br1H2ZoIf0mKK+LxQ0/eJVrJjC7q+EMqyCReCee
+         Min6JPn4ENOFHKXSXhc6hK69D6YE/wyI2bACau0rJPmIRU6ldpNARicISGrKzb2lYK7+
+         jkqaHxMjxys+/D19BtxVY9ApK9Izl3bYFo9DxEe8aivvIkbWbfTDxU2xVXhDz3C438kF
+         xTH7oZW/7fOV4prhgKGhNAA6ySIotIfMLZ0NJnihTqPTkAtMKBAu+V8c7ot0UjO4USK+
+         A4ry+VNDE6g6hu8seZHcMwlEoaDeYueFlTyQm5XM6HQD4imyPBhNRz/Belm2hw3yZKPI
+         89hA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbi+9905hEklYUBYIz0amdASXvIghNdlC5JlYj9Uo1o0ef5Mc2K9sylDkzkKsgC3mTKQr3OPPtsvcCruvb5ew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTSuoUndbWEs9mS0kzdQ7tW/ur45XPMuNBAzina4F40oiizRFa
+	ZkblVsBGYNnBFCyawMrsf2O9K36G1bIj6Lr6F78ui1dwJrWEQ8EPqSc0qe30FtHI2sc=
+X-Gm-Gg: AY/fxX473BeonKvZKY/FCLco/0Eso+K8L1AZNKEiH1mCeLSJUrQaprHVU7hzTQlhVLB
+	X96lPZG0ktZ98Ft0d9ovVecsywIFMZTllhiI/mKAodl7vNMSEIMQm7u7V8cpsPRjN+LrYawlwGA
+	lZWk8ZUTHL5T/4sUm6v5lgasbQ40myUganOIhk/cMDvOh9ZWwWa6x9LemkzA8mwEw2hbX5LMDil
+	iAhTX4kyORhIVRPMVqWOJu+g+lpaozgJPWyjofvBE8F6a4poBTqPXDrjPXSYQy/znICi48B2PPj
+	Fs1WWQoPdfLBf+pPd2vKX6HQkl1zQQMCYlivNioJhYbO9DUchXgiWq0bDh5Z8ATdgKjpaHC9naZ
+	XOexn51MgSpRzK11IuSYoimreOa+gzqEVJ25rPYUdp+hzRAeGJCLVIl7EZAVRGoNWy9kHucD1IS
+	r44Q5lzVLsb8fXGfoFiMyeeCp2ZfI1OAXfkA==
+X-Received: by 2002:a05:600c:6098:b0:480:3a72:5238 with SMTP id 5b1f17b1804b1-4803a7253d1mr13426025e9.30.1768826710239;
+        Mon, 19 Jan 2026 04:45:10 -0800 (PST)
+Received: from [10.255.242.87] ([109.166.183.49])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e86c197sm193288675e9.1.2026.01.19.04.45.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Jan 2026 04:45:09 -0800 (PST)
+Message-ID: <10cb51ae-9cec-49a9-96c4-757cd1410d8a@linaro.org>
+Date: Mon, 19 Jan 2026 14:45:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] dt-bindings: thermal: Add Google GS101 TMU
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, willmcvicker@google.com,
+ jyescas@google.com, shin.son@samsung.com, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260114-acpm-tmu-v1-0-cfe56d93e90f@linaro.org>
+ <20260114-acpm-tmu-v1-1-cfe56d93e90f@linaro.org>
+ <20260115-ultramarine-wildebeest-of-completion-ea1bc0@quoll>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20260115-ultramarine-wildebeest-of-completion-ea1bc0@quoll>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, 19 Jan 2026 10:52:59 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
 
-> On Fri, Jan 02, 2026 at 01:11:51PM +0000, Ryan Roberts wrote:
-> > Hi All,  
+
+On 1/15/26 3:32 PM, Krzysztof Kozlowski wrote:
+> On Wed, Jan 14, 2026 at 02:16:29PM +0000, Tudor Ambarus wrote:
+>> Add device tree bindings for the Google GS101 Thermal Management Unit
+>> (TMU).
+>>
+>> The GS101 TMU is a hybrid thermal solution:
+>> 1. Configuration (thresholds, hysteresis) is handled via the Alive
+>>    Clock and Power Manager (ACPM) firmware protocol.
+>> 2. Interrupt handling is handled by the kernel via direct register
+>>    access.
+>>
+>> This binding documents the required resources, including the APB clock
+>> for register access and the phandle to the associated syscon node.
+>>
+>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>> ---
+>>  .../bindings/thermal/google,gs101-tmu-top.yaml     | 64 ++++++++++++++++++++++
+>>  1 file changed, 64 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/google,gs101-tmu-top.yaml b/Documentation/devicetree/bindings/thermal/google,gs101-tmu-top.yaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..ecf4a315ecf1ea0649c4e96a207d531c696282f4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/thermal/google,gs101-tmu-top.yaml
+>> @@ -0,0 +1,64 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/thermal/google,gs101-tmu-top.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Google GS101 Thermal Management Unit (TMU)
+>> +
+>> +maintainers:
+>> +  - Tudor Ambarus <tudor.ambarus@linaro.org>
+>> +
+>> +description: |
+>> +  The Google GS101 TMU is a thermal sensor block managed via the ACPM
+>> +  (Active Core Power Management) firmware. While the firmware handles
+>> +  the thermal algorithm and thresholds, the kernel requires direct
+>> +  access to the interrupt pending registers via a syscon interface to
+>> +  acknowledge and clear thermal interrupts.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: google,gs101-tmu-top
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +    description: |
+>> +      Phandle to the APB peripheral clock (PCLK) required to access
+>> +      the TMU registers.
 > 
-> Hi Ryan,
+> Drop all the redundancies, so:
+> items:
+>  - description: APB peripheral clock (PCLK) for TMU register access
 > 
-> > As I reported at [1], kstack offset randomisation suffers from a couple of bugs
-> > and, on arm64 at least, the performance is poor. This series attempts to fix
-> > both; patch 1 provides back-portable fixes for the functional bugs. Patches 2-3
-> > propose a performance improvement approach.
-> > 
-> > I've looked at a few different options but ultimately decided that Jeremy's
-> > original prng approach is the fastest. I made the argument that this approach is
-> > secure "enough" in the RFC [2] and the responses indicated agreement.  
+
+ack
 > 
-> FWIW, the series all looks good to me. I understand you're likely to
-> spin a v4 with a couple of minor tweaks (fixing typos and adding an
-> out-of-line wrapper for a prandom function), but I don't think there's
-> anything material that needs to change.
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +    description: |
+>> +      The combined thermal interrupt signal (Level High).
 > 
-> I've given my Ack on all three patches. I've given the series a quick
-> boot test (atop v6.19-rc4) with a bunch of debug options enabled, and
-> all looks well.
+> Drop description
 > 
-> Kees, do you have any comments? It would be nice if we could queue this
-> up soon.
 
-I don't want to stop this being queued up in its current form.
-But I don't see an obvious need for multiple per-cpu prng
-(there are a couple of others lurking), surely one will do.
+ack
 
-How much overhead does the get_cpu_var() add?
-I think it has to disable pre-emption (or interrupts) which might
-be more expensive on non-x86 (which can just do 'inc %gs:address').
+>> +
+>> +  syscon:
+> 
+> I feel like suddenly you sent something completely different than what
+> have you been working for the past 4 years.
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description: |
+>> +      Phandle to the device node representing the TMU System Controller
+>> +      (compatible with "google,gs101-tmu-syscon"). This node provides the
+>> +      regmap for INTPEND and INTCLEAR registers.
+>> +
+>> +  "#thermal-sensor-cells":
+>> +    const: 1
+>> +
+> 
+> No supply?
 
-I'm sure I remember a version that used a per-task prng.
-That just needs 'current' - which might be known and/or be cheaper
-to get.
-(Although I also remember a reference some system where it was slow...)
+It seems not. Nothing specified downstream. Couldn't find anything in the
+schematics that I have either.
 
-The other option is just to play 'fast and loose' with the prng data.
-Using the state from the 'wrong cpu' (if the code is pre-empted) won't
-really matter.
-You might get a RrwW (or even RrwrwW) sequence, but the prng won't be used
-for anything 'really important' so it shouldn't matter.
+I addressed the rest of the feedback in v2.
 
-	David
+Thanks,
+ta
