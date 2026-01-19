@@ -1,33 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68705283C89;
-	Mon, 19 Jan 2026 07:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9E71BD9D0;
+	Mon, 19 Jan 2026 09:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768807066; cv=none; b=qQFIySJkd2zMqYNkb6IJBvfdByoMSx3GRglBpPq+KalcQCQNv/soFsUbvqYTuuM2hATJe83EfgWxFjmJERB3TbeG9ZhFmn190IkmZqoxg11hgmULo1t1bU8mhYCzBwt68ER1yNjFaoW4ZAqM85uAONrYyC/7Eoc4i3HsBu2c9WI=
+	t=1768814704; cv=none; b=DX+4E3LOWYZP01XOZW6GBp+xTNrKDWAmu19KT8m7s6KrOtX4XrUWcG6DlOTztDCEhhemu+68gX2sPBIJL3aDFoQJ+7C3YS0C+oFG7/IC4elWOUzYYILYbmGj8l0RYTfAxSMgGTlEVVwywZBaJgjQ/RGkfxuWeGAOf8D7W1zw608=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768807066; c=relaxed/simple;
-	bh=IsxoWxJDXcOy6IS9oZC97dcs9kOhYH3mkq9XnLoovg8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=JchyInkBp4+J0oMkLPOaajJjvWmyb0bFOd3vLufeJCTOZ0gbcdstcn2rMjOz2zOYd8IBQD4m88pGwXQYw1p6IhG3NCVdPHZMLPNhEZXdma5A3KBfnjxgGOl0WQ8ZFDJ7MkIa6GjDcMYaoF+KHkPPaogR/rDqUF96g+IucLtFkRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UV2CI48U; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UV2CI48U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5E75C116C6;
-	Mon, 19 Jan 2026 07:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768807066;
-	bh=IsxoWxJDXcOy6IS9oZC97dcs9kOhYH3mkq9XnLoovg8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=UV2CI48UYYIdmu/F3CJ7eWfwjOGLMtuh4FNYA5RbIBbup8w57re8E7prU3FY/WNrq
-	 gQ+1p9HwHZjCCEEUVEsjtnbXqZkg4LtuHfG+8G1yEHc3InaP+F5XkfvadRm8RjDsTx
-	 6KKiq23vQa9G0KvFqg1DLWeYx07cO/QAWQ4ZRnPiPQsJ5rxVVqvewcx6MxyE11lYML
-	 a5Kbm/ZNhLfJMqsyQIoFBG3i8o19R2WvFOnAN/tTzen9HqhkyVLPpcD2ww0Pw1rku1
-	 8mBHjza86FFpZzTrevfZW8aGoBaiD/NuRYZAK1k5A6JgT+y43ysL7CBV02iWPbbgZ8
-	 f6CwHr/vpOOjg==
-Message-ID: <db9d334d-84f6-48bc-a27b-95f4225762f4@kernel.org>
-Date: Mon, 19 Jan 2026 08:17:38 +0100
+	s=arc-20240116; t=1768814704; c=relaxed/simple;
+	bh=JRgQDAI4uJurC4XlS5JiC/ehn0cdewA28qsAWvQO1Do=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tKrVKypMi4RAlgPbfCGLEhPLfdwx0QTxo6U+v9pd4AH8ClZXS5y2jV90RMzAfM1iG90rP0xKKECl3U9XfDa8vBauDGya6K8QNn7ltRiiofU7hcc70fvI7rkJUPHY2BCLDyDTw1SNgi6xD3mixwp4MrHTRWHwzz7TRxU1f4G7TIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: b6c1495cf51811f0b0f03b4cfa9209d1-20260119
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:856d4e8e-050a-41bd-a991-c28f59ac7069,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:27605276af80639d37ed3d12c814a6b5,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
+	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
+	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: b6c1495cf51811f0b0f03b4cfa9209d1-20260119
+X-User: jiangfeng@kylinos.cn
+Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <jiangfeng@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 1072398959; Mon, 19 Jan 2026 17:24:54 +0800
+Message-ID: <298c3f7c-42d3-4514-864a-104d64363cd8@kylinos.cn>
+Date: Mon, 19 Jan 2026 17:24:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,93 +42,59 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/10] dt-bindings: omap: Add Samsung Galaxy Tab 2 10.1
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Mithil Bavishi <bavishimithil@gmail.com>, aaro.koskinen@iki.fi,
- andreas@kemnade.info, khilman@baylibre.com, rogerq@kernel.org,
- tony@atomide.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- neil.armstrong@linaro.org, rfoss@kernel.org,
- laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- quic_jesszhan@quicinc.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
- thierry.reding@gmail.com
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-hardening@vger.kernel.org
-References: <20260119033035.57538-1-bavishimithil@gmail.com>
- <20260119033035.57538-11-bavishimithil@gmail.com>
- <7075abf6-fde8-4ff2-8370-ca7f5361ef7c@kernel.org>
+Subject: Re: [PATCH v2 00/14] riscv: optimize string functions and add kunit
+ tests
+To: Joel Stanley <joel@jms.id.au>
+Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
+ ebiggers@kernel.org, martin.petersen@oracle.com, ardb@kernel.org,
+ ajones@ventanamicro.com, conor.dooley@microchip.com,
+ samuel.holland@sifive.com, linus.walleij@linaro.org, nathan@kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ "dfustini@oss.tenstorrent.com" <dfustini@oss.tenstorrent.com>,
+ Michael Ellerman <mpe@oss.tenstorrent.com>
+References: <20260113082748.250916-1-jiangfeng@kylinos.cn>
+ <CACPK8Xc2inE8=mbPFt+iTtgOqF_1U9m+76014aDaQxVyTYy2UQ@mail.gmail.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <7075abf6-fde8-4ff2-8370-ca7f5361ef7c@kernel.org>
+From: Feng Jiang <jiangfeng@kylinos.cn>
+In-Reply-To: <CACPK8Xc2inE8=mbPFt+iTtgOqF_1U9m+76014aDaQxVyTYy2UQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/01/2026 08:16, Krzysztof Kozlowski wrote:
-> On 19/01/2026 04:30, Mithil Bavishi wrote:
->> Add samsung-espresso10 codename for the 10 inch variant
+On 2026/1/15 12:43, Joel Stanley wrote:
+> On Tue, 13 Jan 2026 at 18:58, Feng Jiang <jiangfeng@kylinos.cn> wrote:
 >>
->> Signed-off-by: Mithil Bavishi <bavishimithil@gmail.com>
+>> This series introduces optimized assembly implementations for strnlen,
+>> strchr, and strrchr on the RISC-V architecture. To support a rigorous
+>> verification process, the series also significantly expands the
+>> string_kunit test suite with both functional correctness tests and
+>> performance benchmarks.
 > 
+> I ran the kunit tests on Ascalon, a RVA23 CPU, in emulation. The arch
+> optimised version showed significant improvements over the plain
+> version.
 > 
-> <form letter>
-> This is a friendly reminder during the review process.
+> I didn't have time to investigate if the numbers made sense. As Andy
+> noted, the 'long' benchmark had a much higher ratio improvement than
+> the short and medium.
 > 
-> It seems my or other reviewer's previous comments were not fully
-> addressed. Maybe the feedback got lost between the quotes, maybe you
-> just forgot to apply it. Please go back to the previous discussion and
-> either implement all requested changes or keep discussing them.
-> 
-> Thank you.
-> </form letter>
+> Tested-by: Joel Stanley <joel@jms.id.au>
 > 
 
-Both comments... When you receive a comment under one patch, you must
-check if it does not apply to others. This is really sloppy to send me a
-patch with exactly the same problem, which I asked to fix already.
+Thank you very much for your time and the test results.
 
-Best regards,
-Krzysztof
+You were absolutely right to question the numbers. I've realized there were
+some flaws in the previous benchmark logic that led to those inconsistent
+ratios. I am sincerely sorry for the confusion this may have caused.
+
+I am currently refining the implementation for v3 to ensure much more
+accurate and reliable measurements. I'll send out the updated series
+once it's ready.
+
+Thanks again for helping me catch this!
+
+-- 
+With Best Regards,
+Feng Jiang
+
