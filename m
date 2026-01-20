@@ -1,100 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C207D3AEF53
-	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 20:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768942482; cv=none; b=ctda+thX++DjoP1kUiEMpcSyPEOTV6uqzYJRUUiikiUcHGAv0ZM0yL+Jo7L4ZqZ7eDFB1AIIray9Ui6rGzqXgzvmPgqO8k0sChrpsWdXS8X4QCxxzv8cdQ5uTj2/1dS4b2kArK0Oju/zh8oGAhAAiMUMAibn8cr5u1e2VZSo4NY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768942482; c=relaxed/simple;
-	bh=edHKtT+qbSbcejGeeaSAlk8Hr8IADYpjt5HEGAcTgG4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8FE38BDA7
+	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 21:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768943206; cv=pass; b=q0/xiFtB7PsIaKGRofbjDqcWhJeC4iZtOMbfRg04+LbD4z3tLdmABCDuyKom0lbvkne5WjmGueI79YUskRL5Cac8vZdd8uEiTY3fJvOgWJxHsvdlJCgIRVGnn8qCNhmhBLQyiTfTrS5a3mM/z+4KpSKaI6s75DasYv6bzbIb9UU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768943206; c=relaxed/simple;
+	bh=uzTkHbmProOBNzb+9GyidfMWEO2EiRqUvgCYmYIuezM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iY7a9SRhM8nZ3t6JIzKyrMJ2TrzX3KxAURfwFJ3GOHG+eZbYSoGR3zL7YXhfx43btEUPfeD7SmVdJnIK6q/184vX09dxiDofuKiQQycGfdOUOhn9dhg5Im/ttRAvw1YJIwLoeYgYHTjJzrnJiHzgGLzx0okebpZ6zNNzFfNX/Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhPI5raO; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=qKytPkg2NtzjCqaRlU4cq5beocl77M/qxiNbQwJc0nf/j2LDzZP/6UHWfgyXf98rpPR3DYi7j6Qm7xkW2qidh/3vlQZmJ7v+PF8YRuVBpTBTw8KT3kSNGus7RJFtjI4U7LxMDdP3lFJpt+IRm+amY6ZSKs6O2eKISJmchCl8H20=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IRP8WQz8; arc=pass smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhPI5raO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338F7C2BCB2
-	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 20:54:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768942482;
-	bh=edHKtT+qbSbcejGeeaSAlk8Hr8IADYpjt5HEGAcTgG4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BhPI5raOkEq1ITeUxSpv8PVCAofaF3JhCVroscGohdSvdIAQrfTQUcOpIkq61lgF0
-	 jzUGSTMNUMNIC+9UIJMlRDDZYcOkL07LJlHQ3aB3N3aQLWfQ88z17fW6UUDXlyEQ5f
-	 1niP8TQDoQQyDAb8TKcJYWvDsdO5Grd1NGuM4f9ejyOenaxayOyqZZY2luc/BpzG7Z
-	 onRAtCjBPIjjEmB63Far2LY9z4KUQRJ6ekILrci4z/716WBTlyydVu++nkFCv0t9SL
-	 QFragcdc+FefKBT0bcXauSLW3x1lixV+TJ63hI7HPkp2JurYNXXhNqDAZzk1SEu3UJ
-	 ntMl8CmnUHWwA==
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-34c84ec3b6eso5132527a91.3
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 12:54:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXX5y9bImSkQDe1e5IY2LsIr5FT0wZejIq3JAxPKRJsqCqXohfJ8NSroPx4JwrPQLWC2mFND9fBTT0yRVvDezo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwZVN/qGWncXXcPMqQWVDCE/8VOoguYA5Sbr+XSqOWuRPXl/SK
-	2ZsKvy/C3gheoA9zEM+xR1r8utOnsws/KcCZHRm2yeSYIs11CrnsWkxb1kNsNuI7ln2WcM6l0C6
-	e74FlSPYvfQLUv967UVGXSGOkDP6bD8k=
-X-Received: by 2002:a17:90b:2741:b0:340:bde5:c9e8 with SMTP id
- 98e67ed59e1d1-352c407a374mr2154031a91.22.1768942481739; Tue, 20 Jan 2026
- 12:54:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IRP8WQz8"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b86ed375d37so767714966b.3
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 13:06:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768943202; cv=none;
+        d=google.com; s=arc-20240605;
+        b=IQKdiK4VzV0YRi+w80y9OI6XQPSUSnfZ0OI2NNPLVGcYEmBZeaqejSy68P68/qDi9G
+         3FuhoXG6fmz+VF7zwAoYJ5DcCLj6mKCS516rEc1wbqODd5WRoqmMjO9QjaHokW27bTW4
+         XNX1cK4C9OSL8dFy2kq4zlTnDNGXPV8bZuXpO9UZKVpmSTCuJxm1i1raCJ4nXThpzdN3
+         ar5TUoo/GztrL4K8brXLN+zORVOLLklgpPYvp9nBmmi18pbfzr+vQKJmkHJTGdnlg7XQ
+         E5Zf/cE2rvUcJZvcLHS/2dyJqCnAVbNrtFrTac/uXUQ+2TkPRbcWTCfTLROWNuVtgzZg
+         Pd8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Qm6uyV8c9i4IGocHzcVQAcu7s/WbazRCpwyhACW9O4Q=;
+        fh=K5kKL/LtIa0Jatb/kV9KpZckHwtGjq59uSuQnUiNu00=;
+        b=Rhd6v3edShHaRXlLtShAUqLMfz8sPH/5k+lfXJsbIhpiPLNm68Jj93dD5PlzJpAJW9
+         L1CsOKHSmCSC+AjGXlwSRzvMaNz1P2bZaO2fBkKEuk+ibbvpRBzfBgJ6ztmcAmjj8Usw
+         Uq4dZKO/1cghuNcLpAVrVk+FksLtdiWePdjnwQTeK2f0M93l3VLgeJRXUtyYvIswNqUm
+         Q8Nn60LfIGeRnlSIoJk4w7RrjlmGXOZwa8BeZ+8qXUWx6qo/zN1baoRB+iPXya4jdJ1U
+         DFSRUUUpQ7qocamEwkxf5ZMLH5Vj7HuhkLeVaZJVtY8zNFmKZPs8iP2tg+UOnMgI8//p
+         MVbQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1768943202; x=1769548002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qm6uyV8c9i4IGocHzcVQAcu7s/WbazRCpwyhACW9O4Q=;
+        b=IRP8WQz8M+nQL6s8TNHLSAx6Rc4BW5N/yViSgo+2QmuwNrktuO37Htt/LTcfJ1+eZ1
+         PLtpIhf840kuczfbE6fNWCdjm4uckiPUq0Ck/3Oy6aQTK275nN2FbUOkWh3TWYQGmURK
+         rX/jk14SbJWzfnIrZkCNAuEP9UUGdVDTHJOg64uHg4etb+LFm6AQpzywQb/OZ0j2l5it
+         8+T4ZaeldJofQ/RbqMVBftrgQru0I2808VhV4Q6+qFk6xJKads3kXn8TIAmNauvOwto1
+         3l2SV01ZNvM99dS759sA7cCVcP54IGIgVu9MNiBe5JV3qZaxxwe+suyfb+1YH7cKB/dc
+         NS/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768943202; x=1769548002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Qm6uyV8c9i4IGocHzcVQAcu7s/WbazRCpwyhACW9O4Q=;
+        b=OqOSbnFlUgJg9vuyfYcofQbTACA+yKypbuxxSbkx7MOY3SH+MSXIwSYMnJUCt+gcwS
+         Te8r3P4inbzhtDzJtabyytaVWR/yAJX345iwcxYwX7e3hSQAWgRVXQCp65ZHfJNEa808
+         kNRHz5AEMW9EVqg4FqyBAw0fDONkxG4QkRYsrT8TuE23F2lQuNoW4fHwKef935Dhh2xC
+         CvslbaadbiczG3PwDOGffTvxo61IoiuEIbRbXiKpTtiYo0ZeMh59aQIGG0/1jF5tNRA9
+         m0a9hFHzJFx5SAzm95zCntm7Um1nIt15RZa1EWxGveXHXISOuS8/2SKXcYmSQmKpyhps
+         /cTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUU3h1rtSqHvMq1U3WXNMVktN3xYlYWjArwJ+AbUiNMQRi/AddcVh0Tb1AenbtOzn/0/H6+4rth6uuBvlrDliQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqiqhLCcVkAoCTgyxkMkX1fb2Hfw3iUS3vrhouGWLnsj6RTzRR
+	OG+2ZbISN6pe51cawZ67+ZhwaRUY0EYY1XdHgVB0JxnWCtapK2t/bYEYwWtKCNRtnHQN/PtlZPo
+	ixPlQ4cmd7pQ1dOst8n/ph8yt5iWyTA3nzea9xdU=
+X-Gm-Gg: AZuq6aKUOdBWMFjSHRM9+uWq3alMU/Ay1bGa6jStTtLibhCD1jH6ytJObEoEYwSZsJh
+	7TWH5j0iYUrXguToft8qtf4k7NXPTSZv3Xxqg+WnUl9+jmj/leYBgaCEz2V/NtO/5wXZ2mPIpOp
+	Vpr9m4yMnCDAyr/+S4JZTTs9eMIIFEA9w2dWnqipi60CAqP+thyvc2iFufIX8qAxRGm2gUD/t52
+	prq9kyq07EAoWgH1xdtWIW6mYcJ89WZRSpVAf5Uzs96r+wsaatqFzk+R9zofb3LUGkTYwIu5a+k
+	SMlKAi0gGWDldeya9SQX7Q1IkNWJuhm4xXf+3i/ztvEVvsd93lceqfCKzIXs9A2OmfwAJc+q++h
+	7pmc=
+X-Received: by 2002:a17:907:9704:b0:b87:695f:d2a8 with SMTP id
+ a640c23a62f3a-b88006deaafmr271902866b.55.1768943202102; Tue, 20 Jan 2026
+ 13:06:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108092526.28586-21-ardb@kernel.org> <20260108092526.28586-31-ardb@kernel.org>
- <aW-1mv3OU-GcRyAQ@google.com> <20260120194358.1bd909fa@pumpkin>
-In-Reply-To: <20260120194358.1bd909fa@pumpkin>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 20 Jan 2026 21:54:30 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEW4yZqHAu_cm=ZVMwah-MO+ZZeBtHSO=_UcaSFkY49iQ@mail.gmail.com>
-X-Gm-Features: AZwV_QiySO9q6ni52SjDGIyw-8dD6WtHBxaL_ZGb5Vl_EsH69vIYIR_LrRX46Sw
-Message-ID: <CAMj1kXEW4yZqHAu_cm=ZVMwah-MO+ZZeBtHSO=_UcaSFkY49iQ@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH 10/19] x86/kvm: Use RIP-relative addressing
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
-	Uros Bizjak <ubizjak@gmail.com>, Brian Gerst <brgerst@gmail.com>, linux-hardening@vger.kernel.org
+References: <20251121193957.1655580-1-morbo@google.com> <20251121193957.1655580-3-morbo@google.com>
+ <202511211525.05CB7E1AEC@keescook> <20251122141614.80f1a845cd694b1b470107ca@linux-foundation.org>
+ <20260116084259.GK830755@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260116084259.GK830755@noisy.programming.kicks-ass.net>
+From: Bill Wendling <morbo@google.com>
+Date: Tue, 20 Jan 2026 13:06:25 -0800
+X-Gm-Features: AZwV_QjMxUUkSA0RIc2Md-zJtLCHQ4cc9T_bOZrlgL2_PJok5McD0hSVq7Vo6co
+Message-ID: <CAGG=3QXU5vvgV70Kb8-KUF7f0sE7XOqnFBijVnazSN9gdgManQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] memblock: annotate struct memblock_type with __counted_by_ptr
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Marc Herbert <Marc.Herbert@linux.intel.com>, 
+	Uros Bizjak <ubizjak@gmail.com>, Tejun Heo <tj@kernel.org>, Jeff Xu <jeffxu@chromium.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	John Stultz <jstultz@google.com>, Christian Brauner <brauner@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Brian Gerst <brgerst@gmail.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Mike Rapoport <rppt@kernel.org>, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 Jan 2026 at 20:44, David Laight <david.laight.linux@gmail.com> wrote:
+On Fri, Jan 16, 2026 at 12:43=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
 >
-> On Tue, 20 Jan 2026 09:04:26 -0800
-> Sean Christopherson <seanjc@google.com> wrote:
->
-> > On Thu, Jan 08, 2026, Ard Biesheuvel wrote:
-> > > Replace absolute references in inline asm with RIP-relative ones, to
-> > > avoid the need for relocation fixups at boot time. This is a
-> > > prerequisite for PIE linking, which only permits 64-bit wide
-> > > loader-visible absolute references.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >  arch/x86/kernel/kvm.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > > index df78ddee0abb..1a0335f328e1 100644
-> > > --- a/arch/x86/kernel/kvm.c
-> > > +++ b/arch/x86/kernel/kvm.c
-> > > @@ -807,8 +807,9 @@ extern bool __raw_callee_save___kvm_vcpu_is_preempted(long);
-> > >   * restoring to/from the stack.
-> > >   */
-> > >  #define PV_VCPU_PREEMPTED_ASM                                                   \
-> > > - "movq   __per_cpu_offset(,%rdi,8), %rax\n\t"                                   \
-> > > - "cmpb   $0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax)\n\t" \
-> > > + "0:leaq 0b(%rip), %rax\n\t"                                                    \
+> On Sat, Nov 22, 2025 at 02:16:14PM -0800, Andrew Morton wrote:
+> > On Fri, 21 Nov 2025 16:30:43 -0800 Kees Cook <kees@kernel.org> wrote:
 > >
-> > Please use something other than '0' for the label, it took me forever (and looking
-> > at disassembly) to realize "0b" was just a backwards label and not some fancy
-> > syntax I didn't know.
+> > > On Fri, Nov 21, 2025 at 07:39:44PM +0000, Bill Wendling wrote:
+> > > > Add the '__counted_by_ptr' attribute to the 'regions' field of 'str=
+uct
+> > > > memblock_type'. The 'regions' field is an array of 'struct
+> > > > memblock_region' and its size is tracked by the 'max' field, which
+> > > > represents the total number of allocated regions.
+> > >
+> > > As part of any counted_by annotation patch, there needs to be discuss=
+ion
+> > > in the commit log about how it's been shown to be a safe annotation
+> > > to make. e.g. in this case, if all allocations of "regions" have a
+> > > corresponding "max" assignment, etc. If just "git grep" can't find th=
+em
+> > > all, using something like Coccinelle or CodeQL to search for struct
+> > > memblock_type::regions assignments can work.
+> >
+> > How is anyone to know these things?  I can't find anything about this
+> > in include/ or Documentation/ or in the relevant commits.
+> >
+> > There should be a comment at the __counted_by() definition site, please=
+.
+> >
+> > And possibly write a Documentation/ file then change checkpatch to
+> > direct people to that file if they add a counted_by?
 >
-> I remember taking a while to grok that as well.
+> There is:
 >
-> Can't you just use . as in:
->         leaq    .(%rip), %rax
+>   https://clang.llvm.org/docs/BoundsSafety.html
 >
+After feedback and more consideration, I think this patch was
+premature. I'm going to shelve it until we can submit an improved
+version and the compilers can release the feature. :-)
 
-How would the other two instructions referring to '0b' in their
-immediates refer to '.' in that case?
+-bw
