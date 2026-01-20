@@ -1,49 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958513A7F63;
-	Tue, 20 Jan 2026 07:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690FE3A0E98;
+	Tue, 20 Jan 2026 07:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768894350; cv=none; b=cP4NPi1daYlZjpOAcNCvpwpcmzR06rzOBUSv2E12D2hOuSDLeKO8r0Ru7VmIFoq+OzggaHPoFGpyj7FJT+HGF2HWDbhvUVr68S2khfkjvKpedxGD4qZ9nwFx61X41sngZsEZyP1Qg9kp8ZTbmPO6+stkKSqXAP5wAXkKvgYM2gQ=
+	t=1768894606; cv=none; b=fjmStaZ5VT0HcTKfmPGx3DGCL240XXyM2foIzRXMTELHExcNUA+LdPb7QugvJ4R9H0GQ900IKPuBhhD4HK/qXSV7UJBLAAqi21rMNB/oW61VyPllFP6rgtP6wm2grnI7l0XX2mJLTo7UrFQ6HOjkazX6Pv+ZIkCsf7uLk8F/x34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768894350; c=relaxed/simple;
-	bh=nb3aJk8nyDTzbplwGZGJ0Q/PSSQgwHA8tn4+tbQmuPs=;
+	s=arc-20240116; t=1768894606; c=relaxed/simple;
+	bh=dY/ITLky4ksuqTvlk+bheOz2RwnVsxxlZhktw+2usFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BbbW0Dc6PP37r3SIgjzkCYfPCxw6OdE40pIsOZoM7Z/xyIfXiMZnqU/ZTc3dSi5pv/d5lOsZVlRfz27a0b9KN8tTLro65+w6WhW4ZrcsxfEmB/0fqXZknNvgpdDnKEnaULfSiDxUNL47K+8FW1K0iALH+u12uNv6L0iogo/e4Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gU6PzSpc; arc=none smtp.client-ip=192.198.163.14
+	 Content-Type:Content-Disposition:In-Reply-To; b=fMLJAPW1q76b7Eo2Iw/3AImmBzeLMPGfIEMR7O+x+MN+xI8284TiLEY3zjBQLyZ8nGPqwtU3ps5tvjcfUXzPpqzyjkkyZqYfIMfvg3dOi/+drBttil4ZJaauSP1nLj5cNVO52skm++LEiGXx2f6mrgr5XVxaLUNv5taBF3HUV1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IFs002E5; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gU6PzSpc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IFs002E5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768894348; x=1800430348;
+  t=1768894604; x=1800430604;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=nb3aJk8nyDTzbplwGZGJ0Q/PSSQgwHA8tn4+tbQmuPs=;
-  b=gU6PzSpc62pqOLwxNop6JTBrmcBUYhX/EvpZywd3ZBmsCeHe3brW9xa2
-   wKs3Q5b/t4rJnnnQqslUTXN9MU1xu26Gznf1wycR75URbo9nQv1CLhJ/t
-   kPlv9O2QJc7LtXxHtHm7Rae97QL/58eBXM4j8bKKgBG3D8D/CF4FReSjq
-   qwjsBuOnlipZ+HZtL+iL87CvZuObYoVmGRK/AtKsOgCHaRJCLEhGMIWLQ
-   ytg3bNMNVEpksOYP4s6Gjl2fyc/FeKy2vO4VEwVcBZUK4c1uQrw6k+Iz1
-   Gj40feYpLTQryaw16HktMDdASmBMwP7MLpnoUlnHaKGAEg0kXuuVbtxBU
-   g==;
-X-CSE-ConnectionGUID: yf+ZehkwRQCLmqJC6JQ9nQ==
-X-CSE-MsgGUID: uZYiaUxUTKm/SaFuKOZs4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="70147559"
+  bh=dY/ITLky4ksuqTvlk+bheOz2RwnVsxxlZhktw+2usFw=;
+  b=IFs002E5CB9Jo/ApkeKzJQUxVeNSLJloUBTGMoVWOz/xk/Xcx/YkIyq9
+   xO1lQF+Cifstp1OprEI9DhEk3ZV/JAW+fuukJ6qlmZKePMlNZRTtZYBwz
+   6OEKFfKC540VoOW3kAXjrbnwlWc3PCNGifm/F6BDnmfkF+ZFkHAcL3dlT
+   3kFe9p1CpA5B2SBLDowlxi8U/RoKMFkd1qJGwD8RKSWGD0wvW7nGKl9cZ
+   kjryP/Tfh4YC0+jeIT9cFax/FR8kZQ+TW4kaiGLbK9apVmJ+sdDnrQeyA
+   qvXBwZql9Dv4iexknXNHMZRD0KrTPIAlr+TJN6qxPNs7do2Xqb7dxeOZL
+   A==;
+X-CSE-ConnectionGUID: XHqEpvhuQL+bFp08pFl5pw==
+X-CSE-MsgGUID: eoAXKhJwTKOfmTGXjZ0jJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="80817802"
 X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="70147559"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 23:32:28 -0800
-X-CSE-ConnectionGUID: tx2GBIdAQea0qouo7OESYA==
-X-CSE-MsgGUID: F57grxlgTQGhgqj1ORpCbw==
+   d="scan'208";a="80817802"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 23:36:43 -0800
+X-CSE-ConnectionGUID: aHKjsF1ETVKAm/rOnd05ig==
+X-CSE-MsgGUID: kqcYcfVPSbeawduoR8Oxig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="210893958"
+   d="scan'208";a="205198375"
 Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.179])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 23:32:23 -0800
-Date: Tue, 20 Jan 2026 09:32:21 +0200
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 23:36:39 -0800
+Date: Tue, 20 Jan 2026 09:36:36 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Feng Jiang <jiangfeng@kylinos.cn>
 Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
@@ -52,12 +52,11 @@ Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
 	ardb@kernel.org, charlie@rivosinc.com, conor.dooley@microchip.com,
 	ajones@ventanamicro.com, linus.walleij@linaro.org,
 	nathan@kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v3 8/8] riscv: lib: add strrchr implementation
-Message-ID: <aW8vhU-ECUIITPoh@smile.fi.intel.com>
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] riscv: optimize string functions and add kunit
+ tests
+Message-ID: <aW8whGcAR0x6FSRJ@smile.fi.intel.com>
 References: <20260120065852.166857-1-jiangfeng@kylinos.cn>
- <20260120065852.166857-9-jiangfeng@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,30 +65,74 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260120065852.166857-9-jiangfeng@kylinos.cn>
+In-Reply-To: <20260120065852.166857-1-jiangfeng@kylinos.cn>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Jan 20, 2026 at 02:58:52PM +0800, Feng Jiang wrote:
-> Add an assembly implementation of strrchr() for RISC-V.
-> 
-> This implementation minimizes instruction count and avoids unnecessary
-> memory access to the stack. The performance benefits are most visible
-> on small workloads (1-16 bytes) where the architectural savings in
-> function overhead outweigh the execution time of the scan loop.
-> 
-> Benchmark results (QEMU TCG, rv64):
->   Length | Original (MB/s) | Optimized (MB/s) | Improvement
->   -------|-----------------|------------------|------------
->   1 B    | 21              | 22               | +4.7%
->   7 B    | 116             | 122              | +5.1%
->   16 B   | 195             | 208              | +6.6%
->   512 B  | 388             | 399              | +2.8%
->   4096 B | 411             | 411              | +0.0%
+On Tue, Jan 20, 2026 at 02:58:44PM +0800, Feng Jiang wrote:
+> This series provides optimized implementations of strnlen(), strchr(),
+> and strrchr() for the RISC-V architecture. The strnlen implementation
+> is derived from the existing optimized strlen. For strchr and strrchr,
 
-> Suggested-by: Andy Shevchenko <andy@kernel.org>
+strchr() and strrchr()
 
-Wrong tag.
+> the current versions use simple byte-by-byte assembly logic, which
+> will serve as a baseline for future Zbb-based optimizations.
+> 
+> The patch series is organized into three parts:
+> 1. Correctness Testing: The first three patches add KUnit test cases
+>    for strlen, strnlen, and strrchr to ensure the baseline and optimized
+
+strlen(), strnlen(), and strrchr()
+
+>    versions are functionally correct.
+> 2. Benchmarking Tool: Patches 4 and 5 extend string_kunit to include
+>    performance measurement capabilities, allowing for comparative
+>    analysis within the KUnit environment.
+> 3. Architectural Optimizations: The final three patches introduce the
+>    RISC-V specific assembly implementations.
+> 
+> Following suggestions from Andy Shevchenko, performance benchmarks have
+> been added to string_kunit.c to provide quantifiable evidence of the
+> improvements. Andy provided many specific comments on the implementation
+> of the benchmark logic, which is also inspired by Eric Biggers'
+> crc_benchmark(). Performance was measured in a QEMU TCG (rv64) environment,
+> comparing the generic C implementation with the new RISC-V assembly versions.
+> 
+> Performance Summary (Improvement %):
+> ---------------------------------------------------------------
+> Function  |  16 B (Short) |  512 B (Mid) |  4096 B (Long)
+> ---------------------------------------------------------------
+> strnlen   |    +64.0%     |   +346.2%    |    +410.7%
+
+This is still suspicious.
+
+> strchr    |    +4.0%      |   +6.4%      |    +1.5%
+> strrchr   |    +6.6%      |   +2.8%      |    +0.0%
+> ---------------------------------------------------------------
+> The benchmarks can be reproduced by enabling CONFIG_STRING_KUNIT_BENCH
+> and running: ./tools/testing/kunit/kunit.py run --arch=riscv \
+> --cross_compile=riscv64-linux-gnu- --kunitconfig=my_string.kunitconfig \
+> --raw_output
+> 
+> The strnlen implementation leverages the Zbb 'orc.b' instruction and
+
+strnlen()
+
+> word-at-a-time logic, showing significant gains as the string length
+> increases.
+
+Hmm... Have you tried to optimise the generic implementation to use
+word-at-a-time logic and compare?
+
+> For strchr and strrchr, the handwritten assembly reduces
+
+strchr() and strrchr()
+
+> fixed overhead by eliminating stack frame management. The gain is most
+> prominent on short strings (1-16B) where function call overhead dominates,
+> while the performance converges with the C implementation for longer
+> strings in the TCG environment.
 
 -- 
 With Best Regards,
