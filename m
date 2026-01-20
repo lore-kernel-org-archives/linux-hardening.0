@@ -1,78 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47258313290;
-	Tue, 20 Jan 2026 16:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from forward501d.mail.yandex.net (forward501d.mail.yandex.net [178.154.239.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3132EB876;
+	Tue, 20 Jan 2026 16:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768927539; cv=none; b=k3xr9RXQ1SZkzeO1d4u6Aj1flx5Tf8XqYf5WxMIS+HBj82j7J/j5H0IAQymVpazT1lJUx9mtwCrD6GLIk4ubK3srBKDkJYAUcFE3hKZRqLgfcEFyfNUrEY9igMDcDncsnHiyN0ejTPdzcgKk1ESLXrj/OgCIPrZPd4uTPn6ppw8=
+	t=1768928284; cv=none; b=tD/0hN/cnhwT6DOudbP0L+2oxXQ+h8E/CT3KUTNooQYPijqWd6lA6sVeoaCb1BTnry+EKSnHUsJ5YkCciszCrBnoFUwkjKpE2NNNVsAA8/9TzPGydv9+OIflnNjBXZrm6JdxlsuiI1+gjpvkxrGesKNFTDjtMfswwLwTPGCCC5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768927539; c=relaxed/simple;
-	bh=EktYAkt/rHqN46GzGHWmpJQENSXTbh6gia76OHdxpfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pLPyJyhUnNvt0CBFFOcfT6Evn22OiGNQqFRLbrC7sbS+80ahOpyYRjJZ88Y3eppVEJ+1pjghvROVBFhTuKM/q+470zpS20yeQj6RKONlBBstwekWypSVM2WLLLvsmnHypJJcFe6pRQ5r3iN98WPo0PKfrJhe2iUslg0l1yOq3lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E55491476;
-	Tue, 20 Jan 2026 08:45:30 -0800 (PST)
-Received: from [10.1.39.200] (XHFQ2J9959.cambridge.arm.com [10.1.39.200])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 600763F694;
-	Tue, 20 Jan 2026 08:45:33 -0800 (PST)
-Message-ID: <c5922290-f01c-4c77-995a-9a0ef89053a1@arm.com>
-Date: Tue, 20 Jan 2026 16:45:31 +0000
+	s=arc-20240116; t=1768928284; c=relaxed/simple;
+	bh=7OLaa/PgkWKcDJgT1ipDgSZs7E5O4cdgkZ+uQ8h1UWI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=b4+No1GzejITqhsgp/3VetahTa/nnObL7fTjESc5Gsui+wHkO++7jJhTdoMnu9TzTkgyjhB0Qy50we5dVlCjQ4dQT6JXoCiLVE/02bHquxKqUNLZxav4A2HjP6L0FagohpcLTT2mCpmcGK3v46ePiXUSYIJ5EhdCbHk5lyj9w80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=ndwVEYxp; arc=none smtp.client-ip=178.154.239.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="ndwVEYxp"
+Received: from mail-nwsmtp-smtp-production-main-94.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-94.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:2646:0:640:add0:0])
+	by forward501d.mail.yandex.net (Yandex) with ESMTPS id DD2D282EDC;
+	Tue, 20 Jan 2026 19:57:52 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-94.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ovd3ivvG1Cg0-Wpet3x5Z;
+	Tue, 20 Jan 2026 19:57:52 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1768928272; bh=7OLaa/PgkWKcDJgT1ipDgSZs7E5O4cdgkZ+uQ8h1UWI=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=ndwVEYxp9X8qeDjH03fhdYj++0P3xcnAe1nbI0ngTAQP8WgjjcH1HlkcPeIVLZVxc
+	 E72rbhN4QTe0KJYLHKiDv2tee71WzWdcFi8vPBQCLkxGUb2v9bXKA8FwOdAbxW91vu
+	 /0vcBbm6bBVBXO8DXZ85sfUcaQqVRxYUnOiGEMh8=
+Authentication-Results: mail-nwsmtp-smtp-production-main-94.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <dd2b5f76c1acfb0ebb22585a5282d94e1d8c979e.camel@yandex.ru>
+Subject: Re: [PATCH v4 3/3] xfs: adjust handling of a few numerical mount
+ options
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+ Carlos Maiolino
+	 <cem@kernel.org>, Christoph Hellwig <hch@infradead.org>, 
+	linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Tue, 20 Jan 2026 19:57:50 +0300
+In-Reply-To: <aW-YP7wCEvRJzyfR@smile.fi.intel.com>
+References: <20260119160623.a762c3d64f230936198dc17e@linux-foundation.org>
+	 <20260120141229.356513-1-dmantipov@yandex.ru>
+	 <20260120141229.356513-3-dmantipov@yandex.ru>
+	 <aW-YP7wCEvRJzyfR@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] Fix bugs and performance of kstack offset
- randomisation
-Content-Language: en-GB
-To: Dave Hansen <dave.hansen@intel.com>, Kees Cook <kees@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
- Jeremy Linton <jeremy.linton@arm.com>,
- David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
- <20fb97f1-7e50-485a-bdfd-a2901d20ec84@intel.com>
- <C502BCE6-2FB2-4A06-93A8-E8DEDFC22914@kernel.org>
- <785a7d90-babe-43af-93a6-c220c1877bcf@arm.com>
- <a8ca3483-d61a-41bd-9b1b-17a8f3ac03eb@intel.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <a8ca3483-d61a-41bd-9b1b-17a8f3ac03eb@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 20/01/2026 16:37, Dave Hansen wrote:
-> On 1/20/26 08:32, Ryan Roberts wrote:
->> I don't think this question was really addressed to me, but I'll give my opinion
->> anyway; I agree it's pretty binary - it will either work or it will explode.
->> I've tested on arm64 and x86_64 so I have high confidence that it works. If you
->> get it into -next ASAP it has 3 weeks to soak before the merge window opens
->> right? (Linus said he would do an -rc8 this cycle). That feels like enough time
->> to me. But it's your tree 😉
-> 
-> First of all, thank you for testing it on x86! Having that one data
-> point where it helped performance is super valuable.
-> 
-> I'm more worried that it's going to regress performance somewhere and
-> then it's going to be a pain to back out. I'm not super worried about
-> functional regressions.
+On Tue, 2026-01-20 at 16:59 +0200, Andy Shevchenko wrote:
 
-Fair enough. Let's go slow then.
+> With all this, I do not see the point of having a new API.
+> Also, where are the test cases for it?
+
+If there is no point, why worrying about tests?
+Also, do you always communicate with the people
+just like they're your (well-) paid personnel?
+
+Dmitry
