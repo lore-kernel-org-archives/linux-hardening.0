@@ -1,66 +1,25 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8183C47D949
-	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 15:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C73103176EF;
+	Tue, 20 Jan 2026 16:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768922035; cv=none; b=Wx+DMpgRUh4Ier0890badzQ12XzEO7KJtq8fpth2Rqq30t1r0U5/5CO0Sl6kcG30La4gkblJqUSLflPq/9to/UzK77DuNyo+g/OfRZ9gIfUiRhKJNZ7bUhb/XQP/AH9L7mFhIy/Zbnd1MjFFox+HvrSIuFiEGh6KnTP7WFng/fQ=
+	t=1768926745; cv=none; b=Az4bBswOAiOabmyu6WCBgHETI7upMzsyzQsan/1B8AE/NQxUKp/bPQZHw0iU/L+sK5VQkZelpp7IKzg94SX7qEtsHmtZmmKuodpJUH3aPYY/FhfSwPESs5wS6sSJrjmCKCzwqCk8O1zNftjqWFOrAQ4ucJ/z4TIGfH9o2HDCgns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768922035; c=relaxed/simple;
-	bh=tTdNJ9w0A3SRS2jGZyO87hh6ddJ8/yTI7BHcKalWjPA=;
+	s=arc-20240116; t=1768926745; c=relaxed/simple;
+	bh=MEfEaETuHARVD48KyuQmVhFNmOwX8YQiQSJrURCh6EY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e0aQkNfheVSOSp9+cI3gpHteHd0qI05Ew1zvk9RlO0kd7Y7Ir2jo8Ox5hbL3jOMXO8yv1sKzLW8gjoakH1GdecVGG13Jr0zxnLuiVOtpjBqopItuF5EvQMlB/uK9zKN+zimhJAxvKR4Zgv+ohf8ANuPW5Eqrmiep0JC2YdpVwbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bR3/T7zd; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bR3/T7zd"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47fedb7c68dso37993445e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 07:13:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1768922031; x=1769526831; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KfHF8XX2sLoiWwn6mh6WL+QXvB0XHx4J/lS+4r+T224=;
-        b=bR3/T7zdFsQ79orClB/OtuJkhWjteFZ0ldd6bNXwgN6fisE5qcOQgkjwxTZFoHHc5y
-         7yOyZDtZSZaDTS8ifjUmEfV9CoS4RA0mOQRRHhOX37mQc5i2WUhVK/u4Fj0WEq244H2m
-         EL8NGU7vTFgO0C5cgmMINHG7iQ82UZZYrBQhBcFL3LFsiYgUncQGXA/w0u1AqIGJk6WN
-         JM0QyEhH/TdLoVc9N/tGqY0ahOhJLCkixGa08RxflOIfnO2f/B+6aHagRzCQwLkG22Bf
-         QqDk0s97FGVeslJMAlK5OHWLIEqY2BEyQ63ZNs6fO3Us9xRwOe7ylg8LmnX5TJqPW7qe
-         UMhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768922031; x=1769526831;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KfHF8XX2sLoiWwn6mh6WL+QXvB0XHx4J/lS+4r+T224=;
-        b=jdVEhJFY6dgcJbP+AViRVy3PkyO9x7mSdtFjwho+dyghLnbtK2VIkJLHg6x0r0WKPn
-         +tIZebRG2/G16s8uR7EjBu6WdtElSTx9UtYx+RUHRouaMULMPYnCLSr5YqbNHUC2FT6t
-         J58l2FHotilcNgnsrWVUBxo8Otod4Gxae4moR0QgWJ16nlAFNHZhZrkB26LCGhfdtYvu
-         PwgqFhR7X2jeHVIKQKOwNeFBUeoS95+W0u3Z7QXhI3Q0RzEXIJZrXV/VrS9RxWqeIqaZ
-         +3IubOAZwr0uY9Mvh3k1izN/qV3d2+dvbZMz7z8Z4PPubfBgac0wCbV1JJBBX8Zu8rS4
-         e4Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCXSUVYBTr/1A0MPhEd0fFlv0b6XPt9BP3N/cq2m/dXqMopFyrJhqY4cv7lESjsggJc7FeIFwkKl/0uLurK1ar4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6gX5MRz8KIksoL3dA/WNOMLPVQjl6/nxIxNjI0snzujSkyazH
-	llAVDvJ4i0+s93bZ7jm0Gw44hYvkM9jSRm/sbcN+4kDgTpmUIxJfc1ofVhfBO76wYx4=
-X-Gm-Gg: AY/fxX5YPwKOO6gzUOF4WIkqMgPbEhF47ZVCZlpSBKEOzHONt15yoc6GiB/4qQOAZMF
-	8GohHxf6q0Jjd1whu2vPNS8JxSJE5Aio8x2phKuMPhqJbMRO3/UKBdRIFZAqbvKuDqbtVWvBI71
-	PYHuWRuoo1pArNlZ7bc6KVsyONiHdCaTRxBvDDhEiNMREiSDQlIbmARRziN4MCJx/lmzmq0BVO/
-	KBUUgeKQa41nbmQL3o3DvR1j0uVtVOLQU2snqzdwX1rbDxAzsVb9SoEldPJLP1qahhtXMHjPL0W
-	+cu2787p1/uRAr+H51qbOQkA9VHqEYkdIIeCsleZHpXc4lqIkKnuspTIi7ZNvkwxcZWPGsAXofG
-	zOswOK2jQ3sqIU8LmdDcwbzZcArvQ6a36DI0fF4YpkhA8TjRB7xv2JORc+WkrFjAL07coroOHjZ
-	umzZtp8RWrC0w7teXDingoZR8/uwo6zz0=
-X-Received: by 2002:a05:600c:458d:b0:47d:264e:b435 with SMTP id 5b1f17b1804b1-4801e34209cmr173700875e9.22.1768922030743;
-        Tue, 20 Jan 2026 07:13:50 -0800 (PST)
-Received: from [192.168.1.221] ([94.202.56.172])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e9ee5c3sm113053335e9.2.2026.01.20.07.13.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Jan 2026 07:13:50 -0800 (PST)
-Message-ID: <ae85df64-b6b7-43d7-ba50-9c0525481299@linaro.org>
-Date: Tue, 20 Jan 2026 17:13:43 +0200
+	 In-Reply-To:Content-Type; b=JcZT4IhpB/ECiyrEGGkGtMkhSWGhXL/+cgSPIu6029kRkiV3tbzz8cRy5jlwEBdjkGlRyNFn6OG80GewPNRal2yX/k5eYAg+51clwk7GSY3LN3moz8FTQsLsAGLqXkg601GccP8iyfqTux9H8MSGOYkUxkG6h3FjeJxx/j6voYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B3771476;
+	Tue, 20 Jan 2026 08:32:16 -0800 (PST)
+Received: from [10.1.39.200] (XHFQ2J9959.cambridge.arm.com [10.1.39.200])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFE823F694;
+	Tue, 20 Jan 2026 08:32:18 -0800 (PST)
+Message-ID: <785a7d90-babe-43af-93a6-c220c1877bcf@arm.com>
+Date: Tue, 20 Jan 2026 16:32:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,88 +27,73 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/26] mm/memblock: Add MEMBLOCK_INSPECT flag
-To: Mike Rapoport <rppt@kernel.org>, david@redhat.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, tglx@linutronix.de, andersson@kernel.org,
- pmladek@suse.com, rdunlap@infradead.org, corbet@lwn.net, mhocko@suse.com,
- tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- jonechou@google.com, rostedt@goodmis.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org
-References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
- <20251119154427.1033475-19-eugen.hristev@linaro.org>
- <aVImIneFgOngYdSn@kernel.org>
- <4b8953ac-567b-4d68-9c25-72a69afdf1b3@linaro.org>
- <aVlsqdgXSBLIE9Xi@kernel.org>
-From: Eugen Hristev <eugen.hristev@linaro.org>
-Content-Language: en-US
-In-Reply-To: <aVlsqdgXSBLIE9Xi@kernel.org>
+Subject: Re: [PATCH v4 0/3] Fix bugs and performance of kstack offset
+ randomisation
+Content-Language: en-GB
+To: Kees Cook <kees@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Jeremy Linton <jeremy.linton@arm.com>,
+ David Laight <david.laight.linux@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260119130122.1283821-1-ryan.roberts@arm.com>
+ <20fb97f1-7e50-485a-bdfd-a2901d20ec84@intel.com>
+ <C502BCE6-2FB2-4A06-93A8-E8DEDFC22914@kernel.org>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <C502BCE6-2FB2-4A06-93A8-E8DEDFC22914@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 1/3/26 21:23, Mike Rapoport wrote:
-> On Sat, Jan 03, 2026 at 08:36:40AM +0200, Eugen Hristev wrote:
->>
->>
->> On 12/29/25 08:56, Mike Rapoport wrote:
->>> Hi Eugen,
->>>
->>> On Wed, Nov 19, 2025 at 05:44:19PM +0200, Eugen Hristev wrote:
->>>> This memblock flag indicates that a specific block is registered
->>>> into an inspection table.
->>>> The block can be marked for inspection using memblock_mark_inspect()
->>>> and cleared with memblock_clear_inspect()
->>>
->>> Can you explain why memblock should treat memory registered for inspection
->>> differently?
->>
->> It should not, at a first glance.
->>
->> The purpose of the flag is to let memblock be aware of it.
->> The flag is there to have a "memblock way" of registering the memory,
->> which inside memblock , it can translate to a meminspect way of
->> registering the memory. It's just an extra layer on top of meminspect.
->> With this, it would be avoided to call meminspect all over the places it
->> would be required, but rather use the memblock API.
+On 19/01/2026 16:44, Kees Cook wrote:
 > 
-> memblock APIs are not available after boot on many architectures, most
-> notable being x86.
 > 
-> But regardless, I can't say I understand why using memblock APIs for
-> meminspect is better than using meminspect directly.
-> I'd imagine that using meminspect register APIs would actually make it more
-> consistent and it would be easier to identify what memory is registered
-> with meminspect.
+> On January 19, 2026 8:00:00 AM PST, Dave Hansen <dave.hansen@intel.com> wrote:
+>> On 1/19/26 05:01, Ryan Roberts wrote:
+>>> x86 (AWS Sapphire Rapids):
+>>> +-----------------+--------------+-------------+---------------+
+>>> | Benchmark       | Result Class |   v6.18-rc5 | per-task-prng |
+>>> |                 |              | rndstack-on |               |
+>>> |                 |              |             |               |
+>>> +=================+==============+=============+===============+
+>>> | syscall/getpid  | mean (ns)    |  (R) 13.32% |     (R) 4.60% |
+>>> |                 | p99 (ns)     |  (R) 13.38% |    (R) 18.08% |
+>>> |                 | p99.9 (ns)   |      16.26% |    (R) 19.38% |
+>>
+>> Like you noted, this is surprising. This would be a good thing to make
+>> sure it goes in very early after -rc1 and gets plenty of wide testing.
 > 
-> In the end, memblock_alloc*() returns dynamically allocated memory, just
-> like kmalloc(), the difference is that memblock is active very early at
-> boot and disappears after core MM initialization.
+> Right, we are pretty late in the dev cycle (rc6). It would be prudent to get this into -next after the coming rc1 (1 month from now).
+> 
+> On the other hand, the changes are pretty "binary" in the sense that mistakes should be VERY visible right away. Would it be better to take this into -next immediately instead?
 
-Hi Mike,
+I don't think this question was really addressed to me, but I'll give my opinion
+anyway; I agree it's pretty binary - it will either work or it will explode.
+I've tested on arm64 and x86_64 so I have high confidence that it works. If you
+get it into -next ASAP it has 3 weeks to soak before the merge window opens
+right? (Linus said he would do an -rc8 this cycle). That feels like enough time
+to me. But it's your tree ;-)
 
-Thanks for sharing your opinion.
+Thanks,
+Ryan
 
-David, what do you think, does it make sense to have this flag or we can
-ditch it and use meminspect directly ?
-
-Also, for some memory blocks, they do not disappear ever, e.g. the
-printk log buffer, it's allocated early and never freed, so it's
-required to have some memblocks marked for inspection.
-
-Eugen
 
 > 
->> And further, inside memblock, it would be a single point where
->> meminspect can be disabled (while preserving a no-op memblock flag), or
->> easily changed to another API if needed.
->> Ofcourse, one can call here directly the meminspect API if this is desired.
->> Do you think it would be better to have it this way ?
->>
->> Thanks for looking into it,
->> Eugen
+>> But I don't see any problems with the approach, and the move to common
+>> code looks like a big win as well:
+> 
+> Agreed; I think it's looking great.
 > 
 
