@@ -1,162 +1,100 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA8C3A35AE;
-	Tue, 20 Jan 2026 20:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C207D3AEF53
+	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 20:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768942026; cv=none; b=ot5VuyxSDz3REfgLORNPw0dYrPTvY1PjZBqZ8l2mR9o/RUXjCOdJGczhgATA2inl6Ro1iu6PJuTpLKw0EVnSnoBO8v5Zt7TQznQT/jsBu1w0hFZiwHJBOvFjiGKud+G+cSXUxwJoXEukT4L80AZJVfhroiOeOBd2GGknqVvcrQE=
+	t=1768942482; cv=none; b=ctda+thX++DjoP1kUiEMpcSyPEOTV6uqzYJRUUiikiUcHGAv0ZM0yL+Jo7L4ZqZ7eDFB1AIIray9Ui6rGzqXgzvmPgqO8k0sChrpsWdXS8X4QCxxzv8cdQ5uTj2/1dS4b2kArK0Oju/zh8oGAhAAiMUMAibn8cr5u1e2VZSo4NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768942026; c=relaxed/simple;
-	bh=LyspXueXW68AGO9V25LxvSI472ChvQTBK2CWNJt0Jcc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kFlg7QTPDiVl5yTfh8BqqxhZswBTl7U/OAzR6cME63nNeMboaLJrVnQHqO+86jOv7UHgzRUixUsCWvgnhoU4nMB7h4dGrwU3QsUYsBN+HvpdI7Glri3loGm7J54MJ7OfMmvO+TIKxduwvWwgt9VzkDZGYVT8sB7YyajrzT1l01Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=eqV+OT2o; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1768942482; c=relaxed/simple;
+	bh=edHKtT+qbSbcejGeeaSAlk8Hr8IADYpjt5HEGAcTgG4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iY7a9SRhM8nZ3t6JIzKyrMJ2TrzX3KxAURfwFJ3GOHG+eZbYSoGR3zL7YXhfx43btEUPfeD7SmVdJnIK6q/184vX09dxiDofuKiQQycGfdOUOhn9dhg5Im/ttRAvw1YJIwLoeYgYHTjJzrnJiHzgGLzx0okebpZ6zNNzFfNX/Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhPI5raO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eqV+OT2o"
-Received: from [IPV6:2601:646:8081:9483:12c5:bc8e:d949:3497] ([IPv6:2601:646:8081:9483:12c5:bc8e:d949:3497])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 60KKjMx63991457
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 20 Jan 2026 12:45:23 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 60KKjMx63991457
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025122301; t=1768941924;
-	bh=uxi7aPtP+ZxwoZ8Xk6vH3We1uz0gYxMTSDROnW8WaQs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eqV+OT2oWOUXmm7uQu8O7qUME+1MYFWVKDJddplUiLKgJTofzB6U3VFHroyVs3Vf2
-	 PZKokN2NbW8oCBQD7bIz96+02NEcjofwxpold0Z2SYbneKJAxQYOav67uXHcAvQOaL
-	 VU+OwAP/GkoA8gYFF/26pTovLtQ1sOM8fJ+RMziNkkXvLgz4sl8YFcO8cupYbfFLHO
-	 EqbvwZ+kIS/D24bPa6pRGR0vcYuEHbPHnM3z2Tp+/u8huUg/3G+Kyh7aruugBFCKUV
-	 i9hFzhFrJfQ8LSRTLE1Kbj/cP9B/d4WDFn0Jb0C4FOxRhb03T5yPk3U7PQ/LiVoDD3
-	 i7r4gAN/8uTFA==
-Message-ID: <19f51dd5-c729-4977-880e-ff23ef01bca5@zytor.com>
-Date: Tue, 20 Jan 2026 12:45:16 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhPI5raO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338F7C2BCB2
+	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 20:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768942482;
+	bh=edHKtT+qbSbcejGeeaSAlk8Hr8IADYpjt5HEGAcTgG4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BhPI5raOkEq1ITeUxSpv8PVCAofaF3JhCVroscGohdSvdIAQrfTQUcOpIkq61lgF0
+	 jzUGSTMNUMNIC+9UIJMlRDDZYcOkL07LJlHQ3aB3N3aQLWfQ88z17fW6UUDXlyEQ5f
+	 1niP8TQDoQQyDAb8TKcJYWvDsdO5Grd1NGuM4f9ejyOenaxayOyqZZY2luc/BpzG7Z
+	 onRAtCjBPIjjEmB63Far2LY9z4KUQRJ6ekILrci4z/716WBTlyydVu++nkFCv0t9SL
+	 QFragcdc+FefKBT0bcXauSLW3x1lixV+TJ63hI7HPkp2JurYNXXhNqDAZzk1SEu3UJ
+	 ntMl8CmnUHWwA==
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-34c84ec3b6eso5132527a91.3
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 12:54:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXX5y9bImSkQDe1e5IY2LsIr5FT0wZejIq3JAxPKRJsqCqXohfJ8NSroPx4JwrPQLWC2mFND9fBTT0yRVvDezo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwZVN/qGWncXXcPMqQWVDCE/8VOoguYA5Sbr+XSqOWuRPXl/SK
+	2ZsKvy/C3gheoA9zEM+xR1r8utOnsws/KcCZHRm2yeSYIs11CrnsWkxb1kNsNuI7ln2WcM6l0C6
+	e74FlSPYvfQLUv967UVGXSGOkDP6bD8k=
+X-Received: by 2002:a17:90b:2741:b0:340:bde5:c9e8 with SMTP id
+ 98e67ed59e1d1-352c407a374mr2154031a91.22.1768942481739; Tue, 20 Jan 2026
+ 12:54:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC/RFT PATCH 00/19] Link the relocatable x86 kernel as PIE
-To: Kees Cook <kees@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Uros Bizjak <ubizjak@gmail.com>,
-        Brian Gerst <brgerst@gmail.com>, linux-hardening@vger.kernel.org
-References: <20260108092526.28586-21-ardb@kernel.org>
- <0658071f-0664-442d-b93c-6841f011454d@zytor.com>
- <CAMj1kXHTK2r5P6-vXp=JHVK7pfCvr=1jmR5dgDZTgvseG=8hPg@mail.gmail.com>
- <202601141003.852D0771D@keescook>
-Content-Language: en-US, sv-SE
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <202601141003.852D0771D@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260108092526.28586-21-ardb@kernel.org> <20260108092526.28586-31-ardb@kernel.org>
+ <aW-1mv3OU-GcRyAQ@google.com> <20260120194358.1bd909fa@pumpkin>
+In-Reply-To: <20260120194358.1bd909fa@pumpkin>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 20 Jan 2026 21:54:30 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEW4yZqHAu_cm=ZVMwah-MO+ZZeBtHSO=_UcaSFkY49iQ@mail.gmail.com>
+X-Gm-Features: AZwV_QiySO9q6ni52SjDGIyw-8dD6WtHBxaL_ZGb5Vl_EsH69vIYIR_LrRX46Sw
+Message-ID: <CAMj1kXEW4yZqHAu_cm=ZVMwah-MO+ZZeBtHSO=_UcaSFkY49iQ@mail.gmail.com>
+Subject: Re: [RFC/RFT PATCH 10/19] x86/kvm: Use RIP-relative addressing
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
+	Uros Bizjak <ubizjak@gmail.com>, Brian Gerst <brgerst@gmail.com>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2026-01-14 10:16, Kees Cook wrote:
-> On Fri, Jan 09, 2026 at 10:21:49AM +0100, Ard Biesheuvel wrote:
->> On Fri, 9 Jan 2026 at 01:37, H. Peter Anvin <hpa@zytor.com> wrote:
->>>
->>> On 2026-01-08 01:25, Ard Biesheuvel wrote:
->>>> This series is a follow-up to a series I sent a bit more than a year
->>>> ago, to switch to PIE linking of x86_64 vmlinux, which is a prerequisite
->>>> for further hardening measures, such as fg-kaslr [1], as well as further
->>>> harmonization of the boot protocols between architectures [2].
->>>
->>> Kristin Accardi had fg-kasrl running without that, didn't she?
-> 
-> I understand "such as fg-kaslr" to have been just a terse way of saying
-> "such as a complete multi-architectural fg-kaslr"
-> 
->> Yes, as a proof of concept. But it is tied to the x86 approach of
->> performing runtime relocations based on build time relocation data,
->> which is problematic now that linkers have started to perform
->> relaxations, as these cannot always be translated 1:1. For instance,
->> we already have a latent bug in the x86 relocs tool, which ignores
->> GOTPCREL relocations on the basis that the relocation is relative.
->> However, this is only true for Clang/lld, which does not update the
->> static relocation tables after performing relaxations. ld.bfd does
->> attempt to keep those tables in sync, and so a GOTPCREL relocation
->> should be flagged as a bug when encountered, because it means there is
->> a GOT slot somewhere with no relocation associated with it.
-> 
-> Another historical bit of context is that one of the main reasons
-> Kristen's fg-kaslr got stuck was the linker support needed for (the 65k
-> worth of) section pass-through. That never got resolved, and the solutions
-> either required huge linker files (that tickled performance flaws in the
-> linkers) that resulted in 10 minute linking times, or to disable all the
-> orphan section handling, which was a regression in our sanity checking
-> and bug-finding.
-> 
-> So, getting a well-behaved fg-kaslr still needs toolchain support,
-> and getting there is going to need further design work. As far as PIE,
-> this just makes the fg-kaslr toolchain work easier (fewer special cases),
-> along with all the other benefits of moving to PIE.
-> 
+On Tue, 20 Jan 2026 at 20:44, David Laight <david.laight.linux@gmail.com> wrote:
+>
+> On Tue, 20 Jan 2026 09:04:26 -0800
+> Sean Christopherson <seanjc@google.com> wrote:
+>
+> > On Thu, Jan 08, 2026, Ard Biesheuvel wrote:
+> > > Replace absolute references in inline asm with RIP-relative ones, to
+> > > avoid the need for relocation fixups at boot time. This is a
+> > > prerequisite for PIE linking, which only permits 64-bit wide
+> > > loader-visible absolute references.
+> > >
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > ---
+> > >  arch/x86/kernel/kvm.c | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > > index df78ddee0abb..1a0335f328e1 100644
+> > > --- a/arch/x86/kernel/kvm.c
+> > > +++ b/arch/x86/kernel/kvm.c
+> > > @@ -807,8 +807,9 @@ extern bool __raw_callee_save___kvm_vcpu_is_preempted(long);
+> > >   * restoring to/from the stack.
+> > >   */
+> > >  #define PV_VCPU_PREEMPTED_ASM                                                   \
+> > > - "movq   __per_cpu_offset(,%rdi,8), %rax\n\t"                                   \
+> > > - "cmpb   $0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax)\n\t" \
+> > > + "0:leaq 0b(%rip), %rax\n\t"                                                    \
+> >
+> > Please use something other than '0' for the label, it took me forever (and looking
+> > at disassembly) to realize "0b" was just a backwards label and not some fancy
+> > syntax I didn't know.
+>
+> I remember taking a while to grok that as well.
+>
+> Can't you just use . as in:
+>         leaq    .(%rip), %rax
+>
 
-As I *explicitly* stated earlier, there isn't anything inherently wrong with
-putting a small onus on x86 in order to make the general Linux code better --
-but please, be honest about it *so we know what the actual tradeoffs are*.
-
-For x86, we really do want to maintain the kernel memory model, which allows
-us to directly reference symbols in complex address expressions and to
-directly jump across modules. This means the "PIE" will need to be different
-from the way PIE works in user space, which is in part designed to avoid
-needing to dirty readonly pages, which would inhibit sharing -- which is
-explicitly NOT a concern for the kernel.
-
-So that is one thing that the toolchain needs to be able to do.
-
-I fully expect that we will continue to need to have some kinds of overrides
-for specific symbols, too, because there aren't any really sane ways to
-express them to the toolchain; this especially applies to linker-script and
-some assembly symbols. For example, the real-mode code (which uses the reloc
-tool as well) has to support segment and segbase-relative relocations, which
-are something that ELF simply has no concept of.
-
-I have a lot more of an issue with trying to change the x86 boot protocol,
-simply because the way booting works in x86 has been incredibly successful;
-yes, the bzImage file format is ugly as ****, but that is a direct result of
-34 years of continuous backwards compatibility. One of the reasons we have
-been able to do that is that we have *explicitly* rejected other boot models,
-such as Grub's self-declared Multiboot "standard" (which they have had to
-revise multiple times by now) and the early Xen boot model of booting vmlinux
-directly. We have added *many* capabilities to bzImage as needed, and it has
-turned out to be quite flexible in the end.
-
-That, in turn, has been possible exactly *because* the Linux kernel provides a
-"prekernel". I don't even really like calling it the "decompressor" anymore;
-it really has developed far beyond that.
-
-Every time you introduce a new boot model you take a serious risk that a boot
-loader author will say "hey, I'll just support this new model", and you *also*
-take the serious risk that the boot model isn't adequate. When the Grub
-authors says "we started using the 'modern' Linux entry point" -- meaning they
-would bypass the entry stub and call the kernel entry point directly -- they
-*reduced* the overall functionality, because history has shown that:
-
-a. The kernel image is far easier for the end user to update than the
-potentially many bootloaders, because the bootloader depends on the deployment
-model (consider network booting, for example, or when the bootloader is in
-firmware.)
-
-b. The kernel image provides ONE CENTRAL PLACE to add features, fix bugs, and
-develop workarounds for strange systems.
-
-Thus, I will do anything I can to continue to veto changes to the x86 boot
-model, unless they come with a VERY VERY good motivation.
-
-We originally made the mistake with EFI to leave too much to the bootloader;
-because of the downsides above we really needed to backpedal and take over
-control much earlier in the flow, just as with BIOS -- apparently to the Grub
-developers' utterly inexplicable chagrin.
-
-	-hpa
-
+How would the other two instructions referring to '0b' in their
+immediates refer to '.' in that case?
