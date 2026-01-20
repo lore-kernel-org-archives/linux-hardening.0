@@ -1,91 +1,95 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC65451079
-	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 18:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A9246AF39
+	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 19:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768934747; cv=none; b=MgCWNVWHJoo/eFPodZAE6hPqqsb8PPg4ir5dc/r2UY/G6F5Ww6t+IweJaLc6wjromSA6VM6LeqR9jGUKccPsk5akvIyhMugUG/OQBmAg/aZgt76DlxiiSdNMylHBYgmMw0qur6TtU3EMjTsNEBDU9vZczNYvx1q9X5vhPTn6zm4=
+	t=1768936547; cv=none; b=Py6orKPqQ+0Vfkb/kTb8GDf70cPuO/8UMSfSPYibH/WV284/W1kXnvp049AXHgopoTbs7j9Lpl/KcSN2EFFdAyaWRQk/FYuE4Z35edyu1DTMkGXmgmCQ8iOVKA5tsiZZa4Y2wtjFzVZRpp1XAybYVX82Mi64wWdRLoZsROuH1tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768934747; c=relaxed/simple;
-	bh=yDbiboXvrRh+ivSKcybv8FalD/6w3BtuEBLuaJUmJwE=;
+	s=arc-20240116; t=1768936547; c=relaxed/simple;
+	bh=1N7H+yfpk2NLIOr7BO59rbs9SEWHKeyOlq2YvA8BBU8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KTvujJSHhWUJVf8TdCs1/DsQ7b+RJLBA0ULOsGKruw/a9wSisior0qMoe+/96wuZhtAvWB6ywEZajgw0QxgiztBISPhEEEkF8qgVGmrV/ceAP8VBGpTUlYvr7OdmzR+Hh0mqShGPbJixHgPxV/7ft8A6y5MtK8H2bsa2U3cLstE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AV/ELTjQ; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version:Content-Type; b=L0wFtBhQQCw2qVANAGFvuLipQIPfTLNR9tL9Er12uJaZRKi9xyjRdsOmY2n0BNuyEiMOme98s01/mHajU2Gsk+bjaCaPRdgWWWZUG5+qWslWyNwSzt7/zC9on335KHqPxR0JllqQVTWaqiR9YS+osomAnmbaeu7WACC0r9PyT8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a8XFpMP0; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AV/ELTjQ"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-43246af170aso79254f8f.0
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 10:45:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8XFpMP0"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4801eb2c0a5so38278545e9.3
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 11:15:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768934743; x=1769539543; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768936543; x=1769541343; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=thnE7Lerq2YAOWgwctI0eLWWpc+gSu6vXOqPs3mAkT8=;
-        b=AV/ELTjQ1q2kuPpOal2LcflAh8YWQ0n/W6YBPlugIgwvsrq2Sn8td5EZTtyGf5LG5Z
-         aE2A6UTUU2ExQB22aU73V+hJay8yMrTXF+a0y9kTl7rSaNzpOzepQ0O5ABciIIfNSIFA
-         rSLVpZj60j94NG/XkcXTJuyQsq6VOD4Z9rRIHGrpw+kVFqax/WWLO/EyuruEsHu/To+U
-         Ii+iwTzt1DGIfytCSvXKGvBt/4GsvDQOoeGTJnl4Pz9fVaJ8uKAG5D05pNt366oYAmdu
-         tOyQAx6bR1z6iiWHbPw2ZsIfBlBAlys69iWGylIk8e4ToINaSrZW7B5OyKM+Se+/6FH6
-         523A==
+        bh=C0qoWHj+Pupz+7dBvH/HjJvQAh+/X6Q7iQzogpkXbi8=;
+        b=a8XFpMP07xNVWkfxaeWpj5YXch3RTYsxN627l0CQBozCisd2qH4lzpn3k/K7D76qL2
+         ndiLURYa5r1Y7sONFTj+MTrr6IllG1TQhfTfmJ0Wsx3i7m+TB+daeFLv2Z/LDwQAiWTX
+         Hs2rpO7OwYe67nACT2OwpbXjEQV96LYewDxJbpShDo4/g5QoZKVLzntGB8l7LESa488M
+         p108QmWEkC78bwLP+bpyfd/SI2gzhTIO6Awfk0b49Xhn8lQxPuuF8pNPV9SHuENOYDj7
+         ig551/XA3aIUjZiiJ7ynSZEHAQloG0Kd3p7fO3VEBzIGpyuLjGfoXIITGy6ebJYfpK1L
+         lgrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768934743; x=1769539543;
+        d=1e100.net; s=20230601; t=1768936543; x=1769541343;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=thnE7Lerq2YAOWgwctI0eLWWpc+gSu6vXOqPs3mAkT8=;
-        b=DcQppw5bLTz2QQD+60yjwzb0T1ADMaLLgOdpDuY6bJseZ2MX8hzPBD2L9xzj0sd6Qx
-         uewoTSHK/tWOk9cUa4dSci1VBA5wIDdzwh15rXa7EwQLQzkREEUB8lFoDUBqYSvLxR6Z
-         sZOJm6Jg4w1XRq8OkefWVQAcYZ39bbwt087n3p9wyULw9WDKTMjqpQkQOXtlKrPkEynx
-         gBHk61CDshDU8TPxBpUK0MUr2y00gpvv9DKcsNfcekf38+qrb2PJpgY94OKWG1hzCwgL
-         NHchXZTf4tLb5VisSLUECDooL8JZ8qdZzsBJHHhTV7ZKuNiiPuZMc042te1JWGjpxoGq
-         MKdg==
-X-Forwarded-Encrypted: i=1; AJvYcCW89ja9fdCiO3/Oc2ZPbUKpy6ipiGUdSLXzFpA9JboSznXr96t/34a1g+IhEFWp5A3yD3xFjby3mgt9cmx2YH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxD6NJHWiW2daEqg8AxfWJkGW8jPgAO6hia62ckgqIiDOkKx5y8
-	fAYp4fEJMyYwKxk3si8mMtozr4bdmblZ5wIcQjiMsoZHQDQJufESBQGq
-X-Gm-Gg: AZuq6aLaclR7l52kC9/q8GxRwVMtJeTcCA71jh8xAZL/8E6PPHhV+ccRL0GNzV43PBV
-	HTVZU4G057gTCNWbaY9fHFqFBapvbCvobNB0zRibz1hVvamxqPIURTfJ79EQly+EI/H8WUMq1yB
-	Okv9N5hIK64oprTizXSxuL9JjGmhLp5qLDBjN1lqwTesInnteZpAV5tithpe9S8zRG6l/1nLXMT
-	rbayY9cFgNbPcHHQTLm4LWAOX4kdEUI3TZJ+hfJQBXz0CMvLvDO3VPsV5LlmRLCnREsvA/quzzF
-	tAMO3/udtMLPDq0VC6ns5Gcp8gki8L6mKPE9LEFPF+kzc6Yy6KsIke6zQ/hGTVrdrKKraIK0tce
-	RretHaOuy5ijTCN3uqchu3B0IyQ9VWjKvCAVu1IyEIOu7hVQIy/T0peY3hzna7ned9Y0OBwgYP8
-	hXKRUOOnXfJMOIpmYICw4DTvZqa+J0Rc8H4Yq2/p/glCFobPdmSvqO
-X-Received: by 2002:a05:6000:2484:b0:430:fcbc:dc4a with SMTP id ffacd0b85a97d-434d75c16c1mr25592154f8f.19.1768934743113;
-        Tue, 20 Jan 2026 10:45:43 -0800 (PST)
+        bh=C0qoWHj+Pupz+7dBvH/HjJvQAh+/X6Q7iQzogpkXbi8=;
+        b=IXV4Tj4RTeiSD07nywlJerQY0UvX6OMOKhz17C3SRFd+fqh5/tkjPhNrIp5/t8NjQB
+         YxdC0fD8iksCCkQAyq08LCg7Xl/9KQNIrRg94bK83Hj8YCtMBj2kv5bd1Lqr1OZsP3tJ
+         4vTpoQX0R+wtM7DEb40TIj5j8DN5lppL5tfeEYS/XBJZKg2QPY2ZyL0zxtMy79KiUE2j
+         Gf2CnbNYpOlkSljcnxC1iZOkf6QxawXejhNIxsW4IlySJ2zvdaBplT9UtwNpHm2THKsQ
+         b9FGWj9junHJMtKAhtbLmvbRCRXv9IcTt98pDVAPpJB60xU1vuuivISVCQgkA0C/PCd0
+         0deA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKudVPe0C4d75+wQ8VL+adE3yhR06bZp0BchqwCJTA5kThgu6ptSXf4yj8DtP0jwFZRP6PIjmodSfHtVwWNRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRG+LFaLSlukeRdO9PBPpEKentGoPz/UXQXlPdZPx74lTX7mXD
+	E7FXoBqUxXvBnILXhYeuseyZZ6mP7IfcAcXp70aYOWDjIOCTqy+jjZfB
+X-Gm-Gg: AY/fxX5b6KWgHNohaK/ZE/VaEp3nZ4eMaa5lDKmmFenS2E6GiptRusiJGm54sECXV1M
+	WMzOFuCc8NjIIlppgS/heJSb+EFDH3NpCszUUvEZ1e0x0dga5R7j27rbI5WLFOyJyeO4lWrWmXM
+	f4bMw85mFMan3bd2bda++toPQKE+pqlWIjKeNHgjjh12g8NDOfHAX0lSoPZ33ICivC9nSiYo+Gi
+	oWooGZ2SBKMftQOrOMRnZwRIdMPjQ1eHu66c4tnoluDRmX+Ib2e5vt/6Jzn0IO2UZmj9BRlZPdN
+	KhXCkOKZ66eBDGqCmMQ6gfqqz1YCk4l++YqBnDafByhAXk8CS5BS1uIb62Vet3Lfev495jGLpGM
+	98pJ3NGzYKyxMOXbrO9qcRpMpES1XZtp9FB2ymL4kxkLvyD5DBgXToUjkWM70EuiC9/GAo2isxG
+	z/qHkqUrbU056rcH8E7IhvNcZ3fTF2oCd+qc9jPjbDi31FuhZxdao+
+X-Received: by 2002:a05:600c:8816:b0:479:1ac2:f9b8 with SMTP id 5b1f17b1804b1-4801e334379mr176102295e9.21.1768936543196;
+        Tue, 20 Jan 2026 11:15:43 -0800 (PST)
 Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997eb1fsm30869735f8f.35.2026.01.20.10.45.42
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48042694e77sm1172165e9.12.2026.01.20.11.15.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 10:45:42 -0800 (PST)
-Date: Tue, 20 Jan 2026 18:45:41 +0000
+        Tue, 20 Jan 2026 11:15:42 -0800 (PST)
+Date: Tue, 20 Jan 2026 19:15:40 +0000
 From: David Laight <david.laight.linux@gmail.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Kees Cook <kees@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley
- <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "Gustavo
- A. R. Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark
- Rutland <mark.rutland@arm.com>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard
- Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] Fix bugs and performance of kstack offset
- randomisation
-Message-ID: <20260120184541.0a463cd1@pumpkin>
-In-Reply-To: <a8ca3483-d61a-41bd-9b1b-17a8f3ac03eb@intel.com>
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
-	<20fb97f1-7e50-485a-bdfd-a2901d20ec84@intel.com>
-	<C502BCE6-2FB2-4A06-93A8-E8DEDFC22914@kernel.org>
-	<785a7d90-babe-43af-93a6-c220c1877bcf@arm.com>
-	<a8ca3483-d61a-41bd-9b1b-17a8f3ac03eb@intel.com>
+To: Bill Wendling <morbo@google.com>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt
+ <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Heiko
+ Carstens <hca@linux.ibm.com>, Marc Herbert <Marc.Herbert@linux.intel.com>,
+ Uros Bizjak <ubizjak@gmail.com>, Tejun Heo <tj@kernel.org>, Jeff Xu
+ <jeffxu@chromium.org>, Michal =?UTF-8?B?S291dG7DvQ==?= <mkoutny@suse.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas.weissschuh@linutronix.de>, John Stultz <jstultz@google.com>,
+ Christian Brauner <brauner@kernel.org>, Randy Dunlap
+ <rdunlap@infradead.org>, Brian Gerst <brgerst@gmail.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev, Nicolas Schier
+ <nsc@kernel.org>, Tamir Duberstein <tamird@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Naman Jain <namjain@linux.microsoft.com>, Simon
+ Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner
+ <tglx@kernel.org>, Douglas Anderson <dianders@chromium.org>,
+ linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] Compiler Attributes: Add __counted_by_ptr macro
+Message-ID: <20260120191540.50a22ba8@pumpkin>
+In-Reply-To: <CAGG=3QWeYZqLA8FSMYZFRrJ24LtEKJdmRAq3awkMZj0+qy=4_w@mail.gmail.com>
+References: <20260114193716.1740684-1-morbo@google.com>
+	<20260116005838.2419118-1-morbo@google.com>
+	<20260116095318.46a149fb@pumpkin>
+	<202601171106.90E508A9D4@keescook>
+	<CAGG=3QWeYZqLA8FSMYZFRrJ24LtEKJdmRAq3awkMZj0+qy=4_w@mail.gmail.com>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -96,39 +100,74 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 Jan 2026 08:37:43 -0800
-Dave Hansen <dave.hansen@intel.com> wrote:
+On Tue, 20 Jan 2026 10:12:34 -0800
+Bill Wendling <morbo@google.com> wrote:
 
-> On 1/20/26 08:32, Ryan Roberts wrote:
-> > I don't think this question was really addressed to me, but I'll give m=
-y opinion
-> > anyway; I agree it's pretty binary - it will either work or it will exp=
-lode.
-> > I've tested on arm64 and x86_64 so I have high confidence that it works=
-. If you
-> > get it into -next ASAP it has 3 weeks to soak before the merge window o=
-pens
-> > right? (Linus said he would do an -rc8 this cycle). That feels like eno=
-ugh time
-> > to me. But it's your tree =F0=9F=98=89 =20
->=20
-> First of all, thank you for testing it on x86! Having that one data
-> point where it helped performance is super valuable.
->=20
-> I'm more worried that it's going to regress performance somewhere and
-> then it's going to be a pain to back out. I'm not super worried about
-> functional regressions.
+> On Sat, Jan 17, 2026 at 11:07=E2=80=AFAM Kees Cook <kees@kernel.org> wrot=
+e:
+> >
+> > On Fri, Jan 16, 2026 at 09:53:18AM +0000, David Laight wrote: =20
+> > > On Fri, 16 Jan 2026 00:57:57 +0000
+> > > Bill Wendling <morbo@google.com> wrote:
+> > > =20
+> > > > Introduce __counted_by_ptr(), which works like __counted_by(), but =
+for
+> > > > pointer struct members.
+> > > >
+> > > > struct foo {
+> > > >     int a, b, c;
+> > > >     char *buffer __counted_by_ptr(bytes);
+> > > >     short nr_bars;
+> > > >     struct bar *bars __counted_by_ptr(nr_bars);
+> > > >     size_t bytes;
+> > > > };
+> > > >
+> > > > Because "counted_by" can only be applied to pointer members in very
+> > > > recent compiler versions, its application ends up needing to be dis=
+tinct
+> > > > from flexibe array "counted_by" annotations, hence a separate macro=
+. =20
+> > > ... =20
+> > > > diff --git a/Makefile b/Makefile
+> > > > index 9d38125263fb..6b029f694bc2 100644
+> > > > --- a/Makefile
+> > > > +++ b/Makefile
+> > > > @@ -952,6 +952,12 @@ KBUILD_CFLAGS  +=3D $(CC_AUTO_VAR_INIT_ZERO_EN=
+ABLER)
+> > > >  endif
+> > > >  endif
+> > > >
+> > > > +ifdef CONFIG_CC_IS_CLANG
+> > > > +ifdef CONFIG_CC_HAS_COUNTED_BY_PTR
+> > > > +KBUILD_CFLAGS      +=3D -fexperimental-late-parse-attributes
+> > > > +endif
+> > > > +endif =20
+> > >
+> > > Will that still be needed for clang 22? =20
+> >
+> > AFAIK, yes. AIUI, this flag will remain while -fbounds-safety continues
+> > to be upstreamed into LLVM.
+> > =20
+> > > Looks a bit like a temporary flag to avoid regressions.
+> > > Probably ought to at least have a comment that it won't be needed
+> > > by some future clang version so that it gets tidied up. =20
+> >
+> > Once it's no longer needed, yes, I will want it removed from the
+> > Makefile.
+> > =20
+> Would it be good to 'fixup' a comment in the Makefile for that?
 
-Unlikely, on x86 the 'rdtsc' is ~20 clocks on Intel cpu and even slower
-on amd (according to Agner).
-(That is serialised against another rdtsc rather than other instructions.)
-Whereas the four TAUSWORTHE() are independent so can execute in parallel.
-IIRC each is a memory read and 5 ALU instructions - not much at all.
-The slow bit will be the cache miss on the per-cpu data.
-You lose a clock at the end because gcc will compile the a | b | c | d
-as (((a | b) | c) | d) not ((a | b) | (c | d)).
+Wrap with:
+# Update version when no longer required
+ifneq ($(call clang-min-version, 999999),y)
 
-I think someone reported the 'new' version being faster on x86,
-that might be why.
+Although you might one day need the -f option for something entirely differ=
+ent.
+So perhaps the logic that enables CC_HAS_COUNTER_BY_PTR need to do the
+extra version check and set something so that -fexperimental-late-parse-att=
+ributes
+is added here (so it only added once if needed by multiple things).
 
 	David
+
+
