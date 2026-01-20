@@ -1,100 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C385336AB5D;
-	Tue, 20 Jan 2026 21:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0FF3D3480
+	for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 22:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768945782; cv=none; b=W0maBPT5B9omuWIYwOrdY29yPKlCPjNq5+sHTW3AFI0OnStspajwzlEJ/ery+ltnITnIxsAy5FCLPT7Cfrj+XIJ9771tIr+CfUtisp2To5KOLROFDF11Mie5GWO2SgvwIpskyJpg/l/GSOhiWtuDz8Ut++T8SSTORIJb6gTpPP8=
+	t=1768946423; cv=none; b=eFiDIYOwxZSpgvAnVsCtz3O/XF5Mr1D4uoGyuPvuQprOI6MLk1C29GkmGYSErsN5LitIWpCi6Uops+y2oCI0dGLvr4M+uSZqtUDsXfilNlZDt4s7FrhOSQIOiuCKWcya5M6DmWAdBPeN2WtukY8+VxCm4Ypewi8omKsutyX1Ec8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768945782; c=relaxed/simple;
-	bh=qtWMjt2CUAO7zZ1FhakG4Yg4AXA0OAD51V6crO1692s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EZBrB0mPCdoNR4k9o327LB5mNym+4LIiYRFgcsTF8KcdK7P4OpTiRvp/Opt6v+z8Wr1upFuo6166oKZonXk9iWPPKDiTSzoScjhUufJqICDkUjbuL4h03r1TGCmEPuAQXxPFOg7gL5da11WEVzpIFeaGdU1sqlGSNxwbJslaQ0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j/6IhVQ5; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1768946423; c=relaxed/simple;
+	bh=ZvOxSMtkLIO/ibQMLeUPV9J0RjOmTPpEkH5acVvX9Gs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IXaDbp/CCNskLZwB2jdVgSTzQrpCTmZRySG9bT/vWjLawbYeXwVxIrD9yPb4wijP+XyKorz0NUmSR6dAHZu0Bnn3BvMYSmhQvHD3lVjVIptMGoSd7aO2soVBRcRyDCV7KMRtRamYEYAHQ2/6PC304TGlBWMMO213lyItX+2Auzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GD1I9BSv; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j/6IhVQ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768945780; x=1800481780;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qtWMjt2CUAO7zZ1FhakG4Yg4AXA0OAD51V6crO1692s=;
-  b=j/6IhVQ54igch6Wcj4L43u4EZq9RASEhhze6WtnxyuQ50PSG/yMuSyv3
-   q5vIJyf4uQnSySjy8jhAM/GXNdf7jCA2K3gS1/7BWTqmqLpLJGA6Hs8Bl
-   Tm5e4QoKUIMgQt9o0iTzDk5tjGgLyOU7aE1jpJ8BS9YFSPtIcDNIJ2tWc
-   ibWXjS2B8XGqyx7qgLq1yx+Lolcp69zDxG0BamL0cWJUifxbWymJTz5tB
-   6PS60NhJlPrgq7oUQ2UCETOVQ/Q+tdxAkOLY7xR53dqDf5x3OxeDmOZVA
-   BF68vUSI6N3CNSFjZnTaAulPz2tnb9V/Vc4P+MP5tbbXe7/MXHi6Lk4Nu
-   Q==;
-X-CSE-ConnectionGUID: MzlkUkVbQRO0KL0fwV3bkg==
-X-CSE-MsgGUID: YjK6sHZGT+yKQPNuU6iX3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="70221007"
-X-IronPort-AV: E=Sophos;i="6.21,241,1763452800"; 
-   d="scan'208";a="70221007"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 13:49:39 -0800
-X-CSE-ConnectionGUID: uLru6fozRzqJCiIrYeGajQ==
-X-CSE-MsgGUID: rzVwSywYQ6C0CRxh/LvfcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,241,1763452800"; 
-   d="scan'208";a="206581546"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.244.240])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 13:49:37 -0800
-Date: Tue, 20 Jan 2026 23:49:35 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] xfs: adjust handling of a few numerical mount
- options
-Message-ID: <aW_4bxkLe4-g9teu@smile.fi.intel.com>
-References: <20260119160623.a762c3d64f230936198dc17e@linux-foundation.org>
- <20260120141229.356513-1-dmantipov@yandex.ru>
- <20260120141229.356513-3-dmantipov@yandex.ru>
- <aW-YP7wCEvRJzyfR@smile.fi.intel.com>
- <dd2b5f76c1acfb0ebb22585a5282d94e1d8c979e.camel@yandex.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GD1I9BSv"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4801c314c84so38368545e9.0
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jan 2026 14:00:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768946418; x=1769551218; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HVYraRXOuYGBxOoaAf8Gw+lLx3L7fFVpnuw34HtGkPw=;
+        b=GD1I9BSvt1URL4L9jce2nfbi6TjZCjYAJmivLHidzPGjed2ut7LFk/zCJVYN/SIiBH
+         Y1ZESpEiKkQULXP+UANBQR1/plDAJqGEIo/RCsnpsVyEtBX0szS1u+yI9GDUp5MW/h9X
+         xM2NGVFqKUgLZBV+l0Q/lgQEHQfSuwxyUZdF/4K7T82J0ZqfLUXZsktn68GcH8FzyHuM
+         eEC89KB6p8aqfW53nNmWSzo6lQDNRBs8WCWYKAmKXykNRjL07QtH4U4EQxb2VtdL9yhS
+         CKOuxSrSkKXfFH+L/UG4pSRDKd7A1R09HdVmj1kYuXGwk2ZwdyesA20C9O3lRn7QyiWr
+         FV8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768946418; x=1769551218;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HVYraRXOuYGBxOoaAf8Gw+lLx3L7fFVpnuw34HtGkPw=;
+        b=hWnAEvbWexUQX3N4dOQ5R4ms4almB2hWJjCRQiiDRBQ2yjad9Qd7WfpOdY6WP66wZs
+         ORyOqBe6iJemEVsmj5LnRhhvP2y77ljJS3FmGdAsqsHDqncSd63dZmrk+VOs+Ef5P4Vq
+         ZcSf/j275KyH/OfAnHitpVENLY4+GiO1Qj/J8nbdZCcfja8JC3elIO5zB/nCn5AhWad7
+         9zVib28sCE9XTKvLgfXQq9OZHzeYSd0/3f1aKdScjz3qVRqFCJymYdjbLGeaB9AvTh6i
+         tFJJburaWpzFoSv4J8XMnZS3jTPGDI0y4NjdBe19NPImSI2CM9BV/BTNfa6JbpGlCySY
+         s1dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9AbQESt760Xqi9wwwONAzQDgI6cY9LXhj0t1p/plIKmH8WD3Khz3/TX0XMO+eu20AA58UPl+s2taKx/+DiBc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfggKG25rZX+j499zojPFtH9WHf+XGhgoSmsowZeEbdgqc2Tqj
+	eCkZVMIqCUOulHB1by9H3bZ6HdrRN9cF/Jmu8wV7Kp5UZFvPuxxT2ty/
+X-Gm-Gg: AY/fxX7rmUehqGXs0vfQF+O+P62BubkM79C7dmbD61W4HocKx0/KxMacQ3fRSF6EPqv
+	SI9IQmOYMCEOAj/LuGLBzQhTHP3KRCx29Zn85MWqusSVY08kC2FwNvjeZxeIuz6I8VNKZCoxTHr
+	GNqyauspZJbXYBdb6sYZgGfxPGqOyO0+8gpYP0841lFUPEsU3dC4fLUMbE6nVjuOVQ1NfukeKqn
+	mI884ajxkP2cuqH5I5MDN4v9xbXnEkhgTfqn5SxYQhor/hP1yH1jQSBXJV0eg5ZlK2YEHudSEsy
+	sBCXuIBjRXvJwGwhBHWSENNROFLZKNbeHs6owuc35Utjvdli/ABy9prLbPjH3gVoi+9HYMl5X0s
+	9w4PP/uq1eEc7Logr2gv8C7IXfyj6vzSry8ib5sG+jKg+YBe7ndodhMIzBIagNPBeZEftTQFR/g
+	tVA7Nl3dm7uFYhIj2lIsHDOsJcMu9PhKf5InIZF2gPncjAwj8tFxxr
+X-Received: by 2002:a05:600c:638d:b0:47e:e78a:c833 with SMTP id 5b1f17b1804b1-4801e34cfdfmr228930345e9.32.1768946418205;
+        Tue, 20 Jan 2026 14:00:18 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48042c1e016sm2119345e9.8.2026.01.20.14.00.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 14:00:17 -0800 (PST)
+Date: Tue, 20 Jan 2026 22:00:16 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Kees Cook <kees@kernel.org>, Uros Bizjak <ubizjak@gmail.com>, Brian Gerst
+ <brgerst@gmail.com>, linux-hardening@vger.kernel.org
+Subject: Re: [RFC/RFT PATCH 10/19] x86/kvm: Use RIP-relative addressing
+Message-ID: <20260120220016.241766b2@pumpkin>
+In-Reply-To: <CAMj1kXEW4yZqHAu_cm=ZVMwah-MO+ZZeBtHSO=_UcaSFkY49iQ@mail.gmail.com>
+References: <20260108092526.28586-21-ardb@kernel.org>
+	<20260108092526.28586-31-ardb@kernel.org>
+	<aW-1mv3OU-GcRyAQ@google.com>
+	<20260120194358.1bd909fa@pumpkin>
+	<CAMj1kXEW4yZqHAu_cm=ZVMwah-MO+ZZeBtHSO=_UcaSFkY49iQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd2b5f76c1acfb0ebb22585a5282d94e1d8c979e.camel@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 20, 2026 at 07:57:50PM +0300, Dmitry Antipov wrote:
-> On Tue, 2026-01-20 at 16:59 +0200, Andy Shevchenko wrote:
+On Tue, 20 Jan 2026 21:54:30 +0100
+Ard Biesheuvel <ardb@kernel.org> wrote:
+
+> On Tue, 20 Jan 2026 at 20:44, David Laight <david.laight.linux@gmail.com> wrote:
+> >
+> > On Tue, 20 Jan 2026 09:04:26 -0800
+> > Sean Christopherson <seanjc@google.com> wrote:
+> >  
+> > > On Thu, Jan 08, 2026, Ard Biesheuvel wrote:  
+> > > > Replace absolute references in inline asm with RIP-relative ones, to
+> > > > avoid the need for relocation fixups at boot time. This is a
+> > > > prerequisite for PIE linking, which only permits 64-bit wide
+> > > > loader-visible absolute references.
+> > > >
+> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > > ---
+> > > >  arch/x86/kernel/kvm.c | 5 +++--
+> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > > > index df78ddee0abb..1a0335f328e1 100644
+> > > > --- a/arch/x86/kernel/kvm.c
+> > > > +++ b/arch/x86/kernel/kvm.c
+> > > > @@ -807,8 +807,9 @@ extern bool __raw_callee_save___kvm_vcpu_is_preempted(long);
+> > > >   * restoring to/from the stack.
+> > > >   */
+> > > >  #define PV_VCPU_PREEMPTED_ASM                                                   \
+> > > > - "movq   __per_cpu_offset(,%rdi,8), %rax\n\t"                                   \
+> > > > - "cmpb   $0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax)\n\t" \
+> > > > + "0:leaq 0b(%rip), %rax\n\t"                                                    \  
+> > >
+> > > Please use something other than '0' for the label, it took me forever (and looking
+> > > at disassembly) to realize "0b" was just a backwards label and not some fancy
+> > > syntax I didn't know.  
+> >
+> > I remember taking a while to grok that as well.
+> >
+> > Can't you just use . as in:
+> >         leaq    .(%rip), %rax
+> >  
 > 
-> > With all this, I do not see the point of having a new API.
-> > Also, where are the test cases for it?
+> How would the other two instructions referring to '0b' in their
+> immediates refer to '.' in that case?
 
-> If there is no point, why worrying about tests?
+I'd forgotten about those, not in the quoted bit of patch :-(
 
-I don't know yet if there is a point or not, I provided my view.
-I think you know better than me the code in question. It might
-be that I'm mistaken, and if so the good justification in the
-(currently absent) cover letter may well help with that.
+Traditionally (going back to MACRO-11) numeric labels would start at 10
+and go up in 10s, TECO had a nice macro to renumber them.
+(Showing my age again)
 
-> Also, do you always communicate with the people
-> just like they're your (well-) paid personnel?
-
-What do you mean? Test cases is the requirement for the new APIs
-added to the lib/. It's really should be regular practice for
-the code development independently on the project. If you think
-frustrated by this, I can tell you that I was more than once in
-the past in the same situation until I learnt it very well and
-now when I submit anything to the lib I always add test cases.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+	David
