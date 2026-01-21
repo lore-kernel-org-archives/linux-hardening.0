@@ -1,108 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65C6270552;
-	Wed, 21 Jan 2026 13:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9C247ECD9;
+	Wed, 21 Jan 2026 14:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769001916; cv=none; b=nqs2xAi3oGO1tMsTrn3fNauIrMC35+yWiIDHU9WVeJjCMBeJK644H5TPtwaj0sLhFytGetb69JWLPrHzUWPKWhjDFvUz+E6rEQXhPZvi/r5Vc7u5U/hjQFlm9YRWB8mH5uYHj1rhV2g0Db/Vh8tNoka0ILILaQpwDiLDVRnZuPE=
+	t=1769005370; cv=none; b=NdD12TXgAv2dw2fL3gESj9RuX7lrLeDyARJQ3/yNFnYCRBajlXppMY+pZ93tWHpadyb8pJh8VT/vPi5ODMlZLxBJPLUGy9kTnT/xoW5M283w6QZ3D5QNStAZi0FaRVU3ZfoVt9qF4lI2s3H6jPwXfdgy8/8VJja06ZJt0JnvQAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769001916; c=relaxed/simple;
-	bh=XeBlPKQ/bIh9f3wuYnUYoVfOpIarFk4q4JKbWHS6GSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c54oxxHpUmErT+Rz3oxcVaHJjuLOpkwSOjTCd7EibXLCeBqndSthpNCIr5Tuk1dtFCcvaVBBKR7nAjX7VTY9+RwzSTmWb7H+Bgv6GSwgBjVoVXvj1Gs+nwfuyTmFDMEKpkQPcCknj9KRb8MJxktBliyr1dyxQiq/om73LaB1HbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RIqhPIdK; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1769005370; c=relaxed/simple;
+	bh=dkzuheJ31BzgkjrYV8XBN7j2kGChh0nJwWSdIgvsGc0=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=KZ7QqT8shndj8JSxNFyVkR8MJ8Ll1qWn/HMwLIl1G+WNNkrlEYyhx/P4NHKcrRTSzmTLyXaDcF/ePYK3iiA/KHqax3E4boF+9tJPXYa9hUcnwO6UpmgoV0ndasq0HISG8H0dPiWYGZqfZd1mo9Yhb4caM/LIZo2ss2Cp2lhkEc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=FW8EMShm; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=8vmWBwT+; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RIqhPIdK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769001915; x=1800537915;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=XeBlPKQ/bIh9f3wuYnUYoVfOpIarFk4q4JKbWHS6GSI=;
-  b=RIqhPIdKe4VSPBpZUZC+dlnoCNLYJ6yTa1aspeY5Rl7iz+C3e8XMdszo
-   AE2RuHOS+z1zWG21yJsSw0HezaznFgtn9v2P1KjgbCyoo+cSfg/1Q1QSB
-   UOLe/YXGQe001nP8GHg4UtNirLPYr915q+QrrPANmIrXAS90JU3geKxO3
-   ECRStMn2voxhzXHnrfG549iK2Rb+FyldLNmHl3T3DbD0f/UyHxRbRirYp
-   8cQDHiyhzWwBa8uNLBLCXuwJyvdUKHnrKqx83wQHG/QEjrhydCelAY0o7
-   o8CNYLzXOnkSaSABS+uNUR2SkR+Ra4EaphtZ2uHVm9dsJeFBOd6dGmETx
-   w==;
-X-CSE-ConnectionGUID: KsgkR2SHQies5leNCRyg4w==
-X-CSE-MsgGUID: 3R9nzVnPRsKZZNKW5ohVag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="70138723"
-X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
-   d="scan'208";a="70138723"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 05:25:14 -0800
-X-CSE-ConnectionGUID: rxwxT1iLR/iYeJ7B5rrJXQ==
-X-CSE-MsgGUID: y3TQR7Q5TAyQehJvamb3SA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
-   d="scan'208";a="206506760"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.73])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 05:25:12 -0800
-Date: Wed, 21 Jan 2026 15:25:09 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <kees@kernel.org>, Carlos Maiolino <cem@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] xfs: adjust handling of a few numerical mount
- options
-Message-ID: <aXDTtenD9sRp3rUm@smile.fi.intel.com>
-References: <20260119160623.a762c3d64f230936198dc17e@linux-foundation.org>
- <20260120141229.356513-1-dmantipov@yandex.ru>
- <20260120141229.356513-3-dmantipov@yandex.ru>
- <aW-YP7wCEvRJzyfR@smile.fi.intel.com>
- <dd2b5f76c1acfb0ebb22585a5282d94e1d8c979e.camel@yandex.ru>
- <aW_4bxkLe4-g9teu@smile.fi.intel.com>
- <20260120225531.GZ15551@frogsfrogsfrogs>
- <db2897f9a625e7e9a6797fe32cc9364bde56d605.camel@yandex.ru>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="FW8EMShm";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="8vmWBwT+"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1769005288; bh=m1dJb0UHr6qP/RgS7yZiTdk
+	diumzv85zdR8iC7uFHho=; b=FW8EMShmzIbDymUGF2JdrpOFddb+W0VJ1X6W3qL7KZqptjZjNJ
+	8+acRTlrI/+HKsPkandZ/3wIoxZkVLQoH3lGB1QBBelNkISe+NiN02UKTt5VA6Rq7/90KB9MqW1
+	Y96o2weWbx9autijSndd0QXu8uaI62/EX4C9jSYsjnKjbnRjwsmpk3Z2X/RXfl2kh6EB/qMvF+v
+	uni5vf508hs3UGRKLxLCiMuYeXbvhNvq0E1DcByZaJfdPaXl+Az81WJiSVejSfVDuP8MPdCZYZx
+	BXIbo/m1JyCLKpZKip9DDyMSsjDlvfEhOZeLkzM33BwVJCQ0poXpm0VdLKK7g1iBI1Q==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1769005288; bh=m1dJb0UHr6qP/RgS7yZiTdk
+	diumzv85zdR8iC7uFHho=; b=8vmWBwT+ong3nosUITjncBdVXdqrGsVYAScfE7ns12mrD69zl7
+	wvaXc7qJs9Ov7Z0m/3IaXzxkBPhz3Kul0nCA==;
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Date: Wed, 21 Jan 2026 15:21:28 +0100
+From: barnabas.czeman@mainlining.org
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
+ <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Gabriel Gonzales
+ <semfault@disroot.org>, Kees Cook <kees@kernel.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Biswapriyo Nath <nathbappai@gmail.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org
+Subject: Re: [PATCH v2 2/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
+ reserved memory ranges
+In-Reply-To: <01d254f7-8c62-4061-ba7e-f358f1904ba5@oss.qualcomm.com>
+References: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
+ <20260116-xiaomi-willow-v2-2-4694feb70cdb@mainlining.org>
+ <01d254f7-8c62-4061-ba7e-f358f1904ba5@oss.qualcomm.com>
+Message-ID: <90a74369a2c4d9453de733a46fdd0ef1@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <db2897f9a625e7e9a6797fe32cc9364bde56d605.camel@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Jan 21, 2026 at 08:21:42AM +0300, Dmitry Antipov wrote:
-> On Tue, 2026-01-20 at 14:55 -0800, Darrick J. Wong wrote:
+On 2026-01-21 13:45, Konrad Dybcio wrote:
+> On 1/16/26 4:54 PM, Barnabás Czémán wrote:
+>> The device was crashing on high memory load because the reserved 
+>> memory
+>> ranges was wrongly defined. Correct the ranges for avoid the crashes.
+>> Change the ramoops memory range to match with the values from the 
+>> recovery
+>> to be able to get the results from the device.
+>> 
+>> Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for 
+>> xiaomi-ginkgo")
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
 > 
-> > Yes.� Common code needs to have a rigorous self test suite, because I
-> > see no point in replacing inadequately tested bespoke parsing code with
-> > inadequately tested common parsing code.
+> Have you verified this new and improved(tm) map e.g. by booting up
+> the kernel with memtest=1 in cmdline?
+I have verified with cat /dev/zero | tail | sleep 5
+I can test with memtest=1 also
 > 
-> Nothing to disagree but:
-> 
-> 1) My experience clearly shows that it takes a few patch submission
-> iterations and a bunch of e-mails just to notice that the tests are
-> mandatory for lib/ stuff. If it is really a requirement, it is worth
-> to be mentioned somewhere under Documentation/process at least.
-
-Feel free to submit an update! :-)
-
-Sorry that I mentioned it one or two versions later than I should have.
-
-> 2) I've traced memparse() back to 2006 at least, and (if I didn't miss
-> something) there is no actual tests for it since them. And it's hard to
-> see a point in testing memvalue() prior to testing its actual workhorse.
-
-Yes, the historical code needs test cases. I added a few for get_option*()
-for example before touching that code. So you're welcome to start test
-cases for memparse(), I will appreciate that!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Konrad
