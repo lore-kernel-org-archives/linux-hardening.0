@@ -1,25 +1,25 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8193D363C4F;
-	Wed, 21 Jan 2026 05:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6982C11CD;
+	Wed, 21 Jan 2026 05:52:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768974510; cv=none; b=W5WAtdc2o1kQuOOI6scfUrJF2NEuEu8JRI5AUAlArWYQOSPU5RZPgMmxcoANCpYavoJDLhx0+7BighP8dZGmI5phq+xqGM9V3sUryxVmFBRtDkKBxFSkrSoVMqCrByq9+QhlTkO/iMt9Ql8FCsm8RVyMQXxNXB3nP5nADwvsjrg=
+	t=1768974765; cv=none; b=t9DIhr1sL3b5ym8h6ZzJ+/z3RiGA3SW8BadwofLdSMW19MLpdky1ovZvahb6CsSQX7QURgtnDliv8ix2C8jePpLIgJzhScw6umfF2QPRale2HNuQCxLF+aDptE5G1cnBiLbcNT8kjYhsQeb5OFFAhX2rgUICswMfRa4tgmFZC14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768974510; c=relaxed/simple;
-	bh=O2alSnPSOpvRy+ZBxScSsTqnf25fHPLBCE5S7M2E5fM=;
+	s=arc-20240116; t=1768974765; c=relaxed/simple;
+	bh=tzeRHwL7aFaCkYiS2Mrrjfk7yCExbRC165cwboBO2ps=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RcU0aco11o5c1yA/upRiG6xeXES2ct/l8JCCqU2QI6/OjHJEbBvsYq4/vxe6cyYPTgGbk2uNdB77zgMVDeTt9mEdXXYCcMB80Fdm0f0oh5I/DltXzBf3UfSsSyjyYKgvZD/H/THaLp0rQfF/Zn8DYdlgTX8Rx9QBoW6j6OM5YZ8=
+	 In-Reply-To:Content-Type; b=HC3UG7a5IeHYh4O+8ExzPMaj9JyeaCi5GZeHq0LvUeNc6zJBYuLs5Sxa6iLGgc+Fl5L+nvxyGIQGGyVeinDcjTS6c/n4js4av+OEEPgYlpezlb27eRzWcblPQlGqzq6mCy5Q3S9FLOuUlVsgtUmQuX6CMde8FR1vhcA5P2oj8zA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c8e39a52f68c11f0b0f03b4cfa9209d1-20260121
+X-UUID: 61b115fcf68d11f0b0f03b4cfa9209d1-20260121
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:9405c4e1-a16b-46b7-b895-8180871c3a73,IP:0,UR
+X-CID-O-INFO: VERSION:1.3.6,REQID:bc083bb8-9c77-412a-b909-18ca58310964,IP:0,UR
 	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
 	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:3eb41b61307c773dbc892b4bd9cc4bb3,BulkI
+X-CID-META: VersionHash:a9d874c,CLOUDID:63a34cbd99b4ddb04cc076fcc54cf188,BulkI
 	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
 	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
 	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -27,14 +27,14 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: c8e39a52f68c11f0b0f03b4cfa9209d1-20260121
+X-UUID: 61b115fcf68d11f0b0f03b4cfa9209d1-20260121
 X-User: jiangfeng@kylinos.cn
 Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <jiangfeng@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 2140298535; Wed, 21 Jan 2026 13:48:17 +0800
-Message-ID: <fb396548-1a16-400d-bd88-91f54559fa4d@kylinos.cn>
-Date: Wed, 21 Jan 2026 13:48:13 +0800
+	with ESMTP id 1532687992; Wed, 21 Jan 2026 13:52:33 +0800
+Message-ID: <9fc6472c-b9c1-4535-b351-575604cf7ab1@kylinos.cn>
+Date: Wed, 21 Jan 2026 13:52:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,8 +42,7 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/8] lib/string_kunit: extend benchmarks to strnlen and
- chr searches
+Subject: Re: [PATCH v3 6/8] riscv: lib: add strnlen implementation
 To: Andy Shevchenko <andriy.shevchenko@intel.com>
 Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
  akpm@linux-foundation.org, kees@kernel.org, andy@kernel.org,
@@ -53,40 +52,39 @@ Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org, Joel Stanley <joel@jms.id.au>
 References: <20260120065852.166857-1-jiangfeng@kylinos.cn>
- <20260120065852.166857-6-jiangfeng@kylinos.cn>
- <aW8zWxjpVMSTFPYM@smile.fi.intel.com>
+ <20260120065852.166857-7-jiangfeng@kylinos.cn>
+ <aW8vTc4mieqmJKhE@smile.fi.intel.com>
 Content-Language: en-US
 From: Feng Jiang <jiangfeng@kylinos.cn>
-In-Reply-To: <aW8zWxjpVMSTFPYM@smile.fi.intel.com>
+In-Reply-To: <aW8vTc4mieqmJKhE@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2026/1/20 15:48, Andy Shevchenko wrote:
-> On Tue, Jan 20, 2026 at 02:58:49PM +0800, Feng Jiang wrote:
->> Extend the string benchmarking suite to include strnlen(), strchr(),
->> and strrchr().
+On 2026/1/20 15:31, Andy Shevchenko wrote:
+> On Tue, Jan 20, 2026 at 02:58:50PM +0800, Feng Jiang wrote:
+>> Add an optimized strnlen() implementation for RISC-V. This version
+>> includes a generic word-at-a-time optimization and a Zbb-powered
+>> optimization using the 'orc.b' instruction, derived from the strlen
+>> implementation.
 >>
->> For character search functions (strchr and strrchr), the benchmark
+>> Benchmark results (QEMU TCG, rv64):
+>>   Length | Original (MB/s) | Optimized (MB/s) | Improvement
+>>   -------|-----------------|------------------|------------
+>>   16 B   | 189             | 310              | +64.0%
+>>   512 B  | 344             | 1535             | +346.2%
+>>   4096 B | 363             | 1854             | +410.7%
 > 
-> strchr() and strrchr()
-
-Will fix.
-
->> targets the null terminator. This ensures the entire string is scanned,
+>> Suggested-by: Andy Shevchenko <andy@kernel.org>
 > 
-> NUL character
-> 
-> (Also check terminology everywhere: NULL — is for NULL pointers, NUL is for
->  '\0' characters.)
+> Wrong tag, I have zero knowledge about RISC V.
 > 
 
-Thanks for the correction, I'll fix this and check other places as well.
+Sorry for the confusion. I misunderstood the scope of the 'Suggested-by' tag.
+I will remove it from the RISC-V specific implementation patches and only keep
+relevant credits in the benchmarking/testing patches where your feedback was
+applied. 
 
->> providing a consistent measure of full-length processing efficiency
->> comparable to strlen().
-> 
-> Acked-by: Andy Shevchenko <andy@kernel.org>
-> 
+Thanks for clarifying!
 
 -- 
 With Best Regards,
