@@ -1,127 +1,152 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09914227E95
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Jan 2026 10:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1B3481242
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Jan 2026 12:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768993042; cv=none; b=qzTLOy2bAa/9lAKThwqn2hZieNexAtE9Mu9l0omKohhGe1hHPnzBHX1i/76kw+g5BIwyzhvZrRQev15ezpn/hOzNJqWKXzUJRsHyHUJPK0cXFQmIyMY4fowX3y1k/K5m157CGf4QTD1vrZRk/dVExKm6rBdg8G5KrzxN6t0lfrk=
+	t=1768999547; cv=none; b=Sf+ScWFCWGAiHQlX2E1oqKQAMHNfRJu1jYB+T+HNUSMgdV0Yp1+pHwzTlyisdmc2E5DXOUkTpRqtDMWrtO9C6oB5RkHDyzyLf37Vy21DsbOOQ8vQ/42do7aBE2wcZvB56uaxnC8bG/87eowgDl6kVEBq08hwMVwaQttbOWfAH0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768993042; c=relaxed/simple;
-	bh=6qplPAyVow+/kBcikqN/WhOSwSmC06WyjvGEIzOsqts=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NgGExFeLvXA6x52E0GewAsOIa0Dp+ww1LM2TY6QzOvhQnhEsEEv1up0CYQPCs1rr6NISaM6/TuMrunG0ZyCEpvkQOESFhtU6aBeP3rv1RE5AuqmCB0kTf8Ia5XrTDGEXYNh+qi/K54IMsC+y2kLHTMwWJ5NdBwG8tTFM1risjyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k6pWLf5b; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768999547; c=relaxed/simple;
+	bh=G4+FPG7lsr9cdLya5zE4pmWXyJuqYHbmPTf8gMOA978=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KhzUztA2TOusrVimWPmXacON1E9OZedA30AYQLI0oM5IeioYHv6lfLBURCyqIChvU+gTSdijV2YXty/5U+4HBrfvJCUM++fkdX6n9HI39NBq83Zj3fFLWK9NiWUrMdAVtuXuSuM2mRXmaBYNRGkoO+0WV6IZLJMwcTm9F/gVFXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VTJtBKpj; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MdRSmx3W; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6pWLf5b"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4801bc32725so32609285e9.0
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Jan 2026 02:57:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VTJtBKpj";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MdRSmx3W"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60L9lKQi2840471
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Jan 2026 12:45:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0wgyzjP53pDYgT6DSPTCMkOEuzt2+jWBFYYtjNfK5Wc=; b=VTJtBKpjm3UfYAlB
+	WgLTF1zHVtwEyzLcJ/XLLJSClBLfQRMhP54ePxyYwFbrefPau/1Xq44z2213AYpg
+	EG+QCR5Nr1rZXDZkul/KOEiG9ZxX97NWhPZ4+9glhrdhG5bjxXBD+K25jy7Npg96
+	sPCoZu+maY9YmED3y5FvhJ8pRi3cZr0b4HczKYDBkfc0Ib4qVS6c/xRKVAz27CT8
+	eyjSP7cqGdvgMgkRVZ6zukHkMIgvTJEZDV5isRsFAyFCbq9MwbESgJU26EglQz5w
+	eKw6e31nFY/tzix+gmunzHWrGR/iRCF4Ehu4wnx22Dbwh5ZidFjYExkxmja+VeBz
+	D0Q1lQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4btqm1t0pn-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Jan 2026 12:45:44 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8c6b48c08deso75194285a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jan 2026 04:45:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768993039; x=1769597839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EVe0Qk3VMjV2txWtY8q1b+FCjHEWppjlIBEVCNldeh4=;
-        b=k6pWLf5bxr5676PqQK9Ku/bSHMv4C9x5WbofSmXmMakGD/MMnzPEGf6wLsgcbkvcns
-         bCGGZytiiIhzoNHcIIh+t1WbUdA2qfXaghKJkdlw0plxu9pGWwLHN3he9afpnYnz35XM
-         VXbTzDPMfEIuGJzDthkUsXEFsOW47g/YwLxjOED49nJEbNceJs4C+qHQMkhqQLOQ9SA/
-         5PxAYGq40U52CJ1Ll8xf3rZyIzGFl8E2wvTFvINhLeSo2emMkDt6O+v1AhsCT9i/6i1t
-         TgU1DH3kFpc6yoKokJKnv1p+BSFs64uJ6eIMpwGtLA0ff/lKHi6WI0xNwH6dvjAkghRK
-         L5Og==
+        d=oss.qualcomm.com; s=google; t=1768999544; x=1769604344; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0wgyzjP53pDYgT6DSPTCMkOEuzt2+jWBFYYtjNfK5Wc=;
+        b=MdRSmx3WtfGVoifwUjsFLk3r3JDAOtVggCiDKzx899VggytT77OnOqmEQq1iucySd8
+         QK5gfusEP2tYoE9q0fi7x5aavyrRvnvEC1fcdWVzAQAho8IkisgWEVv/2+rGT/nNcqAH
+         XzVlNlwYD8CUf2gob7IfLZH3GrSXjDb2md5f52Ih3gCid0GOA+PwJn2ryUu6my0LNG2e
+         XJ7ry/fMW/ISSXEpvjtT2q63kmSp8lip4EjgTM0oo9wTmkuTrlN8NgxijYGS3lW4QXdP
+         J+3aDrWTYb1nCHOFPf4l978MdstteHH7HB+M7qgnWmzIwc3O++RTWhzhYScmrxa8h3Ci
+         Zlqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768993039; x=1769597839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=EVe0Qk3VMjV2txWtY8q1b+FCjHEWppjlIBEVCNldeh4=;
-        b=JPsyOwZk7WqPKwZCHYPNWL8NrEeqWiEtKCnxEiLfqbEf2YclNZiiTZekPO0vhcNPGs
-         9QkWrTj19FjhECQMpPfrb+u7IGapwg9H4J8IswyWzPKouuPG64u0VUgUcZoD5xfRvGaf
-         IPEMg/b078AlxXACJ3lVMYcPoifUDte8EwcUtnIJ8q4IOUzFzAxKjMWPVDAOqXK1UINb
-         863GPpaVuoh4+uLxLseWX51uBjuyO4cB7WtFIdCuJ6eFxHXmC37Rn5fkFKqa7mT6TLt7
-         cmM7Vvp8XRlPQ9r1vQU3gCNIQyIVq5gr72rnTZaI+Y98NNUUtkY/54dGQiMHxdhugmEs
-         dI0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVjiIt4QpiF3rinQ8AvpCLpTCeDZ1cvQN/wXkVRYkmkyMz73Bxu1FE2RVwiCQyxFHpUh3OexV4jxwYxP+YmExY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB6mxJCVx5SGNT2xnggWVOZ97DvgYM+O96fWHl8n1cb8gWHkcu
-	KIDkGX/zgq731t8SK+75cfJ35vCT4hz05ALLOrYJDcAaqN+0KSylmwoj
-X-Gm-Gg: AZuq6aJ/jqK1yJh8/q49OKVdNozy18mud2vz1paTYlT6ivp83JwNO0Y//5EiKH0gXZS
-	TruUjMaR/BzK5NIbhedFDCQaTHg0qFrn0ZAbGCq8nvNCfvmcb6gsikQw1adf5W9VEo8kj78ep8V
-	s8IvB9KNB67VIUvozalF0rvXvtwdd0wFqdOaOVoe4UE2yLJup2S0RdfkXBSkedpDH/SYYLFD4I6
-	RbqS+g6uszhIHoSH6xKhpSsLyC3n/oU2AVUOYbccvVHPLKaBzQ8dwqBGzIkIqSrt6dH94+XUJOy
-	qYfMb5uPs9TiCagRo2Og0mScVQ3ptDixpOiHxhHrR2EC1AeJ/dJgqUArULyRMA81krYnbxDtZqb
-	52MrejcFiAg5167zlwgcRqxKQBHWmtnAArjzRfveWia6yMqoe6F/q7nhmG/nI5jIDpkhxgoSZHJ
-	WjvWXp6c+Dy8xMF4mL9c5VlQO6V1wPPhnYPAUd32DoIaN4Oa+dAtEKuQVL7PH9Pyc=
-X-Received: by 2002:a05:600c:34d6:b0:47e:e20e:bbb7 with SMTP id 5b1f17b1804b1-4801eb1080amr246838145e9.25.1768993039340;
-        Wed, 21 Jan 2026 02:57:19 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4802dc90068sm259182585e9.7.2026.01.21.02.57.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jan 2026 02:57:19 -0800 (PST)
-Date: Wed, 21 Jan 2026 10:57:17 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Feng Jiang <jiangfeng@kylinos.cn>, Andy Shevchenko
- <andriy.shevchenko@intel.com>, pjw@kernel.org, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr, akpm@linux-foundation.org,
- kees@kernel.org, andy@kernel.org, ebiggers@kernel.org,
- martin.petersen@oracle.com, ardb@kernel.org, charlie@rivosinc.com,
- conor.dooley@microchip.com, ajones@ventanamicro.com,
- linus.walleij@linaro.org, nathan@kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] riscv: optimize string functions and add kunit
- tests
-Message-ID: <20260121105717.04853c5d@pumpkin>
-In-Reply-To: <CAHp75Ve_pyVm430FL=aEAw1Cnf-92T3Y23qh7pEOaMYMp9iyvw@mail.gmail.com>
-References: <20260120065852.166857-1-jiangfeng@kylinos.cn>
-	<aW8whGcAR0x6FSRJ@smile.fi.intel.com>
-	<691a0183-6f41-4956-82da-abb69a449919@kylinos.cn>
-	<CAHp75Ve_pyVm430FL=aEAw1Cnf-92T3Y23qh7pEOaMYMp9iyvw@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1768999544; x=1769604344;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0wgyzjP53pDYgT6DSPTCMkOEuzt2+jWBFYYtjNfK5Wc=;
+        b=C7eg0Rjs76X219oWucb3gN5+5G+HfY36UuZKrMA3gcrjNOAPt5nxkLn3s+IstYABvU
+         RTnVDknHrPnikzwl9bsB8mIiExjvnhHTOI20nY8uv51tXBhKzJIeAUTunnsbru7m0Duu
+         LOkeci3HC+g1JgNAukozMn2VgO4y7wQhPsNU4hFgKuHXmsyj+ilQ4p5KP5qRD2EvUvgu
+         /9nCTMnj+tIZ0mZ2wBaqw7rqzoz8MkMxW+YzIE1Hc60VJEYvHazGl23REhQCA1eliAgh
+         CqlSrw/+JkBFK/zZPa0a79aOQ6MV9PNiheI78F/Uui6KZ54eDdYWz/Y1N2R3AjRmXYoN
+         cfAg==
+X-Forwarded-Encrypted: i=1; AJvYcCV78LQQH0enBYZFOaJbqKf7T9kn92B1zlHK+fy7NJfaQGWHfaJf+yp9RY9zYL6ST3gS9mhYHeZd/qiV1ihuHuw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe0MgP+V/UFjhzVb6edLh/LtKE2qUIuIX8miO4GUP3MHYUSwKy
+	AigSyvCi4SaYFfl3RmbN4AVJ0LNMnuEbidxES4gOzjTam2PCfnvrtDbiAp3dHrbmFPjrlFr7UR8
+	mtbR+eUYWe+qvi0cJgsFEC12eAWPMlB49V56/8DtZQ36LbNpDY55ogbb0RR6Gr/6gGtVQVDU=
+X-Gm-Gg: AZuq6aJIAwFhmw8d4VHoN7OFbHweJpwCYHGnTCU3MmJJPYztSr5dMtqJ/wkvSEHH7kz
+	j5SbUXxhq8U0O7GUlCJchDsud6NgiLyHn6D2OhXTR/qfpJW3Om8sHyG/+VedFobZcZAwNMruj65
+	ijYDAgVPeuz2QrcEAfgzTC2fJlz8ib8U+v6YnMQ6EIO9PaBAYmomOmjVEu8m5yithIfV2yx3648
+	gXcH6hzaNfLl/0Q6t5Xlni9D8PRgVC1ImE+HYode7TGHkl5HdPh5mHOB4KsxtOu6oVjFcf7h8S6
+	doLFZvOAP34wygfM/8+1kcxyRIyh7d1OJDG4r1HlI0LcesmLIbPGCZVmRJ8kCNmFrMCkfmijB9g
+	sXOru4thfJIp8CQ+4AOua+7lxoTFsr+Sy6fhTf8raYDFgvUSubjqXnTWUbNrar1nT/I8=
+X-Received: by 2002:a05:620a:198d:b0:8a3:9d53:e1e5 with SMTP id af79cd13be357-8c6a660afdemr1968714085a.0.1768999543840;
+        Wed, 21 Jan 2026 04:45:43 -0800 (PST)
+X-Received: by 2002:a05:620a:198d:b0:8a3:9d53:e1e5 with SMTP id af79cd13be357-8c6a660afdemr1968712085a.0.1768999543386;
+        Wed, 21 Jan 2026 04:45:43 -0800 (PST)
+Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b87959c9763sm1487409866b.35.2026.01.21.04.45.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Jan 2026 04:45:42 -0800 (PST)
+Message-ID: <01d254f7-8c62-4061-ba7e-f358f1904ba5@oss.qualcomm.com>
+Date: Wed, 21 Jan 2026 13:45:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
+ reserved memory ranges
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Gabriel Gonzales <semfault@disroot.org>, Kees Cook <kees@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Biswapriyo Nath <nathbappai@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        linux@mainlining.org
+References: <20260116-xiaomi-willow-v2-0-4694feb70cdb@mainlining.org>
+ <20260116-xiaomi-willow-v2-2-4694feb70cdb@mainlining.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260116-xiaomi-willow-v2-2-4694feb70cdb@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTIxMDEwNyBTYWx0ZWRfXwSmYzNB5Mcsf
+ 6MertsLUMJ9qcwtvBCD6u3qS8U+NJ+64tkfTQjgN9Z3w3xaC78h7JQuXTzMVBxfvn8BpWJVXJKn
+ iqheKqL3L5Z5M3x3HayIFAhSDcX7ge2rv3lRBYAgcx4PNHCPgEQ6fRMFB7Rp0v/73PTW+MP36cE
+ +UHHLsJaKIkJbW87JYSm7q2tLIhfz4O81fCJJHXXHoKE5j18pAfUozV7JoU8PszaqrlfEJAvkLN
+ 1w9av34WYHPKhIDzv3pPncDYjRORqJQY0F68ZgGeU+KDXPCHQZQ3T341NHl4mP0c+XZYwvqXiYj
+ OOSIWmKyAtKpXWPjon/r4YkpR8fzxEl+KxT8RTWApKRrcjjx51neMQud8n3SK8Sa5r/TmzA9nc7
+ qD31kJ3VaWjsRheWkeiti56oLSh8o7IsOwZ/VOmrv5gc7/3FP8jsYRbiMY6rofcTbG5lx0XNK6D
+ 2uBe3t2LVD4Yx2A15Yg==
+X-Proofpoint-ORIG-GUID: G_7uGyencg7j38MA4umQbeN-sczhc1hT
+X-Authority-Analysis: v=2.4 cv=dtnWylg4 c=1 sm=1 tr=0 ts=6970ca78 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=OuZLqq7tAAAA:8 a=xRCo5Bcgn4OuC-SBfZIA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+ a=IoWCM6iH3mJn3m4BftBB:22 a=AKGiAy9iJ-JzxKVHQNES:22
+X-Proofpoint-GUID: G_7uGyencg7j38MA4umQbeN-sczhc1hT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-21_01,2026-01-20_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 impostorscore=0 spamscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2601210107
 
-On Wed, 21 Jan 2026 09:01:29 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On 1/16/26 4:54 PM, Barnabás Czémán wrote:
+> The device was crashing on high memory load because the reserved memory
+> ranges was wrongly defined. Correct the ranges for avoid the crashes.
+> Change the ramoops memory range to match with the values from the recovery
+> to be able to get the results from the device.
+> 
+> Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
 
-...
-> I understand that. My point is if we move the generic implementation
-> to use word-at-a-time technique the difference should not go 4x,
-> right? Perhaps 1.5x or so. I believe this will be a very useful
-> exercise.
+Have you verified this new and improved(tm) map e.g. by booting up
+the kernel with memtest=1 in cmdline?
 
-I posted a version earlier.
-
-After the initial setup (aligning the base address and loading
-some constants the loop on x86-64 is 7 instructions (should be similar
-for other architectures).
-I think it will execute in 4 clocks.
-You then need to find the byte in the word, easy enough on LE with
-a fast ffs() - but harder otherwise.
-The real problem is the cost for short strings.
-Like memcpy() you need a hint from the source of the 'expected' length
-(as a compile-time constant) to compile-time select the algorithm.
-
-OTOH:
-	for (;;) {
-		if (!ptr[0]) return ptr - start;
-		ptr += 2;
-	while (ptr[-1]);
-	return ptr - start - 1;
-has two 'load+compare+branch' and one add per loop.
-On x86 that might all overlap and give you a two-clock loop
-that checks one byte every clock - faster than 'rep scasb'.
-(You can get a two clock loop, but not a 1 clock loop.)
-I think unrolling further will make little/no difference.
-
-The break-even for the word-at-a-time version is probably at least 64
-characters.
-
-	David
+Konrad
