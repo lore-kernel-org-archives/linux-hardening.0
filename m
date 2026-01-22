@@ -1,107 +1,118 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C48C2FFFA4;
-	Thu, 22 Jan 2026 02:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971F63101C2;
+	Thu, 22 Jan 2026 10:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769048379; cv=none; b=GXOYM82nq+R2ei6LP3OKV91ckt0jF4Ha3SCFqC6+bpgV6pcN6VjEQV2vqwD2Lq2ovx1C2vUQzP98ed62XI55xU7TFb2DY0Ezu3SS7fZ4iyF9VRKbQU148AMj0UFXUtLFHnyMpdAs2IzKQeqIIDuilnTDF2T61tced+Xq6WxptvE=
+	t=1769076226; cv=none; b=LhljpbQ3DlV2vF/Snx5Nn8gwVEA742sQjzWVwebuP7UW526UeLIq7+7nUJWAufGGJertxnn8vpVdlgk82KLhe6uOkciM87XM2MyT2RvOCzYfARYbdseGJYQnCNJW4T7ImM6RsFpaETnU/CnYAB06EpEmMLz54vXEJCziq9yvlHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769048379; c=relaxed/simple;
-	bh=mGUXzYVzMFDbyZMW9Cy617aKBsSZtOJGIgCgcbmj9Ig=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=NlFErq+TzWsQFgYJEFPH/mXNIrDk65vmetUnOnLxjTVWLUsMLkqHUb3I8tZt2Rz0mfCwS01O2fRZXm5fZWni3CgLd+J1FLiSd9mPp7KBaolfVsJpAU90/WAQK7A/03dF6F9X5xUM1pUqpr4GysEsADaLocZU7oM6WhRplv1GK4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Q+LQcLlt; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1769076226; c=relaxed/simple;
+	bh=yL/NrddG1CawfKhoy4ZH1/4SsxmbBqbip9rUrRWJ+qM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YkGooIUBghGYSXWwU3nz+gSCgxr1vDk1uObdLHUQF5r2zbBhqitgYg7YOk90q0qgWcwRUJHDQ88GoERoT389y6wGrF4EvrINnHXay54owbE0A7RrClaUrsOJ9sJxZSP/M/bjRUP63ixR/v2Lmhc/4Tll8AKiyo31DMrM+ojc3ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpS+5mmu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Q+LQcLlt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=mGUXzYVzMFDbyZMW9Cy617aKBsSZtOJGIgCgcbmj9Ig=; b=Q
-	+LQcLltLQ77M8Ui2bTak8nBp6DMIFzZofaO6CLRxT1KfSKNgVR+eoLsnnNvH2mns
-	IRRdgMct40QXyzQ+V54elfN5fOz8O9Fq4APYw1gGdciZ7+NnoIBYgBm0swEZTHRY
-	yS+pyDVJuTFMj26f6SI9U9dXEnhM2T0wAQnpgCnxSk=
-Received: from slark_xiao$163.com (
- [2409:895b:3874:c9a2:e8a9:6c3d:52dc:d224] ) by ajax-webmail-wmsvr-40-135
- (Coremail) ; Thu, 22 Jan 2026 10:18:24 +0800 (CST)
-Date: Thu, 22 Jan 2026 10:18:24 +0800 (CST)
-From: "Slark Xiao" <slark_xiao@163.com>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	"Loic Poulain" <loic.poulain@linaro.org>
-Cc: ryazanov.s.a@gmail.com, johannes@sipsolutions.net, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, gustavoars@kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re:Re: [net] Revert "net: wwan: mhi_wwan_mbim: Avoid
- -Wflex-array-member-not-at-end warning"
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT build
- 20251222(83accb85) Copyright (c) 2002-2026 www.mailtech.cn 163com
-In-Reply-To: <09efbade-24ce-4e11-ab4e-782eab4f1a71@embeddedor.com>
-References: <20260120072018.29375-1-slark_xiao@163.com>
- <1228d107-4a60-4c33-a763-1a199c0b0961@embeddedor.com>
- <5e012074.84f7.19bdab162e4.Coremail.slark_xiao@163.com>
- <2fc0de60-6450-4ea3-957b-5de465a2313d@embeddedor.com>
- <1eb019f4.1033.19be352bf0c.Coremail.slark_xiao@163.com>
- <09efbade-24ce-4e11-ab4e-782eab4f1a71@embeddedor.com>
-X-NTES-SC: AL_Qu2dC/yft0sr4iGdYOkfmk8Sg+84W8K3v/0v1YVQOpF8jB7owS0ObV9oIlruycGEACW+qQmsdD9S5M5TbZBxQYUoC01u9UNUglNFj3u1ZgDt9w==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpS+5mmu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AFD1C116C6;
+	Thu, 22 Jan 2026 10:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769076226;
+	bh=yL/NrddG1CawfKhoy4ZH1/4SsxmbBqbip9rUrRWJ+qM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BpS+5mmuQZCe173jMQU+eRlim0YQxsGfPb0rhy4QSByTDjeNk8vcjdoLnBsMQNvay
+	 14sD4Tx+hYBzYuiyNWBJN+FO/l/8r5YhCtGPPaEHbFbNv/qJIlE1d3HZGTdnPdhmg5
+	 j2I3/qxwfyTlw5rqZ5Zg2Ypq5sspCPJkG9zibheIhO0NyR4janbnDOFA89yShhAnmI
+	 7kj42mLTLdODw95p3T+NQnWiX46ZgsffM1lsx39s3oj7TGKSGNlHg5SujnnMZUFKJe
+	 mxtWDvaFp8RXaYicrJb/h09nkogt17BpUo6tISRX0nO2e9QjaZ7VlIVfXqE9SoNJQI
+	 opFU4u9VTB2vg==
+Date: Thu, 22 Jan 2026 12:03:35 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Eugen Hristev <eugen.hristev@linaro.org>
+Cc: david@redhat.com, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	tglx@linutronix.de, andersson@kernel.org, pmladek@suse.com,
+	rdunlap@infradead.org, corbet@lwn.net, mhocko@suse.com,
+	tudor.ambarus@linaro.org, mukesh.ojha@oss.qualcomm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org, jonechou@google.com,
+	rostedt@goodmis.org, linux-doc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-arch@vger.kernel.org, tony.luck@intel.com, kees@kernel.org
+Subject: Re: [PATCH 18/26] mm/memblock: Add MEMBLOCK_INSPECT flag
+Message-ID: <aXH190NDVl7JAl7A@kernel.org>
+References: <20251119154427.1033475-1-eugen.hristev@linaro.org>
+ <20251119154427.1033475-19-eugen.hristev@linaro.org>
+ <aVImIneFgOngYdSn@kernel.org>
+ <4b8953ac-567b-4d68-9c25-72a69afdf1b3@linaro.org>
+ <aVlsqdgXSBLIE9Xi@kernel.org>
+ <ae85df64-b6b7-43d7-ba50-9c0525481299@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <34e3e90e.1f22.19be37eea29.Coremail.slark_xiao@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hygvCgBHci_wiHFpjk5cAA--.12875W
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/xtbC6BAVeWlxiPCV9wAA3W
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae85df64-b6b7-43d7-ba50-9c0525481299@linaro.org>
 
-CgpBdCAyMDI2LTAxLTIyIDEwOjE0OjQxLCAiR3VzdGF2byBBLiBSLiBTaWx2YSIgPGd1c3Rhdm9A
-ZW1iZWRkZWRvci5jb20+IHdyb3RlOgo+Cj4KPk9uIDEvMjIvMjYgMTA6MzAsIFNsYXJrIFhpYW8g
-d3JvdGU6Cj4+IAo+PiAKPj4gQXQgMjAyNi0wMS0yMCAxNzoyODo0MiwgIkd1c3Rhdm8gQS4gUi4g
-U2lsdmEiIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPiB3cm90ZToKPj4+Cj4+Pgo+Pj4gT24gMS8y
-MC8yNiAxODoxNiwgU2xhcmsgWGlhbyB3cm90ZToKPj4+Pgo+Pj4+Cj4+Pj4gQXQgMjAyNi0wMS0y
-MCAxNTo1MTo1NywgIkd1c3Rhdm8gQS4gUi4gU2lsdmEiIDxndXN0YXZvQGVtYmVkZGVkb3IuY29t
-PiB3cm90ZToKPj4+Pj4gSGkgU2xhcmssCj4+Pj4+Cj4+Pj4+IE9uIDEvMjAvMjYgMTY6MjAsIFNs
-YXJrIFhpYW8gd3JvdGU6Cj4+Pj4+PiBUaGlzIHJldmVydHMgY29tbWl0IGVlZWNmNWQzYTNhNDg0
-Y2VkZmEzZjJmODdlNmQ1MWE3MzkwZWQ5NjAuCj4+Pj4+Pgo+Pj4+Pj4gVGhpcyBjaGFuZ2UgbGVh
-ZCB0byBNSEkgV1dBTiBkZXZpY2UgY2FuJ3QgY29ubmVjdCB0byBpbnRlcm5ldC4KPj4+Pj4+IEkg
-Zm91bmQgYSBuZXR3cm9rIGlzc3VlIHdpdGgga2VybmVsIDYuMTktcmM0LCBidXQgbmV0d29yayB3
-b3Jrcwo+Pj4+Pj4gd2VsbCB3aXRoIGtlcm5lbCA2LjE4LXJjMS4gQWZ0ZXIgY2hlY2tpbmcsIHRo
-aXMgY29tbWl0IGlzIHRoZQo+Pj4+Pj4gcm9vdCBjYXVzZS4KPj4+Pj4KPj4+Pj4gVGhhbmtzIGZv
-ciB0aGUgcmVwb3J0Lgo+Pj4+Pgo+Pj4+PiBDb3VsZCB5b3UgcGxlYXNlIGFwcGx5IHRoZSBmb2xs
-b3dpbmcgcGF0Y2ggb24gdG9wIG9mIHRoaXMgcmV2ZXJ0LAo+Pj4+PiBhbmQgbGV0IHVzIGtub3cg
-aWYgdGhlIHByb2JsZW0gc3RpbGwgbWFuaWZlc3RzPyBUaGFuayB5b3UhCj4+Pj4+Cj4+Pj4+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL25ldC93d2FuL21oaV93d2FuX21iaW0uYyBiL2RyaXZlcnMvbmV0
-L3d3YW4vbWhpX3d3YW5fbWJpbS5jCj4+Pj4+IGluZGV4IDFkN2UzYWQ5MDBjMS4uYTI3MWE3MmZl
-ZDYzIDEwMDY0NAo+Pj4+PiAtLS0gYS9kcml2ZXJzL25ldC93d2FuL21oaV93d2FuX21iaW0uYwo+
-Pj4+PiArKysgYi9kcml2ZXJzL25ldC93d2FuL21oaV93d2FuX21iaW0uYwo+Pj4+PiBAQCAtNzgs
-OSArNzgsMTIgQEAgc3RydWN0IG1oaV9tYmltX2NvbnRleHQgewo+Pj4+Pgo+Pj4+PiAgICBzdHJ1
-Y3QgbWJpbV90eF9oZHIgewo+Pj4+PiAgICAgICAgICAgc3RydWN0IHVzYl9jZGNfbmNtX250aDE2
-IG50aDE2Owo+Pj4+PiAtICAgICAgIHN0cnVjdCB1c2JfY2RjX25jbV9uZHAxNiBuZHAxNjsKPj4+
-Pj4gLSAgICAgICBzdHJ1Y3QgdXNiX2NkY19uY21fZHBlMTYgZHBlMTZbMl07Cj4+Pj4+ICsgICAg
-ICAgX19UUkFJTElOR19PVkVSTEFQKHN0cnVjdCB1c2JfY2RjX25jbV9uZHAxNiwgbmRwMTYsIGRw
-ZTE2LCBfX3BhY2tlZCwKPj4+Pj4gKyAgICAgICAgICAgICAgIHN0cnVjdCB1c2JfY2RjX25jbV9k
-cGUxNiBkcGUxNlsyXTsKPj4+Pj4gKyAgICAgICApOwo+Pj4+PiAgICB9IF9fcGFja2VkOwo+Pj4+
-PiArc3RhdGljX2Fzc2VydChvZmZzZXRvZihzdHJ1Y3QgbWJpbV90eF9oZHIsIG5kcDE2LmRwZTE2
-KSA9PQo+Pj4+PiArICAgICAgICAgICAgIG9mZnNldG9mKHN0cnVjdCBtYmltX3R4X2hkciwgZHBl
-MTYpKTsKPj4+Pj4KPj4+Pj4gICAgc3RhdGljIHN0cnVjdCBtaGlfbWJpbV9saW5rICptaGlfbWJp
-bV9nZXRfbGlua19yY3Uoc3RydWN0IG1oaV9tYmltX2NvbnRleHQgKm1iaW0sCj4+Pj4+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQg
-aW50IHNlc3Npb24pCj4+Pj4gVGhpcyBwYXRjaCB3b24ndCBpbnRyb2R1Y2UgcHJldmlvdXMgcHJv
-YmxlbS4KPj4+Pgo+Pj4KPj4+IFRoYW5rcyBmb3IgY29uZmlybWluZyB0aGlzLgo+Pj4KPj4+IEkn
-bGwgdHVybiBpdCBpbnRvIGEgcHJvcGVyIHBhdGNoLgo+Pj4KPj4+IC1HdXN0YXZvCj4+IEhpLAo+
-PiBBcmUgeW91IHBsYW5pbmcgdG8gYWRkIHRoaXMgcmV2ZXJ0IGNvbW1pdCB0byB5b3VyIGNvbWlu
-ZyBwYXRjaD8KPgo+Tm8uIEkgdGhpbmsgdGhlIHJldmVydCBzaG91bGQgYmUgYXBwbGllZCBieSB0
-aGUgbWFpbnRhaW5lcnMsIGZpcnN0Lgo+Cj5UaGFua3MKPi1HdXN0YXZvCj4KSGkgTG9pYywKQ291
-bGQgeW91IGhlbHAgY2hlY2sgdGhpcyBjb21taXQgc3RhdHVzPwoKVGhhbmtzCj4+IEFjdHVhbGx5
-IGl0J3MgdXJnZW50IHRvIHJldmVydCB0aGlzIGNoYW5nZSBzaW5jZSB0aGUgcmVsZWFzZSBkZWFk
-bGluZSBvZiB2Ni4xOSBpcyBjb21pbmcgc29vbgo+PiBhbmQgYWxsIG15IE1ISSBXV0FOIGRldmlj
-ZSBoYXZlIGJlZW4gaW1wYWN0ZWQuCj4+IEkgZG9uJ3Qga25vdyB3aHkgdGhpcyBjb21taXQgaGFz
-IGJlZW4gdGFnZ2VkIGFzICJOb3QgQXBwbGljYWJsZSIgYW5kIHdobyBkaWQgdGhpcy4KPj4gCj4+
-IEkgaG9wZSB3ZSBjYW4gZml4IGl0IHJlZ3Jlc3Npb24gYmVmb3JlIHRoZSBvZmZpY2lhbCB2Ni4x
-OSByZWxlYXNlLgo+PiAKPj4gVGhhbmtzCg==
+On Tue, Jan 20, 2026 at 05:13:43PM +0200, Eugen Hristev wrote:
+> 
+> 
+> On 1/3/26 21:23, Mike Rapoport wrote:
+> > On Sat, Jan 03, 2026 at 08:36:40AM +0200, Eugen Hristev wrote:
+> >>
+> >>
+> >> On 12/29/25 08:56, Mike Rapoport wrote:
+> >>> Hi Eugen,
+> >>>
+> >>> On Wed, Nov 19, 2025 at 05:44:19PM +0200, Eugen Hristev wrote:
+> >>>> This memblock flag indicates that a specific block is registered
+> >>>> into an inspection table.
+> >>>> The block can be marked for inspection using memblock_mark_inspect()
+> >>>> and cleared with memblock_clear_inspect()
+> >>>
+> >>> Can you explain why memblock should treat memory registered for inspection
+> >>> differently?
+> >>
+> >> It should not, at a first glance.
+> >>
+> >> The purpose of the flag is to let memblock be aware of it.
+> >> The flag is there to have a "memblock way" of registering the memory,
+> >> which inside memblock , it can translate to a meminspect way of
+> >> registering the memory. It's just an extra layer on top of meminspect.
+> >> With this, it would be avoided to call meminspect all over the places it
+> >> would be required, but rather use the memblock API.
+> > 
+> > memblock APIs are not available after boot on many architectures, most
+> > notable being x86.
+> > 
+> > But regardless, I can't say I understand why using memblock APIs for
+> > meminspect is better than using meminspect directly.
+> > I'd imagine that using meminspect register APIs would actually make it more
+> > consistent and it would be easier to identify what memory is registered
+> > with meminspect.
+> > 
+> > In the end, memblock_alloc*() returns dynamically allocated memory, just
+> > like kmalloc(), the difference is that memblock is active very early at
+> > boot and disappears after core MM initialization.
+> 
+> Hi Mike,
+> 
+> Thanks for sharing your opinion.
+> 
+> David, what do you think, does it make sense to have this flag or we can
+> ditch it and use meminspect directly ?
+> 
+> Also, for some memory blocks, they do not disappear ever, e.g. the
+> printk log buffer, it's allocated early and never freed, so it's
+> required to have some memblocks marked for inspection.
+
+The allocated memory does not disappear, the memblock metadata does.
+
+> Eugen
+
+-- 
+Sincerely yours,
+Mike.
