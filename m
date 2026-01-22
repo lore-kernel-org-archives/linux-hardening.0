@@ -1,130 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA747350A16
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Jan 2026 11:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DC02D9EE4;
+	Thu, 22 Jan 2026 13:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769082410; cv=none; b=gARWU1BSzg57orZZqUdlb2hZa/2n60NYjaXLUnLHVBvf3lnCurts4Zbd2qe5z3C5bot3SEp4WaDn2xLvmt5f3+v16ROdWcRR6Go0gl4fj/DB4EVfUrW5o8NoTEDXoCSbNwCfFeWZKyCP/k4/CPWVQI1Fl589tqiOfNl3xtf7WDo=
+	t=1769087349; cv=none; b=OeEfoiG6QUi96S8/rR8+LUZXVIent3ScJKwFQ67maHJEnbTDCkUk3fdVv2SinaOO66d1nQa4cKS4592qtKTk2QJsWqRCfaypdduv49aHk/zsbVYhhLpqflCGRXjPyQ5zvP2rMEhG4q+PkMdd4IXJNFcKk7z8lBySOVfmgXbwMFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769082410; c=relaxed/simple;
-	bh=Z24VrwgeOQ3DSwEe/Pm/0lWQg7gsCjQuLmDqCMs7jn8=;
+	s=arc-20240116; t=1769087349; c=relaxed/simple;
+	bh=IhW6uUCJlNXzA+TUnDHjZyo5vY2/t+69NEGwibYM8dA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JoIkXfUXTBOIk8vTZn87//STzXFupx017aFWC/b7g4xH00ob0AQ38uxaV+sufCOWkxQJp2oDFrZi3eFHspUHXhUskgVnHz0OaYN8EMk6kOvwhUd1oGQ8logFu8hjXVND4WdmhSLqbQc27TywyhQZQ5zVn0mcEdTzzrAEONLCsc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H25uKguD; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/zsfPUQZfGaY9JV8q13CRn0lIvSiEujtoSEgWo3kRuIJjcGLXpCM4e21QJxEqDi6E3QOU7ph2LCwJvi2sZdyRrIsI5++b+WsCS/HWmAmNVJX9oeTXNBBs56esRBMm00Cs2LLziaKq/AbJHoWE6iotrfgck40PPZ3ZKXqrXLfu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IqvFE5Oo; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H25uKguD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769082409; x=1800618409;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z24VrwgeOQ3DSwEe/Pm/0lWQg7gsCjQuLmDqCMs7jn8=;
-  b=H25uKguDP9AFnQL4gjaNZpo2HME/nvh7xYsFmvI9zF3nJ6+Dud9S9sxS
-   KOrzgR8Cxp1QnCmFCGkXuTxm/m2w2LvgKLCRw0j99K9bSC8M2I7dn7qk2
-   6FnCgLTEkCJVMHgRZky0VUmSU2cdVkr9sEFszyLkETSCglvZ2w7JtlvUm
-   cpNqo398lnZ5+5kCFwTdr5NKgxqcoco+3CMP8vrekaewVrMln1BZWSiGq
-   i8QGqpINI+nBxt+qHf9IglL+B+UKU6lKaMXktfWyLm7zCGgRyGBxmP+0g
-   m8Jts9AB+hdTUhf2YllmrHfzbbhlx6rKf4qxfYU67DhF+8InPuHMHqdzq
-   Q==;
-X-CSE-ConnectionGUID: xQDhw+riQUiH0tONPG0wxg==
-X-CSE-MsgGUID: Ebz0UohtSOuHGQy8+WiPhA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="70376946"
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="70376946"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 03:46:48 -0800
-X-CSE-ConnectionGUID: wqYUXtmZS3qu2kKwOLyQgw==
-X-CSE-MsgGUID: CrlwRLYCToavOI7/Hz+1Gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="205964131"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 03:46:46 -0800
-Date: Thu, 22 Jan 2026 13:46:44 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IqvFE5Oo"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AE8FA40E02E6;
+	Thu, 22 Jan 2026 13:09:04 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id OpEuhyP9S9W8; Thu, 22 Jan 2026 13:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1769087340; bh=FTY8h/DDiUOsL09Qp+kNw6L9gb+o7GHc7+dFlJ4jzho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IqvFE5OoLj2Cp2yWUHUH3Hbu6afIMkm7mkvwYrSxGqxbvsNz1SjoVWgkTP2wjP3lB
+	 LP75ev5EXK8QqvXoGfoNvkIFMwRpbm4+BsVe3r1YCInQZFEPOsbnQRVmZ8SY23A9Ve
+	 itCCZuMIDyCSB8HWJxxiZFph9nHGVoVZmUrYIO2wT6oPdsvi0I+FMfsYtyAgAESd/J
+	 WZJThOkvpA9a0RWeK+31RY71asBzSXxb4ToTF340iBjCNYckkxdZVZDUPZn1yHOZq7
+	 QLvX3C63E9r6b2+V/C804mbMn4adDqPpw+j0AxqwS6BhobvwCrN/H6sI+HY8gRuUEe
+	 twLara1s9/nXpGAIj09QADHU9iepMo0SMsY9gmtqcwik2cwzp4s9ERybkLdeHckExX
+	 tRsQf/1gbQ6E6NeGSyvHdZYfI8hMSTd9kkIlsIeWHbZtQ0zHVGQfaZX9mB11/A7t87
+	 a72eZck2OgvOBQJAd0S2GPjV7kaCnbHY7bCON2Ly+TSGulTcTisVsstxZvgWFy48M6
+	 19PQyECDUc30QhxQpCr/Dfu3RK+FQMMy3FLKkBEL0Wof3viQ2SxGX1MIcQAqCqxMDL
+	 BXVtz2A/M6qr5POIrEk6QxF4yo/9m5YB+xUoeUJVxIE0hlipAt4QwO+mKQb5/GeUJj
+	 ju/Lm7JqkHwt2jRwwGpKa/AE=
+Received: from zn.tnic (pd953023b.dip0.t-ipconnect.de [217.83.2.59])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 55C4740E027A;
+	Thu, 22 Jan 2026 13:08:47 +0000 (UTC)
+Date: Thu, 22 Jan 2026 14:08:39 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>, Brian Gerst <brgerst@gmail.com>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2] lib/cmdline_kunit: add test case for memparse()
-Message-ID: <aXIOJEqV_ctVRrok@smile.fi.intel.com>
-References: <20260122111254.1111811-1-dmantipov@yandex.ru>
- <20260122111254.1111811-2-dmantipov@yandex.ru>
+Subject: Re: [RFC/RFT PATCH 01/19] x86/idt: Move idt_table to __ro_after_init
+ section
+Message-ID: <20260122130839.GFaXIhV9SPFzS-RDnj@fat_crate.local>
+References: <20260108092526.28586-21-ardb@kernel.org>
+ <20260108092526.28586-22-ardb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260122111254.1111811-2-dmantipov@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20260108092526.28586-22-ardb@kernel.org>
 
-On Thu, Jan 22, 2026 at 02:12:53PM +0300, Dmitry Antipov wrote:
-> Better late than never, now there is a long-awaited basic
-> test for 'memparse()' which is provided by cmdline.c.
+On Thu, Jan 08, 2026 at 09:25:28AM +0000, Ard Biesheuvel wrote:
+> Currently, idt_table is allocated as page-aligned .bss, and remapped
+> read-only after init. This breaks a 2 MiB large page into 4k page
+> mappings, which defeats some of the effort done at boot to map the
+> kernel image using large pages, for improved TLB efficiency.
+> 
+> Mark this allocation as __ro_after_init instead, so it will be made
+> read-only automatically after boot, without breaking up large page
+> mappings.
+> 
+> This also fixes a latent bug on i386, where the size of idt_table is
+> less than a page, and so remapping it read-only could potentially affect
+> other read-write variables too, if those are not page-aligned as well.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/x86/kernel/idt.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+> index f445bec516a0..d6da25d7964f 100644
+> --- a/arch/x86/kernel/idt.c
+> +++ b/arch/x86/kernel/idt.c
+> @@ -170,7 +170,7 @@ static const __initconst struct idt_data apic_idts[] = {
+>  };
+>  
+>  /* Must be page-aligned because the real IDT is used in the cpu entry area */
+> -static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
+> +static gate_desc idt_table[IDT_ENTRIES] __aligned(PAGE_SIZE) __ro_after_init;
+>  
+>  static struct desc_ptr idt_descr __ro_after_init = {
+>  	.size		= IDT_TABLE_SIZE - 1,
+> @@ -308,9 +308,6 @@ void __init idt_setup_apic_and_irq_gates(void)
+>  	idt_map_in_cea();
+>  	load_idt(&idt_descr);
+>  
+> -	/* Make the IDT table read only */
+> -	set_memory_ro((unsigned long)&idt_table, 1);
+> -
+>  	idt_setup_done = true;
+>  }
 
-Thank you for this! Really appreciate!
+Good idea, except my guest shows me something else:
 
-See a couple of nit-picks below.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-assuming they will be amended.
+before:
 
+[    0.186281] IDT table: 0xffffffff89c7f000
+
+0xffffffff89c00000-0xffffffff89c7f000         508K     RW                 GLB NX pte
+0xffffffff89c7f000-0xffffffff89c80000           4K     ro                 GLB NX pte
+0xffffffff89c80000-0xffffffff89e00000        1536K     RW                 GLB NX pte
+0xffffffff89e00000-0xffffffff8be00000          32M     RW         PSE     GLB NX pmd
+
+This is clearly a single, 4K RO pageframe right in the middle of a splintered
+2M page.
+
+after:
+
+[    0.180635] IDT table: 0xffffffff822cf000
+
+0xffffffff81e00000-0xffffffff82200000           4M     ro         PSE     GLB NX pmd
+0xffffffff82200000-0xffffffff8236f000        1468K     ro                 GLB NX pte
+0xffffffff8236f000-0xffffffff82400000         580K     RW                 GLB NX pte
+0xffffffff82400000-0xffffffff89800000         116M     RW         PSE     GLB NX pmd
+
+but after applying your patch it looks like it still broke the 2M mapping as
+the remaining piece is RW.
+
+If I do this:
+
+static gate_desc idt_table[IDT_ENTRIES] __aligned(PMD_SIZE) __ro_after_init;
+
+it still doesn't help:
+
+[    0.197808] IDT table: 0xffffffff82800000
+
+0xffffffff81e00000-0xffffffff82800000          10M     ro         PSE     GLB NX pmd
+0xffffffff82800000-0xffffffff828a0000         640K     ro                 GLB NX pte
+0xffffffff828a0000-0xffffffff82a00000        1408K     RW                 GLB NX pte
+0xffffffff82a00000-0xffffffff89e00000         116M     RW         PSE     GLB NX pmd
+
+because that trailing piece of the 2M page is still RW.
+
+And who knows what else am I breaking when doing this:
+
+[    2.368601] ------------[ cut here ]------------
+[    2.389816] [CRTC:35:crtc-0] vblank wait timed out
+[    2.396676] WARNING: drivers/gpu/drm/drm_atomic_helper.c:1920 at drm_atomic_helper_wait_for_vblanks.part.0+0x1ba/0x1e0, CPU#1: kworker/1:0/57
+[    2.406715] Modules linked in:
+[    2.408462] CPU: 1 UID: 0 PID: 57 Comm: kworker/1:0 Not tainted 6.19.0-rc6+ #4 PREEMPT(full)
 ...
 
-> +static const struct cmdline_test_memparse_entry testdata[] = {
-> +	{ "0",			"",	0ULL },
-> +	{ "1",			"",	1ULL },
-> +	{ "a",			"a",	0ULL },
-> +	{ "0xb",		"",	11ULL },
-> +	{ "0xz",		"x",	0ULL },
-> +	{ "1234",		"",	1234ULL },
-> +	{ "04567",		"",	2423ULL },
-> +	{ "0x9876",		"",	39030LL },
-> +	{ "05678",		"8",	375ULL },
-> +	{ "0xabcdefz",		"z",	11259375ULL },
-> +	{ "0cdba",		"c",	0ULL },
+I don't know, sacrificing a 2M page just for the idt_table and so that it
+doesn't get splintered, not sure it is worth it.
 
-> +	{ "4K",			"",	4096ULL },
-> +	{ "0x10k@0xaaaabbbb",	"@",	16384ULL },
-> +	{ "32M",		"",	33554432ULL },
-
-These can utilize constants from sizes.h.
-
-> +	{ "067m:foo",		":",	57671680ULL },
-
-> +	{ "2G;bar=baz",		";",	2147483648ULL },
-
-Ditto.
-
-> +	{ "07gz",		"z",	7516192768ULL },
-> +	{ "3T+data",		"+",	3298534883328ULL },
-
-> +	{ "04t,ro",		",",	4398046511104ULL },
-
-Ditto. (However I don't remember the maximum available there.)
-
-> +	{ "012p",		"",	11258999068426240ULL },
-> +	{ "7P,sync",		",",	7881299347898368ULL },
-> +	{ "0x2e",		"",	46ULL },
-> +	{ "2E and more",	" ",	2305843009213693952ULL },
-> +	{ "18446744073709551615", "",	18446744073709551615ULL },
-
-> +	{ "18446744073709551616", "",	0ULL }
-
-Leave trailing comma as it's not a terminator.
-
-Can we also have one with more than 20 decimal digits?
-
-> +};
+Hmmm.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
