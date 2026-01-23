@@ -1,25 +1,25 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F1E360728;
-	Fri, 23 Jan 2026 08:58:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D6133D6E1;
+	Fri, 23 Jan 2026 08:59:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769158743; cv=none; b=fKerauGVW8CizykDOtyY0FGcUNwaLQ7CtPVxA7GPCy2maFDGU1AseNpw/me/qRTkbwSHRDLfFTTVkXVatTD3M/KXbeJBG6+2NB52Z11WIubyONLFKvtlg0MhVIAeaqFuEpIHDYt+gRnz4XTGzEdaOF0zVuoc3BEf04CJrjzVxkM=
+	t=1769158744; cv=none; b=J0SAIZxyndSPuDmgyIjiYVWecixibDtXcUuE7hRlIRZ9nTxii28QscAHX/XeZGHUM16fayRpIFmkS88yalxLvnQCj8EHQOMJ1Xh4A5UTt1UpNAH0Xo6P0tknkMomotRGh2cewfZxTsRgTL3guefiGm1q+AdulM+sOuNQNpuEcbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769158743; c=relaxed/simple;
-	bh=6ZrnKTzpiWjmT+adBRlB3wl1MnT39vtpTwZv22jFhzg=;
+	s=arc-20240116; t=1769158744; c=relaxed/simple;
+	bh=+giwXz5go4rjM1zaJC2IzpQCxDuiwrGxPZNkTobTMI4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KtR3tfv/MgUGVSgLEqVh1CNTQr+sLQ5E/R2kgcs/RsUae4G3Xo+ct5GzOfVVxc3UYp5xF0ASpP1rGmhaolHVb7aZw85QW9oSSBEwPiliuQ92slp6uTsEp+op8inulC00Tt0I8CJAC/jTdJEKvxH7zb4f5BbBXdwMsl0j7lNNiEQ=
+	 MIME-Version; b=Ek1gnQJpdIOZpVTlkwLLckZSkXeBMvV17ADoaDnY07yvh+VomwXImAovc/gNraqMHwladWprru49d8gONlMpdDTb8DdJf44Ra2kiFfqa41100cz+qp5a9xu6HIjXmqXea9FkoodjpFnfT8RsMAvH10PCAfkMF7uZIhaNt+7Cgao=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: bcb91302f83911f0b0f03b4cfa9209d1-20260123
+X-UUID: bd1f2a5cf83911f0b0f03b4cfa9209d1-20260123
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:b899f6a1-1e9b-4402-826e-8ac7b618a117,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:a9d874c,CLOUDID:cafa3f54b4ba1725d8a95b5766bd95e9,BulkI
+X-CID-O-INFO: VERSION:1.3.6,REQID:b00e071a-dd14-4847-9045-bba7e2ba74fa,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:a9d874c,CLOUDID:c826670df8c0c99825d5f32d8fca22d5,BulkI
 	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|898,TC:nil,Content:0|15|50
 	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
 	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -27,12 +27,12 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: bcb91302f83911f0b0f03b4cfa9209d1-20260123
+X-UUID: bd1f2a5cf83911f0b0f03b4cfa9209d1-20260123
 X-User: jiangfeng@kylinos.cn
 Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <jiangfeng@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1148596265; Fri, 23 Jan 2026 16:58:51 +0800
+	with ESMTP id 532124729; Fri, 23 Jan 2026 16:58:51 +0800
 From: Feng Jiang <jiangfeng@kylinos.cn>
 To: pjw@kernel.org,
 	palmer@dabbelt.com,
@@ -53,9 +53,9 @@ To: pjw@kernel.org,
 Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 4/8] lib/string_kunit: add performance benchmark for strlen()
-Date: Fri, 23 Jan 2026 16:58:37 +0800
-Message-Id: <20260123085841.212468-5-jiangfeng@kylinos.cn>
+Subject: [PATCH v4 5/8] lib/string_kunit: extend benchmarks to strnlen() and chr searches
+Date: Fri, 23 Jan 2026 16:58:38 +0800
+Message-Id: <20260123085841.212468-6-jiangfeng@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260123085841.212468-1-jiangfeng@kylinos.cn>
 References: <20260123085841.212468-1-jiangfeng@kylinos.cn>
@@ -67,241 +67,55 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce a benchmarking framework to the string_kunit test suite to
-measure the execution efficiency of string functions.
+Extend the string benchmarking suite to include strnlen(), strchr(),
+and strrchr().
 
-The implementation is inspired by crc_benchmark(), measuring throughput
-(MB/s) and latency (ns/call) across a range of string lengths. It
-includes a warm-up phase, disables preemption during measurement, and
-uses a fixed seed for reproducible results.
-
-This framework allows for comparing different implementations (e.g.,
-generic C vs. architecture-optimized assembly) within the KUnit
-environment.
-
-Initially, provide a benchmark for strlen().
+For character search functions strchr() and strrchr(), the benchmark
+targets the NUL character. This ensures the entire string is scanned,
+providing a consistent measure of full-length processing efficiency
+comparable to strlen().
 
 Suggested-by: Andy Shevchenko <andy@kernel.org>
 Suggested-by: Eric Biggers <ebiggers@kernel.org>
 Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
+Acked-by: Andy Shevchenko <andy@kernel.org>
 ---
- lib/Kconfig.debug        |  11 +++
- lib/tests/string_kunit.c | 158 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 169 insertions(+)
+ lib/tests/string_kunit.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index ba36939fda79..21b058ae815f 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2475,6 +2475,17 @@ config STRING_HELPERS_KUNIT_TEST
- 	depends on KUNIT
- 	default KUNIT_ALL_TESTS
- 
-+config STRING_KUNIT_BENCH
-+       bool "Benchmark string functions at runtime"
-+       depends on STRING_KUNIT_TEST
-+       help
-+         Enable performance measurement for string functions.
-+
-+         This measures the execution efficiency of string functions
-+         during the KUnit test run.
-+
-+         If unsure, say N.
-+
- config FFS_KUNIT_TEST
- 	tristate "KUnit test ffs-family functions at runtime" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
 diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 7f1e2bf6a352..52798f426aa9 100644
+index 52798f426aa9..3d540ad78cda 100644
 --- a/lib/tests/string_kunit.c
 +++ b/lib/tests/string_kunit.c
-@@ -6,10 +6,13 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <kunit/test.h>
-+#include <linux/math64.h>
- #include <linux/module.h>
-+#include <linux/prandom.h>
- #include <linux/printk.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-+#include <linux/units.h>
- 
- #define STRCMP_LARGE_BUF_LEN 2048
- #define STRCMP_CHANGE_POINT 1337
-@@ -20,6 +23,9 @@
- #define STRING_TEST_MAX_LEN	128
- #define STRING_TEST_MAX_OFFSET	16
- 
-+#define STRING_BENCH_SEED	888
-+#define STRING_BENCH_WORKLOAD	(1 * MEGA)
-+
- static void string_test_memset16(struct kunit *test)
- {
- 	unsigned i, j, k;
-@@ -700,6 +706,157 @@ static void string_test_strends(struct kunit *test)
- 	KUNIT_EXPECT_TRUE(test, strends("", ""));
+@@ -857,6 +857,21 @@ static void string_bench_strlen(struct kunit *test)
+ 	STRING_BENCH_BUF(test, buf, len, strlen, buf);
  }
  
-+/* Target string lengths for benchmarking */
-+static const size_t bench_lens[] = {
-+	0, 1, 7, 8, 16, 31, 64, 127, 512, 1024, 3173, 4096,
-+};
-+
-+/**
-+ * alloc_max_bench_buffer() - Allocate buffer for the max test case.
-+ * @test: KUnit context for managed allocation.
-+ * @lens: Array of lengths used in the benchmark cases.
-+ * @count: Number of elements in the @lens array.
-+ * @buf_len: [out] Pointer to store the actually allocated buffer
-+ * size (including NUL character).
-+ *
-+ * Return: Pointer to the allocated memory, or NULL on failure.
-+ */
-+static void *alloc_max_bench_buffer(struct kunit *test,
-+		const size_t *lens, size_t count, size_t *buf_len)
++static void string_bench_strnlen(struct kunit *test)
 +{
-+	size_t i, max_len = 0;
-+	void *buf;
-+
-+	for (i = 0; i < count; i++) {
-+		if (max_len < lens[i])
-+			max_len = lens[i];
-+	}
-+
-+	/* Add space for NUL character */
-+	max_len += 1;
-+
-+	buf = kunit_kzalloc(test, max_len, GFP_KERNEL);
-+	if (!buf)
-+		return NULL;
-+
-+	if (buf_len)
-+		*buf_len = max_len;
-+
-+	return buf;
++	STRING_BENCH_BUF(test, buf, len, strnlen, buf, len);
 +}
 +
-+/**
-+ * fill_random_string() - Populate a buffer with a random NUL-terminated string.
-+ * @buf: Buffer to fill.
-+ * @len: Length of the buffer in bytes.
-+ *
-+ * Fills the buffer with random non-NUL bytes and ensures the string is
-+ * properly NUL-terminated.
-+ */
-+static void fill_random_string(char *buf, size_t len)
++static void string_bench_strchr(struct kunit *test)
 +{
-+	struct rnd_state state;
-+	size_t i;
-+
-+	if (!buf || !len)
-+		return;
-+
-+	/* Use a fixed seed to ensure deterministic benchmark results */
-+	prandom_seed_state(&state, STRING_BENCH_SEED);
-+	prandom_bytes_state(&state, buf, len);
-+
-+	/* Replace NUL characters to avoid early string termination */
-+	for (i = 0; i < len; i++) {
-+		if (buf[i] == '\0')
-+			buf[i] = 0x01;
-+	}
-+
-+	buf[len - 1] = '\0';
++	STRING_BENCH_BUF(test, buf, len, strchr, buf, '\0');
 +}
 +
-+/**
-+ * STRING_BENCH() - Benchmark string functions.
-+ * @iters: Number of iterations to run.
-+ * @func: Function to benchmark.
-+ * @...: Variable arguments passed to @func.
-+ *
-+ * Disables preemption and measures the total time in nanoseconds to execute
-+ * @func(@__VA_ARGS__) for @iters times, including a small warm-up phase.
-+ *
-+ * Context: Disables preemption during measurement.
-+ * Return: Total execution time in nanoseconds (u64).
-+ */
-+#define STRING_BENCH(iters, func, ...)					\
-+({									\
-+	/* Volatile function pointer prevents dead code elimination */	\
-+	typeof(func) (* volatile __func) = (func);			\
-+	size_t __bn_iters = (iters);					\
-+	size_t __bn_warm_iters;						\
-+	size_t __bn_i;							\
-+	u64 __bn_t;							\
-+									\
-+	__bn_warm_iters = max(__bn_iters / 10, 50U);			\
-+									\
-+	for (__bn_i = 0; __bn_i < __bn_warm_iters; __bn_i++)		\
-+		(void)__func(__VA_ARGS__);				\
-+									\
-+	preempt_disable();						\
-+	__bn_t = ktime_get_ns();					\
-+	for (__bn_i = 0; __bn_i < __bn_iters; __bn_i++)			\
-+		(void)__func(__VA_ARGS__);				\
-+	__bn_t = ktime_get_ns() - __bn_t;				\
-+	preempt_enable();						\
-+	__bn_t;								\
-+})
-+
-+/**
-+ * STRING_BENCH_BUF() - Benchmark harness for single-buffer functions.
-+ * @test: KUnit context.
-+ * @buf_name: Local char * variable name to be defined.
-+ * @buf_size: Local size_t variable name to be defined.
-+ * @func: Function to benchmark.
-+ * @...: Extra arguments for @func.
-+ *
-+ * Prepares a randomized, NUL-terminated buffer and iterates through lengths
-+ * in bench_lens, defining @buf_name and @buf_size in each loop.
-+ */
-+#define STRING_BENCH_BUF(test, buf_name, buf_size, func, ...)		\
-+do {									\
-+	size_t buf_size, _bn_i, _bn_iters, _bn_size = 0;		\
-+	u64 _bn_t, _bn_mbps = 0, _bn_lat = 0;				\
-+	char *buf_name, *_bn_buf;					\
-+									\
-+	if (!IS_ENABLED(CONFIG_STRING_KUNIT_BENCH))			\
-+		kunit_skip(test, "not enabled");			\
-+									\
-+	_bn_buf = alloc_max_bench_buffer(test, bench_lens,		\
-+			ARRAY_SIZE(bench_lens), &_bn_size);		\
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, _bn_buf);			\
-+									\
-+	fill_random_string(_bn_buf, _bn_size);				\
-+									\
-+	for (_bn_i = 0; _bn_i < ARRAY_SIZE(bench_lens); _bn_i++) {	\
-+		buf_size = bench_lens[_bn_i];				\
-+		buf_name = _bn_buf + _bn_size - buf_size - 1;		\
-+		_bn_iters = STRING_BENCH_WORKLOAD / max(buf_size, 1U);	\
-+									\
-+		_bn_t = STRING_BENCH(_bn_iters, func, ##__VA_ARGS__);	\
-+									\
-+		if (_bn_t > 0) {					\
-+			_bn_mbps = (u64)(buf_size) * _bn_iters * 1000;	\
-+			_bn_mbps = div64_u64(_bn_mbps, _bn_t);		\
-+			_bn_lat = div64_u64(_bn_t, _bn_iters);		\
-+		}							\
-+		kunit_info(test, "len=%zu: %llu MB/s (%llu ns/call)\n",	\
-+				buf_size, _bn_mbps, _bn_lat);		\
-+	}								\
-+} while (0)
-+
-+static void string_bench_strlen(struct kunit *test)
++static void string_bench_strrchr(struct kunit *test)
 +{
-+	STRING_BENCH_BUF(test, buf, len, strlen, buf);
++	STRING_BENCH_BUF(test, buf, len, strrchr, buf, '\0');
 +}
 +
  static struct kunit_case string_test_cases[] = {
  	KUNIT_CASE(string_test_memset16),
  	KUNIT_CASE(string_test_memset32),
-@@ -725,6 +882,7 @@ static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_test_strtomem),
+@@ -883,6 +898,9 @@ static struct kunit_case string_test_cases[] = {
  	KUNIT_CASE(string_test_memtostr),
  	KUNIT_CASE(string_test_strends),
-+	KUNIT_CASE(string_bench_strlen),
+ 	KUNIT_CASE(string_bench_strlen),
++	KUNIT_CASE(string_bench_strnlen),
++	KUNIT_CASE(string_bench_strchr),
++	KUNIT_CASE(string_bench_strrchr),
  	{}
  };
  
