@@ -1,181 +1,105 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CE334679A;
-	Fri, 23 Jan 2026 08:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34AD3358D3
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Jan 2026 10:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769158753; cv=none; b=R8w4pznA9F7HgnKOu3ffTJoccR5JcJRL4AB25smHohucw/5qo9e3Zy3SxIyP8cM5L3OQd7TQ7dnB1bedYeSNwR5gmczzVoiZR+mcs9H2ZXnP7bGWSM20HJxeHhKInOcbTAIdkh3GIy89UsssNMx856hCO5REYOeUeZX/YbAplUk=
+	t=1769163375; cv=none; b=QhmHd+UVm9hNpGApzYzvIG/SrcF7dA7eOQIGd1kslkCuJIqPBCEDA+j5XiJ7zn82NJB1fuBlPDjaRJhcpal3AwCm9tzgbU+FEYbaRvxSR8M4EDaZZlsrkzbwfOn2MtmeUJQAPfYn7yF11xtbM/23GUOLNED6bWZ8egwxCJ5x/yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769158753; c=relaxed/simple;
-	bh=tJMju6wtSRF4XQQ4qpse+4Tj1aXVSf+Ixk2cwz9ye2o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GGkO58uZkXmKCPbHDJdQzEBaCAu2oC7Yb6l6QX+rZWYLadUqbx6gOELP24N3dmNrz+t4J2JFSmpukYeJ0N5O7lZolqAtv3+6H9f1uVR/CWWSf0oEdEmEk3NUlF7PHJR+ZH2qE2qfru7bwLYa7YTow4CWUsJflhxqXp7DRWy/9Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: bb16ea10f83911f0b0f03b4cfa9209d1-20260123
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:ef2cee81-e391-48a8-b34d-cc6c61748fdf,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:a9d874c,CLOUDID:39e596a74a7c72949aaf975664a1ecd5,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|898,TC:nil,Content:0|15|50,EDM:-
-	3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,A
-	V:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: bb16ea10f83911f0b0f03b4cfa9209d1-20260123
-X-User: jiangfeng@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <jiangfeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 773990107; Fri, 23 Jan 2026 16:58:48 +0800
-From: Feng Jiang <jiangfeng@kylinos.cn>
-To: pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	akpm@linux-foundation.org,
-	kees@kernel.org,
-	andy@kernel.org,
-	jiangfeng@kylinos.cn,
-	ebiggers@kernel.org,
-	martin.petersen@oracle.com,
-	mingo@kernel.org,
-	charlie@rivosinc.com,
-	conor.dooley@microchip.com,
-	samuel.holland@sifive.com,
-	linus.walleij@linaro.org,
-	nathan@kernel.org
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 0/8] riscv: optimize string functions and add kunit tests
-Date: Fri, 23 Jan 2026 16:58:33 +0800
-Message-Id: <20260123085841.212468-1-jiangfeng@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1769163375; c=relaxed/simple;
+	bh=rdfmaXafwYaxOfaZ8Y3ROw7o3CQOzujrQxG1fGxlP+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O2z/RmhBtTaf2p5xwex8QvpUYN7DLD45PLmiy6/YL8FQPDLNeXjLx0xWTOXXeZ8RbP7w7Tva2I3lXktT8iFxX+kh3lxnDTzFKp2bS6PaUfSkTkf5Qvk3+DYIgzpp9PiIVqBwsxHZJwkVmijJO/02zIhbk3ebbIShClUH2Zu/5PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SDymyFwJ; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDymyFwJ"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-47edd9024b1so16704845e9.3
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Jan 2026 02:16:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769163369; x=1769768169; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1766ltHWrMXyfFyRJgUmU5nLz/oknRF8EBvBBxM+APE=;
+        b=SDymyFwJZ0Zs+eqdMfF/YT0eduwB1YfjskKMXlwmMO2gEkK0ftru0JW/6liBmHsM1K
+         Yws/IDucIxRN1vL6BAGW35qMQ9SxsyqPfh0jlNTsH0KQmQJb6BoIlWPxv2X9MMShLJQ8
+         29XYJLJ0Dtig3fJUVzGGek5h2C+np8oxBm+bTXE8KAFI/80g8zcb8XKRy//mJFqoypuc
+         vLIqw5ZkIy9yJ0AqAg9cEoVx5XoC5yiHuyWsVoNhCdk75P751vtP82jTT/E3eOAWbNYv
+         1BMpnAAzA53puniwmreX2OeVkLqdhFyoVyrykOH85EzQbh9wKP1hOhafl3Pn4MSkbk3r
+         MQbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769163369; x=1769768169;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1766ltHWrMXyfFyRJgUmU5nLz/oknRF8EBvBBxM+APE=;
+        b=bQN+DDZgyxTx3Zd5nGeec763yyP/LRH+cC9/oadAPlUCo9Uz2mfTKc9Ug27Dsn9qTq
+         jNs9fs8B83KSCDh8A79yPcH+eP9ooithxLyCbt6Mh3ZvxTu2k5GKwfUFFu+daT3bGWCS
+         4UYzeKRM60N36qgOSebEEkEuLEQpRhIKaImWHfCWWdiD7aqwrX4FKkVcwRC6y92R7FIn
+         V+cslzQahtQfejc4abWJHwluD72wNtFkQdGI+CXtHhYdXvGb47+T4pTR8HoYeiBiNJN5
+         ++ylTVRk3qnj9GSkBLYVN2XaaRZOlMWhWSertRdPY8+b/PgSLWR9oqXffJegVUrW26iv
+         hwsA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7h2RaJUV1n71vXbOEVP1omq8ixtGMJp0nBPf9gLbU83VjcSTbfA6uX6sVh9jCUWsywSkb1Bq+XZMCxRg1/VE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZyCH9e+uTcGGNeI1CdB2ZUG3sXPtYhFCR90jP8fbtJkTs1Wj4
+	tuhtG/N1OcvsNsMrcgVF+TIh9C4geRrgFDQU3WOb2OqtBYeDcALe0UEd
+X-Gm-Gg: AZuq6aKjQhWcbnMRP3pE2VLzGPgfwoLcVLmcYVHsdfXk+0PvKWGlD+wKS+yRkKHxDOK
+	UmLAxIyqvu1nzurFYKCQyeQUuJDKF/BtOxRHYzDOj9JKDJ30x2ygwkLJEQU0ucyIZPoKmKgBeg2
+	DSosvUFjIwtdMOxRaBQxdNYRWShU21Rqlyvv3zwnOaukV8NI5h6VHIu7xQlRyNSK4GTEbOnk492
+	YLKJHQYleK6TDcqaDQ1qIR6ox1L9PULukAe31TpMA07HSRNSiM1b93H1Ww5+eCdS142EZlSOD5b
+	YyTgphHIpW04rnhGlfBBQOnVUeEAiSlPtOW5eDeBYh4oYOaiLsjtd90rAbBXYTFa7bqSQ5ortRz
+	KyIDVY3xkzQllxs1NwQF/9D96KKr4ceD7UUi1WZe0O+nux3byjs20lOLlpfZtkp0PotleG0DmJI
+	gCE9+HeX80d5nREz8lmT3piPyxmIId6voXTbo3bg7CabuyCSDjnPXrD3vcEWDj4ho=
+X-Received: by 2002:a05:600c:620f:b0:47a:8088:439c with SMTP id 5b1f17b1804b1-4804c9d00f7mr44556815e9.35.1769163368531;
+        Fri, 23 Jan 2026 02:16:08 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804dbbb3c4sm16602415e9.13.2026.01.23.02.16.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jan 2026 02:16:08 -0800 (PST)
+Date: Fri, 23 Jan 2026 10:16:02 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Feng Jiang <jiangfeng@kylinos.cn>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko
+ <andriy.shevchenko@intel.com>, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, akpm@linux-foundation.org,
+ kees@kernel.org, andy@kernel.org, ebiggers@kernel.org,
+ martin.petersen@oracle.com, ardb@kernel.org, charlie@rivosinc.com,
+ conor.dooley@microchip.com, ajones@ventanamicro.com,
+ linus.walleij@linaro.org, nathan@kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] riscv: optimize string functions and add kunit
+ tests
+Message-ID: <20260123101602.111c6210@pumpkin>
+In-Reply-To: <26d08954-2826-4c48-a540-6e0857faf5ec@kylinos.cn>
+References: <20260120065852.166857-1-jiangfeng@kylinos.cn>
+	<aW8whGcAR0x6FSRJ@smile.fi.intel.com>
+	<691a0183-6f41-4956-82da-abb69a449919@kylinos.cn>
+	<CAHp75Ve_pyVm430FL=aEAw1Cnf-92T3Y23qh7pEOaMYMp9iyvw@mail.gmail.com>
+	<20260121105717.04853c5d@pumpkin>
+	<26d08954-2826-4c48-a540-6e0857faf5ec@kylinos.cn>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This series provides optimized implementations of strnlen(), strchr(),
-and strrchr() for the RISC-V architecture. The strnlen() implementation
-is derived from the existing optimized strlen(). For strchr() and strrchr(),
-the current versions use simple byte-by-byte assembly logic, which
-will serve as a baseline for future Zbb-based optimizations.
+On Fri, 23 Jan 2026 11:12:00 +0800
+Feng Jiang <jiangfeng@kylinos.cn> wrote:
 
-The patch series is organized into three parts:
-1. Correctness Testing: The first three patches add KUnit test cases
-   for strlen(), strnlen(), and strrchr() to ensure the baseline and optimized
-   versions are functionally correct.
-2. Benchmarking Tool: Patches 4 and 5 extend string_kunit to include
-   performance measurement capabilities, allowing for comparative
-   analysis within the KUnit environment.
-3. Architectural Optimizations: The final three patches introduce the
-   RISC-V specific assembly implementations.
+>...
+> I am still exploring some of the finer points of these low-level performance
+> trade-offs, so your input is very helpful. I will definitely spend some time
+> studying this further and experiment with the approaches you mentioned.
 
-Following suggestions from Andy Shevchenko, performance benchmarks have
-been added to string_kunit.c to provide quantifiable evidence of the
-improvements. Andy provided many specific comments on the implementation
-of the benchmark logic, which is also inspired by Eric Biggers'
-crc_benchmark(). Performance was measured in a QEMU TCG (rv64) environment,
-comparing the generic C implementation with the new RISC-V assembly versions.
+You can spend a long time micro-optimising small functions.
+I know, I've done it....
+Then you need to test on as many cpu variants as you can find.
 
-Performance Summary (Improvement %):
----------------------------------------------------------------
-Function  |  16 B (Short) |  512 B (Mid) |  4096 B (Long)
----------------------------------------------------------------
-strnlen   |    +72.6%     |   +350.1%    |    +427.5%
-strchr    |    +3.6%      |   +3.5%      |    -0.3%
-strrchr   |    +5.3%      |   +5.8%      |    +0.8%
----------------------------------------------------------------
-The benchmarks can be reproduced by enabling CONFIG_STRING_KUNIT_BENCH
-and running: ./tools/testing/kunit/kunit.py run --arch=riscv \
---cross_compile=riscv64-linux-gnu- --kunitconfig=my_string.kunitconfig \
---raw_output
-
-The strnlen() implementation leverages the Zbb 'orc.b' instruction and
-word-at-a-time logic, showing significant gains as the string length
-increases. For strchr() and strrchr(), the handwritten assembly reduces
-fixed overhead by eliminating stack frame management. The gain is most
-prominent on short strings where function call overhead dominates,
-while the performance converges with the C implementation for longer
-strings in the TCG environment.
-
-I would like to thank Andy Shevchenko for the suggestion to add benchmarks
-and for his detailed feedback on the test framework, and Eric Biggers for
-the benchmarking approach. I am also grateful to Qingfang Deng for providing
-the optimized implementation logic for strnlen(). Thanks also to Joel Stanley
-for testing support and feedback, and to David Laight for his suggestions
-regarding performance measurement.
-
-Changes:
-
-v4:
-- Refine formatting and terminology:
-  - Refer to '\0' as NUL.
-  - Append parentheses () when referencing function names.
-  - Ensure trailing commas are present in initializers.
-  - Reorder local variable declarations to follow the "reverse Xmas tree" 
-    style. (Style-only change; kept existing Acked-by tags).
-- Improve documentation: Refine comments and commit messages for better 
-  clarity.
-- Improve readability by using (1 * MEGA) instead of 1000000UL.
-- Replace max_t() with max() where type-casting is unnecessary.
-- Simplify the return value check for kunit_kzalloc() in 
-  alloc_max_bench_buffer().
-- Remove redundant NUL-terminator handling in STRING_BENCH_BUF().
-- Optimize strnlen() implementation by replacing bleu/bgeu instructions 
-  with minu, as suggested by Qingfang Deng.
-- Remove incorrect Suggested-by tags from certain patches.
-- Drop Tested-by tags for benchmark-related patches due to significant 
-  framework changes since v3.
-- Re-run all tests and updated the performance data in the documentation.
-
-v3:
-- Re-implement benchmark logic inspired by crc_benchmark().
-- Add 'len - 2' test case to strnlen correctness tests.
-- Incorporate detailed benchmark data into individual commit messages.
-
-v2: 
-- Refactored lib/string.c to export __generic_* functions and added
-  corresponding functional/performance tests for strnlen, strchr,
-  and strrchr (Andy Shevchenko).
-- Replaced magic numbers with STRING_TEST_MAX_LEN etc. (Andy Shevchenko).
-
-v1: Initial submission.
-
----
-
-Feng Jiang (8):
-  lib/string_kunit: add correctness test for strlen()
-  lib/string_kunit: add correctness test for strnlen()
-  lib/string_kunit: add correctness test for strrchr()
-  lib/string_kunit: add performance benchmark for strlen()
-  lib/string_kunit: extend benchmarks to strnlen() and chr searches
-  riscv: lib: add strnlen() implementation
-  riscv: lib: add strchr() implementation
-  riscv: lib: add strrchr() implementation
-
- arch/riscv/include/asm/string.h |   9 ++
- arch/riscv/lib/Makefile         |   3 +
- arch/riscv/lib/strchr.S         |  35 +++++
- arch/riscv/lib/strnlen.S        | 164 ++++++++++++++++++++
- arch/riscv/lib/strrchr.S        |  37 +++++
- arch/riscv/purgatory/Makefile   |  11 +-
- lib/Kconfig.debug               |  11 ++
- lib/tests/string_kunit.c        | 265 ++++++++++++++++++++++++++++++++
- 8 files changed, 534 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/lib/strchr.S
- create mode 100644 arch/riscv/lib/strnlen.S
- create mode 100644 arch/riscv/lib/strrchr.S
-
--- 
-2.25.1
-
+	David
