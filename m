@@ -1,40 +1,25 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC23329C69;
-	Fri, 23 Jan 2026 03:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9D4329D277;
+	Fri, 23 Jan 2026 06:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769137947; cv=none; b=XSaXfgdRB1rw3NPrV4znXBYbmdziBN6589x8eycZ2htZmRET+hTThrGLFp0bUZWq8w+TxPKN3Gf8h4RnhNWUnzRNqUZjrC7fHzWfgyFKX8Jwq0Vg84Rp/s9FW7viVDPUcmkDgn0/PTgDjjiilaYeLotKgttQBSxT686jHPjm5O4=
+	t=1769148777; cv=none; b=HC9l+mUkwOIAlaOcfFm3VHuh3VCXYlz4L27hQneWgoMN3lEQVOYPs1fzHljaJIjKu010cvolnr/aim/B8yNLmSTO0a6gWBg0B0J8h1OlJr1Mo3zZg9XwrmJM/jMXreOjMTHanCfP9znzDZKGlA3FF1B5+RKUYZ7DP5R8KnAYewA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769137947; c=relaxed/simple;
-	bh=0xT1epDWb1FQ+J3N0zKCsi8H2EJTlZq0omhKZzCId4I=;
+	s=arc-20240116; t=1769148777; c=relaxed/simple;
+	bh=j60cKGkR12WcqAH+VcNuKAbzGYakrLM1AIkHs3/dVAM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AXP0+QGxXIUrQOih9SdyKBMNT61bu23KMcAWtfOiZNI4UlXeXgvKRxYo4J2Q2dkdFRh9ZTIEU9G2gQS6GwHvpAMEArHozWUKokXDJbnWVPh0g29JBoIigW6KgR6LGZ91qUP7nxDO9BPNf6zIcvIR3kDdUZ1FGJ37qyIEIGv58EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 4a2c610cf80911f0b0f03b4cfa9209d1-20260123
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:90487520-6dca-4b2c-b653-8149c8121841,IP:0,UR
-	L:0,TC:0,Content:3,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:3
-X-CID-META: VersionHash:a9d874c,CLOUDID:832d07ec24574474af5f067b81ba0031,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:4|15|
-	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 4a2c610cf80911f0b0f03b4cfa9209d1-20260123
-X-User: jiangfeng@kylinos.cn
-Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <jiangfeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1599856752; Fri, 23 Jan 2026 11:12:03 +0800
-Message-ID: <26d08954-2826-4c48-a540-6e0857faf5ec@kylinos.cn>
-Date: Fri, 23 Jan 2026 11:12:00 +0800
+	 In-Reply-To:Content-Type; b=Wi3wd838KxP7+S5E+RHgqao8vuo8RJpK6zK4brWqCgboQ+Pd3mZe5EYWrDOBJHsUT88rtH1UyC+bGQe2iVQzHOh/g67clS+TgqtHTsG3c98xBrj/WOBlvtDMaxjL+Pl+a/lKpx2XwhN2e3jpOnsxlN5iNOmYJZHgL7UrvU6ywYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BC821476;
+	Thu, 22 Jan 2026 22:12:41 -0800 (PST)
+Received: from [10.164.18.52] (unknown [10.164.18.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E60603F740;
+	Thu, 22 Jan 2026 22:12:44 -0800 (PST)
+Message-ID: <d5c7ed76-2b54-4c6e-961f-6ba1e4011467@arm.com>
+Date: Fri, 23 Jan 2026 11:42:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,76 +27,76 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/8] riscv: optimize string functions and add kunit
- tests
-To: David Laight <david.laight.linux@gmail.com>,
- Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- akpm@linux-foundation.org, kees@kernel.org, andy@kernel.org,
- ebiggers@kernel.org, martin.petersen@oracle.com, ardb@kernel.org,
- charlie@rivosinc.com, conor.dooley@microchip.com, ajones@ventanamicro.com,
- linus.walleij@linaro.org, nathan@kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260120065852.166857-1-jiangfeng@kylinos.cn>
- <aW8whGcAR0x6FSRJ@smile.fi.intel.com>
- <691a0183-6f41-4956-82da-abb69a449919@kylinos.cn>
- <CAHp75Ve_pyVm430FL=aEAw1Cnf-92T3Y23qh7pEOaMYMp9iyvw@mail.gmail.com>
- <20260121105717.04853c5d@pumpkin>
+Subject: Re: [PATCH 1/4] arm64: Move fixmap page tables to end of kernel image
+To: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, will@kernel.org,
+ catalin.marinas@arm.com, mark.rutland@arm.com,
+ Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+References: <20260119164747.1402434-6-ardb+git@google.com>
+ <20260119164747.1402434-7-ardb+git@google.com>
 Content-Language: en-US
-From: Feng Jiang <jiangfeng@kylinos.cn>
-In-Reply-To: <20260121105717.04853c5d@pumpkin>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20260119164747.1402434-7-ardb+git@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2026/1/21 18:57, David Laight wrote:
-> On Wed, 21 Jan 2026 09:01:29 +0200
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> 
-> ...
->> I understand that. My point is if we move the generic implementation
->> to use word-at-a-time technique the difference should not go 4x,
->> right? Perhaps 1.5x or so. I believe this will be a very useful
->> exercise.
-> 
-> I posted a version earlier.
-> 
-> After the initial setup (aligning the base address and loading
-> some constants the loop on x86-64 is 7 instructions (should be similar
-> for other architectures).
-> I think it will execute in 4 clocks.
-> You then need to find the byte in the word, easy enough on LE with
-> a fast ffs() - but harder otherwise.
-> The real problem is the cost for short strings.
-> Like memcpy() you need a hint from the source of the 'expected' length
-> (as a compile-time constant) to compile-time select the algorithm.
-> 
-> OTOH:
-> 	for (;;) {
-> 		if (!ptr[0]) return ptr - start;
-> 		ptr += 2;
-> 	while (ptr[-1]);
-> 	return ptr - start - 1;
-> has two 'load+compare+branch' and one add per loop.
-> On x86 that might all overlap and give you a two-clock loop
-> that checks one byte every clock - faster than 'rep scasb'.
-> (You can get a two clock loop, but not a 1 clock loop.)
-> I think unrolling further will make little/no difference.
-> 
-> The break-even for the word-at-a-time version is probably at least 64
-> characters.
-> 
 
-Thanks for the profound analysis and the detailed suggestions.
 
-I am still exploring some of the finer points of these low-level performance
-trade-offs, so your input is very helpful. I will definitely spend some time
-studying this further and experiment with the approaches you mentioned.
+On 19/01/26 10:17 PM, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> Move the fixmap page tables out of the BSS section, and place them at
+> the end of the image, right before the init_pg_dir section where some of
+> the other statically allocated page tables live.
+> 
+> These page tables are currently the only data objects in vmlinux that
+> are meant to be accessed via the kernel image's linear alias, and so
+> placing them together allows the remainder of the data/bss section to be
+> remapped read-only or unmapped entirely.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/arm64/kernel/vmlinux.lds.S | 5 +++++
+>  arch/arm64/mm/fixmap.c          | 7 ++++---
+>  2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+> index ad6133b89e7a..df530e6f3e53 100644
+> --- a/arch/arm64/kernel/vmlinux.lds.S
+> +++ b/arch/arm64/kernel/vmlinux.lds.S
+> @@ -334,6 +334,11 @@ SECTIONS
+>  	__pi___bss_start = __bss_start;
+>  
+>  	. = ALIGN(PAGE_SIZE);
+> +	.pgdir : {
+> +		__pgdir_start = .;
 
-Thanks again for your help!
+Does __fixmap_pgdir_start with an end marker __fixmap_pgdir_end sound better ?
 
--- 
-With Best Regards,
-Feng Jiang
+> +		*(.fixmap_bss)
+> +	}
+> +
+>  	__pi_init_pg_dir = .;
+>  	. += INIT_DIR_SIZE;
+>  	__pi_init_pg_end = .;
+> diff --git a/arch/arm64/mm/fixmap.c b/arch/arm64/mm/fixmap.c
+> index c5c5425791da..b649ea1a46e4 100644
+> --- a/arch/arm64/mm/fixmap.c
+> +++ b/arch/arm64/mm/fixmap.c
+> @@ -31,9 +31,10 @@ static_assert(NR_BM_PMD_TABLES == 1);
+>  
+>  #define BM_PTE_TABLE_IDX(addr)	__BM_TABLE_IDX(addr, PMD_SHIFT)
+>  
+> -static pte_t bm_pte[NR_BM_PTE_TABLES][PTRS_PER_PTE] __page_aligned_bss;
+> -static pmd_t bm_pmd[PTRS_PER_PMD] __page_aligned_bss __maybe_unused;
+> -static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
+> +#define __fixmap_bss	__section(".fixmap_bss") __aligned(PAGE_SIZE)
+> +static pte_t bm_pte[NR_BM_PTE_TABLES][PTRS_PER_PTE] __fixmap_bss;
+> +static pmd_t bm_pmd[PTRS_PER_PMD] __fixmap_bss __maybe_unused;
+> +static pud_t bm_pud[PTRS_PER_PUD] __fixmap_bss __maybe_unused;
+>  
+>  static inline pte_t *fixmap_pte(unsigned long addr)
+>  {
 
