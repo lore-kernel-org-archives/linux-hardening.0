@@ -1,105 +1,116 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34AD3358D3
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Jan 2026 10:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE3B36B065;
+	Fri, 23 Jan 2026 10:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769163375; cv=none; b=QhmHd+UVm9hNpGApzYzvIG/SrcF7dA7eOQIGd1kslkCuJIqPBCEDA+j5XiJ7zn82NJB1fuBlPDjaRJhcpal3AwCm9tzgbU+FEYbaRvxSR8M4EDaZZlsrkzbwfOn2MtmeUJQAPfYn7yF11xtbM/23GUOLNED6bWZ8egwxCJ5x/yg=
+	t=1769164920; cv=none; b=IOi4WulMeOYjTz6lD8QE6PzZU/VgXkQgHWXZTgMFV4Me5YoiWz30WxZZgbmXK0IhyVo8g53u/LLS4jDy21w4MBWlUF+Ezb+P0XpXyOxIpBNW6uJ5NddIVroobGX4cTL5maUUavz9xnXT/q05vwNZNN4yNo9oRa5Ud7hvAcKPfBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769163375; c=relaxed/simple;
-	bh=rdfmaXafwYaxOfaZ8Y3ROw7o3CQOzujrQxG1fGxlP+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O2z/RmhBtTaf2p5xwex8QvpUYN7DLD45PLmiy6/YL8FQPDLNeXjLx0xWTOXXeZ8RbP7w7Tva2I3lXktT8iFxX+kh3lxnDTzFKp2bS6PaUfSkTkf5Qvk3+DYIgzpp9PiIVqBwsxHZJwkVmijJO/02zIhbk3ebbIShClUH2Zu/5PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SDymyFwJ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1769164920; c=relaxed/simple;
+	bh=HLrViGVqTC3/G0gsvexqTtXtxspwQxSEDDyxgTv7J0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TBj0Sxg/0rRPFPncLgDap7TI/zrUmiH2mcGRR1z9wMjciZ1o8+cW44UfV8qs9w/mxQC+Td2XKNlW5d7U2ooiEscWe5kbbKKWdHGHGdZbL7rprDErrfyHA2cdQ8AYU1OoX49Ed2lwohlXscx39nBScZu9FVh0nWBLwy7QjXG4q48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K88/W9CP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDymyFwJ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-47edd9024b1so16704845e9.3
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Jan 2026 02:16:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769163369; x=1769768169; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1766ltHWrMXyfFyRJgUmU5nLz/oknRF8EBvBBxM+APE=;
-        b=SDymyFwJZ0Zs+eqdMfF/YT0eduwB1YfjskKMXlwmMO2gEkK0ftru0JW/6liBmHsM1K
-         Yws/IDucIxRN1vL6BAGW35qMQ9SxsyqPfh0jlNTsH0KQmQJb6BoIlWPxv2X9MMShLJQ8
-         29XYJLJ0Dtig3fJUVzGGek5h2C+np8oxBm+bTXE8KAFI/80g8zcb8XKRy//mJFqoypuc
-         vLIqw5ZkIy9yJ0AqAg9cEoVx5XoC5yiHuyWsVoNhCdk75P751vtP82jTT/E3eOAWbNYv
-         1BMpnAAzA53puniwmreX2OeVkLqdhFyoVyrykOH85EzQbh9wKP1hOhafl3Pn4MSkbk3r
-         MQbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769163369; x=1769768169;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1766ltHWrMXyfFyRJgUmU5nLz/oknRF8EBvBBxM+APE=;
-        b=bQN+DDZgyxTx3Zd5nGeec763yyP/LRH+cC9/oadAPlUCo9Uz2mfTKc9Ug27Dsn9qTq
-         jNs9fs8B83KSCDh8A79yPcH+eP9ooithxLyCbt6Mh3ZvxTu2k5GKwfUFFu+daT3bGWCS
-         4UYzeKRM60N36qgOSebEEkEuLEQpRhIKaImWHfCWWdiD7aqwrX4FKkVcwRC6y92R7FIn
-         V+cslzQahtQfejc4abWJHwluD72wNtFkQdGI+CXtHhYdXvGb47+T4pTR8HoYeiBiNJN5
-         ++ylTVRk3qnj9GSkBLYVN2XaaRZOlMWhWSertRdPY8+b/PgSLWR9oqXffJegVUrW26iv
-         hwsA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7h2RaJUV1n71vXbOEVP1omq8ixtGMJp0nBPf9gLbU83VjcSTbfA6uX6sVh9jCUWsywSkb1Bq+XZMCxRg1/VE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZyCH9e+uTcGGNeI1CdB2ZUG3sXPtYhFCR90jP8fbtJkTs1Wj4
-	tuhtG/N1OcvsNsMrcgVF+TIh9C4geRrgFDQU3WOb2OqtBYeDcALe0UEd
-X-Gm-Gg: AZuq6aKjQhWcbnMRP3pE2VLzGPgfwoLcVLmcYVHsdfXk+0PvKWGlD+wKS+yRkKHxDOK
-	UmLAxIyqvu1nzurFYKCQyeQUuJDKF/BtOxRHYzDOj9JKDJ30x2ygwkLJEQU0ucyIZPoKmKgBeg2
-	DSosvUFjIwtdMOxRaBQxdNYRWShU21Rqlyvv3zwnOaukV8NI5h6VHIu7xQlRyNSK4GTEbOnk492
-	YLKJHQYleK6TDcqaDQ1qIR6ox1L9PULukAe31TpMA07HSRNSiM1b93H1Ww5+eCdS142EZlSOD5b
-	YyTgphHIpW04rnhGlfBBQOnVUeEAiSlPtOW5eDeBYh4oYOaiLsjtd90rAbBXYTFa7bqSQ5ortRz
-	KyIDVY3xkzQllxs1NwQF/9D96KKr4ceD7UUi1WZe0O+nux3byjs20lOLlpfZtkp0PotleG0DmJI
-	gCE9+HeX80d5nREz8lmT3piPyxmIId6voXTbo3bg7CabuyCSDjnPXrD3vcEWDj4ho=
-X-Received: by 2002:a05:600c:620f:b0:47a:8088:439c with SMTP id 5b1f17b1804b1-4804c9d00f7mr44556815e9.35.1769163368531;
-        Fri, 23 Jan 2026 02:16:08 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804dbbb3c4sm16602415e9.13.2026.01.23.02.16.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jan 2026 02:16:08 -0800 (PST)
-Date: Fri, 23 Jan 2026 10:16:02 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Feng Jiang <jiangfeng@kylinos.cn>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko
- <andriy.shevchenko@intel.com>, pjw@kernel.org, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr, akpm@linux-foundation.org,
- kees@kernel.org, andy@kernel.org, ebiggers@kernel.org,
- martin.petersen@oracle.com, ardb@kernel.org, charlie@rivosinc.com,
- conor.dooley@microchip.com, ajones@ventanamicro.com,
- linus.walleij@linaro.org, nathan@kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] riscv: optimize string functions and add kunit
- tests
-Message-ID: <20260123101602.111c6210@pumpkin>
-In-Reply-To: <26d08954-2826-4c48-a540-6e0857faf5ec@kylinos.cn>
-References: <20260120065852.166857-1-jiangfeng@kylinos.cn>
-	<aW8whGcAR0x6FSRJ@smile.fi.intel.com>
-	<691a0183-6f41-4956-82da-abb69a449919@kylinos.cn>
-	<CAHp75Ve_pyVm430FL=aEAw1Cnf-92T3Y23qh7pEOaMYMp9iyvw@mail.gmail.com>
-	<20260121105717.04853c5d@pumpkin>
-	<26d08954-2826-4c48-a540-6e0857faf5ec@kylinos.cn>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K88/W9CP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD424C4CEF1;
+	Fri, 23 Jan 2026 10:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769164920;
+	bh=HLrViGVqTC3/G0gsvexqTtXtxspwQxSEDDyxgTv7J0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K88/W9CP38VNlsvsGY4cizpdtUmca1k9hFtwHK6PhgaPrnWH2CuKqJNx2ce/1927M
+	 z23lyd1zE8UmSTz14bfD0pUa+rz3qzLSS3Gejq+50Di+KpU/4d5+UwtA2hPwwcKCQw
+	 kfIBJcXPFtTQrxF11z1ZKTAgs+14yWjmqzr6G8gaUCSb7GY8R+LvDYI/JTEXRpG4xY
+	 T563JVc+Z6dfwEZml6RKjN6FWTXb0TDprK6z1oRVCxsnbpX7vAUDYAHQCWqGTqzWW/
+	 dIY1/0GXJC4d0etgGilNFSXTaohdoNdfOvXOnorf7evKJdma7+vkcUuZfBooAn9fJp
+	 yREIVdvmIZieg==
+Date: Fri, 23 Jan 2026 11:41:54 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-nvme@lists.infradead.org, Damien Le Moal <dlemoal@kernel.org>,
+	imx@lists.linux.dev
+Subject: Re: [PATCH RFT 4/5] dmaengine: dw-edma: Dynamitc append new request
+ during dmaengine running
+Message-ID: <aXNQcowVEMaE1xr5@ryzen>
+References: <20260109-edma_dymatic-v1-0-9a98c9c98536@nxp.com>
+ <20260109-edma_dymatic-v1-4-9a98c9c98536@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260109-edma_dymatic-v1-4-9a98c9c98536@nxp.com>
 
-On Fri, 23 Jan 2026 11:12:00 +0800
-Feng Jiang <jiangfeng@kylinos.cn> wrote:
+On Fri, Jan 09, 2026 at 03:13:28PM -0500, Frank Li wrote:
+> This use PCS-CCS-CB-TCB Producer-Consumer Synchronization module, which
+> support append new DMA request during dmaengine runnings.
+> 
+> Append new request during dmaengine runnings.
+> 
+> But look like hardware have bug, which missed doorbell when engine is
+> running. So add workaround to push doorbelll again when found engine stop.
+> 
+> Get more than 10% performance gain.
+> 
+> The before
+>   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
+> 
+> After
+>   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=38.8k, BW=151MiB/s (159MB/s)
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
 
->...
-> I am still exploring some of the finer points of these low-level performance
-> trade-offs, so your input is very helpful. I will definitely spend some time
-> studying this further and experiment with the approaches you mentioned.
+Hello Frank,
 
-You can spend a long time micro-optimising small functions.
-I know, I've done it....
-Then you need to test on as many cpu variants as you can find.
+First of all, I hope that your:
+[PATCH v3 0/9] dmaengine: Add new API to combine configuration and descriptor preparation
+series will make it to the upcoming 6.20/7.0 merge window.
 
-	David
+
+This RFT series however breaks pci-epf-test:
+
+Before:
+#  RUN           pci_ep_data_transfer.dma.READ_TEST ...
+#            OK  pci_ep_data_transfer.dma.READ_TEST
+ok 14 pci_ep_data_transfer.dma.READ_TEST
+#  RUN           pci_ep_data_transfer.dma.WRITE_TEST ...
+#            OK  pci_ep_data_transfer.dma.WRITE_TEST
+ok 15 pci_ep_data_transfer.dma.WRITE_TEST
+
+After:
+#  RUN           pci_ep_data_transfer.dma.READ_TEST ...
+# READ_TEST: Test terminated by timeout
+#          FAIL  pci_ep_data_transfer.dma.READ_TEST
+not ok 14 pci_ep_data_transfer.dma.READ_TEST
+#  RUN           pci_ep_data_transfer.dma.WRITE_TEST ...
+# WRITE_TEST: Test terminated by timeout
+#          FAIL  pci_ep_data_transfer.dma.WRITE_TEST
+not ok 15 pci_ep_data_transfer.dma.WRITE_TEST
+
+
+After a bisect, first bad commit:
+commit 352fd8d5ed468ea616eb4974b5ac19203528b207
+Author: Frank Li <Frank.Li@nxp.com>
+Date:   Fri Jan 9 15:13:28 2026 -0500
+
+    dmaengine: dw-edma: Dynamitc append new request during dmaengine running
+
+
+
+Kind regards,
+Niklas
