@@ -1,203 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from forward101a.mail.yandex.net (forward101a.mail.yandex.net [178.154.239.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4364E22D78A;
-	Fri, 23 Jan 2026 11:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53B9284662
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Jan 2026 11:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769166137; cv=none; b=lv50DAEuPZv0tGbe1DM5kvnlbQ3vFEa3JQDyeA+TyLasNoPLRrW4u2lxvjR154B7idDXFrIQQCJPcVqSnHuTWdkFxVwINCmQjxXpNge+bWHXS9xpR8g6UvFsLknIGypvE/xsNRCUkuqLNirqjV4FSVZVIIKPPrrMmwRYBwGvO18=
+	t=1769168887; cv=none; b=iJHOaaAID56y55Ksgvm2yXBZbGBKH2wOwFopasCVCh7aX4VVYjO6sIyqBPf8PIUltd5gnRXTeK3tuScv3CKWjW0paYwQx6+aedkScMVrFRI7nYstFAu/IoIvT9Y3iI4UKej3/bvT4KspN5XnvNJS48/IAW3PX/QS6hHTiFEeIls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769166137; c=relaxed/simple;
-	bh=TnAJh/kYI3vezbRFK4R/V29ptgvspkFfTPz2BdA1TY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1X6fkl4RncSkw5eDSKjbLvmxifaoAg187w3IjyM0Ficihp3VWsGq+eKLsDS4WKx79QaNKdpDcIB+PqqnSr02pnUG8q4bpCR4S0jOdfXeDGy3XRQG65k2DPBDkqip+3HK6KOh4gE/Jl9q/hk9zbi/XDjQI9m+/JZU53+h4bpN6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FTdxvXIj; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1769168887; c=relaxed/simple;
+	bh=Feef3qYcIkrxYsZ32ddrG0AHGnZKsavwS+ecFL2lU4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nUFp/nRAqNuTBXkWuArzAwaZ+5eGY8MCE1MvmE+HCxfkq9ttmKaQrhs++XsIxXxiW+Ce41vWhSiHXXcXOBBhdGm+oPhqYRHIkd4mV3LnN5EaHiNF0L7gfC0ZWvxdffTYEiRt8U7VzQC+CNiSIn43P/+hEyDvmKNKmIBekxaA7gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=P2Y3itzI; arc=none smtp.client-ip=178.154.239.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FTdxvXIj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769166133; x=1800702133;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TnAJh/kYI3vezbRFK4R/V29ptgvspkFfTPz2BdA1TY0=;
-  b=FTdxvXIjGp32+PdhXsUOF/XUqDyOOTLaV4Yyx5Mo00BoY80tbXk+SXy9
-   agHzexJ5ZoD8k0IppTn1PyhFtl5nerXJ9yt/zulOqZIOYBgAtlPYGg/fN
-   qyI2pF9XX8qSeeLKKYb5afcBJynNoZ1tLDALVd4jig+IcXbdjWWtL9pod
-   z1P9LBNRwK5rbik+JvkVk9vYtvyTDczHw/jRRjnue9QOLzweic3iE6S7S
-   AzPhkfMQKqED3h3xwxQ+FbwzwYT+BTWtyIPRu1G2CvVE3Dqmwfqd7FmaO
-   YTk5Xr/i7P1u/ES1SbyafYlCUyp8O7bY62NrAPG2JLtxN7golmdX/bWeN
-   A==;
-X-CSE-ConnectionGUID: d8PssuKzSZul9RvyrnaK8g==
-X-CSE-MsgGUID: MXvX9FKnTLOcsuTedydodQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="74270797"
-X-IronPort-AV: E=Sophos;i="6.21,248,1763452800"; 
-   d="scan'208";a="74270797"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2026 03:02:12 -0800
-X-CSE-ConnectionGUID: dBmA4e4xR6eGC+YW+e7q0Q==
-X-CSE-MsgGUID: spZj5O1RSnOzbrBu0gQN2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,248,1763452800"; 
-   d="scan'208";a="229961255"
-Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.112])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2026 03:02:09 -0800
-Date: Fri, 23 Jan 2026 13:02:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Feng Jiang <jiangfeng@kylinos.cn>
-Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, akpm@linux-foundation.org, kees@kernel.org,
-	andy@kernel.org, ebiggers@kernel.org, martin.petersen@oracle.com,
-	mingo@kernel.org, charlie@rivosinc.com, conor.dooley@microchip.com,
-	samuel.holland@sifive.com, linus.walleij@linaro.org,
-	nathan@kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 4/8] lib/string_kunit: add performance benchmark for
- strlen()
-Message-ID: <aXNVL318XTTQ3tsU@smile.fi.intel.com>
-References: <20260123085841.212468-1-jiangfeng@kylinos.cn>
- <20260123085841.212468-5-jiangfeng@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="P2Y3itzI"
+Received: from mail-nwsmtp-smtp-production-main-94.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-94.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:290e:0:640:f317:0])
+	by forward101a.mail.yandex.net (Yandex) with ESMTPS id B631580C97;
+	Fri, 23 Jan 2026 14:47:56 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-94.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id rlbvWNAHGiE0-mfxXO72s;
+	Fri, 23 Jan 2026 14:47:56 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1769168876; bh=5fnRAXxxrq8dO6cBKof2PfeoSYRkGBRTWntfWaK6J8U=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=P2Y3itzISQsD2JHglCDYHWf47nRAQxUgxHxf6ZQqnmtiKRbi++rlVqa92xJmOA73/
+	 hKP1eUJNMSJJF3/9foU7OmRF2iCT2RQ6PgTVAzAazqeHvVF28niQq7lM6gY3v2QK1B
+	 F5G666snoRyzDh1JxSF6zbD3YH8BN5JwCwqqz53I=
+Authentication-Results: mail-nwsmtp-smtp-production-main-94.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH v2 1/3] lib: fix _parse_integer_limit() to handle overflow
+Date: Fri, 23 Jan 2026 14:46:45 +0300
+Message-ID: <20260123114647.1606335-2-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260123114647.1606335-1-dmantipov@yandex.ru>
+References: <20260123114647.1606335-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260123085841.212468-5-jiangfeng@kylinos.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 23, 2026 at 04:58:37PM +0800, Feng Jiang wrote:
-> Introduce a benchmarking framework to the string_kunit test suite to
-> measure the execution efficiency of string functions.
-> 
-> The implementation is inspired by crc_benchmark(), measuring throughput
-> (MB/s) and latency (ns/call) across a range of string lengths. It
-> includes a warm-up phase, disables preemption during measurement, and
-> uses a fixed seed for reproducible results.
-> 
-> This framework allows for comparing different implementations (e.g.,
-> generic C vs. architecture-optimized assembly) within the KUnit
-> environment.
-> 
-> Initially, provide a benchmark for strlen().
+In '_parse_integer_limit()', replace native integer arithmetic with
+'check_mul_overflow()' and 'check_add_overflow()' to check whether
+an intermediate result goes out of range, and denote such a case
+with ULLONG_MAX. Adjust comment to kernel-doc style as well.
 
-...
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+v2: initial version to join the series
+---
+ lib/kstrtox.c | 32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
-> +static void *alloc_max_bench_buffer(struct kunit *test,
-> +		const size_t *lens, size_t count, size_t *buf_len)
-> +{
-> +	size_t i, max_len = 0;
-> +	void *buf;
-
-> +	for (i = 0; i < count; i++) {
-> +		if (max_len < lens[i])
-> +			max_len = lens[i];
-> +	}
-
-	size_t max_len = 0;
-	void *buf;
-
-	for (size_t i = 0; i < count; i++)
-		max_len = max(lens[i], max_len);
-
-> +	/* Add space for NUL character */
-> +	max_len += 1;
-> +
-> +	buf = kunit_kzalloc(test, max_len, GFP_KERNEL);
-> +	if (!buf)
-> +		return NULL;
-> +
-> +	if (buf_len)
-> +		*buf_len = max_len;
-> +
-> +	return buf;
-> +}
-
-...
-
-> +#define STRING_BENCH(iters, func, ...)					\
-> +({									\
-> +	/* Volatile function pointer prevents dead code elimination */	\
-> +	typeof(func) (* volatile __func) = (func);			\
-> +	size_t __bn_iters = (iters);					\
-> +	size_t __bn_warm_iters;						\
-
-> +	size_t __bn_i;							\
-
-Define it inside for-loop:s.
-
-> +	u64 __bn_t;							\
-> +									\
-> +	__bn_warm_iters = max(__bn_iters / 10, 50U);			\
-> +									\
-> +	for (__bn_i = 0; __bn_i < __bn_warm_iters; __bn_i++)		\
-> +		(void)__func(__VA_ARGS__);				\
-> +									\
-> +	preempt_disable();						\
-> +	__bn_t = ktime_get_ns();					\
-> +	for (__bn_i = 0; __bn_i < __bn_iters; __bn_i++)			\
-> +		(void)__func(__VA_ARGS__);				\
-> +	__bn_t = ktime_get_ns() - __bn_t;				\
-> +	preempt_enable();						\
-> +	__bn_t;								\
-> +})
-
-...
-
-> +#define STRING_BENCH_BUF(test, buf_name, buf_size, func, ...)		\
-> +do {									\
-> +	size_t buf_size, _bn_i, _bn_iters, _bn_size = 0;		\
-> +	u64 _bn_t, _bn_mbps = 0, _bn_lat = 0;				\
-> +	char *buf_name, *_bn_buf;					\
-
-> +	if (!IS_ENABLED(CONFIG_STRING_KUNIT_BENCH))			\
-> +		kunit_skip(test, "not enabled");			\
-
-Hmm... Since it's a macro anyway, I think the old style is okay:
-
-
-#if IS_ENABLED(CONFIG_STRING_KUNIT_BENCH)
-#define STRING_BENCH_BUF(test, buf_name, buf_size, func, ...)		\
-	...
-#else
-#define STRING_BENCH_BUF(test, buf_name, buf_size, func, ...)		\
-	kunit_skip(test, "not enabled");				\
-#endif
-
-But check it that it doesn't produce warnings in `make W=1` case.
-
-> +	_bn_buf = alloc_max_bench_buffer(test, bench_lens,		\
-> +			ARRAY_SIZE(bench_lens), &_bn_size);		\
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, _bn_buf);			\
-> +									\
-> +	fill_random_string(_bn_buf, _bn_size);				\
-> +									\
-> +	for (_bn_i = 0; _bn_i < ARRAY_SIZE(bench_lens); _bn_i++) {	\
-> +		buf_size = bench_lens[_bn_i];				\
-> +		buf_name = _bn_buf + _bn_size - buf_size - 1;		\
-> +		_bn_iters = STRING_BENCH_WORKLOAD / max(buf_size, 1U);	\
-> +									\
-> +		_bn_t = STRING_BENCH(_bn_iters, func, ##__VA_ARGS__);	\
-> +									\
-> +		if (_bn_t > 0) {					\
-> +			_bn_mbps = (u64)(buf_size) * _bn_iters * 1000;	\
-
-"KILO"? Or "(MEGA/KILO)"? I'm puzzled with this 1000 multiplier.
-
-> +			_bn_mbps = div64_u64(_bn_mbps, _bn_t);		\
-> +			_bn_lat = div64_u64(_bn_t, _bn_iters);		\
-> +		}							\
-> +		kunit_info(test, "len=%zu: %llu MB/s (%llu ns/call)\n",	\
-> +				buf_size, _bn_mbps, _bn_lat);		\
-> +	}								\
-> +} while (0)
-
+diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+index bdde40cd69d7..a416cdafee37 100644
+--- a/lib/kstrtox.c
++++ b/lib/kstrtox.c
+@@ -39,20 +39,26 @@ const char *_parse_integer_fixup_radix(const char *s, unsigned int *base)
+ 	return s;
+ }
+ 
+-/*
+- * Convert non-negative integer string representation in explicitly given radix
+- * to an integer. A maximum of max_chars characters will be converted.
++/**
++ * _parse_integer_limit - Convert integer string representation to an integer
++ * @s: Integer string representation
++ * @base: Radix
++ * @p: Where to store result
++ * @max_chars: Maximum amount of characters to convert
++ *
++ * Convert non-negative integer string representation in explicitly given
++ * radix to an integer. If overflow occurs, value at @p is set to ULLONG_MAX.
+  *
+- * Return number of characters consumed maybe or-ed with overflow bit.
+- * If overflow occurs, result integer (incorrect) is still returned.
++ * This function is the workhorse of other string conversion functions and
++ * you do not expect to use it explicitly. Consider kstrto*() famlily instead.
+  *
+- * Don't you dare use this function.
++ * Return: Number of characters consumed, maybe ORed with overflow bit
+  */
+ noinline
+ unsigned int _parse_integer_limit(const char *s, unsigned int base, unsigned long long *p,
+ 				  size_t max_chars)
+ {
+-	unsigned long long res;
++	unsigned long long tmp, res;
+ 	unsigned int rv;
+ 
+ 	res = 0;
+@@ -72,14 +78,16 @@ unsigned int _parse_integer_limit(const char *s, unsigned int base, unsigned lon
+ 		if (val >= base)
+ 			break;
+ 		/*
+-		 * Check for overflow only if we are within range of
+-		 * it in the max base we support (16)
++		 * Accumulate result if no overflow detected.
++		 * Otherwise just consume valid characters.
+ 		 */
+-		if (unlikely(res & (~0ull << 60))) {
+-			if (res > div_u64(ULLONG_MAX - val, base))
++		if (res != ULLONG_MAX) {
++			if (check_mul_overflow(res, base, &tmp) ||
++			    check_add_overflow(tmp, val, &res)) {
++				res = ULLONG_MAX;
+ 				rv |= KSTRTOX_OVERFLOW;
++			}
+ 		}
+-		res = res * base + val;
+ 		rv++;
+ 		s++;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.52.0
 
