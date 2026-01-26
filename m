@@ -1,152 +1,115 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89676343D7B;
-	Mon, 26 Jan 2026 16:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5288233B6FD
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 16:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769445480; cv=none; b=QHoUicew+GPs44YVeIYAxGKH8u58G4C5pDNvBc39k3qbLnNFwCQkhYvO/lxGdBQfg+4D7eX4Ygw8bR88U6H+Gnb+wAS5Yo+aN3lrz6rBuI0QcqNNyC+1CMae1V1+fojAj/doTCdEUk4MSoaPJNaZw/9tMj8+ceIsmf/gHxNdYZw=
+	t=1769445560; cv=none; b=P46JoDw1DzdkFl4xE61Fh7jSeQB3lzfb0llD3fy07BU1jttwLevPd+q9IL6DAglI7aPOaiCyPC45KAaI4PrCCS/h0MD1ROhAmjSFeHdY5f0Fti0HkjKjW9CrxAWwW4QiJ4xXE/VI86MgAPedJrS+8soL5AGAidmUk2qQWxVNwFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769445480; c=relaxed/simple;
-	bh=D9ryeuRZr0MhL6fUTrHcnbiVBwra9ZAPtHXzOCIU2KQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uN4SaRDkloYpG6n20LOlrmxpTBvL1mAMZ9A/UV6U2Ykul/wv/dcCJKPmgaktuei8B1g1aGsRS7DawObianSoV6qXcUUCgCGsrbsQ1tUYX+fKmf5jwfcMGuxxlORb1vG+bu1v/FVGVQhV4uK346Ab/Zyf7n8MIYo6KnJL/vmIYEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=rE2zOUt9; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=aqNjmx3O; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1769445560; c=relaxed/simple;
+	bh=RYLM3lt9xeMHUKbEsg+msftPAR6dC6I6uCUgqP0jxyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eE0gLBHNnn998pSt8DtqtIip7VbyoALF3emQgE/JYk8NnrEiEFd62NavzmyJbW/eMcX5HCrbVAAfB+NzSb5oABy5w5BCu51QNKC+TtoM27jYzN3ag9zqsopfb5yfF5oWVrq1v2y56yuk1D8Xxd8y3uEISy6bo/61+PnCTdGzq2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WHihyQti; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="rE2zOUt9";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="aqNjmx3O"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Subject:Date:From; t=1769445295; bh=ubjYYTc4TEz/fEd+reZE53c
-	vQyw9JCOP3AuwDCLc74I=; b=rE2zOUt9eeHmG32oDEp8sW6aR9csrmCtC7/8Vf3OBq8wEFZVRF
-	bcXFLUb3szpbsL1S+WJk6NbF/sjdxiUgTulsMtCUUluTv0fDzQ60Ta9qKBSbxO2JIn7GTK1vQOV
-	eTXFyVG0Cv0hOOQuEldROBEMttwro3G+xWLxf9jOMzPAgnGiaa2rTXtOrEpGooo/HtM45/Au5At
-	P/PpaSgON/6HhsxYYGVJ+fPiOMzxELvPJnXQjNLYbFW1zyFoFvCnMvcXiso5/fANoRX6DKypmdd
-	OSa5+hl6RlA5WtpUghtKmjVOdeoqb9irIsUmlnkkM/TlCN9gkrdk8SwypJb8xG/Mxiw==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Subject:Date:From; t=1769445295; bh=ubjYYTc4TEz/fEd+reZE53c
-	vQyw9JCOP3AuwDCLc74I=; b=aqNjmx3OGFa/qeDm3RZgkMkKJRmg/dnxrfjCpigs1YxQ8JEcct
-	k/7q+aMMwPoklSOuBwoyo1Jk6RXCcyuFIFDQ==;
-From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Date: Mon, 26 Jan 2026 17:34:52 +0100
-Subject: [PATCH v3 2/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
- reserved memory ranges
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WHihyQti"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769445558; x=1800981558;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RYLM3lt9xeMHUKbEsg+msftPAR6dC6I6uCUgqP0jxyo=;
+  b=WHihyQtiBYiDvFDAps/MExhWSyKXguTFzf3VMfWNHu6ZHZbqLCfQjo03
+   vtS8/+A19tRC3OwDjb7JLolzhT0sazJvMB3r3iWyAkbPa0UnxMJtNlc0Y
+   NKXySRlySeXMEXVcS4XloYtQt5po353WJAgQY67/dR/Ow9cF+UTdKsTMn
+   RJhGisYXLRgQGH+mnVvH15d33vbTDLKSkZU5NhPzaWIcrYSXhvdctMHc9
+   T1DBfhN0YNH4vdzZLq9AbX/HS5OQk+7sFD8PeRRPbQUCJiHDDroCtVinN
+   wnbq90+3kj+R5CUhrJj8g+F7x0W1aL/41rak51kTgtz5847Ey1OV9xM9m
+   w==;
+X-CSE-ConnectionGUID: l0HWzt35RI+XisUcp0dUtA==
+X-CSE-MsgGUID: 18kS6fprR/iQjrhR8LBvrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="80926519"
+X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
+   d="scan'208";a="80926519"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:39:17 -0800
+X-CSE-ConnectionGUID: gLOUzqhkS+mJNklyGm9p3Q==
+X-CSE-MsgGUID: FYZpJraXSJau+QAAVFNgfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
+   d="scan'208";a="211818766"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.122])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:39:16 -0800
+Date: Mon, 26 Jan 2026 18:39:13 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] lib: fix _parse_integer_limit() to handle overflow
+Message-ID: <aXeYsUlxibMuYflx@smile.fi.intel.com>
+References: <20260126162059.357467-1-dmantipov@yandex.ru>
+ <20260126162059.357467-2-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260126-xiaomi-willow-v3-2-aad7b106c311@mainlining.org>
-References: <20260126-xiaomi-willow-v3-0-aad7b106c311@mainlining.org>
-In-Reply-To: <20260126-xiaomi-willow-v3-0-aad7b106c311@mainlining.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Gabriel Gonzales <semfault@disroot.org>, 
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
- Biswapriyo Nath <nathbappai@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- linux@mainlining.org, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1769445293; l=2540;
- i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=D9ryeuRZr0MhL6fUTrHcnbiVBwra9ZAPtHXzOCIU2KQ=;
- b=PCcPD+2fSyXZBVdzEtfJfWcTqCZDJ5RGuIpKsg+E2VSKM5D4bArIbZddFDKkLcr5RqaK6wE8g
- 4I91/55mL/HAJOW/9HRdGB2OP5oOE/0UrkDyfJFh+LcZ8rzMv3MiEft
-X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
- pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260126162059.357467-2-dmantipov@yandex.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The device was crashing on high memory load because the reserved memory
-ranges was wrongly defined. Correct the ranges for avoid the crashes.
-Change the ramoops memory range to match with the values from the recovery
-to be able to get the results from the device.
+On Mon, Jan 26, 2026 at 07:20:57PM +0300, Dmitry Antipov wrote:
+> In '_parse_integer_limit()', replace native integer arithmetic with
+> 'check_mul_overflow()' and 'check_add_overflow()' to check whether
+> an intermediate result goes out of range, and denote such a case
+> with ULLONG_MAX, thus making the function more similar to standard
+> C library's 'strtoull()'. Adjust comment to kernel-doc style as well.
 
-Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
----
- arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts | 41 ++++++++++++++++-------
- 1 file changed, 29 insertions(+), 12 deletions(-)
+...
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-index bf03226a6f85..d5e5abdb3b2f 100644
---- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-+++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-@@ -13,6 +13,12 @@
- #include "sm6125.dtsi"
- #include "pm6125.dtsi"
- 
-+/delete-node/ &adsp_pil_mem;
-+/delete-node/ &cont_splash_mem;
-+/delete-node/ &gpu_mem;
-+/delete-node/ &ipa_fw_mem;
-+/delete-node/ &ipa_gsi_mem;
-+
- / {
- 	model = "Xiaomi Redmi Note 8";
- 	compatible = "xiaomi,ginkgo", "qcom,sm6125";
-@@ -36,28 +42,39 @@ framebuffer0: framebuffer@5c000000 {
- 	};
- 
- 	reserved-memory {
--		debug_mem: debug@ffb00000 {
--			reg = <0x0 0xffb00000 0x0 0xc0000>;
-+		adsp_pil_mem: adsp_pil_mem@55300000 {
-+			reg = <0x0 0x55300000 0x0 0x2200000>;
- 			no-map;
- 		};
- 
--		last_log_mem: lastlog@ffbc0000 {
--			reg = <0x0 0xffbc0000 0x0 0x80000>;
-+		ipa_fw_mem: ipa_fw_mem@57500000 {
-+			reg = <0x0 0x57500000 0x0 0x10000>;
- 			no-map;
- 		};
- 
--		pstore_mem: ramoops@ffc00000 {
--			compatible = "ramoops";
--			reg = <0x0 0xffc40000 0x0 0xc0000>;
--			record-size = <0x1000>;
--			console-size = <0x40000>;
--			pmsg-size = <0x20000>;
-+		ipa_gsi_mem: ipa_gsi_mem@57510000 {
-+			reg = <0x0 0x57510000 0x0 0x5000>;
-+			no-map;
- 		};
- 
--		cmdline_mem: memory@ffd00000 {
--			reg = <0x0 0xffd40000 0x0 0x1000>;
-+		gpu_mem: gpu_mem@57515000 {
-+			reg = <0x0 0x57515000 0x0 0x2000>;
- 			no-map;
- 		};
-+
-+		framebuffer@5c000000 {
-+			reg = <0x0 0x5c000000 0x0 (2340 * 1080 * 4)>;
-+			no-map;
-+		};
-+
-+		/* Matching with recovery values to be able to get the results. */
-+		ramoops@61600000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0x61600000 0x0 0x400000>;
-+			record-size = <0x80000>;
-+			pmsg-size = <0x200000>;
-+			console-size = <0x100000>;
-+		};
- 	};
- 
- 	extcon_usb: extcon-usb {
+> -		if (unlikely(res & (~0ull << 60))) {
+> -			if (res > div_u64(ULLONG_MAX - val, base))
+
+Interestingly, but the original check was made to improve performance. We don't
+need to worry about overflow unless we close to it. It also has a hint to the
+compiler to take branch as a slow path.
+
+> +		if (res != ULLONG_MAX) {
+> +			/*
+> +			 * tmp = res * base;
+> +			 * if (overflow)
+> +			 *	res = ULLONG_MAX;
+> +			 * else {
+> +			 *	res = tmp + val;
+> +			 *	if (overflow)
+> +			 *		res = ULLONG_MAX;
+> +			 * }
+> +			 */
+
+This looks like a left over. Use plain English to explain what's going on
+here. But I think this should be only done for the last a couple of iterations
+only.
+
+> +			if (check_mul_overflow(res, base, &tmp) ||
+> +			    check_add_overflow(tmp, val, &res)) {
+> +				res = ULLONG_MAX;
+>  				rv |= KSTRTOX_OVERFLOW;
+> +			}
+>  		}
+> -		res = res * base + val;
+>  		rv++;
+>  		s++;
+>  	}
 
 -- 
-2.52.0
+With Best Regards,
+Andy Shevchenko
+
 
