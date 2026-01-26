@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF8F78F26
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 12:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B5978F26
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 12:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769431763; cv=none; b=BMsTtDP3xfSbVLaE0gkPCEAsivZ9/KDpkSbpV/4QoeBpXc0fxJyfXZNINL2O2vgA91H09cqakp12fM2tjNtb1Yd2w7qdXA8mrBWw6XfUL60pu72+YUGFS3jt/qCxuswbKWXI51Taj44eFxnjEDS8tnJADKTfmkwPQvlOoqgIf5M=
+	t=1769431776; cv=none; b=U/IC+VjEBDmraUN+QAyj6YcZYYCAFflqJixJD9i1zZ1Wi85UNE6lupXlgkzW5DROHsX2/A313qYD073FUTs/2Q6UQdk0dUqEoApzKta7nilIS7RuiS+4nSPPm9pFqmn0T9l8TqzBI+BJ6T56ZI+nSM2Lmw/We3BeOVqlJI9tKgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769431763; c=relaxed/simple;
-	bh=9HtGqLlKfftZYVzcBlczjBJD+WQHkJvDWpySMdmD6eQ=;
+	s=arc-20240116; t=1769431776; c=relaxed/simple;
+	bh=k0mib85hOBmpFUagG96UR19CoyUQFqA62etwYe2fwSg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rF5oeyBwlFqeUwV0Zh3pRIbODzjsvgysE9pxSnwagipE6FxT3OqqBF3CvBapGVvpURpbSATGZJHpyGbKdAUTjo0DDB1x1f86XiN5vlfiM+M6RSflL1reZn/QdR9DBkSDD8nij45xe4M1WJCUG9QsOxEauToGDnckLKeE7HBlcLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCrVoHqC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition:In-Reply-To; b=pxfDAukY9WmqumFHm1VsHz5GxrpxBJrZqtQucJMxQk9BntG2fxsb2x/kqFUd5YLYm/GUnQ6l3IGs5Qw/vABCW1mP+ePtWN+dxBVtctGMEFNHqWQa5IB5m8lW9nC3qpsqZLQKZs+nsQnlmbmKbSRmzjVtLe6lwBLjuRF0/dfkTWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6U0RbTP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCrVoHqC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABB9C116C6;
-	Mon, 26 Jan 2026 12:49:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6U0RbTP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6044CC116C6;
+	Mon, 26 Jan 2026 12:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769431763;
-	bh=9HtGqLlKfftZYVzcBlczjBJD+WQHkJvDWpySMdmD6eQ=;
+	s=k20201202; t=1769431776;
+	bh=k0mib85hOBmpFUagG96UR19CoyUQFqA62etwYe2fwSg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lCrVoHqCf8QUmMOTgZhQ+UTSO1XfW4phQqRqA4vayXhS6gmjjIXuwAwS2NW+kHkYy
-	 0bFNIoLIAdbhlSehBlidH6ACO2DCcxaGKtawT3vEckmqSOXiD2dNREWtYVDNoXTF4y
-	 8FImXK4GPZEvbPypeSJTs7Bv3PPSRGvED+SPDSu2sD9dnBElrs6lLoQwFPx7ZWJK01
-	 IjbfwoBA6k+ThkvjjiUGpIBTaRYF39MB8wTp6/lJAE15TKWaqqjMx8REUPktMJvV3e
-	 tQj3UkRB9emdEA0PULQjMw5lMOwPBk4mXjx/5+cV7g1u9UowyjktJXZzLortV27IBk
-	 Ic9sdeFYbgDjw==
-Date: Mon, 26 Jan 2026 13:49:16 +0100
+	b=t6U0RbTPYxd89LlcF3tyuKr/tZrdueLp7OwD+EgWeqxg5jGpXHj567ogiSfAPYKTn
+	 ZdXLjPN9nv9g8pGK5KENHgK+ZtwTixCqh5MRMsh7DSWyWBJswDaFvaVkVZdqE5epr8
+	 Id6LNz23GBtpeC3VKlMkKhJy7P/McglDmNoo6/AEedrTFfeVWR64sqMhqjWUuTLOZi
+	 FaH4NvXYJB9HACDiLUeI+RFZag6b6+9dbhb/WD/VBkW+A9ZZ+3G+fwU9pdK1OQZpV+
+	 7n1WagNCydhmFnxyhzs59283W8VYDdW24S+tmRk5r637odhXvwObUwkMsYgTsHBzxZ
+	 th8HaU4UhuU8w==
+Date: Mon, 26 Jan 2026 13:49:29 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: Martin Uecker <uecker@tugraz.at>, 
 	Christopher Bazley <chris.bazley.wg14@gmail.com>, Alex Celeste <alexg.nvfp@gmail.com>, 
@@ -41,8 +41,8 @@ Cc: Douglas McIlroy <douglas.mcilroy@dartmouth.edu>,
 	"Basil L. Contovounesios" <basil@contovou.net>, "Jason A. Donenfeld" <jason@zx2c4.com>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, onf <onf@disroot.org>, Rich Felker <dalias@libc.org>, 
 	linux-hardening@vger.kernel.org, Alejandro Colomar <alx@kernel.org>
-Subject: [RFC v3 5/6] alx-0081r2 - array parameters of 0 elements
-Message-ID: <aXdiyLn3vxV2P807@devuan>
+Subject: [RFC v3 6/6] alx-0080r1 - [static] without array length expression
+Message-ID: <aXdi1kl_wHMFJRFQ@devuan>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,12 +50,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="njsnpqzzxxn5y6r3"
+	protocol="application/pgp-signature"; boundary="m62rqarc6oh64aib"
 Content-Disposition: inline
 In-Reply-To: <aXdhh1r7ePA5SrIE@devuan>
 
 
---njsnpqzzxxn5y6r3
+--m62rqarc6oh64aib
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -73,23 +73,16 @@ Cc: Douglas McIlroy <douglas.mcilroy@dartmouth.edu>,
 	"Basil L. Contovounesios" <basil@contovou.net>, "Jason A. Donenfeld" <jason@zx2c4.com>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, onf <onf@disroot.org>, Rich Felker <dalias@libc.org>, 
 	linux-hardening@vger.kernel.org, Alejandro Colomar <alx@kernel.org>
-Subject: [RFC v3 5/6] alx-0081r2 - array parameters of 0 elements
-Message-ID: <aXdiyLn3vxV2P807@devuan>
+Subject: [RFC v3 6/6] alx-0080r1 - [static] without array length expression
+Message-ID: <aXdi1kl_wHMFJRFQ@devuan>
 MIME-Version: 1.0
 In-Reply-To: <aXdhh1r7ePA5SrIE@devuan>
 
 Name
-	alx-0081r2 - array parameters of 0 elements
+	alx-0080r1 - [static] without array length expression
 
 Principles
-	-  Uphold the character of the language
-	-  Codify existing practice to address evident deficiencies
-	-  Enable secure programming
-
-	And from previous charters:
-
-	C23:
-	-  APIs should be self-documenting when possible.
+	-  Keep the language small and simple
 
 Category
 	Language; array parameters.
@@ -100,50 +93,37 @@ Author
 	Cc: Martin Uecker <uecker@tugraz.at>
 	Acked-by: Doug McIlroy
 	Acked-by: Andrew Clayton <ac@sigsegv.uk>
-	Cc: Alex Celeste <alexg.nvfp@gmail.com>
 
 History
-	<https://www.alejandro-colomar.es/src/alx/alx/std/wg14/alx-0081.git/>
+	<https://www.alejandro-colomar.es/src/alx/alx/std/wg14/alx-0080.git/>
 
 	r0 (2026-01-25):
 	-  Initial draft.
 
-	r1 (2026-01-25):
-	-  Array length expressions shall be nonnegative.
-
-	r2 (2026-01-26):
+	r1 (2026-01-26):
 	-  Acked-by.
-	-  Remove 'See also'.
+	-  tfix
 
 Abstract
-	Function parameters that have zero elements are common and safe.
-	Let's acknowledge this, and allow array syntax for them.
+	'static' in [static n] means that the argument shall be
+	non-null.  That is entirely independent of the length of the
+	array parameter, so it doesn't make sense requiring the length
+	to be specified.  Lift that restriction.
 
 Discussion
-	The following code is valid:
+	While the standard, for a long time, claimed that 'static' in
+	[static n] was about the length of the array, it is well known
+	that this is only true in paper.  In practice, programmers use
+	[n] with that meaning.
 
-		static inline wchar_t
-		my_wmemset(size_t n, wchar_t *wcs, wchar_t wc)
-		{
-			return wmemset(wcs, wc, n);
-		}
+	'static' in [static n] has a different meaning (see also
+	alx-0079): it says that the argument shall be non-null.
 
-		wchar_t  a[42];
-
-		my_wmemset(0, a + 42, L'x');
-
-	It would be natural to be able to declare my_wmemset() as
-
-		wchar_t my_wmemset(size_t n, wchar_t wcs[static n], wchar_t);
-
-	However, that would result in UB for the call above, as the
-	number of elements isn't allowed to be zero.  That restriction
-	is superfluous, and harmful; let's remove it.
-
-Future directions
-	I'd like to allow any arrays of zero elements, but that needs
-	to be more careful than for array parameters.  A future proposal
-	will address that.
+See also
+	<https://www.alejandro-colomar.es/src/alx/alx/std/wg14/alx-0079.git/>
+	alx-0079 ("[static n] =3D=3D non-null [n]")
+	alx-0079 should be applied before alx-0080.  Otherwise, the
+	semantics would be undefined.
 
 Comments
 	On 2026-01-25T18:19:02-0500, Douglas McIlroy wrote:
@@ -163,79 +143,48 @@ Comments
 Proposed wording
 	Based on N3685.
 
-    6.7.7.3  Array declarators
-	@@ Constraints, p1
-	 In addition to optional type qualifiers and the keyword static,
-	 the [ and ] can delimit an expression or *.
-	 If they delimit an expression,
-	 called the array length expression,
-	 the expression shall have an integer type.
-	 If the expression is a constant expression,
-	-it shall have a value greater than zero.
-	+it shall have a nonnegative value.
-	+An array length expression
-	+that is a constant expression with value zero
-	+shall appear only in
-	+a declaration of a function parameter with an array type,
-	+and then only in the outermost array type derivation.
-	 The element type shall not be an incomplete or function type.
-	 The optional type qualifiers and the keyword static
-	 shall appear only in
-	 a declaration of a function parameter with an array type,
-	 and then only in the outermost array type derivation.
-
-	@@ Semantics, p5
-	 If the array length expression
-	 is not an integer constant expression:
-	 if it occurs in a declaration
-	 at function prototype scope
-	 or in a type name of a generic association (as described above),
-	 it is treated as if it were replaced by *;
-	 otherwise,
-	 each time it is evaluated,
-	-it shall have a value greater than zero.
-	+it shall have a value greater than zero,
-	+unless in the outermost array type derivation
-	+of a function parameter with an array type,
-	+in which case it shall have a nonnegative value.
-	 The size of each instance of a variable length array type
-	 does not change during its lifetime.
-	 Where an array length expression
-	 is part of the operand of the typeof or sizeof operators
-	 and changing the value of the array length expression
-	 would not affect the result of the operator,
-	 it is unspecified
-	 whether or not the array length expression is evaluated.
-	 Where an array length expression is part of
-	 the operand with a _Countof operator
-	 and changing the value of the array length expression
-	 would not affect the result of the operator,
-	 the array length expression is not evaluated.
-	 Where an array length expression is part of
-	 the operand of an alignof operator,
-	 that expression is not evaluated.
+    6.7.7.1  Declarators :: General
+	@@ Syntax, p1
+	+array-qualifier-list:
+	+	<b>static</b>(opt) type-qualifier-list
+	+	type-qualifier-list <b>static</b>
+	+
+	+array-length-declarator:
+	+	assignment-expression
+	+	<b>*</b>
+	+
+	 array-declarator:
+	-	direct-declarator <b>[</b> type-qualifier-list(opt) assignment-expressio=
+n(opt) <b>]</b>
+	-	direct-declarator <b>[ static</b> type-qualifier-list(opt) assignment-ex=
+pression <b>]</b>
+	-	direct-declarator <b>[</b> type-qualifier-list <b>static</b> assignment-=
+expression <b>]</b>
+	-	direct-declarator <b>[</b> type-qualifier-list(opt) <b>* ]</b>
+	+	direct-declarator <b>[</b> array-qualifier-list(opt) array-length-declar=
+ator(opt) <b>]</b>
 
 --=20
 <https://www.alejandro-colomar.es>
 
---njsnpqzzxxn5y6r3
+--m62rqarc6oh64aib
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAml3YssACgkQ64mZXMKQ
-wqlb/w/+Ot+NfZMH31Pf2BQoW70wpiu8fTvHx4tgiRO6UEntbqpt3v2ML0fPcbKE
-85e2cEyLM98fwAWlrogOPDWJmRSme1w53tWn9g/atrCIBh0Vlx9Z4dAMeRchubM2
-sgD17QKA/KtLnCEy/9czAMo/0wnGoohRGJcmUeIE0oBp86uvBmy1ZbdPX+sKVJrf
-mmeLRm+WdmX2mmuiTPDzps0bqxygJLXKf2TfCxU0yQg6nQm67dUbuq56NiWFllPG
-WflZGljsNfBu3vxjVuH61AFWHhaaWjNSgLTX/y8sU/8J39kZQJHaQp41xI+s15pj
-4VcCFXhNIsWfFnHu/FsLErqVMZPO/XYqMVY1IXE8obZezQlpxS8faaJi4eJAOWGy
-1QRoQSfS0STuGtJxPsDfGVDvue2kBi9wd/FqgnsHvNE1FgQpvohoEc0XDrt1JgcY
-MU4fnXH7tB26q/zzSpa9sZShH5Xv7QFZOMYX1cTt/804w56JN3iGKWul1v5pylcK
-3yghLg2I91FQLMp8kGrzzdciXrAy2f1t6DO1V22Wu/KKT+unYZ0vTL5Ccl5YT7zy
-4qsUssZGoXnbL8h7payi6t/sApCb1nkozdXgVGAh0o2amvqAz53whsMvJw/PnIK8
-TBYez6GxxcG2zxK0cZtKAOafDTyYlET2GclmSGldFs3ftvqXVjE=
-=aBNm
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAml3YtkACgkQ64mZXMKQ
+wqlobRAAtLfpMUfbViLdQJpZAUIiAbxUmk/QIluIVOpJ3aJozQ6DBAmWKhsAyEF0
+lAzYetoUSak8CYIpR+O5/YfC6QuhqwhPbrC2LQGNi0d43c4xGYDKeSF97fC093It
+yIvPo7Co2gOeywh2ujvr/zpTwLM7sOyQlRET1Oi5mdCHV+gwZ5/qv+Bf0kHKWuRz
+Sje8mxDUZIfwolOIin69Hc18THjliZ8vAC6NRsqHS/rM6X+Ju8DKZX7y89vg1xaN
+9FRxp7DTjGvMtxRoDet9m3oBNSc80AgvYDhHEFObLVlxtnO4xmtnpXjOf9VKwea7
+ieTi+KYyNPrWqX0R1Mw/FR47kROVelHfpeIVItrh51zQFMQGlAdbSrHvCGbvwn1c
+OalxNqQ/93zCZJf50WT9k7OVnlVCRpA1BjV/bUI5ftVo51ZWNHctI7YkwQeHTbXR
+MERz0LHx1prEbh+/UUU1M8LuEurN7ukFlecTYVfcK2S2x4VS6YgMt+6aAUvQQKxc
+/3Yz3Bw6mvkerFOV1aldjIyr0/X31s0iOwgLDqpYK2X37/E+lcsVC5P322fz9Tdd
+9WC0maeJSMdU9aVygTi81TGZ/kxWj1txBpfYGV+anc8XseFYtJ4mDNMQQSGMf8tn
+kvMw6WrqJ/hnzaOmKlCfF1AjiZay3I3E0/t9K/MA9dMeGxeoMeQ=
+=ZRBE
 -----END PGP SIGNATURE-----
 
---njsnpqzzxxn5y6r3--
+--m62rqarc6oh64aib--
