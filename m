@@ -1,150 +1,124 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED948314D19
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 09:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769419672; cv=none; b=Dz39G/oKR0eBnph7nr0jW3MU2hMte2waEMRDFDxhMllDBT6cK/bzOZz6SSKlUzetptH+5RBTkCQv6k50l8naS3zc9k5OiJAgMUYzbfP6hEEniD5Ouy5R2AzS3pwLbO+aXqq2f3arFE9OKtMc19oad2Wt3OdMJ9Qi/FYpnhYI40E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769419672; c=relaxed/simple;
-	bh=Gxq4ie03bv9H1pRh3OM+DBK3rL8bxlKAHagD9uGKsVw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=a+32JGrVUFJXxXMWg4sAoCBJN/5dXm22+Ri6U7frQrimrRCjn3jo7bYgWeuqjO4d7SdqlN0vounM2Je3DCxJCbuYVq3KGtmDnjqMvETYnuz0ffuEsmoG28VTzb5ajPUY2EbjRY7ndc9nGTZDkn3g9K2rG46LFOJBtdVqt01oLq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ap5IDeU1; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB147315D51
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 09:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769419771; cv=pass; b=dGImi9iHJ7GH3f8Htt0GMkwbSM6EunGdgm8SeMleOsECug6g762lFqX55PSE9ecNmHrpnBvJ4A5oMAzExYU+1B/gAvDr7IT1LfN0xdscqufWzX9oSxne23ljQVqBk28rGfG/gdNoE5f86THck5OaSQ2o8I4FKG2l6IBd/tgfx38=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769419771; c=relaxed/simple;
+	bh=7sknilJR7WE7S32qXVodV4jXv+/MeP/qmPlNhb+kWnc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UlPBuFBoW6nsnEDolVR5z7vag+G6NUzPfpefBw3HgBgkU+cR+f+uIN+6mRUjqWKrQ46AFacpYWNO4E5m7+ZaOCcq42SHSo9TwfYEa2fzonfoNzKOikowL6Ud6+OAFmm/vx2anDjG4cQPrdLvrJBR+hJAaVkcF5+QSK0B6MjT4U8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KHqU9jfj; arc=pass smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ap5IDeU1"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4803e8b6007so33554795e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 01:27:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHqU9jfj"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b8845cb580bso724270666b.3
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 01:29:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769419765; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PXKEgRF8gLkhlCG0X80lVeepTU1cjYxvCPlUEcN07lB84/ndG0PkKATeDupTQAVldi
+         OnAzHpZwJeHWThOfMeSyCp9xNWx9sjbxNNPvS/LgrR4Owp0SOF2M+aEG1GUehilDUB8E
+         Wvxe5aEGB7th+kG2ubDMmGei5loy7sPOqHQB84Sar2W0HL/DAn1J4wOgEsErNwg7OpjQ
+         YhG7R8PQ7whVq2N1GNBwCdZ1XwNegLff1dvmZIJRYtdRmLHKW0SNwNAiSL5QuQRbO8J7
+         XsdWydXTqJDLc8irg2V6D6pkAf6J4/pVQDB4e/idzJUgkbVLFX5tlCm+wFdiWo7p0mnK
+         zrNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=o/rbdOtgxtjX3LqxxdCWOOuHLMHWGXHyGw+40grPbZA=;
+        fh=aDdC6zxBMa2EMpIDjmA19YXEudebz1qBWrhVu3Sj+9w=;
+        b=GHj0rYRTwH9FvrbQ766v/RH5y34GNuMtAMcjKRgGS6mez1dMISP9Rvb2mOpjI5oUr1
+         CnQkSblCGiPDb317AJNKhklqk/v5IW6QVncn/GwuQdDBtU/ELdrklRZ9mKKQE/cdLYiJ
+         uCn3XAh/T/0xjq/svE5wF6J8WpWDnICbcHXUNoDVq7jGT5yAaoBqctbIXx5jj8m/YNWB
+         p65bq2Fgn8NLl0/SQrbEeGUYy62TXYeIOB0JDiDKKGh9ddCT6uFopy9CJrcqEbfCNcRg
+         oRlmQRrMVmHlrx/XOv+7pQUmDL85glwm37pKIaoOGdT/TuZxhyaZCqTqsQOjY2ZQZ6B8
+         emzw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769419660; x=1770024460; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qFepSabf96QcVfXCKhTiM0/xD6vjSZxLElXj77bKxb0=;
-        b=Ap5IDeU1nUozan2BOaUVG3wo1hJ+VdqpjtDvftHp6RLZMVQlKi2NE+4hi7JYlNmgMi
-         4IkWzjolexttRk5Gqv1HljqRPWVVpHIyNvIdxx2Jl9Bomi0a1WqZQ9GvS1VDA+8Gxl+U
-         IrsOtrQwYbcmUsEXNaDm0vEYl0Srmfe0TQbqjFCO3USR1BfA4W8K/2TOg5PRqs2NWIyv
-         PPgBu9A5ZMV93nGtjRz1qj609sC4fEC5Y0e8lqnui7paMcWggCXTS/6IseirEmLN/B7E
-         BtZNxptJTgWvSNUwBgMXHmnSxjtyAg12b3tZ27Po7OTsCqg2gbiICnzt9rzvKj4W6m+k
-         OXgw==
+        d=gmail.com; s=20230601; t=1769419765; x=1770024565; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o/rbdOtgxtjX3LqxxdCWOOuHLMHWGXHyGw+40grPbZA=;
+        b=KHqU9jfj6T2g4VL57HEbSIenDvOxPKpwRqo62tztj7HUtAoMXRcncZ6/UUi+b3nKmr
+         stcI+7LAMLaDvmMtcjD22va5jeHVFO0PnEpfXXxR0SKWwF7EBZq8zyxfZdZA5uvHuqeT
+         bd8fI8rwQRUhB6IX/KU70j/eVvRwnJbT+7TtK1WIlLK/8DTbKN3AxUUFOdxXXygpA01Q
+         rCLX/QoxUj/JERf4In0PjHVh1D2lvxgm7Wd/MeJEGfB2BBJnBBaDK8ipyGDSnMQqxL3D
+         os6e7sX/Zdm+CJbypmOdUTKzEFWTOAWnrCBj2phn1WJc+Py1J9nIYVCDi0nUhbhZxwSZ
+         xmKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769419660; x=1770024460;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qFepSabf96QcVfXCKhTiM0/xD6vjSZxLElXj77bKxb0=;
-        b=FcDbCjOXV+e3skfHjbMos5uuqdwILwfEjyRlJY59RKzkN+YG9KvCYwXn8+xX5QrbtN
-         inTDAv06GTgZ1NyLVXEbs473JyUTrL6fI3qcCBAjdlJnyHw1VI4P+lWXfdPKx4MJIia6
-         3bad0o01RmB6xkQNNl7zFZe5/7ojPVe7tk4j4l39wyKp/7Vw2tVjObnkmeJSrwIvB8pF
-         w1b6uiHt8y9KbzIEFWzZemO0hBGrJJ+P5ScSrlV5aWEXE/IPzgVlJazFxRXFNZu7oQXu
-         3giIrY1wfJuQLpFlYLu0kg3dOXDgrvrmEcAq2nWmXUxpJAUQ+jLIJOhChFdezAp1cDcd
-         otVA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoFSNLKpOfocD4RuGV39vo0NEHMGNu8CfZ1xn3VO3WgJtBgkS9JFaDZu9Krp+17SCVto0YGMYavPN3dHg98gc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuMhZj3EkpfiO5ryqmFZ2kNxoZ/zSPEa2c7jPloVcK6ocwiheJ
-	/FeOVqJ8c/gKtSM9ALEWFwBtNs0fnjOzJLWIE1+yi6SWZ87LlujzbEiDQlV0qQTTW6W3MmQQdg=
-	=
-X-Received: from wmlz11.prod.google.com ([2002:a05:600c:220b:b0:47d:8744:3dc3])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4f8e:b0:45d:d97c:236c
- with SMTP id 5b1f17b1804b1-4805cf6699cmr52231985e9.21.1769419659870; Mon, 26
- Jan 2026 01:27:39 -0800 (PST)
-Date: Mon, 26 Jan 2026 10:26:40 +0100
-In-Reply-To: <20260126092630.1800589-12-ardb+git@google.com>
+        d=1e100.net; s=20230601; t=1769419765; x=1770024565;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=o/rbdOtgxtjX3LqxxdCWOOuHLMHWGXHyGw+40grPbZA=;
+        b=PKcAl3PjlXHDOems3zHyQHgebJl9tROlOQvRdQeqxIaxnTYt3lO2F7cjqdVQeQHX0k
+         uTphbwOesY/7xrHrDOm0O0kRH0Uo0h4ycM9Y5uHgbpImJCL1rVNUsomRG9p1hxDtLvnL
+         jSrUmpgU2vYoFh8BMvv/3ED0grq/1KEcEPxYbJt1MVNMEDq5efQkn29Z4y2Qw3HW8a6R
+         07mQp6UtMNy8uIRmU5jfchlfgaqKId7ISJ5S8bLaFYQTFKo45BvKxMQP3fd4w09taFWJ
+         2akepXDFpQlmzmnT6cX4QoJ5nBEmjmKQydFXALpDZpybJGup8zW04Z3xcDDm4iP997kE
+         6IAw==
+X-Forwarded-Encrypted: i=1; AJvYcCURdKsgZ0Bfek97BxfiT5Ryr3Sm8wc1A6PewrmdJaYYUintzqUuIxUweLP1BlQTOJhRSJ/fHGIPkk2zvelkAcc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFGERa233t5foKT+tVPYxCxAre5F1bkskV8hMiTCXMsS6gdX2p
+	KnXolggGmW8eLVtMInGnVEorEdZweqpyjhu6Vb3KjHfubqGtU/u9v4+nZ2pt1KEay3QkF515qpg
+	mMrnMgeIVkwN/HEVp4qpFUE1i+/gnga8=
+X-Gm-Gg: AZuq6aJ8ObU0fqa0vLLF9Z3yY9TrN7oXHoalQCxg4hA6b8wxRCj6v/tq2Jfc79yvTIA
+	2ZMpxCJKgSpNdoMFKjmaFCsB9rPz4aWNQg2FAqJDMDuEho+UcCS/2EBihL9MlhF4ojsrJOX9PTS
+	qVd2AZl5OY88xASGZwN8wwrjue2DhT2uhAL7riXrjRSvc2zfEH5XCnsO7WdrWUdSipatV8T5b0f
+	Zk2OZaPdsiot+QU+UxtVA2yTQnlY472yTWuUSbcXPXxkQQW65ptqH0cue9K4O6x2BUBS/pCkKxa
+	A0qkkmjNUeaFo1s8IZ2eRByVyetJLrNbp1t8KU8Li4CuyHZqRLBQqopO9+1Nlq7pDukms24=
+X-Received: by 2002:a17:907:9484:b0:b87:c13:f334 with SMTP id
+ a640c23a62f3a-b8d2e6f25bcmr276729466b.53.1769419764840; Mon, 26 Jan 2026
+ 01:29:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260126092630.1800589-12-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2789; i=ardb@kernel.org;
- h=from:subject; bh=jiHSf63B3FCpPY5LRg5zb9pMV7UOm8DsB0K5QVCNRaU=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIbPc2PvMs/ffLc8t0UhLlfXbtjQx61Xhpd9aidZnP7BJe
- a3lidXtKGVhEONikBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABN51MXwz0quV/X2CbNbF+fy
- zWmfb8/PosuzbKH55rsCnUf0XFObfRkZpuns+C7x8Nb8GRsO3Z0lduATA0vcHI4NP3wiZ77cf3R jExsA
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260126092630.1800589-21-ardb+git@google.com>
-Subject: [PATCH v2 09/10] arm64: mm: Map the kernel data/bss read-only in the
- linear map
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, will@kernel.org, 
-	catalin.marinas@arm.com, mark.rutland@arm.com, 
-	Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Liz Prucka <lizprucka@google.com>, 
-	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>, 
-	linux-hardening@vger.kernel.org
+MIME-Version: 1.0
+References: <20260123085841.212468-1-jiangfeng@kylinos.cn> <20260123085841.212468-5-jiangfeng@kylinos.cn>
+ <aXNVL318XTTQ3tsU@smile.fi.intel.com> <b637ecfb-e852-4864-a80e-fdcd34d93cbd@kylinos.cn>
+In-Reply-To: <b637ecfb-e852-4864-a80e-fdcd34d93cbd@kylinos.cn>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 26 Jan 2026 11:28:47 +0200
+X-Gm-Features: AZwV_Qhx6wRZPCb1Klqjlj9JkvGS4ujtYHhVZw9cTAQek8bSSg_qHZMEWwb3vDY
+Message-ID: <CAHp75Vd0w0P6xFH1KvGon=cTzNVPJXex33=Tv+vpmNKJXKG2sQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/8] lib/string_kunit: add performance benchmark for strlen()
+To: Feng Jiang <jiangfeng@kylinos.cn>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, pjw@kernel.org, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alex@ghiti.fr, akpm@linux-foundation.org, 
+	kees@kernel.org, andy@kernel.org, ebiggers@kernel.org, 
+	martin.petersen@oracle.com, mingo@kernel.org, charlie@rivosinc.com, 
+	conor.dooley@microchip.com, samuel.holland@sifive.com, 
+	linus.walleij@linaro.org, nathan@kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On Mon, Jan 26, 2026 at 8:14=E2=80=AFAM Feng Jiang <jiangfeng@kylinos.cn> w=
+rote:
+> On 2026/1/23 19:02, Andy Shevchenko wrote:
+> > On Fri, Jan 23, 2026 at 04:58:37PM +0800, Feng Jiang wrote:
 
-On systems where the bootloader adheres to the original arm64 boot
-protocol, the placement of the kernel in the physical address space is
-highly predictable, and this makes the placement of its linear alias in
-the kernel virtual address space equally predictable, given the lack of
-randomization of the linear map.
+...
 
-The linear aliases of the kernel text and rodata regions are already
-mapped read-only, but the kernel data and bss are mapped read-write in
-this region. This is not needed, so map them read-only as well.
+> >> +                    _bn_mbps =3D (u64)(buf_size) * _bn_iters * 1000; =
+ \
+> >
+> > "KILO"? Or "(MEGA/KILO)"? I'm puzzled with this 1000 multiplier.
+>
+> The 1000 factor converts bytes/ns to MB/s=EF=BC=9A
+>   (bytes/ns) * (10^9 ns/s) / (10^6 bytes/MB)
+> In v5, I will replace it with (NSEC_PER_SEC / MEGA) to make the unit
+> conversion explicit and avoid confusion.
 
-Note that the statically allocated kernel page tables do need to be
-modifiable via the linear map, so leave these mapped read-write.
+Or NSEC_PER_USEC. Whatever, choose the one you think fits best.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/arm64/include/asm/sections.h |  1 +
- arch/arm64/mm/mmu.c               | 10 ++++++++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/include/asm/sections.h b/arch/arm64/include/asm/sections.h
-index 51b0d594239e..f7fe2bcbfd03 100644
---- a/arch/arm64/include/asm/sections.h
-+++ b/arch/arm64/include/asm/sections.h
-@@ -23,6 +23,7 @@ extern char __irqentry_text_start[], __irqentry_text_end[];
- extern char __mmuoff_data_start[], __mmuoff_data_end[];
- extern char __entry_tramp_text_start[], __entry_tramp_text_end[];
- extern char __relocate_new_kernel_start[], __relocate_new_kernel_end[];
-+extern char __pgdir_start[];
- 
- static inline size_t entry_tramp_text_size(void)
- {
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 18415d4743bf..fdbbb018adc5 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1122,7 +1122,9 @@ static void __init map_mem(void)
- {
- 	static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
- 	phys_addr_t kernel_start = __pa_symbol(_text);
--	phys_addr_t kernel_end = __pa_symbol(__init_begin);
-+	phys_addr_t init_begin = __pa_symbol(__init_begin);
-+	phys_addr_t init_end = __pa_symbol(__init_end);
-+	phys_addr_t kernel_end = __pa_symbol(__pgdir_start);
- 	phys_addr_t start, end;
- 	phys_addr_t early_kfence_pool;
- 	int flags = NO_EXEC_MAPPINGS;
-@@ -1158,7 +1160,9 @@ static void __init map_mem(void)
- 	 * Note that contiguous mappings cannot be remapped in this way,
- 	 * so we should avoid them here.
- 	 */
--	__map_memblock(kernel_start, kernel_end, PAGE_KERNEL,
-+	__map_memblock(kernel_start, init_begin, PAGE_KERNEL,
-+		       flags | NO_CONT_MAPPINGS);
-+	__map_memblock(init_end, kernel_end, PAGE_KERNEL,
- 		       flags | NO_CONT_MAPPINGS);
- 
- 	/* map all the memory banks */
-@@ -1172,6 +1176,8 @@ static void __init map_mem(void)
- 			       flags);
- 	}
- 
-+	__map_memblock(init_end, kernel_end, PAGE_KERNEL_RO,
-+		       flags | NO_CONT_MAPPINGS);
- 	arm64_kfence_map_pool(early_kfence_pool);
- }
- 
--- 
-2.52.0.457.g6b5491de43-goog
-
+--=20
+With Best Regards,
+Andy Shevchenko
