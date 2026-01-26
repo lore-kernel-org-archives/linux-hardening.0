@@ -1,58 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE721344057
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 16:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6217A3446B5
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 16:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769445686; cv=none; b=TDmnw/LmDuAVHb418SBRLCh1rtsrOhnq8pMWqfAhvNhsv0RU0TMbciGLKUyjuJNi02+1/F9yX+LeNWX7eQqh5LFZV1Z8LZrxepzycX9CH/FbR5qhX7xZkTvAwTdIBt65nN+gyJFl8Sc6d2Si7cB6Cqx7XnnlWUpMNOOHvkOx9YM=
+	t=1769445804; cv=none; b=IjaPrKlYlAdcs+1r9jslpHNhNpWktEbBEHmdYgwTYGd73MvKDRckP4QtOCuWJwBPEbkk6tR06k6n8rQXBMKrV9MvM0sv/8N+uJMctNX6HKh7o3OPBCFA0kQNvrJsdCQBEDzaZMNzg6ecDJT43d7i/aX6YuLv0WVuURrBnGIxUL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769445686; c=relaxed/simple;
-	bh=8wnDyUZ0iuPcc59L0Q3fD5CRKUFiJIyrU1sktYsQcmc=;
+	s=arc-20240116; t=1769445804; c=relaxed/simple;
+	bh=GUsMEMIjhwBIluEhrMVnINC5P4MrYW3VrpZeQd6F+aY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A7e6XEz5Y5nLdmxPxU7XAdvEkqyNWFodswnEakeQlu8NWdQaAmTFxaz5kgH8zP+9xvPKoVn5CKaCk/Ymx7F23X66fS8DfZ06rWvkuFp48dFAZO43Dx30mxjdOFqNpUMLeCyRyCb8PQXkPDR4jx9U2dsLasDyDQBtgT6zUlBAWZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJulvHfu; arc=none smtp.client-ip=198.175.65.21
+	 Content-Type:Content-Disposition:In-Reply-To; b=VxFMlWd5qygY5j6ertkzbzKanTf4/VA0guMM3ZQJq0x/Aq8g7vvneGVzt5JkIeGfokoPd42JX+xkzITkhNuHBCBIt7t8od1Zu7xacBpLIgAkIFL04OxAfP0Po5WF+EprkanLiLMA5KpBQ1oYzIqK2xzhWtaFv9mZlZ60vYsPLwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DsFSyQmQ; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJulvHfu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DsFSyQmQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769445685; x=1800981685;
+  t=1769445801; x=1800981801;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=8wnDyUZ0iuPcc59L0Q3fD5CRKUFiJIyrU1sktYsQcmc=;
-  b=OJulvHfuf3jpTtP4WdmNTTpwCVdQLXwgSJPcJcaMI5Xls+8llP4sEgZP
-   CsUhT+m3YCKhRW328R7BkhlsVefY+uO+YrhFFtv7Ra5sN0jT1/TiIwriC
-   AKyJJ6PcP2orde9kqD0B6cjX7nknAdDxQyfraqBGHrFGGQBjuqfdyRo38
-   hUudSs9sdQ9wKbXfYs8xDKv3Fun5lxnydX6QPZ/luwH04CDE9sngY7DU+
-   YM+/AiAMziJw1r/Mh0dVyzgP+26LmXL9VROUTtl8wZu+0myM0aDX5MvkV
-   ZHXGj3BQcFO9qJRE5nEKDN7YDtCYOAZmNfKfMtJAISCjP5PoS/4JFPBng
-   Q==;
-X-CSE-ConnectionGUID: l4QuJjylSWSFqu3vreQhMg==
-X-CSE-MsgGUID: 5h215tkrQBORXtB7KGr+Tw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70531027"
+  bh=GUsMEMIjhwBIluEhrMVnINC5P4MrYW3VrpZeQd6F+aY=;
+  b=DsFSyQmQNxToAwhAamHqchlCuh/a4oUYnfTwm211TQOg+Z6rt8EkT7JT
+   OP/9gNxL146/jjaYEVq2Bis0wLvlQBqbkWrnmFS6Sru0Fwki3ESb2QLYL
+   Hm0Y7ZfdieCKOilD1oY9YnTb4W0xnkJhDWwDY2pyHEn0AjoGrQRSKw1E4
+   oUFqSW/10nKAuXXiCF8Q7xnZfElxU1wgkfKukqLU0jLRgZD/ICS/NuZ80
+   RRnClrH81ZJxJ3wgjxDyTnO0Vm3XC6mjM+X4he+g+WyZSd97mIIvB31Vd
+   tBBMzO6rdbOvpuKpTHTdbLdMOt1MSKQlRB2tsZ4W0OMnLhj7RoMOXrf6F
+   g==;
+X-CSE-ConnectionGUID: np1i786cQAiaefGQNQkTKA==
+X-CSE-MsgGUID: plVENGBjRlOEIkgVhYesjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70718230"
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="70531027"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:41:22 -0800
-X-CSE-ConnectionGUID: kf/hFJ94So2F7ehH16MiaA==
-X-CSE-MsgGUID: L83/j8/dQ6eRazB7D2i9Vw==
+   d="scan'208";a="70718230"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:43:20 -0800
+X-CSE-ConnectionGUID: h43U2JSRQ9ahjdKxsxql+w==
+X-CSE-MsgGUID: V4OKkKtxSQ2caamsTYZUhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="207782621"
+   d="scan'208";a="207745354"
 Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.122])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:41:20 -0800
-Date: Mon, 26 Jan 2026 18:41:17 +0200
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:43:17 -0800
+Date: Mon, 26 Jan 2026 18:43:15 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Dmitry Antipov <dmantipov@yandex.ru>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
 	"Darrick J . Wong" <djwong@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] lib/cmdline_kunit: add test case for memparse()
-Message-ID: <aXeZLTs_rvEAMT2_@smile.fi.intel.com>
+Subject: Re: [PATCH v3 0/3] lib and lib/cmdline enhancements
+Message-ID: <aXeZo2PJlXEuPjIZ@smile.fi.intel.com>
 References: <20260126162059.357467-1-dmantipov@yandex.ru>
- <20260126162059.357467-3-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,48 +60,15 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260126162059.357467-3-dmantipov@yandex.ru>
+In-Reply-To: <20260126162059.357467-1-dmantipov@yandex.ru>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jan 26, 2026 at 07:20:58PM +0300, Dmitry Antipov wrote:
-> Better late than never, now there is a long-awaited basic
-> test for 'memparse()' which is provided by cmdline.c.
+On Mon, Jan 26, 2026 at 07:20:56PM +0300, Dmitry Antipov wrote:
+> Adjust '_parse_integer_limit()' to not ignore overflows, add KUnit-based
+> test for 'memparse()' and fix kernel-doc glitches found in lib/cmdline.c.
 
-...
-
-> +static const struct cmdline_test_memparse_entry testdata[] = {
-> +	{ "0",				"",	0ULL },
-> +	{ "1",				"",	1ULL },
-> +	{ "a",				"a",	0ULL },
-> +	{ "0xb",			"",	11ULL },
-> +	{ "0xz",			"x",	0ULL },
-> +	{ "1234",			"",	1234ULL },
-> +	{ "04567",			"",	2423ULL },
-> +	{ "0x9876",			"",	39030LL },
-> +	{ "05678",			"8",	375ULL },
-> +	{ "0xabcdefz",			"z",	11259375ULL },
-> +	{ "0cdba",			"c",	0ULL },
-> +	{ "4K",				"",	SZ_4K },
-> +	{ "0x10k@0xaaaabbbb",		"@",	SZ_16K },
-> +	{ "32M",			"",	SZ_32M },
-> +	{ "067m:foo",			":",	55 * SZ_1M },
-> +	{ "2G;bar=baz",			";",	SZ_2G },
-> +	{ "07gz",			"z",	7ULL * SZ_1G },
-> +	{ "3T+data",			"+",	3 * SZ_1T },
-> +	{ "04t,ro",			",",	SZ_4T },
-> +	{ "012p",			"",	11258999068426240ULL },
-> +	{ "7P,sync",			",",	7881299347898368ULL },
-> +	{ "0x2e",			"",	46ULL },
-> +	{ "2E and more",		" ",	2305843009213693952ULL },
-
-> +	{ "18446744073709551615", 	"",	ULLONG_MAX },
-> +	{ "18446744073709551616", 	"",	ULLONG_MAX },
-> +	{ "569202370375329612767", 	"",	ULLONG_MAX },
-
-There are spaces left after first value in these three lines.
-
-> +};
+Shouldn't we also add test cases to lib/test-kstrtox.c?
 
 -- 
 With Best Regards,
