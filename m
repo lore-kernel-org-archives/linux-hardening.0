@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5288233B6FD
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 16:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE721344057
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 16:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769445560; cv=none; b=P46JoDw1DzdkFl4xE61Fh7jSeQB3lzfb0llD3fy07BU1jttwLevPd+q9IL6DAglI7aPOaiCyPC45KAaI4PrCCS/h0MD1ROhAmjSFeHdY5f0Fti0HkjKjW9CrxAWwW4QiJ4xXE/VI86MgAPedJrS+8soL5AGAidmUk2qQWxVNwFo=
+	t=1769445686; cv=none; b=TDmnw/LmDuAVHb418SBRLCh1rtsrOhnq8pMWqfAhvNhsv0RU0TMbciGLKUyjuJNi02+1/F9yX+LeNWX7eQqh5LFZV1Z8LZrxepzycX9CH/FbR5qhX7xZkTvAwTdIBt65nN+gyJFl8Sc6d2Si7cB6Cqx7XnnlWUpMNOOHvkOx9YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769445560; c=relaxed/simple;
-	bh=RYLM3lt9xeMHUKbEsg+msftPAR6dC6I6uCUgqP0jxyo=;
+	s=arc-20240116; t=1769445686; c=relaxed/simple;
+	bh=8wnDyUZ0iuPcc59L0Q3fD5CRKUFiJIyrU1sktYsQcmc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eE0gLBHNnn998pSt8DtqtIip7VbyoALF3emQgE/JYk8NnrEiEFd62NavzmyJbW/eMcX5HCrbVAAfB+NzSb5oABy5w5BCu51QNKC+TtoM27jYzN3ag9zqsopfb5yfF5oWVrq1v2y56yuk1D8Xxd8y3uEISy6bo/61+PnCTdGzq2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WHihyQti; arc=none smtp.client-ip=198.175.65.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7e6XEz5Y5nLdmxPxU7XAdvEkqyNWFodswnEakeQlu8NWdQaAmTFxaz5kgH8zP+9xvPKoVn5CKaCk/Ymx7F23X66fS8DfZ06rWvkuFp48dFAZO43Dx30mxjdOFqNpUMLeCyRyCb8PQXkPDR4jx9U2dsLasDyDQBtgT6zUlBAWZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJulvHfu; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WHihyQti"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJulvHfu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769445558; x=1800981558;
+  t=1769445685; x=1800981685;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=RYLM3lt9xeMHUKbEsg+msftPAR6dC6I6uCUgqP0jxyo=;
-  b=WHihyQtiBYiDvFDAps/MExhWSyKXguTFzf3VMfWNHu6ZHZbqLCfQjo03
-   vtS8/+A19tRC3OwDjb7JLolzhT0sazJvMB3r3iWyAkbPa0UnxMJtNlc0Y
-   NKXySRlySeXMEXVcS4XloYtQt5po353WJAgQY67/dR/Ow9cF+UTdKsTMn
-   RJhGisYXLRgQGH+mnVvH15d33vbTDLKSkZU5NhPzaWIcrYSXhvdctMHc9
-   T1DBfhN0YNH4vdzZLq9AbX/HS5OQk+7sFD8PeRRPbQUCJiHDDroCtVinN
-   wnbq90+3kj+R5CUhrJj8g+F7x0W1aL/41rak51kTgtz5847Ey1OV9xM9m
-   w==;
-X-CSE-ConnectionGUID: l0HWzt35RI+XisUcp0dUtA==
-X-CSE-MsgGUID: 18kS6fprR/iQjrhR8LBvrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="80926519"
+  bh=8wnDyUZ0iuPcc59L0Q3fD5CRKUFiJIyrU1sktYsQcmc=;
+  b=OJulvHfuf3jpTtP4WdmNTTpwCVdQLXwgSJPcJcaMI5Xls+8llP4sEgZP
+   CsUhT+m3YCKhRW328R7BkhlsVefY+uO+YrhFFtv7Ra5sN0jT1/TiIwriC
+   AKyJJ6PcP2orde9kqD0B6cjX7nknAdDxQyfraqBGHrFGGQBjuqfdyRo38
+   hUudSs9sdQ9wKbXfYs8xDKv3Fun5lxnydX6QPZ/luwH04CDE9sngY7DU+
+   YM+/AiAMziJw1r/Mh0dVyzgP+26LmXL9VROUTtl8wZu+0myM0aDX5MvkV
+   ZHXGj3BQcFO9qJRE5nEKDN7YDtCYOAZmNfKfMtJAISCjP5PoS/4JFPBng
+   Q==;
+X-CSE-ConnectionGUID: l4QuJjylSWSFqu3vreQhMg==
+X-CSE-MsgGUID: 5h215tkrQBORXtB7KGr+Tw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70531027"
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="80926519"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:39:17 -0800
-X-CSE-ConnectionGUID: gLOUzqhkS+mJNklyGm9p3Q==
-X-CSE-MsgGUID: FYZpJraXSJau+QAAVFNgfQ==
+   d="scan'208";a="70531027"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:41:22 -0800
+X-CSE-ConnectionGUID: kf/hFJ94So2F7ehH16MiaA==
+X-CSE-MsgGUID: L83/j8/dQ6eRazB7D2i9Vw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="211818766"
+   d="scan'208";a="207782621"
 Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.122])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:39:16 -0800
-Date: Mon, 26 Jan 2026 18:39:13 +0200
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:41:20 -0800
+Date: Mon, 26 Jan 2026 18:41:17 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Dmitry Antipov <dmantipov@yandex.ru>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
 	"Darrick J . Wong" <djwong@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] lib: fix _parse_integer_limit() to handle overflow
-Message-ID: <aXeYsUlxibMuYflx@smile.fi.intel.com>
+Subject: Re: [PATCH v3 2/3] lib/cmdline_kunit: add test case for memparse()
+Message-ID: <aXeZLTs_rvEAMT2_@smile.fi.intel.com>
 References: <20260126162059.357467-1-dmantipov@yandex.ru>
- <20260126162059.357467-2-dmantipov@yandex.ru>
+ <20260126162059.357467-3-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,52 +61,48 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260126162059.357467-2-dmantipov@yandex.ru>
+In-Reply-To: <20260126162059.357467-3-dmantipov@yandex.ru>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jan 26, 2026 at 07:20:57PM +0300, Dmitry Antipov wrote:
-> In '_parse_integer_limit()', replace native integer arithmetic with
-> 'check_mul_overflow()' and 'check_add_overflow()' to check whether
-> an intermediate result goes out of range, and denote such a case
-> with ULLONG_MAX, thus making the function more similar to standard
-> C library's 'strtoull()'. Adjust comment to kernel-doc style as well.
+On Mon, Jan 26, 2026 at 07:20:58PM +0300, Dmitry Antipov wrote:
+> Better late than never, now there is a long-awaited basic
+> test for 'memparse()' which is provided by cmdline.c.
 
 ...
 
-> -		if (unlikely(res & (~0ull << 60))) {
-> -			if (res > div_u64(ULLONG_MAX - val, base))
+> +static const struct cmdline_test_memparse_entry testdata[] = {
+> +	{ "0",				"",	0ULL },
+> +	{ "1",				"",	1ULL },
+> +	{ "a",				"a",	0ULL },
+> +	{ "0xb",			"",	11ULL },
+> +	{ "0xz",			"x",	0ULL },
+> +	{ "1234",			"",	1234ULL },
+> +	{ "04567",			"",	2423ULL },
+> +	{ "0x9876",			"",	39030LL },
+> +	{ "05678",			"8",	375ULL },
+> +	{ "0xabcdefz",			"z",	11259375ULL },
+> +	{ "0cdba",			"c",	0ULL },
+> +	{ "4K",				"",	SZ_4K },
+> +	{ "0x10k@0xaaaabbbb",		"@",	SZ_16K },
+> +	{ "32M",			"",	SZ_32M },
+> +	{ "067m:foo",			":",	55 * SZ_1M },
+> +	{ "2G;bar=baz",			";",	SZ_2G },
+> +	{ "07gz",			"z",	7ULL * SZ_1G },
+> +	{ "3T+data",			"+",	3 * SZ_1T },
+> +	{ "04t,ro",			",",	SZ_4T },
+> +	{ "012p",			"",	11258999068426240ULL },
+> +	{ "7P,sync",			",",	7881299347898368ULL },
+> +	{ "0x2e",			"",	46ULL },
+> +	{ "2E and more",		" ",	2305843009213693952ULL },
 
-Interestingly, but the original check was made to improve performance. We don't
-need to worry about overflow unless we close to it. It also has a hint to the
-compiler to take branch as a slow path.
+> +	{ "18446744073709551615", 	"",	ULLONG_MAX },
+> +	{ "18446744073709551616", 	"",	ULLONG_MAX },
+> +	{ "569202370375329612767", 	"",	ULLONG_MAX },
 
-> +		if (res != ULLONG_MAX) {
-> +			/*
-> +			 * tmp = res * base;
-> +			 * if (overflow)
-> +			 *	res = ULLONG_MAX;
-> +			 * else {
-> +			 *	res = tmp + val;
-> +			 *	if (overflow)
-> +			 *		res = ULLONG_MAX;
-> +			 * }
-> +			 */
+There are spaces left after first value in these three lines.
 
-This looks like a left over. Use plain English to explain what's going on
-here. But I think this should be only done for the last a couple of iterations
-only.
-
-> +			if (check_mul_overflow(res, base, &tmp) ||
-> +			    check_add_overflow(tmp, val, &res)) {
-> +				res = ULLONG_MAX;
->  				rv |= KSTRTOX_OVERFLOW;
-> +			}
->  		}
-> -		res = res * base + val;
->  		rv++;
->  		s++;
->  	}
+> +};
 
 -- 
 With Best Regards,
