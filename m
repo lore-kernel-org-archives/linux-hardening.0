@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54171CF7D5
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 12:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF8F78F26
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 12:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769431749; cv=none; b=i4BCw6T668ygtKD+YGQXw1K6ixdE334CoxIJsxlk17CEIUWZcNcol/PcaVfGl4OYzogRTLTziQFVuRibRKtVOlesdVYWTQPLUz95ZhPqWZhInPNU3WD3wBMEbtPiiOQX9dCMwVJ9cE4ua1uPLBzvv9nQc8l3+xb2yDjOTXS2ljE=
+	t=1769431763; cv=none; b=BMsTtDP3xfSbVLaE0gkPCEAsivZ9/KDpkSbpV/4QoeBpXc0fxJyfXZNINL2O2vgA91H09cqakp12fM2tjNtb1Yd2w7qdXA8mrBWw6XfUL60pu72+YUGFS3jt/qCxuswbKWXI51Taj44eFxnjEDS8tnJADKTfmkwPQvlOoqgIf5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769431749; c=relaxed/simple;
-	bh=tkfidgvNKdYog1r1BepLXII2qXnQTanFjuRPpEHdCUo=;
+	s=arc-20240116; t=1769431763; c=relaxed/simple;
+	bh=9HtGqLlKfftZYVzcBlczjBJD+WQHkJvDWpySMdmD6eQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dZDJ1XtsA9Fyf5tec1NsI3dTWeKfN0v8ooBt6AZYQHeTRaEEv6p243DWJ5DCpqFILIty/BeVWSR+8pa4yjeTjEgkNx5yGDMXJ3dxT+jIEgmNmHWDJMAL79Awq/JE9QSKqX8Ca9AiwIdsSvDI34MA5qkI8FBlNsEePoxN58mDEDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LEHmQsUy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition:In-Reply-To; b=rF5oeyBwlFqeUwV0Zh3pRIbODzjsvgysE9pxSnwagipE6FxT3OqqBF3CvBapGVvpURpbSATGZJHpyGbKdAUTjo0DDB1x1f86XiN5vlfiM+M6RSflL1reZn/QdR9DBkSDD8nij45xe4M1WJCUG9QsOxEauToGDnckLKeE7HBlcLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCrVoHqC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LEHmQsUy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C56CEC116C6;
-	Mon, 26 Jan 2026 12:49:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCrVoHqC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABB9C116C6;
+	Mon, 26 Jan 2026 12:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769431749;
-	bh=tkfidgvNKdYog1r1BepLXII2qXnQTanFjuRPpEHdCUo=;
+	s=k20201202; t=1769431763;
+	bh=9HtGqLlKfftZYVzcBlczjBJD+WQHkJvDWpySMdmD6eQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=LEHmQsUyi8mu7wJE4mBDtCFxyvNAN7/lKZ6ptVprk5Nc/auC6o6B6bdfQxUeHCAJ2
-	 h/VnriN1qAD3b45bGvAHU+7HP/CLQcWyXEp23qgHZMXM4sVpWTWwOb0UemMlM2XS8z
-	 jGpqgYlYV8O3kAOH9A3G4/0DQsVQtSToUZztUsPvW+ythAiAUqfjZGACYEhk6XtQ33
-	 fs6qMSzNgMOJL6kQ8W3kr91xoJfYUkYN24aqt0eezMgrbopNHH9AdAH2R4/BzaBmyW
-	 ITuwDHscM7D/qXyoLan5HW8F1MJz7rIuTJQGEfW7KBKj7WatkwgBVukSHGfHZCL9Q4
-	 oFR2jhU1ZGK2g==
-Date: Mon, 26 Jan 2026 13:49:02 +0100
+	b=lCrVoHqCf8QUmMOTgZhQ+UTSO1XfW4phQqRqA4vayXhS6gmjjIXuwAwS2NW+kHkYy
+	 0bFNIoLIAdbhlSehBlidH6ACO2DCcxaGKtawT3vEckmqSOXiD2dNREWtYVDNoXTF4y
+	 8FImXK4GPZEvbPypeSJTs7Bv3PPSRGvED+SPDSu2sD9dnBElrs6lLoQwFPx7ZWJK01
+	 IjbfwoBA6k+ThkvjjiUGpIBTaRYF39MB8wTp6/lJAE15TKWaqqjMx8REUPktMJvV3e
+	 tQj3UkRB9emdEA0PULQjMw5lMOwPBk4mXjx/5+cV7g1u9UowyjktJXZzLortV27IBk
+	 Ic9sdeFYbgDjw==
+Date: Mon, 26 Jan 2026 13:49:16 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: Martin Uecker <uecker@tugraz.at>, 
 	Christopher Bazley <chris.bazley.wg14@gmail.com>, Alex Celeste <alexg.nvfp@gmail.com>, 
@@ -41,8 +41,8 @@ Cc: Douglas McIlroy <douglas.mcilroy@dartmouth.edu>,
 	"Basil L. Contovounesios" <basil@contovou.net>, "Jason A. Donenfeld" <jason@zx2c4.com>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, onf <onf@disroot.org>, Rich Felker <dalias@libc.org>, 
 	linux-hardening@vger.kernel.org, Alejandro Colomar <alx@kernel.org>
-Subject: [RFC v3 4/6] alx-0079r2 - [static n] == non-null [n]
-Message-ID: <aXdiutoeJyV2ZQh_@devuan>
+Subject: [RFC v3 5/6] alx-0081r2 - array parameters of 0 elements
+Message-ID: <aXdiyLn3vxV2P807@devuan>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,12 +50,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7u4gsg2td265virm"
+	protocol="application/pgp-signature"; boundary="njsnpqzzxxn5y6r3"
 Content-Disposition: inline
 In-Reply-To: <aXdhh1r7ePA5SrIE@devuan>
 
 
---7u4gsg2td265virm
+--njsnpqzzxxn5y6r3
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -73,18 +73,18 @@ Cc: Douglas McIlroy <douglas.mcilroy@dartmouth.edu>,
 	"Basil L. Contovounesios" <basil@contovou.net>, "Jason A. Donenfeld" <jason@zx2c4.com>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, onf <onf@disroot.org>, Rich Felker <dalias@libc.org>, 
 	linux-hardening@vger.kernel.org, Alejandro Colomar <alx@kernel.org>
-Subject: [RFC v3 4/6] alx-0079r2 - [static n] == non-null [n]
-Message-ID: <aXdiutoeJyV2ZQh_@devuan>
+Subject: [RFC v3 5/6] alx-0081r2 - array parameters of 0 elements
+Message-ID: <aXdiyLn3vxV2P807@devuan>
 MIME-Version: 1.0
 In-Reply-To: <aXdhh1r7ePA5SrIE@devuan>
 
 Name
-	alx-0079r2 - [static n] =3D=3D non-null [n]
+	alx-0081r2 - array parameters of 0 elements
 
 Principles
-	-  Uphold the character of the language.
-	-  Codify existing practice to address evident deficiencies.
-	-  Enable secure programming.
+	-  Uphold the character of the language
+	-  Codify existing practice to address evident deficiencies
+	-  Enable secure programming
 
 	And from previous charters:
 
@@ -100,70 +100,50 @@ Author
 	Cc: Martin Uecker <uecker@tugraz.at>
 	Acked-by: Doug McIlroy
 	Acked-by: Andrew Clayton <ac@sigsegv.uk>
+	Cc: Alex Celeste <alexg.nvfp@gmail.com>
 
 History
-	<https://www.alejandro-colomar.es/src/alx/alx/std/wg14/alx-0079.git/>
+	<https://www.alejandro-colomar.es/src/alx/alx/std/wg14/alx-0081.git/>
 
 	r0 (2026-01-25):
 	-  Initial draft.
 
 	r1 (2026-01-25):
-	-  wfix
+	-  Array length expressions shall be nonnegative.
 
 	r2 (2026-01-26):
 	-  Acked-by.
+	-  Remove 'See also'.
 
 Abstract
-	Everyone who has ever written [2] in an array parameter meant
-	what a 10-year-old kid would guess.  Let's acknowledge it.
-
-		void f(int a[2]);
+	Function parameters that have zero elements are common and safe.
+	Let's acknowledge this, and allow array syntax for them.
 
 Discussion
-	It is a de-facto standard that functions declaring a [n]
-	parameter require at least n elements (or NULL), and don't
-	access more than n elements.  It is well known that this is not
-	required by the standard, but that should be irrelevant.  The
-	standard didn't acknowledge it for fear of breaking existing
-	code, but
+	The following code is valid:
 
-	1)  There should be absolutely no real code that would break by
-	    such a change.
-
-	2)  If any code wouldn't comply with this specification, it is
-	    deeply broken, and is most likely already overflowing
-	    buffers.
-
-	Let's do the Right Thing(tm).
-
-Prior art
-	GCC acknowledges this common understanding, and diagnoses such
-	code:
-
-		alx@devuan:~/tmp$ cat ap.c=20
-		void f(int a[2]);
-		int
-		main(void)
+		static inline wchar_t
+		my_wmemset(size_t n, wchar_t *wcs, wchar_t wc)
 		{
-			int a[1];
-			f(a);
+			return wmemset(wcs, wc, n);
 		}
-		alx@devuan:~/tmp$ gcc -S ap.c
-		ap.c: In function =E2=80=98main=E2=80=99:
-		ap.c:6:9: warning: =E2=80=98f=E2=80=99 accessing 8 bytes in a region of s=
-ize 4 [-Wstringop-overflow=3D]
-		    6 |         f(a);
-		      |         ^~~~
-		ap.c:6:9: note: referencing argument 1 of type =E2=80=98int[2]=E2=80=99
-		ap.c:1:6: note: in a call to function =E2=80=98f=E2=80=99
-		    1 | void f(int a[2]);
-		      |      ^
 
-See also
-	<https://www.alejandro-colomar.es/src/alx/alx/std/wg14/alx-0078.git/>
-	alx-0078 ("[static n] shouldn't access more than n elements")
-	That proposal also changes this paragraph, but in a compatible
-	way.
+		wchar_t  a[42];
+
+		my_wmemset(0, a + 42, L'x');
+
+	It would be natural to be able to declare my_wmemset() as
+
+		wchar_t my_wmemset(size_t n, wchar_t wcs[static n], wchar_t);
+
+	However, that would result in UB for the call above, as the
+	number of elements isn't allowed to be zero.  That restriction
+	is superfluous, and harmful; let's remove it.
+
+Future directions
+	I'd like to allow any arrays of zero elements, but that needs
+	to be more careful than for array parameters.  A future proposal
+	will address that.
 
 Comments
 	On 2026-01-25T18:19:02-0500, Douglas McIlroy wrote:
@@ -183,55 +163,79 @@ Comments
 Proposed wording
 	Based on N3685.
 
-    6.7.7.4  Function declarators
-	@@ Semantics, p7
-	 A declaration of a parameter as "array of type"
-	 shall be adjusted to "qualified pointer to type",
-	 where the type qualifiers (if any)
-	 are those specified
-	 within the [ and ]
-	 of the array type derivation.
-	-If the keyword static also appears
-	-within the [ and ]
-	-of the array type derivation,
-	+If the length of such an array is specified,
-	 then for each call to the function,
-	+if
-	 the value of the corresponding actual argument
-	+is not a null pointer,
-	+it
-	 shall provide access to
-	 the first element of an array
-	 with at least as many elements
-	 as specified by the size expression.
-	+If the keyword static also appears
-	+within the [ and ]
-	+of the array type derivation,
-	+then for each call to the function,
-	+the corresponding actual argument
-	+shall not be a null pointer.
+    6.7.7.3  Array declarators
+	@@ Constraints, p1
+	 In addition to optional type qualifiers and the keyword static,
+	 the [ and ] can delimit an expression or *.
+	 If they delimit an expression,
+	 called the array length expression,
+	 the expression shall have an integer type.
+	 If the expression is a constant expression,
+	-it shall have a value greater than zero.
+	+it shall have a nonnegative value.
+	+An array length expression
+	+that is a constant expression with value zero
+	+shall appear only in
+	+a declaration of a function parameter with an array type,
+	+and then only in the outermost array type derivation.
+	 The element type shall not be an incomplete or function type.
+	 The optional type qualifiers and the keyword static
+	 shall appear only in
+	 a declaration of a function parameter with an array type,
+	 and then only in the outermost array type derivation.
+
+	@@ Semantics, p5
+	 If the array length expression
+	 is not an integer constant expression:
+	 if it occurs in a declaration
+	 at function prototype scope
+	 or in a type name of a generic association (as described above),
+	 it is treated as if it were replaced by *;
+	 otherwise,
+	 each time it is evaluated,
+	-it shall have a value greater than zero.
+	+it shall have a value greater than zero,
+	+unless in the outermost array type derivation
+	+of a function parameter with an array type,
+	+in which case it shall have a nonnegative value.
+	 The size of each instance of a variable length array type
+	 does not change during its lifetime.
+	 Where an array length expression
+	 is part of the operand of the typeof or sizeof operators
+	 and changing the value of the array length expression
+	 would not affect the result of the operator,
+	 it is unspecified
+	 whether or not the array length expression is evaluated.
+	 Where an array length expression is part of
+	 the operand with a _Countof operator
+	 and changing the value of the array length expression
+	 would not affect the result of the operator,
+	 the array length expression is not evaluated.
+	 Where an array length expression is part of
+	 the operand of an alignof operator,
+	 that expression is not evaluated.
 
 --=20
 <https://www.alejandro-colomar.es>
 
---7u4gsg2td265virm
+--njsnpqzzxxn5y6r3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAml3Yr4ACgkQ64mZXMKQ
-wqkitxAAqDoftS17J4l3CHwLVW+jPIEPZ+gHcvwUKo6a9GajwWbCYo/rwsdvbVLq
-muinJiZAYSbc2RKouQMDJM9Sv7X4yXkSRYrh3cO6DSz3T4J9YGIp8YCwdTgGypMg
-pcB8k7ExF1X+IMoGuWkzpBQQshUwTocdCMA+in36VTeHvdtJD+smCuhL8qOiDB8y
-T2oWfvEKsHtaLCSzZQAyxo/h762Wvpjr5vpjQ010AyVWiZrqJWwHfSheK3mHzWOb
-lq8VyVjAgH3b4UdVLDDvcWqb0JwhhAM8NBgJJTXLFjzUjSvpk2ojazBBCkiOZoxI
-NFihZKLpby07F1tbHYBhQxvm195ypjR+zQcOTkUU7x8FxsLsI/JI9EK+xAlNkHcC
-uajSTuk7AlnK3/IwEexLkLhZSVJjf9vDOLIUc3QoBHMAkKoPcs73mwXKzf6En8be
-4FpRbZPbWXNrYEwFjnHuW0i/7Q97mLPm1wtmwieRh8xgpLNGOSX40XZ+jalbSSDS
-vi6DSAgHK4iHTdzDzitamhhfBo1PKv+wkpWvmw8r4EG2BsHqk2ZqOC9x2KV5ivIu
-wHo6ZQHvXhner2vDAI/Hf8edkbzYgP4wkWGZ8v9opZ0WYCDHhuLfNvDjllmmwuQM
-/IWzkN9P1LUYO3+tRLzhYc+5MlwZEzlwE+7BWOtwKvF4ZjpozTs=
-=PIl0
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAml3YssACgkQ64mZXMKQ
+wqlb/w/+Ot+NfZMH31Pf2BQoW70wpiu8fTvHx4tgiRO6UEntbqpt3v2ML0fPcbKE
+85e2cEyLM98fwAWlrogOPDWJmRSme1w53tWn9g/atrCIBh0Vlx9Z4dAMeRchubM2
+sgD17QKA/KtLnCEy/9czAMo/0wnGoohRGJcmUeIE0oBp86uvBmy1ZbdPX+sKVJrf
+mmeLRm+WdmX2mmuiTPDzps0bqxygJLXKf2TfCxU0yQg6nQm67dUbuq56NiWFllPG
+WflZGljsNfBu3vxjVuH61AFWHhaaWjNSgLTX/y8sU/8J39kZQJHaQp41xI+s15pj
+4VcCFXhNIsWfFnHu/FsLErqVMZPO/XYqMVY1IXE8obZezQlpxS8faaJi4eJAOWGy
+1QRoQSfS0STuGtJxPsDfGVDvue2kBi9wd/FqgnsHvNE1FgQpvohoEc0XDrt1JgcY
+MU4fnXH7tB26q/zzSpa9sZShH5Xv7QFZOMYX1cTt/804w56JN3iGKWul1v5pylcK
+3yghLg2I91FQLMp8kGrzzdciXrAy2f1t6DO1V22Wu/KKT+unYZ0vTL5Ccl5YT7zy
+4qsUssZGoXnbL8h7payi6t/sApCb1nkozdXgVGAh0o2amvqAz53whsMvJw/PnIK8
+TBYez6GxxcG2zxK0cZtKAOafDTyYlET2GclmSGldFs3ftvqXVjE=
+=aBNm
 -----END PGP SIGNATURE-----
 
---7u4gsg2td265virm--
+--njsnpqzzxxn5y6r3--
