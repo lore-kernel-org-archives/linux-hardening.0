@@ -1,33 +1,33 @@
-Received: from forward101d.mail.yandex.net (forward101d.mail.yandex.net [178.154.239.212])
+Received: from forward103d.mail.yandex.net (forward103d.mail.yandex.net [178.154.239.214])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA5433B6DF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F8633A9D9
 	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 16:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.212
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769444632; cv=none; b=UVcjFw+GkaDal6WZC01lhB7u7PwLbAIpDgmL4BoD7NL61QEeHEdJlUk6pLMObvpLoGAsStENFOcOcqNIFfCuuRZ3J9GMWPCJ9VIOO1/leL878aHTB+yTOBouMFfVhAEyuEic6XlOpcBqW+/79VKS1FaoQJEZjHq+c7sYXMfSLyc=
+	t=1769444632; cv=none; b=a12W3mdGgh4+r1KfrsnyiyPeYQtQsmb7rmcYoFrfuYcDecRB3RmoYD0maa+rr9TgBqRP4Wgf7aBAjDG6Et/r4zESHqr+kMTUXuGP5HRDQA47cxGjA+e8Fx25mDFpJYE0Zj70BMnzoY/unTdkiQqzITTCviy5IC75xG8KJQxsHBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769444632; c=relaxed/simple;
-	bh=d67W2OXkyAeWV/HU+DFA7T8dBk58jKrNZ8BZcA5P14k=;
+	bh=SjVewipkGb2pHy2XjlOIMI/ol8YdO6Bc/2jCBQZhxF8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UT+kz+qHydie9A++NqRh74KiSz5GTsDLDAFv++fx72oHPrW59+XJTZqaalNEZBs0j4gxBpFUCdIyq1Of0zTi3O59/tVq+J7vGuSZU7IesbaBvfqU4JOJriANp0mD4Nv6nBKU53rapvSJtwMh1moCMAPbkhHr6drpuHm2HPh7090=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=ovmfTxgK; arc=none smtp.client-ip=178.154.239.212
+	 MIME-Version; b=H1iB4s9y+kPx6YtpF9a/Q8r3Av4yb7n2EoHl9A2PexGi/JU/Fdf1L1x6uvUssQi0IGJQ+q+uWbrG2aQCmGvXvPV9XO2BOqHNJhre7mM3I8hZTn/59+nZq53Ur8j1nNjDYK43+ClxwawwPagDC7r+pGUVyaG0JNzqWS9+bWw2oG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=mtjlMvJ0; arc=none smtp.client-ip=178.154.239.214
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="ovmfTxgK"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="mtjlMvJ0"
 Received: from mail-nwsmtp-smtp-production-main-99.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-99.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:eaca:0:640:4fc0:0])
-	by forward101d.mail.yandex.net (Yandex) with ESMTPS id 110D2C0055;
-	Mon, 26 Jan 2026 19:23:42 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-99.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id aNjffe0G2uQ0-hM1gHxDI;
+	by forward103d.mail.yandex.net (Yandex) with ESMTPS id 6FBB4C0067;
+	Mon, 26 Jan 2026 19:23:41 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-99.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id aNjffe0G2uQ0-Y2HSvANS;
 	Mon, 26 Jan 2026 19:23:41 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1769444621; bh=z0CT4is7vfFbdzSTNcDKog/2Nc05481CDOvsGBFMpN0=;
+	t=1769444621; bh=ARsbmywxfuI5jTWM3mHdTBxT+icu4uOOyjxQJwi5KRM=;
 	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=ovmfTxgKNAenOK1XdZC9sCRa1nKX1urwQ435fRvdvdrD5woWjI1ThM1F+wBiorEaK
-	 LgnYEPSDIttHEculjeG1ri39PkMESJzdIiLtYJ98BAYJQqEvYsT/Qf7TNj3nDUroOF
-	 DGEdTZIsIjOmCvy6NmT4/Kz4K+/xpNL2cGrsdalA=
+	b=mtjlMvJ0mXaxGNrt6MaKPC/syL+QGgw8HlBaSLW1ToL+tO7YxjNs9OvfDaArXqF3R
+	 3J60z9VZ6mHxgA2z6sET0TiDlSLy6f+hTq/yaN9o+XnaIHBcLvHVgDtDWminDRQXNa
+	 K3Pqd8+yajH/gDZFZGu+Qp/8qOlXV5gNtp9Dmr6A=
 Authentication-Results: mail-nwsmtp-smtp-production-main-99.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
 From: Dmitry Antipov <dmantipov@yandex.ru>
 To: Andy Shevchenko <andriy.shevchenko@intel.com>
@@ -36,9 +36,9 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	"Darrick J . Wong" <djwong@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH v3 3/3] lib/cmdline: adjust a few comments to fix kernel-doc -Wreturn warnings
-Date: Mon, 26 Jan 2026 19:20:59 +0300
-Message-ID: <20260126162059.357467-4-dmantipov@yandex.ru>
+Subject: [PATCH v3 2/3] lib/cmdline_kunit: add test case for memparse()
+Date: Mon, 26 Jan 2026 19:20:58 +0300
+Message-ID: <20260126162059.357467-3-dmantipov@yandex.ru>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260126162059.357467-1-dmantipov@yandex.ru>
 References: <20260126162059.357467-1-dmantipov@yandex.ru>
@@ -50,51 +50,94 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix 'get_option()', 'memparse()' and 'parse_option_str()' comments
-to match the commonly used style as suggested by kernel-doc -Wreturn.
+Better late than never, now there is a long-awaited basic
+test for 'memparse()' which is provided by cmdline.c.
 
 Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
 ---
-v3: likewise
-v2: just bump version to match the series
+v3: adjust style as suggested by Andy
+v2: few more test cases to trigger overflows
 ---
- lib/cmdline.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ lib/tests/cmdline_kunit.c | 52 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/lib/cmdline.c b/lib/cmdline.c
-index 90ed997d9570..9ac23a0aecf7 100644
---- a/lib/cmdline.c
-+++ b/lib/cmdline.c
-@@ -43,7 +43,7 @@ static int get_range(char **str, int *pint, int n)
-  *	When @pint is NULL the function can be used as a validator of
-  *	the current option in the string.
-  *
-- *	Return values:
-+ *	Return:
-  *	0 - no int in string
-  *	1 - int found, no subsequent comma
-  *	2 - int found including a subsequent comma
-@@ -145,6 +145,9 @@ EXPORT_SYMBOL(get_options);
-  *
-  *	Parses a string into a number.  The number stored at @ptr is
-  *	potentially suffixed with K, M, G, T, P, E.
-+ *
-+ *	Return: The value as recognized by simple_strtoull() multiplied
-+ *	by the value as specified by suffix, if any.
-  */
+diff --git a/lib/tests/cmdline_kunit.c b/lib/tests/cmdline_kunit.c
+index c1602f797637..3eda70487719 100644
+--- a/lib/tests/cmdline_kunit.c
++++ b/lib/tests/cmdline_kunit.c
+@@ -6,6 +6,7 @@
+ #include <kunit/test.h>
+ #include <linux/kernel.h>
+ #include <linux/random.h>
++#include <linux/sizes.h>
+ #include <linux/string.h>
  
- unsigned long long memparse(const char *ptr, char **retptr)
-@@ -198,7 +201,7 @@ EXPORT_SYMBOL(memparse);
-  *	This function parses a string containing a comma-separated list of
-  *	strings like a=b,c.
-  *
-- *	Return true if there's such option in the string, or return false.
-+ *	Return: True if there's such option in the string or false otherwise.
-  */
- bool parse_option_str(const char *str, const char *option)
- {
+ static const char *cmdline_test_strings[] = {
+@@ -139,11 +140,62 @@ static void cmdline_test_range(struct kunit *test)
+ 	} while (++i < ARRAY_SIZE(cmdline_test_range_strings));
+ }
+ 
++struct cmdline_test_memparse_entry {
++	const char *input;
++	const char *unrecognized;
++	unsigned long long result;
++};
++
++static const struct cmdline_test_memparse_entry testdata[] = {
++	{ "0",				"",	0ULL },
++	{ "1",				"",	1ULL },
++	{ "a",				"a",	0ULL },
++	{ "0xb",			"",	11ULL },
++	{ "0xz",			"x",	0ULL },
++	{ "1234",			"",	1234ULL },
++	{ "04567",			"",	2423ULL },
++	{ "0x9876",			"",	39030LL },
++	{ "05678",			"8",	375ULL },
++	{ "0xabcdefz",			"z",	11259375ULL },
++	{ "0cdba",			"c",	0ULL },
++	{ "4K",				"",	SZ_4K },
++	{ "0x10k@0xaaaabbbb",		"@",	SZ_16K },
++	{ "32M",			"",	SZ_32M },
++	{ "067m:foo",			":",	55 * SZ_1M },
++	{ "2G;bar=baz",			";",	SZ_2G },
++	{ "07gz",			"z",	7ULL * SZ_1G },
++	{ "3T+data",			"+",	3 * SZ_1T },
++	{ "04t,ro",			",",	SZ_4T },
++	{ "012p",			"",	11258999068426240ULL },
++	{ "7P,sync",			",",	7881299347898368ULL },
++	{ "0x2e",			"",	46ULL },
++	{ "2E and more",		" ",	2305843009213693952ULL },
++	{ "18446744073709551615", 	"",	ULLONG_MAX },
++	{ "18446744073709551616", 	"",	ULLONG_MAX },
++	{ "569202370375329612767", 	"",	ULLONG_MAX },
++};
++
++static void cmdline_test_memparse(struct kunit *test)
++{
++	const struct cmdline_test_memparse_entry *e;
++	unsigned long long ret;
++	char *retptr;
++
++	for (e = testdata; e < testdata + ARRAY_SIZE(testdata); e++) {
++		ret = memparse(e->input, &retptr);
++		KUNIT_EXPECT_EQ_MSG(test, ret, e->result,
++				    "    when parsing '%s'", e->input);
++		KUNIT_EXPECT_EQ_MSG(test, *retptr, *e->unrecognized,
++				    "    when parsing '%s'", e->input);
++	}
++}
++
+ static struct kunit_case cmdline_test_cases[] = {
+ 	KUNIT_CASE(cmdline_test_noint),
+ 	KUNIT_CASE(cmdline_test_lead_int),
+ 	KUNIT_CASE(cmdline_test_tail_int),
+ 	KUNIT_CASE(cmdline_test_range),
++	KUNIT_CASE(cmdline_test_memparse),
+ 	{}
+ };
+ 
 -- 
 2.52.0
 
