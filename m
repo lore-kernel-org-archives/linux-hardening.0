@@ -1,25 +1,25 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486E9242D84;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA732505B2;
 	Tue, 27 Jan 2026 01:26:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769477190; cv=none; b=BThbEQrNZl1R8EhF4BswDXBRoeqtxLPzhX4NIC2C66RG4t+iy6gehC93F1dpmRLnQRriGhDpJ8xSxBdNaaDlrLyiT5jejzfbAuXEHIXm+SpIV07oDeCjOeLqC9nB9u+XCcUUNbzUYdW8AtlVGqV20kkB069mvNrVfLUosRQ9m8E=
+	t=1769477191; cv=none; b=al59Jpis8lIg9o4sbu03krRK2PG1Fdu+FtwEw7hMzRUJiIfnzLXazAn64Qf/v5tLVEKmIOCx6guajJWy04o3UfAy+UeToXdIEBAdr0ZslDGZ2YO7J8bLHyZM7sLM2xd+VRr4P6h5gTczEGY9f0GLLaJgVkXM9NJQNqiJND/lx/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769477190; c=relaxed/simple;
-	bh=1ixGsQ7sfK1X4gS4aEkMwinXQxzfZ1EEl2WeoNQDpX0=;
+	s=arc-20240116; t=1769477191; c=relaxed/simple;
+	bh=44ilUmBamG53n4nT4OZBjoSQQbnf9/SQQnbk+MBt63M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hzODYQ62EGN8IhXSPJ1wFlES1une3FdStKZP3jdEDEnxiR5y8Bjjpr3qJoXGnJKhzmm6lHS0zZgBeF0KfmynZaH8dtB/dk/zkqRbG2OcWMtPF/GeCaYGZ9bJ6zsAWcEKxuBqJ/4V3F/Elz5NbKZzxsvmssugjut6uyk8Em/sm5A=
+	 MIME-Version; b=K1cNmEi34sNn/X3vUoasGmu13saTsDiy83eXT4f/vd7YetXvjZUczOh3u+kelaFCiY4VrFAAovL6gOKjhj8W/ZmzsH6O+svSwXyaJU3cwiTdqsh/E0wgw5rAmUbo/V8Wx1Nm8QHGPFmOu7TmxVWoHmgln+1lwmwhMmcsAf/B8lU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 30f42300fb1f11f0b0f03b4cfa9209d1-20260127
+X-UUID: 301e816efb1f11f0b0f03b4cfa9209d1-20260127
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:7743ce76-84ee-478c-8bb2-a8c67f2feb8c,IP:0,UR
+X-CID-O-INFO: VERSION:1.3.6,REQID:0e0339e9-83b8-480c-af2c-f4a648fc3b3c,IP:0,UR
 	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
 	:release,TS:-25
-X-CID-META: VersionHash:a9d874c,CLOUDID:99f814531bff769cb1516ece324ab72b,BulkI
+X-CID-META: VersionHash:a9d874c,CLOUDID:0d119a77ae28999be8f47b75f7889028,BulkI
 	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|898,TC:nil,Content:0|15|50
 	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
 	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -27,12 +27,12 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 30f42300fb1f11f0b0f03b4cfa9209d1-20260127
+X-UUID: 301e816efb1f11f0b0f03b4cfa9209d1-20260127
 X-User: jiangfeng@kylinos.cn
 Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <jiangfeng@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 88876059; Tue, 27 Jan 2026 09:26:23 +0800
+	with ESMTP id 349952707; Tue, 27 Jan 2026 09:26:21 +0800
 From: Feng Jiang <jiangfeng@kylinos.cn>
 To: pjw@kernel.org,
 	palmer@dabbelt.com,
@@ -52,11 +52,10 @@ To: pjw@kernel.org,
 	nathan@kernel.org
 Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Qingfang Deng <dqfext@gmail.com>
-Subject: [PATCH v5 6/8] riscv: lib: add strnlen() implementation
-Date: Tue, 27 Jan 2026 09:25:56 +0800
-Message-Id: <20260127012558.40025-7-jiangfeng@kylinos.cn>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v5 4/8] lib/string_kunit: add performance benchmark for strlen()
+Date: Tue, 27 Jan 2026 09:25:54 +0800
+Message-Id: <20260127012558.40025-5-jiangfeng@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260127012558.40025-1-jiangfeng@kylinos.cn>
 References: <20260127012558.40025-1-jiangfeng@kylinos.cn>
@@ -68,246 +67,245 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add an optimized strnlen() implementation for RISC-V. This version
-includes a generic optimization and a Zbb-powered optimization using
-the 'orc.b' instruction, derived from the strlen() implementation.
+Introduce a benchmarking framework to the string_kunit test suite to
+measure the execution efficiency of string functions.
 
-Benchmark results (QEMU TCG, rv64):
-  Length | Original (MB/s) | Optimized (MB/s) | Improvement
-  -------|-----------------|------------------|------------
-  16 B   | 179             | 309              | +72.6%
-  512 B  | 347             | 1562             | +350.1%
-  4096 B | 356             | 1878             | +427.5%
+The implementation is inspired by crc_benchmark(), measuring throughput
+(MB/s) and latency (ns/call) across a range of string lengths. It
+includes a warm-up phase, disables preemption during measurement, and
+uses a fixed seed for reproducible results.
 
-Suggested-by: Qingfang Deng <dqfext@gmail.com>
+This framework allows for comparing different implementations (e.g.,
+generic C vs. architecture-optimized assembly) within the KUnit
+environment.
+
+Initially, provide a benchmark for strlen().
+
+Suggested-by: Andy Shevchenko <andy@kernel.org>
+Suggested-by: Eric Biggers <ebiggers@kernel.org>
 Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
 ---
- arch/riscv/include/asm/string.h |   3 +
- arch/riscv/lib/Makefile         |   1 +
- arch/riscv/lib/strnlen.S        | 164 ++++++++++++++++++++++++++++++++
- arch/riscv/purgatory/Makefile   |   5 +-
- 4 files changed, 172 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/lib/strnlen.S
+ lib/Kconfig.debug        |  11 +++
+ lib/tests/string_kunit.c | 159 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 170 insertions(+)
 
-diff --git a/arch/riscv/include/asm/string.h b/arch/riscv/include/asm/string.h
-index 5ba77f60bf0b..16634d67c217 100644
---- a/arch/riscv/include/asm/string.h
-+++ b/arch/riscv/include/asm/string.h
-@@ -28,6 +28,9 @@ extern asmlinkage __kernel_size_t strlen(const char *);
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index ba36939fda79..21b058ae815f 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2475,6 +2475,17 @@ config STRING_HELPERS_KUNIT_TEST
+ 	depends on KUNIT
+ 	default KUNIT_ALL_TESTS
  
- #define __HAVE_ARCH_STRNCMP
- extern asmlinkage int strncmp(const char *cs, const char *ct, size_t count);
++config STRING_KUNIT_BENCH
++       bool "Benchmark string functions at runtime"
++       depends on STRING_KUNIT_TEST
++       help
++         Enable performance measurement for string functions.
 +
-+#define __HAVE_ARCH_STRNLEN
-+extern asmlinkage __kernel_size_t strnlen(const char *, size_t);
- #endif
++         This measures the execution efficiency of string functions
++         during the KUnit test run.
++
++         If unsure, say N.
++
+ config FFS_KUNIT_TEST
+ 	tristate "KUnit test ffs-family functions at runtime" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+index 7f1e2bf6a352..3fcd55953bd7 100644
+--- a/lib/tests/string_kunit.c
++++ b/lib/tests/string_kunit.c
+@@ -6,10 +6,15 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- /* For those files which don't want to check by kasan. */
-diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
-index bbc031124974..0969d8136df0 100644
---- a/arch/riscv/lib/Makefile
-+++ b/arch/riscv/lib/Makefile
-@@ -7,6 +7,7 @@ ifeq ($(CONFIG_KASAN_GENERIC)$(CONFIG_KASAN_SW_TAGS),)
- lib-y			+= strcmp.o
- lib-y			+= strlen.o
- lib-y			+= strncmp.o
-+lib-y			+= strnlen.o
- endif
- lib-y			+= csum.o
- ifeq ($(CONFIG_MMU), y)
-diff --git a/arch/riscv/lib/strnlen.S b/arch/riscv/lib/strnlen.S
-new file mode 100644
-index 000000000000..53afa7b5b314
---- /dev/null
-+++ b/arch/riscv/lib/strnlen.S
-@@ -0,0 +1,164 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
+ #include <kunit/test.h>
++#include <linux/ktime.h>
++#include <linux/math64.h>
+ #include <linux/module.h>
++#include <linux/prandom.h>
+ #include <linux/printk.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
++#include <linux/time64.h>
++#include <linux/units.h>
+ 
+ #define STRCMP_LARGE_BUF_LEN 2048
+ #define STRCMP_CHANGE_POINT 1337
+@@ -20,6 +25,9 @@
+ #define STRING_TEST_MAX_LEN	128
+ #define STRING_TEST_MAX_OFFSET	16
+ 
++#define STRING_BENCH_SEED	888
++#define STRING_BENCH_WORKLOAD	(1 * MEGA)
 +
-+/*
-+ * Base on arch/riscv/lib/strlen.S
+ static void string_test_memset16(struct kunit *test)
+ {
+ 	unsigned i, j, k;
+@@ -700,6 +708,156 @@ static void string_test_strends(struct kunit *test)
+ 	KUNIT_EXPECT_TRUE(test, strends("", ""));
+ }
+ 
++#if IS_ENABLED(CONFIG_STRING_KUNIT_BENCH)
++/* Target string lengths for benchmarking */
++static const size_t bench_lens[] = {
++	0, 1, 7, 8, 16, 31, 64, 127, 512, 1024, 3173, 4096,
++};
++
++/**
++ * alloc_max_bench_buffer() - Allocate buffer for the max test case.
++ * @test: KUnit context for managed allocation.
++ * @lens: Array of lengths used in the benchmark cases.
++ * @count: Number of elements in the @lens array.
++ * @buf_len: [out] Pointer to store the actually allocated buffer
++ * size (including NUL character).
 + *
-+ * Copyright (C) Feng Jiang <jiangfeng@kylinos.cn>
++ * Return: Pointer to the allocated memory, or NULL on failure.
 + */
++static void *alloc_max_bench_buffer(struct kunit *test,
++		const size_t *lens, size_t count, size_t *buf_len)
++{
++	size_t max_len = 0;
++	void *buf;
 +
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+#include <asm/alternative-macros.h>
-+#include <asm/hwcap.h>
++	for (size_t i = 0; i < count; i++)
++		max_len = max(lens[i], max_len);
 +
-+/* size_t strnlen(const char *s, size_t count) */
-+SYM_FUNC_START(strnlen)
++	/* Add space for NUL character */
++	max_len += 1;
 +
-+	__ALTERNATIVE_CFG("nop", "j strnlen_zbb", 0, RISCV_ISA_EXT_ZBB,
-+		IS_ENABLED(CONFIG_RISCV_ISA_ZBB) && IS_ENABLED(CONFIG_TOOLCHAIN_HAS_ZBB))
++	buf = kunit_kzalloc(test, max_len, GFP_KERNEL);
++	if (!buf)
++		return NULL;
 +
++	if (buf_len)
++		*buf_len = max_len;
 +
-+	/*
-+	 * Returns
-+	 *   a0 - String length
-+	 *
-+	 * Parameters
-+	 *   a0 - String to measure
-+	 *   a1 - Max length of string
-+	 *
-+	 * Clobbers
-+	 *   t0, t1, t2
-+	 */
-+	addi	t1, a0, -1
-+	add	t2, a0, a1
-+1:
-+	addi	t1, t1, 1
-+	beq	t1, t2, 2f
-+	lbu	t0, 0(t1)
-+	bnez	t0, 1b
-+2:
-+	sub	a0, t1, a0
-+	ret
++	return buf;
++}
 +
-+
-+/*
-+ * Variant of strnlen using the ZBB extension if available
++/**
++ * fill_random_string() - Populate a buffer with a random NUL-terminated string.
++ * @buf: Buffer to fill.
++ * @len: Length of the buffer in bytes.
++ *
++ * Fills the buffer with random non-NUL bytes and ensures the string is
++ * properly NUL-terminated.
 + */
-+#if defined(CONFIG_RISCV_ISA_ZBB) && defined(CONFIG_TOOLCHAIN_HAS_ZBB)
-+strnlen_zbb:
++static void fill_random_string(char *buf, size_t len)
++{
++	struct rnd_state state;
 +
-+#ifdef CONFIG_CPU_BIG_ENDIAN
-+# define CZ	clz
-+# define SHIFT	sll
++	if (!buf || !len)
++		return;
++
++	/* Use a fixed seed to ensure deterministic benchmark results */
++	prandom_seed_state(&state, STRING_BENCH_SEED);
++	prandom_bytes_state(&state, buf, len);
++
++	/* Replace NUL characters to avoid early string termination */
++	for (size_t i = 0; i < len; i++) {
++		if (buf[i] == '\0')
++			buf[i] = 0x01;
++	}
++
++	buf[len - 1] = '\0';
++}
++
++/**
++ * STRING_BENCH() - Benchmark string functions.
++ * @iters: Number of iterations to run.
++ * @func: Function to benchmark.
++ * @...: Variable arguments passed to @func.
++ *
++ * Disables preemption and measures the total time in nanoseconds to execute
++ * @func(@__VA_ARGS__) for @iters times, including a small warm-up phase.
++ *
++ * Context: Disables preemption during measurement.
++ * Return: Total execution time in nanoseconds (u64).
++ */
++#define STRING_BENCH(iters, func, ...)					\
++({									\
++	/* Volatile function pointer prevents dead code elimination */	\
++	typeof(func) (* volatile __func) = (func);			\
++	size_t __bn_iters = (iters);					\
++	size_t __bn_warm_iters;						\
++	u64 __bn_t;							\
++									\
++	__bn_warm_iters = max(__bn_iters / 10, 50U);			\
++									\
++	for (size_t __bn_i = 0; __bn_i < __bn_warm_iters; __bn_i++)	\
++		(void)__func(__VA_ARGS__);				\
++									\
++	preempt_disable();						\
++	__bn_t = ktime_get_ns();					\
++	for (size_t __bn_i = 0; __bn_i < __bn_iters; __bn_i++)		\
++		(void)__func(__VA_ARGS__);				\
++	__bn_t = ktime_get_ns() - __bn_t;				\
++	preempt_enable();						\
++	__bn_t;								\
++})
++
++/**
++ * STRING_BENCH_BUF() - Benchmark harness for single-buffer functions.
++ * @test: KUnit context.
++ * @buf_name: Local char * variable name to be defined.
++ * @buf_size: Local size_t variable name to be defined.
++ * @func: Function to benchmark.
++ * @...: Extra arguments for @func.
++ *
++ * Prepares a randomized, NUL-terminated buffer and iterates through lengths
++ * in bench_lens, defining @buf_name and @buf_size in each loop.
++ */
++#define STRING_BENCH_BUF(test, buf_name, buf_size, func, ...)		\
++do {									\
++	size_t buf_size, _bn_i, _bn_iters, _bn_size = 0;		\
++	u64 _bn_t, _bn_mbps = 0, _bn_lat = 0;				\
++	char *buf_name, *_bn_buf;					\
++									\
++	_bn_buf = alloc_max_bench_buffer(test, bench_lens,		\
++			ARRAY_SIZE(bench_lens), &_bn_size);		\
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, _bn_buf);			\
++									\
++	fill_random_string(_bn_buf, _bn_size);				\
++									\
++	for (_bn_i = 0; _bn_i < ARRAY_SIZE(bench_lens); _bn_i++) {	\
++		buf_size = bench_lens[_bn_i];				\
++		buf_name = _bn_buf + _bn_size - buf_size - 1;		\
++		_bn_iters = STRING_BENCH_WORKLOAD / max(buf_size, 1U);	\
++									\
++		_bn_t = STRING_BENCH(_bn_iters, func, ##__VA_ARGS__);	\
++									\
++		if (_bn_t > 0) {					\
++			_bn_mbps = (u64)(buf_size) * _bn_iters		\
++					* (NSEC_PER_SEC / MEGA);	\
++			_bn_mbps = div64_u64(_bn_mbps, _bn_t);		\
++			_bn_lat = div64_u64(_bn_t, _bn_iters);		\
++		}							\
++		kunit_info(test, "len=%zu: %llu MB/s (%llu ns/call)\n",	\
++				buf_size, _bn_mbps, _bn_lat);		\
++	}								\
++} while (0)
 +#else
-+# define CZ	ctz
-+# define SHIFT	srl
-+#endif
++#define STRING_BENCH_BUF(test, buf_name, buf_size, func, ...)		\
++	kunit_skip(test, "not enabled")
++#endif /* IS_ENABLED(CONFIG_STRING_KUNIT_BENCH) */
 +
-+.option push
-+.option arch,+zbb
++static void string_bench_strlen(struct kunit *test)
++{
++	STRING_BENCH_BUF(test, buf, len, strlen, buf);
++}
 +
-+	/*
-+	 * Returns
-+	 *   a0 - String length
-+	 *
-+	 * Parameters
-+	 *   a0 - String to measure
-+	 *   a1 - Max length of string
-+	 *
-+	 * Clobbers
-+	 *   t0, t1, t2, t3, t4
-+	 */
-+
-+	/* If maxlen is 0, return 0. */
-+	beqz	a1, 3f
-+
-+	/* Number of irrelevant bytes in the first word. */
-+	andi	t2, a0, SZREG-1
-+
-+	/* Align pointer. */
-+	andi	t0, a0, -SZREG
-+
-+	li	t3, SZREG
-+	sub	t3, t3, t2
-+	slli	t2, t2, 3
-+
-+	/* Aligned boundary. */
-+	add	t4, a0, a1
-+	andi	t4, t4, -SZREG
-+
-+	/* Get the first word.  */
-+	REG_L	t1, 0(t0)
-+
-+	/*
-+	 * Shift away the partial data we loaded to remove the irrelevant bytes
-+	 * preceding the string with the effect of adding NUL bytes at the
-+	 * end of the string's first word.
-+	 */
-+	SHIFT	t1, t1, t2
-+
-+	/* Convert non-NUL into 0xff and NUL into 0x00. */
-+	orc.b	t1, t1
-+
-+	/* Convert non-NUL into 0x00 and NUL into 0xff. */
-+	not	t1, t1
-+
-+	/*
-+	 * Search for the first set bit (corresponding to a NUL byte in the
-+	 * original chunk).
-+	 */
-+	CZ	t1, t1
-+
-+	/*
-+	 * The first chunk is special: compare against the number
-+	 * of valid bytes in this chunk.
-+	 */
-+	srli	a0, t1, 3
-+
-+	/* Limit the result by maxlen. */
-+	minu	a0, a0, a1
-+
-+	bgtu	t3, a0, 2f
-+
-+	/* Prepare for the word comparison loop. */
-+	addi	t2, t0, SZREG
-+	li	t3, -1
-+
-+	/*
-+	 * Our critical loop is 4 instructions and processes data in
-+	 * 4 byte or 8 byte chunks.
-+	 */
-+	.p2align 3
-+1:
-+	REG_L	t1, SZREG(t0)
-+	addi	t0, t0, SZREG
-+	orc.b	t1, t1
-+	bgeu	t0, t4, 4f
-+	beq	t1, t3, 1b
-+4:
-+	not	t1, t1
-+	CZ	t1, t1
-+	srli	t1, t1, 3
-+
-+	/* Get number of processed bytes. */
-+	sub	t2, t0, t2
-+
-+	/* Add number of characters in the first word.  */
-+	add	a0, a0, t2
-+
-+	/* Add number of characters in the last word.  */
-+	add	a0, a0, t1
-+
-+	/* Ensure the final result does not exceed maxlen. */
-+	minu	a0, a0, a1
-+2:
-+	ret
-+3:
-+	mv	a0, a1
-+	ret
-+
-+.option pop
-+#endif
-+SYM_FUNC_END(strnlen)
-+SYM_FUNC_ALIAS(__pi_strnlen, strnlen)
-+EXPORT_SYMBOL(strnlen)
-diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
-index 530e497ca2f9..d7c0533108be 100644
---- a/arch/riscv/purgatory/Makefile
-+++ b/arch/riscv/purgatory/Makefile
-@@ -2,7 +2,7 @@
+ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(string_test_memset16),
+ 	KUNIT_CASE(string_test_memset32),
+@@ -725,6 +883,7 @@ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(string_test_strtomem),
+ 	KUNIT_CASE(string_test_memtostr),
+ 	KUNIT_CASE(string_test_strends),
++	KUNIT_CASE(string_bench_strlen),
+ 	{}
+ };
  
- purgatory-y := purgatory.o sha256.o entry.o string.o ctype.o memcpy.o memset.o
- ifeq ($(CONFIG_KASAN_GENERIC)$(CONFIG_KASAN_SW_TAGS),)
--purgatory-y += strcmp.o strlen.o strncmp.o
-+purgatory-y += strcmp.o strlen.o strncmp.o strnlen.o
- endif
- 
- targets += $(purgatory-y)
-@@ -32,6 +32,9 @@ $(obj)/strncmp.o: $(srctree)/arch/riscv/lib/strncmp.S FORCE
- $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
-+$(obj)/strnlen.o: $(srctree)/arch/riscv/lib/strnlen.S FORCE
-+	$(call if_changed_rule,as_o_S)
-+
- CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
- CFLAGS_string.o := -D__DISABLE_EXPORTS
- CFLAGS_ctype.o := -D__DISABLE_EXPORTS
 -- 
 2.25.1
 
