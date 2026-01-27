@@ -1,83 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0963451C1
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Jan 2026 16:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0CB23D7F7;
+	Tue, 27 Jan 2026 01:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769445881; cv=none; b=ACsEYnApp34gIYn7AUs+i0UQNUGr4p1R3jgNqhjMDF/sM+JcQHtUUB4MU2FL5JlE+nYqFrrWaZlDw7kUJUrtZp4/PyWO6j5dq+gB8AGTyTx0hMIpo0kZdKkBC4vd7YlkA6Qo31DF0eoI+9hfIWOSp9XFw88TFhtKa9n9+PtRDOs=
+	t=1769477187; cv=none; b=RDzKf4W0ud/aVPMBJQH/1x7gSL222OLix+GGcFznosA8C3gvWCdroK4lZJgS2N5wkv7TgNmJjKO86anV+zk/tn9r+CYK4fYZiyMvOFh15Vn9t6xR58/PAsBIgaFDGTdSjgqM/xT6DjTWEVQw1ghbuSw2pm+mHsDJrdbroH7Q5O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769445881; c=relaxed/simple;
-	bh=FRAaqRGx7aNP3Yq7q6OpyeBomYQxL/v5lJkG+SpccIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SSa5XVo5wQmgmxk+CMTju/Gu/aDMeoJl3HelM9wik8xC+/OLr8wPs1SoUhGwK4h0be62yi4N863sPoaCbeg5u7mSp4AyGAA9/jWOjDLQ/zfjQehKYicmZNlE0Nt4B/zXcYt10MVZ1sSe2hiFK1jSt8sU9CnmuPUTwi2wWg164Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DWzl0rub; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DWzl0rub"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769445878; x=1800981878;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FRAaqRGx7aNP3Yq7q6OpyeBomYQxL/v5lJkG+SpccIg=;
-  b=DWzl0rubM73/MUd35x1PfzrrX+sNf+mGqkzGxx2ANUaw27yYe36LsFp8
-   dQhuzPC555A6FrZeqplCOmTNo1Ecji47MSY1V8MefNEe4qspCtXSAIKYh
-   8tk7eHnZLQBQ0gerMIu/ioJsR/LCJtHnjTicVTsPOdoITAknWUPwZYGCW
-   G3+3MBKYcIeGWfDb6Ej+HKFTgE9AqWB81tK3C4faJAxxJpYdI4TTnR+VA
-   XaVNdYoAjcsWFUsIs9fv3ZetjeyjDvblGoODmUScLu2SMC9ggyOn/dBbv
-   aPiTxsIfIauDzFPNrjpy9WYkQic2/1k1dr/A5ExHrmZaY787f/pOE/rJx
-   A==;
-X-CSE-ConnectionGUID: Sr6i9hEbQ0aWZS4IQNCLjQ==
-X-CSE-MsgGUID: YrHh+5ZZQSedEfy3zzGr3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="69824193"
-X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="69824193"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:44:37 -0800
-X-CSE-ConnectionGUID: T119CrgrRc2iVH35SUiMYQ==
-X-CSE-MsgGUID: 4VhPv8aHSOqxFuLcydFmwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="212707747"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.122])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 08:44:35 -0800
-Date: Mon, 26 Jan 2026 18:44:33 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] lib and lib/cmdline enhancements
-Message-ID: <aXeZ8Wx3YGBe666p@smile.fi.intel.com>
-References: <20260126162059.357467-1-dmantipov@yandex.ru>
- <aXeZo2PJlXEuPjIZ@smile.fi.intel.com>
+	s=arc-20240116; t=1769477187; c=relaxed/simple;
+	bh=UAYuDoQb/2EtPLdVdp2ivjNPfKg9V9mMj2QQmFZrq5o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Zi1+BCxcGgiwLSnY9kMi1eVtPZq9JQ9KZ1jGbx/wfqve7SczvzXCmgscUSw8k+DpabYuE3+ztGEalhRk9vanOPAW6d4VqsDzcaHnr5aHYAVa31Da31o8q2sgC9TB5vkqOyIDP9FUpbhf7ncR9QAb9RfVb2tslYdpZQ92lhZSaFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 2edcbb90fb1f11f0b0f03b4cfa9209d1-20260127
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:211fc255-d3ae-49cc-a5fb-8c81abf285e4,IP:0,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-25
+X-CID-META: VersionHash:a9d874c,CLOUDID:664592adbd3044f57befc36d5e3a214f,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|898,TC:nil,Content:0|15|50
+	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
+	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 2edcbb90fb1f11f0b0f03b4cfa9209d1-20260127
+X-User: jiangfeng@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <jiangfeng@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1730086189; Tue, 27 Jan 2026 09:26:19 +0800
+From: Feng Jiang <jiangfeng@kylinos.cn>
+To: pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	akpm@linux-foundation.org,
+	kees@kernel.org,
+	andy@kernel.org,
+	jiangfeng@kylinos.cn,
+	ebiggers@kernel.org,
+	martin.petersen@oracle.com,
+	sohil.mehta@intel.com,
+	charlie@rivosinc.com,
+	conor.dooley@microchip.com,
+	samuel.holland@sifive.com,
+	linus.walleij@linaro.org,
+	nathan@kernel.org
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v5 1/8] lib/string_kunit: add correctness test for strlen()
+Date: Tue, 27 Jan 2026 09:25:51 +0800
+Message-Id: <20260127012558.40025-2-jiangfeng@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260127012558.40025-1-jiangfeng@kylinos.cn>
+References: <20260127012558.40025-1-jiangfeng@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aXeZo2PJlXEuPjIZ@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 26, 2026 at 06:43:19PM +0200, Andy Shevchenko wrote:
-> On Mon, Jan 26, 2026 at 07:20:56PM +0300, Dmitry Antipov wrote:
-> > Adjust '_parse_integer_limit()' to not ignore overflows, add KUnit-based
-> > test for 'memparse()' and fix kernel-doc glitches found in lib/cmdline.c.
-> 
-> Shouldn't we also add test cases to lib/test-kstrtox.c?
+Add a KUnit test for strlen() to verify correctness across
+different string lengths and memory alignments.
 
-Actually I think some of what you added for memparse(), should be moved to
-test-kstrtox.c as they test the beneath implementation rather than memparse()
-added code.
+Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
+Acked-by: Andy Shevchenko <andy@kernel.org>
+Tested-by: Joel Stanley <joel@jms.id.au>
+---
+ lib/tests/string_kunit.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
+diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+index f9a8e557ba77..bc5130c6e5e9 100644
+--- a/lib/tests/string_kunit.c
++++ b/lib/tests/string_kunit.c
+@@ -17,6 +17,9 @@
+ #define STRCMP_TEST_EXPECT_LOWER(test, fn, ...) KUNIT_EXPECT_LT(test, fn(__VA_ARGS__), 0)
+ #define STRCMP_TEST_EXPECT_GREATER(test, fn, ...) KUNIT_EXPECT_GT(test, fn(__VA_ARGS__), 0)
+ 
++#define STRING_TEST_MAX_LEN	128
++#define STRING_TEST_MAX_OFFSET	16
++
+ static void string_test_memset16(struct kunit *test)
+ {
+ 	unsigned i, j, k;
+@@ -104,6 +107,28 @@ static void string_test_memset64(struct kunit *test)
+ 	}
+ }
+ 
++static void string_test_strlen(struct kunit *test)
++{
++	const size_t buf_size = STRING_TEST_MAX_LEN + STRING_TEST_MAX_OFFSET + 1;
++	size_t len, offset;
++	char *s;
++
++	s = kunit_kzalloc(test, buf_size, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, s);
++
++	memset(s, 'A', buf_size);
++	s[buf_size - 1] = '\0';
++
++	for (offset = 0; offset < STRING_TEST_MAX_OFFSET; offset++) {
++		for (len = 0; len <= STRING_TEST_MAX_LEN; len++) {
++			s[offset + len] = '\0';
++			KUNIT_EXPECT_EQ_MSG(test, strlen(s + offset), len,
++				"offset:%zu len:%zu", offset, len);
++			s[offset + len] = 'A';
++		}
++	}
++}
++
+ static void string_test_strchr(struct kunit *test)
+ {
+ 	const char *test_string = "abcdefghijkl";
+@@ -618,6 +643,7 @@ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(string_test_memset16),
+ 	KUNIT_CASE(string_test_memset32),
+ 	KUNIT_CASE(string_test_memset64),
++	KUNIT_CASE(string_test_strlen),
+ 	KUNIT_CASE(string_test_strchr),
+ 	KUNIT_CASE(string_test_strnchr),
+ 	KUNIT_CASE(string_test_strspn),
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
