@@ -1,189 +1,98 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8288D280CE5;
-	Tue, 27 Jan 2026 01:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEFB284663;
+	Tue, 27 Jan 2026 03:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769477193; cv=none; b=hmC3gKPBDix/kC4vrrlCmvJrxvy9xg8+7XPXUeI2EaNdCXzo5rJsbay0GvZBx6FlVI2vB0VL+JDCC24mlG6nlM7KrrNkiRgMb9pVbSdKGf0UfGvSwlItGUDx1GFFNKKCyzFvETzfQEqfVqOo8QfnKMW1VgAOokaLWy9Z9djxtZk=
+	t=1769484479; cv=none; b=uVpM6rZ+VrHSwo4znxtmrw61ea2y2Cf70KMzISPjV54WoXMMNhK7GZzByn3L00M6TlEPYjCyv+9Bu5J1dloWRP1Ai5ShMeKZ6IJzQaNOM8P4bTBuTd+84o83kfHECZ/lY6BmBqf/YL2O6Hs8F1USR27KqhZSlAH5+LsHM+T/bZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769477193; c=relaxed/simple;
-	bh=AMLyJP13lq5q9yfPKhQ9OMAfBqXzPWDIhUThsyomljo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EfYrmi7UqcnlAAPDj9v2QIGCUL6PSf2I4ZqW7TT4heyBG2MQi9s/tGaeqieiruW2Uc6iQYCP5b84JwLkreXVsyYbNyX63zlM/klWSLqpKg0DGT0Ho4PY/SRrsz6intyjTQxbJImJT1fYPdgvYbpo7cxIR7uS5xg3jVTkFF+ZGQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 31c5e7e6fb1f11f0b0f03b4cfa9209d1-20260127
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:98ad2e02-80d8-4bb9-8d9e-e3b854d07c80,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:a9d874c,CLOUDID:8ce0b3e479db6be6e531a73d4b068cc3,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|898,TC:nil,Content:0|15|50
-	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
-	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 31c5e7e6fb1f11f0b0f03b4cfa9209d1-20260127
-X-User: jiangfeng@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <jiangfeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1987578300; Tue, 27 Jan 2026 09:26:24 +0800
-From: Feng Jiang <jiangfeng@kylinos.cn>
-To: pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	akpm@linux-foundation.org,
-	kees@kernel.org,
-	andy@kernel.org,
-	jiangfeng@kylinos.cn,
-	ebiggers@kernel.org,
-	martin.petersen@oracle.com,
-	sohil.mehta@intel.com,
-	charlie@rivosinc.com,
-	conor.dooley@microchip.com,
-	samuel.holland@sifive.com,
-	linus.walleij@linaro.org,
-	nathan@kernel.org
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v5 8/8] riscv: lib: add strrchr() implementation
-Date: Tue, 27 Jan 2026 09:25:58 +0800
-Message-Id: <20260127012558.40025-9-jiangfeng@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260127012558.40025-1-jiangfeng@kylinos.cn>
-References: <20260127012558.40025-1-jiangfeng@kylinos.cn>
+	s=arc-20240116; t=1769484479; c=relaxed/simple;
+	bh=82UInUPaZAsuTnm7Eq2Rk6+iYxY2ts69JzilZc2OUsQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=N2tjARn3qf8CGwwEK1f5SSHIXgas36hZ2r0NXkegOw3VF9HMZBOKEpOGE1gko57D0bMDVHiM8Wvr6uPBE8kgkRaCw5UxBWFd+xP3gC2DM0BvjnMr81dKruUdS0u0Q4x3OvZAiWxvjhJ2hISHAqSsHhyKXFfKL8CokMamH5j8vYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XydDZ319; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XydDZ319"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 32FD4C116C6;
+	Tue, 27 Jan 2026 03:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769484479;
+	bh=82UInUPaZAsuTnm7Eq2Rk6+iYxY2ts69JzilZc2OUsQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=XydDZ319/gvkFBkAWnYNjt25ao4WR3bvRPCk6It5k1K+z4Euvj+kn3oXIjz+3SP7Y
+	 +6noowqFxso1ZLhMZFWyrLIIwweg2i06hfCoTodB5pcvOXHVVwruR+EuCeCNVLdbtS
+	 06k6z90IHyuiiLNBFn3PvXieXJO8vj70x8k2AQAXNqSc6K+1UZehG8k4wGTHwQzHGw
+	 mKjd5JuhmHylDMb7whhhjFTsG+lGeOT4xcTxwH56LnqEN09aXURjM6IvxGZ/pVAt+A
+	 /ZQdwsEPRm8xjoV3ihX+zfL6QDKCtuokFYpPPjQBAMAXx62b/p2sZTxucBsNERx6zK
+	 nFc7CBxZa/nGw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200A2D25920;
+	Tue, 27 Jan 2026 03:27:59 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v2 0/3] Add Amlogic general DMA
+Date: Tue, 27 Jan 2026 03:27:51 +0000
+Message-Id: <20260127-amlogic-dma-v2-0-4525d327d74d@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALgweGkC/1XMQQ7CIBCF4as0sxZTSAFx1XuYLgiM7SRSDBiia
+ bi72OjC5T+T922QMRFmOHcbJCyUKa4txKEDt9h1Rka+NYheSC64ZDbc4kyO+WCZNoPWXjov1AB
+ tcU94peeuXabWC+VHTK8dL/xz/Tnqzymc9QzFyaDUaJTV4/d7dDHAVGt9A/rhUiKoAAAA
+X-Change-ID: 20251215-amlogic-dma-79477d5cd264
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1769484476; l=1154;
+ i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
+ bh=82UInUPaZAsuTnm7Eq2Rk6+iYxY2ts69JzilZc2OUsQ=;
+ b=5pfGRD1ecIIB6hxFANgbOJ1NQmMd6kd+5Feseh7D/qlkLzwYFtI7HdbLloiExbeHw/v7Hsk5T
+ EwCisl719kzCxW9iU3KyLM1/qj+3l2h1IAByGyQMcsZlhF09uAbbavS
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
+ auth_id=578
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-Add an assembly implementation of strrchr() for RISC-V.
+Add DMA driver and bindigns for the Amlogic SoCs.
 
-This implementation minimizes instruction count and avoids unnecessary
-memory access to the stack. The performance benefits are most visible
-on small workloads (1-16 bytes) where the architectural savings in
-function overhead outweigh the execution time of the scan loop.
-
-Benchmark results (QEMU TCG, rv64):
-  Length | Original (MB/s) | Optimized (MB/s) | Improvement
-  -------|-----------------|------------------|------------
-  1 B    | 20              | 21               | +5.0%
-  7 B    | 111             | 120              | +8.1%
-  16 B   | 189             | 199              | +5.3%
-  512 B  | 361             | 382              | +5.8%
-  4096 B | 388             | 391              | +0.8%
-
-Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- arch/riscv/include/asm/string.h |  3 +++
- arch/riscv/lib/Makefile         |  1 +
- arch/riscv/lib/strrchr.S        | 37 +++++++++++++++++++++++++++++++++
- arch/riscv/purgatory/Makefile   |  5 ++++-
- 4 files changed, 45 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/lib/strrchr.S
+Changes in v2:
+- Introduce what the DMA is used for in the A9 SoC.
+- Some minor modifications were made according to Krzysztof's suggestions.
+- Some modifications were made according to Neil's suggestions.
+- Fix a build error.
+- Link to v1: https://lore.kernel.org/r/20251216-amlogic-dma-v1-0-e289e57e96a7@amlogic.com
 
-diff --git a/arch/riscv/include/asm/string.h b/arch/riscv/include/asm/string.h
-index ca3ade82b124..764ffe8f6479 100644
---- a/arch/riscv/include/asm/string.h
-+++ b/arch/riscv/include/asm/string.h
-@@ -34,6 +34,9 @@ extern asmlinkage __kernel_size_t strnlen(const char *, size_t);
- 
- #define __HAVE_ARCH_STRCHR
- extern asmlinkage char *strchr(const char *, int);
-+
-+#define __HAVE_ARCH_STRRCHR
-+extern asmlinkage char *strrchr(const char *, int);
- #endif
- 
- /* For those files which don't want to check by kasan. */
-diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
-index b7f804dce1c3..735d0b665536 100644
---- a/arch/riscv/lib/Makefile
-+++ b/arch/riscv/lib/Makefile
-@@ -9,6 +9,7 @@ lib-y			+= strlen.o
- lib-y			+= strncmp.o
- lib-y			+= strnlen.o
- lib-y			+= strchr.o
-+lib-y			+= strrchr.o
- endif
- lib-y			+= csum.o
- ifeq ($(CONFIG_MMU), y)
-diff --git a/arch/riscv/lib/strrchr.S b/arch/riscv/lib/strrchr.S
-new file mode 100644
-index 000000000000..ac58b20ca21d
---- /dev/null
-+++ b/arch/riscv/lib/strrchr.S
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+/*
-+ * Copyright (C) 2025 Feng Jiang <jiangfeng@kylinos.cn>
-+ */
-+
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+
-+/* char *strrchr(const char *s, int c) */
-+SYM_FUNC_START(strrchr)
-+	/*
-+	 * Parameters
-+	 *	a0 - The string to be searched
-+	 *	a1 - The character to seaerch for
-+	 *
-+	 * Returns
-+	 *	a0 - Address of last occurrence of 'c' or 0
-+	 *
-+	 * Clobbers
-+	 *	t0, t1
-+	 */
-+	andi	a1, a1, 0xff
-+	mv	t1, a0
-+	li	a0, 0
-+1:
-+	lbu	t0, 0(t1)
-+	bne	t0, a1, 2f
-+	mv	a0, t1
-+2:
-+	addi	t1, t1, 1
-+	bnez	t0, 1b
-+	ret
-+SYM_FUNC_END(strrchr)
-+
-+SYM_FUNC_ALIAS_WEAK(__pi_strrchr, strrchr)
-+EXPORT_SYMBOL(strrchr)
-diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
-index e7b3d748c913..b0358a78f11a 100644
---- a/arch/riscv/purgatory/Makefile
-+++ b/arch/riscv/purgatory/Makefile
-@@ -2,7 +2,7 @@
- 
- purgatory-y := purgatory.o sha256.o entry.o string.o ctype.o memcpy.o memset.o
- ifeq ($(CONFIG_KASAN_GENERIC)$(CONFIG_KASAN_SW_TAGS),)
--purgatory-y += strcmp.o strlen.o strncmp.o strnlen.o strchr.o
-+purgatory-y += strcmp.o strlen.o strncmp.o strnlen.o strchr.o strrchr.o
- endif
- 
- targets += $(purgatory-y)
-@@ -38,6 +38,9 @@ $(obj)/strnlen.o: $(srctree)/arch/riscv/lib/strnlen.S FORCE
- $(obj)/strchr.o: $(srctree)/arch/riscv/lib/strchr.S FORCE
- 	$(call if_changed_rule,as_o_S)
- 
-+$(obj)/strrchr.o: $(srctree)/arch/riscv/lib/strrchr.S FORCE
-+	$(call if_changed_rule,as_o_S)
-+
- CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
- CFLAGS_string.o := -D__DISABLE_EXPORTS
- CFLAGS_ctype.o := -D__DISABLE_EXPORTS
+---
+Xianwei Zhao (3):
+      dt-bindings: dma: Add Amlogic A9 SoC DMA
+      dma: amlogic: Add general DMA driver for A9
+      MAINTAINERS: Add an entry for Amlogic DMA driver
+
+ .../devicetree/bindings/dma/amlogic,a9-dma.yaml    |  70 +++
+ MAINTAINERS                                        |   7 +
+ drivers/dma/Kconfig                                |   9 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/amlogic-dma.c                          | 563 +++++++++++++++++++++
+ 5 files changed, 650 insertions(+)
+---
+base-commit: 3c8a86ed002ab8fb287ee4ec92f0fd6ac5b291d2
+change-id: 20251215-amlogic-dma-79477d5cd264
+
+Best regards,
 -- 
-2.25.1
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
 
