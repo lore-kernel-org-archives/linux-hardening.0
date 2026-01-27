@@ -1,122 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CCD336ECE
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Jan 2026 09:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B25235045;
+	Tue, 27 Jan 2026 09:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769507375; cv=none; b=dHjLhZEHEeV+0fQJjsOFDuZUzMXyn0Yc3aPeh5zhvO3K7/aN9+XXUJbjjNujTuyaUr2tmgj8kY6kdNRef170GvROjXrENVGfeDMAc4QH9+q6rWcvTJ5knj++C5ARiQfSdIEVcG4LoUeGljPWwJBrcIcX1ToGxQjUrfoTwR25+Ro=
+	t=1769507458; cv=none; b=e5oUFXQbxxPDrjnQGWJ1F1SXKuQOwtoX15uJRQ2KOnldR9GbnW6K4lw5LP5RptxGWATT2UR9TFq55wZ7aTFv9vCUQKXr02g4g4/lADFvCJTuU/liO5yfjs4Pyzh0Z88k7Crqr6HGxuLcHy8UedOOAPZ6UOqydfKlzAFvXmIyN6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769507375; c=relaxed/simple;
-	bh=7ffJyHAC8J/GkSpmEQneS6c4rnD8WljExEpFryTMzaI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nvhCWOvqCsZ6dIwKfkOjmR++AmhZZRKB2rpJP1P/vCRQKJ0I3zY6s/yPxEhPbofk913RDu7fkdpHunqTIGwisEXJj6VekusZcCOnHfGneqtwKiNrNc23qov+wYCztdbEnOJR61Ra1K2eXMPd4sU6/1HhYyEP/XtCtng3DMZyQbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzqWxbJq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769507458; c=relaxed/simple;
+	bh=9JoGMgukM4DO2lRnKpbhZfoRHZo0S35f5oyw0yGG8sI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRbrTD6tz1cFX1mjHu3qN4t2SuUfMBr+Msw1k38hwRYB0q0rNS9FNiJUrBP8HSUkdQhWBt1EYk0xDhfoGdqoJL7+xUoUL9n5NMxnlccj7NWFl0FQ4tCro9I7yt0s6wALcv9GJ4haIGGat2w+3oP9TTUFodA1Fzh0bc5FFKDT74c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dK19/LuI; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzqWxbJq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54690C2BCB0
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Jan 2026 09:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769507375;
-	bh=7ffJyHAC8J/GkSpmEQneS6c4rnD8WljExEpFryTMzaI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LzqWxbJqFOchXJuo8YLJENnYCYFOPrgCtVbCV46w0GlcHrASlofAHnhSJ7DITkkut
-	 Mmb4pBpElwoSbgNjdFGoWbdXY50Nf6kF5meKch2Xrp39YQcS1HFZDeVfp4Dp0B0Y9A
-	 xXVYsckbaOR0bq9vv0ydHb3ExobRGgR3rL9idl9BewSsG/Y7OSvkRgWNb2dkvMkjaU
-	 VocjzPRS1ZsjxZZLTM3h/egB00sUy+KrZZ7U7vaN5gumA8ftItQSjD4KgV+LFYHCrs
-	 +gUlVuyWz1wofey7FvbUxbsahbDPYOSokHtnHnl3y1q0MKFhP3q6hXKT25KWKqvz/u
-	 CrRDeIH6tm6Vg==
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2a79ded11a2so33988965ad.3
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Jan 2026 01:49:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXfyEIyhooWMKnrp5NNzulc3LRxHMx2sDC/50a53cDZd12LFFRZSgGqK/7j8yFqwSQO9fDl5mQ+WpntWj6r+TE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyztpDY8EKeU+dGEwbXADIqQQQaiNRlA03u3I4Lmbx4RHD9Z4p
-	K/Y+q6AZ4cFt/gTho4Yy8YcUUjpR7YQVfhjyzxq2nQmKD3AI1i8Pnmf0p6tR96gaCQyxGcsU6kb
-	m0KR/2kLMP/2cRHJ49VoyQXazye9QmuQ=
-X-Received: by 2002:a17:903:198d:b0:295:570d:116e with SMTP id
- d9443c01a7336-2a870dc8cd3mr12948505ad.41.1769507374856; Tue, 27 Jan 2026
- 01:49:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dK19/LuI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769507457; x=1801043457;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9JoGMgukM4DO2lRnKpbhZfoRHZo0S35f5oyw0yGG8sI=;
+  b=dK19/LuI8OsPEvVVTuU2fxboeQpTfaE/bfqVa1FonvkhPDwRLLkcJ7mt
+   kZsSzRF+E0d9z+STVoiVe//11P+lWUq9y7d86roejPweJZuR0LEP3w2sh
+   bZgDTtFaKwmrcCEmkWgNkCQVXK9GtuU4l2Yi4bELd2cuDrex2MhdMB3E1
+   C8Ouxv5XLdWLCrIHreLAOlfnaQOtR1k2B5iYZE3nLzrZx7naGYY5tZjIP
+   7kDg+zSect0TIVSDvjlW8DmN7/rxjPnQqRgSO44LMMtzlsaKmsQnqePWi
+   Fr4DRek3ziT9fELnTxLfBH9b5tubnqWDFBvphPI84wY20iZsmoqybc8f2
+   g==;
+X-CSE-ConnectionGUID: XEBlY4UpQSGcLd2rtbpATg==
+X-CSE-MsgGUID: r3A7P1wgTdGNLXn9npNt6A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="58271395"
+X-IronPort-AV: E=Sophos;i="6.21,256,1763452800"; 
+   d="scan'208";a="58271395"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 01:50:56 -0800
+X-CSE-ConnectionGUID: OqvKmhYqSd2jgX+m0sRoEQ==
+X-CSE-MsgGUID: 2zHo4xzOTYyK0NqT/J5mqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,256,1763452800"; 
+   d="scan'208";a="208301388"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.248])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 01:50:52 -0800
+Date: Tue, 27 Jan 2026 11:50:50 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Feng Jiang <jiangfeng@kylinos.cn>
+Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, akpm@linux-foundation.org, kees@kernel.org,
+	andy@kernel.org, ebiggers@kernel.org, martin.petersen@oracle.com,
+	sohil.mehta@intel.com, charlie@rivosinc.com,
+	conor.dooley@microchip.com, samuel.holland@sifive.com,
+	linus.walleij@linaro.org, nathan@kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 4/8] lib/string_kunit: add performance benchmark for
+ strlen()
+Message-ID: <aXiKelsJF-SiqnVS@smile.fi.intel.com>
+References: <20260127012558.40025-1-jiangfeng@kylinos.cn>
+ <20260127012558.40025-5-jiangfeng@kylinos.cn>
+ <aXh93EVRSOrQQS6l@smile.fi.intel.com>
+ <dcdb82e8-691a-4cc1-88d5-755039ed0313@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260126092630.1800589-12-ardb+git@google.com>
- <20260126092630.1800589-13-ardb+git@google.com> <3d59a8d9-a382-48d8-b79c-f5c23e86c1b7@arm.com>
-In-Reply-To: <3d59a8d9-a382-48d8-b79c-f5c23e86c1b7@arm.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 27 Jan 2026 10:49:23 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXF4k9EstLkxdNje_rwTehdu2MYvyh7n+4GoMWNcjcHYcA@mail.gmail.com>
-X-Gm-Features: AZwV_QjbFJ48-GJAX5IbCu5heqXiBoewnTMcOOsWNGmC7SW2Fjs46gnJ_q-g0r0
-Message-ID: <CAMj1kXF4k9EstLkxdNje_rwTehdu2MYvyh7n+4GoMWNcjcHYcA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] arm64: Move the zero page to rodata
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, will@kernel.org, 
-	catalin.marinas@arm.com, mark.rutland@arm.com, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Liz Prucka <lizprucka@google.com>, 
-	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dcdb82e8-691a-4cc1-88d5-755039ed0313@kylinos.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, 27 Jan 2026 at 10:34, Ryan Roberts <ryan.roberts@arm.com> wrote:
->
-> On 26/01/2026 09:26, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > The zero page should contain only zero bytes, and so mapping it
-> > read-write is unnecessary. Combine it with reserved_pg_dir, which lives
-> > in the read-only region of the kernel, and already serves a similar
-> > purpose.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/arm64/kernel/vmlinux.lds.S | 1 +
-> >  arch/arm64/mm/mmu.c             | 3 +--
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-> > index ad6133b89e7a..b2a093f5b3fc 100644
-> > --- a/arch/arm64/kernel/vmlinux.lds.S
-> > +++ b/arch/arm64/kernel/vmlinux.lds.S
-> > @@ -229,6 +229,7 @@ SECTIONS
-> >  #endif
-> >
-> >       reserved_pg_dir = .;
-> > +     empty_zero_page = .;
-> >       . += PAGE_SIZE;
-> >
-> >       swapper_pg_dir = .;
->
-> Isn't there a magic macro for getting from swapper to reserved? That will need
-> updating?
->
+On Tue, Jan 27, 2026 at 05:33:10PM +0800, Feng Jiang wrote:
+> On 2026/1/27 16:57, Andy Shevchenko wrote:
+> > On Tue, Jan 27, 2026 at 09:25:54AM +0800, Feng Jiang wrote:
 
-Why? This just adds an alias to refer to the same allocation.
+...
 
-> /*
->  *  Open-coded (swapper_pg_dir - reserved_pg_dir) as this cannot be calculated
->  *  until link time.
->  */
-> #define RESERVED_SWAPPER_OFFSET (PAGE_SIZE)
->
->
-> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > index 9ae7ce00a7ef..c36422a3fae2 100644
-> > --- a/arch/arm64/mm/mmu.c
-> > +++ b/arch/arm64/mm/mmu.c
-> > @@ -66,9 +66,8 @@ long __section(".mmuoff.data.write") __early_cpu_boot_status;
-> >
-> >  /*
-> >   * Empty_zero_page is a special page that is used for zero-initialized data
-> > - * and COW.
-> > + * and COW. Defined in the linker script.
-> >   */
-> > -unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
-> >  EXPORT_SYMBOL(empty_zero_page);
->
-> What's the benefit of giving it it's own place in the linker script vs just
-> declaring it as const and having it placed in the rodata?
->
+> >> +#define STRING_BENCH_BUF(test, buf_name, buf_size, func, ...)		\
+> >> +do {									\
+> >> +	size_t buf_size, _bn_i, _bn_iters, _bn_size = 0;		\
+> >> +	u64 _bn_t, _bn_mbps = 0, _bn_lat = 0;				\
+> >> +	char *buf_name, *_bn_buf;					\
+> >> +									\
+> >> +	_bn_buf = alloc_max_bench_buffer(test, bench_lens,		\
+> >> +			ARRAY_SIZE(bench_lens), &_bn_size);		\
+> >> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, _bn_buf);			\
+> >> +									\
+> >> +	fill_random_string(_bn_buf, _bn_size);				\
+> >> +									\
+> >> +	for (_bn_i = 0; _bn_i < ARRAY_SIZE(bench_lens); _bn_i++) {	\
+> >> +		buf_size = bench_lens[_bn_i];				\
+> >> +		buf_name = _bn_buf + _bn_size - buf_size - 1;		\
+> >> +		_bn_iters = STRING_BENCH_WORKLOAD / max(buf_size, 1U);	\
+> >> +									\
+> >> +		_bn_t = STRING_BENCH(_bn_iters, func, ##__VA_ARGS__);	\
+> > 
+> >> +									\
+> > 
+> > Remove unneeded blank line.
+> 
+> Will fix.
+> 
+> >> +		if (_bn_t > 0) {					\
+> >> +			_bn_mbps = (u64)(buf_size) * _bn_iters		\
+> > 
+> > Why buf_size in the parentheses here and not anywhere else (above)?
+> 
+> It was a bit inconsistent. I'll remove the unneeded parentheses for buf_size.
+> 
+> > I assume it's just an external temporary variable? But why do we need to have
+> > it in the parameters to the macro?
+> 
+> This is necessary because buf_size often needs to be passed as an argument
+> to the function under test. For instance, when benchmarking strnlen, the
+> caller must pass the current length as an argument:
+> STRING_BENCH_BUF(test, buf, len, strnlen, buf, len);
 
-Because it collapses the two into one.
+Okay, and why is it needed in this macro? It get overridden immediately in
+the loop. Assuming that the array size of bench lengths is not zero, this
+has no visible use. Can you elaborate?
+
+> >> +					* (NSEC_PER_SEC / MEGA);	\
+> > > Leave '*' on the previous line.
+> 
+> Will fix.
+> 
+> >> +			_bn_mbps = div64_u64(_bn_mbps, _bn_t);		\
+> >> +			_bn_lat = div64_u64(_bn_t, _bn_iters);		\
+> >> +		}							\
+> >> +		kunit_info(test, "len=%zu: %llu MB/s (%llu ns/call)\n",	\
+> >> +				buf_size, _bn_mbps, _bn_lat);		\
+> >> +	}								\
+> >> +} while (0)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
