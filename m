@@ -1,138 +1,157 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E2834251A;
-	Tue, 27 Jan 2026 10:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7A1344D81
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Jan 2026 10:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769510482; cv=none; b=ZdDtPWOBIjXPxBva/QktIYqzG2rPw7t/lpjJfES3xdO4ii4vqgAjGYW22ey+nPiSL4b9EHUGUCRTIHzG3Wihyz+OupuBXTQNwl0sJBvDzFhpVLTBrzHl9CEfM5fZO+j4t4t2YWoWk7QAZoBXJcAvhgTXQ5PiavOay8663kKyZ/g=
+	t=1769510837; cv=none; b=d8TEPPH6+Z1V+NItRNDFxAigygwM4nTOYxv9Qm7mSA5CE+sGVYCGOhJDnCUH3Dx/dryMKAVliBtC3WH4oHVjbeBD8UFQ9i1nuEe5NZc3cEpWTKP25O5++SSU46Ez+9Xkn4q1wfyVbmW6m235AfFJXjYQKPp1594xRICtJbyPHV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769510482; c=relaxed/simple;
-	bh=zv5lK9tjxVO0n9izBY5BhoELfk0rMA3xB259NEaHDBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nj95142v0ls0lEzcrDoGs5iV8Ts6jQ+aMP1+cydpV3Hx2fjRDD8YbMJhBHvaqnz0E4QyO68tkGMlotW/rKj9s3oo/J/SHt3rik1wiAdhJ8Cl23piswBULE1LtcdtAnT4wPA8YgfM+gXY3i5UIJhA7bFBXql3BJYbimdzaYTZiEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD5E91595;
-	Tue, 27 Jan 2026 02:41:13 -0800 (PST)
-Received: from [10.57.94.246] (unknown [10.57.94.246])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E5813F73F;
-	Tue, 27 Jan 2026 02:41:18 -0800 (PST)
-Message-ID: <bb451854-0edd-4197-b1b0-50d1f1582c0b@arm.com>
-Date: Tue, 27 Jan 2026 10:41:16 +0000
+	s=arc-20240116; t=1769510837; c=relaxed/simple;
+	bh=NgcZQPM56B0R2rDd+OZ+Z7xk1FAyH0scmoSUohCjNNA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H5myw/erOrrKXESd1NsDlhyQLmnTmxgQYz4bmKnCYPyTBF4Y0J73AJKzCQXSZ3IgIouQugxEDU3fuG1vJn2E2aHdMvkWUDltPdV4Wmxk8U5BuAVay+vn5rA0/b4e8BWKWJM2aKAXuk7AIshx5ReuhvQ5JzAOaP9bOohL1cJwSA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BfY1NMCy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfY1NMCy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A677C2BCB2
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Jan 2026 10:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769510837;
+	bh=NgcZQPM56B0R2rDd+OZ+Z7xk1FAyH0scmoSUohCjNNA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BfY1NMCykH+rT2Vd+IIZIv5VeibMoWVJUlZoPodYIJI9rkrBXkXGIGKynUny9XW80
+	 cxK5C9rGHtr54eGmOaoVUalMklILC/TtC2e/7ul30AjoohRuFqjEDz/KZ3Ek43/qLM
+	 ceZkBSPUyYsdA8vzRW9MoLwlw+0T9W4P44bH5q+on6sJAuj1dCn9cYw77gQFeBBMuo
+	 EvI54qa/1ZRs68+JeoehTuPdz5lr4TNEvswACXJzu3Q8a2L1oV+YQKruU9YYQnKhzt
+	 y9TVFXZhwKHm2yQWeukY98ko7F8phpe5aJHq0aSz2E54RZOb+Wo6EPYwVgf34weOJc
+	 JV0DuM8PSO0TQ==
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-350fe1f8ea3so2674002a91.2
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Jan 2026 02:47:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXDh8JcZCVDW87BB63bL1+c8HewQOEo2TD0KB6QOfLjveR4K72pn9MfrrEzGbHw8rztM0Eg2wzeTIjRoCHp2vI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR/fWDYmyMrkK1bFlaMj11ryU/P2hx44DbI3h2iwNu5TVJ/4bF
+	VezqI9REv1+p+NFr9O5ASGJjakf9WsdYdF/y7O6K9aWXwjbBQ6XanEzylxtUzNTrtXtTaT5hDIv
+	yIyNqOrskVpUCWLJUBySzSQyPjGUwr9I=
+X-Received: by 2002:a17:90a:c884:b0:353:3999:5c04 with SMTP id
+ 98e67ed59e1d1-353fed70e16mr1786608a91.17.1769510836548; Tue, 27 Jan 2026
+ 02:47:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/10] arm64: mm: Map the kernel data/bss read-only in
- the linear map
-Content-Language: en-GB
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, will@kernel.org,
- catalin.marinas@arm.com, mark.rutland@arm.com,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
- Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
 References: <20260126092630.1800589-12-ardb+git@google.com>
- <20260126092630.1800589-21-ardb+git@google.com>
- <62b1723a-2ff3-4cac-ad99-a0e8d388ef12@arm.com>
- <CAMj1kXHh2X0fWSZtN_xYQCwwwWKFJfBXaCec-BGXp3FDhE6S5g@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAMj1kXHh2X0fWSZtN_xYQCwwwWKFJfBXaCec-BGXp3FDhE6S5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20260126092630.1800589-20-ardb+git@google.com> <d0f2df03-21da-473f-ab89-64a964c18f08@arm.com>
+ <CAMj1kXGsedZnV7GJZqo6Yfb4mi6YpMCu=fnHOwDib8-OxBij2g@mail.gmail.com> <1bd6e787-00af-4d4c-a882-a0b8fb7f6a2f@arm.com>
+In-Reply-To: <1bd6e787-00af-4d4c-a882-a0b8fb7f6a2f@arm.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 27 Jan 2026 11:47:05 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEJPPWe4JE7SBYuQMcdTwQHvPqBO9Djj=tcW3DsNknkpw@mail.gmail.com>
+X-Gm-Features: AZwV_Qg8lKu-uI20uHzW8xMtxl2N0ls9Z64VrDBC_7ZMLKdMOXFmcoU5zbQe31U
+Message-ID: <CAMj1kXEJPPWe4JE7SBYuQMcdTwQHvPqBO9Djj=tcW3DsNknkpw@mail.gmail.com>
+Subject: Re: [PATCH v2 08/10] arm64: mm: Don't abuse memblock NOMAP to check
+ for overlaps
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Liz Prucka <lizprucka@google.com>, 
+	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 27/01/2026 10:36, Ard Biesheuvel wrote:
-> On Tue, 27 Jan 2026 at 11:33, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->> On 26/01/2026 09:26, Ard Biesheuvel wrote:
->>> From: Ard Biesheuvel <ardb@kernel.org>
->>>
->>> On systems where the bootloader adheres to the original arm64 boot
->>> protocol, the placement of the kernel in the physical address space is
->>> highly predictable, and this makes the placement of its linear alias in
->>> the kernel virtual address space equally predictable, given the lack of
->>> randomization of the linear map.
->>>
->>> The linear aliases of the kernel text and rodata regions are already
->>> mapped read-only, but the kernel data and bss are mapped read-write in
->>> this region. This is not needed, so map them read-only as well.
->>>
->>> Note that the statically allocated kernel page tables do need to be
->>> modifiable via the linear map, so leave these mapped read-write.
->>>
->>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->>> ---
->>>  arch/arm64/include/asm/sections.h |  1 +
->>>  arch/arm64/mm/mmu.c               | 10 ++++++++--
->>>  2 files changed, 9 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/include/asm/sections.h b/arch/arm64/include/asm/sections.h
->>> index 51b0d594239e..f7fe2bcbfd03 100644
->>> --- a/arch/arm64/include/asm/sections.h
->>> +++ b/arch/arm64/include/asm/sections.h
->>> @@ -23,6 +23,7 @@ extern char __irqentry_text_start[], __irqentry_text_end[];
->>>  extern char __mmuoff_data_start[], __mmuoff_data_end[];
->>>  extern char __entry_tramp_text_start[], __entry_tramp_text_end[];
->>>  extern char __relocate_new_kernel_start[], __relocate_new_kernel_end[];
->>> +extern char __pgdir_start[];
->>>
->>>  static inline size_t entry_tramp_text_size(void)
->>>  {
->>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->>> index 18415d4743bf..fdbbb018adc5 100644
->>> --- a/arch/arm64/mm/mmu.c
->>> +++ b/arch/arm64/mm/mmu.c
->>> @@ -1122,7 +1122,9 @@ static void __init map_mem(void)
->>>  {
->>>       static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
->>>       phys_addr_t kernel_start = __pa_symbol(_text);
->>> -     phys_addr_t kernel_end = __pa_symbol(__init_begin);
->>> +     phys_addr_t init_begin = __pa_symbol(__init_begin);
->>> +     phys_addr_t init_end = __pa_symbol(__init_end);
->>> +     phys_addr_t kernel_end = __pa_symbol(__pgdir_start);
->>>       phys_addr_t start, end;
->>>       phys_addr_t early_kfence_pool;
->>>       int flags = NO_EXEC_MAPPINGS;
->>> @@ -1158,7 +1160,9 @@ static void __init map_mem(void)
->>>        * Note that contiguous mappings cannot be remapped in this way,
->>>        * so we should avoid them here.
->>>        */
->>> -     __map_memblock(kernel_start, kernel_end, PAGE_KERNEL,
->>> +     __map_memblock(kernel_start, init_begin, PAGE_KERNEL,
->>> +                    flags | NO_CONT_MAPPINGS);
->>> +     __map_memblock(init_end, kernel_end, PAGE_KERNEL,
->>>                      flags | NO_CONT_MAPPINGS);
->>
->> I'm probably being dumb again... why map [init_end, kernel_end) RW here, only to
->> remap RO below? Why not just map RO here?
->>
-> 
-> Because the loop that iterates over the memblocks will remap it RW
-> again anyway, so whether we map RW or RO at this point is irrelevant.
-> This call just needs to occur here to ensure that no block mappings
-> needs to be broken up later.
+On Tue, 27 Jan 2026 at 11:39, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>
+> On 27/01/2026 10:27, Ard Biesheuvel wrote:
+> > On Tue, 27 Jan 2026 at 11:21, Ryan Roberts <ryan.roberts@arm.com> wrote:
+> >>
+> >> On 26/01/2026 09:26, Ard Biesheuvel wrote:
+> >>> From: Ard Biesheuvel <ardb@kernel.org>
+> >>>
+> >>> Now that the DRAM mapping routines respect existing table mappings and
+> >>> contiguous block and page mappings, it is no longer needed to fiddle
+> >>> with the memblock tables to set and clear the NOMAP attribute. Instead,
+> >>> map the kernel text and rodata alias first, avoiding contiguous
+> >>> mappings, so that they will not be added later when mapping the
+> >>> memblocks.
+> >>
+> >> Should we do something similar for kfence? Currently we have
+> >> arm64_kfence_alloc_pool() which marks some memory NOMAP then
+> >> arm64_kfence_map_pool() which PTE-maps it and clears NOMAP. Presumably we could
+> >> rationalize into a single function that does it all, prior to mapping the bulk
+> >> of the linear map?
+> >>
+> >
+> > Yeah, good point - I did not spot that but I will address it in the
+> > next revision.
+> >
+> >>>
+> >>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> >>> ---
+> >>>  arch/arm64/mm/mmu.c | 27 ++++++++------------
+> >>>  1 file changed, 10 insertions(+), 17 deletions(-)
+> >>>
+> >>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> >>> index 80587cd47ce7..18415d4743bf 100644
+> >>> --- a/arch/arm64/mm/mmu.c
+> >>> +++ b/arch/arm64/mm/mmu.c
+> >>> @@ -1149,12 +1149,17 @@ static void __init map_mem(void)
+> >>>               flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+> >>>
+> >>>       /*
+> >>> -      * Take care not to create a writable alias for the
+> >>> -      * read-only text and rodata sections of the kernel image.
+> >>> -      * So temporarily mark them as NOMAP to skip mappings in
+> >>> -      * the following for-loop
+> >>> +      * Map the linear alias of the [_text, __init_begin) interval
+> >>> +      * as non-executable now, and remove the write permission in
+> >>> +      * mark_linear_text_alias_ro() above (which will be called after
+> >>> +      * alternative patching has completed). This makes the contents
+> >>> +      * of the region accessible to subsystems such as hibernate,
+> >>> +      * but protects it from inadvertent modification or execution.
+> >>> +      * Note that contiguous mappings cannot be remapped in this way,
+> >>> +      * so we should avoid them here.
+> >>>        */
+> >>> -     memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+> >>> +     __map_memblock(kernel_start, kernel_end, PAGE_KERNEL,
+> >>> +                    flags | NO_CONT_MAPPINGS);
+> >>
+> >> So the reason to disallow cont mappings is because we need to modify the
+> >> permissions later? It _is_ safe to change permissions on a live contiguous
+> >> mapping in this way. That was clarified in the architecture a couple of years
+> >> back and we rely on it for contpte_wrprotect_ptes(); see comment there.
+> >>
+> >
+> > OK, good to know - I was hoping to get your take on this ...
+> >
+> >> I think we could relax this?
+> >>
+> >
+> > OK, I suppose that means that we can drop the NO_CONT_MAPPINGS here,
+> > but we still need to map the kernel text/rodata alias initially to
+> > ensure that no block mappings are created that would need to broken
+> > down, right?
+>
+> Yes, but...
+>
+> I think your intent is that the multiple __map_memblock() calls are just
+> controlling the allowed leaf mapping sizes.
 
-Ahh yes, got it.
+Indeed.
 
-> 
-> 
->>>
->>>       /* map all the memory banks */
->>> @@ -1172,6 +1176,8 @@ static void __init map_mem(void)
->>>                              flags);
->>>       }
->>>
->>> +     __map_memblock(init_end, kernel_end, PAGE_KERNEL_RO,
->>> +                    flags | NO_CONT_MAPPINGS);
->>
->> This seems iffy since __map_memblock() doesn't flush the tlb. If you want to
->> update an existing mapping you want to be calling update_mapping_prot() right?
->>
-> 
-> Fair enough - I'll use that here.
+> It becomes problematic if the 2
+> calls use different permissions... which they do.
+>
+> PAGE_KERNEL vs pgprot_tagged(PAGE_KERNEL).
+>
+> Is it possible that the text/rodata section ends up tagged, which is not intended?
+>
 
+
+OK so toggling the R/O attribute on a live contiguous mapping is
+permitted (provided that ultimately, the entire contiguous region is
+updated accordingly) but the same doesn't apply to MT_NORMAL vs
+MT_NORMAL_TAGGED, right?
+
+So let's use just the same prot and flags for the initial mapping, and
+use MT_NORMAL_TAGGED when we remap the text alias R/O.
