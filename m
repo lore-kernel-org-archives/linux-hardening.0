@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3C436A015
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Jan 2026 15:14:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792B723F26A
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Jan 2026 15:21:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769613277; cv=none; b=hT3oDyW3hg248i8YSMjhWF+F0RifBJgI9a75bTwbcx3tL8M54A+mks2EyeWOZoASHlbBTPT17wgut465BlSI20ZcghtAqn8E0cgaR76SUVDehXkpcx6glaJ14QTeHJOnlW8HHBkQV4cP6lNr8XZ57az1DfP2RYzFmOHSW6dr3AA=
+	t=1769613671; cv=none; b=HgbOtca/JWiiOIr51l1EvReq+LqYrCL0P5eI9zHxdVCceHi1JjAUUQhx77S+RHMs4LRA0PhBWLEI8NcjhvLRoUzQG44J1Yzd5vIKn1n/MT2b+1kjqSXVWX27ba0jDgh3/J7DKw8yReMGzT6+WMLwWpOMba5xk2XC5EjCIvAkIWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769613277; c=relaxed/simple;
-	bh=MOLQXDzUZkqjdUtCDHkMs77lzzbvmC2r52puoaX6bG0=;
+	s=arc-20240116; t=1769613671; c=relaxed/simple;
+	bh=fi2Lg3B5iuJoikewkJvbVtY7PqbXsf35y/loGOxJF/M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uynrisAHQItQu6i8EQlEvkz5ZswFfLiLOycB+xp1OngxwlR+zJXAieQcqereEl+siJypR0OrPEvmKdjOXxKFhLMEP0QuWZI0+7RBhr7RudaArDzOfjrQwKYPV3XElly8lj+BbQHIU0DW3/MdXSgoUa6SOLe9fYXvMYVwlD+pQYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWmC9drD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CFopHrcZjCRa2aTKy2GV4bHUVf858Y2MXuk9JXXRt/ZYF3ZGiUao8w9iYDaWO/LIgc02MMSp5qLWvkhQ15MWUuBCv5a1au2V8T1GfLQlIIbQ5GJR1OOnGn+zupBzpA5Ziu4qRGPqOVBUmSNCsbvH04PN768yBffe+zzuiJfwsFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owPUep1q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWmC9drD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B573C4CEF1;
-	Wed, 28 Jan 2026 15:14:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owPUep1q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56019C4CEF1;
+	Wed, 28 Jan 2026 15:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769613277;
-	bh=MOLQXDzUZkqjdUtCDHkMs77lzzbvmC2r52puoaX6bG0=;
+	s=k20201202; t=1769613670;
+	bh=fi2Lg3B5iuJoikewkJvbVtY7PqbXsf35y/loGOxJF/M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DWmC9drDfGqFKPS0VS0b9+VUMnZJHfkf/qh9FmOC5h8uFLIG4pzNH/sxrb3PYbLKi
-	 vXNcx2HXjjSV52dimXkMNg/cH1JJJHmKawDIIqezHz9bD8XUY8lMGGY3/Sfubq4WA2
-	 MYK85npwvyIxx4zvLAHk04IQ4hj4HZaFwgEC7uwR6WRCmmUgJANX1hK+2BzlWwaEDe
-	 8xTWO+41HYJxe0JSq74v2cdJ2Y8w4Ub9lBNPtZ66e193M9mztdzvIg6ba342hRQjzS
-	 ND1K8DNa2wKsp1KEvfek7Y/dRK+tiZ4RB7+c622yzwX2kMMqxwJeaiwK1bunwTUlxF
-	 colK4QYHUEOcg==
-Date: Wed, 28 Jan 2026 16:14:30 +0100
+	b=owPUep1qRgu/HvnIAt0c9l6NbEhIg4CsqcbeDPgQKouW8s/beiBQPIwvFT/HOkbEi
+	 Ww/n2b0+/5CuGLPNRurAwTADm8bP7YrBbpC5a7agVzyvrwEJI3cinXkX963Wvavg4o
+	 LDT3krAGmM+h8p0IVwSgKATMqco5gLTyZ2KLyFd/bcOlfGe9Zh3tcMSqYspZWXirLM
+	 Y7uR0Rugtu2tRVcjOhal0Y5oU7qL6KxG8y/6K/LjKJU+oVohk78vAxg/xNKxXVpiYp
+	 M7ynWIe0KFCsizz0A8eC8ubnoyTe+Xf9o4lnf84BDDjvhb/y3QkIrXE9iJRZC/zRUR
+	 2nGupyUlM0I5w==
+Date: Wed, 28 Jan 2026 16:21:03 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: Daniel Thompson <daniel@riscstar.com>
 Cc: Martin Uecker <uecker@tugraz.at>, 
@@ -41,12 +41,11 @@ Cc: Martin Uecker <uecker@tugraz.at>,
 	"Basil L. Contovounesios" <basil@contovou.net>, "Jason A. Donenfeld" <jason@zx2c4.com>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, onf <onf@disroot.org>, Rich Felker <dalias@libc.org>, 
 	linux-hardening@vger.kernel.org
-Subject: Re: [RFC v3 3/6] alx-0078r2 - [static n] shouldn't access more than
- n elements
-Message-ID: <aXokQWyS2dfm3K2A@devuan>
+Subject: Re: [RFC v3 5/6] alx-0081r2 - array parameters of 0 elements
+Message-ID: <aXooSDxHbpewFzgQ@devuan>
 References: <aXdhh1r7ePA5SrIE@devuan>
- <aXdirEZVgj8PKPxM@devuan>
- <aXnc3aeRq045FWZy@aspen.lan>
+ <aXdiyLn3vxV2P807@devuan>
+ <aXnhf9uAvyJbQfcn@aspen.lan>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,12 +53,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dsemwwf2nhlzanwn"
+	protocol="application/pgp-signature"; boundary="v5rvizuwledlu5qd"
 Content-Disposition: inline
-In-Reply-To: <aXnc3aeRq045FWZy@aspen.lan>
+In-Reply-To: <aXnhf9uAvyJbQfcn@aspen.lan>
 
 
---dsemwwf2nhlzanwn
+--v5rvizuwledlu5qd
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -77,144 +76,66 @@ Cc: Martin Uecker <uecker@tugraz.at>,
 	"Basil L. Contovounesios" <basil@contovou.net>, "Jason A. Donenfeld" <jason@zx2c4.com>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, onf <onf@disroot.org>, Rich Felker <dalias@libc.org>, 
 	linux-hardening@vger.kernel.org
-Subject: Re: [RFC v3 3/6] alx-0078r2 - [static n] shouldn't access more than
- n elements
-Message-ID: <aXokQWyS2dfm3K2A@devuan>
+Subject: Re: [RFC v3 5/6] alx-0081r2 - array parameters of 0 elements
+Message-ID: <aXooSDxHbpewFzgQ@devuan>
 References: <aXdhh1r7ePA5SrIE@devuan>
- <aXdirEZVgj8PKPxM@devuan>
- <aXnc3aeRq045FWZy@aspen.lan>
+ <aXdiyLn3vxV2P807@devuan>
+ <aXnhf9uAvyJbQfcn@aspen.lan>
 MIME-Version: 1.0
-In-Reply-To: <aXnc3aeRq045FWZy@aspen.lan>
+In-Reply-To: <aXnhf9uAvyJbQfcn@aspen.lan>
 
 Hi Daniel,
 
-On 2026-01-28T09:54:37+0000, Daniel Thompson wrote:
-> On Mon, Jan 26, 2026 at 01:48:49PM +0100, Alejandro Colomar wrote:
-> > Name
-> > 	alx-0078r2 - [static n] shouldn't access more than n elements
+On 2026-01-28T10:14:23+0000, Daniel Thompson wrote:
+> On Mon, Jan 26, 2026 at 01:49:16PM +0100, Alejandro Colomar wrote:
+> > Proposed wording
+> > 	Based on N3685.
 > >
-
-[...]
-> > Abstract
-> > 	The following function prototype requires an input with at least
-> > 	2 elements:
-> >
-> > 		void f(int a[static 2]);
-> >
-> > 	It should not use more than 2 elements, as those are not
-> > 	guaranteed to be available.  That is, the following function
-> > 	definition should be unacceptable:
-> >
-> > 		void f(int a[static 2])
-> > 		{
-> > 			a[7] =3D 0;
-> > 		}
-> >
-> > Discussion
-> > 	It is a de-facto standard that functions declaring a [static n]
-> > 	parameter require at least n elements, and don't access more
-> > 	than n elements.  Most programmers that don't know the fine
-> > 	letter of the standard would assume that.  This has its roots in
-> > 	the older syntax, [n], which is not acknowledged by the
-> > 	standard, but has been historically used to document this as
-> > 	part of the API.
-> >
-> > 	Without this, [static n] is only useful for optimizations, but
-> > 	not for writing safe code, as the specification of [static n]
-> > 	doesn't provide the compiler with enough information to know
-> > 	whether array bounds will be violated.  This makes it a terrible
-> > 	UB foot-gun.
-> >
-> > 	Let's change the specification to make it safe.
+> >     6.7.7.3  Array declarators
+> > 	@@ Constraints, p1
+> > 	 In addition to optional type qualifiers and the keyword static,
+> > 	 the [ and ] can delimit an expression or *.
+> > 	 If they delimit an expression,
+> > 	 called the array length expression,
+> > 	 the expression shall have an integer type.
+> > 	 If the expression is a constant expression,
+> > 	-it shall have a value greater than zero.
+> > 	+it shall have a nonnegative value.
+> > 	+An array length expression
+> > 	+that is a constant expression with value zero
+> > 	+shall appear only in
+> > 	+a declaration of a function parameter with an array type,
+> > 	+and then only in the outermost array type derivation.
 >=20
-> I don't see how the proposed wording change makes C safer, see below.
->=20
->=20
-> >     <snip>
-> >     6.7.7.4  Function declarators
-> > 	@@ Semantics, p7
-> > 	 A declaration of a parameter as "array of type"
-> > 	 shall be adjusted to "qualified pointer to type",
-> > 	 where the type qualifiers (if any)
-> > 	 are those specified
-> > 	 within the [ and ]
-> > 	 of the array type derivation.
-> > 	 If the keyword static also appears
-> > 	 within the [ and ]
-> > 	 of the array type derivation,
-> > 	 then for each call to the function,
-> > 	 the value of the corresponding actual argument
-> > 	 shall provide access to
-> > 	 the first element of an array
-> > 	 with at least as many elements
-> > 	-as specified by the size expression.
-> > 	+as specified by the array length expression,
-> > 	+and the function definition
-> > 	+shall not access an element
-> > 	+beyond the specified number of elements.
->=20
-> By limiting what the function definition may do, we are reducing the set
-> of valid programs. Won't that *increase* the level of undefined
-> behaviour in the language?
+> This change did not have any motivating example within the discussion.
+> Providing a motivational example showing why it is useful to allow array
+> parameters whose constant length is zero would be good.
 
-Yes, this proposal increases --at least theoretically-- the amount of
-undefined in the language.  See below for why I say "theoretically".
+Makes sense; I'll add that.
 
-> That will allow compilers to perform more aggressive local optimizations
-> (which is probably good) but I don't see how it will make things safer.
+Here's a function that I use in shadow-utils:
 
-Yes, that's true.  On the other hand, nobody is forcing compilers to
-abuse UB to perform aggresive optimizations.  They may choose to refrain
-=66rom certain optimizations, and instead use the information exclusively
-for diagnostics.
-
-> To make things safe would mean compilers changing their diagnostics, and
-> the prior art suggests compilers already warn on this.
-
-GCC has partial support for this, precisely because it ignores the
-specification of the standard, and de-facto considers this to be the
-meaning of [static n] (and also of [n], FWIW).  GCC support for this is
-incomplete at the moment, though.  But in the long term, yes, GCC
-intends to diagnose like this.
-
-On the other hand, Clang implements this per the C standard, which makes
-it a quite bad implementation regarding array bounds.
-
-	alx@devuan:~/tmp$ cat ap.c=20
-	void f(int a[static 2]);
-	void f(int a[static 2])
+	char *
+	stpecpy(char dst[], const char end[];
+	    char dst[dst?end-dst:0], const char end[0], const char *restrict src)
 	{
-		a[1] =3D 0;
-		a[2] =3D 0;  // UB
-		a[3] =3D 0;  // UB
+		ssize_t  dlen;
+
+		if (dst =3D=3D NULL)
+			return NULL;
+
+		dlen =3D strtcpy(dst, src, end - dst);
+		if (dlen =3D=3D -1)
+			return NULL;
+
+		return dst + dlen;
 	}
-	alx@devuan:~/tmp$ gcc -S ap.c -Wall -Wextra
-	alx@devuan:~/tmp$ clang -S ap.c -Weverything
-	ap.c:4:2: warning: unsafe buffer access [-Wunsafe-buffer-usage]
-	    4 |         a[1] =3D 0;
-	      |         ^
-	ap.c:5:2: warning: unsafe buffer access [-Wunsafe-buffer-usage]
-	    5 |         a[2] =3D 0;  // UB
-	      |         ^
-	ap.c:6:2: warning: unsafe buffer access [-Wunsafe-buffer-usage]
-	    6 |         a[3] =3D 0;  // UB
-	      |         ^
-	3 warnings generated.
 
--Wunsafe-buffer-access is just noise.  Nothing is diagnosing the case
-shown in the abstract.
+It's essentially the same as Plan9's strecpy(2), except that Plan9's
+API has an important bug.
 
-The case shown in the 'Prior art' section is only diagnosed by GCC.
-
-So, this proposal would force Clang to diagnose what GCC already
-diagnoses.
-
-About why this increase in UB is only theoretical: programs violating
-this *already* have UB (with 99.99% certainty).  The UB is just not
-visible to the compiler, but the program is already overflowing buffers
-most likely.  By making that UB visible to the compiler, we increase the
-chances that it will be diagnosed.  So, I'd say I'm not adding UB, but
-rather moving it around to show up earlier.
+Here's a GCC bug that shows such a use case:
+<https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D108036>
 
 
 Have a lovely day!
@@ -225,24 +146,24 @@ Alex
 --=20
 <https://www.alejandro-colomar.es>
 
---dsemwwf2nhlzanwn
+--v5rvizuwledlu5qd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAml6J9AACgkQ64mZXMKQ
-wqmqxhAAj7pCVHhDs2eZBHro3GSc3J5UW/s1DLjiO6WWGCm3Ytq6CXHWNWUbVtns
-48JkAod9b9Yc21TMgssvXNl3Bmp5Vqs7LG/h7939iHMeWzy1nVF4AH5BkqWA/MIk
-56YZJVyFbitbp7N+GqfV9IcCbwrbHZXGm2pC8S+WP3Il5O9CxmH5m6c6k/p8NlXS
-HRd5DvsYv8tE+TDfHILGJ8H0byL/CLbJ1RcqVx9U3boVoHJBaVsSvWBtG4BcbT/i
-WRPFuY36PoIZtCp9M72ejYmuF/nf63rGqqBLH91w8fMFXZ+TbwDGHjWYpLqyqFBv
-mQAFwGY3ZZUdOL5Kx5Hvt0QzptqV4mWYD6VJcFZZgA8vs81Xf1MInO566LquhmBZ
-LOMs1Lw5ZdPtWn41q+sXh4UCJSCOohKgXzuc5a7yRkKxbLBgGPyB65o+GsA5rNxn
-RAXiyhNR9EMfDITwrb2cwoSW70KwQ3OIFqij3UyF20oLYqCm6Z7D+JNrSffzXbB+
-oKspwBm5N7F0/SIiU2p9lpM7e776ddUfBUC9Jdw4496RJZkCx8A8Mu8gzgSCzidn
-micGN4+xvwjq+pbLknj3HoLXwb1QTLFRCnANiF8r041E/pMZK5EyGRrYlB+4tcbx
-FB25KFeNenCbmWdVLjs8bkZ2RYXquIXvPyQqvUWJsXgH0kPhXbM=
-=M8WY
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAml6KV4ACgkQ64mZXMKQ
+wqmf5Q/8DICFnoM8AJshKZo8ERLY+0Vy8QvKC/4pgr4Wz5k2TjpnNIFbInNPvzzD
+Rh+susKpP3wZu/kA62GPAZ4ouq9+U4WZjM2RV/lOrreHAsKxOQqkrW6uaAYTR3nq
+VmyZR/7DomckIULff+LQVx/qkHM4NYT9U+wxA+V82SPDL1vvEe4a6O3NkHXjiAV0
+Pxv+SRvXnNTTGlnI5QbzWsRJ/bUgSbc+p6xZfGTNU2r4IhOSZh9qbZkfcDxx/otn
++m/F5sCf/buXea2SDc8XtXNdK1mLkqGkLiwF3g/g8btNKUMPNU39yxIKzGXyPyiC
+MOLEnEqPLUg4Xhwr469B1wUIkW4XxHwiqzozdg/QgEdO3a2b9w9G2Z8e8bFQ7pBe
+FG5bHw9aXKI/gHFK9Oq4AVOdRLOj+Rfefxvk5I9qZJYiQvO95x/ansCw156BGbFT
+t4TvXzKPBjaJr5ZtNKSf3OPXiuresG2OAGQl1h7KvxSlj6NbqujfAl5JVpVO9LZ0
+K76useaashS8O4wbyLIzigJRSaX4nwH+HVlBsfuA4HfAeX1ICvbO2DMJMpq4NHKU
+aTiXLS6Ci7oW4IRrI5TPbWfC2DaR2gxnqYrAyYkQhD7qOFKe+sBoEgU7CoprqTWn
+6zruZY+zsTh5kd/15sDSG9sWxYk2U88HD/6IwksSKElp6GV9bSM=
+=Hzg2
 -----END PGP SIGNATURE-----
 
---dsemwwf2nhlzanwn--
+--v5rvizuwledlu5qd--
