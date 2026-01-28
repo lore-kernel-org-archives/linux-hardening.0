@@ -1,189 +1,208 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C772D13959D;
-	Wed, 28 Jan 2026 09:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1824E284689
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Jan 2026 09:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769592065; cv=none; b=r60v5SPD4+XPjjHOaAc5m34JchbUg8rLB7X7O+Qq1hj1uEw8Lm61q0SDP5csaMX3Jwa39RJc2wRRNiOaNkRdV0aEg+2dnicsqdMw3REq7+R46WI3+xpZ6GTlM90o58T/VazxKxVWuwld+KQ3kYmnujK8lk0ZtaIRhJKQhEhNKQE=
+	t=1769594083; cv=none; b=A8XehL1ZdOGLlnPrsHM9jMJnO2fwyOis918Pw20Wmj/cGlqfJOEcQ+Kc0lqklUNd7WbdcjS1HB/AaEF0y8WLTAP77N+fyos2x/FTwRs7oWI6wM24wpGOaWxaBuhJDVVV/OidEJezY8bTDnzn5mZXsHDBowqbSs3yuYjWCRyzZWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769592065; c=relaxed/simple;
-	bh=7bsQBhk02T2TgeTfnbu9UqMpTzhK93v5e+6xj0OK130=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RYvlgo+N6uwtZLU7unqYIHOyxn82syaYZChU551h5z53KYuoPmwR4XUvIxog0BYXFh1l3meBszwSJWwL7Y0SZYZhbDdT9N/M72vjQR4wiB1XozUyxEIX5+a21GBEp041VTTkb0FpM5AeU1qsDVYwXD0nkoic7h+30AXm/NuIoBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: a7b5d806fc2a11f0b0f03b4cfa9209d1-20260128
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:6ac908b7-1750-4ebf-a73a-631faeae6520,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:91d8eeff496e98c2da796a6a28df1cc2,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
-	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: a7b5d806fc2a11f0b0f03b4cfa9209d1-20260128
-X-User: jiangfeng@kylinos.cn
-Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <jiangfeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1755012723; Wed, 28 Jan 2026 17:20:58 +0800
-Message-ID: <56eb86c0-9b60-4f7f-8824-16f14a019e3c@kylinos.cn>
-Date: Wed, 28 Jan 2026 17:20:55 +0800
+	s=arc-20240116; t=1769594083; c=relaxed/simple;
+	bh=yXZG8aeeXL06jpgbg8z3YqJbzBCtCJEAETvokSs0sMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AT1MMjEOMqHFQ6P3DcjP0UoY6TCOiqhmTW/yPJ6iPotHqaHRJJp+gkoqkB8N85IKpw0zdxMNj2oPR+IC1RYYA76uNdL/cqoHyz9freBw27t0ZpnIcwQciqwFfomfgWMixiMy75JiSIdNfb6Q2F77ALLQdWQsViC7sA/AgsgkAKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=gX2C6Wal; arc=none smtp.client-ip=209.85.221.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="gX2C6Wal"
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-4359108fd24so3962906f8f.2
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jan 2026 01:54:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1769594080; x=1770198880; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eJuxFAZp03kC7l/ZjQTx79mwznxD1l402NB4nY0zgkw=;
+        b=gX2C6WalNDDhi4qC7bRIMmXLNEQs1phZI3CFHiNpi6aApcc1aTvk2zB/MWwkEw00jN
+         YFQ0xReJrLbqMXmAIUHkjXqABznX0cien5stkEjrNfIHxVBmPsn4jSxe3ItDXkAQneEj
+         B7sbt3Fjm3xA5p/27EMQcMZ3jGY8SDG55Ynq74O0fMcn+3pnH+kNmKHxxt0uXz5VCzG9
+         Iw3Ko3EKr7p5gHsGKlS/GCTYaabCHU3Y0dQxCzYOFHwgOMs1bLo2gt+D94GievzgiaEo
+         8e+7Vq2BH2pySvFLLMDERcCDlKaDjkbzsuICKZINLjCQY0jmWKpw+IJkfQLaDcj248tg
+         TOhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769594080; x=1770198880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eJuxFAZp03kC7l/ZjQTx79mwznxD1l402NB4nY0zgkw=;
+        b=TDVtB6c6u3h2oM9tmr7A5/SUuriUsdf/I1ROVKGv3YbmlAHy+zbAJvwpPoEv6L4S16
+         /a67w9dkqs12FPG86ErIa4zpJsjNZdup9nhsmnOtOY9BhJ9yIgeBSwIIiCnSSsQB3ZEk
+         7So5vuaHuNjjZ1at4jj8EX84EY37ujLLxj4tUf6gkEvYWqzaM1D5Cwir5TEq4q0fjivZ
+         rg4H0CCyMJHpgT23SI/4bou0Hz9RYIZlOo8QrBeavTgiEoX0MdbEV/Uc4joq9ufxj7IO
+         7HS5z6TYM+oOTM94YnlnUxeHOuFcnIbmb5XYiIjSsMTZLm2VuFcpH/sHeNuUPbS0SLi0
+         mJDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzbYgmRoRqtwb9L+dC2JnGXbE9ihZtnuMN91gw00HGIMmO3Qf7ZujQNPqXEENdwf3Hy+N8oPS+r8gdPa7BG60=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywzdg4paIvpDkVbNOItsty/jo/IkgoPBWUzArYZG14ZW2gtyJRd
+	yp481uwAIpw9gxKwoIiJ1FcLHtb2oRHhG1b2pjG8sH1WSU6Rnsoz9iR4eoro1WE4gTo=
+X-Gm-Gg: AZuq6aIeIMTOoirynbnkP9+o6L1l88BdGfbyyGExZNVbI4CDNTvEnOKJ7HanA/r1xy/
+	QYeycFz2YqXC32t7KldmmU66u1EXLeaMFJTbZQQ2KW3Ugjt9P2bz5BJDf9UkWjsn6P9gDaaFmjx
+	7K7DClXzTYYgWkfYbkCKgG1HrGTLGyhpSsPDQ1ykDQkHGvRTIexnMrMTSIdPyG3Qe1WHxUP1pWu
+	GP0SNluyrLd26Gbnb569g2naRWGqxz9VABM1osKpSUUsJSbZvWPVITan9yQPbagOtMIlk4wVGze
+	8huo5qr0OoRxy3tdZYXYW7C5Jso+ykBlVkTuPQC94z9wPqO6rR7tZkgFy7dAwcZk8UNjL/1EKIv
+	fsYjTuxYF8RLOnpZbcdHi7psjWd5yD5fALaQ68oWlbIDu47RecyJp+vmARCh3t+c0j89jxMPeTa
+	44uspGSFhalw0ZS7hE/ehQG14smm2Jm3toNLMDKSeYwlWB89mfIT1H2lmQu7BwOzVv9b8rnmiaU
+	RmMbnnlXxrx0+gOrJPuO6rWcW6t28/MMmf41YQdIEzrm02f8M602b+oWE6KTmnofpdlxewT23tn
+	IKR/vxA=
+X-Received: by 2002:a05:600c:450b:b0:480:5951:fc1e with SMTP id 5b1f17b1804b1-48069c0fc10mr49957815e9.11.1769594080207;
+        Wed, 28 Jan 2026 01:54:40 -0800 (PST)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4806d9b1116sm5036405e9.7.2026.01.28.01.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jan 2026 01:54:39 -0800 (PST)
+Date: Wed, 28 Jan 2026 09:54:37 +0000
+From: Daniel Thompson <daniel@riscstar.com>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: Martin Uecker <uecker@tugraz.at>,
+	Christopher Bazley <chris.bazley.wg14@gmail.com>,
+	Alex Celeste <alexg.nvfp@gmail.com>,
+	Joseph Myers <josmyers@redhat.com>,
+	Aaron Ballman <aaron@aaronballman.com>,
+	Douglas McIlroy <douglas.mcilroy@dartmouth.edu>,
+	Bruno Haible <bruno@clisp.org>, Paul Eggert <eggert@cs.ucla.edu>,
+	Florian Weimer <fweimer@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Daniel Thompson <danielt@kernel.org>,
+	Daniel Lundin <daniel.lundin.mail@gmail.com>,
+	"Valentin V. Bartenev" <vbartenev@gmail.com>,
+	Andrew Clayton <andrew@digital-domain.net>,
+	"Brian W. Kernighan" <bwk@cs.princeton.edu>,
+	"G. Branden Robinson" <branden@debian.org>,
+	"Basil L. Contovounesios" <basil@contovou.net>,
+	"Jason A. Donenfeld" <jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	onf <onf@disroot.org>, Rich Felker <dalias@libc.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [RFC v3 3/6] alx-0078r2 - [static n] shouldn't access more than
+ n elements
+Message-ID: <aXnc3aeRq045FWZy@aspen.lan>
+References: <aXdhh1r7ePA5SrIE@devuan>
+ <aXdirEZVgj8PKPxM@devuan>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/8] lib/string_kunit: add performance benchmark for
- strlen()
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- akpm@linux-foundation.org, kees@kernel.org, andy@kernel.org,
- ebiggers@kernel.org, martin.petersen@oracle.com, sohil.mehta@intel.com,
- charlie@rivosinc.com, conor.dooley@microchip.com, samuel.holland@sifive.com,
- linus.walleij@linaro.org, nathan@kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260127012558.40025-1-jiangfeng@kylinos.cn>
- <20260127012558.40025-5-jiangfeng@kylinos.cn>
- <aXh93EVRSOrQQS6l@smile.fi.intel.com>
- <dcdb82e8-691a-4cc1-88d5-755039ed0313@kylinos.cn>
- <aXiKelsJF-SiqnVS@smile.fi.intel.com>
- <0d0f0528-738b-402c-a05c-53e21000dc67@kylinos.cn>
- <aXnP_6wsyXcVGasN@smile.fi.intel.com>
-Content-Language: en-US
-From: Feng Jiang <jiangfeng@kylinos.cn>
-In-Reply-To: <aXnP_6wsyXcVGasN@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aXdirEZVgj8PKPxM@devuan>
 
-On 2026/1/28 16:59, Andy Shevchenko wrote:
-> On Wed, Jan 28, 2026 at 09:44:40AM +0800, Feng Jiang wrote:
->> On 2026/1/27 17:50, Andy Shevchenko wrote:
->>> On Tue, Jan 27, 2026 at 05:33:10PM +0800, Feng Jiang wrote:
->>>> On 2026/1/27 16:57, Andy Shevchenko wrote:
->>>>> On Tue, Jan 27, 2026 at 09:25:54AM +0800, Feng Jiang wrote:
-> 
-> ...
-> 
->>>>>> +#define STRING_BENCH_BUF(test, buf_name, buf_size, func, ...)		\
->>>>>> +do {									\
->>>>>> +	size_t buf_size, _bn_i, _bn_iters, _bn_size = 0;		\
->>>>>> +	u64 _bn_t, _bn_mbps = 0, _bn_lat = 0;				\
->>>>>> +	char *buf_name, *_bn_buf;					\
->>>>>> +									\
->>>>>> +	_bn_buf = alloc_max_bench_buffer(test, bench_lens,		\
->>>>>> +			ARRAY_SIZE(bench_lens), &_bn_size);		\
->>>>>> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, _bn_buf);			\
->>>>>> +									\
->>>>>> +	fill_random_string(_bn_buf, _bn_size);				\
->>>>>> +									\
->>>>>> +	for (_bn_i = 0; _bn_i < ARRAY_SIZE(bench_lens); _bn_i++) {	\
->>>>>> +		buf_size = bench_lens[_bn_i];				\
->>>>>> +		buf_name = _bn_buf + _bn_size - buf_size - 1;		\
->>>>>> +		_bn_iters = STRING_BENCH_WORKLOAD / max(buf_size, 1U);	\
->>>>>> +									\
->>>>>> +		_bn_t = STRING_BENCH(_bn_iters, func, ##__VA_ARGS__);	\
->>>>>
->>>>>> +									\
->>>>>
->>>>> Remove unneeded blank line.
->>>>
->>>> Will fix.
->>>>
->>>>>> +		if (_bn_t > 0) {					\
->>>>>> +			_bn_mbps = (u64)(buf_size) * _bn_iters		\
->>>>>
->>>>> Why buf_size in the parentheses here and not anywhere else (above)?
->>>>
->>>> It was a bit inconsistent. I'll remove the unneeded parentheses for buf_size.
->>>>
->>>>> I assume it's just an external temporary variable? But why do we need to have
->>>>> it in the parameters to the macro?
->>>>
->>>> This is necessary because buf_size often needs to be passed as an argument
->>>> to the function under test. For instance, when benchmarking strnlen, the
->>>> caller must pass the current length as an argument:
->>>> STRING_BENCH_BUF(test, buf, len, strnlen, buf, len);
->>>
->>> Okay, and why is it needed in this macro? It get overridden immediately in
->>> the loop. Assuming that the array size of bench lengths is not zero, this
->>> has no visible use. Can you elaborate?
->>
->> Thank you for the explanation. I see the source of the confusion now.
->>
->> In v5, buf_name and buf_size were not intended to pass external variables into
->> the macro. Instead, they were naming placeholders for local variables declared
->> inside the macro's scope. This allows the caller to define the names used in
->> the variadic arguments.
->>
->> To resolve the logical inconsistency you pointed out, I'd like to propose two
->> options for v6. Which one would you prefer?
->>
->> Option 1: Internal Declaration (The "Self-Contained" approach)
->>
->> We declare and initialize the variables directly inside the loop. This keeps
->> the macro self-contained and the caller doesn't need to pre-declare anything.
->>
->> for (_bn_i = 0; _bn_i < ARRAY_SIZE(bench_lens); _bn_i++) {
->>     size_t buf_size = bench_lens[_bn_i];
->>     char *buf_name = _bn_buf + _bn_size - buf_size - 1;
->>     ...
->> }
->>
->> Usage:
->>   STRING_BENCH_BUF(test, my_buf, my_len, strnlen, my_buf, my_len);
-> 
-> This option is better as long as the user doesn't need to know the (stale) data
-> out of these parameters. And I think this is the case, so #1 is the winner.
+On Mon, Jan 26, 2026 at 01:48:49PM +0100, Alejandro Colomar wrote:
+> Name
+> 	alx-0078r2 - [static n] shouldn't access more than n elements
+>
+> Principles
+> 	-  Uphold the character of the language.
+> 	-  Codify existing practice to address evident deficiencies.
+> 	-  Enable secure programming.
+>
+> 	And from previous charters:
+>
+> 	C23:
+> 	-  APIs should be self-documenting when possible.
+>
+> Category
+> 	Language; array parameters.
+>
+> Authors
+> 	Alejandro Colomar <alx@kernel.org>
+> 	Martin Uecker <uecker@tugraz.at>
+>
+> 	Acked-by: Doug McIlroy
+> 	Acked-by: Andrew Clayton <ac@sigsegv.uk>
+>
+> History
+> 	<https://www.alejandro-colomar.es/src/alx/alx/std/wg14/alx-0078.git/>
+>
+> 	r0 (2026-01-25):
+> 	-  Initial draft.
+>
+> 	r1 (2026-01-25):
+> 	-  wfix.
+> 	-  Co-authored by Martin.
+>
+> 	r2 (2026-01-26):
+> 	-  Acked-by.
+> 	-  tfix
+>
+> Abstract
+> 	The following function prototype requires an input with at least
+> 	2 elements:
+>
+> 		void f(int a[static 2]);
+>
+> 	It should not use more than 2 elements, as those are not
+> 	guaranteed to be available.  That is, the following function
+> 	definition should be unacceptable:
+>
+> 		void f(int a[static 2])
+> 		{
+> 			a[7] = 0;
+> 		}
+>
+> Discussion
+> 	It is a de-facto standard that functions declaring a [static n]
+> 	parameter require at least n elements, and don't access more
+> 	than n elements.  Most programmers that don't know the fine
+> 	letter of the standard would assume that.  This has its roots in
+> 	the older syntax, [n], which is not acknowledged by the
+> 	standard, but has been historically used to document this as
+> 	part of the API.
+>
+> 	Without this, [static n] is only useful for optimizations, but
+> 	not for writing safe code, as the specification of [static n]
+> 	doesn't provide the compiler with enough information to know
+> 	whether array bounds will be violated.  This makes it a terrible
+> 	UB foot-gun.
+>
+> 	Let's change the specification to make it safe.
 
-Thanks for the feedback. I'll incorporate this change, along with the other
-improvements we discussed, and send out v6 shortly.
+I don't see how the proposed wording change makes C safer, see below.
 
->> Option 2: External Declaration (The list.h approach)
->>
->> The macro expects the caller to provide pre-declared variables, similar to
->> list_for_each_entry(). This removes all re-declarations inside the macro.
->>
->> for (_bn_i = 0; _bn_i < ARRAY_SIZE(bench_lens); _bn_i++) {
->>     buf_size = bench_lens[_bn_i];
->>     buf_name = _bn_buf + _bn_size - buf_size - 1;
->>     ...
->> }
->>
->> Usage:
->>   size_t my_len;
->>   char *my_buf;
->>   STRING_BENCH_BUF(test, my_buf, my_len, strnlen, my_buf, my_len);
->>
->> Please let me know which style fits the kernel's preference better, and
->> I will implement it in v6 along with your other suggestions.
->>
->> Thanks for the catch!
->>
->>>>>> +					* (NSEC_PER_SEC / MEGA);	\
->>>>>> Leave '*' on the previous line.
->>>>
->>>> Will fix.
->>>>
->>>>>> +			_bn_mbps = div64_u64(_bn_mbps, _bn_t);		\
->>>>>> +			_bn_lat = div64_u64(_bn_t, _bn_iters);		\
->>>>>> +		}							\
->>>>>> +		kunit_info(test, "len=%zu: %llu MB/s (%llu ns/call)\n",	\
->>>>>> +				buf_size, _bn_mbps, _bn_lat);		\
->>>>>> +	}								\
->>>>>> +} while (0)
-> 
 
--- 
-With Best Regards,
-Feng Jiang
+>     <snip>
+>     6.7.7.4  Function declarators
+> 	@@ Semantics, p7
+> 	 A declaration of a parameter as "array of type"
+> 	 shall be adjusted to "qualified pointer to type",
+> 	 where the type qualifiers (if any)
+> 	 are those specified
+> 	 within the [ and ]
+> 	 of the array type derivation.
+> 	 If the keyword static also appears
+> 	 within the [ and ]
+> 	 of the array type derivation,
+> 	 then for each call to the function,
+> 	 the value of the corresponding actual argument
+> 	 shall provide access to
+> 	 the first element of an array
+> 	 with at least as many elements
+> 	-as specified by the size expression.
+> 	+as specified by the array length expression,
+> 	+and the function definition
+> 	+shall not access an element
+> 	+beyond the specified number of elements.
 
+By limiting what the function definition may do, we are reducing the set
+of valid programs. Won't that *increase* the level of undefined
+behaviour in the language?
+
+That will allow compilers to perform more aggressive local optimizations
+(which is probably good) but I don't see how it will make things safer.
+To make things safe would mean compilers changing their diagnostics, and
+the prior art suggests compilers already warn on this.
+
+
+Daniel.
