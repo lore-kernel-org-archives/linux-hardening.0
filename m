@@ -1,169 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792B723F26A
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Jan 2026 15:21:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081AE311597;
+	Wed, 28 Jan 2026 17:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769613671; cv=none; b=HgbOtca/JWiiOIr51l1EvReq+LqYrCL0P5eI9zHxdVCceHi1JjAUUQhx77S+RHMs4LRA0PhBWLEI8NcjhvLRoUzQG44J1Yzd5vIKn1n/MT2b+1kjqSXVWX27ba0jDgh3/J7DKw8yReMGzT6+WMLwWpOMba5xk2XC5EjCIvAkIWs=
+	t=1769619654; cv=none; b=eogfGQtlVGNalMfddU7+rIH7WLy21bQlJK3rEBxcuqqUQmjCBvdh+1JX4TabV7id0h46pJSbpZAM25LYFwRKjF3JUDMJPHZjcLaiPZ3GYVKOEzNxcfmzYX7jVBb3TBdASM7NOWWDRcJsjBZghxEd8MPu36wucV8Ij6EpABkoRZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769613671; c=relaxed/simple;
-	bh=fi2Lg3B5iuJoikewkJvbVtY7PqbXsf35y/loGOxJF/M=;
+	s=arc-20240116; t=1769619654; c=relaxed/simple;
+	bh=C93Qi8apiusRugLC1Ad4iUhYBBSbRgs8N2Xrs/fAZFc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CFopHrcZjCRa2aTKy2GV4bHUVf858Y2MXuk9JXXRt/ZYF3ZGiUao8w9iYDaWO/LIgc02MMSp5qLWvkhQ15MWUuBCv5a1au2V8T1GfLQlIIbQ5GJR1OOnGn+zupBzpA5Ziu4qRGPqOVBUmSNCsbvH04PN768yBffe+zzuiJfwsFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owPUep1q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TLJBiek4WUjJ7oyrw33lOicbriDlC493E0vtMy4beeXUI8AybYkpAomO11lsSTa5jgNhTOLHek/8/Hv7+bC4rUDcHbSjheW9dy7PmN3nbEh+2E8Kr4Nfb1zfdZUWM6kd4bt1GATYFfK1MEzixtXeIo3+WmH8OTYE9vfJw6a2DzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=m2wKvC3q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owPUep1q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56019C4CEF1;
-	Wed, 28 Jan 2026 15:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769613670;
-	bh=fi2Lg3B5iuJoikewkJvbVtY7PqbXsf35y/loGOxJF/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=owPUep1qRgu/HvnIAt0c9l6NbEhIg4CsqcbeDPgQKouW8s/beiBQPIwvFT/HOkbEi
-	 Ww/n2b0+/5CuGLPNRurAwTADm8bP7YrBbpC5a7agVzyvrwEJI3cinXkX963Wvavg4o
-	 LDT3krAGmM+h8p0IVwSgKATMqco5gLTyZ2KLyFd/bcOlfGe9Zh3tcMSqYspZWXirLM
-	 Y7uR0Rugtu2tRVcjOhal0Y5oU7qL6KxG8y/6K/LjKJU+oVohk78vAxg/xNKxXVpiYp
-	 M7ynWIe0KFCsizz0A8eC8ubnoyTe+Xf9o4lnf84BDDjvhb/y3QkIrXE9iJRZC/zRUR
-	 2nGupyUlM0I5w==
-Date: Wed, 28 Jan 2026 16:21:03 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Daniel Thompson <daniel@riscstar.com>
-Cc: Martin Uecker <uecker@tugraz.at>, 
-	Christopher Bazley <chris.bazley.wg14@gmail.com>, Alex Celeste <alexg.nvfp@gmail.com>, 
-	Joseph Myers <josmyers@redhat.com>, Aaron Ballman <aaron@aaronballman.com>, 
-	Douglas McIlroy <douglas.mcilroy@dartmouth.edu>, Bruno Haible <bruno@clisp.org>, Paul Eggert <eggert@cs.ucla.edu>, 
-	Florian Weimer <fweimer@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, 
-	Eric Biggers <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Daniel Thompson <danielt@kernel.org>, Daniel Lundin <daniel.lundin.mail@gmail.com>, 
-	"Valentin V. Bartenev" <vbartenev@gmail.com>, Andrew Clayton <andrew@digital-domain.net>, 
-	"Brian W. Kernighan" <bwk@cs.princeton.edu>, "G. Branden Robinson" <branden@debian.org>, 
-	"Basil L. Contovounesios" <basil@contovou.net>, "Jason A. Donenfeld" <jason@zx2c4.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, onf <onf@disroot.org>, Rich Felker <dalias@libc.org>, 
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="m2wKvC3q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF87CC4CEF7;
+	Wed, 28 Jan 2026 17:00:50 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="m2wKvC3q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1769619644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tn4g/9//RsuI8p+PfBKBMGxP/jMELrcAL7s9pAP33WA=;
+	b=m2wKvC3qDETjKG8j143DAoxEEYCt8XypTTP1fkG55IkiGr/El87+qNAqFmJAhmO5Ss4QvO
+	luTaIueGqjBBUWvKkPauPs45CQSo4/Z464etuqYdgloGfvYxQ/yKi612qCksjG3596dGqI
+	ftt2n6cXvdkVFbr1KrLxJuY4x/ZjghA=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id bd2c9de1 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Wed, 28 Jan 2026 17:00:40 +0000 (UTC)
+Date: Wed, 28 Jan 2026 18:00:30 +0100
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [RFC v3 5/6] alx-0081r2 - array parameters of 0 elements
-Message-ID: <aXooSDxHbpewFzgQ@devuan>
-References: <aXdhh1r7ePA5SrIE@devuan>
- <aXdiyLn3vxV2P807@devuan>
- <aXnhf9uAvyJbQfcn@aspen.lan>
+Subject: Re: [PATCH v4 2/3] prandom: Add __always_inline version of
+ prandom_u32_state()
+Message-ID: <aXpArjZ1QQowshnA@zx2c4.com>
+References: <20260119130122.1283821-1-ryan.roberts@arm.com>
+ <20260119130122.1283821-3-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v5rvizuwledlu5qd"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aXnhf9uAvyJbQfcn@aspen.lan>
+In-Reply-To: <20260119130122.1283821-3-ryan.roberts@arm.com>
 
+On Mon, Jan 19, 2026 at 01:01:09PM +0000, Ryan Roberts wrote:
+> We will shortly use prandom_u32_state() to implement kstack offset
+> randomization and some arches need to call it from non-instrumentable
+> context. So let's implement prandom_u32_state() as an out-of-line
+> wrapper around a new __always_inline prandom_u32_state_inline(). kstack
+> offset randomization will use this new version.
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  include/linux/prandom.h | 20 ++++++++++++++++++++
+>  lib/random32.c          |  8 +-------
+>  2 files changed, 21 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/prandom.h b/include/linux/prandom.h
+> index ff7dcc3fa105..801188680a29 100644
+> --- a/include/linux/prandom.h
+> +++ b/include/linux/prandom.h
+> @@ -17,6 +17,26 @@ struct rnd_state {
+>  	__u32 s1, s2, s3, s4;
+>  };
+>  
+> +/**
+> + * prandom_u32_state_inline - seeded pseudo-random number generator.
+> + * @state: pointer to state structure holding seeded state.
+> + *
+> + * This is used for pseudo-randomness with no outside seeding.
+> + * For more random results, use get_random_u32().
+> + * For use only where the out-of-line version, prandom_u32_state(), cannot be
+> + * used (e.g. noinstr code).
+> + */
+> +static __always_inline u32 prandom_u32_state_inline(struct rnd_state *state)
 
---v5rvizuwledlu5qd
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Daniel Thompson <daniel@riscstar.com>
-Cc: Martin Uecker <uecker@tugraz.at>, 
-	Christopher Bazley <chris.bazley.wg14@gmail.com>, Alex Celeste <alexg.nvfp@gmail.com>, 
-	Joseph Myers <josmyers@redhat.com>, Aaron Ballman <aaron@aaronballman.com>, 
-	Douglas McIlroy <douglas.mcilroy@dartmouth.edu>, Bruno Haible <bruno@clisp.org>, Paul Eggert <eggert@cs.ucla.edu>, 
-	Florian Weimer <fweimer@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, 
-	Eric Biggers <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Daniel Thompson <danielt@kernel.org>, Daniel Lundin <daniel.lundin.mail@gmail.com>, 
-	"Valentin V. Bartenev" <vbartenev@gmail.com>, Andrew Clayton <andrew@digital-domain.net>, 
-	"Brian W. Kernighan" <bwk@cs.princeton.edu>, "G. Branden Robinson" <branden@debian.org>, 
-	"Basil L. Contovounesios" <basil@contovou.net>, "Jason A. Donenfeld" <jason@zx2c4.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, onf <onf@disroot.org>, Rich Felker <dalias@libc.org>, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [RFC v3 5/6] alx-0081r2 - array parameters of 0 elements
-Message-ID: <aXooSDxHbpewFzgQ@devuan>
-References: <aXdhh1r7ePA5SrIE@devuan>
- <aXdiyLn3vxV2P807@devuan>
- <aXnhf9uAvyJbQfcn@aspen.lan>
-MIME-Version: 1.0
-In-Reply-To: <aXnhf9uAvyJbQfcn@aspen.lan>
+This is pretty bikesheddy and I'm not really entirely convinced that my
+intuition is correct here, but I thought I should at least ask. Do you
+think this would be better called __prandom_u32_state(), where the "__"
+is kind of a, "don't use this directly unless you know what you're doing
+because it's sort of internal"? It seems like either we make this inline
+for everybody, or if there's a good reason for having most users use the
+non-inline version, then we should be careful that new users don't use
+the inline version. I was thinking the __ would help with that.
 
-Hi Daniel,
-
-On 2026-01-28T10:14:23+0000, Daniel Thompson wrote:
-> On Mon, Jan 26, 2026 at 01:49:16PM +0100, Alejandro Colomar wrote:
-> > Proposed wording
-> > 	Based on N3685.
-> >
-> >     6.7.7.3  Array declarators
-> > 	@@ Constraints, p1
-> > 	 In addition to optional type qualifiers and the keyword static,
-> > 	 the [ and ] can delimit an expression or *.
-> > 	 If they delimit an expression,
-> > 	 called the array length expression,
-> > 	 the expression shall have an integer type.
-> > 	 If the expression is a constant expression,
-> > 	-it shall have a value greater than zero.
-> > 	+it shall have a nonnegative value.
-> > 	+An array length expression
-> > 	+that is a constant expression with value zero
-> > 	+shall appear only in
-> > 	+a declaration of a function parameter with an array type,
-> > 	+and then only in the outermost array type derivation.
->=20
-> This change did not have any motivating example within the discussion.
-> Providing a motivational example showing why it is useful to allow array
-> parameters whose constant length is zero would be good.
-
-Makes sense; I'll add that.
-
-Here's a function that I use in shadow-utils:
-
-	char *
-	stpecpy(char dst[], const char end[];
-	    char dst[dst?end-dst:0], const char end[0], const char *restrict src)
-	{
-		ssize_t  dlen;
-
-		if (dst =3D=3D NULL)
-			return NULL;
-
-		dlen =3D strtcpy(dst, src, end - dst);
-		if (dlen =3D=3D -1)
-			return NULL;
-
-		return dst + dlen;
-	}
-
-It's essentially the same as Plan9's strecpy(2), except that Plan9's
-API has an important bug.
-
-Here's a GCC bug that shows such a use case:
-<https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D108036>
-
-
-Have a lovely day!
-Alex
-
-> Daniel.
-
---=20
-<https://www.alejandro-colomar.es>
-
---v5rvizuwledlu5qd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAml6KV4ACgkQ64mZXMKQ
-wqmf5Q/8DICFnoM8AJshKZo8ERLY+0Vy8QvKC/4pgr4Wz5k2TjpnNIFbInNPvzzD
-Rh+susKpP3wZu/kA62GPAZ4ouq9+U4WZjM2RV/lOrreHAsKxOQqkrW6uaAYTR3nq
-VmyZR/7DomckIULff+LQVx/qkHM4NYT9U+wxA+V82SPDL1vvEe4a6O3NkHXjiAV0
-Pxv+SRvXnNTTGlnI5QbzWsRJ/bUgSbc+p6xZfGTNU2r4IhOSZh9qbZkfcDxx/otn
-+m/F5sCf/buXea2SDc8XtXNdK1mLkqGkLiwF3g/g8btNKUMPNU39yxIKzGXyPyiC
-MOLEnEqPLUg4Xhwr469B1wUIkW4XxHwiqzozdg/QgEdO3a2b9w9G2Z8e8bFQ7pBe
-FG5bHw9aXKI/gHFK9Oq4AVOdRLOj+Rfefxvk5I9qZJYiQvO95x/ansCw156BGbFT
-t4TvXzKPBjaJr5ZtNKSf3OPXiuresG2OAGQl1h7KvxSlj6NbqujfAl5JVpVO9LZ0
-K76useaashS8O4wbyLIzigJRSaX4nwH+HVlBsfuA4HfAeX1ICvbO2DMJMpq4NHKU
-aTiXLS6Ci7oW4IRrI5TPbWfC2DaR2gxnqYrAyYkQhD7qOFKe+sBoEgU7CoprqTWn
-6zruZY+zsTh5kd/15sDSG9sWxYk2U88HD/6IwksSKElp6GV9bSM=
-=Hzg2
------END PGP SIGNATURE-----
-
---v5rvizuwledlu5qd--
+Jason
