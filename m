@@ -1,25 +1,25 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F75637107F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5113793BD;
 	Thu, 29 Jan 2026 07:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769670161; cv=none; b=Tu/Ymn9lWdenQ9IgqtzaDY5KkJBm3BEjjFnhkFBDZ8QmO7MmsmOzKMs2t0OxyOoD6SQ5hjtg5RcKmVozBDE1OGe0OIoZRIRqZ6sGk3Mnyok5v/gt0AbZfRjP/rrVaIQmbR72zinQAtNAHEsbMRy+MSekgpDraosO8dAUM3Jj6GI=
+	t=1769670161; cv=none; b=G+A2ucg0nOhbKnYTP7emJv5A8iPBGoVLrbzGj1YQym0e2X9lYypSAZLP8vICVvc/vGH5auaDAFcQeVRsfmPzxP182iiTRXDAwkiBX7N6RkXf7VVB0S191oCwOwh3DpMYY1nCfCFkWO/O/GNppFlcreLjl1UIyMF/q2nO1SWzi0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769670161; c=relaxed/simple;
-	bh=Vwh4oHBlnE9Z/tnX1Geb5zVw/utF7oF/EDtJLFcKuFs=;
+	bh=ssSPpNgcEIU6jl4Sq+EPUHHZsZ77Yz+4TBW+QrALebs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uJsql0hMBSCbZUK0/60RW22nF5JSW8/9RG9ju0u6Z/CQxtA0aDduen+ZU8Dytlraq831GUv6IlG5phZCgrPJUY9VkIs1RAT/pQ/08gRKpL9y/B/JklVmAE1QYKH/VQGUcWC4vv7/aOBtipf3m2E2Lnwq1UPlzMeU7fYlFC+cP7U=
+	 MIME-Version; b=oEFphcl8LEBlNPryWra6J3o173US78x2MSi5fIqlJTP16qnm6NFSqxDs8f9DaI2RGTkWDoryGF16sVOuUN1230URt9/X8GMnJxL6eToWr66Q2Nd5ZBy2IPU3bLQae/ueAeisTCTfO/NftsUcTXDLkRSk+/j1s9t7TcGwKXtJgoc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 7c862bb6fce011f0b0f03b4cfa9209d1-20260129
+X-UUID: 7c19514efce011f0b0f03b4cfa9209d1-20260129
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:a8964664-8340-4788-9f14-46c4d1e96647,IP:0,UR
+X-CID-O-INFO: VERSION:1.3.6,REQID:2da66a11-4624-4e65-8b53-3d04f8750ff3,IP:0,UR
 	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:-5
-X-CID-META: VersionHash:a9d874c,CLOUDID:1c4d9d7443c2ab3da7c38752f00212d4,BulkI
+X-CID-META: VersionHash:a9d874c,CLOUDID:896c6413a4af6cd7e7bef1d14da6ef38,BulkI
 	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|898,TC:nil,Content:0|15|50
 	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
 	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -27,12 +27,12 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 7c862bb6fce011f0b0f03b4cfa9209d1-20260129
+X-UUID: 7c19514efce011f0b0f03b4cfa9209d1-20260129
 X-User: jiangfeng@kylinos.cn
 Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <jiangfeng@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 14259134; Thu, 29 Jan 2026 15:02:34 +0800
+	with ESMTP id 1062922104; Thu, 29 Jan 2026 15:02:33 +0800
 From: Feng Jiang <jiangfeng@kylinos.cn>
 To: pjw@kernel.org,
 	palmer@dabbelt.com,
@@ -54,9 +54,9 @@ To: pjw@kernel.org,
 Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v6 3/8] lib/string_kunit: add correctness test for strrchr()
-Date: Thu, 29 Jan 2026 15:02:22 +0800
-Message-Id: <20260129070227.220866-4-jiangfeng@kylinos.cn>
+Subject: [PATCH v6 2/8] lib/string_kunit: add correctness test for strnlen()
+Date: Thu, 29 Jan 2026 15:02:21 +0800
+Message-Id: <20260129070227.220866-3-jiangfeng@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260129070227.220866-1-jiangfeng@kylinos.cn>
 References: <20260129070227.220866-1-jiangfeng@kylinos.cn>
@@ -68,26 +68,27 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a KUnit test for strrchr() to verify correctness across
+Add a KUnit test for strnlen() to verify correctness across
 different string lengths and memory alignments. Use vmalloc()
 to place the NUL character at the page boundary to ensure
 over-reads are detected.
 
+Suggested-by: Andy Shevchenko <andy@kernel.org>
 Suggested-by: Kees Cook <kees@kernel.org>
 Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
 ---
- lib/tests/string_kunit.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ lib/tests/string_kunit.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
 diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 886d21d32fa9..f16dfa29e8ce 100644
+index 335f2e6c2ed6..886d21d32fa9 100644
 --- a/lib/tests/string_kunit.c
 +++ b/lib/tests/string_kunit.c
-@@ -189,6 +189,36 @@ static void string_test_strchr(struct kunit *test)
- 	KUNIT_ASSERT_NULL(test, result);
+@@ -132,6 +132,40 @@ static void string_test_strlen(struct kunit *test)
+ 	vfree(buf);
  }
  
-+static void string_test_strrchr(struct kunit *test)
++static void string_test_strnlen(struct kunit *test)
 +{
 +	size_t buf_size;
 +	char *buf, *s;
@@ -103,12 +104,16 @@ index 886d21d32fa9..f16dfa29e8ce 100644
 +			s = buf + buf_size - 1 - offset - len;
 +			s[len] = '\0';
 +
-+			KUNIT_EXPECT_PTR_EQ(test, strrchr(s, 'Z'), NULL);
-+
 +			if (len > 0)
-+				KUNIT_EXPECT_PTR_EQ(test, strrchr(s, 'A'), s + len - 1);
-+			else
-+				KUNIT_EXPECT_PTR_EQ(test, strrchr(s, 'A'), NULL);
++				KUNIT_EXPECT_EQ(test, strnlen(s, len - 1), len - 1);
++			if (len > 1)
++				KUNIT_EXPECT_EQ(test, strnlen(s, len - 2), len - 2);
++
++			KUNIT_EXPECT_EQ(test, strnlen(s, len), len);
++
++			KUNIT_EXPECT_EQ(test, strnlen(s, len + 1), len);
++			KUNIT_EXPECT_EQ(test, strnlen(s, len + 2), len);
++			KUNIT_EXPECT_EQ(test, strnlen(s, len + 10), len);
 +
 +			s[len] = 'A';
 +		}
@@ -117,17 +122,17 @@ index 886d21d32fa9..f16dfa29e8ce 100644
 +	vfree(buf);
 +}
 +
- static void string_test_strnchr(struct kunit *test)
+ static void string_test_strchr(struct kunit *test)
  {
  	const char *test_string = "abcdefghijkl";
-@@ -684,6 +714,7 @@ static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_test_strnlen),
+@@ -647,6 +681,7 @@ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(string_test_memset32),
+ 	KUNIT_CASE(string_test_memset64),
+ 	KUNIT_CASE(string_test_strlen),
++	KUNIT_CASE(string_test_strnlen),
  	KUNIT_CASE(string_test_strchr),
  	KUNIT_CASE(string_test_strnchr),
-+	KUNIT_CASE(string_test_strrchr),
  	KUNIT_CASE(string_test_strspn),
- 	KUNIT_CASE(string_test_strcmp),
- 	KUNIT_CASE(string_test_strcmp_long_strings),
 -- 
 2.25.1
 
