@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A0A37BE94;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7242937C0ED;
 	Thu, 29 Jan 2026 08:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769674111; cv=none; b=Mx9NLK2nIiDlNEkOnowq9P+DjZc1PmtE0G34u4d8keg4efCSED/AeWaVoMAKSD60ENQ24mTiAVU7g9qykE95eE4IeNtYNwXoCjGjDwkrNrFvEPbWbJW/D1jrsGxUPwPExGkf7eWz1akMLsp48jnzm17ssbZQwMjcB8E1uW59jxA=
+	t=1769674111; cv=none; b=euS9IwqTxSJax6XTk9rYeQSd2k0PhIveW57FvqoE7SlNTw06VKwMf0LTlpr79AnbOxiuRy1Ik2K+lnC9mE3SI8kUCNRhtRL/pvgrNuyYSvEiMaghLEsxZCjMQ7iPFPrRz5OVLbGQHJyKA6dsubrBlP1udXcdcvdC/PELDABAA8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769674111; c=relaxed/simple;
-	bh=LaLUXoY/KS6WIRVp9iorgFncFjJ1rGpIWKLw4YbQxJU=;
+	bh=Vgz8udadx0cwepC/wsp/hEk+Bl4FBDA/00MijiNSly0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UXt5TrbD1X57TJxKIbwASpxxp5o6RDFFGisNRBE1a/+NIi8EOT54Wl5k/uZ6Rx8koBTDBsYntV7uaWzVLjj25KyDBqt205XZ70eCIPKt9F1jwvR6e/heiVDnpxV/xcY4eGXnUjlyQ7uq7/czzZmInIl4lCy4mZFlyHE14eHlTAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWvhwl1b; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=UF2e9rAURE+p3aG990zp6umjPzEYZmdUAkrTrYHslURXknu+NNe2RlDjv1CbBMzmyD3ZJBBeeZ8OjWh5lKyjkVVeEfmJAg+KVklZopZQ74N9U9p1ZdrmoYq4iXyxKdP8S7tDiWy+muufXmxODOahIVSbUtCHNZnXy5XFux5hz9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YP5vGpOv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWvhwl1b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5893C2BCB8;
-	Thu, 29 Jan 2026 08:08:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YP5vGpOv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13200C4AF49;
+	Thu, 29 Jan 2026 08:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769674110;
-	bh=LaLUXoY/KS6WIRVp9iorgFncFjJ1rGpIWKLw4YbQxJU=;
+	s=k20201202; t=1769674111;
+	bh=Vgz8udadx0cwepC/wsp/hEk+Bl4FBDA/00MijiNSly0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iWvhwl1bfp2HBezorxauaO2EZmjPRMrkGOxSaekiDDkwvvj54BDshhDG+O7SVaA9C
-	 xdaxITXkK+MopAflWPI8De6K5bYS2ZxkJPqKMhFpSdRY/ZO2kYVYG9qIT0LrLz6/C1
-	 svr53IqwZasCzcupbxTQhw8NWrQB2XViEOusMQch1adrBJUYq8Fp9hJNfSsWXCk1rG
-	 Q32rJBkRJegIt7DWiF+o1vjrt8lAmuOPrNT/kFCF4QyaMf0L1znAQPcqbY0Dpn20HY
-	 X4X+C+bpDUwRK8KLSikyO01ou2ABIiQr2he1mSqkdruUDwB3fnUJYzD/1R1M/ZNZsr
-	 GpTw9EisEz9rw==
+	b=YP5vGpOvHl24KZtFS2lZlEeeb735cIH0uq+vhbQZ2e7nKwUMN5fw8MAbs58UlPVKx
+	 0OROfZZnNcewLqsK0HIRLgknHMJo+WOm8ep+be5EwzprkiWi1U21lj1/TENDurv1mO
+	 hbBGtiSFoLATC46u+uN3kmp7/upOE/QUzw3A5n97dydFPnJUK0RCgbbIG6+2uTQadd
+	 MkdzE1zaHdozS7OZjrdjc+M2HwE56Ye/yF+9gORYZuYc0iNkTLJl8WeVi43TnDAvH5
+	 kZohuBMT3uwl9x5mbb3hllsIHbiTR8L1erlxNcrvN+O6+0GEypaLvVUts+WV1MtM1s
+	 Q+FNWlqjKz7mA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vlN4n-0000000ERNV-0IyM;
+	id 1vlN4n-0000000ERO1-1Ggj;
 	Thu, 29 Jan 2026 09:08:29 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -41,9 +41,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v3 15/30] docs: kdoc_re: properly handle strings and escape chars on it
-Date: Thu, 29 Jan 2026 09:08:06 +0100
-Message-ID: <486ef8c6f1f066d495b23df2dcd450fa5c2bc3e7.1769673038.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 23/30] docs: kdoc_parser: better handle struct_group macros
+Date: Thu, 29 Jan 2026 09:08:14 +0100
+Message-ID: <e583f81bd191654b2df8622ca3d587ee8f61eb2b.1769673038.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1769673038.git.mchehab+huawei@kernel.org>
 References: <cover.1769673038.git.mchehab+huawei@kernel.org>
@@ -57,53 +57,43 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The logic inside NestedMatch currently doesn't consider that
-function arguments may have chars and strings, which may
-eventually contain delimiters.
-
-Add logic to handle strings and escape characters on them.
+Instead of converting them on two steps, implement a single
+logic to parse them using the new sub functionality of
+NestedMatch.sub().
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/lib/python/kdoc/kdoc_re.py | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ tools/lib/python/kdoc/kdoc_parser.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/lib/python/kdoc/kdoc_re.py b/tools/lib/python/kdoc/kdoc_re.py
-index a0402c065d3a..1861799f1966 100644
---- a/tools/lib/python/kdoc/kdoc_re.py
-+++ b/tools/lib/python/kdoc/kdoc_re.py
-@@ -195,6 +195,8 @@ class NestedMatch:
-         for match_re in regex.finditer(line):
-             start = match_re.start()
-             offset = match_re.end()
-+            string_char = None
-+            escape = False
- 
-             d = line[offset - 1]
-             if d not in self.DELIMITER_PAIRS:
-@@ -208,6 +210,22 @@ class NestedMatch:
- 
-                 d = line[pos]
- 
-+                if escape:
-+                    escape = False
-+                    continue
+diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
+index 3a5614106af7..d2eb93f9d489 100644
+--- a/tools/lib/python/kdoc/kdoc_parser.py
++++ b/tools/lib/python/kdoc/kdoc_parser.py
+@@ -124,10 +124,11 @@ struct_xforms = [
+     # matched. So, the implementation to drop STRUCT_GROUP() will be
+     # handled in separate.
+     #
+-    (KernRe(r'\bstruct_group\s*\(([^,]*,)', re.S), r'STRUCT_GROUP('),
+-    (KernRe(r'\bstruct_group_attr\s*\(([^,]*,){2}', re.S), r'STRUCT_GROUP('),
+-    (KernRe(r'\bstruct_group_tagged\s*\(([^,]*),([^,]*),', re.S), r'struct \1 \2; STRUCT_GROUP('),
+-    (KernRe(r'\b__struct_group\s*\(([^,]*,){3}', re.S), r'STRUCT_GROUP('),
++    (NestedMatch(r'\bstruct_group\s*\('), r'\2'),
++    (NestedMatch(r'\bstruct_group_attr\s*\('), r'\3'),
++    (NestedMatch(r'\bstruct_group_tagged\s*\('), r'struct \1 { \3 } \2;'),
++    (NestedMatch(r'\b__struct_group\s*\('), r'\4'),
 +
-+                if string_char:
-+                    if d == '\\':
-+                        escape = True
-+                    elif d == string_char:
-+                        string_char = None
-+
-+                    continue
-+
-+                if d in ('"', "'"):
-+                    string_char = d
-+                    continue
-+
-                 if d in self.DELIMITER_PAIRS:
-                     end = self.DELIMITER_PAIRS[d]
+     #
+     # Replace macros
+     #
+@@ -153,7 +154,6 @@ struct_xforms = [
+     (KernRe(r'DEFINE_DMA_UNMAP_ADDR\s*\(' + struct_args_pattern + r'\)', re.S), r'dma_addr_t \1'),
+     (KernRe(r'DEFINE_DMA_UNMAP_LEN\s*\(' + struct_args_pattern + r'\)', re.S), r'__u32 \1'),
+     (KernRe(r'VIRTIO_DECLARE_FEATURES\(([\w_]+)\)'), r'union { u64 \1; u64 \1_array[VIRTIO_FEATURES_U64S]; }'),
+-    (NestedMatch(r'\bSTRUCT_GROUP\('), r'\0'),
+ ]
  
+ #
 -- 
 2.52.0
 
