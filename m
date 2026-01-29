@@ -1,140 +1,203 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B80F35292D;
-	Thu, 29 Jan 2026 02:19:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DC823EA94;
+	Thu, 29 Jan 2026 07:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769653164; cv=none; b=mDtSquRXcSxKM1lxiA8KSIP1PlfWT3CuI6Anbd+sRDuxBOjz3W+dMHn0oEnDT7c2eUC6k1FumOoK+JoeFS71eu/UrKjSgSIvVTWKknbwuSrNO7zQmIzrEbtQPtHbrXrSY9H0pJmvjOPtuZ6xjLstanHFu/cTV3mLoQvpI8qGpUc=
+	t=1769670159; cv=none; b=ZIIb4aL6dc8+d3pPEq5qjbM+lmoOezxNXdqr7I82lxpK7/JGTastvMuK/WU39YXa0LkZQoQpY3CATNVIhCshQ44seu8nJ3Z87QguelqkJmh4vjAzdLkIWYhzodW2Le4Zb7QxwW75hti0iGw80yYHm1ZWB2WkylgHFCTH+Wjz838=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769653164; c=relaxed/simple;
-	bh=JyzWH6jFBTdjbwzVd96gr6R67EfTycWkvMtwpyMIqAo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cGWTKkweDmgEKCwrUD6+9XS6MpcgdpEAfCAYrqWkAkXXtX5eLDdeRDYjTyzBCLjNoLWmmcAu9flLs6hTyNFGkCwdeIapPvSBbZq+RNn7qvVlbeKXv4SrtaFLO1jk6/dtY9nWArOw9DJLyq/taruW5TUVGuRY9BoXV1pJePtQL24=
+	s=arc-20240116; t=1769670159; c=relaxed/simple;
+	bh=ku5OHSJAkkvVcH5Nd/i1Vjxjtz4dKYzfQpsoK0iM/6A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RJyn9IGVEz8TQwlZpxYirRKrEmx4AQn6Y8rtlwWjrkgKEbdqCAchaJxEu8tu6wxWbUi1Li3azB6uwL3ajMfs9QQiaSFXXzocAsgrfj2MjAJDehbyoHMBY7NVFy5BGHJQJgQem4wDes8e54UnXq6QUsHrkvpTy2bwVigZL199qQs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: e7990fc2fcb811f0b0f03b4cfa9209d1-20260129
+X-UUID: 7b4013d4fce011f0b0f03b4cfa9209d1-20260129
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:f891207d-7053-44ab-a336-3feadf09848e,IP:0,UR
-	L:0,TC:0,Content:2,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:2
-X-CID-META: VersionHash:a9d874c,CLOUDID:93b2c925ebfb35e9375b0a36792dc51a,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:4|15|
-	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-O-INFO: VERSION:1.3.6,REQID:63c251e9-6d9a-4116-83f4-d0e2245be342,IP:0,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-25
+X-CID-META: VersionHash:a9d874c,CLOUDID:57e8c5082dda505fa025034405a69548,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|898,TC:nil,Content:0|15|50,EDM:-
+	3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,A
+	V:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: e7990fc2fcb811f0b0f03b4cfa9209d1-20260129
+X-UUID: 7b4013d4fce011f0b0f03b4cfa9209d1-20260129
 X-User: jiangfeng@kylinos.cn
-Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <jiangfeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1471132287; Thu, 29 Jan 2026 10:19:13 +0800
-Message-ID: <1792d41f-fa5b-4507-98d4-cb8f671cde96@kylinos.cn>
-Date: Thu, 29 Jan 2026 10:19:10 +0800
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 226172025; Thu, 29 Jan 2026 15:02:31 +0800
+From: Feng Jiang <jiangfeng@kylinos.cn>
+To: pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	akpm@linux-foundation.org,
+	kees@kernel.org,
+	andy@kernel.org,
+	jiangfeng@kylinos.cn,
+	ebiggers@kernel.org,
+	martin.petersen@oracle.com,
+	herbert@gondor.apana.org.au,
+	samuel.holland@sifive.com,
+	ajones@ventanamicro.com,
+	charlie@rivosinc.com,
+	conor.dooley@microchip.com,
+	linus.walleij@linaro.org,
+	nathan@kernel.org
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v6 0/8] riscv: optimize string functions and add kunit tests
+Date: Thu, 29 Jan 2026 15:02:19 +0800
+Message-Id: <20260129070227.220866-1-jiangfeng@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/8] lib/string_kunit: add correctness test for
- strlen()
-To: Kees Cook <kees@kernel.org>
-Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- akpm@linux-foundation.org, andy@kernel.org, ebiggers@kernel.org,
- martin.petersen@oracle.com, sohil.mehta@intel.com, charlie@rivosinc.com,
- conor.dooley@microchip.com, samuel.holland@sifive.com,
- linus.walleij@linaro.org, nathan@kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Joel Stanley <joel@jms.id.au>
-References: <20260127012558.40025-1-jiangfeng@kylinos.cn>
- <20260127012558.40025-2-jiangfeng@kylinos.cn>
- <202601281437.F327FC61@keescook>
-Content-Language: en-US
-From: Feng Jiang <jiangfeng@kylinos.cn>
-In-Reply-To: <202601281437.F327FC61@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2026/1/29 06:39, Kees Cook wrote:
-> On Tue, Jan 27, 2026 at 09:25:51AM +0800, Feng Jiang wrote:
->> Add a KUnit test for strlen() to verify correctness across
->> different string lengths and memory alignments.
->>
->> Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
->> Acked-by: Andy Shevchenko <andy@kernel.org>
->> Tested-by: Joel Stanley <joel@jms.id.au>
->> ---
->>  lib/tests/string_kunit.c | 26 ++++++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>
->> diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
->> index f9a8e557ba77..bc5130c6e5e9 100644
->> --- a/lib/tests/string_kunit.c
->> +++ b/lib/tests/string_kunit.c
->> @@ -17,6 +17,9 @@
->>  #define STRCMP_TEST_EXPECT_LOWER(test, fn, ...) KUNIT_EXPECT_LT(test, fn(__VA_ARGS__), 0)
->>  #define STRCMP_TEST_EXPECT_GREATER(test, fn, ...) KUNIT_EXPECT_GT(test, fn(__VA_ARGS__), 0)
->>  
->> +#define STRING_TEST_MAX_LEN	128
->> +#define STRING_TEST_MAX_OFFSET	16
->> +
->>  static void string_test_memset16(struct kunit *test)
->>  {
->>  	unsigned i, j, k;
->> @@ -104,6 +107,28 @@ static void string_test_memset64(struct kunit *test)
->>  	}
->>  }
->>  
->> +static void string_test_strlen(struct kunit *test)
->> +{
->> +	const size_t buf_size = STRING_TEST_MAX_LEN + STRING_TEST_MAX_OFFSET + 1;
->> +	size_t len, offset;
->> +	char *s;
->> +
->> +	s = kunit_kzalloc(test, buf_size, GFP_KERNEL);
-> 
-> One aspect of "correctness" that we might want to include here is making
-> sure we don't have any implementations that over-read. To that end,
-> perhaps this test can put the string at the end of a vmalloc allocation
-> (so that the end of the string is right up against an unallocated memory
-> space).
-> 
->> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, s);
->> +
->> +	memset(s, 'A', buf_size);
->> +	s[buf_size - 1] = '\0';
->> +
->> +	for (offset = 0; offset < STRING_TEST_MAX_OFFSET; offset++) {
->> +		for (len = 0; len <= STRING_TEST_MAX_LEN; len++) {
->> +			s[offset + len] = '\0';
->> +			KUNIT_EXPECT_EQ_MSG(test, strlen(s + offset), len,
->> +				"offset:%zu len:%zu", offset, len);
->> +			s[offset + len] = 'A';
->> +		}
->> +	}
->> +}
-> 
-> It would require building the string backwards here. Or maybe we just
-> need a separate test for the over-read concerns?
-> 
-> Thoughts?
+This series provides optimized implementations of strnlen(), strchr(),
+and strrchr() for the RISC-V architecture. The strnlen() implementation
+is derived from the existing optimized strlen(). For strchr() and
+strrchr(), the current versions use simple byte-by-byte assembly logic,
+which will serve as a baseline for future Zbb-based optimizations.
 
-Thanks for the suggestion! That is a very effective way to catch potential
-over-reads in optimized implementations.
+The patch series is organized into three parts:
+1. Correctness Testing: The first three patches add KUnit test cases
+   for strlen(), strnlen(), and strrchr() to ensure the baseline and
+   optimized versions are functionally correct.
+2. Benchmarking Tool: Patches 4 and 5 extend string_kunit to include
+   performance measurement capabilities, allowing for comparative
+   analysis within the KUnit environment.
+3. Architectural Optimizations: The final three patches introduce the
+   RISC-V specific assembly implementations.
 
-I will refactor the correctness tests in v6 to use a vmalloc-allocated page
-and ensure the NUL character is positioned at the very end of the allocation
-boundary.
+Following suggestions from Andy Shevchenko, performance benchmarks have
+been added to string_kunit.c to provide quantifiable evidence of the
+improvements. Andy provided many specific comments on the implementation
+of the benchmark logic, which is also inspired by Eric Biggers'
+crc_benchmark(). Performance was measured in a QEMU TCG (rv64) environment,
+comparing the generic C implementation with the new RISC-V assembly
+versions.
 
-I'll send out the v6 patch set shortly with these changes.
+Performance Summary (Improvement %):
+---------------------------------------------------------------
+Function  |  16 B (Short) |  512 B (Mid) |  4096 B (Long)
+---------------------------------------------------------------
+strnlen   |    +72.6%     |   +350.1%    |    +427.5%
+strchr    |    +3.6%      |   +3.5%      |    -0.3%
+strrchr   |    +5.3%      |   +5.8%      |    +0.8%
+---------------------------------------------------------------
+The benchmarks can be reproduced by enabling CONFIG_STRING_KUNIT_BENCH
+and running: ./tools/testing/kunit/kunit.py run --arch=riscv \
+--cross_compile=riscv64-linux-gnu- --kunitconfig=my_string.kunitconfig \
+--raw_output
+
+The strnlen() implementation leverages the Zbb 'orc.b' instruction and
+word-at-a-time logic, showing significant gains as the string length
+increases. For strchr() and strrchr(), the handwritten assembly reduces
+fixed overhead by eliminating stack frame management. The gain is most
+prominent on short strings where function call overhead dominates,
+while the performance converges with the C implementation for longer
+strings in the TCG environment.
+
+I would like to thank Andy Shevchenko for the suggestion to add benchmarks
+and for his detailed feedback on the test framework, and Eric Biggers for
+the benchmarking approach. I am also grateful to Qingfang Deng for
+providing the optimized implementation logic for strnlen(). Thanks also to
+Joel Stanley for testing support and feedback, and to David Laight for his
+suggestions regarding performance measurement.
+
+Changes:
+
+v6:
+- Use vmalloc() and page-boundary alignment in strlen(), strnlen(), and
+  strrchr() correctness tests to ensure over-reads are detected, as
+  suggested by Kees Cook. Consequently, previous Acked-by and Tested-by
+  tags for these tests have been dropped.
+- Added <linux/minmax.h> include.
+- Update STRING_BENCH_BUF macro to initialize variables inside the loop.
+- Fixed operator positioning and removed redundant blank lines.
+- Added warm-up iteration comment.
+
+v5:
+- Include <linux/ktime.h> for ktime_get_ns() and <linux/time64.h> 
+  for NSEC_PER_SEC.
+- Use #if IS_ENABLED(CONFIG_STRING_KUNIT_BENCH) to define the macro 
+  instead of using if (!IS_ENABLED(...)) inside the function.
+- Declare variables inside for-loops.
+- Simplify the for-loop logic in alloc_max_bench_buffer().
+- Replace the magic number 1000 with (NSEC_PER_SEC / MEGA) to clarify 
+  the bytes/ns to MB/s conversion.
+
+v4:
+- Refine formatting and terminology:
+  - Refer to '\0' as NUL.
+  - Append parentheses () when referencing function names.
+  - Ensure trailing commas are present in initializers.
+  - Reorder local variable declarations to follow the "reverse Xmas tree" 
+    style. (Style-only change; kept existing Acked-by tags).
+- Improve documentation: Refine comments and commit messages for better 
+  clarity.
+- Improve readability by using (1 * MEGA) instead of 1000000UL.
+- Replace max_t() with max() where type-casting is unnecessary.
+- Simplify the return value check for kunit_kzalloc() in 
+  alloc_max_bench_buffer().
+- Remove redundant NUL-terminator handling in STRING_BENCH_BUF().
+- Optimize strnlen() implementation by replacing bleu/bgeu instructions 
+  with minu, as suggested by Qingfang Deng.
+- Remove incorrect Suggested-by tags from certain patches.
+- Drop Tested-by tags for benchmark-related patches due to significant 
+  framework changes since v3.
+- Re-run all tests and updated the performance data in the documentation.
+
+v3:
+- Re-implement benchmark logic inspired by crc_benchmark().
+- Add 'len - 2' test case to strnlen correctness tests.
+- Incorporate detailed benchmark data into individual commit messages.
+
+v2: 
+- Refactored lib/string.c to export __generic_* functions and added
+  corresponding functional/performance tests for strnlen, strchr,
+  and strrchr (Andy Shevchenko).
+- Replaced magic numbers with STRING_TEST_MAX_LEN etc. (Andy Shevchenko).
+
+v1: Initial submission.
+
+---
+
+Feng Jiang (8):
+  lib/string_kunit: add correctness test for strlen()
+  lib/string_kunit: add correctness test for strnlen()
+  lib/string_kunit: add correctness test for strrchr()
+  lib/string_kunit: add performance benchmark for strlen()
+  lib/string_kunit: extend benchmarks to strnlen() and chr searches
+  riscv: lib: add strnlen() implementation
+  riscv: lib: add strchr() implementation
+  riscv: lib: add strrchr() implementation
+
+ arch/riscv/include/asm/string.h |   9 ++
+ arch/riscv/lib/Makefile         |   3 +
+ arch/riscv/lib/strchr.S         |  35 ++++
+ arch/riscv/lib/strnlen.S        | 164 +++++++++++++++++++
+ arch/riscv/lib/strrchr.S        |  37 +++++
+ arch/riscv/purgatory/Makefile   |  11 +-
+ lib/Kconfig.debug               |  11 ++
+ lib/tests/string_kunit.c        | 273 ++++++++++++++++++++++++++++++++
+ 8 files changed, 542 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/lib/strchr.S
+ create mode 100644 arch/riscv/lib/strnlen.S
+ create mode 100644 arch/riscv/lib/strrchr.S
 
 -- 
-With Best Regards,
-Feng Jiang
+2.25.1
 
