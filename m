@@ -1,442 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A941737D106;
-	Thu, 29 Jan 2026 08:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769674111; cv=none; b=GC5wduQsc1zvDCqKBm7izf4lVBh+eQ9EggXLfgLTNQdrWmTpkfbhmb9tdnEahpccISQ4lOscq85lEOAP5Hcj9oCSmu/BUWCQ+raKyqNuJtc5J+kvEFEh/LiOrW3qO00IYI/VE1gu2ekFTxEfph34kgaibuoEhUtJmwEbbPa9CAQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769674111; c=relaxed/simple;
-	bh=F7SXVJQaKXSGTPt0S8ELbYxmxnPghzSZdaEyiqG1MT0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lSqy84bUjmAknRV6+mcfrcKypVqatXEs0StH34V5yTb0OEL+ImbTRc/QNbxc2142FNZVXdGHexrAnyb5OCg+YjkjOxhjjViqQyCZYdsWNR3+c2tAKUmacdmkTPMSKpHRRw9gpSzIIf0vyM0dz+yLGEStwOk+jhebt7Ux1GXys7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsmRyLsP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665B433D4F9;
+	Thu, 29 Jan 2026 10:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769682352; cv=fail; b=EQNePnhBbmRItZpQKhEGc5lLbNJ5WjMJHuf/lMyblGXZCxhsmim2NmOXcr18Z+6V1uPyzg6j2BoIAw8SO1u6c0MbJDSfegwvmix/TEsYItXkJEMoK1luEY3SW/euNRsrr9RTLkZw3aHexiRKYMvCHjGVTiPNkfWDQlMNU0pxEus=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769682352; c=relaxed/simple;
+	bh=FNv+a4EYVKCU7UJD5YVMmTFFqL9nWz9SCVZ5dzZ8/B8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MNlibLOUzFL6ryu5zXdyMBLg9TqDYZ42TxM1Im7bP88ETM79VVQT8dHCnE6dC3bJsva3600mfpgPO2pdEu1wSg+8Vpk12j2bFmWcrVTOwMp1psAoB6XevrRAtZK9zb57uT+jUpOOkMVtoGqDm6Pt1W8TKOMf765y6RELYlyCQ6M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gfG8MO26; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsmRyLsP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36263C2BCB7;
-	Thu, 29 Jan 2026 08:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769674111;
-	bh=F7SXVJQaKXSGTPt0S8ELbYxmxnPghzSZdaEyiqG1MT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EsmRyLsPaYkZHy8GmfAeTZvYM9esvTbEqahXXySqKeSbpWkU/WGKuExYbie/U5Zhf
-	 TMDOoDcI33QRtygeIxOoiRXWNAcATKUqJf82ztjG1pe4iVVV8IAMP2/FHsub+f9zPa
-	 asImPEdlR1465VH6H05BBCpePoTWp2t0f11Fw49+lFZSndHFo8o5OaEF+89w4IewmM
-	 e+UuUYA4q2S2Uxzd1GKQuJoPwKCW0eaSo61P7miLIuXiZN+Tyn+b2pwWJMB/4KTrib
-	 tMXAMdkYnRC5vwIDyJzqIneqCdyUN2jWR20A6lp4cAdX3pRkmZbid6VSM1MZhUp4e3
-	 PZAvOf1Zq0avg==
-Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vlN4n-0000000EROL-1rP6;
-	Thu, 29 Jan 2026 09:08:29 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	bpf@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v3 28/30] docs: kdoc_parser: move transform lists to a separate file
-Date: Thu, 29 Jan 2026 09:08:19 +0100
-Message-ID: <9f8228c20b8849c068e107bcbcb1f24e1cbd36bb.1769673038.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1769673038.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gfG8MO26"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769682350; x=1801218350;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=FNv+a4EYVKCU7UJD5YVMmTFFqL9nWz9SCVZ5dzZ8/B8=;
+  b=gfG8MO26DbNAc3a9oYlVI/f34UKt75NZGfFuUOFvIwEaqgigQukRhB0W
+   dyeYaFchBpzUaDrWJjZlikliCfzC7DSk3lBUUwP56a6XO88puAqt9gAqB
+   6QxI1mDS3mPf3un10+yHW2hWrP4K41RZOCCZ5zHN6uqvYs7WVaD9kADet
+   pYtq4qSmsC3tn088z4rX8KUS7Nr3NnPsUILyJespfeSNoKpG96AbJkEwl
+   lx5XprmmeRvhGq8VHmaK+yJw68GqRG+6pB8pQf1Yl7ib3fInEbeqmG6Ey
+   10BJXGqkEheIZSIDqe402GjKXyhf/3V4kTLCpCoAT09eWJzN+X361jcYd
+   Q==;
+X-CSE-ConnectionGUID: OviuoSLiRiC30dgIR2oBcw==
+X-CSE-MsgGUID: mww5BvKrS2ORqo4m+ETCMA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11685"; a="58497958"
+X-IronPort-AV: E=Sophos;i="6.21,260,1763452800"; 
+   d="scan'208";a="58497958"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 02:25:49 -0800
+X-CSE-ConnectionGUID: fD6tOvxFQDip84CBZcTU1Q==
+X-CSE-MsgGUID: waiWHKYrSDeU1Ru9dT86Sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,260,1763452800"; 
+   d="scan'208";a="208142441"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 02:25:49 -0800
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Thu, 29 Jan 2026 02:25:48 -0800
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35 via Frontend Transport; Thu, 29 Jan 2026 02:25:48 -0800
+Received: from DM1PR04CU001.outbound.protection.outlook.com (52.101.61.14) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Thu, 29 Jan 2026 02:25:48 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HSWn0BDcBtjr+D04X8uMwl2FUwgpqd0/GiuzVwPIulXJiOWoV9y7F1MzrBqVUiK0SmwvBDuSDwk67mVWmXR2qQF68PzRzZQEBGc3HWrjjJnvxcjutskJKGfm1Ve+rf2y8xyyEdTjhx0m3PmdQQqhAsjdRkTJoQ5r2cWQrxpsrahm/ihLutIMqZfd4iX2TsGrocakXRYj2ykWp2/Bzd2HyoRdpk3EqR8dersEIgo5gCxD0acHmRCPdR7TTC0npjpCkfIH7vGRgrHAVmx2dUIApe6TC1cp0JTVZmX4IBsiZV57G9qqpdzsoEFxhD+sIiIAcOS09zf8vgx9uJh5umge/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FNv+a4EYVKCU7UJD5YVMmTFFqL9nWz9SCVZ5dzZ8/B8=;
+ b=x2x2m1UZ0q3TK5OQhdRebG8FaodLiM/ls6sgd2mZpl1QME849yNv7hG3o2HHwWcKGbBPi+te1Az3Ggd5cJrk+kAG2TzdA+6SB9DLo20bTJ1EUD8IV+FIIpUS0DdMt4ni7SoylwulkPUnBWeFWhzYWG1pztn7VdfHGAvDeOcO80gtHAFEA2CTXwT0NhPN1HkigqU8ZVVQ1DPEmpPplblihGvDAnsAvRS4bIvKuBwGw3v9qPCno0KgOHAU6fMxRPc+JQY7RARKh0TDnz5gtwhuXQNYBdpsosYThWNFDbeWW+Rb8D9ED9UdXRRynEc64HBICpJYa9ylDs9yM2FerC0/NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA3PR11MB8986.namprd11.prod.outlook.com (2603:10b6:208:577::21)
+ by LV8PR11MB8697.namprd11.prod.outlook.com (2603:10b6:408:1fe::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.8; Thu, 29 Jan
+ 2026 10:25:46 +0000
+Received: from IA3PR11MB8986.namprd11.prod.outlook.com
+ ([fe80::395e:7a7f:e74c:5408]) by IA3PR11MB8986.namprd11.prod.outlook.com
+ ([fe80::395e:7a7f:e74c:5408%3]) with mapi id 15.20.9542.010; Thu, 29 Jan 2026
+ 10:25:46 +0000
+From: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+CC: "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
+Subject: RE: [Intel-wired-lan] [PATCH v3 10/30] docs: kdoc_parser: don't
+ exclude defaults from prototype
+Thread-Topic: [Intel-wired-lan] [PATCH v3 10/30] docs: kdoc_parser: don't
+ exclude defaults from prototype
+Thread-Index: AQHckPaDFMzi59/3H06Ut8inCZYEGrVo8U6Q
+Date: Thu, 29 Jan 2026 10:25:46 +0000
+Message-ID: <IA3PR11MB8986EC9B1D968B5156526CBEE59EA@IA3PR11MB8986.namprd11.prod.outlook.com>
 References: <cover.1769673038.git.mchehab+huawei@kernel.org>
+ <0c40c7f91dd5c95b1efcc0f2c0103f941f3c24d1.1769673038.git.mchehab+huawei@kernel.org>
+In-Reply-To: <0c40c7f91dd5c95b1efcc0f2c0103f941f3c24d1.1769673038.git.mchehab+huawei@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA3PR11MB8986:EE_|LV8PR11MB8697:EE_
+x-ms-office365-filtering-correlation-id: 0b45ce67-74ce-4752-236f-08de5f20c401
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700021;
+x-microsoft-antispam-message-info: =?utf-8?B?M25abVlSNUZWR3RhME1YZ1RPM1Z0Zll5TDhWRmJmK3JTNDYzbUdKUGVzejBx?=
+ =?utf-8?B?b3RHNGZrM3FISHkwTzFpQUNwdlc1Zlh0UElhMGt0L1NseGlDYjFnRTFVRi8r?=
+ =?utf-8?B?ajFud3MxVklvMi9ZWjBwanp0eGFJeGpPVzNsZFVvME1iT3NNZ2JaYS9mMnM4?=
+ =?utf-8?B?blZZZ3I2SWMxcXRUb2NlT3M3bHdOSFhIRUdEdkh5Z1B1akNSUUR2cEZ1WjNm?=
+ =?utf-8?B?eWR3RTdUL2N0NUs5ck9wQW5oY2dQZGQvajNUT3djaDZtZGYrNUhKVEtIamk0?=
+ =?utf-8?B?STZhcWx6YVRJYUhmLzBXZFN5YlVERFd6YzluS3l1b0lxejE2ejQ2M2FXVVh3?=
+ =?utf-8?B?Y1VlaTZVUkJTa01hVVNHTG9yTHBOcXZpUDB6U1FzUUtndlk2OWFzSVFUbVNv?=
+ =?utf-8?B?YVpjOG5uNTJqL1ZuZTQ5d0JKa2lXcXhNZW1vZEJ4U1ozOWVoY3BOYVhDMnB2?=
+ =?utf-8?B?SEg2T2FLbDNvWmNRajA0RWRhV3pCU2JJOGU1Yy84MkJ5NHhrZmZ2M1Z1NGt5?=
+ =?utf-8?B?S2ZqY1hDVml6Y1I1QmlDallvSzVhR01jWnBTeW9RbThhWXJLSE5mMm9VQXU4?=
+ =?utf-8?B?T1ZwNjhNWDdTUHcrQllDK0lSTUpOVm1XMVV2UU1iR0VheFg0UC9PdWNEd1p3?=
+ =?utf-8?B?UFdlTDhqMXF1QXlrdWpqMnh5bDZjQUFXRHdCVTFrSC9vVFJwLzN2Ti9jckcv?=
+ =?utf-8?B?dkw3U0R0dUk5T0RsTlBZLzJaRnZUdlZqaU1jNDFUUEVjdDhCWVN0VTJtWHlx?=
+ =?utf-8?B?dGRWWXRrbW5HNHJJc1JRYVFvblMyam1sU09HdmN4KzRvTUw5ZzhUbFFQRGJ0?=
+ =?utf-8?B?UUs4eGhtNk1iQkZ1c0c1MkdkVDUwa3VVQmZtSE90RTRzRkNwUmF4VjhDWS9a?=
+ =?utf-8?B?Q3ZWclFxNnhUODZBQWFZaGxZSUwyZTdvNW1Hb2VSdkdEOUViWVFEZmk4SUlT?=
+ =?utf-8?B?K0l0ME5HUjNnTXc3WDRCaHFnY0dwTnhxNkRZSWcwTmNhWCtJK3NUUSs1cXFF?=
+ =?utf-8?B?VCtVWkNGanhEZEFoeTBWcVIwWDlkVnhWOWNuZlFtQi8zTGxDb2hCYVgxU0h3?=
+ =?utf-8?B?cmcweldIUHVlVmowNWxheG9JMWNBbmk0L3N3S1liaENxdWR4SGxleU5WOUN6?=
+ =?utf-8?B?ODA5TnVBa1dWNUZwcUlwYTdhblhNMGF2ZDlheGxaa1l0NmRkTU1kanU2M1l4?=
+ =?utf-8?B?QTRqbWRsWVRrSWc2MXlqbHUvc3NUS0d1RTJqeVU0Rmp5SXh5YVpBNDJ0TVhC?=
+ =?utf-8?B?VFRzM1M2YnJXQ1ROY2Y1K3h2ZitxTzkvUGZNeTBGZTgvYXFKYVNUdGh2dkNj?=
+ =?utf-8?B?Umw3SWtoeUFYamNNcVFZQTNsem9MRVZhVFNTS3ZZRmJYbit3TUMrVWtsckw5?=
+ =?utf-8?B?SXdpRHcvK1gzcy82ekRoVFZJOGtBZ1dKcU1EL1ZRajJEL3VlZ3ZBSHNTd1d0?=
+ =?utf-8?B?dWcrTktlRHIrV2M1S0lZVzc2UDd6dWs0OWxUWkRIMHNjdUpVMmpPc3lwMU5V?=
+ =?utf-8?B?Tm5JekJaOGNrTHFpZ1VzMkJ5Z2hWWEJ0VmowQ0EzRTlXOS8wOTNxYXhxZnhl?=
+ =?utf-8?B?bDdsaHliMDhyT3Y2QU5aZnd4VEY2NUdQaXdFVjdQcTBCN2U3NmlFc1JxdU0v?=
+ =?utf-8?B?V2lwMnpaWWI4TFpGVG5nTXZNZGpDSUdFTm9mSTF6dUxuTTlJblBlUFM2U0I2?=
+ =?utf-8?B?MEpoN1ZHakdzTU5hOG1IN2prQTFJekYwdFY1ZmVVUWN4ZzcrY25qcFpueHFz?=
+ =?utf-8?B?QTVPZlRiRnBzZWlLOEVJMWs5V096bk5SU0FGNzVQa1VtZ0t2dGNBT2lYQUxV?=
+ =?utf-8?B?RW5rS1BtQ0IxdllJaWgzUmE3a1E1TDhVWng1a08vK0VFNTl0aFNpNzVoOUhG?=
+ =?utf-8?B?VmF3SFdGOFN5RmMxNmZyUEV6bGhzeGZhVnI1YzFlanA5WHMxYWpHemlRc0V5?=
+ =?utf-8?B?ZG9zQWtvcnNBMXFwVERPT2owMFFqT1NBMUdSWFpDSFhTc0JzRUNZd1RNYUl2?=
+ =?utf-8?B?VGo1Mk1ZRklwanJHYzdmR0lnY3UxaWc0S0YzYTJGT2dZYk1OR2JGUTUzcnN5?=
+ =?utf-8?B?eTY1M3h3QU9wSitwdFZQTTB3Um52T0o4RU5Bd2hzMlZRNGpsSDNUYnFzdW5M?=
+ =?utf-8?B?MnFXUkpySnNyWWozV2NZZ0VLS0xvbTRibzVsdEwzTWZYN0hneGtkWm9HZEtk?=
+ =?utf-8?Q?Nl3Vm2ot+wRNTmJWu96jD4U=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA3PR11MB8986.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MlUvUUp4dGh4OThrV3B0OFF0cVQ2bjRDYUdQOWwrM2pFS1YwRjlGbnVSVDVI?=
+ =?utf-8?B?eXV6ZVlJWEdIdGNMY2FSRVRzYlF1NFdBQnlSaFU3MjZVa3hTM0F0eER1L2xG?=
+ =?utf-8?B?ZFVCNDhPNVUxaVg0SFd4MzRQTmNUanczYkFSTzdYbm56aE9UNXVXSStzWjE2?=
+ =?utf-8?B?cngrOGE1amMxV01Pd1hjSVZCa0NwZ1JRaHNBT1ZqR2drNkxlbXpaRzJyWFlC?=
+ =?utf-8?B?czNzNVVacDYyYVZLMEJ4VlBVLzdpWkVZQjErak1xWG9QNTNaS2R2QzZIUFdY?=
+ =?utf-8?B?WmwraU41dXpLRjByQzBNWG0zczdmMWQvaG5maFZoMHdLWDAvMENDSmlhb3Rl?=
+ =?utf-8?B?VWh0cUY5dFpvSDU2bzVBaWZwU3RYbzZKcDlldS9GVkZLQWNhVFc1N1JtL25F?=
+ =?utf-8?B?aWdCc1l0eFRLQnU2U3NaYVBsci9zcDBQUU9Veko5cWlkbG1iditGUmV3d3h0?=
+ =?utf-8?B?ZXFoazZ6L3UvNnFMRnlYOXFSS0FqdU5vc09jOFN1WHJPbHhnNWF1VlhSSXhv?=
+ =?utf-8?B?cU0yZjE5YkpYb0JmRHFYY0c1UEpFYlVkQlI0cVV6MnFnWkV4V1lGZDNNYmQv?=
+ =?utf-8?B?SnlNb1QyZGNvOVc5ZXNEVnlyYzhCUmp3MzgwZk9iK3crRnNvTnYzc0VhVmpn?=
+ =?utf-8?B?V0Zzd2QyNklQWFJ2OXh4MzB3QktPLytnS2VLL292RXlCS2tMTys1VTZSd20y?=
+ =?utf-8?B?RzYxQmxQQTlZSnBpNDNqakNvaXEzZHRqeUxUZFRZdTRIRmFRRmpIWllHd3lx?=
+ =?utf-8?B?T2I1WnpSWU5PSHEyM0s5VzRIWU5RR3dTZjkwTndYdW5pcnlONjcwTlU1OHZa?=
+ =?utf-8?B?S0NmUFN4RWRGS1pBa2MzM0dhY1VPRnlJQjNUaTBDYmxnQVVVVjBaN2hETytM?=
+ =?utf-8?B?MkQweUtRNEpWelYzSzBhMlhOdUhnYXIwT1VmRWFCOU9kWmY5eXVEYlBKWFA2?=
+ =?utf-8?B?MXA0bTRsOEdZZndZa2R4Q2prTkpWWGVMVU4ybldEMzFocStWQzMxTzJUTXZX?=
+ =?utf-8?B?VG51Yk9uNndGaEVaWUx0Q1BNTk0xUnNXdkRwaUdHcXRETkpuM2hiN1VPM1Zz?=
+ =?utf-8?B?VGF0V3JvcXV1NC9vajJzalBXVnJzbGdlM0VaakhFdHRhQ2I2MHhFRzJDKzJZ?=
+ =?utf-8?B?bTY3UDdnRDVFL3lFNVUrWSs3cFc2SkJjcVMyVUMraDMyMVE2UlJRUXN3cXgw?=
+ =?utf-8?B?Z3dXaTMyeDg4TzBtYmFrRGdxU2lIT3FJTnptYURWNVArL0pUZkVEbWVBai84?=
+ =?utf-8?B?S3VvWis4MmMvZDlucnlGeWppMzRHRVd3S2t1Ukg1czk4Z2JpVjg4YUg3QVk4?=
+ =?utf-8?B?UEEyMlpoSzhBL3EzSmc2S3lMVFBxVTRQZG10TjJFRkU4UDcwblIvYmwvT3R5?=
+ =?utf-8?B?bzludHBmeGp0MHk5MDF6OEFMQVBrTmdIWk1xT1VaMnBhbDJpLzhib0s5dThF?=
+ =?utf-8?B?TDFGb1JnNmFLSmw0ekdMZWxyNm80Z2xpTXp6TTRGK2JmTkpFcmt6ajlLUW9t?=
+ =?utf-8?B?OU1YUDVpWFNuSHZqNERSY2NYQkFLR3dFb0JjZncvQmpYbkpEMWJOU3hGR29Y?=
+ =?utf-8?B?aGQ4ai81QlowU255RjhLTFdRSXFkZGgxamFBVHlYa2lQRUluV0d6NkdvNVJG?=
+ =?utf-8?B?TW5xMHU1Q3BzLzZnanRJYzdLaXR1aC9wMzdOdUhySUN0ay9tZm5FdVRlY0hT?=
+ =?utf-8?B?OEpnUFEvL0o2Ni9RR21PSEozMU1pL001bDZQUVFkSXlqR0lJWEZ4ME44MnVE?=
+ =?utf-8?B?eUFIUkNETVpQOGl4QWhIV01pcitteldoL0ZpTnVXLzViQlprdUxkeUJWZDRt?=
+ =?utf-8?B?WGdJTWQ5K2RWdk95RGpMOSt3ZVlUdTNnVWZHcHVlVzM4WUczcDVMVjdIK0RU?=
+ =?utf-8?B?MGNkcVowNTNzdjFmQ1BlSkc5Q0VzM2tpRitBSXkvSWxWU2ZkajY2b1pySnBs?=
+ =?utf-8?B?Z0xaVzJKdEx6OWdKUEZMOUJZVThxZzJBZzdUYmY0UWF3aUFnbTlWWFlPenB4?=
+ =?utf-8?B?eFRoM0dYK1pJamZ6QkVBaDlsd0ZEa2ZEcGtFWlVxaW9sYVlMZDhNTzc2eFFy?=
+ =?utf-8?B?Q0RyMWsrSVRWNTBFOEJhY1NxQTZNNFQvTWRaYjNNNzl6eEpQbVV3SHcxTU1B?=
+ =?utf-8?B?T1ZvSWllNGFsOGEwaHdIelB6UlB3OWhkTmFjL3ZHaUVGRzhHTXQ2MXJSdmJP?=
+ =?utf-8?B?T0QyaFhrY3NNeEk2SXFtZWNGYmJ5QWdlc3IwNGFIWWFHdkxnWlgvRFppYjFM?=
+ =?utf-8?B?MW95NkVzKzdFdExRbHY4SVZ0aDNwOUtUMHJHR056WFVrd1VXRjVFS1NBUDEz?=
+ =?utf-8?B?RFozWE9xeUlNZ0VoYVBTc3ZsZjJadGVuTUNCQmpROXRXUEdNakt0RDFXMmwx?=
+ =?utf-8?Q?jvtCjuNhUE4MWSo4=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA3PR11MB8986.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b45ce67-74ce-4752-236f-08de5f20c401
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2026 10:25:46.4801
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9SRHucY1pvSfelpMh1Ijqb0fmpN/2inOPyPrSnTVbA4E4EMBYKupbticyvea93g/UusChGLi42BvpIbndAZ2hlMpjP+gVCl/SSlfBsWZlv4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8697
+X-OriginatorOrg: intel.com
 
-Over the time, most of the changes at kernel-doc are related
-to maintaining a list of transforms to convert macros into pure
-C code.
-
-Place such transforms on a separate module, to cleanup the
-parser module.
-
-While here, drop the now obsolete comment about the two-steps
-logic to handle struct_group macros.
-
-There is an advantage on that: QEMU also uses our own kernel-doc,
-but the xforms list there is different. By placing it on a
-separate module, we can minimize the differences and make it
-easier to keep QEMU in sync with Kernel upstream.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/tools/kdoc_parser.rst   |   8 ++
- tools/lib/python/kdoc/kdoc_files.py   |   3 +-
- tools/lib/python/kdoc/kdoc_parser.py  | 147 ++------------------------
- tools/lib/python/kdoc/xforms_lists.py | 117 ++++++++++++++++++++
- 4 files changed, 133 insertions(+), 142 deletions(-)
- create mode 100644 tools/lib/python/kdoc/xforms_lists.py
-
-diff --git a/Documentation/tools/kdoc_parser.rst b/Documentation/tools/kdoc_parser.rst
-index 03ee54a1b1cc..55b202173195 100644
---- a/Documentation/tools/kdoc_parser.rst
-+++ b/Documentation/tools/kdoc_parser.rst
-@@ -4,6 +4,14 @@
- Kernel-doc parser stage
- =======================
- 
-+C replacement rules used by the parser
-+======================================
-+
-+.. automodule:: lib.python.kdoc.xforms_lists
-+   :members:
-+   :show-inheritance:
-+   :undoc-members:
-+
- File handler classes
- ====================
- 
-diff --git a/tools/lib/python/kdoc/kdoc_files.py b/tools/lib/python/kdoc/kdoc_files.py
-index 022487ea2cc6..7357c97a4b01 100644
---- a/tools/lib/python/kdoc/kdoc_files.py
-+++ b/tools/lib/python/kdoc/kdoc_files.py
-@@ -15,6 +15,7 @@ import os
- import re
- 
- from kdoc.kdoc_parser import KernelDoc
-+from kdoc.xforms_lists import CTransforms
- from kdoc.kdoc_output import OutputFormat
- 
- 
-@@ -117,7 +118,7 @@ class KernelFiles():
-         if fname in self.files:
-             return
- 
--        doc = KernelDoc(self.config, fname)
-+        doc = KernelDoc(self.config, fname, CTransforms)
-         export_table, entries = doc.parse_kdoc()
- 
-         self.export_table[fname] = export_table
-diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
-index 1e8e156e2a9e..a280fe581937 100644
---- a/tools/lib/python/kdoc/kdoc_parser.py
-+++ b/tools/lib/python/kdoc/kdoc_parser.py
-@@ -75,142 +75,6 @@ doc_begin_func = KernRe(str(doc_com) +			# initial " * '
- #
- struct_args_pattern = r'([^,)]+)'
- 
--struct_xforms = [
--    # Strip attributes
--    (KernRe(r"__attribute__\s*\(\([a-z0-9,_\*\s\(\)]*\)\)", flags=re.I | re.S, cache=False), ' '),
--    (KernRe(r'\s*__aligned\s*\([^;]*\)', re.S), ' '),
--    (KernRe(r'\s*__counted_by\s*\([^;]*\)', re.S), ' '),
--    (KernRe(r'\s*__counted_by_(le|be)\s*\([^;]*\)', re.S), ' '),
--    (KernRe(r'\s*__guarded_by\s*\([^\)]*\)', re.S), ' '),
--    (KernRe(r'\s*__pt_guarded_by\s*\([^\)]*\)', re.S), ' '),
--    (KernRe(r'\s*__packed\s*', re.S), ' '),
--    (KernRe(r'\s*CRYPTO_MINALIGN_ATTR', re.S), ' '),
--    (KernRe(r'\s*__private', re.S), ' '),
--    (KernRe(r'\s*__rcu', re.S), ' '),
--    (KernRe(r'\s*____cacheline_aligned_in_smp', re.S), ' '),
--    (KernRe(r'\s*____cacheline_aligned', re.S), ' '),
--    (KernRe(r'\s*__cacheline_group_(begin|end)\([^\)]+\);'), ''),
--    #
--    # Unwrap struct_group macros based on this definition:
--    # __struct_group(TAG, NAME, ATTRS, MEMBERS...)
--    # which has variants like: struct_group(NAME, MEMBERS...)
--    # Only MEMBERS arguments require documentation.
--    #
--    # Parsing them happens on two steps:
--    #
--    # 1. drop struct group arguments that aren't at MEMBERS,
--    #    storing them as STRUCT_GROUP(MEMBERS)
--    #
--    # 2. remove STRUCT_GROUP() ancillary macro.
--    #
--    # The original logic used to remove STRUCT_GROUP() using an
--    # advanced regex:
--    #
--    #   \bSTRUCT_GROUP(\(((?:(?>[^)(]+)|(?1))*)\))[^;]*;
--    #
--    # with two patterns that are incompatible with
--    # Python re module, as it has:
--    #
--    #   - a recursive pattern: (?1)
--    #   - an atomic grouping: (?>...)
--    #
--    # I tried a simpler version: but it didn't work either:
--    #   \bSTRUCT_GROUP\(([^\)]+)\)[^;]*;
--    #
--    # As it doesn't properly match the end parenthesis on some cases.
--    #
--    # So, a better solution was crafted: there's now a CFunction
--    # class that ensures that delimiters after a search are properly
--    # matched. So, the implementation to drop STRUCT_GROUP() will be
--    # handled in separate.
--    #
--    (CFunction('struct_group'), r'\2'),
--    (CFunction('struct_group_attr'), r'\3'),
--    (CFunction('struct_group_tagged'), r'struct \1 \2; \3'),
--    (CFunction('__struct_group'), r'\4'),
--
--    #
--    # Replace macros
--    #
--    # TODO: use CFunction on all FOO($1, $2, ...) matches
--    #
--    # it is better to also move those to the CFunction logic,
--    # to ensure that parentheses will be properly matched.
--    #
--    (KernRe(r'__ETHTOOL_DECLARE_LINK_MODE_MASK\s*\(([^\)]+)\)', re.S),
--     r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
--    (KernRe(r'DECLARE_PHY_INTERFACE_MASK\s*\(([^\)]+)\)', re.S),
--     r'DECLARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
--    (KernRe(r'DECLARE_BITMAP\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern + r'\)',
--            re.S), r'unsigned long \1[BITS_TO_LONGS(\2)]'),
--    (KernRe(r'DECLARE_HASHTABLE\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern + r'\)',
--            re.S), r'unsigned long \1[1 << ((\2) - 1)]'),
--    (KernRe(r'DECLARE_KFIFO\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern +
--            r',\s*' + struct_args_pattern + r'\)', re.S), r'\2 *\1'),
--    (KernRe(r'DECLARE_KFIFO_PTR\s*\(' + struct_args_pattern + r',\s*' +
--            struct_args_pattern + r'\)', re.S), r'\2 *\1'),
--    (KernRe(r'(?:__)?DECLARE_FLEX_ARRAY\s*\(' + struct_args_pattern + r',\s*' +
--            struct_args_pattern + r'\)', re.S), r'\1 \2[]'),
--    (KernRe(r'DEFINE_DMA_UNMAP_ADDR\s*\(' + struct_args_pattern + r'\)', re.S), r'dma_addr_t \1'),
--    (KernRe(r'DEFINE_DMA_UNMAP_LEN\s*\(' + struct_args_pattern + r'\)', re.S), r'__u32 \1'),
--    (KernRe(r'VIRTIO_DECLARE_FEATURES\(([\w_]+)\)'), r'union { u64 \1; u64 \1_array[VIRTIO_FEATURES_U64S]; }'),
--]
--
--#
--# Transforms for function prototypes
--#
--function_xforms = [
--    (KernRe(r"^static +"), ""),
--    (KernRe(r"^extern +"), ""),
--    (KernRe(r"^asmlinkage +"), ""),
--    (KernRe(r"^inline +"), ""),
--    (KernRe(r"^__inline__ +"), ""),
--    (KernRe(r"^__inline +"), ""),
--    (KernRe(r"^__always_inline +"), ""),
--    (KernRe(r"^noinline +"), ""),
--    (KernRe(r"^__FORTIFY_INLINE +"), ""),
--    (KernRe(r"__init +"), ""),
--    (KernRe(r"__init_or_module +"), ""),
--    (KernRe(r"__deprecated +"), ""),
--    (KernRe(r"__flatten +"), ""),
--    (KernRe(r"__meminit +"), ""),
--    (KernRe(r"__must_check +"), ""),
--    (KernRe(r"__weak +"), ""),
--    (KernRe(r"__sched +"), ""),
--    (KernRe(r"_noprof"), ""),
--    (KernRe(r"__always_unused *"), ""),
--    (KernRe(r"__printf\s*\(\s*\d*\s*,\s*\d*\s*\) +"), ""),
--    (KernRe(r"__(?:re)?alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\) +"), ""),
--    (KernRe(r"__diagnose_as\s*\(\s*\S+\s*(?:,\s*\d+\s*)*\) +"), ""),
--    (KernRe(r"DECL_BUCKET_PARAMS\s*\(\s*(\S+)\s*,\s*(\S+)\s*\)"), r"\1, \2"),
--    (KernRe(r"__no_context_analysis\s*"), ""),
--    (KernRe(r"__attribute_const__ +"), ""),
--    (CFunction("__cond_acquires"), ""),
--    (CFunction("__cond_releases"), ""),
--    (CFunction("__acquires"), ""),
--    (CFunction("__releases"), ""),
--    (CFunction("__must_hold"), ""),
--    (CFunction("__must_not_hold"), ""),
--    (CFunction("__must_hold_shared"), ""),
--    (CFunction("__cond_acquires_shared"), ""),
--    (CFunction("__acquires_shared"), ""),
--    (CFunction("__releases_shared"), ""),
--    (CFunction("__attribute__"), ""),
--]
--
--#
--# Transforms for variable prototypes
--#
--var_xforms = [
--    (KernRe(r"__read_mostly"), ""),
--    (KernRe(r"__ro_after_init"), ""),
--    (KernRe(r'\s*__guarded_by\s*\([^\)]*\)', re.S), ""),
--    (KernRe(r'\s*__pt_guarded_by\s*\([^\)]*\)', re.S), ""),
--    (KernRe(r"LIST_HEAD\(([\w_]+)\)"), r"struct list_head \1"),
--    (KernRe(r"(?://.*)$"), ""),
--    (KernRe(r"(?:/\*.*\*/)"), ""),
--    (KernRe(r";$"), ""),
--]
- 
- #
- # Ancillary functions
-@@ -394,11 +258,12 @@ class KernelDoc:
-     #: String to write when a parameter is not described.
-     undescribed = "-- undescribed --"
- 
--    def __init__(self, config, fname):
-+    def __init__(self, config, fname, xforms):
-         """Initialize internal variables"""
- 
-         self.fname = fname
-         self.config = config
-+        self.xforms = xforms
- 
-         # Initial state for the state machines
-         self.state = state.NORMAL
-@@ -889,7 +754,7 @@ class KernelDoc:
-         # Go through the list of members applying all of our transformations.
-         #
-         members = trim_private_members(members)
--        members = self.apply_transforms(struct_xforms, members)
-+        members = self.apply_transforms(self.xforms.struct_xforms, members)
- 
-         #
-         # Deal with embedded struct and union members, and drop enums entirely.
-@@ -1011,8 +876,7 @@ class KernelDoc:
-         # Drop comments and macros to have a pure C prototype
-         #
-         if not declaration_name:
--            for r, sub in var_xforms:
--                proto = r.sub(sub, proto)
-+            proto = self.apply_transforms(self.xforms.var_xforms, proto)
- 
-         proto = proto.rstrip()
- 
-@@ -1104,7 +968,8 @@ class KernelDoc:
-             #
-             # Apply the initial transformations.
-             #
--            prototype = self.apply_transforms(function_xforms, prototype)
-+            prototype = self.apply_transforms(self.xforms.function_xforms,
-+                                              prototype)
- 
-         # Yes, this truly is vile.  We are looking for:
-         # 1. Return type (may be nothing if we're looking at a macro)
-diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
-new file mode 100644
-index 000000000000..88968bafdb78
---- /dev/null
-+++ b/tools/lib/python/kdoc/xforms_lists.py
-@@ -0,0 +1,117 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright(c) 2026: Mauro Carvalho Chehab <mchehab@kernel.org>.
-+
-+import re
-+
-+from kdoc.kdoc_re import CFunction, KernRe
-+
-+struct_args_pattern = r'([^,)]+)'
-+
-+class CTransforms:
-+    """
-+    Data class containing a long set of transformations to turn
-+    structure member prefixes, and macro invocations and variables
-+    into something we can parse and generate kdoc for.
-+    """
-+
-+    #: Transforms for structs and unions
-+    struct_xforms = [
-+        # Strip attributes
-+        (KernRe(r"__attribute__\s*\(\([a-z0-9,_\*\s\(\)]*\)\)", flags=re.I | re.S, cache=False), ' '),
-+        (KernRe(r'\s*__aligned\s*\([^;]*\)', re.S), ' '),
-+        (KernRe(r'\s*__counted_by\s*\([^;]*\)', re.S), ' '),
-+        (KernRe(r'\s*__counted_by_(le|be)\s*\([^;]*\)', re.S), ' '),
-+        (KernRe(r'\s*__guarded_by\s*\([^\)]*\)', re.S), ' '),
-+        (KernRe(r'\s*__pt_guarded_by\s*\([^\)]*\)', re.S), ' '),
-+        (KernRe(r'\s*__packed\s*', re.S), ' '),
-+        (KernRe(r'\s*CRYPTO_MINALIGN_ATTR', re.S), ' '),
-+        (KernRe(r'\s*__private', re.S), ' '),
-+        (KernRe(r'\s*__rcu', re.S), ' '),
-+        (KernRe(r'\s*____cacheline_aligned_in_smp', re.S), ' '),
-+        (KernRe(r'\s*____cacheline_aligned', re.S), ' '),
-+        (KernRe(r'\s*__cacheline_group_(begin|end)\([^\)]+\);'), ''),
-+
-+        (CFunction('struct_group'), r'\2'),
-+        (CFunction('struct_group_attr'), r'\3'),
-+        (CFunction('struct_group_tagged'), r'struct \1 \2; \3'),
-+        (CFunction('__struct_group'), r'\4'),
-+
-+        #
-+        # Replace macros
-+        #
-+        # TODO: use CFunction on all FOO($1, $2, ...) matches
-+        #
-+        # it is better to also move those to the CFunction logic,
-+        # to ensure that parentheses will be properly matched.
-+        #
-+        (KernRe(r'__ETHTOOL_DECLARE_LINK_MODE_MASK\s*\(([^\)]+)\)', re.S),
-+        r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
-+        (KernRe(r'DECLARE_PHY_INTERFACE_MASK\s*\(([^\)]+)\)', re.S),
-+        r'DECLARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
-+        (KernRe(r'DECLARE_BITMAP\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern + r'\)',
-+                re.S), r'unsigned long \1[BITS_TO_LONGS(\2)]'),
-+        (KernRe(r'DECLARE_HASHTABLE\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern + r'\)',
-+                re.S), r'unsigned long \1[1 << ((\2) - 1)]'),
-+        (KernRe(r'DECLARE_KFIFO\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern +
-+                r',\s*' + struct_args_pattern + r'\)', re.S), r'\2 *\1'),
-+        (KernRe(r'DECLARE_KFIFO_PTR\s*\(' + struct_args_pattern + r',\s*' +
-+                struct_args_pattern + r'\)', re.S), r'\2 *\1'),
-+        (KernRe(r'(?:__)?DECLARE_FLEX_ARRAY\s*\(' + struct_args_pattern + r',\s*' +
-+                struct_args_pattern + r'\)', re.S), r'\1 \2[]'),
-+        (KernRe(r'DEFINE_DMA_UNMAP_ADDR\s*\(' + struct_args_pattern + r'\)', re.S), r'dma_addr_t \1'),
-+        (KernRe(r'DEFINE_DMA_UNMAP_LEN\s*\(' + struct_args_pattern + r'\)', re.S), r'__u32 \1'),
-+        (KernRe(r'VIRTIO_DECLARE_FEATURES\(([\w_]+)\)'), r'union { u64 \1; u64 \1_array[VIRTIO_FEATURES_U64S]; }'),
-+    ]
-+
-+    #: Transforms for function prototypes
-+    function_xforms = [
-+        (KernRe(r"^static +"), ""),
-+        (KernRe(r"^extern +"), ""),
-+        (KernRe(r"^asmlinkage +"), ""),
-+        (KernRe(r"^inline +"), ""),
-+        (KernRe(r"^__inline__ +"), ""),
-+        (KernRe(r"^__inline +"), ""),
-+        (KernRe(r"^__always_inline +"), ""),
-+        (KernRe(r"^noinline +"), ""),
-+        (KernRe(r"^__FORTIFY_INLINE +"), ""),
-+        (KernRe(r"__init +"), ""),
-+        (KernRe(r"__init_or_module +"), ""),
-+        (KernRe(r"__deprecated +"), ""),
-+        (KernRe(r"__flatten +"), ""),
-+        (KernRe(r"__meminit +"), ""),
-+        (KernRe(r"__must_check +"), ""),
-+        (KernRe(r"__weak +"), ""),
-+        (KernRe(r"__sched +"), ""),
-+        (KernRe(r"_noprof"), ""),
-+        (KernRe(r"__always_unused *"), ""),
-+        (KernRe(r"__printf\s*\(\s*\d*\s*,\s*\d*\s*\) +"), ""),
-+        (KernRe(r"__(?:re)?alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\) +"), ""),
-+        (KernRe(r"__diagnose_as\s*\(\s*\S+\s*(?:,\s*\d+\s*)*\) +"), ""),
-+        (KernRe(r"DECL_BUCKET_PARAMS\s*\(\s*(\S+)\s*,\s*(\S+)\s*\)"), r"\1, \2"),
-+        (KernRe(r"__no_context_analysis\s*"), ""),
-+        (KernRe(r"__attribute_const__ +"), ""),
-+        (CFunction("__cond_acquires"), ""),
-+        (CFunction("__cond_releases"), ""),
-+        (CFunction("__acquires"), ""),
-+        (CFunction("__releases"), ""),
-+        (CFunction("__must_hold"), ""),
-+        (CFunction("__must_not_hold"), ""),
-+        (CFunction("__must_hold_shared"), ""),
-+        (CFunction("__cond_acquires_shared"), ""),
-+        (CFunction("__acquires_shared"), ""),
-+        (CFunction("__releases_shared"), ""),
-+        (CFunction("__attribute__"), ""),
-+    ]
-+
-+    #: Transforms for variables
-+    var_xforms = [
-+        (KernRe(r"__read_mostly"), ""),
-+        (KernRe(r"__ro_after_init"), ""),
-+        (KernRe(r'\s*__guarded_by\s*\([^\)]*\)', re.S), ""),
-+        (KernRe(r'\s*__pt_guarded_by\s*\([^\)]*\)', re.S), ""),
-+        (KernRe(r"LIST_HEAD\(([\w_]+)\)"), r"struct list_head \1"),
-+        (KernRe(r"(?://.*)$"), ""),
-+        (KernRe(r"(?:/\*.*\*/)"), ""),
-+        (KernRe(r";$"), ""),
-+    ]
--- 
-2.52.0
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSW50ZWwtd2lyZWQtbGFu
+IDxpbnRlbC13aXJlZC1sYW4tYm91bmNlc0Bvc3Vvc2wub3JnPiBPbiBCZWhhbGYNCj4gT2YgTWF1
+cm8gQ2FydmFsaG8gQ2hlaGFiDQo+IFNlbnQ6IFRodXJzZGF5LCBKYW51YXJ5IDI5LCAyMDI2IDk6
+MDggQU0NCj4gVG86IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+OyBMaW51eCBEb2Mg
+TWFpbGluZyBMaXN0IDxsaW51eC0NCj4gZG9jQHZnZXIua2VybmVsLm9yZz4NCj4gQ2M6IE1hdXJv
+IENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYitodWF3ZWlAa2VybmVsLm9yZz47DQo+IGJwZkB2Z2Vy
+Lmtlcm5lbC5vcmc7IGludGVsLXdpcmVkLWxhbkBsaXN0cy5vc3Vvc2wub3JnOyBsaW51eC0NCj4g
+aGFyZGVuaW5nQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
+Cj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hlaGFi
+QGtlcm5lbC5vcmc+Ow0KPiBSYW5keSBEdW5sYXAgPHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4NCj4g
+U3ViamVjdDogW0ludGVsLXdpcmVkLWxhbl0gW1BBVENIIHYzIDEwLzMwXSBkb2NzOiBrZG9jX3Bh
+cnNlcjogZG9uJ3QNCj4gZXhjbHVkZSBkZWZhdWx0cyBmcm9tIHByb3RvdHlwZQ0KPiANCj4gSWYg
+d2UgZG8gdGhhdCwgdGhlIGRlZmF1bHRzIHdvbid0IGJlIHBhcnNlZC4NCj4gDQo+IFNpZ25lZC1v
+ZmYtYnk6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYitodWF3ZWlAa2VybmVsLm9yZz4N
+Cj4gQWNrZWQtYnk6IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPg0KPiBUZXN0
+ZWQtYnk6IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPg0KPiAtLS0NCj4gIHRv
+b2xzL2xpYi9weXRob24va2RvYy9rZG9jX3BhcnNlci5weSB8IDEgLQ0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS90b29scy9saWIvcHl0aG9uL2tk
+b2Mva2RvY19wYXJzZXIucHkNCj4gYi90b29scy9saWIvcHl0aG9uL2tkb2Mva2RvY19wYXJzZXIu
+cHkNCj4gaW5kZXggY2NlZTRlMGJjYWFiLi4wYjZjYmE0NDJkNzIgMTAwNjQ0DQo+IC0tLSBhL3Rv
+b2xzL2xpYi9weXRob24va2RvYy9rZG9jX3BhcnNlci5weQ0KPiArKysgYi90b29scy9saWIvcHl0
+aG9uL2tkb2Mva2RvY19wYXJzZXIucHkNCj4gQEAgLTIwNyw3ICsyMDcsNiBAQCB2YXJfeGZvcm1z
+ID0gWw0KPiAgICAgIChLZXJuUmUociIoPzovLy4qKSQiKSwgIiIpLA0KPiAgICAgIChLZXJuUmUo
+ciIoPzovXCouKlwqLykiKSwgIiIpLA0KPiAgICAgIChLZXJuUmUociI7JCIpLCAiIiksDQo+IC0g
+ICAgKEtlcm5SZShyIj0uKiIpLCAiIiksDQo+ICBdDQo+IA0KPiAgIw0KPiAtLQ0KPiAyLjUyLjAN
+Cg0KUmV2aWV3ZWQtYnk6IEFsZWtzYW5kciBMb2t0aW9ub3YgPGFsZWtzYW5kci5sb2t0aW9ub3ZA
+aW50ZWwuY29tPg0K
