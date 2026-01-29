@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5181337BE84;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C9937BE87;
 	Thu, 29 Jan 2026 08:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769674111; cv=none; b=HyIHJGBdQKE25Cmi6kFMuf9RFoOEre16hdlHHgQ/hoLxx7cV2NmamvpFYXIOUkeGeftMDcxhiwRy5l1EcANh8knrzj5lb/orps+QzGPi7tqlHm+EDP5d9FplvkfQqaDMFK8ou8rUIsjjpy92qS8frSoUNEILUVHwqC1BOwuab50=
+	t=1769674111; cv=none; b=Bp03FIBUc3j2Xn/dhSl/qKcJ1Wp9oly/9lR30+0B2MZ7EVZ8koIJ0OBEiAzabyI9hgAsnbFTnBfN6OJ/V0IqvFGdPNwncketweHM5R1IVs4YNJJVeqawqeP4NwP/TiT3Pmqy6q/mVzQ8BtWQCSzE8NYIBgI18uqvDQza2tL1ba8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769674111; c=relaxed/simple;
-	bh=ceZVyyPX2HM3A215qLrOaX/Gfxk8tK5tZhLuxNFkn38=;
+	bh=LW3FWQWxnWgJD3Z8QjxOsIjqHu4vcqWf8FWt35UhM3s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eAKIeRwbNI9k+ekQe4DOK9+iPwcxgvMDqf3RFa4/HTOCUFuQWmaamjOycGkvCIqi3jnWtHGAYCqpWhN9NC9nDJE6JVdCEIKtAXzKZqANI8Vu2PmkaB0U19wqHXzXXKv2S/D2SBlgKNChoLpWu5xUmmMvQJwHcVEN7Od31hxZ2io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClkZ5Aac; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CCdxuM14AwcALCE4tXN2qTJENOu5FPXBObydos69phpG5g9p9KP62TYLxUCnMPrxOHqy/eYg1frCpv0XIPnaLkfycRsYVEr++5jEZRRk8EhcQ5VWwexamgsN+ue3ZoDH4PpAWn65n55L8lbTBZ8x3mgTAB8743uJD5sOaZQtYeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAFKwnn2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClkZ5Aac"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7CAC2BCFB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAFKwnn2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA308C2BCB2;
 	Thu, 29 Jan 2026 08:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1769674110;
-	bh=ceZVyyPX2HM3A215qLrOaX/Gfxk8tK5tZhLuxNFkn38=;
+	bh=LW3FWQWxnWgJD3Z8QjxOsIjqHu4vcqWf8FWt35UhM3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ClkZ5AacxK6NDrStNwCjyJvXg1qxbkYQbqzXHd0p6ie26FisfEYXRx1Fve4+WqsCG
-	 g6PjeE7mgn/fxMdcinSrXRkXqvTRcYI0aTI02MMrd+RO6nQWx2MvRMNg4gPatHCNBX
-	 XzdcND/d/AYxjkLtNpBaIIpfsFeSqBKNLk+ZckxxX6lS5EOZelaPTmqxP1daprU72v
-	 7QQbYWRYMS1IH5ihm1Ok1VznBJ1gRad8Q4+8gf1Q4PlorofDvarbqBU3LWTIQhjIVW
-	 OpygAxI1pZEpFjmERWxyQAlrD81lwSnJxebh38jf7AfqxclrgiKrBM6qP1yxnT0qN1
-	 AQEpCw6tsVEDA==
+	b=IAFKwnn2WQ2LTQ+V2Q6bxCu1p/XmRfCkKxyrmaMY0/iIIK8zb9g61njzm/YtULJT2
+	 VE04xPo0K0jRcwe1wzCMhTt/HiiHk4To0HA5t7i/l5PuJKIC4pIUKaDLy5Qc1AUTjd
+	 QtiFiHcMEjLPFa5Nkg238OsY58LwWy0p56rUd14wBdWe/QvItPbNF3xGinJl60zO5Z
+	 NmMKteKPwesqWjRtpVvYwZVo3PR58s+RrFtF4dPEagC9OabwpinzbCNysJuq7LB+hj
+	 i2wKvNxjAA9JXTVY1BG1RckQo43m2+ftvaMG1Hp4pUK/WmyASxPbA/eFVARQVczxy/
+	 0nH7pY5/StvRg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vlN4n-0000000ERNd-0XBz;
-	Thu, 29 Jan 2026 09:08:29 +0100
+	id 1vlN4m-0000000ERMz-3W3o;
+	Thu, 29 Jan 2026 09:08:28 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Linux Doc Mailing List <linux-doc@vger.kernel.org>
@@ -41,9 +41,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v3 17/30] docs: kdoc_re: don't recompile NextMatch regex every time
-Date: Thu, 29 Jan 2026 09:08:08 +0100
-Message-ID: <168e559a46713f390c2984fc1c11e16e552ab0c1.1769673038.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 07/30] docs: kdoc_parser: fix variable regexes to work with size_t
+Date: Thu, 29 Jan 2026 09:07:58 +0100
+Message-ID: <1df8a82162411a720dfec076062263bc7cbbcfb7.1769673038.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1769673038.git.mchehab+huawei@kernel.org>
 References: <cover.1769673038.git.mchehab+huawei@kernel.org>
@@ -57,91 +57,38 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Store delimiters and its regex-compiled version as const vars.
+The regular expressions meant to pick variable types are too
+naive: they forgot that the type word may contain underlines.
 
+Co-developed-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 ---
- tools/lib/python/kdoc/kdoc_re.py | 35 ++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+ tools/lib/python/kdoc/kdoc_parser.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/python/kdoc/kdoc_re.py b/tools/lib/python/kdoc/kdoc_re.py
-index 3f405addcc58..7b7ddc50ac36 100644
---- a/tools/lib/python/kdoc/kdoc_re.py
-+++ b/tools/lib/python/kdoc/kdoc_re.py
-@@ -99,6 +99,13 @@ class KernRe:
-         self.last_match = self.regex.search(string)
-         return self.last_match
+diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
+index 64165d8df84e..201c4f7298d7 100644
+--- a/tools/lib/python/kdoc/kdoc_parser.py
++++ b/tools/lib/python/kdoc/kdoc_parser.py
+@@ -1027,14 +1027,14 @@ class KernelDoc:
  
-+    def finditer(self,  string):
-+        """
-+        Alias to re.finditer.
-+        """
-+
-+        return self.regex.finditer(string)
-+
-     def findall(self, string):
-         """
-         Alias to re.findall.
-@@ -134,6 +141,16 @@ class KernRe:
+         default_val = None
  
-         return self.last_match.groups()
+-        r= KernRe(OPTIONAL_VAR_ATTR + r"\w.*\s+(?:\*+)?([\w_]+)\s*[\d\]\[]*\s*(=.*)?")
++        r= KernRe(OPTIONAL_VAR_ATTR + r"[\w_]*\s+(?:\*+)?([\w_]+)\s*[\d\]\[]*\s*(=.*)?")
+         if r.match(proto):
+             if not declaration_name:
+                 declaration_name = r.group(1)
  
-+#: Nested delimited pairs (brackets and parenthesis)
-+DELIMITER_PAIRS = {
-+    '{': '}',
-+    '(': ')',
-+    '[': ']',
-+}
-+
-+#: compiled delimiters
-+RE_DELIM = KernRe(r'[\{\}\[\]\(\)]')
-+
+             default_val = r.group(2)
+         else:
+-            r= KernRe(OPTIONAL_VAR_ATTR + r"(?:\w.*)?\s+(?:\*+)?(?:[\w_]+)\s*[\d\]\[]*\s*(=.*)?")
++            r= KernRe(OPTIONAL_VAR_ATTR + r"(?:[\w_]*)?\s+(?:\*+)?(?:[\w_]+)\s*[\d\]\[]*\s*(=.*)?")
+         if r.match(proto):
+             default_val = r.group(1)
  
- class NestedMatch:
-     """
-@@ -183,14 +200,6 @@ class NestedMatch:
-     #
-     #   FOO(arg1, arg2, arg3)
- 
--    DELIMITER_PAIRS = {
--        '{': '}',
--        '(': ')',
--        '[': ']',
--    }
--
--    RE_DELIM = re.compile(r'[\{\}\[\]\(\)]')
--
-     def _search(self, regex, line):
-         """
-         Finds paired blocks for a regex that ends with a delimiter.
-@@ -220,13 +229,13 @@ class NestedMatch:
-             escape = False
- 
-             d = line[offset - 1]
--            if d not in self.DELIMITER_PAIRS:
-+            if d not in DELIMITER_PAIRS:
-                 continue
- 
--            end = self.DELIMITER_PAIRS[d]
-+            end = DELIMITER_PAIRS[d]
-             stack.append(end)
- 
--            for match in self.RE_DELIM.finditer(line[offset:]):
-+            for match in RE_DELIM.finditer(line[offset:]):
-                 pos = match.start() + offset
- 
-                 d = line[pos]
-@@ -247,8 +256,8 @@ class NestedMatch:
-                     string_char = d
-                     continue
- 
--                if d in self.DELIMITER_PAIRS:
--                    end = self.DELIMITER_PAIRS[d]
-+                if d in DELIMITER_PAIRS:
-+                    end = DELIMITER_PAIRS[d]
- 
-                     stack.append(end)
-                     continue
 -- 
 2.52.0
 
