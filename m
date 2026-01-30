@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC582D8767;
-	Fri, 30 Jan 2026 17:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DF237756E;
+	Fri, 30 Jan 2026 17:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769794552; cv=none; b=VvMYipQed0l/SHwyOKBWQZT0dunXwYejbYtWV4VgTWYTY4r4KK5dFuxpuJ3Cvt2EkmBfSu19wHiS5X5wXzZq/R4J7ZE5ZNoA2mIMfU+o4yVppn/Mlm9Q20abXkxxBC0V8P3uwllgi2KNR5d4El3vZB9KMhEL/w9/cTmO92WUxSg=
+	t=1769794657; cv=none; b=En3gy41GYFgEaNq5kWiVEu+vF4nN+Wrpi3v6peuVdyX0czx9NL5Xtz3PtD3sQyAaiTHuBigc4qg9Vxw9CeSCEhXHKx9KLL7u5lqxq2Rskbc9/Yi6AfiFkTAPHGRmjtapfscre/PeDMTwxgv9rb5KAEaqlfLOAraiI8dkom1N3BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769794552; c=relaxed/simple;
-	bh=PNcKOtJEhTtwsqaYMcux4hWhZmy9ojaJIltFMghSNDY=;
+	s=arc-20240116; t=1769794657; c=relaxed/simple;
+	bh=EURabUMH4lsCb1dCSFQMp+VQOndKCUfb9vC/+CetiwU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X0FSiArZhFXgqK9RitsLkO0xS2LNFl5CuvEBF7WpxaOJlDB4UpSt1hw59a1nIQomBDg0wUgSaHZbptuBPoDu2bQsrCD8svYfUnUAKZB0SSXaLnwVrbpmeGoaZE+QI2jdcMNCHOoFFhWM/2laJumuv0YYslGdsnn3dOdu47IVdLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiOrk+4K; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNJ8LrJBXb+n9WHH7745TuSnSeEd4jmlirgYHLblUFNQkNjpooNrJMQ2nSUf1N0ggrYh1rD8zop1r2jT6hSuyb1mPgPGZwa5oPO3nHnIY5WdWocgmvlgcjFTGkRteQPMHvxCr1yfU19Sco0OC01eLaZOprUxfJl0GonqQ8gC5+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKhWxTeb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiOrk+4K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB17C4CEF7;
-	Fri, 30 Jan 2026 17:35:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKhWxTeb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 652EEC4CEF7;
+	Fri, 30 Jan 2026 17:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769794552;
-	bh=PNcKOtJEhTtwsqaYMcux4hWhZmy9ojaJIltFMghSNDY=;
+	s=k20201202; t=1769794657;
+	bh=EURabUMH4lsCb1dCSFQMp+VQOndKCUfb9vC/+CetiwU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BiOrk+4KP4cywSelLRGhpurbFn96EhLXamqAMFYcoCppIXrS0vQniRFgfv1kh7HWp
-	 D6R83gevct9t7SCKRg5D1qLFjbIcaV64aktRTSS+S9mNQfngXW5ToszCweShtvHDeq
-	 +ztGwNRWMJXZ0WJrsWufigDVB8ivR/1WhKnyyGLKljv+2tpdY7uiJUHFjtD0nSEyL2
-	 1oV/pu8hs0oF9IfOg7T1HoSsLt7FNjlvK2JH6OAh11hAhL4FGTBFbxXQ2w2hdyUZQO
-	 gtrbLyrlhMCGUYad9xGvHowUho7qJJAAB91U3xujOW0Ii20P0mMr/1/rYgOxRpkgNM
-	 kmLK/Au8/6+uA==
-Date: Fri, 30 Jan 2026 09:35:52 -0800
+	b=YKhWxTebYFBkWgr87V7M7d4jVbTl1IAC6z1KCKRbehsB8H2Cu6GdKiye5y2Nsf0QY
+	 0AvuBrImpkjujpGczBynZQCGYIX2amIpiR3ZwYlyUwyd49v/jU6THnPDGaJYWF2Eud
+	 Y7IOjEhhBXYYMJh1n7clB59Tz4g4tOnqhnBSPyuYm+FgHQpcu1NJZgPAMG9UJ/tREg
+	 dQI4bF8rjtBu/xkicrEwvUFSXn2fYHRWsoWPkPvvVKpj8zIz/RhWwTuKi1+HhCraxZ
+	 OFXwEh1EkhK/5DbA4csUmtu26oXBNwqICJi2Qinz/+xqjpFirVY2jUIcHV28tyRfDq
+	 eTVQQkifEXX6A==
+Date: Fri, 30 Jan 2026 09:37:36 -0800
 From: Kees Cook <kees@kernel.org>
 To: Feng Jiang <jiangfeng@kylinos.cn>
 Cc: palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
@@ -36,11 +36,10 @@ Cc: palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
 	conor.dooley@microchip.com, charlie@rivosinc.com, nathan@kernel.org,
 	linusw@kernel.org, linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v7 5/8] lib/string_kunit: extend benchmarks to strnlen()
- and chr searches
-Message-ID: <202601300935.DF5E50015A@keescook>
+Subject: Re: [PATCH v7 0/8] riscv: optimize string functions and add kunit
+ tests
+Message-ID: <202601300936.6EDA32E96@keescook>
 References: <20260130025018.172925-1-jiangfeng@kylinos.cn>
- <20260130025018.172925-6-jiangfeng@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,22 +48,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260130025018.172925-6-jiangfeng@kylinos.cn>
+In-Reply-To: <20260130025018.172925-1-jiangfeng@kylinos.cn>
 
-On Fri, Jan 30, 2026 at 10:50:15AM +0800, Feng Jiang wrote:
-> Extend the string benchmarking suite to include strnlen(), strchr(),
-> and strrchr().
-> 
-> For character search functions strchr() and strrchr(), the benchmark
-> targets the NUL character. This ensures the entire string is scanned,
-> providing a consistent measure of full-length processing efficiency
-> comparable to strlen().
-> 
-> Suggested-by: Andy Shevchenko <andy@kernel.org>
-> Suggested-by: Eric Biggers <ebiggers@kernel.org>
-> Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
+On Fri, Jan 30, 2026 at 10:50:10AM +0800, Feng Jiang wrote:
+> This series provides optimized implementations of strnlen(), strchr(),
+> and strrchr() for the RISC-V architecture. The strnlen() implementation
+> is derived from the existing optimized strlen(). For strchr() and
+> strrchr(), the current versions use simple byte-by-byte assembly logic,
+> which will serve as a baseline for future Zbb-based optimizations.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+I'm happy with the Kunit elements here, so unless Andy has other
+feedback, please feel free to take this via the riscv tree. (Or if riscv
+maintainers would prefer, I can take it via string.)
+
+Thanks for working on this!
+
+-Kees
 
 -- 
 Kees Cook
