@@ -1,136 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72642561AB;
-	Fri, 30 Jan 2026 16:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5256A364024;
+	Fri, 30 Jan 2026 17:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769789802; cv=none; b=ZKsSi+UrjLhx/WUxE2l4yjCxnQlkXAO47FM4Cgneh7RANN9TRP/qlhA7cImim72Fs6x/8wZYgJgAAZ2Nb90pKcWmT9VGy24kLBL5+M3QverotKTvb2viNmUEdK0CFtLLnyzIKL1g6AoLuU+b/PhnT0lKFM1ZFetC9h6XMiFFDEI=
+	t=1769794051; cv=none; b=JX0ZdVqwWBpvbt/Yd9xh20CpEznH90ket8328KKx2r9suj6lMrKowIgR2zNGnSYngHtWXYA/Qlc30/Om1JUSEBNr2AuL3qgXRotGs2tPfZU4xYsMygVwiDV5pxuUDZXXPaH+yRUV56K5AbpfdkN0JHhDvu6zhr7tI8foRGD1+sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769789802; c=relaxed/simple;
-	bh=AlNS0o8O55cP7ZrafFrQalBO7KdanY5615Qax8Ig75c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m6ex15sPO+GSPmfsOejU3l5ceMQcWcuSp3sDyXQPfmY8/alb4hBiaynhAT/Srt6R3xFTjYVjEL5ys4JnkvQ4dZSuZk//12n4rhsCjrzlIS0cXR+fM7oXAbB7/in2sw1g0OWEWMFkLNId8/145Ark4Y6YhF02i5uh5v9WOX2uzUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOS7PmZZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769794051; c=relaxed/simple;
+	bh=2+OMGUQcuKS2tJWaxFiW0o1E0ku3RG+1C/hjNsN6rPI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=u3gwN9Z0FlK4ZcRip2xnSiFJhvWnwHb6LEvvFZEoKYkAz2+YXPIETKyWwJ+th5tr9MYxG05JPOFHjs/0Vb9wjDc/5iZkMkuNihWyohlRqoABM2YxTrHeqpruJoCz7BLpHjbbB7TTjJI0nwTIk2r353W16h9r9fjs3t3A/IUzqdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4vjFnCId; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=520kqiAp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOS7PmZZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D006C4CEF7;
-	Fri, 30 Jan 2026 16:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769789802;
-	bh=AlNS0o8O55cP7ZrafFrQalBO7KdanY5615Qax8Ig75c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hOS7PmZZrFc5HSN1dVXhZyg9M/cciPSolaQqfWhYDg7HfF1XDoB1HNjJxeiK86UnM
-	 t0paeaoxtYjhwYcMLP8ehpw722gawXSmnt1Ff80sY7yEF5L7T7o1KVKgfa1P6xx/Uk
-	 S7DHHq636jQuWcXVs9rBcbEQ2QAQvrKFpcJM6bhZnxkVAsJwslEvfWUX4cXWiSjnms
-	 hkZcBfTLn6d4cw+9OyK7Jpzkky0ySo8aVXdV/3Vs41kEzOIubFCXlw7rvKNAruk9J0
-	 NRQPKWhrHubAf3UrGWI3BkY7UvozmV6Ss4pPyWqiFlF2wY0RZojtLxb1ipESYS24SU
-	 AnDTT8wKSbTgQ==
-Message-ID: <993fb876-7958-4f1d-ba69-2601976a42d7@kernel.org>
-Date: Fri, 30 Jan 2026 17:16:32 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4vjFnCId";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="520kqiAp"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1769794048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o3M3i7fOsBJJ8QZ7iZoiOC82WHRYdzsj5QwfB37tvhM=;
+	b=4vjFnCIdprQ4bapgrR0W30E28e5XqGnWTzlLJRIchP5KT0mQiU7C2HocIuX1Kdz8pUDo0Y
+	qc+5Orpl1l1vZoFNRQKL24RKcgRr4rbqO02DrPCVc+5aUzHom7b8+oniEw+b53sZSdrxJg
+	+9kDxpq15AQ1xIFUPYwfQgdiBumRwsh+faRgD4dNJMyLkXr/A+P3jXB+CHRA0Hld9eIR+Y
+	7xvqnLxeTCF6EQZwTVn1wPEr2oy9Q/+88+eiC8F7PD8kB/n3dpKOZdgpjEsqUgdQZXqqI6
+	yQRXOGphajl9ppYkFrEud4nWZdOCa3/Ob9kGErESIR3cRVjE/LChlCPSJd3YTA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1769794048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o3M3i7fOsBJJ8QZ7iZoiOC82WHRYdzsj5QwfB37tvhM=;
+	b=520kqiApVkDPFPboRTL5PTkP4fVPei7/H7ecnPwf1SVFxrBJQEXzDTADXeZGZGuaQ0gr4c
+	ZZ61wAzhpOPpFsDw==
+To: Marcos Paulo de Souza <mpdesouza@suse.com>, Richard Weinberger
+ <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes
+ Berg <johannes@sipsolutions.net>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jason Wessel <jason.wessel@windriver.com>,
+ Daniel Thompson <danielt@kernel.org>, Douglas Anderson
+ <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Jiri
+ Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Kees Cook <kees@kernel.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Andreas Larsson
+ <andreas@gaisler.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jacky Huang <ychuang3@nuvoton.com>,
+ Shan-Chun Hung <schung@nuvoton.com>, Laurentiu Tudor
+ <laurentiu.tudor@nxp.com>
+Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+ netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ sparclinux@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ Marcos Paulo de Souza <mpdesouza@suse.com>
+Subject: Re: [PATCH 05/19] printk: Add more context to suspend/resume functions
+In-Reply-To: <20251227-printk-cleanup-part3-v1-5-21a291bcf197@suse.com>
+References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
+ <20251227-printk-cleanup-part3-v1-5-21a291bcf197@suse.com>
+Date: Fri, 30 Jan 2026 18:33:27 +0106
+Message-ID: <87343n3ta8.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] prandom: Add __always_inline version of
- prandom_u32_state()
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
- David Laight <david.laight.linux@gmail.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
- <20260119130122.1283821-3-ryan.roberts@arm.com> <aXpArjZ1QQowshnA@zx2c4.com>
-Content-Language: fr-FR
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-In-Reply-To: <aXpArjZ1QQowshnA@zx2c4.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+On 2025-12-27, Marcos Paulo de Souza <mpdesouza@suse.com> wrote:
+> The new comments clarifies from where the functions are supposed to be
+> called.
+>
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> ---
+>  kernel/printk/printk.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 173c14e08afe..85a8b6521d9e 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2734,7 +2734,8 @@ MODULE_PARM_DESC(console_no_auto_verbose, "Disable console loglevel raise to hig
+>  /**
+>   * console_suspend_all - suspend the console subsystem
+>   *
+> - * This disables printk() while we go into suspend states
+> + * This disables printk() while we go into suspend states. Called by the power
+> + * management subsystem.
 
+Since you are touching this comment, I would prefer to make it
+technically accurate. It is not printk() that is disabled, it is console
+printing that is disabled. Perhaps something like:
 
-Le 28/01/2026 à 18:00, Jason A. Donenfeld a écrit :
-> On Mon, Jan 19, 2026 at 01:01:09PM +0000, Ryan Roberts wrote:
->> We will shortly use prandom_u32_state() to implement kstack offset
->> randomization and some arches need to call it from non-instrumentable
->> context. So let's implement prandom_u32_state() as an out-of-line
->> wrapper around a new __always_inline prandom_u32_state_inline(). kstack
->> offset randomization will use this new version.
->>
->> Acked-by: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>   include/linux/prandom.h | 20 ++++++++++++++++++++
->>   lib/random32.c          |  8 +-------
->>   2 files changed, 21 insertions(+), 7 deletions(-)
->>
->> diff --git a/include/linux/prandom.h b/include/linux/prandom.h
->> index ff7dcc3fa105..801188680a29 100644
->> --- a/include/linux/prandom.h
->> +++ b/include/linux/prandom.h
->> @@ -17,6 +17,26 @@ struct rnd_state {
->>   	__u32 s1, s2, s3, s4;
->>   };
->>   
->> +/**
->> + * prandom_u32_state_inline - seeded pseudo-random number generator.
->> + * @state: pointer to state structure holding seeded state.
->> + *
->> + * This is used for pseudo-randomness with no outside seeding.
->> + * For more random results, use get_random_u32().
->> + * For use only where the out-of-line version, prandom_u32_state(), cannot be
->> + * used (e.g. noinstr code).
->> + */
->> +static __always_inline u32 prandom_u32_state_inline(struct rnd_state *state)
-> 
-> This is pretty bikesheddy and I'm not really entirely convinced that my
-> intuition is correct here, but I thought I should at least ask. Do you
-> think this would be better called __prandom_u32_state(), where the "__"
-> is kind of a, "don't use this directly unless you know what you're doing
-> because it's sort of internal"? It seems like either we make this inline
-> for everybody, or if there's a good reason for having most users use the
-> non-inline version, then we should be careful that new users don't use
-> the inline version. I was thinking the __ would help with that.
+ * Block all console printing while the system goes into suspend state.
+ * Called by the power management subsystem.
+   
+>   */
+>  void console_suspend_all(void)
+>  {
+> @@ -2766,6 +2767,12 @@ void console_suspend_all(void)
+>  	synchronize_srcu(&console_srcu);
+>  }
+>  
+> +/**
+> + * console_resume_all - resume the console subsystem
+> + *
+> + * This resumes printk() when the system is being restored. Called by the power
+> + * management subsystem.
 
-I looked into kernel sources and there are several functions named 
-something_something_else_inline() and it doesn't mean those functions 
-get inlined, so I would also prefer __prandom_u32_state() which means 
-"If you use it you know what you are doing", just like __get_user() for 
-instance.
+And something similar here:
 
-However maybe we could also reconsider making it inline for everyone. We 
-have spotted half a dozen of places where the code size increases a lot 
-when forcing it inline, but those places deserve a local trampoline to 
-avoid code duplication, and then the compiler decides to inline or not.
+ * Allow all console printing when the system resumes from suspend. Called by
+ * the power management system.
+ 
+> + */
+>  void console_resume_all(void)
+>  {
+>  	struct console_flush_type ft;
 
-Because there are also several places that benefit from the inlining 
-because it allows GCC to simplify the calculation, for instance when 
-some calculation is performed with the result like with 
-(prandom_u32_state(rng) % ceil) where ceil is 2 or 4.
-
-That can of course be done as a followup patch but it means at the end 
-we will have to rename all __prandom_u32_state() to prandom_u32_state().
-
-Or should we do the other way round ? Make __prandom_u32_state() the 
-out-of-line version and just change the few places where the size 
-explodes like drm_test_buddy_alloc_range_bias(), loss_gilb_ell(), 
-generate_random_testvec_config(), generate_random_sgl_divisions(), 
-mutate_buffer(), ... ?
-
-Christophe
+John Ogness
