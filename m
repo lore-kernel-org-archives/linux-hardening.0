@@ -1,134 +1,66 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5256A364024;
-	Fri, 30 Jan 2026 17:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DF536404F;
+	Fri, 30 Jan 2026 17:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769794051; cv=none; b=JX0ZdVqwWBpvbt/Yd9xh20CpEznH90ket8328KKx2r9suj6lMrKowIgR2zNGnSYngHtWXYA/Qlc30/Om1JUSEBNr2AuL3qgXRotGs2tPfZU4xYsMygVwiDV5pxuUDZXXPaH+yRUV56K5AbpfdkN0JHhDvu6zhr7tI8foRGD1+sE=
+	t=1769794483; cv=none; b=JD3OqYO2Wcw2IiEIoS2nDpDQun8JM/SHCtKAAZjpHoVc9i+/olZWkaMkkgRkEGVqOSsNYxtcMWQeKZhrAtc3uGa3UwEOTN7IcieiBas2D6jt0c855hDXEiGL+298uymI45UrLzCdkev6ci+mK5jJqikjPlZ6GCfTiJyWDT0db1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769794051; c=relaxed/simple;
-	bh=2+OMGUQcuKS2tJWaxFiW0o1E0ku3RG+1C/hjNsN6rPI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u3gwN9Z0FlK4ZcRip2xnSiFJhvWnwHb6LEvvFZEoKYkAz2+YXPIETKyWwJ+th5tr9MYxG05JPOFHjs/0Vb9wjDc/5iZkMkuNihWyohlRqoABM2YxTrHeqpruJoCz7BLpHjbbB7TTjJI0nwTIk2r353W16h9r9fjs3t3A/IUzqdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4vjFnCId; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=520kqiAp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1769794483; c=relaxed/simple;
+	bh=x25+ZfEQbzsm0yMDiYSBy02gtq3nzHW/g57iJTgC8dQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QcKHB1l2GuDwW6ZZCeupQGUkOzmlO2URZbRrfhj0y8Yjh79VwM33plxGMTpm20WixipoiXo2RCykR+9qTU+jv5iAdZBtn4eneQWfTpZGod//vQbtAylUrtTg3fPLUxjwM2L3pP6e218RF7S6ilnSeF25lOJkWXyCDYE8AuG5JT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYNOs0yJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4vjFnCId";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="520kqiAp"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1769794048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o3M3i7fOsBJJ8QZ7iZoiOC82WHRYdzsj5QwfB37tvhM=;
-	b=4vjFnCIdprQ4bapgrR0W30E28e5XqGnWTzlLJRIchP5KT0mQiU7C2HocIuX1Kdz8pUDo0Y
-	qc+5Orpl1l1vZoFNRQKL24RKcgRr4rbqO02DrPCVc+5aUzHom7b8+oniEw+b53sZSdrxJg
-	+9kDxpq15AQ1xIFUPYwfQgdiBumRwsh+faRgD4dNJMyLkXr/A+P3jXB+CHRA0Hld9eIR+Y
-	7xvqnLxeTCF6EQZwTVn1wPEr2oy9Q/+88+eiC8F7PD8kB/n3dpKOZdgpjEsqUgdQZXqqI6
-	yQRXOGphajl9ppYkFrEud4nWZdOCa3/Ob9kGErESIR3cRVjE/LChlCPSJd3YTA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1769794048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o3M3i7fOsBJJ8QZ7iZoiOC82WHRYdzsj5QwfB37tvhM=;
-	b=520kqiApVkDPFPboRTL5PTkP4fVPei7/H7ecnPwf1SVFxrBJQEXzDTADXeZGZGuaQ0gr4c
-	ZZ61wAzhpOPpFsDw==
-To: Marcos Paulo de Souza <mpdesouza@suse.com>, Richard Weinberger
- <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes
- Berg <johannes@sipsolutions.net>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jason Wessel <jason.wessel@windriver.com>,
- Daniel Thompson <danielt@kernel.org>, Douglas Anderson
- <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, Steven Rostedt
- <rostedt@goodmis.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Jiri
- Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Kees Cook <kees@kernel.org>, Tony Luck
- <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
- <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Andreas Larsson
- <andreas@gaisler.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jacky Huang <ychuang3@nuvoton.com>,
- Shan-Chun Hung <schung@nuvoton.com>, Laurentiu Tudor
- <laurentiu.tudor@nxp.com>
-Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
- kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
- netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- sparclinux@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- Marcos Paulo de Souza <mpdesouza@suse.com>
-Subject: Re: [PATCH 05/19] printk: Add more context to suspend/resume functions
-In-Reply-To: <20251227-printk-cleanup-part3-v1-5-21a291bcf197@suse.com>
-References: <20251227-printk-cleanup-part3-v1-0-21a291bcf197@suse.com>
- <20251227-printk-cleanup-part3-v1-5-21a291bcf197@suse.com>
-Date: Fri, 30 Jan 2026 18:33:27 +0106
-Message-ID: <87343n3ta8.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYNOs0yJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A8B6C116D0;
+	Fri, 30 Jan 2026 17:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769794482;
+	bh=x25+ZfEQbzsm0yMDiYSBy02gtq3nzHW/g57iJTgC8dQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LYNOs0yJD5q1aPU7ES7QDn/iuLkhNQCSK1/POKwci4Tq4PNt29b633/1dLaBtLobj
+	 /Vgj/5rfHOnvvbpudhVbzP+D4KgwSjkMA5uPxSRyyyRpiEiKekIRMV9R/XAvrCpVkm
+	 VXiGbrGK12ZwrZ1Ikx+WiRKu4FtbvJM0hsXKotqaVzKwMPSiLRgUPw8j6q1272IKYQ
+	 xeFpOETN0pfwQuUKhrgI/d+CdcunScydoApRukF8ZHhj8S/2PZjY+NzAPteuRQ7I6F
+	 942Zl7R6CjtvSru5HyLkv6HJMMgBTI5K8IfzE2uoRoNwI5UMR8xmxXEJZHNLC/s6nX
+	 QhsdBA0pbcLQw==
+Date: Fri, 30 Jan 2026 09:34:42 -0800
+From: Kees Cook <kees@kernel.org>
+To: Feng Jiang <jiangfeng@kylinos.cn>
+Cc: palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	akpm@linux-foundation.org, andy@kernel.org, ebiggers@kernel.org,
+	martin.petersen@oracle.com, herbert@gondor.apana.org.au,
+	samuel.holland@sifive.com, ajones@ventanamicro.com,
+	conor.dooley@microchip.com, charlie@rivosinc.com, nathan@kernel.org,
+	linusw@kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v7 1/8] lib/string_kunit: add correctness test for
+ strlen()
+Message-ID: <202601300934.62F91F79@keescook>
+References: <20260130025018.172925-1-jiangfeng@kylinos.cn>
+ <20260130025018.172925-2-jiangfeng@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260130025018.172925-2-jiangfeng@kylinos.cn>
 
-On 2025-12-27, Marcos Paulo de Souza <mpdesouza@suse.com> wrote:
-> The new comments clarifies from where the functions are supposed to be
-> called.
->
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> ---
->  kernel/printk/printk.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 173c14e08afe..85a8b6521d9e 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2734,7 +2734,8 @@ MODULE_PARM_DESC(console_no_auto_verbose, "Disable console loglevel raise to hig
->  /**
->   * console_suspend_all - suspend the console subsystem
->   *
-> - * This disables printk() while we go into suspend states
-> + * This disables printk() while we go into suspend states. Called by the power
-> + * management subsystem.
+On Fri, Jan 30, 2026 at 10:50:11AM +0800, Feng Jiang wrote:
+> Add a KUnit test for strlen() to verify correctness across
+> different string lengths and memory alignments. Use vmalloc()
+> to place the NUL character at the page boundary to ensure
+> over-reads are detected.
+> 
+> Suggested-by: Kees Cook <kees@kernel.org>
+> Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
 
-Since you are touching this comment, I would prefer to make it
-technically accurate. It is not printk() that is disabled, it is console
-printing that is disabled. Perhaps something like:
+Reviewed-by: Kees Cook <kees@kernel.org>
 
- * Block all console printing while the system goes into suspend state.
- * Called by the power management subsystem.
-   
->   */
->  void console_suspend_all(void)
->  {
-> @@ -2766,6 +2767,12 @@ void console_suspend_all(void)
->  	synchronize_srcu(&console_srcu);
->  }
->  
-> +/**
-> + * console_resume_all - resume the console subsystem
-> + *
-> + * This resumes printk() when the system is being restored. Called by the power
-> + * management subsystem.
-
-And something similar here:
-
- * Allow all console printing when the system resumes from suspend. Called by
- * the power management system.
- 
-> + */
->  void console_resume_all(void)
->  {
->  	struct console_flush_type ft;
-
-John Ogness
+-- 
+Kees Cook
