@@ -1,25 +1,25 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5BE33BBD2;
-	Fri, 30 Jan 2026 02:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A09340A57;
+	Fri, 30 Jan 2026 02:50:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769741447; cv=none; b=fEUPL0snAZmrSttZ8m4S92XlLBe/2UiiZiUPaljqBHIE1q7FVxP+eC8NkU60AfbMWkhE4tYnVWg0c9Quz1iyNQQsVzF9rgtxHD2XAdamqxIQFU/IK556sNtCtMNDEHuKFSdhCnvCLK64Vmb2+q3nSMyqexLi+AQUHcH/mCPsLPc=
+	t=1769741447; cv=none; b=p5ImGk1EZnzeXmOUnSI75MgiPIb6X7nl6mf4PNKFc12LyIWw33fdYeK0jGJz2g7Q1MOU3c1tvycG1+e6BH5wn2CH5xcLKNSAtdZ+JQcsLXkzb9t0kfbBd9v9FFMqaENyoxxfbS5fW67E+oS1bCqLoVWVmBtL/ZtfYePHIN02PIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769741447; c=relaxed/simple;
-	bh=2jELAH6U8YzUcZRxGHu087sxUP9bTvmLOQthZ3uL3/A=;
+	bh=AMLyJP13lq5q9yfPKhQ9OMAfBqXzPWDIhUThsyomljo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k8rRP4PZCrUK7O/TBtPVGD8DKhs6Fj8LXboX2CGeJu0dnj5LGhekF+WmoGx/wfXKD7RLf2V8Im32pSjVPo++DRJM86bedhUt6cXt6zSOZostamHGbH7XQP0eCcn96ERhmfpZME8rABOdcm/Vi7rReRxtEn4xkO1dY8zHsNQ8u2g=
+	 MIME-Version; b=jYoykbDF1XIgfyYEZbo16uZumO0FKYxVtj65sXFp7m+7ypzk6FIZq41ZQ64ndlOBCJOFG9r75UPkwd3Qp9MCUNr/tzwcxeIyKa5RjsttzZ2xSKCMsSVtHo0tH+d4FeUCuQjK3L/XliH/Jw+5+BtuxrFpL2/Fh7y7CqIRSH2NmJc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 744e26b4fd8611f0b0f03b4cfa9209d1-20260130
+X-UUID: 758d3fcefd8611f0b0f03b4cfa9209d1-20260130
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:82e82b4e-ac0c-4b25-a7e4-bc67a39d08fd,IP:0,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:-5
-X-CID-META: VersionHash:a9d874c,CLOUDID:9ef4146d6e47820315582a482cf4379e,BulkI
+X-CID-O-INFO: VERSION:1.3.6,REQID:9d791e7b-9efc-4df0-b819-18b65811cf30,IP:0,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-25
+X-CID-META: VersionHash:a9d874c,CLOUDID:0fde758092858cc834e1515d39882192,BulkI
 	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|898,TC:nil,Content:0|15|50
 	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
 	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -27,12 +27,12 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 744e26b4fd8611f0b0f03b4cfa9209d1-20260130
+X-UUID: 758d3fcefd8611f0b0f03b4cfa9209d1-20260130
 X-User: jiangfeng@kylinos.cn
 Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <jiangfeng@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1051736494; Fri, 30 Jan 2026 10:50:36 +0800
+	with ESMTP id 544484140; Fri, 30 Jan 2026 10:50:38 +0800
 From: Feng Jiang <jiangfeng@kylinos.cn>
 To: palmer@dabbelt.com,
 	aou@eecs.berkeley.edu,
@@ -53,9 +53,9 @@ To: palmer@dabbelt.com,
 Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v7 5/8] lib/string_kunit: extend benchmarks to strnlen() and chr searches
-Date: Fri, 30 Jan 2026 10:50:15 +0800
-Message-Id: <20260130025018.172925-6-jiangfeng@kylinos.cn>
+Subject: [PATCH v7 8/8] riscv: lib: add strrchr() implementation
+Date: Fri, 30 Jan 2026 10:50:18 +0800
+Message-Id: <20260130025018.172925-9-jiangfeng@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260130025018.172925-1-jiangfeng@kylinos.cn>
 References: <20260130025018.172925-1-jiangfeng@kylinos.cn>
@@ -67,58 +67,123 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend the string benchmarking suite to include strnlen(), strchr(),
-and strrchr().
+Add an assembly implementation of strrchr() for RISC-V.
 
-For character search functions strchr() and strrchr(), the benchmark
-targets the NUL character. This ensures the entire string is scanned,
-providing a consistent measure of full-length processing efficiency
-comparable to strlen().
+This implementation minimizes instruction count and avoids unnecessary
+memory access to the stack. The performance benefits are most visible
+on small workloads (1-16 bytes) where the architectural savings in
+function overhead outweigh the execution time of the scan loop.
 
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Suggested-by: Eric Biggers <ebiggers@kernel.org>
+Benchmark results (QEMU TCG, rv64):
+  Length | Original (MB/s) | Optimized (MB/s) | Improvement
+  -------|-----------------|------------------|------------
+  1 B    | 20              | 21               | +5.0%
+  7 B    | 111             | 120              | +8.1%
+  16 B   | 189             | 199              | +5.3%
+  512 B  | 361             | 382              | +5.8%
+  4096 B | 388             | 391              | +0.8%
+
 Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
-Acked-by: Andy Shevchenko <andy@kernel.org>
 ---
- lib/tests/string_kunit.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/riscv/include/asm/string.h |  3 +++
+ arch/riscv/lib/Makefile         |  1 +
+ arch/riscv/lib/strrchr.S        | 37 +++++++++++++++++++++++++++++++++
+ arch/riscv/purgatory/Makefile   |  5 ++++-
+ 4 files changed, 45 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/lib/strrchr.S
 
-diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 5f6d0409459b..a8d430aa5466 100644
---- a/lib/tests/string_kunit.c
-+++ b/lib/tests/string_kunit.c
-@@ -866,6 +866,21 @@ static void string_bench_strlen(struct kunit *test)
- 	STRING_BENCH_BUF(test, buf, len, strlen, buf);
- }
+diff --git a/arch/riscv/include/asm/string.h b/arch/riscv/include/asm/string.h
+index ca3ade82b124..764ffe8f6479 100644
+--- a/arch/riscv/include/asm/string.h
++++ b/arch/riscv/include/asm/string.h
+@@ -34,6 +34,9 @@ extern asmlinkage __kernel_size_t strnlen(const char *, size_t);
  
-+static void string_bench_strnlen(struct kunit *test)
-+{
-+	STRING_BENCH_BUF(test, buf, len, strnlen, buf, len);
-+}
+ #define __HAVE_ARCH_STRCHR
+ extern asmlinkage char *strchr(const char *, int);
 +
-+static void string_bench_strchr(struct kunit *test)
-+{
-+	STRING_BENCH_BUF(test, buf, len, strchr, buf, '\0');
-+}
-+
-+static void string_bench_strrchr(struct kunit *test)
-+{
-+	STRING_BENCH_BUF(test, buf, len, strrchr, buf, '\0');
-+}
-+
- static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_test_memset16),
- 	KUNIT_CASE(string_test_memset32),
-@@ -892,6 +907,9 @@ static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_test_memtostr),
- 	KUNIT_CASE(string_test_strends),
- 	KUNIT_CASE(string_bench_strlen),
-+	KUNIT_CASE(string_bench_strnlen),
-+	KUNIT_CASE(string_bench_strchr),
-+	KUNIT_CASE(string_bench_strrchr),
- 	{}
- };
++#define __HAVE_ARCH_STRRCHR
++extern asmlinkage char *strrchr(const char *, int);
+ #endif
  
+ /* For those files which don't want to check by kasan. */
+diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
+index b7f804dce1c3..735d0b665536 100644
+--- a/arch/riscv/lib/Makefile
++++ b/arch/riscv/lib/Makefile
+@@ -9,6 +9,7 @@ lib-y			+= strlen.o
+ lib-y			+= strncmp.o
+ lib-y			+= strnlen.o
+ lib-y			+= strchr.o
++lib-y			+= strrchr.o
+ endif
+ lib-y			+= csum.o
+ ifeq ($(CONFIG_MMU), y)
+diff --git a/arch/riscv/lib/strrchr.S b/arch/riscv/lib/strrchr.S
+new file mode 100644
+index 000000000000..ac58b20ca21d
+--- /dev/null
++++ b/arch/riscv/lib/strrchr.S
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++/*
++ * Copyright (C) 2025 Feng Jiang <jiangfeng@kylinos.cn>
++ */
++
++#include <linux/linkage.h>
++#include <asm/asm.h>
++
++/* char *strrchr(const char *s, int c) */
++SYM_FUNC_START(strrchr)
++	/*
++	 * Parameters
++	 *	a0 - The string to be searched
++	 *	a1 - The character to seaerch for
++	 *
++	 * Returns
++	 *	a0 - Address of last occurrence of 'c' or 0
++	 *
++	 * Clobbers
++	 *	t0, t1
++	 */
++	andi	a1, a1, 0xff
++	mv	t1, a0
++	li	a0, 0
++1:
++	lbu	t0, 0(t1)
++	bne	t0, a1, 2f
++	mv	a0, t1
++2:
++	addi	t1, t1, 1
++	bnez	t0, 1b
++	ret
++SYM_FUNC_END(strrchr)
++
++SYM_FUNC_ALIAS_WEAK(__pi_strrchr, strrchr)
++EXPORT_SYMBOL(strrchr)
+diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
+index e7b3d748c913..b0358a78f11a 100644
+--- a/arch/riscv/purgatory/Makefile
++++ b/arch/riscv/purgatory/Makefile
+@@ -2,7 +2,7 @@
+ 
+ purgatory-y := purgatory.o sha256.o entry.o string.o ctype.o memcpy.o memset.o
+ ifeq ($(CONFIG_KASAN_GENERIC)$(CONFIG_KASAN_SW_TAGS),)
+-purgatory-y += strcmp.o strlen.o strncmp.o strnlen.o strchr.o
++purgatory-y += strcmp.o strlen.o strncmp.o strnlen.o strchr.o strrchr.o
+ endif
+ 
+ targets += $(purgatory-y)
+@@ -38,6 +38,9 @@ $(obj)/strnlen.o: $(srctree)/arch/riscv/lib/strnlen.S FORCE
+ $(obj)/strchr.o: $(srctree)/arch/riscv/lib/strchr.S FORCE
+ 	$(call if_changed_rule,as_o_S)
+ 
++$(obj)/strrchr.o: $(srctree)/arch/riscv/lib/strrchr.S FORCE
++	$(call if_changed_rule,as_o_S)
++
+ CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
+ CFLAGS_string.o := -D__DISABLE_EXPORTS
+ CFLAGS_ctype.o := -D__DISABLE_EXPORTS
 -- 
 2.25.1
 
