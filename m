@@ -1,52 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102F3357725;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C253587D7;
 	Sat, 31 Jan 2026 14:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769869522; cv=none; b=GGOGEtWHz3j84JO5009ctcd4OrTWQtjru4Be5RQI5NO7/hDCUULYAD9gFzWM+k2eweXuNHrV3QBCPNGL0uR5YX6ii9+fYyQ9McoQgQ3o5avBhzC/Mfoy5XSKWEFp5BFJsw7xJFvpM/S+JlNZol+8jlzjqK+UIsfQJlwoaxS2TyY=
+	t=1769869522; cv=none; b=JL70pAx2YwiiyBTmwDYBIBkTPx+e0QX0NEIkbwKYjJr/i+NiHsNDC4iTVlh0bRg4Yu6NIyA2HmZVVy3N9IZ4nff/3gKGZr0wFZdCb1dMNxRwHQdIRJkdw6W4QX3nF+2Wvv8mHraR1fslD3luC70CAatrwYVJp658f1wLjz9Zbkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769869522; c=relaxed/simple;
-	bh=k65ZRQ6nCC0QeSNdRmqS6WoUNEEbl9/G3ipKWB3BcN0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r4Lf6TT2QnsRAXYTwt0f19YnGv/1j+xScTDBf35Bd9HloiuY835q6e3gPzuub6DB+2TlzUlggBSc7sqaa6qCgQetkJ7xH+d/sab+3X9KOO0ft0uXM7Ir3tQA3EWGYY1cP+rqbwKHmTb/94ab+54vhtQ+nPQSTpKayAK4wCmXPNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e63fBHEI; arc=none smtp.client-ip=10.30.226.201
+	bh=GQxQSIJ9zVioMxXOuLm+2OSq66234rnFskvJugtkkiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FgPBz4EMAVuOvOk5GL/uqETPkA781GIPDKzDNwLDTSMbxX5ck6Ua2aDHQkeFTxcqwwgkpD07l7fbzfxTeoYaZrlQPaQqqqhkvAchkNlhtb6NWoShX8hp2kMn6G6lSLF6R6xLPxpC4RtCvtmYTq5WY0lz8caXrXTzkzg+GA4bRCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZtBiOkli; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e63fBHEI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB10C2BC87;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZtBiOkli"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0B3C2BCB3;
 	Sat, 31 Jan 2026 14:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1769869521;
-	bh=k65ZRQ6nCC0QeSNdRmqS6WoUNEEbl9/G3ipKWB3BcN0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e63fBHEIkHV7gUbvSu0y+j59kfsYS+U2rp5MWNYp5NQ0g0JUfdEhh8zX9FFM/Kobt
-	 /ihVs21vbRRyz69Q6p6+ahKpCiLT+GoqoAMnyBqQvjdGpLpbW1DwlHmRa4W1zbtY5Q
-	 i9F1iQnfMkB9haZzKgJ3rwc+tQKXFlGksj9GPaw9N84mw2IdQKLAuONYFDmInekn3x
-	 7f+7ujrpGZ8s2YBbjnNQFTS+qegSmz1cSeOCs0zaTLhGCg1sTbDlLHDvAor/RWFO4q
-	 TprFa23N2XVs5qdpJER1yKLNqsWaWlHrqCLnmmM1h+3VfscA2EI5nVO6WUJM9EgsRn
-	 sI6nVx08tDgDg==
+	bh=GQxQSIJ9zVioMxXOuLm+2OSq66234rnFskvJugtkkiE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZtBiOkliM1tjI/dshe2DJ87tkxKsNQsJeXpHs8bUPcsxuZkIImeIyj/oImKn3dIO6
+	 mvbJcCvzjM6rbgMJQRIjNqswn7r+IAaTLy9XbeV7aPlMmSCrcNfKV2ZJgDjRFiUMkO
+	 UIwvNOGftYnoLX2HDlPe6voh1rOeSphwEnb9ZfOJ9eQ5fsQXQDLX7bIa9hfrZKKfYV
+	 i6UYuBr5d22/k2GtAkeHVuyRe6GBl7kUhlwSxsx+xepH9Mrhb0FiqqpI7noh8w/rM0
+	 404IwE5Rqy/HvRbsOdRS6fMU6mzT7fV7K02g8RG5RwwPwn/ENHUbra0rlOo6fRnD7l
+	 NloskcjdjEvNQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vmBuZ-0000000AVk0-1jqe;
+	id 1vmBuZ-0000000AVjl-1EAr;
 	Sat, 31 Jan 2026 15:25:19 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	intel-wired-lan@lists.osuosl.org,
+	linux-doc@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v4 04/41] docs: kdoc_parser: don't mangle with function defines
-Date: Sat, 31 Jan 2026 15:24:38 +0100
-Message-ID: <40010f8fa7275d1be1287b26ac46fcd3c88e2b99.1769867953.git.mchehab+huawei@kernel.org>
+	Randy Dunlap <rdunlap@infradead.org>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v4 00/41] kernel-doc: make it parse new functions and structs
+Date: Sat, 31 Jan 2026 15:24:34 +0100
+Message-ID: <cover.1769867953.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1769867953.git.mchehab+huawei@kernel.org>
-References: <cover.1769867953.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,66 +58,248 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Mangling with #defines is not nice, as we may end removing
-the macro names, preventing several macros from being properly
-documented.
+Hi Jon,
 
-Also, on defines, we have something like:
+Rebased the changes on the top of docs-mw, and merged
+the /4 patch series with fixes from me that ws pending
+and contained a conflicting patch with this series.
 
-	#define foo(a1, a2, a3, ...)			 \
-		/* some real implementation */
+Oh well, it means that this one increased its size
+again...
 
-The prototype part (first line on this example) won't contain
-any macros, so no need to apply any regexes on it.
+The initial goal were to address some new warnings
+at linux next due to some new macro annotations.
 
-With that, move the apply_transforms() logic to ensure that
-it will be called only on functions.
+As the previous version, this one contains a new
+CFunction class, with is just an alias for "NestedMatch",
+meant to make easier to maintain transforms, which are
+now on a separate file:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
----
- tools/lib/python/kdoc/kdoc_parser.py | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+    tools/lib/python/kdoc/xforms_lists.py
 
-diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
-index 0b68b140cd02..3ba2cda2487a 100644
---- a/tools/lib/python/kdoc/kdoc_parser.py
-+++ b/tools/lib/python/kdoc/kdoc_parser.py
-@@ -163,7 +163,7 @@ struct_nested_prefixes = [
- #
- # Transforms for function prototypes
- #
--function_xforms  = [
-+function_xforms = [
-     (KernRe(r"^static +"), ""),
-     (KernRe(r"^extern +"), ""),
-     (KernRe(r"^asmlinkage +"), ""),
-@@ -1065,10 +1065,7 @@ class KernelDoc:
-         found = func_macro = False
-         return_type = ''
-         decl_type = 'function'
--        #
--        # Apply the initial transformations.
--        #
--        prototype = apply_transforms(function_xforms, prototype)
-+
-         #
-         # If we have a macro, remove the "#define" at the front.
-         #
-@@ -1087,6 +1084,11 @@ class KernelDoc:
-                 declaration_name = r.group(1)
-                 func_macro = True
-                 found = True
-+        else:
-+            #
-+            # Apply the initial transformations.
-+            #
-+            prototype = apply_transforms(function_xforms, prototype)
+With that, transform lists now use CFunction for macros
+with a function prototype, using KernRe only the
+remaining macros and part of the declarations we want to
+strip (like extern).
+
+So, for instance, the entire transform list for structs
+is now:
+
+    #: Transforms for structs and unions
+    struct_xforms = [
+        (CFunction("__attribute__"), ' '),
+        (CFunction('__aligned'), ' '),
+        (CFunction('__counted_by'), ' '),
+        (CFunction('__counted_by_(le|be)'), ' '),
+        (CFunction('__guarded_by'), ' '),
+        (CFunction('__pt_guarded_by'), ' '),
+
+        (KernRe(r'\s*__packed\s*', re.S), ' '),
+        (KernRe(r'\s*CRYPTO_MINALIGN_ATTR', re.S), ' '),
+        (KernRe(r'\s*__private', re.S), ' '),
+        (KernRe(r'\s*__rcu', re.S), ' '),
+        (KernRe(r'\s*____cacheline_aligned_in_smp', re.S), ' '),
+        (KernRe(r'\s*____cacheline_aligned', re.S), ' '),
+
+        (CFunction('__cacheline_group_(begin|end)'), ''),
+
+        (CFunction('struct_group'), r'\2'),
+        (CFunction('struct_group_attr'), r'\3'),
+        (CFunction('struct_group_tagged'), r'struct \1 \2; \3'),
+        (CFunction('__struct_group'), r'\4'),
+
+        (CFunction('__ETHTOOL_DECLARE_LINK_MODE_MASK'), r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
+        (CFunction('DECLARE_PHY_INTERFACE_MASK',), r'DECLARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
+        (CFunction('DECLARE_BITMAP'), r'unsigned long \1[BITS_TO_LONGS(\2)]'),
+
+        (CFunction('DECLARE_HASHTABLE'), r'unsigned long \1[1 << ((\2) - 1)]'),
+        (CFunction('DECLARE_KFIFO'), r'\2 *\1'),
+        (CFunction('DECLARE_KFIFO_PTR'), r'\2 *\1'),
+        (CFunction('(?:__)?DECLARE_FLEX_ARRAY'), r'\1 \2[]'),
+        (CFunction('DEFINE_DMA_UNMAP_ADDR'), r'dma_addr_t \1'),
+        (CFunction('DEFINE_DMA_UNMAP_LEN'), r'__u32 \1'),
+        (CFunction('VIRTIO_DECLARE_FEATURES'), r'union { u64 \1; u64 \1_array[VIRTIO_FEATURES_U64S]; }'),
+    ]
+
+As KernRe, CFunction and NestedMatch have a ".sub" method, a
+single transforms table can have them all.
+
+Due to the complexity of NestedMatch, I opted to write
+unit tests to verify that the logic there is correct.
+
+On this version, the module was almost entirely re-written
+by hand, and the test suite has now 3 groups:
+
+- TestDifferentReplacements: basic tests using several
+  tests to try checkin border cases with NestedMatch.sub.
+  They all use a single macro name;
+- TestMultipleMacros: test different macros and conditions,
+  also trying to get border cases;
+- TestRealUsecases: as the name says, on this one I picked
+  real test cases. I used an example given by Randy on
+  some of them and placed a testset to try covering
+  struct_group macros, which are quite complex.
+
+Using it is as easy as running:
+
+	$ tools/unittests/kdoc_xforms.py
+
+And, if something goes wrong, -v will show the problem in unified diff[1]:
+
+    $ tools/unittests/kdoc_xforms.py -k test_functions_with_acquires_and_releases -v
+
+    test_functions_with_acquires_and_releases (kdoc_xforms.TestRealUsecases.test_functions_with_acquires_and_releases)
+    Test guarded_by on vars from lib/stackdepot.c. ... FAIL
+    
+    ======================================================================
+    FAIL: test_functions_with_acquires_and_releases (kdoc_xforms.TestRealUsecases.test_functions_with_acquires_and_releases)
+    Test guarded_by on vars from lib/stackdepot.c.
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+      File "/new_devel/docs/tools/unittests/kdoc_xforms.py", line 649, in test_functions_with_acquires_and_releases
+        self.assertLogicallyEqual(result, expected)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+      File "/new_devel/docs/tools/unittests/kdoc_xforms.py", line 56, in assertLogicallyEqual
+        self.assertEqual(a, b)
+        ~~~~~~~~~~~~~~~~^^^^^^
+    AssertionError: 'bool[477 chars]\n\n acpi_cpu_flags acpi_os_acquire_lock(acpi_[90 chars]sed)' != 'bool[477 chars]\n\n /* THIS IS UNEXPECTED. TEST WILL FAIL HER[140 chars]sed)'
+      bool prepare_report_consumer(unsigned long *flags,
+       const struct access_info *ai,
+       struct other_info *other_info);
+      
+       int tcp_sigpool_start(unsigned int id, struct tcp_sigpool *c);
+      
+       bool undo_report_consumer(unsigned long *flags,
+       const struct access_info *ai,
+       struct other_info *other_info);
+      
+       void debugfs_enter_cancellation(struct file *file,
+       struct debugfs_cancellation *c);
+      
+       void debugfs_leave_cancellation(struct file *file,
+       struct debugfs_cancellation *c);
+      
+    +  /* THIS IS UNEXPECTED. TEST WILL FAIL HERE */
+    + 
+       acpi_cpu_flags acpi_os_acquire_lock(acpi_spinlock lockp);
+      
+       void acpi_os_release_lock(acpi_spinlock lockp,
+       acpi_cpu_flags not_used)
+    
+    
+    ----------------------------------------------------------------------
+    Ran 1 test in 0.001s
+    
+    FAILED (failures=1)
+
+[1] This error was caused when I applied this patch:
+
+    --- a/tools/unittests/kdoc_xforms.py
+    +++ b/tools/unittests/kdoc_xforms.py
+    @@ -637,6 +637,8 @@ class TestRealUsecases(TestCaseDiff):
+                 void debugfs_leave_cancellation(struct file *file,
+                                                 struct debugfs_cancellation *c);
  
-         # Yes, this truly is vile.  We are looking for:
-         # 1. Return type (may be nothing if we're looking at a macro)
+    +            /* THIS IS UNEXPECTED. TEST WILL FAIL HERE */
+    +
+                 acpi_cpu_flags acpi_os_acquire_lock(acpi_spinlock lockp);
+ 
+                 void acpi_os_release_lock(acpi_spinlock lockp,
+
+
+
+---
+v4:
+- minor cleanups at the description on the first 30 patches;
+- picked paches from this series:
+    https://lore.kernel.org/linux-doc/cover.1769500383.git.mchehab+huawei@kernel.org/
+- added patches to make easier for kernel-doc to be used on
+  other projects (QEMU currently uses it)
+- did some extra fixes at NestedMatch for some corner cases;
+- added patches to improve man pages output;
+- unittests were revamped.
+
+v3:
+- improved the unittest helper to allow adding in the future
+  a runner to create a test suite directly;
+- added unittest to tools/python library documentation;
+- improved comments at the new modules;
+- did several cleanups at the new logic;
+- added a fix for NestedMatch not remove ";" at the end,
+  mimicing the behavior of KernRe;
+- moved transforms to a separate module;
+- replaced all regexes to parse macros with the new CFunction
+  alias for NestedMatch.
+
+v2:
+- added 10 new patches adding support at NestedMatch
+  to properly group and replace arguments with \1, \2, ...
+
+Mauro Carvalho Chehab (39):
+  docs: kdoc_re: add support for groups()
+  docs: kdoc_re: don't go past the end of a line
+  docs: kdoc_parser: move var transformers to the beginning
+  docs: kdoc_parser: don't mangle with function defines
+  docs: kdoc_parser: add functions support for NestedMatch
+  docs: kdoc_parser: use NestedMatch to handle __attribute__ on
+    functions
+  docs: kdoc_parser: fix variable regexes to work with size_t
+  docs: kdoc_parser: fix the default_value logic for variables
+  docs: kdoc_parser: add some debug for variable parsing
+  docs: kdoc_parser: don't exclude defaults from prototype
+  docs: kdoc_parser: fix parser to support multi-word types
+  docs: kdoc_parser: add support for LIST_HEAD
+  docs: kdoc_re: properly handle strings and escape chars on it
+  docs: kdoc_re: better show KernRe() at documentation
+  docs: kdoc_re: don't recompile NestedMatch regex every time
+  docs: kdoc_re: Change NestedMath args replacement to \0
+  docs: kdoc_re: make NestedMatch use KernRe
+  docs: kdoc_re: add support on NestedMatch for argument replacement
+  docs: kdoc_parser: better handle struct_group macros
+  docs: kdoc_re: fix a parse bug on struct page_pool_params
+  docs: kdoc_re: add a helper class to declare C function matches
+  docs: kdoc_parser: use the new CFunction class
+  docs: kdoc_parser: minimize differences with struct_group_tagged
+  docs: kdoc_parser: move transform lists to a separate file
+  docs: kdoc_re: don't remove the trailing ";" with NestedMatch
+  docs: kdoc_re: prevent adding whitespaces on sub replacements
+  docs: xforms_lists.py: use CFuntion to handle all function macros
+  docs: kdoc_files: allows the caller to use a different xforms class
+  docs: kdoc_re: Fix NestedMatch.sub() which causes PDF builds to break
+  docs: sphinx-build-wrapper: allow -v override -q
+  tools: sphinx-build-wrapper: improve its help message
+  docs: kdoc_files: document KernelFiles() ABI
+  docs: kdoc_output: add optional args to ManOutput class
+  docs: sphinx-build-wrapper: better handle troff .TH markups
+  docs: kdoc_output: use a more standard order for .TH on man pages
+  docs: kdoc_output: describe the class init parameters
+  docs: kdoc_output: pick a better default for modulename
+  docs: python: add helpers to run unit tests
+  tools: unittests: add tests for kernel-doc NestedMatch and KernRe
+
+Randy Dunlap (2):
+  docs: kdoc_parser: ignore context analysis and lock attributes
+  docs: kdoc_parser: handle struct member macro
+    VIRTIO_DECLARE_FEATURES(name)
+
+ Documentation/tools/kdoc_parser.rst   |   8 +
+ Documentation/tools/python.rst        |   2 +
+ Documentation/tools/unittest.rst      |  24 +
+ tools/docs/kernel-doc                 |   1 -
+ tools/docs/sphinx-build-wrapper       |  50 +-
+ tools/lib/python/kdoc/kdoc_files.py   |  54 ++-
+ tools/lib/python/kdoc/kdoc_output.py  |  73 ++-
+ tools/lib/python/kdoc/kdoc_parser.py  | 182 ++-----
+ tools/lib/python/kdoc/kdoc_re.py      | 242 +++++++---
+ tools/lib/python/kdoc/xforms_lists.py | 108 +++++
+ tools/lib/python/unittest_helper.py   | 348 ++++++++++++++
+ tools/unittests/kdoc_xforms.py        | 654 ++++++++++++++++++++++++++
+ 12 files changed, 1515 insertions(+), 231 deletions(-)
+ create mode 100644 Documentation/tools/unittest.rst
+ create mode 100644 tools/lib/python/kdoc/xforms_lists.py
+ create mode 100755 tools/lib/python/unittest_helper.py
+ create mode 100755 tools/unittests/kdoc_xforms.py
+
 -- 
 2.52.0
 
