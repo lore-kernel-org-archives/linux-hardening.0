@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0B93590D1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491923590BE;
 	Sat, 31 Jan 2026 14:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769869522; cv=none; b=TAu8twgfii/bda07ACGAGApLETArhIuCkBBnMgGmm6A+IU6KFhsCyy1YgxgSJS88frGPROVUOB6YvvmxtOJhMtLbjJFSI0Y6sOw+zS5UIHF8Vjy9I1d9wttlObqIb1b6IaKenwAiQshTiGNEAWFz7LTXnvI+VFuvGQkwFBynUF4=
+	t=1769869522; cv=none; b=gRCWJxPB5aEQdK9vvueM/KID83Ertx1TfN2VcReUHtsVPU67lMTeM1DvNZ+HOVOOq+HmQzsLFlu12zisoXl2voNT8QUGMRUsFosVKAMTfIsjC2hOHcWjdRMo3eZHfq4pprvYxzY6Mpw+vf/gLG6ksoxOAsKVPveraDExVfpgldY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769869522; c=relaxed/simple;
-	bh=I/r87jAWKSx+9k53qSEfwjXKAwqwD5/EwejaTkqMOBg=;
+	bh=PjcYZUAUNaiqUM2WGTjsaVLZOk4Wa72JQZXaktFxmLA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CVh5rBv5qY+jifKVd8ITMMzztpVQkl0hCGBMxv1UrW2rmIPkL2655FSWihKuTOmgzU9gH29etjLTx9mswKE32C1/swSGE2DCbzUxkPCdFNzVMF0wpafEEG11iWq/ubJ398VXwhqtYD4ixOfNK/jYrs94T7TnCcV+/IzeLoWLUJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ls6wCREO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=jDsfYW/8dk2EGf/XKc3DKd/vRAqQk1qO3GuJfUuWx0oR89M3WahJtOEZBvoboDFvSdxfRlgm+ubA7fQVwgkcwFylN97XCe+4R/MLJ3Uaxx5D4Da2AkXgl55bho8zXsUrha61WfOwL0Dzj/2Zdd4J8zgKkxwxldhTZg3OB0wUfGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itO0YwQZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ls6wCREO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8C2C4AF17;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itO0YwQZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B60E0C2BCB4;
 	Sat, 31 Jan 2026 14:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1769869521;
-	bh=I/r87jAWKSx+9k53qSEfwjXKAwqwD5/EwejaTkqMOBg=;
+	bh=PjcYZUAUNaiqUM2WGTjsaVLZOk4Wa72JQZXaktFxmLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ls6wCREOsdkPS2BTmCqVOWdk0RKi1xRFTee7pRAQWejzpXdGMH6S1Hh9Na1813ySw
-	 26AORe9EZE7bUOTYNO0dMl3b1hsqYSZkM6Nsc8V8v50Y74yttswcOUv0cuFkGIdyJi
-	 aklMf1EzHWX0lj0jtHYhsJQOX+zKcc1cZEgwjbMckY2ydS+d3sz9dPsJpJ78bgvUJf
-	 RUtbk80zbUoz1VbLWqo1Oa6kRd1nhaSFxvk3BdQtxwUSVDXbSKq1XuVKBfKfhmvfdr
-	 j6qbCWbGDl0m7Uf9wbBqlBfjkHDTuUgqqfg06a41UeHtQ1NhP32rJxRWJwkWeWJdQk
-	 wisdK+HAXSpRg==
+	b=itO0YwQZpIhW76BAuJiH93sAQFczal11Ra0KiNpY9EcXSC3ymmLIypzntUYYzoQ0g
+	 yyIlO/SwbI5WDTenKTX0cHWL6npF88k3qPYSMwknuD8JNELfOjKIawqmjoJ2BFA/vc
+	 1EC78b+yPTddRm9OIN5kE3Gm8I9r8lQA6YWPJRoj4A785sR1Y7DoBoHpGy1totldS6
+	 33lBlJ2SBS9Bv/JGW6hmUUzhGxXEIy1ArhLnmC97F5CDW2DrOZAoIo0JxFhU1gZxeR
+	 6vCRZJPkqYjep91x15m0vecyfcIfujpsw9QBtJ8U64SlxkdN04RuL0V8oNB+qCa73P
+	 8VIzzXg6gQ8LQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vmBua-0000000AVlX-0Eaz;
+	id 1vmBuZ-0000000AVlN-4Buk;
 	Sat, 31 Jan 2026 15:25:20 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
+To: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
 	Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	intel-wired-lan@lists.osuosl.org,
@@ -41,9 +42,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v4 27/41] docs: kdoc_re: don't remove the trailing ";" with NestedMatch
-Date: Sat, 31 Jan 2026 15:25:01 +0100
-Message-ID: <68f663611c61411b0e638947347fb3b8f33c8630.1769867953.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v4 25/41] docs: kdoc_parser: minimize differences with struct_group_tagged
+Date: Sat, 31 Jan 2026 15:24:59 +0100
+Message-ID: <3e6a3336d4f62f65df3ce1b464c8233fc59611b0.1769867953.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1769867953.git.mchehab+huawei@kernel.org>
 References: <cover.1769867953.git.mchehab+huawei@kernel.org>
@@ -57,30 +58,57 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Removing it causes the parse to break some conversions, when
-NestedMatch is used on macros like __attribute__().
+While the previous version does a better job representing
+the actual struct, it ends losing documentation from each
+member.
+
+Change the replacements to minimize such changes. With that,
+the only differences before/after using NestedMatch new
+replacement logic are (at man page output):
+
+    --- before.log  2026-01-29 06:14:20.163592584 +0100
+    +++ after.log   2026-01-29 06:32:04.811370234 +0100
+    @@ -1573701 +1573701 @@
+    -.BI "    struct ice_health_tx_hang_buf  tx_hang_buf;"
+    +.BI "    struct ice_health_tx_hang_buf tx_hang_buf;"
+    @@ -4156451 +4156451 @@
+    -.BI "    struct libeth_fq_fp  fp;"
+    +.BI "    struct libeth_fq_fp fp;"
+    @@ -4164041 +4164041 @@
+    -.BI "    struct libeth_xskfq_fp  fp;"
+    +.BI "    struct libeth_xskfq_fp fp;"
+    @@ -4269434 +4269434 @@
+    -.BI "    struct page_pool_params_fast  fast;"
+    +.BI "    struct page_pool_params_fast fast;"
+    @@ -4269452 +4269452 @@
+    -.BI "    struct page_pool_params_slow  slow;"
+    +.BI "    struct page_pool_params_slow slow;"
+    @@ -4269454 +4269454 @@
+    -.BI "    STRUCT_GROUP( struct net_device *netdev;"
+    +.BI "    struct net_device *netdev;"
+
+e.g. basically whitespaces, plus a fix NestedMatch to
+better handle /* private */ comments.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
 ---
- tools/lib/python/kdoc/kdoc_re.py | 4 ----
- 1 file changed, 4 deletions(-)
+ tools/lib/python/kdoc/kdoc_parser.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/python/kdoc/kdoc_re.py b/tools/lib/python/kdoc/kdoc_re.py
-index a49b42e3d189..294051dbc050 100644
---- a/tools/lib/python/kdoc/kdoc_re.py
-+++ b/tools/lib/python/kdoc/kdoc_re.py
-@@ -358,10 +358,6 @@ class NestedMatch:
+diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
+index 50d57c6799bb..1e8e156e2a9e 100644
+--- a/tools/lib/python/kdoc/kdoc_parser.py
++++ b/tools/lib/python/kdoc/kdoc_parser.py
+@@ -126,7 +126,7 @@ struct_xforms = [
+     #
+     (CFunction('struct_group'), r'\2'),
+     (CFunction('struct_group_attr'), r'\3'),
+-    (CFunction('struct_group_tagged'), r'struct \1 { \3 } \2;'),
++    (CFunction('struct_group_tagged'), r'struct \1 \2; \3'),
+     (CFunction('__struct_group'), r'\4'),
  
-             out += new_sub
- 
--            # Drop end ';' if any
--            if pos < len(line) and line[pos] == ';':
--                pos += 1
--
-             cur_pos = pos
-             n += 1
- 
+     #
 -- 
 2.52.0
 
