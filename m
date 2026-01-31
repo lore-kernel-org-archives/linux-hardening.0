@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3779D358D08;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427FC358D3D;
 	Sat, 31 Jan 2026 14:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769869522; cv=none; b=jl8SjJC7aAai59NABPdreXn2Qwd93idhiZkzvwgrU/JCk9a9Uo9SwbNK/PpFxU/jcPABz/0Ec9y77pKRfngp9Iw94v+2eMK04R+2sTx2Ue+SmgxbkAky0Ztt8LfYc9HI4xTpF+0+xIhWY7JuB/V+2XurmeMAsGMu/KCzJ1VzJiE=
+	t=1769869522; cv=none; b=CPU684mxzwFo1MMXDuKsa9WT8zNdL8I9p+8vLZnSwyXdy2bYR8a9vVTjmBSdS3yUXEOm1xhHE/Es72Up+kfx+L4lXEqxPXip51ry5SAMZt+FtagMe4Cjish1uPcSGuAK1mVQf8A7CD9cbnuWg6UQoczQaHjJMkgVJMV2SHBfbVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769869522; c=relaxed/simple;
-	bh=T/tjtljgzM6ONqM7zhOV7Yk4y75K/wRjyLKxDsGKFtU=;
+	bh=C6CeWuwXNWfLjH/HHfru4lb9lJd9uRNWvYwHu3+yiQs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YJggXgVQs1plvs7oZ4TEsdQBgYltfbWYGsMyENw+0mYGczcnoekikwO1MDqMSV9BoTaUhT7jxP3N3MKBfbOE+zMcw8H7m5K8Wzu0AIZi0rAlpDLmG8geabjM6eJPHiHccONA5wZyWotav79Y9TXIvS04utBY4dg6Fnh8bdEpXRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FkI80vV6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=EpBY8PWZNJnpVdJm0PAljIJrcvHgzbH/nyebryZiODhkQtU2/tBoYTLULUH2ylUHms51qgSK85WMzh6V59tYcUCfxjIHZMfeEgyHKUd6j5TII+VLXgsctQe13wqErgr0uis/qfHJSq2p+4WOvFgUDTH/dRyESC84PcnqoD+QLJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkeM9Nri; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FkI80vV6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E28C4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkeM9Nri"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADCACC32786;
 	Sat, 31 Jan 2026 14:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1769869521;
-	bh=T/tjtljgzM6ONqM7zhOV7Yk4y75K/wRjyLKxDsGKFtU=;
+	bh=C6CeWuwXNWfLjH/HHfru4lb9lJd9uRNWvYwHu3+yiQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FkI80vV6n8l3oW8lP1wSbfB0XPQ8C7wAan32GnKk0HvATwLICSCBRX2x6QZ/ajzb+
-	 Ty5boZfyRuzsQg+Y9QsgOtZuDo4SUQr5lWk4jjwgPg7sc4Yav4O2DQJ9iZJgZRapyk
-	 E5ybY6Y6tWdiOxZoq+qVgvQvlRKvEgzNJz4eQDcSIXQW6TG/N7AFZby0zH99zIjXPj
-	 cIbzMxpTBUBrrG+nQMWj/sSNLVW4zVVo8sKcrA/2g7VEBI6B7QSnSTLv40mVqoilIe
-	 VZoOB0MMKmay6en0IPHcwFqEkQReiNZw9dZhbf+SHLnfBetOI7e7/DCcZMYpMvEWr0
-	 NYIjs6aVBSVBQ==
+	b=RkeM9Nrie3xNQ4HWedROr+6WaD2mh/DbAVra2t2JekLYUhCRXUO5h1jWn7zq01ekl
+	 ty+h8IZvW0lKLA+utKar+4BKpIxmJnvYAeHINMYJe0ABNrVdCQumBGKkHc1LzPN+1w
+	 17hsffFDWUIHZpZm35tVcgpviJ2Z9tdJZJDk/iPF6eWdCdkwo9jJVuzQhzyzlP92o8
+	 8A8zBatsh0c2161cT72F6aPDEQ2iZDvnWwY5Yfxr92x+2R0zgfezCncIJTUWhS6iXi
+	 bv14s5/6dXYb5yhTRJV1ghw787Sy+e1XedJRNUvO2HEEZgUZdNHFXtz/awTcArRy4t
+	 lqeL2ZMlMqANw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vmBuZ-0000000AVki-31UN;
+	id 1vmBuZ-0000000AVlI-44GF;
 	Sat, 31 Jan 2026 15:25:19 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -41,9 +41,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v4 15/41] docs: kdoc_re: properly handle strings and escape chars on it
-Date: Sat, 31 Jan 2026 15:24:49 +0100
-Message-ID: <6c8e7354e4aa7042daae46b8c778c4195de10df6.1769867953.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v4 24/41] docs: kdoc_parser: use the new CFunction class
+Date: Sat, 31 Jan 2026 15:24:58 +0100
+Message-ID: <06eaea98108e280144f088cbb3f35bf1d2fb5937.1769867953.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1769867953.git.mchehab+huawei@kernel.org>
 References: <cover.1769867953.git.mchehab+huawei@kernel.org>
@@ -57,54 +57,87 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The logic inside NestedMatch currently doesn't consider that
-function arguments may have chars and strings, which may
-eventually contain delimiters.
-
-Add logic to handle strings and escape characters on them.
+The match logic for transforms becomes a lot clearer if we use
+CFunction convenient alias class instead of NestedMatch.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
 ---
- tools/lib/python/kdoc/kdoc_re.py | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ tools/lib/python/kdoc/kdoc_parser.py | 38 ++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/tools/lib/python/kdoc/kdoc_re.py b/tools/lib/python/kdoc/kdoc_re.py
-index a0402c065d3a..1861799f1966 100644
---- a/tools/lib/python/kdoc/kdoc_re.py
-+++ b/tools/lib/python/kdoc/kdoc_re.py
-@@ -195,6 +195,8 @@ class NestedMatch:
-         for match_re in regex.finditer(line):
-             start = match_re.start()
-             offset = match_re.end()
-+            string_char = None
-+            escape = False
+diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
+index d2eb93f9d489..50d57c6799bb 100644
+--- a/tools/lib/python/kdoc/kdoc_parser.py
++++ b/tools/lib/python/kdoc/kdoc_parser.py
+@@ -13,7 +13,7 @@ import sys
+ import re
+ from pprint import pformat
  
-             d = line[offset - 1]
-             if d not in self.DELIMITER_PAIRS:
-@@ -208,6 +210,22 @@ class NestedMatch:
+-from kdoc.kdoc_re import NestedMatch, KernRe
++from kdoc.kdoc_re import CFunction, KernRe
+ from kdoc.kdoc_item import KdocItem
  
-                 d = line[pos]
+ #
+@@ -119,22 +119,22 @@ struct_xforms = [
+     #
+     # As it doesn't properly match the end parenthesis on some cases.
+     #
+-    # So, a better solution was crafted: there's now a NestedMatch
++    # So, a better solution was crafted: there's now a CFunction
+     # class that ensures that delimiters after a search are properly
+     # matched. So, the implementation to drop STRUCT_GROUP() will be
+     # handled in separate.
+     #
+-    (NestedMatch(r'\bstruct_group\s*\('), r'\2'),
+-    (NestedMatch(r'\bstruct_group_attr\s*\('), r'\3'),
+-    (NestedMatch(r'\bstruct_group_tagged\s*\('), r'struct \1 { \3 } \2;'),
+-    (NestedMatch(r'\b__struct_group\s*\('), r'\4'),
++    (CFunction('struct_group'), r'\2'),
++    (CFunction('struct_group_attr'), r'\3'),
++    (CFunction('struct_group_tagged'), r'struct \1 { \3 } \2;'),
++    (CFunction('__struct_group'), r'\4'),
  
-+                if escape:
-+                    escape = False
-+                    continue
-+
-+                if string_char:
-+                    if d == '\\':
-+                        escape = True
-+                    elif d == string_char:
-+                        string_char = None
-+
-+                    continue
-+
-+                if d in ('"', "'"):
-+                    string_char = d
-+                    continue
-+
-                 if d in self.DELIMITER_PAIRS:
-                     end = self.DELIMITER_PAIRS[d]
+     #
+     # Replace macros
+     #
+-    # TODO: use NestedMatch for FOO($1, $2, ...) matches
++    # TODO: use CFunction on all FOO($1, $2, ...) matches
+     #
+-    # it is better to also move those to the NestedMatch logic,
++    # it is better to also move those to the CFunction logic,
+     # to ensure that parentheses will be properly matched.
+     #
+     (KernRe(r'__ETHTOOL_DECLARE_LINK_MODE_MASK\s*\(([^\)]+)\)', re.S),
+@@ -185,17 +185,17 @@ function_xforms = [
+     (KernRe(r"DECL_BUCKET_PARAMS\s*\(\s*(\S+)\s*,\s*(\S+)\s*\)"), r"\1, \2"),
+     (KernRe(r"__no_context_analysis\s*"), ""),
+     (KernRe(r"__attribute_const__ +"), ""),
+-    (NestedMatch(r"__cond_acquires\s*\("), ""),
+-    (NestedMatch(r"__cond_releases\s*\("), ""),
+-    (NestedMatch(r"__acquires\s*\("), ""),
+-    (NestedMatch(r"__releases\s*\("), ""),
+-    (NestedMatch(r"__must_hold\s*\("), ""),
+-    (NestedMatch(r"__must_not_hold\s*\("), ""),
+-    (NestedMatch(r"__must_hold_shared\s*\("), ""),
+-    (NestedMatch(r"__cond_acquires_shared\s*\("), ""),
+-    (NestedMatch(r"__acquires_shared\s*\("), ""),
+-    (NestedMatch(r"__releases_shared\s*\("), ""),
+-    (NestedMatch(r"__attribute__\s*\("), ""),
++    (CFunction("__cond_acquires"), ""),
++    (CFunction("__cond_releases"), ""),
++    (CFunction("__acquires"), ""),
++    (CFunction("__releases"), ""),
++    (CFunction("__must_hold"), ""),
++    (CFunction("__must_not_hold"), ""),
++    (CFunction("__must_hold_shared"), ""),
++    (CFunction("__cond_acquires_shared"), ""),
++    (CFunction("__acquires_shared"), ""),
++    (CFunction("__releases_shared"), ""),
++    (CFunction("__attribute__"), ""),
+ ]
  
+ #
 -- 
 2.52.0
 
