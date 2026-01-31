@@ -1,51 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0C4359F88;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749CC359FAF;
 	Sat, 31 Jan 2026 14:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769869522; cv=none; b=hf/7Eojp+sO5kNF1UFOYGCbOsAStSGT971b3ZmzN1OjmhJ/NahJbEoU0aj5VEqX9JCgOM0/kCHVcnpMI4NufIUwcBZBc8Yh/oo7fLVJgH4oOmTqavNCnXWO9HUXAZfiffyiN2Nqe4C0Z6mML6g82iEzETLCXaYhmFHPLBKE7K04=
+	t=1769869522; cv=none; b=CmbQZiQe0EcCcPv+U49bmZqqi+Sa30H7s6yDATlO9SBaDe2HKzDdBB6mgZtOHaLv0r/6qCFaZakBPhJXNb2HWHyUFcgcFNcIZ+2uoOSLuZ0HsJBNkuzO3RQPcXDi3ych/fACSbDba+VGEJv6plCi6Htpw0DJf+q7RJaaJkhLkcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769869522; c=relaxed/simple;
-	bh=c78VBSuB3zJR1YCeHGb5UJcGA9b8DZwRfytxgWk/nVQ=;
+	bh=4aMfKYcVERhHxWAsYjEi8+tgICvrID1mZsAmSUTyoxc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=paJnUAMntG6yxEOje+bkag+xHAkbE2eqlBetkzhDylg4xkle54EhJlvFxhdWax4h7vyISFVfrcvf7rSjKviYeCetyjkMiYXsiAf/Khxc8BRxhkCyt6+hNJpryjXEQk1F0N+i9G+PEIAmkK+plGtoJXJ4IMo1TayR6oN82ahUuiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlayTHJs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=th9Tign/ogcZUgLi3jjfBzw97d8T2X1DpH9VRj/qxpnqtvC0BPGVWc8U14fDxSiUg0OdM35aUEfcbvF8QJoBn0KatSC0YxWOCetMZMKdEjugVqgdX672sV0qsyu+9Bgd2GznMqiM+hPZDXpT+0NMON1gaiwa5pE/Rqb9rI6JKqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwEnvRTB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlayTHJs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D96C4AF1B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwEnvRTB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E75FEC4CEF1;
 	Sat, 31 Jan 2026 14:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769869521;
-	bh=c78VBSuB3zJR1YCeHGb5UJcGA9b8DZwRfytxgWk/nVQ=;
+	s=k20201202; t=1769869522;
+	bh=4aMfKYcVERhHxWAsYjEi8+tgICvrID1mZsAmSUTyoxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FlayTHJs2JUrQOYizmq+bu9LbW2w66UJVg9tbVq+HjdhRH0wnlriOKQ+ObL4grHnZ
-	 +r98L9a4ebz0IGwaVufND7ECK2QORhXbBvQVK5a+kMDa7qGwng3sDR4o0E+xDmh6Op
-	 VlmGodLkSbAOyoXmJxvDaIwuRmHzyOtGFbDIInKiTpzGbIK10Z0gzL/C6WkfT6FQTL
-	 Ppij1jr5RxAiEHQouiIYV7XVqh0HDtQumuNQ46hazfxSkW5WVTVX3lu2dcaOXH1KrM
-	 y3vvDQo+EnhPO+Mu8nbkXFfGeeANwYzVECJbdDObW/IbfycnsGRe0ICaCffV0Ut1G7
-	 58BrPSt6HvYoA==
+	b=GwEnvRTBbcukjFCvBXvPdgcMk8cgUg/NaCFQ0rJOvDeTecyO+ZPAkjpB/Ku3JxiY8
+	 GMBLmijNIKMU44tEeKWSwefOeYvvim8vyZpfqFsjJMPO27NfrgSeVMkDacZNKm60Cb
+	 XNLdkazVD4yre6r7b0aF1is/lkAwGwRGaMrdozz4fvmF7zDzMfTsOM4TI6kuu2Slbq
+	 HzMCVXVkDYQh+J+b9YGeyPpOtOwVbT/ma64oMzW8R51OIxHD7f2f8KzCF9jzsjf+ZK
+	 Yy7GXjlkf9Owx8xrNBMDZGTq6Wzv4s0SsQNowqDsocRn2CoCKudSeOONO5uwmZbHCx
+	 3ZESXL3Kdrumg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vmBua-0000000AVlf-0TIM;
+	id 1vmBua-0000000AVlr-0oEC;
 	Sat, 31 Jan 2026 15:25:20 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <kees@kernel.org>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	intel-wired-lan@lists.osuosl.org,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v4 29/41] docs: xforms_lists.py: use CFuntion to handle all function macros
-Date: Sat, 31 Jan 2026 15:25:03 +0100
-Message-ID: <4ad68fce80ea7f994665ce2d72b39f0098df2476.1769867953.git.mchehab+huawei@kernel.org>
+	Randy Dunlap <rdunlap@infradead.org>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v4 32/41] docs: sphinx-build-wrapper: allow -v override -q
+Date: Sat, 31 Jan 2026 15:25:06 +0100
+Message-ID: <64fe15e0ddaba7de59a7c031db03f87c19873c04.1769867954.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1769867953.git.mchehab+huawei@kernel.org>
 References: <cover.1769867953.git.mchehab+huawei@kernel.org>
@@ -59,130 +57,63 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The new CFunction class handles better macros, as it works the same
-way C compilers do, handling delimiters tha right way.
+Documentation builds were using "-q" for a long time, but sometimes
+it is nice to see the Sphinx progress, without increasing build
+verbosity - which would also turn on kernel-doc verbosity.
 
-This allows removing complex regular expressions, placing instead
-just a simple one with the name(s) of the functions to be replaced.
+Instead of doing that, let's parse the sphinx-build already-existing
+-v: each time it is used, it increases the verbosity level.
 
-Doing a before/after check using "kernel-doc -man ." shows only
-cosmetic changes (whitespaces, mostly).
+With that, if the default is to use -q, a single -v will disable
+quiet mode. Passing more -v will keep increasing its verbosity.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/lib/python/kdoc/xforms_lists.py | 71 ++++++++++++---------------
- 1 file changed, 31 insertions(+), 40 deletions(-)
+ tools/docs/sphinx-build-wrapper | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
-index 88968bafdb78..ea6520b38ea2 100644
---- a/tools/lib/python/kdoc/xforms_lists.py
-+++ b/tools/lib/python/kdoc/xforms_lists.py
-@@ -17,51 +17,38 @@ class CTransforms:
+diff --git a/tools/docs/sphinx-build-wrapper b/tools/docs/sphinx-build-wrapper
+index 78ff7ac202ef..8080ace60680 100755
+--- a/tools/docs/sphinx-build-wrapper
++++ b/tools/docs/sphinx-build-wrapper
+@@ -168,6 +168,7 @@ class SphinxBuilder:
+         parser = argparse.ArgumentParser()
+         parser.add_argument('-j', '--jobs', type=int)
+         parser.add_argument('-q', '--quiet', action='store_true')
++        parser.add_argument('-v', '--verbose', default=0, action='count')
  
-     #: Transforms for structs and unions
-     struct_xforms = [
--        # Strip attributes
--        (KernRe(r"__attribute__\s*\(\([a-z0-9,_\*\s\(\)]*\)\)", flags=re.I | re.S, cache=False), ' '),
--        (KernRe(r'\s*__aligned\s*\([^;]*\)', re.S), ' '),
--        (KernRe(r'\s*__counted_by\s*\([^;]*\)', re.S), ' '),
--        (KernRe(r'\s*__counted_by_(le|be)\s*\([^;]*\)', re.S), ' '),
--        (KernRe(r'\s*__guarded_by\s*\([^\)]*\)', re.S), ' '),
--        (KernRe(r'\s*__pt_guarded_by\s*\([^\)]*\)', re.S), ' '),
-+        (CFunction("__attribute__"), ' '),
-+        (CFunction('__aligned'), ' '),
-+        (CFunction('__counted_by'), ' '),
-+        (CFunction('__counted_by_(le|be)'), ' '),
-+        (CFunction('__guarded_by'), ' '),
-+        (CFunction('__pt_guarded_by'), ' '),
-+
-         (KernRe(r'\s*__packed\s*', re.S), ' '),
-         (KernRe(r'\s*CRYPTO_MINALIGN_ATTR', re.S), ' '),
-         (KernRe(r'\s*__private', re.S), ' '),
-         (KernRe(r'\s*__rcu', re.S), ' '),
-         (KernRe(r'\s*____cacheline_aligned_in_smp', re.S), ' '),
-         (KernRe(r'\s*____cacheline_aligned', re.S), ' '),
--        (KernRe(r'\s*__cacheline_group_(begin|end)\([^\)]+\);'), ''),
-+
-+        (CFunction('__cacheline_group_(begin|end)'), ''),
+         #
+         # Other sphinx-build arguments go as-is, so place them
+@@ -179,10 +180,14 @@ class SphinxBuilder:
+         # Build a list of sphinx args, honoring verbosity here if specified
+         #
  
-         (CFunction('struct_group'), r'\2'),
-         (CFunction('struct_group_attr'), r'\3'),
-         (CFunction('struct_group_tagged'), r'struct \1 \2; \3'),
-         (CFunction('__struct_group'), r'\4'),
+-        verbose = self.verbose
+         sphinx_args, self.sphinxopts = parser.parse_known_args(sphinxopts)
++
++        verbose = sphinx_args.verbose
++        if self.verbose:
++            verbose += 1
++
+         if sphinx_args.quiet is True:
+-            verbose = False
++            verbose = 0
  
--        #
--        # Replace macros
--        #
--        # TODO: use CFunction on all FOO($1, $2, ...) matches
--        #
--        # it is better to also move those to the CFunction logic,
--        # to ensure that parentheses will be properly matched.
--        #
--        (KernRe(r'__ETHTOOL_DECLARE_LINK_MODE_MASK\s*\(([^\)]+)\)', re.S),
--        r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
--        (KernRe(r'DECLARE_PHY_INTERFACE_MASK\s*\(([^\)]+)\)', re.S),
--        r'DECLARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
--        (KernRe(r'DECLARE_BITMAP\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern + r'\)',
--                re.S), r'unsigned long \1[BITS_TO_LONGS(\2)]'),
--        (KernRe(r'DECLARE_HASHTABLE\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern + r'\)',
--                re.S), r'unsigned long \1[1 << ((\2) - 1)]'),
--        (KernRe(r'DECLARE_KFIFO\s*\(' + struct_args_pattern + r',\s*' + struct_args_pattern +
--                r',\s*' + struct_args_pattern + r'\)', re.S), r'\2 *\1'),
--        (KernRe(r'DECLARE_KFIFO_PTR\s*\(' + struct_args_pattern + r',\s*' +
--                struct_args_pattern + r'\)', re.S), r'\2 *\1'),
--        (KernRe(r'(?:__)?DECLARE_FLEX_ARRAY\s*\(' + struct_args_pattern + r',\s*' +
--                struct_args_pattern + r'\)', re.S), r'\1 \2[]'),
--        (KernRe(r'DEFINE_DMA_UNMAP_ADDR\s*\(' + struct_args_pattern + r'\)', re.S), r'dma_addr_t \1'),
--        (KernRe(r'DEFINE_DMA_UNMAP_LEN\s*\(' + struct_args_pattern + r'\)', re.S), r'__u32 \1'),
--        (KernRe(r'VIRTIO_DECLARE_FEATURES\(([\w_]+)\)'), r'union { u64 \1; u64 \1_array[VIRTIO_FEATURES_U64S]; }'),
-+        (CFunction('__ETHTOOL_DECLARE_LINK_MODE_MASK'), r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
-+        (CFunction('DECLARE_PHY_INTERFACE_MASK',), r'DECLARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
-+        (CFunction('DECLARE_BITMAP'), r'unsigned long \1[BITS_TO_LONGS(\2)]'),
-+
-+        (CFunction('DECLARE_HASHTABLE'), r'unsigned long \1[1 << ((\2) - 1)]'),
-+        (CFunction('DECLARE_KFIFO'), r'\2 *\1'),
-+        (CFunction('DECLARE_KFIFO_PTR'), r'\2 *\1'),
-+        (CFunction('(?:__)?DECLARE_FLEX_ARRAY'), r'\1 \2[]'),
-+        (CFunction('DEFINE_DMA_UNMAP_ADDR'), r'dma_addr_t \1'),
-+        (CFunction('DEFINE_DMA_UNMAP_LEN'), r'__u32 \1'),
-+        (CFunction('VIRTIO_DECLARE_FEATURES'), r'union { u64 \1; u64 \1_array[VIRTIO_FEATURES_U64S]; }'),
-     ]
+         #
+         # If the user explicitly sets "-j" at command line, use it.
+@@ -195,8 +200,11 @@ class SphinxBuilder:
+         else:
+             self.n_jobs = None
  
-     #: Transforms for function prototypes
-@@ -85,12 +72,14 @@ class CTransforms:
-         (KernRe(r"__sched +"), ""),
-         (KernRe(r"_noprof"), ""),
-         (KernRe(r"__always_unused *"), ""),
--        (KernRe(r"__printf\s*\(\s*\d*\s*,\s*\d*\s*\) +"), ""),
--        (KernRe(r"__(?:re)?alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\) +"), ""),
--        (KernRe(r"__diagnose_as\s*\(\s*\S+\s*(?:,\s*\d+\s*)*\) +"), ""),
--        (KernRe(r"DECL_BUCKET_PARAMS\s*\(\s*(\S+)\s*,\s*(\S+)\s*\)"), r"\1, \2"),
-         (KernRe(r"__no_context_analysis\s*"), ""),
-         (KernRe(r"__attribute_const__ +"), ""),
-+
-+        (CFunction('__printf'), ""),
-+        (CFunction('__(?:re)?alloc_size'), ""),
-+        (CFunction("__diagnose_as"), ""),
-+        (CFunction("DECL_BUCKET_PARAMS"), r"\1, \2"),
-+
-         (CFunction("__cond_acquires"), ""),
-         (CFunction("__cond_releases"), ""),
-         (CFunction("__acquires"), ""),
-@@ -108,9 +97,11 @@ class CTransforms:
-     var_xforms = [
-         (KernRe(r"__read_mostly"), ""),
-         (KernRe(r"__ro_after_init"), ""),
--        (KernRe(r'\s*__guarded_by\s*\([^\)]*\)', re.S), ""),
--        (KernRe(r'\s*__pt_guarded_by\s*\([^\)]*\)', re.S), ""),
--        (KernRe(r"LIST_HEAD\(([\w_]+)\)"), r"struct list_head \1"),
-+
-+        (CFunction('__guarded_by'), ""),
-+        (CFunction('__pt_guarded_by'), ""),
-+        (CFunction("LIST_HEAD"), r"struct list_head \1"),
-+
-         (KernRe(r"(?://.*)$"), ""),
-         (KernRe(r"(?:/\*.*\*/)"), ""),
-         (KernRe(r";$"), ""),
+-        if not verbose:
++        if verbose < 1:
+             self.sphinxopts += ["-q"]
++        else:
++            for i in range(1, sphinx_args.verbose):
++                self.sphinxopts += ["-v"]
+ 
+     def __init__(self, builddir, venv=None, verbose=False, n_jobs=None,
+                  interactive=None):
 -- 
 2.52.0
 
