@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2152D357A59;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1681A357A20;
 	Sat, 31 Jan 2026 14:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769869522; cv=none; b=FkGPDD3DHY87NnLbIJy58fV9Q/mXti1XXDzpPM4HUzjeDpSuMazy+Mo8pMINKc4ODmhH8cRniJsUz1Wf801banMiokXK9jsnBaUCVUbcZhSvHI1zI8nzf0Ycou9jLeQFYX6y4jICcOBjemNhO3xFJjO5eitPY5bbBJuAjm/fLBI=
+	t=1769869522; cv=none; b=G2HMvXho3JYfmYO4AGA5hN0LG2WAnsUcKlSAEKVJQs8o2h8eD8C3yA6HIB/BL4jF9W+uSaATPdhK/kZ3pAcXKlb/i9v1ytYBhkLHG9sNeY+zTQm2usaJDGoxA+KS7QmCmGP/1SQACJTsSALmbydi2d/ponFAk0w+zgnakT8gkFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769869522; c=relaxed/simple;
-	bh=E4fJO9wVUnaqUlAi5WmkzEmXnpOij75g8JwiGBZaJ9Q=;
+	bh=aiHLIfS5F+miX7dW9x3ionw6eHjNQsSUUYhH3F5IK/s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AXX4PDFQXRYrntxhf2QXNS9ZXpQQMNhbfqKCDzb6pwtYV4LfMxoKwtaG5HyRjNLAhF7zbau1sHDGFOCdKbQTn+uE+KadmmLEhOqSGJwSB+qS1eZixY9vN2sYd82axbtiGv0vto4t8Y2E/uTL0Hgl8/RPj7UEi80Qiq4ZvyEDFtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3JUosEF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=dgcI4ixYV9DCuI5GCdsSjaCnF1LGwY5/cF6Sbe3mKBKnZEkU+YJxRgAwJjWANby5XB3P8ZzinQ9UQCynzS8nJZ3z72z7BR5QFBGqwiUAYbG9ztkT/soXD+0rRDp3SaLYJh+0bSSIMQf29jGml+Q6nJOx3hVW7c+5qnbeNKctAKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZ8ffB0o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3JUosEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FEB9C2BCB7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZ8ffB0o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B123C2BCB2;
 	Sat, 31 Jan 2026 14:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1769869521;
-	bh=E4fJO9wVUnaqUlAi5WmkzEmXnpOij75g8JwiGBZaJ9Q=;
+	bh=aiHLIfS5F+miX7dW9x3ionw6eHjNQsSUUYhH3F5IK/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T3JUosEFJJEjm57nIN5CeAd93uZO4+2EAFKhDcuIbkebO1FR7POhOcbcWgZueyjxz
-	 /IXGruDaiYAZz5IDDMkSzYsse7MozmnPNwyYQ8YggFCXDpNaPTh0vTGS/jP152zC7j
-	 czzMbvpxWdlmG/CBEtjZDH+Jxejj1xUlPWmhmsAvgpBeAjSfrsEp6at4bEQGHheS0p
-	 2Pd6103t7cEK0kCjoXibs2v9jbZ0I009Vab8mMb4bm3yMhx7jMcI1E/PLCPjN2dVXw
-	 nj/EAPU4U/6kUE05hcZ18vsYp8a1GBMvr+2v2XPhxvic6Epx9QexnaN5o3IjvqpgNq
-	 mqUN574QnMeEA==
+	b=GZ8ffB0okAa/JZq9EY0ksEvsodBd6UavOLLuUMYwJGch0xaJ5NzYy/XmzPvHPCo3q
+	 RqSaKMODYYaWzPYPITpqTiZ4yCGBhA0Hqk0xQYThuoP3/dzmCL9UShHBcj9vbLKvXk
+	 5iYtPT8ML/OhYwkWrBTnCoRX14C8GyC0dy4WHAaf2dj5JS8NnxttcDA2fqoZ8+Qdec
+	 9pp7YED0qK5vhb7GtLxFuNVzNwefL1IxAyM3xMdf0X3e2Bo7Suzfbz4hi0xetRN8TL
+	 1VHVBEenAyQxB8YZ8M0U7zBdg2/K4wZpYEhp7J2WPpk3U60jnUMJVi2JX2ltmfVDss
+	 pqkDmdp3yNW+w==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vmBuZ-0000000AVka-2msr;
+	id 1vmBuZ-0000000AVkS-2YEf;
 	Sat, 31 Jan 2026 15:25:19 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -41,9 +41,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v4 13/41] docs: kdoc_parser: add support for LIST_HEAD
-Date: Sat, 31 Jan 2026 15:24:47 +0100
-Message-ID: <b53c8adc52fc0263d73fe85ff0c57b9cbc58bfd1.1769867953.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v4 11/41] docs: kdoc_parser: fix parser to support multi-word types
+Date: Sat, 31 Jan 2026 15:24:45 +0100
+Message-ID: <f2b1c15602871f866ea179808fded10dbad447da.1769867953.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1769867953.git.mchehab+huawei@kernel.org>
 References: <cover.1769867953.git.mchehab+huawei@kernel.org>
@@ -57,29 +57,41 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Convert LIST_HEAD into struct list_head when handling its
-prototype.
+The regular expression currently expects a single word for the
+type, but it may be something like  "struct foo".
+
+Add support for it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Acked-by: Randy Dunlap <rdunlap@infradead.org>
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
 ---
- tools/lib/python/kdoc/kdoc_parser.py | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/python/kdoc/kdoc_parser.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
-index 92b550189988..33710c4be145 100644
+index 0b6cba442d72..21cc4e19a1e8 100644
 --- a/tools/lib/python/kdoc/kdoc_parser.py
 +++ b/tools/lib/python/kdoc/kdoc_parser.py
-@@ -219,6 +219,7 @@ var_xforms = [
-     (KernRe(r"__ro_after_init"), ""),
-     (KernRe(r'\s*__guarded_by\s*\([^\)]*\)', re.S), ""),
-     (KernRe(r'\s*__pt_guarded_by\s*\([^\)]*\)', re.S), ""),
-+    (KernRe(r"LIST_HEAD\(([\w_]+)\)"), r"struct list_head \1"),
-     (KernRe(r"(?://.*)$"), ""),
-     (KernRe(r"(?:/\*.*\*/)"), ""),
-     (KernRe(r";$"), ""),
+@@ -1026,7 +1026,7 @@ class KernelDoc:
+ 
+         default_val = None
+ 
+-        r= KernRe(OPTIONAL_VAR_ATTR + r"[\w_]*\s+(?:\*+)?([\w_]+)\s*[\d\]\[]*\s*(=.*)?")
++        r= KernRe(OPTIONAL_VAR_ATTR + r"\s*[\w_\s]*\s+(?:\*+)?([\w_]+)\s*[\d\]\[]*\s*(=.*)?")
+         if r.match(proto):
+             if not declaration_name:
+                 declaration_name = r.group(1)
+@@ -1037,7 +1037,7 @@ class KernelDoc:
+                                   r.groups(), proto)
+ 
+         else:
+-            r= KernRe(OPTIONAL_VAR_ATTR + r"(?:[\w_]*)?\s+(?:\*+)?(?:[\w_]+)\s*[\d\]\[]*\s*(=.*)?")
++            r= KernRe(OPTIONAL_VAR_ATTR + r"(?:[\w_\s]*)?\s+(?:\*+)?(?:[\w_]+)\s*[\d\]\[]*\s*(=.*)?")
+ 
+             if r.match(proto):
+                 default_val = r.group(1)
 -- 
 2.52.0
 
