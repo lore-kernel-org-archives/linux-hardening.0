@@ -1,113 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from forward502d.mail.yandex.net (forward502d.mail.yandex.net [178.154.239.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C961E7C18
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Feb 2026 23:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA0F1AA7A6
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Feb 2026 11:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770162444; cv=none; b=tedt4x847uspxv/U8kx6RhhHE89wdVwdbuRA7I9FiKv6sQ0a0sL/SksmMaSRPYdkocGXXdqk75ga3cvTO3GcvOqK2vAheszoPF68fW4CzcZmCDYqHvf4YEMPh8Ne4RFjBzmsGKq9ylpMlbQOMZLgnJAHKhenYhcaslCMKH8IYJE=
+	t=1770204158; cv=none; b=YN31j/c13Mn94dsIef9aEBuS5VFmXb2pduvxpuuCPk+KIJKHGPBx/mAiS0n8XQOrJhpTNbqeu0YuFXEr3AwROyJbc+IQOsr1ajcsE1V6h43M6Jhz+ZFcIzzxuAEPnJdTyP1JUfFt0AaBVGaH3qYbaPVKFYNCe5b8OQm6syC2BB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770162444; c=relaxed/simple;
-	bh=KbwnxWFw1sXmb38NwNTw783TyXF7XSVlEwUvWsHeXhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=idMk+H6ix8xTWsFUV5WJNTvx6U0QV1rMsxcXQsjykOMdajRdCVL126uXtTFJ+EGuT5aNGx05EOZnJG4zfpBWS5oXKF/INGiQg9NKYyS88ukctjbUr9yYi6jJKhYD347Tb69webrvCLXXqBYRdBHhk+Q2yY0ANpPlhtgH1577lCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YElHavuC; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770204158; c=relaxed/simple;
+	bh=ZCVg0E+9KAAFYT435l6YgX++osPfqYAdusnd9TKCTHc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Poj15H/vEJm7QbW7Q5fV0ovKL3qINQyWCzwuKNI+7gUTBM5hw0mWP63ow5onPvp3lAP0gS5J/HhivRYuqUQKK/1KybXgJtSwgpVOqkn4z+SNGR1M4Df307rVl97KygehZcK/gl+pWvSSjqYN7mdT8x3QcFddWTAbracRaCkAuZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=X98rkqu6; arc=none smtp.client-ip=178.154.239.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YElHavuC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770162443; x=1801698443;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KbwnxWFw1sXmb38NwNTw783TyXF7XSVlEwUvWsHeXhE=;
-  b=YElHavuCYFwEf/BfZZ/biFOhGzImnP9otUe+r0637Q+PIe1OdJ2C4qU9
-   q7lo+axuL+1wOC89XMWFltrhvvaDneQPPedOA2OCkm+n50Ij/MSHhti5P
-   TYk+oZtW0d+HTE93r+6LYVLNyac/rg1WEPyEZ3vaS4dC7Onhxko/Sbly2
-   8y+8LMpMavIhp3nv9TuhGs2u4iInefldIXzd2N9az/JAS8fKfI13KKYcC
-   x2QHnI6lT+UBNAysah/q+CM1hBGLpexxJ1A+w7fJ46GqSlWts5wjJV8Jm
-   rNHJR3SWrJP3T56th9t91DgIldIMXsoGuFia8PJmcu8cDwEGj28CuiJ4s
-   w==;
-X-CSE-ConnectionGUID: ZsmcBAgPTQW5Ad0APsLugQ==
-X-CSE-MsgGUID: yPdtUnvxQrKyuCx+Ns3Y8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="74965546"
-X-IronPort-AV: E=Sophos;i="6.21,271,1763452800"; 
-   d="scan'208";a="74965546"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 15:47:22 -0800
-X-CSE-ConnectionGUID: 1DpmqHosRRuOYxXlhdLykQ==
-X-CSE-MsgGUID: kF13rWmKQGa+0jO6T1eJTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,271,1763452800"; 
-   d="scan'208";a="209277954"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 15:47:20 -0800
-Date: Wed, 4 Feb 2026 01:47:17 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] lib: fix _parse_integer_limit() to handle overflow
-Message-ID: <aYKJBZRwQe3llJlW@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="X98rkqu6"
+Received: from mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3cca:0:640:f0e1:0])
+	by forward502d.mail.yandex.net (Yandex) with ESMTPS id 56B30C1FF3;
+	Wed, 04 Feb 2026 14:22:32 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id UMn6WWNGtGk0-9n2znNXU;
+	Wed, 04 Feb 2026 14:22:32 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1770204152; bh=3KhrBmHCgd0mJoVgZqg/uoTdd5CUq2MmXb+xDP0sGwQ=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=X98rkqu6m/vFxKw4CTsCDwQOmXA+YLAFFPEdnCJ+ZS6T7BHvm7htW3qaXfCWlHf79
+	 TdYxL3PJToY/M1o72b4UdfHYB8mH+fMVCYbRPnqno9NKOJ+YOSpO7wcAZbW4LqmsUB
+	 uuMaMcxbQKnyWB9YxMCWWLvrgJViseWQt9EmsvC8=
+Authentication-Results: mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <2755955ff36c1283aba1c9a854d85de533bcd24a.camel@yandex.ru>
+Subject: Re: [PATCH v4 1/4] lib: fix _parse_integer_limit() to handle
+ overflow
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+ "Darrick J . Wong"
+	 <djwong@kernel.org>, linux-hardening@vger.kernel.org
+Date: Wed, 04 Feb 2026 14:22:30 +0300
+In-Reply-To: <aYKJBZRwQe3llJlW@smile.fi.intel.com>
 References: <20260202115451.290173-1-dmantipov@yandex.ru>
- <20260202115451.290173-2-dmantipov@yandex.ru>
+	 <20260202115451.290173-2-dmantipov@yandex.ru>
+	 <aYKJBZRwQe3llJlW@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260202115451.290173-2-dmantipov@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Feb 02, 2026 at 02:54:48PM +0300, Dmitry Antipov wrote:
-> In '_parse_integer_limit()', adjust native integer arithmetic
-> with near-to-overflow branch where 'check_mul_overflow()' and
-> 'check_add_overflow()' are used to check whether an intermediate
-> result goes out of range, and denote such a case with ULLONG_MAX,
-> thus making the function more similar to standard C library's
-> 'strtoull()'. Adjust comment to kernel-doc style as well.
+On Wed, 2026-02-04 at 01:47 +0200, Andy Shevchenko wrote:
 
-This version is good enough, we may consider further optimisations later on.
+> > +			} else
+> > +				res =3D res * base + val;
+>=20
+> Formally this should be } else { ... }, but I'm not going to insist.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+No problem since there will be v5 with one more overflow detection
+quirk around memparse() :-).
 
-...
-
->  		/*
-> -		 * Check for overflow only if we are within range of
-> -		 * it in the max base we support (16)
-> +		 * Accumulate result if no overflow detected.
-> +		 * Otherwise just consume valid characters.
->  		 */
-> -		if (unlikely(res & (~0ull << 60))) {
-> -			if (res > div_u64(ULLONG_MAX - val, base))
-> -				rv |= KSTRTOX_OVERFLOW;
-> +		if (likely(res != ULLONG_MAX)) {
-> +			if (unlikely(res & (~0ull << 60))) {
-> +				/* We're close to possible overflow. */
-> +				if (check_mul_overflow(res, base, &tmp) ||
-> +				    check_add_overflow(tmp, val, &res)) {
-> +					res = ULLONG_MAX;
-> +					rv |= KSTRTOX_OVERFLOW;
-> +				}
-> +			} else
-> +				res = res * base + val;
-
-Formally this should be } else { ... }, but I'm not going to insist.
-
->  		}
-> -		res = res * base + val;
->  		rv++;
->  		s++;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Dmitry
