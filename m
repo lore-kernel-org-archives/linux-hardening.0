@@ -1,65 +1,126 @@
-Received: from forward502d.mail.yandex.net (forward502d.mail.yandex.net [178.154.239.210])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA0F1AA7A6
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Feb 2026 11:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FAE232395;
+	Wed,  4 Feb 2026 13:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770204158; cv=none; b=YN31j/c13Mn94dsIef9aEBuS5VFmXb2pduvxpuuCPk+KIJKHGPBx/mAiS0n8XQOrJhpTNbqeu0YuFXEr3AwROyJbc+IQOsr1ajcsE1V6h43M6Jhz+ZFcIzzxuAEPnJdTyP1JUfFt0AaBVGaH3qYbaPVKFYNCe5b8OQm6syC2BB0=
+	t=1770211609; cv=none; b=Jj4RNeYe5b+2ShWsXeJMitzxa/EQ41jWLWT8jr//xPwPtoKZHhhj1jplxvvu+91bxnTrM3196S00JOleGYfa8yi3cn8rn7t/jBNRrywSOmijnzDQ94j9NxXHGMfCuvWwojvORCiNtUSAf0ukymqYVMZbMagwqY2MM/m6UyAJYxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770204158; c=relaxed/simple;
-	bh=ZCVg0E+9KAAFYT435l6YgX++osPfqYAdusnd9TKCTHc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Poj15H/vEJm7QbW7Q5fV0ovKL3qINQyWCzwuKNI+7gUTBM5hw0mWP63ow5onPvp3lAP0gS5J/HhivRYuqUQKK/1KybXgJtSwgpVOqkn4z+SNGR1M4Df307rVl97KygehZcK/gl+pWvSSjqYN7mdT8x3QcFddWTAbracRaCkAuZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=X98rkqu6; arc=none smtp.client-ip=178.154.239.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1770211609; c=relaxed/simple;
+	bh=U/llW4oZD1dqeKtQHuKdyCEJeTKfe14SLqOiC8Fseik=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hN1/oXClU/XZ5LSNkLGbAgnTPo2J0FpcWmQQ/0cqbgHMsw+OAsSpzn1An1KidDG+nRDGE3osIiuFIDGtXoeNyKUeMZovV5hP9vMgzQfZapCy+zP/LUjTauid8zeka5jhbsHaGCTHFW1oKiBfih3MFyzyB/jkeDkqXopzQ6fdSDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGVeDora; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="X98rkqu6"
-Received: from mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3cca:0:640:f0e1:0])
-	by forward502d.mail.yandex.net (Yandex) with ESMTPS id 56B30C1FF3;
-	Wed, 04 Feb 2026 14:22:32 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id UMn6WWNGtGk0-9n2znNXU;
-	Wed, 04 Feb 2026 14:22:32 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1770204152; bh=3KhrBmHCgd0mJoVgZqg/uoTdd5CUq2MmXb+xDP0sGwQ=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=X98rkqu6m/vFxKw4CTsCDwQOmXA+YLAFFPEdnCJ+ZS6T7BHvm7htW3qaXfCWlHf79
-	 TdYxL3PJToY/M1o72b4UdfHYB8mH+fMVCYbRPnqno9NKOJ+YOSpO7wcAZbW4LqmsUB
-	 uuMaMcxbQKnyWB9YxMCWWLvrgJViseWQt9EmsvC8=
-Authentication-Results: mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <2755955ff36c1283aba1c9a854d85de533bcd24a.camel@yandex.ru>
-Subject: Re: [PATCH v4 1/4] lib: fix _parse_integer_limit() to handle
- overflow
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
- "Darrick J . Wong"
-	 <djwong@kernel.org>, linux-hardening@vger.kernel.org
-Date: Wed, 04 Feb 2026 14:22:30 +0300
-In-Reply-To: <aYKJBZRwQe3llJlW@smile.fi.intel.com>
-References: <20260202115451.290173-1-dmantipov@yandex.ru>
-	 <20260202115451.290173-2-dmantipov@yandex.ru>
-	 <aYKJBZRwQe3llJlW@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGVeDora"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34729C4CEF7;
+	Wed,  4 Feb 2026 13:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770211608;
+	bh=U/llW4oZD1dqeKtQHuKdyCEJeTKfe14SLqOiC8Fseik=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KGVeDoraVD0sVyWBGV0aaMKiFYONM1BjthWXLqs/58XYaoA96/8GpLqnJ5hpL5Lbe
+	 hiYpMCGEy9z9Z4Bsz3rGiIDSE+lzNM5xbxrQBuXDi6giEmT/mhyGTVIc6F5VietLf4
+	 zFuenXTf+lreEazHmQE3WL9kGHzPyM05OHECUxUGL3AO2opEf/X1YSQodjCYzXCed1
+	 +/XmNbfyRE3rA/gdJQlLiLqnLSjL6yzZ4wamciRPow+IASmqKxqkRc95aLvIQPnDdH
+	 DNh1NFDEwv8DIuKUIF/hRzqHGp/vTHQJ6+TM61ouI09VuYdsFcnjG4kHlPi2H+aGxN
+	 jA8GJ/lQp9izg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Kees Cook <kees@kernel.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	kernel test robot <lkp@intel.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH] vsnprintf: drop __printf() attributes on binary printing functions
+Date: Wed,  4 Feb 2026 14:26:23 +0100
+Message-Id: <20260204132643.1302967-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2026-02-04 at 01:47 +0200, Andy Shevchenko wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> > +			} else
-> > +				res =3D res * base + val;
->=20
-> Formally this should be } else { ... }, but I'm not going to insist.
+The printf() format attributes are applied inconsistently for the binary
+printf helpers, which causes warnings for the bpf_trace code using
+them from functions that pass down format strings:
 
-No problem since there will be v5 with one more overflow detection
-quirk around memparse() :-).
+    kernel/trace/bpf_trace.c: In function '____bpf_trace_printk':
+    kernel/trace/bpf_trace.c:377:9: error: function '____bpf_trace_printk' might be a candidate for 'gnu_printf' format attribute [-Werror=suggest-attribute=format]
+      377 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+          |         ^~~
 
-Dmitry
+This can be addressed either by annotating all five callers in bpf code,
+or by removing the annotations on the callees that were added by Andy
+Shevchenko last year.
+
+As Alexei Starovoitov points out, there are no callers in C code that
+would benefit from the __printf attributes, the only users are in BPF
+code or in the do_trace_printk() helper that already checks the arguments.
+
+Drop all three of these annotations, reverting the earlierl commits that
+added these, in order to get a clean build with -Wsuggest-attribute=format.
+
+Fixes: 6b2c1e30ad68 ("seq_file: Mark binary printing functions with __printf() attribute")
+Fixes: 7bf819aa992f ("vsnprintf: Mark binary printing functions with __printf() attribute")
+Link: https://lore.kernel.org/all/CAADnVQK3eZp3yp35OUx8j1UBsQFhgsn5-4VReqAJ=68PaaKYmg@mail.gmail.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202512061640.9hKTnB8p-lkp@intel.com/
+Reported-by: kernel test robot <lkp@intel.com>
+Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Acked-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+For reference, three additional patches are required before we can drop
+the Makefile.warn line that currently hides these warnings:
+
+https://lore.kernel.org/lkml/20260203162546.2254900-1-arnd@kernel.org/
+https://lore.kernel.org/lkml/20260203163440.2674340-1-arnd@kernel.org/
+https://lore.kernel.org/lkml/20260203164545.3174910-1-arnd@kernel.org/
+
+Tested using randconfig builds on arm/arm64/x86
+---
+ include/linux/seq_file.h | 1 -
+ include/linux/string.h   | 4 ++--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index d6ebf0596510..2fb266ea69fa 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -181,7 +181,6 @@ int seq_open_private(struct file *, const struct seq_operations *, int);
+ int seq_release_private(struct inode *, struct file *);
+ 
+ #ifdef CONFIG_BINARY_PRINTF
+-__printf(2, 0)
+ void seq_bprintf(struct seq_file *m, const char *f, const u32 *binary);
+ #endif
+ 
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 1b564c36d721..b850bd91b3d8 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -336,8 +336,8 @@ int __sysfs_match_string(const char * const *array, size_t n, const char *s);
+ #define sysfs_match_string(_a, _s) __sysfs_match_string(_a, ARRAY_SIZE(_a), _s)
+ 
+ #ifdef CONFIG_BINARY_PRINTF
+-__printf(3, 0) int vbin_printf(u32 *bin_buf, size_t size, const char *fmt, va_list args);
+-__printf(3, 0) int bstr_printf(char *buf, size_t size, const char *fmt, const u32 *bin_buf);
++int vbin_printf(u32 *bin_buf, size_t size, const char *fmt, va_list args);
++int bstr_printf(char *buf, size_t size, const char *fmt, const u32 *bin_buf);
+ #endif
+ 
+ extern ssize_t memory_read_from_buffer(void *to, size_t count, loff_t *ppos,
+-- 
+2.39.5
+
