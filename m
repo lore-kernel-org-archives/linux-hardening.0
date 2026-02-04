@@ -1,100 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from forward103d.mail.yandex.net (forward103d.mail.yandex.net [178.154.239.214])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9CA30FC29;
-	Wed,  4 Feb 2026 13:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A0540B6FF;
+	Wed,  4 Feb 2026 13:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770212836; cv=none; b=FAVQn+8ia0hOZxaH5i0zVhv2qQk31LEJzqIpF4IrsFKLVOafmnr51Kzsn3T+PdKk6j+mQJ7gVk1OV5kwISvqmTrrY6n4Q1aLxm2KqIcFXeUL0T9Xj6IbLIG57Dy7HDNi+sUcVB0fbnB8MqCZVRP2mlJDEu7LUADKtvzBDSXp0/c=
+	t=1770213598; cv=none; b=UkGu3SyLqWM2RZCiEfaQjSMFuBx4ymIYxnppk72oyHaUwryPQcw/Z/EaCA+4g9Uin22naU//FNkpv0+bxqE9o+ncpkOYFMcFq6UisDWBtV38rw3OwytPpSVIjPO5xMIdj9vRPcLdIsuOoxWX64KHcvEvjnMKm5G2XhNcbfcDeBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770212836; c=relaxed/simple;
-	bh=uwO601VYhYVY61ObsCAsobuQ5Jyi6M7D0IeCgu4gCVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SrpkfFhb2ntRjknNGYCRerv7sIyzykdVSZkr4eqK+Lth2SLiX5yK/iDjkVViZBPfUGZyJFqQf5iYm9WWjvGqbgAeO2XmakeFXHVkh1QICE4S5uUIyw57vYg0rvDNhLvDIiqjFS3KfK5n5EX5fvzGIs9yp0TVLrTnDPcAhc4Maaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KBN9+7lf; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1770213598; c=relaxed/simple;
+	bh=ZfWJf7USGOi2ZmL8BmbBAxr5xtcenMPKFDN8d3rC2SU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B9aySKLvQk8qH8+XuW9az6F7uDGWm0mMzbJP/msDhsqNwSu919U7I8fQOROPDmI2a3cFGOTMAC2fCXo9XyMjSNGS29PGv/NqiI6MeEPDcpVsNOsrEn401/tWzLycU+UwWKRYX3Hv38lmlBmI7wXnri8S++65+mKG85E7o6oUC+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=Z1FP2NRW; arc=none smtp.client-ip=178.154.239.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KBN9+7lf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770212836; x=1801748836;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uwO601VYhYVY61ObsCAsobuQ5Jyi6M7D0IeCgu4gCVY=;
-  b=KBN9+7lfFRfozr40gG4ysXSFhBmKtMlxEcBxe9ebBv+2pPGwDmNmnjSJ
-   IWArqLdhNyEb+5q0ZHJC5BA+uf5JbZg3Mot7EgiK/ozh+NlY9Y4Mk0Ze0
-   037gQEc2edo5vcdbRKO13apeaQ6IKKs/C4v+2yq+pSaAgH3ylnRo7YL/T
-   bq5K2LFPEjswApKvy555GoIQtY4iXQ+OQie2bKBQd8GFikrWPxVNJ+pSj
-   6ZHnbRFgq2ynH6ci4nTiDHUk5rOlctfPvxLgvMzY9i8X1TLDmKZ3A1q65
-   AVP8R8EMg9N3us9jk16k2yjBHXGrXYCY9YekIU68yIxKfCPC8lrzOu53F
-   w==;
-X-CSE-ConnectionGUID: tfsRan2cSW2UAx6Ficuvrg==
-X-CSE-MsgGUID: sxbI2GulSfmtCWHRiQdsag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="88975963"
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="88975963"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 05:47:15 -0800
-X-CSE-ConnectionGUID: dwUlw+xIR1yKcXK+t5g2Ng==
-X-CSE-MsgGUID: IWHwvpkdQjG57v3UFgJ0kA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="247768479"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.188])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 05:47:13 -0800
-Date: Wed, 4 Feb 2026 15:47:09 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] vsnprintf: drop __printf() attributes on binary printing
- functions
-Message-ID: <aYNN3aPIIQqrRbaB@smile.fi.intel.com>
-References: <20260204132643.1302967-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Z1FP2NRW"
+Received: from mail-nwsmtp-smtp-production-main-63.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-63.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:4f41:0:640:844:0])
+	by forward103d.mail.yandex.net (Yandex) with ESMTPS id 00731C0079;
+	Wed, 04 Feb 2026 16:59:47 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-63.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ixp7xlOGqOs0-UqzEJAMF;
+	Wed, 04 Feb 2026 16:59:46 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1770213586; bh=dcQy4LkY6TTrzFvJ7wADX5Axp7+J/0ZI1FSU2KmYChY=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=Z1FP2NRWe0a9ZCDzBdRKqbTAvH6Qc+1PbfW2QWi7FGdo3CjfBz8OafL+Ced32722n
+	 lC6M/s6cMrAogAyPJ1uXwF6lk3QQbgAyIix5Bcjq8XLeHxxVEBBioSXxi+L9L+U7rj
+	 L3lV360+2X8dnqhJmUkKRqH3bDASpa/ZmwqQj3DM=
+Authentication-Results: mail-nwsmtp-smtp-production-main-63.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH v5 0/5] lib and lib/cmdline enhancements
+Date: Wed,  4 Feb 2026 16:57:12 +0300
+Message-ID: <20260204135717.941256-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260204132643.1302967-1-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 04, 2026 at 02:26:23PM +0100, Arnd Bergmann wrote:
+Adjust '_parse_integer_limit()' and 'memparse()' to not ignore
+overflows, extend string to 64-bit integer conversion tests, add
+KUnit-based test for 'memparse()' and fix kernel-doc glitches
+found in lib/cmdline.c.
 
-> The printf() format attributes are applied inconsistently for the binary
-> printf helpers, which causes warnings for the bpf_trace code using
-> them from functions that pass down format strings:
-> 
->     kernel/trace/bpf_trace.c: In function '____bpf_trace_printk':
->     kernel/trace/bpf_trace.c:377:9: error: function '____bpf_trace_printk' might be a candidate for 'gnu_printf' format attribute [-Werror=suggest-attribute=format]
->       377 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
->           |         ^~~
-> 
-> This can be addressed either by annotating all five callers in bpf code,
-> or by removing the annotations on the callees that were added by Andy
-> Shevchenko last year.
-> 
-> As Alexei Starovoitov points out, there are no callers in C code that
-> would benefit from the __printf attributes, the only users are in BPF
-> code or in the do_trace_printk() helper that already checks the arguments.
-> 
-> Drop all three of these annotations, reverting the earlierl commits that
-> added these, in order to get a clean build with -Wsuggest-attribute=format.
+Dmitry Antipov (5):
+  lib: fix _parse_integer_limit() to handle overflow
+  lib: fix memparse() to handle overflow
+  lib: add more string to 64-bit integer conversion overflow tests
+  lib/cmdline_kunit: add test case for memparse()
+  lib/cmdline: adjust a few comments to fix kernel-doc -Wreturn warnings
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ lib/cmdline.c             | 29 +++++++++++++++------
+ lib/kstrtox.c             | 38 ++++++++++++++++++----------
+ lib/test-kstrtox.c        |  6 +++++
+ lib/tests/cmdline_kunit.c | 53 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 105 insertions(+), 21 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.52.0
 
