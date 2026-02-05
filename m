@@ -1,133 +1,164 @@
-Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767503A4F53;
-	Thu,  5 Feb 2026 10:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E92219A2A3;
+	Thu,  5 Feb 2026 10:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770285933; cv=none; b=a53G9IIB2nSwZg15y24wq010KZ+z5tLpzrdVRQv/dbpxSLlcp7RWi9Qz3L1dlFZFcvb+spVosh4BCB1UG4miaNa51tQnmaxEEp9hGa9wz1wBA8jvvT8c79GiouOrt89nPuaHPNFXeZ97f+5uHe79m4OAQlxAmt+rWKb80tYpWCU=
+	t=1770286390; cv=none; b=HLQyXC7LBqgsKx+gB60e6y5HQBpbpGStsHY3lyIE04AUExSJUbaVFBzsvpAzGi/XJbocSXvdoR5sx+e0HGkOL0kGOF86L49JO141Xnw7QTPC8phM2K0xnv72LcW9oKtSrjxP53LDwDCZdgfE03XdsXPFZVdY/VqUzuQYjlfnl4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770285933; c=relaxed/simple;
-	bh=CDZnJdl+iIJikVsP1GMe3AmASOfylEwnVv1gl1UdFwk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FsDeSLfxnZxoczclKPApk8ZjPPDQkDoennJS6EZXNuVapDmSY0xFOsJOmluUq1PepH5R0iNmYJHR26USxDjv+JOpzfSSTS0ARUt/7OY30vLJu5S+vZJq5qpwh2auSYebz73D3nbHuUCxf+FP4cHBgwIz8tC8zg31pTC2x4OZkcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=KErAzQSu; arc=none smtp.client-ip=113.46.200.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1770286390; c=relaxed/simple;
+	bh=I56DRuyNOihYpX7ViXshfCJ6d9dg4ShXnJyAmYep3J4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=cTallfvttxZY8NU+G7IxfX4Ps/RRYOZTxCAZ0TfPjBVjscxrcuRwDec7+QbPiZKvhiEQZthMFldOIkZjNefZc6Bx9vjJMVI67UwrSFyEAUEH3ILOKk+w11Hwb1yGQ0CWgDlBO9Zj85vcNTmWryeWfxBFGmsTtW0jg5Ezm11vZtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=OWCRm2yt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=R2hVa6OW; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="KErAzQSu"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=+0bnrjD1Vt8hf7jyTJXY+6HGtA8bkKy60Hegi1EeXzE=;
-	b=KErAzQSuu70Kg2tunAhFZO3MBpPC7k3h5KGOAK7Yth1CwoXzqszVQ/V27rlWwZjlEuJIUlQhx
-	CKQQDOlzJUQN+kjKkoOLhfLv55oAw9AARbsQL1EQcQ71tK+rikghI2bJ+0r3wYKiEWTDYlmzRSj
-	qGRAkW3QKz6zi0Nss37jJuQ=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4f6CQz5HsSzcZym;
-	Thu,  5 Feb 2026 18:00:59 +0800 (CST)
-Received: from kwepemj100009.china.huawei.com (unknown [7.202.194.3])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2777840561;
-	Thu,  5 Feb 2026 18:05:24 +0800 (CST)
-Received: from DESKTOP-A37P9LK.huawei.com (10.67.109.17) by
- kwepemj100009.china.huawei.com (7.202.194.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Thu, 5 Feb 2026 18:05:23 +0800
-From: Xie Yuanbin <xieyuanbin1@huawei.com>
-To: <maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <kees@kernel.org>, <andy@kernel.org>
-CC: <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, <lilinjie8@huawei.com>,
-	<liaohua4@huawei.com>, <xieyuanbin1@huawei.com>
-Subject: [PATCH 1/2] string: move __compiletime_strlen() to string.h
-Date: Thu, 5 Feb 2026 18:05:16 +0800
-Message-ID: <20260205100517.292858-1-xieyuanbin1@huawei.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="OWCRm2yt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="R2hVa6OW"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 38D36EC0302;
+	Thu,  5 Feb 2026 05:13:09 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Thu, 05 Feb 2026 05:13:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1770286389;
+	 x=1770372789; bh=E5R/spuaQMZA/kDXnvyzE7QpoYs/inr2iPdEuHG6yr0=; b=
+	OWCRm2ytSW5Ze3u8BU219YMsJiLfFCKDZZlLtLb14ocU/pNMgCS2GVcVwcx2O45f
+	D5WTB2FqWtenbVdBamzJboGVxNXjb3EIIT75xHUqwwpltjajyRlbO7AX59aUzULe
+	Q2UbNARGh3enkCORcuSxQgAWCTDZSmDi9PHey1iJAJfycVhblcBtZU+lSGuoB9iF
+	f9nmX3APOlQKctFLgSoDXJco6bykXopVzl/guH0MSNmGCTC2PUaVqi368wIBMBnC
+	PC+/UOVgx8xK5HuQPQlBcEXxt+bHBsgOaGbYN/jhjBhxCIei18rzroVxdzB9HY8H
+	MmjIo7Xzj+F3ER0Z+ee25Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1770286389; x=
+	1770372789; bh=E5R/spuaQMZA/kDXnvyzE7QpoYs/inr2iPdEuHG6yr0=; b=R
+	2hVa6OWgmpcIZw6IPm0H2bdJBbtoRbp9QyyR+Pxr7VcDo/2tvaClz4c4yDig0j6Z
+	GVD3aGe2tTkN0gdGqFrXqv0A5o+xkYGvar1RsyFdE3zqiweg0w2gnrOZLWthAxa1
+	7GooQZ8+5G8EjczdGm1vysqlXes0QqYJoZNeLTt4y4bQiiTr/tJycdKUm3SVCxlW
+	sIK411TUJSAajNfmakkPG56YplFVnt8+aSXqVuN96BOg/xvAbNiuf9G/5BAPTV1L
+	0w0mqg5DnaNYLVrZh1TkCwWHDBI2IMS9R0nypqcqCyoMe+2jt2Jt8zgrOrs9P2SH
+	nHrO8fIkBVsasQVcLLINA==
+X-ME-Sender: <xms:NG2EaYoqIrzQGRe2MVnhcjoeinCkSccmZHfdc68m_Fi5hp4VHZGAFA>
+    <xme:NG2EaZfsiovdauY5R0ydtAujm5eGu_VAvD6Mzj7fiFoJFvs0b-qfdYL_-_eD0klvF
+    VhOdiYyYvmldEI2fMstDNREpcthpeJUCuXB4v_zj74tPiOP1rq8YCU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukeehtdefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffhiefh
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgt
+    phhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlvgigvghird
+    hsthgrrhhovhhoihhtohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhkphesihhn
+    thgvlhdrtghomhdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrshhtsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopegsrhhglheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    epkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghv
+    tghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepphhmlhgrug
+    gvkhesshhushgvrdgtohhm
+X-ME-Proxy: <xmx:NG2Eae5bKWrpoGMMQrV4byKV2b-1w6i4tPsiArIW2wt6wbqW0s1b9g>
+    <xmx:NG2EaeaXCeU38qXHbOaB2k9vcvghR0BanTPojOGTODlBgM-eMu6Puw>
+    <xmx:NG2EabdbgDicy2WUTEBXsbZSgUsbujCzYRuUec9IAXGYmTkUIyIAYw>
+    <xmx:NG2Ead7Ca61qzpzgDdBS8ta6xOouawzE8SI1mnKEdvTczwGntqIMjQ>
+    <xmx:NW2EaXufNYIbZDCmzGMllLjRC-cx49st1wmjxPGsiOcbWMObpluqp2ky>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6BC43700065; Thu,  5 Feb 2026 05:13:08 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AKtysVZkJHK3
+Date: Thu, 05 Feb 2026 11:12:47 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Petr Mladek" <pmladek@suse.com>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Kees Cook" <kees@kernel.org>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "kernel test robot" <lkp@intel.com>,
+ "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
+ "Andy Shevchenko" <andy@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
+ "Bartosz Golaszewski" <brgl@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+Message-Id: <4637e47c-61b0-43bf-996e-6291f2b49f31@app.fastmail.com>
+In-Reply-To: <aYRapf5K8wFGEO8v@pathway.suse.cz>
+References: <20260204132643.1302967-1-arnd@kernel.org>
+ <aYRapf5K8wFGEO8v@pathway.suse.cz>
+Subject: Re: [PATCH] vsnprintf: drop __printf() attributes on binary printing functions
 Content-Type: text/plain
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemj100009.china.huawei.com (7.202.194.3)
+Content-Transfer-Encoding: 7bit
 
-Move __compiletime_strlen() to string.h, so that others can use.
+On Thu, Feb 5, 2026, at 09:53, Petr Mladek wrote:
+> On Wed 2026-02-04 14:26:23, Arnd Bergmann wrote:
+>> Fixes: 6b2c1e30ad68 ("seq_file: Mark binary printing functions with __printf() attribute")
+>> Fixes: 7bf819aa992f ("vsnprintf: Mark binary printing functions with __printf() attribute")
+>
+> From the commit message, it is not obvious why reverting these commits
+> won't bring back the warnings in the modified functions.
+>
+> My understanding is that the warnings won't get back thanks to
+> the commit bd67c1c3c353b6560 ("vsnprintf: Silence false positive
+> GCC warning for va_format()") as explained by the original cover
+> letter, see
+> https://lore.kernel.org/all/20250321144822.324050-1-andriy.shevchenko@linux.intel.com/#t
+>
+> It would be worth to mentionin this in the commit message.
 
-Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
----
- include/linux/fortify-string.h | 15 ---------------
- include/linux/string.h         | 15 +++++++++++++++
- lib/tests/fortify_kunit.c      |  3 ++-
- 3 files changed, 17 insertions(+), 16 deletions(-)
+Unfortunately, I have not been able to reproduce the original
+warnings at all. The va_format() warning and the patch to
+silence that look entirely unrelated here, that was just the
+compiler incorrectly identifying a function that does not even
+take a format argument.
 
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index 171982e53c9a..c181dac26353 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -58,21 +58,6 @@ void __read_overflow2_field(size_t avail, size_t wanted) __compiletime_warning("
- void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
- void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("detected write beyond size of field (1st parameter); maybe use struct_group()?");
- 
--#define __compiletime_strlen(p)					\
--({								\
--	char *__p = (char *)(p);				\
--	size_t __ret = SIZE_MAX;				\
--	const size_t __p_size = __member_size(p);		\
--	if (__p_size != SIZE_MAX &&				\
--	    __builtin_constant_p(*__p)) {			\
--		size_t __p_len = __p_size - 1;			\
--		if (__builtin_constant_p(__p[__p_len]) &&	\
--		    __p[__p_len] == '\0')			\
--			__ret = __builtin_strlen(__p);		\
--	}							\
--	__ret;							\
--})
--
- #if defined(__SANITIZE_ADDRESS__)
- 
- #if !defined(CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX) && !defined(CONFIG_GENERIC_ENTRY)
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 1b564c36d721..fbae7d99bb6f 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -19,6 +19,21 @@ extern void *memdup_user(const void __user *, size_t) __realloc_size(2);
- extern void *vmemdup_user(const void __user *, size_t) __realloc_size(2);
- extern void *memdup_user_nul(const void __user *, size_t);
- 
-+#define __compiletime_strlen(p)					\
-+({								\
-+	char *__p = (char *)(p);				\
-+	size_t __ret = SIZE_MAX;				\
-+	const size_t __p_size = __member_size(p);		\
-+	if (__p_size != SIZE_MAX &&				\
-+	    __builtin_constant_p(*__p)) {			\
-+		size_t __p_len = __p_size - 1;			\
-+		if (__builtin_constant_p(__p[__p_len]) &&	\
-+		    __p[__p_len] == '\0')			\
-+			__ret = __builtin_strlen(__p);		\
-+	}							\
-+	__ret;							\
-+})
-+
- /**
-  * memdup_array_user - duplicate array from user space
-  * @src: source address in user space
-diff --git a/lib/tests/fortify_kunit.c b/lib/tests/fortify_kunit.c
-index fc9c76f026d6..86181e3bd994 100644
---- a/lib/tests/fortify_kunit.c
-+++ b/lib/tests/fortify_kunit.c
-@@ -49,7 +49,8 @@ void fortify_add_kunit_error(int write);
- #include <linux/vmalloc.h>
- 
- /* Handle being built without CONFIG_FORTIFY_SOURCE */
--#ifndef __compiletime_strlen
-+#if defined(__NO_FORTIFY) || !defined(__OPTIMIZE__) || !defined(CONFIG_FORTIFY_SOURCE)
-+# undef __compiletime_strlen
- # define __compiletime_strlen __builtin_strlen
- #endif
- 
--- 
-2.51.0
+I'm sure some other intermediate change managed to shut up
+the warnings, but I don't know which one. My best guess would
+be that 938df695e98d ("vsprintf: associate the format state with
+the format pointer") made gcc no longer warn about bstr_printf(),
+but that predates Andy's patch and I can't easily revert it for
+testing. Checking out a kernel before those patches does have
+the warning on va_format() but not on the other ones.
 
+>> Link: https://lore.kernel.org/all/CAADnVQK3eZp3yp35OUx8j1UBsQFhgsn5-4VReqAJ=68PaaKYmg@mail.gmail.com/
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202512061640.9hKTnB8p-lkp@intel.com/
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>> Acked-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>> For reference, three additional patches are required before we can drop
+>> the Makefile.warn line that currently hides these warnings:
+>> 
+>> https://lore.kernel.org/lkml/20260203162546.2254900-1-arnd@kernel.org/
+>> https://lore.kernel.org/lkml/20260203163440.2674340-1-arnd@kernel.org/
+>> https://lore.kernel.org/lkml/20260203164545.3174910-1-arnd@kernel.org/
+>> 
+>> Tested using randconfig builds on arm/arm64/x86
+>> ---
+>>  include/linux/seq_file.h | 1 -
+>>  include/linux/string.h   | 4 ++--
+>>  2 files changed, 2 insertions(+), 3 deletions(-)
+>
+> Otherwise, the change looks good to me. Feel free to use,
+> ideally with the updated commit message:
+>
+> Acked-by: Petr Mladek <pmladek@suse.com>
+>
+> I wonder who should take this patch. Should it go via
+> printk/bpf/tracing or another tree?
+> Does anyone has any preference, please?
+
+I think your tree makes most sense here, but I have no strong
+preference.
+
+       Arnd
