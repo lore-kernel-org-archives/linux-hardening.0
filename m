@@ -1,48 +1,47 @@
-Received: from forward502d.mail.yandex.net (forward502d.mail.yandex.net [178.154.239.210])
+Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8020838F257;
-	Thu,  5 Feb 2026 09:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70F8198A17;
+	Thu,  5 Feb 2026 09:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770282267; cv=none; b=cQPW0BDXWQMCbNh+GOvfmRFMToMmWnw1bVePJbmIpaI08UraIazUOsePJnjjAkih1eUJRHdM95pKMVZ0yKVn+IyoFZCXWmOy23nBEr1UVMF4IB1LT/uj1SMKzIVsFoS8wk5QZlfKwUvbyKfYNsQB+E6PCAJvxD27ycYE8FTYRd0=
+	t=1770283517; cv=none; b=LxHD+Fv/MCbHx7nTkRuqcrwpI7fmaXw2FfaF8bAInzHZ74cz76ZPZNM2klb6ex7YLWednSyp5CpPQXjI3pNDOB3a05oRat+yWf2FWtcw45FL2bhiTeWJoDNchgejmfv9jUAnlMtBrAN7mXf8dsLCiNwDasKFEggihQxePi8Wp98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770282267; c=relaxed/simple;
-	bh=u2u1hmtp4i+IFuIf7RAtOB68qlWZ1GapEORoeGFMTwQ=;
+	s=arc-20240116; t=1770283517; c=relaxed/simple;
+	bh=ju2wstuYIJqo+Q8x+eeHR5r7AVTa0IykUAC1G57tM9w=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NVaf7oNV70+oP/g3Ife+zRrdzDZ7K/wWDkLG6yx1uXBFzA6/GF6AqdVeQpPYgt87dQEJlWEzEjVEjxhZNFzJxzpPXUnXcjzMK9rpi3aX192+NUhDVYzdBaRHjSOoYYkdMwsQ11d6pvKQyW4VIyZvkKA9rIvr0KkUC9jOD6ZgOiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=RvGuVXEF; arc=none smtp.client-ip=178.154.239.210
+	 Content-Type:MIME-Version; b=MNkkocAt3PxxoM0Ia9hWl4O7JTj4XgLXHVQ6X6c/3u9v02mGNiR+HH2zwntfqdwCsNdTzWa3QicTYuJWlFuKbLPBXgEi2EEH82fbOQ4zPhLIW5TUTa2GbveRk35ezupbBuNrC+IJmskj9pRmqCrO9uG6BFOASkWwTV88nk4tQCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=SxHqp4uB; arc=none smtp.client-ip=178.154.239.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="RvGuVXEF"
-Received: from mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3cca:0:640:f0e1:0])
-	by forward502d.mail.yandex.net (Yandex) with ESMTPS id C9F9AC20B9;
-	Thu, 05 Feb 2026 12:04:16 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id E4mtEm0GqKo0-KeiOziCb;
-	Thu, 05 Feb 2026 12:04:16 +0300
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="SxHqp4uB"
+Received: from mail-nwsmtp-smtp-production-main-97.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-97.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:2804:0:640:a3ea:0])
+	by forward500a.mail.yandex.net (Yandex) with ESMTPS id EC350C0F98;
+	Thu, 05 Feb 2026 12:17:18 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-97.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id GHmH0o0GFqM0-fsA9Nxun;
+	Thu, 05 Feb 2026 12:17:18 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1770282256; bh=KBWeTthQA7tNjsoiGVOrPOVLjKWDwoVhUWSgVKGXVm0=;
+	t=1770283038; bh=LkxviVhcV60DhQiy80KOn2bfwDYHzucr7Gms/qqMo6s=;
 	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=RvGuVXEFFx45CG4kkcl525JKMuuN9kteVEOCZmEs3PHr43QQnSnKxlFxaDti2Ct7v
-	 x5OQh4JMq6iamk13R4wrUnj+nMcoE3/nMwkpx93ZLtg5F3FKRj61KfmSzJgbLtVIDs
-	 tayKhUD1/lF+uXkVomqIUlUpBgIzMhWG2kdDE/Ng=
-Authentication-Results: mail-nwsmtp-smtp-production-main-80.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <c49751e8971a77c9847baad442ea7800e9d6e03f.camel@yandex.ru>
-Subject: Re: [PATCH v5 1/5] lib: fix _parse_integer_limit() to handle
- overflow
+	b=SxHqp4uBWJ1Y9LlKOedYfRGTtTuyStvmHIU4nSYqMnr9AA2Syo3rmWwNuqHv54nvF
+	 OjlGTwTY6TnrRzQC+EcJJRQcaFUdFZT6zdFT0lC3xmVFPrk5tk2T1tfdqeepdi2rv7
+	 qZdbm7Q6mnd3rLfNiw0hm6v9N9oxT4a3kUdOYWEc=
+Authentication-Results: mail-nwsmtp-smtp-production-main-97.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <bd627279346a8eb8096371c899325ccfc6fd07d7.camel@yandex.ru>
+Subject: Re: [PATCH v5 2/5] lib: fix memparse() to handle overflow
 From: Dmitry Antipov <dmantipov@yandex.ru>
 To: Andy Shevchenko <andriy.shevchenko@intel.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
  "Darrick J . Wong"
 	 <djwong@kernel.org>, linux-hardening@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Date: Thu, 05 Feb 2026 12:04:14 +0300
-In-Reply-To: <aYNYOaiSfXFFe6Jc@smile.fi.intel.com>
+Date: Thu, 05 Feb 2026 12:17:16 +0300
+In-Reply-To: <aYNa5ZBcA_pJqS7Y@smile.fi.intel.com>
 References: <20260204135717.941256-1-dmantipov@yandex.ru>
-	 <20260204135717.941256-2-dmantipov@yandex.ru>
-	 <aYNYOaiSfXFFe6Jc@smile.fi.intel.com>
+	 <20260204135717.941256-3-dmantipov@yandex.ru>
+	 <aYNa5ZBcA_pJqS7Y@smile.fi.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
@@ -53,19 +52,27 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2026-02-04 at 16:31 +0200, Andy Shevchenko wrote:
+On Wed, 2026-02-04 at 16:42 +0200, Andy Shevchenko wrote:
 
-> In case you would need a v6, we can leave some of the lines untouched if =
-we
-> switch to for-loop instead of while, but it might make the for-loop quite=
- long.
+> On Wed, Feb 04, 2026 at 04:57:14PM +0300, Dmitry Antipov wrote:
+> > Since '_parse_integer_limit()' (and so 'simple_strtoull()') is now
+> > capable to handle overflow, adjust 'memparse()' to handle overflow
+> > (denoted by ULLONG_MAX) returned from 'simple_strtoull()'. Also
+> > use 'check_shl_overflow()' to catch an overflow possibly caused
+> > by processing size suffix and denote it with ULLONG_MAX as well.
+>=20
+> Do we have already test cases to cover this?
 
-Hmm...the for-loop might be:
+In
 
-for (res =3D 0, rv =3D 0; max_chars--; rv++, s++) {
+static const struct cmdline_test_memparse_entry testdata[] =3D {
         ...
-}
+        { "1111111111111111111T",       "",     ULLONG_MAX },
+        ...
+};
 
-and it makes _parse_integer_limit() a few lines shorter.
+the whole string is valid and so should be recognized by memparse(). Next,
+1111111111111111111 fits unsigned long long but 1111111111111111111 << 40
+is too large and should be catched by check_shl_overflow().
 
 Dmitry
