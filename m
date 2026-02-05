@@ -1,58 +1,41 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0561EA84;
-	Wed,  4 Feb 2026 14:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42439156677;
+	Thu,  5 Feb 2026 04:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770216170; cv=none; b=jugZKAOVTXF6PbpqpUhHYfiHVM1RR9Elr8CU9bvSzAS4vDaiFTrrhhegyfxLmrUf7TfrkuHKqNKcJxiI2M/fKTnYLkY6c2YLR8mx/1LgTOWPyG1tqMW0Bk/tmDQMnslr9WXPfAiTGopJEp17YB1HYLDezN+COEAKHGQCMDsGt+M=
+	t=1770264489; cv=none; b=ps8A9cps2YwW9umda85WYJ3uGRBfznK/AsjDigNZgF1BZsitdtHIZ2KApk0Y7xcPjuzpyt5UBtY2TMgqUwaLU+QRzTfOuBLhwtYNVh6zHGKo2LdOl7AVkRQILAsHrjir9Cq9RNcIU3eD3gljOY6CABmLQdXfq6cRL0EkMO+y4k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770216170; c=relaxed/simple;
-	bh=avXb7RubNXn8oyAvpnHqYHsu6rrMmJLIcdSIm9ejpeM=;
+	s=arc-20240116; t=1770264489; c=relaxed/simple;
+	bh=wysu9+zrbXMdXgp+6SzTNM5J5EJSlY+kOcwM6krXDVs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mlefhwvhKsRcbmthGH/ojeq/sb4f9+QIolzEmo2P6yVMDctT4J49vqDbiTsOdS68F1hKMABtfcpBFCfmAnJbqGILVPTvWUv1KCLI1ev7309wZFC3Yd1orxQuIc1SaQrYFEoyXcqLI4mWAq7iALdUPxEs4dxpjzIWKABDn07CTe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SJWPGMY/; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SYy/blJA5ZltmyTKbhRjEs5MAa7QvDHbY+JCYBvnWzrQOIqU4/Gv9JIYDodWmLAt6hxCvw+WeNJeq59rwJ/2kGszQ5vVs6VEHrwax3J8tXX+82qgmRMluHqZIZNFxMnsN1+Q2DDm1exnj4a4vaBcGNOwJ7IW3lGkjEX8oWdepX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+vqYASx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SJWPGMY/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770216170; x=1801752170;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=avXb7RubNXn8oyAvpnHqYHsu6rrMmJLIcdSIm9ejpeM=;
-  b=SJWPGMY/G3gd3YC/Sgn3Dz4yyHgKxkv7+JlP61KDy/bDjqd1luhEYv5t
-   UNb0b1LNcyDVNGV5ROE9m+WfSZr1jDQZn1QOLtmq4cmW6qmiy4g+mZ6b/
-   y8R4LMujX4GH9JWxDnpSjcyP56pAdnfKO1L70k7TNCwxz4MAdTH7OcG+I
-   lM+sko/Oac1TfJrj79MHf+Rc3MATsOH43Obqmnmj0uNKxHlTPYOIHDaJO
-   2p37cN6iz5tu2F8enATGIO2zoiDJVWlRLurFFYHZuq/3KlJs9TvptpK/3
-   80Xco5rnHNovO/MNAEr2KMQuWeTW7X9UwHQC/HTuDlIKo06AAnGFz8Ne2
-   A==;
-X-CSE-ConnectionGUID: TeDDvemiQs+KG4kWWwZprQ==
-X-CSE-MsgGUID: qHdslg99RVGpbiVqXvW/dg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="75257258"
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="75257258"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 06:42:50 -0800
-X-CSE-ConnectionGUID: 3pgGXlxnStK5bJN8WiYQgQ==
-X-CSE-MsgGUID: pQ60nnuTSiuiTHZrY4gZ0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="214673482"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.188])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 06:42:48 -0800
-Date: Wed, 4 Feb 2026 16:42:45 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/5] lib: fix memparse() to handle overflow
-Message-ID: <aYNa5ZBcA_pJqS7Y@smile.fi.intel.com>
-References: <20260204135717.941256-1-dmantipov@yandex.ru>
- <20260204135717.941256-3-dmantipov@yandex.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+vqYASx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF76AC4CEF7;
+	Thu,  5 Feb 2026 04:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770264488;
+	bh=wysu9+zrbXMdXgp+6SzTNM5J5EJSlY+kOcwM6krXDVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+vqYASxyJQq/cuvdPuxtYir/bfzaeXMHG07pEyh5174NosT+jo3ulBNc7kZN2Z0H
+	 mx20yC5I4mjYxpK/iSkuSCo8kPC64rPilKEYVQKxv1qeLxvx4rl2dNLzRgrGbVNnN4
+	 oYco28olAjnc3TRw15k23MUkxTuxEPWb1C3iTI0sQVCRqso/HbqHjHg4DqpE/lRSBr
+	 5sWqfJOt8MDEMClhIX96DamWKwTfahv/rGXtuSlkZuvhXunY/oSLR/m/fHCSdD6Dop
+	 OFOyJc6680EQpc4elvKs45vodVqQXrpmlmgx2JEtFNdNOVJy8wTS36AhlZPf3A1EQE
+	 XPbc98ZBMNcHQ==
+Date: Wed, 4 Feb 2026 20:08:08 -0800
+From: Kees Cook <kees@kernel.org>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+	dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] dm: dm-zoned: Adjust dmz_load_mapping() allocation type
+Message-ID: <202602042007.5C1A9E74@keescook>
+References: <20250426061707.work.587-kees@kernel.org>
+ <dc1191b4-1010-260b-b7cb-dc748a05e571@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,102 +44,24 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260204135717.941256-3-dmantipov@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <dc1191b4-1010-260b-b7cb-dc748a05e571@redhat.com>
 
-On Wed, Feb 04, 2026 at 04:57:14PM +0300, Dmitry Antipov wrote:
-> Since '_parse_integer_limit()' (and so 'simple_strtoull()') is now
-> capable to handle overflow, adjust 'memparse()' to handle overflow
-> (denoted by ULLONG_MAX) returned from 'simple_strtoull()'. Also
-> use 'check_shl_overflow()' to catch an overflow possibly caused
-> by processing size suffix and denote it with ULLONG_MAX as well.
+On Mon, Apr 28, 2025 at 12:49:53PM +0200, Mikulas Patocka wrote:
+> I accepted both patches.
+> 
+> Just nit-picking - I prefer type name as an argument to the sizeof 
+> operator rather than variable name - because when someone needs to find 
+> out where variables with a particular type are allocated, it can be easily 
+> done with grep if the sizeof operator contains the type name. So I changed 
+> your patches so that there are type names.
 
-Do we have already test cases to cover this?
+Thanks for the fix-ups! I wanted to check on these patches, though,
+since I still don't see them in -next and the merge window is expected
+to open next week.
 
-...
+Thanks!
 
-> unsigned long long memparse(const char *ptr, char **retptr)
->  {
->  	char *endptr;	/* local pointer to end of parsed string */
-
->  
-
-Shouldn't be an empty line in the definition block.
-
-> +	unsigned int shl = 0;
->  	unsigned long long ret = simple_strtoull(ptr, &endptr, 0);
-
-and it would be better to preserve reversed xmas tree order (to some extent).
-
-	char *endptr;	/* local pointer to end of parsed string */
-	unsigned long long ret = simple_strtoull(ptr, &endptr, 0);
-	unsigned int shl = 0;
-
-> +	/* Consume valid suffix even in case of overflow. */
->  	switch (*endptr) {
->  	case 'E':
->  	case 'e':
-> -		ret <<= 10;
-> +		shl += 10;
->  		fallthrough;
->  	case 'P':
->  	case 'p':
-> -		ret <<= 10;
-> +		shl += 10;
->  		fallthrough;
->  	case 'T':
->  	case 't':
-> -		ret <<= 10;
-> +		shl += 10;
->  		fallthrough;
->  	case 'G':
->  	case 'g':
-> -		ret <<= 10;
-> +		shl += 10;
->  		fallthrough;
->  	case 'M':
->  	case 'm':
-> -		ret <<= 10;
-> +		shl += 10;
->  		fallthrough;
->  	case 'K':
->  	case 'k':
-> -		ret <<= 10;
-> +		shl += 10;
->  		endptr++;
->  		fallthrough;
->  	default:
->  		break;
->  	}
-
-> +	/* If no overflow, apply suffix if any. */
-> +	if (likely(ret != ULLONG_MAX) && shl) {
-
-Do we need to check for shl? Yes, it will be an additional check below,
-but do we care?
-
-> +		unsigned long long val;
-
-> +		ret = (unlikely(check_shl_overflow(ret, shl, &val))
-> +		       ? ULLONG_MAX : val);
-
-Unneeded parentheses, and ? should be on the previous line.
-With that said, I prefer to see the regular conditional instead:
-
-		ret = check_shl_overflow(...);
-		if (unlikely(ret))
-			ret = ...
-		else
-			ret = val;
-
-> +	}
-> +
->  	if (retptr)
->  		*retptr = endptr;
+-Kees
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Kees Cook
