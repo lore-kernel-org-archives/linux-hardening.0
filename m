@@ -1,62 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C389283FFB;
-	Fri,  6 Feb 2026 15:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB1E2ECD3A
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Feb 2026 18:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770390761; cv=none; b=mdAoYkgFXSZzfsmLl6rO9g9QD2ssbMruSLqMRx8bl6f5OTmuawemVexzWhY7cqECG+6X/0eYPyommT0G62y1aMrYnVHDLqwILakjTCiDu2x1QDitojs3w0lJgESQTwT8AZiYBBTTHIWFUMBiErs5fxAemN2/Jw7cq1EBLytvWJA=
+	t=1770401795; cv=none; b=bs8/ysWPc/laogYH1mel8rfp6nVec013MDxnfBV8lhSAsOGNrPxnWUKJEET3ehYD+MIhT2dYMCI+gInrA2iqoKGzCQr0ZqCv0iGjDVdY8jDb9TVniEGFhIpwIMF5KEA4Z6u1V22fMmuxSED4gPzkkOlgic9tzG7M7YpO3W3SrkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770390761; c=relaxed/simple;
-	bh=nT9iN/obk3sXaFTJnNKOQkkVLWV2fpqN5S3iQ161kRQ=;
+	s=arc-20240116; t=1770401795; c=relaxed/simple;
+	bh=PZwINrWAuS1wQHYArI/H9HLcqcKzUHI2zFqZ6NVXZd4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/xYbyfC6VA2VoB+VwMMy3ctDzuRPEkeE3PZEJuckiYMr1Cmopfpjr9fP0PiTiCZU3S2BujcFnVDDIHNxqKmaKFaG5e5cZrkE2mEu8JSU6BCsK4k5Rcp0l7pqnOEMjXwbiS+a7Gwyw5g2sd+fMfxNVmypZ8yjLJf1Shwf8M2kAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gOKezC+o; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AJ/l1y4qvNGoTSpWWk7r5C/P/CbQ7F1KikSfxHNYFWn4Y+57BqP8yUC4fN1d95hMW9Wsiygk8T7PlVfaD1UAU+JwHVF0PheTwLpwLIu4L8LGRJhTxI/2ZXqbVJ9wWWF1QLHqZcckDpVN0k4k1eyTvfvwDGXWfLfilt72wcjR09E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQxBXv0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gOKezC+o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770390760; x=1801926760;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=nT9iN/obk3sXaFTJnNKOQkkVLWV2fpqN5S3iQ161kRQ=;
-  b=gOKezC+oSjk/C4Mm4GOc3buPlNutq07K2tsaTa9ZyOucbEqD8udc6uuH
-   4vSXefGQTNmc8tJXnzP9NTA3iYGQxDz3HfWxAC24i10ji2MaFpgvOpUTI
-   sdDO+jl8DplKG8cHBjCiaHs2TXFTcESGAw6+TNgHNrIXpINsp8hFxzIf8
-   Ae1OcF2n1xNppTPcvTaYL0QfwlQzSPfspIwSgxf6YHC3/stgLaup+5od7
-   9K33+NTVQFAa7DQK2p7qCtwgzBA+UUo8gISZjbFinF4YRIPPgjCGaR8mz
-   6fPdrwUdQr7lVJ3IJEzGUgz79W/arDOwG9XSfvQwEAOTvcqXjWOMDyk31
-   Q==;
-X-CSE-ConnectionGUID: LXNHfn27Tuu3Fo93em1p8g==
-X-CSE-MsgGUID: M+9/j9iVS8+FaDevHPrdrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11693"; a="70613305"
-X-IronPort-AV: E=Sophos;i="6.21,276,1763452800"; 
-   d="scan'208";a="70613305"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 07:12:39 -0800
-X-CSE-ConnectionGUID: tTaRoNvvTgWaKZ7tkNKqbQ==
-X-CSE-MsgGUID: YfFK3ZoSQeSoXepEsyhc5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,276,1763452800"; 
-   d="scan'208";a="248509330"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 07:12:37 -0800
-Date: Fri, 6 Feb 2026 17:12:34 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: =?utf-8?B?5p2O6b6Z5YW0?= <coregee2000@gmail.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	linux-ext4@vger.kernel.org
-Cc: syzkaller@googlegroups.com, kees@kernel.org, andy@kernel.org,
-	akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [Kernel Bug] WARNING in ext4_fill_super
-Message-ID: <aYYE4iLTXZw5t0w_@smile.fi.intel.com>
-References: <CAHPqNmzBb2LruMA6jymoHXQRsoiAKMFZ1wVEz8JcYKg4U6TBbw@mail.gmail.com>
- <aYX4n42gmy75aw4Y@smile.fi.intel.com>
- <aYYD3rxyIfdH2R-d@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQxBXv0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9CB3C116C6;
+	Fri,  6 Feb 2026 18:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770401794;
+	bh=PZwINrWAuS1wQHYArI/H9HLcqcKzUHI2zFqZ6NVXZd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lQxBXv0MM3bY7K8XWMh28vPegX/o6ja8a4NEPexqSjXZcld+5XfhJFua1McwuZzmn
+	 Mqo5se8cHeKF0p+whVw8PEAxjajtJ/KRVVaRj3lb4cYxY4swP4XhGc0BQXqmB/DgNA
+	 gxq2k99vqngbz9uoGXaI5Xh7dWHu2sWseg1Z3fR30wXXaPHsY7vsdprJM59YmuWw6/
+	 YFhTKhBgfe9pC4Zw5cQh0B9TQ79PbhUmc0Gb3V8qLrnZnKp9tSzDD7nbywf0+eFI+0
+	 tgIWODZ6dta6wl7Ma9auTWGSZApciwyrusxWIwxkDChhv+RQKDMn2khEgvofnZRiwp
+	 BUqJv+g9/+K+g==
+Date: Fri, 6 Feb 2026 10:16:34 -0800
+From: Kees Cook <kees@kernel.org>
+To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>,
+	Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>,
+	Qing Zhao <qing.zhao@oracle.com>, gcc-patches@gcc.gnu.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4] Fix sanitizer attribute infrastructure to use
+ standard TREE_LIST format [PR113264]
+Message-ID: <202602061016.DD543146B8@keescook>
+References: <20250904174325.it.487-kees@kernel.org>
+ <CALvbMcAMWW1ewkszu9nYEaY0iA=CsUh+JFm1pzpnkXvzp9dP5Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,116 +47,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aYYD3rxyIfdH2R-d@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <CALvbMcAMWW1ewkszu9nYEaY0iA=CsUh+JFm1pzpnkXvzp9dP5Q@mail.gmail.com>
 
-On Fri, Feb 06, 2026 at 05:08:19PM +0200, Andy Shevchenko wrote:
-> On Fri, Feb 06, 2026 at 04:20:15PM +0200, Andy Shevchenko wrote:
-> > On Mon, Feb 02, 2026 at 12:19:45PM +0800, 李龙兴 wrote:
-> > > Dear Linux kernel developers and maintainers,
-> > > 
-> > > We would like to report a new kernel bug found by our tool. The issue
-> > > is a WARNING in ext4_fill_super. Details are as follows.
-> > 
-> > First of all, the warning appears in parse_apply_sb_mount_options().
-> > 
-> > > Kernel commit: v6.18.2
-> > > Kernel config: see attachment
-> > > report: see attachment
-> > 
-> > Second, you should include people based on the actual subsystem, unless it's
-> > proven that the problem is in lib/*.
-> > 
-> > Cc'ed to ext4.
-> > 
-> > > We are currently analyzing the root cause and  working on a
-> > > reproducible PoC. We will provide further updates in this thread as
-> > > soon as we have more information.
+On Fri, Feb 06, 2026 at 12:05:04AM -0800, Andrew Pinski wrote:
+> On Thu, Sep 4, 2025 at 10:43 AM Kees Cook <kees@kernel.org> wrote:
+> >
+> > The __attribute__((__copy__)) functionality was crashing when copying
+> > sanitizer-related attributes because these attributes violated the standard
+> > GCC attribute infrastructure by storing INTEGER_CST values directly instead
+> > of wrapping them in TREE_LIST like all other attributes.
 > 
-> You need to add more information here, esp. about the tested environment,
-> architecture, and compiler (I can deduct some from the .config, but still...).
-> 
-> So, as far as I can see this may only happen in the case when _Static_assert()
-> is evaluated to something that strict { $SMTH } is meaningful to the
-> preprocessor to have sizeof() > 0 (or sizeof(struct {}) is > 0).
-> 
-> In both cases sounds like a compiler bug.
-> 
-> Other possible explanation is the instrumentation that makes sizeof($FOO[])
-> return bigger sizes.
-> 
-> But TBH, all of the above looks to me like a nonsense. Maybe I missed something.
+> I am going to review this over the weekend. I see it was not reviewed yet.
 
-Actually, the documentation says that strscpy*() must be used against C-strings.
-This can explain the bug, id est the given string in mount options is not
-NUL-terminated. That's where bug may come from. So, the Q is why is mount options
-not NUL-terminated when it comes to ext4_fill_super()?
-
-> Note, if strscpy_pad(a, b) is broken, it should be much more visible and much
-> easier to reproduce even without syzkaller. Do we have (Kunit) test cases for
-> strscpy*()? If not, you should start adding them first.
-> 
-> > > loop4: detected capacity change from 0 to 514
-> > > ------------[ cut here ]------------
-> > > strnlen: detected buffer overflow: 65 byte read of buffer size 64
-> > > WARNING: CPU: 0 PID: 12320 at lib/string_helpers.c:1035
-> > > __fortify_report+0x9c/0xd0 lib/string_helpers.c:1035
-> > > Modules linked in:
-> > > CPU: 0 UID: 0 PID: 12320 Comm: syz.4.59 Not tainted 6.18.2 #1 PREEMPT(full)
-> > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> > > RIP: 0010:__fortify_report+0x9c/0xd0 lib/string_helpers.c:1035
-> > > Code: ed 48 c7 c0 80 c8 cf 8b 48 0f 44 d8 e8 cd dd 17 fd 4d 89 e0 48
-> > > 89 ea 4c 89 f6 48 89 d9 48 c7 c7 00 c9 cf 8b e8 b5 57 d6 fc 90 <0f> 0b
-> > > 90 90 5b 5d 41 5c 41 5d 41 5e c3 cc cc cc cc 48 89 de 48 c7
-> > > RSP: 0018:ffffc90011f9fa18 EFLAGS: 00010282
-> > > RAX: 0000000000000000 RBX: ffffffff8bcfc880 RCX: ffffffff817afc38
-> > > RDX: ffff8881095eca80 RSI: ffffffff817afc45 RDI: 0000000000000001
-> > > RBP: 0000000000000041 R08: 0000000000000001 R09: 0000000000000000
-> > > R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000040
-> > > R13: 0000000000000000 R14: ffffffff8bcfd240 R15: ffff88803c484400
-> > > FS:  00007f9e5f45c640(0000) GS:ffff8880cf053000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 0000000000000000 CR3: 0000000123400000 CR4: 0000000000752ef0
-> > > PKRU: 80000000
-> > > Call Trace:
-> > >  <TASK>
-> > >  __fortify_panic+0x23/0x30 lib/string_helpers.c:1042
-> > >  strnlen include/linux/fortify-string.h:235 [inline]
-> > >  sized_strscpy include/linux/fortify-string.h:309 [inline]
-> > >  parse_apply_sb_mount_options fs/ext4/super.c:2486 [inline]
-> > >  __ext4_fill_super fs/ext4/super.c:5306 [inline]
-> > >  ext4_fill_super+0x3972/0xaf70 fs/ext4/super.c:5736
-> > >  get_tree_bdev_flags+0x38c/0x620 fs/super.c:1698
-> > >  vfs_get_tree+0x8e/0x340 fs/super.c:1758
-> > >  fc_mount fs/namespace.c:1199 [inline]
-> > >  do_new_mount_fc fs/namespace.c:3642 [inline]
-> > >  do_new_mount fs/namespace.c:3718 [inline]
-> > >  path_mount+0x7b9/0x23a0 fs/namespace.c:4028
-> > >  do_mount fs/namespace.c:4041 [inline]
-> > >  __do_sys_mount fs/namespace.c:4229 [inline]
-> > >  __se_sys_mount fs/namespace.c:4206 [inline]
-> > >  __x64_sys_mount+0x293/0x310 fs/namespace.c:4206
-> > >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> > >  do_syscall_64+0xcd/0xfa0 arch/x86/entry/syscall_64.c:94
-> > >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > > RIP: 0033:0x56755e
-> > > Code: 48 c7 c0 ff ff ff ff eb aa e8 3e 1c 00 00 66 2e 0f 1f 84 00 00
-> > > 00 00 00 0f 1f 40 00 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d
-> > > 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> > > RSP: 002b:00007f9e5f45bdf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> > > RAX: ffffffffffffffda RBX: 00007f9e5f45be80 RCX: 000000000056755e
-> > > RDX: 0000000020000140 RSI: 0000000020000440 RDI: 00007f9e5f45be40
-> > > RBP: 0000000020000140 R08: 00007f9e5f45be80 R09: 0000000000000000
-> > > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000020000440
-> > > R13: 00007f9e5f45be40 R14: 00000000000003d5 R15: 0000000020000200
-> > >  </TASK>
-> > > 
-> > > https://drive.google.com/file/d/12W8B3IU88RBdBpV4nMcAj9TVOzlx6xL-/
-> > > https://drive.google.com/file/d/1efTUJTmSTMuJqSpCq686RjXdUzhyEJDL/
+Thanks! I'd love to get this landed (I don't have commit access).
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Kees Cook
