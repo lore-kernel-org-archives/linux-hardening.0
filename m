@@ -1,92 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F173559D0;
-	Fri,  6 Feb 2026 10:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1474395D80;
+	Fri,  6 Feb 2026 11:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770372715; cv=none; b=P8BMbBwLW8F+2Lina19xPRq6t2f4/Z3bemZihuhlt22KWv6S5L8nJao2Vl8dV0jwSTjfSdJetqUFHoUX46VIaSPNsziwz6zvO73pog+B+Stcsn2Z2LPvWXens+Rt37CDepY/SD0pFD0P+KDKgaga07kvziglgRc9xgjYR2RguZE=
+	t=1770376500; cv=none; b=hmZpOhWsUkdEX99VZGNG0ydu+w69TDkcBwExNgBgLY7rLAUV5QloHZXVhdpNzvJA4IQy4NNPhR25VU6jacQIHwdNUKZV5nxBmHp/MvNbl4XgWcLNZA8L8O3AO+ZjXOMzVc4w4eB3XCJNB6h7y/LhXnDHn3TK/easCyMwX8XmXwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770372715; c=relaxed/simple;
-	bh=NEpQf6P3zSDOqsrW7Vhs4EYdNRFfFRMX7ExDSxgdXpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KxapuVLRZ3aNyPgZ/tCV0kFUP58J3zUHBcB0bD+0yFDtc91410XBAh0D8mjgqia31KkVfxLBZTiK9z0oEaU09UqiuTo1EFTK2R/C1GIHN6QfsqkrI+q6RqaxEkFzpkNGOX0VH4pffEVshV17f2gJvmoFKjoUhrojJ5vULqFNepc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C+UQLlEm; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770376500; c=relaxed/simple;
+	bh=7JpaOg/f3D+7vCPpzVYk7eXwjwNTxWD8zdDSn2v/QYs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N0TbUv+tNjpWl7+thUlkdrxFoHOeTHwmKONAGS9jbJ7ZAk0TImrMyfspNGFUjv5gE07Lzm1XJJe3aj7wBEVtTwCbilw/Kr0snkroeuzMtnV3g25DspPx0WcI8gii2nM2Y/GXKDxX9+sZqsfFcVg4hxT/HLyFE2ywmVF+Jw2Sfic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=lezxuHGx; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C+UQLlEm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770372715; x=1801908715;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NEpQf6P3zSDOqsrW7Vhs4EYdNRFfFRMX7ExDSxgdXpE=;
-  b=C+UQLlEmTzLIwioTu8x0fkHGWmZPsgaMjo9tv8Vnu8vvtVe1dwyEo9Wv
-   SJ/at/I53z6c8Cwh1x3h4Z9OkawqD8UPZsHENQpG5xN95AspO3nKe72sP
-   oQg+m5v/l3kd+jk9Kp+iU9r5tqYGusuKu08c9XIsqISR4BP0xRrJoJ4XD
-   xs72wpZB6XL2eIqiDEiyYCiglWgtRdpZRyMVRCMsqTvEANPE4X7HyFzIc
-   m6GDmcO0HJx5o+2kzFBG4YMH1eGykRPzdVeJUYsMg2OaQq8FEKQO3THcR
-   jF/FwIIGQHcfJUNE99aL/aMQv75zq6Kzq6ufsC0BOaR3AjN61PhXdmTET
-   g==;
-X-CSE-ConnectionGUID: RZAI9SWRQpKaM5fZtOaCYw==
-X-CSE-MsgGUID: /VCsSEvdSgGTQVEXE91GHw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11692"; a="71570773"
-X-IronPort-AV: E=Sophos;i="6.21,276,1763452800"; 
-   d="scan'208";a="71570773"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 02:11:55 -0800
-X-CSE-ConnectionGUID: q4/EOio/QdSflDqpk8Wnlg==
-X-CSE-MsgGUID: I1t1YjHoQXCL5BczLFI9kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,276,1763452800"; 
-   d="scan'208";a="210534802"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 02:11:46 -0800
-Date: Fri, 6 Feb 2026 12:11:43 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: David Laight <david.laight.linux@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <kees@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] lib: fix _parse_integer_limit() to handle overflow
-Message-ID: <aYW-X-uss7n4S6Em@smile.fi.intel.com>
-References: <20260204135717.941256-1-dmantipov@yandex.ru>
- <20260204135717.941256-2-dmantipov@yandex.ru>
- <20260205221537.34778ff0@pumpkin>
- <aYWbcFb73qO16tEC@smile.fi.intel.com>
- <8bd4317ef717016ca5d921a96b15808b6c77845a.camel@yandex.ru>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="lezxuHGx"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=tDEI/GWRahi2pE07GC/9TD0gUS6wvtKdDT3TaBlKGLY=;
+	b=lezxuHGxlUbsrVX5E0KPypi3S3tpedzQjpSz0VpySP5gZ2fRyQyVc1KcqNT4guABEZKJ/NQS/
+	Fbo+bmAJxyoY6YmAGI9iGq9i1p1o20j3scjByeiMXWjcRPA5Dcl2NiDa3J5ypaFqUd6CVaY4jmr
+	MFibONHmoaFlDfxHojq8Vms=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4f6rwx5CW1zpSx0;
+	Fri,  6 Feb 2026 19:10:41 +0800 (CST)
+Received: from kwepemj100009.china.huawei.com (unknown [7.202.194.3])
+	by mail.maildlp.com (Postfix) with ESMTPS id 13E0F40538;
+	Fri,  6 Feb 2026 19:14:56 +0800 (CST)
+Received: from DESKTOP-A37P9LK.huawei.com (10.67.109.17) by
+ kwepemj100009.china.huawei.com (7.202.194.3) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Fri, 6 Feb 2026 19:14:55 +0800
+From: Xie Yuanbin <xieyuanbin1@huawei.com>
+To: <maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <kees@kernel.org>, <andy@kernel.org>
+CC: <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <lilinjie8@huawei.com>,
+	<liaohua4@huawei.com>, <xieyuanbin1@huawei.com>
+Subject: Re: [PATCH 2/2] powerpc/text-patching: Fix possible stringop-overread compilation error
+Date: Fri, 6 Feb 2026 19:14:17 +0800
+Message-ID: <20260206111417.69177-1-xieyuanbin1@huawei.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <aYTH6A2rZQ4Ky-PL@smile.fi.intel.com>
+References: <aYTH6A2rZQ4Ky-PL@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8bd4317ef717016ca5d921a96b15808b6c77845a.camel@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemj100009.china.huawei.com (7.202.194.3)
 
-On Fri, Feb 06, 2026 at 12:53:50PM +0300, Dmitry Antipov wrote:
-> On Fri, 2026-02-06 at 09:42 +0200, Andy Shevchenko wrote:
-> 
-> > > Code looking at the terminating character wont be expecting a digit
-> > > and will treat it as a syntax error - which is what you are trying to do.
-> > > 
-> > > That is a much easier API to use, and a 'drop-in' for existing code.
-> > 
-> > Maybe, but problematic from the usage point of view as I described above.
-> 
-> Note that was an idea behihd memvalue(), see https://lists.openwall.net/linux-hardening/2026/01/07/23.
-> IOW since "mem=64K" is expected to be used more often than, say, "mem=64K@0xaaaaa" or "mem=64K,sync",
-> it may be useful to have a wrapper which is enough to parse "64K" but treat everything else as error.
+On Thu, 5 Feb 2026 18:40:08 +0200, Andy Shevchenko wrote:
+>> For strnlen(), if the compiler detects that the maxlen argument exceeds
+>> the valid memory size of the input string object, a compilation error may
+>> occur.
+>> 
+>> For lastest linux-next source, changing ppc_kallsyms_lookup_name() to
+>> __always_inline,
+>
+> So, there is no issue in upstream without the mentioned change, right?
 
-It will make it less useful.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yes. However, before the commit 889b3c1245de48ed0cac ("compiler: remove
+CONFIG_OPTIMIZE_INLINING entirely") is merged, inline will be changed to
+__always_inline, and this error will be directly triggered.
