@@ -1,40 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9BB35975;
-	Fri,  6 Feb 2026 22:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904FC2EAB6F;
+	Fri,  6 Feb 2026 22:21:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770416421; cv=none; b=OBGfDePoVrMD8x5gU9DpdcZMKx6soyPuNo99ka3Arl2BSTdP1tQlzCIKRbH5NkIvEkIJvPrEqpBhZBKVY7EkuouqDwwbREw0W2QUYt7bZzfvNFLCd4o0BPdBsskEISRT4i5uI//jIEnD1/baw8YiHu5pML12XuKmclB2Lsfd6oY=
+	t=1770416514; cv=none; b=Tn0MwdUKzcIyD9+VOmE6Di8wi4TraV2WgGDXBavisjn16DretD/6KS+fXuOjA8QrlS4Su6KWMP2ZG5I7p9wI+E8ex3Q0Cjrngg1eLPaQwHFqFb7JEQmubw8IMxqRfNfDcOaQU4zbUK/KmxsRQ7Ybw5d1Y4uTfsY0Sqv/oMEALfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770416421; c=relaxed/simple;
-	bh=2HsoN1VBR1y0hwjXSh8Wd5rLg6l2adaRRtQqZaF8KgA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O4O6A8koRKDJHFLaPulTv7KRJalnmA+yKNJ5xocSTpjdh1GYu7flTqXlcnNLGVgec7RTo+9VCcQEW3WGQ/2dvb1yYVOo5TkymW9EV8Y+4U2PXW/oHMHuXF3tRDn4DHa2hh4mHttVV3SIlDmK/wA1Mfyr3WlGLNeA82pzjk4UGfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gp71FYas; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770416514; c=relaxed/simple;
+	bh=oQRJiNUzubJ19Wx1XgCCgnTsTPuzcvWNLC/cnrc8QvA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hnIVx0IJwh5b/4SzDAju1qF1jR7D4p9v5Dq5CoNeivpkempOFExqFDXvvYBtdYktaFcVuscPJDRWv24cba2Ik7+U2m0DtoulQ/0X1cwwTkYo1n4kVytjjyq3iOtzytZGjX31gTiv0kTKC3AOtKA99WCPgkcyQG34GCdfF9JjocI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sclpwADi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gp71FYas"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E13DC116C6;
-	Fri,  6 Feb 2026 22:20:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sclpwADi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28699C116C6;
+	Fri,  6 Feb 2026 22:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770416421;
-	bh=2HsoN1VBR1y0hwjXSh8Wd5rLg6l2adaRRtQqZaF8KgA=;
+	s=k20201202; t=1770416514;
+	bh=oQRJiNUzubJ19Wx1XgCCgnTsTPuzcvWNLC/cnrc8QvA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Gp71FYasjaeDeTto+X1LAiwhDZTdk7XHqI4onnTkqCoWglt2TrEUbChbjjPchHoho
-	 I27EKQw7HND9piZFkUX/gbGg+3G63B5xIaTkdYWywYUvI+EexN7Fsp5z8UbCPo+TLv
-	 1jtOmfqqXFDP2EoS2UjddB64khSmKCzTRD93SLe02bsR4YOsEVjRKbCB9slweWDVsD
-	 M6ebXZ3O0FHjdp1LyBt1tnowW2ajdHYToLZzohmPNKb4Ur1orvkmzU302rZ9cOoCQ4
-	 g5qiVlWSKxsSQbJ9TKW6e7VHfVdqcKiFtaDT9JdWayZH7HlSzKG3rlSmrF0WTkwmg/
-	 099NKurHYQjSg==
+	b=sclpwADixRMuZ09rsS1t0+O7jiwtqiALgjAvTpNzHJe46dn1GLZrEVe3OQvWi8zaN
+	 eewMrCWCfW1ix2SlZaTLQ+8a41A5GFAREv+8nLah3M5n4njJDFD/m2Pvx2qwhs0atX
+	 pncuF/CBxCE3EkFBzSqESpEcfpBXD0eBYlczOdytUiYHpniryUqydOaCir4QefkFwl
+	 C2Dm9kVkfUNqvPhOe5NiPR5Q3vJrlTEV+nyb5vKdfK0l6CF/XCivVgsvLA0lwpe7z3
+	 mXkOEWFoGnMprJGcq3gnn3IzFN7zJecQMVYdQG78RB1rt4djxPRxhG2RQ1QNFsue9R
+	 eu6i4u3Y4IQbA==
 From: Kees Cook <kees@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
+To: Rob Clark <robin.clark@oss.qualcomm.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Wangyang Guo <wangyang.guo@intel.com>,
-	Thomas Gleixner <tglx@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] lib/group_cpus: Handle const qualifier from clusters allocation type
-Date: Fri,  6 Feb 2026 14:20:13 -0800
-Message-Id: <20260206222010.work.349-kees@kernel.org>
+Subject: [PATCH] drm/msm: Adjust msm_iommu_pagetable_prealloc_allocate() allocation type
+Date: Fri,  6 Feb 2026 14:21:52 -0800
+Message-Id: <20260206222151.work.016-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -42,7 +50,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1303; i=kees@kernel.org; h=from:subject:message-id; bh=2HsoN1VBR1y0hwjXSh8Wd5rLg6l2adaRRtQqZaF8KgA=; b=owGbwMvMwCVmps19z/KJym7G02pJDJltmdJtFarGdyaLO8lIFT1/cfSUsXyu+BI2BX71uzP/e L5Ynvm4o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCJHchgZZiYmWT5W29nrvHDB zjtpmmXrL+Wd+6Zv7dV0IcrC+xLHJYb/kfFW/Ut2mjHbL+DeY7/vPhP39TtC3Rz2yixn+jRWdel yAAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1662; i=kees@kernel.org; h=from:subject:message-id; bh=oQRJiNUzubJ19Wx1XgCCgnTsTPuzcvWNLC/cnrc8QvA=; b=owGbwMvMwCVmps19z/KJym7G02pJDJltmfU7n93tvD9HSCh32WPFpydTev27djntL71dv6nLQ klTZkJRRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwER2/2Bk2G3cZGIa2u5sOuf5 Dob2quKXmfEX/ITi5S9Mm8FovvlIGcP/muT/Cwseapy52xnKmXqkIFVl1sqSU/vVRAUVd/HFNLs yAQA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -51,32 +59,40 @@ we need to make sure that the returned type from the allocation matches
 the type of the variable being assigned. (Before, the allocator would
 always return "void *", which can be implicitly cast to any pointer type.)
 
-The assigned type is "const struct cpumask **", but the returned type,
-while matching, is not const qualified. To get them exactly matching,
-just use the dereferenced pointer for the sizeof().
+The assigned type is "void **" but the returned type will be "void ***".
+These are the same allocation size (pointer size), but the types do not
+match. Adjust the allocation type to match the assignment.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Wangyang Guo <wangyang.guo@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>
+Cc: Dmitry Baryshkov <lumag@kernel.org>
+Cc: Abhinav Kumar <abhinav.kumar@linux.dev>
+Cc: Jessica Zhang <jesszhan0024@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: <linux-arm-msm@vger.kernel.org>
+Cc: <dri-devel@lists.freedesktop.org>
+Cc: <freedreno@lists.freedesktop.org>
 ---
- lib/group_cpus.c | 2 +-
+ drivers/gpu/drm/msm/msm_iommu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/group_cpus.c b/lib/group_cpus.c
-index a93df70919df..d496c5001961 100644
---- a/lib/group_cpus.c
-+++ b/lib/group_cpus.c
-@@ -320,7 +320,7 @@ static int alloc_cluster_groups(unsigned int ncpus,
- 		goto no_cluster;
+diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+index d5dede4ff761..271baf4dc4e8 100644
+--- a/drivers/gpu/drm/msm/msm_iommu.c
++++ b/drivers/gpu/drm/msm/msm_iommu.c
+@@ -332,7 +332,7 @@ msm_iommu_pagetable_prealloc_allocate(struct msm_mmu *mmu, struct msm_mmu_preall
+ 	struct kmem_cache *pt_cache = get_pt_cache(mmu);
+ 	int ret;
  
- 	/* Allocate memory based on cluster number. */
--	clusters = kcalloc(ncluster, sizeof(struct cpumask *), GFP_KERNEL);
-+	clusters = kcalloc(ncluster, sizeof(*clusters), GFP_KERNEL);
- 	if (!clusters)
- 		goto no_cluster;
- 	cluster_groups = kcalloc(ncluster, sizeof(struct node_groups), GFP_KERNEL);
+-	p->pages = kvmalloc_array(p->count, sizeof(p->pages), GFP_KERNEL);
++	p->pages = kvmalloc_array(p->count, sizeof(*p->pages), GFP_KERNEL);
+ 	if (!p->pages)
+ 		return -ENOMEM;
+ 
 -- 
 2.34.1
 
