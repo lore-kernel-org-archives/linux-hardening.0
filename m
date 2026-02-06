@@ -1,571 +1,682 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11A93090CB
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Feb 2026 08:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.168.131
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770365118; cv=pass; b=fSBXB6gy8rwh08GY+cMwbfq1FtD6Y9o1Xqz/z6lDErBnXuTBLJDhsUBus/Hb7vBAMLaFiSlfIlHY0ec2naDOI0JsBmXnWmjsSDO3IDOEZ/BhskYKM7vWdpaI+dCI/Yo/JWI/ia8ioEm4jC+yp6Dl7C/e4k/ohA1DbssgBXIwaTU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770365118; c=relaxed/simple;
-	bh=h0JTNamxN83tifiMzSCGhpsjTofjXMgH4X2O7johJQY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RLo83hGRtB18aV/fNBSoyTI3rP2DF/wwG45bWxKdez5XZL0c/tLVwU74K0DJpHLEz47t6YvB1MWv9hhd1GwF4PsmnAt2R882WreeXna0rscI2w6zuT477KlFx7vS9riMWo748iA+k7WFH4mXmXtvhS2ZaleG7vR7MeDTRDPSaj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ildAMzro; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=AETtPwY5; arc=pass smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AAB34676F;
+	Fri,  6 Feb 2026 09:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770368565; cv=none; b=RnbnzqHCQv5UHnP9kkV5L4PDzQE4dVUpudsY6JMSFmgQ+6/sB7loBrrUg77QfcqythB8puo7k94RYOVgY4cprHj/oAgA2dFsym6DJdw/xWNRvVEJEFBfGUaI2OgbqWuJZ6wN84keYwfElEDh/kFaYPN5WpH1HN1xmVGIUdHIzCs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770368565; c=relaxed/simple;
+	bh=O7evD8wwdmbwGV1YhpqpqWGFqynW7f6rneQ7VuYtBGM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cIA3dh1DKzpMQJZg4vzN3/zQ3HrlBuu2S/tJ7zV4uNPJ8nNlJcqxMJKbPzEl5yPUoPEg/uYuNWCycaSvFhvwvPd6beAJntv5RYW55gSWuuv2o+ogfSDPi52oDAejuZzoXRjb8kMcSvD4nJgYOyDlRRM/5Uv2TVgxLlFDbuslXWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJRutc3p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ildAMzro";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="AETtPwY5"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6160xcgH2058295
-	for <linux-hardening@vger.kernel.org>; Fri, 6 Feb 2026 08:05:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kWLfR2iq4Uky6Kq1I5l8o1nz5cqJ4IFTg8zi44mevOI=; b=ildAMzro+khEYzGq
-	sMFyaBRbTeWYD7kxLhdwxyGrLqMf4TlMjUsOFWd6dfedMS/2MXuXVnQzfEXkFVb/
-	GFQG6RqB+NAp3zL5jgROucszfWR6ucbdr0QyzRSwfaJCmtTEm2trXYE/S3hiZj+d
-	t+azOBdDfFkrpPHtw7uk6sYeOf8P5COwi3+cVVsHuK2otvq+BLoGs6dra4s2Y44H
-	C3hA9OE9KsT4a/pkCjLIycPOSUh1Qk2SD4YpePkW/QDfN4Fc5ug5s0AbMiyeTLl9
-	mFtZUEA9Q+0dWEUPP881Y/7U5hKMJm1cY+DmnkOMcE9cOWjVQC90ERvBITJ+ix9y
-	02Niuw==
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c4x8bjutq-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 06 Feb 2026 08:05:17 +0000 (GMT)
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-2b708fa4093so2933699eec.0
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Feb 2026 00:05:17 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770365117; cv=none;
-        d=google.com; s=arc-20240605;
-        b=cK4YxaZlhtAz3DrzJI35FQyCAGdOEkT0XYd0N/blW4BeUlXi7Ll5mM/d0sboiT43B9
-         W2VYk73+GRX0OR7izZqC8HyDxcftsmy6zkmeZ4IMGMMmFpoqDpkhm3LDpftZLCM/CFmh
-         VP7siUOp6Bpg/VtuDlHM3+KP+5D33amBNsAvhWirFV5kDspBwsdpfUsW5tRjm2okzy7s
-         62KCa0rLi/zPwUC1u+6aQKAIGASrXsWAq6ZknzQYR4VHiOt/kIQm4UVv5CJgkbQ5BC/e
-         w8zX8bc3dAzJhPeAk17YDc8QgR8SBy4sNfhH1szAaYxPx8pARtPkjiPz6PMLY0TI84Wd
-         /aZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=kWLfR2iq4Uky6Kq1I5l8o1nz5cqJ4IFTg8zi44mevOI=;
-        fh=W3qcPzUw1Y9MVhsdttD3h/fL14/66GiSqjQeB2NcrM8=;
-        b=IgLYlczNIOrriSa+p88k4P/N0M4xwiYfnoHg19WlyEMp5FgGhNUX+xn0ZZzJVCaVmV
-         hwIsjR/aBQcUFqUdmYZhjPrCjVSh70ibuElOoH3sup2ImH+5Ov96+eSLEMTjgSZ8K1Ea
-         xJ6vhy9j2vL3+y59J5ENjuzVZpP55++SP30VKAC2atx0RX1qstY2Y4nQTWtrpwrIcPKX
-         HCg6Zn1tXnoDJa76j1i22ar25rly5CcCjJg8h1L/50Yss2mlPLd5IboTdDlIDduOkeqt
-         qGSKfodlb1R8UzCa6Dsvuqfuax4Krv32JV/5RIKQM9ig6kj7NtIfOBM0hpDRhtvm1ibm
-         BipA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1770365117; x=1770969917; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kWLfR2iq4Uky6Kq1I5l8o1nz5cqJ4IFTg8zi44mevOI=;
-        b=AETtPwY53dn1xi8/p4g2Tt6gMHNrGyLDbq9Bf80bHo8/smhw2ii0zFETbdIrLtV0E7
-         aNhqwdE7VRhuHIXjDgbERiF1Xu3435Vbb4y2F5fBGI4v1fCDqC/aC0aEWC43CZmI+drp
-         VbdJJUFYLDvtJwyZbYAA7aKc3MIuknTLPsAHEVLxlR9jlHBIHwbpNfiJMnCx9ZahM/Fs
-         CAdvjGQApJDiLkR7cJzVdSNz+emSQwR6GJDsKZHkRMBwwMIzGZM85Usid53Xlm4TLeSH
-         QIu/J1h6fVXB2gXL7C1lw68id5ifVUEVz7hzXxCYWuv/OG8lsPaJYYiRIv/Izfp/uzB+
-         +/OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770365117; x=1770969917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kWLfR2iq4Uky6Kq1I5l8o1nz5cqJ4IFTg8zi44mevOI=;
-        b=FbLp/E01X16FeTefLlMaQXZRbPoEuvZhRAMyejoCVMUmeqgrK8PkWXSRe9CiiSgvvU
-         to8dDVlscchovjmjoAxL1JFRvEn2yUy1sDGXKJNvSJwf5maBE5HR0nNBonDaSggdpxwv
-         nn22hMRqbn0CCitC8sZ2ZQK1wHDqxNBUR1mpFElzgCp6WuSWfg7gFxKZP9rcnu0vB9mv
-         UHoQhILhO4I6PDxLeQC+jqC5j3K/ZKJG0jKV1VYYfTTbus+Q61eu5OKqRrtZbEEAYsoM
-         bVHnAf76thPMHV8qUC2Sxhmfj7tluBdVDpbXrJHRp2fYuc19Abz1/eDE1BzjJ8/MDbx9
-         XHwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHOSHfAoA6iaHD79h4CxGMMUOBuuV4CsJ8OODuwU8lvr29TjroxWPl6d9+P34rC5xWbUKN1yWT1xL8Tt8KL7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFehEZkw+Y9ePLUV+lpvKOOjZQUywoOxBmaBc2FtPIGW5TDJyZ
-	vC8l5qfIo0NEY83ZEm7aCtOpp/6UMNitGQZLd7IaF5iILSWM24XtRX03t4Agy7u905MJXQIslPU
-	XmhF89XA/GWKxjsFszPpwlAZ6OCESVB1jEv6zwoYBbaeQX/6tOfG8RC12WtRK+mvlD1U+2b4L+8
-	exRzmXGL8mOIfVuNGPxwjznWOW8eJKNO90qHjAgEHMhoz25w==
-X-Gm-Gg: AZuq6aLmdB9+n1DfqlE0tJm/qcdYv9XEYOMn5XYPMzd4dZ/29+1v+wnVb0jvMXRps+O
-	KL+OtOYaloZhCzmK/2Jc8o5RJUDVVWRvUy7bp2hxRkUcUbYHqjtM0AIwvwlvoS7rZCqb5S6OQO7
-	yBueltKZ3n0+bqeP0qEo4IXfc6AfQ8QkZge/CGbHS8VBGvQwcfm9ZUEkXO5vZeRk4=
-X-Received: by 2002:a05:7301:2b87:b0:2b8:261a:fbdf with SMTP id 5a478bee46e88-2b856b5775cmr903558eec.39.1770365116829;
-        Fri, 06 Feb 2026 00:05:16 -0800 (PST)
-X-Received: by 2002:a05:7301:2b87:b0:2b8:261a:fbdf with SMTP id
- 5a478bee46e88-2b856b5775cmr903544eec.39.1770365116202; Fri, 06 Feb 2026
- 00:05:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJRutc3p"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 884C2C19421;
+	Fri,  6 Feb 2026 09:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770368565;
+	bh=O7evD8wwdmbwGV1YhpqpqWGFqynW7f6rneQ7VuYtBGM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=aJRutc3p9WXdLAXkOkFPFWMd5gLwR9vlZD0OSfenuNmcPheMenoQMg3joRb46gK7/
+	 oFIWHXwStinCw5si1yEDzMzlg/wTRNXZithGZoQfinjaaJMmjtuYAMvJnvQs71NexF
+	 RWcSf6Wq5KBnNEsoEOyCZh+dkrqVuz+WRT16OJWui53swZKZKz4PJ4MzdFOLOzYUh9
+	 86bmfUuTCf47NWmSZYE1J24xIjw5v7TpxkxIdgikghcVV1wncA5QDhKZghNck39yIu
+	 Z9VHfl/wzDSr6aam6UN64m8VR2XK3oZkl9uqN3yRzIW/S2iIy4zxfH9U8hNVKL6JB7
+	 bf19gO9cJzLew==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB27EB28F8;
+	Fri,  6 Feb 2026 09:02:45 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Date: Fri, 06 Feb 2026 09:02:33 +0000
+Subject: [PATCH v3 2/3] dma: amlogic: Add general DMA driver for A9
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250904174325.it.487-kees@kernel.org>
-In-Reply-To: <20250904174325.it.487-kees@kernel.org>
-From: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-Date: Fri, 6 Feb 2026 00:05:04 -0800
-X-Gm-Features: AZwV_Qjb2Rc_0b_gzX0QExAsryiv4D5h6ZmTxT2uraUZgpzUPLSlmf2S9rKs038
-Message-ID: <CALvbMcAMWW1ewkszu9nYEaY0iA=CsUh+JFm1pzpnkXvzp9dP5Q@mail.gmail.com>
-Subject: Re: [PATCH v4] Fix sanitizer attribute infrastructure to use standard
- TREE_LIST format [PR113264]
-To: Kees Cook <kees@kernel.org>
-Cc: Indu Bhagat <indu.bhagat@oracle.com>,
-        Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>,
-        Qing Zhao <qing.zhao@oracle.com>, gcc-patches@gcc.gnu.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Authority-Analysis: v=2.4 cv=GaoaXAXL c=1 sm=1 tr=0 ts=6985a0bd cx=c_pps
- a=cFYjgdjTJScbgFmBucgdfQ==:117 a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=EUspDBNiAAAA:8
- a=gAw2J8AAsyoxXY8NRG4A:9 a=QEXdDO2ut3YA:10 a=scEy_gLbYbu1JhEsrz4S:22
-X-Proofpoint-ORIG-GUID: inmurJJiIhBRDhO4vPRmHyDgkqPBZ8II
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA2MDA1MCBTYWx0ZWRfX5lXCEaa1tmNX
- d630dC28R6W/Ox4W/Xe/Bv0LQAK+qXNZ7zsn0QQPRC6UioHCCeapSqfYuJ4o3liRdE2ykVlxaFr
- FtT/Huk3iO4pUtCCkixPAiELQm74VhOJfaDWPRwxBY3Bc9Oks8SqC5H3NoeT89lNQtRGwxlG+Su
- a4vMHVvN3d7R2fuQuVl5knpsmtR7m88/tWd7MaERLpbSu24jU3G/4PokRw+fJ+Ftt9Zy6swvdty
- cJhtQFbuPOgFBLLKPZ2Qrm7v4aUkEgn9fhM/H8+sBYUWBGV+cIDFnYyI7Z7ZwuwDM0qwqD1/I40
- fghzkuGCmbNEosM5sY+dir//FgZ7r5xprcUg6PHBl142TGUbBLe4r9Me1pgHwS+2iUxPIxi8yKI
- PDRblFKZgvmgAROVfTksvGpZqykHNA8N0ONGEZz/pwMdAf/CkjoOktAImVgEweuvQEKBCtJspD3
- QCl58dF7KWPSYgsvO7A==
-X-Proofpoint-GUID: inmurJJiIhBRDhO4vPRmHyDgkqPBZ8II
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-06_02,2026-02-05_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 spamscore=0 clxscore=1015 impostorscore=0 phishscore=0
- priorityscore=1501 suspectscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2602060050
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260206-amlogic-dma-v3-2-56fb9f59ed22@amlogic.com>
+References: <20260206-amlogic-dma-v3-0-56fb9f59ed22@amlogic.com>
+In-Reply-To: <20260206-amlogic-dma-v3-0-56fb9f59ed22@amlogic.com>
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1770368563; l=19278;
+ i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
+ bh=5r7TbNgYJP+2mrbZ17vvwcSrr9sFKJg344/WF4aOqdA=;
+ b=hlRvBJu2n6RgbCLJEr4CNXpx+cmD/qE9pm1GXl0sadlxWApZECb90yq6mWEy6OrOptiqubXVN
+ dzA8YotrKzqCC4oxZlTxF9xcYyJQUDOZIR9643sHnK410HVJXRf7484
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
+ auth_id=578
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-On Thu, Sep 4, 2025 at 10:43=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> The __attribute__((__copy__)) functionality was crashing when copying
-> sanitizer-related attributes because these attributes violated the standa=
-rd
-> GCC attribute infrastructure by storing INTEGER_CST values directly inste=
-ad
-> of wrapping them in TREE_LIST like all other attributes.
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-I am going to review this over the weekend. I see it was not reviewed yet.
+Amlogic A9 SoCs include a general-purpose DMA controller that can be used
+by multiple peripherals, such as I2C PIO and I3C. Each peripheral group
+is associated with a dedicated DMA channel in hardware.
 
->
-> Wrap sanitizer attributes INTEGER_CST values in TREE_LIST structures
-> to follow the same pattern as other attributes. This eliminates the
-> copy_list() crashes when copying sanitizer attributes:
->
-> test.c:4:1: internal compiler error: tree check: expected tree that conta=
-ins =E2=80=98common=E2=80=99 structure, have =E2=80=98integer_cst=E2=80=99 =
-in copy_list, at tree.cc:1427
->     4 | __attribute__((__copy__(__tanh)));
->       | ^~~~~~~~~~~~~
-> 0x859d06 tree_contains_struct_check_failed(tree_node const*, tree_node_st=
-ructure_enum, char const*, int, char const*)
->         ../../gcc/gcc/tree.cc:9126
-> 0x860f78 contains_struct_check(tree_node*, tree_node_structure_enum, char=
- const*, int, char const*)
->         ../../gcc/gcc/tree.h:3748
-> 0x860f78 copy_list(tree_node*)
->         ../../gcc/gcc/tree.cc:1427
-> 0xa755a5 handle_copy_attribute
->         ../../gcc/gcc/c-family/c-attribs.cc:3077
->
-> gcc/c-family/ChangeLog:
->
->         PR c/113264
->         * c-attribs.cc (add_no_sanitize_value): Store INTEGER_CST values
->         wrapped in TREE_LIST following standard attribute conventions.
->         (handle_no_sanitize_attribute): Handle both original string
->         arguments and copied INTEGER_CST values from TREE_LIST format.
->
-> gcc/ChangeLog:
->
->         PR c/113264
->         * asan.h (sanitize_flags_p): Extract sanitizer flags from
->         TREE_LIST wrapper instead of directly from INTEGER_CST.
->
-> gcc/d/ChangeLog:
->
->         PR c/113264
->         * d-attribs.cc (d_handle_no_sanitize_attribute): Store INTEGER_CS=
-T
->         values wrapped in TREE_LIST following standard conventions.
->
-> gcc/testsuite/ChangeLog:
->
->         PR c/113264
->         * gcc.dg/pr113264.c: New test.
->         * gcc.dg/pr113264-asan-no-instrumentation.c: New test validating
->         that copied sanitizer attributes prevent ASAN instrumentation.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Indu Bhagat <indu.bhagat@oracle.com>
-> Cc: Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>
-> Cc: Qing Zhao <qing.zhao@oracle.com>
-> Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-> ---
->  gcc/asan.h                                    |   8 +-
->  .../gcc.dg/pr113264-asan-no-instrumentation.c |  60 ++++++++++
->  gcc/testsuite/gcc.dg/pr113264.c               | 107 ++++++++++++++++++
->  gcc/c-family/c-attribs.cc                     |  49 +++++---
->  gcc/d/d-attribs.cc                            |  17 ++-
->  5 files changed, 221 insertions(+), 20 deletions(-)
->  create mode 100644 gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation=
-.c
->  create mode 100644 gcc/testsuite/gcc.dg/pr113264.c
->
-> diff --git a/gcc/asan.h b/gcc/asan.h
-> index a24562f67a29..f5dc3d7ceb8d 100644
-> --- a/gcc/asan.h
-> +++ b/gcc/asan.h
-> @@ -253,7 +253,13 @@ sanitize_flags_p (sanitize_code_type flag,
->      {
->        tree value =3D lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (f=
-n));
->        if (value)
-> -       result_flags &=3D ~tree_to_uhwi (TREE_VALUE (value));
-> +       {
-> +         /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-> +         tree attr_args =3D TREE_VALUE (value);
-> +         gcc_assert (attr_args && TREE_CODE (attr_args) =3D=3D TREE_LIST=
-);
-> +         sanitize_code_type no_sanitize_flags =3D tree_to_sanitize_code_=
-type (TREE_VALUE (attr_args));
-> +         result_flags &=3D ~no_sanitize_flags;
-> +       }
->      }
->
->    return result_flags;
-> diff --git a/gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c b/gc=
-c/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c
-> new file mode 100644
-> index 000000000000..812c67c33086
-> --- /dev/null
-> +++ b/gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c
-> @@ -0,0 +1,60 @@
-> +/* PR c/113264 - __attribute__((copy)) crashes with sanitizer attributes
-> +   Test that copied no_sanitize_address attributes prevent ALL ASAN inst=
-rumentation.
-> +   This file should have NO ASAN calls since all functions have the attr=
-ibute.
-> +   { dg-do compile }
-> +   { dg-options "-fsanitize=3Daddress" }
-> +   { dg-skip-if "no address sanitizer" { no_fsanitize_address } } */
-> +
-> +/* Original function with no_sanitize_address */
-> +__attribute__((no_sanitize_address))
-> +int original (int *p, int *q)
-> +{
-> +  *p =3D 42;
-> +  return *q;
-> +}
-> +
-> +/* Copy the attribute - should also have no_sanitize_address */
-> +__typeof(original) copy1 __attribute__((__copy__(original)));
-> +int copy1 (int *p, int *q)
-> +{
-> +  *p =3D 43;
-> +  return *q;
-> +}
-> +
-> +/* Another copy - should also have no_sanitize_address */
-> +__typeof(original) copy2 __attribute__((__copy__(original)));
-> +int copy2 (int *p, int *q)
-> +{
-> +  *p =3D 44;
-> +  return *q;
-> +}
-> +
-> +/* Copy from a copy - should still have no_sanitize_address */
-> +__typeof(copy1) copy_of_copy __attribute__((__copy__(copy1)));
-> +int copy_of_copy (int *p, int *q)
-> +{
-> +  *p =3D 45;
-> +  return *q;
-> +}
-> +
-> +int separate_decl (void);
-> +__attribute__((noinline)) int separate_decl (void);
-> +
-> +__attribute__((__copy__(separate_decl), no_sanitize_address))
-> +int copy_and_annotated_alias (int *p, int *q)
-> +{
-> +  *p =3D 42;
-> +  return *q;
-> +}
-> +
-> +__attribute__((__copy__(separate_decl), no_sanitize("address")))
-> +int copy_and_annotated_string (int *p, int *q)
-> +{
-> +  *p =3D 42;
-> +  return *q;
-> +}
-> +
-> +/* Since ALL functions have no_sanitize_address (either directly or copi=
-ed),
-> +   there should be NO ASAN instrumentation calls in the entire file. */
-> +/* { dg-final { scan-assembler-not "__asan_report_store" } } */
-> +/* { dg-final { scan-assembler-not "__asan_report_load" } } */
-> diff --git a/gcc/testsuite/gcc.dg/pr113264.c b/gcc/testsuite/gcc.dg/pr113=
-264.c
-> new file mode 100644
-> index 000000000000..2a49965e26fd
-> --- /dev/null
-> +++ b/gcc/testsuite/gcc.dg/pr113264.c
-> @@ -0,0 +1,107 @@
-> +/* PR c/113264 - __attribute__((copy)) crashes with sanitizer attributes
-> +   Test that the copy attribute correctly handles sanitizer attributes
-> +   which store their arguments as INTEGER_CST values rather than TREE_LI=
-ST.
-> +   { dg-do compile }
-> +   { dg-options "-O2" } */
-> +
-> +/* Test copying no_sanitize_address attribute.  */
-> +__attribute__((no_sanitize_address)) void f1 (void);
-> +__typeof(f1) f1_copy __attribute__((__copy__(f1)));
-> +
-> +/* Test copying no_sanitize_thread attribute.  */
-> +__attribute__((no_sanitize_thread)) void f2 (void);
-> +__typeof(f2) f2_copy __attribute__((__copy__(f2)));
-> +
-> +/* Test copying no_sanitize_undefined attribute.  */
-> +__attribute__((no_sanitize_undefined)) void f3 (void);
-> +__typeof(f3) f3_copy __attribute__((__copy__(f3)));
-> +
-> +/* Test copying no_sanitize_coverage attribute.  */
-> +__attribute__((no_sanitize_coverage)) void f4 (void);
-> +__typeof(f4) f4_copy __attribute__((__copy__(f4)));
-> +
-> +/* Test copying no_sanitize attribute with string arguments.  */
-> +__attribute__((no_sanitize("address"))) void f5 (void);
-> +__typeof(f5) f5_copy __attribute__((__copy__(f5)));
-> +
-> +__attribute__((no_sanitize("thread"))) void f6 (void);
-> +__typeof(f6) f6_copy __attribute__((__copy__(f6)));
-> +
-> +__attribute__((no_sanitize("undefined"))) void f7 (void);
-> +__typeof(f7) f7_copy __attribute__((__copy__(f7)));
-> +
-> +/* Test copying multiple sanitizer flags.  */
-> +__attribute__((no_sanitize("address", "thread"))) void f8 (void);
-> +__typeof(f8) f8_copy __attribute__((__copy__(f8)));
-> +
-> +/* Test the original bug report case.  This may trigger a warning
-> +   about conflicting with a built-in function name.  */
-> +__attribute__((no_sanitize_address)) void h (void);
-> +__typeof(h) tanhf64 __attribute__((__copy__(h)));
-> +/* { dg-warning "conflicting types for built-in function" "" { target *-=
-*-* } .-1 } */
-> +
-> +/* Test copying from a function pointer variable - this should trigger a=
- warning.  */
-> +__attribute__((no_sanitize_address)) void f9 (void);
-> +void (*f9_ptr)(void) =3D f9; /* { dg-message "symbol 'f9_ptr' referenced=
-" } */
-> +__typeof(f9) f9_ptr_copy __attribute__((__copy__(*f9_ptr))); /* { dg-war=
-ning "'copy' attribute ignored" } */
-> +
-> +/* Test with actual function definitions to ensure attributes are proper=
-ly applied.  */
-> +__attribute__((no_sanitize_address))
-> +void actual_func (int *p)
-> +{
-> +  *p =3D 100;
-> +}
-> +
-> +__typeof(actual_func) actual_func_copy __attribute__((__copy__(actual_fu=
-nc)));
-> +
-> +void actual_func_copy (int *p)
-> +{
-> +  *p =3D 200;
-> +}
-> +
-> +/* Test copying sanitizer attributes along with other attributes.  */
-> +__attribute__((no_sanitize_address, noinline, cold))
-> +void multi_attr (void);
-> +
-> +__typeof(multi_attr) multi_attr_copy __attribute__((__copy__(multi_attr)=
-));
-> +
-> +/* Verify that the copy attribute works with function declarations that
-> +   have sanitizer attributes applied via separate declarations.  */
-> +void separate_decl (void);
-> +__attribute__((no_sanitize_address)) void separate_decl (void);
-> +__typeof(separate_decl) separate_decl_copy __attribute__((__copy__(separ=
-ate_decl)));
-> +
-> +/* Test combining copy attribute with additional no_sanitize attributes.
-> +   The copied function should have both the original no_sanitize_address
-> +   and the new no_sanitize flags.  */
-> +__attribute__((no_sanitize_address))
-> +int combined_original (int *p, int *q)
-> +{
-> +  *p =3D 42;
-> +  return *q;
-> +}
-> +
-> +/* Copy the no_sanitize_address attribute and add no_sanitize for alignm=
-ent.  */
-> +__typeof(combined_original) combined_copy1 __attribute__((__copy__(combi=
-ned_original), no_sanitize("alignment")));
-> +
-> +/* Test with multiple no_sanitize attributes on original.  */
-> +__attribute__((no_sanitize("address", "undefined")))
-> +int combined_original2 (int *p, int *q)
-> +{
-> +  *p =3D 44;
-> +  return *q;
-> +}
-> +
-> +/* Copy existing sanitizer attributes and add more.  */
-> +__typeof(combined_original2) combined_copy2 __attribute__((__copy__(comb=
-ined_original2), no_sanitize("alignment")));
-> +
-> +/* Test with no_sanitize_undefined on original.  */
-> +__attribute__((no_sanitize_undefined))
-> +int combined_original3 (int *p, int *q)
-> +{
-> +  *p =3D 46;
-> +  return *q;
-> +}
-> +
-> +/* Copy and add no_sanitize_address - combining different sanitizer attr=
-ibutes.  */
-> +__typeof(combined_original3) combined_copy3 __attribute__((__copy__(comb=
-ined_original3), no_sanitize_address));
-> diff --git a/gcc/c-family/c-attribs.cc b/gcc/c-family/c-attribs.cc
-> index 1e3a94ed9493..e629601579ef 100644
-> --- a/gcc/c-family/c-attribs.cc
-> +++ b/gcc/c-family/c-attribs.cc
-> @@ -1425,20 +1425,27 @@ add_no_sanitize_value (tree node, sanitize_code_t=
-ype flags)
->    tree attr =3D lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (node))=
-;
->    if (attr)
->      {
-> -      sanitize_code_type old_value =3D
-> -       tree_to_sanitize_code_type (TREE_VALUE (attr));
-> +      /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-> +      tree attr_args =3D TREE_VALUE (attr);
-> +      gcc_assert (attr_args && TREE_CODE (attr_args) =3D=3D TREE_LIST);
-> +      sanitize_code_type old_value =3D tree_to_sanitize_code_type (TREE_=
-VALUE (attr_args));
-> +
->        flags |=3D old_value;
->
->        if (flags =3D=3D old_value)
->         return;
->
-> -      TREE_VALUE (attr) =3D build_int_cst (uint64_type_node, flags);
-> +      tree new_value =3D build_tree_list (NULL_TREE,
-> +                                       build_int_cst (uint64_type_node, =
-flags));
-> +      TREE_VALUE (attr) =3D new_value;
->      }
->    else
-> -    DECL_ATTRIBUTES (node)
-> -      =3D tree_cons (get_identifier ("no_sanitize"),
-> -                  build_int_cst (uint64_type_node, flags),
-> -                  DECL_ATTRIBUTES (node));
-> +    {
-> +      tree attr_value =3D build_tree_list (NULL_TREE,
-> +                                        build_int_cst (uint64_type_node,=
- flags));
-> +      DECL_ATTRIBUTES (node) =3D tree_cons (get_identifier ("no_sanitize=
-"), attr_value,
-> +                                         DECL_ATTRIBUTES (node));
-> +    }
->  }
->
->  /* Handle a "no_sanitize" attribute; arguments as in
-> @@ -1456,17 +1463,29 @@ handle_no_sanitize_attribute (tree *node, tree na=
-me, tree args, int,
->        return NULL_TREE;
->      }
->
-> -  for (; args; args =3D TREE_CHAIN (args))
-> +  /* Handle both original string arguments and copied attributes that
-> +     have already been processed into INTEGER_CST wrapped in TREE_LIST. =
- */
-> +  if (args && TREE_CODE (args) =3D=3D TREE_LIST
-> +      && TREE_VALUE (args) && TREE_CODE (TREE_VALUE (args)) =3D=3D INTEG=
-ER_CST)
->      {
-> -      tree id =3D TREE_VALUE (args);
-> -      if (TREE_CODE (id) !=3D STRING_CST)
-> +      /* This is a copied attribute with the flags already processed.  *=
-/
-> +      flags =3D tree_to_sanitize_code_type (TREE_VALUE (args));
-> +    }
-> +  else
-> +    {
-> +      /* Process original string arguments.  */
-> +      for (; args; args =3D TREE_CHAIN (args))
->         {
-> -         error ("%qE argument not a string", name);
-> -         return NULL_TREE;
-> -       }
-> +         tree id =3D TREE_VALUE (args);
-> +         if (TREE_CODE (id) !=3D STRING_CST)
-> +           {
-> +             error ("%qE argument not a string", name);
-> +             return NULL_TREE;
-> +           }
->
-> -      char *string =3D ASTRDUP (TREE_STRING_POINTER (id));
-> -      flags |=3D parse_no_sanitize_attribute (string);
-> +         char *string =3D ASTRDUP (TREE_STRING_POINTER (id));
-> +         flags |=3D parse_no_sanitize_attribute (string);
-> +       }
->      }
->
->    add_no_sanitize_value (*node, flags);
-> diff --git a/gcc/d/d-attribs.cc b/gcc/d/d-attribs.cc
-> index 53aea5e2e904..342702b05acb 100644
-> --- a/gcc/d/d-attribs.cc
-> +++ b/gcc/d/d-attribs.cc
-> @@ -1424,17 +1424,26 @@ d_handle_no_sanitize_attribute (tree *node, tree =
-name, tree args, int,
->       merge existing flags if no_sanitize was previously handled.  */
->    if (tree attr =3D lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (*n=
-ode)))
->      {
-> -      sanitize_code_type old_value =3D
-> -       tree_to_sanitize_code_type (TREE_VALUE (attr));
-> +      /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-> +      tree attr_args =3D TREE_VALUE (attr);
-> +      gcc_assert (attr_args && TREE_CODE (attr_args) =3D=3D TREE_LIST);
-> +      sanitize_code_type old_value =3D tree_to_sanitize_code_type (TREE_=
-VALUE (attr_args));
-> +
->        flags |=3D old_value;
->
->        if (flags !=3D old_value)
-> -       TREE_VALUE (attr) =3D build_int_cst (d_ulong_type, flags);
-> +       {
-> +         tree new_value =3D build_tree_list (NULL_TREE,
-> +                                            build_int_cst (d_ulong_type,=
- flags));
-> +         TREE_VALUE (attr) =3D new_value;
-> +       }
->      }
->    else
->      {
-> +      tree attr_value =3D build_tree_list (NULL_TREE,
-> +                                         build_int_cst (d_ulong_type, fl=
-ags));
->        DECL_ATTRIBUTES (*node) =3D tree_cons (get_identifier ("no_sanitiz=
-e"),
-> -                                          build_int_cst (d_ulong_type, f=
-lags),
-> +                                          attr_value,
->                                            DECL_ATTRIBUTES (*node));
->      }
->
-> --
-> 2.34.1
->
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+ drivers/dma/Kconfig       |   9 +
+ drivers/dma/Makefile      |   1 +
+ drivers/dma/amlogic-dma.c | 561 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 571 insertions(+)
+
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 66cda7cc9f7a..8d4578513acf 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -85,6 +85,15 @@ config AMCC_PPC440SPE_ADMA
+ 	help
+ 	  Enable support for the AMCC PPC440SPe RAID engines.
+ 
++config AMLOGIC_DMA
++	tristate "Amlogic general DMA support"
++	depends on ARCH_MESON || COMPILE_TEST
++	select DMA_ENGINE
++	select REGMAP_MMIO
++	help
++	  Enable support for the Amlogic general DMA engines. THis DMA
++	  controller is used some Amlogic SoCs, such as A9.
++
+ config APPLE_ADMAC
+ 	tristate "Apple ADMAC support"
+ 	depends on ARCH_APPLE || COMPILE_TEST
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index a54d7688392b..fc28dade5b69 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -16,6 +16,7 @@ obj-$(CONFIG_DMATEST) += dmatest.o
+ obj-$(CONFIG_ALTERA_MSGDMA) += altera-msgdma.o
+ obj-$(CONFIG_AMBA_PL08X) += amba-pl08x.o
+ obj-$(CONFIG_AMCC_PPC440SPE_ADMA) += ppc4xx/
++obj-$(CONFIG_AMLOGIC_DMA) += amlogic-dma.o
+ obj-$(CONFIG_APPLE_ADMAC) += apple-admac.o
+ obj-$(CONFIG_ARM_DMA350) += arm-dma350.o
+ obj-$(CONFIG_AT_HDMAC) += at_hdmac.o
+diff --git a/drivers/dma/amlogic-dma.c b/drivers/dma/amlogic-dma.c
+new file mode 100644
+index 000000000000..cbecbde7857b
+--- /dev/null
++++ b/drivers/dma/amlogic-dma.c
+@@ -0,0 +1,561 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
++/*
++ * Copyright (C) 2025 Amlogic, Inc. All rights reserved
++ * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
++ */
++
++#include <asm/irq.h>
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/dma-mapping.h>
++#include <linux/dmaengine.h>
++#include <linux/interrupt.h>
++#include <linux/init.h>
++#include <linux/list.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_dma.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++#include "dmaengine.h"
++
++#define RCH_REG_BASE		0x0
++#define WCH_REG_BASE		0x2000
++/*
++ * Each rch (read from memory) REG offset  Rch_offset 0x0 each channel total 0x40
++ * rch addr = DMA_base + Rch_offset+ chan_id * 0x40 + reg_offset
++ */
++#define RCH_READY		0x0
++#define RCH_STATUS		0x4
++#define RCH_CFG			0x8
++#define CFG_CLEAR		BIT(25)
++#define CFG_PAUSE		BIT(26)
++#define CFG_ENABLE		BIT(27)
++#define CFG_DONE		BIT(28)
++#define RCH_ADDR		0xc
++#define RCH_LEN			0x10
++#define RCH_RD_LEN		0x14
++#define RCH_PRT			0x18
++#define RCH_SYCN_STAT		0x1c
++#define RCH_ADDR_LOW		0x20
++#define RCH_ADDR_HIGH		0x24
++/* if work on 64, it work with RCH_PRT */
++#define RCH_PTR_HIGH		0x28
++
++/*
++ * Each wch (write to memory) REG offset  Wch_offset 0x2000 each channel total 0x40
++ * wch addr = DMA_base + Wch_offset+ chan_id * 0x40 + reg_offset
++ */
++#define WCH_READY		0x0
++#define WCH_TOTAL_LEN		0x4
++#define WCH_CFG			0x8
++#define WCH_ADDR		0xc
++#define WCH_LEN			0x10
++#define WCH_RD_LEN		0x14
++#define WCH_PRT			0x18
++#define WCH_CMD_CNT		0x1c
++#define WCH_ADDR_LOW		0x20
++#define WCH_ADDR_HIGH		0x24
++/* if work on 64, it work with RCH_PRT */
++#define WCH_PTR_HIGH		0x28
++
++/* DMA controller reg */
++#define RCH_INT_MASK		0x1000
++#define WCH_INT_MASK		0x1004
++#define CLEAR_W_BATCH		0x1014
++#define CLEAR_RCH		0x1024
++#define CLEAR_WCH		0x1028
++#define RCH_ACTIVE		0x1038
++#define WCH_ACTIVE		0x103c
++#define RCH_DONE		0x104c
++#define WCH_DONE		0x1050
++#define RCH_ERR			0x1060
++#define RCH_LEN_ERR		0x1064
++#define WCH_ERR			0x1068
++#define DMA_BATCH_END		0x1078
++#define WCH_EOC_DONE		0x1088
++#define WDMA_RESP_ERR		0x1098
++#define UPT_PKT_SYNC		0x10a8
++#define RCHN_CFG		0x10ac
++#define WCHN_CFG		0x10b0
++#define MEM_PD_CFG		0x10b4
++#define MEM_BUS_CFG		0x10b8
++#define DMA_GMV_CFG		0x10bc
++#define DMA_GMR_CFG		0x10c0
++
++#define AML_DMA_TYPE_TX		0
++#define AML_DMA_TYPE_RX		1
++#define DMA_MAX_LINK		8
++#define MAX_CHAN_ID		32
++#define SG_MAX_LEN		GENMASK(26, 0)
++
++struct aml_dma_sg_link {
++#define LINK_LEN		GENMASK(26, 0)
++#define LINK_IRQ		BIT(27)
++#define LINK_EOC		BIT(28)
++#define LINK_LOOP		BIT(29)
++#define LINK_ERR		BIT(30)
++#define LINK_OWNER		BIT(31)
++	u32 ctl;
++	u64 address;
++	u32 revered;
++} __packed;
++
++struct aml_dma_chan {
++	struct dma_chan			chan;
++	struct dma_async_tx_descriptor	desc;
++	struct aml_dma_dev		*aml_dma;
++	struct aml_dma_sg_link		*sg_link;
++	dma_addr_t			sg_link_phys;
++	int				sg_link_cnt;
++	int				data_len;
++	enum dma_status			pre_status;
++	enum dma_status			status;
++	enum dma_transfer_direction	direction;
++	int				chan_id;
++	/* reg_base (direction + chan_id) */
++	int				reg_offs;
++};
++
++struct aml_dma_dev {
++	struct dma_device		dma_device;
++	void __iomem			*base;
++	struct regmap			*regmap;
++	struct clk			*clk;
++	int				irq;
++	struct platform_device		*pdev;
++	struct aml_dma_chan		*aml_rch[MAX_CHAN_ID];
++	struct aml_dma_chan		*aml_wch[MAX_CHAN_ID];
++	unsigned int			chan_nr;
++	unsigned int			chan_used;
++	struct aml_dma_chan		aml_chans[]__counted_by(chan_nr);
++};
++
++static struct aml_dma_chan *to_aml_dma_chan(struct dma_chan *chan)
++{
++	return container_of(chan, struct aml_dma_chan, chan);
++}
++
++static dma_cookie_t aml_dma_tx_submit(struct dma_async_tx_descriptor *tx)
++{
++	return dma_cookie_assign(tx);
++}
++
++static int aml_dma_alloc_chan_resources(struct dma_chan *chan)
++{
++	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
++	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
++	size_t size = size_mul(sizeof(struct aml_dma_sg_link), DMA_MAX_LINK);
++
++	aml_chan->sg_link = dma_alloc_coherent(aml_dma->dma_device.dev, size,
++					       &aml_chan->sg_link_phys, GFP_KERNEL);
++	if (!aml_chan->sg_link)
++		return  -ENOMEM;
++
++	/* offset is the same RCH_CFG and WCH_CFG */
++	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, CFG_CLEAR);
++	aml_chan->status = DMA_COMPLETE;
++	dma_async_tx_descriptor_init(&aml_chan->desc, chan);
++	aml_chan->desc.tx_submit = aml_dma_tx_submit;
++	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, 0);
++
++	return 0;
++}
++
++static void aml_dma_free_chan_resources(struct dma_chan *chan)
++{
++	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
++	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
++
++	aml_chan->status = DMA_COMPLETE;
++	dma_free_coherent(aml_dma->dma_device.dev,
++			  sizeof(struct aml_dma_sg_link) * DMA_MAX_LINK,
++			  aml_chan->sg_link, aml_chan->sg_link_phys);
++}
++
++/* DMA transfer state  update how many data reside it */
++static enum dma_status aml_dma_tx_status(struct dma_chan *chan,
++					 dma_cookie_t cookie,
++					 struct dma_tx_state *txstate)
++{
++	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
++	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
++	u32 residue, done;
++
++	regmap_read(aml_dma->regmap, aml_chan->reg_offs + RCH_RD_LEN, &done);
++	residue = aml_chan->data_len - done;
++	dma_set_tx_state(txstate, chan->completed_cookie, chan->cookie,
++			 residue);
++
++	return aml_chan->status;
++}
++
++static struct dma_async_tx_descriptor *aml_dma_prep_slave_sg
++		(struct dma_chan *chan, struct scatterlist *sgl,
++		unsigned int sg_len, enum dma_transfer_direction direction,
++		unsigned long flags, void *context)
++{
++	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
++	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
++	struct aml_dma_sg_link *sg_link;
++	struct scatterlist *sg;
++	int idx = 0;
++	u32 reg, chan_id;
++	u32 i;
++
++	if (aml_chan->direction != direction) {
++		dev_err(aml_dma->dma_device.dev, "direction not support\n");
++		return NULL;
++	}
++
++	switch (aml_chan->status) {
++	case DMA_IN_PROGRESS:
++		dev_err(aml_dma->dma_device.dev, "not support multi tx_desciptor\n");
++		return NULL;
++
++	case DMA_COMPLETE:
++		aml_chan->data_len = 0;
++		chan_id = aml_chan->chan_id;
++		reg = (direction == DMA_DEV_TO_MEM) ? WCH_INT_MASK : RCH_INT_MASK;
++		regmap_update_bits(aml_dma->regmap, reg, BIT(chan_id), BIT(chan_id));
++
++		break;
++	default:
++		dev_err(aml_dma->dma_device.dev, "status error\n");
++		return NULL;
++	}
++
++	if (sg_len > DMA_MAX_LINK) {
++		dev_err(aml_dma->dma_device.dev,
++			"maximum number of sg exceeded: %d > %d\n",
++			sg_len, DMA_MAX_LINK);
++		aml_chan->status = DMA_ERROR;
++		return NULL;
++	}
++
++	aml_chan->status = DMA_IN_PROGRESS;
++
++	for_each_sg(sgl, sg, sg_len, i) {
++		if (sg_dma_len(sg) > SG_MAX_LEN) {
++			dev_err(aml_dma->dma_device.dev,
++				"maximum bytes exceeded: %u > %lu\n",
++				sg_dma_len(sg), SG_MAX_LEN);
++			aml_chan->status = DMA_ERROR;
++			return NULL;
++		}
++		sg_link = &aml_chan->sg_link[idx++];
++		/* set dma address and len  to sglink*/
++		sg_link->address = sg->dma_address;
++		sg_link->ctl = FIELD_PREP(LINK_LEN, sg_dma_len(sg));
++
++		aml_chan->data_len += sg_dma_len(sg);
++	}
++	aml_chan->sg_link_cnt = idx;
++
++	return &aml_chan->desc;
++}
++
++static int aml_dma_pause_chan(struct dma_chan *chan)
++{
++	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
++	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
++
++	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_PAUSE, CFG_PAUSE);
++	aml_chan->pre_status = aml_chan->status;
++	aml_chan->status = DMA_PAUSED;
++
++	return 0;
++}
++
++static int aml_dma_resume_chan(struct dma_chan *chan)
++{
++	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
++	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
++
++	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_PAUSE, 0);
++	aml_chan->status = aml_chan->pre_status;
++
++	return 0;
++}
++
++static int aml_dma_terminate_all(struct dma_chan *chan)
++{
++	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
++	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
++	int chan_id = aml_chan->chan_id;
++
++	aml_dma_pause_chan(chan);
++	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, CFG_CLEAR);
++
++	if (aml_chan->direction == DMA_MEM_TO_DEV)
++		regmap_update_bits(aml_dma->regmap, RCH_INT_MASK, BIT(chan_id), BIT(chan_id));
++	else if (aml_chan->direction == DMA_DEV_TO_MEM)
++		regmap_update_bits(aml_dma->regmap, WCH_INT_MASK, BIT(chan_id), BIT(chan_id));
++
++	aml_chan->status = DMA_COMPLETE;
++
++	return 0;
++}
++
++static void aml_dma_enable_chan(struct dma_chan *chan)
++{
++	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
++	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
++	struct aml_dma_sg_link *sg_link;
++	int chan_id = aml_chan->chan_id;
++	int idx = aml_chan->sg_link_cnt - 1;
++
++	/* the last sg set eoc flag */
++	sg_link = &aml_chan->sg_link[idx];
++	sg_link->ctl |= LINK_EOC;
++	if (aml_chan->direction == DMA_MEM_TO_DEV) {
++		regmap_write(aml_dma->regmap, aml_chan->reg_offs + RCH_ADDR,
++			     aml_chan->sg_link_phys);
++		regmap_write(aml_dma->regmap, aml_chan->reg_offs + RCH_LEN, aml_chan->data_len);
++		regmap_update_bits(aml_dma->regmap, RCH_INT_MASK, BIT(chan_id), 0);
++		/* for rch (tx) need set cfg 0 to trigger start */
++		regmap_write(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, 0);
++	} else if (aml_chan->direction == DMA_DEV_TO_MEM) {
++		regmap_write(aml_dma->regmap, aml_chan->reg_offs + WCH_ADDR,
++			     aml_chan->sg_link_phys);
++		regmap_write(aml_dma->regmap, aml_chan->reg_offs + WCH_LEN, aml_chan->data_len);
++		regmap_update_bits(aml_dma->regmap, WCH_INT_MASK, BIT(chan_id), 0);
++	}
++}
++
++static irqreturn_t aml_dma_interrupt_handler(int irq, void *dev_id)
++{
++	struct aml_dma_dev *aml_dma = dev_id;
++	struct aml_dma_chan *aml_chan;
++	u32 done, eoc_done, err, err_l, end;
++	int i = 0;
++
++	/* deal with rch normal complete and error */
++	regmap_read(aml_dma->regmap, RCH_DONE, &done);
++	regmap_read(aml_dma->regmap, RCH_ERR, &err);
++	regmap_read(aml_dma->regmap, RCH_LEN_ERR, &err_l);
++	err = err | err_l;
++
++	done = done | err;
++
++	while (done) {
++		i = ffs(done) - 1;
++		aml_chan = aml_dma->aml_rch[i];
++		regmap_write(aml_dma->regmap, CLEAR_RCH, BIT(aml_chan->chan_id));
++		if (!aml_chan) {
++			dev_err(aml_dma->dma_device.dev, "idx %d rch not initialized\n", i);
++			done &= ~BIT(i);
++			continue;
++		}
++		aml_chan->status = (err & (1 << i)) ? DMA_ERROR : DMA_COMPLETE;
++		dma_cookie_complete(&aml_chan->desc);
++		dmaengine_desc_get_callback_invoke(&aml_chan->desc, NULL);
++		done &= ~BIT(i);
++	}
++
++	/* deal with wch normal complete and error */
++	regmap_read(aml_dma->regmap, DMA_BATCH_END, &end);
++	if (end)
++		regmap_write(aml_dma->regmap, CLEAR_W_BATCH, end);
++
++	regmap_read(aml_dma->regmap, WCH_DONE, &done);
++	regmap_read(aml_dma->regmap, WCH_EOC_DONE, &eoc_done);
++	done = done | eoc_done;
++
++	regmap_read(aml_dma->regmap, WCH_ERR, &err);
++	regmap_read(aml_dma->regmap, WDMA_RESP_ERR, &err_l);
++	err = err | err_l;
++
++	done = done | err;
++	i = 0;
++	while (done) {
++		i = ffs(done) - 1;
++		aml_chan = aml_dma->aml_wch[i];
++		regmap_write(aml_dma->regmap, CLEAR_WCH, BIT(aml_chan->chan_id));
++		if (!aml_chan) {
++			dev_err(aml_dma->dma_device.dev, "idx %d wch not initialized\n", i);
++			done &= ~BIT(i);
++			continue;
++		}
++		aml_chan->status = (err & (1 << i)) ? DMA_ERROR : DMA_COMPLETE;
++		dma_cookie_complete(&aml_chan->desc);
++		dmaengine_desc_get_callback_invoke(&aml_chan->desc, NULL);
++		done &= ~BIT(i);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static struct dma_chan *aml_of_dma_xlate(struct of_phandle_args *dma_spec, struct of_dma *ofdma)
++{
++	struct aml_dma_dev *aml_dma = (struct aml_dma_dev *)ofdma->of_dma_data;
++	struct aml_dma_chan *aml_chan = NULL;
++	u32 type;
++	u32 phy_chan_id;
++
++	if (dma_spec->args_count != 2)
++		return NULL;
++
++	type = dma_spec->args[0];
++	phy_chan_id = dma_spec->args[1];
++
++	if (phy_chan_id >= MAX_CHAN_ID)
++		return NULL;
++
++	if (type == AML_DMA_TYPE_TX) {
++		aml_chan = aml_dma->aml_rch[phy_chan_id];
++		if (!aml_chan) {
++			if (aml_dma->chan_used >= aml_dma->chan_nr) {
++				dev_err(aml_dma->dma_device.dev, "some dma clients err used\n");
++				return NULL;
++			}
++			aml_chan = &aml_dma->aml_chans[aml_dma->chan_used];
++			aml_dma->chan_used++;
++			aml_chan->direction = DMA_MEM_TO_DEV;
++			aml_chan->chan_id = phy_chan_id;
++			aml_chan->reg_offs = RCH_REG_BASE + 0x40 * aml_chan->chan_id;
++			aml_dma->aml_rch[phy_chan_id] = aml_chan;
++		}
++	} else if (type == AML_DMA_TYPE_RX) {
++		aml_chan = aml_dma->aml_wch[phy_chan_id];
++		if (!aml_chan) {
++			if (aml_dma->chan_used >= aml_dma->chan_nr) {
++				dev_err(aml_dma->dma_device.dev, "some dma clients err used\n");
++				return NULL;
++			}
++			aml_chan = &aml_dma->aml_chans[aml_dma->chan_used];
++			aml_dma->chan_used++;
++			aml_chan->direction = DMA_DEV_TO_MEM;
++			aml_chan->chan_id = phy_chan_id;
++			aml_chan->reg_offs = WCH_REG_BASE + 0x40 * aml_chan->chan_id;
++			aml_dma->aml_wch[phy_chan_id] = aml_chan;
++		}
++	} else {
++		dev_err(aml_dma->dma_device.dev, "type %d not supported\n", type);
++		return NULL;
++	}
++
++	return dma_get_slave_channel(&aml_chan->chan);
++}
++
++static int aml_dma_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct dma_device *dma_dev;
++	struct aml_dma_dev *aml_dma;
++	int ret, i, len;
++	u32 chan_nr;
++
++	const struct regmap_config aml_regmap_config = {
++		.reg_bits = 32,
++		.val_bits = 32,
++		.reg_stride = 4,
++		.max_register = 0x3000,
++	};
++
++	ret = of_property_read_u32(np, "dma-channels", &chan_nr);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "failed to read dma-channels\n");
++
++	len = sizeof(*aml_dma) + sizeof(struct aml_dma_chan) * chan_nr;
++	aml_dma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
++	if (!aml_dma)
++		return -ENOMEM;
++
++	aml_dma->chan_nr = chan_nr;
++
++	aml_dma->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(aml_dma->base))
++		return PTR_ERR(aml_dma->base);
++
++	aml_dma->regmap = devm_regmap_init_mmio(&pdev->dev, aml_dma->base,
++						&aml_regmap_config);
++	if (IS_ERR_OR_NULL(aml_dma->regmap))
++		return PTR_ERR(aml_dma->regmap);
++
++	aml_dma->clk = devm_clk_get_enabled(&pdev->dev, NULL);
++	if (IS_ERR(aml_dma->clk))
++		return PTR_ERR(aml_dma->clk);
++
++	aml_dma->irq = platform_get_irq(pdev, 0);
++
++	aml_dma->pdev = pdev;
++	aml_dma->dma_device.dev = &pdev->dev;
++
++	dma_dev = &aml_dma->dma_device;
++	INIT_LIST_HEAD(&dma_dev->channels);
++
++	/* Initialize channel parameters */
++	for (i = 0; i < chan_nr; i++) {
++		struct aml_dma_chan *aml_chan = &aml_dma->aml_chans[i];
++
++		aml_chan->aml_dma = aml_dma;
++		aml_chan->chan.device = &aml_dma->dma_device;
++		dma_cookie_init(&aml_chan->chan);
++
++		/* Add the channel to aml_chan list */
++		list_add_tail(&aml_chan->chan.device_node,
++			      &aml_dma->dma_device.channels);
++	}
++	aml_dma->chan_used = 0;
++
++	dma_set_max_seg_size(dma_dev->dev, SG_MAX_LEN);
++
++	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
++	dma_dev->device_alloc_chan_resources = aml_dma_alloc_chan_resources;
++	dma_dev->device_free_chan_resources = aml_dma_free_chan_resources;
++	dma_dev->device_tx_status = aml_dma_tx_status;
++	dma_dev->device_prep_slave_sg = aml_dma_prep_slave_sg;
++
++	dma_dev->device_pause = aml_dma_pause_chan;
++	dma_dev->device_resume = aml_dma_resume_chan;
++	dma_dev->device_terminate_all = aml_dma_terminate_all;
++	dma_dev->device_issue_pending = aml_dma_enable_chan;
++	/* PIO 4 bytes and I2C 1 byte */
++	dma_dev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES | DMA_SLAVE_BUSWIDTH_1_BYTE);
++	dma_dev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
++	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
++
++	ret = dmaenginem_async_device_register(dma_dev);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "failed to register dmaenginem\n");
++
++	ret = of_dma_controller_register(np, aml_of_dma_xlate, aml_dma);
++	if (ret)
++		return ret;
++
++	regmap_write(aml_dma->regmap, RCH_INT_MASK, 0xffffffff);
++	regmap_write(aml_dma->regmap, WCH_INT_MASK, 0xffffffff);
++
++	ret = devm_request_irq(&pdev->dev, aml_dma->irq, aml_dma_interrupt_handler,
++			       IRQF_SHARED, dev_name(&pdev->dev), aml_dma);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "failed to reqest_irq\n");
++
++	return 0;
++}
++
++static const struct of_device_id aml_dma_ids[] = {
++	{ .compatible = "amlogic,a9-dma", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, aml_dma_ids);
++
++static struct platform_driver aml_dma_driver = {
++	.probe = aml_dma_probe,
++	.driver		= {
++		.name	= "aml-dma",
++		.of_match_table = aml_dma_ids,
++	},
++};
++
++module_platform_driver(aml_dma_driver);
++
++MODULE_DESCRIPTION("GENERAL DMA driver for Amlogic");
++MODULE_AUTHOR("Xianwei Zhao <xianwei.zhao@amlogic.com>");
++MODULE_LICENSE("GPL");
+
+-- 
+2.52.0
+
+
