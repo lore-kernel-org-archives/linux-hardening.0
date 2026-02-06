@@ -1,118 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E0D2ECE9B;
-	Fri,  6 Feb 2026 19:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D532D949F;
+	Fri,  6 Feb 2026 19:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770404895; cv=none; b=ZmHTXbb9wX7SuPvvuHfXdBG5KLFsqLy1x9VnOAxkQBqphzSoKNjS8vyox2bU9bDM5c+4tHQNuPZkWgrJ2bATnw1BXgpaXCBjAPp046Tjw7PeaZy8YFlxtMTEgknS4LgloQaufdYv9rIzdjAJzroDKUfs3d9CLdnUy1YoeqL1ULk=
+	t=1770406152; cv=none; b=U15FIvxlpwr4+Dbcd3kogDahaOydXuj7f+rOQoR2USA+ndiK4mCeMJPPo1ogEO+6pEyEcxqJQhvGqvoaMt1D/wVMzDsD1g6w/MZIk0Yon6EC0G79pSgKMvYUCiQNoLbv6FtBrrFmlalwAViSJxMf3Td6MM+yp7TtyidMV0nF8z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770404895; c=relaxed/simple;
-	bh=rD12jZNWPdLcwK9Chg3S5oef/etzrdqixcbLXgsH0rQ=;
+	s=arc-20240116; t=1770406152; c=relaxed/simple;
+	bh=H19CTmslTs0mcQ7KjWaj+mu13duhxLwq9lwwVm2UFzI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yp0O90tovIDFhaDim21F4wQBl1N/fbwL5KEcnpPEgN/E5945TlFpE4s7Vb5n/9FeLgAdx4p1bgZklPvtuR8v/c+eyoQiy9shH4jrzQijdvs3eYSdA5/9RpX1ACek1IRVGrPikAr23Uk6tLNvC885G4OS5jowIqPCihS4UW9C7rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MPr3oF03; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lKNz7RXTnkpzHILwoCGVUWMswqWKERHiapYiVY7wQkO24AVcHWGZjeD3ycUEaTA64Qr2tHuER+B7foy4P5wNlQVwvx5DbK/B9XN0hJpmfp/LJz18z4WB6BttrBqeeYJRnND4fPsSEFDKerUZdyeW/ny2SNse8c/zAVAZpQG/6l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTTcotFc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MPr3oF03"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770404895; x=1801940895;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rD12jZNWPdLcwK9Chg3S5oef/etzrdqixcbLXgsH0rQ=;
-  b=MPr3oF03yJPg+cb3Gu2oFU1BmvPN3Zu7j9ipSetbsukruzIdLEPkAe+F
-   Ik+5aQFYp2OtKFcr1v55/as567JVTwIETFZg2Xs0x1eFvK45y5uqyKJ4e
-   Z0vZuoKirZV7pSPWHLSteHxTx9FzRWTRPrj1hQVr64JgWT0O/PCd1n9Fu
-   UwOS3PlB6qf6ixR9XAt/At2tzr4A4/EwMcHMyVX4e51H8sZAwirGu5W0M
-   v6CA0BgBoWcvCUkyp2eTV9s4aThclprGx8wnhRydwj3Xub1F1boPparl2
-   Tzm9EeC25H6HLX0OGmfp9i+wNG0p4p0VeilvXu1ABfburi/Qtfpkq005a
-   Q==;
-X-CSE-ConnectionGUID: v8+33BxySwaBvsVKlqiyyQ==
-X-CSE-MsgGUID: Vgx/9i/gTfekrR8nalSbkA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11693"; a="75239314"
-X-IronPort-AV: E=Sophos;i="6.21,277,1763452800"; 
-   d="scan'208";a="75239314"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 11:08:15 -0800
-X-CSE-ConnectionGUID: 5AXItfbKTdefetpi8q88Cw==
-X-CSE-MsgGUID: 3Xh8yCxSS/STtLkwnSHfFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,277,1763452800"; 
-   d="scan'208";a="210819971"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 06 Feb 2026 11:08:11 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1voRBZ-00000000l32-1kjn;
-	Fri, 06 Feb 2026 19:08:09 +0000
-Date: Sat, 7 Feb 2026 03:08:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>
-Subject: Re: [PATCH v3 2/3] dma: amlogic: Add general DMA driver for A9
-Message-ID: <202602070253.hZ9PqUeB-lkp@intel.com>
-References: <20260206-amlogic-dma-v3-2-56fb9f59ed22@amlogic.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTTcotFc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A1BFC116C6;
+	Fri,  6 Feb 2026 19:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770406152;
+	bh=H19CTmslTs0mcQ7KjWaj+mu13duhxLwq9lwwVm2UFzI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CTTcotFc3gc6fmpzfmk7wakAZ1AsWntoMJIyKzjixY73Fwi/P8uUfjpRwICRn8ocx
+	 NhCuApAq3PMLhEED38jc0PvFJ25mkBNzXmfIV812ioxFPFerTh21KMUuBxD6Z0bLu1
+	 X2q3n8ZQ1AQ3slKJL9vUN+XBzIQEQ8/xzjCaQ3wp/vtdMCsnbkbDL/cxwRb+6n5KNM
+	 b6T/ar4qMfYDk1tMFSJcrPARgPGrR/ZTyaL1x2UHbMnKLX33rtw339NvIBxOsjEvIP
+	 Mj6xeJy2cfZV+zT5yyICulr7XHNNPTSJDZhRGECDzAr92DCViFoa0NYVgrriXp5ZDs
+	 9H7A2WmFARSdQ==
+Date: Fri, 6 Feb 2026 11:29:11 -0800
+From: Kees Cook <kees@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: =?utf-8?B?5p2O6b6Z5YW0?= <coregee2000@gmail.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org, syzkaller@googlegroups.com,
+	andy@kernel.org, akpm@linux-foundation.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [Kernel Bug] WARNING in ext4_fill_super
+Message-ID: <202602061032.63DD1CA3AE@keescook>
+References: <CAHPqNmzBb2LruMA6jymoHXQRsoiAKMFZ1wVEz8JcYKg4U6TBbw@mail.gmail.com>
+ <aYX4n42gmy75aw4Y@smile.fi.intel.com>
+ <aYYD3rxyIfdH2R-d@smile.fi.intel.com>
+ <aYYE4iLTXZw5t0w_@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260206-amlogic-dma-v3-2-56fb9f59ed22@amlogic.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aYYE4iLTXZw5t0w_@smile.fi.intel.com>
 
-Hi Xianwei,
+On Fri, Feb 06, 2026 at 05:12:34PM +0200, Andy Shevchenko wrote:
+> On Fri, Feb 06, 2026 at 05:08:19PM +0200, Andy Shevchenko wrote:
+> > On Fri, Feb 06, 2026 at 04:20:15PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Feb 02, 2026 at 12:19:45PM +0800, 李龙兴 wrote:
+> > > > Dear Linux kernel developers and maintainers,
+> > > > 
+> > > > We would like to report a new kernel bug found by our tool. The issue
+> > > > is a WARNING in ext4_fill_super. Details are as follows.
+> > > 
+> > > First of all, the warning appears in parse_apply_sb_mount_options().
+> [...]
+> Actually, the documentation says that strscpy*() must be used against C-strings.
+> This can explain the bug, id est the given string in mount options is not
+> NUL-terminated. That's where bug may come from. So, the Q is why is mount options
+> not NUL-terminated when it comes to ext4_fill_super()?
 
-kernel test robot noticed the following build warnings:
+parse_apply_sb_mount_options(...):
+	...
+        char s_mount_opts[64];
+	...
+        if (strscpy_pad(s_mount_opts, sbi->s_es->s_mount_opts) < 0)
+                return -E2BIG;
 
-[auto build test WARNING on 3c8a86ed002ab8fb287ee4ec92f0fd6ac5b291d2]
+Is sbi->s_es->s_mount_opts expected to be a C string? If not, this
+strscpy_pad() should likely be memtostr_pad(). (s_mount_opts is expected
+to be a C string based on its use with later C string API calls.)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Xianwei-Zhao-via-B4-Relay/dt-bindings-dma-Add-Amlogic-A9-SoC-DMA/20260206-170903
-base:   3c8a86ed002ab8fb287ee4ec92f0fd6ac5b291d2
-patch link:    https://lore.kernel.org/r/20260206-amlogic-dma-v3-2-56fb9f59ed22%40amlogic.com
-patch subject: [PATCH v3 2/3] dma: amlogic: Add general DMA driver for A9
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20260207/202602070253.hZ9PqUeB-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260207/202602070253.hZ9PqUeB-lkp@intel.com/reproduce)
+It seems like s_mount_opts is expected to be a C string, I can see it
+being used that way in lots of other places, e.g.:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602070253.hZ9PqUeB-lkp@intel.com/
+fs/ext4/ioctl.c:        strscpy_pad(ret.mount_opts, es->s_mount_opts);
+fs/ext4/ioctl.c:        strscpy_pad(es->s_mount_opts, params->mount_opts);
+fs/ext4/super.c:        if (!sbi->s_es->s_mount_opts[0])
+fs/ext4/super.c:        if (strscpy_pad(s_mount_opts, sbi->s_es->s_mount_opts) < 0)
 
-All warnings (new ones prefixed by >>):
+I can't tell where es->s_mount_opts comes from originally?
 
-   In file included from drivers/dma/amlogic-dma.c:7:
->> arch/x86/include/asm/irq.h:39:56: warning: 'struct pt_regs' declared inside parameter list will not be visible outside of this definition or declaration
-      39 | extern void __handle_irq(struct irq_desc *desc, struct pt_regs *regs);
-         |                                                        ^~~~~~~
->> arch/x86/include/asm/irq.h:44:50: warning: 'struct cpumask' declared inside parameter list will not be visible outside of this definition or declaration
-      44 | void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
-         |                                                  ^~~~~~~
+This one:
 
+fs/ext4/ioctl.c:        strscpy_pad(es->s_mount_opts, params->mount_opts);
 
-vim +39 arch/x86/include/asm/irq.h
+comes through ext4_ioctl_set_tune_sb() which has:
 
-a782a7e46bb508 arch/x86/include/asm/irq.h Thomas Gleixner   2015-08-02  38  
-7c2a57364cae0f arch/x86/include/asm/irq.h Thomas Gleixner   2020-05-21 @39  extern void __handle_irq(struct irq_desc *desc, struct pt_regs *regs);
-22067d4501bfb4 include/asm-x86/irq.h      Thomas Gleixner   2008-05-02  40  
-d9112f43021554 arch/x86/include/asm/irq.h Thomas Gleixner   2009-08-20  41  extern void init_ISA_irqs(void);
-d9112f43021554 arch/x86/include/asm/irq.h Thomas Gleixner   2009-08-20  42  
-b52e0a7c4e4100 arch/x86/include/asm/irq.h Michel Lespinasse 2013-06-06  43  #ifdef CONFIG_X86_LOCAL_APIC
-9a01c3ed5cdb35 arch/x86/include/asm/irq.h Chris Metcalf     2016-10-07 @44  void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
-8d539b84f1e347 arch/x86/include/asm/irq.h Douglas Anderson  2023-08-04  45  				    int exclude_cpu);
-89f579ce99f7e0 arch/x86/include/asm/irq.h Yi Wang           2018-11-22  46  
+        if (strnlen(params.mount_opts, sizeof(params.mount_opts)) ==
+            sizeof(params.mount_opts))
+                return -E2BIG;
+
+So it's already checked for, and suggests it must be NUL-terminated.
+
+> > > > loop4: detected capacity change from 0 to 514
+> > > > ------------[ cut here ]------------
+> > > > strnlen: detected buffer overflow: 65 byte read of buffer size 64
+> > > > WARNING: CPU: 0 PID: 12320 at lib/string_helpers.c:1035
+> > > > __fortify_report+0x9c/0xd0 lib/string_helpers.c:1035
+> > > > [...]
+> > > > Call Trace:
+> > > >  <TASK>
+> > > >  __fortify_panic+0x23/0x30 lib/string_helpers.c:1042
+> > > >  strnlen include/linux/fortify-string.h:235 [inline]
+> > > >  sized_strscpy include/linux/fortify-string.h:309 [inline]
+> > > >  parse_apply_sb_mount_options fs/ext4/super.c:2486 [inline]
+> > > >  __ext4_fill_super fs/ext4/super.c:5306 [inline]
+> > > >  ext4_fill_super+0x3972/0xaf70 fs/ext4/super.c:5736
+> > > >  get_tree_bdev_flags+0x38c/0x620 fs/super.c:1698
+> > > >  vfs_get_tree+0x8e/0x340 fs/super.c:1758
+> > > >  fc_mount fs/namespace.c:1199 [inline]
+> > > >  do_new_mount_fc fs/namespace.c:3642 [inline]
+
+So, something via do_new_mount_fc? Probably:
+
+static int ext4_fill_super(struct super_block *sb, struct fs_context *fc)
+
+which calls __ext4_fill_super(), and eventually
+parse_apply_sb_mount_options(). Which depends on:
+
+        struct ext4_fs_context *ctx = fc->fs_private;
+
+But I can't figure out where that comes from. Seems like fs_parse(), but
+I don't see where mount option strings would come through...
+
+Anyone more familiar with this know?
+
+-Kees
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kees Cook
