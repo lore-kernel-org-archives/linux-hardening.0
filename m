@@ -1,84 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2614726ED59;
-	Fri,  6 Feb 2026 19:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AFA26ED59;
+	Fri,  6 Feb 2026 19:54:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770407590; cv=none; b=atQl2VPy8rQAlA1DTUMI2fPI4M7XLnvcs5fGWuqBIWBfBZe/+2vyY7zZ4U5CuOyijPv6fJMaO2o6+dUE3U3AX8l9a0MfwfLX7MctxGy9kMgV/vFphZ1YFWDM4SBSw2VYIIeNpP8HZjJIvMHiaAQgdvYBkB6Sk5vn8nWW7t2/jMM=
+	t=1770407642; cv=none; b=Jdv9rk+1K16YsBax3/n5eJVAZdPJfMEItpZMwfEOgMXmXg0xRSx0w07O/ReMMk+rAPdlmJOHvxmjBcQClc6VuG/8trJsv9B6J1zBhgv152nFU+HjQ4kTbXhJXKVKnIr6u2DSLWSWJ57OXPNZfgo3idm8Iw718/C1cbkfa2EDBaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770407590; c=relaxed/simple;
-	bh=lBlkB72HUvOQFuV0uVPFFGeGkIF0carnA0N3Sr9OGcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lCYthRZAjmQFg1utqGm1S/MxKIMCkFZG/2WZ4xuD25QYj5Zh3SjT1VvnOD9BAAL/7uZd55j3PSG9X0oM02GxvoidHW01fP7Tngyg0NYVhrv72MRwWwH6SXe3lQ29iyGFQr8ZXy6p5Y8pMEIHReEF8VRr4CNTuePgI0gNtiEHZ+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APKc6cMw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770407642; c=relaxed/simple;
+	bh=zuTx45IAXwCCZxQU6FBP5xFVJffmh2hCgzQapegT9vw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qofmriyl8ru40ctHTYNpiTA8CubW84ooxNXRA/nJKIoLK02O26JfXSS3v8EjEmo4TwQ+WdVSlSWyEUPvXt0n/nkez+KP8W0LgrCFbRawH6fpqrQC1DXM9TWimb4e/+37qfPvh1kT6WNecPd984pfwRFPcOxtDbEkAeb/iAyt+pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDAa4U/3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APKc6cMw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE927C19422;
-	Fri,  6 Feb 2026 19:53:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDAa4U/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1567C116C6;
+	Fri,  6 Feb 2026 19:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770407589;
-	bh=lBlkB72HUvOQFuV0uVPFFGeGkIF0carnA0N3Sr9OGcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=APKc6cMw6j67oFsTD654c/iapJtc2tWGVClckylUlb98I02Cas4BMDNfPNuNpFGlE
-	 AAtizw+MYZDJMCcoyPrlYozT32ADsVmOz2uYCX6jlbQsL7RLqfvCOxYzQqFBINMalm
-	 /CqkYPg1YuPTpoTtj+gn5tPOjwCERcFJzjXfJ/RY/9r7kJNVqDGV+y+7qnHAv3iwkf
-	 Ly9b645GgHJF1IgXD0SEvG2LFzE1RdwnNhrsWbM8EExu09zL0Ffr8rotlTDoJf+o+f
-	 pEYxJvZO9slvcRnjvZIDxjKqEvBFKsGoXfarFBHTUsyqHQZcFIt8tM/rdICqYo7JI+
-	 /7SbaE7qCbHdg==
-Date: Fri, 6 Feb 2026 11:53:09 -0800
-From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: =?utf-8?B?5p2O6b6Z5YW0?= <coregee2000@gmail.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	linux-ext4@vger.kernel.org, syzkaller@googlegroups.com,
-	andy@kernel.org, akpm@linux-foundation.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [Kernel Bug] WARNING in ext4_fill_super
-Message-ID: <202602061152.EAAF56214@keescook>
-References: <CAHPqNmzBb2LruMA6jymoHXQRsoiAKMFZ1wVEz8JcYKg4U6TBbw@mail.gmail.com>
- <aYX4n42gmy75aw4Y@smile.fi.intel.com>
- <aYYD3rxyIfdH2R-d@smile.fi.intel.com>
- <aYYE4iLTXZw5t0w_@smile.fi.intel.com>
- <202602061032.63DD1CA3AE@keescook>
+	s=k20201202; t=1770407641;
+	bh=zuTx45IAXwCCZxQU6FBP5xFVJffmh2hCgzQapegT9vw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HDAa4U/3FllAHrt8tgmweRCEeXs78x4KO6JSUioK8jcWQVszKIa6U7gxfZvgEYm4h
+	 B6/AHZMLBH6lvH1gSkfgLdfNR3y7acJGFCHc2qJKzo/O84tOuaYpq09pVyenUA/tAX
+	 zdIHeVSiKlEePQDpV2CXOdWDbc1mK4xz5XPFRe061GFSeBSxlLEJncJPl9FPe1Rc8r
+	 axac7GCT2qmxi1Pia/PKTkfZntTavmsr0apQrMS7ZlrL+SwlU69RK+mnWAOjcrHTu+
+	 JB+7IPaxEGFziQFuLXjK3bPnIkxrsSEFaylMjKarxFURKBCTtQQ1jF3KVcFZKWN3it
+	 Zsc202ZRu+bWg==
+Message-ID: <bca0abe3-5b8d-4493-a338-b41322e9e85d@kernel.org>
+Date: Fri, 6 Feb 2026 20:53:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202602061032.63DD1CA3AE@keescook>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] powerpc/text-patching: Fix possible stringop-overread
+ compilation error
+To: Kees Cook <kees@kernel.org>, Xie Yuanbin <xieyuanbin1@huawei.com>
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+ andy@kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ lilinjie8@huawei.com, liaohua4@huawei.com
+References: <20260205100517.292858-1-xieyuanbin1@huawei.com>
+ <20260205100517.292858-2-xieyuanbin1@huawei.com>
+ <202602061024.111ED487@keescook>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <202602061024.111ED487@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 06, 2026 at 11:29:11AM -0800, Kees Cook wrote:
-> But I can't figure out where that comes from. Seems like fs_parse(), but
-> I don't see where mount option strings would come through...
-
-Oh! This is coming directly from disk. So we need an in-place sanity
-check. How about this?
 
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 87205660c5d0..9ad6005615d8 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -2485,6 +2485,13 @@ static int parse_apply_sb_mount_options(struct super_block *sb,
- 	if (!sbi->s_es->s_mount_opts[0])
- 		return 0;
- 
-+	if (strnlen(sbi->s_es->s_mount_opts, sizeof(sbi->s_es->s_mount_opts)) ==
-+	    sizeof(sbi->s_es->s_mount_opts)) {
-+		ext4_msg(sb, KERN_ERR,
-+			 "Mount options in superblock are not NUL-terminated");
-+		return -EINVAL;
-+	}
-+
- 	if (strscpy_pad(s_mount_opts, sbi->s_es->s_mount_opts) < 0)
- 		return -E2BIG;
- 
+Le 06/02/2026 à 19:26, Kees Cook a écrit :
+> On Thu, Feb 05, 2026 at 06:05:17PM +0800, Xie Yuanbin wrote:
+>> For strnlen(), if the compiler detects that the maxlen argument exceeds
+>> the valid memory size of the input string object, a compilation error may
+>> occur.
+>>
+>> For lastest linux-next source, changing ppc_kallsyms_lookup_name() to
+>> __always_inline, using default ppc64_defconfig, and setting
+>> CONFIG_EXPERT=y, CONFIG_PPC64_BIG_ENDIAN_ELF_ABI_V2=n,
+>> CONFIG_CC_OPTIMIZE_FOR_SIZE=y. Then, when using gcc-15 for compilation,
+>> the following error will be triggered:
+>> ```log
+>>    CC      arch/powerpc/kernel/optprobes.o
+>> In file included from ./arch/powerpc/include/asm/kprobes.h:24,
+>>                   from ./include/linux/kprobes.h:31,
+>>                   from arch/powerpc/kernel/optprobes.c:8:
+>> In function ‘ppc_kallsyms_lookup_name’,
+>>      inlined from ‘arch_prepare_optimized_kprobe’ at arch/powerpc/kernel/optprobes.c:209:21:
+>> ./arch/powerpc/include/asm/text-patching.h:232:13: error: ‘strnlen’ specified bound 512 exceeds source size 19 [-Werror=stringop-overread]
+>>    232 |         if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
+>>        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> In function ‘ppc_kallsyms_lookup_name’,
+>>      inlined from ‘arch_prepare_optimized_kprobe’ at arch/powerpc/kernel/optprobes.c:210:22:
+>> ./arch/powerpc/include/asm/text-patching.h:232:13: error: ‘strnlen’ specified bound 512 exceeds source size 13 [-Werror=stringop-overread]
+>>    232 |         if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
+>>        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> cc1: all warnings being treated as errors
+>> ```
+>>
+>> Refer to the implementation of fortify's strnlen(). If the string length
+>> is a compile-time constant, do not call the strnlen() function.
+>>
+>> Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
+>> ---
+>>   arch/powerpc/include/asm/text-patching.h | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/text-patching.h b/arch/powerpc/include/asm/text-patching.h
+>> index e7f14720f630..ce1b2131980a 100644
+>> --- a/arch/powerpc/include/asm/text-patching.h
+>> +++ b/arch/powerpc/include/asm/text-patching.h
+>> @@ -228,8 +228,13 @@ static inline unsigned long ppc_kallsyms_lookup_name(const char *name)
+>>   	/* check for dot variant */
+>>   	char dot_name[1 + KSYM_NAME_LEN];
+>>   	bool dot_appended = false;
+>> +	size_t n_len = __compiletime_strlen(name);
+>> +	const size_t n_size = __member_size(name);
+>>   
+>> -	if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
+>> +	if (n_len == SIZE_MAX || KSYM_NAME_LEN < n_size)
+>> +		n_len = strnlen(name, KSYM_NAME_LEN);
+>> +	
+>> +	if (n_len >= KSYM_NAME_LEN)
+>>   		return 0;
+> 
+> Isn't it possible to do this and not need __compiletime_strlen at all?
+> 
+> 	n_len = strnlen(name, min(__member_size(name), KSYM_NAME_LEN));
 
--- 
-Kees Cook
+ppc_kallsyms_lookup_name() only has two callers and they call it with a 
+built-in string. I think we can do something a lot simpler, something 
+like (untested):
+
+static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
+{
+	unsigned long addr = kallsyms_lookup_name(name);
+
+	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
+		addr = ppc_function_entry((void *)addr);
+
+	return addr;
+}
+
+#ifdef CONFIG_PPC64_ELF_ABI_V1
+#define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name("." ## x);
+#else
+#define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name(x)
+#endif
+
+Christophe
