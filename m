@@ -1,99 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8D43112A5;
-	Fri,  6 Feb 2026 22:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AE721767D;
+	Sat,  7 Feb 2026 00:35:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770417024; cv=none; b=Gdaks7+8vrpUgj7otPxaZUkcTpY3MmEm7V4Z4f1WnDLDZ4gv2XUnb9HLxe87NnGXyugclskDhUhyZfW728H636rz9N2f5eLqjijdUL20rXC+CWObWzBYkCoAaPu4rRiDT0MsdNFyr1rGnPo/fG55a73SHk+XJCzCfzOyixMC09k=
+	t=1770424554; cv=none; b=duMrs17YYh1ysK4dbK5TWCGMCIs2Nnjf+8ZEr/2zZHZN3Tu8SaFaTksIIrG2swRwbPU/+76zXW80go0Otn/lz6sAs/1fKa/TBqf/uPZ/oXVdDjjfpLAPM74Y9gTRLZD/wplrrEU+sZBzP0/SkcMC8XlbGBk1XYYmdaDD1rujtwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770417024; c=relaxed/simple;
-	bh=Z+P7HrDrYZhvrXjWO/SCgx6Wkp8oj6hqSqLe9QpQvAM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sYAUvX554PkI8/aeh7O2ONc1JJGd2QBmaF7ywsv2UFdJqqJFXNWn9TWi7TsLn874OZ18gmyrbBoByo9g4axS0K2+Caki4V4e3K5r2k1bT5kNNdDnLCyD6NBSjgPRJkNUpFaDXrx8rwOk4cDclTbUxCIcdX3QNOo/XscKqhEQbds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZixVzDl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770424554; c=relaxed/simple;
+	bh=WSoiTb459q4CuoijHEOgQ2VKDloBFwyEv6asKhqZYPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WvJQ2hzITEXDP8vihyotT/jRcrZriveZOyd7HoALQtBhT5qDz4Qm56BFInPBk7FhJDGupG55kZUBVIf22n/L9LZLeo6InEFp9OB/hm2F3b7X2OkjtWJEZcxengG6bPm7iRE+hQMZRdIlHqWruEwLvL329zPkihIu82efuMZOATM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8rol4Np; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZixVzDl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86A29C116C6;
-	Fri,  6 Feb 2026 22:30:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8rol4Np"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26083C116C6;
+	Sat,  7 Feb 2026 00:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770417024;
-	bh=Z+P7HrDrYZhvrXjWO/SCgx6Wkp8oj6hqSqLe9QpQvAM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RZixVzDlQcmxliDsdgbBvba8CQr/38HpatiUFUEio41v7SzCNDKFkyw7r5mxlyWv2
-	 BFuYfwiRfCZiBi0NFPJyT5zx9heNWOJ1Q2q/gn38L195rvAEFzMWi2vEn+9AJnBfao
-	 +vjLEp+TI4VwQmYYm20rnp4aicmPAG1tiMlv6RAlJROYBBIZho71UEuEbrH8yCefLV
-	 f4NagEmymUmRFHjsOIL/j6P4Upw/DFHiUuSdmMtYbf57b02LGp6wxN2fWhsFaVTwH6
-	 NE0d17ppKXpdceoJc2URuqHFR7TR5XVR6jUxB9tsrKJIRvybfrjwjMFB+SuPpA1f4S
-	 0W9S+nSw6FI0Q==
+	s=k20201202; t=1770424554;
+	bh=WSoiTb459q4CuoijHEOgQ2VKDloBFwyEv6asKhqZYPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h8rol4NpLDK5zjmr1rBQaT4Yz2UTR0MHEPg6U9gE7bwWdRx5ZyW5c1351b9FlxSNG
+	 Jc+5xLOzpor+oTv1l7Z9/XANoPWDIhPE6VQVQQnzurQEmtXFXXU2chf+EPT2DtbHFC
+	 rruxA4NmuBggPdRBUP7IVYIXwWTMCAfN51fXgzvybsX19KmI+6LDWRlpi9L8IZ9OtE
+	 E1RlRlrvdHX2vg3jqQUTnNKlIlxY8Us5tHX/AS9pXz5nyZAOW1G4+91HtK619Y+OGR
+	 ++ihZnX6eygaG0SgKQLIE2caRXgbNabSGpNTq/Di0TBleBujtX/5MMf8mEPtWBpXi9
+	 8yN5FIC7aix4w==
+Date: Fri, 6 Feb 2026 16:35:53 -0800
 From: Kees Cook <kees@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Oliver Upton <oupton@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Sascha Bischoff <Sascha.Bischoff@arm.com>,
-	Keir Fraser <keirf@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] KVM: arm64: vgic: Handle const qualifier from gic_kvm_info allocation type
-Date: Fri,  6 Feb 2026 14:30:23 -0800
-Message-Id: <20260206223022.it.052-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Sai Ritvik Tanksalkar <stanksal@purdue.edu>
+Cc: "tony.luck@intel.com" <tony.luck@intel.com>,
+	"gpiccoli@igalia.com" <gpiccoli@igalia.com>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"anton.vorontsov@linaro.org" <anton.vorontsov@linaro.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] pstore/ram: fix buffer overflow in
+ persistent_ram_save_old()
+Message-ID: <202602061626.1C0B1DE0C@keescook>
+References: <SJ2PR22MB4268B38E0E4FF3EEB9979E04BE9CA@SJ2PR22MB4268.namprd22.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1571; i=kees@kernel.org; h=from:subject:message-id; bh=Z+P7HrDrYZhvrXjWO/SCgx6Wkp8oj6hqSqLe9QpQvAM=; b=owGbwMvMwCVmps19z/KJym7G02pJDJlt2XXH+BYzTOSa/XXJ0Yj1H2MCn/2M2yqvucMk69/l5 YWT0sQ5OkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACbyKILhv/Pt5RPPBTXwM8wV nhicN3vj280Pa6e6sogzn/jy7ndLvzHDf693SgXyNXuSl138vm/+UYbU8w51X1lsDNb3/lgcLjT vKycA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <SJ2PR22MB4268B38E0E4FF3EEB9979E04BE9CA@SJ2PR22MB4268.namprd22.prod.outlook.com>
 
-In preparation for making the kmalloc family of allocators type aware,
-we need to make sure that the returned type from the allocation matches
-the type of the variable being assigned. (Before, the allocator would
-always return "void *", which can be implicitly cast to any pointer type.)
+On Sat, Jan 31, 2026 at 02:49:20PM +0000, Sai Ritvik Tanksalkar wrote:
+> persistent_ram_save_old() can be called multiple times for the same
+> persistent_ram_zone (e.g., via ramoops_pstore_read -> ramoops_get_next_prz
+> for PSTORE_TYPE_DMESG records).
 
-The assigned type is "struct gic_kvm_info", but the returned type,
-while matching, is const qualified. To get them exactly matching, just
-use the dereferenced pointer for the sizeof().
+Thanks for the report!
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oupton@kernel.org>
-Cc: Joey Gouly <joey.gouly@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Cc: <kvmarm@lists.linux.dev>
----
- arch/arm64/kvm/vgic/vgic-init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Currently, the function only allocates prz->old_log when it is NULL,
+> but it unconditionally updates prz->old_log_size to the current buffer
+> size and then performs memcpy_fromio() using this new size. If the
+> buffer size has grown since the first allocation (which can happen
+> across different kernel boot cycles), this leads to:
+> 
+> 1. A heap buffer overflow (OOB write) in the memcpy_fromio() calls.
+> 2. A subsequent OOB read when ramoops_pstore_read() accesses the buffer
+>    using the incorrect (larger) old_log_size.
+> 
+> The KASAN splat would look similar to:
+>   BUG: KASAN: slab-out-of-bounds in ramoops_pstore_read+0x...
+>   Read of size N at addr ... by task ...
 
-diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
-index 86c149537493..a53f93546aa0 100644
---- a/arch/arm64/kvm/vgic/vgic-init.c
-+++ b/arch/arm64/kvm/vgic/vgic-init.c
-@@ -654,7 +654,7 @@ static struct gic_kvm_info *gic_kvm_info;
- void __init vgic_set_kvm_info(const struct gic_kvm_info *info)
- {
- 	BUG_ON(gic_kvm_info != NULL);
--	gic_kvm_info = kmalloc(sizeof(*info), GFP_KERNEL);
-+	gic_kvm_info = kmalloc(sizeof(*gic_kvm_info), GFP_KERNEL);
- 	if (gic_kvm_info)
- 		*gic_kvm_info = *info;
- }
+"would look"? Have you confirmed this for a real scenario? It seems like
+an extreme corner case that should be almost impossible to hit in
+practice:
+
+  0. Crash with a ramoops write of less-than-record-max-size bytes.
+  1. Reboot: ramoops registers, pstore_get_records(0) reads old crash,
+     allocates old_log with size X
+  2. Crash handler registered, timer started (if pstore_update_ms >= 0)
+  3. Oops happens (non-fatal, system continues)
+  4. pstore_dump() writes oops via ramoops_pstore_write() size Y (>X)
+  5. pstore_new_entry = 1, pstore_timer_kick() called
+  6. System continues running (not a panic oops)
+  7. Timer fires after pstore_update_ms milliseconds
+  8. pstore_timefunc() → schedule_work() → pstore_dowork() → pstore_get_records(1)
+  9. ramoops_get_next_prz() → persistent_ram_save_old()
+ 10. buffer_size() returns Y, but old_log is X bytes
+ 11. Y > X: memcpy_fromio() overflows heap
+
+  Requirements:
+  - a prior crash record exists that did not fill the record size
+    (almost impossible since the crash handler writes as much as it
+    can possibly fit into the record, capped by max record size and
+    the kmsg buffer almost always exceeds the max record size)
+  - pstore_update_ms >= 0 (disabled by default)
+  - Non-fatal oops (system survives)
+
+So, yes, this is technically possible, but very very hard to do. :)
+Unless you see another way?
+
+> Fix this by freeing and reallocating the buffer when the new size
+> exceeds the previously allocated size. This ensures old_log always has
+> sufficient space for the data being copied.
+> 
+> Fixes: 201e4aca5aa1 ("pstore/ram: Should update old dmesg buffer before reading")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Pwnverse <stanksal@purdue.edu>
+> ---
+>  fs/pstore/ram_core.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+> index f1848cdd6d34..8df813a42a41 100644
+> --- a/fs/pstore/ram_core.c
+> +++ b/fs/pstore/ram_core.c
+> @@ -298,6 +298,14 @@ void persistent_ram_save_old(struct persistent_ram_zone *prz)
+>      if (!size)
+>          return;
+> 
+> +     /*
+> +      * If the existing buffer is too small, free it so a new one is
+> +      * allocated. This can happen when persistent_ram_save_old() is
+> +      * called multiple times with different buffer sizes.
+> +      */
+> +     if (prz->old_log && prz->old_log_size < size)
+
+This should be "!=", I think? Just to deal with leaving old data in if
+the size _shrinks_ too?
+
+> +           persistent_ram_free_old(prz);
+> +
+>      if (!prz->old_log) {
+>          persistent_ram_ecc_old(prz);
+>          prz->old_log = kvzalloc(size, GFP_KERNEL);
+> --
+> 2.43.0
+
 -- 
-2.34.1
-
+Kees Cook
