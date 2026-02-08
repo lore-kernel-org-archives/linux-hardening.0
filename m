@@ -1,98 +1,62 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1148117A2F0
-	for <linux-hardening@vger.kernel.org>; Sat,  7 Feb 2026 09:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6953BB44;
+	Sun,  8 Feb 2026 13:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770455598; cv=none; b=JZdAvjskgtMOPAPM+v0PsN85jtpi3XQ2GV2Y6Zs8ktGVKpOx8biZl+sBrFsLYS/Dkp2j42rmZry4ouf7rqxgkY3UTONaTaMefI2DotKZU8pjCsaSVSHGVVJfxI2DzkT+G0mLCfdKOZ5T+HzrnujpSs2apWQXQnuBDvcqThc8iz0=
+	t=1770558215; cv=none; b=I5m+D8REZioQmJAoTePV09B4D9u2TBNV5m3F7i4ulypU4d/i3SCViHqKaJh4t4ZVJ4Dj4SYu+bBufGWrPU8v+Mql0/hpdf4lNdL7OEx9nD/8qbqwxmXSfBQNevbSuDB2S8p7SYJgZyJUJZCoFR65uR7jkEa+9OA4eNkw9kkMJ+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770455598; c=relaxed/simple;
-	bh=VlUPWMAqypEdpJZi2GWeQiiRkpy6zBBiZPD0Xd+59qQ=;
+	s=arc-20240116; t=1770558215; c=relaxed/simple;
+	bh=JKWxMD70sNR/OlcpP/Dr8+iH/QVPPCxlLjSxygJ+jKQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tSLJDMcrLGFOdD0xbYSqR/bPmmiK8HEUposzmVY8qeGca1L7aRvHJOYwhSMWRlQ6XgEusiKAjKzDrXQPSXgxngkC95N0aA+SuXWtja1H0wId+WJsutpfJfscCJRJI5ykbNTM4LuGdAeOFI0hWTu14XqHO7vD0HDCe/IucL4/p6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pb5Yoqmw; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=SwmrYbRj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=PqYLliiKYtK3msuSmq1HJXCrQ3Jzgy6WcTFiEV/Qj8FGx1Tf173lNiQoWeaJVZlB2sGNVmTAedo1OPCeup4NBdohTg/CdA918z58U8MxmIvTtIdK8cHAgKauGGaEkShUBHfLFE2JbnnNbWhTPxkVj0qkKSSEkUC4VsCx0+oiKJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T7G0mvvL; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pb5Yoqmw";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="SwmrYbRj"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6174Nqid1628508
-	for <linux-hardening@vger.kernel.org>; Sat, 7 Feb 2026 09:13:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=ZnhPfRcyvXmJuJSiZfwzyHe7
-	jzBv7YRscb6FfNKJ8LI=; b=pb5YoqmwIkiTWV4BTcm1MMbKPi8Nhj8aVVJ9cG0V
-	76vEeGsPWhJQvNxzHJ8PWKegr7VI+D3ohps176Htydpl7W7TIpa6xyJuwzx77CKv
-	7lnMXr+R44bt00GQQDerJ6tRzTxjKffxtBjdfvazdUICpCLw/lmUx+i/1ZbFBHBN
-	SbPYC+3vvn2mIanSL520174D1KMTlY6eWyOP8BvojNVLWmLI2A9V7Y8RQy+Mh5ly
-	A35LSKrwrNt2j7/oKzG/S8CON1vrgh2BEasO410oXbLnL2+rkOSK113dj+8wQpnz
-	1OgG7trhbL4JNF077BfOwHlDF6vf9/RYVwJ4hWnIUF0QcQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c5xb50dt5-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Sat, 07 Feb 2026 09:13:17 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-894971e3b60so86035106d6.2
-        for <linux-hardening@vger.kernel.org>; Sat, 07 Feb 2026 01:13:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1770455596; x=1771060396; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZnhPfRcyvXmJuJSiZfwzyHe7jzBv7YRscb6FfNKJ8LI=;
-        b=SwmrYbRjqDRtHIQFtFQQYZLImPs6CIl7BNLaWuEMQWlW2FEWKJGzkwIfleAMDlus3T
-         FttRt+ZPCrkszACDoGtjKuzsPkW2gwTNiedcIXrqPDgqCJhFs86GhbsUGchInbl5NWK6
-         +1u9x36Irb+XZlRXFrrPrpw6W83xUvbHCrqKv13ZoJH9zzGbYz5AnDeEjbaCeM0fC2RF
-         pi8UgbSB1mOyGJOsQEJTmHM4MmdEkne7k5nPYH1x6Z1v5FevgF9ye3MQke+WDRSoIsq4
-         VcVhwiKbbJ3oOzpsFEKd9ROkNV1k0yZWywp2+nAHIpz2uDa6GmEOk/snulBM+CQftLjz
-         dCHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770455596; x=1771060396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZnhPfRcyvXmJuJSiZfwzyHe7jzBv7YRscb6FfNKJ8LI=;
-        b=r4vOKhZeM0udBaxrus2NoQPCbqUQrfiiu+GP3iXrQ5+ZdB4XvdQPi0CF53ul2qI4pF
-         FCDiu651Uu7CwyXbDmnS1cmPthi/2FaxIf+tyZRnCInBLhD9X6RSRO/HNxHbKCm8HBBs
-         lYbBHuzVCHspN9xitOARgThHYsMDEM8IkD3DjHHBZRYz8oM3ic8EvJZAJtTu6AK4YroK
-         rFuJwC+ioR6wCveBgJ+va5hUGfW18mPyAQvS7jlTi6UfWxCegU6uKgH+k3CmMg40InwI
-         7D96i0ogvLqbiBrq5WLfOA4UOvnSn/prL/AI6ENHvDANLFrf1zwCu7CP3KHpwta2H+Us
-         y9vw==
-X-Forwarded-Encrypted: i=1; AJvYcCWbNrjG36Hz0aH41L6dLlSRiasKha+W0yHbgRKDIvsY8/scwq1S1zmg3AvIUrM0sepX4ERJ7kHH5xFs3zxsLmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmBBruq+CMP3KmDRKMmNEuG2avlLQR2PCqpxyVeTtYv/5b2sD0
-	dsY9r6b7fsOCP4Vx1Q1YHZa5DA5MZw8cL0p7C/5/3QIUEzP2y+cz+qYM/OEoFE74kfAL44E2XAF
-	RJFUGI1rTUV1lXVdZHYhaG4DnQLrZ2v7AYHcPrdvebFKkknMiFl/IiTsd2r3fuVzd7cRkQ8A=
-X-Gm-Gg: AZuq6aKEsqFAqC1RnqvZHCsv+ot+ZX0nXUD5nkYxv6phQHQmgHZ8KC/1tYE7gIEVRsu
-	+iX+c7sYngP5qiaNWilXTPgDWj/B2vMFGR9L4xs+wZ5Yu5RfiETKdJCOObLnMOIfCsrJj6qGRwB
-	1XaSUbRfgZ7wPHx8ycopiad3W+5rdDnbfkqn/otqOosqpb18+nsr/bmVkZsdy6jyGmcccys1KUf
-	UX277g/vvW/kBxAvWX6/5LtntgAUyZkaA748/wqnImYU+r6AJI6n2hRGniI0iNals1VnwcirZeE
-	fNuVb38mFneRO9ExEoUFue6Er/KGsiINwlWM8o3AMGVhA3L9z8Y1yBCEtVStjWAc9Rsnm8uZUSh
-	RZY+rSU180ZEY/cK12UHLkwz+8zfnsLtpAxJLyroU/z3eEgJQQ8DZQFu5abmjELTYjGGihJYbyT
-	62TUjXuxl22XBciWsJYE2TEyc=
-X-Received: by 2002:ad4:5dc2:0:b0:896:17e6:b3d7 with SMTP id 6a1803df08f44-89617e6b59dmr1404016d6.68.1770455596333;
-        Sat, 07 Feb 2026 01:13:16 -0800 (PST)
-X-Received: by 2002:ad4:5dc2:0:b0:896:17e6:b3d7 with SMTP id 6a1803df08f44-89617e6b59dmr1403876d6.68.1770455595931;
-        Sat, 07 Feb 2026 01:13:15 -0800 (PST)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-386b63adc3fsm10918031fa.26.2026.02.07.01.13.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Feb 2026 01:13:13 -0800 (PST)
-Date: Sat, 7 Feb 2026 11:13:11 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T7G0mvvL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770558215; x=1802094215;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JKWxMD70sNR/OlcpP/Dr8+iH/QVPPCxlLjSxygJ+jKQ=;
+  b=T7G0mvvLp2cMI7LwPFXwiL3tFUM2UG0J7Wnu2pIX0o1Zh1hB+pkRcVmj
+   z9JonmKE/3LISFZUseDl1FXiq/YR1juLO87cMdznp/uNc53faR+0Q2leQ
+   ijcz81wEpxhua8frRbe8uBv+ytj//2Fm4PztEFobwHJBrdIOrTqKs1yGV
+   aFtG76BrolLPHutUDqD0tOcQjJrTmzNpqsJxjl47scsEzH1GDU1GTGugl
+   jmG4eIg9tuMquRB8vGixPACD8krKAyYsYdSG/RxbtAmewT/DK5Exspx03
+   Zo4mO6vf4iT7X3z4je2OqTDWVAhdNffg78mWEGUnWFOD1DkXDg3Awh5D+
+   g==;
+X-CSE-ConnectionGUID: glC6H+p6TE+0/0paASj3fw==
+X-CSE-MsgGUID: pUAduRAOToWyu4LueXZV2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11695"; a="82011948"
+X-IronPort-AV: E=Sophos;i="6.21,280,1763452800"; 
+   d="scan'208";a="82011948"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2026 05:43:34 -0800
+X-CSE-ConnectionGUID: jykhtvQlQhWyaEhJcrfB9g==
+X-CSE-MsgGUID: NrFrNHROShatCu6Z9Uw6Vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,280,1763452800"; 
+   d="scan'208";a="215518552"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.245.100])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2026 05:43:32 -0800
+Date: Sun, 8 Feb 2026 15:43:30 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Kees Cook <kees@kernel.org>
-Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/msm: Adjust msm_iommu_pagetable_prealloc_allocate()
- allocation type
-Message-ID: <734wzdoihl2qn4lu4inig5taw5n2aovabpce5y27qb5kiftnwh@ynnugouvaran>
-References: <20260206222151.work.016-kees@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	=?utf-8?B?5p2O6b6Z5YW0?= <coregee2000@gmail.com>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ext4: Reject on-disk mount options with missing
+ NUL-terminator
+Message-ID: <aYiTAqpUFsKAhulp@smile.fi.intel.com>
+References: <20260206212654.work.035-kees@kernel.org>
+ <20260206214502.GP7686@frogsfrogsfrogs>
+ <202602061347.2046B806C5@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -101,65 +65,131 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260206222151.work.016-kees@kernel.org>
-X-Authority-Analysis: v=2.4 cv=QMBlhwLL c=1 sm=1 tr=0 ts=6987022d cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=tVI0ZWmoAAAA:8 a=e5mUnYsNAAAA:8
- a=parfbKQTulTwLggSwN0A:9 a=CjuIK1q_8ugA:10 a=1HOtulTD9v-eNWfpl4qZ:22
- a=-BPWgnxRz2uhmvdm1NTO:22 a=Vxmtnl_E_bksehYqCbjh:22
-X-Proofpoint-GUID: FAE3yC_zsu7gBtCCwk3ldY9-LiJV44Fy
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA3MDA3MSBTYWx0ZWRfXxgzGy5RkHH6M
- /3l9ATALijumarqzIplSEOU1mYAcHBkHquGb1TyFRrxemONIdv5+s7R5z7gIoRFB3F4f71t7n13
- eMOyHsHVIEHY5BxUoHvmSaPgl9ePWt4IpXU+oK9ZtQHTDt/nW546TH5e9uRi9WHq4fBa/HwM8VO
- BkeXwRK8XfvjcU4jvLNlPaKsD8G8E8ny1UmPjxqzjVVtJ0FJCGBLsXB3wORKdbO2hVKseG4BCvt
- xjIfl5u9HzoJYKjgz71mmPukktzl8AYkRJN05RzN2AIy9yN08IKgteISIcnruOcLS1soGTQQExR
- M8Zqd6io4fg3J4DFBT25wvP91Pqp6T8fWZPr3sttC+rlci0fPDNtxiuWmlTDYD7p4klufxKS24B
- QG0hC3zeDC3PEKrh3wFOgn3fWyNyIknzJivOhvncQTrtfgvWdZ4HYbDtlmFiV98ei3aH1TE38MR
- nH2uPfFsDg1KyoPAWiA==
-X-Proofpoint-ORIG-GUID: FAE3yC_zsu7gBtCCwk3ldY9-LiJV44Fy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-06_05,2026-02-05_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 suspectscore=0 spamscore=0 adultscore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 lowpriorityscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2602070071
+In-Reply-To: <202602061347.2046B806C5@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Feb 06, 2026 at 02:21:52PM -0800, Kees Cook wrote:
-> In preparation for making the kmalloc family of allocators type aware,
-> we need to make sure that the returned type from the allocation matches
-> the type of the variable being assigned. (Before, the allocator would
-> always return "void *", which can be implicitly cast to any pointer type.)
+On Fri, Feb 06, 2026 at 01:56:52PM -0800, Kees Cook wrote:
+> On Fri, Feb 06, 2026 at 01:45:02PM -0800, Darrick J. Wong wrote:
+> > On Fri, Feb 06, 2026 at 01:27:03PM -0800, Kees Cook wrote:
+> > > When mounting an ext4 filesystem, the on-disk superblock's s_mount_opts
+> > > field (which stores default mount options set via tune2fs) is read and
+> > > parsed. Unlike userspace-provided mount options which are validated by
+> > > the VFS layer before reaching the filesystem, the on-disk s_mount_opts
+> > > is read directly from the disk buffer without NUL-termination validation.
+> > > 
+> > > The two option paths use the same parser but arrive differently:
+> > > 
+> > >   Userspace mount options:
+> > >     VFS -> ext4_parse_param()
+> > > 
+> > >   On-disk default options:
+> > >     parse_apply_sb_mount_options() -> parse_options() -> ext4_parse_param()
+> > > 
+> > > When s_mount_opts lacks NUL-termination, strscpy_pad()'s internal
+> > > fortified strnlen() detects reading beyond the 64-byte field, triggering
+> > > an Oops:
+> > > 
+> > >   strnlen: detected buffer overflow: 65 byte read of buffer size 64
+> > >   WARNING: CPU: 0 PID: 179 at lib/string_helpers.c:1035 __fortify_report+0x5a/0x100
+> > >   ...
+> > >   Call Trace:
+> > >    strnlen+0x71/0xa0 lib/string.c:155
+> > >    sized_strscpy+0x48/0x2a0 lib/string.c:298
+> > >    parse_apply_sb_mount_options+0x94/0x4a0 fs/ext4/super.c:2486
+> > >    __ext4_fill_super+0x31d6/0x51b0 fs/ext4/super.c:5306
+> > >    ext4_fill_super+0x3972/0xaf70 fs/ext4/super.c:5736
+> > >    get_tree_bdev_flags+0x38c/0x620 fs/super.c:1698
+> > >    vfs_get_tree+0x8e/0x340 fs/super.c:1758
+> > >    fc_mount fs/namespace.c:1199
+> > >    do_new_mount fs/namespace.c:3718
+> > >    path_mount+0x7b9/0x23a0 fs/namespace.c:4028
+> > >    ...
+> > > 
+> > > Reject the mount with an error instead. While there is an existing similar
+> > > check in the ioctl path (which validates userspace input before writing
+> > > TO disk), this check validates data read FROM disk before parsing.
+> > > 
+> > > The painful history here is:
+> > > 
+> > > 8b67f04ab9de ("ext4: Add mount options in superblock")
+> > >   s_mount_opts is created and treated as __nonstring: kstrndup is used to
+> > >   make sure all 64 potential characters are available for use (i.e. up
+> > >   to 65 bytes may be allocated).
+> > > 
+> > > 04a91570ac67 ("ext4: implemet new ioctls to set and get superblock parameters")
+> > >   Created ext4_tune_sb_params::mount_opts as 64 bytes in size but
+> > >   incorrectly treated it and s_mount_opts as a C strings (it used
+> > >   strscpy_pad() to copy between them).
+> > > 
+> > > 8ecb790ea8c3 ("ext4: avoid potential buffer over-read in parse_apply_sb_mount_options()")
+> > >   As a prerequisite to the ioctl treating s_mount_opts as a C string, this
+> > >   attempted to switch to using strscpy_pad() with a 65 byte destination
+> > >   for the case of an unterminated s_mount_opts. (But strscpy_pad() will
+> > >   fail due to the over-read of s_mount_opts by strnlen().)
+> > > 
+> > > 3db63d2c2d1d ("ext4: check if mount_opts is NUL-terminated in ext4_ioctl_set_tune_sb()")
+> > >   As a continuation of trying to solve the 64/65 mismatch, this started
+> > >   enforcing a 63 character limit (i.e. 64 bytes total) to incoming values
+> > >   from userspace to the ioctl API. (But did not check s_mount_opts coming
+> > >   from disk.)
+> > > 
+> > > ee5a977b4e77 ("ext4: fix string copying in parse_apply_sb_mount_options()")
+> > >   Notices the loud failures of strscpy_pad() introduced by 8ecb790ea8c3,
+> > >   and attempted to silence them by making the destination 64 and rejecting
+> > >   too-long strings from the on-disk copy of s_mount_opts, but didn't
+> > >   actually solve it at all, since the problem was always the over-read
+> > >   of the source seen by strnlen(). (Note that the report quoted in this
+> > >   commit exactly matches the report today.)
+> > 
+> > Looking through the history of tune2fs, I see v1.42 has commit
+> > 9a976ac732a7e9 ("tune2fs: Fix mount_opts handling"), which always set
+> > byte 63 to a null, which implies that s_mount_opts is supposed to be a
+> > 64-byte field that contains a null-terminated string.  It also doesn't
+> > appear that slack space after the null terminator is set to any
+> > particular value.
 > 
-> The assigned type is "void **" but the returned type will be "void ***".
-> These are the same allocation size (pointer size), but the types do not
-> match. Adjust the allocation type to match the assignment.
+> Okay, so the userspace side is treating it as a C string. Then ignore my
+> "PATCH ALTERNATIVE" I just sent. ;)
 > 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Rob Clark <robin.clark@oss.qualcomm.com>
-> Cc: Dmitry Baryshkov <lumag@kernel.org>
-> Cc: Abhinav Kumar <abhinav.kumar@linux.dev>
-> Cc: Jessica Zhang <jesszhan0024@gmail.com>
-> Cc: Sean Paul <sean@poorly.run>
-> Cc: Marijn Suijten <marijn.suijten@somainline.org>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Simona Vetter <simona@ffwll.ch>
-> Cc: <linux-arm-msm@vger.kernel.org>
-> Cc: <dri-devel@lists.freedesktop.org>
-> Cc: <freedreno@lists.freedesktop.org>
-> ---
->  drivers/gpu/drm/msm/msm_iommu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > In e2fsprogs v1.41.13, commit 9345f02671fd39 ("tune2fs, debugfs,
+> > libext2fs: Add support for ext4 default mount options") added the
+> > ability to set s_mount_opts, and it rejects any string whose length
+> > is greater than or equal to 64 bytes.  This validation is still in
+> > place.
 > 
+> Great, thanks for tracking that down. That looks to be Dec 2010.
+> 
+> > My guess is that the ext4 code should go back to requiring a null
+> > terminated string, and the __nonstring annotations dropped.
+> 
+> It does already; no __nonstring annotations currently exist for
+> s_mount_opts. The trouble was that it was originally treated as
+> effectively __nonstring between 8b67f04ab9de (v2.6.36, Oct 2010) and
+> 04a91570ac67 (v6.18, Nov 2025).
+> 
+> > I guess the hard part is, were there any filesystems written out with a
+> > 64-byte unterminated s_mount_opts?  It looks like 04a91570ac67 used
+> > strscpy_pad to copy the string to the superblock and that function
+> > always zero-terminates the destination, so perhaps we can stick with
+> > "the ondisk superblock s_mount_opts is always a null terminated string"?
+> 
+> Yeah, if the userspace tools always wrote images with a NUL-terminated
+> s_mount_opts, then it should be perfectly sane to reject mounts that
+> don't follow that. (i.e. this patch.)
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+I agree with your patch, so here a couple of remarks:
 
+- the questions you asked in the commit messages probably need to be replaced
+with the summary of what Darrick said
+
+- should the not NUL-terminated string be a fatal error? Maybe we can tell the user
+that it's truncated and go on with it? Dunno (on the first glance this sounds better
+from user perspective, but it may lead to a weird results if the cut string will be
+parsed perfectly and give something dangerous to the data on the volume.
 
 -- 
-With best wishes
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
