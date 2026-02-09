@@ -1,580 +1,373 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067B52FB630
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Feb 2026 08:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.168.131
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770625697; cv=pass; b=rs9HDMMp5DPY2myH7Dfmp/Uc/5VjUM4IMVsWnuzfDQL5bisjXvBc0mW4XSFsR2rV5D7gb8mOxN55p4JUDHbEGOpLlXwq2mL4u7bj5fdgLAqOZSAfaC9Q5hjEYjmeZ1lJsve6UWRqURwjA3eIAxjuCpQFHgVtn+UpWdLZUDNVZOg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770625697; c=relaxed/simple;
-	bh=dLhcF0wiyQH4Ljohwhbo04zAv5PrdZlQC4SCAaggrYU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p6IK5Eio1xUN3VpZDsscvxAn7AGUNHnAelDHy12wAxKJerYHf6cvvmiLgCh0cmsyC9lW2qgft6JFbK+gtvd9VJMJDsH4EyBkYTuEgwgPWRHnlRriDhzv24P890bOgiCIbwNtk2p88/PXkTxacIvjKiy0NSci/UU3LSAIyvGzztU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=J9MfiRCI; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=eMpzq8cm; arc=pass smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6581121D5B0
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Feb 2026 11:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770637660; cv=none; b=ttkeK0ElSj1OhF9MAU5SZU6jyrO+mQmjgSXt7+ltMqtzLg6ftwur+pSYd3aWhp/zRpYoxG0diZt7hj3Lj2bYl3IGbT2vRgdGEkWnwpfuGOOr9XdvY5J1n+4vnm+vC4e3bIU5F+wNT2db4XwGVfKQ34FIZnXFh1QYpJWLjQ95ozI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770637660; c=relaxed/simple;
+	bh=IelMc/uIw/l9YzoezDSmMffoUOJYzEm9p74b+grYLYg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GieW2cQ7p/ga3gK8Iuix+mR7d/qgIubakEjGsBpSAYFokLl3VojQ67IaKRitBL/Y6idHIBP81flfEfqLQsgJcwyYq4OcbQ3qsf8u5rffKFrIxPj2fvaG91vtMlGVu3k8FCo2KbyWbFLr3VfZ/h1TO+x36D6a8Jd/p0A38TSNtWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=Lbr0U0Rr; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="J9MfiRCI";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="eMpzq8cm"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6194wa1n1476771
-	for <linux-hardening@vger.kernel.org>; Mon, 9 Feb 2026 08:28:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	siHl/4iJ814NreiFjSPDr1aGMhejTXOquL5Nq6+RJPM=; b=J9MfiRCIWUilvpaA
-	rQm8J/WtyATevnlOBExG1sBhtLM8NXgGZzI2vJ81nddd0HY22gX87LDgfY5+WQWi
-	Qhsf3Agp3Nn2dwoC7lS+Lue1LXK1rpOXGe3ilxCGQGz5rhmZTkQwew1ZgniJ7axI
-	zrk5R6AE+js/BWwhN4HT/WHOdvW2Cpbo74gPOUsE+nuIiyKPOmC9Bbsfstlg68Jy
-	YJJJKVDG8BUz1ISMbgKOI7ybCSYbR0M8jntFKGaVbipDSDFTZ2lKuOcNq2bPV1V5
-	JsuDvgvKdESqeVpCWVlLGNksEY9hzB9S6CkiPfO5gObVGguMUk1fKujEqORSSyHt
-	QWCRfg==
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c64hnkted-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 09 Feb 2026 08:28:16 +0000 (GMT)
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-2ba73b692b8so140871eec.0
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Feb 2026 00:28:16 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770625695; cv=none;
-        d=google.com; s=arc-20240605;
-        b=eEr9yVmbAphOIo2KkpJCKo997CJ2cSXX9uECebY3YbFCSg8Eh031TNVxzL5wzJFskH
-         9/f2sUpNgqw6b5MphzwxXKEvTDOEoJixiL8FowPdo5y+jTiKOL08v7PQXtdHVXlTBjJj
-         OLSe4FEBuBbAtIrPEpe629M+iDGwzMYbe5ncdBAdftvpbJkNrq10zItazRjjSgd2KQSz
-         aLnyAP4zw03mZE2qbQCfSrXHWRLWaxdBhVpx3Aa3ZnVWiIBFnbaKtm46w6kaXS5/KU9U
-         szJxUCF9iY4lolfomvYjHniVXQObBJHW8AFvv9aE4WT9dBpwR38vKqZ08GNoXjnJSMQ4
-         r8bA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=siHl/4iJ814NreiFjSPDr1aGMhejTXOquL5Nq6+RJPM=;
-        fh=Urr9uVuM7+WhTa+5k4tqsvK9l+/WLNeh+zwDWHDKtD0=;
-        b=ahljqhbb2kkX7e79jhCK4kgicqjsqtl+VuGwDcisP+fielfaCunT2NHlN1MI5a87Z2
-         y/qSq9yR8V5Z8A5xyGQdnCuJQhIP9QBXCPMyrXGgtSisxQaPRWnI78idGxl1opSrUsZ8
-         QEjfmK08kCBJjHH6BCWlO/1B6xxlApIr4nna3hNx2+DB10nyuEniYU6/C8UZx8rNZUl7
-         sjtB3AKdd4ZCXKXbmJiT8uHZRrIxeU1y7Mk+LNniYzfHW6dX743OIhEZ0ANIe8IkWKv0
-         axu0R0qVRdF8EKx478x7oQyz1IOTsXTRqt9XiLejMX8Kt2dnMBd4oVEuIw0A6KPM8BZW
-         fxYA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1770625695; x=1771230495; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=siHl/4iJ814NreiFjSPDr1aGMhejTXOquL5Nq6+RJPM=;
-        b=eMpzq8cmahO6kAfwAlMf1flixxJiSHnbwsh6DICiYu9gxSPsV/KsS8aTpPhT587tqy
-         D7Z7EKh0kbCWt9oVEf4bdV9pG5TJcxhfGykH1uv9OqIDYPythg91HJJE28Jfc3tSOS80
-         /7ff8ebBgoPvfXxpM3VHqbBPlJmiOjoQm2w1UcA3R2eTNrWnBmGUUMx/AtYkE8yNS/qZ
-         px1SrkbaLmJUsyRsfowQ5d94H6JfOsGmTfhwDeTLJhx06y2rGYxci6uLqSOQ0YzvJWqa
-         WJerq9dE3/lCWqAl7XI0brRi0j+9IzMXTn7oOCwrYJ0j6cwO41ts8J/Ao0mTtdrZRKrI
-         eatg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770625695; x=1771230495;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=siHl/4iJ814NreiFjSPDr1aGMhejTXOquL5Nq6+RJPM=;
-        b=aLpEAcT1PZ9AnZVqMUWZEOTFDG15kCpKUM4BCTUO3o17mU9YCnG8bhp214QkOCg4TD
-         dtHfHg/eJOI5ExwJHEi6W14e/tnW0yB+0j02POh8snKId7MTthTIIJCb1+FzVmbTveKW
-         T4IL2r+IaNEnmhTxXTsX3KCi25OcvAUMUPPvVRvTGtDS5klTTF917hhDyTWLFjZoD5l/
-         0ZOHfrw5jM0QoTAKNJTToKjK+LWFQfEeRiB1wO3fLQIpAhoumJ7Y2qwoZ0J9Gc9GNO9m
-         6E9xAUrCW/vPeMkeqVMVmEsbVFib64w4qcTa3A/3Kb68XngshwePX0gaJYK/4vgKVCZk
-         9/DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfjZBKGFz9SiX4S/oCq5+6knXvmQKchZNDFVz5Zl2na/ik9tH2UuecFB2OR0v1UUoscExggyR9NvUR1Vd1tr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQaya0cJYrmskpTlZbfhEPqSIVS0r413RP8H+LX7e1Ausu6EGC
-	wUTFR1eqD8ManlwIG8afBMxseegfhtm7q2oOnUuuZwaNNvx+eB99NtOY467PVj1sCY9mHJN5oig
-	/t+CPJ724jiFmqheZ9e0Yvzq+05WLOR1olG7wu8Dn+NcAmHKaiu3xFFLkzXy7w53wa2Lb65EhvU
-	iRp12gpDT8wQPRXz5mvrquBuMh/XGla80WlMdDGYQ9OomGzg==
-X-Gm-Gg: AZuq6aKx2LVxtSRvEIhChxP4lhwkMBX68FPUlGakz3oOsTJ/i/cyNpyVyrc6in2hAXr
-	MSmTeQHsKh6qaAvv8ErMWs0T2qP2DwCNZDWylpx2OY6mWOl1Ju1g/aYG/Wwq7hrMVdoVxsMgwAQ
-	RqUsmTdAKWejdOSXW11mV1NDUnWhmOfUxfoLZabA0t1onxRTAtHg0c+sSTtVLPkwmu4lwiV8s1Z
-	as9
-X-Received: by 2002:a05:693c:2298:b0:2b8:3b47:8951 with SMTP id 5a478bee46e88-2b845b58bfcmr5189908eec.1.1770625695396;
-        Mon, 09 Feb 2026 00:28:15 -0800 (PST)
-X-Received: by 2002:a05:693c:2298:b0:2b8:3b47:8951 with SMTP id
- 5a478bee46e88-2b845b58bfcmr5189900eec.1.1770625694812; Mon, 09 Feb 2026
- 00:28:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="Lbr0U0Rr"
+dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=IelMc/uIw/l9YzoezDSmMffoUOJYzEm9p74b+grYLYg=;
+	b=Lbr0U0RrPHsDgSYS6T8LVXZQJltbNiOHv/BHdDtG7fqekqxQj7NuJsFGL6cWtqP5YO9kyAo7/
+	pmQh0tV0+7bk/rtCml+p56Er4xcA+dv165UNQHkUmJXJI2oezkmtFXcEAm+1WaBrJGCXWXUNOFj
+	Lp5LHabuJvVEPvyubSdMYHM=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4f8jW861BCzpStM;
+	Mon,  9 Feb 2026 19:43:16 +0800 (CST)
+Received: from kwepemf500012.china.huawei.com (unknown [7.202.181.250])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6EC2F40569;
+	Mon,  9 Feb 2026 19:47:36 +0800 (CST)
+Received: from kwepemf200011.china.huawei.com (7.202.181.237) by
+ kwepemf500012.china.huawei.com (7.202.181.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 9 Feb 2026 19:47:36 +0800
+Received: from kwepemf200011.china.huawei.com ([7.202.181.237]) by
+ kwepemf200011.china.huawei.com ([7.202.181.237]) with mapi id 15.02.1544.011;
+ Mon, 9 Feb 2026 19:47:36 +0800
+From: "hanwei (K)" <hanwei62@h-partners.com>
+To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>, Kees Cook
+	<kees@kernel.org>
+CC: Indu Bhagat <indu.bhagat@oracle.com>, Claudiu Zissulescu
+	<claudiu.zissulescu-ianculescu@oracle.com>, Qing Zhao <qing.zhao@oracle.com>,
+	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjRdIEZpeCBzYW5pdGl6ZXIgYXR0cmlidXRlIGlu?=
+ =?utf-8?B?ZnJhc3RydWN0dXJlIHRvIHVzZSBzdGFuZGFyZCBUUkVFX0xJU1QgZm9ybWF0?=
+ =?utf-8?Q?_[PR113264]?=
+Thread-Topic: [PATCH v4] Fix sanitizer attribute infrastructure to use
+ standard TREE_LIST format [PR113264]
+Thread-Index: AQHcmZ4BG/o5OHbUQkyJCzHfFvOvE7V6PHVQ
+Date: Mon, 9 Feb 2026 11:47:35 +0000
+Message-ID: <92b90f7443304a189f861ffe8a387267@h-partners.com>
+References: <20250904174325.it.487-kees@kernel.org>
+ <CALvbMcB=DGBizanckW_YJdRYBbG4=2TsLi30yp5CacR00UGPGQ@mail.gmail.com>
+In-Reply-To: <CALvbMcB=DGBizanckW_YJdRYBbG4=2TsLi30yp5CacR00UGPGQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250904174325.it.487-kees@kernel.org>
-In-Reply-To: <20250904174325.it.487-kees@kernel.org>
-From: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-Date: Mon, 9 Feb 2026 00:28:03 -0800
-X-Gm-Features: AZwV_QhTfFWedtbv9w1Mra2FQC1lWeeLNBhq10FTr11fHXWbt_QknY18WD4Scrs
-Message-ID: <CALvbMcB=DGBizanckW_YJdRYBbG4=2TsLi30yp5CacR00UGPGQ@mail.gmail.com>
-Subject: Re: [PATCH v4] Fix sanitizer attribute infrastructure to use standard
- TREE_LIST format [PR113264]
-To: Kees Cook <kees@kernel.org>
-Cc: Indu Bhagat <indu.bhagat@oracle.com>,
-        Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>,
-        Qing Zhao <qing.zhao@oracle.com>, gcc-patches@gcc.gnu.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-GUID: rNIsZ5B3_DHcHbSIsQY-JX6zoJGzNzAo
-X-Proofpoint-ORIG-GUID: rNIsZ5B3_DHcHbSIsQY-JX6zoJGzNzAo
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA5MDA2OSBTYWx0ZWRfX6WsqMmTzhThH
- QAGmVmu+E2Zp3RrjRBiweooSWQdLuWrbhEhJTDY4Z/ht8XhvEnvFoT8Z8Ov7YS9e2a3oZHZgk5x
- aFZTldTXvhrZcVUoyXz0fLC/rRlZCcapHtDB9nK+Qmf1Bl6AAoodG/YAh3W2ewagUaMA4AZIUWI
- sSqW9d3+VoLTG2YiN1Bmk8ipG3BVQV/3PO8bFXRCQrMZwsL3LZ4a+iv5b9pHwgE14GksgtkNjuU
- fMttM+nPh6EdO/LmOwNL8/1X017LJVuPcbFUW/B3RMJFUrcToxLMqpjIYGZzFXSp3BtByYL5UIF
- nEYWCQg5S6071Nmh6NU0PQc1xWr2PkdqZsmPVdXhdCEgn4cm62t0GvLZcbC1cTCpTLYu5tjOQ5F
- HeeK3OreCaM0gt5teDW+ogCPUElr91aj3O0jLvQwWs40iGKMy0MJHfJNuwO6toi2oMpZQcEXkPg
- iDaAuSZNzKmFokSp2UQ==
-X-Authority-Analysis: v=2.4 cv=SNlPlevH c=1 sm=1 tr=0 ts=69899aa0 cx=c_pps
- a=wEP8DlPgTf/vqF+yE6f9lg==:117 a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=EUspDBNiAAAA:8
- a=zRetiblGEnhvEZwHOGkA:9 a=QEXdDO2ut3YA:10 a=bBxd6f-gb0O0v-kibOvt:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-08_05,2026-02-09_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 priorityscore=1501 impostorscore=0 suspectscore=0
- adultscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602090069
 
-On Thu, Sep 4, 2025 at 10:43=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> The __attribute__((__copy__)) functionality was crashing when copying
-> sanitizer-related attributes because these attributes violated the standa=
-rd
-> GCC attribute infrastructure by storing INTEGER_CST values directly inste=
-ad
-> of wrapping them in TREE_LIST like all other attributes.
->
-> Wrap sanitizer attributes INTEGER_CST values in TREE_LIST structures
-> to follow the same pattern as other attributes. This eliminates the
-> copy_list() crashes when copying sanitizer attributes:
->
-> test.c:4:1: internal compiler error: tree check: expected tree that conta=
-ins =E2=80=98common=E2=80=99 structure, have =E2=80=98integer_cst=E2=80=99 =
-in copy_list, at tree.cc:1427
->     4 | __attribute__((__copy__(__tanh)));
->       | ^~~~~~~~~~~~~
-> 0x859d06 tree_contains_struct_check_failed(tree_node const*, tree_node_st=
-ructure_enum, char const*, int, char const*)
->         ../../gcc/gcc/tree.cc:9126
-> 0x860f78 contains_struct_check(tree_node*, tree_node_structure_enum, char=
- const*, int, char const*)
->         ../../gcc/gcc/tree.h:3748
-> 0x860f78 copy_list(tree_node*)
->         ../../gcc/gcc/tree.cc:1427
-> 0xa755a5 handle_copy_attribute
->         ../../gcc/gcc/c-family/c-attribs.cc:3077
-
-
-I am not a fan of the wrapping because it increases the memory usage
-slightly but it is required since the rest of the attributes code
-requires TREE_LIST here.
-
-So Ok.  I will do final testing either Monday or Tuesday and push it after =
-that.
-
-Thanks,
-Andrew
-
->
-> gcc/c-family/ChangeLog:
->
->         PR c/113264
->         * c-attribs.cc (add_no_sanitize_value): Store INTEGER_CST values
->         wrapped in TREE_LIST following standard attribute conventions.
->         (handle_no_sanitize_attribute): Handle both original string
->         arguments and copied INTEGER_CST values from TREE_LIST format.
->
-> gcc/ChangeLog:
->
->         PR c/113264
->         * asan.h (sanitize_flags_p): Extract sanitizer flags from
->         TREE_LIST wrapper instead of directly from INTEGER_CST.
->
-> gcc/d/ChangeLog:
->
->         PR c/113264
->         * d-attribs.cc (d_handle_no_sanitize_attribute): Store INTEGER_CS=
-T
->         values wrapped in TREE_LIST following standard conventions.
->
-> gcc/testsuite/ChangeLog:
->
->         PR c/113264
->         * gcc.dg/pr113264.c: New test.
->         * gcc.dg/pr113264-asan-no-instrumentation.c: New test validating
->         that copied sanitizer attributes prevent ASAN instrumentation.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Indu Bhagat <indu.bhagat@oracle.com>
-> Cc: Claudiu Zissulescu <claudiu.zissulescu-ianculescu@oracle.com>
-> Cc: Qing Zhao <qing.zhao@oracle.com>
-> Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-> ---
->  gcc/asan.h                                    |   8 +-
->  .../gcc.dg/pr113264-asan-no-instrumentation.c |  60 ++++++++++
->  gcc/testsuite/gcc.dg/pr113264.c               | 107 ++++++++++++++++++
->  gcc/c-family/c-attribs.cc                     |  49 +++++---
->  gcc/d/d-attribs.cc                            |  17 ++-
->  5 files changed, 221 insertions(+), 20 deletions(-)
->  create mode 100644 gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation=
-.c
->  create mode 100644 gcc/testsuite/gcc.dg/pr113264.c
->
-> diff --git a/gcc/asan.h b/gcc/asan.h
-> index a24562f67a29..f5dc3d7ceb8d 100644
-> --- a/gcc/asan.h
-> +++ b/gcc/asan.h
-> @@ -253,7 +253,13 @@ sanitize_flags_p (sanitize_code_type flag,
->      {
->        tree value =3D lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (f=
-n));
->        if (value)
-> -       result_flags &=3D ~tree_to_uhwi (TREE_VALUE (value));
-> +       {
-> +         /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-> +         tree attr_args =3D TREE_VALUE (value);
-> +         gcc_assert (attr_args && TREE_CODE (attr_args) =3D=3D TREE_LIST=
-);
-> +         sanitize_code_type no_sanitize_flags =3D tree_to_sanitize_code_=
-type (TREE_VALUE (attr_args));
-> +         result_flags &=3D ~no_sanitize_flags;
-> +       }
->      }
->
->    return result_flags;
-> diff --git a/gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c b/gc=
-c/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c
-> new file mode 100644
-> index 000000000000..812c67c33086
-> --- /dev/null
-> +++ b/gcc/testsuite/gcc.dg/pr113264-asan-no-instrumentation.c
-> @@ -0,0 +1,60 @@
-> +/* PR c/113264 - __attribute__((copy)) crashes with sanitizer attributes
-> +   Test that copied no_sanitize_address attributes prevent ALL ASAN inst=
-rumentation.
-> +   This file should have NO ASAN calls since all functions have the attr=
-ibute.
-> +   { dg-do compile }
-> +   { dg-options "-fsanitize=3Daddress" }
-> +   { dg-skip-if "no address sanitizer" { no_fsanitize_address } } */
-> +
-> +/* Original function with no_sanitize_address */
-> +__attribute__((no_sanitize_address))
-> +int original (int *p, int *q)
-> +{
-> +  *p =3D 42;
-> +  return *q;
-> +}
-> +
-> +/* Copy the attribute - should also have no_sanitize_address */
-> +__typeof(original) copy1 __attribute__((__copy__(original)));
-> +int copy1 (int *p, int *q)
-> +{
-> +  *p =3D 43;
-> +  return *q;
-> +}
-> +
-> +/* Another copy - should also have no_sanitize_address */
-> +__typeof(original) copy2 __attribute__((__copy__(original)));
-> +int copy2 (int *p, int *q)
-> +{
-> +  *p =3D 44;
-> +  return *q;
-> +}
-> +
-> +/* Copy from a copy - should still have no_sanitize_address */
-> +__typeof(copy1) copy_of_copy __attribute__((__copy__(copy1)));
-> +int copy_of_copy (int *p, int *q)
-> +{
-> +  *p =3D 45;
-> +  return *q;
-> +}
-> +
-> +int separate_decl (void);
-> +__attribute__((noinline)) int separate_decl (void);
-> +
-> +__attribute__((__copy__(separate_decl), no_sanitize_address))
-> +int copy_and_annotated_alias (int *p, int *q)
-> +{
-> +  *p =3D 42;
-> +  return *q;
-> +}
-> +
-> +__attribute__((__copy__(separate_decl), no_sanitize("address")))
-> +int copy_and_annotated_string (int *p, int *q)
-> +{
-> +  *p =3D 42;
-> +  return *q;
-> +}
-> +
-> +/* Since ALL functions have no_sanitize_address (either directly or copi=
-ed),
-> +   there should be NO ASAN instrumentation calls in the entire file. */
-> +/* { dg-final { scan-assembler-not "__asan_report_store" } } */
-> +/* { dg-final { scan-assembler-not "__asan_report_load" } } */
-> diff --git a/gcc/testsuite/gcc.dg/pr113264.c b/gcc/testsuite/gcc.dg/pr113=
-264.c
-> new file mode 100644
-> index 000000000000..2a49965e26fd
-> --- /dev/null
-> +++ b/gcc/testsuite/gcc.dg/pr113264.c
-> @@ -0,0 +1,107 @@
-> +/* PR c/113264 - __attribute__((copy)) crashes with sanitizer attributes
-> +   Test that the copy attribute correctly handles sanitizer attributes
-> +   which store their arguments as INTEGER_CST values rather than TREE_LI=
-ST.
-> +   { dg-do compile }
-> +   { dg-options "-O2" } */
-> +
-> +/* Test copying no_sanitize_address attribute.  */
-> +__attribute__((no_sanitize_address)) void f1 (void);
-> +__typeof(f1) f1_copy __attribute__((__copy__(f1)));
-> +
-> +/* Test copying no_sanitize_thread attribute.  */
-> +__attribute__((no_sanitize_thread)) void f2 (void);
-> +__typeof(f2) f2_copy __attribute__((__copy__(f2)));
-> +
-> +/* Test copying no_sanitize_undefined attribute.  */
-> +__attribute__((no_sanitize_undefined)) void f3 (void);
-> +__typeof(f3) f3_copy __attribute__((__copy__(f3)));
-> +
-> +/* Test copying no_sanitize_coverage attribute.  */
-> +__attribute__((no_sanitize_coverage)) void f4 (void);
-> +__typeof(f4) f4_copy __attribute__((__copy__(f4)));
-> +
-> +/* Test copying no_sanitize attribute with string arguments.  */
-> +__attribute__((no_sanitize("address"))) void f5 (void);
-> +__typeof(f5) f5_copy __attribute__((__copy__(f5)));
-> +
-> +__attribute__((no_sanitize("thread"))) void f6 (void);
-> +__typeof(f6) f6_copy __attribute__((__copy__(f6)));
-> +
-> +__attribute__((no_sanitize("undefined"))) void f7 (void);
-> +__typeof(f7) f7_copy __attribute__((__copy__(f7)));
-> +
-> +/* Test copying multiple sanitizer flags.  */
-> +__attribute__((no_sanitize("address", "thread"))) void f8 (void);
-> +__typeof(f8) f8_copy __attribute__((__copy__(f8)));
-> +
-> +/* Test the original bug report case.  This may trigger a warning
-> +   about conflicting with a built-in function name.  */
-> +__attribute__((no_sanitize_address)) void h (void);
-> +__typeof(h) tanhf64 __attribute__((__copy__(h)));
-> +/* { dg-warning "conflicting types for built-in function" "" { target *-=
-*-* } .-1 } */
-> +
-> +/* Test copying from a function pointer variable - this should trigger a=
- warning.  */
-> +__attribute__((no_sanitize_address)) void f9 (void);
-> +void (*f9_ptr)(void) =3D f9; /* { dg-message "symbol 'f9_ptr' referenced=
-" } */
-> +__typeof(f9) f9_ptr_copy __attribute__((__copy__(*f9_ptr))); /* { dg-war=
-ning "'copy' attribute ignored" } */
-> +
-> +/* Test with actual function definitions to ensure attributes are proper=
-ly applied.  */
-> +__attribute__((no_sanitize_address))
-> +void actual_func (int *p)
-> +{
-> +  *p =3D 100;
-> +}
-> +
-> +__typeof(actual_func) actual_func_copy __attribute__((__copy__(actual_fu=
-nc)));
-> +
-> +void actual_func_copy (int *p)
-> +{
-> +  *p =3D 200;
-> +}
-> +
-> +/* Test copying sanitizer attributes along with other attributes.  */
-> +__attribute__((no_sanitize_address, noinline, cold))
-> +void multi_attr (void);
-> +
-> +__typeof(multi_attr) multi_attr_copy __attribute__((__copy__(multi_attr)=
-));
-> +
-> +/* Verify that the copy attribute works with function declarations that
-> +   have sanitizer attributes applied via separate declarations.  */
-> +void separate_decl (void);
-> +__attribute__((no_sanitize_address)) void separate_decl (void);
-> +__typeof(separate_decl) separate_decl_copy __attribute__((__copy__(separ=
-ate_decl)));
-> +
-> +/* Test combining copy attribute with additional no_sanitize attributes.
-> +   The copied function should have both the original no_sanitize_address
-> +   and the new no_sanitize flags.  */
-> +__attribute__((no_sanitize_address))
-> +int combined_original (int *p, int *q)
-> +{
-> +  *p =3D 42;
-> +  return *q;
-> +}
-> +
-> +/* Copy the no_sanitize_address attribute and add no_sanitize for alignm=
-ent.  */
-> +__typeof(combined_original) combined_copy1 __attribute__((__copy__(combi=
-ned_original), no_sanitize("alignment")));
-> +
-> +/* Test with multiple no_sanitize attributes on original.  */
-> +__attribute__((no_sanitize("address", "undefined")))
-> +int combined_original2 (int *p, int *q)
-> +{
-> +  *p =3D 44;
-> +  return *q;
-> +}
-> +
-> +/* Copy existing sanitizer attributes and add more.  */
-> +__typeof(combined_original2) combined_copy2 __attribute__((__copy__(comb=
-ined_original2), no_sanitize("alignment")));
-> +
-> +/* Test with no_sanitize_undefined on original.  */
-> +__attribute__((no_sanitize_undefined))
-> +int combined_original3 (int *p, int *q)
-> +{
-> +  *p =3D 46;
-> +  return *q;
-> +}
-> +
-> +/* Copy and add no_sanitize_address - combining different sanitizer attr=
-ibutes.  */
-> +__typeof(combined_original3) combined_copy3 __attribute__((__copy__(comb=
-ined_original3), no_sanitize_address));
-> diff --git a/gcc/c-family/c-attribs.cc b/gcc/c-family/c-attribs.cc
-> index 1e3a94ed9493..e629601579ef 100644
-> --- a/gcc/c-family/c-attribs.cc
-> +++ b/gcc/c-family/c-attribs.cc
-> @@ -1425,20 +1425,27 @@ add_no_sanitize_value (tree node, sanitize_code_t=
-ype flags)
->    tree attr =3D lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (node))=
-;
->    if (attr)
->      {
-> -      sanitize_code_type old_value =3D
-> -       tree_to_sanitize_code_type (TREE_VALUE (attr));
-> +      /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-> +      tree attr_args =3D TREE_VALUE (attr);
-> +      gcc_assert (attr_args && TREE_CODE (attr_args) =3D=3D TREE_LIST);
-> +      sanitize_code_type old_value =3D tree_to_sanitize_code_type (TREE_=
-VALUE (attr_args));
-> +
->        flags |=3D old_value;
->
->        if (flags =3D=3D old_value)
->         return;
->
-> -      TREE_VALUE (attr) =3D build_int_cst (uint64_type_node, flags);
-> +      tree new_value =3D build_tree_list (NULL_TREE,
-> +                                       build_int_cst (uint64_type_node, =
-flags));
-> +      TREE_VALUE (attr) =3D new_value;
->      }
->    else
-> -    DECL_ATTRIBUTES (node)
-> -      =3D tree_cons (get_identifier ("no_sanitize"),
-> -                  build_int_cst (uint64_type_node, flags),
-> -                  DECL_ATTRIBUTES (node));
-> +    {
-> +      tree attr_value =3D build_tree_list (NULL_TREE,
-> +                                        build_int_cst (uint64_type_node,=
- flags));
-> +      DECL_ATTRIBUTES (node) =3D tree_cons (get_identifier ("no_sanitize=
-"), attr_value,
-> +                                         DECL_ATTRIBUTES (node));
-> +    }
->  }
->
->  /* Handle a "no_sanitize" attribute; arguments as in
-> @@ -1456,17 +1463,29 @@ handle_no_sanitize_attribute (tree *node, tree na=
-me, tree args, int,
->        return NULL_TREE;
->      }
->
-> -  for (; args; args =3D TREE_CHAIN (args))
-> +  /* Handle both original string arguments and copied attributes that
-> +     have already been processed into INTEGER_CST wrapped in TREE_LIST. =
- */
-> +  if (args && TREE_CODE (args) =3D=3D TREE_LIST
-> +      && TREE_VALUE (args) && TREE_CODE (TREE_VALUE (args)) =3D=3D INTEG=
-ER_CST)
->      {
-> -      tree id =3D TREE_VALUE (args);
-> -      if (TREE_CODE (id) !=3D STRING_CST)
-> +      /* This is a copied attribute with the flags already processed.  *=
-/
-> +      flags =3D tree_to_sanitize_code_type (TREE_VALUE (args));
-> +    }
-> +  else
-> +    {
-> +      /* Process original string arguments.  */
-> +      for (; args; args =3D TREE_CHAIN (args))
->         {
-> -         error ("%qE argument not a string", name);
-> -         return NULL_TREE;
-> -       }
-> +         tree id =3D TREE_VALUE (args);
-> +         if (TREE_CODE (id) !=3D STRING_CST)
-> +           {
-> +             error ("%qE argument not a string", name);
-> +             return NULL_TREE;
-> +           }
->
-> -      char *string =3D ASTRDUP (TREE_STRING_POINTER (id));
-> -      flags |=3D parse_no_sanitize_attribute (string);
-> +         char *string =3D ASTRDUP (TREE_STRING_POINTER (id));
-> +         flags |=3D parse_no_sanitize_attribute (string);
-> +       }
->      }
->
->    add_no_sanitize_value (*node, flags);
-> diff --git a/gcc/d/d-attribs.cc b/gcc/d/d-attribs.cc
-> index 53aea5e2e904..342702b05acb 100644
-> --- a/gcc/d/d-attribs.cc
-> +++ b/gcc/d/d-attribs.cc
-> @@ -1424,17 +1424,26 @@ d_handle_no_sanitize_attribute (tree *node, tree =
-name, tree args, int,
->       merge existing flags if no_sanitize was previously handled.  */
->    if (tree attr =3D lookup_attribute ("no_sanitize", DECL_ATTRIBUTES (*n=
-ode)))
->      {
-> -      sanitize_code_type old_value =3D
-> -       tree_to_sanitize_code_type (TREE_VALUE (attr));
-> +      /* Extract the INTEGER_CST from the TREE_LIST wrapper.  */
-> +      tree attr_args =3D TREE_VALUE (attr);
-> +      gcc_assert (attr_args && TREE_CODE (attr_args) =3D=3D TREE_LIST);
-> +      sanitize_code_type old_value =3D tree_to_sanitize_code_type (TREE_=
-VALUE (attr_args));
-> +
->        flags |=3D old_value;
->
->        if (flags !=3D old_value)
-> -       TREE_VALUE (attr) =3D build_int_cst (d_ulong_type, flags);
-> +       {
-> +         tree new_value =3D build_tree_list (NULL_TREE,
-> +                                            build_int_cst (d_ulong_type,=
- flags));
-> +         TREE_VALUE (attr) =3D new_value;
-> +       }
->      }
->    else
->      {
-> +      tree attr_value =3D build_tree_list (NULL_TREE,
-> +                                         build_int_cst (d_ulong_type, fl=
-ags));
->        DECL_ATTRIBUTES (*node) =3D tree_cons (get_identifier ("no_sanitiz=
-e"),
-> -                                          build_int_cst (d_ulong_type, f=
-lags),
-> +                                          attr_value,
->                                            DECL_ATTRIBUTES (*node));
->      }
->
-> --
-> 2.34.1
->
+U29tZSBjb2RlIHN0eWxlIGFkdmljZSBiZWxvdyBjYW4gYmUgZml4Og0KDQpMaW5lcyBzaG91bGQg
+bm90IGV4Y2VlZCA4MCBjaGFyYWN0ZXJzLg0KMTQ6KyAgICAgICAgICBzYW5pdGl6ZV9jb2RlX3R5
+cGUgbm9fc2FuaXRpemVfZmxhZ3MgPSB0cmVlX3RvX3Nhbml0aXplX2NvZGVfdHlwZSAoVFJFRV9W
+QUxVRSAoYXR0cl9hcmdzKSk7DQozMzorICAgICAgc2FuaXRpemVfY29kZV90eXBlIG9sZF92YWx1
+ZSA9IHRyZWVfdG9fc2FuaXRpemVfY29kZV90eXBlIChUUkVFX1ZBTFVFIChhdHRyX2FyZ3MpKTsN
+CjQyOisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYnVpbGRfaW50X2Nz
+dCAodWludDY0X3R5cGVfbm9kZSwgZmxhZ3MpKTsNCjUyOisgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGJ1aWxkX2ludF9jc3QgKHVpbnQ2NF90eXBlX25vZGUsIGZsYWdz
+KSk7DQo1MzorICAgICAgREVDTF9BVFRSSUJVVEVTIChub2RlKSA9IHRyZWVfY29ucyAoZ2V0X2lk
+ZW50aWZpZXIgKCJub19zYW5pdGl6ZSIpLCBhdHRyX3ZhbHVlLA0KMTEwOisgICAgICBzYW5pdGl6
+ZV9jb2RlX3R5cGUgb2xkX3ZhbHVlID0gdHJlZV90b19zYW5pdGl6ZV9jb2RlX3R5cGUgKFRSRUVf
+VkFMVUUgKGF0dHJfYXJncykpOw0KMTE4OisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBidWlsZF9pbnRfY3N0IChkX3Vsb25nX3R5cGUsIGZsYWdzKSk7DQoNCklm
+IHRoaXMgaXMgdHJpdmlhbCwgcGxlYXNlIGlnbm9yZSBpdC4gSSdtIG5vdCBmYW1pbGlhciB3aXRo
+IGdjYyA6KQ0KDQotLS0tLemCruS7tuWOn+S7ti0tLS0tDQrlj5Hku7bkuro6IEFuZHJldyBQaW5z
+a2kgPGFuZHJldy5waW5za2lAb3NzLnF1YWxjb21tLmNvbT4gDQrlj5HpgIHml7bpl7Q6IDIwMjbl
+ubQy5pyIOeaXpSAxNjoyOA0K5pS25Lu25Lq6OiBLZWVzIENvb2sgPGtlZXNAa2VybmVsLm9yZz4N
+CuaKhOmAgTogSW5kdSBCaGFnYXQgPGluZHUuYmhhZ2F0QG9yYWNsZS5jb20+OyBDbGF1ZGl1IFpp
+c3N1bGVzY3UgPGNsYXVkaXUuemlzc3VsZXNjdS1pYW5jdWxlc2N1QG9yYWNsZS5jb20+OyBRaW5n
+IFpoYW8gPHFpbmcuemhhb0BvcmFjbGUuY29tPjsgZ2NjLXBhdGNoZXNAZ2NjLmdudS5vcmc7IGxp
+bnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmcNCuS4u+mimDogUmU6IFtQQVRDSCB2NF0gRml4
+IHNhbml0aXplciBhdHRyaWJ1dGUgaW5mcmFzdHJ1Y3R1cmUgdG8gdXNlIHN0YW5kYXJkIFRSRUVf
+TElTVCBmb3JtYXQgW1BSMTEzMjY0XQ0KDQpPbiBUaHUsIFNlcCA0LCAyMDI1IGF0IDEwOjQz4oCv
+QU0gS2VlcyBDb29rIDxrZWVzQGtlcm5lbC5vcmc+IHdyb3RlOg0KPg0KPiBUaGUgX19hdHRyaWJ1
+dGVfXygoX19jb3B5X18pKSBmdW5jdGlvbmFsaXR5IHdhcyBjcmFzaGluZyB3aGVuIGNvcHlpbmcg
+DQo+IHNhbml0aXplci1yZWxhdGVkIGF0dHJpYnV0ZXMgYmVjYXVzZSB0aGVzZSBhdHRyaWJ1dGVz
+IHZpb2xhdGVkIHRoZSANCj4gc3RhbmRhcmQgR0NDIGF0dHJpYnV0ZSBpbmZyYXN0cnVjdHVyZSBi
+eSBzdG9yaW5nIElOVEVHRVJfQ1NUIHZhbHVlcyANCj4gZGlyZWN0bHkgaW5zdGVhZCBvZiB3cmFw
+cGluZyB0aGVtIGluIFRSRUVfTElTVCBsaWtlIGFsbCBvdGhlciBhdHRyaWJ1dGVzLg0KPg0KPiBX
+cmFwIHNhbml0aXplciBhdHRyaWJ1dGVzIElOVEVHRVJfQ1NUIHZhbHVlcyBpbiBUUkVFX0xJU1Qg
+c3RydWN0dXJlcyANCj4gdG8gZm9sbG93IHRoZSBzYW1lIHBhdHRlcm4gYXMgb3RoZXIgYXR0cmli
+dXRlcy4gVGhpcyBlbGltaW5hdGVzIHRoZQ0KPiBjb3B5X2xpc3QoKSBjcmFzaGVzIHdoZW4gY29w
+eWluZyBzYW5pdGl6ZXIgYXR0cmlidXRlczoNCj4NCj4gdGVzdC5jOjQ6MTogaW50ZXJuYWwgY29t
+cGlsZXIgZXJyb3I6IHRyZWUgY2hlY2s6IGV4cGVjdGVkIHRyZWUgdGhhdCBjb250YWlucyDigJhj
+b21tb27igJkgc3RydWN0dXJlLCBoYXZlIOKAmGludGVnZXJfY3N04oCZIGluIGNvcHlfbGlzdCwg
+YXQgdHJlZS5jYzoxNDI3DQo+ICAgICA0IHwgX19hdHRyaWJ1dGVfXygoX19jb3B5X18oX190YW5o
+KSkpOw0KPiAgICAgICB8IF5+fn5+fn5+fn5+fn4NCj4gMHg4NTlkMDYgdHJlZV9jb250YWluc19z
+dHJ1Y3RfY2hlY2tfZmFpbGVkKHRyZWVfbm9kZSBjb25zdCosIHRyZWVfbm9kZV9zdHJ1Y3R1cmVf
+ZW51bSwgY2hhciBjb25zdCosIGludCwgY2hhciBjb25zdCopDQo+ICAgICAgICAgLi4vLi4vZ2Nj
+L2djYy90cmVlLmNjOjkxMjYNCj4gMHg4NjBmNzggY29udGFpbnNfc3RydWN0X2NoZWNrKHRyZWVf
+bm9kZSosIHRyZWVfbm9kZV9zdHJ1Y3R1cmVfZW51bSwgY2hhciBjb25zdCosIGludCwgY2hhciBj
+b25zdCopDQo+ICAgICAgICAgLi4vLi4vZ2NjL2djYy90cmVlLmg6Mzc0OA0KPiAweDg2MGY3OCBj
+b3B5X2xpc3QodHJlZV9ub2RlKikNCj4gICAgICAgICAuLi8uLi9nY2MvZ2NjL3RyZWUuY2M6MTQy
+Nw0KPiAweGE3NTVhNSBoYW5kbGVfY29weV9hdHRyaWJ1dGUNCj4gICAgICAgICAuLi8uLi9nY2Mv
+Z2NjL2MtZmFtaWx5L2MtYXR0cmlicy5jYzozMDc3DQoNCg0KSSBhbSBub3QgYSBmYW4gb2YgdGhl
+IHdyYXBwaW5nIGJlY2F1c2UgaXQgaW5jcmVhc2VzIHRoZSBtZW1vcnkgdXNhZ2Ugc2xpZ2h0bHkg
+YnV0IGl0IGlzIHJlcXVpcmVkIHNpbmNlIHRoZSByZXN0IG9mIHRoZSBhdHRyaWJ1dGVzIGNvZGUg
+cmVxdWlyZXMgVFJFRV9MSVNUIGhlcmUuDQoNClNvIE9rLiAgSSB3aWxsIGRvIGZpbmFsIHRlc3Rp
+bmcgZWl0aGVyIE1vbmRheSBvciBUdWVzZGF5IGFuZCBwdXNoIGl0IGFmdGVyIHRoYXQuDQoNClRo
+YW5rcywNCkFuZHJldw0KDQo+DQo+IGdjYy9jLWZhbWlseS9DaGFuZ2VMb2c6DQo+DQo+ICAgICAg
+ICAgUFIgYy8xMTMyNjQNCj4gICAgICAgICAqIGMtYXR0cmlicy5jYyAoYWRkX25vX3Nhbml0aXpl
+X3ZhbHVlKTogU3RvcmUgSU5URUdFUl9DU1QgdmFsdWVzDQo+ICAgICAgICAgd3JhcHBlZCBpbiBU
+UkVFX0xJU1QgZm9sbG93aW5nIHN0YW5kYXJkIGF0dHJpYnV0ZSBjb252ZW50aW9ucy4NCj4gICAg
+ICAgICAoaGFuZGxlX25vX3Nhbml0aXplX2F0dHJpYnV0ZSk6IEhhbmRsZSBib3RoIG9yaWdpbmFs
+IHN0cmluZw0KPiAgICAgICAgIGFyZ3VtZW50cyBhbmQgY29waWVkIElOVEVHRVJfQ1NUIHZhbHVl
+cyBmcm9tIFRSRUVfTElTVCBmb3JtYXQuDQo+DQo+IGdjYy9DaGFuZ2VMb2c6DQo+DQo+ICAgICAg
+ICAgUFIgYy8xMTMyNjQNCj4gICAgICAgICAqIGFzYW4uaCAoc2FuaXRpemVfZmxhZ3NfcCk6IEV4
+dHJhY3Qgc2FuaXRpemVyIGZsYWdzIGZyb20NCj4gICAgICAgICBUUkVFX0xJU1Qgd3JhcHBlciBp
+bnN0ZWFkIG9mIGRpcmVjdGx5IGZyb20gSU5URUdFUl9DU1QuDQo+DQo+IGdjYy9kL0NoYW5nZUxv
+ZzoNCj4NCj4gICAgICAgICBQUiBjLzExMzI2NA0KPiAgICAgICAgICogZC1hdHRyaWJzLmNjIChk
+X2hhbmRsZV9ub19zYW5pdGl6ZV9hdHRyaWJ1dGUpOiBTdG9yZSBJTlRFR0VSX0NTVA0KPiAgICAg
+ICAgIHZhbHVlcyB3cmFwcGVkIGluIFRSRUVfTElTVCBmb2xsb3dpbmcgc3RhbmRhcmQgY29udmVu
+dGlvbnMuDQo+DQo+IGdjYy90ZXN0c3VpdGUvQ2hhbmdlTG9nOg0KPg0KPiAgICAgICAgIFBSIGMv
+MTEzMjY0DQo+ICAgICAgICAgKiBnY2MuZGcvcHIxMTMyNjQuYzogTmV3IHRlc3QuDQo+ICAgICAg
+ICAgKiBnY2MuZGcvcHIxMTMyNjQtYXNhbi1uby1pbnN0cnVtZW50YXRpb24uYzogTmV3IHRlc3Qg
+dmFsaWRhdGluZw0KPiAgICAgICAgIHRoYXQgY29waWVkIHNhbml0aXplciBhdHRyaWJ1dGVzIHBy
+ZXZlbnQgQVNBTiBpbnN0cnVtZW50YXRpb24uDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEtlZXMgQ29v
+ayA8a2Vlc0BrZXJuZWwub3JnPg0KPiAtLS0NCj4gQ2M6IEluZHUgQmhhZ2F0IDxpbmR1LmJoYWdh
+dEBvcmFjbGUuY29tPg0KPiBDYzogQ2xhdWRpdSBaaXNzdWxlc2N1IDxjbGF1ZGl1Lnppc3N1bGVz
+Y3UtaWFuY3VsZXNjdUBvcmFjbGUuY29tPg0KPiBDYzogUWluZyBaaGFvIDxxaW5nLnpoYW9Ab3Jh
+Y2xlLmNvbT4NCj4gQ2M6IEFuZHJldyBQaW5za2kgPGFuZHJldy5waW5za2lAb3NzLnF1YWxjb21t
+LmNvbT4NCj4gLS0tDQo+ICBnY2MvYXNhbi5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgIDggKy0NCj4gIC4uLi9nY2MuZGcvcHIxMTMyNjQtYXNhbi1uby1pbnN0cnVtZW50
+YXRpb24uYyB8ICA2MCArKysrKysrKysrDQo+ICBnY2MvdGVzdHN1aXRlL2djYy5kZy9wcjExMzI2
+NC5jICAgICAgICAgICAgICAgfCAxMDcgKysrKysrKysrKysrKysrKysrDQo+ICBnY2MvYy1mYW1p
+bHkvYy1hdHRyaWJzLmNjICAgICAgICAgICAgICAgICAgICAgfCAgNDkgKysrKystLS0NCj4gIGdj
+Yy9kL2QtYXR0cmlicy5jYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxNyArKy0NCj4g
+IDUgZmlsZXMgY2hhbmdlZCwgMjIxIGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9ucygtKSAgY3Jl
+YXRlIG1vZGUgDQo+IDEwMDY0NCBnY2MvdGVzdHN1aXRlL2djYy5kZy9wcjExMzI2NC1hc2FuLW5v
+LWluc3RydW1lbnRhdGlvbi5jDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZ2NjL3Rlc3RzdWl0ZS9n
+Y2MuZGcvcHIxMTMyNjQuYw0KPg0KPiBkaWZmIC0tZ2l0IGEvZ2NjL2FzYW4uaCBiL2djYy9hc2Fu
+LmgNCj4gaW5kZXggYTI0NTYyZjY3YTI5Li5mNWRjM2Q3Y2ViOGQgMTAwNjQ0DQo+IC0tLSBhL2dj
+Yy9hc2FuLmgNCj4gKysrIGIvZ2NjL2FzYW4uaA0KPiBAQCAtMjUzLDcgKzI1MywxMyBAQCBzYW5p
+dGl6ZV9mbGFnc19wIChzYW5pdGl6ZV9jb2RlX3R5cGUgZmxhZywNCj4gICAgICB7DQo+ICAgICAg
+ICB0cmVlIHZhbHVlID0gbG9va3VwX2F0dHJpYnV0ZSAoIm5vX3Nhbml0aXplIiwgREVDTF9BVFRS
+SUJVVEVTIChmbikpOw0KPiAgICAgICAgaWYgKHZhbHVlKQ0KPiAtICAgICAgIHJlc3VsdF9mbGFn
+cyAmPSB+dHJlZV90b191aHdpIChUUkVFX1ZBTFVFICh2YWx1ZSkpOw0KPiArICAgICAgIHsNCj4g
+KyAgICAgICAgIC8qIEV4dHJhY3QgdGhlIElOVEVHRVJfQ1NUIGZyb20gdGhlIFRSRUVfTElTVCB3
+cmFwcGVyLiAgKi8NCj4gKyAgICAgICAgIHRyZWUgYXR0cl9hcmdzID0gVFJFRV9WQUxVRSAodmFs
+dWUpOw0KPiArICAgICAgICAgZ2NjX2Fzc2VydCAoYXR0cl9hcmdzICYmIFRSRUVfQ09ERSAoYXR0
+cl9hcmdzKSA9PSBUUkVFX0xJU1QpOw0KPiArICAgICAgICAgc2FuaXRpemVfY29kZV90eXBlIG5v
+X3Nhbml0aXplX2ZsYWdzID0gdHJlZV90b19zYW5pdGl6ZV9jb2RlX3R5cGUgKFRSRUVfVkFMVUUg
+KGF0dHJfYXJncykpOw0KPiArICAgICAgICAgcmVzdWx0X2ZsYWdzICY9IH5ub19zYW5pdGl6ZV9m
+bGFnczsNCj4gKyAgICAgICB9DQo+ICAgICAgfQ0KPg0KPiAgICByZXR1cm4gcmVzdWx0X2ZsYWdz
+Ow0KPiBkaWZmIC0tZ2l0IGEvZ2NjL3Rlc3RzdWl0ZS9nY2MuZGcvcHIxMTMyNjQtYXNhbi1uby1p
+bnN0cnVtZW50YXRpb24uYyANCj4gYi9nY2MvdGVzdHN1aXRlL2djYy5kZy9wcjExMzI2NC1hc2Fu
+LW5vLWluc3RydW1lbnRhdGlvbi5jDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAw
+MDAwMDAwMDAwMC4uODEyYzY3YzMzMDg2DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvZ2NjL3Rl
+c3RzdWl0ZS9nY2MuZGcvcHIxMTMyNjQtYXNhbi1uby1pbnN0cnVtZW50YXRpb24uYw0KPiBAQCAt
+MCwwICsxLDYwIEBADQo+ICsvKiBQUiBjLzExMzI2NCAtIF9fYXR0cmlidXRlX18oKGNvcHkpKSBj
+cmFzaGVzIHdpdGggc2FuaXRpemVyIGF0dHJpYnV0ZXMNCj4gKyAgIFRlc3QgdGhhdCBjb3BpZWQg
+bm9fc2FuaXRpemVfYWRkcmVzcyBhdHRyaWJ1dGVzIHByZXZlbnQgQUxMIEFTQU4gaW5zdHJ1bWVu
+dGF0aW9uLg0KPiArICAgVGhpcyBmaWxlIHNob3VsZCBoYXZlIE5PIEFTQU4gY2FsbHMgc2luY2Ug
+YWxsIGZ1bmN0aW9ucyBoYXZlIHRoZSBhdHRyaWJ1dGUuDQo+ICsgICB7IGRnLWRvIGNvbXBpbGUg
+fQ0KPiArICAgeyBkZy1vcHRpb25zICItZnNhbml0aXplPWFkZHJlc3MiIH0NCj4gKyAgIHsgZGct
+c2tpcC1pZiAibm8gYWRkcmVzcyBzYW5pdGl6ZXIiIHsgbm9fZnNhbml0aXplX2FkZHJlc3MgfSB9
+ICovDQo+ICsNCj4gKy8qIE9yaWdpbmFsIGZ1bmN0aW9uIHdpdGggbm9fc2FuaXRpemVfYWRkcmVz
+cyAqLw0KPiArX19hdHRyaWJ1dGVfXygobm9fc2FuaXRpemVfYWRkcmVzcykpDQo+ICtpbnQgb3Jp
+Z2luYWwgKGludCAqcCwgaW50ICpxKQ0KPiArew0KPiArICAqcCA9IDQyOw0KPiArICByZXR1cm4g
+KnE7DQo+ICt9DQo+ICsNCj4gKy8qIENvcHkgdGhlIGF0dHJpYnV0ZSAtIHNob3VsZCBhbHNvIGhh
+dmUgbm9fc2FuaXRpemVfYWRkcmVzcyAqLw0KPiArX190eXBlb2Yob3JpZ2luYWwpIGNvcHkxIF9f
+YXR0cmlidXRlX18oKF9fY29weV9fKG9yaWdpbmFsKSkpOw0KPiAraW50IGNvcHkxIChpbnQgKnAs
+IGludCAqcSkNCj4gK3sNCj4gKyAgKnAgPSA0MzsNCj4gKyAgcmV0dXJuICpxOw0KPiArfQ0KPiAr
+DQo+ICsvKiBBbm90aGVyIGNvcHkgLSBzaG91bGQgYWxzbyBoYXZlIG5vX3Nhbml0aXplX2FkZHJl
+c3MgKi8NCj4gK19fdHlwZW9mKG9yaWdpbmFsKSBjb3B5MiBfX2F0dHJpYnV0ZV9fKChfX2NvcHlf
+XyhvcmlnaW5hbCkpKTsNCj4gK2ludCBjb3B5MiAoaW50ICpwLCBpbnQgKnEpDQo+ICt7DQo+ICsg
+ICpwID0gNDQ7DQo+ICsgIHJldHVybiAqcTsNCj4gK30NCj4gKw0KPiArLyogQ29weSBmcm9tIGEg
+Y29weSAtIHNob3VsZCBzdGlsbCBoYXZlIG5vX3Nhbml0aXplX2FkZHJlc3MgKi8NCj4gK19fdHlw
+ZW9mKGNvcHkxKSBjb3B5X29mX2NvcHkgX19hdHRyaWJ1dGVfXygoX19jb3B5X18oY29weTEpKSk7
+IGludCANCj4gK2NvcHlfb2ZfY29weSAoaW50ICpwLCBpbnQgKnEpIHsNCj4gKyAgKnAgPSA0NTsN
+Cj4gKyAgcmV0dXJuICpxOw0KPiArfQ0KPiArDQo+ICtpbnQgc2VwYXJhdGVfZGVjbCAodm9pZCk7
+DQo+ICtfX2F0dHJpYnV0ZV9fKChub2lubGluZSkpIGludCBzZXBhcmF0ZV9kZWNsICh2b2lkKTsN
+Cj4gKw0KPiArX19hdHRyaWJ1dGVfXygoX19jb3B5X18oc2VwYXJhdGVfZGVjbCksIG5vX3Nhbml0
+aXplX2FkZHJlc3MpKSBpbnQgDQo+ICtjb3B5X2FuZF9hbm5vdGF0ZWRfYWxpYXMgKGludCAqcCwg
+aW50ICpxKSB7DQo+ICsgICpwID0gNDI7DQo+ICsgIHJldHVybiAqcTsNCj4gK30NCj4gKw0KPiAr
+X19hdHRyaWJ1dGVfXygoX19jb3B5X18oc2VwYXJhdGVfZGVjbCksIG5vX3Nhbml0aXplKCJhZGRy
+ZXNzIikpKSBpbnQgDQo+ICtjb3B5X2FuZF9hbm5vdGF0ZWRfc3RyaW5nIChpbnQgKnAsIGludCAq
+cSkgew0KPiArICAqcCA9IDQyOw0KPiArICByZXR1cm4gKnE7DQo+ICt9DQo+ICsNCj4gKy8qIFNp
+bmNlIEFMTCBmdW5jdGlvbnMgaGF2ZSBub19zYW5pdGl6ZV9hZGRyZXNzIChlaXRoZXIgZGlyZWN0
+bHkgb3IgY29waWVkKSwNCj4gKyAgIHRoZXJlIHNob3VsZCBiZSBOTyBBU0FOIGluc3RydW1lbnRh
+dGlvbiBjYWxscyBpbiB0aGUgZW50aXJlIGZpbGUuIA0KPiArKi8NCj4gKy8qIHsgZGctZmluYWwg
+eyBzY2FuLWFzc2VtYmxlci1ub3QgIl9fYXNhbl9yZXBvcnRfc3RvcmUiIH0gfSAqLw0KPiArLyog
+eyBkZy1maW5hbCB7IHNjYW4tYXNzZW1ibGVyLW5vdCAiX19hc2FuX3JlcG9ydF9sb2FkIiB9IH0g
+Ki8NCj4gZGlmZiAtLWdpdCBhL2djYy90ZXN0c3VpdGUvZ2NjLmRnL3ByMTEzMjY0LmMgDQo+IGIv
+Z2NjL3Rlc3RzdWl0ZS9nY2MuZGcvcHIxMTMyNjQuYyBuZXcgZmlsZSBtb2RlIDEwMDY0NCBpbmRl
+eCANCj4gMDAwMDAwMDAwMDAwLi4yYTQ5OTY1ZTI2ZmQNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysg
+Yi9nY2MvdGVzdHN1aXRlL2djYy5kZy9wcjExMzI2NC5jDQo+IEBAIC0wLDAgKzEsMTA3IEBADQo+
+ICsvKiBQUiBjLzExMzI2NCAtIF9fYXR0cmlidXRlX18oKGNvcHkpKSBjcmFzaGVzIHdpdGggc2Fu
+aXRpemVyIGF0dHJpYnV0ZXMNCj4gKyAgIFRlc3QgdGhhdCB0aGUgY29weSBhdHRyaWJ1dGUgY29y
+cmVjdGx5IGhhbmRsZXMgc2FuaXRpemVyIGF0dHJpYnV0ZXMNCj4gKyAgIHdoaWNoIHN0b3JlIHRo
+ZWlyIGFyZ3VtZW50cyBhcyBJTlRFR0VSX0NTVCB2YWx1ZXMgcmF0aGVyIHRoYW4gVFJFRV9MSVNU
+Lg0KPiArICAgeyBkZy1kbyBjb21waWxlIH0NCj4gKyAgIHsgZGctb3B0aW9ucyAiLU8yIiB9ICov
+DQo+ICsNCj4gKy8qIFRlc3QgY29weWluZyBub19zYW5pdGl6ZV9hZGRyZXNzIGF0dHJpYnV0ZS4g
+ICovDQo+ICtfX2F0dHJpYnV0ZV9fKChub19zYW5pdGl6ZV9hZGRyZXNzKSkgdm9pZCBmMSAodm9p
+ZCk7DQo+ICtfX3R5cGVvZihmMSkgZjFfY29weSBfX2F0dHJpYnV0ZV9fKChfX2NvcHlfXyhmMSkp
+KTsNCj4gKw0KPiArLyogVGVzdCBjb3B5aW5nIG5vX3Nhbml0aXplX3RocmVhZCBhdHRyaWJ1dGUu
+ICAqLw0KPiArX19hdHRyaWJ1dGVfXygobm9fc2FuaXRpemVfdGhyZWFkKSkgdm9pZCBmMiAodm9p
+ZCk7DQo+ICtfX3R5cGVvZihmMikgZjJfY29weSBfX2F0dHJpYnV0ZV9fKChfX2NvcHlfXyhmMikp
+KTsNCj4gKw0KPiArLyogVGVzdCBjb3B5aW5nIG5vX3Nhbml0aXplX3VuZGVmaW5lZCBhdHRyaWJ1
+dGUuICAqLw0KPiArX19hdHRyaWJ1dGVfXygobm9fc2FuaXRpemVfdW5kZWZpbmVkKSkgdm9pZCBm
+MyAodm9pZCk7DQo+ICtfX3R5cGVvZihmMykgZjNfY29weSBfX2F0dHJpYnV0ZV9fKChfX2NvcHlf
+XyhmMykpKTsNCj4gKw0KPiArLyogVGVzdCBjb3B5aW5nIG5vX3Nhbml0aXplX2NvdmVyYWdlIGF0
+dHJpYnV0ZS4gICovDQo+ICtfX2F0dHJpYnV0ZV9fKChub19zYW5pdGl6ZV9jb3ZlcmFnZSkpIHZv
+aWQgZjQgKHZvaWQpOw0KPiArX190eXBlb2YoZjQpIGY0X2NvcHkgX19hdHRyaWJ1dGVfXygoX19j
+b3B5X18oZjQpKSk7DQo+ICsNCj4gKy8qIFRlc3QgY29weWluZyBub19zYW5pdGl6ZSBhdHRyaWJ1
+dGUgd2l0aCBzdHJpbmcgYXJndW1lbnRzLiAgKi8NCj4gK19fYXR0cmlidXRlX18oKG5vX3Nhbml0
+aXplKCJhZGRyZXNzIikpKSB2b2lkIGY1ICh2b2lkKTsNCj4gK19fdHlwZW9mKGY1KSBmNV9jb3B5
+IF9fYXR0cmlidXRlX18oKF9fY29weV9fKGY1KSkpOw0KPiArDQo+ICtfX2F0dHJpYnV0ZV9fKChu
+b19zYW5pdGl6ZSgidGhyZWFkIikpKSB2b2lkIGY2ICh2b2lkKTsNCj4gK19fdHlwZW9mKGY2KSBm
+Nl9jb3B5IF9fYXR0cmlidXRlX18oKF9fY29weV9fKGY2KSkpOw0KPiArDQo+ICtfX2F0dHJpYnV0
+ZV9fKChub19zYW5pdGl6ZSgidW5kZWZpbmVkIikpKSB2b2lkIGY3ICh2b2lkKTsNCj4gK19fdHlw
+ZW9mKGY3KSBmN19jb3B5IF9fYXR0cmlidXRlX18oKF9fY29weV9fKGY3KSkpOw0KPiArDQo+ICsv
+KiBUZXN0IGNvcHlpbmcgbXVsdGlwbGUgc2FuaXRpemVyIGZsYWdzLiAgKi8gDQo+ICtfX2F0dHJp
+YnV0ZV9fKChub19zYW5pdGl6ZSgiYWRkcmVzcyIsICJ0aHJlYWQiKSkpIHZvaWQgZjggKHZvaWQp
+Ow0KPiArX190eXBlb2YoZjgpIGY4X2NvcHkgX19hdHRyaWJ1dGVfXygoX19jb3B5X18oZjgpKSk7
+DQo+ICsNCj4gKy8qIFRlc3QgdGhlIG9yaWdpbmFsIGJ1ZyByZXBvcnQgY2FzZS4gIFRoaXMgbWF5
+IHRyaWdnZXIgYSB3YXJuaW5nDQo+ICsgICBhYm91dCBjb25mbGljdGluZyB3aXRoIGEgYnVpbHQt
+aW4gZnVuY3Rpb24gbmFtZS4gICovDQo+ICtfX2F0dHJpYnV0ZV9fKChub19zYW5pdGl6ZV9hZGRy
+ZXNzKSkgdm9pZCBoICh2b2lkKTsNCj4gK19fdHlwZW9mKGgpIHRhbmhmNjQgX19hdHRyaWJ1dGVf
+XygoX19jb3B5X18oaCkpKTsNCj4gKy8qIHsgZGctd2FybmluZyAiY29uZmxpY3RpbmcgdHlwZXMg
+Zm9yIGJ1aWx0LWluIGZ1bmN0aW9uIiAiIiB7IHRhcmdldCANCj4gKyotKi0qIH0gLi0xIH0gKi8N
+Cj4gKw0KPiArLyogVGVzdCBjb3B5aW5nIGZyb20gYSBmdW5jdGlvbiBwb2ludGVyIHZhcmlhYmxl
+IC0gdGhpcyBzaG91bGQgDQo+ICt0cmlnZ2VyIGEgd2FybmluZy4gICovDQo+ICtfX2F0dHJpYnV0
+ZV9fKChub19zYW5pdGl6ZV9hZGRyZXNzKSkgdm9pZCBmOSAodm9pZCk7IHZvaWQgDQo+ICsoKmY5
+X3B0cikodm9pZCkgPSBmOTsgLyogeyBkZy1tZXNzYWdlICJzeW1ib2wgJ2Y5X3B0cicgcmVmZXJl
+bmNlZCIgfSANCj4gKyovDQo+ICtfX3R5cGVvZihmOSkgZjlfcHRyX2NvcHkgX19hdHRyaWJ1dGVf
+XygoX19jb3B5X18oKmY5X3B0cikpKTsgLyogeyANCj4gK2RnLXdhcm5pbmcgIidjb3B5JyBhdHRy
+aWJ1dGUgaWdub3JlZCIgfSAqLw0KPiArDQo+ICsvKiBUZXN0IHdpdGggYWN0dWFsIGZ1bmN0aW9u
+IGRlZmluaXRpb25zIHRvIGVuc3VyZSBhdHRyaWJ1dGVzIGFyZSANCj4gK3Byb3Blcmx5IGFwcGxp
+ZWQuICAqLw0KPiArX19hdHRyaWJ1dGVfXygobm9fc2FuaXRpemVfYWRkcmVzcykpDQo+ICt2b2lk
+IGFjdHVhbF9mdW5jIChpbnQgKnApDQo+ICt7DQo+ICsgICpwID0gMTAwOw0KPiArfQ0KPiArDQo+
+ICtfX3R5cGVvZihhY3R1YWxfZnVuYykgYWN0dWFsX2Z1bmNfY29weSANCj4gK19fYXR0cmlidXRl
+X18oKF9fY29weV9fKGFjdHVhbF9mdW5jKSkpOw0KPiArDQo+ICt2b2lkIGFjdHVhbF9mdW5jX2Nv
+cHkgKGludCAqcCkNCj4gK3sNCj4gKyAgKnAgPSAyMDA7DQo+ICt9DQo+ICsNCj4gKy8qIFRlc3Qg
+Y29weWluZyBzYW5pdGl6ZXIgYXR0cmlidXRlcyBhbG9uZyB3aXRoIG90aGVyIGF0dHJpYnV0ZXMu
+ICAqLyANCj4gK19fYXR0cmlidXRlX18oKG5vX3Nhbml0aXplX2FkZHJlc3MsIG5vaW5saW5lLCBj
+b2xkKSkgdm9pZCBtdWx0aV9hdHRyIA0KPiArKHZvaWQpOw0KPiArDQo+ICtfX3R5cGVvZihtdWx0
+aV9hdHRyKSBtdWx0aV9hdHRyX2NvcHkgDQo+ICtfX2F0dHJpYnV0ZV9fKChfX2NvcHlfXyhtdWx0
+aV9hdHRyKSkpOw0KPiArDQo+ICsvKiBWZXJpZnkgdGhhdCB0aGUgY29weSBhdHRyaWJ1dGUgd29y
+a3Mgd2l0aCBmdW5jdGlvbiBkZWNsYXJhdGlvbnMgdGhhdA0KPiArICAgaGF2ZSBzYW5pdGl6ZXIg
+YXR0cmlidXRlcyBhcHBsaWVkIHZpYSBzZXBhcmF0ZSBkZWNsYXJhdGlvbnMuICAqLyANCj4gK3Zv
+aWQgc2VwYXJhdGVfZGVjbCAodm9pZCk7DQo+ICtfX2F0dHJpYnV0ZV9fKChub19zYW5pdGl6ZV9h
+ZGRyZXNzKSkgdm9pZCBzZXBhcmF0ZV9kZWNsICh2b2lkKTsNCj4gK19fdHlwZW9mKHNlcGFyYXRl
+X2RlY2wpIHNlcGFyYXRlX2RlY2xfY29weSANCj4gK19fYXR0cmlidXRlX18oKF9fY29weV9fKHNl
+cGFyYXRlX2RlY2wpKSk7DQo+ICsNCj4gKy8qIFRlc3QgY29tYmluaW5nIGNvcHkgYXR0cmlidXRl
+IHdpdGggYWRkaXRpb25hbCBub19zYW5pdGl6ZSBhdHRyaWJ1dGVzLg0KPiArICAgVGhlIGNvcGll
+ZCBmdW5jdGlvbiBzaG91bGQgaGF2ZSBib3RoIHRoZSBvcmlnaW5hbCBub19zYW5pdGl6ZV9hZGRy
+ZXNzDQo+ICsgICBhbmQgdGhlIG5ldyBub19zYW5pdGl6ZSBmbGFncy4gICovDQo+ICtfX2F0dHJp
+YnV0ZV9fKChub19zYW5pdGl6ZV9hZGRyZXNzKSkNCj4gK2ludCBjb21iaW5lZF9vcmlnaW5hbCAo
+aW50ICpwLCBpbnQgKnEpIHsNCj4gKyAgKnAgPSA0MjsNCj4gKyAgcmV0dXJuICpxOw0KPiArfQ0K
+PiArDQo+ICsvKiBDb3B5IHRoZSBub19zYW5pdGl6ZV9hZGRyZXNzIGF0dHJpYnV0ZSBhbmQgYWRk
+IG5vX3Nhbml0aXplIGZvciANCj4gK2FsaWdubWVudC4gICovDQo+ICtfX3R5cGVvZihjb21iaW5l
+ZF9vcmlnaW5hbCkgY29tYmluZWRfY29weTEgDQo+ICtfX2F0dHJpYnV0ZV9fKChfX2NvcHlfXyhj
+b21iaW5lZF9vcmlnaW5hbCksIA0KPiArbm9fc2FuaXRpemUoImFsaWdubWVudCIpKSk7DQo+ICsN
+Cj4gKy8qIFRlc3Qgd2l0aCBtdWx0aXBsZSBub19zYW5pdGl6ZSBhdHRyaWJ1dGVzIG9uIG9yaWdp
+bmFsLiAgKi8gDQo+ICtfX2F0dHJpYnV0ZV9fKChub19zYW5pdGl6ZSgiYWRkcmVzcyIsICJ1bmRl
+ZmluZWQiKSkpIGludCANCj4gK2NvbWJpbmVkX29yaWdpbmFsMiAoaW50ICpwLCBpbnQgKnEpIHsN
+Cj4gKyAgKnAgPSA0NDsNCj4gKyAgcmV0dXJuICpxOw0KPiArfQ0KPiArDQo+ICsvKiBDb3B5IGV4
+aXN0aW5nIHNhbml0aXplciBhdHRyaWJ1dGVzIGFuZCBhZGQgbW9yZS4gICovDQo+ICtfX3R5cGVv
+Zihjb21iaW5lZF9vcmlnaW5hbDIpIGNvbWJpbmVkX2NvcHkyIA0KPiArX19hdHRyaWJ1dGVfXygo
+X19jb3B5X18oY29tYmluZWRfb3JpZ2luYWwyKSwgDQo+ICtub19zYW5pdGl6ZSgiYWxpZ25tZW50
+IikpKTsNCj4gKw0KPiArLyogVGVzdCB3aXRoIG5vX3Nhbml0aXplX3VuZGVmaW5lZCBvbiBvcmln
+aW5hbC4gICovDQo+ICtfX2F0dHJpYnV0ZV9fKChub19zYW5pdGl6ZV91bmRlZmluZWQpKQ0KPiAr
+aW50IGNvbWJpbmVkX29yaWdpbmFsMyAoaW50ICpwLCBpbnQgKnEpIHsNCj4gKyAgKnAgPSA0NjsN
+Cj4gKyAgcmV0dXJuICpxOw0KPiArfQ0KPiArDQo+ICsvKiBDb3B5IGFuZCBhZGQgbm9fc2FuaXRp
+emVfYWRkcmVzcyAtIGNvbWJpbmluZyBkaWZmZXJlbnQgc2FuaXRpemVyIA0KPiArYXR0cmlidXRl
+cy4gICovDQo+ICtfX3R5cGVvZihjb21iaW5lZF9vcmlnaW5hbDMpIGNvbWJpbmVkX2NvcHkzIA0K
+PiArX19hdHRyaWJ1dGVfXygoX19jb3B5X18oY29tYmluZWRfb3JpZ2luYWwzKSwgbm9fc2FuaXRp
+emVfYWRkcmVzcykpOw0KPiBkaWZmIC0tZ2l0IGEvZ2NjL2MtZmFtaWx5L2MtYXR0cmlicy5jYyBi
+L2djYy9jLWZhbWlseS9jLWF0dHJpYnMuY2MgDQo+IGluZGV4IDFlM2E5NGVkOTQ5My4uZTYyOTYw
+MTU3OWVmIDEwMDY0NA0KPiAtLS0gYS9nY2MvYy1mYW1pbHkvYy1hdHRyaWJzLmNjDQo+ICsrKyBi
+L2djYy9jLWZhbWlseS9jLWF0dHJpYnMuY2MNCj4gQEAgLTE0MjUsMjAgKzE0MjUsMjcgQEAgYWRk
+X25vX3Nhbml0aXplX3ZhbHVlICh0cmVlIG5vZGUsIHNhbml0aXplX2NvZGVfdHlwZSBmbGFncykN
+Cj4gICAgdHJlZSBhdHRyID0gbG9va3VwX2F0dHJpYnV0ZSAoIm5vX3Nhbml0aXplIiwgREVDTF9B
+VFRSSUJVVEVTIChub2RlKSk7DQo+ICAgIGlmIChhdHRyKQ0KPiAgICAgIHsNCj4gLSAgICAgIHNh
+bml0aXplX2NvZGVfdHlwZSBvbGRfdmFsdWUgPQ0KPiAtICAgICAgIHRyZWVfdG9fc2FuaXRpemVf
+Y29kZV90eXBlIChUUkVFX1ZBTFVFIChhdHRyKSk7DQo+ICsgICAgICAvKiBFeHRyYWN0IHRoZSBJ
+TlRFR0VSX0NTVCBmcm9tIHRoZSBUUkVFX0xJU1Qgd3JhcHBlci4gICovDQo+ICsgICAgICB0cmVl
+IGF0dHJfYXJncyA9IFRSRUVfVkFMVUUgKGF0dHIpOw0KPiArICAgICAgZ2NjX2Fzc2VydCAoYXR0
+cl9hcmdzICYmIFRSRUVfQ09ERSAoYXR0cl9hcmdzKSA9PSBUUkVFX0xJU1QpOw0KPiArICAgICAg
+c2FuaXRpemVfY29kZV90eXBlIG9sZF92YWx1ZSA9IHRyZWVfdG9fc2FuaXRpemVfY29kZV90eXBl
+IA0KPiArIChUUkVFX1ZBTFVFIChhdHRyX2FyZ3MpKTsNCj4gKw0KPiAgICAgICAgZmxhZ3MgfD0g
+b2xkX3ZhbHVlOw0KPg0KPiAgICAgICAgaWYgKGZsYWdzID09IG9sZF92YWx1ZSkNCj4gICAgICAg
+ICByZXR1cm47DQo+DQo+IC0gICAgICBUUkVFX1ZBTFVFIChhdHRyKSA9IGJ1aWxkX2ludF9jc3Qg
+KHVpbnQ2NF90eXBlX25vZGUsIGZsYWdzKTsNCj4gKyAgICAgIHRyZWUgbmV3X3ZhbHVlID0gYnVp
+bGRfdHJlZV9saXN0IChOVUxMX1RSRUUsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBidWlsZF9pbnRfY3N0ICh1aW50NjRfdHlwZV9ub2RlLCBmbGFncykpOw0KPiAr
+ICAgICAgVFJFRV9WQUxVRSAoYXR0cikgPSBuZXdfdmFsdWU7DQo+ICAgICAgfQ0KPiAgICBlbHNl
+DQo+IC0gICAgREVDTF9BVFRSSUJVVEVTIChub2RlKQ0KPiAtICAgICAgPSB0cmVlX2NvbnMgKGdl
+dF9pZGVudGlmaWVyICgibm9fc2FuaXRpemUiKSwNCj4gLSAgICAgICAgICAgICAgICAgIGJ1aWxk
+X2ludF9jc3QgKHVpbnQ2NF90eXBlX25vZGUsIGZsYWdzKSwNCj4gLSAgICAgICAgICAgICAgICAg
+IERFQ0xfQVRUUklCVVRFUyAobm9kZSkpOw0KPiArICAgIHsNCj4gKyAgICAgIHRyZWUgYXR0cl92
+YWx1ZSA9IGJ1aWxkX3RyZWVfbGlzdCAoTlVMTF9UUkVFLA0KPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGJ1aWxkX2ludF9jc3QgKHVpbnQ2NF90eXBlX25vZGUsIGZs
+YWdzKSk7DQo+ICsgICAgICBERUNMX0FUVFJJQlVURVMgKG5vZGUpID0gdHJlZV9jb25zIChnZXRf
+aWRlbnRpZmllciAoIm5vX3Nhbml0aXplIiksIGF0dHJfdmFsdWUsDQo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIERFQ0xfQVRUUklCVVRFUyAobm9kZSkpOw0KPiAr
+ICAgIH0NCj4gIH0NCj4NCj4gIC8qIEhhbmRsZSBhICJub19zYW5pdGl6ZSIgYXR0cmlidXRlOyBh
+cmd1bWVudHMgYXMgaW4gQEAgLTE0NTYsMTcgDQo+ICsxNDYzLDI5IEBAIGhhbmRsZV9ub19zYW5p
+dGl6ZV9hdHRyaWJ1dGUgKHRyZWUgKm5vZGUsIHRyZWUgbmFtZSwgdHJlZSBhcmdzLCBpbnQsDQo+
+ICAgICAgICByZXR1cm4gTlVMTF9UUkVFOw0KPiAgICAgIH0NCj4NCj4gLSAgZm9yICg7IGFyZ3M7
+IGFyZ3MgPSBUUkVFX0NIQUlOIChhcmdzKSkNCj4gKyAgLyogSGFuZGxlIGJvdGggb3JpZ2luYWwg
+c3RyaW5nIGFyZ3VtZW50cyBhbmQgY29waWVkIGF0dHJpYnV0ZXMgdGhhdA0KPiArICAgICBoYXZl
+IGFscmVhZHkgYmVlbiBwcm9jZXNzZWQgaW50byBJTlRFR0VSX0NTVCB3cmFwcGVkIGluIA0KPiAr
+IFRSRUVfTElTVC4gICovICBpZiAoYXJncyAmJiBUUkVFX0NPREUgKGFyZ3MpID09IFRSRUVfTElT
+VA0KPiArICAgICAgJiYgVFJFRV9WQUxVRSAoYXJncykgJiYgVFJFRV9DT0RFIChUUkVFX1ZBTFVF
+IChhcmdzKSkgPT0gDQo+ICsgSU5URUdFUl9DU1QpDQo+ICAgICAgew0KPiAtICAgICAgdHJlZSBp
+ZCA9IFRSRUVfVkFMVUUgKGFyZ3MpOw0KPiAtICAgICAgaWYgKFRSRUVfQ09ERSAoaWQpICE9IFNU
+UklOR19DU1QpDQo+ICsgICAgICAvKiBUaGlzIGlzIGEgY29waWVkIGF0dHJpYnV0ZSB3aXRoIHRo
+ZSBmbGFncyBhbHJlYWR5IHByb2Nlc3NlZC4gICovDQo+ICsgICAgICBmbGFncyA9IHRyZWVfdG9f
+c2FuaXRpemVfY29kZV90eXBlIChUUkVFX1ZBTFVFIChhcmdzKSk7DQo+ICsgICAgfQ0KPiArICBl
+bHNlDQo+ICsgICAgew0KPiArICAgICAgLyogUHJvY2VzcyBvcmlnaW5hbCBzdHJpbmcgYXJndW1l
+bnRzLiAgKi8NCj4gKyAgICAgIGZvciAoOyBhcmdzOyBhcmdzID0gVFJFRV9DSEFJTiAoYXJncykp
+DQo+ICAgICAgICAgew0KPiAtICAgICAgICAgZXJyb3IgKCIlcUUgYXJndW1lbnQgbm90IGEgc3Ry
+aW5nIiwgbmFtZSk7DQo+IC0gICAgICAgICByZXR1cm4gTlVMTF9UUkVFOw0KPiAtICAgICAgIH0N
+Cj4gKyAgICAgICAgIHRyZWUgaWQgPSBUUkVFX1ZBTFVFIChhcmdzKTsNCj4gKyAgICAgICAgIGlm
+IChUUkVFX0NPREUgKGlkKSAhPSBTVFJJTkdfQ1NUKQ0KPiArICAgICAgICAgICB7DQo+ICsgICAg
+ICAgICAgICAgZXJyb3IgKCIlcUUgYXJndW1lbnQgbm90IGEgc3RyaW5nIiwgbmFtZSk7DQo+ICsg
+ICAgICAgICAgICAgcmV0dXJuIE5VTExfVFJFRTsNCj4gKyAgICAgICAgICAgfQ0KPg0KPiAtICAg
+ICAgY2hhciAqc3RyaW5nID0gQVNUUkRVUCAoVFJFRV9TVFJJTkdfUE9JTlRFUiAoaWQpKTsNCj4g
+LSAgICAgIGZsYWdzIHw9IHBhcnNlX25vX3Nhbml0aXplX2F0dHJpYnV0ZSAoc3RyaW5nKTsNCj4g
+KyAgICAgICAgIGNoYXIgKnN0cmluZyA9IEFTVFJEVVAgKFRSRUVfU1RSSU5HX1BPSU5URVIgKGlk
+KSk7DQo+ICsgICAgICAgICBmbGFncyB8PSBwYXJzZV9ub19zYW5pdGl6ZV9hdHRyaWJ1dGUgKHN0
+cmluZyk7DQo+ICsgICAgICAgfQ0KPiAgICAgIH0NCj4NCj4gICAgYWRkX25vX3Nhbml0aXplX3Zh
+bHVlICgqbm9kZSwgZmxhZ3MpOyBkaWZmIC0tZ2l0IA0KPiBhL2djYy9kL2QtYXR0cmlicy5jYyBi
+L2djYy9kL2QtYXR0cmlicy5jYyBpbmRleCANCj4gNTNhZWE1ZTJlOTA0Li4zNDI3MDJiMDVhY2Ig
+MTAwNjQ0DQo+IC0tLSBhL2djYy9kL2QtYXR0cmlicy5jYw0KPiArKysgYi9nY2MvZC9kLWF0dHJp
+YnMuY2MNCj4gQEAgLTE0MjQsMTcgKzE0MjQsMjYgQEAgZF9oYW5kbGVfbm9fc2FuaXRpemVfYXR0
+cmlidXRlICh0cmVlICpub2RlLCB0cmVlIG5hbWUsIHRyZWUgYXJncywgaW50LA0KPiAgICAgICBt
+ZXJnZSBleGlzdGluZyBmbGFncyBpZiBub19zYW5pdGl6ZSB3YXMgcHJldmlvdXNseSBoYW5kbGVk
+LiAgKi8NCj4gICAgaWYgKHRyZWUgYXR0ciA9IGxvb2t1cF9hdHRyaWJ1dGUgKCJub19zYW5pdGl6
+ZSIsIERFQ0xfQVRUUklCVVRFUyAoKm5vZGUpKSkNCj4gICAgICB7DQo+IC0gICAgICBzYW5pdGl6
+ZV9jb2RlX3R5cGUgb2xkX3ZhbHVlID0NCj4gLSAgICAgICB0cmVlX3RvX3Nhbml0aXplX2NvZGVf
+dHlwZSAoVFJFRV9WQUxVRSAoYXR0cikpOw0KPiArICAgICAgLyogRXh0cmFjdCB0aGUgSU5URUdF
+Ul9DU1QgZnJvbSB0aGUgVFJFRV9MSVNUIHdyYXBwZXIuICAqLw0KPiArICAgICAgdHJlZSBhdHRy
+X2FyZ3MgPSBUUkVFX1ZBTFVFIChhdHRyKTsNCj4gKyAgICAgIGdjY19hc3NlcnQgKGF0dHJfYXJn
+cyAmJiBUUkVFX0NPREUgKGF0dHJfYXJncykgPT0gVFJFRV9MSVNUKTsNCj4gKyAgICAgIHNhbml0
+aXplX2NvZGVfdHlwZSBvbGRfdmFsdWUgPSB0cmVlX3RvX3Nhbml0aXplX2NvZGVfdHlwZSANCj4g
+KyAoVFJFRV9WQUxVRSAoYXR0cl9hcmdzKSk7DQo+ICsNCj4gICAgICAgIGZsYWdzIHw9IG9sZF92
+YWx1ZTsNCj4NCj4gICAgICAgIGlmIChmbGFncyAhPSBvbGRfdmFsdWUpDQo+IC0gICAgICAgVFJF
+RV9WQUxVRSAoYXR0cikgPSBidWlsZF9pbnRfY3N0IChkX3Vsb25nX3R5cGUsIGZsYWdzKTsNCj4g
+KyAgICAgICB7DQo+ICsgICAgICAgICB0cmVlIG5ld192YWx1ZSA9IGJ1aWxkX3RyZWVfbGlzdCAo
+TlVMTF9UUkVFLA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBidWlsZF9pbnRfY3N0IChkX3Vsb25nX3R5cGUsIGZsYWdzKSk7DQo+ICsgICAgICAgICBUUkVF
+X1ZBTFVFIChhdHRyKSA9IG5ld192YWx1ZTsNCj4gKyAgICAgICB9DQo+ICAgICAgfQ0KPiAgICBl
+bHNlDQo+ICAgICAgew0KPiArICAgICAgdHJlZSBhdHRyX3ZhbHVlID0gYnVpbGRfdHJlZV9saXN0
+IChOVUxMX1RSRUUsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGJ1aWxkX2ludF9jc3QgKGRfdWxvbmdfdHlwZSwgDQo+ICsgZmxhZ3MpKTsNCj4gICAgICAgIERF
+Q0xfQVRUUklCVVRFUyAoKm5vZGUpID0gdHJlZV9jb25zIChnZXRfaWRlbnRpZmllciAoIm5vX3Nh
+bml0aXplIiksDQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBi
+dWlsZF9pbnRfY3N0IChkX3Vsb25nX3R5cGUsIGZsYWdzKSwNCj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJfdmFsdWUsDQo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBERUNMX0FUVFJJQlVURVMgKCpub2RlKSk7DQo+ICAg
+ICAgfQ0KPg0KPiAtLQ0KPiAyLjM0LjENCj4NCg==
