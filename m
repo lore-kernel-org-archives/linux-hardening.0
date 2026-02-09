@@ -1,116 +1,114 @@
-Received: from forward202b.mail.yandex.net (forward202b.mail.yandex.net [178.154.239.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8F63859E7;
-	Mon,  9 Feb 2026 17:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D333806DB;
+	Mon,  9 Feb 2026 17:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770656417; cv=none; b=Dl/LxArzJcDmIq1qQYHaMK7b2dlnFkdtE6Ghi6TdMv5fRqkJkIuFkkuOYK73tIZrpqJQ4xMdjbXMVoUBvuyZ4vh66i4ekX178HKwwQUe3qhT5KzDVSU2gxxUA20bWtJhlTOEAOcKfrOUymL+0jo20bxb/0SMfj/5Kvi3dZBYYo4=
+	t=1770658079; cv=none; b=O419sUJrTstoJM6J3oAxz6q0Bs/1fqfQ9KnRJEzn820qemW7+fZ8kBR+79gztCuyQr7dant1QqBe8zM11STjL7zJlPYoMR9J2SOTIlTM08MERWPXNnu1iKdqEYozwm7gbcHIKyzsqfu1h9N3ApK7o2ErzpG4twXx/osGGNEEXCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770656417; c=relaxed/simple;
-	bh=C/8Vr1dBRtFVIuiAuzbJ6yM3rbb8jKeEdd/4S4n5l1c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tvAg2650b1whUwhErhGLM0fro/cXEq4JX1QctjIy74rDd5NjFdmVxWoGOcLiUDCZLQUhQvZdipHutbtYbEbyX/U0kAQMIpO5pDg9Zeqi8Qp5eFAGR8ki2/SR2fVU/0OLyzAzCZ9IYYIgcSAIATxxYfGhA7guDS28Cw4VMBO2gNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=BnmKtfQ3; arc=none smtp.client-ip=178.154.239.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1770658079; c=relaxed/simple;
+	bh=EckDzIB85OPtZ0L5+pn/y9RZ7eyE+62oJwvMpI+aS9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=oSfFh78iTXyGiWZ99ldQA0SLTToW2aPR4BWtlR2t5sOQ53hkG48IGggoigSl8D5FZEfl6w+Ru/bJl0LCNDhgxlTTANASGMxDhuF/4sv4svhqXmxmY0s9zPsKnAx3rQN5DfQu9a7ohdhw0Orv6ek8aeFakvZBnRum571Gu3hspO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=Yg/TF4C0; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="BnmKtfQ3"
-Received: from forward103b.mail.yandex.net (forward103b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d103])
-	by forward202b.mail.yandex.net (Yandex) with ESMTPS id BB247C40B0;
-	Mon, 09 Feb 2026 19:53:11 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net [IPv6:2a02:6b8:c1c:405:0:640:8814:0])
-	by forward103b.mail.yandex.net (Yandex) with ESMTPS id BEF8EC0063;
-	Mon, 09 Feb 2026 19:53:03 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 0rUtjO1G1mI0-AGSnr0cS;
-	Mon, 09 Feb 2026 19:53:03 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1770655983; bh=VpRZzoboI6b3LpSIuTQcGxHUe7dL/Vo3TnQAn5DzS7g=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=BnmKtfQ3yn2fzSbLNPG/a74uy70oe5bN+seev8kD4EBs5gtKfaqrTby5utk+I/yx7
-	 Uucd9OLQ27RdhYZa2rrQWubqOTgxLVRt424BL91wzBfVHAsH7mbh/MSUHnyJK3ObIX
-	 C0wyZa9PiFTt7NIguggSiwzaBHCiY6zDftpIexnw=
-Authentication-Results: mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <kees@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH v6 3/5] lib: add more string to 64-bit integer conversion overflow tests
-Date: Mon,  9 Feb 2026 19:47:55 +0300
-Message-ID: <20260209164757.433932-4-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260209164757.433932-1-dmantipov@yandex.ru>
-References: <20260209164757.433932-1-dmantipov@yandex.ru>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="Yg/TF4C0"
+Received: from localhost (unknown [10.10.165.15])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 3CB0F413A4B0;
+	Mon,  9 Feb 2026 17:27:50 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 3CB0F413A4B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1770658070;
+	bh=0xXj+JToMkkECdVZ1BvtzQ1KbVz5+Tpi2h68cDWOvwk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Yg/TF4C0cnPglddrgnY8O8xojHJPCOLyQQ74WM4F+ptT7JvltozqbddkvY7Xzx0nb
+	 C0c735o2pcoRQ/dgCJJJQ96Y4seZqUK78bRDzxg6CFU6YqfSTvc5OvAYiSM+5Lw1GG
+	 kwLT0bIrYqKUvhV2U1/Mcw/Ww5Wfy6DOi6SnKZvw=
+Date: Mon, 9 Feb 2026 20:27:50 +0300
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Kees Cook <kees@kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>, 
+	=?utf-8?B?5p2O6b6Z5YW0?= <coregee2000@gmail.com>, Andreas Dilger <adilger.kernel@dilger.ca>, 
+	Andy Shevchenko <andriy.shevchenko@intel.com>, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] ext4: Reject on-disk mount options with missing
+ NUL-terminator
+Message-ID: <20260209193945-80d9bfc8aa82b0eb1b764c7f-pchelkin@ispras>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260206212654.work.035-kees@kernel.org>
 
-Add a few more string to 64-bit integer conversion tests to
-check whether 'kstrtoull()', 'kstrtoll()', 'kstrtou64()' and
-'kstrtos64()' can handle overflows reported by
-'_parse_integer_limit()'.
+Kees Cook wrote:
+> ee5a977b4e77 ("ext4: fix string copying in parse_apply_sb_mount_options()")
+>   Notices the loud failures of strscpy_pad() introduced by 8ecb790ea8c3,
+>   and attempted to silence them by making the destination 64 and rejecting
+>   too-long strings from the on-disk copy of s_mount_opts, but didn't
+>   actually solve it at all, since the problem was always the over-read
+>   of the source seen by strnlen(). (Note that the report quoted in this
+>   commit exactly matches the report today.)
+> 
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
-v6: likewise
-v5: bump version to match the series
-v4: initial version to join the series
----
- lib/test-kstrtox.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+[...]
 
-diff --git a/lib/test-kstrtox.c b/lib/test-kstrtox.c
-index ee87fef66cb5..811128d0df16 100644
---- a/lib/test-kstrtox.c
-+++ b/lib/test-kstrtox.c
-@@ -198,6 +198,7 @@ static void __init test_kstrtoull_fail(void)
- 		{"10000000000000000000000000000000000000000000000000000000000000000",	2},
- 		{"2000000000000000000000",	8},
- 		{"18446744073709551616",	10},
-+		{"569202370375329612767",	10},
- 		{"10000000000000000",	16},
- 		/* negative */
- 		{"-0", 0},
-@@ -275,9 +276,11 @@ static void __init test_kstrtoll_fail(void)
- 		{"9223372036854775809",	10},
- 		{"18446744073709551614",	10},
- 		{"18446744073709551615",	10},
-+		{"569202370375329612767",	10},
- 		{"-9223372036854775809",	10},
- 		{"-18446744073709551614",	10},
- 		{"-18446744073709551615",	10},
-+		{"-569202370375329612767",	10},
- 		/* sign is first character if any */
- 		{"-+1", 0},
- 		{"-+1", 8},
-@@ -334,6 +337,7 @@ static void __init test_kstrtou64_fail(void)
- 		{"-1",	10},
- 		{"18446744073709551616",	10},
- 		{"18446744073709551617",	10},
-+		{"569202370375329612767",	10},
- 	};
- 	TEST_FAIL(kstrtou64, u64, "%llu", test_u64_fail);
- }
-@@ -386,6 +390,8 @@ static void __init test_kstrtos64_fail(void)
- 		{"18446744073709551615",	10},
- 		{"18446744073709551616",	10},
- 		{"18446744073709551617",	10},
-+		{"569202370375329612767",	10},
-+		{"-569202370375329612767",	10},
- 	};
- 	TEST_FAIL(kstrtos64, s64, "%lld", test_s64_fail);
- }
--- 
-2.53.0
+> Reported-by: 李龙兴 <coregee2000@gmail.com>
+> Closes: https://lore.kernel.org/lkml/CAHPqNmzBb2LruMA6jymoHXQRsoiAKMFZ1wVEz8JcYKg4U6TBbw@mail.gmail.com/
+> Fixes: ee5a977b4e77 ("ext4: fix string copying in parse_apply_sb_mount_options()")
 
+Hi there,
+
+[ I'd better be Cc'ed as the author of the commit in Fixes ]
+
+The mentioned reports are for v6.18.2 kernel while ee5a977b4e77 ("ext4:
+fix string copying in parse_apply_sb_mount_options()") landed in v6.18.3.
+Back at the time I've tested the patch with different bogus s_mount_opts
+values and the fortify warnings should have been gone.
+
+I don't think there is an error in ee5a977b4e77 unless these warnings
+actually appear on the latest kernels with ee5a977b4e77 applied.
+
+> @@ -2485,6 +2485,13 @@ static int parse_apply_sb_mount_options(struct super_block *sb,
+>  	if (!sbi->s_es->s_mount_opts[0])
+>  		return 0;
+>  
+> +	if (strnlen(sbi->s_es->s_mount_opts, sizeof(sbi->s_es->s_mount_opts)) ==
+> +	    sizeof(sbi->s_es->s_mount_opts)) {
+> +		ext4_msg(sb, KERN_ERR,
+> +			 "Mount options in superblock are not NUL-terminated");
+> +		return -EINVAL;
+> +	}
+
+strscpy_pad() returns -E2BIG if the source string was truncated.  This
+happens for the above condition as well - the last byte is truncated and
+replaced with a NUL-terminator.
+
+The check at 3db63d2c2d1d ("ext4: check if mount_opts is NUL-terminated in
+ext4_ioctl_set_tune_sb()") was done in that manner as there is currently
+no way to propagate strscpy_pad() return value up from ext4_sb_setparams().
+So the string is independently checked inside ext4_ioctl_set_tune_sb()
+directly.
+
+
+As for the 64/65 byte length part, now the rationale of the checks works
+as Darrick Wong described at the other part of this thread and corresponds
+to how relevant userspace stuff treats the s_mount_opts field: the buffer
+is at most 63 payload characters long + NUL-terminator.  Jan Kara also
+shared similar thoughts during the discussion of ee5a977b4e77 [1].
+
+[1]: https://lore.kernel.org/linux-ext4/yq6rbx54jt4btntsh37urd6u63wwcd3lyhovbrm6w7occaveea@riljfkx5jmhi/
+
+> +
+>  	if (strscpy_pad(s_mount_opts, sbi->s_es->s_mount_opts) < 0)
+>  		return -E2BIG;
+>  
+> -- 
+> 2.34.1
