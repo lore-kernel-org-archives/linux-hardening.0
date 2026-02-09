@@ -1,136 +1,143 @@
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Received: from forward206b.mail.yandex.net (forward206b.mail.yandex.net [178.154.239.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328983783C2;
-	Mon,  9 Feb 2026 14:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B11C243387;
+	Mon,  9 Feb 2026 16:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770646300; cv=none; b=dagQjz0XtPYYh2y7I0CXwtzgnLQc7NTyO2XM5I4dNMMtij8eANhdi6gD7mXmUuEzkUs9bhzALrXSNYkiM3nKzebk4ewzpJQ00mveiXRhJHD8kIqa2bsv+63snDOa4u/pJLsPu2UZKDJJ13k8ceNkYF256CAnCTLctEDEoAmxbrg=
+	t=1770656343; cv=none; b=RFa52Slahy6lZKlIsmcGDaDmk5i/3JGqutgeLAW+ZVC1jxWvafgy7TpASptXgZ6hIv6OPxBuACs8xUtlJqbxwLnY+upNavh+LJgwPml6DQwpNA5pIYnFcwWrvef28y2AvrlZ8mTRugPq6LUzhhk47On3jTpbBrTcNE/TIWxfNOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770646300; c=relaxed/simple;
-	bh=pYQeRlToKVdnFEmZHq1dakoaVYFqd0G7wpJuDMKLjGk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=anwBYfgfS25HiIicbyBZ9+AninYSOXg5krZJGZ/6VTVDd0nv1iQcL9oRau9IdB+3AEoyuwKfOudNRCOLFePLkPVbMQV76h7s+k4UdBKhDEVrwmqYymgkAP1TgeF/2sw+DpmCZXR3Q6Ux5U2NfMLIXZ6y1pd26DCg5F+AvrjXO3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=lzxZT3+u; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1770656343; c=relaxed/simple;
+	bh=eO5tke+KhgXh2513zEmf5TEKgDgK3D90rv/LsDRg6s0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZWxU6Mpd64j3ZNkomF+hD+5taBx/I5rGZ99py7qmwI9+ki3vKI43C3DFn5nqBPqO+OFkxE47DC/dCvyhVVwMuBQDmq22kRl9a1fwrae+GDGgHQEVLNFt83ZXFUXVNaL5BXDhXdu2BdGtkVyYJnyD4iOj2taLkDwrUrobgd7qILM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=Q2tV9Cx5; arc=none smtp.client-ip=178.154.239.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="lzxZT3+u"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=aH91xLSmg33pp2gJzXKqb559lxedqqea4mhjrttOweE=;
-	b=lzxZT3+uZNiQBf7G4BOKZ2HoE7l7gGXGZPFa+xNFivz2fjzxt3yDElwtYbNnTSb1Y+E6x0Tit
-	MZaBgJVxsT+Dem3M2UQiq76YdppN6DLeqMcHwW0naVZU1g4+Wb2LStxzkh2Cauetgq2x0dkfiNV
-	oDkAaHGUOcbQjKxZhIsP6EA=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4f8mjJ02dGzpSv1;
-	Mon,  9 Feb 2026 22:07:16 +0800 (CST)
-Received: from kwepemj100009.china.huawei.com (unknown [7.202.194.3])
-	by mail.maildlp.com (Postfix) with ESMTPS id C71E840567;
-	Mon,  9 Feb 2026 22:11:35 +0800 (CST)
-Received: from DESKTOP-A37P9LK.huawei.com (10.67.109.17) by
- kwepemj100009.china.huawei.com (7.202.194.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Mon, 9 Feb 2026 22:11:35 +0800
-From: Xie Yuanbin <xieyuanbin1@huawei.com>
-To: <chleroy@kernel.org>, <andriy.shevchenko@intel.com>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<kees@kernel.org>, <andy@kernel.org>
-CC: <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, <lilinjie8@huawei.com>,
-	<liaohua4@huawei.com>, <xieyuanbin1@huawei.com>
-Subject: Re: [PATCH 2/2] powerpc/text-patching: Fix possible stringop-overread compilation error
-Date: Mon, 9 Feb 2026 22:11:25 +0800
-Message-ID: <20260209141131.7041-1-xieyuanbin1@huawei.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <5cfae419-427a-471b-8bbe-645f56442e2c@kernel.org>
-References: <5cfae419-427a-471b-8bbe-645f56442e2c@kernel.org>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Q2tV9Cx5"
+Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
+	by forward206b.mail.yandex.net (Yandex) with ESMTPS id 32DEE828AF;
+	Mon, 09 Feb 2026 19:53:11 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net [IPv6:2a02:6b8:c1c:405:0:640:8814:0])
+	by forward102b.mail.yandex.net (Yandex) with ESMTPS id 5181CC007C;
+	Mon, 09 Feb 2026 19:53:03 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 0rUtjO1G1mI0-Du3YAbWs;
+	Mon, 09 Feb 2026 19:53:03 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1770655983; bh=6wKqFxInnLDgQDtAb5C+Fe26hbEaSYc85Ba2o1NJxoQ=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=Q2tV9Cx5bVC/9Ouk6h+F8d8Xv84CJDH+C6uxXh11+ePuPRbDqF+yFc5LkY29XS2ya
+	 gon+DrfsNoOsBTyKJ3USSrdSwmapj0yX9dmhaRNTnnmBntKLJLnU9E62tT1HH520k1
+	 sGcNOqd5aGR9ycNnmPIh2KkhdAxsC9+SokN4xEQA=
+Authentication-Results: mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH v6 2/5] lib: fix memparse() to handle overflow
+Date: Mon,  9 Feb 2026 19:47:54 +0300
+Message-ID: <20260209164757.433932-3-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260209164757.433932-1-dmantipov@yandex.ru>
+References: <20260209164757.433932-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="y"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemj100009.china.huawei.com (7.202.194.3)
 
-On Mon, 9 Feb 2026 14:41:51 +0100, Christophe Leroy (CS GROUP) wrote:
-> Le 09/02/2026 à 14:25, Xie Yuanbin a écrit :
->> On Fri, 6 Feb 2026 20:53:55 +0100, Christophe Leroy (CS GROUP) wrote:
->>> ppc_kallsyms_lookup_name() only has two callers and they call it with a
->>> built-in string. I think we can do something a lot simpler, something
->>> like (untested):
->>>
->>> static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
->>> {
->>> 	unsigned long addr = kallsyms_lookup_name(name);
->>>
->>> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
->>> 		addr = ppc_function_entry((void *)addr);
->>>
->>> 	return addr;
->>> }
->>>
->>> #ifdef CONFIG_PPC64_ELF_ABI_V1
->>> #define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name("." ## x);
->>> #else
->>> #define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name(x)
->>> #endif
->>>
->>> Christophe
->>
->> When CONFIG_PPC64_ELF_ABI_V1=y, it seems that the try of lookupinp
->> the original non-dot symbol is missing.
->>
->> What about this (Only the compilation test is performed):
->> ```c
->> static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
->> {
->> 	unsigned long addr = kallsyms_lookup_name(name);
->>
->> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
->> 		addr = ppc_function_entry((void *)addr);
->>
->> 	return addr;
->> }
->>
->> #define ppc_kallsyms_lookup_name(x) ({					\
->> 		unsigned long addr = 0;					\
->> 		if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1))		\
->> 			addr = __ppc_kallsyms_lookup_name("." x);	\
->> 		if (!addr)						\
->> 			addr = __ppc_kallsyms_lookup_name(x);		\
->> 		addr;							\
->> 	})
->> ```
->
-> Good point.
->
-> To avoid duplicating the string I'd suggest:
->
-> static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
-> {
-> 	unsigned long addr = kallsyms_lookup_name(name);
->
-> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1) && !addr)
-> 		addr = kallsyms_lookup_name(name + 1);
-> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
-> 		addr = ppc_function_entry((void *)addr);
->
-> 	return addr;
-> }
->
-> #ifdef CONFIG_PPC64_ELF_ABI_V1
-> #define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name("." x);
-> #else
-> #define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name(x)
-> #endif
+Since '_parse_integer_limit()' (and so 'simple_strtoull()') is now
+capable to handle overflow, adjust 'memparse()' to handle overflow
+(denoted by ULLONG_MAX) returned from 'simple_strtoull()'. Also
+use 'check_shl_overflow()' to catch an overflow possibly caused
+by processing size suffix and denote it with ULLONG_MAX as well.
 
-This seems good, but there seems to be an extra ';' after
-'__ppc_kallsyms_lookup_name("." x)' ?
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+v6: handle valid-suffix-only string like "k"
+    as unrecognized, minor style adjustments
+v5: initial version to join the series
+---
+ lib/cmdline.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
-After removing the extra ';', I performed a compilation test,
-no warnings.
+diff --git a/lib/cmdline.c b/lib/cmdline.c
+index 90ed997d9570..0d8770a0fb67 100644
+--- a/lib/cmdline.c
++++ b/lib/cmdline.c
+@@ -150,39 +150,57 @@ EXPORT_SYMBOL(get_options);
+ unsigned long long memparse(const char *ptr, char **retptr)
+ {
+ 	char *endptr;	/* local pointer to end of parsed string */
+-
+ 	unsigned long long ret = simple_strtoull(ptr, &endptr, 0);
++	unsigned int shl = 0;
+ 
++	/* Consume valid suffix even in case of overflow. */
+ 	switch (*endptr) {
+ 	case 'E':
+ 	case 'e':
+-		ret <<= 10;
++		shl += 10;
+ 		fallthrough;
+ 	case 'P':
+ 	case 'p':
+-		ret <<= 10;
++		shl += 10;
+ 		fallthrough;
+ 	case 'T':
+ 	case 't':
+-		ret <<= 10;
++		shl += 10;
+ 		fallthrough;
+ 	case 'G':
+ 	case 'g':
+-		ret <<= 10;
++		shl += 10;
+ 		fallthrough;
+ 	case 'M':
+ 	case 'm':
+-		ret <<= 10;
++		shl += 10;
+ 		fallthrough;
+ 	case 'K':
+ 	case 'k':
+-		ret <<= 10;
++		shl += 10;
+ 		endptr++;
+ 		fallthrough;
+ 	default:
+ 		break;
+ 	}
+ 
++	if (shl) {
++		/* Valid suffix without preceding number. */
++		if (unlikely(ptr == endptr - 1)) {
++			endptr--;
++			ret = 0;
++		}
++		/* Apply suffix if no overflow. */
++		else if (likely(ret != ULLONG_MAX)) {
++			unsigned long long val;
++
++			if (unlikely(check_shl_overflow(ret, shl, &val)))
++				ret = ULLONG_MAX;
++			else
++				ret = val;
++		}
++	}
++
+ 	if (retptr)
+ 		*retptr = endptr;
+ 
+-- 
+2.53.0
+
