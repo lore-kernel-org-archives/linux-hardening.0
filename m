@@ -1,114 +1,250 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D333806DB;
-	Mon,  9 Feb 2026 17:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E085E3F23C3;
+	Mon,  9 Feb 2026 19:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770658079; cv=none; b=O419sUJrTstoJM6J3oAxz6q0Bs/1fqfQ9KnRJEzn820qemW7+fZ8kBR+79gztCuyQr7dant1QqBe8zM11STjL7zJlPYoMR9J2SOTIlTM08MERWPXNnu1iKdqEYozwm7gbcHIKyzsqfu1h9N3ApK7o2ErzpG4twXx/osGGNEEXCw=
+	t=1770665930; cv=none; b=S8aRIsL4N0XSYN5iqEO8bNc7T5Gtzmim8je5pRX4T6/Iku1Thih9gNPdeCJYlqWch+GWzKQg8GlmhXeAcd+Erjw1IEaAmrtZRBs9QpsHHdXQDlhWe4Dz5QFV3jFgrFEMvPJjTcqsq92LWPUmClYKp8ljEc9hBZGVKb7WseYfNO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770658079; c=relaxed/simple;
-	bh=EckDzIB85OPtZ0L5+pn/y9RZ7eyE+62oJwvMpI+aS9w=;
+	s=arc-20240116; t=1770665930; c=relaxed/simple;
+	bh=bievALuSgn9dvP7F/aksHrAK3+JGgzx8RvdpU1TEr44=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=oSfFh78iTXyGiWZ99ldQA0SLTToW2aPR4BWtlR2t5sOQ53hkG48IGggoigSl8D5FZEfl6w+Ru/bJl0LCNDhgxlTTANASGMxDhuF/4sv4svhqXmxmY0s9zPsKnAx3rQN5DfQu9a7ohdhw0Orv6ek8aeFakvZBnRum571Gu3hspO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=Yg/TF4C0; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	 Content-Disposition; b=g/NWzJHnDJT8Mzqjj0VRktLkrmVYYWMiK4RNoVX1TgjLKrFORxW+2r8OGQLV7e0wt5qc3r6IROIWw2CyruSQU+StWWcprMbt2JlQFxwn21X0wEJWPBERxksFyP4IY6q92q/32Kfu+19ZRVwLDnPq7vx3NbO1MxI3y696LNE/NYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgdM45FL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="Yg/TF4C0"
-Received: from localhost (unknown [10.10.165.15])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 3CB0F413A4B0;
-	Mon,  9 Feb 2026 17:27:50 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 3CB0F413A4B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1770658070;
-	bh=0xXj+JToMkkECdVZ1BvtzQ1KbVz5+Tpi2h68cDWOvwk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Yg/TF4C0cnPglddrgnY8O8xojHJPCOLyQQ74WM4F+ptT7JvltozqbddkvY7Xzx0nb
-	 C0c735o2pcoRQ/dgCJJJQ96Y4seZqUK78bRDzxg6CFU6YqfSTvc5OvAYiSM+5Lw1GG
-	 kwLT0bIrYqKUvhV2U1/Mcw/Ww5Wfy6DOi6SnKZvw=
-Date: Mon, 9 Feb 2026 20:27:50 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Kees Cook <kees@kernel.org>
-Cc: Theodore Ts'o <tytso@mit.edu>, 
-	=?utf-8?B?5p2O6b6Z5YW0?= <coregee2000@gmail.com>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] ext4: Reject on-disk mount options with missing
- NUL-terminator
-Message-ID: <20260209193945-80d9bfc8aa82b0eb1b764c7f-pchelkin@ispras>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgdM45FL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87429C116C6;
+	Mon,  9 Feb 2026 19:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770665929;
+	bh=bievALuSgn9dvP7F/aksHrAK3+JGgzx8RvdpU1TEr44=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sgdM45FLO8ObgNA0IaU6Cs6L6RzqUubeVbfDXjXTotZ80pnv+wlkI3hVVHdoupFl0
+	 tom/RdYpZ0R67fsEQA/eCVbVMNdD89g0qWPDTBMjoTIzGMjt4HTW5LDBAQY++yz7HF
+	 cBrRr3Pz5UF0IFSkhdlxAoA6uQ4fsictVPh703Oij11B2oZraUqsjVVeCCnGHYbXv2
+	 SkRMH1CA6sbVdoGnfCYVeNjMEZU8D4KAZ4d9HmQeQAr8OKa5P1T6bBfGyCuWhBG5e0
+	 fA++jB/ohqKL6iDrkd9KEi1iAKzHOPjhD9C69NlDIzC0rbeq3uI9qdJtqPOw7XzS70
+	 mBetGzziPRU6Q==
+Date: Mon, 9 Feb 2026 13:38:15 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Stanislaw Gruszka <stf_xl@wp.pl>,
+	Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: [PATCH v2][next] iwlegacy: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aYlkt2WP2oQ1TgeH@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260206212654.work.035-kees@kernel.org>
 
-Kees Cook wrote:
-> ee5a977b4e77 ("ext4: fix string copying in parse_apply_sb_mount_options()")
->   Notices the loud failures of strscpy_pad() introduced by 8ecb790ea8c3,
->   and attempted to silence them by making the destination 64 and rejecting
->   too-long strings from the on-disk copy of s_mount_opts, but didn't
->   actually solve it at all, since the problem was always the over-read
->   of the source seen by strnlen(). (Note that the report quoted in this
->   commit exactly matches the report today.)
-> 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-[...]
+Move the conflicting declarations (which in a couple of cases happen
+to be in a union, so the entire unions are moved) to the end of the
+corresponding structures. Notice that `struct il_tx_beacon_cmd`,
+`struct il4965_tx_resp`, and `struct il3945_tx_beacon_cmd` are flexible
+structures, this is structures that contain a flexible-array member.
 
-> Reported-by: 李龙兴 <coregee2000@gmail.com>
-> Closes: https://lore.kernel.org/lkml/CAHPqNmzBb2LruMA6jymoHXQRsoiAKMFZ1wVEz8JcYKg4U6TBbw@mail.gmail.com/
-> Fixes: ee5a977b4e77 ("ext4: fix string copying in parse_apply_sb_mount_options()")
+The case for struct il4965_beacon_notif is different. Since this
+structure is defined by hardware, we use the struct_group() helper
+to create the new `struct il4965_tx_resp_hdr` type. We then use this newly
+created type to replace the obhect type of  causing trouble in
+struct il4965_beacon_notif, namely `stryct il4965_tx_resp`.
 
-Hi there,
+In order to preserve the memory layout in struct il4965_beacon_notif,
+add member `__le32 beacon_tx_status`, which was previously included
+by `struct il4965_tx_resp` (as `__le32 status`), but it's not present
+in the newly created type `struct il4965_tx_resp_hdr`.
 
-[ I'd better be Cc'ed as the author of the commit in Fixes ]
+Notice that after this changes, the size of struct il4965_beacon_notif
+along with its member's offsets remain the same, hence the memory
+layout doesn't change:
 
-The mentioned reports are for v6.18.2 kernel while ee5a977b4e77 ("ext4:
-fix string copying in parse_apply_sb_mount_options()") landed in v6.18.3.
-Back at the time I've tested the patch with different bogus s_mount_opts
-values and the fortify warnings should have been gone.
+Before changes:
+struct il4965_beacon_notif {
+	struct il4965_tx_resp      beacon_notify_hdr;    /*     0    24 */
+	__le32                     low_tsf;              /*    24     4 */
+	__le32                     high_tsf;             /*    28     4 */
+	__le32                     ibss_mgr_status;      /*    32     4 */
 
-I don't think there is an error in ee5a977b4e77 unless these warnings
-actually appear on the latest kernels with ee5a977b4e77 applied.
+	/* size: 36, cachelines: 1, members: 4 */
+	/* last cacheline: 36 bytes */
+};
 
-> @@ -2485,6 +2485,13 @@ static int parse_apply_sb_mount_options(struct super_block *sb,
->  	if (!sbi->s_es->s_mount_opts[0])
->  		return 0;
->  
-> +	if (strnlen(sbi->s_es->s_mount_opts, sizeof(sbi->s_es->s_mount_opts)) ==
-> +	    sizeof(sbi->s_es->s_mount_opts)) {
-> +		ext4_msg(sb, KERN_ERR,
-> +			 "Mount options in superblock are not NUL-terminated");
-> +		return -EINVAL;
-> +	}
+After changes:
+struct il4965_beacon_notif {
+	struct il4965_tx_resp_hdr  beacon_notify_hdr;    /*     0    20 */
+	__le32                     beacon_tx_status;     /*    20     4 */
+	__le32                     low_tsf;              /*    24     4 */
+	__le32                     high_tsf;             /*    28     4 */
+	__le32                     ibss_mgr_status;      /*    32     4 */
 
-strscpy_pad() returns -E2BIG if the source string was truncated.  This
-happens for the above condition as well - the last byte is truncated and
-replaced with a NUL-terminator.
+	/* size: 36, cachelines: 1, members: 5 */
+	/* last cacheline: 36 bytes */
+};
 
-The check at 3db63d2c2d1d ("ext4: check if mount_opts is NUL-terminated in
-ext4_ioctl_set_tune_sb()") was done in that manner as there is currently
-no way to propagate strscpy_pad() return value up from ext4_sb_setparams().
-So the string is independently checked inside ext4_ioctl_set_tune_sb()
-directly.
+We also want to ensure that when new members are added to the flexible
+structure `struct il4965_tx_resp` (if any), they are always included
+within the newly created struct type. To enforce this, we use
+`static_assert()` (which is intentionally placed right after the struct,
+this is, no blank line in between). This ensures that the memory layout
+of both the flexible structure and the new `struct il4965_tx_resp_hdr`
+type remains consistent after any changes.
 
+Lastly, refactor the rest of the code, accordingly.
 
-As for the 64/65 byte length part, now the rationale of the checks works
-as Darrick Wong described at the other part of this thread and corresponds
-to how relevant userspace stuff treats the s_mount_opts field: the buffer
-is at most 63 payload characters long + NUL-terminator.  Jan Kara also
-shared similar thoughts during the discussion of ee5a977b4e77 [1].
+With these changes fix the following warnings:
 
-[1]: https://lore.kernel.org/linux-ext4/yq6rbx54jt4btntsh37urd6u63wwcd3lyhovbrm6w7occaveea@riljfkx5jmhi/
+11 drivers/net/wireless/intel/iwlegacy/common.h:526:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+11 drivers/net/wireless/intel/iwlegacy/commands.h:2667:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+4 drivers/net/wireless/intel/iwlegacy/3945.h:131:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-> +
->  	if (strscpy_pad(s_mount_opts, sbi->s_es->s_mount_opts) < 0)
->  		return -E2BIG;
->  
-> -- 
-> 2.34.1
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use the struct_group() helper, and update the conflicting type
+   (struct il4965_tx_resp -> struct il4965_tx_resp_hdr) in
+   struct il4965_beacon_notif.
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/aR2CtqZI3atH0HmE@kspp/
+
+ drivers/net/wireless/intel/iwlegacy/3945.h    |  4 +-
+ .../net/wireless/intel/iwlegacy/4965-mac.c    |  2 +-
+ .../net/wireless/intel/iwlegacy/commands.h    | 41 +++++++++++--------
+ drivers/net/wireless/intel/iwlegacy/common.h  |  4 +-
+ 4 files changed, 31 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945.h b/drivers/net/wireless/intel/iwlegacy/3945.h
+index fb1e33c89d0e..ed63b31fee9a 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945.h
++++ b/drivers/net/wireless/intel/iwlegacy/3945.h
+@@ -123,13 +123,15 @@ enum il3945_antenna {
+ #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
+ 
+ struct il3945_frame {
++	struct list_head list;
++
++	/* Must be last as it ends in a flexible-array member. */
+ 	union {
+ 		struct ieee80211_hdr frame;
+ 		struct il3945_tx_beacon_cmd beacon;
+ 		u8 raw[IEEE80211_FRAME_LEN];
+ 		u8 cmd[360];
+ 	} u;
+-	struct list_head list;
+ };
+ 
+ #define SUP_RATE_11A_MAX_NUM_CHANNELS  8
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index 57fa866efd9f..f5a99a2ee95a 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -4076,7 +4076,7 @@ il4965_hdl_beacon(struct il_priv *il, struct il_rx_buf *rxb)
+ 	u8 rate = il4965_hw_get_rate(beacon->beacon_notify_hdr.rate_n_flags);
+ 
+ 	D_RX("beacon status %x retries %d iss %d tsf:0x%.8x%.8x rate %d\n",
+-	     le32_to_cpu(beacon->beacon_notify_hdr.u.status) & TX_STATUS_MSK,
++	     le32_to_cpu(beacon->beacon_tx_status) & TX_STATUS_MSK,
+ 	     beacon->beacon_notify_hdr.failure_frame,
+ 	     le32_to_cpu(beacon->ibss_mgr_status),
+ 	     le32_to_cpu(beacon->high_tsf), le32_to_cpu(beacon->low_tsf), rate);
+diff --git a/drivers/net/wireless/intel/iwlegacy/commands.h b/drivers/net/wireless/intel/iwlegacy/commands.h
+index b61b8f377702..630bc12cd0d5 100644
+--- a/drivers/net/wireless/intel/iwlegacy/commands.h
++++ b/drivers/net/wireless/intel/iwlegacy/commands.h
+@@ -1691,22 +1691,25 @@ struct agg_tx_status {
+ } __packed;
+ 
+ struct il4965_tx_resp {
+-	u8 frame_count;		/* 1 no aggregation, >1 aggregation */
+-	u8 bt_kill_count;	/* # blocked by bluetooth (unused for agg) */
+-	u8 failure_rts;		/* # failures due to unsuccessful RTS */
+-	u8 failure_frame;	/* # failures due to no ACK (unused for agg) */
+-
+-	/* For non-agg:  Rate at which frame was successful.
+-	 * For agg:  Rate at which all frames were transmitted. */
+-	__le32 rate_n_flags;	/* RATE_MCS_*  */
+-
+-	/* For non-agg:  RTS + CTS + frame tx attempts time + ACK.
+-	 * For agg:  RTS + CTS + aggregation tx time + block-ack time. */
+-	__le16 wireless_media_time;	/* uSecs */
+-
+-	__le16 reserved;
+-	__le32 pa_power1;	/* RF power amplifier measurement (not used) */
+-	__le32 pa_power2;
++	/* New members MUST be added within the __struct_group() macro below. */
++	__struct_group(il4965_tx_resp_hdr, __hdr, __packed,
++		u8 frame_count;		/* 1 no aggregation, >1 aggregation */
++		u8 bt_kill_count;	/* # blocked by bluetooth (unused for agg) */
++		u8 failure_rts;		/* # failures due to unsuccessful RTS */
++		u8 failure_frame;	/* # failures due to no ACK (unused for agg) */
++
++		/* For non-agg:  Rate at which frame was successful.
++		 * For agg:  Rate at which all frames were transmitted. */
++		__le32 rate_n_flags;	/* RATE_MCS_*  */
++
++		/* For non-agg:  RTS + CTS + frame tx attempts time + ACK.
++		 * For agg:  RTS + CTS + aggregation tx time + block-ack time. */
++		__le16 wireless_media_time;	/* uSecs */
++
++		__le16 reserved;
++		__le32 pa_power1;	/* RF power amplifier measurement (not used) */
++		__le32 pa_power2;
++	);
+ 
+ 	/*
+ 	 * For non-agg:  frame status TX_STATUS_*
+@@ -1726,6 +1729,9 @@ struct il4965_tx_resp {
+ 		DECLARE_FLEX_ARRAY(struct agg_tx_status, agg_status);	/* for each agg frame */
+ 	} u;
+ } __packed;
++static_assert(offsetof(struct il4965_tx_resp, u.agg_status) ==
++	      sizeof(struct il4965_tx_resp_hdr),
++	      "struct member likely outside of __struct_group()");
+ 
+ /*
+  * N_COMPRESSED_BA = 0xc5 (response only, not a command)
+@@ -2664,7 +2670,8 @@ struct il3945_beacon_notif {
+ } __packed;
+ 
+ struct il4965_beacon_notif {
+-	struct il4965_tx_resp beacon_notify_hdr;
++	struct il4965_tx_resp_hdr beacon_notify_hdr;
++	__le32 beacon_tx_status;
+ 	__le32 low_tsf;
+ 	__le32 high_tsf;
+ 	__le32 ibss_mgr_status;
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.h b/drivers/net/wireless/intel/iwlegacy/common.h
+index 4c9836ab11dd..21f1c7702add 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.h
++++ b/drivers/net/wireless/intel/iwlegacy/common.h
+@@ -518,13 +518,15 @@ struct il_channel_info {
+ #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
+ 
+ struct il_frame {
++	struct list_head list;
++
++	/* Must be last as it ends in a flexible-array member. */
+ 	union {
+ 		struct ieee80211_hdr frame;
+ 		struct il_tx_beacon_cmd beacon;
+ 		u8 raw[IEEE80211_FRAME_LEN];
+ 		u8 cmd[360];
+ 	} u;
+-	struct list_head list;
+ };
+ 
+ enum {
+-- 
+2.43.0
+
