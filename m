@@ -1,152 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37ACE19CC14;
-	Tue, 10 Feb 2026 05:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C442C027A;
+	Tue, 10 Feb 2026 07:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770699685; cv=none; b=OB4SzEvYFahrgMAi2CUj251gttqAWhJ1QVaWpqslzeN5PajEnpZi8BLjI6QH3fDW1iU0OIZ4L5H0Ufs43/r0QJOKMMSCwfTBOcAhutZVZbh0ZMQ5V3psI+SQV1AWNzcumnpHz4ZNelHDwOJr4wrfaS4nys6RjFbY5AtlOwaJPe4=
+	t=1770708998; cv=none; b=rPo9zyBpvpELVKRcEhC2eVpguMmso44O6vnfqEFnaT0Mgxp7WcipyxNSDnfO0qzwmpenQARN1OvTd9WD/aggxKHI7sv6XRd1IlKC7XsiYpAw8uhEhcdHXB6llbaHEOSYDG7ku062ouzx+o2HXIGsN3tb901NeVUcdBJBcd//Pjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770699685; c=relaxed/simple;
-	bh=rM6QjJtKoKs0itasWEpHjPkPV3940T+T4PgqfmckEtM=;
+	s=arc-20240116; t=1770708998; c=relaxed/simple;
+	bh=kIEn+qMKSnpw0K89feAvR4xHo+tGFOMI2fzHHfvHvPQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KeVBOu/w4DG7rN2RV2M08NqFV/x6MX5H/fuGjGdRTTmehdFc2R9Kgtke8hsNyaOqB5O7tplBmjktHKesTnoqTed+U+FmcJ1aSPPaQGpkNbMtCOKK2jtDbjWD9S3qp76uRDFOAq12fhhjFuy1+KF0N9y2asy21FWY/yvu/IZt2cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7IJxP28; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DC1mYOvhwQRB/BpboLXD1gOCa9otkFqCoYRRcae4LgqEBWqO/mlJ9npUw6/QqdvlghBbA2xS7AVArq+zh+x31dX67l+B9sfTBP1w3s7nPnS2i95smoB5YCVJ1yz8E+D9904nts30//BZs0NiqJEuvLAmYWevwgxClf47YCox7gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lfa2gyDy; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7IJxP28"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC284C116C6;
-	Tue, 10 Feb 2026 05:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770699684;
-	bh=rM6QjJtKoKs0itasWEpHjPkPV3940T+T4PgqfmckEtM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b7IJxP28lbjIAUp5jP7mXFUxw56TGA2+FfMUB2ISerOb3jPXTlHDQdRvwFmf6O0nM
-	 ekmB0BhFaMuRGKIU2Uj+yqhJRaA1wWHucPkRbNqqNTs/ki3wd2esmOhXVXGfRNhKLF
-	 Xp3Na7+CeXUfrwJ4y8giOjg2nsSsGxEX6wpOloE6Kz3THJgtVxA/rIb235M+IIoILM
-	 PLP0D3A2xo10dVLF3eCLd2Qaa7wD2+Q+8hMJH4li7GvTH7iWXGRKbjyzT1kQyQf4Ym
-	 RWrntbLSJuatw/N3DN/iSBKBY3azGGgch8/yqZtHMkjP6jJmeX8bR2dnrc3MlMQap/
-	 01xCDYyphucPg==
-Date: Mon, 9 Feb 2026 21:01:24 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>, Theodore Ts'o <tytso@mit.edu>,
-	=?utf-8?B?5p2O6b6Z5YW0?= <coregee2000@gmail.com>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] ext4: Reject on-disk mount options with missing
- NUL-terminator
-Message-ID: <20260210050124.GR7686@frogsfrogsfrogs>
-References: <20260206212654.work.035-kees@kernel.org>
- <20260209193945-80d9bfc8aa82b0eb1b764c7f-pchelkin@ispras>
- <202602091148.EDBFECE686@keescook>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lfa2gyDy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770708998; x=1802244998;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kIEn+qMKSnpw0K89feAvR4xHo+tGFOMI2fzHHfvHvPQ=;
+  b=lfa2gyDyFXPTNV2xYnkMlr1zwLsvOqi4mDE2ut/P8JsHhjtYjqEqMbGL
+   w2n4Z0fX904TclMja3+DY7bFfyjWIKDsO0JZbScBGmcY/Yr/KDfiSw7wz
+   jPrz2Vod1X1qYmYIJduRup+bdTj9mXV3ZcSwo/BdubW835EWFMGj4YNOK
+   hiY3na2peCx9zEZiWZ3Yh8OrH19jkpzSkeqf8ikYLp7U1OCo1F57Cf32R
+   I3FPT3YO8mYC2GiFqkujv4jXhqmQxCfuTH6r8aB9Lnx4Wr4MOomn+UF5G
+   jlxdxcTI1S3qnq2aYOc72K4tYjJ3K/2Z4oEKji72Agl1iA34XGFD1hmXU
+   w==;
+X-CSE-ConnectionGUID: btuPH5vITfqR1mr5CA+srw==
+X-CSE-MsgGUID: 6G+MCvBtRuWi1pTudSh6uQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11696"; a="74434216"
+X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
+   d="scan'208";a="74434216"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 23:36:37 -0800
+X-CSE-ConnectionGUID: uaw6ahSoTMe77i9dz79bmQ==
+X-CSE-MsgGUID: hQBc0s8PSMmFjBt0J7zq3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
+   d="scan'208";a="216807157"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.39])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 23:36:35 -0800
+Date: Tue, 10 Feb 2026 09:36:33 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] lib: fix _parse_integer_limit() to handle overflow
+Message-ID: <aYrgASJXAyoholbF@smile.fi.intel.com>
+References: <20260209164757.433932-1-dmantipov@yandex.ru>
+ <20260209164757.433932-2-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202602091148.EDBFECE686@keescook>
+In-Reply-To: <20260209164757.433932-2-dmantipov@yandex.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Feb 09, 2026 at 12:00:36PM -0800, Kees Cook wrote:
-> On Mon, Feb 09, 2026 at 08:27:50PM +0300, Fedor Pchelkin wrote:
-> > Kees Cook wrote:
-> > > ee5a977b4e77 ("ext4: fix string copying in parse_apply_sb_mount_options()")
-> > >   Notices the loud failures of strscpy_pad() introduced by 8ecb790ea8c3,
-> > >   and attempted to silence them by making the destination 64 and rejecting
-> > >   too-long strings from the on-disk copy of s_mount_opts, but didn't
-> > >   actually solve it at all, since the problem was always the over-read
-> > >   of the source seen by strnlen(). (Note that the report quoted in this
-> > >   commit exactly matches the report today.)
-> > > 
-> > 
-> > [...]
-> > 
-> > > Reported-by: 李龙兴 <coregee2000@gmail.com>
-> > > Closes: https://lore.kernel.org/lkml/CAHPqNmzBb2LruMA6jymoHXQRsoiAKMFZ1wVEz8JcYKg4U6TBbw@mail.gmail.com/
-> > > Fixes: ee5a977b4e77 ("ext4: fix string copying in parse_apply_sb_mount_options()")
-> > 
-> > Hi there,
-> > 
-> > [ I'd better be Cc'ed as the author of the commit in Fixes ]
-> 
-> Agreed! Sorry I missed adding you to Cc.
-> 
-> > The mentioned reports are for v6.18.2 kernel while ee5a977b4e77 ("ext4:
-> > fix string copying in parse_apply_sb_mount_options()") landed in v6.18.3.
-> > Back at the time I've tested the patch with different bogus s_mount_opts
-> > values and the fortify warnings should have been gone.
-> 
-> Ah-ha! Okay, thank you for catching this versioning issue. I had been
-> scratching my head over how it could have been the same warning. This
-> report is effectively a duplicate of the report you fixed with
-> ee5a977b4e77.
-> 
-> > I don't think there is an error in ee5a977b4e77 unless these warnings
-> > actually appear on the latest kernels with ee5a977b4e77 applied.
-> > 
-> > > @@ -2485,6 +2485,13 @@ static int parse_apply_sb_mount_options(struct super_block *sb,
-> > >  	if (!sbi->s_es->s_mount_opts[0])
-> > >  		return 0;
-> > >  
-> > > +	if (strnlen(sbi->s_es->s_mount_opts, sizeof(sbi->s_es->s_mount_opts)) ==
-> > > +	    sizeof(sbi->s_es->s_mount_opts)) {
-> > > +		ext4_msg(sb, KERN_ERR,
-> > > +			 "Mount options in superblock are not NUL-terminated");
-> > > +		return -EINVAL;
-> > > +	}
-> > 
-> > strscpy_pad() returns -E2BIG if the source string was truncated.  This
-> > happens for the above condition as well - the last byte is truncated and
-> > replaced with a NUL-terminator.
-> 
-> Yeah, I've double-checked this now. The second half of the overflow
-> check in the fortified strnlen eluded by eyes when I went through this
-> originally. Thanks for sanity checking this!
-> 
-> > The check at 3db63d2c2d1d ("ext4: check if mount_opts is NUL-terminated in
-> > ext4_ioctl_set_tune_sb()") was done in that manner as there is currently
-> > no way to propagate strscpy_pad() return value up from ext4_sb_setparams().
-> > So the string is independently checked inside ext4_ioctl_set_tune_sb()
-> > directly.
-> > 
-> > 
-> > As for the 64/65 byte length part, now the rationale of the checks works
-> > as Darrick Wong described at the other part of this thread and corresponds
-> > to how relevant userspace stuff treats the s_mount_opts field: the buffer
-> > is at most 63 payload characters long + NUL-terminator.  Jan Kara also
-> > shared similar thoughts during the discussion of ee5a977b4e77 [1].
-> > 
-> > [1]: https://lore.kernel.org/linux-ext4/yq6rbx54jt4btntsh37urd6u63wwcd3lyhovbrm6w7occaveea@riljfkx5jmhi/
-> 
-> Okay, great. I figure I can do two things:
-> 
-> 1) rework this patch with adjusted commit log to reflect the notes
->    raised so far, so that we reject mounts that lack a NUL-terminated
->    s_mount_opts (as silent truncation may induce an unintended option
->    string, e.g. "...,journal_path=/dev/sda2" into "...,journal_path=/dev/sda"
->    or something weird like that).
-> 
-> 2) Leave everything as-is, live with above corner case since it should
->    be unreachable with userspace tooling as they have always existed.
-> 
-> I'm fine either way! :)
+On Mon, Feb 09, 2026 at 07:47:53PM +0300, Dmitry Antipov wrote:
+> In '_parse_integer_limit()', adjust native integer arithmetic
+> with near-to-overflow branch where 'check_mul_overflow()' and
+> 'check_add_overflow()' are used to check whether an intermediate
+> result goes out of range, and denote such a case with ULLONG_MAX,
+> thus making the function more similar to standard C library's
+> 'strtoull()'. Adjust comment to kernel-doc style as well.
 
-I'd pick #1, unless someone knows of a userspace program that could have
-set a 64-byte s_mount_ops string with no null terminator.  I didn't find
-any, but there are many implementations of ext4 out there. :/
+...
 
-(and yes, it's better to reject an unterminated s_mount_opts than
-accidentally point the kernel at the wrong block device)
+> -	unsigned long long res;
+> +	unsigned long long res = 0;
 
---D
+>  
+> -	res = 0;
 
-> -Kees
-> 
-> -- 
-> Kees Cook
-> 
+We can leave this untouched.
+
+...
+
+
+> -	while (max_chars--) {
+> +	for (rv = 0; max_chars--; rv++, s++) {
+
+I don't see how max_chars is used. With that said, I would rather see the usual
+way of expressing the condition in the for-loop:
+
+	for (rv = 0; rv < max_chars; rv++, s++) {
+
+...
+
+> +		if (likely(res != ULLONG_MAX)) {
+
+Have you seen David's question about these checks?
+Maybe I missed your answer...
+
+> +			if (unlikely(res & (~0ull << 60))) {
+> +				/* We're close to possible overflow. */
+> +				unsigned long long tmp;
+> +
+> +				if (check_mul_overflow(res, base, &tmp) ||
+> +				    check_add_overflow(tmp, val, &res)) {
+> +					res = ULLONG_MAX;
+> +					rv |= KSTRTOX_OVERFLOW;
+> +				}
+> +			} else {
+> +				res = res * base + val;
+> +			}
+>  		}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
