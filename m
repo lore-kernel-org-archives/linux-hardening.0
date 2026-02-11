@@ -1,170 +1,62 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49EF3358B8
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Feb 2026 12:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2681126C03;
+	Wed, 11 Feb 2026 14:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770812803; cv=none; b=g7EEdzuX3nsDFnwdY+i97ETXr9oAeNfd648uDENoBOsMczwXCvrKUm+CCPi7iUDfBYxDCeCnbu7A+TI6YlhFKXFe2YiQdGBkeYDVt5+R2ZT5z7F3X6xR1l1XJue9wPHQRMRDn5v95zNBVRRSzNZF9HP7u+rGMlwGOXaQDIN2ybQ=
+	t=1770819236; cv=none; b=damUAzqcc2qYhpHMm4L2WdBOWY1HmQzO+6bDoSIYj90nPGH14fBpSs0orO60hNqU90gqqghue1ZuHya6JobX6RB2W2Kqo3QMj+P0NDbcclXlnMeWbFqSkr4N2za9WMf4w5UpmVcvgJvJNfTDa13WVMLl+qb9XnaGJsPkZnpv008=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770812803; c=relaxed/simple;
-	bh=LJRpeV/A1fxlnnZUB3wTrAHsDxAi+EZccFnu8ySHu/Y=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=MuD+p3mrbW5VDUAUoVgKH+qONbRMrak7oL4dja7JyVP8GXkD300oLlZrVaHqEqxC8SDXzP2avTY6ReBgLlh1lyIbzlTvRgf0fJCLAJGAHI+yTTTwJkQWZIOiDFLt8ARPKzkUhYduIh0CByiRNCaqAFUsQzK4dxcARfIa78zY614=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rwYXqi0/; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1770819236; c=relaxed/simple;
+	bh=kTmR8HlNNdypEC2sQgZd8Hmj4lVNRQD+1rgOJ0XCm9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cYhjkh/jDxzyWJeQG6EqFjc75obIK594/qW3DqOginmp1W3HSavs8AkBVVFGD1vp+SalpXNrAIOYMcoXet7M3EbRFxpLM8Y0QznxgWS+mbnETxLMv977HuF8E/73hUfMLFv7dqg1sdlu8DXve0J65T5pv8ohAPfkMuMYk3fZFlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pw2BTBtv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rwYXqi0/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pw2BTBtv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7734FC4CEF7;
+	Wed, 11 Feb 2026 14:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770819236;
+	bh=kTmR8HlNNdypEC2sQgZd8Hmj4lVNRQD+1rgOJ0XCm9M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pw2BTBtv9scYBWfC9uofOv7JqG3PX16nhSlPA3Nu82z5WqjDAYyWTCyHsHukkJY/T
+	 UMYJQ1WNiL/Od1c+fGA+teYmZnGYrJsYZI+73VTwE+G17hKpKCSSVKDpg9bx76MmXZ
+	 Mx0vWRwlvemxvM2vwkT1oNyg2Z8eY35Rm7s4uhljb0visdkSuiIH7dT7clhODH69W+
+	 Sia5s51Go1PrzGGnmktoeMGMg54++Y/bXyGJXb5OUq8TvzOwcf94hUdR1Rh051WavK
+	 aMaOJ64ZqYrkFEApgUa/EHMW3ksOh9IDV5G2C8LleQ1wZHvV7SYq/ciM/8EX0KHlfq
+	 KG13vuP7myTAQ==
+Date: Wed, 11 Feb 2026 06:13:55 -0800
+From: Kees Cook <kees@kernel.org>
+To: Jann Horn <jannh@google.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] fs: Keep long filenames in isolated slab buckets
+Message-ID: <202602110613.7FEC92C@keescook>
+References: <20260211004811.work.981-kees@kernel.org>
+ <CAG48ez1GYR+6kZHDmy4CTZvEfdyUySCxhZaXRo1S=YyN=Fsp8Q@mail.gmail.com>
+ <202602101736.80F1783@keescook>
+ <CAG48ez1wxj5uxuMXQLV+yxfT4gumNSoK8UX2+K=5aCLAKg+VPg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1770812788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=juP12CPu5no4sJn3GXK23Vcmd+0s4QSQdQ9JTIQubAU=;
-	b=rwYXqi0/CVyLw7kczTCLZo8jyq63PuT8zrg+bMz0vGm2UFcucyrJRfSchgEzcnTLO6C/Qu
-	pU9Pt8f1MhsJ+89uccS3nooe/wDXJ6bEQDheGN9jq4YRLqadf+A/HS8HwNOKvEmOv7IMZY
-	8+Nwtx2YGtkH+DgQcgof2NPIwKgH9Fo=
-Date: Wed, 11 Feb 2026 12:26:23 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <82e29f76816971cfad92167c97afb437e1996aea@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf v1] bpf: cpumap: fix race in bq_flush_to_queue on
- PREEMPT_RT
-To: "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>
-Cc: bpf@vger.kernel.org, "Jiayuan Chen" <jiayuan.chen@shopee.com>,
- syzbot+2b3391f44313b3983e91@syzkaller.appspotmail.com, "Alexei
- Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
- "David S. Miller" <davem@davemloft.net>, "Jakub Kicinski"
- <kuba@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>, "John
- Fastabend" <john.fastabend@gmail.com>, "Stanislav Fomichev"
- <sdf@fomichev.me>, "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai
- Lau" <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>,
- "Song Liu" <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>,
- "KP Singh" <kpsingh@kernel.org>, "Hao Luo" <haoluo@google.com>, "Jiri
- Olsa" <jolsa@kernel.org>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, "Clark Williams" <clrkwllms@kernel.org>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Thomas Gleixner"
- <tglx@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-rt-devel@lists.linux.dev
-In-Reply-To: <20260211114418.xnfx8M-t@linutronix.de>
-References: <20260211064417.196401-1-jiayuan.chen@linux.dev>
- <20260211114418.xnfx8M-t@linutronix.de>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez1wxj5uxuMXQLV+yxfT4gumNSoK8UX2+K=5aCLAKg+VPg@mail.gmail.com>
 
-February 11, 2026 at 19:44, "Sebastian Andrzej Siewior" <bigeasy@linutron=
-ix.de mailto:bigeasy@linutronix.de?to=3D%22Sebastian%20Andrzej%20Siewior%=
-22%20%3Cbigeasy%40linutronix.de%3E > wrote:
+On Wed, Feb 11, 2026 at 03:06:47AM +0100, Jann Horn wrote:
+> Actually, looking around a bit, there really aren't that many
+> allocations with __GFP_RECLAIMABLE, so this probably isn't all that
+> useful for same-cache attacks. (To be clear: Anything with
+> __GFP_RECLAIMABLE goes in the special kmalloc-rcl-* slabs.) Looking
 
+Ah! Yeah, I looked right past __GFP_RECLAIMABLE. As you say, this will
+keep it isolated already.
 
->=20
->=20On 2026-02-11 14:44:16 [+0800], Jiayuan Chen wrote:
->=20
->=20>=20
->=20> From: Jiayuan Chen <jiayuan.chen@shopee.com>
-> >=20=20
->=20>  On PREEMPT_RT kernels, the per-CPU xdp_bulk_queue (bq) can be acce=
-ssed
-> >  concurrently by multiple preemptible tasks on the same CPU.
-> >=20=20
->=20>  The original code assumes bq_enqueue() and __cpu_map_flush() run
-> >  atomically with respect to each other on the same CPU, relying on
-> >  local_bh_disable() to prevent preemption. However, on PREEMPT_RT,
-> >  local_bh_disable() only calls migrate_disable() and does not disable
-> >  preemption. spin_lock() also becomes a sleeping rt_mutex. Together,
-> >  this allows CFS scheduling to preempt a task during bq_flush_to_queu=
-e(),
-> >  enabling another task on the same CPU to enter bq_enqueue() and oper=
-ate
-> >  on the same per-CPU bq concurrently.
-> >=20
->=20=E2=80=A6
->=20
->=20>=20
->=20> Fixes: d2d6422f8bd1 ("x86: Allow to enable PREEMPT_RT.")
-> >=20
->=20Can you reproduce this? It should not trigger with the commit above.
-> It should trigger starting with
->  3253cb49cbad4 ("softirq: Allow to drop the softirq-BKL lock on PREEMPT=
-_RT")
-
-
-Thanks for the review, Sebastian.
-
-You are right. The race only becomes possible after the softirq BKL is dr=
-opped.
-
-> >=20
->=20> Reported-by: syzbot+2b3391f44313b3983e91@syzkaller.appspotmail.com
-> >  Closes: https://lore.kernel.org/all/69369331.a70a0220.38f243.009d.GA=
-E@google.com/T/
-> >  Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
-> >  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> >  ---
-> >  kernel/bpf/cpumap.c | 16 +++++++++++++++-
-> >  1 file changed, 15 insertions(+), 1 deletion(-)
-> >=20=20
->=20>  diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-> >  index 04171fbc39cb..7fda8421ec40 100644
-> >  --- a/kernel/bpf/cpumap.c
-> >  +++ b/kernel/bpf/cpumap.c
-> >  @@ -714,6 +717,7 @@ const struct bpf_map_ops cpu_map_ops =3D {
-> >  .map_redirect =3D cpu_map_redirect,
-> >  };
-> >=20=20
->=20>  +/* Caller must hold bq->bq_lock */
-> >=20
->=20If this information is important please use lockdep_assert_held() in =
-the
-> function below. This can be used by lockdep and is understood by humans
-> while the comment is only visible to humans.
-
-
-Will add lockdep_assert_held() in bq_flush_to_queue() and drop the
-comment.
-
-> >=20
->=20> static void bq_flush_to_queue(struct xdp_bulk_queue *bq)
-> >  {
-> >  struct bpf_cpu_map_entry *rcpu =3D bq->obj;
-> >  @@ -750,10 +754,16 @@ static void bq_flush_to_queue(struct xdp_bulk_=
-queue *bq)
-> >=20=20
->=20>  /* Runs under RCU-read-side, plus in softirq under NAPI protection=
-.
-> >  * Thus, safe percpu variable access.
-> >=20
->=20+ PREEMPT_RT relies on local_lock_nested_bh().
->=20
->=20>=20
->=20> + *
-> >  + * On PREEMPT_RT, local_bh_disable() does not disable preemption,
-> >  + * so we use local_lock to serialize access to the per-CPU bq.
-> >  */
-> >  static void bq_enqueue(struct bpf_cpu_map_entry *rcpu, struct xdp_fr=
-ame *xdpf)
-> >  {
-> >  - struct xdp_bulk_queue *bq =3D this_cpu_ptr(rcpu->bulkq);
-> >  + struct xdp_bulk_queue *bq;
-> >  +
-> >  + local_lock(&rcpu->bulkq->bq_lock);
-> >=20
->=20local_lock_nested_bh() & the matching unlock here and in the other
-> places, please.
-
-
-Makes sense. Since these paths already run under local_bh_disable(),
-local_lock_nested_bh() is the correct primitive.
-
-> Sebastian
->
+-- 
+Kees Cook
