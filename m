@@ -1,221 +1,151 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011007.outbound.protection.outlook.com [52.101.62.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33DB33120D;
-	Wed, 11 Feb 2026 10:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770805769; cv=fail; b=YJ7B3xhFOZyKlm+vMstWoElwi3ltsIZR5S+O6akmo455cU1cvBw6kWg8CtzXEHa5AZi5wmZ98mQ8nPufxE7cnOfhS5UxYvEcBcgGgdPhhIljQeA/5TZl/2Iux/IPTeox9pDNZ6KxaOA1MDDEExlFIZgy/lSqPpGCfSBGwWxUDE0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770805769; c=relaxed/simple;
-	bh=O9f4x58dczT8uN0Om7T725H1+DmgPlQ/NszjHpgRtUs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D9LY2zmAo80k+qtyNQVPft2/tpl/KUi/CVKnUgU9pk56oIBJ/4ULflb01iDJg46GOxsZDvpva0E9YokAdrYWSKbuD07foN2cIeNHiplEUrrtZbxeKojAYSluvbmOncmC0KKt1NNMpjK87ojDCxx/MZBs0VfxFTpW6UNXZraeAlY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fJLm/0nf; arc=fail smtp.client-ip=52.101.62.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734442F2910;
+	Wed, 11 Feb 2026 11:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770810263; cv=none; b=TOJjFE65l3vHfJMIPwYCb8g9Q6kcPirn1u4Mnfm6NbJ02iTFIgc4jEvUc+GyQqXhOY1RzDwaWvruF5l86zUya9GlxSIUv4Bs/a2ZRMuiBeaDfdJgGS55KLRiSGdyEPDAE34M0QVU9ClBQoh7o8IVRdWNzejEVn9oiaNcGVsh1/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770810263; c=relaxed/simple;
+	bh=sI0b1ba2m0bkVc1AtBlmVUWPv66R8ZmLBV3MDW6SRHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KXuMLje1QT0Hn5mxuBRZ8hui0lsgviQrNfun+xd4INlExQERm/ZyQcqr7Ry88Zjr3ItEdidGbjmO+NWCBWYc1DCAkmnYO5FlkDpOspf8wpwriodOAPOsx+llkl+q1p8XdiDP/GAw1ngDrN5DL8x8QeAXi4SFYfzRjQVvbJMyukw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=izANsgZm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1cNDnr7T; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fJLm/0nf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O4PGJb1REnaK7PxOj7Oq2aifjVzrJ2ZY1AB831oJqQNiOkrDxHtLfNTaYeusPGJxYHC/ws2amHugqb32Zh92NCOdg7A2sfLGd/jms2uqds0cNPqWxoQUxeH0TreM9Qqkf+NWxtWkDC5qOG4gIWV5B52ikOlVCj4S5SkscCT44ktbeDuVGuwa9A9JCEjgI/5JBOzXXJUssAMrGfdOC+O98sl2BPADW/UK5U7q3MkqdHLmgnNn8/gpwsd5j7SXdOB8u3bpPBUp12KYJojJAnzn4axoxITeh21ui3+yN0B0cEtfKFn0qxsQvaUl0n4zhNiGtiP2BZPuoKKh3J55OmD5LQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UYhnRcyxAEdAzn9EwUDFQaBV2exyM+a2Odl2/MsXxww=;
- b=UcOiSUWT10UN1l+2Om63sZSaKFSA3v9ATAwWoplca+ajGTCXB/Du7Q3E+3Cnyqfa1nUuPdjCTt2+nHzTS1OHCUshbmEbXIUf7dAtXvgJ/XVGP2hIe6Dq8/V8dhDp0eKskqnhBSeOQWqieaSwEwhca6Naz63pSqy8IrPm7GvFQiGr4g9jCzTVSE4/tLNcEVm95Dq7mciKxH2kgxxNUwzPe4Do13uCKKZQ50rA7EoxufJu0v6Qdw2fjuQpyioPemkMu9zuVH9IdFSO0TC5Z25J0BlmN2xppZNY4X1iVr7H+WUgC+vwC+AM+OVB4TT7xzX32VZZH2XsZmD1gO1u9A2mBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UYhnRcyxAEdAzn9EwUDFQaBV2exyM+a2Odl2/MsXxww=;
- b=fJLm/0nfNygf2rfQ1DothwTtnyySQ7oAVUSTbK0PH9deZsi5XqqacsMCk7xZf43W66HDmVBSMdIlfSPM7Rbz/VqRy31d+5rqgw1P75+zzbzD19ZyuiTSGLZZRYyFBjPx/Pbnyg7p/4M4ypVz5DwtRXJ2BhdiT44pktx2yaW19/A=
-Received: from SA1P222CA0183.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c4::7)
- by IA1PR12MB8585.namprd12.prod.outlook.com (2603:10b6:208:451::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.10; Wed, 11 Feb
- 2026 10:29:25 +0000
-Received: from SN1PEPF00026367.namprd02.prod.outlook.com
- (2603:10b6:806:3c4:cafe::9a) by SA1P222CA0183.outlook.office365.com
- (2603:10b6:806:3c4::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.10 via Frontend Transport; Wed,
- 11 Feb 2026 10:29:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF00026367.mail.protection.outlook.com (10.167.241.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9611.8 via Frontend Transport; Wed, 11 Feb 2026 10:29:24 +0000
-Received: from FRAPPELLOUX01-WSLPUB.amd.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Wed, 11 Feb 2026 04:29:22 -0600
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Kees Cook
-	<kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-	<amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: [PATCH v1 5/6] drm/amdgpu: store ib info for devcoredump
-Date: Wed, 11 Feb 2026 11:26:52 +0100
-Message-ID: <20260211102657.4180-5-pierre-eric.pelloux-prayer@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260211102657.4180-1-pierre-eric.pelloux-prayer@amd.com>
-References: <20260211102657.4180-1-pierre-eric.pelloux-prayer@amd.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="izANsgZm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1cNDnr7T"
+Date: Wed, 11 Feb 2026 12:44:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1770810260;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iwcCNO4iuM7dYsnfRuUULJMBsV4MSD/w5EOIcRiS9Hw=;
+	b=izANsgZmmYk6yRGCXEehqtKfCp7Hc3L2ggot9l/K8nF9h7H5kK4GupAp8bWkGQxNb8J++4
+	2qQgxKKZnXiuL9NihReHFy7g1uL4u31Tj+XVTXUzAq8izkOd8Ousniy6894+qA0/ZH9TGw
+	8YrhjuQWoik+sTX/WibudCMoR+JJrOzR6rCaMxdU7CL0YT+3Rm2/VvKQPAUpdcQo6efdIV
+	12HRjGcMq8000IGpNlzi4U09NJdYNGhdYCNaMHWt/sRl6i8XlhZVskH31i/zoPn32zOIzp
+	hXSQLP2MPl+9wzdc2tg8bLNqqI7FtJqW3c7JHDnfEduj8FPih4S0g5IMhRI9xA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1770810260;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iwcCNO4iuM7dYsnfRuUULJMBsV4MSD/w5EOIcRiS9Hw=;
+	b=1cNDnr7TpeKAHPcC2odibxF9E841oApY60B68Vzxxg99OuOIluCt9noMJGajETUxi23Zhg
+	VJZnBEy5HcJypqDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, Jiayuan Chen <jiayuan.chen@shopee.com>,
+	syzbot+2b3391f44313b3983e91@syzkaller.appspotmail.com,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH bpf v1] bpf: cpumap: fix race in bq_flush_to_queue on
+ PREEMPT_RT
+Message-ID: <20260211114418.xnfx8M-t@linutronix.de>
+References: <20260211064417.196401-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00026367:EE_|IA1PR12MB8585:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31b9f0ef-7f4b-495a-3204-08de69586d82
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7tRZgruFkJ7GblOwsbOFQQQCniWMEofAxSfEDJmN2DFlK6o1lBKUwIMniwPa?=
- =?us-ascii?Q?hAnmU31qzokwmBGo/9ZRPFg1X+Mrq7hqK/7LXfXp1Fs182LIRJs8t6juzRXF?=
- =?us-ascii?Q?IDWukZMWl3yZarqnfeudSLKogUYY7U1l87cRuYl0iCMeEuGEGDCIbPiohnv6?=
- =?us-ascii?Q?6Si9TNxoM+0aZ3IixUwDk+yQDIYMnFyGlx+VrEP1Cpc7KwtLQswT6JgTKmDE?=
- =?us-ascii?Q?LYdt9H5ZWogoyH4ufQaq3VLW2K6SUJlTo7VN3kpYvxknAlSqevMRCEVmiHzH?=
- =?us-ascii?Q?rPRAmiK3a0VlOqY/gwdNQIMXMcIyc70hiuOjmcoUTl+HDOhV+0bOMHHCqIVM?=
- =?us-ascii?Q?g6zbZvHj3HkGQO8ix3HijmnlIIEl9rtdlfdHSv9Ae8gmBWFmn/rOms0Oeq/7?=
- =?us-ascii?Q?jRr+YE7L0Xb9lwFgm9dzQem8CiUNjRs+E5DBKpzcuDrSpJphUjTpM2GePb+r?=
- =?us-ascii?Q?RgJD/H8rFp2pOMVhrveFACS+XdhtbLnlvr0RgNu/zqUNY/rTmcga45ysvNFD?=
- =?us-ascii?Q?IVWjrHyjXWq5B/edryrlvrcYBOyKcAbgZLihybNQMHyT+3T/v+VGG0ZDDZI0?=
- =?us-ascii?Q?DAnQ5qKWGNtc05m7i9UMyZ+N1WpZrBahkG4PPEDGDBBfyMFxXcEr9Dus5f1e?=
- =?us-ascii?Q?owJz/Bsf+YbV6gKKjCgf3rMGc0qDnvgZdonSRM6vRFz384RsgsJ/1xj3zViM?=
- =?us-ascii?Q?dVM0Zgu18N/fbYmejhrvm97n6hQ+oMTLwEu5o4twESGCHOyhwNWcht6QwQV9?=
- =?us-ascii?Q?mJ8Fx2f0DHwMA9AqrNJ+lNymChX+GXgJixUXB1/QEyEWoPsyr82xHJOPZJ7L?=
- =?us-ascii?Q?i5rc1m/O9TSG+/BvlBIN6XXmpFsCaJef6wgsMkZ+P92u3nb115yMKJyzkNQI?=
- =?us-ascii?Q?4afDj4hfkR6C8eAkrUqJT78T14TT2NEmjjN2MBB/GnDTuTwl/QEyJfy81Pp3?=
- =?us-ascii?Q?snL7ytD4J6OaZvBxST+N0/ouW/qyfxxu5VTGF+uwdooF6vfOZK7WbGOUKJX+?=
- =?us-ascii?Q?ArIXp8ugCQKGk3eMY83mqDRkgzMWLnOLQCnjwMygrV6gREni/jMF6zqYFlqt?=
- =?us-ascii?Q?+lt63EgBldYZfXwr4Bf02DsBNEYl6b1lNvQSnUOh18spmBirrgKRctFG5rt2?=
- =?us-ascii?Q?Up3yj6/gAImEEbeSMa7+9bzgs/zhFJWRp1GUEhsaeWmZT0Ss2lfaiCcBRKhq?=
- =?us-ascii?Q?Q8j/nTcUB7zCGDkEEVsBzOIAFySkspq/udZms+L1SlWd0P9hr2qTsOepA+59?=
- =?us-ascii?Q?XDXPaNBd5zNQV2jIOyvfCDPXdfDh/pByceVs/VpZZwsiw1ShAfeZ2qpDDGC3?=
- =?us-ascii?Q?iYRD/Iza2+McrraoFD+160Lm7iLv8hD5uV+1v3YIb/csAJTHmoS4a2pbWstp?=
- =?us-ascii?Q?ATw/01XHkelzYxytNhvs3dwPPwM80PPOr3o5H0nRydSIjXeD1mi2Z3W4ue6R?=
- =?us-ascii?Q?dS/exIbS6Pnn2o33jSwSVOVXLl2Hf1sSoiZyVwLx40ptEfbqL11J6gBLyWlW?=
- =?us-ascii?Q?Gf1g445KOE2EhkEi1h8nAx9fZC64ep7V+hUI8gspcHozJG1Ry2aGqbsIpr9A?=
- =?us-ascii?Q?HGgaTShtHJveMfdl6nLoRHGGagILACyUM0FN9Auk6iLCQ584C3ZJNbnLV29b?=
- =?us-ascii?Q?Csm0fQYZlxhAnnhl2yqCtJoKa6LMEWggYLBtnpM+fybWFowQPp/gISp7WYhN?=
- =?us-ascii?Q?QsF4AQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	JQCXL01nvbIYDOHv14T9hZQD558MglS7bLr2FRFgVCupwfK7+RfSzpsQQIRN8HzO2qvTYR1yZIzqdOwjh0/QhqqIfPxFujtBn/Hsdaz9isfCR5RxKmfLJkBkdvPVlgcZlmd/PRcKwu7+mdchEXrcHDkgfmCV07KesutyJv61EQjpr38uVAfbywGTfioKq6iAqKoCkB+fr0+mt7/2fNRanycfhx2pQHCNOJpm3uTjYCucJG4oEBAg5aLp1Rywj+XDRkve+KPJThmeUXyLtJxdfgMV7/PdqmU7OfYsLo2qWv21ap6CoY3atb1FEBq87lSdGBlZRVGKCX68jQ9Q4dXdXAsLx3uc+pDyD3MM9RU/m4iKecJsX4FHu6ukaSG0zxYnLkJ15qpXysbYPUwco9W1MGwVY/PAvWTVxJacI3/ETd8OJNfwBBn1216iqacaK/t9
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2026 10:29:24.7819
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31b9f0ef-7f4b-495a-3204-08de69586d82
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00026367.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8585
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260211064417.196401-1-jiayuan.chen@linux.dev>
 
-Store the basic state of IBs so we can read it back in the
-amdgpu_devcoredump_format function.
+On 2026-02-11 14:44:16 [+0800], Jiayuan Chen wrote:
+> From: Jiayuan Chen <jiayuan.chen@shopee.com>
+>=20
+> On PREEMPT_RT kernels, the per-CPU xdp_bulk_queue (bq) can be accessed
+> concurrently by multiple preemptible tasks on the same CPU.
+>=20
+> The original code assumes bq_enqueue() and __cpu_map_flush() run
+> atomically with respect to each other on the same CPU, relying on
+> local_bh_disable() to prevent preemption. However, on PREEMPT_RT,
+> local_bh_disable() only calls migrate_disable() and does not disable
+> preemption. spin_lock() also becomes a sleeping rt_mutex. Together,
+> this allows CFS scheduling to preempt a task during bq_flush_to_queue(),
+> enabling another task on the same CPU to enter bq_enqueue() and operate
+> on the same per-CPU bq concurrently.
+=E2=80=A6
+> Fixes: d2d6422f8bd1 ("x86: Allow to enable PREEMPT_RT.")
 
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c | 13 ++++++++++---
- drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.h |  9 +++++++++
- 2 files changed, 19 insertions(+), 3 deletions(-)
+Can you reproduce this? It should not trigger with the commit above.
+It should trigger starting with
+   3253cb49cbad4 ("softirq: Allow to drop the softirq-BKL lock on PREEMPT_R=
+T")
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
-index 0bf85ab43204..d0af8a294abf 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
-@@ -387,6 +387,7 @@ void amdgpu_coredump(struct amdgpu_device *adev, bool skip_vram_check,
- {
- 	struct drm_device *dev = adev_to_drm(adev);
- 	struct amdgpu_coredump_info *coredump;
-+	size_t size = sizeof(*coredump);
- 	struct drm_sched_job *s_job;
- 	u64 total_ring_size, ring_count;
- 	struct amdgpu_ring *ring;
-@@ -395,10 +396,10 @@ void amdgpu_coredump(struct amdgpu_device *adev, bool skip_vram_check,
- 	if (adev->coredump_in_progress)
- 		return;
- 
--	if (adev->coredump_in_progress)
--		return;
-+	if (job && job->pasid)
-+		size += sizeof(struct amdgpu_coredump_ib_info) * job->num_ibs;
- 
--	coredump = kzalloc(sizeof(*coredump), GFP_NOWAIT);
-+	coredump = kzalloc(size, GFP_NOWAIT);
- 	if (!coredump)
- 		return;
- 
-@@ -406,6 +407,7 @@ void amdgpu_coredump(struct amdgpu_device *adev, bool skip_vram_check,
- 
- 	coredump->skip_vram_check = skip_vram_check;
- 	coredump->reset_vram_lost = vram_lost;
-+	coredump->pasid = job->pasid;
- 
- 	if (job && job->pasid) {
- 		struct amdgpu_task_info *ti;
-@@ -415,6 +417,11 @@ void amdgpu_coredump(struct amdgpu_device *adev, bool skip_vram_check,
- 			coredump->reset_task_info = *ti;
- 			amdgpu_vm_put_task_info(ti);
- 		}
-+		coredump->num_ibs = job->num_ibs;
-+		for (i = 0; i < job->num_ibs; ++i) {
-+			coredump->ibs[i].gpu_addr = job->ibs[i].gpu_addr;
-+			coredump->ibs[i].ib_size_dw = job->ibs[i].length_dw;
-+		}
- 	}
- 
- 	if (job) {
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.h
-index 1c3d22356cc7..49486d1f6a5d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.h
-@@ -38,6 +38,11 @@ struct amdgpu_coredump_ring {
- 	u32				offset;
- };
- 
-+struct amdgpu_coredump_ib_info {
-+	uint64_t			gpu_addr;
-+	u32				ib_size_dw;
-+};
-+
- struct amdgpu_coredump_info {
- 	struct amdgpu_device            *adev;
- 	struct amdgpu_task_info         reset_task_info;
-@@ -58,6 +63,10 @@ struct amdgpu_coredump_info {
- 	 */
- 	ssize_t				formatted_size;
- 	char				*formatted;
-+
-+	unsigned int			pasid;
-+	int				num_ibs;
-+	struct amdgpu_coredump_ib_info	ibs[] __counted_by(num_ibs);
- };
- #endif
- 
--- 
-2.43.0
+> Reported-by: syzbot+2b3391f44313b3983e91@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/69369331.a70a0220.38f243.009d.GAE@goo=
+gle.com/T/
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> ---
+>  kernel/bpf/cpumap.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+> index 04171fbc39cb..7fda8421ec40 100644
+> --- a/kernel/bpf/cpumap.c
+> +++ b/kernel/bpf/cpumap.c
+> @@ -714,6 +717,7 @@ const struct bpf_map_ops cpu_map_ops =3D {
+>  	.map_redirect		=3D cpu_map_redirect,
+>  };
+> =20
+> +/* Caller must hold bq->bq_lock */
 
+If this information is important please use lockdep_assert_held() in the
+function below. This can be used by lockdep and is understood by humans
+while the comment is only visible to humans.
+
+>  static void bq_flush_to_queue(struct xdp_bulk_queue *bq)
+>  {
+>  	struct bpf_cpu_map_entry *rcpu =3D bq->obj;
+> @@ -750,10 +754,16 @@ static void bq_flush_to_queue(struct xdp_bulk_queue=
+ *bq)
+> =20
+>  /* Runs under RCU-read-side, plus in softirq under NAPI protection.
+>   * Thus, safe percpu variable access.
+
++ PREEMPT_RT relies on local_lock_nested_bh().
+
+> + *
+> + * On PREEMPT_RT, local_bh_disable() does not disable preemption,
+> + * so we use local_lock to serialize access to the per-CPU bq.
+>   */
+>  static void bq_enqueue(struct bpf_cpu_map_entry *rcpu, struct xdp_frame =
+*xdpf)
+>  {
+> -	struct xdp_bulk_queue *bq =3D this_cpu_ptr(rcpu->bulkq);
+> +	struct xdp_bulk_queue *bq;
+> +
+> +	local_lock(&rcpu->bulkq->bq_lock);
+
+local_lock_nested_bh() & the matching unlock here and in the other
+places, please.
+
+Sebastian
