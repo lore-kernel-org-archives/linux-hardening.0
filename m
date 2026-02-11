@@ -1,167 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590CB27815E;
-	Wed, 11 Feb 2026 01:41:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7859C239E9A;
+	Wed, 11 Feb 2026 01:50:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770774104; cv=none; b=oAIFns+hFusFTP9/uxrDxof9lcDLWA/JsnzgBiX2z5n8C8xMgm5/XaUKQlXoWuOgtw7Vj4k1l5JM42BlqN6gAb2xx2yo9ywv5EUtc3TBY2MdU/dhd7OeZo5VDjC1c6BsvaJuR3SHrvvdRwLXCbeSOz37guu0TB0vV3dVAWrmVZM=
+	t=1770774601; cv=none; b=IbwdojFOTMlSuCtOCDi5Fg7ZFUDxrhA1PEZKtXPhcTqsf1u2qYFvi1Re5BbbMRKbFxXPiMduUbIhP6D1JMoUAu3Dp1xueX8Blcp9NNESGfxHWun5dlVnuJO7hnVd0qIm9AuXs1lNvLN93I67sYOR1vhqawBXZgOLVStgAdCwjBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770774104; c=relaxed/simple;
-	bh=RHA8Ov2M102yN4iQ2T8h34WWw1tnpDSMl83Ze2PM6Gw=;
+	s=arc-20240116; t=1770774601; c=relaxed/simple;
+	bh=9DpbWfY9/tuwF0tWoezq5LLP0eYFa9VS94LE8d07iQs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DecLCkG2oiL/hDeWwoLAJ6X9DbWief1ViNWYnVGIKaEfFKB40R0AmUMb8fOqZXFq8Od/fmR2UnNr+m24ex/J7D5MfTaB1cUJ2WDdKQiLKcvH3Yra+OLLoEnzg0RnFBzozv/dNvcbybqrK9JKdonGgcUhqx4XeTmnfoBstaqb02w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFF2+nv9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IACtte73NNjevQLN9/cqx8O4BpIuBcWKBQ0Fk7zd0uD4oIpdveEN6la3WN6Sw5tRf67bVTmWX9iL/hOgbAE28454wjHu6kBi6DAPzzozzGrnj+wn+j2hIMD+JRalI2EOEwCBJAOKQWm27b1C6toyUHDM7uuvMO0GgK32hSyl0bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ttlvbUIG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFF2+nv9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48C2C116C6;
-	Wed, 11 Feb 2026 01:41:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ttlvbUIG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EECAFC116C6;
+	Wed, 11 Feb 2026 01:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770774104;
-	bh=RHA8Ov2M102yN4iQ2T8h34WWw1tnpDSMl83Ze2PM6Gw=;
+	s=k20201202; t=1770774601;
+	bh=9DpbWfY9/tuwF0tWoezq5LLP0eYFa9VS94LE8d07iQs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mFF2+nv9a/uE8Ue++fofMfIEIFV40zqfpIEkQ5UqfYYGFq34ZoX48NyRjlBflw1Gk
-	 8xuFI/yHXDjlLUzTkZsn/TEHPipakNHOKJSBsDXsshE+3msVxC32RfybpdM0QzT1y7
-	 klpTwTR8BObEvdzrTKsiYUznFz+H9FzmqhgLaEaJaiTaZnr0sqtYOAMm0NQBRGm64H
-	 kJKIxhSMJqmdEChRhNrjfc6wky+asuuFe7D9nwOzXAlpHjMVY2TnvmEESP+1DOh8MR
-	 UEO6oipX8nDdB1XftpPcg94eECgqTnbe0k2dMcmq6Wdt3ez1kAMKI2stawjRVh+afV
-	 p6uE3BJ+TUqlg==
-Date: Tue, 10 Feb 2026 17:41:43 -0800
+	b=ttlvbUIGthtrXP0Ow8SAkHoocj3SM9r+pLPNjqo+1a5aSH6m/wXXlwNQhv7l6XF71
+	 4vxe9OJLtIviKiH6T7ZzMfjQqEXEfucnfvmEZ4mkVu/43CA8RcRvqpkvzxt2eK5DK3
+	 lWNUhx6eYcpHJ59ZR1du9DqEJU01HUW7cBb6LUdDQc/EqYGE1RbobAKgMa9Wt7o9Dn
+	 95a4v/WIerrK7E7so/ul+EakfmvF8AWOigCswQCPcpzM/r2q3tCTlfEGM3GX5Fa1Fd
+	 AB+y8s+oQ4nfWhax/Ezign0x5RspGMG7Nr9vhUfootAqqsrFcz8ymZCZ/bZ/OGpJWW
+	 RJNRM/kSfK2Wg==
+Date: Tue, 10 Feb 2026 17:50:00 -0800
 From: Kees Cook <kees@kernel.org>
-To: Jann Horn <jannh@google.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] fs: Keep long filenames in isolated slab buckets
-Message-ID: <202602101736.80F1783@keescook>
-References: <20260211004811.work.981-kees@kernel.org>
- <CAG48ez1GYR+6kZHDmy4CTZvEfdyUySCxhZaXRo1S=YyN=Fsp8Q@mail.gmail.com>
+To: Fedor Pchelkin <pchelkin@ispras.ru>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	=?utf-8?B?5p2O6b6Z5YW0?= <coregee2000@gmail.com>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] ext4: Reject on-disk mount options with missing
+ NUL-terminator
+Message-ID: <202602101749.40E8AB05@keescook>
+References: <20260206212654.work.035-kees@kernel.org>
+ <20260209193945-80d9bfc8aa82b0eb1b764c7f-pchelkin@ispras>
+ <202602091148.EDBFECE686@keescook>
+ <20260210050124.GR7686@frogsfrogsfrogs>
+ <20260210115731-8a60c77ca684b6684fb8955f-pchelkin@ispras>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez1GYR+6kZHDmy4CTZvEfdyUySCxhZaXRo1S=YyN=Fsp8Q@mail.gmail.com>
+In-Reply-To: <20260210115731-8a60c77ca684b6684fb8955f-pchelkin@ispras>
 
-On Wed, Feb 11, 2026 at 02:28:53AM +0100, Jann Horn wrote:
-> On Wed, Feb 11, 2026 at 1:48 AM Kees Cook <kees@kernel.org> wrote:
-> > A building block of Use-After-Free heap memory corruption attacks is
-> > using userspace controllable kernel allocations to fill specifically sized
-> > kmalloc regions with specific contents. The most powerful of these kinds
-> > of primitives is arbitrarily controllable contents with arbitrary size.
-> > Keeping these kinds of allocations out of the general kmalloc buckets is
-> > needed to harden the kernel against such manipulations, so this is why
-> > these sorts of "copy data from userspace into kernel heap" situations are
-> > expected to use things like memdup_user(), which keeps the allocations
-> > in their own set of slab buckets. However, using memdup_user() is not
-> > always appropriate, so in those cases, kmem_buckets can used directly.
-> >
-> > Filenames used to be isolated in their own (fixed size) slab cache so
-> > they would not end up in the general kmalloc buckets (which made them
-> > unusable for the heap grooming method described above). After commit
-> > 8c888b31903c ("struct filename: saner handling of long names"), filenames
-> > were being copied into arbitrarily sized kmalloc regions in the general
-> > kmalloc buckets. Instead, like memdup_user(), use a dedicated set of
-> > kmem buckets for long filenames so we do not introduce a new way for
-> > attackers to place arbitrary contents into the general kmalloc buckets.
-> >
-> > Fixes: 8c888b31903c ("struct filename: saner handling of long names")
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Also, from the same commit, is the loss of SLAB_HWCACHE_ALIGN|SLAB_PANIC
-> > for filename allocations relavant at all? It could be added back for
-> > these buckets if desired, but I left it default in this patch.
-> >
-> > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > Cc: Christian Brauner <brauner@kernel.org>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: <linux-fsdevel@vger.kernel.org>
-> > ---
-> >  fs/namei.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index 8e7792de0000..a901733380cd 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -128,6 +128,8 @@
-> >  /* SLAB cache for struct filename instances */
-> >  static struct kmem_cache *__names_cache __ro_after_init;
-> >  #define names_cache    runtime_const_ptr(__names_cache)
-> > +/* SLAB buckets for long names */
-> > +static kmem_buckets *names_buckets __ro_after_init;
-> >
-> >  void __init filename_init(void)
-> >  {
-> > @@ -135,6 +137,8 @@ void __init filename_init(void)
-> >                          SLAB_HWCACHE_ALIGN|SLAB_PANIC, offsetof(struct filename, iname),
-> >                          EMBEDDED_NAME_MAX, NULL);
-> >         runtime_const_init(ptr, __names_cache);
-> > +
-> > +       names_buckets = kmem_buckets_create("names_bucket", 0, 0, PATH_MAX, NULL);
-> >  }
-> >
-> >  static inline struct filename *alloc_filename(void)
-> > @@ -156,7 +160,7 @@ static inline void initname(struct filename *name)
-> >  static int getname_long(struct filename *name, const char __user *filename)
-> >  {
-> >         int len;
-> > -       char *p __free(kfree) = kmalloc(PATH_MAX, GFP_KERNEL);
-> > +       char *p __free(kfree) = kmem_buckets_alloc(names_buckets, PATH_MAX, GFP_KERNEL);
-> >         if (unlikely(!p))
-> >                 return -ENOMEM;
+On Tue, Feb 10, 2026 at 12:03:35PM +0300, Fedor Pchelkin wrote:
+> If I understand the issue correctly, it's already being rejected with the
+> existing check:
 > 
-> I think this path, where we always do maximally-sized allocations, is
-> the normal case where we're handling paths coming from userspace...
-
-Actually, is there any reason we can't use strnlen_user() in
-do_getname(), and then just use strndup_user() in the long case?
-
-> > @@ -264,14 +268,14 @@ static struct filename *do_getname_kernel(const char *filename, bool incomplete)
-> >
-> >         if (len <= EMBEDDED_NAME_MAX) {
-> >                 p = (char *)result->iname;
-> > -               memcpy(p, filename, len);
-> >         } else {
-> > -               p = kmemdup(filename, len, GFP_KERNEL);
-> > +               p = kmem_buckets_alloc(names_buckets, len, GFP_KERNEL);
+> 	if (strscpy_pad(s_mount_opts, sbi->s_es->s_mount_opts) < 0)
+> 		return -E2BIG;
 > 
-> ... while this is kind of the exceptional case, where paths are coming
-> from kernelspace.
-> 
-> So you might want to get rid of the bucketing and instead just create
-> a single kmem_cache for long paths.
+> If the source string is truncated at least by one symbol (which is the
+> case for unterminated string), strscpy_pad() returns -E2BIG and the mount
+> fails.
 
-I wasn't sure if there was a controllable way to reach this case or not.
-
-> By the way, did you know that "struct filename" is only used for
-> storing fairly-temporary stuff like paths supplied to open(), but not
-> for storing the names of directory entries in the dentry cache (which
-> are more long-lived)? My understanding is that this is also why the
-> kernel doesn't really try to optimize the size of "struct filename" -
-> almost all instances of it only exist for the duration of a syscall or
-> something like that.
-
-Right, but it was enough of a location change that I felt like it was
-worth fixing it up.
-
-> The dentry cache allocates long names as "struct external_name" in
-> reclaimable kmalloc slabs, see __d_alloc().
-
-Oh hey, look at that!
-
-                struct external_name *p = kmalloc(size + name->len,
-                                                  GFP_KERNEL_ACCOUNT |
-                                                  __GFP_RECLAIMABLE);
-
-Yeah, let's put that into dedicated buckets instead?
-
--Kees
+Agreed. Sorry for the noise! Things appear to be fine as-is. I had
+missed the version tested in the original report.
 
 -- 
 Kees Cook
