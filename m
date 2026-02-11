@@ -1,134 +1,135 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687C73191D3
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Feb 2026 11:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770722983; cv=pass; b=XL4HY8covfIAJ3pwbJ6yWZxzrCUKibgWISAA0yTK7JxRWcWi3V2+68Ih1F99X9dHkiKmFeCwgpgZy/owNSV0bqgle/mnsBVaKfSY2vI7puspSHwHJ1tYiL61T2FjD9iyPCQMzsrn90Kc9Ku3la4x/yImxpd1PlEbej5zZYxwGqU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770722983; c=relaxed/simple;
-	bh=j3nx/ajXEqDdK9tPtrbxfG/uqfq2Fd5vN56+LqjmEiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n6dqMoJUosUHPcdPg86JQRVkm3iWkwsmMMaSvSj+PtXYwoS3q9vLuFku+X7yxV0NWRy5THh5uy8to+cJry1oC6QnBfB8F+tqntAk/u7sXGIpOpuPOJjY2rwIuDd0YOJPFhTXVCO/AbMvvMOwQFAOH/AutRmkdidUERInTR640G0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z0b+JX9n; arc=pass smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2401FB1;
+	Wed, 11 Feb 2026 00:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770770901; cv=none; b=p5cBPsGv2AgqxVNsPMkX0+NL/mY2y5HtULqRKtnKyjAwoKaOLtd+dWsh9ZOiGnFe8cp1FwIMe3NRc4+q3Cw+fdQFJlpwJcux4FKhXocJTNUNdIvungfA0GJkOd3iEzaViIuKyhnVJFqKB/PCIZDdMMv2mpnjMcWAUfCM828fU2I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770770901; c=relaxed/simple;
+	bh=iCffL0xzUPUG3BJfbMxK8tI4lDRi9xgWQfS/pTIlq1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SYR6UV3jLB3fHMYrWH4IlhpeGyk6fP0lH0gntmCj3MhbsqJ1203ugGf+V/QKlG+Gvp1Fu0N0RBEtu41lOiX4lAjioI78tlYLyh3zBWnRSDS5wAff6CY5OU9ep6ndHRN3AafYiHlAl5YUFN4dcQvOxOsz5foEdu1OIvzzAON/sFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HG/ChHGK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z0b+JX9n"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-5eeaae02888so1354812137.1
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Feb 2026 03:29:42 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770722981; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ILHbtTIEe3OXjctZ0X2ZpG4leLWt/sHFmKz3hbzAyGpAkeOExS5MerFUVbrLOOmijK
-         LPmJzi1Jn0irtz81NULM7+jITM59qZyzAaeJlWorvRcYZgmX+Nde8rMT1cPCOGKn7Jie
-         FkgcjZmTCB9Yxa+seIAhAAIKZjcwTpexoyuQv/DPwy61sYscNZotNmzz15mIwqPO5mHf
-         iIkkmZqZPbSWzq40GCuv0AVjvGUeTYk4ItWwDNe5huAz8lrz5c7y6rErzxAd1kDdIl2x
-         FFv0ANe9axL1pCQ39YYY7p5DIm3fFfLuUSmh4O0Taj151XVUnKIkZ6o/NaiOLSQd4heC
-         WXsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=j3nx/ajXEqDdK9tPtrbxfG/uqfq2Fd5vN56+LqjmEiA=;
-        fh=iDeserz5YiTss9wHeIn+ZGaY/lENx+tL4ky0QV5f2ks=;
-        b=BR0LWNF4UPPCLTfn5tNWmIQj3P5xteOOAxXTyqzsJuW0vtSP4BAwbgnp1XMQSZqAVd
-         rSxVkUefeJMvCMT8bCBUMrM8zj/xE7fPJpswpods3+cYTaoDdpckm9b0JaWoEIBNtHnU
-         44IdEiC8cVqAG2OQAwEJFsDrP3xrAc/SUzQWY0dQ7het8+QQl7E/2LwhUVOJipz3yTBd
-         u2KglVvHs+ZHZZfZxxJwYxKBK8kjBG5cvZFt8A41eq57Ru72NdB3ptTPvhcsGorz0Czy
-         2xGcySMUuXPfDYwAxw2jqm7p0P4FpMx/qJu/EkOQXQsqQLwlihNrIeGQgKMTQB2JDscy
-         uwww==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770722981; x=1771327781; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j3nx/ajXEqDdK9tPtrbxfG/uqfq2Fd5vN56+LqjmEiA=;
-        b=Z0b+JX9nTRsdURgs1/j3KQs9W3UWiQ0RGD7b581kUufveqe3f+tR+Mn464j3MfUqU0
-         NHz5U8ACTTxR5hLWKp4H3OoTn4HkS5Wb55xg0kIANzHg82tZpJ/AvveZqV7si/qkht0a
-         LI2gpjjy9ZlCbZM8987hZo65a5m7/dMXcJBtlRkpCN/Ic595kM1ttAmhcQiMJyqShr3L
-         6qG3y+doCxdFsN/ZBr/SaOuP6DbflYneRzIMrsAV4sBFxDg5FC5nzm9NkkidsmNMLHVy
-         eQgqr24/eh0KVjpBNHbMH+uKDdsAA4ai68fWbbjyuXmxE1WzViIONFxBefczgkNXQ/Xt
-         VNUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770722981; x=1771327781;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=j3nx/ajXEqDdK9tPtrbxfG/uqfq2Fd5vN56+LqjmEiA=;
-        b=gL/vFipZorSBpjF5vNHA9QFURlh6hXbUPurKUfcIItzP6yN+VA2fwJRd4vsVJWLGQd
-         v4mpKU5oYJTa/isTEYdNymWHLEjn1Vjkea5+go6QiRTXRnsd352xzubQCmdZ7KwQX/rR
-         uT2geWToHufaNWUl2t4Tk98/rfAjh5VcazH9Yy+/Q039y9qw4y8mLJhV0xFaQM980JWB
-         cIE1b8BbGU9fjV80KaKv0srg/7JOwS2aoBeFZO80BVGWjJ9Uzh6aj1RNWHmLLaMafjd+
-         l241WPH9d4hwytaQM1W9gNUs4kei2dZh1Yj2Lh8+ZAEGRAK5dqniIIw8rfBwgVcmwlul
-         kJIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUro/jjmh680pgMi6nEnQVbgDaPRN4iWpFnpe4w/CllsOgnt+zXfwmVvCXagO1RPcpcgdQGR8PozpPmTuyDxEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/d03EsiN33+HY5GT18iRe1gO0ssAUt2dN2+3/PrYf31qmvcdr
-	0dsiOXG5CAxKaPkHp1KHcwHoE6xLHRjUj1UfZhLK2hOArMHN0h5SqHGdCGNZyji/ye/cuNC7Zaw
-	8JlYUiPqQo+b/4AgVpI34HjCiybhf34A5ihxiZ7E=
-X-Gm-Gg: AZuq6aKDGykEilpKGMgpE8eSx4vRtX7bA2Gb1QXL2YRYnrkfWKZ65lgmoU9HWxVUPGu
-	Cfx5h87GEQ7SLrswznd++fFAJSTgcgcMaM+LNt9uPUN/mr6igLk4DiAxQLbuFLj7Gl4XIMYfPx8
-	Dm2I7rWgc1SbpyK/G9jqEaq3baTulzTB6MGdUMLj4ZrW17XxUD5xeCj1UvT7CGqGxtsOCK5Yc+v
-	pBLYPU4gZcTOOI6WR0ash4T5+FIoefClIJYt4/EQgUhbvu4xk1U7dyZCA7fQecXxjBMCBm9nK+d
-	jHAq3HnuSQiSPc6ebXYS88Zp82FD3fYL6iTZLiANDos8jtRp1UKIPxGpw+I=
-X-Received: by 2002:a05:6102:4187:b0:5de:93bb:c53f with SMTP id
- ada2fe7eead31-5fc48df6ff6mr403676137.25.1770722981155; Tue, 10 Feb 2026
- 03:29:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HG/ChHGK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C86EDC19423;
+	Wed, 11 Feb 2026 00:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770770900;
+	bh=iCffL0xzUPUG3BJfbMxK8tI4lDRi9xgWQfS/pTIlq1g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HG/ChHGKKmMIKjJM7JRwB/IQoS0qJwmGjRtfoBuBf7cI5azTlKq4Fg5V61GAB9AQJ
+	 rOllaK0kLA9e8UXHBLjmvpE31q3p4SAmeHC/rz6ZqHmpxxAOVHoSN1F/HtBvzQcEuC
+	 FjVPlUITGO0EU8IRgrNPYrLI8YHxf3Nn2ut6G7bxthCAnuLFXWCrRrSu0tu7aWNN7r
+	 MYM0k7ZXSa75MaS+3tx2zKLIG9NZJ2euvYRt5D92RZG8JDUaU1ph4Hls/eW6qNFNu8
+	 gUnDTUfegSW/BLXmVBLyxAb0n5JtE+8K1qIzkQWJ4zE1m2O5b8RChf1/ooPM5tuOva
+	 D7j34eIuCDm0A==
+From: Kees Cook <kees@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <kees@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] fs: Keep long filenames in isolated slab buckets
+Date: Tue, 10 Feb 2026 16:48:15 -0800
+Message-Id: <20260211004811.work.981-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251121193957.1655580-1-morbo@google.com> <20251121193957.1655580-2-morbo@google.com>
- <d29ca795-ade3-454b-816e-46b5815a1444@app.fastmail.com> <CAGG=3QXC7EH18mhJq6egqE6bvo8_KchPD_N4PeZ7Z7tLOv26-A@mail.gmail.com>
- <a4c3494c-5444-4cc5-b847-4e1754bf3d20@app.fastmail.com>
-In-Reply-To: <a4c3494c-5444-4cc5-b847-4e1754bf3d20@app.fastmail.com>
-From: Bill Wendling <morbo@google.com>
-Date: Tue, 10 Feb 2026 03:29:24 -0800
-X-Gm-Features: AZwV_QhncrCadRnYVezoNaR1hRSbJWzPQVVig9dQWodD_Oj6H6DCBbQYrzvwC9g
-Message-ID: <CAGG=3QW0Hs7DdNh9Zt1g3LgdrFGi9POKuhOETMPbe-a2=gvp0Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Compiler Attributes: Add __counted_by_ptr macro
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Marc Herbert <Marc.Herbert@linux.intel.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Tejun Heo <tj@kernel.org>, Jeff Xu <jeffxu@chromium.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	John Stultz <jstultz@google.com>, Christian Brauner <brauner@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Brian Gerst <brgerst@gmail.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, Jan Hendrik Farr <kernel@jfarr.cc>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3518; i=kees@kernel.org; h=from:subject:message-id; bh=iCffL0xzUPUG3BJfbMxK8tI4lDRi9xgWQfS/pTIlq1g=; b=owGbwMvMwCVmps19z/KJym7G02pJDJndF88zuvi51p0ynLXriX6b6MVK4aBt7zg0K1/8nBG46 M427zrujlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlsKmL4Xy79K37vIfH3+j+f ZJ03lj8v3TXT6eXNJdf8tGbfyX7VuY+RYVfYck43zg9Grz8vSjLPs7m4c4/r0eqdr/e+s+cxmT9 RihsA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 10, 2026 at 3:28=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote=
-:
->
-> On Tue, Feb 10, 2026, at 12:00, Bill Wendling wrote:
-> > On Tue, Feb 10, 2026 at 12:41=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> =
-wrote:
-> >>
-> >> This is every use of __counted_by_ptr() in linux-next at the moment.
-> >>
-> > I assume it's a git snapshot of GCC. :-) What does
-> > `scripts/cc-version.sh` produce for it?
->
-> It shows 'GCC 160000'
->
-> I see my mistake now, I tried to build the lastest snapshot
-> but accidentally checked out an older git commit on that
-> branch, which didn't work.
->
-> I retested with current HEAD now, and that does work.
->
-> Sorry for the confusion.
->
-*whew* I can go to sleep now. :-D
+A building block of Use-After-Free heap memory corruption attacks is
+using userspace controllable kernel allocations to fill specifically sized
+kmalloc regions with specific contents. The most powerful of these kinds
+of primitives is arbitrarily controllable contents with arbitrary size.
+Keeping these kinds of allocations out of the general kmalloc buckets is
+needed to harden the kernel against such manipulations, so this is why
+these sorts of "copy data from userspace into kernel heap" situations are
+expected to use things like memdup_user(), which keeps the allocations
+in their own set of slab buckets. However, using memdup_user() is not
+always appropriate, so in those cases, kmem_buckets can used directly.
 
--bw
+Filenames used to be isolated in their own (fixed size) slab cache so
+they would not end up in the general kmalloc buckets (which made them
+unusable for the heap grooming method described above). After commit
+8c888b31903c ("struct filename: saner handling of long names"), filenames
+were being copied into arbitrarily sized kmalloc regions in the general
+kmalloc buckets. Instead, like memdup_user(), use a dedicated set of
+kmem buckets for long filenames so we do not introduce a new way for
+attackers to place arbitrary contents into the general kmalloc buckets.
+
+Fixes: 8c888b31903c ("struct filename: saner handling of long names")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Also, from the same commit, is the loss of SLAB_HWCACHE_ALIGN|SLAB_PANIC
+for filename allocations relavant at all? It could be added back for
+these buckets if desired, but I left it default in this patch.
+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: <linux-fsdevel@vger.kernel.org>
+---
+ fs/namei.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 8e7792de0000..a901733380cd 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -128,6 +128,8 @@
+ /* SLAB cache for struct filename instances */
+ static struct kmem_cache *__names_cache __ro_after_init;
+ #define names_cache	runtime_const_ptr(__names_cache)
++/* SLAB buckets for long names */
++static kmem_buckets *names_buckets __ro_after_init;
+ 
+ void __init filename_init(void)
+ {
+@@ -135,6 +137,8 @@ void __init filename_init(void)
+ 			 SLAB_HWCACHE_ALIGN|SLAB_PANIC, offsetof(struct filename, iname),
+ 			 EMBEDDED_NAME_MAX, NULL);
+ 	runtime_const_init(ptr, __names_cache);
++
++	names_buckets = kmem_buckets_create("names_bucket", 0, 0, PATH_MAX, NULL);
+ }
+ 
+ static inline struct filename *alloc_filename(void)
+@@ -156,7 +160,7 @@ static inline void initname(struct filename *name)
+ static int getname_long(struct filename *name, const char __user *filename)
+ {
+ 	int len;
+-	char *p __free(kfree) = kmalloc(PATH_MAX, GFP_KERNEL);
++	char *p __free(kfree) = kmem_buckets_alloc(names_buckets, PATH_MAX, GFP_KERNEL);
+ 	if (unlikely(!p))
+ 		return -ENOMEM;
+ 
+@@ -264,14 +268,14 @@ static struct filename *do_getname_kernel(const char *filename, bool incomplete)
+ 
+ 	if (len <= EMBEDDED_NAME_MAX) {
+ 		p = (char *)result->iname;
+-		memcpy(p, filename, len);
+ 	} else {
+-		p = kmemdup(filename, len, GFP_KERNEL);
++		p = kmem_buckets_alloc(names_buckets, len, GFP_KERNEL);
+ 		if (unlikely(!p)) {
+ 			free_filename(result);
+ 			return ERR_PTR(-ENOMEM);
+ 		}
+ 	}
++	memcpy(p, filename, len);
+ 	result->name = p;
+ 	initname(result);
+ 	if (likely(!incomplete))
+-- 
+2.34.1
+
