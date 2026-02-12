@@ -1,92 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F104A11CAF;
-	Thu, 12 Feb 2026 13:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8DE2C11FA
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 13:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770903725; cv=none; b=U3ts/xUIhiY98S50cd8qmjO3v5IMJDPE3WgEQ4CZb9rxJt3XRLckYZ16NhEUgPALE1+oNHrBJUXzspayZIo6xb1Aqqw4BgVmPEWw90Nlsn5g4P/fOjoNU4VH+X8bCj1ED19Qgi370AoUI102wdKqsBzZqnvWG5YsSJc/q6hH7fY=
+	t=1770904295; cv=none; b=tjtlQOZb/32TE84h961+hCPNXynqLK8wCJxUm4shyQnTmZy2H3iTTdBWLgKnnk59GPqZO0qqAM9QmtShK2kMVa4itwK6/pXZ66FeFfd0xAyUtEHvX8jbXkjs9UGAFgC0ImUcyjk7pZrWuYcqrZI03QKTbCX5WdK0xrzp8Gb79Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770903725; c=relaxed/simple;
-	bh=i+gthsIlXrjZlaf7zd5WghoRV8wFB0MDl4nHQiklEgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HnV2GzPxE704xjONx5lkshYE+lsY4Ad3FYmpWkAyg9w6zi8Lr6Aaz3Uo8aCOMoo1Va0WF/PbuR7s+02iIulfvCrfrOf+Si7jaaVdb5SOb6PfdLmw9sjYLeVse6cYN/UgcE2gQx2aG36PAapEf+FCfLu+2eC5p/IcsbLc8rIUPdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=akl86D3r; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770904295; c=relaxed/simple;
+	bh=6kxMnabhMAwglNElaLKNhQ/MZytHLp7WT7da7lPDGVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J6Fw9WqxspiPUwD7osmHJyRwM7rXmuj3iR+8eOYE13/1Vf8LflwknwcTsTgm4gbp8OaShRKOlLBburwayNEEZnT6MnMlar0YOqx5ZzRt5TZfoMh0++aFkxI6RuXmnIumFnnuZpd6fSvJJPyXuYY2djjha7SwvFyjkCqXZ60OIgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bboXz/ny; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="akl86D3r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770903724; x=1802439724;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=i+gthsIlXrjZlaf7zd5WghoRV8wFB0MDl4nHQiklEgg=;
-  b=akl86D3ri/SXGpa/+FJ/lJ1nB2rZXju39+BQPDty4GWd5Xbs5m8JVcXq
-   QcDVUrXJxllZB7dkUs0vyW0amDsTBB566+mUHcxw5N6SLmSXzBZeNXwB6
-   c7D3kpM2acuiJFNRvzGsiVzmJ/TGiVzy/zXIaqso9LW6EL6jIuDmzsxHM
-   U1PYHaUMrtLHPfG2xVxeR43gzdSNe0gqxTH/k5Ug6UVMnZO0Lfnd1YH57
-   mNal0WJBuBzQM6Sme/aMWC1c/z3cLtqTZoPwz8isq3k6uE/ateqYnpKua
-   gTR/ssaXIadZ+FUOzCUdRSiq/vTpLNqvD7uZTg1VP3O+9X9bc9ObzdoHR
-   A==;
-X-CSE-ConnectionGUID: IGfhuFG+RXK99ae7pa1fNg==
-X-CSE-MsgGUID: tIW0x3rgTNaZEaRQRoo8Rg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11699"; a="75916937"
-X-IronPort-AV: E=Sophos;i="6.21,286,1763452800"; 
-   d="scan'208";a="75916937"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 05:42:03 -0800
-X-CSE-ConnectionGUID: idgGjPzgRDqufBpZQlRm+g==
-X-CSE-MsgGUID: HCo1KF3PSraEEnoI3Bj54A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,286,1763452800"; 
-   d="scan'208";a="217560860"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.145])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 05:42:01 -0800
-Date: Thu, 12 Feb 2026 15:41:59 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bboXz/ny"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4806e0f6b69so62587395e9.3
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 05:51:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770904292; x=1771509092; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hb8rB32Awhno0bn6RPWJX3/e8hA1sYQyTYJwiIxYNjs=;
+        b=bboXz/nyKpBfeIihnK9jeKtDzwJ9gKFHWMCItaAhNAftKZWbKOXP0MlTS/lpJE5Xgv
+         0pVyjDvCqlU4EsPmgAtKytGO+gTt+L+7eJbbsGLQ7K6fdT6B/kvlepDK/zCCAedCVHFN
+         M1O7nB+VClnR7ikf0KDlWFcIcLKEacVQ5XaRvHk++zxkRphU4RdEvUAc+csmanAxoUN6
+         Rd8h6/+H1afHHJoYORNFY1Zs6GXhtEtKduIGRq962zSkXf4HiL/VpgOp1KpiLengn2pK
+         DpwT6m9tiB4GGoJyRZUsKchqZZWTylQDGanzz0iXjyaGH3mQoiNyTT8NWZ5H8ALQx9z3
+         6OnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770904292; x=1771509092;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Hb8rB32Awhno0bn6RPWJX3/e8hA1sYQyTYJwiIxYNjs=;
+        b=mLv9Im/3cIi5IizL06s7SYyOVq9t4i/E2FD/CBDfRUTdqDErJN0C6lKuzt0540N9XK
+         HsMBil8QsN6l+uDRk8z7h+CKwpNQTLaUreZDWXGU5y+f5DetNtFaI10u1ocO/wC1UbkM
+         HeVCezzN1bp9lmgpSZnntDwtop1Fj9YNEZRyjJ4CpwDCMw86ISkWj0Nv1ZKgb4WM5uPn
+         pimnE6Rtejb9lBBES4xGjIbINQQk1vzJ6zBkGkkSdUvTtGX12Qf2yI3yKRyDhMA3jWrd
+         Hg32Cxvm1gsfw0NZZq8W5REJLh/4SVvrRWB0NGdRohEkc4Q6t8z5aoOjsuZlw45g4URz
+         PL5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVy392ELudqCXnrAiwlO9Aw7PscCgpUbRTv+qCYY6rnjJwwNh4znfkMn7a+mdztdege0jYLv1fz5WGTE97xkZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPTsoQ9BUrYeM3OCmrCbe4vjyr9EY3DiALBDk+9gBDDZMIs5y7
+	DupEgempLnqOA/WfEYDHrxT5+VAmqkBjyKelk+u8K8py+VJyQhrbYctI
+X-Gm-Gg: AZuq6aIqkYPvTt5hXC55ILAMZIdPjEUWCEWlzZosTRj5CkWPnFrB6wbQLobMNFafLN5
+	CtFmGXYMHXQI3Q6T+veSsQWE8ydknkBd7/pSO5jJVH2GNwzyVCQga6fXr23MntJ8iYMNqnp4+am
+	Xa0SOpB4PP98JveOuTtB0AgFOaG1hlZmxyfqliJykcOMVH+OSeq7zZZMMwmoquB+sdKrPtrssl3
+	2+f0/FGs5AKVuELes3eTPHNx57O92h+VdwsvA0m3BRjW7P6MTSFyZzBk1Urex0K3Jws/zzsD4d6
+	HtgDJC39ib0CqmHx9HLhdu+wuM8F/XKFObSiMdpzXr9j7ePDTa6l493CGjQI+G5oPyK8RbBzB6t
+	RJa7/PETzPYQh7Pftv4I+zzb9PL+wJxLGSuM0we8OV4AI+8pZkl1HMp2u4YdkPcDuuMHxpYPSB/
+	pe9HZghe+nFJ5VGtt1V/rqEYToqse+r+0gH8iB3dAB7uoYZ4P7En9nShH/eqUS7jgN
+X-Received: by 2002:a05:600c:1907:b0:477:a21c:2066 with SMTP id 5b1f17b1804b1-483656ae5a3mr40177585e9.5.1770904291372;
+        Thu, 12 Feb 2026 05:51:31 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4835a627c96sm70181415e9.2.2026.02.12.05.51.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Feb 2026 05:51:31 -0800 (PST)
+Date: Thu, 12 Feb 2026 13:51:29 +0000
+From: David Laight <david.laight.linux@gmail.com>
 To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Kees Cook <kees@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] lib: fix _parse_integer_limit() to handle overflow
-Message-ID: <aY3Yp89R1cl-sacD@smile.fi.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
+ <djwong@kernel.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/5] lib: fix _parse_integer_limit() to handle
+ overflow
+Message-ID: <20260212135129.358c2462@pumpkin>
+In-Reply-To: <20260212125628.739276-2-dmantipov@yandex.ru>
 References: <20260212125628.739276-1-dmantipov@yandex.ru>
- <20260212125628.739276-2-dmantipov@yandex.ru>
+	<20260212125628.739276-2-dmantipov@yandex.ru>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260212125628.739276-2-dmantipov@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 12, 2026 at 03:56:24PM +0300, Dmitry Antipov wrote:
+On Thu, 12 Feb 2026 15:56:24 +0300
+Dmitry Antipov <dmantipov@yandex.ru> wrote:
+
 > In '_parse_integer_limit()', adjust native integer arithmetic
 > with near-to-overflow branch where 'check_mul_overflow()' and
 > 'check_add_overflow()' are used to check whether an intermediate
 > result goes out of range, and denote such a case with ULLONG_MAX,
 > thus making the function more similar to standard C library's
 > 'strtoull()'. Adjust comment to kernel-doc style as well.
-
-...
-
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> ---
+> v7: drop redundant check against ULLONG_MAX and restore
+>     original comment
+> v6: more compact for-loop and minor style adjustments again
+> v5: minor brace style adjustment
+> v4: restore plain integer arithmetic and use check_xxx_overflow()
+>     on near-to-overflow branch only
+> v3: adjust commit message and comments as suggested by Andy
+> v2: initial version to join the series
+> ---
+>  lib/kstrtox.c | 33 +++++++++++++++++++++------------
+>  1 file changed, 21 insertions(+), 12 deletions(-)
+> 
+> diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+> index bdde40cd69d7..ffcf0219b1f1 100644
+> --- a/lib/kstrtox.c
+> +++ b/lib/kstrtox.c
+> @@ -39,14 +39,20 @@ const char *_parse_integer_fixup_radix(const char *s, unsigned int *base)
+>  	return s;
+>  }
+>  
+> -/*
+> - * Convert non-negative integer string representation in explicitly given radix
+> - * to an integer. A maximum of max_chars characters will be converted.
+> +/**
+> + * _parse_integer_limit - Convert integer string representation to an integer
+> + * @s: Integer string representation
+> + * @base: Radix
+> + * @p: Where to store result
+> + * @max_chars: Maximum amount of characters to convert
+> + *
+> + * Convert non-negative integer string representation in explicitly given
+> + * radix to an integer. If overflow occurs, value at @p is set to ULLONG_MAX.
+>   *
+> - * Return number of characters consumed maybe or-ed with overflow bit.
+> - * If overflow occurs, result integer (incorrect) is still returned.
+> + * This function is the workhorse of other string conversion functions and it
+> + * is discouraged to use it explicitly. Consider kstrto*() family instead.
+>   *
+> - * Don't you dare use this function.
+> + * Return: Number of characters consumed, maybe ORed with overflow bit
+>   */
+>  noinline
+>  unsigned int _parse_integer_limit(const char *s, unsigned int base, unsigned long long *p,
+> @@ -56,8 +62,7 @@ unsigned int _parse_integer_limit(const char *s, unsigned int base, unsigned lon
+>  	unsigned int rv;
+>  
+>  	res = 0;
+> -	rv = 0;
+> -	while (max_chars--) {
 > +	for (rv = 0; max_chars--; rv++, s++) {
+>  		unsigned int c = *s;
 
-Hmm... is max_chars being used inside for-loop body? I would rather use regular
-pattern here:
+I think it would be better to use a separate variable for OVERFLOW.
+Then the above would be the much more readable:
+	overflow = 0;
+	for (rv = 0; rv < max_chars; rv++) {
+		unsigned int c = s[rv];
+with a final:
+	return rv | overflow;
+('rv' is probably not a good name any more...)
+I'd guess the code comes out a bit smaller, rather depends on how the
+compiler pessimises it.
 
-	for (rv = 0; rv < max_chars; rv++, s++) {
+>  		unsigned int lc = _tolower(c);
+>  		unsigned int val;
+> @@ -76,12 +81,16 @@ unsigned int _parse_integer_limit(const char *s, unsigned int base, unsigned lon
+>  		 * it in the max base we support (16)
+>  		 */
+>  		if (unlikely(res & (~0ull << 60))) {
+> -			if (res > div_u64(ULLONG_MAX - val, base))
+> +			unsigned long long tmp;
+> +
+> +			if (check_mul_overflow(res, base, &tmp) ||
+> +			    check_add_overflow(tmp, val, &res)) {
 
-(just check that any integer / sign promotion doesn't change the logic).
+Do you need 'tmp' at all?
+I think you can just use 'res'.
 
--- 
-With Best Regards,
-Andy Shevchenko
+	David
 
+> +				res = ULLONG_MAX;
+>  				rv |= KSTRTOX_OVERFLOW;
+> +			}
+> +		} else {
+> +			res = res * base + val;
+>  		}
+> -		res = res * base + val;
+> -		rv++;
+> -		s++;
+>  	}
+>  	*p = res;
+>  	return rv;
 
