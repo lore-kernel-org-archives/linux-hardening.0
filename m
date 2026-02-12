@@ -1,163 +1,121 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAE635C1A9
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 14:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E136B2629D
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 14:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770905442; cv=none; b=r7vflkyIbCJAP697O35t8gYFGnh+gQVfo3oQeUaQuK8S3RQOPm+UEpBbewoOqffQBLfsB/6ZA4wU+7CnYQ3jl2BcpH7JvDEfA2GqIfbfYkVkdcU6CCoT2LEXr4KzYajK/RXcTtOAryFsI2dAZguDAWUzTgSQkOKvLVdka9Qj+6M=
+	t=1770906764; cv=none; b=jp1SMxI5CP2SgTOj7zS4upPu8e8/CMi9RhgR48KrFSYTd+3UZfJIe4RSsuNyd2xqAY1O8y0n3A28SuGo9tYf10iXXdJrH5SnnlzqzW89MuccONlNd4tRvQE+5Dnrps0imC20qL5dlU3uM/rYxK7iLZ2Itp55oMRPkmfTJWdtB1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770905442; c=relaxed/simple;
-	bh=jDyKRBmt0G41/VH3KfVNBmriwhTGiamLDB//4wIkoz4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C+OvFdhGZeVJAHrJNKWYyc6HXz96mmFU6SCUpsBqnIzbaElObukn5oxn/7+zjAL8v4Xs91edIfYamdIlaEcv9Yc2DE92NhS3kwudbPEOcQ+jSFvpJENxVR4rJbZMxn9XQhZwJHxJnTTGmQfdUBnyl67ICL8swtsXcItxAN35OBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Sh1E5NJy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4GvtexwN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Sh1E5NJy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4GvtexwN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1770906764; c=relaxed/simple;
+	bh=vJa0YV8/AAhwkj+6zcGnh5TTocmKgjfC4eD4Jdywfng=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f9cHVi4JyfnyhsR6tLU0CaZYgtkyp/Atuc7EJiYZTPdbiD1aqIeFjUMCNfnBPUo+dXB2LcLlrLgDKvnOyBf+mdVxsHKPwSpkCmJbAxnPRB/kJhopeJbwuCAXThcDxL9cPdhnwWipa6BTwqQIIAO6qXMySRUkVQi9JCpMxX+WpFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xsv5qWPl; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Sh1E5NJy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4GvtexwN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Sh1E5NJy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4GvtexwN"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 52B333E6DD;
-	Thu, 12 Feb 2026 14:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1770905439; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/YrbUClmQVL1U5uh49SxY9lMMVv9VNYSFUFYMwRRmQA=;
-	b=Sh1E5NJyPsuCoJnfDS59MPtfBo+qDL5BZ8Ahy+W1Y1FFR3gpQDJhO7vRere+4IhvfE7SMh
-	LJShsWZSEe9a8qt/GHT19eOCd8h+4p4HEJZ8b7fiVb4l/wH4XuiYPMhcb2N8eLrm2kBFwm
-	hI+ANLPW0kMpsvO0DhKE50kiTDFxm6M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1770905439;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/YrbUClmQVL1U5uh49SxY9lMMVv9VNYSFUFYMwRRmQA=;
-	b=4GvtexwNPsZ3e4rJ71vocCu2u5M6Z3E8fS6WgYAT8Yae8Da4QoJefjrTVUlXXH9W8ZAgqI
-	/lHKxdMCobN6IMCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1770905439; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/YrbUClmQVL1U5uh49SxY9lMMVv9VNYSFUFYMwRRmQA=;
-	b=Sh1E5NJyPsuCoJnfDS59MPtfBo+qDL5BZ8Ahy+W1Y1FFR3gpQDJhO7vRere+4IhvfE7SMh
-	LJShsWZSEe9a8qt/GHT19eOCd8h+4p4HEJZ8b7fiVb4l/wH4XuiYPMhcb2N8eLrm2kBFwm
-	hI+ANLPW0kMpsvO0DhKE50kiTDFxm6M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1770905439;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/YrbUClmQVL1U5uh49SxY9lMMVv9VNYSFUFYMwRRmQA=;
-	b=4GvtexwNPsZ3e4rJ71vocCu2u5M6Z3E8fS6WgYAT8Yae8Da4QoJefjrTVUlXXH9W8ZAgqI
-	/lHKxdMCobN6IMCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7C5C13EA62;
-	Thu, 12 Feb 2026 14:10:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gAuEG17fjWkSJAAAD6G6ig
-	(envelope-from <clopez@suse.de>); Thu, 12 Feb 2026 14:10:38 +0000
-From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
-To: kvm@vger.kernel.org,
-	seanjc@google.com,
-	pbonzini@redhat.com
-Cc: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] KVM: x86/pmu: annotate struct kvm_x86_pmu_event_filter with __counted_by()
-Date: Thu, 12 Feb 2026 15:05:56 +0100
-Message-ID: <20260212140556.3883030-2-clopez@suse.de>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xsv5qWPl"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47ee76e8656so47832745e9.0
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 06:32:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770906761; x=1771511561; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZQGR+zG+LtJxLmW2ico4/GTCmLnqArT7S1nttOCxytU=;
+        b=Xsv5qWPlD55KNXoXLdVuFVET8ylLxtfXItwDU+XPPNbdFmX1SPGr5F0ZcvshX7cPeX
+         pcTEYEY9+oVh8DCA68lV8R+rOEregSsADA2aaBuZQJTRq83nrbsCwq9DimTDxxzVUOOF
+         3gIPktmIoBlWGqEc4g71SlWI64t8KDX4z+Dse5wUaNikcdjGF0pZlFcF6VhIeb9Cp7TV
+         tD8kEZYdGdR3zgSAHg+6ZMogxIOp83Rx5m0HttKXtCeiQmbcY8RQh1N/fC1wanL1ZNb9
+         FL2ACLmUasoj7bS870CGYS4n5RnQ7Fb0f8bHBfnOvof7gdv+7Z11a62A4EpSFhcrY0Wo
+         DrZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770906761; x=1771511561;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZQGR+zG+LtJxLmW2ico4/GTCmLnqArT7S1nttOCxytU=;
+        b=g8/gygsmgKiC8cNMxRILEqEdKPdomDWIsLpP/fRnXTdc7I4kO1xAOzidFCtJPPBSqE
+         0OlgppSQWvORSriFisTsopRyzNQx8AE8C0RMjYL0Bt2TORblz5Zzp45Q9Xo3V5zAnpjd
+         tauE7JGTIO8K+jfAZsGYfeLIs2e2MkFBCLzqQzhYOKGWkYKzIa1Ova3xCiD5/QSIHYtM
+         O0+yK7RqbZ6JJLuZUhTe6Da9sxCRhA2VyWALduhgSpc9YxF96adzkIhRD9cUzd8VFEWz
+         kEnYkaTlxO3OYpANxtJ2mGAdVcfmJJo8Ej/On8ECP7AFhvW7poJ8SehbvcH38qYA7UR2
+         0v1A==
+X-Forwarded-Encrypted: i=1; AJvYcCW8WOzsQDNopHFHTrmp/weazoEFWuLj8MKocP0SqbN34RWJexXsVP3dI4OEz8wuCAqJ0XzQnG+bHdv53Bwskwk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiwGRrWyYbi4anGXQ/Q/hT1+n3hiKI1+NmcJNqEqjZmsBKHyR7
+	CYSLOXlOL1B3L0XcSirSouzSHKlfbui7K/Q6V017KstmSMZvPfMgwOPc
+X-Gm-Gg: AZuq6aIC8jaLlyM5PkzU8ps7vjyGFbRZ1edkiOF7yw3JERU31d0Aj6YTjdDCZ9panmF
+	LbMx1LxTTn3MzM+SYnZJbfM0vZmWo8VIVn0sFG8JMEP9tiKZWg+djsBJbwD5EeQGyoSjWDxSnB/
+	yfVV+I2cLEuVp4IW4cD4u9apoBVP1mO8sdfkucDHrZ/gDkpGskszCpJyERirDXYZUw4ozs4pG4L
+	VUfckZM19G4tqXrS65C9wvlg6ejJLsNFSPdprVUMWrfPx0bNaf8rbehCmqd+qWwBolHiiNDpPRq
+	whw/rF7dJ6NWxGNTe5Y8EgLQcEYO2p+UJ2UX+0UPkwv4vesloIwowR3pq3AsRJiV2FpqCRerLIl
+	mhtGP4l+PP7HzD2V0laSyLc8vCMiUuCdotDtxHZMtl7AZeFOtK5/58aGrHe3ES1+JBgLjxZCrv1
+	KUQlH6zhv+yIaZgPFvnYSlEXacIRVaDXScnMsryY8/JOANIY8ay2JZrJ54pjTn4mgj
+X-Received: by 2002:a05:6000:2912:b0:436:3563:499b with SMTP id ffacd0b85a97d-4378f128ce4mr3735577f8f.2.1770906761029;
+        Thu, 12 Feb 2026 06:32:41 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43783d3464csm14478377f8f.5.2026.02.12.06.32.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Feb 2026 06:32:40 -0800 (PST)
+Date: Thu, 12 Feb 2026 14:32:39 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Dmitry Antipov <dmantipov@yandex.ru>, Andrew Morton
+ <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, "Darrick J .
+ Wong" <djwong@kernel.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/5] lib: fix _parse_integer_limit() to handle
+ overflow
+Message-ID: <20260212143239.7039596a@pumpkin>
+In-Reply-To: <aY3Yp89R1cl-sacD@smile.fi.intel.com>
+References: <20260212125628.739276-1-dmantipov@yandex.ru>
+	<20260212125628.739276-2-dmantipov@yandex.ru>
+	<aY3Yp89R1cl-sacD@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-struct kvm_x86_pmu_event_filter has a flexible array member, so annotate
-it with the field that describes the amount of entries in such array.
-Opportunistically replace the open-coded array size calculation with
-flex_array_size() when copying the array portion of the struct from
-userspace.
+On Thu, 12 Feb 2026 15:41:59 +0200
+Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 
-Signed-off-by: Carlos López <clopez@suse.de>
----
- arch/x86/include/asm/kvm_host.h | 2 +-
- arch/x86/kvm/pmu.c              | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> On Thu, Feb 12, 2026 at 03:56:24PM +0300, Dmitry Antipov wrote:
+> > In '_parse_integer_limit()', adjust native integer arithmetic
+> > with near-to-overflow branch where 'check_mul_overflow()' and
+> > 'check_add_overflow()' are used to check whether an intermediate
+> > result goes out of range, and denote such a case with ULLONG_MAX,
+> > thus making the function more similar to standard C library's
+> > 'strtoull()'. Adjust comment to kernel-doc style as well.  
+> 
+> ...
+> 
+> > +	for (rv = 0; max_chars--; rv++, s++) {  
+> 
+> Hmm... is max_chars being used inside for-loop body? I would rather use regular
+> pattern here:
+> 
+> 	for (rv = 0; rv < max_chars; rv++, s++) {
+> 
+> (just check that any integer / sign promotion doesn't change the logic).
+> 
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index ff07c45e3c73..d9159b969bd9 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1261,7 +1261,7 @@ struct kvm_x86_pmu_event_filter {
- 	__u32 nr_excludes;
- 	__u64 *includes;
- 	__u64 *excludes;
--	__u64 events[];
-+	__u64 events[] __counted_by(nevents);
- };
- 
- enum kvm_apicv_inhibit {
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index bd6b785cf261..e218352e3423 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -1256,7 +1256,7 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
- 
- 	r = -EFAULT;
- 	if (copy_from_user(filter->events, user_filter->events,
--			   sizeof(filter->events[0]) * filter->nevents))
-+			   flex_array_size(filter, events, filter->nevents)))
- 		goto cleanup;
- 
- 	r = prepare_filter_lists(filter);
+The 'problem' is that the loop sets 'OVERFLOW' in rv.
+But that is easily solved.
 
-base-commit: e944fe2c09f405a2e2d147145c9b470084bc4c9a
--- 
-2.51.0
+The smallest code is probably from the slightly horrid:
+	rv = max_chars;
+	lim = s + max_chars;
+	while (s < lim) {
+		ch = *s++;
+		..
+	}
+	return rv - (lim - s);
+although that relies on max_chars being sane.
 
+	David
