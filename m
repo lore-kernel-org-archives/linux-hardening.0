@@ -1,137 +1,135 @@
-Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [178.154.239.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063D035C1AD;
-	Thu, 12 Feb 2026 12:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B58A35B630
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 13:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770901004; cv=none; b=uwOBmjEl0+/STPk7Xp7lK+Ni/eEPfGj7HrLj+I+07VN6dPULSB0AAWVGCgDeRBZHrrHYefllUMO6syjD7jeg613D0f2LZ3vvZI32bXD0linUSkk7UwqSTrKUZ9NScjeWK8VJmkWFJmWBOqG6OcrS7xOu6t7iVlsBZfCakHYmbp0=
+	t=1770902722; cv=none; b=MXwFx2Paems9zK+ngu/sLk0fo4mefwbmUP5a3GB3Tih+MILTLTYlsMytATRgaznapV9JH7GQSXMruccgDsDEMGEWNZJoRp7dRt+NwqzFnI/pWKmtfbOH3+Y8bGj607UIYkNgH20gMuonMR9Tqrn7+viB5oysW2Nu7tCU9VTHYv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770901004; c=relaxed/simple;
-	bh=mnKuLEH8BfjkEMBC9cWgyEAo0Be6SXc3cyw+vkboY2w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j7UMkzr4BQ4xR6GM5CbSjJ27i1zusA/HUbQqavBds1pGyxheq+EQqXAdY4zXrf0IIA2afBe6iYrYOOuJk+c8DFdtqwE4+e070q0RalHbvqZyLrLfnG3JKwz/l5hSBtLwrn0NFxzGueQJK/QeJnmcEkaMuXmhuG8TNJtha3abAB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=Nqi6viXC; arc=none smtp.client-ip=178.154.239.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1770902722; c=relaxed/simple;
+	bh=JXk2Ej5TBrQF8DIR+/aVyp1DP04ICAIrfnWlInhYPcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pAsHjSNX/7Sg941oAIzqx7esumSaOyuvpdAfIuC/KYn6hbR32TLsiXCnGEOxG+BMHBWtdbXQtATTUlwhLGTmkzFVxG3cLowI4Cxm1PyFTAS2r9Os+hfz3KB4RoBLZTJLuwy1yH9S3tJ5TKEWeWizKdZxl2Ono1wfzCQMRyVt/9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCSO+4hV; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Nqi6viXC"
-Received: from mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net [IPv6:2a02:6b8:c11:e97:0:640:f294:0])
-	by forward102b.mail.yandex.net (Yandex) with ESMTPS id 2FFF2C0102;
-	Thu, 12 Feb 2026 15:56:34 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id VuTjuXAGI4Y0-yXnszrB9;
-	Thu, 12 Feb 2026 15:56:33 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1770900993; bh=bUSYSYWj4dObYpG0McIjHrOKuumKhZrreSa3eiSsy1k=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=Nqi6viXC11Fa2rMq15n8chAksHUfXjGoSFL0T3C2NBu+Wpn0RzHmQAiFqikWz2ojm
-	 8KkmqPXPY/1qOedErE5KL6rR9OT6YlyJwZULQq4zjSt/AiedNTRovSOE87KjXGkjhm
-	 +XsW9wlnoFeT9NJeyOaKyjRvIwiMUlBz+fim906g=
-Authentication-Results: mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: David Laight <david.laight.linux@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH v7 2/5] lib: fix memparse() to handle overflow
-Date: Thu, 12 Feb 2026 15:56:25 +0300
-Message-ID: <20260212125628.739276-3-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260212125628.739276-1-dmantipov@yandex.ru>
-References: <20260212125628.739276-1-dmantipov@yandex.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCSO+4hV"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4376c0bffc1so3661790f8f.0
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 05:25:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770902720; x=1771507520; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZP7FAI3atH8q7kGoiZraE67HwJjBLlIVqi9iW4TLH9U=;
+        b=YCSO+4hVAa2P6GZBEm9r6SriGfF99Sz28m8NnJNuYA6yQEp6rWD7oeiv7e3yC6L0jl
+         Cq+UZqv0br+/0s0irU4GhvvY8mGM8Tv8eYUINRGwJ7/HXEq2cZeqqrCMhmh2D4a1Zg4p
+         xcrqSRvBVvENLw7zTj0TlF9ODdMV5ybiQ1VMduh/W7QkJRkDdPA4eLU8bfiT5yaSsRXU
+         JMo1+CkudX5SCVuhb36ag5ILKfyBWqJTOxceFopTsQKgg+XLeAmos2bwTeNddIAT1ce3
+         yuBZW8ObEHABwvN4q5qjAEfB8pMXQl/oP629nc9AC0j/1xclvqCOLbYyifLhoLwAZBg/
+         SyNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770902720; x=1771507520;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZP7FAI3atH8q7kGoiZraE67HwJjBLlIVqi9iW4TLH9U=;
+        b=tjotmAqCs9jza9kVPVCLEjP+56pZzBhXM010i1ZPyC/42AlKTkxYF8qz/MEVbxx4A/
+         q/ILMQOYVVSfoNNg/JgOyFE6DikXILHXqQDCvk7xkuFqW7ddjvkesaeRRZhEtyitsqoV
+         nbQQrhcgs/mnm92+bB8bV956PCibV0y2zKEBuYY7rfY9ITO5Z32wkvsVKMMf3m2wQ++w
+         nwFWSIlY/vgbuZi87Ht84lmPtq4LfxAtzcQZkGvc37es6prc00apL4P/1g9MRomjAF7d
+         od2P1+HGsWMNwkeiofHGIAFmbuNBg7WVyWvkBqvygfe8uhAwQvqEmkwzoP4NrjwyICTg
+         wj+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUB+/U4+sHDf450oLnvdtV+4FtHNlYn3S/4x/xLtFbqDiIXmL+doGrbe04FzrCgGUnQcfWAU+Tv02ti3U0mfjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBi6CPtd6N3Pz2fptvr8zxWgeHj6AqSGQfWLaqAEqCZuFRyXvF
+	R1PFmUlgOZjh+0teqFJIKmhMyr/H6urOcLFHJv3fo3W9DWo0w+ACLFwIPkArZg==
+X-Gm-Gg: AZuq6aIKDXK5Ri+/I/l6CcjInz24XXoHMPfer9QNpgmEjjjQrDLD029sSS9Rb5IW/Yd
+	n5kpujt6nHUGSS2oRBqeQJAbwXGJ6tqODlBYsTWNHEljtxAbwRKzmHxL/gpt8RWTnDUITUu4dXA
+	cjcgVAQTf4XDxwc2EuWlHzlTIhe42Gf9PyPXRO8BrEDmKt+RjFKYIFOOHk1rYTl6C/IKBj+NUEx
+	dCXN75jdbgQBJtrtvfoxq8KULyGW+wR99k4c3NyzZ5nxz1gE7sBunG8fsif0kf1cW2G2VC8txbn
+	hl8KGZuAIoo2JSq5kU7vcYvva/dcvQL2YYcE1LLUOUQF1BRsY6KjeWzbTngY7a/vDRj0l/OBDNH
+	nAykofy+GUOKZiHiiyURRGdHECMb0MRRfUw0jbgaUxusEhKEtkKZBLb90ekKfoPCG/3ZceNoFOx
+	nt7OedYaYYL61mIH29EN7eKCRaAoNqQvuXdvysGGoqIlF6DFwhsSaAN2/mtNPOlJyW
+X-Received: by 2002:a05:6000:2c08:b0:432:84f9:8bf9 with SMTP id ffacd0b85a97d-4378aca3fa9mr4258827f8f.57.1770902719485;
+        Thu, 12 Feb 2026 05:25:19 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43783dfc2b0sm11507302f8f.21.2026.02.12.05.25.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Feb 2026 05:25:19 -0800 (PST)
+Date: Thu, 12 Feb 2026 13:25:17 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
+ <djwong@kernel.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] lib: fix _parse_integer_limit() to handle
+ overflow
+Message-ID: <20260212132517.1ac5de44@pumpkin>
+In-Reply-To: <20260212120030.2f15caaa@pumpkin>
+References: <20260209164757.433932-1-dmantipov@yandex.ru>
+	<20260209164757.433932-2-dmantipov@yandex.ru>
+	<aYrgASJXAyoholbF@smile.fi.intel.com>
+	<14e1e0ac3b2622f762c8f369afc9b1e9a84ca66b.camel@yandex.ru>
+	<20260212120030.2f15caaa@pumpkin>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Since '_parse_integer_limit()' (and so 'simple_strtoull()') is now
-capable to handle overflow, adjust 'memparse()' to handle overflow
-(denoted by ULLONG_MAX) returned from 'simple_strtoull()'. Also
-use 'check_shl_overflow()' to catch an overflow possibly caused
-by processing size suffix and denote it with ULLONG_MAX as well.
+On Thu, 12 Feb 2026 12:00:30 +0000
+David Laight <david.laight.linux@gmail.com> wrote:
 
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
-v7: do not double-adjust endptr and drop
-    redundant check against ULLONG_MAX
-v6: handle valid-suffix-only string like "k"
-    as unrecognized, minor style adjustments
-v5: initial version to join the series
----
- lib/cmdline.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+Re-send with "..." removed from one of the addresses so my MUA (claws) won't
+escape the second one and the list-servers fail to accept the mail.
 
-diff --git a/lib/cmdline.c b/lib/cmdline.c
-index 90ed997d9570..32da6f5a9cdb 100644
---- a/lib/cmdline.c
-+++ b/lib/cmdline.c
-@@ -150,39 +150,50 @@ EXPORT_SYMBOL(get_options);
- unsigned long long memparse(const char *ptr, char **retptr)
- {
- 	char *endptr;	/* local pointer to end of parsed string */
--
- 	unsigned long long ret = simple_strtoull(ptr, &endptr, 0);
-+	unsigned int shl = 0;
- 
-+	/* Consume valid suffix even in case of overflow. */
- 	switch (*endptr) {
- 	case 'E':
- 	case 'e':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'P':
- 	case 'p':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'T':
- 	case 't':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'G':
- 	case 'g':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'M':
- 	case 'm':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'K':
- 	case 'k':
--		ret <<= 10;
--		endptr++;
-+		shl += 10;
- 		fallthrough;
- 	default:
- 		break;
- 	}
- 
-+	if (shl && likely(ptr != endptr)) {
-+		/* Have valid suffix with preceding number. */
-+		unsigned long long val;
-+
-+		if (unlikely(check_shl_overflow(ret, shl, &val)))
-+			ret = ULLONG_MAX;
-+		else
-+			ret = val;
-+		endptr++;
-+	}
-+
- 	if (retptr)
- 		*retptr = endptr;
- 
--- 
-2.53.0
+> On Thu, 12 Feb 2026 14:13:16 +0300
+> Dmitry Antipov <dmantipov@yandex.ru> wrote:
+> 
+> > On Tue, 2026-02-10 at 09:36 +0200, Andy Shevchenko wrote:
+> >   
+> > > I don't see how max_chars is used. With that said, I would rather see the usual
+> > > way of expressing the condition in the for-loop:
+> > > 
+> > > 	for (rv = 0; rv < max_chars; rv++, s++) {    
+> > 
+> > This will break the loop (and so stop consuming characters) if KSTRTOX_OVERFLOW
+> > bit is set.
+> >   
+> > > > +		if (likely(res != ULLONG_MAX)) {    
+> > > 
+> > > Have you seen David's question about these checks?
+> > > Maybe I missed your answer...  
+> 
+> I've not seen one...
+> 
+> > >     
+> > > > +			if (unlikely(res & (~0ull << 60))) {    
+> > 
+> > The first check may be dropped indeed (assuming check_mul_overflow(ULLONG_MAX, a, b)
+> > and check_add_overflow(ULLONG_MAX, a, b) always signals an overflow).  
+> 
+> That check for the high bits may well be cheaper than the one in
+> check_mul_overflow() - which is likely to need to partially generate
+> the 128bit result.
+> Also if the code is going to call check_mul_overflow() it ought to use the
+> result in the 'non-overflow' case.
+> 
+> But there is nothing 'magic' about check_mul_overflow(), given the base
+> is known (and the only dificult one is 10) comparing against the known
+> limit will be better code.
+> 
+> 	David
+> 
+> 
+> > 
+> > Dmitry  
+> 
 
