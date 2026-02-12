@@ -1,33 +1,33 @@
-Received: from forward100b.mail.yandex.net (forward100b.mail.yandex.net [178.154.239.147])
+Received: from forward101b.mail.yandex.net (forward101b.mail.yandex.net [178.154.239.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBBC35D5E9;
-	Thu, 12 Feb 2026 16:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C0235D5FC;
+	Thu, 12 Feb 2026 16:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770914662; cv=none; b=uQCs9Xn3XkY9rcmwa6s+D7ceXSvyjZ5VNnfBwdUghV2IZTFSWhpd3/VWu+so+ijK98uiDcAqGmtcW20ICCKDd31FRhMR/60h4agZfN9dXDpKvuV88ErLkTos73wPEOfauso20VtZvRs1pbM48jEX+70u1apr77O1fbxSFuF5sZc=
+	t=1770914663; cv=none; b=utVbJ9QPpv/nZjfeOwu5Ky1/EyJwVhb7JKFY73zDw05o2/q40ggZwdym/oS+0uWeQ7dw7jUaGtXQkD/5M+PNutRIiwjAUffZrToeLDR4C4M38Sq5u0EaGLA5Ja3UgaSS41nF8nzLjs3LEuU0XeY1NgVqBn5aOZVnDvveBDYfASo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770914662; c=relaxed/simple;
-	bh=S+pOB972MT+mMKCqNOQm1kjpd0h9eXT09IaTLj01XBo=;
+	s=arc-20240116; t=1770914663; c=relaxed/simple;
+	bh=x7zQCTK9E9zvarWdz56OYkmXuR+sj+nJBAl9IBPWsk4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OTWcfVoTwb5uMGK7VoiZ7pOKXSyhkAksxJ/xOhFWX9JUvCcsRN80YXkKnRxvm97oRLuuAO8CbJ3rkhFTuSsCe19eT8J3oJH8NUZwYsthTjrD41um5fBWPJFc3EiRruttEnCX6+K5/aNO75/tnZoe5agYAchZTp/xwwjtatSzotM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=fflf5iFm; arc=none smtp.client-ip=178.154.239.147
+	 MIME-Version; b=k4pD4UAkLr4/uEDob5br+K9B/XjxK7fbV+Tnk2umpTRjqkbgi6RGIqJYsaLDkHm/XOyqEtCBxggit4KO8CL2qN++FlSi+SCox5BAYMQLgiVbV74pTCLaV4aPHxWCj5cKiq/hHXSMMLRhSVh1+y8jaUQ65knx23BR4sm6Gv6UfFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=DN95QyO9; arc=none smtp.client-ip=178.154.239.148
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="fflf5iFm"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="DN95QyO9"
 Received: from mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net [IPv6:2a02:6b8:c1e:3990:0:640:454b:0])
-	by forward100b.mail.yandex.net (Yandex) with ESMTPS id AFBB180898;
-	Thu, 12 Feb 2026 19:44:17 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id EiXcAWCGxeA0-OjK3dee0;
-	Thu, 12 Feb 2026 19:44:17 +0300
+	by forward101b.mail.yandex.net (Yandex) with ESMTPS id 80786C0081;
+	Thu, 12 Feb 2026 19:44:19 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id EiXcAWCGxeA0-n2xGa5QO;
+	Thu, 12 Feb 2026 19:44:19 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1770914657; bh=/uiI4r2yK9BJQMApU7dPAG4Xjf0TSjmYqI1MlncSPgI=;
+	t=1770914659; bh=gA72Ls5eRaGrKkWfOZiySyHNm4v/PKnrrPEn/q+BU34=;
 	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=fflf5iFmOe0y8i6nN2qHPKu3qB+ojutnRL8Gio6CjNHJAibcMeAfHdQX4PmwBL82D
-	 o3zcE6wayun3s8j7jPaSVgCNAM5m0D0gS76Oz2OAKkBDYNBDvnFDhqBvmUL5qeooWr
-	 nILwOFMw9Tv6lG8y/R20Kn/sjsTJzuPyVS8/nJcw=
+	b=DN95QyO9YHAQTuBg4/0+TCm+fJiJPLwvQE93B2WchC7cLqk+jCl3g8tmq1bOeR/AP
+	 2pEBYMPKMF7/IXQsgeLLKk3oN9cH3/7mhtDd2Voq8l+qpsCi8xB4J6dnaTnuP2tVAC
+	 tj3Qr/b+kXnE7KdqAQ4aqhIkJNLaG13RYicWzQUA=
 Authentication-Results: mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
 From: Dmitry Antipov <dmantipov@yandex.ru>
 To: Andy Shevchenko <andriy.shevchenko@intel.com>,
@@ -38,9 +38,9 @@ Cc: David Laight <david.laight.linux@gmail.com>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH v8 2/5] lib: fix memparse() to handle overflow
-Date: Thu, 12 Feb 2026 19:44:10 +0300
-Message-ID: <20260212164413.889625-3-dmantipov@yandex.ru>
+Subject: [PATCH v8 5/5] lib/cmdline: adjust a few comments to fix kernel-doc -Wreturn warnings
+Date: Thu, 12 Feb 2026 19:44:13 +0300
+Message-ID: <20260212164413.889625-6-dmantipov@yandex.ru>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260212164413.889625-1-dmantipov@yandex.ru>
 References: <20260212164413.889625-1-dmantipov@yandex.ru>
@@ -52,84 +52,50 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since '_parse_integer_limit()' (and so 'simple_strtoull()') is now
-capable to handle overflow, adjust 'memparse()' to handle overflow
-(denoted by ULLONG_MAX) returned from 'simple_strtoull()'. Also
-use 'check_shl_overflow()' to catch an overflow possibly caused
-by processing size suffix and denote it with ULLONG_MAX as well.
+Fix 'get_option()', 'memparse()' and 'parse_option_str()' comments
+to match the commonly used style as suggested by kernel-doc -Wreturn.
 
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
 ---
-v8: do not use temporary in check_shl_overflow()
-v7: do not double-adjust endptr and drop
-    redundant check against ULLONG_MAX
-v6: handle valid-suffix-only string like "k"
-    as unrecognized, minor style adjustments
-v5: initial version to join the series
+v2 and upwards: bump version to match the series
 ---
- lib/cmdline.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ lib/cmdline.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/lib/cmdline.c b/lib/cmdline.c
-index 90ed997d9570..f6e4b113ca9f 100644
+index f6e4b113ca9f..16cce6621cec 100644
 --- a/lib/cmdline.c
 +++ b/lib/cmdline.c
-@@ -150,39 +150,46 @@ EXPORT_SYMBOL(get_options);
+@@ -43,7 +43,7 @@ static int get_range(char **str, int *pint, int n)
+  *	When @pint is NULL the function can be used as a validator of
+  *	the current option in the string.
+  *
+- *	Return values:
++ *	Return:
+  *	0 - no int in string
+  *	1 - int found, no subsequent comma
+  *	2 - int found including a subsequent comma
+@@ -145,6 +145,9 @@ EXPORT_SYMBOL(get_options);
+  *
+  *	Parses a string into a number.  The number stored at @ptr is
+  *	potentially suffixed with K, M, G, T, P, E.
++ *
++ *	Return: The value as recognized by simple_strtoull() multiplied
++ *	by the value as specified by suffix, if any.
+  */
+ 
  unsigned long long memparse(const char *ptr, char **retptr)
+@@ -205,7 +208,7 @@ EXPORT_SYMBOL(memparse);
+  *	This function parses a string containing a comma-separated list of
+  *	strings like a=b,c.
+  *
+- *	Return true if there's such option in the string, or return false.
++ *	Return: True if there's such option in the string or false otherwise.
+  */
+ bool parse_option_str(const char *str, const char *option)
  {
- 	char *endptr;	/* local pointer to end of parsed string */
--
- 	unsigned long long ret = simple_strtoull(ptr, &endptr, 0);
-+	unsigned int shl = 0;
- 
-+	/* Consume valid suffix even in case of overflow. */
- 	switch (*endptr) {
- 	case 'E':
- 	case 'e':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'P':
- 	case 'p':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'T':
- 	case 't':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'G':
- 	case 'g':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'M':
- 	case 'm':
--		ret <<= 10;
-+		shl += 10;
- 		fallthrough;
- 	case 'K':
- 	case 'k':
--		ret <<= 10;
--		endptr++;
-+		shl += 10;
- 		fallthrough;
- 	default:
- 		break;
- 	}
- 
-+	if (shl && likely(ptr != endptr)) {
-+		/* Have valid suffix with preceding number. */
-+		if (unlikely(check_shl_overflow(ret, shl, &ret)))
-+			ret = ULLONG_MAX;
-+		endptr++;
-+	}
-+
- 	if (retptr)
- 		*retptr = endptr;
- 
 -- 
 2.53.0
 
