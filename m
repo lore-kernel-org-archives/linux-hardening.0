@@ -1,135 +1,104 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B58A35B630
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 13:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26142EBB8C;
+	Thu, 12 Feb 2026 13:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770902722; cv=none; b=MXwFx2Paems9zK+ngu/sLk0fo4mefwbmUP5a3GB3Tih+MILTLTYlsMytATRgaznapV9JH7GQSXMruccgDsDEMGEWNZJoRp7dRt+NwqzFnI/pWKmtfbOH3+Y8bGj607UIYkNgH20gMuonMR9Tqrn7+viB5oysW2Nu7tCU9VTHYv8=
+	t=1770903378; cv=none; b=unwFeEdJp7wUXgwFRjkLRCZ30aiVzWRCTPp9J9LrQAVsclWoDKyQ/G5d6t/vSWWAKKjN4ZjrKojBI4O0komq+c1DHgTQpX5Vxtn1wpbqb0+M/OC7meBgMdlEH+mt40KgD4FA1GIB+qcVjTWqt0vtP3DJYLw64PLa19Tk/WhKVfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770902722; c=relaxed/simple;
-	bh=JXk2Ej5TBrQF8DIR+/aVyp1DP04ICAIrfnWlInhYPcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pAsHjSNX/7Sg941oAIzqx7esumSaOyuvpdAfIuC/KYn6hbR32TLsiXCnGEOxG+BMHBWtdbXQtATTUlwhLGTmkzFVxG3cLowI4Cxm1PyFTAS2r9Os+hfz3KB4RoBLZTJLuwy1yH9S3tJ5TKEWeWizKdZxl2Ono1wfzCQMRyVt/9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCSO+4hV; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770903378; c=relaxed/simple;
+	bh=Fx8eujbnCm44iTvql3NV6KTiJ01ONya3LRx8F4T+W50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AzLOMZXwfXhXuJ7w2m0z7FvjctcCXcjWZWs3Y8l/dEs9ay2xNwxM/RlHKXioqfGcny5tWF5j876W3zzN45FQ4NdsuMfFn4dKhHntdK+7l0OWYyldmilLYW61H40C7IGzjIaJEPJLzXQqooIrZJo9MebKB0qi+QeBuEpu7JefTx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YRAePc6p; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCSO+4hV"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4376c0bffc1so3661790f8f.0
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Feb 2026 05:25:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770902720; x=1771507520; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZP7FAI3atH8q7kGoiZraE67HwJjBLlIVqi9iW4TLH9U=;
-        b=YCSO+4hVAa2P6GZBEm9r6SriGfF99Sz28m8NnJNuYA6yQEp6rWD7oeiv7e3yC6L0jl
-         Cq+UZqv0br+/0s0irU4GhvvY8mGM8Tv8eYUINRGwJ7/HXEq2cZeqqrCMhmh2D4a1Zg4p
-         xcrqSRvBVvENLw7zTj0TlF9ODdMV5ybiQ1VMduh/W7QkJRkDdPA4eLU8bfiT5yaSsRXU
-         JMo1+CkudX5SCVuhb36ag5ILKfyBWqJTOxceFopTsQKgg+XLeAmos2bwTeNddIAT1ce3
-         yuBZW8ObEHABwvN4q5qjAEfB8pMXQl/oP629nc9AC0j/1xclvqCOLbYyifLhoLwAZBg/
-         SyNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770902720; x=1771507520;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZP7FAI3atH8q7kGoiZraE67HwJjBLlIVqi9iW4TLH9U=;
-        b=tjotmAqCs9jza9kVPVCLEjP+56pZzBhXM010i1ZPyC/42AlKTkxYF8qz/MEVbxx4A/
-         q/ILMQOYVVSfoNNg/JgOyFE6DikXILHXqQDCvk7xkuFqW7ddjvkesaeRRZhEtyitsqoV
-         nbQQrhcgs/mnm92+bB8bV956PCibV0y2zKEBuYY7rfY9ITO5Z32wkvsVKMMf3m2wQ++w
-         nwFWSIlY/vgbuZi87Ht84lmPtq4LfxAtzcQZkGvc37es6prc00apL4P/1g9MRomjAF7d
-         od2P1+HGsWMNwkeiofHGIAFmbuNBg7WVyWvkBqvygfe8uhAwQvqEmkwzoP4NrjwyICTg
-         wj+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUB+/U4+sHDf450oLnvdtV+4FtHNlYn3S/4x/xLtFbqDiIXmL+doGrbe04FzrCgGUnQcfWAU+Tv02ti3U0mfjs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBi6CPtd6N3Pz2fptvr8zxWgeHj6AqSGQfWLaqAEqCZuFRyXvF
-	R1PFmUlgOZjh+0teqFJIKmhMyr/H6urOcLFHJv3fo3W9DWo0w+ACLFwIPkArZg==
-X-Gm-Gg: AZuq6aIKDXK5Ri+/I/l6CcjInz24XXoHMPfer9QNpgmEjjjQrDLD029sSS9Rb5IW/Yd
-	n5kpujt6nHUGSS2oRBqeQJAbwXGJ6tqODlBYsTWNHEljtxAbwRKzmHxL/gpt8RWTnDUITUu4dXA
-	cjcgVAQTf4XDxwc2EuWlHzlTIhe42Gf9PyPXRO8BrEDmKt+RjFKYIFOOHk1rYTl6C/IKBj+NUEx
-	dCXN75jdbgQBJtrtvfoxq8KULyGW+wR99k4c3NyzZ5nxz1gE7sBunG8fsif0kf1cW2G2VC8txbn
-	hl8KGZuAIoo2JSq5kU7vcYvva/dcvQL2YYcE1LLUOUQF1BRsY6KjeWzbTngY7a/vDRj0l/OBDNH
-	nAykofy+GUOKZiHiiyURRGdHECMb0MRRfUw0jbgaUxusEhKEtkKZBLb90ekKfoPCG/3ZceNoFOx
-	nt7OedYaYYL61mIH29EN7eKCRaAoNqQvuXdvysGGoqIlF6DFwhsSaAN2/mtNPOlJyW
-X-Received: by 2002:a05:6000:2c08:b0:432:84f9:8bf9 with SMTP id ffacd0b85a97d-4378aca3fa9mr4258827f8f.57.1770902719485;
-        Thu, 12 Feb 2026 05:25:19 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43783dfc2b0sm11507302f8f.21.2026.02.12.05.25.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Feb 2026 05:25:19 -0800 (PST)
-Date: Thu, 12 Feb 2026 13:25:17 +0000
-From: David Laight <david.laight.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YRAePc6p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770903377; x=1802439377;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Fx8eujbnCm44iTvql3NV6KTiJ01ONya3LRx8F4T+W50=;
+  b=YRAePc6prZIfoJEDfjlYjksAnmFx5+yBH6r5s1xi8pcTD1NAIWvDS15Q
+   iXg1HOnQRLFrAX2g7z16cMq6ryfPbsRKHWc9Asi//q2PBSOWu5SqooUop
+   e56DLgL+7DzDZl/qmCIFentNEVsKQvM3uUFhaGAZ1qQEaPjaC7OIqs2UD
+   L9cQ+fVc8DDn5nqCCgJUSEes5xSXUjUOv4Vop92Axt5gyrZbULxB/DWVg
+   cqJ9w7IQW5FEZ+FCWnC0rMsfi2MBtJnuof1JN3PhOk9EdFvYeq0Wbsj/3
+   4X8OH3UsWFAeEfABJ4ZXI8UKtTrdbKidYg36aEkJ13swnYtypJp2TjzXm
+   g==;
+X-CSE-ConnectionGUID: vTt7mdRoSJWKmjLt55pYHw==
+X-CSE-MsgGUID: clUPQM1FS6GNcxLLG8kIeQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11699"; a="75697461"
+X-IronPort-AV: E=Sophos;i="6.21,286,1763452800"; 
+   d="scan'208";a="75697461"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 05:36:17 -0800
+X-CSE-ConnectionGUID: jmCwaf9qQsiJQ5HisUU/8Q==
+X-CSE-MsgGUID: LeDm+JbmR92cLxrxyETXYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,286,1763452800"; 
+   d="scan'208";a="211869767"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.145])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 05:36:15 -0800
+Date: Thu, 12 Feb 2026 15:36:12 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Andrew Morton
- <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
- <djwong@kernel.org>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] lib: fix _parse_integer_limit() to handle
- overflow
-Message-ID: <20260212132517.1ac5de44@pumpkin>
-In-Reply-To: <20260212120030.2f15caaa@pumpkin>
-References: <20260209164757.433932-1-dmantipov@yandex.ru>
-	<20260209164757.433932-2-dmantipov@yandex.ru>
-	<aYrgASJXAyoholbF@smile.fi.intel.com>
-	<14e1e0ac3b2622f762c8f369afc9b1e9a84ca66b.camel@yandex.ru>
-	<20260212120030.2f15caaa@pumpkin>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Laight <david.laight.linux@gmail.com>,
+	Kees Cook <kees@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/5] lib: fix memparse() to handle overflow
+Message-ID: <aY3XTDhPmUQB2V4P@smile.fi.intel.com>
+References: <20260212125628.739276-1-dmantipov@yandex.ru>
+ <20260212125628.739276-3-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260212125628.739276-3-dmantipov@yandex.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, 12 Feb 2026 12:00:30 +0000
-David Laight <david.laight.linux@gmail.com> wrote:
+On Thu, Feb 12, 2026 at 03:56:25PM +0300, Dmitry Antipov wrote:
+> Since '_parse_integer_limit()' (and so 'simple_strtoull()') is now
+> capable to handle overflow, adjust 'memparse()' to handle overflow
+> (denoted by ULLONG_MAX) returned from 'simple_strtoull()'. Also
+> use 'check_shl_overflow()' to catch an overflow possibly caused
+> by processing size suffix and denote it with ULLONG_MAX as well.
 
-Re-send with "..." removed from one of the addresses so my MUA (claws) won't
-escape the second one and the list-servers fail to accept the mail.
+Assuming this is a desired check and you undertake any required
+action in case of user breakage, the code wise this version LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-> On Thu, 12 Feb 2026 14:13:16 +0300
-> Dmitry Antipov <dmantipov@yandex.ru> wrote:
-> 
-> > On Tue, 2026-02-10 at 09:36 +0200, Andy Shevchenko wrote:
-> >   
-> > > I don't see how max_chars is used. With that said, I would rather see the usual
-> > > way of expressing the condition in the for-loop:
-> > > 
-> > > 	for (rv = 0; rv < max_chars; rv++, s++) {    
-> > 
-> > This will break the loop (and so stop consuming characters) if KSTRTOX_OVERFLOW
-> > bit is set.
-> >   
-> > > > +		if (likely(res != ULLONG_MAX)) {    
-> > > 
-> > > Have you seen David's question about these checks?
-> > > Maybe I missed your answer...  
-> 
-> I've not seen one...
-> 
-> > >     
-> > > > +			if (unlikely(res & (~0ull << 60))) {    
-> > 
-> > The first check may be dropped indeed (assuming check_mul_overflow(ULLONG_MAX, a, b)
-> > and check_add_overflow(ULLONG_MAX, a, b) always signals an overflow).  
-> 
-> That check for the high bits may well be cheaper than the one in
-> check_mul_overflow() - which is likely to need to partially generate
-> the 128bit result.
-> Also if the code is going to call check_mul_overflow() it ought to use the
-> result in the 'non-overflow' case.
-> 
-> But there is nothing 'magic' about check_mul_overflow(), given the base
-> is known (and the only dificult one is 10) comparing against the known
-> limit will be better code.
-> 
-> 	David
-> 
-> 
-> > 
-> > Dmitry  
-> 
+...
+
+> +	if (shl && likely(ptr != endptr)) {
+
+IIUC the second check is not needed, but harmless as it's basically a shortcut
+for a single allowed unit letter.
+
+> +		/* Have valid suffix with preceding number. */
+> +		unsigned long long val;
+> +
+> +		if (unlikely(check_shl_overflow(ret, shl, &val)))
+> +			ret = ULLONG_MAX;
+> +		else
+
+Id est if we came here with ret == 0, shl == 0, we would get val == 0.
+
+> +			ret = val;
+> +		endptr++;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
