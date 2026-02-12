@@ -1,82 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8E3C8E6;
-	Thu, 12 Feb 2026 01:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A04B1E7C23;
+	Thu, 12 Feb 2026 11:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770859719; cv=none; b=oMbEcByGc13kf6q6bteDzYEEmqGFo7WBs46yzamJr4FjLNeinrKIsvAyvZFo74qGIpAftTtM3CwrNFilwCUVxpgaKp9DPLBYM9ciO/hPHj7AEYfmQyPcQJekpGtJJCeAip7ds8N1EBC6e7FmF/oG7lRZ24M8cRjtehJ8UVBDLDQ=
+	t=1770895173; cv=none; b=geGmv33Fr82D04/m+N9/SlVhSpDaod6F+JSIGEo5Tba4prXQJhHf8EpseM6HDr4Gl/73Yu+EIbhMMwoh9iMZGFvd5DBBc4CVzqFCS3UHTXMGFMf5HfiIxko2niYbyMTN+Q6lSSPXHDxi8wTQS8ddp9FaMHLnLlQSP+0Ve8o1S9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770859719; c=relaxed/simple;
-	bh=8Yg1RFg80tpAhdhD9psz+mJXkrc5ycYTezdfBBb3eXc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MJe/tUEzYBwZBouOkKlagAgw39JGFNYMqZ2OQWJKPvsQXHcgfrNYA4PQSQ0yALaz5hi9NDE8FsK4N17e+4BdadX+MWIYgu7GGK6X7I3TtEldVGcNygllkpop/T+maHoYrj5YDoG6bA8bJPv9IMre+zXt6rGGziPra72+/uIZg0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHTg2mMV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770895173; c=relaxed/simple;
+	bh=nhrsSkaCVo2m4HhNpCGvb70oeVPmlnWGCxV0ty/eYsw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PoVGg/O4LqqJIoPzUAUrPfxSwZZNajJ82LqLhGRMFwoS9vbiEZ6QsW4uKfyBavIPz3cctWqnWbwejd2OH1GeyycujZBqZAjXQcWxJRAy6+lnX6laVHs5nobuBbwQxE+5qky9KJDjhoiWsiISHoW1A5fKlgquUFuUyaY7I8tl7O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=cfkIGyMd; arc=none smtp.client-ip=178.154.239.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHTg2mMV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E21D3C4CEF7;
-	Thu, 12 Feb 2026 01:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770859718;
-	bh=8Yg1RFg80tpAhdhD9psz+mJXkrc5ycYTezdfBBb3eXc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=iHTg2mMVE5USaHe6Tll8RP+FlkBa2ie6mh1hfjnJ1cjFZcTpZJRexHvJAoRSCvP0O
-	 b0ImzXdCjluiKgPqlwduz/sFSHTwGNKt6t7NGJMAK009JFoUf0NYflOyQ27m1FXp+k
-	 fjpTiyd4FZOMJPWEkh0hR4fS/qqT1+yvXlNe1LRxiV2JtmozHVgzhZTM0L7SgLi4u0
-	 +eoan5D+AfY1SwBZAajveZHsOIilgy2Abzxrur86mJfP2i076oyi8qpQvpDKF9OfDK
-	 epFqAdHvyyHJ0QTqi7JA7GJnN1r7bcTNKaNpJ6d8/kUhpDEkMZEuVioX5Pse16CQ/J
-	 EARGkMcAzziSg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id C203A39EF966;
-	Thu, 12 Feb 2026 01:28:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="cfkIGyMd"
+Received: from mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net [IPv6:2a02:6b8:c24:1698:0:640:befc:0])
+	by forward501b.mail.yandex.net (Yandex) with ESMTPS id D522089D44;
+	Thu, 12 Feb 2026 14:13:17 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id GDSRnV9G4uQ0-Bi8zTBTc;
+	Thu, 12 Feb 2026 14:13:17 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1770894797; bh=5f9J4ku+28W/h8uT0eiVMVZ7+dverkzco0L9EX6ZO6o=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=cfkIGyMd0emydD03D+UP/0ky4YKc+/wasKv6wWl6ZLVDTcfZhHDBEMDrNRlWbD4Ds
+	 FxpS24mSy1qmOisuAJF0Dijw8bSrFDjU8RBfyYIOBAbrJl3SVyK0pL5G6Aly39UMmj
+	 3TmZLDvRWs2lbuLS3z29AoU6fZToj7IzD1Jc0pvM=
+Authentication-Results: mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <14e1e0ac3b2622f762c8f369afc9b1e9a84ca66b.camel@yandex.ru>
+Subject: Re: [PATCH v6 1/5] lib: fix _parse_integer_limit() to handle
+ overflow
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Laight	
+ <david.laight.linux@gmail.com>, Kees Cook <kees@kernel.org>, "Darrick J .
+ Wong"	 <djwong@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 12 Feb 2026 14:13:16 +0300
+In-Reply-To: <aYrgASJXAyoholbF@smile.fi.intel.com>
+References: <20260209164757.433932-1-dmantipov@yandex.ru>
+	 <20260209164757.433932-2-dmantipov@yandex.ru>
+	 <aYrgASJXAyoholbF@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] vsnprintf: drop __printf() attributes on binary printing
- functions
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177085971357.817736.11815620280391831698.git-patchwork-notify@kernel.org>
-Date: Thu, 12 Feb 2026 01:28:33 +0000
-References: <20260204132643.1302967-1-arnd@kernel.org>
-In-Reply-To: <20260204132643.1302967-1-arnd@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: kees@kernel.org, pmladek@suse.com, andriy.shevchenko@linux.intel.com,
- arnd@arndb.de, lkp@intel.com, alexei.starovoitov@gmail.com, andy@kernel.org,
- ast@kernel.org, brgl@kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, bpf@vger.kernel.org
 
-Hello:
+On Tue, 2026-02-10 at 09:36 +0200, Andy Shevchenko wrote:
 
-This patch was applied to bpf/bpf-next.git (master)
-by Petr Mladek <pmladek@suse.com>:
+> I don't see how max_chars is used. With that said, I would rather see the=
+ usual
+> way of expressing the condition in the for-loop:
+>=20
+> 	for (rv =3D 0; rv < max_chars; rv++, s++) {
 
-On Wed,  4 Feb 2026 14:26:23 +0100 you wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The printf() format attributes are applied inconsistently for the binary
-> printf helpers, which causes warnings for the bpf_trace code using
-> them from functions that pass down format strings:
-> 
->     kernel/trace/bpf_trace.c: In function '____bpf_trace_printk':
->     kernel/trace/bpf_trace.c:377:9: error: function '____bpf_trace_printk' might be a candidate for 'gnu_printf' format attribute [-Werror=suggest-attribute=format]
->       377 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
->           |         ^~~
-> 
-> [...]
+This will break the loop (and so stop consuming characters) if KSTRTOX_OVER=
+FLOW
+bit is set.
 
-Here is the summary with links:
-  - vsnprintf: drop __printf() attributes on binary printing functions
-    https://git.kernel.org/bpf/bpf-next/c/b07829d546c8
+> > +		if (likely(res !=3D ULLONG_MAX)) {
+>=20
+> Have you seen David's question about these checks?
+> Maybe I missed your answer...
+>=20
+> > +			if (unlikely(res & (~0ull << 60))) {
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+The first check may be dropped indeed (assuming check_mul_overflow(ULLONG_M=
+AX, a, b)
+and check_add_overflow(ULLONG_MAX, a, b) always signals an overflow).
 
-
+Dmitry
