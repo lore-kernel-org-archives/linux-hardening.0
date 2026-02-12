@@ -1,95 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from forward103b.mail.yandex.net (forward103b.mail.yandex.net [178.154.239.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655992E091D;
-	Thu, 12 Feb 2026 14:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0DD21E0AD;
+	Thu, 12 Feb 2026 16:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770907540; cv=none; b=o8VDGavLumNYvCQDq4Mrmtp9BJPke80W0u4ZjWsiEOr2FX+MK3YinDuky6auFm7phoHkg6cej1J79MSpz8tPSv/UeXtYiLwUf5KXIUbO3kJaDIjP3RgLPXiuYBp3CZThTTlKUmvRcFj0RBjDOQ10ctf66aGEP+0akFlCJ1pl1m0=
+	t=1770914661; cv=none; b=nHpAjV0wOz7g75BRsZDcijMq3TKvOA3DXUU5dObhixwI6MZws1kHEfBocucwqWm6YMw2ukDCK01le2etyjUrz9G43GCsRR43YGWaYud+MIaQbhq5nfzl2F+aaDx/9kR43tOYxibGfWvNnkPEReRvYIbKIXzitLnzWIfOxZWYlOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770907540; c=relaxed/simple;
-	bh=LmqU5d39cm4T0ml27ZhvPn6arOqxdUDHzdo0e4KWzS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f77RJmZeswOpIQHgnoFtLmNHne6bA1YH3/pB/vdMhUHYepxwS7kw1E7Wsx8Iy162n/ID/CXEaPPxI1l+mNZ+9jyjRJIIaK02Y11aWrQe1JypSUMHqWulqWQW4tS8IXFZ8JWHaTPhgRfVL8BPLYrmfCOHLwWk1gOqJcgA7QRiDes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FREUaEla; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770914661; c=relaxed/simple;
+	bh=YbaYBt5wymcfE8LewVf5ekMotq+LDY7DQpbKBXZ6uKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pTXZf8JAkfIZjpfyjSJ6Sw5Qs2j7H+3oYzi8PP3mmnXgpnMv/HjM7JxZXLcixk03mjI8OlMSTiTYe83KZffXBsYJcK1Y8cxeWjoB0biukbOWsA37gzgVjHhvDwdN+XbZd0I23dlZt8J7X2W2ig7qDCD9dSBcEV5IjhvOU97ifXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=eTmqtncd; arc=none smtp.client-ip=178.154.239.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FREUaEla"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770907540; x=1802443540;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LmqU5d39cm4T0ml27ZhvPn6arOqxdUDHzdo0e4KWzS8=;
-  b=FREUaElaxrjQDvP5Dlneb4C1mLIPWeMi+yuxV3sXXznT4k0Sjlebm5FU
-   P4tOMglj6u0R0+bcGlEfdyepWpO6kScGUFzGkRFqI9RQVpMr/hKbA6od1
-   gq8mhbZercpRSwD7aw/Wd9l8vOi0GOG96cIdoxpH/FFqRfTPPIjAxjcHT
-   tqBelVys5K/qK0pJAkx2qs0Fu1b2YrlVEXfzSpB4m9/hHrAU5PMytT72M
-   VmsHezWzAc18sC9K/sb5g5kItxmbyUQLphKmVRBLxQXqSRBtxXBgCAAvc
-   SmtAkLNcJXTRKoXwLFYJ6MFNZP88HfTKvrlU4WWO1MAkvu6/5FURBZhyS
-   w==;
-X-CSE-ConnectionGUID: qEPC1cu6QF+YdUKPagTk3g==
-X-CSE-MsgGUID: DpOcGkTMSji3i7jtnxLcIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11699"; a="71795743"
-X-IronPort-AV: E=Sophos;i="6.21,286,1763452800"; 
-   d="scan'208";a="71795743"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 06:45:39 -0800
-X-CSE-ConnectionGUID: Ph1uPDQvRWWaOB+xiotgNQ==
-X-CSE-MsgGUID: nrUqYznfRNe/p4xJesqmEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,286,1763452800"; 
-   d="scan'208";a="211867347"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.145])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2026 06:45:37 -0800
-Date: Thu, 12 Feb 2026 16:45:34 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Dmitry Antipov <dmantipov@yandex.ru>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <kees@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] lib: fix _parse_integer_limit() to handle overflow
-Message-ID: <aY3njs-gh9P0cEjj@smile.fi.intel.com>
-References: <20260212125628.739276-1-dmantipov@yandex.ru>
- <20260212125628.739276-2-dmantipov@yandex.ru>
- <aY3Yp89R1cl-sacD@smile.fi.intel.com>
- <20260212143239.7039596a@pumpkin>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="eTmqtncd"
+Received: from mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net [IPv6:2a02:6b8:c1e:3990:0:640:454b:0])
+	by forward103b.mail.yandex.net (Yandex) with ESMTPS id 44367C005E;
+	Thu, 12 Feb 2026 19:44:16 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id EiXcAWCGxeA0-5NXQQlI4;
+	Thu, 12 Feb 2026 19:44:15 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1770914655; bh=3V07dujldyfd8+VLUbZqe5xXRGtEZD6+Cp1Nv6yYR9s=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=eTmqtncdWpThOtMdnAR5ow/+4i8fj6/xGz5S1Vhz4RyyhJ3HsD4D+ocrvHlkuI6sP
+	 Fp7UGUX1rfNLKFDLpYHMwxpwa6psZk2NhHFI5rEochUxuMArIIhLn1PAlzaXlzgSt1
+	 mjAx9hyrth06bzrVkfOiV4m2ciyEPMLeSXN97zcQ=
+Authentication-Results: mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH v8 0/5] lib and lib/cmdline enhancements
+Date: Thu, 12 Feb 2026 19:44:08 +0300
+Message-ID: <20260212164413.889625-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260212143239.7039596a@pumpkin>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 12, 2026 at 02:32:39PM +0000, David Laight wrote:
-> On Thu, 12 Feb 2026 15:41:59 +0200
-> Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> > On Thu, Feb 12, 2026 at 03:56:24PM +0300, Dmitry Antipov wrote:
+Adjust '_parse_integer_limit()' and 'memparse()' to not ignore
+overflows, extend string to 64-bit integer conversion tests, add
+KUnit-based test for 'memparse()' and fix kernel-doc glitches
+found in lib/cmdline.c.
 
-...
+Dmitry Antipov (5):
+  lib: fix _parse_integer_limit() to handle overflow
+  lib: fix memparse() to handle overflow
+  lib: add more string to 64-bit integer conversion overflow tests
+  lib/cmdline_kunit: add test case for memparse()
+  lib/cmdline: adjust a few comments to fix kernel-doc -Wreturn warnings
 
-> > > +	for (rv = 0; max_chars--; rv++, s++) {  
-> > 
-> > Hmm... is max_chars being used inside for-loop body? I would rather use regular
-> > pattern here:
-> > 
-> > 	for (rv = 0; rv < max_chars; rv++, s++) {
-> > 
-> > (just check that any integer / sign promotion doesn't change the logic).
-> 
-> The 'problem' is that the loop sets 'OVERFLOW' in rv.
-
-Ah, true...
+ lib/cmdline.c             | 30 ++++++++++++++-------
+ lib/kstrtox.c             | 37 +++++++++++++++-----------
+ lib/test-kstrtox.c        |  6 +++++
+ lib/tests/cmdline_kunit.c | 56 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 104 insertions(+), 25 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.53.0
 
