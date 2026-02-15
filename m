@@ -1,138 +1,137 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2DC42AA9;
-	Sun, 15 Feb 2026 00:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7102D1E1A17
+	for <linux-hardening@vger.kernel.org>; Sun, 15 Feb 2026 18:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771114979; cv=none; b=J7VGGZdDMac/13m84/RZ18CKoenTTINmsrf9t+jjgS3GGGrmS+cez/b+QxZxAOUjjZtjabraYdNOcQU54ypR1Le7+eNlSaNnbrTATIsFNH5kY09gKaKlBScssf5Lt2RFSxV657L86s6L+C1t5jSGFeBBSymvsuBbME5W+d0vUHY=
+	t=1771181554; cv=none; b=QEv5vbpthzk2QFdiVxFeOLeSEFFYWjwoVXJZOIV8okEaU8M3g00DmwKpAdiZuBAJEwWbVWuMqWxDeIbwg0hkN+ngC0GQGhjjtZFVsWKcrRJRMDQCTk+mjGo15ny8ILEm7o4ytRX+2X/hpiCRprL0e8UNMNQlmeEgQXvgD0szOq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771114979; c=relaxed/simple;
-	bh=oJT6TjXlSm4w7F9vF23Hoz9HGuEu0EhzhtQZT+102e4=;
-	h=To:Cc:Message-ID:From:Subject:Date; b=cG9a8w/y2FU+ix5kD5kBlbow/bi4N/JauwhXSRW4m4O2AGnGXLQYA2yK0ySNOiDAPRpvexEMyDWSC381LsX6ZaXSdTL6Flso/9UpeZkj3/hWFZ4a9tb5FjTSiVM//hVpkR/6ORInPxTyHLWksK/8gxDN4Wp4G9iw4TrAjvaefOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fAzw/vJo; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+	s=arc-20240116; t=1771181554; c=relaxed/simple;
+	bh=NoNskTe3uZW4RgcxjeNpjg/9c7kZ6FWlUlEfAyhmGRM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g+IAilSJikD1d0j/WR2w7vdKop/lwi4BLfVWzOo4kd0ROK1toOpF3sENI6S0EBFDQBFmqhsONSfRGSDTwqsQxDzwCgar1+5cSjoX8ZD3KZbew1XcpEwzRBuVl6xSDwgP6dnG+BW59KfOifEBnow5RjrYwZssdLIL4Lofm4h++jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMGThPyE; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fAzw/vJo"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id EEA6F7A0010;
-	Sat, 14 Feb 2026 19:22:55 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Sat, 14 Feb 2026 19:22:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:message-id:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1771114975; x=1771201375; bh=hc2F8xxBgw9KFLMT7GGYPqWvc2/v
-	LKLhR9u451GcYGM=; b=fAzw/vJoD4OA++mzSv7rPKdhnwXiJFxFF8L1eN2Lnsdp
-	8dsGqWc/v5Iny/jI+26i/HYJIVmk5QIDNGp8wjvDNSlCayGxAb/433cq06R6xVC8
-	zpVFirCnEOeXk89Cd2KiS+eCjCPsK6frOKVx/hLb/aKmQDt7/eewhAQYQFZNPOCf
-	T+Wa+cT7OyHAD9ZvIsYO5fquQVPcWsoflpy2mf5YsXCN0T18QUshBD/o5r9HEcKD
-	93Mtde2G+1JTdYeOSjfmTlgyCUfeKHgHt+FNBQzSMhnioSLdMgc8oH1jV/9KfiGj
-	bKDVQBH2ABn1FtRO4rw7SFnSqrYl3Manie1Z2D8J1A==
-X-ME-Sender: <xms:3hGRaRFBSZ-wixRZ882PFQBCq2seclqI1OwLrLEFrBn-QN8M7LTf5A>
-    <xme:3hGRaS7hHdQ99m5LFmr7hxVm8vtf2aLv52B7DbfklWFfxVvOTEpa5j4eHuw6mZ_CM
-    EaE6WuCm7wM_hnqmEXlS51YnHjriSOmfUkbQ9UHTK3sXYdiZSXaG74>
-X-ME-Received: <xmr:3hGRaXltFhfl8XPh2kMrmcBs_-93fWCVLJPVDy5dwIgtlpYHP-hJBHLJjsQK>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvuddvheegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepvfevkffhufffsedttdertddttddtnecuhfhrohhmpefhihhnnhcuvfhhrghinhcu
-    oehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    ehfffggeefveegvedtiefffeevuedtgefhueehieetffejfefggeevfeeuvdduleenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehfthhhrghinh
-    eslhhinhhugidqmheikehkrdhorhhgpdhnsggprhgtphhtthhopeelpdhmohguvgepshhm
-    thhpohhuthdprhgtphhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrd
-    gtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhi
-    ghhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshht
-    rggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqhh
-    grrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
-    uhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:3hGRad5T6ATE_vJgdFk5xWyKGWNArPEh3uG-VxlbzGzXHQBrgMJrUg>
-    <xmx:3hGRaYQBCwOjV2BkMkwFfAROFHD_LTYiyvZ7sO69rVRcueGOomu-sg>
-    <xmx:3hGRaby0vuUEW5XKErtaLXaxmE82IPweYfpI-MLPDCYgK6yxjzsfdw>
-    <xmx:3hGRaQpFpGG7GUnYK-oOTPa_ewvSwIusT5iIAeCYQRRmFRm-4Yr8oA>
-    <xmx:3xGRad8IAf8GkErZGecpHHYgVU64nmYTMllA1M_rYIj9p3VzcKTMgAGL>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 14 Feb 2026 19:22:53 -0500 (EST)
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-    Richard Weinberger <richard@nod.at>,
-    Vignesh Raghavendra <vigneshr@ti.com>,
-    Miguel Ojeda <ojeda@kernel.org>,
-    Kees Cook <kees@kernel.org>
-Cc: stable@vger.kernel.org,
-    linux-hardening@vger.kernel.org,
-    linux-mtd@lists.infradead.org,
-    linux-kernel@vger.kernel.org
-Message-ID: <92af570970aadee773f2b0b18179efef0f34be93.1771114891.git.fthain@linux-m68k.org>
-From: Finn Thain <fthain@linux-m68k.org>
-Subject: [PATCH] mtd: Avoid boot crash in RedBoot partition table parser
-Date: Sun, 15 Feb 2026 11:21:31 +1100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMGThPyE"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8ca01dc7d40so271344185a.1
+        for <linux-hardening@vger.kernel.org>; Sun, 15 Feb 2026 10:52:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771181552; x=1771786352; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EsfzKYmpLSxAAOTiptt7aFVx1ktWi2rGfqaYFT6oD3Q=;
+        b=SMGThPyEWfxaa8U9PKlPyLmaQ/Wmp9rzH6U6QxYwUZPiMq1S0l/AEahnWcbrBh6hRc
+         G2seRBToawPiC7DGAJMRj9WMxLd3jZbYULmNmKGX5Kula36ZSDPGF+uLvgrZgpe+zkBa
+         lfZfzatsjb78aIHg+7MhqeupKEdbtAfl3cm+SK7TFlEOE9jCHE9YsIkJXqMQMN2nZ7a9
+         /dnny39dXsoxNdd1ojVI50jwCv3zGTs+Q0Y3oZSlv1WDaxyTSIClm+J/8j0xHNjM4YYu
+         ASkbbQRuku0O7T2g2ncfwxvfY32pAfgeqIcPkDhrAqeXXBDLxF2BoU5c//IbI+fn11N9
+         pb9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771181552; x=1771786352;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EsfzKYmpLSxAAOTiptt7aFVx1ktWi2rGfqaYFT6oD3Q=;
+        b=H1NSP2kKRBarkLMPoy0EfoPqOPrRsbsrV5EF6QqPI4qIBxvYHeu3ooleBc5ovXWOsq
+         Tmz/g6PH8SW+pVmELiEz8/UzUFfi1a1PRb9LrA+81J1AvL933hJta+967AIoFS5ROKA7
+         H3EV1thin8pom0zb6QFQBV2UzrRgRabzk0+qUbK9HsjzmcYoxTK0YyO8nqrlC9AYF6jw
+         Vkd+PNlHbN+NHpn/oRbQibduAsSSNG/aTsDtlU2IHB60AsAobuformSawoLUxQib83sh
+         eZTGoKjQduYQYq5nQpwVAWFIDcnvhGw3ZgwyOeq794bEFI9nudR3Agw6OBLH1+Sj1fAw
+         Hjzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhGbbkKlnB8AWwFYmjNFtpolw2fW2Q5PJwfHYBjMhAXlbOk9q3K4GlCjzWd1CfweJ+ZUbai+2fAKwtq9IRn9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydYYXoR7QsHh34CgPgg56SiSC9ITQDmPsFN8HaJi0FpC9ZembB
+	iZYghYkNTH3swt+3VyzVX/lNf1KqO/yarsvT1IRfrjUQuZRg7xZarSy7u9Zk+w==
+X-Gm-Gg: AZuq6aKCNLOBksBq0/Y0Sbkb1OHOg0L1DhItLDnvrCq6Ur+kNj6+ekChw9LtNLRbh8I
+	4H4EDnP87Dqf92JqCFApg8msl0VWZjGcgS4Lqfw+VqHtArkKmoeNlTnKJIBdOpSWSzlbzizLM/8
+	tsrKXZAY4cwTI+4sLMMFQ+aNVG+r/JqfEfa59fonkKlroidFE/CwxC38UTFIO4FvITzznlj3HqH
+	f0teF+hs7sHUrm/QA3mVrzPNaInE8+g8egZRg4gnmP41BZSuJID9m0IDOUYnPpcYwtInvXoz6CJ
+	4a11MJPNwL+7+o+AK0ktCBSOtFMdikgqr84Gx6/OC9n97KtKVNlaSuVYSvFKMXIwOleL0/8EjST
+	juhZJK1VQjS/rcJdaKPXkw28i7faF3Rl8F3Rr1RfqKT5Gi9m/u/LrMyo3k0xBpUOA0rZ2LntRwp
+	Ub6TLzZJev0k4dyD1K7z4kVP8uVQ==
+X-Received: by 2002:a05:620a:290c:b0:8b2:ea5a:4149 with SMTP id af79cd13be357-8cb4248158dmr1092505385a.65.1771181552160;
+        Sun, 15 Feb 2026 10:52:32 -0800 (PST)
+Received: from new-nest ([94.19.228.143])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8971cd8ca6esm113306766d6.33.2026.02.15.10.52.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Feb 2026 10:52:30 -0800 (PST)
+From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+To: Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+Subject: [PATCH] pstore: fix ftrace dump, when ECC is enabled
+Date: Sun, 15 Feb 2026 21:51:55 +0300
+Message-ID: <20260215185156.317394-1-andrej.skvortzov@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Given CONFIG_FORTIFY_SOURCE=y, and given a recent compiler,
-commit 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when
-available") produces the warning below and an oops.
+total_size is sum of record->size and record->ecc_notice_size (ECC: No
+errors detected). When ECC is not used, then there is no problem.
+When ECC is enabled, then ftrace dump is decoded incorrectly after
+restart.
 
-    Searching for RedBoot partition table in 50000000.flash at offset 0x7e0000
-    ------------[ cut here ]------------
-    WARNING: lib/string_helpers.c:1035 at 0xc029e04c, CPU#0: swapper/0/1
-    memcmp: detected buffer overflow: 15 byte read of buffer size 14
-    Modules linked in:
-    CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.19.0 #1 NONE
+First this affects starting offset calculation, that breaks
+reading of all ftrace records.
 
-I couldn't see how memcmp() exceeds the buffer here, so the simplest way
-to prevent the regression was to perform memcmp() on the original name
-rather than the copy.
+  CPU:66 ts:51646260179894273 3818ffff80008002  fe00ffff800080f0  0x3818ffff80008002 <- 0xfe00ffff800080f0
+  CPU:66 ts:56589664458375169 3818ffff80008002  ff02ffff800080f0  0x3818ffff80008002 <- 0xff02ffff800080f0
+  CPU:67 ts:13194139533313 afe4ffff80008002  1ffff800080f0  0xafe4ffff80008002 <- 0x1ffff800080f0
+  CPU:67 ts:13194139533313 b7d0ffff80008001  100ffff80008002  0xb7d0ffff80008001 <- 0x100ffff80008002
+  CPU:67 ts:51646260179894273 8de0ffff80008001  202ffff80008002  0x8de0ffff80008001 <- 0x202ffff80008002
 
-Cc: stable@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
-Fixes: 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when available")
-Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+Second ECC notice message is printed like ftrace record and as a
+result couple of last records are completely wrong.
+
+For example, when the starting offset is fixed:
+
+ CPU:0 ts:113 ffffffc00879bd04  ffffffc0080dc08c  cpuidle_enter <- do_idle+0x20c/0x290
+ CPU:0 ts:114 ffffffc00879bd04  ffffffc0080dc08c  cpuidle_enter <- do_idle+0x20c/0x290
+ CPU:100 ts:28259048229270629 6f4e203a4343450a  2073726f72726520  0x6f4e203a4343450a <- 0x2073726f72726520
+
+Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
 ---
-I put commit 439a1bcac648 into a Fixes tag because git bisect identified
-that commit as the source of the regression. But I don't know anything
-about __builtin_dynamic_object_size() or its limitations. So perhaps the
-real bug lies elsewhere. The compiler I'm using is this one:
+ fs/pstore/inode.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-$ armeb-softfloat-linux-musleabi-gcc --version
-armeb-softfloat-linux-musleabi-gcc (Gentoo Hardened 13.4.1_p20250807 p8) 13.4.1 20250807
----
- drivers/mtd/parsers/redboot.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/mtd/parsers/redboot.c b/drivers/mtd/parsers/redboot.c
-index 3b55b676ca6b..6e253f6c45c9 100644
---- a/drivers/mtd/parsers/redboot.c
-+++ b/drivers/mtd/parsers/redboot.c
-@@ -269,14 +269,14 @@ static int parse_redboot_partitions(struct mtd_info *master,
- 		parts[i].name = names;
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index b4e55c90f8dc2..9c2d5e5f31d65 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -74,9 +74,9 @@ static void *pstore_ftrace_seq_start(struct seq_file *s, loff_t *pos)
+ 	if (!data)
+ 		return NULL;
  
- 		strcpy(names, fl->img->name);
-+		names += strlen(names) + 1;
-+
- #ifdef CONFIG_MTD_REDBOOT_PARTS_READONLY
--		if (!memcmp(names, "RedBoot", 8) ||
--		    !memcmp(names, "RedBoot config", 15) ||
--		    !memcmp(names, "FIS directory", 14)) {
-+		if (!memcmp(fl->img->name, "RedBoot", 8) ||
-+		    !memcmp(fl->img->name, "RedBoot config", 15) ||
-+		    !memcmp(fl->img->name, "FIS directory", 14))
- 			parts[i].mask_flags = MTD_WRITEABLE;
--		}
- #endif
--		names += strlen(names) + 1;
+-	data->off = ps->total_size % REC_SIZE;
++	data->off = ps->record->size % REC_SIZE;
+ 	data->off += *pos * REC_SIZE;
+-	if (data->off + REC_SIZE > ps->total_size)
++	if (data->off + REC_SIZE > ps->record->size)
+ 		return NULL;
  
- #ifdef CONFIG_MTD_REDBOOT_PARTS_UNALLOCATED
- 		if (fl->next && fl->img->flash_base + fl->img->size + master->erasesize <= fl->next->img->flash_base) {
+ 	return_ptr(data);
+@@ -94,7 +94,7 @@ static void *pstore_ftrace_seq_next(struct seq_file *s, void *v, loff_t *pos)
+ 
+ 	(*pos)++;
+ 	data->off += REC_SIZE;
+-	if (data->off + REC_SIZE > ps->total_size)
++	if (data->off + REC_SIZE > ps->record->size)
+ 		return NULL;
+ 
+ 	return data;
 -- 
-2.49.1
+2.51.0
 
