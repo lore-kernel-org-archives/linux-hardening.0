@@ -1,129 +1,98 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4DB18C2C;
-	Mon, 16 Feb 2026 07:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E309C1C69D
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Feb 2026 18:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771225520; cv=none; b=i1m8gKyG2uGndISbCiJt3uRl4pEbvHlaqaqACKZGN71hrYhXp4JeXhDxhOTI2YIBPqhqxFTzgGnturHoo4i3o7WOTA/VuMjC3etgoKUlDqC9r0kVdHKAiO0QP3egJHfcQ9j6F2Kk1so8qmr+4yQNcyblOf/ZDLeRvIM/Eb/W1Pg=
+	t=1771267374; cv=none; b=MGgs8jpD8zDHgsgkjyguGnzCkz1zQyS6Zy8lpQiDXewB9XFlKQBtxrmVyu5glq+4MDJndCNV+k7BDFh1lQMneqYn3xZEdtdac/lihciGJD0iWVmszBh1bileUGk40VNMlRWegCHr9oALA09fzJOWxqz5DEGiVr4VioW6ypQL0/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771225520; c=relaxed/simple;
-	bh=9qNw/zDR7mcFIhjEdxURl42kfNjRDjBaMFVn9IgQVQU=;
-	h=To:Cc:Message-ID:From:Subject:Date; b=T3oCBiE++7RU1QIDVrMJItIhBsfVCkdOKmMgnn/KbAq3ycaKP0M0iWeCG7rJx1xQqO/54Qz0iORnc9ESwC7VzqUoFak4DD1I2XVyn/xIldQkNPIerkRyZCTkJ/txwJro/Tnnyp3X0cY0skOOVudb7+An5OBnHYJ0QxJp7I2UcYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aeS4tgoj; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+	s=arc-20240116; t=1771267374; c=relaxed/simple;
+	bh=767Uj0QkOhaOIrALMDpxXKc40OdZwmuLlgYRVGoVtEg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TDHwkpn4SO0ZnXWXd8WMlM1TwXt1ZaRz2IInxhclA+QKI10OkOwi6wDeOsN1X01FU41cxaGJ3ocmSnmjI+96It2uq8R0slyRUuh4uXB++pwd0i5NaQ4mADqw7H1Ot2WkmIW/8lEuwzVyJ/jn2nv+nGkc9VUObCN+gfDPu31+544=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=a4breAF5; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aeS4tgoj"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 6445C14000B2;
-	Mon, 16 Feb 2026 02:05:17 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Mon, 16 Feb 2026 02:05:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:message-id:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1771225517; x=1771311917; bh=SqSMnR1aNHeLFEbaIrIJdQySfKhX
-	CHZWc8Vomx9GKhE=; b=aeS4tgojApQXR2hzTYJTvi/eh5mPAyi0sdjCOrRaeEYC
-	CmohH+mqxYzTxws4fv6JtyXD98tDnz3gBwS3gSHUHiTPTLLSU1rdvYlNgxe5+yZE
-	xn+1mx4jS/Ac30NAhiZZ2DhnAN/99ApOa/zjtqCEkJGgFJbGsUo6JhtpapBhBaHr
-	gpKBFNTWEV+MtNge3KZMJ4gO8syPRLxB058XSnkabLCQ49rD/TlLxM1q1ko6SEA+
-	MDJ223ZbMwT7o7LPd9GBX4TL6XrAxtVhMkacmifj99CSvhu96A4c/+Fi0gNnsfXY
-	SFMxjrPiKTnE3WsutsP+OSqAkJdbmXAdYoGQ+of4aw==
-X-ME-Sender: <xms:rMGSafu06X_84LrxxZa5HPWSYAAf82VRziHSiAnwbyPrE0gGNQ1fFw>
-    <xme:rMGSaTBxMyMhkEPl-2bi64wIDxL8ZJmc-SfUm8tkCigLnelpkYWSi85c7TzwSL38Y
-    AIQ7qBuuD8Z-E_XE0PXYJ9OJ4TG60jIoOE90QHi7c5VVNeGJ_i06L8>
-X-ME-Received: <xmr:rMGSaWYm9rPmoQ-4qrRoZFxClK-O9TrytPapaH0PAsh-PvHqW-shO9OSoytkT5WDPio__C3LzzBVPRzoygpEvtdd94nk-JVXA0s>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvudeivdefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepvfevkffhufffsedttdertddttddtnecuhfhrohhmpefhihhnnhcuvfhhrghinhcu
-    oehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    ekffejgfehheehkeekffffveekteevvddvveelhffgffetteefgfeutdehleetheenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepfhhthhgrihhnsehlihhnuhigqdhmieekkhdrohhrghdp
-    nhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhiqh
-    huvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrihgthhgr
-    rhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtg
-    hpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgrsghlvges
-    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnh
-    hinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhht
-    ugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqd
-    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:rMGSaeWy4q1bRth2zeRvN7PhjhaNZeEFtDfXBmts5lsf8Q39VRBwdw>
-    <xmx:rMGSaVMZ3LjNHQ_ZaV0lSrmopi-jfDeyZnBFB3i6de38won0740bnA>
-    <xmx:rMGSaYYQndhKMHGWEULjbW-SyiiQ8vWEufJgLPkjV2BBOvcYmFrhnA>
-    <xmx:rMGSaU9pR5BptDKGzFeE4Fdc3OveaPopGEBXQpEyB6rsL8EA_DnMoQ>
-    <xmx:rcGSaZg5QLDK6SeihI8K5VyTZIwYmT7GmkAPYxnb8XerNDJ_31VJSmw3>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 16 Feb 2026 02:05:13 -0500 (EST)
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-    Richard Weinberger <richard@nod.at>,
-    Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Kees Cook <kees@kernel.org>,
-    stable@vger.kernel.org,
-    linux-hardening@vger.kernel.org,
-    linux-mtd@lists.infradead.org,
-    linux-kernel@vger.kernel.org
-Message-ID: <e11761ba31af4fd1d310f40f9b6a1753a0227025.1771225290.git.fthain@linux-m68k.org>
-From: Finn Thain <fthain@linux-m68k.org>
-Subject: [PATCH v2] mtd: Avoid boot crash in RedBoot partition table parser
-Date: Mon, 16 Feb 2026 18:01:30 +1100
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="a4breAF5"
+Received: from eig-obgw-6003b.ext.cloudfilter.net ([10.0.30.175])
+	by cmsmtp with ESMTPS
+	id rm1zvtStKSkcfs3YUvxgUu; Mon, 16 Feb 2026 18:42:46 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id s3YTvUj4JhoT4s3YTvD85e; Mon, 16 Feb 2026 18:42:45 +0000
+X-Authority-Analysis: v=2.4 cv=XZyJzJ55 c=1 sm=1 tr=0 ts=69936526
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
+ a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=7T7KSl7uo7wA:10
+ a=GjgvrKyk6xp7FOdauVAA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=767Uj0QkOhaOIrALMDpxXKc40OdZwmuLlgYRVGoVtEg=; b=a4breAF5KXEkbYLpt6EPqnmqeC
+	Bq1EWp6uX3n8NUV5URIAR3KF61FqfRNitEr1YIttlc7q1tcj8JWVFojz+vfwQEq2BGPecEQR6ALSG
+	IlFxysXIV8zR0U+LMJtj2XesB9nI5TFaF025Y9gvAxtIqBSpJdUYr0uTTPKOTAIFgnWyoCtMUS0EW
+	01rwLnBOC0ePDCzZQThtrRT6TB/dI57cPU7ydEZ2nWi74z/osSUZsPELvzqcyf6yf9+0oSmX7sFUP
+	xll2atuJly7UczoFK4NE1IjfUGhZxaG2Uj4JyzxBqPg+tp+IIxATl6C3G5HoY7jhSOIBRGtHph+11
+	62XT/vzg==;
+Received: from [177.238.16.13] (port=43702 helo=[192.168.0.21])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vs3YS-00000002BcX-0mQj;
+	Mon, 16 Feb 2026 12:42:44 -0600
+Message-ID: <baaa1b4f-7150-48a8-9b63-42f124c8655e@embeddedor.com>
+Date: Mon, 16 Feb 2026 12:42:03 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] iwlegacy: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Johannes Berg <johannes@sipsolutions.net>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aYlkt2WP2oQ1TgeH@kspp> <202602091212.743C6B9B7C@keescook>
+ <4bf43164-b130-4643-9f4f-761f49bd0dc9@embeddedor.com>
+ <20260216184033.GB10063@wp.pl>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20260216184033.GB10063@wp.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.13
+X-Source-L: No
+X-Exim-ID: 1vs3YS-00000002BcX-0mQj
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:43702
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJ7i6UNqkBIF+HdmLlD4yzYswvFkckwGRndBlatvm49KsUtSLMVKxEuiYSvKi9eoMXQno2oWVdigdDFbkmMxL8VagMzTwYvbXd+aW9XfiF55nRK1HmG8
+ fZr0TV7j/lrq8LXW/LuTRJnIslD0+VgWZSsNwYKfwISAY14UnWoY5BpYGoiyvLiwFumYZ8Ah72RtOMfLj93joIoNr3Av4XKy36F3JwzBpKS3gfhhCcp4q773
 
-Given CONFIG_FORTIFY_SOURCE=y and a recent compiler,
-commit 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when
-available") produces the warning below and an oops.
 
-    Searching for RedBoot partition table in 50000000.flash at offset 0x7e0000
-    ------------[ cut here ]------------
-    WARNING: lib/string_helpers.c:1035 at 0xc029e04c, CPU#0: swapper/0/1
-    memcmp: detected buffer overflow: 15 byte read of buffer size 14
-    Modules linked in:
-    CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.19.0 #1 NONE
+> When you will repost, please use 'wifi: iwlegacy:' prefix in the title.
 
-As Kees said, "'names' is pointing to the final 'namelen' many bytes
-of the allocation ... 'namelen' could be basically any length at all.
-This fortify warning looks legit to me -- this code used to be reading
-beyond the end of the allocation."
+Sure thing.
 
-Since the size of the dynamic allocation is calculated with strlen()
-we can use strcmp() instead of memcmp() and remain within bounds.
-
-Cc: Kees Cook <kees@kernel.org>
-Cc: stable@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
-Link: https://lore.kernel.org/all/202602151911.AD092DFFCD@keescook/
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Suggested-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Finn Thain <fthain@linux-m68k.org>
----
- drivers/mtd/parsers/redboot.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mtd/parsers/redboot.c b/drivers/mtd/parsers/redboot.c
-index 3b55b676ca6b..c06ba7a2a34b 100644
---- a/drivers/mtd/parsers/redboot.c
-+++ b/drivers/mtd/parsers/redboot.c
-@@ -270,9 +270,9 @@ static int parse_redboot_partitions(struct mtd_info *master,
- 
- 		strcpy(names, fl->img->name);
- #ifdef CONFIG_MTD_REDBOOT_PARTS_READONLY
--		if (!memcmp(names, "RedBoot", 8) ||
--		    !memcmp(names, "RedBoot config", 15) ||
--		    !memcmp(names, "FIS directory", 14)) {
-+		if (!strcmp(names, "RedBoot") ||
-+		    !strcmp(names, "RedBoot config") ||
-+		    !strcmp(names, "FIS directory")) {
- 			parts[i].mask_flags = MTD_WRITEABLE;
- 		}
- #endif
--- 
-2.49.1
-
+Thanks for the feedback
+-Gustavo
