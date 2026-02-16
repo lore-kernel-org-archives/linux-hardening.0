@@ -1,49 +1,41 @@
-Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0091C69D
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Feb 2026 18:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012B225776;
+	Tue, 17 Feb 2026 00:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771267637; cv=none; b=BvRMbPhTIFJssBYrB9ISDUl+q+xW0KbGcfNVnb/Pa0jPJGcE8tTDrE7InQDJPVp9/OZpcFqI+FoT10zlBW9G02xXT8wtX0U8bu4KcE4yaP/Z3n1HoKgIORkwXNKajFPykJLEUHFQjkap5U/VnVN5Vwjm6zq4MbjLYQVHrG6S5wk=
+	t=1771287438; cv=none; b=PQ/9iqeBGUwgyLlrQ6oKNJRpLs0By//XxuZWDGAVPyQSPl98hwjt2t0Dq3nZZpTgmToy1VSAHMrXK5u/l6icdxJxgFNEd88VIy9f2D6URN37QGIlRVMxnGIPXovNIxiHXdw9TDHT77OvTvCP8IsHDw3oSK/LeMfAf7NQH+rg7eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771267637; c=relaxed/simple;
-	bh=2byi3hC475KVRuKj/j8RLZA3EFKqKcS1jcnJ40oG+eU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CqEegSF01PmjsjjIO3IrIYM0UNBbhWPb2MQgfcf60/2t3JNsDZrBizDYip1JriT/j5sWxaA1zR57EJDmgftF+E8LPCRtT7VXEZx9OmY0xa1E2LEt7CR+So/1nq/n+4DAhENHEPWN9HBXUjdZ5TQiXgmGJDqE7RKkXWOD75nIkXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=JYrOPMqB; arc=none smtp.client-ip=212.77.101.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1771287438; c=relaxed/simple;
+	bh=HiH5NHs3zxAE4B0ZdiuYtzWsVh3H+DPSMNPduiYFaH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Yt7Du4zgOHPnIVK7SzpVpR7bfLIkhYlM11QEpXTzrey7fN6hph/N7uMvHBWSu6iwv2xA/BRF4Zq/ajqoarDyRSnCZiOnGz7260rqBhNd7v5AOwcbYO/L6Zkm6MeCzmhtXfN6rdcy6Pv5wGBSkX4YOiebp0k4BqwjyuOOTnpi7Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifdu8miS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="JYrOPMqB"
-Received: (wp-smtpd smtp.wp.pl 39911 invoked from network); 16 Feb 2026 19:40:33 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1771267233; bh=g9kWFH+gZGPCGKBvPU1bB5S5nt1G0K9yP8u4EZ6iNtE=;
-          h=From:To:Cc:Subject;
-          b=JYrOPMqBPVdfnTgAgTAPV4V70oG8GNjQx4Q2jTp0gPpD8mqrh5TW77Y+hsOGSNiWH
-           tfra8loZfHZsh4MetPHPzaHjeICn+8Pkl8RC058ob0F7AagNMCZrnqdnuZQ3GMSC+d
-           aZBC7GtFDXkrff/NlcgabuL0ljndYXaFBy5TFQ0O+mHlLWmvd1Pswn0fPqwqRSREDW
-           GDTJ3tDmQ3pgQkYDZe/d+n6BN1yiM1PKfuigcdKwvkPaxrG1TS+hlHDQyynie3lgqP
-           yeHCEjmk+BipKaybD5IuWziks/2jm/KumJbgyzbwmo0FEP3uQd9/OEhm2mB26iNrKn
-           7ouWfrRNAU/7A==
-Received: from 89-64-3-178.dynamic.play.pl (HELO localhost) (stf_xl@wp.pl@[89.64.3.178])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
-          for <gustavo@embeddedor.com>; 16 Feb 2026 19:40:33 +0100
-Date: Mon, 16 Feb 2026 19:40:33 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Kees Cook <kees@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifdu8miS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D92C116C6;
+	Tue, 17 Feb 2026 00:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771287437;
+	bh=HiH5NHs3zxAE4B0ZdiuYtzWsVh3H+DPSMNPduiYFaH8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ifdu8miSInSGCWm/MLtE0jlKNOjpKEJyunIM+MIYoCXQrJhVTdCyI3e+AJzeWADrh
+	 oPULg8+U99f4IN+GiiQZ9UeiJHAgYtLGu0GUdxC+8Tm+X5L1ybobUbkjbb6ijnGmJk
+	 O89Nuyr9yjBLwX1WRZbCMYFuukMbwkC+fq0vI+YQBFQ2dnytfC1W1jZfStjFOe/la/
+	 WaqVHBtC5LKQnkcBQ+KFUU2Qd8dhU9wOE5oIZhugZrsufSpBo+zT025EI/7NSeBAv0
+	 c4hzn8yXNDgQKs48l3vUt05Rrp5WNA+MqaQPWs9JgWvaI3mB98ZH5U6CTUntOCkbvS
+	 zh9jc19h8xhAw==
+Date: Mon, 16 Feb 2026 18:16:44 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Stanislaw Gruszka <stf_xl@wp.pl>,
+	Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] iwlegacy: Avoid multiple
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: [PATCH v3][next] wifi: iwlegacy: Avoid multiple
  -Wflex-array-member-not-at-end warnings
-Message-ID: <20260216184033.GB10063@wp.pl>
-References: <aYlkt2WP2oQ1TgeH@kspp>
- <202602091212.743C6B9B7C@keescook>
- <4bf43164-b130-4643-9f4f-761f49bd0dc9@embeddedor.com>
+Message-ID: <aZLgfO6z1Gt8aiyc@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,183 +44,180 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4bf43164-b130-4643-9f4f-761f49bd0dc9@embeddedor.com>
-X-WP-MailID: 6cbdb478c833d6401de726d55360c29e
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000003 [cYAA]                               
 
-Hi
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-On Mon, Feb 09, 2026 at 03:23:59PM +0900, Gustavo A. R. Silva wrote:
+Move the conflicting declarations (which in a couple of cases happen
+to be in a union, so the entire unions are moved) to the end of the
+corresponding structures, struct il_frame, and struct il3945_frame.
 
-When you will repost, please use 'wifi: iwlegacy:' prefix in the title.
+Notice that `struct il_tx_beacon_cmd`, `struct il4965_tx_resp`, and
+`struct il3945_tx_beacon_cmd` are flexible structures, this is
+structures that contain a flexible-array member.
 
-Regards
-Stanislaw
+The case for struct il4965_beacon_notif is different. Since this
+structure is defined by hardware, we create the new `struct
+il4965_tx_resp_hdr` type. We then use this newly created type to
+replace the object type causing trouble in struct il4965_beacon_notif,
+namely `stryct il4965_tx_resp`.
 
-> On 2/10/26 05:46, Kees Cook wrote:
-> > On Mon, Feb 09, 2026 at 01:38:15PM +0900, Gustavo A. R. Silva wrote:
-> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > > getting ready to enable it, globally.
-> > > 
-> > > Move the conflicting declarations (which in a couple of cases happen
-> > > to be in a union, so the entire unions are moved) to the end of the
-> > > corresponding structures. Notice that `struct il_tx_beacon_cmd`,
-> > > `struct il4965_tx_resp`, and `struct il3945_tx_beacon_cmd` are flexible
-> > > structures, this is structures that contain a flexible-array member.
-> > 
-> > I think explicit mention of il3945_frame and il_frame should be included
-> > in the commit log (probably after the above), as they are the ones that
-> > contain the mentioned il*_tx_beacon_cmd structs that have a trailing
-> > flex array.
-> 
-> Okay.
-> 
-> > 
-> > > The case for struct il4965_beacon_notif is different. Since this
-> > > structure is defined by hardware, we use the struct_group() helper
-> > > to create the new `struct il4965_tx_resp_hdr` type. We then use this newly
-> > > created type to replace the obhect type of  causing trouble in
-> > > struct il4965_beacon_notif, namely `stryct il4965_tx_resp`.
-> > 
-> > Above two lines have typos and maybe a missing name (between "of" and
-> > "causing")?
-> 
-> Aggh.. yes, I had fixed this before, but somehow I ended up using the
-> wrong changelog text. Thanks for the catch!
-> 
-> > 
-> > > In order to preserve the memory layout in struct il4965_beacon_notif,
-> > > add member `__le32 beacon_tx_status`, which was previously included
-> > > by `struct il4965_tx_resp` (as `__le32 status`), but it's not present
-> > > in the newly created type `struct il4965_tx_resp_hdr`.
-> > 
-> > It may help to explicitly mention how the union exists to provide the
-> > "status" member to anything using struct il4965_tx_resp, but there's no
-> > sane way to do the overlap across structs, so anything using
-> > il4965_beacon_notif needs have its own view of "status".
-> 
-> Okay.
-> 
-> > 
-> > It does feel like accessing il4965_tx_resp's agg_status should be using
-> > a different struct (like happens for other things that want bytes beyond
-> > "status"), but okay.
-> > 
-> > Anyway, it's another situation of a header with a trailing flex array
-> > that needs to overlap with differing deserializations of the trailing
-> > bytes. The complication here is the kind of "layering violation" of
-> > agg_status and status.
-> > 
-> > > Notice that after this changes, the size of struct il4965_beacon_notif
-> > > along with its member's offsets remain the same, hence the memory
-> > > layout doesn't change:
-> > > 
-> > > Before changes:
-> > > struct il4965_beacon_notif {
-> > > 	struct il4965_tx_resp      beacon_notify_hdr;    /*     0    24 */
-> > > 	__le32                     low_tsf;              /*    24     4 */
-> > > 	__le32                     high_tsf;             /*    28     4 */
-> > > 	__le32                     ibss_mgr_status;      /*    32     4 */
-> > > 
-> > > 	/* size: 36, cachelines: 1, members: 4 */
-> > > 	/* last cacheline: 36 bytes */
-> > > };
-> > > 
-> > > After changes:
-> > > struct il4965_beacon_notif {
-> > > 	struct il4965_tx_resp_hdr  beacon_notify_hdr;    /*     0    20 */
-> > > 	__le32                     beacon_tx_status;     /*    20     4 */
-> > > 	__le32                     low_tsf;              /*    24     4 */
-> > > 	__le32                     high_tsf;             /*    28     4 */
-> > > 	__le32                     ibss_mgr_status;      /*    32     4 */
-> > > 
-> > > 	/* size: 36, cachelines: 1, members: 5 */
-> > > 	/* last cacheline: 36 bytes */
-> > > };
-> > > 
-> > > We also want to ensure that when new members are added to the flexible
-> > > structure `struct il4965_tx_resp` (if any), they are always included
-> > > within the newly created struct type. To enforce this, we use
-> > > `static_assert()` (which is intentionally placed right after the struct,
-> > > this is, no blank line in between). This ensures that the memory layout
-> > > of both the flexible structure and the new `struct il4965_tx_resp_hdr`
-> > > type remains consistent after any changes.
-> > > 
-> > > Lastly, refactor the rest of the code, accordingly.
-> > 
-> > I think the changes look consistent with other similar logical changes
-> > that have been made for -Wfamnae.
-> > 
-> > Since enabling -fms-extensions I'm on the look-out for cases where
-> > we can use transparent struct members (i.e. define the header struct
-> > separately and then use it transparently) instead of using the struct
-> > group when we don't need to make the interior explicitly addressable
-> > (as we have in this case), as it makes the diff way smaller:
-> 
-> Ah yes, I can do this. The only thing is that I'd have to change every
-> place where members in struct il4965_tx_resp are used, e.g.
-> 
-> s/frame_count/hdr.frame_count
-> 
-> and so on...
-> 
-> Another thing to take into account (fortunately, not in this case) is
-> when the FAM needs to be annotated with __counted_by(). If we use a
-> separate struct for the header portion of the flexible structure, GCC
-> currently cannot _see_ the _counter_ if it's included in a non-anonymous
-> structure. However, this will be possible in the near future, correct?
-> 
-> > 
-> > diff --git a/drivers/net/wireless/intel/iwlegacy/commands.h b/drivers/net/wireless/intel/iwlegacy/commands.h
-> > index b61b8f377702..440dff2a4ad9 100644
-> > --- a/drivers/net/wireless/intel/iwlegacy/commands.h
-> > +++ b/drivers/net/wireless/intel/iwlegacy/commands.h
-> > @@ -1690,7 +1690,7 @@ struct agg_tx_status {
-> >   	__le16 sequence;
-> >   } __packed;
-> > -struct il4965_tx_resp {
-> > +struct il4965_tx_resp_hdr {
-> >   	u8 frame_count;		/* 1 no aggregation, >1 aggregation */
-> >   	u8 bt_kill_count;	/* # blocked by bluetooth (unused for agg) */
-> >   	u8 failure_rts;		/* # failures due to unsuccessful RTS */
-> > @@ -1707,6 +1707,10 @@ struct il4965_tx_resp {
-> >   	__le16 reserved;
-> >   	__le32 pa_power1;	/* RF power amplifier measurement (not used) */
-> >   	__le32 pa_power2;
-> > +} __packed;
-> > +
-> > +struct il4965_tx_resp {
-> > +	struct il4965_tx_resp_hdr;
-> >   	/*
-> >   	 * For non-agg:  frame status TX_STATUS_*
-> > @@ -2664,7 +2668,8 @@ struct il3945_beacon_notif {
-> >   } __packed;
-> >   struct il4965_beacon_notif {
-> > -	struct il4965_tx_resp beacon_notify_hdr;
-> > +	struct il4965_tx_resp_hdr beacon_notify_hdr;
-> > +	__le32 status;
-> >   	__le32 low_tsf;
-> >   	__le32 high_tsf;
-> >   	__le32 ibss_mgr_status;
-> > 
-> > 
-> > What do folks think?
-> 
-> I'll wait for maintainers to chime in.
-> 
-> > 
-> > > With these changes fix the following warnings:
-> > > 
-> > > 11 drivers/net/wireless/intel/iwlegacy/common.h:526:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > 11 drivers/net/wireless/intel/iwlegacy/commands.h:2667:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > 4 drivers/net/wireless/intel/iwlegacy/3945.h:131:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > 
-> > Yay for getting these gone! :)
-> > 
-> 
-> We're getting there! \o/
-> 
-> Thanks
-> -Gustavo
-> 
+Also, once -fms-extensions is enabled, we can use transparent struct
+members in struct il4965_beacon_notif.
+
+Notice that the newly created type does not contain the flex-array
+member `agg_status`, which is the object causing the -Wfamnae warnings.
+This object is currently in a union along with `__le32 status`, so
+anything using struct il4965_beacon_notif needs to have its own view
+of `status`. To preserve the memory layout, we therefore add member
+`__le32 beacon_tx_status` to struct il4965_beacon_notif.
+
+After these changes, the size of struct il4965_beacon_notif along
+with its member's offsets remain the same, hence the memory layout
+doesn't change:
+
+Before changes:
+struct il4965_beacon_notif {
+	struct il4965_tx_resp      beacon_notify_hdr;    /*     0    24 */
+	__le32                     low_tsf;              /*    24     4 */
+	__le32                     high_tsf;             /*    28     4 */
+	__le32                     ibss_mgr_status;      /*    32     4 */
+
+	/* size: 36, cachelines: 1, members: 4 */
+	/* last cacheline: 36 bytes */
+};
+
+After changes:
+struct il4965_beacon_notif {
+	struct il4965_tx_resp_hdr  beacon_notify_hdr;    /*     0    20 */
+	__le32                     beacon_tx_status;     /*    20     4 */
+	__le32                     low_tsf;              /*    24     4 */
+	__le32                     high_tsf;             /*    28     4 */
+	__le32                     ibss_mgr_status;      /*    32     4 */
+
+	/* size: 36, cachelines: 1, members: 5 */
+	/* last cacheline: 36 bytes */
+};
+
+Lastly, adjust the rest of the code, accordingly.
+
+With these changes fix the following warnings:
+
+11 drivers/net/wireless/intel/iwlegacy/common.h:526:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+11 drivers/net/wireless/intel/iwlegacy/commands.h:2667:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+4 drivers/net/wireless/intel/iwlegacy/3945.h:131:11: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v3:
+ - Create new separate struct il4965_tx_resp_hdr, and use
+   transparent struct members instead of __struct_group(). (Kees)
+ - Update subject line - Add 'wifi:' prefix. (Stanislaw)
+
+Changes in v2:
+ - Use the struct_group() helper, and update the conflicting type
+   (struct il4965_tx_resp -> struct il4965_tx_resp_hdr) in
+   struct il4965_beacon_notif.
+ - Link: https://lore.kernel.org/linux-hardening/aYlkt2WP2oQ1TgeH@kspp/
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/aR2CtqZI3atH0HmE@kspp/
+
+ drivers/net/wireless/intel/iwlegacy/3945.h     | 4 +++-
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 2 +-
+ drivers/net/wireless/intel/iwlegacy/commands.h | 9 +++++++--
+ drivers/net/wireless/intel/iwlegacy/common.h   | 4 +++-
+ 4 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945.h b/drivers/net/wireless/intel/iwlegacy/3945.h
+index fb1e33c89d0e..ed63b31fee9a 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945.h
++++ b/drivers/net/wireless/intel/iwlegacy/3945.h
+@@ -123,13 +123,15 @@ enum il3945_antenna {
+ #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
+ 
+ struct il3945_frame {
++	struct list_head list;
++
++	/* Must be last as it ends in a flexible-array member. */
+ 	union {
+ 		struct ieee80211_hdr frame;
+ 		struct il3945_tx_beacon_cmd beacon;
+ 		u8 raw[IEEE80211_FRAME_LEN];
+ 		u8 cmd[360];
+ 	} u;
+-	struct list_head list;
+ };
+ 
+ #define SUP_RATE_11A_MAX_NUM_CHANNELS  8
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index 57fa866efd9f..f5a99a2ee95a 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -4076,7 +4076,7 @@ il4965_hdl_beacon(struct il_priv *il, struct il_rx_buf *rxb)
+ 	u8 rate = il4965_hw_get_rate(beacon->beacon_notify_hdr.rate_n_flags);
+ 
+ 	D_RX("beacon status %x retries %d iss %d tsf:0x%.8x%.8x rate %d\n",
+-	     le32_to_cpu(beacon->beacon_notify_hdr.u.status) & TX_STATUS_MSK,
++	     le32_to_cpu(beacon->beacon_tx_status) & TX_STATUS_MSK,
+ 	     beacon->beacon_notify_hdr.failure_frame,
+ 	     le32_to_cpu(beacon->ibss_mgr_status),
+ 	     le32_to_cpu(beacon->high_tsf), le32_to_cpu(beacon->low_tsf), rate);
+diff --git a/drivers/net/wireless/intel/iwlegacy/commands.h b/drivers/net/wireless/intel/iwlegacy/commands.h
+index b61b8f377702..7aba84ac88a1 100644
+--- a/drivers/net/wireless/intel/iwlegacy/commands.h
++++ b/drivers/net/wireless/intel/iwlegacy/commands.h
+@@ -1690,7 +1690,7 @@ struct agg_tx_status {
+ 	__le16 sequence;
+ } __packed;
+ 
+-struct il4965_tx_resp {
++struct il4965_tx_resp_hdr {
+ 	u8 frame_count;		/* 1 no aggregation, >1 aggregation */
+ 	u8 bt_kill_count;	/* # blocked by bluetooth (unused for agg) */
+ 	u8 failure_rts;		/* # failures due to unsuccessful RTS */
+@@ -1707,6 +1707,10 @@ struct il4965_tx_resp {
+ 	__le16 reserved;
+ 	__le32 pa_power1;	/* RF power amplifier measurement (not used) */
+ 	__le32 pa_power2;
++} __packed;
++
++struct il4965_tx_resp {
++	struct il4965_tx_resp_hdr;
+ 
+ 	/*
+ 	 * For non-agg:  frame status TX_STATUS_*
+@@ -2664,7 +2668,8 @@ struct il3945_beacon_notif {
+ } __packed;
+ 
+ struct il4965_beacon_notif {
+-	struct il4965_tx_resp beacon_notify_hdr;
++	struct il4965_tx_resp_hdr beacon_notify_hdr;
++	__le32 beacon_tx_status;
+ 	__le32 low_tsf;
+ 	__le32 high_tsf;
+ 	__le32 ibss_mgr_status;
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.h b/drivers/net/wireless/intel/iwlegacy/common.h
+index 4c9836ab11dd..21f1c7702add 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.h
++++ b/drivers/net/wireless/intel/iwlegacy/common.h
+@@ -518,13 +518,15 @@ struct il_channel_info {
+ #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
+ 
+ struct il_frame {
++	struct list_head list;
++
++	/* Must be last as it ends in a flexible-array member. */
+ 	union {
+ 		struct ieee80211_hdr frame;
+ 		struct il_tx_beacon_cmd beacon;
+ 		u8 raw[IEEE80211_FRAME_LEN];
+ 		u8 cmd[360];
+ 	} u;
+-	struct list_head list;
+ };
+ 
+ enum {
+-- 
+2.43.0
+
