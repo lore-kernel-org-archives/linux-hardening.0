@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A3834105D;
-	Wed, 18 Feb 2026 10:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524CF33D6EA;
+	Wed, 18 Feb 2026 10:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771409600; cv=none; b=K1nzeIROPCfVZKYnQFo82WesaHyTxXhfrD3rTiWKo/QI7s1W0BeNKaXDuDqMtS5OtLKHvqb2MC0mz2c7ln8wA95ChgsVcNN5siK+L9XYmYuu/7e75LGqRJPSg+lMRl3rcmw9JaB8lQytSQfDxUVWf+8qJkVXnXMKdQCZNqwgih8=
+	t=1771409601; cv=none; b=OW7/I88qoMvf5348TjwO7wBn8XK5J8zn+aIM5UyHRgf53IJDBR6rCWD9VCzteQEup+jao2yGVPV0a/EbB7G9/Da4R/B5DhhyAiYtwlQrVdwbgTG/NX9papQGT/R+q223tBZVX63GNGbS/KHqwVbm3+8QWM14ge7rCoS75O1dgHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771409600; c=relaxed/simple;
-	bh=SOaPcpSwL2YOZCy5eFxw6vXlh6YPzp2zJBUs62B0pPk=;
+	s=arc-20240116; t=1771409601; c=relaxed/simple;
+	bh=JTYFcIXcwV7BhIZmDYUhOQPoY48Bf1qGF/RzTiHfnbA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UXaC9lZiwtVTXJVn+4ncDuYJ0c4Bl786Zf6Oy/j2iZcBNW16m5HcutgJ9TuOlBlavZJIcVKkTNHNNiNgTQLr54G4z+ilyPzjBb2D1RPgK9pTUXQrVb+fdW+j37EtvO+0Hwt+kNcOcKbWmnehHUEe12iaLWq/ZOqt+0eNKxThw5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQKq7jXQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=uzbhRAa8leCC1FRmSVFLjIivztZswwZONgqZbvOYpezwLHdsrX3FUh2PC+2D7+y0oWu8XFbWvbZZwqVnsM2cWj6v7QsDsN7CmD8kwLq1192x/sKoSHuF5Ezr3KqQ3gYXkw1urc0xpMHW8OnrTD0Cju9x5gmUqrIllgL+hkBdwto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sj254GgI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQKq7jXQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4AB1C19421;
-	Wed, 18 Feb 2026 10:13:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sj254GgI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8EFC19423;
+	Wed, 18 Feb 2026 10:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771409600;
-	bh=SOaPcpSwL2YOZCy5eFxw6vXlh6YPzp2zJBUs62B0pPk=;
+	s=k20201202; t=1771409601;
+	bh=JTYFcIXcwV7BhIZmDYUhOQPoY48Bf1qGF/RzTiHfnbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hQKq7jXQAmnA1oi17FdW1WrT9lMnn/BxlrBnoB38O4kWhyj2xlLjtbM5SZFCp+kvw
-	 nnhJlECeI4ozMfT81rso4oUW/f/vIAHy4h2Vdg/sDz1xSMGvwpmDfcGoe1u+S5NEqN
-	 tPDK5O8K1r0+wDO/7rOmxS/ODjxxmVsa+CnhhUZpk/lHkJ5Mvr912Oz9Au/8FI8CNk
-	 s+364r21AxnZXLoAaXjf3bWb1VOqXDdmkeRY2HOKIeehkAy/Od4ZJ0VJ+QRTLoZIkd
-	 dogFzd2iBPNdPPLWXOkSm/0LZw4ek1MeGsLpDh099eFQsXCJklqXDA0YharYHMa4rw
-	 gpnjrPPbhFwYw==
+	b=Sj254GgIyuBcb5XoikRrAgXbHGdZGs3odN22SIFqNLjd/14wf0z+iI7mVYs8rxoDs
+	 +cU85qUL3oHalhO35vgqdhYAgstD9Ptn+OhFqzui/HZcAhInoCK+UnjcdYx64Z6x/M
+	 TjWdCWjcTbAkhRyyFxoALGSHORs/7zdYIz2mFB+WNWDewvr6OZ5Ymbi7nL4bJfdlYo
+	 mK8oL/oDwlOxAomY+ZTtYqUwRg0Vm7lk5NUeFmlICVcvaGvjdlAtf/MJNrDAD1pHhL
+	 xjOmNqBFf7wNzhZHtEHT4oQb/0rXTu5OF6jmpdVNY4GyGxaAzJMPLl0q0BRadB+2yO
+	 TMZlNX8QAyjiQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vseYY-00000000LTL-3hcM;
-	Wed, 18 Feb 2026 11:13:18 +0100
+	id 1vseYZ-00000000LUY-1NFu;
+	Wed, 18 Feb 2026 11:13:19 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Linux Doc Mailing List <linux-doc@vger.kernel.org>
@@ -40,9 +40,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
 	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 08/38] docs: kdoc_parser: fix the default_value logic for variables
-Date: Wed, 18 Feb 2026 11:12:38 +0100
-Message-ID: <6141a2f9378a79c76b3a8e860b82c46bc8bfb048.1771408406.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 09/38] docs: kdoc_parser: add some debug for variable parsing
+Date: Wed, 18 Feb 2026 11:12:39 +0100
+Message-ID: <4d6cac070e812ba030474b2b814d31b3cdffa0da.1771408406.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1771408406.git.mchehab+huawei@kernel.org>
 References: <cover.1771408406.git.mchehab+huawei@kernel.org>
@@ -56,33 +56,51 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The indentation is wrong for the second regex, which causes
-problems on variables with defaults.
+This is a new parser that we're still fine-tuning. Add some
+extra debug messages to help addressing issues over there.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Acked-by: Randy Dunlap <rdunlap@infradead.org>
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
 ---
- tools/lib/python/kdoc/kdoc_parser.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/python/kdoc/kdoc_parser.py | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
-index b63d91b7f79e..abfa693051cb 100644
+index abfa693051cb..9559cbfd5e4c 100644
 --- a/tools/lib/python/kdoc/kdoc_parser.py
 +++ b/tools/lib/python/kdoc/kdoc_parser.py
-@@ -1036,9 +1036,9 @@ class KernelDoc:
+@@ -1034,11 +1034,19 @@ class KernelDoc:
+                 declaration_name = r.group(1)
+ 
              default_val = r.group(2)
++
++            self.config.log.debug("Variable proto parser: %s from '%s'",
++                                  r.groups(), proto)
++
          else:
              r= KernRe(OPTIONAL_VAR_ATTR + r"(?:[\w_]*)?\s+(?:\*+)?(?:[\w_]+)\s*[\d\]\[]*\s*(=.*)?")
--        if r.match(proto):
--            default_val = r.group(1)
  
-+            if r.match(proto):
-+                default_val = r.group(1)
+             if r.match(proto):
+                 default_val = r.group(1)
++
++        if default_val:
++            self.config.log.debug("default: '%s'", default_val)
++
          if not declaration_name:
             self.emit_msg(ln,f"{proto}: can't parse variable")
             return
+@@ -1046,6 +1054,9 @@ class KernelDoc:
+         if default_val:
+             default_val = default_val.lstrip("=").strip()
+ 
++        self.config.log.debug("'%s' variable prototype: '%s', default: %s",
++                              declaration_name, proto, default_val)
++
+         self.output_declaration("var", declaration_name,
+                                 full_proto=full_proto,
+                                 default_val=default_val,
 -- 
 2.52.0
 
