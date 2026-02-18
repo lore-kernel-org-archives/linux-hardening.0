@@ -1,129 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019A33587A9;
-	Wed, 18 Feb 2026 10:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07382FD698;
+	Wed, 18 Feb 2026 13:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771409615; cv=none; b=DIKXpX0Gtcq5SNvPakPR6vyfcvhci2X2ASjFmYTOa5MIBTrZ2nzA++jTwcR21wimk6SE9KpSlSNy+aNiDEmSjxpVRUI1aX08JyskSfduL+clkkkIe1LVY5cZv39gTMuBsfBUH3FN1K5spWmtiMS14yrKbaJIGYPYIE3G/aFX4pI=
+	t=1771422041; cv=none; b=O+iVUVW1T1tJ9z1Kkz3rbsXEUc7W6IsMGaDOHlC4vdzAcKFhQ7DWhPPZ3ou4/b5d5RjcY7dznIJ1TBsoAmnLJFL78jpYTXABN0rMZDlOYenjpqxfgKuKGonhz0M1UhJFij8MuRRQV8K+IbvOSttR+lS2kJGTLJpjblueM+b/El0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771409615; c=relaxed/simple;
-	bh=93FI6HCbFuKLoTGysvIesP/671jVJYX05qdlxtKR9Kk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I6gkn67e6PwvL3n6c2Hfda+AnQOK8yqxVJTKbjlprcmjl1Y5edSIX2Cm6iCeiYhNNJPXo4ZK/Gjz2fzMZvgmKDDrtxU2PtpMx50Izm0ybIRlnV3oNDOV+fq9Zh3bCvFLlpIdFxtcUVuVqjm5plSsx1M5s8/raEmT794ZjyhzHmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6zqkt/3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771422041; c=relaxed/simple;
+	bh=JzXeul7hrLHJEyXVuNdFfdj6AUqmHyErDXCENhN9W1g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YvhEdVtL8LFdeBN+l0PI5slzlmJwBDEBS5O6RIL9GMkjnQQgo9tCXVcidRR7ujhbP1PVgT5zNWj1dsGs6ACWorasUFxfAoEPyQcsKaddNoH6yHGaGP0LOnXcamciYubX87pXxEBorVIgxrSMas2gj+uDPWxlvqRwikZGewisFoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=ZjVcGL3R; arc=none smtp.client-ip=178.154.239.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6zqkt/3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26B82C19421;
-	Wed, 18 Feb 2026 10:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771409611;
-	bh=93FI6HCbFuKLoTGysvIesP/671jVJYX05qdlxtKR9Kk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D6zqkt/3NUB6EpxHEputgfvaw1vHtc0NsZ65QNN3AAKsJuHWSBcq82NKFzJu8llkR
-	 S+1bk/UPxulyqkqcMbYtUMX/IIRr09HFtRuwNOA1NPlhPHsSPUiXhECDzbmymTKCPU
-	 JmPJyAld8CPADXng3h49bxxTnDEx8O6tZ/7uUMOx2P8DlevrZHSEFbuD7SA01tAoZe
-	 Wy2GDlPrU1hQLkRN135ojO5oHWcW9ckY5i4kcvDUXG5i7xXrBHkp+i3T/cZga64Syq
-	 yIzxySQ3SnLG+PqvN40MnLlrYGZ278mb8gxtsx2bB1lNqpGUgxCJ6tFZMhIOwetkTl
-	 /MxbF5cjFyQRg==
-Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vseYj-00000000Lxe-1kJB;
-	Wed, 18 Feb 2026 11:13:29 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	intel-wired-lan@lists.osuosl.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 32/38] docs: kdoc_files: document KernelFiles() ABI
-Date: Wed, 18 Feb 2026 11:13:02 +0100
-Message-ID: <ca064642fd70b1dd2fa2c72a119a3a579ef0a3c2.1771408406.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1771408406.git.mchehab+huawei@kernel.org>
-References: <cover.1771408406.git.mchehab+huawei@kernel.org>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="ZjVcGL3R"
+Received: from mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net [IPv6:2a02:6b8:c11:e97:0:640:f294:0])
+	by forward501b.mail.yandex.net (Yandex) with ESMTPS id 872BE89C47;
+	Wed, 18 Feb 2026 16:40:30 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id Sea3lbMGFa60-YCPLBxWD;
+	Wed, 18 Feb 2026 16:40:29 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1771422030; bh=JzXeul7hrLHJEyXVuNdFfdj6AUqmHyErDXCENhN9W1g=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=ZjVcGL3R7bx2RRPMRmuw1vTAzDSUCjONX00aMnML2AQGLBdThqK6U8m4NQu3TDoRL
+	 N3vF6VkPmpBtr9/b75ZN3VfPskv5HZtsw5QgpwocfoRYhKE/KD+JM0hooH2H1/r1+C
+	 rQx7Vy5ZtyJ1oVqFvFEStiGqrCVjFR36pB3YVWwk=
+Authentication-Results: mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <87799485ed44bf023f0e1a7ed67f2e5268763c73.camel@yandex.ru>
+Subject: Re: [PATCH v8 0/5] lib and lib/cmdline enhancements
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, Andrew Morton
+	 <akpm@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>, Kees Cook
+ <kees@kernel.org>,  "Darrick J . Wong"	 <djwong@kernel.org>,
+ linux-hardening@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Wed, 18 Feb 2026 16:40:28 +0300
+In-Reply-To: <20260212164413.889625-1-dmantipov@yandex.ru>
+References: <20260212164413.889625-1-dmantipov@yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The KernelFiles is the main entry point to run kernel-doc,
-being used by both tools/docs/kernel-doc and
-Documentation/sphinx/kerneldoc.py.
+On Thu, 2026-02-12 at 19:44 +0300, Dmitry Antipov wrote:
 
-It is also used on QEMU, which also uses the kernel-doc
-libraries from tools/lib/python/kdoc.
+> Adjust '_parse_integer_limit()' and 'memparse()' to not ignore
+> overflows, extend string to 64-bit integer conversion tests, add
+> KUnit-based test for 'memparse()' and fix kernel-doc glitches
+> found in lib/cmdline.c.
+>=20
+> Dmitry Antipov (5):
+> =C2=A0 lib: fix _parse_integer_limit() to handle overflow
+> =C2=A0 lib: fix memparse() to handle overflow
+> =C2=A0 lib: add more string to 64-bit integer conversion overflow tests
+> =C2=A0 lib/cmdline_kunit: add test case for memparse()
+> =C2=A0 lib/cmdline: adjust a few comments to fix kernel-doc -Wreturn warn=
+ings
 
-Properly describe its ABI contract.
+Any chance to move forward with this?
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- tools/lib/python/kdoc/kdoc_files.py | 44 ++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
-
-diff --git a/tools/lib/python/kdoc/kdoc_files.py b/tools/lib/python/kdoc/kdoc_files.py
-index c35e033cf123..8c2059623949 100644
---- a/tools/lib/python/kdoc/kdoc_files.py
-+++ b/tools/lib/python/kdoc/kdoc_files.py
-@@ -91,7 +91,49 @@ class KernelFiles():
-     """
-     Parse kernel-doc tags on multiple kernel source files.
- 
--    There are two type of parsers defined here:
-+    This is the main entry point to run kernel-doc. This class is initialized
-+    using a series of optional arguments:
-+
-+    ``verbose``
-+        If True, enables kernel-doc verbosity. Default: False.
-+
-+    ``out_style``
-+        Class to be used to format output. If None (default),
-+        only report errors.
-+
-+    ``xforms``
-+        Transforms to be applied to C prototypes and data structs.
-+        If not specified, defaults to xforms = CFunction()
-+
-+    ``werror``
-+        If True, treat warnings as errors, retuning an error code on warnings.
-+
-+        Default: False.
-+
-+    ``wreturn``
-+        If True, warns about the lack of a return markup on functions.
-+
-+        Default: False.
-+    ``wshort_desc``
-+        If True, warns if initial short description is missing.
-+
-+        Default: False.
-+
-+    ``wcontents_before_sections``
-+        If True, warn if there are contents before sections (deprecated).
-+        This option is kept just for backward-compatibility, but it does
-+        nothing, neither here nor at the original Perl script.
-+
-+        Default: False.
-+
-+    ``logger``
-+        Optional logger class instance.
-+
-+        If not specified, defaults to use: ``logging.getLogger("kernel-doc")``
-+
-+    Note:
-+        There are two type of parsers defined here:
-+
-         - self.parse_file(): parses both kernel-doc markups and
-           ``EXPORT_SYMBOL*`` macros;
-         - self.process_export_file(): parses only ``EXPORT_SYMBOL*`` macros.
--- 
-2.52.0
-
+Dmitry
