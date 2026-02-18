@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E290233E352;
-	Wed, 18 Feb 2026 10:13:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFDE33EB18;
+	Wed, 18 Feb 2026 10:13:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771409599; cv=none; b=WcJADPfqUEu2JUypT7FQ9O9vKGHKdJenPIz8w9CAWecOEpml9IacIrayLD9+B8bUNEu2UjyJ6z2CJfsIhlIcR5c3z32SsxYJkBo9IcRqVSPuqueOaCGQaf6XzGM7gJXzWy+ZerCtKUpGB0HHNyyC6upNDA1zW637Iwzq0rawiZU=
+	t=1771409599; cv=none; b=YZk1z1Ty2iy5BsV/aF6bCUh6aYUsCDeAX1EwLVnNdE1L9VgSovs2UliU020tY2+tNbQ42M3hXsL2v/2IQo4TBJ/7TNihjPRPBTE6k2uXOIn2ypiTFaSIEoyJCOCgYOFI2+UJCG1WTZbl20AtfKyyppKD5Up+luCcVCFY0dScJjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1771409599; c=relaxed/simple;
-	bh=ftCwoMytpLULQWEXGblskf53KEc3VuT0xZwVGahX9Ic=;
+	bh=l1TnXg9K1HZGJE+MUFeDj5Ao7LGwzZBBWNXmq8OcdpM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EOM0qPmGyIOToa+PheOx9ygwAYAiBLy2GrQIAms9Fo4VH1PaP9lBFB3+uALjaoxjiYiu7tkh6nf1OlkcVfeJxKAEQshLVPO7WdYRlfOTkBpxh50MeWs3iOgxSg16BJ1Y+KkfCqgY4TpUKS1zhvm7B+OxRohOaZv8p1Yj2HOaYpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htrE8c65; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rQgbo95QXGAGGYtsv3JTSsNFbcDg5orjhaRaJwm44Ra9ei1n5lOQ9jsxyRKJiBmX8SJT0mmev3oImuru9W2iiuD68PMUSYd4KmjKfQJOYzhVItBPU+A/eThoA2+1RJJ9fUw3Br9wzaPHVPdjyyhyOza/xKLxR/jJ3LcQLMDE2l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MCvrIShR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htrE8c65"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3BADC19423;
-	Wed, 18 Feb 2026 10:13:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MCvrIShR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49139C2BCB2;
+	Wed, 18 Feb 2026 10:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771409598;
-	bh=ftCwoMytpLULQWEXGblskf53KEc3VuT0xZwVGahX9Ic=;
+	s=k20201202; t=1771409599;
+	bh=l1TnXg9K1HZGJE+MUFeDj5Ao7LGwzZBBWNXmq8OcdpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=htrE8c65anRRdCdgeXC+2Nbg4/ppJ2ESBk6Jall7k/31EPTkYE2jsmZOkuMfS2f4z
-	 lBFZfKFDKoF+Yqf/85WHAeeJ03wqcoIjc9A4pqR4zU1GSmMEHpAAXxw4RY0i1mzWMH
-	 +Y8yKyZBC3ufsnEpSDq/1q9mZSIotnQ+fpO7j1KOY5Niw/Oxxapcq5CKa1A1ERcUch
-	 Nbjua0ThtkFERx5aSDmqY9rZSL2PCavnNs4iQMRhyssRwl1tWaihKZ7e7EiBnRgt6q
-	 cEI0Kpa04uQF7QY63Udc/i241ILXUXnTIYlVhz3PZmzgxO5wtpnJ1nAVlwp9fRtL36
-	 iu1LUzH9VR04g==
+	b=MCvrIShRWQOn3kud+SrF72GQRRQoy8OmrR6yjDW5RlNisEJFpIUqVjFy08irxCVc+
+	 mjZgJcxkDMHVCNC8UshxLFNGBjByVeTTuuEgWLEWwnsvR1pmPN3/4xtswo9q/hiK9p
+	 gTyhtm4iw/YYOvpvJgtn8QfXn/lXb1oYxajx4Y5vMNt/hqvE1aU/NcV80bjSvHoFhz
+	 DlJryyoGqHz0vmCsAdDwilJwlqgOlKCISe1RoJf3A1lEtNw1Z3qQEiI+XmsGCvMldf
+	 Ac1SFPW5V1GguUfndsay9o6/+4fAj69FV+5wDZ98TJ55Alw7jJqSrmYU9TzlndEuii
+	 ELbd0z/ONbmnQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vseYW-00000000LNN-3rfW;
-	Wed, 18 Feb 2026 11:13:16 +0100
+	id 1vseYX-00000000LOY-1StF;
+	Wed, 18 Feb 2026 11:13:17 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Linux Doc Mailing List <linux-doc@vger.kernel.org>
@@ -40,9 +40,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
 	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 03/38] docs: kdoc_parser: move var transformers to the beginning
-Date: Wed, 18 Feb 2026 11:12:33 +0100
-Message-ID: <117d010f42434c437284e37cb78a4590b84eb1c6.1771408406.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 04/38] docs: kdoc_parser: don't mangle with function defines
+Date: Wed, 18 Feb 2026 11:12:34 +0100
+Message-ID: <87e79a43714d1de8258c169bf2a8e2ce30705df2.1771408406.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1771408406.git.mchehab+huawei@kernel.org>
 References: <cover.1771408406.git.mchehab+huawei@kernel.org>
@@ -56,68 +56,66 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Just like functions and structs had their transform variables
-placed at the beginning, move variable transforms to there
-as well.
+Mangling with #defines is not nice, as we may end removing
+the macro names, preventing several macros from being properly
+documented.
 
-No functional changes.
+Also, on defines, we have something like:
+
+	#define foo(a1, a2, a3, ...)			 \
+		/* some real implementation */
+
+The prototype part (first line on this example) won't contain
+any macros, so no need to apply any regexes on it.
+
+With that, move the apply_transforms() logic to ensure that
+it will be called only on functions.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Acked-by: Randy Dunlap <rdunlap@infradead.org>
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
 ---
- tools/lib/python/kdoc/kdoc_parser.py | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ tools/lib/python/kdoc/kdoc_parser.py | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
-index ca00695b47b3..68a5aea9175d 100644
+index 68a5aea9175d..9643ffb7584a 100644
 --- a/tools/lib/python/kdoc/kdoc_parser.py
 +++ b/tools/lib/python/kdoc/kdoc_parser.py
-@@ -192,6 +192,18 @@ function_xforms  = [
-     (KernRe(r"__attribute__\s*\(\((?:[\w\s]+(?:\([^)]*\))?\s*,?)+\)\)\s+"), ""),
- ]
- 
-+#
-+# Transforms for variable prototypes
-+#
-+var_xforms = [
-+    (KernRe(r"__read_mostly"), ""),
-+    (KernRe(r"__ro_after_init"), ""),
-+    (KernRe(r"(?://.*)$"), ""),
-+    (KernRe(r"(?:/\*.*\*/)"), ""),
-+    (KernRe(r";$"), ""),
-+    (KernRe(r"=.*"), ""),
-+]
+@@ -163,7 +163,7 @@ struct_nested_prefixes = [
+ #
+ # Transforms for function prototypes
+ #
+-function_xforms  = [
++function_xforms = [
+     (KernRe(r"^static +"), ""),
+     (KernRe(r"^extern +"), ""),
+     (KernRe(r"^asmlinkage +"), ""),
+@@ -1066,10 +1066,7 @@ class KernelDoc:
+         found = func_macro = False
+         return_type = ''
+         decl_type = 'function'
+-        #
+-        # Apply the initial transformations.
+-        #
+-        prototype = apply_transforms(function_xforms, prototype)
 +
- #
- # Ancillary functions
- #
-@@ -972,15 +984,6 @@ class KernelDoc:
-         ]
-         OPTIONAL_VAR_ATTR = "^(?:" + "|".join(VAR_ATTRIBS) + ")?"
+         #
+         # If we have a macro, remove the "#define" at the front.
+         #
+@@ -1088,6 +1085,11 @@ class KernelDoc:
+                 declaration_name = r.group(1)
+                 func_macro = True
+                 found = True
++        else:
++            #
++            # Apply the initial transformations.
++            #
++            prototype = apply_transforms(function_xforms, prototype)
  
--        sub_prefixes = [
--            (KernRe(r"__read_mostly"), ""),
--            (KernRe(r"__ro_after_init"), ""),
--            (KernRe(r"(?://.*)$"), ""),
--            (KernRe(r"(?:/\*.*\*/)"), ""),
--            (KernRe(r";$"), ""),
--            (KernRe(r"=.*"), ""),
--        ]
--
-         #
-         # Store the full prototype before modifying it
-         #
-@@ -1004,7 +1007,7 @@ class KernelDoc:
-         # Drop comments and macros to have a pure C prototype
-         #
-         if not declaration_name:
--            for r, sub in sub_prefixes:
-+            for r, sub in var_xforms:
-                 proto = r.sub(sub, proto)
- 
-         proto = proto.rstrip()
+         # Yes, this truly is vile.  We are looking for:
+         # 1. Return type (may be nothing if we're looking at a macro)
 -- 
 2.52.0
 
