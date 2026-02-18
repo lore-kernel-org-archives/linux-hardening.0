@@ -1,87 +1,51 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8629F1862A
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 00:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F40B1E1DEC
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 00:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771460318; cv=none; b=QCmPWfyEwud9O/HbaloiUgZ8bV3EHjkoUYRwHNyDUN6U7cO9iMHvemKSrY4ZvV7AwOJQ6WvsMBqyOqsvNz9cazv3hFapWcmZEkqD4Z3l3ph9AAhCyrjtbd0ZTEHM7MRZLAxsJQU6lb9/BPFm8Suy7WFYtoq929SfMD7UseTsGDc=
+	t=1771461579; cv=none; b=tQFEOH4ZmBycKx/LQuRSUWKhfg0CN9V7GjkBagReyMbmf+HBB7BPkcyMFJ0bEo+ghbwae/kdSfdFndFioCxNWPGz2xNaIgQlIw9DV+GloCk27hyBMlKe5SkBf5ELrX547iDVYAcQAMydgyMmVCee1njRwg9dipw+Fq7FysgZg48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771460318; c=relaxed/simple;
-	bh=yX58FE41c/ilP+wBoKhqYAK/S3q8rJQbjLJSPC8DJQ4=;
+	s=arc-20240116; t=1771461579; c=relaxed/simple;
+	bh=z6syF4LidYTHWoLqxLqQLWmNiefVyfFzZH9TK+S8Qhk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pD+vwaXmOvHared2CMMo62kz34ysdztXS67Tt20Iz5NH2zaG7NAqceNV2VzFnT68m+CGvdc8cWV582kze5hMfu1rBNUb/kUGtNWPuAvNWoxmNV/ND0EV2orrbHG/jG9WdeW/Ans5eijFRoBRu5xYehXEWEjUy0vptY8vqCxMCuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FvXG60bx; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=EoVv67TD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=ob0kwwfgLYkmZ9Jv1s7M4X5OqJVjG/PZisEiQSvE5FBdJRVy4ULMRgffY8ElJtA5qfeofFVwRbMsWn+wvg49qEmewoDHcpz77QswKOxmzTVQDIJ6KDiWAKcrp+NCa63xZTPyrozpWFnLyShZ+p8tJjw1xPbshJ2WDAj4dwnzGec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=TFvzcemT; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FvXG60bx";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="EoVv67TD"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61IFmS4o421072
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 00:18:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VXIKfQNG9TrKEgU99HqIDj1sC/EgfQBOZENx2xktZTU=; b=FvXG60bxmkD/dPLI
-	vGJrGFpo8R4nuvHrvE8g15jwPilGDG3QnWKy4sbJ+w22k3nKhZg/B4qNK7HP0epa
-	i28tuXGgnyN4fr1zrRB+NyFFtLeRLXULXCfbDhFhutPDRvlnWUlKuQmER6TZnNMO
-	YKLyKLzXWCJh68z04TBddVXDz1eAX7bwq8GCw/GLINTGTnDF4ORK1tVYZe6K9yXc
-	mm24VjqA3Wcc9zv3RAb3IGXpybAqIWAw2ZI8WCSfriL+h5cbVrfQvVbht3yqowHG
-	whkYx265eMmy72HvXnhn9BN3n4SpNIjVWP0KOOc4BK3JW6dhIZTHvqb5QGn0Ptfh
-	TTX0Kw==
-Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cd76e2uxd-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 00:18:36 +0000 (GMT)
-Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-1275c2ae713so12089987c88.0
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Feb 2026 16:18:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1771460316; x=1772065116; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VXIKfQNG9TrKEgU99HqIDj1sC/EgfQBOZENx2xktZTU=;
-        b=EoVv67TDmEs3jh+boQ/WV9/BwoU4oOmmg2zI6HXk3sSEXGmQz22CxxEOzp1h+bWq+o
-         7Ez1Zbl0CrRdemyOerGTpQdBULdGja2jcADwsVF7cOil5BuS0tFfZalY7tKzh9z82gju
-         pKTNtpaKx6wtdUgP8crag5r9he39zND2lM4hOBxjlXH8kVxWr01aWCjI6HIKGjIDSHih
-         xmZKJzXeLhJEoWfJzTHc3IvU5kGTcef2mNL+1VZ/mhKqnFXRz5YRdZYQfdywGyHmTeYO
-         Bg58zCrQhT7ByAa81FtopFj20CesjDj5ZrX/C3bdvtrMlhXLk1Cq2K8G87pEE/RxPc3q
-         Uw8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771460316; x=1772065116;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VXIKfQNG9TrKEgU99HqIDj1sC/EgfQBOZENx2xktZTU=;
-        b=vdh9/5bgvWcLf/xGdTRa+L79HIekSjK65oSeWxZFeyrNWAKDRiFbHmP5N+8QPU84FN
-         dxn/SW8M28DL3Gp2n0+BSMUhiGkrHR0j8PrEUE51V/DySqiA6KTXNOPbNO5ffXTi9TYG
-         0jOJ5aHd5aTVNUpXjlcC8h+ODqFbJEAm2GT1fssKFXgkB2HQ4vaOVxJ552vrvzahJlbu
-         /HY6f1AKLgrtzQtdyCtBmKSrz457UXVtIFQQ7fhcj3E+RKSo0sMhiq6nnxtgMtJ4sXUx
-         /viE9EF4PDqMHsvqd66wH7L4vW2PjrVc9gXShCLxMLQbMt0wWTFbS+pXk9wE2kfe0p3d
-         qhLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8HT8qMokpWuvTzFnDuhKqfBTYe4RtTPof/u6gIngSe6NEEA9921KjCNlzBYt/bdmRVqa9ztCRJ1/j16BdlRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP0TkeHNBFu5aps/U3Q1iVFGVp72JzY2C2tAClcymzlohKbIoP
-	B+eUQpn3915/N5pVH6WLXg6DmWoZDD6HkPchfJaKZoLaTyGGQ7iNDJpeFv1A48xVFnkPQNbg7+c
-	NTs11gRzPAf0Bn8D9dXf8ZIUyR2oJq05/kPXOda3HJyZ3jZ7A4/QXykehjtQ4khrmDtDi83M=
-X-Gm-Gg: AZuq6aINYOYO4l+jT8ofNi7zPXqwHjR3X03YrJWmVM94h4B0xvgmXmlBjKhCtSVIzm7
-	TzdtXIIs83VkJvLbFLuMPTv3yUb4IkKp7zL4H8tTq7Q/9VAYG/ZIW8nfNEt4sHKArYBSoeU7iOF
-	3oj7Zj2/dLw0JCJuh/slNvxhpR9W3KPLkWyV8dnqN+sXrSciR/brbbLg3CJcLne7LECuPgEVqQw
-	iMssul5HFv3msrzqfbIuTjMiJiApb/bjhkByAI/gQ5AS8fiE3MMIbXtda4vlo1hAhjGnzOhcqAu
-	16xIBNHV3HK+EF20MsFsLXCZh8jqdSSmu8X6pT7ailyWchAWSlWnEsETeGD8X9VSI5IVb8hnidB
-	seFa1D3YoJL8ctS4oc3Eyt/snusWQEAfhA/V5Sktl8QKLa7/Wzn+Ye+rPHs4Y1vuer3NKhNzXbU
-	XZuchi8PzeHwhkcA==
-X-Received: by 2002:a05:7022:4a3:b0:121:9f05:7e4c with SMTP id a92af1059eb24-1273addcd33mr9051069c88.16.1771460315783;
-        Wed, 18 Feb 2026 16:18:35 -0800 (PST)
-X-Received: by 2002:a05:7022:4a3:b0:121:9f05:7e4c with SMTP id a92af1059eb24-1273addcd33mr9051060c88.16.1771460315217;
-        Wed, 18 Feb 2026 16:18:35 -0800 (PST)
-Received: from [192.168.1.41] (c-24-130-122-79.hsd1.ca.comcast.net. [24.130.122.79])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12742cadb25sm25643780c88.10.2026.02.18.16.18.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Feb 2026 16:18:34 -0800 (PST)
-Message-ID: <d2a02b4c-5f69-4f5e-bc0e-428b64e99d36@oss.qualcomm.com>
-Date: Wed, 18 Feb 2026 16:18:33 -0800
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TFvzcemT"
+Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
+	by cmsmtp with ESMTPS
+	id smmNvCzLFKjfoss4qvqkyG; Thu, 19 Feb 2026 00:39:32 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id ss4pv2fqMK8vzss4pvN2u6; Thu, 19 Feb 2026 00:39:31 +0000
+X-Authority-Analysis: v=2.4 cv=cJDgskeN c=1 sm=1 tr=0 ts=69965bc4
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
+ a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=9YR8UghG2Mux9z_Xfx4A:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=+/cI9yYaTzTcqdQ58iWogswfNeVO0Pn3cSXKnRlVUwg=; b=TFvzcemTtvfbWw5mv7eH4IFz4W
+	/gVUCTw9e07wPvK/Q+SoU5UMs0ZlpWO/rCEEPaXcbjBiNViNdd6S0/SAOQMNPfq3iqC7tUQC07wW0
+	Zf1HERNpDc4C9NyNtbpUFxkU9bypsTUphtjFlhTIAkLYjOSi8RnzDO48DiTZmfNDVYBtvDETrz+JM
+	g1qb3NVVpMgApSCaaJI8KnkCLWvWI22RgecPTwSnuOqtwO5clQt/Zhhygyd3JTwRl6Gm7liyqA5J/
+	Ae6H17Vj4Fc8HgUoh934JB6KT0K//0LOZWXjUPNa7m+soVVf66Ki5p2w5TJS98DcB7pkcKajE/jRt
+	ueo11Deg==;
+Received: from [177.238.16.13] (port=37088 helo=[192.168.0.21])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vss4o-00000003gCK-41Zb;
+	Wed, 18 Feb 2026 18:39:31 -0600
+Message-ID: <6305fbc7-8210-4f4d-b719-30ba038611af@embeddedor.com>
+Date: Wed, 18 Feb 2026 18:38:41 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -91,144 +55,84 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2][next] wifi: ath6kl: wmi: Avoid
  -Wflex-array-member-not-at-end warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kalle Valo <quic_kvalo@quicinc.com>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kalle Valo <quic_kvalo@quicinc.com>
 Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+ linux-hardening@vger.kernel.org
 References: <aZP4RI-uN2001cBh@kspp>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+ <d2a02b4c-5f69-4f5e-bc0e-428b64e99d36@oss.qualcomm.com>
 Content-Language: en-US
-In-Reply-To: <aZP4RI-uN2001cBh@kspp>
-Content-Type: text/plain; charset=UTF-8
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <d2a02b4c-5f69-4f5e-bc0e-428b64e99d36@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=OKsqHCaB c=1 sm=1 tr=0 ts=699656dc cx=c_pps
- a=bS7HVuBVfinNPG3f6cIo3Q==:117 a=Tg7Z00WN3eLgNEO9NLUKUQ==:17
- a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22
- a=VwQbUJbxAAAA:8 a=za3tAlzF_62g-CIsXx4A:9 a=QEXdDO2ut3YA:10
- a=vBUdepa8ALXHeOFLBtFW:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE5MDAwMSBTYWx0ZWRfXxl/6gya3Qni5
- aUKuvHoVBxzUcQBjIGFk1tQbMO5xZV1N1+zC/R7vxzyT18kCuei5nhDLnb0J007NOFz3tqDd08R
- /+GF7EjoDDcTxe8XjKBRTc/dVeBR2/JdhFcfR/WDQHQ5tjrNmcki4JqUdKD6SeUlRQVWEtZ0gIb
- 3HeSwnzqSFwBCi5HQ91b90pBXnovtTig/k2BYJ3vRMzom1WhvSGvFUUAwdmA2rOqq9ZXIRZWx7l
- fXZcrKRoeKR63S2Zd65uuNhEKrZbnzUExcknEFoga954XKyCvTEfAMuixhJvxlp04PkEIeJRxWZ
- rIi1eGawgloMVhvo5xd527sC5JU/Da5OvBcvcgKzDpzOwSSKDI8VL9ejP530C+HxWxrmLvH4msA
- rn75YTDvuOWRrgVywhUAZXpNQLiS5agb//5HWgQOv0BGJGRWfXDwLO1GmwlJPYWPu10vZT2vXOv
- qcMse8t4ECjKsmuOkEg==
-X-Proofpoint-GUID: Kn9tDZJC3JDSx4JsCoO53C5b4503AXTO
-X-Proofpoint-ORIG-GUID: Kn9tDZJC3JDSx4JsCoO53C5b4503AXTO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-18_05,2026-02-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 bulkscore=0 impostorscore=0 adultscore=0 suspectscore=0
- clxscore=1011 spamscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602190001
-
-On 2/16/2026 9:10 PM, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> struct bss_bias_info is a flexible structure, this is a structure
-> that contains a flexible-array member (struct bss_bias bss_bias[]).
-> 
-> Since struct roam_ctrl_cmd is defined by hardware, we create the new
-> struct bss_bias_info_hdr type, and use it to replace the object type
-> causing trouble in struct roam_ctrl_cmd, namely struct bss_bias_info.
-> 
-> Also, once -fms-extensions is enabled, we can use transparent struct
-> members in struct bss_bias_info.
-> 
-> Notice that the newly created type does not contain the flex-array
-> member `bss_bias`, which is the object causing the -Wfamnae warning.
-> 
-> After these changes, the size of struct roam_ctrl_cmd, along
-> with its member's offsets remain the same, hence the memory layout
-> doesn't change:
-> 
-> Before changes:
-> struct roam_ctrl_cmd {
-> 	union {
-> 		u8                 bssid[6];             /*     0     6 */
-> 		u8                 roam_mode;            /*     0     1 */
-> 		struct bss_bias_info bss;            	 /*     0     1 */
-> 		struct low_rssi_scan_params params;      /*     0     8 */
-> 	} info;                                          /*     0     8 */
-> 	u8                         roam_ctrl;            /*     8     1 */
-> 
-> 	/* size: 9, cachelines: 1, members: 2 */
-> 	/* last cacheline: 9 bytes */
-> } __attribute__((__packed__));
-> 
-> After changes:
-> struct roam_ctrl_cmd {
-> 	union {
-> 		u8                 bssid[6];             /*     0     6 */
-> 		u8                 roam_mode;            /*     0     1 */
-> 		struct bss_bias_info_hdr bss;            /*     0     1 */
-> 		struct low_rssi_scan_params params;      /*     0     8 */
-> 	} info;                                          /*     0     8 */
-> 	u8                         roam_ctrl;            /*     8     1 */
-> 
-> 	/* size: 9, cachelines: 1, members: 2 */
-> 	/* last cacheline: 9 bytes */
-> } __attribute__((__packed__));
-> 
-> With these changes fix the following warning:
-> 
-> drivers/net/wireless/ath/ath6kl/wmi.h:1658:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->  - Create new separate struct bss_bias_info_hdr, and use
->    transparent struct members (in struct bss_bias_info)
->    instead of rearranging members in struct roam_ctrl_cmd.
->  - Update subject line - Add 'wifi:' prefix.
-> 
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/aR153k4ExCD-QTMq@kspp/
-> 
->  drivers/net/wireless/ath/ath6kl/wmi.h | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
-> index 3080d82e25cc..d2a5c96fc878 100644
-> --- a/drivers/net/wireless/ath/ath6kl/wmi.h
-> +++ b/drivers/net/wireless/ath/ath6kl/wmi.h
-> @@ -1635,8 +1635,12 @@ struct bss_bias {
->  	s8 bias;
->  } __packed;
->  
-> -struct bss_bias_info {
-> +struct bss_bias_info_hdr {
->  	u8 num_bss;
-> +} __packed;
-> +
-> +struct bss_bias_info {
-> +	struct bss_bias_info_hdr;
->  	struct bss_bias bss_bias[];
->  } __packed;
->  
-> @@ -1652,7 +1656,7 @@ struct roam_ctrl_cmd {
->  	union {
->  		u8 bssid[ETH_ALEN]; /* WMI_FORCE_ROAM */
->  		u8 roam_mode; /* WMI_SET_ROAM_MODE */
-> -		struct bss_bias_info bss; /* WMI_SET_HOST_BIAS */
-> +		struct bss_bias_info_hdr bss; /* WMI_SET_HOST_BIAS */
->  		struct low_rssi_scan_params params; /* WMI_SET_LRSSI_SCAN_PARAMS
->  						     */
->  	} __packed info;
-
-That bss member appears to be completely unused
-(bssid, roam_mode, and params are used)
-
-So IMO the better solution is to remove bss from the union.
-And I think struct bss_bias and struct bss_bias_info can also be removed.
-
-/jeff
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.13
+X-Source-L: No
+X-Exim-ID: 1vss4o-00000003gCK-41Zb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:37088
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFtK37xvSa3gBzuSbqZGc60lAMqgSjuNhiyfPaqhSwBKcwHAicgPQ6G52m8SaNh5EAtso6gaLwa66xvw6sfScpSN3/fSTAFWMm+82mq1CN4CPzswHdLv
+ mRS+N4qA9K3PVphvvWrX7Nqwuv4Xm7ZiQddRKSz3enu0apsdqLxuPN5yNTi3PD+oUFmkkpjXLwD4Bpy+DGiWKRoW3l+IxK27FGa0p1rtvaC0DYu9Ap8XlWpn
 
 
+>> @@ -1652,7 +1656,7 @@ struct roam_ctrl_cmd {
+>>   	union {
+>>   		u8 bssid[ETH_ALEN]; /* WMI_FORCE_ROAM */
+>>   		u8 roam_mode; /* WMI_SET_ROAM_MODE */
+>> -		struct bss_bias_info bss; /* WMI_SET_HOST_BIAS */
+>> +		struct bss_bias_info_hdr bss; /* WMI_SET_HOST_BIAS */
+>>   		struct low_rssi_scan_params params; /* WMI_SET_LRSSI_SCAN_PARAMS
+>>   						     */
+>>   	} __packed info;
+> 
+> That bss member appears to be completely unused
+> (bssid, roam_mode, and params are used)
+> 
+> So IMO the better solution is to remove bss from the union.
+> And I think struct bss_bias and struct bss_bias_info can also be removed.
 
+Even if they're not used, are you sure they aren't there simply	
+to define the memory layout of struct roam_ctrl_cmd?
+
+As Kees commented[1], struct roam_ctrl_cmd appears to be a
+hardware interface... See below:
+
+drivers/net/wireless/ath/ath6kl/wmi.c:
+  755 /*
+  756  * Mechanism to modify the roaming behavior in the firmware. The lower rssi
+  757  * at which the station has to roam can be passed with
+  758  * WMI_SET_LRSSI_SCAN_PARAMS. Subtract 96 from RSSI to get the signal level
+  759  * in dBm.
+  760  */
+  761 int ath6kl_wmi_set_roam_lrssi_cmd(struct wmi *wmi, u8 lrssi)
+  762 {
+  763         struct sk_buff *skb;
+  764         struct roam_ctrl_cmd *cmd;
+  765
+  766         skb = ath6kl_wmi_get_new_buf(sizeof(*cmd));
+  767         if (!skb)
+  768                 return -ENOMEM;
+  769
+  770         cmd = (struct roam_ctrl_cmd *) skb->data;
+...
+}
+
+Thanks
+-Gustavo
+
+[1] https://lore.kernel.org/linux-hardening/202601151627.99DFE54@keescook/
 
