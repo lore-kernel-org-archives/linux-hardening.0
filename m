@@ -1,138 +1,151 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F40B1E1DEC
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 00:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9ED332ED1
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 07:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771461579; cv=none; b=tQFEOH4ZmBycKx/LQuRSUWKhfg0CN9V7GjkBagReyMbmf+HBB7BPkcyMFJ0bEo+ghbwae/kdSfdFndFioCxNWPGz2xNaIgQlIw9DV+GloCk27hyBMlKe5SkBf5ELrX547iDVYAcQAMydgyMmVCee1njRwg9dipw+Fq7FysgZg48=
+	t=1771487830; cv=none; b=jE7/bUENcLDNSCk4lxxG7InXzyY2EmTq+O9t2gYmr0unWqnTIr/x1cAfgvEsaAT3IHCBOPP+xQTiLtmPlt4T1ma1Vo4SNibymJeDCgkFCvXrzOz98KwTUBt2G5qE/Qg8ebSN3TJyPlYUdB+TkxcaPBpNwnm7KvscNZGTI4+O1Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771461579; c=relaxed/simple;
-	bh=z6syF4LidYTHWoLqxLqQLWmNiefVyfFzZH9TK+S8Qhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ob0kwwfgLYkmZ9Jv1s7M4X5OqJVjG/PZisEiQSvE5FBdJRVy4ULMRgffY8ElJtA5qfeofFVwRbMsWn+wvg49qEmewoDHcpz77QswKOxmzTVQDIJ6KDiWAKcrp+NCa63xZTPyrozpWFnLyShZ+p8tJjw1xPbshJ2WDAj4dwnzGec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=TFvzcemT; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1771487830; c=relaxed/simple;
+	bh=hUxk4HA/1LmjRVI/ERTkmt5jBW8D8G4uV1QeZXJbdJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jA3elhogkRuJxnZ3OJrHjR81c/a/XJLIFEkG4n4yMmUoCSDeYhJNIUcZ+EVGDX9ixlEjZUyoTR2N/VmFe+CO5Z9KmynwmacRTeFapXVYnKfVzihk082yUdHOVCpT+0PyA0quf1/TPpEd3tHKX++giRSAvwGUQ8+B6GQhC4OrBzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wn6zMLsP; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TFvzcemT"
-Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
-	by cmsmtp with ESMTPS
-	id smmNvCzLFKjfoss4qvqkyG; Thu, 19 Feb 2026 00:39:32 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ss4pv2fqMK8vzss4pvN2u6; Thu, 19 Feb 2026 00:39:31 +0000
-X-Authority-Analysis: v=2.4 cv=cJDgskeN c=1 sm=1 tr=0 ts=69965bc4
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
- a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=9YR8UghG2Mux9z_Xfx4A:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+/cI9yYaTzTcqdQ58iWogswfNeVO0Pn3cSXKnRlVUwg=; b=TFvzcemTtvfbWw5mv7eH4IFz4W
-	/gVUCTw9e07wPvK/Q+SoU5UMs0ZlpWO/rCEEPaXcbjBiNViNdd6S0/SAOQMNPfq3iqC7tUQC07wW0
-	Zf1HERNpDc4C9NyNtbpUFxkU9bypsTUphtjFlhTIAkLYjOSi8RnzDO48DiTZmfNDVYBtvDETrz+JM
-	g1qb3NVVpMgApSCaaJI8KnkCLWvWI22RgecPTwSnuOqtwO5clQt/Zhhygyd3JTwRl6Gm7liyqA5J/
-	Ae6H17Vj4Fc8HgUoh934JB6KT0K//0LOZWXjUPNa7m+soVVf66Ki5p2w5TJS98DcB7pkcKajE/jRt
-	ueo11Deg==;
-Received: from [177.238.16.13] (port=37088 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.99.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vss4o-00000003gCK-41Zb;
-	Wed, 18 Feb 2026 18:39:31 -0600
-Message-ID: <6305fbc7-8210-4f4d-b719-30ba038611af@embeddedor.com>
-Date: Wed, 18 Feb 2026 18:38:41 +0900
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wn6zMLsP"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-480706554beso7109725e9.1
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Feb 2026 23:57:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1771487827; x=1772092627; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ee6rz3n4lRLIfzQydkYiBi8fGnwsN3AAWbuDK39dnaE=;
+        b=wn6zMLsPxLDSjPqCOC8EPanbRoJjb/GhwwAiwKbxvLfRGBJ3GYTGwQ4qF5HDoQ/1R0
+         qdGTCtWPdVN6F2k08vDpaJIvmO803LXTZOngLdaOpV9zNT7llHIMPwYS+ZCZowlG7HKD
+         XusJKKjQ9/oy3mtBFEOnDn468IMxsSv2Efh+1iWwfUB//V17e6w1aCHCZAJdYMuKvVZd
+         olHfKcXzAVfeAz9LOUDQ2UfXYAdKAwIrjjN6OF6nYA86zdqkm9LIlEHXQQdfN3Iexz2U
+         3vc7w1TQUX0LgqScfXjpca8E74x0P7A0ljnubUGSZ+gvd8gKqKr/xZKlSAyTNaWIuLcI
+         xBHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771487827; x=1772092627;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ee6rz3n4lRLIfzQydkYiBi8fGnwsN3AAWbuDK39dnaE=;
+        b=F8koanK0qcKALu2YFLfNw3Bgf07vU+Xy+ezYL2itkEtZH0iHIf49EcuPUoWVV0lgc7
+         yKBVgvoymdoanMBgm5L/Ozf6rEkWw1aDzv3VbC5810b5IiWC9gYxEKIYMlwO+F1eZGzR
+         H1jO1W/9sSuOYP6T0ffW6rq8uLCxJQW0EGOUFVP6irMw15/ds9FP9iaaqjn8TDGDA9ms
+         U1HpdeW7rfw7ZH0RcZFWrpHf1izr5K+94kxC+GRuL+FxuAp822fFeAHBLlCzpRA3cJq7
+         IUDGGLDjQ9TisC8uET9klm3cyQRrEdkxfm4Y1cvQEWSOVFRxCPPk5im8zfZvuvIKGc24
+         90vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWpmQAxKritsaeCWr7zn+Ck3MkQtcMZn17JH7PkDnb8SYO2Avj4uJsj8z7F9cC8nimGCyWOVo7ySYXtCM/nJ5o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsE1FH3iwTd+sKjOcKPRDkatGnaZhyyaoC05zND3GK/duJRiq4
+	M9kE7D+hXztMu/tldKOTyY5UyoZuPZuqHcpwW04QMLok6fqsJupwJqzUFTuCPYdwVNw=
+X-Gm-Gg: AZuq6aKEo6BoCWqv42ASFoZEuepMbxawXU0NvkS7Il9XbBRLVbNbDL2nE6kjEbyfbhP
+	JEg+IMTiDs7vQTtllHX82Q+BvTTIDjqSDrDmaLeaTz0rKbtN55mICS5dcgsVa3m5MsDwVmXW2b/
+	5drYDN4Ebor0ky94kW+15dKW6yjg3evjmy/ux/uKKieRn9/EqFfqA49ubjO1xXW3vmGOZHYuPD8
+	QKrRK6Ux3OlL+ktioXykSKfmgJbJCQ4mTtCHEsHFUwDms3gMblFk6AAHgxmPNJ+1tRQYjy85VpF
+	dmrXzOyeplhtrSg95mZG3Adfb0lzrVSHee2R4YulXmPUrxS1A0wJAXM8+S1pyljw/qxKOkrpuDT
+	2XW6y13GWVY6vboz1D7ktmGZS9zJgJ4QLGakXtnLUGl9vRdT5Sl5cjke/RQFZfj+ZGI8gavqSFZ
+	C5ZLx0ZCw1v5Hn8O4BD4DmCUGKs5MK
+X-Received: by 2002:a05:600c:698c:b0:477:5ad9:6df1 with SMTP id 5b1f17b1804b1-48379b932b7mr310004635e9.3.1771487826769;
+        Wed, 18 Feb 2026 23:57:06 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4839f96967bsm15143135e9.3.2026.02.18.23.57.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Feb 2026 23:57:06 -0800 (PST)
+Date: Thu, 19 Feb 2026 10:57:03 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Marco Elver <elver@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	John Hubbard <jhubbard@nvidia.com>, Joe Perches <joe@perches.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Alexander Potapenko <glider@google.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v6 1/5] slab: Introduce kmalloc_obj() and family
+Message-ID: <aZbCT3-q3O4M5osr@stanley.mountain>
+References: <20251203233029.it.641-kees@kernel.org>
+ <20251203233036.3212363-1-kees@kernel.org>
+ <960729bb-0746-4709-a40c-2e254f963deb@suse.cz>
+ <202601090928.5CFF95F@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] wifi: ath6kl: wmi: Avoid
- -Wflex-array-member-not-at-end warning
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kalle Valo <quic_kvalo@quicinc.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aZP4RI-uN2001cBh@kspp>
- <d2a02b4c-5f69-4f5e-bc0e-428b64e99d36@oss.qualcomm.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <d2a02b4c-5f69-4f5e-bc0e-428b64e99d36@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.16.13
-X-Source-L: No
-X-Exim-ID: 1vss4o-00000003gCK-41Zb
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:37088
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFtK37xvSa3gBzuSbqZGc60lAMqgSjuNhiyfPaqhSwBKcwHAicgPQ6G52m8SaNh5EAtso6gaLwa66xvw6sfScpSN3/fSTAFWMm+82mq1CN4CPzswHdLv
- mRS+N4qA9K3PVphvvWrX7Nqwuv4Xm7ZiQddRKSz3enu0apsdqLxuPN5yNTi3PD+oUFmkkpjXLwD4Bpy+DGiWKRoW3l+IxK27FGa0p1rtvaC0DYu9Ap8XlWpn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202601090928.5CFF95F@keescook>
 
-
->> @@ -1652,7 +1656,7 @@ struct roam_ctrl_cmd {
->>   	union {
->>   		u8 bssid[ETH_ALEN]; /* WMI_FORCE_ROAM */
->>   		u8 roam_mode; /* WMI_SET_ROAM_MODE */
->> -		struct bss_bias_info bss; /* WMI_SET_HOST_BIAS */
->> +		struct bss_bias_info_hdr bss; /* WMI_SET_HOST_BIAS */
->>   		struct low_rssi_scan_params params; /* WMI_SET_LRSSI_SCAN_PARAMS
->>   						     */
->>   	} __packed info;
+On Fri, Jan 09, 2026 at 09:31:03AM -0800, Kees Cook wrote:
+> On Thu, Jan 08, 2026 at 03:01:00PM +0100, Vlastimil Babka wrote:
+> > On 12/4/25 00:30, Kees Cook wrote:
+> > > [...]
+> > > +/**
+> > > + * __alloc_objs - Allocate objects of a given type using
+> > > + * @KMALLOC: which size-based kmalloc wrapper to allocate with.
+> > > + * @GFP: GFP flags for the allocation.
+> > > + * @TYPE: type to allocate space for.
+> > > + * @COUNT: how many @TYPE objects to allocate.
+> > > + *
+> > > + * Returns: Newly allocated pointer to (first) @TYPE of @COUNT-many
+> > > + * allocated @TYPE objects, or NULL on failure.
+> > > + */
+> > > +#define __alloc_objs(KMALLOC, GFP, TYPE, COUNT)				\
+> > > +({									\
+> > > +	const size_t __obj_size = size_mul(sizeof(TYPE), COUNT);	\
+> > 
+> > I assume with the hardcoded 1 for COUNT, this size_mul() will be eliminated
+> > by the compiler and not add unnecessary runtime overhead? Otherwise we
+> > should have two core #define variants.
 > 
-> That bss member appears to be completely unused
-> (bssid, roam_mode, and params are used)
+> You're correct: the compiler completely collapses it with 0 runtime
+> overhead; a variant is not needed.
 > 
-> So IMO the better solution is to remove bss from the union.
-> And I think struct bss_bias and struct bss_bias_info can also be removed.
+> > I also noted that the existing kmalloc_array() and kvmalloc_array() do
+> > check_mul_overflow() and return NULL silently on overflow. This AFAIU will
+> > make SIZE_MAX passed to the underlying kmalloc/kvmalloc and thus will cause
+> > a warning. That's IMHO a good thing.
+> 
+> Right -- I prefer seeing the SIZE_MAX yelling from the allocator. Should
+> we change how k*malloc_array() behaves?
 
-Even if they're not used, are you sure they aren't there simply	
-to define the memory layout of struct roam_ctrl_cmd?
+Huh, yeah, it's weird to not get a stack trace if kmalloc() fails.  On
+the other hand, if we're allocating SIZE_MAX, that is probably a user
+controlled size.  Since we don't want people spamming dmesg, it should
+probably be WARN_ONCE().
 
-As Kees commented[1], struct roam_ctrl_cmd appears to be a
-hardware interface... See below:
-
-drivers/net/wireless/ath/ath6kl/wmi.c:
-  755 /*
-  756  * Mechanism to modify the roaming behavior in the firmware. The lower rssi
-  757  * at which the station has to roam can be passed with
-  758  * WMI_SET_LRSSI_SCAN_PARAMS. Subtract 96 from RSSI to get the signal level
-  759  * in dBm.
-  760  */
-  761 int ath6kl_wmi_set_roam_lrssi_cmd(struct wmi *wmi, u8 lrssi)
-  762 {
-  763         struct sk_buff *skb;
-  764         struct roam_ctrl_cmd *cmd;
-  765
-  766         skb = ath6kl_wmi_get_new_buf(sizeof(*cmd));
-  767         if (!skb)
-  768                 return -ENOMEM;
-  769
-  770         cmd = (struct roam_ctrl_cmd *) skb->data;
-...
-}
-
-Thanks
--Gustavo
-
-[1] https://lore.kernel.org/linux-hardening/202601151627.99DFE54@keescook/
+regards,
+dan carpenter
 
