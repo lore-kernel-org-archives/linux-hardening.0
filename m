@@ -1,107 +1,135 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998AF304BDA
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 11:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771502374; cv=none; b=VVRjC4c1QL+b36yI6437DuvzvNiPZhWa9GAb6YfM2YSwblaVn13S/TnJ5IsH7bP8V98Gw0XJi30cjLLRyc3U2cQ4Tywvn6WOjsya7HZPiq6xzrEmfEFt4BcIBnIoEYOqPRdwH1dxuoIJJIAHZ7G9EvnazURLL9bWE3+8W4fgTMo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771502374; c=relaxed/simple;
-	bh=jNG6NKM2obIk5OUBsjkkY3but/QE8iHDzB1+6teyTKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hylfdvj66FMYkQscap8KhA4vgoeHNNIKyLVbWYfdbHbm3Y4Ji+uT+VAKZGPadipTqdzmE+WVDlfLw7VoVpUgvLvEh1cihPzebkBlZqsajW54eY4DO71twDIDmsJMdVAAs9+qfukdc2m+plXyMMjLwIm0HF1TBF+S4l2zo1RwMP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jNtT3X/z; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jNtT3X/z"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-480706554beso9831975e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 03:59:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1771502372; x=1772107172; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YmIgGmMzCzPMs3nWbq1Vj6DbI/moOSEXCUqKC+k5+GY=;
-        b=jNtT3X/zG3bqhzVDjXA/iNN/yNQUuF0fndaP4qJcZgHQUdl1LpGCcGHdbUKr3l+H0R
-         ceGprRXGWtwbNwFLsd7jkiS+AGUVaZz9pI7y1WKA2bEjAT9lg6g2LvEmhTA8igh8Nd9U
-         zgW8a3gJ7Hte0fvupXFlHsRce7pAcyKLmqfZDLE5RlGymvjqpbaVsrR29VPHNodrheSJ
-         7Zz9BwW2kQ4hQr5CH1eIT5sEo8M27mBzCyDB7k/l2mJtb0Wd+YjaPXhLG6pDU157G0vC
-         9DSJE3NcKHqbnp3Ts7TCRurpK6Kc1NJLup2DUP6MobusROPDwgzrO3e4Zs+e+7Lu8Y2+
-         yvDQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F433376A9
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 17:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771520682; cv=pass; b=iWWhQM9rqAXkE9I++LkO+TEPODd+wOGJJvQk3eka7tosNB6DHtqu7FZMuugN3J/uqhthNt63NuQTRL6E7zxDTcm/K/1dTvHa2WTb6E7ia31OrV9M8iJ1F0Uk23ybDsOK7u5a5XqwLJXCqTrgzIZ5U2DcxHSB38GaohkFkozQ5HI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771520682; c=relaxed/simple;
+	bh=b6U1hG3nrOVFz0ecG5N+39M6HPtyrPXlR9zj9WH7HqQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qV8IPsn49znt39o0CUGGtbE9T++E+8bzTig4M8EWikjNrwxGm217ROUfhQmSn9dxwmbZ+ILEoRZa4De4cDIbLasCDaLH8h3XPq7q6GDbzINsdIljgdALy9hSBoKIwA1pAy9EDRSMOfYTy7OXu2zCNXDlFSDlwAJqgun0p6THPsY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chrisli.org; spf=pass smtp.mailfrom=chrisli.org; arc=pass smtp.client-ip=74.125.224.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chrisli.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisli.org
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-649e456e8a2so1057830d50.0
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 09:04:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771520680; cv=none;
+        d=google.com; s=arc-20240605;
+        b=lxIc6euWsSXahmD7gLkfCFna5Ppbz243S6Bj8beQ5e8TVvvZ5LppPVMD9g6W4Nqfp1
+         JgLKw0ROY/VlTpL6QLIuSPR8dY1dx0Nmbu5nVyVOO3qBx3KwEVkqKQ2/vESQCLlWgV7C
+         dQiPAWnQM2B3P70W/5furyZZvYpnRvO5ugWE09k9I/VHAzmNUNGeRtUdpUD8N9HCsaau
+         r7KD+xc8KNJCmDtuBno9P79ih6dQekU4xUs6AsqUPbfji5UPNtBoepKNf6mG0CADnT/H
+         jFKtAJgiNlPGdVUYjP4uomWmQ/e9D6TZfoRATUAhH1JGTRmeIHDgZddldEzUG4s0NTQd
+         eRJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=GCfnfADMenCdj35GVzlSj1RLfLETxBVqx3iNQnVeu6I=;
+        fh=ZUZ0t8SI1a1W/I9Y65dtup0sWEj7IT48dDQGoFAuULo=;
+        b=DDaWGT4cRvXLBY+i3XOfyk1y2M7x0SwngVh5ByBfpkXN1Qc5XyTMVBCuIBvPtcjro8
+         +V01eMAKPmcUK0chSuar6E8Ds10V6KW9ejwSwvEbcCYUfH2/K6GM7RAbApO6T2n2XyI8
+         aZK/fpI+benMgQuauv720ZA9eSkHuWIRZgxrFpCHmDwaDWfSZYAJZQNqOWOcxFkBtmoV
+         LC2g+/19Yz1398/xNpr/N8PVcAJ67mD+PUpm8eUSE1sO4bfwLvcA8oNnpp8eLOLTk5yh
+         bmZZT/IpuV//CQygQpCzRgcr/I6mOpGg51hw5KUfJbs7QzxceRJv4HaMaeQ6pH9f8hxG
+         FJbQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771502372; x=1772107172;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YmIgGmMzCzPMs3nWbq1Vj6DbI/moOSEXCUqKC+k5+GY=;
-        b=G0xuh6d0bu08eAcD4D0EYFq7fy2/1ej/McnaTMQxyZ60T7nb77l6EjM5PtsLknSLI9
-         nA/GdJ/f+/e0ZojabKVMH8+OijGbJW7PtdV+uj0n3hL0YkB4GgNLQauPPYYAZhjFDwHC
-         Nb8T+efIzdozt2vSkc7dMiyOtUYydpLeTM9S/gpadh7RFhS7ZHXqQxhj+tMZMat7pkgB
-         ng1XG0Xf3Aj8j2hsWoD12BRoaM1LDJU7XGNdVQHb607PQ0+3WrUKWE5qjSUiQbaY+ng3
-         XDwcFCcvTgVhD7OKnyNC5qrcBHgJUqu3F9CcO9jzBRfraKSXnySfqe9IW9vK3ICdaZ67
-         +Gwg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6cNsEkS5uO5N8U6G46kMCZQ3iWhvzdu71DI7l2gJCRIb8S5rO58MuUPPKVCoGO0cR/zUfDI4KBXjqYFMkVWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEV2SoSiWkeSy4jnpMY6zQoIfljAb2uDMY+4GAtss5bcfv3mOF
-	k9WMtGGxp15GdKzJn7qhOKV+tdcdAq8WrmOekdUV8De4xL5WrXXXNJt/Lp8hmy2XxRM=
-X-Gm-Gg: AZuq6aIfpk9HhhNfFJvOyQh6r99ZjDzIWfwsKErQB4GV2fh5FFCMOK5mPMFleGtOJkS
-	pLysFasQbH4xtLbD7+6QdWrcLuUwmYyQs4FPmkpKDv7+SNTjYNXez+m8iKbT3B4trPU2H90G0SG
-	m8y8lY0eX5XGL6k65IXpK40DH5Z+iTTkdhGWSoraQStSkvZdixvZ2RKOKt1PgHZf8EMHsswm4uQ
-	hH0Dl7gkRyMmFBYgl9HyFeh3adUQbHQ9NuleU0yndq0IsRc7ZlPXrnGC/WSxtg0MayAgVrmKUhE
-	tfoD7qbtsz2l1ecy6Gn+lryTh0NBAK3skKmUKa4fYstKF0A2sF04ra88RB+s2DlISslEn/5w7fS
-	w9R5YOJtA2FVyIb/6MN9pzVQvEeSRSvjmhrpuJiEmlyBKCVPStDWy2uFPdACgkU5kM2qUm3O2V+
-	To+f+3Am4MVrQLsfYphLcU6sF71MzIhO4V
-X-Received: by 2002:a05:600c:1c19:b0:483:5310:dc67 with SMTP id 5b1f17b1804b1-48379be817cmr338907725e9.20.1771502371842;
-        Thu, 19 Feb 2026 03:59:31 -0800 (PST)
-Received: from [10.11.12.108] ([79.115.63.134])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a31bac27sm267185e9.5.2026.02.19.03.59.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Feb 2026 03:59:31 -0800 (PST)
-Message-ID: <cdfa7ca0-2c7b-42ef-ab79-4c63d4c10c35@linaro.org>
-Date: Thu, 19 Feb 2026 13:59:30 +0200
+        d=1e100.net; s=20230601; t=1771520680; x=1772125480;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GCfnfADMenCdj35GVzlSj1RLfLETxBVqx3iNQnVeu6I=;
+        b=ZDV4vJuomHqZCaIOIFo1I2o3xiw4nSSc15Y98Nx/cVA/M6wbJAUFiBlhRjjID2KA6Z
+         14TcofLvzfiNGyqnp0onorXJnWgIGrNa9JEKbPqMuKQnKFlYJb9nN3a3oXMSMMxLDkVy
+         R7GS17tdWyY7URGPR9dNHw6V0ge25Gz+HYlRq3n5RY2bQjgVObURlM4zf9/VkN0SWjR1
+         0VT9xSMml26zfPxPMUqk+x5EzJg3EgZBbIld9InOiXV1+kSF7qrz49nMJnnZQ8fFbfuO
+         Zh9gkJZZi33yHILmRXkpygyj/z7RDrCqSF9KF5g3EjP0GPnyPy2AsSGu7F0dChU7aVr3
+         qgog==
+X-Forwarded-Encrypted: i=1; AJvYcCXCUQ1Rd5O7hSwCs4IJhltehut3KzVXhcFCUhfvSqOG2+jCguw7e95/R9/ra4GgYKudyDNGuD0feTljvytNY7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS4h+TD2fD7JVwi/ubCXU+dKmqAeFAAKW0/mNNtgy2npunow94
+	rfyM2MNXJSF6RH3xuSlp1SA/uAqe2p9pD4TcQgQeJpfKCwPsLFHRXFfbPbj20cDOUthBo0ygvOg
+	+3BQe8goOZZazItvJCUkLMPHB5p2S+7Gbd+0ULaT/rQ==
+X-Gm-Gg: AZuq6aI84SoVftIaF+FfmgQw1My6wlH/Eo0fBxPa8rXeVt0Y2ONxLxhjRuBof7QbZdI
+	oMNfXEZ/YlPWYMw/1t/D0cmQOxWbvxSFdz2zNceWkp/nKQAKRFpwJ0CgYqxvtwBtlZ0PDNwgXRP
+	Gi4y2WusJGeyc6iq5vHvo6Xero4f3LXXsDGQYAi3S2MaGhyjYtiA+ZgGRi6gPIi6WL0bEA4u7Ei
+	mEItTRzEHHPVSUQ5SArfou+ZQCQyNrn41L1dHJpaS0RqJaRR+9CUxQYBT5FUNU08lnkyRtZVmgJ
+	+pG6HY/shSLTpqM4/x+gPUeu3UYdNVFKFkDHlkOm+M5wYmJe
+X-Received: by 2002:a05:690e:1c1c:b0:649:c375:974c with SMTP id
+ 956f58d0204a3-64c55587d75mr4376174d50.28.1771520680340; Thu, 19 Feb 2026
+ 09:04:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] firmware: exynos-acpm: Count number of commands in
- acpm_xfer
-To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
- <alim.akhtar@samsung.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260219-firmare-acpm-counted-v2-0-e1f7389237d3@oss.qualcomm.com>
- <20260219-firmare-acpm-counted-v2-2-e1f7389237d3@oss.qualcomm.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20260219-firmare-acpm-counted-v2-2-e1f7389237d3@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <d3dd8fc8-ab46-4cf1-87a9-0324685ba2e0@kernel.org>
+ <SJ1PR11MB6083C6D97484ED4E4710268EFCA3A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <aThSGiKwJRYOB6kx@agluck-desk3> <aThqcq0iGge1pQCr@agluck-desk3>
+ <20251210010020.GA2522829@google.com> <aTn0WdVv-S_EpQmS@agluck-desk3>
+ <aTqAxfiVCR2ch4I5@stanley.mountain> <CABCJKufWw4VQA_k6Deuf5Bn6401cbYv_St8VV_0-LAau6F0nTw@mail.gmail.com>
+ <083ebd92-4b3f-47f8-bf0f-395a604b5f05@kernel.org> <aUVI9smf2t7PvDF6@stanley.mountain>
+ <aUV7kyjxlijuy5sC@agluck-desk3>
+In-Reply-To: <aUV7kyjxlijuy5sC@agluck-desk3>
+From: Chris Li <sparse@chrisli.org>
+Date: Thu, 19 Feb 2026 09:04:29 -0800
+X-Gm-Features: AZwV_QgEIU-5ticNLcegsMRlOq6nRWIo8xAridFdMNrLj6Suwr-SXxpNMC8DPy0
+Message-ID: <CACePvbVCwr2hc+gqUBWz++GKsk6+c97sBrVRFJ015jyeLkDbcw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] module: Add compile-time check for embedded NUL characters
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Eric Biggers <ebiggers@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Rusty Russell <rusty@rustcorp.com.au>, 
+	Petr Pavlu <petr.pavlu@suse.com>, 
+	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>, Malcolm Priestley <tvboxspy@gmail.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Tony,
 
+Sorry for the late reply.
 
-On 2/19/26 1:27 PM, Krzysztof Kozlowski wrote:
-> Struct acpm_xfer holds two buffers with u32 commands - rxd and txd - and
-> counts their size by rxlen and txlen.  "len" suffix is here ambiguous,
-> so could mean length of the buffer or length of commands, and these are
-> not the same since each command is u32.  Rename these to rxcnt and
-> txcnt, and change their usage to count the number of commands in each
-> buffer.
-> 
-> This will have a benefit of allowing to use __counted_by_ptr later.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+On Fri, Dec 19, 2025 at 8:21=E2=80=AFAM Luck, Tony <tony.luck@intel.com> wr=
+ote:
+>
+> On Fri, Dec 19, 2025 at 03:45:42PM +0300, Dan Carpenter wrote:
+> > On Fri, Dec 12, 2025 at 02:30:48AM +0900, Daniel Gomez wrote:
+> > > Maybe the flag fix just needs to be applied to the evaluation? Other =
+op
+> > > structs do the same. But Dan's patch did not implement evaluate. E.g.=
+:
+> > >
+> > > static struct symbol_op constant_p_op =3D {
+> > >     .evaluate =3D evaluate_to_int_const_expr,
+> > >     .expand =3D expand_constant_p
+> > > };
+> > >
+> >
+> > I was waiting for you to send this as a patch.  I can do it if you
+> > need me to.
+>
+> Dan,
+>
+> Al Viro thought this was wrong. His alternative patch is here:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/viro/sparse.git/commit/?i=
+d=3D2634e39bf02697a18fece057208150362c985992
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Hi Al, should I pull from your git repo
+https://git.kernel.org/pub/scm/linux/kernel/git/viro/sparse.git/
+instead? I saw there is more than one commit. I assume it is ready to
+pull. Please let me know if I shouldn't.
 
-Thank you!
+Thanks
+
+Chris
