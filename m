@@ -1,87 +1,87 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1144433EAF9
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 11:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D07533F361
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 11:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771500449; cv=none; b=D8QodfuTtzo2fturYiFf2Wy0njvnzxAv0kVHJ7tPbGrB7o+ett1uu8XFIjpDBq+ReJNZX9ppldWKzXmq1/RH78G8i44AIp745Qt8RBucVxmyLGMsbQ5ZyiOhVn3lxU/HANCbq8XI1UAs85SdQxQWm/8qi/cxE72QoENGz1589jU=
+	t=1771500451; cv=none; b=Zet7eFxkryD72aXZ089/iJOM46pBq9JK2elAmmCSUcFnRFTJOX8m0rmlB8EYYOvhCPYTM3GQ4siSMtu2P22DNn5p0ju4McvoKmrjJX2K6sivCpPg/bOKJZRpkRsOEVhw+c0SUXlL3nZP93+KtEiWLlRGsnOepgBw/HiOEugE1OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771500449; c=relaxed/simple;
-	bh=QDmpj9Mhi+yaAgNVbdMPNkUREhCivGToVpPYIMUn09A=;
+	s=arc-20240116; t=1771500451; c=relaxed/simple;
+	bh=sMLN/7ZBA2P0C1881XG/mSB/uFAs4yEuNbwucOSQHKk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p6Z9UHDJZ805p0pPiIB6YpeO6Hq7QdRqQdZ3MApvfIcEbTn/v6zCSPSy3gypofkuVsg4I+qWezJWo3h6ZNCHukbXkAl3GZtziaaFBwjR0AkO8KGVdOeWXJsIuIrS6sEyma52SW0bJwrqNTd2/7ScEanjq5JEik8Zs1wSnODiF7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L2TYlkTP; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=H+u/IklS; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=ISojcsaMmeOWGWoYYkxYUDUtoN5Mp2hZ0BsfCEbV34CyOErgifsRyaTus3sqwESBPVhot+xuRVAPcQgNSXrTwYBc5oq0pYPqwTuFpu0GAwhBefN+rYpZG3l8xii+OToDZQ4d5Owa1LjZfLnJLkXPKlOTRRiWfYCCxEGaNpyaG80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JfzLxZQB; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=kU9CNYp1; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L2TYlkTP";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="H+u/IklS"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61INlfqQ1924952
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 11:27:26 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JfzLxZQB";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="kU9CNYp1"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61J56kdK3319692
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 11:27:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hy+BuVS0iLVMRmhvOck3ZxPEwiAHI2ibXjhBmo6hiuo=; b=L2TYlkTPyyp0CHuc
-	Qd9a43DHIZveEBAUgpBJRkPft2Y/7HgTN/a6SHJ5vrvSTY8Wg9JKJ/IRDr1fgYiO
-	rfedf/9BjsRlfmzNH4nfJ1aBMDVi7njvd3LxpprgqCLUg7HFG8KgjZh9ENfZB753
-	mNz1N51XL3ZxYl+0qKVSgT83PYozzTA5bVgltPfewmW1e5H3NTf6RTxNjXmsihpe
-	IIt6M80GY6V2zgmoLZhFYeTbZ7piwH2z2Sy7xbZN+MUSAoPp1MPaJrbCnVY1Dngb
-	lMWBr1pjo6xSo1xvyeI3+73idd0wkcr/5uGurMt/DSNDks6/ArNPQqhWP5nDmjag
-	Kc2Igw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cdqdg9f0d-1
+	ou7ebgKBjCjOIB9PlzrTghR5gcm+XWioNOKUO6+BOOU=; b=JfzLxZQBhQzr6QdO
+	7G0D5NxmxR5cqL2xJIaTgYGafNC98yQGcmxG/Imjjpo8eZcrSdIBqcuXGHw4wkDq
+	bVLBa5isbqlWc/7YiqRORbOKgdtotkCtH8+d8cqKRK4VzD6EDifIwSyLZJ/Gojtx
+	uf1oc+NaMG2qI7qyc6FWYquhSleNqz5PF9jkWuhzbEk3kau/3QylRbhnzFKxOT+B
+	yHzGHLKJLakSkgi7JHVxaPyBHRs51v6SPu2mDVjM0tAPPljwzeUM4EOrTCDbBsg2
+	8GpD+1o1JAk/HvIwlgDB6PL3HMDEXYqxBbOFOjvSxl7vGa5o0chggVeOTUy6fuk1
+	nMawVw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cdv388wf7-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 11:27:26 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8cb5359e9d3so669026385a.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 03:27:26 -0800 (PST)
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 11:27:27 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8c71655aa11so824191485a.3
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 03:27:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1771500445; x=1772105245; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1771500447; x=1772105247; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hy+BuVS0iLVMRmhvOck3ZxPEwiAHI2ibXjhBmo6hiuo=;
-        b=H+u/IklSc9dH/wGsAXDOiXNx6UfWpCBubGKFbqVG1o2HdPDm6wkx3gP40OX+oAWhnj
-         iOdRXAc/TRSDvau0DvIIvWj3+lHVzDS437bTZpeKUAxvDllO6+pQHi9oG6kv6DyOpP5C
-         df4rcOusS77oZP3oACy7/pa3rkp0so97O9VbfglpRPEXA+KqGETshVd9Y7mIi0pb+QKp
-         x11H6STmlRoUtbawhZoD3nRgNr/1TOp4G4Jm4cmw805feYxejtLmEv5aIFL8taI/nwEP
-         6Ytls+nGlVJN/joR+AJ/NW8lEnfZo2Pw5Lb0uQCLmau+/HPZMJJjqE9KL2heXDaLJCiY
-         Bizg==
+        bh=ou7ebgKBjCjOIB9PlzrTghR5gcm+XWioNOKUO6+BOOU=;
+        b=kU9CNYp1ETF9O7NKHhBpU7iwuAUgXFsR2nXbHaxh0TQrdpCnmGZXWnYWHyiqBdOgI6
+         1E0DLmse0OmSavjZC+HDRuugssKYlEFyUtfIm1Ufo9aRo0A9oxVBAoxupQEl/Etielhm
+         Q+fv3ZnVY1GTIrTuGWXSKy1NJxvCHVHMRDqZTISDbI5SLlKEW8AQyKux0UOYJVLnLhF/
+         x1PtOra44Uz8O/hQWOVQW2l8qwWNdF+F56TqAGnRYGaFluS2BmDClwyolSDm6ouc60Dq
+         5ii+MVFsn6ps4u/jsIvCb+eKz3mXgaMKCCuD6LsCcxxHZJh82zrRBVhnhfT7KY4BdLUv
+         8LTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771500445; x=1772105245;
+        d=1e100.net; s=20230601; t=1771500447; x=1772105247;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=hy+BuVS0iLVMRmhvOck3ZxPEwiAHI2ibXjhBmo6hiuo=;
-        b=iaurTUgJDK0anO5qfVdF/Ze2FjqGx2l2yBP9xwJyh7QRmU+PjYo7fVxI9mnp6nZdwd
-         qX+gshUz9s/CJoCQTheHHJakO6DjqiLSnZyQDQlc8ZJ2v2sGc8is3mstnhU7mfSESEN4
-         jPmqdcAC/knyfGVO9jzHwMAe3Ebvd8XT5YskpdgoZFgZ3ykNxPJbY1K0BYl6Jsj6BtIX
-         YU7s0DemN2KLG2dbtHkHwYW/DBYPQxqe3X0P1uy+PntGpuZ6guyWF/83qI/eatARhk9U
-         mlyQJY2czj4ZC4/g8sI82WTxNeaFGpIyttzBWhnu7o0evLe2iSAa+BArDRr6PaDi1eqE
-         eyBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDXKyjE06A9IttpKXZ0nggzAu6Twfk9rx6oGMpL4dR/LJpNs2ufjW+OX/Uf/e9upIq4R1/3O18X0eTWfAB4H4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRiKnS9+esx9Nf6gv4s1VvtQg5r3Xw6asoBEYB5NKo0YKZtzhI
-	q9+aCrx3wJq9PSeb1uHgL2XqVe5Pd5raD69UdeP9uAIaU9PpC86HheqA59B2GcRtce9ljfus0j/
-	mHAAZ5ZSUMQIBECtrUdbmfWmb3r2fKNfKd09h0FKsrTWNTmj+v5BiZDmpJe3WhcP4zmhONxo=
-X-Gm-Gg: AZuq6aJlz1TJc1TrvshQCfUJva+ynw81fQwcA7GjuzGRbExE2p+bXIFqYj8pjGs7U0o
-	xDB8apSCWfMzIuu4pMk7a/kbaKeuxfh5ss0H4hNRkS4A7IMEcXsOKQWEMO/5o6RTc9Maoyuujk4
-	uvv/6HnRIodCNFRnmih7ZQ9uubAp84LXQRn89J67Igl0MnE+r14/uLqrWsnnQkVRw5AH3lwNEfF
-	JU1qcKsv16C+tZTfKlpGv1K/b+unzkE/K37CVkek77DoAHne9fh7rvFFNKU7D3UEFa63ZPe1f5c
-	76Gh9zAPkpbLlDfo0dmkvoy/ydw6c1EbLJSW2dDIwbTnXv8UHg2/MdL/4WFX6x5fA9qhfhWIdRZ
-	c4VVqbsM8QYaICTAAeV2F2xh4Wm7BFNI4NwurY5WZg4p0RQ==
-X-Received: by 2002:a05:620a:4492:b0:8ca:4438:b8f4 with SMTP id af79cd13be357-8cb740ef205mr615679085a.67.1771500445318;
-        Thu, 19 Feb 2026 03:27:25 -0800 (PST)
-X-Received: by 2002:a05:620a:4492:b0:8ca:4438:b8f4 with SMTP id af79cd13be357-8cb740ef205mr615676285a.67.1771500444867;
-        Thu, 19 Feb 2026 03:27:24 -0800 (PST)
+        bh=ou7ebgKBjCjOIB9PlzrTghR5gcm+XWioNOKUO6+BOOU=;
+        b=k5v7PrJbuxTDM65KuIEOV6t+0NUXVEY7m6U3Ap3TXTf94FUz+YQKtxbBiwgwJfnJ2i
+         CPTTfDoWOyNVfK66aqgGsUI5dpBMWpoZkj5T3/n1wBaFCq84Jk6T/XyKeidInAlsmSO1
+         LkylFlyiSf+0SifL7PsfIJ4fzHK2hwPuRuwV/DA3BIrCCtZtsWLMgLVqXYX/E9v1H2Kb
+         cjvdNTth8DX42qhAY4dp0J7/eDJtSkuDKwWQEeyx4d3Vw+Z6Vs6JByWUPysDE51I7mxR
+         w9STiMhqmQTEFSwuXF0K4j1ymg8i9v+TVbM2L9lXvbkYeZtSkaNV3RXeJj+y6prarHcC
+         GnCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLoV3DkIIFp1XJ+HFnQIXEM61Bv7YvhJotqARViuf4oRMdfDd+dAUID5cd7gtQkz19xyxGzyL04s+ozPCd2I4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOb89JlaX4V6z9HKxtdED6ShgRPGZCwlsEBmpPoJ0hJa7em4I5
+	NgqPnWkZLGOuQ57Nv0j1ll466vdGk0ZZpQJbBdlN4X7K5IIzwpJj9F/hE4pTrO91WSfeyll137h
+	yv+Hran43XcZ7knIbXn40va4VWtU1gx7REybErepwCXS5hmWL/lG5MulkA4Q3dzpMC3BigGE=
+X-Gm-Gg: AZuq6aKfsin27HGnZ/5bPXhiRvgpkpV8VAIYaWQ60wlP3dENlFruIbeh1taPvq2gAps
+	IKmou8n2QbDQhPDb5hhuzeTAYcItamZ3RXFvBPY4DXpz4zUaauVizVeP/y5m10vgpJXCJAPQ5pE
+	5LHLcTd2q7z+7HdQD1tvLULdyR82uMlrmSWdaHqQzjLlyUxSwijAibFrkBP4p45fCftFn4UFswF
+	oInNmN7QMELN/2VnxC4PZe7BOGT/ym5QCGm+JilOh9O1CeQpD24HwpZ5QMLdOoAYTch6QRK1lvh
+	hFr4gScwiDxhQ54A/DHnkwRpga+8cgkCdYV7S+aPNfalOF0Cwr0EHbb1r1a08/qO2PWy8yHxSwI
+	SWaI1jXeGDYDJFKU946Cbz4a9ZbMcXQSXx/EAFJmBKXn8Pg==
+X-Received: by 2002:a05:620a:4447:b0:8c7:1afd:a535 with SMTP id af79cd13be357-8cb74058e0fmr576146585a.25.1771500446924;
+        Thu, 19 Feb 2026 03:27:26 -0800 (PST)
+X-Received: by 2002:a05:620a:4447:b0:8c7:1afd:a535 with SMTP id af79cd13be357-8cb74058e0fmr576144185a.25.1771500446487;
+        Thu, 19 Feb 2026 03:27:26 -0800 (PST)
 Received: from [127.0.1.1] ([178.197.223.140])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac8d82sm48903796f8f.31.2026.02.19.03.27.23
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac8d82sm48903796f8f.31.2026.02.19.03.27.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Feb 2026 03:27:24 -0800 (PST)
+        Thu, 19 Feb 2026 03:27:25 -0800 (PST)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Date: Thu, 19 Feb 2026 12:27:10 +0100
-Subject: [PATCH v2 1/3] firmware: exynos-acpm: Use unsigned int for
- acpm_pmic_linux_errmap index
+Date: Thu, 19 Feb 2026 12:27:11 +0100
+Subject: [PATCH v2 2/3] firmware: exynos-acpm: Count number of commands in
+ acpm_xfer
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -90,7 +90,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260219-firmare-acpm-counted-v2-1-e1f7389237d3@oss.qualcomm.com>
+Message-Id: <20260219-firmare-acpm-counted-v2-2-e1f7389237d3@oss.qualcomm.com>
 References: <20260219-firmare-acpm-counted-v2-0-e1f7389237d3@oss.qualcomm.com>
 In-Reply-To: <20260219-firmare-acpm-counted-v2-0-e1f7389237d3@oss.qualcomm.com>
 To: Tudor Ambarus <tudor.ambarus@linaro.org>,
@@ -106,71 +106,238 @@ Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
         llvm@lists.linux.dev,
         Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1038;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7024;
  i=krzysztof.kozlowski@oss.qualcomm.com; h=from:subject:message-id;
- bh=QDmpj9Mhi+yaAgNVbdMPNkUREhCivGToVpPYIMUn09A=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBplvOXAyCwdeeG60WQzcr9Uo+M3mkJDcWzTWLZ3
- kXMLJDmM7KJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaZbzlwAKCRDBN2bmhouD
- 17aeD/wOR6DTrP+rBWdXbkF2r6rb3/tLd36u8MghhP0UWVrgi2z0y/jWoTssX+J0V7oPlxzXpCI
- cMgluqyML+MC9L60z4kTPIFqhi/AtNdC/8CVFU5a0Hx68otOv/K0qBDMJ077FvMe140HHGGnh0u
- kpO/PsZ0EJnWWzvZgqVb6M051BYBvsywoJdt16H7swNJHBnCLfBtK7aXx+Nq71u8405lw8LuEDL
- iZhrXgvWNZLN8mbNFGdGoZQLoKAbf3jbwoCLxRuLB1W66O5Y2nvPVw2vIszBoJaHfAJ6HM5rCAb
- HKqodL/5CTHrZBnnr/3qTltvJsRGisotNasGln36eo065HHND1/NQdUPEf1PInYEOZPsohYAu0Y
- tHPyFYJud5k6PQIrP1lcHEpkQnH0ggxXaVae1GMOEVf/DwsiO2XajyruDU2k+eI7idNY1AO86SY
- WNvog6SSmc8oZmh8in3yvpOO7lKGq3WMcYrvrUXfv7F8uB7dRRTHbti4hWbN/wfWct9ZatBDN+c
- 6EKzxbtIuFUTi8QB+AhmcL2uZn66/y2PdJZb2xgsRacVhy1rrIVQl34XIpnmbC7Mq8zJWWm0kd4
- gK3mAVXA4SnwngfiqWpon86kStiZ8hVlMbBcAUCJ9uvr66DAjhB0orNeIRirQiB1ktbGltC1Ayr
- EEFtsxNfwsjn84A==
+ bh=sMLN/7ZBA2P0C1881XG/mSB/uFAs4yEuNbwucOSQHKk=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBplvOY5cA/feqbe9rvzIDKDL7Qpbm2bFuPWfPSY
+ 9T0ZWTRZFSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaZbzmAAKCRDBN2bmhouD
+ 1zoiD/9dC38H15MV/QMCaANwKiwL/JatPkLP7TNRvJ88xastlsXzFSPEwFJp3L9DtbGJOBkqWiA
+ sF7HIlc2Sf9xINNV5UN6n72HkadHHp24tUr9N02/4MC6+wd8UqIBtmGiZ2wy0GlSbrmTC+bbA1d
+ OBOSU7sGAa2BOrIiqPMaXohj1xDdzpE6S/huoFBnRMdoNLeEB57dCvU7RYjs1SOTduYFjrcoO5W
+ 3HsUKqkFtjoH9BzSzjgSFvZ97juKc4bic5Lk9v3SQY8FDn5CQzg22fl8+dnVrUjePuSpd2TYT/2
+ C1bnRXycAsmdwBxGmQQUqdfVevX0ClEXDUdl+0uhhL86O6KY1Yf8e+qf5BXsJT02Bf+WrfJU03u
+ IB3oKJU5E7C/CNAJRQandkdJOWl37MqXrVjMAOGKfjEhSWlt0pcjGB4871/zJxmsIoLaxWhRX/Y
+ AixdV18ReBbuCtEEUuiLLv4dzJ2HtFORaR7DitaWgAiskMdHdRg6tGvly8H5UZpL/WPWYeFCLlx
+ /wn09R6nfXhcSWUNOUE3CXxepPmCnuVwyOUDfjFJ0P+Nh2WSrfFrpcAHknt3IG4lL0jqASBKkVT
+ Ad/HXweYA07hJ42K/4GSK6k/pX18QSD3+pi6j9xiQ67YpwVJSJY/TToZDRHpiYVGfn6rk0+lBMK
+ kuEvko5lxhmmmZg==
 X-Developer-Key: i=krzysztof.kozlowski@oss.qualcomm.com; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-X-Proofpoint-ORIG-GUID: LU2rO3R-lVFtIsIqkjsaC0CqjlpQt5L_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE5MDEwNSBTYWx0ZWRfXy0mAE4xczVOj
- 4HJ1FAivyIzNjt5yOUKtbF+F5uEmJVsMSqrYA06vydTwYCpYVER4A5PvEDFM/KGGdtU8r0gWssX
- UHHvGSJttb1AC92dTHUV8ADb+m5GSk0kgWXJX4b9N0GJlBZWy9jxPZ1mt6jYFCIqlQYSwC05kEC
- GoEBpzUB5rZ3XKh05xOLuQbJmPEHvrgEs3SjUwdCzbCRu/VGgt65LGpDrP6merGPbWZG3KhsGwB
- AkieeUP+PtfP7FeD0PH8UFumn8SVUIQBo7xLllAqGIkPbLQ/Bx6h4xNif48Dh6PnXDVXmEBi+fF
- pq3RXrZHtwkNrKnd+a/+jbbVMGjeN/uVH0AhtYxFX8MPLAUFh9vDxddurVaNwd7WxMt42nEuBBW
- 785OEt0kGMixbsN1KsJWA9YKFTs+hisgwVqxghIEPPrbRa6RpmJ1XPJ6cxT5mNwN3KVT5cUso23
- ggKeFzTuaVU6M7/8bcQ==
-X-Proofpoint-GUID: LU2rO3R-lVFtIsIqkjsaC0CqjlpQt5L_
-X-Authority-Analysis: v=2.4 cv=W/M1lBWk c=1 sm=1 tr=0 ts=6996f39e cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=6nO30s3o7FuWeffXwhKHTA==:17
+X-Authority-Analysis: v=2.4 cv=ceffb3DM c=1 sm=1 tr=0 ts=6996f3a0 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=6nO30s3o7FuWeffXwhKHTA==:17
  a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10
  a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22
- a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=ba0xTr4slAEstdPKfgkA:9 a=QEXdDO2ut3YA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
+ a=EUspDBNiAAAA:8 a=OVqkz_Oto1G4WS9Ues4A:9 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: 7J5oKsXzQrPpW0GoQ4J7f-Uujt0QH9IP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE5MDEwNSBTYWx0ZWRfX51rWhuzV7KqK
+ XXDECJde4+7ZYRYUYAUqk35RwQZOAS01S7HM7gMwrL7U7OW6YYto05ktlPxkBVAPLSrkxaXEJT9
+ WEWX/LW8dIwC61Ey+KANiShX5gD5GALzpidq7JRjRP3G9S7LHSVOTIiQuxZpNBqpr/iUAC59yMp
+ i6NJLP1V3arQRn3UaGmR5EIKD/ixK2DMV02ovEt0iG8J6k2eUXThfbHeKN7VW/B+L8H9znYlq4F
+ mp2hjTapqVJQcNQuxaEFHcF7d5ZIrSCGQpdz2NBBKwvIFp5Tx03iVcdlzBSSYx6oLPtlYttndPq
+ WCA0pblRu9HXAwhk/7xTexN/WqWf6rBGLCGqb0UTgqeXiiNQnsqkhDVrmkTYPZValXHal5ljSue
+ 8vro2shBN/w9moSAYvA+b1qBRKpaejaORFUVAVzG8+wOQ2HNJDWd3itwlbPQL96p0yacZ2WJa51
+ aAQvKUb48OHN/dc1F7g==
+X-Proofpoint-ORIG-GUID: 7J5oKsXzQrPpW0GoQ4J7f-Uujt0QH9IP
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-02-19_03,2026-02-18_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 adultscore=0 malwarescore=0 clxscore=1015
- suspectscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602190105
+ adultscore=0 spamscore=0 bulkscore=0 clxscore=1015 malwarescore=0
+ impostorscore=0 suspectscore=0 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2602190105
 
-acpm_pmic_to_linux_err() uses an unsigned integer obtained from messages
-as index of array to map them to error codes.  Array index cannot be
-negative, so make that explicit.
+Struct acpm_xfer holds two buffers with u32 commands - rxd and txd - and
+counts their size by rxlen and txlen.  "len" suffix is here ambiguous,
+so could mean length of the buffer or length of commands, and these are
+not the same since each command is u32.  Rename these to rxcnt and
+txcnt, and change their usage to count the number of commands in each
+buffer.
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+This will have a benefit of allowing to use __counted_by_ptr later.
+
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 ---
- drivers/firmware/samsung/exynos-acpm-pmic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/samsung/exynos-acpm-dvfs.c |  9 +++++----
+ drivers/firmware/samsung/exynos-acpm-pmic.c | 14 +++++++-------
+ drivers/firmware/samsung/exynos-acpm.c      | 14 +++++++-------
+ drivers/firmware/samsung/exynos-acpm.h      |  4 ++--
+ 4 files changed, 21 insertions(+), 20 deletions(-)
 
+diff --git a/drivers/firmware/samsung/exynos-acpm-dvfs.c b/drivers/firmware/samsung/exynos-acpm-dvfs.c
+index 1c5b2b143bcc..485fc77ad4b1 100644
+--- a/drivers/firmware/samsung/exynos-acpm-dvfs.c
++++ b/drivers/firmware/samsung/exynos-acpm-dvfs.c
+@@ -5,6 +5,7 @@
+  * Copyright 2025 Linaro Ltd.
+  */
+ 
++#include <linux/array_size.h>
+ #include <linux/bitfield.h>
+ #include <linux/firmware/samsung/exynos-acpm-protocol.h>
+ #include <linux/ktime.h>
+@@ -25,11 +26,11 @@ static void acpm_dvfs_set_xfer(struct acpm_xfer *xfer, u32 *cmd, size_t cmdlen,
+ {
+ 	xfer->acpm_chan_id = acpm_chan_id;
+ 	xfer->txd = cmd;
+-	xfer->txlen = cmdlen;
++	xfer->txcnt = cmdlen;
+ 
+ 	if (response) {
+ 		xfer->rxd = cmd;
+-		xfer->rxlen = cmdlen;
++		xfer->rxcnt = cmdlen;
+ 	}
+ }
+ 
+@@ -50,7 +51,7 @@ int acpm_dvfs_set_rate(const struct acpm_handle *handle,
+ 	u32 cmd[4];
+ 
+ 	acpm_dvfs_init_set_rate_cmd(cmd, clk_id, rate);
+-	acpm_dvfs_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id, false);
++	acpm_dvfs_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id, false);
+ 
+ 	return acpm_do_xfer(handle, &xfer);
+ }
+@@ -70,7 +71,7 @@ unsigned long acpm_dvfs_get_rate(const struct acpm_handle *handle,
+ 	int ret;
+ 
+ 	acpm_dvfs_init_get_rate_cmd(cmd, clk_id);
+-	acpm_dvfs_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id, true);
++	acpm_dvfs_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id, true);
+ 
+ 	ret = acpm_do_xfer(handle, &xfer);
+ 	if (ret)
 diff --git a/drivers/firmware/samsung/exynos-acpm-pmic.c b/drivers/firmware/samsung/exynos-acpm-pmic.c
-index 961d7599e422..44265db34ae6 100644
+index 44265db34ae6..26a9024d8ed8 100644
 --- a/drivers/firmware/samsung/exynos-acpm-pmic.c
 +++ b/drivers/firmware/samsung/exynos-acpm-pmic.c
-@@ -41,7 +41,7 @@ static const int acpm_pmic_linux_errmap[] = {
- 	[2] = -EACCES, /* Write register can't be accessed or issues to access it. */
+@@ -63,8 +63,8 @@ static void acpm_pmic_set_xfer(struct acpm_xfer *xfer, u32 *cmd, size_t cmdlen,
+ {
+ 	xfer->txd = cmd;
+ 	xfer->rxd = cmd;
+-	xfer->txlen = cmdlen;
+-	xfer->rxlen = cmdlen;
++	xfer->txcnt = cmdlen;
++	xfer->rxcnt = cmdlen;
+ 	xfer->acpm_chan_id = acpm_chan_id;
+ }
+ 
+@@ -86,7 +86,7 @@ int acpm_pmic_read_reg(const struct acpm_handle *handle,
+ 	int ret;
+ 
+ 	acpm_pmic_init_read_cmd(cmd, type, reg, chan);
+-	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
++	acpm_pmic_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id);
+ 
+ 	ret = acpm_do_xfer(handle, &xfer);
+ 	if (ret)
+@@ -119,7 +119,7 @@ int acpm_pmic_bulk_read(const struct acpm_handle *handle,
+ 		return -EINVAL;
+ 
+ 	acpm_pmic_init_bulk_read_cmd(cmd, type, reg, chan, count);
+-	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
++	acpm_pmic_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id);
+ 
+ 	ret = acpm_do_xfer(handle, &xfer);
+ 	if (ret)
+@@ -159,7 +159,7 @@ int acpm_pmic_write_reg(const struct acpm_handle *handle,
+ 	int ret;
+ 
+ 	acpm_pmic_init_write_cmd(cmd, type, reg, chan, value);
+-	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
++	acpm_pmic_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id);
+ 
+ 	ret = acpm_do_xfer(handle, &xfer);
+ 	if (ret)
+@@ -199,7 +199,7 @@ int acpm_pmic_bulk_write(const struct acpm_handle *handle,
+ 		return -EINVAL;
+ 
+ 	acpm_pmic_init_bulk_write_cmd(cmd, type, reg, chan, count, buf);
+-	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
++	acpm_pmic_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id);
+ 
+ 	ret = acpm_do_xfer(handle, &xfer);
+ 	if (ret)
+@@ -229,7 +229,7 @@ int acpm_pmic_update_reg(const struct acpm_handle *handle,
+ 	int ret;
+ 
+ 	acpm_pmic_init_update_cmd(cmd, type, reg, chan, value, mask);
+-	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
++	acpm_pmic_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id);
+ 
+ 	ret = acpm_do_xfer(handle, &xfer);
+ 	if (ret)
+diff --git a/drivers/firmware/samsung/exynos-acpm.c b/drivers/firmware/samsung/exynos-acpm.c
+index 0cb269c70460..c616ac951a0d 100644
+--- a/drivers/firmware/samsung/exynos-acpm.c
++++ b/drivers/firmware/samsung/exynos-acpm.c
+@@ -205,7 +205,7 @@ static void acpm_get_saved_rx(struct acpm_chan *achan,
+ 	rx_seqnum = FIELD_GET(ACPM_PROTOCOL_SEQNUM, rx_data->cmd[0]);
+ 
+ 	if (rx_seqnum == tx_seqnum) {
+-		memcpy(xfer->rxd, rx_data->cmd, xfer->rxlen);
++		memcpy(xfer->rxd, rx_data->cmd, xfer->rxcnt * sizeof(*xfer->rxd));
+ 		clear_bit(rx_seqnum - 1, achan->bitmap_seqnum);
+ 	}
+ }
+@@ -258,8 +258,7 @@ static int acpm_get_rx(struct acpm_chan *achan, const struct acpm_xfer *xfer)
+ 
+ 		if (rx_data->response) {
+ 			if (rx_seqnum == tx_seqnum) {
+-				__ioread32_copy(xfer->rxd, addr,
+-						xfer->rxlen / 4);
++				__ioread32_copy(xfer->rxd, addr, xfer->rxcnt);
+ 				rx_set = true;
+ 				clear_bit(seqnum, achan->bitmap_seqnum);
+ 			} else {
+@@ -269,8 +268,7 @@ static int acpm_get_rx(struct acpm_chan *achan, const struct acpm_xfer *xfer)
+ 				 * clear yet the bitmap. It will be cleared
+ 				 * after the response is copied to the request.
+ 				 */
+-				__ioread32_copy(rx_data->cmd, addr,
+-						xfer->rxlen / 4);
++				__ioread32_copy(rx_data->cmd, addr, xfer->rxcnt);
+ 			}
+ 		} else {
+ 			clear_bit(seqnum, achan->bitmap_seqnum);
+@@ -425,7 +423,9 @@ int acpm_do_xfer(const struct acpm_handle *handle, const struct acpm_xfer *xfer)
+ 
+ 	achan = &acpm->chans[xfer->acpm_chan_id];
+ 
+-	if (!xfer->txd || xfer->txlen > achan->mlen || xfer->rxlen > achan->mlen)
++	if (!xfer->txd ||
++	    (xfer->txcnt * sizeof(*xfer->txd) > achan->mlen) ||
++	    (xfer->rxcnt * sizeof(*xfer->rxd) > achan->mlen))
+ 		return -EINVAL;
+ 
+ 	if (!achan->poll_completion) {
+@@ -448,7 +448,7 @@ int acpm_do_xfer(const struct acpm_handle *handle, const struct acpm_xfer *xfer)
+ 
+ 		/* Write TX command. */
+ 		__iowrite32_copy(achan->tx.base + achan->mlen * tx_front,
+-				 xfer->txd, xfer->txlen / 4);
++				 xfer->txd, xfer->txcnt);
+ 
+ 		/* Advance TX front. */
+ 		writel(idx, achan->tx.front);
+diff --git a/drivers/firmware/samsung/exynos-acpm.h b/drivers/firmware/samsung/exynos-acpm.h
+index 2d14cb58f98c..422fbcac7284 100644
+--- a/drivers/firmware/samsung/exynos-acpm.h
++++ b/drivers/firmware/samsung/exynos-acpm.h
+@@ -10,8 +10,8 @@
+ struct acpm_xfer {
+ 	const u32 *txd;
+ 	u32 *rxd;
+-	size_t txlen;
+-	size_t rxlen;
++	size_t txcnt;
++	size_t rxcnt;
+ 	unsigned int acpm_chan_id;
  };
  
--static int acpm_pmic_to_linux_err(int err)
-+static int acpm_pmic_to_linux_err(unsigned int err)
- {
- 	if (err >= 0 && err < ARRAY_SIZE(acpm_pmic_linux_errmap))
- 		return acpm_pmic_linux_errmap[err];
 
 -- 
 2.51.0
