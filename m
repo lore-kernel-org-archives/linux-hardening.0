@@ -1,63 +1,63 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9ED332ED1
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 07:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFB32D193F
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 08:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771487830; cv=none; b=jE7/bUENcLDNSCk4lxxG7InXzyY2EmTq+O9t2gYmr0unWqnTIr/x1cAfgvEsaAT3IHCBOPP+xQTiLtmPlt4T1ma1Vo4SNibymJeDCgkFCvXrzOz98KwTUBt2G5qE/Qg8ebSN3TJyPlYUdB+TkxcaPBpNwnm7KvscNZGTI4+O1Jc=
+	t=1771488072; cv=none; b=S4g6eNgztDTUdIzmxJep75kgPGFcH3Q0jLjm2GUg/NfgnaIKwJbu6j+yWD0fZkfaVdgOt0qTT7jmwBA1ADD9SftXTtTxerkkW6aTkLcISgekCWf/H35XwTf7I2gRScnk6tZCleBCOCgGZcIs08jYiOmiaiw4zLBLRjQPGmkUPZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771487830; c=relaxed/simple;
-	bh=hUxk4HA/1LmjRVI/ERTkmt5jBW8D8G4uV1QeZXJbdJo=;
+	s=arc-20240116; t=1771488072; c=relaxed/simple;
+	bh=97dxDuo1CGiK//r6VlQ2n/mnPEoD6lcPU66zb/bJ+yk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jA3elhogkRuJxnZ3OJrHjR81c/a/XJLIFEkG4n4yMmUoCSDeYhJNIUcZ+EVGDX9ixlEjZUyoTR2N/VmFe+CO5Z9KmynwmacRTeFapXVYnKfVzihk082yUdHOVCpT+0PyA0quf1/TPpEd3tHKX++giRSAvwGUQ8+B6GQhC4OrBzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wn6zMLsP; arc=none smtp.client-ip=209.85.128.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=oa7L5u8p8244PICc4BWDHALGu23Qw3NFw9RbFB2oGGICy+XMr2DXc6GnbJPOPila9EVUp7YjJjjf5Z59zlgDs7U8TthW4s3HBSl1/AQRYcdk4sVKeq80YzDAvtWs1u5tDyaDHqV5Nu3ZFa3qSTMUm7vbDwarzwcA7rEKcjgmAno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vVSh+qQd; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wn6zMLsP"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-480706554beso7109725e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Feb 2026 23:57:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vVSh+qQd"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4837634de51so2926985e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 00:01:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1771487827; x=1772092627; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1771488069; x=1772092869; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ee6rz3n4lRLIfzQydkYiBi8fGnwsN3AAWbuDK39dnaE=;
-        b=wn6zMLsPxLDSjPqCOC8EPanbRoJjb/GhwwAiwKbxvLfRGBJ3GYTGwQ4qF5HDoQ/1R0
-         qdGTCtWPdVN6F2k08vDpaJIvmO803LXTZOngLdaOpV9zNT7llHIMPwYS+ZCZowlG7HKD
-         XusJKKjQ9/oy3mtBFEOnDn468IMxsSv2Efh+1iWwfUB//V17e6w1aCHCZAJdYMuKvVZd
-         olHfKcXzAVfeAz9LOUDQ2UfXYAdKAwIrjjN6OF6nYA86zdqkm9LIlEHXQQdfN3Iexz2U
-         3vc7w1TQUX0LgqScfXjpca8E74x0P7A0ljnubUGSZ+gvd8gKqKr/xZKlSAyTNaWIuLcI
-         xBHA==
+        bh=uEQ27jPIjOmpNod7ihflopMRb8gsNhXOZ78DPDWRDlQ=;
+        b=vVSh+qQdoWRndVsMFPeBdlP2w98Bf0QA9IOMtgp1L1hgAdmnJUOr3TQM3qq1VxfMVg
+         yhaaP+uODJGTcdofs9f6M4EJ8cmJLqmF+QLavY+KBK77Q4nrYCwc34r/4OjpWf+yhdS4
+         AQ881pIl/dLwF8CLJ5bQXBc/S0xjU9AO1Z2KtVg3+LbY1J2ZbELBMQUbGTi4njtANowc
+         HI4AatlQmBqeWRJBfTw4a9XqSxvktUqxEgBVjeIBvPrRGSSspvQOxiPQOydOVrmmBgzK
+         /zMrJ1aGo59yvdiSJ5i8QNd+OAsul+ZMOTojICyrY8Oz5D8rsqaw4RuWWd2M0wgyJLSu
+         urXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771487827; x=1772092627;
+        d=1e100.net; s=20230601; t=1771488069; x=1772092869;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ee6rz3n4lRLIfzQydkYiBi8fGnwsN3AAWbuDK39dnaE=;
-        b=F8koanK0qcKALu2YFLfNw3Bgf07vU+Xy+ezYL2itkEtZH0iHIf49EcuPUoWVV0lgc7
-         yKBVgvoymdoanMBgm5L/Ozf6rEkWw1aDzv3VbC5810b5IiWC9gYxEKIYMlwO+F1eZGzR
-         H1jO1W/9sSuOYP6T0ffW6rq8uLCxJQW0EGOUFVP6irMw15/ds9FP9iaaqjn8TDGDA9ms
-         U1HpdeW7rfw7ZH0RcZFWrpHf1izr5K+94kxC+GRuL+FxuAp822fFeAHBLlCzpRA3cJq7
-         IUDGGLDjQ9TisC8uET9klm3cyQRrEdkxfm4Y1cvQEWSOVFRxCPPk5im8zfZvuvIKGc24
-         90vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpmQAxKritsaeCWr7zn+Ck3MkQtcMZn17JH7PkDnb8SYO2Avj4uJsj8z7F9cC8nimGCyWOVo7ySYXtCM/nJ5o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsE1FH3iwTd+sKjOcKPRDkatGnaZhyyaoC05zND3GK/duJRiq4
-	M9kE7D+hXztMu/tldKOTyY5UyoZuPZuqHcpwW04QMLok6fqsJupwJqzUFTuCPYdwVNw=
-X-Gm-Gg: AZuq6aKEo6BoCWqv42ASFoZEuepMbxawXU0NvkS7Il9XbBRLVbNbDL2nE6kjEbyfbhP
-	JEg+IMTiDs7vQTtllHX82Q+BvTTIDjqSDrDmaLeaTz0rKbtN55mICS5dcgsVa3m5MsDwVmXW2b/
-	5drYDN4Ebor0ky94kW+15dKW6yjg3evjmy/ux/uKKieRn9/EqFfqA49ubjO1xXW3vmGOZHYuPD8
-	QKrRK6Ux3OlL+ktioXykSKfmgJbJCQ4mTtCHEsHFUwDms3gMblFk6AAHgxmPNJ+1tRQYjy85VpF
-	dmrXzOyeplhtrSg95mZG3Adfb0lzrVSHee2R4YulXmPUrxS1A0wJAXM8+S1pyljw/qxKOkrpuDT
-	2XW6y13GWVY6vboz1D7ktmGZS9zJgJ4QLGakXtnLUGl9vRdT5Sl5cjke/RQFZfj+ZGI8gavqSFZ
-	C5ZLx0ZCw1v5Hn8O4BD4DmCUGKs5MK
-X-Received: by 2002:a05:600c:698c:b0:477:5ad9:6df1 with SMTP id 5b1f17b1804b1-48379b932b7mr310004635e9.3.1771487826769;
-        Wed, 18 Feb 2026 23:57:06 -0800 (PST)
+        bh=uEQ27jPIjOmpNod7ihflopMRb8gsNhXOZ78DPDWRDlQ=;
+        b=F5l8MkKwZGPsf8nedBjpKJrAI9EH+5myKj9cLSbRhEvYzqthpxAjtZUqDfd/ri6679
+         r1vOMOsMSLmGzU7notJf9L1RfHsKiJYNtB6cozGvg1Ab/Gf1/x2xBdmEYx8kXbmM1//D
+         /NjFySpbyeggtBuyopxHrtE1CrfyCfhwgMeSpm5vH54SblpO9sFN4LpqFrnMKOU2Rf4m
+         BiTJykQ+MrXVhaugUaX3vJOBVCBj/lmR21FfIO9Xystfw34httXT0er4lJ7aRxqVcZ1r
+         Vpv540+b/QKjbdFfa4woouh2cXlcMYsO40lfdIv17icYXVpw+xRzViqbVFsKdswE7iAe
+         HhRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWy1eCLFxrqpYG+CmLKiOfZM9dq/6Po1ndbyp2MLQkFdIA2uPXtW2XXQAwh1y1dPMi/YLMMPKHvqGBR9f8/3vE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVB0exhKcLYaI0EC/80GF673jky5TLwo4O7TTAgV7pC/0b3Yrd
+	ezXLXSW8+OHsBvigZIaHBi8Azhkv4CZGBEY4dCYVXwl8xUE+/h2NNuZtvzow7miyt7c=
+X-Gm-Gg: AZuq6aKJJDNjbgUgoYVMSdz0+Aum6VaFsqQqWWhLryDC0rnNh0O7BjXO8Yy3wc4RTMo
+	8+hh1Qu509m4lrfbndcactu0I2jRj89n7mXAPOeVmYekgS7sn/pSR+D/cK6QdDagHxTMEoeTN0B
+	heVWgTo3xJ2YcBQMXKl9x2rLTnV06zcmgj836IeXDbQxkNrgczohEDYm+Uuxbr6UPwuWJYDI0uq
+	OCcwsizN3/kHdAu4p0PppGzhJ7+PgwjyPAgsjs0OZewrQUxxCEwCtGUVdItwewAA96Y99tqxgoW
+	oeJCIrYC+cW+eK4+ZDiqkfJL6z0KNI+gct+e1tcib/ECvL4ss9rY/VWPkAGaar7wsKjKrovBmmx
+	ptXaQiTRFKHi4qE0dXnnciupUoMwBqvwLUTTCV8Mp/4ISX3NRgHRw/8r0UYoILF+1tFi9R6APms
+	1wbTc99NBUCHOWvOBS8GkyTWH8s56TJec3T7rIys4=
+X-Received: by 2002:a05:600c:1381:b0:483:ea6:8767 with SMTP id 5b1f17b1804b1-48371098c8dmr309544945e9.36.1771488068588;
+        Thu, 19 Feb 2026 00:01:08 -0800 (PST)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4839f96967bsm15143135e9.3.2026.02.18.23.57.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4837b68e5adsm461946265e9.9.2026.02.19.00.01.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Feb 2026 23:57:06 -0800 (PST)
-Date: Thu, 19 Feb 2026 10:57:03 +0300
+        Thu, 19 Feb 2026 00:01:07 -0800 (PST)
+Date: Thu, 19 Feb 2026 11:01:04 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Kees Cook <kees@kernel.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
@@ -93,11 +93,9 @@ Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
 	linux-doc@vger.kernel.org, llvm@lists.linux.dev
 Subject: Re: [PATCH v6 1/5] slab: Introduce kmalloc_obj() and family
-Message-ID: <aZbCT3-q3O4M5osr@stanley.mountain>
+Message-ID: <aZbDQLeMsHCv32X8@stanley.mountain>
 References: <20251203233029.it.641-kees@kernel.org>
  <20251203233036.3212363-1-kees@kernel.org>
- <960729bb-0746-4709-a40c-2e254f963deb@suse.cz>
- <202601090928.5CFF95F@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -106,45 +104,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202601090928.5CFF95F@keescook>
+In-Reply-To: <20251203233036.3212363-1-kees@kernel.org>
 
-On Fri, Jan 09, 2026 at 09:31:03AM -0800, Kees Cook wrote:
-> On Thu, Jan 08, 2026 at 03:01:00PM +0100, Vlastimil Babka wrote:
-> > On 12/4/25 00:30, Kees Cook wrote:
-> > > [...]
-> > > +/**
-> > > + * __alloc_objs - Allocate objects of a given type using
-> > > + * @KMALLOC: which size-based kmalloc wrapper to allocate with.
-> > > + * @GFP: GFP flags for the allocation.
-> > > + * @TYPE: type to allocate space for.
-> > > + * @COUNT: how many @TYPE objects to allocate.
-> > > + *
-> > > + * Returns: Newly allocated pointer to (first) @TYPE of @COUNT-many
-> > > + * allocated @TYPE objects, or NULL on failure.
-> > > + */
-> > > +#define __alloc_objs(KMALLOC, GFP, TYPE, COUNT)				\
-> > > +({									\
-> > > +	const size_t __obj_size = size_mul(sizeof(TYPE), COUNT);	\
-> > 
-> > I assume with the hardcoded 1 for COUNT, this size_mul() will be eliminated
-> > by the compiler and not add unnecessary runtime overhead? Otherwise we
-> > should have two core #define variants.
+On Wed, Dec 03, 2025 at 03:30:31PM -0800, Kees Cook wrote:
+> Introduce type-aware kmalloc-family helpers to replace the common
+> idioms for single object and arrays of objects allocation:
 > 
-> You're correct: the compiler completely collapses it with 0 runtime
-> overhead; a variant is not needed.
+> 	ptr = kmalloc(sizeof(*ptr), gfp);
+> 	ptr = kmalloc(sizeof(struct some_obj_name), gfp);
+> 	ptr = kzalloc(sizeof(*ptr), gfp);
+> 	ptr = kmalloc_array(count, sizeof(*ptr), gfp);
+> 	ptr = kcalloc(count, sizeof(*ptr), gfp);
 > 
-> > I also noted that the existing kmalloc_array() and kvmalloc_array() do
-> > check_mul_overflow() and return NULL silently on overflow. This AFAIU will
-> > make SIZE_MAX passed to the underlying kmalloc/kvmalloc and thus will cause
-> > a warning. That's IMHO a good thing.
+> These become, respectively:
 > 
-> Right -- I prefer seeing the SIZE_MAX yelling from the allocator. Should
-> we change how k*malloc_array() behaves?
+> 	ptr = kmalloc_obj(*ptr, gfp);
 
-Huh, yeah, it's weird to not get a stack trace if kmalloc() fails.  On
-the other hand, if we're allocating SIZE_MAX, that is probably a user
-controlled size.  Since we don't want people spamming dmesg, it should
-probably be WARN_ONCE().
+We are already getting patches that covert these to:
+
+	ptr = kmalloc_obj(ptr, gfp);
+
+(without the *).  This feels like the obvious bug people will introduce
+with this API.  I sort of think that "ptr = kmalloc_obj(ptr, gfp);" is
+more natural, so maybe we could make it work that way instead?
 
 regards,
 dan carpenter
