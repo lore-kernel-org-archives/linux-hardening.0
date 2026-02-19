@@ -1,138 +1,120 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE741E8342
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 08:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807C12F39AB
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 10:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771489451; cv=none; b=u6x8QbfXSqLDGnLiw2fawEX0Wu66hhDbP5poO0HntE0WS14q2qM1vxecu5+JuZY6HdSVwE4ew2f5BVPDq3jsLOzWofi0B8CxuNKz8dMAFfcpMRJXfyR5whM0qZVR9HRZihg2P1TnEiJ56leFRilfIAmvFVmMcyMK4zF6pcwZSr0=
+	t=1771496187; cv=none; b=hK6C+N8o3plwOvZ7bgFF+XQz0xfQjFYoJB3h4WbYQAzHj1jjE+ki+O/aAUFv84gKDXCZQ9+tzz3doJRTCzHoLVKZkYFIfLHH+F5aIJ3dmsYTt8UXDB64QNJPCSyeFeDdadLkvNJFLnhYn8ckH0uacbMYR7Hu4Pd4VklhS9sR9ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771489451; c=relaxed/simple;
-	bh=pl8NaGuc07730Vhu9Yi5iYedyPwIa2ZX8U6xHGWonLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gurra6jK4EynEbOODJGmm4/ZEGvh5bnS5ATIfP1FF0WyHCJJMvKZ/Rk04TxMWusZAJ8HLY9bzGUcIqPMl7epK6lOJIXaZeZpD1m8ap5hkensj5Gk8osTRodlaPsT6HMfOhbZgtEbZuScZlMoaTdqWvGNur+Z3jEOuFd1i7oeO+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gKGxken2; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1771496187; c=relaxed/simple;
+	bh=w0okaFhRI38jPOXfvOe7745j7gtMsdJt2nwM9DZt5TA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PLfm19a16bxtVFrtgAD4lZ6ByyNRLrQ8qebwhIqEopxZlLQGzdgihXrwgOsqbzcgkgpsExOOjkIjCSrbPvtO+LAXbg4jp6G68BdKClxHQ5kMzg6DbEzIxb1rjKimdzF0opPTHX4HwAHKQ5o4PjIOpKhcgLfLERuzxXXzHb/oDew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n6UkpHf7; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKGxken2"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-43945763558so362369f8f.3
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 00:24:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n6UkpHf7"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43767807cf3so577487f8f.1
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Feb 2026 02:16:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1771489448; x=1772094248; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0GbbSdysg+YFEUJI01k89ruDtqq8bN+fDTrKedLeRl8=;
-        b=gKGxken2WFoZuX42NCCSDHpNUhkhkcbFoI2oSFAAtNqCVSYwcJ1ZZ5YHdMKN0/L/A9
-         C7GEQFB2FaMYnNMx8qpfCuOgn6gG4jgqzjKRIEGtMI8MZ5kowIdn7Q5h3wlguiR7161G
-         Ee2zBv+SjjSOawkLFJpZuKnR76K9nncojZFMMJ3EtWirhtbZKCkl0yMmQ8oogbpOOCUQ
-         wsu3fkeNNU669hBRsiAqFCPuNeFPpTVi+HqGz+CoVExuvK5vvhwQBvjKYE9Uf+18VQh3
-         IapODavNdIwRKIguMrscVylxkcg1tqcoHdJm7jIKgOu9U7UN8PyGQZZMNlI3SbbbFJZX
-         cXBA==
+        d=linaro.org; s=google; t=1771496185; x=1772100985; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AcSCzwxqg7VWiur4dwM2dEy5lv+NIQcB10C1LX2/4m4=;
+        b=n6UkpHf77W0SruUKqA3W4jRm5DrjGtCSIWH7M3IioQs4An+DD9DsS1VM9INOBhbIAK
+         OO78lmnYt3ZcKsZ1An31eCytLquwqM535WxbcvN8qBwuZ8GvqHx/PUwioAzGKU0GwnIF
+         mJajMsmYkLisFB20x64vdKgW73oksxZy5Z5Fzy+ef9sIHb4HbXdXbopaMloDkLDRXu5L
+         wkn/2sIuIH4ZPQOQGnjFXt7iPZOFZ5ZZqit72Nq6MyMR+0eyOtWS+W8ccMHHONuV3G9G
+         sd10WGDqePgOZz9+YnKJmfY2cn6vdnPNqir/S/AgKN1Ea8o8nNK3BPiiVU40k6eu/ljE
+         wSkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771489448; x=1772094248;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0GbbSdysg+YFEUJI01k89ruDtqq8bN+fDTrKedLeRl8=;
-        b=X3G8g/QrY913m/mJVAFZJ1XjaUv8k/bKf4MXGod3BZxUF1M+dWOI1gNONV0182K4Vd
-         1klgvvO/Q4gG2rGJRXYolQrFsw/Lu0ibCyjxswwqkOUkDyxFJqyyM9twHMRGPw2sOEer
-         0R4DP9XHYAR/6QBvwJqFeEp0BpipdFlGfJM4+66BubLplPUnXe6kni1yIWPPoa0kyzDV
-         QGDxmHtJfMIHs9VPt5UYRg1DyVz7zTWv/a754t6KBE2bBFKr/hkKJP6qWT5EyLRINffo
-         oD/9ckbcYY2tI15HDBSrNHP9t+OhsZ0HJaQ4Dmiww6AUjzpmii1+M83Ph0aI8gmT3LUd
-         k60Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXlej82HaPojs/EzbBx+/YYpIGq21PGrI06RF8vbEAv5DciYba09BZJ6foPlyYYz9z64A6ptVz7HTdqkl0GKQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWSFpeEnagyELPv42YzyviBjMr70PLMsXZova0JVlxjX5JMiow
-	EJvaAX/egs55jBdA2Ez2B/X6C8qHl1pby2fqxJlpJzviXHg2MWI/wDqwlcDkWwqpDiI=
-X-Gm-Gg: AZuq6aJ/ZaPHIw9aJT3ShF++PGVQ/Vj8kMpmrOlbqEuFhszPIVMOSDoJZlRznCK7xta
-	njRHkNIjVwG7jXe7rPHlnqy8DgI7evasONZpfc3VVzy2K6Sbn1LTElvkzEXrvYHuAE804q/c8GG
-	Upok9VI9NbW/PYeXwc3/KzzD+KtY1Jon6wi6/NrZygLGazqaeSxv3E0uHsFyw0POeCc+1c1yk85
-	3U/2a09Wei+pMFDyQOpOC7vyocyyDdl4cyUaenVQjp8w54THczzBQV0Z0zWE9Qz2sd64pqsVxTr
-	KkYc3DMC0AQcwNsOFQOFxfXSS5gOYLyHz66FzeWLJnsRPuwTxGEK5hGtiy2utBpYaRKJOiCPB2/
-	57wdODWXdAhqvtCzRgH2LPBzA7xM4KBQBm0/QtlUaV8BJFynNd1TLJt9YvBPOWobhzgMAlms4bW
-	shw5qiT3AwVJEZTOPXMf6CNwv6se4w
-X-Received: by 2002:a05:600c:6912:b0:483:456a:5146 with SMTP id 5b1f17b1804b1-4837108fed4mr354407295e9.25.1771489448240;
-        Thu, 19 Feb 2026 00:24:08 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4836ff00332sm412241365e9.2.2026.02.19.00.24.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Feb 2026 00:24:07 -0800 (PST)
-Date: Thu, 19 Feb 2026 11:24:04 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Marco Elver <elver@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	John Hubbard <jhubbard@nvidia.com>, Joe Perches <joe@perches.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Tony Ambardar <tony.ambardar@gmail.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Alexander Potapenko <glider@google.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-doc@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v6 1/5] slab: Introduce kmalloc_obj() and family
-Message-ID: <aZbIpCSuKU45b66t@stanley.mountain>
-References: <20251203233029.it.641-kees@kernel.org>
- <20251203233036.3212363-1-kees@kernel.org>
- <aZbDQLeMsHCv32X8@stanley.mountain>
+        d=1e100.net; s=20230601; t=1771496185; x=1772100985;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AcSCzwxqg7VWiur4dwM2dEy5lv+NIQcB10C1LX2/4m4=;
+        b=Y+5HOwfO6VuJLlFi7UDoGGkZxV9dfCgvVAMNpEc/PLL6XLJnxfs8pt5MfGCvI3beuG
+         dexBeSt6AJOOqzsUScFAqdV+JCieuWBkEK/wdBl0hTIMxPB4rg5z6eicCbOP8Uz+sHYk
+         M6VJrQFc7YGSLqxbBWwUUu0o/jhfNC7c1Gc+V6ME8XGqW7XLp7Xpo/i23Wvni6R3AMW1
+         iKdE+ezOe5gKfH/Gz6Qq6kzBH33YPX1GB9p2duddFLhQ9gX+bM3QgIrXQ9CTxdlKlszq
+         DnP3+3ivdIIItCzd5Gt1ubquW+r8MIEESZLhlNkqd4EpCB0XpfkLzYxlStTfEsQIt76w
+         6Glw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkNPHNpx6mPKd/IEU311fkJJLr+VisHaxZeV8hMhqD+dFDamyyOo/4Bxyk/e6LZdAY9bA9AmlzTIOj+NecvJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIZE+wtGFpfLMy72NFifyXmFtzJNm0U+fZLNPhs6Ba3rB8qL4x
+	++tD0zmScWr7DSt007OUvqScX/h5ObpZbzCLWbJUBpXzNwweUlG0O9tBXeBITv/TeIk=
+X-Gm-Gg: AZuq6aKqubwWSnBUuVMNyTMiDVJUFeWQ/wi4X0bZYLCh780IjISRVuYIhDsD+zoBxx2
+	drSNxH/0FY6Fhah/DUISGSVhfJzfuMNUqVkPkXi8DR5R/wrctSoVQYu8e8O8TQ3rkba5urKubk9
+	iBfSg95u1Cv8KXPx+qkUXJ+LTV/kfLp6gnvAaI6XliRuhhHO//rbDNRoa4uPzYKuxvgQ63pzM+v
+	k2ls02UxIjT37wPDboRLsw6lXTsPFwLwjNcTyT3m1SIIU2o/ncM1ti/WBCWSYAdNHNOD/bfiqik
+	G4Vgopw2X5b+Nlb79GDlht63hyGZthWtBEZQTsjoKJ/PnlNyhoQ7ItICP/j/IpsII9BfXR30Anw
+	5xnCW5UD8c0EsomOsSPz58BY7phd6ssHB7sdCqyDe4NrEVwulScSDN6NLZk9xFYBsyhXtAb6J7c
+	9GITauNr2oiU0SS0/jmBLzjt70Z+kujKdh
+X-Received: by 2002:a05:6000:4305:b0:437:68d5:f167 with SMTP id ffacd0b85a97d-4379db9859fmr33226037f8f.44.1771496184734;
+        Thu, 19 Feb 2026 02:16:24 -0800 (PST)
+Received: from [10.11.12.108] ([79.115.63.134])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439567aad3csm14050703f8f.36.2026.02.19.02.16.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Feb 2026 02:16:24 -0800 (PST)
+Message-ID: <17020b22-6e80-49a2-8890-b16917586b49@linaro.org>
+Date: Thu, 19 Feb 2026 12:16:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aZbDQLeMsHCv32X8@stanley.mountain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT 1/3] firmware: exynos-acpm: Use unsigned int for
+ acpm_pmic_linux_errmap index
+To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
+ <alim.akhtar@samsung.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20260214-firmare-acpm-counted-v1-0-32af5735470e@oss.qualcomm.com>
+ <20260214-firmare-acpm-counted-v1-1-32af5735470e@oss.qualcomm.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20260214-firmare-acpm-counted-v1-1-32af5735470e@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 19, 2026 at 11:01:04AM +0300, Dan Carpenter wrote:
-> On Wed, Dec 03, 2025 at 03:30:31PM -0800, Kees Cook wrote:
-> > Introduce type-aware kmalloc-family helpers to replace the common
-> > idioms for single object and arrays of objects allocation:
-> > 
-> > 	ptr = kmalloc(sizeof(*ptr), gfp);
-> > 	ptr = kmalloc(sizeof(struct some_obj_name), gfp);
-> > 	ptr = kzalloc(sizeof(*ptr), gfp);
-> > 	ptr = kmalloc_array(count, sizeof(*ptr), gfp);
-> > 	ptr = kcalloc(count, sizeof(*ptr), gfp);
-> > 
-> > These become, respectively:
-> > 
-> > 	ptr = kmalloc_obj(*ptr, gfp);
-> 
-> We are already getting patches that covert these to:
-> 
-> 	ptr = kmalloc_obj(ptr, gfp);
-> 
-> (without the *).  This feels like the obvious bug people will introduce
-> with this API.  I sort of think that "ptr = kmalloc_obj(ptr, gfp);" is
-> more natural, so maybe we could make it work that way instead?
 
-Never mind.  It causes a compile error when people leave out the
-asterisk.  Thanks for that.
 
-regards,
-dan carpenter
+On 2/14/26 2:39 PM, Krzysztof Kozlowski wrote:
+> acpm_pmic_to_linux_err() uses an unsigned integer obtained from messages
+> as index of array to map them to error codes.  Array index cannot be
+> negative, so make that explicit.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+
+> ---
+>  drivers/firmware/samsung/exynos-acpm-pmic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/samsung/exynos-acpm-pmic.c b/drivers/firmware/samsung/exynos-acpm-pmic.c
+> index 961d7599e422..44265db34ae6 100644
+> --- a/drivers/firmware/samsung/exynos-acpm-pmic.c
+> +++ b/drivers/firmware/samsung/exynos-acpm-pmic.c
+> @@ -41,7 +41,7 @@ static const int acpm_pmic_linux_errmap[] = {
+>  	[2] = -EACCES, /* Write register can't be accessed or issues to access it. */
+>  };
+>  
+> -static int acpm_pmic_to_linux_err(int err)
+> +static int acpm_pmic_to_linux_err(unsigned int err)
+>  {
+>  	if (err >= 0 && err < ARRAY_SIZE(acpm_pmic_linux_errmap))
+>  		return acpm_pmic_linux_errmap[err];
+> 
 
