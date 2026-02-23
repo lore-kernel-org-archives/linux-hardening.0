@@ -1,74 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C2414EC73;
-	Sun, 22 Feb 2026 21:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC00334F47E
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Feb 2026 09:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771796070; cv=none; b=sQYUOqorpg6PdfpIERBzTU647XMMy8LDXC5znKDDcxKJ67umxC/jSAmqvGbO73E7UgAZ16xeZUz4Z0sUch7893fVBCRD9ARtos2pkZe2KUPzjV7JG12Ne/QWjREBanv4kw/XHcgAsXGm+bng04JsDviEKvzJ8VrntsMgZ0VzlK4=
+	t=1771839723; cv=none; b=nPMP+LG2JfTg5U6XwDgHmPZzJxbUolwQeqFsfhCw+2t5KuX0Zo+/WGbwMpqVZ3K6W/XjRxC7thysGQHxFniacGuyMRtSHkXgTDTGa3/H1i1WxjSqwR1J728NDymuxWUveyOAo11gMbfxyNBcPasKVVUQpB24lCu4p/HoeLllpkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771796070; c=relaxed/simple;
-	bh=MoM4gAfGlJ1ngKCroMgt6s8hQQRUOv2GP6lsvWBTYTk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VYGCdeAwCHH9NFzgn1qL0deKb5V2bt1QnvnLM89HwIZqSB21gNnNLmNFFRRov5gHxJHJUoF6AMrkaIQiEhmGCcgueYbKIiRj/LfNjujvghy967I4AYAuhzU+NPApSw3Owyu7j3vlDarhvJdRTp0ktBSUb2VleM4xM3OcdihlWl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3kE5G5Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771839723; c=relaxed/simple;
+	bh=h2fE6FJnt+GTKQVQdqqbEpUoyJIa8aBYwbs8ZoZNJxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UOSLqaLQOqBvcJorzuYl+Ohxa2ACSSksaWtrpmmbYtd/hwCtqe2nwrIahwYKK0+xRk5YVkSVw/JisnY9jMxpq7q24eBwhrN1U8v0Iu+jCQJdXNAQO3CEf0vzju8930/HapzsyxtIPnpXPTF5UpqixNftptJ+fezy2/6MUwvV9kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O8jcbl3I; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3kE5G5Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3118FC116D0;
-	Sun, 22 Feb 2026 21:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771796070;
-	bh=MoM4gAfGlJ1ngKCroMgt6s8hQQRUOv2GP6lsvWBTYTk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=F3kE5G5YSHiCVZ5mOwWBQ1EmkdZUUxri8FWvUUe1+bPk6Car0R0kut2uvNuYHVkAa
-	 g8IvAYcI7E8/6hHCb/jrPziQTKClMwrJ6H0Y/aYHLJyimbtr/frfU8CLViovCDA9UV
-	 HIObLbqEucr9FrLIbWX5/hRoPhPnR0+zxQyrVmCTdNaMIGloFGLnnqKAP5W6Ewm6w7
-	 I/owa0GiWqAQBaI4TmPdDfE67f10RHZ+BDAgtt/1JTGJALkdfXpJeUzGxFHrjR/KHe
-	 NiTE6uiB4kCm6q8SZrGgK2AZmAXo4GAErDwos4utQpdh9gKlK0o0vXjumdP0UVYmSi
-	 KhiPc2AZqyPxQ==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>, Catalin Marinas
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8jcbl3I"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4837907f535so36407035e9.3
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Feb 2026 01:42:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771839721; x=1772444521; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uP6bWvtU8eeL2/gAQvmkB1Apc9H5g4lS1edf4fQ7WfI=;
+        b=O8jcbl3IsaLsFrDMafag9I0CI/ZwyUhagbpmgRJft4VFwt39ifhvNPt/enF/DPShk+
+         hk+Ms/VLOl6Qcz3z5kB7dPNTDE7TpB22p6Y6b27p1zeRDFrMIaK0suMZuOpFP+hC1yXJ
+         7LnF1oopx85bhkijMEZHtzT9l9aAP8aBuOha7AJiZhMamRapsZjKrxF3XNQ31RebYDYH
+         KXoooUD7myBP/eupqCEY8NJkStMf+RWrG9wboNqTjvCaGVnmyF8hnSaJoBH63HYNOKRL
+         m3dpIa9OB30gucGstqPDMNi2G+odDqNjDlYXx7kSwFwjZtaBt9jSnTM8KdKHvKaX2TkD
+         +V0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771839721; x=1772444521;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uP6bWvtU8eeL2/gAQvmkB1Apc9H5g4lS1edf4fQ7WfI=;
+        b=Y81YIRvNihqQpTCE+XXNBNYEPjjUqef5OayYXqTr/A/JM/ordMvUHFYRWBugVXWXDp
+         dcQcySeRdoZ6UyJH0OJIi5vY1ZBEzCIRw4XVjhGssQ0NyCXsc/yqM8D57N2TdlYt+nJu
+         Fv29naO+krS14saM8Jig8Yudqgf2eCtPUoenL+ac1U8n5WC4ajx73mfq2w/c0cGNKlQM
+         x9dALL8197Y57lE1L8iV/lAN7fMC7KBYfOwH9hXOm5s6DJNT5YPpeQtIOr1TS91lR/sO
+         uqs9XWY/3q+5bGBHO1mNlJepmDDESBAkEOTqTPkxGa52uhEwXVbmJi27ZuLcwXN4V2Mp
+         Ravg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6J1vMzAt9OxzxV5BLHAp84URxdXVl/IEXoNhDvSyIOFgMyjXzwcp/KRtOWKg48B7n+4CYmmKCUUdNtFZQe44=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHxyMKUwZmcau77oxK4bZMUxDDAnJK3Zmm/JcPEr9FujD/kVp5
+	Wkq/r6Z9A/PlqQIAYizv5KEO9JGaPT2w9xiWfBARy4vDaisQQofg3WxC
+X-Gm-Gg: AZuq6aISU6lNTikr7qX4Vp29jjCdleihUV65fPkh9GUtsw27/18M0FsbH2oVI2G6jKR
+	WWa7/uwCegrQlsBlrmCrnGE+YDTYQSMMKYVChqyr7DyAfbZcmE35JHyoHqq4ki5HP3z7N1RpN3R
+	bIo/aQ1CXyaROsvXDcwnnbJF1bQJno1PN0uyIvsp3c/PmIIqDRxQgSn/CA3IjFso8wX6bRMvVnO
+	/GPEt0zvni/Wb22YK+hJorUd7Wdl4WMZEQofe2zZeG/oKedsg8iwhGQAtEv3x/RTwbCYDvuyGv3
+	c43ybEi7N8HziyyB/TxIg9h26dap4aH8G5oVuhE5pSB8/vx022ye58G2LwkHCq171FwRdGvV19W
+	owcegzmeJjBHSYioLkZiIsCp3izqnJIxzU/JLV3TYroL194VdAhiL0pGuxNjpeXiDkuR/cxc0m0
+	LZvvjj0J8DD2C0MyqiDfpAC3CXY0WmT91jsGzfMo0pbMSLHj//BCWny3WsWCbseMLzG0rUBpVkt
+	rc=
+X-Received: by 2002:a05:600c:3b27:b0:483:702f:4641 with SMTP id 5b1f17b1804b1-483a95bd842mr121940845e9.3.1771839720960;
+        Mon, 23 Feb 2026 01:42:00 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a31f0330sm222508405e9.9.2026.02.23.01.42.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Feb 2026 01:42:00 -0800 (PST)
+Date: Mon, 23 Feb 2026 09:41:58 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, Catalin Marinas
  <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark
- Rutland <mark.rutland@arm.com>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
- David Laight <david.laight.linux@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
+ <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko
+ Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
+ Gordeev <agordeev@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "Jason A.
+ Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
+ Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
  linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
  linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across arches
-In-Reply-To: <20260119130122.1283821-4-ryan.roberts@arm.com>
+Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across
+ arches
+Message-ID: <20260223094158.2197d7af@pumpkin>
+In-Reply-To: <87ecmcwjh9.ffs@tglx>
 References: <20260119130122.1283821-1-ryan.roberts@arm.com>
- <20260119130122.1283821-4-ryan.roberts@arm.com>
-Date: Sun, 22 Feb 2026 22:34:26 +0100
-Message-ID: <87ecmcwjh9.ffs@tglx>
+	<20260119130122.1283821-4-ryan.roberts@arm.com>
+	<87ecmcwjh9.ffs@tglx>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 19 2026 at 13:01, Ryan Roberts wrote:
-> I tested an earlier version of this change on x86 bare metal and it
-> showed a smaller but still significant improvement. The bare metal
-> system wasn't available this time around so testing was done in a VM
-> instance. I'm guessing the cost of rdtsc is higher for VMs.
+On Sun, 22 Feb 2026 22:34:26 +0100
+Thomas Gleixner <tglx@kernel.org> wrote:
 
-No it's not, unless the hypervisor traps RDTSC, which would be insane as
-that would cause massive regressions all over the place.
+> On Mon, Jan 19 2026 at 13:01, Ryan Roberts wrote:
+> > I tested an earlier version of this change on x86 bare metal and it
+> > showed a smaller but still significant improvement. The bare metal
+> > system wasn't available this time around so testing was done in a VM
+> > instance. I'm guessing the cost of rdtsc is higher for VMs.  
+> 
+> No it's not, unless the hypervisor traps RDTSC, which would be insane as
+> that would cause massive regressions all over the place.
+> 
+> So guessing is not really helpful if you want to argue performance.
 
-So guessing is not really helpful if you want to argue performance.
+The cost of rdtsc will depend on the cpu architecture.
+To get valid comparisons you need to run on identical systems.
 
-Thanks,
+Regardless, the cost of rdtsc could easily be larger than the
+cost of the prandom_u32_state() code (especially if inlined or
+without all the return thunk 'crap').
 
-        tglx
+	David
+
+> 
+> Thanks,
+> 
+>         tglx
+
