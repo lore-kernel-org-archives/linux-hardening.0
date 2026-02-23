@@ -1,94 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999AD3EBF10;
-	Mon, 23 Feb 2026 22:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F73933B6F3;
+	Mon, 23 Feb 2026 22:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771885352; cv=none; b=EtBMgvEgNc1Dnt+BFA/Huad17gJ+UiEmiDCfSePVvr5Pg8EFLOOJM4IWx0FsH2XFVassgMGI4eUpasTHo2Fjk4kY5Blglou6Fps5Vj62DwNnXH4VrS8n/fWOxW1aN/Z2Iz3Kfz3cpTrcVwXtSpM6X8RjhbBvZEy9Yty6FU8g2qo=
+	t=1771885694; cv=none; b=uc9zTv6aAQMA53pZx7Vs1c4pRor7hQ1fHG7WXEloxR/djRosINQcLnZUZgteZNbWgJhv/tYawHTRQkHAFp18T7cKrNkVT/F7zrgjRycIexG+aCucwPGqJ2I3kwIjLa2Lluq05XQmGjih12Xtr5BfGH9nTaQphDtMEM/NTuVy+rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771885352; c=relaxed/simple;
-	bh=Ihme3BeQuf5dfeZKKF9RAQvVrJKW09YsEJyzB6dEgSw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fIE7N+Z0fQmUoasPbSGa2GuD+7+joLswctQdT0QPfYisXrVvsBYB18B5HORhlO/Jmy0mQuDWDqPwTOtv6oMTlDEXpcv6Bc/Mji1/i9C8k5YHP1avQO6bXp7PlY/tgXCAkmfAhvMdeqBLVAHi2X/8+dj45znpzbDCqdW/0oXJqvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okXmN25o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771885694; c=relaxed/simple;
+	bh=287aDHfFTNxKKXzxvsvWSRGQ7MceXfi9FELksZ/s8gc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ELFI/Na++/gWJOWDT22EAwlNqdiqOHhA0QyGO0e5n6dfYar00kDoqZIPMry/tTnQdSGqf5CQ77tKWgClub58Yb6DqLmkeJ+SPebfs3K+KPXqpJo3gUQ2o5/tqwYp/+khkHp9WoNB41TxcCwQ1bCPD9p/sYFEKrSZ4iQonv+E5/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHSmuHZm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okXmN25o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30344C116C6;
-	Mon, 23 Feb 2026 22:22:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHSmuHZm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0DD4C116C6;
+	Mon, 23 Feb 2026 22:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771885352;
-	bh=Ihme3BeQuf5dfeZKKF9RAQvVrJKW09YsEJyzB6dEgSw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=okXmN25o1zrbsKFm+bfMtfKHG/aCjEtqTo9rBuQW6j1CrYxrn4j81lmlWRfEum531
-	 ZwlSx9tDhfOFL7BLR81QgLuuzxxgiixVeDR3CS8l68bqDk8l+LiMhYuk30bWF1+aUa
-	 Va4uaOifeCgM+wEpyC/x2eaosrpXY81yUeMtqTvXhzGE8YIu1x91wv/yA8Z4WuGNII
-	 wJII89x7MHV1EZ55yweVSdGGVHJzlSh9YhJAbfp6NYyWmocwWaQN9o3fpwfjo1HN6X
-	 I91Y/LA+YazAMxkliJ/nsw/SS67k8i0FHF/JhkZG3hnDO6Y0vb8W04LTzyEc8sE7rf
-	 cKVp2q0WhXhxg==
+	s=k20201202; t=1771885693;
+	bh=287aDHfFTNxKKXzxvsvWSRGQ7MceXfi9FELksZ/s8gc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iHSmuHZmD143C6fEOcUWopj7Fv/hrL/xakQk9NjM35vQqDfVMnMY2v28sdmUDGcG+
+	 Vl0jnLd0KGIX4B82DqP1B68mQ6M535tSlrSkgCPwjkseOY69MzGimoWGybL6z0l8qo
+	 lQO7uYodarPjpNi3qWlKos3LZKdzJMBUXZm5R7d+2Zpv0Zs9X+5srPqfUpH3UmjBWE
+	 mlviugKSUEFAafk0WsHUc1qRLkLCdp5dZXGTN+rxx1OOaTAu0ouF0PdqEZ3Z4F5zPj
+	 NINvPLriKAD4Pae324i0Qtfo/ASrB2HgRpYEVHPHssMPIEuRyPTz1vjC2J9iYLTb8x
+	 cC7a7cqCb/GXw==
 From: Kees Cook <kees@kernel.org>
-To: Marco Elver <elver@google.com>
+To: Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Nathan Chancellor <nathan@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	kasan-dev@googlegroups.com,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] kcsan: test: Adjust "expect" allocation type for kmalloc_obj
-Date: Mon, 23 Feb 2026 14:22:30 -0800
-Message-Id: <20260223222226.work.188-kees@kernel.org>
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] init/Kconfig: Adjust fixed clang version for __builtin_counted_by_ref
+Date: Mon, 23 Feb 2026 14:28:09 -0800
+Message-Id: <177188568476.2083280.10220783288827464439.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260223-fix-clang-version-builtin-counted-by-ref-v1-1-3ea478a24f0a@kernel.org>
+References: <20260223-fix-clang-version-builtin-counted-by-ref-v1-1-3ea478a24f0a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1564; i=kees@kernel.org; h=from:subject:message-id; bh=Ihme3BeQuf5dfeZKKF9RAQvVrJKW09YsEJyzB6dEgSw=; b=owGbwMvMwCVmps19z/KJym7G02pJDJlzLqv19RrJ/TYWDlkYVR+zXew/g4xdxu1JkbPurYvpX pa8a0FSRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwERiLBgZ/kSF3422S/gUKCso 5hTZGT7NZ2P9qz5RFaNLFaXslkcvMjIsna1RfCrP3OmoccHcu8d2svy4csVF3/Wy9lOnvNNL7l5 iAQA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Instead of depending on the implicit case between a pointer to pointers
-and pointer to arrays, use the assigned variable type for the allocation
-type so they correctly match. Solves the following build error:
+On Mon, 23 Feb 2026 11:23:12 -0700, Nathan Chancellor wrote:
+> Commit d39a1d7486d9 ("compiler_types: Disable __builtin_counted_by_ref
+> for Clang") used 22.0.0 as the fixed version for a compiler crash but
+> the fix was only merged in main (23.0.0) and release/22.x (22.1.0). With
+> the current fixed version number, prerelease or Android LLVM 22 builds
+> will still be able to hit the compiler crash when building the kernel.
+> This can be particularly disruptive when bisecting LLVM.
+> 
+> [...]
 
-../kernel/kcsan/kcsan_test.c: In function '__report_matches':
-../kernel/kcsan/kcsan_test.c:171:16: error: assignment to 'char (*)[512]' from incompatible pointer type 'char (*)[3][512]'
-[-Wincompatible-pointer-types]
-  171 |         expect = kmalloc_obj(observed.lines);
-      |                ^
+Applied to for-next/kmalloc_obj, thanks!
 
-Tested with:
+[1/1] init/Kconfig: Adjust fixed clang version for __builtin_counted_by_ref
+      https://git.kernel.org/kees/c/8e795ac93b64
 
-$ ./tools/testing/kunit/kunit.py run \
-	--kconfig_add CONFIG_DEBUG_KERNEL=y \
-	--kconfig_add CONFIG_KCSAN=y \
-	--kconfig_add CONFIG_KCSAN_KUNIT_TEST=y \
-	--arch=x86_64 --qemu_args '-smp 2' kcsan
+Take care,
 
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Fixes: 69050f8d6d07 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Marco Elver <elver@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: <kasan-dev@googlegroups.com>
----
- kernel/kcsan/kcsan_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
-index 79e655ea4ca1..056fa859ad9a 100644
---- a/kernel/kcsan/kcsan_test.c
-+++ b/kernel/kcsan/kcsan_test.c
-@@ -168,7 +168,7 @@ static bool __report_matches(const struct expect_report *r)
- 	if (!report_available())
- 		return false;
- 
--	expect = kmalloc_obj(observed.lines);
-+	expect = kmalloc_obj(*expect);
- 	if (WARN_ON(!expect))
- 		return false;
- 
 -- 
-2.34.1
+Kees Cook
 
