@@ -1,73 +1,97 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41719361DB2;
-	Mon, 23 Feb 2026 15:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDC7315D46;
+	Mon, 23 Feb 2026 18:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771859256; cv=none; b=JnbHaTV9YmljZeU/VTJnHdXHZOdA7/61qMyl7O3LzEoMDq455U8axtyvXLaqphEArUx2qVkcc8v5DwTBj7jjioG1oe99Uho2uRsRmmas/f/h2CaZufBX1o2AAH0p7tersxQjS0b3n2d5c/PJmZk4haYH3UpePDcbMxgeRqYX+tg=
+	t=1771871007; cv=none; b=OSOoDGX44AqO/Pme1KyKYXW5DHd/9DXHY/lEchsU5YHfNV2e6S98Lqd7zOanC5byNurekYwNuzB99l+YonQKK0N8xOzlp/YcXEH7IGZtuRBLLFz9mPvVg8eQf4zLZI8GX+2cJ1U9hzQYmc2clRRJ3q4pSxK5tktA8SZWagKou2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771859256; c=relaxed/simple;
-	bh=6ZP8MgbtGH5MobBoC2FmXVMgOF3DCo3R40gaWjqdmuE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JD6WBu/PHULf0vbZKHSGIFoAzRugZaH3vM8tz+VDlNXgXvAyiAsxsOC5Ite4Jg+JW/buf8QsQdQT+x1m+e0i0vLYk/RxS1oOTnqHn8mDnr04h+7pqlAi0DsQhMuOIQ2HhM3YBl2GTd5ypWCi0uxJpeizT0UwyEbluspZdVA5HyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=pmyRjEdO; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1771871007; c=relaxed/simple;
+	bh=6+2naQDXV5XODs47cZvDUyCoEdwlayXFA/uMm8d4/HY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rUmdtSLbxQao7lB1qcoVK2vbbC/Qr4RgbjIQizolYiUl1mCYD2ebOAv7t/xix3mX8ANseJM1O8e8O/JmkkIu7+xR7YdfnXl4kGVqn/Kti+RmpYI2G3xAOhQJbsepD0FdA7Q1bBaIKqPygFMZJ+PQzmkFrAiiPVeQQ54Go/tn7gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSbrhxjJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="pmyRjEdO"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 36B9640C6F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1771858932; bh=uNGo1sx9Ki+w096sWaEIkC6IKo4fwwadEMyWfut8oEA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pmyRjEdODIjeAipqFcXYuUUMrCqulImfJMdvpChSX4o/WEBWx/D9iIlWRpC28MpMR
-	 qVDCmq+hq0AkV08Ab8WKXCSn3jVSTe44fDZpyszr6qmMY8FVvxyKZSG4VIFau2YsLd
-	 6HmQreBiYMLctEplPjUNpkQHDtzx90LkD1LwYV6ym6ZGVr2QfWgD8ASD79pfZpssJm
-	 6jsdZ7c9cQC8TcmBk0h3GmT35iZy0vd2tpZL0AmNvmaqMWI1Q7BnfoIBzCZR5JfsDI
-	 1+Hnuvb8/6/Nn5MLCnkYX2noN97MOig+H33SStCdhDKoh1Zib9BjIAcfdAoKMAPONc
-	 fVwEGo2bWGoog==
-Received: from localhost (c-71-229-227-126.hsd1.co.comcast.net [71.229.227.126])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 36B9640C6F;
-	Mon, 23 Feb 2026 15:02:12 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Jani Nikula <jani.nikula@linux.intel.com>, Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, Kees
- Cook <kees@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- intel-wired-lan@lists.osuosl.org, linux-doc@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Aleksandr Loktionov <aleksandr.loktionov@intel.com>, Randy Dunlap
- <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH 00/38] docs: several improvements to kernel-doc
-In-Reply-To: <33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
-References: <cover.1771408406.git.mchehab+huawei@kernel.org>
- <33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
-Date: Mon, 23 Feb 2026 08:02:11 -0700
-Message-ID: <878qcj8pvw.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSbrhxjJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361BEC116C6;
+	Mon, 23 Feb 2026 18:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771871006;
+	bh=6+2naQDXV5XODs47cZvDUyCoEdwlayXFA/uMm8d4/HY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=tSbrhxjJusGsXpCZ+JQYWKeF+uIsYK3cZ88z58ReYq2CYcg0uN06mm8UtU/Bp1uJo
+	 R4dP3W1XC3+2ITv0dK6x4D07kp530IMPbIJlFkbxbIFZtwQpOY4KZ7sx13N+YYf2QK
+	 n8I28bSszPv6b9m+XFZ2JkVnnpLCo6wsJJptRAsJZ1gNIKEu8qVC4Likeb7mYzdDs1
+	 JYBnYsnfO53sAYwOYjevHbyfGDWqZ4duklAyZKT23Y/6vslC6Z1uh+A0MZh4GShZtI
+	 /ufcqWrsbD296fYJ9sqIxcr+Iv/f3j9y2msNIaQm9ZgVeedhlZ/nVFTIE7PD/sXIy6
+	 qgIIADjl4irbw==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Mon, 23 Feb 2026 11:23:12 -0700
+Subject: [PATCH] init/Kconfig: Adjust fixed clang version for
+ __builtin_counted_by_ref
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260223-fix-clang-version-builtin-counted-by-ref-v1-1-3ea478a24f0a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWN2wrCMBBEf6Xsswt1IwH9FfHBJJu6UlLJpVRK/
+ 92tfTwzw5kVCmfhArduhcyzFJmSwvnUgX8908AoQRmoJ9sTGYyyoB+1wZnzvkbXZKyS0E8tVQ7
+ ovpg5IgXmqzU2XkwA1X00lOV/dX8cXJp7s6+7H7btBxdN3YWMAAAA
+X-Change-ID: 20260223-fix-clang-version-builtin-counted-by-ref-2dee9636f43d
+To: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, 
+ Justin Stitt <justinstitt@google.com>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1495; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=6+2naQDXV5XODs47cZvDUyCoEdwlayXFA/uMm8d4/HY=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDJlzZstkx6xsENulecokm7el2c7F9HpF5vri+r9HA1O5v
+ KNr+6M6SlkYxLgYZMUUWaofqx43NJxzlvHGqUkwc1iZQIYwcHEKwES4XzEyTGyZ7fs602KTIsvx
+ vwIBk9/z/D+d+bvp9rvm5dJ2z2fN3sHIcHh7je/cM9XztwWsXWTG4vyPQ37VKx9p3Uidht/Hbp/
+ dwwoA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-Jani Nikula <jani.nikula@linux.intel.com> writes:
+Commit d39a1d7486d9 ("compiler_types: Disable __builtin_counted_by_ref
+for Clang") used 22.0.0 as the fixed version for a compiler crash but
+the fix was only merged in main (23.0.0) and release/22.x (22.1.0). With
+the current fixed version number, prerelease or Android LLVM 22 builds
+will still be able to hit the compiler crash when building the kernel.
+This can be particularly disruptive when bisecting LLVM.
 
-> There's always the question, if you're putting a lot of effort into
-> making kernel-doc closer to an actual C parser, why not put all that
-> effort into using and adapting to, you know, an actual C parser?
+Use 21.1.0 as the fixed version number to ensure the fix for this crash
+is always present.
 
-Not speaking to the current effort but ... in the past, when I have
-contemplated this (using, say, tree-sitter), the real problem is that
-those parsers simply strip out the comments.  Kerneldoc without comments
-... doesn't work very well.  If there were a parser without those
-problems, and which could be made to do the right thing with all of our
-weird macro usage, it would certainly be worth considering.
+Fixes: d39a1d7486d9 ("compiler_types: Disable __builtin_counted_by_ref for Clang")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ init/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-jon
+diff --git a/init/Kconfig b/init/Kconfig
+index c25869cf59c1..b55deae9256c 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -153,7 +153,7 @@ config CC_HAS_COUNTED_BY_PTR
+ config CC_HAS_BROKEN_COUNTED_BY_REF
+ 	bool
+ 	# https://github.com/llvm/llvm-project/issues/182575
+-	default y if CC_IS_CLANG && CLANG_VERSION < 220000
++	default y if CC_IS_CLANG && CLANG_VERSION < 220100
+ 
+ config CC_HAS_MULTIDIMENSIONAL_NONSTRING
+ 	def_bool $(success,echo 'char tag[][4] __attribute__((__nonstring__)) = { };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
+
+---
+base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+change-id: 20260223-fix-clang-version-builtin-counted-by-ref-2dee9636f43d
+
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
+
