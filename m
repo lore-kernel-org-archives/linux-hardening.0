@@ -1,124 +1,94 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC00334F47E
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Feb 2026 09:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F721F4168;
+	Mon, 23 Feb 2026 13:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771839723; cv=none; b=nPMP+LG2JfTg5U6XwDgHmPZzJxbUolwQeqFsfhCw+2t5KuX0Zo+/WGbwMpqVZ3K6W/XjRxC7thysGQHxFniacGuyMRtSHkXgTDTGa3/H1i1WxjSqwR1J728NDymuxWUveyOAo11gMbfxyNBcPasKVVUQpB24lCu4p/HoeLllpkw=
+	t=1771854431; cv=none; b=tqJO5AkPGawidW6VY39x8XgywYTVUJAkAD2QagW2WkUuaDY9pQKqfHymwy8wEcc9g+8C7Re4Tb9cLgoqBGNrEs75DJ5b2deddqjtFOG5yy3ADDmgSQC1JSqD6hu+QYRyFBEOTP1YVz/PddzB9HipqqnZ1K32oW01bwGDnbTejBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771839723; c=relaxed/simple;
-	bh=h2fE6FJnt+GTKQVQdqqbEpUoyJIa8aBYwbs8ZoZNJxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UOSLqaLQOqBvcJorzuYl+Ohxa2ACSSksaWtrpmmbYtd/hwCtqe2nwrIahwYKK0+xRk5YVkSVw/JisnY9jMxpq7q24eBwhrN1U8v0Iu+jCQJdXNAQO3CEf0vzju8930/HapzsyxtIPnpXPTF5UpqixNftptJ+fezy2/6MUwvV9kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O8jcbl3I; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771854431; c=relaxed/simple;
+	bh=ydmdhEGM/O41rgUA/G7JvzJvk3KxbBzvvuzH7eImK34=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=k/VoQTYw8potIPUIR5v/NCznulO228GGVuQBNyem0J3eX5EpR0kGPheR9yRtk+hSmaxAtZbsrnJqsH/jf3W6cv4By35m3iywf8SPcXkmF+QYNwPB4Q60IsGWG9QVDOPL87z7XjZZvRXoRMrprmmx8HrU/+K/aj8CRaqllpPm15M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VW6zsY06; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8jcbl3I"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4837907f535so36407035e9.3
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Feb 2026 01:42:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771839721; x=1772444521; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uP6bWvtU8eeL2/gAQvmkB1Apc9H5g4lS1edf4fQ7WfI=;
-        b=O8jcbl3IsaLsFrDMafag9I0CI/ZwyUhagbpmgRJft4VFwt39ifhvNPt/enF/DPShk+
-         hk+Ms/VLOl6Qcz3z5kB7dPNTDE7TpB22p6Y6b27p1zeRDFrMIaK0suMZuOpFP+hC1yXJ
-         7LnF1oopx85bhkijMEZHtzT9l9aAP8aBuOha7AJiZhMamRapsZjKrxF3XNQ31RebYDYH
-         KXoooUD7myBP/eupqCEY8NJkStMf+RWrG9wboNqTjvCaGVnmyF8hnSaJoBH63HYNOKRL
-         m3dpIa9OB30gucGstqPDMNi2G+odDqNjDlYXx7kSwFwjZtaBt9jSnTM8KdKHvKaX2TkD
-         +V0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771839721; x=1772444521;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uP6bWvtU8eeL2/gAQvmkB1Apc9H5g4lS1edf4fQ7WfI=;
-        b=Y81YIRvNihqQpTCE+XXNBNYEPjjUqef5OayYXqTr/A/JM/ordMvUHFYRWBugVXWXDp
-         dcQcySeRdoZ6UyJH0OJIi5vY1ZBEzCIRw4XVjhGssQ0NyCXsc/yqM8D57N2TdlYt+nJu
-         Fv29naO+krS14saM8Jig8Yudqgf2eCtPUoenL+ac1U8n5WC4ajx73mfq2w/c0cGNKlQM
-         x9dALL8197Y57lE1L8iV/lAN7fMC7KBYfOwH9hXOm5s6DJNT5YPpeQtIOr1TS91lR/sO
-         uqs9XWY/3q+5bGBHO1mNlJepmDDESBAkEOTqTPkxGa52uhEwXVbmJi27ZuLcwXN4V2Mp
-         Ravg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6J1vMzAt9OxzxV5BLHAp84URxdXVl/IEXoNhDvSyIOFgMyjXzwcp/KRtOWKg48B7n+4CYmmKCUUdNtFZQe44=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHxyMKUwZmcau77oxK4bZMUxDDAnJK3Zmm/JcPEr9FujD/kVp5
-	Wkq/r6Z9A/PlqQIAYizv5KEO9JGaPT2w9xiWfBARy4vDaisQQofg3WxC
-X-Gm-Gg: AZuq6aISU6lNTikr7qX4Vp29jjCdleihUV65fPkh9GUtsw27/18M0FsbH2oVI2G6jKR
-	WWa7/uwCegrQlsBlrmCrnGE+YDTYQSMMKYVChqyr7DyAfbZcmE35JHyoHqq4ki5HP3z7N1RpN3R
-	bIo/aQ1CXyaROsvXDcwnnbJF1bQJno1PN0uyIvsp3c/PmIIqDRxQgSn/CA3IjFso8wX6bRMvVnO
-	/GPEt0zvni/Wb22YK+hJorUd7Wdl4WMZEQofe2zZeG/oKedsg8iwhGQAtEv3x/RTwbCYDvuyGv3
-	c43ybEi7N8HziyyB/TxIg9h26dap4aH8G5oVuhE5pSB8/vx022ye58G2LwkHCq171FwRdGvV19W
-	owcegzmeJjBHSYioLkZiIsCp3izqnJIxzU/JLV3TYroL194VdAhiL0pGuxNjpeXiDkuR/cxc0m0
-	LZvvjj0J8DD2C0MyqiDfpAC3CXY0WmT91jsGzfMo0pbMSLHj//BCWny3WsWCbseMLzG0rUBpVkt
-	rc=
-X-Received: by 2002:a05:600c:3b27:b0:483:702f:4641 with SMTP id 5b1f17b1804b1-483a95bd842mr121940845e9.3.1771839720960;
-        Mon, 23 Feb 2026 01:42:00 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a31f0330sm222508405e9.9.2026.02.23.01.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 01:42:00 -0800 (PST)
-Date: Mon, 23 Feb 2026 09:41:58 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
- Gordeev <agordeev@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Kees Cook
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "Jason A.
- Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
- Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across
- arches
-Message-ID: <20260223094158.2197d7af@pumpkin>
-In-Reply-To: <87ecmcwjh9.ffs@tglx>
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
-	<20260119130122.1283821-4-ryan.roberts@arm.com>
-	<87ecmcwjh9.ffs@tglx>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VW6zsY06"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771854429; x=1803390429;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=ydmdhEGM/O41rgUA/G7JvzJvk3KxbBzvvuzH7eImK34=;
+  b=VW6zsY06sAfcNAvKJWHscJ64vXxvEeKcaVZlOfLrkM+hM7lsQXrvesiq
+   pr3SEdJpszneKIzb69UK/XLs9Ehl9kHECZmu81ue8uW6XqMc7bY7Mh52W
+   lR3kgIIN2AppERlvRcPOhclAskuO3AU9XK5IX8B/c5vZSJy/LBKWgHZAd
+   3EQf79t1MCDfIfqJMrj9FbIyVOyM8hC/mb2jwLWIYW3730sjVSAk3uD5O
+   sCO9DsSFwQ+NnnxMImulw3b4uxKLaBrB5TKyQa3zGkUP2vzQlBjEMu+Eg
+   tk0YA/oXRe+kW+6NbEZE0ONr9aQ1+lWRFQdnIp1F3vEKcgBL/0+nbeuEV
+   Q==;
+X-CSE-ConnectionGUID: MA+KWGozT9SQqzOOrCK+rQ==
+X-CSE-MsgGUID: GXkOsBnVQUSbKYQ3oocZ5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11709"; a="72756781"
+X-IronPort-AV: E=Sophos;i="6.21,306,1763452800"; 
+   d="scan'208";a="72756781"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 05:47:08 -0800
+X-CSE-ConnectionGUID: 1v88AsnGQx+5D12EpgNwKg==
+X-CSE-MsgGUID: mmVGelq+SZamc1NuWYyuZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,306,1763452800"; 
+   d="scan'208";a="219682264"
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.249])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 05:47:03 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>, Jonathan Corbet <corbet@lwn.net>, Kees
+ Cook <kees@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ intel-wired-lan@lists.osuosl.org, linux-doc@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Aleksandr Loktionov <aleksandr.loktionov@intel.com>, Randy Dunlap
+ <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH 00/38] docs: several improvements to kernel-doc
+In-Reply-To: <cover.1771408406.git.mchehab+huawei@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
+ 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
+References: <cover.1771408406.git.mchehab+huawei@kernel.org>
+Date: Mon, 23 Feb 2026 15:47:00 +0200
+Message-ID: <33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Sun, 22 Feb 2026 22:34:26 +0100
-Thomas Gleixner <tglx@kernel.org> wrote:
+On Wed, 18 Feb 2026, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> As anyone that worked before with kernel-doc are aware, using regex to
+> handle C input is not great. Instead, we need something closer to how
+> C statements and declarations are handled.
+>
+> Yet, to avoid breaking  docs, I avoided touching the regex-based algorithms
+> inside it with one exception: struct_group logic was using very complex
+> regexes that are incompatible with Python internal "re" module.
+>
+> So, I came up with a different approach: NestedMatch. The logic inside
+> it is meant to properly handle brackets, square brackets and parenthesis,
+> which is closer to what C lexical parser does. On that time, I added
+> a TODO about the need to extend that.
 
-> On Mon, Jan 19 2026 at 13:01, Ryan Roberts wrote:
-> > I tested an earlier version of this change on x86 bare metal and it
-> > showed a smaller but still significant improvement. The bare metal
-> > system wasn't available this time around so testing was done in a VM
-> > instance. I'm guessing the cost of rdtsc is higher for VMs.  
-> 
-> No it's not, unless the hypervisor traps RDTSC, which would be insane as
-> that would cause massive regressions all over the place.
-> 
-> So guessing is not really helpful if you want to argue performance.
+There's always the question, if you're putting a lot of effort into
+making kernel-doc closer to an actual C parser, why not put all that
+effort into using and adapting to, you know, an actual C parser?
 
-The cost of rdtsc will depend on the cpu architecture.
-To get valid comparisons you need to run on identical systems.
 
-Regardless, the cost of rdtsc could easily be larger than the
-cost of the prandom_u32_state() code (especially if inlined or
-without all the return thunk 'crap').
+BR,
+Jani.
 
-	David
-
-> 
-> Thanks,
-> 
->         tglx
-
+-- 
+Jani Nikula, Intel
