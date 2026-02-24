@@ -1,110 +1,97 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9963A225791
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Feb 2026 12:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DC8396B8E;
+	Tue, 24 Feb 2026 13:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771936338; cv=none; b=WMom2oj44xGmYB4hfg3H0MxkCLjfE7ASxmhKYrlNzHUAYiSD1QyQ94xtbLR1N55IO4IfigMaPtSwJ77XZ3lbZWZmD4lo9BR/d7XJsckvz38SCXLy2aFzDOweZ+O7yA1hipOKf7hya8UxStru81YxNY2xDMpZEIaoU2ByvvJCkqA=
+	t=1771939550; cv=none; b=OuTQgF19Wm9Ii6AxcOy8XDciDrHTp6LE6gentbV24PFRJgmy0Aj6wutAKaYWQT0tPnKR6kdINZTNRkeMQDmKbFLqtfsT4ZjIEcyJcDHqLiPo/SYwfvo34+eUEQsSEhInfb+9PgsvHly6gC0qYkTe8+qL4ApVUpH04oCYXB8GASU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771936338; c=relaxed/simple;
-	bh=e4r6QSzCXgkLd00SfnwI1rSarp7HvrZXjtfgoPQVYxg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UX4CQW83n0VBSUcyPOSDjVHnQ/ksTVVW4vSJspanuTjPzRsid+joE0WLjkdtouyIyfx4rtEO4QzTmIlzmf/oEhdtcC7s29DKQlOWnhXFnTaTynSLsivVYeguG+cPh1sJF63PyhRizmdfOuH+J7GuRNzpIl4pXSbzpCcFAobcclg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1fjrOzK; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771939550; c=relaxed/simple;
+	bh=OH226xpf6OFBkdLB/rlmhdXNbboVu+PgHRuJNn31ygA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KF94zdaMt5RI0wBR9NNXTZx6yfg+Fq0bxmsF3pUl7aMP2DDX96oymxnHfii62Zqa+t9gz9rcZlgnFzYky/bBZxSCWEpYsAmiXDB9V24SWo483H6pA7dAgqT/oxWgqFRwVW2fvKD3TdLSEhunIKTmvLc6Bl/1MAIa/lanSsM6+YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaoJ9568; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1fjrOzK"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-48069a48629so56033605e9.0
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Feb 2026 04:32:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771936336; x=1772541136; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XZJXURF8+qZPmvOXTS8TBbzIn7PDpr9uM92PUJEhPaE=;
-        b=L1fjrOzKwWwfVlOe4doH9/ccyD/tZvD5NwdJaXSDMe1N4tiIIca9tkH2xd4A2k039B
-         2sHLyOn6iLx8NjNoyGRLkFgmD8p3zRky3soEPMLw3azUssFHYo5Dj4tiHwSVCIj0pHdm
-         0M+uM88WmoDJeelUnm3aJJ7HVZ3bGrWEV8vPA29le4vCWW+e8ZoSZNesAwM/zjx6P91r
-         9Pe9sJ6V8K23kzM9yVifc3hCrRj5lpYWGJQF/ukZJ2S9yQYV5G5Rzfm8oEUuhuSxqbBr
-         7bBk2pMpQynyZo8gHF0LWMsNPsYTYQPyRT2VpM6bWeuAPxbXCHgA2ds478N0Elo3prIM
-         xhNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771936336; x=1772541136;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XZJXURF8+qZPmvOXTS8TBbzIn7PDpr9uM92PUJEhPaE=;
-        b=ETvHWtPgHGRwcr7hmZhKPULvPKvct10oKIVpWXt8EavbyoRso9HU4rsuD9Hc5PUA/1
-         DqWuEMKYcqcelvxiMJKSZPRhRMLuTqr485XntZEu1AvVsKgF7CmKyXD2ONaapGEGiNXt
-         oTIS/G/N7nMmyKqq1sZWbusqla1yA1anJi8wOmHi8gWgNlL/5jNPQRAnsY+e4VjkdKB9
-         yMD+DaLVeaSMN5kXulds0ijyxYu8spNelC9e4uxdYAV1kJVN99xMdpXwDQS+cZzdXFms
-         7CzvWUmioZmQvh7Ks6Yd55jDWHzF4UmV9LC2auAKK8DeVe7lC1xcpRxQbC66nnbx2Se1
-         xqHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWs4GtLUdkQASgfkKDYys+UzKYonk57Hrf4ejB52+b0h7pGSxTUrowfmVdQMXTo1JU7B6ESH8G/22ZCDxdA8Z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpYwib5S2BXgEqgCNqCpdmnCp9O3IIKoCIGWWAt4tf921UQgI6
-	kypUyImrred+iJJnkEvC9nNKKlsEQ7LCowNaLQOT/CUVBv3XM4WQQ6NY
-X-Gm-Gg: AZuq6aIsLOd3TgMhbogbtY7Z+FsZdPEmFOxfclerpYhc29jpfIBAWgy9f8lie/O1VUZ
-	DWROWj68h7QKZ63+gmLbPmwKd56qWZlXQgASkSpr+oAM1QPIYfNO3h07mq98PlQPfpYoXQMonDB
-	qgKGJqt5cn8Vi0FMDeC7IPagQ5/LiR87B7IyMV+nhyQvVs+/ajX2HYYVyx70eELwOrS4eLgBgVh
-	dZvAnlQDThXRNGgxRQwgWcg+eGoQUw1dwX0wNtdv+QxEXVdTEDpPl84FJD5TnZF2qovK+iVN3SX
-	NWqAXz31VpVbSP3aBoBWdtAbn5SgCSb68Be448ep6OkcDZnATM3PjoCRwulUBrq4q83Wq8TeoQN
-	xWhRlLFZ3upZqgfk5bMKQYB/U5t2Ir/VFsaUu5+E8Bc0wi6J4TZiMQCegzciVh4aslwtCX4qpJQ
-	TgAN/EJEhf2BCSQF6up991Hwl7Hyp/INAlwT0zocA8pR2GSJctKJWWvpfPC3V0ZDLNCrWpJNphl
-	V/xV2RWpeTZujWCR166JObp+GPs10tHscNrwaCUXGgW6/Vm6bSY4HQJFOQEmQ==
-X-Received: by 2002:a05:600c:4e48:b0:483:709e:f238 with SMTP id 5b1f17b1804b1-483a95f71b9mr197091855e9.29.1771936335417;
-        Tue, 24 Feb 2026 04:32:15 -0800 (PST)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.131.netskope-rdns.com. [24.206.116.131])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483b81f94a6sm23664195e9.3.2026.02.24.04.32.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Feb 2026 04:32:14 -0800 (PST)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Tue, 24 Feb 2026 12:32:07 +0000
-To: Dmitry Antipov <dmantipov@yandex.ru>, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: David Laight <david.laight.linux@gmail.com>, 
-	Kees Cook <kees@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/5] lib: fix memparse() to handle overflow
-Message-ID: <umfxjjw2iukw5knj5xn5lxtkr2keorq3sws2mnegmw3zr64bmg@77v4cqwi2fay>
-References: <20260212164413.889625-1-dmantipov@yandex.ru>
- <20260212164413.889625-3-dmantipov@yandex.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaoJ9568"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C34C19422;
+	Tue, 24 Feb 2026 13:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771939550;
+	bh=OH226xpf6OFBkdLB/rlmhdXNbboVu+PgHRuJNn31ygA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MaoJ9568OOoCR1H3e1IZa3TXWhhHUxPVWefiXSWJ2H04Ml2WRp0YZFrfYixr85VSq
+	 xgLhEU4O++7qwHs4z7H6w+2Z83T8ixWcwtEoznNyTXw3SQRBIbxl7vnfiIFdMeDwb6
+	 D58Fq4EwRtzjQUa2SQ6x0QZyq15d4tjJXkhZMfYnAzbYXstciiMANFs7Mqr2MlvcxE
+	 nGme0QMlaUWVcc0XIS9/p+yJC0bk35W57YSjtBmnMj05sAvqYGbrv783MqSmT2s88s
+	 lQso4Cd6fZP60LmlsXOD22HuXICgwgDsLtgOtpb2uhpjH3wq6r9GHsBW9AnSZIduyL
+	 UMPdivEE1xDbg==
+Received: from localhost ([::1])
+	by mail.kernel.org with esmtp (Exim 4.99.1)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1vusQ7-0000000Gpru-39rz;
+	Tue, 24 Feb 2026 14:25:47 +0100
+Date: Tue, 24 Feb 2026 14:25:46 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>, Kees Cook <kees@kernel.org>, Mauro Carvalho
+ Chehab <mchehab@kernel.org>, intel-wired-lan@lists.osuosl.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Aleksandr Loktionov
+ <aleksandr.loktionov@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [Intel-wired-lan] [PATCH 00/38] docs: several improvements to
+ kernel-doc
+Message-ID: <20260224142546.3eb7c38b@localhost>
+In-Reply-To: <878qcj8pvw.fsf@trenco.lwn.net>
+References: <cover.1771408406.git.mchehab+huawei@kernel.org>
+	<33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
+	<878qcj8pvw.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260212164413.889625-3-dmantipov@yandex.ru>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 26/02/12 07:44PM, Dmitry Antipov wrote:
-> Since '_parse_integer_limit()' (and so 'simple_strtoull()') is now
-> capable to handle overflow, adjust 'memparse()' to handle overflow
-> (denoted by ULLONG_MAX) returned from 'simple_strtoull()'. Also
-> use 'check_shl_overflow()' to catch an overflow possibly caused
-> by processing size suffix and denote it with ULLONG_MAX as well.
+On Mon, 23 Feb 2026 08:02:11 -0700
+Jonathan Corbet <corbet@lwn.net> wrote:
 
-is returning ULLONG_MAX the proper way to indicate overflow with
-simple_strtoull()?
+> Jani Nikula <jani.nikula@linux.intel.com> writes:
+> 
+> > There's always the question, if you're putting a lot of effort into
+> > making kernel-doc closer to an actual C parser, why not put all that
+> > effort into using and adapting to, you know, an actual C parser?  
+> 
+> Not speaking to the current effort but ... in the past, when I have
+> contemplated this (using, say, tree-sitter), the real problem is that
+> those parsers simply strip out the comments.  Kerneldoc without comments
+> ... doesn't work very well.  If there were a parser without those
+> problems, and which could be made to do the right thing with all of our
+> weird macro usage, it would certainly be worth considering.
 
-...
+Parser is only needed for statement prototypes. There, stripping
+comments (after we parse public/private) should be OK. Yet, we
+want a python library to do the parsing, using it only for the
+things we want to be parsed.
 
->  unsigned long long memparse(const char *ptr, char **retptr)
->  {
->  	char *endptr;	/* local pointer to end of parsed string */
-> -
->  	unsigned long long ret = simple_strtoull(ptr, &endptr, 0);
+Assuming we have something like that, we'll still need to teach
+the parser about the macro transforms, as those are very Linux
+specific.
 
-... or a new wrapper for _parse_integer_limit() is needed?
+Maybe something like: https://github.com/eliben/pycparser would
+help (didn't test nor tried to check if it does what we want).
 
-I am interested on having _parse_integer_limit() overflow check
-exposed to kernel modules.
-...
+There is an additional problem that this will add an extra
+dependency for the Kernel build itself, because kernel-doc can
+run at Kernel build time.
+
 
 -- 
-Kind regards,
-
-Rodrigo Alencar
+Thanks,
+Mauro
