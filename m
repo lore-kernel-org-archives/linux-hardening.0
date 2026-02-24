@@ -1,97 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DC8396B8E;
-	Tue, 24 Feb 2026 13:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E906A22652D
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Feb 2026 14:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771939550; cv=none; b=OuTQgF19Wm9Ii6AxcOy8XDciDrHTp6LE6gentbV24PFRJgmy0Aj6wutAKaYWQT0tPnKR6kdINZTNRkeMQDmKbFLqtfsT4ZjIEcyJcDHqLiPo/SYwfvo34+eUEQsSEhInfb+9PgsvHly6gC0qYkTe8+qL4ApVUpH04oCYXB8GASU=
+	t=1771942536; cv=none; b=bdA7e8D+rTtQHNVYShflIrDJLQBozbDM4hbFySHJW1f9IbIaXt42m6ntyzAYgKWNsftqmkKHFRmm+LfkYA2dG6khRpfTGvXyJRTBq+4jZ9OKnxCjx4dLR3DDxXJvicscseEcBpq0wAbG/PbJ2pIDVQUL3nUsrooF74Ws2zBbFdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771939550; c=relaxed/simple;
-	bh=OH226xpf6OFBkdLB/rlmhdXNbboVu+PgHRuJNn31ygA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KF94zdaMt5RI0wBR9NNXTZx6yfg+Fq0bxmsF3pUl7aMP2DDX96oymxnHfii62Zqa+t9gz9rcZlgnFzYky/bBZxSCWEpYsAmiXDB9V24SWo483H6pA7dAgqT/oxWgqFRwVW2fvKD3TdLSEhunIKTmvLc6Bl/1MAIa/lanSsM6+YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaoJ9568; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771942536; c=relaxed/simple;
+	bh=oJsY/U/k4CbTYTTW70JIhrh7FeuaK8TVKU817s1X3EI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GaaYW6J5bckyyNBmfi5wGrF6XhFSQSCgcsiGISKOabtkOSwVsqQGACMetmu7ziwOJy6ckYYC9c7MhoC2mEijCUpcswTuWnB4kjj/gdRJFh3gv9/loG50modrpc55G2PxWD7ktzXu1Z2WcKAlarmNdORk7ykCuVhP6/UOE9D6wkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A8Cs13VX; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaoJ9568"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C34C19422;
-	Tue, 24 Feb 2026 13:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771939550;
-	bh=OH226xpf6OFBkdLB/rlmhdXNbboVu+PgHRuJNn31ygA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MaoJ9568OOoCR1H3e1IZa3TXWhhHUxPVWefiXSWJ2H04Ml2WRp0YZFrfYixr85VSq
-	 xgLhEU4O++7qwHs4z7H6w+2Z83T8ixWcwtEoznNyTXw3SQRBIbxl7vnfiIFdMeDwb6
-	 D58Fq4EwRtzjQUa2SQ6x0QZyq15d4tjJXkhZMfYnAzbYXstciiMANFs7Mqr2MlvcxE
-	 nGme0QMlaUWVcc0XIS9/p+yJC0bk35W57YSjtBmnMj05sAvqYGbrv783MqSmT2s88s
-	 lQso4Cd6fZP60LmlsXOD22HuXICgwgDsLtgOtpb2uhpjH3wq6r9GHsBW9AnSZIduyL
-	 UMPdivEE1xDbg==
-Received: from localhost ([::1])
-	by mail.kernel.org with esmtp (Exim 4.99.1)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vusQ7-0000000Gpru-39rz;
-	Tue, 24 Feb 2026 14:25:47 +0100
-Date: Tue, 24 Feb 2026 14:25:46 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, Kees Cook <kees@kernel.org>, Mauro Carvalho
- Chehab <mchehab@kernel.org>, intel-wired-lan@lists.osuosl.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Aleksandr Loktionov
- <aleksandr.loktionov@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [Intel-wired-lan] [PATCH 00/38] docs: several improvements to
- kernel-doc
-Message-ID: <20260224142546.3eb7c38b@localhost>
-In-Reply-To: <878qcj8pvw.fsf@trenco.lwn.net>
-References: <cover.1771408406.git.mchehab+huawei@kernel.org>
-	<33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
-	<878qcj8pvw.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A8Cs13VX"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-483487335c2so50859805e9.2
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Feb 2026 06:15:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771942533; x=1772547333; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C0iBNYLR3RydCyDm/jKb9Zog4KrMP0OiE2OvAMK19V0=;
+        b=A8Cs13VXaVNteDkOhWIHpAvf2k84h+HJTopT+PPfdMiSvnXWqOb+HBfUuK8/PDZ1Ms
+         U8TzJan66ztT1mr5wQGMSFDF+ERiKBXVevH2jY+TzgedvYPXNKH2iORIE8fpi9zpF1A4
+         bBNVKX5KqKjT+Kyuk6iNnQ7SVOtDx8Iw3D9hPG3Jezh+F+novaSM5oktzMGggKI+faNY
+         XaKqiMw4GAnE+cshOvuOpn8ssJIkE4g+c5RW3vQ3h3oNuZi10+MNr5nVbEsAa3x338/p
+         +KGzM6sNmJoEMXqvHMrRMZWI5sKVX3sWSbQe8AtdxZgxrMrkZKkVJfHexBlpA03+X52V
+         X76w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771942533; x=1772547333;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C0iBNYLR3RydCyDm/jKb9Zog4KrMP0OiE2OvAMK19V0=;
+        b=dALOyJuuY2tvLQaxVt2CraGsarVLbpsd3yJcq5y1bti3lOymPbItOGSFnbW4cQ+83j
+         aN/h+m27OlWYK7j1UIZqcv48cgb32wk5njcNBtYGv6vsk7OcO7224m0swB4HDedFn82x
+         ymx/PLGJsJfdtoNpdXSj2XqHxF/B7MOgn4vArK7Y+eskblAGhqOz2UN1WCtA2/12px1b
+         lo6OpfZaic5b3isdjN9Nl2g1mSa+sun4BmmwJ3J5gUYPqF0MWyy3bylYcVc3WaHjbZ9W
+         U8qoEGj9RqG5pV6AJLmylMRfHKbTqk0wD5WJ0G5rAxMcoV6jmqzld5MTzE+9ZIDrOEAq
+         IBSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVY6PfjG5Mp5l1wDtrofkr8hXdAnDXxHWLxq6N0ZQHvTNRFnty3TIXIeOIo/0iEPOQ6DbqoPN7NXN86axUBfUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziGkgzIFIEAr3d/45h6kRsyNF5DUWB2qxT4vhlsIKuRIhLaBTp
+	JFLXCTNh2lf5Wn94LmwbGEq19hD2RD9fYPEya3tDmmgLZifjQ8GnEXm7
+X-Gm-Gg: AZuq6aKMj91Wt/atjQK5S9Frw3DSjYKO4rp3BA7zroHXMHKmU6YXin1TXFR+ooXB62d
+	H3HIdEoClNjWipGaVMFjvbNNvibCFN66JzUmUGwXOdOU4nyr+uZ1iT2OrjiEZ30t0csLt0up6Ei
+	0O5ku/9D4FNBGSV7lph8lr4drZzut1h3mokalwAov0L0ktkVnAUdxugWsIZUy1i2ERIIEntkQx/
+	p+CRa0G0vp+h+sfgjQGMG1GLs495lsngyEv/B/cIkiS4dkMs6zdYkTgYgWhkgL4LSHjLd23kDum
+	DBGmmFPF5xVVg2dudaAJy10ujuByFT1QbWkKqo8hkwmESWvzXDhC8iBlFgB/RwuLVcBX+czw2v5
+	yO+20RD3z5VUgGrTzWt964ZbjlRMhXOO0B3jEtuor7Q7yNwucYvMNlea/rXcwZGPdP3OfrAII7Z
+	2W2QfCNe/swbkHKc4USQeWN9qnp1761fiJ7C6i7g9ZOvY5rmdyQFvCmWI8TqJhEqgstewB8qYF6
+	DQuZfg1yuv7+3+yXwo+ZsQvlVbvitwDy1NeHgcmQlBMHiTcE1QL7DuiRsBoRQ==
+X-Received: by 2002:a05:600c:3e8d:b0:47e:e9c9:23bc with SMTP id 5b1f17b1804b1-483a95f89b5mr183528345e9.30.1771942533151;
+        Tue, 24 Feb 2026 06:15:33 -0800 (PST)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.131.netskope-rdns.com. [24.206.116.131])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483b890a3dbsm27223155e9.6.2026.02.24.06.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Feb 2026 06:15:32 -0800 (PST)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
+Date: Tue, 24 Feb 2026 14:15:30 +0000
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>, 
+	Dmitry Antipov <dmantipov@yandex.ru>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>, 
+	Kees Cook <kees@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/5] lib: fix memparse() to handle overflow
+Message-ID: <pwycaqzyfpan3eglq6hwx4esyfm2w2buvvaqtcqw3aco5y3trq@2ft2ajxaqobu>
+References: <20260212164413.889625-1-dmantipov@yandex.ru>
+ <20260212164413.889625-3-dmantipov@yandex.ru>
+ <umfxjjw2iukw5knj5xn5lxtkr2keorq3sws2mnegmw3zr64bmg@77v4cqwi2fay>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <umfxjjw2iukw5knj5xn5lxtkr2keorq3sws2mnegmw3zr64bmg@77v4cqwi2fay>
 
-On Mon, 23 Feb 2026 08:02:11 -0700
-Jonathan Corbet <corbet@lwn.net> wrote:
-
-> Jani Nikula <jani.nikula@linux.intel.com> writes:
+On 26/02/24 12:32PM, Rodrigo Alencar wrote:
+> On 26/02/12 07:44PM, Dmitry Antipov wrote:
+> > Since '_parse_integer_limit()' (and so 'simple_strtoull()') is now
+> > capable to handle overflow, adjust 'memparse()' to handle overflow
+> > (denoted by ULLONG_MAX) returned from 'simple_strtoull()'. Also
+> > use 'check_shl_overflow()' to catch an overflow possibly caused
+> > by processing size suffix and denote it with ULLONG_MAX as well.
 > 
-> > There's always the question, if you're putting a lot of effort into
-> > making kernel-doc closer to an actual C parser, why not put all that
-> > effort into using and adapting to, you know, an actual C parser?  
+> is returning ULLONG_MAX the proper way to indicate overflow with
+> simple_strtoull()?
 > 
-> Not speaking to the current effort but ... in the past, when I have
-> contemplated this (using, say, tree-sitter), the real problem is that
-> those parsers simply strip out the comments.  Kerneldoc without comments
-> ... doesn't work very well.  If there were a parser without those
-> problems, and which could be made to do the right thing with all of our
-> weird macro usage, it would certainly be worth considering.
+> ...
+> 
+> >  unsigned long long memparse(const char *ptr, char **retptr)
+> >  {
+> >  	char *endptr;	/* local pointer to end of parsed string */
+> > -
+> >  	unsigned long long ret = simple_strtoull(ptr, &endptr, 0);
+> 
+> ... or a new wrapper for _parse_integer_limit() is needed?
+> 
+> I am interested on having _parse_integer_limit() overflow check
+> exposed to kernel modules.
+> ...
 
-Parser is only needed for statement prototypes. There, stripping
-comments (after we parse public/private) should be OK. Yet, we
-want a python library to do the parsing, using it only for the
-things we want to be parsed.
+I could propose the exposure of simple_strntoull() which is private
+to lib/vsprintf.c, slightly changing its prototype:
 
-Assuming we have something like that, we'll still need to teach
-the parser about the macro transforms, as those are very Linux
-specific.
+* from:
+unsigned long long simple_strntoull(const char *startp,
+				    char **endp,
+				    unsigned int base,
+				    size_t max_chars)
+* to:
+int simple_strntoull(const char *startp,
+		     char **endp,
+		     unsigned long long *result,
+		     unsigned int base,
+		     size_t max_chars)
 
-Maybe something like: https://github.com/eliben/pycparser would
-help (didn't test nor tried to check if it does what we want).
-
-There is an additional problem that this will add an extra
-dependency for the Kernel build itself, because kernel-doc can
-run at Kernel build time.
-
+That would allow to tackle the FIXME tag. I suppose it is there
+because the overflow flag is being ignored, so the returned integer
+can be set to -ERANGE or -EOVERFLOW when overflow happens.
 
 -- 
-Thanks,
-Mauro
+Kind regards,
+
+Rodrigo Alencar
