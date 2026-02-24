@@ -1,104 +1,86 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F293A8FF1
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Feb 2026 17:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE83217733;
+	Tue, 24 Feb 2026 17:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771952671; cv=none; b=cXjntJaQ0Q2EPQQGqP1j1hf0+CrMIOYc5wM3aCBRPI/clbcCLf4d9okofeCgWiPszpsF3HGZ7rFGuHjssaH5YDNq+RxJJbmQutp1S4xXTQyxeFJAIvVLFufd1XXDZ23vtD10VNBInwwzm18kRW6b/3dvrehMoR8v/Ah0mWV6fJc=
+	t=1771953713; cv=none; b=lMrjpuEWwL1bBq9izVbA40lQnsVep1+tSHdF2lP4lzxNgplwa3iG+QkrwxtoH0OJsaJwWgcKxGbipjZph6lFG/Yk8IaV7gAdrG6PDMjl85bxCxh2NZfPa0lF1x7mXF/Ui0inJTuLe3+U+2HsO0Qr4NxvrmPet5VdPaQPVPHjGL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771952671; c=relaxed/simple;
-	bh=kyJx0abKsM+ye4/sGjKOKOe8QO0KJKvhi9JvpmTKgFE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YGwnV2XKl42qm6ZqIGIFXoELWe1i0/jUQpQvhWxpGu9TA/6Y70gyQbQlDScCyRquZoCwhQ/8n/ds59io+BQ4NkF6beWCbXxtpPwAoOtd5mKA8ZPaNzzMq0J8gWNrMjjrLr8lpIC/3/aX5xXvwsgblkAn0KvPAl/jz4y5o9MYZKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tabba.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NKdx6fRv; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tabba.bounces.google.com
+	s=arc-20240116; t=1771953713; c=relaxed/simple;
+	bh=YF9fco3oo89bvvudl1slsgHlw84HK8gWjvH1WgsYTWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pZImiMVN9eO4P+gPQMpvZGy2pJhVuDgvxOlWCRnkIjqu0IivkGutDE/I8Iz2oAH+eqju8RuIBiPDs4TKnF9T1MDVz9AtMCPkxR2eYRmEhDvtANyFjniYuGRbnP+nyqEamSbzUJKdRczQlckAbtuEksS0bCP9ohgMGak5hL5p/EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHPvdpGK; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NKdx6fRv"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4837c597cd5so6870875e9.3
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Feb 2026 09:04:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771952668; x=1772557468; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wEqFN9UUEKzcXYtb/M8n+iE3sou79Y04zVjpTLary3Y=;
-        b=NKdx6fRvqciccoMzqn+K0vxJ8d437vwlykUyCFHYSSmFX55IU3G419J0nDtDZvGEJZ
-         2JSiHHSl/kojyomM9sDDHoxeeD4N3WyXdbPu2shuSdOqy3zR4v+VGGVdrJBP0BZACm7M
-         I4pNQFWiailpaU5DfVfT4EiWY4VjIKCFT0MRKUOVMBTzCIpjf4HHAP+bwfJDh12XT69k
-         lzkZOdP7b353Isp8vqUnrKgJRcXxde8sW9k1CnesD8GX2YfUTseLXoxbYn9gM41kVtTn
-         D0Cqoq0Bu04jG+e8N6KJqhlceOuEFGEaaFDBfwW0oFq1BJkHGLyZPzfUV3nVYRYaSfBJ
-         woMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771952668; x=1772557468;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wEqFN9UUEKzcXYtb/M8n+iE3sou79Y04zVjpTLary3Y=;
-        b=tbRs3pRHe8c4e+icYdY6Z2OyCCK42tVPf8ulT4HjQ2tMnV+1by9WuMOUdbhowYJ+9D
-         7QJZO5QtKbF9or4n7pN9MxQnb6YzTvbM6+bx3vUWdJWkO69GqAHIOIm2HgyQojyBRK3G
-         iWK8AnGooxa4YWoz/U4jOcO6Cj3oNHGa1x6QLVZY9ElZ1SV3GZhcRh5kVZUkNWiRYwlq
-         WR6v/Seu0BSIyi2w8/DU2lUfX1eFYAIDBzsjFOOw987URWRN2JUJsTZeDWS3gAxIL9d1
-         tC+kgVzjrCbQaTLpm929f/mAGiqwzyfamQ4F/Uoh9a4Ml7JAgPv0Z2fiX3aN3DUCmU4a
-         r5jA==
-X-Gm-Message-State: AOJu0YwdyK2bQphlk28Kw3Ym/xAV4IIoAdYR8I/2qlSNxhCnl37c8GVt
-	wKQIElEAHeUL4xbX39BYMI1pn0pHCAc3CC60M0AHkeDajrzcb8Cp8MaAL6q8IqupZbV8r9D6Mlr
-	lgQ==
-X-Received: from wrbck7.prod.google.com ([2002:a5d:5e87:0:b0:439:8c91:524d])
- (user=tabba job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5394:b0:483:6a8d:b2fc
- with SMTP id 5b1f17b1804b1-483a95b7162mr185229535e9.8.1771952668202; Tue, 24
- Feb 2026 09:04:28 -0800 (PST)
-Date: Tue, 24 Feb 2026 17:04:27 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHPvdpGK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771953713; x=1803489713;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YF9fco3oo89bvvudl1slsgHlw84HK8gWjvH1WgsYTWY=;
+  b=NHPvdpGKvrQH1JvZkmVttLsInvvpF7x0/9JdvmgDH6bFWo/bUWv4iBGz
+   OT8Xs554jCXp/KtI7qOH6BM7PORDQoqhhnNBHvluo8VfmeEW+MmZWHpO/
+   ZgZ4ImYuSH8vZ3hR0RcscDxZFZ3/LLrGKaTaXpiksRAxKAMaA8YJBvrKL
+   DUGb7XUvlK63i9t4WFnUdZwAYCsSxZKpjBlDOG/E9iDOQzefBq9F2f8o+
+   1p6wybxGCY9flhBCXEkEIRM1SplmAaa3WhXOAFZXc540TyK0HDFsSG6/c
+   cLrMBW0t1bHobR2PJKU/xUY3rQDyq+ZYgoUzSUqACq5nvj9UcLqGJIBud
+   Q==;
+X-CSE-ConnectionGUID: 4efrIGn7SBi8t1OvqDAErQ==
+X-CSE-MsgGUID: DDTOd6YFQOW8vGoM4boCTg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="90395315"
+X-IronPort-AV: E=Sophos;i="6.21,309,1763452800"; 
+   d="scan'208";a="90395315"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 09:21:52 -0800
+X-CSE-ConnectionGUID: xHu1Z72QRPi8f8Jdtmee/Q==
+X-CSE-MsgGUID: yep161rfTe2l77RoHGlPaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,309,1763452800"; 
+   d="scan'208";a="253719835"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 09:21:50 -0800
+Date: Tue, 24 Feb 2026 19:21:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Fuad Tabba <tabba@google.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	will@kernel.org
+Subject: Re: [PATCH] lib/string: Fix UBSAN misaligned access in sized_strscpy
+Message-ID: <aZ3eKyVXPd-Fvcst@smile.fi.intel.com>
+References: <20260224170427.2296592-1-tabba@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.371.g1d285c8824-goog
-Message-ID: <20260224170427.2296592-1-tabba@google.com>
-Subject: [PATCH] lib/string: Fix UBSAN misaligned access in sized_strscpy
-From: Fuad Tabba <tabba@google.com>
-To: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	will@kernel.org, tabba@google.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260224170427.2296592-1-tabba@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-sized_strscpy() performs word-at-a-time writes to the destination
-buffer. If the destination buffer is not aligned to unsigned long,
-direct assignment causes UBSAN misaligned-access errors.
+On Tue, Feb 24, 2026 at 05:04:27PM +0000, Fuad Tabba wrote:
+> sized_strscpy() performs word-at-a-time writes to the destination
+> buffer. If the destination buffer is not aligned to unsigned long,
+> direct assignment causes UBSAN misaligned-access errors.
+> 
+> Use put_unaligned() to safely write the words to the destination.
 
-Use put_unaligned() to safely write the words to the destination.
+Have you measured the performance impact?
+Have you read the comment near to
 
-Fixes: 30035e45753b7 ("string: provide strscpy()")
-Signed-off-by: Fuad Tabba <tabba@google.com>
----
- lib/string.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+        if (IS_ENABLED(CONFIG_KMSAN))
 
-diff --git a/lib/string.c b/lib/string.c
-index b632c71df1a5..a1697bf72078 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -157,16 +157,16 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
- 		if (has_zero(c, &data, &constants)) {
- 			data = prep_zero_mask(c, data, &constants);
- 			data = create_zero_mask(data);
--			*(unsigned long *)(dest+res) = c & zero_bytemask(data);
-+			put_unaligned(c & zero_bytemask(data), (unsigned long *)(dest+res));
- 			return res + find_zero(data);
- 		}
- 		count -= sizeof(unsigned long);
- 		if (unlikely(!count)) {
- 			c &= ALLBUTLAST_BYTE_MASK;
--			*(unsigned long *)(dest+res) = c;
-+			put_unaligned(c, (unsigned long *)(dest+res));
- 			return -E2BIG;
- 		}
--		*(unsigned long *)(dest+res) = c;
-+		put_unaligned(c, (unsigned long *)(dest+res));
- 		res += sizeof(unsigned long);
- 		max -= sizeof(unsigned long);
- 	}
+?
+
 -- 
-2.53.0.371.g1d285c8824-goog
+With Best Regards,
+Andy Shevchenko
+
 
