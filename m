@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF8B33DEDD;
-	Tue, 24 Feb 2026 21:31:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661BB226D00;
+	Tue, 24 Feb 2026 21:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771968701; cv=none; b=uun8bTMk0Vy376tIc1sAC9vFCw4PL3yWCxl+PH04767d0xL/WY7u4s8grjzsKo+190ZzIV6qElL2l/Pqx/a+xovesj9UXQBUmMxA0XngIyp8mecJUq/gwl/gewQdm8WrQUQDMnPTn0iZCk5zQsh2LNXJhAJ33sSaMYm4hnbOrYo=
+	t=1771969732; cv=none; b=aH6qc9UQd6zmOxGm/x73A8nb1X7CHQo2/T9tuoHWc85f5OTgG/XbZ7CKvyT8CCA8VkpQ6SODIIpabnahogOOUdf1j5KTqY/rRUw39uKBCaGij4dXrFQbuJSucTUjZwh4FVZinvJbp5caZFY+ERclBcHux/WiezLXb3lVL8r0bKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771968701; c=relaxed/simple;
-	bh=YIlxGwPr5hMd/xYC92n77YTEg4ZxfpXED5MmFXnriGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LgoLwXMs+ix978Q7k/9wpcrPXePuxz26lx4DXfRGvvbvfcyjVQvqP6TI1G7zbr9umKJuPa9mXS8A+ebKdIWF+YRP/w8LP3HRUoBBD8sE0DkFwzYhaaGQNzqFxR5CC9TsiskaILe//z81agNC6c4Jzy7zMLmyMxMeCyimZeyeO5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGHAp1VY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771969732; c=relaxed/simple;
+	bh=CBsGpsY2aMNwx8WrDOH4mczG4gg3cu75ErPQFMi6ZMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1QQMXxJLBtzpp0muTLv6ceKTQJV0MZadqLdSCNrnPufpEVBKsdyERWjdmJIXQvgbBhybP2fIu9ZCmrrAan06wPWpQ/S+S9A318Kj37KPozC8mP7iv9edx3cyje04g3A8x/P9zZhUj3qAt3W4y7ICeUP2CjJdF/RDmg9cVYabM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRLuFxup; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGHAp1VY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A998BC116D0;
-	Tue, 24 Feb 2026 21:31:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRLuFxup"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C2EC116D0;
+	Tue, 24 Feb 2026 21:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771968701;
-	bh=YIlxGwPr5hMd/xYC92n77YTEg4ZxfpXED5MmFXnriGA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AGHAp1VYfEp8JV0mtoHFu/TlxSn1frOQtTrUcFQKzGqTe0q7YGXqPbrN44SgKLePx
-	 zVmCQqhQki+nTDHMfT4GRqwGhBnYYNN0DWenHLjJV13eYD8RJ6jniJIe8vaDGKqXMa
-	 H61sSnNocbGNbxoJ8v9IoJJP+n+tOY0Dm7xoK7yFHc5mkvnBk4HiLsv+9wYJF7128/
-	 NjFIIYz4sypjpOAPUXrdXGVK6wbh2V7KIVfHZgDcRy1vMLuBmxZeeNAuxT7BnhDkbz
-	 qs2csCdBhnDHI6Q0V7nPM6RwNKOcKkgsLnhVgMci4d4vnkrkaU8qNAbGZNV+JT42xX
-	 UEuAQy5VyxfBg==
-Date: Tue, 24 Feb 2026 15:31:08 +0900
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] Bluetooth: hci.h: Avoid a couple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aZ1FrL8qvvKuktBF@kspp>
+	s=k20201202; t=1771969732;
+	bh=CBsGpsY2aMNwx8WrDOH4mczG4gg3cu75ErPQFMi6ZMg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dRLuFxupUxHJ+yOl5ZAuTZdIJ919jEQpqcrkaEwk5poOwbfwk/OU5CqD/vm3+X3Oi
+	 AXCj7lf3MLAGgXw199giJAWOePqyb2DV7ZS5d3f4UaHV4udcmzONXBzYzB3WIOaUYD
+	 TTj8VKJrgGFtEfcN1InPPihEopWpbF4thYFyzjjw5XSH7VahU7GNGUkq6EAwmaYEzN
+	 m+VGw5BKYO8Wm+Jiqd+8WIePtyixw4gHc6Axomfc5fdYIBUNu7queIf+R7xUJCBxjt
+	 4/N2fXjdyn4yujNFz+euMkCRaX/bZBvY04nV439EuW5t+wPV7K+2vBThiUwb3Ef9z0
+	 Re/KREjY+BbCA==
+Date: Tue, 24 Feb 2026 13:48:51 -0800
+From: Kees Cook <kees@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] kcsan: test: Adjust "expect" allocation type for
+ kmalloc_obj
+Message-ID: <202602241316.CFFF256ED6@keescook>
+References: <20260223222226.work.188-kees@kernel.org>
+ <CANpmjNOpXe7tCP7tyR04Hm+a8zdiBWWQdK=US-qTL31mm+Yzkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,131 +45,77 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CANpmjNOpXe7tCP7tyR04Hm+a8zdiBWWQdK=US-qTL31mm+Yzkw@mail.gmail.com>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Tue, Feb 24, 2026 at 11:09:44AM +0100, Marco Elver wrote:
+> On Mon, 23 Feb 2026 at 23:22, Kees Cook <kees@kernel.org> wrote:
+> >
+> > Instead of depending on the implicit case between a pointer to pointers
+> > and pointer to arrays, use the assigned variable type for the allocation
+> > type so they correctly match. Solves the following build error:
+> >
+> > ../kernel/kcsan/kcsan_test.c: In function '__report_matches':
+> > ../kernel/kcsan/kcsan_test.c:171:16: error: assignment to 'char (*)[512]' from incompatible pointer type 'char (*)[3][512]'
+> > [-Wincompatible-pointer-types]
+> >   171 |         expect = kmalloc_obj(observed.lines);
+> >       |                ^
+> >
+> > Tested with:
+> >
+> > $ ./tools/testing/kunit/kunit.py run \
+> >         --kconfig_add CONFIG_DEBUG_KERNEL=y \
+> >         --kconfig_add CONFIG_KCSAN=y \
+> >         --kconfig_add CONFIG_KCSAN_KUNIT_TEST=y \
+> >         --arch=x86_64 --qemu_args '-smp 2' kcsan
+> >
+> > Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > Fixes: 69050f8d6d07 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Dmitry Vyukov <dvyukov@google.com>
+> > Cc: <kasan-dev@googlegroups.com>
+> > ---
+> >  kernel/kcsan/kcsan_test.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
+> > index 79e655ea4ca1..056fa859ad9a 100644
+> > --- a/kernel/kcsan/kcsan_test.c
+> > +++ b/kernel/kcsan/kcsan_test.c
+> > @@ -168,7 +168,7 @@ static bool __report_matches(const struct expect_report *r)
+> >         if (!report_available())
+> >                 return false;
+> >
+> > -       expect = kmalloc_obj(observed.lines);
+> > +       expect = kmalloc_obj(*expect);
+> 
+> This is wrong. Instead of allocating 3x512 bytes it's now only
+> allocating 512 bytes, so we get OOB below with this change. 'expect'
+> is a pointer to a 3-dimensional array of 512-char arrays (matching
+> observed.lines).
 
-struct hci_std_codecs and struct hci_std_codecs_v2 are flexible
-structures, this is structures that contain a flexible-array member
-(__u8 codec[]; and struct hci_std_codec_v2 codec[];, correspondingly.)
+Why did running the kunit test not trip over this? :(
 
-Since struct hci_rp_read_local_supported_codecs and struct
-hci_rp_read_local_supported_codecs_v2 are defined by hardware, we
-create the new struct hci_std_codecs_hdr and struct hci_std_codecs_v2_hdr
-types, and use them to replace the object types causing trouble in
-struct hci_rp_read_local_supported_codecs and struct
-hci_rp_read_local_supported_codecs_v2, namely struct hci_std_codecs
-std_codecs; and struct hci_std_codecs_v2_hdr std_codecs;.
+Hmpf, getting arrays allocated without an explicit cast seems to be
+impossible. How about this:
 
-Also, once -fms-extensions is enabled, we can use transparent struct
-members in both struct hci_std_codecs and struct hci_std_codecs_v2_hdr.
 
-Notice that the newly created types does not contain the flex-array
-member `codec`, which is the object causing the -Wfamnae warnings.
-
-After these changes, the size of struct hci_rp_read_local_supported_codecs
-and struct hci_rp_read_local_supported_codecs_v2, along with their
-member's offsets remain the same, hence the memory layouts don't
-change:
-
-Before changes:
-struct hci_rp_read_local_supported_codecs {
-        __u8                       status;               /*     0     1 */
-        struct hci_std_codecs      std_codecs;           /*     1     1 */
-        struct hci_vnd_codecs      vnd_codecs;           /*     2     1 */
-
-        /* size: 3, cachelines: 1, members: 3 */
-        /* last cacheline: 3 bytes */
-} __attribute__((__packed__));
-
-struct hci_rp_read_local_supported_codecs_v2 {
-        __u8                       status;               /*     0     1 */
-        struct hci_std_codecs_v2   std_codecs;           /*     1     1 */
-        struct hci_vnd_codecs_v2   vendor_codecs;        /*     2     1 */
-
-        /* size: 3, cachelines: 1, members: 3 */
-        /* last cacheline: 3 bytes */
-} __attribute__((__packed__));
-
-After changes:
-struct hci_rp_read_local_supported_codecs {
-	__u8                       status;               /*     0     1 */
-	struct hci_std_codecs_hdr  std_codecs;           /*     1     1 */
-	struct hci_vnd_codecs      vnd_codecs;           /*     2     1 */
-
-	/* size: 3, cachelines: 1, members: 3 */
-	/* last cacheline: 3 bytes */
-} __attribute__((__packed__));
-
-struct hci_rp_read_local_supported_codecs_v2 {
-	__u8                       status;               /*     0     1 */
-	struct hci_std_codecs_v2_hdr std_codecs;         /*     1     1 */
-	struct hci_vnd_codecs_v2   vendor_codecs;        /*     2     1 */
-
-	/* size: 3, cachelines: 1, members: 3 */
-	/* last cacheline: 3 bytes */
-} __attribute__((__packed__));
-
-With these changes fix the following warnings:
-
-include/net/bluetooth/hci.h:1490:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-include/net/bluetooth/hci.h:1525:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/net/bluetooth/hci.h | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 89ad9470fa71..572b1c620c5d 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -1468,8 +1468,12 @@ struct hci_rp_read_data_block_size {
- } __packed;
+diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
+index 056fa859ad9a..ae758150ccb9 100644
+--- a/kernel/kcsan/kcsan_test.c
++++ b/kernel/kcsan/kcsan_test.c
+@@ -168,7 +168,7 @@ static bool __report_matches(const struct expect_report *r)
+ 	if (!report_available())
+ 		return false;
  
- #define HCI_OP_READ_LOCAL_CODECS	0x100b
--struct hci_std_codecs {
-+struct hci_std_codecs_hdr {
- 	__u8	num;
-+} __packed;
-+
-+struct hci_std_codecs {
-+	struct hci_std_codecs_hdr;
- 	__u8	codec[];
- } __packed;
+-	expect = kmalloc_obj(*expect);
++	expect = (typeof(expect))kmalloc_obj(observed.lines);
+ 	if (WARN_ON(!expect))
+ 		return false;
  
-@@ -1487,7 +1491,7 @@ struct hci_vnd_codecs {
- 
- struct hci_rp_read_local_supported_codecs {
- 	__u8	status;
--	struct hci_std_codecs std_codecs;
-+	struct hci_std_codecs_hdr std_codecs;
- 	struct hci_vnd_codecs vnd_codecs;
- } __packed;
- 
-@@ -1504,8 +1508,12 @@ struct hci_std_codec_v2 {
- 	__u8	transport;
- } __packed;
- 
--struct hci_std_codecs_v2 {
-+struct hci_std_codecs_v2_hdr {
- 	__u8	num;
-+} __packed;
-+
-+struct hci_std_codecs_v2 {
-+	struct hci_std_codecs_v2_hdr;
- 	struct hci_std_codec_v2 codec[];
- } __packed;
- 
-@@ -1522,7 +1530,7 @@ struct hci_vnd_codecs_v2 {
- 
- struct hci_rp_read_local_supported_codecs_v2 {
- 	__u8	status;
--	struct hci_std_codecs_v2 std_codecs;
-+	struct hci_std_codecs_v2_hdr std_codecs;
- 	struct hci_vnd_codecs_v2 vendor_codecs;
- } __packed;
- 
+
+
+
 -- 
-2.43.0
-
+Kees Cook
