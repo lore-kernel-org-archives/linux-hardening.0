@@ -1,41 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FF733BBCD;
-	Tue, 24 Feb 2026 21:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF8B33DEDD;
+	Tue, 24 Feb 2026 21:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771967269; cv=none; b=OSP5f3jYLuNZMKrktaxjEQxny21VAeu6kNJ5pyoQoryVla8+oClSK+YLoRrOwji8Ufd00Jd7vwtEUHZkjE2SzhRQ04fkGIDZPL/UD+3jxMauYXjjSoK7ehBKBKX9XR+DjmPxdoVQrN5i0yflbTLeEn+b+5ePBjFGr1p8lskKJSU=
+	t=1771968701; cv=none; b=uun8bTMk0Vy376tIc1sAC9vFCw4PL3yWCxl+PH04767d0xL/WY7u4s8grjzsKo+190ZzIV6qElL2l/Pqx/a+xovesj9UXQBUmMxA0XngIyp8mecJUq/gwl/gewQdm8WrQUQDMnPTn0iZCk5zQsh2LNXJhAJ33sSaMYm4hnbOrYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771967269; c=relaxed/simple;
-	bh=6hCBG7weEyJevMfD2njHUo2wuPYASbBAE3ywAdd0EUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IxgkT2dyoFPggtjF0S7GlEbUa5oEU8aLRi9upLXIWDJ4iQFiJTNvCpZw4n0AbMYa9zU4wWUBdanEZK+KXjAP/nCNWSG0h0EdsPAyT3QmUtiDPC4Hd632wJIrtzjUeL5mXzqrj1SLd1ZMyMpkh+7dFdWQX+GfjpIni+m7BKHOLco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWPYPo3J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771968701; c=relaxed/simple;
+	bh=YIlxGwPr5hMd/xYC92n77YTEg4ZxfpXED5MmFXnriGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LgoLwXMs+ix978Q7k/9wpcrPXePuxz26lx4DXfRGvvbvfcyjVQvqP6TI1G7zbr9umKJuPa9mXS8A+ebKdIWF+YRP/w8LP3HRUoBBD8sE0DkFwzYhaaGQNzqFxR5CC9TsiskaILe//z81agNC6c4Jzy7zMLmyMxMeCyimZeyeO5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGHAp1VY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWPYPo3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC22C116D0;
-	Tue, 24 Feb 2026 21:07:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGHAp1VY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A998BC116D0;
+	Tue, 24 Feb 2026 21:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771967269;
-	bh=6hCBG7weEyJevMfD2njHUo2wuPYASbBAE3ywAdd0EUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DWPYPo3JU3XKzAa08aiHdx28hKvE5jFtMIduAl1GaANoj9GLmBt6S4YBkF4nkihIq
-	 Xqcn6Wl+ZcpEhATbKsiUhmEbPSV7e0tsp9iBNmZ0IN17GuCft8ztRkMKKjeIQIMXR1
-	 EjJIUHWh4G4510eETFNya1UauYO917FhFKgHtcyHYLJVm6qCon/etzBcapsuKV8Wwf
-	 nNuepzrdNXDPghANCH9ION0b5OKH2NrSd3jhB971e4t8VR0VcVx+ZKlmyVL0u7Tgup
-	 1tMevGoQYBPV9IIgNxW+byYpvkFU205/fGizfh3QcSwovvT5QhdA3eLvWDSJXNikRB
-	 WID0n3WkvFOKg==
-Date: Tue, 24 Feb 2026 13:07:48 -0800
-From: Kees Cook <kees@kernel.org>
-To: Fuad Tabba <tabba@google.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	will@kernel.org
-Subject: Re: [PATCH] lib/string: Fix UBSAN misaligned access in sized_strscpy
-Message-ID: <202602241302.75B565883@keescook>
-References: <20260224170427.2296592-1-tabba@google.com>
+	s=k20201202; t=1771968701;
+	bh=YIlxGwPr5hMd/xYC92n77YTEg4ZxfpXED5MmFXnriGA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AGHAp1VYfEp8JV0mtoHFu/TlxSn1frOQtTrUcFQKzGqTe0q7YGXqPbrN44SgKLePx
+	 zVmCQqhQki+nTDHMfT4GRqwGhBnYYNN0DWenHLjJV13eYD8RJ6jniJIe8vaDGKqXMa
+	 H61sSnNocbGNbxoJ8v9IoJJP+n+tOY0Dm7xoK7yFHc5mkvnBk4HiLsv+9wYJF7128/
+	 NjFIIYz4sypjpOAPUXrdXGVK6wbh2V7KIVfHZgDcRy1vMLuBmxZeeNAuxT7BnhDkbz
+	 qs2csCdBhnDHI6Q0V7nPM6RwNKOcKkgsLnhVgMci4d4vnkrkaU8qNAbGZNV+JT42xX
+	 UEuAQy5VyxfBg==
+Date: Tue, 24 Feb 2026 15:31:08 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] Bluetooth: hci.h: Avoid a couple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aZ1FrL8qvvKuktBF@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,68 +50,131 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260224170427.2296592-1-tabba@google.com>
 
-On Tue, Feb 24, 2026 at 05:04:27PM +0000, Fuad Tabba wrote:
-> sized_strscpy() performs word-at-a-time writes to the destination
-> buffer. If the destination buffer is not aligned to unsigned long,
-> direct assignment causes UBSAN misaligned-access errors.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Is this via CONFIG_UBSAN_ALIGNMENT=y ? Note this in the Kconfig:
+struct hci_std_codecs and struct hci_std_codecs_v2 are flexible
+structures, this is structures that contain a flexible-array member
+(__u8 codec[]; and struct hci_std_codec_v2 codec[];, correspondingly.)
 
-          Enabling this option on architectures that support unaligned
-          accesses may produce a lot of false positives.
+Since struct hci_rp_read_local_supported_codecs and struct
+hci_rp_read_local_supported_codecs_v2 are defined by hardware, we
+create the new struct hci_std_codecs_hdr and struct hci_std_codecs_v2_hdr
+types, and use them to replace the object types causing trouble in
+struct hci_rp_read_local_supported_codecs and struct
+hci_rp_read_local_supported_codecs_v2, namely struct hci_std_codecs
+std_codecs; and struct hci_std_codecs_v2_hdr std_codecs;.
 
-which architecture are you checking this on?
+Also, once -fms-extensions is enabled, we can use transparent struct
+members in both struct hci_std_codecs and struct hci_std_codecs_v2_hdr.
 
-> Use put_unaligned() to safely write the words to the destination.
+Notice that the newly created types does not contain the flex-array
+member `codec`, which is the object causing the -Wfamnae warnings.
 
-Also, I thought the word-at-a-time work in sized_strscpy() was
-specifically to take advantage of aligned word writes? This doesn't seem
-like the right solution, and I think we're already disabling the
-unaligned access by using "max=0" in the earlier checks.
+After these changes, the size of struct hci_rp_read_local_supported_codecs
+and struct hci_rp_read_local_supported_codecs_v2, along with their
+member's offsets remain the same, hence the memory layouts don't
+change:
 
-I think the bug may be that you got CONFIG_UBSAN_ALIGNMENT enabled for
-an arch that doesn't suffer from unaligned access problems. :) We should
-fix the Kconfig!
+Before changes:
+struct hci_rp_read_local_supported_codecs {
+        __u8                       status;               /*     0     1 */
+        struct hci_std_codecs      std_codecs;           /*     1     1 */
+        struct hci_vnd_codecs      vnd_codecs;           /*     2     1 */
 
--Kees
+        /* size: 3, cachelines: 1, members: 3 */
+        /* last cacheline: 3 bytes */
+} __attribute__((__packed__));
 
-> 
-> Fixes: 30035e45753b7 ("string: provide strscpy()")
-> Signed-off-by: Fuad Tabba <tabba@google.com>
-> ---
->  lib/string.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/string.c b/lib/string.c
-> index b632c71df1a5..a1697bf72078 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -157,16 +157,16 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
->  		if (has_zero(c, &data, &constants)) {
->  			data = prep_zero_mask(c, data, &constants);
->  			data = create_zero_mask(data);
-> -			*(unsigned long *)(dest+res) = c & zero_bytemask(data);
-> +			put_unaligned(c & zero_bytemask(data), (unsigned long *)(dest+res));
->  			return res + find_zero(data);
->  		}
->  		count -= sizeof(unsigned long);
->  		if (unlikely(!count)) {
->  			c &= ALLBUTLAST_BYTE_MASK;
-> -			*(unsigned long *)(dest+res) = c;
-> +			put_unaligned(c, (unsigned long *)(dest+res));
->  			return -E2BIG;
->  		}
-> -		*(unsigned long *)(dest+res) = c;
-> +		put_unaligned(c, (unsigned long *)(dest+res));
->  		res += sizeof(unsigned long);
->  		max -= sizeof(unsigned long);
->  	}
-> -- 
-> 2.53.0.371.g1d285c8824-goog
-> 
-> 
+struct hci_rp_read_local_supported_codecs_v2 {
+        __u8                       status;               /*     0     1 */
+        struct hci_std_codecs_v2   std_codecs;           /*     1     1 */
+        struct hci_vnd_codecs_v2   vendor_codecs;        /*     2     1 */
 
+        /* size: 3, cachelines: 1, members: 3 */
+        /* last cacheline: 3 bytes */
+} __attribute__((__packed__));
+
+After changes:
+struct hci_rp_read_local_supported_codecs {
+	__u8                       status;               /*     0     1 */
+	struct hci_std_codecs_hdr  std_codecs;           /*     1     1 */
+	struct hci_vnd_codecs      vnd_codecs;           /*     2     1 */
+
+	/* size: 3, cachelines: 1, members: 3 */
+	/* last cacheline: 3 bytes */
+} __attribute__((__packed__));
+
+struct hci_rp_read_local_supported_codecs_v2 {
+	__u8                       status;               /*     0     1 */
+	struct hci_std_codecs_v2_hdr std_codecs;         /*     1     1 */
+	struct hci_vnd_codecs_v2   vendor_codecs;        /*     2     1 */
+
+	/* size: 3, cachelines: 1, members: 3 */
+	/* last cacheline: 3 bytes */
+} __attribute__((__packed__));
+
+With these changes fix the following warnings:
+
+include/net/bluetooth/hci.h:1490:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+include/net/bluetooth/hci.h:1525:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/net/bluetooth/hci.h | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 89ad9470fa71..572b1c620c5d 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -1468,8 +1468,12 @@ struct hci_rp_read_data_block_size {
+ } __packed;
+ 
+ #define HCI_OP_READ_LOCAL_CODECS	0x100b
+-struct hci_std_codecs {
++struct hci_std_codecs_hdr {
+ 	__u8	num;
++} __packed;
++
++struct hci_std_codecs {
++	struct hci_std_codecs_hdr;
+ 	__u8	codec[];
+ } __packed;
+ 
+@@ -1487,7 +1491,7 @@ struct hci_vnd_codecs {
+ 
+ struct hci_rp_read_local_supported_codecs {
+ 	__u8	status;
+-	struct hci_std_codecs std_codecs;
++	struct hci_std_codecs_hdr std_codecs;
+ 	struct hci_vnd_codecs vnd_codecs;
+ } __packed;
+ 
+@@ -1504,8 +1508,12 @@ struct hci_std_codec_v2 {
+ 	__u8	transport;
+ } __packed;
+ 
+-struct hci_std_codecs_v2 {
++struct hci_std_codecs_v2_hdr {
+ 	__u8	num;
++} __packed;
++
++struct hci_std_codecs_v2 {
++	struct hci_std_codecs_v2_hdr;
+ 	struct hci_std_codec_v2 codec[];
+ } __packed;
+ 
+@@ -1522,7 +1530,7 @@ struct hci_vnd_codecs_v2 {
+ 
+ struct hci_rp_read_local_supported_codecs_v2 {
+ 	__u8	status;
+-	struct hci_std_codecs_v2 std_codecs;
++	struct hci_std_codecs_v2_hdr std_codecs;
+ 	struct hci_vnd_codecs_v2 vendor_codecs;
+ } __packed;
+ 
 -- 
-Kees Cook
+2.43.0
+
