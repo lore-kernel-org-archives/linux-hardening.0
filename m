@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1541FC7FB;
-	Tue, 24 Feb 2026 19:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FF733BBCD;
+	Tue, 24 Feb 2026 21:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771962409; cv=none; b=dVicBHSMl8lF1CbUl1+gu1bA+q8syMYgkwK+OVtpZzNMYgY2+x6RrOTq+BW8bmzmfu4f8ct4qbM4nisGJH5cbO2gao4TQ8HE2Gihm8Equv7BEnfSb1x2CfH5GW4Pkhq40IL7GcPgQGcRztCXlGRxxQ7YBc1cp8ygdiENrYD1YK8=
+	t=1771967269; cv=none; b=OSP5f3jYLuNZMKrktaxjEQxny21VAeu6kNJ5pyoQoryVla8+oClSK+YLoRrOwji8Ufd00Jd7vwtEUHZkjE2SzhRQ04fkGIDZPL/UD+3jxMauYXjjSoK7ehBKBKX9XR+DjmPxdoVQrN5i0yflbTLeEn+b+5ePBjFGr1p8lskKJSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771962409; c=relaxed/simple;
-	bh=WdbkqgfLfo6zRN4JKq8jQL0DmFzINHD01rn1Bl7BB9o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jDa56T5cTueL1yCsQujsM4fIQ5frjVJDsoryySqtvEokjPbltZcijTtftsnuQDXEJu3ulj0kYpakj1quERYoqX800V89XZV24sBvf1jYoePKBhqrS5EXO62ilBgIDXCzDYD46rGKg4nxaEd4SBWx+1YYb4Z8b3BdTDH8Z4iM7Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZIcStBI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771967269; c=relaxed/simple;
+	bh=6hCBG7weEyJevMfD2njHUo2wuPYASbBAE3ywAdd0EUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IxgkT2dyoFPggtjF0S7GlEbUa5oEU8aLRi9upLXIWDJ4iQFiJTNvCpZw4n0AbMYa9zU4wWUBdanEZK+KXjAP/nCNWSG0h0EdsPAyT3QmUtiDPC4Hd632wJIrtzjUeL5mXzqrj1SLd1ZMyMpkh+7dFdWQX+GfjpIni+m7BKHOLco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWPYPo3J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZIcStBI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF238C116D0;
-	Tue, 24 Feb 2026 19:46:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWPYPo3J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC22C116D0;
+	Tue, 24 Feb 2026 21:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771962408;
-	bh=WdbkqgfLfo6zRN4JKq8jQL0DmFzINHD01rn1Bl7BB9o=;
-	h=Date:From:To:Cc:Subject:From;
-	b=kZIcStBINWtJVDs0JwFH2ISDMsaLByMFWhG/h1Eu30Eb/eaWPXF/jbDD98KuPPPVZ
-	 +zuPCEeAUnKkFL0kariqlvrF1CV4KCR2cbGdKrY0ICMi2XVfl9BMo3JPgkYM2y52X9
-	 MaxmfXopWNRmKjzn1ira3dUbk6TGtwcbOOnSe/20xBng/2+RngxF1bRO68rgbaiLFS
-	 6+ueiGFuWRN1LKInoMrLIV1QZLmIEEuYXjOAj4R95M7powViXnssf7ruFrdLqNCRBN
-	 BMIPVAk05FoeV6Bj3uwPmiWWkVHEgIBrPMRo1Jya/ax22246ukX86TCPoFxNTq0IEu
-	 BkTV1PtBUQ/Wg==
-Date: Tue, 24 Feb 2026 13:46:17 +0900
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3][next] wifi: ath6kl: wmi: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <aZ0tGZnmtGckKJzY@kspp>
+	s=k20201202; t=1771967269;
+	bh=6hCBG7weEyJevMfD2njHUo2wuPYASbBAE3ywAdd0EUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DWPYPo3JU3XKzAa08aiHdx28hKvE5jFtMIduAl1GaANoj9GLmBt6S4YBkF4nkihIq
+	 Xqcn6Wl+ZcpEhATbKsiUhmEbPSV7e0tsp9iBNmZ0IN17GuCft8ztRkMKKjeIQIMXR1
+	 EjJIUHWh4G4510eETFNya1UauYO917FhFKgHtcyHYLJVm6qCon/etzBcapsuKV8Wwf
+	 nNuepzrdNXDPghANCH9ION0b5OKH2NrSd3jhB971e4t8VR0VcVx+ZKlmyVL0u7Tgup
+	 1tMevGoQYBPV9IIgNxW+byYpvkFU205/fGizfh3QcSwovvT5QhdA3eLvWDSJXNikRB
+	 WID0n3WkvFOKg==
+Date: Tue, 24 Feb 2026 13:07:48 -0800
+From: Kees Cook <kees@kernel.org>
+To: Fuad Tabba <tabba@google.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	will@kernel.org
+Subject: Re: [PATCH] lib/string: Fix UBSAN misaligned access in sized_strscpy
+Message-ID: <202602241302.75B565883@keescook>
+References: <20260224170427.2296592-1-tabba@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,95 +44,68 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20260224170427.2296592-1-tabba@google.com>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Tue, Feb 24, 2026 at 05:04:27PM +0000, Fuad Tabba wrote:
+> sized_strscpy() performs word-at-a-time writes to the destination
+> buffer. If the destination buffer is not aligned to unsigned long,
+> direct assignment causes UBSAN misaligned-access errors.
 
-Remove unused structures bss_bias_info and bss_bias, and member
-bss in struct roam_ctrl_cmd.
+Is this via CONFIG_UBSAN_ALIGNMENT=y ? Note this in the Kconfig:
 
-After these changes, the size of struct roam_ctrl_cmd, along
-with its member's offsets remain the same, hence the memory layout
-doesn't change:
+          Enabling this option on architectures that support unaligned
+          accesses may produce a lot of false positives.
 
-Before changes:
-struct roam_ctrl_cmd {
-	union {
-		u8                 bssid[6];             /*     0     6 */
-		u8                 roam_mode;            /*     0     1 */
-		struct bss_bias_info bss;                /*     0     1 */
-		struct low_rssi_scan_params params;      /*     0     8 */
-	} info;                                          /*     0     8 */
-	u8                         roam_ctrl;            /*     8     1 */
+which architecture are you checking this on?
 
-	/* size: 9, cachelines: 1, members: 2 */
-	/* last cacheline: 9 bytes */
-} __attribute__((__packed__));
+> Use put_unaligned() to safely write the words to the destination.
 
-After changes:
-struct roam_ctrl_cmd {
-	union {
-		u8                 bssid[6];             /*     0     6 */
-		u8                 roam_mode;            /*     0     1 */
-		struct low_rssi_scan_params params;      /*     0     8 */
-	} info;                                          /*     0     8 */
-	u8                         roam_ctrl;            /*     8     1 */
+Also, I thought the word-at-a-time work in sized_strscpy() was
+specifically to take advantage of aligned word writes? This doesn't seem
+like the right solution, and I think we're already disabling the
+unaligned access by using "max=0" in the earlier checks.
 
-	/* size: 9, cachelines: 1, members: 2 */
-	/* last cacheline: 9 bytes */
-} __attribute__((__packed__));
+I think the bug may be that you got CONFIG_UBSAN_ALIGNMENT enabled for
+an arch that doesn't suffer from unaligned access problems. :) We should
+fix the Kconfig!
 
-With these changes fix the following warning:
+-Kees
 
-drivers/net/wireless/ath/ath6kl/wmi.h:1658:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Fixes: 30035e45753b7 ("string: provide strscpy()")
+> Signed-off-by: Fuad Tabba <tabba@google.com>
+> ---
+>  lib/string.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/string.c b/lib/string.c
+> index b632c71df1a5..a1697bf72078 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -157,16 +157,16 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
+>  		if (has_zero(c, &data, &constants)) {
+>  			data = prep_zero_mask(c, data, &constants);
+>  			data = create_zero_mask(data);
+> -			*(unsigned long *)(dest+res) = c & zero_bytemask(data);
+> +			put_unaligned(c & zero_bytemask(data), (unsigned long *)(dest+res));
+>  			return res + find_zero(data);
+>  		}
+>  		count -= sizeof(unsigned long);
+>  		if (unlikely(!count)) {
+>  			c &= ALLBUTLAST_BYTE_MASK;
+> -			*(unsigned long *)(dest+res) = c;
+> +			put_unaligned(c, (unsigned long *)(dest+res));
+>  			return -E2BIG;
+>  		}
+> -		*(unsigned long *)(dest+res) = c;
+> +		put_unaligned(c, (unsigned long *)(dest+res));
+>  		res += sizeof(unsigned long);
+>  		max -= sizeof(unsigned long);
+>  	}
+> -- 
+> 2.53.0.371.g1d285c8824-goog
+> 
+> 
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - Remove unused structures. (Jeff)
-
-Changes in v2:
- - Create new separate struct bss_bias_info_hdr, and use
-   transparent struct members (in struct bss_bias_info)
-   instead of rearranging members in struct roam_ctrl_cmd.
- - Update subject line - Add 'wifi:' prefix.
- - Link: https://lore.kernel.org/linux-hardening/aZP4RI-uN2001cBh@kspp/
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aR153k4ExCD-QTMq@kspp/
-
- drivers/net/wireless/ath/ath6kl/wmi.h | 11 -----------
- 1 file changed, 11 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
-index 3080d82e25cc..8fbece3fdad9 100644
---- a/drivers/net/wireless/ath/ath6kl/wmi.h
-+++ b/drivers/net/wireless/ath/ath6kl/wmi.h
-@@ -1630,16 +1630,6 @@ enum wmi_roam_mode {
- 	WMI_LOCK_BSS_MODE = 3, /* Lock to the current BSS */
- };
- 
--struct bss_bias {
--	u8 bssid[ETH_ALEN];
--	s8 bias;
--} __packed;
--
--struct bss_bias_info {
--	u8 num_bss;
--	struct bss_bias bss_bias[];
--} __packed;
--
- struct low_rssi_scan_params {
- 	__le16 lrssi_scan_period;
- 	a_sle16 lrssi_scan_threshold;
-@@ -1652,7 +1642,6 @@ struct roam_ctrl_cmd {
- 	union {
- 		u8 bssid[ETH_ALEN]; /* WMI_FORCE_ROAM */
- 		u8 roam_mode; /* WMI_SET_ROAM_MODE */
--		struct bss_bias_info bss; /* WMI_SET_HOST_BIAS */
- 		struct low_rssi_scan_params params; /* WMI_SET_LRSSI_SCAN_PARAMS
- 						     */
- 	} __packed info;
 -- 
-2.43.0
-
+Kees Cook
