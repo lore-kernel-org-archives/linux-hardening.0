@@ -1,88 +1,73 @@
-Received: from forward500d.mail.yandex.net (forward500d.mail.yandex.net [178.154.239.208])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4C92C21DF;
-	Wed, 25 Feb 2026 06:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8150F2D374F;
+	Wed, 25 Feb 2026 07:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772002722; cv=none; b=mJTwkBiLjO5NBQG+AQF58yVfwAYnJmfKWcJUlb4GW43hk15Pgp51ctH0mycMh4FC9d4hy1KjsjhgX6l0HgnbgWX20Wx4YThUbzVBOuRd83AlskLw766J7TxSgveQ6YxZdPEEfuz/w4JnvqvraTnUD2qate8d/xoD350/xb6hBYo=
+	t=1772003757; cv=none; b=vFpxnbGIOXGobHJ8nGs+U7HBA5vNI0QUuOw/bukugn5ui5aTa3pUbqEZf6yRD13nJ6LwiCUCsgpLc3KvANYg4C5vGuzvnRD+fwAhU7cOfMryuVtlfJt+YS49vj197kPo08s9H+6omAgL+QBjKGndBxSOMQh4n4U4cHiiTEpXJJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772002722; c=relaxed/simple;
-	bh=UUnbu1AvaVUjFLrFgtgIFJ9LM7Ct+YXnwP6ZchgUaLM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aQP9zgf/8SUenEgj8OMEoqZksmyJE8awDCN9Y5P0/BIwzOqpsbnREZkqF2Y6TaXm0VK9iWUO6nUrEOi/R6/rKeOaH8UUILSFTduq6hLBva1iIMW5Ecb2wpOLcgoIBLe1Nqpx9wP57859WBncijf8ILsKDyRChkq6qS8ClqmNJ6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=cLwUKliy; arc=none smtp.client-ip=178.154.239.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1772003757; c=relaxed/simple;
+	bh=4BdT8DUi7UC7RFjd1x4PTnvnw1YSgTjXNR2GltKSXTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FWtBDPTB6OgMzf+gZIsMSX4cfoz87kscnBInw9WdkO3LVbzPpEQyEzuXAth/pzFnhw0VrVdJJiBWzJGPbjTHqAYBAu1KDf0yB3IUJMJ+hb55Oj2R6ovPBG8Ywbm8NTjo1LwXn9W4iFf/JKWfKP4J28hdayzCfBTBSeeJXyIOXng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPsNsUYr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="cLwUKliy"
-Received: from mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3d48:0:640:52d7:0])
-	by forward500d.mail.yandex.net (Yandex) with ESMTPS id A890783CA0;
-	Wed, 25 Feb 2026 09:58:34 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id WwaTsClG0Cg0-WVs288Bd;
-	Wed, 25 Feb 2026 09:58:34 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1772002714; bh=0ZNQLUZjuSTwJtQMEurZv9D4TeutYoBFTB38t4pvmoo=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=cLwUKliyxqzxnCp0gOjMU5dPEHX0HoLKIhrDPA0TcJ6jJUm+Y07VEgyTz+/oqma6v
-	 Y9FUPQgyFW+2IlbMpr733vu1K7To7SfPvjaLauAVL0GN9mLo3QZLffMPut0MQ2gO2r
-	 hRRNXrTqmXnkU0BooCXt4/PZ9EPOlErjzcqArhFM=
-Authentication-Results: mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <61b376fd2acf6e8cf8a90ee4eb7d58397f2acfa1.camel@yandex.ru>
-Subject: Re: [PATCH v8 2/5] lib: fix memparse() to handle overflow
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>, Andy Shevchenko
-	 <andriy.shevchenko@intel.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: David Laight <david.laight.linux@gmail.com>, Kees Cook
- <kees@kernel.org>,  "Darrick J . Wong"	 <djwong@kernel.org>,
- linux-hardening@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Wed, 25 Feb 2026 09:58:32 +0300
-In-Reply-To: <pwycaqzyfpan3eglq6hwx4esyfm2w2buvvaqtcqw3aco5y3trq@2ft2ajxaqobu>
-References: <20260212164413.889625-1-dmantipov@yandex.ru>
-	 <20260212164413.889625-3-dmantipov@yandex.ru>
-	 <umfxjjw2iukw5knj5xn5lxtkr2keorq3sws2mnegmw3zr64bmg@77v4cqwi2fay>
-	 <pwycaqzyfpan3eglq6hwx4esyfm2w2buvvaqtcqw3aco5y3trq@2ft2ajxaqobu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPsNsUYr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F77C116D0;
+	Wed, 25 Feb 2026 07:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772003757;
+	bh=4BdT8DUi7UC7RFjd1x4PTnvnw1YSgTjXNR2GltKSXTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TPsNsUYrj+Fqdw9dRfQKzsT3tMy3u1TDm4AoZVBqag6LtBFdGVjQyJkZDYJvSIZv3
+	 UjSI7y+1GvByJHwvgqLudsQOdYwaRmrynMtukU13oBcSaciaWPKin04/z2QqQtTdiA
+	 6FDGYyxWb3782DVe463sw1ddADZdDarAmN8KVGLvBip6S33WPCtbuxqqDACYBKIJIs
+	 3+mqFvc/t4xLOXV5LMmmafzBzxdSZVHm/4/GKJ6TDUaEyN77k+mNDhpG0JOv1oVmK3
+	 F+3HyOYmbPQsqvDC//7ryRqieJd4h18nPei3J6gQJT3INmw77pNNy56DJ/z2R2PmPo
+	 vwIJtt4WMK3Kw==
+Date: Tue, 24 Feb 2026 23:15:56 -0800
+From: Kees Cook <kees@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] slab: Saturate to SIZE_MAX for allocation size overflows
+Message-ID: <202602242315.C9D5430C7@keescook>
+References: <20260225013954.work.319-kees@kernel.org>
+ <aZ5zjIpYZYoc-LSX@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aZ5zjIpYZYoc-LSX@casper.infradead.org>
 
-On Tue, 2026-02-24 at 14:15 +0000, Rodrigo Alencar wrote:
+On Wed, Feb 25, 2026 at 03:59:08AM +0000, Matthew Wilcox wrote:
+> On Tue, Feb 24, 2026 at 05:40:02PM -0800, Kees Cook wrote:
+> > +++ b/include/linux/slab.h
+> > @@ -1105,7 +1105,7 @@ static inline __alloc_size(1, 2) void *kmalloc_array_noprof(size_t n, size_t siz
+> >  	size_t bytes;
+> >  
+> >  	if (unlikely(check_mul_overflow(n, size, &bytes)))
+> > -		return NULL;
+> > +		bytes = SIZE_MAX;
+> >  	return kmalloc_noprof(bytes, flags);
+> 
+> Wouldn't this be better written as:
+> 
+> 	return kmalloc_noprof(size_mul(n, size), flags);
+> 
+> (etc)
 
-> > I am interested on having _parse_integer_limit() overflow check
-> > exposed to kernel modules.
+Sure, I can convert them all that way if that's preferred?
 
-Hm... _parse_integer_limit() may be EXPORT_SYMBOL()ed of course.
-But are you sure that current API is not enough for your task?
-
-> > ...
->=20
-> I could propose the exposure of simple_strntoull() which is private
-> to lib/vsprintf.c, slightly changing its prototype:
->=20
-> * from:
-> unsigned long long simple_strntoull(const char *startp,
-> 				=C2=A0=C2=A0=C2=A0 char **endp,
-> 				=C2=A0=C2=A0=C2=A0 unsigned int base,
-> 				=C2=A0=C2=A0=C2=A0 size_t max_chars)
-> * to:
-> int simple_strntoull(const char *startp,
-> 		=C2=A0=C2=A0=C2=A0=C2=A0 char **endp,
-> 		=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long long *result,
-> 		=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int base,
-> 		=C2=A0=C2=A0=C2=A0=C2=A0 size_t max_chars)
->=20
-> That would allow to tackle the FIXME tag. I suppose it is there
-> because the overflow flag is being ignored, so the returned integer
-> can be set to -ERANGE or -EOVERFLOW when overflow happens.
-
-Well, removal of KSTRTOX_OVERFLOW quirk may be a subject for the next serie=
-s.
-
-Dmitry
+-- 
+Kees Cook
