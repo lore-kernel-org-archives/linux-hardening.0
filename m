@@ -1,69 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F18627A45C;
-	Wed, 25 Feb 2026 17:24:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853813ECBC0;
+	Wed, 25 Feb 2026 17:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772040299; cv=none; b=bbcSLaQdZCtWSKOFE3QgMBmR1Pczdnsf5TrNu/4bCvyVZ4RNH+jhlSyc1Nd0RUQ6sQXpvN8GI2JPzi5SmPtSZtWGyjO/iOWYRkLGdiC5656VuPAMIcRYwGJNwIGEqze0m9tWWvoBDrHHsfKFeUtyN3YafWgKFCRbC4ix1rx15nA=
+	t=1772040494; cv=none; b=HZUrvU4ApkSLspArjNSKUBSVWOvKzlKiIUI3uTOHI7RiSdos5E2zLdq8WkluvRSEKVPRcfP47yWANLIlzrsw4474NRQouxFDm0BIrBooZieVVO4Rpxf8XQeT+gHw3k84Hi5lTyHWCxxxnwoLaRDPddgJRKECGlFPsVrzvxfF/V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772040299; c=relaxed/simple;
-	bh=0e9SqD/+hsqTFerGrgoY6o2/NOjfpeueLYEdBPSeVd0=;
+	s=arc-20240116; t=1772040494; c=relaxed/simple;
+	bh=EfgKCiH4LT3KqQiGbcQFoTpH2C7Iohqow3BAjy2YggI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=miMTAn9wkxFOUJHsoAuzuSiwCW1wqL5Vz324jiv5TiWCiTA7qcWRJ48/Tnz66CbH5/Sr7eRxS+jrSZ4wAgXLRXywHyMMS5mN6tsH11/1E30XjKO1xCXfyF4EnL9bNpcitKN8F6By5PB2SFCWkyW25S+Iuqe49YDZ97xzNoVs5tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8KCP8v6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=p7psl3ym1+C7l5jKfh5kFY2JBN6U91s28sgwyJXxDZTHaut+/CEOMo2urLWcLUpBavODZJpglCBGoFUyz9HMjSOqxbURBCKD74w/2MEr81r6rGZ9UaspYM35r5g5Z3wVvqFseZDGCa1VYlLSCeHVx6T9U+JK5vbnj3d8rhCTSMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAEBcLqx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8KCP8v6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A62C116D0;
-	Wed, 25 Feb 2026 17:24:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAEBcLqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39552C19421;
+	Wed, 25 Feb 2026 17:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772040298;
-	bh=0e9SqD/+hsqTFerGrgoY6o2/NOjfpeueLYEdBPSeVd0=;
+	s=k20201202; t=1772040494;
+	bh=EfgKCiH4LT3KqQiGbcQFoTpH2C7Iohqow3BAjy2YggI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z8KCP8v6TEvoD4b7UR2NbIKZtY7/aATfjB9fLWp+hTa1yD1GCa2wR3uamUDLFnp6b
-	 kDTbNJOo2MW6F07WGx0jIn7SHchNDIjhST9sAxGkzBiGjVWJo4bQuOLOc5ki4ESp1w
-	 dRncP9MtgjNt6sPdMI+AHo+oIOjnXl8zfQvDq/5RNDYWLO6LoXsh+8raIQpcU0CA3m
-	 rfJGb3Km64g/F/ZKDrScLwC12P77UCAHYXF5lfA//yAfl55IRy+89t3X5oo7pEI41k
-	 T36F4bX28KIRRg3bl0BB7doDbrT1RUuDjGp57P0cRI8LzLGnlagLKLipxstIEk5Z7i
-	 XoehDrvcOfyog==
-Date: Wed, 25 Feb 2026 09:24:58 -0800
+	b=KAEBcLqxCBxcuCKDvmYjsmnLQEKLDsGKgxKdqE7Kp348V6nAEWwJgqGJtaI6iymT7
+	 RZgQB2SBCXYVFfxc/TZ3kUz9IyITdxWQaKHoqalUWKNefe52kmegj1o5j/usqD2UWW
+	 pwkG+fH+z7OtPAHHcngQ30IQ/zVmp/h6G7mtvyBWcJhDDhUhmdx2d3RlBpN4Dd54lE
+	 kg0k5/VLT5YuoC7Y/tfRNBqD60CfOTohNcE+NOS8gaHLQeIA5QqM37tHKK6Dd98iwW
+	 l5xbdiz671yprQhAgqbNjXTpJRbqIs/3WogRrsx/X00BQObWdXzHizPJ45SIxGCVEl
+	 8crNUb/t7ITUQ==
+Date: Wed, 25 Feb 2026 09:28:13 -0800
 From: Kees Cook <kees@kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jingwei Wang <wangjingwei@iscas.ac.cn>,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] vdso/datapage: Define vdso data pointers as arrays
-Message-ID: <202602250924.B0A6F658ED@keescook>
-References: <20260225024716.work.043-kees@kernel.org>
+To: Alex Deucher <alexander.deucher@amd.com>
+Cc: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	YiPeng Chai <YiPeng.Chai@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
+	Hawking Zhang <Hawking.Zhang@amd.com>,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] drm/amd/ras: Fix type size of remainder argument
+Message-ID: <202602250926.E587F86@keescook>
+References: <20260225014317.work.103-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260225024716.work.043-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260225014317.work.103-kees@kernel.org>
 
-On Tue, Feb 24, 2026 at 06:47:20PM -0800, Kees Cook wrote:
-> The vdso_u_time_data, vdso_u_rng_data, and vdso_u_arch_data arrays
-> are seen by GCC as single instances (due to their declarations in
-> include/vdso/datapage.h). When the vdso data pointers are dereferenced
-> with an offset, GCC thinks there is an access beyond the returned single
-> instance. These are actually arrays constructed at link time, so declare
-> them as such.
+On Tue, Feb 24, 2026 at 05:43:18PM -0800, Kees Cook wrote:
+> Forcing an int to be dereferenced at uint64_t for div64_u64_rem() runs
+> the risk of endian confusion and stack overflowing writes. Seen while
+> preparing to enable -Warray-bounds globally:
+> 
+> In file included from ../arch/x86/include/asm/processor.h:35,
+>                  from ../include/linux/sched.h:13,
+>                  from ../include/linux/ratelimit.h:6,
+>                  from ../include/linux/dev_printk.h:16,
+>                  from ../drivers/gpu/drm/amd/amdgpu/../ras/ras_mgr/ras_sys.h:29,
+>                  from ../drivers/gpu/drm/amd/amdgpu/../ras/rascore/ras.h:27,
+>                  from ../drivers/gpu/drm/amd/amdgpu/../ras/rascore/ras_core.c:24:
+> In function 'div64_u64_rem',
+>     inlined from 'ras_core_convert_timestamp_to_time' at ../drivers/gpu/drm/amd/amdgpu/../ras/rascore/ras_core.c:72:9:
+> ../include/linux/math64.h:56:20: error: array subscript 'u64 {aka long long unsigned int}[0]' is partly outside array bounds of 'int[1]' [-Werror=array-bounds=]
+>    56 |         *remainder = dividend % divisor;
+>       |         ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+> ../drivers/gpu/drm/amd/amdgpu/../ras/rascore/ras_core.c: In function 'ras_core_convert_timestamp_to_time':
+> ../drivers/gpu/drm/amd/amdgpu/../ras/rascore/ras_core.c:70:19: note: object 'remaining_seconds' of size 4
+>    70 |         int days, remaining_seconds;
+>       |                   ^~~~~~~~~~~~~~~~~
+> 
+> Switch remaining_seconds to uint64_t to avoid the problems.
+> 
+> Fixes: ace232eff50e ("drm/amdgpu: Add ras module files into amdgpu")
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: YiPeng Chai <YiPeng.Chai@amd.com>
+> Cc: Tao Zhou <tao.zhou1@amd.com>
+> Cc: Hawking Zhang <Hawking.Zhang@amd.com>
+> Cc: <amd-gfx@lists.freedesktop.org>
+> Cc: <dri-devel@lists.freedesktop.org>
+> ---
+>  drivers/gpu/drm/amd/ras/rascore/ras_core.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/ras/rascore/ras_core.c b/drivers/gpu/drm/amd/ras/rascore/ras_core.c
+> index 01122b55c98a..91e16b0b98f9 100644
+> --- a/drivers/gpu/drm/amd/ras/rascore/ras_core.c
+> +++ b/drivers/gpu/drm/amd/ras/rascore/ras_core.c
+> @@ -63,13 +63,14 @@ int ras_core_convert_timestamp_to_time(struct ras_core_context *ras_core,
+>  {
+>  	int days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+>  	uint64_t month = 0, day = 0, hour = 0, minute = 0, second = 0;
+> +	uint64_t remaining_seconds;
+>  	uint32_t year = 0;
+>  	int seconds_per_day = 24 * 60 * 60;
+>  	int seconds_per_hour = 60 * 60;
+>  	int seconds_per_minute = 60;
+> -	int days, remaining_seconds;
+> +	int days;
+>  
+> -	days = div64_u64_rem(timestamp, seconds_per_day, (uint64_t *)&remaining_seconds);
+> +	days = div64_u64_rem(timestamp, seconds_per_day, &remaining_seconds);
+>  
+>  	/* utc_timestamp follows the Unix epoch */
+>  	year = 1970;
 
-I found 2 more places I needed to make "&var" to "var" changes. I'll
-send a v2...
+Hm, 0day noticed this creates a problem on 32-bit systems:
+https://lore.kernel.org/all/202602251312.pq8yvrww-lkp@intel.com
+
+>  ld: drivers/gpu/drm/amd/ras/rascore/ras_core.o: in function `ras_core_convert_timestamp_to_time':
+>  drivers/gpu/drm/amd/amdgpu/../ras/rascore/ras_core.c:99:(.text+0x23e): undefined reference to `__udivmoddi4'
+>  ld: drivers/gpu/drm/amd/amdgpu/../ras/rascore/ras_core.c:100:(.text+0x253): undefined reference to `__udivdi3'
+>  ld: drivers/gpu/drm/amd/amdgpu/../ras/rascore/ras_core.c:101:(.text+0x265): undefined reference to `__umoddi3'
+
+I will investigate and send a v2...
 
 -- 
 Kees Cook
