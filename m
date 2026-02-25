@@ -1,133 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A62238E5C5;
-	Wed, 25 Feb 2026 09:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BEA3921CD
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 10:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772011954; cv=none; b=nFe0gO6Re9H0FtI5ck5HAOkx6eC/cUMbmdDw+mM9KQOjeFSjKanXtF6kDKeWwz55jwcpLNQOOSEJemYKkyF4NenMdFLkvqnKWaZE3zmUZCSDJgcVBaZxxyygefJXqYRVuTswj65R3fa1KjejR1a8lbfC5dPkzeAUjFMlbBo87+M=
+	t=1772014285; cv=none; b=UE3dEpBC0k4jRPx0NXfaceiynxFgkU42evi/TAn4jwaPmZmJGEfsICVa75oynm89qcANGGSHPARbX6uH0DTfL+DkIkjAKYpmvjokkyF7fRqColrc1/nuqfRddsXDdn2DyaxbHcC8xvoPVoQbEpC0dKwsQ20LKq4kPyaNb5EUtUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772011954; c=relaxed/simple;
-	bh=HVUwgqRM/eO1JAZ2oCPN+pOSpky+jR+BDC2Uzx0lbX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rD+WNjg/F4SUNXRJxWgehKP2AtN9FZSI7mPh52eOiT3zTn9Rl0AMyO+RFa/r7gyNI70/Axg5TepLtmFzJMvBiMSD35Fi8hfTCB5kNYvcSoWDeBj2ljkGXI9xlsXxguII1doHS311QYB5fbILXTFkW6Wp9463rc/x+9dwgVMD1vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MkkohYoW; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1772014285; c=relaxed/simple;
+	bh=tDMxpmvWd64wiFW5JbTOxxEAgZ1+dPmVrDH1cmiS8Vs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d4KRpI9cFViENOAFbKPHnx1JQ6ygucTbfvCIWFgomNzeVrRgJSs7og/TDopd7bwNxDFWmgkYWV6j32T6jNfTFjHpZRETDj7Y5XGa6j8M2IXBF7tUQYAPjuAkCV4Wv2bRLr77FvyPA7HzJr51wGu1zQ+AMfoNOsleRYnn5X6oOic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jbo4rFgK; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MkkohYoW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772011952; x=1803547952;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HVUwgqRM/eO1JAZ2oCPN+pOSpky+jR+BDC2Uzx0lbX4=;
-  b=MkkohYoWJZ1g+Qx1vKA3gUdo2FAapW5OrXJv6SG0Rv/EpC50a/5Im6qu
-   OGz3S1Td+TTLacXUyIu3nBfsoN2jCvSC6dbJs3wug8u4UbzSzVcr0oPEz
-   LYROOx4KaAzwlXRi5LiKGVR4FehC8YJm6RWoLwzLCgj3rphJ0A8Z4FFj0
-   9J2hoT8h91canndTEfz84Kyb2W9fKmDlCT4XXtvtmUmzo0A7NsfcXC4qW
-   0lIV4oNjkGS1l+tDaO5ye5tZ3LHqrMi7m/TP1lATlq5IhBLXkZOUZE1RG
-   jB+QJA3LqVMhutA006awyd2EIMhw2h2+OkNkRr/GvNbn0gq0Ewu+4+mO2
-   w==;
-X-CSE-ConnectionGUID: JOcx7XJXTG2VsjniL0HVBw==
-X-CSE-MsgGUID: QwxZY8lDQxS54KbOyogCyw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="72951835"
-X-IronPort-AV: E=Sophos;i="6.21,310,1763452800"; 
-   d="scan'208";a="72951835"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 01:32:32 -0800
-X-CSE-ConnectionGUID: kmUaOzYWTJyu3CXH+qaK1w==
-X-CSE-MsgGUID: gkwLkIDMQi6fmTVF+rjoYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,310,1763452800"; 
-   d="scan'208";a="239184874"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.71])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 01:32:30 -0800
-Date: Wed, 25 Feb 2026 11:32:28 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jbo4rFgK"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-4398913af88so1211924f8f.2
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 02:11:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772014281; x=1772619081; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1G1yT2ul3Ys8XiUmvDO5GBct2G1otswN0+Cj5PpvnD8=;
+        b=Jbo4rFgKT+myuYJlBAECpNRoJYoRpy3vpgxyjCC5SqMMuJVvQ9uhSbrPgzFF/i9Sff
+         Iziwl97ybXk396gzAkAJFytHh1Dlh9jmWWAbKK81xGivi+EsrZPFycvV0J/OeN1GsOx2
+         4uZmQEV9DjggiE7AGmb4XqBd8qRyg3HzdbFCvSYPDdNb7P4AHivpmg1FUnYW8ZnMoKkR
+         eChttgfyBmq9kVJ5Q7Jauv0UZlW7dmeIo2SAJvjSFeJTr7Y6JJqKkh//pFyXYxFgxKJ5
+         IqpzgzMcT9xWUXsLcO0IveXL4QFooOBpiBLJGhcb60CFi7YdR3eqw9Ohe0+FTHE1K5r+
+         ZvBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772014281; x=1772619081;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1G1yT2ul3Ys8XiUmvDO5GBct2G1otswN0+Cj5PpvnD8=;
+        b=K06KhmAkThw4Fvu/mciPrm75oi3O0OB4jLC6qtRMPPiPw/j8gVimR5hja2ayQObGtq
+         bg+/XaTvBoG/zSC+D0DUms3Jb17dTItEGk+CFob2Htt7ET31twRj6LAMCzrkawNdnGFv
+         7aehy156BGWijGknElRvaevyd+JkxTbkUpXtsDZYridhzFLCPlDVpRZHjKbqRD8JohVT
+         JDKq0grNdpZ9DMiibMMaWR0LwHzbKYCQ5NrVr9I+/6pPXblb90UcSVydwN/SZSzFnUmE
+         BwV1lPvl/bAtOUI7smeAoMFZgkifg+B2l4gsHDlidnHcQQfnJR+gEgtArW95YBcqYPDW
+         L0IA==
+X-Forwarded-Encrypted: i=1; AJvYcCWA0igk+UuoBBivlnQYQ0u//bJB5VHN3aYJrG/KTveOmdu33QW8fiDFO3ulKY6p6Sk1zlvNhGr/nEWB67zpaXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDP7PaoA5jIPmJNCenUBJEeWbl2C1vXJ17Y2FCabwJd1WfEm1b
+	Qyi6++YM/D/RYCZpj2dI4Kgiw4oJvhaoq9ksk4HT9EDamqZqMDTPSq4X
+X-Gm-Gg: ATEYQzy1TnPX6pOGT7qLXwyqZ2fpD+NDXJKEWmJUyDlSlFqVvPLghnlYwznUVlwv+Dw
+	RRVMT+OeD3sb9ldLsYqzmCgC/AG4wTtpXQN4O65tDl1/mKiEfOdh0ieJgepOiehwoBvkzLfhwE7
+	NYb47EBVM97o82rBWyYh1EFkMiGLopOyQ2+/HxDi34wNXPxqPLMFExPhuqLs3aMIEcLL2R1wCWp
+	DC77NIyZtYi2B4eDJ5p/2Gvvok3KQh9CNu8zlFmz176XgJFKwFVLmJq23X6BX1PbjaDK9jaBNHD
+	jgPfGFcdoRI96I7EiATtIvAhkH9O1LXyEiAH917QXGhRNe3IIf3UUyY1PdSm3VEdvw46a5+VLF9
+	6hKp3as5vrAY/xCybfoX6QHUTRup6+9uu4nLeh3E2TEofzUfS+5HZ7mPJxYc1UnB2499BW0oM/S
+	qSnnkrRottiIP5O/HiFcIOG/F1MjxNTuNMRjkG2hSXNn3oWRooVw50gFTTrY6BuXDZ
+X-Received: by 2002:a05:6000:40c9:b0:436:3707:2bf0 with SMTP id ffacd0b85a97d-4398faefc72mr2663789f8f.35.1772014280726;
+        Wed, 25 Feb 2026 02:11:20 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970d4c977sm35315573f8f.32.2026.02.25.02.11.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Feb 2026 02:11:20 -0800 (PST)
+Date: Wed, 25 Feb 2026 10:11:19 +0000
+From: David Laight <david.laight.linux@gmail.com>
 To: Fuad Tabba <tabba@google.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	will@kernel.org
-Subject: Re: [PATCH] lib/string: Fix UBSAN misaligned access in sized_strscpy
-Message-ID: <aZ7BrBJqg3kUGZgh@smile.fi.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Kees Cook
+ <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, will@kernel.org
+Subject: Re: [PATCH] lib/string: Fix UBSAN misaligned access in
+ sized_strscpy
+Message-ID: <20260225101119.0481a005@pumpkin>
+In-Reply-To: <CA+EHjTyWtdwQe3_pyrrC0jfhX30jHwYVNQkgNE7UoeJG0O=NLA@mail.gmail.com>
 References: <20260224170427.2296592-1-tabba@google.com>
- <202602241302.75B565883@keescook>
- <CA+EHjTzCFAecmjkX5iYJ99GqCsJhT6T5ONCSFMDh=khNG6MzTA@mail.gmail.com>
+	<aZ3eKyVXPd-Fvcst@smile.fi.intel.com>
+	<CA+EHjTxgX8RpVxdf1rrri8m_=oG-0_KpYzhEKaZXXOr2UXWegQ@mail.gmail.com>
+	<20260224230637.38f93836@pumpkin>
+	<CA+EHjTyWtdwQe3_pyrrC0jfhX30jHwYVNQkgNE7UoeJG0O=NLA@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+EHjTzCFAecmjkX5iYJ99GqCsJhT6T5ONCSFMDh=khNG6MzTA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 25, 2026 at 08:08:34AM +0000, Fuad Tabba wrote:
-> On Tue, 24 Feb 2026 at 21:07, Kees Cook <kees@kernel.org> wrote:
-> > On Tue, Feb 24, 2026 at 05:04:27PM +0000, Fuad Tabba wrote:
-> > > sized_strscpy() performs word-at-a-time writes to the destination
-> > > buffer. If the destination buffer is not aligned to unsigned long,
-> > > direct assignment causes UBSAN misaligned-access errors.
-> >
-> > Is this via CONFIG_UBSAN_ALIGNMENT=y ? Note this in the Kconfig:
-> >
-> >           Enabling this option on architectures that support unaligned
-> >           accesses may produce a lot of false positives.
-> >
-> > which architecture are you checking this on?
+On Wed, 25 Feb 2026 08:33:01 +0000
+Fuad Tabba <tabba@google.com> wrote:
+
+> Hi David,
 > 
-> This is with CONFIG_UBSAN_ALIGNMENT=y on arm64. Although the
-> architecture supports unaligned accesses, I was running the UBSAN
-> checks (including the alignment ones) the other day while debugging an
-> unrelated issue. That said, the alignment checks ensure C standard
-> compliance and prevent the compiler from optimizing unaligned UB casts
-> into alignment-strict instructions (like ldp/stp or vector
-> instructions on arm64, which cause hardware faults).
-> 
-> > > Use put_unaligned() to safely write the words to the destination.
+> On Tue, 24 Feb 2026 at 23:06, David Laight <david.laight.linux@gmail.com> wrote:
 > >
-> > Also, I thought the word-at-a-time work in sized_strscpy() was
-> > specifically to take advantage of aligned word writes? This doesn't seem
-> > like the right solution, and I think we're already disabling the
-> > unaligned access by using "max=0" in the earlier checks.
+> > On Tue, 24 Feb 2026 17:54:07 +0000
+> > Fuad Tabba <tabba@google.com> wrote:
+> >  
+> > > Hi Andy,
+> > >
+> > > On Tue, 24 Feb 2026 at 17:21, Andy Shevchenko
+> > > <andriy.shevchenko@intel.com> wrote:  
+> > > >
+> > > > On Tue, Feb 24, 2026 at 05:04:27PM +0000, Fuad Tabba wrote:  
+> > > > > sized_strscpy() performs word-at-a-time writes to the destination
+> > > > > buffer. If the destination buffer is not aligned to unsigned long,
+> > > > > direct assignment causes UBSAN misaligned-access errors.
+> > > > >
+> > > > > Use put_unaligned() to safely write the words to the destination.  
+> > > >
+> > > > Have you measured the performance impact?  
+> > >
+> > > Not directly. I verified the disassembly for both x86_64 and aarch64.
+> > > On x86_64, both the raw pointer cast and put_unaligned() compile down
+> > > to mov %rdi,(%rsi). On aarch64, both compile to str x0, [x1].  
+> >
+> > What happens on cpu that trap misaligned accesses (eg sparc64)?
+> > put_unaligned() exists because it can be horrid.  
 > 
-> The max=0 check is heavily guarded. Both x86 and arm64 select
-> CONFIG_DCACHE_WORD_ACCESS, bypassing it:
+> To be honest, I hadn't considered this until now. But looking at it, I
+> believe that the existing guards in sized_strscpy() already protect
+> architectures like sparc from the unaligned paths you are concerned
+> about. Looking at the code and configs, these do not select
+> CONFIG_DCACHE_WORD_ACCESS nor CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS.
+> Because of this, they fall into the #else block early in
+> sized_strscpy():
 > 
 > #ifndef CONFIG_DCACHE_WORD_ACCESS
-> // ... alignment checks that set max = 0 ...
+> #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+>         ...
+> #else
+>         /* If src or dest is unaligned, don't do word-at-a-time. */
+>         if (((long) dest | (long) src) & (sizeof(long) - 1))
+>                 max = 0;
+> #endif
 > #endif
 > 
-> I also noticed that the read path already expects and handles
-> unaligned addresses. If you look at load_unaligned_zeropad() (called
-> above the write), it explicitly loads an unaligned word and handles
-> potential page-crossing faults. The write path lacked the equivalent
-> put_unaligned() wrapper, leaving it exposed to UB.
+> If either dest or src is unaligned, max is set to 0. This bypasses the
+> loop with put_unaligned(). I checked by compiling this for sparc: if
+> aligned, the compiler sees that, and optimizes it into an 8-byte store
+> (stx %i0, [%i1]), identical to the raw pointer cast.
 
-Probably it needs to be reworked differently to provide write_at_a_time()
-helper?
+That very much depends on the exactly how get/put_unaligned are implemented
+(and the behaviour of the compiler).
+ISTR something about not using 'casts to packed types' for the them,
+which might cause the compiler to generate other code.
+(Brain can't quite remember...)
 
-> I checked the disassembly on both x86 and aarch64: put_unaligned()
-> (via __builtin_memcpy) compiles to the same instructions (mov and
-> str), preserving the optimization while making the code UBSAN-clean.
+	David
 
-You need to check this on _all_ supported architectures with all possible
-related configuration option combinations.
-
-> > I think the bug may be that you got CONFIG_UBSAN_ALIGNMENT enabled for
-> > an arch that doesn't suffer from unaligned access problems. :) We should
-> > fix the Kconfig!
 > 
-> Does that reasoning make sense for keeping the fix here rather than in
-> the Kconfig?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> So this patch shouldn't introduce memcpy fallback penalties on sparc,
+> but it still fixes the UB on architectures like x86 and arm64.
+> 
+> Cheers,
+> /fuad
+> 
+> >         David
+> >  
+> > >  
+> > > > Have you read the comment near to
+> > > >
+> > > >         if (IS_ENABLED(CONFIG_KMSAN))  
+> > >
+> > > Not until now to be honest. However, are you asking whether
+> > > put_unaligned() breaks KMSAN? I don't think it does, max is set to 0
+> > > when KMSAN is enabled, this entire while loop is bypassed.
+> > >
+> > > Thanks,
+> > > /fuad
+> > >  
+> > > > ?
+> > > >
+> > > > --
+> > > > With Best Regards,
+> > > > Andy Shevchenko
+> > > >
+> > > >  
+> > >  
+> >  
+> 
 
