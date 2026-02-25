@@ -1,78 +1,82 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4452E3B15;
-	Wed, 25 Feb 2026 18:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38314239099;
+	Wed, 25 Feb 2026 20:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772042807; cv=none; b=Y6/5SBAiV8Xq/O9iR+qYY5QEBqHyQ1xggDBtoUgGvcZ11kOIMjJlAmONNnJQgUrOPJLbXKVEcnWXyXzoWBTRfrQ8R0xyzjuFzkkh5r9U1IOuVBs1Gq7n0UFPvD+L7SAM1hGai1Alh9J8ksfn9+QxFNBsjgfxkl4O0LSv9SLLQxo=
+	t=1772052060; cv=none; b=QgukqlVrkLtZC7bgML42qr8Kx28pWOmuyAJscnZ3nmNE6i9Nd3gTXqgRkfDn4PF5NQm7LZd/hRwMC9OoaY12WG8t9gAcUZ4NFZiKAKFxGZQs+mLxCTNoLYhQZ2b5TyyzicfHAb5FfYwHv8dows6eGBbVkeAzySlbKC+6h+dwmpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772042807; c=relaxed/simple;
-	bh=5jecAdD5KllNmzOg7FRaWKsueClWFJm4QGj8F4ug58M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RHxDr4TR9eDPiUP3QkxSRmqx1tvEb/u03/hd8n3HqnIPYLyBnTEvzIROxyaw8VmmLmzmD2YA2VFSVqsyoXS36fph3eYCTXeHZlWxaYZVWLnA+BaYTm7WDjOt0fFvNasxYLIX9W9/zMvQgaGac0t0rxuOhV461OCyzRHh4xu0EVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Uk4hmUPH; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1772052060; c=relaxed/simple;
+	bh=z0Y3De4Uk2isfGH9NA9irLH/p0Xi9/d3jhSxem3V0qU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hzORIpMfnrJeGj/vRhFFWenbtZfPYHjYtSxCe+tSYl2fSFGoOLcoP/T3VznYlAsiR0ffJJ1AsfoIDNNXLQDuPtH/jxQemelD2zi0iZn1ZUjy0RIDtBB//lqH0nkGvgZewbn2RSsNAx5bEoPZOIYfw6eMuhAmB94RilxqMOeLG9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4EsyawR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Uk4hmUPH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772042804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tlpzGUTFPW3cLO7x8OT4LkM8/WzI/eOUKAvfgyaDTQM=;
-	b=Uk4hmUPHXW6BA5UJqYcUKjTbxA8LwtQXJmT/YlLTYSKaMjQnG8H4OEt5oGHygby0jiRNgc
-	O7YGbDcJCdsb4p4kIxu7TnJ+boHJRYi62U45cg+Ct30k+eGMS22qeWKoaJ7Q7HM96tHdWQ
-	ytea5FrCFZR3oUvMaFTb+X9NyiIDkXE=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
-	Christian Gromm <christian.gromm@microchip.com>
-Cc: linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] most: usb: Use kzalloc_objs for endpoint address array
-Date: Wed, 25 Feb 2026 19:03:29 +0100
-Message-ID: <20260225180329.712101-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4EsyawR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8A2C116D0;
+	Wed, 25 Feb 2026 20:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772052059;
+	bh=z0Y3De4Uk2isfGH9NA9irLH/p0Xi9/d3jhSxem3V0qU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g4EsyawRbjvuMG24b6o867TcLWDVI5T2q5/PWvvSNtJ+66Jb7JwoxMEJ7wdzjR316
+	 TGgEFFfHcKDpYRD4T3RL8IuT+FlFuhkzb994WOV2pDGuT4K3CXvyTvVA4pojOAXgbS
+	 va4WC+kD4r+/Tw4SHhbPG9JmEGh83LaefV3Pv1oYTOG2+t4KXnrcSTy3jLodqXrNxb
+	 wZgGhyZRJC5q9eNTuCDWHbHU1tdhNEW28KQyQZtdP2ImAJop1xPf/X5aQQvbc949wq
+	 V+L/MtAG+K6n5z+tsA/Ls2bLsxZLYBq1aCQ6cNBFJQyC2TrfLeRVkzvZ8XFMiJqDSG
+	 fI+fsCmIDNRfw==
+Date: Wed, 25 Feb 2026 12:40:59 -0800
+From: Kees Cook <kees@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Sascha Bischoff <Sascha.Bischoff@arm.com>,
+	Keir Fraser <keirf@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] KVM: arm64: vgic: Handle const qualifier from
+ gic_kvm_info allocation type
+Message-ID: <202602251238.9850FCB@keescook>
+References: <20260206223022.it.052-kees@kernel.org>
+ <177099499992.1792318.9934885934778681296.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <177099499992.1792318.9934885934778681296.b4-ty@kernel.org>
 
-Replace kcalloc() with kzalloc_objs() when allocating the endpoint
-address array to keep the size type-safe and match nearby allocations.
-Reformat ->busy_urbs allocation to a single line. No functional change.
+On Fri, Feb 13, 2026 at 03:03:24PM +0000, Marc Zyngier wrote:
+> On Fri, 06 Feb 2026 14:30:23 -0800, Kees Cook wrote:
+> > In preparation for making the kmalloc family of allocators type aware,
+> > we need to make sure that the returned type from the allocation matches
+> > the type of the variable being assigned. (Before, the allocator would
+> > always return "void *", which can be implicitly cast to any pointer type.)
+> > 
+> > The assigned type is "struct gic_kvm_info", but the returned type,
+> > while matching, is const qualified. To get them exactly matching, just
+> > use the dereferenced pointer for the sizeof().
+> > 
+> > [...]
+> 
+> Applied to fixes, thanks!
+> 
+> [1/1] KVM: arm64: vgic: Handle const qualifier from gic_kvm_info allocation type
+>       commit: ee5c38a8d31e5dea52299c43c2ec3213351ab6e1
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/most/most_usb.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Just a heads-up that I ended up sending this patch to Linus for -rc1 as
+it was a prerequisite for the tree-wide kmalloc_obj refactoring. Sorry
+for any merge conflicts this might create for your tree! It is now
+commit c732084c891d there.
 
-diff --git a/drivers/most/most_usb.c b/drivers/most/most_usb.c
-index d2c0875727a3..6437733afee0 100644
---- a/drivers/most/most_usb.c
-+++ b/drivers/most/most_usb.c
-@@ -1009,13 +1009,11 @@ hdm_probe(struct usb_interface *interface, const struct usb_device_id *id)
- 		goto err_free_conf;
- 
- 	mdev->iface.channel_vector = mdev->cap;
--	mdev->ep_address =
--		kcalloc(num_endpoints, sizeof(*mdev->ep_address), GFP_KERNEL);
-+	mdev->ep_address = kzalloc_objs(*mdev->ep_address, num_endpoints);
- 	if (!mdev->ep_address)
- 		goto err_free_cap;
- 
--	mdev->busy_urbs =
--		kzalloc_objs(*mdev->busy_urbs, num_endpoints);
-+	mdev->busy_urbs = kzalloc_objs(*mdev->busy_urbs, num_endpoints);
- 	if (!mdev->busy_urbs)
- 		goto err_free_ep_address;
- 
 -- 
-Thorsten Blum <thorsten.blum@linux.dev>
-GPG: 1D60 735E 8AEF 3BE4 73B6  9D84 7336 78FD 8DFE EAD4
-
+Kees Cook
