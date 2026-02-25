@@ -1,60 +1,51 @@
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
+Received: from forward500d.mail.yandex.net (forward500d.mail.yandex.net [178.154.239.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D2C2D5926
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 06:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4C92C21DF;
+	Wed, 25 Feb 2026 06:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772000840; cv=none; b=bkeilmFHWnFWJpA3X37wqD+saEwAxeKPbEMHc6pcb8LDTkpZBuxrfIbaypnCNrJr18GoLWeUlZ0DPYnk8gvcRMds6SdWo3gqp2ZdzCts99V5TOcOiBofObgOLAazMsv17T1uhPZNMVRLFjzlPPS9gl/Fto4VPuQB9ZHbZOltB6k=
+	t=1772002722; cv=none; b=mJTwkBiLjO5NBQG+AQF58yVfwAYnJmfKWcJUlb4GW43hk15Pgp51ctH0mycMh4FC9d4hy1KjsjhgX6l0HgnbgWX20Wx4YThUbzVBOuRd83AlskLw766J7TxSgveQ6YxZdPEEfuz/w4JnvqvraTnUD2qate8d/xoD350/xb6hBYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772000840; c=relaxed/simple;
-	bh=wDUJsiMZTO07gMDRgash34OTnmVgdmGyvT/af0O1A9k=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=DON0yYqNcuSJIBhtc1lBnqn5iisUQRAODKITqmPGTmveBrgdMaDg51XLC4si7Vak1VpRljgsNheKnhD60l2yLGoSdXRyTU2kt9b6HXBqgo/2mo+pSl1Fmt8a74CN8qMbwkF7OhunTEiNRrF6b7lh5TtrujO9TUPzAOw+mIRCdTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=BwlVw81T; arc=none smtp.client-ip=113.46.200.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
+	s=arc-20240116; t=1772002722; c=relaxed/simple;
+	bh=UUnbu1AvaVUjFLrFgtgIFJ9LM7Ct+YXnwP6ZchgUaLM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aQP9zgf/8SUenEgj8OMEoqZksmyJE8awDCN9Y5P0/BIwzOqpsbnREZkqF2Y6TaXm0VK9iWUO6nUrEOi/R6/rKeOaH8UUILSFTduq6hLBva1iIMW5Ecb2wpOLcgoIBLe1Nqpx9wP57859WBncijf8ILsKDyRChkq6qS8ClqmNJ6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=cLwUKliy; arc=none smtp.client-ip=178.154.239.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="BwlVw81T"
-dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=wDUJsiMZTO07gMDRgash34OTnmVgdmGyvT/af0O1A9k=;
-	b=BwlVw81TAVYPVcl1VZz7sAedlnMQWPO2iMubouNPHZ6FtKAvT3yoXoDYAJU6RtDH7czUnYXP4
-	zNdMuQNp3jpSffkB7GCvM9FnSZ6LOZSUvG8jtkL80rtiV4VspWen2UOHMC495qRhLNiGOzQlqMD
-	PjWpoVzx89OdPDQdRRqVwgg=
-Received: from mail.maildlp.com (unknown [172.19.162.92])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fLPdb2WGkzKm4l;
-	Wed, 25 Feb 2026 14:22:27 +0800 (CST)
-Received: from kwepemf100012.china.huawei.com (unknown [7.202.181.226])
-	by mail.maildlp.com (Postfix) with ESMTPS id B650640565;
-	Wed, 25 Feb 2026 14:27:14 +0800 (CST)
-Received: from kwepemf200011.china.huawei.com (7.202.181.237) by
- kwepemf100012.china.huawei.com (7.202.181.226) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Wed, 25 Feb 2026 14:27:14 +0800
-Received: from kwepemf200011.china.huawei.com ([7.202.181.237]) by
- kwepemf200011.china.huawei.com ([7.202.181.237]) with mapi id 15.02.1544.011;
- Wed, 25 Feb 2026 14:27:14 +0800
-From: "hanwei (K)" <hanwei62@h-partners.com>
-To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>, Kees Cook
-	<kees@kernel.org>
-CC: Indu Bhagat <indu.bhagat@oracle.com>, Claudiu Zissulescu
-	<claudiu.zissulescu-ianculescu@oracle.com>, Qing Zhao <qing.zhao@oracle.com>,
-	"gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4] Fix sanitizer attribute infrastructure to use standard
- TREE_LIST format [PR113264]
-Thread-Topic: [PATCH v4] Fix sanitizer attribute infrastructure to use
- standard TREE_LIST format [PR113264]
-Thread-Index: AdymByhxmhDw3+3aRL6lzww9b+pZEw==
-Date: Wed, 25 Feb 2026 06:27:14 +0000
-Message-ID: <062a7de7ed924307b13c74afe1ec95ee@h-partners.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="cLwUKliy"
+Received: from mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3d48:0:640:52d7:0])
+	by forward500d.mail.yandex.net (Yandex) with ESMTPS id A890783CA0;
+	Wed, 25 Feb 2026 09:58:34 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id WwaTsClG0Cg0-WVs288Bd;
+	Wed, 25 Feb 2026 09:58:34 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1772002714; bh=0ZNQLUZjuSTwJtQMEurZv9D4TeutYoBFTB38t4pvmoo=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=cLwUKliyxqzxnCp0gOjMU5dPEHX0HoLKIhrDPA0TcJ6jJUm+Y07VEgyTz+/oqma6v
+	 Y9FUPQgyFW+2IlbMpr733vu1K7To7SfPvjaLauAVL0GN9mLo3QZLffMPut0MQ2gO2r
+	 hRRNXrTqmXnkU0BooCXt4/PZ9EPOlErjzcqArhFM=
+Authentication-Results: mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <61b376fd2acf6e8cf8a90ee4eb7d58397f2acfa1.camel@yandex.ru>
+Subject: Re: [PATCH v8 2/5] lib: fix memparse() to handle overflow
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>, Andy Shevchenko
+	 <andriy.shevchenko@intel.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>, Kees Cook
+ <kees@kernel.org>,  "Darrick J . Wong"	 <djwong@kernel.org>,
+ linux-hardening@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Wed, 25 Feb 2026 09:58:32 +0300
+In-Reply-To: <pwycaqzyfpan3eglq6hwx4esyfm2w2buvvaqtcqw3aco5y3trq@2ft2ajxaqobu>
+References: <20260212164413.889625-1-dmantipov@yandex.ru>
+	 <20260212164413.889625-3-dmantipov@yandex.ru>
+	 <umfxjjw2iukw5knj5xn5lxtkr2keorq3sws2mnegmw3zr64bmg@77v4cqwi2fay>
+	 <pwycaqzyfpan3eglq6hwx4esyfm2w2buvvaqtcqw3aco5y3trq@2ft2ajxaqobu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,69 +53,36 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-T24gV2VkLCBGZWIgMjUsIDIwMjYgYXQgMTI6MjjigK9BTSBoc3RrMzAgPGhhbndlaTYyQGh1YXdl
-aS5jb20+IHdyb3RlOg0KPiBPbiBNb24sIEZlYiA5LCAyMDI2IGF0IDEyOjI44oCvQU0gQW5kcmV3
-IFBpbnNraSA8YW5kcmV3LnBpbnNraUBvc3MucXVhbGNvbW0uY29tPiB3cm90ZToNCj4gPg0KPiA+
-IE9uIFRodSwgU2VwIDQsIDIwMjUgYXQgMTA6NDPigK9BTSBLZWVzIENvb2sgPGtlZXNAa2VybmVs
-Lm9yZz4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gVGhlIF9fYXR0cmlidXRlX18oKF9fY29weV9fKSkg
-ZnVuY3Rpb25hbGl0eSB3YXMgY3Jhc2hpbmcgd2hlbiANCj4gPiA+IGNvcHlpbmcgc2FuaXRpemVy
-LXJlbGF0ZWQgYXR0cmlidXRlcyBiZWNhdXNlIHRoZXNlIGF0dHJpYnV0ZXMgDQo+ID4gPiB2aW9s
-YXRlZCB0aGUgc3RhbmRhcmQgR0NDIGF0dHJpYnV0ZSBpbmZyYXN0cnVjdHVyZSBieSBzdG9yaW5n
-IA0KPiA+ID4gSU5URUdFUl9DU1QgdmFsdWVzIGRpcmVjdGx5IGluc3RlYWQgb2Ygd3JhcHBpbmcg
-dGhlbSBpbiBUUkVFX0xJU1QgbGlrZSBhbGwgb3RoZXIgYXR0cmlidXRlcy4NCj4gPiA+DQo+ID4g
-PiBXcmFwIHNhbml0aXplciBhdHRyaWJ1dGVzIElOVEVHRVJfQ1NUIHZhbHVlcyBpbiBUUkVFX0xJ
-U1Qgc3RydWN0dXJlcyANCj4gPiA+IHRvIGZvbGxvdyB0aGUgc2FtZSBwYXR0ZXJuIGFzIG90aGVy
-IGF0dHJpYnV0ZXMuIFRoaXMgZWxpbWluYXRlcyB0aGUNCj4gPiA+IGNvcHlfbGlzdCgpIGNyYXNo
-ZXMgd2hlbiBjb3B5aW5nIHNhbml0aXplciBhdHRyaWJ1dGVzOg0KPiA+ID4NCj4gPiA+IHRlc3Qu
-Yzo0OjE6IGludGVybmFsIGNvbXBpbGVyIGVycm9yOiB0cmVlIGNoZWNrOiBleHBlY3RlZCB0cmVl
-IHRoYXQgY29udGFpbnMg4oCYY29tbW9u4oCZIHN0cnVjdHVyZSwgaGF2ZSDigJhpbnRlZ2VyX2Nz
-dOKAmSBpbiBjb3B5X2xpc3QsIGF0IHRyZWUuY2M6MTQyNw0KPiA+ID4gICAgIDQgfCBfX2F0dHJp
-YnV0ZV9fKChfX2NvcHlfXyhfX3RhbmgpKSk7DQo+ID4gPiAgICAgICB8IF5+fn5+fn5+fn5+fn4N
-Cj4gPiA+IDB4ODU5ZDA2IHRyZWVfY29udGFpbnNfc3RydWN0X2NoZWNrX2ZhaWxlZCh0cmVlX25v
-ZGUgY29uc3QqLCB0cmVlX25vZGVfc3RydWN0dXJlX2VudW0sIGNoYXIgY29uc3QqLCBpbnQsIGNo
-YXIgY29uc3QqKQ0KPiA+ID4gICAgICAgICAuLi8uLi9nY2MvZ2NjL3RyZWUuY2M6OTEyNg0KPiA+
-ID4gMHg4NjBmNzggY29udGFpbnNfc3RydWN0X2NoZWNrKHRyZWVfbm9kZSosIHRyZWVfbm9kZV9z
-dHJ1Y3R1cmVfZW51bSwgY2hhciBjb25zdCosIGludCwgY2hhciBjb25zdCopDQo+ID4gPiAgICAg
-ICAgIC4uLy4uL2djYy9nY2MvdHJlZS5oOjM3NDgNCj4gPiA+IDB4ODYwZjc4IGNvcHlfbGlzdCh0
-cmVlX25vZGUqKQ0KPiA+ID4gICAgICAgICAuLi8uLi9nY2MvZ2NjL3RyZWUuY2M6MTQyNw0KPiA+
-ID4gMHhhNzU1YTUgaGFuZGxlX2NvcHlfYXR0cmlidXRlDQo+ID4gPiAgICAgICAgIC4uLy4uL2dj
-Yy9nY2MvYy1mYW1pbHkvYy1hdHRyaWJzLmNjOjMwNzcNCj4gPg0KPiA+DQo+ID4gSSBhbSBub3Qg
-YSBmYW4gb2YgdGhlIHdyYXBwaW5nIGJlY2F1c2UgaXQgaW5jcmVhc2VzIHRoZSBtZW1vcnkgdXNh
-Z2UgDQo+ID4gc2xpZ2h0bHkgYnV0IGl0IGlzIHJlcXVpcmVkIHNpbmNlIHRoZSByZXN0IG9mIHRo
-ZSBhdHRyaWJ1dGVzIGNvZGUgDQo+ID4gcmVxdWlyZXMgVFJFRV9MSVNUIGhlcmUuDQo+ID4NCj4g
-PiBTbyBPay4gIEkgd2lsbCBkbyBmaW5hbCB0ZXN0aW5nIGVpdGhlciBNb25kYXkgb3IgVHVlc2Rh
-eSBhbmQgcHVzaCBpdCBhZnRlciB0aGF0Lg0KPiANCj4gU28gdGhpcyBjYXVzZXMgc29tZSBJQ0Vz
-IGluIHRoZSB0ZXN0c3VpdGU6DQo+IEZBSUw6IGMtYysrLWNvbW1vbi9hc2FuL2lubGluZS1rZXJu
-ZWwuYyAgIC1PMCAgKGludGVybmFsIGNvbXBpbGVyDQo+IGVycm9yOiBpbiB0cmVlX3RvX3Nhbml0
-aXplX2NvZGVfdHlwZSwgYXQgdHJlZS5jYzo2NzA0KQ0KPiANCj4gMHhhNDM3NmIgZmFuY3lfYWJv
-cnQoY2hhciBjb25zdCosIGludCwgY2hhciBjb25zdCopDQo+ICAgICAgICAgL2hvbWUvYXBpbnNr
-aS9zcmMvdXBzdHJlYW0tZ2NjLW5ldy9nY2MvZ2NjL2RpYWdub3N0aWNzL2NvbnRleHQuY2M6MTgx
-Mg0KPiAweDkyZjU4MSB0cmVlX3RvX3Nhbml0aXplX2NvZGVfdHlwZSh0cmVlX25vZGUgY29uc3Qq
-KQ0KPiAgICAgICAgIC9ob21lL2FwaW5za2kvc3JjL3Vwc3RyZWFtLWdjYy1uZXcvZ2NjL2djYy90
-cmVlLmNjOjY3MDQNCj4gMHg5MmY1ODEgdHJlZV90b19zYW5pdGl6ZV9jb2RlX3R5cGUodHJlZV9u
-b2RlIGNvbnN0KikNCj4gICAgICAgICAvaG9tZS9hcGluc2tpL3NyYy91cHN0cmVhbS1nY2MtbmV3
-L2djYy9nY2MvdHJlZS5jYzo2NzAyDQo+IDB4MTI4YmVhMiBwcmludF9ub19zYW5pdGl6ZV9hdHRy
-X3ZhbHVlDQo+ICAgICAgICAgL2hvbWUvYXBpbnNraS9zcmMvdXBzdHJlYW0tZ2NjLW5ldy9nY2Mv
-Z2NjL3RyZWUtY2ZnLmNjOjgyMjMNCj4gMHgxMjhiZWEyIGR1bXBfZnVuY3Rpb25fdG9fZmlsZSh0
-cmVlX25vZGUqLCBfSU9fRklMRSosIGR1bXBfZmxhZykNCj4gICAgICAgICAvaG9tZS9hcGluc2tp
-L3NyYy91cHN0cmVhbS1nY2MtbmV3L2djYy9nY2MvdHJlZS1jZmcuY2M6ODI3Ng0KPiANCj4gDQo+
-IExvb2tzIGxpa2UgeW91IGZvcmdvdCB0byB1cGRhdGUgZHVtcF9mdW5jdGlvbl90b19maWxlIHRv
-by4NCj4gQ2FuIHlvdSBkb3VibGUgY2hlY2sgYWxsIG9mIHRoZSBsb2NhdGlvbnMgdGhhdCB1c2Ug
-dHJlZV90b19zYW5pdGl6ZV9jb2RlX3R5cGUgdG8gbWFrZSBzdXJlIHRoZXkgYWxsIGhhdmUgYmVl
-biBmaXhlZD8NCg0KRml4IHRoaXMgZmFpbCBieSBiZWxvdyBwYXRjaDoNCg0KZGlmZiAtLWdpdCBh
-L2djYy90cmVlLWNmZy5jYyBiL2djYy90cmVlLWNmZy5jYw0KaW5kZXggNjZlYTU0ZjhiODUuLjgw
-OGI4MDAwNjAzIDEwMDY0NA0KLS0tIGEvZ2NjL3RyZWUtY2ZnLmNjDQorKysgYi9nY2MvdHJlZS1j
-ZmcuY2MNCkBAIC04MjIwLDcgKzgyMjAsMTAgQEAgZHVtcF9kZWZhdWx0X2RlZiAoRklMRSAqZmls
-ZSwgdHJlZSBkZWYsIGludCBzcGMsIGR1bXBfZmxhZ3NfdCBmbGFncykNCiBzdGF0aWMgdm9pZA0K
-IHByaW50X25vX3Nhbml0aXplX2F0dHJfdmFsdWUgKEZJTEUgKmZpbGUsIHRyZWUgdmFsdWUpDQog
-ew0KLSAgc2FuaXRpemVfY29kZV90eXBlIGZsYWdzID0gdHJlZV90b19zYW5pdGl6ZV9jb2RlX3R5
-cGUgKHZhbHVlKTsNCisgIC8qIEV4dHJhY3QgdGhlIElOVEVHRVJfQ1NUIGZyb20gdGhlIFRSRUVf
-TElTVCB3cmFwcGVyLiAgKi8NCisgIGdjY19hc3NlcnQgKFRSRUVfQ09ERSAodmFsdWUpID09IFRS
-RUVfTElTVCk7DQorICBzYW5pdGl6ZV9jb2RlX3R5cGUgZmxhZ3MgPSB0cmVlX3RvX3Nhbml0aXpl
-X2NvZGVfdHlwZSAoVFJFRV9WQUxVRSAodmFsdWUpKTsNCisNCiAgIGJvb2wgZmlyc3QgPSB0cnVl
-Ow0KICAgZm9yIChpbnQgaSA9IDA7IHNhbml0aXplcl9vcHRzW2ldLm5hbWUgIT0gTlVMTDsgKytp
-KQ0KICAgICB7DQoNCg0KSSBoYXZlIGNoZWNrZWQgdGhlIHBhdGNoIHdoaWNoIGZpcnN0IGludHJv
-ZHVjZXMgdGhlIHRyZWVfdG9fc2FuaXRpemVfY29kZV90eXBlIA0KKGh0dHBzOi8vaW5ib3guc291
-cmNld2FyZS5vcmcvZ2NjLXBhdGNoZXMvMjAyNTA4MTMxMDQzMDYuMjA4MDQtMy1jbGF1ZGl1Lnpp
-c3N1bGVzY3UtaWFuY3VsZXNjdUBvcmFjbGUuY29tLykNCg0KDQo+IA0KPiBUaGFua3MsDQo+IEFu
-ZHJldw0KPiANCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBBbmRyZXcNCg==
+On Tue, 2026-02-24 at 14:15 +0000, Rodrigo Alencar wrote:
+
+> > I am interested on having _parse_integer_limit() overflow check
+> > exposed to kernel modules.
+
+Hm... _parse_integer_limit() may be EXPORT_SYMBOL()ed of course.
+But are you sure that current API is not enough for your task?
+
+> > ...
+>=20
+> I could propose the exposure of simple_strntoull() which is private
+> to lib/vsprintf.c, slightly changing its prototype:
+>=20
+> * from:
+> unsigned long long simple_strntoull(const char *startp,
+> 				=C2=A0=C2=A0=C2=A0 char **endp,
+> 				=C2=A0=C2=A0=C2=A0 unsigned int base,
+> 				=C2=A0=C2=A0=C2=A0 size_t max_chars)
+> * to:
+> int simple_strntoull(const char *startp,
+> 		=C2=A0=C2=A0=C2=A0=C2=A0 char **endp,
+> 		=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long long *result,
+> 		=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int base,
+> 		=C2=A0=C2=A0=C2=A0=C2=A0 size_t max_chars)
+>=20
+> That would allow to tackle the FIXME tag. I suppose it is there
+> because the overflow flag is being ignored, so the returned integer
+> can be set to -ERANGE or -EOVERFLOW when overflow happens.
+
+Well, removal of KSTRTOX_OVERFLOW quirk may be a subject for the next serie=
+s.
+
+Dmitry
