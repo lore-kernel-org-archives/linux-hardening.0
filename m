@@ -1,166 +1,130 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74498392819
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 11:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772017827; cv=pass; b=ldQrmgEjBlbBH26c6EpJIyJrskzNr7V6D8nozLGZ5hfZMJWFveD2o7+CrZ8W7s3B9L/fXRN11HwwdyWNVrUU7yl3Ai9xOCo3PEl/4t06jRaiBKEj1LxIHsmT2wQUNUDu/boMsirKosarRY1DQVXJ3Swuvdftduisd4UVXUn2Nbc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772017827; c=relaxed/simple;
-	bh=pdSmqKRjR4iQnKLcXzrbYQIwBM+k4EOWLhC5BihQ0Jo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TXmYlXTP0xYjChrc0vaRlouOaud0ESGhq0203UGGnwLqlCag6GtP+fDWAV4XQDnjqJQbdpddZB3wSkM9z6ddTngWp/z09KGNbcnVLCC3jbocUeTgkvhrvn4EGuV8ysUl39I/wPt9Zr4v/SXgqlEKwvroh1+F4M1fpGw/deVmAAY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HpEKcBzd; arc=pass smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3D127CB02
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 14:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772030426; cv=none; b=kzAzQQASHRXVu2lUejxypTdwegChQqV2yUKt3HackY2WV6h2hgEzte0hPCEf4nAc4Tku9z/BROA1EpHRItWNgmFd8OaVZ/NbiXkKRHoNULOfj8Wsv9Ejyb/ikdNQfCnnj47GSvmIy3E2US9EbZiS6tqJ3bRQ3imPAkzhm52s3JQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772030426; c=relaxed/simple;
+	bh=666U2SeH2IF2l8bqfN3ChEOx/oJUibMvCH6ENY3ztPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JqQDmZrEgrG+7nRiui2kyULZNCzitcJEJH2T/x0Cd5WS4QiRcNxYVh9De6LMOciZR0LLVOIfv8AkNXNwq6tb/jrIompBswZliu9UfYPciBwhnVMCbu5kniG/7PYd6k2+dI+GkgMaeXXfCyX3qbIkaiP3Y9vzXYFyn1jbvDUvDq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QOUpS3mT; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HpEKcBzd"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-505d3baf1a7so395231cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 03:10:25 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772017824; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jcjRCwFd6JJ9sw224tcZbHx6yWfHPnpEs8Z5FTlyvOmEqVR0brTyHV11dsEWMke+om
-         t3MuDOCWzPO8AE1kmyY1HYjynvgdh3OBDV49fMch+SGu+ZPzLLu8Im+EEnmPTpJ2UBW8
-         PaIE2dT9zdd5tVUATjjON/kO0S0zEaHPF3O2bWBYIO0OJGq/vT13xPwhnCMAF+MoziJH
-         21WWzeqjY3bK4pcMeVEVx83MpuU//XNVL5W5WxzbAx7fCquxfgBVfhJ2fVssOR6VKq4/
-         LNay1QZzAtM0zZ9+k498hWsEtHXxG4/ipED+/q1SrH/Ee6280gimnXahoenyhfbcOUse
-         t2og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=DsZeuYgIqCV3nl0yAnM1bCPBTAlfUBvv1YNt3VOPvvw=;
-        fh=mzDguj89lqqAyl8QymNs69mr44Q1KTfwckJF8tGSilk=;
-        b=PYGaGyck8IXaPe6YhLdgagVIsR0fHzmsThCvedRevY+Llydbnd9j37HPIWi57mMSas
-         gfNsO3iMtA1MC678wd/69wOf4UpohG9LV1LHsb6xgGpdMkfz19O/VuNGeC0vXIiWHG4U
-         /iD8UHIWpOSPbVr8hljoMmObYQoRM+9r6jzgbGFOEC3Xxb37F4r8tu9FNaZ7RyatOI4T
-         RLVlLbQfVHwmBKzCzmh0u9M6F/Dm0iEQ8jv0rRIcTp1mp3YPtFrvdXN14EFrl2ejPZWa
-         W3yYmlUCZzvjyZIFeTdNL3L9ms48xbddAFNQkY0wXlTt53v9n/7+5Dj/HyDorwDaeSsy
-         Cdaw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOUpS3mT"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-483a233819aso67014165e9.3
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 06:40:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772017824; x=1772622624; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DsZeuYgIqCV3nl0yAnM1bCPBTAlfUBvv1YNt3VOPvvw=;
-        b=HpEKcBzdV5v+S0bJfABuMsKpm603PS5lVp3JaDKOBLc8ralbLU1qhzKAiXi2oJr6+Q
-         TDI/D874FMqTGtAIu1tqkUz/F/Xj/ZORMrWSHkA/57gLc4uNt/FvgiMZJc0/+jpzohvY
-         sUNciLc2IVSAAwX9JlqMqNIcuwF39KcLTrntW2Az9k4RO/+aXC5QVWNic9l901sPnBWD
-         s2YXbBal5gbfOTHMFvJvAp3z1ErKhbgmfroCjbbX/vffCL9uHXpvBgzyeWyk0yro/l+6
-         GeSM2t11dfe+x6z9HROICMWst9VOW2h3+Kpv0xOHcIR07pZiOoVorBmNiKYXQMXc9LVO
-         XgmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772017824; x=1772622624;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1772030423; x=1772635223; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DsZeuYgIqCV3nl0yAnM1bCPBTAlfUBvv1YNt3VOPvvw=;
-        b=XiOtQl2i0StZ82p3ZEjFSWfbSg7K6turtihsBHAMbY7/ybTBXAAOaPB2dMRjuBm4xi
-         8rk3eCKmP9qDkBfVZAzUUN8bg8aWgQkV8qbPipWBIGaitAhVmH8WXmjdM37LbvJdX/Gf
-         1+0aCydcsYcTxFL26DuUerBmuflT+AAJL3wlybPPJR7rovF36EZYgXVo0CDGer/2wf0O
-         WILDWKKbU0pK/3eFoBeHQ1abCRpjXnd9oATSjz208k6U01Q+p8OPWGIIuI4ewuKtE+2G
-         s8W4S5VHfzNMTiopZ9wLgJYp3eFMzcEfqPWlgvqxOAUnwCvisEhgljnQ04wEJiceWUgL
-         VSbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPNMYIjGiIHdXdCbme/FDveobJjw90mvTsyVJJ1qsD+cKzqOtH5P4Nxe9+pA89z6dSHItE4BP4o06x0SHjjg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuQnh+AevfA4lZlXwo/vmxsRmFrSkDU6GtgBinG+p4i6+UnaAi
-	7VV2xt5jqY0484du4ENKN9OK8x2YIT8VskcPQSBQlzv4mwJZp1I5m9EfgFms5qT5e/GHkkJSf9z
-	QIls2V6yORdhDRI914Db5plre0Kh30CZBp4SfbZAf
-X-Gm-Gg: ATEYQzzVWNjrrcT1AnF78zCiRQ24n2MMTYDtD0+NvJan01EAC1J5Cp4Hq/+bEn84rrq
-	YiUlta3PE792a3d14w45VWRU0rrKthRn9124ErnO95r5MbPpuR+6/wv8rC28jaBUrF3CBBqmfQS
-	KiF52KftISj9rNMJIR1opV9++eILaBfa29XHibGMpUqNC6ogdM4nxCoAPcahIOxJ8gLxLKCq+cU
-	J9Z+z3vpQx/vsffk/HJHxKvXoetsBAuqssUzlMMnnM12TQqF7c0LXtEHbodiK4VLgbok6+QMXT/
-	OZAiu7Vo
-X-Received: by 2002:ac8:5e54:0:b0:503:4bc:c925 with SMTP id
- d75a77b69052e-5073a34ff5amr9511671cf.13.1772017823830; Wed, 25 Feb 2026
- 03:10:23 -0800 (PST)
+        bh=7q8RWpVROZPmxmIqcGCn3629mxXy+yPwavVRfw3rfAU=;
+        b=QOUpS3mTecDe+Kw70tHOqPRUWapF32cfKstoDDBqnUiXfHHiL9yBtOmuMVBbANzsyl
+         3RzAVQha2ZCDMfoUDM9aAxD6LG9aBT6WMsGKVwPESWDWlnymdKQjxS+JN2Ou9Wg24wCr
+         CBX7QhzwXrqolmsjdfLel7JllYRJkDtrDoL409epV/kNhzLQwrHVUfwHseFbPVsZMrh0
+         c3GmCCtLg2/c4KhOoNcHg6enyudKTShFWePUqW+Jt7dt6vfSxckcM2xiRoGL6wFytQgF
+         xkv4pLWxFRERHZQp3haqoMmM/fAjdv7f6t//QlwGV0iaUdmSyzVWZxPM6hquTp03zrqf
+         SLEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772030423; x=1772635223;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7q8RWpVROZPmxmIqcGCn3629mxXy+yPwavVRfw3rfAU=;
+        b=XyXga1K+3sqCARO0h8ghfak2ik8x3iokbvc1eqGG2z2lJEGiD2jdZQ4nOqbxRD6Xsi
+         4Im0drSkA9JyoBcg5uPgAJbVqyRZZMlBh+QHcti6xyJd2UtVBlTUyKJlO/dfId03su2c
+         y04n1YCBY+fbfY4YoAcZXIvF7KqFD1jZeAEXME7B+4Rrap9VXtFLrxVa0oGMDIsyH0x/
+         IQfknKU1is1X10ejT6ksGON8xaij7ZCHZvcBcp2z5kV8W2Yf6IdiX7djZRS710c4hNcy
+         2xu2VjezNXNSIHBbZ3G+miEyh6exZdPVkdwMOt9ufddWcb2hdN9LIufCjCpq1umNXb1R
+         q4ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUF/uwU85JHgoeLArm1q7pZZu7YrMaO1pOumyUlmi9TWUI18FIJDqehKk7PoTxyrTV6eLSnP3Ms9FSui/yGECE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK+UYUafOJ5dTXw3MoQr8YD8egwss8rhE2YSqj0O8YQ+wOnM+Y
+	Fe1x03M2jcmSnVjE35JFl3traBV7+WXs6/SHyHMcoIkWAwR2dsXZjcYD9dw0tXJ0
+X-Gm-Gg: ATEYQzxOlBfXUNpd2dOZVJ19FHmqj8bePdDSfPk6VsSuFit2StHZRZdnjNX5JIvwipl
+	cRLFfWUQqd3vnhSFbL/hHjUJXDCTu0zVDz0q9qD5hOXqMyTy66hiMmLcH0LSvHoDYMKQ4K+PosQ
+	ibagHkE/4RZ++JxISylXg20c7AoR0U6fYN9t1VFyTGDb1tGEcl/RChEhKqCJvpEJa6AB0Xwodwa
+	52IfxmjtTAx3Rwk3Qddo4AZvWIqEEVMfHj3eLBhqG0NVaz2zaxav7RbnJK4ZJRxIpE+a6cY86UP
+	4Xte7wYOZO2WrrGAqMiC+yKlZwR1toCGQCTbkksLKTPu8zW73Sfua3FGsNKmO40Vy0eERJbHDGl
+	CUOj/DCnZ8kFW/BFnjUay291HlhMw2pq+2OXNLPsmv60XD65TIzVq2zBcRtaQ68QfccGuNsk6Zg
+	XZDHOdwCVPltoleu3YMK573fC2A972vqQ52pWD9UIJnmlwEXGzJoMsOIEfXGGScRr1
+X-Received: by 2002:a05:600c:1d29:b0:477:a36f:1a57 with SMTP id 5b1f17b1804b1-483a95eb537mr244540785e9.3.1772030423078;
+        Wed, 25 Feb 2026 06:40:23 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483bfcb4f8bsm33408465e9.4.2026.02.25.06.40.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Feb 2026 06:40:22 -0800 (PST)
+Date: Wed, 25 Feb 2026 14:40:21 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Fuad Tabba <tabba@google.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Andrew
+ Morton <akpm@linux-foundation.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, will@kernel.org
+Subject: Re: [PATCH] lib/string: Fix UBSAN misaligned access in
+ sized_strscpy
+Message-ID: <20260225144021.61ba508e@pumpkin>
+In-Reply-To: <CA+EHjTzCFAecmjkX5iYJ99GqCsJhT6T5ONCSFMDh=khNG6MzTA@mail.gmail.com>
+References: <20260224170427.2296592-1-tabba@google.com>
+	<202602241302.75B565883@keescook>
+	<CA+EHjTzCFAecmjkX5iYJ99GqCsJhT6T5ONCSFMDh=khNG6MzTA@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260224170427.2296592-1-tabba@google.com> <aZ3eKyVXPd-Fvcst@smile.fi.intel.com>
- <CA+EHjTxgX8RpVxdf1rrri8m_=oG-0_KpYzhEKaZXXOr2UXWegQ@mail.gmail.com>
- <20260224230637.38f93836@pumpkin> <CA+EHjTyWtdwQe3_pyrrC0jfhX30jHwYVNQkgNE7UoeJG0O=NLA@mail.gmail.com>
- <20260225101119.0481a005@pumpkin>
-In-Reply-To: <20260225101119.0481a005@pumpkin>
-From: Fuad Tabba <tabba@google.com>
-Date: Wed, 25 Feb 2026 11:09:46 +0000
-X-Gm-Features: AaiRm50dTqHM35T_Gr2FtAgNe5MDjMHgpegZZufX5aEUZ-yZbuAPJu8SobGd67E
-Message-ID: <CA+EHjTxmj=m4GwV5TJbYkTt5tnwW-kc_4=+_wncsgpHQ6fjNRg@mail.gmail.com>
-Subject: Re: [PATCH] lib/string: Fix UBSAN misaligned access in sized_strscpy
-To: David Laight <david.laight.linux@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, will@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Wed, 25 Feb 2026 08:08:34 +0000
+Fuad Tabba <tabba@google.com> wrote:
 
-[Andy]
-> You need to check this on _all_ supported architectures with all possible
-> related configuration option combinations.
+...
+> I also noticed that the read path already expects and handles
+> unaligned addresses. If you look at load_unaligned_zeropad() (called
+> above the write), it explicitly loads an unaligned word and handles
+> potential page-crossing faults. The write path lacked the equivalent
+> put_unaligned() wrapper, leaving it exposed to UB.
 
-[David]
-> That very much depends on the exactly how get/put_unaligned are implemented
-> (and the behaviour of the compiler).
-> ISTR something about not using 'casts to packed types' for the them,
-> which might cause the compiler to generate other code.
-> (Brain can't quite remember...)
+Not really, the read side is doing reads that might go past the '\0'
+that terminates the string.
+If they are misaligned they can fault even though the string is
+correctly terminated.
+OTOH the write side must not write beyond the terminating '\0'
+so the memory must always be there.
 
-Fair points all around. To be honest, proving the behavior across all
-supported architecture/config combinations is more than I can chew on
-right now.
+I didn't look at exactly how the 'word at a time' version terminates.
+For strlen() doing it at all is pretty marginal for 32bit.
+For strcpy() it may depend on whether the byte writes get merged
+it the cpu's store buffer.
+On 64bit you have to try quite hard to stop the compiler making
+'a right pigs breakfast' of generating the constants; it is pretty
+bad on x64-64, mips64 is a lot worse.
+On LE with fast 'bit scan' you can quickly determine the number of
+partial bytes - so they can be written without re-reading from
+memory.
 
-I initially stumbled across this UBSAN splat on arm64 while debugging
-an unrelated issue, and I thought a targeted put_unaligned() swap
-would be a straightforward fix. Given the complexity of the
-architectural and compiler quirks you've raised, I agree this needs a
-much deeper investigation, or potentially a new write_word_at_a_time()
-abstraction, as Andy suggested.
+The actual problem with that version of strlen() is that it is
+only faster for strings above (about and IIRC) 64 bytes long.
+So in the kernel it is pretty much a complete waste of time.
+The same is probably true for strscpy().
 
-I'll drop this patch for the time being. If I have the bandwidth in
-the future, and if this splat starts causing real problems, I might
-give it another go.
+My guess is that the fastest code uses the 'unrolled once' loop:
+	do {
+		if ((dst[len] = src[len]) == 0)
+			break;
+		if ((dst[len + 1] = src[len + 1]) == 0) {
+			len++;
+			break;
+		}
+	} while ((len += 2) < lim);
+(Provided it gets compiled reasonably).
+Without the writes that was pretty much the best strlen() on the few cpu
+I tried it on.
 
-Thanks for the thorough review and insights! At least I learned a bit from this.
-
-Cheers,
-/fuad
-
->         David
->
-> >
-> > So this patch shouldn't introduce memcpy fallback penalties on sparc,
-> > but it still fixes the UB on architectures like x86 and arm64.
-> >
-> > Cheers,
-> > /fuad
-> >
-> > >         David
-> > >
-> > > >
-> > > > > Have you read the comment near to
-> > > > >
-> > > > >         if (IS_ENABLED(CONFIG_KMSAN))
-> > > >
-> > > > Not until now to be honest. However, are you asking whether
-> > > > put_unaligned() breaks KMSAN? I don't think it does, max is set to 0
-> > > > when KMSAN is enabled, this entire while loop is bypassed.
-> > > >
-> > > > Thanks,
-> > > > /fuad
-> > > >
-> > > > > ?
-> > > > >
-> > > > > --
-> > > > > With Best Regards,
-> > > > > Andy Shevchenko
-> > > > >
-> > > > >
-> > > >
-> > >
-> >
->
+	David
