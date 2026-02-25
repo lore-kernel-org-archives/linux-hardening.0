@@ -1,196 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE73A271456;
-	Wed, 25 Feb 2026 02:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771987642; cv=none; b=oBQqtUB4EuPdIvM5p10cHG8ZAocQGm/GRQPVz8CVTGJ6njQqL2HFNTLe/385DyajCv94frvY31rc0vCKFuAM01Dmlk4sajcvRL9CW6fjH6wlHy02DzhAAYwEQWQqITfOAdzImFkU867xEhzP2IlTTJBTCNxcFUFVdIUtJJq5b1I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771987642; c=relaxed/simple;
-	bh=vnPzHx0X/qaS6meC3nBcsauKU3RBIOk3biR3/9t4ODk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ukMJDBqXgcZAg0EaN+cIV/AfSzvFdpkI45OAT/rI2DMWdtzYMbEWPM58wICT9zddytow40j9RG7+bJ/WMbBD1UNjnc+zu0W3+hHmjSNMivx0AgI7vJ3mkaisCJfP0Wb+cbpeuWX/OXFX68Va5O0M8cfBPzLzrLdUjdX/Ytn7+8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stDtDriJ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F00296BD1
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 02:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771988167; cv=pass; b=UDcPTP9BUHW/nnWf8dPTq140jIveIVQNsdLJ0XoIC2jfIvrc4OOjdKW/YbVO/AOhWTKsSvlRreDcEhD2U3QrMfI1RcdwY/1odvqSfh/SdakjKFJyUUjAef/NERTrd9tLapaa6hWbXvKb0J+5zdI3/vERmxRepwMJGeHcIOsyN7s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771988167; c=relaxed/simple;
+	bh=YEe4JU3gZ1AYNNZzR2AtL0prHODUxNibRD65/Wgd16Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gE752R2URq/vv34IgoFAlMYiAyuCTtH9fLqUCs0AcrBeKojrb73g54dbHfPKp74Ttz0RsvBDmHzTgsrJLMtilw6Qi0xCa9j7ifTcLln2Q9HzrnNuJ5Cloumwq9uTu9wA+hTCziVwhy4/ncX1DwzAcoj3Wm4Qfo8+BJvoQEBsq9Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lBrNOfUl; arc=pass smtp.client-ip=74.125.82.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stDtDriJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FAEBC116D0;
-	Wed, 25 Feb 2026 02:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771987642;
-	bh=vnPzHx0X/qaS6meC3nBcsauKU3RBIOk3biR3/9t4ODk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=stDtDriJGui+0odZNwqsvA76+vpX+4SHYSS9OG+eD1s99Tg/Y42wjUOBagzvtdA4v
-	 69WWme479xenxH1MNW/u8YA+T6HnB1yHV2cV+g6ybyYAo451OPJh/Ys8+1DPNySX1K
-	 d4zce//Y8CmiRcCel8Q6I14Bbuj/cGX/dK4Sad3xfUiLLWdL25n1+86EOgWBOwNAvO
-	 UXlSXjma3TYYxewIRf0sTfI4THijJHVSXgPczPQ0m9uw0lJDZZXzLCaPm7ov6Yf8ii
-	 OrnjSr6yEhzp0qIhos/IgbLOBlUZlZ0LtOh3nyBtUgb6PZielmZ+as4EJ7uwQYMDl2
-	 CZ2qF7Nn4Emdg==
-From: Kees Cook <kees@kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jingwei Wang <wangjingwei@iscas.ac.cn>,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] vdso/datapage: Define vdso data pointers as arrays
-Date: Tue, 24 Feb 2026 18:47:20 -0800
-Message-Id: <20260225024716.work.043-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lBrNOfUl"
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-1273349c56bso7589276c88.0
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Feb 2026 18:56:06 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771988166; cv=none;
+        d=google.com; s=arc-20240605;
+        b=cWxeyZhj98QOlKI0l7fYoD4oc72qeoxXTRdnkOuItOzTcaLP/KtF5BMjHApUeju5By
+         sWwUFjmflmXxPMzDW9t4XLtJSRqz9diC07UxX0jpORquGQwrDiZiMun8h4br71J/qpPZ
+         A3LpoJALmPPJMPHZVV5+Ek7I374y1+U7iI7m4TC2I01R1A4/SkQqmSxvYV9S4gEogvTV
+         GF2PHMAJVsaTOJLNDzr7DP0k1e1Tp7WqKhkT5aTk7loQMxi42qOjZhg1S+7Us7rU4dAt
+         tHe+TYLA+by6irLZ7ij6hyoaPS2MKHLqhPaIzl4YakUykft/na8MA/N0ZgCrLdkbfLex
+         lPnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=TA7qDg4NCtd1YAnZI9KvDRHNA97lBlSYLdzRKpUyISQ=;
+        fh=HfSBeJ/s8Cown3Mq5ZEsT14gmrM8qttmbmod+guValU=;
+        b=gpMs6mmvq/oDyMqweUAgO7m7nGJr8U9et5da6P3C5xK6xfvqOIaUIlsvFKb51ZuEZN
+         NxRvxLEsTelAbOEZW10JsRpODwvsss9FkV+a/mJEJzzk/NqWtz4RdUlpdPDYU71bgFPK
+         1b2WLdOFCBFQRkupgUr1QP9QfG9eSnDXGCUbSxjocWOU2mOKrt9yRZ+r4fkwoJuVNGHT
+         VrBd4qRwHs9wBIrRVGGmL8hmWwZibKrnQUCFpMCVsgQXom/zISVEhlaux4ny6SquJHRX
+         EcBRZaZNfhg/QakyDS+8MJQUJIih7HKIa94uY3tZfmzcmXcbMHNCjWjZ7HXGW4jNx8WP
+         GX+Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1771988166; x=1772592966; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TA7qDg4NCtd1YAnZI9KvDRHNA97lBlSYLdzRKpUyISQ=;
+        b=lBrNOfUlVgu5WDbfd0jfJZWjWQOQxZGkrd0KdTzFd1/1xFFey3MZRwDyZ8zDpUeJDM
+         9Q5TGaEh8bCxty7XhLQU6WsrcHDrJMwZeO11kmzZmurZG+hoqkGCHFW2vfvvpSUChdlo
+         dRQBF3bf8wNBcY87Ra5M2gg4TQFUFljswJvOaJLULcaPiqZGMXR+/nGDddDPvQAMLB7y
+         iTz8A1FHG0KRliEhf30NFWyExggFtBiLJzCivFKEwJW/BNMccWI018jJVeL0ik0Gi49J
+         kteivP5g015CIuAMiCOhENttgr4H/0ByHJacXADx3vdQGk1qnhFzGjpqhf/igvE2bd7X
+         Wcqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771988166; x=1772592966;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TA7qDg4NCtd1YAnZI9KvDRHNA97lBlSYLdzRKpUyISQ=;
+        b=pwWx01DPYAvW3ZyetU+5uQBp1cCxXoSP03DhX/qLp50ERoG9Fc0FUZTeUztHu8Zjjz
+         YK7EvzxFk9CL7MAaXc6pEA7WBLigWseLOuyroWh29B0x3doo9Tgu3BS7MMpeAVftCOTo
+         6cMhA3OUh//OgZGMsLk2xF+i2HqOQMxzBANyRzKs0rzkOfTRzdgAfFpBfSi80ClGHJFQ
+         YYS4iTifnYvXoEjSw/c0QFUgWR4iAEFcZXAUX1EGP1hp3Z82l8FJAKf+Dpk96muLB9rz
+         W8jX1aF+jA/iA5fhJMcGQoBRQz2obmMQfHSS7zSj8A6viiIov4Ka6utBa/3xXMiHkFy8
+         yLcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0orAOHNEGVKapiLlhrr1DcMsockV95mNTH+nbKp3mWsOg2kf4JJ2u2XAeCl+51sqObnTo3fCWhmsD8pWCIzQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxWBkxPIOjshizVLGxb1gYwZet37oEZ0HDtDc8WlHirwn9jR+u
+	+u+21j+PCcjk8Z5lbIrCU/5S1rsY+0a5UKYzpCmbIt2HtviruhZeZk8R85aj4A7hXnREWQvRhLk
+	2C9fQyckqpBWqdFyiFLHdpQY5KvHMvIVMD3wpdBVP
+X-Gm-Gg: AZuq6aK3dW8d9ciRmfpJLq1Rh/gZtasLl1srPVqwENdCAEdWCgHpFnrGx2e46+k5DWX
+	ILspOz6ObbKCS7LCMBIo0UM0q8R5QSi3Te3hbCNa1PgwiUyqjuZWSNaP4XKJbSZzl0jP5DOXvwt
+	VFliQySG2rG2x/aC7tzcbdf1Ll0BYLmQfgb44a7PGs0ZoHmFlsduZzO21PS6crqiN0rEqR9gUYN
+	F1bNogebcs8psVcrry7xn0UHevAnhcAIB3O/P4NxDst4DZcFDyqPSGR1/GOxmec6mNaOEgHaZmr
+	L5nvTjoSnPMDN6griYRTBu3YdipuEUBPR4sCNQ==
+X-Received: by 2002:a05:7022:608:b0:124:a8dc:c1b4 with SMTP id
+ a92af1059eb24-12781eff3c9mr273321c88.45.1771988165187; Tue, 24 Feb 2026
+ 18:56:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5715; i=kees@kernel.org; h=from:subject:message-id; bh=vnPzHx0X/qaS6meC3nBcsauKU3RBIOk3biR3/9t4ODk=; b=owGbwMvMwCVmps19z/KJym7G02pJDJnzknZsuJb2USV14adTcQcCL30xvpOZcWfjhS/xfQ0iz 34HN5370lHKwiDGxSArpsgSZOce5+Lxtj3cfa4izBxWJpAhDFycAjCR3esYGS4o3/n2va/9ybWP /9cw/pPazPRPdnujnVb0LlVH+XZpc32Gf+ZTbkmweLeuSlCT8y8pa9Cy2LphcufXtfat/0K4NQ0 6OAE=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20260224232434.it.591-kees@kernel.org>
+In-Reply-To: <20260224232434.it.591-kees@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Wed, 25 Feb 2026 03:55:29 +0100
+X-Gm-Features: AaiRm514aelrg8NyTSJLn7ZpuNuUcLbDTH1_TAzrgxY3Zp5UfRGLpkjOsY51Yxs
+Message-ID: <CANpmjNNyvrrOi3m6XUg+Hq39qdVHTvD88ODotYjPzTwC2Kh9pg@mail.gmail.com>
+Subject: Re: [PATCH v2] kcsan: test: Adjust "expect" allocation type for kmalloc_obj
+To: Kees Cook <kees@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The vdso_u_time_data, vdso_u_rng_data, and vdso_u_arch_data arrays
-are seen by GCC as single instances (due to their declarations in
-include/vdso/datapage.h). When the vdso data pointers are dereferenced
-with an offset, GCC thinks there is an access beyond the returned single
-instance. These are actually arrays constructed at link time, so declare
-them as such.
+On Wed, 25 Feb 2026 at 00:24, Kees Cook <kees@kernel.org> wrote:
+>
+> The call to kmalloc_obj(observed.lines) returns "char (*)[3][512]",
+> a pointer to the whole 2D array. But "expect" wants to be "char (*)[512]",
+> the decayed pointer type, as if it were observed.lines itself (though
+> without the "3" bounds). This produces the following build error:
+>
+> ../kernel/kcsan/kcsan_test.c: In function '__report_matches':
+> ../kernel/kcsan/kcsan_test.c:171:16: error: assignment to 'char (*)[512]' from incompatible pointer type 'char (*)[3][512]'
+> [-Wincompatible-pointer-types]
+>   171 |         expect = kmalloc_obj(observed.lines);
+>       |                ^
+>
+> Instead of changing the "expect" type to "char (*)[3][512]" and
+> requiring a dereference at each use (e.g. "(expect*)[0]"), just
+> explicitly cast the return to the desired type.
+>
+> Tested with:
+>
+> $ ./tools/testing/kunit/kunit.py run \
+>         --kconfig_add CONFIG_DEBUG_KERNEL=y \
+>         --kconfig_add CONFIG_KCSAN=y \
+>         --kconfig_add CONFIG_KCSAN_KUNIT_TEST=y \
+>         --arch=x86_64 --qemu_args '-smp 2' kcsan
+>
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Fixes: 69050f8d6d07 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Silence the warning seen with -Warray-bounds:
+Reviewed-by: Marco Elver <elver@google.com>
 
-In file included from ../include/linux/export.h:5,
-                 from ../include/linux/linkage.h:7,
-                 from ../arch/x86/include/asm/cache.h:5,
-                 from ../include/vdso/cache.h:5,
-                 from ../include/linux/cache.h:6,
-                 from ../include/linux/time.h:5,
-                 from ../arch/x86/entry/vdso/vclock_gettime.c:11:
-In function 'vdso_read_begin',
-    inlined from 'do_coarse_timens' at ../arch/x86/entry/vdso/../../../../lib/vdso/gettimeofday.c:204:9,
-    inlined from 'do_coarse' at ../arch/x86/entry/vdso/../../../../lib/vdso/gettimeofday.c:233:12,
-    inlined from '__cvdso_clock_gettime_common' at ../arch/x86/entry/vdso/../../../../lib/vdso/gettimeofday.c:305:10,
-    inlined from '__cvdso_clock_gettime_data.constprop' at ../arch/x86/entry/vdso/../../../../lib/vdso/gettimeofday.c:322:7:
-../include/asm-generic/rwonce.h:44:26: error: array subscript 1024 is outside array bounds of 'struct vdso_time_data[1]' [-Werror=array-bounds=]
-...
-../include/vdso/helpers.h:14:32: note: in expansion of macro 'READ_ONCE'
-   14 |         while (unlikely((seq = READ_ONCE(vc->seq)) & 1))
-      |                                ^~~~~~~~~
+I'm assuming you'll take it through your tree.
 
-Reachable via:
+Thanks!
 
-static __always_inline const struct vdso_time_data *__arch_get_vdso_u_time_data(void)
-{
-        return &vdso_u_time_data;
-}
-...
-        return __cvdso_clock_gettime_data(__arch_get_vdso_u_time_data(), clock, ts);
-...
-__cvdso_clock_gettime_common(const struct vdso_time_data *vd, ...)
-...
-	const struct vdso_clock *vc = vd->clock_data;
-...
-	if (likely(msk & VDSO_HRES))
-		vc = &vc[CS_HRES_COARSE];
-...
-	while (unlikely((seq = READ_ONCE(vc->seq)) & 1))
-
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: <linux-arch@vger.kernel.org>
----
- include/asm-generic/vdso/vsyscall.h | 4 ++--
- include/vdso/datapage.h             | 6 +++---
- arch/loongarch/vdso/vgetcpu.c       | 2 +-
- arch/riscv/kernel/vdso/hwprobe.c    | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
-index 5c6d9799f4e7..743056f804ed 100644
---- a/include/asm-generic/vdso/vsyscall.h
-+++ b/include/asm-generic/vdso/vsyscall.h
-@@ -7,14 +7,14 @@
- #ifndef __arch_get_vdso_u_time_data
- static __always_inline const struct vdso_time_data *__arch_get_vdso_u_time_data(void)
- {
--	return &vdso_u_time_data;
-+	return vdso_u_time_data;
- }
- #endif
- 
- #ifndef __arch_get_vdso_u_rng_data
- static __always_inline const struct vdso_rng_data *__arch_get_vdso_u_rng_data(void)
- {
--	return &vdso_u_rng_data;
-+	return vdso_u_rng_data;
- }
- #endif
- 
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index 23c39b96190f..8c3408c8b126 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -164,9 +164,9 @@ struct vdso_rng_data {
-  * With the hidden visibility, the compiler simply generates a PC-relative
-  * relocation, and this is what we need.
-  */
--extern struct vdso_time_data vdso_u_time_data __attribute__((visibility("hidden")));
--extern struct vdso_rng_data vdso_u_rng_data __attribute__((visibility("hidden")));
--extern struct vdso_arch_data vdso_u_arch_data __attribute__((visibility("hidden")));
-+extern struct vdso_time_data vdso_u_time_data[] __attribute__((visibility("hidden")));
-+extern struct vdso_rng_data vdso_u_rng_data[] __attribute__((visibility("hidden")));
-+extern struct vdso_arch_data vdso_u_arch_data[] __attribute__((visibility("hidden")));
- 
- extern struct vdso_time_data *vdso_k_time_data;
- extern struct vdso_rng_data *vdso_k_rng_data;
-diff --git a/arch/loongarch/vdso/vgetcpu.c b/arch/loongarch/vdso/vgetcpu.c
-index 73af49242ecd..d09f9d860bf0 100644
---- a/arch/loongarch/vdso/vgetcpu.c
-+++ b/arch/loongarch/vdso/vgetcpu.c
-@@ -39,7 +39,7 @@ int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *un
- 		*cpu = cpu_id;
- 
- 	if (node)
--		*node = vdso_u_arch_data.pdata[cpu_id].node;
-+		*node = vdso_u_arch_data->pdata[cpu_id].node;
- 
- 	return 0;
- }
-diff --git a/arch/riscv/kernel/vdso/hwprobe.c b/arch/riscv/kernel/vdso/hwprobe.c
-index 8f45500d0a6e..fc2ab4e6a9ab 100644
---- a/arch/riscv/kernel/vdso/hwprobe.c
-+++ b/arch/riscv/kernel/vdso/hwprobe.c
-@@ -16,7 +16,7 @@ static int riscv_vdso_get_values(struct riscv_hwprobe *pairs, size_t pair_count,
- 				 size_t cpusetsize, unsigned long *cpus,
- 				 unsigned int flags)
- {
--	const struct vdso_arch_data *avd = &vdso_u_arch_data;
-+	const struct vdso_arch_data *avd = vdso_u_arch_data;
- 	bool all_cpus = !cpusetsize && !cpus;
- 	struct riscv_hwprobe *p = pairs;
- 	struct riscv_hwprobe *end = pairs + pair_count;
-@@ -50,7 +50,7 @@ static int riscv_vdso_get_cpus(struct riscv_hwprobe *pairs, size_t pair_count,
- 			       size_t cpusetsize, unsigned long *cpus,
- 			       unsigned int flags)
- {
--	const struct vdso_arch_data *avd = &vdso_u_arch_data;
-+	const struct vdso_arch_data *avd = vdso_u_arch_data;
- 	struct riscv_hwprobe *p = pairs;
- 	struct riscv_hwprobe *end = pairs + pair_count;
- 	unsigned char *c = (unsigned char *)cpus;
--- 
-2.34.1
-
+> ---
+> Cc: Marco Elver <elver@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: <kasan-dev@googlegroups.com>
+> ---
+>  kernel/kcsan/kcsan_test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
+> index 79e655ea4ca1..ae758150ccb9 100644
+> --- a/kernel/kcsan/kcsan_test.c
+> +++ b/kernel/kcsan/kcsan_test.c
+> @@ -168,7 +168,7 @@ static bool __report_matches(const struct expect_report *r)
+>         if (!report_available())
+>                 return false;
+>
+> -       expect = kmalloc_obj(observed.lines);
+> +       expect = (typeof(expect))kmalloc_obj(observed.lines);
+>         if (WARN_ON(!expect))
+>                 return false;
+>
+> --
+> 2.34.1
+>
