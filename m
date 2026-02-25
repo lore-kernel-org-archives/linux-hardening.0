@@ -1,83 +1,69 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4363D904E
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Feb 2026 16:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F18627A45C;
+	Wed, 25 Feb 2026 17:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772038194; cv=none; b=ByaEO9jhyUJ7D4MbK7U76hBkhSw+8KJ7Ki1Jg9EM9dmzNlKkMibxhv6iUJ/436T1gYqTvl27Sj/bD+7c9Es9eNs+2ASBGtBjPUWqi/GoASXgvcPz4taBLLYjJ5Tf4jEvqrFyqAuriwYYEeSoDb15k7edn43ma5Zr2P2vBn9LexA=
+	t=1772040299; cv=none; b=bbcSLaQdZCtWSKOFE3QgMBmR1Pczdnsf5TrNu/4bCvyVZ4RNH+jhlSyc1Nd0RUQ6sQXpvN8GI2JPzi5SmPtSZtWGyjO/iOWYRkLGdiC5656VuPAMIcRYwGJNwIGEqze0m9tWWvoBDrHHsfKFeUtyN3YafWgKFCRbC4ix1rx15nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772038194; c=relaxed/simple;
-	bh=eBN/LQaDqEg9TMbX12mRTIKS4fJfRm78/RNdOGnI2ys=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Xskv2ssPfOp3YWgO5TmIiISmLJxSL5u/IF8lh7k1qnZ997uOvi+QXj297gqV/75Sfw8URpGmxkq8iDClz4inm3kVrZrg6HiQQTpC3RBYkxdUkvcHbuTSkYU1J0gdoz3Jb7VhMtRKZfUt52tQZwq9ILOsiNgGcJ5Fj7ZofvnfqcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PlWQJmgf; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1772040299; c=relaxed/simple;
+	bh=0e9SqD/+hsqTFerGrgoY6o2/NOjfpeueLYEdBPSeVd0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=miMTAn9wkxFOUJHsoAuzuSiwCW1wqL5Vz324jiv5TiWCiTA7qcWRJ48/Tnz66CbH5/Sr7eRxS+jrSZ4wAgXLRXywHyMMS5mN6tsH11/1E30XjKO1xCXfyF4EnL9bNpcitKN8F6By5PB2SFCWkyW25S+Iuqe49YDZ97xzNoVs5tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8KCP8v6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PlWQJmgf"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 73C9B4E41120;
-	Wed, 25 Feb 2026 16:49:50 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 3F1BA5FDE6;
-	Wed, 25 Feb 2026 16:49:50 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 09B1010368C53;
-	Wed, 25 Feb 2026 17:49:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1772038189; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=vnlHTw1jpJ7y/IagyfDJhS5F+PIUOtK6DIED1cOc3Rw=;
-	b=PlWQJmgfErQnZfaLbvak6rXaJSVWitrl9TTwjyixqnMq8ecms3Xe/ib4+zl4t5iKn+e0it
-	3D+uEdXlY1Gl/sHyMjBJUoGGPkuOXGZb0b/0R1QslWCm45f1udnGSjVzU5oAA+VY5V+oiu
-	iHeQeHoeOH6obaE9I1FA1BGYhxiziMa7OOy7HPFJtmpkLiMYpEli+jUGosIFMIb5jRpT72
-	Jjoe3GrkZjYwd+Mlx4ONXGgOANCb5XmDh48ZDeXauW86bxTNETj/vEKAfpJn2jbENOujgD
-	JLgEdFnXRE/SeK3lozvEerw06vgRUQssqaHQSgLiiXGhlSWhMP5xXyJP/69F9w==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Richard Weinberger <richard@nod.at>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Finn Thain <fthain@linux-m68k.org>
-Cc: Kees Cook <kees@kernel.org>, stable@vger.kernel.org, 
- linux-hardening@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <e11761ba31af4fd1d310f40f9b6a1753a0227025.1771225290.git.fthain@linux-m68k.org>
-References: <e11761ba31af4fd1d310f40f9b6a1753a0227025.1771225290.git.fthain@linux-m68k.org>
-Subject: Re: [PATCH v2] mtd: Avoid boot crash in RedBoot partition table
- parser
-Message-Id: <177203818789.1988281.623199213497482365.b4-ty@bootlin.com>
-Date: Wed, 25 Feb 2026 17:49:47 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8KCP8v6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A62C116D0;
+	Wed, 25 Feb 2026 17:24:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772040298;
+	bh=0e9SqD/+hsqTFerGrgoY6o2/NOjfpeueLYEdBPSeVd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z8KCP8v6TEvoD4b7UR2NbIKZtY7/aATfjB9fLWp+hTa1yD1GCa2wR3uamUDLFnp6b
+	 kDTbNJOo2MW6F07WGx0jIn7SHchNDIjhST9sAxGkzBiGjVWJo4bQuOLOc5ki4ESp1w
+	 dRncP9MtgjNt6sPdMI+AHo+oIOjnXl8zfQvDq/5RNDYWLO6LoXsh+8raIQpcU0CA3m
+	 rfJGb3Km64g/F/ZKDrScLwC12P77UCAHYXF5lfA//yAfl55IRy+89t3X5oo7pEI41k
+	 T36F4bX28KIRRg3bl0BB7doDbrT1RUuDjGp57P0cRI8LzLGnlagLKLipxstIEk5Z7i
+	 XoehDrvcOfyog==
+Date: Wed, 25 Feb 2026 09:24:58 -0800
+From: Kees Cook <kees@kernel.org>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jingwei Wang <wangjingwei@iscas.ac.cn>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] vdso/datapage: Define vdso data pointers as arrays
+Message-ID: <202602250924.B0A6F658ED@keescook>
+References: <20260225024716.work.043-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.14.3
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260225024716.work.043-kees@kernel.org>
 
-On Mon, 16 Feb 2026 18:01:30 +1100, Finn Thain wrote:
-> Given CONFIG_FORTIFY_SOURCE=y and a recent compiler,
-> commit 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when
-> available") produces the warning below and an oops.
-> 
->     Searching for RedBoot partition table in 50000000.flash at offset 0x7e0000
->     ------------[ cut here ]------------
->     WARNING: lib/string_helpers.c:1035 at 0xc029e04c, CPU#0: swapper/0/1
->     memcmp: detected buffer overflow: 15 byte read of buffer size 14
->     Modules linked in:
->     CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.19.0 #1 NONE
-> 
-> [...]
+On Tue, Feb 24, 2026 at 06:47:20PM -0800, Kees Cook wrote:
+> The vdso_u_time_data, vdso_u_rng_data, and vdso_u_arch_data arrays
+> are seen by GCC as single instances (due to their declarations in
+> include/vdso/datapage.h). When the vdso data pointers are dereferenced
+> with an offset, GCC thinks there is an access beyond the returned single
+> instance. These are actually arrays constructed at link time, so declare
+> them as such.
 
-Applied to mtd/fixes, thanks!
+I found 2 more places I needed to make "&var" to "var" changes. I'll
+send a v2...
 
-[1/1] mtd: Avoid boot crash in RedBoot partition table parser
-      commit: 8e2f8020270af7777d49c2e7132260983e4fc566
-
-Patche(s) should be available on mtd/linux.git and will be
-part of the next PR (provided that no robot complains by then).
-
-Kind regards,
-Miquèl
-
+-- 
+Kees Cook
