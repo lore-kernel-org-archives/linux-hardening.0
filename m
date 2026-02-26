@@ -1,25 +1,25 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474A52CCB9;
-	Thu, 26 Feb 2026 02:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67A12BE056;
+	Thu, 26 Feb 2026 06:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772073231; cv=none; b=P2VdkOXP2E9unOkT0YSN4Mmqay0rfoO9AOfULeRWcXcUYLYO0hm2Qj+JTLz2y5lbKaTnfndGULKEOUuCzGbUgb0T6QmXBpePi9ivxuICqEWBL4LhIcaFXclk04mK31mV8TyokJnj3yKnNxWz1mY3JqrW26t7J2rj7XduYh0xx0w=
+	t=1772086374; cv=none; b=T96v0JdPAl+DotKqZFqSCzZxkDz6hr6O+opUOu55YSTG+cew7Shk9RK2cyjt18XgMH7+K/MfzV6gYRB3YG1s9Y40AvOEi00oIwHOnMx9CuKeesfYxvS7dXtgweswEpWuEP6/7hvBaCuWuedkv7u4+F9qKQ112Et92Hzr/Dk/FbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772073231; c=relaxed/simple;
-	bh=i7o6YGvxNtbBjgla2qVvouutb+K/1hdgIQFDCCIfIEk=;
+	s=arc-20240116; t=1772086374; c=relaxed/simple;
+	bh=wum857gD/UcBYdqfPjX13dI7dp+soN1JT6+RNLDkzpw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lMcBKogC549Bb2LgtrqlwRx+aFUsyS+bAxF0RB+kbPtC2iMqqa8A07ke2ZBfqdCEAkd6RaZDgwCZE/SZt42j1JAUZ2iaigJw2syC44uAnybL96euQIeXjcW/v4RHT5V+qCgV8m5mbmCuUrt2eSwhkoKBl/WRRXLNqsRzfy6gW+Y=
+	 In-Reply-To:Content-Type; b=L1MneZW/YtI81/enoW7SUnOaRHQku9gM4VuGEaHaMDpitmozJ7B7UEE6qNa2zFdaOTijpTRhS1rc/wDQcH+UmoxrPmuvfHq4kPlRiKaqOKJwGa18oz/oAnTDChy0rDMco02ZW8bCkMJKh9OkvZNCtXLMjd28qEUtdNiG7Wji5Cw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 90e1f12612bb11f1a21c59e7364eecb8-20260226
+X-UUID: 2b0db3a212da11f1a21c59e7364eecb8-20260226
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.11,REQID:209e8b85-7bef-4f24-a224-ef4d342fac15,IP:0,U
+X-CID-O-INFO: VERSION:1.3.11,REQID:3488ece2-81c1-46e5-82a4-78914bc34d65,IP:0,U
 	RL:0,TC:0,Content:3,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:3
-X-CID-META: VersionHash:89c9d04,CLOUDID:51be10678f8ebd5dd75a4fdedfe0a219,BulkI
+X-CID-META: VersionHash:89c9d04,CLOUDID:8e17a85cc01bbaec23e301c1ae65c493,BulkI
 	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:4|15|
 	50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
 	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -27,14 +27,14 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 90e1f12612bb11f1a21c59e7364eecb8-20260226
+X-UUID: 2b0db3a212da11f1a21c59e7364eecb8-20260226
 X-User: jiangfeng@kylinos.cn
 Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <jiangfeng@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1725422168; Thu, 26 Feb 2026 10:33:42 +0800
-Message-ID: <bc5ed1c4-3b6f-41f5-9785-1045724fc43e@kylinos.cn>
-Date: Thu, 26 Feb 2026 10:33:39 +0800
+	with ESMTP id 1828231663; Thu, 26 Feb 2026 14:12:45 +0800
+Message-ID: <d0f92b42-529e-493b-9960-581791f29ac3@kylinos.cn>
+Date: Thu, 26 Feb 2026 14:12:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,7 +44,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v7 0/8] riscv: optimize string functions and add kunit
  tests
-To: palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+To: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
  akpm@linux-foundation.org, kees@kernel.org, andy@kernel.org,
  ebiggers@kernel.org, martin.petersen@oracle.com,
  herbert@gondor.apana.org.au, samuel.holland@sifive.com,
@@ -66,14 +66,10 @@ On 2026/1/30 10:50, Feng Jiang wrote:
 > strrchr(), the current versions use simple byte-by-byte assembly logic,
 > which will serve as a baseline for future Zbb-based optimizations.
 
-Hi Palmer,
+Hi Paul,
 
-Just a gentle ping on this v7 series.
-
-Kees is happy for this to go through the riscv tree. I've also followed up
-with Andy regarding the tags for v7 on the mailing list.
-
-Is there anything else needed for this series to be picked up?
+I'm very sorry, I dropped you from the 'To' list by mistake in v7.
+Adding you back now for visibility.
 
 -- 
 With Best Regards,
