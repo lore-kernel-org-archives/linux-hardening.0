@@ -1,218 +1,194 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013005.outbound.protection.outlook.com [40.107.159.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846263DA7C3;
-	Thu, 26 Feb 2026 14:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772117621; cv=none; b=hu+Dv0h+WDhhY3vzk8OaZeRQ0bbQAM8zs6OIV3O9o3EqpZdEccT3WW7AnI5apoLNcBVduSZHH3RbXGpQ9zRmpFTbWIE9XNhXoKd90I6t6MzT54ZrJt4VZifoOrCe/zBbSGKcpnkAN4mMyDXhSHiQA4wX10S/28XaQB7nQibAFG4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772117621; c=relaxed/simple;
-	bh=FXfqsAF5PRH26O8N70kDI+3KThd+V1nxBXQXGcLCcrY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=n89oLDPeDur24TKl7STz5zQvo9J/36mWwhDmUvpn5rFiZd7+iyb+H7+Rx8+Z34ot/n7qM2ijcfbgKm5HwL/cxY2yxalbdO6Illy4AG5FdkfABBznjEjXKgypOLeKOCModZw53zXT7oSXM6YY5/AyxmsN7fqRtMYeDGk/a9TxInI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=O0e558B3 reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73042475D0;
+	Thu, 26 Feb 2026 15:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772119303; cv=fail; b=QAK7xrZI/Hje5+htFLJ3EDBTyNalPwomehBEinZfb7HkFIiPwsK4MVdIfbAmRsybAlnyPcv0et67gazIvLr0VSas792zwW2aQoaK7oQFEf0P+5HoRSR2B2kmPm/LgAoQs0g8FwyEkWeZzIY2tDh9oAnJkf1X/cjqNnxMXOQ1o5c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772119303; c=relaxed/simple;
+	bh=5HSvVyw5azhNm5RiN6xqiJ1dOJiYLsVPfXSCFoceHGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Cu9ETP6JBNwzExptEhz0WpBl+i4Wf/xmRWQrHGyqSDLtPaaHHXjeUXSwylM8kUMQN4WX1LYUIdnsjEGEzz5cD0ixNVj72Q2nomKceLaoZqZ232Oz8ria7yGhsF5eROJkXohAOVxqpFTDGieep+Seqf87HZ7rulueuYG7hKYa/QM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=OcQ0B2di; arc=fail smtp.client-ip=40.107.159.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="O0e558B3"
-Received: from [192.168.10.111] (p865013-ipoe.ipoe.ocn.ne.jp [153.242.222.12])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 61QElsGn068080
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 26 Feb 2026 23:47:59 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=cStohuBeyAJqBHNqMSHkFL9km00palixDSHGcKIHiUU=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1772117280; v=1;
-        b=O0e558B30Bbqk4IAi9+ee1np2GsjTDtoU6rJg8vGudlHF03MY4pwZ7YoY0VViA5J
-         /agupfL+eGC+jVenFzh4dX5iFRCDJ0ohKWPy3apT2qsbaGihaZIKwqiLP8AaGI2O
-         8knDPqYYHBFmv56E1U7mBDZu4upBwZPNtX7q4JwnUU8LgjlZLAPc7CFrBEc2mOaT
-         wcEo/w1gQTvSJj/tUqiM5vKRO4QRxMT17zXl1YuKJG/dupasiVrsU+12ewfZv65k
-         jaXWK4KrpKw0EKYs7CK/Vy8GRYvK9tuPAwW2GiQzV+OIgPsNZIgfVL20OEx0VueU
-         nZCAXvyz8s/YQEAeGpqaCA==
-Message-ID: <b81cbeb7-6541-4a1f-b08e-2b5c9ee66b69@rsg.ci.i.u-tokyo.ac.jp>
-Date: Thu, 26 Feb 2026 23:47:54 +0900
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="OcQ0B2di"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NZIa0BnN6g5/1rZcXsN8C2KAMtiHsyueiirBG5mFsQlRg+Y0/vGkHroBplzhUEwzUxbQvTWo/p4ybIl8pkY8Sqzw+AEmocPE2ufZaVQOy54mzLFXys6l+rT4o/nnGtNSzpcFiQTogjbK/yzPJyudKb+DMBd0FQXruAPQGk8nygaEST1vQTiwUEuoXgjPzX/0vfGj+IR5dXOjJbJQJrSbXz6CgHEefPsAd/u23zb4soD9qiFZCJ/vZbAQOcIP4hg4gP45sGBaDUw+4zxVQAFx7ZzjGUKlboC/Ql4brj/9g5V0MPalvoBXtATNNTmx49cA9POZ94QIxu2TUAnPArCdxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0D/A7SW4Mwvx2UoSWSexKB4jtT0jW106esJ4ejlO7ms=;
+ b=tv+Vk1RPuDYicVdcwLJpscqjj9zWy4cXe1FJ2wtU6yVhv7+ALMTgjRhPKS6Ap5jXJl3gt4q0hLlIw7r2xnbksLaFztOLeyUNixEUeYNh0e2BK3tWcxEjlg2rYXOuL3AItwn1mj07wMCdtHkyopXbzu5Aep86FP1yWgrf+skXsIZTZjEQfFQwx0ie9OBU+YqV+NL1IFeISNJL2Skf3KK8gVZHf9AqHsXQQUliUZTbOc2Ek+MwBQojHePeZnnsOxwxV2cKD27uzJHe1+mUdCUC1T7N8c9YqvW20ax6pjEBIMKsA3Y15dES2kDKVU6Dd+IB8Uvi0CUOd6rheXLfx+YN2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0D/A7SW4Mwvx2UoSWSexKB4jtT0jW106esJ4ejlO7ms=;
+ b=OcQ0B2diIhLLpFpIrob/vHKrdWojLOE6yEVZkZvZMrHON5I16vyUobdBH4qDd5sdw+ToqvHaun/UFHKwc1vXyK3qJuz68QWqtBqpBrS8gfuf182WxiS6chEYuKGXeXfWSwVAh86Z/dVtRPETkOUQz9M6mUT2ev1ezVEkv78F/PZpE9cIA5QVKCZxKZNJ+wsD9Wy4uz70ePbjR4T9ow7xVJL1RA29XBLZ82WbJGpQyVaUQ6RmeyxfrSCXh5zwt/TQzeCRylGm5IYMm0wJBtiGb8AnAsuVgPYRaf7HXB6sz2l0K1eT0cGsTlM0bAZ6igO7tbrXUDcdyltjxuzHlYUxQA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by PA1PR04MB11263.eurprd04.prod.outlook.com (2603:10a6:102:4eb::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.13; Thu, 26 Feb
+ 2026 15:21:36 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9632.017; Thu, 26 Feb 2026
+ 15:21:36 +0000
+Date: Thu, 26 Feb 2026 10:21:28 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Niklas Cassel <cassel@kernel.org>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v2 04/11] dmaengine: dw-edma: Remove ll_max = -1 in
+ dw_edma_channel_setup()
+Message-ID: <aaBk-I5jrut5wpT7@lizhi-Precision-Tower-5810>
+References: <20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com>
+ <20260109-edma_ll-v2-4-5c0b27b2c664@nxp.com>
+ <6d6c222faypvbo6fvs7tad2gtzxqqzlsjkrbefwmgxodt5thbc@lylpaqxozrg7>
+ <aZ8YpKPqSjzDtomb@lizhi-Precision-Tower-5810>
+ <esdpmy46hffpg577hd67rxmpkfm3agrzrginegi2rczbwvdnlb@urqmwhh3kuff>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <esdpmy46hffpg577hd67rxmpkfm3agrzrginegi2rczbwvdnlb@urqmwhh3kuff>
+X-ClientProxiedBy: PH8P221CA0022.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:510:2d8::7) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-To: Oliver Upton <oupton@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu
- <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, devel@daynix.com, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260225-hybrid-v3-0-46e8fe220880@rsg.ci.i.u-tokyo.ac.jp>
- <20260225-hybrid-v3-1-46e8fe220880@rsg.ci.i.u-tokyo.ac.jp>
- <aaA0gn9O8QAf9Gpu@kernel.org>
- <fbcadab4-676b-44e4-8afa-b8bd095f8981@rsg.ci.i.u-tokyo.ac.jp>
-Content-Language: en-US
-In-Reply-To: <fbcadab4-676b-44e4-8afa-b8bd095f8981@rsg.ci.i.u-tokyo.ac.jp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PA1PR04MB11263:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d7c4e8d-50a5-4e8c-c5b2-08de754abb58
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|7416014|366016|19092799006|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	deP5GJtsG6nvgAFFHO4mvui2q7Z8rR31I7q82K4xf3SSYRVSrHRlDWS2aQfxHMz+Prv1xwQg1u7OIwIl/67h2waiyowvF7z1rSjx1gDHCbPYMHZzr0edOfMKqUv6IrB/8v0bKbE+GT0wGVdAY8IB5G+TR++yk7BEUiQC2du0EjqatoGW603AuYyzbx3811l9+/E1Xggk/Xtx6fF8DThqRaWbdmV/9OBlLHcYE0kZybuYk1ue8IcNCwwCPFxRSOFOK7th1CmLoI0KPWbxejRctuREfGQpT/+VovdYQuOsG44QFcJ3YZk/mcTMTEFTt5wb528JauxeRDzPjt9EYpaHz7tksIYOwUUFIkZ+XQmVs2v+OOIlnjr6ZR6ZXaAQBs4SvcBZmPvOb1samypWZrC0Gn6/LWQDa/VVPvFqY+5DlKrchTztMP+7eoOPVwS6o6zQTysu0SEFSfGm+PQJI5K0yHH7G9Z7OM6vtiOskfj+gCj+96BRkvAUUDl9/iPH3szahOpsmONq7TJ8AUxJ/K0gj9rJYDJtMZ2mmi8R1zDidPTIpsx3CcugRBIhMoGqqnyGpPARMZd35sMpq4wipgZ9tGtqtp0iCIBXyN9ojcj9iTDJ5L9DWB77vDmgz1OAlihlDwV/dhNntHRZx7aiIuOKl7k8wW0aKA6id14IApTro24qk4O9U4qf721i01aoPQPKpmapm+RUdIjXRAEXv4tmbI9VMCPXuw2NbPD96BXIFeFwXV0cqgDexnlEh/1pYaJEBo5+kxB8xCiqtoMOu1p5YD278pdw08CIRmM605XYbSc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(7416014)(366016)(19092799006)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?XkS7+JD4DOKY22lyF2q5maJGR7IU4j2YnUfXw+FKc+XWx05b2VX074VZ+TRx?=
+ =?us-ascii?Q?H5IyaYC+8PaCNb+Q9/L1cvLNAq6jdjmmHa8awLWmC9qoXPK/n6xmOFPHznUR?=
+ =?us-ascii?Q?UqgvAmOaH9kgWoJFTr5mvtZFM1/gxrvcJu+emCuShYWwUpzEEfd1kZatCaWy?=
+ =?us-ascii?Q?rg0W1KOQRNrneVLGphorT0T/fuSZi9LAycsmgPzoz1NVsueghfO0zxeG6CMe?=
+ =?us-ascii?Q?YG1LkhSZt/NjScEicRZB1bjYX3ShQkgIh1mhi8FrqARCzdBNYqO/B/M/egOS?=
+ =?us-ascii?Q?fGD57q1C+VCiYlsc3nv/En8WZxS898pOGQc5ABeymd6zuv/E+WY3yWsyc3IJ?=
+ =?us-ascii?Q?pMvmF/D2HaJJmewVV3zd9Z4wu3gHrQWGBt+3Vn3zycvTifMtFTDIi0qg7h89?=
+ =?us-ascii?Q?eZ4em//6as/e44rkdHe1o9UnV3G8F/I5zA+VhmDo6D/rFeU/4vpkxyUolBfp?=
+ =?us-ascii?Q?tbdfynjP+r6Dw7l/cpWVr0NzH9ZIMmJ+OYrL2SFBAWd4dqNfdChGi/f4Hgtu?=
+ =?us-ascii?Q?gQl9qMvfP7UcXllrrZam94zC3BGmzKWI67HVum9NaBJLcJRbOTcDpNdnFrLw?=
+ =?us-ascii?Q?83mP2cp/AMoAHw/DbJXl0yJTjd2P99rdvVcYIEf5bxmTMYZIqJFz8W2B74g2?=
+ =?us-ascii?Q?1iLgw5ioq4z4E8UMOp9NBXnRM4XnyieL9d/0xVk1n0Lw6R9qQNmlnZGxAc3A?=
+ =?us-ascii?Q?wFp36FmwuWixrj6jF0Ik+iybDlQFG11uKikCRXgwm+XK2By/rBTDffk0ej1I?=
+ =?us-ascii?Q?X1f60ole5S1uE79nWmeNb+G4qO7H7RlPb0pack31rKS7worNh26ePxUHJZHK?=
+ =?us-ascii?Q?c4sYmfQDr1hpB+xK/SueYEVgHMphafn32knsGGUWtUjQvAuY7SQdZUwshMPC?=
+ =?us-ascii?Q?D6j46/aCIX8aCLA1xdVIZGSMv6xYbQyqJ6Y964IgZMBFuP5oWyhRiVz7rLaN?=
+ =?us-ascii?Q?iYg+DEK82wmU5MplLUBdIP9/yzeyGolVembeumX3QaoIAK7grNrBUlMT1yNY?=
+ =?us-ascii?Q?3DtBeUEBT2OlTx3qjVH0Hs8Yo9CUkDi3kxBElDnLLvsC8W9R4aby0lrQCsSA?=
+ =?us-ascii?Q?5yzbhIaC8ao5xGf3EdJqGP1Sw3SUYEFDgeF0octbSxPqGiBY4aC4lR9c/X0z?=
+ =?us-ascii?Q?oj8HW1TFmc2bdlLYzngC/UdPRdB24WKt9bSYgJGL8382kkjUsywVyBGjsRRx?=
+ =?us-ascii?Q?ntxU4dyPL9u84+D28HTh3ofhIpiJi0HhEmItN5mkJOI7JZwCxMJppY4gNIdU?=
+ =?us-ascii?Q?wvCusBEzH6MkY8BZ8H44BEvhmSgh3TKEDvZU7nXz2SEjheVF8QH1vvnAS0RV?=
+ =?us-ascii?Q?+euVFXlQF05NFoO01otw9jNscOQcAV9vIG6yXCUsxnqSLrPya6CXHkMr1qTc?=
+ =?us-ascii?Q?pafWqgqRtexVWN+GjGDFWMpwJUGtYN/ziYE79F37PjAf0huXo9QRQPSfek4B?=
+ =?us-ascii?Q?a3XWnZrYeSaPPCTZK3xvtPU0aEwIVQb+9ub1vFJG9NzSgyOy0MJ+E42im5Cj?=
+ =?us-ascii?Q?X620Enace73tluhkJjNGx5V0K4hgXEAog2Gu4G85P1ycBn9tT65QXg5ZcM/L?=
+ =?us-ascii?Q?ZvLTaYtMYhDalYccW2WMvIX1FpGRwZ5jHweouGow95Pz70tOi27nd0WFM74P?=
+ =?us-ascii?Q?yrbCVB2CB44knV0DOIPObV5ZRzSBlHsK6H40oYOylbRTLUwVxd9tb+yC6sxc?=
+ =?us-ascii?Q?IvsE86/jQERpTjmDz/TyofX+ktHNl5vAwV18ZP4DK9hQVcOs?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d7c4e8d-50a5-4e8c-c5b2-08de754abb58
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 15:21:36.5785
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dB6QmJekq7ZyiuXpXIGh+k0Kqytzk66AoKzUbyZfhVLmF5+LuHBRhszPV21UnrSEfdNCa6LEg3q39diNLYe1pA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11263
 
-On 2026/02/26 23:43, Akihiko Odaki wrote:
-> On 2026/02/26 20:54, Oliver Upton wrote:
->> Hi Akihiko,
->>
->> On Wed, Feb 25, 2026 at 01:31:15PM +0900, Akihiko Odaki wrote:
->>> @@ -629,6 +629,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, 
->>> int cpu)
->>>           kvm_vcpu_load_vhe(vcpu);
->>>       kvm_arch_vcpu_load_fp(vcpu);
->>>       kvm_vcpu_pmu_restore_guest(vcpu);
->>> +    if (test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &vcpu- 
->>> >kvm->arch.flags))
->>> +        kvm_make_request(KVM_REQ_CREATE_PMU, vcpu);
->>
->> We only need to set the request if the vCPU has migrated to a different
->> PMU implementation, no?
-> 
-> Indeed. I was too lazy to implement such a check since it won't affect 
-> performance unless the new feature is requested, but having one may be 
-> still nice.
-> 
->>
->>>       if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
->>>           kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
->>> @@ -1056,6 +1058,9 @@ static int check_vcpu_requests(struct kvm_vcpu 
->>> *vcpu)
->>>           if (kvm_check_request(KVM_REQ_RELOAD_PMU, vcpu))
->>>               kvm_vcpu_reload_pmu(vcpu);
->>> +        if (kvm_check_request(KVM_REQ_CREATE_PMU, vcpu))
->>> +            kvm_vcpu_create_pmu(vcpu);
->>> +
->>
->> My strong preference would be to squash the migration handling into
->> kvm_vcpu_reload_pmu(). It is already reprogramming PMU events in
->> response to other things.
-> 
-> Can you share a reason for that?
-> 
-> In terms of complexity, I don't think it will help reducing complexity 
-> since the only common things between kvm_vcpu_reload_pmu() and 
-> kvm_vcpu_create_pmu() are the enumeration of enabled counters, which is 
-> simple enough.
-> 
-> In terms of performance, I guess it is better to keep 
-> kvm_vcpu_create_pmu() small since it is triggered for each migration.
-> 
->>
->>>           if (kvm_check_request(KVM_REQ_RESYNC_PMU_EL0, vcpu))
->>>               kvm_vcpu_pmu_restore_guest(vcpu);
->>> @@ -1516,7 +1521,8 @@ static int kvm_setup_vcpu(struct kvm_vcpu *vcpu)
->>>        * When the vCPU has a PMU, but no PMU is set for the guest
->>>        * yet, set the default one.
->>>        */
->>> -    if (kvm_vcpu_has_pmu(vcpu) && !kvm->arch.arm_pmu)
->>> +    if (kvm_vcpu_has_pmu(vcpu) && !kvm->arch.arm_pmu &&
->>> +        !test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm- 
->>> >arch.flags))
->>>           ret = kvm_arm_set_default_pmu(kvm);
->>
->> I'd rather just initialize it to a default than have to deal with the
->> field being sometimes null.
-> 
-> I agree. I'll change this with the next version.
-> 
->>
->>> -static bool kvm_pmu_counter_is_enabled(struct kvm_pmc *pmc)
->>> +static u64 kvm_pmu_enabled_counter_mask(struct kvm_vcpu *vcpu)
->>>   {
->>> -    struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
->>> -    unsigned int mdcr = __vcpu_sys_reg(vcpu, MDCR_EL2);
->>> +    u64 mask = 0;
->>> -    if (!(__vcpu_sys_reg(vcpu, PMCNTENSET_EL0) & BIT(pmc->idx)))
->>> -        return false;
->>> +    if (__vcpu_sys_reg(vcpu, MDCR_EL2) & MDCR_EL2_HPME)
->>> +        mask |= kvm_pmu_hyp_counter_mask(vcpu);
->>> -    if (kvm_pmu_counter_is_hyp(vcpu, pmc->idx))
->>> -        return mdcr & MDCR_EL2_HPME;
->>> +    if (kvm_vcpu_read_pmcr(vcpu) & ARMV8_PMU_PMCR_E)
->>> +        mask |= ~kvm_pmu_hyp_counter_mask(vcpu);
->>> -    return kvm_vcpu_read_pmcr(vcpu) & ARMV8_PMU_PMCR_E;
->>> +    return __vcpu_sys_reg(vcpu, PMCNTENSET_EL0) & mask;
->>> +}
->>> +
->>> +static bool kvm_pmu_counter_is_enabled(struct kvm_pmc *pmc)
->>> +{
->>> +    struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
->>> +
->>> +    return kvm_pmu_enabled_counter_mask(vcpu) & BIT(pmc->idx);
->>>   }
->>
->> You're churning a good bit of code, this needs to happen in a separate
->> patch (if at all).
-> 
-> It makes sense. The next version will have a separate patch for this.
-> 
->>
->>> @@ -689,6 +710,14 @@ static void kvm_pmu_create_perf_event(struct 
->>> kvm_pmc *pmc)
->>>       int eventsel;
->>>       u64 evtreg;
->>> +    if (!arm_pmu) {
->>> +        arm_pmu = kvm_pmu_probe_armpmu(vcpu->cpu);
->>
->> kvm_pmu_probe_armpmu() takes a global mutex, I'm not sure that's what we
->> want.
->>
->> What prevents us from opening a PERF_TYPE_RAW event and allowing perf to
->> work out the right PMU for this CPU?
-> 
-> Unfortunately perf does not seem to have a capability to switch to the 
-> right PMU. tools/perf/Documentation/intel-hybrid.txt says the perf tool 
-> creates events for each PMU in a hybird configuration, for example.
+On Thu, Feb 26, 2026 at 11:16:26AM +0900, Koichiro Den wrote:
+> On Wed, Feb 25, 2026 at 10:43:32AM -0500, Frank Li wrote:
+> > On Wed, Feb 25, 2026 at 05:30:33PM +0900, Koichiro Den wrote:
+> > > On Fri, Jan 09, 2026 at 10:28:24AM -0500, Frank Li wrote:
+> > > > dw_edma_channel_setup() calculates ll_max based on the size of the
+> > > > ll_region, but the value is later overwritten with -1, preventing the
+> > > > code from ever reaching the calculated ll_max.
+> > > >
+> > > > Typically ll_max is around 170 for a 4 KB page and four DMA R/W channels.
+> > > > It is uncommon for a single DMA request to reach this limit, so the issue
+> > > > has not been observed in practice. However, if it occurs, the driver may
+> > > > overwrite adjacent memory before reporting an error.
+> > > >
+> > > > Remove the incorrect assignment so the calculated ll_max is honored
+> > > >
+> > > > Fixes: 31fb8c1ff962d ("dmaengine: dw-edma: Improve the linked list and data blocks definition")
+> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > ---
+> > > >  drivers/dma/dw-edma/dw-edma-core.c | 1 -
+> > > >  1 file changed, 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > > > index c6b014949afe82f10362711fc8a956fe60a72835..b154bdd7f2897d9a28df698a425afc1b1c93698b 100644
+> > > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > > @@ -770,7 +770,6 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
+> > > >  			chan->ll_max = (chip->ll_region_wr[chan->id].sz / EDMA_LL_SZ);
+> > > >  		else
+> > > >  			chan->ll_max = (chip->ll_region_rd[chan->id].sz / EDMA_LL_SZ);
+> > > > -		chan->ll_max -= 1;
+> > >
+> > > Just curious: wasn't this to reserve one slot for the final link element?
+> >
+> > when calculate avaible entry, always use chan-ll_max -1.  ll_max indicate
+> > memory size, final link element actually occupted a space.
+>
+> After the entire series is applied (esp. [PATCH v2 10/11] + [PATCH v2 11/11]),
+> yes, that makes sense to me. My concern was that before the semantics of
+> "ll_max" changes, this "-1" was required. In other words, this seemed to me not
+> a fix but a preparatory patch. Please correct me if I'm misunderstainding.
 
-I think I misunderstood what you meant. Letting 
-perf_event_create_kernel_counter() to figure out what a PMU to use may 
-be a good idea. I'll give a try with the next version.
+Thanks, I found I make mistake, wrong think it as "chan->ll_max = -1".
+I will squash this change to patch 10.
 
-> 
->>
->>> +        if (!arm_pmu) {
->>> +            vcpu_set_on_unsupported_cpu(vcpu);
->>
->> At this point it seems pretty late to flag the CPU as unsupported. Maybe
->> instead we can compute the union cpumask for all the PMU implemetations
->> the VM may schedule on.
-> 
-> This is just a safe guard and it is a responsibility of the userspace to 
-> schedule the VCPU properly. It is conceptually same with what 
-> kvm_arch_vcpu_load() does when migrating to an unsupported CPU.
-> 
->>
->>> @@ -1249,6 +1299,10 @@ int kvm_arm_pmu_v3_get_attr(struct kvm_vcpu 
->>> *vcpu, struct kvm_device_attr *attr)
->>>           irq = vcpu->arch.pmu.irq_num;
->>>           return put_user(irq, uaddr);
->>>       }
->>> +    case KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY:
->>> +        lockdep_assert_held(&vcpu->kvm->arch.config_lock);
->>> +        if (test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, 
->>> &vcpu->kvm->arch.flags))
->>> +            return 0;
->>
->> We don't need a getter for this, userspace should remember how it
->> provisioned the VM.
-> 
-> The getter is useful for debugging and testing. The selftest will use it 
-> to query the current state.
-> 
-> Regards,
-> Akihiko Odaki
+Frank
 
+>
+> Thanks,
+> Koichiro
+>
+> >
+> > Frank
+> > >
+> > > Best regards,
+> > > Koichiro
+> > >
+> > > >
+> > > >  		dev_vdbg(dev, "L. List:\tChannel %s[%u] max_cnt=%u\n",
+> > > >  			 str_write_read(chan->dir == EDMA_DIR_WRITE),
+> > > >
+> > > > --
+> > > > 2.34.1
+> > > >
