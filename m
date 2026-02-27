@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF0D936E49F;
-	Fri, 27 Feb 2026 17:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39833364031;
+	Fri, 27 Feb 2026 17:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772215057; cv=none; b=JWz8Nj7KtrtJuNfn1LGS45c+mQddftzTJ9IuNlmgXa+MCETRrs8WYHQKhneq5hV25/wzEltLXylxw5sqO2xwLZOWXgBHQaVaUTu8JhvTQmbLvytUAiC9Ha3RBDl+bTZurUto9aMWkXEf6cEgSq0JjzoZHktFm2HRxgWRKaOVWgc=
+	t=1772215062; cv=none; b=g4+Vbo7UH8Xv4k5YRFYDYIgchLfpsWFBbzYPNh1wx+GyAU1Nnf4LAOYFtBSZPsFyzZWPRT2NrSCSrOVW+4lVuVvaJBAaGrl6RMEXWwLWMcoxsfSSo4jXeGVnI6GcKzQouuCD/VKGfpg3/mV6jUg+8oRs2VsA8/kWQoBKTo0y9gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772215057; c=relaxed/simple;
-	bh=P8IDTj4yF6qDQuR+pa/KMXIkjNEeYrDKFCKpXqXY1Pk=;
+	s=arc-20240116; t=1772215062; c=relaxed/simple;
+	bh=4xaZYuingxRN/t3hvCf+IjHey9rMT1T67XbHK/AYuW4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pSiRtG/ZtIhi7x0HWaYUwhcZwOP7dVeTQhcjaQBkOH6Hb+pP3HwEYO1zAizvax+6jR/SEyUMvSP3gRBZjMBa91aNNwr6/MXHV90Blq1B46dq0aHtsDcxVXljsH8Z+tbkFq8q8a29o5rnkTB0BiN/kZLqt6+irl4yrTMMi8uQq4w=
+	 MIME-Version; b=qZnrpNpQMtn+W9BvlCyYEHJdiaatdtotCAUilD3sBWXJTyyy9bkHvqgwwGWZa7tzMUIi9LGX+VdYojcsLbXjx2wWm0aDORtweTLFJvQcd1WoK/YR96lA37b9655BxeHW9uzSdQHERgdKFjBWzRgs3x0g14gVbRPd+NErJBZ2KjQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE7E41516;
-	Fri, 27 Feb 2026 09:57:29 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F69A176B;
+	Fri, 27 Feb 2026 09:57:34 -0800 (PST)
 Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8C363F73B;
-	Fri, 27 Feb 2026 09:57:31 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C9833F73B;
+	Fri, 27 Feb 2026 09:57:36 -0800 (PST)
 From: Kevin Brodsky <kevin.brodsky@arm.com>
 To: linux-hardening@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
 	x86@kernel.org
-Subject: [PATCH v6 24/30] arm64: kpkeys: Handle splitting of linear map
-Date: Fri, 27 Feb 2026 17:55:12 +0000
-Message-ID: <20260227175518.3728055-25-kevin.brodsky@arm.com>
+Subject: [PATCH v6 25/30] arm64: kpkeys: Protect early page tables
+Date: Fri, 27 Feb 2026 17:55:13 +0000
+Message-ID: <20260227175518.3728055-26-kevin.brodsky@arm.com>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260227175518.3728055-1-kevin.brodsky@arm.com>
 References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
@@ -66,61 +66,37 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the kpkeys_hardened_pgtables feature is enabled, special care
-is required when allocating page table pages while splitting the
-linear map.
+Use the dedicated kpkeys allocator for early page tables (used to create
+the linear map) when the kpkeys_hardened_pgtables feature is enabled.
 
-Indicate that such pages are being allocated by passing
-__GFP_PGTABLE_SPLIT and use the appropriate interface to prepare the
-kpkeys_hardened_pgtables allocator in
-split_kernel_leaf_mapping().
+CPU features have not been detected at this stage so we use the
+early helper arm64_supports_kpkeys_hardened_pgtables(). This is not
+a concern as kpkeys_physmem_pgtable_alloc() does not itself use POE
+or set_memory_pkey().
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/mm/mmu.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ arch/arm64/mm/mmu.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index ea1cb1875257..2cee0b7f8a56 100644
+index 2cee0b7f8a56..7072d5ac0579 100644
 --- a/arch/arm64/mm/mmu.c
 +++ b/arch/arm64/mm/mmu.c
-@@ -707,7 +707,7 @@ static int split_kernel_leaf_mapping_locked(unsigned long addr)
- 	if (!pud_present(pud))
- 		goto out;
- 	if (pud_leaf(pud)) {
--		ret = split_pud(pudp, pud, GFP_PGTABLE_KERNEL, true);
-+		ret = split_pud(pudp, pud, GFP_PGTABLE_KERNEL | __GFP_PGTABLE_SPLIT, true);
- 		if (ret)
- 			goto out;
- 	}
-@@ -732,7 +732,7 @@ static int split_kernel_leaf_mapping_locked(unsigned long addr)
- 		 */
- 		if (ALIGN_DOWN(addr, PMD_SIZE) == addr)
- 			goto out;
--		ret = split_pmd(pmdp, pmd, GFP_PGTABLE_KERNEL, true);
-+		ret = split_pmd(pmdp, pmd, GFP_PGTABLE_KERNEL | __GFP_PGTABLE_SPLIT, true);
- 		if (ret)
- 			goto out;
- 	}
-@@ -800,7 +800,18 @@ int split_kernel_leaf_mapping(unsigned long start, unsigned long end)
- 	if (start != PAGE_ALIGN(start) || end != PAGE_ALIGN(end))
- 		return -EINVAL;
+@@ -116,8 +116,11 @@ static phys_addr_t __init early_pgtable_alloc(enum pgtable_type pgtable_type)
+ {
+ 	phys_addr_t phys;
  
-+kpkeys_retry:
-+	ret = kpkeys_prepare_direct_map_split();
-+	if (ret)
-+		return ret;
-+
- 	mutex_lock(&pgtable_split_lock);
-+
-+	if (!kpkeys_ready_for_direct_map_split()) {
-+		mutex_unlock(&pgtable_split_lock);
-+		goto kpkeys_retry;
-+	}
-+
- 	lazy_mmu_mode_enable();
+-	phys = memblock_phys_alloc_range(PAGE_SIZE, PAGE_SIZE, 0,
+-					 MEMBLOCK_ALLOC_NOLEAKTRACE);
++	if (arm64_supports_kpkeys_hardened_pgtables())
++		phys = kpkeys_physmem_pgtable_alloc();
++	else
++		phys = memblock_phys_alloc_range(PAGE_SIZE, PAGE_SIZE, 0,
++						 MEMBLOCK_ALLOC_NOLEAKTRACE);
+ 	if (!phys)
+ 		panic("Failed to allocate page table page\n");
  
- 	/*
 -- 
 2.51.2
 
