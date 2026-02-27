@@ -1,41 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0DEE36C0BB;
-	Fri, 27 Feb 2026 17:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42759477999;
+	Fri, 27 Feb 2026 20:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772215086; cv=none; b=eCJ46zNLQ9C9zygODC31EOk4ECvzBbkgGR7rwcWV5UoXY8aR37G6byLKgV2RcXim3mBcVdYCXFCWUrWlulTdPol7fao3/kRQgOVMsWRAPF6J/UN1KXGsTWyBKgZIvRHacHNR/C1RYv3/jN5pqdOfzHOv0uT3bnQhudzhKn2HY8c=
+	t=1772224266; cv=none; b=Y4wq813pHusp2AE7bkJxH9TO1AAnfmb4IbCP9rJWq2pGAQAmSuC/lqWq0va0mfyo3Q6zACy8qEvRRqZE+XqxmdR5vigMIOq8l0ewpEYjvcocxCdJyK+u6UuUz327J38vSJoSC0eJQFJX0Zr1WrGTWZw41x/5RV4nrV7v0IAt5xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772215086; c=relaxed/simple;
-	bh=iSG7Av7j5KHTW/v0cdXUOM+uXfvBqsu/iYyfux3js58=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kw3t6Ev9rab1mnC8mRZC6huLYEbsf1ueLjSHdHXQasvUVUDt11pujG7aKGvSEOswMmmS6U/AV7mvk70Fp//8jgVeoqOk3m+hpjj+66RTnw8Ip6EpUrjTBUSfbaeF+LXYUwX7Bbd/adiCbYFTryrPEYWDhu7pmejiHlC2BXhuWV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBCC214BF;
-	Fri, 27 Feb 2026 09:57:57 -0800 (PST)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D689D3F73B;
-	Fri, 27 Feb 2026 09:57:59 -0800 (PST)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1772224266; c=relaxed/simple;
+	bh=fuAscArmYg357MsE3htAgFOOKf+t4SCUkyfha++zEk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fq53duZeHC4OABWaqzDG4lwI8RiPxsEw3PuWeGfTow1zSky32KCA8m5lju3DXfop9gn0Szb2J6HBU3g3oFGAbS+XRhC+pQ7ynVbI19yt6fUxyQYezIu+vCbCe+ztQC+ENJ7SCCt4NIR/dpCkNMrOqI3LKEehX1y6akp4iykWkiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=leIYpou+; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="leIYpou+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772224265; x=1803760265;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fuAscArmYg357MsE3htAgFOOKf+t4SCUkyfha++zEk0=;
+  b=leIYpou+O1Gb4XfdSlW6guZdWAWjgb7yHr/OHT4RHrtIdpfx9FNINRpP
+   cwoJHByC//gE/0BUki4+XK7Pxt3PPFYy4/klp1eOaDkiSpipsSNvlUZ9I
+   aY0m8tzI5W4Kw1+6BOkKlKBsGTPXf2gnJzjKH3YJ1iuXEUtUDjNYZ1op+
+   yP84PTAB/Rd5mMCoeG7RQqSPaYRapz/oHOMCncRvC5vWzDelywZwLicBE
+   CP3Pcmp0cZkmFfHgBrgjxPL4SPrRTkF+iHEUPbRFZb86+MmzNOwz+vVyh
+   mtinTVPRMWSvr4kGJTT0x05Ig8AGPyCIJv2C9cNv+EKiFhJQFNsmwWln0
+   g==;
+X-CSE-ConnectionGUID: A96D0qXvQm25NJK8WOX0iA==
+X-CSE-MsgGUID: iPdy1EXkTI+a1wv/bO3MOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11714"; a="73225504"
+X-IronPort-AV: E=Sophos;i="6.21,314,1763452800"; 
+   d="scan'208";a="73225504"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 12:31:05 -0800
+X-CSE-ConnectionGUID: n5E4HiogTn2++Omp7xOvsg==
+X-CSE-MsgGUID: ziHmHMINSxmQwCOKxmGv5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,314,1763452800"; 
+   d="scan'208";a="240005993"
+Received: from lkp-server02.sh.intel.com (HELO a3936d6a266d) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 27 Feb 2026 12:30:58 -0800
+Received: from kbuild by a3936d6a266d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vw4UA-00000000B2T-3vIz;
+	Fri, 27 Feb 2026 20:30:54 +0000
+Date: Sat, 28 Feb 2026 04:28:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
 	Kevin Brodsky <kevin.brodsky@arm.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	David Hildenbrand <david@redhat.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
+	Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
 	Kees Cook <kees@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
+	Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
 	Matthew Wilcox <willy@infradead.org>,
 	Maxwell Bland <mbland@motorola.com>,
 	"Mike Rapoport (IBM)" <rppt@kernel.org>,
@@ -45,286 +73,71 @@ Cc: linux-kernel@vger.kernel.org,
 	Rick Edgecombe <rick.p.edgecombe@intel.com>,
 	Ryan Roberts <ryan.roberts@arm.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Will Deacon <will@kernel.org>,
-	Yang Shi <yang@os.amperecomputing.com>,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [PATCH v6 30/30] mm: Add basic tests for kpkeys_hardened_pgtables
-Date: Fri, 27 Feb 2026 17:55:18 +0000
-Message-ID: <20260227175518.3728055-31-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.51.2
-In-Reply-To: <20260227175518.3728055-1-kevin.brodsky@arm.com>
-References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+	Yang Shi <yang@os.amperecomputing.com>
+Subject: Re: [PATCH v6 23/30] arm64: kpkeys: Ensure the linear map can be
+ modified
+Message-ID: <202602280415.zn69IEgu-lkp@intel.com>
+References: <20260227175518.3728055-24-kevin.brodsky@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260227175518.3728055-24-kevin.brodsky@arm.com>
 
-Add basic tests for the kpkeys_hardened_pgtables feature: try to
-perform direct writes to kernel and user page table entries and
-ensure they fail.
+Hi Kevin,
 
-Multiple cases are considered for kernel page tables, as early page
-tables are allocated and/or protected in a different way.
+kernel test robot noticed the following build errors:
 
-The tests are builtin (cannot be built as a module) because they
-refer to multiple symbols that are not exported (e.g.
-copy_to_kernel_nofault()).
+[auto build test ERROR on 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f]
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- mm/Makefile                               |   1 +
- mm/tests/kpkeys_hardened_pgtables_kunit.c | 202 ++++++++++++++++++++++
- security/Kconfig.hardening                |  12 ++
- 3 files changed, 215 insertions(+)
- create mode 100644 mm/tests/kpkeys_hardened_pgtables_kunit.c
+url:    https://github.com/intel-lab-lkp/linux/commits/Kevin-Brodsky/mm-Introduce-kpkeys/20260228-020115
+base:   6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+patch link:    https://lore.kernel.org/r/20260227175518.3728055-24-kevin.brodsky%40arm.com
+patch subject: [PATCH v6 23/30] arm64: kpkeys: Ensure the linear map can be modified
+config: arm64-allnoconfig (https://download.01.org/0day-ci/archive/20260228/202602280415.zn69IEgu-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260228/202602280415.zn69IEgu-lkp@intel.com/reproduce)
 
-diff --git a/mm/Makefile b/mm/Makefile
-index 7603e6051afa..9ebdbaa696b2 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -151,3 +151,4 @@ obj-$(CONFIG_EXECMEM) += execmem.o
- obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
- obj-$(CONFIG_LAZY_MMU_MODE_KUNIT_TEST) += tests/lazy_mmu_mode_kunit.o
- obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES) += kpkeys_hardened_pgtables.o
-+obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES_KUNIT_TEST) += tests/kpkeys_hardened_pgtables_kunit.o
-diff --git a/mm/tests/kpkeys_hardened_pgtables_kunit.c b/mm/tests/kpkeys_hardened_pgtables_kunit.c
-new file mode 100644
-index 000000000000..fa11fcd7abde
---- /dev/null
-+++ b/mm/tests/kpkeys_hardened_pgtables_kunit.c
-@@ -0,0 +1,202 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <kunit/test.h>
-+#include <linux/mman.h>
-+#include <linux/pgtable.h>
-+#include <linux/set_memory.h>
-+#include <linux/vmalloc.h>
-+
-+#ifdef CONFIG_ARM64
-+#include <asm/stacktrace.h>
-+#endif
-+
-+static void free_page_wrapper(void *ctx)
-+{
-+	__free_page((struct page *)ctx);
-+}
-+
-+KUNIT_DEFINE_ACTION_WRAPPER(vfree_wrapper, vfree, const void *);
-+
-+static pud_t *pud_off_k(unsigned long va)
-+{
-+	return pud_offset(p4d_offset(pgd_offset_k(va), va), va);
-+}
-+
-+static pte_t *get_kernel_pte(unsigned long addr)
-+{
-+	pmd_t *pmdp = pmd_off_k(addr);
-+
-+	if (!pmdp || pmd_leaf(*pmdp))
-+		return NULL;
-+
-+	return pte_offset_kernel(pmdp, addr);
-+}
-+
-+#define write_pgtable(type, ptr) do {					\
-+	type##_t val;							\
-+	int ret;							\
-+									\
-+	pr_debug("%s: writing to "#type" at %px\n", __func__, (ptr));	\
-+									\
-+	val = type##p_get(ptr);						\
-+	ret = copy_to_kernel_nofault(ptr, &val, sizeof(val));		\
-+	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,				\
-+			    "Direct "#type" write wasn't prevented");	\
-+} while (0)
-+
-+/*
-+ * Try to write linear map page tables, at every level. This is worthwhile
-+ * because those page table pages are obtained from different allocators:
-+ *
-+ * - Static memory (part of the kernel image) for PGD
-+ * - memblock for PUD and possibly PMD/PTE
-+ * - pagetable_alloc() (buddy allocator) for PMD/PTE if large block mappings are
-+ *   used and the linear map is split after being created
-+ */
-+static void write_direct_map_pgtables(struct kunit *test)
-+{
-+	struct page *page;
-+	unsigned long addr;
-+	pgd_t *pgdp;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep;
-+	int ret;
-+
-+	if (!arch_kpkeys_enabled())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	page = alloc_page(GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, page);
-+	ret = kunit_add_action_or_reset(test, free_page_wrapper, page);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* Ensure page is PTE-mapped (splitting the linear map if necessary) */
-+	ret = set_direct_map_invalid_noflush(page);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+	ret = set_direct_map_default_noflush(page);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	addr = (unsigned long)page_address(page);
-+
-+	pgdp = pgd_offset_k(addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pgdp, "Failed to get PGD");
-+	/*
-+	 * swapper_pg_dir is still writable at this stage, so don't check it.
-+	 * It is not protected by kpkeys_hardened_pgtables because it should be
-+	 * made read-only by mark_rodata_ro(). However since these
-+	 * KUnit tests are builtin, they are run before mark_rodata_ro() is
-+	 * called.
-+	 */
-+
-+	p4dp = p4d_offset(pgdp, addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, p4dp, "Failed to get P4D");
-+	/* Not checked; same rationale as PGD in case P4D is folded */
-+
-+	pudp = pud_offset(p4dp, addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pudp, "Failed to get PUD");
-+	write_pgtable(pud, pudp);
-+
-+	pmdp = pmd_offset(pudp, addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pmdp, "Failed to get PMD");
-+	write_pgtable(pmd, pmdp);
-+
-+	ptep = pte_offset_kernel(pmdp, addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, ptep, "Failed to get PTE");
-+	write_pgtable(pte, ptep);
-+}
-+
-+/* Worth checking since the kernel image is mapped with static page tables */
-+static void write_kernel_image_pud(struct kunit *test)
-+{
-+	pud_t *pudp;
-+
-+	if (!arch_kpkeys_enabled())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	/* The kernel is probably block-mapped, check the PUD to be safe */
-+	pudp = pud_off_k((unsigned long)&init_mm);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pudp, "Failed to get PUD");
-+
-+	write_pgtable(pud, pudp);
-+}
-+
-+static void write_kernel_vmalloc_pte(struct kunit *test)
-+{
-+	void *mem;
-+	pte_t *ptep;
-+	int ret;
-+
-+	if (!arch_kpkeys_enabled())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	mem = vmalloc(PAGE_SIZE);
-+	KUNIT_ASSERT_NOT_NULL(test, mem);
-+	ret = kunit_add_action_or_reset(test, vfree_wrapper, mem);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* vmalloc() without VM_ALLOW_HUGE_VMAP is PTE-mapped */
-+	ptep = get_kernel_pte((unsigned long)mem);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, ptep, "Failed to get PTE");
-+
-+	write_pgtable(pte, ptep);
-+}
-+
-+#ifdef CONFIG_ARM64
-+static void write_early_kernel_vmap_pte(struct kunit *test)
-+{
-+	pte_t *ptep;
-+
-+	if (!arch_kpkeys_enabled())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	/*
-+	 * When block mappings are used, the IRQ stacks are allocated before
-+	 * set_memory_pkey() is available - the pkey is set later by
-+	 * kpkeys_hardened_pgtables_init_late()
-+	 */
-+	ptep = get_kernel_pte((unsigned long)raw_cpu_read(irq_stack_ptr));
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, ptep, "Failed to get PTE");
-+
-+	write_pgtable(pte, ptep);
-+}
-+#endif
-+
-+static void write_user_pmd(struct kunit *test)
-+{
-+	pmd_t *pmdp;
-+	unsigned long uaddr;
-+
-+	if (!arch_kpkeys_enabled())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	uaddr = kunit_vm_mmap(test, NULL, 0, PAGE_SIZE, PROT_READ,
-+			      MAP_ANONYMOUS | MAP_PRIVATE | MAP_POPULATE, 0);
-+	KUNIT_ASSERT_NE_MSG(test, uaddr, 0, "Could not create userspace mm");
-+
-+	/* We passed MAP_POPULATE so a PMD should already be allocated */
-+	pmdp = pmd_off(current->mm, uaddr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pmdp, "Failed to get PMD");
-+
-+	write_pgtable(pmd, pmdp);
-+}
-+
-+static struct kunit_case kpkeys_hardened_pgtables_test_cases[] = {
-+	KUNIT_CASE(write_direct_map_pgtables),
-+	KUNIT_CASE(write_kernel_image_pud),
-+	KUNIT_CASE(write_kernel_vmalloc_pte),
-+#ifdef CONFIG_ARM64
-+	KUNIT_CASE(write_early_kernel_vmap_pte),
-+#endif
-+	KUNIT_CASE(write_user_pmd),
-+	{}
-+};
-+
-+static struct kunit_suite kpkeys_hardened_pgtables_test_suite = {
-+	.name = "kpkeys_hardened_pgtables",
-+	.test_cases = kpkeys_hardened_pgtables_test_cases,
-+};
-+kunit_test_suite(kpkeys_hardened_pgtables_test_suite);
-+
-+MODULE_DESCRIPTION("Tests for the kpkeys_hardened_pgtables feature");
-+MODULE_LICENSE("GPL");
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index fdaf977d4626..48789f93e933 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -287,6 +287,18 @@ config KPKEYS_HARDENED_PGTABLES
- 	  This option has no effect if the system does not support
- 	  kernel pkeys.
- 
-+config KPKEYS_HARDENED_PGTABLES_KUNIT_TEST
-+	bool "KUnit tests for kpkeys_hardened_pgtables" if !KUNIT_ALL_TESTS
-+	depends on KPKEYS_HARDENED_PGTABLES
-+	depends on KUNIT=y
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable this option to check that the kpkeys_hardened_pgtables feature
-+	  functions as intended, i.e. prevents arbitrary writes to user and
-+	  kernel page tables.
-+
-+	  If unsure, say N.
-+
- endmenu
- 
- config CC_HAS_RANDSTRUCT
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602280415.zn69IEgu-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/arm64/mm/mmu.c: In function 'force_pte_mapping':
+>> arch/arm64/mm/mmu.c:768:17: error: implicit declaration of function 'arm64_supports_kpkeys_hardened_pgtables' [-Wimplicit-function-declaration]
+     768 |                 arm64_supports_kpkeys_hardened_pgtables();
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   arch/arm64/mm/pageattr.c: In function 'can_set_direct_map':
+>> arch/arm64/mm/pageattr.c:100:17: error: implicit declaration of function 'arm64_supports_kpkeys_hardened_pgtables' [-Wimplicit-function-declaration]
+     100 |                 arm64_supports_kpkeys_hardened_pgtables();
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/arm64_supports_kpkeys_hardened_pgtables +768 arch/arm64/mm/mmu.c
+
+   757	
+   758	static inline bool force_pte_mapping(void)
+   759	{
+   760		const bool bbml2 = system_capabilities_finalized() ?
+   761			system_supports_bbml2_noabort() : cpu_supports_bbml2_noabort();
+   762	
+   763		if (debug_pagealloc_enabled())
+   764			return true;
+   765		if (bbml2)
+   766			return false;
+   767		return rodata_full || arm64_kfence_can_set_direct_map() || is_realm_world() ||
+ > 768			arm64_supports_kpkeys_hardened_pgtables();
+   769	}
+   770	
+
 -- 
-2.51.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
