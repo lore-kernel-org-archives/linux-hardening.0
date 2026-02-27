@@ -1,746 +1,779 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013064.outbound.protection.outlook.com [40.107.162.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EA4332ECB;
-	Fri, 27 Feb 2026 15:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772207713; cv=fail; b=oOrn9BAQN6yxSCJNQRtzzkOIxs8W6sGcLEwhqi1XD5x01C/4FBjxAXE6bkWuL94ZPzwcAAxz3M0q/VkX/XvxAAxEJli6Bnk/RUVMiwOqGfzhPoAGc1bodO28T7qYfJTKHq7DtnJX9yx4bVMj8Qvn4EP0QpFudKdzdRORUX7KIPw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772207713; c=relaxed/simple;
-	bh=umXzN3yOQUTa1bXhKqrtbCVr4BKmsKJ8l/qet4DwFak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lp/BszKVBYZqsSBvyMSzverGqWdYxZkdLr7qg69ASU90h0gZs8mMSKDK/e56dtdNLcPrLLAlwZ6BVvLhUqQzbUeS65AavTVWfM8VpsATPXnPK83j1Jan8y9tPWd18nmHFRm7Ph51ltgP8CmKc6VUd1/gj9pY9glg/xeo3O1nB2A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=RvsXjMcJ; arc=fail smtp.client-ip=40.107.162.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="RvsXjMcJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=skrH6DmPe6EDhdRGvGbgwyIC4BhPCrqGgf7d1sh8aWdhvClgt0A4rpOCnYudNkpmk8x6fiudW4fm6uwqmr9sNBzF0/cEf2JPbLMIMb4Yqg+TkclMS20wXFwonYATvUA2fJ2Yl5Mo4hpLBs0UyfxpJZIql6Pa9Bxru/f9ATaS2PQub6gPaZJgU3bN3q9hH5ZzL8xJ+hZPE2V7xPYbzJby+k8QkXgKzEgXYk0A4FjDSIiosyDXVsQFacJsKPH8DjaSTETxnmLM4khCDG8dMcCv1DQPjMn78RsK2NtOrfynes3OQaU5RWsITfudqz0x5lP5PE0tAHgbLqlP/FXhh8Y2yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MJOKdYsix/gRystmLKYPtAIiuKug8ZNrULrkzA15NDc=;
- b=iYxoGU/USW6chjjvWhZqUOd6l3MAneKE+s3vicMuivGnSABVdvDVihJJp8kTZVwyxpQT38mIP2VR2X9AoXLDeiJgSVfvmqQtgHKIdN8eqwxOmIxQRtGUV+BoBkVvTsA3F4R3aSgYQz3GvX4txan+NZN2LfKhgVR8MhjYpJ61hwmw8g01hbvkg7cgs8g0zPiGlvQYmXHs+qI3JlYCI1cCk6GOjMQPltcxsrRuPiDmV+T1lsKyCu+fqRgvxyXSo23yFq+1wyZ/xYRF6Zyb+6LPlExzPonxLgSRcdjpDHmaIqWf2hy3Du5VKNNA98LlD39PQxmbYt/du+T6WXU5hbbgPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MJOKdYsix/gRystmLKYPtAIiuKug8ZNrULrkzA15NDc=;
- b=RvsXjMcJSEkLrUFpX20aoEYdcONrJcORzMqNZsTlWYzoEYKpvX40CV5B9uJgTsCxKmvPi3ekN7aWAn9vIPCWhUwI0OBnRMf9gA4LnlXwpk7QW0yKfB+DWsqhCwf3BPUWHUktNK8DQZQ0TPg/ldrtlvQpTLJ7JUx6c+VANPvcHDiqWBUPFMLSxjEGglR29k4RXV3yNhIsiKB+QdZ1fogblkGyYCLp1oT262KglrYJlyQimDUWjptGCa1eSQl0LDyH607nKMEH/hVhbCXh7YraFV3qZluGz0mBv7n+S8SsGNL3iJIOFsC4o4ZCMfuscN6fCAm6uiUiFsVOw+SmVSDMBA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU0PR04MB9372.eurprd04.prod.outlook.com (2603:10a6:10:35b::7)
- by AM0PR04MB6867.eurprd04.prod.outlook.com (2603:10a6:208:182::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.14; Fri, 27 Feb
- 2026 15:55:06 +0000
-Received: from DU0PR04MB9372.eurprd04.prod.outlook.com
- ([fe80::4f6:1e57:c3b9:62b4]) by DU0PR04MB9372.eurprd04.prod.outlook.com
- ([fe80::4f6:1e57:c3b9:62b4%4]) with mapi id 15.20.9654.014; Fri, 27 Feb 2026
- 15:55:06 +0000
-Date: Fri, 27 Feb 2026 10:54:58 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: xianwei.zhao@amlogic.com
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dma: amlogic: Add general DMA driver for A9
-Message-ID: <aaG-UvN_lTl6dv7L@lizhi-Precision-Tower-5810>
-References: <20260206-amlogic-dma-v3-0-56fb9f59ed22@amlogic.com>
- <20260206-amlogic-dma-v3-2-56fb9f59ed22@amlogic.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260206-amlogic-dma-v3-2-56fb9f59ed22@amlogic.com>
-X-ClientProxiedBy: SJ2PR07CA0008.namprd07.prod.outlook.com
- (2603:10b6:a03:505::8) To DU0PR04MB9372.eurprd04.prod.outlook.com
- (2603:10a6:10:35b::7)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92EC035893;
+	Fri, 27 Feb 2026 17:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772214947; cv=none; b=pyJNvbftdgohscAS1e2HiPRD4AS/d7oeRI+hqEltrJ1JaMavuHvW+TfjXoR89Pz1fVMS3sqD7WzjGk4Vn+HKl3DJ6m3ikfQv/mJMLVEqTfeoXFUjet8K4WE1QIJdJb/dG9ZiTMcn0W3NohOvHm7m2USXkfxOGPsXm2ypv0fowSI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772214947; c=relaxed/simple;
+	bh=XyUEukBOTSx/J9glmfa6bsV78XFEVtH5CPxsAVSW8zk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tiNw8M2Nv8L7adXIaUnGnbKdBJBHf0QZljUhmz6Y3ST8L2xbjgLiJECUfUTJWKMWO/+gIt88zWR2J9Rg2KddZOBVS9GL/Gnnoj8i1a/aG4bqxx+tnLLJPGmHP2dAOH1+j3GwJPp5QL8gm9LDsAUTvpE3SPwgONvNIjqo0OPVajE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A0F414BF;
+	Fri, 27 Feb 2026 09:55:37 -0800 (PST)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8F6F3F73B;
+	Fri, 27 Feb 2026 09:55:38 -0800 (PST)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Maxwell Bland <mbland@motorola.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Will Deacon <will@kernel.org>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [PATCH v6 00/30] pkeys-based page table hardening
+Date: Fri, 27 Feb 2026 17:54:48 +0000
+Message-ID: <20260227175518.3728055-1-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.51.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9372:EE_|AM0PR04MB6867:EE_
-X-MS-Office365-Filtering-Correlation-Id: 846d4c10-36c7-4dd2-2bdd-08de76189385
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|19092799006|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	wctaxQ55gBZmAY4vecWy6DvzeG6ZIjsWqnqLQwoRHk8Xu9Dk0gQvJdl2L4DoP12migrpBI0+vJF+J76myxsChrpxV4GUiJliJPb3Li/+VAMwu2suXqFkqMP73GILR3Gkf6UoDjGk36kdrCM4/Ld5PrRJgUHAphoeCUKdACbXuLPY2oK0OoEEcyylNXsgvR5FqG/qhhbz65tWAX+G0gCPvL8kruL/pbTF6Vd3zCPzPM8n031ONlh4FTlJ4S15sOujm4uSiZMqQr6mPsSwV76MSuGGQnsZ27DQJqyDcOnis2OorvpNQqWw7/5jWogxr1+9ZgDSrWt6R9wGd3BYC1IwaVBG2KaP0D1abg/5msZAEvwKshmEk5O883ydKp1jdJgI8EUy+Qm+558yhCKTfm0SxW4EtM5l8/deyaHztxpBMa04IFbXC5arUrrf4MMuvIb5gswLRj0cbuZShr/P77I76km81onKGUKFHiJrvFmYtKYV2z3P77XCV/YkD8l8SV3+wyLbApYvAyhbOy0UxoaMouCr1lHCJBLoc3WtCxEK8xEcnO7l8Zszvv5aLrQbpx6Zf3g/lyvNT/2vM9qYzhWB16RcK0DnWZy4GAaFsti/1JcSGFNlDuD/CzyLaURBFEzK+ca++WgJ38Oe2/nn/HyME4VM9JD4g38r4olUZaK19p6Zs3mXWWRJjGID3p5hQUQieEDkj+1k0jQIRvui66dXN1AieVMeWE2lEu9WyidP+iLugaaylducxOr5vc4IdXoB+HysM4jQK9QO4duxwoYk6eGZ/DcFq9jcmFWmaRIBe7M=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9372.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(19092799006)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eCwAfDWtcQ/QvLnxLPtHfWvtOt+TAXgi4eiF6OuM7rZuK9Bf6ADFwSxdMg9N?=
- =?us-ascii?Q?eEQZNgvgmFXr7q2EiuKDg3i7nm4figoW0Z5SqcrAmyrfYfs4+fTLwlGV/V1T?=
- =?us-ascii?Q?4rdRY0pEsJP59LgQ7+ldtyaBhh3KE5ze2k/jJ5sHAxirY0UwBkkInZNNcnu3?=
- =?us-ascii?Q?djFCg6E121BZaXchGzoYv3DGOBLzvHch9UaLUz2ltwzutF1RTBpPoeqMQLko?=
- =?us-ascii?Q?7lkIArQcB6FcZ4boMkiv0ORPIGnKXPEFJI/XKcnVLTnKiW3VUxVmemM9OoTN?=
- =?us-ascii?Q?0v9A1TiODH/flCOe30nExSFOlbDW0gHUMrh6RwnZ/JWjFGt/JGhKOFeM7EQY?=
- =?us-ascii?Q?FPPp2O9ZtT8RcpEotlMgu1mqA2vF74/gsySKvlFHBUsWk4CogU4pe+W0ZwIA?=
- =?us-ascii?Q?gjS3zvmxE3eIYK4IW/WafVWNdku4beM4MakpyQhV9D4fXcG7YytgbSB8DfWm?=
- =?us-ascii?Q?BFo8PChDwOrWP/RX6b9C29IQake2/3QcsUSF9Hjv+S0EdAIFCMp1jggMq8ex?=
- =?us-ascii?Q?NzVmNWo+YCgNcfrNxC5rRwVzsI56/OBYvnonU7kj1sEqRenLw4gslte0Htz/?=
- =?us-ascii?Q?aXYS4qvsQDtWUjV17eS/94Y3hxb5MRBR3jpgEUE8SFNQrunXvUiw3/J4CY9U?=
- =?us-ascii?Q?AP8eVX6Bl46pZkWzKDFTOKiubyfediZi5IsZwDsd/5ivBX1KM8eQGceAIPgO?=
- =?us-ascii?Q?zoR6YkIA37/YdvKWRiZfxpZJvJxK0z1uUiFFaaguUg3R9oNg5QNIImHumcU7?=
- =?us-ascii?Q?XYdghSl9w/ceECaUo53Ojv+981QV7Jci82sPVTKFSRApRhAHC9n3VCWa8YGc?=
- =?us-ascii?Q?xGJQA0n/H9uVK3rnx2aDAZ2R7e8Z7I7huL7+Kh4R/kWPg2OfkuQQ4x5kKLhE?=
- =?us-ascii?Q?P7xG6FlX4Dl2emvPUqqVQU+dtswRZq/8Y+JEaBjB2hrpRiE8lggPSIWkQLR1?=
- =?us-ascii?Q?8QGpJrfQZq/HdqegHfPTZRJaRTPaWRzz3xEiZVaDghNX9is8bFKwCgXqnxzC?=
- =?us-ascii?Q?NdOg5Dc/mhhQO8ags9/1fq71YMASlOHwLcAbRdmk8s/nh/wKxVlZsQzvejk9?=
- =?us-ascii?Q?HlXj3TcIfgvk3UuE39VkA3uydDdzoUxDf49VuAfsU049A9x6Kk8K4DWSrq6/?=
- =?us-ascii?Q?ubdvl+1IjF4MMD082+Dep7iEa6wWdFzveUQ7IXNqQJMRWr91bTPx6UW9mWXQ?=
- =?us-ascii?Q?exZB9KzRBHTrEjCCP7zbNG4kQccwnMpHNcRcoFLQWIDHI0uHcZXz7gH1mLc5?=
- =?us-ascii?Q?O9223or7AguaXM3aSM6sj9pszuf4Kpi0qHWnLhJTkDy+kwAMkvxolfNjbhAv?=
- =?us-ascii?Q?ALfIZ5y4m9HtvGkn4u2RrbVHnYkVFH6+DxJaffnA8zJqBi5cNdQZ386IvylL?=
- =?us-ascii?Q?fV/XVoMDaFMKO4OXhWtDSo0cn1i705Gk8Zeku/UqLj48VoLxB/MPBnNR6KyR?=
- =?us-ascii?Q?SB1EqNfDDLF7UR4YYpwH65s8kXqrv2Yr0H3A5FsPL1+EqVhCAPv/c3Ux1och?=
- =?us-ascii?Q?VwIB4vv3O8akjE8Ivg7EWb2Ezh3DL/icS6DjSWEgrFP5RA+O93pX5g82DUfR?=
- =?us-ascii?Q?DMru4fApkVeGkZ2Cq8Xr+XFTz+sgGSlVC3btJjpogSSY6cvAszWSmXH0hj5x?=
- =?us-ascii?Q?LtGpxVNaXedBBd4YVJUf2sKtxNGoF4MSbFNpPZv08OsbqPXM+S3jBpE3v826?=
- =?us-ascii?Q?7AuCt9aozi7Ahm9nNldzs7w6OZqo5UFNi5cdC9lYzFXxndo3?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 846d4c10-36c7-4dd2-2bdd-08de76189385
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9372.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 15:55:06.2407
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1rUQd+hZdWVN/ZpKfan2V280XNERIICqrT0nZJTSY82Wwzb3ztDMoUV37vSv1LJlWS2jlqYxdhmi6FFKHjGPNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6867
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 06, 2026 at 09:02:33AM +0000, Xianwei Zhao via B4 Relay wrote:
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+NEW in v6: support for large block mappings through a dedicated page table
+allocator (patch 14-17)
 
-subject should dmaegine: amlogic: ...
+This is a proposal to leverage protection keys (pkeys) to harden
+critical kernel data, by making it mostly read-only. The series includes
+a simple framework called "kpkeys" to manipulate pkeys for in-kernel use,
+as well as a page table hardening feature based on that framework,
+"kpkeys_hardened_pgtables". Both are implemented on arm64 as a proof of
+concept, but they are designed to be compatible with any architecture
+that supports pkeys.
 
-Frank
+The proposed approach is a typical use of pkeys: the data to protect is
+mapped with a given pkey P, and the pkey register is initially configured
+to grant read-only access to P. Where the protected data needs to be
+written to, the pkey register is temporarily switched to grant write
+access to P on the current CPU.
 
->
-> Amlogic A9 SoCs include a general-purpose DMA controller that can be used
-> by multiple peripherals, such as I2C PIO and I3C. Each peripheral group
-> is associated with a dedicated DMA channel in hardware.
->
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
->  drivers/dma/Kconfig       |   9 +
->  drivers/dma/Makefile      |   1 +
->  drivers/dma/amlogic-dma.c | 561 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 571 insertions(+)
->
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 66cda7cc9f7a..8d4578513acf 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -85,6 +85,15 @@ config AMCC_PPC440SPE_ADMA
->  	help
->  	  Enable support for the AMCC PPC440SPe RAID engines.
->
-> +config AMLOGIC_DMA
-> +	tristate "Amlogic general DMA support"
-> +	depends on ARCH_MESON || COMPILE_TEST
-> +	select DMA_ENGINE
-> +	select REGMAP_MMIO
-> +	help
-> +	  Enable support for the Amlogic general DMA engines. THis DMA
-> +	  controller is used some Amlogic SoCs, such as A9.
-> +
->  config APPLE_ADMAC
->  	tristate "Apple ADMAC support"
->  	depends on ARCH_APPLE || COMPILE_TEST
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index a54d7688392b..fc28dade5b69 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -16,6 +16,7 @@ obj-$(CONFIG_DMATEST) += dmatest.o
->  obj-$(CONFIG_ALTERA_MSGDMA) += altera-msgdma.o
->  obj-$(CONFIG_AMBA_PL08X) += amba-pl08x.o
->  obj-$(CONFIG_AMCC_PPC440SPE_ADMA) += ppc4xx/
-> +obj-$(CONFIG_AMLOGIC_DMA) += amlogic-dma.o
->  obj-$(CONFIG_APPLE_ADMAC) += apple-admac.o
->  obj-$(CONFIG_ARM_DMA350) += arm-dma350.o
->  obj-$(CONFIG_AT_HDMAC) += at_hdmac.o
-> diff --git a/drivers/dma/amlogic-dma.c b/drivers/dma/amlogic-dma.c
-> new file mode 100644
-> index 000000000000..cbecbde7857b
-> --- /dev/null
-> +++ b/drivers/dma/amlogic-dma.c
-> @@ -0,0 +1,561 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> +/*
-> + * Copyright (C) 2025 Amlogic, Inc. All rights reserved
-> + * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> + */
-> +
-> +#include <asm/irq.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/init.h>
-> +#include <linux/list.h>
-> +#include <linux/mm.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#include "dmaengine.h"
-> +
-> +#define RCH_REG_BASE		0x0
-> +#define WCH_REG_BASE		0x2000
-> +/*
-> + * Each rch (read from memory) REG offset  Rch_offset 0x0 each channel total 0x40
-> + * rch addr = DMA_base + Rch_offset+ chan_id * 0x40 + reg_offset
-> + */
-> +#define RCH_READY		0x0
-> +#define RCH_STATUS		0x4
-> +#define RCH_CFG			0x8
-> +#define CFG_CLEAR		BIT(25)
-> +#define CFG_PAUSE		BIT(26)
-> +#define CFG_ENABLE		BIT(27)
-> +#define CFG_DONE		BIT(28)
-> +#define RCH_ADDR		0xc
-> +#define RCH_LEN			0x10
-> +#define RCH_RD_LEN		0x14
-> +#define RCH_PRT			0x18
-> +#define RCH_SYCN_STAT		0x1c
-> +#define RCH_ADDR_LOW		0x20
-> +#define RCH_ADDR_HIGH		0x24
-> +/* if work on 64, it work with RCH_PRT */
-> +#define RCH_PTR_HIGH		0x28
-> +
-> +/*
-> + * Each wch (write to memory) REG offset  Wch_offset 0x2000 each channel total 0x40
-> + * wch addr = DMA_base + Wch_offset+ chan_id * 0x40 + reg_offset
-> + */
-> +#define WCH_READY		0x0
-> +#define WCH_TOTAL_LEN		0x4
-> +#define WCH_CFG			0x8
-> +#define WCH_ADDR		0xc
-> +#define WCH_LEN			0x10
-> +#define WCH_RD_LEN		0x14
-> +#define WCH_PRT			0x18
-> +#define WCH_CMD_CNT		0x1c
-> +#define WCH_ADDR_LOW		0x20
-> +#define WCH_ADDR_HIGH		0x24
-> +/* if work on 64, it work with RCH_PRT */
-> +#define WCH_PTR_HIGH		0x28
-> +
-> +/* DMA controller reg */
-> +#define RCH_INT_MASK		0x1000
-> +#define WCH_INT_MASK		0x1004
-> +#define CLEAR_W_BATCH		0x1014
-> +#define CLEAR_RCH		0x1024
-> +#define CLEAR_WCH		0x1028
-> +#define RCH_ACTIVE		0x1038
-> +#define WCH_ACTIVE		0x103c
-> +#define RCH_DONE		0x104c
-> +#define WCH_DONE		0x1050
-> +#define RCH_ERR			0x1060
-> +#define RCH_LEN_ERR		0x1064
-> +#define WCH_ERR			0x1068
-> +#define DMA_BATCH_END		0x1078
-> +#define WCH_EOC_DONE		0x1088
-> +#define WDMA_RESP_ERR		0x1098
-> +#define UPT_PKT_SYNC		0x10a8
-> +#define RCHN_CFG		0x10ac
-> +#define WCHN_CFG		0x10b0
-> +#define MEM_PD_CFG		0x10b4
-> +#define MEM_BUS_CFG		0x10b8
-> +#define DMA_GMV_CFG		0x10bc
-> +#define DMA_GMR_CFG		0x10c0
-> +
-> +#define AML_DMA_TYPE_TX		0
-> +#define AML_DMA_TYPE_RX		1
-> +#define DMA_MAX_LINK		8
-> +#define MAX_CHAN_ID		32
-> +#define SG_MAX_LEN		GENMASK(26, 0)
-> +
-> +struct aml_dma_sg_link {
-> +#define LINK_LEN		GENMASK(26, 0)
-> +#define LINK_IRQ		BIT(27)
-> +#define LINK_EOC		BIT(28)
-> +#define LINK_LOOP		BIT(29)
-> +#define LINK_ERR		BIT(30)
-> +#define LINK_OWNER		BIT(31)
-> +	u32 ctl;
-> +	u64 address;
-> +	u32 revered;
-> +} __packed;
-> +
-> +struct aml_dma_chan {
-> +	struct dma_chan			chan;
-> +	struct dma_async_tx_descriptor	desc;
-> +	struct aml_dma_dev		*aml_dma;
-> +	struct aml_dma_sg_link		*sg_link;
-> +	dma_addr_t			sg_link_phys;
-> +	int				sg_link_cnt;
-> +	int				data_len;
-> +	enum dma_status			pre_status;
-> +	enum dma_status			status;
-> +	enum dma_transfer_direction	direction;
-> +	int				chan_id;
-> +	/* reg_base (direction + chan_id) */
-> +	int				reg_offs;
-> +};
-> +
-> +struct aml_dma_dev {
-> +	struct dma_device		dma_device;
-> +	void __iomem			*base;
-> +	struct regmap			*regmap;
-> +	struct clk			*clk;
-> +	int				irq;
-> +	struct platform_device		*pdev;
-> +	struct aml_dma_chan		*aml_rch[MAX_CHAN_ID];
-> +	struct aml_dma_chan		*aml_wch[MAX_CHAN_ID];
-> +	unsigned int			chan_nr;
-> +	unsigned int			chan_used;
-> +	struct aml_dma_chan		aml_chans[]__counted_by(chan_nr);
-> +};
-> +
-> +static struct aml_dma_chan *to_aml_dma_chan(struct dma_chan *chan)
-> +{
-> +	return container_of(chan, struct aml_dma_chan, chan);
-> +}
-> +
-> +static dma_cookie_t aml_dma_tx_submit(struct dma_async_tx_descriptor *tx)
-> +{
-> +	return dma_cookie_assign(tx);
-> +}
-> +
-> +static int aml_dma_alloc_chan_resources(struct dma_chan *chan)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +	size_t size = size_mul(sizeof(struct aml_dma_sg_link), DMA_MAX_LINK);
-> +
-> +	aml_chan->sg_link = dma_alloc_coherent(aml_dma->dma_device.dev, size,
-> +					       &aml_chan->sg_link_phys, GFP_KERNEL);
-> +	if (!aml_chan->sg_link)
-> +		return  -ENOMEM;
-> +
-> +	/* offset is the same RCH_CFG and WCH_CFG */
-> +	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, CFG_CLEAR);
-> +	aml_chan->status = DMA_COMPLETE;
-> +	dma_async_tx_descriptor_init(&aml_chan->desc, chan);
-> +	aml_chan->desc.tx_submit = aml_dma_tx_submit;
-> +	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static void aml_dma_free_chan_resources(struct dma_chan *chan)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +
-> +	aml_chan->status = DMA_COMPLETE;
-> +	dma_free_coherent(aml_dma->dma_device.dev,
-> +			  sizeof(struct aml_dma_sg_link) * DMA_MAX_LINK,
-> +			  aml_chan->sg_link, aml_chan->sg_link_phys);
-> +}
-> +
-> +/* DMA transfer state  update how many data reside it */
-> +static enum dma_status aml_dma_tx_status(struct dma_chan *chan,
-> +					 dma_cookie_t cookie,
-> +					 struct dma_tx_state *txstate)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +	u32 residue, done;
-> +
-> +	regmap_read(aml_dma->regmap, aml_chan->reg_offs + RCH_RD_LEN, &done);
-> +	residue = aml_chan->data_len - done;
-> +	dma_set_tx_state(txstate, chan->completed_cookie, chan->cookie,
-> +			 residue);
-> +
-> +	return aml_chan->status;
-> +}
-> +
-> +static struct dma_async_tx_descriptor *aml_dma_prep_slave_sg
-> +		(struct dma_chan *chan, struct scatterlist *sgl,
-> +		unsigned int sg_len, enum dma_transfer_direction direction,
-> +		unsigned long flags, void *context)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +	struct aml_dma_sg_link *sg_link;
-> +	struct scatterlist *sg;
-> +	int idx = 0;
-> +	u32 reg, chan_id;
-> +	u32 i;
-> +
-> +	if (aml_chan->direction != direction) {
-> +		dev_err(aml_dma->dma_device.dev, "direction not support\n");
-> +		return NULL;
-> +	}
-> +
-> +	switch (aml_chan->status) {
-> +	case DMA_IN_PROGRESS:
-> +		dev_err(aml_dma->dma_device.dev, "not support multi tx_desciptor\n");
-> +		return NULL;
-> +
-> +	case DMA_COMPLETE:
-> +		aml_chan->data_len = 0;
-> +		chan_id = aml_chan->chan_id;
-> +		reg = (direction == DMA_DEV_TO_MEM) ? WCH_INT_MASK : RCH_INT_MASK;
-> +		regmap_update_bits(aml_dma->regmap, reg, BIT(chan_id), BIT(chan_id));
-> +
-> +		break;
-> +	default:
-> +		dev_err(aml_dma->dma_device.dev, "status error\n");
-> +		return NULL;
-> +	}
-> +
-> +	if (sg_len > DMA_MAX_LINK) {
-> +		dev_err(aml_dma->dma_device.dev,
-> +			"maximum number of sg exceeded: %d > %d\n",
-> +			sg_len, DMA_MAX_LINK);
-> +		aml_chan->status = DMA_ERROR;
-> +		return NULL;
-> +	}
-> +
-> +	aml_chan->status = DMA_IN_PROGRESS;
-> +
-> +	for_each_sg(sgl, sg, sg_len, i) {
-> +		if (sg_dma_len(sg) > SG_MAX_LEN) {
-> +			dev_err(aml_dma->dma_device.dev,
-> +				"maximum bytes exceeded: %u > %lu\n",
-> +				sg_dma_len(sg), SG_MAX_LEN);
-> +			aml_chan->status = DMA_ERROR;
-> +			return NULL;
-> +		}
-> +		sg_link = &aml_chan->sg_link[idx++];
-> +		/* set dma address and len  to sglink*/
-> +		sg_link->address = sg->dma_address;
-> +		sg_link->ctl = FIELD_PREP(LINK_LEN, sg_dma_len(sg));
-> +
-> +		aml_chan->data_len += sg_dma_len(sg);
-> +	}
-> +	aml_chan->sg_link_cnt = idx;
-> +
-> +	return &aml_chan->desc;
-> +}
-> +
-> +static int aml_dma_pause_chan(struct dma_chan *chan)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +
-> +	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_PAUSE, CFG_PAUSE);
-> +	aml_chan->pre_status = aml_chan->status;
-> +	aml_chan->status = DMA_PAUSED;
-> +
-> +	return 0;
-> +}
-> +
-> +static int aml_dma_resume_chan(struct dma_chan *chan)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +
-> +	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_PAUSE, 0);
-> +	aml_chan->status = aml_chan->pre_status;
-> +
-> +	return 0;
-> +}
-> +
-> +static int aml_dma_terminate_all(struct dma_chan *chan)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +	int chan_id = aml_chan->chan_id;
-> +
-> +	aml_dma_pause_chan(chan);
-> +	regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, CFG_CLEAR);
-> +
-> +	if (aml_chan->direction == DMA_MEM_TO_DEV)
-> +		regmap_update_bits(aml_dma->regmap, RCH_INT_MASK, BIT(chan_id), BIT(chan_id));
-> +	else if (aml_chan->direction == DMA_DEV_TO_MEM)
-> +		regmap_update_bits(aml_dma->regmap, WCH_INT_MASK, BIT(chan_id), BIT(chan_id));
-> +
-> +	aml_chan->status = DMA_COMPLETE;
-> +
-> +	return 0;
-> +}
-> +
-> +static void aml_dma_enable_chan(struct dma_chan *chan)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +	struct aml_dma_sg_link *sg_link;
-> +	int chan_id = aml_chan->chan_id;
-> +	int idx = aml_chan->sg_link_cnt - 1;
-> +
-> +	/* the last sg set eoc flag */
-> +	sg_link = &aml_chan->sg_link[idx];
-> +	sg_link->ctl |= LINK_EOC;
-> +	if (aml_chan->direction == DMA_MEM_TO_DEV) {
-> +		regmap_write(aml_dma->regmap, aml_chan->reg_offs + RCH_ADDR,
-> +			     aml_chan->sg_link_phys);
-> +		regmap_write(aml_dma->regmap, aml_chan->reg_offs + RCH_LEN, aml_chan->data_len);
-> +		regmap_update_bits(aml_dma->regmap, RCH_INT_MASK, BIT(chan_id), 0);
-> +		/* for rch (tx) need set cfg 0 to trigger start */
-> +		regmap_write(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, 0);
-> +	} else if (aml_chan->direction == DMA_DEV_TO_MEM) {
-> +		regmap_write(aml_dma->regmap, aml_chan->reg_offs + WCH_ADDR,
-> +			     aml_chan->sg_link_phys);
-> +		regmap_write(aml_dma->regmap, aml_chan->reg_offs + WCH_LEN, aml_chan->data_len);
-> +		regmap_update_bits(aml_dma->regmap, WCH_INT_MASK, BIT(chan_id), 0);
-> +	}
-> +}
-> +
-> +static irqreturn_t aml_dma_interrupt_handler(int irq, void *dev_id)
-> +{
-> +	struct aml_dma_dev *aml_dma = dev_id;
-> +	struct aml_dma_chan *aml_chan;
-> +	u32 done, eoc_done, err, err_l, end;
-> +	int i = 0;
-> +
-> +	/* deal with rch normal complete and error */
-> +	regmap_read(aml_dma->regmap, RCH_DONE, &done);
-> +	regmap_read(aml_dma->regmap, RCH_ERR, &err);
-> +	regmap_read(aml_dma->regmap, RCH_LEN_ERR, &err_l);
-> +	err = err | err_l;
-> +
-> +	done = done | err;
-> +
-> +	while (done) {
-> +		i = ffs(done) - 1;
-> +		aml_chan = aml_dma->aml_rch[i];
-> +		regmap_write(aml_dma->regmap, CLEAR_RCH, BIT(aml_chan->chan_id));
-> +		if (!aml_chan) {
-> +			dev_err(aml_dma->dma_device.dev, "idx %d rch not initialized\n", i);
-> +			done &= ~BIT(i);
-> +			continue;
-> +		}
-> +		aml_chan->status = (err & (1 << i)) ? DMA_ERROR : DMA_COMPLETE;
-> +		dma_cookie_complete(&aml_chan->desc);
-> +		dmaengine_desc_get_callback_invoke(&aml_chan->desc, NULL);
-> +		done &= ~BIT(i);
-> +	}
-> +
-> +	/* deal with wch normal complete and error */
-> +	regmap_read(aml_dma->regmap, DMA_BATCH_END, &end);
-> +	if (end)
-> +		regmap_write(aml_dma->regmap, CLEAR_W_BATCH, end);
-> +
-> +	regmap_read(aml_dma->regmap, WCH_DONE, &done);
-> +	regmap_read(aml_dma->regmap, WCH_EOC_DONE, &eoc_done);
-> +	done = done | eoc_done;
-> +
-> +	regmap_read(aml_dma->regmap, WCH_ERR, &err);
-> +	regmap_read(aml_dma->regmap, WDMA_RESP_ERR, &err_l);
-> +	err = err | err_l;
-> +
-> +	done = done | err;
-> +	i = 0;
-> +	while (done) {
-> +		i = ffs(done) - 1;
-> +		aml_chan = aml_dma->aml_wch[i];
-> +		regmap_write(aml_dma->regmap, CLEAR_WCH, BIT(aml_chan->chan_id));
-> +		if (!aml_chan) {
-> +			dev_err(aml_dma->dma_device.dev, "idx %d wch not initialized\n", i);
-> +			done &= ~BIT(i);
-> +			continue;
-> +		}
-> +		aml_chan->status = (err & (1 << i)) ? DMA_ERROR : DMA_COMPLETE;
-> +		dma_cookie_complete(&aml_chan->desc);
-> +		dmaengine_desc_get_callback_invoke(&aml_chan->desc, NULL);
-> +		done &= ~BIT(i);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static struct dma_chan *aml_of_dma_xlate(struct of_phandle_args *dma_spec, struct of_dma *ofdma)
-> +{
-> +	struct aml_dma_dev *aml_dma = (struct aml_dma_dev *)ofdma->of_dma_data;
-> +	struct aml_dma_chan *aml_chan = NULL;
-> +	u32 type;
-> +	u32 phy_chan_id;
-> +
-> +	if (dma_spec->args_count != 2)
-> +		return NULL;
-> +
-> +	type = dma_spec->args[0];
-> +	phy_chan_id = dma_spec->args[1];
-> +
-> +	if (phy_chan_id >= MAX_CHAN_ID)
-> +		return NULL;
-> +
-> +	if (type == AML_DMA_TYPE_TX) {
-> +		aml_chan = aml_dma->aml_rch[phy_chan_id];
-> +		if (!aml_chan) {
-> +			if (aml_dma->chan_used >= aml_dma->chan_nr) {
-> +				dev_err(aml_dma->dma_device.dev, "some dma clients err used\n");
-> +				return NULL;
-> +			}
-> +			aml_chan = &aml_dma->aml_chans[aml_dma->chan_used];
-> +			aml_dma->chan_used++;
-> +			aml_chan->direction = DMA_MEM_TO_DEV;
-> +			aml_chan->chan_id = phy_chan_id;
-> +			aml_chan->reg_offs = RCH_REG_BASE + 0x40 * aml_chan->chan_id;
-> +			aml_dma->aml_rch[phy_chan_id] = aml_chan;
-> +		}
-> +	} else if (type == AML_DMA_TYPE_RX) {
-> +		aml_chan = aml_dma->aml_wch[phy_chan_id];
-> +		if (!aml_chan) {
-> +			if (aml_dma->chan_used >= aml_dma->chan_nr) {
-> +				dev_err(aml_dma->dma_device.dev, "some dma clients err used\n");
-> +				return NULL;
-> +			}
-> +			aml_chan = &aml_dma->aml_chans[aml_dma->chan_used];
-> +			aml_dma->chan_used++;
-> +			aml_chan->direction = DMA_DEV_TO_MEM;
-> +			aml_chan->chan_id = phy_chan_id;
-> +			aml_chan->reg_offs = WCH_REG_BASE + 0x40 * aml_chan->chan_id;
-> +			aml_dma->aml_wch[phy_chan_id] = aml_chan;
-> +		}
-> +	} else {
-> +		dev_err(aml_dma->dma_device.dev, "type %d not supported\n", type);
-> +		return NULL;
-> +	}
-> +
-> +	return dma_get_slave_channel(&aml_chan->chan);
-> +}
-> +
-> +static int aml_dma_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct dma_device *dma_dev;
-> +	struct aml_dma_dev *aml_dma;
-> +	int ret, i, len;
-> +	u32 chan_nr;
-> +
-> +	const struct regmap_config aml_regmap_config = {
-> +		.reg_bits = 32,
-> +		.val_bits = 32,
-> +		.reg_stride = 4,
-> +		.max_register = 0x3000,
-> +	};
-> +
-> +	ret = of_property_read_u32(np, "dma-channels", &chan_nr);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "failed to read dma-channels\n");
-> +
-> +	len = sizeof(*aml_dma) + sizeof(struct aml_dma_chan) * chan_nr;
-> +	aml_dma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
-> +	if (!aml_dma)
-> +		return -ENOMEM;
-> +
-> +	aml_dma->chan_nr = chan_nr;
-> +
-> +	aml_dma->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(aml_dma->base))
-> +		return PTR_ERR(aml_dma->base);
-> +
-> +	aml_dma->regmap = devm_regmap_init_mmio(&pdev->dev, aml_dma->base,
-> +						&aml_regmap_config);
-> +	if (IS_ERR_OR_NULL(aml_dma->regmap))
-> +		return PTR_ERR(aml_dma->regmap);
-> +
-> +	aml_dma->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(aml_dma->clk))
-> +		return PTR_ERR(aml_dma->clk);
-> +
-> +	aml_dma->irq = platform_get_irq(pdev, 0);
-> +
-> +	aml_dma->pdev = pdev;
-> +	aml_dma->dma_device.dev = &pdev->dev;
-> +
-> +	dma_dev = &aml_dma->dma_device;
-> +	INIT_LIST_HEAD(&dma_dev->channels);
-> +
-> +	/* Initialize channel parameters */
-> +	for (i = 0; i < chan_nr; i++) {
-> +		struct aml_dma_chan *aml_chan = &aml_dma->aml_chans[i];
-> +
-> +		aml_chan->aml_dma = aml_dma;
-> +		aml_chan->chan.device = &aml_dma->dma_device;
-> +		dma_cookie_init(&aml_chan->chan);
-> +
-> +		/* Add the channel to aml_chan list */
-> +		list_add_tail(&aml_chan->chan.device_node,
-> +			      &aml_dma->dma_device.channels);
-> +	}
-> +	aml_dma->chan_used = 0;
-> +
-> +	dma_set_max_seg_size(dma_dev->dev, SG_MAX_LEN);
-> +
-> +	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
-> +	dma_dev->device_alloc_chan_resources = aml_dma_alloc_chan_resources;
-> +	dma_dev->device_free_chan_resources = aml_dma_free_chan_resources;
-> +	dma_dev->device_tx_status = aml_dma_tx_status;
-> +	dma_dev->device_prep_slave_sg = aml_dma_prep_slave_sg;
-> +
-> +	dma_dev->device_pause = aml_dma_pause_chan;
-> +	dma_dev->device_resume = aml_dma_resume_chan;
-> +	dma_dev->device_terminate_all = aml_dma_terminate_all;
-> +	dma_dev->device_issue_pending = aml_dma_enable_chan;
-> +	/* PIO 4 bytes and I2C 1 byte */
-> +	dma_dev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES | DMA_SLAVE_BUSWIDTH_1_BYTE);
-> +	dma_dev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> +
-> +	ret = dmaenginem_async_device_register(dma_dev);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "failed to register dmaenginem\n");
-> +
-> +	ret = of_dma_controller_register(np, aml_of_dma_xlate, aml_dma);
-> +	if (ret)
-> +		return ret;
-> +
-> +	regmap_write(aml_dma->regmap, RCH_INT_MASK, 0xffffffff);
-> +	regmap_write(aml_dma->regmap, WCH_INT_MASK, 0xffffffff);
-> +
-> +	ret = devm_request_irq(&pdev->dev, aml_dma->irq, aml_dma_interrupt_handler,
-> +			       IRQF_SHARED, dev_name(&pdev->dev), aml_dma);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "failed to reqest_irq\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id aml_dma_ids[] = {
-> +	{ .compatible = "amlogic,a9-dma", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, aml_dma_ids);
-> +
-> +static struct platform_driver aml_dma_driver = {
-> +	.probe = aml_dma_probe,
-> +	.driver		= {
-> +		.name	= "aml-dma",
-> +		.of_match_table = aml_dma_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(aml_dma_driver);
-> +
-> +MODULE_DESCRIPTION("GENERAL DMA driver for Amlogic");
-> +MODULE_AUTHOR("Xianwei Zhao <xianwei.zhao@amlogic.com>");
-> +MODULE_LICENSE("GPL");
->
-> --
-> 2.52.0
->
->
+The key fact this approach relies on is that the target data is
+only written to via a limited and well-defined API. This makes it
+possible to explicitly switch the pkey register where needed, without
+introducing excessively invasive changes, and only for a small amount of
+trusted code.
+
+Page tables were chosen as they are a popular (and critical) target for
+attacks, but there are of course many others - this is only a starting
+point (see section "Further use-cases"). It has become more and more
+common for accesses to such target data to be mediated by a hypervisor
+in vendor kernels; the hope is that kpkeys can provide much of that
+protection with a reduced complexity and overhead. A rough performance
+estimation has been performed on a modern arm64 system, see section
+"Performance".
+
+This series (especially v6) has similarities with the "PKS write
+protected page tables" series posted by Rick Edgecombe a few years ago
+[1] but it is not specific to x86/PKS - the approach is meant to be
+generic.
+
+This proposal was presented at Linux Security Summit Europe 2025 [2].
+Note that changes in v6 (notably the dedicated page table allocator)
+are not covered in that talk.
+
+[Table of contents]
+
+* kpkeys
+  - pkey register management
+
+* kpkeys_hardened_pgtables
+  - Protected page table allocation
+  - kpkeys level switching
+  - Performance
+  - Limitations
+
+* This series
+  - Branches
+
+* Threat model
+
+* Further use-cases
+
+* Open questions
+
+
+kpkeys
+======
+
+The use of pkeys involves two separate mechanisms: assigning a pkey to
+pages, and defining the pkeys -> permissions mapping via the pkey
+register. This is implemented through the following interface:
+
+- Pages are assigned a pkey in the linear map using set_memory_pkey().
+  This is sufficient for this series, but it is also plausible for
+  higher-level allocators to support marking allocations with a given
+  pkey.
+
+- The pkey register is configured based on a *kpkeys level*. kpkeys
+  levels are simple integers that correspond to a given configuration,
+  for instance:
+
+  KPKEYS_LVL_DEFAULT:
+        RW access to KPKEYS_PKEY_DEFAULT
+        RO access to any other KPKEYS_PKEY_*
+
+  KPKEYS_LVL_<FEAT>:
+        RW access to KPKEYS_PKEY_DEFAULT
+        RW access to KPKEYS_PKEY_<FEAT>
+        RO access to any other KPKEYS_PKEY_*
+
+  Only pkeys that are managed by the kpkeys framework are impacted;
+  permissions for other pkeys are left unchanged (this allows for other
+  schemes using pkeys to be used in parallel, and arch-specific use of
+  certain pkeys).
+
+  The kpkeys level is changed by calling kpkeys_set_level(), setting the
+  pkey register accordingly and returning the original value. A
+  subsequent call to kpkeys_restore_pkey_reg() restores the kpkeys
+  level. The numeric value of KPKEYS_LVL_* (kpkeys level) is purely
+  symbolic and thus generic, however each architecture is free to define
+  KPKEYS_PKEY_* (pkey value).
+
+pkey register management
+------------------------
+
+The kpkeys model relies on the kernel pkey register being set to a
+specific value for the duration of a relatively small section of code,
+and otherwise to the default value. Accordingly, the arm64
+implementation based on POE handles its pkey register (POR_EL1) as
+follows:
+
+- POR_EL1 is saved and reset to its default value on exception entry,
+  and restored on exception return. This ensures that exception handling
+  code runs in a fixed kpkeys state.
+
+- POR_EL1 is context-switched per-thread. This allows sections of code
+  that run at a non-default kpkeys level to sleep (e.g. when locking a
+  mutex). For kpkeys_hardened_pgtables, only involuntary preemption is
+  relevant and the previous point already handles that; however sleeping
+  is likely to occur in more advanced uses of kpkeys.
+
+An important assumption is that all kpkeys levels allow RW access to the
+default pkey (0). Removing this assumption requires significant
+reworking of the way POR_EL1 is saved/restored on exception entry and
+context switch.
+
+
+kpkeys_hardened_pgtables
+========================
+
+The kpkeys_hardened_pgtables feature uses the interface above to make
+the (kernel and user) page tables read-only by default, enabling write
+access only in helpers such as set_pte(). An efficient implementation
+requires careful consideration; this is detailed in the following
+subsections.
+
+Protected page table allocation
+-------------------------------
+
+Kernel page tables are required as soon as the MMU is turned on, i.e.
+extremely early. Different allocators are therefore used to obtain
+page table pages (PTPs), depending on where we are in the boot sequence.
+In chronological order:
+
+1. Static pools (in the kernel image itself). This is typically used to
+   map the kernel image. By definition these pools have a fixed size.
+
+2. memblock. This is notably used to create the linear map.
+
+3. Buddy allocator, via pagetable_alloc(). Used for everything else,
+   including user page tables, once available.
+
+Previously (until v5), this series relied on pagetable_*_ctor() to set
+the pkey of each PTP allocated at step 3 and walked the kernel page
+tables on boot to set the pkey of earlier PTPs (1. and 2.). This worked
+fine, but it relied on the crucial assumption that the linear map is
+fully PTE-mapped - in other words, that it is possible to set the pkey
+for a page simply by changing the attributes of an existing PTE.
+
+This assumption no longer holds on some arm64 systems, since [3], and it
+never has on x86. The linear map may be created using block mappings
+(PMD/PUD level). As a result, setting the pkey for one page may require
+splitting block(s) down to PTEs. This creates extra overhead and may
+lead to recursion, as the PTPs allocated for splitting themselves need
+to be protected, and setting their pkey could lead to splitting as well.
+
+From v6, this series therefore attempts to allocate PTPs in PMD-sized
+blocks whenever possible. PTPs allocated in that manner are protected
+very efficiently by setting the pkey at PMD level. Still, splitting
+cannot be totally eliminated: PUD blocks need to be split, large
+physically contiguous blocks may not be available on long-running
+systems, and unused pages must have their pkey reset before being
+eventually returned to the buddy allocator.
+
+There have been attempts to address this issue before, notably in Rick's
+series [1] with the same aim, and Mike Rapoport's proposal [4] for
+unmapping regions of the linear map. Consensus has not been reached on
+any of them, unfortunately. This series draws inspiration from those
+attempts and introduces its own allocator. It does not aim to address
+linear map fragmentation in general; on the contrary, it is designed
+specifically to allocate pkey-protected PTPs, ideally in blocks, and
+prevent any recursion while splitting the linear map.
+
+This series protects the different sources of PTPs listed above as
+follows:
+
+1. Static pools are mostly contiguous already so they are left
+   unchanged. A hook is introduced to allow the arch to set the pkey of
+   those PTPs later during boot.
+
+2. A separate memblock-based allocator is introduced for early page
+   tables. This is a very simple allocator that obtains memory from
+   memblock in large blocks. Since the linear map may not be ready yet,
+   those blocks are tracked so that their pkey can be set later.
+
+3. The main pkeys block allocator, based on the buddy allocator and
+   hooked into pagetable_alloc(). In this initial prototype, a single
+   global freelist is used. Its cache is refilled in whole PMD-sized
+   blocks if possible, with fallback orders in case of memory pressure.
+   A reserve of pages is kept available to allow splitting the linear
+   map without any memory allocation. A shrinker is also included to
+   allow cached pages to be reclaimed, while attempting to reduce block
+   splitting.
+
+The pkeys block allocator slightly increases the risk of allocation
+failure because it must refill at least at order 2 (4 pages), since
+splitting may use up to 2 pages whenever allocating at low orders.
+This is deemed acceptable, and a net improvement over [1] where enough
+pages were reserved to split the entire linear map down to PTEs.
+
+All this infrastructure is generic. This series only includes the
+required plumbing for arm64 (and some arm64 tuning for the refill
+orders), but it is meant to be plumbed into x86 in a similar manner.
+
+kpkeys level switching
+----------------------
+
+Page tables are only supposed to be written via a fairly small set of
+helpers, so only a few switches to a privileged kpkeys level need to be
+introduced.
+
+However, a naive implementation is very inefficient when many PTEs are
+changed at once, as the kpkeys level is switched twice for every PTE. On
+arm64, this means two barriers (ISBs) per PTE. This is optimised by
+making use of the lazy MMU mode to batch those switches: 1. switch to
+KPKEYS_LVL_PGTABLES on arch_enter_lazy_mmu_mode(), 2. skip any kpkeys
+switch while in that section, and 3. restore the kpkeys level on
+arch_leave_lazy_mmu_mode(). When that last function already issues an
+ISB (when updating kernel page tables), we get a further optimisation as
+we can skip the ISB when restoring the kpkeys level.
+
+The lazy MMU mode may be enabled/disabled in a nested manner. This is
+handled in v6 thanks to [5] (merged in 7.0-rc1) - if nesting occurs,
+only the outer section will switch kpkeys level.
+
+Performance
+-----------
+
+No arm64 hardware currently implements POE. To estimate the performance
+impact of kpkeys_hardened_pgtables, a mock implementation of kpkeys has
+been used, replacing accesses to the POR_EL1 register with accesses to
+another system register that is otherwise unused (CONTEXTIDR_EL1), and
+leaving everything else unchanged. Most of the kpkeys overhead is
+expected to originate from the barrier (ISB) that is required after
+writing to POR_EL1, and from setting the POIndex (pkey) in page tables;
+both of these are done exactly in the same way in the mock
+implementation.
+
+This mock implementation was evaluated on an AmpereOne A192-32X server,
+using a variety of benchmarks that involve heavy page table
+manipulations. The machine supports BBML2-noabort, which means that
+large block mappings can be split and are used to create the linear map
+by default since [3].
+
+The table below shows the performance impact of enabling
+CONFIG_KPKEYS_HARDENED_PGTABLES in two different configurations:
+
+1. Large block mappings are used; page tables are allocated in blocks as
+   per section "Protected page table allocation" above.
+
+2. Large block mappings are not used (BBML2-noabort is force-disabled);
+   page tables are allocated and protected individually. This is very
+   similar to the approach in v5.
+
+Note that the two sets of results are relative w.r.t. their own
+baseline, as disabling large block mappings has performance
+implications in itself.
+
+Caveat: these numbers should be seen as a lower bound for the overhead
+of a real POE-based protection. The hardware checks added by POE are
+however not expected to incur significant extra overhead.
+
+Reading example: for the fix_size_alloc_test benchmark, using 1 page per
+iteration (no hugepage), kpkeys_hardened_pgtables incurs 11.20% overhead
+with large block mappings, and 10.24% overhead without. Both results are
+considered statistically significant (95% confidence interval),
+indicated by "(R)".
+
++-------------------+----------------------------------+----------------------+---------------------+
+| Benchmark         | Result Class                     | Large block mappings | PTE-only linear map |
++===================+==================================+======================+=====================+
+| mmtests/kernbench | real time                        |               -0.26% |              -0.55% |
+|                   | system time                      |               -1.87% |          (R) -2.24% |
+|                   | user time                        |                0.01% |              -0.04% |
++-------------------+----------------------------------+----------------------+---------------------+
+| micromm/fork      | fork: h:0                        |               -2.04% |          (R) -6.09% |
+|                   | fork: h:1                        |           (R) -4.61% |         (R) -13.28% |
++-------------------+----------------------------------+----------------------+---------------------+
+| micromm/munmap    | munmap: h:0                      |                1.70% |              -1.23% |
+|                   | munmap: h:1                      |               -0.85% |              -0.79% |
++-------------------+----------------------------------+----------------------+---------------------+
+| micromm/vmalloc   | fix_size_alloc_test: p:1, h:0    |          (R) -11.20% |         (R) -10.24% |
+|                   | fix_size_alloc_test: p:4, h:0    |               -3.12% |              -5.67% |
+|                   | fix_size_alloc_test: p:16, h:0   |               -4.09% |              -5.17% |
+|                   | fix_size_alloc_test: p:64, h:0   |               -3.86% |              -2.40% |
+|                   | fix_size_alloc_test: p:256, h:0  |               -2.14% |          (R) -2.79% |
+|                   | fix_size_alloc_test: p:16, h:1   |               -5.74% |              -1.18% |
+|                   | fix_size_alloc_test: p:64, h:1   |               -0.99% |               2.17% |
+|                   | fix_size_alloc_test: p:256, h:1  |           (R) -2.53% |              -1.33% |
+|                   | random_size_alloc_test: p:1, h:0 |           (R) -2.84% |          (R) -3.21% |
+|                   | vm_map_ram_test: p:1, h:0        |          (R) -23.31% |         (R) -23.66% |
++-------------------+----------------------------------+----------------------+---------------------+
+
+Benchmarks:
+- mmtests/kernbench: running kernbench (kernel build) [6].
+- micromm/{fork,munmap}: from David Hildenbrand's benchmark suite. A
+  1 GB mapping is created and then fork/unmap is called. The mapping is
+  created using either page-sized (h:0) or hugepage folios (h:1); in all
+  cases the memory is PTE-mapped.
+- micromm/vmalloc: from test_vmalloc.ko, varying the number of pages
+  (p:) and whether huge pages are used (h:).
+
+The results are overall very similar in both cases, and in line with the
+results from v5 (with batching). On a "real-world" and fork-heavy
+workload like kernbench, the estimated overhead of
+kpkeys_hardened_pgtables is reasonable, around 2% system time overhead.
+The real time overhead is negligible.
+
+Microbenchmarks show some noticeable overheads, which tend to go down
+when operating on larger page ranges. Because all PTEs in a given
+mapping are modified in the same lazy MMU section, the kpkeys level is
+changed just twice regardless of the mapping size; as a result the
+relative overhead actually decreases as the size increases for
+fix_size_alloc_test.
+
+These results should be taken with a pinch of salt, as in the "large
+block mappings" case the baseline (this series with
+CONFIG_KPKEYS_HARDENED_PGTABLES disabled) appears to outperform
+v7.0-rc1. This is to be investigated; it might explain the large
+overhead in the fork benchmarks that wasn't observed in v5.
+
+Limitations
+-----------
+
+- More testing/benchmarking is needed to better understand the
+  implications of using a global allocator for all page tables. This may
+  be beneficial in some cases thanks to the allocator's cache and lower
+  linear map fragmentation, but the single global freelist risks
+  creating contention.
+
+- Since this series no longer walks kernel page tables to protect early
+  PTPs, some of them may have been missed and left unprotected. This is
+  notably the case for vmemmap (covered by patch 11 in [1]), and
+  possibly for some statically allocated arm64 pools.
+
+
+This series
+===========
+
+The series is composed of two parts:
+
+- The kpkeys framework (patch 1-10). The main API is introduced in
+  <linux/kpkeys.h>, and it is implemented on arm64 using the POE
+  (Permission Overlay Extension) feature.
+
+- The kpkeys_hardened_pgtables feature (patch 11-30). <linux/kpkeys.h>
+  is extended with an API to protect page table pages and a guard object
+  to switch kpkeys level accordingly, both gated on a static key. This
+  is then used in generic and arm64 pgtable handling code as needed.
+  Finally a simple KUnit-based test suite is added to demonstrate the
+  page table protection.
+
+Branches
+--------
+
+To make reviewing and testing easier, this series is available here:
+
+  https://gitlab.arm.com/linux-arm/linux-kb
+
+The following branches are available:
+
+- kpkeys/rfc-v6 - this series, as posted
+
+- kpkeys/rfc-v6-bench - this series + patch for benchmarking on
+  a regular arm64 system (see section above)
+
+
+Threat model
+============
+
+The proposed scheme aims at mitigating data-only attacks (e.g.
+use-after-free/cross-cache attacks). In other words, it is assumed that
+control flow is not corrupted, and that the attacker does not achieve
+arbitrary code execution. Nothing prevents the pkey register from being
+set to its most permissive state - the assumption is that the register
+is only modified on legitimate code paths.
+
+A few related notes:
+
+- Functions that set the pkey register are all implemented inline.
+  Besides performance considerations, this is meant to avoid creating
+  a function that can be used as a straightforward gadget to set the
+  pkey register to an arbitrary value.
+
+- kpkeys_set_level() only accepts a compile-time constant as argument,
+  as a variable could be manipulated by an attacker. This could be
+  relaxed but it seems unlikely that a variable kpkeys level would be
+  needed in practice.
+
+
+Further use-cases
+=================
+
+It should be possible to harden various targets using kpkeys, including:
+
+- struct cred - proposal posted as a separate series [7]
+
+- eBPF programs (preventing direct W/X to core kernel code/data) -
+  work in progress [8]
+
+- fixmap (occasionally used even after early boot, e.g.
+  set_swapper_pgd() in arch/arm64/mm/mmu.c)
+
+- SELinux state (e.g. struct selinux_state::initialized)
+
+... and many others.
+
+kpkeys could also be used to strengthen the confidentiality of secret
+data by making it completely inaccessible by default, and granting
+read-only or read-write access as needed. This requires such data to be
+rarely accessed (or via a limited interface only). One example on arm64
+is the pointer authentication keys in thread_struct, whose leakage to
+userspace would lead to pointer authentication being easily defeated.
+
+
+Open questions
+==============
+
+A few aspects in this RFC that are debatable and/or worth discussing:
+
+- Can the pkeys block allocator be abstracted into something more
+  generic? This seems desirable considering other use-cases for changing
+  attributes of regions of the linear map, but the handling of page
+  tables while splitting may be difficult to integrate in a generic
+  allocator.
+
+- There is currently no restriction on how kpkeys levels map to pkeys
+  permissions. A typical approach is to allocate one pkey per level and
+  make it writable at that level only. As the number of levels
+  increases, we may however run out of pkeys, especially on arm64 (just
+  8 pkeys with POE). Depending on the use-cases, it may be acceptable to
+  use the same pkey for the data associated to multiple levels.
+
+
+Any comment or feedback is highly appreciated, be it on the high-level
+approach or implementation choices!
+
+- Kevin
+
+---
+Changelog
+
+RFC v5..v6:
+
+- Rebased on v7.0-rc1 (includes support for splitting large block
+  mappings with BBML2-noabort [3] and nested lazy MMU sections [5])
+
+- Completely new approach for allocating protected page tables, see
+  section "Protected page table allocation". Patch 11-26 are mostly new.
+
+- Patch 6: check arch_kpkeys_enabled() to make sure that page table
+  attributes are still changed when using the mock implementation 
+
+- Patch 9: new patch (thank you Yeoreum!)
+
+- Patch 28: minor changes following the merging of the nested lazy MMU
+  series [5]
+
+- Patch 30:
+    * Many tests added to provide better coverage of the various page
+      table allocation paths
+    * Require that the tests are built-in (many referenced symbols are
+      not exported)
+    * Some refactoring to reduce duplication and add logging
+
+v5: https://lore.kernel.org/linux-hardening/20250815085512.2182322-1-kevin.brodsky@arm.com/
+
+RFC v4..v5:
+
+- Rebased on v6.17-rc1.
+
+- Cover letter: re-ran benchmarks on top of v6.17-rc1, made various
+  small improvements especially to the "Performance" section.
+
+- Patch 18: disable batching while in interrupt, since POR_EL1 is reset
+  on exception entry, making the TIF_LAZY_MMU flag meaningless. This
+  fixes a crash that may occur when a page table page is freed while in
+  interrupt context.
+
+- Patch 17: ensure that the target kernel address is actually
+  PTE-mapped. Certain mappings (e.g. code) may be PMD-mapped instead -
+  this explains why the change made in v4 was required.
+
+
+RFC v4: https://lore.kernel.org/linux-mm/20250411091631.954228-1-kevin.brodsky@arm.com/
+
+RFC v3..v4:
+
+- Added appropriate handling of the arm64 pkey register (POR_EL1):
+  context-switching between threads and resetting on exception entry
+  (patch 7 and 8). See section "pkey register management" above for more
+  details. A new POR_EL1_INIT macro is introduced to make the default
+  value available to assembly (where POR_EL1 is reset on exception
+  entry); it is updated in each patch allocating new keys.
+
+- Added patch 18 making use of the lazy_mmu mode to batch switches to
+  KPKEYS_LVL_PGTABLES - just once per lazy_mmu section rather than on
+  every pgtable write. See section "Performance" for details.
+
+- Rebased on top of [9]. No direct impact on the patches, but it ensures that
+  the ctor/dtor is always called for kernel pgtables. This is an
+  important fix as kernel PTEs allocated after boot were not protected
+  by kpkeys_hardened_pgtables in v3 - a new test was added to patch 17
+  to ensure that pgtables created by vmalloc are protected too.
+
+- Rebased on top of [10]. The batching of kpkeys level switches in patch
+  18 relies on the last patch in [10].
+
+- Moved kpkeys guard definitions out of <linux/kpkeys.h> and to a relevant
+  header for each subsystem (e.g. <asm/pgtable.h> for the
+  kpkeys_hardened_pgtables guard).
+
+- Patch 1,5: marked kpkeys_{set_level,restore_pkey_reg} as
+  __always_inline to ensure that no callable gadget is created.
+  [Maxwell Bland's suggestion]
+
+- Patch 5: added helper __kpkeys_set_pkey_reg_nosync().
+
+- Patch 10: marked kernel_pgtables_set_pkey() and related helpers as
+  __init. [Linus Walleij's suggestion]
+
+- Patch 11: added helper kpkeys_hardened_pgtables_enabled(), renamed the
+  static key to kpkeys_hardened_pgtables_key.
+
+- Patch 17: followed the KUnit conventions more closely. [Kees Cook's
+  suggestion]
+
+- Patch 17: changed the address used in the write_linear_map_pte()
+  test. It seems that the PTEs that map some functions are allocated in
+  ZONE_DMA and read-only (unclear why exactly). This doesn't seem to
+  occur for global variables.
+
+- Various minor fixes/improvements.
+
+- Rebased on v6.15-rc1. This includes [11], which renames a few POE
+  symbols: s/POE_RXW/POE_RWX/ and
+  s/por_set_pkey_perms/por_elx_set_pkey_perms/
+
+
+RFC v3: https://lore.kernel.org/linux-hardening/20250203101839.1223008-1-kevin.brodsky@arm.com/
+
+RFC v2..v3:
+
+- Patch 1: kpkeys_set_level() may now return KPKEYS_PKEY_REG_INVAL to indicate
+  that the pkey register wasn't written to, and as a result that
+  kpkeys_restore_pkey_reg() should do nothing. This simplifies the conditional
+  guard macro and also allows architectures to skip writes to the pkey
+  register if the target value is the same as the current one.
+
+- Patch 1: introduced additional KPKEYS_GUARD* macros to cover more use-cases
+  and reduce duplication.
+
+- Patch 6: reject pkey value above arch_max_pkey().
+
+- Patch 13: added missing guard(kpkeys_hardened_pgtables) in
+  __clear_young_dirty_pte().
+
+- Rebased on v6.14-rc1.
+
+RFC v2: https://lore.kernel.org/linux-hardening/20250108103250.3188419-1-kevin.brodsky@arm.com/
+
+RFC v1..v2:
+
+- A new approach is used to set the pkey of page table pages. Thanks to
+  Qi Zheng's and my own series [12][13], pagetable_*_ctor is
+  systematically called when a PTP is allocated at any level (PTE to
+  PGD), and pagetable_*_dtor when it is freed, on all architectures.
+  Patch 11 makes use of this to call kpkeys_{,un}protect_pgtable_memory
+  from the common ctor/dtor helper. The arm64 patches from v1 (patch 12
+  and 13) are dropped as they are no longer needed. Patch 10 is
+  introduced to allow pagetable_*_ctor to fail at all levels, since
+  kpkeys_protect_pgtable_memory may itself fail.
+  [Original suggestion by Peter Zijlstra]
+
+- Changed the prototype of kpkeys_{,un}protect_pgtable_memory in patch 9
+  to take a struct folio * for more convenience, and implemented them
+  out-of-line to avoid a circular dependency with <linux/mm.h>.
+
+- Rebased on next-20250107, which includes [12] and [13].
+
+- Added locking in patch 8. [Peter Zijlstra's suggestion]
+
+RFC v1: https://lore.kernel.org/linux-hardening/20241206101110.1646108-1-kevin.brodsky@arm.com/
+---
+References
+
+[1] https://lore.kernel.org/all/20210830235927.6443-1-rick.p.edgecombe@intel.com/
+[2] https://lsseu2025.sched.com/event/25GEE/kernel-hardening-with-protection-keys-kevin-brodsky-arm
+[3] https://lore.kernel.org/all/20250917190323.3828347-1-yang@os.amperecomputing.com/
+[4] https://lore.kernel.org/all/20230308094106.227365-1-rppt@kernel.org/
+[5] https://lore.kernel.org/all/20251215150323.2218608-1-kevin.brodsky@arm.com/
+[6] https://github.com/gormanm/mmtests/blob/master/shellpack_src/src/kernbench/kernbench-bench
+[7] https://lore.kernel.org/linux-mm/?q=s%3Apkeys+s%3Acred+s%3A0
+[8] https://lore.kernel.org/all/aY3+Raf8eZqipCd6@e129823.arm.com/
+[9] https://lore.kernel.org/linux-mm/20250408095222.860601-1-kevin.brodsky@arm.com/
+[10] https://lore.kernel.org/linux-mm/20250304150444.3788920-1-ryan.roberts@arm.com/
+[11] https://lore.kernel.org/linux-arm-kernel/20250219164029.2309119-1-kevin.brodsky@arm.com/
+[12] https://lore.kernel.org/linux-mm/cover.1736317725.git.zhengqi.arch@bytedance.com/
+[13] https://lore.kernel.org/linux-mm/20250103184415.2744423-1-kevin.brodsky@arm.com/
+---
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jeff Xu <jeffxu@chromium.org>
+Cc: Joey Gouly <joey.gouly@arm.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Maxwell Bland <mbland@motorola.com>
+Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pierre Langlois <pierre.langlois@arm.com>
+Cc: Quentin Perret <qperret@google.com>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Will Deacon <will@kernel.org>
+Cc: Yang Shi <yang@os.amperecomputing.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mm@kvack.org
+Cc: x86@kernel.org
+
+Kevin Brodsky (29):
+  mm: Introduce kpkeys
+  set_memory: Introduce set_memory_pkey() stub
+  arm64: mm: Enable overlays for all EL1 indirect permissions
+  arm64: Introduce por_elx_set_pkey_perms() helper
+  arm64: Implement asm/kpkeys.h using POE
+  arm64: set_memory: Implement set_memory_pkey()
+  arm64: Reset POR_EL1 on exception entry
+  arm64: Context-switch POR_EL1
+  arm64: Enable kpkeys
+  memblock: Move INIT_MEMBLOCK_* macros to header
+  set_memory: Introduce arch_has_pte_only_direct_map()
+  mm: kpkeys: Introduce kpkeys_hardened_pgtables feature
+  mm: kpkeys: Introduce block-based page table allocator
+  mm: kpkeys: Handle splitting of linear map
+  mm: kpkeys: Defer early call to set_memory_pkey()
+  mm: kpkeys: Add shrinker for block pgtable allocator
+  mm: kpkeys: Introduce early page table allocator
+  mm: kpkeys: Introduce hook for protecting static page tables
+  arm64: cpufeature: Add helper to directly probe CPU for POE support
+  arm64: set_memory: Implement arch_has_pte_only_direct_map()
+  arm64: kpkeys: Support KPKEYS_LVL_PGTABLES
+  arm64: kpkeys: Ensure the linear map can be modified
+  arm64: kpkeys: Handle splitting of linear map
+  arm64: kpkeys: Protect early page tables
+  arm64: kpkeys: Protect init_pg_dir
+  arm64: kpkeys: Guard page table writes
+  arm64: kpkeys: Batch KPKEYS_LVL_PGTABLES switches
+  arm64: kpkeys: Enable kpkeys_hardened_pgtables support
+  mm: Add basic tests for kpkeys_hardened_pgtables
+
+Yeoreum Yun (1):
+  arm64: Initialize POR_EL1 register on cpu_resume()
+
+ arch/arm64/Kconfig                        |   2 +
+ arch/arm64/include/asm/cpufeature.h       |  12 +
+ arch/arm64/include/asm/kpkeys.h           |  83 ++
+ arch/arm64/include/asm/pgtable-prot.h     |  16 +-
+ arch/arm64/include/asm/pgtable.h          |  66 +-
+ arch/arm64/include/asm/por.h              |  11 +
+ arch/arm64/include/asm/processor.h        |   2 +
+ arch/arm64/include/asm/ptrace.h           |   4 +
+ arch/arm64/include/asm/set_memory.h       |   7 +
+ arch/arm64/kernel/asm-offsets.c           |   3 +
+ arch/arm64/kernel/cpufeature.c            |   5 +-
+ arch/arm64/kernel/entry.S                 |  24 +-
+ arch/arm64/kernel/process.c               |   9 +
+ arch/arm64/kernel/sleep.S                 |  12 +
+ arch/arm64/kernel/smp.c                   |   2 +
+ arch/arm64/mm/fault.c                     |   2 +
+ arch/arm64/mm/mmu.c                       |  74 +-
+ arch/arm64/mm/pageattr.c                  |  29 +-
+ include/asm-generic/kpkeys.h              |  21 +
+ include/linux/gfp_types.h                 |   3 +
+ include/linux/kpkeys.h                    | 183 +++++
+ include/linux/memblock.h                  |  11 +
+ include/linux/mm.h                        |  14 +-
+ include/linux/set_memory.h                |  20 +
+ mm/Kconfig                                |   5 +
+ mm/Makefile                               |   2 +
+ mm/kpkeys_hardened_pgtables.c             | 919 ++++++++++++++++++++++
+ mm/memblock.c                             |  11 -
+ mm/tests/kpkeys_hardened_pgtables_kunit.c | 202 +++++
+ security/Kconfig.hardening                |  24 +
+ 30 files changed, 1731 insertions(+), 47 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kpkeys.h
+ create mode 100644 include/asm-generic/kpkeys.h
+ create mode 100644 include/linux/kpkeys.h
+ create mode 100644 mm/kpkeys_hardened_pgtables.c
+ create mode 100644 mm/tests/kpkeys_hardened_pgtables_kunit.c
+
+
+base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+-- 
+2.51.2
+
