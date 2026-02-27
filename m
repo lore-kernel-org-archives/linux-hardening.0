@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 818E53624C8;
-	Fri, 27 Feb 2026 17:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4267D3624C8;
+	Fri, 27 Feb 2026 17:55:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772214955; cv=none; b=qyKKN88wnAZePHks+7pgxK2Og1OnSxd/p6WyGhkAOv57jhoJf6lrEm23LcbZ3Z26SfRnVV+LvF/iIZ8vgDEW9utWEAcvl/438RxQYBZRqeo9JIthevUEycnnkktc/Lewbfe0S4FRuIqEv1Pe9UUuO27z6+1RhJy9VaaGPJIA3zk=
+	t=1772214959; cv=none; b=rY6fzIDDNq44RjnUSMazG+yL35LIkgad4MO7ywMTrFstoS1EIVGe0cztzcnjmEsyeUlSQHRYOOtq8Az/pjV+RMKyUp3pn7bo9MRHqA4MB7BrTwI4WtbB8nQUxs/yuEf1LiSBzm2wL040iCARBenTYiMxqxI5Kh49QfUcShJ9z6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772214955; c=relaxed/simple;
-	bh=Ej7XZhdLj1ATcU2xluiCiiuQdUONc3oCHQzcB5eX7dM=;
+	s=arc-20240116; t=1772214959; c=relaxed/simple;
+	bh=fn31K1X2D3wspRq5hElc0NY1JUzyg9cOpug5uy+BMl8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=faj7YXHbO4SlgKLb4GtAukuxKs6+hMfS2CDxeRuAKxtcLOQEFS8K7XzQS1mENkRktaQC+WYlX8MpD8UU6ZOHQD7VuHizpIWPyaqHXupkfadcfnmPHhsaugF2crzVYJjE0JOC0uN1bgwOtAAPif2lN+ZonmTIw99C3OZ+dVxfuRM=
+	 MIME-Version; b=WpPDI+fGdZ844GN4goetpjqF8JYOzy/3IGXJNmJgxzFixl0VPpaTaXN9YKUKOiGfqRkRPw0DywwPH1WBb5FNOyq18FsVMDo6oPpFEz+VenEn3tBKp4UozB3OYTzWavRreAeUabXIv80lelssfAGku0qkeZoj+rdTEXRXKd2hu8Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 969FA176B;
-	Fri, 27 Feb 2026 09:55:46 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C48514BF;
+	Fri, 27 Feb 2026 09:55:51 -0800 (PST)
 Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 822BA3F73B;
-	Fri, 27 Feb 2026 09:55:48 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35BEA3F73B;
+	Fri, 27 Feb 2026 09:55:53 -0800 (PST)
 From: Kevin Brodsky <kevin.brodsky@arm.com>
 To: linux-hardening@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
 	x86@kernel.org
-Subject: [PATCH v6 02/30] set_memory: Introduce set_memory_pkey() stub
-Date: Fri, 27 Feb 2026 17:54:50 +0000
-Message-ID: <20260227175518.3728055-3-kevin.brodsky@arm.com>
+Subject: [PATCH v6 03/30] arm64: mm: Enable overlays for all EL1 indirect permissions
+Date: Fri, 27 Feb 2026 17:54:51 +0000
+Message-ID: <20260227175518.3728055-4-kevin.brodsky@arm.com>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260227175518.3728055-1-kevin.brodsky@arm.com>
 References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
@@ -66,33 +66,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce a new function, set_memory_pkey(), which sets the
-protection key (pkey) of pages in the specified linear mapping
-range. Architectures implementing kernel pkeys (kpkeys) must
-provide a suitable implementation; an empty stub is added as
-fallback.
+In preparation of using POE inside the kernel, enable "Overlay
+applied" for all stage 1 base permissions in PIR_EL1. This ensures
+that the permissions set in POR_EL1 affect all kernel mappings.
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- include/linux/set_memory.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/include/asm/pgtable-prot.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
-index 3030d9245f5a..7b3a8bfde3c6 100644
---- a/include/linux/set_memory.h
-+++ b/include/linux/set_memory.h
-@@ -84,4 +84,11 @@ static inline int set_memory_decrypted(unsigned long addr, int numpages)
- }
- #endif /* CONFIG_ARCH_HAS_MEM_ENCRYPT */
+diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+index d27e8872fe3c..849fec1328ae 100644
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -180,13 +180,13 @@ static inline bool __pure lpa2_is_enabled(void)
+ 	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_GCS),           PIE_NONE_O) | \
+ 	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_GCS_RO),        PIE_NONE_O) | \
+ 	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_EXECONLY),      PIE_NONE_O) | \
+-	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_READONLY_EXEC), PIE_R)      | \
+-	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_SHARED_EXEC),   PIE_RW)     | \
+-	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_READONLY),      PIE_R)      | \
+-	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_SHARED),        PIE_RW)     | \
+-	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_ROX),    PIE_RX)     | \
+-	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_EXEC),   PIE_RWX)    | \
+-	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_RO),     PIE_R)      | \
+-	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL),        PIE_RW))
++	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_READONLY_EXEC), PIE_R_O)      | \
++	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_SHARED_EXEC),   PIE_RW_O)     | \
++	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_READONLY),      PIE_R_O)      | \
++	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_SHARED),        PIE_RW_O)     | \
++	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_ROX),    PIE_RX_O)     | \
++	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_EXEC),   PIE_RWX_O)    | \
++	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_RO),     PIE_R_O)      | \
++	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL),        PIE_RW_O))
  
-+#ifndef CONFIG_ARCH_HAS_KPKEYS
-+static inline int set_memory_pkey(unsigned long addr, int numpages, int pkey)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif /* _LINUX_SET_MEMORY_H_ */
+ #endif /* __ASM_PGTABLE_PROT_H */
 -- 
 2.51.2
 
