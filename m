@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CA8364023;
-	Fri, 27 Feb 2026 17:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC658364023;
+	Fri, 27 Feb 2026 17:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772214992; cv=none; b=oBREpHKJ2DRQrL8BhY3wmZcLXS384ALIIKY/r2GHHOp7w0E1Pi3+6PwT5ZvWZinmEEHAYJ+I3FOFCuy0E8a6tQWrlo10AF4zUeTg+FjUI2xqa8JrXnETwlXj4BSQhOqBdEZWdre51Q79Q5eb1WFPVY0RXZJTyot+GekAFzlkHaA=
+	t=1772214996; cv=none; b=svXT5IFkygowEg+B2+TyiTRWoZtvI9/TDjvQPz75VGmC15JyEIqaR9uL8Et0fyhzHIPECiMkA86lQYVcllAW+k2d9D+sWtWJmdMYZqUCuNbb8tKnJmjZokYWD7ha7bndFgnS2uFpCkJdzQ94iXr1JCq77jaKSUrZFXzhAiESKso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772214992; c=relaxed/simple;
-	bh=kbR1axBAxi9R79m2JjRq+pQ+FnjkV6mSW/xmzgdC5OI=;
+	s=arc-20240116; t=1772214996; c=relaxed/simple;
+	bh=bI8Gl183Rin9rGfFGV1mgKQOfIESiX+tZE6Ejnm4OdM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CDDwQXvp9sH7TChARGGHt7zl2azAF4IcIKWShLE3o9Ui5bncblMWnNrmGnEvzKU7o87JXmrclkTXXU3VYmMpdmZEZh7CQ6nPi7J8/HQR+n6ZFR+j3hBhFBqOHMrbS0FMb49W2ty1C2vJZ6TSw2Qeoy8bqc0Fa4NEaXj1DPkWHzA=
+	 MIME-Version; b=d1T9mBfGWgD2p7H/itHU0AP9+FGwFTY3tWFpA4XlEh/osdLU45Qx26uGnHEKMeQ14dLUOpMMtutILVlOCPDcXlRoUjuinYJwsrkbvKnUC3c6RW8qoYnmNtGHnUM3gWw/qt2w6LXv/6rg8IEBo1PLXtOVDxRxFF/0wYMldcuG8tk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D25D14BF;
-	Fri, 27 Feb 2026 09:56:24 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3DBC14BF;
+	Fri, 27 Feb 2026 09:56:28 -0800 (PST)
 Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1637B3F73B;
-	Fri, 27 Feb 2026 09:56:25 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C17103F73B;
+	Fri, 27 Feb 2026 09:56:30 -0800 (PST)
 From: Kevin Brodsky <kevin.brodsky@arm.com>
 To: linux-hardening@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
 	x86@kernel.org
-Subject: [PATCH v6 10/30] arm64: Enable kpkeys
-Date: Fri, 27 Feb 2026 17:54:58 +0000
-Message-ID: <20260227175518.3728055-11-kevin.brodsky@arm.com>
+Subject: [PATCH v6 11/30] memblock: Move INIT_MEMBLOCK_* macros to header
+Date: Fri, 27 Feb 2026 17:54:59 +0000
+Message-ID: <20260227175518.3728055-12-kevin.brodsky@arm.com>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260227175518.3728055-1-kevin.brodsky@arm.com>
 References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
@@ -66,56 +66,65 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is the final step to enable kpkeys on arm64. We enable
-POE at EL1 by setting TCR2_EL1.POE, and initialise POR_EL1 to the
-default value, enabling access to the default pkey/POIndex (0).
-An ISB is added so that POE restrictions are enforced immediately.
+The upcoming page table allocator for the kpkeys_hardened_pgtables
+feature will need to know the maximum number of memblock regions.
+Move the corresponding macros to <linux/memblock.h> to allow that.
 
-Having done this, we can now select ARCH_HAS_KPKEYS if ARM64_POE is
-enabled.
+INIT_MEMBLOCK_{RESERVED,MEMORY}_REGIONS may be overridden, but this
+should be fine as only arm64 and loong currently do that and the
+relevant header is already (indirectly) included by
+<linux/memblock.h>.
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/Kconfig             | 1 +
- arch/arm64/kernel/cpufeature.c | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ include/linux/memblock.h | 11 +++++++++++
+ mm/memblock.c            | 11 -----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 38dba5f7e4d2..732d4dbbab20 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -2164,6 +2164,7 @@ config ARM64_POE
- 	def_bool y
- 	select ARCH_USES_HIGH_VMA_FLAGS
- 	select ARCH_HAS_PKEYS
-+	select ARCH_HAS_KPKEYS
- 	help
- 	  The Permission Overlay Extension is used to implement Memory
- 	  Protection Keys. Memory Protection Keys provides a mechanism for
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index c31f8e17732a..3b01a70b617b 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -76,6 +76,7 @@
- #include <linux/kasan.h>
- #include <linux/percpu.h>
- #include <linux/sched/isolation.h>
-+#include <linux/kpkeys.h>
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 6ec5e9ac0699..79f3ca8ff268 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -24,6 +24,17 @@ extern unsigned long max_pfn;
+  */
+ extern unsigned long long max_possible_pfn;
  
- #include <asm/cpu.h>
- #include <asm/cpufeature.h>
-@@ -2447,8 +2448,10 @@ static void cpu_enable_mops(const struct arm64_cpu_capabilities *__unused)
- #ifdef CONFIG_ARM64_POE
- static void cpu_enable_poe(const struct arm64_cpu_capabilities *__unused)
- {
--	sysreg_clear_set(REG_TCR2_EL1, 0, TCR2_EL1_E0POE);
-+	write_sysreg_s(POR_EL1_INIT, SYS_POR_EL1);
-+	sysreg_clear_set(REG_TCR2_EL1, 0, TCR2_EL1_E0POE | TCR2_EL1_POE);
- 	sysreg_clear_set(CPACR_EL1, 0, CPACR_EL1_E0POE);
-+	isb();
- }
- #endif
++#define INIT_MEMBLOCK_REGIONS			128
++#define INIT_PHYSMEM_REGIONS			4
++
++#ifndef INIT_MEMBLOCK_RESERVED_REGIONS
++#define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
++#endif
++
++#ifndef INIT_MEMBLOCK_MEMORY_REGIONS
++#define INIT_MEMBLOCK_MEMORY_REGIONS		INIT_MEMBLOCK_REGIONS
++#endif
++
+ /**
+  * enum memblock_flags - definition of memory region attributes
+  * @MEMBLOCK_NONE: no special request
+diff --git a/mm/memblock.c b/mm/memblock.c
+index b3ddfdec7a80..954eb76aa0c2 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -29,17 +29,6 @@
  
+ #include "internal.h"
+ 
+-#define INIT_MEMBLOCK_REGIONS			128
+-#define INIT_PHYSMEM_REGIONS			4
+-
+-#ifndef INIT_MEMBLOCK_RESERVED_REGIONS
+-# define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
+-#endif
+-
+-#ifndef INIT_MEMBLOCK_MEMORY_REGIONS
+-#define INIT_MEMBLOCK_MEMORY_REGIONS		INIT_MEMBLOCK_REGIONS
+-#endif
+-
+ /**
+  * DOC: memblock overview
+  *
 -- 
 2.51.2
 
