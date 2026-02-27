@@ -1,241 +1,247 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023117.outbound.protection.outlook.com [52.101.127.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE3B372B36;
-	Fri, 27 Feb 2026 09:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772184972; cv=none; b=pMxAfZADkvsiT79tgNr1KshAJcP85GDXxmWM7aWrlLvi4lcUxBC8YwZ/9nmzzF8Ixd3i5pESiMCqWe74dZrgDIVMweannXC2nQ5hsOYxWjQSMm9ldbzttT2pchC24IacbXVFtDvJuN3lJQuF74xToc0E5qld0MU8//U287uUpwA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772184972; c=relaxed/simple;
-	bh=JatrjCh9rXYX1jXJ8diwK86Ywvjtzzka6onpEElf6Vk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fECZsDR/shQBRzuH56YJ3EWQ+BQETGKg7QWmqYcbeapuOw38A/u9mmp1KyfjTWr8Sbi/dcmC+w47BqD8vV7wkUDOBwcdkJCQQ7oMzTBa9CdR7sd4vbyfh7cncploo+hRyjoWf/UFa2p1xLgyQimbH7aCPekSDPPfe1ZI8EWUmk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=s5jjOGFr reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17131FE45D;
+	Fri, 27 Feb 2026 09:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772185390; cv=fail; b=F0u2t7OTYCrJp8yBvdUdzK7pFvCflI0jXpGILvMTyX17JR0p7+p8UTn0srTk++BLcBQGozWe/xfmCdTP2x+xwHUa/+w05ITBp/em/Hz3Fd8NGRqYOUBbwJJLXedoooEOSeeNdMcqK51RK3y2xz4VB51X9h01G2rCV1Ekj2o8hJs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772185390; c=relaxed/simple;
+	bh=35YhYgv8F7EcJsPtvKhaYtl5ijDN4DNaGM0UM6ry+uo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GBatCeDmgetjB4PQgt+WjF3DOxp42MiJ8D3SkdxenyBleBUGDuhqUX3kZQRMDMtXBhwwBTC+lmmIMkodAJmDuSB63sdK8LrzlRCmCz555C4wQNdzB3KMfSl0dI3UjWpRVGkh3MMDKPTz2VIupUBLDfS4e1ysN+ooHl6CycF0EV4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=jojYaKgn; arc=fail smtp.client-ip=52.101.127.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="s5jjOGFr"
-Received: from [133.11.54.205] (h205.csg.ci.i.u-tokyo.ac.jp [133.11.54.205])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 61R9YgsP068326
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 27 Feb 2026 18:35:18 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=px5XieEPKmbuo9CrIiuS5zCR9teM+ZDzb7WZFA/ue1Q=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1772184918; v=1;
-        b=s5jjOGFrW9QHij3qAVZnKPHOFsghNeaW8zQT6IuwDs7t2PShZEQeXy33VCPfziRT
-         6+JLSEU28wP8EP+nDfodCUc7u0vjTX8JvWrUn7LjgiiAnrf2awCPPJ4igZ9E9R2u
-         EzJUyQp1USQYoeFg8Br9VmnI+LJ6k7aYUW0ouGDfIFavAUjllPQacOyDX5G7DkoZ
-         lYsPFUHKC4JAv4XTVx+zXs/TdwawYCujbocHIZMdP+UYxMwmL6t4OlqONRmNB6T+
-         LYR9C0XdtF0IdswVYWd/1UoXymFJy4NRNlQukRqsUNDU8239NEk5KQ7SxiYqV/Tk
-         F5cf5t2Hjd8Rd5pxcreQew==
-Message-ID: <c5e5d2b2-ee47-4241-b0c8-3099cd8e73cb@rsg.ci.i.u-tokyo.ac.jp>
-Date: Fri, 27 Feb 2026 18:34:40 +0900
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="jojYaKgn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vxeDGUUNQR9yDdmaFTbQUGA0L638TqXmJp7JwHsrNijglY3I5VlKP7nficO9QQbxGUEBmchU/+rlwpiz17PB1Fdnw3rNYJa8TWxavlfy4AmwwKjCMFcoqMyiJ5KLtDWEG31HcTYoIVlDvPF/KejJEwFW8q0wVDP6zw1RJmxfQ/MibG/cO9CZVIjTPNaA7WdWqaBx6S4v0CbFEpgnEiIpm6UrA2OuARxWvG95kQT8cWLpyuGQVcNQe0i2PXOG0PGaOS2rxyJshOKWS9SpMRKTGj2AY7J36ZqKOsQG0qahWcTl5HFtHmMJywNzbIpOXDR199egb3P7tKwc0pqwR+LvUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l2IhjF1adrBOpitV3ujpp67wuen5qXICjqM+01VX/A0=;
+ b=pbSTszNCQiKM67r7NyXnFJUaIJD80NQ36PGKutWslo1Wm6vOi5Oa8jgYLGQ6ySFHStSdOeu/YNOd84vzkrdmfizzlJFZNAY7Q8MQKdODMOc9dpD2x7k/uFj9EoB7ElNmZoj8Ew4jmRo2BTXpDRiFR+SjMW3wvDYH0UpEfXs1pERklUInb54+TUXpuiX/wgPDyfsKjJeKGJ/+/N8vuAK69V0DXyszFLbJSEBNjz971M1L3xqHVafiBHzmSEjQT1FXjwRp6PejPcQ9C3GWYBq5Qz9himHGdXu7eAfobhdtFsPFyhlINzW4RpYHQV9V4nM8sj+sIvgY7SzN8EWzsm1L/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l2IhjF1adrBOpitV3ujpp67wuen5qXICjqM+01VX/A0=;
+ b=jojYaKgnGBbkRuZ+sqhnbf6Poyjtp4CsjnD7GIkBMcuIkR8rECKQPH0Qt2g98TqCW3Lx+078X16ToxWNGjl0q2y9amhmE1M9nRomydd48i4q1h93MlC7X3oq9jZz3fzkcrPoCjO0RKKfbQD4Isfg+tuKn8BfFrPvxX5VviM+3Bj5vRhOCuuurQ8/naIbHb1Yz2AtX2mK/Le+S6Zzi/8Ns48girbiAolgNoebCkvaQFnqr0l1a6AxlbmcFzGdlLDVvXmFAFF/fcCypi8w6Mg07nAMPMSsbI7bYnsEM2PSpZdLt3dLPPgWaR87O5kk6emUAqArtwogqQfqf+jLU5G2Ew==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by TY0PR03MB6497.apcprd03.prod.outlook.com (2603:1096:400:1be::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.14; Fri, 27 Feb
+ 2026 09:43:05 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::78d4:9dee:2e32:d1e4]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::78d4:9dee:2e32:d1e4%6]) with mapi id 15.20.9654.013; Fri, 27 Feb 2026
+ 09:43:04 +0000
+Message-ID: <4fa16352-5f74-473c-a568-406e3ca24395@amlogic.com>
+Date: Fri, 27 Feb 2026 17:43:01 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] dt-bindings: dma: Add Amlogic A9 SoC DMA
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260227-amlogic-dma-v4-0-f25e4614e9b7@amlogic.com>
+ <20260227-amlogic-dma-v4-1-f25e4614e9b7@amlogic.com>
+ <20260227-crafty-just-cheetah-7ef8a2@quoll>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20260227-crafty-just-cheetah-7ef8a2@quoll>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TPYP295CA0041.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:7::19) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
-To: Oliver Upton <oupton@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu
- <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, devel@daynix.com, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260225-hybrid-v3-0-46e8fe220880@rsg.ci.i.u-tokyo.ac.jp>
- <20260225-hybrid-v3-1-46e8fe220880@rsg.ci.i.u-tokyo.ac.jp>
- <aaA0gn9O8QAf9Gpu@kernel.org>
- <fbcadab4-676b-44e4-8afa-b8bd095f8981@rsg.ci.i.u-tokyo.ac.jp>
- <b81cbeb7-6541-4a1f-b08e-2b5c9ee66b69@rsg.ci.i.u-tokyo.ac.jp>
- <aaDRtkdU85kULqwm@kernel.org>
-Content-Language: en-US
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <aaDRtkdU85kULqwm@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|TY0PR03MB6497:EE_
+X-MS-Office365-Filtering-Correlation-Id: f31b1690-4753-4d66-ff11-08de75e49ae5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	ksSXoEJ0BLk1SqnOKTLS+hituEoGGGqyr1bMXSc7KWJtbhcJS+bJezsHfJ3jC6DaW0Q7U5JJQydlTdRIaj+11RSMQP7wATXUFsvDG4ugsXd77O5prHPRY0d0sFS7bQf2i8ybn0zeKTp48j26oojx9SH1PNdJILdDRokcwfIHNgHmqsnCppIIbRvUVEhhy8TnGyr4dRu/6VKvZaBZMYhR9aSn+J295vtEnoHVs+YPbl+osFjOrTlOAwkff/toAH89nE7iamVEzHG48E0kMBDHb0uqIEO8DYOeCVrCnd6DY6W/klbHKkm15SodwaFhOOxuATouEWw5rtmo5TSOQ06w4LAjRhpOKCNrDpIzCh+BhQ6JuvZUsTd6CpwlRJFGmI+zibWWmJWmT7iN9WoayEg+8cgliKn0dMY2UeLePVgCBcqokCmChSC+PgKuIe9/H7Kr1OKpuACFPmShkoDFQnmPZJND8LG+v21PrVTXL1pKrNlDs8qRl/4ZBDGQFjjQnFms7lo5ZZUaJQKjycXlMKjXrMf1cGQm//vSu5jE9XI4eSl75VOyhZxE6UOUnK5EmAnfjVnCnEsk2mViojo0axot5Lum9lab7rVI2bI/CXdAZhi/kp+2p6Niy3jF5fUYwwRQzkkFIHC6h17vRyaQpcHikq8lSJZRJAmiIyN99sLdUPDnR3BjVIoWcIwwfcSQTr4Z
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SnA2ZGptTzgzbjc3ODJlVnFZNTdaMkprbFBVTytGbWs3R0Qxc2ZvSGZUM3JN?=
+ =?utf-8?B?dkdrRjRaNXRBYkFWK0l6WTRoSzhobWNsenJERlU5ZGFyN2pMZFZYb3pZd3k0?=
+ =?utf-8?B?RjFHeWNhdkk0b3dJNkhhaktiay9OQ1BTVkNQTWt2RlZObXJGUFFEcmNaWCtq?=
+ =?utf-8?B?T3hiSk9tQVpibldLeTIwUWN5SnZWV2R1NUIxSXhRalFUYTByVExaRmhkVUNp?=
+ =?utf-8?B?Qmc5MlN0bDFUeXVtaGRBU2pmeWNoSVZoSk41TnR3cS9mVnN6UDM2QU1CRmVV?=
+ =?utf-8?B?emkzTDJ6VmRGUmpRcXg0VDkyNE1YWmx0c01NaWZONDNScnhHMVJsNWtIYmcw?=
+ =?utf-8?B?RFdQNURBTHdHdmRaUHZZblozRjdjS25mam8wTTVjbjRONDNETTM2Mnh0bkxY?=
+ =?utf-8?B?MlRHeDg0a2tiNVNwZ1VWZ1pKSk5MektTVUhTbmsreVd6cFMyeWVjcVJuUEFB?=
+ =?utf-8?B?SnZOY0RuaWZOUk1PcEMzSEtNNjU3ZVhtaDBERWdLbDR0TVBpRXlpSWVXdVNw?=
+ =?utf-8?B?UVovZGVySk8vbkxaNy9lcDZVRUZLS0J1N3c2T3pzN3doZHNJR2Z0WVBsaG5I?=
+ =?utf-8?B?aklsYlExWmFSZkZpbGJyd1JIbWdOdVpRQUdscktCREFydXhRMW8wOHF3a0JY?=
+ =?utf-8?B?cDZObFpvTjhSY3B4dTVYQ3ZqT0I3eFVjRnZYTDFQSW1LQkg0V2lmcDdSVWpl?=
+ =?utf-8?B?Z095UHFYbERuaG02NFg3WXExT08ydkJySzFDZ0RrcWQvOTJGaGVsdkFGZ3Ux?=
+ =?utf-8?B?dG5vV0lsLzhadjZjRDVydXh1UWFIcnlxZWJRbHRCR2k3Rk8zd0xkZTZMRjF6?=
+ =?utf-8?B?S1lwNGlUb21QK1VyUGNhNk41L2ZiR1hYUlQzMTlhWk5SRW5STE9IWnM5VHpQ?=
+ =?utf-8?B?UnpQVkNWTlMyMUN1Q2ZESTBUSm0vbHZJYzBTbVBOcGNSbkxUb3BRa1JwbjRG?=
+ =?utf-8?B?RzlqanRTU2tJVWY1ZTUxbzJIZk9kNWtUdlhHSmdmSUhIdUhucXE2cW13ZFV2?=
+ =?utf-8?B?YXRZc0d5N2M0anhBMTV3RUtzOVViVjFNN2NyaGIyVjYrVXFQRXJuditqTkFL?=
+ =?utf-8?B?RDFWM21tQ2lDYlNveVpaZW94YktsYVZicUNWeEhhcTg2aURnZ2g3OG0xRDM0?=
+ =?utf-8?B?MWRrcWdVM1lZOWI3a2dRc3V3VTJWLzJYOEQyRER6SjdZUk5lV2FJVG9BMlRI?=
+ =?utf-8?B?OW9YZlZHR016V2VGNzVDYWprajZ1VW5peTRiclFvelFkMDNXd1NKQVVtMzdm?=
+ =?utf-8?B?dytzRFdYVmNnVnc5TG5ZeWVTZDdZcjYybXNodkRZejZjTE1wY280QnFlVVN1?=
+ =?utf-8?B?d2ZDRDNOOU1uazQvUzdxOFpFeW5mSzNITmJ3Y1lJK2hQTkVvRVovb1FoQWlG?=
+ =?utf-8?B?QXU1N3FjdEgwY1JjZ0kxd3BsdE9qRThuNkhuMmlnVVRLOERWTVpCcU9lc3dh?=
+ =?utf-8?B?d3Q2dnBON2lQNmxnMmZCK085TjBqZGptNW9RZW5iN2h5OERsMzQ0QTZUWTd6?=
+ =?utf-8?B?MWprZjBXQ3cvbEtMbmVrK25LeVYvb1FXeWhDVlU0TVpVWXM3UGNVWXV0cElM?=
+ =?utf-8?B?L2t3TEhKREU4OUtiOEx4emZTU2lNTzh1TVhFNUpBNEVVaXpGaTR4RUpJTmgv?=
+ =?utf-8?B?OVZoVVVmNDVKNTRaU2k2V3ZLSE5qSFEvMEhmSWo1cWdtNGdXWllvK1daQnRo?=
+ =?utf-8?B?TWY5d29TZTltMDIvbGQxWXlXK29yR0dMNW9xcEphYmhmcUxlSjhPaGNZRjJB?=
+ =?utf-8?B?VnVISG5xOWI4c3lkb0Q2QVNNK3o5NkpuQXhiRDRqRDAyS0dOY2x3YlpzVXJn?=
+ =?utf-8?B?MmxGWE5uKys0MnJmV3pLMlBaa0VUQmplZ0dFU0cwRUwrckM1ZmlKd0krK3BL?=
+ =?utf-8?B?cFhJdXl4ejJvaloyTm8rRnN6dFBaelFuNDJ4Nmx4MDdvRGkvd0xkcGdXUmdI?=
+ =?utf-8?B?aERDZlBrM3RaakVrM1dzZmt4Y1lrdnF2UTZ2QVdmanVjRm5ObEpvakc2dzlx?=
+ =?utf-8?B?U1RhK0lSTHhuakM2dE9zQTRvVGVRbTFmSUlSYnlGZ3BITEZIdDFBMDdxV0Rw?=
+ =?utf-8?B?ZGRxa053aGNheEpuL3hQNlI3Y3llVDFaUmtBelVtb2dsYk9iL0tsQy92KzFj?=
+ =?utf-8?B?K1pUcjBPSUlQbHY1VzlCWFBMWDFRUFVvb24vS29ISk8yeGhpMWEzNnFoTm9V?=
+ =?utf-8?B?SlVkYzFtZC9GeWZHNjh5WTJQQ09rR1pzNDNBRmxFcHROeDBJT3R2V3JoTWxB?=
+ =?utf-8?B?RlV0eWpDZVBnL3lGOXROSnlPbFZUeUZ1OHY2cy8wdE5UVzNMcHp6MEp5ZDhr?=
+ =?utf-8?B?UFhXRWpOM1hFQ0xhQkNiRzg2bEJ2cGRpRGJmYm9tYURJSVowSmJxUT09?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f31b1690-4753-4d66-ff11-08de75e49ae5
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 09:43:04.7338
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S36PZJx01Uqqdy88KPcPQQxjAx/ojnTrp8Ked05qo1Q4K0dONpAM9RO2Zbslsbk1j0h60lCqE+SgPkJYxWoi6omG4SuvUH1BIguwSUShT6c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR03MB6497
 
+Hi Krzysztof,
+    Thanks for your reply.
 
-
-On 2026/02/27 8:05, Oliver Upton wrote:
-> On Thu, Feb 26, 2026 at 11:47:54PM +0900, Akihiko Odaki wrote:
->> On 2026/02/26 23:43, Akihiko Odaki wrote:
->>> On 2026/02/26 20:54, Oliver Upton wrote:
->>>> Hi Akihiko,
->>>>
->>>> On Wed, Feb 25, 2026 at 01:31:15PM +0900, Akihiko Odaki wrote:
->>>>> @@ -629,6 +629,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu
->>>>> *vcpu, int cpu)
->>>>>            kvm_vcpu_load_vhe(vcpu);
->>>>>        kvm_arch_vcpu_load_fp(vcpu);
->>>>>        kvm_vcpu_pmu_restore_guest(vcpu);
->>>>> +    if (test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY,
->>>>> &vcpu- >kvm->arch.flags))
->>>>> +        kvm_make_request(KVM_REQ_CREATE_PMU, vcpu);
->>>>
->>>> We only need to set the request if the vCPU has migrated to a different
->>>> PMU implementation, no?
->>>
->>> Indeed. I was too lazy to implement such a check since it won't affect
->>> performance unless the new feature is requested, but having one may be
->>> still nice.
-> 
-> I'd definitely like to see this.
-> 
->>>>
->>>>>        if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
->>>>>            kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
->>>>> @@ -1056,6 +1058,9 @@ static int check_vcpu_requests(struct
->>>>> kvm_vcpu *vcpu)
->>>>>            if (kvm_check_request(KVM_REQ_RELOAD_PMU, vcpu))
->>>>>                kvm_vcpu_reload_pmu(vcpu);
->>>>> +        if (kvm_check_request(KVM_REQ_CREATE_PMU, vcpu))
->>>>> +            kvm_vcpu_create_pmu(vcpu);
->>>>> +
->>>>
->>>> My strong preference would be to squash the migration handling into
->>>> kvm_vcpu_reload_pmu(). It is already reprogramming PMU events in
->>>> response to other things.
->>>
->>> Can you share a reason for that?
->>>
->>> In terms of complexity, I don't think it will help reducing complexity
->>> since the only common things between kvm_vcpu_reload_pmu() and
->>> kvm_vcpu_create_pmu() are the enumeration of enabled counters, which is
->>> simple enough.
-> 
-> I prefer it in terms of code organization. We should have a single
-> helper that refreshes the backing perf events when something has
-> globally changed for the vPMU.
-> 
-> Besides this, "create" is confusing since the vPMU has already been
-> instantiated.
-> 
->>> In terms of performance, I guess it is better to keep
->>> kvm_vcpu_create_pmu() small since it is triggered for each migration.
-> 
-> I think the surrounding KVM code for iterating over the counters is
-> inconsequential compared to the overheads of calling into perf to
-> recreate the PMU events. Since we expect this to be slow, we should only
-> set the request when absolutely necessary.
-
-I see. I'll squash it into kvm_vcpu_reload_pmu().
-
-> 
->>>>> +static bool kvm_pmu_counter_is_enabled(struct kvm_pmc *pmc)
->>>>> +{
->>>>> +    struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
->>>>> +
->>>>> +    return kvm_pmu_enabled_counter_mask(vcpu) & BIT(pmc->idx);
->>>>>    }
->>>>
->>>> You're churning a good bit of code, this needs to happen in a separate
->>>> patch (if at all).
->>>
->>> It makes sense. The next version will have a separate patch for this.
-> 
-> If I have the full picture right, you may not need it with a common
-> request handler.
-
-I think I'm going to use it to check if the vCPU is covered by the perf 
-events currently enabled before requesting KVM_REQ_RELOAD_PMU.
-
-> 
->>>>
->>>>> @@ -689,6 +710,14 @@ static void
->>>>> kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
->>>>>        int eventsel;
->>>>>        u64 evtreg;
->>>>> +    if (!arm_pmu) {
->>>>> +        arm_pmu = kvm_pmu_probe_armpmu(vcpu->cpu);
->>>>
->>>> kvm_pmu_probe_armpmu() takes a global mutex, I'm not sure that's what we
->>>> want.
->>>>
->>>> What prevents us from opening a PERF_TYPE_RAW event and allowing perf to
->>>> work out the right PMU for this CPU?
->>>
->>> Unfortunately perf does not seem to have a capability to switch to the
->>> right PMU. tools/perf/Documentation/intel-hybrid.txt says the perf tool
->>> creates events for each PMU in a hybird configuration, for example.
+On 2026/2/27 17:18, Krzysztof Kozlowski wrote:
+> On Fri, Feb 27, 2026 at 07:20:53AM +0000, Xianwei Zhao wrote:
+>> Add documentation describing the Amlogic A9 SoC DMA. And add
+>> the properties specific values defines into a new include file.
 >>
->> I think I misunderstood what you meant. Letting
->> perf_event_create_kernel_counter() to figure out what a PMU to use may be a
->> good idea. I'll give a try with the next version.
+>> Signed-off-by: Xianwei Zhao<xianwei.zhao@amlogic.com>
+>> ---
+>>   .../devicetree/bindings/dma/amlogic,a9-dma.yaml    | 65 ++++++++++++++++++++++
+>>   include/dt-bindings/dma/amlogic-dma.h              |  8 +++
+>>   2 files changed, 73 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml b/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
+>> new file mode 100644
+>> index 000000000000..efd7b2602c33
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
+>> @@ -0,0 +1,65 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id:http://devicetree.org/schemas/dma/amlogic,a9-dma.yaml#
+>> +$schema:http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Amlogic general DMA controller
+>> +
+>> +description:
+>> +  This is a general-purpose peripheral DMA controller. It currently supports
+>> +  major peripherals including I2C, I3C, PIO, and CAN-BUS. Transmit and receive
+>> +  for the same peripheral use two separate channels, controlled by different
+>> +  register sets. I2C and I3C transfer data in 1-byte units, while PIO and
+>> +  CAN-BUS transfer data in 4-byte units. From the controller’s perspective,
+>> +  there is no significant difference.
+>> +
+>> +maintainers:
+>> +  - Xianwei Zhao<xianwei.zhao@amlogic.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: amlogic,a9-dma
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    const: sys
+>> +
+>> +  '#dma-cells':
+>> +    const: 2
+>> +
+>> +  dma-channels:
+>> +    maximum: 64
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - '#dma-cells'
+>> +  - dma-channels
+>> +
+>> +allOf:
+>> +  - $ref: dma-controller.yaml#
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    dma-controller@fe400000{
+>> +        compatible = "amlogic,a9-dma";
+>> +        reg = <0xfe400000 0x4000>;
+>> +        interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
+>> +        clocks = <&clkc 45>;
+>> +        #dma-cells = <2>;
+>> +        dma-channels = <28>;
+>> +    };
+>> diff --git a/include/dt-bindings/dma/amlogic-dma.h b/include/dt-bindings/dma/amlogic-dma.h
+> Filename must be the same as binding file.
+>
+
+Will do.
+
+>> new file mode 100644
+>> index 000000000000..025ecc42e395
+>> --- /dev/null
+>> +++ b/include/dt-bindings/dma/amlogic-dma.h
+>> @@ -0,0 +1,8 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+>> +
+>> +#ifndef __DT_BINDINGS_DMA_AMLOGIC_DMA_H__
+>> +#define __DT_BINDINGS_DMA_AMLOGIC_DMA_H__
+>> +
+>> +#define AML_DMA_TYPE_TX              0
+>> +#define AML_DMA_TYPE_RX              1
+> You sure you need AML prefix? Your clock constants do not have AML
+> prefixes. What other constants do you expect here?
 > 
-> Yep, this is what I was alluding to.
 
-I tried this, but unfortunately it didn't work well. Simply using 
-PERF_TYPE_RAW let perf_event_create_kernel_counter() choose an arbitrary 
-PMU, potentially not covering the current PCPU.
+I will delete AML prefix in next version.
 
-We can change the cpu parameter of the function to fix this, but it 
-binds the perf event to that particular PCPU and requires recreating 
-perf event when migrating to another PCPU covered by the same PMU.
-
-I think I'm going to use RCU to avoid locking a global mutex.
-
-> 
->>>
->>>>
->>>>> +        if (!arm_pmu) {
->>>>> +            vcpu_set_on_unsupported_cpu(vcpu);
->>>>
->>>> At this point it seems pretty late to flag the CPU as unsupported. Maybe
->>>> instead we can compute the union cpumask for all the PMU implemetations
->>>> the VM may schedule on.
->>>
->>> This is just a safe guard and it is a responsibility of the userspace to
->>> schedule the VCPU properly. It is conceptually same with what
->>> kvm_arch_vcpu_load() does when migrating to an unsupported CPU.
-> 
-> I agree with you that we need to have some handling for this situation.
-> 
-> What I don't like about this is userspace doesn't discover its mistake
-> until the guest actually programs a PMC. I'd much rather preserve the
-> existing ABI where KVM proactively rejects running a vCPU on an
-> unsupported CPU.
-
-Thanks for explanation. I'll change this with the next version.
-
-> 
->>>>> +    case KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY:
->>>>> +        lockdep_assert_held(&vcpu->kvm->arch.config_lock);
->>>>> +        if (test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY,
->>>>> &vcpu->kvm->arch.flags))
->>>>> +            return 0;
->>>>
->>>> We don't need a getter for this, userspace should remember how it
->>>> provisioned the VM.
->>>
->>> The getter is useful for debugging and testing. The selftest will use it
->>> to query the current state.
-> 
-> That's fine for debugging this on your own kernel but we don't need it
-> upstream. There's several other vPMU attributes that are write-only,
-> like KVM_ARM_VCPU_PMU_V3_SET_PMU.
-
-Not just for debugging kernel, but it will be useful for userspace 
-debugging.
-
-Indeed there are other readonly attributes, but there is also an 
-attribute with getter: KVM_ARM_VCPU_PMU_V3_IRQ. I think there are more 
-if you look at a scope broader than the KVM_ARM_VCPU_PMU_V3_CTRL group, 
-and such existing getters for read/write attributes are probably only 
-useful for kernel/userspace debugging either. I think having a getter 
-can be justified, given that these preexisting examples.
-
-Regards,
-Akihiko Odaki
+> Best regards,
+> Krzysztof
