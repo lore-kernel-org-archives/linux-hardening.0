@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0934B364028;
-	Fri, 27 Feb 2026 17:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF0D936E49F;
+	Fri, 27 Feb 2026 17:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772215053; cv=none; b=oYPBcJvsRfKhCiO44X6/xr8PbTx2El2JZJTzKC+DRrurnTtd9qe/doZqF4bIbsxdFXNyzbXv2r4el/Es0rsIYpGmxeUMsddc7srQKYkq1RqRN7GddA61Q2x8NHYNQ+M5d8epHiVvkVLOBD5Kn9hB31tSiFUA8aLajMFPjGk4Df8=
+	t=1772215057; cv=none; b=JWz8Nj7KtrtJuNfn1LGS45c+mQddftzTJ9IuNlmgXa+MCETRrs8WYHQKhneq5hV25/wzEltLXylxw5sqO2xwLZOWXgBHQaVaUTu8JhvTQmbLvytUAiC9Ha3RBDl+bTZurUto9aMWkXEf6cEgSq0JjzoZHktFm2HRxgWRKaOVWgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772215053; c=relaxed/simple;
-	bh=cfjyc1N2BcHEcLbNJ4gC5T3UGv+P/Ejs7Sk4aDpPbSE=;
+	s=arc-20240116; t=1772215057; c=relaxed/simple;
+	bh=P8IDTj4yF6qDQuR+pa/KMXIkjNEeYrDKFCKpXqXY1Pk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kRlZmkCc9p8GmHUJAEEUralrVuFZPo1cueTzgeAD2/xYpppw4WBVw+T2uoL566fPGo2t3/71pSY6tUo90KpwSG7LpXrncnCkOtuZ1akitTxcCvvCzQx3ZNE/y5ZAewc6cNSKiTh2k308+NvvcGi9uQ8YTiaJ0R3ANH0URE6m2h8=
+	 MIME-Version; b=pSiRtG/ZtIhi7x0HWaYUwhcZwOP7dVeTQhcjaQBkOH6Hb+pP3HwEYO1zAizvax+6jR/SEyUMvSP3gRBZjMBa91aNNwr6/MXHV90Blq1B46dq0aHtsDcxVXljsH8Z+tbkFq8q8a29o5rnkTB0BiN/kZLqt6+irl4yrTMMi8uQq4w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 239D714BF;
-	Fri, 27 Feb 2026 09:57:25 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE7E41516;
+	Fri, 27 Feb 2026 09:57:29 -0800 (PST)
 Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 112383F73B;
-	Fri, 27 Feb 2026 09:57:26 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8C363F73B;
+	Fri, 27 Feb 2026 09:57:31 -0800 (PST)
 From: Kevin Brodsky <kevin.brodsky@arm.com>
 To: linux-hardening@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
 	x86@kernel.org
-Subject: [PATCH v6 23/30] arm64: kpkeys: Ensure the linear map can be modified
-Date: Fri, 27 Feb 2026 17:55:11 +0000
-Message-ID: <20260227175518.3728055-24-kevin.brodsky@arm.com>
+Subject: [PATCH v6 24/30] arm64: kpkeys: Handle splitting of linear map
+Date: Fri, 27 Feb 2026 17:55:12 +0000
+Message-ID: <20260227175518.3728055-25-kevin.brodsky@arm.com>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260227175518.3728055-1-kevin.brodsky@arm.com>
 References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
@@ -66,83 +66,61 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the kpkeys_hardened_pgtables feature is enabled, we need to be
-able to modify attributes (specifically the pkey/POIndex) in the
-linear map at page granularity.
+When the kpkeys_hardened_pgtables feature is enabled, special care
+is required when allocating page table pages while splitting the
+linear map.
 
-Add the appropriate check to can_set_direct_map() and
-force_pte_mapping(), on the same principle as rodata_full and other
-features.
-
-These functions can be called very early, before POE is actually
-detected. Introduce a helper that returns whether the hardening
-feature is/will be enabled, by checking whether POE is supported
-by the CPU if it hasn't been detected yet.
+Indicate that such pages are being allocated by passing
+__GFP_PGTABLE_SPLIT and use the appropriate interface to prepare the
+kpkeys_hardened_pgtables allocator in
+split_kernel_leaf_mapping().
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/include/asm/kpkeys.h | 18 ++++++++++++++++++
- arch/arm64/mm/mmu.c             |  3 ++-
- arch/arm64/mm/pageattr.c        |  3 ++-
- 3 files changed, 22 insertions(+), 2 deletions(-)
+ arch/arm64/mm/mmu.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
-index 64d6e22740ec..eeebbdfe239a 100644
---- a/arch/arm64/include/asm/kpkeys.h
-+++ b/arch/arm64/include/asm/kpkeys.h
-@@ -57,6 +57,24 @@ static __always_inline void arch_kpkeys_restore_pkey_reg(u64 pkey_reg)
- 
- #endif /* CONFIG_ARM64_POE */
- 
-+#ifdef CONFIG_KPKEYS_HARDENED_PGTABLES
-+
-+static inline bool arm64_supports_kpkeys_hardened_pgtables(void)
-+{
-+	/* POE is a boot feature */
-+	return boot_capabilities_finalized() ?
-+		system_supports_poe() : cpu_has_poe();
-+}
-+
-+#else /* CONFIG_KPKEYS_HARDENED_PGTABLES */
-+
-+static inline bool arm64_supports_kpkeys_hardened_pgtables(void)
-+{
-+	return false;
-+}
-+
-+#endif /* CONFIG_KPKEYS_HARDENED_PGTABLES */
-+
- #endif	/* __ASSEMBLY__ */
- 
- #endif	/* __ASM_KPKEYS_H */
 diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index a8e982ac5079..ea1cb1875257 100644
+index ea1cb1875257..2cee0b7f8a56 100644
 --- a/arch/arm64/mm/mmu.c
 +++ b/arch/arm64/mm/mmu.c
-@@ -764,7 +764,8 @@ static inline bool force_pte_mapping(void)
- 		return true;
- 	if (bbml2)
- 		return false;
--	return rodata_full || arm64_kfence_can_set_direct_map() || is_realm_world();
-+	return rodata_full || arm64_kfence_can_set_direct_map() || is_realm_world() ||
-+		arm64_supports_kpkeys_hardened_pgtables();
- }
+@@ -707,7 +707,7 @@ static int split_kernel_leaf_mapping_locked(unsigned long addr)
+ 	if (!pud_present(pud))
+ 		goto out;
+ 	if (pud_leaf(pud)) {
+-		ret = split_pud(pudp, pud, GFP_PGTABLE_KERNEL, true);
++		ret = split_pud(pudp, pud, GFP_PGTABLE_KERNEL | __GFP_PGTABLE_SPLIT, true);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -732,7 +732,7 @@ static int split_kernel_leaf_mapping_locked(unsigned long addr)
+ 		 */
+ 		if (ALIGN_DOWN(addr, PMD_SIZE) == addr)
+ 			goto out;
+-		ret = split_pmd(pmdp, pmd, GFP_PGTABLE_KERNEL, true);
++		ret = split_pmd(pmdp, pmd, GFP_PGTABLE_KERNEL | __GFP_PGTABLE_SPLIT, true);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -800,7 +800,18 @@ int split_kernel_leaf_mapping(unsigned long start, unsigned long end)
+ 	if (start != PAGE_ALIGN(start) || end != PAGE_ALIGN(end))
+ 		return -EINVAL;
  
- static DEFINE_MUTEX(pgtable_split_lock);
-diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index d2a7e104a5c2..05e57387c0b5 100644
---- a/arch/arm64/mm/pageattr.c
-+++ b/arch/arm64/mm/pageattr.c
-@@ -96,7 +96,8 @@ bool can_set_direct_map(void)
- 	 * Realms need to make pages shared/protected at page granularity.
- 	 */
- 	return rodata_full || debug_pagealloc_enabled() ||
--		arm64_kfence_can_set_direct_map() || is_realm_world();
-+		arm64_kfence_can_set_direct_map() || is_realm_world() ||
-+		arm64_supports_kpkeys_hardened_pgtables();
- }
++kpkeys_retry:
++	ret = kpkeys_prepare_direct_map_split();
++	if (ret)
++		return ret;
++
+ 	mutex_lock(&pgtable_split_lock);
++
++	if (!kpkeys_ready_for_direct_map_split()) {
++		mutex_unlock(&pgtable_split_lock);
++		goto kpkeys_retry;
++	}
++
+ 	lazy_mmu_mode_enable();
  
- static int update_range_prot(unsigned long start, unsigned long size,
+ 	/*
 -- 
 2.51.2
 
