@@ -1,95 +1,113 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3173D34BF
-	for <linux-hardening@vger.kernel.org>; Sat, 28 Feb 2026 22:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EE72727EB;
+	Sun,  1 Mar 2026 01:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772317017; cv=none; b=NyJdBgX9ivpDF1y40w5YO99BNZgthahvpw9ZOLYgVGjPBd0dSQv7rSloXcRBhYmpYYbUW5OTA/O1Ms3QVFN/0icNEXcYp5CMwuVYmlJoMJY1Va6z3vOMHPh/2XR9zatixA/62A7mFPLEus9NnXxiyZ1hJ1TGjawamk+5kUPb604=
+	t=1772328315; cv=none; b=UT9jL/K5R6TEDR/1OainLttpwFWPW2ywNb1aNsu1sJDrnicA8JqfGcXT3Jq0lkXmOnO89zn3NUQBq65eHgFygjSElYnMqw0vktYijW52W+T4LV0xdcDfgypxZt9euRsyPsMth2PLDr5jlSmqkH+D1VISgG+snUAOVv+Ojuhjo4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772317017; c=relaxed/simple;
-	bh=po1GJ5OL+l37vGYwOeXHbTRrLbPHVWf6bedwzCyotzw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rb58+PoCBU9FlRKdiAx5+ZHrkfKtErYfIm6eWjsQ7SXjCvNAIucX35JQRdc36iPUFQ7cyXlXhBhELeKNqy+PfU9gUtz6LWY7vRuJvvVGqdj8Bw999m4DN98wqPynwtKmmI6RY6ZGnAoO1ESPd3jOfJ5lFb4jvJGgiThdiNJ/Cpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=VrQEcZTl; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
+	s=arc-20240116; t=1772328315; c=relaxed/simple;
+	bh=y1tSg0gpsbVlAC5WHtPZe5wAvSJVAH/Yx+1WLN87+Ek=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZFnfN5ndSfwxxjZFJgOIq9uPKvF0tt84AAZeqQK9mmCM4T224jKspCZBEPntOJOEp5vYYqbkHG5gUUiY+xGMnUpJ+x8kktwPlqIAqGzraQd4Wt7TIJF6BQHkkC6dHKK+VR2hm9ANO6UR6jWwEQmdoPSjQXSraHFMMw3mEZS0tko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lpTgvBzp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="VrQEcZTl"
-Message-ID: <c4e93e78-427a-45a6-9560-399b578e9260@packett.cool>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1772317013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mo8hhAD0T4w5u4cZDhtfyEdn8aaXHkZHMK1H62Gbpmw=;
-	b=VrQEcZTlYvv3IkuNXllFn7cX8Ffj/S6Whqymcl4G5uECvZvknPoJnTjyWRxRoANd5EMbTG
-	NfNaaASUoO2EhE5q9lq5zh9Uui+6r0H1IswxdEFvJWolIbxjk23zZUQVxvN37XsvRaECfh
-	BcMfr39l9XpcXZll4VNUYcZGAURwkcSOyAgEckX9s3ImA+WDgV1miMo/kyvqAiM7SIMU6X
-	BogSeBCDPcrGTpeiuU2jPr8omPStiFtiCTtZ11nNWCCgQwJr5Ltfklm3wrTQHQCW9FWdJy
-	mjAgwaU8n/qoaMIGIlSxL7mqo74jwsE3R2o0gqwymjTunXurXtCzK0irezHRHg==
-Date: Sat, 28 Feb 2026 19:16:44 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lpTgvBzp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D6F3C19421;
+	Sun,  1 Mar 2026 01:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772328315;
+	bh=y1tSg0gpsbVlAC5WHtPZe5wAvSJVAH/Yx+1WLN87+Ek=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lpTgvBzpCQc2/atIhvylNwEs6K3UD6vLkhcrrELmAlir4PAfC/nG1NCuG4+Nu04uT
+	 7rZcmkBwOns2bQU655yeZX6kCweHZDpCXPGGwaWPYVnRp3/M0N8QX+P6pc/sSrdqnh
+	 GYbl7gqjufN2OJaHlIugwgU8YtpoupNnyhJZ+KvWX+fQtORQnQDJvHdpjuODdYYouK
+	 l0SCy1lCWC62H3wmeNpjFX9JuPo7lQORauOd2y1TGRHb1De2NUuTuSv0Bs6Omm5NCc
+	 UsaQe0KQA+Eoox8Cduj0doQHOdVJufY9f1d3wjHF7jnIOdEQZYstyhdPXCQABPwn7U
+	 xQT2xf+p5SMBw==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	heming.zhao@suse.com
+Cc: Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Junxiao Bi <junxiao.bi@oracle.com>,
+	Joseph Qi <jiangqi903@gmail.com>,
+	Changwei Ge <gechangwei@live.cn>,
+	Jun Piao <piaojun@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	ocfs2-devel@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: FAILED: Patch "ocfs2: fix reflink preserve cleanup issue" failed to apply to 6.12-stable tree
+Date: Sat, 28 Feb 2026 20:25:12 -0500
+Message-ID: <20260301012513.1682267-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 3/3] drm/msm/adreno: Trust the SSoT UBWC config
-To: Konrad Dybcio <konradybcio@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
- Akhil P Oommen <akhilpo@oss.qualcomm.com>,
- Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar
- <abhinav.kumar@linux.dev>, Jessica Zhang <jesszhan0024@gmail.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20260108-topic-smem_dramc-v3-0-6b64df58a017@oss.qualcomm.com>
- <20260108-topic-smem_dramc-v3-3-6b64df58a017@oss.qualcomm.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Val Packett <val@packett.cool>
-In-Reply-To: <20260108-topic-smem_dramc-v3-3-6b64df58a017@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Patchwork-Hint: ignore
+X-stable: review
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 1/8/26 11:21 AM, Konrad Dybcio wrote:
+The patch below does not apply to the 6.12-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->
-> Now that the highest_bank_bit value is retrieved from the running
-> system and the global config has been part of the tree for a couple
-> of releases, there is no reason to keep any hardcoded values inside
-> the GPU driver.
-[…]
-> -	if (adreno_is_a610(gpu)) {
-> -		cfg->highest_bank_bit = 13;
-> -		cfg->ubwc_swizzle = 0x7;
-> -	}
+Thanks,
+Sasha
+
+------------------ original commit in Linus's tree ------------------
+
+From 5138c936c2c82c9be8883921854bc6f7e1177d8c Mon Sep 17 00:00:00 2001
+From: Heming Zhao <heming.zhao@suse.com>
+Date: Wed, 10 Dec 2025 09:57:24 +0800
+Subject: [PATCH] ocfs2: fix reflink preserve cleanup issue
+
+commit c06c303832ec ("ocfs2: fix xattr array entry __counted_by error")
+doesn't handle all cases and the cleanup job for preserved xattr entries
+still has bug:
+- the 'last' pointer should be shifted by one unit after cleanup
+  an array entry.
+- current code logic doesn't cleanup the first entry when xh_count is 1.
+
+Note, commit c06c303832ec is also a bug fix for 0fe9b66c65f3.
+
+Link: https://lkml.kernel.org/r/20251210015725.8409-2-heming.zhao@suse.com
+Fixes: 0fe9b66c65f3 ("ocfs2: Add preserve to reflink.")
+Signed-off-by: Heming Zhao <heming.zhao@suse.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+ fs/ocfs2/xattr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index 5fd85f5178689..e434a62dd69f9 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -6395,6 +6395,10 @@ static int ocfs2_reflink_xattr_header(handle_t *handle,
+ 					(void *)last - (void *)xe);
+ 				memset(last, 0,
+ 				       sizeof(struct ocfs2_xattr_entry));
++				last = &new_xh->xh_entries[le16_to_cpu(new_xh->xh_count)] - 1;
++			} else {
++				memset(xe, 0, sizeof(struct ocfs2_xattr_entry));
++				last = NULL;
+ 			}
+ 
+ 			/*
+-- 
+2.51.0
 
 
-Just noticed that the SoCs with A610 (SM6115/SM6125) have 
-.highest_bank_bit = 14 in drivers/soc/qcom/ubwc_config.c unlike this 13 
-value here.
-
-Could this have been the cause of the corruption I saw on SM6115 
-initially? [1]
-
-What's really strange though is that I wanted to test this now, but I 
-removed the FD_MESA_DEBUG=noubwc workaround that solved it initially…
-
-and the corruption *did not* come back so I can't even repro it to 
-confirm that this would fix it o.0
-
-
-[1]: 
-https://cache.treehouse.systems/media_attachments/files/116/083/578/070/293/038/original/9b8e73e15bed644f.jpg 
 
 
