@@ -1,113 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760D313D53C;
-	Sun,  1 Mar 2026 02:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74530303A18
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Mar 2026 02:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772330578; cv=none; b=bPYDHzJohtDyj/PLy6W+FKdxVtO+1MuYYmjbM8XnBC9nZ4kPnfhkp0afzRU6b7NtiWhuSs8jqUha8kyca/GNTzPmmzJtdRXapL+SLeR8PzIoQBiW7tBZ9356Zwh2JN+kJZX0FPfuVGggLOKJwH8xpadI8X+Y2gMpHdKS+tyMmck=
+	t=1772333869; cv=none; b=LUXJtCaHceqBEm5ZEI0iuxpN6qp4U8ECddWJlxeazyRNst6Gqx6d0/wS1ho9JZ5NAS1mxa7SigW8dy1XnB7E0ge97oZYCcSXyTh0ucLr3MYDgUqlp0WylaG2EBej7W8/vtawCiK0Yfs21vYSEAxZ2OM/2myyxcF6n783GjSdYB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772330578; c=relaxed/simple;
-	bh=qaosfLo4AHWp+gGW+BnVKv6cOTQ+cuQJjo83LZp2dvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hg0MY6TlAyKK5/i5l91ew37EORThmjQevt0WjH6BIvMP9FfEaF3aX0Pf1fAkO6gg7g/2Iv05EVosn00FtGdOXbZnM+7mQgSSY+Gj1Q+zOAoEa8ZaCkeHptT0kYjAA22kjkPHPuE+o56ZAAKq7MZ36vex11GXPHxFQJexbORGYtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNuF/uFS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772333869; c=relaxed/simple;
+	bh=v7j7u4Cgs/YgDdAJ7Cmwg6YLlgzhvBFEmlTEsg17hQE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=GgddxoZAmjzg0QRr8lPpDPmdaxgcram+cV+I6nKuWTckvHScbSNQqoByCew/B2qkGLoNUol6sZ4kHUdNWHrpetWO4EAm+odAUNa3jPNMlqOCWeBAgiI+tUrqvpZKljp460Doq5SKz7BQXU8I8JSWBf4M0pflDZWZUSXsjuGwpqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B8sykDSF; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNuF/uFS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30DDFC19421;
-	Sun,  1 Mar 2026 02:02:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772330578;
-	bh=qaosfLo4AHWp+gGW+BnVKv6cOTQ+cuQJjo83LZp2dvA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WNuF/uFSe1caoQol4SuvX2kfdf9hIoNxzfMSHMF6DPQWCUibgZJGxTrsja147eCBz
-	 bQNovDyFsdyXNly3lo3MBZnL06mFP4snGGoAeEZArfF0Eo2U5zgs3Al+85JwlIRhw/
-	 zJtW39LPmB1aTmrXOJFr8ALR5sVCfdHx77j3PvZe6GMLtAl+0KFunaZFYQA6CVP1xc
-	 VmxJ/2CFjFelm5T1CALpZ9jixq7dSLjb+2I+/el2y9EF3q07iZbmD4pDE6wNK+prGk
-	 L8wyRwOUZDlvAQLjsgM/K8cmO3wVkgIetro1jVfZFpjyyHixDAVxqYnS5geGqy6OWp
-	 c6e3bFh00prnw==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	heming.zhao@suse.com
-Cc: Mark Fasheh <mark@fasheh.com>,
-	Joel Becker <jlbec@evilplan.org>,
-	Junxiao Bi <junxiao.bi@oracle.com>,
-	Joseph Qi <jiangqi903@gmail.com>,
-	Changwei Ge <gechangwei@live.cn>,
-	Jun Piao <piaojun@huawei.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	ocfs2-devel@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: FAILED: Patch "ocfs2: fix reflink preserve cleanup issue" failed to apply to 5.10-stable tree
-Date: Sat, 28 Feb 2026 21:02:55 -0500
-Message-ID: <20260301020256.1730870-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B8sykDSF"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-48371bb515eso49160725e9.1
+        for <linux-hardening@vger.kernel.org>; Sat, 28 Feb 2026 18:57:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1772333867; x=1772938667; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v7j7u4Cgs/YgDdAJ7Cmwg6YLlgzhvBFEmlTEsg17hQE=;
+        b=B8sykDSFAyaC67iFyk4CYMeKS6Il9k1AUltUMttpfugW/RVix+yn1tROE+MVWY7597
+         zPP6ejKH5rx+uu/rJhHP2wRfNcO31ZxO7+gG28k/E+M9wXr+JAO4ejq8uurzjF7yLOQj
+         dAZadi3O9SihNq+f3RPFa4ynZ2UClR5y84C5bYhuvOzEa6q6kT9LJq5gfqnmI/TCu4rA
+         N4ls9Sp5C4aY/9wAHeS6sK1c3znjZHgnBorPoqj4aMZ3dl5thqujzXWiGljCS+ksnjib
+         yt1JowWzDvtuZLwQNP+lvWrT093WvZptGIgEB3pnQLIwQdyh90+DAOYkqvYy1pRsktoL
+         7sWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772333867; x=1772938667;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v7j7u4Cgs/YgDdAJ7Cmwg6YLlgzhvBFEmlTEsg17hQE=;
+        b=GzUj8Wa/GieTii7xS24tKoEpdUfi7uek4kjPdsEfybBX1N+aHNh7zmX8BKRNaRkWBc
+         3hfGVm5z93fcJkAAHBqKDBa8Y5O89aSayot9J8QqNDL48i6MM1PEKEgweYhAXYldQ7G6
+         BQWtDK+swnlADQs/2lqZQWNqvesFPb6hxPxhOtTn0DpNEtLuhdg+XbqiCAE9T61E6QNt
+         9KgqHziucra54QOTl3aIrYdLClYXSG9itLEojB+740Jb/3b9CccHwmqcrpHhXpOMDo6k
+         Qxf3RYnrOImD5CLIigPi5/W10nQCFdCzsMfIz4JR1gYqa6HwrGOniENiiVQpvl5JcP+t
+         0IQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRaQKF7NOKsRYO4eid69dGleQNm/a4bLIlOf+zqz6h1q/46y9+KFlpXD+I3nORLG9+jW9kF+lgr7xBwdp1XXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQL1U8tC9wrayzIEoQM1+qluX1DPKYmBv8v3wlJmXkDY3Qj3eO
+	nMfPQlWA7lg3uy8g78R6LPFIbFGVLSc/nRZVBg+kQN8zsk8F/5CIkRrndLE9GWZwIow=
+X-Gm-Gg: ATEYQzzFg2QUR+MNesD7jOV8xHztEq6DiF4EaicdYXOvDOBXcGaiAK/VZG61qnlU1er
+	gxzJZfceLvUmQi0MWIes8qrGXHb3yIRNj92cSuLTbwCNJSPXEgsrzo224hMw4pY/V6ai35Dde6l
+	YP0PZy0TWyS/lpekZwoWYBKTuMHNi/c1IxbsQKKO+zHPm/Dd8tAV3ZgPNxbdIutMX0QDtDubT7c
+	PZzPRaM2y8ClywIaKWVmg/8cTqi+5o34jGeUGY9k98KSaRgyqXRad+OZO5l/9tPebds897Rah6n
+	GDWL/ZbavrIiPKXjbDcpASY1WqrnCwvW4Vtyb/veN6TJ+j0zQkNQZTJVwRXOm0p8vJ1wXJARGl6
+	RWotLRQlbtg5kFYFfioEozhpmXjgevsssnHxt1St6sgjbGF2mLXEsvUWVBJdsaQl52muDZpFLun
+	6owVgiOqK3IYnYeYGt+Yp8z0scvNusXsQAO/Ydfdx4KHcGWAWHZI8qt4/1FQvrjeHWm/fO9vGzU
+	OpkJ3wpm19OjnTnog==
+X-Received: by 2002:a05:600c:8106:b0:483:afbb:a064 with SMTP id 5b1f17b1804b1-483c9bb7b7emr131516965e9.1.1772333866793;
+        Sat, 28 Feb 2026 18:57:46 -0800 (PST)
+Received: from localhost ([2a02:c7c:5e34:8000:6ece:b3d1:ab81:6eaf])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4399c764a35sm19633263f8f.30.2026.02.28.18.57.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Feb 2026 18:57:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 01 Mar 2026 02:57:44 +0000
+Message-Id: <DGR3X53FPO88.3C2UO0HGRVQGF@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Daniel Lezcano"
+ <daniel.lezcano@linaro.org>, "Zhang Rui" <rui.zhang@intel.com>, "Lukasz
+ Luba" <lukasz.luba@arm.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzk@kernel.org>, "Alim Akhtar"
+ <alim.akhtar@samsung.com>, "Bartlomiej Zolnierkiewicz"
+ <bzolnier@gmail.com>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, "Peter Griffin" <peter.griffin@linaro.org>,
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ <willmcvicker@google.com>, <jyescas@google.com>, <shin.son@samsung.com>,
+ <linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] thermal: samsung: Add support for Google GS101
+ TMU
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20260119-acpm-tmu-v2-0-e02a834f04c6@linaro.org>
+In-Reply-To: <20260119-acpm-tmu-v2-0-e02a834f04c6@linaro.org>
 
-The patch below does not apply to the 5.10-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+On Mon Jan 19, 2026 at 12:08 PM GMT, Tudor Ambarus wrote:
+> Add support for the Thermal Management Unit (TMU) on the Google GS101
+> SoC.
+>
+> The GS101 TMU implementation utilizes a hybrid architecture where
+> management is shared between the kernel and the Alive Clock and
+> Power Manager (ACPM) firmware.
 
-Thanks,
-Sasha
+[..]
 
------------------- original commit in Linus's tree ------------------
+> Sensor Mapping (One-to-Many)
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>
+> The SoC contains multiple physical temperature sensors, but the ACPM
+> firmware abstracts these into logical groups (Clusters) for reporting:
+>
+> - ACPM Sensor 0 (Big Cluster): Aggregates physical sensors 0, 6, 7, 8, 9.
+> - ACPM Sensor 1 (Mid Cluster): Aggregates physical sensors 4, 5.
+> - ACPM Sensor 2 (Little Cluster): Aggregates physical sensors 1, 2.
 
-From 5138c936c2c82c9be8883921854bc6f7e1177d8c Mon Sep 17 00:00:00 2001
-From: Heming Zhao <heming.zhao@suse.com>
-Date: Wed, 10 Dec 2025 09:57:24 +0800
-Subject: [PATCH] ocfs2: fix reflink preserve cleanup issue
+What about other non-CPU devices? Are there no sensors or implementation
+currently doesn't support them?
 
-commit c06c303832ec ("ocfs2: fix xattr array entry __counted_by error")
-doesn't handle all cases and the cleanup job for preserved xattr entries
-still has bug:
-- the 'last' pointer should be shifted by one unit after cleanup
-  an array entry.
-- current code logic doesn't cleanup the first entry when xh_count is 1.
+Is this implementation and ACPM TMU support exclusive only to GS101 SoC?
+IIRC, mapping could be different for other SoCs and, for instance, last
+sensors could be non-CPU devices.
 
-Note, commit c06c303832ec is also a bug fix for 0fe9b66c65f3.
+Best regards,
+Alexey
 
-Link: https://lkml.kernel.org/r/20251210015725.8409-2-heming.zhao@suse.com
-Fixes: 0fe9b66c65f3 ("ocfs2: Add preserve to reflink.")
-Signed-off-by: Heming Zhao <heming.zhao@suse.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <jiangqi903@gmail.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
- fs/ocfs2/xattr.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
-index 5fd85f5178689..e434a62dd69f9 100644
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -6395,6 +6395,10 @@ static int ocfs2_reflink_xattr_header(handle_t *handle,
- 					(void *)last - (void *)xe);
- 				memset(last, 0,
- 				       sizeof(struct ocfs2_xattr_entry));
-+				last = &new_xh->xh_entries[le16_to_cpu(new_xh->xh_count)] - 1;
-+			} else {
-+				memset(xe, 0, sizeof(struct ocfs2_xattr_entry));
-+				last = NULL;
- 			}
- 
- 			/*
--- 
-2.51.0
-
-
-
-
+[..]
