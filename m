@@ -1,39 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFA44219F4;
-	Mon,  2 Mar 2026 15:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9A6387372;
+	Mon,  2 Mar 2026 16:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772466877; cv=none; b=j7/qsZnRx8Q4cdQbbTKY5mcvMQdcX5dOMKNRJkMHIfS+nQMrmfN0UgJJ7N2sCmjmnWstoXYhpD9i23rUG73kxdK23DD8Fna88a/kdqSiXotJmYOva9CGZ8HS/XpKe8qqM3kqd7n6Ol9FWC8AH7v0SE2g3CUhjmpdTF++CfERFd4=
+	t=1772468049; cv=none; b=A2CHjJgARZDxY9NdotAS0So5jaTy61OO6VNdWv3fViUufQFOsWi5qmJQ1kktONrhDKOE/YwhX/OLHz22mwEeDIwYKp8KivQZ1gpkKnAFshvX/ajRTb5KUEiXYMihu8YaC2cLG/iQyXHvJIMuAtYrMlEVA2MmT5kz87SnRM070AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772466877; c=relaxed/simple;
-	bh=3BQmq9dvDpl2+fop+k6JBpifN8Rg7E6/3o3+NwzLUys=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CPfnT3OWuvYA59pXkj+CAdQXTUuijTS+PVjes82TQoFM2QoyCb1f15r5wbiND4S7AB4p9nKuyyWW8XWj30JG2lGSzYGH+U7sEe+xaAK5uIXm7KKt5BDifl7JnqyxPitMjeTTxqRmU3ToST/GvuT47Tmg8rKIMjdN1efM+utKv9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jgDRLpR1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772468049; c=relaxed/simple;
+	bh=GllBRQ+/5lw/YKIoqIlltaCvkXN3t0K2P1wecZTMdfo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=j8/8FJXbtPcyYCvRx1OjvnFxC70LLBIx57cfUCBPzTr1LJeI7/WffZi0LJ7dyddFqaax3f/H76XkRoineRQCTvUntb6kbTe2FjIGOP/6Fyuj70KF0fFAoRbqTlttiXXG+KJsMrL7RASBrvXCSByBAgW9DLlGn6e2dPRcGUzp3jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=f8pn8U6F; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jgDRLpR1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D4EC2BC87;
-	Mon,  2 Mar 2026 15:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772466876;
-	bh=3BQmq9dvDpl2+fop+k6JBpifN8Rg7E6/3o3+NwzLUys=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jgDRLpR1lV5Tw0Ecq/vLiVK0zxCyZGfh1QQbGSPkdVdk1kFg7jD5JrKWWujT+3ecn
-	 RjXtWbXFBDkmX7zxn30hP1eQwct2sf7gJb1MzO1hPFScV+HwOVAPZ5NAFNcsGl/JbI
-	 eAVuF1oT4mtua5qCAOSkJ0A3nSHPDpAMyGacFS/ugKah1ihP+Fr8LZy6rriEy4chT7
-	 f4eyrHL4vKxvgQ02eB5Fz+VSkK9pN0/GX8il4ctbFuZcp5j4Afl5dTpoP058MHmxwM
-	 DXYNh6GjhipUwJDF3NojaQIG5EBzIqcCyrCtCTW6IsPV+/P3ZOFPNIPM61nOqBe5cr
-	 Tn9PETygu4k/Q==
-Received: from localhost ([::1])
-	by mail.kernel.org with esmtp (Exim 4.99.1)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vx5bO-0000000GuZ0-2ElO;
-	Mon, 02 Mar 2026 16:54:34 +0100
-Date: Mon, 2 Mar 2026 16:54:33 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="f8pn8U6F"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5854040C69
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1772468041; bh=GllBRQ+/5lw/YKIoqIlltaCvkXN3t0K2P1wecZTMdfo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=f8pn8U6FA7kUP/r8iFJZ4rWUypHnzoaqHWxdAGjfHjokYaiGJKCr7IU0F2JeN/8Fw
+	 azpeD8ldqGCxtqmHWLxHS49TZl0QI+PrcVa1ESn/HNUJLsJpACllhhxKlZ7WWhWA0G
+	 4aJvqrqR8VuLoM4+Eg+rb1g/Si03GSmPlar/FE1+ppa4Qndh/WT11KisZJg8mqwbVh
+	 /WzQmizJRbq2GmBEJHki9LsLvF6IsnP61jEwvwgciTs1BsM2J6ZOLVi4QFAAp0/ZhL
+	 xDEN8yE0rRR0o2SHCha4a+omT/xNujvFQOxlgrR+kzRwwpwg0ORD4R3MLY+vZKFmpC
+	 3fI6jawrtR2kg==
+Received: from localhost (unknown [IPv6:2601:280:4600:27b::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 5854040C69;
+	Mon,  2 Mar 2026 16:14:01 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc: Alexander Lobakin <aleksander.lobakin@intel.com>, Kees Cook
  <kees@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
  intel-wired-lan@lists.osuosl.org, linux-doc@vger.kernel.org,
@@ -43,50 +43,29 @@ Cc: Alexander Lobakin <aleksander.lobakin@intel.com>, Kees Cook
  <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>
 Subject: Re: [Intel-wired-lan] [PATCH 00/38] docs: several improvements to
  kernel-doc
-Message-ID: <20260302165433.27f11148@localhost>
-In-Reply-To: <87sear2kbm.fsf@trenco.lwn.net>
+In-Reply-To: <20260302165433.27f11148@localhost>
 References: <cover.1771408406.git.mchehab+huawei@kernel.org>
-	<87sear2kbm.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+ <87sear2kbm.fsf@trenco.lwn.net> <20260302165433.27f11148@localhost>
+Date: Mon, 02 Mar 2026 09:14:00 -0700
+Message-ID: <87y0kaw6nr.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Mon, 23 Feb 2026 14:58:53 -0700
-Jonathan Corbet <corbet@lwn.net> wrote:
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> 
-> > Hi Jon,
-> >
-> > This series contain several improvements for kernel-doc.
-> >
-> > Most of the patches came from v4 of this series:
-> > 	https://lore.kernel.org/linux-doc/cover.1769867953.git.mchehab+huawei@kernel.org/  
-> 
-> So I will freely confess to having lost the plot with this stuff; I'm
-> now trying to get back up to speed. 
+> So, instead of merging this patchset, I'll be sending you
+> a smaller series with the basic stuff, in a way that it would
+> be easier to review. My plan is to send patches along this week
+> on smaller chunks, and after checking the differences before/after,
+> in terms of man/rst/error output.
 
-Yeah, I kinda figure it out ;-)
+OK... *whew* ... that sounds like a better way to proceed :)
 
-> But, before I dig into this big
-> series, can you say whether you think it's ready, or whether there's
-> another one on the horizon that I should wait for?
-
-There are more things undergoing, but I need some time to reorganize
-the patchset... currently, there are 60+ patches on my pile.
-
-So, instead of merging this patchset, I'll be sending you
-a smaller series with the basic stuff, in a way that it would
-be easier to review. My plan is to send patches along this week
-on smaller chunks, and after checking the differences before/after,
-in terms of man/rst/error output.
-
--- 
 Thanks,
-Mauro
+
+jon
