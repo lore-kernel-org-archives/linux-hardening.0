@@ -1,66 +1,66 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3465938D019
-	for <linux-hardening@vger.kernel.org>; Mon,  2 Mar 2026 09:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E454A2E2663
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Mar 2026 09:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772442446; cv=none; b=AdOZ2gc1WFzC9FXhynQWX57DeEUUA4XclQCtEKQzZc3SWldaL80yZxH51CWjaGI1xqvPakygXfAbPGr0tucsPg2ruT703SqhC+4YFVp8+OQpxbPS3nr82aGbfkr5SFKNNkAe6+CicTKRC+W4DAyRURHeUs2swBZNxeoynbWWdW0=
+	t=1772443001; cv=none; b=A03VviEQtKsKm1m6lJ/cfg1V7I16H7w03lJRVcuUtf7bks4ws88pQ47lCeYIN44cjUxoVrPDQvOkpUjl+e/iaGJV2S6rSeINKyF/xrH+49nZQo2sxa4jfMtfGJrksQ9EQ27gVG09qZLE3rovPkSaoxCbsmBBhAGKFqJLzRwxBn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772442446; c=relaxed/simple;
-	bh=1Hlh3tnJvRQvGvsfO4Noy/pZx4WjfAthD2cgeDPBDSU=;
+	s=arc-20240116; t=1772443001; c=relaxed/simple;
+	bh=nIBLLWlywvbDHJl1jfJUWtsRmZwWr5mgqYdTBQwVYCU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WevI+BfLzIs7xcmjUPi/HRNdw6lS13Ply/q4VLmdKaltZ44bK9U0WIMM+MLeKt0h7bhlm2q0A7nqNExOJEjQzSSOfOend5VtdhGYd/5kyxQcSVyDRnJrzaoYENC3ZNjtQ+ccTs50sjpOLgyjxu2xybjnqh7op0GHGzC4aSJmCa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uEfZ/9Yy; arc=none smtp.client-ip=209.85.128.50
+	 In-Reply-To:Content-Type; b=jyAMavDfIqrJyDpmG8R+FAK0cByhpeSn6aI8+Rvgi/eMF+Xn/i7eMoj2O8l7MGAGNo0fRSabzCDp5Xvv/gNkUrIEsJr+yMIqRTaxCVHdGIFOJw/M7Ym8YBgPThciUQR2D6AxBBeRTSEx7Gzck88xHVMz0sLzFK8/8S2yE8H4Un0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eA3tzMte; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uEfZ/9Yy"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-483abed83b6so33875185e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 02 Mar 2026 01:07:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eA3tzMte"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4836f4cbe0bso35128885e9.3
+        for <linux-hardening@vger.kernel.org>; Mon, 02 Mar 2026 01:16:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1772442442; x=1773047242; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1772442997; x=1773047797; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ltNDP6q2mUdMtPqpRgX6YzMyjY4kZxSKj4nBNx4rkj4=;
-        b=uEfZ/9YyQsBmcX0cM+Uk0yjd09CVydlp96acEAYG5n6jM7w8s5HuZ//F/umP3rL0oT
-         jsHdXRduiMNSeNK0XmylLirZKnaTPv7jSlBjobg9ORNfa0Ni7Y/Vp9xM1QZj7oRofn3C
-         rkMDEpAAiLv+nnFDqWLYJ6L25VilF1jq2qNlc2q7icBXlvnmsM8gMrDoKsA785a7FtrW
-         ApWcYB6yah325EIQ/e7O/zCkvitLJ7yCqjugL1N/Xqvd3TY3j//AHel6CS3mq/xs3cGf
-         32LsnONpzlHt7s7gKGoij6I5xz1ChkL+x+SY13nttIFkEtmtfqhVJwqmRqDj/NELca7R
-         vwSg==
+        bh=1ktr/JNOB3fV/EZRd7szBfJ+V3eeHkmzO1vLTnQ/4sY=;
+        b=eA3tzMteMsy6Qn5yTXt1XNfp/jsXQuQqtqn8ZHsbkm9xoROdFgvh/uUxZjk7lWWNoF
+         6YonUW19js4ImCBLcllImRvplTXbHYw6siG+C7mc8UMU7TeG1Q7prmseBXN7Hb0xlI+p
+         xvUcIkJzN7naTb3ooxwsOe0W24aIQuqtOQU8OfIfHNauPzZMxAHvrtZSLabQcy5r+0zN
+         1tCvM6QDSN8eGHHIZxL1qOjxUNohORBCh4b7SxGHE4INptectyS4hFALbil9Q3yeAUBq
+         geZzV19VyWPjvpVHHn3No2KDd2nsMfBuxOB9PIMUjBRaXceh4KcIY1KOgPjumQJbI/Dl
+         Qcmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772442442; x=1773047242;
+        d=1e100.net; s=20230601; t=1772442997; x=1773047797;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ltNDP6q2mUdMtPqpRgX6YzMyjY4kZxSKj4nBNx4rkj4=;
-        b=PFyH4Y16kmWTM5T1h1qCqsHQyqL8apGRd1gpIvD/Ix0OvPPj3BWqrQN688Gv9n3E0j
-         ZxHR+8uaWGzgd5U97LppjoNG+qw/I67YHvRODfEd9HnnNNPeSkN+x4LV+e4QudCOXgDM
-         njeuGebe4dQM0bF9xew2hXHE9m3J0r7DrhpMj02kmyE0TEam2xtJBn8EsqDdAixFKpdy
-         Hq5izxHPl+0LOE2ubqGWfsLKZOygFEyiv7wQRt/8Hs7Zhsh4leest/DITZ9VmvaHaa6B
-         GfUyn2wkKjXQa/qT85e4bIqJZRzRPwHBwC0HMy5PdoxHQVZL9afD5wx6sRmaSxVbWqSy
-         3FYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUa+LYr1dOkyFVI64/uyjgzX7ZrL3nKHLbYb6VMr+ncGfaifrBqGdaPWRd2YT4oa9kMufRSS20PSCMhJiS3qDA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyxII3h9I3KUTAwJxMndZPR9DxJuhDlifFVmGBlqW5rcgS4yIX
-	tAKL5fZNHbLBeIn02QCpWg+5I/Sg6JQ/AT4+gmeTgb1ODUERIl26h5T2Na4+2kX6XPw=
-X-Gm-Gg: ATEYQzzQvoDzDfONKtw2YYq/TbpZ3blsnSKGIIMYGrTmxW8RMbudHLao6CvPML0W8ep
-	1ZTolvISk6EKqUsvzAy/p9MM5yXW6z9fL/IwZhi0lQPlNwTchFSbXXnGVvcQY8ROkUPzAKJ8Cjf
-	1TSXP/GIcNWmD4CWSQh59ci0r6y1MKEwdEXbAU91YN3HyauxHoC+7+8XM3kFNH4ftSWy7WAL2sP
-	OBqmBwJbeiPFeUygOlPKNw650FSf769fUk/i0lz1lzVxvJU1dwRKyTYNu/LAkDNCICRebBTinqf
-	Yb5twkTw2ZpB6+4RlBpI7sdB70kX66Afd4WEDFQh/vx+M7J2Ek3vEaaLSGS9sCFtae/edblVwX1
-	5rs9SccKGNURxUEJ2Ls4u5IeLnRdkVj/IwUg84xbQiQMemG3OGG/JLrb1UnVoqg1mMMwsqaCHme
-	wW8muSMhya4vfmQyPFxphGyguO/u0jv6M=
-X-Received: by 2002:a05:600c:8289:b0:480:1e9e:f9c with SMTP id 5b1f17b1804b1-483c9ba7cbdmr202248045e9.10.1772442442277;
-        Mon, 02 Mar 2026 01:07:22 -0800 (PST)
+        bh=1ktr/JNOB3fV/EZRd7szBfJ+V3eeHkmzO1vLTnQ/4sY=;
+        b=J1rtegExxahiZ1EqA3fAaQtr+2wwifcv4kRQ+c9SpnGvIcodPZnK9yZCEt/GqMktVJ
+         7R3UD8hutTS3O3OsY+cAH1OSPwgcCqMvGvC6Dv12Vmy8yq7dUqjkXbqmZ4YUqWz0hO9z
+         z9flOJQmuYGnv4FTauCoYTJ6+5SBETCBNNPYlnrrXev4Aeg+Ku8iTE8UGn/UUf3o4FRt
+         2rQgwHdNuISldYqT/OmbG94QCsFWhonBoRI0knq+cwEWtRUkYa1ZxFKnUxZZwaMF+SDU
+         gKhWCwA+rVVJf+UChj1IcxssrhFWRxHPSZXEkjwC6/4Em9sIeqKm4OxJvKX4ng1zTYWM
+         BhSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUX+4LNzoFaO3eCVU9gSzFzGkgKCIWHoYiQsn5vu017wB0j0RrIW3Sx27bGuqD1xu6lvApgPKEyPpPP2/41Kkk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGqiUmg+pq4RRTfSKU+CLnUQE621YrAEdXEIR54asZr6JK2Wh0
+	0CobpEWAtS1VX2z/ZsdeuUbHVZxoZGbdDursouZNRGBkQOe7BtQnNd+NyjPAbnQs9u0=
+X-Gm-Gg: ATEYQzwgwJk49e17YjuJ6UfLXF90IIRtBMK5olVIT91i7Z+DoSyFbB05tHeHGynbzUQ
+	34TXzzA60oInpU7KahvhPYaQ+je8rR/WtpRV2n6P+Ce2DyR70+M3DAKvOP7vYEOTLtgiYIX2IyX
+	26uRxHf5lEvIiOcxSF+0TJSTgyTFg/YinC+6oT3FL980bacddqmKMnWCGNgN6Id6HJVY5hXjkb2
+	fvtjHKd8UQIC6hZddpu9OAm1dI1INZIcBmU2iDrN0N4nXumWKGhitpgPFGtjtbY/f+2QeR3LBqR
+	0rKdwKOPD9C9qPxQGVVOuS7by4t129cWGsYaw5Dji3T+de3edcTdt17ReoN6SNy7k6CcJ7QWGze
+	8dZoaHTWg1pPinWZlqnd0vSV86fZSZnjSOngySB5LdvB85iunwUXIfr+Ii7GVBRZfo5MPLYfIlw
+	5kIL5VF/9qVV1I6RMt8RXbxax92OmlI/c=
+X-Received: by 2002:a05:600c:4eca:b0:480:1e9e:f9b with SMTP id 5b1f17b1804b1-483c9beac6cmr219764705e9.16.1772442997213;
+        Mon, 02 Mar 2026 01:16:37 -0800 (PST)
 Received: from [10.11.12.108] ([79.115.63.77])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483c3b89c99sm271364845e9.15.2026.03.02.01.07.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483bfabb84esm389964955e9.0.2026.03.02.01.16.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2026 01:07:21 -0800 (PST)
-Message-ID: <b1f5be90-62eb-4482-bf42-f331739733ad@linaro.org>
-Date: Mon, 2 Mar 2026 11:07:18 +0200
+        Mon, 02 Mar 2026 01:16:35 -0800 (PST)
+Message-ID: <488f9257-94fd-4c5f-ba41-c9216bf0f7e5@linaro.org>
+Date: Mon, 2 Mar 2026 11:16:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,67 +68,118 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] thermal: samsung: Add support for Google GS101 TMU
+Subject: Re: [PATCH v2 4/7] thermal: samsung: Add support for GS101 TMU
 To: Alexey Klimov <alexey.klimov@linaro.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
  Alim Akhtar <alim.akhtar@samsung.com>,
  Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
  "Gustavo A. R. Silva" <gustavoars@kernel.org>,
  Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com,
  linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
 References: <20260119-acpm-tmu-v2-0-e02a834f04c6@linaro.org>
- <DGR3X53FPO88.3C2UO0HGRVQGF@linaro.org>
+ <20260119-acpm-tmu-v2-4-e02a834f04c6@linaro.org>
+ <DGR4OFNJXOI2.3QACIHMM1V429@linaro.org>
 Content-Language: en-US
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <DGR3X53FPO88.3C2UO0HGRVQGF@linaro.org>
+In-Reply-To: <DGR4OFNJXOI2.3QACIHMM1V429@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 3/1/26 4:57 AM, Alexey Klimov wrote:
+On 3/1/26 5:33 AM, Alexey Klimov wrote:
 > On Mon Jan 19, 2026 at 12:08 PM GMT, Tudor Ambarus wrote:
->> Add support for the Thermal Management Unit (TMU) on the Google GS101
->> SoC.
+>> Add the thermal driver for the Google GS101 SoC.
+> 
+> Is this driver for GS101 platforms only or for all Exynos-based
+> platforms where we have deal with thermal unit via ACPM?
+
+The driver can be extended for other Samsung Exynos SoCs.
+
+> 
+>> The GS101 TMU utilizes a hybrid management model shared between the
+>> Application Processor (AP) and the ACPM (Alive Clock and Power Manager)
+>> firmware. The driver maintains direct memory-mapped access to the TMU
+>> interrupt pending registers to identify thermal events, while delegating
+>> functional tasks - such as sensor initialization, threshold configuration,
+>> and temperature acquisition - to the ACPM firmware via the ACPM IPC
+>> protocol.
 >>
->> The GS101 TMU implementation utilizes a hybrid architecture where
->> management is shared between the kernel and the Alive Clock and
->> Power Manager (ACPM) firmware.
-> 
-> [..]
-> 
->> Sensor Mapping (One-to-Many)
->> ============================
+>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>> ---
+>>  drivers/thermal/samsung/Kconfig    |  16 +
+>>  drivers/thermal/samsung/Makefile   |   2 +
+>>  drivers/thermal/samsung/acpm-tmu.c | 643 +++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 661 insertions(+)
 >>
->> The SoC contains multiple physical temperature sensors, but the ACPM
->> firmware abstracts these into logical groups (Clusters) for reporting:
->>
->> - ACPM Sensor 0 (Big Cluster): Aggregates physical sensors 0, 6, 7, 8, 9.
->> - ACPM Sensor 1 (Mid Cluster): Aggregates physical sensors 4, 5.
->> - ACPM Sensor 2 (Little Cluster): Aggregates physical sensors 1, 2.
+>> diff --git a/drivers/thermal/samsung/Kconfig b/drivers/thermal/samsung/Kconfig
+>> index f4eff5a41a84ce02b12abb85d6a0f8818031d0dc..5679dfa85f4079c7d40317ac231bd6a1af93c7e7 100644
+>> --- a/drivers/thermal/samsung/Kconfig
+>> +++ b/drivers/thermal/samsung/Kconfig
+>> @@ -9,3 +9,19 @@ config EXYNOS_THERMAL
+>>  	  the TMU, reports temperature and handles cooling action if defined.
+>>  	  This driver uses the Exynos core thermal APIs and TMU configuration
+>>  	  data from the supported SoCs.
+>> +
+>> +config EXYNOS_ACPM_THERMAL
+>> +	tristate "Exynos ACPM thermal management unit driver"
+>> +	depends on THERMAL_OF
+>> +	depends on EXYNOS_ACPM_PROTOCOL || (COMPILE_TEST && !EXYNOS_ACPM_PROTOCOL)
+>> +	help
+>> +	  Support for the Thermal Management Unit (TMU) on Google GS101 SoC.
+>> +
+>> +	  The TMU on GS101 is managed through a hybrid architecture. This driver
+>> +	  handles direct register access for thermal interrupt status monitoring
+>> +	  and communicates with the Alive Clock and Power Manager (ACPM)
+>> +	  firmware via the ACPM IPC protocol for functional sensor control and
+>> +	  configuration.
+>> +
+>> +	  Select this if you want to monitor device temperature and enable
+>> +	  thermal mitigation on GS101 based devices.
 > 
-> What about other non-CPU devices? Are there no sensors or implementation
-> currently doesn't support them?
+> I don't understand this. What this driver actually supports/implements?
+> Dealing with TMU over ACPM firmware is not exclusive to Google GS101 SoC,
 
-The implementation currently doesn't support them. On GS101 other sensors
-are for GPU, ISP, TPU, and AUR.
+right
+
+> some other Exynos-based systems has this as well. However, it names
+> the config option EXYNOS_ACPM_THERMAL but a lot of other things say that
+> it is only for GS101, isn't it?
+
+right, because I'm currently adding support just for GS101. I wanted to be
+accurate and thought that when/if other SoCs will be supported by this
+driver, we can generalize the description.
+
+> Does it implement the generic layer dealing with TMU via ACPM (hence the name)
+> and adds specific things to support gs101?
+
+Right. I expect the sensor mask may differ from other Samsung Exynos SoCs.
+I remembered I compared the register set with e850, minor differences there.
+
 > 
-> Is this implementation and ACPM TMU support exclusive only to GS101 SoC?
+> Should it be something like this (feel free to correct):
+> Support for the Thermal Management Unit (TMU) exported via ACPM.
+> 
+> This driver handles direct register access for thermal interrupt
+> status monitoring and communicates with the Alive Clock and Power
+> Manager (ACPM) firmware via the ACPM IPC protocol for functional
+> sensor control and configuration.
+> 
+> Select this if you want to monitor device temperature and enable
+> thermal mitigation on Exynos-based devices that implement dealing
+> with TMU via ACPM, for instance, GS101-based devices.
+> 
 
-no, it can be extended for other Samsung SoCs.
+I can generalize the description in v2.
 
-> IIRC, mapping could be different for other SoCs and, for instance, last
-> sensors could be non-CPU devices.
-
-right.
-
-Cheers,
+Thanks,
 ta
+
