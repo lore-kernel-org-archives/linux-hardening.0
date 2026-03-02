@@ -1,64 +1,76 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F88338D006;
-	Mon,  2 Mar 2026 09:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0178035F60A
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Mar 2026 11:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772443681; cv=none; b=XFQVYNfxYUZlgJL4lW1Ieb2F7VFbEpXN9ACpKfxAklh13omK9v9IFO5j3L1REsvChaAxbPcp1Io8G8ULLpFzI1mFerMzTworHUhSySOXQxZ+m6WbAphOO3kk/Rfrghfg1u3jpiCuo9AJDdBENNJTqi1gkKDJoNxTezbRgIFclvo=
+	t=1772450051; cv=none; b=C5V2OSE/q/ZFox/ZEq1LzeaQQRiJ6c+r1rOEl4z9lwVhaGrjIFzeDVm1cc4lzeErOYp5uIcMSy83A+PeGdM+0ql6f+aPb3+PFc9euenisyh1u9tavK6I1Hs7ImsvqJToXcUuCdB9DPhagbs6iK2b/iiSzHW2/UL7Inix+8YBHsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772443681; c=relaxed/simple;
-	bh=XDqqJpO6KvaRP2y+HP6XP+sqGzk+KS+e/tXhKDCvw04=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cpNfu8/dQqr2iwaM7xxYBVHWoUlE3RJfQxT8TvjYL6MuJRwkFh93jMSdgcVEAYygBstg4N2dSbnq462Yj7njV3ihgEj+0BhWINiEG0irxraj4pw7oDxEXsxo9Kj4CCB1dzPsKCMVW1ZryEm2WEXY3ILB3J4GPN804UxeIc/Xvt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 290C314BF;
-	Mon,  2 Mar 2026 01:27:53 -0800 (PST)
-Received: from [10.57.13.119] (unknown [10.57.13.119])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B60D3F73B;
-	Mon,  2 Mar 2026 01:27:50 -0800 (PST)
-Message-ID: <a5967fbf-7be7-44aa-aaae-f374ea7ea61c@arm.com>
-Date: Mon, 2 Mar 2026 10:27:47 +0100
+	s=arc-20240116; t=1772450051; c=relaxed/simple;
+	bh=+WEC8vLIaaBu4jRcRDa/Q2GRe9zxcjW5PMMWhfsd128=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aEihGz7MHqcq46j63p8ZvrTU0JKWB3tGGQb22xXseaaRY0a5zJOrOcK1qHoAFbOtm6zDjWudPR0DJrD8DlKs/24JuTzE2f2Vz9LVaOGufPXli1KCvWIT8TfmptaYiNQB7BRsSBP+E0IW78TYVgRuTqJC0sIuevef+absPe6RAwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xa5dDV0d; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xa5dDV0d"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772450048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4L7492MiqYQDrnPN0WkcKH0FrZ/kIDJ3QODz609KDV0=;
+	b=Xa5dDV0dQzOqnNoXHEM1OttefGZe+yp/hvpWslhbtT+ODZY3SkKHL3WuQxt10RegiBMyk2
+	ZgliWBUuECtAtu1S9g67oZjRajvovkTGC1P41jUIZeZjnvh7xvp/GkIMKBkPlMkHZs1nvJ
+	103T16+DxMGNcC7j9KhWvP9P86mYOOs=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-hardening@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] keys: Use kmalloc_flex() to improve user_preparse()
+Date: Mon,  2 Mar 2026 12:13:11 +0100
+Message-ID: <20260302111309.937726-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/30] pkeys-based page table hardening
-To: linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
- Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
- Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
- Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
- Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260227175518.3728055-1-kevin.brodsky@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 27/02/2026 18:54, Kevin Brodsky wrote:
-> NEW in v6: support for large block mappings through a dedicated page table
-> allocator (patch 14-17)
+Use kmalloc_flex() when allocating a new 'struct user_key_payload' in
+user_preparse() to replace the open-coded size arithmetic and to keep
+the size type-safe.
 
-To be clear, v6 is still very much an RFC - I just forgot to pass --rfc
-to git format-patch...
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ security/keys/user_defined.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Kevin
+diff --git a/security/keys/user_defined.c b/security/keys/user_defined.c
+index 686d56e4cc85..6f88b507f927 100644
+--- a/security/keys/user_defined.c
++++ b/security/keys/user_defined.c
+@@ -64,7 +64,7 @@ int user_preparse(struct key_preparsed_payload *prep)
+ 	if (datalen == 0 || datalen > 32767 || !prep->data)
+ 		return -EINVAL;
+ 
+-	upayload = kmalloc(sizeof(*upayload) + datalen, GFP_KERNEL);
++	upayload = kmalloc_flex(*upayload, data, datalen);
+ 	if (!upayload)
+ 		return -ENOMEM;
+ 
+-- 
+Thorsten Blum <thorsten.blum@linux.dev>
+GPG: 1D60 735E 8AEF 3BE4 73B6  9D84 7336 78FD 8DFE EAD4
+
