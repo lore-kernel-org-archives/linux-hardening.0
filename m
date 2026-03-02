@@ -1,114 +1,92 @@
-Received: from mail-07.mail-europe.com (mail-0701.mail-europe.com [51.83.17.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869E540149E
-	for <linux-hardening@vger.kernel.org>; Mon,  2 Mar 2026 15:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.83.17.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFA44219F4;
+	Mon,  2 Mar 2026 15:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772464487; cv=none; b=D7TYsQtItDHINXnNIYiJhOjm4vcVEBzpxTwFrz8RWDh7/chEp7/nJrvrJj2mFi+Yze9Ei9T3n8fkEH+Ruq3tMhKgbSRRthR/flUTEfOf6W8JYCRoK9YA4oh2+U1OLYddnvCb+7WC0XSmEHk2ChkT42gINlXgnkV7qvWtl+t7XXQ=
+	t=1772466877; cv=none; b=j7/qsZnRx8Q4cdQbbTKY5mcvMQdcX5dOMKNRJkMHIfS+nQMrmfN0UgJJ7N2sCmjmnWstoXYhpD9i23rUG73kxdK23DD8Fna88a/kdqSiXotJmYOva9CGZ8HS/XpKe8qqM3kqd7n6Ol9FWC8AH7v0SE2g3CUhjmpdTF++CfERFd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772464487; c=relaxed/simple;
-	bh=ZJ60hk3W7oiFCeVzRzHrfxgk3H3Cz5Zfv9Fvf2olsOc=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hAN6espVDW8sOUhmnmemMqSx0NohqEjSfu5LZKHvNaS+EfkA8hYz+1HZTPbE4pNdG/5abTRJyVkojkaKT7cFOSQEAwWkP7C9h3WwVcAxyPeumS4roufIXki8RWWQKpF5TtBie0rjlIQ/hZoUwUU/LUTHO/A9IAMNsLQqOyBNZmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=fail smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=omANQZWH; arc=none smtp.client-ip=51.83.17.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1772466877; c=relaxed/simple;
+	bh=3BQmq9dvDpl2+fop+k6JBpifN8Rg7E6/3o3+NwzLUys=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CPfnT3OWuvYA59pXkj+CAdQXTUuijTS+PVjes82TQoFM2QoyCb1f15r5wbiND4S7AB4p9nKuyyWW8XWj30JG2lGSzYGH+U7sEe+xaAK5uIXm7KKt5BDifl7JnqyxPitMjeTTxqRmU3ToST/GvuT47Tmg8rKIMjdN1efM+utKv9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jgDRLpR1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="omANQZWH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1772464470; x=1772723670;
-	bh=ZJ60hk3W7oiFCeVzRzHrfxgk3H3Cz5Zfv9Fvf2olsOc=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=omANQZWHMz/ySb7B5ONLBOqKUKShhEO6YY9Berz99FU+Lhcz4S0kjpEmbLqqWEjuX
-	 wGoF/GW3VljMIt+CHBE+SyLurL3gHRwbRSTTbabrnB9kB9qrMS975YKd4XQRE/wDaW
-	 UVAGcIM9NVGbWPVfVNP5qWNH+SXQOi0BtALOIO3vrBHJtsalrFUZKfauqs8T54Af2L
-	 I9SC3GlAuGMdYowSAOEiABsfeC8V/hX38fKrKsC8vCzN6l81CqMz5O177TIkZBxsKO
-	 9lhD1b0MJg/5AeVfasvZwU/Yf0dROB1uDSYSIv5CTNl14AnGsUiLelo3m9AKAfqLN3
-	 7I0mSZRzC3pZA==
-Date: Mon, 02 Mar 2026 15:14:27 +0000
-To: "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-From: Turritopsis Dohrnii Teo En Ming <ceotdtem@protonmail.com>
-Cc: "ceo@teo-en-ming-corp.com" <ceo@teo-en-ming-corp.com>
-Subject: Government hackers changed my video title in my primary / main / master Youtube account recently
-Message-ID: <ZeGiDLy5-ed2qqgZAV4Br-J9zs0sXUEsZahfeFNt-OMcmqr6AXGvp8IQUcICKg0JQoBvMS5D1iq3QjPEHvMi0tOqIx_uh-nBnFMjfV71nPk=@protonmail.com>
-Feedback-ID: 165137334:user:proton
-X-Pm-Message-ID: cc23de877a8cd167625e09a37b816d9af8309059
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jgDRLpR1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D4EC2BC87;
+	Mon,  2 Mar 2026 15:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772466876;
+	bh=3BQmq9dvDpl2+fop+k6JBpifN8Rg7E6/3o3+NwzLUys=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jgDRLpR1lV5Tw0Ecq/vLiVK0zxCyZGfh1QQbGSPkdVdk1kFg7jD5JrKWWujT+3ecn
+	 RjXtWbXFBDkmX7zxn30hP1eQwct2sf7gJb1MzO1hPFScV+HwOVAPZ5NAFNcsGl/JbI
+	 eAVuF1oT4mtua5qCAOSkJ0A3nSHPDpAMyGacFS/ugKah1ihP+Fr8LZy6rriEy4chT7
+	 f4eyrHL4vKxvgQ02eB5Fz+VSkK9pN0/GX8il4ctbFuZcp5j4Afl5dTpoP058MHmxwM
+	 DXYNh6GjhipUwJDF3NojaQIG5EBzIqcCyrCtCTW6IsPV+/P3ZOFPNIPM61nOqBe5cr
+	 Tn9PETygu4k/Q==
+Received: from localhost ([::1])
+	by mail.kernel.org with esmtp (Exim 4.99.1)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1vx5bO-0000000GuZ0-2ElO;
+	Mon, 02 Mar 2026 16:54:34 +0100
+Date: Mon, 2 Mar 2026 16:54:33 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>, Kees Cook
+ <kees@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ intel-wired-lan@lists.osuosl.org, linux-doc@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Aleksandr Loktionov <aleksandr.loktionov@intel.com>, Randy Dunlap
+ <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [Intel-wired-lan] [PATCH 00/38] docs: several improvements to
+ kernel-doc
+Message-ID: <20260302165433.27f11148@localhost>
+In-Reply-To: <87sear2kbm.fsf@trenco.lwn.net>
+References: <cover.1771408406.git.mchehab+huawei@kernel.org>
+	<87sear2kbm.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Subject: Government hackers changed my video title in my primary / main / m=
-aster Youtube account recently
+On Mon, 23 Feb 2026 14:58:53 -0700
+Jonathan Corbet <corbet@lwn.net> wrote:
 
-Good day from Singapore,
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> 
+> > Hi Jon,
+> >
+> > This series contain several improvements for kernel-doc.
+> >
+> > Most of the patches came from v4 of this series:
+> > 	https://lore.kernel.org/linux-doc/cover.1769867953.git.mchehab+huawei@kernel.org/  
+> 
+> So I will freely confess to having lost the plot with this stuff; I'm
+> now trying to get back up to speed. 
 
-My primary / main / master YouTube account is protected by two-factor secon=
-d-factor authentication aka 2FA MFA. Yet government hackers were able to ch=
-ange the title of my YouTube video easily.
+Yeah, I kinda figure it out ;-)
 
-My Youtube video title will usually match the video filename on my computer=
-, 99.9% of the time.
+> But, before I dig into this big
+> series, can you say whether you think it's ready, or whether there's
+> another one on the horizon that I should wait for?
 
-On 4 Feb 2026 Wednesday, I had uploaded a video to Youtube.
+There are more things undergoing, but I need some time to reorganize
+the patchset... currently, there are 60+ patches on my pile.
 
-The video filename on my computer is:
+So, instead of merging this patchset, I'll be sending you
+a smaller series with the basic stuff, in a way that it would
+be easier to review. My plan is to send patches along this week
+on smaller chunks, and after checking the differences before/after,
+in terms of man/rst/error output.
 
-=E9=83=91=E5=B7=A7=E5=84=BF Jayner Teh Getai Performance 4 Feb 2026 Wednesd=
-ay.mp4
-
-However, a few days later, I noticed that my YouTube video title appeared t=
-o have changed.
-
-Government hackers had changed my Youtube video title to:
-
-Jayner Teh Getai Performance, February 4, 2026, Wednesday
-
-Yesterday 28 Feb 2026 Saturday at 6.14 PM, I made a verification check.
-
-The Youtube video title does not match the video filename on my computer. I=
-ndeed!
-
-Immediately I know government hackers must have changed my Youtube video ti=
-tle.
-
-For the past 19 years since 2007, I know government hackers have control ov=
-er my Android (Linux) phones, laptops, desktop computers, servers, and onli=
-ne accounts.
-
-This is because government hackers regularly love to purposely and delibera=
-tely show off they can hack into my devices and accounts for the past 19 ye=
-ars.
-
-Recently, government hackers purposely and deliberately show off they are a=
-ble to change my Youtube video title, when my primary / main / master Youtu=
-be account is protected by 2FA MFA.
-
-What are the motives and objectives of the government hackers in repeatedly=
- and regularly showing me they have access to my devices and accounts, purp=
-osely and deliberately?
-
-Government hackers could have chosen NOT to let me know they have hacked in=
-to my devices and accounts for the past 19 years. They could have done it s=
-ilently and stealthily. Why are they doing it so obviously?
-
-Why? Is it to distract me from something else?
-
-Regards,
-
-Mr. Turritopsis Dohrnii Teo En Ming
-Targeted Individuals Singapore
-GIMP =3D Government-Induced Medical/Mental Problems/Poverty
-1st March 2026 Sunday 10.31 PM Singapore Time
-
-PS. A few minutes after making the above report, my vivo X100 Pro 5G Androi=
-d (Linux) smartphone started playing music by itself without me doing anyth=
-ing.
-
-
-
+-- 
+Thanks,
+Mauro
