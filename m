@@ -1,531 +1,456 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B011481256;
-	Tue,  3 Mar 2026 15:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772550548; cv=none; b=bCRgaD2ssSSnDczo28ao21Nac0QvNKFlSieieCQNfCysGUTohOlgtODhzqgdwrUK3fS17dPWafVgnGo8kVZ62pdUeES0MBh1d16TX8eGKtlorzg3rYMDHxFjy+pSap9h6RHO2Ca4zsol1i8j9hYRkSFFWb3KlUGLi4kJTBKxjbk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772550548; c=relaxed/simple;
-	bh=yFCPaoZTzWwK3TuRGGoC7htCOpglMt0FSkwzHOe0FZg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d4hlRLeGDHt2eqK7vNcA+k2pox9ZtiFHzUkQFh2Fx/ESn8f0Q2N+y32ISGy+5piOFkaI0tg6kqkwSbARWR11sbeG8r7iYvdr0kFtVtUI1P1MMXULteMJG8Qp5Qy9TV6xeqeBlJ57ahHSJk1HhPM4ykSG0g/nT4svLPSQpuV39NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 556221595;
-	Tue,  3 Mar 2026 07:08:58 -0800 (PST)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D45D3F73B;
-	Tue,  3 Mar 2026 07:09:00 -0800 (PST)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	David Laight <david.laight.linux@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v5 2/2] randomize_kstack: Unify random source across arches
-Date: Tue,  3 Mar 2026 15:08:39 +0000
-Message-ID: <20260303150840.3789438-3-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260303150840.3789438-1-ryan.roberts@arm.com>
-References: <20260303150840.3789438-1-ryan.roberts@arm.com>
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB9A480968;
+	Tue,  3 Mar 2026 15:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772550758; cv=fail; b=dGDbgak13YOiU/SEtEXFWOYsUo9UM2bHUqHMcOA3mygRk8kxtjNPQPWQatTvHCNHgw0ts6r6Zt+zrKBxav2OZes0aDCvfQCm/gm9zsG3YdtgJENZMDi2d8aSUkr3pqgSuWYOGZjzmwkvcj+Z7642eWMHos95RaL/tFoF3MgvBH4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772550758; c=relaxed/simple;
+	bh=ilfLMmX0FLNciJmQ4mMVLV+FhhXLiU1kxcUTEFuJ8CQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZAojv3yXY5c1etiu2HwykZrr1UjssxKBcYh+WCvBtmeTQtOLrXeIeWarOGsXlCJXPP2AqJ554GMeZySXNV1tVQC9dIy4+sggKPzYFzq2M82D/5yvF1clkfWI1QXqRS2D81gBYwh7CdF4l7QtuH7REQflUg8492PDmCjf99HMVt0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gbRpTeas; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gbRpTeas"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772550755; x=1804086755;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=ilfLMmX0FLNciJmQ4mMVLV+FhhXLiU1kxcUTEFuJ8CQ=;
+  b=gbRpTeasHD970XgBKI/U4XyUFB4C0jnZNQBYdikjjqXV4MmIvfEc0Xt1
+   0qulVyHAdUW2/2m3QC+qWonMB36KLCdkz7GyUXN5nfANgXYdHHJURqDNp
+   Efw2N7Y3BQGrRfi4A80q4hY8CYlLcRcjkHCbvEjunqnqYwd7LmFRwrZB0
+   oTv76GsXiIU4eEej3Fb/kI+ycJkOhZ+SPmIG+ZTQPqFlesaVbTHAQsURc
+   1nl8Z0HrgKmKaZrgb+W21//D94E/ZHtKwmXulMGPTCfg3Jo1mwL6O80l/
+   QiZ6eLbphJDIzriyoyglA3TfE4oLogBRKBdV44mDfV9PjkQik6nOiq4M8
+   Q==;
+X-CSE-ConnectionGUID: XdSkJmFrQ4SYeKttpwTvkA==
+X-CSE-MsgGUID: /iqcfr0mSV+P7nnyec1U7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11718"; a="73710880"
+X-IronPort-AV: E=Sophos;i="6.21,322,1763452800"; 
+   d="scan'208";a="73710880"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2026 07:12:34 -0800
+X-CSE-ConnectionGUID: 3bd42/ZVR1i1wEPTI/62gw==
+X-CSE-MsgGUID: 9af6KkXIS26IrQFcaaH0GQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,322,1763452800"; 
+   d="scan'208";a="244863494"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2026 07:12:34 -0800
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 3 Mar 2026 07:12:33 -0800
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Tue, 3 Mar 2026 07:12:33 -0800
+Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.68) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 3 Mar 2026 07:12:33 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LZII0TnHX9ghVarlHk1PyYuYPxRQi2rMZeqMv0b4Kwj3yx1hKs8b1HzFEfTQSQszMA48gzodm8aF9Y/jrm2rwrdwhekhYQewB8v5w4IOb0+Qt+OgEo9bvP3fsaqpp5DTDa00dlFfsYFXYusYdsk6rqvV86HbLtA5SpGGn1w1cGwe+kgHvPKFC2YJU9gUcS6JFcsH7OX12XBfGMOw1GQUunpBKU5Ej5MBNvzOZEWC5Bu5FZJbCzf0ycNqFBUYMO5ntX2dgNrz8kDFX/rD0cMPN3fEPL3vBRl1JENFmGGTn5GLYz4/01jF5EPFxcsnGtkZMeULTY45AA405aKdmi7BCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yng8eRcFjah+ePVz1eaps/Ys9kqQ4mx/TdgdWr6vpmI=;
+ b=Wp8WeNEelNlS62Zb9HSNt8wkmUlWAOdIIhAEAkr5n2RC7DJayzD850FjuGEq64/qszJEdpJMEBzjPUVT13/9YhBYzPcBV4M4kTgilAM8tlKWnPCQcEO97Nu0sAp5x5PjcPVZLPXuNLSh8PwFTMa578lWDQuX/2vEpQBAfoB9e3Ww5Lx3PlR5b5kccaVU+2m8srzlookKpLgetdjvA1dXoM42h1BlpBGy7SU4vYXiCXO65fZqfTw7ODkk0HKmRxYvlpLzNpejk15665S8NICk40LRVe6rKJR4tfnmi+FJ9WTkozhRzn2vCbMLXw8h5s8bE97N48DHItm3AJCT27VgnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA3PR11MB8986.namprd11.prod.outlook.com (2603:10b6:208:577::21)
+ by DS0PR11MB7384.namprd11.prod.outlook.com (2603:10b6:8:134::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Tue, 3 Mar
+ 2026 15:12:31 +0000
+Received: from IA3PR11MB8986.namprd11.prod.outlook.com
+ ([fe80::e6f0:6afb:6ef9:ab5c]) by IA3PR11MB8986.namprd11.prod.outlook.com
+ ([fe80::e6f0:6afb:6ef9:ab5c%5]) with mapi id 15.20.9654.022; Tue, 3 Mar 2026
+ 15:12:31 +0000
+From: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Jani Nikula
+	<jani.nikula@linux.intel.com>
+CC: "Lobakin, Aleksander" <aleksander.lobakin@intel.com>, Jonathan Corbet
+	<corbet@lwn.net>, Kees Cook <kees@kernel.org>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, "intel-wired-lan@lists.osuosl.org"
+	<intel-wired-lan@lists.osuosl.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: RE: [PATCH 00/38] docs: several improvements to kernel-doc
+Thread-Topic: [PATCH 00/38] docs: several improvements to kernel-doc
+Thread-Index: AQHcoL88GZR54j5iykSjAqU9CRGQErWQVEUAgAylJACAAAR8kA==
+Date: Tue, 3 Mar 2026 15:12:30 +0000
+Message-ID: <IA3PR11MB89867A79259D027E855F38DAE57FA@IA3PR11MB8986.namprd11.prod.outlook.com>
+References: <cover.1771408406.git.mchehab+huawei@kernel.org>
+	<33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
+ <20260303155310.5235b367@localhost>
+In-Reply-To: <20260303155310.5235b367@localhost>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA3PR11MB8986:EE_|DS0PR11MB7384:EE_
+x-ms-office365-filtering-correlation-id: 677b2ffa-8760-4c9a-533f-08de79374a55
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7142099003|38070700021;
+x-microsoft-antispam-message-info: BVDzw1j5CA5nLs5EYq6bRWW6wURooS0xkTbOerys4tryrgq6sjBGv1PADbqIc0GbnSGIB4mOBtZjgx65XlccXb9OJyoPD8jV3knJogy+AMiFeNAM4BiAZ8pZrBzrvPOibv13bOQAqZxk5A8WkQYNbNor6SDMIzAKSfJNw+KurlPy/CyomJR7YuqkA2e3Fb0ptUAM0wD++CUvvrJqVt3oN3BWNhNs/luuRfQlNoSVFt9iSHA36hZ7zd320MwYFFxOEjcG384pemtdbTfdoTKJ+Ru17pr8sV/QeHexxLdcOnWaJcRoEF6MMxuG6NJ5r/9A17s1Ke7/wfAqQg4l/SJSFNQ5IcPnwE59Uv8559heq67GEbKsPTI/CMAQ3TxgU6OCBkPorwqYKs5OGB2m9rubNkFkV25UYiCkqc/2YJUr4w62k1qOVhQ4cPb5PtKnWzm2sghRK/F2IdI9VmI1CYmjGSCX8GLE8zJb+LxvCvViS02ns53g67I4D92b9Yc8cxiZVFa3yFV988zPia06oLYzEb2xBQMOrBsyYIWG+HH/XYp/13L6fSADC1fqn4h3O8GRVYaxADeOU+GnD5otA99SrzXifOjNvfrgMkmBAZCWEf5CmjxnUsZq5RtAwGSA74LSK9vcWJ1uxMpnpfSXVVg58Y7hrod2NIR+zsI/fVKWKLVtyFaOOdEZfGmfXwhIBn5DxsNcfGBGufG8B2w/QLuVT8YtSczGzUmDuHTS8PablGw2e0OeiIvDEn9IzG+yyuVrdjpXDjHAsOP55morwLAEc1/krd6clCV/8kvM8eahjnQ=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA3PR11MB8986.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7142099003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?5GSe7JBREBnluper344E3dzg9HwRwcSwDZFu0rxgFQu4GS+F50DqFyj1m1pL?=
+ =?us-ascii?Q?sHSkqGye6Qs4F6mnaCgxVpqAV7VmTFJTFmkrudtwZgRcOr4MrGEsUp2y21ql?=
+ =?us-ascii?Q?eRbzZoK3IX05ONZhLOlZiwoBYWCEzH7LnWgulgMLIzsE2DxckSjp9246FuY+?=
+ =?us-ascii?Q?77EiGTPSW6iw34Rurj2N+QdFgAGIaybNWegxVq5tk2EH54/DXbclsb/qrGN3?=
+ =?us-ascii?Q?jMg7vVrBHNyZ8k+/rwAgvhjuo6/OqSCzPAvSPsjsZ4BKpKeY4GwhdzEGpxcV?=
+ =?us-ascii?Q?XXvo40dF99rNhRchDEDcb2DMKVvNPF3kBOCi+jpcviUzyPbZyVjpNa7fErke?=
+ =?us-ascii?Q?axH6ZZUxmqt91FTMofmgzy9rKNh/L9ZDj3Gob0UtLCDzeJimzP6POH0lI2pE?=
+ =?us-ascii?Q?Itrt5NO/gyZWXAUk7H+Pn+6HiSK0TfTQsM0jtlXy386rpA4AQhw3Hqrl1daU?=
+ =?us-ascii?Q?cOu3lQ6TV3Ye+h52xXkW6mTDkd6KWWYjS5FSD9n0cinaNW3qZR/068brdhIB?=
+ =?us-ascii?Q?0/49phCyzQ7VU1Zp46rrA1xuPmnxg2LRdO/RV/jRpsfjYclxyfvpXHl1G4pV?=
+ =?us-ascii?Q?xiTnU+ujF18e0wPGj4T+GVKO6JhXS1dXUm4ybEqtAyljGk/8GOAdWTuafKDf?=
+ =?us-ascii?Q?0cyLU38H283bwKM3qQiK1b++81p37rr9rSSBY1k2yk/bBi8VNAwBUDIlhMWs?=
+ =?us-ascii?Q?CJ6ae/M7vn5YBWMoWv0GSDW6mnTTNBa3W4lMgmJykd8G0N646C8wlbq4tFNh?=
+ =?us-ascii?Q?UHnxWdJuBZQObrPSI2aIjm/MvzmgVekXTtho5NiwQyc6NCCdLUArj11uxr0q?=
+ =?us-ascii?Q?DqIz4AdBrS1T47zrXiWdBeO+F13ABkLe64kUZeuPk1U2IvyZpKUxp7A/3mEg?=
+ =?us-ascii?Q?ihc7QDtJO6ulIHEtPgzFLX6K11dQAixxBNNZZOP8fW8W+hHX8/0eSaQAqg6y?=
+ =?us-ascii?Q?l7ECZ53e77rdVURCR5x8Qzs9Y0L9qY8CWiNhABK2gbvuC3JJLePRVT7YSQyz?=
+ =?us-ascii?Q?TaicinVi/4E0/9z3el2uOHcuX4M9i7AcoJGvWQVCMNE3AmTA/QiZ4CQ7WAuN?=
+ =?us-ascii?Q?NLZsu6y/0IMoOXBkhRjVFJAp106jDk6f3JClpHTiNMj0YyJ2PI9bDxtX7g3y?=
+ =?us-ascii?Q?SZ7H2SVzUx84+y1rIWrKAZ/jxuTU5NMmY61YkdzMcoLpKmwlCuTCJoaeCkhL?=
+ =?us-ascii?Q?0rC5TAtroLnN6qqXzdZwWrWbMsxE5ys20cBbcf+t9rT5Rq+M3roc0n5PLqeR?=
+ =?us-ascii?Q?Hk+litRkjiNSZjvEeZnS6KSKAwCMfsrPMnQN2ZQBOUL1Zlr7J/SO5m1xUe0W?=
+ =?us-ascii?Q?UyKlyiVQy9uOAVY/HstzkY3hGzG4xY41K7LlGIEEpzkYQanq3Yywfoz5OyxJ?=
+ =?us-ascii?Q?xH6RroRpExfsZ3aFZOFHbFBec0lB28ZqpDFWiTV4CcS7hhk86hZ19+8NPJw6?=
+ =?us-ascii?Q?mDYfKlnHslP7pq5N5FqpQwOVWr/xxMQi8SMaBPBrEqe6xB1B1MFncanxRVJh?=
+ =?us-ascii?Q?MfBND0FGMNJPmj88QIiUXXvTpDaetYNTnyyy8i8100bNCpzcgkx2bl7vBJSH?=
+ =?us-ascii?Q?DxDY42wr7C3wlpJ9kw9dFCrWmxFjk+YToFu0z9L2AI41H9hIVS/nONZx4un4?=
+ =?us-ascii?Q?00XBJRWicKxwJqRv5xx8xSrXhJzd8D9c9/gxLZIxAKi6XOK3rtgK2SZXIT/n?=
+ =?us-ascii?Q?0EiT1q29nHYUHTovcwp1Rg49ytTd1xjScTaiIpXWp8da3CLiEjoUOofN2hZ6?=
+ =?us-ascii?Q?FYK6tlm3DiWaCJ/pc0p3QE7g+5fFe+8=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA3PR11MB8986.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 677b2ffa-8760-4c9a-533f-08de79374a55
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2026 15:12:30.9954
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cCifkbs9Ao2ibF6+ygDlVZBxePWs440e6mqXVrNcOIHc4zp6g1ajrZ/7ThDAJTt4Igih4Mmc2kmeOhMgNAnhJUO59rWei+Y1R5M8jvEZiT0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7384
+X-OriginatorOrg: intel.com
 
-Previously different architectures were using random sources of
-differing strength and cost to decide the random kstack offset. A number
-of architectures (loongarch, powerpc, s390, x86) were using their
-timestamp counter, at whatever the frequency happened to be. Other
-arches (arm64, riscv) were using entropy from the crng via
-get_random_u16().
 
-There have been concerns that in some cases the timestamp counters may
-be too weak, because they can be easily guessed or influenced by user
-space. And get_random_u16() has been shown to be too costly for the
-level of protection kstack offset randomization provides.
 
-So let's use a common, architecture-agnostic source of entropy; a
-per-cpu prng, seeded at boot-time from the crng. This has a few
-benefits:
+> -----Original Message-----
+> From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Sent: Tuesday, March 3, 2026 3:53 PM
+> To: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Lobakin, Aleksander <aleksander.lobakin@intel.com>; Jonathan
+> Corbet <corbet@lwn.net>; Kees Cook <kees@kernel.org>; Mauro Carvalho
+> Chehab <mchehab@kernel.org>; intel-wired-lan@lists.osuosl.org; linux-
+> doc@vger.kernel.org; linux-hardening@vger.kernel.org; linux-
+> kernel@vger.kernel.org; netdev@vger.kernel.org; Gustavo A. R. Silva
+> <gustavoars@kernel.org>; Loktionov, Aleksandr
+> <aleksandr.loktionov@intel.com>; Randy Dunlap <rdunlap@infradead.org>;
+> Shuah Khan <skhan@linuxfoundation.org>
+> Subject: Re: [PATCH 00/38] docs: several improvements to kernel-doc
+>=20
+> On Mon, 23 Feb 2026 15:47:00 +0200
+> Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>=20
+> > On Wed, 18 Feb 2026, Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> > > As anyone that worked before with kernel-doc are aware, using
+> regex
+> > > to handle C input is not great. Instead, we need something closer
+> to
+> > > how C statements and declarations are handled.
+> > >
+> > > Yet, to avoid breaking  docs, I avoided touching the regex-based
+> > > algorithms inside it with one exception: struct_group logic was
+> > > using very complex regexes that are incompatible with Python
+> internal "re" module.
+> > >
+> > > So, I came up with a different approach: NestedMatch. The logic
+> > > inside it is meant to properly handle brackets, square brackets
+> and
+> > > parenthesis, which is closer to what C lexical parser does. On
+> that
+> > > time, I added a TODO about the need to extend that.
+> >
+> > There's always the question, if you're putting a lot of effort into
+> > making kernel-doc closer to an actual C parser, why not put all that
+> > effort into using and adapting to, you know, an actual C parser?
+>=20
+> Playing with this idea, it is not that hard to write an actual C
+> parser - or at least a tokenizer. There is already an example of it
+> at:
+>=20
+> 	https://docs.python.org/3/library/re.html
+>=20
+> I did a quick implementation, and it seems to be able to do its job:
+>=20
+>     $ ./tokenizer.py ./include/net/netlink.h
+>       1:  0  COMMENT       '/* SPDX-License-Identifier: GPL-2.0 */'
+>       2:  0  CPP           '#ifndef'
+>       2:  8  ID            '__NET_NETLINK_H'
+>       3:  0  CPP           '#define'
+>       3:  8  ID            '__NET_NETLINK_H'
+>       5:  0  CPP           '#include'
+>       5:  9  OP            '<'
+>       5: 10  ID            'linux'
+>       5: 15  OP            '/'
+>       5: 16  ID            'types'
+>       5: 21  PUNC          '.'
+>       5: 22  ID            'h'
+>       5: 23  OP            '>'
+>       6:  0  CPP           '#include'
+>       6:  9  OP            '<'
+>       6: 10  ID            'linux'
+>       6: 15  OP            '/'
+>       6: 16  ID            'netlink'
+>       6: 23  PUNC          '.'
+>       6: 24  ID            'h'
+>       6: 25  OP            '>'
+>       7:  0  CPP           '#include'
+>       7:  9  OP            '<'
+>       7: 10  ID            'linux'
+>       7: 15  OP            '/'
+>       7: 16  ID            'jiffies'
+>       7: 23  PUNC          '.'
+>       7: 24  ID            'h'
+>       7: 25  OP            '>'
+>       8:  0  CPP           '#include'
+>       8:  9  OP            '<'
+>       8: 10  ID            'linux'
+>       8: 15  OP            '/'
+>       8: 16  ID            'in6'
+> ...
+>      12:  1  COMMENT       '/**\n  * Standard attribute types to
+> specify validation policy\n  */'
+>      13:  0  ENUM          'enum'
+>      13:  5  PUNC          '{'
+>      14:  1  ID            'NLA_UNSPEC'
+>      14: 11  PUNC          ','
+>      15:  1  ID            'NLA_U8'
+>      15:  7  PUNC          ','
+>      16:  1  ID            'NLA_U16'
+>      16:  8  PUNC          ','
+>      17:  1  ID            'NLA_U32'
+>      17:  8  PUNC          ','
+>      18:  1  ID            'NLA_U64'
+>      18:  8  PUNC          ','
+>      19:  1  ID            'NLA_STRING'
+>      19: 11  PUNC          ','
+>      20:  1  ID            'NLA_FLAG'
+> ...
+>      41:  0  STRUCT        'struct'
+>      41:  7  ID            'netlink_range_validation'
+>      41: 32  PUNC          '{'
+>      42:  1  ID            'u64'
+>      42:  5  ID            'min'
+>      42:  8  PUNC          ','
+>      42: 10  ID            'max'
+>      42: 13  PUNC          ';'
+>      43:  0  PUNC          '}'
+>      43:  1  PUNC          ';'
+>      45:  0  STRUCT        'struct'
+>      45:  7  ID            'netlink_range_validation_signed'
+>      45: 39  PUNC          '{'
+>      46:  1  ID            's64'
+>      46:  5  ID            'min'
+>      46:  8  PUNC          ','
+>      46: 10  ID            'max'
+>      46: 13  PUNC          ';'
+>      47:  0  PUNC          '}'
+>      47:  1  PUNC          ';'
+>      49:  0  ENUM          'enum'
+>      49:  5  ID            'nla_policy_validation'
+>      49: 27  PUNC          '{'
+>      50:  1  ID            'NLA_VALIDATE_NONE'
+>      50: 18  PUNC          ','
+>      51:  1  ID            'NLA_VALIDATE_RANGE'
+>      51: 19  PUNC          ','
+>      52:  1  ID            'NLA_VALIDATE_RANGE_WARN_TOO_LONG'
+>      52: 33  PUNC          ','
+>      53:  1  ID            'NLA_VALIDATE_MIN'
+>      53: 17  PUNC          ','
+>      54:  1  ID            'NLA_VALIDATE_MAX'
+>      54: 17  PUNC          ','
+>      55:  1  ID            'NLA_VALIDATE_MASK'
+>      55: 18  PUNC          ','
+>      56:  1  ID            'NLA_VALIDATE_RANGE_PTR'
+>      56: 23  PUNC          ','
+>      57:  1  ID            'NLA_VALIDATE_FUNCTION'
+>      57: 22  PUNC          ','
+>      58:  0  PUNC          '}'
+>      58:  1  PUNC          ';'
+>=20
+> It sounds doable to use it, and, at least on this example, it properly
+> picked the IDs.
+>=20
+> On the other hand, using it would require lots of changes at kernel-
+> doc. So, I guess I'll add a tokenizer to kernel-doc, but we should
+> likely start using it gradually.
+>=20
+> Maybe starting with NestedSearch and with public/private comment
+> handling (which is currently half-broken).
+>=20
+> As a reference, the above was generated with the code below, which was
+> based on the Python re documentation.
+>=20
+> Comments?
+>=20
+> ---
+>=20
+> One side note: right now, we're not using typing at kernel-doc, nor
+> really following a proper coding style.
+>=20
+> I wanted to use it during the conversion, and place consts in
+> uppercase, as this is currently the best practices, but doing it while
+> converting from Perl were very annoying. So, I opted to make things
+> simpler. Now that we have it coded, perhaps it is time to define a
+> coding style and apply it to kernel-doc.
+>=20
+> --
+> Thanks,
+> Mauro
+>=20
+> #!/usr/bin/env python3
+>=20
+> import sys
+> import re
+>=20
+> class Token():
+>     def __init__(self, type, value, line, column):
+>         self.type =3D type
+>         self.value =3D value
+>         self.line =3D line
+>         self.column =3D column
+>=20
+> class CTokenizer():
+>     C_KEYWORDS =3D {
+>         "struct", "union", "enum",
+>     }
+>=20
+>     TOKEN_LIST =3D [
+>         ("COMMENT", r"//[^\n]*|/\*[\s\S]*?\*/"),
+>=20
+>         ("STRING",  r'"(?:\\.|[^"\\])*"'),
+>         ("CHAR",    r"'(?:\\.|[^'\\])'"),
+>=20
+>         ("NUMBER",  r"0[xX][0-9a-fA-F]+[uUlL]*|0[0-7]+[uUlL]*|"
+>                     r"[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?[fFlL]*"),
+>=20
+>         ("ID",      r"[A-Za-z_][A-Za-z0-9_]*"),
+>=20
+>         ("OP",      r"\+\+|\-\-|\->|=3D=3D|\!=3D|<=3D|>=3D|&&|\|\||<<|>>|=
+\+=3D|\-
+> =3D|\*=3D|/=3D|%=3D"
+>                     r"|&=3D|\|=3D|\^=3D|=3D|\+|\-
+> |\*|/|%|<|>|&|\||\^|~|!|\?|\:"),
+>=20
+>         ("PUNC",    r"[;,\.\[\]\(\)\{\}]"),
+>=20
+>         ("CPP",
+> r"#\s*(define|include|ifdef|ifndef|if|else|elif|endif|undef|pragma)"),
+>=20
+>         ("HASH",    r"#"),
+>=20
+>         ("NEWLINE", r"\n"),
+>=20
+>         ("SKIP",    r"[\s]+"),
+>=20
+>         ("MISMATCH",r"."),
+>     ]
+>=20
+>     def __init__(self):
+>         re_tokens =3D []
+>=20
+>         for name, pattern in self.TOKEN_LIST:
+>             re_tokens.append(f"(?P<{name}>{pattern})")
+>=20
+>         self.re_scanner =3D re.compile("|".join(re_tokens),
+>                                      re.MULTILINE | re.DOTALL)
+>=20
+>     def tokenize(self, code):
+>         # Handle continuation lines
+>         code =3D re.sub(r"\\\n", "", code)
+>=20
+>         line_num =3D 1
+>         line_start =3D 0
+>=20
+>         for match in self.re_scanner.finditer(code):
+>             kind   =3D match.lastgroup
+>             value  =3D match.group()
+>             column =3D match.start() - line_start
+>=20
+>             if kind =3D=3D "NEWLINE":
+>                 line_start =3D match.end()
+>                 line_num +=3D 1
+>                 continue
+>=20
+>             if kind in {"SKIP"}:
+>                 continue
+>=20
+>             if kind =3D=3D "MISMATCH":
+>                 raise RuntimeError(f"Unexpected character {value!r} on
+> line {line_num}")
+>=20
+>             if kind =3D=3D "ID" and value in self.C_KEYWORDS:
+>                 kind =3D value.upper()
+>=20
+>             # For all other tokens we keep the raw string value
+>             yield Token(kind, value, line_num, column)
+>=20
+> if __name__ =3D=3D "__main__":
+>     if len(sys.argv) !=3D 2:
+>         print(f"Usage: python {sys.argv[0]} <fname>")
+>         sys.exit(1)
+>=20
+>     fname =3D sys.argv[1]
+>=20
+>     try:
+>         with open(fname, 'r', encoding=3D'utf-8') as file:
+>             sample =3D file.read()
+>     except FileNotFoundError:
+>         print(f"Error: The file '{fname}' was not found.")
+>         sys.exit(1)
+>     except Exception as e:
+>         print(f"An error occurred while reading the file: {str(e)}")
+>         sys.exit(1)
+>=20
+>     print(f"Tokens from {fname}:")
+>=20
+>     for tok in CTokenizer().tokenize(sample):
+>         print(f"{tok.line:3d}:{tok.column:3d}  {tok.type:12}
+> {tok.value!r}")
 
-  - We can remove choose_random_kstack_offset(); That was only there to
-    try to make the timestamp counter value a bit harder to influence
-    from user space [*].
+As hobby C compiler writer, I must say that you need to implement C preproc=
+essor first, because C preprocessor influences/changes the syntax.
+In your tokenizer I see right away that any line which begins from '#' must=
+ be just as C preprocessor command without further tokenizing.
+But the real pain make C preprocessor substitutions IMHO
 
-  - The architecture code is simplified. All it has to do now is call
-    add_random_kstack_offset() in the syscall path.
-
-  - The strength of the randomness can be reasoned about independently
-    of the architecture.
-
-  - Arches previously using get_random_u16() now have much faster
-    syscall paths, see below results.
-
-[*] Additionally, this gets rid of some redundant work on s390 and x86.
-Before this patch, those architectures called
-choose_random_kstack_offset() under arch_exit_to_user_mode_prepare(),
-which is also called for exception returns to userspace which were *not*
-syscalls (e.g. regular interrupts). Getting rid of
-choose_random_kstack_offset() avoids a small amount of redundant work
-for the non-syscall cases.
-
-In some configurations, add_random_kstack_offset() will now call
-instrumentable code, so for a couple of arches, I have moved the call a
-bit later to the first point where instrumentation is allowed. This
-doesn't impact the efficacy of the mechanism.
-
-There have been some claims that a prng may be less strong than the
-timestamp counter if not regularly reseeded. But the prng has a period
-of about 2^113. So as long as the prng state remains secret, it should
-not be possible to guess. If the prng state can be accessed, we have
-bigger problems.
-
-Additionally, we are only consuming 6 bits to randomize the stack, so
-there are only 64 possible random offsets. I assert that it would be
-trivial for an attacker to brute force by repeating their attack and
-waiting for the random stack offset to be the desired one. The prng
-approach seems entirely proportional to this level of protection.
-
-Performance data are provided below. The baseline is v6.18 with rndstack
-on for each respective arch. (I)/(R) indicate statistically significant
-improvement/regression. arm64 platform is AWS Graviton3 (m7g.metal).
-x86_64 platform is AWS Sapphire Rapids (m7i.24xlarge):
-
-+-----------------+--------------+---------------+---------------+
-| Benchmark       | Result Class |  per-cpu-prng |  per-cpu-prng |
-|                 |              | arm64 (metal) |   x86_64 (VM) |
-+=================+==============+===============+===============+
-| syscall/getpid  | mean (ns)    |    (I) -9.50% |   (I) -17.65% |
-|                 | p99 (ns)     |   (I) -59.24% |   (I) -24.41% |
-|                 | p99.9 (ns)   |   (I) -59.52% |   (I) -28.52% |
-+-----------------+--------------+---------------+---------------+
-| syscall/getppid | mean (ns)    |    (I) -9.52% |   (I) -19.24% |
-|                 | p99 (ns)     |   (I) -59.25% |   (I) -25.03% |
-|                 | p99.9 (ns)   |   (I) -59.50% |   (I) -28.17% |
-+-----------------+--------------+---------------+---------------+
-| syscall/invalid | mean (ns)    |   (I) -10.31% |   (I) -18.56% |
-|                 | p99 (ns)     |   (I) -60.79% |   (I) -20.06% |
-|                 | p99.9 (ns)   |   (I) -61.04% |   (I) -25.04% |
-+-----------------+--------------+---------------+---------------+
-
-I tested an earlier version of this change on x86 bare metal and it
-showed a smaller but still significant improvement. The bare metal
-system wasn't available this time around so testing was done in a VM
-instance. I'm guessing the cost of rdtsc is higher for VMs.
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
- arch/Kconfig                         |  5 ++-
- arch/arm64/kernel/syscall.c          | 11 ------
- arch/loongarch/kernel/syscall.c      | 11 ------
- arch/powerpc/kernel/syscall.c        | 16 ++-------
- arch/riscv/kernel/traps.c            | 12 -------
- arch/s390/include/asm/entry-common.h |  8 -----
- arch/s390/kernel/syscall.c           |  2 +-
- arch/x86/entry/syscall_32.c          |  4 +--
- arch/x86/entry/syscall_64.c          |  2 +-
- arch/x86/include/asm/entry-common.h  | 12 -------
- include/linux/randomize_kstack.h     | 52 +++++++++-------------------
- include/linux/sched.h                |  4 ---
- init/main.c                          |  8 +++++
- kernel/fork.c                        |  1 -
- 14 files changed, 33 insertions(+), 115 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 102ddbd4298ef..f134527ace10e 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1519,9 +1519,8 @@ config HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
- 	def_bool n
- 	help
- 	  An arch should select this symbol if it can support kernel stack
--	  offset randomization with calls to add_random_kstack_offset()
--	  during syscall entry and choose_random_kstack_offset() during
--	  syscall exit. Careful removal of -fstack-protector-strong and
-+	  offset randomization with a call to add_random_kstack_offset()
-+	  during syscall entry. Careful removal of -fstack-protector-strong and
- 	  -fstack-protector should also be applied to the entry code and
- 	  closely examined, as the artificial stack bump looks like an array
- 	  to the compiler, so it will attempt to add canary checks regardless
-diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-index c062badd1a566..358ddfbf1401a 100644
---- a/arch/arm64/kernel/syscall.c
-+++ b/arch/arm64/kernel/syscall.c
-@@ -52,17 +52,6 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
- 	}
- 
- 	syscall_set_return_value(current, regs, 0, ret);
--
--	/*
--	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
--	 * bits. The actual entropy will be further reduced by the compiler
--	 * when applying stack alignment constraints: the AAPCS mandates a
--	 * 16-byte aligned SP at function boundaries, which will remove the
--	 * 4 low bits from any entropy chosen here.
--	 *
--	 * The resulting 6 bits of entropy is seen in SP[9:4].
--	 */
--	choose_random_kstack_offset(get_random_u16());
- }
- 
- static inline bool has_syscall_work(unsigned long flags)
-diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
-index 1249d82c1cd0a..85da7e050d977 100644
---- a/arch/loongarch/kernel/syscall.c
-+++ b/arch/loongarch/kernel/syscall.c
-@@ -79,16 +79,5 @@ void noinstr __no_stack_protector do_syscall(struct pt_regs *regs)
- 					   regs->regs[7], regs->regs[8], regs->regs[9]);
- 	}
- 
--	/*
--	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
--	 * bits. The actual entropy will be further reduced by the compiler
--	 * when applying stack alignment constraints: 16-bytes (i.e. 4-bits)
--	 * aligned, which will remove the 4 low bits from any entropy chosen
--	 * here.
--	 *
--	 * The resulting 6 bits of entropy is seen in SP[9:4].
--	 */
--	choose_random_kstack_offset(get_cycles());
--
- 	syscall_exit_to_user_mode(regs);
- }
-diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
-index be159ad4b77bd..b762677f87371 100644
---- a/arch/powerpc/kernel/syscall.c
-+++ b/arch/powerpc/kernel/syscall.c
-@@ -20,8 +20,6 @@ notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
- 
- 	kuap_lock();
- 
--	add_random_kstack_offset();
--
- 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
- 		BUG_ON(irq_soft_mask_return() != IRQS_ALL_DISABLED);
- 
-@@ -30,6 +28,8 @@ notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
- 	CT_WARN_ON(ct_state() == CT_STATE_KERNEL);
- 	user_exit_irqoff();
- 
-+	add_random_kstack_offset();
-+
- 	BUG_ON(regs_is_unrecoverable(regs));
- 	BUG_ON(!user_mode(regs));
- 	BUG_ON(arch_irq_disabled_regs(regs));
-@@ -173,17 +173,5 @@ notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
- 	}
- #endif
- 
--	/*
--	 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
--	 * so the maximum stack offset is 1k bytes (10 bits).
--	 *
--	 * The actual entropy will be further reduced by the compiler when
--	 * applying stack alignment constraints: the powerpc architecture
--	 * may have two kinds of stack alignment (16-bytes and 8-bytes).
--	 *
--	 * So the resulting 6 or 7 bits of entropy is seen in SP[9:4] or SP[9:3].
--	 */
--	choose_random_kstack_offset(mftb());
--
- 	return ret;
- }
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 5fb57fad188a9..461279a7bd864 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -344,18 +344,6 @@ void do_trap_ecall_u(struct pt_regs *regs)
- 			syscall_handler(regs, syscall);
- 		}
- 
--		/*
--		 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
--		 * so the maximum stack offset is 1k bytes (10 bits).
--		 *
--		 * The actual entropy will be further reduced by the compiler when
--		 * applying stack alignment constraints: 16-byte (i.e. 4-bit) aligned
--		 * for RV32I or RV64I.
--		 *
--		 * The resulting 6 bits of entropy is seen in SP[9:4].
--		 */
--		choose_random_kstack_offset(get_random_u16());
--
- 		syscall_exit_to_user_mode(regs);
- 	} else {
- 		irqentry_state_t state = irqentry_nmi_enter(regs);
-diff --git a/arch/s390/include/asm/entry-common.h b/arch/s390/include/asm/entry-common.h
-index 979af986a8feb..35450a4853239 100644
---- a/arch/s390/include/asm/entry-common.h
-+++ b/arch/s390/include/asm/entry-common.h
-@@ -51,14 +51,6 @@ static __always_inline void arch_exit_to_user_mode(void)
- 
- #define arch_exit_to_user_mode arch_exit_to_user_mode
- 
--static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
--						  unsigned long ti_work)
--{
--	choose_random_kstack_offset(get_tod_clock_fast());
--}
--
--#define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
--
- static __always_inline bool arch_in_rcu_eqs(void)
- {
- 	if (IS_ENABLED(CONFIG_KVM))
-diff --git a/arch/s390/kernel/syscall.c b/arch/s390/kernel/syscall.c
-index 795b6cca74c9b..1cf49af74a1df 100644
---- a/arch/s390/kernel/syscall.c
-+++ b/arch/s390/kernel/syscall.c
-@@ -96,8 +96,8 @@ void noinstr __do_syscall(struct pt_regs *regs, int per_trap)
- {
- 	unsigned long nr;
- 
--	add_random_kstack_offset();
- 	enter_from_user_mode(regs);
-+	add_random_kstack_offset();
- 	regs->psw = get_lowcore()->svc_old_psw;
- 	regs->int_code = get_lowcore()->svc_int_code;
- 	update_timer_sys();
-diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
-index 8e829575e12f9..31b9492fe851d 100644
---- a/arch/x86/entry/syscall_32.c
-+++ b/arch/x86/entry/syscall_32.c
-@@ -247,7 +247,6 @@ __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
- {
- 	int nr = syscall_32_enter(regs);
- 
--	add_random_kstack_offset();
- 	/*
- 	 * Subtlety here: if ptrace pokes something larger than 2^31-1 into
- 	 * orig_ax, the int return value truncates it. This matches
-@@ -256,6 +255,7 @@ __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
- 	nr = syscall_enter_from_user_mode(regs, nr);
- 	instrumentation_begin();
- 
-+	add_random_kstack_offset();
- 	do_syscall_32_irqs_on(regs, nr);
- 
- 	instrumentation_end();
-@@ -268,7 +268,6 @@ static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
- 	int nr = syscall_32_enter(regs);
- 	int res;
- 
--	add_random_kstack_offset();
- 	/*
- 	 * This cannot use syscall_enter_from_user_mode() as it has to
- 	 * fetch EBP before invoking any of the syscall entry work
-@@ -277,6 +276,7 @@ static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
- 	enter_from_user_mode(regs);
- 
- 	instrumentation_begin();
-+	add_random_kstack_offset();
- 	local_irq_enable();
- 	/* Fetch EBP from where the vDSO stashed it. */
- 	if (IS_ENABLED(CONFIG_X86_64)) {
-diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
-index b6e68ea98b839..71f032504e731 100644
---- a/arch/x86/entry/syscall_64.c
-+++ b/arch/x86/entry/syscall_64.c
-@@ -86,10 +86,10 @@ static __always_inline bool do_syscall_x32(struct pt_regs *regs, int nr)
- /* Returns true to return using SYSRET, or false to use IRET */
- __visible noinstr bool do_syscall_64(struct pt_regs *regs, int nr)
- {
--	add_random_kstack_offset();
- 	nr = syscall_enter_from_user_mode(regs, nr);
- 
- 	instrumentation_begin();
-+	add_random_kstack_offset();
- 
- 	if (!do_syscall_x64(regs, nr) && !do_syscall_x32(regs, nr) && nr != -1) {
- 		/* Invalid system call, but still a system call. */
-diff --git a/arch/x86/include/asm/entry-common.h b/arch/x86/include/asm/entry-common.h
-index ce3eb6d5fdf9f..7535131c711bb 100644
---- a/arch/x86/include/asm/entry-common.h
-+++ b/arch/x86/include/asm/entry-common.h
-@@ -82,18 +82,6 @@ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
- 	current_thread_info()->status &= ~(TS_COMPAT | TS_I386_REGS_POKED);
- #endif
- 
--	/*
--	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
--	 * bits. The actual entropy will be further reduced by the compiler
--	 * when applying stack alignment constraints (see cc_stack_align4/8 in
--	 * arch/x86/Makefile), which will remove the 3 (x86_64) or 2 (ia32)
--	 * low bits from any entropy chosen here.
--	 *
--	 * Therefore, final stack offset entropy will be 7 (x86_64) or
--	 * 8 (ia32) bits.
--	 */
--	choose_random_kstack_offset(rdtsc());
--
- 	/* Avoid unnecessary reads of 'x86_ibpb_exit_to_user' */
- 	if (cpu_feature_enabled(X86_FEATURE_IBPB_EXIT_TO_USER) &&
- 	    this_cpu_read(x86_ibpb_exit_to_user)) {
-diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
-index 5d3916ca747cc..024fc20e77622 100644
---- a/include/linux/randomize_kstack.h
-+++ b/include/linux/randomize_kstack.h
-@@ -6,6 +6,7 @@
- #include <linux/kernel.h>
- #include <linux/jump_label.h>
- #include <linux/percpu-defs.h>
-+#include <linux/prandom.h>
- 
- DECLARE_STATIC_KEY_MAYBE(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
- 			 randomize_kstack_offset);
-@@ -45,9 +46,22 @@ DECLARE_STATIC_KEY_MAYBE(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
- #define KSTACK_OFFSET_MAX(x)	((x) & 0b1111111100)
- #endif
- 
-+DECLARE_PER_CPU(struct rnd_state, kstack_rnd_state);
-+
-+static __always_inline u32 get_kstack_offset(void)
-+{
-+	struct rnd_state *state;
-+	u32 rnd;
-+
-+	state = &get_cpu_var(kstack_rnd_state);
-+	rnd = prandom_u32_state(state);
-+	put_cpu_var(kstack_rnd_state);
-+
-+	return rnd;
-+}
-+
- /**
-- * add_random_kstack_offset - Increase stack utilization by previously
-- *			      chosen random offset
-+ * add_random_kstack_offset - Increase stack utilization by a random offset.
-  *
-  * This should be used in the syscall entry path after user registers have been
-  * stored to the stack. Preemption may be enabled. For testing the resulting
-@@ -56,47 +70,15 @@ DECLARE_STATIC_KEY_MAYBE(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
- #define add_random_kstack_offset() do {					\
- 	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
- 				&randomize_kstack_offset)) {		\
--		u32 offset = current->kstack_offset;			\
-+		u32 offset = get_kstack_offset();			\
- 		u8 *ptr = __kstack_alloca(KSTACK_OFFSET_MAX(offset));	\
- 		/* Keep allocation even after "ptr" loses scope. */	\
- 		asm volatile("" :: "r"(ptr) : "memory");		\
- 	}								\
- } while (0)
- 
--/**
-- * choose_random_kstack_offset - Choose the random offset for the next
-- *				 add_random_kstack_offset()
-- *
-- * This should only be used during syscall exit. Preemption may be enabled. This
-- * position in the syscall flow is done to frustrate attacks from userspace
-- * attempting to learn the next offset:
-- * - Maximize the timing uncertainty visible from userspace: if the
-- *   offset is chosen at syscall entry, userspace has much more control
-- *   over the timing between choosing offsets. "How long will we be in
-- *   kernel mode?" tends to be more difficult to predict than "how long
-- *   will we be in user mode?"
-- * - Reduce the lifetime of the new offset sitting in memory during
-- *   kernel mode execution. Exposure of "thread-local" memory content
-- *   (e.g. current, percpu, etc) tends to be easier than arbitrary
-- *   location memory exposure.
-- */
--#define choose_random_kstack_offset(rand) do {				\
--	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
--				&randomize_kstack_offset)) {		\
--		u32 offset = current->kstack_offset;			\
--		offset = ror32(offset, 5) ^ (rand);			\
--		current->kstack_offset = offset;			\
--	}								\
--} while (0)
--
--static inline void random_kstack_task_init(struct task_struct *tsk)
--{
--	tsk->kstack_offset = 0;
--}
- #else /* CONFIG_RANDOMIZE_KSTACK_OFFSET */
- #define add_random_kstack_offset()		do { } while (0)
--#define choose_random_kstack_offset(rand)	do { } while (0)
--#define random_kstack_task_init(tsk)		do { } while (0)
- #endif /* CONFIG_RANDOMIZE_KSTACK_OFFSET */
- 
- #endif
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 8358e430dd7fd..a7b4a980eb2f0 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1592,10 +1592,6 @@ struct task_struct {
- 	unsigned long			prev_lowest_stack;
- #endif
- 
--#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
--	u32				kstack_offset;
--#endif
--
- #ifdef CONFIG_X86_MCE
- 	void __user			*mce_vaddr;
- 	__u64				mce_kflags;
-diff --git a/init/main.c b/init/main.c
-index 0a1d8529212e9..c9638a6946dca 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -833,6 +833,14 @@ static inline void initcall_debug_enable(void)
- #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
- DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
- 			   randomize_kstack_offset);
-+DEFINE_PER_CPU(struct rnd_state, kstack_rnd_state);
-+
-+static int __init random_kstack_init(void)
-+{
-+	prandom_seed_full_state(&kstack_rnd_state);
-+	return 0;
-+}
-+late_initcall(random_kstack_init);
- 
- static int __init early_randomize_kstack_offset(char *buf)
- {
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 5715adeb6adfe..1f738c28ca07b 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2234,7 +2234,6 @@ __latent_entropy struct task_struct *copy_process(
- 	if (retval)
- 		goto bad_fork_cleanup_io;
- 
--	random_kstack_task_init(p);
- 	stackleak_task_init(p);
- 
- 	if (pid != &init_struct_pid) {
--- 
-2.43.0
 
