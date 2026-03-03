@@ -1,317 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B35247DD7C;
-	Tue,  3 Mar 2026 14:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC6E215055;
+	Tue,  3 Mar 2026 15:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772549594; cv=none; b=Wg7FYIxkiyGoB1tIXigReYOeNJeOxJuDr7Xe8E0u8ULrPfdqM+YmFkQvPwRrZC5XBD21eoGhObIgGyMvQtjf6iZdMgwZnKbO1Vx0yU+ALlrINJ3cnXgJFrTtPq0BL5+UkkMXr3xHkSFKP3mCByMYf4tPPFjV/W9Nt1iuE3dTuJQ=
+	t=1772550539; cv=none; b=GlNu7849/EUEO1mbcw5ccx9iz/268Dre1bb/QPphzVRmX4JMbTDvbD2FMCtsQZrtD2egWeInXnFSaLOdsuvXRREYE+KlYCUaawNuSvLJFIgxXm7+5T3OjJGUuvaUP+VzNhU73AM6nZUkZ/snHExd41hpxFZr0XeNFnHLsis2aYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772549594; c=relaxed/simple;
-	bh=mPB+8jSnehbEHKBNReaI36+tVxnO/gz5hMo6CDtR1vU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JY949EHxhGh5rrgkp7RhEVZwOMaPfDBjIlm2tx6a/sKzvySqvxSxobuLYRJZeAEear/Wn6EsHM/7SoR1zOCa/EY/iRQv2C9Ei0yomOlIDFYn66NIZ2+/yTphAfnDeVexSRmMb9jm9qf0j7UH+/sBYurAOkylpR5PRqL3qC7WEAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWFnVb+S; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWFnVb+S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D73C19422;
-	Tue,  3 Mar 2026 14:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772549594;
-	bh=mPB+8jSnehbEHKBNReaI36+tVxnO/gz5hMo6CDtR1vU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IWFnVb+SAOFAW6k2lmD7xM2MmjXDlaKtuLQfi1BOXrrQ730APm7WOFiF67wuUnc++
-	 EGSzMenoInTEUWIO7CSSf/bFBl4ZeUXZjL85avoqiMtQK/oSff46KbycV28M9WkDvY
-	 XUnahFU9ulGTN30W+mMw/EMqmtkIduKav8WJUB/2TDsOz+bW+urOzRV9Fi1DNqM4ee
-	 y8ZD8ab8w73Luic7Ff60S0bNdLT8kqI7mAwcYvulxf5n9Crzb9z2+s2S3vi5j4rpkZ
-	 kPzV3aBM8fN2nX5iOYorO3X9cnpTBIe8tlimk92fP+EUrdxUrMwniVlPpd88G7WOWL
-	 5SvNPVQd6C1oA==
-Received: from localhost ([::1])
-	by mail.kernel.org with esmtp (Exim 4.99.1)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1vxR7W-00000007JR5-48Lo;
-	Tue, 03 Mar 2026 15:53:11 +0100
-Date: Tue, 3 Mar 2026 15:53:10 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>, Jonathan Corbet
- <corbet@lwn.net>, Kees Cook <kees@kernel.org>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, intel-wired-lan@lists.osuosl.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Aleksandr Loktionov
- <aleksandr.loktionov@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH 00/38] docs: several improvements to kernel-doc
-Message-ID: <20260303155310.5235b367@localhost>
-In-Reply-To: <33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
-References: <cover.1771408406.git.mchehab+huawei@kernel.org>
-	<33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1772550539; c=relaxed/simple;
+	bh=3I4tZwfO6MPOA16PwtFKDqQCUHl8VFhQU/V50+AVB7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KC2zB1zIr/4tryzjI6rhTDglKBR3+zYe3nqF5fVlhXkl4p0LICxz0H6/zQJCVPc5a80RrxHyqcEJlem8Qd2Tlh92kjSfMs5mbfJ1yIfv3zGZHWOs2ROZ5W9CRTAbC7RPoBSjs30o016OBtWlecv8GP31+xWS5vZuoGUhll0KjaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36D46339;
+	Tue,  3 Mar 2026 07:08:49 -0800 (PST)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C1D23F73B;
+	Tue,  3 Mar 2026 07:08:51 -0800 (PST)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	David Laight <david.laight.linux@gmail.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v5 0/2] Fix bugs and performance of kstack offset randomisation
+Date: Tue,  3 Mar 2026 15:08:37 +0000
+Message-ID: <20260303150840.3789438-1-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 23 Feb 2026 15:47:00 +0200
-Jani Nikula <jani.nikula@linux.intel.com> wrote:
+[Kees; I'm hoping this is now good-to-go via your hardening tree? It would be
+good to get some linux-next testing.]
 
-> On Wed, 18 Feb 2026, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > As anyone that worked before with kernel-doc are aware, using regex to
-> > handle C input is not great. Instead, we need something closer to how
-> > C statements and declarations are handled.
-> >
-> > Yet, to avoid breaking  docs, I avoided touching the regex-based algorithms
-> > inside it with one exception: struct_group logic was using very complex
-> > regexes that are incompatible with Python internal "re" module.
-> >
-> > So, I came up with a different approach: NestedMatch. The logic inside
-> > it is meant to properly handle brackets, square brackets and parenthesis,
-> > which is closer to what C lexical parser does. On that time, I added
-> > a TODO about the need to extend that.  
-> 
-> There's always the question, if you're putting a lot of effort into
-> making kernel-doc closer to an actual C parser, why not put all that
-> effort into using and adapting to, you know, an actual C parser?
+Hi All,
 
-Playing with this idea, it is not that hard to write an actual C
-parser - or at least a tokenizer. There is already an example of it
-at:
+As I reported at [1], kstack offset randomisation suffers from a couple of bugs
+and, on arm64 at least, the performance is poor. This series attempts to fix
+both; patch 1 provides back-portable fixes for the functional bugs. Patch 2
+proposes a performance improvement approach.
 
-	https://docs.python.org/3/library/re.html
+I've looked at a few different options but ultimately decided that Jeremy's
+original prng approach is the fastest. I made the argument that this approach is
+secure "enough" in the RFC [2] and the responses indicated agreement.
 
-I did a quick implementation, and it seems to be able to do its job:
+More details in the commit logs.
 
-    $ ./tokenizer.py ./include/net/netlink.h
-      1:  0  COMMENT       '/* SPDX-License-Identifier: GPL-2.0 */'
-      2:  0  CPP           '#ifndef'
-      2:  8  ID            '__NET_NETLINK_H'
-      3:  0  CPP           '#define'
-      3:  8  ID            '__NET_NETLINK_H'
-      5:  0  CPP           '#include'
-      5:  9  OP            '<'
-      5: 10  ID            'linux'
-      5: 15  OP            '/'
-      5: 16  ID            'types'
-      5: 21  PUNC          '.'
-      5: 22  ID            'h'
-      5: 23  OP            '>'
-      6:  0  CPP           '#include'
-      6:  9  OP            '<'
-      6: 10  ID            'linux'
-      6: 15  OP            '/'
-      6: 16  ID            'netlink'
-      6: 23  PUNC          '.'
-      6: 24  ID            'h'
-      6: 25  OP            '>'
-      7:  0  CPP           '#include'
-      7:  9  OP            '<'
-      7: 10  ID            'linux'
-      7: 15  OP            '/'
-      7: 16  ID            'jiffies'
-      7: 23  PUNC          '.'
-      7: 24  ID            'h'
-      7: 25  OP            '>'
-      8:  0  CPP           '#include'
-      8:  9  OP            '<'
-      8: 10  ID            'linux'
-      8: 15  OP            '/'
-      8: 16  ID            'in6'
-...
-     12:  1  COMMENT       '/**\n  * Standard attribute types to specify validation policy\n  */'
-     13:  0  ENUM          'enum'
-     13:  5  PUNC          '{'
-     14:  1  ID            'NLA_UNSPEC'
-     14: 11  PUNC          ','
-     15:  1  ID            'NLA_U8'
-     15:  7  PUNC          ','
-     16:  1  ID            'NLA_U16'
-     16:  8  PUNC          ','
-     17:  1  ID            'NLA_U32'
-     17:  8  PUNC          ','
-     18:  1  ID            'NLA_U64'
-     18:  8  PUNC          ','
-     19:  1  ID            'NLA_STRING'
-     19: 11  PUNC          ','
-     20:  1  ID            'NLA_FLAG'
-...
-     41:  0  STRUCT        'struct'
-     41:  7  ID            'netlink_range_validation'
-     41: 32  PUNC          '{'
-     42:  1  ID            'u64'
-     42:  5  ID            'min'
-     42:  8  PUNC          ','
-     42: 10  ID            'max'
-     42: 13  PUNC          ';'
-     43:  0  PUNC          '}'
-     43:  1  PUNC          ';'
-     45:  0  STRUCT        'struct'
-     45:  7  ID            'netlink_range_validation_signed'
-     45: 39  PUNC          '{'
-     46:  1  ID            's64'
-     46:  5  ID            'min'
-     46:  8  PUNC          ','
-     46: 10  ID            'max'
-     46: 13  PUNC          ';'
-     47:  0  PUNC          '}'
-     47:  1  PUNC          ';'
-     49:  0  ENUM          'enum'
-     49:  5  ID            'nla_policy_validation'
-     49: 27  PUNC          '{'
-     50:  1  ID            'NLA_VALIDATE_NONE'
-     50: 18  PUNC          ','
-     51:  1  ID            'NLA_VALIDATE_RANGE'
-     51: 19  PUNC          ','
-     52:  1  ID            'NLA_VALIDATE_RANGE_WARN_TOO_LONG'
-     52: 33  PUNC          ','
-     53:  1  ID            'NLA_VALIDATE_MIN'
-     53: 17  PUNC          ','
-     54:  1  ID            'NLA_VALIDATE_MAX'
-     54: 17  PUNC          ','
-     55:  1  ID            'NLA_VALIDATE_MASK'
-     55: 18  PUNC          ','
-     56:  1  ID            'NLA_VALIDATE_RANGE_PTR'
-     56: 23  PUNC          ','
-     57:  1  ID            'NLA_VALIDATE_FUNCTION'
-     57: 22  PUNC          ','
-     58:  0  PUNC          '}'
-     58:  1  PUNC          ';'
 
-It sounds doable to use it, and, at least on this example, it
-properly picked the IDs.
+Performance
+===========
 
-On the other hand, using it would require lots of changes at
-kernel-doc. So, I guess I'll add a tokenizer to kernel-doc, but
-we should likely start using it gradually.
+Mean and tail performance of 3 "small" syscalls was measured. syscall was made
+10 million times and each individually measured and binned. These results have
+low noise so I'm confident that they are trustworthy.
 
-Maybe starting with NestedSearch and with public/private
-comment handling (which is currently half-broken).
+The baseline is v6.18-rc5 with stack randomization turned *off*. So I'm showing
+performance cost of turning it on without any changes to the implementation,
+then the reduced performance cost of turning it on with my changes applied.
 
-As a reference, the above was generated with the code below,
-which was based on the Python re documentation.
+**NOTE**: The below results were generated using the RFC patches but there is no
+meaningful change, so the numbers are still valid. I've also rerun the tests
+with this version on top of v7.0-rc2 on arm64 and confirmed simialr results.
 
-Comments?
+arm64 (AWS Graviton3):
++-----------------+--------------+-------------+---------------+
+| Benchmark       | Result Class |   v6.18-rc5 |  per-cpu-prng |
+|                 |              | rndstack-on |               |
+|                 |              |             |               |
++=================+==============+=============+===============+
+| syscall/getpid  | mean (ns)    |  (R) 15.62% |     (R) 3.43% |
+|                 | p99 (ns)     | (R) 155.01% |     (R) 3.20% |
+|                 | p99.9 (ns)   | (R) 156.71% |     (R) 2.93% |
++-----------------+--------------+-------------+---------------+
+| syscall/getppid | mean (ns)    |  (R) 14.09% |     (R) 2.12% |
+|                 | p99 (ns)     | (R) 152.81% |         1.55% |
+|                 | p99.9 (ns)   | (R) 153.67% |         1.77% |
++-----------------+--------------+-------------+---------------+
+| syscall/invalid | mean (ns)    |  (R) 13.89% |     (R) 3.32% |
+|                 | p99 (ns)     | (R) 165.82% |     (R) 3.51% |
+|                 | p99.9 (ns)   | (R) 168.83% |     (R) 3.77% |
++-----------------+--------------+-------------+---------------+
 
----
+Because arm64 was previously using get_random_u16(), it was expensive when it
+didn't have any buffered bits and had to call into the crng. That's what caused
+the enormous tail latency.
 
-One side note: right now, we're not using typing at kernel-doc,
-nor really following a proper coding style.
 
-I wanted to use it during the conversion, and place consts in
-uppercase, as this is currently the best practices, but doing
-it while converting from Perl were very annoying. So, I opted
-to make things simpler. Now that we have it coded, perhaps it
-is time to define a coding style and apply it to kernel-doc.
+x86 (AWS Sapphire Rapids):
++-----------------+--------------+-------------+---------------+
+| Benchmark       | Result Class |   v6.18-rc5 |  per-cpu-prng |
+|                 |              | rndstack-on |               |
+|                 |              |             |               |
++=================+==============+=============+===============+
+| syscall/getpid  | mean (ns)    |  (R) 13.32% |     (R) 4.60% |
+|                 | p99 (ns)     |  (R) 13.38% |    (R) 18.08% |
+|                 | p99.9 (ns)   |      16.26% |    (R) 19.38% |
++-----------------+--------------+-------------+---------------+
+| syscall/getppid | mean (ns)    |  (R) 11.96% |     (R) 5.26% |
+|                 | p99 (ns)     |  (R) 11.83% |     (R) 8.35% |
+|                 | p99.9 (ns)   |  (R) 11.42% |    (R) 22.37% |
++-----------------+--------------+-------------+---------------+
+| syscall/invalid | mean (ns)    |  (R) 10.58% |     (R) 2.91% |
+|                 | p99 (ns)     |  (R) 10.51% |     (R) 4.36% |
+|                 | p99.9 (ns)   |  (R) 10.35% |    (R) 21.97% |
++-----------------+--------------+-------------+---------------+
 
--- 
+I was surprised to see that the baseline cost on x86 is 10-12% since it is just
+using rdtsc. But as I say, I believe the results are accurate.
+
+
+Changes since v4 [5]
+====================
+
+- Moved add_random_kstack_offset() later in syscall entry code for powerpc, s390
+  and x86. On these platforms it was previously within noinstr sections but for
+  some exotic Kconfigs, [get|put]_cpu_var() was calling out to instrumentable
+  code. (reported by kernel test robot)
+- Removed what was previously patch 2 (inline version of prandom_u32_state()).
+  With the above change, there is no longer an issue with calling the
+  out-of-line version.
+
+Changes since v3 [4]
+====================
+
+- Patch 1: Fixed typo in commit log (per David L)
+- Patch 2: Reinstated prandom_u32_state() as out-of-line function, which
+  forwards to inline version (per David L)
+- Patch 3: Added supplementary info about benefits of removing
+  choose_random_kstack_offset() (per Mark R)
+
+Changes since v2 [3]
+====================
+
+- Moved late_initcall() to initialize kstack_rnd_state out of
+  randomize_kstack.h and into main.c. (issue noticed by kernel test robot)
+
+Changes since v1 (RFC) [2]
+==========================
+
+- Introduced patch 2 to make prandom_u32_state() __always_inline (needed since
+  its called from noinstr code)
+- In patch 3, prng is now per-cpu instead of per-task (per Ard)
+
+
+[1] https://lore.kernel.org/all/dd8c37bc-795f-4c7a-9086-69e584d8ab24@arm.com/
+[2] https://lore.kernel.org/all/20251127105958.2427758-1-ryan.roberts@arm.com/
+[3] https://lore.kernel.org/all/20251215163520.1144179-1-ryan.roberts@arm.com/
+[4] https://lore.kernel.org/all/20260102131156.3265118-1-ryan.roberts@arm.com/
+[5] https://lore.kernel.org/all/20260119130122.1283821-1-ryan.roberts@arm.com
+
 Thanks,
-Mauro
+Ryan
 
-#!/usr/bin/env python3
 
-import sys
-import re
+Ryan Roberts (2):
+  randomize_kstack: Maintain kstack_offset per task
+  randomize_kstack: Unify random source across arches
 
-class Token():
-    def __init__(self, type, value, line, column):
-        self.type = type
-        self.value = value
-        self.line = line
-        self.column = column
+ arch/Kconfig                         |  5 ++-
+ arch/arm64/kernel/syscall.c          | 11 ------
+ arch/loongarch/kernel/syscall.c      | 11 ------
+ arch/powerpc/kernel/syscall.c        | 16 ++-------
+ arch/riscv/kernel/traps.c            | 12 -------
+ arch/s390/include/asm/entry-common.h |  8 -----
+ arch/s390/kernel/syscall.c           |  2 +-
+ arch/x86/entry/syscall_32.c          |  4 +--
+ arch/x86/entry/syscall_64.c          |  2 +-
+ arch/x86/include/asm/entry-common.h  | 12 -------
+ include/linux/randomize_kstack.h     | 54 +++++++++++-----------------
+ init/main.c                          |  9 ++++-
+ kernel/fork.c                        |  1 +
+ 13 files changed, 37 insertions(+), 110 deletions(-)
 
-class CTokenizer():
-    C_KEYWORDS = {
-        "struct", "union", "enum",
-    }
-
-    TOKEN_LIST = [
-        ("COMMENT", r"//[^\n]*|/\*[\s\S]*?\*/"),
-
-        ("STRING",  r'"(?:\\.|[^"\\])*"'),
-        ("CHAR",    r"'(?:\\.|[^'\\])'"),
-
-        ("NUMBER",  r"0[xX][0-9a-fA-F]+[uUlL]*|0[0-7]+[uUlL]*|"
-                    r"[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?[fFlL]*"),
-
-        ("ID",      r"[A-Za-z_][A-Za-z0-9_]*"),
-
-        ("OP",      r"\+\+|\-\-|\->|==|\!=|<=|>=|&&|\|\||<<|>>|\+=|\-=|\*=|/=|%="
-                    r"|&=|\|=|\^=|=|\+|\-|\*|/|%|<|>|&|\||\^|~|!|\?|\:"),
-
-        ("PUNC",    r"[;,\.\[\]\(\)\{\}]"),
-
-        ("CPP",     r"#\s*(define|include|ifdef|ifndef|if|else|elif|endif|undef|pragma)"),
-
-        ("HASH",    r"#"),
-
-        ("NEWLINE", r"\n"),
-
-        ("SKIP",    r"[\s]+"),
-
-        ("MISMATCH",r"."),
-    ]
-
-    def __init__(self):
-        re_tokens = []
-
-        for name, pattern in self.TOKEN_LIST:
-            re_tokens.append(f"(?P<{name}>{pattern})")
-
-        self.re_scanner = re.compile("|".join(re_tokens),
-                                     re.MULTILINE | re.DOTALL)
-
-    def tokenize(self, code):
-        # Handle continuation lines
-        code = re.sub(r"\\\n", "", code)
-
-        line_num = 1
-        line_start = 0
-
-        for match in self.re_scanner.finditer(code):
-            kind   = match.lastgroup
-            value  = match.group()
-            column = match.start() - line_start
-
-            if kind == "NEWLINE":
-                line_start = match.end()
-                line_num += 1
-                continue
-
-            if kind in {"SKIP"}:
-                continue
-
-            if kind == "MISMATCH":
-                raise RuntimeError(f"Unexpected character {value!r} on line {line_num}")
-
-            if kind == "ID" and value in self.C_KEYWORDS:
-                kind = value.upper()
-
-            # For all other tokens we keep the raw string value
-            yield Token(kind, value, line_num, column)
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: python {sys.argv[0]} <fname>")
-        sys.exit(1)
-
-    fname = sys.argv[1]
-
-    try:
-        with open(fname, 'r', encoding='utf-8') as file:
-            sample = file.read()
-    except FileNotFoundError:
-        print(f"Error: The file '{fname}' was not found.")
-        sys.exit(1)
-    except Exception as e:
-        print(f"An error occurred while reading the file: {str(e)}")
-        sys.exit(1)
-
-    print(f"Tokens from {fname}:")
-
-    for tok in CTokenizer().tokenize(sample):
-        print(f"{tok.line:3d}:{tok.column:3d}  {tok.type:12}  {tok.value!r}")
+--
+2.43.0
 
