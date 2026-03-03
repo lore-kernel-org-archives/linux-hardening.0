@@ -1,80 +1,140 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C703EDABA;
-	Tue,  3 Mar 2026 17:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91DD3264E6;
+	Tue,  3 Mar 2026 18:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772560576; cv=none; b=mxI/JHHoKWaHpGgN6Mjzls3Ulp/7lpUX/FLxxvYzSTo/DyiL7Rhd9D9d1mihuyY9twUEnjJkysTvHNzsXsRZr/LmG4/Zww+WVwNTZR+uWVx/oZGZJogQdUgW4ICVVDTT0Rg4zgIEg1J2uTZU/odIQ6WyAG9rjinwOVsDB1sdtto=
+	t=1772560844; cv=none; b=uM6/UPTcOeaiIpNx732TUbwCFEAX1JabpXBxGbPP6pMgyZ305byl16l72fZHmwXDZzo0ezDf6J3keGMmf3ueGuRsn9l94JSZzh1Jorh2EAtktmytpmCZEdC+zoeqP8GZa4/H+nIKqNuMnOfWkHLxCfucvyb6PcCheRgN6+S7W/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772560576; c=relaxed/simple;
-	bh=tB7Qhf51t7COgx6AMwEAKQA7Sfjn1Zl7lq7S+y5Xq5A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SESjgCmRSVA5FYHhowEu6wD/y9+PSjufsl1Gi02V8dUlD3jrDH7icloXoQrmcODT8IOKbxPiA2a+JVJwQvB2E7x6KnoyUI/9eQyx+al1mhi5oC7IctFMfVw29ZCE4B5kOdLCEch7JZhIVvzQT54cczusFWepvB7Jy6ksGHjYagw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ECcOlPtO; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1772560844; c=relaxed/simple;
+	bh=spETfYMosC2Kp4mRy+ya6d6MGmqILxDoC7rPwcNQ0kU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CsJahIrRsavTfFHKh4hM79HaTT2UpySlppYeVButkcyMVmsc00J/3OyTSc9apWpCZ/HxQrGzBqxWQSDDjN3JkEHOABOklroLHlj+P/NmbruAFer/G3MFssEbovSyPIm9ra/8HbiEaK+5tHkKQokw5uTPpgVy0PLw9Sg0TnxqMSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZK7bfkJ2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ECcOlPtO"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 94D5F40429
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1772560573; bh=Ob/61kfjwkWKR8Gl5mNIk6TMub+KtclDWQimZackFME=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ECcOlPtOmP1m2c6qpzyRlEc5KAxrOjxF2Xhmr/bTT/lt/nCQ4ZS7jlbOZnn5oZlN1
-	 j3r6Jt6sZEJuKuazx/woFmFwYh7y7hBLLJZ1cbStpSsE6DyOudYmel/mBYUS7WSusP
-	 KDd1S3+QYiLvAAeRrJq6N2CbMUD9OdJDmGhmAvnc/gesHwWpguTO2eLszxZyPOLvhL
-	 KdS/Ki3vyX0CMP1aOG5nWOQmPWQxbwvI7JFfkcnlZh/LNNnH7neB2Uu1OXvk2hhJ5o
-	 DP37OvPr0ka6vBlb9WcRgkZLh9xWFx2DYA6oY59K7Y76qge+daKhsLpPsdeMZ0ckbP
-	 Tmy7I4NQgeN4A==
-Received: from localhost (unknown [IPv6:2601:280:4600:27b::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 94D5F40429;
-	Tue,  3 Mar 2026 17:56:13 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Kees Cook
- <kees@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Aleksandr Loktionov
- <aleksandr.loktionov@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH 00/18] Several kdoc fixes
-In-Reply-To: <cover.1772469446.git.mchehab+huawei@kernel.org>
-References: <cover.1772469446.git.mchehab+huawei@kernel.org>
-Date: Tue, 03 Mar 2026 10:56:12 -0700
-Message-ID: <87fr6gbxvn.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZK7bfkJ2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4MoG9hkzWKLHQRnvjG+fbUzFovSVj0LaQW2FGn3AtBo=; b=ZK7bfkJ2sjfgHNI+ZSVwEPBzq5
+	78lv0xKkltX7hvzMAhFSSsA+xJORiOtOUhrVLqL3PEoPBiZ+RT7TOSjptRVYzluFZrgmsIxwUkbW4
+	yRSBzQJsmT4fedDxSMwbWKxhgtQ1hluePd37WZsWxq/LAI3Bhj/FuGjYxnDKrkLYeRX4bFt4xzmvW
+	ELzJtxyPQgZHZ1AYu9gsSxWb61IVeSAojmTpugFEtP5rvz+ZcE+FlpczWa7l9pVEaJ6KgXKjOocLM
+	cTNrQAH2p5vL3Gni8i9PoeaTW6+i+7zew49JrLgL0z8wsmkgZl1A/U+JeTolf45jBCm4eSJ/6gq4E
+	jhOGUvNg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vxU2u-0000000BuW6-3QJF;
+	Tue, 03 Mar 2026 18:00:37 +0000
+Date: Tue, 3 Mar 2026 18:00:36 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: viro@zeniv.linux.org.uk, kees@kernel.org, gustavoars@kernel.org,
+	linux-hardening@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [RFC PATCH] iov: Bypass usercopy hardening for kernel iterators
+Message-ID: <aachxPdUi2puxQKq@casper.infradead.org>
+References: <20260303162932.22910-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260303162932.22910-1-cel@kernel.org>
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Tue, Mar 03, 2026 at 11:29:32AM -0500, Chuck Lever wrote:
+> Profiling NFSD under an iozone workload showed that hardened
+> usercopy checks consume roughly 1.3% of CPU in the TCP receive
+> path. The runtime check in check_object_size() validates that
+> copy buffers reside in expected slab regions, which is
+> meaningful when data crosses the user/kernel boundary but adds
+> no value when both source and destination are kernel addresses.
 
-> Hi Jon,
->
-> This series contains patches from:
-> 	https://lore.kernel.org/linux-doc/87sear2kbm.fsf@trenco.lwn.net/T/#t
->
-> I rebased them to make the changes cleaner, fixing mostly on fixes.
->
-> I dropped stuff related to NestedMatch arguments parsing.
-> I'll be sending you on a new patch series, likely tomorrow.
->
-> The changes here basically addresses several issues discoverd by
-> Randy and by me and makes NestedMatch more similar to KernRe.
->
-> It also moves the transforms ruleset to a separate file, to make
-> easier to maintain kernel-doc code.
+I'm not sure I'd go as far as "no value".  I could see an attack which
+managed to trick the kernel into copying past the end of a slab object
+and sending the contents of that buffer across the network to an attacker.
 
-OK, I have applied this set - it all seems to work as advertised as far
-as I can tell.
+Or I guess in this case you're talking about copying _to_ a slab object.
+Then we could see a network attacker somewhow confusing the kernel into
+copying past the end of the object they allocated, overwriting slab
+metadata and/or the contents of the next object in the slab.
 
-Thanks,
+Limited value, sure.  And the performance change you're showing here
+certainly isn't nothing!
 
-jon
+> Split check_copy_size() so that copy_to_iter() can bypass the
+> runtime check_object_size() call for kernel-only iterators
+> (ITER_BVEC, ITER_KVEC). Existing callers of check_copy_size()
+> are unaffected; user-backed iterators still receive the full
+> usercopy validation.
+> 
+> This benefits all kernel consumers of copy_to_iter(), including
+> the TCP receive path used by the NFS client and server,
+> NVMe-TCP, and any other subsystem that uses ITER_BVEC or
+> ITER_KVEC receive buffers.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  include/linux/ucopysize.h | 10 +++++++++-
+>  include/linux/uio.h       |  9 +++++++--
+>  2 files changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/ucopysize.h b/include/linux/ucopysize.h
+> index 41c2d9720466..b3eacb4869a8 100644
+> --- a/include/linux/ucopysize.h
+> +++ b/include/linux/ucopysize.h
+> @@ -42,7 +42,7 @@ static inline void copy_overflow(int size, unsigned long count)
+>  }
+>  
+>  static __always_inline __must_check bool
+> -check_copy_size(const void *addr, size_t bytes, bool is_source)
+> +check_copy_size_nosec(const void *addr, size_t bytes, bool is_source)
+>  {
+>  	int sz = __builtin_object_size(addr, 0);
+>  	if (unlikely(sz >= 0 && sz < bytes)) {
+> @@ -56,6 +56,14 @@ check_copy_size(const void *addr, size_t bytes, bool is_source)
+>  	}
+>  	if (WARN_ON_ONCE(bytes > INT_MAX))
+>  		return false;
+> +	return true;
+> +}
+> +
+> +static __always_inline __must_check bool
+> +check_copy_size(const void *addr, size_t bytes, bool is_source)
+> +{
+> +	if (!check_copy_size_nosec(addr, bytes, is_source))
+> +		return false;
+>  	check_object_size(addr, bytes, is_source);
+>  	return true;
+>  }
+> diff --git a/include/linux/uio.h b/include/linux/uio.h
+> index a9bc5b3067e3..f860529abfbe 100644
+> --- a/include/linux/uio.h
+> +++ b/include/linux/uio.h
+> @@ -216,8 +216,13 @@ size_t copy_page_to_iter_nofault(struct page *page, unsigned offset,
+>  static __always_inline __must_check
+>  size_t copy_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
+>  {
+> -	if (check_copy_size(addr, bytes, true))
+> -		return _copy_to_iter(addr, bytes, i);
+> +	if (user_backed_iter(i)) {
+> +		if (check_copy_size(addr, bytes, true))
+> +			return _copy_to_iter(addr, bytes, i);
+> +	} else {
+> +		if (check_copy_size_nosec(addr, bytes, true))
+> +			return _copy_to_iter(addr, bytes, i);
+> +	}
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.53.0
+> 
+> 
