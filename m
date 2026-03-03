@@ -1,125 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C604DB548;
-	Tue,  3 Mar 2026 16:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3F84301C1;
+	Tue,  3 Mar 2026 17:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772555376; cv=none; b=VvP9W+sMog3LNLiyq+Vo8xklC6zPLmSv7mva8HPdca9Qj+qd0RbJ3dIwD33ppvT0ZxJ8AD+5X6pywvP3ORQGh7U1QvqprwyQIAfO0C0qsQDYXJz8dkFPAvUBzm/RNEAaKYv33RYmXrBnVwZOY+tbgm7MlPohDjhmYFjJW8D5pdM=
+	t=1772559291; cv=none; b=cpJUuO1hyfOaS31eo6TLsiYqjUTkguiICgAdQ1xWzG+xtirPmqRdNENKojRNsLRmpNMJJPTjI+hcmcTS1Y0FPuCUjaaHDEYLyWhBc4NhvE3O+5dWXRiFgbci609zLoA20rCNn25V72Ng93cnZ23Ym2lHWIVEaPHavFUPTU1PPZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772555376; c=relaxed/simple;
-	bh=Jlf/CDGD5yIDkoTypuod0BzSNkr8OFY+HKUT/RBMY14=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iQRDsFSlijA1xHI8I5GdYeacK2T5IGtnt9UZy3F1AwZCWZYpxWf5v+BL3ublJDoFsXjBTddyPURVIEamrR13wk4RqLtrW7TBt/ylVHuHRtaczgaA8HOnsveWeCoCdhv4uCJfkrJCCnCuh8xgZ6wL8wqg7VD+w5esTz3eTO4vEY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=th/TgfP5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772559291; c=relaxed/simple;
+	bh=70uyYe7s2E6X7AnJBGkkkxOS7v1d2Km08tJCTIMGiYc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Vz42CqrFqyKwXllhYK7qEjJd1ZsOHuREoxcB1Vrcz+AheCaFxFpkgETzjNPv67zpDoYwBZM88mYlK68RFF1QvAgZAKwJcSg0WDkbBwirRWfXioQpw/Sqrwy4HiTnqHJTDj/nkJ6QhCKR3DYUWm+A0DfCAPibhUiiWnDrG/zcOzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=W7/5EYBP; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="th/TgfP5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 527BCC19422;
-	Tue,  3 Mar 2026 16:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772555376;
-	bh=Jlf/CDGD5yIDkoTypuod0BzSNkr8OFY+HKUT/RBMY14=;
-	h=From:To:Cc:Subject:Date:From;
-	b=th/TgfP5pwZHJdNABACCxsBVK+HNuEgHSkq++QR74Tu6wTFdRI5h6NTwJm8PjQyea
-	 VZqtRFGiQlOJxDwuW4tLwBRccza1l7m2X3AycUxP+aW0AGnQ9ibZTtSCAVXCBDWBZO
-	 NDBMkWcAnmSj+K8fHbCQ2/bD7VC5NRDcZiA2MscUX33iQO+9oA4R8O185+l4arImCR
-	 6Ea0dzZ+Vie27+8YUrCxSE2G6OLsk+UB2bBkvM4HpA2v6cSE00OIzsYELQoJlUhSTJ
-	 EaMwPWv/lPwE0LmrpnwJ3MZg+UWtVDBtygFv/xMdg58enSK1JtbYMsoksbgYhC4XBw
-	 D8Ww3zNJz9KQw==
-From: Chuck Lever <cel@kernel.org>
-To: viro@zeniv.linux.org.uk,
-	kees@kernel.org,
-	gustavoars@kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	<netdev@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH] iov: Bypass usercopy hardening for kernel iterators
-Date: Tue,  3 Mar 2026 11:29:32 -0500
-Message-ID: <20260303162932.22910-1-cel@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="W7/5EYBP"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7679F40429
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1772559289; bh=p1Z/TBWG1G2IxEOxUKWAwXVAY46Ni5SU7OEprjK7kAc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=W7/5EYBPQPftHPWTuXHVc0QQg65BR+1Srd8l5IKh6defNW83NQ4RdewlXd8BNnAHI
+	 gon9byPQr3GIjqcm7OEzIHAlSaQdDJEG5QZ78whALJ6UznBSeEKajdz4+AyOJJ7x80
+	 6K4JPBFX/7NPoBcjn5FYQnMiHHv6RZZy8mjYHfRHgA6hBn2mYIqw+9kkHENK+e/HgQ
+	 webzLTXGNRJqzPNAskAhLXtF+HCn63D9G4K2AQlg7r/D5LFrKxzLwMy3TrAiUsLTqC
+	 qKfe/z0AuhyewZ54TYO/TmFB6xQZ5tkeJxV/xsl94s98jF4CnZlJDjjr1Qe+fEZocI
+	 /EDGqYiZKBDXA==
+Received: from localhost (unknown [IPv6:2601:280:4600:27b::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 7679F40429;
+	Tue,  3 Mar 2026 17:34:49 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
+ List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, Aleksandr
+ Loktionov <aleksandr.loktionov@intel.com>, Randy Dunlap
+ <rdunlap@infradead.org>
+Subject: Re: [PATCH 08/18] docs: kdoc_parser: fix parser to support
+ multi-word types
+In-Reply-To: <544c73a9e670b6fef1828bf4f2ba0de7d29d8675.1772469446.git.mchehab+huawei@kernel.org>
+References: <cover.1772469446.git.mchehab+huawei@kernel.org>
+ <544c73a9e670b6fef1828bf4f2ba0de7d29d8675.1772469446.git.mchehab+huawei@kernel.org>
+Date: Tue, 03 Mar 2026 10:34:48 -0700
+Message-ID: <87jyvsbyvb.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Profiling NFSD under an iozone workload showed that hardened
-usercopy checks consume roughly 1.3% of CPU in the TCP receive
-path. The runtime check in check_object_size() validates that
-copy buffers reside in expected slab regions, which is
-meaningful when data crosses the user/kernel boundary but adds
-no value when both source and destination are kernel addresses.
+> The regular expression currently expects a single word for the
+> type, but it may be something like  "struct foo".
+>
+> Add support for it.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+> ---
+>  tools/lib/python/kdoc/kdoc_parser.py | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
+> index 39ff27d421eb..22a820d33dc8 100644
+> --- a/tools/lib/python/kdoc/kdoc_parser.py
+> +++ b/tools/lib/python/kdoc/kdoc_parser.py
+> @@ -1018,14 +1018,14 @@ class KernelDoc:
+>  
+>          default_val = None
+>  
+> -        r= KernRe(OPTIONAL_VAR_ATTR + r"[\w_]*\s+(?:\*+)?([\w_]+)\s*[\d\]\[]*\s*(=.*)?")
+> +        r= KernRe(OPTIONAL_VAR_ATTR + r"\s*[\w_\s]*\s+(?:\*+)?([\w_]+)\s*[\d\]\[]*\s*(=.*)?")
 
-Split check_copy_size() so that copy_to_iter() can bypass the
-runtime check_object_size() call for kernel-only iterators
-(ITER_BVEC, ITER_KVEC). Existing callers of check_copy_size()
-are unaffected; user-backed iterators still receive the full
-usercopy validation.
+Just for future reference...I *really* think that the code is improved
+by breaking up and commenting gnarly regexes like this.  They are really
+unreadable in this form.  (And yes, I know the code has been full of
+these forever, but we can always try to make it better :)
 
-This benefits all kernel consumers of copy_to_iter(), including
-the TCP receive path used by the NFS client and server,
-NVMe-TCP, and any other subsystem that uses ITER_BVEC or
-ITER_KVEC receive buffers.
+Anyway, just grumbling.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/ucopysize.h | 10 +++++++++-
- include/linux/uio.h       |  9 +++++++--
- 2 files changed, 16 insertions(+), 3 deletions(-)
+Thanks,
 
-diff --git a/include/linux/ucopysize.h b/include/linux/ucopysize.h
-index 41c2d9720466..b3eacb4869a8 100644
---- a/include/linux/ucopysize.h
-+++ b/include/linux/ucopysize.h
-@@ -42,7 +42,7 @@ static inline void copy_overflow(int size, unsigned long count)
- }
- 
- static __always_inline __must_check bool
--check_copy_size(const void *addr, size_t bytes, bool is_source)
-+check_copy_size_nosec(const void *addr, size_t bytes, bool is_source)
- {
- 	int sz = __builtin_object_size(addr, 0);
- 	if (unlikely(sz >= 0 && sz < bytes)) {
-@@ -56,6 +56,14 @@ check_copy_size(const void *addr, size_t bytes, bool is_source)
- 	}
- 	if (WARN_ON_ONCE(bytes > INT_MAX))
- 		return false;
-+	return true;
-+}
-+
-+static __always_inline __must_check bool
-+check_copy_size(const void *addr, size_t bytes, bool is_source)
-+{
-+	if (!check_copy_size_nosec(addr, bytes, is_source))
-+		return false;
- 	check_object_size(addr, bytes, is_source);
- 	return true;
- }
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index a9bc5b3067e3..f860529abfbe 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -216,8 +216,13 @@ size_t copy_page_to_iter_nofault(struct page *page, unsigned offset,
- static __always_inline __must_check
- size_t copy_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
- {
--	if (check_copy_size(addr, bytes, true))
--		return _copy_to_iter(addr, bytes, i);
-+	if (user_backed_iter(i)) {
-+		if (check_copy_size(addr, bytes, true))
-+			return _copy_to_iter(addr, bytes, i);
-+	} else {
-+		if (check_copy_size_nosec(addr, bytes, true))
-+			return _copy_to_iter(addr, bytes, i);
-+	}
- 	return 0;
- }
- 
--- 
-2.53.0
-
+jon
