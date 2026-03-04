@@ -1,64 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8C0308F1D;
-	Wed,  4 Mar 2026 07:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B90F349B16;
+	Wed,  4 Mar 2026 09:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772609593; cv=none; b=PI3gEb/MXYiRZcWr6hH/u8SCZhobn/ywajfmJSTlKfcxipI+UgwqPE9Bd+fs9XAAl/GEX3k0ZOG6yDVJU0qh+yfxTgJCj8TBvjpEJJ5lr5PxRmwzqQ+9tkGBMbvTm/+Bk6/b35bSOx7tfz9QK3LitlY9dT2Y6dtQWpHzXOoWBpo=
+	t=1772617890; cv=none; b=kP1xRk/XSQX7EY2tOsp5Yq+h1mSXVYd3BaqnPS06KypHpeholGyBS4T7q2crQNsAgAJ3qtpdNPfWgmGKDQ1OfxrWff59YjjFzV5tzPMV5nSKihl3xYGBQtKJB0MhCneDMj5rT+hYmSkl2NxHjDGOCUn7rgbk3Erx3PDyMIaIpIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772609593; c=relaxed/simple;
-	bh=8l87FG3GfJ8GOGQId/6eYI/ACFLADMHOJZvD/ixFexk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lQ7yKWnvBX40ruIb2v9K6RUPgPI69OVJIIZmiINwZXY/rJiWDQHCDUPRwLEl7V2stt3keON/j0NcdZYQFSIVCHYZ0kjiNmpQqVRlOQtYFg05Ny+/NibYCFcqwp8404Hv3hdezzO0ybkof3FJy2ZH0JEGLCMBtC6pFSHcHm9SFyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOMSWQIr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772617890; c=relaxed/simple;
+	bh=hOx8/u7ut1L3MguJoU5B49CkW48rFlxVpSD60jdidy0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=A7T6zLxzH5VuJgOLNz8l9w9hunTjc8hsxEfo2HvOUh2oDDdtqH0GtxQNSR+/+TbxhNhQp8qcJJPSP6Iai5Yu3+Kq6LXi9zAKF7ZVeRoJRzv7r8F1AlrOKoqZL/D4WOeQqUg0Mz/nn9oxpox2kB7XNshme9IIagMGdL9WHgqVocM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=csEKBYBu; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOMSWQIr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4817EC19423;
-	Wed,  4 Mar 2026 07:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772609592;
-	bh=8l87FG3GfJ8GOGQId/6eYI/ACFLADMHOJZvD/ixFexk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HOMSWQIrUCrYfDhcT1LekIwNg0z7E1jHDc7bo6lVsZ2I8YneR/S/G/tKdCXEXGs0Q
-	 XfKKNVNqODC2qSDdytIoSSm98eG3ZlePGTPyNOYbIOZi42mHHw/CJqcmbZ28t6I+pG
-	 hajkmVxa969r5CkWKo0YNEKvY2b9xJTL+tAJzvv6WxiR+veQ3fKbn8nJwh74P2UEAK
-	 CWSSAjy1aFLISt7ZMQfQHcIRzEmLk9YaPDFtQC+DZPbgtM16IKeb7A6ZzmHpdD4AAZ
-	 yShTiebgwMWI753LCzzb/m3a+H7AzAIRrL33TzVFGW2sjxwcoBR97qWEeCTASw/AVW
-	 oRjZB4mbAQLLw==
-Date: Wed, 4 Mar 2026 08:33:10 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: dma: Add Amlogic A9 SoC DMA
-Message-ID: <20260304-uptight-rugged-badger-c40d0d@quoll>
-References: <20260304-amlogic-dma-v5-0-aa453d14fd43@amlogic.com>
- <20260304-amlogic-dma-v5-1-aa453d14fd43@amlogic.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="csEKBYBu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772617887; x=1804153887;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=hOx8/u7ut1L3MguJoU5B49CkW48rFlxVpSD60jdidy0=;
+  b=csEKBYBuAX//Y2+Brl6PPI6zqp5CBjVFW7BFFZD8ozMomJaKA1v+9Ptl
+   WerKnqd/YnuevJ1WL5jOMawfpLcK9tO9zDqFb7JHNgpwZYi9pwC62da79
+   hrLymL/xCj38pN7AY5ahvsHMfEG4SDWOBlT6wE0I1eZK1H3bjgnqlQ5Md
+   wxcrkEqFAfv7ZKYiwjYasAKr8ULQm12XqPXmyICvk43ulKODGvFndg3D3
+   XqoyMCRIk2yrDsNTSY1ro4cNlJTt7x0wG5soBA7v5nDEdrco8A/6tUpID
+   boK3tgTWB1fmEtqjrk8TwTsszS/KfGKaHXj7JI8v842kYe2GiVtCrpa6g
+   w==;
+X-CSE-ConnectionGUID: BRSQMSytQgGfiP79giFJNw==
+X-CSE-MsgGUID: ojRkMuIgSWuQ8FdSBb0TPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11718"; a="73374994"
+X-IronPort-AV: E=Sophos;i="6.21,323,1763452800"; 
+   d="scan'208";a="73374994"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 01:51:26 -0800
+X-CSE-ConnectionGUID: 1Ea7458+RDWErlLELTBiWg==
+X-CSE-MsgGUID: 4l180kpJQLGqACFXzt6ovw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,323,1763452800"; 
+   d="scan'208";a="217531444"
+Received: from krybak-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.84])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 01:51:22 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>, Jonathan Corbet
+ <corbet@lwn.net>, Kees Cook <kees@kernel.org>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, intel-wired-lan@lists.osuosl.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, Aleksandr Loktionov
+ <aleksandr.loktionov@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH 00/38] docs: several improvements to kernel-doc
+In-Reply-To: <20260303155310.5235b367@localhost>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
+ 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
+References: <cover.1771408406.git.mchehab+huawei@kernel.org>
+ <33d214091909b9a060637f56f81fb8f525cf433b@intel.com>
+ <20260303155310.5235b367@localhost>
+Date: Wed, 04 Mar 2026 11:51:18 +0200
+Message-ID: <b345179eb9c440c597f6618697b7272a8e383eff@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260304-amlogic-dma-v5-1-aa453d14fd43@amlogic.com>
+Content-Type: text/plain
 
-On Wed, Mar 04, 2026 at 06:14:12AM +0000, Xianwei Zhao wrote:
-> Add documentation describing the Amlogic A9 SoC DMA. And add
-> the properties specific values defines into a new include file.
-> 
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
->  .../devicetree/bindings/dma/amlogic,a9-dma.yaml    | 65 ++++++++++++++++++++++
->  include/dt-bindings/dma/amlogic,a9-dma.h           |  8 +++
->  2 files changed, 73 insertions(+)
+On Tue, 03 Mar 2026, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> On Mon, 23 Feb 2026 15:47:00 +0200
+> Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>> There's always the question, if you're putting a lot of effort into
+>> making kernel-doc closer to an actual C parser, why not put all that
+>> effort into using and adapting to, you know, an actual C parser?
+>
+> Playing with this idea, it is not that hard to write an actual C
+> parser - or at least a tokenizer.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Just for the record, I suggested using an existing parser, not going all
+NIH and writing your own.
 
-Best regards,
-Krzysztof
+BR,
+Jani.
 
+-- 
+Jani Nikula, Intel
