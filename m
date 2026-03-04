@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C540B366544;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF4337B417;
 	Wed,  4 Mar 2026 06:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772604856; cv=none; b=qTFmtdSUBLzs8Lj0OJOlqXB+oCtgOUjL1db/FedOyvD/18EchO1+pO+F7IZH8IEsUBhKL6tca4NN/tWpo9R8fBWp7ewgJByhH622oV1gET3Cjkzvx4Qtw3ckCV2rnFNkkH9AerhW5glM3Bt0nUSyA/o+jKtGcqPLf9mY1TgK2EM=
+	t=1772604856; cv=none; b=Whcw+iWayC4nhWJrSAonU+j82dD5zSdcoFxzEPJIAta4NNPZXHGCdTLLt37PEveexHSmMPGYEr3mZqme8cR+GTivQg6pWEL3e8RN8vCMDky50LrL7pBEtr8InDV+o8WTtVZEJMKTJJJ+E/zFUbGFWDmLS9vtMNS2G7u9SxWNODw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1772604856; c=relaxed/simple;
-	bh=lmagtz9+OA/n7FkE5J4e5tGiKXmEpXx/wXUmbG4bvic=;
+	bh=kdSXp5Qbia4qiLAhNtnkaEIWENtU3D2yrCCRDU+8y4g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fnhYX+BdmG+zA6RwCHMQDGomMiwztMzhji8gcESSmlbfF81isGvSaR+jzB1blIm+iOfW+pRXE+78/tdlSuC4FQhkqEDjfPluzBFRfO517maNmNAz9guTi+8pkgm3QSAbl73rPXo6L83GbgvmrsKkYaSDlddECBMaYJqW2PXKyxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vnum6WvE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=gUOsYXEKkrY2H5P35EQJ3wxwEQX1ALytOZnfMIJd95PtIjcqKHIQqOfXU5lsKzrI7ssu7D5RqjGroI9kHa5hS9bgW41tBQ7mOHw4HDkHxYnY5oPMdwXIONB/OajAqLCNtXwOqsJGj1nx9UHS1noZWYRyhaJYI2Ja1RzYywB+eHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9oIytMD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vnum6WvE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 72CFAC2BC87;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9oIytMD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AC737C2BCB0;
 	Wed,  4 Mar 2026 06:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1772604856;
-	bh=lmagtz9+OA/n7FkE5J4e5tGiKXmEpXx/wXUmbG4bvic=;
+	bh=kdSXp5Qbia4qiLAhNtnkaEIWENtU3D2yrCCRDU+8y4g=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Vnum6WvE08KNd+uLoTmqZcK/Thrg0B+03nS1TWzGt0pJ7QvV1auggUiHk2lnCj1ZH
-	 TxaTw6MuXNJ08Prtqs24kpkD8M1ZySTc79pnKQvtkg2lDUvOuPpK42leggEMATEno8
-	 RLsyynh8E0b0YSnNeICshM+Jc5Pl65HsVBkENLz9ZrbSa/5Z6+WGZn2uNXIQ4yaFt7
-	 fOhst7gtJ+TI2ExH/zBjYZVjPvRPWy5SOeYbTyai77+hcTHbfkcc+vzwm9ptAHEXn6
-	 Q2eXTEOHi7SP30sy+T5yg/GXk3WLho6QjqdtJS2rc4XwiSusVi+i6mBycXrpdxQbWo
-	 mI80dk2GSzh9A==
+	b=I9oIytMDC1vx3uKpQOcBU45ds2ZOOHOxNPVn4tKV3/8OSxgedSZ/6i92PU8L5HScF
+	 9MvXIuF0BTfW9qDcOp1sNeQCDZSjBoFdfwlFKQYkkPLOnT7yqlXJpbueco6Up5s2/y
+	 p8hh/I9P+PXo5zF3hZYUDEjQZgnwi7mS/gXvsro4qeUEIwyvrV0AEZJ9zI8EeeTSfZ
+	 dp5tJIYISN2DlhApogL/DkRsv6hXwYp8RJOvUf9a0kTrxF17ikOy3MFU5oTVERypj3
+	 zW8lxwC8ZyoNcUKxhivZVLTk0ySa3lx7LdTFqq9ijmQVdYOkQO6/p7rR52ojnbAmm7
+	 ovfp5eEbqbWqw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F993EDEC12;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15ABEDEC15;
 	Wed,  4 Mar 2026 06:14:16 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Wed, 04 Mar 2026 06:14:12 +0000
-Subject: [PATCH v5 1/3] dt-bindings: dma: Add Amlogic A9 SoC DMA
+Date: Wed, 04 Mar 2026 06:14:14 +0000
+Subject: [PATCH v5 3/3] MAINTAINERS: Add an entry for Amlogic DMA driver
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,8 +39,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260304-amlogic-dma-v5-1-aa453d14fd43@amlogic.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260304-amlogic-dma-v5-3-aa453d14fd43@amlogic.com>
 References: <20260304-amlogic-dma-v5-0-aa453d14fd43@amlogic.com>
 In-Reply-To: <20260304-amlogic-dma-v5-0-aa453d14fd43@amlogic.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -51,11 +51,11 @@ Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772604853; l=2707;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772604853; l=791;
  i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
- bh=tOW+mg+Op+k/ZgX4FkAdrJ1JecmytVhZ23wsn8r2TZM=;
- b=mWvgpgqvHp3o6DoHv4R46+QmnZA7osrhiKPLH45vypHg87VH7F/67t1VwEIhk651oC3wnI5oU
- LnKL7RT9POhBhhk7uhizOH7OzaNcd7BZq5G1t54lr6yppWBvK/tWqoy
+ bh=3ILqFEE9mmDp095lkKeN49I2hs9aNRjaPs7y2SEtITs=;
+ b=9USpP0n2vyKSR5Z5zHbVHWWUmK2A2p7Let4R9fnXZAezGITc++N1pXoFvcMlDUAjCTSoBm8s2
+ ctANXVN1tv/CfTdMg2qDB1OiGzK7T56TIxFLGxUt40EQ0YiPopgKnIA
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
@@ -65,100 +65,32 @@ Reply-To: xianwei.zhao@amlogic.com
 
 From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Add documentation describing the Amlogic A9 SoC DMA. And add
-the properties specific values defines into a new include file.
+Add Amlogic DMA controller entry to MAINTAINERS to clarify
+the maintainers.
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- .../devicetree/bindings/dma/amlogic,a9-dma.yaml    | 65 ++++++++++++++++++++++
- include/dt-bindings/dma/amlogic,a9-dma.h           |  8 +++
- 2 files changed, 73 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml b/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
-new file mode 100644
-index 000000000000..efd7b2602c33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/amlogic,a9-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 55af015174a5..e9c52dfba2df 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1316,6 +1316,13 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
+ F:	drivers/perf/amlogic/
+ F:	include/soc/amlogic/
+ 
++AMLOGIC DMA DRIVER
++M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
++L:	linux-amlogic@lists.infradead.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
++F:	drivers/dma/amlogic-dma.c
 +
-+title: Amlogic general DMA controller
-+
-+description:
-+  This is a general-purpose peripheral DMA controller. It currently supports
-+  major peripherals including I2C, I3C, PIO, and CAN-BUS. Transmit and receive
-+  for the same peripheral use two separate channels, controlled by different
-+  register sets. I2C and I3C transfer data in 1-byte units, while PIO and
-+  CAN-BUS transfer data in 4-byte units. From the controller’s perspective,
-+  there is no significant difference.
-+
-+maintainers:
-+  - Xianwei Zhao <xianwei.zhao@amlogic.com>
-+
-+properties:
-+  compatible:
-+    const: amlogic,a9-dma
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: sys
-+
-+  '#dma-cells':
-+    const: 2
-+
-+  dma-channels:
-+    maximum: 64
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - '#dma-cells'
-+  - dma-channels
-+
-+allOf:
-+  - $ref: dma-controller.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    dma-controller@fe400000{
-+        compatible = "amlogic,a9-dma";
-+        reg = <0xfe400000 0x4000>;
-+        interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-+        clocks = <&clkc 45>;
-+        #dma-cells = <2>;
-+        dma-channels = <28>;
-+    };
-diff --git a/include/dt-bindings/dma/amlogic,a9-dma.h b/include/dt-bindings/dma/amlogic,a9-dma.h
-new file mode 100644
-index 000000000000..c59c2fd4b956
---- /dev/null
-+++ b/include/dt-bindings/dma/amlogic,a9-dma.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+
-+#ifndef __DT_BINDINGS_DMA_AMLOGIC_DMA_H__
-+#define __DT_BINDINGS_DMA_AMLOGIC_DMA_H__
-+
-+#define DMA_TX			0
-+#define DMA_RX			1
-+#endif /* __DT_BINDINGS_DMA_AMLOGIC_DMA_H__ */
+ AMLOGIC ISP DRIVER
+ M:	Keke Li <keke.li@amlogic.com>
+ L:	linux-media@vger.kernel.org
 
 -- 
 2.52.0
