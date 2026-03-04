@@ -1,73 +1,73 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2B937AA70
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Mar 2026 23:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD13636403A
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Mar 2026 23:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772665614; cv=none; b=aJXyMsq1dFaee/MPT/C3j5FMLEv3Fo+XsHZjEu9pzJCiv3HCYHpNoyc/uU+rzvSdqeUZ4r5PB0bGQRC+eOD8r2G8za0YqYDAzgLF2VaFigR2fOFQbc52zomySB+td7wgeJL8G1tPXYRHpV5ypMY2NJScZd8Wksq98RfVLwWNLUY=
+	t=1772666434; cv=none; b=NnMtj6n+WCBw6a7MiA6L3kuw0eqMLcGOH6Z29E9WCgJwUJUir8/Z02NEd5Vs32JUUA54H1lkVZ7JuofR7KffReCADCEKJQLO/ChaLEzmeEjk0c1sDYHOOTNyjhaPUhkfbAPmJILnZtU4+q2EtF/+fxfbhy5YyVm7x3EcseS+J7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772665614; c=relaxed/simple;
-	bh=3mXMuLOxk8zLGokqx2S/V/n1q9jDGACUh/JO53uci0U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jtfi7bNrvvB4QpKyNSXclpaLwK4x6wFE6XEsWCTMEFnhCXT07zy40FToBl26e9rhy5T3mB2PyJp9xx91cfdfxXFvzroGexr9l/5wEs07pqgyzQsj7h059YQz7XsvjPraeQI6lf9h2duSDwZVrEKKpQzx81QqJrM4x7fGmFPRom8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bJRyUQDc; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1772666434; c=relaxed/simple;
+	bh=FhSYioIp87zWW15JxImwp9ZRr+LkR0h+oTrgy/6ObAk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sAbxzNr7at7mWjNnF7hklylW75tG0a0LNtec53OOUdOGeD+tLPWBIbj6OouA5BWb7kJSprupcHyX4jla4Ak0OXiuRQUuQ2vw8wUo5IuMZ+zvwUMnbTVbyzPV0I0LwMJouJgTKpD14zggR38oRzuGIXZOsw8CZmFAxTFWHFg+N7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jvZgaBmj; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJRyUQDc"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-82985f42664so34767b3a.0
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Mar 2026 15:06:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvZgaBmj"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-82746ed8cdcso4794601b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Mar 2026 15:20:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772665613; x=1773270413; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1772666433; x=1773271233; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nuwkc66SGtvVybuj3enJtzvT05yj+40BgPg9Oazhc0c=;
-        b=bJRyUQDcBdGxL7RSsjLNAesCp28oZ/y18Gd4lwjtPe4naNgZ2hiDmdUEKxXIBFZznb
-         yP4rki6uuEdCz+QlzgAvs/Hy7wCKooQDb8S+Ogyrb3D3HgOcYlJb9tW+nhbei9jGkJRu
-         o3ZkD6mgUdiPlhciwdpttLSUGr1+b9r9s4IwlJp4Sd9IRUoIRi884r/CaM4XASm2mlpm
-         R//mg0/TmpHHYqXq7kZ92qpCPfoFRXVsZUYe1ZWqRU4j5dpwC2F0cFKWymfw03rdl4SQ
-         dhTeAZ65yaB3AnUwGQleJe4ljS+RfFTD7pOHFNmTYC9czFYZwfc+wVzgn2Xy9miEjXvs
-         OuPA==
+        bh=S8/7Iq+R5X6wke7kdfyu42X+a9yz8jbqYH+qW9takpM=;
+        b=jvZgaBmjpazpAcLzAkO0xrU8rWKeTCeWYyJtOk78yaRmxeJWFr3etZG23HUo6FpwC1
+         WidvddPpV7Kxgs0J73d5vH88d462faLZDTUb2+jJ8Cq7PfqPu1/g2beQ4SnwwcONH5CL
+         DZ0mZsrkIR7UCOEUTG9YQJ1dfZgh2/TbfLlS7TF0JFFmp4mu/Eryk43QfsvV7ZgkZej+
+         +ByzV+MvlAYUJ4ByJODJiN3R1L14+HLm5OzhZuCFyJyInyvPgshE/J5Oa0QYrxeGS7CF
+         kxhNoDEAmX8o7ldEcVg5nOacXMpSxmOhzNGUSSdiw22R8GqZKtdaxYxoMHfLRhHyExBe
+         roUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772665613; x=1773270413;
+        d=1e100.net; s=20230601; t=1772666433; x=1773271233;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Nuwkc66SGtvVybuj3enJtzvT05yj+40BgPg9Oazhc0c=;
-        b=R6L1G52YNRhFkzV44gqQJAzJXVOaOyK4SDJk3vgpA043v1DNDukeBiKtWy2jxpCQjZ
-         EDMG8N7woFrUPWXVZg5dMQlgwofw5iyUnuyfoZTkmlUBh1Ib4llY19Bl3UemDRaX6O8H
-         aDRshsQm5jsIZurcE6A+UFUfVI0CKFeRHRMYhk3EOCvtc7EUAFXJaJtzxkQ/IX+kB9S1
-         YbqGzKYnnNDV1ydP3Y9T2Lr/dyARRiQnB9xHw109hsqgg52cfE0cnCGlyHYpbQpPZZLw
-         kn3CNqYWTsQE4mQJwPn9tte2Sv4QIwcDt48yfpAHSGyJnF9VJojIX2h9E+mgUQMZIdvA
-         zxbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfAAlZrqFgzbthZlra3Q/7KriFODrgVTy1nWFoDXfU21i3UAjNDiibNZWbhx9PJqxm8fTEVHPDiJ15wBGAvSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9Si34YtgRnGJBBK7iUrZVXUtX191n6bYlJSTjlh1IAaDN2jwI
-	fUmVOCkpYdaMoDMPZi3HLG0rjVAG4sYXjwVz/Fcmi7SmBjy2boJS+/zhsp+LqXA4Fd8=
-X-Gm-Gg: ATEYQzyNYbHxaF7xdOFHVS5FsIcIOkwMX7VWM8rJONNneqN+sO/APpksJeRiYpSR+8D
-	eAeZWW0/XawengjmyZPveIn8aU/nywn9ViqA8Ab7sP5ZUhDgGU8Er95X1GZpn0k6VAXEIfpREDp
-	XU7FRxVEJ/Yn9E876QBxFTHUfWoVKoLZZB1tFyyOGgijZWK2VgezFO2kcFn5jOt5Szx039FTMpb
-	xPQa+JrdqU+1zPt7JylVxWlnFjMkzD9hsHk4ey0LYq8ZBB4q3qZwyr/206VquMfHjFIgxLPVY1Y
-	Vw6WgJZhxCbwFp6IhaW1topwWs80cKG+UvyChaLvomfJXx4j4RmlmGKwFMuJY55LQI6UQMIGmkc
-	P/PECoBf2zMV9aFnPAhFAYDZwGvsymhMoCQPIwk2gbzofWLRUwNuYkY96iKUtl3nZj2o/XQBiC+
-	KozQSI+Rdi41/JSnU8Gz06Q/SWo6hRGnwq0dMgSKv9hW/3hLzv5FFt+Q==
-X-Received: by 2002:a05:6a00:94c5:b0:81f:3c77:a24c with SMTP id d2e1a72fcca58-82972d5395amr2252997b3a.66.1772665613175;
-        Wed, 04 Mar 2026 15:06:53 -0800 (PST)
+        bh=S8/7Iq+R5X6wke7kdfyu42X+a9yz8jbqYH+qW9takpM=;
+        b=Hat2Zj5sM5u/pm0eWPNN/9OokMQCgBtRPnQdJzB0Xhj7IiJ012QWtGS69FSRHuEW15
+         N2hzeMjr0SPPpRWWKt0LiMFTh5BIGUbkSZGRXypQGvBX833STh5Jny7PAvZdxJknxFk9
+         MeFSdBPkgzfbo17LJkFtvsndjTkYJIZN5hCXzjU4zKl+BHMdY6iPFcvaqVi81hEqKI/q
+         Qaen0Y5u+1E9+j8oJOVz51Qfur1V+3ZQ+b97KU1ux3UE6VNKGjNEsTCXea+Vduy9g7hc
+         rza8ZyKKGcq3/fntx8Eqfoa9UlVtA3LQYE4ei6bNxeQHBq78UCRLNN4zFAQsnJVDHQyB
+         3jBw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/Hb9+iXQynOpyS7PRzedacgH2SlmWdVYWUdoDfW/tLrqThsI4w9DCtvsBqSTM8VgVXFghYZhICvU8bSQH+N8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc+ksn4zyWnz+LlKf28vELcc7bLvRlZ2WSD7HHX/A2nZTfZYnG
+	w4rgErOK47or9pyfW7Ir0k6aQ0eLBHRIuU8FNTxcpkJ/ez25U7U2l91e
+X-Gm-Gg: ATEYQzxbK0X2x5rhuhdrxDVZXbOYaewQsi/T8a3ZgBYFpVOv540RDhBFWIj/P67wC8G
+	IQU2ZS1KZ9srh5+z8a5y2pbiK07dzIy6xITvENMpWe3zXnLnkb7iWmJaomx+arVvrKngaHZe6zQ
+	R+EXT+1v1t3aNHXQ20FvrqTuYiG9iJZJkH49RxUUU0ib369Iimh+920zBVI4DDdPWvHOURadhQk
+	yr1OMrJhwx8fpevS603jdDBo2HnbKakUHRZgthrZUTWww0Y6FZuU2/bavEKdDR79wbvWy+4wXaD
+	KuppLQnrC/+jCcrJ5Xte3JPFlmPQrNzQLtsokQ7xjzUz5Ev5Pek2/5VzxN5AyMn8SlAr2HvVc5u
+	nFivb2GmBFNi5qqC/8H8F9YUF6W4ceFDPM8ocNyb2LEBKm/xh2x6n7V/kATUDdxfjEz515tHWqH
+	99VWjm4CPYBGfQvkyJXULBNq1VBu4ruq1OUdP13J6jbU9/I7YcTiW7ww==
+X-Received: by 2002:a05:6a00:1c98:b0:827:2eff:a29e with SMTP id d2e1a72fcca58-82972c655e8mr3140323b3a.34.1772666433049;
+        Wed, 04 Mar 2026 15:20:33 -0800 (PST)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82739d8805esm20511087b3a.16.2026.03.04.15.06.52
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82739d544ffsm19730769b3a.12.2026.03.04.15.20.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2026 15:06:52 -0800 (PST)
+        Wed, 04 Mar 2026 15:20:31 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-phy@lists.infradead.org
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
+To: linux-mediatek@lists.infradead.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM MAILING LIST),
-	linux-kernel@vger.kernel.org (open list),
+	linux-kernel@vger.kernel.org (open list:ARM/Mediatek SoC support),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC support),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] phy: qualcomm: usb-hs-28nm: use flex array
-Date: Wed,  4 Mar 2026 15:06:36 -0800
-Message-ID: <20260304230636.27808-1-rosenp@gmail.com>
+Subject: [PATCH] soc: mediatek: mtk-dvfsrc: use flex array
+Date: Wed,  4 Mar 2026 15:20:14 -0800
+Message-ID: <20260304232014.164408-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -77,63 +77,67 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allows simplifying allocation to a single kzalloc call.
+Simplifies allocation from kzalloc + kcaloc to one allocation.
 
-Also allows using __counted_by for extra runtime analysis.
+Allows extra runtime analysis with __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/soc/mediatek/mtk-dvfsrc.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c b/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
-index a52a9bf13b75..b2ea038a8f25 100644
---- a/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
-+++ b/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
-@@ -56,13 +56,13 @@ struct hsphy_data {
- 
- struct hsphy_priv {
- 	void __iomem *base;
--	struct clk_bulk_data *clks;
- 	int num_clks;
- 	struct reset_control *phy_reset;
- 	struct reset_control *por_reset;
- 	struct regulator_bulk_data vregs[VREG_NUM];
- 	const struct hsphy_data *data;
- 	enum phy_mode mode;
-+	struct clk_bulk_data clks[] __counted_by(num_clks);
+diff --git a/drivers/soc/mediatek/mtk-dvfsrc.c b/drivers/soc/mediatek/mtk-dvfsrc.c
+index 548a28f50242..48b1fcf3e101 100644
+--- a/drivers/soc/mediatek/mtk-dvfsrc.c
++++ b/drivers/soc/mediatek/mtk-dvfsrc.c
+@@ -71,8 +71,8 @@ struct dvfsrc_opp {
  };
  
- static int qcom_snps_hsphy_set_mode(struct phy *phy, enum phy_mode mode,
-@@ -309,23 +309,21 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
- 	struct phy_provider *provider;
- 	struct hsphy_priv *priv;
- 	struct phy *phy;
-+	size_t size;
- 	int ret;
- 	int i;
+ struct dvfsrc_opp_desc {
+-	const struct dvfsrc_opp *opps;
+ 	u32 num_opp;
++	struct dvfsrc_opp opps[] __counted_by(num_opp);
+ };
  
--	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	size = ARRAY_SIZE(qcom_snps_hsphy_clks);
-+	priv = devm_kzalloc(dev, struct_size(priv, clks, size), GFP_KERNEL);
- 	if (!priv)
+ struct dvfsrc_soc_data;
+@@ -489,7 +489,6 @@ static u32 dvfsrc_get_opp_gear(struct mtk_dvfsrc *dvfsrc, u8 level)
+ 
+ static int dvfsrc_get_hw_opps_v4(struct mtk_dvfsrc *dvfsrc)
+ {
+-	struct dvfsrc_opp *dvfsrc_opps;
+ 	struct dvfsrc_opp_desc *desc;
+ 	u32 num_opps, gear_info;
+ 	u8 num_vcore, num_dram;
+@@ -520,24 +519,19 @@ static int dvfsrc_get_hw_opps_v4(struct mtk_dvfsrc *dvfsrc)
+ 		 num_opps, num_vcore, num_dram, num_emi);
+ 
+ 	/* Allocate everything now as anything else after that cannot fail */
+-	desc = devm_kzalloc(dvfsrc->dev, sizeof(*desc), GFP_KERNEL);
++	desc = devm_kzalloc(dvfsrc->dev, struct_size(desc, opps, num_ops + 1), GFP_KERNEL);
+ 	if (!desc)
  		return -ENOMEM;
  
-+	priv->num_clks = size;
-+
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
--	priv->num_clks = ARRAY_SIZE(qcom_snps_hsphy_clks);
--	priv->clks = devm_kcalloc(dev, priv->num_clks, sizeof(*priv->clks),
--				  GFP_KERNEL);
--	if (!priv->clks)
+-	dvfsrc_opps = devm_kcalloc(dvfsrc->dev, num_opps + 1,
+-				   sizeof(*dvfsrc_opps), GFP_KERNEL);
+-	if (!dvfsrc_opps)
 -		return -ENOMEM;
--
- 	for (i = 0; i < priv->num_clks; i++)
- 		priv->clks[i].id = qcom_snps_hsphy_clks[i];
++	desc->num_opp = num_opps + 1;
  
+ 	/* Read the OPP table gear indices */
+ 	for (i = 0; i <= num_opps; i++) {
+ 		gear_info = dvfsrc_get_opp_gear(dvfsrc, num_opps - i);
+-		dvfsrc_opps[i].vcore_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_VCORE, gear_info);
+-		dvfsrc_opps[i].dram_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_DRAM, gear_info);
+-		dvfsrc_opps[i].emi_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_EMI, gear_info);
++		desc->opps[i].vcore_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_VCORE, gear_info);
++		desc->opps[i].dram_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_DRAM, gear_info);
++		desc->opps[i].emi_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_EMI, gear_info);
+ 	};
+-	desc->num_opp = num_opps + 1;
+-	desc->opps = dvfsrc_opps;
+ 
+ 	/* Assign to main structure now that everything is done! */
+ 	dvfsrc->curr_opps = desc;
 -- 
 2.53.0
 
