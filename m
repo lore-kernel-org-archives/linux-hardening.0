@@ -1,150 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291853D34AA;
-	Wed,  4 Mar 2026 18:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B2F386432;
+	Wed,  4 Mar 2026 21:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772650339; cv=none; b=O+isid8uTPdYtvO/fqSkQNOEQD2jo9J6GBepMZM2dXfu8QxmxUMiOrJBg+Vkc5zMQ8Gp5Yjk/nOE24ZKWBtY5UdPYUI5kCi1L0ITJOmZuae6AWl1A3VYVtRf5PuCuuulxgqruTX/gS4PqlvgMEhxk6Rzy5w31CJN/Ci2WB5Rg20=
+	t=1772659614; cv=none; b=rZ2s9QgO/ge1wM0qRtCDGBU+BlMyDTg8UExIorZPKrZKfI11HitpM3Jnk0z9n3X1mfoGn48uaM3YEoyvvMKyxGKpdUuof6bxJBSsADYx+Q8EL4Qk571dTd3lKGqWcAeKri8jOXG5iFB2wOiMBCnI7XifQTJvKYPvV8iBij95RNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772650339; c=relaxed/simple;
-	bh=DDFFy501pyxspfWhkdcUxEKpUA/8TVxM3OGvXEIiwRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o7pqeNBggfHX/Z0589+a+8XymWSc+6/QcPrGNIeZSwsrthNCxMZKIg6J5imGUhUS/NnXxZmgv7/Sed/WbG84BsSg0wcHTkDgBJH1TM5muaOYJD98WPK7mpF1WYDuhgHWu53YeJNH5sVtMU/nf6pXLg9SmwLYLy+Cc8J25Ggwl48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJWkbwba; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772659614; c=relaxed/simple;
+	bh=MVhmd4cWE0Kx3+BczUBvTeGMoG4y8lKZBKmcPBNai8Q=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=Gfe/XMsySc/inxPfauKSYAE7DWc9bfi1IqTwyVDNJ78veUYXOwoSSBlGxvxQ/yLmi9i88b1xZ3mv0gCCrtmkMZWwlILJskDOTjbwp/zZOqj+5BeAPyUrzhHnx/UmWZYeefDfK1y1ELgJPiUbGsNPJKuZQSjSdK4Oo6SkA8wbMH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=RXhkKbCV; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=5A25tT79; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJWkbwba"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A829BC4CEF7;
-	Wed,  4 Mar 2026 18:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772650338;
-	bh=DDFFy501pyxspfWhkdcUxEKpUA/8TVxM3OGvXEIiwRo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QJWkbwbacfYJo+IuwGLW6H5IhxxBfJC1lZTnSzdl1LXiWUZLlRdB4RIK47OyWVY3C
-	 UZ9YjjTC7VZgSNQejFfJzVjhqqOl5KpYM0hSTGCaZ7MZ0VdLgZba3dhh/eX4wT4zLC
-	 epTOMbEQOKHwcWKhbP01s9o1O2kJpEq6ja0aGC3rrUaYzILV2eGTgucK8vR4PFyGFJ
-	 +ZlVGry/WP8a2dTlk+PiB2AbhWPczTyqyrdvT6FGxXuMZHW/o3uDsGCc8+jsd4P42W
-	 NoPWys8q72nbXXNcaeE7aq+uy5wQ5l2nHpSZR6YRTJpPHgRPnJmZljA9G1RIEJUTDk
-	 VyiUoWcDgdwIA==
-Date: Wed, 4 Mar 2026 12:51:54 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: =?utf-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Gabriel Gonzales <semfault@disroot.org>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Biswapriyo Nath <nathbappai@gmail.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v3 2/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
- reserved memory ranges
-Message-ID: <xgcv6gcaw6xxelkafo23waz4sbw2cycas45qhzxkfhbeuukzbe@wwssuc44mp7y>
-References: <20260126-xiaomi-willow-v3-0-aad7b106c311@mainlining.org>
- <20260126-xiaomi-willow-v3-2-aad7b106c311@mainlining.org>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="RXhkKbCV";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="5A25tT79"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1772659603; bh=ph8FSrXPg2/n2Ad6/2vbcmV
+	Qb668+5s77efPfp1VCHA=; b=RXhkKbCVAcPaz1mI5rRjFzXC7h2MjdCW6IahRHDaBTZ+tjHK1x
+	RTT/M/c5Law8eJDHHNzFpjjAJeQZgJ2qZDQcx/8Lf8pBOCXYQF6pwjfgLdRLM1nsfs/2fN4Yz9d
+	M2IehnG3rue2wkgHxDfZxcI+pEpn2m4MRi9rCjwS2S4vwjoHHYxsU7bb4ue0dgym9+tEk9fAbvl
+	Dd+vjSNMauLHbK03xU1F0OGeurPYtMUes8Dj9hhi+c8qmCr3j6ROf4pW8Bg0/+/9dNMgrDel2eI
+	5a6cVJFvrD6Ec7fFjGFqgRklFL+agMXkNSXJlrCMTvhIrV8kAb8CKT07iqSSfeR9JHA==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1772659603; bh=ph8FSrXPg2/n2Ad6/2vbcmV
+	Qb668+5s77efPfp1VCHA=; b=5A25tT79Aq2CJfrW6ibkNOhBuEcu5Z+zHyKHR5TouGxL8S1LnF
+	GdgmMJp2WuIpZlaNxy8r6DoX8/2BojAevyCw==;
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Date: Wed, 04 Mar 2026 22:26:43 +0100
+From: barnabas.czeman@mainlining.org
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Gabriel Gonzales <semfault@disroot.org>, Kees Cook
+ <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, Biswapriyo Nath <nathbappai@gmail.com>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ linux@mainlining.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v3 2/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct
+ reserved memory ranges
+In-Reply-To: <xgcv6gcaw6xxelkafo23waz4sbw2cycas45qhzxkfhbeuukzbe@wwssuc44mp7y>
+References: <20260126-xiaomi-willow-v3-0-aad7b106c311@mainlining.org>
+ <20260126-xiaomi-willow-v3-2-aad7b106c311@mainlining.org>
+ <xgcv6gcaw6xxelkafo23waz4sbw2cycas45qhzxkfhbeuukzbe@wwssuc44mp7y>
+Message-ID: <f1028a5b2eefbb0672f0a5e55d0691d1@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260126-xiaomi-willow-v3-2-aad7b106c311@mainlining.org>
 
-On Mon, Jan 26, 2026 at 05:34:52PM +0100, Barnab·s CzÈm·n wrote:
-> The device was crashing on high memory load because the reserved memory
-> ranges was wrongly defined. Correct the ranges for avoid the crashes.
-> Change the ramoops memory range to match with the values from the recovery
-> to be able to get the results from the device.
+On 2026-03-04 19:51, Bjorn Andersson wrote:
+> On Mon, Jan 26, 2026 at 05:34:52PM +0100, Barnab√°s Cz√©m√°n wrote:
+>> The device was crashing on high memory load because the reserved 
+>> memory
+>> ranges was wrongly defined. Correct the ranges for avoid the crashes.
+>> Change the ramoops memory range to match with the values from the 
+>> recovery
+>> to be able to get the results from the device.
+>> 
 > 
-
-FYI. If you add "memtest=1" to your kernel command line the kernel will
-sweep all memory at boot, which tends to flush out most such issues.
-Then you don't need to rely on "high memory load" for testing for such
-issues.
-
-Regards,
-Bjorn
-
-> Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for xiaomi-ginkgo")
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Barnab·s CzÈm·n <barnabas.czeman@mainlining.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts | 41 ++++++++++++++++-------
->  1 file changed, 29 insertions(+), 12 deletions(-)
+> FYI. If you add "memtest=1" to your kernel command line the kernel will
+I have tested with memtest=1 also, it is working fine.
+> sweep all memory at boot, which tends to flush out most such issues.
+> Then you don't need to rely on "high memory load" for testing for such
+> issues.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-> index bf03226a6f85..d5e5abdb3b2f 100644
-> --- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
-> @@ -13,6 +13,12 @@
->  #include "sm6125.dtsi"
->  #include "pm6125.dtsi"
->  
-> +/delete-node/ &adsp_pil_mem;
-> +/delete-node/ &cont_splash_mem;
-> +/delete-node/ &gpu_mem;
-> +/delete-node/ &ipa_fw_mem;
-> +/delete-node/ &ipa_gsi_mem;
-> +
->  / {
->  	model = "Xiaomi Redmi Note 8";
->  	compatible = "xiaomi,ginkgo", "qcom,sm6125";
-> @@ -36,28 +42,39 @@ framebuffer0: framebuffer@5c000000 {
->  	};
->  
->  	reserved-memory {
-> -		debug_mem: debug@ffb00000 {
-> -			reg = <0x0 0xffb00000 0x0 0xc0000>;
-> +		adsp_pil_mem: adsp_pil_mem@55300000 {
-> +			reg = <0x0 0x55300000 0x0 0x2200000>;
->  			no-map;
->  		};
->  
-> -		last_log_mem: lastlog@ffbc0000 {
-> -			reg = <0x0 0xffbc0000 0x0 0x80000>;
-> +		ipa_fw_mem: ipa_fw_mem@57500000 {
-> +			reg = <0x0 0x57500000 0x0 0x10000>;
->  			no-map;
->  		};
->  
-> -		pstore_mem: ramoops@ffc00000 {
-> -			compatible = "ramoops";
-> -			reg = <0x0 0xffc40000 0x0 0xc0000>;
-> -			record-size = <0x1000>;
-> -			console-size = <0x40000>;
-> -			pmsg-size = <0x20000>;
-> +		ipa_gsi_mem: ipa_gsi_mem@57510000 {
-> +			reg = <0x0 0x57510000 0x0 0x5000>;
-> +			no-map;
->  		};
->  
-> -		cmdline_mem: memory@ffd00000 {
-> -			reg = <0x0 0xffd40000 0x0 0x1000>;
-> +		gpu_mem: gpu_mem@57515000 {
-> +			reg = <0x0 0x57515000 0x0 0x2000>;
->  			no-map;
->  		};
-> +
-> +		framebuffer@5c000000 {
-> +			reg = <0x0 0x5c000000 0x0 (2340 * 1080 * 4)>;
-> +			no-map;
-> +		};
-> +
-> +		/* Matching with recovery values to be able to get the results. */
-> +		ramoops@61600000 {
-> +			compatible = "ramoops";
-> +			reg = <0x0 0x61600000 0x0 0x400000>;
-> +			record-size = <0x80000>;
-> +			pmsg-size = <0x200000>;
-> +			console-size = <0x100000>;
-> +		};
->  	};
->  
->  	extcon_usb: extcon-usb {
+> Regards,
+> Bjorn
 > 
-> -- 
-> 2.52.0
-> 
+>> Fixes: 9b1a6c925c88 ("arm64: dts: qcom: sm6125: Initial support for 
+>> xiaomi-ginkgo")
+>> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>> Signed-off-by: Barnab√°s Cz√©m√°n <barnabas.czeman@mainlining.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts | 41 
+>> ++++++++++++++++-------
+>>  1 file changed, 29 insertions(+), 12 deletions(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts 
+>> b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+>> index bf03226a6f85..d5e5abdb3b2f 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-ginkgo.dts
+>> @@ -13,6 +13,12 @@
+>>  #include "sm6125.dtsi"
+>>  #include "pm6125.dtsi"
+>> 
+>> +/delete-node/ &adsp_pil_mem;
+>> +/delete-node/ &cont_splash_mem;
+>> +/delete-node/ &gpu_mem;
+>> +/delete-node/ &ipa_fw_mem;
+>> +/delete-node/ &ipa_gsi_mem;
+>> +
+>>  / {
+>>  	model = "Xiaomi Redmi Note 8";
+>>  	compatible = "xiaomi,ginkgo", "qcom,sm6125";
+>> @@ -36,28 +42,39 @@ framebuffer0: framebuffer@5c000000 {
+>>  	};
+>> 
+>>  	reserved-memory {
+>> -		debug_mem: debug@ffb00000 {
+>> -			reg = <0x0 0xffb00000 0x0 0xc0000>;
+>> +		adsp_pil_mem: adsp_pil_mem@55300000 {
+>> +			reg = <0x0 0x55300000 0x0 0x2200000>;
+>>  			no-map;
+>>  		};
+>> 
+>> -		last_log_mem: lastlog@ffbc0000 {
+>> -			reg = <0x0 0xffbc0000 0x0 0x80000>;
+>> +		ipa_fw_mem: ipa_fw_mem@57500000 {
+>> +			reg = <0x0 0x57500000 0x0 0x10000>;
+>>  			no-map;
+>>  		};
+>> 
+>> -		pstore_mem: ramoops@ffc00000 {
+>> -			compatible = "ramoops";
+>> -			reg = <0x0 0xffc40000 0x0 0xc0000>;
+>> -			record-size = <0x1000>;
+>> -			console-size = <0x40000>;
+>> -			pmsg-size = <0x20000>;
+>> +		ipa_gsi_mem: ipa_gsi_mem@57510000 {
+>> +			reg = <0x0 0x57510000 0x0 0x5000>;
+>> +			no-map;
+>>  		};
+>> 
+>> -		cmdline_mem: memory@ffd00000 {
+>> -			reg = <0x0 0xffd40000 0x0 0x1000>;
+>> +		gpu_mem: gpu_mem@57515000 {
+>> +			reg = <0x0 0x57515000 0x0 0x2000>;
+>>  			no-map;
+>>  		};
+>> +
+>> +		framebuffer@5c000000 {
+>> +			reg = <0x0 0x5c000000 0x0 (2340 * 1080 * 4)>;
+>> +			no-map;
+>> +		};
+>> +
+>> +		/* Matching with recovery values to be able to get the results. */
+>> +		ramoops@61600000 {
+>> +			compatible = "ramoops";
+>> +			reg = <0x0 0x61600000 0x0 0x400000>;
+>> +			record-size = <0x80000>;
+>> +			pmsg-size = <0x200000>;
+>> +			console-size = <0x100000>;
+>> +		};
+>>  	};
+>> 
+>>  	extcon_usb: extcon-usb {
+>> 
+>> --
+>> 2.52.0
+>> 
