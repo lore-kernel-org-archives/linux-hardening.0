@@ -1,94 +1,164 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554C83E3D90
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Mar 2026 17:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2270129B78B
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Mar 2026 19:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772730620; cv=none; b=nXxD/AkCQtNNVBgGaQliHTYPkzWEC5hbbtd0iX1E57gFknJfDGsymZ3gEeNrf05O9O6kLovgr0Frj2SiizjzIZ0q4qxzs4r/2HPK2D13bHNXfTPqnm/979GUg9fFbHhMywcRvctc3VVdMDHBCoYSjdZgVoYzc9LA3FSJpNA0z3k=
+	t=1772738074; cv=none; b=pletRhARQbad0TT5DQYlqljOZ/y5xsw0s7AVCmTGHX9tXbUqSx7MU/lJl1VmxFt74YfzSp76gJX5gcMd/LlmnwrMCdyNoQ5UxEiM3hwYewSQNK/EJ0v/BH9zQKGdj0cCNrepRBkgNZXq49GjO8n6hmFLmU49h+bqvrs9wY4saHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772730620; c=relaxed/simple;
-	bh=1dRtbSL0z2ytbckj6wSLUUOGGrIOP3G0d+3V5VkDtc8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PotqONTd89nR+ChEIXGhZjl1IHzB9OTos8tHNSjumDX/a35P0sBzPhW93gGyR/DLJoIZHKrjZtngc+dbQbmM0EVOzZT6/6Cxmo8FJHcuZzFz4h40joIb/juCU3GvGMtpG2/PxYpSFN1Zjt+usX7YsVASvzeD+0eEAq9/zxtURFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=auVOJC8b; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1772738074; c=relaxed/simple;
+	bh=qRdDrBna4a6872YMyXijGc872wYwYrXblTPPs70KtTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UeP78uNHm8/OHChyL6d6+DVrNQ44/hjfPfXxOCPfQdd0LejHQk2XYTSVeDp4ETfakudFmZYBvwlWvIbYlXE2xemmRCJtkFrFgvplcpXl2qzW/NQnLHukLbpbL5I4vgIJO++gKYO/BA4Hu4uu2bB5RbR/Gij+v1I1iW+8Ix6GeXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=hYrt5u4P; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="auVOJC8b"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2ae3badc00dso60552725ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Mar 2026 09:10:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772730619; x=1773335419; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5eRREj8B726P8wv+ghDGF6Dj3pEBAyYOHAidGVCV8Tg=;
-        b=auVOJC8bHck87F4HM5e5x+TetsKim1cdkekP0YETd7F27R0c6M083u01Ai2XRYT4+d
-         9ZoWZpQpjElS959Suf0p0jI0D4nr+Jjxw1uSKFJJLd5v0Qe9DP6bWdaTm8fwaU/fZDgz
-         Bl5sdMyeIl7UEdMU2EEAbohnNHQz0ifeIqT3oPQ3keHGLpN1qJMH4jazTB9jqMtHofhY
-         G+8aYz0RIVftVvyot68kFaNeMMKtop2AHsnir5+W31i9F8DwZdCqun6IKie1H+fYLKyU
-         hWiiuSdAxjP/FcRSxlafvtMrhsKLWw9R00ThpQBBmVg3CmZ3m9ldDNyItLeydbX/AXBs
-         y6lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772730619; x=1773335419;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5eRREj8B726P8wv+ghDGF6Dj3pEBAyYOHAidGVCV8Tg=;
-        b=LKdXbenggfgqLKEpgj2/LSlJVXcSaHvVIog81ZvWyd47VFjsEHXgIcb/7MFchhYiV6
-         DvY6fS02dHnVnUBU7UAD/OQKfppFceypkvdaVJ5UI39BIZc7/haK9BjciZxxONet+kDE
-         51aMODWWplOAxoGAT5HVfav1Ul2hqDlyFOXK95QXSQvd9JSIx5Fe8n1OJO19/XSGNLtb
-         eSm5sqNvEgY8aSAyw/QUJmAgBgg3tqh32vOr0Fw3p4D4YKw2309RPqy5FpZxM3skm6Fm
-         9kkxBeGFLsnNR5ZtN9Zm7NLdcSmld8FUgV6gey0kQ65aKpWXyGgBjPHETzs6eMa/8wBE
-         G3dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCOwTnkjdwgb1BgDtDdhtQVUQ/y3af03HbCIgR9LRiTubEre2QSK1gBDLiW+zYtbAYMFhNGd2xx+Gxkdi8Ceo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww9YhMN7RkIo5ZjptCciKDmxsaz4mgMS7/LoYSlMncaYcxYJh1
-	bIfCe9d9EN8KoCHvcIGrRmHmfAjiDl6idNE46aE4P8JSoVT8TfDucqQ5OMnyKk72GtO+9aSYDKn
-	lYLSWKg==
-X-Received: from pllg11.prod.google.com ([2002:a17:902:740b:b0:2ae:3fb2:f203])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e947:b0:2aa:e3c2:f920
- with SMTP id d9443c01a7336-2ae6ab0f5a7mr70937115ad.36.1772730618593; Thu, 05
- Mar 2026 09:10:18 -0800 (PST)
-Date: Thu,  5 Mar 2026 09:07:47 -0800
-In-Reply-To: <20260212140556.3883030-2-clopez@suse.de>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hYrt5u4P"
+Received: from eig-obgw-6007b.ext.cloudfilter.net ([10.0.30.166])
+	by cmsmtp with ESMTPS
+	id yByOvQ1r3KjfoyE9Yvpl6p; Thu, 05 Mar 2026 19:14:32 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id yE9Yv2DHkh8QWyE9YvgKlr; Thu, 05 Mar 2026 19:14:32 +0000
+X-Authority-Analysis: v=2.4 cv=Mcdsu4/f c=1 sm=1 tr=0 ts=69a9d618
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=7T7KSl7uo7wA:10 a=edf1wS77AAAA:8
+ a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=J2gJbEVsAAAA:8 a=hSkVLCK3AAAA:8
+ a=Yx1WBRiMjIbWHXwVVgIA:9 a=QEXdDO2ut3YA:10 a=DcSpbTIhAlouE1Uv7lRv:22
+ a=Bt_igOxda4ASFyQEjNxY:22 a=cQPPKAXgyycSBL8etih5:22 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sZMfNUjL8QEWNequUGC+4j4wQXCEXyFRudo0qIRAqyA=; b=hYrt5u4PV4omYCa9x78WfqR6GG
+	nMIcpVmxrwAIQIqFlVCIF6Myd7FsXCaFpgFsxw72PGhka6kdfBfdb4c3Lq87pgsACnCc+Z/e0+jkf
+	FhLPozGFY9dJ2dQSe9RGerkKYEfGkuiIL1AKEPI1T6vK0SUugSamrcBfd3UG8h1omGzxsBrCVv4Ml
+	m1MszpCwWogM/232Q3SUNi90/NbawmKq2Ij5n9KqKn3FqL42u3ePiDtfDGDhRNF9sBRiXGN47ME33
+	Y8+6Ge+JeM8ho90m+SFgxqeDOIGzOB2ihBhAkE6vShjDT04foSkZCte7WzyF9rkkqLdLRf07g6/yR
+	zmdQFlSA==;
+Received: from [177.238.16.13] (port=41596 helo=[192.168.0.21])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vyE9V-000000008gQ-2btz;
+	Thu, 05 Mar 2026 13:14:30 -0600
+Message-ID: <7c33220b-df94-429c-9cd5-fd2b7d7d1add@embeddedor.com>
+Date: Thu, 5 Mar 2026 13:13:45 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260212140556.3883030-2-clopez@suse.de>
-X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <177272956967.1565536.690492075978150495.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: x86/pmu: annotate struct kvm_x86_pmu_event_filter
- with __counted_by()
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, pbonzini@redhat.com, 
-	"=?UTF-8?q?Carlos=20L=C3=B3pez?=" <clopez@suse.de>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v1] net: sched: cls_u32: Avoid memcpy()
+ false-positive warning in u32_init_knode()
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, netdev@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@shopee.com>,
+ syzbot+d5ace703ed883df56e42@syzkaller.appspotmail.com,
+ Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260305073343.250702-1-jiayuan.chen@linux.dev>
+ <fef6bae161f319a188b5b6f157b33498a463e3e6@linux.dev>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <fef6bae161f319a188b5b6f157b33498a463e3e6@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.13
+X-Source-L: No
+X-Exim-ID: 1vyE9V-000000008gQ-2btz
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:41596
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAOcf+jszqg+lrMdqEgcPnXJoCt6hsHEx20OHLg4+Sm/y3tcMga8OrnFehjyhALA+YvYLvu6jTkmX5RTRCCXy4sBNt+z9ACUXwMblukIkvmwe+XUV9YP
+ bdu28JQNwLYIWfHzJcMzeys3wrUW2byu2bsioVXYrxnO1fRoGKmVipnLH9Pt74vLyzgr4jweG1Ls4UAr1vEgWomA3+zP7LaRUnP0JmuwWPoBnKaXiQg1zZjM
 
-On Thu, 12 Feb 2026 15:05:56 +0100, Carlos L=C3=B3pez wrote:
-> struct kvm_x86_pmu_event_filter has a flexible array member, so annotate
-> it with the field that describes the amount of entries in such array.
-> Opportunistically replace the open-coded array size calculation with
-> flex_array_size() when copying the array portion of the struct from
-> userspace.
->=20
->=20
-> [...]
 
-Applied to kvm-x86 misc, thanks!
 
-[1/1] KVM: x86/pmu: annotate struct kvm_x86_pmu_event_filter with __counted=
-_by()
-      https://github.com/kvm-x86/linux/commit/c522ac04ba9d
+On 3/5/26 17:09, Jiayuan Chen wrote:
+> March 5, 2026 at 15:33, "Jiayuan Chen" <jiayuan.chen@linux.dev mailto:jiayuan.chen@linux.dev?to=%22Jiayuan%20Chen%22%20%3Cjiayuan.chen%40linux.dev%3E > wrote:
+> 
+> 
+>>
+>> From: Jiayuan Chen <jiayuan.chen@shopee.com>
+>>
+>> Syzbot reported a warning in u32_init_knode() [1].
+>>
+>> Similar to commit 7cba18332e36 ("net: sched: cls_u32: Avoid memcpy()
+>> false-positive warning") which addressed the same issue in u32_change(),
+>> use unsafe_memcpy() in u32_init_knode() to work around the compiler's
+>> inability to see into composite flexible array structs.
+>>
+>> This silences the false-positive reported by syzbot:
+>>
+>>   memcpy: detected field-spanning write (size 32) of single field
+>>   "&new->sel" at net/sched/cls_u32.c:855 (size 16)
+>>
+>> Since the memory is correctly allocated with kzalloc_flex() using
+>> s->nkeys, this is purely a false positive and does not need a Fixes tag.
+>>
+>> [1] https://syzkaller.appspot.com/bug?extid=d5ace703ed883df56e42
+>>
+>> Reported-by: syzbot+d5ace703ed883df56e42@syzkaller.appspotmail.com
+>> Closes: https://lore.kernel.org/all/69a811b9.a70a0220.b118c.0019.GAE@google.com/T/
+>> Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
+>> Made-with: Cursor
+>> ---
+>>   net/sched/cls_u32.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/sched/cls_u32.c b/net/sched/cls_u32.c
+>> index 9241c025aa74..8f30cc82181d 100644
+>> --- a/net/sched/cls_u32.c
+>> +++ b/net/sched/cls_u32.c
+>> @@ -852,7 +852,10 @@ static struct tc_u_knode *u32_init_knode(struct net *net, struct tcf_proto *tp,
+>>   /* Similarly success statistics must be moved as pointers */
+>>   new->pcpu_success = n->pcpu_success;
+>>   #endif
+>> - memcpy(&new->sel, s, struct_size(s, keys, s->nkeys));
+>> + unsafe_memcpy(&new->sel, s, struct_size(s, keys, s->nkeys),
+>> + /* A composite flex-array structure destination,
+>> + * which was correctly sized with kzalloc_flex(),
+>> + * above. */);
+> 
+> 
+> 
+> I'm thinking whether it's more appropriate:
+> 
+> new->sel.hdr = s->hdr;
+> memcpy(new->sel.keys, s->keys, flex_array_size(s, keys, s->nkeys));
 
---
-https://github.com/kvm-x86/linux/tree/next
+I think unsafe_memcpy() is "better" in this case, as it will mark code
+that could be updated/reviewed once the compiler can correctly see into
+composite flexible structures in the future.
+
+-Gustavo
+
+> 
+>>   if (tcf_exts_init(&new->exts, net, TCA_U32_ACT, TCA_U32_POLICE)) {
+>>   kfree(new);
+>> -- 
+>> 2.43.0
+>>
+> 
+
