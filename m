@@ -1,139 +1,145 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8488C371D0B
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 19:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772825120; cv=pass; b=saYjThrMO2+p1c6o/0j7KDgBxaY0NgAXso+RZQbqW3Q1t5UwvhuHy2MZNl9Af63iLdSm9yWt2TPXpRqPPQX4LzSSZqA2g+liIOQVJj+X7Pj4JvLQUjhXObPdh12UvhRT7Pzev3lrYCe2nH6HYOpRT10FDxflQaQiDdmZHDePVMM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772825120; c=relaxed/simple;
-	bh=nSRTaUyOy2CdPO/r9tq8gDn5OQlNwlgXiGGi6Uex0NU=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HNVszdHDB1NvX+HXKDfSm3+l7jVQdXXJIW9wI7PPiaAsNSK65bDSQtl8k/mV/xFSv5aDsslO/3/YxdPMym/ydSy/hwT10K4Mmu8T54NU1kJekYvXIYkoesaDweTDGGR1SasJtVcdJ+RMVlP5bf2EG6gl2JfB1lTp2IIFlzcwDK4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhOYraCI; arc=pass smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381103FFAAF
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 19:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772825311; cv=none; b=PXVGh/yTgBaznxnsD3JYzFs7lyT/897AWxpl3ctLc7kZfvkRZFyMKD3PAt6pQhPysVyoTq35uV68F0xGJ68430Zi64Q47wOFOxgC5MFPBxRY/JTM4Ky7oYqnldOk5uv8CSqGhuqd8SJBTnF+KdCoEYGmqKSSGBDeV/MItAbiALA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772825311; c=relaxed/simple;
+	bh=RAbE/qSDE3hsC38/B8lVHyLhIm2P0o2grNBnSkIL430=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rLJyFbmu7NcJaFCm5mn2bha6eGCHfrJRZeVwBsl+XHWQXKMOearZAGJ1PQ9Ez6L61Z+IcUp3RNtE2I9NABhdEdg/lumKeVI/smT7YnG6pbPiLJ8a3wXAMgsSkPGTJyfbOrP9Rxt7unGCA1Sylp/2ztoO/4vsrm5c7v7pszRvKB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dH8FEDR+; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhOYraCI"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-7966d747c84so8656927b3.1
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Mar 2026 11:25:19 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772825118; cv=none;
-        d=google.com; s=arc-20240605;
-        b=WYNAnRxhDmDq/NB3P+mQyeA+Y3o5eryIc3O4wi/Bc7efUeFwvL4ZvPYvXhtGscp3h+
-         wdA2YFE5Bd8xpYEW3/Cf1z9e8jN3YuMNIgN2PyHL+SBTphr6LI//9koOlNLFsgqBE9Ho
-         6yUisMQGBvjyPNY63WrMo4LQPnBr7Kcz5sWzdauZOoQquNz0kXWCHg/DMV0WPVvzMv5m
-         Ce8PNoQHW7gmNxF5wI41vsfIv3AR0n5c937xzlkBfZso4fQMsI/aooGfGJYhhuzwnfAa
-         KsEbeygEbWXPTownrpNHMH5+xIpelhi5m5oij5SHNN5Sf5GGpNOu2cb3QxQbTrfNdwX/
-         Qceg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=lY6sP4liFUCfsR0JZcNZnSXYRH2hTABEqRhwR3Jxfn0=;
-        fh=bvFhubQunx9cZIEXYNtg2f7eiZ85UfS7XKOwrz+UOvI=;
-        b=HYRfvuw1pjmtiZrN9rryO9LQDn2TeWMyQ6JIdlxWyL4yk6djvlbFd4Nvfvrp957bD6
-         RYOS0kQlj0pNm/1/wS5jbEw6WwB1B7ClUWQJ5cxH7tnYvj0rF7bT31+1fUnQB9k/L37e
-         JA17v4CNf+L2lE1c1zJ5+i3NyJVnN5G108HCobriXmLGvXqrNOWGeGMUGBSGr/PAXET3
-         v5WKwG9V91SoJA2LGccUSKC3+iDyBq1RjNgKQalrA9w/8HLslmass6ouiu52YpuVriQI
-         3/BSHXQH2+V9bM6K/sDv3A7WxKCH1nrSmRjPJr6OC8cHOzBrOJNMW/sI4EPqGy/qwkX/
-         9lIw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772825118; x=1773429918; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lY6sP4liFUCfsR0JZcNZnSXYRH2hTABEqRhwR3Jxfn0=;
-        b=dhOYraCIRvlH0LLarMfjDp5ZclM40S4shv8I38CVRiE4iSia4rll0b+lsg9OErosb2
-         Qrih/YF6dPH92q5MSpLw4PtcqJOHKLMpHYPmkTd5zIV51pt+XF1fLI3D3hPJLDIi14Px
-         epc8zjAniUXe07PHSnslz3SisSs2EBTL3Npy6vIkKsMy5ZxskN62S4yuLWUSlNk/6j3z
-         88tiQWUTyUPMr1ZAkbmXwXrNUP/cpbzrAk8NngZqrbIshAaUnrkzzd0vh0Q572EaeKyY
-         /2HmzZM+ZdR1AmUlbNu2V3ecLDAWFObqWDV7Pzvoac+jwzGA0A53hr282m89OkNuYsvI
-         /DTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772825118; x=1773429918;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lY6sP4liFUCfsR0JZcNZnSXYRH2hTABEqRhwR3Jxfn0=;
-        b=Lyc/mwGijnKvqpggwDcyb8BncihbC6Zkx0ksfk+AwrkVlAndLEF13uTUvfo44vkl8g
-         IDvO/tPru/IF4NGltpY5TA75tKEc85X7EFzB/e2oSL3y0pGJm0U2HdloDGdkNvWnWTH8
-         EseE2kx1cOZ2yB5NCYlmQXyW21obtb6/sEzE6defXm7ad2OiWlNGMvUVysfH3Evt5IEE
-         PVksOqxSbouqWV6H5kTL1xO0VhfmSiDpYMBF6Jc7tMjDqHxerDzUBjZRH1nQIaEGmcnf
-         LGlUVWpQhSFiU7WdnD09sJlNaz/df/VbqnLGqhESLmwlkT/1JFcEbz8IPQ1dz5hgwuxz
-         6q5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUgwqDUn+Ge0UQjhs5voWmJ1WhxgajWohQ7H0AQ3JfL9vnGoj9hrDczVfSMEFxaZz6WI33oBEFDmSf+oGckqEQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaK2x4H63NX+e6Hikww8XvMzFgp1gEi4kfIXwV8ERFbYk0OQvI
-	wXCWjTj2qAEQoa0ccD7fEMSFzJz7XVHOgGv/ajngv7YFUGtuTgi1mOosQWN4IDwQM3dXHkcLnAI
-	ZnK5RXeHvVhFpA7Dolp2EgcZCYhAzgY4=
-X-Gm-Gg: ATEYQzzo1wj4XxyrkCNVqSmyQN91PXF9EL1VmGmX6ZJjZfsCwHCnUExIfW47AW3npUa
-	ORjwE/4Qva5L3hiUtG9YOOmF5tQgKOM581zFTrWZXFoIwjL6yEvNmT3uLQkfZA5qTL+z4cUARBK
-	eCU7ap82unZPMc+gkfZwIbdhK/kJLa5rhT5+Xyqu0euirOiEKE9MYa8XxwOjymIKnknow5eGS/6
-	B8jvLOI1g8rdN+ZXfjp8lj8/b9PZEH/ECAXD1+SH+wgaUCeyCrbW6PymHWHSTqS1ruPEJ3qOD0O
-	Y/eiBQ==
-X-Received: by 2002:a05:690c:15:b0:798:5ce8:f46a with SMTP id
- 00721157ae682-798dd6f5b17mr24082977b3.3.1772825118598; Fri, 06 Mar 2026
- 11:25:18 -0800 (PST)
-Received: from 95991385052 named unknown by gmailapi.google.com with HTTPREST;
- Fri, 6 Mar 2026 13:25:18 -0600
-Received: from 95991385052 named unknown by gmailapi.google.com with HTTPREST;
- Fri, 6 Mar 2026 13:25:17 -0600
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <20260306150613.350029-1-arnd@kernel.org>
-References: <20260306150613.350029-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dH8FEDR+"
+Received: from eig-obgw-6002b.ext.cloudfilter.net ([10.0.30.203])
+	by cmsmtp with ESMTPS
+	id yW0EvjeMsJ9SZyaqWvzIV3; Fri, 06 Mar 2026 19:28:24 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id yaqVvcNG5PL32yaqWviINE; Fri, 06 Mar 2026 19:28:24 +0000
+X-Authority-Analysis: v=2.4 cv=MqhS63ae c=1 sm=1 tr=0 ts=69ab2ad8
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=7T7KSl7uo7wA:10 a=pGLkceISAAAA:8
+ a=mRCR8zNIrG22jyqt1SMA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qjqp+nzVkHY5IgyvI5b4YAv0FzCMSJoruY9g4RVtXLk=; b=dH8FEDR+0dFGLSuOOlBK3tq2AZ
+	YmFQ8JxdWT6KjQcmWXkCY8wiP40rfVYI3Y2z+lYk/1ju7xQD8hMnrZcq7bW8k6Xc7JEJss+kJbSbN
+	AAlCndnTO1ss5a7fTD15Ycd+GldybKPVNCwCbc+jOwznsF+a1JKTGfEHrOgeVLiYH2TNEWEJY95b3
+	HS9fe77LTET6Be75UgbfEKLVINFSsxkXokN/m7rbZ4t3E6uOM4PtoizI0Jvv0SZ62a/htY4Ui0vPR
+	4+cdKI1RzSOR41DdFckRUxrOWoe1JfKfYtUAXI1ZouKwAfjikmgo3pZ5on4Wwd6rFBP/s20Cfu1m/
+	lwEQIERA==;
+Received: from [177.238.16.13] (port=44592 helo=[192.168.0.21])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vyaqU-00000001RPb-39v6;
+	Fri, 06 Mar 2026 13:28:23 -0600
+Message-ID: <72e8b51c-4dcc-4c42-9e26-8ad8f9299c76@embeddedor.com>
+Date: Fri, 6 Mar 2026 13:27:49 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 6 Mar 2026 13:25:17 -0600
-X-Gm-Features: AaiRm51im8Opzhh4FrDhukBOYJIJAUVnJyGocvgFTBcd1zQhrlQ-HbSj120EYv0
-Message-ID: <CAPAsAGzSybyM_GsP1JxzZTj=SFeN6K8t9uQ3XAXBWiN+019Wmw@mail.gmail.com>
-Subject: Re: [PATCH] ubsan: turn off kmsan inside of ubsan instrumentation
-To: Arnd Bergmann <arnd@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Kees Cook <kees@kernel.org>, Marco Elver <elver@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] phy: miphy28lp: kzalloc + kcalloc to single kzalloc
+To: Rosen Penev <rosenp@gmail.com>, linux-phy@lists.infradead.org
+Cc: Patrice Chotard <patrice.chotard@foss.st.com>,
+ Vinod Koul <vkoul@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "moderated list:ARM/STI ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ open "list:KERNEL" HARDENING "(not" covered by other
+ "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260304232848.469446-1-rosenp@gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20260304232848.469446-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.13
+X-Source-L: No
+X-Exim-ID: 1vyaqU-00000001RPb-39v6
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:44592
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 33
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOMzyDQ8mZ+3m0ErJkvxmBJ42qIXg2L2FQPuALTKDTeTgHz2AFdXAkczEuCQBa+8ly8IbDRlVB/f4uHRAv1LvQ6WGC1lM13ig/Q4RyC+I+TlW71W67hz
+ i/xwq19JQ07b4/jjPtxJmhy9sLMbvJDGvLcTmGrKhyE3kkdSCaeWPq94S2bjdvNe4Pf/2QXn51hPbKLEmlOPp56+Q0ngM/mvw84Nl/3o6eClx+7PnFCsm1C7
 
-Arnd Bergmann <arnd@kernel.org> writes:
 
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The structure initialization in the two type mismatch handling functions
-> causes a call to __msan_memset() to be generated inside of a UACCESS
-> block, which in turn leads to an objtool warning about possibly leaking
-> uaccess-enabled state:
->
-> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch+0xda: call to __msan_memset() with UACCESS enabled
-> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1+0xf4: call to __msan_memset() with UACCESS enabled
->
-> Most likely __msan_memset() is safe to be called here and could be added
-> to the uaccess_safe_builtin[] list of safe functions, but seeing that
-> the ubsan file itself already has kasan, ubsan and kcsan disabled itself,
-> it is probably a good idea to also turn off kmsan here, in particular this
-> also avoids the risk of recursing between ubsan and kcsan checks in
-> other functions of this file.
->
-> I saw this happen while testing randconfig builds with clang-22, but did
-> not try older versions, or attempt to see which kernel change introduced
-> the warning.
->
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: kasan-dev@googlegroups.com
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+On 3/5/26 08:28, Rosen Penev wrote:
+> Use flex array to simplify allocation.
+> 
+> Allows using __counted_by for extra runtime analysis.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 > ---
->  lib/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
+>   drivers/phy/st/phy-miphy28lp.c | 12 +++++-------
+>   1 file changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/phy/st/phy-miphy28lp.c b/drivers/phy/st/phy-miphy28lp.c
+> index 43cef89af55e..fd931ede7162 100644
+> --- a/drivers/phy/st/phy-miphy28lp.c
+> +++ b/drivers/phy/st/phy-miphy28lp.c
+> @@ -224,8 +224,8 @@ struct miphy28lp_dev {
+>   	struct device *dev;
+>   	struct regmap *regmap;
+>   	struct mutex miphy_mutex;
+> -	struct miphy28lp_phy **phys;
+>   	int nphys;
+> +	struct miphy28lp_phy *phys[] __counted_by(nphys);
+>   };
+>   
+>   enum miphy_sata_gen { SATA_GEN1, SATA_GEN2, SATA_GEN3 };
+> @@ -1168,16 +1168,14 @@ static int miphy28lp_probe(struct platform_device *pdev)
+>   	struct phy_provider *provider;
+>   	struct phy *phy;
+>   	int ret, port = 0;
+> +	size_t nphys;
+>   
+> -	miphy_dev = devm_kzalloc(&pdev->dev, sizeof(*miphy_dev), GFP_KERNEL);
+> +	nphys = of_get_child_count(np);
+> +	miphy_dev = devm_kzalloc(&pdev->dev, struct_size(wiphy_dev, phys, nphys) ,TGFP_KERNEL);
 
-Acked-by: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+This is bad... it looks like you didn't build any of these patches.
+
+-Gustavo
+
+>   	if (!miphy_dev)
+>   		return -ENOMEM;
+>   
+> -	miphy_dev->nphys = of_get_child_count(np);
+> -	miphy_dev->phys = devm_kcalloc(&pdev->dev, miphy_dev->nphys,
+> -				       sizeof(*miphy_dev->phys), GFP_KERNEL);
+> -	if (!miphy_dev->phys)
+> -		return -ENOMEM;
+> +	miphy_dev->nphys = nphys;
+>   
+>   	miphy_dev->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
+>   	if (IS_ERR(miphy_dev->regmap)) {
+
