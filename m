@@ -1,197 +1,162 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5CC2D8DD6
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 19:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772824598; cv=pass; b=tcAiNGPOQthERaz2Kjjwi8IuLcjkohxtCYxAWx83cjZHMKZJ355xq6SkFeToMEG3EhGKsp/nWYtfyUrXMqHx4nQ2FMvF7NqdupIBMxlpuAecPP5uUuReXo/cd8QYS67Uh2xcJRjCi8RW9AtG9tX9idfceOUJcnLilhIswc/X7OQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772824598; c=relaxed/simple;
-	bh=9g511vcaQ68wgb3bgfddkmWSMclMBk8o4icbii7da0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KCy+Xw4hOHP8PmX76XIXItxTHpQivuX1j5ezMn0IPDcXtrGHMapqUm9eY65DtVO2sjuIzvENW8mqeqcc492EKjLrDen07QNzf7yzp7IpowTF/a3g3hjRohV/jMBDbqir7ubxUCKY9IjeA7864tZuJk23KLD+h3UWTiagyfrp2YE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6mjE6ZM; arc=pass smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9739736607C
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 19:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772824880; cv=none; b=mldpS0wWIh9BgWmE+Rp+t9ZAbR2t4rM1Rh/ppXzmoJuqn6lv0IwL99/R5jpwD4EfnD/HlIo5w8acJSRGoKU+hcqssC0de/EUzuz30RR0xyGRdar6ZNAJ1JlZdPH/uyO8o+4p7SlfwHxVu5o5ugm+Ye14ap+TiC7GHuzC8Aaiqn8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772824880; c=relaxed/simple;
+	bh=jbRDxYd1he6LzuYxEq1Q3XunXni6sxDlFu3tOBrBLj8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RYIk/6xKFReqAD6/lqgIRUgP4MqVUjmmRLPOA4Q34da6dxiAVL8megFTorFGOthoK6vMjjTe7/0ntft2E/dzJ8qNg5hXbyzu/3H/R3phTdINFDYMGbUt5Qvqq1fN+AaExbRw1ktqyEVPMmJZ66xsZjjOBTqX+g+tZoRKugBXie8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=O9y9+73+; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6mjE6ZM"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b9372552059so1336729066b.1
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Mar 2026 11:16:36 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772824595; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LsXo6T40DU1qiE+eYYTg92r0ydKvE0B8wHduLVFZvB4nErywjvHBm3Qz0NzR5WNa3x
-         7trFwKJ0YEIgkZMhZhIcS/4lQQKdxN4bB6PA9+OprSCkbi38pWykyNwKVAJF2m6YokKJ
-         +WxtdtpYduTiiJGGzQCqXuxSAJwnp6hQ99oqtRL2KES/kz4uIpbdPiA4P+RV5vhiihsw
-         W39sCtGWVXs1KJXhvNprBKS4eiKay45RM/oD6+1hGVCLzhiYfC9v9MjkZCaYi/zIr+Ko
-         8drxrRkTHysNzA7ANiMWFD5AEtv0bnREoj01oJguwcSawGktlMx2tI82vyJZZP6+W0Iq
-         gXEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=RQl/k7H5TnGsHgAzmX0qeb615hkvz32yF+5OyK+sVKA=;
-        fh=+ioP54uNfgnezUA3WEYig1M0yVQ0LxDSFXT5o7u6JhI=;
-        b=VzS+/ZRqyRA5KNdSNZvS5GIfh+N69IIMnI7pY6cAMnqYiZHm06cR5vFx+SF5/vavC7
-         UeN7oJzgKRvXWCHPPcbUGJ5quUhFHd6Ms+3OPPHe6PpnfI4GQLXwcO0YajSvcIxpUawR
-         MEM0Ln3ggEZE3tnFoMKIZhO6brVTlOUHCT0S4U+FgpCmG6ARBXKRxBYR1jRSI7sup8f7
-         /wdPqRu9Fwg79Rc3u/aNGcyQLAWLntx6fQojM4fVOXHqozCJuElsLYMbsrp2DdCKDXlt
-         g8nD+S0+jtWkLzbaydNzM58Ef8kg5C9opnP5ClBFL+Oj40RYXcGKcv3AVD5qqtkXSGgH
-         +lBg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772824595; x=1773429395; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RQl/k7H5TnGsHgAzmX0qeb615hkvz32yF+5OyK+sVKA=;
-        b=i6mjE6ZMC7PD48yo7brB/zqSXwNRdoR1wsPtOWzGWet9aOJ196OnPx+4kJFKVQ+JIF
-         RsTHSDbIipZN2D1jYUGdWZMBaqKFn23emJy1x7xHzjX/Q89i5uDNrTJCJGWmFMntKP4H
-         oGkOnC6iRl+TiGB8dKXE1x77kh+3RFHnRI7cf9gMax1cxzqLuzgKUuOWRA5z9fHHR4/b
-         msavt7vfEq5TGW6FIx6VVWNaxW1A/l2GpTw+TxO2eBFeASI6boTTYPOnw5+mCgYYdENc
-         kMVmSikK7ShXQxVb/T1vCMqwmJjWzdVkl2z2j3vQraZQ48EZHn6Fk1ZL98vC/TA8tBTm
-         RUiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772824595; x=1773429395;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RQl/k7H5TnGsHgAzmX0qeb615hkvz32yF+5OyK+sVKA=;
-        b=U4H0WZJuVlEFs8TRDDjUeubKGmQbNGJSfB7jUHpQMI55YW60+rx/+xM1tEjE9ad9cG
-         jnhxedvsyUGU2byJVqyGZHSBp9Gc+Ly37uFWjEYxUKWDoEHw+3B+uMgLsOfh2anJKOYV
-         +a+hdhJffShYlNBpdPjcuTf0rdBNHhI4hfIh4QLRXKckBBnvEmE8Sy42XzEB0WxOGG5J
-         PRai5IU2qgYoFLUV3RctZELGBZpII+jqxLQ33YmH4IJ+BoozNS2W71Fwj0m/Gcg/lrbP
-         NloFeEBAuWocGh/fUIzayRik/22zwrR7tF8QGcLrIlkNOHU8nb4WM7eGXzpg7IiW5btj
-         xDPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaDvBNR42E+wSesDMpBhhMjLNEek3bDekTeBBV89gNa/XWcb3TW4LMd+glqkZt1MbnI4xxFxswf7uikxSAAm8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY+vmxgYgNt9NV8z03ge5ca1LZNSfgmG58nuuqeaD065r0kTJf
-	ZA/INJodEd8cAphJBWFda2/saN2EXeHC2EbBllz/0E3GyqJ163+yWqjbzqgjKb+1llyyrAQ2Z2n
-	HhBxqpaSEX8Pk5RH7hNgpkhLPC/tMBok=
-X-Gm-Gg: ATEYQzwfTGVVGUnVg0Ir/UBDMxrhp4OXF4sIGxGPClsm3NgQHBaFjx/VmJfJ4QLWWg6
-	rShmSEf3NjfVWYnUjwbic76FFVVAbUt2sRC5VhYZ3vLPvyD6qDG2nW2m0eyHzeIvpPSVrIYsyoz
-	6W+9OFT5/ABlx1a7EaU4I0ADh7gMtwj6+l0YffPiZ3Dz4qLsBknRmprgG1Gv9eo+mGvdfcqsrU2
-	wfVboujaTs9pCdzpjyu1tC35W7xBGB/LUybBWkOL4ztV++RcEQ6bMiF44BzRR/DjD21hxORGUec
-	+TBF5fnbfesSVdFi0PZF//PNdRm74aiyZXZNeueKADwRQpfmsgB0fHqYya4j/6EEW4RV1IVz9rD
-	mxTI/8dFduSTB1fOT
-X-Received: by 2002:a17:907:96a3:b0:b8e:4790:d7cf with SMTP id
- a640c23a62f3a-b942e0249b9mr197709866b.53.1772824594561; Fri, 06 Mar 2026
- 11:16:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="O9y9+73+"
+Received: from eig-obgw-5004b.ext.cloudfilter.net ([10.0.29.208])
+	by cmsmtp with ESMTPS
+	id yW6YvQfA1aPqLyajfvCDq5; Fri, 06 Mar 2026 19:21:19 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id yajIvZbpeqfpWyajJvX8Ah; Fri, 06 Mar 2026 19:20:57 +0000
+X-Authority-Analysis: v=2.4 cv=A55sP7WG c=1 sm=1 tr=0 ts=69ab292f
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=7T7KSl7uo7wA:10 a=pGLkceISAAAA:8
+ a=EcUihO1BCf_UJVK-1IMA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=0n42meaqGDUGzjj9bzqWNF89weGMYcF1c/cak04I5XA=; b=O9y9+73+ouMsaM0xhKXiJLvW2a
+	Ywu4XqNxZDNA1lNVURcPwpGMvAnMU7PlOFI9ARxlq1vzbhxgwjvRjBAFzEGF7BIbj/G0ADu2tgwij
+	9OWq5wtMF2uaEedEWgX0RivJ03Fw3lUwSIE6/s9jLLPIYYduNkyeHHCPnGH883u2sxfkPAqLV4g4T
+	jZp0qeP4m8iTd+1/5kRv3QoZXgu6+Q/fifr1woOnsqC2jPjGJlRmKZiRvjhi+jVZO5ZDI6NXIif5K
+	5qWQJVoEN5uB5MOb5wyZ65bg0DqTe0q6rhCA6aTIhk6PBhNhw9ajWpW+owBAT0rQ+YWIMkbMwZimX
+	no7nUOPw==;
+Received: from [177.238.16.13] (port=34680 helo=[192.168.0.21])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1vyajI-00000001Gcm-09F6;
+	Fri, 06 Mar 2026 13:20:56 -0600
+Message-ID: <9dbf5b85-66ec-4d3f-99d6-17cc74a8f912@embeddedor.com>
+Date: Fri, 6 Mar 2026 13:20:27 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260306031639.46942-1-rosenp@gmail.com> <be17111e-1c78-49ca-8bae-fadcd7af6905@embeddedor.com>
-In-Reply-To: <be17111e-1c78-49ca-8bae-fadcd7af6905@embeddedor.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Fri, 6 Mar 2026 11:16:23 -0800
-X-Gm-Features: AaiRm50wLh1_AThkRv_BjNof7MflCw4QqkJP8CGHD5V--3_dfluZWxf4oemtoVM
-Message-ID: <CAKxU2N_qu73NFFaJqd+ejg855L-RvaPvQvEmGLqTUpnO5iOUxQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: typec: tcpm: kzalloc + kcalloc to kzalloc_flex
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: linux-usb@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soc: mediatek: mtk-dvfsrc: use flex array
+To: Rosen Penev <rosenp@gmail.com>, linux-mediatek@lists.infradead.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>,
+ "moderated list:ARM/Mediatek SoC support"
+ <linux-arm-kernel@lists.infradead.org>,
+ open "list:KERNEL" HARDENING "(not" covered by other
+ "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260304232014.164408-1-rosenp@gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20260304232014.164408-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.13
+X-Source-L: No
+X-Exim-ID: 1vyajI-00000001Gcm-09F6
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:34680
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 24
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDW97WxsFKa9A3GTF4xbh40Q7quM0W2AkXPjgzSVjvITAQALzns+iQ+1HhHKdaFlK2WdbFaINXJiCyp/AePkMTjgZrrfekuJ2AuLiuq5elRP0OD/uB04
+ H0oojcUkPvV0EyHQhP1uQQVMlSRCvTGMeg4Y5FUM9ZxtjaALRIvNwmZx8QrY7W8FfPZs4ATy73ZLfKSip7AOQVauvNvHHHE0PxCpgmExS52Hz385FyQczAmf
 
-On Fri, Mar 6, 2026 at 10:54=E2=80=AFAM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
->
->
-> On 3/6/26 12:16, Rosen Penev wrote:
-> > Simplifies allocation and allows using __counted_by for extra runtime
-> > analysis.
->
-> Are you finding these with Coccinelle or any other tool?
-git grep -B 10 zalloc_objs\( | grep zalloc\(
-git grep -B 10 calloc\( | grep zalloc\(
 
-And seeing if it's something that can easily be dealt with. The
-__counted_by thing is usually clear in _probe if it's correct.
->
-> >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
->
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->
-> Thanks
-> -Gustavo
->
-> > ---
-> >   drivers/usb/typec/tcpm/tcpm.c | 19 +++++--------------
-> >   1 file changed, 5 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcp=
-m.c
-> > index 1d2f3af034c5..272f9187b12d 100644
-> > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > @@ -605,9 +605,9 @@ struct altmode_vdm_event {
-> >       struct kthread_work work;
-> >       struct tcpm_port *port;
-> >       u32 header;
-> > -     u32 *data;
-> >       int cnt;
-> >       enum tcpm_transmit_type tx_sop_type;
-> > +     u32 data[] __counted_by(cnt);
-> >   };
-> >
-> >   static const char * const pd_rev[] =3D {
-> > @@ -1653,7 +1653,6 @@ static void tcpm_queue_vdm_work(struct kthread_wo=
-rk *work)
-> >       tcpm_queue_vdm(port, event->header, event->data, event->cnt, even=
-t->tx_sop_type);
-> >
-> >   port_unlock:
-> > -     kfree(event->data);
-> >       kfree(event);
-> >       mutex_unlock(&port->lock);
-> >   }
-> > @@ -1662,35 +1661,27 @@ static int tcpm_queue_vdm_unlocked(struct tcpm_=
-port *port, const u32 header,
-> >                                  const u32 *data, int cnt, enum tcpm_tr=
-ansmit_type tx_sop_type)
-> >   {
-> >       struct altmode_vdm_event *event;
-> > -     u32 *data_cpy;
-> >       int ret =3D -ENOMEM;
-> >
-> > -     event =3D kzalloc_obj(*event);
-> > +     event =3D kzalloc_flex(*event, data, cnt);
-> >       if (!event)
-> >               goto err_event;
-> >
-> > -     data_cpy =3D kcalloc(cnt, sizeof(u32), GFP_KERNEL);
-> > -     if (!data_cpy)
-> > -             goto err_data;
-> > -
-> >       kthread_init_work(&event->work, tcpm_queue_vdm_work);
-> > +     event->cnt =3D cnt;
-> >       event->port =3D port;
-> >       event->header =3D header;
-> > -     memcpy(data_cpy, data, sizeof(u32) * cnt);
-> > -     event->data =3D data_cpy;
-> > -     event->cnt =3D cnt;
-> > +     memcpy(event->data, data, sizeof(u32) * cnt);
-> >       event->tx_sop_type =3D tx_sop_type;
-> >
-> >       ret =3D kthread_queue_work(port->wq, &event->work);
-> >       if (!ret) {
-> >               ret =3D -EBUSY;
-> > -             goto err_queue;
-> > +             goto err_data;
-> >       }
-> >
-> >       return 0;
-> >
-> > -err_queue:
-> > -     kfree(data_cpy);
-> >   err_data:
-> >       kfree(event);
-> >   err_event:
->
+
+On 3/5/26 08:20, Rosen Penev wrote:
+> Simplifies allocation from kzalloc + kcaloc to one allocation.
+> 
+> Allows extra runtime analysis with __counted_by.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>   drivers/soc/mediatek/mtk-dvfsrc.c | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-dvfsrc.c b/drivers/soc/mediatek/mtk-dvfsrc.c
+> index 548a28f50242..48b1fcf3e101 100644
+> --- a/drivers/soc/mediatek/mtk-dvfsrc.c
+> +++ b/drivers/soc/mediatek/mtk-dvfsrc.c
+> @@ -71,8 +71,8 @@ struct dvfsrc_opp {
+>   };
+>   
+>   struct dvfsrc_opp_desc {
+> -	const struct dvfsrc_opp *opps;
+>   	u32 num_opp;
+> +	struct dvfsrc_opp opps[] __counted_by(num_opp);
+>   };
+>   
+>   struct dvfsrc_soc_data;
+> @@ -489,7 +489,6 @@ static u32 dvfsrc_get_opp_gear(struct mtk_dvfsrc *dvfsrc, u8 level)
+>   
+>   static int dvfsrc_get_hw_opps_v4(struct mtk_dvfsrc *dvfsrc)
+>   {
+> -	struct dvfsrc_opp *dvfsrc_opps;
+>   	struct dvfsrc_opp_desc *desc;
+>   	u32 num_opps, gear_info;
+>   	u8 num_vcore, num_dram;
+> @@ -520,24 +519,19 @@ static int dvfsrc_get_hw_opps_v4(struct mtk_dvfsrc *dvfsrc)
+>   		 num_opps, num_vcore, num_dram, num_emi);
+>   
+>   	/* Allocate everything now as anything else after that cannot fail */
+> -	desc = devm_kzalloc(dvfsrc->dev, sizeof(*desc), GFP_KERNEL);
+> +	desc = devm_kzalloc(dvfsrc->dev, struct_size(desc, opps, num_ops + 1), GFP_KERNEL);
+
+Mmhh... You should really consider building your code before submitting any patches.
+
+-Gustavo
+
+>   	if (!desc)
+>   		return -ENOMEM;
+>   
+> -	dvfsrc_opps = devm_kcalloc(dvfsrc->dev, num_opps + 1,
+> -				   sizeof(*dvfsrc_opps), GFP_KERNEL);
+> -	if (!dvfsrc_opps)
+> -		return -ENOMEM;
+> +	desc->num_opp = num_opps + 1;
+>   
+>   	/* Read the OPP table gear indices */
+>   	for (i = 0; i <= num_opps; i++) {
+>   		gear_info = dvfsrc_get_opp_gear(dvfsrc, num_opps - i);
+> -		dvfsrc_opps[i].vcore_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_VCORE, gear_info);
+> -		dvfsrc_opps[i].dram_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_DRAM, gear_info);
+> -		dvfsrc_opps[i].emi_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_EMI, gear_info);
+> +		desc->opps[i].vcore_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_VCORE, gear_info);
+> +		desc->opps[i].dram_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_DRAM, gear_info);
+> +		desc->opps[i].emi_opp = FIELD_GET(DVFSRC_V4_GEAR_INFO_EMI, gear_info);
+>   	};
+> -	desc->num_opp = num_opps + 1;
+> -	desc->opps = dvfsrc_opps;
+>   
+>   	/* Assign to main structure now that everything is done! */
+>   	dvfsrc->curr_opps = desc;
+
