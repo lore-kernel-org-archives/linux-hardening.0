@@ -1,149 +1,225 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AFD33E376
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 21:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5A934F47E
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 22:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772831942; cv=none; b=qcTDu/CAwEmHh+rqfnQRNG+ZLcVwb8MUGX1eGrSIFjQv0X0Or4+EHqWQIN08jjgz9t9pJAnCjjFj+bDLxntvuasQxKd5nJWgO/PISRmg9XgIQpG95ij9lLQSWEDumGzVG6Bcxa9cWNi8EtRhal1YrYxVd66DWas12SC/pfcdMBI=
+	t=1772835728; cv=none; b=jyTOqOxy7q8SUDYukyX9EpXssKUXCjjcX7aJhnTFs8MQkvLAQbguVk4UzNbyGGC4jE9uokEZrlJ29jBAK23kQuLYJwW8CW1LxJybIHGwuIzo9JiT7ORaQEgAqBKlHncGWYAxNJRWyfI/N8LmTo8RCDC7U2dJpyACu27o57diZ0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772831942; c=relaxed/simple;
-	bh=Lo+dXkVoRCQ9V2kc4/EFipIZm0qHajIudIfIYPCgTIQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Wmlml7STU2sE19xwsMzZ9p5JTCTDPxymqaTAHG3CphSRG3utNxYg3zInbscydWvklMy5OgLvxvHIzS7eAFdCBoI7EvutAuIsfUEieB7bct5+XN/vu9+Rx8tz/45TVAw8JlNLNaOdtwwf443J+7ySHBi1vbByhJMTu15tR2WYZcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RQoh0haD; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NB2wNOZP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1772835728; c=relaxed/simple;
+	bh=DmIoKkR8KqK2qQF1bZkGkUZ6ggJ0MpC5LuN1Et+ZHLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Iqc/tBLI9ZS5RDLE1argZG0Eskq+Po7fZ9V9YZSzMTRRCcbWiulaf890YWgUTMjVwgW+DScHJks5wN1pFofkqR4Q0vS9eaZSRKrD0Pis1TG3POznUsvi9RfSwV7ucOp0aScqHN7YM/iA+K62IdB7nXzpKIYCuKvd7ec3pN4TPAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cy2HvC5W; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RQoh0haD";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NB2wNOZP"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 626KWU1M692730
-	for <linux-hardening@vger.kernel.org>; Fri, 6 Mar 2026 21:19:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iBrDtPGjQkXXNabe2uu0Xn4yj8xK4G6bLD03csL6H7g=; b=RQoh0haDKfareQKt
-	U1bIo1pTITtYkmSDPFqHVxELCtSP/CLjKhCCsYAKDnJO2LrpAx2ZfwPFE4Ktc3uT
-	U/kW+qGjW7zyaJDYn9ju/ufWCCMXWabsLBcADMQtzOrjwQLiGT1vFKHL1/ldMkxg
-	UpfNV/gEwqmj6NzLy+r+MbvlTcQA8ymXQMeKycezeJjTH9V2pZ5IoQYHEhDx+dPp
-	uArT7WhkaBtECC+2gm+8OJ9AlVTwRlCJEGywtTWGVfkbjdxZ/TnpsS8/zmxdqQ1V
-	JS/3HJU08zb2mJ+RJI9QyyIsv/sIxaJLFS0T9qYv8hWdWzimkR2Zrm9bVRc5Y4W3
-	o/YbVg==
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cr5rd052u-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 06 Mar 2026 21:19:00 +0000 (GMT)
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-2bdff07d8f4so9559085eec.1
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Mar 2026 13:19:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cy2HvC5W"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3598b95ad7dso4558100a91.2
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Mar 2026 14:22:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1772831939; x=1773436739; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iBrDtPGjQkXXNabe2uu0Xn4yj8xK4G6bLD03csL6H7g=;
-        b=NB2wNOZPq6ExzQel/tJgmljRmV3uR7qC8KnEy1z4hC9QqM7x0dW63bEapcGlVTNnTx
-         1udm26vxO/NavM60PLg0IyLmo/C28BuhKPAasil2nmnkTD5NRiJUepZVkLEAJTCXrdmv
-         WhUG7p/BXW5hVPk9toRYOfGGKEBaUvdyhLPO0j6gWVJX5HGaoFaeELloAHWV1NX/JwkM
-         oJzIl6lJv9oNuily/P+3OWVFbT/10ROI9/gBXU4tA7G/9SR7dxb8jdfaXu3f9WrteqBB
-         vwMMMyWlpEx/HUBQbUYl89rJjiPjQbg7lQl+bjLajdHz1ZAtDVlHUTSW3xJk1CPqFBb7
-         uQng==
+        d=gmail.com; s=20230601; t=1772835727; x=1773440527; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r4FMmOPA74qb/sr9utsKChtIdTy4B4gMndDtghHY5lQ=;
+        b=cy2HvC5WTAgC+9fGtFjirUOOKH3aoUoHj4p2nUHBiiq9L08SGtyJN5ZBIn0qUunIR1
+         BlhS10tpovGsvbiKB0F+0CLzTt52OBRYpPau9nGAFZw214BlwHljyMsyMqlKDbpEnxiF
+         Obq/hxs4Epmty1XxuLMOq3Zn9KCU6Qu2vsZU6xs8CrOBm0rOYNVMltYP8oeI7avZW/Ir
+         +Vj1cpv0iFZbW/I4zI9R4ilCEHP6u39tTq2QV0FbRB7Hs2vQRvKy5AavkUeZ4XsTxpQA
+         rRqR8CeVx+kJsJT9Ys+gKtE4SdK5meBUD5NICAHnvXi/CblGPf0zGETwsKXh5PkHNLaU
+         3+Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772831939; x=1773436739;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=iBrDtPGjQkXXNabe2uu0Xn4yj8xK4G6bLD03csL6H7g=;
-        b=M0Gkkf265F7+/EoyYWmnpub2OBAMrWbG8ETrGHTChpAhNycqmgZOeFyMMb+U1ICoXw
-         qdKJL+wDsjsKhLQlTBDANCdGBtvZlLRuqONJ/QBkOjfybawU4+v+h1hxP6NZkPAHhw63
-         7i6LFuMKITWiPG0l6/WN3C6xWBfDPS5BQ67UIvQHgkN7H74BsjZm7BSBiqNfobCguv1G
-         bU9DiFo0x/Jyi1lOUITE0LIYNjDirysIxZpqCc8eEONCVFOHWf3g6MzibiGYO4oop+eB
-         wnOtSAVHsx3xxyF9EHQOouUB5/wtOaRT2NGecWQk++wK3ZU50spbFflB8tjUaVd7SND2
-         fwdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYr2urmfw8MS4gLhiCJR27JftN0O56I31E3Q+kgXtGYqi4L+D5lILCtyBr2W5CvsskFXtZJSkGv0MONI/yK1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlRR2+8RAyXfSdJvRHlsEQ5EKg26Q2kvhKeHTlnqmdMhJ/+rCA
-	WwL4x5RZvbXT3B2xxANHlewTiMKycOGVTQGMJz4/LR68w/sqfYm4+NVaTBnPGi4UZ3yxYRaoUw4
-	0xuBytlh4g2yigAkfOvopWMRgSEG5LuoooxmAYLvi2gP6/7FXLe9GzY1+X8/zmnkgINmVIycglT
-	r2MwY=
-X-Gm-Gg: ATEYQzyCxQQ8t5F7C2sOb3bLoaUWeODrQu54X1TZUomUqhYUFPeD7u+mXedc4v0Q0en
-	cHJsyYQiFLwVJ358xt+wG5W7uMzzDslIp/+ja3gLfKtBEcB1pjZBLQwzNIH5YH4h/3N04bGPIZ4
-	EQVP7cK7QWgWIK7I/CmCQnp4wlgW+nu12fCVbyI/YeVn6+LS6p5LuQYkiBYg23EPSdlzR2axP2l
-	ah3B7Yz/Tc2o7pD764t+Rj+QP+Uee/BoRRirCC3JvSrOOT6gBAeFlAfo8TdGQXeWPSOqq3lFGuB
-	5IYyc38OeeREFYGD+bP1XPFLFy/B/Mui0G8ei0FoQ8FRiMi069Ps168hNRMaNnHMC9BJeTCxpF2
-	l9mDivhNUpGM+nU5Mca7Lmk4b5vfjdsVgF2ZD4VexV82hkg47R7DO4M0tIghdd5yl2n4VAqEy0C
-	Oo
-X-Received: by 2002:a05:7301:1004:b0:2be:fe8:8b0d with SMTP id 5a478bee46e88-2be4e08e222mr1296763eec.22.1772831938781;
-        Fri, 06 Mar 2026 13:18:58 -0800 (PST)
-X-Received: by 2002:a05:7301:1004:b0:2be:fe8:8b0d with SMTP id 5a478bee46e88-2be4e08e222mr1296751eec.22.1772831938147;
-        Fri, 06 Mar 2026 13:18:58 -0800 (PST)
-Received: from hu-jjohnson-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2be4f948324sm2325124eec.17.2026.03.06.13.18.57
+        d=1e100.net; s=20230601; t=1772835727; x=1773440527;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r4FMmOPA74qb/sr9utsKChtIdTy4B4gMndDtghHY5lQ=;
+        b=DwZqKLz8PifIuIJJkmVMPF3jHk/0XGqmnt77dif87PUvFGIpq5xDBMQrhIxWX5hlz6
+         Vc40F6eIvOQPPysznBZRi1eq5AFlWvg2/LegnK4+BDiEmbrqQ2fLoLBoyoBVv2qlgz+Y
+         IbZNs5uhzZPBochJC0+CSJGxercFT0rIF8G1OXLj08vICty0RCEacg47kwvrdag4Hs63
+         O+N/Mpnw2qM8hxp49RZZRgfBtIDuBm+IGhI6jltxDcwWv6AJglh187dn6Nwbev2n9fhZ
+         ljuB66CQAX9J3HU1jHImsOk/Wd0m2OWWvbqC+EYZM+updAOL/O8xDRdYPF4Zw8m+6TW3
+         M0+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVfdsB991fwRGzo6+6tTGdwULvidpdvEWnsRLOHUw9BjsoyPbluIBTqi7M++q7dLrMeXqYuF3YXFpXJZ7kWqVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF9OTaCBOoyS2DH3GlD58NvgI2EvjpeGcFkRBtFu6u3rMj823u
+	n3v00QZ7JsHHpYJUMd1mXMFSAUEstyAUuKth+C1Ops3dRimVT/yExeBN
+X-Gm-Gg: ATEYQzwFOfsqkP51EaTtxAqBVNTa3L60lEM0Y327a+QvAqssOcn7eJZw7HGYYAH1OY1
+	xlSdqLLzDAtc4Xf8D0Lu0dDv5HEJqU0wd0Cmhj4brU2wO4I5/ge/AOG1chqMihK99NgOTiPL8xC
+	cD8QNmnefGYcSqncf/5r+gFp1tq+TwQY4mRbM+SBk0oc2ArJKaVC8iBW7WCltZ/SEmj1WEPJmq0
+	ZlsyRiBn6TEPvIDopBlbOAZeyn0EeMDADwVKn7SqHco65PhnO/xhcGQ4tSvi6J4niz2J3bI2z34
+	pHZjh0dGdFfvh+LxcSWzHMSA58GwuSIzxUb3gSNKm73jq+PE0QTOLr7+Vb0GApBDjLBvjJCZwah
+	KJ1VDL1Pgr5YFjmbr7K//zhLRkwJG5qrlEUl1hyA1qU2Zyt/4iDBR8D/VGFj9wOHmyWS9uqRfnf
+	eyfuDEPPTwKB++hSaw6DVcqL0blLAvUZw3WC4PIw0Cov2sy8S3EuNLI6Q=
+X-Received: by 2002:a17:90b:38d0:b0:34c:fe57:2793 with SMTP id 98e67ed59e1d1-359be344cbamr3132368a91.20.1772835726741;
+        Fri, 06 Mar 2026 14:22:06 -0800 (PST)
+Received: from ryzen ([2601:644:8000:56f5::8bd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-359c005e224sm4136310a91.7.2026.03.06.14.22.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 13:18:57 -0800 (PST)
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-In-Reply-To: <aZ0tGZnmtGckKJzY@kspp>
-References: <aZ0tGZnmtGckKJzY@kspp>
-Subject: Re: [PATCH v3][next] wifi: ath6kl: wmi: Avoid
- -Wflex-array-member-not-at-end warning
-Message-Id: <177283193743.1373939.4596850697529267078.b4-ty@oss.qualcomm.com>
-Date: Fri, 06 Mar 2026 13:18:57 -0800
+        Fri, 06 Mar 2026 14:22:06 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-usb@vger.kernel.org
+Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org (open list:QUALCOMM TYPEC PORT MANAGER DRIVER),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] usb: typec: qcom-pmic-typec: simplify allocation
+Date: Fri,  6 Mar 2026 14:21:48 -0800
+Message-ID: <20260306222148.8200-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
-X-Proofpoint-GUID: bsnRst4RKbNcU6YPoddPp2JdhHRHUKRh
-X-Proofpoint-ORIG-GUID: bsnRst4RKbNcU6YPoddPp2JdhHRHUKRh
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA2MDE5OSBTYWx0ZWRfX2Tgr/92wCnoj
- XIzayqSU1ssmsI/dbMriLMN+dE0KRG4MXwVv1EL94nDC5l9C5Z4oPfv1wn8TXJEzfOGP1pYzt6K
- QxQOhyxcHCjO5qcBR2Sl+8VqmT4/Ib0u6g1MA773dlE2Ps3wOowAblvi0vYuhdWFnftuxFm+UMX
- LJ0OpKgTo9p6WPV30Mb/IrnnYvwFoxjzHssMiIJnUvmMs4j+vyGb738jsJTPbjPfo580uKQ6chl
- 6GD9go7W7mqEFD7ktLbLijR5jiSeJW4ayrX3yVacqGpwC3aOEPBmxdkH3pGNm7BRuqpqAcTF5mt
- fdUWWpe7Gg1w825b8CxVrbBXuLA93bA/2DQM9/Dm4nDcr/8aHfNcOSbi9u/FVHFdZbPZDluTA3k
- 0ZBXB638BN8uuwb5KGeOePT+m7qGFoZZEY0kx8jIKNYfG2OTkH5/zOi8+bRpre2ahLYMhrnM7kL
- D/tr/xdUuXguai1gUlg==
-X-Authority-Analysis: v=2.4 cv=P6U3RyAu c=1 sm=1 tr=0 ts=69ab44c4 cx=c_pps
- a=Uww141gWH0fZj/3QKPojxA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
- a=EUspDBNiAAAA:8 a=bO_SRPZOoruQ8eAkNgkA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
- a=PxkB5W3o20Ba91AHUih5:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-06_05,2026-03-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 malwarescore=0 adultscore=0 bulkscore=0
- spamscore=0 phishscore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603060199
+Content-Transfer-Encoding: 8bit
 
+Change kzalloc + kcalloc to just kzalloc with a flexible array member.
 
-On Tue, 24 Feb 2026 13:46:17 +0900, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Remove unused structures bss_bias_info and bss_bias, and member
-> bss in struct roam_ctrl_cmd.
-> 
-> After these changes, the size of struct roam_ctrl_cmd, along
-> with its member's offsets remain the same, hence the memory layout
-> doesn't change:
-> 
-> [...]
+Add __counted_by for extra runtime analysis when requested.
 
-Applied, thanks!
+Shuffle some code in probe to provide a clearer picture.
 
-[1/1] wifi: ath6kl: wmi: Avoid -Wflex-array-member-not-at-end warning
-      commit: 8e0ab5b9adb7fec3149441621df1cf15325b7215
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ .../typec/tcpm/qcom/qcom_pmic_typec_pdphy.c   | 27 ++++++++-----------
+ .../typec/tcpm/qcom/qcom_pmic_typec_port.c    | 26 ++++++++----------
+ 2 files changed, 22 insertions(+), 31 deletions(-)
 
-Best regards,
+diff --git a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
+index c8b1463e6e8b..4b3915c6894a 100644
+--- a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
++++ b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
+@@ -95,13 +95,13 @@ struct pmic_typec_pdphy {
+ 	struct regmap			*regmap;
+ 	u32				base;
+ 
+-	unsigned int			nr_irqs;
+-	struct pmic_typec_pdphy_irq_data	*irq_data;
+-
+ 	struct work_struct		reset_work;
+ 	struct work_struct		receive_work;
+ 	struct regulator		*vdd_pdphy;
+ 	spinlock_t			lock;		/* Register atomicity */
++
++	unsigned int			nr_irqs;
++	struct pmic_typec_pdphy_irq_data	irq_data[] __counted_by(nr_irqs);
+ };
+ 
+ static void qcom_pmic_typec_pdphy_reset_on(struct pmic_typec_pdphy *pmic_typec_pdphy)
+@@ -560,31 +560,26 @@ int qcom_pmic_typec_pdphy_probe(struct platform_device *pdev,
+ 	struct pmic_typec_pdphy_irq_data *irq_data;
+ 	int i, ret, irq;
+ 
+-	pmic_typec_pdphy = devm_kzalloc(dev, sizeof(*pmic_typec_pdphy), GFP_KERNEL);
+-	if (!pmic_typec_pdphy)
+-		return -ENOMEM;
+-
+ 	if (!res->nr_irqs || res->nr_irqs > PMIC_PDPHY_MAX_IRQS)
+ 		return -EINVAL;
+ 
+-	irq_data = devm_kcalloc(dev, res->nr_irqs, sizeof(*irq_data),
+-				GFP_KERNEL);
+-	if (!irq_data)
++	pmic_typec_pdphy = devm_kzalloc(dev, struct_size(pmic_typec_pdphy, irq_data, res->nr_irqs), GFP_KERNEL);
++	if (!pmic_typec_pdphy)
+ 		return -ENOMEM;
+ 
++	pmic_typec_pdphy->nr_irqs = res->nr_irqs;
++	pmic_typec_pdphy->dev = dev;
++	pmic_typec_pdphy->base = base;
++	pmic_typec_pdphy->regmap = regmap;
+ 	pmic_typec_pdphy->vdd_pdphy = devm_regulator_get(dev, "vdd-pdphy");
+ 	if (IS_ERR(pmic_typec_pdphy->vdd_pdphy))
+ 		return PTR_ERR(pmic_typec_pdphy->vdd_pdphy);
+ 
+-	pmic_typec_pdphy->dev = dev;
+-	pmic_typec_pdphy->base = base;
+-	pmic_typec_pdphy->regmap = regmap;
+-	pmic_typec_pdphy->nr_irqs = res->nr_irqs;
+-	pmic_typec_pdphy->irq_data = irq_data;
+ 	spin_lock_init(&pmic_typec_pdphy->lock);
+ 	INIT_WORK(&pmic_typec_pdphy->reset_work, qcom_pmic_typec_pdphy_sig_reset_work);
+ 
+-	for (i = 0; i < res->nr_irqs; i++, irq_data++) {
++	for (i = 0; i < res->nr_irqs; i++) {
++		irq_data = &pmic_typec_pdphy->irq_data[i];
+ 		irq = platform_get_irq_byname(pdev, res->irq_params[i].irq_name);
+ 		if (irq < 0)
+ 			return irq;
+diff --git a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_port.c b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_port.c
+index 8051eaa46991..7c5cf8061f04 100644
+--- a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_port.c
++++ b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_port.c
+@@ -169,8 +169,6 @@ struct pmic_typec_port {
+ 	struct tcpm_port		*tcpm_port;
+ 	struct regmap			*regmap;
+ 	u32				base;
+-	unsigned int			nr_irqs;
+-	struct pmic_typec_port_irq_data	*irq_data;
+ 
+ 	struct regulator		*vdd_vbus;
+ 	bool				vbus_enabled;
+@@ -181,6 +179,9 @@ struct pmic_typec_port {
+ 	struct delayed_work		cc_debounce_dwork;
+ 
+ 	spinlock_t			lock;	/* Register atomicity */
++
++	unsigned int			nr_irqs;
++	struct pmic_typec_port_irq_data	irq_data[] __counted_by(nr_irqs);
+ };
+ 
+ static const char * const typec_cc_status_name[] = {
+@@ -706,29 +707,23 @@ int qcom_pmic_typec_port_probe(struct platform_device *pdev,
+ 	struct pmic_typec_port *pmic_typec_port;
+ 	int i, ret, irq;
+ 
+-	pmic_typec_port = devm_kzalloc(dev, sizeof(*pmic_typec_port), GFP_KERNEL);
+-	if (!pmic_typec_port)
+-		return -ENOMEM;
+-
+ 	if (!res->nr_irqs || res->nr_irqs > PMIC_TYPEC_MAX_IRQS)
+ 		return -EINVAL;
+ 
+-	irq_data = devm_kcalloc(dev, res->nr_irqs, sizeof(*irq_data),
+-				GFP_KERNEL);
+-	if (!irq_data)
++	pmic_typec_port = devm_kzalloc(dev, struct_size(pmic_typec_port, irq_data, res->nr_irqs), GFP_KERNEL);
++	if (!pmic_typec_port)
+ 		return -ENOMEM;
+ 
+ 	mutex_init(&pmic_typec_port->vbus_lock);
+ 
++	pmic_typec_port->nr_irqs = res->nr_irqs;
++	pmic_typec_port->dev = dev;
++	pmic_typec_port->base = base;
++	pmic_typec_port->regmap = regmap;
+ 	pmic_typec_port->vdd_vbus = devm_regulator_get(dev, "vdd-vbus");
+ 	if (IS_ERR(pmic_typec_port->vdd_vbus))
+ 		return PTR_ERR(pmic_typec_port->vdd_vbus);
+ 
+-	pmic_typec_port->dev = dev;
+-	pmic_typec_port->base = base;
+-	pmic_typec_port->regmap = regmap;
+-	pmic_typec_port->nr_irqs = res->nr_irqs;
+-	pmic_typec_port->irq_data = irq_data;
+ 	spin_lock_init(&pmic_typec_port->lock);
+ 	INIT_DELAYED_WORK(&pmic_typec_port->cc_debounce_dwork,
+ 			  qcom_pmic_typec_port_cc_debounce);
+@@ -737,7 +732,8 @@ int qcom_pmic_typec_port_probe(struct platform_device *pdev,
+ 	if (irq < 0)
+ 		return irq;
+ 
+-	for (i = 0; i < res->nr_irqs; i++, irq_data++) {
++	for (i = 0; i < res->nr_irqs; i++) {
++		irq_data = &pmic_typec_port->irq_data[i];
+ 		irq = platform_get_irq_byname(pdev,
+ 					      res->irq_params[i].irq_name);
+ 		if (irq < 0)
 -- 
-Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+2.53.0
 
