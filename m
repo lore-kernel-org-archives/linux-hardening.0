@@ -1,126 +1,115 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F2D370D57
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 06:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772777980; cv=pass; b=jVdSvIVkotX/JzI2aGSyyx0LBmEOvUWddiBE13XRU2mdhDIDwQAzuIgflrn49uGzxgzik8bJHzZY2ZxPuinfl3GmPD9Shx4qQmrrYVGezRZTuVUBoS5YPl9cOx5nxxbsZJbbiu5BUop3EIZ3iqB0FfBQo73A/nCQQM6qT0Fjueg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772777980; c=relaxed/simple;
-	bh=P0VGWiHF08Hb/LHLPzScyeOvbLZVakbt6uUzSBkPJkk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VkgyJ0GrCnD1DyBpFcD0oSLmvGe7w4Fbi0cywlPQaq6+/ElArzYAAg+q4cClh/Yk12iReuyA9YmAj7n3kQSmEJ5pNGB8ujHxuZYNHpVwERmjt8iX+vuFvVm1DtGs3ULybkJf3MJBj/KdxU4ZB8kvtMT+lzNDpgC83QdV/gOgF98=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wk+XzgGT; arc=pass smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4698366DB7
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 06:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772778943; cv=none; b=EMYLjbiTc4rdGJCXeLTHqQWSfbnRw/0bey/uPqK3iInpUWHjN5/xczeGi+Uj2L267gwnG6/U4hW6Ie5FdE/fYUJtj4T5NlMHeE+cvHwVuW0yERWbAzZxD8RTPJEWy8GAqh8p/idHYXCGcDGzVgiuPKVYQ72YZd0NqPzo2B2CgOc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772778943; c=relaxed/simple;
+	bh=9cQdIdDbfHBxQdVjl1wma1djHdHSQkCaWml9R0EIOqw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hb8LD2s2hHNhQng9ame0QYIHNbzbk+a+mP6G+nrDyP5v2cCN0hRK90mNYI/O4UMZzJeRBUkEz3S7YbV7+LN9hN66RZmaG25bp8MRTR/C1cPNu11gyMg43EUE0obNYmMClMwPgdGoAEDLJo22+6x0okMrwI6jCD4vtj+46ygOGvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ElgVPC8s; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wk+XzgGT"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b935b8dcab7so1396994666b.1
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Mar 2026 22:19:39 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772777978; cv=none;
-        d=google.com; s=arc-20240605;
-        b=TDBh/MF0p+zxeonoX/YEwYavq1RDyPFVWPJ9LNA7elJIOYpXSq7PbtN3F8iyayBMmh
-         pfZCOHVp/ArJ6irTJjvn5sIqk0DFf1ChWV89TKsORyIdhXkEzraP/OtR/oW0S4POwQCx
-         dUbDDCtZAdkNcZ1kjJ4i84W9zsq2CVQXbmtUFJExJIHKPjouy9Z8bHhl54za0yn4HgmM
-         lOdTEqPkP3acDAMHCItgXMGDqD8gV4cFqcdRp+3cYs2Vmrhvw7ZkmgPkihbCsh10oMus
-         T2vbywQqckimEln6LVniIiOP6mPbHw6K+RZb6iWFsZVKWOHTiqayNN70JAgs8jMu56nQ
-         5rsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=P0VGWiHF08Hb/LHLPzScyeOvbLZVakbt6uUzSBkPJkk=;
-        fh=R20R998mW2gpbREzk43uLOFsRmw76xEyGLjT4wSXkV4=;
-        b=EkhmKnMsIpqLn/eSL23FFdZRPMmbevQlP6axTNXGPeuNDPyq3XWn788JoXnuVeTsHS
-         sbOEMr4+HhHRd1H0/XNN/J1a4LG7Vsf+l4U+irrK7zRGi0gu+Py23EN7ryO4SodgsxGQ
-         n3WaCYuMP2Jajwc/ofHUuGLZbyKr8pBwhUxdCra8bvLMcERurEn4yP6IadyCct28kGaC
-         hB8COhSdfHijrWJWh97AC3m6IGAAF/xJDtCm6iFJdmR7TnPqRmgkdv5FUUCb6p2kroOP
-         TnQrOp69MNdTwb2JW7KzUqywTUPQY1ySXfReZBttZEmpzN/yGOGoT3ilPHXZFxsOmIFv
-         9JOg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElgVPC8s"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ae56f8776dso35708995ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Mar 2026 22:35:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772777978; x=1773382778; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P0VGWiHF08Hb/LHLPzScyeOvbLZVakbt6uUzSBkPJkk=;
-        b=Wk+XzgGT0L6XZ8jL8ce7A/Rjr9z8scgkIA5Eg04VppfqVky6hpibzKxqwlDMdFkHJh
-         lBBPERs4VjeiN3+G0sVE0FO9m/+1BZIzai9xIfGAYwTYHnExOq4+vdPPSKPz9qQrZdGm
-         lJ25jrRKEiGVLtVxpOy/vwwdqgqoPqQFILfnro6ZyRvxA0c+6x2twqqcEze1FjdjLXp4
-         wIx/oM9QW///v9oZK8CIM5C5n2uS8t4+XgWjGbz5pHY6e6Ay5zBTMDc4m/cActPvIn/X
-         uzZN/TCKL4YQfcLsO7wI0TOnYztkVycCEDZYc32gZ2uQc0sB9R/9Ovyprrx/TA7QaKbY
-         mioQ==
+        d=gmail.com; s=20230601; t=1772778941; x=1773383741; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O00SvXmF1/neLG6bXArW7CD/JczRf42amEzXY9wGYt8=;
+        b=ElgVPC8sKDMRj4sc7J22emogY1ycBWQ/bj+kzeMim6SLxqBP6Zj3JTxvi/UZRuwg83
+         KT7M9Y2MEjT5Ywz/SNDT+mZt0PIVYcanrtiS7PX5jWABI9cPru8+o5nBqVc+Tg36biaS
+         eOnas/+TUq+P1mVyUD8VMwqFzxSjCT0IdSJ5FG8sDeEjaHkQugnZKQCOEZC9fOgmMyaK
+         tptdlEydMT6+l/RDj7yG0difu1toTc/rwy5kEOmCckRR77IRLHhDnlKzUkTZN22Ibfd5
+         IuHCakZelZeCOwDupwWmx66/PNV7kL7w6DfyNjUsf+mktwu8ZcCG3HXgOGcST+d28fIv
+         6ztw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772777978; x=1773382778;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=P0VGWiHF08Hb/LHLPzScyeOvbLZVakbt6uUzSBkPJkk=;
-        b=bNbz1cvs9bIFpZnEeKncU1lc9yjmue1XHppbTt/NJKPVXsIkvAa8j4tFYLLW+Z3TqR
-         1CXfSD+LLXEQNLjsLzS4pSJOf03JtcOtc6PIHx9CUoyMBNRDHx/HMlagsxiwaKVC9hW3
-         PIlu6aWfCEMg5VgBnKJ5QkV/+mMFaBb/T6TBPOu8Ep/QQoxUvPekWxRSHxg9Ny9UbxTN
-         19Vn/MvF7ucyX56A+hc7CJSzkXDHVb4QKCL/6LuKUzYGGxxTLZ0YE8pTyuJp8j5b/RyA
-         rmK7Pf3XRY0zn5Gt1Ee7odooJbZ8Ze8xYB/D2RPi+lxl2KStME/fqhMcO/PA8Y//H226
-         NWzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWP1Ak/38d7QU39HQUqP27t2exP0OWOSaLVo8KqSbccRcTofd11RDDiSc3uipwYj1f0J5b16nP6xVg9VhYY3yE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyngVLhPu/o1YVEkMMjZE8T765WgcLHh23QsaBBRC449GZEbVBM
-	m5ywqRADHm0OzeVrYi/8V07v2PrUYsimrjRg9I6gNCLcDV8qt4BPpBG4S5XKudJyQMhMYRUNb5z
-	OSm4AuKqoGXEmfRJCY+whpO1155hpXUc=
-X-Gm-Gg: ATEYQzwvu7N+k7sXJ75CsoA0pZyrDiSqGI2Gp3r77VLEjKyN+XvdewxrfiuLHMcsUgi
-	Glr33u4L1q/HQxvV/Sgb6gSf7ILqC7/GnhQE7+AoUGWKyM4S6U4JujC2X13p1vheUKKzd0LS570
-	OrNH16VUVaTikdfWFcTvjUKZ28bCzwJK3CoL+iZU/QWR+jYrbjaHhyYiVQntLc8onjQD59Txp11
-	Jg7nelc3ugjZaVnxgcFcGpKbGWzO/INMZzRSeUbCyFSlx5chDH1kgtuNcycRCnwv/2LmOavQM1j
-	7VuQWJ7vTG0Ij44ZtZqmskSOsHING2JT5+k49squPN43HjOb9/B1PuMlTdqNT5LvpuGJ+MMWoKY
-	N52ovMA==
-X-Received: by 2002:a17:906:f5a5:b0:b94:244b:2ba8 with SMTP id
- a640c23a62f3a-b942df74e45mr44939766b.29.1772777977596; Thu, 05 Mar 2026
- 22:19:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772778941; x=1773383741;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O00SvXmF1/neLG6bXArW7CD/JczRf42amEzXY9wGYt8=;
+        b=re7QpdxjoF+/8HkRZQvuynG2mNEWtoBUBrBRXeaT9cJ228UMH/V/W3QZpbXzS+JCeP
+         uBsofXFKTXG9KrtUgvQYT1BJgCoqXyteKaV7O3o89evgXdT+h3dy/eo5FusMJb42cfR/
+         mtEORDV5TK6OtFJ2JgBh2cZz+I1o9ZBXlbJXzOEtJkfbeAzhsOZ6ukNG1hMEW/b9euyV
+         CtJvF5gUpeIppJktaHZCIYZH5Nqh4PzeyDnIaOvquAOTmrJgvcDUDCbzGknR/vgSWTuK
+         HO02W4qgDNOvh3eNX5MWvbXwkPqE4qj8KYEJLlh0wR2Svmd88okZqvItRUpWjbZRXo8e
+         rGcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVd5CeZ6HEN3BWQhDOAdSRbR4UoWIesEPE7g/inFmka3qBYHU05kQ0sllUjGNnxIP9zWomU8bQK+D4X86cYqbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybWwwnEFSievYCgsah1JNJsXXCjJZESxIk0vZ5Qr+ckY0GXSyu
+	ksV1iMlKTr7luuSEnrXNPBqVS/kliugWxOEvxvDPIgFL+nh7MPebbXMe
+X-Gm-Gg: ATEYQzwLD0lOMkeTweP6HMA8rMcKjGeNafxgMLwRjaG6Gil55aErQ6/Q+yiVzzfr+RL
+	XH1daxvaTvtitr+Ag1vp5UmxhtXYJv9ziOmT6iHcfkPN4tRdfa2RMpBU6V7elf8xIZW/TpxvSaI
+	Rt9lkoHv2yWyEYUt04jSZotUkofYafbi+VshBXmbISANFb9jErBOxW8Ob/bH3nJEMchWEeyJlT7
+	r1Tc6kOfhneT13v9TO+/eXQ7FM/noHoGp/loFLQOOKtytRjDB4yS0/yfjQRxJdkIQKF3n8Vh+5L
+	VQXGyHF+1O6Aq/4oecGzfw4EHXnbKdgbtZEq+4P/z++yc9ds1YX6Ska+irRy6xXWWdj33Okyxjj
+	84ZaMOO2TVSMd1queHjvqwMUZW4EV9TLsvJaPoLcuGryBH93EpSV8ubV+wsHWDLqlyAgBwPO1iP
+	iJnGuT+BHwU5c5mCZUaJ3M/M6GVJOXbjnSFEILV8CqEbsOl9NY9b5DPDo=
+X-Received: by 2002:a17:903:46c4:b0:2ae:5063:b3e0 with SMTP id d9443c01a7336-2ae823febb1mr13075235ad.9.1772778941243;
+        Thu, 05 Mar 2026 22:35:41 -0800 (PST)
+Received: from ryzen ([2601:644:8000:56f5::8bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae83f752bfsm9788055ad.60.2026.03.05.22.35.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2026 22:35:39 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-cifs@vger.kernel.org
+Cc: Namjae Jeon <linkinjeon@kernel.org>,
+	Steve French <smfrench@gmail.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tom Talpey <tom@talpey.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] ksmbd: ipc: use kzalloc_flex and __counted_by
+Date: Thu,  5 Mar 2026 22:35:22 -0800
+Message-ID: <20260306063522.439782-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260306044536.149204-1-rosenp@gmail.com> <aapiBcnPHa3eDLN5@lizhi-Precision-Tower-5810>
-In-Reply-To: <aapiBcnPHa3eDLN5@lizhi-Precision-Tower-5810>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Thu, 5 Mar 2026 22:19:26 -0800
-X-Gm-Features: AaiRm50x7YMCKK1F6zYGE3uuqGNee--50j1jpnmhfHu0gWe_LApncHVHg97bcLc
-Message-ID: <CAKxU2N9TyRe_o6zj5pNRdTR65BgZZ6brsgRuq0Oi1EFvQSCiVQ@mail.gmail.com>
-Subject: Re: [PATCH] media: nxp: imx8-isi: remove kzalloc_objs
-To: Frank Li <Frank.li@nxp.com>
-Cc: linux-media@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-hardening@vger.kernel.org, 
-	gustavoars@kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, 
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, 
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 5, 2026 at 9:11=E2=80=AFPM Frank Li <Frank.li@nxp.com> wrote:
->
-> On Thu, Mar 05, 2026 at 08:45:36PM -0800, Rosen Penev wrote:
->
-> Subjest: use flexible array to fix memory leak
->
-> > Use a flexible arraay member to combine allocations.
->
-> typo array
-Will fix.
-> >
-> > It looks like pipes never gets freed anywhere. Meaning this effectively
-> > fixes a memory leak.
->
-> Remove "It looks like". The pipes never ...
->
-> Because fix memory leak, need fixes tag here.
-Since its inception. Lovely.
+The former is just a nice macro and the latter allows runtime analysis
+of the allocation and its size.
 
-That had no struct_size AFAIK.
->
-> Frank
-> >
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ fs/smb/server/transport_ipc.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/fs/smb/server/transport_ipc.c b/fs/smb/server/transport_ipc.c
+index 2dbabe2d8005..f7aa427a06fe 100644
+--- a/fs/smb/server/transport_ipc.c
++++ b/fs/smb/server/transport_ipc.c
+@@ -55,7 +55,7 @@ static bool ksmbd_ipc_validate_version(struct genl_info *m)
+ struct ksmbd_ipc_msg {
+ 	unsigned int		type;
+ 	unsigned int		sz;
+-	unsigned char		payload[];
++	unsigned char		payload[] __counted_by(sz);
+ };
+ 
+ struct ipc_msg_table_entry {
+@@ -242,9 +242,8 @@ static void ipc_update_last_active(void)
+ static struct ksmbd_ipc_msg *ipc_msg_alloc(size_t sz)
+ {
+ 	struct ksmbd_ipc_msg *msg;
+-	size_t msg_sz = sz + sizeof(struct ksmbd_ipc_msg);
+ 
+-	msg = kvzalloc(msg_sz, KSMBD_DEFAULT_GFP);
++	msg = kvzalloc_flex(*msg, payload, sz, KSMBD_DEFAULT_GFP);
+ 	if (msg)
+ 		msg->sz = sz;
+ 	return msg;
+-- 
+2.53.0
+
