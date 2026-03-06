@@ -1,115 +1,99 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4698366DB7
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 06:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3693037187B
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Mar 2026 06:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772778943; cv=none; b=EMYLjbiTc4rdGJCXeLTHqQWSfbnRw/0bey/uPqK3iInpUWHjN5/xczeGi+Uj2L267gwnG6/U4hW6Ie5FdE/fYUJtj4T5NlMHeE+cvHwVuW0yERWbAzZxD8RTPJEWy8GAqh8p/idHYXCGcDGzVgiuPKVYQ72YZd0NqPzo2B2CgOc=
+	t=1772780192; cv=none; b=RK2cltUJkZ1NhiL9qFxLPup3jFISLg0ZzkuhlXiKMCAWR+Ib22wyetXwvrqeQHpeQ030s+cMJrLiUZVL6zInzVojEa6GKaFEAn/enYvp9IT7anmsTQV/x9TKqFYk+zr376sTgC8Cuqc7kY3X1iGsvQVceQTFrLE9X9dwhsthirg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772778943; c=relaxed/simple;
-	bh=9cQdIdDbfHBxQdVjl1wma1djHdHSQkCaWml9R0EIOqw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hb8LD2s2hHNhQng9ame0QYIHNbzbk+a+mP6G+nrDyP5v2cCN0hRK90mNYI/O4UMZzJeRBUkEz3S7YbV7+LN9hN66RZmaG25bp8MRTR/C1cPNu11gyMg43EUE0obNYmMClMwPgdGoAEDLJo22+6x0okMrwI6jCD4vtj+46ygOGvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ElgVPC8s; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElgVPC8s"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ae56f8776dso35708995ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Mar 2026 22:35:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772778941; x=1773383741; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O00SvXmF1/neLG6bXArW7CD/JczRf42amEzXY9wGYt8=;
-        b=ElgVPC8sKDMRj4sc7J22emogY1ycBWQ/bj+kzeMim6SLxqBP6Zj3JTxvi/UZRuwg83
-         KT7M9Y2MEjT5Ywz/SNDT+mZt0PIVYcanrtiS7PX5jWABI9cPru8+o5nBqVc+Tg36biaS
-         eOnas/+TUq+P1mVyUD8VMwqFzxSjCT0IdSJ5FG8sDeEjaHkQugnZKQCOEZC9fOgmMyaK
-         tptdlEydMT6+l/RDj7yG0difu1toTc/rwy5kEOmCckRR77IRLHhDnlKzUkTZN22Ibfd5
-         IuHCakZelZeCOwDupwWmx66/PNV7kL7w6DfyNjUsf+mktwu8ZcCG3HXgOGcST+d28fIv
-         6ztw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772778941; x=1773383741;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O00SvXmF1/neLG6bXArW7CD/JczRf42amEzXY9wGYt8=;
-        b=re7QpdxjoF+/8HkRZQvuynG2mNEWtoBUBrBRXeaT9cJ228UMH/V/W3QZpbXzS+JCeP
-         uBsofXFKTXG9KrtUgvQYT1BJgCoqXyteKaV7O3o89evgXdT+h3dy/eo5FusMJb42cfR/
-         mtEORDV5TK6OtFJ2JgBh2cZz+I1o9ZBXlbJXzOEtJkfbeAzhsOZ6ukNG1hMEW/b9euyV
-         CtJvF5gUpeIppJktaHZCIYZH5Nqh4PzeyDnIaOvquAOTmrJgvcDUDCbzGknR/vgSWTuK
-         HO02W4qgDNOvh3eNX5MWvbXwkPqE4qj8KYEJLlh0wR2Svmd88okZqvItRUpWjbZRXo8e
-         rGcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVd5CeZ6HEN3BWQhDOAdSRbR4UoWIesEPE7g/inFmka3qBYHU05kQ0sllUjGNnxIP9zWomU8bQK+D4X86cYqbs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybWwwnEFSievYCgsah1JNJsXXCjJZESxIk0vZ5Qr+ckY0GXSyu
-	ksV1iMlKTr7luuSEnrXNPBqVS/kliugWxOEvxvDPIgFL+nh7MPebbXMe
-X-Gm-Gg: ATEYQzwLD0lOMkeTweP6HMA8rMcKjGeNafxgMLwRjaG6Gil55aErQ6/Q+yiVzzfr+RL
-	XH1daxvaTvtitr+Ag1vp5UmxhtXYJv9ziOmT6iHcfkPN4tRdfa2RMpBU6V7elf8xIZW/TpxvSaI
-	Rt9lkoHv2yWyEYUt04jSZotUkofYafbi+VshBXmbISANFb9jErBOxW8Ob/bH3nJEMchWEeyJlT7
-	r1Tc6kOfhneT13v9TO+/eXQ7FM/noHoGp/loFLQOOKtytRjDB4yS0/yfjQRxJdkIQKF3n8Vh+5L
-	VQXGyHF+1O6Aq/4oecGzfw4EHXnbKdgbtZEq+4P/z++yc9ds1YX6Ska+irRy6xXWWdj33Okyxjj
-	84ZaMOO2TVSMd1queHjvqwMUZW4EV9TLsvJaPoLcuGryBH93EpSV8ubV+wsHWDLqlyAgBwPO1iP
-	iJnGuT+BHwU5c5mCZUaJ3M/M6GVJOXbjnSFEILV8CqEbsOl9NY9b5DPDo=
-X-Received: by 2002:a17:903:46c4:b0:2ae:5063:b3e0 with SMTP id d9443c01a7336-2ae823febb1mr13075235ad.9.1772778941243;
-        Thu, 05 Mar 2026 22:35:41 -0800 (PST)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae83f752bfsm9788055ad.60.2026.03.05.22.35.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 22:35:39 -0800 (PST)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-cifs@vger.kernel.org
-Cc: Namjae Jeon <linkinjeon@kernel.org>,
-	Steve French <smfrench@gmail.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Tom Talpey <tom@talpey.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] ksmbd: ipc: use kzalloc_flex and __counted_by
-Date: Thu,  5 Mar 2026 22:35:22 -0800
-Message-ID: <20260306063522.439782-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1772780192; c=relaxed/simple;
+	bh=lZi/wMM/ciY0PifjHsWxYMySZzBSA++aFXRYYRu1dVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pnFvx20yobASouCKzlDdDova32OQvQeIx7rONZ5Z0rLXqNG2E7oBk26Wu52i02EOA5Eui9tdO7ZiDFVqJZmVt6mg2lrygUT489z2dWlAqIkqpeDGQPILWUedL2OPlkug9qx/SrxRuP+OAYJ2B6Yg0oRbb/ciwXrQLsvX1Y3Md+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1vyP6e-0008Cg-FH; Fri, 06 Mar 2026 07:56:16 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1vyP6c-0040ah-0f;
+	Fri, 06 Mar 2026 07:56:15 +0100
+Received: from pengutronix.de (unknown [IPv6:2a01:4f8:1c1c:29e9:22:41ff:fe00:1400])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id B80D84F9166;
+	Fri, 06 Mar 2026 06:56:13 +0000 (UTC)
+Date: Fri, 6 Mar 2026 07:56:12 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-media@vger.kernel.org, 
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Frank Li <Frank.Li@nxp.com>, gustavoars@kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] media: nxp: imx8-isi: remove kzalloc_objs
+Message-ID: <20260306-handsome-quixotic-catfish-705bde-mkl@pengutronix.de>
+X-AI: stop_reason: "refusal"
+References: <20260306044536.149204-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qt6jm373d6epfxbc"
+Content-Disposition: inline
+In-Reply-To: <20260306044536.149204-1-rosenp@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 
-The former is just a nice macro and the latter allows runtime analysis
-of the allocation and its size.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- fs/smb/server/transport_ipc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+--qt6jm373d6epfxbc
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] media: nxp: imx8-isi: remove kzalloc_objs
+MIME-Version: 1.0
 
-diff --git a/fs/smb/server/transport_ipc.c b/fs/smb/server/transport_ipc.c
-index 2dbabe2d8005..f7aa427a06fe 100644
---- a/fs/smb/server/transport_ipc.c
-+++ b/fs/smb/server/transport_ipc.c
-@@ -55,7 +55,7 @@ static bool ksmbd_ipc_validate_version(struct genl_info *m)
- struct ksmbd_ipc_msg {
- 	unsigned int		type;
- 	unsigned int		sz;
--	unsigned char		payload[];
-+	unsigned char		payload[] __counted_by(sz);
- };
- 
- struct ipc_msg_table_entry {
-@@ -242,9 +242,8 @@ static void ipc_update_last_active(void)
- static struct ksmbd_ipc_msg *ipc_msg_alloc(size_t sz)
- {
- 	struct ksmbd_ipc_msg *msg;
--	size_t msg_sz = sz + sizeof(struct ksmbd_ipc_msg);
- 
--	msg = kvzalloc(msg_sz, KSMBD_DEFAULT_GFP);
-+	msg = kvzalloc_flex(*msg, payload, sz, KSMBD_DEFAULT_GFP);
- 	if (msg)
- 		msg->sz = sz;
- 	return msg;
--- 
-2.53.0
+On 05.03.2026 20:45:36, Rosen Penev wrote:
+> Use a flexible arraay member to combine allocations.
+>
+> It looks like pipes never gets freed anywhere. Meaning this effectively
+> fixes a memory leak.
 
+It's a devm_kzalloc(), which means it's automatically free()ed after the
+remove callback.
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--qt6jm373d6epfxbc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSl+MghEFFAdY3pYJLMOmT6rpmt0gUCaap6igAKCRDMOmT6rpmt
+0h0YAP9FYFN9bll7jzuGDpQaPy24yBisGMPapjkkoLpoXI0gFgEA15p+v6RhEWUS
+2+WhjuDG94zUDEWMa2eNHkHVZONmfgU=
+=Afub
+-----END PGP SIGNATURE-----
+
+--qt6jm373d6epfxbc--
