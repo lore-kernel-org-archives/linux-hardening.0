@@ -1,70 +1,75 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53506328B58
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Mar 2026 20:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BD0288A2
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Mar 2026 21:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773003323; cv=none; b=UvOHJczzbNF3Drr7bZqpivRFuN/JfRV+8ML6EvIGRl+xnh9Gt7gXyRi0UUDxLw5CYIOPQo3SkupPMGwLPHMwuo6udHLHW8/0sdzahlGArs03q+xKBLOaBlkTk5qOPwBbSrp5+z/UvaGlLFY9OTibwxf6sEGNHItaqEbV4op/CdA=
+	t=1773004362; cv=none; b=PF1wvbILck4+dV+Uzom4mh7HJtrvsVDbcCK3UeKS9LkHiSR3dGsZocyjfbhXh1JzVoBRmu1UvF1002cVgS5uE7TL1aq337pGP8lykISfX8go3v3CIArmmI+WuGvh3E72luJBmH+bWASY+oPqcdgaZYaZdu4DxWMseBST77ZAd4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773003323; c=relaxed/simple;
-	bh=V+HaIjOxeZCvqXsVvP4U91p/1MNE7Xa2RqirRnIi+Fs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uqD99oZusJeIpISj8A7pqKvXIR0RTi7gkUrCQwA/ZUJdvD+OimvU9yxx4bPVij6LhCYdskeKM427dt8rwG83zC0pUu78Mro5GtZvQ2Dp68fs6qTAGsXej7cPNKozEzbgPwM+29p5J2DB/eozbc3/5KHMPBHDeyrMdtdDEXFOVuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYL2LuRX; arc=none smtp.client-ip=209.85.216.46
+	s=arc-20240116; t=1773004362; c=relaxed/simple;
+	bh=O3YdQzw47RaaB3oNmJm+L0X+L/dFe9AGPKqOiW7K/7E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nBpv6waBFfkxoKu4papeFXpiydNcuAl9Yncq6t6NVC5rXmVRv+4I/LRK2YH0c4WzBoDzvWqRSe1wEKCLpckVeUIZ+v5xAh7sM3Oka7eyFxsjG4Jqqjc1wceAWuOxXCNXsOTN300g/IXT/pRw9NR7M0HiIuZwcWWv5+uhXkOtxU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NIxHwykD; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYL2LuRX"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3598df39444so4652178a91.2
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Mar 2026 13:55:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIxHwykD"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2a9296b3926so84001795ad.1
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Mar 2026 14:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773003322; x=1773608122; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773004360; x=1773609160; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dSbXQF0TQ/oDDYSYqKtbfxF1Vwex7qbylX5vtAN5cVI=;
-        b=NYL2LuRXV/lfh7HitJmrW+4anrxO+JyAloZDn1LzlCATHj1ZWUb/YlB7khmikVwEF4
-         J93r9H5p7zLOc3Q+5QrJ1Wsg7bw7VQAwYzjjpelur/F/UdwrW1o83AACINJnU98ioIPR
-         i0M7E8888eroHb3CH53XnBccWEgJyhNKol5mmpV1wWOWsb6X14VIZi9WlVb2ffpDRyIn
-         TfLoTl3YnpoCzhxNuN7zu7SzEdcjTcTkl9XqMwTcoO5lVM2+CP7RFIsRnwq/ooX77qGN
-         FpOKK5foYEuhve3RHxhwj/CpKPw5kkVr0ZQezXcl7uUPhMgJNJ37DigEP81cIQR4gqnh
-         2xKA==
+        bh=SVUEHpGLZsetFZXD2hp6GWpOMuo456n8g2SApWKR0cQ=;
+        b=NIxHwykDAft74Tuo+Ex55Ugf80AFDxhYdE0acyRI/hf0C8JJHJaP65CBJS63j9y9+J
+         ePAmKSZ7UJNIL/slsui2lWQJiA49NiBReAyip1cO5K82UUDodKYP3NJNkwH6Y87wCRVA
+         nOzvr4THE0S6yuSKjVZCBNVbs+SYAxREd5YoyS0RmytDTc+WHfT8J9NTvORoA+R+YCLO
+         t19AzxyR4EbB2ny/n2Gf+2OpXpFOaRzd1rCB56KorrOiK6zc/sutean95fy7n+Htipns
+         cZ7AN7y+lzPPFPTUyBCGIiCOgnfV9NsBRYnTqpq56UYHWwHtqA4gQy7Y8QWoQ4dA9FPE
+         YmTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773003322; x=1773608122;
+        d=1e100.net; s=20230601; t=1773004360; x=1773609160;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dSbXQF0TQ/oDDYSYqKtbfxF1Vwex7qbylX5vtAN5cVI=;
-        b=HH0/KrYHDCZHrWJTQLDr+OQ0/8oYzE96TGDzIfbNc8QOtqmOlI+sUdXeLB260vlCbg
-         2YHzO+rZ2qgp3sgKbTvJ5o/Xp1E6y/hpJkk1kl41CZf/AUVV3EKgPjGbR9maJXw3VBua
-         S6rKmI+W24SDMYttTG1teU1RkG84gMbRRq3Su8LUXxd75JPKEjPAlbLirKm5DUbMZEJr
-         6ZM2Akm32/NuQgO8+/EeiO1zlQHC2SzJdo8HnQSNrSDKewITt5k6dDFsuEMEgJ3ZAzvU
-         YutpBlwwqEKAj3xi5LbHnjutoIoprbeApa5OFT4VtYgYLVnWREycSQV4LAouTh2/dHdT
-         lI1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWsOUwhAtRalkD0Pq2bYQUGOWztgSVs4wUSI/+7EppKnxX4aEuoGBMHv/wk5kaLNfJSidjpucQct1VRUdJGx9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsR8iBsoHMHzkOb7G5iuJ+ikUj8MeIMWuX8STlk6swFgwaaLpn
-	lXatzGZNwWUFb0n3oFNWqEWNpWwmJ2RwAiHPwZwJPrmKGn5e2+Z0/dnKQBOI9gK0
-X-Gm-Gg: ATEYQzyHDFNbpawXsp9cq8g3mp5bh+23mMBJ8QkHP+5B5NUB2O6JNi3pWgavW9H6RbT
-	RpyqJ8Bhrz4CD+IphFWgMEwjmWQHmafZ5A70qTkmSDnWM+KyUCT/ugBAWpG8WLA0+4p/MPZrDY4
-	iojsGrws7POdibH78IoXlwVo8RuMs8KDgO3hzZ0GcCuDOLQV+qOH1DU+j6eQkBz0xhdr66SX9pK
-	dx+mC85VNVIeyg3EPk0BzD44bg58CDf6z/cW35MGyGaPucYZKvEV1IG5XgC7jGVv3t/Mi0zgwr5
-	H823z/jPkN41+M2gB0cO6lStrAt5mqzTR5xd45HizoHQUAbB3I/A3yy2lfkPnLcGHjoF7uK3eNt
-	eUQy8nIiPcgqf4EKoRbAoDTZPqdGJ1FF52R+OKC75ObdPurW5UEcMhpis+cT8eos8FvchrquyHn
-	LC9HqAU2K9uIYQS9LZWMQePOl4/eeK6bKbyQHS6DoxiTqTYr70Cl2RgkufKs/K0z3L
-X-Received: by 2002:a17:90b:33c7:b0:359:8eaa:7f42 with SMTP id 98e67ed59e1d1-359be2f90edmr8194647a91.18.1773003321560;
-        Sun, 08 Mar 2026 13:55:21 -0700 (PDT)
+        bh=SVUEHpGLZsetFZXD2hp6GWpOMuo456n8g2SApWKR0cQ=;
+        b=u/r1fWrVQGxgjF89ntGK8CllFBZzMmPN50srXmJPmBUM+1hhieTXpW63w91PCfcK0Y
+         q0o1C8BT9wcPkFmIS6uJRBiyQKv53VA/ICG0SHt4v2neOCz8Q5y+EL9WCIsjHu7p2sVu
+         KpT0oUABafoWq1jjCe3JxTmfqouuz+BMEqP/K4jdSMAMVoeO5apS3e6tra2qk3GT/wzE
+         R5f9+rNf2IXgTWF3JXgptjkoCbP6JR4rNOPZ8WoY0ofe+o2A2vPcnBSwe9Q1uBqCyjKR
+         FD+oZwsyxl1PiiArLUCgfQFL0hvvhiVtRJoGcBNVG66ZMJsvjrkRqdpl7ZXhlj//NEyQ
+         1lVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX8gnPHlypqINjMdzwZPPWzOQNq0forEt46UQ1GdZrc/xkNyZ6KQg2YSHq/001/oBhprBpZRATsKHhTMweKZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDsCfq8Fg3/1pLzNoA8+XckGSXbsMZ0UgAIENV5aq8cCaju9r7
+	wbopG++R/aVA0SdKtUJpuWRvfA1Yn0N8ELmeCQENCIPqsucoBDT1q1w9
+X-Gm-Gg: ATEYQzz+9Y4uVZq17HiPN31AsKsF80a8jnrCFR/cF4Y7adBYRNcHYqI7cF4yxKqvcyg
+	j8P6s03OW4YyQDX2kPuIuI1iGyfYRWS7TanNpPQUTKK8wBHw3R6Tlu44csE/WHMALeW99xhHV+N
+	zQISIVkgaVq9XjijiRwFkhJwdHGmNj224+cSDh7fuFbhyciVXK0Rc7zkC6dZ09iKMt7eZfGYJAb
+	fLcI+fTM3haHA8AUvV+nyUmsYJicoGTeT1UUbcINx040S3oWEm2l/isUYlBvR2uj3wlX8AdndYO
+	OKcXMggURBSEMbSsgNBv3EZ3rDVm4qA1glrpKgWtnEZichaertlHD3bKXypbrjXnkooZ3nhUzbX
+	EOFGjKPkNXLuag/IUg1Xm0ysRIRTkjHz9N3bI/LZPF9/VojDmjJMKW4owW4l38E/dnsVWpuAAhO
+	oJQA95zz3FNX1zoFZ+t7OzR15uzt9+UhcxgEZcI9ERQhyo+Pz2IdRFlQ==
+X-Received: by 2002:a17:902:ce83:b0:2ae:45bd:9b39 with SMTP id d9443c01a7336-2ae82416b18mr89231215ad.12.1773004359649;
+        Sun, 08 Mar 2026 14:12:39 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c739e195c40sm6951607a12.31.2026.03.08.13.55.20
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae840ad894sm119471255ad.80.2026.03.08.14.12.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2026 13:55:21 -0700 (PDT)
+        Sun, 08 Mar 2026 14:12:37 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-wireless@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>,
+To: dri-devel@lists.freedesktop.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH ath-next] wifi: wil6210: use kzalloc_flex in wil_tid_ampdu_rx
-Date: Sun,  8 Mar 2026 13:55:04 -0700
-Message-ID: <20260308205504.26819-1-rosenp@gmail.com>
+Subject: [PATCH] drm: dp_tunnel: use kzalloc_flex
+Date: Sun,  8 Mar 2026 14:12:20 -0700
+Message-ID: <20260308211220.33759-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -74,84 +79,85 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use it to simplify allocation and freeing.
+Simplifies allocation by using a flexible array member to remove a
+second kzalloc.
 
-Add __counted_by for extra runtime analysis.
+Added __counted_by for extra runtime analysis.
+
+Simplify assignment loop. It always returns true. That is,
+max_group_count is always equal to group_count.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/net/wireless/ath/wil6210/rx_reorder.c | 13 +++----------
- drivers/net/wireless/ath/wil6210/wil6210.h    |  4 ++--
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/display/drm_dp_tunnel.c | 26 ++++++-------------------
+ 1 file changed, 6 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/rx_reorder.c b/drivers/net/wireless/ath/wil6210/rx_reorder.c
-index 5841098ff8f9..3f11c6090234 100644
---- a/drivers/net/wireless/ath/wil6210/rx_reorder.c
-+++ b/drivers/net/wireless/ath/wil6210/rx_reorder.c
-@@ -241,21 +241,15 @@ void wil_rx_bar(struct wil6210_priv *wil, struct wil6210_vif *vif,
- struct wil_tid_ampdu_rx *wil_tid_ampdu_rx_alloc(struct wil6210_priv *wil,
- 						int size, u16 ssn)
- {
--	struct wil_tid_ampdu_rx *r = kzalloc_obj(*r);
-+	struct wil_tid_ampdu_rx *r;
-
-+	r = kzalloc_flex(*r, reorder_buf, size);
- 	if (!r)
- 		return NULL;
-
--	r->reorder_buf =
--		kzalloc_objs(struct sk_buff *, size);
--	if (!r->reorder_buf) {
--		kfree(r);
--		return NULL;
+diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
+index f442430d8de7..aad1605b956e 100644
+--- a/drivers/gpu/drm/display/drm_dp_tunnel.c
++++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
+@@ -188,13 +188,13 @@ struct drm_dp_tunnel_group {
+ struct drm_dp_tunnel_mgr {
+ 	struct drm_device *dev;
+ 
+-	int group_count;
+-	struct drm_dp_tunnel_group *groups;
+ 	wait_queue_head_t bw_req_queue;
+ 
+ #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
+ 	struct ref_tracker_dir ref_tracker;
+ #endif
++	int group_count;
++	struct drm_dp_tunnel_group groups[] __counted_by(group_count);
+ };
+ 
+ /*
+@@ -1893,7 +1893,6 @@ static void destroy_mgr(struct drm_dp_tunnel_mgr *mgr)
+ 	ref_tracker_dir_exit(&mgr->ref_tracker);
+ #endif
+ 
+-	kfree(mgr->groups);
+ 	kfree(mgr);
+ }
+ 
+@@ -1913,33 +1912,20 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
+ 	struct drm_dp_tunnel_mgr *mgr;
+ 	int i;
+ 
+-	mgr = kzalloc_obj(*mgr);
++	mgr = kzalloc_flex(*mgr, groups, max_group_count);
+ 	if (!mgr)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	mgr->group_count = max_group_count;
+ 	mgr->dev = dev;
+ 	init_waitqueue_head(&mgr->bw_req_queue);
+ 
+-	mgr->groups = kzalloc_objs(*mgr->groups, max_group_count);
+-	if (!mgr->groups) {
+-		kfree(mgr);
+-
+-		return ERR_PTR(-ENOMEM);
 -	}
 -
-+	r->buf_size = size;
- 	r->ssn = ssn;
- 	r->head_seq_num = ssn;
--	r->buf_size = size;
- 	r->stored_mpdu_num = 0;
- 	r->first_time = true;
- 	r->mcast_last_seq = U16_MAX;
-@@ -278,7 +272,6 @@ void wil_tid_ampdu_rx_free(struct wil6210_priv *wil,
- 	for (i = 0; i < r->buf_size; i++)
- 		kfree_skb(r->reorder_buf[i]);
-
--	kfree(r->reorder_buf);
- 	kfree(r);
+ #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
+ 	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
+ #endif
+ 
+-	for (i = 0; i < max_group_count; i++) {
+-		if (!init_group(mgr, &mgr->groups[i])) {
+-			destroy_mgr(mgr);
+-
+-			return ERR_PTR(-ENOMEM);
+-		}
+-
+-		mgr->group_count++;
+-	}
++	for (i = 0; i < max_group_count; i++)
++		init_group(mgr, &mgr->groups[i]);
+ 
+ 	return mgr;
  }
-
-diff --git a/drivers/net/wireless/ath/wil6210/wil6210.h b/drivers/net/wireless/ath/wil6210/wil6210.h
-index 31e107c81e2d..768e6573cd29 100644
---- a/drivers/net/wireless/ath/wil6210/wil6210.h
-+++ b/drivers/net/wireless/ath/wil6210/wil6210.h
-@@ -659,7 +659,6 @@ struct pci_dev;
- /**
-  * struct wil_tid_ampdu_rx - TID aggregation information (Rx).
-  *
-- * @reorder_buf: buffer to reorder incoming aggregated MPDUs
-  * @last_rx: jiffies of last rx activity
-  * @head_seq_num: head sequence number in reordering buffer.
-  * @stored_mpdu_num: number of MPDUs in reordering buffer
-@@ -672,9 +671,9 @@ struct pci_dev;
-  * @first_time: true when this buffer used 1-st time
-  * @mcast_last_seq: sequence number (SN) of last received multicast packet
-  * @drop_dup_mcast: duplicate multicast frames dropped for this reorder buffer
-+ * @reorder_buf: buffer to reorder incoming aggregated MPDUs
-  */
- struct wil_tid_ampdu_rx {
--	struct sk_buff **reorder_buf;
- 	unsigned long last_rx;
- 	u16 head_seq_num;
- 	u16 stored_mpdu_num;
-@@ -687,6 +686,7 @@ struct wil_tid_ampdu_rx {
- 	bool first_time; /* is it 1-st time this buffer used? */
- 	u16 mcast_last_seq; /* multicast dup detection */
- 	unsigned long long drop_dup_mcast;
-+	struct sk_buff *reorder_buf[] __counted_by(buf_size);
- };
-
- /**
---
+-- 
 2.53.0
 
