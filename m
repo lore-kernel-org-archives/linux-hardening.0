@@ -1,208 +1,179 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E982033D51F
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Mar 2026 21:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94E217993
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Mar 2026 22:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773004746; cv=none; b=qsqac+nXalb+8Ge5oRBzGOkcmvShKnQfAeRd0UNLKU5UMZLFqOpH55jew6YrXkyte1rikb+ka/gAxSUhvRKwCgvI+k0YBGbLdG6pvgkq/9CPVICcEeNHqSgvwuEdrN9iN9HO2F/93czJxvjS+dh8ooD+QE2Ixa23gdbWk6tSZOA=
+	t=1773007668; cv=none; b=UH1eCbjKXBaEE8Wz19Sa3MnPicobS6j5rPTfeOblc0hGVwwx5cFDopqJXrpfJHeiC/jZnDlAInM+bv+wIpej4r+mFc/DuubYGhD+V1siypjORN24Hy4D7nRsk05vkzyb6RCy0gzbwRlAqaWwYaKNCUJQzgnOjj3+Y85ldtvef8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773004746; c=relaxed/simple;
-	bh=hJZwWH3dKh30jrXu06PNPZiH2Rh0RzlXVIiHGznX3so=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RR2afrQcJz/47BAZjkSqQWm5XKGY27u2hEgYmTu1xFqFI+XAKoYDNaPPDDlrUkGQ6vT9C1rlj31urDgHTIYQLQR21hw4PsNcCvcxG4M3VJffSZfqDS+CKuHUUlWG0OgrLoIJfpCeBiTcvBK2uvEpRf6jZHqppJE1+FglNJx9M4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=I5Q+sO+t; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1773007668; c=relaxed/simple;
+	bh=eil+iPpwgIw3LaL+spkCjgN0S+e4SPX8IkdqBz91dFM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u7DL8WyQtFDbTw8lJgx4ibonj2XyNjMufOQeobOda4LCwoMS3ONPhSQ8yMtGBkhRGUoX2yccX8456svZ/uRG58L4GNHvHuJBeRyvAtRqkzRhvBh4lmnuLW9Ua+gq4rmh8aJ6lh8RE8/5e39S/zJtwkhUhwKQL2iTvQghWTuqrJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j0Ftu1/e; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="I5Q+sO+t"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4806cc07ce7so127445625e9.1
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Mar 2026 14:19:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0Ftu1/e"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-79800183233so148530637b3.1
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Mar 2026 15:07:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1773004743; x=1773609543; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3+z4CqEO/7VS22glAthUPXJPXHmHHuhnxWXDV7aa870=;
-        b=I5Q+sO+tzowKZlxEklJp7Jbsv9jjHKkU7PS/feE930Ie5i8xVmXJ9Ct3ljz0xv+zAO
-         ygugOnGxJFoY16fk8fZSwHuWuBJOCSUgG8MuPmcHKCb+zw/k9JwvlGkeuSKKRAq9Zxte
-         T2hPkeWc0IsiJYhjcfzAGAusG8hJwrJ9kPo02CWRmWbC/9FntTUwoH4ZlOrj2FOEUn5J
-         2FLf22JNsTqA6lwEZHxX/o+GmYKAQrHrcsTRm32uKbENtYAGoKuEibKOxMUzsYErxIiQ
-         63jOKGJ44PFw7Xd5LfrQL7ufCggB+jLyVOWA54hYv8Efwzdtud63d862Ou7Yp+BxE8Q3
-         tN8w==
+        d=gmail.com; s=20230601; t=1773007666; x=1773612466; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ftcpbjh6p3nPyd9FYgD5ANvcMgJCdJh9w2K7lp47ksM=;
+        b=j0Ftu1/eSn4j0SDzo9lWLIcAmQXzSozDPFnMN1ZjVOfTGWJ+TTMTSQWnSUKNKChUWL
+         tnn0NlJ8WfaYOgShzE+l20cYYAK3FUhbtjWME2Os9R9/1B+rZCZWJY9MxHNClD4Q1vpg
+         ejrLKRphLlWRWdEbtUD+Va7AvsVYuPzKu2N9YXQm5k3RF6dp6/AP+OvBTlRbLvAzBHlR
+         Jx+L36Z1AL6QZtd//Zszs8CGI4YI8JLGk/N03SLhnk7j16HgmHHTNknBnNPz7XDtu55a
+         rsyjp0Hlno2SSQSoX1RMPkSbrlKaxshdjsGki76756/8uyJD59yHi+FQoAJjgW39kCyE
+         dU7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773004743; x=1773609543;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1773007666; x=1773612466;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3+z4CqEO/7VS22glAthUPXJPXHmHHuhnxWXDV7aa870=;
-        b=cfBlYcrFsrsUu6093iHSyDoZi9zM7faGE2+7DTLCJNX8smjBJ2CnKcAvHUANQEBXrG
-         W2/Ir+QKLTDirtA6DrHHUPzSqPfR+lRYDSMFbCdO2GV3qzhQWHkZkRNllyMJRFnOJUhs
-         j67Ofas8K4UrNZNz1dzYpLUqGjfoHyp+Ltly9qXhIJms4/n+GCBEzCbpes+9j0suX51l
-         OeBG5HI1bRdszaIolgERvx5Avdi39KXOPFDSkGEuJJ/77ZTZ6/E5Td/ac1Ytrd25hRZQ
-         cM42Mrx6UHVDhUzM30ZLOWqBfwZ6ob8d0ZVwWqJFPx/jAM6kUkU/5pwuwSdMxXjjcjCi
-         2yGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKyPei/vT++qo5779v4ed3Ac9HWQ0LoyOBUBM94/fN1ChWHiB6hCKTZvCzxj+wpCtEyx8vEEwFFmdU9UYqRmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWuItj+gYnxBoAbJs59xqS/UBOLt1tDSWJUkDGXIaCINXLbsPO
-	BdJ/xmtkF5olzwTqFlOZqrd9poS/j4nLyuHGEkbzYtqszFafzxJNlN06w+03QVi42nk=
-X-Gm-Gg: ATEYQzwTB4PF3GNNDd0IW+kekrmplCsbqGPrJyq44317Q5KoQJv9+vavAL2+3FEdZyI
-	/fJb2/hls9h2FgVQARo8kAVnvlbBDI3Wv0KUtqlypAHjNrjcVVgFu56gaoe2fhhvaX8be+mXfOv
-	LY6J7TV0yjETtxpsgblZ3pAjHLEGY9LMDh0meUeHmC5ZFmnsCTbZJmaSGIvoRpopuQqNKu+mqgA
-	udwJCcxFWgxqoxY5rNWk9lRbXHCw4JAutqGnqEtTzIonwbN7218ChNi37KP4/cbun85qxmVHpcy
-	K4R+7e81bIsKx1tzhQe2ZJRQRTl2L7fzFFZjnrBsPClkljC4z/NsJimyLi8IH2xyxJK6IOK1Qjx
-	u6kMih0JKnlOOSAAeGaQT8lnAnhQSGGfKfJSYrWAatOgXuruAkbjUL/0F5UdejaZCgDFcyIvFtW
-	HzKd+q+3qaRFBIIwzE6HvpvN/T54C0Tn/A/oFMm8XYLw2NonJ6JOA=
-X-Received: by 2002:a05:600c:45d1:b0:483:a361:41a5 with SMTP id 5b1f17b1804b1-4852697866fmr159410045e9.30.1773004743052;
-        Sun, 08 Mar 2026 14:19:03 -0700 (PDT)
-Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae840b6639sm123685335ad.86.2026.03.08.14.18.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Mar 2026 14:19:01 -0700 (PDT)
-Message-ID: <ae4da77a-5ccb-4fcd-89d0-db452ad5a152@suse.com>
-Date: Mon, 9 Mar 2026 07:48:56 +1030
+        bh=Ftcpbjh6p3nPyd9FYgD5ANvcMgJCdJh9w2K7lp47ksM=;
+        b=SwRxrzWw9TtBMAxBBTmR9hzLaD64Nccxmh3f5s27ls1EgE/U8ZhDIcd3/O+ZnydXBT
+         fGB/gS6mey0PqGWwcGnXtfSTYd5N0KpdPBfJlVpDzUkE0rqitoNQB2M/my/Xt9Zln9nv
+         MAxFMdXJ5fkPRSBkFTMfGJ9DrtgiXbcA/XzBBErpowZBdm0BEb0x40ptB2v52n+epM3b
+         OeYWyUbbeeNpi+WU2IRUs0LP5aQjngezbSlejFoTRTOX01h/I9mHtsah8FhtdFMfiUhK
+         3B/LwCPWtsDk8J/EKQdY/rDmkp9cgTUSBxEXWr7CTOqi2S3bXWNpRdrDf9njONfoYGAj
+         +fLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWbWqG+jQuCL/r17VvjggLrhO9lTE5Hq6+gVr3CKhDTKh3NeGAdihFoe4SnWbsglF22bu7MnaImxOZhOgwfBYc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7G7ndFio9gr0sfpO99OK1xKNrD9nnJv5vQb0UCjYk4xPZYgsC
+	SW7JdH0VExsbFy15ZAE/wzezMPmh9/kjL3K2DEWSGbCsi0KM+g29s9cV
+X-Gm-Gg: ATEYQzyMkmc+U0xwOQbN5J0CrcWC3+or22tBkqpJjzE4nZFdgXOzRhruI7HdYOUxH4V
+	SeJcoBV3SCLQERWkTpB+11nhg+eoFqb+TvUg998PM5ooaHb8G8VO23FrWaj5CAPlnMo57Y+hVXH
+	V4lEL8O8w1xGY/inKeb/YifyX3x0TAXks3SO4axKlKsumGaMcGvc4SWPPJGqQIGpcWwS0Vmu2cf
+	pCnqjjTsg1iLx8/n7RfZMzy3Mm7Jm0cPzPE3OWkCoT0DjS/l33d41ElC+qh3+BdJhM/Sh3dbNPf
+	231XqkHV8/W9G+w60Q7h/cvMFyQav/FwXrvASw+VkMXpO+JPPipFsFG48DQoqw2lCgyhRgeP3fq
+	a3qxOawslMd8OkI4q/aYq3Gp6CAZ/mxzQWobqDXsDD8FYewukqxn4bq4IrQZNBDii/3GoFRgyre
+	+UmafAkcozM0OXML4MO/9pJ/JBecEirQJgIfxRYxYJNCBGnsY/T0re3w==
+X-Received: by 2002:a05:690c:ed3:b0:796:3f8a:9607 with SMTP id 00721157ae682-798d1f07dbfmr126573077b3.30.1773007665815;
+        Sun, 08 Mar 2026 15:07:45 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:56f5::8bd])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-798dee8ac51sm36771577b3.49.2026.03.08.15.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2026 15:07:45 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: dmaengine@vger.kernel.org
+Cc: Lizhi Hou <lizhi.hou@amd.com>,
+	Brian Xu <brian.xu@amd.com>,
+	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] maengine: xilinx: use kzalloc_flex
+Date: Sun,  8 Mar 2026 15:07:26 -0700
+Message-ID: <20260308220726.45270-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] btrfs: raid56: use kzalloc_flex for rbio
-To: Rosen Penev <rosenp@gmail.com>, linux-btrfs@vger.kernel.org
-Cc: Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- open "list:KERNEL" HARDENING "(not" covered by other
- "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-References: <20260308205340.24208-1-rosenp@gmail.com>
-Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
- Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
- fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
- 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
- V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
- rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
- cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
- qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
- /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
- o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
- JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
-In-Reply-To: <20260308205340.24208-1-rosenp@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Changing descs to a flexible array member allows one fewer allocation.
 
+Aadded __counted_by for extra runtime analysis.
 
-在 2026/3/9 07:23, Rosen Penev 写道:
-> Simplifies allocation slightly. Now stripe_pages does not need to be
-> freed separately.
-> 
-> Added __counted_by for extra runtime analysis.
+Changed error path to a simple kfree. descs in all paths are not
+allocated. No reason to call xdma_free_desc. A single kfree is enough.
 
-If that's the only variable sized member this will be a good change.
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/dma/xilinx/xdma.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-Unfortunately there are too many pointers for variable sized members, 
-all around the old @stripe_pages pointer.
-
-Treating @stripe_pages differently from other doesn't seem good to 
-expandability nor readability.
-
-Thanks,
-Qu
-
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->   fs/btrfs/raid56.c |  9 ++++-----
->   fs/btrfs/raid56.h | 12 ++++++------
->   2 files changed, 10 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
-> index baebd9f733e9..d74ae380265e 100644
-> --- a/fs/btrfs/raid56.c
-> +++ b/fs/btrfs/raid56.c
-> @@ -151,7 +151,6 @@ static void free_raid_bio_pointers(struct btrfs_raid_bio *rbio)
->   {
->   	bitmap_free(rbio->error_bitmap);
->   	bitmap_free(rbio->stripe_uptodate_bitmap);
-> -	kfree(rbio->stripe_pages);
->   	kfree(rbio->bio_paddrs);
->   	kfree(rbio->stripe_paddrs);
->   	kfree(rbio->finish_pointers);
-> @@ -1070,10 +1069,11 @@ static struct btrfs_raid_bio *alloc_rbio(struct btrfs_fs_info *fs_info,
->   	ASSERT(real_stripes >= 2);
->   	ASSERT(real_stripes <= U8_MAX);
->   
-> -	rbio = kzalloc_obj(*rbio, GFP_NOFS);
-> +	rbio = kzalloc_flex(*rbio, stripe_pages, num_pages, GFP_NOFS);
->   	if (!rbio)
->   		return ERR_PTR(-ENOMEM);
-> -	rbio->stripe_pages = kzalloc_objs(struct page *, num_pages, GFP_NOFS);
-> +
-> +	rbio->nr_pages = num_pages;
->   	rbio->bio_paddrs = kzalloc_objs(phys_addr_t,
->   					num_sectors * sector_nsteps, GFP_NOFS);
->   	rbio->stripe_paddrs = kzalloc_objs(phys_addr_t,
-> @@ -1083,7 +1083,7 @@ static struct btrfs_raid_bio *alloc_rbio(struct btrfs_fs_info *fs_info,
->   	rbio->error_bitmap = bitmap_zalloc(num_sectors, GFP_NOFS);
->   	rbio->stripe_uptodate_bitmap = bitmap_zalloc(num_sectors, GFP_NOFS);
->   
-> -	if (!rbio->stripe_pages || !rbio->bio_paddrs || !rbio->stripe_paddrs ||
-> +	if (!rbio->bio_paddrs || !rbio->stripe_paddrs ||
->   	    !rbio->finish_pointers || !rbio->error_bitmap || !rbio->stripe_uptodate_bitmap) {
->   		free_raid_bio_pointers(rbio);
->   		kfree(rbio);
-> @@ -1102,7 +1102,6 @@ static struct btrfs_raid_bio *alloc_rbio(struct btrfs_fs_info *fs_info,
->   	INIT_LIST_HEAD(&rbio->hash_list);
->   	btrfs_get_bioc(bioc);
->   	rbio->bioc = bioc;
-> -	rbio->nr_pages = num_pages;
->   	rbio->nr_sectors = num_sectors;
->   	rbio->real_stripes = real_stripes;
->   	rbio->stripe_npages = stripe_npages;
-> diff --git a/fs/btrfs/raid56.h b/fs/btrfs/raid56.h
-> index 1f463ecf7e41..dbe6b7a2e194 100644
-> --- a/fs/btrfs/raid56.h
-> +++ b/fs/btrfs/raid56.h
-> @@ -194,12 +194,6 @@ struct btrfs_raid_bio {
->   	 * allocated.
->   	 */
->   
-> -	/*
-> -	 * Pointers to pages that we allocated for reading/writing stripes
-> -	 * directly from the disk (including P/Q).
-> -	 */
-> -	struct page **stripe_pages;
-> -
->   	/* Pointers to the sectors in the bio_list, for faster lookup */
->   	phys_addr_t *bio_paddrs;
->   
-> @@ -230,6 +224,12 @@ struct btrfs_raid_bio {
->   	 * Should only cover data sectors (excluding P/Q sectors).
->   	 */
->   	unsigned long *csum_bitmap;
-> +
-> +	/*
-> +	 * Pointers to pages that we allocated for reading/writing stripes
-> +	 * directly from the disk (including P/Q).
-> +	 */
-> +	struct page *stripe_pages[] __counted_by(nr_pages);
->   };
->   
->   /*
+diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
+index d02a4dac2291..14fbc7200a6d 100644
+--- a/drivers/dma/xilinx/xdma.c
++++ b/drivers/dma/xilinx/xdma.c
+@@ -80,7 +80,6 @@ struct xdma_chan {
+  * @vdesc: Virtual DMA descriptor
+  * @chan: DMA channel pointer
+  * @dir: Transferring direction of the request
+- * @desc_blocks: Hardware descriptor blocks
+  * @dblk_num: Number of hardware descriptor blocks
+  * @desc_num: Number of hardware descriptors
+  * @completed_desc_num: Completed hardware descriptors
+@@ -90,12 +89,12 @@ struct xdma_chan {
+  * @period_size: Size of a period in bytes in cyclic transfers
+  * @frames_left: Number of frames left in interleaved DMA transfer
+  * @error: tx error flag
++ * @desc_blocks: Hardware descriptor blocks
+  */
+ struct xdma_desc {
+ 	struct virt_dma_desc		vdesc;
+ 	struct xdma_chan		*chan;
+ 	enum dma_transfer_direction	dir;
+-	struct xdma_desc_block		*desc_blocks;
+ 	u32				dblk_num;
+ 	u32				desc_num;
+ 	u32				completed_desc_num;
+@@ -105,6 +104,7 @@ struct xdma_desc {
+ 	u32				period_size;
+ 	u32				frames_left;
+ 	bool				error;
++	struct xdma_desc_block		desc_blocks[] __counted_by(dblk_num);
+ };
+ 
+ #define XDMA_DEV_STATUS_REG_DMA		BIT(0)
+@@ -254,7 +254,6 @@ static void xdma_free_desc(struct virt_dma_desc *vdesc)
+ 			      sw_desc->desc_blocks[i].virt_addr,
+ 			      sw_desc->desc_blocks[i].dma_addr);
+ 	}
+-	kfree(sw_desc->desc_blocks);
+ 	kfree(sw_desc);
+ }
+ 
+@@ -275,26 +274,22 @@ xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num, bool cyclic)
+ 	void *addr;
+ 	int i, j;
+ 
+-	sw_desc = kzalloc_obj(*sw_desc, GFP_NOWAIT);
++	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
++	sw_desc = kzalloc_flex(*sw_desc, desc_blocks, dblk_num, GFP_NOWAIT);
+ 	if (!sw_desc)
+ 		return NULL;
+ 
++	sw_desc->dblk_num = dblk_num;
+ 	sw_desc->chan = chan;
+ 	sw_desc->desc_num = desc_num;
+ 	sw_desc->cyclic = cyclic;
+ 	sw_desc->error = false;
+-	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
+-	sw_desc->desc_blocks = kzalloc_objs(*sw_desc->desc_blocks, dblk_num,
+-					    GFP_NOWAIT);
+-	if (!sw_desc->desc_blocks)
+-		goto failed;
+ 
+ 	if (cyclic)
+ 		control = XDMA_DESC_CONTROL_CYCLIC;
+ 	else
+ 		control = XDMA_DESC_CONTROL(1, 0);
+ 
+-	sw_desc->dblk_num = dblk_num;
+ 	for (i = 0; i < sw_desc->dblk_num; i++) {
+ 		addr = dma_pool_alloc(chan->desc_pool, GFP_NOWAIT, &dma_addr);
+ 		if (!addr)
+@@ -314,7 +309,7 @@ xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num, bool cyclic)
+ 	return sw_desc;
+ 
+ failed:
+-	xdma_free_desc(&sw_desc->vdesc);
++	kfree(desc);
+ 	return NULL;
+ }
+ 
+-- 
+2.53.0
 
