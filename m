@@ -1,163 +1,208 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BD0288A2
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Mar 2026 21:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E982033D51F
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Mar 2026 21:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773004362; cv=none; b=PF1wvbILck4+dV+Uzom4mh7HJtrvsVDbcCK3UeKS9LkHiSR3dGsZocyjfbhXh1JzVoBRmu1UvF1002cVgS5uE7TL1aq337pGP8lykISfX8go3v3CIArmmI+WuGvh3E72luJBmH+bWASY+oPqcdgaZYaZdu4DxWMseBST77ZAd4I=
+	t=1773004746; cv=none; b=qsqac+nXalb+8Ge5oRBzGOkcmvShKnQfAeRd0UNLKU5UMZLFqOpH55jew6YrXkyte1rikb+ka/gAxSUhvRKwCgvI+k0YBGbLdG6pvgkq/9CPVICcEeNHqSgvwuEdrN9iN9HO2F/93czJxvjS+dh8ooD+QE2Ixa23gdbWk6tSZOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773004362; c=relaxed/simple;
-	bh=O3YdQzw47RaaB3oNmJm+L0X+L/dFe9AGPKqOiW7K/7E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nBpv6waBFfkxoKu4papeFXpiydNcuAl9Yncq6t6NVC5rXmVRv+4I/LRK2YH0c4WzBoDzvWqRSe1wEKCLpckVeUIZ+v5xAh7sM3Oka7eyFxsjG4Jqqjc1wceAWuOxXCNXsOTN300g/IXT/pRw9NR7M0HiIuZwcWWv5+uhXkOtxU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NIxHwykD; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773004746; c=relaxed/simple;
+	bh=hJZwWH3dKh30jrXu06PNPZiH2Rh0RzlXVIiHGznX3so=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RR2afrQcJz/47BAZjkSqQWm5XKGY27u2hEgYmTu1xFqFI+XAKoYDNaPPDDlrUkGQ6vT9C1rlj31urDgHTIYQLQR21hw4PsNcCvcxG4M3VJffSZfqDS+CKuHUUlWG0OgrLoIJfpCeBiTcvBK2uvEpRf6jZHqppJE1+FglNJx9M4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=I5Q+sO+t; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIxHwykD"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2a9296b3926so84001795ad.1
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Mar 2026 14:12:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="I5Q+sO+t"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4806cc07ce7so127445625e9.1
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Mar 2026 14:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773004360; x=1773609160; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SVUEHpGLZsetFZXD2hp6GWpOMuo456n8g2SApWKR0cQ=;
-        b=NIxHwykDAft74Tuo+Ex55Ugf80AFDxhYdE0acyRI/hf0C8JJHJaP65CBJS63j9y9+J
-         ePAmKSZ7UJNIL/slsui2lWQJiA49NiBReAyip1cO5K82UUDodKYP3NJNkwH6Y87wCRVA
-         nOzvr4THE0S6yuSKjVZCBNVbs+SYAxREd5YoyS0RmytDTc+WHfT8J9NTvORoA+R+YCLO
-         t19AzxyR4EbB2ny/n2Gf+2OpXpFOaRzd1rCB56KorrOiK6zc/sutean95fy7n+Htipns
-         cZ7AN7y+lzPPFPTUyBCGIiCOgnfV9NsBRYnTqpq56UYHWwHtqA4gQy7Y8QWoQ4dA9FPE
-         YmTQ==
+        d=suse.com; s=google; t=1773004743; x=1773609543; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=3+z4CqEO/7VS22glAthUPXJPXHmHHuhnxWXDV7aa870=;
+        b=I5Q+sO+tzowKZlxEklJp7Jbsv9jjHKkU7PS/feE930Ie5i8xVmXJ9Ct3ljz0xv+zAO
+         ygugOnGxJFoY16fk8fZSwHuWuBJOCSUgG8MuPmcHKCb+zw/k9JwvlGkeuSKKRAq9Zxte
+         T2hPkeWc0IsiJYhjcfzAGAusG8hJwrJ9kPo02CWRmWbC/9FntTUwoH4ZlOrj2FOEUn5J
+         2FLf22JNsTqA6lwEZHxX/o+GmYKAQrHrcsTRm32uKbENtYAGoKuEibKOxMUzsYErxIiQ
+         63jOKGJ44PFw7Xd5LfrQL7ufCggB+jLyVOWA54hYv8Efwzdtud63d862Ou7Yp+BxE8Q3
+         tN8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773004360; x=1773609160;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1773004743; x=1773609543;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SVUEHpGLZsetFZXD2hp6GWpOMuo456n8g2SApWKR0cQ=;
-        b=u/r1fWrVQGxgjF89ntGK8CllFBZzMmPN50srXmJPmBUM+1hhieTXpW63w91PCfcK0Y
-         q0o1C8BT9wcPkFmIS6uJRBiyQKv53VA/ICG0SHt4v2neOCz8Q5y+EL9WCIsjHu7p2sVu
-         KpT0oUABafoWq1jjCe3JxTmfqouuz+BMEqP/K4jdSMAMVoeO5apS3e6tra2qk3GT/wzE
-         R5f9+rNf2IXgTWF3JXgptjkoCbP6JR4rNOPZ8WoY0ofe+o2A2vPcnBSwe9Q1uBqCyjKR
-         FD+oZwsyxl1PiiArLUCgfQFL0hvvhiVtRJoGcBNVG66ZMJsvjrkRqdpl7ZXhlj//NEyQ
-         1lVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUX8gnPHlypqINjMdzwZPPWzOQNq0forEt46UQ1GdZrc/xkNyZ6KQg2YSHq/001/oBhprBpZRATsKHhTMweKZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDsCfq8Fg3/1pLzNoA8+XckGSXbsMZ0UgAIENV5aq8cCaju9r7
-	wbopG++R/aVA0SdKtUJpuWRvfA1Yn0N8ELmeCQENCIPqsucoBDT1q1w9
-X-Gm-Gg: ATEYQzz+9Y4uVZq17HiPN31AsKsF80a8jnrCFR/cF4Y7adBYRNcHYqI7cF4yxKqvcyg
-	j8P6s03OW4YyQDX2kPuIuI1iGyfYRWS7TanNpPQUTKK8wBHw3R6Tlu44csE/WHMALeW99xhHV+N
-	zQISIVkgaVq9XjijiRwFkhJwdHGmNj224+cSDh7fuFbhyciVXK0Rc7zkC6dZ09iKMt7eZfGYJAb
-	fLcI+fTM3haHA8AUvV+nyUmsYJicoGTeT1UUbcINx040S3oWEm2l/isUYlBvR2uj3wlX8AdndYO
-	OKcXMggURBSEMbSsgNBv3EZ3rDVm4qA1glrpKgWtnEZichaertlHD3bKXypbrjXnkooZ3nhUzbX
-	EOFGjKPkNXLuag/IUg1Xm0ysRIRTkjHz9N3bI/LZPF9/VojDmjJMKW4owW4l38E/dnsVWpuAAhO
-	oJQA95zz3FNX1zoFZ+t7OzR15uzt9+UhcxgEZcI9ERQhyo+Pz2IdRFlQ==
-X-Received: by 2002:a17:902:ce83:b0:2ae:45bd:9b39 with SMTP id d9443c01a7336-2ae82416b18mr89231215ad.12.1773004359649;
-        Sun, 08 Mar 2026 14:12:39 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae840ad894sm119471255ad.80.2026.03.08.14.12.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2026 14:12:37 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dri-devel@lists.freedesktop.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] drm: dp_tunnel: use kzalloc_flex
-Date: Sun,  8 Mar 2026 14:12:20 -0700
-Message-ID: <20260308211220.33759-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        bh=3+z4CqEO/7VS22glAthUPXJPXHmHHuhnxWXDV7aa870=;
+        b=cfBlYcrFsrsUu6093iHSyDoZi9zM7faGE2+7DTLCJNX8smjBJ2CnKcAvHUANQEBXrG
+         W2/Ir+QKLTDirtA6DrHHUPzSqPfR+lRYDSMFbCdO2GV3qzhQWHkZkRNllyMJRFnOJUhs
+         j67Ofas8K4UrNZNz1dzYpLUqGjfoHyp+Ltly9qXhIJms4/n+GCBEzCbpes+9j0suX51l
+         OeBG5HI1bRdszaIolgERvx5Avdi39KXOPFDSkGEuJJ/77ZTZ6/E5Td/ac1Ytrd25hRZQ
+         cM42Mrx6UHVDhUzM30ZLOWqBfwZ6ob8d0ZVwWqJFPx/jAM6kUkU/5pwuwSdMxXjjcjCi
+         2yGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKyPei/vT++qo5779v4ed3Ac9HWQ0LoyOBUBM94/fN1ChWHiB6hCKTZvCzxj+wpCtEyx8vEEwFFmdU9UYqRmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWuItj+gYnxBoAbJs59xqS/UBOLt1tDSWJUkDGXIaCINXLbsPO
+	BdJ/xmtkF5olzwTqFlOZqrd9poS/j4nLyuHGEkbzYtqszFafzxJNlN06w+03QVi42nk=
+X-Gm-Gg: ATEYQzwTB4PF3GNNDd0IW+kekrmplCsbqGPrJyq44317Q5KoQJv9+vavAL2+3FEdZyI
+	/fJb2/hls9h2FgVQARo8kAVnvlbBDI3Wv0KUtqlypAHjNrjcVVgFu56gaoe2fhhvaX8be+mXfOv
+	LY6J7TV0yjETtxpsgblZ3pAjHLEGY9LMDh0meUeHmC5ZFmnsCTbZJmaSGIvoRpopuQqNKu+mqgA
+	udwJCcxFWgxqoxY5rNWk9lRbXHCw4JAutqGnqEtTzIonwbN7218ChNi37KP4/cbun85qxmVHpcy
+	K4R+7e81bIsKx1tzhQe2ZJRQRTl2L7fzFFZjnrBsPClkljC4z/NsJimyLi8IH2xyxJK6IOK1Qjx
+	u6kMih0JKnlOOSAAeGaQT8lnAnhQSGGfKfJSYrWAatOgXuruAkbjUL/0F5UdejaZCgDFcyIvFtW
+	HzKd+q+3qaRFBIIwzE6HvpvN/T54C0Tn/A/oFMm8XYLw2NonJ6JOA=
+X-Received: by 2002:a05:600c:45d1:b0:483:a361:41a5 with SMTP id 5b1f17b1804b1-4852697866fmr159410045e9.30.1773004743052;
+        Sun, 08 Mar 2026 14:19:03 -0700 (PDT)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae840b6639sm123685335ad.86.2026.03.08.14.18.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Mar 2026 14:19:01 -0700 (PDT)
+Message-ID: <ae4da77a-5ccb-4fcd-89d0-db452ad5a152@suse.com>
+Date: Mon, 9 Mar 2026 07:48:56 +1030
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] btrfs: raid56: use kzalloc_flex for rbio
+To: Rosen Penev <rosenp@gmail.com>, linux-btrfs@vger.kernel.org
+Cc: Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ open "list:KERNEL" HARDENING "(not" covered by other
+ "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260308205340.24208-1-rosenp@gmail.com>
+Content-Language: en-US
+From: Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
+ Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
+ fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
+ 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
+ V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
+ rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
+ cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
+ qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
+ /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
+ o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
+ JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
+In-Reply-To: <20260308205340.24208-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Simplifies allocation by using a flexible array member to remove a
-second kzalloc.
 
-Added __counted_by for extra runtime analysis.
 
-Simplify assignment loop. It always returns true. That is,
-max_group_count is always equal to group_count.
+在 2026/3/9 07:23, Rosen Penev 写道:
+> Simplifies allocation slightly. Now stripe_pages does not need to be
+> freed separately.
+> 
+> Added __counted_by for extra runtime analysis.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/gpu/drm/display/drm_dp_tunnel.c | 26 ++++++-------------------
- 1 file changed, 6 insertions(+), 20 deletions(-)
+If that's the only variable sized member this will be a good change.
 
-diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
-index f442430d8de7..aad1605b956e 100644
---- a/drivers/gpu/drm/display/drm_dp_tunnel.c
-+++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
-@@ -188,13 +188,13 @@ struct drm_dp_tunnel_group {
- struct drm_dp_tunnel_mgr {
- 	struct drm_device *dev;
- 
--	int group_count;
--	struct drm_dp_tunnel_group *groups;
- 	wait_queue_head_t bw_req_queue;
- 
- #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
- 	struct ref_tracker_dir ref_tracker;
- #endif
-+	int group_count;
-+	struct drm_dp_tunnel_group groups[] __counted_by(group_count);
- };
- 
- /*
-@@ -1893,7 +1893,6 @@ static void destroy_mgr(struct drm_dp_tunnel_mgr *mgr)
- 	ref_tracker_dir_exit(&mgr->ref_tracker);
- #endif
- 
--	kfree(mgr->groups);
- 	kfree(mgr);
- }
- 
-@@ -1913,33 +1912,20 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
- 	struct drm_dp_tunnel_mgr *mgr;
- 	int i;
- 
--	mgr = kzalloc_obj(*mgr);
-+	mgr = kzalloc_flex(*mgr, groups, max_group_count);
- 	if (!mgr)
- 		return ERR_PTR(-ENOMEM);
- 
-+	mgr->group_count = max_group_count;
- 	mgr->dev = dev;
- 	init_waitqueue_head(&mgr->bw_req_queue);
- 
--	mgr->groups = kzalloc_objs(*mgr->groups, max_group_count);
--	if (!mgr->groups) {
--		kfree(mgr);
--
--		return ERR_PTR(-ENOMEM);
--	}
--
- #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
- 	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
- #endif
- 
--	for (i = 0; i < max_group_count; i++) {
--		if (!init_group(mgr, &mgr->groups[i])) {
--			destroy_mgr(mgr);
--
--			return ERR_PTR(-ENOMEM);
--		}
--
--		mgr->group_count++;
--	}
-+	for (i = 0; i < max_group_count; i++)
-+		init_group(mgr, &mgr->groups[i]);
- 
- 	return mgr;
- }
--- 
-2.53.0
+Unfortunately there are too many pointers for variable sized members, 
+all around the old @stripe_pages pointer.
+
+Treating @stripe_pages differently from other doesn't seem good to 
+expandability nor readability.
+
+Thanks,
+Qu
+
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>   fs/btrfs/raid56.c |  9 ++++-----
+>   fs/btrfs/raid56.h | 12 ++++++------
+>   2 files changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
+> index baebd9f733e9..d74ae380265e 100644
+> --- a/fs/btrfs/raid56.c
+> +++ b/fs/btrfs/raid56.c
+> @@ -151,7 +151,6 @@ static void free_raid_bio_pointers(struct btrfs_raid_bio *rbio)
+>   {
+>   	bitmap_free(rbio->error_bitmap);
+>   	bitmap_free(rbio->stripe_uptodate_bitmap);
+> -	kfree(rbio->stripe_pages);
+>   	kfree(rbio->bio_paddrs);
+>   	kfree(rbio->stripe_paddrs);
+>   	kfree(rbio->finish_pointers);
+> @@ -1070,10 +1069,11 @@ static struct btrfs_raid_bio *alloc_rbio(struct btrfs_fs_info *fs_info,
+>   	ASSERT(real_stripes >= 2);
+>   	ASSERT(real_stripes <= U8_MAX);
+>   
+> -	rbio = kzalloc_obj(*rbio, GFP_NOFS);
+> +	rbio = kzalloc_flex(*rbio, stripe_pages, num_pages, GFP_NOFS);
+>   	if (!rbio)
+>   		return ERR_PTR(-ENOMEM);
+> -	rbio->stripe_pages = kzalloc_objs(struct page *, num_pages, GFP_NOFS);
+> +
+> +	rbio->nr_pages = num_pages;
+>   	rbio->bio_paddrs = kzalloc_objs(phys_addr_t,
+>   					num_sectors * sector_nsteps, GFP_NOFS);
+>   	rbio->stripe_paddrs = kzalloc_objs(phys_addr_t,
+> @@ -1083,7 +1083,7 @@ static struct btrfs_raid_bio *alloc_rbio(struct btrfs_fs_info *fs_info,
+>   	rbio->error_bitmap = bitmap_zalloc(num_sectors, GFP_NOFS);
+>   	rbio->stripe_uptodate_bitmap = bitmap_zalloc(num_sectors, GFP_NOFS);
+>   
+> -	if (!rbio->stripe_pages || !rbio->bio_paddrs || !rbio->stripe_paddrs ||
+> +	if (!rbio->bio_paddrs || !rbio->stripe_paddrs ||
+>   	    !rbio->finish_pointers || !rbio->error_bitmap || !rbio->stripe_uptodate_bitmap) {
+>   		free_raid_bio_pointers(rbio);
+>   		kfree(rbio);
+> @@ -1102,7 +1102,6 @@ static struct btrfs_raid_bio *alloc_rbio(struct btrfs_fs_info *fs_info,
+>   	INIT_LIST_HEAD(&rbio->hash_list);
+>   	btrfs_get_bioc(bioc);
+>   	rbio->bioc = bioc;
+> -	rbio->nr_pages = num_pages;
+>   	rbio->nr_sectors = num_sectors;
+>   	rbio->real_stripes = real_stripes;
+>   	rbio->stripe_npages = stripe_npages;
+> diff --git a/fs/btrfs/raid56.h b/fs/btrfs/raid56.h
+> index 1f463ecf7e41..dbe6b7a2e194 100644
+> --- a/fs/btrfs/raid56.h
+> +++ b/fs/btrfs/raid56.h
+> @@ -194,12 +194,6 @@ struct btrfs_raid_bio {
+>   	 * allocated.
+>   	 */
+>   
+> -	/*
+> -	 * Pointers to pages that we allocated for reading/writing stripes
+> -	 * directly from the disk (including P/Q).
+> -	 */
+> -	struct page **stripe_pages;
+> -
+>   	/* Pointers to the sectors in the bio_list, for faster lookup */
+>   	phys_addr_t *bio_paddrs;
+>   
+> @@ -230,6 +224,12 @@ struct btrfs_raid_bio {
+>   	 * Should only cover data sectors (excluding P/Q sectors).
+>   	 */
+>   	unsigned long *csum_bitmap;
+> +
+> +	/*
+> +	 * Pointers to pages that we allocated for reading/writing stripes
+> +	 * directly from the disk (including P/Q).
+> +	 */
+> +	struct page *stripe_pages[] __counted_by(nr_pages);
+>   };
+>   
+>   /*
 
