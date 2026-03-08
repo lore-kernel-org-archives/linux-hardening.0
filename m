@@ -1,74 +1,72 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0598C19CC28
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Mar 2026 02:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAA21E1DE9
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Mar 2026 03:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772936155; cv=none; b=ta7pCHJZYo9Pzto4Jrc5PBfatYDnx7sPRtIBo3/Ck42o7DkmnJ3cKkf9bHboXf8zBmtFjIzp+yijfsMn6h5aSKYXonKUkOQbAFCr9/+A+I/ElrB6ajGz+KEz+z3VC/cf7qi5tRYDqLMc0o9mhLKfTl62o6sGO22maXMP/zqrccI=
+	t=1772940016; cv=none; b=jDs61mpHtK/e8qIXFR8YhcPOCz7FyijHPOoL9+z+BSBdoBG4d5dmU6vqwPr7gwfGjEzncaleKa+DIO/VoeCu7dHIFfjfEdYBq7RjGtHVYPLFmWpW3wmYne14rp6Q4UiVDxz0XLrPX+CAZpfY8vPlpQNOEvH3H5PDpkMWt9KeWZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772936155; c=relaxed/simple;
-	bh=RFTtLtXTJSCNlN81p7jhHeIaM5OglLMy9XlFjb1EpGE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gpZopzczXVSQjC2FtTrH9HR+gRyjbDvfortrGr8j9ZSfzrTQ5R9b/gBk4M6s4bdRqMid5Rvhk7CgbMFxH8xFQKJ3BCC1s4udeAqo1KI6DXVCtU5LtOmNpHI/b31T2+aUHT35hIhv0cvHWhqo7pbaYhlztEuFcWMxrmgPyRDk5sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IklvxTCn; arc=none smtp.client-ip=209.85.216.48
+	s=arc-20240116; t=1772940016; c=relaxed/simple;
+	bh=KgJsvx1IcN9NsDZGqhbA1t3ZxHApBqizQDZHsQZW1d0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nmI0B0zcJSZZMu/brElm6gF6ZePksjQAXhRj/Jxd0UAUsn1B/AIFltEdLcC3SF41uZtQ2gqv4SKYs2oLDkp51zHlitQVLE8+ZIzkj992q8oYXJ5/7ZTRoikwgXHRolLR1nvgS6s8U7pSPuR3QzOV6zeZmiWuNnxR5FaQnfD7uSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OEwKwETe; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IklvxTCn"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-359894e17b8so4921100a91.1
-        for <linux-hardening@vger.kernel.org>; Sat, 07 Mar 2026 18:15:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEwKwETe"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-824c9da9928so6006267b3a.3
+        for <linux-hardening@vger.kernel.org>; Sat, 07 Mar 2026 19:20:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772936153; x=1773540953; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1772940015; x=1773544815; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iIcO5BEsmaavjxp3pWNdUOixbx6V+gvKfNkKSDPbOxY=;
-        b=IklvxTCnhXSR0WNDZcm8uy3KcOlqpXrdjhm+9XD9Xrs3xtfr8cpK5Q9rxKQtfI19Ne
-         vu1qOig4TKysAQKEnXxOfh7SXl6go6ayQKsDpX+xAKPJD3WG8kB+xa1fGgqvfeDzHSZ7
-         rvGCaHHHU9EHX2EtX8XT6EeBboE2k+qbm/PA9vHFIeRoHlF7J4xMIxGM9m4RCI4NXrDB
-         WZ2F5lUAaWnqmXc1lbKdr+fIDm+WP7VBff2qKu1ReFRi89N5gJH2ClSEJ9BzBUabYM3c
-         M11CJqwfXvhh7V0uK3T5/+J6O3Jch5UOa8VxgMSmSd8TZqGLWYb9LQjZp03TDaGlivZ3
-         QzIQ==
+        bh=C5S2gvLeO3HtB5KquXoTw6XAQVdla0vPImwUUawa4hM=;
+        b=OEwKwETeL7874jmFVnJ+R3tskTk8MuhtMW2sPCD+l8lGOyFbUNdsPc7K4F3DsgqMes
+         Bwj/JcYf1UKwThue8Md0eihoRj/wpJn9DqEbbRkFFNHW5h5sot65drmBf+EeZK7mGR0z
+         bwMSCkRexd/7vnFukgf+v2C9nQ5H8BSMcyBk1xmKJPbdHwt0+Ig988b5KUf6UfBXoAtY
+         QRCqHKlztBEQPseQHI0sW6XXkUkKMflji5hu7JqqR+aMwMzQub5UgnaC6DPIE6uK0MLE
+         fJIYmhlbTnMcCGyTdyEaY85dlWhm0+RFtf4766eg4gYWUGcB4YlcFG/QvH/yzXnj8HE+
+         7M9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772936153; x=1773540953;
+        d=1e100.net; s=20230601; t=1772940015; x=1773544815;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iIcO5BEsmaavjxp3pWNdUOixbx6V+gvKfNkKSDPbOxY=;
-        b=LxKdthjtw/M4H9z4joP86AGhIJpubiaJoX2T+VZFTjhUS55vQqdumQBf8QedNg6xMo
-         0MChLBinGupbgggpuViRQwnbClBY/iAmkZ5n1nXgOzUdrc7a4tJPaTlcwjCAZNMo+Aw+
-         graPzHnIHCegZ+DtQfcWkIy4LzhrgAYmI9lchR5lV3c0kNeFmzLT4F34OvfC2UhKs/+V
-         caf7gmsN6YcuIe9taHRQuWJYCyZFU11QDYxD28QBUD4Tlap2+iSCOhj/qTCla/mE/dHw
-         2mLoXakdRUeELN9i7J8gL+NFJtv6EAYGA3XxBd9mq4zP47L5vAfIUJvCVVYgyYlBUmhx
-         Vt2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUbOZJkvUO1WXFGetbHDEMmPLYNzUEG5Bm5bXc9QVPVtD7wsrxsHufPTnh0RgMlYjKrdM2AbD5eSzPhSlWGvhw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/I/AhB1RHjLePOCrR+JQwVb7HZNQdzbfjVF5ioLRqK/TU6G3G
-	22PXjPE1QA3kml+sL7lUw6ChnAeuqpvX4vZiV9Sn8ZaiB2P567BjPgrW
-X-Gm-Gg: ATEYQzxq7czbqaL3NZmHyMxOZGgxG4wdGJs0petQ78UiTOJdUR64Rb4EsewUOSbHKXq
-	2lczdzoJYQ2MkU6Z+dtNOniiiXh5ysPgvvbm+DMOwJVWZkzm+x2hv8hXq9RTUgDY6aJRZUzd3Gt
-	pZHG+Tcfq4+QGV3aRRTvIsiDcp8tkQ1KiNUyPjRSVwLM/G1V0wY5Uf1K7sa7O357HqBun0zJr5X
-	BbJwXKHA8ggc6kVpnlI0yqm+4sn3lgSAD8udGzc7X91b9tnH9dMrVa6wJ6jYopFXTMHTnw7mpfd
-	dQCLTIQk/r2RDny7+pq0ro1GEiqH4sA7mxYhHtoYjBP37I24Xirnay/weldxr2sGMyvLVGi4vw7
-	NATH/Kg6CYuXjFL2CZutfcHr89I7B4EI4H+NBAP/ofcndGypHCmT432cE2TwKauHQFKsUAdMexn
-	AzCUStFBsHXfVzPTf2waZsqJkOsxJdbSnqnpOgsq/pMmD7Q+AEtRipxw==
-X-Received: by 2002:a17:902:ce8e:b0:2ad:ca3a:ecb0 with SMTP id d9443c01a7336-2ae823ac6ebmr70405345ad.25.1772936153317;
-        Sat, 07 Mar 2026 18:15:53 -0800 (PST)
+        bh=C5S2gvLeO3HtB5KquXoTw6XAQVdla0vPImwUUawa4hM=;
+        b=MVoRiG31tZQY0Nz4xAvKfnzJLFzTPVJ40CSzx3m0wAyoIPowURc1ELyKpbYmRZ2KQ+
+         B/4Yo1zzz7zIoMwBXVrq4vx0aiNZNR6j+CNf/tRV60sg9o1MUGYfWrpM+fHNovy9E87o
+         UlaL/ntSYyEWvsHi3StMWs4E6khDV+KHhklb6EliBLK/68nz3a7nvRSvSHGqjBuj7Xml
+         OPSrcMWY8aZNobsJe4U4o5p9bONGTTsGK4Ge7X8aZHABzPMOqMvdLzxr5YGnP3Rq88T6
+         /sZ7i6wxir3pmWmgnBB2YNe8Ml5jDB4Pc+27aSrgkHvUpgzq5pw85jvoTVdzond3Qs4b
+         5ztQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzJCL3dL6FhqJpcYjVHPpjxmfiN/KQtTMiuGdj7n5mPdISjCI5cgW6Y0nJk11eYgLgdno4hE0lIWid0BqUxn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8EKPitk7vkBgz05zqlPH/fYsp7lIbwIaaLx2Yb3EW6rd5VTPa
+	H2AYwpBpFGvCdwqlVaxILTjyIOFrQ/xXynyl8gOeBmAeCrlzQdRi3sAo
+X-Gm-Gg: ATEYQzwAHSpCQY9Giq3tSpgs53UPAmDNkfKFrEZ7Gfx5+FZu0W2mgF5dh5jAMGLMn7T
+	d4ygtb3t3duILYeg6YdONMJvo6KZJ9JWNzJd4Y0WgBrr4jwC2q+AdlhKKm3sCYrEt09zPOdbsSM
+	WrqgHYcOlNFnpQKNXQaAtgAw3sPgC4rODULN8DdlH2ceYtUepFE3Wg1jlPByzvJbkEO10Ft2cKC
+	sAb5SfEm1D064rjJCps1XC4ga3PN1DmULvDgmLr+lj7OpoJfHdlGkNTpHcbQt5SeUaLlQFo5CGB
+	6uYXYJC/jwx1PEc4WsnfE2HMUN3Gw8WI11nbLL7LTnFantPuu4sLVQqhFS5NqC2QVMKADBiqBWt
+	ORqDrGwfQQZxtzrfXTWFqjdaYagPwDOWaPdbt41Ce2tdsvPEqhkehWKEh3MOJQPlOh685uA0OFq
+	s2wlQhX7rlzkkSLqVGHztEZeEhwMz1OJTTp1cENGVkcBjmEnxpvUzaiA==
+X-Received: by 2002:a05:6a21:4846:b0:398:6ea8:21d2 with SMTP id adf61e73a8af0-3986ea82cb2mr3394774637.19.1772940014806;
+        Sat, 07 Mar 2026 19:20:14 -0800 (PST)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae840adb42sm85962385ad.81.2026.03.07.18.15.52
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a4657a10sm5422904b3a.21.2026.03.07.19.20.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2026 18:15:52 -0800 (PST)
+        Sat, 07 Mar 2026 19:20:14 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Daniel Palmer <daniel@thingy.jp>,
+To: linux-rdma@vger.kernel.org
+Cc: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
 	linux-hardening@vger.kernel.org,
 	gustavoars@kernel.org,
-	Romain Perier <romain.perier@gmail.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/MStar/Sigmastar Armv7 SoC support),
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] gpio: msc313: remove kcalloc
-Date: Sat,  7 Mar 2026 18:15:35 -0800
-Message-ID: <20260308021535.48098-1-rosenp@gmail.com>
+Subject: [PATCH] IB/hfi1: kzalloc to kzalloc_flex
+Date: Sat,  7 Mar 2026 19:19:56 -0800
+Message-ID: <20260308031957.90900-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -78,44 +76,71 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member to combine kzalloc and kcalloc.
+Combine kzalloc and kcalloc with a flexible array member. Avoids having
+to free separately.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/gpio/gpio-msc313.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c | 10 +---------
+ drivers/infiniband/hw/hfi1/user_exp_rcv.h |  2 +-
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
-index 7345afdc78de..de3e6da2a089 100644
---- a/drivers/gpio/gpio-msc313.c
-+++ b/drivers/gpio/gpio-msc313.c
-@@ -483,7 +483,7 @@ MSC313_GPIO_CHIPDATA(ssd20xd);
- struct msc313_gpio {
- 	void __iomem *base;
- 	const struct msc313_gpio_data *gpio_data;
--	u8 *saved;
-+	u8 saved[];
- };
+diff --git a/drivers/infiniband/hw/hfi1/user_exp_rcv.c b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+index 5b01070ed66f..2597d311fb1f 100644
+--- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
++++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+@@ -257,7 +257,7 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
+ 	if (tinfo->length == 0)
+ 		return -EINVAL;
  
- static int msc313_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-@@ -631,16 +631,12 @@ static int msc313_gpio_probe(struct platform_device *pdev)
- 	if (!parent_domain)
- 		return -ENODEV;
- 
--	gpio = devm_kzalloc(dev, sizeof(*gpio), GFP_KERNEL);
-+	gpio = devm_kzalloc(dev, struct_size(gpio, saved, match_data->num), GFP_KERNEL);
- 	if (!gpio)
+-	tidbuf = kzalloc(sizeof(*tidbuf), GFP_KERNEL);
++	tidbuf = kzalloc_flex(*tidbuf, psets, uctxt->expected_count);
+ 	if (!tidbuf)
  		return -ENOMEM;
  
- 	gpio->gpio_data = match_data;
+@@ -265,12 +265,6 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
+ 	tidbuf->vaddr = tinfo->vaddr;
+ 	tidbuf->length = tinfo->length;
+ 	tidbuf->npages = num_user_pages(tidbuf->vaddr, tidbuf->length);
+-	tidbuf->psets = kcalloc(uctxt->expected_count, sizeof(*tidbuf->psets),
+-				GFP_KERNEL);
+-	if (!tidbuf->psets) {
+-		ret = -ENOMEM;
+-		goto fail_release_mem;
+-	}
  
--	gpio->saved = devm_kcalloc(dev, gpio->gpio_data->num, sizeof(*gpio->saved), GFP_KERNEL);
--	if (!gpio->saved)
--		return -ENOMEM;
--
- 	gpio->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(gpio->base))
- 		return PTR_ERR(gpio->base);
+ 	if (fd->use_mn) {
+ 		ret = mmu_interval_notifier_insert(
+@@ -448,7 +442,6 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
+ 	if (fd->use_mn)
+ 		mmu_interval_notifier_remove(&tidbuf->notifier);
+ 	kfree(tidbuf->pages);
+-	kfree(tidbuf->psets);
+ 	kfree(tidbuf);
+ 	kfree(tidlist);
+ 	return 0;
+@@ -471,7 +464,6 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
+ 		unpin_rcv_pages(fd, tidbuf, NULL, 0, pinned, false);
+ fail_release_mem:
+ 	kfree(tidbuf->pages);
+-	kfree(tidbuf->psets);
+ 	kfree(tidbuf);
+ 	kfree(tidlist);
+ 	return ret;
+diff --git a/drivers/infiniband/hw/hfi1/user_exp_rcv.h b/drivers/infiniband/hw/hfi1/user_exp_rcv.h
+index 055726f7c139..b4a309a051f9 100644
+--- a/drivers/infiniband/hw/hfi1/user_exp_rcv.h
++++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.h
+@@ -22,8 +22,8 @@ struct tid_user_buf {
+ 	unsigned long length;
+ 	unsigned int npages;
+ 	struct page **pages;
+-	struct tid_pageset *psets;
+ 	unsigned int n_psets;
++	struct tid_pageset psets[];
+ };
+ 
+ struct tid_rb_node {
 -- 
 2.53.0
 
