@@ -1,55 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA6B487BE
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 00:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773014776; cv=none; b=OvdolM7VOBE62/kmPvvOXSnZ50GpJSF0GegCl9IdFkV123iDKjsFV5u3xMV9/RnbSAdc7B2aqYUugy8XJi1eHWofIwq1/Zxh6eeVYUipTFjqYQDNuaM5IzhNpugShB9j1ph8rA80JciHl9BOWT5TXkwnonTSZ9dl4Oqr4Hsew68=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773014776; c=relaxed/simple;
-	bh=7VfkDWCT25IPiML+OuV1VYi27QKD7JmygfyqI7YGyJI=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE1E2264A9
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 01:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773019655; cv=pass; b=HEkqkkfXTYZP8hsoejVxDs0yRDLR45fNpqArkKsSJ8F0VmaEsVAbPOCmeGn5Hz9O2by2REep8V4k2FevtxkbCkBhSfCC33YhQdr3D7TDs6Y4KhJVUuPUpiFiqN4dI//NX/KCakLm0K+xoxwK8OR4Vb9k1mHQio3V2ss/p7dcl3U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773019655; c=relaxed/simple;
+	bh=J5WOQGgsBgN0mzbAGAd4BjE3fxkas2mV2HC7lbTpC0s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m6QVKh3jGb6wIRCSkD0Yz7w1LVNtCUHMfhZVsnl/N6lBERBVRndWTR7GG9GDP2FrqMh2WVt8P5PlB8EWYuMGC+cakpfOXCTesn5LPlKgEei40IHVGVEEZRFCKtJXKc6sxfsBcUIQsPTTyYvwFC0f9WalhPsVKt0RcfMgYScpjrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJblPt5j; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=evR4nbOmND8aNxNFZe6PTQ2UMtka/ktrYmacS8IsmXL2m6bNXgpxlu3v5B8MP0ePRRRIy/bW1a6W2vWsO7geqYaerZtH05y6v32rysATvKDwHnRL2P49quJ/tngmGW9qaeeYiaGTOhJArPTPhY1chjKVmq4wEec8DSBFKXc3cg8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ExDbpSyx; arc=pass smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJblPt5j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A1DC2BC9E
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 00:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773014776;
-	bh=7VfkDWCT25IPiML+OuV1VYi27QKD7JmygfyqI7YGyJI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FJblPt5jpv/3qqX8qI8PbjgpkMG9LbfWYZPE3/oM05ArvhT3IO8unTa7K3/ZPwKJa
-	 JUDVkyySyf9/39minIvepp61mc7TV4xkWXevvEITxaNv1WrrfqT9A0dwcqnuSCVFEx
-	 AV3TPM/dO2SJyE0bGIp9BgtY8CTQeUfVKlIUf8Iy0TqLh1faCzoS0utycxfVwOGo8m
-	 IPx56nFuVFlSCDpfaylVo2A+9YJzLJ+KgYJyF4D2AnDFarZvnmUINb2dAKk90nTnPh
-	 aw7gusA6NIpzj01Y2EvGGd8ltrt1eguA2IzlP4VNwlgdbm8T7MlryKT7A9wYsWuNdP
-	 68B9ZD/TtIYzg==
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7986a347d4bso107421777b3.0
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Mar 2026 17:06:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVNpFxu5ue4Y0/blODia4AozQ5Q5usy4Uf5WLmTwXCBsimTLjeLcCSunfKFwz7pYBekVZvjxBwyngBVgDI3nVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo1tU6GgyllQ/7ZiTvLhdeGKq4XPRqPf/GCYHoyDATxGmvMEpU
-	YZsSOjk76gq9h7BC/9WQlSBmGcTqe5cRsv3miTdSd7QbTZjS4/bj1WjFRD5TK0dU/9HIkRu2Y49
-	8yBsRp7V0+Gtvje18ckV3xpmend0Et7g=
-X-Received: by 2002:a05:690c:4d86:b0:796:3c99:1833 with SMTP id
- 00721157ae682-798dd7aa7ccmr92587587b3.60.1773014775703; Sun, 08 Mar 2026
- 17:06:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExDbpSyx"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b941d924534so338413166b.3
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Mar 2026 18:27:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773019653; cv=none;
+        d=google.com; s=arc-20240605;
+        b=XAGLGzXQQzIfQZbbGzsad7OOb5uKpguvHHkXdwmTck0MpJXxXlM3S2F+UvSXXL8Pwj
+         rbZ5X5iUt034xvQX86oGAl2wzC86BaHJ/I0t6vxuGeOWVL/6EMJsLlKHYhN/f3CmQNFW
+         yvus6oB+ThQFfjARij9EW8rR2F8YcH5PwThRwoZA6PvL+iPQVweaufk1PjMIkhKYeO5O
+         2nWra3aW2wRbVqvJnL8jlwIoO87i6qFl5vjvOJ5C3xxVfA4VnnQr6ZSjAG/V9EtJhlzp
+         /Wu5f1ltkphaEw5CiRsMMWtpfSEv8Wx/asYYdqxLz+QxgtR8aY4QJc100WXrPXRRS5s/
+         8c+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=AmrXqlRa6XqcxgRZeLfPo4HT+SM6fCIjFFPpzWuCXEI=;
+        fh=mUkHjCB2vpfAqMJ+uAodLjoe36I2mrY23/WGag5Q+Vc=;
+        b=jphFCPd9SCziwyJKVq0Qp5No+tH88+I+ys5O3nR9ody7+q0AHddteqPkWXTKS8OstY
+         J54dZb4zNw3x+bSAhnTPEPw754J1CDfazhf4OPTK0N6XdALLVu4LXmxx91HHU8lfrLIE
+         7BVUU6JO/chOUH5OTig1EhgGsmPpdw8HBrBbWPBJsaxm5NYdtPEPQ5PjbqD2SsgXPrvE
+         kyqr9qkxIXSHjZbdova7j04p6nuhxFCUk1yMCt0VcC1rreiRsFaqzWbwTMjaVr2nNocR
+         BMNkldRnLEYqhiavLNn1pU1qiOmZ/I3rKwvsHgUD9Vab8PoURDjniPM864JCagwoIGBX
+         XPKw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773019653; x=1773624453; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AmrXqlRa6XqcxgRZeLfPo4HT+SM6fCIjFFPpzWuCXEI=;
+        b=ExDbpSyxPuV+FqE+rIosW5MEfnry+p/87P7V4Mfv4FJh95wUHRKzkG6pHdTFplNTLG
+         pRmO9rCTizoGZ4EpRPeUKKDo0WlbIN521fDyERWbmaKjH3Njh0S4cBy71iqQlf6WtG0d
+         5A4BvRSqflZYNRWR0d/b+vXmPo9CCQpTKezPOT2A/xjH6h7SsIhcXuLqa7fF+oqNYP9p
+         xfYTIyZgCJ/EaH579/Y6WxUTERLat+uzBTZHGD15VAxLsIJPoKE42ebuoCpyqf1UJjOm
+         JKCm620iLESDvQJ3xBmKQKzKvH4iMPO5VIZXtRWzWfwPcBQ7NqlTfZylsnk2cfWnA8Jp
+         zRPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773019653; x=1773624453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AmrXqlRa6XqcxgRZeLfPo4HT+SM6fCIjFFPpzWuCXEI=;
+        b=LW0SIGuaG81iRYrgGYhGMbiZtoDdotfaw/Ls6aiKMO0r6o88e/SIC/FE9127f3U/Aj
+         xUuLcbJZLJknvmyZFSehyb7QsLFxO5jRlKsUptnd9TYN3MswJWwM4s5iymmC3bML2Qke
+         BAPy3cqBhmASTW96HjrNhdRQ/+xiqxJFjSR4WOl9TOxkyUbTnV6mEmFnTkzaXgtSvqVV
+         1OEjt1mqYWcy2B8IoHGgaUGuoT58gDrJjRNG2RE8Rdw6c23v4M9ieGCND49SZ4rwSe6F
+         dE7ieaobEXllP8OIWa14cykZojb6q78GiTqDOFwE9fWFms1FEEQCM0SngLPryHU5BXFL
+         Vn7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWm1r7o/lACQz19GStScyYuXP5q9KDDwdCwzC1ByMnWAOLBgVh/xts1xVcB86aRZKA73mcv8qIe9liLq0ohkDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhY5GkAPgcNgTinMoVoGV5x3/syHvopKOqC6kodqFDoCLshOMk
+	hIXlqgG1XQrC+Tc3I1KT1mYLQVKiDHOr9jI+Z43ygjfFWqZ5MBYkjqIbueHIpodTxtnqHerSsWq
+	fGuYLLAAPsJPwZqqHAZ35vPpB/2TePSo=
+X-Gm-Gg: ATEYQzx8SHTAhRn3Gstj5CFS7Ccutm8YRovN+0Ab89iE91UOC4g+YE+hxD9UBworjXl
+	GnbUzsyWGb3S+5U+wqpXrz/4iHqGQu5Lyrf6MIXInU6qw68buW9eIav1Rd25/UfdtEq4UpTsvKk
+	ksqclaJQENUBzoL+EngT86o0VNFafqnFSndxil3cEyA4XlHjCpIAAHr1wBkmHdnawAD8+FbXbLY
+	uh/AsxggHQqCYVvDkT7qa6xa2AGFuMOL/IHfUKLm78ECoD3jhmlP8ye8W2PyzPp7f7oaHM8Q2N1
+	Y5NJiGB6hMuhXZRfvPQuTOHWMEKhSFYThr62xhVnPsd7JsYBZ6xWpF8K63V0w+RuVNMwycP8zr/
+	eyTD6//dxqcJPgHr5
+X-Received: by 2002:a17:907:a03:b0:b88:5bbc:3658 with SMTP id
+ a640c23a62f3a-b942e02cf9dmr525408666b.52.1773019652375; Sun, 08 Mar 2026
+ 18:27:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260308021535.48098-1-rosenp@gmail.com>
-In-Reply-To: <20260308021535.48098-1-rosenp@gmail.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 9 Mar 2026 01:06:04 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkLj235Q=U_9E-hSneW5E42JjU=dRBJxKJNnqwgBLCm=w@mail.gmail.com>
-X-Gm-Features: AaiRm50BkNsacwf3vNv8Po8_uyxzkaR51BCh7HDgMk0GF4BnX_1Cwh-_3Tsm4-Y
-Message-ID: <CAD++jLkLj235Q=U_9E-hSneW5E42JjU=dRBJxKJNnqwgBLCm=w@mail.gmail.com>
+References: <20260308021535.48098-1-rosenp@gmail.com> <CAD++jLkLj235Q=U_9E-hSneW5E42JjU=dRBJxKJNnqwgBLCm=w@mail.gmail.com>
+In-Reply-To: <CAD++jLkLj235Q=U_9E-hSneW5E42JjU=dRBJxKJNnqwgBLCm=w@mail.gmail.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Sun, 8 Mar 2026 18:27:21 -0700
+X-Gm-Features: AaiRm51DHUN2l4LTGqNpI9x37mFL5UP6Qa3rL8znqPALUSc2sV8jWzO7K995iBA
+Message-ID: <CAKxU2N9JbAzEYfmLpbw5b9Y6MsYUZ1FfLirfy8Hg8MCOUY6PAg@mail.gmail.com>
 Subject: Re: [PATCH] gpio: msc313: remove kcalloc
-To: Rosen Penev <rosenp@gmail.com>
+To: Linus Walleij <linusw@kernel.org>
 Cc: linux-gpio@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>, 
 	linux-hardening@vger.kernel.org, gustavoars@kernel.org, 
 	Romain Perier <romain.perier@gmail.com>, Bartosz Golaszewski <brgl@kernel.org>, 
@@ -58,42 +98,52 @@ Cc: linux-gpio@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 8, 2026 at 3:15=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrote=
-:
-
-> Use a flexible array member to combine kzalloc and kcalloc.
+On Sun, Mar 8, 2026 at 5:06=E2=80=AFPM Linus Walleij <linusw@kernel.org> wr=
+ote:
 >
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-(...)
->  struct msc313_gpio {
->         void __iomem *base;
->         const struct msc313_gpio_data *gpio_data;
-
-Do you wanna add:
-
-const unsigned int saved_size;
-
-> -       u8 *saved;
-> +       u8 saved[];
-
-u8 saved[] __counted_by(saved_size);
-
->  static int msc313_gpio_set(struct gpio_chip *chip, unsigned int offset, =
-int value)
-> @@ -631,16 +631,12 @@ static int msc313_gpio_probe(struct platform_device=
- *pdev)
->         if (!parent_domain)
->                 return -ENODEV;
+> On Sun, Mar 8, 2026 at 3:15=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wro=
+te:
 >
-> -       gpio =3D devm_kzalloc(dev, sizeof(*gpio), GFP_KERNEL);
-> +       gpio =3D devm_kzalloc(dev, struct_size(gpio, saved, match_data->n=
-um), GFP_KERNEL);
->         if (!gpio)
->                 return -ENOMEM;
+> > Use a flexible array member to combine kzalloc and kcalloc.
+> >
+> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> (...)
+> >  struct msc313_gpio {
+> >         void __iomem *base;
+> >         const struct msc313_gpio_data *gpio_data;
+>
+> Do you wanna add:
+>
+> const unsigned int saved_size;
+So in the code there's
 
-gpio->saved_size =3D match_data->num;
+for (i =3D 0; i < gpio->gpio_data->num; i++)
 
-I know it takes some bytes more but it feels way safer.
+which is equivalent to match->num.
 
-Yours,
-Linus Walleij
+__counted_by doesn't support pointers AFAIK.
+>
+> > -       u8 *saved;
+> > +       u8 saved[];
+>
+> u8 saved[] __counted_by(saved_size);
+>
+> >  static int msc313_gpio_set(struct gpio_chip *chip, unsigned int offset=
+, int value)
+> > @@ -631,16 +631,12 @@ static int msc313_gpio_probe(struct platform_devi=
+ce *pdev)
+> >         if (!parent_domain)
+> >                 return -ENODEV;
+> >
+> > -       gpio =3D devm_kzalloc(dev, sizeof(*gpio), GFP_KERNEL);
+> > +       gpio =3D devm_kzalloc(dev, struct_size(gpio, saved, match_data-=
+>num), GFP_KERNEL);
+> >         if (!gpio)
+> >                 return -ENOMEM;
+>
+> gpio->saved_size =3D match_data->num;
+>
+> I know it takes some bytes more but it feels way safer.
+>
+> Yours,
+> Linus Walleij
