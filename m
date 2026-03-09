@@ -1,199 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011057.outbound.protection.outlook.com [52.101.65.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7113A3CE4B2
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 14:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773065501; cv=none; b=DBBIDiIY4YjVyjr8xxgS92A4UuoftIAKpc6HQR+46qMPTVqnbnaim0aQu3RwpbhzILX+ewG73XCMMP/h+YV7PGJQNGrRr1LmVdCLp0jUCVcK++MirCcqCZF3L6k7YNZ/K0WOAX9X3JjSmhetw5H4KPhp7AGyPFc3TthnMvHqrlE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773065501; c=relaxed/simple;
-	bh=Hqy01tOmlql+ZEgGRFBT4aqwchvquGYinxvKDR+qxzo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=YkNAaQrvBtqohpE3/9b6BUCSE2/GbJFNKpfH0Y65BTC7/6jf7VQY04So6bNXWpTQR23Sskkp8h2aLjuNFA5ksMfte8A3jp+h/utbGuHWEcRwujykjhLE767os274/C0eIwziStrutYd+rJf49uVhbmQke6F4ruPjZXjeYOGlqLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYkisno8; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783733D7D6D;
+	Mon,  9 Mar 2026 15:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773071444; cv=fail; b=fjmcWxMQXV19hjE5TRIXeKDbQnz7WldYXVGAukz7kQnZxATG3gVoS3x/kPOr3VcYVLJap2qTxtzAwTKQcwvRlZGwHdl8P8M0QyiKvZyh/djY0lUFESQvdhcYmCaf8xoJ5FU4shzmEmnTRqnIDahZbE1YPpcWK65dz0hy4HZrnXo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773071444; c=relaxed/simple;
+	bh=TTLHUxxuOjv6lt5zt80FKmnS0lRR42uZ9XX37SUnK+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pxve9jpsWiQIeVgW1J7vvIXefWeCtByujI/W9u2FyGoUqXFUKcsQmgX9uvw91s09pmVEmvqsGFJYRkyetaialNXS66A5XfPnOJ8J0SOQTGx2JEC8syxSPIWVZiyhHA2Ft3gWHXVpE+lPm3UoR4qRms2swCI7mq3ojmfzbDPpOc4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GBMAup7e; arc=fail smtp.client-ip=52.101.65.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYkisno8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD48EC2BC9E;
-	Mon,  9 Mar 2026 14:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773065501;
-	bh=Hqy01tOmlql+ZEgGRFBT4aqwchvquGYinxvKDR+qxzo=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=tYkisno8tUIiZWQW6DbK88hTFCpkFxsz/oJE6Guth04Ml01CXM4VAMahkV8CbSsYE
-	 UocABe/550C8Xdj5xqQ2FXqL/SN4AdvyVIgTXC0hnXEGpLVHCyfuhTcR1+GJaeM6A1
-	 usR+l34caxi+YSQRZGOfLY5OUCUmSdp7wS6YNl02+efmhZGJON8xadA18rPgu8P1vK
-	 wMM0bp170gMy6rXUvaoCO/ZdzDnRoTswTyiRjSV2Z2SllhPM7I5ukwM+Yg61BuYRmS
-	 xkOpzZo9dSmzgR+pasmPMgWT+Utc5xdBRUUjSzrSzpfzyawnC7sqKTYb4DhEhwEUGw
-	 NZKBftgtJJMkQ==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C582EF40068;
-	Mon,  9 Mar 2026 10:11:39 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Mon, 09 Mar 2026 10:11:39 -0400
-X-ME-Sender: <xms:G9WuaaT25rAveLqBalCSNqyTDlVO8X7SXb-wDTwPayLJazjEmi7ixQ>
-    <xme:G9WuaakvrUbGt8tYivWWl-irqJqnUColKO1pXG5elVAdX9lqDFh7NYLxRF6MvxGBJ
-    3s4bP9Gobmoi-LHF_t3ONY5Ge3Islz8JFyqduiHm9MHFFIMS7Mm8w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvjeekfedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrugcu
-    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
-    htthgvrhhnpeeffeevtdeifedttddtuddukeefkeffjeehjedvtdeihfdutdevhfeljefh
-    leeiudenucffohhmrghinheplhgushdrshgsnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheprghrugdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqudeijedthedttdejledqfeefvdduieegudehqdgrrhgusgeppehkvghrnh
-    gvlhdrohhrghesfihorhhkohhfrghrugdrtghomhdpnhgspghrtghpthhtohepudefpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtph
-    htthhopegsrhhgvghrshhtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuhgsihiijhgr
-    khesghhmrghilhdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrug
-    drohhrghdprhgtphhtthhopehjphhoihhmsghovgeskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeigkeeisehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgt
-    phhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:G9WuaXOk1jWchlE0vEGxUEYmVEDdLw-CbZpnjuZ8jlHzyGd9Q35bhg>
-    <xmx:G9WuaZOknt-rop4R8cbhnh55BpiaB-BLFo2wj6qOAnm6EFcFoTtoEg>
-    <xmx:G9WuaRJsbCByS0DUBITlhDnxZj8AP27wmCEqAI7XCS-TPKBN0-3buQ>
-    <xmx:G9Wuabq3RJOhx1VhtJWt7oyjPJ07B1V_ZfWHQe4WFFr1TcNPkenLKQ>
-    <xmx:G9WuaVOV6bp818HAwpMkWUQRASIqqkHdpSPgJb83ulmPOtg4OC129CVC>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9D24C700069; Mon,  9 Mar 2026 10:11:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GBMAup7e"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UGKvVDBwUwreS0RSorlRPop360Mm2eg2xfwv5DHshp6qMbIiVniCAfHrdCCRx62QOjxrGWzOEwJT+/7pRzk134mzNPXF6zy0cPrwnGZjJmBtHsr3D0KY2fl4o+ML895vnTaNXGrd5ZZ87VfyhmKnNbMewlAdy5uC9jK6IwNs+gXgmhmUVsZ4LyygW/oXEflroebcQ0GOsPpoBOB7hKpQgqGjcwuJM5fHLZwXmJjlcICLecmJ4p8xfwr0dsfP533SZ1aK0O1meq1UXpMDxLxwfHuyGxvgnSPA4JTf4Dw/W2htApkqVFQVhb14j25qLK2zdpBPkTGN15yt14HkAO9/KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TTLHUxxuOjv6lt5zt80FKmnS0lRR42uZ9XX37SUnK+w=;
+ b=DyWd3ZzTCHyIaPrCFEeVvhkUYBMStHbBBHi9JQ2LV4NwD//RyENU7vfbQIF0C+pZGwImaVXRMOekPJSdqmvxq2ZC3UUU0FAx31c6r5OIqB8oD69Ac76kGZiEBAGZYSpQFM2F7QFjpPAzJiLRTEIJLVnIRgAjPeV3OPWOkhrO9Yp8Xve6PVbiMaRxMobhLcxu1GQULwbPhI0xB8kWSeE6hk28cRcJ1J7QFdmaB8/OD24ajfHLZJ3/iMaD9UnOb6QHS/X04TZM2EuHlZBuNgo2BoDEvuXQyVFjl7IktCdTHqu0ppwUnbJ1CA9TdgvvPSHweJanFqLoThHq37WoaUt7Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TTLHUxxuOjv6lt5zt80FKmnS0lRR42uZ9XX37SUnK+w=;
+ b=GBMAup7e8Wx7j8O7PRzbemS9TwjvhmNugyzetNXrLIM8vcUzN7lPSTm019J+PQTJ0K8wB4I8rvMGnlpYPWklxHkHZtLpHqssYw5Bh/RCYpg/3PeFfkTB/c1fcEPvNgVIDft5KVDlSS576r9jT7uEMJVKluu/j3d+BMe9F226uG/n/6W++jKe8T07u68ZFh402PyD0/HkrGtBBIT50rvb564HLhbt/TWWhUzxirQFML3Dre0tqamhhJwg0Bj2F+BzCWpEUTkFfz2ss/eceI+R3OBV/ItAo+/mBC/zfLCHRyhvnKkJUb1lECYLjH6VqVXIoAPJ4nWd/Q+gnz5qcDJg8A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by AS1PR04MB9310.eurprd04.prod.outlook.com (2603:10a6:20b:4de::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.22; Mon, 9 Mar
+ 2026 15:50:40 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9678.017; Mon, 9 Mar 2026
+ 15:50:38 +0000
+Date: Mon, 9 Mar 2026 11:50:30 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: xianwei.zhao@amlogic.com
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, linux-amlogic@lists.infradead.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] dmaengine: amlogic: Add general DMA driver for A9
+Message-ID: <aa7sRockHl9uBybj@lizhi-Precision-Tower-5810>
+References: <20260309-amlogic-dma-v6-0-63349d23bd4b@amlogic.com>
+ <20260309-amlogic-dma-v6-2-63349d23bd4b@amlogic.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260309-amlogic-dma-v6-2-63349d23bd4b@amlogic.com>
+X-ClientProxiedBy: PH8PR20CA0006.namprd20.prod.outlook.com
+ (2603:10b6:510:23c::11) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Agw7_yjux95B
-Date: Mon, 09 Mar 2026 15:11:19 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Borislav Petkov" <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Kees Cook" <kees@kernel.org>,
- "Uros Bizjak" <ubizjak@gmail.com>, "Brian Gerst" <brgerst@gmail.com>,
- linux-hardening@vger.kernel.org
-Message-Id: <a29fa2af-a894-40bd-923d-51115dca7940@app.fastmail.com>
-In-Reply-To: <20260306190729.GMaasl8VFJh31kS3mi@fat_crate.local>
-References: <20260108092526.28586-21-ardb@kernel.org>
- <20260108092526.28586-24-ardb@kernel.org>
- <20260306190729.GMaasl8VFJh31kS3mi@fat_crate.local>
-Subject: Re: [RFC/RFT PATCH 03/19] x86: Combine .data with .bss in kernel mapping
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AS1PR04MB9310:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ab0f491-73ef-446b-aa12-08de7df39c39
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|52116014|19092799006|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	wdznjPJi5AEJgMoIuCd6cY4kZ8Vjs079Xry23isixugrFKmdpMvdHG91Zki2+Xoc7jjJ/v6q4yVJP72ZY45t6uubky2W2y5J2j4mofWDzCMxZ4e5LDXXUxA7SuDWMfYnqPcmioW0lPbC0sNZu7ik4HDiutwa+r2DKGIxzwNG+bvIELLzPeO1WWVeDv0uvYp+IbPeFcGydpCKy3iKS5zIugTWr46C5a+omYC+AhtKcGcnUlgzlo1zG/MWW4lwwDoIOUGvAT6DLABRxiAuKt5L7lDKCgtxOdwNVYT3sbK2PawMND1sCR/UYJxzDrnsW0YIsbOur8c+6O1Pyf0NcStCJe/2quWkO1gIDggBUoILtwI8i8wAmFF9uJqnrYvEEmxuizG3/5I8URfABOAbPr0lyMKLxOejhbvgXLiCV6DLnaMSfotveHnJFqY0rKXV2eIeOuiPmrPsEJy1wiNXiGkYSZUg/CBEi1D1dgH2Fn61vGb9CZ9tuDBysra77Ldc8/sd+3nluD9uavHjqHtJYa3phFf32adC87bBxlbKLEL4em4uQeXMEPNJ2+dOA+oGPaoZTBlxcJehOYKUjyRNBnyHrTDNUWY4Rpe2aZDgd3udGFkybjyq77svXoHYuN40fXnnrMJPousmzu9Bn5+lKOQDddFhSwJmIY8Asj5zyywEFKL+Wm0Mox5BW0/9Q/QTT8BWodx01nB52s6eN4A7ZcskZZmt+F2q7BwUf2QmLo5C6YbonIyQzISdu0jWOBCkxKXPnTSS7ghD0+zh66TYT5Cb4HsdHXN6rVzyABPUluJVrdY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(52116014)(19092799006)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?llDRp1yHS0KiwNn70I1wUCuQsjEf1DQQB7US32s3Ah0B30DY4c5EAe11QgrV?=
+ =?us-ascii?Q?oSx+/pMTVgrFym7Vg/ZXnQslSTBLgYOKnWjy9kKs6WnS/FnOOSrVPgKuuiWd?=
+ =?us-ascii?Q?ddS0npSK0K7mW0pcpJaKSdXnEjY7GWKFD/bFE0DnXaP9is61Q1EXSwsfJ4rO?=
+ =?us-ascii?Q?YteE9R0AqmG3oHthEQrzlEn23n1E3rct+bzVjKGXXt49PZ3h3HUPPZNgFy8L?=
+ =?us-ascii?Q?lTlbDXwBfX/dBjCsB3+swPRdoo1/4Ods1+RrdZZ/etTLkZSG4+YtOpEbZLQ1?=
+ =?us-ascii?Q?eBno0iPdbq8Bldnc5xFWXyKJJFBtV8ki61aFJVVH5+nvpKEICb3LUglVkmwg?=
+ =?us-ascii?Q?TOP9xnEm7MOOFOVX/uzHXIpFh0YrIyXFWL92wZqvritZuXf+oh1lFJWfvg8v?=
+ =?us-ascii?Q?CHO+2nXc9PsaYDGNSMK1UONZji6keye3r+FbtdDbsSglMAerf0buIyR1kJ3H?=
+ =?us-ascii?Q?1sDdqSSDH51LSaqAkSZroZW4ziP28lt3fD/elVt860aQSqx9fFvT7S8bqtQ7?=
+ =?us-ascii?Q?TY7nBIuH9snIrUgVY2EUZiBDnsKI2iNraiKwlDi/oj87VkcDphOitkYYWBgA?=
+ =?us-ascii?Q?FO2Oi10qVvH5Hk+WSQs7NqLXK+B+8gesEmtSBVscCicdTBjKEAIB4L2XoG+7?=
+ =?us-ascii?Q?WnMQQHJrcFA0UV1lWAGOKfR1FIH22nBkeZPf4U1eoEd5gWs0wBCsMLCrlqTf?=
+ =?us-ascii?Q?eBtMCNPgHAi/gVrqMYd2zKoiTitrw7deiv/XKH4GFu0L0xW2wCypb7noOKnY?=
+ =?us-ascii?Q?eQP97uhxlL4pPWWfmvYRM1A6zJyiLBqPsxoo1hZm9eybG+uZ9O3RfjpiQhrw?=
+ =?us-ascii?Q?YlsrHObR0XoxQbOUOmoHt7qMFIMmMN1iyf9//lNmhBejF91yOiuXxhPZGGCt?=
+ =?us-ascii?Q?0g2oQ1BhlMEbB3FXdNOMStEQ5oDJVMfzKAynEzxUHpuo+368FFPoE6xYP2Eg?=
+ =?us-ascii?Q?CBuT9NZOaZJmwrdV6RTFWqx5U5p6E1w15ZztEAmN9edoLfd+mFiFC05xzahy?=
+ =?us-ascii?Q?SY7eGeCJLr5M/EMzel1/OmlXlP2fcH2TCVWe8UTUkcj4Oti9KsWjfe5uSvFB?=
+ =?us-ascii?Q?01qCMJtCb2lGoI4mjO99Nkf2wOL6EtewZYlntifwk+RpVVSLomg/GpZgDrwx?=
+ =?us-ascii?Q?7qDAsgS6NybpZSqweuEHQE5mpIpm/O6JpaZu6CH52jkCIPajUKbVMI7OJLiV?=
+ =?us-ascii?Q?CQRH6NJYIr7yAcwsAD43uqxNFJe97uAm67lrWbkIBirVaMOjCfPigUWfy2A/?=
+ =?us-ascii?Q?1+It/ortYRqX+fd5zmPM7AUaqAo0qNm47KNRKfUY6YjsRFLue7iC4jPBgKmq?=
+ =?us-ascii?Q?ECYbTfcefPe3qpWQtGCbk+mCDvuWr27ulMKU+HTVAkdn3aDkT3Ke3Kz2FQDn?=
+ =?us-ascii?Q?3GwHYSirJFGpFIwWsYdPrie39s3QJgnkTayd/Cs2YD1foEB2M8pRXHeOggJ9?=
+ =?us-ascii?Q?sthYVdGebGBaI4xxH43gkPFr/3NpRYz0jsIFX1R/wgFmJ0sqhHDOmKRlu45p?=
+ =?us-ascii?Q?AR/+bp0Ab80iQZ3qIEzNrz0PNQ9sm7GHLEadl+uyPoQZqySs6V9DJmSD9w0r?=
+ =?us-ascii?Q?YSed6+GngO/XGeA6lfjCIdVs+aj/8Muc9yMtesxqUBMrgC/iz4iacxHHqEED?=
+ =?us-ascii?Q?WF0NG4JuIWN4I4ChB4tgzeibnODIT13Q2MlNe41qfbSP2mIaJYyR6emvdhZw?=
+ =?us-ascii?Q?Ja8i62FzHumfnttWrGhQX7Zln3NrEOF2HsY0ZPxLHANTmyf0?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ab0f491-73ef-446b-aa12-08de7df39c39
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 15:50:38.7588
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tmkoX2jS+yWlOfrtXjVLl2dmxw/f/CrYdgMYKh7M1U2gEeqvjIbwDq9V7Kr4yOFtKCyA+yGghSLf/xIKONaetQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9310
 
-
-
-On Fri, 6 Mar 2026, at 20:07, Borislav Petkov wrote:
-> On Thu, Jan 08, 2026 at 09:25:30AM +0000, Ard Biesheuvel wrote:
->> The primary mapping of the kernel image is made using huge pages where
->> possible, mostly to minimize TLB pressure (Only the entry text section
->> requires alignment to 2 MiB). This involves some rounding and padding of
->> the .text and .rodata sections, resulting in gaps.  These gaps are
->> smaller than a huge page, and are remapped using different permissions,
->> resulting in fragmentation of the huge page mappings at the edges of
->> those regions.
->> 
->> Similarly, there is a gap between .data and .bss, where the init text
->> and data regions reside. This means that the end of the .data region and
->> the start of the .bss region are not covered by huge page mappings
->> either, even though both regions use the same permissions (RW+NX).
->> 
->> Improve the situation, by placing .data and .bss adjacently in the
->> linker map, and putting the init text and data regions after .rodata,
->> taking the place of the rodata/data gap. This results in one fewer gap,
->> and a more efficient mapping of the .data and .bss regions.
->> 
->> To preserve the x86_64 ELF layout with PT_LOAD regions aligned to 2 MiB,
->> start the second ELF segment at .init.data and align it to 2 MiB.  The
->> resulting padding will be covered by the init region and will be freed
->> along with it after boot.
->> 
->> defconfig + Clang 19:
->> 
->> Before:
->> 
->>   0xffffffff81000000-0xffffffff82200000    18M  ro  PSE  GLB x  pmd
->>   0xffffffff82200000-0xffffffff8231c000  1136K  ro       GLB x  pte
->>   0xffffffff8231c000-0xffffffff82400000   912K  RW       GLB NX pte
->>   0xffffffff82400000-0xffffffff82a00000     6M  ro  PSE  GLB NX pmd
->>   0xffffffff82a00000-0xffffffff82b40000  1280K  ro       GLB NX pte
->>   0xffffffff82b40000-0xffffffff82c00000   768K  RW       GLB NX pte
->>   0xffffffff82c00000-0xffffffff83400000     8M  RW  PSE  GLB NX pmd
->>   0xffffffff83400000-0xffffffff83800000     4M  RW       GLB NX pte
->> 
->> After:
->> 
->>   0xffffffff81000000-0xffffffff82200000    18M  ro  PSE  GLB x  pmd
->>   0xffffffff82200000-0xffffffff8231c000  1136K  ro       GLB x  pte
->>   0xffffffff8231c000-0xffffffff82400000   912K  RW       GLB NX pte
->>   0xffffffff82400000-0xffffffff82a00000     6M  ro  PSE  GLB NX pmd
->>   0xffffffff82a00000-0xffffffff82b40000  1280K  ro       GLB NX pte
->>   0xffffffff82b40000-0xffffffff82c00000   768K  RW       GLB NX pte
->>   0xffffffff82c00000-0xffffffff82e00000     2M  RW  PSE  GLB NX pmd
->>   0xffffffff82e00000-0xffffffff83000000     2M  RW       GLB NX pte
->>   0xffffffff83000000-0xffffffff83800000     8M  RW  PSE  GLB NX pmd
->> 
->> With the gaps removed/unmapped (pti=on)
->> 
->> Before:
->> 
->>   0xffffffff81000000-0xffffffff81200000     2M  ro  PSE  GLB x  pmd
->>   0xffffffff81200000-0xffffffff82200000    16M  ro  PSE      x  pmd
->>   0xffffffff82200000-0xffffffff8231c000  1136K  ro           x  pte
->>   0xffffffff8231c000-0xffffffff82400000   912K                  pte
->>   0xffffffff82400000-0xffffffff82a00000     6M  ro  PSE      NX pmd
->>   0xffffffff82a00000-0xffffffff82b40000  1280K  ro           NX pte
->>   0xffffffff82b40000-0xffffffff82c00000   768K                  pte
->>   0xffffffff82c00000-0xffffffff83400000     8M  RW  PSE      NX pmd
->>   0xffffffff83400000-0xffffffff8342a000   168K  RW           NX pte
->>   0xffffffff8342a000-0xffffffff836f3000  2852K                  pte
->>   0xffffffff836f3000-0xffffffff83800000  1076K  RW           NX pte
->> 
->> After:
->> 
->>   0xffffffff81000000-0xffffffff81200000     2M  ro  PSE  GLB x  pmd
->>   0xffffffff81200000-0xffffffff82200000    16M  ro  PSE      x  pmd
->>   0xffffffff82200000-0xffffffff8231c000  1136K  ro           x  pte
->>   0xffffffff8231c000-0xffffffff82400000   912K                  pte
->>   0xffffffff82400000-0xffffffff82a00000     6M  ro  PSE      NX pmd
->>   0xffffffff82a00000-0xffffffff82b40000  1280K  ro           NX pte
->>   0xffffffff82b40000-0xffffffff82e3d000  3060K                  pte
->>   0xffffffff82e3d000-0xffffffff83000000  1804K  RW           NX pte
->>   0xffffffff83000000-0xffffffff83800000     8M  RW  PSE      NX pmd
->> 
->> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->> ---
->>  arch/x86/kernel/vmlinux.lds.S | 91 +++++++++++---------
->>  arch/x86/mm/init_64.c         |  5 +-
->>  arch/x86/mm/pat/set_memory.c  |  2 +-
->>  3 files changed, 52 insertions(+), 46 deletions(-)
+On Mon, Mar 09, 2026 at 06:33:53AM +0000, Xianwei Zhao via B4 Relay wrote:
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 >
-> I guess we could do this - I don't see why not... we'll have to take it for
-> a longer spin tho.
+> Amlogic A9 SoCs include a general-purpose DMA controller that can be used
+> by multiple peripherals, such as I2C PIO and I3C. Each peripheral group
+> is associated with a dedicated DMA channel in hardware.
 >
->> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
->> index 3a24a3fc55f5..1dee2987c42b 100644
->> --- a/arch/x86/kernel/vmlinux.lds.S
->> +++ b/arch/x86/kernel/vmlinux.lds.S
->> @@ -61,12 +61,15 @@ const_cpu_current_top_of_stack = cpu_current_top_of_stack;
->>  #define X86_ALIGN_RODATA_BEGIN	. = ALIGN(HPAGE_SIZE);
->>  
->>  #define X86_ALIGN_RODATA_END					\
->> -		. = ALIGN(HPAGE_SIZE);				\
->> -		__end_rodata_hpage_align = .;			\
->
-> $ git grep __end_rodata_hpage_align
-> arch/x86/include/asm/sections.h:13:extern char __end_rodata_hpage_align[];
-> arch/x86/tools/relocs.c:93:     "__end_rodata_hpage_align|"
->
-> I guess you wanna remove those too and say that that marker is unused. Better
-> yet do that in a pre-patch.
->
-
-Indeed. When __end_rodata_hpage_align exists, it is always equal to __end_rodata_aligned, so it can just be dropped entirely.
-
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
