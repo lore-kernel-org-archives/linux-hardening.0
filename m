@@ -1,72 +1,75 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EE62741C9
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 22:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857F7392C4B
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 23:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773096745; cv=none; b=RVzQr2odsROnV7qrYktAMLsyHza9LpPeQGBBbeiwOH32ARzOSZDekPKS0I7+XAyV7eDcMk4OBOijFH/PXsuOifuhCNwOCPu0kasKlFnJOmuXnoP7PSyvc33nuRGwrfuwj0NEUkUYZSR2Pg1xGBMap8q3tSnOSM89S1Pg10aejGw=
+	t=1773098904; cv=none; b=kVy/XS9qpzWjkES9Fwoxe3t3f6Uyp4M+nyW2k0l7n8DzNZD+KY4pC+G092TzRoZZ9PtYAd4wfZkdKz4IF7vjeH17XkMIsqj76hVyYa0yF4PFnzM6uMr4cwx3UKaybrqlBhJ4INwMXiZeigzJwYnf8S6SSp819/9KkbaN4e9a9Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773096745; c=relaxed/simple;
-	bh=wunlnXvfKir7qarnlHXULFM+eClI1QtYhLLNER2o0LM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jMENdgMu+QJ8Kff5SZUAkD10Qat6tD7FHIGS65YIGAS0rTURlq4GwK6veGZ2OrieyhdC/AfzTw3pVT5W2t4Eg13AoH8677vVysE8vPaAMe46jJlpdZgWsSNxGcgxFd9bWeSPv7R8xQRA1JiJb21HA8QuQM6VhgbqRRQ3RpRWV0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=inccpL0n; arc=none smtp.client-ip=209.85.215.171
+	s=arc-20240116; t=1773098904; c=relaxed/simple;
+	bh=MWbUKB2ezRImDoJVgS2/+wEVlNLF38LUmNJhx9sh7GI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZQl5mF5VjRWEXnVnBDa4IcTeSW95bty6MxGYyHdkUHnHffld5f7T9MjPbd8dJ8MWF/oCLFVWf45C7B0Qj2ChL5547z+4EETXildLy/TYDEdGNZNRbhxP5G2XnTxtio0jP9fXM7rnP3D7Ngo5ZnS8u2CBO2sc+8qEQuUXZ4IFYeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kYCCQJJr; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="inccpL0n"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-c73bb6662d8so313580a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Mar 2026 15:52:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYCCQJJr"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3598581ed7bso3613381a91.2
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Mar 2026 16:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773096743; x=1773701543; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773098903; x=1773703703; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3FJ2CJKqK7GJP8XEN8e6DlV2Ycki4IQq2ehkokeaIAs=;
-        b=inccpL0nD79wSXFhhmR8RCnEbA4hjnp5Uv3KweA6IODBJus3i4h7OMLTv6xoK9+Mwy
-         Hnp4aPq+ZuSR7ohASCLpJzeg+oyUqGwD5u9iR8SXaGs6i7NJh5Hg0pgySkwSJis4kx79
-         jQPkOyFdJwctlbkXEdiyuXtdjWasyFhkC5KarI/V4pBZ9b1te2zJrqlQDE2QQg+BTO5v
-         KtLp+7kj7itkHHmYAcUYJRNkjfGrlnFixnGGejE7gv9IVyGfq129Mg0kK6L8zHrPCPd2
-         NQjJgwAzUeV4z1JkzCFxXyVUauECQTL4Wz3lsYspeRPjSKIC/8Z55GxczD2rmHW4WS1H
-         KuZQ==
+        bh=zThsLLueEsXMRUWwQCRT0ylC/fnc8iJ8IJ/w6hvboLo=;
+        b=kYCCQJJrpau+WlSNWNvtEUJQIP8deY/OVMDAr3myKg7j9Caj419udngtZUuU3oiowh
+         0KkjppEdxBpeHu258CKto2eESaEoIq2Zck8sFCB0xyowGnQwT482LU2bXX5IdYh/+BjL
+         Azj6sw9EvGHZQON+9gy4kqMOJshzuHIdNvJ2LW7uIJpSpYuxIU7/m9epfGK+1hENTBY7
+         qaPtgXF+ElnUL2MhZCjaJ/Rk3CiLHaGNHfAYSHL++jTWzkrk4IedaNEhScR5SxvUdQIp
+         6D6Fp9llhcgsdXPMBcvVtziyHaNr7fLvIo4xsjmqBOyXXjtC4SUwRqpmi81OMnqGRxrE
+         BupA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773096743; x=1773701543;
+        d=1e100.net; s=20230601; t=1773098903; x=1773703703;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3FJ2CJKqK7GJP8XEN8e6DlV2Ycki4IQq2ehkokeaIAs=;
-        b=mROqpQVaEU3nkArldzsIpxHCNgrY156Q+hbni/MIvaSKw2s47hAvT30YTQqIsASll5
-         Czbdq5Z6udCPBUGlXH1jaEdMqBcdq1w/fbGy02X5GaQ9UzPLeYTju+sW3HCUE9XcmLjC
-         QVBKo0SJosvdn/nUEdmxe+XjM9h1Iq3pjV39xK5KtjVehQWv7KUVZO1tIDP2qJQ2p3JV
-         /kjvhJiictTDsy4VlrvPXBx2W8IfXK2FfTvcmmprGVWavBFMMVekKaU73HLggAwWU735
-         byRmVysKFTJQOJv4wwvtVwHjcWjJc96IuStFzAfEfUqUEQ6/BK26yybCT4JTGcMQdfSj
-         jUBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHVz2PsRpJ2fnpqrogmB7mEqExw5MUuict6JBs7x5WTrHxvZl74VVebgxnx24GWWs0b3s+jBDKafVx5eA5dpY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQPCmsMtVb65oaz1x6/IBOhLsWNEmghm2YfxjzljUNzUDz/kAA
-	zUx6JwM/U/w4+maW8tS1bVtYE4T+mvj7YrYYmJTGipBDPuxotXDWdkgQ86DXHiB8f3s=
-X-Gm-Gg: ATEYQzzsUN2h1w/y6/Nb904t8EnGIvOr/ZtGCFDtAc7fhKe3VHJN3/BMCxBwwkpspG1
-	ueLGGMUnn/KScGnGIO3RunDU/BAHPGk3u4zQKO/MCGnEL6+UDH7qnhG+cEMayO9BKoJNv5d74JB
-	fzlzS12OvtjwLb05aIJORhM2lyu1JCyEVQuXdSG4RRa12jCfzYjdYQfh8vwGKIr3DJ7PDt+DiTW
-	BLisdP6Bk8ChDnhWHyugUNCunxTm0it5iKC9fAcnvaaFhof1hmLcEYMbpruXka0gySGz6Zh2trx
-	H77ujZWLcMsFiw6MnLxKvYjdOX4AR2O880KG+sQqBCbrUNl51uXSwch2QncHVPqy3H1jGhF264U
-	SFsgxs8Dgh8qlxNIsjET+dwZ7QlSq8Vv8g4fZ4iw1QRt+BVKhUtJ9Vg16rBiZnk2QBe/zFb2yDS
-	dbNN1LY66HPDT7KYvxfuEkfPil+e5pIkuh5JFWTTeiMqzT581RIRIR3Q==
-X-Received: by 2002:a17:902:cf08:b0:2ad:ad0f:bbc3 with SMTP id d9443c01a7336-2ae824dd271mr128790305ad.33.1773096743046;
-        Mon, 09 Mar 2026 15:52:23 -0700 (PDT)
+        bh=zThsLLueEsXMRUWwQCRT0ylC/fnc8iJ8IJ/w6hvboLo=;
+        b=kba7oWvWWGtsQksX7TVfbeFK0ih4W0lOxVGk36+gTMXaLC2PgqnIxlZ+T1fVKreHNn
+         DB+W7lWfNM+/mzi/c3ZiunNs/7+4xncSA5aQ+p9Yy093RPZ+Q2xjl3MkK1X0kJO386/U
+         mEmioYSed30F0mt+inAx37SOvacmMSvHuMKui58Wv6MuHEoRCbydYSpdVXcuME5xqhyg
+         0xIDzOT8nl5Zeq70t0cpLSYhqMJqQtdRQAX9I/bWcXAE2/VzylGXzztGCm6CksVuJTr+
+         mvwo39Pojf0pq5b/gzh8MGzMpFd7RbUCxpBIqVvAQWAM8wlL1sPnY81QzHzFwpPtMutN
+         hP9g==
+X-Forwarded-Encrypted: i=1; AJvYcCV9pn58Bb0EHY+n3NIrzvAnt0gMdAKdUAmzJ4j1deJj3FCtwZ4s5Blv9etbzJCxaAI/p8VU1/ocqtmAdQr5oXo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH4Sv66SZ9BEW2hBMv9PN2wVeMTHlfqeIk+nHgRxpa6QSmZq2j
+	5sm+7GWap4bP4DtUmLPvmKZUW+uJedirhofE5DqklmqLlc9SvLygtf4t
+X-Gm-Gg: ATEYQzyyCu5/sby54wigVn0J4J79D8u7ICSoLwOCRl3TExQj1wTV4mXB12hXSVtKs3N
+	ZxHsxMDLC0XK++IGifvwFbiFDQfb3Nvp0u5iAU9oNnZJTRAqcLzPZ22FUe8kwK951dXIcONjTf7
+	DPFFtUvdwDGZX1KQsIPRBhVKhYsu7vviU6esbVT9dWO/NpIglxoJhEvYQwqm6pj2GLQObLT3626
+	dFUnSFn84IqCJZ1x3vnvRS0npIt+ZepomKGbuvWOWFGYgWB0Bcp8N7VulXmGKBm9upqpSgO+pOB
+	WTccA3p4B6nnPZ6lA2rJ1o6N+hNu5lrwmFV+WWI+LzRD1ETrhJJsWUg6q0b0zSIqiBY+MQZa+gP
+	cKlkAuGQc2r19VqImHwcxkCeAnk3sMV8R/C6n6zlDgrktnwFPKZVQZG6MwBRYosi+wCi5tFNJjL
+	b8+H17A19NbzvSTuvJHKJiNS3xY6gBOJ5Xq9v3dhEi+1FRYkQoR585yA==
+X-Received: by 2002:a17:903:ac4:b0:2a7:d42f:7065 with SMTP id d9443c01a7336-2ae824dd11dmr127212465ad.27.1773098902876;
+        Mon, 09 Mar 2026 16:28:22 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae83e9ad26sm163029705ad.28.2026.03.09.15.52.21
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae83f9678fsm130423725ad.68.2026.03.09.16.28.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 15:52:22 -0700 (PDT)
+        Mon, 09 Mar 2026 16:28:22 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: Linus Walleij <linusw@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	gustavoars@kernel.org,
 	Bartosz Golaszewski <brgl@kernel.org>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
 	Kees Cook <kees@kernel.org>,
+	linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] gpio: htc-egpio: allocate irq with the main struct
-Date: Mon,  9 Mar 2026 15:52:04 -0700
-Message-ID: <20260309225204.44789-1-rosenp@gmail.com>
+Subject: [PATCH] gpio: tegra186: allocate irqs with the main struct
+Date: Mon,  9 Mar 2026 16:28:04 -0700
+Message-ID: <20260309232804.331882-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -76,57 +79,79 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member to combinwe allocations.
+Remove an extra kcalloc call by using a flexible array member.
 
 Add __counted_by for extra runtime analysis.
 
+Assign counting variable immediately after allocation as required by
+__counted_by.
+
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/gpio/gpio-htc-egpio.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/gpio/gpio-tegra186.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpio/gpio-htc-egpio.c b/drivers/gpio/gpio-htc-egpio.c
-index 72935d6dbebf..d15423c718d0 100644
---- a/drivers/gpio/gpio-htc-egpio.c
-+++ b/drivers/gpio/gpio-htc-egpio.c
-@@ -46,8 +46,8 @@ struct egpio_info {
- 	uint              chained_irq;
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index fb26402b6c47..aa7c3e44234f 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -125,7 +125,6 @@ struct tegra_gpio_soc {
+ struct tegra_gpio {
+ 	struct gpio_chip gpio;
+ 	unsigned int num_irq;
+-	unsigned int *irq;
  
- 	/* egpio info */
--	struct egpio_chip *chip;
- 	int               nchips;
-+	struct egpio_chip chip[] __counted_by(nchips);
+ 	const struct tegra_gpio_soc *soc;
+ 	unsigned int num_irqs_per_bank;
+@@ -133,6 +132,8 @@ struct tegra_gpio {
+ 
+ 	void __iomem *secure;
+ 	void __iomem *base;
++
++	unsigned int irq[] __counted_by(num_irq);
  };
  
- static inline void egpio_writew(u16 value, struct egpio_info *ei, int reg)
-@@ -270,10 +270,12 @@ static int __init egpio_probe(struct platform_device *pdev)
- 	int               i;
+ static const struct tegra_gpio_port *
+@@ -859,10 +860,16 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+ 	char **names;
+ 	int node, err;
  
- 	/* Initialize ei data structure. */
--	ei = devm_kzalloc(&pdev->dev, sizeof(*ei), GFP_KERNEL);
-+	ei = devm_kzalloc(&pdev->dev, struct_size(ei, chip, pdata->num_chips), GFP_KERNEL);
- 	if (!ei)
+-	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
++	err = platform_irq_count(pdev);
++	if (err < 0)
++		return err;
++
++	gpio = devm_kzalloc(&pdev->dev, struct_size(gpio, irq, err), GFP_KERNEL);
+ 	if (!gpio)
  		return -ENOMEM;
  
-+	ei->nchips = pdata->num_chips;
++	gpio->num_irq = err;
 +
- 	spin_lock_init(&ei->lock);
+ 	gpio->soc = device_get_match_data(&pdev->dev);
+ 	gpio->gpio.label = gpio->soc->name;
+ 	gpio->gpio.parent = &pdev->dev;
+@@ -889,21 +896,10 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(gpio->base))
+ 		return PTR_ERR(gpio->base);
  
- 	/* Find chained irq */
-@@ -302,13 +304,6 @@ static int __init egpio_probe(struct platform_device *pdev)
+-	err = platform_irq_count(pdev);
+-	if (err < 0)
+-		return err;
+-
+-	gpio->num_irq = err;
+-
+ 	err = tegra186_gpio_irqs_per_bank(gpio);
+ 	if (err < 0)
+ 		return err;
  
- 	platform_set_drvdata(pdev, ei);
- 
--	ei->nchips = pdata->num_chips;
--	ei->chip = devm_kcalloc(&pdev->dev,
--				ei->nchips, sizeof(struct egpio_chip),
--				GFP_KERNEL);
--	if (!ei->chip)
+-	gpio->irq = devm_kcalloc(&pdev->dev, gpio->num_irq, sizeof(*gpio->irq),
+-				 GFP_KERNEL);
+-	if (!gpio->irq)
 -		return -ENOMEM;
 -
- 	for (i = 0; i < ei->nchips; i++) {
- 		ei->chip[i].reg_start = pdata->chip[i].reg_start;
- 		ei->chip[i].cached_values = pdata->chip[i].initial_values;
+ 	for (i = 0; i < gpio->num_irq; i++) {
+ 		err = platform_get_irq(pdev, i);
+ 		if (err < 0)
 -- 
 2.53.0
 
