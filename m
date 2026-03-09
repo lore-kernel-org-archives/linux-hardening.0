@@ -1,105 +1,199 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C909377EC6
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 12:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7113A3CE4B2
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 14:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773059969; cv=none; b=ejwKvb1Wwz315pyqTFLrG5ne4lifednw1/0oaZ/ggLSWDfGZ3FdjyDuEJeW1HT2j4pMsuz4FLRjbvuTbcwF8N54xP92BN/Zpq30i39chcQrXinCgDp3ILAIRQtlnhiUHeKp7ziWWXgXa0LYJLM1j9F2XZ/DA4V9YmT5kQr0HCqA=
+	t=1773065501; cv=none; b=DBBIDiIY4YjVyjr8xxgS92A4UuoftIAKpc6HQR+46qMPTVqnbnaim0aQu3RwpbhzILX+ewG73XCMMP/h+YV7PGJQNGrRr1LmVdCLp0jUCVcK++MirCcqCZF3L6k7YNZ/K0WOAX9X3JjSmhetw5H4KPhp7AGyPFc3TthnMvHqrlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773059969; c=relaxed/simple;
-	bh=K0B+9CgesUCAtvj8Cvvkj7KcgdWQMEdRLu/B1U2WzuA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j+3a0Jx+qO+laImibVw3HNysnarywmMy4s1HZH/TkRS2CTofC/kq48TsICVQAO1SRfhSZKXSiysVtKqEPUqHMZid6U7MoWcKBDEoFY3yPI0dpelf0ODWEWcedbh5GoK77O/ZTzmEgc8T9brMPRYzrybsPurZ32mQddJ84m28aKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IsDbB9KX; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1773065501; c=relaxed/simple;
+	bh=Hqy01tOmlql+ZEgGRFBT4aqwchvquGYinxvKDR+qxzo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=YkNAaQrvBtqohpE3/9b6BUCSE2/GbJFNKpfH0Y65BTC7/6jf7VQY04So6bNXWpTQR23Sskkp8h2aLjuNFA5ksMfte8A3jp+h/utbGuHWEcRwujykjhLE767os274/C0eIwziStrutYd+rJf49uVhbmQke6F4ruPjZXjeYOGlqLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYkisno8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IsDbB9KX"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1773059966;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KEmp/me7gtMmg7DycYcIv6LHKVCKwSXM1LEKVU8XNbI=;
-	b=IsDbB9KXNMVr7fZJ6tIlj/Y4Sq1eXEXwH3vX+plFDSs9GXDdXQPClbSM+s6r1VzuhdjVJP
-	M6XZABrhRcIaCgX6LBrraNGWAdIyjn/XssVeH8g7uoxfZPa7NP2tvNWtOxxdn/5/UAaGJX
-	PIM4txdecoos+1Ak40tjprslyLRdJb4=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: netdev@vger.kernel.org,
-	horms@kernel.org,
-	gustavoars@kernel.org
-Cc: Jiayuan Chen <jiayuan.chen@shopee.com>,
-	syzbot+d5ace703ed883df56e42@syzkaller.appspotmail.com,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next v2] net: sched: cls_u32: Avoid memcpy() false-positive warning in u32_init_knode()
-Date: Mon,  9 Mar 2026 20:39:16 +0800
-Message-ID: <20260309123917.402183-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYkisno8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD48EC2BC9E;
+	Mon,  9 Mar 2026 14:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773065501;
+	bh=Hqy01tOmlql+ZEgGRFBT4aqwchvquGYinxvKDR+qxzo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=tYkisno8tUIiZWQW6DbK88hTFCpkFxsz/oJE6Guth04Ml01CXM4VAMahkV8CbSsYE
+	 UocABe/550C8Xdj5xqQ2FXqL/SN4AdvyVIgTXC0hnXEGpLVHCyfuhTcR1+GJaeM6A1
+	 usR+l34caxi+YSQRZGOfLY5OUCUmSdp7wS6YNl02+efmhZGJON8xadA18rPgu8P1vK
+	 wMM0bp170gMy6rXUvaoCO/ZdzDnRoTswTyiRjSV2Z2SllhPM7I5ukwM+Yg61BuYRmS
+	 xkOpzZo9dSmzgR+pasmPMgWT+Utc5xdBRUUjSzrSzpfzyawnC7sqKTYb4DhEhwEUGw
+	 NZKBftgtJJMkQ==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C582EF40068;
+	Mon,  9 Mar 2026 10:11:39 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Mon, 09 Mar 2026 10:11:39 -0400
+X-ME-Sender: <xms:G9WuaaT25rAveLqBalCSNqyTDlVO8X7SXb-wDTwPayLJazjEmi7ixQ>
+    <xme:G9WuaakvrUbGt8tYivWWl-irqJqnUColKO1pXG5elVAdX9lqDFh7NYLxRF6MvxGBJ
+    3s4bP9Gobmoi-LHF_t3ONY5Ge3Islz8JFyqduiHm9MHFFIMS7Mm8w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvjeekfedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrugcu
+    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
+    htthgvrhhnpeeffeevtdeifedttddtuddukeefkeffjeehjedvtdeihfdutdevhfeljefh
+    leeiudenucffohhmrghinheplhgushdrshgsnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheprghrugdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqudeijedthedttdejledqfeefvdduieegudehqdgrrhgusgeppehkvghrnh
+    gvlhdrohhrghesfihorhhkohhfrghrugdrtghomhdpnhgspghrtghpthhtohepudefpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtph
+    htthhopegsrhhgvghrshhtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuhgsihiijhgr
+    khesghhmrghilhdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrug
+    drohhrghdprhgtphhtthhopehjphhoihhmsghovgeskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeigkeeisehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgt
+    phhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:G9WuaXOk1jWchlE0vEGxUEYmVEDdLw-CbZpnjuZ8jlHzyGd9Q35bhg>
+    <xmx:G9WuaZOknt-rop4R8cbhnh55BpiaB-BLFo2wj6qOAnm6EFcFoTtoEg>
+    <xmx:G9WuaRJsbCByS0DUBITlhDnxZj8AP27wmCEqAI7XCS-TPKBN0-3buQ>
+    <xmx:G9Wuabq3RJOhx1VhtJWt7oyjPJ07B1V_ZfWHQe4WFFr1TcNPkenLKQ>
+    <xmx:G9WuaVOV6bp818HAwpMkWUQRASIqqkHdpSPgJb83ulmPOtg4OC129CVC>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9D24C700069; Mon,  9 Mar 2026 10:11:39 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-ThreadId: Agw7_yjux95B
+Date: Mon, 09 Mar 2026 15:11:19 +0100
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Borislav Petkov" <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, "Josh Poimboeuf" <jpoimboe@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Kees Cook" <kees@kernel.org>,
+ "Uros Bizjak" <ubizjak@gmail.com>, "Brian Gerst" <brgerst@gmail.com>,
+ linux-hardening@vger.kernel.org
+Message-Id: <a29fa2af-a894-40bd-923d-51115dca7940@app.fastmail.com>
+In-Reply-To: <20260306190729.GMaasl8VFJh31kS3mi@fat_crate.local>
+References: <20260108092526.28586-21-ardb@kernel.org>
+ <20260108092526.28586-24-ardb@kernel.org>
+ <20260306190729.GMaasl8VFJh31kS3mi@fat_crate.local>
+Subject: Re: [RFC/RFT PATCH 03/19] x86: Combine .data with .bss in kernel mapping
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-From: Jiayuan Chen <jiayuan.chen@shopee.com>
 
-Syzbot reported a warning in u32_init_knode() [1].
 
-Similar to commit 7cba18332e36 ("net: sched: cls_u32: Avoid memcpy()
-false-positive warning") which addressed the same issue in u32_change(),
-use unsafe_memcpy() in u32_init_knode() to work around the compiler's
-inability to see into composite flexible array structs.
+On Fri, 6 Mar 2026, at 20:07, Borislav Petkov wrote:
+> On Thu, Jan 08, 2026 at 09:25:30AM +0000, Ard Biesheuvel wrote:
+>> The primary mapping of the kernel image is made using huge pages where
+>> possible, mostly to minimize TLB pressure (Only the entry text section
+>> requires alignment to 2 MiB). This involves some rounding and padding of
+>> the .text and .rodata sections, resulting in gaps.  These gaps are
+>> smaller than a huge page, and are remapped using different permissions,
+>> resulting in fragmentation of the huge page mappings at the edges of
+>> those regions.
+>> 
+>> Similarly, there is a gap between .data and .bss, where the init text
+>> and data regions reside. This means that the end of the .data region and
+>> the start of the .bss region are not covered by huge page mappings
+>> either, even though both regions use the same permissions (RW+NX).
+>> 
+>> Improve the situation, by placing .data and .bss adjacently in the
+>> linker map, and putting the init text and data regions after .rodata,
+>> taking the place of the rodata/data gap. This results in one fewer gap,
+>> and a more efficient mapping of the .data and .bss regions.
+>> 
+>> To preserve the x86_64 ELF layout with PT_LOAD regions aligned to 2 MiB,
+>> start the second ELF segment at .init.data and align it to 2 MiB.  The
+>> resulting padding will be covered by the init region and will be freed
+>> along with it after boot.
+>> 
+>> defconfig + Clang 19:
+>> 
+>> Before:
+>> 
+>>   0xffffffff81000000-0xffffffff82200000    18M  ro  PSE  GLB x  pmd
+>>   0xffffffff82200000-0xffffffff8231c000  1136K  ro       GLB x  pte
+>>   0xffffffff8231c000-0xffffffff82400000   912K  RW       GLB NX pte
+>>   0xffffffff82400000-0xffffffff82a00000     6M  ro  PSE  GLB NX pmd
+>>   0xffffffff82a00000-0xffffffff82b40000  1280K  ro       GLB NX pte
+>>   0xffffffff82b40000-0xffffffff82c00000   768K  RW       GLB NX pte
+>>   0xffffffff82c00000-0xffffffff83400000     8M  RW  PSE  GLB NX pmd
+>>   0xffffffff83400000-0xffffffff83800000     4M  RW       GLB NX pte
+>> 
+>> After:
+>> 
+>>   0xffffffff81000000-0xffffffff82200000    18M  ro  PSE  GLB x  pmd
+>>   0xffffffff82200000-0xffffffff8231c000  1136K  ro       GLB x  pte
+>>   0xffffffff8231c000-0xffffffff82400000   912K  RW       GLB NX pte
+>>   0xffffffff82400000-0xffffffff82a00000     6M  ro  PSE  GLB NX pmd
+>>   0xffffffff82a00000-0xffffffff82b40000  1280K  ro       GLB NX pte
+>>   0xffffffff82b40000-0xffffffff82c00000   768K  RW       GLB NX pte
+>>   0xffffffff82c00000-0xffffffff82e00000     2M  RW  PSE  GLB NX pmd
+>>   0xffffffff82e00000-0xffffffff83000000     2M  RW       GLB NX pte
+>>   0xffffffff83000000-0xffffffff83800000     8M  RW  PSE  GLB NX pmd
+>> 
+>> With the gaps removed/unmapped (pti=on)
+>> 
+>> Before:
+>> 
+>>   0xffffffff81000000-0xffffffff81200000     2M  ro  PSE  GLB x  pmd
+>>   0xffffffff81200000-0xffffffff82200000    16M  ro  PSE      x  pmd
+>>   0xffffffff82200000-0xffffffff8231c000  1136K  ro           x  pte
+>>   0xffffffff8231c000-0xffffffff82400000   912K                  pte
+>>   0xffffffff82400000-0xffffffff82a00000     6M  ro  PSE      NX pmd
+>>   0xffffffff82a00000-0xffffffff82b40000  1280K  ro           NX pte
+>>   0xffffffff82b40000-0xffffffff82c00000   768K                  pte
+>>   0xffffffff82c00000-0xffffffff83400000     8M  RW  PSE      NX pmd
+>>   0xffffffff83400000-0xffffffff8342a000   168K  RW           NX pte
+>>   0xffffffff8342a000-0xffffffff836f3000  2852K                  pte
+>>   0xffffffff836f3000-0xffffffff83800000  1076K  RW           NX pte
+>> 
+>> After:
+>> 
+>>   0xffffffff81000000-0xffffffff81200000     2M  ro  PSE  GLB x  pmd
+>>   0xffffffff81200000-0xffffffff82200000    16M  ro  PSE      x  pmd
+>>   0xffffffff82200000-0xffffffff8231c000  1136K  ro           x  pte
+>>   0xffffffff8231c000-0xffffffff82400000   912K                  pte
+>>   0xffffffff82400000-0xffffffff82a00000     6M  ro  PSE      NX pmd
+>>   0xffffffff82a00000-0xffffffff82b40000  1280K  ro           NX pte
+>>   0xffffffff82b40000-0xffffffff82e3d000  3060K                  pte
+>>   0xffffffff82e3d000-0xffffffff83000000  1804K  RW           NX pte
+>>   0xffffffff83000000-0xffffffff83800000     8M  RW  PSE      NX pmd
+>> 
+>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>> ---
+>>  arch/x86/kernel/vmlinux.lds.S | 91 +++++++++++---------
+>>  arch/x86/mm/init_64.c         |  5 +-
+>>  arch/x86/mm/pat/set_memory.c  |  2 +-
+>>  3 files changed, 52 insertions(+), 46 deletions(-)
+>
+> I guess we could do this - I don't see why not... we'll have to take it for
+> a longer spin tho.
+>
+>> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+>> index 3a24a3fc55f5..1dee2987c42b 100644
+>> --- a/arch/x86/kernel/vmlinux.lds.S
+>> +++ b/arch/x86/kernel/vmlinux.lds.S
+>> @@ -61,12 +61,15 @@ const_cpu_current_top_of_stack = cpu_current_top_of_stack;
+>>  #define X86_ALIGN_RODATA_BEGIN	. = ALIGN(HPAGE_SIZE);
+>>  
+>>  #define X86_ALIGN_RODATA_END					\
+>> -		. = ALIGN(HPAGE_SIZE);				\
+>> -		__end_rodata_hpage_align = .;			\
+>
+> $ git grep __end_rodata_hpage_align
+> arch/x86/include/asm/sections.h:13:extern char __end_rodata_hpage_align[];
+> arch/x86/tools/relocs.c:93:     "__end_rodata_hpage_align|"
+>
+> I guess you wanna remove those too and say that that marker is unused. Better
+> yet do that in a pre-patch.
+>
 
-This silences the false-positive reported by syzbot:
-
-  memcpy: detected field-spanning write (size 32) of single field
-  "&new->sel" at net/sched/cls_u32.c:855 (size 16)
-
-Since the memory is correctly allocated with kzalloc_flex() using
-s->nkeys, this is purely a false positive and does not need a Fixes tag.
-
-[1] https://syzkaller.appspot.com/bug?extid=d5ace703ed883df56e42
-
-Reported-by: syzbot+d5ace703ed883df56e42@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/69a811b9.a70a0220.b118c.0019.GAE@google.com/T/
-Reviewed-by: Simon Horman <horms@kernel.org>
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
-
----
-v1 -> v2 : Drop unnecessary commit message
-https://lore.kernel.org/netdev/20260309121240.GH461701@kernel.org/T/#t
----
- net/sched/cls_u32.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/net/sched/cls_u32.c b/net/sched/cls_u32.c
-index 9241c025aa74..8f30cc82181d 100644
---- a/net/sched/cls_u32.c
-+++ b/net/sched/cls_u32.c
-@@ -852,7 +852,10 @@ static struct tc_u_knode *u32_init_knode(struct net *net, struct tcf_proto *tp,
- 	/* Similarly success statistics must be moved as pointers */
- 	new->pcpu_success = n->pcpu_success;
- #endif
--	memcpy(&new->sel, s, struct_size(s, keys, s->nkeys));
-+	unsafe_memcpy(&new->sel, s, struct_size(s, keys, s->nkeys),
-+		      /* A composite flex-array structure destination,
-+		       * which was correctly sized with kzalloc_flex(),
-+		       * above. */);
- 
- 	if (tcf_exts_init(&new->exts, net, TCA_U32_ACT, TCA_U32_POLICE)) {
- 		kfree(new);
--- 
-2.43.0
+Indeed. When __end_rodata_hpage_align exists, it is always equal to __end_rodata_aligned, so it can just be dropped entirely.
 
