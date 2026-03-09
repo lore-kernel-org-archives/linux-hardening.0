@@ -1,95 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98013750D7
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 09:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1620D378823
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 09:22:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773047023; cv=none; b=H40VWgEmXUMcdOlXDOmwWKadINKfElSwXJQx+FCUd5HZ2XIbGK8LGCbvK5b4UohtOOylWkYqNIa02VLo7QjtpPclAIJQVHo40ztuDyKluw6DlQ4+OwOH0sIux6mdODop1GfeZtac0U+8jn+DURM0E1fREq4J5gaE9V83/b7OZRI=
+	t=1773048152; cv=none; b=FvjLjtYXFdeAhYHscSdM8po9jFoSStS4tf+QvZVB0Koo8j9C0O6SvVWfNlXnMcFZBr0s/JVIOrelURS3I2fiV2MUMrJYcFPTGsH5U89w2I1CTKFz7/KIYs5VZD8K9lQ9MXSs7rqAnTgbWQQ67p9pGEffoSQseZ0Ifj71q8Ka9U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773047023; c=relaxed/simple;
-	bh=NHqpSEZVsWbWgIja3kieVVuxwiNnL7EaRmas6HJUsWc=;
+	s=arc-20240116; t=1773048152; c=relaxed/simple;
+	bh=rG4iGZioAprTGKBiz46GgCZK5qEFnPoxgRT+pvl4YO8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rB49lwXCyp/kkts9rfJ4oeWC9Y+m5rQW/YMfW2PZ9O9PxtcIjyITO9vFeWvFcbUrKdUrds1LcfQRZeDACOdP2guQ+uNPP6amdiTr0FBSugAH5hhaOqXBes1fW3FoqRgbJdvCzNmO51VbEXWyCNpm31oa0IWtE9Lyl6jTtPr93BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQ101iWk; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=E4tNrYPB2uVY+oIFS9FXy2D7kZmxo8YI1W+f3gmmvKL70CavSV3sG2aS9/ddHA+2otPYJhz6GjCxvwpUE4lWrSOJPiBJBouWAhR4jR2gUtuRQ2xfb9hSlaoch7PRnMeeTbZIW2Mf3vgBfFrIb2T6/AergOiXibuhoDyGp31kTUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCXY/CQB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQ101iWk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768B2C4AF0C
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 09:03:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCXY/CQB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A2CC19423
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Mar 2026 09:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773047023;
-	bh=NHqpSEZVsWbWgIja3kieVVuxwiNnL7EaRmas6HJUsWc=;
+	s=k20201202; t=1773048151;
+	bh=rG4iGZioAprTGKBiz46GgCZK5qEFnPoxgRT+pvl4YO8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rQ101iWkne4GQpFROza0W41V7NDreoF6+XeGG7jzew41PPHodNBGCEQSFkylBBJQJ
-	 hDc8XJ99mE5qnngXrp1vm3YfpGgcKcxBG+BCbiQQy7lIGEV/ej8ER5JpbRJcpQUV5O
-	 GD9znMOb31xlZcaGDM5ctl0lvO9/QKGkze9duLfAIcqd8AxYXvg6dt34D2jJyGLfbh
-	 dmqEPhCAbEsk8E7iHQlmnyk6SuF9bIzsAIYWk1Uum7s8ny4tT4hcAvc12ZMFBe7rt+
-	 d5zoXA531kIM8nAifg1diwPgQdU7bYuhUV4sYx13PsT1yxks47B7Mu80WhvpQomW9y
-	 fLDYdQMJyQcag==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-38a439f9b43so14511041fa.2
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Mar 2026 02:03:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXYZ3LAhTkDxaplCminFF1CoPuGAaLKvPULC0U1zcwpnLYJZGWfaKBZBZpvuhXLAI2XoOB+GiiZTdW/UjWQG2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3LRA4i2/MZXnVRv14r0HCb+uNm3a1QTabpVEn9ZSunNx95IRy
-	pE4IMPxwDHg/p76ts4vkuRQ7lRMwwAp+BFk4N+4pGcYztbYw7IrAbEgrqV8y3v/EG/TbJRFp25D
-	GcVw6HTk6TaqZABPM7wT/L4dczD0YODpJV2e9oIjMng==
-X-Received: by 2002:a05:651c:41c8:b0:387:15c9:379a with SMTP id
- 38308e7fff4ca-38a40b5ff81mr28921681fa.26.1773047022054; Mon, 09 Mar 2026
- 02:03:42 -0700 (PDT)
+	b=FCXY/CQBFR0twTRWRwX9Gdvz0U0IS7fBYYi36x/3S77mI0D/B5Ni43MUpxvEbI2xF
+	 s5wbs7IG9fW4sh+DHxvJwpbWLCbtbUuQUBsWJwfwIrljmdlcm+reahxzCVjYl9RxGw
+	 BuqKm8TwTsV4L/f59fcYhoH4p1OEH4xzukxLVIOkyb7LZfr++ynFjs2khV3vUgTdIh
+	 HuiYjraRsVYxz4IUGCcWH7DzOyLHp2wr/Ziyjjza7T7KzhWr20IRfMlgV353dIPU4t
+	 YDADp7XSNKfUEqtSf3r6xQf0h99wGH0G9Gfk6GW1ZQ0yvjQS6g+0eyx/NeLJE/i6WA
+	 7/M6FKDrET7iw==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-59de8155501so5830901e87.3
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Mar 2026 02:22:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXmjDx2GbYQqHdEp9dcJt3D7I8FXLvKjwAgqY3d25fM/wsTSZmJC4bgIc8JKQpC2Siqo3NAQkHGtwMzV9FUlaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMiLSZplg3sFmZneMTz1NJap+gDz9LyxZ1B46TgQKmTcaMEA0J
+	N7Pzt8v+4KAwFLZXwUP88WHtvGNi+FBf4fizenqGg9hQI7T7v+CbidqsNix58IVn4T2Tr5pNSsz
+	6Hm8DAuGAwttRyQA/iVwivGNZcKVWgFJfmozBZLtf6A==
+X-Received: by 2002:a05:6512:1152:b0:5a0:ff30:5281 with SMTP id
+ 2adb3069b0e04-5a13cd55eb8mr3200633e87.46.1773048150493; Mon, 09 Mar 2026
+ 02:22:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260308021535.48098-1-rosenp@gmail.com> <CAD++jLkLj235Q=U_9E-hSneW5E42JjU=dRBJxKJNnqwgBLCm=w@mail.gmail.com>
- <CAKxU2N9JbAzEYfmLpbw5b9Y6MsYUZ1FfLirfy8Hg8MCOUY6PAg@mail.gmail.com>
-In-Reply-To: <CAKxU2N9JbAzEYfmLpbw5b9Y6MsYUZ1FfLirfy8Hg8MCOUY6PAg@mail.gmail.com>
+References: <20260308021201.47820-1-rosenp@gmail.com>
+In-Reply-To: <20260308021201.47820-1-rosenp@gmail.com>
 From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Mon, 9 Mar 2026 10:03:30 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Me+oUX5xbNY7PX43cTH0e5ouu=Ex3TqhvWvoefmR7jYYQ@mail.gmail.com>
-X-Gm-Features: AaiRm51GDQM7nWXlWiIub7pxCbmgBaQ0riecFovbemyWgkXzu2HGDohc6qR3JdA
-Message-ID: <CAMRc=Me+oUX5xbNY7PX43cTH0e5ouu=Ex3TqhvWvoefmR7jYYQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: msc313: remove kcalloc
+Date: Mon, 9 Mar 2026 10:22:19 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MfGkVpk9rBLvwxndjveXemY6t7nWOBX9wqZxc+Qe7aOCg@mail.gmail.com>
+X-Gm-Features: AaiRm52w-C0ztrxLFeXv5hewRPxLZddLVCg-vwfhtlv1RCAB78FDBiAvWfha8Tw
+Message-ID: <CAMRc=MfGkVpk9rBLvwxndjveXemY6t7nWOBX9wqZxc+Qe7aOCg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ljca: reduce struct allocation
 To: Rosen Penev <rosenp@gmail.com>
-Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org, 
-	Daniel Palmer <daniel@thingy.jp>, linux-hardening@vger.kernel.org, gustavoars@kernel.org, 
-	Romain Perier <romain.perier@gmail.com>, 
-	"moderated list:ARM/MStar/Sigmastar Armv7 SoC support" <linux-arm-kernel@lists.infradead.org>, 
+Cc: linux-gpio@vger.kernel.org, Lixu Zhang <lixu.zhang@intel.com>, 
+	linux-hardening@vger.kernel.org, gustavoars@kernel.org, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Linus Walleij <linusw@kernel.org>, 
 	open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 9, 2026 at 2:27=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrote=
+On Sun, Mar 8, 2026 at 3:12=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrote=
 :
 >
-> On Sun, Mar 8, 2026 at 5:06=E2=80=AFPM Linus Walleij <linusw@kernel.org> =
-wrote:
-> >
-> > On Sun, Mar 8, 2026 at 3:15=E2=80=AFAM Rosen Penev <rosenp@gmail.com> w=
-rote:
-> >
-> > > Use a flexible array member to combine kzalloc and kcalloc.
-> > >
-> > > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > (...)
-> > >  struct msc313_gpio {
-> > >         void __iomem *base;
-> > >         const struct msc313_gpio_data *gpio_data;
-> >
-> > Do you wanna add:
-> >
-> > const unsigned int saved_size;
-> So in the code there's
+> Convert connect_mode to a flexible array member to avoid calling
+> kcalloc and to combine the allocations.
 >
-> for (i =3D 0; i < gpio->gpio_data->num; i++)
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  drivers/gpio/gpio-ljca.c | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
 >
-> which is equivalent to match->num.
+> diff --git a/drivers/gpio/gpio-ljca.c b/drivers/gpio/gpio-ljca.c
+> index f32d1d237795..a531aaa0425f 100644
+> --- a/drivers/gpio/gpio-ljca.c
+> +++ b/drivers/gpio/gpio-ljca.c
+> @@ -63,7 +63,6 @@ struct ljca_gpio_dev {
+>         DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
+>         DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
+>         DECLARE_BITMAP(output_enabled, LJCA_MAX_GPIO_NUM);
+> -       u8 *connect_mode;
+>         /* protect irq bus */
+>         struct mutex irq_lock;
+>         struct work_struct work;
+> @@ -72,6 +71,8 @@ struct ljca_gpio_dev {
 >
-> __counted_by doesn't support pointers AFAIK.
-> >
+>         u8 obuf[LJCA_GPIO_BUF_SIZE];
+>         u8 ibuf[LJCA_GPIO_BUF_SIZE];
+> +
+> +       u8 connect_mode[];
 
-This is a regular flexible array of u8. It should work fine with
-__counted_by and I too am in favor of using it as it has become
-standard for flexible arrays.
+Please use __counted_by().
+
+>  };
+>
+>  static int ljca_gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id,
+> @@ -400,22 +401,19 @@ static int ljca_gpio_probe(struct auxiliary_device =
+*auxdev,
+>                            const struct auxiliary_device_id *aux_dev_id)
+>  {
+>         struct ljca_client *ljca =3D auxiliary_dev_to_ljca_client(auxdev)=
+;
+> +       struct ljca_gpio_info *gpio_info;
+>         struct ljca_gpio_dev *ljca_gpio;
+>         struct gpio_irq_chip *girq;
+>         int ret;
+>
+> -       ljca_gpio =3D devm_kzalloc(&auxdev->dev, sizeof(*ljca_gpio), GFP_=
+KERNEL);
+> +       gpio_info =3D dev_get_platdata(&auxdev->dev);
+> +       ljca_gpio =3D devm_kzalloc(&auxdev->dev, struct_size(ljca_gpio, c=
+onnect_mode, gpio_info->num),
+
+I'm surprised to learn that there's no devm_kzalloc_flex() yet. I
+wanted to ask you to use it but it doesn't exist.
 
 Bart
+
+> +                                GFP_KERNEL);
+>         if (!ljca_gpio)
+>                 return -ENOMEM;
+>
+>         ljca_gpio->ljca =3D ljca;
+> -       ljca_gpio->gpio_info =3D dev_get_platdata(&auxdev->dev);
+> -       ljca_gpio->connect_mode =3D devm_kcalloc(&auxdev->dev,
+> -                                              ljca_gpio->gpio_info->num,
+> -                                              sizeof(*ljca_gpio->connect=
+_mode),
+> -                                              GFP_KERNEL);
+> -       if (!ljca_gpio->connect_mode)
+> -               return -ENOMEM;
+> +       ljca_gpio->gpio_info =3D gpio_info;
+>
+>         ret =3D devm_mutex_init(&auxdev->dev, &ljca_gpio->irq_lock);
+>         if (ret)
+> --
+> 2.53.0
+>
