@@ -1,132 +1,101 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F71532FA21
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Mar 2026 02:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4E332B9A2;
+	Tue, 10 Mar 2026 02:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773108079; cv=none; b=q54rTq0ycMOzBRVuExKDErleIo8Kj1C3TC68DCy1oI4OvQ8CUmNw2tcs0WTyQCry3dQWpdmBuf6zUOPw6C97xfC6QDxDCwo+LwmtV01obqqPrib7WRN6wdVhOvLdE6ft2/MoTjVx5qDBapSyb13eW62OM8p7nzLoI2Ee7dTbkOc=
+	t=1773110773; cv=none; b=K8kHsuV8j1hF+I6mi6eXsDi2RxkXTEkbgsI1TS1V7/dHBmUMmrHJOW/9BlyV6hgaelBvmLbE+4LAvfK5WWkhQ7gDLsz+C3p/GahypxS5DxQu1NBy1GLom/KoANNAxGskjNdaqzvhLmwqZ1wz4XxuYLlJZrzUoDDHqn7QZ6uOZyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773108079; c=relaxed/simple;
-	bh=r74vXhE8Sb4aeEjXyTRfyESwDzvu/qDaicDAjMleUvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ErqsHqsotkH/MoNhOV2x3fc5dNHc/B0qkJ19N8MvjOIYk/RksPuQkTpjeNQezYMuhGoRWimRYBFx7ZD51Twg5uAmuewvrYasiBUWZftdjgiwk9p8friQBEqHgiYXJFo3sYATSfszOzDuI6x+o/FQD1m2pfCxR7cYYBjsuZ6znpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJNOb5Jj; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773110773; c=relaxed/simple;
+	bh=8ZSQ9NsNIH3PdEI8a25pi0HPrK42YnV+4hx7xxrVNRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QSs1K0xb4EFmiryTdc6ZvCvucXQQ1mGgPjs9428RKqNIFn1hk6Rj8QjchG74vY9eK7yVYHZBE4vLoNbJkS1w7D42NHcT3iGGHuPzT74DzvRLHKtFiwPGgEhRSbghojGKsIxlRpHtsx+jZd7DTVpChT1QxPbjUQbmr7Z0UQFvxDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h64B7dvl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJNOb5Jj"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-c73bd024a0dso433259a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Mar 2026 19:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773108076; x=1773712876; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lALqj4AFCCf04PXMDS8nK7oxi7K5MFhENXcy3JAs/Dw=;
-        b=dJNOb5Jjoc+jmdYmgiu8+0knsmzfzdQvaoaUBRVv6lCtAtSXO0FEN+ZJpoVjxUs8B0
-         Y2GiMIilV/ishEkDr3qPEo80DL15wyeVomYUQabdTOibrSVvsdaY56drAgsaSfjsF8ZH
-         nvLtM4LvatzOFauc8/UDfhdSCX+5AQocJEb0dbV+fPO8giuwvwIsveckgFNigs4wq4Ir
-         lNNLnN5mmMeH5imwjvTUgtmPK53wAIJfX/mszGqY+PDvRZ/+VWwOH4RUd/c8Sklvsc2M
-         /4maCJwiAfdlHoglKfCj0qn/jJCg/BuhBoG4aD5+Kw84lkS10Dvxlcxr/MBP58cZ7d5n
-         XjZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773108076; x=1773712876;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lALqj4AFCCf04PXMDS8nK7oxi7K5MFhENXcy3JAs/Dw=;
-        b=gkHlPt4cipHQd6ICxTyT47iwxD3kBA+jqlHpI6ZhWgT+0rhD6Cc1cnPn13W3aSi5lv
-         o9eeh10Y3pmtiOctJxyeX80Jgpu250PutO6xBCbCK+InoXIjd/B3b1I0SexIO5VE+285
-         xYr8UOs2btNXxjxigOSuYo5jSLuZNFWN/87VlLSeeI+CAPCbBzXzGVTW6Yks6qA0CJcu
-         izbMF0eDmNYBCKPuCl08l6xYvPQO157GiJjr/VKLCzhJOl6VLQTZdQWeu0aJB3oeTCm/
-         CJJ3ZUTozbBwTPi6YlWP5wSCsPajJKlveIWjTbGmFaAF31ffhvvZn7y7C25kOggsg1CS
-         uukg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOyz78SNf9ZZRknizHh7Sh1Tw12ApaLn8K64KsCL/J2fdPcHLuhLdy9Toafokg1hgAnAjyWs0Nv8mOGY2fMm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4N4ZVvGbPopd57R/urWTO7S24oZ2uZeQPfaDzSVTRIoXoRME2
-	q/n9Q0y94VHQBN1xpMwjRk2PKiU0QA9JXJtWfYGyk9TEG8ekvMzYL4+c
-X-Gm-Gg: ATEYQzxoTo3/ulSjVr1ELE+X3/UKV1Xu7Uxr5Jmwj8y7kgRBri+WnmRhhncadWxCYKA
-	+BSHnPRPHaHJvHRSPapunMWnembtRjboMUggncBs57BqPGPeQW5PA1704UfcNDBP7AOxR2ybhff
-	tcAh5+c4cNuTHNuMu26IIZu8xOdzM2ksQrwlkmvSCZw0NJpXy/pMefOHTPSjgOEZGEzwNpZUfJH
-	B1BL4wFIVFZOZ6DjWpWjD/sZTAwVW0iFJfJbaH4+IW/H+fxya+RV+DLnu/IMa9sbb2sSG4qzLiE
-	N9P8ozODwZvyuaTpQMn/1McBLAEb42a/dY60D+P8fNakHdTKviimzk/9dTauBMOrI3NKBpKV9AF
-	YG/W2hQGAcH9PjDy9lNXhL0OvzJGuSpClEKritigFtyeYmXbGv8ZuJYNdKZXOhS4BLXrM6kbXBx
-	BuZQCBVg4YuBRADvL8h7NZxzgD6EKjwjEFmt/IiGDn7TrnfNUVEWvhnQ==
-X-Received: by 2002:a17:903:2c50:b0:2ae:57e6:616c with SMTP id d9443c01a7336-2ae82362d1cmr136082195ad.3.1773108075517;
-        Mon, 09 Mar 2026 19:01:15 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae83f78370sm135102865ad.43.2026.03.09.19.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 19:01:15 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h64B7dvl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D088BC4CEF7;
+	Tue, 10 Mar 2026 02:46:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773110773;
+	bh=8ZSQ9NsNIH3PdEI8a25pi0HPrK42YnV+4hx7xxrVNRA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=h64B7dvlNhd68KVGrvrpkCVLPEi+OBR2CqHCuqb54Cxb1fW3XDLIF07fRroeBEH1i
+	 GJSbwt+B9RJnWuawQ2M3mpxgZBqZWolxBFbXTgYTBw47rbNJG7fFOCHCdd4uAsbGAb
+	 CYpkOnm7jkMFcr9ciaQcRMRApqtaWm/g1pTiG0qZW0tZOa5XleE8tnH5n5mxEh2BM8
+	 ePIMl24N3Fdrb6RZt412R5df4FY1MN88SYCZHkjhutuZc/fDFK2Bnm3MH/C8q4Hl6z
+	 /gsIxltGIFYrL5YEGf8lefNiyzfQSUacuBSYyv2GAehJqWGfIh4y3Oot6XO5Yuibv0
+	 FAzq3Nsh1xmWg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Gabriel Gonzales <semfault@disroot.org>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Biswapriyo Nath <nathbappai@gmail.com>,
+	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
-	gustavoars@kernel.org,
-	Viresh Kumar <vireshk@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	virtualization@lists.linux.dev (open list:VIRTIO GPIO DRIVER),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] gpio: virtio: remove one kcalloc
-Date: Mon,  9 Mar 2026 19:00:57 -0700
-Message-ID: <20260310020057.340550-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	linux@mainlining.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v3 0/7] Initial Redmi Note 8T support and more
+Date: Mon,  9 Mar 2026 21:45:24 -0500
+Message-ID: <177311073318.23763.5505178540690402680.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260126-xiaomi-willow-v3-0-aad7b106c311@mainlining.org>
+References: <20260126-xiaomi-willow-v3-0-aad7b106c311@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-A flexible array member can be used to combine allocations.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/gpio/gpio-virtio.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+On Mon, 26 Jan 2026 17:34:50 +0100, Barnabás Czémán wrote:
+> Redmi Note 8 and 8T are sibling devices the only difference
+> is Redmi Note 8T have NFC.
+> This patch series is commonizing Redmi Note 8 devicetree
+> for a base for both devices.
+> 
+> The patch series also contains some fixes for Redmi Note 8:
+> - Fix reserved memory ranges, they were wrongly defined.
+> - Remove board-id, board-id is not neccessary for the bootloader.
+> - Fix reserved-gpio-ranges the reserved ranges was wrongly
+> defined what caused the device crash on the boot.
+> - Remove unnecessary usb-extcon, gpio102 is related to DisplayPort
+> what is not supported by these devices.
+> - Use memory-region property for framebuffer.
+> 
+> [...]
 
-diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-index ed6e0e90fa8a..876a34ed739d 100644
---- a/drivers/gpio/gpio-virtio.c
-+++ b/drivers/gpio/gpio-virtio.c
-@@ -52,7 +52,6 @@ struct virtio_gpio {
- 	struct virtio_device *vdev;
- 	struct mutex lock; /* Protects virtqueue operation */
- 	struct gpio_chip gc;
--	struct virtio_gpio_line *lines;
- 	struct virtqueue *request_vq;
- 
- 	/* irq support */
-@@ -60,6 +59,7 @@ struct virtio_gpio {
- 	struct mutex irq_lock; /* Protects irq operation */
- 	raw_spinlock_t eventq_lock; /* Protects queuing of the buffer */
- 	struct vgpio_irq_line *irq_lines;
-+	struct virtio_gpio_line lines[];
- };
- 
- static int _virtio_gpio_req(struct virtio_gpio *vgpio, u16 type, u16 gpio,
-@@ -541,10 +541,6 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 	u16 ngpio;
- 	int ret, i;
- 
--	vgpio = devm_kzalloc(dev, sizeof(*vgpio), GFP_KERNEL);
--	if (!vgpio)
--		return -ENOMEM;
--
- 	/* Read configuration */
- 	gpio_names_size =
- 		virtio_cread32(vdev, offsetof(struct virtio_gpio_config,
-@@ -556,8 +552,8 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 		return -EINVAL;
- 	}
- 
--	vgpio->lines = devm_kcalloc(dev, ngpio, sizeof(*vgpio->lines), GFP_KERNEL);
--	if (!vgpio->lines)
-+	vgpio = devm_kzalloc(dev, struct_size(vgpio, lines, ngpio), GFP_KERNEL);
-+	if (!vgpio)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < ngpio; i++) {
+Applied, thanks!
+
+[1/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Remove board-id
+      commit: 535e5741bc9acef5ea2561aa300f28370599e7e2
+[2/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Correct reserved memory ranges
+      commit: 242801cc24e865cb525ef7d826ce6ebeffcad606
+[3/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Set memory-region for framebuffer
+      commit: f3d3a5924812eae3aedb431632c8a3b4c3f6bae1
+[4/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Remove extcon
+      commit: 79664600fd3ed3972ad9321e13d1f80267730447
+[5/7] arm64: dts: qcom: sm6125-xiaomi-ginkgo: Fix reserved gpio ranges
+      commit: e8669e010991154bedadd1cd67700544e0362e99
+[6/7] dt-bindings: arm: qcom: Add Xiaomi Redmi Note 8T
+      commit: 32ace20ca1b65fcc2680b94cc8f00a80758eb76d
+[7/7] arm64: dts: qcom: Add Redmi Note 8T
+      commit: 7bb7c90e0ac18565a45c02072356bf3dffb81bcb
+
+Best regards,
 -- 
-2.53.0
-
+Bjorn Andersson <andersson@kernel.org>
