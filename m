@@ -1,167 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052FC3ED127;
-	Tue, 10 Mar 2026 08:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E678344056
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Mar 2026 08:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773130365; cv=none; b=MXIh4mvby3I4Yc6dLpm4BlgTg+nxr1hXcPGHsWreMsIqaW61Bz19XIKTyBdGZ6EAHRz1YXJSnJetxesdQBHq6m4m9x97ghdAWz22+7nKqi7IptulMef/SuSzqvSKZ5pg35+zFFLoIfpoYJipdMJRKfqKZ0MfMqnDrpXPAqE70dM=
+	t=1773132707; cv=none; b=C2GOauCP6BujW1X/604Cfu4L68clPnPAMAMnrdAbdAqFTFHtm0YHx9XDRxTdybosewiFEoCG1wV1B0eUPYkhXoDY1GE9oDfvlpZzZqtYzLwp8HU+Gp9NWx+8K1oNSqxUF+70FO/xQ+JaAMJByvDiaVE/fZshCyvlfZpiVd8ZAeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773130365; c=relaxed/simple;
-	bh=vixXyBmtAnLl2OyUavsNTcpAxyqUPXyYYcUyrFNX0DM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SWUCwpH4H2K9tkouWsQ/XowuoahLs8+Ynl0whjO5tXZzBWSbJaA1h26Zr+xV3uvTm6dDSxxKj1ABCB5zHAX2peJa36bba8iqSxFj4BB/gpUEmcKWukdOcLGZUhN5X+vpA9BSDCoum24UErnKNV6uFgqbMl1fuTr3nDo6h3aigWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zmbtjt4j; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773132707; c=relaxed/simple;
+	bh=vVoj3FLi83VXmJyuCRq2Dd+bxXjKaU+NntpFAWe/BT4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gZBDmKOZvzBQ6fyPEOVXUaD3+LlJBF0sCkGeITrtwqLVAVexJv7LwIDlHZBJdcj/dZYmiEOe+kL9irfq9wSywRuGUBre90Ga7BwnIbt4K5HmpSXt4eUgu+I42Pd4NM1zSH9tSwpGRZqK9pI6kgmz+FONUIMdvXDqyvFuAmdgdnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zct30tSL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zmbtjt4j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773130363; x=1804666363;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=vixXyBmtAnLl2OyUavsNTcpAxyqUPXyYYcUyrFNX0DM=;
-  b=Zmbtjt4j3JE0eJtI6crN5zR69zrY+dJ6zYeEUNclBQphaWHr3/iNAM8m
-   rljIKZbsGlQ13qf1Yd9sfOOb1sIBiabpjvgx+tynAu9ceBPAXLdjcKcTd
-   7MeFxO8+wLcD1fDHWRYIp/GquyS5Ddd+wXnTSs/FujGStC778DwKlJIr4
-   yhgyZDiKVVV3Zspjhgsc7oBCILB0zHbLhozCYOzGnT0E0FEis6VtubWxw
-   iB7ejE1AayS10XQP2cJGvAE2hyQeOWaqbyIN5zmihZmTDxZlu98bHmE7S
-   3G3o0+VDc0O2czwPPrsdvE2OlP6mRMAMdQMfm4XZsncP1WkvF+M1ezeob
-   g==;
-X-CSE-ConnectionGUID: hOBRFZXdToeySMWwHdQbxg==
-X-CSE-MsgGUID: EmmmH34VQzihg9w/pTHnlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11724"; a="96788719"
-X-IronPort-AV: E=Sophos;i="6.23,111,1770624000"; 
-   d="scan'208";a="96788719"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 01:12:42 -0700
-X-CSE-ConnectionGUID: iCHMQkmMQNGsrNJWe36plA==
-X-CSE-MsgGUID: vFA/5GVDQ2eBjGWdles5xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,111,1770624000"; 
-   d="scan'208";a="220209543"
-Received: from zzombora-mobl1 (HELO localhost) ([10.245.244.33])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 01:12:39 -0700
-Date: Tue, 10 Mar 2026 10:12:26 +0200
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] drm: dp_tunnel: use kzalloc_flex
-Message-ID: <aa_SahEg_NzB_PJN@intel.com>
-References: <20260308211220.33759-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zct30tSL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A99A3C2BC86
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Mar 2026 08:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773132706;
+	bh=vVoj3FLi83VXmJyuCRq2Dd+bxXjKaU+NntpFAWe/BT4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Zct30tSL3h4O0vrlc0FGEfY06o2E9w0S4RpZ3oU4xghwLQTLssYmSSmsIOaAXXJed
+	 GKp04zVWjV/rboXJu0znMzuHIhNcjAAHCPTqfjdOHx5SJOogCMDfFiXwQaeV6zNlj8
+	 DZyLtTSXYgnjg+zrA9J5y5CyI2Tucq5+RKbfV0zVr7P7ZZHdlQKSI3dR4wndWrXYh8
+	 4W4NSylgs6Xj1JcmztWDqzx7kskIHyPe4fUKskMhME8+fhxxKMlUrWlrpJ01IelZQ8
+	 G0RZjP94IHthM+0mqwwd46gxPz/r4ZLGHNMhvCgMMgoFvulyrcuC3K43Rc2UQmbtts
+	 hLwezImpohRfA==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a1330ac6c3so5426809e87.1
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Mar 2026 01:51:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUe+BPsYLgQqQK04iosYO4RafLhClNv7d1sICMWqX9qsYGi1gMsoBmsi+uFCJAuchdTfJfHmYgXetbgoUyWNHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywin8HrYNeEKveist/oTxjxF3ThQfvjkx4gDDs7xCIBaBD8TwIo
+	pK8S/1BsDa7nrvZ3847A6dxETgGu9F7zHuN4+kNXSuWf1hIYyHinR9abRkeks6TiNrEodEoVIUL
+	I8PViXlR5+O7uPXGR7FdxeWtb95QBopD3C64krNF5JA==
+X-Received: by 2002:a05:6512:304f:b0:5a1:3e8d:aa27 with SMTP id
+ 2adb3069b0e04-5a13e8dad62mr4744483e87.36.1773132705315; Tue, 10 Mar 2026
+ 01:51:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260308211220.33759-1-rosenp@gmail.com>
-X-Patchwork-Hint: comment
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
+References: <20260308021535.48098-1-rosenp@gmail.com> <CAD++jLkLj235Q=U_9E-hSneW5E42JjU=dRBJxKJNnqwgBLCm=w@mail.gmail.com>
+ <CAKxU2N9JbAzEYfmLpbw5b9Y6MsYUZ1FfLirfy8Hg8MCOUY6PAg@mail.gmail.com>
+ <CAMRc=Me+oUX5xbNY7PX43cTH0e5ouu=Ex3TqhvWvoefmR7jYYQ@mail.gmail.com> <CAKxU2N8_V7U11X18Ja+=tdYPWT6jnmM7bYt+5GHgeXAXOJ5cng@mail.gmail.com>
+In-Reply-To: <CAKxU2N8_V7U11X18Ja+=tdYPWT6jnmM7bYt+5GHgeXAXOJ5cng@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Tue, 10 Mar 2026 09:51:33 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Md3uAPzndudyvpFiLki8fkYHgAtumtaauXMkXwU4vANBA@mail.gmail.com>
+X-Gm-Features: AaiRm52QyqGRA5XZTuwTzrHYnzWWeX8i1qdpXgK_Fun3PV5g-eaSB6k0RbEVzRo
+Message-ID: <CAMRc=Md3uAPzndudyvpFiLki8fkYHgAtumtaauXMkXwU4vANBA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: msc313: remove kcalloc
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org, 
+	Daniel Palmer <daniel@thingy.jp>, linux-hardening@vger.kernel.org, gustavoars@kernel.org, 
+	Romain Perier <romain.perier@gmail.com>, 
+	"moderated list:ARM/MStar/Sigmastar Armv7 SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 08, 2026 at 02:12:20PM -0700, Rosen Penev wrote:
-> Simplifies allocation by using a flexible array member to remove a
-> second kzalloc.
-> 
-> Added __counted_by for extra runtime analysis.
-> 
-> Simplify assignment loop. It always returns true. That is,
-> max_group_count is always equal to group_count.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  drivers/gpu/drm/display/drm_dp_tunnel.c | 26 ++++++-------------------
->  1 file changed, 6 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
-> index f442430d8de7..aad1605b956e 100644
-> --- a/drivers/gpu/drm/display/drm_dp_tunnel.c
-> +++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
-> @@ -188,13 +188,13 @@ struct drm_dp_tunnel_group {
->  struct drm_dp_tunnel_mgr {
->  	struct drm_device *dev;
->  
-> -	int group_count;
-> -	struct drm_dp_tunnel_group *groups;
->  	wait_queue_head_t bw_req_queue;
->  
->  #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
->  	struct ref_tracker_dir ref_tracker;
->  #endif
-> +	int group_count;
-> +	struct drm_dp_tunnel_group groups[] __counted_by(group_count);
->  };
->  
->  /*
-> @@ -1893,7 +1893,6 @@ static void destroy_mgr(struct drm_dp_tunnel_mgr *mgr)
->  	ref_tracker_dir_exit(&mgr->ref_tracker);
->  #endif
->  
-> -	kfree(mgr->groups);
->  	kfree(mgr);
->  }
->  
-> @@ -1913,33 +1912,20 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
->  	struct drm_dp_tunnel_mgr *mgr;
->  	int i;
->  
-> -	mgr = kzalloc_obj(*mgr);
-> +	mgr = kzalloc_flex(*mgr, groups, max_group_count);
->  	if (!mgr)
->  		return ERR_PTR(-ENOMEM);
->  
-> +	mgr->group_count = max_group_count;
->  	mgr->dev = dev;
->  	init_waitqueue_head(&mgr->bw_req_queue);
->  
-> -	mgr->groups = kzalloc_objs(*mgr->groups, max_group_count);
-> -	if (!mgr->groups) {
-> -		kfree(mgr);
-> -
-> -		return ERR_PTR(-ENOMEM);
-> -	}
-> -
->  #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
->  	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
->  #endif
->  
-> -	for (i = 0; i < max_group_count; i++) {
-> -		if (!init_group(mgr, &mgr->groups[i])) {
-> -			destroy_mgr(mgr);
-> -
-> -			return ERR_PTR(-ENOMEM);
-> -		}
-> -
-> -		mgr->group_count++;
-> -	}
-> +	for (i = 0; i < max_group_count; i++)
-> +		init_group(mgr, &mgr->groups[i]);
+On Mon, Mar 9, 2026 at 11:00=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wrot=
+e:
+>
+> On Mon, Mar 9, 2026 at 2:03=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
+rg> wrote:
+> >
+> > On Mon, Mar 9, 2026 at 2:27=E2=80=AFAM Rosen Penev <rosenp@gmail.com> w=
+rote:
+> > >
+> > > On Sun, Mar 8, 2026 at 5:06=E2=80=AFPM Linus Walleij <linusw@kernel.o=
+rg> wrote:
+> > > >
+> > > > On Sun, Mar 8, 2026 at 3:15=E2=80=AFAM Rosen Penev <rosenp@gmail.co=
+m> wrote:
+> > > >
+> > > > > Use a flexible array member to combine kzalloc and kcalloc.
+> > > > >
+> > > > > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > > > (...)
+> > > > >  struct msc313_gpio {
+> > > > >         void __iomem *base;
+> > > > >         const struct msc313_gpio_data *gpio_data;
+> > > >
+> > > > Do you wanna add:
+> > > >
+> > > > const unsigned int saved_size;
+> > > So in the code there's
+> > >
+> > > for (i =3D 0; i < gpio->gpio_data->num; i++)
+> > >
+> > > which is equivalent to match->num.
+> > >
+> > > __counted_by doesn't support pointers AFAIK.
+> > > >
+> >
+> > This is a regular flexible array of u8. It should work fine with
+> > __counted_by and I too am in favor of using it as it has become
+> > standard for flexible arrays.
+> That requires adding an extra variable in the struct.
 
-This breaks the error handling.
+That's ok, it's negligible and provides tangible advantages.
 
-Hmm, actually it looks like it already got broken by commit
-8e6da25bd60d ("drm/dp_tunnel: Switch private_obj initialization
-to atomic_create_state")...
+Please do the same for your other patches.
 
->  
->  	return mgr;
->  }
-> -- 
-> 2.53.0
-
--- 
-Ville Syrjälä
-Intel
+Bart
