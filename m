@@ -1,73 +1,74 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18772F5487
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 23:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33032F5487
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 23:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773271345; cv=none; b=fFEuqpLEAEoWoUFsqSjRsqWhrMaQ35D6ueLDG11Hrjx+pXSEGm64ya5QiWbnmLNDGKnsHR36O0cQpe5YOtF/9Cl5ioA60DNKyfUnpTBv6KZouAHVJzJT9hl4U+bRvP5GtOBzyDm9dk661CniVYx5/0H485rylgXNlI9SqHFv64Q=
+	t=1773271448; cv=none; b=DoI/Iv0p05a3srkyZNaKnHPb5EMg08DoZfkWNr7psUWBnUp0vfKQR85JFPY5B2/t9c17iMdM0uUgEtrtJf8FmBgA5M80CxJtBxgGo+7+Hn9UL2PyFrvaCbVqZVtHDLkNjJZUXUrbOzM57xhPzXJ5PhRJWTC1Hb/NjMd+rikpQTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773271345; c=relaxed/simple;
-	bh=3b/UX2M7aFcJWInuUSq55ZwYF94bNSeG7Wja6ecHKnc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=es/fHIaUe27xAdSmtwmFzy5TrEUKBHiMz8WgtIkGdghtQyL7C2xDy8P5OPX9FyIdQNsX5ytLZayjs1JhEzZCDLG7YEv8dudQrLA2SKaDn2Pzs0V0WG+9r8yIhCNkBvS7C8Kq61lSfo8i5Ro0/zPGBWYyuI1Ns3VhwJMcTvj7v0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ij2E9rIO; arc=none smtp.client-ip=209.85.216.51
+	s=arc-20240116; t=1773271448; c=relaxed/simple;
+	bh=5x6P8nJwDE2dMBktvCxCL7MxySCiJKpx1mSlB5k2l7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Osa4uTiIbx0I4OQkgZ8lSVkHVT2YtbUeqyuFRNzfkKVwTkBdnWcA1azDWN5E7Hip5U27sMAD0IRpmjh5hneGfvuO7bED7q1b20agDhTARFxhaOc0HcYU5382fd7bQK9U9N/7p5at+Fu9MVJt8z4GZ1+AFdQp5EYFkVIQA7GyyxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FVHIAo0O; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ij2E9rIO"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-35990245493so219240a91.2
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 16:22:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVHIAo0O"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c73aabd620bso234229a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 16:24:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773271344; x=1773876144; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773271446; x=1773876246; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/y9dleBR2reXEEDZPM2b1qrma+w8Y5dsVKybDsJlCkg=;
-        b=ij2E9rIOE3cyTQ1BBG/rXGGHkdfv4vGCnm9tmxa5aX9g7FqyCKdiiWcVtC5wnw4dj1
-         V+nqnMvIedzyhd9DCeX4duCGPGXxPp8Dtak7Kdps05Bx97vmZvsOTNXy/NzKBy7Se0xO
-         aCmbhV4MylpY6YJIN+hQeU9VbC2eoPN+gckYeuZAwFk2hDblaTkhoMChG1JX5Yb//ikN
-         gAK7dMyoXp/OnnZVIhclm7qqtLvCvnu7+HPG1YJvgTsSTB9nv84pB/7EJm6L5fI64K0o
-         w9JPNrg/rGr18h9PVrDHnzZOLAIz9YT1t++3nfPZnGwbzx4vlHu0cJLJPm7x3Ehxu+YW
-         htYQ==
+        bh=KKV6gzPWKf+kdTy1HFMh1iXAwf/N5tjFhknniuMmlF8=;
+        b=FVHIAo0OTs0xVexbwy8CQFqCNz43JIoI8zD5/kMBuvUv/Qtx6KDiuyccMFCsOObpLR
+         lOdbab3AV0RzpzOhjtEb3coKW2qnXwLNeGfdfybix5L7itKGndSKgEZVqMLqF3LyhKYr
+         2EzPsB9to0k/DRdt9dwYEL1uSRSyLHYJrHpewDJVrfIaVtaMBYQg4yBo9XW8rEgY+Vsp
+         EnZV4HYG/O2bTlHbbzeFZa3qK9w6GljdVKpWTe+8UTSJrqm+KlDIftMQeCbFPS57ag3p
+         MKEDDP+lS5AM3rUpoY10oLWXLW/tpjK7af5E4Vdsgt7SQIVdpyF466IjaXCRsJaoOjxk
+         yV3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773271344; x=1773876144;
+        d=1e100.net; s=20230601; t=1773271446; x=1773876246;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/y9dleBR2reXEEDZPM2b1qrma+w8Y5dsVKybDsJlCkg=;
-        b=on5KXgHADZX3TImqzKHVawyhqwGFK9lZb4rBcjBUY7atwVB5suktvQG5pTYHbQ3V52
-         bI0RKRz0/ZOcrtSV8dWfSF1jc3gx0Pky/Go5x5Z2LbF2RdwTgUNi2eqTebjTiKUwx7mp
-         +TtdNUDbKWpPr/Ym4ZTwhhVmoIir5RWHABF0KHAvFk94kqA1VoGohzJk9Z9UUsIuuVHX
-         l+z1vpjuRa3K/0CNjRAd8D/Tu58rB9vKyxfVxaOhrSsEL9YKX8H/z8PUd+sF0NVjHH9z
-         DPsJvkRg4fEywSELgpEF6GsPOJ9akWAmPZzd86K2nHMRUBfkD3S/DxpWxMkrbFifdMJG
-         1dlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWALuQFv0p2URHIET7O0bcNgoAseT3Yll/8Dm04wYC9hEE7ndQEUpemhvrxe4cn7HLTCfKF20jl2mm2aXuG/S4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9h1G2KHZ1qEa96s1gUQzTcHeLfU6HBKOoITESsgS5ITSObUAU
-	tQnxGkIQ0VQQmLY9FG+EqBWI0npzLRXetU9aVgYHPBKcmOY1GUQfQR9F
-X-Gm-Gg: ATEYQzwoeSeFZeiR3yBjGBVqjQZ4tUz9cOmwz3H1OLCCWMtcowerTBq4Qq+nUt9UgWZ
-	binwi8bXQYPR5j4mYTW5tZxaiAIy4a8Y1jboh1KzltTwZnN2/ZMKXpJ0MXuPBN2nf9Kp2aTSIXu
-	hHXQgC4Y0JzZ9kYnCcPcguo9CFmMSQdFrr/RiGuH17ZnqcUlBM3KZ3Z8iyAO7KRyurT9eXMDkVi
-	xf8brGmgFLLclHIfsqp7olbvS+E0/NBKra8X1WkM/hr4QQtLndg1DQiO4Nipxk9jbkdRqNxXKUN
-	DcE7mcfUXqbJIHO9lb/kZVuRe6ixecg0T0z0LjFBwgN80m1AxG/urW4LoZJtviMY3KRIHiIMMvV
-	Za0NTQTDjLc5p/Kr4WWeegXqW5Wbxwy/8TxX8gb8kTGNNNuihojczDhglxiR6oxWyb6qJ1VKe1u
-	qGMTateeAOs14tRCwaXjOHfaT/8Oy+RkRjcvD53t+rzklxFK7ImH/dTQ==
-X-Received: by 2002:a17:90a:d446:b0:356:2c7b:c026 with SMTP id 98e67ed59e1d1-35a01301cf1mr3659933a91.23.1773271343988;
-        Wed, 11 Mar 2026 16:22:23 -0700 (PDT)
+        bh=KKV6gzPWKf+kdTy1HFMh1iXAwf/N5tjFhknniuMmlF8=;
+        b=L2QQzErEr/DpON2iD+psypWx6LOco3bkU1UHACJyTJwo0o/z20/+9gJ6gxE0SecR4h
+         UcrsMEgWBbu5bRetMY6l+5uyAw+/L8nCUjZXhTy9EtniXkBDAZt4dsQVqJ0BesKd/ojX
+         ZYKW+j8Dd+A7KIX+SL2vjLAAk97rItU+4ovKATQOe8MIOzZc4RYRseZMXsj8mh1xY6AM
+         VQEC4ez/WGJ9GUNbOfYxhxjJHJrVWguLZk0LxSEo+IlN3cIYwcxcZ6DP0Q5gTq9ssc6n
+         QzTAGMndu1Zv9L4AZuVA06JhFfUOaGs+pepmbjHeStlqMcApCXlHJNTXelrS9ricD8qu
+         TATw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2yx3AbJINHw5nQYmbBPKuEnBI5Xw4C82UMKetfQ/dIcH/VNU0Ocayqr8LjSsqiTitowliybu2hk/EkJ4X7ZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO+KW83+uNOH5ApY6D9UYSRj6zXZyF/tLxxDreW7Smo0FtPi5s
+	D0bv4/IG6cVfi6NsgwWASv6Z2Vsk2L3/amPyxmBbouGL+kZYBG0KBOOEVynnSMNb
+X-Gm-Gg: ATEYQzz9aSa16yh/tIf/K6aWZa5iQdzK2qLJK7VtX9BQ0PVwXfsqmNKj1SjI7ByJ8Iz
+	lIUXFy7DquH03MED4p+Fo69uKOBLIlaeyh52W9XbEuVDkzGDs5wlVesgi3Hsf6cxahiCgd42GWl
+	PxRT8wryfzvxwgCM4iLIkrApH8Lgd8K8P0Yb+gQAOVgeVX0A2EfXicc8OmKTKRr4CrCVCaXRQZl
+	aLUFMZ/tcczJFhhwxFv3o0bZVt+KsGWsTL91A1egt6N/8BHDEdjDlrGmukMUkLRhXtFomOY9a0z
+	5buIRWI3/uYMA9+wS3M+BKuYlFQwwr3rafcouPnKgL/VDhrNCH18ARGEeIAepFLDB4jb4e0Pptd
+	lmFq1Is0O/JKQX4jO1bIoQiwZR5MpLZsnUGLNVJ79i7ItnJHxXRoWwalE7XFnep9k+S7G7tBxY0
+	00WtKaemLIlv9MMx/RUy6WV9tGJJMib4w9ukKF5jTli8fb8fvU925RWLa5q1bZJnZ5
+X-Received: by 2002:a05:6300:6705:b0:398:7667:b2e5 with SMTP id adf61e73a8af0-398c6178160mr3760195637.68.1773271446144;
+        Wed, 11 Mar 2026 16:24:06 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35a031aa12dsm1290014a91.10.2026.03.11.16.22.22
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a072603c0sm755037b3a.22.2026.03.11.16.24.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 16:22:23 -0700 (PDT)
+        Wed, 11 Mar 2026 16:24:04 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: linux-usb@vger.kernel.org
-Cc: Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
+Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org (open list:QUALCOMM TYPEC PORT MANAGER DRIVER),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] thunderbolt: use kzalloc_flex
-Date: Wed, 11 Mar 2026 16:22:05 -0700
-Message-ID: <20260311232205.18137-1-rosenp@gmail.com>
+Subject: [PATCHv2] usb: typec: qcom-pmic-typec: simplify allocation
+Date: Wed, 11 Mar 2026 16:23:47 -0700
+Message-ID: <20260311232347.18257-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -77,105 +78,146 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplifies allocation by using a flexible arraay member.
+Change kzalloc + kcalloc to just kzalloc with a flexible array member.
 
-Added __counted_by for extra runtime analysis.
+Add __counted_by for extra runtime analysis when requested.
+
+Move counting assignment immediately after allocation as required by
+__counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/thunderbolt/path.c | 24 ++++++------------------
- drivers/thunderbolt/tb.h   |  3 ++-
- 2 files changed, 8 insertions(+), 19 deletions(-)
+ v2: reduce chaanges only to needed ones.
+ .../typec/tcpm/qcom/qcom_pmic_typec_pdphy.c   | 23 ++++++++-----------
+ .../typec/tcpm/qcom/qcom_pmic_typec_port.c    | 22 ++++++++----------
+ 2 files changed, 20 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
-index 22fb4a1e1acd..3af5d263ac74 100644
---- a/drivers/thunderbolt/path.c
-+++ b/drivers/thunderbolt/path.c
-@@ -150,22 +150,17 @@ struct tb_path *tb_path_discover(struct tb_port *src, int src_hopid,
- 		num_hops++;
- 	}
- 
--	path = kzalloc_obj(*path);
-+	path = kzalloc_flex(*path, hops, num_hops);
- 	if (!path)
- 		return NULL;
- 
-+	path->path_length = num_hops;
-+
- 	path->name = name;
- 	path->tb = src->sw->tb;
--	path->path_length = num_hops;
- 	path->activated = true;
- 	path->alloc_hopid = alloc_hopid;
- 
--	path->hops = kzalloc_objs(*path->hops, num_hops);
--	if (!path->hops) {
--		kfree(path);
--		return NULL;
--	}
+diff --git a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
+index c8b1463e6e8b..a1d9315994de 100644
+--- a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
++++ b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c
+@@ -95,13 +95,13 @@ struct pmic_typec_pdphy {
+ 	struct regmap			*regmap;
+ 	u32				base;
+
+-	unsigned int			nr_irqs;
+-	struct pmic_typec_pdphy_irq_data	*irq_data;
 -
- 	tb_dbg(path->tb, "discovering %s path starting from %llx:%u\n",
- 	       path->name, tb_route(src->sw), src->port);
- 
-@@ -245,10 +240,6 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
- 	size_t num_hops;
- 	int i, ret;
- 
--	path = kzalloc_obj(*path);
--	if (!path)
--		return NULL;
--
- 	first_port = last_port = NULL;
- 	i = 0;
- 	tb_for_each_port_on_path(src, dst, in_port) {
-@@ -267,12 +258,11 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
- 	/* Each hop takes two ports */
- 	num_hops = i / 2;
- 
--	path->hops = kzalloc_objs(*path->hops, num_hops);
--	if (!path->hops) {
--		kfree(path);
-+	path = kzalloc_flex(*path, hops, num_hops);
-+	if (!path)
- 		return NULL;
--	}
- 
-+	path->path_length = num_hops;
- 	path->alloc_hopid = true;
- 
- 	in_hopid = src_hopid;
-@@ -339,7 +329,6 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
- 	}
- 
- 	path->tb = tb;
--	path->path_length = num_hops;
- 	path->name = name;
- 
- 	return path;
-@@ -372,7 +361,6 @@ void tb_path_free(struct tb_path *path)
- 		}
- 	}
- 
--	kfree(path->hops);
- 	kfree(path);
- }
- 
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index e96474f17067..4e66b53860dd 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -440,9 +440,10 @@ struct tb_path {
- 	bool drop_packages;
- 	bool activated;
- 	bool clear_fc;
--	struct tb_path_hop *hops;
- 	int path_length;
- 	bool alloc_hopid;
+ 	struct work_struct		reset_work;
+ 	struct work_struct		receive_work;
+ 	struct regulator		*vdd_pdphy;
+ 	spinlock_t			lock;		/* Register atomicity */
 +
-+	struct tb_path_hop hops[] __counted_by(path_length);
++	unsigned int			nr_irqs;
++	struct pmic_typec_pdphy_irq_data	irq_data[] __counted_by(nr_irqs);
  };
- 
- /* HopIDs 0-7 are reserved by the Thunderbolt protocol */
--- 
+
+ static void qcom_pmic_typec_pdphy_reset_on(struct pmic_typec_pdphy *pmic_typec_pdphy)
+@@ -560,18 +560,16 @@ int qcom_pmic_typec_pdphy_probe(struct platform_device *pdev,
+ 	struct pmic_typec_pdphy_irq_data *irq_data;
+ 	int i, ret, irq;
+
+-	pmic_typec_pdphy = devm_kzalloc(dev, sizeof(*pmic_typec_pdphy), GFP_KERNEL);
+-	if (!pmic_typec_pdphy)
+-		return -ENOMEM;
+-
+ 	if (!res->nr_irqs || res->nr_irqs > PMIC_PDPHY_MAX_IRQS)
+ 		return -EINVAL;
+
+-	irq_data = devm_kcalloc(dev, res->nr_irqs, sizeof(*irq_data),
+-				GFP_KERNEL);
+-	if (!irq_data)
++	pmic_typec_pdphy = devm_kzalloc(dev,
++			struct_size(pmic_typec_pdphy, irq_data, res->nr_irqs), GFP_KERNEL);
++	if (!pmic_typec_pdphy)
+ 		return -ENOMEM;
+
++	pmic_typec_pdphy->nr_irqs = res->nr_irqs;
++
+ 	pmic_typec_pdphy->vdd_pdphy = devm_regulator_get(dev, "vdd-pdphy");
+ 	if (IS_ERR(pmic_typec_pdphy->vdd_pdphy))
+ 		return PTR_ERR(pmic_typec_pdphy->vdd_pdphy);
+@@ -579,12 +577,11 @@ int qcom_pmic_typec_pdphy_probe(struct platform_device *pdev,
+ 	pmic_typec_pdphy->dev = dev;
+ 	pmic_typec_pdphy->base = base;
+ 	pmic_typec_pdphy->regmap = regmap;
+-	pmic_typec_pdphy->nr_irqs = res->nr_irqs;
+-	pmic_typec_pdphy->irq_data = irq_data;
+ 	spin_lock_init(&pmic_typec_pdphy->lock);
+ 	INIT_WORK(&pmic_typec_pdphy->reset_work, qcom_pmic_typec_pdphy_sig_reset_work);
+
+-	for (i = 0; i < res->nr_irqs; i++, irq_data++) {
++	for (i = 0; i < res->nr_irqs; i++) {
++		irq_data = &pmic_typec_pdphy->irq_data[i];
+ 		irq = platform_get_irq_byname(pdev, res->irq_params[i].irq_name);
+ 		if (irq < 0)
+ 			return irq;
+diff --git a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_port.c b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_port.c
+index 8051eaa46991..6c6401187f58 100644
+--- a/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_port.c
++++ b/drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_port.c
+@@ -169,8 +169,6 @@ struct pmic_typec_port {
+ 	struct tcpm_port		*tcpm_port;
+ 	struct regmap			*regmap;
+ 	u32				base;
+-	unsigned int			nr_irqs;
+-	struct pmic_typec_port_irq_data	*irq_data;
+
+ 	struct regulator		*vdd_vbus;
+ 	bool				vbus_enabled;
+@@ -181,6 +179,9 @@ struct pmic_typec_port {
+ 	struct delayed_work		cc_debounce_dwork;
+
+ 	spinlock_t			lock;	/* Register atomicity */
++
++	unsigned int			nr_irqs;
++	struct pmic_typec_port_irq_data	irq_data[] __counted_by(nr_irqs);
+ };
+
+ static const char * const typec_cc_status_name[] = {
+@@ -706,18 +707,16 @@ int qcom_pmic_typec_port_probe(struct platform_device *pdev,
+ 	struct pmic_typec_port *pmic_typec_port;
+ 	int i, ret, irq;
+
+-	pmic_typec_port = devm_kzalloc(dev, sizeof(*pmic_typec_port), GFP_KERNEL);
+-	if (!pmic_typec_port)
+-		return -ENOMEM;
+-
+ 	if (!res->nr_irqs || res->nr_irqs > PMIC_TYPEC_MAX_IRQS)
+ 		return -EINVAL;
+
+-	irq_data = devm_kcalloc(dev, res->nr_irqs, sizeof(*irq_data),
+-				GFP_KERNEL);
+-	if (!irq_data)
++	pmic_typec_port = devm_kzalloc(dev,
++			struct_size(pmic_typec_port, irq_data, res->nr_irqs), GFP_KERNEL);
++	if (!pmic_typec_port)
+ 		return -ENOMEM;
+
++	pmic_typec_port->nr_irqs = res->nr_irqs;
++
+ 	mutex_init(&pmic_typec_port->vbus_lock);
+
+ 	pmic_typec_port->vdd_vbus = devm_regulator_get(dev, "vdd-vbus");
+@@ -727,8 +726,6 @@ int qcom_pmic_typec_port_probe(struct platform_device *pdev,
+ 	pmic_typec_port->dev = dev;
+ 	pmic_typec_port->base = base;
+ 	pmic_typec_port->regmap = regmap;
+-	pmic_typec_port->nr_irqs = res->nr_irqs;
+-	pmic_typec_port->irq_data = irq_data;
+ 	spin_lock_init(&pmic_typec_port->lock);
+ 	INIT_DELAYED_WORK(&pmic_typec_port->cc_debounce_dwork,
+ 			  qcom_pmic_typec_port_cc_debounce);
+@@ -737,7 +734,8 @@ int qcom_pmic_typec_port_probe(struct platform_device *pdev,
+ 	if (irq < 0)
+ 		return irq;
+
+-	for (i = 0; i < res->nr_irqs; i++, irq_data++) {
++	for (i = 0; i < res->nr_irqs; i++) {
++		irq_data = &pmic_typec_port->irq_data[i];
+ 		irq = platform_get_irq_byname(pdev,
+ 					      res->irq_params[i].irq_name);
+ 		if (irq < 0)
+--
 2.53.0
 
