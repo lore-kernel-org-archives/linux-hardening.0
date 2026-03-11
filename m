@@ -1,146 +1,114 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE83A2D978B
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 23:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773271144; cv=none; b=cy3Xd9rEFwNbOUrYhBAHXXfZllWu3mYHQq7yEBV9BIcOzpY3NSvb9BrFh5UeNZq6s7IsDgOOHeBg2jFtqMhBvJv2k/ObBbJYYW3zcpbnHuAPUO+J2K70FaD6qNSB0bk0k0DrLHEVGb2jPms5kYHYZksiYgEE37KdN009qTAb7gU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773271144; c=relaxed/simple;
-	bh=O6jBhetHYK3YjI5od6XbzRv137I+sjU3j7bdXLcMVIk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VXUtmLTLWr+Ge27UuQNptGaCK7ZFX3G95b0zSR+6BIwvllfpO7RptpTIXpWJduSWwa/3lE2rcTE1TuwiuqF1L2tMB19Bv+jYxln6pUM1FJ8uAhmxXw0LOcRROZA+PQYN83cuufiBMV08KlU8VDJBrQBbSYGbjZGc+fIWS+g4E4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KnCxiJqX; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337C0358378
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 23:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773271154; cv=pass; b=IMoKMTcNGa1/2ub6FGA94Iwr5luBDcWqF9XrgxKWB4ieJuRTomn2WCk2lrH43r9k6g8/jmwcduXIsZ7hm+mrJqfZb6PO8Q/K7oomus1MKRUxzX3DPtC9HQVIvytbY9YIjTAeS2EJxg80hpqTZH+tqFV8YGH5Cjiv5mkrKZE/xf4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773271154; c=relaxed/simple;
+	bh=S0Kwnud5iFtwr69z8VPCi5ftaPUGlvLcKnXUDXdBOFI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i8XX6RK5qgq4xcy+IBt8mSApjXnNFZl3UoebaAbqkJqv599vT9QoP8+03TVmJVhHxyzLmGOA3Rfc6n3FffJ/u5DHPK8VjL7xaP5J944NzEaH04Tdx6e/yXDP/7/Lnc28bf8xaRniYAzwBjmd1ufMTjCggHHWMf7jySAmm/vgck8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cR6X86Qw; arc=pass smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnCxiJqX"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2ad21f437eeso3791185ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 16:19:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cR6X86Qw"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-661b16ac011so622973a12.2
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 16:19:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773271151; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ZyjTRnwK+J2Wr9Rob1KAAFek/Vm46inFf9Xdp3A3DNqXl4R2iZxIDQMjuUfDXyjhhl
+         0a/GtC4nDAu1iaxNkJYe+JwreM0Bx2s5lIczeMXTnsvjyXx85raJiqCJZor23Cyb6OO1
+         IH/BPzEeVonhDYSNIl3gJ+ui4hEmwHsNm7b1vJ7HcsrUedi/z+f1TwFV2pRISg1RDqZG
+         zWO9/mmkixlk7iqY8DrYM6PPpjyQysjg8Ym+vK5FdqVSM+sTh3WVKC7SHIxHZlbTHzJ6
+         zixG2p8n7frymhxqhUnSUCpeIuAU2xp4rH5jPqsan3mG8UNJGI9ZfVS+NzCVr5JygR7a
+         iRzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
+        fh=QWSnOtYyvucCaKs/xwaN6LUoAAVMN19sY0TiQZP/BR0=;
+        b=TRg+WmscGx43WniYtJTnwjFgMJeCbFyoBcQSpK2FWRPZ5ZpcnoIGH7wLGc1ECt05GR
+         Iaw/CD5jdM9rN0tY8kRo7sbc+YfK5OHoKJ/Fq5A94xC4dfJ/7UeCufaVQ/Tt1blve8Z0
+         jcJbFGo+vHondVC6aQOboRtZWmH3pbTmZ0JuaReYzw8tb04Usl70vlceh2p89YPJFDda
+         3QXdRw+1slswLGJb0llQV/IifWCrjebUSVo4Mjm9cQXwK7MbdkJAfr9sTnRBri51h7PT
+         1xmmccXWBM5dwbjceWiS786M5NKYh6xAuWtFQl+HXD0pf3NHdET7F4fwpkD24IG1jjh4
+         aI3g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773271142; x=1773875942; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nGQa5TPg+fy6f75658KrdxaLTfVS/9M1At/7AR8OAo8=;
-        b=KnCxiJqXXM1lmVUKn97NqqpXhZdLhCN9uXHz5DTW8sEfQGTmXykuLB6tBB/xnnjag/
-         KnSYQA0Y5YPXwLLSp8qwQKN1QdI0nkbIHLAo82yUUO5HN0aDTKrjy1rGlVKhIXR/++38
-         h6vvkA2FwNuqDFp1eMQm2dYzud4ttgv7diRWElfz9ikFEwf3Dfum4aNMuDNv36DPE7Py
-         8hCfsx73HDkCA8hlhce1xJErqj86xlzWrBqasQqGNrUd0AsxtGgypHtoUYdqlvpQqDJC
-         oSObC9B1lZXrLnFpOf0YtjhC5FXdsPoivT0iyNb4SmoPeXIJekxF7656Le43sQMW9s3T
-         R1Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773271142; x=1773875942;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1773271151; x=1773875951; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nGQa5TPg+fy6f75658KrdxaLTfVS/9M1At/7AR8OAo8=;
-        b=OLfaNY8OVzVNUVr3JKM+GXydMiYkAf+5dihDjG+dcbKqdrL7DsViToNsMnp7w2DKVf
-         clbBjNMIMto7fptvdo8EXwgs1b5otIc5XdgJfMa+z9EYLhqJWa8lcb3Q/kA9RfVAdxf0
-         Xi1qg+se8zuQ/qTpMW6HnochkYhOHR49pXLPYlxcrvzjntJXmkxJGz5gxzYipVgV+/mU
-         nWPpBoeQGUHNaLg2Nj4qPhg9OiJb0rBZrvIlE+PsQ/EYQY6kgK0bhN+LUR9mAdhHtRTj
-         Brm5uZ0gKc0G8mHHH1oP45/FSNulWPJnnhLVxO+h+sVqpLpOO+u6SSDAcKQEF69iSRdr
-         MB2g==
-X-Forwarded-Encrypted: i=1; AJvYcCW69i0cRORDFZ3VqNdRdPSEHpB3Ku+fXlGRoz29PBB5aUhiYtQA+kSv1TRSBMeJjRvzf6ZoxhcXa1gIla4cQfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFVDehZsW9o8vOXCwj6kmh7sslxhdApxIwRQ/NuPJ5Q2q7g/5C
-	t/LfL0NyCK7RZqBY5OVb+/4nzXqp+ampuAxonTSloKGAJdt4wvWnP5xtcvi3wB7N
-X-Gm-Gg: ATEYQzwJ+tz2uA+re31V9nFcih8YGpwpGWLyhQzmLGv5VzWTeBmNQA7HsP4YRkuUXII
-	OaN9SbsXmhpGg12TVB4eaq4lB7GkJrG1zCjgOASr17s8oRw5BVnMF74n+cJ5O4wkv+7FW0YXVTt
-	USKGafE6OIGOPzE/ARx/A1cZ/i9iRa1J0kNdMVltQICRqdWTMG9jk9w7ZButb2a6oR7vcTU1Pt4
-	XTqCGnIsE7328NnW8J+RjUVKeQ6gu3vf5q0c7VNhj6Kh+SsM3RE9jFTe9Xu/ElyZRUv2kSoV4dZ
-	omlxLArFpv4ocmp28qLUQ9QkVQpTIfcoED5N55LAILVTTQeCQJP7eEcVKC0frCZctxKEsF6aLy4
-	bZEZWLa3MY6NMci2ckKNOHtsNYBzic7kHi5EzNF6gO9qKGN4avKbe7Y9qdbT2lba4vFSwvQ7dbP
-	M5m1MKF4Y1Y7Rr0MK9wuD9gmF1l01VUpMEdGiEVVha6ENOmb7Dh4mxmw==
-X-Received: by 2002:a17:903:32cc:b0:2ad:b213:feba with SMTP id d9443c01a7336-2aeba4416d2mr10894095ad.5.1773271142123;
-        Wed, 11 Mar 2026 16:19:02 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aeae222e3asm43921815ad.15.2026.03.11.16.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 16:19:01 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Lixu Zhang <lixu.zhang@intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv3] gpio: ljca: reduce struct allocation
-Date: Wed, 11 Mar 2026 16:18:44 -0700
-Message-ID: <20260311231844.17891-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
+        b=cR6X86Qw+tvhbwCWZryMP33vE3ID5yNEhPeJ9uDPyp3jmfbOEC/zfGnBAUOv4ccqee
+         2S7CdhAjVVm/9nfFDN9vUuw3tMZmWC4Nx5WhA1WshPPZOuPX6so3IM/6Zlxb/hAtc5Ht
+         7uKX0244lcNW1mgz2vJlfTrJcAeilYMPGMH11iS0L/YnShPoGFReBp9utk8FFdtN4WM1
+         DxSUNopaqcn04xV14HHHgqkAZGKL60Qx9XiTdW3vcaxRZXCwxhIuwPOP80EfqMIQzfCY
+         TA37K3/1QO95Poad4Xg4Rdwn3Ki8GC35rNvNuZsD4afsaQL4DxPOn1Pu+nogV1/FdoX3
+         d4Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773271151; x=1773875951;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
+        b=GFzo7vAoWAbzv1ACZPe8/NXAEg/ffuuInDlKq3lPVvNqvdDd1mghF0sw94cCLf2P//
+         /tmlKo8SU2qEvXg4duQgSQ8OY3inv8Q0TZMqrXMkyH1dsVZI6Lnsy5yDBPwUKsZdGUOB
+         dm4b1T0/boG9DXWqPLXl0M8lr1Qkv3VLZpaMPnThZP2ahKm2FqGlZT/H7lQdYa1wnJUD
+         2RKDuuUXdYCRPDzBhee03XCIQSfGXoShWcL3Wk/7OPVF9JJLSIdM8i1LBAc8wYDRi7lZ
+         QTiHxqCAjPiFl3Hz9aemloYWROjWnxmstvF9zmZCgOT8SGZxo6DyzReDKwfa2NU79fi2
+         gqFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSW6X7QlEfQ71na3SgrxGZqXQqpk46ZjeDbbIVbtzNQAXv1eSZieNEmK9W6H+eLlVsCswvvAeAS7wK0KLZnvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCBZAfIiTsgC8AG0z6SF28F1EfeN37L5BIJWt6TrzZQc6MWU2S
+	/VtUZd09u/O6nD3we5ymCypLl33ev0OuXSFQIyiWgUKOfgVPd28KLRl13sNiUmCBy6QSl04pmxZ
+	+ASXlEBLZ9ZueXsZ8mWSOkJaATYNJP5c=
+X-Gm-Gg: ATEYQzw2PdS8OEumKpXLHSnpMHF23Jycj843CwYxOC/sBLOdeUuTfBoU8gu+dnCkS9B
+	1P5xaKKkwUzYDawpFWTNfXzv9F5PitJsm3phHklUDoU8dZopxQEwKFamUJmdj2MKTyCJF+LBe87
+	AtPB0/bEyAOk7TdlrW74Xe56T1z+mH5pzuSAx07DCXVdEAkKM6irrHg4Y5zsduP6Ut3tQ9kprAa
+	W4wEcbK1ptoBBgF/O6fTvhqtYCt1d1eg8BrafBFOYc3XeOvSAh843/B7SJ+d5s8BB5sRKux2Pao
+	5/8jCvuW+kFsd6EpvStcEtes/Cln83MbV3r9A8Sex+4KwhpE4ynOCIrOJLE25O3V8uFkevrnu91
+	X4/bPFZe1RkVLB35B
+X-Received: by 2002:a17:907:2d0e:b0:b94:b5b:4370 with SMTP id
+ a640c23a62f3a-b972e158c2emr286633466b.2.1773271151254; Wed, 11 Mar 2026
+ 16:19:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260310222040.10324-1-rosenp@gmail.com> <CAD++jLmR8TZHMbiSBaUmUvPYvP9bPOmr0a=yq4M7FNRFF4EzcQ@mail.gmail.com>
+In-Reply-To: <CAD++jLmR8TZHMbiSBaUmUvPYvP9bPOmr0a=yq4M7FNRFF4EzcQ@mail.gmail.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Wed, 11 Mar 2026 16:19:00 -0700
+X-Gm-Features: AaiRm51bcB2GD8hEt0KZsTqrJJEU2s6nszH4kDHUKTkax9rvTUDLGCQS6er_THc
+Message-ID: <CAKxU2N9fExr=72E6ZPs+VqCe+eSzyxS8zbcCU2PPcqKjvqiO_g@mail.gmail.com>
+Subject: Re: [PATCHv2] gpio: ljca: reduce struct allocation
+To: Linus Walleij <linusw@kernel.org>
+Cc: linux-gpio@vger.kernel.org, Lixu Zhang <lixu.zhang@intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert connect_mode to a flexible array member to avoid calling
-kcalloc and to combine the allocations.
-
-Add __counted_by for extra runtime analysis.
-
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- v3: make unsigned int to match original.
- v2: add counting variable
- drivers/gpio/gpio-ljca.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpio/gpio-ljca.c b/drivers/gpio/gpio-ljca.c
-index f32d1d237795..93a0fd4ac507 100644
---- a/drivers/gpio/gpio-ljca.c
-+++ b/drivers/gpio/gpio-ljca.c
-@@ -63,7 +63,6 @@ struct ljca_gpio_dev {
- 	DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
- 	DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
- 	DECLARE_BITMAP(output_enabled, LJCA_MAX_GPIO_NUM);
--	u8 *connect_mode;
- 	/* protect irq bus */
- 	struct mutex irq_lock;
- 	struct work_struct work;
-@@ -72,6 +71,9 @@ struct ljca_gpio_dev {
-
- 	u8 obuf[LJCA_GPIO_BUF_SIZE];
- 	u8 ibuf[LJCA_GPIO_BUF_SIZE];
-+
-+	unsigned int num;
-+	u8 connect_mode[] __counted_by(num);
- };
-
- static int ljca_gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id,
-@@ -400,22 +402,20 @@ static int ljca_gpio_probe(struct auxiliary_device *auxdev,
- 			   const struct auxiliary_device_id *aux_dev_id)
- {
- 	struct ljca_client *ljca = auxiliary_dev_to_ljca_client(auxdev);
-+	struct ljca_gpio_info *gpio_info = dev_get_platdata(&auxdev->dev);
- 	struct ljca_gpio_dev *ljca_gpio;
- 	struct gpio_irq_chip *girq;
- 	int ret;
-
--	ljca_gpio = devm_kzalloc(&auxdev->dev, sizeof(*ljca_gpio), GFP_KERNEL);
-+	ljca_gpio = devm_kzalloc(&auxdev->dev,
-+				 struct_size(ljca_gpio, connect_mode, gpio_info->num),
-+				 GFP_KERNEL);
- 	if (!ljca_gpio)
- 		return -ENOMEM;
-
-+	ljca_gpio->num = gpio_info->num;
- 	ljca_gpio->ljca = ljca;
--	ljca_gpio->gpio_info = dev_get_platdata(&auxdev->dev);
--	ljca_gpio->connect_mode = devm_kcalloc(&auxdev->dev,
--					       ljca_gpio->gpio_info->num,
--					       sizeof(*ljca_gpio->connect_mode),
--					       GFP_KERNEL);
--	if (!ljca_gpio->connect_mode)
--		return -ENOMEM;
-+	ljca_gpio->gpio_info = gpio_info;
-
- 	ret = devm_mutex_init(&auxdev->dev, &ljca_gpio->irq_lock);
- 	if (ret)
---
-2.53.0
-
+On Wed, Mar 11, 2026 at 5:57=E2=80=AFAM Linus Walleij <linusw@kernel.org> w=
+rote:
+>
+> On Tue, Mar 10, 2026 at 11:21=E2=80=AFPM Rosen Penev <rosenp@gmail.com> w=
+rote:
+>
+> > +       size_t num;
+>
+> What about naming it num_connect_modes?
+> (and unsigned in as Sakari says.)
+Too long IMO. Makes the most sense to match variable names.
+>
+> Yours,
+> Linus Walleij
