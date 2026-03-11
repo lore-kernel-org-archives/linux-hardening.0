@@ -1,146 +1,111 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259763BB9F3
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 08:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55533DCD87
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 11:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773218788; cv=none; b=XWnz1JLuiERBxh+97U6MJfjGi6iV08YXzn3r4DUs+7mljP/2HEyJ60Ty/3ybQzQUZr8LJ2z9rRDC1b/XhSIXhT/AZN73OlJjYBOmiS5iSDpA/GLtdhB2f4c8pQobYsXVOdQS9QkAb/+SD/FCM4yYlYLXjmMc9g9WyDSTgT32x6s=
+	t=1773229925; cv=none; b=H5H9FF6niaAIQHzeA7c6CE16IjxR7TueELsJQEDrPZF91+QXBKgmElWmgSSN2vaZSw3MuSUX3appQj5RQYQjEH0h4iLCtn21HieuswvPkaZhF2E/aGcZ1CnTjBYaQLTI7EcPAnbDlPWiF/b5ECKuQePH3vL2sb5YAG6fn2M+Z4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773218788; c=relaxed/simple;
-	bh=J/eXn4jxWGAFllL8D/NqvXyBbzgywLRkM6+3tnsk9T8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LinQFMR2HJibqy18hxHN9tlVSm540KHK/HWpu2Feco0wDWKtxIuFStnAz7PyZMAvAuxhHIwcdGAovufGr6g0EXwsb073s64iK3cwRL1Q0LnuaJkih8W9S0omPUhjeCce1Wycf88vm/IP5/Sgah4fJVZafqvcE7D1B+46Dl27DrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BrdENJTc; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=gvB4Dsop; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1773229925; c=relaxed/simple;
+	bh=J26iwcTH0Z/huqTH2Fmcqab+8MgnO27SnkHJz4TSMMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LnsL4qYPpYkMdRoFBLcEog178XUzIXWxaG5HbH3+YE25ILX/2A8b9TDCi1kkBGJ2ia9w6G/aReJZ1kzSArdV1nvu9Ky2VJ0Yn14MWIL6XaPzUtD0gd96hUfaPYwlesGdnJUQ5D0SQymVXa+r29WiB4Q5E0P48smXjYs630abfNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WezULfVA; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BrdENJTc";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="gvB4Dsop"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62B82Y7k1265798
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 08:46:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6vJFxCRXXAQ3TQeEvqMbHf6JZbJYgoRmy2aLFS+RO1I=; b=BrdENJTcMQ7zUFAN
-	qayAoKHnVf+74ijFUtI+1sjehnCalKYJmR+V4UkmfRgZS4q8XAEyr3qeV7z/Kv9k
-	e9BUTrzPz5yJlv4DiVPu6/aEpl7NyHlvf+F4dP+2jvl11VZW7uvgs+xCR40xebyc
-	SwOd22pwGqSTKRtgtOqAhYAe6SlE6USa6xYSTVi+6tCt53Fn091kz9x7Cu3M1jmD
-	T7nwfESm8MwkUkf+lIMJIC0268HqbsUDwDfd924MYngbnHobFNVjBVa9SRpOl2FB
-	TjaZ3uyM1/PwFHVuo4n5wI1EPb3IPUJf5mWIqHbNwVmkHv73OyVy8e82oFZvbcL7
-	bElvKQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ctpkfk3dm-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 08:46:19 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8cd858e8709so3094433085a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 01:46:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WezULfVA"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-48534b59cf3so32924095e9.2
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 04:52:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773218778; x=1773823578; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6vJFxCRXXAQ3TQeEvqMbHf6JZbJYgoRmy2aLFS+RO1I=;
-        b=gvB4DsopezQqZ1V5twaEpPa0v5Q87zq3NSFGJG6Vuwex3VxBP6Twva35GMSiwrEWou
-         5k/EK4tncx5+O8BCN4/8BJdemxzKz8aeEDA8b3CFTa5lV6cOjwJoAjxazsrYjc4uIXNM
-         wWF4/Y5roffYoMCRUnDCKHEp1lIXo7B3b3gBS65wbXvolyMVGRrmk/bWmc2h7pQ6HhM5
-         A7Ox49hA284/auh0H271JWh5x/G4xkgEmd2Rguc3jUHZZbFg/I2wYdArBpXGfDCt0Bdl
-         IIjnkz6nwcNOf7dn6nJsKPMZ8up9ABYlcYVTkO41IxXSZ/T0++k5MvjXUQ/1GU5CcvcB
-         hqOQ==
+        d=gmail.com; s=20230601; t=1773229922; x=1773834722; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V6HzbTr74KcfnoTLlMcxfPo8bn4yDRViVRsJ4L7TL1o=;
+        b=WezULfVANJe54A2pOD7IgJ0JRT8yPu6L1q3+tS3WRjBprfJ0JKv3cb8QZyrARSsEid
+         wWb/Sf8KknDXZxb3mW5EkkkjvsqjDxQIBRXydGcG7d9pYkVlu5pFu6f/pR6AjINnyo+5
+         FXnjgqd72s04+2Iaen5gy0imIHV+wGf3OahUa3gpQ5Y3JrW9XCdiG0YCbSU10TjYe9iB
+         ety8aErd+iTNqYK/h3e2EBger9kg4OeU1HjlbP1D3LaArhFoJCQK/zrXQL2wecGTSQ+a
+         78YF7Baa+09AYwS3r5/rnzhndM4TXg3nHESR88BJ43Ee6e7jOMMtCfW8DXboeFh95uII
+         JQEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773218778; x=1773823578;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6vJFxCRXXAQ3TQeEvqMbHf6JZbJYgoRmy2aLFS+RO1I=;
-        b=DMthqWmO1lG8y0AUH4VRw0Lm2zB2Ekj8K2RHaKgwDTLok46A9xkCO3CPwWXKCdwpHv
-         9pU15Cgywn7rAaVB5dZae2bAfy4mjn+eADRCmfZUHVNJX3UWdDUfaYiT7c3GYePaMXLo
-         d86WVSvAmaKKpkJmhv4MNnmz6boZxY1GcmUkvKkIrLTSvv9trBS5RZ7Yk/Ys1augasAz
-         fy0wGxWDEC3Zizn/SGpDq0JLLzpkM0sVz12hgcmTAxOWkORcSyiEJcXDdiNFUhc60jIX
-         vz0jy8z4BdZp5j+p2o+G6UR8xgiZ7iqoWN9wG4xOLosTKFXe3clkcH7gG3XsP8f4dT89
-         HUjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUb49D4/3CA+gJmUF4hfLBz2zW6kSPMHbMYxwHbekQkiG7SGqKEzTKj8CaH0vxqWBAquH1aQRgJIMxuMJPx7YA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkLFv1Blb3aebobmHdTmDmjIkMJBuTAaoAh7z2+ob6sszXTc3U
-	6cdL9MLHBCreEWBmomGcwwO8AKtmAw0/xLG7IdpBUKuekUDsVexTu71bCgIpe4ivtubwT1JPl9l
-	nL534RN9va8OuPiIiCzWTZf8K+nerXGHFQdHcADO0rjDUjt3O4x9LWxGAQHfEs8rcOFN0JrU=
-X-Gm-Gg: ATEYQzzYstK6bzWtgvX0CjGJ/xanLCCZEdi13hU8RLnxVLsH+XTZYIA/CwCwD8WUjRx
-	zS8UAZ52StPc1qoBy85ltANamifv3O05Ft3GcI6pZSlsE/E0Np8CGM6Swm2hxvDZ0Vpwf4KcxLQ
-	Yah7xlDJlN4ZKfD6RqgeqYJhGVYfcmPFx3lkviB1Ut+PlNiwq2Svk8Og7e0719m0AsaPICM+Xs+
-	NO3ROubn2FdNpY4eVAvEo0gVodkVjzw+EPzpzOpBjFOilUJ5LDzmvBLD+dUPkGgGtuEQT1pgT1n
-	KLCaa6qCb1BMgcny9v+OnfcyvsB8ReyqenP8miMZYjW48f8umkhaOwWugsOKl5aGXm9bV2LepuO
-	XHQFxwhbEGe3fCNOEVUMtyKQtVqRoNiF8DSSlRIuL4tpthBfjgUs=
-X-Received: by 2002:a05:620a:2848:b0:8cd:9253:215b with SMTP id af79cd13be357-8cda1a87e2fmr217870585a.38.1773218778190;
-        Wed, 11 Mar 2026 01:46:18 -0700 (PDT)
-X-Received: by 2002:a05:620a:2848:b0:8cd:9253:215b with SMTP id af79cd13be357-8cda1a87e2fmr217868585a.38.1773218777716;
-        Wed, 11 Mar 2026 01:46:17 -0700 (PDT)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:1f4c:200b:aaaf:c666])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439f81fcd65sm5503816f8f.26.2026.03.11.01.46.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 01:46:16 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: linux-gpio@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        Linus Walleij <linusw@kernel.org>, linux-hardening@vger.kernel.org,
-        gustavoars@kernel.org, Bartosz Golaszewski <brgl@kernel.org>,
-        Thierry Reding <thierry.reding@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: tegra186: allocate irqs with the main struct
-Date: Wed, 11 Mar 2026 09:46:09 +0100
-Message-ID: <177321876121.6763.3562212784533777999.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260309232804.331882-1-rosenp@gmail.com>
-References: <20260309232804.331882-1-rosenp@gmail.com>
+        d=1e100.net; s=20230601; t=1773229922; x=1773834722;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V6HzbTr74KcfnoTLlMcxfPo8bn4yDRViVRsJ4L7TL1o=;
+        b=puSfHxSIIIqHbWlQNLFOnS/W7zqjQP4GAevhu/nWqwZ6uzJBmDkpuAZ+BqLHxbmpGq
+         rLN6R/+MLVkTd5f3qDdeeBl4yrQ4NDIwXt1fbydGOJqjWurKgTFUKxwJaenUCHER7tFV
+         6wuIbTgX2yVLM+dyn9zXjZBQcvofVo1peJMFZeHBsy44U+fH/AdxHgqzka/k4yU7RAyu
+         cGz3YVn2UyKDT36JCqNjDRGaDUA2UYZCByR6GMbl30LPYkfqlsUfrtDQIfI7HKjrhmda
+         JP//1vo3pINsn5OD8xx1pcimUcOgaS+o2wiQoI64jZrWEPzlBXbqwPVPqEKnR7oWS1h0
+         qgsg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/hbrHcqf9yBPeiDlolOduBp/+tqjfQSA87CFCbL7QoSRg8FtXOYGn5vykK5oJkHfct7G04S1JO8Be1v5zh0E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ31bdC3jsAJptQJAYI5HvaYi7riuCu35xjJq5l0UwONxQgbZ/
+	F0onE22LYoRzezKpbMhQ1ODw6F5BWRWTT+CAln7xlQHPFvaK607duPpM
+X-Gm-Gg: ATEYQzxd8TOeduYrK3+NgG3828LypstHbB8euBB6oPKStZrJhV2eBiiV0p2c+alNbvf
+	on3nz3ddwrDu5nRq/8XRK4IcI9K2ZL9kqwfAVX5A5exu47Yhoo8Ubjnn4cyvGhsVZeQURonDBuN
+	R09Ch416GKNIrfvXzIx5Ba+0X646zw8SlBbZyBzyVjtE/Mn+YQ5QiklIyAcD1dzIeNVsekOc0IB
+	t0VZcDZe4xDMPM3rlqsGUKv7MCpGSec3WWabjlUu/Q6vXy7/wmzFD59nQYgFQsyMbVQL1+jIvjg
+	hquWU74H1uXv68uXrAjZ7AcT51FQZhcIe/NLlATc8YZKXSoge34gOn2ca5FNK/YzNbINXOFLmsR
+	2LYh7ybyvO0157CuR54smMxTSU9ddNDqVu0Oa/xGU1m0kgHabO3RqLM/cW/3LZRmuW1xtOPtfXB
+	+sQOsACWVO7dLO/ophAwVBEcYWy320O3N+0puQHmrF/TNtDqhyRj7fOaA56Bs=
+X-Received: by 2002:a05:600c:4f89:b0:485:2fd9:3d4a with SMTP id 5b1f17b1804b1-4854b102656mr37907285e9.22.1773229921984;
+        Wed, 11 Mar 2026 04:52:01 -0700 (PDT)
+Received: from [10.247.12.125] ([129.234.0.168])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4854b5e912fsm123205825e9.2.2026.03.11.04.52.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2026 04:52:01 -0700 (PDT)
+Message-ID: <be86c64d-db3f-447b-92e8-085333c28d11@gmail.com>
+Date: Wed, 11 Mar 2026 11:52:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: MBTY3wr0DpD3gc_N3IXL_n_mT8k1D8YD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzExMDA3MyBTYWx0ZWRfX9ROkxsb/jYja
- KB5P+BmwTwUVz0Bm0a+im/rV1jg6X3RgI7tNWgfH1zJjl9Dm5xyXZIleD/QEBaqqdVnz7QF7DGu
- QUglWYG4mp1ryBe6OC1OjxDi+5IO9UlIWOPOgNyQjEL0vQX7S737Anu42gHUdjeFrCT+nGkpcWw
- hHRfRlQdHmZ/QwymUHtLkqoAFnFf7zToPjO96JGEfZH+0ufAtBlUHblMAG4ShwSCEOIfSWOObt1
- zwtgYGzqvFyZ66sz/Oef6DsB72uRCsvxyMdc0gvOg5CgKr3iNy3z74i5y/6+vSaXiuw34Syf2vJ
- RAJqk30zHCs4gCH8fUCosIxwC3KPf1FumNcnEM7keDWyY6qkpWuWk0du+130yOYeGdHdAJtvPse
- ZD2p+i9TsBBkfrrpK3ZY46Z99qnc58OFeNwfAmwMXWUrF1pdRLDgSqM4WF2u98Cr1QaGj4GLcUE
- HPp7aTQT2vtS9MlUwIg==
-X-Proofpoint-ORIG-GUID: MBTY3wr0DpD3gc_N3IXL_n_mT8k1D8YD
-X-Authority-Analysis: v=2.4 cv=Gq5PO01C c=1 sm=1 tr=0 ts=69b12bdb cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=LMpztJHqCLRgs0MzPDEA:9 a=QEXdDO2ut3YA:10
- a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-11_01,2026-03-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
- adultscore=0 clxscore=1015 priorityscore=1501 impostorscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603110073
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amdgpu: Replace deprecated strcpy() in
+ amdgpu_virt_write_vf2pf_data
+To: Kees Cook <kees@kernel.org>, airlied@gmail.com, christian.koenig@amd.com,
+ alexander.deucher@amd.com, simona@ffwll.ch
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ skhan@linuxfoundation.org, david.hunter.linux@gmail.com,
+ linux-hardening@vger.kernel.org
+References: <20260109162514.308143-1-yiconghui@gmail.com>
+ <202601091117.122A9268@keescook>
+From: Yicong Hui <yiconghui@gmail.com>
+Content-Language: en-US
+In-Reply-To: <202601091117.122A9268@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Mon, 09 Mar 2026 16:28:04 -0700, Rosen Penev wrote:
-> Remove an extra kcalloc call by using a flexible array member.
+On 1/9/26 7:18 PM, Kees Cook wrote:
+> On Fri, Jan 09, 2026 at 04:25:14PM +0000, Yicong Hui wrote:
+>> strcpy() is deprecated as it does not do any bounds checking (as
+>> specified in Documentation/process/deprecated.rst).
+>>
+>> There is a risk of buffer overflow in the case that the value for
+>> THIS_MODULE->version exceeds the 64 characters. This is unlikely, but
+>> replacing the deprecated function will pre-emptively remove this risk
+>> entirely.
+>>
+>> Replace both instances of strcpy() with the safer strscpy() function.
 > 
-> Add __counted_by for extra runtime analysis.
+> This looks correct to me -- dest and src are both fixed-size, so strscpy
+> happily checks everything at compile time. :)
 > 
-> Assign counting variable immediately after allocation as required by
-> __counted_by.
+> Reviewed-by: Kees Cook <kees@kernel.org>
 > 
-> [...]
+> -Kees
+> 
 
-Applied, thanks!
+Hello!
 
-[1/1] gpio: tegra186: allocate irqs with the main struct
-      https://git.kernel.org/brgl/c/b4784adfe3aab3e74b5f7556834d87e416b666d0
+Is there any further feedback or progress on this patch?
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Thank you!
+Yicong
