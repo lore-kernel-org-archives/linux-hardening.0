@@ -1,114 +1,154 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337C0358378
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 23:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773271154; cv=pass; b=IMoKMTcNGa1/2ub6FGA94Iwr5luBDcWqF9XrgxKWB4ieJuRTomn2WCk2lrH43r9k6g8/jmwcduXIsZ7hm+mrJqfZb6PO8Q/K7oomus1MKRUxzX3DPtC9HQVIvytbY9YIjTAeS2EJxg80hpqTZH+tqFV8YGH5Cjiv5mkrKZE/xf4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773271154; c=relaxed/simple;
-	bh=S0Kwnud5iFtwr69z8VPCi5ftaPUGlvLcKnXUDXdBOFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i8XX6RK5qgq4xcy+IBt8mSApjXnNFZl3UoebaAbqkJqv599vT9QoP8+03TVmJVhHxyzLmGOA3Rfc6n3FffJ/u5DHPK8VjL7xaP5J944NzEaH04Tdx6e/yXDP/7/Lnc28bf8xaRniYAzwBjmd1ufMTjCggHHWMf7jySAmm/vgck8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cR6X86Qw; arc=pass smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4031D3A4F37
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 23:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773271264; cv=none; b=cj9r/7JWSuHn3ieRLkaYHidMY52JKaB6nUyyoMn1UsHsNU7LoezJ8N4q/vVHk9SHCUnUlvRStZv2jbMYGu9jvsjvZ2x8w3k4hUiIUBXGci9lSciYAhuSJD16EsC/Ko63pMMYFwkFtPiOZ/UzJSMr7LZInjkGAda9Ar0gA3Ua4no=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773271264; c=relaxed/simple;
+	bh=Tw+2EyKUb9agQ6zKe0hRUqwC5xleuQDNBz4yJ156L+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DduQrIs+v7drWorQkDdAVCCY3LueD1boUnFYD1TrEbnOJnZa8QzXj+m3e8FEW+82Ups+9qGPMcTaArjynUYgwyrg0iJxirG2eJPT/BWVDurrYPXSBE8/0xza8NKJBNczmCzynwQMVdz30xlysjuWkXDqHceuKpPuql4UN9PYdRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HU46iou7; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cR6X86Qw"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-661b16ac011so622973a12.2
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 16:19:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773271151; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ZyjTRnwK+J2Wr9Rob1KAAFek/Vm46inFf9Xdp3A3DNqXl4R2iZxIDQMjuUfDXyjhhl
-         0a/GtC4nDAu1iaxNkJYe+JwreM0Bx2s5lIczeMXTnsvjyXx85raJiqCJZor23Cyb6OO1
-         IH/BPzEeVonhDYSNIl3gJ+ui4hEmwHsNm7b1vJ7HcsrUedi/z+f1TwFV2pRISg1RDqZG
-         zWO9/mmkixlk7iqY8DrYM6PPpjyQysjg8Ym+vK5FdqVSM+sTh3WVKC7SHIxHZlbTHzJ6
-         zixG2p8n7frymhxqhUnSUCpeIuAU2xp4rH5jPqsan3mG8UNJGI9ZfVS+NzCVr5JygR7a
-         iRzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
-        fh=QWSnOtYyvucCaKs/xwaN6LUoAAVMN19sY0TiQZP/BR0=;
-        b=TRg+WmscGx43WniYtJTnwjFgMJeCbFyoBcQSpK2FWRPZ5ZpcnoIGH7wLGc1ECt05GR
-         Iaw/CD5jdM9rN0tY8kRo7sbc+YfK5OHoKJ/Fq5A94xC4dfJ/7UeCufaVQ/Tt1blve8Z0
-         jcJbFGo+vHondVC6aQOboRtZWmH3pbTmZ0JuaReYzw8tb04Usl70vlceh2p89YPJFDda
-         3QXdRw+1slswLGJb0llQV/IifWCrjebUSVo4Mjm9cQXwK7MbdkJAfr9sTnRBri51h7PT
-         1xmmccXWBM5dwbjceWiS786M5NKYh6xAuWtFQl+HXD0pf3NHdET7F4fwpkD24IG1jjh4
-         aI3g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HU46iou7"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2ae4e538abdso5230605ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 16:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773271151; x=1773875951; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
-        b=cR6X86Qw+tvhbwCWZryMP33vE3ID5yNEhPeJ9uDPyp3jmfbOEC/zfGnBAUOv4ccqee
-         2S7CdhAjVVm/9nfFDN9vUuw3tMZmWC4Nx5WhA1WshPPZOuPX6so3IM/6Zlxb/hAtc5Ht
-         7uKX0244lcNW1mgz2vJlfTrJcAeilYMPGMH11iS0L/YnShPoGFReBp9utk8FFdtN4WM1
-         DxSUNopaqcn04xV14HHHgqkAZGKL60Qx9XiTdW3vcaxRZXCwxhIuwPOP80EfqMIQzfCY
-         TA37K3/1QO95Poad4Xg4Rdwn3Ki8GC35rNvNuZsD4afsaQL4DxPOn1Pu+nogV1/FdoX3
-         d4Dw==
+        d=gmail.com; s=20230601; t=1773271261; x=1773876061; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DkMgiVq7K2oqvd5LIg0pWuilh6oqSCCM4UC7aP9hpy0=;
+        b=HU46iou7qqulew9Q1YNo/BcYfAGpODphqmgtC5t/K0mmMKgTjEJoGpWpt0v6t9Nxy4
+         TtuBwT4Mkkp1MNoEL+JiKgMaOL/tL94B/G1NIAPxw1xeFfFul2XJCmki2RlCR9qYbxqn
+         51kP1Qig+NqiJ17E2eqe7x9xarT1WF2FALLVepJN80zAi+vDA0NVkB42T8HdNX+gId0+
+         enmI/LVl50M1T7wY/fozGxGq8a2/0NPBEFIcRAu9f9cmWRnUUvymtAloy6hPkUT9b3eV
+         avYiw2b/Ezbpl0h2W9S32WbBKJDJWQ/qotJzFqn5QpH13pRrPFxUNQVchToGvCg9jEDU
+         8oHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773271151; x=1773875951;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
-        b=GFzo7vAoWAbzv1ACZPe8/NXAEg/ffuuInDlKq3lPVvNqvdDd1mghF0sw94cCLf2P//
-         /tmlKo8SU2qEvXg4duQgSQ8OY3inv8Q0TZMqrXMkyH1dsVZI6Lnsy5yDBPwUKsZdGUOB
-         dm4b1T0/boG9DXWqPLXl0M8lr1Qkv3VLZpaMPnThZP2ahKm2FqGlZT/H7lQdYa1wnJUD
-         2RKDuuUXdYCRPDzBhee03XCIQSfGXoShWcL3Wk/7OPVF9JJLSIdM8i1LBAc8wYDRi7lZ
-         QTiHxqCAjPiFl3Hz9aemloYWROjWnxmstvF9zmZCgOT8SGZxo6DyzReDKwfa2NU79fi2
-         gqFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSW6X7QlEfQ71na3SgrxGZqXQqpk46ZjeDbbIVbtzNQAXv1eSZieNEmK9W6H+eLlVsCswvvAeAS7wK0KLZnvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCBZAfIiTsgC8AG0z6SF28F1EfeN37L5BIJWt6TrzZQc6MWU2S
-	/VtUZd09u/O6nD3we5ymCypLl33ev0OuXSFQIyiWgUKOfgVPd28KLRl13sNiUmCBy6QSl04pmxZ
-	+ASXlEBLZ9ZueXsZ8mWSOkJaATYNJP5c=
-X-Gm-Gg: ATEYQzw2PdS8OEumKpXLHSnpMHF23Jycj843CwYxOC/sBLOdeUuTfBoU8gu+dnCkS9B
-	1P5xaKKkwUzYDawpFWTNfXzv9F5PitJsm3phHklUDoU8dZopxQEwKFamUJmdj2MKTyCJF+LBe87
-	AtPB0/bEyAOk7TdlrW74Xe56T1z+mH5pzuSAx07DCXVdEAkKM6irrHg4Y5zsduP6Ut3tQ9kprAa
-	W4wEcbK1ptoBBgF/O6fTvhqtYCt1d1eg8BrafBFOYc3XeOvSAh843/B7SJ+d5s8BB5sRKux2Pao
-	5/8jCvuW+kFsd6EpvStcEtes/Cln83MbV3r9A8Sex+4KwhpE4ynOCIrOJLE25O3V8uFkevrnu91
-	X4/bPFZe1RkVLB35B
-X-Received: by 2002:a17:907:2d0e:b0:b94:b5b:4370 with SMTP id
- a640c23a62f3a-b972e158c2emr286633466b.2.1773271151254; Wed, 11 Mar 2026
- 16:19:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1773271261; x=1773876061;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DkMgiVq7K2oqvd5LIg0pWuilh6oqSCCM4UC7aP9hpy0=;
+        b=MoI29T7SjehImoQu70jtry4dj6zuwvAh6HXuJY4bQlUf7T0gCvnv2jRDG302mzbzon
+         WRY7aKWj7DJRSfpz6HvmArO5DokxXU0GGFm+UbYT1l62zcw4juHFguMLUPpc0k9PSzBT
+         cN77bAWBpWEM6Ec6SP1JQ9URiaegt61Oulv7zaJXk9OzoyLhHlPL3q5EzSy7wxKxqlUX
+         UN+irKmX9ts45mRcuYeWoqpwHRizTFMMYM4rAZ9+vzLpWmBYHE73l5c+pCWQ3FmwPHB3
+         efVof0OcQ03ydPa3J7TF3wRLAJTDTcg/dPAxa10/7pz+PQPMvHlN/45XdOf0CquLkQ1g
+         HW6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVklMBnfh6QeyS+YJm6kFIBPmpOYrwDbgRzYs77KXxBxKyU5zH0ptdZFWclgtrXY+P/OVOJG2odlEhPCvZ4D0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLYDI5bKoDRLFNAyrIdWNvKh9nHTCDWM/yL5FL7qB2bHceQTlf
+	LhGEF6lJuLqQ6AYwLmIdgE+o6yA6oJ1MADAiyeB6nTskuP8+olnuagj4
+X-Gm-Gg: ATEYQzxUUGtAPCAJvDLgWRodE+yGgCKvw6cI04QZkGCBzkE/ueflJ5uJmyzRdBdZCpz
+	NoVuodoHT3+ua4w3MkNe7pu/X7zLqn/ZESThT3WCfp52yw8QQWm6AHScnOVasQ+0IFnsX7zH8+k
+	suukTThlbplYvpBeTIqxppcUsLXRZ2m7Zi9E/T4+SJONc6koW4GxuusmM/uuScpFugyQKsH2ZZQ
+	LXEcO9AHiE+H4c5Tz4s81waEcwFRcRRhNdvQJmoDMzZeuFSD9q/1nQ1FYzlgQ0e3F5TczEtvOnL
+	MkYVyeXanC2klw2EQiQq7Fa6+qTKCU1qSHzFY45JCy0OiXi33ID53nDyB7TH2RJpkMoSdVRnnl1
+	yxTaP7qHeFrF/dGXwp64kbIh729+YWy63DpfesRDGmU5G6hEVqNbhc+/nunI7nrYUBc4UqXAgox
+	ANufIMOyFqRrdnsXgUfKlAN7cwI18PADNNMP3P1uA1Eg3ufmtZKXuFTMA9/X3bdeHBGf3s6obkp
+	AwQLAWeGZS4KufpHDS+f03wIjQUt9Tol6Op
+X-Received: by 2002:a17:902:f651:b0:2aa:e6fa:2f6c with SMTP id d9443c01a7336-2aeae7d8961mr41552345ad.24.1773271261277;
+        Wed, 11 Mar 2026 16:21:01 -0700 (PDT)
+Received: from ryzen (c-76-21-102-177.hsd1.ca.comcast.net. [76.21.102.177])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aeae261082sm46883805ad.41.2026.03.11.16.21.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2026 16:21:00 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-usb@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] usb: renesas_usbhs: use kzalloc_flex
+Date: Wed, 11 Mar 2026 16:20:43 -0700
+Message-ID: <20260311232043.18025-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310222040.10324-1-rosenp@gmail.com> <CAD++jLmR8TZHMbiSBaUmUvPYvP9bPOmr0a=yq4M7FNRFF4EzcQ@mail.gmail.com>
-In-Reply-To: <CAD++jLmR8TZHMbiSBaUmUvPYvP9bPOmr0a=yq4M7FNRFF4EzcQ@mail.gmail.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Wed, 11 Mar 2026 16:19:00 -0700
-X-Gm-Features: AaiRm51bcB2GD8hEt0KZsTqrJJEU2s6nszH4kDHUKTkax9rvTUDLGCQS6er_THc
-Message-ID: <CAKxU2N9fExr=72E6ZPs+VqCe+eSzyxS8zbcCU2PPcqKjvqiO_g@mail.gmail.com>
-Subject: Re: [PATCHv2] gpio: ljca: reduce struct allocation
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org, Lixu Zhang <lixu.zhang@intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 11, 2026 at 5:57=E2=80=AFAM Linus Walleij <linusw@kernel.org> w=
-rote:
->
-> On Tue, Mar 10, 2026 at 11:21=E2=80=AFPM Rosen Penev <rosenp@gmail.com> w=
-rote:
->
-> > +       size_t num;
->
-> What about naming it num_connect_modes?
-> (and unsigned in as Sakari says.)
-Too long IMO. Makes the most sense to match variable names.
->
-> Yours,
-> Linus Walleij
+Removes one allocation and one free by using a flexible array member.
+
+Also added __counted_by for extra runtime analysis.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/usb/renesas_usbhs/mod_gadget.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
+index 1539e8e6901d..0c7fe109d5c7 100644
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -40,7 +40,6 @@ struct usbhsg_gpriv {
+ 	struct usb_gadget	 gadget;
+ 	struct usbhs_mod	 mod;
+ 
+-	struct usbhsg_uep	*uep;
+ 	int			 uep_size;
+ 
+ 	struct usb_gadget_driver	*driver;
+@@ -53,6 +52,7 @@ struct usbhsg_gpriv {
+ #define USBHSG_STATUS_WEDGE		(1 << 2)
+ #define USBHSG_STATUS_SELF_POWERED	(1 << 3)
+ #define USBHSG_STATUS_SOFT_CONNECT	(1 << 4)
++	struct usbhsg_uep	uep[] __counted_by(uep_size);
+ };
+ 
+ struct usbhsg_recip_handle {
+@@ -1084,15 +1084,11 @@ int usbhs_mod_gadget_probe(struct usbhs_priv *priv)
+ 	int i;
+ 	int ret;
+ 
+-	gpriv = kzalloc_obj(struct usbhsg_gpriv);
++	gpriv = kzalloc_flex(*gpriv, uep, pipe_size);
+ 	if (!gpriv)
+ 		return -ENOMEM;
+ 
+-	uep = kzalloc_objs(struct usbhsg_uep, pipe_size);
+-	if (!uep) {
+-		ret = -ENOMEM;
+-		goto usbhs_mod_gadget_probe_err_gpriv;
+-	}
++	gpriv->uep_size	= pipe_size;
+ 
+ 	gpriv->transceiver = devm_usb_get_phy(dev, USB_PHY_TYPE_UNDEFINED);
+ 	dev_info(dev, "%stransceiver found\n",
+@@ -1115,8 +1111,6 @@ int usbhs_mod_gadget_probe(struct usbhs_priv *priv)
+ 	gpriv->mod.name		= "gadget";
+ 	gpriv->mod.start	= usbhsg_start;
+ 	gpriv->mod.stop		= usbhsg_stop;
+-	gpriv->uep		= uep;
+-	gpriv->uep_size		= pipe_size;
+ 	usbhsg_status_init(gpriv);
+ 
+ 	/*
+@@ -1175,9 +1169,6 @@ int usbhs_mod_gadget_probe(struct usbhs_priv *priv)
+ 	return 0;
+ 
+ err_add_udc:
+-	kfree(gpriv->uep);
+-
+-usbhs_mod_gadget_probe_err_gpriv:
+ 	kfree(gpriv);
+ 
+ 	return ret;
+@@ -1189,6 +1180,5 @@ void usbhs_mod_gadget_remove(struct usbhs_priv *priv)
+ 
+ 	usb_del_gadget_udc(&gpriv->gadget);
+ 
+-	kfree(gpriv->uep);
+ 	kfree(gpriv);
+ }
+-- 
+2.53.0
+
