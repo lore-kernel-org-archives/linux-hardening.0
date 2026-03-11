@@ -1,146 +1,146 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C059C38D00E
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 20:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773260124; cv=pass; b=UE9JQUpkzPBOwfG0qnCKTSjM/z2Lm79alQp9Y35MKU52qHDVQA9J0CvE0XB3meRO84NGWkDMFdthAIH7loQpY6CXRBYtwUKitlOyUDxLG3u/UdyqmXSySo66FPrEfviKdX35evFekfIxjWj520l5Jr7mhbH57+5DApo0ve9N8+o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773260124; c=relaxed/simple;
-	bh=qCUYBGAUOheU0nTCcMZyCl5y4dtCdasyHwmyMVbOBCc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A6VCVD+SBKp3w3B0MYHeKuk3qzQYC/pP403690IkRO/h61XQCXQ245F+PXtx+BnmxIg1l3X2jHDqT14CuoeTiNRnSZXz9R0HYmfMjbCgVoDBPIQzJUJ9TvYbFisbbGQKqIG2H3zbjbLKDhMTSIW4mouS1yPFB1XsuPujFThYE9Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nWe/prAY; arc=pass smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE83A2D978B
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 23:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773271144; cv=none; b=cy3Xd9rEFwNbOUrYhBAHXXfZllWu3mYHQq7yEBV9BIcOzpY3NSvb9BrFh5UeNZq6s7IsDgOOHeBg2jFtqMhBvJv2k/ObBbJYYW3zcpbnHuAPUO+J2K70FaD6qNSB0bk0k0DrLHEVGb2jPms5kYHYZksiYgEE37KdN009qTAb7gU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773271144; c=relaxed/simple;
+	bh=O6jBhetHYK3YjI5od6XbzRv137I+sjU3j7bdXLcMVIk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VXUtmLTLWr+Ge27UuQNptGaCK7ZFX3G95b0zSR+6BIwvllfpO7RptpTIXpWJduSWwa/3lE2rcTE1TuwiuqF1L2tMB19Bv+jYxln6pUM1FJ8uAhmxXw0LOcRROZA+PQYN83cuufiBMV08KlU8VDJBrQBbSYGbjZGc+fIWS+g4E4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KnCxiJqX; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWe/prAY"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b932fe2e1a7so28275266b.1
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 13:15:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773260121; cv=none;
-        d=google.com; s=arc-20240605;
-        b=eg0U5VGT3OY5eV21c7uEUZ58PKytlR2cWLktPkrHxALaJoaD7ZfcaPVmyiaH+n1TRk
-         zoqTn4uNXp0O5bsqP3Aqdy7BkKaTBpcqngeMxG1CpRG50vsiuJ3J+e/Rz+5shuplo3wu
-         eoD2pOOqFA1S2BJocMmgQjEpaDqt7IoJywa7c6KTLNfpd0JNc5bH/6oSJXeWKMTmH40g
-         jJcQ32/zIKSs7zJk66E+sAcjMPp+fBa1XucjIxv2ktsMLAhxigIUMaJKpa2JYGJiyKJq
-         2m9HytOHn9Z2OwGi6o6lP4YXTIACXLAeY+IFkBx2fxvuS3HPVOJQvATe9+O5PEwyjL3/
-         VswQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=i6F+UW8vpaPOSbe+aow4A6qQsDdfkrJCugB1bxi2H3M=;
-        fh=lsTq7qxrLiAwMdxmy1clSV4SGTOpZz3A/TXcbUSSN/c=;
-        b=anYQWHZrvBHDfRSb5mb3G06KcPUlEZXEH8d8vwT2hhDS+Ra+DJKn/g3SFQnCuvH6cz
-         ZuaHHYvXsjrshsRuxEWeLYgd2Nyi9cmlddgpuHN8jPpRQE8HN8ln9+XSeeJ2RMFmKiT2
-         MlflWxGDn77ZpM5fSpS332rrIPS80EkTYQxJ3Y1fU3lTQsytVy6rds+UWcBfMk5Vylqn
-         SpObvCBBI9/0MSprqTXuXTkezc6LPSI0qQpVHMyx2vsb8zCVGx/GI2hs/BxEpG+YT4Oc
-         ZeDx0JEFXOG/Odlyi/RL2qo99kYA0f+171HkhR75EwUYHz11Ih91c7ZnBD9fnBrGG9Z9
-         aKWQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnCxiJqX"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2ad21f437eeso3791185ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 16:19:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773260121; x=1773864921; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i6F+UW8vpaPOSbe+aow4A6qQsDdfkrJCugB1bxi2H3M=;
-        b=nWe/prAYzvBDiutVXiO6S+1K2vIf87NlcJjxfML+QuWQ2JitCchpJ0EET506sfrXvv
-         yTqYq99l9QF3PfHVikdeebx8GwUPquPD9q449ZlwFS+Gmq4WtrvtfFwT3NRZxQL5R5Vd
-         LmxYUDee4Gq/dzzYlZixAwza8lw7PWwWTa0XW8fQ13XWdwmB4OjH3rBvrsIz0DPh8/Vt
-         opkVQQY1LGDxOUs5vestd7+UHQ24SjLdOTWKX1ix7I+rEA+8wEqUpk2vVsZ4FZCgoY7R
-         k1FrYcNQAn/VR0SG2J+xoY64k5Hkt2owRDbGWJ29GCC34FAy65MIdVnhQhXTBbMWjhCg
-         QFoA==
+        d=gmail.com; s=20230601; t=1773271142; x=1773875942; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nGQa5TPg+fy6f75658KrdxaLTfVS/9M1At/7AR8OAo8=;
+        b=KnCxiJqXXM1lmVUKn97NqqpXhZdLhCN9uXHz5DTW8sEfQGTmXykuLB6tBB/xnnjag/
+         KnSYQA0Y5YPXwLLSp8qwQKN1QdI0nkbIHLAo82yUUO5HN0aDTKrjy1rGlVKhIXR/++38
+         h6vvkA2FwNuqDFp1eMQm2dYzud4ttgv7diRWElfz9ikFEwf3Dfum4aNMuDNv36DPE7Py
+         8hCfsx73HDkCA8hlhce1xJErqj86xlzWrBqasQqGNrUd0AsxtGgypHtoUYdqlvpQqDJC
+         oSObC9B1lZXrLnFpOf0YtjhC5FXdsPoivT0iyNb4SmoPeXIJekxF7656Le43sQMW9s3T
+         R1Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773260121; x=1773864921;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=i6F+UW8vpaPOSbe+aow4A6qQsDdfkrJCugB1bxi2H3M=;
-        b=UHBmfFqPY0zJGmnxOjb8lA1KkpD3XyRmwbv9tnHrijThsXwHE0g2erK52N1E59nZ3C
-         2VpRfGdSDeM9BqYmSRvMfTH/7Wz+c4AYzunfB7Q/2h2s26ZrJ8czD6OaNJrvIGK3cqKW
-         3p4ySva2LSpkz2r8SrHTAJFffv1yhtIavLAYwub7Az65T8Lk5K5DljJeBM1D1cZ9+myH
-         wpeoxr/iSi3dvDWv2EcpEO6+wYXDtjpXGIS64Z62xRrKuEWsPKX04HcVd09jisnYoXkS
-         oIc8SNtUsBCCjLPvpdY1gwtQZ5E1cKMjFPZ8zTrFGoOmzqOawEDsJA6+6i7IzNLtjgB1
-         glgg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8jWAI0mH0CFgS8NF1/0p+o185RPHxAHE1pk1ANJZQ62/C47QpZgxStp/TDdlxSBu51H2F4L1TQrot2SCf6bs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyC+er7CLvZgCI0725h/ReB83gDSaiYffGovjIrN2WfZ2BiIWA6
-	jTaUPuSQ3KteVINtTf6W/FHzQjwNCIkbSourdqEH7QgD1U0IQtgewx2C7RO8XjafJfvQ8vtwPNl
-	d64rL1h2C8WtxqHG6PD74qW2FQOR1SXo=
-X-Gm-Gg: ATEYQzwgGvtBNcm8nN7aWLnC3JhgmdWtBb/0Na+fgU41E7cOJkrKGcbOIHwv9tP/DyB
-	3mQLBYXhKFsA2P+LYwT9R/U4hCTq/YPI+Kn2be9vPEXU355cvDRULK3zbfzWn+ndNuDV3JdeeJA
-	sADDh2ILCokhJpt+FTjpqoeOJOy/4RHyc5LzDcg0vc9uPWnzx4lScYs59sZ/gs449nvvh1TKtcf
-	mNm2SDHboqNU2T+TBQZ2JZbUAMTORW8v5ZncKS5B+c+wKQgP8T3BzxINjhy+z/ogTXObMUoWxEw
-	ijdcL+V2LlwxxjRmHXxkqgknWYtfJ3++pJdAA9JANcd3mSpDJDVWykkuT4ITRjjq3wcXB+vLehD
-	HT4LuYWHWbDBJGw2n7g==
-X-Received: by 2002:a17:907:fd17:b0:b94:1df4:3525 with SMTP id
- a640c23a62f3a-b972e20f6c9mr213172366b.1.1773260120699; Wed, 11 Mar 2026
- 13:15:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1773271142; x=1773875942;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nGQa5TPg+fy6f75658KrdxaLTfVS/9M1At/7AR8OAo8=;
+        b=OLfaNY8OVzVNUVr3JKM+GXydMiYkAf+5dihDjG+dcbKqdrL7DsViToNsMnp7w2DKVf
+         clbBjNMIMto7fptvdo8EXwgs1b5otIc5XdgJfMa+z9EYLhqJWa8lcb3Q/kA9RfVAdxf0
+         Xi1qg+se8zuQ/qTpMW6HnochkYhOHR49pXLPYlxcrvzjntJXmkxJGz5gxzYipVgV+/mU
+         nWPpBoeQGUHNaLg2Nj4qPhg9OiJb0rBZrvIlE+PsQ/EYQY6kgK0bhN+LUR9mAdhHtRTj
+         Brm5uZ0gKc0G8mHHH1oP45/FSNulWPJnnhLVxO+h+sVqpLpOO+u6SSDAcKQEF69iSRdr
+         MB2g==
+X-Forwarded-Encrypted: i=1; AJvYcCW69i0cRORDFZ3VqNdRdPSEHpB3Ku+fXlGRoz29PBB5aUhiYtQA+kSv1TRSBMeJjRvzf6ZoxhcXa1gIla4cQfo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFVDehZsW9o8vOXCwj6kmh7sslxhdApxIwRQ/NuPJ5Q2q7g/5C
+	t/LfL0NyCK7RZqBY5OVb+/4nzXqp+ampuAxonTSloKGAJdt4wvWnP5xtcvi3wB7N
+X-Gm-Gg: ATEYQzwJ+tz2uA+re31V9nFcih8YGpwpGWLyhQzmLGv5VzWTeBmNQA7HsP4YRkuUXII
+	OaN9SbsXmhpGg12TVB4eaq4lB7GkJrG1zCjgOASr17s8oRw5BVnMF74n+cJ5O4wkv+7FW0YXVTt
+	USKGafE6OIGOPzE/ARx/A1cZ/i9iRa1J0kNdMVltQICRqdWTMG9jk9w7ZButb2a6oR7vcTU1Pt4
+	XTqCGnIsE7328NnW8J+RjUVKeQ6gu3vf5q0c7VNhj6Kh+SsM3RE9jFTe9Xu/ElyZRUv2kSoV4dZ
+	omlxLArFpv4ocmp28qLUQ9QkVQpTIfcoED5N55LAILVTTQeCQJP7eEcVKC0frCZctxKEsF6aLy4
+	bZEZWLa3MY6NMci2ckKNOHtsNYBzic7kHi5EzNF6gO9qKGN4avKbe7Y9qdbT2lba4vFSwvQ7dbP
+	M5m1MKF4Y1Y7Rr0MK9wuD9gmF1l01VUpMEdGiEVVha6ENOmb7Dh4mxmw==
+X-Received: by 2002:a17:903:32cc:b0:2ad:b213:feba with SMTP id d9443c01a7336-2aeba4416d2mr10894095ad.5.1773271142123;
+        Wed, 11 Mar 2026 16:19:02 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:56f5::8bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aeae222e3asm43921815ad.15.2026.03.11.16.19.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2026 16:19:01 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Lixu Zhang <lixu.zhang@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCHv3] gpio: ljca: reduce struct allocation
+Date: Wed, 11 Mar 2026 16:18:44 -0700
+Message-ID: <20260311231844.17891-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <20251112-gpio-shared-v4-3-b51f97b1abd8@linaro.org> <921ba8ce-b18e-4a99-966d-c763d22081e2@nvidia.com>
-In-Reply-To: <921ba8ce-b18e-4a99-966d-c763d22081e2@nvidia.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 11 Mar 2026 22:14:43 +0200
-X-Gm-Features: AaiRm50gZlAiM-5_F_zUlx0D2HjCtugUtf3WuAOsTMIp9Wv8sMtNxrZngwvWk-o
-Message-ID: <CAHp75VevThmDMm6VoVB9P0YbUGGGsmgnzr2gn9=1xtJZt-kuQw@mail.gmail.com>
-Subject: Re: [PATCH v4 03/10] gpiolib: implement low-level, shared GPIO support
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 11, 2026 at 8:38=E2=80=AFPM Jon Hunter <jonathanh@nvidia.com> w=
-rote:
-> On 12/11/2025 13:55, Bartosz Golaszewski wrote:
+Convert connect_mode to a flexible array member to avoid calling
+kcalloc and to combine the allocations.
 
-...
+Add __counted_by for extra runtime analysis.
 
-> On Tegra234, the main gpio controller has a total of 164 GPIOs (see
-> the tegra234_main_ports in drivers/gpio/gpio-tegra186.c). The GPIOs
-> are assigned a index by the kernel from 0-163, but these GPIOs are
-> not contiguous with respect to the device-tree specifier.
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v3: make unsigned int to match original.
+ v2: add counting variable
+ drivers/gpio/gpio-ljca.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-If I may ask...
+diff --git a/drivers/gpio/gpio-ljca.c b/drivers/gpio/gpio-ljca.c
+index f32d1d237795..93a0fd4ac507 100644
+--- a/drivers/gpio/gpio-ljca.c
++++ b/drivers/gpio/gpio-ljca.c
+@@ -63,7 +63,6 @@ struct ljca_gpio_dev {
+ 	DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
+ 	DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
+ 	DECLARE_BITMAP(output_enabled, LJCA_MAX_GPIO_NUM);
+-	u8 *connect_mode;
+ 	/* protect irq bus */
+ 	struct mutex irq_lock;
+ 	struct work_struct work;
+@@ -72,6 +71,9 @@ struct ljca_gpio_dev {
 
-Why? Is it sparse because there are pads that can't be used as GPIOs?
+ 	u8 obuf[LJCA_GPIO_BUF_SIZE];
+ 	u8 ibuf[LJCA_GPIO_BUF_SIZE];
++
++	unsigned int num;
++	u8 connect_mode[] __counted_by(num);
+ };
 
-> For example, in device-tree, if I have a shared-gpio with the
-> following specifier ...
->
->   gpios =3D <&gpio TEGRA234_MAIN_GPIO(AF, 1) GPIO_ACTIVE_LOW>;
->
-> The macro TEGRA234_MAIN_GPIO(AF, 1) evaluates to (23 * 8) + 1 =3D 185.
+ static int ljca_gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id,
+@@ -400,22 +402,20 @@ static int ljca_gpio_probe(struct auxiliary_device *auxdev,
+ 			   const struct auxiliary_device_id *aux_dev_id)
+ {
+ 	struct ljca_client *ljca = auxiliary_dev_to_ljca_client(auxdev);
++	struct ljca_gpio_info *gpio_info = dev_get_platdata(&auxdev->dev);
+ 	struct ljca_gpio_dev *ljca_gpio;
+ 	struct gpio_irq_chip *girq;
+ 	int ret;
 
-To me it sounds like a bad design of the driver for this SoC/platform.
+-	ljca_gpio = devm_kzalloc(&auxdev->dev, sizeof(*ljca_gpio), GFP_KERNEL);
++	ljca_gpio = devm_kzalloc(&auxdev->dev,
++				 struct_size(ljca_gpio, connect_mode, gpio_info->num),
++				 GFP_KERNEL);
+ 	if (!ljca_gpio)
+ 		return -ENOMEM;
 
-> This is greater than 164 and this is causing the above crash because
-> 'entry->offset' in gpio_device_setup_shared() is greater than
-> 'gdev->ngpio' and this causes us to access invalid memory.
->
-> This is what I have been able to determine so far and wanted to get
-> your inputs.
++	ljca_gpio->num = gpio_info->num;
+ 	ljca_gpio->ljca = ljca;
+-	ljca_gpio->gpio_info = dev_get_platdata(&auxdev->dev);
+-	ljca_gpio->connect_mode = devm_kcalloc(&auxdev->dev,
+-					       ljca_gpio->gpio_info->num,
+-					       sizeof(*ljca_gpio->connect_mode),
+-					       GFP_KERNEL);
+-	if (!ljca_gpio->connect_mode)
+-		return -ENOMEM;
++	ljca_gpio->gpio_info = gpio_info;
 
+ 	ret = devm_mutex_init(&auxdev->dev, &ljca_gpio->irq_lock);
+ 	if (ret)
+--
+2.53.0
 
---=20
-With Best Regards,
-Andy Shevchenko
