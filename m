@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C0E3B9DA4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBE73BE650;
 	Thu, 12 Mar 2026 14:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773327299; cv=none; b=mUs9tI1MV1RJEtTfpEtrBD+9QbaPE3eX2uYQAyUvaA7y+VMKwTQMsebGwGrxVWebQXu4G7t4YhyTWq879dansnRDVWzIqG1M97OyW2JpDpI+zod4VT9/EczpsddJtS4wh4OB8hUsiqdTtqWeUp2/LfHJ9N57XVnYhKNx/e20LQY=
+	t=1773327300; cv=none; b=nVFZZF34PxZ1PrOidUpnpic730veLd9VJv1tFZgEU5fVWiUqHYA/+t9l1ZiMXD7Tgef2LE+ilhI7ud0evERpxjxr5Qxh2O4mXuIa07nsALm2qGT+/skB+JALbZXejWSrRbhmiFz19EhRXKDtMntTF0OlzeD590lmdako+pTSXDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773327299; c=relaxed/simple;
-	bh=DOreXVDvucIGBkwwT2ilLuF9eQSdozf07HLDbrhdpG0=;
+	s=arc-20240116; t=1773327300; c=relaxed/simple;
+	bh=23osqksC+HlDZjjQOvGmLu9UHdH5zA5IUH035QkOdVQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sgA5V5l0IHrvBljp19KbAk5VUccDrVHA+H02ESU54gTZnd5+nPe7ojI7omWb1+9DR6BvZE/4yDINKaEzWBrPgMrK+rB5pPscqSBYUIHr3zJDpu+RM3YhjPPbCaIj1y/0EPA/e03b9iCE5ZaVu+XrUQr/f7YK+ARs/5YsoU86FKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acEbsA4A; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=X2MS4GeSyby7zVM/xSEk3KBmrar14LNZnEYtm6kiOBQ1MI6vBWtZjAWaO2DZNP4st6jDaVOCZeUFcF6wtFHmXcULLSILlhDyo4shuu0WEUPLlsFLZB7ZvLlaaGoRijfypnL5IuV+yztIaUXvXvueINmz9N82Ph5H6NwWyMc8s28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JC+hGW9p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acEbsA4A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B487C2BC86;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JC+hGW9p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A073CC19424;
 	Thu, 12 Mar 2026 14:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1773327299;
-	bh=DOreXVDvucIGBkwwT2ilLuF9eQSdozf07HLDbrhdpG0=;
+	bh=23osqksC+HlDZjjQOvGmLu9UHdH5zA5IUH035QkOdVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=acEbsA4ADqePlM+In2i9lU1TFwupiPOzYZeITN2ACzHz2QhxAttkLog6ErKzN4Qwh
-	 faBy0vljf3LbzxWBlneyYcgWr8AskeiP3BoBD6xZUF4jMJbXHE8EdDrUuFeuulDwUC
-	 bFbqSnYktT1B9aNxf4NGyWpmfWWwdcHQlj2qNzJIBkUn238F3pYIANYZYSjaflYgcA
-	 OL2u0aI4Y07LukEpM3Jw6I2CZPJuGvjkCRRxiQbIdqL4ttjUfI8sxMvgJilqxl2H4L
-	 AJqcpsiY4iBUfaFfd1uiCbkw51VR5MkSHmYq+z/LezXmDNYrQNMnR5vEKJ/AFG5m+d
-	 njpL18fVKfXcw==
+	b=JC+hGW9pzNzwD20PFpPs0JX5fviNXqg2/grt7ZTBTdQi53KAEu8y1hoZPnvu6yjj7
+	 nXXddCTiW0L21IBND/CidZkJpN0HIWAO74of4tcp2+2TbF1Akoa0vs7pWkUr+j+oUn
+	 SwN6d57bv9KQftH6KrX4KPHaY4ZxOmF7VXFhZtelsGYi0sNkeWJLreU1VaG66cF4m2
+	 b0iHwUfz0NwzqdoWBY/wJ+yK+YE8pyEH59Ft81XDFwwqJmhnSGI+k8PW0f5FJWEZcH
+	 biGm0eBi2W7YpNLTFe3ThBkxEhVMSkYC4Pkq8wHne4r6KKw74Qe9P1yaHXJyqsjdqK
+	 6FxrlzLZPXtuw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1w0hRB-00000008xyZ-24rx;
+	id 1w0hRB-00000008y1P-3luq;
 	Thu, 12 Mar 2026 15:54:57 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -36,9 +36,9 @@ To: Jonathan Corbet <corbet@lwn.net>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/28] docs: kdoc: create a CMatch to match nested C blocks
-Date: Thu, 12 Mar 2026 15:54:31 +0100
-Message-ID: <06d21e2c38a313aec8f7c8a6df4674c41c47c23b.1773326442.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 13/28] docs: c_lex: properly implement a sub() method for CMatch
+Date: Thu, 12 Mar 2026 15:54:33 +0100
+Message-ID: <4c88a55b21910b1bae6838d74c8ab6b32e5c8213.1773326442.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1773326442.git.mchehab+huawei@kernel.org>
 References: <cover.1773326442.git.mchehab+huawei@kernel.org>
@@ -52,330 +52,343 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The NextMatch code is complex, and will become even more complex
-if we add there support for arguments.
-
-Now that we have a tokenizer, we can use a better solution,
-easier to be understood.
-
-Yet, to improve performance, it is better to make it use a
-previously tokenized code, changing its ABI.
-
-So, reimplement NextMatch using the CTokener class. Once it
-is done, we can drop NestedMatch.
+Change the sub() method to do what it is expected, parsing
+backref arguments like \0, \1, \2, ...
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/lib/python/kdoc/c_lex.py    | 222 +++++++++++++++++++++++++++---
- tools/unittests/test_tokenizer.py |   3 +-
- 2 files changed, 203 insertions(+), 22 deletions(-)
+ tools/lib/python/kdoc/c_lex.py | 240 +++++++++++++++++++++++++++------
+ 1 file changed, 202 insertions(+), 38 deletions(-)
 
 diff --git a/tools/lib/python/kdoc/c_lex.py b/tools/lib/python/kdoc/c_lex.py
-index 38f70e836eb8..e986a4ad73e3 100644
+index e986a4ad73e3..98031cb7907c 100644
 --- a/tools/lib/python/kdoc/c_lex.py
 +++ b/tools/lib/python/kdoc/c_lex.py
-@@ -58,14 +58,13 @@ class CToken():
+@@ -10,6 +10,8 @@ Those help caching regular expressions and do matching for kernel-doc.
  
-         return CToken.MISMATCH
+ import re
  
++from copy import copy
 +
-     def __init__(self, kind, value=None, pos=0,
-                  brace_level=0, paren_level=0, bracket_level=0):
-         self.kind = kind
-         self.value = value
-         self.pos = pos
--        self.brace_level = brace_level
--        self.paren_level = paren_level
--        self.bracket_level = bracket_level
-+        self.level = (bracket_level, paren_level, brace_level)
+ from .kdoc_re import KernRe
  
-     def __repr__(self):
-         name = self.to_name(self.kind)
-@@ -74,8 +73,7 @@ class CToken():
-         else:
-             value = self.value
+ class CToken():
+@@ -36,6 +38,8 @@ class CToken():
+     NAME = 14       #: A name. Can be an ID or a type.
+     SPACE = 15      #: Any space characters, including new lines
  
--        return f"CToken({name}, {value}, {self.pos}, " \
--               f"{self.brace_level}, {self.paren_level}, {self.bracket_level})"
-+        return f"CToken(CToken.{name}, {value}, {self.pos}, {self.level})"
++    BACKREF = 16  #: Not a valid C sequence, but used at sub regex patterns.
++
+     MISMATCH = 255  #: an error indicator: should never happen in practice.
  
- #: Tokens to parse C code.
- TOKEN_LIST = [
-@@ -105,20 +103,30 @@ TOKEN_LIST = [
-     (CToken.ENUM,    r"\benum\b"),
-     (CToken.TYPEDEF, r"\bkinddef\b"),
- 
--    (CToken.NAME,      r"[A-Za-z_][A-Za-z0-9_]*"),
-+    (CToken.NAME,    r"[A-Za-z_][A-Za-z0-9_]*"),
+     # Dict to convert from an enum interger into a string.
+@@ -107,6 +111,8 @@ TOKEN_LIST = [
  
      (CToken.SPACE,   r"[\s]+"),
  
++    (CToken.BACKREF, r"\\\d+"),
++
      (CToken.MISMATCH,r"."),
  ]
  
-+def fill_re_scanner(token_list):
-+    """Ancillary routine to convert TOKEN_LIST into a finditer regex"""
-+    re_tokens = []
-+
-+    for kind, pattern in token_list:
-+        name = CToken.to_name(kind)
-+        re_tokens.append(f"(?P<{name}>{pattern})")
-+
-+    return KernRe("|".join(re_tokens), re.MULTILINE | re.DOTALL)
-+
- #: Handle C continuation lines.
- RE_CONT = KernRe(r"\\\n")
- 
- RE_COMMENT_START = KernRe(r'/\*\s*')
- 
- #: tokenizer regex. Will be filled at the first CTokenizer usage.
--re_scanner = None
-+RE_SCANNER = fill_re_scanner(TOKEN_LIST)
- 
- class CTokenizer():
-     """
-@@ -149,7 +157,7 @@ class CTokenizer():
-         paren_level = 0
-         bracket_level = 0
- 
--        for match in re_scanner.finditer(source):
-+        for match in RE_SCANNER.finditer(source):
-             kind = CToken.from_name(match.lastgroup)
-             pos = match.start()
-             value = match.group()
-@@ -175,7 +183,7 @@ class CTokenizer():
-             yield CToken(kind, value, pos,
-                          brace_level, paren_level, bracket_level)
- 
--    def __init__(self, source):
-+    def __init__(self, source=None):
-         """
-         Create a regular expression to handle TOKEN_LIST.
- 
-@@ -183,20 +191,18 @@ class CTokenizer():
-             (?P<name>...)
- 
-         in this particular case, it makes sense, as we can pick the name
--        when matching a code via re_scanner().
-+        when matching a code via RE_SCANNER.
-         """
--        global re_scanner
--
--        if not re_scanner:
--            re_tokens = []
--
--            for kind, pattern in TOKEN_LIST:
--                name = CToken.to_name(kind)
--                re_tokens.append(f"(?P<{name}>{pattern})")
--
--            re_scanner = KernRe("|".join(re_tokens), re.MULTILINE | re.DOTALL)
- 
-         self.tokens = []
-+
-+        if not source:
-+            return
-+
-+        if isinstance(source, list):
-+            self.tokens = source
-+            return
-+
-         for tok in self._tokenize(source):
-             self.tokens.append(tok)
- 
-@@ -237,3 +243,179 @@ class CTokenizer():
-                     out += str(tok.value)
- 
+@@ -245,6 +251,167 @@ class CTokenizer():
          return out
-+
-+
-+class CMatch:
+ 
+ 
++class CTokenArgs:
 +    """
-+    Finding nested delimiters is hard with regular expressions. It is
-+    even harder on Python with its normal re module, as there are several
-+    advanced regular expressions that are missing.
++    Ancillary class to help using backrefs from sub matches.
 +
-+    This is the case of this pattern::
++    If the highest backref contain a "+" at the last element,
++    the logic will be greedy, picking all other delims.
 +
-+            '\\bSTRUCT_GROUP(\\(((?:(?>[^)(]+)|(?1))*)\\))[^;]*;'
-+
-+    which is used to properly match open/close parentheses of the
-+    string search STRUCT_GROUP(),
-+
-+    Add a class that counts pairs of delimiters, using it to match and
-+    replace nested expressions.
-+
-+    The original approach was suggested by:
-+
-+        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
-+
-+    Although I re-implemented it to make it more generic and match 3 types
-+    of delimiters. The logic checks if delimiters are paired. If not, it
-+    will ignore the search string.
++    This is needed to parse struct_group macros with end with ``MEMBERS...``.
 +    """
++    def __init__(self, sub_str):
++        self.sub_groups = set()
++        self.max_group = -1
++        self.greedy = None
 +
-+    # TODO: make CMatch handle multiple match groups
-+    #
-+    # Right now, regular expressions to match it are defined only up to
-+    #       the start delimiter, e.g.:
-+    #
-+    #       \bSTRUCT_GROUP\(
-+    #
-+    # is similar to: STRUCT_GROUP\((.*)\)
-+    # except that the content inside the match group is delimiter-aligned.
-+    #
-+    # The content inside parentheses is converted into a single replace
-+    # group (e.g. r`\0').
-+    #
-+    # It would be nice to change such definition to support multiple
-+    # match groups, allowing a regex equivalent to:
-+    #
-+    #   FOO\((.*), (.*), (.*)\)
-+    #
-+    # it is probably easier to define it not as a regular expression, but
-+    # with some lexical definition like:
-+    #
-+    #   FOO(arg1, arg2, arg3)
++        for m in KernRe(r'\\(\d+)([+]?)').finditer(sub_str):
++            group = int(m.group(1))
++            if m.group(2) == "+":
++                if self.greedy and self.greedy != group:
++                    raise ValueError("There are multiple greedy patterns!")
++                self.greedy = group
 +
-+    def __init__(self, regex):
-+        self.regex = KernRe(regex)
++            self.sub_groups.add(group)
++            self.max_group = max(self.max_group, group)
 +
-+    def _search(self, tokenizer):
++        if self.greedy:
++            if self.greedy != self.max_group:
++                raise ValueError("Greedy pattern is not the last one!")
++
++            sub_str = KernRe(r'(\\\d+)[+]').sub(r"\1", sub_str)
++
++        self.sub_str = sub_str
++        self.sub_tokeninzer = CTokenizer(sub_str)
++
++    def groups(self, new_tokenizer):
 +        """
-+        Finds paired blocks for a regex that ends with a delimiter.
++        Create replacement arguments for backrefs like:
 +
-+        The suggestion of using finditer to match pairs came from:
-+        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
-+        but I ended using a different implementation to align all three types
-+        of delimiters and seek for an initial regular expression.
++        ``\0``, ``\1``, ``\2``, ...``\n``
 +
-+        The algorithm seeks for open/close paired delimiters and places them
-+        into a stack, yielding a start/stop position of each match when the
-+        stack is zeroed.
++        It also accepts a ``+`` character to the highest backref. When used,
++        it means in practice to ignore delimins after it, being greedy.
 +
-+        The algorithm should work fine for properly paired lines, but will
-+        silently ignore end delimiters that precede a start delimiter.
-+        This should be OK for kernel-doc parser, as unaligned delimiters
-+        would cause compilation errors. So, we don't need to raise exceptions
-+        to cover such issues.
++        The logic is smart enough to only go up to the maximum required
++        argument, even if there are more.
++
++        If there is a backref for an argument above the limit, it will
++        raise an exception. Please notice that, on C, square brackets
++        don't have any separator on it. Trying to use ``\1``..``\n`` for
++        brackets also raise an exception.
 +        """
 +
-+        start = None
-+        offset = -1
-+        started = False
++        level = (0, 0, 0)
 +
-+        import sys
++        if self.max_group < 0:
++            return level, []
 +
-+        stack = []
-+
-+        for i, tok in enumerate(tokenizer.tokens):
-+            if start is None:
-+                if tok.kind == CToken.NAME and self.regex.match(tok.value):
-+                    start = i
-+                    stack.append((start, tok.level))
-+                    started = False
-+
-+                continue
-+
-+            if not started and tok.kind == CToken.BEGIN:
-+                started = True
-+                continue
-+
-+            if tok.kind == CToken.END and tok.level == stack[-1][1]:
-+                start, level = stack.pop()
-+                offset = i
-+
-+                yield CTokenizer(tokenizer.tokens[start:offset + 1])
-+                start = None
++        tokens = new_tokenizer.tokens
 +
 +        #
-+        # If an END zeroing levels is not there, return remaining stuff
-+        # This is meant to solve cases where the caller logic might be
-+        # picking an incomplete block.
++        # Fill \0 with the full token contents
 +        #
-+        if start and offset < 0:
-+            print("WARNING: can't find an end", file=sys.stderr)
-+            yield CTokenizer(tokenizer.tokens[start:])
++        groups_list = [ [] ]
 +
-+    def search(self, source):
-+        """
-+        This is similar to re.search:
++        if 0 in self.sub_groups:
++            inner_level = 0
 +
-+        It matches a regex that it is followed by a delimiter,
-+        returning occurrences only if all delimiters are paired.
-+        """
++            for i in range(0, len(tokens)):
++                tok = tokens[i]
 +
-+        if isinstance(source, CTokenizer):
-+            tokenizer = source
-+            is_token = True
-+        else:
-+            tokenizer = CTokenizer(source)
-+            is_token = False
++                if tok.kind == CToken.BEGIN:
++                    inner_level += 1
++                    continue
 +
-+        for new_tokenizer in self._search(tokenizer):
-+            if is_token:
-+                yield new_tokenizer
++                if tok.kind == CToken.END:
++                    inner_level -= 1
++                    if inner_level < 0:
++                        break
++
++                if inner_level:
++                    groups_list[0].append(tok)
++
++        if not self.max_group:
++            return level, groups_list
++
++        delim = None
++
++        #
++        # Ignore everything before BEGIN. The value of begin gives the
++        # delimiter to be used for the matches
++        #
++        for i in range(0, len(tokens)):
++            tok = tokens[i]
++            if tok.kind == CToken.BEGIN:
++                if tok.value == "{":
++                    delim = ";"
++                elif tok.value == "(":
++                    delim = ","
++                else:
++                    raise ValueError(fr"Can't handle \1..\n on {sub_str}")
++
++                level = tok.level
++                break
++
++        pos = 1
++        groups_list.append([])
++
++        inner_level = 0
++        for i in range(i + 1, len(tokens)):
++            tok = tokens[i]
++
++            if tok.kind == CToken.BEGIN:
++                inner_level += 1
++            if tok.kind == CToken.END:
++                inner_level -= 1
++                if inner_level < 0:
++                    break
++
++            if tok.kind == CToken.PUNC and delim == tok.value:
++                pos += 1
++                if self.greedy and pos > self.max_group:
++                    pos -= 1
++                else:
++                    groups_list.append([])
++
++                    if pos > self.max_group:
++                        break
++
++                    continue
++
++            groups_list[pos].append(tok)
++
++        if pos < self.max_group:
++            raise ValueError(fr"{self.sub_str} groups are up to {pos} instead of {self.max_group}")
++
++        return level, groups_list
++
++    def tokens(self, new_tokenizer):
++        level, groups = self.groups(new_tokenizer)
++
++        new = CTokenizer()
++
++        for tok in self.sub_tokeninzer.tokens:
++            if tok.kind == CToken.BACKREF:
++                group = int(tok.value[1:])
++
++                for group_tok in groups[group]:
++                    new_tok = copy(group_tok)
++
++                    new_level = [0, 0, 0]
++
++                    for i in range(0, len(level)):
++                        new_level[i] = new_tok.level[i] + level[i]
++
++                    new_tok.level = tuple(new_level)
++
++                    new.tokens += [ new_tok ]
 +            else:
-+                yield str(new_tokenizer)
++                new.tokens += [ tok ]
 +
-+    def sub(self, sub, line, count=0):
-+        """
-+        This is similar to re.sub:
++        return new.tokens
 +
-+        It matches a regex that it is followed by a delimiter,
-+        replacing occurrences only if all delimiters are paired.
-+
-+        if the sub argument contains::
-+
-+            r'\0'
-+
-+        it will work just like re: it places there the matched paired data
-+        with the delimiter stripped.
-+
-+        If count is different than zero, it will replace at most count
-+        items.
-+        """
-+        if isinstance(source, CTokenizer):
-+            is_token = True
-+            tokenizer = source
-+        else:
-+            is_token = False
-+            tokenizer = CTokenizer(source)
-+
-+        new_tokenizer = CTokenizer()
-+        cur_pos = 0
+ class CMatch:
+     """
+     Finding nested delimiters is hard with regular expressions. It is
+@@ -270,31 +437,9 @@ class CMatch:
+     will ignore the search string.
+     """
+ 
+-    # TODO: make CMatch handle multiple match groups
+-    #
+-    # Right now, regular expressions to match it are defined only up to
+-    #       the start delimiter, e.g.:
+-    #
+-    #       \bSTRUCT_GROUP\(
+-    #
+-    # is similar to: STRUCT_GROUP\((.*)\)
+-    # except that the content inside the match group is delimiter-aligned.
+-    #
+-    # The content inside parentheses is converted into a single replace
+-    # group (e.g. r`\0').
+-    #
+-    # It would be nice to change such definition to support multiple
+-    # match groups, allowing a regex equivalent to:
+-    #
+-    #   FOO\((.*), (.*), (.*)\)
+-    #
+-    # it is probably easier to define it not as a regular expression, but
+-    # with some lexical definition like:
+-    #
+-    #   FOO(arg1, arg2, arg3)
+ 
+     def __init__(self, regex):
+-        self.regex = KernRe(regex)
++        self.regex = KernRe("^" + regex + r"\b")
+ 
+     def _search(self, tokenizer):
+         """
+@@ -317,7 +462,6 @@ class CMatch:
+         """
+ 
+         start = None
+-        offset = -1
+         started = False
+ 
+         import sys
+@@ -339,9 +483,8 @@ class CMatch:
+ 
+             if tok.kind == CToken.END and tok.level == stack[-1][1]:
+                 start, level = stack.pop()
+-                offset = i
+ 
+-                yield CTokenizer(tokenizer.tokens[start:offset + 1])
++                yield start, i
+                 start = None
+ 
+         #
+@@ -349,9 +492,9 @@ class CMatch:
+         # This is meant to solve cases where the caller logic might be
+         # picking an incomplete block.
+         #
+-        if start and offset < 0:
++        if start and stack:
+             print("WARNING: can't find an end", file=sys.stderr)
+-            yield CTokenizer(tokenizer.tokens[start:])
++            yield start, len(tokenizer.tokens)
+ 
+     def search(self, source):
+         """
+@@ -368,13 +511,15 @@ class CMatch:
+             tokenizer = CTokenizer(source)
+             is_token = False
+ 
+-        for new_tokenizer in self._search(tokenizer):
 +        for start, end in self._search(tokenizer):
-+            new_tokenizer.tokens += tokenizer.tokens[cur_pos:start]
-+#            new_tokenizer.tokens += [sub_str]
++            new_tokenizer = CTokenizer(tokenizer.tokens[start:end + 1])
 +
-+            cur_pos = end + 1
-+
-+        if cur_pos:
-+            new_tokenizer.tokens += tokenizer.tokens[cur_pos:]
-+
-+        print(new_tokenizer.tokens)
-+
-+        return str(new_tokenizer)
-+
-+    def __repr__(self):
-+        """
-+        Returns a displayable version of the class init.
-+        """
-+
-+        return f'CMatch("{self.regex.regex.pattern}")'
-diff --git a/tools/unittests/test_tokenizer.py b/tools/unittests/test_tokenizer.py
-index efb1d1687811..3081f27a7786 100755
---- a/tools/unittests/test_tokenizer.py
-+++ b/tools/unittests/test_tokenizer.py
-@@ -30,8 +30,7 @@ def tokens_to_list(tokens):
-         if tok.kind == CToken.SPACE:
-             continue
+             if is_token:
+                 yield new_tokenizer
+             else:
+                 yield str(new_tokenizer)
  
--        tuples += [(tok.kind, tok.value,
--                    tok.brace_level, tok.paren_level, tok.bracket_level)]
-+        tuples += [(tok.kind, tok.value, tok.level)]
+-    def sub(self, sub, line, count=0):
++    def sub(self, sub_str, source, count=0):
+         """
+         This is similar to re.sub:
  
-     return tuples
+@@ -398,20 +543,39 @@ class CMatch:
+             is_token = False
+             tokenizer = CTokenizer(source)
  
++        # Detect if sub_str contains sub arguments
++
++        args_match = CTokenArgs(sub_str)
++
+         new_tokenizer = CTokenizer()
+-        cur_pos = 0
++        pos = 0
++        n = 0
++
++        #
++        # NOTE: the code below doesn't consider overlays at sub.
++        # We may need to add some extra unit tests to check if those
++        # would cause problems. When replacing by "", this should not
++        # be a problem, but other transformations could be problematic
++        #
+         for start, end in self._search(tokenizer):
+-            new_tokenizer.tokens += tokenizer.tokens[cur_pos:start]
+-#            new_tokenizer.tokens += [sub_str]
++            new_tokenizer.tokens += tokenizer.tokens[pos:start]
+ 
+-            cur_pos = end + 1
++            new = CTokenizer(tokenizer.tokens[start:end + 1])
+ 
+-        if cur_pos:
+-            new_tokenizer.tokens += tokenizer.tokens[cur_pos:]
++            new_tokenizer.tokens += args_match.tokens(new)
+ 
+-        print(new_tokenizer.tokens)
++            pos = end + 1
+ 
+-        return str(new_tokenizer)
++            n += 1
++            if count and n >= count:
++                break
++
++        new_tokenizer.tokens += tokenizer.tokens[pos:]
++
++        if not is_token:
++            return str(new_tokenizer)
++
++        return new_tokenizer
+ 
+     def __repr__(self):
+         """
 -- 
 2.52.0
 
