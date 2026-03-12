@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36524389E16;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C0E3B9DA4;
 	Thu, 12 Mar 2026 14:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773327299; cv=none; b=locHk7aP8SODIY28Bk8/QJOgILmQZz4KMSJeLLhfihVz+cNQlJnwt2k5q+eyGJNqJOG3dSn/NegglAv1jpiEK7FLJtVzs7g55Jb+5SM3+7j1wUlS+eCE8Zms7Iblm+i01BkM+w1TmMNMP7YKPcvf8H8eWTD89LTVj5qATtZsxGU=
+	t=1773327299; cv=none; b=mUs9tI1MV1RJEtTfpEtrBD+9QbaPE3eX2uYQAyUvaA7y+VMKwTQMsebGwGrxVWebQXu4G7t4YhyTWq879dansnRDVWzIqG1M97OyW2JpDpI+zod4VT9/EczpsddJtS4wh4OB8hUsiqdTtqWeUp2/LfHJ9N57XVnYhKNx/e20LQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773327299; c=relaxed/simple;
-	bh=PaOLRDk0iXEcEwnWCzqzsJpfgjdAgDVAImrhDci59t0=;
+	bh=DOreXVDvucIGBkwwT2ilLuF9eQSdozf07HLDbrhdpG0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Aurb93eJ3dZRjCoLK0cN2iE/2l/cIKshk9kybl2H7QqB8I1trPEdUH6FaK8eltsakZKRcphHoQrwsO+OnDYr0C5Ldn67CBinIYzvnO811CnOu9ADmzFfRVk49+E1YOHuTY14NIuIuK6KHquDmSTYyPYfQnWaTaG7I1oF/ZUoUXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxIVbJTp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=sgA5V5l0IHrvBljp19KbAk5VUccDrVHA+H02ESU54gTZnd5+nPe7ojI7omWb1+9DR6BvZE/4yDINKaEzWBrPgMrK+rB5pPscqSBYUIHr3zJDpu+RM3YhjPPbCaIj1y/0EPA/e03b9iCE5ZaVu+XrUQr/f7YK+ARs/5YsoU86FKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acEbsA4A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxIVbJTp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 162EEC2BC87;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acEbsA4A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B487C2BC86;
 	Thu, 12 Mar 2026 14:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1773327299;
-	bh=PaOLRDk0iXEcEwnWCzqzsJpfgjdAgDVAImrhDci59t0=;
+	bh=DOreXVDvucIGBkwwT2ilLuF9eQSdozf07HLDbrhdpG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QxIVbJTpIRZrQcT3lAxZM7P5LfaKPUzvCM3GfGr+WEj9+h6qlu19Uc9iSbbf2Y2EB
-	 V9+83zXFKZMiRrAfWG2oG16p3BLNbddc4gfV7/TT0FLCrq8JOIgMcpQpQP4ArERbl4
-	 TpRrwYZu9VwgApr/OFD/1ons1hxBtCe2vEzP0OFfbsRfdi2GUAswfO11kI0heEDXp2
-	 ahGUbKdLLc9knkJxjkLIhKaRJJm1knUMfxkvhmXU4L2oDRcvoiQrNXwPU+cuDtkIGT
-	 /1GH1/Acrxllc8J9liZAYojcl5Mhg6BkGNi4SX2XGS7kzqlVoDDZXFmis1CE7+gnjA
-	 xkSBAKEeF8Zvg==
+	b=acEbsA4ADqePlM+In2i9lU1TFwupiPOzYZeITN2ACzHz2QhxAttkLog6ErKzN4Qwh
+	 faBy0vljf3LbzxWBlneyYcgWr8AskeiP3BoBD6xZUF4jMJbXHE8EdDrUuFeuulDwUC
+	 bFbqSnYktT1B9aNxf4NGyWpmfWWwdcHQlj2qNzJIBkUn238F3pYIANYZYSjaflYgcA
+	 OL2u0aI4Y07LukEpM3Jw6I2CZPJuGvjkCRRxiQbIdqL4ttjUfI8sxMvgJilqxl2H4L
+	 AJqcpsiY4iBUfaFfd1uiCbkw51VR5MkSHmYq+z/LezXmDNYrQNMnR5vEKJ/AFG5m+d
+	 njpL18fVKfXcw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1w0hRB-00000008xxM-1ESP;
+	id 1w0hRB-00000008xyZ-24rx;
 	Thu, 12 Mar 2026 15:54:57 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -36,9 +36,9 @@ To: Jonathan Corbet <corbet@lwn.net>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/28] unittests: add a runner to execute all unittests
-Date: Thu, 12 Mar 2026 15:54:30 +0100
-Message-ID: <fb0bcc317d30200b0e91a3c18150e7394844b6d8.1773326442.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 11/28] docs: kdoc: create a CMatch to match nested C blocks
+Date: Thu, 12 Mar 2026 15:54:31 +0100
+Message-ID: <06d21e2c38a313aec8f7c8a6df4674c41c47c23b.1773326442.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1773326442.git.mchehab+huawei@kernel.org>
 References: <cover.1773326442.git.mchehab+huawei@kernel.org>
@@ -52,42 +52,330 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-We'll soon have multiple unit tests, add a runner that will
-discover all of them and execute all tests.
+The NextMatch code is complex, and will become even more complex
+if we add there support for arguments.
 
-It was opted to discover only files that starts with "test",
-as this way unittest discover won't try adding libraries or
-other stuff that might not contain unittest classes.
+Now that we have a tokenizer, we can use a better solution,
+easier to be understood.
+
+Yet, to improve performance, it is better to make it use a
+previously tokenized code, changing its ABI.
+
+So, reimplement NextMatch using the CTokener class. Once it
+is done, we can drop NestedMatch.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/unittests/run.py | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100755 tools/unittests/run.py
+ tools/lib/python/kdoc/c_lex.py    | 222 +++++++++++++++++++++++++++---
+ tools/unittests/test_tokenizer.py |   3 +-
+ 2 files changed, 203 insertions(+), 22 deletions(-)
 
-diff --git a/tools/unittests/run.py b/tools/unittests/run.py
-new file mode 100755
-index 000000000000..8c19036d43a1
---- /dev/null
-+++ b/tools/unittests/run.py
-@@ -0,0 +1,17 @@
-+#!/bin/env python3
-+import os
-+import unittest
-+import sys
+diff --git a/tools/lib/python/kdoc/c_lex.py b/tools/lib/python/kdoc/c_lex.py
+index 38f70e836eb8..e986a4ad73e3 100644
+--- a/tools/lib/python/kdoc/c_lex.py
++++ b/tools/lib/python/kdoc/c_lex.py
+@@ -58,14 +58,13 @@ class CToken():
+ 
+         return CToken.MISMATCH
+ 
 +
-+TOOLS_DIR=os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
-+sys.path.insert(0, TOOLS_DIR)
+     def __init__(self, kind, value=None, pos=0,
+                  brace_level=0, paren_level=0, bracket_level=0):
+         self.kind = kind
+         self.value = value
+         self.pos = pos
+-        self.brace_level = brace_level
+-        self.paren_level = paren_level
+-        self.bracket_level = bracket_level
++        self.level = (bracket_level, paren_level, brace_level)
+ 
+     def __repr__(self):
+         name = self.to_name(self.kind)
+@@ -74,8 +73,7 @@ class CToken():
+         else:
+             value = self.value
+ 
+-        return f"CToken({name}, {value}, {self.pos}, " \
+-               f"{self.brace_level}, {self.paren_level}, {self.bracket_level})"
++        return f"CToken(CToken.{name}, {value}, {self.pos}, {self.level})"
+ 
+ #: Tokens to parse C code.
+ TOKEN_LIST = [
+@@ -105,20 +103,30 @@ TOKEN_LIST = [
+     (CToken.ENUM,    r"\benum\b"),
+     (CToken.TYPEDEF, r"\bkinddef\b"),
+ 
+-    (CToken.NAME,      r"[A-Za-z_][A-Za-z0-9_]*"),
++    (CToken.NAME,    r"[A-Za-z_][A-Za-z0-9_]*"),
+ 
+     (CToken.SPACE,   r"[\s]+"),
+ 
+     (CToken.MISMATCH,r"."),
+ ]
+ 
++def fill_re_scanner(token_list):
++    """Ancillary routine to convert TOKEN_LIST into a finditer regex"""
++    re_tokens = []
 +
-+from lib.python.unittest_helper import TestUnits
++    for kind, pattern in token_list:
++        name = CToken.to_name(kind)
++        re_tokens.append(f"(?P<{name}>{pattern})")
 +
-+if __name__ == "__main__":
-+    loader = unittest.TestLoader()
++    return KernRe("|".join(re_tokens), re.MULTILINE | re.DOTALL)
 +
-+    suite = loader.discover(start_dir=os.path.join(TOOLS_DIR, "unittests"),
-+                            pattern="test*.py")
+ #: Handle C continuation lines.
+ RE_CONT = KernRe(r"\\\n")
+ 
+ RE_COMMENT_START = KernRe(r'/\*\s*')
+ 
+ #: tokenizer regex. Will be filled at the first CTokenizer usage.
+-re_scanner = None
++RE_SCANNER = fill_re_scanner(TOKEN_LIST)
+ 
+ class CTokenizer():
+     """
+@@ -149,7 +157,7 @@ class CTokenizer():
+         paren_level = 0
+         bracket_level = 0
+ 
+-        for match in re_scanner.finditer(source):
++        for match in RE_SCANNER.finditer(source):
+             kind = CToken.from_name(match.lastgroup)
+             pos = match.start()
+             value = match.group()
+@@ -175,7 +183,7 @@ class CTokenizer():
+             yield CToken(kind, value, pos,
+                          brace_level, paren_level, bracket_level)
+ 
+-    def __init__(self, source):
++    def __init__(self, source=None):
+         """
+         Create a regular expression to handle TOKEN_LIST.
+ 
+@@ -183,20 +191,18 @@ class CTokenizer():
+             (?P<name>...)
+ 
+         in this particular case, it makes sense, as we can pick the name
+-        when matching a code via re_scanner().
++        when matching a code via RE_SCANNER.
+         """
+-        global re_scanner
+-
+-        if not re_scanner:
+-            re_tokens = []
+-
+-            for kind, pattern in TOKEN_LIST:
+-                name = CToken.to_name(kind)
+-                re_tokens.append(f"(?P<{name}>{pattern})")
+-
+-            re_scanner = KernRe("|".join(re_tokens), re.MULTILINE | re.DOTALL)
+ 
+         self.tokens = []
 +
-+    TestUnits().run("", suite=suite)
++        if not source:
++            return
++
++        if isinstance(source, list):
++            self.tokens = source
++            return
++
+         for tok in self._tokenize(source):
+             self.tokens.append(tok)
+ 
+@@ -237,3 +243,179 @@ class CTokenizer():
+                     out += str(tok.value)
+ 
+         return out
++
++
++class CMatch:
++    """
++    Finding nested delimiters is hard with regular expressions. It is
++    even harder on Python with its normal re module, as there are several
++    advanced regular expressions that are missing.
++
++    This is the case of this pattern::
++
++            '\\bSTRUCT_GROUP(\\(((?:(?>[^)(]+)|(?1))*)\\))[^;]*;'
++
++    which is used to properly match open/close parentheses of the
++    string search STRUCT_GROUP(),
++
++    Add a class that counts pairs of delimiters, using it to match and
++    replace nested expressions.
++
++    The original approach was suggested by:
++
++        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
++
++    Although I re-implemented it to make it more generic and match 3 types
++    of delimiters. The logic checks if delimiters are paired. If not, it
++    will ignore the search string.
++    """
++
++    # TODO: make CMatch handle multiple match groups
++    #
++    # Right now, regular expressions to match it are defined only up to
++    #       the start delimiter, e.g.:
++    #
++    #       \bSTRUCT_GROUP\(
++    #
++    # is similar to: STRUCT_GROUP\((.*)\)
++    # except that the content inside the match group is delimiter-aligned.
++    #
++    # The content inside parentheses is converted into a single replace
++    # group (e.g. r`\0').
++    #
++    # It would be nice to change such definition to support multiple
++    # match groups, allowing a regex equivalent to:
++    #
++    #   FOO\((.*), (.*), (.*)\)
++    #
++    # it is probably easier to define it not as a regular expression, but
++    # with some lexical definition like:
++    #
++    #   FOO(arg1, arg2, arg3)
++
++    def __init__(self, regex):
++        self.regex = KernRe(regex)
++
++    def _search(self, tokenizer):
++        """
++        Finds paired blocks for a regex that ends with a delimiter.
++
++        The suggestion of using finditer to match pairs came from:
++        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
++        but I ended using a different implementation to align all three types
++        of delimiters and seek for an initial regular expression.
++
++        The algorithm seeks for open/close paired delimiters and places them
++        into a stack, yielding a start/stop position of each match when the
++        stack is zeroed.
++
++        The algorithm should work fine for properly paired lines, but will
++        silently ignore end delimiters that precede a start delimiter.
++        This should be OK for kernel-doc parser, as unaligned delimiters
++        would cause compilation errors. So, we don't need to raise exceptions
++        to cover such issues.
++        """
++
++        start = None
++        offset = -1
++        started = False
++
++        import sys
++
++        stack = []
++
++        for i, tok in enumerate(tokenizer.tokens):
++            if start is None:
++                if tok.kind == CToken.NAME and self.regex.match(tok.value):
++                    start = i
++                    stack.append((start, tok.level))
++                    started = False
++
++                continue
++
++            if not started and tok.kind == CToken.BEGIN:
++                started = True
++                continue
++
++            if tok.kind == CToken.END and tok.level == stack[-1][1]:
++                start, level = stack.pop()
++                offset = i
++
++                yield CTokenizer(tokenizer.tokens[start:offset + 1])
++                start = None
++
++        #
++        # If an END zeroing levels is not there, return remaining stuff
++        # This is meant to solve cases where the caller logic might be
++        # picking an incomplete block.
++        #
++        if start and offset < 0:
++            print("WARNING: can't find an end", file=sys.stderr)
++            yield CTokenizer(tokenizer.tokens[start:])
++
++    def search(self, source):
++        """
++        This is similar to re.search:
++
++        It matches a regex that it is followed by a delimiter,
++        returning occurrences only if all delimiters are paired.
++        """
++
++        if isinstance(source, CTokenizer):
++            tokenizer = source
++            is_token = True
++        else:
++            tokenizer = CTokenizer(source)
++            is_token = False
++
++        for new_tokenizer in self._search(tokenizer):
++            if is_token:
++                yield new_tokenizer
++            else:
++                yield str(new_tokenizer)
++
++    def sub(self, sub, line, count=0):
++        """
++        This is similar to re.sub:
++
++        It matches a regex that it is followed by a delimiter,
++        replacing occurrences only if all delimiters are paired.
++
++        if the sub argument contains::
++
++            r'\0'
++
++        it will work just like re: it places there the matched paired data
++        with the delimiter stripped.
++
++        If count is different than zero, it will replace at most count
++        items.
++        """
++        if isinstance(source, CTokenizer):
++            is_token = True
++            tokenizer = source
++        else:
++            is_token = False
++            tokenizer = CTokenizer(source)
++
++        new_tokenizer = CTokenizer()
++        cur_pos = 0
++        for start, end in self._search(tokenizer):
++            new_tokenizer.tokens += tokenizer.tokens[cur_pos:start]
++#            new_tokenizer.tokens += [sub_str]
++
++            cur_pos = end + 1
++
++        if cur_pos:
++            new_tokenizer.tokens += tokenizer.tokens[cur_pos:]
++
++        print(new_tokenizer.tokens)
++
++        return str(new_tokenizer)
++
++    def __repr__(self):
++        """
++        Returns a displayable version of the class init.
++        """
++
++        return f'CMatch("{self.regex.regex.pattern}")'
+diff --git a/tools/unittests/test_tokenizer.py b/tools/unittests/test_tokenizer.py
+index efb1d1687811..3081f27a7786 100755
+--- a/tools/unittests/test_tokenizer.py
++++ b/tools/unittests/test_tokenizer.py
+@@ -30,8 +30,7 @@ def tokens_to_list(tokens):
+         if tok.kind == CToken.SPACE:
+             continue
+ 
+-        tuples += [(tok.kind, tok.value,
+-                    tok.brace_level, tok.paren_level, tok.bracket_level)]
++        tuples += [(tok.kind, tok.value, tok.level)]
+ 
+     return tuples
+ 
 -- 
 2.52.0
 
