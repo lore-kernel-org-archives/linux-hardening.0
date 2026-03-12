@@ -1,813 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012000.outbound.protection.outlook.com [40.107.200.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4323AD534;
-	Thu, 12 Mar 2026 07:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773299554; cv=none; b=iWbw7l54qJHN8BjYNGTyE8/JLcRMtT3YX8mFei1jukdU4+czKsJRcz0yDi17BrkOxfIlluFXhHO6bQF5SSVBuPimE4SWYSbHBU1NNVgrbUlqpjlPT/1vhP+g5SWqN/vrNoHowqsL53T2jao+fRhcsHN9FVESCpW43VX9zXlNCu0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773299554; c=relaxed/simple;
-	bh=024KPIqyz3ZfGXNW94ZUdDluTtjF6rZFufcUUDYWkXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n1zaWcenaigevC0+4KPey8AMAAPmgTOrip8ct/dHYS/IpU/YbhkoRN2M2I79AXs7XBwEJr7BrAy+h6MezCww1AXcrL1f4x/NLpHlTjbi072X1iCTi2BWcyaUuwsogNP9onCP1GV595+mf5B+pOI9FzflfaVUxhBpIVQSy7J73U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gikbu3ag; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B2A33F5B5;
+	Thu, 12 Mar 2026 07:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773300542; cv=fail; b=OuuZwyrkTStrolbRj5EKuYZmuIRWHr2cN3kkl1MXEhH0YX0yaUmWhXo3eLgtgbTtPoGuCqamJlc5fmRPxoc8jNaylMu8ZEqNQcPtl/iJ7q/S3CtEgGnHPHbCt2bSeoI2pBxaZVw4y8DDMyQDCssIjYaS0EIg+66lPKBcfVvKPFc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773300542; c=relaxed/simple;
+	bh=6BOY+3ZsKs0sOgT7hraalxagCJw6IueaBtVYR5tkjnc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TZnEWLUp2Py2P7nilH+Na6RO7vxddApc2FUDkKnpPJAu283EW7VbOva8rjEJtKo0+BM09Jl43u1pjvLUkaVbPlIGfzJEPBxb42cO4G91altCyVjTCH1y4KNKTKk1vrPVKESrjbVWFPHT6UOIPMLZkn43sEPsXKdZaCjzh8qnOXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WwwYzV5w; arc=fail smtp.client-ip=40.107.200.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gikbu3ag"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C475C2BCB7;
-	Thu, 12 Mar 2026 07:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773299553;
-	bh=024KPIqyz3ZfGXNW94ZUdDluTtjF6rZFufcUUDYWkXA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gikbu3agS1eM41ibUr0nT+7guTAR0vSqIVlcypBOOEPYNWUJtOJqPGUyE1vlK2Zi6
-	 f0qVTUZ6aF7W58ny6a+SMEEg7iuQHMoeXR52UvVACgTT906BaLQIUj6C4EY8vmxmo0
-	 7EHY1KYuSWQy5oyyT29wDJTZJ8UHNI33CYu4AEGMSYAVYbmyoDiKySnvKGuBF6oBUy
-	 p53Ll67g1gagxYh0cxb1z4N0sRlTYyrtFul4fvTSK41DTQ38SILPV8yMVY8+MnKyyB
-	 xXzzphjcLeQJ3ZGuFskhqEK+JfpDq8iGTiyBB+9RRmBWILxu8FZX6103Ep4Np8Avee
-	 PwPgH0A2lRRwg==
-Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1w0aDf-000000077hE-2nq0;
-	Thu, 12 Mar 2026 08:12:31 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <kees@kernel.org>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH v2 14/20] unittests: test_cmatch: add tests for sub()
-Date: Thu, 12 Mar 2026 08:12:22 +0100
-Message-ID: <4642a8e6d14e0ce7f134ae5bed88e5e94d425114.1773297828.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1773297828.git.mchehab+huawei@kernel.org>
-References: <cover.1773297828.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WwwYzV5w"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YI8BWaJb+o5+GYvupMsMFWbx+BG7maYD2F4LMKMc16M9IQoiUiCicEZ+RHcF70MTS3FtDBN+CCYE9jUr76+FBv2a/lagRchl/M2BevMRNoJdAG4rKMNOnmSnAOFXWKXgzREuTSZEpzzhmo+atTZbN9QAp9v7TrB4EJoKB1RxGSgwtHr5IOqP82VGAKbdlC5XPaNZi79Y66iWKyXvPaEergztww/h2SS0kisxuzcoz/IkdfcnB2PRO//mefmY0b+3BV3E5ZQVeIu0pELueEM0r1S+EhIkk3+muzZHQClj2Og0LILPbK15gujV0HeL6T7eqcdP3vK7c50DrTYtRbgpcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/9azDxvxlyu0AGAWR/wtM/stY/3N4uFIPlGbGd0i2Z0=;
+ b=Dsp14UvPpKxtvL8KfC9xMssG4+DSSwdPsZkO7jMZp2xYSRjTBswJw3suH9Seg8Xzed30KMi7rZOuUzQkl7utU4veIvrqbk2/vjzlZS3LDGUmknRC8acQ+OFfg8hubX0DMJxxNK7QJ501GdomylP/5p53Q7h31fL4288JRZqQcAxcU5oOpH4aixUuHDVH1psI5mrHzwQshatJxNngfOYvbwvBUxWvpqKBM32LGA/DONUc4Dkq9s6he2/DUEu/yLC9FQYjksRJSZiP7yal0GXxF4ksQPIeiziepJ59K8nzmPpAx4VG6BIpe36o0UjE4JS5t/ifIjiSrZxTnumzU+ghBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/9azDxvxlyu0AGAWR/wtM/stY/3N4uFIPlGbGd0i2Z0=;
+ b=WwwYzV5w6UKzdSoEzVhxRsX6/Q+s30kTzYybgTKrYEsPZC0KZfdJgaIxGfPjG4lAXi2eYTpytSvkHRWYpj+scanf4zzLqi85J9dswpVxyXowwTPDPNtTyBkoRgiHzyErng293tDn7OcCFgVJVAj7xMy6jN99WPtqkR3T4D0UIvyoJuGRmUF8a9GJubj7a8IG0FDTs6WgkUkofND1NxkJwfDlOJkqw3c4YlX2QGCPQ+RtmnN22yFEhEGIR2FJHlUWG6C7f9SJgBygy/t7TqLpDd6K6qvJMw8eueAl9EEASKe101f34VJkVxFTtOBsWvrbTNvz6H0xrCmzcC7+CtxbgA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS2PR12MB9750.namprd12.prod.outlook.com (2603:10b6:8:2b0::12)
+ by SN7PR12MB6910.namprd12.prod.outlook.com (2603:10b6:806:262::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.4; Thu, 12 Mar
+ 2026 07:28:56 +0000
+Received: from DS2PR12MB9750.namprd12.prod.outlook.com
+ ([fe80::56a8:d6bf:e24c:b391]) by DS2PR12MB9750.namprd12.prod.outlook.com
+ ([fe80::56a8:d6bf:e24c:b391%5]) with mapi id 15.20.9723.000; Thu, 12 Mar 2026
+ 07:28:56 +0000
+Message-ID: <64f6e02d-c7cb-40cb-b1fb-2d3523433c66@nvidia.com>
+Date: Thu, 12 Mar 2026 07:28:49 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/10] gpiolib: implement low-level, shared GPIO
+ support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andy Shevchenko <andy@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Alexey Klimov <alexey.klimov@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+ <20251112-gpio-shared-v4-3-b51f97b1abd8@linaro.org>
+ <921ba8ce-b18e-4a99-966d-c763d22081e2@nvidia.com>
+ <CAHp75VevThmDMm6VoVB9P0YbUGGGsmgnzr2gn9=1xtJZt-kuQw@mail.gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <CAHp75VevThmDMm6VoVB9P0YbUGGGsmgnzr2gn9=1xtJZt-kuQw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO3P123CA0004.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:ba::9) To DS2PR12MB9750.namprd12.prod.outlook.com
+ (2603:10b6:8:2b0::12)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PR12MB9750:EE_|SN7PR12MB6910:EE_
+X-MS-Office365-Filtering-Correlation-Id: 58178983-a39c-4c15-5c8e-08de8009051a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|7416014|376014|1800799024|366016|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	j3qQHS6GXcDs5HW7SCLqmzDtzZqODgydlf0deYoOYI3zulaSDcvWmMEhKg64Rq+65jyUyezsdyp+ORqtWoQEOcsM1LhQVL8d60S8U3ZpAPIFEEZ3wwJMFUnPop5vRDzrVJcCAYxeEkT69SOib4AZnWWDS5VsttVo+eOe6lIzxT4shTXHaj9WOiRgoREPk1IlUlCAqV7IZtP/4MzuzU/zb3Z9gyi3xImyZEQjDPEzqUNYafhvT7vxHWAWQ7DR6RhOvuUPCPSLg85GR4itbXdamP8OVSnT1Le+9esKnqhVX2FILEuaGSYGx5LB4z3S3e82oPqgSfTq1vzgI59Ha6yghGsJ6LWdGNd4HzjceZ+Jpo4yGop1l2GobNcoo0QGkhxMsKEwDoT+lplVfuirMy/Hrnt4RHDgBZozZIErZPHItnDptjD0K42Zy1dFCjIpo0kNjFmUBgnoPc4eSCe5SUscabuVL7FHjV9B37Spe8Bui2ZrLBIymOHnPZksZeRyZx8oL3AgzlVp1nMdA185KlwwA95SQ0dzm6GgPt0/8C1Ec0FrPTc+QeE6rEQvFMOq6dwP25LS2xX9tXycdYkuMwKFYWbBmPKF+83qTieOaOdU6lrs+rj6ES5B6kJR5hOSgeIfFBlCksS582TS2N64SQQ51zCCn6mouSm1z0u7EWoJIfbO7C/AOb1YQk18rWubpGSkLTuGcJNT/SVydKx15RRB4G+gKVjEIzXFJ+05jQi8TqQ=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS2PR12MB9750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(376014)(1800799024)(366016)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UWhLbXhBN2FmUW0rQnRuOVY4UXR4ZDlNUTNWN1EvclpLNWU3TFprZitCTXov?=
+ =?utf-8?B?VVFsN1lqUWRCWUhTRFE0akFpT2NQK2hkYUllZ0NmcHFMVnoxNUhjMHVnc3px?=
+ =?utf-8?B?YkZQYUdXRm9DNlI5VVpMazVpdnhuSENxYjB6ZDRJSkd1RmVlaXBBV1FhMysv?=
+ =?utf-8?B?ajJRWFRwN1VVaUFtc0I3dmYxVUxsQS9jb3Jtcm1UWkJOc1VGU1pXTkpMczRS?=
+ =?utf-8?B?MFVnV1NDZWh3NkNvU0F1WVFlWisyUUNsUTdyMWlXZ3M4aElpL25qbUZRWXFw?=
+ =?utf-8?B?TmhTVWVYRHJxL0Rwc1hIcnJMc3VTTFJCL01xMHZVWTQ2RUxDQ1BGd3djZEZm?=
+ =?utf-8?B?R2Y4OTZMQ0pBNjFjSnNRckxJZzM5SFVMOGFkc0dkeEl4b2FremN3UVBNT285?=
+ =?utf-8?B?TkM4YkZsblJ4eEFDKzMvODViL1Q3cWk1dGc1U0dMa1VuUkJUYzBaOXlyREZZ?=
+ =?utf-8?B?Y1RSMTdVZHhqTis0OHAwd3ZwMEVyQ1hEanViNDB3T3VWdHpxcktja0ZRZy80?=
+ =?utf-8?B?eXBaelVUaDczczhSMFlOU0VvaXBxRDZDOHZJNVViZ28xZGVQb2dBWXZjakNm?=
+ =?utf-8?B?YndkT3R0b0VOc1lCUVoybkRJZWpiUHJTYmJjR3dnNnRUZC9naGJCYVVaYy9K?=
+ =?utf-8?B?RGt3RzdMNTl1ZkZzT0pLSzhLOUI0QWl4WU5QWTZTbHR4cmRUWXZJNy91N0dN?=
+ =?utf-8?B?VEFYampYenUxeGs1bmI2dVY5ajlsZ3VxL2NRMUNxc2tsNkRReGpoRWNWREVw?=
+ =?utf-8?B?OW8raUFVdU9URHdTQlovK20yQzFOUXd2aUE1T3ZPNmFZMTlPY0lYei90RU82?=
+ =?utf-8?B?My9YQmhNVzNTaVAvVHR3OUVPdTlKQUNCRmNmengrN1FpNmszaVVnTWR0Q3d1?=
+ =?utf-8?B?NHd0RCt0TjgwaGVsLzllb0U2TC9vZkZKdU5xQjJ6b0tqOVY1WWlNb25PRWZz?=
+ =?utf-8?B?MmZKcmlPR0tZWEVKc3FLdnIxYjRYRnZ0VkZjL0ZNM3p3bDVTZHZSbWRyb0dl?=
+ =?utf-8?B?VnpoZlA5Ull5MGRFYnBMS2h6WDFFYzBjZWR4aXlacy9ZTk9LSm1kRHhQUVpl?=
+ =?utf-8?B?R2M3TjZrWEhyN1hPaCs4YUllOVFHTWZQSG9VVExSaFdMQ0R5Kzk5QU13R1Zl?=
+ =?utf-8?B?RDJveDdtdFFwa1Raa0twVGdiekZQU1dIcGdYMlZPb2g3Y2UzalREYWJpdXhM?=
+ =?utf-8?B?MmZqbG9wQUNiTlF5cGxWMjJrUEY4cU90WEN6UXlrL1ZhTjhKaWZibzRWZDlK?=
+ =?utf-8?B?VUpFVHRBQkNRYThaQWhnYnRJeU1tSkFob3pnWDRJRzZWWVI3UmVvQ0FGc3JB?=
+ =?utf-8?B?ZnczMjZ4YnBRa3VUUjU5LzVkTGpBY24zSklQeUJKTkY1Z3lsMHlqOWx2RG9y?=
+ =?utf-8?B?dVJEeWNpeWRpenFYS2ZTRVY3MFlKK2hyK2h5SGdPNjk1NFJuQXRZS2RCMFl3?=
+ =?utf-8?B?ZnZ5Qk1qV2xWNUNsNks5SmdXOG50eEJKQlQyWWRSeUltdVZuQWZ2M1R4MFpE?=
+ =?utf-8?B?Z0VkNWd0aUg3UHBSMXBMcmx2VndjQVo0Q3dOUVJkZ085RTlLaGR5S2xWSVlo?=
+ =?utf-8?B?cDBGajJxYmFCUEd0b1hjWkRoeWs1K3dEQmpvUXJLbldHaUg4ZS9ZazRIWXpu?=
+ =?utf-8?B?NWZ3bWdNYTF5TXpwQWtDZTJPYVZUSkNKNUNYNUNlYi9WQlhaM05xVENHRUZj?=
+ =?utf-8?B?eXRmcDAxSVo4SUZweC9maExLaGowREcreVBuRTdQYk9OSUgvMW1Ta09EN2ox?=
+ =?utf-8?B?ZlVmUGZyaGozMjI0cE1XNHFFcVdJSEo5aCtNQ2RleVpTREtmSGFoOENnMWJP?=
+ =?utf-8?B?cTVNWWYwdWdoMDJkQXlKQnQwMitZQnQ0VUV1VDNQd3dSaWRGRXhQZWRQWThE?=
+ =?utf-8?B?VWZRYjROanZkcThVSkNXK0wvN0E2Y3ROTjkwMlZTRy9aMXpnc2l4VnVCRTBH?=
+ =?utf-8?B?ai9rUFBSak9BOFg1ekd3SUJBL1Z1VzhSSkRIVHN6aUg4SUhQeUI3NjRFSFAw?=
+ =?utf-8?B?N09kdUR6VTYxTlBucmdMYnJMbHh5cVRKU0IvZmNxSW5TSzJDQ0RPOVBOYzVl?=
+ =?utf-8?B?KytBTEZjYkNUTGpGSm1mRlNBYVlNRG80ckcwSnFQNW1ORVlZUXBCM2hTSVBX?=
+ =?utf-8?B?SWg1L2VUODlNQ1krc2FSK2FDSW1reUN6dFZpdWYzK1lJYXR3UFpDWUR3UElZ?=
+ =?utf-8?B?NlFVRy9SVHhqbDZSQ0M4eXdvV2E0K25FTG9aallsVUczb2orUkQ4cTFBZ1lO?=
+ =?utf-8?B?VS8xa3VTc3pObW1xb2RWN3g5bVJhVEU2ckE4ME9SaWRwL3hLZHRmb3ZHdS82?=
+ =?utf-8?B?dC9SQ3BCeDF5SkhINVZNcFdPL2E0THUrbG5CdCtlZVowZ0JCMWlhQk5MVlVw?=
+ =?utf-8?Q?tSl0D79KlTYu8kTwcaAt0wbaK9JEJ0VOl9InoO9hWJEzk?=
+X-MS-Exchange-AntiSpam-MessageData-1: 8z6zpuqrEyFIdQ==
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58178983-a39c-4c15-5c8e-08de8009051a
+X-MS-Exchange-CrossTenant-AuthSource: DS2PR12MB9750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 07:28:56.3638
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7pZRk0elVgnf4CyIHDvkAAR0Ek8GM1Re7fVwXYHDK245izDoPYgjDhq3Dsti5fDjhLJ0ERU8c5iZxyyqOSxmJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6910
 
-Now that we have code for sub(), test it.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- tools/unittests/test_cmatch.py | 721 ++++++++++++++++++++++++++++++++-
- 1 file changed, 719 insertions(+), 2 deletions(-)
+On 11/03/2026 20:14, Andy Shevchenko wrote:
+> On Wed, Mar 11, 2026 at 8:38 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+>> On 12/11/2025 13:55, Bartosz Golaszewski wrote:
+> 
+> ...
+> 
+>> On Tegra234, the main gpio controller has a total of 164 GPIOs (see
+>> the tegra234_main_ports in drivers/gpio/gpio-tegra186.c). The GPIOs
+>> are assigned a index by the kernel from 0-163, but these GPIOs are
+>> not contiguous with respect to the device-tree specifier.
+> 
+> If I may ask...
+> 
+> Why? Is it sparse because there are pads that can't be used as GPIOs?
 
-diff --git a/tools/unittests/test_cmatch.py b/tools/unittests/test_cmatch.py
-index 53b25aa4dc4a..f6ccd2a942f1 100755
---- a/tools/unittests/test_cmatch.py
-+++ b/tools/unittests/test_cmatch.py
-@@ -21,7 +21,7 @@ SRC_DIR = os.path.dirname(os.path.realpath(__file__))
- sys.path.insert(0, os.path.join(SRC_DIR, "../lib/python"))
- 
- from kdoc.c_lex import CMatch
--from kdoc.xforms_lists import CTransforms
-+from kdoc.kdoc_re import KernRe
- from unittest_helper import run_unittest
- 
- #
-@@ -75,7 +75,7 @@ class TestSearch(TestCaseDiff):
- 
-     def test_search_no_false_positive(self):
-         line = "call__acquires(foo);  // should stay intact"
--        result = ", ".join(CMatch(r"\b__acquires").search(line))
-+        result = ", ".join(CMatch(r"__acquires").search(line))
-         self.assertEqual(result, "")
- 
-     def test_search_no_macro_remains(self):
-@@ -88,6 +88,723 @@ class TestSearch(TestCaseDiff):
-         result = ", ".join(CMatch(line).search(line))
-         self.assertEqual(result, "")
- 
-+#
-+# Override unittest.TestCase to better compare diffs ignoring whitespaces
-+#
-+class TestCaseDiff(unittest.TestCase):
-+    """
-+    Disable maximum limit on diffs and add a method to better
-+    handle diffs with whitespace differences.
-+    """
-+
-+    @classmethod
-+    def setUpClass(cls):
-+        """Ensure that there won't be limit for diffs"""
-+        cls.maxDiff = None
-+
-+    def assertLogicallyEqual(self, a, b):
-+        """
-+        Compare two results ignoring multiple whitespace differences.
-+
-+        This is useful to check more complex matches picked from examples.
-+        On a plus side, we also don't need to use dedent.
-+        Please notice that line breaks still need to match. We might
-+        remove it at the regex, but this way, checking the diff is easier.
-+        """
-+        a = re.sub(r"[\t ]+", " ", a.strip())
-+        b = re.sub(r"[\t ]+", " ", b.strip())
-+
-+        a = re.sub(r"\s+\n", "\n", a)
-+        b = re.sub(r"\s+\n", "\n", b)
-+
-+        a = re.sub(" ;", ";", a)
-+        b = re.sub(" ;", ";", b)
-+
-+        self.assertEqual(a, b)
-+
-+#
-+# Tests doing with different macros
-+#
-+
-+class TestSubMultipleMacros(TestCaseDiff):
-+    """
-+    Tests doing with different macros.
-+
-+    Here, we won't use assertLogicallyEqual. Instead, we'll check if each
-+    of the expected patterns are present at the answer.
-+    """
-+
-+    def test_acquires_simple(self):
-+        """Simple replacement test with __acquires"""
-+        line = "__acquires(ctx) foo();"
-+        result = CMatch(r"__acquires").sub("REPLACED", line)
-+
-+        self.assertEqual("REPLACED foo();", result)
-+
-+    def test_acquires_multiple(self):
-+        """Multiple __acquires"""
-+        line = "__acquires(ctx) __acquires(other) bar();"
-+        result = CMatch(r"__acquires").sub("REPLACED", line)
-+
-+        self.assertEqual("REPLACED REPLACED bar();", result)
-+
-+    def test_acquires_nested_paren(self):
-+        """__acquires with nested pattern"""
-+        line = "__acquires((ctx1, ctx2)) baz();"
-+        result = CMatch(r"__acquires").sub("REPLACED", line)
-+
-+        self.assertEqual("REPLACED baz();", result)
-+
-+    def test_must_hold(self):
-+        """__must_hold with a pointer"""
-+        line = "__must_hold(&lock) do_something();"
-+        result = CMatch(r"__must_hold").sub("REPLACED", line)
-+
-+        self.assertNotIn("__must_hold(", result)
-+        self.assertIn("do_something();", result)
-+
-+    def test_must_hold_shared(self):
-+        """__must_hold with an upercase defined value"""
-+        line = "__must_hold_shared(RCU) other();"
-+        result = CMatch(r"__must_hold_shared").sub("REPLACED", line)
-+
-+        self.assertNotIn("__must_hold_shared(", result)
-+        self.assertIn("other();", result)
-+
-+    def test_no_false_positive(self):
-+        """
-+        Ensure that unrelated text containing similar patterns is preserved
-+        """
-+        line = "call__acquires(foo);  // should stay intact"
-+        result = CMatch(r"\b__acquires").sub("REPLACED", line)
-+
-+        self.assertLogicallyEqual(result, "call__acquires(foo);")
-+
-+    def test_mixed_macros(self):
-+        """Add a mix of macros"""
-+        line = "__acquires(ctx) __releases(ctx) __must_hold(&lock) foo();"
-+
-+        result = CMatch(r"__acquires").sub("REPLACED", line)
-+        result = CMatch(r"__releases").sub("REPLACED", result)
-+        result = CMatch(r"__must_hold").sub("REPLACED", result)
-+
-+        self.assertNotIn("__acquires(", result)
-+        self.assertNotIn("__releases(", result)
-+        self.assertNotIn("__must_hold(", result)
-+
-+        self.assertIn("foo();", result)
-+
-+    def test_no_macro_remains(self):
-+        """Ensures that unmatched macros are untouched"""
-+        line = "do_something_else();"
-+        result = CMatch(r"__acquires").sub("REPLACED", line)
-+
-+        self.assertEqual(result, line)
-+
-+    def test_no_function(self):
-+        """Ensures that no functions will remain untouched"""
-+        line = "something"
-+        result = CMatch(line).sub("REPLACED", line)
-+
-+        self.assertEqual(result, line)
-+
-+#
-+# Check if the diff is logically equivalent. To simplify, the tests here
-+# use a single macro name for all replacements.
-+#
-+
-+class TestSubSimple(TestCaseDiff):
-+    """
-+    Test argument replacements.
-+
-+    Here, the function name can be anything. So, we picked __attribute__(),
-+    to mimic a macro found at the Kernel, but none of the replacements her
-+    has any relationship with the Kernel usage.
-+    """
-+
-+    MACRO = "__attribute__"
-+
-+    @classmethod
-+    def setUpClass(cls):
-+        """Define a CMatch to be used for all tests"""
-+        cls.matcher = CMatch(cls.MACRO)
-+
-+    def test_sub_with_capture(self):
-+        """Test all arguments replacement with a single arg"""
-+        line = f"{self.MACRO}(&ctx)\nfoo();"
-+
-+        result = self.matcher.sub(r"ACQUIRED(\0)", line)
-+
-+        self.assertLogicallyEqual("ACQUIRED(&ctx)\nfoo();", result)
-+
-+    def test_sub_zero_placeholder(self):
-+        """Test all arguments replacement with a multiple args"""
-+        line = f"{self.MACRO}(arg1, arg2)\nbar();"
-+
-+        result = self.matcher.sub(r"REPLACED(\0)", line)
-+
-+        self.assertLogicallyEqual("REPLACED(arg1, arg2)\nbar();", result)
-+
-+    def test_sub_single_placeholder(self):
-+        """Single replacement rule for \1"""
-+        line = f"{self.MACRO}(ctx, boo)\nfoo();"
-+        result = self.matcher.sub(r"ACQUIRED(\1)", line)
-+
-+        self.assertLogicallyEqual("ACQUIRED(ctx)\nfoo();", result)
-+
-+    def test_sub_multiple_placeholders(self):
-+        """Replacement rule for both \1 and \2"""
-+        line = f"{self.MACRO}(arg1, arg2)\nbar();"
-+        result = self.matcher.sub(r"REPLACE(\1, \2)", line)
-+
-+        self.assertLogicallyEqual("REPLACE(arg1, arg2)\nbar();", result)
-+
-+    def test_sub_mixed_placeholders(self):
-+        """Replacement rule for \0, \1 and additional text"""
-+        line = f"{self.MACRO}(foo, bar)\nbaz();"
-+        result = self.matcher.sub(r"ALL(\0) FIRST(\1)", line)
-+
-+        self.assertLogicallyEqual("ALL(foo, bar) FIRST(foo)\nbaz();", result)
-+
-+    def test_sub_no_placeholder(self):
-+        """Replacement without placeholders"""
-+        line = f"{self.MACRO}(arg)\nfoo();"
-+        result = self.matcher.sub(r"NO_BACKREFS()", line)
-+
-+        self.assertLogicallyEqual("NO_BACKREFS()\nfoo();", result)
-+
-+    def test_sub_count_parameter(self):
-+        """Verify that the algorithm stops after the requested count"""
-+        line = f"{self.MACRO}(a1) x();\n{self.MACRO}(a2) y();"
-+        result = self.matcher.sub(r"ONLY_FIRST(\1) ", line, count=1)
-+
-+        self.assertLogicallyEqual(f"ONLY_FIRST(a1) x();\n{self.MACRO}(a2) y();",
-+                                  result)
-+
-+    def test_strip_multiple_acquires(self):
-+        """Check if spaces between removed delimiters will be dropped"""
-+        line = f"int {self.MACRO}(1)  {self.MACRO}(2 )   {self.MACRO}(3) foo;"
-+        result = self.matcher.sub("", line)
-+
-+        self.assertLogicallyEqual(result, "int foo;")
-+
-+
-+#
-+# Test replacements with slashrefs
-+#
-+
-+
-+class TestSubWithLocalXforms(TestCaseDiff):
-+    """
-+    Test diferent usecase patterns found at the Kernel.
-+
-+    Here, replacements using both CMatch and KernRe can be tested,
-+    as it will import the actual replacement rules used by kernel-doc.
-+    """
-+
-+    struct_xforms = [
-+        (CMatch("__attribute__"), ' '),
-+        (CMatch('__aligned'), ' '),
-+        (CMatch('__counted_by'), ' '),
-+        (CMatch('__counted_by_(le|be)'), ' '),
-+        (CMatch('__guarded_by'), ' '),
-+        (CMatch('__pt_guarded_by'), ' '),
-+
-+        (CMatch('__cacheline_group_(begin|end)'), ''),
-+
-+        (CMatch('struct_group'), r'\2'),
-+        (CMatch('struct_group_attr'), r'\3'),
-+        (CMatch('struct_group_tagged'), r'struct \1 { \3+ } \2;'),
-+        (CMatch('__struct_group'), r'\4'),
-+
-+        (CMatch('__ETHTOOL_DECLARE_LINK_MODE_MASK'), r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
-+        (CMatch('DECLARE_PHY_INTERFACE_MASK',), r'DECLARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
-+        (CMatch('DECLARE_BITMAP'), r'unsigned long \1[BITS_TO_LONGS(\2)]'),
-+
-+        (CMatch('DECLARE_HASHTABLE'), r'unsigned long \1[1 << ((\2) - 1)]'),
-+        (CMatch('DECLARE_KFIFO'), r'\2 *\1'),
-+        (CMatch('DECLARE_KFIFO_PTR'), r'\2 *\1'),
-+        (CMatch('(?:__)?DECLARE_FLEX_ARRAY'), r'\1 \2[]'),
-+        (CMatch('DEFINE_DMA_UNMAP_ADDR'), r'dma_addr_t \1'),
-+        (CMatch('DEFINE_DMA_UNMAP_LEN'), r'__u32 \1'),
-+        (CMatch('VIRTIO_DECLARE_FEATURES'), r'union { u64 \1; u64 \1_array[VIRTIO_FEATURES_U64S]; }'),
-+    ]
-+
-+    function_xforms = [
-+        (CMatch('__printf'), ""),
-+        (CMatch('__(?:re)?alloc_size'), ""),
-+        (CMatch("__diagnose_as"), ""),
-+        (CMatch("DECL_BUCKET_PARAMS"), r"\1, \2"),
-+
-+        (CMatch("__cond_acquires"), ""),
-+        (CMatch("__cond_releases"), ""),
-+        (CMatch("__acquires"), ""),
-+        (CMatch("__releases"), ""),
-+        (CMatch("__must_hold"), ""),
-+        (CMatch("__must_not_hold"), ""),
-+        (CMatch("__must_hold_shared"), ""),
-+        (CMatch("__cond_acquires_shared"), ""),
-+        (CMatch("__acquires_shared"), ""),
-+        (CMatch("__releases_shared"), ""),
-+        (CMatch("__attribute__"), ""),
-+    ]
-+
-+    var_xforms = [
-+        (CMatch('__guarded_by'), ""),
-+        (CMatch('__pt_guarded_by'), ""),
-+        (CMatch("LIST_HEAD"), r"struct list_head \1"),
-+    ]
-+
-+    #: Transforms main dictionary used at apply_transforms().
-+    xforms = {
-+        "struct": struct_xforms,
-+        "func": function_xforms,
-+        "var": var_xforms,
-+    }
-+
-+    @classmethod
-+    def apply_transforms(cls, xform_type, text):
-+        """
-+        Mimic the behavior of kdoc_parser.apply_transforms() method.
-+
-+        For each element of STRUCT_XFORMS, apply apply_transforms.
-+
-+        There are two parameters:
-+
-+        - ``xform_type``
-+            Can be ``func``, ``struct`` or ``var``;
-+        - ``text``
-+            The text where the sub patterns from CTransforms will be applied.
-+        """
-+        for search, subst in cls.xforms.get(xform_type):
-+            text = search.sub(subst, text)
-+
-+        return text.strip()
-+
-+        cls.matcher = CMatch(r"struct_group[\w\_]*")
-+
-+    def test_struct_group(self):
-+        """
-+        Test struct_group using a pattern from
-+        drivers/net/ethernet/asix/ax88796c_main.h.
-+        """
-+        line = """
-+            struct tx_pkt_info {
-+                    struct_group(tx_overhead,
-+                            struct tx_sop_header sop;
-+                            struct tx_segment_header seg;
-+                    );
-+                    struct tx_eop_header eop;
-+                    u16 pkt_len;
-+                    u16 seq_num;
-+            };
-+        """
-+        expected = """
-+            struct tx_pkt_info {
-+                    struct tx_sop_header sop;
-+                    struct tx_segment_header seg;
-+                    ;
-+                    struct tx_eop_header eop;
-+                    u16 pkt_len;
-+                    u16 seq_num;
-+            };
-+        """
-+
-+        result = self.apply_transforms("struct", line)
-+        self.assertLogicallyEqual(result, expected)
-+
-+    def test_struct_group_attr(self):
-+        """
-+        Test two struct_group_attr using patterns from fs/smb/client/cifspdu.h.
-+        """
-+        line = """
-+            typedef struct smb_com_open_rsp {
-+                struct smb_hdr hdr;     /* wct = 34 BB */
-+                __u8 AndXCommand;
-+                __u8 AndXReserved;
-+                __le16 AndXOffset;
-+                __u8 OplockLevel;
-+                __u16 Fid;
-+                __le32 CreateAction;
-+                struct_group_attr(common_attributes,,
-+                    __le64 CreationTime;
-+                    __le64 LastAccessTime;
-+                    __le64 LastWriteTime;
-+                    __le64 ChangeTime;
-+                    __le32 FileAttributes;
-+                );
-+                __le64 AllocationSize;
-+                __le64 EndOfFile;
-+                __le16 FileType;
-+                __le16 DeviceState;
-+                __u8 DirectoryFlag;
-+                __u16 ByteCount;        /* bct = 0 */
-+            } OPEN_RSP;
-+            typedef struct {
-+                struct_group_attr(common_attributes,,
-+                    __le64 CreationTime;
-+                    __le64 LastAccessTime;
-+                    __le64 LastWriteTime;
-+                    __le64 ChangeTime;
-+                    __le32 Attributes;
-+                );
-+                __u32 Pad1;
-+                __le64 AllocationSize;
-+                __le64 EndOfFile;
-+                __le32 NumberOfLinks;
-+                __u8 DeletePending;
-+                __u8 Directory;
-+                __u16 Pad2;
-+                __le32 EASize;
-+                __le32 FileNameLength;
-+                union {
-+                    char __pad;
-+                    DECLARE_FLEX_ARRAY(char, FileName);
-+                };
-+            } FILE_ALL_INFO;       /* level 0x107 QPathInfo */
-+        """
-+        expected = """
-+            typedef struct smb_com_open_rsp {
-+                struct smb_hdr hdr;
-+                __u8 AndXCommand;
-+                __u8 AndXReserved;
-+                __le16 AndXOffset;
-+                __u8 OplockLevel;
-+                __u16 Fid;
-+                __le32 CreateAction;
-+                __le64 CreationTime;
-+                __le64 LastAccessTime;
-+                __le64 LastWriteTime;
-+                __le64 ChangeTime;
-+                __le32 FileAttributes;
-+                ;
-+                __le64 AllocationSize;
-+                __le64 EndOfFile;
-+                __le16 FileType;
-+                __le16 DeviceState;
-+                __u8 DirectoryFlag;
-+                __u16 ByteCount;
-+            } OPEN_RSP;
-+        typedef struct {
-+            __le64 CreationTime;
-+            __le64 LastAccessTime;
-+            __le64 LastWriteTime;
-+            __le64 ChangeTime;
-+            __le32 Attributes;
-+            ;
-+            __u32 Pad1;
-+            __le64 AllocationSize;
-+            __le64 EndOfFile;
-+            __le32 NumberOfLinks;
-+            __u8 DeletePending;
-+            __u8 Directory;
-+            __u16 Pad2;
-+            __le32 EASize;
-+            __le32 FileNameLength;
-+            union {
-+                char __pad;
-+                char FileName[];
-+            };
-+        } FILE_ALL_INFO;
-+        """
-+
-+        result = self.apply_transforms("struct", line)
-+        self.assertLogicallyEqual(result, expected)
-+
-+    def test_raw_struct_group(self):
-+        """
-+        Test a __struct_group pattern from include/uapi/cxl/features.h.
-+        """
-+        line = """
-+            struct cxl_mbox_get_sup_feats_out {
-+                __struct_group(cxl_mbox_get_sup_feats_out_hdr, hdr, /* empty */,
-+                    __le16 num_entries;
-+                    __le16 supported_feats;
-+                    __u8 reserved[4];
-+                );
-+                struct cxl_feat_entry ents[] __counted_by_le(num_entries);
-+            } __attribute__ ((__packed__));
-+        """
-+        expected = """
-+            struct cxl_mbox_get_sup_feats_out {
-+                __le16 num_entries;
-+                __le16 supported_feats;
-+                __u8 reserved[4];
-+                ;
-+                struct cxl_feat_entry ents[];
-+            };
-+        """
-+
-+        result = self.apply_transforms("struct", line)
-+        self.assertLogicallyEqual(result, expected)
-+
-+    def test_raw_struct_group_tagged(self):
-+        """
-+        Test cxl_regs with struct_group_tagged patterns from drivers/cxl/cxl.h.
-+
-+        NOTE:
-+
-+            This one has actually a violation from what kernel-doc would
-+            expect: Kernel-doc regex expects only 3 members, but this is
-+            actually defined as::
-+
-+                #define struct_group_tagged(TAG, NAME, MEMBERS...)
-+
-+            The replace expression there is::
-+
-+                struct \1 { \3 } \2;
-+
-+            but it should be really something like::
-+
-+                struct \1 { \3 \4 \5 \6 \7 \8 ... } \2;
-+
-+            a later fix would be needed to address it.
-+
-+        """
-+        line = """
-+            struct cxl_regs {
-+                struct_group_tagged(cxl_component_regs, component,
-+                    void __iomem *hdm_decoder;
-+                    void __iomem *ras;
-+                );
-+
-+
-+                /* This is actually a violation: too much commas */
-+                struct_group_tagged(cxl_device_regs, device_regs,
-+                    void __iomem *status, *mbox, *memdev;
-+                );
-+
-+                struct_group_tagged(cxl_pmu_regs, pmu_regs,
-+                    void __iomem *pmu;
-+                );
-+
-+                struct_group_tagged(cxl_rch_regs, rch_regs,
-+                    void __iomem *dport_aer;
-+                );
-+
-+                struct_group_tagged(cxl_rcd_regs, rcd_regs,
-+                    void __iomem *rcd_pcie_cap;
-+                );
-+            };
-+        """
-+        expected = """
-+        struct cxl_regs {
-+            struct cxl_component_regs {
-+                void __iomem *hdm_decoder;
-+                void __iomem *ras;
-+            } component;;
-+
-+            struct cxl_device_regs {
-+                void __iomem *status, *mbox, *memdev;
-+            } device_regs;;
-+
-+            struct cxl_pmu_regs {
-+                void __iomem *pmu;
-+            } pmu_regs;;
-+
-+            struct cxl_rch_regs {
-+                void __iomem *dport_aer;
-+            } rch_regs;;
-+
-+            struct cxl_rcd_regs {
-+                void __iomem *rcd_pcie_cap;
-+            } rcd_regs;;
-+        };
-+        """
-+
-+        result = self.apply_transforms("struct", line)
-+        self.assertLogicallyEqual(result, expected)
-+
-+    def test_struct_group_tagged_with_private(self):
-+        """
-+        Replace struct_group_tagged with private, using the same regex
-+        for the replacement as what happens in xforms_lists.py.
-+
-+        As the private removal happens outside NestedGroup class, we manually
-+        dropped the remaining part of the struct, to simulate what happens
-+        at kdoc_parser.
-+
-+        Taken from include/net/page_pool/types.h
-+        """
-+        line = """
-+            struct page_pool_params {
-+                struct_group_tagged(page_pool_params_slow, slow,
-+                                    struct net_device *netdev;
-+                                    unsigned int queue_idx;
-+                                    unsigned int    flags;
-+                                    /* private: only under "slow" struct */
-+                                    unsigned int ignored;
-+                );
-+                /* Struct below shall not be ignored */
-+                struct_group_tagged(page_pool_params_fast, fast,
-+                                    unsigned int    order;
-+                                    unsigned int    pool_size;
-+                                    int             nid;
-+                                    struct device   *dev;
-+                                    struct napi_struct *napi;
-+                                    enum dma_data_direction dma_dir;
-+                                    unsigned int    max_len;
-+                                    unsigned int    offset;
-+                );
-+            };
-+        """
-+        expected = """
-+            struct page_pool_params {
-+                struct page_pool_params_slow {
-+                    struct net_device *netdev;
-+                    unsigned int queue_idx;
-+                    unsigned int    flags;
-+                } slow;;
-+                struct page_pool_params_fast {
-+                    unsigned int order;
-+                    unsigned int    pool_size;
-+                    int             nid;
-+                    struct device   *dev;
-+                    struct napi_struct *napi;
-+                    enum dma_data_direction dma_dir;
-+                    unsigned int    max_len;
-+                    unsigned int    offset;
-+                } fast;;
-+            };
-+        """
-+
-+        result = self.apply_transforms("struct", line)
-+        self.assertLogicallyEqual(result, expected)
-+
-+    def test_struct_kcov(self):
-+        """
-+        """
-+        line = """
-+            struct kcov {
-+                refcount_t              refcount;
-+                spinlock_t              lock;
-+                enum kcov_mode          mode __guarded_by(&lock);
-+                unsigned int            size __guarded_by(&lock);
-+                void                    *area __guarded_by(&lock);
-+                struct task_struct      *t __guarded_by(&lock);
-+                bool                    remote;
-+                unsigned int            remote_size;
-+                int                     sequence;
-+            };
-+        """
-+        expected = """
-+        """
-+
-+        result = self.apply_transforms("struct", line)
-+        self.assertLogicallyEqual(result, expected)
-+
-+
-+    def test_struct_kcov(self):
-+        """
-+        Test a struct from kernel/kcov.c.
-+        """
-+        line = """
-+            struct kcov {
-+                refcount_t              refcount;
-+                spinlock_t              lock;
-+                enum kcov_mode          mode __guarded_by(&lock);
-+                unsigned int            size __guarded_by(&lock);
-+                void                    *area __guarded_by(&lock);
-+                struct task_struct      *t __guarded_by(&lock);
-+                bool                    remote;
-+                unsigned int            remote_size;
-+                int                     sequence;
-+            };
-+        """
-+        expected = """
-+            struct kcov {
-+                refcount_t              refcount;
-+                spinlock_t              lock;
-+                enum kcov_mode          mode;
-+                unsigned int            size;
-+                void                    *area;
-+                struct task_struct      *t;
-+                bool                    remote;
-+                unsigned int            remote_size;
-+                int                     sequence;
-+            };
-+        """
-+
-+        result = self.apply_transforms("struct", line)
-+        self.assertLogicallyEqual(result, expected)
-+
-+    def test_vars_stackdepot(self):
-+        """
-+        Test guarded_by on vars from lib/stackdepot.c.
-+        """
-+        line = """
-+            size_t pool_offset __guarded_by(&pool_lock) = DEPOT_POOL_SIZE;
-+            __guarded_by(&pool_lock) LIST_HEAD(free_stacks);
-+            void **stack_pools __pt_guarded_by(&pool_lock);
-+        """
-+        expected = """
-+            size_t pool_offset = DEPOT_POOL_SIZE;
-+            struct list_head free_stacks;
-+            void **stack_pools;
-+        """
-+
-+        result = self.apply_transforms("var", line)
-+        self.assertLogicallyEqual(result, expected)
-+
-+    def test_functions_with_acquires_and_releases(self):
-+        """
-+        Test guarded_by on vars from lib/stackdepot.c.
-+        """
-+        line = """
-+            bool prepare_report_consumer(unsigned long *flags,
-+                                         const struct access_info *ai,
-+                                         struct other_info *other_info) \
-+                                        __cond_acquires(true, &report_lock);
-+
-+            int tcp_sigpool_start(unsigned int id, struct tcp_sigpool *c) \
-+                                  __cond_acquires(0, RCU_BH);
-+
-+            bool undo_report_consumer(unsigned long *flags,
-+                                      const struct access_info *ai,
-+                                      struct other_info *other_info) \
-+                                     __cond_releases(true, &report_lock);
-+
-+            void debugfs_enter_cancellation(struct file *file,
-+                                            struct debugfs_cancellation *c) \
-+                                           __acquires(cancellation);
-+
-+            void debugfs_leave_cancellation(struct file *file,
-+                                            struct debugfs_cancellation *c) \
-+                                           __releases(cancellation);
-+
-+            acpi_cpu_flags acpi_os_acquire_lock(acpi_spinlock lockp) \
-+                                               __acquires(lockp);
-+
-+            void acpi_os_release_lock(acpi_spinlock lockp,
-+                                      acpi_cpu_flags not_used) \
-+                                     __releases(lockp)
-+        """
-+        expected = """
-+            bool prepare_report_consumer(unsigned long *flags,
-+                                         const struct access_info *ai,
-+                                         struct other_info *other_info);
-+
-+            int tcp_sigpool_start(unsigned int id, struct tcp_sigpool *c);
-+
-+            bool undo_report_consumer(unsigned long *flags,
-+                                      const struct access_info *ai,
-+                                      struct other_info *other_info);
-+
-+            void debugfs_enter_cancellation(struct file *file,
-+                                            struct debugfs_cancellation *c);
-+
-+            void debugfs_leave_cancellation(struct file *file,
-+                                            struct debugfs_cancellation *c);
-+
-+            acpi_cpu_flags acpi_os_acquire_lock(acpi_spinlock lockp);
-+
-+            void acpi_os_release_lock(acpi_spinlock lockp,
-+                                      acpi_cpu_flags not_used)
-+        """
-+
-+        result = self.apply_transforms("func", line)
-+        self.assertLogicallyEqual(result, expected)
-+
- #
- # Run all tests
- #
+It is purely how the different port for the GPIO controller are 
+configured in h/w ...
+
+static const struct tegra_gpio_port tegra234_main_ports[] = {
+         TEGRA234_MAIN_GPIO_PORT( A, 0, 0, 8),
+         TEGRA234_MAIN_GPIO_PORT( B, 0, 3, 1),
+         TEGRA234_MAIN_GPIO_PORT( C, 5, 1, 8),
+         TEGRA234_MAIN_GPIO_PORT( D, 5, 2, 4),
+         TEGRA234_MAIN_GPIO_PORT( E, 5, 3, 8),
+         TEGRA234_MAIN_GPIO_PORT( F, 5, 4, 6),
+         TEGRA234_MAIN_GPIO_PORT( G, 4, 0, 8),
+         TEGRA234_MAIN_GPIO_PORT( H, 4, 1, 8),
+         TEGRA234_MAIN_GPIO_PORT( I, 4, 2, 7),
+         TEGRA234_MAIN_GPIO_PORT( J, 5, 0, 6),
+         TEGRA234_MAIN_GPIO_PORT( K, 3, 0, 8),
+         TEGRA234_MAIN_GPIO_PORT( L, 3, 1, 4),
+         TEGRA234_MAIN_GPIO_PORT( M, 2, 0, 8),
+         TEGRA234_MAIN_GPIO_PORT( N, 2, 1, 8),
+         TEGRA234_MAIN_GPIO_PORT( P, 2, 2, 8),
+         TEGRA234_MAIN_GPIO_PORT( Q, 2, 3, 8),
+         TEGRA234_MAIN_GPIO_PORT( R, 2, 4, 6),
+         TEGRA234_MAIN_GPIO_PORT( X, 1, 0, 8),
+         TEGRA234_MAIN_GPIO_PORT( Y, 1, 1, 8),
+         TEGRA234_MAIN_GPIO_PORT( Z, 1, 2, 8),
+         TEGRA234_MAIN_GPIO_PORT(AC, 0, 1, 8),
+         TEGRA234_MAIN_GPIO_PORT(AD, 0, 2, 4),
+         TEGRA234_MAIN_GPIO_PORT(AE, 3, 3, 2),
+         TEGRA234_MAIN_GPIO_PORT(AF, 3, 4, 4),
+         TEGRA234_MAIN_GPIO_PORT(AG, 3, 2, 8),
+};
+
+Each port can have upto 8 pins, but some don't. Note the last number in 
+the column indicates the number of pins for a port.
+
+>> For example, in device-tree, if I have a shared-gpio with the
+>> following specifier ...
+>>
+>>    gpios = <&gpio TEGRA234_MAIN_GPIO(AF, 1) GPIO_ACTIVE_LOW>;
+>>
+>> The macro TEGRA234_MAIN_GPIO(AF, 1) evaluates to (23 * 8) + 1 = 185.
+> 
+> To me it sounds like a bad design of the driver for this SoC/platform.
+
+I am not sure why you think that. Assuming a 1:1 mapping of the kernel's 
+GPIO index to the GPIO controller + h/w port + 1 GPIO number seems fragile.
+
+Jon
+
 -- 
-2.53.0
+nvpublic
 
