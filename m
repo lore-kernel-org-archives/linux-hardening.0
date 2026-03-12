@@ -1,193 +1,140 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010029.outbound.protection.outlook.com [52.101.201.29])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691FC34A784;
-	Thu, 12 Mar 2026 08:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.29
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773304878; cv=fail; b=DwFqIF1tQ20tYs0huHah5DIXA6dPx+Me3rH+TudTdRVkfSntXYt9cPsXifYC4i25zvjxQlzDyZp2kAwxZEAOpimZHIxo1EcatnBOfF/nqP+poON8O2EVZ/F2FyFvLhhhBUSlxNTqqF9w/5aDER2Xi1ay+pWJJUAuugnyVRP71mU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773304878; c=relaxed/simple;
-	bh=cdp5RjNZB7F7OB/rNquu+kwHnUshdEz57ynR+Tk9VrE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XDvafhBjW411/GkKu7vgJq2BRj3ncYQFYYc2GKWpGuNxhEm0HLRwWOe9xcj6jPlbTZaMQ5IEHHGWKxsSL1N042PgCz5NIFwJrG7KXOxFtxOjYozAZ69yCLayl7+qeaZ9FShnhsQjxi1FI/GDvPRY9NgEu68hlefdAbhrYBaBoMw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JlFy3IrQ; arc=fail smtp.client-ip=52.101.201.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394B63B3883;
+	Thu, 12 Mar 2026 09:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773307746; cv=none; b=bcxn0TKq7rnH7r4MSfMh13U8ploF5ySCb2PqKl0HxVrJSoT6jXOaknimNstMcLhiR9wPdU2qauv7UIm5cUNFZwYpCkR6VTGuJzbRf3u4z4t69NJWpF+/cTfm8UNgBF6DJADEWP57Iz1xzjzitEfw0N9hM0tOaSQW9mguAOvW9DY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773307746; c=relaxed/simple;
+	bh=lEOtM4zhrzldYTBWFHJI+Dhum9TqJxp4kJWyKgJHjgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c4XkqIBVc0HuLQ2LKFWeSIKN9E6JTRKgfgUw/RY52NS9tmLNITPUC/mxwhr9SsVJ+W5PTWQyl2v++0tkAsM5lDbvexUFSzKsrPc0wZNyZkDx92MQL3OXynhwNrWM7h+vDm09sbld4NqGlY/3Xo9Z+IPQ7ZUFTQNtbdQPcrZn1Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X9g10wqZ; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JlFy3IrQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F7mxFi3Yl4Gx7zyFCStxpjei1LHOQ+QfyNlHnRpCzkACJaE4eF1UEaYX9AhDLNY0h6LDPlTvSzsfvA1k3VLLNrR7n4sbpFQKiC1eO6E/g4ANxqmunn0tjQ7b0ci2y5pOjdhdNLEyhwoRdza2w5vbC2WBcWeP1ZtHQkM4UbGP37KAALazKMgeVjVcCpK0Y9xNnEkmFA3KEjNCds2yUGuJllq3shTmrZgrhn74j8cu7FuKUrlPWDj8KBu34Z/ToavjCOtLCCbtmaIzXDf6fp9GQ/CZQTtpVPNlhE3ry99X+3X7N7D13dslxH77uIvUMV9Eb69qrnyG1Pz0volyfjoRjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nlNzPcZqWTUEZHCFLlLKvRemunPyu8m4TRxYqKDk3lY=;
- b=GMXYlI3NuAOyGGbkfABkVFuOp75J5oyYM2+Fk6n8FC52ekIYQqGpMKIn22cfJXEUwpBjv4mOKQWxlGqrkmJMxcb/gOhZOibe+VEa/3bTKYA9t+1W/3YVg2YoIjyjQebJXI3Lw2Vs6B0EoVQDN9y05xwOUfXv5MbYT/p4SRSOIMVIlATl4lIW7hPn1nqUZHD7Bb5SwFDyy1DpkXtVe/FIK+hx24aeAOsQWEDujCNr9YjmGpnu5R5LqMcQ5EhTvF+UhK8NI0K1EiUp2FwV80DAtjjJRUTzbYBSxOucsbrMreIf5DbFgaueYTq0IrX8GgXCGrDEMCZdR+Msok7B5DRT6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nlNzPcZqWTUEZHCFLlLKvRemunPyu8m4TRxYqKDk3lY=;
- b=JlFy3IrQjdbAkEllyHlA4Ido10xW+glVcEz8Wun7wtkdMzrtoSna7kZYZ66NU/J1AFjyu+0nnBB7grwx4havtLGQtJWuLNKfePB1CTNcdNqWfKL70OwSouVyVw7YaG5W3lVm1rHIihsCOhea6UZgmXejnaWxZ+Na2jnF2dhGybDHdeUV0z4yxTo6QwkHIPbB5fEHLkpwXMuix7r9QNJ1fb2QEUjKwKly/TYv7gT7I6Q691aloxRhf+TjRn+sgRkH3Z3kN1CQ1LG6lEc7GinbeSWfzeRaTOBBIjyvda7CqaNiS3o5rc135vOAlOBnCwCH3OVBcKGWADqSvVbhJkHtoA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS2PR12MB9750.namprd12.prod.outlook.com (2603:10b6:8:2b0::12)
- by LV2PR12MB5773.namprd12.prod.outlook.com (2603:10b6:408:17b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.4; Thu, 12 Mar
- 2026 08:41:10 +0000
-Received: from DS2PR12MB9750.namprd12.prod.outlook.com
- ([fe80::56a8:d6bf:e24c:b391]) by DS2PR12MB9750.namprd12.prod.outlook.com
- ([fe80::56a8:d6bf:e24c:b391%5]) with mapi id 15.20.9723.000; Thu, 12 Mar 2026
- 08:41:09 +0000
-Message-ID: <2d4e69cb-a43c-4d13-9f7b-20b95cee43a7@nvidia.com>
-Date: Thu, 12 Mar 2026 08:41:03 +0000
-User-Agent: Mozilla Thunderbird
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X9g10wqZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773307746; x=1804843746;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lEOtM4zhrzldYTBWFHJI+Dhum9TqJxp4kJWyKgJHjgI=;
+  b=X9g10wqZqAmEM5vSWCPr/Ruzf4QTcZsEbYueqsf1/AgN9LfUMS74UduT
+   CG7lKo0scf1n04LSeqZw4xi5FAQ2P/TFA+G0fuxVnks9AUlesiioEF5A2
+   8BbEXyg/XRQpbU+KACVpOA7OOcvGmzYbzOg5Abhx8iRTU93NU7rnchDnX
+   IBNQYikfBwIqceM+jCw4Fn01JQOwWE0sxyWYisQ/C+LG9x55qSMd44ZOU
+   Bk2XMY//pqEcEQAqPozNXOdzW6/s3fULeichpTYXcQcCs5ZaU+p7ZiYIo
+   9HU+enNRuTYue4l/PU0URuuBs30kE4QUa9DODKRlytrlYf8+c2p3kn5NI
+   Q==;
+X-CSE-ConnectionGUID: n+YsjcfVSfWPpvi5GAl82A==
+X-CSE-MsgGUID: SB4bSls8QCGf7JD+GE8sIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="74285414"
+X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
+   d="scan'208";a="74285414"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 02:29:05 -0700
+X-CSE-ConnectionGUID: Bmp7J73lQ2KkDt15aqIghA==
+X-CSE-MsgGUID: VGjzDg/3SbWUY6CwzC6H8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
+   d="scan'208";a="225466070"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 02:28:57 -0700
+Date: Thu, 12 Mar 2026 11:28:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: wens@kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 Subject: Re: [PATCH v4 03/10] gpiolib: implement low-level, shared GPIO
  support
-To: wens@kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andy Shevchenko <andy@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Alexey Klimov <alexey.klimov@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org,
- linux-arm-msm@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Message-ID: <abKHV7RSJWI0U-sK@ashevche-desk.local>
 References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
  <20251112-gpio-shared-v4-3-b51f97b1abd8@linaro.org>
  <921ba8ce-b18e-4a99-966d-c763d22081e2@nvidia.com>
  <CAHp75VevThmDMm6VoVB9P0YbUGGGsmgnzr2gn9=1xtJZt-kuQw@mail.gmail.com>
  <64f6e02d-c7cb-40cb-b1fb-2d3523433c66@nvidia.com>
  <CAGb2v67mmt=X8rbsUo+Gwe6uHXTNpBFGzBbrXZYEGsftHL4Ejg@mail.gmail.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <CAGb2v67mmt=X8rbsUo+Gwe6uHXTNpBFGzBbrXZYEGsftHL4Ejg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0359.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:d::35) To DS2PR12MB9750.namprd12.prod.outlook.com
- (2603:10b6:8:2b0::12)
+ <2d4e69cb-a43c-4d13-9f7b-20b95cee43a7@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PR12MB9750:EE_|LV2PR12MB5773:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6cc4a31d-d609-48c0-a9f1-08de80131c07
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	KuiAXHbKjdkiNZCjfnH8NYsRm0/PFj/5XcB9UHmmwIRJNSWUyY90OQA/jifmMmZKlpjg5o5J04LNZqqFFV+LBQSn5SAnmryCAVMsakEC9NmsHOGcPP0TVRyaEn1bCvRQb5tgM3adUq3Ue6UlwJdHEx9d0rxUKMQNCtBu7MU4hi5Q5KkI1uBD/WC+qUNRSy2mrlQwz6391MfU8UNVNxjo7CeK1HrcmLiATB+sDvmpCt6Jts4wDQj2k+PIjKPm9AfyK4P26630xNsQoKRYrWlZIY37kTuQ+/00emmoGmBKsVg8DTRcyTtALM5k/bQ2tKoTGqUShSm7LmjkLy4DEUuFVzHgzlZu54ZB5xlnQ9fnjFW0SNaPi6dMuL9wKOE3RHEX2cvqj+FfoVebV5Jh+IV4d8YxkX96dBFhBncCWjPnRypE2gf6Xl4UZ4xK9JehsnVsjQA/Skba7qt3mI9R8LPf4VhQ/D7ox1UTH5XP8cJAPb02viMqboojjES9HpejReErZ8WJom8Q98waKLf5lwSEn3Pj0f2GyckZQ/y4vTQYr62PL50J9foA81/eOrVMNlrI3EDaX2tn/kfJ7EhoKp3/vu4w/YmQ6AmKm/j/fTd9adbv/p8QLku85UdQ+LRFoGOwgYUvC3iIy+4gUnawsJrCAoD1Id6qOx7+aAL1uR7qH1iOgSodAyu8LMs8q6j4aqwc0HNDg6WtiTq7UpoMSNVVfKylj3DvS+G3HdZc/9qOXo8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS2PR12MB9750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b2JpeDFYNEkxcFVhOTdGSDJ3cjBCcFUyMkZHY1Z5THpVWnpHdVVycS8wK1Js?=
- =?utf-8?B?d0VvMnlmVWtLNnhZakczWkRBWnVpY3pMV0UweGVaMGV3VGp5dEo2WG1pVzRy?=
- =?utf-8?B?bklwaDQzaUNTcjd1R2RHMmdhclJNK3NJOXFzdHhOWXlET3BJQTRJcnNFd0dw?=
- =?utf-8?B?ZSsvSHhDSFZDVjVncTRaYUZUNDNKTm56R2d5ZlBmUC9TdzgzamlESVVZNTds?=
- =?utf-8?B?cE1yV0hQcGxkUTVNcGxocEwvQWo0TU5jMjlDTDhBdXMyWFdEdFgvcjdZVnNr?=
- =?utf-8?B?R0E4U0RFbitZRVlaTGJYTjBCT2hYWFlPSFJtajdFSzZTUDhzZ2VzQWxlUDVC?=
- =?utf-8?B?dmRVbDc2Vy9jV2p0RFV2NkNadHZZZDhKNUtNVlQ1eVNyazhsZ1MyaC9VRDJx?=
- =?utf-8?B?U29CcHZFd1BSRXdDcnV0Vk0yTWxWZ0NCUmxjdXRaM3Y3ZkNoNFJZa0hiOTBz?=
- =?utf-8?B?aTFMQXZBdDRzZW45aVBPMXNCay9UTCtXRkRydG11SW52MVcvbENyWFh1RnE3?=
- =?utf-8?B?Nm9RaUdPYjZHbmI5OEJTYXc2eHc1N3ZsMGM3bi9RSjFSZDBwUnQ5dC8vTnpE?=
- =?utf-8?B?eEFIMHNhUVpwOWlNMzBrMmNNWmMrc2NjemFndkROcWoweERCUzlrNm8yVzVh?=
- =?utf-8?B?ZytidlN6Ykp2NnlrNHMwbkpBazZjUVVkczJPM2xUcWtEa2pzbzlCYlQ0VkVD?=
- =?utf-8?B?Mis2NDViMWZFNEhZRExMNDhZcTl5Z0RyUU5rWmxybE5WelpsK3cwaDBnMHIv?=
- =?utf-8?B?LzNyZGY3UTE1RHBreTdna014VTlQUHFIZmcvaXk3ZkxoYzV3bVpFYnVOclZG?=
- =?utf-8?B?L2FmN2kzYklrYXVJYS9pcDdHQndydmoyUlpVeDBDZ1VrY2NlcDNjVnQzdFlL?=
- =?utf-8?B?OFFkYmVEcWIwWmdzQkZRZ2gzdFN4dGQxT1FQVVprbU9BbVhYdnZyTXdxZHZU?=
- =?utf-8?B?WTBGMFhRNHlyMDQxRjVFeDJVSm5CNjl2eVBZc21EUWlwQTlkV29BU3RjTGVP?=
- =?utf-8?B?OGxEektWYU1tU2ZCZ091SFVGY3J6dER0aFZZVnlOUXI1N2RZZGlxUStqY0hi?=
- =?utf-8?B?TmdKaFlkamV0WnB1dGNpcFAySWk2M2c1dXVYWVprb1FOV1piWTZvUjVnOTZG?=
- =?utf-8?B?TDJoc2Y2TFhWRndGN3dkZDNtbHV1QksyTVJ6bXpKMmtKZzhGYjliMFhHb2Y2?=
- =?utf-8?B?YlNwY3dvdXF4dnhIbkkxM2V0elNwY2lrY0V5aXBaN1o4SXFGbm5XZkd0V3Uw?=
- =?utf-8?B?VC9BRU5QczRldG0zZmhPN0xVZDhDdzE3REU5OGtqWStQSlNKNVJ4OEU0WUVt?=
- =?utf-8?B?em83ZkJiVUt3cFFQREFadVo1S1RwR0tiOTY4V2s1VktmeTBicitMZDZuZExS?=
- =?utf-8?B?c2lNUnFVQ2xIcFRmaHFIZUR3dlR0dnI0NDlrSDdhbTh0eG4xMTZ1WTVsWktu?=
- =?utf-8?B?N3NRNHJ6Y1VBcE51NWhzNXYzSnFCYTF1RnJzczZyVS9XVVhwaXYvaVJTa2ZM?=
- =?utf-8?B?VVVLMUd2WUNWbnNEbG9Pem15MCtsZ09uY2xtVEYxOC9xRVhzMDg4RlNidENl?=
- =?utf-8?B?Z2Npc1Q4SEE1aVhiUXVyKzNFeG5EVXhVYlFwTWdhWURrU3FjcFJFVXpZU0to?=
- =?utf-8?B?a0czUVJRTDNGUFord1RRc1l6Y3VMMGpubld0K01vU3NFRE9jTGEwZTE0VXo0?=
- =?utf-8?B?TUlhdFlndFY4ZS9jeVhpQzU2V3pnZ0ZZbzhybHdkVWdNbzJSTktXWS9kVjNZ?=
- =?utf-8?B?eU5YNmVkYUE1YTlGRnRhd1ZVcEtqVitvbDFtSFFPTXU0K0FBL3N5R0ppMHdW?=
- =?utf-8?B?ZE54Nm95MUNpWmJrSEpNVGNESC9CeDFudllPc25NMDNxNjlkL0Z6OUJuTXNS?=
- =?utf-8?B?UFhQNHpTaE51bUVJWXEzL1p4QVJPS0MrczRhVDIvdFVpV2ZEcms3VkFkMEdw?=
- =?utf-8?B?bUtiMVc2NG5mUVZLaFFRc2t4UWFwVjRpcVcwRzQwVFJ2V1U2Wk9TVExyODFu?=
- =?utf-8?B?ampMTmVyd1oxdFB2MXM0eDk3YU9CaVV2U3RDS2xpWUYxYXF5Ri96dG1rTVBI?=
- =?utf-8?B?VEpwa1R0TmZvVUcwQVZGWmdJTlpVYmFjdXEwelhyTUcxWXVldEJDTTVpOHFU?=
- =?utf-8?B?dzRCenMzWUNxSVQvMUtWSFBla1EyeXJzOEM5NFNxdEZkZ1ExcS9TbFl1NitP?=
- =?utf-8?B?eFo4cWk1T0tGNlZ5cktUR2xoVUpSNWEyTENtY1Y3UnJpcXErV24xKzM5Q3c4?=
- =?utf-8?B?SkxXSW1kcG5QZytRcDIxYy9Pc0YxdEphWTJyV0RwVTNSRi9KZ3ZLaElTWnJs?=
- =?utf-8?B?SUl1SVd1dlR0UnQ2S2RiU3VRaGYydmgrRW16aFNpZEw3eWc2N2d1dz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6cc4a31d-d609-48c0-a9f1-08de80131c07
-X-MS-Exchange-CrossTenant-AuthSource: DS2PR12MB9750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 08:41:09.7136
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XD2urBqzAWTlsriMyU+Vy8gYS2kXo/hQDy0prrDrE2lS1s9SEeztB4S++uKHtRI9Q88eKbO1wz0shZ4fX15amg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5773
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d4e69cb-a43c-4d13-9f7b-20b95cee43a7@nvidia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-
-On 12/03/2026 07:49, Chen-Yu Tsai wrote:
+On Thu, Mar 12, 2026 at 08:41:03AM +0000, Jon Hunter wrote:
+> On 12/03/2026 07:49, Chen-Yu Tsai wrote:
 
 ...
 
->>> To me it sounds like a bad design of the driver for this SoC/platform.
->>
->> I am not sure why you think that. Assuming a 1:1 mapping of the kernel's
->> GPIO index to the GPIO controller + h/w port + 1 GPIO number seems fragile.
+> > > > To me it sounds like a bad design of the driver for this SoC/platform.
+> > > 
+> > > I am not sure why you think that. Assuming a 1:1 mapping of the kernel's
+> > > GPIO index to the GPIO controller + h/w port + 1 GPIO number seems fragile.
+
+You may use valid mask (which is also available via GPIO device properties) or
+as said below. In any case this thread just convinces me even more that driver
+has a design flaw.
+
+> > If the hardware has uneven number of actual pins for each bank, either
+> > you end up using the deprecated static GPIO number allocation and
+> > have holes in the GPIO range (sunxi currently does this), or you use
+> > dynamic allocation, which gives you no holes in the GPIO range, but
+> > not directly calculable mapping between DT and GPIO numbers.
+> > 
+> > The driver handles the mapping by providing an .xlate callback. A
+> > consumer shouldn't assume anything. The shared GPIO library probably
+> > shouldn't be try parsing the property itself and use the result to
+> > grab the GPIO descriptor, but just rely on the gpiochip's .xlate
+> > callback in some way.
 > 
-> If the hardware has uneven number of actual pins for each bank, either
-> you end up using the deprecated static GPIO number allocation and
-> have holes in the GPIO range (sunxi currently does this), or you use
-> dynamic allocation, which gives you no holes in the GPIO range, but
-> not directly calculable mapping between DT and GPIO numbers.
+> Right. I was thinking that isn't this why we have the xlate callbacks in the
+> first place to handle such things and not make these assumptions?
 > 
-> The driver handles the mapping by providing an .xlate callback. A
-> consumer shouldn't assume anything. The shared GPIO library probably
-> shouldn't be try parsing the property itself and use the result to
-> grab the GPIO descriptor, but just rely on the gpiochip's .xlate
-> callback in some way.
+> I am curious if other platforms could have the same issue? I did not see
+> this immediately with v6.19 because it is only one specific platform  we
+> have that showed this. So very much a corner case that will only be seen if
+> a platform uses shared GPIOs and the shared GPIO happens to be high enough
+> to overflow the descriptor array. Even if we don't crash, at least for
+> Tegra, we could be using the wrong descriptor too for shared GPIOs.
 
-Right. I was thinking that isn't this why we have the xlate callbacks in 
-the first place to handle such things and not make these assumptions?
-
-I am curious if other platforms could have the same issue? I did not see 
-this immediately with v6.19 because it is only one specific platform  we 
-have that showed this. So very much a corner case that will only be seen 
-if a platform uses shared GPIOs and the shared GPIO happens to be high 
-enough to overflow the descriptor array. Even if we don't crash, at 
-least for Tegra, we could be using the wrong descriptor too for shared 
-GPIOs.
-
-Jon
+None of Intel platforms has this issue, for the rest I have no clue.
 
 -- 
-nvpublic
+With Best Regards,
+Andy Shevchenko
+
 
