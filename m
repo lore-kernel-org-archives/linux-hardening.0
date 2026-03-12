@@ -1,171 +1,224 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A4E39A05D
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 04:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773290662; cv=pass; b=ZIT1KizFDMCOrsrVcKYnZ6lMStCmMSzGrq9ZP+xgadO3w6Hfsq+ILNwDEldUykKoyLARzqs0avlqA11lPpPji0taveRyMecnwSJthOzPVETF0JNYsPItpZ9z5S63kAh0dQdrfyPQIeNJLR6WlElnGrMMQbukZxma+LZvg34mA3s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773290662; c=relaxed/simple;
-	bh=ohdNMiGDsJ9qXT/qMT6p3+umPlNFYkYUeMT/HuXPekU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cUCxhe3SVZXnc7IpSLjgBBAanZ0SZaVm+S8z5Hn4hHTkym1YLFrHijfpP7mcdbynUkOLL9JDBC4ok2n2deMgHrA4IqMNRG8VWRmnWbF9+vIRgwkMJNHwAuegD94txy3Nu9OMkw/ZqX9R0/L0FyiQmBLmzaEFdAO0CncGFR5oU0E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eaDywv26; arc=pass smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A78381AF3
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 04:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773291581; cv=none; b=Mfq5occOHI+08SkqRxIrCEpQv1uQMm46rlo+opiYja1C6uKTj2hyK8QSJL0m5TcmiaXAys5QzgvS7amMrCulhQXdmhXNkf/FJNK8FzXpRy0uEXd50X3M+4Lk/WgQO1J9Eg16AJOxLm3662OnQlJ1J+/eP6gW0v9oH58Oxc7+HvE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773291581; c=relaxed/simple;
+	bh=70BeD1knxFPBhbOveZaJ78TQk69t5SY8pDh27xzK/l0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O+n7/OEjE+kpiCangLGBDRIdVOaqBqfX0w1x0nsXcewmEcrDnh3sYqj+eMRFUPMJ108Z35kGhhtmrIzxTpzubd7fod6pJL/URKGYre+uWNUbdNiR0SxGKQjGOoLTzqyypPzSXPRCyJmzfqUgQrzrL3U4sTrvb6s+PsBS2iwfn3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+/HuwE1; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaDywv26"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b96f02b4329so88815466b.2
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 21:44:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773290660; cv=none;
-        d=google.com; s=arc-20240605;
-        b=PTLhfoj+F7T0vaMqU1q9RO/8CylISY9tRVc004Blhjt4DX+/Y2MMGmrEHjdzEKEboO
-         EZJebV2408BJ+a6JsCMBRD9Ww8scRKZpcZ9H9Z7azWJKC5x+phUaXh4ovdeinJZ4xzwO
-         ox3XyFX55d7DyA0sMtBJ3JQnhBysvXnHLitIdH+qjJwk2daz3wGYDpcSh7hVIeQSBu1B
-         0GhJ/3W9RUd5bnZVQfZH2NpnuC6xhUXNLo18BRfyAtUElwACZKfIQtNRSg6Vi68GPnix
-         YteVhGG5Iyeivm/FGE7RAK5tGdfg91JhLcLUI5zyrRT2SgsW7FPZFDuwcNlJ5j1zFBdF
-         Q97Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=DmbSeeL5YKTmZzl5uFsKI4sYasWlIRX3peN9L+EGfFg=;
-        fh=0etnIWcHUwU6nwGC8F46/ZnU/D3AEq2ov/JUJMMghs0=;
-        b=h6ium6QD1g6mC0HVbwSH2kUfTgLfoo+ShsvPst1Z2pRi7Hl7BzI/SMd5ds/zKYfsco
-         LqNc8OyWIBEfgbuB4+2QphPfW2ayeCERkHumF5iY4HNx379hIJsP5+skHwdFW6xmUsc7
-         LeiAIS4g3MtffAh4I/EA51zD2Nm/A3vscIWHn/RqQETwFGXW/ojo5BYsPQHctkK3l2nw
-         ct3ayekhaNhI/Pm1MAYA+M1tU2Ea+gy1Z5Vz/RYhSkP3aHCSzx7kL+9EBYb5svHVtfdK
-         V83B5DdOC9R9sDtglLS0Q5hA3z0Un0CIGf7BovAbl667THdzAQt/dJf01orhlIIvTick
-         igpQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+/HuwE1"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2ad9516a653so3056795ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Mar 2026 21:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773290660; x=1773895460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DmbSeeL5YKTmZzl5uFsKI4sYasWlIRX3peN9L+EGfFg=;
-        b=eaDywv26Tdq1Zhyr06t8b+6hazRT6EAAlq4OGV6yfPj4Cd1+dO8HrKkAdkOH3TpH6H
-         QZ+SgbZrp//KEQNCZDABJp2whcW6CghqDqMNqkp/NLRziiV39VkwAp5q+/tFP5mpqQrb
-         wN9+6xCt5FL0mpC/+Onwy2Q0lM078tyrwDr1EUxSPW9I++NEuRekXpt7KwsJENhlrAf7
-         9GX1f6fGC85VsshF+ZmuaKZAebF/wVBAOgRmVqORPstjHGiieoYsH0bSbd/SXX/KqVL3
-         JB+y79M+8IH6W7KtA4zpL6Z/qnzRDkcNk4wkZmXvmHCfpa5kI8W/n72VVmu6wPw8DO3u
-         wCBg==
+        d=gmail.com; s=20230601; t=1773291579; x=1773896379; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JjiMf+HrHgumtDrytCb9PW5t02HTgkYKwwniQ8SZW0c=;
+        b=j+/HuwE1M0YhY0t0xFVPNRINMa8yttMhjc7bxlbmfqCpLrUQB4H040lSzT/13alyRy
+         6yvjNsv9LFzHDhPaS9M90ILR0gTZH0aHYkaX0fobzKcViqHHp4e7S4lzjAjVXJLMWxDw
+         TantOQrphn0ADdBQps61nNMI4q89HnqPM82gIniyNxJ1x4a6545X0lHazNjsMeIa66iB
+         7ZkLB29JXwWDe4CupLPnaT08KXZYtMltovVUiejLWKkaZAwuT6iXqrO4G7SCnOwxZvOn
+         2VAp1bFlCGvZmfyVCBgx603IBOslw1sDbFgimSN8ThZSX5FgXHBEgS+P47IZ1YrIwaBN
+         eaJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773290660; x=1773895460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DmbSeeL5YKTmZzl5uFsKI4sYasWlIRX3peN9L+EGfFg=;
-        b=Tap8Kqe5i1HCsj2aohTw79ftk1+zQ7b4lLt0u8sDO0NGZQJyhwthKWyBlRhBGKQ+LU
-         q+GDGeadVjTI6/ELhyl2BgzT2W3zyv9tqTdkQ/fqOl2L6QPSNnNOjeQgTFlLG+TdUIzm
-         uzdIfp15q2YZcEqAHPSquQhPk90RZRokyb6QVm5C+bWV+aZwLhUPeeCgBAQlRHyvmhSH
-         MTAQIyqsf5w/ZO5x6NUecHefqqjKavvVQr+Icieff8Bkp8zCcIJq4AjmV05x6gQPBSQl
-         D95UuRSsF0T2Bw35h8kYEMAGUwpug4aBlACrqvWUzZhrGyd2ZaA/LEfe6gyY8YsyAmZm
-         b23A==
-X-Forwarded-Encrypted: i=1; AJvYcCX/vCXuusD/cMaXKt6T7trdEg/1+hidt4rws9lKKtSFhF/JGVA8USSGafY9BHjKo6HzY2pjpBXoEYBubvwknBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZnqjm3RBTktLDAzfqhhHAHCNbkPsUbNCWmrxjApLVuxw60Dg2
-	v9BIF11rwAtCia50CwlmPOHQDjKsTySuY9qvrhWa/Nf6nrQzwdhfMhhwFbretKxTDAFAlGo2gj5
-	3R++MpmDZY8i1n21lCecjDz5cMTyXNUhz9/Zr
-X-Gm-Gg: ATEYQzzeibFKN6gR2+JasyDGaMIqWt9xmEll4gaM1SqWT1sjBo3hOrktH2k3RbT2v5p
-	2L0nwU12l1voXiBjoSfn3y5G1XF6FhHws/xfoyfQvaNAKSl8Zjr0tr130apKRoZlC56bU4302jI
-	F1BT5aJqtzIvG5txpbW1OFJxYvh7Oga/zBxEjeRlkOI5yNaXqSyPWu2pa3Us8hwPNKAegMFWwGz
-	2xMjOhnJCv4hjF9dL9OAUVb5cn5M7g5sVuDKF7ikatQ6kpZDyFeKRg7DoKQJr+xqKwZtmg+bZYj
-	n3XbVn7HF5BP+sv6DpSE1BxUdReC3I+uhfgA0+nYVYBMDMGMP3/PctoRdZnemzEictMfcYHsvW0
-	HAdnKXg==
-X-Received: by 2002:a17:907:c05:b0:b88:5158:d10e with SMTP id
- a640c23a62f3a-b972e1b75dfmr285621866b.21.1773290659499; Wed, 11 Mar 2026
- 21:44:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1773291579; x=1773896379;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JjiMf+HrHgumtDrytCb9PW5t02HTgkYKwwniQ8SZW0c=;
+        b=Mnkz2en3c6rsd5VZYStEYR8QCz4H6/Icbcib4kyNP7dopByneHSS1MEIompmhVLuB/
+         InrFEMSR2SJOuf/EAT7K/2G8TCjGDOOs2ylLm7Hlq/IX4qxUR/ZsUM3I4kTMWhQLgLP0
+         D6lP78QAtjZo/BpDigVzG4Mmu8v/zlKkNrGP3ZMmf4YMGqMivbddogDR3T0lsQ21AxqP
+         Z5jF/g/qM3Ar3MS0/GG16KE3erfkl531mIq4EwiczJM9PQVCo4+Nzs2Wlj6pEKyGp7Ta
+         wjLGj6IHJ5IMDWjRuusEEKy+U85LGMhYs4cL/cOjKID3RoRALUKoG1nDq/ekBynW4xYI
+         RYnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZvw7WUcNOGCipx+acI7him/Sn7N9QZJAGc7Plxl5KMZvYy2uk/5hkS4lkyMYo8lox3h27f/qPTnelkt/p1kk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC8cF6CqQdSW1lEl6WOw42P2Ignr08z+rGoarxbo5dHODGJhgR
+	nzVGqJeXQAm8ZeLr5H/cWUy9Vy5dl6yEL3HY6q8iUG/+8p1mypxDHxWp
+X-Gm-Gg: ATEYQzzEmPb4ntTVBhzqHc8jbi3HcKzMcb8N3F8LZqHJ+5M7p9p1UesRxnueBrM2CUy
+	Baj3g+VVfyTvucwEnKneJBeCKAWJ834gsgZcQ11fwPAgYMw4IqkMBO2B5yvXoTdoit7wvyZhHnG
+	FzJPjhhc0RVznDAoFEjE5ZtAzPEQsPnfWiKjWw2tLQyWHya49Z5nAgS+M8alR67puN79j2DioLK
+	A7IOknJAEj/AMqHRoYWtX6m9XGYoI2GZWFiOaZ9dJUF2Puf1rIB5e6aii/GKJ50bsRxH4eZFRMD
+	vUnWDhaazjQmpE3aEVf4gE8mQn4N9UDiYon1qpTnE6Bm7E1rWS4el6Z2h1oQjJxNddYet9M0L+0
+	VlM0ffxczmrBhpN4koUVInwqe3/XlpS8tR/hGENstNtdp02eBy0eiuMAscJxADvooQaWiT7ecQ9
+	j5e15My8DuHRf9L/0WTm8shlhT5BuyjVp8wcSOpuMGdN0qJ7OQwzvBCQ==
+X-Received: by 2002:a17:902:ea11:b0:2ae:b991:a46f with SMTP id d9443c01a7336-2aeb991a868mr25734465ad.42.1773291579268;
+        Wed, 11 Mar 2026 21:59:39 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:56f5::8bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aeae255a05sm55804755ad.36.2026.03.11.21.59.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2026 21:59:38 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: mhi@lists.linux.dev
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org (open list:MHI BUS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] bus: mhi: use kzalloc_flex
+Date: Wed, 11 Mar 2026 21:59:21 -0700
+Message-ID: <20260312045921.7663-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260311232545.18492-1-rosenp@gmail.com> <CY8PR11MB7134FC62AB39DEC3AA26DE2A8944A@CY8PR11MB7134.namprd11.prod.outlook.com>
-In-Reply-To: <CY8PR11MB7134FC62AB39DEC3AA26DE2A8944A@CY8PR11MB7134.namprd11.prod.outlook.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Wed, 11 Mar 2026 21:44:08 -0700
-X-Gm-Features: AaiRm50L8GrqFvM-8cKp3CbVyfWXKBxxI39QTyqzMo4HLW_-AN-ijV3wIqXam3Y
-Message-ID: <CAKxU2N_2w=3Sh=1Ymkc48psUa7pNkFM5Ci4sR5qdXiPec6bQ-Q@mail.gmail.com>
-Subject: Re: [PATCH] EDAC: sb_edac: use kzalloc_flex
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "Luck, Tony" <tony.luck@intel.com>, 
-	Borislav Petkov <bp@alien8.de>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:\\b__counted_by(_le|_be)?\\b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 11, 2026 at 7:28=E2=80=AFPM Zhuo, Qiuxu <qiuxu.zhuo@intel.com> =
-wrote:
->
->
-> > From: Rosen Penev <rosenp@gmail.com>
-> > [...]
-> > Subject: [PATCH] EDAC: sb_edac: use kzalloc_flex
->
-> Could you use this style of subject:
->
->   EDAC/sb: Use kzalloc_flex()
-Will do.
->
-> >
-> > Simplifies allocations by using a flexible array member in this struct.
-> >
-> > Add __counted_by to get extra runtime analysis.
-> >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > ---
-> >  drivers/edac/sb_edac.c | 14 +++-----------
-> >  1 file changed, 3 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c index
-> > 09d4e816404b..7b282dfd093f 100644
-> > --- a/drivers/edac/sb_edac.c
-> > +++ b/drivers/edac/sb_edac.c
-> > @@ -364,11 +364,11 @@ struct sbridge_dev {
-> >       int                     seg;
-> >       u8                      bus, mc;
-> >       u8                      node_id, source_id;
-> > -     struct pci_dev          **pdev;
-> >       enum domain             dom;
-> >       int                     n_devs;
-> >       int                     i_devs;
-> >       struct mem_ctl_info     *mci;
-> > +     struct pci_dev          *pdev[] __counted_by(n_devs);
-> >  };
-> >
-> >  struct knl_pvt {
-> > @@ -771,21 +771,14 @@ static struct sbridge_dev *alloc_sbridge_dev(int
-> > seg, u8 bus, enum domain dom,  {
-> >       struct sbridge_dev *sbridge_dev;
-> >
-> > -     sbridge_dev =3D kzalloc_obj(*sbridge_dev);
-> > +     sbridge_dev =3D kzalloc_flex(*sbridge_dev, pdev, table-
-> > >n_devs_per_imc);
-> >       if (!sbridge_dev)
-> >               return NULL;
-> >
-> > -     sbridge_dev->pdev =3D kzalloc_objs(*sbridge_dev->pdev,
-> > -                                      table->n_devs_per_imc);
-> > -     if (!sbridge_dev->pdev) {
-> > -             kfree(sbridge_dev);
-> > -             return NULL;
-> > -     }
-> > -
-> > +     sbridge_dev->n_devs =3D table->n_devs_per_imc;
->
-> What's the reason for moving this line of code up here?
-__counted_by requires setting the counting variable first.
->
-> >       sbridge_dev->seg =3D seg;
-> >       sbridge_dev->bus =3D bus;
-> >       sbridge_dev->dom =3D dom;
-> > -     sbridge_dev->n_devs =3D table->n_devs_per_imc;
-> >       list_add_tail(&sbridge_dev->list, &sbridge_edac_list);
-> > [...]
->
-> Other than the comments above:
->
->    Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Change kzalloc + kcalloc to just kzalloc with a flexible array member.
+
+Add __counted_by for extra runtime analysis when requested.
+
+Move counting assignment immediately after allocation as required by
+__counted_by.
+
+Move mhi_buf definition as a complete definition is needed for flex
+arrays. It's not a pointer anymore.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/bus/mhi/host/boot.c | 20 +++-----------------
+ include/linux/mhi.h         | 34 +++++++++++++++++-----------------
+ 2 files changed, 20 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+index f16a1e67a667..e1d77cecd75e 100644
+--- a/drivers/bus/mhi/host/boot.c
++++ b/drivers/bus/mhi/host/boot.c
+@@ -333,15 +333,10 @@ static int mhi_alloc_bhi_buffer(struct mhi_controller *mhi_cntrl,
+ 	struct image_info *img_info;
+ 	struct mhi_buf *mhi_buf;
+ 
+-	img_info = kzalloc_obj(*img_info);
++	img_info = kzalloc_flex(*img_info, mhi_buf, 1);
+ 	if (!img_info)
+ 		return -ENOMEM;
+ 
+-	/* Allocate memory for entry */
+-	img_info->mhi_buf = kzalloc_obj(*img_info->mhi_buf);
+-	if (!img_info->mhi_buf)
+-		goto error_alloc_mhi_buf;
+-
+ 	/* Allocate and populate vector table */
+ 	mhi_buf = img_info->mhi_buf;
+ 
+@@ -358,8 +353,6 @@ static int mhi_alloc_bhi_buffer(struct mhi_controller *mhi_cntrl,
+ 	return 0;
+ 
+ error_alloc_segment:
+-	kfree(mhi_buf);
+-error_alloc_mhi_buf:
+ 	kfree(img_info);
+ 
+ 	return -ENOMEM;
+@@ -375,14 +368,11 @@ int mhi_alloc_bhie_table(struct mhi_controller *mhi_cntrl,
+ 	struct image_info *img_info;
+ 	struct mhi_buf *mhi_buf;
+ 
+-	img_info = kzalloc_obj(*img_info);
++	img_info = kzalloc_flex(*img_info, mhi_buf, segments);
+ 	if (!img_info)
+ 		return -ENOMEM;
+ 
+-	/* Allocate memory for entries */
+-	img_info->mhi_buf = kzalloc_objs(*img_info->mhi_buf, segments);
+-	if (!img_info->mhi_buf)
+-		goto error_alloc_mhi_buf;
++	img_info->entries = segments;
+ 
+ 	/* Allocate and populate vector table */
+ 	mhi_buf = img_info->mhi_buf;
+@@ -402,7 +392,6 @@ int mhi_alloc_bhie_table(struct mhi_controller *mhi_cntrl,
+ 	}
+ 
+ 	img_info->bhi_vec = img_info->mhi_buf[segments - 1].buf;
+-	img_info->entries = segments;
+ 	*image_info = img_info;
+ 
+ 	return 0;
+@@ -411,9 +400,6 @@ int mhi_alloc_bhie_table(struct mhi_controller *mhi_cntrl,
+ 	for (--i, --mhi_buf; i >= 0; i--, mhi_buf--)
+ 		dma_free_coherent(mhi_cntrl->cntrl_dev, mhi_buf->len,
+ 				  mhi_buf->buf, mhi_buf->dma_addr);
+-	kfree(img_info->mhi_buf);
+-
+-error_alloc_mhi_buf:
+ 	kfree(img_info);
+ 
+ 	return -ENOMEM;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index 88ccb3e14f48..fb3ba639f4f8 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -85,17 +85,33 @@ enum mhi_ch_type {
+ 	MHI_CH_TYPE_INBOUND_COALESCED = 3,
+ };
+ 
++/**
++ * struct mhi_buf - MHI Buffer description
++ * @buf: Virtual address of the buffer
++ * @name: Buffer label. For offload channel, configurations name must be:
++ *        ECA - Event context array data
++ *        CCA - Channel context array data
++ * @dma_addr: IOMMU address of the buffer
++ * @len: # of bytes
++ */
++struct mhi_buf {
++	void *buf;
++	const char *name;
++	dma_addr_t dma_addr;
++	size_t len;
++};
++
+ /**
+  * struct image_info - Firmware and RDDM table
+  * @mhi_buf: Buffer for firmware and RDDM table
+  * @entries: # of entries in table
+  */
+ struct image_info {
+-	struct mhi_buf *mhi_buf;
+ 	/* private: from internal.h */
+ 	struct bhi_vec_entry *bhi_vec;
+ 	/* public: */
+ 	u32 entries;
++	struct mhi_buf mhi_buf[] __counted_by(entries);
+ };
+ 
+ /**
+@@ -488,22 +504,6 @@ struct mhi_result {
+ 	int transaction_status;
+ };
+ 
+-/**
+- * struct mhi_buf - MHI Buffer description
+- * @buf: Virtual address of the buffer
+- * @name: Buffer label. For offload channel, configurations name must be:
+- *        ECA - Event context array data
+- *        CCA - Channel context array data
+- * @dma_addr: IOMMU address of the buffer
+- * @len: # of bytes
+- */
+-struct mhi_buf {
+-	void *buf;
+-	const char *name;
+-	dma_addr_t dma_addr;
+-	size_t len;
+-};
+-
+ /**
+  * struct mhi_driver - Structure representing a MHI client driver
+  * @probe: CB function for client driver probe function
+-- 
+2.53.0
+
