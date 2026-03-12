@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C600137CD30;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D193C7E0F;
 	Thu, 12 Mar 2026 14:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773327301; cv=none; b=YZ1NfW3+5+Tx5J2iYA8etrs6g9AifUGgCjUPp5MiGwgW12/uIpvI/pEgJR3tk8MRyIjz02SmExVHL9v0ZVA/ifUf88jWgIt9EnLkP0qMJXX7eFhZROfb/7tz7lSXCmzYxc4X/etXVKoh0s8Lj+HR+gW6LLwi1izBLQthlj//bHI=
+	t=1773327302; cv=none; b=OAP4otGjwWgdyTzVpjT5lN2XTMuZMCItyLLsZoi2a3r8coj9sKCx7aoVzmQb1qPN/PZLU3vdz8plGz62AmhaFdhYAPzrgqL8Z1ZVW/Hoj/FqtWl+417wEB9p12bmD4w10Bk1rIt4XFh0bsBhb2WQCUM01V629r/3DSch2Gq1BJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773327301; c=relaxed/simple;
-	bh=VTrfpIcoDJoiKg/0Gp5KrZ4qMcYV14/HT00S5tsu8cc=;
+	s=arc-20240116; t=1773327302; c=relaxed/simple;
+	bh=Ivzj5p0x4Q8l2OC2OB+jBO38HqdWt02WQNEVEu6ZxqY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sUHLrkEOh3oYRAaFHa6KHtUK0VUAUWA+fpjhByI1zrud3827ogQLB33X4+1Ctq9bQcevvn9yR9KMvUlF7XgOxC/7Jism2IRBIIFCPF0+/JocZVicnpWQhzV8LGkOezdOCmzKltFuhQb/4cqODWmRoW4E+eSykov0UDXXs6vCLm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEToEVgC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rZGhL2ZJ8Mz/496C9uaYLEOnF2m/ylh1MmNCYTeeJr1vSN3n7OwSqUUY6KRzcRFg2JtHcFo2eJwb6ZHkxLAftTNoiA+UaEEc3sJ5+2X1+JzJ6UQQ3vavWZDaT5Yz3HKZnrpt0z0+3YKXkVamu5zBT5evZSFyMDg1hAtu1+xy9jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fn6yDNRd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEToEVgC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB882C4CEF7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fn6yDNRd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C36F6C2BC86;
 	Thu, 12 Mar 2026 14:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1773327301;
-	bh=VTrfpIcoDJoiKg/0Gp5KrZ4qMcYV14/HT00S5tsu8cc=;
+	bh=Ivzj5p0x4Q8l2OC2OB+jBO38HqdWt02WQNEVEu6ZxqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oEToEVgCfiFaJt6RWONliPJKP4rX+18J/CWNLJJy3BtXeeBLx0jB/IhGSjdZqglws
-	 ce12A/ffTP1RmfJ/u3tRVvLeLHSa1i/JK9x/WhbT4FCTJ6+1yNBbU/WVSOBWbO4T4Y
-	 lfeHAljHsqBmmrnwKjybgJLW9a9xNPMq4bFIv26NVV5dcBLOCtrHtNoRI3cQW23Kwo
-	 +5DQLM9HvE9RP1FmeyV+Rlqy+FpzStd1rh22Kamvsophc194nh/S9AHiLpuszI8mEr
-	 ubRGTGVTUHd1+VJOj99OG+AI/vIn/C0k08hdULcsAv6agL67jVdqtzIFInPozqLopW
-	 xFmKB4zoqrMpw==
+	b=fn6yDNRdaEmsepdqPlD19wZLeauGChAFOYIS+lec2GcBign+9CzJTISdYyfa92X6P
+	 yBCyjzE77fZLQi9JocRz/wdPYwfOy9ynLvn/Qcxy2kYP+UrIlrQUA+8YlyMtxKRNjB
+	 21Kkq96KDrEYBH3kg+8wZK7HmvjnrcCtxJzTht8n8Zxydr4r2Xvho9k0QFealpJSvO
+	 b5lOWUDse+k5bRIVDzqsC7KWRGr5BOPQMdg1lahXarcrK0HTqlzkPZwpi0OXEKRMWm
+	 /L+dJ4pwti6Js8bTGh8ss/qHpeJLl1SXLzIgIn5l4yNsvdVAnCPXhqEcgz5yclDDHy
+	 9HZJzMFF+uJYg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1w0hRD-00000008yE8-3g0O;
-	Thu, 12 Mar 2026 15:54:59 +0100
+	id 1w0hRE-00000008yFM-0IeP;
+	Thu, 12 Mar 2026 15:55:00 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2 23/28] docs: c_lex: setup a logger to report tokenizer issues
-Date: Thu, 12 Mar 2026 15:54:43 +0100
-Message-ID: <da59e827fd20de22045db29d4490d919ed4fbf8c.1773326442.git.mchehab+huawei@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 24/28] docs: unittests: add and adjust tests to check for errors
+Date: Thu, 12 Mar 2026 15:54:44 +0100
+Message-ID: <c7614bdb4edb48d1d4f50e6fddfbb247281c0ad9.1773326442.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1773326442.git.mchehab+huawei@kernel.org>
 References: <cover.1773326442.git.mchehab+huawei@kernel.org>
@@ -54,127 +52,90 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Report file that has issues detected via CMatch and CTokenizer.
-
-This is done by setting up a logger that will be overriden by
-kdoc_parser, when used on it.
+Test the errors that are rised and the ones that are logged.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/lib/python/kdoc/c_lex.py       | 36 ++++++++++++++++++++++++----
- tools/lib/python/kdoc/kdoc_parser.py |  3 +++
- 2 files changed, 34 insertions(+), 5 deletions(-)
+ tools/lib/python/kdoc/c_lex.py    |  2 +-
+ tools/unittests/test_cmatch.py    | 15 ++++++++++++++-
+ tools/unittests/test_tokenizer.py | 11 ++++++-----
+ 3 files changed, 21 insertions(+), 7 deletions(-)
 
 diff --git a/tools/lib/python/kdoc/c_lex.py b/tools/lib/python/kdoc/c_lex.py
-index bc70b55f0dbe..596510bb4e95 100644
+index 596510bb4e95..8beac59166fc 100644
 --- a/tools/lib/python/kdoc/c_lex.py
 +++ b/tools/lib/python/kdoc/c_lex.py
-@@ -6,14 +6,39 @@
- Regular expression ancillary classes.
- 
- Those help caching regular expressions and do matching for kernel-doc.
-+
-+Please notice that the code here may rise exceptions to indicate bad
-+usage inside kdoc to indicate problems at the replace pattern.
-+
-+Other errors are logged via log instance.
- """
- 
-+import logging
- import re
- 
- from copy import copy
- 
- from .kdoc_re import KernRe
- 
-+log = logging.getLogger(__name__)
-+
-+def tokenizer_set_log(logger, prefix = ""):
-+    """
-+    Replace the module‑level logger with a LoggerAdapter that
-+    prepends *prefix* to every message.
-+    """
-+    global log
-+
-+    class PrefixAdapter(logging.LoggerAdapter):
-+        """
-+        Ancillary class to set prefix on all message logs.
-+        """
-+        def process(self, msg, kwargs):
-+            return f"{prefix}{msg}", kwargs
-+
-+    # Wrap the provided logger in our adapter
-+    log = PrefixAdapter(logger, {"prefix": prefix})
-+
- class CToken():
-     """
-     Data class to define a C token.
-@@ -169,7 +194,7 @@ class CTokenizer():
+@@ -194,7 +194,7 @@ class CTokenizer():
              value = match.group()
  
              if kind == CToken.MISMATCH:
--                raise RuntimeError(f"Unexpected token '{value}' on {pos}:\n\t{source}")
-+                log.error(f"Unexpected token '{value}' on {pos}:\n\t{source}")
+-                log.error(f"Unexpected token '{value}' on {pos}:\n\t{source}")
++                log.error(f"Unexpected token '{value}' on pos {pos}:\n\t'{source}'")
              elif kind == CToken.BEGIN:
                  if value == '(':
                      paren_level += 1
-@@ -189,7 +214,7 @@ class CTokenizer():
-             yield CToken(kind, value, pos,
-                          brace_level, paren_level, bracket_level)
+diff --git a/tools/unittests/test_cmatch.py b/tools/unittests/test_cmatch.py
+index f6ccd2a942f1..3fbc5d3bc244 100755
+--- a/tools/unittests/test_cmatch.py
++++ b/tools/unittests/test_cmatch.py
+@@ -288,6 +288,19 @@ class TestSubSimple(TestCaseDiff):
  
--    def __init__(self, source=None):
-+    def __init__(self, source=None, log=None):
-         """
-         Create a regular expression to handle TOKEN_LIST.
+         self.assertLogicallyEqual(result, "int foo;")
  
-@@ -349,7 +374,7 @@ class CTokenArgs:
-                 elif tok.value == "(":
-                     delim = ","
-                 else:
--                    raise ValueError(fr"Can't handle \1..\n on {sub_str}")
-+                    self.log.error(fr"Can't handle \1..\n on {sub_str}")
- 
-                 level = tok.level
-                 break
-@@ -383,7 +408,7 @@ class CTokenArgs:
-             groups_list[pos].append(tok)
- 
-         if pos < self.max_group:
--            raise ValueError(fr"{self.sub_str} groups are up to {pos} instead of {self.max_group}")
-+            log.error(fr"{self.sub_str} groups are up to {pos} instead of {self.max_group}")
- 
-         return level, groups_list
- 
-@@ -503,7 +528,8 @@ class CMatch:
-         # picking an incomplete block.
-         #
-         if start and stack:
--            print("WARNING: can't find an end", file=sys.stderr)
-+            s = str(tokenizer)
-+            log.warning(f"can't find a final end at {s}")
-             yield start, len(tokenizer.tokens)
- 
-     def search(self, source):
-diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
-index 0da95b090a34..3ff17b07c1c9 100644
---- a/tools/lib/python/kdoc/kdoc_parser.py
-+++ b/tools/lib/python/kdoc/kdoc_parser.py
-@@ -14,6 +14,7 @@ import re
- from pprint import pformat
- 
- from kdoc.kdoc_re import KernRe
-+from kdoc.c_lex import tokenizer_set_log
- from kdoc.c_lex import CTokenizer
- from kdoc.kdoc_item import KdocItem
- 
-@@ -253,6 +254,8 @@ class KernelDoc:
-         self.config = config
-         self.xforms = xforms
- 
-+        tokenizer_set_log(self.config.log, f"{self.fname}: CMatch: ")
++    def test_rise_early_greedy(self):
++        line = f"{self.MACRO}(a, b, c, d);"
++        sub = r"\1, \2+, \3"
 +
-         # Initial state for the state machines
-         self.state = state.NORMAL
++        with self.assertRaises(ValueError):
++            result = self.matcher.sub(sub, line)
++
++    def test_rise_multiple_greedy(self):
++        line = f"{self.MACRO}(a, b, c, d);"
++        sub = r"\1, \2+, \3+"
++
++        with self.assertRaises(ValueError):
++            result = self.matcher.sub(sub, line)
+ 
+ #
+ # Test replacements with slashrefs
+@@ -539,7 +552,7 @@ class TestSubWithLocalXforms(TestCaseDiff):
+         self.assertLogicallyEqual(result, expected)
+ 
+     def test_raw_struct_group_tagged(self):
+-        """
++        r"""
+         Test cxl_regs with struct_group_tagged patterns from drivers/cxl/cxl.h.
+ 
+         NOTE:
+diff --git a/tools/unittests/test_tokenizer.py b/tools/unittests/test_tokenizer.py
+index 3081f27a7786..6a0bd49df72e 100755
+--- a/tools/unittests/test_tokenizer.py
++++ b/tools/unittests/test_tokenizer.py
+@@ -44,11 +44,12 @@ def make_tokenizer_test(name, data):
+         """In-lined lambda-like function to run the test"""
+ 
+         #
+-        # Check if exceptions are properly handled
++        # Check if logger is working
+         #
+-        if "raises" in data:
+-            with self.assertRaises(data["raises"]):
+-                CTokenizer(data["source"])
++        if "log_level" in data:
++            with self.assertLogs('kdoc.c_lex', level='ERROR') as cm:
++                tokenizer = CTokenizer(data["source"])
++
+             return
+ 
+         #
+@@ -123,7 +124,7 @@ TESTS_TOKENIZER = {
+ 
+     "mismatch_error": {
+         "source": "int a$ = 5;",          # $ is illegal
+-        "raises": RuntimeError,
++        "log_level": "ERROR",
+     },
+ }
  
 -- 
 2.52.0
