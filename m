@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAE0375F78;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB5F38229E;
 	Thu, 12 Mar 2026 07:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773299553; cv=none; b=tkkjv8FCoqBVLWOuqS2RdEMR6iDdeaRxkkDdXpU+5cuLNfL0FeS27if4wBY2Jxzr/5MTMmNTd/a7Mteq6rfyatrqdrmkGsOYayQTn7s89i8GsxvW63HtxfX4Q3US6U4SurSFsHzgl5ZmSx9aNnPAc5wF7rEFsMqGGXtEmrZ3o18=
+	t=1773299553; cv=none; b=H7iZ743ObBkzDPJ9MXSbJ4MtxK+ND+ad+3pWgwksYtqdcTeWwPVBSrJLveHOr0wBf50QwmZ/E+8juGB85tLCt9bvaJ7KkTOyWdnQYtvQP2yZuocoGNtB33cEFF+r/jpbTB4YC64zpz4gfwO+FvCuXcW+dhowHUc12EsBMi7GT9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773299553; c=relaxed/simple;
-	bh=GfkGEBCrWYbAWOv2b+GqnMJXIitm+in5/jhJ5VsTDNc=;
+	bh=csYZ9dA1O9VyUFjc5J0DpD/DghpaaqHq/9OSwq1kYgs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mrrfgaIS5mjbPiqHkxKQC27oVCj232c9XvlAtbWettIOH4CRCIct/5gV5Rv+B6CpyE+fACadELYQbVR9oyVIo7gPXo0Fuzw+TH6mNBjJQ3h98qRMwra+3UsSO/RQXqPIgtIjE5RE6I8+BUcD3Tq+q6KJZVKev8ByXE7VR19lHl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exeJ/KkF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=mkC3mHuh/2KoR3VrLi8XVtEwaqFLIfrtTgOkb9jEId+qKtx3hUWZF9xdkcdZkKKiqDtL0S/ocLNDWd9R3DJKm7rcIv82bMlHHtwHLRM+GdKFnqzmIyM4Br3TB1Sm7GjenKL4Icr0c2EH0eIoQ0GvUuD08rQZcVO+XPUODAAIZbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbIhMUX+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exeJ/KkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D07C4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbIhMUX+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CDFC2BC9E;
 	Thu, 12 Mar 2026 07:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1773299553;
-	bh=GfkGEBCrWYbAWOv2b+GqnMJXIitm+in5/jhJ5VsTDNc=;
+	bh=csYZ9dA1O9VyUFjc5J0DpD/DghpaaqHq/9OSwq1kYgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=exeJ/KkFlke8EuCjetR+4XhTRz1RnUpXnB5etMyQxdguPpfXwY0yfVT1TO6AqIZTP
-	 AagBrDxBzMNUlbuz/6f4yvwx/ChgA6v0B/1PNSIhjBBsnWRE3AwA/hEsBJ04HK2AXC
-	 meI9j8DyyS14K98c4Mjtbtf0UBOKDtxiWwR+viqzVvPevvd59eB2MPWWq1FZQphATg
-	 Q0pBHySrxVV0ArvkBpDqLMHImfu6XUdCX0ZDW/44WHQAYwNr2mIc0kqnMK5YSkHSbC
-	 7NALyOvRhi/VvFCcm58C0ap3izhcwroLvRnaxgtlVvkgpzRfq0tVsyTRVQvZNs3YGc
-	 ONlA1+C9aiLww==
+	b=TbIhMUX+XkxadUrQIE31OR2aBPxFmGwzypQ/j7wVWH30AThJgrrJ8r89E/Ur4xJ1U
+	 As0PRHw5/EWjVJag930+QqY+3iJ8LVPttM0/YT2tIK+38b9V3+vvea4jX+rDQZxlIl
+	 umiSIsIsy8YBx7Hm5pBZmM7o2+OnYh05DpkwGpQ2+1m/FtG1yucV+pyJdGeFmUimbw
+	 zsvm8DlNzA7WoHgIl8ClURKNFFUeY6VNVC8PQbzBaHR4DBOybEHr4gt6UT8ALu1au/
+	 t9KHD4SF9LlXi4huy337VQx+tFWKpkSHX7ZPKCxatBWYUDAK5pyaRhKGYtjoxoPPTR
+	 /zAvvwBhaTKGg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1w0aDf-000000077gW-26qb;
+	id 1w0aDf-000000077gC-1XAN;
 	Thu, 12 Mar 2026 08:12:31 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -36,10 +36,12 @@ To: Jonathan Corbet <corbet@lwn.net>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH v2 08/20] unittests: test_private: modify it to use CTokenizer directly
-Date: Thu, 12 Mar 2026 08:12:16 +0100
-Message-ID: <eeb01b2c5e7f6f67a4864f0361a1ba7ad58e3747.1773297828.git.mchehab+huawei@kernel.org>
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2 03/20] docs: kdoc: don't add broken comments inside prototypes
+Date: Thu, 12 Mar 2026 08:12:11 +0100
+Message-ID: <2b957decdb6cedab4268f71a166c25b7abdb9a61.1773297828.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1773297828.git.mchehab+huawei@kernel.org>
 References: <cover.1773297828.git.mchehab+huawei@kernel.org>
@@ -53,139 +55,49 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Change the logic to use the tokenizer directly. This allows
-adding more unit tests to check the validty of the tokenizer
-itself.
+Parsing a file like drivers/scsi/isci/host.h, which contains
+broken kernel-doc markups makes it create a prototype that contains
+unmatched end comments.
+
+That causes, for instance, struct sci_power_control to be shown this
+this prototype:
+
+    struct sci_power_control {
+        * it is not. */ bool timer_started;
+        */ struct sci_timer timer;
+        * requesters field. */ u8 phys_waiting;
+        */ u8 phys_granted_power;
+        * mapped into requesters via struct sci_phy.phy_index */ struct isci_phy *requesters[SCI_MAX_PHYS];
+    };
+
+as comments won't start with "/*" anymore.
+
+Fix the logic to detect such cases, and keep adding the comments
+inside it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Message-ID: <2672257233ff73a9464c09b50924be51e25d4f59.1773074166.git.mchehab+huawei@kernel.org>
+Message-ID: <18e577dbbd538dcc22945ff139fe3638344e14f0.1773074166.git.mchehab+huawei@kernel.org>
 ---
- .../{test_private.py => test_tokenizer.py}    | 76 +++++++++++++------
- 1 file changed, 52 insertions(+), 24 deletions(-)
- rename tools/unittests/{test_private.py => test_tokenizer.py} (85%)
+ tools/lib/python/kdoc/kdoc_parser.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/unittests/test_private.py b/tools/unittests/test_tokenizer.py
-similarity index 85%
-rename from tools/unittests/test_private.py
-rename to tools/unittests/test_tokenizer.py
-index eae245ae8a12..da0f2c4c9e21 100755
---- a/tools/unittests/test_private.py
-+++ b/tools/unittests/test_tokenizer.py
-@@ -15,20 +15,44 @@ from unittest.mock import MagicMock
- SRC_DIR = os.path.dirname(os.path.realpath(__file__))
- sys.path.insert(0, os.path.join(SRC_DIR, "../lib/python"))
- 
--from kdoc.kdoc_parser import trim_private_members
-+from kdoc.kdoc_re import CTokenizer
- from unittest_helper import run_unittest
- 
+diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
+index edf70ba139a5..086579d00b5c 100644
+--- a/tools/lib/python/kdoc/kdoc_parser.py
++++ b/tools/lib/python/kdoc/kdoc_parser.py
+@@ -1355,6 +1355,12 @@ class KernelDoc:
+         elif doc_content.search(line):
+             self.emit_msg(ln, f"Incorrect use of kernel-doc format: {line}")
+             self.state = state.PROTO
 +
-+
- #
- # List of tests.
- #
- # The code will dynamically generate one test for each key on this dictionary.
- #
++            #
++            # Don't let it add partial comments at the code, as breaks the
++            # logic meant to remove comments from prototypes.
++            #
++            self.process_proto_type(ln, "/**\n" + line)
+         # else ... ??
  
-+def make_private_test(name, data):
-+    """
-+    Create a test named ``name`` using parameters given by ``data`` dict.
-+    """
-+
-+    def test(self):
-+        """In-lined lambda-like function to run the test"""
-+        tokens = CTokenizer(data["source"])
-+        result = str(tokens)
-+
-+        #
-+        # Avoid whitespace false positives
-+        #
-+        result = re.sub(r"\s++", " ", result).strip()
-+        expected = re.sub(r"\s++", " ", data["trimmed"]).strip()
-+
-+        msg = f"failed when parsing this source:\n{data['source']}"
-+        self.assertEqual(result, expected, msg=msg)
-+
-+    return test
-+
- #: Tests to check if CTokenizer is handling properly public/private comments.
- TESTS_PRIVATE = {
-     #
-     # Simplest case: no private. Ensure that trimming won't affect struct
-     #
-+    "__run__": make_private_test,
-     "no private": {
-         "source": """
-             struct foo {
-@@ -288,41 +312,45 @@ TESTS_PRIVATE = {
-     },
- }
- 
-+#: Dict containing all test groups fror CTokenizer
-+TESTS = {
-+    "TestPublicPrivate": TESTS_PRIVATE,
-+}
- 
--class TestPublicPrivate(unittest.TestCase):
--    """
--    Main test class. Populated dynamically at runtime.
--    """
-+def setUp(self):
-+    self.maxDiff = None
- 
--    def setUp(self):
--        self.maxDiff = None
-+def build_test_class(group_name, table):
-+    """
-+    Dynamically creates a class instance using type() as a generator
-+    for a new class derivated from unittest.TestCase.
- 
--    def add_test(cls, name, source, trimmed):
--        """
--        Dynamically add a test to the class
--        """
--        def test(cls):
--            result = trim_private_members(source)
-+    We're opting to do it inside a function to avoid the risk of
-+    changing the globals() dictionary.
-+    """
- 
--            result = re.sub(r"\s++", " ", result).strip()
--            expected = re.sub(r"\s++", " ", trimmed).strip()
-+    class_dict = {
-+        "setUp": setUp
-+    }
- 
--            msg = f"failed when parsing this source:\n" + source
-+    run = table["__run__"]
- 
--            cls.assertEqual(result, expected, msg=msg)
-+    for test_name, data in table.items():
-+        if test_name == "__run__":
-+            continue
- 
--        test.__name__ = f'test {name}'
-+        class_dict[f"test_{test_name}"] = run(test_name, data)
- 
--        setattr(TestPublicPrivate, test.__name__, test)
-+    cls = type(group_name, (unittest.TestCase,), class_dict)
- 
-+    return cls.__name__, cls
- 
- #
--# Populate TestPublicPrivate class
-+# Create classes and add them to the global dictionary
- #
--test_class = TestPublicPrivate()
--for name, test in TESTS_PRIVATE.items():
--    test_class.add_test(name, test["source"], test["trimmed"])
--
-+for group, table in TESTS.items():
-+    t = build_test_class(group, table)
-+    globals()[t[0]] = t[1]
- 
- #
- # main
+     def process_inline_text(self, ln, line):
 -- 
 2.53.0
 
