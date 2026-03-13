@@ -1,72 +1,76 @@
-Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BDB175A8E
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Mar 2026 00:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6498295DBD
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Mar 2026 00:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773360990; cv=none; b=TkKq4zUQqQ9PtT7r+ksr3o4x9drsKRmPmAW6rcFCzM90tdC21zQ+bwHkFoXfeK+fRQjrnrx5Vi0/UuQsTdWwo1PAF1O3QTtGsjTBrEiSwvWZSXcm6XpIgIn0zaTYMx+PeKGD2eHXR7JqkTWf139B3sVpqwpA6G30lwSfv3TNPkc=
+	t=1773361302; cv=none; b=aXpTSFF3l9i+4ptmgkv0JoUDOLUq3jyi/bfd34K1UKYGDy0An5Irz1N2dyjdT7xqmuHbXIuEErNSzhdWqeGlceleXfBOhVLOje/QOqOSTK43z+dxUfLLG7j6/ndPJjwSyd1jG2aYq5LVG+Y2Iogf8tgEtLd/sxDqVQfHtKfCKhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773360990; c=relaxed/simple;
-	bh=RLLe8Nn4Adi81Y8GPo3Efcp1Ndv2LUmLZ/8xBbKDvVM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c22y9wbZa8i+Z+huHWS/y96GT4Jpkz8CVXYHka9knc0L0I4QiWh5wY4YiZDdfJ++rbq3PlIQqFagY6rZRB7TZexM6W3+KZotM854gGLn9JpNr2VNcVng93s0tQ56Tmx3GmSDqLu+D8xciJeVba5rLwVCWA+y/76ZnAZECCjC57c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JUvIHvPe; arc=none smtp.client-ip=74.125.224.42
+	s=arc-20240116; t=1773361302; c=relaxed/simple;
+	bh=1YMiY7/Zot15ra9DuC1CUpjFsA44TAxwB5BjF3e8+FE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mwPpJvxMUDcztj7rfODzN94cNdJEkjTi6jv3npi/TIDgjeKdV53XVzDnd2WplHdWWuupKCL3si2mfGMVlC8CGbqGtmJMK0Z05TE+r4lDztDb0Vkoe7yNJG7OxEVgHAwertsRWHBREGslKEEzB8q5bb4NQB+NMagmnX9H+/y35Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JpDjyiOs; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUvIHvPe"
-Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-64c9a398bc7so1895241d50.2
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 17:16:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpDjyiOs"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-7987531082aso18159597b3.3
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 17:21:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773360987; x=1773965787; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773361299; x=1773966099; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F3YA59Mp4HTuyJkhwuElaXOAlXnXSvbB0FwywcY2nbs=;
-        b=JUvIHvPe5ofQwTps7zIgtv7hAsIj8ABsSvgTE3ec6jR3R8ug8j/mTZgbOGagu3/ZAj
-         NRSMIZQ/xoGbDytpPEfnS01IIGiEjEuWYlXTUoPH7XKO1uSGCflewfSgzMpNj8G2BEWf
-         sJdIGBL26ZQOJOcXOInOYjIyW6qMXSfbuPcCbMggiCCaeTKB0RH9xtbTwnyXb93RScCY
-         uNQSiqgWOD73giAsKT39op4Cf9FuVgUIShECJAeIUIM8Hk4XsV+MmhaG+ufj4Ad0zBg4
-         lpDNjRj2e64PNCxsmkdS2KscBe53GNSScALX3Od4j14G9ZHGQllHimvFQZbEbk10VQA8
-         rhNA==
+        bh=PeETB9eQltddP5mF2mJA8o9tnQJB7YnT8JvFDCE8DGE=;
+        b=JpDjyiOsfK/apRe83gzVuB21pDPIfiTt/JP41PuJV1odsJv0jQuPsjZUr7PQa7hdCU
+         qJJ1JK+Hsjjt6R54V9zmcb08moedlPSk/8Hbtm58+iGPg8WVxe9IF15b6sowI23hm/Fo
+         xx5dbv4vbWP2va5ZTil1s1Jh7bXmgNlmoEn7Qm2QrI6bjHX1rE2c9twg4fDBFLJVGb1R
+         WTDphYV8ja1+7M4G+5iv5Ofsb0Q08dRDUepVqT2d5VN6UGHnDpiCVjtdliumfhf48h0z
+         aGzwObnN/+jWf6UEbyD8+dFvlqmjax+YK5Tp7P9zG4w1coNt1RcqWhCjUsabLQZgNXIN
+         OGEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773360987; x=1773965787;
+        d=1e100.net; s=20251104; t=1773361299; x=1773966099;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F3YA59Mp4HTuyJkhwuElaXOAlXnXSvbB0FwywcY2nbs=;
-        b=FSrr9gi+b3Ydu5HEzhT0mgGTZBDQSoVh1YbEo6BAnIeI3ksXMiUcynLKPr+4eMmg+N
-         yQfowaRN4+RRVupc26lWKtTOU0EFYFjcbbW6+Rsj0uWK/2NVe1c583BBH+/1Nf+g2Q+B
-         bQnk7t8+Dgp3rPqCyj+EYSb212yhaLBWaruN7o/sbIBgBwME1Pi4LBBBl/6GiAsAEQrE
-         wjISXp0jckw8g8SGydDnjPFCaWuvW/Ozgu7iBOcNu4mb8I6C00Zii1W1lyGxK20V3yjJ
-         HF6F2WiN5ubGEtvZYYh369MENQN2eSX+79OHMaqPZyBkvU6MU244H088GHBaqA6HI06Y
-         Xf0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVK2y4znqhDkZ7+GSV1wmGWnW+pMmC+QYE1GW2ioU35KxJFMn/7vV7v/H+ib0vPCBLJA+24tL0AJlxHrccSliU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsZUtHxzLLEEQwh7vitJASq/Mz+BGU6N0CgWzQXnzYge8UHdtL
-	kxSyHjfGYRl5PNrdF/eSOltNPy0xiLSVIom6WGszu5buUgC4/Ntifzns
-X-Gm-Gg: ATEYQzx1EeNQ6/d/MVSyQJYjv8MLW2bYYk9T06byiM6REP94YF0izRMBX3N9uBEkNGk
-	xazyuXseSz9TFG0hfGkHvXlH427fbgxP+eC2P54OFFbi/6lO9S/Vr3FNDBqW+SsJ4wBqc6b+8Oc
-	0rGKvRnWdtHJvM1pA3EmRAJLFuf/HvP3+Z8XaRyWItg4z5chIQy+aq3pWL3sYwPkPuy++gQNVCg
-	TJrut7vG2M9AAGm0lHXKJVIvduhJ2EsqUOakbXlMH54iaz+Ar+yD+ZieCPQZle7rpND7ew9zHPJ
-	VqB1P+TiuvAFcNyxH6swWg12ibAHWs+bYzCWx79tfcBVUTbiwu8IOSm0M35xqmPoaGfKy4g+GE1
-	kjbISStjBSoUdwTc+0fXC0TyRRN++tOm8ihtG9c8lVbvxKippk9XSqKcNeCWHKOoF+3zf/WkDEm
-	dNY0pKTkzfC8EjWNHFKbWxmc7ZN90MAns1eMQxE+vfrGFgK1ElVyXSKQ==
-X-Received: by 2002:a53:c448:0:b0:64c:9fd7:676a with SMTP id 956f58d0204a3-64e630dc827mr1182932d50.83.1773360986740;
-        Thu, 12 Mar 2026 17:16:26 -0700 (PDT)
+        bh=PeETB9eQltddP5mF2mJA8o9tnQJB7YnT8JvFDCE8DGE=;
+        b=VEYj4P6TCJH+83b/LQqrK1LoOuyJgeZ4gtkYkCswVPgFnZFY+y0jpmDpPL8WaEWQFk
+         8K9IeRrZG09QdJQA4nX7gRXFWi99SpV+yUhHHeymfwSwEA64EAo481TOPu1XBVO2Ommv
+         PNk6lwGheWHm6AHhzJ9pWr7pQJ7+08ts4youNVXfndOn5csA5Ipn/zDCoSVrBwL/+9S4
+         RNzlJFAFL90i5t3VEVW1WcXvh6BtRuR73EM7oAdlhybiMmfYaD8PyzFXan9fzUJ8TWmW
+         EmO9iBswZ3eu4ZlbbsImxfO3QJECUzqN3Yd9ID5yFpnRq6OqQQhvuwuJia6ihGYFlStF
+         4m0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVXLTFQNYchr5VBcSrk6DK8RHYhQatJBQKC/DEvGpi7xFAETY1PdBFbpcIYf8/52Yo/Xsmo7lv8LkDDasXozW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE8Bgb2DidYS60iNXEKDFBKtHwGBDad0Hf3yYw3XPNvVayzXhT
+	hh2mxQWCTGMxd8hUfZrZprBUOy/zQg0fYddWxOQN4CRZ1AH+6zUPrKzA
+X-Gm-Gg: ATEYQzy9xX5AKSCvkyxoa3tU9CpU1eq93L00hAD5aQ0azD7QUyNOSoCWWuz9IuQ3jmR
+	f9q8LicHCcnR3/J09734JmhhMCwAc/vBrn85NgMnVJnEGyDVoO6KXlmyNwdZaegw+dHz/mYEMa4
+	UUOBgsOECWQa3KTvqCGUMZBLI3FHLrOY1brK+OsfAmJzHv5oDIN2WpbI+a+mMFJ97EAC4TSWdvp
+	+GdSCk4JR8xHhVf7CNFfFZvdFKRuLzLVn37KIy/9sxFPkpur0UmT0dybCbHQvWW8RZAadrXyMmG
+	VzEZiRsziFbFfScOzFgYhPF5Ht3VXwAYXlFZ9io9mmPNNi+7Wlt295QctHCVxxD5yPXYXMRSHhJ
+	zGCJ8vRHZM5yfiwkhSK0e+fMhs/wCeD04r16i8gr7JLtJUadwPsqkCxhkMAo48V+jB3yUqCbaas
+	kpNyModyBwoPDaxvK5O7DgKAqotzg6/4Su+xKB1Ap2IIoiIYM+tD5aSoHAwBrU9rGi
+X-Received: by 2002:a05:690c:c155:b0:799:182:17bd with SMTP id 00721157ae682-79a1c0e1676mr14239947b3.24.1773361298678;
+        Thu, 12 Mar 2026 17:21:38 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64e65a405c5sm157460d50.2.2026.03.12.17.16.25
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-79917f1ecd9sm39089407b3.45.2026.03.12.17.21.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 17:16:26 -0700 (PDT)
+        Thu, 12 Mar 2026 17:21:38 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-wireless@vger.kernel.org
-Cc: Jeff Johnson <jjohnson@kernel.org>,
+To: linux-clk@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	ath11k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH11K WIRELESS DRIVER),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Microchip (AT91) SoC support),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH ath-next] wifi: ath11k: use kzalloc_flex
-Date: Thu, 12 Mar 2026 17:16:08 -0700
-Message-ID: <20260313001608.118294-1-rosenp@gmail.com>
+Subject: [PATCH] clk: at91: use kzalloc_flex
+Date: Thu, 12 Mar 2026 17:21:19 -0700
+Message-ID: <20260313002119.118962-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -83,159 +87,89 @@ assignment immediately after allocation as required by __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/net/wireless/ath/ath11k/mac.c | 71 ++++++++++-----------------
- drivers/net/wireless/ath/ath11k/wmi.h |  2 +-
- 2 files changed, 28 insertions(+), 45 deletions(-)
+ drivers/clk/at91/dt-compat.c | 15 ++++-----------
+ drivers/clk/at91/pmc.h       |  2 +-
+ 2 files changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
-index 4a68bb9ca4fa..b5f3d7221b5f 100644
---- a/drivers/net/wireless/ath/ath11k/mac.c
-+++ b/drivers/net/wireless/ath/ath11k/mac.c
-@@ -4228,13 +4228,14 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
- 	if (ret)
- 		goto exit;
-
--	arg = kzalloc_obj(*arg);
-+	arg = kzalloc_flex(*arg, chan_list, req->n_channels);
-
- 	if (!arg) {
- 		ret = -ENOMEM;
- 		goto exit;
+diff --git a/drivers/clk/at91/dt-compat.c b/drivers/clk/at91/dt-compat.c
+index 5d543e807843..5c88cfafa31f 100644
+--- a/drivers/clk/at91/dt-compat.c
++++ b/drivers/clk/at91/dt-compat.c
+@@ -548,7 +548,6 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
+ 	int num_output;
+ 	u32 num_cells;
+ 	struct clk_range input;
+-	struct clk_range *output;
+ 	u8 *out = NULL;
+ 	u16 *icpll = NULL;
+ 	struct clk_pll_characteristics *characteristics;
+@@ -568,13 +567,11 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
+ 		return NULL;
+ 	num_output /= num_cells;
+ 
+-	characteristics = kzalloc_obj(*characteristics);
++	characteristics = kzalloc_flex(*characteristics, output, num_output);
+ 	if (!characteristics)
+ 		return NULL;
+ 
+-	output = kzalloc_objs(*output, num_output);
+-	if (!output)
+-		goto out_free_characteristics;
++	characteristics->num_output = num_output;
+ 
+ 	if (num_cells > 2) {
+ 		out = kcalloc(num_output, sizeof(*out), GFP_KERNEL);
+@@ -594,12 +591,12 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
+ 					       "atmel,pll-clk-output-ranges",
+ 					       offset, &tmp))
+ 			goto out_free_output;
+-		output[i].min = tmp;
++		charecteristics->output[i].min = tmp;
+ 		if (of_property_read_u32_index(np,
+ 					       "atmel,pll-clk-output-ranges",
+ 					       offset + 1, &tmp))
+ 			goto out_free_output;
+-		output[i].max = tmp;
++		charecteristics->output[i].max = tmp;
+ 
+ 		if (num_cells == 2)
+ 			continue;
+@@ -621,8 +618,6 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
  	}
-
-+	arg->num_chan = req->n_channels;
- 	ath11k_wmi_start_scan_init(ar, arg);
- 	arg->vdev_id = arvif->vdev_id;
- 	arg->scan_id = ATH11K_SCAN_ID;
-@@ -4262,38 +4263,27 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
- 		arg->scan_f_passive = 1;
- 	}
-
--	if (req->n_channels) {
--		arg->num_chan = req->n_channels;
--		arg->chan_list = kcalloc(arg->num_chan, sizeof(*arg->chan_list),
--					 GFP_KERNEL);
-+	for (i = 0; i < arg->num_chan; i++) {
-+		if (test_bit(WMI_TLV_SERVICE_SCAN_CONFIG_PER_CHANNEL,
-+			     ar->ab->wmi_ab.svc_map)) {
-+			arg->chan_list[i] =
-+				u32_encode_bits(req->channels[i]->center_freq,
-+						WMI_SCAN_CONFIG_PER_CHANNEL_MASK);
-
--		if (!arg->chan_list) {
--			ret = -ENOMEM;
--			goto exit;
--		}
--
--		for (i = 0; i < arg->num_chan; i++) {
--			if (test_bit(WMI_TLV_SERVICE_SCAN_CONFIG_PER_CHANNEL,
--				     ar->ab->wmi_ab.svc_map)) {
--				arg->chan_list[i] =
--					u32_encode_bits(req->channels[i]->center_freq,
--							WMI_SCAN_CONFIG_PER_CHANNEL_MASK);
--
--				/* If NL80211_SCAN_FLAG_COLOCATED_6GHZ is set in scan
--				 * flags, then scan all PSC channels in 6 GHz band and
--				 * those non-PSC channels where RNR IE is found during
--				 * the legacy 2.4/5 GHz scan.
--				 * If NL80211_SCAN_FLAG_COLOCATED_6GHZ is not set,
--				 * then all channels in 6 GHz will be scanned.
--				 */
--				if (req->channels[i]->band == NL80211_BAND_6GHZ &&
--				    req->flags & NL80211_SCAN_FLAG_COLOCATED_6GHZ &&
--				    !cfg80211_channel_is_psc(req->channels[i]))
--					arg->chan_list[i] |=
--						WMI_SCAN_CH_FLAG_SCAN_ONLY_IF_RNR_FOUND;
--			} else {
--				arg->chan_list[i] = req->channels[i]->center_freq;
--			}
-+			/* If NL80211_SCAN_FLAG_COLOCATED_6GHZ is set in scan
-+			 * flags, then scan all PSC channels in 6 GHz band and
-+			 * those non-PSC channels where RNR IE is found during
-+			 * the legacy 2.4/5 GHz scan.
-+			 * If NL80211_SCAN_FLAG_COLOCATED_6GHZ is not set,
-+			 * then all channels in 6 GHz will be scanned.
-+			 */
-+			if (req->channels[i]->band == NL80211_BAND_6GHZ &&
-+			    req->flags & NL80211_SCAN_FLAG_COLOCATED_6GHZ &&
-+			    !cfg80211_channel_is_psc(req->channels[i]))
-+				arg->chan_list[i] |=
-+					WMI_SCAN_CH_FLAG_SCAN_ONLY_IF_RNR_FOUND;
-+		} else {
-+			arg->chan_list[i] = req->channels[i]->center_freq;
- 		}
- 	}
-
-@@ -9736,19 +9726,14 @@ static int ath11k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
-
- 	scan_time_msec = ar->hw->wiphy->max_remain_on_channel_duration * 2;
-
--	arg = kzalloc_obj(*arg);
-+	arg = kzalloc_flex(*arg, chan_list, 1);
- 	if (!arg) {
- 		ret = -ENOMEM;
- 		goto exit;
- 	}
--	ath11k_wmi_start_scan_init(ar, arg);
-+
- 	arg->num_chan = 1;
--	arg->chan_list = kcalloc(arg->num_chan, sizeof(*arg->chan_list),
--				 GFP_KERNEL);
--	if (!arg->chan_list) {
--		ret = -ENOMEM;
--		goto free_arg;
--	}
-+	ath11k_wmi_start_scan_init(ar, arg);
-
- 	arg->vdev_id = arvif->vdev_id;
- 	arg->scan_id = ATH11K_SCAN_ID;
-@@ -9769,7 +9754,7 @@ static int ath11k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
- 		spin_lock_bh(&ar->data_lock);
- 		ar->scan.state = ATH11K_SCAN_IDLE;
- 		spin_unlock_bh(&ar->data_lock);
--		goto free_chan_list;
-+		goto free_arg;
- 	}
-
- 	ret = wait_for_completion_timeout(&ar->scan.on_channel, 3 * HZ);
-@@ -9779,7 +9764,7 @@ static int ath11k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
- 		if (ret)
- 			ath11k_warn(ar->ab, "failed to stop scan: %d\n", ret);
- 		ret = -ETIMEDOUT;
--		goto free_chan_list;
-+		goto free_arg;
- 	}
-
- 	ieee80211_queue_delayed_work(ar->hw, &ar->scan.timeout,
-@@ -9787,8 +9772,6 @@ static int ath11k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
-
- 	ret = 0;
-
--free_chan_list:
--	kfree(arg->chan_list);
- free_arg:
- 	kfree(arg);
- exit:
-diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
-index baed501b640b..b2dade0516ac 100644
---- a/drivers/net/wireless/ath/ath11k/wmi.h
-+++ b/drivers/net/wireless/ath/ath11k/wmi.h
-@@ -3423,7 +3423,6 @@ struct scan_req_params {
- 	u32 num_bssid;
- 	u32 num_ssids;
- 	u32 n_probes;
--	u32 *chan_list;
- 	u32 notify_scan_events;
- 	struct wlan_ssid ssid[WLAN_SCAN_PARAMS_MAX_SSID];
- 	struct wmi_mac_addr bssid_list[WLAN_SCAN_PARAMS_MAX_BSSID];
-@@ -3436,6 +3435,7 @@ struct scan_req_params {
- 	struct hint_bssid hint_bssid[WLAN_SCAN_MAX_HINT_BSSID];
- 	struct wmi_mac_addr mac_addr;
- 	struct wmi_mac_addr mac_mask;
-+	u32 chan_list[] __counted_by(num_chan);
+ 
+ 	characteristics->input = input;
+-	characteristics->num_output = num_output;
+-	characteristics->output = output;
+ 	characteristics->out = out;
+ 	characteristics->icpll = icpll;
+ 	return characteristics;
+@@ -630,8 +625,6 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
+ out_free_output:
+ 	kfree(icpll);
+ 	kfree(out);
+-	kfree(output);
+-out_free_characteristics:
+ 	kfree(characteristics);
+ 	return NULL;
+ }
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 543d7aee8d24..123050b4356d 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -75,12 +75,12 @@ extern const struct clk_pll_layout sama5d3_pll_layout;
+ struct clk_pll_characteristics {
+ 	struct clk_range input;
+ 	int num_output;
+-	const struct clk_range *output;
+ 	const struct clk_range *core_output;
+ 	u16 *icpll;
+ 	u8 *out;
+ 	u8 upll : 1;
+ 	u32 acr;
++	struct clk_range output[] __counted_by(num_output);
  };
-
- struct wmi_ssid_arg {
---
+ 
+ struct clk_programmable_layout {
+-- 
 2.53.0
 
