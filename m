@@ -1,75 +1,72 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427923B28D
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Mar 2026 00:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CFD145B3F
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Mar 2026 00:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773360400; cv=none; b=ovMrBOp7/ZBqvtrvnV2IOCwTduzx0EtBgmWcmI7fUEkFaxA2KEYQUJRFDXG+Plfk8pu+k5Y8ORo+sfhutlgZfzb6ur23B3apW3PXB3Vx+ImgVMAdpc78v9254tZvbeeTwfJcSfb4HIAU0KarRRWuZS755ImGwVAFHUmhOyS3G4Q=
+	t=1773360897; cv=none; b=aTA07/ZuuPxl1w6ozqKaku8fer7QeiPWkEgo7zxgg3pqzM3Atar9Ks8KqPi5M+Trf0AejtMJRfz7RvipbeCN+o2Mc5lsCN+oiqi/+yn1A7phUEhzZLrY84f3mRPHHd22cJ++1IUabPS+fnp/KnkfOO1SR+GrpOy4v6KpxvNdrag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773360400; c=relaxed/simple;
-	bh=RNBDhx6SP9Dlnjslw2G6n/SBRm1RMP3mTWySGwZB16E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uaDQF9KtooPoexVBiXEXQyKkUcgJTLS0EtQNl0P4NZWpwCfyC4tNoHzp963+VHuK5vGP/MuPajnYs1euHotyOuH4BS5SA6P7bC93ifepqlFJ2BMPgNwuVtMM2210n5UvxuLnXh6b+kvxbOEJc8H0dKArp3wPw5ELgK7jEj5h8Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KgbjLUm3; arc=none smtp.client-ip=209.85.216.51
+	s=arc-20240116; t=1773360897; c=relaxed/simple;
+	bh=MPvp3uLpYzLrrjOQiqIHZIR+DFjBEGgkZpOibNsBV8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R/ao+NhHemRpJs4BvYaMb69mewBWhRJwGR3I+sO5gRiSWiN3yUkvU0En1Q3kWBR855OXUW+Zhv0hjMfdJwWDWUekIb9g2rXDYW+4XHb52LEu3cVuFsihyEAjigethZfXqvlYN7xsZupM2XEHqwvrZE1CBTEre9ZgggpDFDeVOYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O76BbDku; arc=none smtp.client-ip=209.85.128.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgbjLUm3"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-35a04d6aeb0so983905a91.0
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 17:06:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O76BbDku"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7986c7b8076so18651887b3.2
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 17:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773360398; x=1773965198; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773360893; x=1773965693; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nuLpHvR1fwObt/8Xvj3rrc9Oc9+CrLWMV9LCtsBGyrI=;
-        b=KgbjLUm3nIeMZItgPA/7XBSfz/Ya6u1teNAkKqZhGdLX3XOwyA0cXv/b8CjvPfo9NQ
-         DBrsKidCHEbeCpWs4qO5JY4anvQ2AuLb/sAtAEoP/CTDYZVMBbkEV2qXIWop+BGdLRsA
-         m971uTr7hzBLZte4GLEA8Vz40/uE8kegf2i3mp5TnChtkstrBguh1LaaD5dRX1+R6QrO
-         RxuknpeZPxq/QYkAzQt4m4mHCjQbVqs0WJjB2o45W2ZAMxeBNn3kIzm2Cyxil6FXbrH0
-         J9dgyQP4izr3NIiHKLkWvlIeZ2n9dUnFP2slZOk/NSN+w9/lTKtQ/nHaZveiQer0CQeN
-         EwWA==
+        bh=Dc7T6F+QAAK7xJvWNMAT28cNkHEqvmKrsbYs4miggWQ=;
+        b=O76BbDkuck5vvz7A8wf9+5wypQdsSgZjWV7PzA3HgzjIigk0kIoiKe/+dKdgiaQVAa
+         Oe9kWixok3PxxopqDz8o9k8uW6ba66uZpRNJPV/amtcu99gS8lB6yE9bKY38FcSYIm1d
+         2OCpRriHUduMKb4e0k2ET/4fB4MMzPQNogHP2NiZordYGC+sWEqLSkoSa0kXrIFVjqa3
+         s349IlnEhNLI9Haf/lcFLmsCkUBe2L05bQP04i33zASuxAdW4IzGk8qllpqmDWgnrqGb
+         5T7achmq+ebfl3Zl2GuKnAY1RJ2EVFuHD30q90ve+IcPvTCTSMsWTz3JZn7EuS9u1g/g
+         /nGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773360398; x=1773965198;
+        d=1e100.net; s=20251104; t=1773360893; x=1773965693;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nuLpHvR1fwObt/8Xvj3rrc9Oc9+CrLWMV9LCtsBGyrI=;
-        b=CDrwqlvVCB/C3a2f6u8pLuOVbts4VrtTC274eqCi5Osq5R5hpxkYpoJRku0WNF7xER
-         uvaCarz17mDjiaXr2vCZ3s38/3THTaJv+9lKnIpO46SmdkJWHapid9CEL08PPgppuBE1
-         LOcSv++SFhGxT9HoHwOubqujCheA29FifdcoIxQXvFJGQaS+ElqjxQ7tKpqkA814QVQO
-         PdlpWWwx1T4ivQ3s2r4/Ml4mGqYz0ro1OqQKFu13rqMcSs/bk2Gup5n6pQOTTset8e3V
-         wAFATW9LvL5pjYQmIAFFQffAe42+ftIRKvXPeqqy2HGZp7rKcwnXdVP9RzuQuI7Xvx9K
-         JeRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQvbLjLUA/chs/3hIVZbYRcA6SAC8FfRPj/qv31IaYr72W+m15vYPKIXKY+5TyjL13Kbt2MDIVck4R6V2n4Jw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvhaptyjyUXbubSj20fAbYSi+vEoVQRQJQzM+53IcSpEZwagWr
-	7zIJhsPKi088O4M/ylzJGmCC5TjBjRzV6kasgk6UQSSn7C128ElhUgQE
-X-Gm-Gg: ATEYQzywWLlH1PFLZz7EaP/L0mQIhu+G+9eS7u2TDpukBxE6PM2kDjbVhUrpLosMkgi
-	jWrc1lg5Ko7xU6ButHH7mfjNITq36HvDlR1Mdp61joAdP1zJnTfkm8S5DbmLjlsefkGAWx/mDiu
-	LK+meMnwA+PBIuE6zQZSRmenqQBmZc9fK2qwT7yYxzrimaOs4l2brdHemOz9RsVz+/EBOzYeSS5
-	wiRo7iPZttCxqss04i9oDquLKpR6JQvz+RMxzuILEqm3rCUDUPlEGtHYvKoGShWDxqjzVrw3XXS
-	g7O4n3YmvZsknfuNOzkMSoW4x/pu9i/D7Vnh2Nnw6Jee7NH3w9kv4qvrVoilmhQrnl01dM2IElh
-	nTSkaDKfnd0/jzA9UL7uLCvUCeyMYHc/BkTGxpZ1Un3/uYQx+JKzbJjtouBWcvm/YALS14mezWg
-	dF3VPI5K/6/cbHJp7RqyA9TKeZmj5aYokEpscGfyrC0r5eAFqlGkTxpg==
-X-Received: by 2002:a17:90b:3848:b0:359:f2e1:58fc with SMTP id 98e67ed59e1d1-35a220cf0ddmr1186924a91.30.1773360398558;
-        Thu, 12 Mar 2026 17:06:38 -0700 (PDT)
+        bh=Dc7T6F+QAAK7xJvWNMAT28cNkHEqvmKrsbYs4miggWQ=;
+        b=DpVajaZgyowDubAC2j1E2fBba966HjcveuR4oBc+s3OS24g+cRwh6OT4iSLAXLGwjU
+         CAGksyD0PutjTx0J7KYTHx916PQipbF5k0mUNZXDIhmq9eL4zDW+T94u2mkxVntGFG86
+         wavjwPKkM4rVoX49Nl8jr5RDKVePETHFCsRBKIpNMc8x/GE/Pvr81G6V0Al9loCw5LpT
+         fHiceqoTSq6xB9tZjvhbg8MdxAwulpv4vXENsz35O0Alrc3MzzD2johdLXagx/SrDvC9
+         bAWBDtMaB8gU3QNxNbqPYAStFDMxbuCkXGIzJZGSpxFvQoNTVsbObiJWcHudprc0wOIB
+         4x3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUWm+UNDyt/DfhrV21biOyJ9yvZpMRCwEgipE+uBmHT/ZXXSkN/d4ri/qYE8dgzbpTDWkZoGO31Nc9AJQq0lfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEOC4irncqMp1nK0tKgN8Rlakys3rws2KZ3tT29P++do3F1dFl
+	+qpkFsz31uVSH7MxaZPw+kmmqptSxv+1k6lUgO4+F00CI/+Gk6hGy4zT
+X-Gm-Gg: ATEYQzwMGWXYoJAuQKmwZbl4updn9/D4ao7Yd8T7zStRcOxczEpvfi5RA7KwunPzZjZ
+	pYYrXWjuMHflLd/+BJn0o8wXS5ACxu3ZGSMrI4YAV5WlR6fJ3eXA4R4KdO2Q9PzTkig+FX8Cf9P
+	MrI7R+Kaz6VIYoBBH9jygrhk394kjXUkD20w0AtIv68iFD37jmkgu5dzq8eOmCp1DNn6ys7uTdW
+	C0ah3DOMAQ8GdBbrl5mbpvvH1y/xvRP62qeYYm43k/awSr8d6k4YD3MepRfeLnIQdx9Nwo0iG40
+	T38FRf6KYFw9aTHjz2ntHrP2zUoaxyp5WhjBbBXqCiEBeDYi3o4a73m+o+c/O7/w7Gl46i0ZL+U
+	ecop2qRhY3J0+N7ySG7bH9qBDae/eUK/2H3yPtHyD0YqGIScZHrGI5UrdHSqZDpx2DGEiBjmyN3
+	W6ypgJATCJp97CUcUSYqW6TXOxElXrvdfrUcZL+w/bCmzMXBdpOtY62G20i38F7H3J
+X-Received: by 2002:a05:690c:6f13:b0:798:11ac:d0ac with SMTP id 00721157ae682-79a1c1e5451mr16754597b3.53.1773360893250;
+        Thu, 12 Mar 2026 17:14:53 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35a07f0a365sm6192261a91.13.2026.03.12.17.06.36
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-79917e1fa3esm41018377b3.18.2026.03.12.17.14.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 17:06:37 -0700 (PDT)
+        Thu, 12 Mar 2026 17:14:52 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: dri-devel@lists.freedesktop.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
+To: linux-wireless@vger.kernel.org
+Cc: Jeff Johnson <jjohnson@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	ath12k@lists.infradead.org (open list:QUALCOMM ATH12K WIRELESS DRIVER),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] drm: property: use kzalloc_flex
-Date: Thu, 12 Mar 2026 17:06:20 -0700
-Message-ID: <20260313000620.117065-1-rosenp@gmail.com>
+Subject: [PATCH ath-next] wifi: ath12k: use kzalloc_flex
+Date: Thu, 12 Mar 2026 17:14:34 -0700
+Message-ID: <20260313001434.118010-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -79,100 +76,108 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Don't allocate values separately to simplify allocation.
+Convert kzalloc_obj + kcalloc to kzalloc_flex to save an allocation.
 
-Add __counted_by for extra runtime analysis. Move the counting variable
-assignment to right after allocation as required by __counted_by.
+Add __counted_by to get extra runtime analysis. Move counting variable
+assignment immediately after allocation as required by __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/gpu/drm/drm_property.c | 14 ++------------
- include/drm/drm_property.h     | 16 ++++++++--------
- 2 files changed, 10 insertions(+), 20 deletions(-)
+ drivers/net/wireless/ath/ath12k/mac.c | 29 +++++++--------------------
+ drivers/net/wireless/ath/ath12k/wmi.h |  2 +-
+ 2 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
-index f38f2c5437e6..a6008e5c2b58 100644
---- a/drivers/gpu/drm/drm_property.c
-+++ b/drivers/gpu/drm/drm_property.c
-@@ -107,25 +107,18 @@ struct drm_property *drm_property_create(struct drm_device *dev,
- 	if (WARN_ON(strlen(name) >= DRM_PROP_NAME_LEN))
- 		return NULL;
- 
--	property = kzalloc_obj(struct drm_property);
-+	property = kzalloc_flex(*property, values, num_values);
- 	if (!property)
- 		return NULL;
- 
-+	property->num_values = num_values;
- 	property->dev = dev;
- 
--	if (num_values) {
--		property->values = kcalloc(num_values, sizeof(uint64_t),
--					   GFP_KERNEL);
--		if (!property->values)
--			goto fail;
--	}
--
- 	ret = drm_mode_object_add(dev, &property->base, DRM_MODE_OBJECT_PROPERTY);
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index 553ec28b6aaa..b7c43a64e37b 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -5611,12 +5611,14 @@ static int ath12k_mac_initiate_hw_scan(struct ieee80211_hw *hw,
  	if (ret)
- 		goto fail;
- 
- 	property->flags = flags;
--	property->num_values = num_values;
- 	INIT_LIST_HEAD(&property->enum_list);
- 
- 	strscpy_pad(property->name, name, DRM_PROP_NAME_LEN);
-@@ -134,7 +127,6 @@ struct drm_property *drm_property_create(struct drm_device *dev,
- 
- 	return property;
- fail:
--	kfree(property->values);
- 	kfree(property);
- 	return NULL;
- }
-@@ -447,8 +439,6 @@ void drm_property_destroy(struct drm_device *dev, struct drm_property *property)
- 		kfree(prop_enum);
+ 		goto exit;
+
+-	arg = kzalloc_obj(*arg);
++	arg = kzalloc_flex(*arg, chan_list, n_channels);
+ 	if (!arg) {
+ 		ret = -ENOMEM;
+ 		goto exit;
  	}
- 
--	if (property->num_values)
--		kfree(property->values);
- 	drm_mode_object_unregister(dev, &property->base);
- 	list_del(&property->head);
- 	kfree(property);
-diff --git a/include/drm/drm_property.h b/include/drm/drm_property.h
-index aa49b5a42bb5..8c7cef4418c4 100644
---- a/include/drm/drm_property.h
-+++ b/include/drm/drm_property.h
-@@ -175,14 +175,6 @@ struct drm_property {
- 	 */
- 	uint32_t num_values;
- 
--	/**
--	 * @values:
--	 *
--	 * Array with limits and values for the property. The
--	 * interpretation of these limits is dependent upon the type per @flags.
--	 */
--	uint64_t *values;
--
- 	/**
- 	 * @dev: DRM device
- 	 */
-@@ -195,6 +187,14 @@ struct drm_property {
- 	 * enum and bitmask values.
- 	 */
- 	struct list_head enum_list;
+
++	arg->num_chan = n_channels;
 +
-+	/**
-+	 * @values:
-+	 *
-+	 * Array with limits and values for the property. The
-+	 * interpretation of these limits is dependent upon the type per @flags.
-+	 */
-+	uint64_t values[] __counted_by(num_values);
+ 	ath12k_wmi_start_scan_init(ar, arg);
+ 	arg->vdev_id = arvif->vdev_id;
+ 	arg->scan_id = ATH12K_SCAN_ID;
+@@ -5638,18 +5640,8 @@ static int ath12k_mac_initiate_hw_scan(struct ieee80211_hw *hw,
+ 		arg->scan_f_passive = 1;
+ 	}
+
+-	if (n_channels) {
+-		arg->num_chan = n_channels;
+-		arg->chan_list = kcalloc(arg->num_chan, sizeof(*arg->chan_list),
+-					 GFP_KERNEL);
+-		if (!arg->chan_list) {
+-			ret = -ENOMEM;
+-			goto exit;
+-		}
+-
+-		for (i = 0; i < arg->num_chan; i++)
+-			arg->chan_list[i] = chan_list[i]->center_freq;
+-	}
++	for (i = 0; i < arg->num_chan; i++)
++		arg->chan_list[i] = chan_list[i]->center_freq;
+
+ 	ret = ath12k_start_scan(ar, arg);
+ 	if (ret) {
+@@ -5674,7 +5666,6 @@ static int ath12k_mac_initiate_hw_scan(struct ieee80211_hw *hw,
+
+ exit:
+ 	if (arg) {
+-		kfree(arg->chan_list);
+ 		kfree(arg->extraie.ptr);
+ 		kfree(arg);
+ 	}
+@@ -13735,19 +13726,13 @@ int ath12k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
+ 	scan_time_msec = hw->wiphy->max_remain_on_channel_duration * 2;
+
+ 	struct ath12k_wmi_scan_req_arg *arg __free(kfree) =
+-					kzalloc_obj(*arg);
++					kzalloc_flex(*arg, chan_list, 1);
+ 	if (!arg)
+ 		return -ENOMEM;
+
+-	ath12k_wmi_start_scan_init(ar, arg);
+ 	arg->num_chan = 1;
++	ath12k_wmi_start_scan_init(ar, arg);
+
+-	u32 *chan_list __free(kfree) = kcalloc(arg->num_chan, sizeof(*chan_list),
+-					       GFP_KERNEL);
+-	if (!chan_list)
+-		return -ENOMEM;
+-
+-	arg->chan_list = chan_list;
+ 	arg->vdev_id = arvif->vdev_id;
+ 	arg->scan_id = ATH12K_SCAN_ID;
+ 	arg->chan_list[0] = chan->center_freq;
+diff --git a/drivers/net/wireless/ath/ath12k/wmi.h b/drivers/net/wireless/ath/ath12k/wmi.h
+index 0bf0a7941cd3..190e7a4a92d0 100644
+--- a/drivers/net/wireless/ath/ath12k/wmi.h
++++ b/drivers/net/wireless/ath/ath12k/wmi.h
+@@ -3586,7 +3586,6 @@ struct ath12k_wmi_scan_req_arg {
+ 	u32 num_bssid;
+ 	u32 num_ssids;
+ 	u32 n_probes;
+-	u32 *chan_list;
+ 	u32 notify_scan_events;
+ 	struct cfg80211_ssid ssid[WLAN_SCAN_MAX_NUM_SSID];
+ 	struct ath12k_wmi_mac_addr_params bssid_list[WLAN_SCAN_MAX_NUM_BSSID];
+@@ -3595,6 +3594,7 @@ struct ath12k_wmi_scan_req_arg {
+ 	u32 num_hint_bssid;
+ 	struct ath12k_wmi_hint_short_ssid_arg hint_s_ssid[WLAN_SCAN_MAX_HINT_S_SSID];
+ 	struct ath12k_wmi_hint_bssid_arg hint_bssid[WLAN_SCAN_MAX_HINT_BSSID];
++	u32 chan_list[] __counted_by(num_chan);
  };
- 
- /**
--- 
+
+ struct wmi_ssid_arg {
+--
 2.53.0
 
