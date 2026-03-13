@@ -1,76 +1,73 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6498295DBD
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Mar 2026 00:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C9129A31C
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Mar 2026 00:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773361302; cv=none; b=aXpTSFF3l9i+4ptmgkv0JoUDOLUq3jyi/bfd34K1UKYGDy0An5Irz1N2dyjdT7xqmuHbXIuEErNSzhdWqeGlceleXfBOhVLOje/QOqOSTK43z+dxUfLLG7j6/ndPJjwSyd1jG2aYq5LVG+Y2Iogf8tgEtLd/sxDqVQfHtKfCKhg=
+	t=1773361408; cv=none; b=Uap6n7PK72lUyj4duLYEm3/WeZ+YTtmo0TduxlsewLfzu3SZTffs73MuNITqXnkJBgiBZtU/s5gtvSAE8QGjN3TSKAnK9VpLYqrN/cd2+sWTZ6GTDQwgeu79PsGLc915PTEPZpEwPoylSN+zKV4Qm6dyPodWAgLL43s18JOq6NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773361302; c=relaxed/simple;
-	bh=1YMiY7/Zot15ra9DuC1CUpjFsA44TAxwB5BjF3e8+FE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mwPpJvxMUDcztj7rfODzN94cNdJEkjTi6jv3npi/TIDgjeKdV53XVzDnd2WplHdWWuupKCL3si2mfGMVlC8CGbqGtmJMK0Z05TE+r4lDztDb0Vkoe7yNJG7OxEVgHAwertsRWHBREGslKEEzB8q5bb4NQB+NMagmnX9H+/y35Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JpDjyiOs; arc=none smtp.client-ip=209.85.128.177
+	s=arc-20240116; t=1773361408; c=relaxed/simple;
+	bh=DAOotS0+fJKT3Knk+MeZ7HSRumsv/xP9lPM/rU63+iE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mjxo0PWOyivElvEMmOBnyyZLIYV8kbGx8MD8jdJFS3nTM31uD+1Waw36+SfPi4KYrTK8lB3xoTO1mv01hJX29M65PMKI5J1Q0PpPWLDGtDz7K9wzx4bSuip+ze35+BaV+RdvlZHhGw4pqAvVQJxaHjP7o5ocFsW1SzzlRaFxPYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kBbm3S5X; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpDjyiOs"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-7987531082aso18159597b3.3
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 17:21:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBbm3S5X"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7986c7b8076so18699747b3.2
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 17:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773361299; x=1773966099; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773361407; x=1773966207; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PeETB9eQltddP5mF2mJA8o9tnQJB7YnT8JvFDCE8DGE=;
-        b=JpDjyiOsfK/apRe83gzVuB21pDPIfiTt/JP41PuJV1odsJv0jQuPsjZUr7PQa7hdCU
-         qJJ1JK+Hsjjt6R54V9zmcb08moedlPSk/8Hbtm58+iGPg8WVxe9IF15b6sowI23hm/Fo
-         xx5dbv4vbWP2va5ZTil1s1Jh7bXmgNlmoEn7Qm2QrI6bjHX1rE2c9twg4fDBFLJVGb1R
-         WTDphYV8ja1+7M4G+5iv5Ofsb0Q08dRDUepVqT2d5VN6UGHnDpiCVjtdliumfhf48h0z
-         aGzwObnN/+jWf6UEbyD8+dFvlqmjax+YK5Tp7P9zG4w1coNt1RcqWhCjUsabLQZgNXIN
-         OGEw==
+        bh=bpGg8KlAOke1kfXQdKS/v1oPTBpVb3phcbFoPsToyyw=;
+        b=kBbm3S5XfkOimj5j68nNMgRHRssj72ZnCsTjJGIPBtmQ+uRo3fBIHz7BbTMChu1hV1
+         X10KojimkhYYp82RwZ3cKhnkFuxu+IJ51oECy6cJr2ntxYwzoCVtBvhFabfODfzUrobp
+         gS/zg/q6fMz9gGS7v8aqFlqvL/PX2Ov41xnGzAkcSKOrP9HriaGICwQ+znLdEMJa9p2Z
+         ggr3b5IEaboFi+v6dLG+jA/BMEexXxDS/kntRWV5BwvqgQCr1zTnV9k/hJg0+vj2hpSa
+         fb9PYWrsgD+mOG/5SCYLRmL4Ov/LszwmqIJjbMnOfPW6wueVcz+SFhGqEzadpNo65K+J
+         58+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773361299; x=1773966099;
+        d=1e100.net; s=20251104; t=1773361407; x=1773966207;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PeETB9eQltddP5mF2mJA8o9tnQJB7YnT8JvFDCE8DGE=;
-        b=VEYj4P6TCJH+83b/LQqrK1LoOuyJgeZ4gtkYkCswVPgFnZFY+y0jpmDpPL8WaEWQFk
-         8K9IeRrZG09QdJQA4nX7gRXFWi99SpV+yUhHHeymfwSwEA64EAo481TOPu1XBVO2Ommv
-         PNk6lwGheWHm6AHhzJ9pWr7pQJ7+08ts4youNVXfndOn5csA5Ipn/zDCoSVrBwL/+9S4
-         RNzlJFAFL90i5t3VEVW1WcXvh6BtRuR73EM7oAdlhybiMmfYaD8PyzFXan9fzUJ8TWmW
-         EmO9iBswZ3eu4ZlbbsImxfO3QJECUzqN3Yd9ID5yFpnRq6OqQQhvuwuJia6ihGYFlStF
-         4m0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVXLTFQNYchr5VBcSrk6DK8RHYhQatJBQKC/DEvGpi7xFAETY1PdBFbpcIYf8/52Yo/Xsmo7lv8LkDDasXozW8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE8Bgb2DidYS60iNXEKDFBKtHwGBDad0Hf3yYw3XPNvVayzXhT
-	hh2mxQWCTGMxd8hUfZrZprBUOy/zQg0fYddWxOQN4CRZ1AH+6zUPrKzA
-X-Gm-Gg: ATEYQzy9xX5AKSCvkyxoa3tU9CpU1eq93L00hAD5aQ0azD7QUyNOSoCWWuz9IuQ3jmR
-	f9q8LicHCcnR3/J09734JmhhMCwAc/vBrn85NgMnVJnEGyDVoO6KXlmyNwdZaegw+dHz/mYEMa4
-	UUOBgsOECWQa3KTvqCGUMZBLI3FHLrOY1brK+OsfAmJzHv5oDIN2WpbI+a+mMFJ97EAC4TSWdvp
-	+GdSCk4JR8xHhVf7CNFfFZvdFKRuLzLVn37KIy/9sxFPkpur0UmT0dybCbHQvWW8RZAadrXyMmG
-	VzEZiRsziFbFfScOzFgYhPF5Ht3VXwAYXlFZ9io9mmPNNi+7Wlt295QctHCVxxD5yPXYXMRSHhJ
-	zGCJ8vRHZM5yfiwkhSK0e+fMhs/wCeD04r16i8gr7JLtJUadwPsqkCxhkMAo48V+jB3yUqCbaas
-	kpNyModyBwoPDaxvK5O7DgKAqotzg6/4Su+xKB1Ap2IIoiIYM+tD5aSoHAwBrU9rGi
-X-Received: by 2002:a05:690c:c155:b0:799:182:17bd with SMTP id 00721157ae682-79a1c0e1676mr14239947b3.24.1773361298678;
-        Thu, 12 Mar 2026 17:21:38 -0700 (PDT)
+        bh=bpGg8KlAOke1kfXQdKS/v1oPTBpVb3phcbFoPsToyyw=;
+        b=GDUITZ0XnKWicqU19nSgKf76qrozdcSs9KQbuwIAlvzvfaYNbgzOSjd6CJ4zS62bM0
+         ybdMC0WO9pvbOdUAuNLFltb1cxy0Wx0uWDr2NFJuoxKplMW24BEuBk/X7FO0/M9RehwP
+         ndwkRf12YtuJEk8OO5IcykJGF+ZwUIo9MGDk/4aq6XfvulljVbD1l/1SEvceNqm2RDVm
+         /5+0d0ZmU6dTQpf83wK3puoiPgcbelnPrsY88YXnxfO0MQLQ+qCgaY/mDom2nFYj9Unf
+         eNs3H0x7JSbw8hneoq7BWZbhPWbtcdu4SbGbvSm/m472HV/2dA5Yziu02LfoQoHAxTkf
+         8oCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVV1BblFIMoQdixrB09VlRhgCyzqs+jFMVOZGHY0kfAIKZR3fQURPCJ2fsJXDkpJjzXvsCNuVjfr0kKd+H8wro=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr6NFYd1lVUU4a/VMZRc9bxP3uc/+Mp8ZEjBH8qR6R7ILXqDJP
+	BAXWIoGfDvVUyInxdCwE71OQhgP+kZzGjxkIdYrB1alaAc4o4BgdKo9L
+X-Gm-Gg: ATEYQzyyHawkjzNH6+CX73pqShPs8GIBjIPqu8IimCg9SSP6u8k1QMDES1KvfbNk4G7
+	fzw1MrYa3tZglLQC4axC0Io8pKrUymk8omZcVl31dEz1lPp9xNn/cvdKnsa6W29ao5kMOdQxi4W
+	h+wHPOBSMkRgkmb+Bw2HeMUvRntNfJRraE1vJt1c/qoBk7KKieJDR8tpIA3j6kLFQvjyiOXtET/
+	98JIkw/nLOzrPhYglW8YrvwvLXkovWUZOoocFAGhtSka8GAfhEwXHHuYLyKz0p7pJnhJdchgjH7
+	JWqN5aMq4o82eHqOJuxA5kQexuu6fXWSGzTuviMRTrUGEx7qorgjd/1SEQAoMuXlRT+9svHQP3O
+	2kg8rRj2GjM9VU+M8bfbmncH3byNvk8bqo4bbnKiSpOsRbx2vVUcH5MBQdqmqi81ewjUNPwS9Bx
+	usqP6vPRhxcN6+X3Now7O3qFZ02f9FMmea8qeh4bF/fP72MJKbQor8Gg==
+X-Received: by 2002:a05:690c:ed5:b0:798:ff7e:96a6 with SMTP id 00721157ae682-79a1c23cd40mr16090467b3.63.1773361406680;
+        Thu, 12 Mar 2026 17:23:26 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-79917f1ecd9sm39089407b3.45.2026.03.12.17.21.36
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64e65b67185sm152768d50.19.2026.03.12.17.23.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 17:21:38 -0700 (PDT)
+        Thu, 12 Mar 2026 17:23:26 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-clk@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+To: linux-i2c@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Microchip (AT91) SoC support),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] clk: at91: use kzalloc_flex
-Date: Thu, 12 Mar 2026 17:21:19 -0700
-Message-ID: <20260313002119.118962-1-rosenp@gmail.com>
+Subject: [PATCH] i2c: atr: use kzalloc_flex
+Date: Thu, 12 Mar 2026 17:23:08 -0700
+Message-ID: <20260313002308.119343-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -87,89 +84,65 @@ assignment immediately after allocation as required by __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/clk/at91/dt-compat.c | 15 ++++-----------
- drivers/clk/at91/pmc.h       |  2 +-
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ drivers/i2c/i2c-atr.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/at91/dt-compat.c b/drivers/clk/at91/dt-compat.c
-index 5d543e807843..5c88cfafa31f 100644
---- a/drivers/clk/at91/dt-compat.c
-+++ b/drivers/clk/at91/dt-compat.c
-@@ -548,7 +548,6 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
- 	int num_output;
- 	u32 num_cells;
- 	struct clk_range input;
--	struct clk_range *output;
- 	u8 *out = NULL;
- 	u16 *icpll = NULL;
- 	struct clk_pll_characteristics *characteristics;
-@@ -568,13 +567,11 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
- 		return NULL;
- 	num_output /= num_cells;
+diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
+index f9fcb4793aaf..b0aedcf0bf71 100644
+--- a/drivers/i2c/i2c-atr.c
++++ b/drivers/i2c/i2c-atr.c
+@@ -58,8 +58,8 @@ struct i2c_atr_alias_pool {
  
--	characteristics = kzalloc_obj(*characteristics);
-+	characteristics = kzalloc_flex(*characteristics, output, num_output);
- 	if (!characteristics)
- 		return NULL;
- 
--	output = kzalloc_objs(*output, num_output);
--	if (!output)
--		goto out_free_characteristics;
-+	characteristics->num_output = num_output;
- 
- 	if (num_cells > 2) {
- 		out = kcalloc(num_output, sizeof(*out), GFP_KERNEL);
-@@ -594,12 +591,12 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
- 					       "atmel,pll-clk-output-ranges",
- 					       offset, &tmp))
- 			goto out_free_output;
--		output[i].min = tmp;
-+		charecteristics->output[i].min = tmp;
- 		if (of_property_read_u32_index(np,
- 					       "atmel,pll-clk-output-ranges",
- 					       offset + 1, &tmp))
- 			goto out_free_output;
--		output[i].max = tmp;
-+		charecteristics->output[i].max = tmp;
- 
- 		if (num_cells == 2)
- 			continue;
-@@ -621,8 +618,6 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
- 	}
- 
- 	characteristics->input = input;
--	characteristics->num_output = num_output;
--	characteristics->output = output;
- 	characteristics->out = out;
- 	characteristics->icpll = icpll;
- 	return characteristics;
-@@ -630,8 +625,6 @@ of_at91_clk_pll_get_characteristics(struct device_node *np)
- out_free_output:
- 	kfree(icpll);
- 	kfree(out);
--	kfree(output);
--out_free_characteristics:
- 	kfree(characteristics);
- 	return NULL;
- }
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 543d7aee8d24..123050b4356d 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -75,12 +75,12 @@ extern const struct clk_pll_layout sama5d3_pll_layout;
- struct clk_pll_characteristics {
- 	struct clk_range input;
- 	int num_output;
--	const struct clk_range *output;
- 	const struct clk_range *core_output;
- 	u16 *icpll;
- 	u8 *out;
- 	u8 upll : 1;
- 	u32 acr;
-+	struct clk_range output[] __counted_by(num_output);
+ 	/* Protects aliases and use_mask */
+ 	spinlock_t lock;
+-	u16 *aliases;
+ 	unsigned long *use_mask;
++	u16 aliases[] __counted_by(size);
  };
  
- struct clk_programmable_layout {
+ /**
+@@ -137,22 +137,16 @@ static struct i2c_atr_alias_pool *i2c_atr_alloc_alias_pool(size_t num_aliases, b
+ 	struct i2c_atr_alias_pool *alias_pool;
+ 	int ret;
+ 
+-	alias_pool = kzalloc_obj(*alias_pool);
++	alias_pool = kzalloc_flex(*alias_pool, aliases, num_aliases);
+ 	if (!alias_pool)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	alias_pool->size = num_aliases;
+ 
+-	alias_pool->aliases = kcalloc(num_aliases, sizeof(*alias_pool->aliases), GFP_KERNEL);
+-	if (!alias_pool->aliases) {
+-		ret = -ENOMEM;
+-		goto err_free_alias_pool;
+-	}
+-
+ 	alias_pool->use_mask = bitmap_zalloc(num_aliases, GFP_KERNEL);
+ 	if (!alias_pool->use_mask) {
+ 		ret = -ENOMEM;
+-		goto err_free_aliases;
++		goto err_free_alias_pool;
+ 	}
+ 
+ 	alias_pool->shared = shared;
+@@ -161,8 +155,6 @@ static struct i2c_atr_alias_pool *i2c_atr_alloc_alias_pool(size_t num_aliases, b
+ 
+ 	return alias_pool;
+ 
+-err_free_aliases:
+-	kfree(alias_pool->aliases);
+ err_free_alias_pool:
+ 	kfree(alias_pool);
+ 	return ERR_PTR(ret);
+@@ -171,7 +163,6 @@ static struct i2c_atr_alias_pool *i2c_atr_alloc_alias_pool(size_t num_aliases, b
+ static void i2c_atr_free_alias_pool(struct i2c_atr_alias_pool *alias_pool)
+ {
+ 	bitmap_free(alias_pool->use_mask);
+-	kfree(alias_pool->aliases);
+ 	kfree(alias_pool);
+ }
+ 
 -- 
 2.53.0
 
