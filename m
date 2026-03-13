@@ -1,106 +1,252 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD6037C92A
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Mar 2026 08:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BE633C53D;
+	Fri, 13 Mar 2026 09:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773389840; cv=none; b=e0jtxfeELf9hc2gqakW2/h6DHTFwYGpnN/3NflDJFHBZkzV/CQ7Z0CoIWqODAzNLXSj+gpOhz/rkRQufAVJXXVdkMrSV9jkvWBd6IhYrQu1vOKe8+9cfZQbsCjD3or1soby8reGxWznRZZCZu2M27CDp1UY+gHvPfS5T354WmeE=
+	t=1773393485; cv=none; b=hwbtIHG46Lk3KelswvevGtIQAqbbPtpc7pgIq1jhNBMDU+exHH8hl9gchva1ukQ/BpOy58SLHNhFImtThXPeL6qclKvV+mDtnBSryP+ixG6kcpTIeyZMmXP5UjoOdYQPZ+uQzVGOthSfUvDIIm9Ya+/uOq70Bza/pI6FHodLde4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773389840; c=relaxed/simple;
-	bh=R2fon5pzajJZitAIkcVtPhbUt65B/YCLWO8IrF9U0TQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=FKiTw6Uf1PjynmO1Vo5l1m7pDlOI1o1z/srz4PXTt6t1Rf/aVrHO8XqZ07gkRsmKrXf4zEgLhN7t2hBa3ms7WucPF0IarAEWhW2wtjO7E/go693hQLySB4Leogws0EM9pUNTlpDNeP+6x8CXVQwBJK8O7UrrnFGIFTnozz/5S0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QOV5/YEP; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1773393485; c=relaxed/simple;
+	bh=EcyHN4pw9Uc2DlI5mhXLnzG8hORwCsRy5uZuxhkjT38=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qQaCPaPEMDwGVQ4aPKObLz8vjPOykF2R7hgN9xoCHfyc2jytb13jtLa/C4Fjj3tsNy1IHWllCsMQEMlyFnbXdVvpcNPZ73fPY66fJl0Svxa8Kger7QN6ktqKSCYxo1DgNpTGFPdk7uPyZcV0ZHCmxB0PE8EKfLtmk316Wbl/bDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bx/oZyqN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QOV5/YEP"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 7000D1A2E08;
-	Fri, 13 Mar 2026 08:17:12 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 3F48660027;
-	Fri, 13 Mar 2026 08:17:12 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1AA9B10369C8B;
-	Fri, 13 Mar 2026 09:17:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1773389831; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=4nfwtz9pCMH5vgqfUwq/GzIjQmaSYzvxqLV8rNp3KWU=;
-	b=QOV5/YEPTRHPbUOlNDbTU+OOq0yBtrq6nnMvg8PUr5YJAI7cpw6fE+08/WsO/qt6FpSzg9
-	e96OZvcHR3m1UcJsI+7gonwdzvqcNsPRjMOMGD/zUxACm1w6He1TJjpSWwA2CiaWgwT5MJ
-	NkB+qJpERk41hrVWB7CCMga1ThktulTU7IN/GnXKp04VDMaJhvY9KiAhzohpoS9DMpAc1E
-	uN9DtBJzDHrQADhivFWlR8IFQRzmwwkpYA5QqnqeQEQbRTrKBhPA+hbgH549PcE5nuuXOj
-	OY42hzQpPZ71EgwDPXJoeUBqGfeDje6YcbplX3ALLguxCgEEIAGZqGIEiBrMJA==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bx/oZyqN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A505C19424;
+	Fri, 13 Mar 2026 09:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773393484;
+	bh=EcyHN4pw9Uc2DlI5mhXLnzG8hORwCsRy5uZuxhkjT38=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Bx/oZyqN5+WK2LBGz9mUk8VtR8Poq8EJxNdSdRgvI+5zMSkaWjS9hiYIRyC4kclhL
+	 JNpK2vqczRxK4MjtF3s23up685uIBGTmSMmMvkAtb4LnT90GJmTFjzv8p85uULwfJw
+	 3DycVkT1kfceFmzaqN2YZsRm3jdkUu25Rbeu/Iq17DCB9WDpCLAnTWNhVn9xNUAW2E
+	 2Pyh0VFED8Rn6UulfHvwSVm8U7ZRRYez0/JCCpbRkqyvXjZ8AiIk1Dx8DjtbKYW2xh
+	 3TcZojTi7fD+NY6s8SlhdwNaw/cGlpzX0SCcXYgAhhERDb3Cz06vnLpFrdrv9kiEXA
+	 2f8p2DHydN6Xg==
+Date: Fri, 13 Mar 2026 10:17:58 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, linux-doc@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>, Aleksandr Loktionov
+ <aleksandr.loktionov@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Shuah Khan <skhan@linuxfoundation.org>, Vincent Mailhol
+ <mailhol@kernel.org>
+Subject: Re: [PATCH v2 00/28] kernel-doc: use a C lexical tokenizer for
+ transforms
+Message-ID: <20260313101758.1dc691bc@foz.lan>
+In-Reply-To: <cover.1773326442.git.mchehab+huawei@kernel.org>
+References: <cover.1773326442.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 13 Mar 2026 09:17:09 +0100
-Message-Id: <DH1I88QT17NI.1MZERF8Z4M6P5@bootlin.com>
-To: "Rosen Penev" <rosenp@gmail.com>, <linux-i2c@vger.kernel.org>
-From: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH] i2c: atr: use kzalloc_flex
-Cc: "Wolfram Sang" <wsa+renesas@sang-engineering.com>, "Tomi Valkeinen"
- <tomi.valkeinen@ideasonboard.com>, "Kees Cook" <kees@kernel.org>, "Gustavo
- A. R. Silva" <gustavoars@kernel.org>, "open list"
- <linux-kernel@vger.kernel.org>, "open list:KERNEL HARDENING (not covered by
- other areas):Keyword:b__counted_by(_le|_be)?b"
- <linux-hardening@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20260313002308.119343-1-rosenp@gmail.com>
-In-Reply-To: <20260313002308.119343-1-rosenp@gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello Rosen,
+Hi Jon,
 
-On Fri Mar 13, 2026 at 1:23 AM CET, Rosen Penev wrote:
-> Convert kzalloc_obj + kcalloc to kzalloc_flex to save an allocation.
->
-> Add __counted_by to get extra runtime analysis. Move counting variable
-> assignment immediately after allocation as required by __counted_by.
+On Thu, 12 Mar 2026 15:54:20 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-Not sure what you mean by the last sentence, you are not moving the
-assignment.
+> Also, I didn't notice any relevant change on the documentation build
+> time. 
 
-> --- a/drivers/i2c/i2c-atr.c
-> +++ b/drivers/i2c/i2c-atr.c
-> @@ -58,8 +58,8 @@ struct i2c_atr_alias_pool {
->
->  	/* Protects aliases and use_mask */
->  	spinlock_t lock;
-> -	u16 *aliases;
->  	unsigned long *use_mask;
-> +	u16 aliases[] __counted_by(size);
+After more tests, I actually noticed an issue after this changeset:
 
-Please reorder the parameters accordingly in the kdoc documentation above.
+https://lore.kernel.org/linux-doc/2b957decdb6cedab4268f71a166c25b7abdb9a61.1773326442.git.mchehab+huawei@kernel.org/
 
-> @@ -137,22 +137,16 @@ static struct i2c_atr_alias_pool *i2c_atr_alloc_ali=
-as_pool(size_t num_aliases, b
->  	struct i2c_atr_alias_pool *alias_pool;
->  	int ret;
->
-> -	alias_pool =3D kzalloc_obj(*alias_pool);
-> +	alias_pool =3D kzalloc_flex(*alias_pool, aliases, num_aliases);
->  	if (!alias_pool)
->  		return ERR_PTR(-ENOMEM);
->
->  	alias_pool->size =3D num_aliases;
+Basically, a broken kernel-doc like this:
 
-I'm not really sure about that, but I suspect kzalloc_flex() does set the
-counter variable automatically if it's annotated using __counted_by. If
-that's true, you can drop this line.
+	
+	/**
+	 * enum dmub_abm_ace_curve_type - ACE curve type.
+	 */
+	enum dmub_abm_ace_curve_type {
+	        /**
+	         * ACE curve as defined by the SW layer.
+	         */
+	        ABM_ACE_CURVE_TYPE__SW = 0,
+	        /**
+	         * ACE curve as defined by the SW to HW translation interface layer.
+	         */
+	        ABM_ACE_CURVE_TYPE__SW_IF = 1,
+	};
 
-Otherwise LGTM.
+where the inlined markups don't have "@symbol" doesn't parse well. If
+you run current kernel-doc, it would produce:
 
-Luca
+	.. c:enum:: dmub_abm_ace_curve_type
 
---
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+	  ACE curve type.
+
+	.. container:: kernelindent
+
+	    **Constants**
+
+	    ``*/ ABM_ACE_CURVE_TYPE__SW = 0``
+	      *undescribed*
+
+
+	    `` */ ABM_ACE_CURVE_TYPE__SW_IF = 1``
+	      *undescribed*
+
+Because Kernel-doc currently drops the "/**" line. My fix patch
+above fixes it, but inlined comments confuse enum/struct detection.
+To avoid that, we need to strip comments earlier at dump_struct and
+dump_enum:
+
+	https://lore.kernel.org/linux-doc/d112804ace83e0ad8496f687977596bb7f091560.1773390831.git.mchehab+huawei@kernel.org/T/#u
+
+After such fix, the output is now:
+
+	.. c:enum:: dmub_abm_ace_curve_type
+
+	  ACE curve type.
+
+	.. container:: kernelindent
+
+	    **Constants**
+
+	    ``ABM_ACE_CURVE_TYPE__SW``
+	      *undescribed*
+
+
+	    ``ABM_ACE_CURVE_TYPE__SW_IF``
+	      *undescribed*
+
+which is the result expected when there's no proper inlined
+kernel-doc markups.
+
+Due to this issue, I ended adding a 29/28 patch on this series.
+
+> With that regards, right now, every time a CMatch replacement
+> rule takes in place, it does:
+> 
+>     for each transform:
+>     - tokenizes the source code;
+>     - handle CMatch;
+>     - convert tokens back to a string.
+> 
+> A possible optimization would be to do, instead:
+> 
+>     - tokenizes source code;
+>     - for each transform handle CMatch;
+>     - convert tokens back to a string.
+> 
+> For now, I opted not do do it, because:
+> 
+>     - too much changes on a single row;
+>     - docs build time is taking ~3:30 minutes, which is
+>       about the same time it ws taken before the changes;
+>     - there is a very dirty hack inside function_xforms:
+>          (KernRe(r"_noprof"), ""). This is meant to change
+>       function prototypes instead of function arguments.
+> 
+> So, if ok for you, I would prefer to merge this one first. We can later
+> optimize kdoc_parser to avoid multiple token <-> string conversions.
+
+I did such optimization and it worked fine. So, I ended adding
+a 30/28 patch at the end. With that, running kernel-doc before/after
+the entire series won't have significant performance changes.
+
+	# Current approach
+	$ time ./scripts/kernel-doc . -man >original 2>&1
+
+	real    0m37.344s
+	user    0m36.447s
+	sys     0m0.712s
+
+	# Tokenizer running multiple times (patch 29)
+	$ time ./scripts/kernel-doc . -man >before 2>&1
+
+	real    1m32.427s
+	user    1m25.377s
+	sys     0m1.293s
+
+	# After optimization (patch 30)
+	$ time ./scripts/kernel-doc . -man >after 2>&1
+
+	real    0m47.094s
+	user    0m46.106s
+	sys     0m0.751s
+
+10 seconds slower than before when parsing everything, which affects
+make mandocs, but the time differences spent at kernel-doc parser during
+make htmldocs is minimal: ir is about ~4 seconds(*):
+
+	$  run_kdoc.py -none 2>/dev/null
+	Checking what files are currently used on documentation...
+	Running kernel-doc
+
+	Elapsed time: 0:00:04.348008
+
+(*) the slowest logic when building docs with Sphinx is inside its
+    RST parser code.
+
+See the enclosed script to see how I measured the parsing time for
+existing ".. kernel-doc::" markups inside Documentation.
+
+
+Thanks,
+Mauro
+
+---
+
+This is the run_kdoc.py script I'm using here to pick the same files
+as make htmldocs do:
+
+#!/bin/env python3
+
+import os
+import re
+import subprocess
+import sys
+
+from datetime import datetime
+from glob import glob
+
+print("Checking what files are currently used on documentation...")
+
+kdoc_files = set()
+re_kernel_doc = re.compile(r"^\.\.\s+kernel-doc::\s*(\S+)")
+
+for fname in glob(os.path.join(".", "**"), recursive=True):
+    if os.path.isfile(fname) and fname.endswith(".rst"):
+        with open(fname, "r", encoding="utf-8") as in_fp:
+            data = in_fp.read()
+
+        for line in data.split("\n"):
+            match = re_kernel_doc.match(line)
+            if match:
+                if os.path.isfile(match.group(1)):
+                    kdoc_files.add(match.group(1))
+
+if not kdoc_files:
+    sys.exit(f"Directory doesn't contain kernel-doc tags")
+
+cmd = [ "./tools/docs/kernel-doc" ]
+cmd += sys.argv[1:]
+cmd += sorted(kdoc_files)
+
+print("Running kernel-doc")
+
+start_time = datetime.now()
+
+try:
+    result = subprocess.run(cmd, check=True)
+except subprocess.CalledProcessError as e:
+    print(f"kernel-doc failed: {repr(e)}")
+
+elapsed = datetime.now() - start_time
+print(f"\nElapsed time: {elapsed}")
+
+
+
