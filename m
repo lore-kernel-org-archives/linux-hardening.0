@@ -1,75 +1,75 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E842324B33
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 19:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427923B28D
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Mar 2026 00:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773344257; cv=none; b=Go4DGzDlnGRAbFif+n821NLGbOxwsaMDCnP4ciq6Srf0SKu1bc1BEmCHbKZ/S0ttakiAPLtSzG9TyYc4X9CxcH9oCib71cPQnpO0LLAB4jz9ZCEauKx6f7TDwE39FBltQwMEYH/EzaaGRKE+HaA8vaaMixh0/4JCrDUibwjWrfc=
+	t=1773360400; cv=none; b=ovMrBOp7/ZBqvtrvnV2IOCwTduzx0EtBgmWcmI7fUEkFaxA2KEYQUJRFDXG+Plfk8pu+k5Y8ORo+sfhutlgZfzb6ur23B3apW3PXB3Vx+ImgVMAdpc78v9254tZvbeeTwfJcSfb4HIAU0KarRRWuZS755ImGwVAFHUmhOyS3G4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773344257; c=relaxed/simple;
-	bh=gXp1sqo04e6LO5/4Vkl6NRi4x49bKddvQgyl58yMMsg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ER0htYwMYZilqoIROs/5aN8+JU8WioTT1yaecNitdqdsvyr7xE4k+TDth+RNAc2nMCtXdvG8qdRPK3EZt6cWEO2OEsdcUP5f5pRa8UCRozZ63uUx+ArUZQ1sBzivWPXGWSKrxlHYVO6RnF4t2Nve9SBCREB+22yDtFg8h+osI0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gE+Hpt1n; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1773360400; c=relaxed/simple;
+	bh=RNBDhx6SP9Dlnjslw2G6n/SBRm1RMP3mTWySGwZB16E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uaDQF9KtooPoexVBiXEXQyKkUcgJTLS0EtQNl0P4NZWpwCfyC4tNoHzp963+VHuK5vGP/MuPajnYs1euHotyOuH4BS5SA6P7bC93ifepqlFJ2BMPgNwuVtMM2210n5UvxuLnXh6b+kvxbOEJc8H0dKArp3wPw5ELgK7jEj5h8Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KgbjLUm3; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gE+Hpt1n"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ad21f437eeso11924075ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 12:37:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgbjLUm3"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-35a04d6aeb0so983905a91.0
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Mar 2026 17:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773344255; x=1773949055; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773360398; x=1773965198; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RzzRjNz0vk0FkgwQahTz097bKivrpMU+EtTeSnfZdlM=;
-        b=gE+Hpt1nBQIUFo/d1YUzifVzwjkYNVE+GBzTWBaHT6yTKGMBcus7rvUtkun0S793jd
-         JB2boFIci6CelAMYrChF+L8MS/hvL857T0BKBcAwza7dTgOYO55Wr3nxp2ajNtP6QGkR
-         vg2Jp1TI8kfuztoJALX7LzdWou/6Fmx6T9bpTwtibBukaqMsPEBW5GmHFZJiA5BkVgpj
-         njv450OipbBbLxvScvG47yOjh9CPAuORNlWpkT2RbYD7jvCvq3n2Z1namP1R0M8BpxpV
-         AQxl2D9xW6yrUB13o4kAIFWmvz9P75Nl8ugE/gYbeAOs3sWIJd/BtGrwOMi2zP40TrRe
-         ACAQ==
+        bh=nuLpHvR1fwObt/8Xvj3rrc9Oc9+CrLWMV9LCtsBGyrI=;
+        b=KgbjLUm3nIeMZItgPA/7XBSfz/Ya6u1teNAkKqZhGdLX3XOwyA0cXv/b8CjvPfo9NQ
+         DBrsKidCHEbeCpWs4qO5JY4anvQ2AuLb/sAtAEoP/CTDYZVMBbkEV2qXIWop+BGdLRsA
+         m971uTr7hzBLZte4GLEA8Vz40/uE8kegf2i3mp5TnChtkstrBguh1LaaD5dRX1+R6QrO
+         RxuknpeZPxq/QYkAzQt4m4mHCjQbVqs0WJjB2o45W2ZAMxeBNn3kIzm2Cyxil6FXbrH0
+         J9dgyQP4izr3NIiHKLkWvlIeZ2n9dUnFP2slZOk/NSN+w9/lTKtQ/nHaZveiQer0CQeN
+         EwWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773344255; x=1773949055;
+        d=1e100.net; s=20251104; t=1773360398; x=1773965198;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RzzRjNz0vk0FkgwQahTz097bKivrpMU+EtTeSnfZdlM=;
-        b=FeFfkOY+auQC4MXOIMCD6l/zlzvz07G/LBJ8bm5v5lgy6zynzdtQ5vxNU8WonltNf6
-         53yGqY0KupfisrNJ10RC7MDDyfgyFghJFIP2RFhi8sFHjmkU7O4P+Py0/HYUGf8aJHaL
-         n1g+qN1xZnQSbzVnjXb35lW6oWL6QpK4awp6UakU8OS/XgxrmCM3PHBpVxAChKS/RRzF
-         ONKpdJH/GF1vEbm1XvwQoKRniPUYm3wogDRju8Tve+U62kRng16AJqySzHaOj+BKDQo/
-         ftKfDvg2uGfxZ5cX+rX/Up+CwSicGLUdr4t94M72fyN5JqpTUFZfMTqEJvMTC/9IAh42
-         lF5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUM3/CGB0pymXW8N6fw1tHjZhlIiHJlICKh27Ge4dkVmCtBnoIvyFIUEkuPmlxfKN8zzw5fLsO4MsPMrlzPq+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0j/RekB0BDS4bPUDQsAKgNzdrfPEbQCpiFoL7XMXc6c39VqZS
-	4oy4L6gB1m1Ip67cSWmEcYvWZnWd/AI3xmjp38AypEr0/GXbUolGZP2I
-X-Gm-Gg: ATEYQzzq/YMDtR3UGREjziX9abvU7n00J6V3Nit8p0k68VOKtADsTwUdDn8rttAGuW9
-	deIaWQK/NVsMf7d7s1WEw80Nd9GomKx0Jj49IMyfHw1KH5dAVYAPhCZ9DX0F8pfTa34O0s05T6g
-	eNixlwzNX3XbSEJ+qDzgz3OPhjardETkb76eKsrwCejkRLR3kxBWJS0KPM1SDSeICYg/G44Xpat
-	t8AnQdmgRDhsQu/vzHOIHBextm+Vsps2CHWnuNmMPV9KY2zKPy1rV5L/WQlmTfbMKy6WHws2rRB
-	5tulXXWz9kszWtxf4FLdcQbDFGIX2/IFvubQERZ6zWVIEqtOXIGMa7cVbgb5WWfzdtBBxoXE2kI
-	cUlX0HpAaF6VlBBCMujZkF4rMUo9YJlzk+7j704wrgaq+f5WbCCPB2zWJhdnPpQ57gQlqYphU7V
-	LDaDd4VlbFWkfSXNvIA41xDb4hMVhuZoAQ3e3meGs6Cdh6WImFKSdcsA==
-X-Received: by 2002:a17:902:ecc2:b0:2ae:3ae3:432c with SMTP id d9443c01a7336-2aeba46a7d0mr41568145ad.10.1773344255388;
-        Thu, 12 Mar 2026 12:37:35 -0700 (PDT)
+        bh=nuLpHvR1fwObt/8Xvj3rrc9Oc9+CrLWMV9LCtsBGyrI=;
+        b=CDrwqlvVCB/C3a2f6u8pLuOVbts4VrtTC274eqCi5Osq5R5hpxkYpoJRku0WNF7xER
+         uvaCarz17mDjiaXr2vCZ3s38/3THTaJv+9lKnIpO46SmdkJWHapid9CEL08PPgppuBE1
+         LOcSv++SFhGxT9HoHwOubqujCheA29FifdcoIxQXvFJGQaS+ElqjxQ7tKpqkA814QVQO
+         PdlpWWwx1T4ivQ3s2r4/Ml4mGqYz0ro1OqQKFu13rqMcSs/bk2Gup5n6pQOTTset8e3V
+         wAFATW9LvL5pjYQmIAFFQffAe42+ftIRKvXPeqqy2HGZp7rKcwnXdVP9RzuQuI7Xvx9K
+         JeRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQvbLjLUA/chs/3hIVZbYRcA6SAC8FfRPj/qv31IaYr72W+m15vYPKIXKY+5TyjL13Kbt2MDIVck4R6V2n4Jw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvhaptyjyUXbubSj20fAbYSi+vEoVQRQJQzM+53IcSpEZwagWr
+	7zIJhsPKi088O4M/ylzJGmCC5TjBjRzV6kasgk6UQSSn7C128ElhUgQE
+X-Gm-Gg: ATEYQzywWLlH1PFLZz7EaP/L0mQIhu+G+9eS7u2TDpukBxE6PM2kDjbVhUrpLosMkgi
+	jWrc1lg5Ko7xU6ButHH7mfjNITq36HvDlR1Mdp61joAdP1zJnTfkm8S5DbmLjlsefkGAWx/mDiu
+	LK+meMnwA+PBIuE6zQZSRmenqQBmZc9fK2qwT7yYxzrimaOs4l2brdHemOz9RsVz+/EBOzYeSS5
+	wiRo7iPZttCxqss04i9oDquLKpR6JQvz+RMxzuILEqm3rCUDUPlEGtHYvKoGShWDxqjzVrw3XXS
+	g7O4n3YmvZsknfuNOzkMSoW4x/pu9i/D7Vnh2Nnw6Jee7NH3w9kv4qvrVoilmhQrnl01dM2IElh
+	nTSkaDKfnd0/jzA9UL7uLCvUCeyMYHc/BkTGxpZ1Un3/uYQx+JKzbJjtouBWcvm/YALS14mezWg
+	dF3VPI5K/6/cbHJp7RqyA9TKeZmj5aYokEpscGfyrC0r5eAFqlGkTxpg==
+X-Received: by 2002:a17:90b:3848:b0:359:f2e1:58fc with SMTP id 98e67ed59e1d1-35a220cf0ddmr1186924a91.30.1773360398558;
+        Thu, 12 Mar 2026 17:06:38 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aeae34de20sm62461975ad.60.2026.03.12.12.37.34
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35a07f0a365sm6192261a91.13.2026.03.12.17.06.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 12:37:34 -0700 (PDT)
+        Thu, 12 Mar 2026 17:06:37 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>,
-	Viresh Kumar <vireshk@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
+To: dri-devel@lists.freedesktop.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	virtualization@lists.linux.dev (open list:VIRTIO GPIO DRIVER),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv3] gpio: virtio: remove one kcalloc
-Date: Thu, 12 Mar 2026 12:37:17 -0700
-Message-ID: <20260312193717.12221-1-rosenp@gmail.com>
+Subject: [PATCH] drm: property: use kzalloc_flex
+Date: Thu, 12 Mar 2026 17:06:20 -0700
+Message-ID: <20260313000620.117065-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -79,64 +79,100 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A flexible array member can be used to combine allocations.
+Don't allocate values separately to simplify allocation.
+
+Add __counted_by for extra runtime analysis. Move the counting variable
+assignment to right after allocation as required by __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- v3: add counting field for __counted_by.
- v2: add space in struct
- drivers/gpio/gpio-virtio.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/drm_property.c | 14 ++------------
+ include/drm/drm_property.h     | 16 ++++++++--------
+ 2 files changed, 10 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-index ed6e0e90fa8a..57d0eb532c3c 100644
---- a/drivers/gpio/gpio-virtio.c
-+++ b/drivers/gpio/gpio-virtio.c
-@@ -52,7 +52,6 @@ struct virtio_gpio {
- 	struct virtio_device *vdev;
- 	struct mutex lock; /* Protects virtqueue operation */
- 	struct gpio_chip gc;
--	struct virtio_gpio_line *lines;
- 	struct virtqueue *request_vq;
-
- 	/* irq support */
-@@ -60,6 +59,9 @@ struct virtio_gpio {
- 	struct mutex irq_lock; /* Protects irq operation */
- 	raw_spinlock_t eventq_lock; /* Protects queuing of the buffer */
- 	struct vgpio_irq_line *irq_lines;
-+
-+	u16 ngpio;
-+	struct virtio_gpio_line lines[] __counted_by(ngpio);
- };
-
- static int _virtio_gpio_req(struct virtio_gpio *vgpio, u16 type, u16 gpio,
-@@ -541,10 +543,6 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 	u16 ngpio;
- 	int ret, i;
-
--	vgpio = devm_kzalloc(dev, sizeof(*vgpio), GFP_KERNEL);
--	if (!vgpio)
--		return -ENOMEM;
+diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
+index f38f2c5437e6..a6008e5c2b58 100644
+--- a/drivers/gpu/drm/drm_property.c
++++ b/drivers/gpu/drm/drm_property.c
+@@ -107,25 +107,18 @@ struct drm_property *drm_property_create(struct drm_device *dev,
+ 	if (WARN_ON(strlen(name) >= DRM_PROP_NAME_LEN))
+ 		return NULL;
+ 
+-	property = kzalloc_obj(struct drm_property);
++	property = kzalloc_flex(*property, values, num_values);
+ 	if (!property)
+ 		return NULL;
+ 
++	property->num_values = num_values;
+ 	property->dev = dev;
+ 
+-	if (num_values) {
+-		property->values = kcalloc(num_values, sizeof(uint64_t),
+-					   GFP_KERNEL);
+-		if (!property->values)
+-			goto fail;
+-	}
 -
- 	/* Read configuration */
- 	gpio_names_size =
- 		virtio_cread32(vdev, offsetof(struct virtio_gpio_config,
-@@ -556,10 +554,12 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 		return -EINVAL;
+ 	ret = drm_mode_object_add(dev, &property->base, DRM_MODE_OBJECT_PROPERTY);
+ 	if (ret)
+ 		goto fail;
+ 
+ 	property->flags = flags;
+-	property->num_values = num_values;
+ 	INIT_LIST_HEAD(&property->enum_list);
+ 
+ 	strscpy_pad(property->name, name, DRM_PROP_NAME_LEN);
+@@ -134,7 +127,6 @@ struct drm_property *drm_property_create(struct drm_device *dev,
+ 
+ 	return property;
+ fail:
+-	kfree(property->values);
+ 	kfree(property);
+ 	return NULL;
+ }
+@@ -447,8 +439,6 @@ void drm_property_destroy(struct drm_device *dev, struct drm_property *property)
+ 		kfree(prop_enum);
  	}
-
--	vgpio->lines = devm_kcalloc(dev, ngpio, sizeof(*vgpio->lines), GFP_KERNEL);
--	if (!vgpio->lines)
-+	vgpio = devm_kzalloc(dev, struct_size(vgpio, lines, ngpio), GFP_KERNEL);
-+	if (!vgpio)
- 		return -ENOMEM;
-
-+	vgpio->ngpio = ngpio;
+ 
+-	if (property->num_values)
+-		kfree(property->values);
+ 	drm_mode_object_unregister(dev, &property->base);
+ 	list_del(&property->head);
+ 	kfree(property);
+diff --git a/include/drm/drm_property.h b/include/drm/drm_property.h
+index aa49b5a42bb5..8c7cef4418c4 100644
+--- a/include/drm/drm_property.h
++++ b/include/drm/drm_property.h
+@@ -175,14 +175,6 @@ struct drm_property {
+ 	 */
+ 	uint32_t num_values;
+ 
+-	/**
+-	 * @values:
+-	 *
+-	 * Array with limits and values for the property. The
+-	 * interpretation of these limits is dependent upon the type per @flags.
+-	 */
+-	uint64_t *values;
+-
+ 	/**
+ 	 * @dev: DRM device
+ 	 */
+@@ -195,6 +187,14 @@ struct drm_property {
+ 	 * enum and bitmask values.
+ 	 */
+ 	struct list_head enum_list;
 +
- 	for (i = 0; i < ngpio; i++) {
- 		mutex_init(&vgpio->lines[i].lock);
- 		init_completion(&vgpio->lines[i].completion);
---
++	/**
++	 * @values:
++	 *
++	 * Array with limits and values for the property. The
++	 * interpretation of these limits is dependent upon the type per @flags.
++	 */
++	uint64_t values[] __counted_by(num_values);
+ };
+ 
+ /**
+-- 
 2.53.0
 
