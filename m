@@ -1,88 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from sender-of-o59.zoho.eu (sender-of-o59.zoho.eu [136.143.169.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9615332ED3;
-	Mon, 16 Mar 2026 16:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773679905; cv=none; b=H4nB4ApvEiIN2s+XpDfSB4IKFsk+vRss9/njU3f16lZdkjeIFUS3rA9e5e+3GozqfMraTs6xTAZ9Ja64GKMjQjRqftERrnkkqHtASk7zwPifbZPKVXVm0+iPwRoJNEY5BTbcYqEzGuTKv7Ro8V+LWuqV2EJLuAwF/hmDldmGtMg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773679905; c=relaxed/simple;
-	bh=WpDsGXSnARC5nIJPZaBcjN+QmvbgsoUT44sBnvUrdac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVTeDHKny9iRtnxYVxHna0HhHvmiAwGEPjnfAKEsUxiKwVJraVEEahq7RTGiPfQkcPbhQILgZvsdwjqsIp7hKP8682dnbxANtNFQV+9QCfND+WIPNl+dNoF62StMLb7nS9xvA2RFZjn/k//ehuGipbyuHYyQvxVCf5vtX1XzzGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bE7E8Xd2; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13761335571;
+	Mon, 16 Mar 2026 16:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773679960; cv=pass; b=AhMMt1/SSivkq8Pszx+razDoB2DYqrmnl+rodL+7H/UTzOJE8835bLiVHyKEVgxJVsdxXqgK2fbCrS8/Nxs43ANnsyRFmMjwD9Xnzabe8mYiUeMupOTBKHqFO5klHu6R4TgL7GN1+QbqdolnqDo6obdrnOWfPYBPmnFAgLsO/5M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773679960; c=relaxed/simple;
+	bh=acp6vhHXh8icSpbFaf+1l9dFxGutFHGvuUzAWNrUadc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=sN5wPqPVvFq2QhddUb/afZScxRJuV9tAb0sAxMT5M4Ij6zG7Q1mn5Do/T/+g6+jb7aBoolMu51vO0wy0a2xzKrrddB6hAjInkq51dBPsAJVcNOqN1zYjnoW7svjh21hZSz1mrSWVSgFMFsN6N+W9iwmyVF3jNqz6CDx57IVlAGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=XjHA6Rsu; arc=pass smtp.client-ip=136.143.169.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bE7E8Xd2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773679904; x=1805215904;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WpDsGXSnARC5nIJPZaBcjN+QmvbgsoUT44sBnvUrdac=;
-  b=bE7E8Xd2eY47zl0Ef+yvVX7dg8sdaU8bac6LbfXqPlikfRTYCTKQfvFk
-   ooHbKBxdot0v7GiHtHTTZXeD2mz3WB55+etQPsavvtYzsRbdj95+fQ8vq
-   BPW643Rd/poFz1C0cSAza7PD66HY3QOOILt9bdFRFxrFebSmCWgoXl1QR
-   mTWu6YTvl35ASMFO0VR8YID8XsLxN75WeHDF3R82rxTSNYz83hj8KnfJM
-   bphc3ynz7QZ16Tc8qlpodl+/L5I6nwKEXgZh+V89w3zj1O4Y/8zsVe7VZ
-   qBM038pUvHIfObeCzU0a6uHYvquVNE1PDBdXBCQzkju4xgiJIgEKjZuTS
-   w==;
-X-CSE-ConnectionGUID: lo+er71BRjO8eR55UbKz+Q==
-X-CSE-MsgGUID: 2dFsOqlESWWxfZHr0n/VUQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11731"; a="92273194"
-X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="92273194"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 09:51:43 -0700
-X-CSE-ConnectionGUID: uxinB/BASbSRKmwJMzqCWA==
-X-CSE-MsgGUID: dHzAoI8UQIekl9VCJvsjNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="245000637"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.237])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 09:51:41 -0700
-Date: Mon, 16 Mar 2026 18:51:39 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Josh Law <objecting@objecting.org>
-Cc: kees@kernel.org, akpm@linux-foundation.org, andy@kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="XjHA6Rsu"
+ARC-Seal: i=1; a=rsa-sha256; t=1773679943; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=dBdvDCDPh9F4tYgCneA2K+YIZQbSsgOtnC3DD7H5wU80MwB/s51eUpt11gIjl9toh53KwkgzAZnRPuNjK0Ds015C6vmhJ3h2mNQAxrsl1OtnSzjkId8GP2IAAyiraH1MUkgLY4gtMtxORJglxaDLnlU11LRfcaleSErOkU82DDc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1773679943; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=acp6vhHXh8icSpbFaf+1l9dFxGutFHGvuUzAWNrUadc=; 
+	b=BB+bJvrqdnlk8Y/Xh/UQnc2EkJQXj0/i3ABo0ZrjAN/ByZlBn10QgdE62C6Eg6o5q/pYdZYvKl8N29EvHQWxuGN0WuB/AqMQNKeRIE/mbVBlpkNbaqGo2Q2+oAWshyn9R4pCNKsHJ1/nRCA0QU1KeD2/TL22YBvO987wYqGps3g=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=objecting.org;
+	spf=pass  smtp.mailfrom=objecting@objecting.org;
+	dmarc=pass header.from=<objecting@objecting.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773679943;
+	s=zmail; d=objecting.org; i=objecting@objecting.org;
+	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=acp6vhHXh8icSpbFaf+1l9dFxGutFHGvuUzAWNrUadc=;
+	b=XjHA6Rsu3jW/B6ev9fFWIZe+TKdyEwYXWyyQtJyGU13FRFxNKLWJ9EW80QNuQP+I
+	V2GhItUfyYyNNkTYawMf7nHOVkm8jV1WQWoUsCGBNe9VefVj6HlX5vOtaZwNF1Z8jJW
+	/KiV0aXw6bG7pByye6FLUzL7mey4LWCYZOs+lbVI=
+Received: by mx.zoho.eu with SMTPS id 1773679939583770.5722276316869;
+	Mon, 16 Mar 2026 17:52:19 +0100 (CET)
+Date: Mon, 16 Mar 2026 16:52:19 +0000
+From: Josh Law <objecting@objecting.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+CC: kees@kernel.org, akpm@linux-foundation.org, andy@kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] lib/string: replace BUG_ON with WARN_ON_ONCE in strlcat
-Message-ID: <abg1G8UodaBu47Pl@ashevche-desk.local>
-References: <20260316161728.84485-1-objecting@objecting.org>
- <abgwF-yT_FtLTgQ3@ashevche-desk.local>
- <C98872ED-CE72-4201-B5A6-D5AD5EA336CF@objecting.org>
- <abgzILD0L2sdvAFZ@ashevche-desk.local>
- <11CFF535-91DF-4E73-ADA8-51CD8D51FACE@objecting.org>
+User-Agent: Thunderbird for Android
+In-Reply-To: <abg1G8UodaBu47Pl@ashevche-desk.local>
+References: <20260316161728.84485-1-objecting@objecting.org> <abgwF-yT_FtLTgQ3@ashevche-desk.local> <C98872ED-CE72-4201-B5A6-D5AD5EA336CF@objecting.org> <abgzILD0L2sdvAFZ@ashevche-desk.local> <11CFF535-91DF-4E73-ADA8-51CD8D51FACE@objecting.org> <abg1G8UodaBu47Pl@ashevche-desk.local>
+Message-ID: <86D1BF2A-910C-42F4-8569-BDB970F8F213@objecting.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11CFF535-91DF-4E73-ADA8-51CD8D51FACE@objecting.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-
-On Mon, Mar 16, 2026 at 04:46:47PM +0000, Josh Law wrote:
-> On 16 March 2026 16:43:12 GMT, Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> >On Mon, Mar 16, 2026 at 04:36:40PM +0000, Josh Law wrote:
-
-...
-
-> >Drop the function. Start from converting users to strscpy() or similar
-> >(we have a few for different cases) and then drop strlcat() all for good.
-> 
-> Okie dokie. I'm doing a patch on that right now, keep your eyes peeled on
-> your emails, thanks for the suggestion 
-
-I'm taking my breath!
-
--- 
-With Best Regards,
-Andy Shevchenko
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
 
+
+On 16 March 2026 16:51:39 GMT, Andy Shevchenko <andriy=2Eshevchenko@intel=
+=2Ecom> wrote:
+>On Mon, Mar 16, 2026 at 04:46:47PM +0000, Josh Law wrote:
+>> On 16 March 2026 16:43:12 GMT, Andy Shevchenko <andriy=2Eshevchenko@int=
+el=2Ecom> wrote:
+>> >On Mon, Mar 16, 2026 at 04:36:40PM +0000, Josh Law wrote:
+>
+>=2E=2E=2E
+>
+>> >Drop the function=2E Start from converting users to strscpy() or simil=
+ar
+>> >(we have a few for different cases) and then drop strlcat() all for go=
+od=2E
+>>=20
+>> Okie dokie=2E I'm doing a patch on that right now, keep your eyes peele=
+d on
+>> your emails, thanks for the suggestion=20
+>
+>I'm taking my breath!
+>
+
+
+It's been sent!
+
+V/R
+
+
+Josh Law
