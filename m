@@ -1,109 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745A738E5D1;
-	Mon, 16 Mar 2026 16:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B2A3A1A5C;
+	Mon, 16 Mar 2026 16:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773679397; cv=none; b=bp8vrqX8nMxMF1xfk9iEjxSzo+F0WdJoTFjyGRE9ZahxN+4ulIiwUjGfpgF5kHlIR7E509aSJplTkx/HR1mD29UMga4Y++GNOvwr1XDYfI2zGmwvg5gkn/CQbQ4JJUdt2VSnG+CmmZU9I6LkJ4U8UrEmXBAHF4+2R0oYXS5u/aU=
+	t=1773679480; cv=none; b=C5sYqUF+pzqZ6wbqnOXyy/AMVh+MVMA+vPYqLdL/1JjGoMk5HaZjcvYgS+U/Bxy8RQdetEezOqDZfm4Dxze5hhDjNb7F2uFrclnHvcbjAl0CZZP2/ll/bH2RZd5wDaJ5j32UYq1YyCfEVs/fAHNqy2Fxp6DOaoFdeQRJGBBL2dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773679397; c=relaxed/simple;
-	bh=1dIhBB8pMRUDueKa9gpviYTOGi54LYsi7prXqqHhLJs=;
+	s=arc-20240116; t=1773679480; c=relaxed/simple;
+	bh=r3k38bwjH0ZuBrxeJO+jvgnNmMlBitH7QWdnFx3etxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=geZHbT+Y1N4IU9+/0VdtpJldN/5waL4JdyQbfP3Nqkd69anvQBxfK9f4VE3N4vSooHXr/xkHaLYBiqXbYelAfT9lZGtgpcAbzbmXMc1vw0LBmJY2+px3LMIYsnG4su4xB4hX8OAw0I2EFtmX3VENiiGE5WvSWH7zXGaAnF5f+ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E8JGFqrx; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tld1LfMllTFjfUZ/zgKtSf4wSH4oEIfsCnDexYxHJ46lb5zXrNQKkVxsG2asjfpkbc6NiIfvhDXSaLqZGNrYVAcydUthQxpicmgjF4BvtbnPumOEsGHOQnH+UrKidRtsnFxDGiRWqKS5nfXxnsaqc+nQlWyb7AxtotgTBigu3Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZZIYyiYA; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E8JGFqrx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZZIYyiYA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773679396; x=1805215396;
+  t=1773679479; x=1805215479;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1dIhBB8pMRUDueKa9gpviYTOGi54LYsi7prXqqHhLJs=;
-  b=E8JGFqrx5JNnV3Zy5Cj+v4hEzTfxfHusAJ9a2KAk4YX+3P8Uqqt2vG++
-   PGN46XXLJInz8XpSVFrsN3EeUYMJ5CMOPLfaEI4wRjIJvIXi2eFsQdl47
-   LkenvS3KysMWYFED5G4LD33CRO8EZk8N6cUchlljdlTdMnOUfTVxUFvfv
-   uBQFj04Xg/lqE9VxPyLRhrwejLNV5KnJwVQr5etRdXi+mA0IcOz6qcqmW
-   365Cmy8cMBIRlOX8d+nxrNrbo1rHDIEdVWNVM2Tjs043UGCEfUbQAJTrA
-   94OjDc3Xs5gozve4dBbDrKfDmNeY6yhxUWv7AK29n5hDu9sOyuaWisSn7
-   Q==;
-X-CSE-ConnectionGUID: YAc9q+8jRHS3R7vN7bXcLg==
-X-CSE-MsgGUID: K+DDFieIRiicLmieH3mwsw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11731"; a="74591603"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=r3k38bwjH0ZuBrxeJO+jvgnNmMlBitH7QWdnFx3etxo=;
+  b=ZZIYyiYAIyeDphrK0OlE4qHu0iWOiAZyoJ+k0imay28SKNlG+/Yzt3Jd
+   D3I6B9VD/tMAutcTZKSvDIW/wbv2LNcqFZAOpZSL+Q/qYmYn/k6VTwBsX
+   Tsjj278rdlH37wQe05fZLcqE3ca5hY4mwZQCsyxBKMz0i9WY0L0uW8MIr
+   h9rGDiAQFAxa6i0PGJzGaykplj1oeORzvZRCFzy7Z3I5r2I6xLUkvtFWA
+   X7W0ZJM0dH/mZvlMlf5vcQTI7tyc6H4ZFtsYaDdp/sfB++ZfYWV1zA386
+   Lurnhak98KvHkMl7lZWZryYi/uBxYckqfLu6UNQ+9mb4lCvjQU9I87QUn
+   w==;
+X-CSE-ConnectionGUID: jKOX7FfCTWC9g0ozBFrhRQ==
+X-CSE-MsgGUID: xmbB4wtpRRKC6V16sOymeg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11731"; a="78596963"
 X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="74591603"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 09:43:16 -0700
-X-CSE-ConnectionGUID: D1GjeyZLRPy8nNg7bIR2vw==
-X-CSE-MsgGUID: qHGmst6ARe6mEHMUBGjvUw==
+   d="scan'208";a="78596963"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 09:44:38 -0700
+X-CSE-ConnectionGUID: 1c52I7EMQXa0Q4onwQ1fKg==
+X-CSE-MsgGUID: 0s2F2lCxSLeAGDs+P2W7XQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="226651089"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.237])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 09:43:14 -0700
-Date: Mon, 16 Mar 2026 18:43:12 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Josh Law <objecting@objecting.org>
-Cc: kees@kernel.org, akpm@linux-foundation.org, andy@kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib/string: replace BUG_ON with WARN_ON_ONCE in strlcat
-Message-ID: <abgzILD0L2sdvAFZ@ashevche-desk.local>
-References: <20260316161728.84485-1-objecting@objecting.org>
- <abgwF-yT_FtLTgQ3@ashevche-desk.local>
- <C98872ED-CE72-4201-B5A6-D5AD5EA336CF@objecting.org>
+   d="scan'208";a="221920519"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.42])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 09:44:35 -0700
+Date: Mon, 16 Mar 2026 18:44:32 +0200
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: dri-devel@lists.freedesktop.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] drm: dp_tunnel: use kzalloc_flex
+Message-ID: <abPd9rQFjsOQheNm@intel.com>
+References: <20260308211220.33759-1-rosenp@gmail.com>
+ <aa_SahEg_NzB_PJN@intel.com>
+ <CAKxU2N8x4z7Lw3mQjsnGAMxYP-K0AxLUtCXJP6btEBuTcxL7fA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <C98872ED-CE72-4201-B5A6-D5AD5EA336CF@objecting.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKxU2N8x4z7Lw3mQjsnGAMxYP-K0AxLUtCXJP6btEBuTcxL7fA@mail.gmail.com>
+X-Patchwork-Hint: comment
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+ krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
 
-On Mon, Mar 16, 2026 at 04:36:40PM +0000, Josh Law wrote:
-> On 16 March 2026 16:30:15 GMT, Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> >On Mon, Mar 16, 2026 at 04:17:28PM +0000, Josh Law wrote:
-> >> BUG_ON() in a library function is too harsh -- it panics the kernel
-> >> when a caller passes a dest string whose length already meets or
-> >> exceeds count. This is a caller bug, not a reason to bring down the
-> >> entire system.
-> >> 
-> >> Replace with WARN_ON_ONCE() and a safe early return. The return value
-> >> of count signals truncation to the caller, consistent with strlcat
-> >> semantics (return >= count means the output was truncated).
-> >> 
-> >> This follows the guidance in include/asm-generic/bug.h which
-> >> explicitly discourages BUG_ON: "Don't use BUG() or BUG_ON() unless
-> >> there's really no way out."
+On Tue, Mar 10, 2026 at 03:09:31PM -0700, Rosen Penev wrote:
+> On Tue, Mar 10, 2026 at 1:12 AM Ville Syrjälä
+> <ville.syrjala@linux.intel.com> wrote:
 > >
-> >First of all, this doesn't really change much, especially if one uses
-> >panic_on_oops.
+> > On Sun, Mar 08, 2026 at 02:12:20PM -0700, Rosen Penev wrote:
+> > > Simplifies allocation by using a flexible array member to remove a
+> > > second kzalloc.
+> > >
+> > > Added __counted_by for extra runtime analysis.
+> > >
+> > > Simplify assignment loop. It always returns true. That is,
+> > > max_group_count is always equal to group_count.
+> > >
+> > > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/display/drm_dp_tunnel.c | 26 ++++++-------------------
+> > >  1 file changed, 6 insertions(+), 20 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
+> > > index f442430d8de7..aad1605b956e 100644
+> > > --- a/drivers/gpu/drm/display/drm_dp_tunnel.c
+> > > +++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
+> > > @@ -188,13 +188,13 @@ struct drm_dp_tunnel_group {
+> > >  struct drm_dp_tunnel_mgr {
+> > >       struct drm_device *dev;
+> > >
+> > > -     int group_count;
+> > > -     struct drm_dp_tunnel_group *groups;
+> > >       wait_queue_head_t bw_req_queue;
+> > >
+> > >  #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
+> > >       struct ref_tracker_dir ref_tracker;
+> > >  #endif
+> > > +     int group_count;
+> > > +     struct drm_dp_tunnel_group groups[] __counted_by(group_count);
+> > >  };
+> > >
+> > >  /*
+> > > @@ -1893,7 +1893,6 @@ static void destroy_mgr(struct drm_dp_tunnel_mgr *mgr)
+> > >       ref_tracker_dir_exit(&mgr->ref_tracker);
+> > >  #endif
+> > >
+> > > -     kfree(mgr->groups);
+> > >       kfree(mgr);
+> > >  }
+> > >
+> > > @@ -1913,33 +1912,20 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
+> > >       struct drm_dp_tunnel_mgr *mgr;
+> > >       int i;
+> > >
+> > > -     mgr = kzalloc_obj(*mgr);
+> > > +     mgr = kzalloc_flex(*mgr, groups, max_group_count);
+> > >       if (!mgr)
+> > >               return ERR_PTR(-ENOMEM);
+> > >
+> > > +     mgr->group_count = max_group_count;
+> > >       mgr->dev = dev;
+> > >       init_waitqueue_head(&mgr->bw_req_queue);
+> > >
+> > > -     mgr->groups = kzalloc_objs(*mgr->groups, max_group_count);
+> > > -     if (!mgr->groups) {
+> > > -             kfree(mgr);
+> > > -
+> > > -             return ERR_PTR(-ENOMEM);
+> > > -     }
+> > > -
+> > >  #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
+> > >       ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
+> > >  #endif
+> > >
+> > > -     for (i = 0; i < max_group_count; i++) {
+> > > -             if (!init_group(mgr, &mgr->groups[i])) {
+> > > -                     destroy_mgr(mgr);
+> > > -
+> > > -                     return ERR_PTR(-ENOMEM);
+> > > -             }
+> > > -
+> > > -             mgr->group_count++;
+> > > -     }
+> > > +     for (i = 0; i < max_group_count; i++)
+> > > +             init_group(mgr, &mgr->groups[i]);
 > >
-> >Second, the entire function is kinda deprecated, it's better just to drop it.
+> > This breaks the error handling.
 > >
-> >$ git grep -lw strlcat | wc -l
-> >142
-> >
-> >(In reality it's less as tools and implementation are not users of it)
-> >
-> >Third, if the caller is that problematic this may lead to the serious
-> >(security) issues.
-> >
-> >Based on that, NAK.
+> > Hmm, actually it looks like it already got broken by commit
+> > 8e6da25bd60d ("drm/dp_tunnel: Switch private_obj initialization
+> > to atomic_create_state")...
+> I can't comment on that.
 > 
-> Hmm, good call, but how would I implement that? BUG_ON seems a bit too harsh
-> for a library function.
+> This patch does not touch that.
 
-Drop the function. Start from converting users to strscpy() or similar
-(we have a few for different cases) and then drop strlcat() all for good.
+You are removing what remains of the error handling, and that part
+would have to be undone to fix the earlier breakage.
+
+Maxime, can you fix that up?
+
+> >
+> > >
+> > >       return mgr;
+> > >  }
+> > > --
+> > > 2.53.0
+> >
+> > --
+> > Ville Syrjälä
+> > Intel
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Ville Syrjälä
+Intel
