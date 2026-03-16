@@ -1,191 +1,104 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender-of-o58.zoho.eu (sender-of-o58.zoho.eu [136.143.169.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485E5315D58
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 18:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773685300; cv=none; b=S2PIzEt5kayK6WEP5Mf+wpkx8vcHgyb6qqva/w+4ByA0MnnCcvo4RHMUoRkCXGcKP7vUnCZoDyViX3adr/Uh8T6XTqeJDOslu/Mz77oBizYasFMgCfNwAMakOUF95ZNHmUYV1DanCKqSLnFitzRgR5NXMoNEWmz6/JvAqAQm5C4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773685300; c=relaxed/simple;
-	bh=wyoEhbH5vEmoe/FvNNWLblsq3Yj00zp3Hzhb8lN1S9w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dv1Lem1YhE1iXMQXS7+r9ve21/hugLbDcbZWjqeCOZtxkxZ/g89IqMGxrUz/t0fPnuBIzuqLsdHL9PrTjcw1BLyjm996t7mbDKFi6e9ucrcH+WZGeH9+reknu2pwvwQRKRk/aV3yHoHbXiRqxS/mSUk+ZX4tatFd822JlslBznM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gML1drS1; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F673E1CE9;
+	Mon, 16 Mar 2026 18:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773686667; cv=pass; b=W090+/Dqi2g2zKr/CzKIlLH/o5ZbNfHF6ndOvbZW4RA98oUxxGa06FcKaeY7VGlgaeZJ5s7JqGsnJbYIoEbhU7rVreMe7Et2l9RUdOrPFLljTEnb7g911Qsnszxptbbd07ZVrg34TU6bGelhzmBrZk1SxyOonGEz5VJfw02CXfg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773686667; c=relaxed/simple;
+	bh=GtFrz9KbKIKh0IkZziorROObu/Y/fy8Mvzhol31nVeA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Ii7bClOxLUKGGM6MSyHS+ZdJylwEKWo2xxeJ4ya8dR/cLBbYNkHZky01vDId9RLRNXINYtFb2FPthJGnW04ilLCeTRmTkkUbh8F4YqWYGYXqNrWu0AVLOlRRMKYxWFF9wISeN2OnLGr+X89GewIclhbP6ZUYyuo2jaQsMRa9fSA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=oMmG8LaK; arc=pass smtp.client-ip=136.143.169.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gML1drS1"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-824c9da9928so3151712b3a.3
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 11:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773685290; x=1774290090; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffmkfhN6IZVcQX8QYVniegQEwjGmXttuPdYtjponOMI=;
-        b=gML1drS1cxujHW6+jEH+RoV9YKcV/WIyxim42MQEKud+pZQnCnvJexH9YEg7lQjfaM
-         H9fNz9abjHJ+iSdftB3tr8q6yLQwH4+f3VXbLyXTkO87KmhXoenLFLiQ37wheXwRlQZA
-         t3sLHKuuSypWuWpdn7XXuDK+dCpLEmi+KbdnhrH8tTgGNtJWb57lfLmVMgZiqFeAi+mj
-         1l+OYPNfhoFcBUMbs5MUhtrGnV76e2zZ/RH5hrt3iHMTOlrJ6TFSVqkoZMa+ercvRb7L
-         HBIcW5tkXBhEO5L2TMf01wgG8wB4jpKeeYI2haMYKojc9RdzFFlkXSiecOXxREitVSDu
-         Kf/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773685290; x=1774290090;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ffmkfhN6IZVcQX8QYVniegQEwjGmXttuPdYtjponOMI=;
-        b=Vk+c76d1LlHmU17dCb3QsRDq937CpdZrun4CjbMwDffJUD7sF1sqYfvYt/J+VaDIwV
-         jPDd4brPySdWQdpmPM31xGYfuEgLM+Vfy/5I+cLjCl9PwTLV28nKXwUZlmh8vC61Bxun
-         EP8FuGMk4TuidlnXh5TeDPC94l2f7qbj3enDM+QFy2dewnAiL8hKU+l80amsPNUa4kGB
-         7O6COwl5gZrAnR1hDTf5ROKhVgi9Exl2Ca/wocme/tJaT5MKRGgbpqP4jPXbzCZsqAEd
-         JxR0hJQBQTSZNPiXTF1RLNd2wy9LebhxIvuemCRcKm9YW/hq7e0eG5StD6gcAp2vq3Dt
-         K+nw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyA7gxTN0JZ0omr+PUgJnkTp8x6R8s5HDN/1bS0Qtr7ewOG8AD7tupPxXBWvTfVcjna7qkQV/UWimr07b0CEQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxANOBFSGNYRQfcab7ingIlwsL1waP70nFZtj2zKXxFx2wGQ/jf
-	gXtgYVY4aaI82/icPnuvZ2EQTK0EcJ4hz/CHwbjJ1gLTYTSeLI2dPTeI
-X-Gm-Gg: ATEYQzw3b42B/jlS7Q9kDzRfaXIK8OHdYqSsBoTBYO7gGQ8B0XS1uJOtZ62pQR/IzuJ
-	kr0gBl6fQyHd/Iw1Z1bnRjum5pTZJL6Kbj4W4531uJc4xO/EWH7EDRSX+k/DCtzMwmo8GXxkF0N
-	wy1Ki7XOM4vhooC0JVboPHgZR1xxZxgrWflvahsRNtPEplAcTlzz2fSf9HUuONRhWj1uAl3HcRT
-	jVrJY/dEN1Pj1OWU74FJx7QPwK3i2/4N2/Bj4DUy/wTZWgxhEYhAvktwBCxmVpbT+MSiXvZxVy9
-	bcg8XrxNEs/ucyGygVCc3kId/01aapOrSrpRR9CNzq5zSn+xfm9DmzcbRi8E2YkbB4etjRzr29b
-	U9TEDWx9Q5gDEg3At/M7PE+TmtbAfDIPlpAHfchcd1WBMAdlClVfzSOenHKDMWb8/WHOwYmYuB9
-	5M8BNEsUq2UbO2amOkVk1knBNNU8/tt524LeaWUHpz0+5iG9Dcd56H86k=
-X-Received: by 2002:a05:6a00:aa0a:b0:81f:394a:4897 with SMTP id d2e1a72fcca58-82a198fd351mr12387566b3a.44.1773685290281;
-        Mon, 16 Mar 2026 11:21:30 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a07341ed1sm13602575b3a.33.2026.03.16.11.21.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 11:21:29 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-usb@vger.kernel.org
-Cc: Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv2] thunderbolt: use kzalloc_flex
-Date: Mon, 16 Mar 2026 11:21:12 -0700
-Message-ID: <20260316182112.8682-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="oMmG8LaK"
+ARC-Seal: i=1; a=rsa-sha256; t=1773686641; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=Mkpu/oO/VHsCPqbOjzj9e6rvi0TRYZnQ1YNaADqgMPhokZejsZqSicZP6/fFfnHJVjBuQwskhuhN1J9eYxQE/g1uu/X516ZyQiCz1uAvlYydJAMRSodM2aTdeBVY/jXGOI3AKNPdH+YGleVSyvpptLZCLhWmmQnPAodwt6NqvNo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1773686641; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ek+/9mNBrNkpaZ3zR4u9yejVy5ZC/V0+MIIe2CHgd+o=; 
+	b=hd+JLiAmb90wJAMeVVT94o4SXw6zMo4YwwTXZCCBlrTXR6jue5MbB7ILA7IuSDN0K1xQWK79t1EkpK4pDe9wSA54je91nX1tcOCXHzZf2IgnpQz474osqfibFrN4cZHovTiszOMu3TX/9Kh0ZotT0igdna1kXFMzoDEIexUv+uk=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=objecting.org;
+	spf=pass  smtp.mailfrom=objecting@objecting.org;
+	dmarc=pass header.from=<objecting@objecting.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773686641;
+	s=zmail; d=objecting.org; i=objecting@objecting.org;
+	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=ek+/9mNBrNkpaZ3zR4u9yejVy5ZC/V0+MIIe2CHgd+o=;
+	b=oMmG8LaKspBeHtZotYr+NoOI+CME9/SwzTAF1aBLeCsjOGOU0ruGNZUAbVBHngW2
+	WhWdcRRCAzoZ36wApvbXAkHb86lnpg7kCww4OYnb9h0vjoXsIAKIRzI2TqSPG7HgMP9
+	DsQMtC1h+Jkf3/MqYwEeM3hw7M/nNOkJ2NWl06h0=
+Received: by mx.zoho.eu with SMTPS id 177368663776653.66512137874156;
+	Mon, 16 Mar 2026 19:43:57 +0100 (CET)
+Date: Mon, 16 Mar 2026 18:43:58 +0000
+From: Josh Law <objecting@objecting.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ kees@kernel.org, linux-hardening@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_1/1=5D_ACPI=3A_processor=3A_idle=3A?=
+ =?US-ASCII?Q?_Replace_strlcat=28=29_with_better_alternative?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20260316170158.1596857-1-andriy.shevchenko@linux.intel.com>
+References: <20260316170158.1596857-1-andriy.shevchenko@linux.intel.com>
+Message-ID: <4FC4DDD1-E170-46A9-888A-41D2CD6D97F3@objecting.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-Simplifies allocation by using a flexible arraay member.
 
-Added __counted_by for extra runtime analysis.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- v2: remove extra kfree to fix kernel test bot.
- drivers/thunderbolt/path.c | 28 +++++++---------------------
- drivers/thunderbolt/tb.h   |  3 ++-
- 2 files changed, 9 insertions(+), 22 deletions(-)
+On 16 March 2026 17:01:58 GMT, Andy Shevchenko <andriy=2Eshevchenko@linux=
+=2Eintel=2Ecom> wrote:
+>strlcpy() and strlcat() are confusing APIs and the former one already gon=
+e
+>from the kernel=2E In preparation to kill strlcat() replace it with the b=
+etter
+>alternative=2E
+>
+>Signed-off-by: Andy Shevchenko <andriy=2Eshevchenko@linux=2Eintel=2Ecom>
+>---
+> drivers/acpi/processor_idle=2Ec | 4 +---
+> 1 file changed, 1 insertion(+), 3 deletions(-)
+>
+>diff --git a/drivers/acpi/processor_idle=2Ec b/drivers/acpi/processor_idl=
+e=2Ec
+>index 45b5d17443cf=2E=2E498d88f5d5c9 100644
+>--- a/drivers/acpi/processor_idle=2Ec
+>+++ b/drivers/acpi/processor_idle=2Ec
+>@@ -1010,9 +1010,7 @@ static bool combine_lpi_states(struct acpi_lpi_stat=
+e *local,
+> 	result->arch_flags =3D parent->arch_flags;
+> 	result->index =3D parent->index;
+>=20
+>-	strscpy(result->desc, local->desc, ACPI_CX_DESC_LEN);
+>-	strlcat(result->desc, "+", ACPI_CX_DESC_LEN);
+>-	strlcat(result->desc, parent->desc, ACPI_CX_DESC_LEN);
+>+	snprintf(result->desc, ACPI_CX_DESC_LEN, "%s+%s", local->desc, parent->=
+desc);
+> 	return true;
+> }
+>=20
 
-diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
-index 22fb4a1e1acd..8713ea0f47c1 100644
---- a/drivers/thunderbolt/path.c
-+++ b/drivers/thunderbolt/path.c
-@@ -150,22 +150,17 @@ struct tb_path *tb_path_discover(struct tb_port *src, int src_hopid,
- 		num_hops++;
- 	}
 
--	path = kzalloc_obj(*path);
-+	path = kzalloc_flex(*path, hops, num_hops);
- 	if (!path)
- 		return NULL;
+Is this patch in relation to my string=2Ec patch? You would have to do thi=
+s for about 120~ files=2E
 
-+	path->path_length = num_hops;
-+
- 	path->name = name;
- 	path->tb = src->sw->tb;
--	path->path_length = num_hops;
- 	path->activated = true;
- 	path->alloc_hopid = alloc_hopid;
+V/R
 
--	path->hops = kzalloc_objs(*path->hops, num_hops);
--	if (!path->hops) {
--		kfree(path);
--		return NULL;
--	}
--
- 	tb_dbg(path->tb, "discovering %s path starting from %llx:%u\n",
- 	       path->name, tb_route(src->sw), src->port);
 
-@@ -245,10 +240,6 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
- 	size_t num_hops;
- 	int i, ret;
-
--	path = kzalloc_obj(*path);
--	if (!path)
--		return NULL;
--
- 	first_port = last_port = NULL;
- 	i = 0;
- 	tb_for_each_port_on_path(src, dst, in_port) {
-@@ -259,20 +250,17 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
- 	}
-
- 	/* Check that src and dst are reachable */
--	if (first_port != src || last_port != dst) {
--		kfree(path);
-+	if (first_port != src || last_port != dst)
- 		return NULL;
--	}
-
- 	/* Each hop takes two ports */
- 	num_hops = i / 2;
-
--	path->hops = kzalloc_objs(*path->hops, num_hops);
--	if (!path->hops) {
--		kfree(path);
-+	path = kzalloc_flex(*path, hops, num_hops);
-+	if (!path)
- 		return NULL;
--	}
-
-+	path->path_length = num_hops;
- 	path->alloc_hopid = true;
-
- 	in_hopid = src_hopid;
-@@ -339,7 +327,6 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
- 	}
-
- 	path->tb = tb;
--	path->path_length = num_hops;
- 	path->name = name;
-
- 	return path;
-@@ -372,7 +359,6 @@ void tb_path_free(struct tb_path *path)
- 		}
- 	}
-
--	kfree(path->hops);
- 	kfree(path);
- }
-
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index e96474f17067..4e66b53860dd 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -440,9 +440,10 @@ struct tb_path {
- 	bool drop_packages;
- 	bool activated;
- 	bool clear_fc;
--	struct tb_path_hop *hops;
- 	int path_length;
- 	bool alloc_hopid;
-+
-+	struct tb_path_hop hops[] __counted_by(path_length);
- };
-
- /* HopIDs 0-7 are reserved by the Thunderbolt protocol */
---
-2.53.0
-
+Josh Law
