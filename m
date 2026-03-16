@@ -1,77 +1,63 @@
-Received: from mail-dl1-f41.google.com (mail-dl1-f41.google.com [74.125.82.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77426340A6F
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 19:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2A43ED11E;
+	Mon, 16 Mar 2026 19:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773688622; cv=none; b=p9+YRXAu4FG9GbA1AI/01ABtNqsxtHEbAB0LZtIdqtY6jBosDctgnCCrLwWULIfgrrc+n6m6ebzPKausafP8hTBZr9Ud7Ak5E+C0i07gbxDpisQ0Nz3y+bC9gv/ecTY0Dp5e+H5+L0zhJJSFCmKKSUNQQ/GLwRmnezjLB3JSmDo=
+	t=1773690178; cv=none; b=aEgKig2p1kXC9dgjbFX1OaaoY+yUIuHxq1Y7MJA+j0XmpToGCQu/5HNBPF57JWVhl98ApY9e8JE8ih5iRf1q8gAdyXMYeAaos1l/80hJM+5uzsUU5dZEajY0Jy5VCrmD+RUfj94EVJqQXxCww+r989sYej/SeqOJ0479YhrdCnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773688622; c=relaxed/simple;
-	bh=PlGPZoglXUuh1dfeukJH/LeqqwBMJABO0C248s1v9As=;
+	s=arc-20240116; t=1773690178; c=relaxed/simple;
+	bh=U2KkEVVoR5XEO52nxBfzK+KP9ppHBKrzL0lErOkybc0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TwGpY/jadoVy1Q7FSmas+YgEfPrWRXiSr7isQP613l8aP1xS8baioiuX1A/19NUSjKAIyCm8BzNchQ8YkwVJTWG1C1D493e1pysAkUAN9PbVZSj7kRdVn0sspGC8qV/pxXvTuuOFteZSmaooWWv2MWpnAjw4f0PHPITXsR73IxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HD4WVQWy; arc=none smtp.client-ip=74.125.82.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sxxICZuKbi5mtyAanfD3Kaf/DasKZbIMPNiz7XyzPg+mPaNn/ZUB4FPQMAgCxcp5dGZN+4gnSI3Xu63OZ636DMXDpvDybLT5yqUVwHffUmj/RtrDjG6683R/Od4h4uIUVUyqYnFnwQZCNK1o51EP6/vPhyi+16NUnxrbvbe57dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eC6gFrb1; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HD4WVQWy"
-Received: by mail-dl1-f41.google.com with SMTP id a92af1059eb24-1279eced0b9so6626399c88.0
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 12:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773688620; x=1774293420; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7Hk2XaBHC8Qa6dgUkCoPcN4E9YBKjMdtHqI5bOd6Xjw=;
-        b=HD4WVQWyGgPLd3jJ1GHewURwI2RV136um/ZLg30U6PJAfKIrEqj+6n+G4wRMMjiuBl
-         jOxtr/KhWksLAsVS2bUzx7O6V6pv2zcXY67mVAUKWmNpVsdYM/xTg/D72dHrQYovLI3e
-         Xc8zwrB5H1BzBnHy+qvpqtBiBgv7kMIt97ICOkMTyBnip7Gh6YTYwW9UYg3ibW+J2y9f
-         /HB7uMi6w/jcLl4tLvaMxt2zIkHv/P+3r1jA5hdpi8F2ivOmWTcMm8h/IRIlZF+z3+iq
-         i+e0FdXRJGvD+P5ZsiY4Oe4t1L0iVnud09QWF6I1zhXuuCuhc9u69FUMELRjdH6sZJY3
-         6nWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773688620; x=1774293420;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7Hk2XaBHC8Qa6dgUkCoPcN4E9YBKjMdtHqI5bOd6Xjw=;
-        b=jMpD6tIiG+T2/abgCYluc/evdjwaZ2BFnoJXnXdoHb13nS+7GLQ+5Nn94Dda2y3LbS
-         LOH5XoLpXME2MnR/JpTm0QJpPhVbuxBHYfiltbvXTgwHn8DYW4hcff2QR3XjYPD+/zfz
-         X1DRYZoO7SFy6YVFhKEYSBTfDCohK7qXivdVl77zP0egLIHm9C3RHeZz3fx4jC+Xtnvf
-         JtOBhbYpIXxXU+/itTVcJKE4ZbqtULM/fyK7iSQRQ8Jzytv67UbywhDa0gfwQFTxUSWy
-         /yemXHjtUIaL/vT6w6ku6aGq7FDpyFdOGx4/8ce02M74cnFFpBLAWJz5j0m7+i16uoDH
-         kJJw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3wDLrjLVKbGiBcO01gkwtLiy0K9MyJsAxn2X1Buft+UUNzN/291CzVotBo+DE5gWoX9envbDiCe6cMZH65kM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj0RhM+TgZE1d2x5dDZMPoodRJKAO6l0fvpzPQEgH9sB/6Yzjd
-	2v9BOSGUKXTvpXR+cWS9pXqf9UoyLH70Q7XeTwYKn+58LE1jUcomigSb
-X-Gm-Gg: ATEYQzyZg+Wpp/YVNNFgeUNmY3/JVq0+r6JWbxaBwsKm1HvdgnKIVCEIkZNiDgtQbAZ
-	EF16mxT4hV/HDHRud2LW2RPEY3V3fbSh6AeE6zUrxBtYzgGMqLuy1j/2OOj0oc19COAczDFkHYr
-	RYZSv77GiyKLUoPtuZrznpZQSX1WPx2BqAFcYYAClPXS4+rWgVInaUQe8qlpF/ie6gpnKgW2gEA
-	keVlZjg9M6r+LR3wv1250L2pJdQLB69dCNJffnh5BYcC6twKlbErVBM/N1Mo4EzULGFW50tYrOO
-	jKEcAjV2g5fc5rQ7AI2evj4uLctvrNCse3JFrJVYVGN1Omw+3CpfSVc66sgcCyqTenWNFaWmviM
-	hPnoTmn1HpPP++/xbCe/+1ibYwt3pXjl3UXdbMK97rIx1+5s+vKl/z4Fr5jp4DfXWpMVNK3hCdE
-	60YocPUu2Sc1ZTVMAgnU5cohEjWVUpsHQSFfp6
-X-Received: by 2002:a05:7022:925:b0:128:bbad:9a52 with SMTP id a92af1059eb24-128f3e52ca3mr5874419c88.39.1773688620362;
-        Mon, 16 Mar 2026 12:17:00 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-128f62837ccsm17035721c88.3.2026.03.16.12.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 12:16:59 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 16 Mar 2026 12:16:58 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Kees Cook <keescook@chromium.org>
-Cc: Eric Biederman <ebiederm@xmission.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2] exec: Add KUnit test for bprm_stack_limits()
-Message-ID: <a3e9b1c2-40c1-45df-9fa2-14ee6a7b3fe2@roeck-us.net>
-References: <20240520021337.work.198-kees@kernel.org>
- <20240520021615.741800-1-keescook@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eC6gFrb1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773690175; x=1805226175;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=U2KkEVVoR5XEO52nxBfzK+KP9ppHBKrzL0lErOkybc0=;
+  b=eC6gFrb1UOCZVdsQJNurWODMca2pGNtLwOY9xdZsJLfGNqfqrsQNnxYf
+   RlKW17X42lZLOjS3QNNj54v6fftLpgNKglicqPsFDeLcuIcJvqob/2nkU
+   vDhJM/02YZ7pkM08xajnSrTBRBm/A588OloeW5/8n3K9JlgZbY8RLkAAp
+   tAajVpGh5As3GzQ1oB3+BNqUNFWrqCLZRpkTdkJALcOEpgJeVV/UZoCZU
+   0OwZVPVKOHUt4MQ+C3+DxF0LjS7rSbF1DuWQiRP7G6Ag50Mc/UlHBJ1Ve
+   leaSEh6ioowggUuP+ZXGDWVyFIjkz0S//QrX5EQjk56msP5YQppXNXWZR
+   w==;
+X-CSE-ConnectionGUID: EiShLKYTRI6/+JiokuzVQw==
+X-CSE-MsgGUID: kHLnwzBKRPKEqu9WEQhoyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11731"; a="100173398"
+X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
+   d="scan'208";a="100173398"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 12:42:55 -0700
+X-CSE-ConnectionGUID: 1G8N3fO3Q5Or1//k421l0g==
+X-CSE-MsgGUID: tUaPr5ewTByJHtDubNiG9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
+   d="scan'208";a="222098474"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.237])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 12:42:52 -0700
+Date: Mon, 16 Mar 2026 21:42:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Josh Law <objecting@objecting.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, kees@kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] ACPI: processor: idle: Replace strlcat() with
+ better alternative
+Message-ID: <abhdOes2GSRZdWh3@ashevche-desk.local>
+References: <20260316170158.1596857-1-andriy.shevchenko@linux.intel.com>
+ <4FC4DDD1-E170-46A9-888A-41D2CD6D97F3@objecting.org>
+ <abhQURnuNUPwiy_6@ashevche-desk.local>
+ <590CA4EE-3510-482D-B768-91B3CFC73164@objecting.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,37 +66,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240520021615.741800-1-keescook@chromium.org>
+In-Reply-To: <590CA4EE-3510-482D-B768-91B3CFC73164@objecting.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi,
-
-On Sun, May 19, 2024 at 07:16:11PM -0700, Kees Cook wrote:
-> Since bprm_stack_limits() operates with very limited side-effects, add
-> it as the first exec.c KUnit test. Add to Kconfig and adjust MAINTAINERS
-> file to include it.
+On Mon, Mar 16, 2026 at 06:49:23PM +0000, Josh Law wrote:
+> On 16 March 2026 18:47:45 GMT, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> >On Mon, Mar 16, 2026 at 06:43:58PM +0000, Josh Law wrote:
+> >> On 16 March 2026 17:01:58 GMT, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> >> >strlcpy() and strlcat() are confusing APIs and the former one already gone
+> >> >from the kernel. In preparation to kill strlcat() replace it with the better
+> >> >alternative.
+> >> 
+> >> Is this patch in relation to my string.c patch?
+> >
+> >Yes.
+> >
+> >> You would have to do this for about 120~ files.
+> >
+> >Not me, just showing you what to do.
+> >
+> >Btw, what kind of assistance do you use for the patches?
 > 
-> Tested on 64-bit UML:
-> $ tools/testing/kunit/kunit.py run exec
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> ---
-...
-> +++ b/fs/exec.c
-...
-> +	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
-> +	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * (_STK_LIM / 4 *  + sizeof(void *)),
-                                                                   ^^^^^^
+> None
 
-Google's experimental AI review agent tagged the above change as syntactically wrong.
-How does this even compile ?
+Hmm... Many patches that are generated require quite a lot of time investment
+and understanding the code. It's unbelievable that a person can do that without
+an assistance.
 
-Thanks,
-Guenter
+> I use grep to find all the files calling the functions (took a while!)
+
+No, that's not what I was asking about.
+
+> And if I did those patches, I can't guarantee all of them will be ACKed.
+
+Interesting way of saying the obvious. And if you didn't?..
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
