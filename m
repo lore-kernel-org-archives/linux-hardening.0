@@ -1,82 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender-of-o55.zoho.eu (sender-of-o55.zoho.eu [136.143.169.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A08C1B142D
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 14:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773670096; cv=none; b=oVX2USc/4THQFJaeeauNP6mJ4gL73izGb3YAAQzzr9/7IQy+tb102lJ6UVssHp4qo69YYTpeAbxFMFYYgRNZQ7aTN5uoY6t0QBrc0bUYQxyilyTDwxPbw+f6ZIOcCmLm2wMcMTC3ntMCqvcmIOLAxWgSvhewoywW5+GMWKIkRlo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773670096; c=relaxed/simple;
-	bh=l8oPYmCUox+HYD80+GdLFbBOPhRJJNmQ2cOQc3OAfqc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fZSFP4s6sTiNcqQ0FuK357VGT4ChHkcoJpGhAgEW4j8+JiZVsPC6m4kYnQwhlugA7Wk0dBoCgjt+t5CONckbFR9wPUUA4j5Xu+J2gouXTsLlkVTLTKA2YpIEHEc2emDzdz+B05CkYxeescso0ga1FS37ciDQ7zf4RNQdND+JnXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ng4mmIpL; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A1B1DFFB;
+	Mon, 16 Mar 2026 16:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773677863; cv=pass; b=ETL2sLOCM6+YeGJ2coqQTpLo5/BcBSrTv9JdeXeAEvc6yrpsWcFA8x8OC0a3US5MLdGGncz4fdyJtVFqbLPknvf3DNSmvo6iqnNxzXxssAMSYc6fiJZMZn//l16PQ8weydSba4qSkbGJlab8DmBZCjpw2rKPvGYdmolJGZSOk84=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773677863; c=relaxed/simple;
+	bh=EV6I8Jp8DJZObjggmqMVOEdG3a93MP4Ik2SppLKiN3E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HjdtPvVWcRnCi+bpA7qp8LgoXMkS6vp7z1G2R0Ff8HAPgpiDceMvl4laDiiMoJnKQNknCvIsJcCb+TVZJ6QSEHxRVX7vOMNYbd8O5+TBJDzLLZBGVL98xft6yIcNBcP0breNFPxCm/iM/dUUV6vHGeQomihK8p6yhHUQ747GShQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=bmI9ctRL; arc=pass smtp.client-ip=136.143.169.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ng4mmIpL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DFCEC4AF0B
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 14:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773670096;
-	bh=l8oPYmCUox+HYD80+GdLFbBOPhRJJNmQ2cOQc3OAfqc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ng4mmIpL6U0ehU3SOP5qWSo8kgc18jmYfZGM0mDQfAfnxRtV/INL0nH90zPKsBOSL
-	 lzRPWMzeJ03pzi0wSwnWM8dh+hzq53hsJssAxWXe81OwkC/Ba8pCRdHULsxe7TQyZk
-	 ozltW5flENH9Of/u/v/Lto7dPCI0Bf+A7PX1R2A5OaWWdJx4Olm0qr/FDc7rCnqULB
-	 YFJe6C5egJI1hrMDw3ugQ7B2+T9hQxqO0Tp9h4HY8DDqK4RgOQMWwlOgjylpGvEfKW
-	 Ite0va9ia9tz9PXEs6PcZ6+DT05M2UFmJk+q14EzfRs5mY5vJ56lCVe6eF2/Jh4gXc
-	 O8k2h/8A26TkA==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-38a01c80c34so38219931fa.0
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 07:08:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXT1jUNPs8iz+Ko2vdUxzIwNnqUbFGHUoiBPtXDbNEQCdX1mBLNak75KE+ZTjzbppg9P+6gI96u0M99fgnYuqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2F8na17SBdheTm+rFMISKSj6mGKdy6QS4T8bQ+H8S+FlNM7cs
-	kzVgIiGaEpXU8taTy2sfUL4CCucW0hRxGZJThls3wMXJXWyXTgr2e5FnfmBBcUhMG5xCtEzIabd
-	poA6AVDPXhJGy3S1qPpWD9DrDrSZ4k6E=
-X-Received: by 2002:a05:651c:198d:b0:389:f5b4:46cc with SMTP id
- 38308e7fff4ca-38a89645d0cmr42254341fa.4.1773670094566; Mon, 16 Mar 2026
- 07:08:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="bmI9ctRL"
+ARC-Seal: i=1; a=rsa-sha256; t=1773677853; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=gwMu2vUKQwpzpkvQ3aSDBYdp/YZCP4CtKDrgPlx2FahsPQa9alEyL3DFCu88oS1vhaDc5sK421i/kUTetx5ZiaPz/NL0stvXPIs8l3OnD37TVLuASQExVK7xCT6oUVpkHmei1rdO6Xix+XD1I4B2HgcHCaRFmBMh1n/br7nEZX4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1773677853; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=9LquFkDvJ6U2XSUzS0MFKH27OLwzBJYpe4jPChCwFhk=; 
+	b=RNiMg+gO4gNhbOBvsZsf4vPTusseaZIk11pjQd4rAc7s7IoIxdZQFdEY71F6lV20VTWBTN0+6FBQrTsEmAsmgkKmdOyik4CX0V8dw1vi8NmE8PpNg/G6nIpg3z02sSgqi7oVRCSw+iW6XiOz1+bJeYWcnPo5Fva+DyO9/XSt1JE=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=objecting.org;
+	spf=pass  smtp.mailfrom=objecting@objecting.org;
+	dmarc=pass header.from=<objecting@objecting.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773677853;
+	s=zmail; d=objecting.org; i=objecting@objecting.org;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=9LquFkDvJ6U2XSUzS0MFKH27OLwzBJYpe4jPChCwFhk=;
+	b=bmI9ctRLhdADFAfbNkoZJ/kO5suyE/+OkDNJdqKS4DtNruw9hwZgiq7OdzANf7Mt
+	H35Nj1KhYF/olhJukRM5oTKPcb9bdKTdUP1/AdM5Vruus0y85yX3sQMX/Ia8Z2Sb0/K
+	vx8JB/MEsn89P3ve7KSCUpAmtWxFrJ1qrYOjpJeo=
+Received: by mx.zoho.eu with SMTPS id 1773677850331247.88446027781822;
+	Mon, 16 Mar 2026 17:17:30 +0100 (CET)
+From: Josh Law <objecting@objecting.org>
+To: kees@kernel.org,
+	akpm@linux-foundation.org
+Cc: andy@kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Josh Law <objecting@objecting.org>
+Subject: [PATCH] lib/string: replace BUG_ON with WARN_ON_ONCE in strlcat
+Date: Mon, 16 Mar 2026 16:17:28 +0000
+Message-Id: <20260316161728.84485-1-objecting@objecting.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312193717.12221-1-rosenp@gmail.com> <7jwgbrijeldghk44tdg2be5q7o7vuj5np3nlbl2pxuln6c7ll7@ntuquxxdnfmm>
- <CAKxU2N_7sZu+J46sCQH4jgVB0r9HsHREToeCTg0Hz4PaVjY+sQ@mail.gmail.com>
-In-Reply-To: <CAKxU2N_7sZu+J46sCQH4jgVB0r9HsHREToeCTg0Hz4PaVjY+sQ@mail.gmail.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 16 Mar 2026 15:08:00 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkaxtuKZq-sJ3s1Rv4hAVT8Wb5RKTHo7L7EU7U5Csw=ag@mail.gmail.com>
-X-Gm-Features: AaiRm514yMjy-riOY0-nNMAQ3Dm3EeSfZQ_Jeua8HVMt8JGxk9ChMWC5efBcsmM
-Message-ID: <CAD++jLkaxtuKZq-sJ3s1Rv4hAVT8Wb5RKTHo7L7EU7U5Csw=ag@mail.gmail.com>
-Subject: Re: [PATCHv3] gpio: virtio: remove one kcalloc
-To: Rosen Penev <rosenp@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org, 
-	"Enrico Weigelt, metux IT consult" <info@metux.net>, Viresh Kumar <vireshk@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:VIRTIO GPIO DRIVER" <virtualization@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Fri, Mar 13, 2026 at 7:30=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrot=
-e:
+BUG_ON() in a library function is too harsh -- it panics the kernel
+when a caller passes a dest string whose length already meets or
+exceeds count. This is a caller bug, not a reason to bring down the
+entire system.
 
-> > I wonder if it is worth it anymore. Why combining allocations is better=
- when we
-> > are ending up using more memory ?
+Replace with WARN_ON_ONCE() and a safe early return. The return value
+of count signals truncation to the caller, consistent with strlcat
+semantics (return >= count means the output was truncated).
 
-> No idea. That's what maintainers suggested for some unknown reason.
+This follows the guidance in include/asm-generic/bug.h which
+explicitly discourages BUG_ON: "Don't use BUG() or BUG_ON() unless
+there's really no way out."
 
-This YouTube seminar by Kees Cook and Gustavo Silva explains
-exactly why we want this:
-https://www.youtube.com/watch?v=3DV2kzptQG5_A
+Signed-off-by: Josh Law <objecting@objecting.org>
+---
+ lib/string.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-As mentioned briefly in my reply to Viresh, it brings some of the same
-features that Rust has to the kernel C dialect.
+diff --git a/lib/string.c b/lib/string.c
+index b632c71df1a5..ae3eb192534d 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -255,8 +255,9 @@ size_t strlcat(char *dest, const char *src, size_t count)
+ 	size_t len = strlen(src);
+ 	size_t res = dsize + len;
+ 
+-	/* This would be a bug */
+-	BUG_ON(dsize >= count);
++	/* This would be a caller bug */
++	if (WARN_ON_ONCE(dsize >= count))
++		return count;
+ 
+ 	dest += dsize;
+ 	count -= dsize;
+-- 
+2.34.1
 
-This is done to avoid what we call undefined behaviour.
-
-Yours,
-Linus Walleij
