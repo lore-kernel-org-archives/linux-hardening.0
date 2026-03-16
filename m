@@ -1,37 +1,26 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from g4coop.com (lmx.g4coop.com [45.56.102.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDE7288D2;
-	Mon, 16 Mar 2026 23:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B75B372EF9;
+	Mon, 16 Mar 2026 23:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.56.102.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773702216; cv=none; b=GSLH2h3vj2VkU7pXidzVpWDwn9IrM/xU/MCk0Ph5tLnPrmRv+LyDGSgPAJ639QCPDEXd/gT/nLVD+GeN/t3Qklwa9zEG/9UqPoAAqlNOLudl/2G1LT79MsxybsX85MOCBvbLplAg8lwBf8X1k3Ok1VddjYr3QxC7haeM7UQjQ8w=
+	t=1773702677; cv=none; b=hZM8rwhOcwSvvrYWlCPYhb+kkAM37yiUA8Qm9nonotrk7UFB1x4XzZjyNI9GsuAkhgQx7N7vGUowysTsZqu/sSv+HGsPdSJh7/wVer53u/loyOLHlwszLctI1TAV+tcG/2WxhcnKmgI7hhGPnOpZFT29I+BcWxrUjsDD/vlTXzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773702216; c=relaxed/simple;
+	s=arc-20240116; t=1773702677; c=relaxed/simple;
 	bh=u9Ye+s7yAwy1gcOvK+Rpx+0TnDyC5VJDIg61/9wdlko=;
 	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=HvYFFP0lj6TDjLmCVjJs0KOr5vmY4qqbMxRB+raAzUsTeuqGUDhwftktmPT1PCtaIycAvRWDWXHI2YeOoFmoC31anJutj4GcktqblW9JE7sBAG3fAAKxvKm5L2GIL4Tz2GzehrRdXIknD9L/IKlnWaNuCrDTx+VUpYmEZEGX/SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=oJ3UESMT; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="oJ3UESMT"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net CE6E441205
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1773702213; bh=UYBixaJ8U0OR+1lcGfiFhXvzf13xvsTch2LbkCSz7/U=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
-	b=oJ3UESMT7kyVcDPzhNgJZfFaEzvHvn1eSFgJ7czPEvbXzTuUualSvSoVl1P478ovq
-	 7mjcYzKDWLJS6ZArtxbiZM4k6siEucftbrBx2+ER4uicuOrO4ED2okQS1imK7a38JE
-	 4+pklJ32ihheOQWkxkNC0F98B3/nlx+N4RIlJAw3ECdzZ4hOA5I+Oq/fPAwSMlxPRr
-	 6RT+9wimN/ZRePwARFEpj6SlP8hx98SFycJqaYYQK/n7BKU6L+z/jwf2bYhxNjCkER
-	 CWzJ1XfNDxakNW0GiXHg2ZW50HgiY5efKNSNgi5pQm4UBbwa8cy3VbhKGPPt8mZAJ8
-	 OkbKz/EwmhKOg==
+	 References:Date:Message-Id; b=SDXlW0B5CBJ2xNkJ8VbJo48yAd/Uwm5aVdDULTWwFv9yDc29mSmEeJKyDtWdD/Mm5GwkkW7lElj3tIs0swssvIa30JsBr+SiujlM6jzBADMssxFskvWK/CR2gQt+jesx1GnEa19KayM1fKt3ggGp/h2mllgDV+AY70akvywKmTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=killermarmot.com; arc=none smtp.client-ip=45.56.102.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=killermarmot.com
 Received: from localhost (c-71-229-227-126.hsd1.co.comcast.net [71.229.227.126])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id CE6E441205;
-	Mon, 16 Mar 2026 23:03:33 +0000 (UTC)
+	by g4coop.com (Postfix) with ESMTPSA id 3BAA14060C;
+	Mon, 16 Mar 2026 17:01:13 -0600 (MDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 g4coop.com 3BAA14060C
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,8 +40,8 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 In-Reply-To: <8541ffa469647db1a7154f274fb2d55b4c127dcb.1773326442.git.mchehab+huawei@kernel.org>
 References: <cover.1773326442.git.mchehab+huawei@kernel.org>
  <8541ffa469647db1a7154f274fb2d55b4c127dcb.1773326442.git.mchehab+huawei@kernel.org>
-Date: Mon, 16 Mar 2026 17:03:29 -0600
-Message-Id: <177370220974.1754131.9642805524574261129.b4-review@b4>
+Date: Mon, 16 Mar 2026 17:01:11 -0600
+Message-Id: <177370207134.1753752.17403055172165325174.b4-review@b4>
 X-Mailer: b4 0.15-dev-bf9d1
 
 On Thu, 12 Mar 2026 15:54:25 +0100, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
