@@ -1,96 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4077391500
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Mar 2026 09:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705113A7F61;
+	Tue, 17 Mar 2026 11:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773740731; cv=none; b=tcYqzDx2krTaAkST8qCI14jdoL6HqIW3ALK8EYsoypaCdtOEDYNTQDR0WJiSfEuIidHKzz3XLBY1X+z51UcADAIsag+K+suLN12q3gs8490EsA8K1oRwGsh/9gaAyssWhOdemPuZfUkWFR+Nmh7+gyBLC3ibBvdjETip8or9ixg=
+	t=1773746001; cv=none; b=IOykh/usfmX+lGgQRsiOSn8Wn8bnFqf3TUc6+Yv1c3zWKHaUWcrzUXG2w0LoHBaSdCvG/T1YoMiVvnjEh/awx570M3Wy4IfHI6KX95tYbBZayNGpi1qxhdZMjji6ZothkDgd+UkMyOECCo7eQ0KbVhMEzuTO2JY2Gnkbvy4OWs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773740731; c=relaxed/simple;
-	bh=JGBz0SdiTulLcKwRUnaZplsI+zj2QfUegXT7Nov2gO4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pK+3nlX0YaKO+OQOuj0RT/+jPZH1eY0Bm/z/bMYmHFY+KY+tMLWNc0i7haQxBHrePVA0MXNG8g1qYHDGJAyZJDzIG2ngH4bDgG7gV7xEg4QSz488zIMm9vpRldJG4Ik1eaWPuQPqB2tvjyimBQoIFH6HRsYNe+dwL6EliBJV5LM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cnQMs3yD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773746001; c=relaxed/simple;
+	bh=A4k44UqySYK9sBzDZ65HlwjIbkEi1C81mQWx6Wneq/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QrLvMDPCnYNJzy1bqUgtSPVWBb3kxkamJoYyzM9EbCaooWScJcpfyRSjlzNXc9j+KdcTQDZlkBjsvnTFrkFJhroJKu9LJ2nrPKTdNtpS9DkSBJDmKtGLcVtucpw47ZcYqmM5PSIw9tCnDZ9/7F2cur9BU8nxtdLFM2sTTrSUJzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BN4OvIHs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cnQMs3yD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20E3C2BCB1
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Mar 2026 09:45:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BN4OvIHs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9747DC4CEF7;
+	Tue, 17 Mar 2026 11:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773740730;
-	bh=JGBz0SdiTulLcKwRUnaZplsI+zj2QfUegXT7Nov2gO4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cnQMs3yDCcmFOrk4R10NlxOp1qHZasnz84rJHrEAlX/FnzPd7AGcSz1uiUV6vwg+l
-	 okDB/3MJJyLOD73Iaw4DXFwZB7Tx6OYBMXzlfbpTH4qGGR34HYApEstbaCSaVmoN6j
-	 YuNlvAGrDMmZ4D++z0JIDgLqf4drvNKBLvAICWv1Ujf3Bv71kD7lIsNn6DAc5FsrpD
-	 n8wlOnUvtY6BEb5j3HWCiNOt8HmcYS82Ok/lvPq+4gZJmKNEtGNXWQQjTcUBb1VqiW
-	 YqKJit6vU6BWfc5HbyVFR4oa7B8hbhPBMGsNBlrHScYTtLjLb0ds8MkB6eXf18T7gS
-	 L3Jc/vOUao1DQ==
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-79800183233so7027157b3.1
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Mar 2026 02:45:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQRooDg5MJ0iGmQ9E6I/eodXIzkc0yGtqrCH0/BX9LnIdKq+poj7ZRJE8WCBx/Kqc3iy47m2ovNQ0GV1aS4SY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTG1Wqpv5/LdUoslbvGTbWOyFvy05+1aRt8YRNcD0+Lj2hB8MI
-	NQV/3MW5nk7MyF1dVEF4u342cGUCkRQ6Firi8pu528fRfZiSrUC+oCOZUzB7mDlepmO8eQUq2FU
-	EqdcaCNy9CqcsmODIOncsALoX0Jj6uCw=
-X-Received: by 2002:a05:690c:9688:b0:79a:3564:ee8d with SMTP id
- 00721157ae682-79a618e6111mr20649057b3.26.1773740730046; Tue, 17 Mar 2026
- 02:45:30 -0700 (PDT)
+	s=k20201202; t=1773746001;
+	bh=A4k44UqySYK9sBzDZ65HlwjIbkEi1C81mQWx6Wneq/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BN4OvIHsgbwLgRezuXX+qMCFE0z812uNPJ9isuRxchmBDsKjWaXzTUTLVWnM7Bfdd
+	 vMfHaG1KT8/XVIs1YNXau89CSWykOVGhdZcx+SITNe+aSiluskaWz4L7FDs0iyC/jW
+	 k0wyksijDe55/zUnE17hXYiYnQ1IDq1JU4NT4A36NApXlJcPWC/KShcBdgPE/QF4vn
+	 aUp+XeV0TFVyAd+0z6CkDTAzZLMbRGX499M4KyuWK4dtulyX9vIydWTzp6aPJU4+Ch
+	 W8BsjoO1wcKst8WwmJGQy8edFc82Kb6/mjnRFmqf1fiuG3Cb3gQ/GE/Jp458V2HcXx
+	 l5cgK8BH7vEqg==
+Date: Tue, 17 Mar 2026 16:43:17 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: xianwei.zhao@amlogic.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, linux-amlogic@lists.infradead.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] dmaengine: amlogic: Add general DMA driver for A9
+Message-ID: <abk3TUTaov3zIfFm@vaman>
+References: <20260309-amlogic-dma-v6-0-63349d23bd4b@amlogic.com>
+ <20260309-amlogic-dma-v6-2-63349d23bd4b@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312193717.12221-1-rosenp@gmail.com> <7jwgbrijeldghk44tdg2be5q7o7vuj5np3nlbl2pxuln6c7ll7@ntuquxxdnfmm>
- <CAD++jLnTJGt2YXo6ASXEjPPsMbrr+Mz3RKcCVeUpaWEMPm6DOQ@mail.gmail.com> <bh5rgccasvor5xjunkc7wjp3resyulehnqafhzlfwqx2ealwxw@eqohebwzjq2a>
-In-Reply-To: <bh5rgccasvor5xjunkc7wjp3resyulehnqafhzlfwqx2ealwxw@eqohebwzjq2a>
-From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 17 Mar 2026 10:45:19 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkKqF4ooL7zC0dyT+k7o1MC7AyY-Xat5xSTzSZ6KdLHfw@mail.gmail.com>
-X-Gm-Features: AaiRm50c28ehMzG3FZtQnMIktiveKhdLesYuHZvx6K3Ld6TrmqPk05dY8AJLm7s
-Message-ID: <CAD++jLkKqF4ooL7zC0dyT+k7o1MC7AyY-Xat5xSTzSZ6KdLHfw@mail.gmail.com>
-Subject: Re: [PATCHv3] gpio: virtio: remove one kcalloc
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rosen Penev <rosenp@gmail.com>, linux-gpio@vger.kernel.org, 
-	"Enrico Weigelt, metux IT consult" <info@metux.net>, Viresh Kumar <vireshk@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:VIRTIO GPIO DRIVER" <virtualization@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260309-amlogic-dma-v6-2-63349d23bd4b@amlogic.com>
 
-On Tue, Mar 17, 2026 at 9:49=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
-> On 16-03-26, 15:00, Linus Walleij wrote:
-> > On Fri, Mar 13, 2026 at 7:09=E2=80=AFAM Viresh Kumar <viresh.kumar@lina=
-ro.org> wrote:
-> >
-> > > I wonder if it is worth it anymore. Why combining allocations is bett=
-er when we
-> > > are ending up using more memory ?
-> >
-> > For the same reason we are starting to use Rust in the kernel, despite
-> > it sometimes will take more memory essentially. __counted_by() enforce
-> > the same type of runtime size checks as Rust do on arrays.
->
-> Right. I don't have any issue with __counted_by(). It does the right thin=
-g for
-> flexible length arrays. But we don't need a flexible length array here an=
-d so my
-> question.
+On 09-03-26, 06:33, Xianwei Zhao via B4 Relay wrote:
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-So why check for something that "can't go wrong".
+> +static dma_cookie_t aml_dma_tx_submit(struct dma_async_tx_descriptor *tx)
+> +{
+> +	return dma_cookie_assign(tx);
+> +}
 
-IIUC it still removes undefined behaviour from the object code.
+You lost tx, why was it not saved into a queue?
 
-If someone managed to compromise the kernel using return-oriented programmi=
-ng
-they cannot call back into this function to overwrite the memory
-beyond where the
-array is stored, because the runtime checks will block this.
+> +static struct dma_async_tx_descriptor *aml_dma_prep_slave_sg
+> +		(struct dma_chan *chan, struct scatterlist *sgl,
+> +		unsigned int sg_len, enum dma_transfer_direction direction,
+> +		unsigned long flags, void *context)
+> +{
+> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
+> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
+> +	struct aml_dma_sg_link *sg_link;
+> +	struct scatterlist *sg;
+> +	int idx = 0;
+> +	u64 paddr;
+> +	u32 reg, link_count, avail, chan_id;
+> +	u32 i;
+> +
+> +	if (aml_chan->direction != direction) {
+> +		dev_err(aml_dma->dma_device.dev, "direction not support\n");
+> +		return NULL;
+> +	}
+> +
+> +	switch (aml_chan->status) {
+> +	case DMA_IN_PROGRESS:
+> +		dev_err(aml_dma->dma_device.dev, "not support multi tx_desciptor\n");
+> +		return NULL;
 
-But Kees & Gustavo can tell if I understand this correctly.
+And why is that. You are preparing a descriptor and keep it ready and
+submit after the current one finishes
 
-Yours,
-Linus Walleij
+
+> +
+> +	case DMA_COMPLETE:
+> +		aml_chan->data_len = 0;
+> +		chan_id = aml_chan->chan_id;
+> +		reg = (direction == DMA_DEV_TO_MEM) ? WCH_INT_MASK : RCH_INT_MASK;
+> +		regmap_set_bits(aml_dma->regmap, reg, BIT(chan_id));
+> +
+> +		break;
+> +	default:
+> +		dev_err(aml_dma->dma_device.dev, "status error\n");
+> +		return NULL;
+> +	}
+> +
+> +	link_count = sg_nents_for_dma(sgl, sg_len, SG_MAX_LEN);
+> +
+> +	if (link_count > DMA_MAX_LINK) {
+> +		dev_err(aml_dma->dma_device.dev,
+> +			"maximum number of sg exceeded: %d > %d\n",
+> +			sg_len, DMA_MAX_LINK);
+> +		aml_chan->status = DMA_ERROR;
+> +		return NULL;
+> +	}
+> +
+> +	aml_chan->status = DMA_IN_PROGRESS;
+> +
+> +	for_each_sg(sgl, sg, sg_len, i) {
+> +		avail = sg_dma_len(sg);
+> +		paddr = sg->dma_address;
+> +		while (avail > SG_MAX_LEN) {
+> +			sg_link = &aml_chan->sg_link[idx++];
+> +			/* set dma address and len  to sglink*/
+> +			sg_link->address = paddr;
+> +			sg_link->ctl = FIELD_PREP(LINK_LEN, SG_MAX_LEN);
+> +			paddr = paddr + SG_MAX_LEN;
+> +			avail = avail - SG_MAX_LEN;
+> +		}
+> +		sg_link = &aml_chan->sg_link[idx++];
+> +		/* set dma address and len  to sglink*/
+> +		sg_link->address = paddr;
+> +		sg_link->ctl = FIELD_PREP(LINK_LEN, avail);
+> +
+> +		aml_chan->data_len += sg_dma_len(sg);
+> +	}
+> +	aml_chan->sg_link_cnt = idx;
+
+There is no descriptor management here. You are directly writing to
+channel. This is _very_ inefficient and defeats the use of dmaengine.
+
+Please revise the driver. Implement queues to manage multiple txns and
+we have vchan to help you implement these, so take use of that
+
+-- 
+~Vinod
