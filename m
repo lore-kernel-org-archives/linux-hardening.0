@@ -1,140 +1,221 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33B933F368;
-	Tue, 17 Mar 2026 06:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438FA1A073F;
+	Tue, 17 Mar 2026 07:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773729760; cv=none; b=lUuv/vKM/OU6wtgfyybwf2INHluC+E0m5ZqKfGdb7c9ri9ducnNV2Xf/r1FlxUWJKnFBP1kz920qA7x8aehWFYw2xi6jlL3MGqnHY7A7s+IDuZkwnGxJcHbqJpAWDQCfoUSQSTvC7kGM+2768P6PopWALV7scRitR18YVwMlGck=
+	t=1773731019; cv=none; b=mgSoWotIJncPdkSe6sTd0/FqkyE2h4HcIW9Sg2QnwxWhoUI8LaoIb0+VYEh94rrWrNPVJK+sqYYzxhAeacAoPiV8EFCDsFyMLZf5jTgdViapc9EmlNLo0A88WK9xzlIGMIkHL8K0XdR0YBn4HuHbfX1kxMomtjrl81Ras2pk5qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773729760; c=relaxed/simple;
-	bh=p2jT3cj/dqZTMqBPRODxsJKcCAfEvHGxzp1GHCe76zM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RBomdW5Lbd8DCn/qBW1+M+E7Ls0n28KKgIjrBMYBOZ09I0ONp6xmaY0T6IUmG41y4WLePOiNgv5tfS1C7Ki19tOCaNeqxbjUZq4du8jSAk9IVgsJf4INdhf8P0MmpMwA01u0Q0m4j9qasz4nbdEs6yEm2V9DAweQ+e73ayyZBMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=T3VWcd1T reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1773731019; c=relaxed/simple;
+	bh=RIwg2cC1FwGdnNjLTD7uT1V2fe8NxEwMbNkRum1LoXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FhOMhy2s3LPwSr4cbF2txoaeAVycr539TnzzvBc4+gR72N28jcKsbX5wdyah+fsEfTABKq0Bvmm1K5cRQQDSqxFWjRPPpXXz+wPMnb1ZTp2dd4u66/0GdZZN4olmpPixJS27CPmSNak7VIrTWl3dY5YFikPI5q5BqLu6dGy+Xw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGzgsUIX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="T3VWcd1T"
-Received: from h205.csg.ci.i.u-tokyo.ac.jp (h205.csg.ci.i.u-tokyo.ac.jp [133.11.54.205])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 62H6aoNk004343
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 17 Mar 2026 15:37:00 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=tQPLRdcG2BXep0eW/gY1gtA4+gQ7V3cwSUUxElynWig=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-Id:To:Subject:Date;
-        s=rs20250326; t=1773729420; v=1;
-        b=T3VWcd1TYTjORfLvRhbKQXTFPIx/BVQzEBmsUG8cr7eJaO/QTqKPJimcC/hR7t5r
-         eADzWIjJ95qHfYNzy3ZahUpM77rolDmiRDbPunHJRA0x+69do3sjoB5XRVZpRxw6
-         Lr/k1gF2GQWwrcQOzvpr1OvTerXfGawV8A+4dxUoS2keyVT20/s5z/N2SLbdEmXV
-         bNW4/Ut2waJ7Isovenp+pTEBBxgrwQT58qm5MPxiorlUdzK8BsRqIE2BmBv3SxtZ
-         T/5XcaV+Ltev9xBZtUVuP9F4Wuifs9DjPb7VaDVEJXW+WNV83s441nhDCGUq37qj
-         Rjl9IPT2VvPGPenpVNoEAw==
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Subject: [PATCH v4 0/4] KVM: arm64: PMU: Use multiple host PMUs
-Date: Tue, 17 Mar 2026 15:36:48 +0900
-Message-Id: <20260317-hybrid-v4-0-bd62bcd48644@rsg.ci.i.u-tokyo.ac.jp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGzgsUIX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B656C4CEF7;
+	Tue, 17 Mar 2026 07:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773731018;
+	bh=RIwg2cC1FwGdnNjLTD7uT1V2fe8NxEwMbNkRum1LoXk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZGzgsUIXHyJWx0Xk8TkHwGSVefb24qtouxFFmKuE9T66ZreDNVVvaIIVdCBLt0g8i
+	 PQy13ESRaIZIZWxbixVArs9cnD+sC1QZgG+BhXg7/G5QCcAqx4P/myXut7JHleWpus
+	 MVL7f2n+J0eR8A9nHA8dbw+HPbVlBxa5SzSXc2cpcQBmNBJa0p14eSbq5icQje1FeF
+	 kxmjLU3S9VXu5ti2PY7IX0L/d1AdwNU8ztISJ7Hzkq41xcphE4+SM/subtpk45b0rz
+	 j64kuiwBr/ehrfWFEcdDbzQU7Qx/0fSAAgujBq3QXFSnijKteKQMod6nXWCpUkmhH5
+	 BzkhabS/xP7Rg==
+Date: Tue, 17 Mar 2026 08:03:32 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Linux Doc Mailing List
+ <linux-doc@vger.kernel.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Aleksandr Loktionov
+ <aleksandr.loktionov@intel.com>
+Subject: Re: [PATCH v2 05/28] docs: kdoc_re: add a C tokenizer
+Message-ID: <20260317080332.355d451c@foz.lan>
+In-Reply-To: <c53a3638-7a72-472c-81e8-86a6c235b598@infradead.org>
+References: <cover.1773326442.git.mchehab+huawei@kernel.org>
+	<8541ffa469647db1a7154f274fb2d55b4c127dcb.1773326442.git.mchehab+huawei@kernel.org>
+	<177370220974.1754131.9642805524574261129.b4-review@b4>
+	<c53a3638-7a72-472c-81e8-86a6c235b598@infradead.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAID2uGkC/3XPQW7DIBAF0KtYrAsaMCY0q9yj6oLAEE+r2Ak4V
- qzIdy/FSrrq8qM/b5gHy5gIM9s3D5ZwpkzjUIJ+a5jv3XBCTqFkpkB1oJTm/XJMFDjI0MWodxi
- CYqV8SRjpXqGPzy0nvN6KN22P7Ogycj+ezzTtm9kIaYUE9tvtKU9jWuofZlnLdV0r35/rZskl1
- 0G64CTgDrpDcMtAd1HAaszqb86Cec0pDhyMkQ5966L1h5RPwpMgcePT+L2MwnnxddmM9mmYcmr
- 3MtpiaIM2olJgLfxrrOv6Ay7e7ftRAQAA
-X-Change-ID: 20250224-hybrid-01d5ff47edd2
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-X-Mailer: b4 0.15-dev-5ab4c
 
-On a heterogeneous arm64 system, KVM's PMU emulation is based on the
-features of a single host PMU instance. When a vCPU is migrated to a
-pCPU with an incompatible PMU, counters such as PMCCNTR_EL0 stop
-incrementing.
+On Mon, 16 Mar 2026 16:29:37 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Although this behavior is permitted by the architecture, Windows does
-not handle it gracefully and may crash with a division-by-zero error.
+> Uh, I find this review confusing.
+> Do your (Jon) comments refer to the code above them?
+> (more below)
 
-The current workaround requires VMMs to pin vCPUs to a set of pCPUs
-that share a compatible PMU. This is difficult to implement correctly in
-QEMU/libvirt, where pinning occurs after vCPU initialization, and it
-also restricts the guest to a subset of available pCPUs.
+I was about to comment the same thing: it sounds that b4 review did a
+big mess with your comments, as it is very hard to identify what part
+of the code you're referring to.
 
-This patch introduces the KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
-attribute. If set, PMUv3 will be emulated without programmable event
-counters. KVM will be able to run VCPUs on any physical CPUs with a
-compatible hardware PMU.
+I'll reply to your comments on a separate e-mail - at least the ones I
+understand.
 
-This allows Windows guests to run reliably on heterogeneous systems
-without crashing, even without vCPU pinning, and enables VMMs to
-schedule vCPUs across all available pCPUs, making full use of the host
-hardware.
+> 
+> 
+> On 3/16/26 4:03 PM, Jonathan Corbet wrote:
+> > On Thu, 12 Mar 2026 15:54:25 +0100, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:  
+> >> Handling C code purely using regular expressions doesn't work well.
+> >>
+> >> Add a C tokenizer to help doing it the right way.
+> >>
+> >> The tokenizer was written using as basis the Python re documentation
+> >> tokenizer example from:
+> >> 	https://docs.python.org/3/library/re.html#writing-a-tokenizer
+> >>
+> >> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> >> Message-ID: <c63ad36c81fe043e9e33ca55630414893f127413.1773074166.git.mchehab+huawei@kernel.org>
+> >> Message-ID: <8541ffa469647db1a7154f274fb2d55b4c127dcb.1773326442.git.mchehab+huawei@kernel.org>  
+> > 
+> > This is a combined effort to review this patch and to try out "b4 review",
+> > we'll see how it goes :).
+> >   
+> >> diff --git a/tools/lib/python/kdoc/kdoc_re.py b/tools/lib/python/kdoc/kdoc_re.py
+> >> index 085b89a4547c0..7bed4e9a88108 100644
+> >> --- a/tools/lib/python/kdoc/kdoc_re.py
+> >> +++ b/tools/lib/python/kdoc/kdoc_re.py
+> >> @@ -141,6 +141,240 @@ class KernRe:
+> >> [ ... skip 4 lines ... ]
+> >> +
+> >> +    @staticmethod
+> >> +    def __str__(val):
+> >> +        """Return the name of an enum value"""
+> >> +        return TokType._name_by_val.get(val, f"UNKNOWN({val})")
+> >> +  
+> > 
+> > What is this class supposed to do?
+> >   
+> >> [ ... skip 27 lines ... ]
+> >> +    _name_by_val = {v: k for k, v in dict(vars()).items() if isinstance(v, int)}
+> >> +
+> >> +    # Dict to convert from string to an enum-like integer value.
+> >> +    _name_to_val = {k: v for v, k in _name_by_val.items()}
+> >> +
+> >> +    @staticmethod  
+> > 
+> > This stuff strikes me as a bit overdone; _name_to_val is really just the
+> > variable list for the class, right?
+> >   
+> >> [ ... skip 30 lines ... ]
+> >> +               f"{self.brace_level}, {self.paren_level}, {self.bracket_level})"
+> >> +
+> >> +#: Tokens to parse C code.
+> >> +TOKEN_LIST = [
+> >> +    (CToken.COMMENT, r"//[^\n]*|/\*[\s\S]*?\*/"),
+> >> +  
+> > 
+> > So these aren't "tokens", this is a list of regexes; how is it intended
+> > to be used?
+> >   
+> >> +    (CToken.STRING,  r'"(?:\\.|[^"\\])*"'),
+> >> +    (CToken.CHAR,    r"'(?:\\.|[^'\\])'"),
+> >> +
+> >> +    (CToken.NUMBER,  r"0[xX][0-9a-fA-F]+[uUlL]*|0[0-7]+[uUlL]*|"  
+> > 
+> > How does "[\s\S]*" differ from plain old "*" ?
+> >   
+> >> [ ... skip 15 lines ... ]
+> >> +    (CToken.STRUCT,  r"\bstruct\b"),
+> >> +    (CToken.UNION,   r"\bunion\b"),
+> >> +    (CToken.ENUM,    r"\benum\b"),
+> >> +    (CToken.TYPEDEF, r"\bkinddef\b"),
+> >> +
+> >> +    (CToken.NAME,      r"[A-Za-z_][A-Za-z0-9_]*"),  
+> > 
+> > "-" and "!" never need to be escaped.
+> >   
+> >> +
+> >> +    (CToken.SPACE,   r"[\s]+"),
+> >> +
+> >> +    (CToken.MISMATCH,r"."),
+> >> +]
+> >> +  
+> > 
+> > "kinddef" ?  
+> 
+> What does that refer to?
+> 
+> >   
+> >> +#: Handle C continuation lines.
+> >> +RE_CONT = KernRe(r"\\\n")
+> >> +
+> >> +RE_COMMENT_START = KernRe(r'/\*\s*')
+> >> +  
+> > 
+> > Don't need the [brackets] here  
+> 
+> what brackets?
+> 
+> >   
+> >> [ ... skip 6 lines ... ]
+> >> +
+> >> +    When converted to string, it drops comments and handle public/private
+> >> +    values, respecting depth.
+> >> +    """
+> >> +
+> >> +    # This class is inspired and follows the basic concepts of:  
+> > 
+> > That seems weird, why don't you just initialize it here?  
+> 
+> I can't tell what that comments refers to.
+> 
+> >> [ ... skip 14 lines ... ]
+> >> +        source = RE_CONT.sub("", source)
+> >> +
+> >> +        brace_level = 0
+> >> +        paren_level = 0
+> >> +        bracket_level = 0
+> >> +  
+> > 
+> > Do you mean "iterator" here?  
+> 
+> Ditto.
+> 
+> >> [ ... skip 33 lines ... ]
+> >> +        in this particular case, it makes sense, as we can pick the name
+> >> +        when matching a code via re_scanner().
+> >> +        """
+> >> +        global re_scanner
+> >> +
+> >> +        if not re_scanner:  
+> > 
+> > Putting __init__() first is fairly standard, methinks.
+> >   
+> >> [ ... skip 15 lines ... ]
+> >> +
+> >> +        for tok in self.tokens:
+> >> +            if tok.kind == CToken.BEGIN:
+> >> +                show_stack.append(show_stack[-1])
+> >> +
+> >> +            elif tok.kind == CToken.END:  
+> > 
+> > I still don't understand why you do this here - this is all constant, right?
+> >   
+> >> +                prev = show_stack[-1]
+> >> +                if len(show_stack) > 1:
+> >> +                    show_stack.pop()
+> >> +
+> >> +                if not prev and show_stack[-1]:  
+> > 
+> > So you create a nice iterator structure, then just put it all together into a
+> > list anyway?
+> >   
+> 
 
-A QEMU patch that demonstrates the usage of the new attribute is
-available at:
-https://lore.kernel.org/qemu-devel/20260225-kvm-v2-1-b8d743db0f73@rsg.ci.i.u-tokyo.ac.jp/
-("[PATCH RFC v2] target/arm/kvm: Choose PMU backend")
 
-Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
----
-Changes in v4:
-- Extracted kvm_pmu_enabled_counter_mask() into a separate patch.
-- Added patch "KVM: arm64: PMU: Protect the list of PMUs with RCU".
-- Merged KVM_REQ_CREATE_PMU into KVM_REQ_RELOAD_PMU.
-- Added a check to avoid unnecessary KVM_REQ_RELOAD_PMU requests.
-- Dropped the change to avoid setting kvm_arm_set_default_pmu() when
-  KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY is not set.
-- Link to v3: https://lore.kernel.org/r/20260225-hybrid-v3-0-46e8fe220880@rsg.ci.i.u-tokyo.ac.jp
 
-Changes in v3:
-- Renamed the attribute to KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY.
-- Changed to request the creation of perf counters when loading vCPU.
-- Link to v2: https://lore.kernel.org/r/20250806-hybrid-v2-0-0661aec3af8c@rsg.ci.i.u-tokyo.ac.jp
-
-Changes in v2:
-- Added the KVM_ARM_VCPU_PMU_V3_COMPOSITION attribute to opt in the
-  feature.
-- Added code to handle overflow.
-- Link to v1: https://lore.kernel.org/r/20250319-hybrid-v1-1-4d1ada10e705@daynix.com
-
----
-Akihiko Odaki (4):
-      KVM: arm64: PMU: Add kvm_pmu_enabled_counter_mask()
-      KVM: arm64: PMU: Protect the list of PMUs with RCU
-      KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
-      KVM: arm64: selftests: Test PMU_V3_FIXED_COUNTERS_ONLY
-
- Documentation/virt/kvm/devices/vcpu.rst            |  29 ++++
- arch/arm64/include/asm/kvm_host.h                  |   2 +
- arch/arm64/include/uapi/asm/kvm.h                  |   1 +
- arch/arm64/kvm/arm.c                               |   1 +
- arch/arm64/kvm/pmu-emul.c                          | 190 ++++++++++++++-------
- include/kvm/arm_pmu.h                              |   2 +
- .../selftests/kvm/arm64/vpmu_counter_access.c      | 148 +++++++++++++---
- 7 files changed, 290 insertions(+), 83 deletions(-)
----
-base-commit: ef87500dc466ef424e4fc344b5063d345e18bf73
-change-id: 20250224-hybrid-01d5ff47edd2
-
-Best regards,
---  
-Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-
+Thanks,
+Mauro
