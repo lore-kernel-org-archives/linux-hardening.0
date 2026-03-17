@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F173F8E11;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372D33F8E12;
 	Tue, 17 Mar 2026 18:09:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773770990; cv=none; b=dmSZ4YRCV0MwxnI5uq7W0XVkb3a8MhFDdUXwibBdAPytm158ZBJ544Q1Rgh5rM3Y8WJm0KP4ObOqGWMOziTe3HDLnxBH0ScGqInvMb+LWSeRCDky/lYOCp25RaLcfSYPCBJCt9LUptHGBxJQ2flw1BmAbwQZdkDoyt1EzBqsO2Y=
+	t=1773770990; cv=none; b=NdfhQdnx+bOR614q9PWyUlztqNEGlgNR9WInbetEPQq3g93RWIRbzinnzFssEGJpvAjxTcjyasb1OuBOn16lbrvI0riKv+6rSocFTc/Z3f7XVlURUhotryq/mnTTl9PgYAg1X5HS7WVc820Co/xWkb/V60kTkNRmGek124d8RnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773770990; c=relaxed/simple;
-	bh=PHXaltNZ4ol9wjdXwRcvdpg7f6YIjhlE0exg45N//uI=;
+	bh=ZDRG5DBGkJYDCOF+lIGnqxY+DJZczzp7U4kkKLWMkJk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BayqnFcXGn61cA7zSAh3c4DfdbQnWphKBysR0hd4wjLeqZU4H2HZL1VuLk3gtx2+d6qZn/cOrfGTjtNc+lDXHFD/DjpHB87jDBeANsaA20+vtrJJwKjom4V+EXrenEs4JKjnQqS44xMPjxLIQlbNJliicMFVX8nGb+3pxOXlp8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZrXSmO8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hI3j7rCfv5FL+O8yrojIAV31DLoaCZheh9MnI0pJD8/RB7LGdivQWNDoX++8TcgKiM7ueNG2rLeVRIoCypzYjK6MKeaRqmM43BCJE6cr2iaxzvwiWFvQOnT0me9Fo6awVzqJWal0qLgAUHgaGCyt876skZUvOS8otiAGvRBk87g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vNS1LYyx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZrXSmO8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C34CC2BC86;
-	Tue, 17 Mar 2026 18:09:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vNS1LYyx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA7E8C4CEF7;
+	Tue, 17 Mar 2026 18:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1773770990;
-	bh=PHXaltNZ4ol9wjdXwRcvdpg7f6YIjhlE0exg45N//uI=;
+	bh=ZDRG5DBGkJYDCOF+lIGnqxY+DJZczzp7U4kkKLWMkJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gZrXSmO8eUuqNsR8v0KCMp8jF81KEFRbJbqAYCDJ2UpCdHIATyteYnkX450rkHfgY
-	 V/R7LzUFsxScj+s2vqyXnulzQwxxKKx+sER7lhA+zDhYCX2l7YDlnOp04dtv88a+yD
-	 ySZQygOHGu/y6AjAlx3CpV/tVr0b8HnxeOtGICymjfk3I0imb1FkhcxR6r9OXN076s
-	 p7W+u2Ego4wP03zptj11rl/z6PvVZYvq0wEXoILGmFqJPHPB0UCd5MQXZt2YZiEP4H
-	 X1eNtVqzrJmMm+wP0dRsUQ8At2CK36Wf2Q75nMF/5m8PMEMQQZ+N/MYnK+WBbK7rww
-	 8GCpMF9EVnSbw==
+	b=vNS1LYyxOBioBEWYR7h62fJBrOtzb/roeeRlhGuGHctB34JMvIefm959FtIlKMaaF
+	 7G8l4G2ZE2oT1u8sMNXsMYcMgBu022vP7d/RY+pnrCvQZZa2CkOCu9lkhrn4u7UYav
+	 ZyH/5lYxVUIl+517oQhTW5WaetI86B9ZzDlfPFVZsBnRnR+mW0ypJT48pmzemI5XBs
+	 B8qdaxMF8YOBy5g4kI4q39ePqMYTTVPLHdHK7JRxkZmTnCeTmESCFCo19SjAc3szYv
+	 6Zud9kJJYdwOvC3SLYn1pfjsXyPBohzL9Ioe0ry0p5hq1zDy8RbtL4Ib8gMJ0oM4c9
+	 l8qQZgTCW3C2Q==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1w2YrU-0000000H5Wi-1EkP;
-	Tue, 17 Mar 2026 19:09:48 +0100
+	id 1w2YrT-0000000H5UD-3oyp;
+	Tue, 17 Mar 2026 19:09:47 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
 	Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v3 15/22] docs: kdoc_re: get rid of NestedMatch class
-Date: Tue, 17 Mar 2026 19:09:35 +0100
-Message-ID: <c82dd0d2c0ab330fc04925965091c448ccabb8fd.1773770483.git.mchehab+huawei@kernel.org>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH v3 13/22] unittests: test_cmatch: add tests for sub()
+Date: Tue, 17 Mar 2026 19:09:33 +0100
+Message-ID: <b2621b0d378317f0db5eeb2408c794429dc9f70a.1773770483.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1773770483.git.mchehab+huawei@kernel.org>
 References: <cover.1773770483.git.mchehab+huawei@kernel.org>
@@ -54,223 +54,768 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that everything was converted to CMatch, we can get rid of
-the previous NestedMatch implementation.
+Now that we have code for sub(), test it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/lib/python/kdoc/kdoc_re.py | 201 -------------------------------
- 1 file changed, 201 deletions(-)
+ tools/unittests/test_cmatch.py | 730 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 728 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/python/kdoc/kdoc_re.py b/tools/lib/python/kdoc/kdoc_re.py
-index 085b89a4547c..6f3ae28859ea 100644
---- a/tools/lib/python/kdoc/kdoc_re.py
-+++ b/tools/lib/python/kdoc/kdoc_re.py
-@@ -140,204 +140,3 @@ class KernRe:
-         """
+diff --git a/tools/unittests/test_cmatch.py b/tools/unittests/test_cmatch.py
+index 53b25aa4dc4a..7b996f83784d 100755
+--- a/tools/unittests/test_cmatch.py
++++ b/tools/unittests/test_cmatch.py
+@@ -21,7 +21,7 @@ SRC_DIR = os.path.dirname(os.path.realpath(__file__))
+ sys.path.insert(0, os.path.join(SRC_DIR, "../lib/python"))
  
-         return self.last_match.groups()
--
--#: Nested delimited pairs (brackets and parenthesis)
--DELIMITER_PAIRS = {
--    '{': '}',
--    '(': ')',
--    '[': ']',
--}
--
--#: compiled delimiters
--RE_DELIM = KernRe(r'[\{\}\[\]\(\)]')
--
--
--class NestedMatch:
--    """
--    Finding nested delimiters is hard with regular expressions. It is
--    even harder on Python with its normal re module, as there are several
--    advanced regular expressions that are missing.
--
--    This is the case of this pattern::
--
--            '\\bSTRUCT_GROUP(\\(((?:(?>[^)(]+)|(?1))*)\\))[^;]*;'
--
--    which is used to properly match open/close parentheses of the
--    string search STRUCT_GROUP(),
--
--    Add a class that counts pairs of delimiters, using it to match and
--    replace nested expressions.
--
--    The original approach was suggested by:
--
--        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
--
--    Although I re-implemented it to make it more generic and match 3 types
--    of delimiters. The logic checks if delimiters are paired. If not, it
--    will ignore the search string.
--    """
--
--    # TODO: make NestedMatch handle multiple match groups
--    #
--    # Right now, regular expressions to match it are defined only up to
--    #       the start delimiter, e.g.:
--    #
--    #       \bSTRUCT_GROUP\(
--    #
--    # is similar to: STRUCT_GROUP\((.*)\)
--    # except that the content inside the match group is delimiter-aligned.
--    #
--    # The content inside parentheses is converted into a single replace
--    # group (e.g. r`\0').
--    #
--    # It would be nice to change such definition to support multiple
--    # match groups, allowing a regex equivalent to:
--    #
--    #   FOO\((.*), (.*), (.*)\)
--    #
--    # it is probably easier to define it not as a regular expression, but
--    # with some lexical definition like:
--    #
--    #   FOO(arg1, arg2, arg3)
--
--    def __init__(self, regex):
--        self.regex = KernRe(regex)
--
--    def _search(self, line):
--        """
--        Finds paired blocks for a regex that ends with a delimiter.
--
--        The suggestion of using finditer to match pairs came from:
--        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
--        but I ended using a different implementation to align all three types
--        of delimiters and seek for an initial regular expression.
--
--        The algorithm seeks for open/close paired delimiters and places them
--        into a stack, yielding a start/stop position of each match when the
--        stack is zeroed.
--
--        The algorithm should work fine for properly paired lines, but will
--        silently ignore end delimiters that precede a start delimiter.
--        This should be OK for kernel-doc parser, as unaligned delimiters
--        would cause compilation errors. So, we don't need to raise exceptions
--        to cover such issues.
--        """
--
--        stack = []
--
--        for match_re in self.regex.finditer(line):
--            start = match_re.start()
--            offset = match_re.end()
--            string_char = None
--            escape = False
--
--            d = line[offset - 1]
--            if d not in DELIMITER_PAIRS:
--                continue
--
--            end = DELIMITER_PAIRS[d]
--            stack.append(end)
--
--            for match in RE_DELIM.finditer(line[offset:]):
--                pos = match.start() + offset
--
--                d = line[pos]
--
--                if escape:
--                    escape = False
--                    continue
--
--                if string_char:
--                    if d == '\\':
--                        escape = True
--                    elif d == string_char:
--                        string_char = None
--
--                    continue
--
--                if d in ('"', "'"):
--                    string_char = d
--                    continue
--
--                if d in DELIMITER_PAIRS:
--                    end = DELIMITER_PAIRS[d]
--
--                    stack.append(end)
--                    continue
--
--                # Does the end delimiter match what is expected?
--                if stack and d == stack[-1]:
--                    stack.pop()
--
--                    if not stack:
--                        yield start, offset, pos + 1
--                        break
--
--    def search(self, line):
--        """
--        This is similar to re.search:
--
--        It matches a regex that it is followed by a delimiter,
--        returning occurrences only if all delimiters are paired.
--        """
--
--        for t in self._search(line):
--
--            yield line[t[0]:t[2]]
--
--    def sub(self, sub, line, count=0):
--        """
--        This is similar to re.sub:
--
--        It matches a regex that it is followed by a delimiter,
--        replacing occurrences only if all delimiters are paired.
--
--        if the sub argument contains::
--
--            r'\0'
--
--        it will work just like re: it places there the matched paired data
--        with the delimiter stripped.
--
--        If count is different than zero, it will replace at most count
--        items.
--        """
--        out = ""
--
--        cur_pos = 0
--        n = 0
--
--        for start, end, pos in self._search(line):
--            out += line[cur_pos:start]
--
--            # Value, ignoring start/end delimiters
--            value = line[end:pos - 1]
--
--            # replaces \0 at the sub string, if \0 is used there
--            new_sub = sub
--            new_sub = new_sub.replace(r'\0', value)
--
--            out += new_sub
--
--            # Drop end ';' if any
--            if pos < len(line) and line[pos] == ';':
--                pos += 1
--
--            cur_pos = pos
--            n += 1
--
--            if count and count >= n:
--                break
--
--        # Append the remaining string
--        l = len(line)
--        out += line[cur_pos:l]
--
--        return out
--
--    def __repr__(self):
--        """
--        Returns a displayable version of the class init.
--        """
--
--        return f'NestedMatch("{self.regex.regex.pattern}")'
+ from kdoc.c_lex import CMatch
+-from kdoc.xforms_lists import CTransforms
++from kdoc.kdoc_re import KernRe
+ from unittest_helper import run_unittest
+ 
+ #
+@@ -75,7 +75,7 @@ class TestSearch(TestCaseDiff):
+ 
+     def test_search_no_false_positive(self):
+         line = "call__acquires(foo);  // should stay intact"
+-        result = ", ".join(CMatch(r"\b__acquires").search(line))
++        result = ", ".join(CMatch(r"__acquires").search(line))
+         self.assertEqual(result, "")
+ 
+     def test_search_no_macro_remains(self):
+@@ -88,6 +88,732 @@ class TestSearch(TestCaseDiff):
+         result = ", ".join(CMatch(line).search(line))
+         self.assertEqual(result, "")
+ 
++#
++# Override unittest.TestCase to better compare diffs ignoring whitespaces
++#
++class TestCaseDiff(unittest.TestCase):
++    """
++    Disable maximum limit on diffs and add a method to better
++    handle diffs with whitespace differences.
++    """
++
++    @classmethod
++    def setUpClass(cls):
++        """Ensure that there won't be limit for diffs"""
++        cls.maxDiff = None
++
++    def assertLogicallyEqual(self, a, b):
++        """
++        Compare two results ignoring multiple whitespace differences.
++
++        This is useful to check more complex matches picked from examples.
++        On a plus side, we also don't need to use dedent.
++        Please notice that line breaks still need to match. We might
++        remove it at the regex, but this way, checking the diff is easier.
++        """
++        a = re.sub(r"[\t ]+", " ", a.strip())
++        b = re.sub(r"[\t ]+", " ", b.strip())
++
++        a = re.sub(r"\s+\n", "\n", a)
++        b = re.sub(r"\s+\n", "\n", b)
++
++        a = re.sub(" ;", ";", a)
++        b = re.sub(" ;", ";", b)
++
++        self.assertEqual(a, b)
++
++#
++# Tests doing with different macros
++#
++
++class TestSubMultipleMacros(TestCaseDiff):
++    """
++    Tests doing with different macros.
++
++    Here, we won't use assertLogicallyEqual. Instead, we'll check if each
++    of the expected patterns are present at the answer.
++    """
++
++    def test_acquires_simple(self):
++        """Simple replacement test with __acquires"""
++        line = "__acquires(ctx) foo();"
++        result = CMatch(r"__acquires").sub("REPLACED", line)
++
++        self.assertEqual("REPLACED foo();", result)
++
++    def test_acquires_multiple(self):
++        """Multiple __acquires"""
++        line = "__acquires(ctx) __acquires(other) bar();"
++        result = CMatch(r"__acquires").sub("REPLACED", line)
++
++        self.assertEqual("REPLACED REPLACED bar();", result)
++
++    def test_acquires_nested_paren(self):
++        """__acquires with nested pattern"""
++        line = "__acquires((ctx1, ctx2)) baz();"
++        result = CMatch(r"__acquires").sub("REPLACED", line)
++
++        self.assertEqual("REPLACED baz();", result)
++
++    def test_must_hold(self):
++        """__must_hold with a pointer"""
++        line = "__must_hold(&lock) do_something();"
++        result = CMatch(r"__must_hold").sub("REPLACED", line)
++
++        self.assertNotIn("__must_hold(", result)
++        self.assertIn("do_something();", result)
++
++    def test_must_hold_shared(self):
++        """__must_hold with an upercase defined value"""
++        line = "__must_hold_shared(RCU) other();"
++        result = CMatch(r"__must_hold_shared").sub("REPLACED", line)
++
++        self.assertNotIn("__must_hold_shared(", result)
++        self.assertIn("other();", result)
++
++    def test_no_false_positive(self):
++        """
++        Ensure that unrelated text containing similar patterns is preserved
++        """
++        line = "call__acquires(foo);  // should stay intact"
++        result = CMatch(r"\b__acquires").sub("REPLACED", line)
++
++        self.assertLogicallyEqual(result, "call__acquires(foo);")
++
++    def test_mixed_macros(self):
++        """Add a mix of macros"""
++        line = "__acquires(ctx) __releases(ctx) __must_hold(&lock) foo();"
++
++        result = CMatch(r"__acquires").sub("REPLACED", line)
++        result = CMatch(r"__releases").sub("REPLACED", result)
++        result = CMatch(r"__must_hold").sub("REPLACED", result)
++
++        self.assertNotIn("__acquires(", result)
++        self.assertNotIn("__releases(", result)
++        self.assertNotIn("__must_hold(", result)
++
++        self.assertIn("foo();", result)
++
++    def test_no_macro_remains(self):
++        """Ensures that unmatched macros are untouched"""
++        line = "do_something_else();"
++        result = CMatch(r"__acquires").sub("REPLACED", line)
++
++        self.assertEqual(result, line)
++
++    def test_no_function(self):
++        """Ensures that no functions will remain untouched"""
++        line = "something"
++        result = CMatch(line).sub("REPLACED", line)
++
++        self.assertEqual(result, line)
++
++#
++# Check if the diff is logically equivalent. To simplify, the tests here
++# use a single macro name for all replacements.
++#
++
++class TestSubSimple(TestCaseDiff):
++    """
++    Test argument replacements.
++
++    Here, the function name can be anything. So, we picked __attribute__(),
++    to mimic a macro found at the Kernel, but none of the replacements her
++    has any relationship with the Kernel usage.
++    """
++
++    MACRO = "__attribute__"
++
++    @classmethod
++    def setUpClass(cls):
++        """Define a CMatch to be used for all tests"""
++        cls.matcher = CMatch(cls.MACRO)
++
++    def test_sub_with_capture(self):
++        """Test all arguments replacement with a single arg"""
++        line = f"{self.MACRO}(&ctx)\nfoo();"
++
++        result = self.matcher.sub(r"ACQUIRED(\0)", line)
++
++        self.assertLogicallyEqual("ACQUIRED(&ctx)\nfoo();", result)
++
++    def test_sub_zero_placeholder(self):
++        """Test all arguments replacement with a multiple args"""
++        line = f"{self.MACRO}(arg1, arg2)\nbar();"
++
++        result = self.matcher.sub(r"REPLACED(\0)", line)
++
++        self.assertLogicallyEqual("REPLACED(arg1, arg2)\nbar();", result)
++
++    def test_sub_single_placeholder(self):
++        """Single replacement rule for \1"""
++        line = f"{self.MACRO}(ctx, boo)\nfoo();"
++        result = self.matcher.sub(r"ACQUIRED(\1)", line)
++
++        self.assertLogicallyEqual("ACQUIRED(ctx)\nfoo();", result)
++
++    def test_sub_multiple_placeholders(self):
++        """Replacement rule for both \1 and \2"""
++        line = f"{self.MACRO}(arg1, arg2)\nbar();"
++        result = self.matcher.sub(r"REPLACE(\1, \2)", line)
++
++        self.assertLogicallyEqual("REPLACE(arg1, arg2)\nbar();", result)
++
++    def test_sub_mixed_placeholders(self):
++        """Replacement rule for \0, \1 and additional text"""
++        line = f"{self.MACRO}(foo, bar)\nbaz();"
++        result = self.matcher.sub(r"ALL(\0) FIRST(\1)", line)
++
++        self.assertLogicallyEqual("ALL(foo, bar) FIRST(foo)\nbaz();", result)
++
++    def test_sub_no_placeholder(self):
++        """Replacement without placeholders"""
++        line = f"{self.MACRO}(arg)\nfoo();"
++        result = self.matcher.sub(r"NO_BACKREFS()", line)
++
++        self.assertLogicallyEqual("NO_BACKREFS()\nfoo();", result)
++
++    def test_sub_count_parameter(self):
++        """Verify that the algorithm stops after the requested count"""
++        line = f"{self.MACRO}(a1) x();\n{self.MACRO}(a2) y();"
++        result = self.matcher.sub(r"ONLY_FIRST(\1) ", line, count=1)
++
++        self.assertLogicallyEqual(f"ONLY_FIRST(a1) x();\n{self.MACRO}(a2) y();",
++                                  result)
++
++    def test_strip_multiple_acquires(self):
++        """Check if spaces between removed delimiters will be dropped"""
++        line = f"int {self.MACRO}(1)  {self.MACRO}(2 )   {self.MACRO}(3) foo;"
++        result = self.matcher.sub("", line)
++
++        self.assertLogicallyEqual(result, "int foo;")
++
++    def test_rise_early_greedy(self):
++        line = f"{self.MACRO}(a, b, c, d);"
++        sub = r"\1, \2+, \3"
++
++        with self.assertRaises(ValueError):
++            result = self.matcher.sub(sub, line)
++
++    def test_rise_multiple_greedy(self):
++        line = f"{self.MACRO}(a, b, c, d);"
++        sub = r"\1, \2+, \3+"
++
++        with self.assertRaises(ValueError):
++            result = self.matcher.sub(sub, line)
++
++#
++# Test replacements with slashrefs
++#
++
++
++class TestSubWithLocalXforms(TestCaseDiff):
++    """
++    Test diferent usecase patterns found at the Kernel.
++
++    Here, replacements using both CMatch and KernRe can be tested,
++    as it will import the actual replacement rules used by kernel-doc.
++    """
++
++    struct_xforms = [
++        (CMatch("__attribute__"), ' '),
++        (CMatch('__aligned'), ' '),
++        (CMatch('__counted_by'), ' '),
++        (CMatch('__counted_by_(le|be)'), ' '),
++        (CMatch('__guarded_by'), ' '),
++        (CMatch('__pt_guarded_by'), ' '),
++
++        (CMatch('__cacheline_group_(begin|end)'), ''),
++
++        (CMatch('struct_group'), r'\2'),
++        (CMatch('struct_group_attr'), r'\3'),
++        (CMatch('struct_group_tagged'), r'struct \1 { \3+ } \2;'),
++        (CMatch('__struct_group'), r'\4'),
++
++        (CMatch('__ETHTOOL_DECLARE_LINK_MODE_MASK'), r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
++        (CMatch('DECLARE_PHY_INTERFACE_MASK',), r'DECLARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
++        (CMatch('DECLARE_BITMAP'), r'unsigned long \1[BITS_TO_LONGS(\2)]'),
++
++        (CMatch('DECLARE_HASHTABLE'), r'unsigned long \1[1 << ((\2) - 1)]'),
++        (CMatch('DECLARE_KFIFO'), r'\2 *\1'),
++        (CMatch('DECLARE_KFIFO_PTR'), r'\2 *\1'),
++        (CMatch('(?:__)?DECLARE_FLEX_ARRAY'), r'\1 \2[]'),
++        (CMatch('DEFINE_DMA_UNMAP_ADDR'), r'dma_addr_t \1'),
++        (CMatch('DEFINE_DMA_UNMAP_LEN'), r'__u32 \1'),
++        (CMatch('VIRTIO_DECLARE_FEATURES'), r'union { u64 \1; u64 \1_array[VIRTIO_FEATURES_U64S]; }'),
++    ]
++
++    function_xforms = [
++        (CMatch('__printf'), ""),
++        (CMatch('__(?:re)?alloc_size'), ""),
++        (CMatch("__diagnose_as"), ""),
++        (CMatch("DECL_BUCKET_PARAMS"), r"\1, \2"),
++
++        (CMatch("__cond_acquires"), ""),
++        (CMatch("__cond_releases"), ""),
++        (CMatch("__acquires"), ""),
++        (CMatch("__releases"), ""),
++        (CMatch("__must_hold"), ""),
++        (CMatch("__must_not_hold"), ""),
++        (CMatch("__must_hold_shared"), ""),
++        (CMatch("__cond_acquires_shared"), ""),
++        (CMatch("__acquires_shared"), ""),
++        (CMatch("__releases_shared"), ""),
++        (CMatch("__attribute__"), ""),
++    ]
++
++    var_xforms = [
++        (CMatch('__guarded_by'), ""),
++        (CMatch('__pt_guarded_by'), ""),
++        (CMatch("LIST_HEAD"), r"struct list_head \1"),
++    ]
++
++    #: Transforms main dictionary used at apply_transforms().
++    xforms = {
++        "struct": struct_xforms,
++        "func": function_xforms,
++        "var": var_xforms,
++    }
++
++    @classmethod
++    def apply_transforms(cls, xform_type, text):
++        """
++        Mimic the behavior of kdoc_parser.apply_transforms() method.
++
++        For each element of STRUCT_XFORMS, apply apply_transforms.
++
++        There are two parameters:
++
++        - ``xform_type``
++            Can be ``func``, ``struct`` or ``var``;
++        - ``text``
++            The text where the sub patterns from CTransforms will be applied.
++        """
++        for search, subst in cls.xforms.get(xform_type):
++            text = search.sub(subst, text)
++
++        return text.strip()
++
++        cls.matcher = CMatch(r"struct_group[\w\_]*")
++
++    def test_struct_group(self):
++        """
++        Test struct_group using a pattern from
++        drivers/net/ethernet/asix/ax88796c_main.h.
++        """
++        line = """
++            struct tx_pkt_info {
++                    struct_group(tx_overhead,
++                            struct tx_sop_header sop;
++                            struct tx_segment_header seg;
++                    );
++                    struct tx_eop_header eop;
++                    u16 pkt_len;
++                    u16 seq_num;
++            };
++        """
++        expected = """
++            struct tx_pkt_info {
++                    struct tx_sop_header sop;
++                    struct tx_segment_header seg;
++                    struct tx_eop_header eop;
++                    u16 pkt_len;
++                    u16 seq_num;
++            };
++        """
++
++        result = self.apply_transforms("struct", line)
++        self.assertLogicallyEqual(result, expected)
++
++    def test_struct_group_attr(self):
++        """
++        Test two struct_group_attr using patterns from fs/smb/client/cifspdu.h.
++        """
++        line = """
++            typedef struct smb_com_open_rsp {
++                struct smb_hdr hdr;     /* wct = 34 BB */
++                __u8 AndXCommand;
++                __u8 AndXReserved;
++                __le16 AndXOffset;
++                __u8 OplockLevel;
++                __u16 Fid;
++                __le32 CreateAction;
++                struct_group_attr(common_attributes,,
++                    __le64 CreationTime;
++                    __le64 LastAccessTime;
++                    __le64 LastWriteTime;
++                    __le64 ChangeTime;
++                    __le32 FileAttributes;
++                );
++                __le64 AllocationSize;
++                __le64 EndOfFile;
++                __le16 FileType;
++                __le16 DeviceState;
++                __u8 DirectoryFlag;
++                __u16 ByteCount;        /* bct = 0 */
++            } OPEN_RSP;
++            typedef struct {
++                struct_group_attr(common_attributes,,
++                    __le64 CreationTime;
++                    __le64 LastAccessTime;
++                    __le64 LastWriteTime;
++                    __le64 ChangeTime;
++                    __le32 Attributes;
++                );
++                __u32 Pad1;
++                __le64 AllocationSize;
++                __le64 EndOfFile;
++                __le32 NumberOfLinks;
++                __u8 DeletePending;
++                __u8 Directory;
++                __u16 Pad2;
++                __le32 EASize;
++                __le32 FileNameLength;
++                union {
++                    char __pad;
++                    DECLARE_FLEX_ARRAY(char, FileName);
++                };
++            } FILE_ALL_INFO;       /* level 0x107 QPathInfo */
++        """
++        expected = """
++            typedef struct smb_com_open_rsp {
++                struct smb_hdr hdr;
++                __u8 AndXCommand;
++                __u8 AndXReserved;
++                __le16 AndXOffset;
++                __u8 OplockLevel;
++                __u16 Fid;
++                __le32 CreateAction;
++                __le64 CreationTime;
++                __le64 LastAccessTime;
++                __le64 LastWriteTime;
++                __le64 ChangeTime;
++                __le32 FileAttributes;
++                __le64 AllocationSize;
++                __le64 EndOfFile;
++                __le16 FileType;
++                __le16 DeviceState;
++                __u8 DirectoryFlag;
++                __u16 ByteCount;
++            } OPEN_RSP;
++        typedef struct {
++            __le64 CreationTime;
++            __le64 LastAccessTime;
++            __le64 LastWriteTime;
++            __le64 ChangeTime;
++            __le32 Attributes;
++            __u32 Pad1;
++            __le64 AllocationSize;
++            __le64 EndOfFile;
++            __le32 NumberOfLinks;
++            __u8 DeletePending;
++            __u8 Directory;
++            __u16 Pad2;
++            __le32 EASize;
++            __le32 FileNameLength;
++            union {
++                char __pad;
++                char FileName[];
++            };
++        } FILE_ALL_INFO;
++        """
++
++        result = self.apply_transforms("struct", line)
++        self.assertLogicallyEqual(result, expected)
++
++    def test_raw_struct_group(self):
++        """
++        Test a __struct_group pattern from include/uapi/cxl/features.h.
++        """
++        line = """
++            struct cxl_mbox_get_sup_feats_out {
++                __struct_group(cxl_mbox_get_sup_feats_out_hdr, hdr, /* empty */,
++                    __le16 num_entries;
++                    __le16 supported_feats;
++                    __u8 reserved[4];
++                );
++                struct cxl_feat_entry ents[] __counted_by_le(num_entries);
++            } __attribute__ ((__packed__));
++        """
++        expected = """
++            struct cxl_mbox_get_sup_feats_out {
++                __le16 num_entries;
++                __le16 supported_feats;
++                __u8 reserved[4];
++                struct cxl_feat_entry ents[];
++            };
++        """
++
++        result = self.apply_transforms("struct", line)
++        self.assertLogicallyEqual(result, expected)
++
++    def test_raw_struct_group_tagged(self):
++        r"""
++        Test cxl_regs with struct_group_tagged patterns from drivers/cxl/cxl.h.
++
++        NOTE:
++
++            This one has actually a violation from what kernel-doc would
++            expect: Kernel-doc regex expects only 3 members, but this is
++            actually defined as::
++
++                #define struct_group_tagged(TAG, NAME, MEMBERS...)
++
++            The replace expression there is::
++
++                struct \1 { \3 } \2;
++
++            but it should be really something like::
++
++                struct \1 { \3 \4 \5 \6 \7 \8 ... } \2;
++
++            a later fix would be needed to address it.
++
++        """
++        line = """
++            struct cxl_regs {
++                struct_group_tagged(cxl_component_regs, component,
++                    void __iomem *hdm_decoder;
++                    void __iomem *ras;
++                );
++
++
++                /* This is actually a violation: too much commas */
++                struct_group_tagged(cxl_device_regs, device_regs,
++                    void __iomem *status, *mbox, *memdev;
++                );
++
++                struct_group_tagged(cxl_pmu_regs, pmu_regs,
++                    void __iomem *pmu;
++                );
++
++                struct_group_tagged(cxl_rch_regs, rch_regs,
++                    void __iomem *dport_aer;
++                );
++
++                struct_group_tagged(cxl_rcd_regs, rcd_regs,
++                    void __iomem *rcd_pcie_cap;
++                );
++            };
++        """
++        expected = """
++        struct cxl_regs {
++            struct cxl_component_regs {
++                void __iomem *hdm_decoder;
++                void __iomem *ras;
++            } component;
++
++            struct cxl_device_regs {
++                void __iomem *status, *mbox, *memdev;
++            } device_regs;
++
++            struct cxl_pmu_regs {
++                void __iomem *pmu;
++            } pmu_regs;
++
++            struct cxl_rch_regs {
++                void __iomem *dport_aer;
++            } rch_regs;
++
++            struct cxl_rcd_regs {
++                void __iomem *rcd_pcie_cap;
++            } rcd_regs;
++        };
++        """
++
++        result = self.apply_transforms("struct", line)
++        self.assertLogicallyEqual(result, expected)
++
++    def test_struct_group_tagged_with_private(self):
++        """
++        Replace struct_group_tagged with private, using the same regex
++        for the replacement as what happens in xforms_lists.py.
++
++        As the private removal happens outside NestedGroup class, we manually
++        dropped the remaining part of the struct, to simulate what happens
++        at kdoc_parser.
++
++        Taken from include/net/page_pool/types.h
++        """
++        line = """
++            struct page_pool_params {
++                struct_group_tagged(page_pool_params_slow, slow,
++                                    struct net_device *netdev;
++                                    unsigned int queue_idx;
++                                    unsigned int    flags;
++                                    /* private: only under "slow" struct */
++                                    unsigned int ignored;
++                );
++                /* Struct below shall not be ignored */
++                struct_group_tagged(page_pool_params_fast, fast,
++                                    unsigned int    order;
++                                    unsigned int    pool_size;
++                                    int             nid;
++                                    struct device   *dev;
++                                    struct napi_struct *napi;
++                                    enum dma_data_direction dma_dir;
++                                    unsigned int    max_len;
++                                    unsigned int    offset;
++                );
++            };
++        """
++        expected = """
++            struct page_pool_params {
++                struct page_pool_params_slow {
++                    struct net_device *netdev;
++                    unsigned int queue_idx;
++                    unsigned int    flags;
++                } slow;
++                struct page_pool_params_fast {
++                    unsigned int order;
++                    unsigned int    pool_size;
++                    int             nid;
++                    struct device   *dev;
++                    struct napi_struct *napi;
++                    enum dma_data_direction dma_dir;
++                    unsigned int    max_len;
++                    unsigned int    offset;
++                } fast;
++            };
++        """
++
++        result = self.apply_transforms("struct", line)
++        self.assertLogicallyEqual(result, expected)
++
++    def test_struct_kcov(self):
++        """
++        """
++        line = """
++            struct kcov {
++                refcount_t              refcount;
++                spinlock_t              lock;
++                enum kcov_mode          mode __guarded_by(&lock);
++                unsigned int            size __guarded_by(&lock);
++                void                    *area __guarded_by(&lock);
++                struct task_struct      *t __guarded_by(&lock);
++                bool                    remote;
++                unsigned int            remote_size;
++                int                     sequence;
++            };
++        """
++        expected = """
++        """
++
++        result = self.apply_transforms("struct", line)
++        self.assertLogicallyEqual(result, expected)
++
++
++    def test_struct_kcov(self):
++        """
++        Test a struct from kernel/kcov.c.
++        """
++        line = """
++            struct kcov {
++                refcount_t              refcount;
++                spinlock_t              lock;
++                enum kcov_mode          mode __guarded_by(&lock);
++                unsigned int            size __guarded_by(&lock);
++                void                    *area __guarded_by(&lock);
++                struct task_struct      *t __guarded_by(&lock);
++                bool                    remote;
++                unsigned int            remote_size;
++                int                     sequence;
++            };
++        """
++        expected = """
++            struct kcov {
++                refcount_t              refcount;
++                spinlock_t              lock;
++                enum kcov_mode          mode;
++                unsigned int            size;
++                void                    *area;
++                struct task_struct      *t;
++                bool                    remote;
++                unsigned int            remote_size;
++                int                     sequence;
++            };
++        """
++
++        result = self.apply_transforms("struct", line)
++        self.assertLogicallyEqual(result, expected)
++
++    def test_vars_stackdepot(self):
++        """
++        Test guarded_by on vars from lib/stackdepot.c.
++        """
++        line = """
++            size_t pool_offset __guarded_by(&pool_lock) = DEPOT_POOL_SIZE;
++            __guarded_by(&pool_lock) LIST_HEAD(free_stacks);
++            void **stack_pools __pt_guarded_by(&pool_lock);
++        """
++        expected = """
++            size_t pool_offset = DEPOT_POOL_SIZE;
++            struct list_head free_stacks;
++            void **stack_pools;
++        """
++
++        result = self.apply_transforms("var", line)
++        self.assertLogicallyEqual(result, expected)
++
++    def test_functions_with_acquires_and_releases(self):
++        """
++        Test guarded_by on vars from lib/stackdepot.c.
++        """
++        line = """
++            bool prepare_report_consumer(unsigned long *flags,
++                                         const struct access_info *ai,
++                                         struct other_info *other_info) \
++                                        __cond_acquires(true, &report_lock);
++
++            int tcp_sigpool_start(unsigned int id, struct tcp_sigpool *c) \
++                                  __cond_acquires(0, RCU_BH);
++
++            bool undo_report_consumer(unsigned long *flags,
++                                      const struct access_info *ai,
++                                      struct other_info *other_info) \
++                                     __cond_releases(true, &report_lock);
++
++            void debugfs_enter_cancellation(struct file *file,
++                                            struct debugfs_cancellation *c) \
++                                           __acquires(cancellation);
++
++            void debugfs_leave_cancellation(struct file *file,
++                                            struct debugfs_cancellation *c) \
++                                           __releases(cancellation);
++
++            acpi_cpu_flags acpi_os_acquire_lock(acpi_spinlock lockp) \
++                                               __acquires(lockp);
++
++            void acpi_os_release_lock(acpi_spinlock lockp,
++                                      acpi_cpu_flags not_used) \
++                                     __releases(lockp)
++        """
++        expected = """
++            bool prepare_report_consumer(unsigned long *flags,
++                                         const struct access_info *ai,
++                                         struct other_info *other_info);
++
++            int tcp_sigpool_start(unsigned int id, struct tcp_sigpool *c);
++
++            bool undo_report_consumer(unsigned long *flags,
++                                      const struct access_info *ai,
++                                      struct other_info *other_info);
++
++            void debugfs_enter_cancellation(struct file *file,
++                                            struct debugfs_cancellation *c);
++
++            void debugfs_leave_cancellation(struct file *file,
++                                            struct debugfs_cancellation *c);
++
++            acpi_cpu_flags acpi_os_acquire_lock(acpi_spinlock lockp);
++
++            void acpi_os_release_lock(acpi_spinlock lockp,
++                                      acpi_cpu_flags not_used)
++        """
++
++        result = self.apply_transforms("func", line)
++        self.assertLogicallyEqual(result, expected)
++
+ #
+ # Run all tests
+ #
 -- 
 2.52.0
 
