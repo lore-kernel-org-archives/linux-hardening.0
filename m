@@ -1,77 +1,74 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF3212D21B
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Mar 2026 00:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F181DF73A
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Mar 2026 00:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773707360; cv=none; b=G5Hd6jfg/drtzKpLQ4W5uxkWU3FRMxIE1/2YTF+XNYI3z5SflYzC0jMwj1NNqV9aLwmICZOkBuVq2eW6JMwY9C4euY1eROIvqTjb6sGpU4jK4IGDVehTmdGXWixkGSx1ND20hxfgHzu1KnhuL7Acub8oAkHzPmZZs593p5p6kcg=
+	t=1773707454; cv=none; b=RqiRcrgMcvJiaPEPd3XPWHF76nSSXqut71W6r5G5MlN8YRg7oijZgoSuA/RECGbWXVU/pi46FQ/exuKm4ENtD+L1qCMGa++IoBNY38tECCaLh3OMr6MWJCFrZ3CRKKda7CDAotV0Wf/OjsGZ6ish0foiNxUVI38pOUx7ZdHUWN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773707360; c=relaxed/simple;
-	bh=Ykl7pRMjv9ddmeTEMSu2XWv5ypxsnnaE2OuTTvdmJf8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B15V+1QLHonfoWA1G8I/E0Nj7jZpnc2dMPESnleGKm3kW4vz5gMbAP7q2JyDE4TAO58gbr9PqXwGEB5c0n4xG6o6DKacM9sPxcNEWOtQgt+Jw4490Haz4iUwfwv9d9SxH9NIWe5AM8V3bvzUsATGXwkxhYOX1MV0yLoVgHygtN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKqgHCMF; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1773707454; c=relaxed/simple;
+	bh=Mx0l2NxLKzer7ADCbLsi4hxQxnDoZ0MKjOO+1vhGXy0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TorCb2Tihb0LnGgZK1d8G9cAv4gBM0OJ0mzbEGRNjI2wioFQzNp9X6juBOeBeaN8QUd5TjfP61ltHRtkLo8C8oP5BlyPDgoRQJT4o2uo8+vHC4k6TDzMzgA16hqebPHRAhPnfU0I/gdfdTUsJ7Qr7S+hd6koRkk5+DCnXuKH8GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lPr75XCq; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKqgHCMF"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-829865a8471so4905707b3a.3
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 17:29:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPr75XCq"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-82990763921so4749851b3a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Mar 2026 17:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773707359; x=1774312159; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773707452; x=1774312252; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zEaJEC5yeKcESXwFqV6k9VnziI7uI+jjMq7JZGGKBfA=;
-        b=JKqgHCMFSBN2PktyvNv9ikODFsFN4db8y1UDUAFV/l3h66ijBTPp/epT4aUYOshxTa
-         /zCbg8ydFzlS1rtWzGwKKDfhw6mcsPjciA88tBxolmK90PX1Xd9qoy5UVXlqwkv31vI7
-         B9CNqxKFN6v6yFspDcztc1/MGSwLCQSvZxQhInkWi+RazCtKvOwtq+NLIrfb4vVoPKau
-         9+Qcrka58jKKJfCn3zMCdAaD+qXWKWfxvLgIGrPojnnR3XrAgOdvYdxzMLmbVexL73/d
-         3cg/KRTHRhC3DuS/UC/C/zWRYnDOkV6SIuyvr/vqpN+nnztK90kvC5GTUeJ5McPGAwXP
-         klfQ==
+        bh=PMczMzhV3A2GonGYjmIFHjc1BY+/VEDhWUtNnoc7Cvo=;
+        b=lPr75XCqF6GDfeAyItC3R2jSd835lFwfig2+XZLM4ammQ2RGCh/l9Zgx2FeFLjoK2z
+         OG/U0xOBbDzBCzXjh5nzFmBD6zg/+Xx04rDcH+6xYSfHvJSABall7uoIII1dj66G1RtU
+         F5rPVZvb7USEwya3i3p+SR4HbrqDY8NEHuOKZk23MpDNfFqIfVjCS4bJQNgyq4ixXf51
+         D6lUA9NHtGNTwE9gvP5rZL1L8Wqw9pBNWMhM7iM+oj27Vw5h1ETgmITM4RWre3ziMNfN
+         IprK/EKo/H2Xdf/XzhguLqyr1hsSWPkl82tEqAG5VQRluwdtW/Q92WUj8RMLG/bPSuoi
+         2zUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773707359; x=1774312159;
+        d=1e100.net; s=20251104; t=1773707452; x=1774312252;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zEaJEC5yeKcESXwFqV6k9VnziI7uI+jjMq7JZGGKBfA=;
-        b=DCPpEJuaxd6WDTgO4bXnERaPmZx5nSSgtagZZY+DY3fH1gVlCwBoCmCkE43ZWDTUui
-         Z8fPlPy4xpWs2zUqZpsb+KBGTJNR7yBoEOZ1CYxkkBTYV401miKyUPVet2PmNgqP/8OQ
-         7mkdot2mqlk7h9d/DovdMXPlNQKi0NEbKtdWcNMDY17vfG0CkSdtdpKF5FkPF+SsAKSZ
-         +pWwt/jBgX4HXvJM8lmon6yw7AXZez+8pmLEeNBDSCCwuwhssQq9EMH628aIfUBsLW+3
-         wt/iJlNcJD7V7tKKZ7BleKnEzbDue/B5CwCSSc50/7zu3+m14OeO5F5fZl3rsPZbbzQD
-         tnSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOTAqAIoPKCgVEIaqI95zBmuNR3MoMnk2St0vTe8jtJspnxcykvVsUXbwYtyZBPqvk8Azq+bsorcOqXzE3U6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/uxwjSaj8FUxJariso9MYIO7hmourLDztVojuFO6kFL99a2yP
-	qNAwKNZ1QZFJuK75WWr2Oz7rU07pp9ppRRNOLpSF/ID9aQh1r3Z7mkut
-X-Gm-Gg: ATEYQzwqcPPRg7pL2H3OATDCBuq5voK5aa8WqYUnf8vvK9kxyr9BzFG953Y/9nIPpo+
-	mxLLp0ASmr8hQ+A6tzg9ty19NuqSW+fUrIwFR2sqYW9n16DHxKdWdzlTPwES3T+ozNfglZZMLKC
-	23J2qGk1Wj+Ow8+aXQav1cLeTjvi4IW65pfWeKdgXUwhjCerPmJWKdfby2FKiQlIw8MoLz/VIZe
-	Sf2mIPBRGuxKRIzULd++Y0bWUViwoSR2D2y23f8qdUtXaxpKJ3rKlNPLV5s0FR53H1CWBhJrYef
-	kkfCOh6TIP8M8u8/+tMPCjVLy5XNtSyvaTVp2RARwV9+qoOuGEjUb5qL2auohaA2Eidz3xDpAlM
-	kIoLw5VwZTBUxWa1j1ecbgHZgwjgIDPlsaPNX2+Yl5BDY5QqHaWszkwfc/3nM460aVGQW6APX2a
-	kfYHAM3OuWN5eDOlCXjnxqPr8Q95buspzkrg5hexPoCdAN3EeAZuLtuCI=
-X-Received: by 2002:a05:6a00:1594:b0:82a:778:cd73 with SMTP id d2e1a72fcca58-82a1992c45amr10581048b3a.51.1773707358578;
-        Mon, 16 Mar 2026 17:29:18 -0700 (PDT)
+        bh=PMczMzhV3A2GonGYjmIFHjc1BY+/VEDhWUtNnoc7Cvo=;
+        b=CFFib6Kj08rZd54hnYpGEQA929F1bYSS7WmBYkYkwPEVZjnra5lgk8kKQZTjqMVk63
+         cQydPhA/cC1vYw3ePUykjf9fs9C+o/cYrE4tQHhLy+dxQOwZMHyu6mtIjKieo0Z6MD8l
+         RpZUobmXiUSNWUcM8GIBh9sXKxclcaCXhJuY7Rw3nXXhyWyK6s+PJnbNdOmXFCXUB2xh
+         G3ZhNwz9U+NierkFk40i2W7ffqdnomlcLcS02lPA9q3vYLnsfEHQYP6Lq954FuONUP2R
+         aMAm1Qm4NSXwAUgZkKuQorETyEVL11ZADtQjMdAgN+Y1Dm2opXFClSopY4VQ/9zjKP9/
+         xfDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXVspZxnKY35zqkydQpiX0KCNVHxEYQkrHd1pP/jVmQSVMoGQqs/mcCPF4oAzJqKp8rb0I01XMVHizeoiBNnC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI9nPP8yZN3u7nZQCMTplaAXCamLGfsZXcl2I5oJhsWDrwPCAH
+	odKj4mB9Uke3Iu6un1lIuyrV9sQKU97vGGfjcE1ZhgAvwmpLib86EhKk
+X-Gm-Gg: ATEYQzx4QaW/oQmpn5tyn4FNbIEbvtejjqefvKhraoOzSyholVuOPtHoxDq+KCLu6Xj
+	COMvJZGi9cyXEe5od2y0vDO3vDTgS84WuIlaNyK57m+5q+gKV7APRr8BDf/eNGOesn9j8LCBLTQ
+	Mi8Eu3sfx4avh5OA8z9VwyfLq7yhtTZcKYrWW08YclmyGfqB/70U7rqR4R+H0hMgIYsDuS1KbZb
+	HeiNmzvOCfyBpgBrxbzDvNyLIGP9yYWTlgli7pmIwFbU36Ul9A/aHvZrfpcXHX+WMk2Coh9F6Qr
+	lzS9eqDklxvCSRPz6wrgpNyUS6ro/9meCCtULvBM42vdn6UyVd6FTfBnTxZxQOCFNOYODGH2aQd
+	msV+yGyNEFVxtRyYTtuNKGprd/piK3aAKI5jZCzrLOiFJA3aN3E6wmYgh8me38BEaG58iQTTZnr
+	+NMfTEP4rExKbDWQHFuvUHYY3LJ0h0WIEtQdbmXX9TEXRoF192ytCVlso=
+X-Received: by 2002:aa7:8896:0:b0:823:1212:8e87 with SMTP id d2e1a72fcca58-82a198d7220mr13987513b3a.32.1773707452151;
+        Mon, 16 Mar 2026 17:30:52 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a072603c0sm14010022b3a.22.2026.03.16.17.29.17
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a0736deb4sm14420074b3a.44.2026.03.16.17.30.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 17:29:18 -0700 (PDT)
+        Mon, 16 Mar 2026 17:30:51 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-tegra@vger.kernel.org
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>,
-	Prashant Gaikwad <pgaikwad@nvidia.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thierry Reding <thierry.reding@kernel.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
+To: linux-kernel@vger.kernel.org
+Cc: Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+	Carl Vanderlip <carl.vanderlip@oss.qualcomm.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-	linux-kernel@vger.kernel.org (open list),
+	linux-arm-msm@vger.kernel.org (open list:QUALCOMM CLOUD AI (QAIC) DRIVER),
+	dri-devel@lists.freedesktop.org (open list:QUALCOMM CLOUD AI (QAIC) DRIVER),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] clk: tegra: bmp: remove kcalloc
-Date: Mon, 16 Mar 2026 17:29:00 -0700
-Message-ID: <20260317002900.71452-1-rosenp@gmail.com>
+Subject: [PATCH] accel/qaic: kcalloc + kzalloc to kzalloc
+Date: Mon, 16 Mar 2026 17:30:34 -0700
+Message-ID: <20260317003034.71618-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -81,51 +78,61 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member to avoid allocating separately.
+Combine allocations by using a flexible array member.
 
-Use __counted_by for extra runtime analysis.
+Use __counted_by for extra runtime analysis. Move counting variable
+assignment as required by __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/clk/tegra/clk-bpmp.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/accel/qaic/qaic.h     | 4 ++--
+ drivers/accel/qaic/qaic_drv.c | 7 ++-----
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-bpmp.c b/drivers/clk/tegra/clk-bpmp.c
-index f6d2b934228b..e2d506cdbae2 100644
---- a/drivers/clk/tegra/clk-bpmp.c
-+++ b/drivers/clk/tegra/clk-bpmp.c
-@@ -32,7 +32,7 @@ struct tegra_bpmp_clk {
- 	unsigned int id;
- 
- 	unsigned int num_parents;
--	unsigned int *parents;
-+	unsigned int parents[] __counted_by(num_parents);
+diff --git a/drivers/accel/qaic/qaic.h b/drivers/accel/qaic/qaic.h
+index fa7a8155658c..e237020f6aa9 100644
+--- a/drivers/accel/qaic/qaic.h
++++ b/drivers/accel/qaic/qaic.h
+@@ -152,8 +152,6 @@ struct qaic_device {
+ 	struct list_head	cntl_xfer_list;
+ 	/* Synchronizes MHI control device transactions and its xfer list */
+ 	struct mutex		cntl_mutex;
+-	/* Array of DBC struct of this device */
+-	struct dma_bridge_chan	*dbc;
+ 	/* Work queue for tasks related to MHI control device */
+ 	struct workqueue_struct	*cntl_wq;
+ 	/* Synchronizes all the users of device during cleanup */
+@@ -206,6 +204,8 @@ struct qaic_device {
+ 	void			*ssr_mhi_buf;
+ 	/* DBC which is under SSR. Sentinel U32_MAX would mean that no SSR in progress */
+ 	u32			ssr_dbc;
++	/* Array of DBC struct of this device */
++	struct dma_bridge_chan	dbc[] __counted_by(num_dbc);
  };
  
- static inline struct tegra_bpmp_clk *to_tegra_bpmp_clk(struct clk_hw *hw)
-@@ -510,20 +510,14 @@ tegra_bpmp_clk_register(struct tegra_bpmp *bpmp,
- 	unsigned int i;
- 	int err;
+ struct qaic_drm_device {
+diff --git a/drivers/accel/qaic/qaic_drv.c b/drivers/accel/qaic/qaic_drv.c
+index 63fb8c7b4abc..ab428ecd26f5 100644
+--- a/drivers/accel/qaic/qaic_drv.c
++++ b/drivers/accel/qaic/qaic_drv.c
+@@ -405,15 +405,12 @@ static struct qaic_device *create_qdev(struct pci_dev *pdev,
+ 	struct drm_device *drm;
+ 	int i, ret;
  
--	clk = devm_kzalloc(bpmp->dev, sizeof(*clk), GFP_KERNEL);
-+	clk = devm_kzalloc(bpmp->dev, struct_size(clk, parents, info->num_parents), GFP_KERNEL);
- 	if (!clk)
- 		return ERR_PTR(-ENOMEM);
+-	qdev = devm_kzalloc(dev, sizeof(*qdev), GFP_KERNEL);
++	qdev = devm_kzalloc(dev, struct_size(qdev, dbc, 16), GFP_KERNEL);
+ 	if (!qdev)
+ 		return NULL;
  
-+	clk->num_parents = info->num_parents;
- 	clk->id = info->id;
- 	clk->bpmp = bpmp;
+-	qdev->dev_state = QAIC_OFFLINE;
+ 	qdev->num_dbc = 16;
+-	qdev->dbc = devm_kcalloc(dev, qdev->num_dbc, sizeof(*qdev->dbc), GFP_KERNEL);
+-	if (!qdev->dbc)
+-		return NULL;
++	qdev->dev_state = QAIC_OFFLINE;
  
--	clk->parents = devm_kcalloc(bpmp->dev, info->num_parents,
--				    sizeof(*clk->parents), GFP_KERNEL);
--	if (!clk->parents)
--		return ERR_PTR(-ENOMEM);
--
--	clk->num_parents = info->num_parents;
--
- 	/* hardware clock initialization */
- 	memset(&init, 0, sizeof(init));
- 	init.name = info->name;
+ 	qddev = devm_drm_dev_alloc(&pdev->dev, &qaic_accel_driver, struct qaic_drm_device, drm);
+ 	if (IS_ERR(qddev))
 -- 
 2.53.0
 
