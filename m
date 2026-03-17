@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A3E3F99E9;
-	Tue, 17 Mar 2026 18:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2033E3F7A80;
+	Tue, 17 Mar 2026 18:09:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773770991; cv=none; b=tYHIHpyMbLMjbO30870FyvsNbJe5MPfwhDTsxG54APG9UgEQKReVK1CiCA09u82HifdV6JkR3uTJNRzOSHDSLhJCXcQFhqos3CLVhntVnD/F3UxypQhb6hOjQPWApEtp7OHHx49KqL76iIbRzn7jyor28NWjOrzc2IaqCiKnW9Y=
+	t=1773770991; cv=none; b=FYT3cBVtyHHiBA++kvn8mazZMnUPxH8MrIFA16by+v61nQ8GTko4crtn7GGGo0SUolzfRZUfa+xfT0Yp9NxY1QiG2XBo8LDO17xBUxuyyH6HfpAhXroVcaIBNvIMTgyv78PV2WAbYE+pXWiUUAjMHS9jGNHCWR9Hh89rv9a0rHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773770991; c=relaxed/simple;
-	bh=TmYHPBWmiJoumgXDNjybq4wZqraDZtMhzikKfDnelmU=;
+	bh=k+ehfP1sl6SdRybZAYJu9AFpJMlMcv42DU7JH8k+cI0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lay7Wfikvd6hEqDm1RjHA3hBdEbVRhyqb9562uYjJGewJMBmJ296qTdD6jnZeC3g4M/SZVBD7Afh7Dvc6Ea9hfJ+bWb1TzEuPUSZuZjN0VKL7cBByllvrUl+6HGzYcvWqsu8CC5U78lWgLiBtlkdBttE1apoWBtHPfam58TfZv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nj7vYBYC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=dWmc6LQPFqoy/Sx9NtzSRNpQ3BLU/1u58cMPqkzGxm7WhNpg2vlJwAAF1jDkVgymui2gazn9nQxFOlGYyRLBy9D45dU1pr5H239kpHkQxMaxZwxDVSh1s3BuepEv2eOC8bAxPX/+vUsijJpuUqpAVBwmYzbi6+gmbh2m8EX28c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjHMiAkv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nj7vYBYC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C59C6C2BC9E;
-	Tue, 17 Mar 2026 18:09:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjHMiAkv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E63C2BC86;
+	Tue, 17 Mar 2026 18:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773770990;
-	bh=TmYHPBWmiJoumgXDNjybq4wZqraDZtMhzikKfDnelmU=;
+	s=k20201202; t=1773770991;
+	bh=k+ehfP1sl6SdRybZAYJu9AFpJMlMcv42DU7JH8k+cI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nj7vYBYCfl+pT13zfzAvDNa1R2d0FYqdakyGUq1T6a1GlOI+F1q6bkl6vrMqlF881
-	 v9FlGL2WXumbCIzn0E0cWp7BLX12vVhERF1ZTYQP6QIpaC2NkzsSwC7cWRMM/O1qTJ
-	 8j8jr03UBOCzkTzLn9EVYT1uVt7UtdallOtBhnjdv9TuHK46E5PJHzLzqFbHjEOh29
-	 N/HVXmr+/KUhJr1NtvurMNuI4KlVawg7QbCu96lVfEMZJAhrZZhFbp0WWhYZ4ODQUv
-	 R5kV2Ri5qa5xxBMgcP5HiZu94P5IvhK+k91zDrEh3Tdz/cWBTc7iu+TBe2MrxoTWH/
-	 pqUTtH7KhiQ7w==
+	b=YjHMiAkvj+/rn7fQ0lMGt0R3CjBL810iXcsRr3N7Qk3hzPMqEpFHboi4aVaeEImBS
+	 sk5lacZPxnqc6X1lzxXKY9H8awn0ffwa7qqW0edwpBAVGmqOKIg2YYjAEj17e+lW/K
+	 idQ+tuX85uDRM4Udvc8UEFeoqoFZNwex+kLNFA63+WDCQQTbK430ZGT717At+BOWpC
+	 qJjcxSWSUodzuFtitxb7P++u4EWWnfP7Fx5acS1fZtNnj4OaSAzZR/8iM6t9/3AlXL
+	 wtp3ps7QGGjTmIpPnW01tHP/kqQMUZ6vu2IpnmSv/AeoL3DiV6u9CJqHgOKfPd2llC
+	 aNwvY6aX+w5UQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.99.1)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1w2YrV-0000000H5bz-0O2z;
+	id 1w2YrV-0000000H5dD-1DqM;
 	Tue, 17 Mar 2026 19:09:49 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
@@ -36,12 +36,11 @@ To: Jonathan Corbet <corbet@lwn.net>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vincent Mailhol <mailhol@kernel.org>
-Subject: [PATCH v3 19/22] docs: kernel-doc.rst: document private: scope propagation
-Date: Tue, 17 Mar 2026 19:09:39 +0100
-Message-ID: <bbe0ed698c21f3f930a561b885bc8a47824f7f1d.1773770483.git.mchehab+huawei@kernel.org>
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v3 20/22] docs: kdoc: ensure that comments are dropped before calling split_struct_proto()
+Date: Tue, 17 Mar 2026 19:09:40 +0100
+Message-ID: <dcff37b6da5329aea415de31f543b6a1c2cbbbce.1773770483.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1773770483.git.mchehab+huawei@kernel.org>
 References: <cover.1773770483.git.mchehab+huawei@kernel.org>
@@ -55,42 +54,56 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-This was an undefined behavior, but at least one place used private:
-inside a nested struct meant to not be propagated outside it.
+Changeset 2b957decdb6c ("docs: kdoc: don't add broken comments inside prototypes")
+revealed a hidden bug at split_struct_proto(): some comments there may break
+its capability of properly identifying a struct.
 
-Kernel-doc now defines how this is propagated. So, document that.
+Fixing it is as simple as stripping comments before calling it.
 
+Fixes: 2b957decdb6c ("docs: kdoc: don't add broken comments inside prototypes")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/doc-guide/kernel-doc.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/lib/python/kdoc/kdoc_parser.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/doc-guide/kernel-doc.rst b/Documentation/doc-guide/kernel-doc.rst
-index 8d2c09fb36e4..1c148fe8e1f9 100644
---- a/Documentation/doc-guide/kernel-doc.rst
-+++ b/Documentation/doc-guide/kernel-doc.rst
-@@ -213,6 +213,10 @@ The ``private:`` and ``public:`` tags must begin immediately following a
- ``/*`` comment marker. They may optionally include comments between the
- ``:`` and the ending ``*/`` marker.
- 
-+When ``private:`` is used on nested structs, it propagates only to inner
-+structs/unions.
-+
-+
- Example::
- 
-   /**
-@@ -256,8 +260,10 @@ It is possible to document nested structs and unions, like::
-         union {
-           struct {
-             int memb1;
-+            /* private: hides memb2 from documentation */
-             int memb2;
-           };
-+          /* Everything here is public again, as private scope finished */
-           struct {
-             void *memb3;
-             int memb4;
+diff --git a/tools/lib/python/kdoc/kdoc_parser.py b/tools/lib/python/kdoc/kdoc_parser.py
+index f90c6dd0343d..8b2c9d0f0c58 100644
+--- a/tools/lib/python/kdoc/kdoc_parser.py
++++ b/tools/lib/python/kdoc/kdoc_parser.py
+@@ -723,6 +723,7 @@ class KernelDoc:
+         #
+         # Do the basic parse to get the pieces of the declaration.
+         #
++        proto = trim_private_members(proto)
+         struct_parts = self.split_struct_proto(proto)
+         if not struct_parts:
+             self.emit_msg(ln, f"{proto} error: Cannot parse struct or union!")
+@@ -763,6 +764,7 @@ class KernelDoc:
+         # Strip preprocessor directives.  Note that this depends on the
+         # trailing semicolon we added in process_proto_type().
+         #
++        proto = trim_private_members(proto)
+         proto = KernRe(r'#\s*((define|ifdef|if)\s+|endif)[^;]*;', flags=re.S).sub('', proto)
+         #
+         # Parse out the name and members of the enum.  Typedef form first.
+@@ -770,7 +772,7 @@ class KernelDoc:
+         r = KernRe(r'typedef\s+enum\s*\{(.*)\}\s*(\w*)\s*;')
+         if r.search(proto):
+             declaration_name = r.group(2)
+-            members = trim_private_members(r.group(1))
++            members = r.group(1)
+         #
+         # Failing that, look for a straight enum
+         #
+@@ -778,7 +780,7 @@ class KernelDoc:
+             r = KernRe(r'enum\s+(\w*)\s*\{(.*)\}')
+             if r.match(proto):
+                 declaration_name = r.group(1)
+-                members = trim_private_members(r.group(2))
++                members = r.group(2)
+         #
+         # OK, this isn't going to work.
+         #
 -- 
 2.52.0
 
