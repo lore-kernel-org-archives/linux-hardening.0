@@ -1,70 +1,76 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3638B3D648C
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 19:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA6D3C3435
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 19:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773861057; cv=none; b=lW6S3y/w4+YgbCdzH8+/KnHjqCsufgLqpu1EoSDGSMkPWawzhW8tO2QwMQ8AjrZAOktYf9Yk3u8PqxHi2/VC235iOceETF86NgPk/UUN9jMu0l6wYZmhuQtAsxmb/LYB1xYhR+DbbPwpY+lthuju/OUArEZ4HKw4BMjGD9PCvmw=
+	t=1773861692; cv=none; b=H+PXtk6jaHJVsl5sgo2bkUg7WptIBFKp9f1vRkZrZIvtkUEEOn5DcbP6lOUw1Xk39e1KMEdl+bQgbaqpDRXmrE1+V3Cerj/iCZG6OKElSiFxzzQBzrM0J7lR4k+JCLvj2d7A5xI+qumdJZFv0rronSAYGDc78Dyb90rsXn7TXXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773861057; c=relaxed/simple;
-	bh=tB+Nv6pjBL7gh/YSoN1m/+MbKOlsv6e5EOr2WdQwmn0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MQoiCxDU5K2gNqw8SkUnhpoIOI4tZsqtr/vg+ga3VOkZD1ZusvMtrL51Lc7TK0xEyMLtevHe3lu1C05WBMXCINm07S9vNOT04vGdzUsX/prDt9d2DTmXLI3IRS7zjWMFoUnp36C/aLAUPXFX5c/hIgYYccqg0+Ml/XgDqHZZCkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RXRrzcij; arc=none smtp.client-ip=209.85.216.54
+	s=arc-20240116; t=1773861692; c=relaxed/simple;
+	bh=GDi+SP7TojNzy5Hpcz7mVRnWh7BjfImltYSEk3/gEK0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dBGpxSF9s0Ezau0BYRjVv9aLmJO70DngHZUhVkzXsfx31nLlwB1eDp7blh7B85So7peUvG98RwfzglnzdCOxj+bBCa+O9VLC1DLe1wM2fpXIFhfiT4r0nz8Zsrqi16A/yyE6jVGxv2yaVfoNKgrcGNUEdli/yYEKsE0p/Lxb2+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACshw3Ka; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXRrzcij"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3567e2b4159so206966a91.0
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 12:10:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACshw3Ka"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ab46931cf1so11114085ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 12:21:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773861055; x=1774465855; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773861690; x=1774466490; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=N/fuMQSCwheo92q+sJzp01BF5cuisAnFpxfybDN6btA=;
-        b=RXRrzcijFCiysqSrTKYFo5cqpEnivzGnqYa5YXfR8XTvSouCJcKH6mrbuj1lWRDXq4
-         AqI2hFwby6GrLaRHQfm8o+k4nRGxx2hU3GwdSVtr+OOKPJff4LCN2fo1pUBEJoJc1j4+
-         ubW0flsVQEuA1mzNBtxCsGEjU6BNk1keSurSG04EBa5TyEcwDxu+CKXjgaP3Vt6fEC1x
-         BSq+UXZ7aZZBzaQLc230bQsVW3uDrnrevvT0wQlTF9zPqmoyw2kPEHkXrBPjE12GiAYX
-         1pt4Q9RVwkug2mkmOIE+2SYechuyB2lg8huA3k/EgpLErtLffbrelcQI+SogB978cAaG
-         jKYw==
+        bh=NPQGa+9XMA5plq4J8pHqZnzGZoUGgCAorDU5naqXgW8=;
+        b=ACshw3KalYW23q6WdmUHkzmnJreui0bfPWyKv3R3X/wmEpam5Srbkj0VdgQT1QdHPr
+         0d1beZ2YyuB1uDvLCZKUyrP7+TrzYzpr8dDI75VYyOPd8SWgbh8DdcX459mQj/5Lwgrt
+         LQ47XE5j3M6F+sCszpqypB93dFPo1VSsCJ660V3ClYjY52MTmA4HefqSe5EEIt1CROKD
+         86fywP+u/fQKpKjnzg45Ltky+TgHE6E4y8nTu6BZCYW8PjZCEXwxsnfAvoy5/LMuxG41
+         fncjgDQJCamU7OEQjeM+aEqNuC28YxBI2MZar7ghjtYKvusmYNpFUUA93bYiwu9MEcNN
+         SSOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773861055; x=1774465855;
+        d=1e100.net; s=20251104; t=1773861690; x=1774466490;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N/fuMQSCwheo92q+sJzp01BF5cuisAnFpxfybDN6btA=;
-        b=kpZXl4AabardiDkWSXT0PzEcbrTbrUCw6+SVRDKJrG0RQDCCEDenYPgeWz+e56+1g0
-         WYAGeuxbYjqTNBisHZYuTG7LYWm0N7cA4Jic7q2wqd0Jx9Yt4ZiaGSqGswwBbH9n/g36
-         zHI5D4rO6ASejeiaYI7vAnj+SFyM7eYWxBwd6IcvgrErK5nHF2McJfKw7Ps/Ll0tF6l6
-         wGARiJusT66metbbou1AZ6nPzLuwpnLkZyyMWM4BmfPi5RAvmE29sYuTviXiIYNwz8ws
-         GrDApS3e+jo9Dz/p0qP8qudAK6ODrtsKBMuIRbCC+94VALgI+aBcmAQA8vh/rGR8RUMy
-         tCBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVom8iAV6YBvi0p0vM2RkTtBpIZRMcMqlnL/91W07oqEKbfV6qOzfAXquJ9MeiGhPAxAZTvjwsjuaCH1vpM8OE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1M0/E8Nh3WzK4jiPi1UX/YVBMDTz5Bye+4FxHBG7WvcxTz9J/
-	DtfHmZx5cmePs4RZpjtIOJprcMPmKq3nTRGMjF2sWRjYZJfFvbfxRcME
-X-Gm-Gg: ATEYQzwrYBJWFli35FP2GIgsF/EAkArh8mUxctZ8MkwyOV4MN+6myhWvy3tF7c2ncJu
-	UzEgP41ZmBcMQ4gu2k5uWXrbjo5K71uuxeQdc2jXUUwlr8zpiI3eVNGugl1l7VfrOAO7qiksC9X
-	neDdU84Jk3l466okFG1+cSTEYTkqKDpWmPr4G+sBEuW8z1eP+ULjX+KLysc7SDxfMpQcwJ18A5I
-	2icIkei13nkF68NWqP9V0+mgTARZzdDXmcW+4napE8ak5NdsljjPXbX9/rG0fg1k7oiznmeZebe
-	mGAhS1Z4S/UVHgO0v1Tn3Ztn1IDe3nkWmU1WopLTy7MTJxkPI89VB1p15vtgt4DQd9OhA9uexKD
-	MTDrxfOpRR1cRAUTkmfQYu/O/lVs32r02znPy0/QudviSYAj5bH8+5qvAWiCtC6Q7vgImcA9qc2
-	JYL74i1uKL0MRHVVBDW2FOP9yvC96Yw69CUyGCrEJlWzDAx1BWv7350og=
-X-Received: by 2002:a17:90b:5584:b0:35b:9896:cbcd with SMTP id 98e67ed59e1d1-35bb9f123bcmr3740207a91.27.1773861055321;
-        Wed, 18 Mar 2026 12:10:55 -0700 (PDT)
+        bh=NPQGa+9XMA5plq4J8pHqZnzGZoUGgCAorDU5naqXgW8=;
+        b=nLwdVOO4cLYqT3/vWzvebniWbAVv0BnEsn2MywzB/dyY/BJrbj0Rr3iQ9UbMuwJSrQ
+         TYDjz4H1Fq9I7pICDCtBCtokwHt9PIWlVC4g1UCF4TteDWhFV47OHm03Sn5qufOO/+cv
+         x4Sbn6t8l4vfnf9rRRSg9EgNUqj1RdpP1tqoid42AFwy/vAFVLNCx5ZmIfIwQM/2iWLh
+         AME26AXl5g3GI6TljBNILqnAKbgW4B7cNM9Ey5nhWlCnUxWcr8b8Fq6uMMATlLvpwKbI
+         jTR7xDDKe4p3GIGnDFH74g4U0zXzLqB0eawvuqz78/5ZRdi7OfHYNtQAtfpBGCRWGWSJ
+         Qpnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXScZn8ch8kgX8RL/Iuv4pt58MG/YH+Xv3RHfUGT1goVwz0aWVRvgzxS+ksvQNYCEtvPcWS+6OJLmMvzSu0Aw4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyImacSZ67cQ7Y0da5+l+Zdan25cuyg5NER4u4/+yDOuKvzLoHA
+	lxEQb85j7gLYy55xb+h6eF0btn+VCOxdDIM4cfnSRTT/BR0o3DsBaTjF
+X-Gm-Gg: ATEYQzy92QLdSljPe/SlcWTAzdJr2Twn3m1C2ibnGPwUSGZYuRV5jGxPFrl8xF9yhr+
+	GxQIEs2QVTAguUq6UxUSsIGPVjeqYEuOJcZhUBWszWXd6iapEY+T8D8s9uLhpcLhvz5TdoHMbje
+	TaQPYc2wcAVMFyAdOGWazySEGZoOwmTKxmVL+QaA4HhLIRfvy74iO6Ezmfg44FCAwfQnkEKquyJ
+	2wOrtI+GJDJbp27VMUdh31vMFwwSlU2AHAdUU3aH0WxPvpm5nJFg9SkLbvaH1L55EPsCjHYouH1
+	7Z5qhxD5Kjz2XXLsSZpVicsijmjccrV80moSlGannpCYx3XKsJR7heGQ+IF0U9NX/cZUFmJPL9o
+	mlnivVYreGMDxBUNRkTKJ7N4qqNRuXW6d6JjoBlKEJ2gulT6rbSXxtOxFpb/RgxJQfh13l7aqvv
+	c0RJXuQoLeHL1IltHGfDpFDvPTjfIftMeVmowjRlkzSf/Uf5wU2PaU/4HXZGhCyrECPA==
+X-Received: by 2002:a17:90b:5547:b0:35b:9d0c:a2f3 with SMTP id 98e67ed59e1d1-35bc606ff0emr476139a91.15.1773861690455;
+        Wed, 18 Mar 2026 12:21:30 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bc62f6003sm355894a91.8.2026.03.18.12.10.54
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bc63204f2sm409269a91.16.2026.03.18.12.21.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2026 12:10:54 -0700 (PDT)
+        Wed, 18 Mar 2026 12:21:29 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Sebastian Reichel <sre@kernel.org>,
+To: netdev@vger.kernel.org
+Cc: Elad Nachman <enachman@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv3] hsi: hsi_core: use kzalloc_flex
-Date: Wed, 18 Mar 2026 12:10:37 -0700
-Message-ID: <20260318191037.5661-1-rosenp@gmail.com>
+Subject: [PATCH] net: marvell: prestera: use kzalloc_flex
+Date: Wed, 18 Mar 2026 12:21:11 -0700
+Message-ID: <20260318192111.6802-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -74,106 +80,69 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplifies allocations by using a flexible array member in this struct.
+Simplify allocation by using a flexible array member in this struct. No
+need to free separately.
 
-Add __counted_by to get extra runtime analysis.
+Add __counted_by to get extra runtime analysis. Move counting variable
+assignment to right after allocation as required by __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- v3: add back kfree for ports.
- v2: remove wrong null check
- drivers/hsi/hsi_core.c  | 37 +++++++++++++++----------------------
- include/linux/hsi/hsi.h |  2 +-
- 2 files changed, 16 insertions(+), 23 deletions(-)
+ .../ethernet/marvell/prestera/prestera_devlink.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/hsi/hsi_core.c b/drivers/hsi/hsi_core.c
-index 7cb2dcb30fdb..754949f5ebd6 100644
---- a/drivers/hsi/hsi_core.c
-+++ b/drivers/hsi/hsi_core.c
-@@ -342,7 +342,6 @@ static void hsi_controller_release(struct device *dev)
- {
- 	struct hsi_controller *hsi = to_hsi_controller(dev);
-
--	kfree(hsi->port);
- 	kfree(hsi);
- }
-
-@@ -446,7 +445,7 @@ void hsi_put_controller(struct hsi_controller *hsi)
- 		return;
-
- 	for (i = 0; i < hsi->num_ports; i++)
--		if (hsi->port && hsi->port[i])
-+		if (hsi->port[i])
- 			put_device(&hsi->port[i]->device);
- 	put_device(&hsi->device);
- }
-@@ -462,39 +461,33 @@ EXPORT_SYMBOL_GPL(hsi_put_controller);
- struct hsi_controller *hsi_alloc_controller(unsigned int n_ports, gfp_t flags)
- {
- 	struct hsi_controller	*hsi;
--	struct hsi_port		**port;
- 	unsigned int		i;
-
- 	if (!n_ports)
- 		return NULL;
-
--	hsi = kzalloc_obj(*hsi, flags);
-+	hsi = kzalloc_flex(*hsi, port, n_ports, flags);
- 	if (!hsi)
- 		return NULL;
--	port = kzalloc_objs(*port, n_ports, flags);
--	if (!port) {
--		kfree(hsi);
--		return NULL;
--	}
-+
- 	hsi->num_ports = n_ports;
--	hsi->port = port;
- 	hsi->device.release = hsi_controller_release;
- 	device_initialize(&hsi->device);
-
- 	for (i = 0; i < n_ports; i++) {
--		port[i] = kzalloc_obj(**port, flags);
--		if (port[i] == NULL)
-+		hsi->port[i] = kzalloc_obj(**hsi->port, flags);
-+		if (hsi->port[i] == NULL)
- 			goto out;
--		port[i]->num = i;
--		port[i]->async = hsi_dummy_msg;
--		port[i]->setup = hsi_dummy_cl;
--		port[i]->flush = hsi_dummy_cl;
--		port[i]->start_tx = hsi_dummy_cl;
--		port[i]->stop_tx = hsi_dummy_cl;
--		port[i]->release = hsi_dummy_cl;
--		mutex_init(&port[i]->lock);
--		BLOCKING_INIT_NOTIFIER_HEAD(&port[i]->n_head);
--		dev_set_name(&port[i]->device, "port%d", i);
-+		hsi->port[i]->num = i;
-+		hsi->port[i]->async = hsi_dummy_msg;
-+		hsi->port[i]->setup = hsi_dummy_cl;
-+		hsi->port[i]->flush = hsi_dummy_cl;
-+		hsi->port[i]->start_tx = hsi_dummy_cl;
-+		hsi->port[i]->stop_tx = hsi_dummy_cl;
-+		hsi->port[i]->release = hsi_dummy_cl;
-+		mutex_init(&hsi->port[i]->lock);
-+		BLOCKING_INIT_NOTIFIER_HEAD(&hsi->port[i]->n_head);
-+		dev_set_name(&hsi->port[i]->device, "port%d", i);
- 		hsi->port[i]->device.release = hsi_port_release;
- 		device_initialize(&hsi->port[i]->device);
- 	}
-diff --git a/include/linux/hsi/hsi.h b/include/linux/hsi/hsi.h
-index 6ca92bff02c6..ea6bef9b6012 100644
---- a/include/linux/hsi/hsi.h
-+++ b/include/linux/hsi/hsi.h
-@@ -271,7 +271,7 @@ struct hsi_controller {
- 	struct module		*owner;
- 	unsigned int		id;
- 	unsigned int		num_ports;
--	struct hsi_port		**port;
-+	struct hsi_port		*port[] __counted_by(num_ports);
+diff --git a/drivers/net/ethernet/marvell/prestera/prestera_devlink.c b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
+index 06b876f6b27f..9c043cddb0f9 100644
+--- a/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
++++ b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
+@@ -125,8 +125,8 @@ struct prestera_trap_item {
+ 
+ struct prestera_trap_data {
+ 	struct prestera_switch *sw;
+-	struct prestera_trap_item *trap_items_arr;
+ 	u32 traps_count;
++	struct prestera_trap_item trap_items_arr[] __counted_by(traps_count);
  };
-
- #define to_hsi_controller(dev) container_of(dev, struct hsi_controller, device)
---
+ 
+ #define PRESTERA_TRAP_METADATA DEVLINK_TRAP_METADATA_TYPE_F_IN_PORT
+@@ -451,19 +451,12 @@ int prestera_devlink_traps_register(struct prestera_switch *sw)
+ 	struct prestera_trap *prestera_trap;
+ 	int err, i;
+ 
+-	trap_data = kzalloc_obj(*trap_data);
++	trap_data = kzalloc_flex(*trap_data, trap_items_arr, traps_count);
+ 	if (!trap_data)
+ 		return -ENOMEM;
+ 
+-	trap_data->trap_items_arr = kzalloc_objs(struct prestera_trap_item,
+-						 traps_count);
+-	if (!trap_data->trap_items_arr) {
+-		err = -ENOMEM;
+-		goto err_trap_items_alloc;
+-	}
+-
+-	trap_data->sw = sw;
+ 	trap_data->traps_count = traps_count;
++	trap_data->sw = sw;
+ 	sw->trap_data = trap_data;
+ 
+ 	err = devlink_trap_groups_register(devlink, prestera_trap_groups_arr,
+@@ -489,8 +482,6 @@ int prestera_devlink_traps_register(struct prestera_switch *sw)
+ 	devlink_trap_groups_unregister(devlink, prestera_trap_groups_arr,
+ 				       groups_count);
+ err_groups_register:
+-	kfree(trap_data->trap_items_arr);
+-err_trap_items_alloc:
+ 	kfree(trap_data);
+ 	return err;
+ }
+@@ -594,6 +585,5 @@ void prestera_devlink_traps_unregister(struct prestera_switch *sw)
+ 
+ 	devlink_trap_groups_unregister(dl, prestera_trap_groups_arr,
+ 				       ARRAY_SIZE(prestera_trap_groups_arr));
+-	kfree(trap_data->trap_items_arr);
+ 	kfree(trap_data);
+ }
+-- 
 2.53.0
 
