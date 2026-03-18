@@ -1,148 +1,192 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA6D3C3435
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 19:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2400346AC6
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 19:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773861692; cv=none; b=H+PXtk6jaHJVsl5sgo2bkUg7WptIBFKp9f1vRkZrZIvtkUEEOn5DcbP6lOUw1Xk39e1KMEdl+bQgbaqpDRXmrE1+V3Cerj/iCZG6OKElSiFxzzQBzrM0J7lR4k+JCLvj2d7A5xI+qumdJZFv0rronSAYGDc78Dyb90rsXn7TXXk=
+	t=1773863426; cv=none; b=VVDC8Gq0s5DbOM2rileF9tLx1vm25lNXp/mXrnF/csxgQRTp9xj37qsCnmg4igM1wFAAmQVoogIrwDOj98phKNU5hNB7RqQY60IcskF3jAlfYNrCZlYSiXWrrpPe7ojnU1UgYuai14vJnypsPtMuOT5xgafCejluO53QtWtgakc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773861692; c=relaxed/simple;
-	bh=GDi+SP7TojNzy5Hpcz7mVRnWh7BjfImltYSEk3/gEK0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dBGpxSF9s0Ezau0BYRjVv9aLmJO70DngHZUhVkzXsfx31nLlwB1eDp7blh7B85So7peUvG98RwfzglnzdCOxj+bBCa+O9VLC1DLe1wM2fpXIFhfiT4r0nz8Zsrqi16A/yyE6jVGxv2yaVfoNKgrcGNUEdli/yYEKsE0p/Lxb2+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACshw3Ka; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1773863426; c=relaxed/simple;
+	bh=4E2+mgnoT/O7gf1R4+xQjIqP6j0a3Jp5OE1RFcWGio0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ooTxCL7MNd5ZfdmijSrj7M+pPagAzoSfSOXF7FkEvu+txI55ORWnjMMe8f7Yox08ErcRN1Uh0/Mke5k1iSrj4TagiaUzdXRDQDh8tHvoLZRc0MrqRZkaWFxlbkxW496ISqgdN4JSkBgsJMA3YVVZ5OIxQ6k7BEBAReu71jTpSik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dz+2XbqE; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACshw3Ka"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ab46931cf1so11114085ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 12:21:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dz+2XbqE"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3567e2b4159so228475a91.0
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 12:50:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773861690; x=1774466490; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NPQGa+9XMA5plq4J8pHqZnzGZoUGgCAorDU5naqXgW8=;
-        b=ACshw3KalYW23q6WdmUHkzmnJreui0bfPWyKv3R3X/wmEpam5Srbkj0VdgQT1QdHPr
-         0d1beZ2YyuB1uDvLCZKUyrP7+TrzYzpr8dDI75VYyOPd8SWgbh8DdcX459mQj/5Lwgrt
-         LQ47XE5j3M6F+sCszpqypB93dFPo1VSsCJ660V3ClYjY52MTmA4HefqSe5EEIt1CROKD
-         86fywP+u/fQKpKjnzg45Ltky+TgHE6E4y8nTu6BZCYW8PjZCEXwxsnfAvoy5/LMuxG41
-         fncjgDQJCamU7OEQjeM+aEqNuC28YxBI2MZar7ghjtYKvusmYNpFUUA93bYiwu9MEcNN
-         SSOA==
+        d=gmail.com; s=20230601; t=1773863425; x=1774468225; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=Resi8n+oQ1vXGyEjFOBn4ZBz6ktHZ1vnUrgtEXoKXe8=;
+        b=Dz+2XbqESJyUtSPtOhEVpUmtjfikkbMatpzTDEcTGQCm0jFZjQspE5oFsi790c7YPe
+         hvocUm01ymkyYUl1xjbaxPLAcsHGNjZL1KzEuUq9V2Q+I3eEVXmbtvSOEood8Hy4lEUH
+         z1JZqCoakAwWLvCwJF5svLSU7TcyZ8XLIzVMnyxyBjefJ0otnBQKtvvzdQrcYDbbrmr5
+         FjOGqXW+tkwDsHwRgRrLZO2Iaphrlh9rn3SdcKqh/iSJRaC96yWuaGiVnILH8ey6x/5v
+         U67cySGOHXJerhYeemq9lBTgnW9rc3f0IbpVu5yJvGPTFpRxTs/HWrzZzoy0n1wmvkuH
+         HjMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773861690; x=1774466490;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NPQGa+9XMA5plq4J8pHqZnzGZoUGgCAorDU5naqXgW8=;
-        b=nLwdVOO4cLYqT3/vWzvebniWbAVv0BnEsn2MywzB/dyY/BJrbj0Rr3iQ9UbMuwJSrQ
-         TYDjz4H1Fq9I7pICDCtBCtokwHt9PIWlVC4g1UCF4TteDWhFV47OHm03Sn5qufOO/+cv
-         x4Sbn6t8l4vfnf9rRRSg9EgNUqj1RdpP1tqoid42AFwy/vAFVLNCx5ZmIfIwQM/2iWLh
-         AME26AXl5g3GI6TljBNILqnAKbgW4B7cNM9Ey5nhWlCnUxWcr8b8Fq6uMMATlLvpwKbI
-         jTR7xDDKe4p3GIGnDFH74g4U0zXzLqB0eawvuqz78/5ZRdi7OfHYNtQAtfpBGCRWGWSJ
-         Qpnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXScZn8ch8kgX8RL/Iuv4pt58MG/YH+Xv3RHfUGT1goVwz0aWVRvgzxS+ksvQNYCEtvPcWS+6OJLmMvzSu0Aw4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyImacSZ67cQ7Y0da5+l+Zdan25cuyg5NER4u4/+yDOuKvzLoHA
-	lxEQb85j7gLYy55xb+h6eF0btn+VCOxdDIM4cfnSRTT/BR0o3DsBaTjF
-X-Gm-Gg: ATEYQzy92QLdSljPe/SlcWTAzdJr2Twn3m1C2ibnGPwUSGZYuRV5jGxPFrl8xF9yhr+
-	GxQIEs2QVTAguUq6UxUSsIGPVjeqYEuOJcZhUBWszWXd6iapEY+T8D8s9uLhpcLhvz5TdoHMbje
-	TaQPYc2wcAVMFyAdOGWazySEGZoOwmTKxmVL+QaA4HhLIRfvy74iO6Ezmfg44FCAwfQnkEKquyJ
-	2wOrtI+GJDJbp27VMUdh31vMFwwSlU2AHAdUU3aH0WxPvpm5nJFg9SkLbvaH1L55EPsCjHYouH1
-	7Z5qhxD5Kjz2XXLsSZpVicsijmjccrV80moSlGannpCYx3XKsJR7heGQ+IF0U9NX/cZUFmJPL9o
-	mlnivVYreGMDxBUNRkTKJ7N4qqNRuXW6d6JjoBlKEJ2gulT6rbSXxtOxFpb/RgxJQfh13l7aqvv
-	c0RJXuQoLeHL1IltHGfDpFDvPTjfIftMeVmowjRlkzSf/Uf5wU2PaU/4HXZGhCyrECPA==
-X-Received: by 2002:a17:90b:5547:b0:35b:9d0c:a2f3 with SMTP id 98e67ed59e1d1-35bc606ff0emr476139a91.15.1773861690455;
-        Wed, 18 Mar 2026 12:21:30 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bc63204f2sm409269a91.16.2026.03.18.12.21.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2026 12:21:29 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Elad Nachman <enachman@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] net: marvell: prestera: use kzalloc_flex
-Date: Wed, 18 Mar 2026 12:21:11 -0700
-Message-ID: <20260318192111.6802-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        d=1e100.net; s=20251104; t=1773863425; x=1774468225;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Resi8n+oQ1vXGyEjFOBn4ZBz6ktHZ1vnUrgtEXoKXe8=;
+        b=kmLS510ZlQbK7vzRJRupASxs2TG3tLbDhvvBzGUkXItfGp9Ul+fgFxdLNBdv9f/sxi
+         24XvBXiDKW6sPjpLgO0N2sOUp1W4lz6p/qHFrDqwu/ehXYFVIXFZe6zchpA1m1RlAtlV
+         csY8Kvud7SWq464hz3GOJfx2AE1dX624vNi8oz1B3JGvh4ZRgTc/h9cv7MMQHFm8nZQt
+         FFcNVNaWkxGbVBMywIMga28FlFOwmWJFS0o6j4DI3iCZRTJt9o/Dajdm3AENFW5l1iHP
+         5ZdTqeCWenzN3JfSIYHg84r3UEL09qFW3JZonMDbE1EmUVxuoWDyqZxLoS3/tG89M5ON
+         Rp2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWS1CcJgwlySgBPTzJB0qmyITKl31Dt/3jECY9AWlVgp4KR+PstM2YJg6L/kvdlBMN+SkqFTT8u4HZ18bE16Ts=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuktEtGsccw4MYroUsOC4kvi4M0RceFC2J2c9CoNDVj64q+opt
+	gCm8TohQSZ1nkLbFl6un8Q1JF/9oH5iQILMwafb/XNJwulqtixtifY2f
+X-Gm-Gg: ATEYQzy2DWglIts3/5c+0EXr5IxmiYimq3hBTY2xVkMd+u3fLCY8TCslk5etPz+KkUF
+	lxQ+2XX1eLAUyb7S+wWZQ6wsSFf+qSRJKVBxBBygwVd9m/IXalry25OA6Ln/Vbs9Cyd1lowLTr3
+	cW2xtMwBe2ZsNf8CJg7FRnUQlkQgztR+1rIh/U8LjbTbig8paNv7AkLz7RdiBfKACpliZoVlEtE
+	H2TSFElVmJPIkqOrp1SmNSvgA4iCumB5jrRONwP0DcXW42Ag2YfOSl+ix3Ydbt+P/gqQqY5MqW5
+	VIcUahnkkCkcWYaEEXzEycX6H+uQYAPbnyH5N3nzpNd7FRcQW1fGdxFvwn20kfgTuiPoVULhCWg
+	ATYO4Ksy+jRkotHwWdYEZ+R75Tc1c9uTBNrJzfdkAA7IV40C7uGPOZklJNYfKdFfqCx94WwJMHw
+	a//rvvZHuo6h6QUxoGm/vfVXvrXcyhMDkqu9IKlCZlNNu2/STgoElINPDf0ADtoac7wovr18joc
+	qkNbM5LHGU=
+X-Received: by 2002:a17:90a:d604:b0:359:ff8a:ee5a with SMTP id 98e67ed59e1d1-35bb9e51090mr4450775a91.12.1773863424940;
+        Wed, 18 Mar 2026 12:50:24 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bc618be0fsm409804a91.0.2026.03.18.12.50.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2026 12:50:24 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <cce7a4aa-0786-4c55-afcd-4816f977806a@roeck-us.net>
+Date: Wed, 18 Mar 2026 12:50:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] exec: Add KUnit test for bprm_stack_limits()
+To: Kees Cook <kees@kernel.org>
+Cc: Eric Biederman <ebiederm@xmission.com>,
+ Justin Stitt <justinstitt@google.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240520021337.work.198-kees@kernel.org>
+ <20240520021615.741800-1-keescook@chromium.org>
+ <a3e9b1c2-40c1-45df-9fa2-14ee6a7b3fe2@roeck-us.net>
+ <202603181132.507C829A9@keescook>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <202603181132.507C829A9@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Simplify allocation by using a flexible array member in this struct. No
-need to free separately.
+On 3/18/26 11:33, Kees Cook wrote:
+> On Mon, Mar 16, 2026 at 12:16:58PM -0700, Guenter Roeck wrote:
+>> Hi,
+>>
+>> On Sun, May 19, 2024 at 07:16:11PM -0700, Kees Cook wrote:
+>>> Since bprm_stack_limits() operates with very limited side-effects, add
+>>> it as the first exec.c KUnit test. Add to Kconfig and adjust MAINTAINERS
+>>> file to include it.
+>>>
+>>> Tested on 64-bit UML:
+>>> $ tools/testing/kunit/kunit.py run exec
+>>>
+>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>> ---
+>>> Cc: Eric Biederman <ebiederm@xmission.com>
+>>> Cc: Justin Stitt <justinstitt@google.com>
+>>> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+>>> Cc: Christian Brauner <brauner@kernel.org>
+>>> Cc: Jan Kara <jack@suse.cz>
+>>> Cc: linux-fsdevel@vger.kernel.org
+>>> Cc: linux-mm@kvack.org
+>>> ---
+>> ...
+>>> +++ b/fs/exec.c
+>> ...
+>>> +	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
+>>> +	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * (_STK_LIM / 4 *  + sizeof(void *)),
+>>                                                                     ^^^^^^
+>>
+>> Google's experimental AI review agent tagged the above change as syntactically wrong.
+>> How does this even compile ?
+> 
+> Wow. I have no idea how this ever built either. I will get it fixed.
+> 
+I ended up writing a test program.
 
-Add __counted_by to get extra runtime analysis. Move counting variable
-assignment to right after allocation as required by __counted_by.
+#define TESTVAL 10
+...
+long int x = TESTVAL / 4 * + sizeof(void *);
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- .../ethernet/marvell/prestera/prestera_devlink.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+does build, as does
 
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_devlink.c b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-index 06b876f6b27f..9c043cddb0f9 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-@@ -125,8 +125,8 @@ struct prestera_trap_item {
- 
- struct prestera_trap_data {
- 	struct prestera_switch *sw;
--	struct prestera_trap_item *trap_items_arr;
- 	u32 traps_count;
-+	struct prestera_trap_item trap_items_arr[] __counted_by(traps_count);
- };
- 
- #define PRESTERA_TRAP_METADATA DEVLINK_TRAP_METADATA_TYPE_F_IN_PORT
-@@ -451,19 +451,12 @@ int prestera_devlink_traps_register(struct prestera_switch *sw)
- 	struct prestera_trap *prestera_trap;
- 	int err, i;
- 
--	trap_data = kzalloc_obj(*trap_data);
-+	trap_data = kzalloc_flex(*trap_data, trap_items_arr, traps_count);
- 	if (!trap_data)
- 		return -ENOMEM;
- 
--	trap_data->trap_items_arr = kzalloc_objs(struct prestera_trap_item,
--						 traps_count);
--	if (!trap_data->trap_items_arr) {
--		err = -ENOMEM;
--		goto err_trap_items_alloc;
--	}
--
--	trap_data->sw = sw;
- 	trap_data->traps_count = traps_count;
-+	trap_data->sw = sw;
- 	sw->trap_data = trap_data;
- 
- 	err = devlink_trap_groups_register(devlink, prestera_trap_groups_arr,
-@@ -489,8 +482,6 @@ int prestera_devlink_traps_register(struct prestera_switch *sw)
- 	devlink_trap_groups_unregister(devlink, prestera_trap_groups_arr,
- 				       groups_count);
- err_groups_register:
--	kfree(trap_data->trap_items_arr);
--err_trap_items_alloc:
- 	kfree(trap_data);
- 	return err;
- }
-@@ -594,6 +585,5 @@ void prestera_devlink_traps_unregister(struct prestera_switch *sw)
- 
- 	devlink_trap_groups_unregister(dl, prestera_trap_groups_arr,
- 				       ARRAY_SIZE(prestera_trap_groups_arr));
--	kfree(trap_data->trap_items_arr);
- 	kfree(trap_data);
- }
--- 
-2.53.0
+long int x = TESTVAL / 4 * - sizeof(void *);
+
+or even
+
+long int x = TESTVAL / 4 * 3 - - sizeof(void *);
+
+long int x = TESTVAL / 4 * - - sizeof(void *);
+
+It doesn't even have problems with
+
+long int x = TESTVAL / 4 * - - + - + - sizeof(void *);
+
+Weird. Looks like the compiler takes the "+" or "-" as sign value,
+not as operator, and once can have as many of those as one desires.
+
+Guenter
 
