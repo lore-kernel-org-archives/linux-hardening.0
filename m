@@ -1,139 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2247036BCEE;
-	Wed, 18 Mar 2026 16:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563A53DFC8F;
+	Wed, 18 Mar 2026 18:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773851025; cv=none; b=EccBrkRNGmdJ+2c6qyBU/yTh8VSRrBfsZYkSyXTSqA5HGgN68M10/vvmTNNZFXUhC0EAhaKD65JBWg3pMvFV7ISimkV8TKNdmduEMdD+DiFuoXHpg6hV97MVUasID78C1guwlnVp150SgaCvxpMK9kyF+owUUZ7UF7IKgBMo8Ig=
+	t=1773858804; cv=none; b=YrxhpoiYm4zmg5RZvkNEMwxomhwE5cyjxgRDoHHY+y5oLW7SRz71HJBOAmKkvyLsVCqf7VYVYeomdnPW/E2QVMTf1Vzw4geb8fZrO3MQd5xDA0owhGF//PQbcj1czmAefsj8f+Xldgg11V4ZInm3X/iJAFeVB7lmI4sNsYx6HQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773851025; c=relaxed/simple;
-	bh=FdhuttvZGnIsunYEpcHI6IMnhszSdtzemyslEPEyWN0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p+Vbn1tTFByzkmFNvm6QcTIlltqaOU8KXApBA+l8tDzNegJYhPUnlLddpKzdFn+hf59ZgcD3FNTZKw5j5TULroH6adEtyFY4nZXsrRqN3WYGVYY/M0maDWwFHLvBqNS7jZ5eG5RC0ILLCwZYJk9oNZWsPXF1eUjUPDqg5Y3fUgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PC002q0B; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773858804; c=relaxed/simple;
+	bh=Q/uh4QAy4IU2itVKlERvGMXidyUsuGdulupJTD5xwYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tyKxPAfZ9DxVBJOGhvyhFf1Yd7wpQ75FuIz92JCVImPn8Lxh+YR1gs29MmlfcTXyYiGBz6traTpfVGYEb+OM+8rw+ZB1bconXt5rc85MCFkneVJSDPx5Uxk/K0ZRtev1zUPDDl6jTdGcdKZgL2Q8aTJMWBQHRVj87A9APf0GpW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=chyubJ3X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PC002q0B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773851023; x=1805387023;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FdhuttvZGnIsunYEpcHI6IMnhszSdtzemyslEPEyWN0=;
-  b=PC002q0B6xFhb7DQNlYO/AG2KlnuG7G6LZCh9XrVh8HTa7CwAIVYJ6J/
-   bZdTsJDszJuEyQv4riKRHzG5ssMQhKcT6FY/VCOWRKt7yl4qwR8o4fAeA
-   kL+evhSoOAdCrN9nnM/gPtWPi5cGf+WdIxOhDvBkXNTjb991vwCTXeRB8
-   BEMT008DK8i5dzypj74hZEUq5y+OVWQh9GQPQBsWNj0DUHMYGVrE86/ga
-   ctlPPV9rj4NEa04XPSMsYjhDstkxMpf4IC0XtsGrmFO1FYvnSqZpb9cQb
-   ZZsS4m+c4O2vfNn6m3dRjCvgaFXdJ8uMpzFAu54oB3KTv5CepLhR3YI9h
-   A==;
-X-CSE-ConnectionGUID: Fwq+dDFcSdqJaHEtArDsrA==
-X-CSE-MsgGUID: Lmpr3ZVMTVylPg2Vz5fopw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="78819431"
-X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="78819431"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 09:23:42 -0700
-X-CSE-ConnectionGUID: /5y4H5aRR9KYXhO6z+dn6g==
-X-CSE-MsgGUID: tHBFQBsCRnOzzRCgcWIwcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="227158979"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.223]) ([10.125.108.223])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 09:23:41 -0700
-Message-ID: <c18ab521-5745-4e17-9cf9-773a7aa0103d@intel.com>
-Date: Wed, 18 Mar 2026 09:23:41 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="chyubJ3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9929C19421;
+	Wed, 18 Mar 2026 18:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773858804;
+	bh=Q/uh4QAy4IU2itVKlERvGMXidyUsuGdulupJTD5xwYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=chyubJ3X1/firrp76bLjG/+vNfJqNnB90aYEk6Zcih2c9oabwEvoGLloeOaNTiLY6
+	 hqfkJjRL78NKkqbcVGtfZNCEqcNKCoe/PFcPdNbgXg0uXPCD7vW8Yp5avtdW0kKFp1
+	 D7IbJ82yq6DqzJMjeVXAJ/qH152XodTiC3pihX1Ykbh202ePhb2bcbuHvCsQQOLcNQ
+	 6qRpSFVvr0fwGlnPtaX/Rx1Npsvi8EP6hC8eHaFByCvd62g0GK15dVuaZz98LVdDIb
+	 QGgz1CYNBDLxRBxcb9W7EoReKrwoAHzO4pm2annaPka3Sul+V3ascK5FgWfVDEgrGt
+	 9b7D0aoZqSRiQ==
+Date: Wed, 18 Mar 2026 11:33:23 -0700
+From: Kees Cook <kees@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Eric Biederman <ebiederm@xmission.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] exec: Add KUnit test for bprm_stack_limits()
+Message-ID: <202603181132.507C829A9@keescook>
+References: <20240520021337.work.198-kees@kernel.org>
+ <20240520021615.741800-1-keescook@chromium.org>
+ <a3e9b1c2-40c1-45df-9fa2-14ee6a7b3fe2@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: =?UTF-8?Q?Marvin_H=C3=A4user?= <haeuser@rptu.de>,
- Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, x86@kernel.org, linux-crypto@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Roxana Bradescu
- <roxabee@chromium.org>, Adam Langley <agl@google.com>,
- Ard Biesheuvel <ardb@kernel.org>, "Jason A . Donenfeld" <Jason@zx2c4.com>
-References: <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
- <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com> <Y9MAvhQYlOe4l2BM@gmail.com>
- <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
- <16e3217b-1561-51ea-7514-014e27240402@intel.com>
- <Y9oMmYWzy7mlk3D9@sol.localdomain>
- <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
- <851920c5-31c9-ddd9-3e2d-57d379aa0671@intel.com>
- <33E64985-BE38-49D6-AB1C-CD7CFC1D08F1@rptu.de>
- <7dfb5fe7-295f-4a29-a633-c2907a1fdb60@intel.com> <20260318161558.GA2255@sol>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20260318161558.GA2255@sol>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3e9b1c2-40c1-45df-9fa2-14ee6a7b3fe2@roeck-us.net>
 
-On 3/18/26 09:15, Eric Biggers wrote:
-> Doesn't DOITM still need to be enabled by default for now, given that
-> data-dependent timing is a backwards compatibility break and code hasn't
-> been updated to account for it yet?
+On Mon, Mar 16, 2026 at 12:16:58PM -0700, Guenter Roeck wrote:
+> Hi,
+> 
+> On Sun, May 19, 2024 at 07:16:11PM -0700, Kees Cook wrote:
+> > Since bprm_stack_limits() operates with very limited side-effects, add
+> > it as the first exec.c KUnit test. Add to Kconfig and adjust MAINTAINERS
+> > file to include it.
+> > 
+> > Tested on 64-bit UML:
+> > $ tools/testing/kunit/kunit.py run exec
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > Cc: Eric Biederman <ebiederm@xmission.com>
+> > Cc: Justin Stitt <justinstitt@google.com>
+> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> > Cc: Christian Brauner <brauner@kernel.org>
+> > Cc: Jan Kara <jack@suse.cz>
+> > Cc: linux-fsdevel@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > ---
+> ...
+> > +++ b/fs/exec.c
+> ...
+> > +	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
+> > +	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * (_STK_LIM / 4 *  + sizeof(void *)),
+>                                                                    ^^^^^^
+> 
+> Google's experimental AI review agent tagged the above change as syntactically wrong.
+> How does this even compile ?
 
-Please read:
+Wow. I have no idea how this ever built either. I will get it fixed.
 
-https://lore.kernel.org/all/851920c5-31c9-ddd9-3e2d-57d379aa0671@intel.com/
-
-Especially:
-
-> The execution latency of the DOIT instructions[1] does not depend on the
-> value of data operands on all currently-supported Intel processors.
-
-I believe that's a long winded way of saying there's no "backwards
-compatibility break".
+-- 
+Kees Cook
