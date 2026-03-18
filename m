@@ -1,86 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mailgw1.uni-kl.de (mailgw1.uni-kl.de [131.246.120.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB273A1E67;
-	Wed, 18 Mar 2026 13:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87DD3B4E8C;
+	Wed, 18 Mar 2026 15:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.246.120.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773841261; cv=none; b=cO2Hfqw0+BrITXUcuPW2BZkh0V6jEztlbP7TK+EzyJZOrL862lsdQT3c8JsJjesXcenacx9eEpAXbShE91g0E1GkBm4vbLq1VsnolcVh4x/aRuLCA/ONyz988+bBKrMQ1E/RiiXTrQyfA2RoKzlkolwgECH6OcHXJBrm9c3rThI=
+	t=1773848378; cv=none; b=k1p6NXh7hRsPjNTasSiNxaxUXFpeO94bWBjk98jaVYO9wEGRqMQLwO8Uq5K8KKRRuSwQnRBEWeExFtI03P4JO9p82sfAJ2iffdVEvCQM0m2kQHSzihDXPuvfmRA//b2YT/ia/5cxFRwfR6fxlvNz3Up7aMsv85RStcHNyjcjcUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773841261; c=relaxed/simple;
-	bh=P5G0CDacif4HsUnn1QJFo3uWCJ2vvAe0hY2GWGyq8/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FCMiN5sFDU36t5NPNU9WTIdivQ2j4GiNM33+JUz1zABv8vBUtVyS4x3Qtv2VBn2asKMz2lRkZSiqOmyWg1UPNO+2akwMdlPi98tG8PvaANVnHHBA3Z6sTIpw3FUH4CLZSd3U1Mon+DGcsQ6YHkgcZ2b4w4jM/0qAOdavLR0qK60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BZebq07U; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BZebq07U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773841259; x=1805377259;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=P5G0CDacif4HsUnn1QJFo3uWCJ2vvAe0hY2GWGyq8/Y=;
-  b=BZebq07Ub+VrAf/thv8ITmLGEUj9L0VxvO2SfvDdSgtxSwm+KevFeeNb
-   zbyqlDa1xlyK4pnpRnYv4Do3ootsjko7e99Qq6rqKGlCDfA1oKUMOmJUG
-   0k9MHTApgwNrnp2Pug1Hsiqsi2jTCQnu4cLaQHoxKNHDOykdT8uVdX0Va
-   WtTn6gknORWR6zyvCylal/T4Nr9gq2N7dYhSs/qK5d91kv5qYB5CE/xJo
-   ls3oeaeDYjYOHZbliMAF6RcfsmbLD79T3kRjEJt0gRKqQmIC6sxrREZ7j
-   YvSfn2beGF6nNsqxisfFvQUhzeU5dX6IqfH3aWWdwbczmr1dSDYLOufxQ
-   Q==;
-X-CSE-ConnectionGUID: lYHY1/jKRWO/wlsErydXEA==
-X-CSE-MsgGUID: BWXDmzcRQs6NFiGE5C+oeg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="85208050"
-X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="85208050"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 06:40:59 -0700
-X-CSE-ConnectionGUID: xO0V8ntuTaW0GL8Wv+fY6A==
-X-CSE-MsgGUID: zrK8iuQ7Sj6+IdqWWaq2oA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="247111629"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 18 Mar 2026 06:40:57 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 1BFFB98; Wed, 18 Mar 2026 14:40:56 +0100 (CET)
-Date: Wed, 18 Mar 2026 14:40:56 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-usb@vger.kernel.org, Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCHv2] thunderbolt: use kzalloc_flex
-Message-ID: <20260318134056.GJ2275908@black.igk.intel.com>
-References: <20260316182112.8682-1-rosenp@gmail.com>
+	s=arc-20240116; t=1773848378; c=relaxed/simple;
+	bh=9biZ7RHXjgNdFYYFQWCNAHvjg2IqE29+EF9hdALNpTc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=OUKCEVz2VZDRNQkpxNkc5FS+NAymCHwlFTANO8zWVZux8oRaXqFh04a//1UY9phpcdB+NRfJKyTWix7UQsan4l4z5mCxRPNv0qLDUxdXf5fAjtYaBtQnFI+hnh2prdG2O6mhG5boVKz+llt9d0O6ipNBssSqgV13d7/1hcpxalc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rptu.de; spf=pass smtp.mailfrom=rptu.de; arc=none smtp.client-ip=131.246.120.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rptu.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rptu.de
+Received: from smtpclient.apple (ip5f58e5b0.dynamic.kabel-deutschland.de [95.88.229.176])
+	(authenticated bits=0)
+	by mailgw1.uni-kl.de (8.17.1.9/8.17.1.9/Debian-2+deb12u2) with ESMTPSA id 62IFXD1K1820072
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Mar 2026 16:33:21 +0100
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260316182112.8682-1-rosenp@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.500.181\))
+Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
+From: =?utf-8?Q?Marvin_H=C3=A4user?= <haeuser@rptu.de>
+In-Reply-To: <851920c5-31c9-ddd9-3e2d-57d379aa0671@intel.com>
+Date: Wed, 18 Mar 2026 16:33:02 +0100
+Cc: Eric Biggers <ebiggers@kernel.org>, Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Roxana Bradescu <roxabee@chromium.org>, Adam Langley <agl@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <33E64985-BE38-49D6-AB1C-CD7CFC1D08F1@rptu.de>
+References: <20230125012801.362496-1-ebiggers@kernel.org>
+ <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
+ <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
+ <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
+ <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
+ <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com> <Y9MAvhQYlOe4l2BM@gmail.com>
+ <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
+ <16e3217b-1561-51ea-7514-014e27240402@intel.com>
+ <Y9oMmYWzy7mlk3D9@sol.localdomain>
+ <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
+ <851920c5-31c9-ddd9-3e2d-57d379aa0671@intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+X-Mailer: Apple Mail (2.3864.500.181)
+X-Spam-Score:  (-2.9)
+X-Spam-Flag: NO
 
-On Mon, Mar 16, 2026 at 11:21:12AM -0700, Rosen Penev wrote:
-> diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-> index e96474f17067..4e66b53860dd 100644
-> --- a/drivers/thunderbolt/tb.h
-> +++ b/drivers/thunderbolt/tb.h
-> @@ -440,9 +440,10 @@ struct tb_path {
->  	bool drop_packages;
->  	bool activated;
->  	bool clear_fc;
-> -	struct tb_path_hop *hops;
->  	int path_length;
->  	bool alloc_hopid;
-> +
-> +	struct tb_path_hop hops[] __counted_by(path_length);
+Hi all,
 
-Please update the kernel-doc too. Other than that this looks good.
+As I haven=E2=80=99t found any news on the list or the tree, I'd like to =
+inquire whether
+there=E2=80=99s been any updates on the situation.
+
+> On 3. Feb 2023, at 17:25, Dave Hansen <dave.hansen@intel.com> wrote:
+>=20
+> There are some other crazier choices like adding ABI to toggle DOITM =
+for
+> userspace, but I'm not sure they're even worth discussing.
+
+Sorry if I misunderstood something, but isn=E2=80=99t that basically the =
+only effective
+way to use DOITM? DDP is not active in kernel mode regardless of DOITM =
+and the
+FSFP documentation says that existing mitigations for SSB and such =
+=E2=80=9Cusually=E2=80=9D
+will also be sufficient for FSFP. I assume in absence of KERNEL_SSBD, =
+the other
+existing mitigations would simply be augmented as necessary, rather than
+enabling something alike KERNEL_FSFPD. But I may be totally mistaken =
+here.
+I further assume variable-latency instruction semantics still do not =
+apply, so
+to my understanding, FSFP is the only potential concern to the kernel, =
+and it=E2=80=99s
+not that bad.
+
+Meanwhile, DDP is active in userspace and potentially violates the =E2=80=9C=
+no
+secret-dependent memory accesses=E2=80=9D constant-time programming rule =
+at the
+microarchitectural level. While real-world risk is up for debate, for =
+truly
+constant-time execution it must never trigger on memory that contains =
+secrets.
+To my knowledge, the only way to achieve this right now is to turn it =
+off. The
+Intel documentation also recommends against turning it off generally. =
+So, either
+there must be an opt-out per-process (and the processes should be mostly
+isolated regarding computation on secrets, otherwise all other =
+operations face
+the performance penalty as well), or there must be a dynamic toggle like =
+there
+is for prctl() speculation control. As ARM has basically the same thing, =
+I=E2=80=99m not
+sure there=E2=80=99s much benefit in relaxing the semantics (but there =
+might be in
+making it accessible in userspace).
+
+OT/Motivation: DDP has a rarely talked about implication from the =
+prefetching
+window. Namely, when accessing non-secret memory adjacent to secret =
+memory, it
+can activate on secret memory even when it is never accessed while DDP =
+is
+enabled. There are multiple solutions to this, e.g., to place guard =
+pages around
+secret memory and trust DDPs will fault and back off. Another way is to =
+make
+sure secret memory is never mapped while DDPs are active. I=E2=80=99m =
+playing around
+with this at the moment because unmapping secret memory also would mean =
+that
+mitigations like SLH only need to be applied to code that can execute =
+while
+secret memory is mapped. This can be achieved with pkeys, but it =
+requires some
+extra work to ensure no process=E2=80=99s secret memory pkey allows =
+reads while DDPs are
+on, even during context switches. Maybe more on that to come, maybe not, =
+but I
+wanted to provide my motivation in this. :)
+
+> My inclination is to wait a couple of weeks to see which way DOITM is
+> headed and if the definition is likely to get changed.
+
+The Intel documentation seems to be fairly stable, so I assume not much =
+happened
+on the hardware/ISA side?
+
+Thank you!
+
+Best regards,
+Marvin=
