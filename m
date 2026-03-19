@@ -1,156 +1,143 @@
-Received: from mailgw1.uni-kl.de (mailgw1.uni-kl.de [131.246.120.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38D014D719;
-	Wed, 18 Mar 2026 20:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.246.120.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1B4C8F0
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Mar 2026 00:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773865037; cv=none; b=awxEp5MK8Pv2G6PIPGAPsH0Yewor8VPKUi4R6FbV6WNmzzJlLh9gxG1DPQ0zW4F2oJBD0kbTKE1Nz1dl/gsTSwuo7FnEUsr2JyzvvGQzZvLCrxCp3/3tjCAcAP7Qjx2Yl3CR9xORlBG8v5Do905OIcPr5zJm3SKZoV7Q8YYieMo=
+	t=1773878777; cv=none; b=RV5SYUc+QSgl1VKueHZjBbMUycoDptJTqN61WCjnwUOGCA6H86xFI7q30CbzQPoeTztbIiFeXp8Otr1tY2a/kRNPlVJoTZUe5YZfqEFA5ChBTIHHkdlybfCTwba+4WeN39REkoytedyixk0PooKzSvXA09XzXv7DMR0gIkDBG3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773865037; c=relaxed/simple;
-	bh=OOvaqkoWgMwW/DtOxPXAjFjVHwZYzAZ6X3fYu1spxbU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=aC1l4tATwP6Fn1U5jYr+lfedZRoDMfF/hM0I8+QXr5Eckoe7ELClEUNKmXm5mK/23KsqcERzm06OUfXApfGVvyZwZn7P208wxVySi2u0a6Ll9VUwOzYTAqhniAIOe0RFZU6hrRvhE62gysmPmZvRZeyH7Naqnj3vCxUJ2hln/dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rptu.de; spf=pass smtp.mailfrom=rptu.de; arc=none smtp.client-ip=131.246.120.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rptu.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rptu.de
-Received: from smtpclient.apple (ip5f58e5b0.dynamic.kabel-deutschland.de [95.88.229.176])
-	(authenticated bits=0)
-	by mailgw1.uni-kl.de (8.17.1.9/8.17.1.9/Debian-2+deb12u2) with ESMTPSA id 62IKGNGt2277528
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Mar 2026 21:16:31 +0100
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1773878777; c=relaxed/simple;
+	bh=FzNH19rgnTQby5fAPdsDwWUSiHP1o3ls1AowYzfPyg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GMrzcIQTylxZwFgxo7DD8EhnlgSjxF/nqL4DpqrZNMBxl+0ve8RjoS6YgwftR54iwfrgerk9SBzczO8uzw5ab5OIYGrYiolxn050QW5v/DKDYsXVvNbUH1zqFPKJQvhFKD7c+oRwsWDN2Qw5U3E3FxPBKVxNgjUO+Q9jvr5jlIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EKs9I72Y; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKs9I72Y"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ab39b111b9so1586855ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Mar 2026 17:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773878776; x=1774483576; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yRm3k9nSwdEcyKRHATcZEGW4qHweuoW5rJO6irAqBPs=;
+        b=EKs9I72YKo1AFwo5u1YJpW5ayVVkW4fxZSe3oHvA7EfkSUbVo8yW2xyCZhQAZ7EfPy
+         RUzUj0Wx7yDWuzMEAWePvwovWTmqSe0RekEYTceb4llaIRCloDlK9ezFnmKqeXaqZhFF
+         r8wl506HQDgMNMuAZnqlcROlL645h3rJYFK2F3rEmCPM8504JcbG1/33u/4PU1QMlhH9
+         EUurRx1iZEsFUK6myQuaGhH3vBK4u6KEtuuqzU0Wkaxzx6NWVku/KemPYwrLosbH0W/N
+         4uMKfrRNyEKhYxLyvN5PJ1nE3P4UW58CgR92l5inVXaXTqzn6Qa8GIGmZJMa+K/lXuXC
+         7Ffg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773878776; x=1774483576;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yRm3k9nSwdEcyKRHATcZEGW4qHweuoW5rJO6irAqBPs=;
+        b=PJHPFowS9+4l1PAk3WJ/2vIgjzEBXNT5S8N6ybTXsX2tbOJZD95OAYLzjf113t8V8o
+         UXmdEU+UjC9bIqOQQJ3b8LC1kOQsNdc3wDgZxmS6hPQCEnpVtPJSEGYfMlFz9h4QrWxs
+         dczZZxoa0Bcn9qbVAILo/lqb4X317mmnGxiBaal3dMJr7w6RVVt8oWJN8HH7ONQk9VNz
+         p8w+CfWtxCEBpca8Ltlw3f/Bi1gTMLXEdoidFCGh0Qwun+s/xA4dDuUaEIdPX0flzUPP
+         o1OKGaWYZ/A6khCAPkj2xOV5vyuroOZoCq5xDjGeTNkXeA20l8x3jsRueLq/HlglPnzc
+         dMeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmvhOBzZhclkTgTowA4ziO9Gidy2BowrZ1S9O8n2tZSOdPlvglw3Kvv00oQNtmkjV3Elq5V0pWj1nV90OD+VU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylzfCuE8Sn4jOP/bHMWJ3ALhBo8hJDbIS7HMkq3xb6D6XePCXh
+	gZzCPC2WITNVs16EmZTJDrZmW1VRgPSuyQI0QMgPzFf1Ku2ADbE3Sz1Z
+X-Gm-Gg: ATEYQzyTybVQX2HT860E/8QwBJ4wcQsI9tY/ahe+niwPzCs4PQllOIqxgoY3cFkTGdQ
+	uYWYVi8m2rJMwvaVcN0Gifro9DCU6VGiBo5NHTDquDE+rAWius9WjKycWNbH3i+LH5NYd4/N8ns
+	mEKnom3o7Giv3iCVnDAlG50vDwfMr8Zens177Fxrree7+yIOY4dBrpGRQ3A+cDvA3KJHUGnROKg
+	JFeUpAFc0rqR5PvUwtbtmDQvhH5E9ELGIPtj1nnbQIZ/9bZqFQ61Z0sNdFPJfkzhlCPMIRyr6fX
+	3jvb2FtTjpGViB5VCKZKP44A/MVljlnUphuQaiIKzzAJ2RHapzYPEc0Bp9jlyRMN021MoE32+uZ
+	/ScCttJhRJHSzZZLyhZOSt/mBwOrHybetjdnMcsExH+m0oZjlz2W4FxEkxPHCaXfbWub/di4jEW
+	U91dGHp4TGRfPFkgCuZ4d8VIAcK9sUcDSK5SEVk/xLkKbJ+7AojYJf79EJfUZbC7DeWw==
+X-Received: by 2002:a17:903:2f87:b0:2ae:ba41:60 with SMTP id d9443c01a7336-2b06e3248d5mr49150455ad.1.1773878775805;
+        Wed, 18 Mar 2026 17:06:15 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:56f5::8bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b06e4199easm51952735ad.5.2026.03.18.17.06.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2026 17:06:15 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Bamvor Jian Zhang <bamv2005@gmail.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] gpio: mockup: allocate lines with main struct
+Date: Wed, 18 Mar 2026 17:05:58 -0700
+Message-ID: <20260319000558.22108-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.500.181\))
-Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
-From: =?utf-8?Q?Marvin_H=C3=A4user?= <haeuser@rptu.de>
-In-Reply-To: <D5B3C493-BADA-4906-BB34-E5D60182F611@rptu.de>
-Date: Wed, 18 Mar 2026 21:16:13 +0100
-Cc: Eric Biggers <ebiggers@kernel.org>, Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Roxana Bradescu <roxabee@chromium.org>, Adam Langley <agl@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A5C6AB74-7E6B-4E4E-9836-45DF18F671DD@rptu.de>
-References: <20230125012801.362496-1-ebiggers@kernel.org>
- <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
- <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
- <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
- <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
- <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com> <Y9MAvhQYlOe4l2BM@gmail.com>
- <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
- <16e3217b-1561-51ea-7514-014e27240402@intel.com>
- <Y9oMmYWzy7mlk3D9@sol.localdomain>
- <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
- <851920c5-31c9-ddd9-3e2d-57d379aa0671@intel.com>
- <33E64985-BE38-49D6-AB1C-CD7CFC1D08F1@rptu.de>
- <7dfb5fe7-295f-4a29-a633-c2907a1fdb60@intel.com>
- <D5B3C493-BADA-4906-BB34-E5D60182F611@rptu.de>
-To: Dave Hansen <dave.hansen@intel.com>
-X-Mailer: Apple Mail (2.3864.500.181)
-X-Spam-Score:  (-2.9)
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-(CC, sorry for resending, my client converted the e-mail to rich text by =
-accident)
+Remove no longer needed kcalloc to simplify allocation.
 
-> On 18. Mar 2026, at 16:44, Dave Hansen <dave.hansen@intel.com> wrote:
->=20
-> I'd summarize it like this: lots of meetings, no updates.
->=20
-> IMNHO (and not speaking for my employer) DOITM itself is dead. There's
-> almost no chance of Linux ever doing anything with the existing, =
-public
-> DOITM architecture.
+Added __counted_by along with a counting variable to get extra runtime
+analysis.
 
-Thanks for the quick update!
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/gpio/gpio-mockup.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-Well, I am not sure this changes much. So, DOITM has always been more or =
-less
-an alias for (DDPD_U | PSFD) (surprisingly, I don=E2=80=99t think the =
-documentation
-mentions FSFP is disabled in DOITM?) and will likely remain exactly =
-that.
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index a7d69f3835c1..a907ce28cbbb 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -52,10 +52,11 @@ struct gpio_mockup_line_status {
+ 
+ struct gpio_mockup_chip {
+ 	struct gpio_chip gc;
+-	struct gpio_mockup_line_status *lines;
+ 	struct irq_domain *irq_sim_domain;
+ 	struct dentry *dbg_dir;
+ 	struct mutex lock;
++	int nr_lines;
++	struct gpio_mockup_line_status lines[] __counted_by(nr_lines);
+ };
+ 
+ struct gpio_mockup_dbgfs_private {
+@@ -436,15 +437,18 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	if (rv)
+ 		name = dev_name(dev);
+ 
+-	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
++	chip = devm_kzalloc(dev, struct_size(chip, lines, ngpio), GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
+-	mutex_init(&chip->lock);
++	chip->nr_lines = ngpio;
+ 
+ 	gc = &chip->gc;
+-	gc->base = base;
+ 	gc->ngpio = ngpio;
++	gc->base = base;
++
++	mutex_init(&chip->lock);
++
+ 	gc->label = name;
+ 	gc->owner = THIS_MODULE;
+ 	gc->parent = dev;
+@@ -460,11 +464,6 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	gc->request = gpio_mockup_request;
+ 	gc->free = gpio_mockup_free;
+ 
+-	chip->lines = devm_kcalloc(dev, gc->ngpio,
+-				   sizeof(*chip->lines), GFP_KERNEL);
+-	if (!chip->lines)
+-		return -ENOMEM;
+-
+ 	for (i = 0; i < gc->ngpio; i++)
+ 		chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
+ 
+-- 
+2.53.0
 
-It might still make sense for the kernel to have some general DIT =
-control.
-Not only does ARM have DIT with a definition analogous to DOITM. The =
-only
-real-world implementation of ARM DIT I know of, Apple silicon, also =
-toggles
-their DDP alongside the core DIT semantics (starting with Apple M3) [1]. =
-This
-makes it roughly equivalent to Intel DOITM. Apple, for their =
-implementation,
-recommends toggling DIT for crypto code rather than per-process =
-protection [2].
-Of course, ARM=E2=80=99s doesn=E2=80=99t need a syscall.
-
-So, to my understanding, DDP (and FSFP?) would still need to become =
-=E2=80=9Cbugs=E2=80=9D in
-the kernel to be independent of SSBD (unsure there is a strong benefit, =
-but
-the documentation says there are alternative mitigations to SSB). The =
-same is
-true for MCDT, which appears to be an actual bug (userspace can apply
-mitigations, so the kernel should just report whether the CPU is =
-affected; or
-is that not desired?). As Intel DOITM and Apple DIT have done, it still =
-makes
-sense to classify DDP under the DIT umbrella, because it=E2=80=99s the =
-only =E2=80=9Cbug=E2=80=9D
-that leaks your secrets by design. So a general kernel DIT control =
-should
-toggle it, regardless of DOITM=E2=80=99s future. This would also allow =
-adding DDP-like
-optimizations with separate kill switches in the future, if necessary =
-(though
-that=E2=80=99s exactly the problem DOITM would solve).
-
-OT: I think applications may benefit from an opt-out speculation =
-mitigation
-control. By that I don=E2=80=99t mean that every process has all =
-mitigations applied
-by default and has to proactively disable them, but that a process makes =
-an
-=E2=80=9Capply sensible mitigations=E2=80=9D syscall, agnostic to what =
-these particular
-mitigations are. If an application has manual hardening, it can then opt =
-out
-of a specific heavyweight kernel mitigation (e.g., it may be happy with =
-lfence
-over SSBD, or it may not be affected by a particular =E2=80=9Cbug=E2=80=9D=
- by design).
-Of course, this can be implemented in userspace by having a shared =
-library that
-keeps up with in-kernel mitigations and applies them considering the
-application-provided opt-out list. Otherwise, code remains vulnerable to =
-novel
-=E2=80=9Cbugs=E2=80=9D until updated. I=E2=80=99m not sure whether an =
-in-kernel mechanism or a shared
-library would be the way to go. For mitigations that are low-risk but =
-high-cost,
-there could still be a separate opt-in. I just feel like the OS is the =
-best
-suited entity to make that decision when a new =E2=80=9Cbug=E2=80=9D =
-drops.
-
-Best regards,
-Marvin
-
-[1] https://gofetch.fail/files/gofetch.pdf
-
-[2] =
-https://developer.apple.com/documentation/xcode/writing-arm64-code-for-app=
-le-platforms=
