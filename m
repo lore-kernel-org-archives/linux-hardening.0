@@ -1,178 +1,146 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F24176ADE
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Mar 2026 20:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31907407105;
+	Thu, 19 Mar 2026 22:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951346; cv=none; b=iwkMUblHIZfgdSpp46/OmEdgg8kzJw66KW/tumCRC+e4L6fxv4qq/jpO5HOe7E29wc0H1GnR8ZUQmNiknZfFd6OrRI/1eDfF+Qz+1r15WDytYXEu4fxMnLsB+fE7DHpUOOV0D0B1T27ieGP2+BnvFoFbYYXK95revUDVaaIHZkk=
+	t=1773958145; cv=none; b=Rb4HBPoS0lI+RtnL7ghi7O3OPhq33YDrGEUtBpZl2FE557YWrNd8MN+gfW5WKpt8qcKkVKy6MtW/G/87TyVvQv0SoZffj1qKU1bI2UqqV2MOfttTNJl6xLVHImCuEmsp2xjbp9lTJ0/rQuELI7sw+GTvnaMBfLtdGlhTO0E364o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773951346; c=relaxed/simple;
-	bh=0E1xN3HmdJGSZ6UQ0dNBxRKtgCC4EAAOtjwcoINiom4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LTSji4Jaz941Km5NUBJplRWpHgQvgihdLzU8hfntruuqAxPhQ5j95FxDwuh5KAPbpZVfSTvtynmwS4tiWLn3pwB0I9aTvYjl9ws+KAEaXCJrgAHN8jjWHKnJQTRTdc6fbhSvtQshCUkA6myeF/H4qBzCLPE82FQggB7bm2pclmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mY0brNeA; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773958145; c=relaxed/simple;
+	bh=jq8yNxg7Yiz2NU+7p28rjZpnAu9NVY9En1FhSO5xowI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLucmu/1RmW4KvbOafqtTjH5V2UfVdbYhqB5jO3XRXxTQb6X1lEH/YLDtPKlGiGEOg3mxEJeJgOpu0p6nNfBfFjf/6b6TuSnhmT8sF/RD1ptUxZb9gTeq6vhARPoWGfpYGMrEUP9LNraRe+oEySYivQOMu18GE3NpHr4wBjp/sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=V+4rAm9/; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mY0brNeA"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-c742d7c8acfso495500a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Mar 2026 13:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951343; x=1774556143; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/jDnJgSgoxI+fR2Q+0oguo+U/G7a0RmU8BoRg3HRZvw=;
-        b=mY0brNeAkVYRkkD8Q0qFwBVWEnyGzzTO9s5EZ3goxg1iosgJAtwkq4Qwro0p/FgFUk
-         AX3p9OOSkVSxbcyT+pTO5qvi3ii9FVCplHm9pedXLPXDsdGxZwHBAlKlkTcmvAyBL/0H
-         5dmNn23YWfH7zU1LP4fB2uU9X3HxqjKhxbfcBQQvZgVTHX9h7+Ke8K/w8LTGy1ja/10w
-         JorGXMPJNYF2I0RWuRXjLz2GUaThQAy15T7LFmnRcHn41ZC1EVYh5xks7caxb9E7n8rf
-         QC3uvgAWCiGvaVHkjk1wKwn9iYQqnUHcym8DlIXMYP9QrNesoJll9+T4GEr3VHa0guN8
-         k+Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951343; x=1774556143;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/jDnJgSgoxI+fR2Q+0oguo+U/G7a0RmU8BoRg3HRZvw=;
-        b=CKoEYc9nUsGV6oRrKs4lENjHAhrZS4t6b+GgIlrvanz3gNwoGOAS11LhawYQD5hcJM
-         /mMYXjfsKkBD/kBHXnu3Xrv1uia2vSYksbMVx0RGDzsPwAyCTIUXkXMEUMqg+K/7aQQI
-         R5Xuzj+V+q/KD/OmoTJmKM2uFcMCyWdge6pH7VEn1CVeTIHBmRh1praArxNxqdSsBitD
-         K92H4P8t1c5FltlWdiiYUOhFJBY5gXoRNOLr2XANpvgl1p0HE+2cMgu4Ib3FpjvnuB7g
-         s6gKm8F4/78q+SLwL4Tvm/ldItJMu+r0XdYbfMv/kw32aNYG7ybvM0aNp2QgCfb1Z5ni
-         1vPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWd8+0HgZSa8VTm2VyGu2OcBy5ws5sSa+JONxcn27bophxwZTPZRK75vWvBr5O3mzDQMBTWib0RJXAmkUsvwcw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxT4WDtfFQWVl113f36zSlfgEbmPMG6XW2g5xcsavHfzUSu+af
-	f87Sn6+QGCP14vF33QBG/pdSuxF6db/l96LZ3vneBR7/8NvizG2XFvGu
-X-Gm-Gg: ATEYQzxAObcDjQN6fG7gXKQlmQkkVheu81FNwXhkjeFj7p8imslp3WXqGSlsjRdGKKS
-	X12YNuqfmlBocuQIiX0GOvv4X4wDSubASjnT4vyvCGMfSDH9+8CsDGI7Ef+yXyn7/dTzQ3roFnF
-	nF2Qsbue5cOLB7+AXkrZO2fQlsxjxR/qx1AEVa2htI/Xjh2II1hKB+MdM8zmUdLFUbahA68+a5m
-	21N6GwxWa7vYPHG2M0nWxKOHFIb2ZPMK/qDilohyhTUHV8EU1LYhtfKS+9gwuCiZylAQBBoDPHC
-	f857Bf6GzNKbU52eW3a1gyGQoIyEeYtZkYVgtzeg4vqTPhWIKxGJIJZ6VH9o7o4lSaUzkv7jwdf
-	ZUeUHfa0q/+LoplTZZbk8TEEUeo96PTCfn/SYwC6w35LrOdM9DQVmomRTPlcdoypABe64EIW3W0
-	6s4RAqqiqzeObRLUCdy2f3aHgP9aZX8JPc3BQtT9XsD/33ABYNrjoAdwY=
-X-Received: by 2002:a17:903:8c8:b0:2ae:46b9:c653 with SMTP id d9443c01a7336-2b08278b310mr4139655ad.33.1773951343394;
-        Thu, 19 Mar 2026 13:15:43 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b08368ea1bsm469005ad.68.2026.03.19.13.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 13:15:42 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-edac@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv2] EDAC/mc: Use kzalloc_flex()
-Date: Thu, 19 Mar 2026 13:15:25 -0700
-Message-ID: <20260319201525.174493-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="V+4rAm9/"
+Received: from killaraus.ideasonboard.com (2001-14ba-703d-e500--2a1.rev.dnainternet.fi [IPv6:2001:14ba:703d:e500::2a1])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 94ACF9A6;
+	Thu, 19 Mar 2026 23:07:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1773958068;
+	bh=jq8yNxg7Yiz2NU+7p28rjZpnAu9NVY9En1FhSO5xowI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V+4rAm9/Wks6PNphwB6BAf/x2uMc5Gn6fwowKQ3v6ucXZ8ZbYpIa+AcP2i7QGdT6P
+	 KNk8LvgfQDM/BMlTGOidKV+r907R5GXkiE+TXd/iZnNN8PiExVkGeuir62Eq/ETF0A
+	 LVitmz37wqxKpQIf9cEq8oGko1SBUA5eLl1lkYVw=
+Date: Fri, 20 Mar 2026 00:09:01 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-media@vger.kernel.org, linux-hardening@vger.kernel.org,
+	gustavoars@kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: nxp: imx8-isi: remove kzalloc_objs
+Message-ID: <20260319220901.GD950375@killaraus.ideasonboard.com>
+References: <20260306044536.149204-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260306044536.149204-1-rosenp@gmail.com>
 
-Convert struct mem_ctl_info to use flex array and use the new flex
-array helpers to simplify initialization.
+On Thu, Mar 05, 2026 at 08:45:36PM -0800, Rosen Penev wrote:
+> Use a flexible arraay member to combine allocations.
+> 
+> It looks like pipes never gets freed anywhere. Meaning this effectively
+> fixes a memory leak.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c | 11 ++++-------
+>  drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h |  3 ++-
+>  2 files changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> index 16392420903a..657ffecc4d7e 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> @@ -459,25 +459,21 @@ static const struct dev_pm_ops mxc_isi_pm_ops = {
+>  
+>  static int mxc_isi_probe(struct platform_device *pdev)
+>  {
+> +	const struct mxc_isi_plat_data *pdata;
+>  	struct device *dev = &pdev->dev;
+>  	struct mxc_isi_dev *isi;
+>  	unsigned int dma_size;
+>  	unsigned int i;
+>  	int ret = 0;
+>  
+> -	isi = devm_kzalloc(dev, sizeof(*isi), GFP_KERNEL);
+> +	pdata = of_device_get_match_data(dev);
+> +	isi = devm_kzalloc(dev, struct_size(isi, pipes, pdata->num_channels), GFP_KERNEL);
+>  	if (!isi)
+>  		return -ENOMEM;
+>  
+>  	isi->dev = dev;
+>  	platform_set_drvdata(pdev, isi);
+>  
+> -	isi->pdata = of_device_get_match_data(dev);
 
-Add __counted_by for extra runtime analysis when requested.
+I'd keep
 
-Move counting assignment immediately after allocation as required by
-__counted_by.
+	isi->pdata = pdata;
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
-Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
- v2: reword message slightly.
- drivers/edac/edac_mc.c |  9 ++-------
- include/linux/edac.h   | 23 ++++++++++++-----------
- 2 files changed, 14 insertions(+), 18 deletions(-)
+here and not below.
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 29e9828422bb..1ffab0269aec 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -203,7 +203,6 @@ static void mci_release(struct device *dev)
- 		kfree(mci->csrows);
- 	}
- 	kfree(mci->pvt_info);
--	kfree(mci->layers);
- 	kfree(mci);
- }
+> -
+> -	isi->pipes = kzalloc_objs(isi->pipes[0], isi->pdata->num_channels);
 
-@@ -361,25 +360,21 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
- 			per_rank = true;
- 	}
+Wouldn't it be simpler to just replace this with devm_kcalloc() ?
 
--	mci = kzalloc_obj(struct mem_ctl_info);
-+	mci = kzalloc_flex(*mci, layers, n_layers);
- 	if (!mci)
- 		return NULL;
+	isi->pipes = devm_kcalloc(dev, isi->pdata->num_channels,
+				  sizeof(isi->pipes[0]), GFP_KERNEL);
 
--	mci->layers = kzalloc_objs(struct edac_mc_layer, n_layers);
--	if (!mci->layers)
--		goto error;
--
- 	mci->pvt_info = kzalloc(sz_pvt, GFP_KERNEL);
- 	if (!mci->pvt_info)
- 		goto error;
+No other change would be needed.
 
-+	mci->n_layers = n_layers;
- 	mci->dev.release = mci_release;
- 	device_initialize(&mci->dev);
+> -	if (!isi->pipes)
+> -		return -ENOMEM;
+> -
+>  	isi->num_clks = devm_clk_bulk_get_all(dev, &isi->clks);
+>  	if (isi->num_clks < 0)
+>  		return dev_err_probe(dev, isi->num_clks, "Failed to get clocks\n");
+> @@ -487,6 +483,7 @@ static int mxc_isi_probe(struct platform_device *pdev)
+>  		return dev_err_probe(dev, PTR_ERR(isi->regs),
+>  				     "Failed to get ISI register map\n");
+>  
+> +	isi->pdata = pdata;
+>  	if (isi->pdata->gasket_ops) {
+>  		isi->gasket = syscon_regmap_lookup_by_phandle(dev->of_node,
+>  							      "fsl,blk-ctrl");
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> index 3cbd35305af0..99532efa4e41 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> @@ -286,7 +286,6 @@ struct mxc_isi_dev {
+>  	struct regmap			*gasket;
+>  
+>  	struct mxc_isi_crossbar		crossbar;
+> -	struct mxc_isi_pipe		*pipes;
+>  	struct mxc_isi_m2m		m2m;
+>  
+>  	struct media_device		media_dev;
+> @@ -294,6 +293,8 @@ struct mxc_isi_dev {
+>  	struct v4l2_async_notifier	notifier;
+>  
+>  	struct dentry			*debugfs_root;
+> +
+> +	struct mxc_isi_pipe		pipes[];
+>  };
+>  
+>  extern const struct mxc_gasket_ops mxc_imx8_gasket_ops;
 
- 	/* setup index and various internal pointers */
- 	mci->mc_idx = mc_num;
- 	mci->tot_dimms = tot_dimms;
--	mci->n_layers = n_layers;
- 	memcpy(mci->layers, layers, sizeof(*layer) * n_layers);
- 	mci->nr_csrows = tot_csrows;
- 	mci->num_cschannel = tot_channels;
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index fa32f2aca22f..deba46b3ee25 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -541,17 +541,6 @@ struct mem_ctl_info {
- 	struct csrow_info **csrows;
- 	unsigned int nr_csrows, num_cschannel;
+-- 
+Regards,
 
--	/*
--	 * Memory Controller hierarchy
--	 *
--	 * There are basically two types of memory controller: the ones that
--	 * sees memory sticks ("dimms"), and the ones that sees memory ranks.
--	 * All old memory controllers enumerate memories per rank, but most
--	 * of the recent drivers enumerate memories per DIMM, instead.
--	 * When the memory controller is per rank, csbased is true.
--	 */
--	unsigned int n_layers;
--	struct edac_mc_layer *layers;
- 	bool csbased;
-
- 	/*
-@@ -609,6 +598,18 @@ struct mem_ctl_info {
- 	u8 fake_inject_layer[EDAC_MAX_LAYERS];
- 	bool fake_inject_ue;
- 	u16 fake_inject_count;
-+
-+	/*
-+	 * Memory Controller hierarchy
-+	 *
-+	 * There are basically two types of memory controller: the ones that
-+	 * sees memory sticks ("dimms"), and the ones that sees memory ranks.
-+	 * All old memory controllers enumerate memories per rank, but most
-+	 * of the recent drivers enumerate memories per DIMM, instead.
-+	 * When the memory controller is per rank, csbased is true.
-+	 */
-+	unsigned int n_layers;
-+	struct edac_mc_layer layers[] __counted_by(n_layers);
- };
-
- #define mci_for_each_dimm(mci, dimm)				\
---
-2.53.0
-
+Laurent Pinchart
