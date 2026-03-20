@@ -1,231 +1,199 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD6F175A7D
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 01:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773968783; cv=pass; b=HM9sar2A9Tyrr32WP0ZBMdoF3GdjJCWLT5I2dPBhF4nqYSdd1ogoUa7Q3NJ6OyWiNRAF/brFFZrcDwjE+K1bhV54swJVTejNgHcxCsOHTz4y17j90t/3nglN05LVRUZ8ByA4HSS0lVfq+kgY/7bSog/UN7JozkJjrT4WzoJWWdA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773968783; c=relaxed/simple;
-	bh=r69ExM9MAmSbi4Pa8SdsjkeGTV4p53z6YKYrX7qJXnw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YWsZJd4kOgeOlSups/afgNF9GE1PwX5o3YB//zcpbZH1C3s4CmTH3jbfyzNBeQnTyL+RRC5giHpVGTkm3BOUyh8epaFlLafXmyo+hF3oojCi3frZkzL4Q2OuRt7MLQtz02WR2/dXRfNmcMr0O29vTr7WxuFaapljBl4sjSyEU8I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aea8OxWC; arc=pass smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290441A6809
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 01:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773969018; cv=none; b=MA/AE18ZrUfdk3XtRWaaXfeatR07tBm4fEeeb1YXEN4VV/bl0Z4HreHzQsbnjkEflI4KG5c3kA8WpKvAxw54YQxnLwvfjuO024MT5GZC/ux6aucFtpuEaP/VPLMLMdCxVzryvsUVwvxf8glEGWD0d3b/li5PHiohceSLhVQruNM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773969018; c=relaxed/simple;
+	bh=27JPzjJMDDgjf2qMis3eedxFTyNiAGX6kPcAnzP2/20=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OlIcH6cWKezBQEt3zIOm7C1+LfgifL6WEGjjO8DYx5+mxAIGXjzN/lp/puQqvAB3k5NqBm36vzlZ0E1kGFoiQAJChjkE/6PudkeJFPuOGnVjBxedjGTDZcCG1L8Be2gQ3zSBDpEw0o673p6AiEo9nWlhM24RmS7WxPbVerXoMfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kmZlfiPd; arc=none smtp.client-ip=209.85.128.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aea8OxWC"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b9793fa5371so180455566b.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Mar 2026 18:06:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773968780; cv=none;
-        d=google.com; s=arc-20240605;
-        b=iCG7dxHugO1u+ukTpdFrFjVVxNCHaWZdfzKxwmcLegybD/ylAwGRkbSW/jF9ZFlApm
-         u+4oDjP8brJRtx2OpXdYWXnVfUsgdtYzyBx57mNUAF7IKniYGgb4WTo9UPTZhsk4rTTu
-         DOW0AP/RPmH+6tbuOnX2K9hbule/lVci5pkZApRCw6rOb+QwBinUWBoE7IXXdpDun7/W
-         m83pczMw4AJsjFPfZNgqNZo5eM98p55aRgALbnZm5vIIBG0cN2IRvIs3KmdDW2O9ny9l
-         HfnR+HdiCbGn7xG1TBvs8zuhb7MjViqnNVdmlkdMW65t5l326j3XwLRIMK9wHNu4TAMP
-         jWRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=9SqJxw/G3C8Z+MfgxLYlgt9ClPmc6gVykGItWwhh0uU=;
-        fh=hfVqmO9JZhKbdfD4jXg1GX6NTnIODzwVFn4+z9TbJPU=;
-        b=FosYvSmEd88Glo/7k68widmpBoOWgb1IYJoNu1DC85Ju+f9yCPblSNsQAs+Xd1NKw0
-         MwQx6IaC2yuM9K1HOM+4SaJwndBBe7QRZuIXF+CldLdMgbxMzQst61ADTaHzmU0cTBIM
-         gVb9j8xpLDjbAzxcLNB6nVCnTj33SIFZCmNJEb4MoIjP5PLm9SHdEjN8ISfvxSNtowow
-         Pxe0m+s9vUZHfMrSax+kpiEDl7B/Gf1bPAD+6KYO1/D39WGIS3WPVR5XabVsEbmQ0m7e
-         B2SDzdqQ6bMwst6/OtFm61ZZqQ8UWGrsXk4662VZGaGfMXaRBJXGDHsYlaiK6vugXjZe
-         9Onw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmZlfiPd"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-79a8e873ca1so7653757b3.1
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Mar 2026 18:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773968780; x=1774573580; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9SqJxw/G3C8Z+MfgxLYlgt9ClPmc6gVykGItWwhh0uU=;
-        b=aea8OxWC/odErtGCCX4J7mcTpqt9jO2ncAQV0vkQMOZhdvgz3cJGAX5Fu3UHok7p9I
-         07W1c7RNOzfT/EVqcOJUGcVwX5jweupadgqXR7rfgP7xwNKGW0u7qQXBh8Ms7zZYERbT
-         7TESvYS0sJth+05szHevFBqZr5zzJ20Dzvyj0naySrj6xF7ulQ45viHS0Urf8RmczdO9
-         oZBRZ4dYss89/L2BZ4UAvD1Eb3UMkCHX7qgDGBZPObV++EslSrN1/jypg1llqZd5WgdA
-         ZtoFtl/G/wD3eFvw/xPHZz2qTWpYD8hI3960pKFFN5n+FdCG6wCz/TRbuxw+xF7UERoq
-         TsOg==
+        d=gmail.com; s=20230601; t=1773969016; x=1774573816; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qdP8K3+cAzx0ganXl8vq/PIp0ujTWW+NWr7suf1Oel0=;
+        b=kmZlfiPdODOCvSU3eIci9NvNQzSPXDG0VOJinngreh/sycfaobk1/gN6c24bKbGk59
+         GUuCkxe3zL7On+7dEWrf/kgfgxgbVJOvh1PLekF8opDHCRhWvsw6V7PRMrC9w8t01cbl
+         q2lgoNCY9ajBXG3WXser4o4KH59xPbwJA9wG5bbKnXfA0XFbJ+5zEe07frfc8jFm2D6z
+         p4i5XPyruwbw2Td57o4542JOnEmIDemPdV+/IVrenwmFl3q9JqZ8eCYdjicmEJLKHN97
+         51p6oHqHs9sTno4SypOBM1ozb6vw70B6Ns8+bT1rJIQuNvH+dfZYDAkVO/NsdvqVHiyn
+         bf/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773968780; x=1774573580;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9SqJxw/G3C8Z+MfgxLYlgt9ClPmc6gVykGItWwhh0uU=;
-        b=DOL/IAe4L5+223Yi1MHoLl5E+FdGAdHMC0Hw9lgHmM5GFXlhdpyZ3bvoSSubROS+1a
-         6AgLzix2+zB73bWnfUZ7fORkmilv02nzRCzY6xuEn4a5KrlMIvgNiO5pYYCzqJxnSX1G
-         AjshzcBfzUOD1vAs/EZZ1qW/8q2t6AaaajbGS5D1AAaa6K//SNF3Fr2eYtJjdCMuQfdU
-         bYw7CR5ZU+PGk8myVLnPUHwFInVdQWtr/zdMggdKkw2+6cIo2W3uQ/ykJmlYFC/lYt0e
-         HDwq7b5X1GNZXENBQ/ynhMxURFMIX0p/eaarNjnDa/htL/COKyRqS8Y/MmXzXPZuZLew
-         YAqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwFxamkwBafotnh8nrWROqSUaQWFg73LEh8TPyvdHpv8zbL0gsbYvO0lG/i8OPvuZyokswSFnEPtP3AL1KvOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWcCjq1JlqJ/WsHFRgOray5ZB9hxKQYACZ2jiAzkaM1illRsy8
-	VsP6bFC86e3Kmp4VuoWyJKUML+QADJtB2fuEQJH44kDr7bXoPLPos1k72WXlmWoEBTD5UjojTge
-	oyAHtW1qB5D0Ng7TCHhjbao6ahW5hs74=
-X-Gm-Gg: ATEYQzzKcy8lYJJQ43RJSxWNMs56JLRecMYf0cke/XJ4HXBV62p92nyqFSXW8Fv2fg3
-	1nY9caAypwSFfwjylEjutzI5I+/d+cOJ0gSp5z5yjfSelsDWclMq1ZNIfU77Tm6FYVC0a2o8npW
-	aQJfcKymEQM6UEYMxXG94z9eufX9DunsRtFSiyrRbGzlMnjnzrf1oBsTLFvlmg2Qyqgm/aWUDoQ
-	JwwlLaAgnGbzgNGWc9eSdD0mr+jeC2LeFo5b+or7TsAuG6Xj24BQfBbDnleAshLgW7PSSHX25aw
-	/8B8wRTioe48hRPGazmqrcWdpuQos+q12xWFWxln1sad7iJXEzBYpaR2JEUqyNxTi1iIqob1KMw
-	+eGygEQ==
-X-Received: by 2002:a17:907:8d85:b0:b97:f1a8:ecb7 with SMTP id
- a640c23a62f3a-b982f20c0b2mr81117866b.25.1773968779976; Thu, 19 Mar 2026
- 18:06:19 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1773969016; x=1774573816;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qdP8K3+cAzx0ganXl8vq/PIp0ujTWW+NWr7suf1Oel0=;
+        b=o99evae+Y3+l8gs0iZ0lceh0Vb0+SwY7hV4Y5zF6rFEb7bmsr0KgFrT5CAkH0vkAYf
+         JEJJwHXaLH4Z9PqiBM/n8U5EwsQGERCvRHrKIv4lrPvSZqrfy6lIAc0A6fcHO9h7zG5k
+         1BW0rfnrHgtLCOljZ7lkzgh8UgVb8KehgXby14ZrhuvAOt1mC1vJsrIrC3rV93Dz7U/W
+         yRwvbrmIoFHQDoRCq0TH4i+Usx+hLMt0nkf5io8ZSRKJ8pkPHxjA0D5pMnZrQhY0lLvY
+         SQJmi0RGvttEu5uQS0RLfbi7K7iYEEIXV7px0zp03I5KZKT3q5youjQLUh7uG+hJ9Dw0
+         jv0g==
+X-Forwarded-Encrypted: i=1; AJvYcCU0zQ6ao7zQal+DxVDjQs8rHjnQOZHs1ZY3Sl7JMIqrQWeEHJIB7XSn6AZmpvhO4qfDRtjFO+FmgiSg72IZ7Bo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9YJXC8Imjh0PPcchrl2sGtctwmbvK0lvLBK8RQ1It1LsuND+Q
+	iNVBqHog3GrJbom7MNy7LJ88pFWObud1Zaz00VICi+rwZaVp7s0QBoGK
+X-Gm-Gg: ATEYQzzm9/GOgYmF93A/08ikSmfJJYhTNsQ2Ok1GQETLtszHubatNwUEo2BEOJVRrfW
+	N1btwCEqIeLPwYA83T/xsyTSydJ3MvIb3qRu3gMIs+hOc/cnSGahTCnO1qabD1Xn3u+VXBvN3oK
+	YtZxgvSaxWHJE6KLL8Oxr5Cc5yyCZASuyDCd9PjaBQiTWXEBa3vCMlV9xE6Pxb6opd7PWV7Zezq
+	Jruw+/M/69TlBGexChwBlarMkSF/8eruQ3WjhKsJmxHpIfoco+J/t3xC+ymC441zmp3MZoXh6nH
+	Vk0ARLixGAqqDFSGwNblQatsLNC8VcQohw9KzOHueSYFK4eEksWqBkwh5kdzUKx8Sy12Rf0Xjsi
+	B11ZNCt8fhHfWYVPaIqltl0E2nmJTZtmmAPCoApIdKlxisdX8wkSMf5IgKcPKpzN50QgjATSYJ3
+	UbvFrWEZSHOgvUlmi+gT2gozlHCBVqBZugmxES2O1tuoRcoIuD9NtJeKI=
+X-Received: by 2002:a05:690e:e11:b0:64a:db29:5e61 with SMTP id 956f58d0204a3-64eaacd241fmr1049059d50.32.1773969016093;
+        Thu, 19 Mar 2026 18:10:16 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64eabd44121sm515493d50.1.2026.03.19.18.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2026 18:10:15 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-scsi@vger.kernel.org
+Cc: Ketan Mukadam <ketan.mukadam@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] scsi: be2iscsi: kzalloc + kcalloc to kzalloc_flex
+Date: Thu, 19 Mar 2026 18:09:57 -0700
+Message-ID: <20260320010957.32355-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260306044536.149204-1-rosenp@gmail.com> <20260319220901.GD950375@killaraus.ideasonboard.com>
- <CAKxU2N856yYXURRf3td-_RCpe9hyX=zAy3qtD3ki23RjgO+a4Q@mail.gmail.com> <20260320005737.GE950244@killaraus.ideasonboard.com>
-In-Reply-To: <20260320005737.GE950244@killaraus.ideasonboard.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Thu, 19 Mar 2026 18:06:07 -0700
-X-Gm-Features: AaiRm53rx05Tqdc9FwzZoPf5XXpIJZUGAo0qoy3HNuWTkbHSxfZxEG9QI9aaaDs
-Message-ID: <CAKxU2N81WEMkAPOVRHUORWodc21oW7wqvUJYVhd3uBJdLxRW4w@mail.gmail.com>
-Subject: Re: [PATCH] media: nxp: imx8-isi: remove kzalloc_objs
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	gustavoars@kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, 
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, 
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 19, 2026 at 5:57=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> On Thu, Mar 19, 2026 at 05:11:22PM -0700, Rosen Penev wrote:
-> > On Thu, Mar 19, 2026 at 3:09=E2=80=AFPM Laurent Pinchart wrote:
-> > > On Thu, Mar 05, 2026 at 08:45:36PM -0800, Rosen Penev wrote:
-> > > > Use a flexible arraay member to combine allocations.
-> > > >
-> > > > It looks like pipes never gets freed anywhere. Meaning this effecti=
-vely
-> > > > fixes a memory leak.
-> > > >
-> > > > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > > > ---
-> > > >  drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c | 11 ++++-----=
---
-> > > >  drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h |  3 ++-
-> > > >  2 files changed, 6 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/=
-drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > index 16392420903a..657ffecc4d7e 100644
-> > > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > @@ -459,25 +459,21 @@ static const struct dev_pm_ops mxc_isi_pm_ops=
- =3D {
-> > > >
-> > > >  static int mxc_isi_probe(struct platform_device *pdev)
-> > > >  {
-> > > > +     const struct mxc_isi_plat_data *pdata;
-> > > >       struct device *dev =3D &pdev->dev;
-> > > >       struct mxc_isi_dev *isi;
-> > > >       unsigned int dma_size;
-> > > >       unsigned int i;
-> > > >       int ret =3D 0;
-> > > >
-> > > > -     isi =3D devm_kzalloc(dev, sizeof(*isi), GFP_KERNEL);
-> > > > +     pdata =3D of_device_get_match_data(dev);
-> > > > +     isi =3D devm_kzalloc(dev, struct_size(isi, pipes, pdata->num_=
-channels), GFP_KERNEL);
-> > > >       if (!isi)
-> > > >               return -ENOMEM;
-> > > >
-> > > >       isi->dev =3D dev;
-> > > >       platform_set_drvdata(pdev, isi);
-> > > >
-> > > > -     isi->pdata =3D of_device_get_match_data(dev);
-> > >
-> > > I'd keep
-> > >
-> > >         isi->pdata =3D pdata;
-> > >
-> > > here and not below.
-> >
-> > Sure
-> >
-> > > > -
-> > > > -     isi->pipes =3D kzalloc_objs(isi->pipes[0], isi->pdata->num_ch=
-annels);
-> > >
-> > > Wouldn't it be simpler to just replace this with devm_kcalloc() ?
-> >
-> > That would only make sense if pipes remained a pointer. A flex array
-> > member allows combining allocations since it doesn't take up extra
-> > space.
->
-> Yes, I understand that. My point was that with devm_kzalloc() here you
-> won't need to change the mxc_isi_dev structure. The leak fix will be a
-> one-liner patch.
-Leak fix is not the point of the patch to be fair.
->
-> > Technically kzalloc_flex is simpler but I assume a devm version of
-> > that will be handled in another treewide commit.
-> > >
-> > >         isi->pipes =3D devm_kcalloc(dev, isi->pdata->num_channels,
-> > >                                   sizeof(isi->pipes[0]), GFP_KERNEL);
-> > >
-> > > No other change would be needed.
-> >
-> > With a flex array member, that's a compile time error, which I use as
-> > a hint to complete the conversion.
-> >
-> > > > -     if (!isi->pipes)
-> > > > -             return -ENOMEM;
-> > > > -
-> > > >       isi->num_clks =3D devm_clk_bulk_get_all(dev, &isi->clks);
-> > > >       if (isi->num_clks < 0)
-> > > >               return dev_err_probe(dev, isi->num_clks, "Failed to g=
-et clocks\n");
-> > > > @@ -487,6 +483,7 @@ static int mxc_isi_probe(struct platform_device=
- *pdev)
-> > > >               return dev_err_probe(dev, PTR_ERR(isi->regs),
-> > > >                                    "Failed to get ISI register map\=
-n");
-> > > >
-> > > > +     isi->pdata =3D pdata;
-> > > >       if (isi->pdata->gasket_ops) {
-> > > >               isi->gasket =3D syscon_regmap_lookup_by_phandle(dev->=
-of_node,
-> > > >                                                             "fsl,bl=
-k-ctrl");
-> > > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/=
-drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> > > > index 3cbd35305af0..99532efa4e41 100644
-> > > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> > > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> > > > @@ -286,7 +286,6 @@ struct mxc_isi_dev {
-> > > >       struct regmap                   *gasket;
-> > > >
-> > > >       struct mxc_isi_crossbar         crossbar;
-> > > > -     struct mxc_isi_pipe             *pipes;
-> > > >       struct mxc_isi_m2m              m2m;
-> > > >
-> > > >       struct media_device             media_dev;
-> > > > @@ -294,6 +293,8 @@ struct mxc_isi_dev {
-> > > >       struct v4l2_async_notifier      notifier;
-> > > >
-> > > >       struct dentry                   *debugfs_root;
-> > > > +
-> > > > +     struct mxc_isi_pipe             pipes[];
-> > > >  };
-> > > >
-> > > >  extern const struct mxc_gasket_ops mxc_imx8_gasket_ops;
->
-> --
-> Regards,
->
-> Laurent Pinchart
+Simplifies allocation by using a flexible array member
+
+Added __counted_by for extra runtime analysis.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/scsi/be2iscsi/be_main.c | 27 ++-------------------------
+ drivers/scsi/be2iscsi/be_main.h |  4 ++--
+ 2 files changed, 4 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/scsi/be2iscsi/be_main.c b/drivers/scsi/be2iscsi/be_main.c
+index fd18d4d3d219..782a21af01a3 100644
+--- a/drivers/scsi/be2iscsi/be_main.c
++++ b/drivers/scsi/be2iscsi/be_main.c
+@@ -2470,22 +2470,15 @@ static int beiscsi_alloc_mem(struct beiscsi_hba *phba)
+ 	struct mem_array *mem_arr, *mem_arr_orig;
+ 	unsigned int i, j, alloc_size, curr_alloc_size;
+ 
+-	phba->phwi_ctrlr = kzalloc(phba->params.hwi_ws_sz, GFP_KERNEL);
++	phba->phwi_ctrlr = kzalloc_flex(*phba->phwi_ctrlr, wrb_context, phba->params.cxns_per_ctrl);
+ 	if (!phba->phwi_ctrlr)
+ 		return -ENOMEM;
+ 
+ 	/* Allocate memory for wrb_context */
+ 	phwi_ctrlr = phba->phwi_ctrlr;
+-	phwi_ctrlr->wrb_context = kzalloc_objs(struct hwi_wrb_context,
+-					       phba->params.cxns_per_ctrl);
+-	if (!phwi_ctrlr->wrb_context) {
+-		kfree(phba->phwi_ctrlr);
+-		return -ENOMEM;
+-	}
+ 
+ 	phba->init_mem = kzalloc_objs(*mem_descr, SE_MEM_MAX);
+ 	if (!phba->init_mem) {
+-		kfree(phwi_ctrlr->wrb_context);
+ 		kfree(phba->phwi_ctrlr);
+ 		return -ENOMEM;
+ 	}
+@@ -2493,7 +2486,6 @@ static int beiscsi_alloc_mem(struct beiscsi_hba *phba)
+ 	mem_arr_orig = kmalloc_objs(*mem_arr_orig, BEISCSI_MAX_FRAGS_INIT);
+ 	if (!mem_arr_orig) {
+ 		kfree(phba->init_mem);
+-		kfree(phwi_ctrlr->wrb_context);
+ 		kfree(phba->phwi_ctrlr);
+ 		return -ENOMEM;
+ 	}
+@@ -3992,25 +3984,12 @@ static int hba_setup_cid_tbls(struct beiscsi_hba *phba)
+ 
+ 	for (ulp_num = 0; ulp_num < BEISCSI_ULP_COUNT; ulp_num++) {
+ 		if (test_bit(ulp_num, (void *)&phba->fw_config.ulp_supported)) {
+-			ptr_cid_info = kzalloc_obj(struct ulp_cid_info);
+-
++			ptr_cid_info = kzalloc_flex(*ptr_cid_info, cid_array, BEISCSI_GET_CID_COUNT(phba, ulp_num));
+ 			if (!ptr_cid_info) {
+ 				ret = -ENOMEM;
+ 				goto free_memory;
+ 			}
+ 
+-			/* Allocate memory for CID array */
+-			ptr_cid_info->cid_array =
+-				kcalloc(BEISCSI_GET_CID_COUNT(phba, ulp_num),
+-					sizeof(*ptr_cid_info->cid_array),
+-					GFP_KERNEL);
+-			if (!ptr_cid_info->cid_array) {
+-				kfree(ptr_cid_info);
+-				ptr_cid_info = NULL;
+-				ret = -ENOMEM;
+-
+-				goto free_memory;
+-			}
+ 			ptr_cid_info->avlbl_cids = BEISCSI_GET_CID_COUNT(
+ 						   phba, ulp_num);
+ 
+@@ -4061,7 +4040,6 @@ static int hba_setup_cid_tbls(struct beiscsi_hba *phba)
+ 			ptr_cid_info = phba->cid_array_info[ulp_num];
+ 
+ 			if (ptr_cid_info) {
+-				kfree(ptr_cid_info->cid_array);
+ 				kfree(ptr_cid_info);
+ 				phba->cid_array_info[ulp_num] = NULL;
+ 			}
+@@ -4175,7 +4153,6 @@ static void beiscsi_cleanup_port(struct beiscsi_hba *phba)
+ 			ptr_cid_info = phba->cid_array_info[ulp_num];
+ 
+ 			if (ptr_cid_info) {
+-				kfree(ptr_cid_info->cid_array);
+ 				kfree(ptr_cid_info);
+ 				phba->cid_array_info[ulp_num] = NULL;
+ 			}
+diff --git a/drivers/scsi/be2iscsi/be_main.h b/drivers/scsi/be2iscsi/be_main.h
+index 71c95d144560..77c9b1a1a488 100644
+--- a/drivers/scsi/be2iscsi/be_main.h
++++ b/drivers/scsi/be2iscsi/be_main.h
+@@ -241,10 +241,10 @@ struct hwi_wrb_context {
+ };
+ 
+ struct ulp_cid_info {
+-	unsigned short *cid_array;
+ 	unsigned short avlbl_cids;
+ 	unsigned short cid_alloc;
+ 	unsigned short cid_free;
++	unsigned short cid_array[] __counted_by(avlbl_cids);
+ };
+ 
+ #include "be.h"
+@@ -968,10 +968,10 @@ struct be_ring {
+ };
+ 
+ struct hwi_controller {
+-	struct hwi_wrb_context *wrb_context;
+ 	struct be_ring default_pdu_hdr[BEISCSI_ULP_COUNT];
+ 	struct be_ring default_pdu_data[BEISCSI_ULP_COUNT];
+ 	struct hwi_context_memory *phwi_ctxt;
++	struct hwi_wrb_context wrb_context[];
+ };
+ 
+ enum hwh_type_enum {
+-- 
+2.53.0
+
