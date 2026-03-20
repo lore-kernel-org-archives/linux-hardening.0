@@ -1,73 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF31378808
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA9C27A461
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774013301; cv=none; b=cVKpNSKfkR00JC1qA6+NiJQ2ozZsVfz4huNqDbmOWv9mUPycOU9h+YGmG7G0N3PjjKza6c89IEFykPg9dcoeYDWt34myPt6yJbjQnOt0GTUpN3DP1mcYfw4qNKTFUWOoaLNkTs5cD8uKoP2Y+r+mqRpqHyRPuU9U2WdyGmMskes=
+	t=1774013943; cv=none; b=UNru8j+6HwSAndlRSYZsqRAcbS5e3IrklKi8sb8/jnEn5klewQMNBfEmIoPvxWREFGQKC9UgCDWzbjdoBSJtlkyQutx2n0gJGFyAGoW79pgs6+R5f32yjvjxAWp/BukZXI9AtnFErSTpPznLBkTwzxikzIeAw6tAaZRMUl7A1eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774013301; c=relaxed/simple;
-	bh=YzKXzVaGS/2OIloKcqNaAOwJYnHhATebfduv4sAgUHI=;
+	s=arc-20240116; t=1774013943; c=relaxed/simple;
+	bh=sZj6DnCZyjt8HONClCcyxov7+5CPr/w7swwMeT/AqK4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZP1E3wwnycGYsZc6Z+9Gw+8xpVYvPf5j/RmGqpq0JcwmzsgKa6ZGwHx7xWTPLhjzbzAh5Jdz8ijlsEuSQ+AkzZFknaB0DLV3PowlFObgqBqJ/a5WBoAJ8tHiHLczxbQF1q1v3U+HtUA1zqUcD9aKdIT3h3rXdON/m6dcsVhWVvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcM9EJl8; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=XHKPhQnTpLBKkWL1iMltgGajXdGzNCkhpy1zkLzMBSjuOI4DgQ9VIMJY6+j9v4fvh1rVwjuvjRvnpfWh4+QtEN9Zd4i/gqC+HIcqPW8rS3mn3Dt94wyJD8+wEJtmsUYNnqHf+M8+K6I+1lUWG4h3HaFT17JRb/ByXfaOoDqHIB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWw8Tlzq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcM9EJl8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3072C4AF0C
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:28:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWw8Tlzq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F41C2BCB1
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774013301;
-	bh=YzKXzVaGS/2OIloKcqNaAOwJYnHhATebfduv4sAgUHI=;
+	s=k20201202; t=1774013943;
+	bh=sZj6DnCZyjt8HONClCcyxov7+5CPr/w7swwMeT/AqK4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qcM9EJl8N/8p9eiTm2vrmTrGsCaY5bdF66SqBs5nF+mB2rt+7Zl9vRUVvtFhtjqlW
-	 TJv8Ykr9Fm5S2NBHuRtyR6fjt8LyrCawuX7SHTL/Z5RZ4rmKEUL3evrL++Oec3d7S5
-	 M27iRP9UGfYhJ/5EAuLtYXHfmezBryL9rbZVXGW09tGXsaFVP0hw7BIeWHKsdqef6h
-	 2taqYSZUySHykKLTFTD7LDlSeDlCyHZ6QyJb5fzP67VsT39IF9LLYNijnNitiqM+e8
-	 WLCuQDbfK2ajIpFQg9t9mkNWhlgE7Z0eDLzryV6uZlQiCVByAXCCG741Fr84D/CgGk
-	 ORrXZhvQ5FmJA==
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-79a46260385so20864817b3.3
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 06:28:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWaKCPDAorZUnjUtRUkXfpLq5jaEZLuZ/xLhGsHIylbEAWe4W/XG2mdqKS//M4XaY6zNj88RlTUxDKB/h+CtYc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUtkMzMhWyK5J6q4WOCE28T2Mb7obo615PkR5OeXYzv3BVRrrE
-	zkNovVnrB8scQ6qTMUVy054C4sGEawSRuf12UHDs1XwOnE5EimDy3JgjP0z4yjrD0U5u+8b18VR
-	8o6a61HtwoKdfSiA/gtEkugioULPRnBw=
-X-Received: by 2002:a05:690c:60c7:b0:798:138c:76de with SMTP id
- 00721157ae682-79a90c0a1f1mr28204277b3.41.1774013300401; Fri, 20 Mar 2026
- 06:28:20 -0700 (PDT)
+	b=pWw8TlzqDFoHwph3KDyCSQ9RWZggThxWkYDWtzDwwA0OIl26SBNnmwGWKyvUXmk/t
+	 bDLDIfQVoweCT0QWhN0hi/0CePrQWqmS/okWujQXl9z7ibN9U45Lzqz1VW/yCKJsuL
+	 MzwLiURiT9v/+P645X5uU+LGcWCbwl40Dnbck1lk2C9v9I+xfiROV6akOGoDyOYm9m
+	 ybisSgzmIc3gqLHWG3qszlgjPkLjzPZYq7n0Mjx38D/dDYimOxAAVffyGCutrjAJnp
+	 tW5/FuvQhXUMUm8MLBImdZgQ+0tofCMU3qAMmnuJwf2h7w14LjTpiyWg1t0PIHk4FI
+	 eMEo4Cg1OE8oQ==
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-79a62a2bb8cso21356807b3.3
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 06:39:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7hsB2c1cyV97ZY5Wy299auu1/80sJBJaeyetgeYFnjXN/VHrIB4qk223Kzv3az2zHshyNQwvTzytAvaIpBJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9bTE/u4sHL+lO5T9zC17DlHv2yY8F0z9pMmkVrNbb4T8qQvmA
+	UpjuAy7NeKKEHqDnCItWq3rCmnzt3kB9a1UPS3KBtMEWERaEInaGppl+7SgjWRLg0NJV11/Pl+G
+	PYxMxvkwpKM2BAWeXoQDTAPUIVgQjdMg=
+X-Received: by 2002:a05:690c:22c4:b0:798:e281:a4f3 with SMTP id
+ 00721157ae682-79a90ba02a2mr31740737b3.40.1774013942875; Fri, 20 Mar 2026
+ 06:39:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319000558.22108-1-rosenp@gmail.com>
-In-Reply-To: <20260319000558.22108-1-rosenp@gmail.com>
+References: <20260320005338.30355-1-rosenp@gmail.com>
+In-Reply-To: <20260320005338.30355-1-rosenp@gmail.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 20 Mar 2026 14:28:09 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=ELqj0Cvd6WBG_UvAOt7+Y0xUPpc7qPEGS-0Dm2upYgA@mail.gmail.com>
-X-Gm-Features: AaiRm50ZafYOElWf5QgG_Wj2xMz2THbMMPVrJQETvNw6UshnM47uBG2-F_YKets
-Message-ID: <CAD++jL=ELqj0Cvd6WBG_UvAOt7+Y0xUPpc7qPEGS-0Dm2upYgA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
+Date: Fri, 20 Mar 2026 14:38:50 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkpvSb+cQXoXV-9+2b8eQRYYJpKQzuf+6xAqarQsOL0_Q@mail.gmail.com>
+X-Gm-Features: AaiRm51rZsRwW4njnIt6SHlMGSJepFEH4f2OsTyDiAdp7pcBmT6TD4IrYRReTow
+Message-ID: <CAD++jLkpvSb+cQXoXV-9+2b8eQRYYJpKQzuf+6xAqarQsOL0_Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: dwapb: reduce allocation to single kzalloc
 To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Bamvor Jian Zhang <bamv2005@gmail.com>, 
+Cc: linux-gpio@vger.kernel.org, Hoan Tran <hoan@os.amperecomputing.com>, 
 	Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
 	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 19, 2026 at 1:06=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrot=
+On Fri, Mar 20, 2026 at 1:53=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrot=
 e:
 
-> Remove no longer needed kcalloc to simplify allocation.
+> Instead of kzalloc + kcalloc, Combine the two using a flexible array
+> member.
 >
-> Added __counted_by along with a counting variable to get extra runtime
-> analysis.
+> Allows using __counted_by for extra runtime analysis. Move counting
+> variable to right after allocation as required by __counted_by.
 >
 > Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
-Sweet!
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
