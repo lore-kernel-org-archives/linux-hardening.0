@@ -1,83 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFC43D1CAD;
-	Fri, 20 Mar 2026 17:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE813E025E;
+	Fri, 20 Mar 2026 18:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774029080; cv=none; b=pHcDksGwxYCIzKYMpphM9GH5P2gQWg33h2oeQKJUVEaZyIqiJPN8JZaJfCYm06MAHNhOJv33Wq8HjGE/KvCVlXXI0HtJ+frZqG9xosxc2qWyat+s7uQ4LRSWOhwjSvWwN4CEmtRgKrPh0+AOX2ZcCao1+wllXYISmgO6PzDkMb4=
+	t=1774030228; cv=none; b=achwPfO7Gr5VRRmb7GgyZN2ZWWK6qixfYIMXozY2pAcvzcgSUO9URI0/WCfVNQc4waIB/HabQwgc8IXH2hrc1MJWkp2bX2bG5CMTlM/PGeJPi9/ju0VPqVzKBnQKM/5SJHDqFrYTZOg2uShaz9vk/g0qYb/EDShJeY0O68Z5mBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774029080; c=relaxed/simple;
-	bh=5zBHZBiRQnxI63nFpcUxKUAqSHpyESQ+S3fdO2jglgU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HI9RASO1FVOg/prGU7ishPRyuw4Cf8nwmNd3Zj3+kjLuIDgsn2bWK2aEbmIWyjRxDqi+sxtikAO7eZcw+TmmYSgMJbaocKx3jDOkUS2O41YU5yxALKPvCuSU1hIOTIjbyb46InhXsGsB7FsmBOPk0t6h1spmMhTKB+a73ybHtAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=twDK+uz9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774030228; c=relaxed/simple;
+	bh=HN2gQ76vWA+8OUenZIyxhbvtYrHC960mitHXCMLfomY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KdZYqXTA9nycLqFX2B+sjdI9jI3wRi6BPk5gmRspkaMUFpxygguc4qYx6nGpHryz7IsGbsXGeSrkYQbPDq/kGA2WvuHpXIx4NX9weoB0g+hfsS9ioZP+m23Vff1GkoR5JDMzH3AZFReXN6vs833O5ptkkej8USmN+VrI/SK03I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fPNoQnH1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="twDK+uz9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8568AC4CEF7;
-	Fri, 20 Mar 2026 17:51:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fPNoQnH1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E812C4CEF7;
+	Fri, 20 Mar 2026 18:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774029079;
-	bh=5zBHZBiRQnxI63nFpcUxKUAqSHpyESQ+S3fdO2jglgU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=twDK+uz9rKvmsAMW9HdKITQjmjPRJSQTvm4E5aIp7MR18F3xeSHzzBbLRh/HhnhnJ
-	 Piitn6JhoSNIxl2SSqQoD2LkLHUQg6Wk0nQf0mBwD72kZvEcRV26h84mIpXvOEjZxT
-	 Lx7hvnyffOp1WU4+3kIYLwcLNJ1Ucx0AjqHYosCL/BN5v9A27U0UITOQo7FsHDdtga
-	 MRp3l0+T465wakVza87OW5m4P9skBGhDNyESNFi4PmMx33/QQ9/VbNs7F5nBEgAV/U
-	 ngQ3cVJPQFvKFVoPpUdZK5Y494/jUFwDgfysaGeDnchyoYKjxOlhYz/1yC7Ni5ksz8
-	 BozhIJDW0hLCA==
+	s=k20201202; t=1774030228;
+	bh=HN2gQ76vWA+8OUenZIyxhbvtYrHC960mitHXCMLfomY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fPNoQnH14L8TgU6gye7bDyZialqKlvmDHGeAn0nITLS4Jd30vw8e9OUAXJaFosmdN
+	 LnTgqVQJ7mPwpbHHhlMBaU/cZCkUeNGFnaMB2JxtLkTsap7evvIGc9rI9Te62WgcyD
+	 HY4hWBPVIIom6ph1hXnFUckx3WxrcXyPvTmUpXrlz3FoDXKFPxf+KD/HxrwdpswqS+
+	 jGfFfEoSRDKtvGvmsutH5E6Z896BG+cwgX9KObglSHzf2eSQ6wTfS49xf49B2ebaM0
+	 QRynUr7epqgyH0+XFeLegThBBCeLsLLL+C3qStqqWO0LQ0AdpJLGk/RZFnZjhJOFaz
+	 d6Ia6sk8sCrpw==
+Date: Fri, 20 Mar 2026 11:10:27 -0700
 From: Kees Cook <kees@kernel.org>
-To: Julia Lawall <Julia.Lawall@inria.fr>
-Cc: Kees Cook <kees@kernel.org>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	cocci@inria.fr,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] coccinelle: kmalloc_obj: Remove default GFP_KERNEL arg
-Date: Fri, 20 Mar 2026 10:51:18 -0700
-Message-Id: <20260320175113.work.016-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Bamvor Jian Zhang <bamv2005@gmail.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
+Message-ID: <202603201104.8D7B8A1@keescook>
+References: <20260319000558.22108-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=kees@kernel.org; h=from:subject:message-id; bh=5zBHZBiRQnxI63nFpcUxKUAqSHpyESQ+S3fdO2jglgU=; b=owGbwMvMwCVmps19z/KJym7G02pJDJl7O0VnVyr17zb+ni6ta+Cw/PnHTseFs1nvH+QpnFnv0 8+83/51RykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwET2z2H4wxNdcGBfowfv9fUB k379aGqfdeLxj3rF0scPT87btbQwKJvhn0FV9clPH4Jl3/h9TYvcp9s87UHUJd76p6smuwSt38L 9kxcA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260319000558.22108-1-rosenp@gmail.com>
 
-Remove any GFP_KERNEL arguments found in the new kmalloc_obj-family
-helpers. This captures the script used in commit 189f164e573e ("Convert
-remaining multi-line kmalloc_obj/flex GFP_KERNEL uses").
+On Wed, Mar 18, 2026 at 05:05:58PM -0700, Rosen Penev wrote:
+> Remove no longer needed kcalloc to simplify allocation.
+> 
+> Added __counted_by along with a counting variable to get extra runtime
+> analysis.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  drivers/gpio/gpio-mockup.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> index a7d69f3835c1..a907ce28cbbb 100644
+> --- a/drivers/gpio/gpio-mockup.c
+> +++ b/drivers/gpio/gpio-mockup.c
+> @@ -52,10 +52,11 @@ struct gpio_mockup_line_status {
+>  
+>  struct gpio_mockup_chip {
+>  	struct gpio_chip gc;
+> -	struct gpio_mockup_line_status *lines;
+>  	struct irq_domain *irq_sim_domain;
+>  	struct dentry *dbg_dir;
+>  	struct mutex lock;
+> +	int nr_lines;
+> +	struct gpio_mockup_line_status lines[] __counted_by(nr_lines);
+>  };
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Julia Lawall <Julia.Lawall@inria.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: <cocci@inria.fr>
----
- scripts/coccinelle/api/kmalloc_objs.cocci | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+In the cases where a new counter variable is being added to the struct,
+I think it might be better to have those be unsigned.
 
-diff --git a/scripts/coccinelle/api/kmalloc_objs.cocci b/scripts/coccinelle/api/kmalloc_objs.cocci
-index db12b7be7247..e9a415b7b6f4 100644
---- a/scripts/coccinelle/api/kmalloc_objs.cocci
-+++ b/scripts/coccinelle/api/kmalloc_objs.cocci
-@@ -122,3 +122,14 @@ fresh identifier ALLOC_OBJS = script:python(ALLOC_ARRAY) { alloc_array(ALLOC_ARR
- -	ALLOC(struct_size_t(TYPE, FLEX, COUNT), GFP)
- +	ALLOC_FLEX(TYPE, FLEX, COUNT, GFP)
- )
-+
-+@drop_gfp_kernel depends on patch && !(file in "tools") && !(file in "samples")@
-+identifier ALLOC = {kmalloc_obj,kmalloc_objs,kmalloc_flex,
-+		    kzalloc_obj,kzalloc_objs,kzalloc_flex,
-+		    kvmalloc_obj,kvmalloc_objs,kvmalloc_flex,
-+		    kvzalloc_obj,kvzalloc_objs,kvzalloc_flex};
-+@@
-+
-+	ALLOC(...
-+-		 , GFP_KERNEL
-+	     )
+>  
+>  struct gpio_mockup_dbgfs_private {
+> @@ -436,15 +437,18 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+>  	if (rv)
+>  		name = dev_name(dev);
+>  
+> -	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+> +	chip = devm_kzalloc(dev, struct_size(chip, lines, ngpio), GFP_KERNEL);
+>  	if (!chip)
+>  		return -ENOMEM;
+>  
+> -	mutex_init(&chip->lock);
+> +	chip->nr_lines = ngpio;
+
+Besides the new variable being meaningless for negative values, there's
+a strong hint about its type even from the counter used to perform the
+calculation (u16):
+
+static int gpio_mockup_probe(struct platform_device *pdev)
+{
+	...
+        u16 ngpio;
+	...
+        rv = device_property_read_u16(dev, "nr-gpios", &ngpio);
+	...
+        gc->ngpio = ngpio;
+	...
+        chip->lines = devm_kcalloc(dev, gc->ngpio,
+                                   sizeof(*chip->lines), GFP_KERNEL);
+
+But this begs the question: why add nr_lines when ngpio is already part
+of the struct:
+
+struct gpio_chip {
+	...
+        u16                     ngpio;
+
+
+?
+
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
