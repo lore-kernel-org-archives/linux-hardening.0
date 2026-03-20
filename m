@@ -1,73 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F74D286881;
-	Fri, 20 Mar 2026 18:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868DA238C0A;
+	Fri, 20 Mar 2026 19:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774032766; cv=none; b=KNcgl+o/rqiotKFGN5MrhqXtAoLN0bg7MjY9HSX6czihJDjZroircM6iywRBcZuZl11Pol8lKfnY3Zia10ZzfmaHtFjruxATi8ORhYwYddBM5aSqsAhXzEZW5GyBskXbweWaTOqasRF6lPNdCvw92cGG704zmJEdy+60kyJL0gU=
+	t=1774034275; cv=none; b=jPp9cgK5zXbbtzYOt94klVnIK79yCiG/7PMe+UODHQyu7PwaRa+FWeDi/fYiX+nJyvp/nD/MHb8SEyDTSooisHCPJZ7k3KYeqg1GAtzm0HRV7+j9A7+I5HhHRLpz6v6WA+e25QeU2yUscOGn6wcD/qClMT4wr177QGDP/MQuLsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774032766; c=relaxed/simple;
-	bh=yZxmNupLjMnOVyoVWs6WeaGs693HPuq7zByuOqLBqsE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gi6/rK9Z7I5O4eNqSISldMY4XSAkyY4MVEF9yR3L9+vdTs/tJ71RNhH5jBrIhw6OgnGkpvfrOnB01sZOzwD9OEk3a6etCTvV9RRITIlSU8ahR3ghF4rAUzaKqRSGzKRqf076s/TbsUG8l5ctkkq+8KqbaBM80GV9wg433r1H6Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0WJEZd/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774034275; c=relaxed/simple;
+	bh=9TZIMqUnNBD0DEJe2/OMUDzBG5+dAMkv/0IXuJcy46A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZwGwjJGqZm5CJFbRIuAvwKh6PMc0CMu0oHtXTVy46FbbtiuIRIYMWnVVn1HCokQb3FywatLPQGUp2m0WdFk7cNs7cL1uozuQMO/jwEz0ERATJ/uHv7IPIQX1FERZrB1AwEyAbNxnfe6h2QcgaA3cqZX/kmw0lIIeH0hFgrWwCho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2w91l2B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0WJEZd/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F39C4CEF7;
-	Fri, 20 Mar 2026 18:52:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2w91l2B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E275C4CEF7;
+	Fri, 20 Mar 2026 19:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774032765;
-	bh=yZxmNupLjMnOVyoVWs6WeaGs693HPuq7zByuOqLBqsE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r0WJEZd/D8wpi8ysSQnHaf0MkjQCJTR0+U5/8AUsnpws4eMIRPuTjZhPCNEvheoIO
-	 eQCdjMru8TLGPkB89E5bBIFxYZ8fYkcRSeVg8szcjeD18YP/fP+nuTXETGRhAvPTD5
-	 LAO1xmPSPbHSewCQgKt9sbciqtQvVEEyCBNV71Arn5MwICPhHvBPwHvgqxe4szQpna
-	 bUEX+C8+JCUAVXBcZdxZHg0iN5qWuIddfrpPqe4bLoKv8INVYCEweS0XyDMHqZS0oD
-	 KB+vOwQTgi3d87P349WofmjtzbBufiTRvGhwVe9f3j1LmpJDAYYSY3ud2iAbPtP+2F
-	 773vOPNa6zXjA==
+	s=k20201202; t=1774034275;
+	bh=9TZIMqUnNBD0DEJe2/OMUDzBG5+dAMkv/0IXuJcy46A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V2w91l2BWtvl2nVeulquTZZ+CheLOBRJSMGMojBV3DIC80v6J7Sr7PoKdO6ZIkCvF
+	 n905DAXgpsGZ2qgjMb1tZu5oMRqFxtcO/LyZvXeo6LDX0XMXBxi/R3ww4E/Z+/2VBV
+	 tCdNSCcNNmi0inBDoyCwoeuroFVYQVnLkxh+msjNZ96nWThffr6k+wbA9SbNWf5aiG
+	 QLn5QdIbi+kKpUl+tSLh5jXGFn+xGRTFe2hVOdkHv+mm/sXzYhEnBteQPiyZdWFcy2
+	 KJiq7QYN+5agU4b01l33KzaO81k+ldHNrJ4LrLknSF6dJEn8fHQQvFDw3gy+qr3hMz
+	 btJ0Z+e/6NbyQ==
+Date: Fri, 20 Mar 2026 12:17:54 -0700
 From: Kees Cook <kees@kernel.org>
-To: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev,
-	patches@lists.linux.dev
-Subject: Re: [PATCH] init/Kconfig: Require a release version of clang-22 for CC_HAS_COUNTED_BY_PTR
-Date: Fri, 20 Mar 2026 11:52:41 -0700
-Message-Id: <177403275866.3826131.2167472865845160418.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260318-counted_by_ptr-release-clang-22-v1-1-e017da246df0@kernel.org>
-References: <20260318-counted_by_ptr-release-clang-22-v1-1-e017da246df0@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Josh Law <objecting@objecting.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] ACPI: processor: idle: Replace strlcat() with
+ better alternative
+Message-ID: <202603201216.3CD33C4@keescook>
+References: <20260316170158.1596857-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260316170158.1596857-1-andriy.shevchenko@linux.intel.com>
 
-On Wed, 18 Mar 2026 17:20:18 -0700, Nathan Chancellor wrote:
-> Commit 150a04d817d8 ("compiler_types.h: Attributes: Add __counted_by_ptr
-> macro") used Clang 22.0.0 as a minimum supported version for
-> __counted_by_ptr, which made sense while 22.0.0 was the version of
-> LLVM's main branch to allow developers to easily test and develop uses
-> of __counted_by_ptr in their code. However, __counted_by_ptr requires a
-> change [1] merged towards the end of the 22 development cycle to avoid
-> errors when applied to void pointers.
+On Mon, Mar 16, 2026 at 06:01:58PM +0100, Andy Shevchenko wrote:
+> strlcpy() and strlcat() are confusing APIs and the former one already gone
+> from the kernel. In preparation to kill strlcat() replace it with the better
+> alternative.
+
+Yes please. There are a few places I looked at in the past that might
+benefit from being changed to seq_buf or similar (where snprintf doesn't
+cut it), but otherwise the removal of strlcat should be straight forward
+and would be well appreciated. :)
+
 > 
-> [...]
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Applied to for-linus/hardening, thanks!
+Reviewed-by: Kees Cook <kees@kernel.org>
 
-[1/1] init/Kconfig: Require a release version of clang-22 for CC_HAS_COUNTED_BY_PTR
-      https://git.kernel.org/kees/c/7a618ca9b9c4
+-Kees
 
-Take care,
+> ---
+>  drivers/acpi/processor_idle.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+> index 45b5d17443cf..498d88f5d5c9 100644
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -1010,9 +1010,7 @@ static bool combine_lpi_states(struct acpi_lpi_state *local,
+>  	result->arch_flags = parent->arch_flags;
+>  	result->index = parent->index;
+>  
+> -	strscpy(result->desc, local->desc, ACPI_CX_DESC_LEN);
+> -	strlcat(result->desc, "+", ACPI_CX_DESC_LEN);
+> -	strlcat(result->desc, parent->desc, ACPI_CX_DESC_LEN);
+> +	snprintf(result->desc, ACPI_CX_DESC_LEN, "%s+%s", local->desc, parent->desc);
+>  	return true;
+>  }
+>  
+> -- 
+> 2.50.1
+> 
 
 -- 
 Kees Cook
-
