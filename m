@@ -1,71 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66683301704;
-	Fri, 20 Mar 2026 15:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFC43D1CAD;
+	Fri, 20 Mar 2026 17:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774019588; cv=none; b=G4VCzC2a9K3hcNGzrw21bPreT0Goqy6MjF31q5u63O5cxTLAdjcUPlWknJI6vvgoFgkIhVLsHBLAZqf825jT5ideMooCbWthTykG98WfbAxld7e0upMGhD4NCvxPrCy1YgyaiUQHyPyo+z+5lKBUL6aS93dq9ejAwF9h2Mvx734=
+	t=1774029080; cv=none; b=pHcDksGwxYCIzKYMpphM9GH5P2gQWg33h2oeQKJUVEaZyIqiJPN8JZaJfCYm06MAHNhOJv33Wq8HjGE/KvCVlXXI0HtJ+frZqG9xosxc2qWyat+s7uQ4LRSWOhwjSvWwN4CEmtRgKrPh0+AOX2ZcCao1+wllXYISmgO6PzDkMb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774019588; c=relaxed/simple;
-	bh=F5NjMNf1IADhR68ibfZoDTBsvxmUxLw8Sk4u+6nNt4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MMinI9933v6GipFmyXUCHiAKEDBl1Zhqcgw94qJdQbNwZpRRERe/6Ia502xz4XHIQ2xds7h6to5SLeHUp3B+1ytEGBZJEf8W2+eILV8YCjdy90kCBrVbprok7gVog0mnszVZR8EO2dJ3xHxaCIFQdJh8mJAaqaEJMH8tDzTl3JQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srZtmN3X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774029080; c=relaxed/simple;
+	bh=5zBHZBiRQnxI63nFpcUxKUAqSHpyESQ+S3fdO2jglgU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HI9RASO1FVOg/prGU7ishPRyuw4Cf8nwmNd3Zj3+kjLuIDgsn2bWK2aEbmIWyjRxDqi+sxtikAO7eZcw+TmmYSgMJbaocKx3jDOkUS2O41YU5yxALKPvCuSU1hIOTIjbyb46InhXsGsB7FsmBOPk0t6h1spmMhTKB+a73ybHtAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=twDK+uz9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srZtmN3X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D48AEC4CEF7;
-	Fri, 20 Mar 2026 15:13:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="twDK+uz9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8568AC4CEF7;
+	Fri, 20 Mar 2026 17:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774019588;
-	bh=F5NjMNf1IADhR68ibfZoDTBsvxmUxLw8Sk4u+6nNt4A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=srZtmN3Xv/5XPXDsgLNiI+RnCnbvcP0muAY+MLRhpvuaZ3yf04BJvoQBYiZ5tPHW7
-	 j/XLgQgrIHVEWaAbyOm7QjhCnEQd4GUi0vLt2k4iW8Bz9LI9fPPC9eWz3mdwUzmptj
-	 GSQ6D7tkOn8RfnjGw/lPboGG89iOmQQTk8w7fqy7CrPRD6f+fEAyg0Z04YipHbRl6v
-	 /BuAwlkh7Do66OSaz87kJpz+471XYUptlljs9KVikrbzYNPrt59I12vCaX3zpNraBP
-	 kMDMkvBcG8xvLv4vru3pll3c6IrT9KcLo+n/UmuzIZsYzzE1VD4g2VxXc4PlKWTcKW
-	 x6w2qYErMtVEA==
-Date: Fri, 20 Mar 2026 10:13:06 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kai-Heng Feng <kaihengf@nvidia.com>
-Cc: rafael@kernel.org, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Shiju Jose <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Huang Yiwei <quic_hyiwei@quicinc.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	s=k20201202; t=1774029079;
+	bh=5zBHZBiRQnxI63nFpcUxKUAqSHpyESQ+S3fdO2jglgU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=twDK+uz9rKvmsAMW9HdKITQjmjPRJSQTvm4E5aIp7MR18F3xeSHzzBbLRh/HhnhnJ
+	 Piitn6JhoSNIxl2SSqQoD2LkLHUQg6Wk0nQf0mBwD72kZvEcRV26h84mIpXvOEjZxT
+	 Lx7hvnyffOp1WU4+3kIYLwcLNJ1Ucx0AjqHYosCL/BN5v9A27U0UITOQo7FsHDdtga
+	 MRp3l0+T465wakVza87OW5m4P9skBGhDNyESNFi4PmMx33/QQ9/VbNs7F5nBEgAV/U
+	 ngQ3cVJPQFvKFVoPpUdZK5Y494/jUFwDgfysaGeDnchyoYKjxOlhYz/1yC7Ni5ksz8
+	 BozhIJDW0hLCA==
+From: Kees Cook <kees@kernel.org>
+To: Julia Lawall <Julia.Lawall@inria.fr>
+Cc: Kees Cook <kees@kernel.org>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	cocci@inria.fr,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] acpi/apei: Add NVIDIA GHES vendor CPER record
- handler
-Message-ID: <20260320151306.GC699200@bhelgaas>
-References: <20260319111315.87624-1-kaihengf@nvidia.com>
- <20260319111315.87624-3-kaihengf@nvidia.com>
- <20260320145254.GB699200@bhelgaas>
+Subject: [PATCH] coccinelle: kmalloc_obj: Remove default GFP_KERNEL arg
+Date: Fri, 20 Mar 2026 10:51:18 -0700
+Message-Id: <20260320175113.work.016-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260320145254.GB699200@bhelgaas>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=kees@kernel.org; h=from:subject:message-id; bh=5zBHZBiRQnxI63nFpcUxKUAqSHpyESQ+S3fdO2jglgU=; b=owGbwMvMwCVmps19z/KJym7G02pJDJl7O0VnVyr17zb+ni6ta+Cw/PnHTseFs1nvH+QpnFnv0 8+83/51RykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwET2z2H4wxNdcGBfowfv9fUB k379aGqfdeLxj3rF0scPT87btbQwKJvhn0FV9clPH4Jl3/h9TYvcp9s87UHUJd76p6smuwSt38L 9kxcA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 20, 2026 at 09:52:54AM -0500, Bjorn Helgaas wrote:
-> On Thu, Mar 19, 2026 at 07:13:09PM +0800, Kai-Heng Feng wrote:
-> > Add support for decoding NVIDIA-specific CPER sections delivered via
-> ...
+Remove any GFP_KERNEL arguments found in the new kmalloc_obj-family
+helpers. This captures the script used in commit 189f164e573e ("Convert
+remaining multi-line kmalloc_obj/flex GFP_KERNEL uses").
 
-> Wrap commit logs to fit in 75 columns.  When indented by "git log", all of
-> these overflow 80 columns by just a few characters.
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Julia Lawall <Julia.Lawall@inria.fr>
+Cc: Nicolas Palix <nicolas.palix@imag.fr>
+Cc: <cocci@inria.fr>
+---
+ scripts/coccinelle/api/kmalloc_objs.cocci | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I'm so sorry, I had accidentally resized my window narrower.  These are all
-fine; please ignore this and the similar Kconfig comment.
+diff --git a/scripts/coccinelle/api/kmalloc_objs.cocci b/scripts/coccinelle/api/kmalloc_objs.cocci
+index db12b7be7247..e9a415b7b6f4 100644
+--- a/scripts/coccinelle/api/kmalloc_objs.cocci
++++ b/scripts/coccinelle/api/kmalloc_objs.cocci
+@@ -122,3 +122,14 @@ fresh identifier ALLOC_OBJS = script:python(ALLOC_ARRAY) { alloc_array(ALLOC_ARR
+ -	ALLOC(struct_size_t(TYPE, FLEX, COUNT), GFP)
+ +	ALLOC_FLEX(TYPE, FLEX, COUNT, GFP)
+ )
++
++@drop_gfp_kernel depends on patch && !(file in "tools") && !(file in "samples")@
++identifier ALLOC = {kmalloc_obj,kmalloc_objs,kmalloc_flex,
++		    kzalloc_obj,kzalloc_objs,kzalloc_flex,
++		    kvmalloc_obj,kvmalloc_objs,kvmalloc_flex,
++		    kvzalloc_obj,kvzalloc_objs,kvzalloc_flex};
++@@
++
++	ALLOC(...
++-		 , GFP_KERNEL
++	     )
+-- 
+2.34.1
+
