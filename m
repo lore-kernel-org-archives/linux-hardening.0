@@ -1,73 +1,93 @@
-Received: from sender-of-o59.zoho.eu (sender-of-o59.zoho.eu [136.143.169.59])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D393F2119;
-	Fri, 20 Mar 2026 19:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774035148; cv=pass; b=dH3f7H0Ocos04zPG01Pt3+ApC6yVOeODcpdcot2mTAmk07mPzWCOmwJ1ClRtkNuE2F++HCqXvrwqeJJqgN2c1CKzn8wpWNIpkygjEwtI/Y1FHdibA0rR4AJKRBjrwIUkeMaq3VBx4lLz0CpXGeagmtKAPviSIQ8A3J0TFlLix2c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774035148; c=relaxed/simple;
-	bh=3XStrT6FjHvFdK7FCYWQEHQTTKXpM+N1byEmwcBfcuY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=JG8b1l1exp76T77B+a3zSVl2SRXHioxdrIFJ7883W24Jh20BYbbDx/h+5LHAYJH6LNZnd+IwOyLXH/fSfsb/JDOZwWciicofEqk+B9JRxgl09CtUO5CQSITGoGPJPzmly/MMrw196SaGOUGpYYV9grlkikMZ5A7Hor19HFIFmso=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org; spf=pass smtp.mailfrom=objecting.org; dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b=aSMAwqRC; arc=pass smtp.client-ip=136.143.169.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=objecting.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=objecting.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B30351C05;
+	Fri, 20 Mar 2026 19:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774035283; cv=none; b=J8RmrU25Cmz57gxA/efgwINo+3iR1TX8imMOOKyRXDiDCef+YnQhRKsTbf939sA5u//oQuZvhQnl+lUDG+sUmhgF9/9SBZeBaeReZI7TabphHktkNE5LFZpRyh3EmxUilqDivvjCfNTO8oxoBBuS+zv3YNQXI81SpJiZLek0wOQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774035283; c=relaxed/simple;
+	bh=VKd3vG3YD2f8nfFDLl+85SG+6H9rK8JOoLwsfodexWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qm0Bj3oO6Ydcbc6h97z5RYtQ52WDD83/m5O/z0vaAFDGEfwiJeGhiz9dRdLfes4ibda0LGNtAiKEvzjZ5P8x+CK5lYvtXA4QBkb1xhyfrSBudhyG8Pl6efKYaANPgdtAoQjRd+uz7uwcTEE2bUCqxE1O0tnKnNUCQV5Z930z36Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PMiCDOy7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=objecting.org header.i=objecting@objecting.org header.b="aSMAwqRC"
-ARC-Seal: i=1; a=rsa-sha256; t=1774035118; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=LeHj679HiWbCbZ50Jlj6De5XUmmbiD1gdDsrZ56+hrcZJ3At4lW9y96uXVs9BtxZWDuGHqq7WIZCcDFoJJmv2ARgsRIclVTFCK/Tq7CsItcNM59A+gPYTNCnAmMwKR7QIs/HQHN5Han0+ZPcrTsK282KPep/XdLQdL5TldkVsNA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1774035118; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3XStrT6FjHvFdK7FCYWQEHQTTKXpM+N1byEmwcBfcuY=; 
-	b=SqcQT0MsQ66I7NnjF5V5GH0IwMvKfX7X9Qub+JBH6CZoyLXLE2DjvL2X9JnhoDbSaiskTx8Ivv2WBEdk98oJHprTHP/P67nflS6QcyVQXSBd5/ctch7w35resfOm9zVHwGZ32XP7WzV0IXXb6nAhlJ+IeLm3eS/8VurYJinhzwA=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=objecting.org;
-	spf=pass  smtp.mailfrom=objecting@objecting.org;
-	dmarc=pass header.from=<objecting@objecting.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774035118;
-	s=zmail; d=objecting.org; i=objecting@objecting.org;
-	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=3XStrT6FjHvFdK7FCYWQEHQTTKXpM+N1byEmwcBfcuY=;
-	b=aSMAwqRCK8XRaXaa1Ulb0DKikfqxndIwlZ3BT5aqL63H79paZaqHrXOyOzjLAPm9
-	GCcII7xTXcpz7vIrMs7P9ddwLWxk8df36eQvbEx587d7O5vR7iItcmDTu4Xk3fjWlLW
-	qjmgTxXB8dYdYr/k/Bp4lT66BkXBmt7FcfzaNO84=
-Received: by mx.zoho.eu with SMTPS id 1774035115847579.8889874692579;
-	Fri, 20 Mar 2026 20:31:55 +0100 (CET)
-Date: Fri, 20 Mar 2026 19:31:54 +0000
-From: Josh Law <objecting@objecting.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Kees Cook <kees@kernel.org>
-CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, linux-hardening@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_1/1=5D_ACPI=3A_processor=3A_idle=3A?=
- =?US-ASCII?Q?_Replace_strlcat=28=29_with_better_alternative?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <ab2fNTeawayVvjZv@ashevche-desk.local>
-References: <20260316170158.1596857-1-andriy.shevchenko@linux.intel.com> <202603201216.3CD33C4@keescook> <ab2fNTeawayVvjZv@ashevche-desk.local>
-Message-ID: <308B1431-EEA5-4114-9587-A553CCE75A22@objecting.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PMiCDOy7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7323C2BCC6;
+	Fri, 20 Mar 2026 19:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774035282;
+	bh=VKd3vG3YD2f8nfFDLl+85SG+6H9rK8JOoLwsfodexWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PMiCDOy7wu2r/40o9YD7Amf0FefcK+YJxOYTs2CvA+HbenqirVEoyn5OvlwvXdX4a
+	 36jiq0PkBvuWdrTeHzzX1jwA24tPhhGNSOPn5qED5EWcYbMjt3QmBFbYhdfXoL6iW6
+	 o92FFvuUTJw2S2HEUxQs2SUeFyVPipxXAfLxVYlT7xux2IxW2OLBEi1c1zYEkhU3+p
+	 Bg8XnttvkC03c8U+GWq+w7N57BOdvJqTZmHkx7iZ18eDtgSvIo+EtA0O3VCChe+Jkh
+	 S9+PgSBfEvMaP5faU8znsEQN//20vS287Tuvi1b8UNuFSO07TRFhjPKtvo2nd2MDNo
+	 Pvkv+mtawu5BQ==
+Date: Fri, 20 Mar 2026 12:34:42 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Josh Law <objecting@objecting.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] ACPI: processor: idle: Replace strlcat() with
+ better alternative
+Message-ID: <202603201230.74BBFFABAD@keescook>
+References: <20260316170158.1596857-1-andriy.shevchenko@linux.intel.com>
+ <202603201216.3CD33C4@keescook>
+ <ab2fNTeawayVvjZv@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab2fNTeawayVvjZv@ashevche-desk.local>
 
+On Fri, Mar 20, 2026 at 09:25:41PM +0200, Andy Shevchenko wrote:
+> On Fri, Mar 20, 2026 at 12:17:54PM -0700, Kees Cook wrote:
+> > On Mon, Mar 16, 2026 at 06:01:58PM +0100, Andy Shevchenko wrote:
+> > > strlcpy() and strlcat() are confusing APIs and the former one already gone
+> > > from the kernel. In preparation to kill strlcat() replace it with the better
+> > > alternative.
+> > 
+> > Yes please. There are a few places I looked at in the past that might
+> > benefit from being changed to seq_buf or similar (where snprintf doesn't
+> > cut it), but otherwise the removal of strlcat should be straight forward
+> > and would be well appreciated. :)
+> 
+> Thank you for confirming, this is basically the message to Josh to find
+> users and start converting them and kill strlcat() eventually. Josh, as
+> you see it will be well appreciated!
 
+As an example of a seq_buf user, see block/partitions/core.c:
 
->Thank you for confirming, this is basically the message to Josh to find
->users and start converting them and kill strlcat() eventually=2E Josh, as
->you see it will be well appreciated!
+static struct parsed_partitions *check_partition(struct gendisk *hd)
+{
+	...
+        state->pp_buf = (char *)__get_free_page(GFP_KERNEL);
+	...
+        state->pp_buf[0] = '\0';
+	...
+        snprintf(state->pp_buf, PAGE_SIZE, " %s:", state->name);
+	...
+        while (!res && check_part[i]) {
+		...
+                res = check_part[i++](state);
+...
 
+All the partition handlers then use strlcat to append more details,
+and it's totally unbounded. The correct thing would be to build a
+seq_buf to attach to state instead of the pp_buf, and the handlers would
+use seq_buf functions to append their info, etc etc.
 
-Thank you! But the only reason I'm not doing it is because if I submit all=
- of the patches, let's say, 50 gets merged (including strings=2Ec) and like=
- 50 don't, then 50 will have a nonexistent/slow API because they chose to n=
-ot merge my patch
+-Kees
+
+-- 
+Kees Cook
