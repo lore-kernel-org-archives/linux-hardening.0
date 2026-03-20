@@ -1,74 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F1D282F1E
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7056C3C3455;
+	Fri, 20 Mar 2026 14:52:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774014010; cv=none; b=DPdNFTUNIV9qQSqltXztoqeOsp6f3mHqcM+NZHdZ/DPcQfNhvYLk1G5Ds+dhRDdDGBJhSOzKHrE+CHGucCUFqAzispLkQHA3vH0fOPEpbsLVD1TpN0wrxff8bwWzT64JgJoG5s2CVZd7xNNjrWui9TEjsYRT4AeyhGRKzS3h6WE=
+	t=1774018376; cv=none; b=AwCnNFqiaQGw00CXu5mWIMarGUGMzNGfBQE+TtAqyiQwx/z5RjHAN4r0ozPhUvc143rDXgsb4avfP3hoSViRD0Rpkomh7yUPIJLKWf5fjl9PT63DBgGqxeldEeR+Z5/ftJyt8CnrfJKTOVCl6ybVaD5CEHRk5mtk4fszuvwDTRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774014010; c=relaxed/simple;
-	bh=a3oCvWwktJOka9q2aoujsHbZ4rvoudf3Wlq8RAfXnIk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BaMZSo4TvscPDBN1v1XSP2EhifyRciH/rSBoUS1K7DGK9RD1qv1mR8zP+wCgzaApDrDacB/lUHXtQADilhgdAaSzmLzBaAAmrZMDxohHySbuEqT9TqLV1FIq56izKGD2vBzis4GEFqYoHK2ScYDqlnIeygi4+SPBvC9zS0nkLvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pSbWswNC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774018376; c=relaxed/simple;
+	bh=7Yfr9ZLW+HBZAx47T0vzj7K4sheH1yW1VF7eS9bGzvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FdwvvephyWKtJM9IQZmZXltOXjZ6eKX1q6UpJ0njzBPpXPudyb21LsDNg1h23Ld0TCFGQB4p2yHkh8CvDp3FvEZ2EmyFKO/K1gfrmLuESEhCW945ZhO9rtSANvJ0CQm2jCtQodZ5UcYHdetF/OFet5XUFX7Z+7IvdcxkYPuySx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BP+HlV6W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pSbWswNC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 428C1C2BCB1
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:40:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BP+HlV6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6415C4CEF7;
+	Fri, 20 Mar 2026 14:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774014010;
-	bh=a3oCvWwktJOka9q2aoujsHbZ4rvoudf3Wlq8RAfXnIk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pSbWswNCG1U+am53GXN61FyyVrA/NHtY2WmM4qZpgNbTT6uGcwitK1NnB7MwESUoz
-	 W9CkAlCshbYKtU98OnBIEvmyp5Og2nNApzud/zbsoQPr+BIv+EoAfzeiSj4f7101yB
-	 yi5IVR91Yw1b8BXPExgaxxl0QEYCKs+X+YZr+TL3jlrrjtXbyuj0Ae1daXsXO7YKCA
-	 1wosZczUwO8m71FISeB4O6YdO710eNq5XjHIZoMh+ZOOm+2BthPag38s3FyQ9vndi8
-	 UlfVeLWsGJxxtENegHwZY6Tylflz8jpybEIE4oOGD1CONDbsMgO3e0EM16y86HP3F1
-	 PQcwJ4y6Ydntg==
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-64ad79dfb7cso2568587d50.2
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 06:40:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUuQ8J35rd4LF2OV6dO0hPKg9PgiU02qaVPXidNwXlUbUmzywpJXBTkiizQRVV4jr1Top+y03JIG6jwNFVi2A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY7vOxMQrsZhWSdG2z6iXsfMTRHjEJd4VmP80BdVgbTladwtC4
-	0dK2RzjisBAIK/lAAnnAVhaOBe6ebNnc9mSfZ7N349rtwZKGGPUQ+v5T/csDG2N1mZmRaLLh+Cf
-	xHNtwEHAqKmb0Fs/vVgblIJovn/FIeWw=
-X-Received: by 2002:a05:690c:f14:b0:79a:6f11:3ac8 with SMTP id
- 00721157ae682-79a90ba015dmr30839247b3.29.1774014009652; Fri, 20 Mar 2026
- 06:40:09 -0700 (PDT)
+	s=k20201202; t=1774018375;
+	bh=7Yfr9ZLW+HBZAx47T0vzj7K4sheH1yW1VF7eS9bGzvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BP+HlV6W7x9CTXULFtST2hBBgnseSIDwSWRSYPAc28gDh0yOb6x849d0MDx6Lsklt
+	 gbD3tTzUaIc8ay4BsgZrXdn5Xu4gmxkyDpvL7p3fRt5RUX+QJt/f2XzHzbIzf6oSLi
+	 WidGREqiUdF1FPhcuKL7gMwWjjohBe1sIM4+C1PQnRo1WRgEsgIhCjfse/Qxi+zAYb
+	 FyIidejjyjqm+iyit6h9tYt8AbOrZ3qTgx9NWe74iMcgPftd99w34sKB1MN5gdCOWZ
+	 TN76sBRwraVtpVBRnVSvB52YPYUc/2yLjQ9g9d47tboWNnju7lZb6D6xbI9XaJUjzT
+	 p8ek69XAuswhg==
+Date: Fri, 20 Mar 2026 09:52:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: rafael@kernel.org, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Huang Yiwei <quic_hyiwei@quicinc.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] acpi/apei: Add NVIDIA GHES vendor CPER record
+ handler
+Message-ID: <20260320145254.GB699200@bhelgaas>
+References: <20260319111315.87624-1-kaihengf@nvidia.com>
+ <20260319111315.87624-3-kaihengf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260320015323.36383-1-rosenp@gmail.com>
-In-Reply-To: <20260320015323.36383-1-rosenp@gmail.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 20 Mar 2026 14:39:58 +0100
-X-Gmail-Original-Message-ID: <CAD++jLmSs_zr+VjOFDcWeWd8k2fvW4D_=AB21sOzFDNeRfY77w@mail.gmail.com>
-X-Gm-Features: AaiRm51td7xH5-vHG8a3FglHGrwjolWTDZvQoaQMPmI-u_KtaEKBB-jCCe9iV-Q
-Message-ID: <CAD++jLmSs_zr+VjOFDcWeWd8k2fvW4D_=AB21sOzFDNeRfY77w@mail.gmail.com>
-Subject: Re: [PATCHv2] gpio: msc313: remove kcalloc
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>, 
-	Romain Perier <romain.perier@gmail.com>, Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"moderated list:ARM/MStar/Sigmastar Armv7 SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260319111315.87624-3-kaihengf@nvidia.com>
 
-On Fri, Mar 20, 2026 at 2:53=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrot=
-e:
+On Thu, Mar 19, 2026 at 07:13:09PM +0800, Kai-Heng Feng wrote:
+> Add support for decoding NVIDIA-specific CPER sections delivered via
+> the APEI GHES vendor record notifier chain. NVIDIA hardware generates
+> vendor-specific CPER sections containing error signatures and diagnostic
+> register dumps. This implementation registers a notifier_block with the
+> GHES vendor record notifier and decodes these sections, printing error
+> details via dev_info().
+> 
+> The driver binds to ACPI device NVDA2012, present on NVIDIA server
+> platforms. The NVIDIA CPER section contains a fixed header with error
+> metadata (signature, error type, severity, socket) followed by
+> variable-length register address-value pairs for hardware diagnostics.
+> 
+> This work is based on libcper [0].
+> 
+> Example output:
+> nvidia-ghes NVDA2012:00: NVIDIA CPER section, error_data_length: 544
+> nvidia-ghes NVDA2012:00: signature: CMET-INFO
+> nvidia-ghes NVDA2012:00: error_type: 0
+> nvidia-ghes NVDA2012:00: error_instance: 0
+> nvidia-ghes NVDA2012:00: severity: 3
+> nvidia-ghes NVDA2012:00: socket: 0
+> nvidia-ghes NVDA2012:00: number_regs: 32
+> nvidia-ghes NVDA2012:00: instance_base: 0x0000000000000000
+> nvidia-ghes NVDA2012:00: register[0]: address=0x8000000100000000 value=0x0000000100000000
 
-> Use a flexible array member to combine kzalloc and kcalloc.
->
-> Add an extra counting member to support __counted_by.
->
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Is there a convenient way to connect NVDA2012:00 with the actual device?  I
+assume this is typically a PCIe device?  How would we relate this with PCIe
+errors?
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+Consider a cover letter.  Some of these comments apply to the series.
 
-Yours,
-Linus Walleij
+Wrap commit logs to fit in 75 columns.  When indented by "git log", all of
+these overflow 80 columns by just a few characters.
+
+Possibly reorder so the acpi/apei patches are together.  I don't think the
+NVIDIA record handler depends on the PCI patch.
+
+Typical subject line style in drivers/acpi/apei appears to be:
+
+  ACPI: APEI: GHES: Add ...
+
+> +config ACPI_APEI_NVIDIA_GHES
+> +	tristate "NVIDIA GHES vendor record handler"
+> +	depends on ACPI_APEI_GHES
+
+Maybe s/ACPI_APEI_NVIDIA_GHES/ACPI_APEI_GHES_NVIDIA/ since there will
+likely be more, and they'll sort nicely if the vendor is at the end.
+
+> +	help
+> +	  Support for decoding NVIDIA-specific CPER sections delivered via
+> +	  the APEI GHES vendor record notifier chain. Registers a handler
+> +	  for the NVIDIA section GUID and logs error signatures, severity,
+> +	  socket, and diagnostic register address-value pairs.
+> +
+> +	  Enable on NVIDIA server platforms (e.g. DGX, HGX) that expose
+> +	  ACPI device NVDA2012 in their firmware tables.
+
+Wrap to fit in 80 columns like the rest of this file.
+
+> +++ b/drivers/acpi/apei/nvidia-ghes.c
+
+Maybe rename to "ghes-nvidia.c" so future decoders for other vendors are
+grouped?
