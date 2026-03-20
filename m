@@ -1,47 +1,54 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDC638F658
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 15:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66683301704;
+	Fri, 20 Mar 2026 15:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774019187; cv=none; b=Iob2yDysdMKFYSEqFn6B+v5idSfuobYQRV6euDcWJjnvhihE6D76mgRMAWKas9Gj3JeEksg04FC12QYN0Uvw1YUihpE63a6/HIPJGF/gPUrKZTh6rWktpc6csYYlfiZpDgICoYOe1iXMVHPnORkI1XA5BzieWtSmIEFK770jzyc=
+	t=1774019588; cv=none; b=G4VCzC2a9K3hcNGzrw21bPreT0Goqy6MjF31q5u63O5cxTLAdjcUPlWknJI6vvgoFgkIhVLsHBLAZqf825jT5ideMooCbWthTykG98WfbAxld7e0upMGhD4NCvxPrCy1YgyaiUQHyPyo+z+5lKBUL6aS93dq9ejAwF9h2Mvx734=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774019187; c=relaxed/simple;
-	bh=DvpAtXbZitiq7MQ3g4MX7pj97XkM96ETYqAuNBHUsI8=;
+	s=arc-20240116; t=1774019588; c=relaxed/simple;
+	bh=F5NjMNf1IADhR68ibfZoDTBsvxmUxLw8Sk4u+6nNt4A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=achuU4mq443imFmTw/vafMb8xx7w+3EOMKxFHYpDhCIwDzK6pW9rtbnQeG+jw5gbR9CwQZLqnAtzQWhwLGUnTDOeBsHeLFUdTwCQySvRXszOKGljiSDWiq9S7J5CViUCq3LTW2QACms3pT/DFzss1bjAxkqhnkoczctOol8wvns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NcLxmILw; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=MMinI9933v6GipFmyXUCHiAKEDBl1Zhqcgw94qJdQbNwZpRRERe/6Ia502xz4XHIQ2xds7h6to5SLeHUp3B+1ytEGBZJEf8W2+eILV8YCjdy90kCBrVbprok7gVog0mnszVZR8EO2dJ3xHxaCIFQdJh8mJAaqaEJMH8tDzTl3JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srZtmN3X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NcLxmILw"
-Date: Fri, 20 Mar 2026 16:06:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774019173;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PM0ecKAgG32QvB1q4aNjle0Vk2lnfC0MirltUTa1XaE=;
-	b=NcLxmILw2TOdpNaObDp5OgcX9bNJH2V5AALnfEbAl2pNVhALD6ziRtUXejDg+29FQGKQLp
-	TrwRNU0wwUFk5L5L9zeRyrJj5UoCoNQyQ/cwcssFf5XfD+x5kxWEbePikVbap/czQdCMUa
-	vG9osed2XollmYfkkBuneNIRfZbT5fM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Haren Myneni <haren@us.ibm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: nx - Fix packed layout in struct
- nx842_crypto_header
-Message-ID: <ab1iXryB4x0YwA3w@linux.dev>
-References: <abnmUvHzhgS9xA-m@kspp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srZtmN3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D48AEC4CEF7;
+	Fri, 20 Mar 2026 15:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774019588;
+	bh=F5NjMNf1IADhR68ibfZoDTBsvxmUxLw8Sk4u+6nNt4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=srZtmN3Xv/5XPXDsgLNiI+RnCnbvcP0muAY+MLRhpvuaZ3yf04BJvoQBYiZ5tPHW7
+	 j/XLgQgrIHVEWaAbyOm7QjhCnEQd4GUi0vLt2k4iW8Bz9LI9fPPC9eWz3mdwUzmptj
+	 GSQ6D7tkOn8RfnjGw/lPboGG89iOmQQTk8w7fqy7CrPRD6f+fEAyg0Z04YipHbRl6v
+	 /BuAwlkh7Do66OSaz87kJpz+471XYUptlljs9KVikrbzYNPrt59I12vCaX3zpNraBP
+	 kMDMkvBcG8xvLv4vru3pll3c6IrT9KcLo+n/UmuzIZsYzzE1VD4g2VxXc4PlKWTcKW
+	 x6w2qYErMtVEA==
+Date: Fri, 20 Mar 2026 10:13:06 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: rafael@kernel.org, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Huang Yiwei <quic_hyiwei@quicinc.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] acpi/apei: Add NVIDIA GHES vendor CPER record
+ handler
+Message-ID: <20260320151306.GC699200@bhelgaas>
+References: <20260319111315.87624-1-kaihengf@nvidia.com>
+ <20260319111315.87624-3-kaihengf@nvidia.com>
+ <20260320145254.GB699200@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,57 +57,15 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <abnmUvHzhgS9xA-m@kspp>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20260320145254.GB699200@bhelgaas>
 
-On Tue, Mar 17, 2026 at 05:40:02PM -0600, Gustavo A. R. Silva wrote:
-> struct nx842_crypto_header is declared with the __packed attribute,
-> however	the fields grouped with struct_group_tagged() were not packed.
-> This caused the grouped header portion of the structure to lose the
-> packed layout guarantees of the containing structure.
-> 
-> Fix this by replacing struct_group_tagged() with __struct_group(...,
-> ..., __packed, ...) so the grouped fields are packed, and the original
-> layout is preserved, restoring the intended packed layout of the
-> structure.
-> 
-> Before changes:
-> struct nx842_crypto_header {
-> 	union {
-> 		struct {
-> 			__be16     magic;                /*     0     2 */
-> 			__be16     ignore;               /*     2     2 */
-> 			u8         groups;               /*     4     1 */
-> 		};                                       /*     0     6 */
-> 		struct nx842_crypto_header_hdr hdr;      /*     0     6 */
-> 	};                                               /*     0     6 */
-> 	struct nx842_crypto_header_group group[];        /*     6     0 */
-> 
-> 	/* size: 6, cachelines: 1, members: 2 */
-> 	/* last cacheline: 6 bytes */
-> } __attribute__((__packed__));
-> 
-> After changes:
-> struct nx842_crypto_header {
-> 	union {
-> 		struct {
-> 			__be16     magic;                /*     0     2 */
-> 			__be16     ignore;               /*     2     2 */
-> 			u8         groups;               /*     4     1 */
-> 		} __attribute__((__packed__));           /*     0     5 */
-> 		struct nx842_crypto_header_hdr hdr;      /*     0     5 */
-> 	};                                               /*     0     5 */
-> 	struct nx842_crypto_header_group group[];        /*     5     0 */
-> 
-> 	/* size: 5, cachelines: 1, members: 2 */
-> 	/* last cacheline: 5 bytes */
-> } __attribute__((__packed__));
-> 
-> Fixes: 1e6b251ce175 ("crypto: nx - Avoid -Wflex-array-member-not-at-end warning")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/crypto/nx/nx-842.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, Mar 20, 2026 at 09:52:54AM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 19, 2026 at 07:13:09PM +0800, Kai-Heng Feng wrote:
+> > Add support for decoding NVIDIA-specific CPER sections delivered via
+> ...
 
-Reviewed-by: Thorsten Blum <thorsten.blum@linux.dev>
+> Wrap commit logs to fit in 75 columns.  When indented by "git log", all of
+> these overflow 80 columns by just a few characters.
+
+I'm so sorry, I had accidentally resized my window narrower.  These are all
+fine; please ignore this and the similar Kconfig comment.
