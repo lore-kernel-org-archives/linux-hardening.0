@@ -1,75 +1,72 @@
 Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F19F2D238F
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 01:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799FE1C84A0
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 04:08:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773971627; cv=none; b=bdROGIw0v873Mwy5b+gUQQUIcALViRbxBx05YHVTd7Ybh4n3Y+9CYFkNVMmobpngwg7ErCjnMIlUjpA5h7zU5nXerzMbsR6CEkIDRy9w9hS+r2LfJRHCVX06wXC6U70//0QQR/XeE/XkCle+VVry/RmnqshtZPt0hSRZbpSn+7o=
+	t=1773979722; cv=none; b=Bdovte5Z52z3lXFP3ox9I9B6vzSPKOQTFfPWgLKz66qcp0T3o5E9F7vZ9TbAohvd0mfkI2hwZK+pHEx6DhrCaeOu4XbpjjMeDYtZ2f0e3Z6FBdnJy1cV13mZIaLEri7+7CiBVtGl9RaGh6IOA283K41bi6gbi+lkTHAEdx47/eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773971627; c=relaxed/simple;
-	bh=4fWULOXJ2FCFWhJy9fLghj7NWISrjfvLRkcXm4+1KYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aunvPBLFhO3xv0C0TePBKDiEm7/p59Aplym7GT4RTswxmmQf7MhsIicpzqk1c7iUu6gXdik4sMuM11XSlYwpioYz05xLqtfZ2xwyzAsqmUjMKkGIcBPhCDfPXsg/rOPrrKAnqp+/ZKOzzmLo2m691WAWWSbzyBFGNgCOfzRK1eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+BPSY59; arc=none smtp.client-ip=74.125.224.44
+	s=arc-20240116; t=1773979722; c=relaxed/simple;
+	bh=Hs5JCVi/mDCoUp8T9yD6sHiPNpI9OAcvAkx6z54p0S8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U7FfRVq1Q9VLFh9TEXE5yvWy8t05QmcvIYoMI7Vxxt/NZW50dbhpce4lLDJQdUSzWBhHTIwAuHlpPb+9jz67jzuAeSPCG8oFVw0AOMaqOdS8MAVVHf16Bp2cuEwygK/lWDvTztMAo07HpoR+GkfKvomQehxSTpSoRbAulzncc7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FoIh34cn; arc=none smtp.client-ip=74.125.224.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+BPSY59"
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64e87a81639so1890714d50.0
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Mar 2026 18:53:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoIh34cn"
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64c31ca77b4so202677d50.2
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Mar 2026 21:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773971622; x=1774576422; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773979720; x=1774584520; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OzPny3OBUeeBpt9cG0P/e54tGjxk7eLdlTFpb0o1yU8=;
-        b=P+BPSY59yYPSyPq7sqg90l8NH6u/mYi/BUS0qGLxWLMeAbjlwhTOrXowdqNHREDt3y
-         HSbEfG0zzinbWAsIVBQe1+tIPSznIGKGM9Ou7QzB7BhG4ujw9bH/83so+aJvBIzkAKrh
-         wBrFPTwWd15g/QRCQWFlMjqAB/gU313rE1GbTLtV4p7xseKFkfrm88USvGnJ0PI5w1M0
-         moQ1zKMmUDOEHJYAN1n1Oyy8BB1qxQtiGbAl9GV2Nl89knAy5l4li6xO6hzBu3RYJ7Vc
-         7oAG8SCFgcaVeOpUkePhtnjJz1ILPVyhOOg7CxPGNzE/6JXP3g6BbarurjN5tDjuWaFM
-         DifA==
+        bh=9qXYjAYEG/7TdZTZTuXrafJ6evX5BXEzOr2dZP97xrw=;
+        b=FoIh34cn5A4QYrPFj6riiJSMAqmdTsurN9HdQ3GjBIBzp0VG6BUAFckjIPSiahe9Eq
+         zKnRVFlC0a7B88M7wdXqELpWk96HgenxFHxlCOQLf7082qllyyyxrTiAGQXFgk0fKZMi
+         A2rKbZW/5DbGM7Cf24naDkquQajB0yjf202sKUilHm+whhp5JDPvvkY/GHmagleAOa9c
+         HnBFKiMhCE5oUsrGBkHux0OqFKvp5WLGkci/Yk1VKCeeDswTTJPCKTW5VXglz8/FMAwI
+         86yuTMJBWnmpdroQftitfZM6XNpMbORGLDeMBQU+aTVHvvZNEvsNk4yCSJYKKSW8eO/k
+         iubA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773971622; x=1774576422;
+        d=1e100.net; s=20251104; t=1773979720; x=1774584520;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OzPny3OBUeeBpt9cG0P/e54tGjxk7eLdlTFpb0o1yU8=;
-        b=I56FHfVMwC1L6qJr7FYMDYdi7Md1xosciXzm9ZUFvvnACDu95jB6XtagC/4WPYG6yp
-         +LHgL0R9iorAMszeuz0UdgOcPsaFgfuA3vtkNS6h6L18odXsstQV9gdD3s6xldBp4/Lr
-         O/Kk1ZmLR+RQn+vCY2P1FAkfNennL2UWgFSwjPkhAHWRZMkPAoU0O7l+uyrrcvlp4Bgw
-         rpKQN18/LzVOYLw++zJueNfU4VfUYTECDzABJ0sGxiQkqAHBtJpUO8PUwJuqOYHrgXts
-         E0qS0li7BvmOaypc+nvFebz/qWOTVTf+uzkbzoGfAEJ0Pf2QYsiH49QJjOeJPa9OCA8h
-         NIQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWic3d0O0K3HefZb3dczTAnaP5M+ymLgwlJJwgdHJ5uJfNyv5blGFw2lFto5GShpSPJEGEkw8bT1zAWR2qwKsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr79Qej9SzlCWbXnrx0dogOlccrVW5QklQp3jJkSyabKG5LtOW
-	mNwQMAftzHrqxZY7/JgND72yIfIzxbRa+kusOOexiPlLL62GAx8gGPIk
-X-Gm-Gg: ATEYQzyhm4eCK3laI/nZ4bIdRGVmxKTgejq8v2/BRMiEZoR+83IwkonkPqT7ryTLyxS
-	3VU0x4fWxS2rQVOHONqWhssNqiUje8ZziT5U8z4rYSQhcOPYPV4kt7Z5jjpT1ajJo1VSNuzyHCc
-	PecqUp3YynGAUeT/+3dDRFpFGfn0ElHBS+Ml/LBbil20H0F+YKFpZ75tkgUm3Q8X4o+p71yE+eF
-	qZ/MxVhfrsKENXK4t76rwFnHhnfnZgAZ5EFedDLZTy+xgL5fP1S1FpXI+TmX0dt5W6y34lRQBZA
-	dtJ+gUYUyBM2rF7va47AmYWKtsHPXli41JF47lGvfcVmYpoIKbgg/TeGrITGrirte90PKzTRpzB
-	LThnH9AbYvpYyzun9J9gw2C+d3ygRJlgJWuIFkNQNblYdRBDJUkOM8k6y2p0TOCNsbwFRLKWBYd
-	2pfjl+zY10ecpxnWDyMHZS9Ga2uEWE/zMsX8bgKo782wpvvYtP9W+HzGs=
-X-Received: by 2002:a05:690c:d83:b0:79a:38a2:d8cf with SMTP id 00721157ae682-79a90aea249mr15668467b3.17.1773971622283;
-        Thu, 19 Mar 2026 18:53:42 -0700 (PDT)
+        bh=9qXYjAYEG/7TdZTZTuXrafJ6evX5BXEzOr2dZP97xrw=;
+        b=U98pjqGRARCQxZad/wNxVQDAvcNWrOswGy2uV2BZAhc0KKBaLOw362HTaJzFg0OfHS
+         dGdT1bRoJo1iXOgz4TL+UGCst0C6yxn+MLVnmSlPc6b2xlTGAhOMBpKW+4IZShr3CSy5
+         PKP32cdddjf1HEFcdtnC3mYF3sI5rL3Nn2Jdq+uAfxomcghVWe/rWR4Kpkb9L54oLZrb
+         3LaUKNJfHoUhAukj2siTvvJRk1ZAE12Z9jGDVmEpq+AKGdSI63lT/VZUGcnO5ErjtpWe
+         WRQm1cebU1MKsrQ/K1Ooe/lq/dP5BQ452fmGz3LjvRihXU55tsMgYm+L4tMVVQ2aVKLf
+         Ugkg==
+X-Forwarded-Encrypted: i=1; AJvYcCXf6rnEVXaHs1DK9AOj8P7oePaEs6xEoNUbZGTPztyC9+jSbCO9NkUkbBGgtkfBU/mRKkN7NxgCnu70Jlv37vE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmZ6Yze40PH77tHGSSeFfTDLAMtCSucxEFmx1SwTTib+BNslFn
+	BB+/gZgB0aRFBkBFEPKSwYgRpMvkvMH7m08X9XiNaxU44+G9r10qjb/2
+X-Gm-Gg: ATEYQzyYSx80tw80WVpk3r85svxtJbTI+/DnweMEfhipAWOArTpTxOr31BYkUnSu+Hv
+	UixttqKujI6k2jTjNJauFAP/WlMaIvnBqTHeCyE1QHpxsBKmUOqplJUp2W2r60YC9OxsNW/vxnS
+	wxY9386c2fMX+pxKul1f/c1QjSVwzktp8WvKnPM11NKsr1UoakhWubbc9PdpbGwN0nfwE1KFA4e
+	nvNfYigh5CBboSc8irdOeFJc+RNe5RB3KLvT64dUzv5KvBuOKYy1+ANG5z2AddfIbafnNcVJtmr
+	qVJ7HtBYJ5LbrOJ/MaUmxczaldxO3J7x2w+CfxI3Yn6gaNycByCU47qt6M9x2y/6sjiY2kprxuy
+	ducHCOUkTkCAedATalvljo7Vn0MUh1Qp19AtsED30PxzRasLiuMovDJ6N5tOzbggc/LfBTbTyi1
+	sNBoDemK8mauYwIz67zK1TiTYEFAJEc9xZzDruL+CtNUACLTSklMdvpSDB8q92I1ZcZw==
+X-Received: by 2002:a05:690e:e25:b0:649:c512:1422 with SMTP id 956f58d0204a3-64eaa77e9d1mr1564985d50.42.1773979720476;
+        Thu, 19 Mar 2026 21:08:40 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-79a90214024sm8378917b3.0.2026.03.19.18.53.40
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64eabecdbd3sm717558d50.18.2026.03.19.21.08.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 18:53:41 -0700 (PDT)
+        Thu, 19 Mar 2026 21:08:39 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Daniel Palmer <daniel@thingy.jp>,
-	Romain Perier <romain.perier@gmail.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
+To: linux-leds@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/MStar/Sigmastar Armv7 SoC support),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv2] gpio: msc313: remove kcalloc
-Date: Thu, 19 Mar 2026 18:53:23 -0700
-Message-ID: <20260320015323.36383-1-rosenp@gmail.com>
+Subject: [PATCH] leds: pca955x: kzalloc + kcalloc to single kzalloc
+Date: Thu, 19 Mar 2026 21:08:21 -0700
+Message-ID: <20260320040821.46540-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -79,49 +76,110 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member to combine kzalloc and kcalloc.
+Two fewer allocations as a result.
 
-Add an extra counting member to support __counted_by.
+Required placing some structs before others as flexible array members
+require a complete definition. Declaration is not enough.
+
+Added __counted_by support for one of the structs for extra runtime
+analysis.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- v2: add __counted_by.
- drivers/gpio/gpio-msc313.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/leds/leds-pca955x.c | 45 ++++++++++++++-----------------------
+ 1 file changed, 17 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
-index 7345afdc78de..2accf3446cd9 100644
---- a/drivers/gpio/gpio-msc313.c
-+++ b/drivers/gpio/gpio-msc313.c
-@@ -483,7 +483,8 @@ MSC313_GPIO_CHIPDATA(ssd20xd);
- struct msc313_gpio {
- 	void __iomem *base;
- 	const struct msc313_gpio_data *gpio_data;
--	u8 *saved;
-+	int nr_saved;
-+	u8 saved[] __counted_by(nr_saved);
+diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
+index 2007fe6217ec..ee5f02eaa3c9 100644
+--- a/drivers/leds/leds-pca955x.c
++++ b/drivers/leds/leds-pca955x.c
+@@ -112,19 +112,6 @@ static const struct pca955x_chipdef pca955x_chipdefs[] = {
+ 	},
  };
-
- static int msc313_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-@@ -631,16 +632,13 @@ static int msc313_gpio_probe(struct platform_device *pdev)
- 	if (!parent_domain)
+ 
+-struct pca955x {
+-	struct mutex lock;
+-	struct pca955x_led *leds;
+-	const struct pca955x_chipdef	*chipdef;
+-	struct i2c_client	*client;
+-	unsigned long active_blink;
+-	unsigned long active_pins;
+-	unsigned long blink_period;
+-#ifdef CONFIG_LEDS_PCA955X_GPIO
+-	struct gpio_chip gpio;
+-#endif
+-};
+-
+ struct pca955x_led {
+ 	struct pca955x	*pca955x;
+ 	struct led_classdev	led_cdev;
+@@ -137,8 +124,21 @@ struct pca955x_led {
+ #define led_to_pca955x(l)	container_of(l, struct pca955x_led, led_cdev)
+ 
+ struct pca955x_platform_data {
+-	struct pca955x_led	*leds;
+ 	int			num_leds;
++	struct pca955x_led	leds[] __counted_by(num_leds);
++};
++
++struct pca955x {
++	struct mutex lock;
++	const struct pca955x_chipdef	*chipdef;
++	struct i2c_client	*client;
++	unsigned long active_blink;
++	unsigned long active_pins;
++	unsigned long blink_period;
++#ifdef CONFIG_LEDS_PCA955X_GPIO
++	struct gpio_chip gpio;
++#endif
++	struct pca955x_led leds[];
+ };
+ 
+ /* 8 bits per input register */
+@@ -542,15 +542,11 @@ pca955x_get_pdata(struct i2c_client *client, const struct pca955x_chipdef *chip)
+ 	if (count > chip->bits)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	pdata = devm_kzalloc(&client->dev, struct_size(pdata, leds, chip->bits), GFP_KERNEL);
+ 	if (!pdata)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	pdata->leds = devm_kcalloc(&client->dev,
+-				   chip->bits, sizeof(struct pca955x_led),
+-				   GFP_KERNEL);
+-	if (!pdata->leds)
+-		return ERR_PTR(-ENOMEM);
++	pdata->num_leds = chip->bits;
+ 
+ 	device_for_each_child_node(&client->dev, child) {
+ 		u32 reg;
+@@ -568,8 +564,6 @@ pca955x_get_pdata(struct i2c_client *client, const struct pca955x_chipdef *chip)
+ 		fwnode_property_read_u32(child, "type", &led->type);
+ 	}
+ 
+-	pdata->num_leds = chip->bits;
+-
+ 	return pdata;
+ }
+ 
+@@ -623,15 +617,10 @@ static int pca955x_probe(struct i2c_client *client)
  		return -ENODEV;
-
--	gpio = devm_kzalloc(dev, sizeof(*gpio), GFP_KERNEL);
-+	gpio = devm_kzalloc(dev, struct_size(gpio, saved, match_data->num), GFP_KERNEL);
- 	if (!gpio)
+ 	}
+ 
+-	pca955x = devm_kzalloc(&client->dev, sizeof(*pca955x), GFP_KERNEL);
++	pca955x = devm_kzalloc(&client->dev, struct_size(pca955x, leds, chip->bits), GFP_KERNEL);
+ 	if (!pca955x)
  		return -ENOMEM;
-
-+	gpio->nr_saved = match_data->num;
- 	gpio->gpio_data = match_data;
-
--	gpio->saved = devm_kcalloc(dev, gpio->gpio_data->num, sizeof(*gpio->saved), GFP_KERNEL);
--	if (!gpio->saved)
+ 
+-	pca955x->leds = devm_kcalloc(&client->dev, chip->bits,
+-				     sizeof(*pca955x_led), GFP_KERNEL);
+-	if (!pca955x->leds)
 -		return -ENOMEM;
 -
- 	gpio->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(gpio->base))
- 		return PTR_ERR(gpio->base);
---
+ 	i2c_set_clientdata(client, pca955x);
+ 
+ 	mutex_init(&pca955x->lock);
+-- 
 2.53.0
 
