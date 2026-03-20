@@ -1,106 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817DC2C08D4;
-	Fri, 20 Mar 2026 21:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774043729; cv=none; b=KNSSASEK0KCH0TZ0OiP4XwPXGiNyKj6TxXGkw3uRgLCNdQHepVsx5W2rPQQo1Rzj3K5ybKuTAKF9fBpvejY8v20++U8Q1QZRr1t1hWudXCCZ2K6W453ViNPZIeDB56+PpT83MZN17Bg+71hZni8GwC+ix04uIPIP4iKmf5M/qlw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774043729; c=relaxed/simple;
-	bh=WtVFQVLFopD61Jm7IQCGDAdAe+6bUfaFJixTM92fGmc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F9DkCVjAS/hEcEqEdb/IIR4SzSTdWT6O2ZIdO/krDuWMEAyHWQbqpZoI/AvOeZWt02QqTwRBnv0aVOGtQgHkDr8WSRfsJYcjXW4IOd9+wllPp5qgAE/y0KW/9PJw8QxGLg8aIsYHCjE09dFCx3Cw3VbjbPS4xp1ETpZyxcatlwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhgFQjwP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24542DF156
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 23:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774047619; cv=pass; b=jTgPBSA0juBsWkWbmhRYFktOPYpMyAqqpUuVNxaWJcN+G7UzV3Z45frMqPxik360oFAIXXm529V0qn0Dyw81rP430oARjeRiNoR+h56+BIsQqKJtghPg00Sp7ndFxfhS9ql3tQvjCU4na4NP+6+iUOSh2locu6jfxYBMfX6rzvc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774047619; c=relaxed/simple;
+	bh=mv+mEa8lYPVTeU4UjW5mpF2vNDEGKAmCTJPdr0jAXo4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WSeoIisYVayNufBMprfWT+a3Lfem5HVAFv6pKbUAQaK7plLayzupiJlr1adEvkFiw0MmBlXpgDLjbcihDYkp++ciz80fsvKkOolrUGtF7RlK4zaAj2CE/96YkOcGW4izTSMf5DaPNCdwYokq+rk0kdxm0QBaBjjADKjl4NFP1Xs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LUXTnEN3; arc=pass smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhgFQjwP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74BAC2BC87;
-	Fri, 20 Mar 2026 21:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774043729;
-	bh=WtVFQVLFopD61Jm7IQCGDAdAe+6bUfaFJixTM92fGmc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qhgFQjwPxUg3a3UEF4haMMUqGZLA61ounCS3wWEp3r11TNSdDFtYU+/+3iv67sZfM
-	 rvwyFvNsz0rULDPlCwQcZAR0dk0FJqmRz0P068sya0m83JUmc5zvC9KVrNwv8uEB+g
-	 5r4+vvZPaVcvn/Jtmi/v8k4t8RKbPQm363gnpAS+xc6Bt8PfTV3KdwOk28AwqQdS5G
-	 Dp05tq7wqJL4OyngDcgeNnwqjgO+jeB6v3HUxeX/qot2YDB5G9x/c7VuJK6RWn1ov5
-	 HPEGeoCqJcd/TPJRRqrFCuaPZrYzoTERQRxaKdWCKXA1z/udHiQiq8XNPHkjK2Z8Pp
-	 gVjs8RXY44m7A==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org
-Cc: Finn Thain <fthain@linux-m68k.org>,
-	Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10.y 2/2] mtd: Avoid boot crash in RedBoot partition table parser
-Date: Fri, 20 Mar 2026 17:55:26 -0400
-Message-ID: <20260320215526.133494-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260320215526.133494-1-sashal@kernel.org>
-References: <2026032025-scanning-frying-8ead@gregkh>
- <20260320215526.133494-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUXTnEN3"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b9358bc9c50so310978566b.1
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 16:00:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774047616; cv=none;
+        d=google.com; s=arc-20240605;
+        b=lRW3XsgsLNI6DCHmFDjfFmJbGxAfAz2k7WIxwSUBnQ4pl7MU9ZgaNowKRpy9ryH0AK
+         O6el1wT9DZ7tALF1lBhnR/bmpA52LT5FXWt+OsjllE+qcaNYrLR1M1CeeJdJvkpy3SUC
+         KPNsFTdVLZZXer/17iGD6+CVcZKd74zSKlrf/sdWJT+16vuYY7TGxhUDhMTt1WXnX1oz
+         QMnHAD9clKPQtnVea8e6s9mUC81SxmNFIcHp971Jhp2nOG1kBEX6B0EzzpcV1dqMPDpS
+         91J5d5fw1njvEdZODTK3Wo9VGjReVGYt26g0wrs6fsJaFeI2xPKxnDobx3N/NZd8T8S3
+         RV0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=pAWHlHvrO0epzpavXwEL2ZZmeMxmfsRjc8R4FrsxYJ0=;
+        fh=MEJEQPiXa0oeQlaiTDPa5LxSZ7cqoN31YMZyi9ogj3Q=;
+        b=O2J6Iaz+VWT0Iw+biKgF/+LbrhmaybmWcQwxhTibjAuN8JazYQSp4MRWK1b8lYbZME
+         vfbMAsUZ92y711qONk6YtZpY1fV1MMkHx+pUXx+qyn9QsxYJblOfqqjtpBgqilPvKq1N
+         aYCcme+k+82mguzjOv1KLDRqRfXZ3mNoa1F7Eoq2KjdvrUo8h+zeS8Ezcm5k9qJ4iS/9
+         Jlh3nI9pvUMDU6ZO5yWaWnr6cZGwai37CuMGOw2B4W7mlXHzrF0AclsXG31crZx3ndG5
+         hoOGbS80/cpDY6wFi3HRzIXUJhEFV93Ll68m+ePGWPvd3IlZ3EmEKpG8fXh/dK5f9uoB
+         u2kw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1774047616; x=1774652416; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pAWHlHvrO0epzpavXwEL2ZZmeMxmfsRjc8R4FrsxYJ0=;
+        b=LUXTnEN3Qk9unsOn8b98vV3YnIWZZahvBT19hYJeUIoOJE7ale37jOHvqU0eMyRG6+
+         mXC0mrTN/WODNjA0BXLS9d/OKuyENOkVZIKgj3vweFGIMr7010/M6bZ8CZa0cMrcmYPZ
+         M2GajskBhhSCkQDRBCdbE9NgrG+0rkNhMGQEqW41/gTi4AmLQP6MnyRWukEnfFNUL5cH
+         ubnSYoTw3s3/eBXie8g6zZC7YpDcMpY73+rcKdcqdf2HhtC1ELdHmmNJkwzL0vXUbknu
+         ZIZVv0uDkAlnl43o1a1cAuWrygNu8rxsk1t0PKXD/E8XBOLtJ5+BlKmM0HXaTJp5F4bA
+         fLBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774047616; x=1774652416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pAWHlHvrO0epzpavXwEL2ZZmeMxmfsRjc8R4FrsxYJ0=;
+        b=GQd14z48T2MsL62JJE2ra+n90u1sABded0Js9l8w2ySIe6UwtnRvK6fJ+Q/jcEyfz5
+         rfJ9lhGm5gXdhdnjiozwibH8HZswoqd6TBC5CgC+DthZE/DA5vC2RSj9rNqmMgpe+OHs
+         nqXmzuDaPv7yUJQgGbT3mqFyvVDQM4WyK5U5RyEK0+x/Lh5Hp0bEt1GiOLECyA8tpOJk
+         iBDf39CuPER07w39IsY8LfAnL8b9XyQ/2e7CYr57ik4zrgrPPq3cWYWXHVE6KOdkdkxQ
+         1riTKwT3BAJw8DZppGm8QPljm9DkM48qYZ7s/XawvxnezBNXj1AuBWuaSUxUXoj7cakZ
+         zH+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXgzY1fzGWt8p3op3MDFJgRf8i4Ms+4lQtoMOyKO7r0SOl8Dh1tHIvzdOXzLS8Pvl/2yj54cjJEKc9HJkV8vuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxRc9zlUZZyMYx7KOTyU+Jgy1NxyLcN7NiBVyN/ULubcyxgAOF
+	E8jPb2RcQ1mZAOjx3lvPxXIJNTejaZ4CenFSfpotnt0+d7rVRxqmM4wcwdgn3oYMo8I5plnS8DA
+	zpT5UhjU2y5Tu0/wSj6f5fj4zoCz3Shc=
+X-Gm-Gg: ATEYQzxJfxDbP08R7KY+w0mb26qJu2AHmQn5+ye4grkdiGYPwrgRZn76iGEwYMdUwwb
+	EfPZOjvBvpyALR7lONoOITDM+wN6tokgM3z8uVMjQNZfhFBJcVbyGmP8+/v/7VtB5N7N5X5wHA2
+	Mi8nwFwxDbqFcsw710uPG1XCir9gwyyxnkh/4kO3HTI6Ku2QomVlnN/x/vv4Mxq9FCA/4KwWiSN
+	30JRDMC1sCQaw+lKGFqR33wEE/qUOsm2Xuv++ipEHVW91E8RewRHHAmUudfIj7YQEpgZGL1Xn6J
+	LI0V/Wy1sAHX/9LADq+waxYb7y+6s3yvTe6vdPuM42aZDRGkx0aOZoowA2ahUgyHMZW+m+lbdm7
+	wjDkGdg==
+X-Received: by 2002:a17:906:490:b0:b98:e4:6d1f with SMTP id
+ a640c23a62f3a-b982f36d94bmr279801466b.40.1774047615630; Fri, 20 Mar 2026
+ 16:00:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260319000558.22108-1-rosenp@gmail.com> <202603201104.8D7B8A1@keescook>
+In-Reply-To: <202603201104.8D7B8A1@keescook>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Fri, 20 Mar 2026 16:00:04 -0700
+X-Gm-Features: AaiRm50Lq9aViRrhhRsDErlXez4p8-8WBaip7HhoqPszk6Y0R8DvNbHvdtxBwA0
+Message-ID: <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
+To: Kees Cook <kees@kernel.org>
+Cc: linux-gpio@vger.kernel.org, Bamvor Jian Zhang <bamv2005@gmail.com>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Finn Thain <fthain@linux-m68k.org>
-
-[ Upstream commit 8e2f8020270af7777d49c2e7132260983e4fc566 ]
-
-Given CONFIG_FORTIFY_SOURCE=y and a recent compiler,
-commit 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when
-available") produces the warning below and an oops.
-
-    Searching for RedBoot partition table in 50000000.flash at offset 0x7e0000
-    ------------[ cut here ]------------
-    WARNING: lib/string_helpers.c:1035 at 0xc029e04c, CPU#0: swapper/0/1
-    memcmp: detected buffer overflow: 15 byte read of buffer size 14
-    Modules linked in:
-    CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.19.0 #1 NONE
-
-As Kees said, "'names' is pointing to the final 'namelen' many bytes
-of the allocation ... 'namelen' could be basically any length at all.
-This fortify warning looks legit to me -- this code used to be reading
-beyond the end of the allocation."
-
-Since the size of the dynamic allocation is calculated with strlen()
-we can use strcmp() instead of memcmp() and remain within bounds.
-
-Cc: Kees Cook <kees@kernel.org>
-Cc: stable@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
-Link: https://lore.kernel.org/all/202602151911.AD092DFFCD@keescook/
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Suggested-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Finn Thain <fthain@linux-m68k.org>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/mtd/parsers/redboot.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mtd/parsers/redboot.c b/drivers/mtd/parsers/redboot.c
-index 3b55b676ca6b9..c06ba7a2a34b4 100644
---- a/drivers/mtd/parsers/redboot.c
-+++ b/drivers/mtd/parsers/redboot.c
-@@ -270,9 +270,9 @@ static int parse_redboot_partitions(struct mtd_info *master,
- 
- 		strcpy(names, fl->img->name);
- #ifdef CONFIG_MTD_REDBOOT_PARTS_READONLY
--		if (!memcmp(names, "RedBoot", 8) ||
--		    !memcmp(names, "RedBoot config", 15) ||
--		    !memcmp(names, "FIS directory", 14)) {
-+		if (!strcmp(names, "RedBoot") ||
-+		    !strcmp(names, "RedBoot config") ||
-+		    !strcmp(names, "FIS directory")) {
- 			parts[i].mask_flags = MTD_WRITEABLE;
- 		}
- #endif
--- 
-2.51.0
-
+On Fri, Mar 20, 2026 at 11:10=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> On Wed, Mar 18, 2026 at 05:05:58PM -0700, Rosen Penev wrote:
+> > Remove no longer needed kcalloc to simplify allocation.
+> >
+> > Added __counted_by along with a counting variable to get extra runtime
+> > analysis.
+> >
+> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > ---
+> >  drivers/gpio/gpio-mockup.c | 17 ++++++++---------
+> >  1 file changed, 8 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> > index a7d69f3835c1..a907ce28cbbb 100644
+> > --- a/drivers/gpio/gpio-mockup.c
+> > +++ b/drivers/gpio/gpio-mockup.c
+> > @@ -52,10 +52,11 @@ struct gpio_mockup_line_status {
+> >
+> >  struct gpio_mockup_chip {
+> >       struct gpio_chip gc;
+> > -     struct gpio_mockup_line_status *lines;
+> >       struct irq_domain *irq_sim_domain;
+> >       struct dentry *dbg_dir;
+> >       struct mutex lock;
+> > +     int nr_lines;
+> > +     struct gpio_mockup_line_status lines[] __counted_by(nr_lines);
+> >  };
+>
+> In the cases where a new counter variable is being added to the struct,
+> I think it might be better to have those be unsigned.
+>
+> >
+> >  struct gpio_mockup_dbgfs_private {
+> > @@ -436,15 +437,18 @@ static int gpio_mockup_probe(struct platform_devi=
+ce *pdev)
+> >       if (rv)
+> >               name =3D dev_name(dev);
+> >
+> > -     chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+> > +     chip =3D devm_kzalloc(dev, struct_size(chip, lines, ngpio), GFP_K=
+ERNEL);
+> >       if (!chip)
+> >               return -ENOMEM;
+> >
+> > -     mutex_init(&chip->lock);
+> > +     chip->nr_lines =3D ngpio;
+>
+> Besides the new variable being meaningless for negative values, there's
+> a strong hint about its type even from the counter used to perform the
+> calculation (u16):
+>
+> static int gpio_mockup_probe(struct platform_device *pdev)
+> {
+>         ...
+>         u16 ngpio;
+>         ...
+>         rv =3D device_property_read_u16(dev, "nr-gpios", &ngpio);
+>         ...
+>         gc->ngpio =3D ngpio;
+>         ...
+>         chip->lines =3D devm_kcalloc(dev, gc->ngpio,
+>                                    sizeof(*chip->lines), GFP_KERNEL);
+>
+> But this begs the question: why add nr_lines when ngpio is already part
+> of the struct:
+Maintainers for some inexplicable reason want an extra variable for
+__counted_by works.
+>
+> struct gpio_chip {
+>         ...
+>         u16                     ngpio;
+>
+>
+> ?
+>
+> -Kees
+>
+> --
+> Kees Cook
