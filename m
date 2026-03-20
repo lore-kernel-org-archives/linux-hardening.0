@@ -1,117 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C253FD12F;
-	Fri, 20 Mar 2026 19:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817DC2C08D4;
+	Fri, 20 Mar 2026 21:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774035579; cv=none; b=qXAF0vzX5Xz5DloUPycUD06nVgd74aknSGLYRhBiv0hHdCrZijLHo/dC4sLiPsRJgLrWjYMsodP/s0f4yCxaq2CyVK8dmkm1WZSvzcyQWbK6xHwb0vquzcdBm+sd5yil/C2I3kCi3knFIGgg1l4jt5xz4iLhvIToGeVnJufvb0w=
+	t=1774043729; cv=none; b=KNSSASEK0KCH0TZ0OiP4XwPXGiNyKj6TxXGkw3uRgLCNdQHepVsx5W2rPQQo1Rzj3K5ybKuTAKF9fBpvejY8v20++U8Q1QZRr1t1hWudXCCZ2K6W453ViNPZIeDB56+PpT83MZN17Bg+71hZni8GwC+ix04uIPIP4iKmf5M/qlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774035579; c=relaxed/simple;
-	bh=vdZnRm/9xp1ezGkDtjRjdUhZKUetr/nh4nzFXdSOK1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gX1f9unfJBB2WeRJjVwZzP8dRfNhMf5Nh1nEP6b2vwICboDJTp0HAOOHueG8G2vhVyuNfRgx2kbBta1bF1mKY7ac2AXPFi/7G7y7QLtjhG4FC6Cx5JuhkwtgzCQ9ZzlE8IpB8QP2kGnz2TL90kSUjQhRN9cx0/tAB1gbD71hsoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0WLQvd5; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774043729; c=relaxed/simple;
+	bh=WtVFQVLFopD61Jm7IQCGDAdAe+6bUfaFJixTM92fGmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F9DkCVjAS/hEcEqEdb/IIR4SzSTdWT6O2ZIdO/krDuWMEAyHWQbqpZoI/AvOeZWt02QqTwRBnv0aVOGtQgHkDr8WSRfsJYcjXW4IOd9+wllPp5qgAE/y0KW/9PJw8QxGLg8aIsYHCjE09dFCx3Cw3VbjbPS4xp1ETpZyxcatlwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhgFQjwP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0WLQvd5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774035579; x=1805571579;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vdZnRm/9xp1ezGkDtjRjdUhZKUetr/nh4nzFXdSOK1I=;
-  b=X0WLQvd5/QurOV0+iDzq71XGSpAGHCOGkUAgQc8gyG4cG0j8VbOe8zMt
-   OD7DerkM20mq1Qr+SkMeBpBT6BKx52ddqIKkCjaLR17tsjcKki0ubEtM0
-   Z8mbgZVvPO+Q2UMQ59UQQtuXvKV92xg9TjrxkdiOgLva3bVu+Ts4CsX6g
-   Iv+UKbg4RHZroBU8rBoPkRmtOHERFPja63z7fBD6dxOfSUx0tX/Uyavo1
-   nKWOyCRCibtUfFWACAJ0koiR1jvq6a9DPyittm14MSo9LQCI6FKwbsLIx
-   ToJeuR2DphsrjituX9fArUo1XZmIH2J7glQ0U5/Tzu80WylnkxZCbC/OU
-   w==;
-X-CSE-ConnectionGUID: EIlunr8uQgeRS+pP/Rt1fA==
-X-CSE-MsgGUID: ZSKlD3ApTBeKeMhcATESsQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11735"; a="79035988"
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="79035988"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 12:39:38 -0700
-X-CSE-ConnectionGUID: 0JZHhr6OR82U39Cm7ZwMgA==
-X-CSE-MsgGUID: 5LjUqmiqQLm6wQM9b4z0LQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="223599950"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.40])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 12:39:35 -0700
-Date: Fri, 20 Mar 2026 21:39:33 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Josh Law <objecting@objecting.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] ACPI: processor: idle: Replace strlcat() with
- better alternative
-Message-ID: <ab2idYsOFxPfEIYY@ashevche-desk.local>
-References: <20260316170158.1596857-1-andriy.shevchenko@linux.intel.com>
- <202603201216.3CD33C4@keescook>
- <ab2fNTeawayVvjZv@ashevche-desk.local>
- <202603201230.74BBFFABAD@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhgFQjwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74BAC2BC87;
+	Fri, 20 Mar 2026 21:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774043729;
+	bh=WtVFQVLFopD61Jm7IQCGDAdAe+6bUfaFJixTM92fGmc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qhgFQjwPxUg3a3UEF4haMMUqGZLA61ounCS3wWEp3r11TNSdDFtYU+/+3iv67sZfM
+	 rvwyFvNsz0rULDPlCwQcZAR0dk0FJqmRz0P068sya0m83JUmc5zvC9KVrNwv8uEB+g
+	 5r4+vvZPaVcvn/Jtmi/v8k4t8RKbPQm363gnpAS+xc6Bt8PfTV3KdwOk28AwqQdS5G
+	 Dp05tq7wqJL4OyngDcgeNnwqjgO+jeB6v3HUxeX/qot2YDB5G9x/c7VuJK6RWn1ov5
+	 HPEGeoCqJcd/TPJRRqrFCuaPZrYzoTERQRxaKdWCKXA1z/udHiQiq8XNPHkjK2Z8Pp
+	 gVjs8RXY44m7A==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org
+Cc: Finn Thain <fthain@linux-m68k.org>,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10.y 2/2] mtd: Avoid boot crash in RedBoot partition table parser
+Date: Fri, 20 Mar 2026 17:55:26 -0400
+Message-ID: <20260320215526.133494-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260320215526.133494-1-sashal@kernel.org>
+References: <2026032025-scanning-frying-8ead@gregkh>
+ <20260320215526.133494-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202603201230.74BBFFABAD@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 20, 2026 at 12:34:42PM -0700, Kees Cook wrote:
-> On Fri, Mar 20, 2026 at 09:25:41PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 20, 2026 at 12:17:54PM -0700, Kees Cook wrote:
-> > > On Mon, Mar 16, 2026 at 06:01:58PM +0100, Andy Shevchenko wrote:
-> > > > strlcpy() and strlcat() are confusing APIs and the former one already gone
-> > > > from the kernel. In preparation to kill strlcat() replace it with the better
-> > > > alternative.
-> > > 
-> > > Yes please. There are a few places I looked at in the past that might
-> > > benefit from being changed to seq_buf or similar (where snprintf doesn't
-> > > cut it), but otherwise the removal of strlcat should be straight forward
-> > > and would be well appreciated. :)
-> > 
-> > Thank you for confirming, this is basically the message to Josh to find
-> > users and start converting them and kill strlcat() eventually. Josh, as
-> > you see it will be well appreciated!
-> 
-> As an example of a seq_buf user, see block/partitions/core.c:
-> 
-> static struct parsed_partitions *check_partition(struct gendisk *hd)
-> {
-> 	...
->         state->pp_buf = (char *)__get_free_page(GFP_KERNEL);
-> 	...
->         state->pp_buf[0] = '\0';
-> 	...
->         snprintf(state->pp_buf, PAGE_SIZE, " %s:", state->name);
-> 	...
->         while (!res && check_part[i]) {
-> 		...
->                 res = check_part[i++](state);
-> ...
-> 
-> All the partition handlers then use strlcat to append more details,
-> and it's totally unbounded. The correct thing would be to build a
-> seq_buf to attach to state instead of the pp_buf, and the handlers would
-> use seq_buf functions to append their info, etc etc.
+From: Finn Thain <fthain@linux-m68k.org>
 
-Indeed. Thanks for sharing the ideas!
+[ Upstream commit 8e2f8020270af7777d49c2e7132260983e4fc566 ]
 
+Given CONFIG_FORTIFY_SOURCE=y and a recent compiler,
+commit 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when
+available") produces the warning below and an oops.
+
+    Searching for RedBoot partition table in 50000000.flash at offset 0x7e0000
+    ------------[ cut here ]------------
+    WARNING: lib/string_helpers.c:1035 at 0xc029e04c, CPU#0: swapper/0/1
+    memcmp: detected buffer overflow: 15 byte read of buffer size 14
+    Modules linked in:
+    CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.19.0 #1 NONE
+
+As Kees said, "'names' is pointing to the final 'namelen' many bytes
+of the allocation ... 'namelen' could be basically any length at all.
+This fortify warning looks legit to me -- this code used to be reading
+beyond the end of the allocation."
+
+Since the size of the dynamic allocation is calculated with strlen()
+we can use strcmp() instead of memcmp() and remain within bounds.
+
+Cc: Kees Cook <kees@kernel.org>
+Cc: stable@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Link: https://lore.kernel.org/all/202602151911.AD092DFFCD@keescook/
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Suggested-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mtd/parsers/redboot.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mtd/parsers/redboot.c b/drivers/mtd/parsers/redboot.c
+index 3b55b676ca6b9..c06ba7a2a34b4 100644
+--- a/drivers/mtd/parsers/redboot.c
++++ b/drivers/mtd/parsers/redboot.c
+@@ -270,9 +270,9 @@ static int parse_redboot_partitions(struct mtd_info *master,
+ 
+ 		strcpy(names, fl->img->name);
+ #ifdef CONFIG_MTD_REDBOOT_PARTS_READONLY
+-		if (!memcmp(names, "RedBoot", 8) ||
+-		    !memcmp(names, "RedBoot config", 15) ||
+-		    !memcmp(names, "FIS directory", 14)) {
++		if (!strcmp(names, "RedBoot") ||
++		    !strcmp(names, "RedBoot config") ||
++		    !strcmp(names, "FIS directory")) {
+ 			parts[i].mask_flags = MTD_WRITEABLE;
+ 		}
+ #endif
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.51.0
 
