@@ -1,70 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA9C27A461
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F1D282F1E
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:40:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774013943; cv=none; b=UNru8j+6HwSAndlRSYZsqRAcbS5e3IrklKi8sb8/jnEn5klewQMNBfEmIoPvxWREFGQKC9UgCDWzbjdoBSJtlkyQutx2n0gJGFyAGoW79pgs6+R5f32yjvjxAWp/BukZXI9AtnFErSTpPznLBkTwzxikzIeAw6tAaZRMUl7A1eI=
+	t=1774014010; cv=none; b=DPdNFTUNIV9qQSqltXztoqeOsp6f3mHqcM+NZHdZ/DPcQfNhvYLk1G5Ds+dhRDdDGBJhSOzKHrE+CHGucCUFqAzispLkQHA3vH0fOPEpbsLVD1TpN0wrxff8bwWzT64JgJoG5s2CVZd7xNNjrWui9TEjsYRT4AeyhGRKzS3h6WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774013943; c=relaxed/simple;
-	bh=sZj6DnCZyjt8HONClCcyxov7+5CPr/w7swwMeT/AqK4=;
+	s=arc-20240116; t=1774014010; c=relaxed/simple;
+	bh=a3oCvWwktJOka9q2aoujsHbZ4rvoudf3Wlq8RAfXnIk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XHKPhQnTpLBKkWL1iMltgGajXdGzNCkhpy1zkLzMBSjuOI4DgQ9VIMJY6+j9v4fvh1rVwjuvjRvnpfWh4+QtEN9Zd4i/gqC+HIcqPW8rS3mn3Dt94wyJD8+wEJtmsUYNnqHf+M8+K6I+1lUWG4h3HaFT17JRb/ByXfaOoDqHIB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWw8Tlzq; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=BaMZSo4TvscPDBN1v1XSP2EhifyRciH/rSBoUS1K7DGK9RD1qv1mR8zP+wCgzaApDrDacB/lUHXtQADilhgdAaSzmLzBaAAmrZMDxohHySbuEqT9TqLV1FIq56izKGD2vBzis4GEFqYoHK2ScYDqlnIeygi4+SPBvC9zS0nkLvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pSbWswNC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWw8Tlzq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F41C2BCB1
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:39:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pSbWswNC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 428C1C2BCB1
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 13:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774013943;
-	bh=sZj6DnCZyjt8HONClCcyxov7+5CPr/w7swwMeT/AqK4=;
+	s=k20201202; t=1774014010;
+	bh=a3oCvWwktJOka9q2aoujsHbZ4rvoudf3Wlq8RAfXnIk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pWw8TlzqDFoHwph3KDyCSQ9RWZggThxWkYDWtzDwwA0OIl26SBNnmwGWKyvUXmk/t
-	 bDLDIfQVoweCT0QWhN0hi/0CePrQWqmS/okWujQXl9z7ibN9U45Lzqz1VW/yCKJsuL
-	 MzwLiURiT9v/+P645X5uU+LGcWCbwl40Dnbck1lk2C9v9I+xfiROV6akOGoDyOYm9m
-	 ybisSgzmIc3gqLHWG3qszlgjPkLjzPZYq7n0Mjx38D/dDYimOxAAVffyGCutrjAJnp
-	 tW5/FuvQhXUMUm8MLBImdZgQ+0tofCMU3qAMmnuJwf2h7w14LjTpiyWg1t0PIHk4FI
-	 eMEo4Cg1OE8oQ==
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-79a62a2bb8cso21356807b3.3
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 06:39:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7hsB2c1cyV97ZY5Wy299auu1/80sJBJaeyetgeYFnjXN/VHrIB4qk223Kzv3az2zHshyNQwvTzytAvaIpBJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9bTE/u4sHL+lO5T9zC17DlHv2yY8F0z9pMmkVrNbb4T8qQvmA
-	UpjuAy7NeKKEHqDnCItWq3rCmnzt3kB9a1UPS3KBtMEWERaEInaGppl+7SgjWRLg0NJV11/Pl+G
-	PYxMxvkwpKM2BAWeXoQDTAPUIVgQjdMg=
-X-Received: by 2002:a05:690c:22c4:b0:798:e281:a4f3 with SMTP id
- 00721157ae682-79a90ba02a2mr31740737b3.40.1774013942875; Fri, 20 Mar 2026
- 06:39:02 -0700 (PDT)
+	b=pSbWswNCG1U+am53GXN61FyyVrA/NHtY2WmM4qZpgNbTT6uGcwitK1NnB7MwESUoz
+	 W9CkAlCshbYKtU98OnBIEvmyp5Og2nNApzud/zbsoQPr+BIv+EoAfzeiSj4f7101yB
+	 yi5IVR91Yw1b8BXPExgaxxl0QEYCKs+X+YZr+TL3jlrrjtXbyuj0Ae1daXsXO7YKCA
+	 1wosZczUwO8m71FISeB4O6YdO710eNq5XjHIZoMh+ZOOm+2BthPag38s3FyQ9vndi8
+	 UlfVeLWsGJxxtENegHwZY6Tylflz8jpybEIE4oOGD1CONDbsMgO3e0EM16y86HP3F1
+	 PQcwJ4y6Ydntg==
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-64ad79dfb7cso2568587d50.2
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Mar 2026 06:40:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUUuQ8J35rd4LF2OV6dO0hPKg9PgiU02qaVPXidNwXlUbUmzywpJXBTkiizQRVV4jr1Top+y03JIG6jwNFVi2A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY7vOxMQrsZhWSdG2z6iXsfMTRHjEJd4VmP80BdVgbTladwtC4
+	0dK2RzjisBAIK/lAAnnAVhaOBe6ebNnc9mSfZ7N349rtwZKGGPUQ+v5T/csDG2N1mZmRaLLh+Cf
+	xHNtwEHAqKmb0Fs/vVgblIJovn/FIeWw=
+X-Received: by 2002:a05:690c:f14:b0:79a:6f11:3ac8 with SMTP id
+ 00721157ae682-79a90ba015dmr30839247b3.29.1774014009652; Fri, 20 Mar 2026
+ 06:40:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260320005338.30355-1-rosenp@gmail.com>
-In-Reply-To: <20260320005338.30355-1-rosenp@gmail.com>
+References: <20260320015323.36383-1-rosenp@gmail.com>
+In-Reply-To: <20260320015323.36383-1-rosenp@gmail.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 20 Mar 2026 14:38:50 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkpvSb+cQXoXV-9+2b8eQRYYJpKQzuf+6xAqarQsOL0_Q@mail.gmail.com>
-X-Gm-Features: AaiRm51rZsRwW4njnIt6SHlMGSJepFEH4f2OsTyDiAdp7pcBmT6TD4IrYRReTow
-Message-ID: <CAD++jLkpvSb+cQXoXV-9+2b8eQRYYJpKQzuf+6xAqarQsOL0_Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: dwapb: reduce allocation to single kzalloc
+Date: Fri, 20 Mar 2026 14:39:58 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmSs_zr+VjOFDcWeWd8k2fvW4D_=AB21sOzFDNeRfY77w@mail.gmail.com>
+X-Gm-Features: AaiRm51td7xH5-vHG8a3FglHGrwjolWTDZvQoaQMPmI-u_KtaEKBB-jCCe9iV-Q
+Message-ID: <CAD++jLmSs_zr+VjOFDcWeWd8k2fvW4D_=AB21sOzFDNeRfY77w@mail.gmail.com>
+Subject: Re: [PATCHv2] gpio: msc313: remove kcalloc
 To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Hoan Tran <hoan@os.amperecomputing.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+Cc: linux-gpio@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>, 
+	Romain Perier <romain.perier@gmail.com>, Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"moderated list:ARM/MStar/Sigmastar Armv7 SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
 	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 20, 2026 at 1:53=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrot=
+On Fri, Mar 20, 2026 at 2:53=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrot=
 e:
 
-> Instead of kzalloc + kcalloc, Combine the two using a flexible array
-> member.
+> Use a flexible array member to combine kzalloc and kcalloc.
 >
-> Allows using __counted_by for extra runtime analysis. Move counting
-> variable to right after allocation as required by __counted_by.
+> Add an extra counting member to support __counted_by.
 >
 > Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
