@@ -1,74 +1,78 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2218E37E319;
-	Sun, 22 Mar 2026 21:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14577AD4B;
+	Mon, 23 Mar 2026 05:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774213695; cv=none; b=gzf97bk14vy5qzPstLvML3qvCrDDk7krjggK/XIbGBv3kf/pyA3iLEjMoXpxL+PVNpoIQWAlzbtk3yO1Ob2EqxorCE+71JN+U7s/m9+4PuenUwxvRTzPo0nJRbZFtNMrrM7G061wQuSAszE1TAllaMUNio9LgEyJzBFVTaO38yQ=
+	t=1774245245; cv=none; b=PwciPCKEBYEHNBcOEeIf7ZUaMvc0jIW50E32r5C82yhVhkfU/NWXz/ZGhS9sV5k2NtaqIce6YLlXNpSfljxTzTV09fNLEuJN2hXEV+huSzqWaeg0V1fKE75xwJvSNCXoqpx88Lx4l6nzIzDigSQG0vq0CnpkmhYyD/l26v8N29s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774213695; c=relaxed/simple;
-	bh=1dIm+IRJ8YNviqNMy1x1h605kgMvdgBb1SG2sRlgD/w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sUhrEc0ZnPsESB/YD91j1UxROqYjo3EigFCfuMIQc6XuDtpm7298j+Fd9n4S79yhPrbYrsTbARzrXj1LE98TRTO3ZFzn6SiwH44TGkm1JzBOyvN/bR5GOt+99HAqGAFCRm4ljabOesE7Mvezrg0I2mFW+1wN4QtSTWmCaRmEcUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=XjesLpLP; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1774245245; c=relaxed/simple;
+	bh=5Np89iEfAkaoUvFYor9oqdXgPCMO1WES0ZnH+qDTPxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NMOD3eE67aBAkzp4CwolxyLvV7+gGI5YvgpQVIRuybkQWgtQF9V2EaBT2D4OzoiWY4Vc732IlUvbXQ7XgaegO3ye6cOwrEeNBDA7x6Qm2g2hIkB1+HV+PhW3RF62ZBY5zfYcyz5RTfmeTCtauOtxuLBD32Ewoy+M0EqKO3j1VXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aEY71oMW; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="XjesLpLP"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7DB4F411EA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1774213693; bh=c7Mkncglh+ov7MC8kT/zXkMfiXtW+S9B7hikGVB2yP8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=XjesLpLPc5lvC+qLnMB24elpRtpfZfwHwCfm2W9F6je6yaz37b8vGZ6LwZ7Ajtm0J
-	 l/YBMLv7mXobmWRw2h+dqAA7iRyPm49xo02TxXAGWAWJ/EF/E0hr0KyQ4wG/MqoXOy
-	 OfYJuLc1pXZW/0MtXrvh8nonvXBhNCp8jscBqUDzXR0lM91nznRJ5Xelh372C5brE/
-	 xiZDTlMubegdzNEdIRHYPFWCOH1FImGDOPWikhq3lnUkmDtzyDSNB3WwhMyc+eipQ4
-	 d+qNUFV3QSNlH+4BtYv1/wI8Z/EcodfrbDitO/z3N6go43Oc7dXqa++UWEkmbcDt9E
-	 ty6hHNW5KSdhQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:27b::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 7DB4F411EA;
-	Sun, 22 Mar 2026 21:08:13 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Kees Cook
- <kees@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Aleksandr Loktionov
- <aleksandr.loktionov@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
- Shuah Khan <skhan@linuxfoundation.org>, Vincent Mailhol
- <mailhol@kernel.org>
-Subject: Re: [PATCH v3 00/22] kernel-doc: use a C lexical tokenizer for
- transforms
-In-Reply-To: <cover.1773770483.git.mchehab+huawei@kernel.org>
-References: <cover.1773770483.git.mchehab+huawei@kernel.org>
-Date: Sun, 22 Mar 2026 15:08:12 -0600
-Message-ID: <871phbd137.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aEY71oMW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774245243; x=1805781243;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5Np89iEfAkaoUvFYor9oqdXgPCMO1WES0ZnH+qDTPxk=;
+  b=aEY71oMW8P50ywDqzB9Vg1lKeIMjrRCzWB1k8EgC1Nx6q4hdB/esB5LY
+   qnHkxr7a2aBCaPjEowXP4oJVqxqbwo3tYKkXos489NQF72qd62CFeXIfg
+   7ul0PnCg8rbqzzRWwLtIqByMc4uq/Lv98LGkT5FgCKHCtxzOm2f+NHQ0n
+   mcpteMM3UY/pODjRnuKojOs1cta7vOiovT9GqF4e1PuH+z9COjQJl25c1
+   XcvyILtD02lzfpL7MvBeBAqRC3MaGs8tUHLauiWeWzvAHmfTwNanEfazw
+   ZzFkxlsJyarhBfNT9PgXurGAW68oB+SGsPYYVsbX2wvpzAGvmVJZINg+/
+   Q==;
+X-CSE-ConnectionGUID: C/QoECbtSa2yQiLO/e3ImQ==
+X-CSE-MsgGUID: sByAzvn1QFmsaGyNrtPbZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="85549584"
+X-IronPort-AV: E=Sophos;i="6.23,136,1770624000"; 
+   d="scan'208";a="85549584"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2026 22:54:02 -0700
+X-CSE-ConnectionGUID: ALiZczb0S/W3xBNmG9F17A==
+X-CSE-MsgGUID: aRewrqC9SISR1w+X2oTSGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,136,1770624000"; 
+   d="scan'208";a="224140347"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa007.jf.intel.com with ESMTP; 22 Mar 2026 22:54:00 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 28C6A95; Mon, 23 Mar 2026 06:53:59 +0100 (CET)
+Date: Mon, 23 Mar 2026 06:53:59 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-usb@vger.kernel.org, Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCHv3] thunderbolt: use kzalloc_flex
+Message-ID: <20260323055359.GV2275908@black.igk.intel.com>
+References: <20260318185237.4742-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260318185237.4742-1-rosenp@gmail.com>
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Wed, Mar 18, 2026 at 11:52:37AM -0700, Rosen Penev wrote:
+> Simplifies allocation by using a flexible arraay member.
+> 
+> Added __counted_by for extra runtime analysis.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
-> Hi Jon,
->
-> It follows v3 of the series. I basically addressed there the
-> points you mentioned. Besides that, I did a fix at CMatch
-> group(0) logic, and opted to create a special token for ";",
-> as it simplifies the code a little bit and will likely help to
-> simplify future changes.
-
-OK, I have gone ahead and applied this series...it doesn't seem to
-explode for me, anyway :)  Let's hope for the best...
-
-Thanks,
-
-jon
+Applied to thunderbolt.git/next, thanks!
