@@ -1,53 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7243C660A;
-	Mon, 23 Mar 2026 18:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF87359A94;
+	Mon, 23 Mar 2026 19:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774290299; cv=none; b=INCsCFCQaYqIDhCz4AIRh3P5z1CLJbUZcPzgBGvX2vqEzWCTMWas2SuA2kNGUV7ljc+aSJp65ySgEgyIlujK7zDfZ3BcPoxyHMjQ58U2K+0qKowXVBz4kfUMBbFbObKtFncBaLYjZRo41N1z0Gfppxu5sTuF72oq3qn2DIue/lk=
+	t=1774293885; cv=none; b=ATiVOvqPJGh+yK7p5R+4sWYrwot8pJKv8xVs10coUxNMIDDnK26ii58guqXx0qmSRSQRm1/hwQmjQrP1mPaxsnMdFfXSQ3j4WTDhCNVUkOclnDERId1kd6HGwyJONHIPkM0m+nXtrCvFBrKgpvXrQda5JBlTgAY9Yj/Kc8viAqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774290299; c=relaxed/simple;
-	bh=+OfivGD4//8uRVSauZcaTW7iKNbZsdG6fOv6bQX/GrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YJ5/HTF0/oCt38XUXZvSDePIpt4+lDeHGpklVNfBPDwQaSaEaRxcabaWm4aNZH8KRvxFFYQHkULWdK0djVjej+zuYlGvkg3p1SOn9knyCwHsLVC3ywoc9GhqG/GSFPNMLyl3yk5CQ5RDL/7CUfW/LpkpK43W2feAdYC6YoNOLFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQbjJlcF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQbjJlcF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F87C4CEF7;
-	Mon, 23 Mar 2026 18:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774290299;
-	bh=+OfivGD4//8uRVSauZcaTW7iKNbZsdG6fOv6bQX/GrE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qQbjJlcFtH2TNyGOhnrT4b80vGlfZkwYNy7ToPdhq7NwjihQA5f5NoFayCzRGm+Re
-	 WRnfkMySklfDO7iSNbvUEnkD4hPhSnDl+crlY5Y6izqV2VZgRi/9zDGqgL3/MtXekA
-	 qeoCSt44SdbLa7issXHDsSSStRrnPnCLg2w3Zs9LUH1VYFTDZJt8cFJgeo79w1LusO
-	 +AzaIRxYvIML1k9bSBqqKBSZbm9ML1AX9AApUTQlsclxEU6zKqQegWWB/3JHDSRjH0
-	 P6RzG/ZEZjYZnB9x8Vk5CQO+w443xW3pldVd0sKvVTD68b5fJshCZ1jfNOkU/WT69A
-	 yMaLxqwCUNonA==
-Date: Mon, 23 Mar 2026 11:24:58 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
+	s=arc-20240116; t=1774293885; c=relaxed/simple;
+	bh=mWyrUOPWTSJoaU6a2GftDk5Ql6QbxVjhOfbP0fwQbSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=skTEjtcNcSekVmU9/IEjkdjlSe0/Q9brHPhrPm6kj1wBxAwboLueLTcYoiecrclRlCYqkP9UGmtNVocrpiDx/8PefIJwdVspHG7XXB17TDmCld9YuK6LW1r4X1ep5LI1X+triKA9kOyd4mbQdthqNOpx7entjPD1f1/gkJ352bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 803A61B9338;
+	Mon, 23 Mar 2026 19:24:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 9D4AB2000E;
+	Mon, 23 Mar 2026 19:24:34 +0000 (UTC)
+Date: Mon, 23 Mar 2026 15:25:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Carlos Maiolino <cem@kernel.org>,
-	Andrey Albershteyn <aalbersh@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+ Andrey Albershteyn <aalbersh@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] xfs: Replace strncpy() with strscpy_pad() in tracepoint
  error paths
-Message-ID: <20260323182458.GI6223@frogsfrogsfrogs>
+Message-ID: <20260323152514.006d96b5@gandalf.local.home>
+In-Reply-To: <20260323172204.work.979-kees@kernel.org>
 References: <20260323172204.work.979-kees@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260323172204.work.979-kees@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: a9cubsx3kmcd96hh31jcpi9ngny15qrs
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 9D4AB2000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+OA4qXrbdyasYTd1S00snUQyBrAGOfLns=
+X-HE-Tag: 1774293874-862539
+X-HE-Meta: U2FsdGVkX197dFKfRjDw6D7qzxrvAo285F4xi2NWRnGrXg2E/UuhAl2a2irUJLf+oaxwjIHt2WtVm7MrHt2LYD1vH0xAQrUP4J+C/eS0ACFVcGilPS9/JaQ2UPfApyPIb4onPfcoobRLgnkF3aWhPFiElFi9jW+oEiplmw2K+4y46mz8YPDS+Nzlze57sFPnI9J3PL1YHCNZzXSLc3NZ0gV0Ns7zgKM5BxSkwqq4bfIbGrTjugwYAZ3aQd2lsf+EPCR2iPqdJLjKfmUlf0keGYkEruu/k+4igf43aeWmfeoo5sUBD+N83a692Q+7bBhY/rJrr8Yk4KwQNKarU0nXLpQr/f6W3Afh+HmsgBz2uYpeZ0TmkgplVA==
 
-On Mon, Mar 23, 2026 at 10:22:09AM -0700, Kees Cook wrote:
+On Mon, 23 Mar 2026 10:22:09 -0700
+Kees Cook <kees@kernel.org> wrote:
+
 > Replace the deprecated[1] strncpy() with strscpy_pad() in the
 > xfile_create and xmbuf_create tracepoints.
 > 
@@ -66,15 +68,20 @@ On Mon, Mar 23, 2026 at 10:22:09AM -0700, Kees Cook wrote:
 > 
 > The source is a 10-byte string literal into a 256-byte destination,
 > so there is no behavioral change.
+
+Hmm, seems to be a lot of waste. Note, the ring buffer now zeros out its
+data on allocation so there's no need to zero pad anything, at least not
+for exposing data. You may expose a previous trace.
+
+Also, why are these using full path size and not just use dynamic array.
+That would be much more efficient in both performance and space.
+
+-- Steve
+
+
 > 
 > Link: https://github.com/KSPP/linux/issues/90 [1]
 > Signed-off-by: Kees Cook <kees@kernel.org>
-
-Seems fine to me,
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-
---D
-
 > ---
 >  fs/xfs/scrub/trace.h | 3 +--
 >  fs/xfs/xfs_trace.h   | 3 +--
@@ -108,7 +115,4 @@ Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 >  	),
 >  	TP_printk("dev %d:%d xmino 0x%lx path '%s'",
 >  		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> -- 
-> 2.34.1
-> 
-> 
+
