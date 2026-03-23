@@ -1,238 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864573603FC;
-	Mon, 23 Mar 2026 08:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5784633F588;
+	Mon, 23 Mar 2026 09:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774255911; cv=none; b=XLEf6Hv408AYrCPI3JiF4qYh3kktj6qN594g0DjjlPVGdVlB/8L06VHHE1zXrx3axApv37wmd9WjYl1lFarmoLswj1y2MHrd1EjHdWTwmgBF53vaWmNb8J6xypNeSpWHp0M2zgEQVZktKC/kKz71fWVWQeOK0OOhsPb99VmMS6Q=
+	t=1774257206; cv=none; b=qGt+JeY4l/xyh923hdAxz0TCkxs4oGfPcpRJTyZla0tBkZq8ttFNlPVL6g+9QvXxrdzi9/tcnpn9CM4kw4pU7bUqEUk3c0EgP6gcG4tcP7qZDSHxpQq5EPzW9obqR3ddO98zs304DlIJZ8ScuF9B41HvtryNSnnMC0+gUbm4iJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774255911; c=relaxed/simple;
-	bh=dmgQeU3RW0ZvG5Al9Vg1ngqjadpe9kAbYXZbA7yKC/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWq1o58dUn4M/Fq9IINUpCx6i2sPo2Kb9gMpIDfuyy9hVSG3xaVoucEzHVgfk1p2ipdoEVAV5oQNZUmpcBUBvTdHsxWCJePBDrQQ68LlrAsQqFvYqz/+bzSc4hghn9KTr2qPBlfD9u4+2jt007sdGGOiFXtoIBNDsyOoyD8tU3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lBCwxNgK; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1774257206; c=relaxed/simple;
+	bh=HbFcVlLDzr7s8MAShY5kn8xSzlS4geN+9YqgsyUJxLU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ocAAroBMt7R9z5RkGSyEmA/AhtTOQ+PQfwx3TRPD7cU0TATAajS2hKI+28b+3Mf7lrwgiH6qCSn2lYzue5lUArDKTgdMMioU5cZ/P4twgKUHid+b/TskqMIjFjaYwzfMsZgAaMNsKUzTgsfz1Li4GX+TzoUk/perStP0NcDwPyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzxHlZuJ; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lBCwxNgK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzxHlZuJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774255911; x=1805791911;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dmgQeU3RW0ZvG5Al9Vg1ngqjadpe9kAbYXZbA7yKC/o=;
-  b=lBCwxNgKcecwvuVqHTY8XuWxg+ZvN7vTfOdmwscnFhTN1VpD8/ysmAwL
-   UVcYKpH3fWMGFvRpBbim6nusqR9HMKPPuRXEPYmo/8tOhCq6srIIU1Q85
-   bDjiI+Y1kydw9kNBm/6KyTO7ZtQD+ltZ/graT9sKnCDfFUykgTPrx8MIV
-   JVPuXLdhEt7FaD4csZ/NRF3tyvtDbKAleCKu/Z9FXJJvloPS2e8ZX788d
-   b9pULmi+SeSIS6Ag2bSroCVcEcJvGgE9IGXeVvey2f4/ssthHSPh8twWi
-   W6cm1BXez+99ieSPqsYMOZvHtMxbJTn7E92rujDj9NEyLyU49kTTLe5ad
+  t=1774257205; x=1805793205;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=HbFcVlLDzr7s8MAShY5kn8xSzlS4geN+9YqgsyUJxLU=;
+  b=nzxHlZuJgZAsey7yAGRHDmuBmk4TtQs46w/e8i1+9k71wh3vLOZ5K2eC
+   PwjYOg1/yTY0OKCdYhwjnEOddE6m5K8HcgoD1B1lzg1F7rQSg5L8+V5Wr
+   pMZRjTvv2IbayRF/lem7Ue/Ne9aSOgHVHl0STGNLup97fkOstKeA3fFcs
+   FEde7XVWnZ6/UTf+wIbgRuymB7SFyztGMGuC0AotMArvFcat8u5ojvhRg
+   sf/Ix4k5uK6zTgAL/VT5U+jnI4GXwji+WqenVLBTlz/2GemRV+EzdHwpZ
+   f48t5kqKLppX92MMrp5t8YDizrK+BuhHRFhfF3pKJqdsd3Rti8RqrxczD
    g==;
-X-CSE-ConnectionGUID: 8iRTGY8GTzG8mf/USL/7FA==
-X-CSE-MsgGUID: Y0rQz1TNTHKTuRqsN6y1lg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="74427215"
-X-IronPort-AV: E=Sophos;i="6.23,136,1770624000"; 
-   d="scan'208";a="74427215"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 01:51:50 -0700
-X-CSE-ConnectionGUID: ock8Tlp0TquOEKkUY4ALRA==
-X-CSE-MsgGUID: kxhnSGJ+Sq+epLMtPDxTVw==
+X-CSE-ConnectionGUID: MhkcKoDmQYeIM8tSzAY87A==
+X-CSE-MsgGUID: 8vpd/shLS2Os/GYtJlAUVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="62807273"
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="62807273"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:13:24 -0700
+X-CSE-ConnectionGUID: 0zNkQR2ISzG5X/USyEDHcg==
+X-CSE-MsgGUID: haIcpTB+QjmLrnT9i4luFQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,136,1770624000"; 
-   d="scan'208";a="254438657"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 01:51:46 -0700
-Date: Mon, 23 Mar 2026 10:51:44 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Josh Law <objecting@objecting.org>, Jens Axboe <axboe@kernel.dk>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	"Richard Russon (FlatCap)" <ldm@flatcap.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-ntfs-dev@lists.sourceforge.net,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] block: partitions: Replace pp_buf with struct seq_buf
-Message-ID: <acD_IIEXmhnVlO0C@ashevche-desk.local>
-References: <20260321004840.work.670-kees@kernel.org>
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="217490034"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.49])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:13:19 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 23 Mar 2026 11:13:15 +0200 (EET)
+To: Rosen Penev <rosenp@gmail.com>, Kees Cook <kees@kernel.org>
+cc: platform-driver-x86@vger.kernel.org, 
+    Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: panasonic-laptop: simplify allocation of
+ sinf
+In-Reply-To: <CAKxU2N9fqr8XunsR+=-P8AngLbUbphTq6aFnEJ_yEGhue9d2wA@mail.gmail.com>
+Message-ID: <17effdb3-7406-d280-8d9a-e699e54dadef@linux.intel.com>
+References: <20260320004928.29914-1-rosenp@gmail.com> <202603201131.55E516E@keescook> <CAKxU2N9fqr8XunsR+=-P8AngLbUbphTq6aFnEJ_yEGhue9d2wA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260321004840.work.670-kees@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: multipart/mixed; boundary="8323328-1296920707-1774257195=:1623"
 
-On Fri, Mar 20, 2026 at 05:48:44PM -0700, Kees Cook wrote:
-> In preparation for removing the strlcat API[1], replace the char *pp_buf
-> with a struct seq_buf, which tracks the current write position and
-> remaining space internally. This allows for:
-> 
-> - Direct use of seq_buf_printf() in place of snprintf()+strlcat()
->   pairs, eliminating local tmp buffers throughout.
-> - Adjacent strlcat() calls that build strings piece-by-piece
->   (e.g., strlcat("["); strlcat(name); strlcat("]")) to be collapsed
->   into single seq_buf_printf() calls.
-> - Simpler call sites: seq_buf_puts() takes only the buffer and string,
->   with no need to pass PAGE_SIZE at every call.
-> 
-> The backing buffer allocation is unchanged (__get_free_page), and the
-> output path uses seq_buf_str() to NUL-terminate before passing to
-> printk().
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks a lot! A few comments below.
-Personally I'm in favour of this patch as it also removes a lot of ugly code
-(which is scoped string manipulations), FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--8323328-1296920707-1774257195=:1623
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> Link: https://github.com/KSPP/linux/issues/370 [1]
+On Fri, 20 Mar 2026, Rosen Penev wrote:
+> On Fri, Mar 20, 2026 at 11:32=E2=80=AFAM Kees Cook <kees@kernel.org> wrot=
+e:
+> >
+> > On Thu, Mar 19, 2026 at 05:49:28PM -0700, Rosen Penev wrote:
+> > > Change to a flexible array member to allocate once instead of twice.
+> > >
+> > > Allows using __counted_by for extra runtime analysis. Move the counti=
+ng
+> > > variable assignment to right after allocation as required by
+> > > __counted_by.
+> > >
+> > > Remove + 1 to allocation. It's already done in the previous line.
+> >
+> > Are you sure this is an accidental +1? I see the "num_sifr++" that
+> > happens earlier, but it's not immediately clear why either that or the
+> > +1 in the original allocation are needed. I'd like to understand why
+> > either/both are/aren't needed.
 
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Josh Law <objecting@objecting.org>
+There's a comment right before the increment:
 
-While not long, this still can be placed...
+        /*
+         * Some DSDT-s have an off-by-one bug where the SINF package count =
+is
+         * one higher than the SQTY reported value, allocate 1 entry extra.
+         */
+        num_sifr++;
 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
+=2E.l.which comes from 33297cef3101 ("platform/x86: panasonic-laptop:=20
+Allocate 1 entry extra in the sinf array").
 
-...somewhere here to reduce unneeded noise in the commit message.
+So I don't know why you said it's not clear why it's there.
 
-> I couldn't help myself. Here's the full patch, as I suggested in
-> https://lore.kernel.org/lkml/202603201230.74BBFFABAD@keescook/
-> There are plenty more like this to do...
+> Looks like a rebasing mistake to me honestly.
 
-Indeed, but thanks for the example on how to do that!
-
-...
-
-> @@ -78,14 +76,14 @@ static int riscix_partition(struct parsed_partitions *state,
->  	if (!rr)
->  		return -1;
->  
-> -	strlcat(state->pp_buf, " [RISCiX]", PAGE_SIZE);
-> +	seq_buf_puts(&state->pp_buf, " [RISCiX]");
->  
->  
-
-While at it, you can also drop a second blank line.
-
->  	if (rr->magic == RISCIX_MAGIC) {
->  		unsigned long size = nr_sects > 2 ? 2 : nr_sects;
->  		int part;
->  
-> -		strlcat(state->pp_buf, " <", PAGE_SIZE);
-> +		seq_buf_puts(&state->pp_buf, " <");
->  
->  		put_partition(state, slot++, first_sect, size);
->  		for (part = 0; part < 8; part++) {
-
-...
-
-> @@ -173,24 +173,22 @@ int aix_partition(struct parsed_partitions *state)
->  	if (d) {
->  		struct lvm_rec *p = (struct lvm_rec *)d;
->  		u16 lvm_version = be16_to_cpu(p->version);
-> -		char tmp[64];
->  
->  		if (lvm_version == 1) {
->  			int pp_size_log2 = be16_to_cpu(p->pp_size);
->  
->  			pp_bytes_size = 1 << pp_size_log2;
->  			pp_blocks_size = pp_bytes_size / 512;
-> -			snprintf(tmp, sizeof(tmp),
-> -				" AIX LVM header version %u found\n",
-> -				lvm_version);
-> +			seq_buf_printf(&state->pp_buf,
-> +				       " AIX LVM header version %u found\n",
-> +				       lvm_version);
-
-Hmm... here it's %u...
-
->  			vgda_len = be32_to_cpu(p->vgda_len);
->  			vgda_sector = be32_to_cpu(p->vgda_psn[0]);
->  		} else {
-> -			snprintf(tmp, sizeof(tmp),
-> -				" unsupported AIX LVM version %d found\n",
-> -				lvm_version);
-> +			seq_buf_printf(&state->pp_buf,
-> +				       " unsupported AIX LVM version %d found\n",
-> +				       lvm_version);
-
-...and here it's %d. Perhaps also fix specifiers to be aligned with the actual
-data type?
-
->  		}
-> -		strlcat(state->pp_buf, tmp, PAGE_SIZE);
->  		put_dev_sector(sect);
->  	}
->  	if (vgda_sector && (d = read_part_sector(state, vgda_sector, &sect))) {
-
-...
-
-> -			char tmp[42];
->  
->  			__be32 *dt = (__be32 *)dostype;
->  			*dt = pb->pb_Environment[16];
->  			if (dostype[3] < ' ')
-> -				snprintf(tmp, sizeof(tmp), " (%c%c%c^%c)",
-> -					dostype[0], dostype[1],
-> -					dostype[2], dostype[3] + '@' );
-> +				seq_buf_printf(&state->pp_buf,
-> +					       " (%c%c%c^%c)",
-> +					       dostype[0], dostype[1],
-> +					       dostype[2],
-> +					       dostype[3] + '@');
->  			else
-> -				snprintf(tmp, sizeof(tmp), " (%c%c%c%c)",
-> -					dostype[0], dostype[1],
-> -					dostype[2], dostype[3]);
-> -			strlcat(state->pp_buf, tmp, PAGE_SIZE);
-> -			snprintf(tmp, sizeof(tmp), "(res %d spb %d)",
-> -				be32_to_cpu(pb->pb_Environment[6]),
-> -				be32_to_cpu(pb->pb_Environment[4]));
-> -			strlcat(state->pp_buf, tmp, PAGE_SIZE);
-> +				seq_buf_printf(&state->pp_buf,
-> +					       " (%c%c%c%c)",
-> +					       dostype[0], dostype[1],
-> +					       dostype[2], dostype[3]);
-
-Wouldn't
-				seq_buf_printf(&state->pp_buf, " (%.4s)", dostype);
-
-work?
-
-But probably okay as in the previous branch it needs more work to follow,
-something like
-
-			char dostype[8];
-			...
-			if (dostype[3] < ' ') {
-				/* Escape control character */
-				dostype[4] = dostype[3] + '@';
-				dostype[3] = '^';
-				seq_buf_printf(&state->pp_buf, " (%.5s)", dostype);
-			} else {
-				seq_buf_printf(&state->pp_buf, " (%.4s)", dostype);
-			}
-
-Taking how invasive is this, it might be better to done separately.
-
-> +			seq_buf_printf(&state->pp_buf, "(res %d spb %d)",
-> +				       be32_to_cpu(pb->pb_Environment[6]),
-> +				       be32_to_cpu(pb->pb_Environment[4]));
->  		}
->  		res = 1;
-
--- 
-With Best Regards,
-Andy Shevchenko
+In which commit?
 
 
+--=20
+ i.
+
+--8323328-1296920707-1774257195=:1623--
