@@ -1,39 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97724277C88;
-	Mon, 23 Mar 2026 17:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC1F3BED59;
+	Mon, 23 Mar 2026 17:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774286418; cv=none; b=L8SY/9NO0FiMkxGAdX1AtjDnIR9lc9FG6yBRl5+GdI2wAXT8HgFRIdFxVZrSuigAtRydx4WZ6sCcGjNvxcCW+o3rCz5jA1JgeDrXwPuZyewmFBIL+J3JtvQlwS/i5mfpXGSIfU/rAndlIFOmviElcaUUt/B+I+zSp/H+X5lXTfk=
+	t=1774286530; cv=none; b=YlcQnQTvd4z2jwotunrVAK8xwiyudjD9ll7zzIfQlubxVTQyIOk4BgQW8eykEdUUNowXUa5rNURGsMbvA62uv2ftQ3WpGcHLHFMJ16ihME5+CXhPZW+Mt+TVvW3Q92S2n+rEwaAchUwq+DDlx3w/Jj1MHf2aRWmLfI0XYxjvnxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774286418; c=relaxed/simple;
-	bh=koTi9b0X3dRcnxtZiIHUEUiGA0Peg0+3cPdMN4nVIzk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tVLUjp46Az9JcZfS9CWrEmjKIVVji0oT9DAWqduKf7MFFV/8WMr6n7yK1n/WE6s50c0jZtuZOLQrhPwwDjWd/RDSBsQ29bk902M03ZbeKeXSUBvsrc21rTVCO7Yn3YrB/iNifPJernHnZIZfdPrfeT9TeWWJQT4JW51kz0Gyk6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JV6frrDQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774286530; c=relaxed/simple;
+	bh=sJh27ACHhMobpUq8jC5k7ysmfrpJATZRBiIZaWg4O3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s/1LNFSHRy2UhdIq5BWub27077db1CmF2ckJyDcHdutLpAfZAaAL0wXJFZ2g59mhoIiSL5fHRuURJmM48ugQWeWhWm+DbPi0L06/5L97fjcOnC0h0Q7TUzOK7TXd1mJf4HGcKNdHaA/qp+Kz2nMAN22P5dQ/VyTxvr6Hn0tKVSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dby7Vm9d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JV6frrDQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25FF4C4CEF7;
-	Mon, 23 Mar 2026 17:20:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dby7Vm9d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65394C4CEF7;
+	Mon, 23 Mar 2026 17:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774286418;
-	bh=koTi9b0X3dRcnxtZiIHUEUiGA0Peg0+3cPdMN4nVIzk=;
+	s=k20201202; t=1774286530;
+	bh=sJh27ACHhMobpUq8jC5k7ysmfrpJATZRBiIZaWg4O3o=;
 	h=From:To:Cc:Subject:Date:From;
-	b=JV6frrDQDJNe/9wT1/5eKqZ795MxuDF7/G7eXdjn9uGiDZHeaKA7vBs7JQrgZiyGx
-	 OWkZSMtKlgRmXglck+vGfFd8lwyOMCfO4ebxiL0kmb7Vcgf5sD1CvL18D7VrMGEv6t
-	 ji+JmialK2Xllgoi0xlkAWt0dSPtyP2kMC8RFr8QaF9KDt6tgqVNBuFXLDyoOVKr+6
-	 dt1vjr/dkVSnFSmCLnDJMdS0/tS+UJvZ0mXeXZ5QnT3cQDNG7n1umeg59DZvIUoEmH
-	 KkpuWF52VjpCD5VqTIjzndm2YJpmWoTEMZRweD15ahA3cU0ArpbYWvBzWOdCIj7GSU
-	 VowbDpzDmh9rA==
+	b=Dby7Vm9dM02Ac4qaNL70qRL/55VnycO8naCzatwpmUOEzKCjPVxcgzlfFLG2kMjse
+	 GcmsTwJJGWCFGKSexeK0Sshd2x2eHG08sMEyBPHD43kKc0hqmVmghNKLa+KdeWaTmv
+	 J5tTqcsF+Au3FPeipV7A+rGNuycVFvWXGGkfrkepjrBNc3XP8cteR9z/aq2shtSWW/
+	 p6QIRVuvKbT9NM3yVo5+o2SmSLRoTjLZQes/uAMNfE5XSC2MFzEmxkVARWkrj3AOPd
+	 hUfVsOR8OIomxrr35RicBui3RH9F1ykFzUZ4T6gNYHctLDOxDrfJncXksRwiEj4yqV
+	 dVwPUoJtlU+jw==
 From: Kees Cook <kees@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
+To: Carlos Maiolino <cem@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Andrey Albershteyn <aalbersh@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: mac80211: Replace strncpy() with strscpy_pad() in drv_switch_vif_chanctx tracepoint
-Date: Mon, 23 Mar 2026 10:20:16 -0700
-Message-Id: <20260323172015.work.146-kees@kernel.org>
+Subject: [PATCH] xfs: Replace strncpy() with strscpy_pad() in tracepoint error paths
+Date: Mon, 23 Mar 2026 10:22:09 -0700
+Message-Id: <20260323172204.work.979-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -41,53 +44,64 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2020; i=kees@kernel.org; h=from:subject:message-id; bh=koTi9b0X3dRcnxtZiIHUEUiGA0Peg0+3cPdMN4nVIzk=; b=owGbwMvMwCVmps19z/KJym7G02pJDJkHywIqy5eWRDIclr7C1fvxY9q3f8yZp7/c9wz6c/Toi f2vXduOdZSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEzkpD4jw04drr1+YZtm/HiQ 9L0x/9OKUo1mAbM5nQ18zobhGQYr8xgZPk7/uc3g3OJbSWo5ufu2X7iwMP6h7QznLtG1mqa3mOR z+AE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2194; i=kees@kernel.org; h=from:subject:message-id; bh=sJh27ACHhMobpUq8jC5k7ysmfrpJATZRBiIZaWg4O3o=; b=owGbwMvMwCVmps19z/KJym7G02pJDJkHyw7UyMonhBqGXfu3e6lgs0NW/pLCldvzN/9Zca5T7 z9bW5NrRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwETsIhgZWicWPdxYX3Nsq2n+ 6Wu5j/dHhInItk7Kfs42kT0/4AXvOoZ/mho7LjzfO3EJB9uKrTuzijc8sf3N0j/394sZXamSB7Q ecwAA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Replace the deprecated[1] strncpy() with strscpy_pad() for copying the
-interface name into a tracepoint entry.
+Replace the deprecated[1] strncpy() with strscpy_pad() in the
+xfile_create and xmbuf_create tracepoints.
 
-The source "sdata->name" is a NUL-terminated char[IFNAMSIZ] buffer
-populated via NUL-guaranteeing paths: strscpy() in ieee80211_if_add(),
-snprintf() in ieee80211_add_virtual_monitor(), or memcpy() from
-ndev->name in ieee80211_if_add() and netdev_notify()
-(net/mac80211/iface.c). In the memcpy() cases, the source ndev->name
-is itself always NUL-terminated (populated via snprintf() or strscpy()
-in __dev_alloc_name() and dev_prep_valid_name() in net/core/dev.c).
+Both tracepoints use file_path() to resolve a pathname into
+__entry->pathname (a char[MAXNAMELEN] trace ring buffer field). On
+failure, the error path overwrites the buffer with the string literal
+"(unknown)" via strncpy(). The original strncpy() zero-pads the
+remaining 246 bytes (MAXNAMELEN is 256, "(unknown)" is 10 bytes
+including NUL).
 
-The destination "local_vifs[i].vif.vif_name" is a char[IFNAMSIZ] field
-in struct trace_vif_entry, stored in a __dynamic_array within the trace
-ring buffer. Since ring buffer entries are not zeroed on allocation,
-strscpy_pad() is used to zero-fill trailing bytes and prevent exposing
-stale ring buffer contents to userspace readers of tracefs.
+strscpy_pad() preserves this zero-padding, which matters because the
+destination is a trace ring buffer entry: ring buffer slots are not
+zeroed on allocation, and the raw buffer is readable by userspace via
+tracefs. The zero-padding ensures no stale data remains in the
+buffer after the error path overwrites it.
 
-No behavioral change: since interface names are always at most 15
-characters plus a NUL terminator, strscpy_pad() with size IFNAMSIZ (16)
-produces identical output to the original strncpy().
+The source is a 10-byte string literal into a 256-byte destination,
+so there is no behavioral change.
 
 Link: https://github.com/KSPP/linux/issues/90 [1]
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- net/mac80211/trace.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ fs/xfs/scrub/trace.h | 3 +--
+ fs/xfs/xfs_trace.h   | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/mac80211/trace.h b/net/mac80211/trace.h
-index c04d4547e8f4..3b139fb67d1b 100644
---- a/net/mac80211/trace.h
-+++ b/net/mac80211/trace.h
-@@ -1796,9 +1796,8 @@ TRACE_EVENT(drv_switch_vif_chanctx,
- 				SWITCH_ENTRY_ASSIGN(vif.vif_type, vif->type);
- 				SWITCH_ENTRY_ASSIGN(vif.p2p, vif->p2p);
- 				SWITCH_ENTRY_ASSIGN(link_id, link_conf->link_id);
--				strncpy(local_vifs[i].vif.vif_name,
--					sdata->name,
--					sizeof(local_vifs[i].vif.vif_name));
-+				strscpy_pad(local_vifs[i].vif.vif_name,
-+					    sdata->name);
- 				SWITCH_ENTRY_ASSIGN(old_chandef.control_freq,
- 						old_ctx->def.chan->center_freq);
- 				SWITCH_ENTRY_ASSIGN(old_chandef.freq_offset,
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index 39ea651cbb75..46c420f51129 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -980,8 +980,7 @@ TRACE_EVENT(xfile_create,
+ 		__entry->ino = file_inode(xf->file)->i_ino;
+ 		path = file_path(xf->file, __entry->pathname, MAXNAMELEN);
+ 		if (IS_ERR(path))
+-			strncpy(__entry->pathname, "(unknown)",
+-					sizeof(__entry->pathname));
++			strscpy_pad(__entry->pathname, "(unknown)");
+ 	),
+ 	TP_printk("xfino 0x%lx path '%s'",
+ 		  __entry->ino,
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 813e5a9f57eb..9f9fb86097ed 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -5101,8 +5101,7 @@ TRACE_EVENT(xmbuf_create,
+ 		__entry->ino = file_inode(file)->i_ino;
+ 		path = file_path(file, __entry->pathname, MAXNAMELEN);
+ 		if (IS_ERR(path))
+-			strncpy(__entry->pathname, "(unknown)",
+-					sizeof(__entry->pathname));
++			strscpy_pad(__entry->pathname, "(unknown)");
+ 	),
+ 	TP_printk("dev %d:%d xmino 0x%lx path '%s'",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
 -- 
 2.34.1
 
