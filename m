@@ -1,36 +1,80 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF87359A94;
-	Mon, 23 Mar 2026 19:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A6C3E1201
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 20:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774293885; cv=none; b=ATiVOvqPJGh+yK7p5R+4sWYrwot8pJKv8xVs10coUxNMIDDnK26ii58guqXx0qmSRSQRm1/hwQmjQrP1mPaxsnMdFfXSQ3j4WTDhCNVUkOclnDERId1kd6HGwyJONHIPkM0m+nXtrCvFBrKgpvXrQda5JBlTgAY9Yj/Kc8viAqs=
+	t=1774296495; cv=none; b=HknR8ow9fr61BOoXV9/ejG8Uq1jtytgnQEN7RQAefIB51H1CgvFn7c8+MpWjCKdKzFfyKFJTwgaNq2m5guIRoWZ6GYFKLEstenUpaG9hobNxd5TpI9L1oHhLuuV+7rSVAsjj7Ll6Kj9iW+2u7CfYL8QpqozwV0y38wjLawyLZXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774293885; c=relaxed/simple;
-	bh=mWyrUOPWTSJoaU6a2GftDk5Ql6QbxVjhOfbP0fwQbSo=;
+	s=arc-20240116; t=1774296495; c=relaxed/simple;
+	bh=3x9O81VmyvkAmOknPTE67IsbDONvsM0u8u+OLmZWLFo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=skTEjtcNcSekVmU9/IEjkdjlSe0/Q9brHPhrPm6kj1wBxAwboLueLTcYoiecrclRlCYqkP9UGmtNVocrpiDx/8PefIJwdVspHG7XXB17TDmCld9YuK6LW1r4X1ep5LI1X+triKA9kOyd4mbQdthqNOpx7entjPD1f1/gkJ352bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 803A61B9338;
-	Mon, 23 Mar 2026 19:24:36 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 9D4AB2000E;
-	Mon, 23 Mar 2026 19:24:34 +0000 (UTC)
-Date: Mon, 23 Mar 2026 15:25:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
- Andrey Albershteyn <aalbersh@redhat.com>, linux-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] xfs: Replace strncpy() with strscpy_pad() in tracepoint
- error paths
-Message-ID: <20260323152514.006d96b5@gandalf.local.home>
-In-Reply-To: <20260323172204.work.979-kees@kernel.org>
-References: <20260323172204.work.979-kees@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=rftzDHY+wvCyeqckq3YHFCdIkdcgqldxzTiZtPT9ZrjIkOS2r8uinCT+0kaxwacdjoKyDmNDK7ryczxOBvdC8/WF05PQIcD3e+OPhvklX73zmQiLwnQK6uqiZuZjDBNmGuKuo+UK283r12h1RnnimthMU0mgk0FFPt1SXR0r5rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kQZvEFBX; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQZvEFBX"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-43b527ac5d0so1597639f8f.2
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 13:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774296490; x=1774901290; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WTyDjzylHqeRX+dhDvxKEc8/YaDA7xCjfQl8LdFPYqo=;
+        b=kQZvEFBXHi1VeuSU3kN9Q0VRzCCEMMrceNwxYPuLo0STZYyyGZoTpwLN8hEGpCf/SR
+         gmA+LnNxU6WIwFmIGwh+tR97tpHJNELljqtzGplAg9NPrkA3ade3EIqXFmhUL53PaoBP
+         kQR6LUBziXFYcmNKLziG1nkEh3OATsUJ7lPoPFgW/9P1GPAWOo+GaeQ7iWKzvz0fHHmI
+         nKnBxaX0wUdoudzYywGoh0Ga2Jp/69UpUwZwq/kWImqdHfHue75fw8Ug6Y0O3/mBo2nf
+         +Vci3vmuyPFxVV9GNziI9VOmJt920nbg7ski0bV4nh2tpGtUsh7EShkZEWJ4mcGpO1kp
+         ABhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774296490; x=1774901290;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WTyDjzylHqeRX+dhDvxKEc8/YaDA7xCjfQl8LdFPYqo=;
+        b=d3tBaSC3eOILnPprBToWtbxConZ5J2wGxQnW/1UQmS/P5+vU6X8Hh24CTn5F2Q5C8Q
+         YWFXF/nzgGdUIMcvdkjgBIIECJbOxpO5ns8agxBuG4Rgddsfmm5eTHSQHgxcpLJwjjiE
+         O9Dh2BrLrsVcyl4R57w+GdCb3Z7uzFLoFx5jZXPeV7wUdlXHpbNjUIlcT1uxaa/AUBgU
+         0f2Gd96UQM6/q1M1PMKJCpEj6GOQy5VlPnjtNlDQAh0MihPL3g/Ct2+GZtjWBXd+ezsc
+         os7X57wXC/2FkbFIR6UROGMiaJCNU1LWipf/MIIX3Jwxt/DVNebAYLiZTApcNz3/POCV
+         itFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOBd8QKyosjMbai2AGnWrKbS7U1rNJGc5bcBm72WxXIDoBg5WfhGZPIP1xB02KyMfsGCuYePWfomY4zPjK4Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKWjHiuU8aGe1r8L0r/ZaovhhEJ2FQYSNlfTw8MSMnaZkwfBI6
+	Wp8bsNvd7KCNQSgot6zPH3UHE1F3i0CDMkv+xgE4A2Hyv6Y9RKcALcsb
+X-Gm-Gg: ATEYQzx02NVTi2uJ8+625GLoQYTUj+eq1QI74qKB05Q+cXcYNToMbfMDW80hGVDCDUm
+	NxXiaVnM0T4ppfyZl5xUcBguAIc7plJ7RSbb88GTTPZr5h6H7CzVnFH27D6sGsxaHuHMXeAO1TN
+	8rJgIIOPRa75VxnISXwrtTRVAVcNs4gqPMwaVelJDO1tnq3n6Go7c7OjniI5OmIXC8S56sGVsID
+	afdw2Qk6X5xIPdAjXkDJQJu/kgjd/Xbo8i4bA6utIM7/FmGeCdBnV5tS3AojEHUWO/LlmpyVz51
+	XU+CVo/f3RI0Y3MndCZCUYbfZXYZBZSj/VRa/e99zIyqmOwWUZk0oKLyVGf7y+vyk6tJHhfgpBh
+	QQUg3dIfgMsBd5U1f22ekDh2i1weSsCTj15lfqlTt9LwivnYUbpVm7JSg2y6CsnEjDpc3M/V/G6
+	QOyp0RCaHSBrGzYHfLg2lsmkawizdrpFqN8VeMYfDzjoCvZjQkE0xcKihj9kxUVyjh
+X-Received: by 2002:a05:6000:2203:b0:43b:46b6:87aa with SMTP id ffacd0b85a97d-43b64277e1amr20809765f8f.27.1774296490087;
+        Mon, 23 Mar 2026 13:08:10 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae37dsm32309509f8f.2.2026.03.23.13.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2026 13:08:09 -0700 (PDT)
+Date: Mon, 23 Mar 2026 20:08:07 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kees Cook <kees@kernel.org>, Josh Law <objecting@objecting.org>, Jens
+ Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>, Stefan
+ Haberland <sth@linux.ibm.com>, Jan Hoeppner <hoeppner@linux.ibm.com>,
+ "Richard Russon (FlatCap)" <ldm@flatcap.org>, Thorsten Blum
+ <thorsten.blum@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] block: partitions: Replace pp_buf with struct seq_buf
+Message-ID: <20260323200807.71535b6c@pumpkin>
+In-Reply-To: <acD_IIEXmhnVlO0C@ashevche-desk.local>
+References: <20260321004840.work.670-kees@kernel.org>
+	<acD_IIEXmhnVlO0C@ashevche-desk.local>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,80 +83,77 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: a9cubsx3kmcd96hh31jcpi9ngny15qrs
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 9D4AB2000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+OA4qXrbdyasYTd1S00snUQyBrAGOfLns=
-X-HE-Tag: 1774293874-862539
-X-HE-Meta: U2FsdGVkX197dFKfRjDw6D7qzxrvAo285F4xi2NWRnGrXg2E/UuhAl2a2irUJLf+oaxwjIHt2WtVm7MrHt2LYD1vH0xAQrUP4J+C/eS0ACFVcGilPS9/JaQ2UPfApyPIb4onPfcoobRLgnkF3aWhPFiElFi9jW+oEiplmw2K+4y46mz8YPDS+Nzlze57sFPnI9J3PL1YHCNZzXSLc3NZ0gV0Ns7zgKM5BxSkwqq4bfIbGrTjugwYAZ3aQd2lsf+EPCR2iPqdJLjKfmUlf0keGYkEruu/k+4igf43aeWmfeoo5sUBD+N83a692Q+7bBhY/rJrr8Yk4KwQNKarU0nXLpQr/f6W3Afh+HmsgBz2uYpeZ0TmkgplVA==
 
-On Mon, 23 Mar 2026 10:22:09 -0700
-Kees Cook <kees@kernel.org> wrote:
+On Mon, 23 Mar 2026 10:51:44 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-> Replace the deprecated[1] strncpy() with strscpy_pad() in the
-> xfile_create and xmbuf_create tracepoints.
+> On Fri, Mar 20, 2026 at 05:48:44PM -0700, Kees Cook wrote:
+> > In preparation for removing the strlcat API[1], replace the char *pp_buf
+> > with a struct seq_buf, which tracks the current write position and
+> > remaining space internally. This allows for:
+> > 
+> > - Direct use of seq_buf_printf() in place of snprintf()+strlcat()
+> >   pairs, eliminating local tmp buffers throughout.
+> > - Adjacent strlcat() calls that build strings piece-by-piece
+> >   (e.g., strlcat("["); strlcat(name); strlcat("]")) to be collapsed
+> >   into single seq_buf_printf() calls.
+> > - Simpler call sites: seq_buf_puts() takes only the buffer and string,
+> >   with no need to pass PAGE_SIZE at every call.
+> > 
+> > The backing buffer allocation is unchanged (__get_free_page), and the
+> > output path uses seq_buf_str() to NUL-terminate before passing to
+> > printk().  
 > 
-> Both tracepoints use file_path() to resolve a pathname into
-> __entry->pathname (a char[MAXNAMELEN] trace ring buffer field). On
-> failure, the error path overwrites the buffer with the string literal
-> "(unknown)" via strncpy(). The original strncpy() zero-pads the
-> remaining 246 bytes (MAXNAMELEN is 256, "(unknown)" is 10 bytes
-> including NUL).
+> Thanks a lot! A few comments below.
+> Personally I'm in favour of this patch as it also removes a lot of ugly code
+> (which is scoped string manipulations), FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> strscpy_pad() preserves this zero-padding, which matters because the
-> destination is a trace ring buffer entry: ring buffer slots are not
-> zeroed on allocation, and the raw buffer is readable by userspace via
-> tracefs. The zero-padding ensures no stale data remains in the
-> buffer after the error path overwrites it.
+> > Link: https://github.com/KSPP/linux/issues/370 [1]  
 > 
-> The source is a 10-byte string literal into a 256-byte destination,
-> so there is no behavioral change.
-
-Hmm, seems to be a lot of waste. Note, the ring buffer now zeros out its
-data on allocation so there's no need to zero pad anything, at least not
-for exposing data. You may expose a previous trace.
-
-Also, why are these using full path size and not just use dynamic array.
-That would be much more efficient in both performance and space.
-
--- Steve
-
-
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Josh Law <objecting@objecting.org>  
 > 
-> Link: https://github.com/KSPP/linux/issues/90 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  fs/xfs/scrub/trace.h | 3 +--
->  fs/xfs/xfs_trace.h   | 3 +--
->  2 files changed, 2 insertions(+), 4 deletions(-)
+> While not long, this still can be placed...
 > 
-> diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
-> index 39ea651cbb75..46c420f51129 100644
-> --- a/fs/xfs/scrub/trace.h
-> +++ b/fs/xfs/scrub/trace.h
-> @@ -980,8 +980,7 @@ TRACE_EVENT(xfile_create,
->  		__entry->ino = file_inode(xf->file)->i_ino;
->  		path = file_path(xf->file, __entry->pathname, MAXNAMELEN);
->  		if (IS_ERR(path))
-> -			strncpy(__entry->pathname, "(unknown)",
-> -					sizeof(__entry->pathname));
-> +			strscpy_pad(__entry->pathname, "(unknown)");
->  	),
->  	TP_printk("xfino 0x%lx path '%s'",
->  		  __entry->ino,
-> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> index 813e5a9f57eb..9f9fb86097ed 100644
-> --- a/fs/xfs/xfs_trace.h
-> +++ b/fs/xfs/xfs_trace.h
-> @@ -5101,8 +5101,7 @@ TRACE_EVENT(xmbuf_create,
->  		__entry->ino = file_inode(file)->i_ino;
->  		path = file_path(file, __entry->pathname, MAXNAMELEN);
->  		if (IS_ERR(path))
-> -			strncpy(__entry->pathname, "(unknown)",
-> -					sizeof(__entry->pathname));
-> +			strscpy_pad(__entry->pathname, "(unknown)");
->  	),
->  	TP_printk("dev %d:%d xmino 0x%lx path '%s'",
->  		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---  
+> 
+> ...somewhere here to reduce unneeded noise in the commit message.
+> 
+> > I couldn't help myself. Here's the full patch, as I suggested in
+> > https://lore.kernel.org/lkml/202603201230.74BBFFABAD@keescook/
+> > There are plenty more like this to do...  
+> 
+> Indeed, but thanks for the example on how to do that!
+> 
+...
+> But probably okay as in the previous branch it needs more work to follow,
+> something like
+> 
+> 			char dostype[8];
+> 			...
+> 			if (dostype[3] < ' ') {
+> 				/* Escape control character */
+> 				dostype[4] = dostype[3] + '@';
+> 				dostype[3] = '^';
+> 				seq_buf_printf(&state->pp_buf, " (%.5s)", dostype);
+
+Or just:
+				seq_buf_printf(&state->pp_buf, " (%.3s^%c)", dostype, dostype[3] + '@');
+
+	David
+
+> 			} else {
+> 				seq_buf_printf(&state->pp_buf, " (%.4s)", dostype);
+> 			}
+> 
+> Taking how invasive is this, it might be better to done separately.
+> 
+> > +			seq_buf_printf(&state->pp_buf, "(res %d spb %d)",
+> > +				       be32_to_cpu(pb->pb_Environment[6]),
+> > +				       be32_to_cpu(pb->pb_Environment[4]));
+> >  		}
+> >  		res = 1;  
+> 
 
