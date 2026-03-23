@@ -1,140 +1,147 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097D63C13F9
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 16:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE573C196D
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 16:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774284195; cv=pass; b=qt3Kk4Xn7aQP8zjfTibIyvH462ucaGaKK7A+AYk4lbuPBrPPL0SjS8SeDkemkMn7VieDBKn9mAyCMV+ADWzJUWsOg8GrbjuXodAQyAgsyGR8NFMlj7bCjdUC/4UbKlVACuZiTAks0gWK2Xl9z9EnGkZB6a5yP4nfVxaaK325fmk=
+	t=1774284275; cv=pass; b=VGTpSlH6mG+YpZnTpj3M1b7vgdf9VDoN1VHp0Rs9hJDJeOxGu0U+rQhTpvegbF6/+5753SJBo8M/cRRBd1GUr+Trjh2PNPuWHonq2di1P5zQjcwRLhcs8ew+lJ4tgorhZoerEPyUyPE1nvS4BOnVK+F4o+t6HwobEJM7ERHBpeU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774284195; c=relaxed/simple;
-	bh=1fvRhUogs1V9rKEcsI/PCKxEMWCn6MR0Es71uuKVz88=;
+	s=arc-20240116; t=1774284275; c=relaxed/simple;
+	bh=iOiSE0D9ee7Sm/e28AHjuVIIq7sS/74BRRRrRqGlNiI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kA+qkwcXJOurRz8/wUwsM/12rvplFGLdLs88NVKLosxCmxGchZTTc+Vw1gAduSE8qKFytRBkXV1wAtiTUFR9+YPbEJ9rOnDTmws1My0fo9j4zITdRDwco4So4h+BwhOzXgOCdP8Dyu980QczkpCWn2oD5gCOrs29rSIsu1pD+cA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kksSMOby; arc=pass smtp.client-ip=209.85.218.50
+	 To:Cc:Content-Type; b=gBIhgO8rpbZUfHn1lChtE87S2uzh9/TZ+MKUIJwMaXbcO/WkdHdTa6iHb3ns0S423LrGkogLSZ9ltC06kzC/kdQPKtGViuFx/U6nua4N+l92ZI7+TF7G2SVDn6Jl0/3Cll85T9b2Jy3pUvTpoo7ArIfxtVfb3pkFBJFj6QJhuXk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XCDqI4N6; arc=pass smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kksSMOby"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b97f9587e6eso598923966b.3
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 09:43:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774284192; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCDqI4N6"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b886fc047d5so749127466b.3
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 09:44:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774284272; cv=none;
         d=google.com; s=arc-20240605;
-        b=eScFDFhSjFgTjTvRU+/ab+951YyqUxF8kTfxCnaBksbIWxqsl+4ROaIZmk+Yk7aPMm
-         Fp4Gp/XYt5omqQ9vYUllPhIegsr7PHm1iN807tHBSLcEEs5sQGKUpcuxSwhhl6+lmcM0
-         nF982MEPNTA8zD+60rgJ8GqTqmw26NFJ+YwSWHzGaVv0Hh9yyjKpBxte9gKoh0LXj5m8
-         sqruJTMbHric0n1UV55n05XFnC573HbaEKa0ZFgYdP92vERZFZzjfzcvKSOcQXNegMjq
-         AQ+m6nIhb1Q7AAljo2/vEw9i09FWRH7EG+RNP39uuLdNn/PfLKSUPcMzsYaRdzJUG29J
-         SzHA==
+        b=lZNwI15QWva94rlW6LoOwiT5XRdkxuPtnhBUDaDJeKBhTpECq5QvbepBO3gnkCdAKE
+         7MpKo4b50FmvDQuq7yHwCLnyyEirENF56/L0iulyZFIx7EAwzJfLhrM+Ma1iLHGbO/QY
+         ELQJ7H2wHeK+8htuskHJM4ygqbKS6A6/L7vgSY3J5RQjffmbvv7Bf0giwZrfApYfw7Ws
+         VdCCbuDB1jOa4YbJkSUnJxo/S9pH++wGFSLQj4SrZIHMEvtTxkq4SxT4F1TEhMIxS7K2
+         lyZm/JHnM/rRuMe9m9HU/WjX4zu9UL7DBNfekBUQnjC5p7V+mg4TD1BDbT7AV7oOj5K3
+         SQKg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=qXz025swToeMHHQtF/dGQpue1EMwmv0J9i7P0ZIHR38=;
-        fh=ug7aXGPPj6gelblmKtIFawCfWgL+8Y8DUDlALTr8Muc=;
-        b=LYswdl0HREgyTo1mwIdmbVHur23aDFLM+nq79Az/xZ+YcOGLzYWPnbUExvFl8DqYvJ
-         edQPd9jv1ejJdOL1G1m4WoyQSswxfzZNSbEBE+/0ZyJ7eZmZXF0oM+JYza0bXV0MZD1K
-         5b0v/YgRDRzurNr0IY/2/mfQwHBdhAMQurbE37ChEXbAtlCTDMZcU9FqzdfNphA2IkEp
-         BDnn39odl/0zXxk3NsssPmMS5IyVkwHbvMNEA6P05s/uZHvKkMuXwyTwEX2ZXoJIoCtW
-         bAswv16PIiipQcZUv7Bd1UBOqePJne7ehJxWyv9+cD6teROTZsAFvT/ierKDr0u6ydUs
-         dwpw==;
+        bh=19KOfsfsCHLU/Bj+wS4J+CsWCEDhPuzySwigX2HhnlU=;
+        fh=oxxVjmyq5ZkQItDRUeSO8LbDkuXXbH2dBugad/qLAGo=;
+        b=T8929t3ADOkRwMTAvXBKXO5spWbVXAo9LsBlNbUvfUI698ZOY6eZkWboXufq0lKMyn
+         m80tTVebmbaWHs4befwbueLD2DLU4V8zJB3hcZ8YhzDta8D3ddTwCGUkLhYKxh4s5Ycc
+         xqGaPgmBugQPWXe+gWZnywDiX7W/ZUq7OvtgW6ArgySvOw5hof01uYwIFMjsneWq2BNg
+         hoNFPj9XIBXNyHEURU4rDSRyjcNbpSRJUPmUMnylLVSLBsF5dbbdd7hAKDYQD1zss10q
+         LQmRD3wqmlN6ZqW/oCOZPwHKcUSAxFlCYT3vMvvAqpSzu/0ZDD/hK/Uk7tCS1c1iRp22
+         Cc5Q==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774284192; x=1774888992; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1774284272; x=1774889072; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qXz025swToeMHHQtF/dGQpue1EMwmv0J9i7P0ZIHR38=;
-        b=kksSMObyD7jS9SsMxSrYGWpIdb52bWibg3ZjeJW3kFJusT5eyY4sXEIdQeWzuGL0nI
-         1bYhT5BgFttbASkUqCzesXgGl/Zvt2D5E73qi18slfKkhTZNdjJ27arnbupRh6X/YDzu
-         QoU6kRziSOsM+OP9yttJPmzw3pKbv9QwP6cf5uL1ShKMSf9rxz+LSyufNbfuNaDF0qhC
-         NWimtDLipbenUUAiPv899moLANcAU0mUdJZjpRu7iTOZdEgAzb8jCMffykoffhbp2SpO
-         ERu5a+Z7TOonkpw4ruxy9XO4OD40INW8cvcZNTFd7q0srRC2vreI09OF33UIA4yG+EOT
-         XfGw==
+        bh=19KOfsfsCHLU/Bj+wS4J+CsWCEDhPuzySwigX2HhnlU=;
+        b=XCDqI4N6zID5YG7R4FZcVOJBqFixoYyBdAT6LzNJGr6R4aF6lcVBwCM5UAvsqLt1Jv
+         qAhMfJzBQ2X8vMpclW3X+ULVWeeYdmtJ/j5XDsdxaJariGZxM9DaiLSa2+aXiaCGbt8M
+         cNPBpRvQPEMxzyNayjgVlIiYEtZY4R7dNjeOLccOinU9BTiEHVJdGY+c9iMv8dHSiH5b
+         y9f+uGDYv/4DDYf9hQalzzCbJjNtgt1cNajZ/0xdcCVtpDzMvxM68ePpPmE490OaOf4s
+         IaOrFRqCzlP2WeWI6TqoPsBtqOiq5T7iEz9MkU0HD1em8Iz1AyQSob7jdvBGx9ze3eKH
+         8XAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774284192; x=1774888992;
+        d=1e100.net; s=20251104; t=1774284272; x=1774889072;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=qXz025swToeMHHQtF/dGQpue1EMwmv0J9i7P0ZIHR38=;
-        b=UuHvaa0fZjpb7F1jeUm9bp3k9w2uULQ0zxgvEZ9dQ4xpeCZMnr+kAyuXDNxBKBGwq9
-         hsopKQaJfSqgRqy3DeUFW7AmwjNVjBMhY5TyABAr60IG8qg+MeBkJ5ji1pEieLc2Yytk
-         9CmimfoboYo5C8eJZVOesMuARNd6x77Iic/PRIZEvh+uJ+/ZJ9Y1sTDwvz9IkEfot25i
-         pptquBNQrs6VnG+DZUisDLCBJBVWECHld0p+R2MDIMass8l1vlOJTZcX/blPurOwx6OV
-         27MPX5tW+P5d7bH1HzlTE31mS99INDMDF2suLqSEN649OgckhC7IoUELoMLiG99NJL/k
-         dLig==
-X-Forwarded-Encrypted: i=1; AJvYcCWgt/ySH04Vx2wA1458jCtnXdzRVPZBiZJvwJWsDvL5PSP/jVvf+QSByYnNc9IVTRxwXoWi9ap09DFEqeHG56c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6gVSJyN2JtxUu3zDc7Qe0WR1LBpV8JsFBUwtH8LGiVF9P+KNG
-	ZOnsCFv8OBXsl3A+FZoVyygsXNlbSppoTRzG6+OuK3nz0ojqoUYqzFSHK+CZ0wu4lg2HiluU2d3
-	5aDkxjwDT1n4LhDUu2JO9PDaaRBaO07Y=
-X-Gm-Gg: ATEYQzyeaQllREwjLFF3UvXievp9lSekuB0d2G7Y6i43yhatDXtRcSYRKkpmOEcBu1w
-	iIaUOM1uwttwyLL5JMMiVBgk7kSB5973+BpCyqKICUXa4CDp7U8qaCr0GYOwFKvtwZ17kcgkZRQ
-	5GtLB9KrfTBl8BN5e62+tY7s4FxV8dShJazc46Cj3T2hfMtvoz7GHsDhlMnzu55szPsCjgK6eP8
-	RnlFv6bnJ8ZZCuolgXXJwGJqOWhs5wLyXHTANzd/x8x0Kprg+IkTueJNICfrclLy0rtuyegC2Jk
-	c2uufPBoMv6AIW+pW3Xu8uoNgOgT8wkYtSIkv/jGqvnIsyBpEcsm4l6czTZi6v9W7onKHrlJByl
-	SH8JgbQ==
-X-Received: by 2002:a17:907:c20d:b0:b96:ef71:49f9 with SMTP id
- a640c23a62f3a-b982f0b9a37mr982589366b.9.1774284191993; Mon, 23 Mar 2026
- 09:43:11 -0700 (PDT)
+        bh=19KOfsfsCHLU/Bj+wS4J+CsWCEDhPuzySwigX2HhnlU=;
+        b=qY+OXrSjJLcT/HQLLrzMU95J2YbIpfETgYBaBsEWv88OhhiVRnanx8XcC2A2kYtn0s
+         7em3XeaKpEM72pJebY3pXRXsVUgrvLJe0g7/n46RKoK7FC7MSGs/FA7yXe7ExfFuLUFi
+         J8J2VU12JwKXB/p0y20sZBK+tZriTN2IQDkpLT49XYCBbbq3KSSm2QfP3Tw++kxFfcp4
+         yIpNz0+we6ojCBqvKENXyO+s3k3CQBrSHLUMrWIhx7Dv5cvAnHk0r8b/DKZ4YFi2Oqlk
+         o+NkpwC8cPCLk6SreAaXPC73NE8+FOX4WWNd2USaizg5jBQBr7kTtc08iGvfJ0RA/Owb
+         IsUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSB4Ubxz47JD+GcTvUMEiYSu/Z19bN6c+upK+GYbdeOiKnxktJUMCOHLWb54sM/oIo51pC3YtWxH5jWxOMkMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRRq78CxNJCdF0CMMkeI3jYjXFzImRvkZNsUVerhX42ZI3uOMC
+	lFsj8uItnoljFYGoFSaVDys0u0qHG1VzHKlnZwAzyP0y2QeLbcdynomrv8corKSeO1swFBwiV4V
+	w4ghJUDKDzCCnC/Pb0twFGz703ocPF8Q=
+X-Gm-Gg: ATEYQzymuedxxSR/K9CyaW3+xYb6PeRldWcZo17sBR9lv4m/iIaNVyHvuL2xJQnqVOT
+	NPlVNsIWXt0ouCc/5UDrR6wJZ5eIZcsJLpwy2YJXslHrvRAaawbh3LAPzaMyDfs3phdw0OZs80T
+	tUpudZROQhB70nPUr6zrsawGWchcp0sMcfKuojS9KR+t5+4NFtPrt+VEEczEWeZ+d4dR0tSvCXr
+	vcSlWAzRKSJShLsb/Pkc/gN6TjrXJtT9txoCpxsYHJfGfQU/OC7sNX1FM6D0sRDf4uZHvkJvuKm
+	Ccj02KjOLH+6EBXTHG9HeHG78s+6P8zaVpMLx6uLIPae5myJxSMfaaqJULAX/5vYPoIstp3xHoM
+	bhg82dQ==
+X-Received: by 2002:a17:907:3309:b0:b97:9099:7b3 with SMTP id
+ a640c23a62f3a-b982f3d8245mr684159966b.44.1774284271978; Mon, 23 Mar 2026
+ 09:44:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319000558.22108-1-rosenp@gmail.com> <202603201104.8D7B8A1@keescook>
- <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com> <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com>
-In-Reply-To: <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com>
+References: <20260320004928.29914-1-rosenp@gmail.com> <202603201131.55E516E@keescook>
+ <CAKxU2N9fqr8XunsR+=-P8AngLbUbphTq6aFnEJ_yEGhue9d2wA@mail.gmail.com> <17effdb3-7406-d280-8d9a-e699e54dadef@linux.intel.com>
+In-Reply-To: <17effdb3-7406-d280-8d9a-e699e54dadef@linux.intel.com>
 From: Rosen Penev <rosenp@gmail.com>
-Date: Mon, 23 Mar 2026 09:43:00 -0700
-X-Gm-Features: AQROBzA2qaX1yaM8KyWefigkU6SOxX6FP_EtmkeEIENTjos0A7j-OoAxHhEnBi8
-Message-ID: <CAKxU2N9KdziPen9-_gfe0UZjyuMTOsbb583aeF3=kqm22rGieA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Linus Walleij <linusw@kernel.org>, 
+Date: Mon, 23 Mar 2026 09:44:20 -0700
+X-Gm-Features: AQROBzB9FeU8sgsyfu2mFaEm3_sHqNI3RC4CCQ5eSEbjea3JoaWfhkweU9_cTVI
+Message-ID: <CAKxU2N9apKwzwvRdLhcuSTNz4iVh4aVXUHnUV-nkr=LnEPHYjA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: panasonic-laptop: simplify allocation of sinf
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Kees Cook <kees@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede <hansg@kernel.org>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
 	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 23, 2026 at 3:00=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.or=
-g> wrote:
+On Mon, Mar 23, 2026 at 2:13=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> On Sat, Mar 21, 2026 at 12:00=E2=80=AFAM Rosen Penev <rosenp@gmail.com> w=
-rote:
-> >
+> On Fri, 20 Mar 2026, Rosen Penev wrote:
+> > On Fri, Mar 20, 2026 at 11:32=E2=80=AFAM Kees Cook <kees@kernel.org> wr=
+ote:
 > > >
-> > > static int gpio_mockup_probe(struct platform_device *pdev)
-> > > {
-> > >         ...
-> > >         u16 ngpio;
-> > >         ...
-> > >         rv =3D device_property_read_u16(dev, "nr-gpios", &ngpio);
-> > >         ...
-> > >         gc->ngpio =3D ngpio;
-> > >         ...
-> > >         chip->lines =3D devm_kcalloc(dev, gc->ngpio,
-> > >                                    sizeof(*chip->lines), GFP_KERNEL);
+> > > On Thu, Mar 19, 2026 at 05:49:28PM -0700, Rosen Penev wrote:
+> > > > Change to a flexible array member to allocate once instead of twice=
+.
+> > > >
+> > > > Allows using __counted_by for extra runtime analysis. Move the coun=
+ting
+> > > > variable assignment to right after allocation as required by
+> > > > __counted_by.
+> > > >
+> > > > Remove + 1 to allocation. It's already done in the previous line.
 > > >
-> > > But this begs the question: why add nr_lines when ngpio is already pa=
-rt
-> > > of the struct:
-> > Maintainers for some inexplicable reason want an extra variable for
-> > __counted_by works.
+> > > Are you sure this is an accidental +1? I see the "num_sifr++" that
+> > > happens earlier, but it's not immediately clear why either that or th=
+e
+> > > +1 in the original allocation are needed. I'd like to understand why
+> > > either/both are/aren't needed.
 >
-> I believe what Kees means here is: you can use ngpio for __counted_by() l=
-ike so:
+> There's a comment right before the increment:
 >
->   __counted_by(gc.ngpio)
-__counted_by doesn't support nested variables like that.
-
-drivers/gpio/gpio-mockup.c:59:61: error: =E2=80=98gc=E2=80=99 undeclared he=
-re (not in
-a function)
-   59 |         struct gpio_mockup_line_status lines[] __counted_by(gc.ngpi=
-o);
+>         /*
+>          * Some DSDT-s have an off-by-one bug where the SINF package coun=
+t is
+>          * one higher than the SQTY reported value, allocate 1 entry extr=
+a.
+>          */
+>         num_sifr++;
 >
-> I didn't think about it and I do prefer it of course over an extra field.
+> ..l.which comes from 33297cef3101 ("platform/x86: panasonic-laptop:
+> Allocate 1 entry extra in the sinf array").
 >
-> Bart
+> So I don't know why you said it's not clear why it's there.
+>
+> > Looks like a rebasing mistake to me honestly.
+>
+> In which commit?
+None in particular. Probably just a mistake.
+>
+>
+> --
+>  i.
