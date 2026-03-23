@@ -1,43 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8DB3E51CF;
-	Mon, 23 Mar 2026 20:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC02329B216;
+	Mon, 23 Mar 2026 22:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774299393; cv=none; b=Xs3dkFT4sY5LyC8ScKQ4GcO8WhGwuKVvbUOozqPcYaEsaBQ805CwVJSCTPATpWPJTUmo6ULXyuXCCA/MUeMkH7fqY1DogJcmtEbT/DJs6jJzEIkTzw2IqRMseVJN0iSqD7926QEfRXD0yG1by6HmFUPWRESfwuw6zxd7iwrX2Cg=
+	t=1774304949; cv=none; b=XpiFic8P/2YT+Ib9p0Q5NqlWvnJxMF6/+/ZLN7sg3B3Q2dzYPlzgM5FfYNNkN7SdSIze18vdror6xqkjl3N3d8FsJ5Rswk4cW1e4cA72siQHl1rRxhcNeTYY+0Eemcfue46gFXSb8TbuHDY4J1f/Wjo9fV0b1wZgeii1l+JaSlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774299393; c=relaxed/simple;
-	bh=DafmbkMzyPr+uuz7EKoPBBIaj+Zc/1ct/k3hW7o1G2k=;
+	s=arc-20240116; t=1774304949; c=relaxed/simple;
+	bh=b4z8RgLa9KqoZ38u5S4ocRd0tOm+QXwxO4X2MfnCi7Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hZP2fDLcE/080GQkde8Hl8BhuAQ0HUQHqSavHQP+vtBR+duO6cqj4wUmap38T8GU6z1/WWqbS0mdjKMI72oNQRAS1fys5N8tS0euh8AbtfRRmRijceQ1avPZ6jGhKIvrdKkAer5srH0HZcclf2hmGhIYL26eJVgR0+CFfaSttQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2TtqCvh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IAmNmaFlYxHaMGKtNCmWwUK8N2qVsrzB4SFQaIyilVxgn8g4SQBqE2ykybtGrd4SPlOTtVVqN+BoSyOIcEcpxsVuKjObrudr94sLe98q4hpGaa7TmqgBq9nCUk6N2B1yyx2JHSl6xxNOPO7qD/jx63JcX23YGKI+CsKG82Gw5Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBipcaOJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2TtqCvh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DFE6C2BC87;
-	Mon, 23 Mar 2026 20:56:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBipcaOJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44742C4CEF7;
+	Mon, 23 Mar 2026 22:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774299392;
-	bh=DafmbkMzyPr+uuz7EKoPBBIaj+Zc/1ct/k3hW7o1G2k=;
+	s=k20201202; t=1774304949;
+	bh=b4z8RgLa9KqoZ38u5S4ocRd0tOm+QXwxO4X2MfnCi7Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y2TtqCvhJal2Skb1pbOwhlMw5i0zi+TVmJE2Eq3Zxj75W15S1BxEQD58l4YlVnFUb
-	 kY/YJ/UvABWWUo8rxVaSM/vBdmwnhywjnxa8/wG/jJlc5Wjkn0lJj5Axjt2B9GXofU
-	 vypcliAmtrK7orhjNr2+L0qDVjnTUGAbZdw9aXRjEtBtrOgqk4lcso2o9KwhMQUOHU
-	 MpZdCb2IPph2LOtuKIud5YxXFvsqC9aDxZxfGkfvHG4jTuOpwnL/nyHCI5++0Uxv8i
-	 0zVH3NP0A0z3R2FaeL8PrT3Y5aOm8dCPA44E5Xd73hWTzfdevrkhAJU1SfWc+70Rz5
-	 y+Yovu6tv/WZA==
-Date: Mon, 23 Mar 2026 13:56:31 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>, Carlos Maiolino <cem@kernel.org>,
-	Andrey Albershteyn <aalbersh@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	b=dBipcaOJ+VHy+PWYPWbTp/nW0J4Eq+iG9DKF1PTYjy0Pr+a99n9AUaZccVbq/ElqB
+	 526h0R5Q3MF3vyTZOmj6il4Kcz4Y1qasG1mVTwDznLFGNvAntA+qMzh/ujNIxMXGE+
+	 FjxRQzYRKIY1bjuTi6og3JE97XGm9gTilj0Z8Myw2MPSi7fQBZSAiUCCP6WNHR3P0N
+	 BSUTA//MonKdOmM4zIgeCmbEGMDZn5igm2wCvdYdZSNMS3OSNbpSTwqUfAn2uEdf/n
+	 RpI4QxzLCoEST40o1kayMlWU5aucwJikC+95VsvNSCQrEethpdkjWQTF8o7p8oYCIf
+	 eKta88neJs9sw==
+Date: Mon, 23 Mar 2026 15:29:08 -0700
+From: Kees Cook <kees@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Josh Law <objecting@objecting.org>, Jens Axboe <axboe@kernel.dk>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Stefan Haberland <sth@linux.ibm.com>,
+	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	"Richard Russon (FlatCap)" <ldm@flatcap.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-ntfs-dev@lists.sourceforge.net,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] xfs: Replace strncpy() with strscpy_pad() in tracepoint
- error paths
-Message-ID: <20260323205631.GK6223@frogsfrogsfrogs>
-References: <20260323172204.work.979-kees@kernel.org>
- <20260323152514.006d96b5@gandalf.local.home>
+Subject: Re: [PATCH] block: partitions: Replace pp_buf with struct seq_buf
+Message-ID: <202603231528.26AA606EA8@keescook>
+References: <20260321004840.work.670-kees@kernel.org>
+ <acD_IIEXmhnVlO0C@ashevche-desk.local>
+ <20260323200807.71535b6c@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,90 +53,78 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260323152514.006d96b5@gandalf.local.home>
+In-Reply-To: <20260323200807.71535b6c@pumpkin>
 
-On Mon, Mar 23, 2026 at 03:25:14PM -0400, Steven Rostedt wrote:
-> On Mon, 23 Mar 2026 10:22:09 -0700
-> Kees Cook <kees@kernel.org> wrote:
+On Mon, Mar 23, 2026 at 08:08:07PM +0000, David Laight wrote:
+> On Mon, 23 Mar 2026 10:51:44 +0200
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> > Replace the deprecated[1] strncpy() with strscpy_pad() in the
-> > xfile_create and xmbuf_create tracepoints.
+> > On Fri, Mar 20, 2026 at 05:48:44PM -0700, Kees Cook wrote:
+> > > In preparation for removing the strlcat API[1], replace the char *pp_buf
+> > > with a struct seq_buf, which tracks the current write position and
+> > > remaining space internally. This allows for:
+> > > 
+> > > - Direct use of seq_buf_printf() in place of snprintf()+strlcat()
+> > >   pairs, eliminating local tmp buffers throughout.
+> > > - Adjacent strlcat() calls that build strings piece-by-piece
+> > >   (e.g., strlcat("["); strlcat(name); strlcat("]")) to be collapsed
+> > >   into single seq_buf_printf() calls.
+> > > - Simpler call sites: seq_buf_puts() takes only the buffer and string,
+> > >   with no need to pass PAGE_SIZE at every call.
+> > > 
+> > > The backing buffer allocation is unchanged (__get_free_page), and the
+> > > output path uses seq_buf_str() to NUL-terminate before passing to
+> > > printk().  
 > > 
-> > Both tracepoints use file_path() to resolve a pathname into
-> > __entry->pathname (a char[MAXNAMELEN] trace ring buffer field). On
-> > failure, the error path overwrites the buffer with the string literal
-> > "(unknown)" via strncpy(). The original strncpy() zero-pads the
-> > remaining 246 bytes (MAXNAMELEN is 256, "(unknown)" is 10 bytes
-> > including NUL).
+> > Thanks a lot! A few comments below.
+> > Personally I'm in favour of this patch as it also removes a lot of ugly code
+> > (which is scoped string manipulations), FWIW,
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > > 
-> > strscpy_pad() preserves this zero-padding, which matters because the
-> > destination is a trace ring buffer entry: ring buffer slots are not
-> > zeroed on allocation, and the raw buffer is readable by userspace via
-> > tracefs. The zero-padding ensures no stale data remains in the
-> > buffer after the error path overwrites it.
+> > > Link: https://github.com/KSPP/linux/issues/370 [1]  
 > > 
-> > The source is a 10-byte string literal into a 256-byte destination,
-> > so there is no behavioral change.
-> 
-> Hmm, seems to be a lot of waste. Note, the ring buffer now zeros out its
-> data on allocation so there's no need to zero pad anything, at least not
-> for exposing data. You may expose a previous trace.
-> 
-> Also, why are these using full path size and not just use dynamic array.
-> That would be much more efficient in both performance and space.
-
-"Darrick was too stupid to figure that out when he wrote it."
-
-Initially the shmem files used by xfile/xmbuf provided a longer
-description of exactly what the file was being used for (e.g. "AG 43
-rmapbt") but the dynamic string memory allocations were annoying to have
-to catch since some of them exceeded 16 bytes (or whatever the
-"guaranteed not to fail" limits arenow) and then I was snowed under by a
-bunch of static checker people and so I gave up and ripped all that out.
-
-So at this point the description is hardly useful and maybe I'll just
-submit a patch to rip out all the file_path tracepoint stuff.
-
---D
-
-> -- Steve
-> 
-> 
+> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Cc: Josh Law <objecting@objecting.org>  
 > > 
-> > Link: https://github.com/KSPP/linux/issues/90 [1]
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> >  fs/xfs/scrub/trace.h | 3 +--
-> >  fs/xfs/xfs_trace.h   | 3 +--
-> >  2 files changed, 2 insertions(+), 4 deletions(-)
+> > While not long, this still can be placed...
 > > 
-> > diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
-> > index 39ea651cbb75..46c420f51129 100644
-> > --- a/fs/xfs/scrub/trace.h
-> > +++ b/fs/xfs/scrub/trace.h
-> > @@ -980,8 +980,7 @@ TRACE_EVENT(xfile_create,
-> >  		__entry->ino = file_inode(xf->file)->i_ino;
-> >  		path = file_path(xf->file, __entry->pathname, MAXNAMELEN);
-> >  		if (IS_ERR(path))
-> > -			strncpy(__entry->pathname, "(unknown)",
-> > -					sizeof(__entry->pathname));
-> > +			strscpy_pad(__entry->pathname, "(unknown)");
-> >  	),
-> >  	TP_printk("xfino 0x%lx path '%s'",
-> >  		  __entry->ino,
-> > diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> > index 813e5a9f57eb..9f9fb86097ed 100644
-> > --- a/fs/xfs/xfs_trace.h
-> > +++ b/fs/xfs/xfs_trace.h
-> > @@ -5101,8 +5101,7 @@ TRACE_EVENT(xmbuf_create,
-> >  		__entry->ino = file_inode(file)->i_ino;
-> >  		path = file_path(file, __entry->pathname, MAXNAMELEN);
-> >  		if (IS_ERR(path))
-> > -			strncpy(__entry->pathname, "(unknown)",
-> > -					sizeof(__entry->pathname));
-> > +			strscpy_pad(__entry->pathname, "(unknown)");
-> >  	),
-> >  	TP_printk("dev %d:%d xmino 0x%lx path '%s'",
-> >  		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > > ---  
+> > 
+> > ...somewhere here to reduce unneeded noise in the commit message.
+> > 
+> > > I couldn't help myself. Here's the full patch, as I suggested in
+> > > https://lore.kernel.org/lkml/202603201230.74BBFFABAD@keescook/
+> > > There are plenty more like this to do...  
+> > 
+> > Indeed, but thanks for the example on how to do that!
+> > 
+> ...
+> > But probably okay as in the previous branch it needs more work to follow,
+> > something like
+> > 
+> > 			char dostype[8];
+> > 			...
+> > 			if (dostype[3] < ' ') {
+> > 				/* Escape control character */
+> > 				dostype[4] = dostype[3] + '@';
+> > 				dostype[3] = '^';
+> > 				seq_buf_printf(&state->pp_buf, " (%.5s)", dostype);
 > 
+> Or just:
+> 				seq_buf_printf(&state->pp_buf, " (%.3s^%c)", dostype, dostype[3] + '@');
 > 
+> 	David
+> 
+> > 			} else {
+> > 				seq_buf_printf(&state->pp_buf, " (%.4s)", dostype);
+> > 			}
+> > 
+> > Taking how invasive is this, it might be better to done separately.
+
+I tried to make this as 1-to-1 replacement as possible. The logic here
+was "complex" enough that I just left it as-is.
+
+
+-- 
+Kees Cook
