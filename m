@@ -1,115 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5784633F588;
-	Mon, 23 Mar 2026 09:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2271D388363
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 09:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774257206; cv=none; b=qGt+JeY4l/xyh923hdAxz0TCkxs4oGfPcpRJTyZla0tBkZq8ttFNlPVL6g+9QvXxrdzi9/tcnpn9CM4kw4pU7bUqEUk3c0EgP6gcG4tcP7qZDSHxpQq5EPzW9obqR3ddO98zs304DlIJZ8ScuF9B41HvtryNSnnMC0+gUbm4iJM=
+	t=1774259787; cv=none; b=hvt0nSGwOVnGTLPOz6ht7/88oOZCTn1xAT9rTmxv75820XNLFimeSsfKi17jpRuXOe+Fu51AeFrqMXmEV9GhVOWzhSvNqDofSVxnou8gEm2rbJdy1fNJdhVM5R3KZznaytqH6EuyW1qWRWA1UeowFhivknh5Q6JAg2qPVS8x0s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774257206; c=relaxed/simple;
-	bh=HbFcVlLDzr7s8MAShY5kn8xSzlS4geN+9YqgsyUJxLU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ocAAroBMt7R9z5RkGSyEmA/AhtTOQ+PQfwx3TRPD7cU0TATAajS2hKI+28b+3Mf7lrwgiH6qCSn2lYzue5lUArDKTgdMMioU5cZ/P4twgKUHid+b/TskqMIjFjaYwzfMsZgAaMNsKUzTgsfz1Li4GX+TzoUk/perStP0NcDwPyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzxHlZuJ; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774259787; c=relaxed/simple;
+	bh=be9bYc8p9EIUnGdjIf69LDNuA5uavvc9sw3zZw5cDiw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iFEu5TRVVgGH0bpEZdgHu8Bb9B6BqZdQT+wF5dGffqaajBqGk0PFQO4J++N0ruf/B4UBlUZLYG1lhleh+UgyX0Lr5q99kAXbFQuKyaPUXLTsQSIHxwWIukI063Ulwg2W2dmYCI9qXQTYgoUQwBDZw4JN7bLH6k+WoQtUuM9222A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SBDYcwo8; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=CK8/qQM8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzxHlZuJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774257205; x=1805793205;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=HbFcVlLDzr7s8MAShY5kn8xSzlS4geN+9YqgsyUJxLU=;
-  b=nzxHlZuJgZAsey7yAGRHDmuBmk4TtQs46w/e8i1+9k71wh3vLOZ5K2eC
-   PwjYOg1/yTY0OKCdYhwjnEOddE6m5K8HcgoD1B1lzg1F7rQSg5L8+V5Wr
-   pMZRjTvv2IbayRF/lem7Ue/Ne9aSOgHVHl0STGNLup97fkOstKeA3fFcs
-   FEde7XVWnZ6/UTf+wIbgRuymB7SFyztGMGuC0AotMArvFcat8u5ojvhRg
-   sf/Ix4k5uK6zTgAL/VT5U+jnI4GXwji+WqenVLBTlz/2GemRV+EzdHwpZ
-   f48t5kqKLppX92MMrp5t8YDizrK+BuhHRFhfF3pKJqdsd3Rti8RqrxczD
-   g==;
-X-CSE-ConnectionGUID: MhkcKoDmQYeIM8tSzAY87A==
-X-CSE-MsgGUID: 8vpd/shLS2Os/GYtJlAUVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="62807273"
-X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="62807273"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:13:24 -0700
-X-CSE-ConnectionGUID: 0zNkQR2ISzG5X/USyEDHcg==
-X-CSE-MsgGUID: haIcpTB+QjmLrnT9i4luFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="217490034"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.49])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:13:19 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 23 Mar 2026 11:13:15 +0200 (EET)
-To: Rosen Penev <rosenp@gmail.com>, Kees Cook <kees@kernel.org>
-cc: platform-driver-x86@vger.kernel.org, 
-    Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: panasonic-laptop: simplify allocation of
- sinf
-In-Reply-To: <CAKxU2N9fqr8XunsR+=-P8AngLbUbphTq6aFnEJ_yEGhue9d2wA@mail.gmail.com>
-Message-ID: <17effdb3-7406-d280-8d9a-e699e54dadef@linux.intel.com>
-References: <20260320004928.29914-1-rosenp@gmail.com> <202603201131.55E516E@keescook> <CAKxU2N9fqr8XunsR+=-P8AngLbUbphTq6aFnEJ_yEGhue9d2wA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SBDYcwo8";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="CK8/qQM8"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62N7trt33468141
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 09:56:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0L4WkgdbL0ERVJyI8K4T4Krrj8ZxJ/wrVMo0PWvP3Gc=; b=SBDYcwo8Oz+S2wkK
+	Rg+h+BeJmC0oG472ZkXGybeXzvSfoT1l7wLDl6Qhm+TadRzlv9bwpym6jjlrDOIo
+	JW5Qe9ABGQTePMXtxDfFwqdxkXc7CXARd1mja6hi8UJyxz4lt1j9bFc+jKzmlqE9
+	krbymC6H3qTRKYoPGdBrnv7qMQbPI1TLc9WimmL1S2QXsBVNnhvGU5Tm1SOYBQqk
+	hTg7pi9k0UPTHg8oznS3nEI1FiO55vznIaNIqf7eVqHvpK1HIu+LpN22Z3UPvBrD
+	ulV4Kr1uZ2NLFhL3u8RJOkTz5IsBrRkSyvS9KBiZ0hEmiz4893VIRuLEfG8Voa0T
+	meJjLQ==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d31jggejc-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 09:56:25 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50b274f94f8so302941961cf.1
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 02:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1774259784; x=1774864584; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0L4WkgdbL0ERVJyI8K4T4Krrj8ZxJ/wrVMo0PWvP3Gc=;
+        b=CK8/qQM85oC/uSk8znWyMDWwVOkv4oIRqJHVTBw0BStrnCqER/NZELFft7dVrYBAg1
+         a55q9LOZya4ex6V9TrqaBMoB90am4QIY8hQ6gyDFUZPO7RyKRj0MAhURYvZZLhwYDYF0
+         +1SYnjcRH5Di5xpGMYaZSeWhRtbNw/c9LPanDXlBg2jjROLHMqeAtzRZQio6JeSw0Y49
+         iDmc1KnRlAIsZLJyqO0+kBbTVZR0JENIyBLnflSlPFmgx8nLApO5MarWNeqO87hAvqNY
+         gMRfHP+nlOZigjpawRsxvGY79O2k0dKdY6ihimDoXb1sY4BfjlwoP091PS57p5vIu51P
+         h7GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774259784; x=1774864584;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0L4WkgdbL0ERVJyI8K4T4Krrj8ZxJ/wrVMo0PWvP3Gc=;
+        b=dnXAs6pMsiNVjRyn8yJFx4UDdJ15ElLSRrje4bKaXYAntOxt0ALGoKoIEtR8MphcuQ
+         T61qPNgn0hEIiVCPPs2tkP23kqrclwpo7d7xqGBN9DZU3ZEwDOAemKp2Ib74sod19BEm
+         cQKQ1t+T16QYrO/8xUxRsA57MgEuQ6HdFrRb/OaGjPuXdRU+HEMfoK2HXjo1fSByfK2p
+         s0BeaS8oWqRFAr8a8wAL3EuN1YV5kr+VIL+MFjYTp5r/OUHYkat2V4Qjt/IA/VBR4q0r
+         8RIhVaZdeXueLDGuHHBuicW60b3QoB/cmmA8HbTKiYvb6r7R58eHFrFssqOpApsKHY67
+         6+6w==
+X-Forwarded-Encrypted: i=1; AJvYcCW1xt9ep5XQRsX7b3kMy7QvOTU5uQup2tG7OoN52RwQCGakC2Zr6Q+aZnpKDcjj5YxleCQTKS3gmHdf5ZVg2tw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8ucROS50w8djZe2NiUfRJR73mMYmR0ZVV6yg0ln0E3VmbCY6D
+	9W4sQS0E8kjMFvuOWmz3G3x/CKYg9wnupQlIiMrgI1uwKMycg0mb6B54mrfLNs39UjQYN1G6m6c
+	a4mDfx0QaIoc6ym2iruibv3V9QM6+sa5eMIAYVTC9V3nNIilTDqljiB3aNi8N39e//UQFZw4=
+X-Gm-Gg: ATEYQzzr5EVWztcDMpf/f8CN5vZMNDXvmbzARw97d1x8i06Ajslx1UJ/3kNxPsSCgKM
+	kNCclF7Fl/ZxtsuwU9vYjeqzDir/alrEYJEIcYke/OhJ/I+t5DHdFT87sE488F2d9vija2vqTFl
+	+/e5+mQJVPNOalSo8gKY12U2mTs+oWGCwRDMXNzmLTKCvPiO2xTQpHzxu0DfHmqJbOzE40Ro15R
+	4uJLZa1NO0UtTZGJZB97TMwNwZUZDGsT9UZEMXzX6Z5EqIKvDzEV1WTH5YSpV5Mu/Ip8YeU4/O9
+	pQHGBRQCVF4iTntT+FzljvwBWXkv7NH0NPHEFsV+2R3T1n2RrBuC5j+Hgb4+idlra0S6WKoHySx
+	fFHyNJDJOrEEOxbTUuf4cfu2hEtrM2e2dtyOQ4gdIXeIES/HY+0E=
+X-Received: by 2002:a05:622a:8d17:b0:50b:3ef9:7985 with SMTP id d75a77b69052e-50b3ef98021mr115749781cf.26.1774259784472;
+        Mon, 23 Mar 2026 02:56:24 -0700 (PDT)
+X-Received: by 2002:a05:622a:8d17:b0:50b:3ef9:7985 with SMTP id d75a77b69052e-50b3ef98021mr115749651cf.26.1774259784077;
+        Mon, 23 Mar 2026 02:56:24 -0700 (PDT)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:abd5:2e93:595d:57eb])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-668cfdb4659sm3688967a12.13.2026.03.23.02.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2026 02:56:23 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: linux-gpio@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] gpio: dwapb: reduce allocation to single kzalloc
+Date: Mon, 23 Mar 2026 10:56:19 +0100
+Message-ID: <177425976891.21144.17113953246213685933.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260320005338.30355-1-rosenp@gmail.com>
+References: <20260320005338.30355-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1296920707-1774257195=:1623"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1296920707-1774257195=:1623
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Fri, 20 Mar 2026, Rosen Penev wrote:
-> On Fri, Mar 20, 2026 at 11:32=E2=80=AFAM Kees Cook <kees@kernel.org> wrot=
-e:
-> >
-> > On Thu, Mar 19, 2026 at 05:49:28PM -0700, Rosen Penev wrote:
-> > > Change to a flexible array member to allocate once instead of twice.
-> > >
-> > > Allows using __counted_by for extra runtime analysis. Move the counti=
-ng
-> > > variable assignment to right after allocation as required by
-> > > __counted_by.
-> > >
-> > > Remove + 1 to allocation. It's already done in the previous line.
-> >
-> > Are you sure this is an accidental +1? I see the "num_sifr++" that
-> > happens earlier, but it's not immediately clear why either that or the
-> > +1 in the original allocation are needed. I'd like to understand why
-> > either/both are/aren't needed.
-
-There's a comment right before the increment:
-
-        /*
-         * Some DSDT-s have an off-by-one bug where the SINF package count =
-is
-         * one higher than the SQTY reported value, allocate 1 entry extra.
-         */
-        num_sifr++;
-
-=2E.l.which comes from 33297cef3101 ("platform/x86: panasonic-laptop:=20
-Allocate 1 entry extra in the sinf array").
-
-So I don't know why you said it's not clear why it's there.
-
-> Looks like a rebasing mistake to me honestly.
-
-In which commit?
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 4O5li9349TVcul6EYbJkhbl1L4_wWsKQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIzMDA3NiBTYWx0ZWRfX1vA3q312NIcX
+ +PS4oAFeaznUNjPVWZP2Plm+V56r8IYmkfX+Q4r8pPdn7lkSjwLugVU/tCv5HxZc2nJOPB9qrq0
+ WUjfIcbLaTMDpNv1eVhQkoy4X+N9PBVSJDWAxrlW6pBY78EckVxKdpoUl+PCKGpjEwK/w0mvYmU
+ nXrxDVOVg/czjDAE3M3FWVTVS7RZL+KAQLZUmg4N00MzREcOfzed69aqZgU9Fd9CyhgaW+L+7yl
+ Qc+xLZoSXvyVLoBZ/aw6RMLvaSSOFi4TE6cVAWRzbzSpQX/dWUuQhyF4twi0dJXPia3AAPNeOPg
+ fv5T91zJUohHEIamETsSeRY/tpOn/gDCzCGwa8Oz10SNZKHBw2yhYeee3EwQXbtlaeDFCoop9Nc
+ N3F/wCQIPGfbKgghzQJMbvV59T4WSf0pVAKuwTCVf+oG9pnBCSvMjtZl/J3wgsiB1JzhO2WbP5f
+ 50WDI5hYYpyAE7ZhoYw==
+X-Authority-Analysis: v=2.4 cv=CMInnBrD c=1 sm=1 tr=0 ts=69c10e49 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=ek9T_fdv5d9Sg3W4T1sA:9 a=QEXdDO2ut3YA:10
+ a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-ORIG-GUID: 4O5li9349TVcul6EYbJkhbl1L4_wWsKQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-23_03,2026-03-20_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 malwarescore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 phishscore=0 impostorscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603230076
 
 
---=20
- i.
+On Thu, 19 Mar 2026 17:53:38 -0700, Rosen Penev wrote:
+> Instead of kzalloc + kcalloc, Combine the two using a flexible array
+> member.
+> 
+> Allows using __counted_by for extra runtime analysis. Move counting
+> variable to right after allocation as required by __counted_by.
+> 
+> 
+> [...]
 
---8323328-1296920707-1774257195=:1623--
+Applied, thanks!
+
+[1/1] gpio: dwapb: reduce allocation to single kzalloc
+      https://git.kernel.org/brgl/c/9a5bf2f53b76b1619c602f9e751fe4c0e64713ca
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
