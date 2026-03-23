@@ -1,89 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04156386C19
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 10:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8785E1A6818;
+	Mon, 23 Mar 2026 13:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774260024; cv=none; b=Y2YDUxLg8zwxuIdoUibj4DE/gfbpJY3ZGNNap9DwvEbht5ADEcVTQrITxE23pzjXNqQtZwNqxpQDZ1UKGOULy57J01tbg0OnVTLBPlNwNKjN1B+WEp2hyG2fGqy5jzk46kmxfaN6fSGh3AzQLeE1q95adSvIeukP0M1t6niZtJo=
+	t=1774273924; cv=none; b=R6g1FcZ3Pj09STuOH+9wC+GjM5RxvUX7xZ5vXur4HFnIHiukeJP7emz6OZd1atxpCj6Hbhr5d5u/tBUTZ0uZdMoC/Y/KUOiAEBdK4yRy7vVzFbW9dsPdw3PLXViH9FpcMExYySsFzTylXlJZ7YeD2e7984mM5kdMUfRL6BUrhDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774260024; c=relaxed/simple;
-	bh=2ZEySTGjzvEYD0+oL2rPnTK8VnmzmCs5n7mzP302FTw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QMt4yC5TNO7LHiCSzSUQCRjIocbXnS4D1hMGhMknAhSxSwEzQ9b/UsGGhb+Y0L/qQ+KASHJTARJijlpKXyOrIHqln6H+X2/SUjKw4jJt+1v3s/it8dXPf8w+s5NlrIEXDmokVBMsxer/vYIDUPq1Qq+FAw3uWsyFUq2tnSPGvB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOQVXTdp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774273924; c=relaxed/simple;
+	bh=Sg185neczz+Ma96TwtFK0rYaRKz2Exil10sYvaqB3MQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=orjHyZ8nzbBBKcFhJHzoPhKB1GsSeBGwgOV63ZSH2NV9YdQw55EtRDGhWb8NirCDY35lJRPbez6PDYdrpHTVQNM9o2QShdUpJVwVxrTSOTW3bUqADV+n3w6MrEIR0tnL3VkSAZzc9KmTVxCNguklUiuOhnLw925oYuDp8aHALio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kJbd32zZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOQVXTdp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A11A2C2BC9E
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 10:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774260023;
-	bh=2ZEySTGjzvEYD0+oL2rPnTK8VnmzmCs5n7mzP302FTw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MOQVXTdpZyrB1SZ6zK1Dq9v3RsCaNpEYWeAPWB6UzgfucCOv6JzFhj8eqDUvuqTkR
-	 7N2+vldpoBdy2WrGTX9aWw3yICey55qa8nnrRtBywLFpgS1ID6Kn18JdKHVuElF6rH
-	 OerjbF/sXD2hKZgTX6cjWUw+FpmSMxi2P4W2AA7QpQeDnpDw10J0UMjfD9HEA1zJxU
-	 AmPSlUPuHOc1lkGpWzCVdGylFXWgkzJYjXoqu+OYudbvHHaeF6IRy4lJVgWI2D9Xyl
-	 ybePWWv8QBS2PnrubvaSII6jm1nNojE0XJEwZxctBJ4ef2ON6SszZMOX1uM8X7CaU7
-	 d5pn2DdZ+5NIA==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5a279ce9475so4160797e87.1
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 03:00:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV6Jgmk/hcNkQtvoe/fv71NGRO8TrcMt4/a4mOKDBHJe4Wx3JqdbTOP0zKtq+4Fp7UqNdvtYfQVrg4Arqx980E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj/0NBhohH7fmgM/xsCQTojfjo3ra93Wbx463otErzSyxcNJiW
-	yCsa2FT8A85Q5NODPjJ+JZ8Zg4QQjLwU1uUHBFz8pkPra6SHGSD02lYYpKg2bgrb7fIC8r+kTM7
-	55LAGcDJ2dyYbXxrwD7BQkMPh2mL5nTj5ebkPadSzRQ==
-X-Received: by 2002:a05:6512:1388:b0:5a1:3273:37af with SMTP id
- 2adb3069b0e04-5a27dde27a7mr4720127e87.5.1774260022227; Mon, 23 Mar 2026
- 03:00:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kJbd32zZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC45C4CEF7;
+	Mon, 23 Mar 2026 13:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1774273924;
+	bh=Sg185neczz+Ma96TwtFK0rYaRKz2Exil10sYvaqB3MQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kJbd32zZZs7l3anM58+h1o1ttSlmOdXIsPBUy1hpMUJmTDqU/ygyqUsTUMjBZ5x/9
+	 +CF3kATFFWNSP+XcgVlsBOdHhmP8Dsp9bWgdb2SY7KBO+IWpJ26U9SAHnCimS88TJ6
+	 g62BJA5BqElxGkUu9oK6QQzs0jPMQyGO++bqwpzs=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Finn Thain <fthain@linux-m68k.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 6.19 052/220] mtd: Avoid boot crash in RedBoot partition table parser
+Date: Mon, 23 Mar 2026 14:43:49 +0100
+Message-ID: <20260323134506.231583293@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260323134504.575022936@linuxfoundation.org>
+References: <20260323134504.575022936@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319000558.22108-1-rosenp@gmail.com> <202603201104.8D7B8A1@keescook>
- <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com>
-In-Reply-To: <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Mon, 23 Mar 2026 11:00:10 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com>
-X-Gm-Features: AaiRm52TiXiM-9nvry-2dIKOcPo7jhE_iD_zrDEUXC_8gLkLh4_1u8Idt1ki1O8
-Message-ID: <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
-To: Rosen Penev <rosenp@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Linus Walleij <linusw@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 21, 2026 at 12:00=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wro=
-te:
->
-> >
-> > static int gpio_mockup_probe(struct platform_device *pdev)
-> > {
-> >         ...
-> >         u16 ngpio;
-> >         ...
-> >         rv =3D device_property_read_u16(dev, "nr-gpios", &ngpio);
-> >         ...
-> >         gc->ngpio =3D ngpio;
-> >         ...
-> >         chip->lines =3D devm_kcalloc(dev, gc->ngpio,
-> >                                    sizeof(*chip->lines), GFP_KERNEL);
-> >
-> > But this begs the question: why add nr_lines when ngpio is already part
-> > of the struct:
-> Maintainers for some inexplicable reason want an extra variable for
-> __counted_by works.
+6.19-stable review patch.  If anyone has any objections, please let me know.
 
-I believe what Kees means here is: you can use ngpio for __counted_by() lik=
-e so:
+------------------
 
-  __counted_by(gc.ngpio)
+From: Finn Thain <fthain@linux-m68k.org>
 
-I didn't think about it and I do prefer it of course over an extra field.
+commit 8e2f8020270af7777d49c2e7132260983e4fc566 upstream.
 
-Bart
+Given CONFIG_FORTIFY_SOURCE=y and a recent compiler,
+commit 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when
+available") produces the warning below and an oops.
+
+    Searching for RedBoot partition table in 50000000.flash at offset 0x7e0000
+    ------------[ cut here ]------------
+    WARNING: lib/string_helpers.c:1035 at 0xc029e04c, CPU#0: swapper/0/1
+    memcmp: detected buffer overflow: 15 byte read of buffer size 14
+    Modules linked in:
+    CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.19.0 #1 NONE
+
+As Kees said, "'names' is pointing to the final 'namelen' many bytes
+of the allocation ... 'namelen' could be basically any length at all.
+This fortify warning looks legit to me -- this code used to be reading
+beyond the end of the allocation."
+
+Since the size of the dynamic allocation is calculated with strlen()
+we can use strcmp() instead of memcmp() and remain within bounds.
+
+Cc: Kees Cook <kees@kernel.org>
+Cc: stable@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Link: https://lore.kernel.org/all/202602151911.AD092DFFCD@keescook/
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Suggested-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/mtd/parsers/redboot.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/drivers/mtd/parsers/redboot.c
++++ b/drivers/mtd/parsers/redboot.c
+@@ -270,9 +270,9 @@ nogood:
+ 
+ 		strcpy(names, fl->img->name);
+ #ifdef CONFIG_MTD_REDBOOT_PARTS_READONLY
+-		if (!memcmp(names, "RedBoot", 8) ||
+-		    !memcmp(names, "RedBoot config", 15) ||
+-		    !memcmp(names, "FIS directory", 14)) {
++		if (!strcmp(names, "RedBoot") ||
++		    !strcmp(names, "RedBoot config") ||
++		    !strcmp(names, "FIS directory")) {
+ 			parts[i].mask_flags = MTD_WRITEABLE;
+ 		}
+ #endif
+
+
