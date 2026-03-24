@@ -1,155 +1,121 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BAB394497
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 03:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C8170818;
+	Tue, 24 Mar 2026 04:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774322585; cv=none; b=f+kFwgiAM9hrqH3dEN9D0JaSf0ISDtm1WRRRjGGPnyYA36mXf97kDfd/uRQbHdvs0vLJLrgFSPN25rQPk/OnmwVbPu2UIqPlNlfyFnwdKU2MHYsqb8VZBnMgjKKOEBgRjVHrwCSbShZ1QUtaCQAXupWfITsKJAA4yLrqa2YUD3c=
+	t=1774325141; cv=none; b=PIJCB0v9UEK0HG+knsSkYZFfL/7sjutCURTIt5rk5dVHmABBF4GLebmaKThsoXGvv1nA2cCwDxALZpxj/63bKQ96YIG+Q8qprOmomv5+Hsqa/icL1D9XYb/b09axuzddXvr/EIuD4yQmQILrobgd2ILUyZXkEezxzvUlC7OKdzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774322585; c=relaxed/simple;
-	bh=TxbddlDvwj0H0a5cRauMLce46ArVR1XYLpaJvIoiL3c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q0sqNeeneP0H5Dh8j7EY7pYsWYIIkqp6afw7fPXYPn3yidlrcMu8WV/TnGc3DDj6MlYy/bBNzPA0llssSlmSRD6TiXmBkpuQVmSkQVGC9ogYa5Kd2NSflz5Xgy1fqBnmrIrhzwNpGmMTZMkekBOnDXzIPJ9u/GYeY95SDUb8TvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tDmk03qa; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774325141; c=relaxed/simple;
+	bh=mbDDm1zReRj3CD4GxvHAUMT8iSVZINzYULyqBvGF4F8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tUcpgea6qeoS+N++J9WrnuoGzNx2x0cqK9KF4oIOPUWDOeZ3Q0ZvkJSxsD/vlD+1mcYVwgv8xNZ3IuMsfRu3+peFJvEBvbENmJB4uFXsOPsFG2KDXFhozYSWhiICfDeK7Iv/BUnZ8eKY8TBhfVJmqHEssTJAdCTg41WFeqkVSHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLORA2Le; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tDmk03qa"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-c742d4df00cso1861232a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 20:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774322581; x=1774927381; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qUpcZJ/GX5bIeN9b+qRlxwn1Qz4eci6IXB2Cnwx3YIg=;
-        b=tDmk03qa5hoimTRhj6UjNZC4fKzXv3mc00JEMrxtg9+WZX5d3bAmeDcYNuNriNYuFa
-         rbS29T3J9Qwt6wRyxZZEl8kNEzI+Yg5/Spuy4K6a4O9zQ8Ms+FETWagNnYv1BfwUJNF4
-         uB6tmpG285N1FU/KtavFpQvdtkuAArB2LLZLBdAxkfxIY6W+m7GXWKun8Iae8SJ9zPqh
-         UGWQiYoJ0vsfSMTqvnuIiu70XawFY/bqUMFqSYAuUfUHJiVIxdVcG9sG8jPcT1pALXjp
-         dXi34PfFV29ml0K9dZ6AzRq/YRmEP+ZjI+5FiVGqfdpucVOeJ611yYU4nnXrHKNOjVzf
-         4W9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774322581; x=1774927381;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qUpcZJ/GX5bIeN9b+qRlxwn1Qz4eci6IXB2Cnwx3YIg=;
-        b=VuL7hN/anFfsfTSx0PW+fs46HHln9HTUIYmpxSLI8yEu1/LPWadSdgNFeN/dgRpe64
-         E3HXIDr0e4SIr/1X81jq57Vsv9Q8OAFl3gExY85FuqSWwzrG9xpbj+WzRHGFicqnJhde
-         6u5IWL1xhvj0o196xXfNMRxauSCvBmjm5jJHIr4qiyjfFarhXiqmUJOl1nTCUhSgZS4S
-         RMU+4wHsGKD7vIgenjUpcrIOue2tzdjM1fqlVDRdZf+BdmRGKqKY0Ns19efSvRlCM+9v
-         lm/bSGMLb5uTs/d+W1gYNc4E9yf6xAlS6nKGvBULxJJ1Pnqz8OTL4VN2FLOotKRF9LIK
-         BDJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfaWmilW0NCMvCxG9XWa5KXy1Y9m+f+McUK/X9hsabo5SXwtFfXDLitsX0ZzPAN/4DRqk9d4wq9801b9ZGCqU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFFomn+dUMpOjlmLZCOg2rJILdvEyEzskQ/Pfj2SfiAinB2Rlb
-	WfzETYDwkjvAi8uLmosuNgFwayBjN4qXxy96OY3ekKV3FPDWndll9oQn
-X-Gm-Gg: ATEYQzw693iBYy245HttJIarQ1p/4Lo9wSqUw56+sYXxwos99IEal5ip0p1uko6qjwN
-	DoZFZ4EEzpsVldzKECBhBQNY4ZuZvsY6H52va6J198Len3t3IYzEekpRrA+rua1Zz8KOiyrH0w4
-	Gcsc6Ta1y60lqPqODSjS/0j1IKQVhquQFhEzPKjSdldZv0Ssi1et5W5SoEk/6aVEKABzTLbceqb
-	dmfePFQwEtu8CU6NcNjx8DR9RqAqhh3R+e1C+pop51pkSwupydyJz/du7G5Z3w1NSLXl1FFbB1b
-	VU4b1umLzrSa1AswwCXYHkJn1+ul+UwqewJyRngFKzlChVMNr8OlJJ4xzr7n/BRLIql2mvl2Uyp
-	TEti071LmpuLYCtojww0U0OJKzeeFJWoOQDQt9ofQvWEeZQKph6Udwip3qmwTpOwFDYu+PnamGv
-	icB4O6mzd2sCP8JBW8YuTh+25Ct+hkKZ6muHH0HphicmDXjVEiAPykZbc=
-X-Received: by 2002:a17:903:32c8:b0:2b0:501e:d751 with SMTP id d9443c01a7336-2b0a4e1ac96mr16623755ad.20.1774322581514;
-        Mon, 23 Mar 2026 20:23:01 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b0835298acsm131223335ad.22.2026.03.23.20.23.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 20:23:00 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chas Williams <3chas3@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-atm-general@lists.sourceforge.net (moderated list:ATM),
-	netdev@vger.kernel.org (open list:ATM),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] atm: nicstar: simplify allocation
-Date: Mon, 23 Mar 2026 20:22:43 -0700
-Message-ID: <20260324032243.26387-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLORA2Le"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391C9C19424;
+	Tue, 24 Mar 2026 04:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774325141;
+	bh=mbDDm1zReRj3CD4GxvHAUMT8iSVZINzYULyqBvGF4F8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PLORA2LeifuSU3BpnoFHhnRKOmWDiLWeBQw0+1bc0EvXehVF24a1A1D5jWSif7ykQ
+	 ADGoPFtXBSyr6zRDdtXakyAt8U8ZsbHzVxsHtT4jrCe712dXeZ1lWORwQQ/Yy04np9
+	 egqsqEC4Luy+rdf7Zic3MRsSOGiPj9kOCVtgOALXpGl9hsFG+5pq8no6XNX5PXsfly
+	 gfcFXzfyKFmmdC3vP+kU2YDye5//BF219CGx7YnFgQ6wjm+epbCww6FGoQxU3VWUy1
+	 aZ5LFzB1nHXZ+N96FUx+Fdob+Zokniwzt98oYaCp9CaZPZ960PODQh1ZqbFp652aaI
+	 z4G9xr74cxVCg==
+From: Kees Cook <kees@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] libbpf: Replace strncpy() with strnlen()+memcpy() in skel_map_create()
+Date: Mon, 23 Mar 2026 21:05:39 -0700
+Message-Id: <20260324040535.work.851-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2789; i=kees@kernel.org; h=from:subject:message-id; bh=mbDDm1zReRj3CD4GxvHAUMT8iSVZINzYULyqBvGF4F8=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmHeCcbul3+k8kw6Udlp9qGtcyNdlYnf+xOFNEVEfv2u SuvP/p3RwkLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwETMVRm++/nuKt4rfrPxRs/D zYKKocePLCu8z2r5Ze6L2smi87OkGf4XnnKMqTh/aYHJr//Kn5S/RFgHm0+ttmha9L/lQ7+J3D5 +AA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member with kzalloc_flex to combine allocations
-into one.
+Replace the deprecated[1] strncpy() with strnlen() on the source
+followed by memcpy(). Normally strscpy() would be used in this case,
+but skel_internal.h is shared between kernel and userspace tools, and
+strscpy() is not available in the userspace build context.
 
-Add __counted_by for extra runtime analysis. Move counting variable
-assignment to right after allocation as required by __counted_by.
+The source map_name is a NUL-terminated C string (the only caller
+passes a 12 character string literal). The destination attr.map_name is
+char[BPF_OBJ_NAME_LEN] (16 bytes) in union bpf_attr, passed to the bpf()
+syscall. The kernel's bpf_obj_name_cpy() requires a NUL terminator within
+the 16-byte field, rejecting names that use all 16 bytes. Valid names
+are therefore at most 15 characters.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+The attr is pre-zeroed with memset() at the top of the function,
+so the byte at position 15 is always NUL. The copy is bounded to
+sizeof(attr.map_name) - 1 (15 bytes) to guarantee NUL-termination is
+preserved. This is safe because the kernel would reject a 16-byte
+unterminated name anyway, and the only in-tree caller passes
+"__loader.map" (12 characters).
+
+While the original strncpy() would have copied a full 16 bytes from an
+overlong name (producing an unterminated field that the syscall rejects),
+but this wasn't a reachable state. This replacement will instead always
+truncate to 15 bytes and keeps the NUL terminator, which should have no
+behavioral changes with the present code and avoids potential issues
+with future over-long string literals.
+
+Link: https://github.com/KSPP/linux/issues/90 [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/atm/nicstar.c | 17 +++++------------
- drivers/atm/nicstar.h |  4 ++--
- 2 files changed, 7 insertions(+), 14 deletions(-)
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Eduard Zingerman <eddyz87@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Song Liu <song@kernel.org>
+Cc: Yonghong Song <yonghong.song@linux.dev>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Stanislav Fomichev <sdf@fomichev.me>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: <bpf@vger.kernel.org>
+---
+ tools/lib/bpf/skel_internal.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/atm/nicstar.c b/drivers/atm/nicstar.c
-index 24e51343df15..2f6a3637aeab 100644
---- a/drivers/atm/nicstar.c
-+++ b/drivers/atm/nicstar.c
-@@ -867,23 +867,17 @@ static scq_info *get_scq(ns_dev *card, int size, u32 scd)
- 	if (size != VBR_SCQSIZE && size != CBR_SCQSIZE)
- 		return NULL;
+diff --git a/tools/lib/bpf/skel_internal.h b/tools/lib/bpf/skel_internal.h
+index 6a8f5c7a02eb..137da935f478 100644
+--- a/tools/lib/bpf/skel_internal.h
++++ b/tools/lib/bpf/skel_internal.h
+@@ -243,7 +243,8 @@ static inline int skel_map_create(enum bpf_map_type map_type,
+ 	attr.excl_prog_hash = (unsigned long) excl_prog_hash;
+ 	attr.excl_prog_hash_size = excl_prog_hash_sz;
  
--	scq = kmalloc_obj(*scq);
-+	scq = kmalloc_flex(*scq, skb, size / NS_SCQE_SIZE);
- 	if (!scq)
- 		return NULL;
--        scq->org = dma_alloc_coherent(&card->pcidev->dev,
--				      2 * size,  &scq->dma, GFP_KERNEL);
-+
-+	scq->num_entries = size / NS_SCQE_SIZE;
-+
-+	scq->org = dma_alloc_coherent(&card->pcidev->dev, 2 * size, &scq->dma, GFP_KERNEL);
- 	if (!scq->org) {
- 		kfree(scq);
- 		return NULL;
- 	}
--	scq->skb = kzalloc_objs(*scq->skb, size / NS_SCQE_SIZE);
--	if (!scq->skb) {
--		dma_free_coherent(&card->pcidev->dev,
--				  2 * size, scq->org, scq->dma);
--		kfree(scq);
--		return NULL;
--	}
--	scq->num_entries = size / NS_SCQE_SIZE;
- 	scq->base = PTR_ALIGN(scq->org, size);
- 	scq->next = scq->base;
- 	scq->last = scq->base + (scq->num_entries - 1);
-@@ -928,7 +922,6 @@ static void free_scq(ns_dev *card, scq_info *scq, struct atm_vcc *vcc)
- 				}
- 			}
- 	}
--	kfree(scq->skb);
- 	dma_free_coherent(&card->pcidev->dev,
- 			  2 * (scq->num_entries == VBR_SCQ_NUM_ENTRIES ?
- 			       VBR_SCQSIZE : CBR_SCQSIZE),
-diff --git a/drivers/atm/nicstar.h b/drivers/atm/nicstar.h
-index 1b7f1dfc1735..ba45be53d40e 100644
---- a/drivers/atm/nicstar.h
-+++ b/drivers/atm/nicstar.h
-@@ -667,14 +667,14 @@ typedef struct scq_info {
- 	ns_scqe *next;
- 	volatile ns_scqe *tail;	/* Not related to the nicstar register */
- 	unsigned num_entries;
--	struct sk_buff **skb;	/* Pointer to an array of pointers
--				   to the sk_buffs used for tx */
- 	u32 scd;		/* SRAM address of the corresponding
- 				   SCD */
- 	int tbd_count;		/* Only meaningful on variable rate */
- 	wait_queue_head_t scqfull_waitq;
- 	volatile char full;	/* SCQ full indicator */
- 	spinlock_t lock;	/* SCQ spinlock */
-+	struct sk_buff *skb[] __counted_by(num_entries);	/* Pointer to an array of pointers
-+								   to the sk_buffs used for tx */
- } scq_info;
- 
- typedef struct rsq_info {
+-	strncpy(attr.map_name, map_name, sizeof(attr.map_name));
++	memcpy(attr.map_name, map_name,
++	       strnlen(map_name, sizeof(attr.map_name) - 1));
+ 	attr.key_size = key_size;
+ 	attr.value_size = value_size;
+ 	attr.max_entries = max_entries;
 -- 
-2.53.0
+2.34.1
 
