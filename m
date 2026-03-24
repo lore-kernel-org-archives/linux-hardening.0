@@ -1,185 +1,99 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F202B389445
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 15:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774367804; cv=pass; b=B46QIDgp9L56pt+olK3es/ef6V19eYZbJFfoy4TOAHR7G+joniJQBnxgwWZD3JFk6Cm4/Y1GrjUDp076Dcbbb6TEN/z5C5XbYYh6OHggZR66sgwrzQHzYeAtVxaOLg+ipLLTFQ/f8qEM1pxWqtZ1mPlUqR8GaeKQOoFyK4DCyqY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774367804; c=relaxed/simple;
-	bh=NcFE19+lHolIoka+UAD/Gg4aP7dmCd3kVrW0euzZIw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lGSNN5oBUKJ2Sk4SOdSTU9A+vTLywKoupc/w1/7QENA7/FuMVNcEusH2vrDEjm8cF6comaAeZsvtTzrh3Sa2LZq94yqwncy6hsZx/HXL14i4iHvGV9koIPsiOufRxkCUEMHHBwBaXUuNUr9VspQlDuTBJJE8ThNIL90/ADpL1f0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=q7qTo02n; arc=pass smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B326218EB1;
+	Tue, 24 Mar 2026 16:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774368935; cv=none; b=VwYZYGFRBh+nliG4V5Da/iPerEWewtQioxhnGfDT+G8dRYmxQKQ8atdUVSvs11l/XImF88efUcGU2FnEKXFustMFwiIZmhWDsYGUxXXRYQTDz0u2jABHR2lULWtRQkkHP6GTKWH3BHT4823CPZvzYg7hTLfujTMIRzCRbSXr0Cs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774368935; c=relaxed/simple;
+	bh=xYE0WPxGCBWCOSXP82sjBN3xLQsRopgunx9uuNc1mOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fp1xmk3NZwJ45ZsGQTjkIHuz3V7jh28xVphWXNv2vnVxpXyVT1r+NUWfrGlo14BdE9mp6bPckxOQrOFD6Ito+IS0jAnYZzecoJcBr2T3mMmXpdjri0wXQ5a16r0LZAE0N/ylMnA11YikW7KD3+5pO7DTkAINwxJyLnpPAwuS/qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UD3bMMR4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q7qTo02n"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b932fe2e1a7so660736466b.1
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 08:56:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774367801; cv=none;
-        d=google.com; s=arc-20240605;
-        b=V56MNo9E4sfiq1TDVWXFYaVRrnAMHYN4CsUhHelWg2Vi3J0c3+1b110wLt71jJvyy3
-         W5Z+hLU9XTWwqETLBwPqIKBkkFinVljHXqZvQ1e2sGe3za+uuK09GHYLASsCT4Iwig8T
-         HL1U717uhYxRxMApB8P3A6g11exjUlsJaIOV72NeRVgurahIKHEKTCkxlYJ6aDcSKVj0
-         ir/V8wtDXNeHc+NDeiU2Zl5R3Nd6U868GA1f3FvXVn1CT/ONiSD3qEKyqm9RgROHmAj+
-         iMtfGEEfluCaUxOXhyt4E6y/k2qF9hz/1tB0z7u+O3uQBCqb1/dVadk6uW2nMLJM/E9V
-         pOXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=f3qRkrcmZqnQcAsHSgrGTF3O2trpu3zcL2/3GqhPT84=;
-        fh=2Ozhl7xYFD6TTVAGpr2latQwHr229zW5LzjUXSsTLNI=;
-        b=Q66JEwdw1vw9zGiJnpSwy9ILi9OdG2ZPV6ii7qNIuqs479akwv9MSMQxYgoUlqqjhc
-         IavI6VbMzqJ2NmkopZb8a2KDpGrgVdBNBCcMUGz3CKmBVjUBJx3pru1iO2pxvAczjaB4
-         G+F9qT/CcxTB6t5wkYGErdF1FolXMmqpsasLoXGJtz4adE7JHe4ozb/guNUE4/27CMg6
-         KXhkXGCNhFuvltt6CQ4fTQNiYSWE/GOhskjpF2RJPoGQWvps16UFMm5DG32l0M16ATqK
-         H7tZz15FSNseETJIs4OIsBOWKwO87b3P0tHr7ntEVdV+7y6taslmV7foNm91yzrvpiOa
-         2DKQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774367801; x=1774972601; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f3qRkrcmZqnQcAsHSgrGTF3O2trpu3zcL2/3GqhPT84=;
-        b=q7qTo02n6KtI43Ap5uUPAShjuPBFjEbcMeALEY7V5s19EZv8S7ihl7Z2ZVR0YA7U88
-         PY4bn1gK2PmeKOwB+hsAh7pCEpQ+c6wmB6DgIgMRcAXgNhOOQc9u0gwA0FGZ5P62CIgW
-         H7Z9N9Bs0b5xtCPdHva6EGvn61gPW0tRMrQxHmkodWdPdHgZT4qjnWs6HzFVAepEJ2IT
-         Z+vAnjnvxt5KkVCjOpew95DEj3iZJH0mNxxIAKUMS3PQ2WL1JJwVQ4MrTWMZPmoHL+44
-         FDTZXlOgyXAcXLrbDFTNxboiSQ1GLwZkE2I62UaVb80oLTpgKDWw0rfhKk1/inAt5P+n
-         lh/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774367801; x=1774972601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=f3qRkrcmZqnQcAsHSgrGTF3O2trpu3zcL2/3GqhPT84=;
-        b=drMrywOGmQn2S/RntK3KnD8Pimfx64mOZi5UqQ+HR5yagfLNOFV5y0yDy7mrDTA+fB
-         R18Vmw3+BPmlXvegdKtFh0xLya8Lx0UfxXtcsXOGTZsfqaevxClU6/1ZFp8roBpXH/4I
-         LA7MdZ4OOFTp58AcXUhGmg+DAAvoEtlGkgBSqocj0tJFd2g4+jZCYnCjqn2lXnhG375b
-         2kaz3u5g24er7ZfTfHWYZkHA3Lzff8Z42B9fS9nxwPA2s1eIn15WsUzk5p11j2MREHvq
-         1J0WyHukbbXH9PCuq/EJ0ZvFZZv65JoKLRGLte3TsfyG+P8NCufp6041oNISVbS2KdmS
-         TGVw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6Fs1yE82SXZuougRDiX3bRylI2DkgQ3yFKfb7Lfj5oX/Hh6OIXDukaYSUDcyqv93IwMoEhvC1y1Vyi1R51N4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbfuPonSIWf4lU38UoC/LRwb39OTj5dHphU1K5WGIPf4fC2VbP
-	0p3pRp+KwluxQ6CW/0ZDcNHc9arOu6fQ02l8PyVk1oEx5sDMsXUeG+Vyxs6jcYoyqk6XAj9Whdy
-	cNFUpZijnkUf/4klgpEVkWeZQ+yFsLGF6Oozv
-X-Gm-Gg: ATEYQzw4R3dKdGlxd6cn8hc4sDlLoUQ/KOuXIwGdlRH6Fp0PaK6Ha91Rwhu9J3Dh4Qz
-	+8fY6Fkb4rptCvPwgGG0ysp2McpCyy6W5J9AkoiP9OFoWbK8Ec2V7S3EVMQZhERyH3LJJR0j+yM
-	N/jPfvde4nTGOq/4NfgtIh88cs5Q3Q/k+8sWrdeqgK/ncHWZxz/CQmcB5arx7x/zNReexWoFRx/
-	I9UX//hcOZc4+2L5i69FTzc9vcGbKzltToEStQ49dceyRz1T5NOFk1CHPS2Eqh27iDGHugJi8Ic
-	Me4pRu9R3KvdiKkivla8EkkbEgB/HKg93AR5IfoI/sConR5zrS0aKwXjHHnf7Q86BgCSq4lLFZq
-	4sl6++Q==
-X-Received: by 2002:a17:907:1987:b0:b98:e8:8eaa with SMTP id
- a640c23a62f3a-b982f1ed70cmr1176255966b.7.1774367801042; Tue, 24 Mar 2026
- 08:56:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UD3bMMR4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 211BCC19424;
+	Tue, 24 Mar 2026 16:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774368935;
+	bh=xYE0WPxGCBWCOSXP82sjBN3xLQsRopgunx9uuNc1mOA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UD3bMMR4E0/hBoEM2t8dCmtJA4Il2ksi4i/umB8/w7/08T1uZu1BaO5daJlpLhwpv
+	 mlA+a9ZT7A+SU9xgo9z7Phd18n1EAiABv/Auwoiw6G4K2EyoDKp67TPpMNJM0haJUw
+	 St4N1SCwlQQSbQSOl1YbVk4kas+xmckOk4SmOII2iDr5ddOb6A1leRwR+PFijV/Ia3
+	 J+kPopFzwA6JhlvhUqZvYXV79nkFFdcosE6NyXTDvZutRocpjPjbLONjw8iL9wyNof
+	 GCGxFKZD3fwyxMYO90TT65IZ4PFf/AD1OVZPwNTi/ZT/LEIn5TwwV27V3VxpbWkMSN
+	 2yljhrEGBU72w==
+Date: Tue, 24 Mar 2026 11:15:33 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: rafael@kernel.org, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Huang Yiwei <quic_hyiwei@quicinc.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] acpi/apei: Add NVIDIA GHES vendor CPER record
+ handler
+Message-ID: <20260324161533.GA1131495@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319000558.22108-1-rosenp@gmail.com> <202603201104.8D7B8A1@keescook>
- <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com>
- <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com>
- <CAKxU2N9KdziPen9-_gfe0UZjyuMTOsbb583aeF3=kqm22rGieA@mail.gmail.com>
- <CAMRc=Me2RLj-vvCVNho9CPYVwsQHypC_KvKHJWkLyj=rMkfx2w@mail.gmail.com>
- <CAKxU2N8gudRXR-bLMoyDVDuv3vWuzqrbyVsHL=Gu3mDZWMvs6w@mail.gmail.com> <CAMRc=MeYoDB1QsgckNH9OGWx=WJZofMHq+zL4xY8VK+rzP3gog@mail.gmail.com>
-In-Reply-To: <CAMRc=MeYoDB1QsgckNH9OGWx=WJZofMHq+zL4xY8VK+rzP3gog@mail.gmail.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Tue, 24 Mar 2026 08:56:29 -0700
-X-Gm-Features: AQROBzADURwHKy8tFIAJpN4IsVdtcJXR_0r8UlcgpmAhJJaXZDOBRsprwoOTOm4
-Message-ID: <CAKxU2N80Qf+Uc_daBSxjz26e54fAz8bLRPVZYdCcaiHhpfHK-g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Linus Walleij <linusw@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acJYJlm2JZn_W7yO@M5403NF6WD>
 
-On Tue, Mar 24, 2026 at 8:54=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.or=
-g> wrote:
->
-> On Tue, Mar 24, 2026 at 4:52=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wr=
-ote:
+On Tue, Mar 24, 2026 at 05:33:06PM +0800, Kai-Heng Feng wrote:
+> On 2026-03-20 09:52, Bjorn Helgaas wrote:
+> > On Thu, Mar 19, 2026 at 07:13:09PM +0800, Kai-Heng Feng wrote:
+> > > Add support for decoding NVIDIA-specific CPER sections delivered via
+> > > the APEI GHES vendor record notifier chain. NVIDIA hardware generates
+> > > vendor-specific CPER sections containing error signatures and diagnostic
+> > > register dumps. This implementation registers a notifier_block with the
+> > > GHES vendor record notifier and decodes these sections, printing error
+> > > details via dev_info().
+> > >
+> > > The driver binds to ACPI device NVDA2012, present on NVIDIA server
+> > > platforms. The NVIDIA CPER section contains a fixed header with error
+> > > metadata (signature, error type, severity, socket) followed by
+> > > variable-length register address-value pairs for hardware diagnostics.
+> > >
+> > > This work is based on libcper [0].
+> > >
+> > > Example output:
+> > > nvidia-ghes NVDA2012:00: NVIDIA CPER section, error_data_length: 544
+> > > nvidia-ghes NVDA2012:00: signature: CMET-INFO
+> > > nvidia-ghes NVDA2012:00: error_type: 0
+> > > nvidia-ghes NVDA2012:00: error_instance: 0
+> > > nvidia-ghes NVDA2012:00: severity: 3
+> > > nvidia-ghes NVDA2012:00: socket: 0
+> > > nvidia-ghes NVDA2012:00: number_regs: 32
+> > > nvidia-ghes NVDA2012:00: instance_base: 0x0000000000000000
+> > > nvidia-ghes NVDA2012:00: register[0]: address=0x8000000100000000 value=0x0000000100000000
 > >
-> > On Tue, Mar 24, 2026 at 2:16=E2=80=AFAM Bartosz Golaszewski <brgl@kerne=
-l.org> wrote:
-> > >
-> > > On Mon, 23 Mar 2026 17:43:00 +0100, Rosen Penev <rosenp@gmail.com> sa=
-id:
-> > > > On Mon, Mar 23, 2026 at 3:00=E2=80=AFAM Bartosz Golaszewski <brgl@k=
-ernel.org> wrote:
-> > > >>
-> > > >> On Sat, Mar 21, 2026 at 12:00=E2=80=AFAM Rosen Penev <rosenp@gmail=
-.com> wrote:
-> > > >> >
-> > > >> > >
-> > > >> > > static int gpio_mockup_probe(struct platform_device *pdev)
-> > > >> > > {
-> > > >> > >         ...
-> > > >> > >         u16 ngpio;
-> > > >> > >         ...
-> > > >> > >         rv =3D device_property_read_u16(dev, "nr-gpios", &ngpi=
-o);
-> > > >> > >         ...
-> > > >> > >         gc->ngpio =3D ngpio;
-> > > >> > >         ...
-> > > >> > >         chip->lines =3D devm_kcalloc(dev, gc->ngpio,
-> > > >> > >                                    sizeof(*chip->lines), GFP_K=
-ERNEL);
-> > > >> > >
-> > > >> > > But this begs the question: why add nr_lines when ngpio is alr=
-eady part
-> > > >> > > of the struct:
-> > > >> > Maintainers for some inexplicable reason want an extra variable =
-for
-> > > >> > __counted_by works.
-> > > >>
-> > > >> I believe what Kees means here is: you can use ngpio for __counted=
-_by() like so:
-> > > >>
-> > > >>   __counted_by(gc.ngpio)
-> > > > __counted_by doesn't support nested variables like that.
-> > > >
-> > > > drivers/gpio/gpio-mockup.c:59:61: error: =E2=80=98gc=E2=80=99 undec=
-lared here (not in
-> > > > a function)
-> > > >    59 |         struct gpio_mockup_line_status lines[] __counted_by=
-(gc.ngpio);
-> > >
-> > > The following spin on your patch builds fine for me:
-> > >
-> > > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> > > index a7d69f3835c1e..9427ab8c45f73 100644
-> > > --- a/drivers/gpio/gpio-mockup.c
-> > > +++ b/drivers/gpio/gpio-mockup.c
-> > > @@ -52,10 +52,10 @@ struct gpio_mockup_line_status {
-> > >
-> > >  struct gpio_mockup_chip {
-> > >         struct gpio_chip gc;
-> > > -       struct gpio_mockup_line_status *lines;
-> > >         struct irq_domain *irq_sim_domain;
-> > >         struct dentry *dbg_dir;
-> > >         struct mutex lock;
-> > > +       struct gpio_mockup_line_status lines[] __counted_by(gc.ngpio)=
-;
-> > You're using an older compiler. This does not work at all.
-> >
-> >  * Optional: only supported since gcc >=3D 15
-> >  * Optional: only supported since clang >=3D 18
-> > >  };
-> > >
->
-> Ok, what is this feature called in gcc parlance and where does this
-> info come from?
-include/linux/compiler_types.h
+> > Is there a convenient way to connect NVDA2012:00 with the actual
+> > device?  I assume this is typically a PCIe device?  How would we
+> > relate this with PCIe errors?
+> 
+> The CPER report is from ARM RAS firmware and not neccessarily be
+> related to a PCIe device.
 
-Lines 363-364 in linux-next.
->
-> Bart
+Right, I know CPER is more general than just PCI/PCIe.
+
+But in this case, I think NVDA2012 probably *is* a PCIe device.  How
+would we figure out which one?  If we have to manually do an acpidump,
+figure out which NVDA2012 is :00, and look for an _ADR or something,
+that doesn't really seem convenient for multi-NVDA2012 situations.
