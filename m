@@ -1,150 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AF437CD3F;
-	Tue, 24 Mar 2026 02:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B29340DB0
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 02:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774318052; cv=none; b=HuR5T7aEIej8gLS/62yqZHoaYKK0f3csHqfsppM3Kxa9O2cY3Y6F/Bmx6ShUNSnVlito/vEiE4Voonu6Iipy+Bk8TXfoY2T0S7u45mTG0MZhs7/vULSZqC/XpjQb6rqJsLdDHU4lM/5YIUC1vqRd+C5mR+I+AAXFNjRRwke8Aiw=
+	t=1774318282; cv=none; b=lrSPbuNzN8JM9a0HcsaDy++0141VHOpWVWZjjZ5nyy3jQAsGrr/iBj0DlEJrXgEpIk9UQ5vvvZZRoamBQ+4UuAYGi4pg+2V2qYzKg4dpyrDIzyZ1xXFWru4V5XGrS+2eKo1lrtSIo52dECaOZcNl4wpJDt0WNH7I6cdvD7EtEWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774318052; c=relaxed/simple;
-	bh=pAx/PvSEGw7/5bbf1hocL2t4NIuGnAq/O9b0E3vE+9g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S7CnXVeqUV++tbLpgoLaQifRjhnGBcxHpc9uvs/Phjb05m+RdE/df2efpoElp4bWJ4zjtsDMLmXht6CFyq7W1EGUw40LFRSR11eFwrMojlotMBQzVc+mhpteLjFf8SH6XskU1RGvU41I6cZbWFIDLChuchcfJQjWkGn6r0qJTlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8EMvOw6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774318282; c=relaxed/simple;
+	bh=5LCSZy0QNtO4bzoIvyj24RyYrTxJ4vg7ZKTxOvocysw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pc0PKWygLS7fqBavamewKH4D6BbCAIPG4mj8NpeJ+gyRo0NzzxPih8ao8GFmaDxGtv/LSv8WBUl8OiYhqwbjCZX8l28RB/VINVuIBq/Uhumnt1mNa7AcFolo9h7KqFYYFmmzXGAl7ozVkngkARQIj4iDA2/Gz9ECMOhKQ2vQwmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dr79q3pK; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8EMvOw6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC0F8C4CEF7;
-	Tue, 24 Mar 2026 02:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774318052;
-	bh=pAx/PvSEGw7/5bbf1hocL2t4NIuGnAq/O9b0E3vE+9g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U8EMvOw6j0vFksVy3n6XcVQvweaSg341Sc1ESNsLoj+CprZ0nZRTbMrMExqa5EiN7
-	 SJXAE3bgdUD5Ju7mXoHELM6K1d1t2qtGMgaW7HU+dMYh6fSSxNE+IRal15RHIo3dll
-	 XcRyXiv51uocg2408dNPhgBeRJMZTtr3N9e7hTMXog52C8NQs2I84vbHdNaw37kb//
-	 je8Ckddjhiw+LHhQv37aq360Q9r/tL5Ml89MWQqML9dELRx871Y2iC4Q7GVVbbW25g
-	 G8xW1YVmwzwJz7TNItLryYekGTkI2Tw2GSFVkfWeZcjeWymQRagW0zuawdAkf/rTnL
-	 HeoKe8m5xaDJg==
-From: Kees Cook <kees@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kees Cook <kees@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] lkdtm/fortify: Drop unneeded FORTIFY_STR_OBJECT test
-Date: Mon, 23 Mar 2026 19:07:30 -0700
-Message-Id: <20260324020726.work.624-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dr79q3pK"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-35a1230c60eso1646538a91.3
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Mar 2026 19:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774318281; x=1774923081; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pg3BeEF/NeYvq9HpPYQyLEWkUbXwDTNUoplMULCqoG4=;
+        b=Dr79q3pKlHDZoriUdWMx6Rp0FzjGAH+djAn8d7B40mgLTveQDTs9vJY2ygw8V+/8ma
+         Dgq2Hb+09dZYJiOSBS7qX7lpoSF7NowmV+QPwK7Sk2tV658rueIF8+nCcrXuS/u2kvOh
+         gujUAVBF6XKckecqAbUGr04HCDa9HfGqDxnz16RGN3BkdhPI7ypFiQdLYYyGCB836JIs
+         lgsKHLhWucDa5s1i661bSlPnT3k+JSyqAoYV2dJIXWb+yzjQ4AjohxsbVWWOr595F7mR
+         h8EmvYe4DvK2vfOZUr1JbTkVRapjH6rebMAGBEWUP9ggKWoC2DgJzceDLj4B3IZKqSCJ
+         1A1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774318281; x=1774923081;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pg3BeEF/NeYvq9HpPYQyLEWkUbXwDTNUoplMULCqoG4=;
+        b=dH+dK3D2WzV3NHsQtVD2LFMFsfmXkU9dOPwjN2Mm+WsVDuUp7ksdqt5fmAeFyBcNT7
+         1xmsSnp8cyYlRLQnhelVUeOCjFnHQnz+NmJnbuF0Co4oaaTckWsSbgGEdZ//0qwrQJd+
+         0Ib19K9wD8T5p+XSrQfCf9RnOhdDNZ13xTFo2epoo4O3cejtczYznc3+6jMMtmaE9lde
+         5RpzHinwhyPC12UgjBt6FVbU8b+ASgZRQidkfy4a+qsvR/7Q9UvDW59IkhGtpp+E2pNK
+         DiCS3hlKnui0+vadJbK80+acLOMBSUVH7W0JDlNSRcSpDfLcSLTiiomEbXD8ETlnK8Tz
+         BO7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVeUNPs/gsjusqX91hfV3n0VwSSA7mEpEjotFlFoDpFzctJXQFlTKwI3C6b4IvTIrCyzh707QVqYjk54qdOADg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr9CHV0ZiqmrFRb2xZbbVRphrw3hZhemEYlHLMZv2q0oTd24Bs
+	5xEpu/96FCS2Mhx6nbIP5lN9PtsRkneK7nwv+XSj3nAL7ZVCiNVS50mH
+X-Gm-Gg: ATEYQzzc5Q/iYeSfduPYosQaPOYk5u0c4xiTruTDVnBakyp5YEDBPXJDm5oUOjocN3+
+	KqN2ZKauj387G1t2lCFvaZ+XVymvddOdNOJVCJFKn09Z5lfhl7pORWM2yfpF/EJd7C+aX2ZyAXw
+	Y2QuQRoVVhd2qACne4MZhpryAzHPm9O1wehSSS88SOpWTN89rXwB4Ph+1n+8mYCWJR+wspqnWVV
+	ElakQAAtZMTDtwHxHYPeqPEH0LwuYYCy7IRMdDIumUNHC8pMfB/bb50sPoPCFM0hOdnBYzxl460
+	g4IXLzLSQ8coU8/XGQRe8U2V/wEmtEDMAizspfVvi/FPkpSirc9JFzIM6yRgy4yKw5pTscSz2Nm
+	zB7R8AIbHc7tTURZ4AH3S9TQ4OCv74tWrs7UhyX3aPJlCM/nyA4gaGIOxk/og6oaJGKd5cjqE7E
+	F+5mOt9mfQe0aGBk1VvI5KrnocYiovqF31FMGb5G/0aTZJ5k40ZQlL6Xk=
+X-Received: by 2002:a17:90b:1e4b:b0:35b:e6a3:41d0 with SMTP id 98e67ed59e1d1-35be6a342admr6003709a91.26.1774318280932;
+        Mon, 23 Mar 2026 19:11:20 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35c03149db2sm457965a91.9.2026.03.23.19.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2026 19:11:20 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-clk@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-renesas-soc@vger.kernel.org (open list:RENESAS CLOCK DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] clk: renesas: cpg-mssr: use struct_size
+Date: Mon, 23 Mar 2026 19:11:03 -0700
+Message-ID: <20260324021103.13651-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3590; i=kees@kernel.org; h=from:subject:message-id; bh=pAx/PvSEGw7/5bbf1hocL2t4NIuGnAq/O9b0E3vE+9g=; b=owGbwMvMwCVmps19z/KJym7G02pJDJkHPz7aqj25XPJxy7LLy45c4n3y793NjznxVzf6qh+48 mpHoWCDVEcpC4MYF4OsmCJLkJ17nIvH2/Zw97mKMHNYmUCGMHBxCsBEZOUZ/mdPS/+3fbXVVdts m/UHZfP7f7HWpKn9ydskp5P6RMnGYhcjw78PAo5pHU4fVB4em7ktuM93csaJ/p15x9keV/eu4RE 2ZgQA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The str* family of fortified functions all use member-sized limits
-for a while now, so the FORTIFY_STR_OBJECT test is redundant to
-FORTIFY_STR_MEMBER. While here, replace the strncpy() use with strscpy(),
-as strncpy() is being removed.
+struct_size is what is normally used when a flexible array member is
+present to avoid accidental mistakes. pm_size is still needed for the
+memcpy call below.
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/misc/lkdtm/fortify.c            | 36 +++++--------------------
- tools/testing/selftests/lkdtm/tests.txt |  1 -
- 2 files changed, 6 insertions(+), 31 deletions(-)
+Added __counted_by for extra runtime analysis.
 
-diff --git a/drivers/misc/lkdtm/fortify.c b/drivers/misc/lkdtm/fortify.c
-index 00ed2147113e..7615a02dfc47 100644
---- a/drivers/misc/lkdtm/fortify.c
-+++ b/drivers/misc/lkdtm/fortify.c
-@@ -10,30 +10,6 @@
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/clk/renesas/renesas-cpg-mssr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
+index 64a432fd0e8a..26ea85cfaa02 100644
+--- a/drivers/clk/renesas/renesas-cpg-mssr.c
++++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+@@ -569,7 +569,7 @@ static void __init cpg_mssr_register_mod_clk(const struct mssr_mod_clk *mod,
+ struct cpg_mssr_clk_domain {
+ 	struct generic_pm_domain genpd;
+ 	unsigned int num_core_pm_clks;
+-	unsigned int core_pm_clks[];
++	unsigned int core_pm_clks[] __counted_by(num_core_pm_clks);
+ };
  
- static volatile int fortify_scratch_space;
+ static struct cpg_mssr_clk_domain *cpg_mssr_clk_domain;
+@@ -667,7 +667,7 @@ static int __init cpg_mssr_add_clk_domain(struct device *dev,
+ 	size_t pm_size = num_core_pm_clks * sizeof(core_pm_clks[0]);
+ 	int ret;
  
--static void lkdtm_FORTIFY_STR_OBJECT(void)
--{
--	struct target {
--		char a[10];
--		int foo;
--	} target[3] = {};
--	/*
--	 * Using volatile prevents the compiler from determining the value of
--	 * 'size' at compile time. Without that, we would get a compile error
--	 * rather than a runtime error.
--	 */
--	volatile int size = 20;
--
--	pr_info("trying to strcmp() past the end of a struct\n");
--
--	strncpy(target[0].a, target[1].a, size);
--
--	/* Store result to global to prevent the code from being eliminated */
--	fortify_scratch_space = target[0].a[3];
--
--	pr_err("FAIL: fortify did not block a strncpy() object write overflow!\n");
--	pr_expected_config(CONFIG_FORTIFY_SOURCE);
--}
--
- static void lkdtm_FORTIFY_STR_MEMBER(void)
- {
- 	struct target {
-@@ -47,22 +23,23 @@ static void lkdtm_FORTIFY_STR_MEMBER(void)
- 	if (!src)
- 		return;
+-	pd = devm_kzalloc(dev, sizeof(*pd) + pm_size, GFP_KERNEL);
++	pd = devm_kzalloc(dev, struct_size(pd, core_pm_clks, num_core_pm_clks), GFP_KERNEL);
+ 	if (!pd)
+ 		return -ENOMEM;
  
-+	/* 15 bytes: past end of a[] but not target. */
- 	strscpy(src, "over ten bytes", size);
- 	size = strlen(src) + 1;
- 
--	pr_info("trying to strncpy() past the end of a struct member...\n");
-+	pr_info("trying to strscpy() past the end of a struct member...\n");
- 
- 	/*
--	 * strncpy(target.a, src, 20); will hit a compile error because the
--	 * compiler knows at build time that target.a < 20 bytes. Use a
-+	 * strscpy(target.a, src, 15); will hit a compile error because the
-+	 * compiler knows at build time that target.a < 15 bytes. Use a
- 	 * volatile to force a runtime error.
- 	 */
--	strncpy(target.a, src, size);
-+	strscpy(target.a, src, size);
- 
- 	/* Store result to global to prevent the code from being eliminated */
- 	fortify_scratch_space = target.a[3];
- 
--	pr_err("FAIL: fortify did not block a strncpy() struct member write overflow!\n");
-+	pr_err("FAIL: fortify did not block a strscpy() struct member write overflow!\n");
- 	pr_expected_config(CONFIG_FORTIFY_SOURCE);
- 
- 	kfree(src);
-@@ -210,7 +187,6 @@ static void lkdtm_FORTIFY_STRSCPY(void)
- }
- 
- static struct crashtype crashtypes[] = {
--	CRASHTYPE(FORTIFY_STR_OBJECT),
- 	CRASHTYPE(FORTIFY_STR_MEMBER),
- 	CRASHTYPE(FORTIFY_MEM_OBJECT),
- 	CRASHTYPE(FORTIFY_MEM_MEMBER),
-diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-index e62b85b591be..3245032db34d 100644
---- a/tools/testing/selftests/lkdtm/tests.txt
-+++ b/tools/testing/selftests/lkdtm/tests.txt
-@@ -82,7 +82,6 @@ STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
- CFI_FORWARD_PROTO
- CFI_BACKWARD call trace:|ok: control flow unchanged
- FORTIFY_STRSCPY detected buffer overflow
--FORTIFY_STR_OBJECT detected buffer overflow
- FORTIFY_STR_MEMBER detected buffer overflow
- FORTIFY_MEM_OBJECT detected buffer overflow
- FORTIFY_MEM_MEMBER detected field-spanning write
 -- 
-2.34.1
+2.53.0
 
