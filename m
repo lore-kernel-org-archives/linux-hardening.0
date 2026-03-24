@@ -1,190 +1,266 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D1239F192
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 18:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774376745; cv=pass; b=PUK6vZQeWQxVBCR7MdGjcRKsHQ5N7yLMgm18AiS+GQcy01bI8Qi7HsU2Oyg7nG40jnceWIRxMAZXE+/MRXTd/x27UZP2BWzUDVzCL0dOX1yy6ejhRsGdByFlmDma39rt2/g4FQ5a+dGUXtw7He2RJeSDuuYLCXReZSStFtCoGOI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774376745; c=relaxed/simple;
-	bh=nSeJjWi9ff21ilzihYD7YJPR61++LDGp71PADOCu5cU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uXbO1hluIRshPR2sgcs+JH1Y+yKSO0wpcDN9CE77gn+TXbwZ3CkIiAMU2NEAEbCp25UrEIfWFaOQHd0tRqMVfFb27w6ZUQPiNf/CWK+n2C2xv5X+wctc+iW0ToxZ2Fc7Y8Py8048R9UcNRtBu8Cgy8mUVX+jxtpRBFy5EEK97vg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wr0JnZCI; arc=pass smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9025D38BF87
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 21:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774389113; cv=none; b=lzNSHAxENaFes+Hn4C/0mZ1eYiQZ/5eFp4L3yN0qwmvLPO6R+Jwtwj+nCuKpSusV3quAGXbsKfDYohCL2Z6JIGjLMKYY3cDmbyGWTcPD6qOV9cA6rK3RpUI9t+uE0pKDR1fHKho+pddfxFEEz7JoHDxBfoFltlxzd/p9WSKisQw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774389113; c=relaxed/simple;
+	bh=v8M/avmhZ+p5mDe6QYrKH2VFK1KNVhLl1fQvN6lgwqI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZmaTVjx0bp9VYVgeS5tfzrmuRXMpsLQ03kuh2eE5Zn3pIX0Y1UQPPJ/OfW+4BK4yJRbpqKqQUoCQwzQD5OSW6Jmg4bVLdvQDjK0LJgtfoTQq+ToSa8Q6396v/lqNpjReIr2grZltoqsqNoImTK0hInmOWoFonEMqHcPN76AGadk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dren/ayx; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wr0JnZCI"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b9358bc9c50so253323766b.1
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 11:25:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774376741; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hfYtXeXEHN1fiQidVYvUt/NhBaSFly2Llw9OVVRRa1b/tqHZO13CW6EnEF9WjESe2X
-         4g7sCV2TNuYoJTwOMlKlP4Fb+6TOl8UtItg9JPXYWow1f+Pq7nMDoZtc2eDbwi9g7fDa
-         +riF1Cy5CbzJjrZ+j8EWJ0kIFCOPbhZwaF/ns5Yarh1thECawE/8IgeyOYSfZmI5f3eE
-         5JJbekNCXsyobrWC5JStFXGM1tweuQOzMd+5Ml6scHgLBCJFnSPthLSZcLhDdzgJAl/t
-         2W8Ff4yl5F7RumqkUSXyM8VxRJYvq1roGusACiZnheo79mYejirJ1IwHbpvX9v98L5mp
-         CMng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=QK4NUvTEC0se5sdlimEBUGkPC6mWj52an2k34LrXOLs=;
-        fh=X7xBdfSvO7xdsoRQypAnfa5eJbRIUIpsytai8ivZQj8=;
-        b=Ko+BJRl+/u1fn27zThOJi/Pr919yOPIqzX9ZEJ+0Xh07JjyrgkvMJ4K0GUhGL0M4k1
-         Hd7/mpq/4BFrJxao1RcLiJi2ZC036xcu2edHuY4Z6ozcFvChToCtThOpjzUZfC7hQ+0c
-         g9MyKbc8u9H+drCzqkfyXqNaL6Nk+K5AhJZtJiZ+27plb0p8pshQ1thwEXfy2qeeIxyB
-         Rvmit+KXQ3gkqMVwUdPxIQq1oaW6mCIMKmQ1Itp6sQJTD9cw1fae2IyP2bIrw7Saztpr
-         JiQHKCk69BHJkU2V6tbA7PS6+KlS3fOP45+tfPWX3bephFzReQig4TePsGTOI+EXYkSo
-         zjfw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774376741; x=1774981541; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QK4NUvTEC0se5sdlimEBUGkPC6mWj52an2k34LrXOLs=;
-        b=Wr0JnZCIrytmmcN/pEfjMSz1DKNpQTX1Zp/hXxE21IHktTEagZT8ASEunmUlmu1v9h
-         nfRuZp/bWegr0JqYMf7z4KDFeR3M3edbh18KntwvpjVnGLkoBlfwgbCZ3fzgH1+c5f3E
-         I9pVrXpXcET9fqq4oDTvJ/qj8Iyvo8C63VC1v3WAzyCXssgsdPDt1SOBOkmbm0dIL+xc
-         6G9WRW0NkTwJbU9W/z46Y+LT0fYtth9gaNpsKJWhbolZGcHHuqB+sjJ9b9tshYM22ngf
-         ArxzcTIKTgH/fFh2eKH76nEreiXj2VvFFUNHqr8HtI/wOO9dJahy6EzS99H0ewnBgv8q
-         ZH2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774376741; x=1774981541;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=QK4NUvTEC0se5sdlimEBUGkPC6mWj52an2k34LrXOLs=;
-        b=AD6KJ+LbA6vf7+hi+ipy0ZZopN+JzIncmjljgxoQE196pbZ74YeG9HGgjjNP6LN4gv
-         XDgGZjt5R0T4RwoPNJgK4cm03E6SU9E5v29ryl+yEoU4oR9HQcfjfrL3W+POpPUfwKSH
-         rU0Lcn1wugN1UDovMLX1z40gTaN72gtiP1vJ+04IdnKjVOKZfl0FHNpNUrUu2JAc+0jT
-         xHQxRefm7QvjmM73NlPIncRGqxRHD592e+GtjLTip6TwOLJOu8+h4h9jToCidtD9KAHC
-         1o/hfbUqVLwRCfuedaxygP1sH17zumw/o79xIB+1T4EqHaFKym4Q2uo84y3hUrXfppT9
-         +46A==
-X-Forwarded-Encrypted: i=1; AJvYcCXCe2Fv/6Mv2GmZQHHSkBtsgtLES9HO4cR2KDlm0Cjr+tsI6svHkfYACo8hkWJW9Kn1znHMd7xdcTrFkgV9ruY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS0DxSBfmsZmKBJKL+QxDhk1jPE3FtN8VXLWI5Frdb8HX/286i
-	y1zzTjTrUmn8ZeebvXt2e1lD+c4S1negXjTMlgiAO2ZJQjRpik4bvwZJJgD7IK08fB8xkGEZ/LX
-	0YeZJbK9+pXuMr6AovWC2fhmsJtemNK0=
-X-Gm-Gg: ATEYQzwIQMqpT2RZuhWMiQoDgKgTu52R/Of9g56hGuFnRaAe7lMFOqUBcCb8EYF9O55
-	MlMu3UMilX6c/FPABHy0maBJjK1OZvs2Ss50+TFEZy9yv0P942N4JS3AYbCxHkiAp3TfMrC/Mun
-	KvfCeeeJUe/C6VXD8AwEnj8nTPGX/rAdZbBbILtQKP1XDqF3xAw7c1D7ADRplPmZNal8d7tWkrw
-	sRW5Yjl5ipkG9Xa9eDAYfE2jDZ0x13LnNoPXR+sFpC5dI5ASlM95ruPWYkRAYZkVVl/FDR8kPtL
-	53Nijkpg7bV/Sl77Rj5R1UldW1lXgqd4j8iK1d2d9bob8VJx98nnuX+5lkL/TDtKxV3CwW+GLFc
-	tZDvllg==
-X-Received: by 2002:a17:906:f59c:b0:b98:8a4a:7d15 with SMTP id
- a640c23a62f3a-b9a3f1a70fdmr30898466b.19.1774376740366; Tue, 24 Mar 2026
- 11:25:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dren/ayx"
+Received: from eig-obgw-5004b.ext.cloudfilter.net ([10.0.29.208])
+	by cmsmtp with ESMTPS
+	id 531xwtN4oaPqL59fEwm5Zz; Tue, 24 Mar 2026 21:51:52 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 59eqwOoJyqfpW59eqw98JF; Tue, 24 Mar 2026 21:51:28 +0000
+X-Authority-Analysis: v=2.4 cv=A55sP7WG c=1 sm=1 tr=0 ts=69c30777
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=knFFEZXCCS6sNPuXYSYA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=t1tCrlPYFjY47Um8pkwyFOtPvnYcfZ5DeBcav9rYK4g=; b=dren/ayxdgB4upLGfffSGu8OXb
+	JptHjxg8cZRkXf8xCWL30xw9K1nCDMgPhdy7hqMP+tH7S4GJRXzHvILOwsD2X2wcBhGOwaasrpnJg
+	MEZWZGSnxDDNtXrFASoE3cTa5Dc9vFZs81Txr3HPIZ8teWCwBUU8nVL9bE0J8/ket7cqp1slV+T6j
+	wkG2fgdsfpUnYQ+W2ene3HzHhNBKX6ID/BYmhso3z1qiSsJUnYeP87xc3VfmfBTHOB2Mxc9r4t3ZQ
+	ME2deNHuTkwSFDBRSRF6/tuVWy31ko7Zj4lstxqYtq2jOY8nOQrTNYptBkVdjjuySVMWBC0GRg0qB
+	HQMi0esg==;
+Received: from [177.238.16.13] (port=54038 helo=[192.168.0.21])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1w59ec-00000004L0s-42HP;
+	Tue, 24 Mar 2026 16:51:15 -0500
+Message-ID: <ad1df772-9fcc-4b53-b726-188d609b536c@embeddedor.com>
+Date: Tue, 24 Mar 2026 15:50:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319000558.22108-1-rosenp@gmail.com> <202603201104.8D7B8A1@keescook>
- <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com>
- <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com>
- <CAKxU2N9KdziPen9-_gfe0UZjyuMTOsbb583aeF3=kqm22rGieA@mail.gmail.com>
- <CAMRc=Me2RLj-vvCVNho9CPYVwsQHypC_KvKHJWkLyj=rMkfx2w@mail.gmail.com>
- <CAKxU2N8gudRXR-bLMoyDVDuv3vWuzqrbyVsHL=Gu3mDZWMvs6w@mail.gmail.com>
- <CAMRc=MeYoDB1QsgckNH9OGWx=WJZofMHq+zL4xY8VK+rzP3gog@mail.gmail.com>
- <CAKxU2N80Qf+Uc_daBSxjz26e54fAz8bLRPVZYdCcaiHhpfHK-g@mail.gmail.com> <CAMRc=Mcv1TW55R87xiuAOQShX1Tjf_=BkwfoXdDN8SfUK=a5GQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Mcv1TW55R87xiuAOQShX1Tjf_=BkwfoXdDN8SfUK=a5GQ@mail.gmail.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Tue, 24 Mar 2026 11:25:29 -0700
-X-Gm-Features: AQROBzAP0LwYIgjA2GAFD4uEyPzen9IwFHr8wG9Eghx_TY_10NtmkgkzTOhTbjo
-Message-ID: <CAKxU2N9gCoyDapYmiY31EMPnTr0vPns6nme26xtibw+Ybs5iHA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Linus Walleij <linusw@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] bpf: Avoid thousands of
+ -Wflex-array-members-not-at-end warnings
+To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aaZr2A1UPJq33127@kspp>
+ <30A4F6F9-9E41-4767-9949-8F89927CA159@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <30A4F6F9-9E41-4767-9949-8F89927CA159@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.13
+X-Source-L: No
+X-Exim-ID: 1w59ec-00000004L0s-42HP
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:54038
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKeLFx/qpz7NXPR3NxLuCj6mBBIv4ibGYA78B7nn0WGoEwh9BKSolUB8ObEuURuEux8Ar3lXHQuLMyYIw6G0nYRcCCnqIJG1d1CISqI7T6M8q/OE2Lw1
+ kul7FDGu47GmCB/zo2DIHIMXU8im8OKuVEwPvq5cQUo0tRDMuEf0V7hIkJ45f4G68lpmK6cCUPbnq21h8qCkO7EMd5+ZaNf3pgK1NUpuLefruxGNJJDjJIPg
 
-On Tue, Mar 24, 2026 at 10:16=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
-rg> wrote:
->
-> On Tue, Mar 24, 2026 at 4:56=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wr=
-ote:
-> >
-> > On Tue, Mar 24, 2026 at 8:54=E2=80=AFAM Bartosz Golaszewski <brgl@kerne=
-l.org> wrote:
-> > >
-> > > On Tue, Mar 24, 2026 at 4:52=E2=80=AFPM Rosen Penev <rosenp@gmail.com=
-> wrote:
-> > > >
-> > > > On Tue, Mar 24, 2026 at 2:16=E2=80=AFAM Bartosz Golaszewski <brgl@k=
-ernel.org> wrote:
-> > > > >
-> > > > > On Mon, 23 Mar 2026 17:43:00 +0100, Rosen Penev <rosenp@gmail.com=
-> said:
-> > > > > > On Mon, Mar 23, 2026 at 3:00=E2=80=AFAM Bartosz Golaszewski <br=
-gl@kernel.org> wrote:
-> > > > > >>
-> > > > > >> On Sat, Mar 21, 2026 at 12:00=E2=80=AFAM Rosen Penev <rosenp@g=
-mail.com> wrote:
-> > > > > >> >
-> > > > > >> > >
-> > > > > >> > > static int gpio_mockup_probe(struct platform_device *pdev)
-> > > > > >> > > {
-> > > > > >> > >         ...
-> > > > > >> > >         u16 ngpio;
-> > > > > >> > >         ...
-> > > > > >> > >         rv =3D device_property_read_u16(dev, "nr-gpios", &=
-ngpio);
-> > > > > >> > >         ...
-> > > > > >> > >         gc->ngpio =3D ngpio;
-> > > > > >> > >         ...
-> > > > > >> > >         chip->lines =3D devm_kcalloc(dev, gc->ngpio,
-> > > > > >> > >                                    sizeof(*chip->lines), G=
-FP_KERNEL);
-> > > > > >> > >
-> > > > > >> > > But this begs the question: why add nr_lines when ngpio is=
- already part
-> > > > > >> > > of the struct:
-> > > > > >> > Maintainers for some inexplicable reason want an extra varia=
-ble for
-> > > > > >> > __counted_by works.
-> > > > > >>
-> > > > > >> I believe what Kees means here is: you can use ngpio for __cou=
-nted_by() like so:
-> > > > > >>
-> > > > > >>   __counted_by(gc.ngpio)
-> > > > > > __counted_by doesn't support nested variables like that.
-> > > > > >
-> > > > > > drivers/gpio/gpio-mockup.c:59:61: error: =E2=80=98gc=E2=80=99 u=
-ndeclared here (not in
-> > > > > > a function)
-> > > > > >    59 |         struct gpio_mockup_line_status lines[] __counte=
-d_by(gc.ngpio);
-> > > > >
-> > > > > The following spin on your patch builds fine for me:
-> > > > >
-> > > > > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mocku=
-p.c
-> > > > > index a7d69f3835c1e..9427ab8c45f73 100644
-> > > > > --- a/drivers/gpio/gpio-mockup.c
-> > > > > +++ b/drivers/gpio/gpio-mockup.c
-> > > > > @@ -52,10 +52,10 @@ struct gpio_mockup_line_status {
-> > > > >
-> > > > >  struct gpio_mockup_chip {
-> > > > >         struct gpio_chip gc;
-> > > > > -       struct gpio_mockup_line_status *lines;
-> > > > >         struct irq_domain *irq_sim_domain;
-> > > > >         struct dentry *dbg_dir;
-> > > > >         struct mutex lock;
-> > > > > +       struct gpio_mockup_line_status lines[] __counted_by(gc.ng=
-pio);
-> > > > You're using an older compiler. This does not work at all.
-> > > >
-> > > >  *
->
-> Indeed, sorry. In that case I don't know what Kees meant. I'm fine
-> with a new variable.
-I think his comment is that there's already a counting variable, with
-or without counted_by.
->
-> Bartosz
+
+
+On 3/4/26 01:30, Kees Cook wrote:
+> 
+> 
+> On March 2, 2026 9:04:24 PM PST, "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> struct bpf_prog_array is a flexible structure, this is a structure that
+>> contains a flexible-array member (struct bpf_prog_array_item items[];).
+>>
+>> We create the new struct bpf_prog_array_hdr type, and use it to replace
+>> the object type causing trouble in struct bpf_empty_prog_array, namely
+>> struct bpf_prog_array hdr;
+>>
+>> Also, once -fms-extensions is enabled, we can use transparent struct
+> 
+> Typo: "since" instead of "once".
+
+Ah yes, thanks!
+
+> 
+>> members in struct bpf_prog_array.
+>>
+>> Notice that the newly created type does not contain the flex-array
+>> member `items`, which is the object causing the -Wfamnae warnings
+>> in struct bpf_empty_prog_array.
+>>
+>> With these changes, fix the following warnings:
+>>     
+>> 7659 ./include/linux/bpf.h:2369:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>> include/linux/bpf-cgroup.h | 2 +-
+>> include/linux/bpf.h        | 8 ++++++--
+>> kernel/bpf/core.c          | 6 +++---
+>> 3 files changed, 10 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+>> index 2f535331f926..e7d266600ac7 100644
+>> --- a/include/linux/bpf-cgroup.h
+>> +++ b/include/linux/bpf-cgroup.h
+>> @@ -184,7 +184,7 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
+>> 	struct bpf_prog_array *array;
+>>
+>> 	array = rcu_access_pointer(cgrp->bpf.effective[type]);
+>> -	return array != &bpf_empty_prog_array.hdr;
+>> +	return (void *)array != (void *)&bpf_empty_prog_array.hdr;
+>> }
+>>
+>> /* Wrappers for __cgroup_bpf_run_filter_skb() guarded by cgroup_bpf_enabled. */
+>> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+>> index 05b34a6355b0..488de065466e 100644
+>> --- a/include/linux/bpf.h
+>> +++ b/include/linux/bpf.h
+>> @@ -2360,13 +2360,17 @@ struct bpf_prog_array_item {
+>> 	};
+>> };
+>>
+>> -struct bpf_prog_array {
+>> +struct bpf_prog_array_hdr {
+>> 	struct rcu_head rcu;
+>> +};
+>> +
+>> +struct bpf_prog_array {
+>> +	struct bpf_prog_array_hdr;
+>> 	struct bpf_prog_array_item items[];
+>> };
+>>
+>> struct bpf_empty_prog_array {
+>> -	struct bpf_prog_array hdr;
+>> +	struct bpf_prog_array_hdr hdr;
+>> 	struct bpf_prog *null_prog;
+>> };
+> 
+> AFAICT, this struct exists entirely to populate a single element of "items" in a global variable. (I only see "null_prog" used during the initializer.) None of this is needed; globals will be correctly sized with an array initializer of a FAM. Totally untested:
+> 
+> struct bpf_prog_array bpf_empty_prog_array = {
+>      .items = { NULL, },
+> };
+
+Okay, in this case the patch would look as follows:
+
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index 2f535331f926..b2e79c2b41d5 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -184,7 +184,7 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
+  	struct bpf_prog_array *array;
+
+  	array = rcu_access_pointer(cgrp->bpf.effective[type]);
+-	return array != &bpf_empty_prog_array.hdr;
++	return array != &bpf_empty_prog_array;
+  }
+
+  /* Wrappers for __cgroup_bpf_run_filter_skb() guarded by cgroup_bpf_enabled. */
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 05b34a6355b0..4f5b9e85a20c 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -2365,18 +2365,13 @@ struct bpf_prog_array {
+  	struct bpf_prog_array_item items[];
+  };
+
+-struct bpf_empty_prog_array {
+-	struct bpf_prog_array hdr;
+-	struct bpf_prog *null_prog;
+-};
+-
+  /* to avoid allocating empty bpf_prog_array for cgroups that
+   * don't have bpf program attached use one global 'bpf_empty_prog_array'
+   * It will not be modified the caller of bpf_prog_array_alloc()
+   * (since caller requested prog_cnt == 0)
+   * that pointer should be 'freed' by bpf_prog_array_free()
+   */
+-extern struct bpf_empty_prog_array bpf_empty_prog_array;
++extern struct bpf_prog_array bpf_empty_prog_array;
+
+  struct bpf_prog_array *bpf_prog_array_alloc(u32 prog_cnt, gfp_t flags);
+  void bpf_prog_array_free(struct bpf_prog_array *progs);
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 67eb12b637a5..ca39d2e690b9 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2613,8 +2613,10 @@ static struct bpf_prog_dummy {
+  	},
+  };
+
+-struct bpf_empty_prog_array bpf_empty_prog_array = {
+-	.null_prog = NULL,
++struct bpf_prog_array bpf_empty_prog_array = {
++	.items = {
++		{ .prog = NULL },
++	},
+  };
+  EXPORT_SYMBOL(bpf_empty_prog_array);
+
+@@ -2625,14 +2627,14 @@ struct bpf_prog_array *bpf_prog_array_alloc(u32 prog_cnt, gfp_t flags)
+  	if (prog_cnt)
+  		p = kzalloc_flex(*p, items, prog_cnt + 1, flags);
+  	else
+-		p = &bpf_empty_prog_array.hdr;
++		p = &bpf_empty_prog_array;
+
+  	return p;
+  }
+
+  void bpf_prog_array_free(struct bpf_prog_array *progs)
+  {
+-	if (!progs || progs == &bpf_empty_prog_array.hdr)
++	if (!progs || progs == &bpf_empty_prog_array)
+  		return;
+  	kfree_rcu(progs, rcu);
+  }
+@@ -2653,7 +2655,7 @@ static void __bpf_prog_array_free_sleepable_cb(struct rcu_head *rcu)
+
+  void bpf_prog_array_free_sleepable(struct bpf_prog_array *progs)
+  {
+-	if (!progs || progs == &bpf_empty_prog_array.hdr)
++	if (!progs || progs == &bpf_empty_prog_array)
+  		return;
+  	call_rcu_tasks_trace(&progs->rcu, __bpf_prog_array_free_sleepable_cb);
+  }
+
+Could maintainers give us feedback or comment on this, please? :)
+
+Thanks!
+-Gustavo
