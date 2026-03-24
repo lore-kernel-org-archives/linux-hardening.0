@@ -1,208 +1,131 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010041.outbound.protection.outlook.com [52.101.201.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126F53C9424;
-	Tue, 24 Mar 2026 09:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DCF3D6461
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 14:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.173
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774344799; cv=fail; b=kpz8R+1VMrEymHWTZZhE3rCi23RdmvVuewV828/bUs4fGhC+tGuDICygLN0jwaY07DXU1flwiGf4+Y6PkfY370Jvor1KfQbE04cqsVvlTtFPBa0sEDoUuT2t9VAJo6jYhKFfMzLMFDls9PwZw9y42TtMFsYBBcFhsPZjQCdPrqk=
+	t=1774363249; cv=pass; b=ehWhsynMSM2OEttANyR2bmU9AcyEBewylZmDFMQmioNAgYBqQPd9OaZ4u2Wa6HbWymEk3AnRfoJJwVxUobtu8N8YPfou8sxItzfH/M98nKq6WwkkUZWIR6fyd+URlnbCLQbGQFEKhAFgIayVLZTIUtIDG5X5Q4rjJSeH0r6ZZnc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774344799; c=relaxed/simple;
-	bh=5p24lGmFZNQEPLj/uJqzWcR2EScfO/crGkU4iBJnx1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mEQFws2o0I1Ql86gN5P3eSTbC6PmWzRHf/9I1vmVGVGiT1QjjWIFTVsBOs+QhDu/MpMQLLhGau53bcxGs86DupbfYld2NCIIfdGsv1DqoF9zQa40vpNhlW3VJ+Z5guoDsTcuuzrAUkoPlZQQdxcgCx2v6J9xj5rPilO8hK1lSlQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rXEeuRwX; arc=fail smtp.client-ip=52.101.201.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1774363249; c=relaxed/simple;
+	bh=vIOTQppSONw9z50oLZexhAWHsb4Q3HZrSfu8BpJO/QA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hDTAKswBfdmGc91Mexw90TcuHDH/R94U9cMQ9bybGxta4hVABPTsTykIiJWo7sA7f2dXxqmnoCT7GE3Vv4eL3gXtLIgjpdNNccAWIdbgaxi+IabrcOF+tki8ta4e8UFbB2VCTrSXbOsUzToXmeGKye7mlsfFhHJDdNBaIbzTa48=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T5QR1fr5; arc=pass smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rXEeuRwX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AyYwOeXOV/ps0WUeIMDNjg6ajBihArUswcC9fNCCcWy4M5F+ZihHbGvyZHz/SvNdP/7aky0G4NR02DGRrt2SRnrnD4irxVeraVXeKPa7DMSgp0JdkxNERpIUUZrDurjYfUv21sQr+p89fU3v8RkfRmxVpENxNvgtjkxTVAXcZOvJ7luDWHlpQRmufvhf+w4AMlnOepcLnlmUbvwxGN7NtrO0juZn/+oHJidMk7/G/ZrNi5YuZAb2+ngpIQ8HawEsLsgPriBdtxAHqi9s1nqPS2TvnrvlHCFQCAZ97mGEMdQmaE3q4e1KLa75AEQlu5WjwHuAdjxkz4crx+/Btp3mog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0Jn1rxIMqtrVY3VP4T+i8sj/pQJQHg8ZWnKn799NX1k=;
- b=baxG1NZCA6fn2krMbM1gDezQ31ydsWl+v5hKd7kU8NUedko+w/5aFdHeq/ovIdItdAjPyzAhe8HHEM1GTRxEWYxKUUUMSAfeOkMfvL46wk48vfaugDod/e70Tv5Z10YZdpBQdofqma0zndzjU6OyYEXFaCcwR70HG87BlC9S5Rl+GW7nCb1vMvZZfoFY+LMjSZYkI0RdyRnrSM0JTdVtKWsjeneQXWEt97L4OppYac023jYmW9a8RTpKMm9Wp3U848rmb/B/uxko7643k4rP3V5p1Y0UiF7U2JfGcVZQf/s1vB8x228PczKnjESVjGgxEHXyiRUiN0AUFSoh9anHFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Jn1rxIMqtrVY3VP4T+i8sj/pQJQHg8ZWnKn799NX1k=;
- b=rXEeuRwXNCf/c9/f31fNs8xkgtpj32t3AFbRMOP2vgHiURoFtjoNQ/CoE7BNYe1fsV5QztXfSvxZoPYMCWOuCWAWCH2+3z/UUZ8oCURSWy8CiVnkReSzhyv/h7ti2nN85zUBe7DjQnvg2PvhfBLAPhn3uENFU9Oectpz28VlXOGmuO8aVK7jq8G8IHzrhwSXoWjYnw+WXRQ9S1tQecsWGjg5ZE32d5EUAKggeiutxJz9B8WHqpxKA5Vm2NzNx8g9pprcn2t7f/O8AmlSWytu7WY7yJ4nnoscdZGqp9MiImwDEazwKBPIJpjsraOFiUKp5YMEqoS7bcBuCSYX/hyJTQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB7914.namprd12.prod.outlook.com (2603:10b6:510:27d::13)
- by SN7PR12MB6789.namprd12.prod.outlook.com (2603:10b6:806:26b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Tue, 24 Mar
- 2026 09:33:13 +0000
-Received: from PH7PR12MB7914.namprd12.prod.outlook.com
- ([fe80::d390:582:5536:40ad]) by PH7PR12MB7914.namprd12.prod.outlook.com
- ([fe80::d390:582:5536:40ad%5]) with mapi id 15.20.9723.013; Tue, 24 Mar 2026
- 09:33:13 +0000
-Date: Tue, 24 Mar 2026 17:33:06 +0800
-From: Kai-Heng Feng <kaihengf@nvidia.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: rafael@kernel.org, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Shiju Jose <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Will Deacon <will@kernel.org>, 
-	Huang Yiwei <quic_hyiwei@quicinc.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] acpi/apei: Add NVIDIA GHES vendor CPER record
- handler
-Message-ID: <acJYJlm2JZn_W7yO@M5403NF6WD>
-References: <20260319111315.87624-1-kaihengf@nvidia.com>
- <20260319111315.87624-3-kaihengf@nvidia.com>
- <20260320145254.GB699200@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260320145254.GB699200@bhelgaas>
-X-ClientProxiedBy: TP0P295CA0009.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:910:2::19) To PH7PR12MB7914.namprd12.prod.outlook.com
- (2603:10b6:510:27d::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5QR1fr5"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-79801df3e42so70486837b3.0
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Mar 2026 07:40:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774363247; cv=none;
+        d=google.com; s=arc-20240605;
+        b=le6Eq3FYynfl46JgdbnMTVpwFpwcMEqoDC9a9mr+YAg6XJHHhXa8eJetHlykfZANF4
+         wfB9N1Xy8UItzSTFo/1Tzej62oOqVpkqD3u3z46imHjHFwJlykfa9BkpxGfE95nIEBcM
+         +hWCpsOnRQ17p4yqoscAsuOVh+KLOT2utFzYEeO5MRTSF5lZBJgL3i5tl+eBFPP2vED+
+         SC3kXnvPalZ7+CGw4bfIAjxJQHgGHTegH+T+6JNJtZGdiV6m4gWemvX60fpiPCnkvp+D
+         9i2juB3As72A6sz21JZcztefKgdwChrK/kTizQ0Z9j9tdmsFZLUvCQ+cucYlH6MSdFSQ
+         xYNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=vIOTQppSONw9z50oLZexhAWHsb4Q3HZrSfu8BpJO/QA=;
+        fh=fBXN+3XoSrmwC04D3paHJxCuM4s/bbMlpm8QFLpR5J4=;
+        b=WJdxSkUI0wNHgtj9AEdHja3yFYOL+xAEFklp10AvhZp9UPVf7d5e4YrzTSxCqPxafl
+         j8oaFGypJQOCgYX0MxzFpYnEnzByX9yjVRwZqQYn0xoSy8/YuEZdb7lg1HESpF2NR2tm
+         JfChuBsuwpnDuKdlVomk/W+7J7IDYu/GFFCpyZGRRTBOSB+lxj8iRotx5IZiAcrWeIos
+         bjmxSMz8RJjSAJgqTxBHfYamz2MJJYohafC7DFnf/LibZ9H++3Lgk/vJG4vEUALh1bfD
+         BMUN5wpkF4d0WzPFX5wpncHcr9gQbEPUQynzV383IlGI8nLJQouiTuxngGDN0IhF4Oib
+         XcrQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774363247; x=1774968047; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vIOTQppSONw9z50oLZexhAWHsb4Q3HZrSfu8BpJO/QA=;
+        b=T5QR1fr5LsUidi/oSaEMN/akhtx3oH2F3/ILSN4y9ePBxOpKFNONsW2SFRhPoNG0b7
+         cjVJE9iDIiqGxwzkhcM5OFxxilJUSUcwFyZjI6TiFubm/DdiqcJuYZdTlqZ8xj5LppZj
+         yG9owVHUYaZq1Nc+Ia9LrvLS9EIrTQY1tdQ8/+lut+OityHzoxWQbCKAL/cgiD8O4Mr2
+         tL6Qljdt2VN/sKufJ6JHwNZVdzo5Y3TCoHMChazIVGyB07xFag3JxH3+GQz0KsK6JxnC
+         F+lmdomEjA+RbcU2pKGgEhhKRHgl5qDQEVWguzmaUPDDMRW7SXbcoDrTdpKXx7sYqtbf
+         tAbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774363247; x=1774968047;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vIOTQppSONw9z50oLZexhAWHsb4Q3HZrSfu8BpJO/QA=;
+        b=ks9zFlAVRT1Bm71L20bB7RcNs0Zal+ma47tDIfifMJB5RHKZJzWJxhLQMhYpSf2wSh
+         EDBaTGSwghQFqHkIRAE7q+Ed6YR+3vGGikVJgxxKGFPFt2nZICd1dxM+BHvfX/yByS1M
+         ZP8J7rLrDqauAen2FQgR5Qe/QDty9/NX/+L/+4y6omOIO8EmZ9B8Mw23QGFCDIVVFxWn
+         S4HAzjjKbOI0QvjafPedNhP3yOfwmJDcmZCRfj2BJTYmIJgqZfr/rrkW0xef9JX/UuOA
+         RwyGFCcHp3QWfrlylhd5rIv0t8yGeiXJuDYI+FVhvV1/C+pI9anHkSmlW0JnhQpoIK+g
+         /DGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXuA7vTIlEA+955v9i/seBwpGPPHybc5T7/iKgEUg5AGwUBVBHKrcv4CE4muhT2FLsWcaZU5HUer2mfMixYdyA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSuPkGXPck0OLa/a9G+0WNx2MpRVhM0Of3UnYfwjq4vH+XrwCI
+	zEvDyfgCW2VhXXCuuxlTy4T9z9BK65Z1hqv/m3EMQf72leVuhVvgGVkB7Cpv+5/hjpoUoZ/mmsG
+	KOqW0QWisfDKEmnHnYmN5Jz7b6QW1/Nw=
+X-Gm-Gg: ATEYQzzDkSE1e7K+8IJ2jNwsIsQxs5F9SyrOXbcf6sB8k6yDmFy8JICSqchXHcBjHGq
+	A4ehD+P9gwIInC5FAwS1lign/omzxvQR5aK1k4fRNOmhVRZ2ZImOR0W8jjV+62kzYzRk7sB59UR
+	ySYMUWaz/WtCGxillTtqQ9n0G8jOr3ofdLqK+AEyr+lnPtT0OVYIRmqJfQNwC4Rym4eY8icKQ2G
+	tBEweYIQ2biygDqRpbSdnP7z3fpXbat1eSS9Yt1qgEWcEH1RSmOplXuHpVY14BRn/5v1n0Z4d6+
+	cvrH0ouxE5gv+hKiJ3f4FKvQrUWrCZd5mH8fJmQqF0MY7psNexA=
+X-Received: by 2002:a05:690c:386:b0:794:c283:5fb8 with SMTP id
+ 00721157ae682-79ac2f69d32mr32318717b3.25.1774363247300; Tue, 24 Mar 2026
+ 07:40:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB7914:EE_|SN7PR12MB6789:EE_
-X-MS-Office365-Filtering-Correlation-Id: 43af3ce0-a9d2-4bef-5ddb-08de89885edc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	txBaLoxKUvduNZ0ABrP9/7O0p3C0eoMoNn2+MYmRv0cxWcZX/nt8aylVlSpdS40RDURGtj4a6K1Lrl3VCMsBEdn0tEWONn1hliekb82Ohvci08hQbufaxpploS+f0MwWKM7GzpW/tdLvLL9XJuzsIF4rrLTtWGU3ROmf/5pQI9t/sekMWiNHaUAUU+ngZpejlGPBrvqSpc+bHsjzmdu79PikrTGhGsf3nzaoQD/UBSauM9pZUin9QUEOtDxd9/HCvojc3CNHU+SXQyvXBe50aHC2WT9LgTLYYDoN5OTf3GZY+QY84DZ9POFwCFx6b9VIOcIB72SPsqL21RX2chntlio85UqKkZMB8ZFp1b9it2szBc/GfFCgX22RgPbSauQBRRt6mT5ybaQV1igVFjyshGlaMzL8jyM84jFGg2gbaCNe+lOah6xVjvHKBc1yp26pZb+YB4RHk6QDWdtEVmRl6K1p0U+IMDTDLIROqiMWWtrAtponcSuabTWlw6kUaVqFde91CP5jB6F+EsuSUwrAmTGjIglsZvJKjtrwhWZ/N2oqkeKZcY+00BTKESF4ctLaptcbvAXib4TELu9liLugN/R0chD3P2fA+g61tQq0ylJ86eYn5Wm11WI5fNQhx/66lh3/mazJlsP2DXfZFGZ8evFXDkZUXLseQARWddCSX3PEUF7lvc6W4NYh/ptQI9Z5qcPuK9ty4u4bbi+IQWjewTiGXRpqMBDKzpzN2ncGfHU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB7914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NVujh+Gdo8owZea7dD932PpFKu91kBZIGvl0THdORSScfKiX06qV/khOWEB6?=
- =?us-ascii?Q?Mfl0OkWr98rNajy0OVttXsFnUErR8rHoDxCt6Rptlt6nO1ZgoCvLm7MnIpIT?=
- =?us-ascii?Q?fGhVwiZv8FI+Kxf+BN+7NFEYFcBXKdIjJSlOTrwrLKz7J1T2CBA4hgqyDDec?=
- =?us-ascii?Q?+pwbAn+IcdL488plkV9f2dQBfa1nlmidr2s7dcoo3e+7BQK4RqitYi219TiQ?=
- =?us-ascii?Q?4ABGv6e3YQYB4rLOpAgjYCEtye1WxVptzKvQHmpT8gsYETSqTisP/8YO5cT8?=
- =?us-ascii?Q?TeppZIylpa4zrDIgm/z9W8AqDnW0bHdi/0boc+qynY9pAXxOc9DbdjctnSFp?=
- =?us-ascii?Q?17ZXn827yRVGrDEY9J79kQGUAiFAvKsM3ca7sXBL4PDZ44ljqqcDvX5jcROi?=
- =?us-ascii?Q?4v5+uUcm1TO/fy6OcbtsB1cKLVoIlJnQTwsSVT5HCmMq+WJXx0RU9PsykEO6?=
- =?us-ascii?Q?GmyW28VfPdOByYluI1B9T17XWQbqpvFqsyFmQ4q2QRS0voLp8x6XBb4NzuFW?=
- =?us-ascii?Q?3oIrX5Uy3y0Q62eHHcd1uahImol3B4BZFig6VMIuV6ZHaVKk1O8EJh+J2hFB?=
- =?us-ascii?Q?etOuqNXcKiVZoP+NQU4ZpIel8+D6CXkwnlAvzK8N/FJKPR/MDq0fsoGS7zGe?=
- =?us-ascii?Q?sZ6amRjHadQ4uU8SUepBDpjjfFBzIqLkZs7DJnDcuDYrVTs2swQlAYoUo8Da?=
- =?us-ascii?Q?5Or4cS5y+ujqtrcvs02qWpBAqpUTH/7C3hHzTwBrDfS/2og21SsSLNoXfyM2?=
- =?us-ascii?Q?go4nw/iEnuqPWFfWeoKPGX2XNblPw3/HQviCY6UAuwZWzrUOVUoW2H162PQb?=
- =?us-ascii?Q?q/QtzmbJHj+Vniyf2G4uEt3VUhci5L5jpr2NRj2qG5jAN3fBYu78MUS/2uq/?=
- =?us-ascii?Q?Pzb/lmI3ksOC4cjb/36bAYx5x7ZSz63pbEhFuGoDHY+inC/FEb/sfthyaGi2?=
- =?us-ascii?Q?niK6LUFF7ZN1OelKgY/RC+Pq1a32WaNbMq5EiDqreO/rR0l781IlN+sf6485?=
- =?us-ascii?Q?YzRUdFpTLrGB1pf8ceCKLJPvFBmTPKkJqAm/Xh2gvXsUZ2qHB4wghuYz4dHP?=
- =?us-ascii?Q?uMKo1npbpszKuD8T3121KNdAZTXx8VUz3XnHwH0UB2mvNrK62AyZwwJk/yRB?=
- =?us-ascii?Q?aeAiH/TKn4qoLQEe2XIFHd7fuxYj++bHr1Q6NQxd627+R8zVlWYfpCQNTAFL?=
- =?us-ascii?Q?ZEuRjanbnDWPF3qrRDkaMImv0j+/5dtApEFxk0aj2PptLGriXUobB9wYRSaV?=
- =?us-ascii?Q?ZyY9fX7dM4gYimA/zt/TH2d450+uQQ9vmwyaoENHVu2ChkqN5hZ2pVp5NhnX?=
- =?us-ascii?Q?O8ZWNTOUBZHVFfJ/f0c9c4defgLIOIsUs2xJw2F1Duz7Q7wGDKn7gH8ulLee?=
- =?us-ascii?Q?/j9H1se/qIjVcBRZH/AZgA7V88vOm2VmtWQm6kkHEOoKB8uvQfFY340yLQDW?=
- =?us-ascii?Q?u0ofVC5oYrjJOGeLfeuSRrz8kVeeK10bE28P6UqxDX/+3R29p0gw36J97iwU?=
- =?us-ascii?Q?a9ryyaBuO0mHJ/OErt27REabvVPbYrpllncje7OS8YLUEcyepoQSzUZkuvcv?=
- =?us-ascii?Q?zXDYvkM7nvEWLG/kCL5JkV57TzukFeeP5pRgQd3bxvK248+FeiBKtEuZFoN7?=
- =?us-ascii?Q?6jFaUIEHGBR3oMvwD6wyAYasKgd9aMAw8MWU+XomdkQSkFZZ+X7FfQaFgbRz?=
- =?us-ascii?Q?ABKj0pV0U2R3fkbjvfjSbRc3BVBbRquWkbJAV/T8bv+6XVwWVAcqbdExLpKj?=
- =?us-ascii?Q?h9L1yupdpQ=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43af3ce0-a9d2-4bef-5ddb-08de89885edc
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB7914.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2026 09:33:13.6361
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wADm11okIeUUKk/je5lMOYeXokpF++P1nvW/44R5y//wSaYtLhPXT7oMkVYY2cFEhcfkawpfn0TpTLA44KTXjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6789
+References: <20260324040535.work.851-kees@kernel.org> <202603232224.C1555BF@keescook>
+In-Reply-To: <202603232224.C1555BF@keescook>
+From: sun jian <sun.jian.kdev@gmail.com>
+Date: Tue, 24 Mar 2026 22:40:36 +0800
+X-Gm-Features: AQROBzDuylfJpvIzbHVr5tertRSIgq0oIglskAWDMfwVyWLSS3eK64LQ-Sk2jqM
+Message-ID: <CABFUUZGYfw7=yHu8p7CW_JC6FSNSrT8jg1pAPqBK6nj_Br0iNw@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: Replace strncpy() with strnlen()+memcpy() in skel_map_create()
+To: Kees Cook <kees@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026-03-20 09:52, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
+On Tue, Mar 24, 2026 at 1:26=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
 >
+> On Mon, Mar 23, 2026 at 09:05:39PM -0700, Kees Cook wrote:
+> > While the original strncpy() would have copied a full 16 bytes from an
+> > overlong name (producing an unterminated field that the syscall rejects=
+),
+> > but this wasn't a reachable state. This replacement will instead always
+> > truncate to 15 bytes and keeps the NUL terminator, which should have no
+> > behavioral changes with the present code and avoids potential issues
+> > with future over-long string literals.
 >
-> On Thu, Mar 19, 2026 at 07:13:09PM +0800, Kai-Heng Feng wrote:
-> > Add support for decoding NVIDIA-specific CPER sections delivered via
-> > the APEI GHES vendor record notifier chain. NVIDIA hardware generates
-> > vendor-specific CPER sections containing error signatures and diagnostic
-> > register dumps. This implementation registers a notifier_block with the
-> > GHES vendor record notifier and decodes these sections, printing error
-> > details via dev_info().
-> >
-> > The driver binds to ACPI device NVDA2012, present on NVIDIA server
-> > platforms. The NVIDIA CPER section contains a fixed header with error
-> > metadata (signature, error type, severity, socket) followed by
-> > variable-length register address-value pairs for hardware diagnostics.
-> >
-> > This work is based on libcper [0].
-> >
-> > Example output:
-> > nvidia-ghes NVDA2012:00: NVIDIA CPER section, error_data_length: 544
-> > nvidia-ghes NVDA2012:00: signature: CMET-INFO
-> > nvidia-ghes NVDA2012:00: error_type: 0
-> > nvidia-ghes NVDA2012:00: error_instance: 0
-> > nvidia-ghes NVDA2012:00: severity: 3
-> > nvidia-ghes NVDA2012:00: socket: 0
-> > nvidia-ghes NVDA2012:00: number_regs: 32
-> > nvidia-ghes NVDA2012:00: instance_base: 0x0000000000000000
-> > nvidia-ghes NVDA2012:00: register[0]: address=0x8000000100000000 value=0x0000000100000000
+> Hm, I got a failure report, but it *seems* unrelated? But nothing else
+> fails that way recently, so I will try a v2 with the "unterminated at 16
+> bytes" behavior restored and see if it passes...
 >
-> Is there a convenient way to connect NVDA2012:00 with the actual device?  I
-> assume this is typically a PCIe device?  How would we relate this with PCIe
-> errors?
+> test_progs_no_alu32-x86_64-llvm-21:
+> https://github.com/kernel-patches/bpf/actions/runs/23472955268/job/683004=
+40546
+IMHO, it's a flaky test failure, likely caused by timer-related
+activity when selftests/bpf
+are running concurrently.
 
-The CPER report is from ARM RAS firmware and not neccessarily be related
-to a PCIe device.
+As for your patch, replacing strncpy() makes sense, but this also
+changes semantics
+for overlong map names: they are silently truncated to 15 bytes.
+I'd prefer an explicit length check and rejecting the overlong names,
+instead of normalizing
+them by truncation.
 
->
-> Consider a cover letter.  Some of these comments apply to the series.
-
-Will do in next version.
-
->
-> Wrap commit logs to fit in 75 columns.  When indented by "git log", all of
-> these overflow 80 columns by just a few characters.
->
-> Possibly reorder so the acpi/apei patches are together.  I don't think the
-> NVIDIA record handler depends on the PCI patch.
->
-> Typical subject line style in drivers/acpi/apei appears to be:
->
->   ACPI: APEI: GHES: Add ...
->
-> > +config ACPI_APEI_NVIDIA_GHES
-> > +     tristate "NVIDIA GHES vendor record handler"
-> > +     depends on ACPI_APEI_GHES
->
-> Maybe s/ACPI_APEI_NVIDIA_GHES/ACPI_APEI_GHES_NVIDIA/ since there will
-> likely be more, and they'll sort nicely if the vendor is at the end.
-
-OK, will do.
-
->
-> > +     help
-> > +       Support for decoding NVIDIA-specific CPER sections delivered via
-> > +       the APEI GHES vendor record notifier chain. Registers a handler
-> > +       for the NVIDIA section GUID and logs error signatures, severity,
-> > +       socket, and diagnostic register address-value pairs.
-> > +
-> > +       Enable on NVIDIA server platforms (e.g. DGX, HGX) that expose
-> > +       ACPI device NVDA2012 in their firmware tables.
->
-> Wrap to fit in 80 columns like the rest of this file.
->
-> > +++ b/drivers/acpi/apei/nvidia-ghes.c
->
-> Maybe rename to "ghes-nvidia.c" so future decoders for other vendors are
-> grouped?
-
-Will do.
+Sun Jian
