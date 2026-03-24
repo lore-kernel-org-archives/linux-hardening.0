@@ -1,134 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19052391E4B;
-	Tue, 24 Mar 2026 16:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C94C3A0E81;
+	Tue, 24 Mar 2026 16:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774368974; cv=none; b=Wd1mlmx/wjPqGieybB9dFQvQxy3j+lGceH8AnEdZsDR4v+5fLWZCvqKtlhxl3Ty1Tn44aaLEA1RTVUGLXrfNTHiG7gjvGE0cxV0vgVXbooFk+0uazJxTC8N/lDdvrNDvswpyoCs+DKD3YnKlGFcqJt0ps46YcF0ifwkxrCKA7Ls=
+	t=1774369424; cv=none; b=AgDi7mTAtojLpudjPrZQouYg/xpFbJQa/I1MyqKfK/s6lM09/OWOx0MUfdSCINMW+m8Y6q9gqEEbp+HWPs8iAyiSivn+FlJeNMWM9jW9JcPBvy7+HKOBI+DEfkCnm3bV/Gm172C7FPLY6ako1pUlyuoOznOGH+x7JguNBpP6Y0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774368974; c=relaxed/simple;
-	bh=8mE/hk4JeconWD2CxN0hrl6k/Bs3a/bHP5M+/Wb+Nqo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SNy6ZQC7pzpI4wykejWCKbYeiG4avtA5HmsprVXj9Nyo5mfW49eebNCTeeN6rHeChWREBzirWRZRvrkB2aL4I8TMW1lnH3MWA9MzIJx8aZMAmIAoOsu0X3tgfkXAvjZ7ICws2BNwdq3uQsIGXAzIV3Ga8XYKWlRZDvES9337Kkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5hnkLMW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774369424; c=relaxed/simple;
+	bh=WQ1A8b35lF7Jv9ylYLhpyHOZ6n4C5LJ0Rc2K5iNsUD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CrAY0+fY+GcpzWEgokAc/sB0cerIWTm1UtiO9iez+LM6WzCFvIRtwSJohy7+ving0qXr+pBZHJLvR8nlKaGkw7zZRkVlX0hFuKVNethplkJHSC5QWdOxKMN5bUGdEETGWJEK2TAIi8HmY2II1ziIdQnAPECbJdxOCB9K3cwjq0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfgJFV0X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5hnkLMW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7408C19424;
-	Tue, 24 Mar 2026 16:16:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfgJFV0X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0C97C19424;
+	Tue, 24 Mar 2026 16:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774368973;
-	bh=8mE/hk4JeconWD2CxN0hrl6k/Bs3a/bHP5M+/Wb+Nqo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=J5hnkLMWBHFYljVWnrj80NbDVCKVmKeGqKKw2iceQXK+GvQL6sA8L966X02lluQuB
-	 FmaDZHkDe9Nzwn/e3fxdptX3iIFBGmZDzgU2Y/vCPmCX6Ir40ZUZkfnINQMZg8ylrt
-	 uFKNNQiCO76ZrxZhLEbMREHbqK14CCXzWOqmcpT70kwutnjzt3vsVQk6MyHh3Uce2q
-	 5EGzhwAetFPRy4rT4UWVWnTb3/sdRk0emCICZV6wWigLepKTM+M717w3g9kSpk/tB2
-	 XbpYutddsk+CkWRvpBz7/qgtiFGBaDnceGcQZCrY0nggTslBcj6P898LyfsoXf8+CR
-	 BFEMIIaHyb+rg==
+	s=k20201202; t=1774369424;
+	bh=WQ1A8b35lF7Jv9ylYLhpyHOZ6n4C5LJ0Rc2K5iNsUD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CfgJFV0XxugbAMVRakJTh3ANfvm9yIhKA/ucPhw5VKcgSqmTJ359JMD+eABCpTvoe
+	 7M2Zs9uA9nGLFo9vGZcBjFHYxW7ZNjXNKgoiA2AkPX9OTzxzGByZGzAwrg/rf9PdIN
+	 yuq5TYR1gxobpzkdVvq7VR6xJJsFMu9F62ChoDEDAdHtzbNYuDPzUaB2T+Xyrq3O09
+	 R+P1Awee3rcYLxLAf6ccirJYBoY8VkF+KDmCwStpxMzVetiXnaxKWjTFPzjFgNJpNU
+	 KTYQs1fNaCvELzv8VDQDnY++OBxekLX7u7KeXE+fVcfMO8jXmVoMce0ofgN8ds0LT7
+	 at/tb+dxHGzqA==
+Date: Tue, 24 Mar 2026 09:23:43 -0700
 From: Kees Cook <kees@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	sun jian <sun.jian.kdev@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>,
 	Eduard Zingerman <eddyz87@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
 	Yonghong Song <yonghong.song@linux.dev>,
 	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] libbpf: Replace strncpy() with strnlen()+memcpy() in skel_map_create()
-Date: Tue, 24 Mar 2026 09:16:09 -0700
-Message-Id: <20260324161605.make.168-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] libbpf: Replace strncpy() with strnlen()+memcpy() in
+ skel_map_create()
+Message-ID: <202603240919.D248D71B48@keescook>
+References: <20260324040535.work.851-kees@kernel.org>
+ <202603232224.C1555BF@keescook>
+ <CAADnVQLhWURvQ=gBYQvuEa3pTxabYQYhrPm9QG0gbxL9ee=vng@mail.gmail.com>
+ <D53376BA-4772-486B-A18A-6858C1732723@kernel.org>
+ <CAADnVQLA3K6v_+_7-+BDVEeZ2N=6229FL6Ko=3ywDWsPVOPLcg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3193; i=kees@kernel.org; h=from:subject:message-id; bh=8mE/hk4JeconWD2CxN0hrl6k/Bs3a/bHP5M+/Wb+Nqo=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmHdpxknszs8fJUZ9/a/ccF1DqPVom+/jjJOPvZN6HaT 1Vf4s+UdZSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEykbTUjw8w/uxSfS2/ueWIq qfo/c99zLqX7F37vkNf28478va40czMjw51anXO287+W2St6/r7+MchVg2ctHw/P0qVLnf2jeg4 84QAA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQLA3K6v_+_7-+BDVEeZ2N=6229FL6Ko=3ywDWsPVOPLcg@mail.gmail.com>
 
-Replace the deprecated[1] strncpy() with strnlen() on the source
-followed by memcpy(). Normally strscpy() would be used in this case,
-but skel_internal.h is shared between kernel and userspace tools, and
-strscpy() is not available in the userspace build context.
+On Tue, Mar 24, 2026 at 08:38:48AM -0700, Alexei Starovoitov wrote:
+> On Tue, Mar 24, 2026 at 8:28 AM Kees Cook <kees@kernel.org> wrote:
+> >
+> >
+> >
+> > On March 24, 2026 7:42:04 AM PDT, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> > >On Mon, Mar 23, 2026 at 10:25 PM Kees Cook <kees@kernel.org> wrote:
+> > >>
+> > >> On Mon, Mar 23, 2026 at 09:05:39PM -0700, Kees Cook wrote:
+> > >> > While the original strncpy() would have copied a full 16 bytes from an
+> > >> > overlong name (producing an unterminated field that the syscall rejects),
+> > >> > but this wasn't a reachable state. This replacement will instead always
+> > >> > truncate to 15 bytes and keeps the NUL terminator, which should have no
+> > >> > behavioral changes with the present code and avoids potential issues
+> > >> > with future over-long string literals.
+> > >>
+> > >> Hm, I got a failure report, but it *seems* unrelated? But nothing else
+> > >> fails that way recently, so I will try a v2 with the "unterminated at 16
+> > >> bytes" behavior restored and see if it passes...
+> > >>
+> > >> test_progs_no_alu32-x86_64-llvm-21:
+> > >> https://github.com/kernel-patches/bpf/actions/runs/23472955268/job/68300440546
+> > >
+> > >Don't fix what is not broken.
+> >
+> > strncpy is broken. ;) This is one of the 6 remaining uses of strncpy in the kernel. But it needs a v3. I'll add explicit rejection of over-long strings and validate that the bpf test was a flake, as suggested in the other reply.
+> 
+> Don't. it's not a kernel.
 
-The source map_name is a NUL-terminated C string (the only caller
-passes the "__loader.map" 12 character string literal). The destination
-attr.map_name is char[BPF_OBJ_NAME_LEN] (16 bytes) in union bpf_attr,
-ultimately passed to the bpf() syscall.
+This is a very terse reply, so I'm not sure what you're trying to tell
+me.
 
-The bpf(BPF_MAP_CREATE) syscall, through bpf_obj_name_cpy(), requires a
-NUL terminator within this 16-byte array, rejecting names that use all 16
-bytes. Valid names are therefore at most 15 characters, but this wasn't
-being checked via the skel_map_create() path. Add a matching check and
-refuse 16+ character strings early, as they would be refused later by
-bpf_obj_name_cpy().
+Do you mean to say that this header is not used by the Linux kernel
+build? If so, that's a misunderstanding. I found this case due to 0day
+complaining about it after I removed the kernel's strncpy implementations:
+https://lore.kernel.org/all/202603240325.rd8gRV6s-lkp@intel.com/
+https://lore.kernel.org/all/202603241330.vmNnBWvZ-lkp@intel.com/
 
-The attr is pre-zeroed with memset() at the top of the function, so
-the last byte of attr.map_name is always NUL, meaning the memcpy()
-of just the non-NUL characters from the source will always produce a
-NUL-terminated destination string.
+(I had originally ignored tools/ since normally the files there are not
+included in kernel builds, but this didn't seem to be the case for this
+BPF header.)
 
-Link: https://github.com/KSPP/linux/issues/90 [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v3: instead of truncation, refuse the long length (test appears to have been a flake)
- v2: https://lore.kernel.org/lkml/20260324053036.it.906-kees@kernel.org/
- v1: https://lore.kernel.org/lkml/20260324040535.work.851-kees@kernel.org/
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: sun jian <sun.jian.kdev@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Song Liu <song@kernel.org>
-Cc: Yonghong Song <yonghong.song@linux.dev>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: Stanislav Fomichev <sdf@fomichev.me>
-Cc: Hao Luo <haoluo@google.com>
-Cc: <bpf@vger.kernel.org>
----
- tools/lib/bpf/skel_internal.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+-Kees
 
-diff --git a/tools/lib/bpf/skel_internal.h b/tools/lib/bpf/skel_internal.h
-index 6a8f5c7a02eb..2d38c387f43c 100644
---- a/tools/lib/bpf/skel_internal.h
-+++ b/tools/lib/bpf/skel_internal.h
-@@ -236,6 +236,7 @@ static inline int skel_map_create(enum bpf_map_type map_type,
- {
- 	const size_t attr_sz = offsetofend(union bpf_attr, excl_prog_hash_size);
- 	union bpf_attr attr;
-+	size_t map_name_len;
- 
- 	memset(&attr, 0, attr_sz);
- 
-@@ -243,7 +244,12 @@ static inline int skel_map_create(enum bpf_map_type map_type,
- 	attr.excl_prog_hash = (unsigned long) excl_prog_hash;
- 	attr.excl_prog_hash_size = excl_prog_hash_sz;
- 
--	strncpy(attr.map_name, map_name, sizeof(attr.map_name));
-+	/* attr.map_name must be NUL-terminated, like bpf_obj_name_cpy() */
-+	map_name_len = strnlen(map_name, sizeof(attr.map_name));
-+	if (map_name_len == sizeof(attr.map_name))
-+		return -EINVAL;
-+	memcpy(attr.map_name, map_name, map_name_len);
-+
- 	attr.key_size = key_size;
- 	attr.value_size = value_size;
- 	attr.max_entries = max_entries;
 -- 
-2.34.1
-
+Kees Cook
