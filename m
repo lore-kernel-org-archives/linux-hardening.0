@@ -1,173 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C94405AA6;
-	Wed, 25 Mar 2026 17:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DC92F3C18;
+	Wed, 25 Mar 2026 17:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774459604; cv=none; b=Jy4UusPTiwUAJ+wpkI1U7ky0oT4MeUy/F4CDiBXjzC75quFW2okmcwqTzFyNIHahCID0um8/qs8MTVMD775NZ8rCsUn3tPbBfSFPCThErHqjLV+8T3FyyDOfHP2XIvDruLmfOMlgNfXI290jVApBGxvADokSnUfAbqe5XYn0dvo=
+	t=1774459659; cv=none; b=ZmRaWlAoJp0V7CtQeDr2Pi6jEelyZp36bBjSnoEGMDAjP1tgGkAC8bBtLTj2CeQt2NTY8UkZE/SYX29Srsz4/DlE3J/vGQxbaoCop5SXopLjYz1aqcbAjejQqHaOQny3mDVc5RQoW0uUfSmT2mn1hbl0JQ40qDy217YD7h71H3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774459604; c=relaxed/simple;
-	bh=8MKiB5e+7wU5JMRzvptDLH6dhESil3VUSqbtlMcTZuo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=gO2iNtkVbvNhL0TvzE/itYhZUhIHCAx2hSr3LHU4REwgDukveiqT8ydKDh/6+4eeREWnMG52bO4ZVFQixwMICMGXjjaedGRmweWpyZbkKSndIFWq3ZLz4uspOhfNxRIdQWiddWh9XPDRJXUAXgQRhbTNCWdHgV7U2xL8bpwQ7ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2KgyqFj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774459659; c=relaxed/simple;
+	bh=8D0qiHwmmjHvb8SeystR2mv+/7nC+vaVWV+hwdICHhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhdsMDAHZKrhDLjjBGmsEFarUMdMdGeImZKUDcGhJlBMJkskaMR/iYTAFGVVc3mB+aNt9XrbuJVyf7Qf2YvmMY3c/4IjNi5wWtCdHviWIYO4347a/wQ9Og7efdcH4NqmuLavi6S88Yz8anxA7dE5w8J/iVNKJWO3AgnwtvxnK3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UigdTlUq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2KgyqFj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38504C4CEF7;
-	Wed, 25 Mar 2026 17:26:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UigdTlUq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D715C4CEF7;
+	Wed, 25 Mar 2026 17:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774459603;
-	bh=8MKiB5e+7wU5JMRzvptDLH6dhESil3VUSqbtlMcTZuo=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=e2KgyqFjz6lx9UPb1Acn7jv987HppCSYpFVXquvg7iB4GYqk7WWOs56LHWoBcByjs
-	 Q3qg9wuNNMfNmx4Z2zTreksSuBMSF0UENwBddzM2090FC7LQt+bFJD/EtqiXP851GJ
-	 aZk+dFvepJ1z0vo4BV7ZVzHT4fKWL8LcX5WRecltj9jUDCOXFaLNTxH5aBlQt1BMtc
-	 TknlxWKbaLm3FUTAC+vLNTYpSzdYh9I885rUnCspFKnxl0R5Mw7iFAWh3E9odMazoJ
-	 W46alJmfyxn+HpyhEL0URuJuXoPbAWw9oppwa2x68JZ4PcemzOpJP2FJ73m/73PxLb
-	 fTUgc/vPNYfmA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1B705F4006E;
-	Wed, 25 Mar 2026 13:26:42 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 25 Mar 2026 13:26:42 -0400
-X-ME-Sender: <xms:0RrEadAZVvCcZD5UoJjuYkc2UKomG5u8aIZIDmA1aMvD_lsLgBYqxw>
-    <xme:0RrEaWWxKLcDk3WpBUpYgfrTOuDupuNsqp659RvsL4oxBF5JTEErGLKsUy_Dt6AUJ
-    irO6MRRGvhU1n8jRbGkhDkQfnIPTlL1T4FiuBYM0FJ5GSJT-UM44x8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefvdehtdeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepghhushhtrghvohgrrhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvg
-    gvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhr
-    rggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqsghlohgtkhesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdr
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidroh
-    hrghdruhhk
-X-ME-Proxy: <xmx:0hrEaciY_Eefhlg7ZXsfQz56aA9-v4gO6O7hd1-ic03dRQdmbYqxqA>
-    <xmx:0hrEaRmk_FfkqLRKZDroLRG6i3HcrWdtEbjgAnFWYWDYPEL5eGiPCA>
-    <xmx:0hrEaYiNstqPBqa3noi3DhTwKjnmJW_03_WYtB1nHvbfdQ0VDq8yuQ>
-    <xmx:0hrEaUF0AyO5FiQPVc94gS_2soX9DtEt6NO1xl20JQWZ56PZq3kXMA>
-    <xmx:0hrEaau99OhYO1WQlm846Zq84gmzP4vVpFDK8bFF4TLPC4LTvGEz2ALD>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id D77E2780075; Wed, 25 Mar 2026 13:26:41 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1774459659;
+	bh=8D0qiHwmmjHvb8SeystR2mv+/7nC+vaVWV+hwdICHhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UigdTlUq3VTSBsrqrSgXiPV9LC26U4A0VXJnfPBeZglP1B/gsqdFO3yyOWT5iD0GD
+	 TlI86425boz41sc1/yhKz0IUtuKlbqROJLW41cTfEjTgJlcSDUmDdHX4GexwdZCiOn
+	 smC7vgtpPh3PTL+ldPYD9UUU6MWoaY14yqizZgtUgKVw+WM7aZzNVbmFwHb4Plh2ui
+	 +SJhRQd+NdwRhGgofAUXAU7AIghSSQhNeLurTLSMTQkr8lnJ1ZIpe6aIJ2QIQmkhzY
+	 3QrNTHXIYcYXiNRyBzmdhODrbvyF1Ie+9uFu5o03VUfCupBSmBu7Q6yMWzUlCQR+Dg
+	 5Sq03GZmp1Mcw==
+Date: Wed, 25 Mar 2026 17:27:34 +0000
+From: Simon Horman <horms@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Chas Williams <3chas3@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"moderated list:ATM" <linux-atm-general@lists.sourceforge.net>,
+	"open list:ATM" <netdev@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] atm: nicstar: simplify allocation
+Message-ID: <20260325172734.GA334461@horms.kernel.org>
+References: <20260324032243.26387-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AyMVdAmERJ9c
-Date: Wed, 25 Mar 2026 13:26:21 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Alexander Viro" <viro@zeniv.linux.org.uk>, kees@kernel.org,
- gustavoars@kernel.org
-Cc: linux-hardening@vger.kernel.org,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <cc8ff9a7-d7f6-4588-82ba-e77c99574e93@app.fastmail.com>
-In-Reply-To: <20260303162932.22910-1-cel@kernel.org>
-References: <20260303162932.22910-1-cel@kernel.org>
-Subject: Re: [RFC PATCH] iov: Bypass usercopy hardening for kernel iterators
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260324032243.26387-1-rosenp@gmail.com>
 
+On Mon, Mar 23, 2026 at 08:22:43PM -0700, Rosen Penev wrote:
+> Use a flexible array member with kzalloc_flex to combine allocations
+> into one.
+> 
+> Add __counted_by for extra runtime analysis. Move counting variable
+> assignment to right after allocation as required by __counted_by.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
+To be honest I'd prefer that we discussed deprecating and removing ATM
+rather than cleaning it up. Is anyone using it?
 
-On Tue, Mar 3, 2026, at 11:29 AM, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->
-> Profiling NFSD under an iozone workload showed that hardened
-> usercopy checks consume roughly 1.3% of CPU in the TCP receive
-> path. The runtime check in check_object_size() validates that
-> copy buffers reside in expected slab regions, which is
-> meaningful when data crosses the user/kernel boundary but adds
-> no value when both source and destination are kernel addresses.
->
-> Split check_copy_size() so that copy_to_iter() can bypass the
-> runtime check_object_size() call for kernel-only iterators
-> (ITER_BVEC, ITER_KVEC). Existing callers of check_copy_size()
-> are unaffected; user-backed iterators still receive the full
-> usercopy validation.
->
-> This benefits all kernel consumers of copy_to_iter(), including
-> the TCP receive path used by the NFS client and server,
-> NVMe-TCP, and any other subsystem that uses ITER_BVEC or
-> ITER_KVEC receive buffers.
->
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  include/linux/ucopysize.h | 10 +++++++++-
->  include/linux/uio.h       |  9 +++++++--
->  2 files changed, 16 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/ucopysize.h b/include/linux/ucopysize.h
-> index 41c2d9720466..b3eacb4869a8 100644
-> --- a/include/linux/ucopysize.h
-> +++ b/include/linux/ucopysize.h
-> @@ -42,7 +42,7 @@ static inline void copy_overflow(int size, unsigned 
-> long count)
->  }
+>  drivers/atm/nicstar.c | 17 +++++------------
+>  drivers/atm/nicstar.h |  4 ++--
+>  2 files changed, 7 insertions(+), 14 deletions(-)
 > 
->  static __always_inline __must_check bool
-> -check_copy_size(const void *addr, size_t bytes, bool is_source)
-> +check_copy_size_nosec(const void *addr, size_t bytes, bool is_source)
->  {
->  	int sz = __builtin_object_size(addr, 0);
->  	if (unlikely(sz >= 0 && sz < bytes)) {
-> @@ -56,6 +56,14 @@ check_copy_size(const void *addr, size_t bytes, bool 
-> is_source)
->  	}
->  	if (WARN_ON_ONCE(bytes > INT_MAX))
->  		return false;
-> +	return true;
-> +}
+> diff --git a/drivers/atm/nicstar.c b/drivers/atm/nicstar.c
+> index 24e51343df15..2f6a3637aeab 100644
+> --- a/drivers/atm/nicstar.c
+> +++ b/drivers/atm/nicstar.c
+> @@ -867,23 +867,17 @@ static scq_info *get_scq(ns_dev *card, int size, u32 scd)
+>  	if (size != VBR_SCQSIZE && size != CBR_SCQSIZE)
+>  		return NULL;
+>  
+> -	scq = kmalloc_obj(*scq);
+> +	scq = kmalloc_flex(*scq, skb, size / NS_SCQE_SIZE);
+>  	if (!scq)
+>  		return NULL;
+> -        scq->org = dma_alloc_coherent(&card->pcidev->dev,
+> -				      2 * size,  &scq->dma, GFP_KERNEL);
 > +
-> +static __always_inline __must_check bool
-> +check_copy_size(const void *addr, size_t bytes, bool is_source)
-> +{
-> +	if (!check_copy_size_nosec(addr, bytes, is_source))
-> +		return false;
->  	check_object_size(addr, bytes, is_source);
->  	return true;
->  }
-> diff --git a/include/linux/uio.h b/include/linux/uio.h
-> index a9bc5b3067e3..f860529abfbe 100644
-> --- a/include/linux/uio.h
-> +++ b/include/linux/uio.h
-> @@ -216,8 +216,13 @@ size_t copy_page_to_iter_nofault(struct page 
-> *page, unsigned offset,
->  static __always_inline __must_check
->  size_t copy_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
->  {
-> -	if (check_copy_size(addr, bytes, true))
-> -		return _copy_to_iter(addr, bytes, i);
-> +	if (user_backed_iter(i)) {
-> +		if (check_copy_size(addr, bytes, true))
-> +			return _copy_to_iter(addr, bytes, i);
-> +	} else {
-> +		if (check_copy_size_nosec(addr, bytes, true))
-> +			return _copy_to_iter(addr, bytes, i);
-> +	}
->  	return 0;
->  }
-> 
-> -- 
-> 2.53.0
+> +	scq->num_entries = size / NS_SCQE_SIZE;
+> +
+> +	scq->org = dma_alloc_coherent(&card->pcidev->dev, 2 * size, &scq->dma, GFP_KERNEL);
+>  	if (!scq->org) {
+>  		kfree(scq);
+>  		return NULL;
+>  	}
+> -	scq->skb = kzalloc_objs(*scq->skb, size / NS_SCQE_SIZE);
+> -	if (!scq->skb) {
+> -		dma_free_coherent(&card->pcidev->dev,
+> -				  2 * size, scq->org, scq->dma);
+> -		kfree(scq);
+> -		return NULL;
+> -	}
+> -	scq->num_entries = size / NS_SCQE_SIZE;
 
-Ping: Any further thoughts on this? Al, Kees, Gustavo?
-
+AI review points out that previously the skb array was zeroed on allocation,
+which is relied on by the code. But that is no longer the case.
 
 -- 
-Chuck Lever
+pw-bot: changes requested
