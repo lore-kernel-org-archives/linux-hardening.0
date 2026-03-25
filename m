@@ -1,99 +1,149 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3AC3F0AB7
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Mar 2026 16:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FD63E3C4B;
+	Wed, 25 Mar 2026 17:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774455897; cv=none; b=mfx3x0r2aJ0NHC69IvdNWr4fa2e3Tu61LhtxvrZM4/wNn9ghWE7XACUk6BH25iLAOIIFhTDw/bfUx03T6DdeQMS0Sm5frhsTtcHaMlemPak46Kc2NEtRCxVScSc2bGapEu9Au2+dGPeYBQ9mGglUX5VdPRWifd4oDl34gi+yGcU=
+	t=1774458495; cv=none; b=FnG7SlRNNcJK6xfQYr9qdoiW7pc4ds8NGT2+GyLia7Mb2GAuHsUXO2Vy3top60GuR9jht8uodC+jeOqe0QpajtGp8/WvbqpZNwvt0ArIvdkiz3zfxjsW/F2qtnLn7iDjlLkbrgonKmHPu8khBM1vp6Sfu4W9Veq8SuzIaCQh4C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774455897; c=relaxed/simple;
-	bh=rmeZVPSOtvHKsudTVqrd29mAkraoSiHAZ4PP1RwACbo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ob+rD467WdgACJO+yNwkFLaMFHLf6pES38KdGcVMDhg7FuHzJdT263NNgz0qMakx69WDEW08Up9LsfQJE3DFUdq+ePKWNmrYDAxaioVd2h529T96M8z/VFU13yEY9f/UYbhhekYr1gqpboTQ+KOu9hVX5CLplQB3XgrgV3bCOlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-60328744754so1137666137.3
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Mar 2026 09:24:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774455894; x=1775060694;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7gAXhHrpF27wFNXFA6QhJ48A7x34w2nxZZrvrXeYgHw=;
-        b=P+VJaW7b3J+EwSOQjPjwqSclsei60m8QVeYIRz9f19XPKmFx9EeDzUoGppTmCC/kny
-         ns1SyE2huUX57bHxcPvyaYYao2Zd1cmu/UMYTcb/8eodFDkf8mbLwTt9WhzGvnwiQxX3
-         t5GhBVqpwoYVYdrvXQEPXyYM5krqOcICtHJV0dsh+RmVQxspAFxJiRnyx5KZrmhXYH1B
-         GRgBHLvj35hd97PXLDg+8eq3vN1RI3ZtbCUWgvcvDl175PqKLGQYI4+ZTxbsHhdvlbFs
-         6YkRq3g1evmpez/+jTrGqXbQPMdmTHS3EYiizbJiYYsePu7la1ybhTc6k3OHoGCy3J25
-         n+jw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWctV55hCBuYsl3HyhFCt1eWQokMwdgfff+OxW5HEfsjq92GbDY4Pj79c8XEGNfIj1mi6hW0dRQdHEdcztWxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLrXsItsM+RtImxOUrwoLXs5lHhVDF6HDGCY9VwgIUf+WCR8kT
-	4O7iB4+vayPZ5YADZTIll8cldlGgoMWX1Hwp4evk+pAxVNcuHEcGaa5MnsX0jbqFufo=
-X-Gm-Gg: ATEYQzxoRJ7PzKyLgGSu/hqMnuESIxFtNY7/i13m+5KS5wtUanuLrB2vyBvaK4i0QW+
-	InyFMZL+a+3tM8c/EGCqiveBLmPxbebp1vYD9n+xKgsRBCowfU/db9s7igrUhmmPYfFei/fmIXe
-	0mRRw3wxefF+NB91sQmCQt9HqkKNGgVmSlzcCXPLrjnfQ3pWrOLbi61TRTSPtKz7zgcu14s9AL0
-	NwyvWAjzkuCXdycf81ksUlLDE3xGfVSkWUGhyhsqFQX5kcP6xg0D4xWyjFCgGATDY1TXUa1/2LH
-	m2vSTOOehbbYpFoN21hBQsFufqCyPRx/edUQmbT4mro5fNliuR8fPdV38DTgVhMyvrZbVp/V3Iy
-	/yR8HVmNaLbaMNgFM+GwYzW1JbOoL8rmj+QT8kd60i826kCJqRI6aQ34490PkNZ4og8uBfz+Bh8
-	MNtTAIOsi1WeOLU4YiyVUd4SnC4DUoA9liGvrUflJQ14b2h+5/vmeJsgcEqb2wxdr5
-X-Received: by 2002:a05:6102:ccc:b0:602:b370:7814 with SMTP id ada2fe7eead31-6037903055emr2267531137.7.1774455894167;
-        Wed, 25 Mar 2026 09:24:54 -0700 (PDT)
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-951be5af7b0sm462145241.11.2026.03.25.09.24.52
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2026 09:24:52 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-56cf45deb45so68906e0c.2
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Mar 2026 09:24:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUplqJKBKaqLVoOgBLMnJHyyv0P1pB7KcInFhCSB6TdWt8cXirpFAK08+LHGCaQ4b3NEUJoh0dNMBc/o5JkPp8=@vger.kernel.org
-X-Received: by 2002:a05:6123:4c:b0:56b:a534:42c0 with SMTP id
- 71dfb90a1353d-56d220ef9f1mr2094685e0c.15.1774455891759; Wed, 25 Mar 2026
- 09:24:51 -0700 (PDT)
+	s=arc-20240116; t=1774458495; c=relaxed/simple;
+	bh=Wjf3K/wc7cDytRcGfYS5jhHKjfMoU+noHZ8vGYCvL1w=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GWD3mlu3iUkLBoiVK7VDwMXg46XCtKxKRqkvgX5gdLEQr57Fiyht1s27Qg8r3vRj5qQuW6hDDIDJJBHBjeo3pSGt6ne2S7Ik7Fst2yaAm5fkxlRfzLxEcHxk2Qi6FiCzNBWwUf4A4O00dLdyMrE/a+CQMt5up3ykqF7AGomKAt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgtd20DjZzHnH52;
+	Thu, 26 Mar 2026 01:07:34 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id B3F2140086;
+	Thu, 26 Mar 2026 01:08:09 +0800 (CST)
+Received: from localhost (10.48.157.17) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 25 Mar
+ 2026 17:08:08 +0000
+Date: Wed, 25 Mar 2026 17:08:05 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Kai-Heng Feng <kaihengf@nvidia.com>, <rafael@kernel.org>, Shiju Jose
+	<shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov
+	<bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown
+	<lenb@kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>, Will Deacon <will@kernel.org>, Huang Yiwei
+	<quic_hyiwei@quicinc.com>, Dave Jiang <dave.jiang@intel.com>, "Nathan
+ Chancellor" <nathan@kernel.org>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] acpi/apei: Add NVIDIA GHES vendor CPER record
+ handler
+Message-ID: <20260325170805.00005ba1@huawei.com>
+In-Reply-To: <20260325153628.GA1189053@bhelgaas>
+References: <acJYJlm2JZn_W7yO@M5403NF6WD>
+	<20260324161533.GA1131495@bhelgaas>
+	<DHBTY4W21Z9S.1LCIGKKJ0WX3T@nvidia.com>
+	<20260325153628.GA1189053@bhelgaas>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260324021103.13651-1-rosenp@gmail.com>
-In-Reply-To: <20260324021103.13651-1-rosenp@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 25 Mar 2026 17:24:40 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV6tBG7zQX_eGuLnvp1he1kQxTxj+8QmYj=jbo2OTGbMg@mail.gmail.com>
-X-Gm-Features: AQROBzCGGCNDC4VvyRbtehsEECFBYE5hrIOwkI-_9A4YzO91h6FhBZCpQfgFjIE
-Message-ID: <CAMuHMdV6tBG7zQX_eGuLnvp1he1kQxTxj+8QmYj=jbo2OTGbMg@mail.gmail.com>
-Subject: Re: [PATCH] clk: renesas: cpg-mssr: use struct_size
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:RENESAS CLOCK DRIVERS" <linux-renesas-soc@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Tue, 24 Mar 2026 at 03:11, Rosen Penev <rosenp@gmail.com> wrote:
-> struct_size is what is normally used when a flexible array member is
-> present to avoid accidental mistakes. pm_size is still needed for the
-> memcpy call below.
->
-> Added __counted_by for extra runtime analysis.
->
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+On Wed, 25 Mar 2026 10:36:28 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-FTR, no changes in generated  code.
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v7.1.
+> On Wed, Mar 25, 2026 at 07:34:50PM +0800, Kai-Heng Feng wrote:
+> > On Wed Mar 25, 2026 at 12:15 AM CST, Bjorn Helgaas wrote:  
+> > > On Tue, Mar 24, 2026 at 05:33:06PM +0800, Kai-Heng Feng wrote:  
+> > >> On 2026-03-20 09:52, Bjorn Helgaas wrote:  
+> > >> > On Thu, Mar 19, 2026 at 07:13:09PM +0800, Kai-Heng Feng wrote:  
+> > >> > > Add support for decoding NVIDIA-specific CPER sections delivered via
+> > >> > > the APEI GHES vendor record notifier chain. NVIDIA hardware generates
+> > >> > > vendor-specific CPER sections containing error signatures and diagnostic
+> > >> > > register dumps. This implementation registers a notifier_block with the
+> > >> > > GHES vendor record notifier and decodes these sections, printing error
+> > >> > > details via dev_info().
+> > >> > >
+> > >> > > The driver binds to ACPI device NVDA2012, present on NVIDIA server
+> > >> > > platforms. The NVIDIA CPER section contains a fixed header with error
+> > >> > > metadata (signature, error type, severity, socket) followed by
+> > >> > > variable-length register address-value pairs for hardware diagnostics.
+> > >> > >
+> > >> > > This work is based on libcper [0].
+> > >> > >
+> > >> > > Example output:
+> > >> > > nvidia-ghes NVDA2012:00: NVIDIA CPER section, error_data_length: 544
+> > >> > > nvidia-ghes NVDA2012:00: signature: CMET-INFO
+> > >> > > nvidia-ghes NVDA2012:00: error_type: 0
+> > >> > > nvidia-ghes NVDA2012:00: error_instance: 0
+> > >> > > nvidia-ghes NVDA2012:00: severity: 3
+> > >> > > nvidia-ghes NVDA2012:00: socket: 0
+> > >> > > nvidia-ghes NVDA2012:00: number_regs: 32
+> > >> > > nvidia-ghes NVDA2012:00: instance_base: 0x0000000000000000
+> > >> > > nvidia-ghes NVDA2012:00: register[0]: address=0x8000000100000000 value=0x0000000100000000  
+> > >> >
+> > >> > Is there a convenient way to connect NVDA2012:00 with the actual
+> > >> > device?  I assume this is typically a PCIe device?  How would we
+> > >> > relate this with PCIe errors?  
+> > >>
+> > >> The CPER report is from ARM RAS firmware and not neccessarily be
+> > >> related to a PCIe device.  
+> > >
+> > > Right, I know CPER is more general than just PCI/PCIe.
+> > >
+> > > But in this case, I think NVDA2012 probably *is* a PCIe device.  How
+> > > would we figure out which one?  If we have to manually do an acpidump,
+> > > figure out which NVDA2012 is :00, and look for an _ADR or something,
+> > > that doesn't really seem convenient for multi-NVDA2012 situations.  
+> > 
+> > It's actually just an ACPI device:
+> > Device (CPER)
+> > {
+> >   Name (_HID, "NVDA2012")  // _HID: Hardware ID
+> >   Name (_UID, 0x00)  // _UID: Unique ID
+> >   Method (_DSM, 4, Serialized) // _DSM: Device-Specific Method
+> > }
+> > 
+> > And that's it.  
+> 
+> Weird.  There's nothing for a driver to operate the device with except
+> _DSM?  The device doesn't need any MMIO resources?  I would expect some
+> resources described by a _CRS method or some native enumeration protocol
+> like PCI BARs.
+> 
+> The _UID 0x00 matches the "00" in "NVDA2012:00", but I think that's a
+> coincidence; I think the "00" in the device name came from the ida_alloc()
+> in acpi_device_set_name(), not from _UID.
+> 
+> So I still don't know how you would identify the correct part in a system
+> with multiple NVDA2012 devices.  I do see the "socket" and "instance_base"
+> in the output.  Maybe that would help, but those seem to be
+> device-specific, and it seems like we should have a generic mechanism.
 
-Gr{oetje,eeting}s,
+It's not unique in ACPI terms.  There are a few cases even in the ACPI spec
+of IDs that exist just to say some feature is there.
 
-                        Geert
+ACPI0017 is an example. Simply says, there be CXL here, go look for the
+tables.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Here this device is used to indicate that a platform should be ready to handle
+a particular type of error record.  If it happened to expose any other
+interfaces, then I agree it would need resources or a _DSM etc.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Basically it's a workaround for the lack of discoverability in APEI /
+ACPI error reporting. Could use an _OSC bit for the same job but then
+we'd run out of those fast.  Device IDs are near free.
+
+Jonathan
+
+
+> 
+
