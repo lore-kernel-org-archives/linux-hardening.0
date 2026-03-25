@@ -1,71 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A652D5950;
-	Wed, 25 Mar 2026 04:10:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C5F4CB5B;
+	Wed, 25 Mar 2026 04:14:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774411834; cv=none; b=WyYRtFkG/cgm7wC+CHOtzi+GwPTcLHR0Nkm0PKnV9lEp3HuPdgZHFsC62cyQxBBloPOjuaQ9xmcLGT8sGQxEQaSt08jWeaiOTX25wO3srMRBcxzBlQ0Y63CSOmwZ+4DjIITeAx4ccKlCm61B8lL1ywhBtr3NiNvYMqaZaW6La8M=
+	t=1774412075; cv=none; b=RKwkyl2PD8rKYp05npurwgtqA+Ud3UZLklsnh8keOhSKr5WysVvFuGCX3ypNkQ02KPsHLk0Vpowtos4xhedoaj/WvXdIl0yUQq2AqTEZnPhRnTe4AMDWAKbiHZPoxQXEmMsV6YBEm8FsoTR8TlPcvKoRWJ6PIe2rI0SOsCkeNiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774411834; c=relaxed/simple;
-	bh=Io6dHWWlxQDn5v2v/88XmGH1oU328xK2X6byiSoqf/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hOvmsgfCxDxtAc6pRPG/lTHB4VFs3gxVCJ40lJofsxT6ySPfaiVIOoVEK5hefN9QTf1KE1BO9uqrmxAd9LlN4hdXWlN8+mYVaK4CCCswQ7Lr1qyFNsV2hY8bCsGsNdsx2d/N4Jp9qJyN3l0YB5ucpZA/i6iCauTG7+qymyjkXO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLzrExNf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774412075; c=relaxed/simple;
+	bh=DjQNBELJeTo8/+IvhIZ195gGXomNRX+U9eI4gj1CDvQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pGFUZfjjOEIPwpIhRsVc1T8o1RNbKmi7tbxhN/CbU2TBBcXyNZcAduKA/GAq8QGoV86BQtTUUDm3i+7sde0HuT8E3Gx4+9EHQDcM3DmhQKyL/cKa49VUyOPhvST7LAWkPIF9efhowmwymaXBmNQ6L+TDMSsB9xoEZpgEru2alIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRN8ph0p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLzrExNf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4112C4CEF7;
-	Wed, 25 Mar 2026 04:10:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRN8ph0p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C4AC4CEF7;
+	Wed, 25 Mar 2026 04:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774411833;
-	bh=Io6dHWWlxQDn5v2v/88XmGH1oU328xK2X6byiSoqf/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eLzrExNflqv0CDBucBia98o/NJjdE6FmynWS/M8sN2NySunqgBoezH3/lCIODI0mu
-	 isi0vV8/MaoGloIuY6xslZUtJSjKKI84bAfaUsRA6iodE2cQxUd6zDhuZ+Y2Nt1ksn
-	 SkATdFrvN4p5eULTTpQxcCpWX3o4Ngqb9+iuJB02cSmZw6/ajbXlH0P+Ha6bsEUHOt
-	 /cOKIycVuCuc8fsKXZ7tuMPBUpyKuq6kj2uvJ92SMWpEZP5Bt9g6D2TbMvS2QYPE1h
-	 xpiYUoHUvPjhFwEKclpLS1+tQukdZF1vXToiW/sWMev0GrlazN5NUBQ2bqMFKQ5iW3
-	 l6nE4nzuAMQ6g==
-Date: Tue, 24 Mar 2026 21:10:33 -0700
+	s=k20201202; t=1774412074;
+	bh=DjQNBELJeTo8/+IvhIZ195gGXomNRX+U9eI4gj1CDvQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SRN8ph0pe1XZdbFseT7tE70r/KjEUXruc5OYrwNk9RqqxCpNBz3lKttBmjvyR/V+F
+	 LtJrTZ+7anfXtgnic7l5VIoLbzWClqhGy86LYc5jTJ5WiLlspuvWPVcH7tVEo3bTZQ
+	 B3/V2PjFQujB3TmjH/YZDXYjGSvefpMLSF6ujW4kNal6dqlrgdyZy3xe5uuN8qioVt
+	 C5T8kZxf9GojeAa9XddOx6PZakiiMDHaZ25yl5D3ZSoIxAugmHnvVJo6l2b5/Lv/S0
+	 upiARQ+JCWrFKrTEs9313xFN7iKFbUBGQMZ2Z6A7i8ktSdEYDHgVOSA3WjPwRHv5Xc
+	 ZaeMKZnXKgm0Q==
 From: Kees Cook <kees@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] libbpf: Replace strncpy() with strnlen()+memcpy() in
- skel_map_create()
-Message-ID: <202603242109.171584E8@keescook>
-References: <20260324040535.work.851-kees@kernel.org>
- <202603232224.C1555BF@keescook>
- <CAADnVQLhWURvQ=gBYQvuEa3pTxabYQYhrPm9QG0gbxL9ee=vng@mail.gmail.com>
- <D53376BA-4772-486B-A18A-6858C1732723@kernel.org>
- <CAADnVQLA3K6v_+_7-+BDVEeZ2N=6229FL6Ko=3ywDWsPVOPLcg@mail.gmail.com>
- <202603240919.D248D71B48@keescook>
- <CAADnVQK+hMnUkv5TfOGfiVR+nf59bBX+zaHOvcp5zSZTpdJB_Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] Fix bugs and performance of kstack offset randomisation
+Date: Tue, 24 Mar 2026 21:14:20 -0700
+Message-Id: <177441205756.1333400.7749975219620417508.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260303150840.3789438-1-ryan.roberts@arm.com>
+References: <20260303150840.3789438-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQK+hMnUkv5TfOGfiVR+nf59bBX+zaHOvcp5zSZTpdJB_Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 24, 2026 at 09:31:09AM -0700, Alexei Starovoitov wrote:
-> And please keep ignoring it.
-> It's not broken. Don't fix it.
+On Tue, 03 Mar 2026 15:08:37 +0000, Ryan Roberts wrote:
+> [Kees; I'm hoping this is now good-to-go via your hardening tree? It would be
+> good to get some linux-next testing.]
+> 
+> Hi All,
+> 
+> As I reported at [1], kstack offset randomisation suffers from a couple of bugs
+> and, on arm64 at least, the performance is poor. This series attempts to fix
+> both; patch 1 provides back-portable fixes for the functional bugs. Patch 2
+> proposes a performance improvement approach.
+> 
+> [...]
 
-Okay. I'm confused, though: what's your plan for when strncpy is removed
-from the kernel?
+Sorry for the delay! Applied to for-next/hardening, thanks. :)
+
+[1/2] randomize_kstack: Maintain kstack_offset per task
+      https://git.kernel.org/kees/c/37beb4256016
+[2/2] randomize_kstack: Unify random source across arches
+      https://git.kernel.org/kees/c/a96ef5848cb0
+
+Take care,
 
 -- 
 Kees Cook
+
