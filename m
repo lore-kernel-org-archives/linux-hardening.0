@@ -1,92 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC75392836;
-	Thu, 26 Mar 2026 10:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854543DD538;
+	Thu, 26 Mar 2026 11:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774521671; cv=none; b=l5HC8MaX3pdvFJdu2vTK0Ahfw+mYiSMTdE5Qapv7TJZKE0mDwntGhib9QjbyqgJrOA0/IyFe9f4HsaBFCV+dkwrsrAPk6ZAqlCTMlyPI3VnFDj6hiOWI90CieMx1c/4Pfd/6e4HgF3OOq0rN1XASFMEH7i9xNGq7J/pydNLqTEU=
+	t=1774524821; cv=none; b=GvKw5xVFJlrHzcwBi5Jg04LiHunZnwee+Ee2pMoYp9dXyqwfYORYltWhQeqNnLDqPhlslysLvLuguCtjBqHYkmRXZMeKlKLNlFftAYtM3WE/Qri6N52dyh8vc5Z80Svn5sR5sxBn20AZP+njJCWJi5nO55zzpLtr0B9EYRXmzT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774521671; c=relaxed/simple;
-	bh=QwcRD7lYBB3bVtbVPl0xFodLgyrxXNTDNPu1TEeWvDo=;
+	s=arc-20240116; t=1774524821; c=relaxed/simple;
+	bh=Dc+43LLKGIafXxSPWH2OdPjAKwX62l5GrjzWHtYmxPk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohevkyTkDJY+hmDLlWmn3qUnYUGlqeIzVdGdr629tQpMdmkNnI0Xt8KdzqZ91psOPNV8uqZR9PWsgaCi90a9Qxp1Oo1WpQsXZxhpxf8rB9wenn4TTZltfxaNrWVOieKDiyvGgeD91lbIIRSgof3YNclkU99EgGQvbz/94lqU3sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gkcPGaWS; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mlze158zX52ipjT+X8+pZXkmu+Q1RA1p0M/YqUCgYrOZgGcM12AYH9mcZ0po+2mTx7LjMUxZrGQs4rrd/Ebum8nyMiZJUWZgS3OuAiRuyxzyI4tNayRujcBpz2MvWGQqydM8R92UvsnzXrE3QhS9mYuvDtzpX23WtwO/RLfFV7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7a7T12q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gkcPGaWS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774521669; x=1806057669;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QwcRD7lYBB3bVtbVPl0xFodLgyrxXNTDNPu1TEeWvDo=;
-  b=gkcPGaWSrTPcdymTv7F29eI3xgPmCJDkj4D6bvqj8AInzRVlXs8FRfMZ
-   3IIhY3Wopfc9rI0/P0K7H0Stq1HovrmpDk2iQ/UEURilTxa+keLfjyf2A
-   InBwvOJGotBd/pBlqqD3BctgxOUNHUJ93TWUdUxjg/ogabHTaLUmb/hbE
-   Y7133V8Ba6IAKQRjkZLgmGAlqbgwfhbTPY4fqVnSj357/WbMcEziGTs/1
-   rq0p4m0r7I/vYsm4hZ5/8rJkuqleArcvIq/QsLVDAMd44abb//+w22PDV
-   0KEp5IR0dVh1LgEiTJhEAp9QHVQIyniy1foUR5d3B3Wr+3LWnlBtADEBL
-   w==;
-X-CSE-ConnectionGUID: Izzb4LYCRLiRiHWIK1EKPw==
-X-CSE-MsgGUID: tSMhccCMQ+6I2KbiAVnfaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11740"; a="75770957"
-X-IronPort-AV: E=Sophos;i="6.23,142,1770624000"; 
-   d="scan'208";a="75770957"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 03:41:08 -0700
-X-CSE-ConnectionGUID: ly6uU2sqRbWjZOjb1sKkaw==
-X-CSE-MsgGUID: 3nuDLsGkRtGNo0cuf7eFTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,142,1770624000"; 
-   d="scan'208";a="229907833"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.216])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 03:41:06 -0700
-Date: Thu, 26 Mar 2026 12:41:03 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7a7T12q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F743C116C6;
+	Thu, 26 Mar 2026 11:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774524821;
+	bh=Dc+43LLKGIafXxSPWH2OdPjAKwX62l5GrjzWHtYmxPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X7a7T12q6MfWYUyQJCE2/FtFTMKN205bSLUyZR43+GoUNvKEz6IntB1Z4YFQYAiZK
+	 ZQp2v3KSudzJ7S5ioY2gyT5KUTE+3M07DBO2dsp4ptrZnunDSGuPNxeY276JoCkooa
+	 t97o61sFCVizwspb0dMzhIHf12Irqi52OWx5SPIY90irRhZp4QFwZwUWJL1wDl3HJ3
+	 4uABZZhyLQxhnfAeuf8JnYGr1M6vEdaF6DEgst4dHt+GKxzffc80cnUg3FuXJv5HHZ
+	 tCHu3cTRB3XlpbM2IGJR1UIhpqor3Zx2ULRqKvxChu5KlYeCUQMsvKQdYmB48enZpE
+	 fF5Tn1XQSJK9g==
+Date: Thu, 26 Mar 2026 11:33:36 +0000
+From: Lee Jones <lee@kernel.org>
 To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, Kees Cook <kees@kernel.org>,
+Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
+	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	open list <linux-kernel@vger.kernel.org>,
 	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: intel: use FAM for communities
-Message-ID: <acUNP7ZG87rV-LJL@ashevche-desk.local>
-References: <20260326023627.54349-1-rosenp@gmail.com>
- <acUMB5OUGCpy73eW@ashevche-desk.local>
+Subject: Re: [PATCH] leds: pca955x: kzalloc + kcalloc to single kzalloc
+Message-ID: <20260326113336.GK1141718@google.com>
+References: <20260320040821.46540-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <acUMB5OUGCpy73eW@ashevche-desk.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260320040821.46540-1-rosenp@gmail.com>
 
-On Thu, Mar 26, 2026 at 12:35:57PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 25, 2026 at 07:36:27PM -0700, Rosen Penev wrote:
+On Thu, 19 Mar 2026, Rosen Penev wrote:
 
-...
+> Two fewer allocations as a result.
+> 
+> Required placing some structs before others as flexible array members
+> require a complete definition. Declaration is not enough.
+> 
+> Added __counted_by support for one of the structs for extra runtime
+> analysis.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  drivers/leds/leds-pca955x.c | 45 ++++++++++++++-----------------------
+>  1 file changed, 17 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
+> index 2007fe6217ec..ee5f02eaa3c9 100644
+> --- a/drivers/leds/leds-pca955x.c
+> +++ b/drivers/leds/leds-pca955x.c
+> @@ -112,19 +112,6 @@ static const struct pca955x_chipdef pca955x_chipdefs[] = {
+>  	},
+>  };
+>  
+> -struct pca955x {
+> -	struct mutex lock;
+> -	struct pca955x_led *leds;
+> -	const struct pca955x_chipdef	*chipdef;
+> -	struct i2c_client	*client;
+> -	unsigned long active_blink;
+> -	unsigned long active_pins;
+> -	unsigned long blink_period;
+> -#ifdef CONFIG_LEDS_PCA955X_GPIO
+> -	struct gpio_chip gpio;
+> -#endif
+> -};
+> -
+>  struct pca955x_led {
+>  	struct pca955x	*pca955x;
+>  	struct led_classdev	led_cdev;
+> @@ -137,8 +124,21 @@ struct pca955x_led {
+>  #define led_to_pca955x(l)	container_of(l, struct pca955x_led, led_cdev)
+>  
+>  struct pca955x_platform_data {
+> -	struct pca955x_led	*leds;
+>  	int			num_leds;
+> +	struct pca955x_led	leds[] __counted_by(num_leds);
 
-> What I would like to see is rater special devm_kmalloc_and_dup()-like API
-> instead of doing this in every driver out of dozens of drivers.
+Where is the memory allocated to this now?
 
-You may start with providing a common API for all Intel pin control drivers.
+Why do we need this in both structs?
 
-Patch series of:
-- add a new API and new member
-- convert driver-by-driver in separate changes.
-
-Actually why can't it be done like this from the start?
+> +};
+> +
+> +struct pca955x {
+> +	struct mutex lock;
+> +	const struct pca955x_chipdef	*chipdef;
+> +	struct i2c_client	*client;
+> +	unsigned long active_blink;
+> +	unsigned long active_pins;
+> +	unsigned long blink_period;
+> +#ifdef CONFIG_LEDS_PCA955X_GPIO
+> +	struct gpio_chip gpio;
+> +#endif
+> +	struct pca955x_led leds[];
+>  };
+>  
+>  /* 8 bits per input register */
+> @@ -542,15 +542,11 @@ pca955x_get_pdata(struct i2c_client *client, const struct pca955x_chipdef *chip)
+>  	if (count > chip->bits)
+>  		return ERR_PTR(-ENODEV);
+>  
+> -	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> +	pdata = devm_kzalloc(&client->dev, struct_size(pdata, leds, chip->bits), GFP_KERNEL);
+>  	if (!pdata)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	pdata->leds = devm_kcalloc(&client->dev,
+> -				   chip->bits, sizeof(struct pca955x_led),
+> -				   GFP_KERNEL);
+> -	if (!pdata->leds)
+> -		return ERR_PTR(-ENOMEM);
+> +	pdata->num_leds = chip->bits;
+>  
+>  	device_for_each_child_node(&client->dev, child) {
+>  		u32 reg;
+> @@ -568,8 +564,6 @@ pca955x_get_pdata(struct i2c_client *client, const struct pca955x_chipdef *chip)
+>  		fwnode_property_read_u32(child, "type", &led->type);
+>  	}
+>  
+> -	pdata->num_leds = chip->bits;
+> -
+>  	return pdata;
+>  }
+>  
+> @@ -623,15 +617,10 @@ static int pca955x_probe(struct i2c_client *client)
+>  		return -ENODEV;
+>  	}
+>  
+> -	pca955x = devm_kzalloc(&client->dev, sizeof(*pca955x), GFP_KERNEL);
+> +	pca955x = devm_kzalloc(&client->dev, struct_size(pca955x, leds, chip->bits), GFP_KERNEL);
+>  	if (!pca955x)
+>  		return -ENOMEM;
+>  
+> -	pca955x->leds = devm_kcalloc(&client->dev, chip->bits,
+> -				     sizeof(*pca955x_led), GFP_KERNEL);
+> -	if (!pca955x->leds)
+> -		return -ENOMEM;
+> -
+>  	i2c_set_clientdata(client, pca955x);
+>  
+>  	mutex_init(&pca955x->lock);
+> -- 
+> 2.53.0
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
