@@ -1,74 +1,72 @@
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F10834E774
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 05:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2AC39DBF9
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 05:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774502948; cv=none; b=o9s3Q43wBv0Z1T69hn6qdgIbOkbGkUuw8sw6Q1bUxIjOh5D7GhOOFB6cbWoq3R2OPNxwFOhYYLkCkVFdrfY7qlEFFcw1fpOCJnjmJgQ30vMoqiK5JPqEHFiBYN6OGss9PmaZnSMDk/TOhujB/hMbrVGsvfD4qbzE58Hy+pjYixg=
+	t=1774503358; cv=none; b=h3UePSmz0NaN4EveCQ3fCld/Mkxs2dgE1mt5BEnbnQywXveeZrCogoiuikGlaIOdJvtXLWn+97q88Gl/YRTo2OJUi/KqGFmq9Dl38IS4Lt2bRPKJQq20045EHtfNlJQhNgwhbiAJrCgQ+tphLjqIjmNdJn+tXKcd37o4zQ+Aob4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774502948; c=relaxed/simple;
-	bh=secipyXIFe5nKwWxQDiFSflV2qpjNZ5UEC68A4oj4Ik=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=InApoQ4udFXEv+PTBCu83tBWR0TNzthWSLw9wZExP2sXVRv9wm5MqmdgifR9LCQbcsWO2Q5i6xeF739gMTh8dvDnh2VRQjg9qKJcqUX0NWsi2MoXM7qjcOK9lILQYXRAJSHvQesDT/NbeGPmelCPl4zdDVp7OwwhHtG7gotdU+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p6bZ2JnX; arc=none smtp.client-ip=74.125.82.45
+	s=arc-20240116; t=1774503358; c=relaxed/simple;
+	bh=Qr8ZdoV03XC8Y/zIkKOZ6eJPlAgDEERg45y8qVbjw7c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pOMJDUBPsJyhkHc8YFqbKHLCHQg2sw+Ye6sD2zlzgV2Fq3g0AwRUVMYUJEtKPZ4Y5FOTeA54Xvzfuk8vPMH8OgEKcBduomkCnnGqrVxvZuMUhAm7IfwsHcNiuQm21kJ0LltGh/c3wdZAavneXn4xmpSq+PsK2Cw4jpTuapI0ViM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sRbrYDQX; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6bZ2JnX"
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-1279eced0b9so763014c88.0
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Mar 2026 22:29:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRbrYDQX"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c742d4df00cso701289a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Mar 2026 22:35:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774502945; x=1775107745; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774503357; x=1775108157; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+vj6+CrB7XzZSSoo0WZkVvcXGudvkrxFD+q5udVvUfM=;
-        b=p6bZ2JnXNd4sm6qbImZEFNPmdgt66hyqPEyJeXFTyU4Co453P3A6RG4DJPqbpeQhll
-         erdbi5Bjz9cKF7xCs549PhIMuugTPZ2zWAEFrH/NyoFXGbeQkhawfsRBAG8Gqd7WJ7ty
-         0QS8L4pK9MTUBBSW2zvBQMtt6sxSdiQKkhZHrMCK8fA9gzcu6NG75SdPKPgU3eeAD4kG
-         E9Kfhn9WRiIuuy1gOv4RUtMN22R+yn1wKa8Lh7qKNb79v1HR8RmV1xiOC+6JUA6W8m5V
-         LeSZbehPnMDa/HtyASPf89d+o+3snYH319+ODoxKiMxzjNQtbIVzlRj7w3OfPKCvKgxs
-         TfNg==
+        bh=+jGE1cCQwPm570qppMAHgNNyYwfNt8xMLKnlmo6j/5s=;
+        b=sRbrYDQX6tXzYaRV/NjaQv/8TMEUDIG1QFHZw/LzYw9meNiX4+s5ni+I+RgHYyiigy
+         WbNrpydM8hsgHkgCp6Zeiv6+bsuiiFN9sWKWlRnXCKNTtNLNPsydabe+Ql/3rypwK16y
+         AWhcKXR/bPj1tRm5fxmLAHNaygAd/wuljWa2lh/NS9jvrnbyv+u9MpvV4+2tm9IPX0DH
+         6wMKXIvPgTx2io13JoMsidL6DOvyZH1yqxz7AWv5EVYwpT5Vgce4H1SD3ThbBIUx8eTA
+         wFYgXRyrtM3h2ao0DmAy9RUjGjOd1c8FfsXCDgBhGVPJDdBdS4zWtjQcUQjOy5P1Gw99
+         jYow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774502945; x=1775107745;
+        d=1e100.net; s=20251104; t=1774503357; x=1775108157;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+vj6+CrB7XzZSSoo0WZkVvcXGudvkrxFD+q5udVvUfM=;
-        b=M/kV4yC3c485OBCh0f3ux5qSl96Z9HuPjlFoanfr957ACNW5EA2ZaID1SnPfccP7RH
-         a7r2RyuVHIq9SvUpYeob0oDRJaY63Cm15pkiQD1c2mqj55CMwbc1NVj1HvLRqxaeGvZ5
-         v2En1NZqYxSzIFmQVfj5iSxseojGRApKxJRLS9o+6+5zCND6EBbOxfDJLf7OWzWkjc2d
-         Mqes0hDSPuUD6iDAnZRp0y5p6fJUgAR8aAcJQb+DEhE6PlwZZ8q0+6LZylWnuYQk04YG
-         Tso55HGSm6t9LTeI21wLVnDc3ppwMDuNmZUHHyjSf7kuDTgiuAxMg0awQPmpF1+PgtNE
-         dg9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU4jBp65exzlCmzdVfOQVhrCq6Q5fjx40ruLokmv56p8lVdNMhYHYqrwSQjF4nvtB0RbMekt6MvWg8zfhdIEdk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzmq4l1hMrrlQlV+OGKfdY4Q+FDhLseanKJHx/NsUZxLa5nV8B5
-	lnpC+NVhKO+PXpnDAH8lIGM0ZiubE5mDzM/zqF4XQApYD5DOX/zfym5T
-X-Gm-Gg: ATEYQzwznab/HOwIIgCdzKb3ghI+0tm/Yk+DTf16g+g4KkFxaA60OG0w5N8sEKq7ZBf
-	WXowGoNiwNRwOIcJy8kyuLvcyljYb+oZr9yZZ5B1o7WgFgnCBw+qNn+M/E9OBrVK1gD9h3tndS1
-	eSwEWwGcydTQQdUpXrsoObvFPYeoit95jffF0MWBT3dl8PPtcJJTBJGCNPON7ZnjBU8kAjgNGxd
-	JeQcw0ux+AUdGdoC7f0HnzLtbTbYSnLclPRCxqj+qznYiCXKkqFm76vGiug7ryHC+ezsbYVbpnn
-	2W5ZRRfTaq7RS6J19QThvqtncmEvgEZcHelngTQsyjL06CHhecO5X40/a0AlwFIfNzymKvV3BCY
-	4/HUqn1YPwke0Z0ZWIlweZqc1SoDM6eD8BohTzndsJxVSK/DnHXCKgrwSVnser00kUYlXvWsZJz
-	uFpN3hLjnLT/8HPHNa4Me9wNSWDGBv2Huv9rQDx2yItlZjvPME4922vmA=
-X-Received: by 2002:a05:7022:ec86:b0:128:bae0:e044 with SMTP id a92af1059eb24-12a96ee7565mr3175255c88.30.1774502945123;
-        Wed, 25 Mar 2026 22:29:05 -0700 (PDT)
+        bh=+jGE1cCQwPm570qppMAHgNNyYwfNt8xMLKnlmo6j/5s=;
+        b=behFy93CnkgIimVNjiHuMo8hlRlk2ChNKMsQ85xpEa17/4aWkH8lA6cjJUW2LHMdUK
+         656aEa4EpqW03KO0bKShUoOiak2gzWpxk9gJSnKIvHhwZ9dZjYqRpT4HoEMC4fPSHsPY
+         8MpPS5+iLwgecNO10AcUA58n+wTeA6bIGc8x4iAYsOWgj+BoLwHU5LlatlTN8olKwHQu
+         gaTch6uvD38QFicLV/nxVm9lfMEDLcFaYf4d7Eybh2aGPGs02ooBA3XXmsK3KbDht0K8
+         Ym4wxWzTagAqF9tySvcHlQRCG2vhf99tuF9YUXaX381X3APvPOSNVEYjnIZBGRcG3yfe
+         7OoA==
+X-Forwarded-Encrypted: i=1; AJvYcCX22kj1QLQPjJ5+++JpuCMuP2fKWWuoBKvvST5eyXPq2obyFdZIyKs6ewXfXpNeJJ7H4SlfRrTHI9ecasy+BUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws5XGfXc1H1D469v/1fcdxvEsB+Aq71d3IrBxf0evKCzxJkSeg
+	tJJxMZG36lR5Nla5eiFF2NF8Z8IwoLOyi2SnTQl93xaUsyx4eadV125I
+X-Gm-Gg: ATEYQzyCwlMyZ12kN6N102R8fBUnLHhHr8vZJByrX4eqOQeLlUZcKr+3IDACftYWaUU
+	QNLXqgswYclTIETB3HbUKNGXSOK8bh+egHHp4sFrtjjqgpRUPsyOjvpr5xpiGsbdGXHO3OS3R3a
+	brWAz1ASCiMUFN7GIPXFe+Th4Ahtu9lEqHCP42XpSLvJNlnfCWuamuL4lOXqj9wv43t8rjBT+/Z
+	AmnduuClP/RyDk/JMKBUSg8P2jQkIQwfrWIsWYVzKHrLaDrtduw2CLwbYIlVZrwB5eYqVd3ia5S
+	ykp/6LUMZ6MJT2Lu1ycun9FH9F3rOqRH5TMjzJh9EfFbLDvZ6Wac1UpXrlWyne20zx9yUeMZG2Y
+	EGPohqdPrnDxS98PC4hQOeB/SlvP6QRWhisKrJD47719nW6COwl2F9LptmBjxxQf32rBhCSgSt3
+	xwBkfW4DimApCY9T66BzwKK7ONR/xcpRopu32xGQ8/G4zgtopqKXmloSQ=
+X-Received: by 2002:a05:6a21:3383:b0:39b:e3aa:df2d with SMTP id adf61e73a8af0-39c734cc786mr376742637.7.1774503356576;
+        Wed, 25 Mar 2026 22:35:56 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12aa78462fesm3013681c88.15.2026.03.25.22.29.04
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c767382bcecsm1080464a12.13.2026.03.25.22.35.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2026 22:29:04 -0700 (PDT)
+        Wed, 25 Mar 2026 22:35:55 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-clk@vger.kernel.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
+To: linux-atm-general@lists.sourceforge.net
+Cc: Chas Williams <3chas3@gmail.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BO...),
+	netdev@vger.kernel.org (open list:ATM),
+	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] clk: clk-max77686: kzalloc + kcalloc to kzalloc
-Date: Wed, 25 Mar 2026 22:28:47 -0700
-Message-ID: <20260326052847.335089-1-rosenp@gmail.com>
+Subject: [PATCHv2] atm: nicstar: simplify allocation
+Date: Wed, 25 Mar 2026 22:35:39 -0700
+Message-ID: <20260326053539.336831-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -78,77 +76,81 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplify allocation by using a flexible array member to combine
-allocations. Use struct_size to calculate size properly.
+Use a flexible array member with kzalloc_flex to combine allocations
+into one.
 
-Use __counted_by to get extra runtime analysis. Assign counting variable
-right after allocation as required by __counted_by.
+Add __counted_by for extra runtime analysis. Move counting variable
+assignment to right after allocation as required by __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/clk/clk-max77686.c | 32 +++++++++++++-------------------
- 1 file changed, 13 insertions(+), 19 deletions(-)
+ v2: use kzalloc_flex
+ drivers/atm/nicstar.c | 17 +++++------------
+ drivers/atm/nicstar.h |  4 ++--
+ 2 files changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/clk/clk-max77686.c b/drivers/clk/clk-max77686.c
-index 3727d5472450..9149ce4f702d 100644
---- a/drivers/clk/clk-max77686.c
-+++ b/drivers/clk/clk-max77686.c
-@@ -47,8 +47,8 @@ struct max77686_clk_init_data {
- 
- struct max77686_clk_driver_data {
- 	enum max77686_chip_name chip;
--	struct max77686_clk_init_data *max_clk_data;
- 	size_t num_clks;
-+	struct max77686_clk_init_data max_clk_data[] __counted_by(num_clks);
- };
- 
- static const struct
-@@ -168,19 +168,7 @@ static int max77686_clk_probe(struct platform_device *pdev)
- 	struct regmap *regmap;
- 	int i, ret, num_clks;
- 
--	drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
--	if (!drv_data)
--		return -ENOMEM;
--
--	regmap = dev_get_regmap(parent, NULL);
--	if (!regmap) {
--		dev_err(dev, "Failed to get rtc regmap\n");
--		return -ENODEV;
--	}
--
--	drv_data->chip = id->driver_data;
--
--	switch (drv_data->chip) {
-+	switch (id->driver_data) {
- 	case CHIP_MAX77686:
- 		num_clks = MAX77686_CLKS_NUM;
- 		hw_clks = max77686_hw_clks_info;
-@@ -201,13 +189,19 @@ static int max77686_clk_probe(struct platform_device *pdev)
- 		return -EINVAL;
+diff --git a/drivers/atm/nicstar.c b/drivers/atm/nicstar.c
+index 24e51343df15..b01c6cfdcc87 100644
+--- a/drivers/atm/nicstar.c
++++ b/drivers/atm/nicstar.c
+@@ -867,23 +867,17 @@ static scq_info *get_scq(ns_dev *card, int size, u32 scd)
+ 	if (size != VBR_SCQSIZE && size != CBR_SCQSIZE)
+ 		return NULL;
+
+-	scq = kmalloc_obj(*scq);
++	scq = kzalloc_flex(*scq, skb, size / NS_SCQE_SIZE);
+ 	if (!scq)
+ 		return NULL;
+-        scq->org = dma_alloc_coherent(&card->pcidev->dev,
+-				      2 * size,  &scq->dma, GFP_KERNEL);
++
++	scq->num_entries = size / NS_SCQE_SIZE;
++
++	scq->org = dma_alloc_coherent(&card->pcidev->dev, 2 * size, &scq->dma, GFP_KERNEL);
+ 	if (!scq->org) {
+ 		kfree(scq);
+ 		return NULL;
  	}
- 
--	drv_data->num_clks = num_clks;
--	drv_data->max_clk_data = devm_kcalloc(dev, num_clks,
--					      sizeof(*drv_data->max_clk_data),
--					      GFP_KERNEL);
--	if (!drv_data->max_clk_data)
-+	drv_data = devm_kzalloc(dev, struct_size(drv_data, max_clk_data, num_clks), GFP_KERNEL);
-+	if (!drv_data)
- 		return -ENOMEM;
- 
-+	drv_data->num_clks = num_clks;
-+	drv_data->chip = id->driver_data;
-+
-+	regmap = dev_get_regmap(parent, NULL);
-+	if (!regmap) {
-+		dev_err(dev, "Failed to get rtc regmap\n");
-+		return -ENODEV;
-+	}
-+
- 	for (i = 0; i < num_clks; i++) {
- 		struct max77686_clk_init_data *max_clk_data;
- 		const char *clk_name;
--- 
+-	scq->skb = kzalloc_objs(*scq->skb, size / NS_SCQE_SIZE);
+-	if (!scq->skb) {
+-		dma_free_coherent(&card->pcidev->dev,
+-				  2 * size, scq->org, scq->dma);
+-		kfree(scq);
+-		return NULL;
+-	}
+-	scq->num_entries = size / NS_SCQE_SIZE;
+ 	scq->base = PTR_ALIGN(scq->org, size);
+ 	scq->next = scq->base;
+ 	scq->last = scq->base + (scq->num_entries - 1);
+@@ -928,7 +922,6 @@ static void free_scq(ns_dev *card, scq_info *scq, struct atm_vcc *vcc)
+ 				}
+ 			}
+ 	}
+-	kfree(scq->skb);
+ 	dma_free_coherent(&card->pcidev->dev,
+ 			  2 * (scq->num_entries == VBR_SCQ_NUM_ENTRIES ?
+ 			       VBR_SCQSIZE : CBR_SCQSIZE),
+diff --git a/drivers/atm/nicstar.h b/drivers/atm/nicstar.h
+index 1b7f1dfc1735..ba45be53d40e 100644
+--- a/drivers/atm/nicstar.h
++++ b/drivers/atm/nicstar.h
+@@ -667,14 +667,14 @@ typedef struct scq_info {
+ 	ns_scqe *next;
+ 	volatile ns_scqe *tail;	/* Not related to the nicstar register */
+ 	unsigned num_entries;
+-	struct sk_buff **skb;	/* Pointer to an array of pointers
+-				   to the sk_buffs used for tx */
+ 	u32 scd;		/* SRAM address of the corresponding
+ 				   SCD */
+ 	int tbd_count;		/* Only meaningful on variable rate */
+ 	wait_queue_head_t scqfull_waitq;
+ 	volatile char full;	/* SCQ full indicator */
+ 	spinlock_t lock;	/* SCQ spinlock */
++	struct sk_buff *skb[] __counted_by(num_entries);	/* Pointer to an array of pointers
++								   to the sk_buffs used for tx */
+ } scq_info;
+
+ typedef struct rsq_info {
+--
 2.53.0
 
