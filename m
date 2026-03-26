@@ -1,147 +1,130 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5141931ED80
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 19:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4172F34F48E
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 19:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774552668; cv=pass; b=tB09bwo64tpM8qviaJJB9GC9Tgokt9vnUbpJ3XcgbM+0al6otmCZcQOVTy7qBHUr1RdZlp696JEEVhzw9euD4qR99yxP5So9gv7g8dcqw0aT5T9KCZVgS9GAm+xKrVpMJFlz7rWqYimuVjZNJUYV2NOd3F2Ds32KOppAJyrHQNk=
+	t=1774552954; cv=pass; b=jv8XdJsnacBEmes/oQIRZ9CbHYU/5cUoVwkqVAaJCNOSM+sYKzpCAAeKkC+/LmXpi0T0C17N6cPCMdRewm8Daw/R7zqchf4U/5SMAhlYONb8k5c1WhRAv4StQBhiqU1jYLdBp2b3XXZ99P4gj7jrHbXGZv/+QfvAb8hD/bPBCsQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774552668; c=relaxed/simple;
-	bh=5nrGZTbAT14Bb+EWmgrupuzltdQ77wCJq78VUhn+Bv8=;
+	s=arc-20240116; t=1774552954; c=relaxed/simple;
+	bh=xrCrjSplDANvqfLantwAW2gMs2H4/I97Gi3JHLIu66Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sKHl4+UG3nl2+pGB8izqE7AX6mPdj+MuKsg6wMn4EFBDnqj/PUbA97Mjb/JQExR5Tf1hOlGhcRBkUXluTqVyq60MnZPEVxDPxY1E/wlyOj5NtSZZ/BfLU1xld04obfh5C19rvr2HAYmi/p7/q5yD7jFbu/O9SCD0HfVWeV5gOSs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L0Xqy5Rq; arc=pass smtp.client-ip=209.85.208.43
+	 To:Cc:Content-Type; b=MtbyMkSVrPMQKJIcIr8/w7bFQ15zR6fZSjvcklKKssPCgSCLz+yaFWvTvvvakJuvXqvGJPPTUnBiivz7WkZqdlcuE8liFNrLnUw17zD5ovVdWS0SnhNsQVYjdzI7+eJDooM4jQ5i8Aw2FO2G6kdJZGNfAMqg/ehLwFYdc6AaWm0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HGXSrCfF; arc=pass smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0Xqy5Rq"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-66a851e62c6so1413076a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 12:17:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774552666; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGXSrCfF"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6618bc129acso2005387a12.2
+        for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 12:22:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774552951; cv=none;
         d=google.com; s=arc-20240605;
-        b=iCGrMcF3YowzFgXdsjyzAeLCwgF3zi9G3F6eb8bkCTWIOf9Nn1shWZlVxs0gTH8/8v
-         vWXpFJzFJaRRjQJLNV8Tsx9WeeN5ZSH+OMpHk9ao4F7+AcucCiq7mvXu1u6hFu4GDDBI
-         Kted1wCMuoGVEdQUDYXOIlrLnUkTJhZWsVMopGeLNU6QmcJYq1bX9hWqatVvYxQXS6jw
-         8a0ygRBSOogklgYSSsp8VQLsGoNcrf2xz/qsppOHWhxFSHzkqarPSyWNl2l5nlPYpLDK
-         JndZpw29IwkcKyAGGKqvnnEEmiMDUCftvQn1X2jXuN67Yg1u4Zoh7k7y5XonulEU2yM0
-         71fQ==
+        b=SOiqv7hh/w5BUm97stmjVBlQNmhht3j7InKOc82W1KifIzWbc5vdjmuOnRu1vdrog3
+         NXjytQvbwjixh+UQe2p/k56QNy8a6DwUX1qFyTY39dlVde1/cdOCNsWwgQVQa1SP4kAM
+         lvSPQXJfaxn3YUnTRTXio2R6DBMl4B7oJNhXQZ9Y4h1yiMPVslOB6mLCM/6ap0btqM0s
+         A1EtRzWZcSRKVdc4pqlX9l/QCvGkPE+L4t/qKFcTbQKmq3MGILGLHk4TbytqrKrb8ef+
+         rSk/K1X8YUfdywl9lXz/CCpe8VZiCmaA2i5TnrKy8ykId8f5RPHCeMkeX1Sq+AhkoXNW
+         4v6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Uo3rm/n38aWrxHsHtkGNbJCQJLFP7vPzOiRzCB4mnuk=;
-        fh=toD/4jcZykaoz/g3ak8yG6LkfVPb/5TxESfknAArNvA=;
-        b=bXIES/dhbcyOxOPE1lEJ5W76198ivrGB7j5R2RPVCfixvav/hZADEknp8jKZamBBPK
-         8JaqdwO/zkiji0XSb1eaZeX+Xi4Qo78PCKKLcl20bt5QgdaK2LwzTjcsUcllwehX7lT1
-         SBT6rboEmbUiqqt/XoxDzrWIDA34KDFucFusRzdgVKiSaTRitBnnjTHp2AL+plIc7MUH
-         pf4SGR3fWWaGXFeeKSkywDAwi1dVp3iXn6aA/dtnEDFbsYVCCnP+ZK+qvqMpgKTudvP2
-         aKAmAainOYz+iY+WhwQ7dxjVNzwdjq2meVNvEFzMAGA8P4rTgWejL8hW5siNnZFX11RM
-         kJqw==;
+        bh=xrCrjSplDANvqfLantwAW2gMs2H4/I97Gi3JHLIu66Q=;
+        fh=uclhhgFaCDoNCAP9lKbdsTDYEs2tD0lwNOyb/V5DLtI=;
+        b=d4fxXbf3RMChyZssEYujKQB6xbflcsHkL+nmRLhYfuD6xOpydXrU6StassznXIpTX3
+         OUxLqdGV8/JIaiNIjt9gMaz8F/g91qckETaN6TkUqhVpHcmBL+plsM+UdprhYrNxhcD8
+         kBIsH7+orjFwt5/JgbOP/CSlOFGT5JTnGt4gXDjvMsInACeJLFBXSvRna8Ja90Zdvwwr
+         cBFBixyy0QasrZR++9Ez9gXjn4o8BcAx+WVWWE+YqohVVNbbx9bgeMZ/UcAQj3Q1mLpn
+         anYINMwR9Mmb+gOT13IxrgoEpleYsyZPXdq2UYOyJWuCC2gV4fhWjN8gioPTpoko7V30
+         vyVg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774552666; x=1775157466; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774552951; x=1775157751; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Uo3rm/n38aWrxHsHtkGNbJCQJLFP7vPzOiRzCB4mnuk=;
-        b=L0Xqy5Rq5aAGLxkdxasFAl9qXTDJX0WKOsptxFZw0a9eu5AV8kUa5QrnG+8mWeXchP
-         H9FBjeCl5tf2RDWjVKSOQs8ztoxPgh5zrjQsUa/znSvF95Anz+6mbJufJ6y+JECaJFCT
-         NuuMkRJq9CaRfdR42i11mFTK4RqjBZY42d4jLNQBRPyYXRvPJ726NDA/2AE+UCKjP0dM
-         dBF0Ztp+SHrYxNiXfzFIZhzkAa6vHiHgVlRKc/dTJFDLU/K3wvdiuXaHV/6/igfTn4S1
-         VmBXju5+a1+rLTxaAtsZQQDWMLKOlGDc6dMZcDC9kHqdO+JX5bIdwK9iVO2+z/bpVHvH
-         iBXA==
+        bh=xrCrjSplDANvqfLantwAW2gMs2H4/I97Gi3JHLIu66Q=;
+        b=HGXSrCfF+KX9IhnyAqd5UXgptnql+NfSmHkYC1xzgHWYZdzh24NkhbIYuRd5LgNb6l
+         itDYf05SFynwuuiQsqOokbaQKtT9Cl4FEuKffrRYBjfdm7+LbjsEr20PHjr0UixgRA5L
+         f+0G64wPjiXzN7mCmwFZnvPwDhk65385Ih++kqe56tJXivDGjD5/bjS/uOsaGYZHoGiy
+         f3x4ETQqtJj3ncYXyOPudWGOdT6PReOKI8kRjSYLmEVXxNDZcTiLtJW+fVF1R/brVcKK
+         hMS+SKBKaoa72ifSe64yJz0gTUODaPLEXBgA2PywJU9V1Jng1Z1yAMmZHxChAQhbgqRs
+         afLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774552666; x=1775157466;
+        d=1e100.net; s=20251104; t=1774552951; x=1775157751;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Uo3rm/n38aWrxHsHtkGNbJCQJLFP7vPzOiRzCB4mnuk=;
-        b=BpsFRx61/C7ASbf+LfEogezrNju4h5IRqwDlFHuoq0jco5sBLyA+hETngmvtAsthN2
-         BN2nDKJFMfLRk1rpAA49XXe3LQtLJkjOxbN51+sBN0SGZ731wYqhKbhuRdM0SOM70a0s
-         vQTLF0JWY14Q2PBK7EtoPGF43p815/beASpm6ZdQm8bSjvRpGfEgAq31cBlip8uij9Lk
-         oz2NVclNQ/Avoq5kfbTwE1H5wikhYRWAQoiVAQIpxsM4osoTaBlZQ9ZxTfN0zJZ2fuvK
-         RMMEiRHjcCNQPujmxOV7y2cIZdvOAOzuliNhPE92sfwGM/znUUsOO/+JXW1BnKrWp5MG
-         0qUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGfZRi9RG+nJDzmHbObYPCwN5wv/eN0k6K1bgXqELyVT3xPEdDo+HXXpK6KTqWP3E+Iz6yTy7w8UsqGhakQ9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwGmLqwIu1klpQR3MIg1nw4ooaAXz+XEIoHDvORJjZsQTG/E6i
-	DoR2W4nNvNUdhwayEJn0Xvl90zExXnAbsLeiTOFroQOFAY47L4c0QuYr06/PGryzvLmvU+b0BQD
-	LomxM/M3il9sszGkLErVxmxF0ErMSz9HFod7q
-X-Gm-Gg: ATEYQzwFv2ap1UhIZmXCY1OKsWrnl/rR0dxiKF9R1RP0i3T7OIEvpIywGxCCWdkywyb
-	xgDWXb0WQRTKGgbkR1BgvqoeK7ht1jdSsRpj8+F3Z2m9F5JfK4b4pNglC6PoqoavsfOxKb1jsmu
-	AbhCfVN3di5gX0Sra9038/oqsFIGtrU9REvO5YjBjcJqHoApoITgN8wVZArUqmUv3+SNnLqZsRQ
-	n8McrY9BNe9NyM7jZK/buixVN7Sp7HWnEM3BJRNiJbPFT5kTTXrzn/SrzfhNIOEgV0vNoJFHSES
-	ceAtu/dYPU9Wy9Aimr1Y7/1Zby5SxYrApK1c6VvbyxUBci1IMSnoE1Q7m/r91VfQe7qWByqqE2H
-	HZXn2Bg==
-X-Received: by 2002:a05:6402:144f:b0:663:4bea:c74f with SMTP id
- 4fb4d7f45d1cf-66a826e2bb7mr5965349a12.17.1774552665417; Thu, 26 Mar 2026
- 12:17:45 -0700 (PDT)
+        bh=xrCrjSplDANvqfLantwAW2gMs2H4/I97Gi3JHLIu66Q=;
+        b=e3l+w1sSacYMye85PZflUOs/ebRct8LnMVlILtOTt7HkRCk/NAr365xL02VV6egHqw
+         rLj10Mu4RuYNachc2Fque/nO7nnQBd4MZVLzLaUK92LU4vunvVfhtxnGWpMY6ebaHG83
+         8c2DRQ87kDwU1FtwV2AxKCu4u4ZZg1/6Lg7TnAy7ZphWttb7lwQ4TKcQGOYbuTyZzsyB
+         /ymujdRXZW2KHJWp2nZKHw12hZUozWR1TgVigt/AWJRHo4RHCRm8rUabtawy+facN+Yh
+         lThlXqzNZqY+p0w3LGf/wGahOHpOHXO7l560UsqVnKWN3Ld1Xnei238nBylKV4ghN0TS
+         E6cw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmaggGc3BkJNBqjGNESVVbu3AGb5nysbw87lePUMn7nhbVg8NgRVQwhdPFAKjCphSHpyd2XQ5BwdaAlPsLKDk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu/NecxHPPBjUbJl8tjyjqO3+oJ10jg+UuchT8Eb2MnnIWY0Wn
+	ravbUH5IMPCC8yCfWAkZYO5FcV+8YtEx2M7FjmDxpL7Jln14f8JFeKHHWcNRCvOEQ2BzIxc5Gaa
+	3lViKFYRT5kIANPUBkAmacr5XkT59rNw=
+X-Gm-Gg: ATEYQzw2DM4e41Eqt3SwyRjDEmteP0KlXtr/4+z238BsQbLGxKJ3uq0+1xLLyYkhb+h
+	mrPYJK4cBfvNMt+9IVB0tbJn72Impv7oLnxLFz8X6+Fjoep9YYj6x9f/TmDjBp/esjDd1ov+NFG
+	1Y/CutV8ysL1hTt79U/sS2aXQOXNmQPkxOQHlD2pXSFDdocrMBiDjskGI+61TioNEPot87t3jhq
+	fGX94rsSCllQXM3XZhWJh2vffhGI3mMLM6p0wEem3nT37XxX38tGE/EJ1oC055g4SUpq8HJCAhZ
+	z5Qo0XEv6181dYCZ/nEAnExyuW7PeofFz9vPrnIsV0ud6d3RDLZS+xCdrClqJ6gweTKFhm2x2BT
+	KbGrcVg==
+X-Received: by 2002:a05:6402:912:b0:669:ed35:e472 with SMTP id
+ 4fb4d7f45d1cf-66a8264c2ecmr5578534a12.4.1774552951473; Thu, 26 Mar 2026
+ 12:22:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260326044725.234216-1-rosenp@gmail.com> <20260326-pastel-monumental-bullfinch-44df90-mkl@pengutronix.de>
-In-Reply-To: <20260326-pastel-monumental-bullfinch-44df90-mkl@pengutronix.de>
+References: <20260326023627.54349-1-rosenp@gmail.com> <acUMB5OUGCpy73eW@ashevche-desk.local>
+ <acUNP7ZG87rV-LJL@ashevche-desk.local>
+In-Reply-To: <acUNP7ZG87rV-LJL@ashevche-desk.local>
 From: Rosen Penev <rosenp@gmail.com>
-Date: Thu, 26 Mar 2026 12:17:34 -0700
-X-Gm-Features: AQROBzC6rvGDUcbQXKjCwtaQKfb6kF2DCW-Rf5DEt4FIHWvKvyc55WOeVTo30RM
-Message-ID: <CAKxU2N_0EJfv4EHyLbBJsn27Hui9U3SvaZ_bnbcnmAx8=mZAvw@mail.gmail.com>
-Subject: Re: [PATCH] siox: use kzalloc_flex
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	Thorsten Scherer <t.scherer@eckelmann.de>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	"open list:KERNEL HARDENING not covered by other areas:Keyword:b__counted_by_le|_be?b" <linux-hardening@vger.kernel.org>
+Date: Thu, 26 Mar 2026 12:22:20 -0700
+X-Gm-Features: AQROBzDrAh23L9Jgw9ejZZ05EdKmPTzlhAUEhnEGA1vUCPfydEGmEBchOcwh8Y8
+Message-ID: <CAKxU2N_PViOW_Frpm5AA=9gib0Gjs20RGA+0QXJc5hf8Xtp=NQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: intel: use FAM for communities
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: linux-gpio@vger.kernel.org, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 26, 2026 at 1:22=E2=80=AFAM Marc Kleine-Budde <mkl@pengutronix.=
-de> wrote:
+On Thu, Mar 26, 2026 at 3:41=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
 >
-> On 25.03.2026 21:47:25, Rosen Penev wrote:
-> > Use the proper function to allocate a struct with a flexible array
-> > member.
-> >
-> > Add __counted_by for extra runtime analysis. Add counting variable
-> > assignment as required by __counted_by.
-> >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> On Thu, Mar 26, 2026 at 12:35:57PM +0200, Andy Shevchenko wrote:
+> > On Wed, Mar 25, 2026 at 07:36:27PM -0700, Rosen Penev wrote:
 >
-> NACK - What's you motivation to do this?
+> ...
 >
-> > ---
-> >  drivers/siox/siox-core.c | 5 +++--
-> >  drivers/siox/siox.h      | 3 ++-
-> >  2 files changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/siox/siox-core.c b/drivers/siox/siox-core.c
-> > index 3e8f3b6a4555..b87e2a12d640 100644
-> > --- a/drivers/siox/siox-core.c
-> > +++ b/drivers/siox/siox-core.c
-> > @@ -689,10 +689,11 @@ struct siox_master *siox_master_alloc(struct devi=
-ce *dev,
-> >       if (!dev)
-> >               return NULL;
-> >
-> > -     smaster =3D kzalloc(sizeof(*smaster) + size, GFP_KERNEL);
-> > +     smaster =3D kzalloc_flex(*smaster, buf, size);
-> >       if (!smaster)
-> >               return NULL;
-> >
-> > +     smaster->buf_len =3D size;
+> > What I would like to see is rater special devm_kmalloc_and_dup()-like A=
+PI
+> > instead of doing this in every driver out of dozens of drivers.
+I defer to the hardening people for that. My suggestion was to
+introduce a kmemdup_flex macro that does kzalloc_flex + memcpy on the
+FAM.
 >
-> The "size" extra space is not used for master->buf, but for
-> dev->driver_data. master->buf is allocated in siox_device_add().
-I assume this means a new struct member should be added and
-kzalloc_flex modified to work on that.
+> You may start with providing a common API for all Intel pin control drive=
+rs.
 >
-> regards,
-> Marc
+> Patch series of:
+> - add a new API and new member
+> - convert driver-by-driver in separate changes.
+>
+> Actually why can't it be done like this from the start?
 >
 > --
-> Pengutronix e.K.                 | Marc Kleine-Budde          |
-> Embedded Linux                   | https://www.pengutronix.de |
-> Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-> Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+> With Best Regards,
+> Andy Shevchenko
+>
+>
