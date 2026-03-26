@@ -1,153 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3053138553C;
-	Wed, 25 Mar 2026 21:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774474193; cv=none; b=ZafyRgDukum5iFN2wHsRHig/Ip7Vx8HtU4tgjFI/G8b9+HWBs6EVm/HCIFOcBG8xftCch/tSqb7kcd7ndDL6JBNvvlTQW094tCXNyxh+h3k7unSfx0Tb/Mk8GJxI7FIuG0Buztp6i0VMFL90oTcdz/CH/WnYNk1V51FFgX14sgU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774474193; c=relaxed/simple;
-	bh=BYUqf4WQw6IJsNm9lyVY1feqRun33qdwx02NVZPDtQs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mBh2NP9D1/CY7gmj/U41KmNq3rHV756UbmZ9WbYLYpXWsyC/8LSFNYJDB33hWbjO6JWj2gzvP8rthZkeaWB3suDIzu/M01iWdHdj9wveeD+FJOvh6+sCRcrPQ8euL+pM+u+MMME6Cf9vyUNX3Ws6moaj+Pe74SEJDxOulU003Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7K4KVXS; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C4F37A496
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 01:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774489999; cv=pass; b=t5QXDRkSPOcSxUWANzuPoERUxHbuTl4QIpnV77hF2wAR2kXsgUC+cwmyDhnsGxwXUhXrSoQGxESCobwGTtv7OWQ2z88dbd359oRNtYv8nztQgGS/xBkJnno/G64GpWgNVZm6RXW/bR1a//S6jzT7qdAZgw0wyk0nqrkd01G14JE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774489999; c=relaxed/simple;
+	bh=OkQDhqxdu/VghGhiJbxfiIKUvNi36C2xoIdqMy2/5jc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hje3ox0EnNA5bIoLSuwAxZaX9femXM+M444YtvlB8ibhHdiJh58YzArzkbtOUClKsvhxqckbpGAHGkGm5T29NbWeq8vBZWwRvW2v9QT1N6jm7CysSf+BN42Xhd8StfA/lmeMb+WpFk5d/fuzpvZxDR0rc9C1/PIMJqtMtiMFO10=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3P2ixL1; arc=pass smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7K4KVXS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26284C4CEF7;
-	Wed, 25 Mar 2026 21:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774474192;
-	bh=BYUqf4WQw6IJsNm9lyVY1feqRun33qdwx02NVZPDtQs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E7K4KVXSRbE86MfSScMWZdI5vyjUoohtdYvNK0jw4TQMDOh5Ri0kykymD2N2nT7M8
-	 j0TvrN3ET9FctdZYcBGZpuUIHZ+wX+JPTgPEOLFU2LvrizfeLb0nJXPM75Jud58u8D
-	 z4rLG17XjJzHUC5iUgO1rEm/5y1W8ZAXwLCYHyvnfkXBUXdQ+7TRityA3rHD00AvIq
-	 nHHd51flq55HkrUc1cb2cHqftTrkdPtWWDjrfxzpT3eBJLREitJJyNCnleA4wCh1cL
-	 8NYp6nDo0tg1n6a/56+RlHGRW0RJMD3qtZJJnerdzpT+dqpLRmZx5P3WCr+mzeSs7D
-	 wrYlbkNpJptvg==
-Message-ID: <a65dee68-6b8b-44ae-9296-7fde63322083@kernel.org>
-Date: Wed, 25 Mar 2026 17:29:51 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3P2ixL1"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-66847de014aso730562a12.2
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Mar 2026 18:53:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774489997; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YgY18GH92RUNADoLydUwmqTkSZrj+8Zi2DKsX65Qoqm6taPXbA/cI2k3EbVzV7tNba
+         S4wf4yFs5hTqp0eYPbj6mLDDOMaO2wQzXK1F0L8ACVZt/Nq6dhbfHYzwBn1YxCiXJ15c
+         MvZvmnowbOBi+tcmsjyqKl2nqwmVn791TWp/Ueu1jmRD5Cm1S0SWik2uv63nuAta5G92
+         RLIBVdBEQqDoZIACIvWGl0aDsm7/MmBWB7V47dQE5dz4dvebq14jThtuaYhnXIa4B5TQ
+         tC2ZVL9Cyuanqx/YXQ7Y88iCZJluHO514U9SjzeEISOHlwkdqN3m4b0L3W+Cr4lNuyyh
+         wjZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=OkQDhqxdu/VghGhiJbxfiIKUvNi36C2xoIdqMy2/5jc=;
+        fh=jM1Yo7TvfB0ISc0lJvvH5GY28tCnyeQLX1v7kSxqdSc=;
+        b=EQYYojUrmVtZgfPzje6j87rD5PWDDfsDTtKQOeJTfWB9gSabcturdQ8SX5JRvRqbxn
+         uHQAiqX2usCp8sr95u0wlX/bWWaOjIMPKmTDwL9eCBRkg3PawSnw+Pzu6R5JFPITSuqp
+         Zc/YtDaebCShwqA+AhGW9lTdcF7bAipcQtErK5IqHztXKJztoomSy/L+azOO4zdRJkmu
+         aM78N+I7pjcMyDLroTxefCwmHkKOLEqW52s1pqMjl9aJGlTgpYGQ4dwIcSEIZ5ELQPkL
+         RvZT9r1jZJ9ucNW/dIAfZQLpm9j5A5XIK+MmPjmMYR7V/AgzSjZhm1m79ibdcvVqdCci
+         ff/A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774489997; x=1775094797; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OkQDhqxdu/VghGhiJbxfiIKUvNi36C2xoIdqMy2/5jc=;
+        b=F3P2ixL1Lp+xUdlHD4A9fAInBG8yjo4AsXKmiOTT51SGB2Sg1mxf/ztCSRnfph2Eg2
+         4bq2Ou0u69GpCqciNLfsB/U9Gh0QvBZ6FzXTLLoUlgPGmYvzyeimqjfnlVKXqGH939vU
+         a31nQ7ElNLQig8N++3/c+GcL0BFEiZgnFC6+EMFTl/439nRAa/CU4vjNYenXS8ad4cvN
+         s8noNTTcefYsuveDQfAyg6ya+Gom6RAw4WF4OnAg/EKmv6G1IFrAVSGaXolIHQeNF7d2
+         td6nyeMq6PcR/U4sSHIcvWZdKmM48swJTnFx65ooBptO24KZ7bjdGRYkcESKMRtAYVyA
+         H6rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774489997; x=1775094797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=OkQDhqxdu/VghGhiJbxfiIKUvNi36C2xoIdqMy2/5jc=;
+        b=dYtrFuUgS9SXF1wuaPBn/HNwNHjgJKUGViJ5qXqwePQaTjbD28rClVmi9O4ZO0swjw
+         4ptFDCWBDQjoAlduAMA7YER4EKtiDRHUzHDYHWYKPSAqZZd3SgNCezudGzRUK2upPh9R
+         eQnuXz887fzktjfXO+OjG59Uls79KX31u0C7/qDjXmn2Oduj8IEpfjwsbycTk0XFjXnZ
+         JIdKU4J9LavrDTNQ5uu6eijbfG0Sxv0ohXyOwXCUKP2SduhbOCO7PQe63FZ2EeypseF2
+         CIqg63dFKenlVsVAiMrv/ggRSe1KQv02RtmOaX94FsEggMrQ6nit605ohdf6ZaCxCGsF
+         adWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSoLm0THMAkt/0a4+4bDP9Pn/Hca/HAGCGKVMVwW9aLpzf/SMR1MbnF1msc3eEqPg+O5zLhrmfZDZnTqpPCH4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7RAaxO1FSMytZD71x1VlMHoEtjpDed1bvrxjlLq6CZhCSB53g
+	cRJ2gj9wpYUjTSqDPikgk2prB898mwhs+ZuZ/2WPQzA8EOD2Hk6zuop4kMxOTZkAZWM/D5/B4X9
+	dGVrhLg4rZOsFNteq1ae4DpZMAKzA1tc=
+X-Gm-Gg: ATEYQzwixtUml4hRi3KrHfOsdrp6MbNO+LEN3ju+2BBSu6i4+wyw201xFr4tKO4JHkQ
+	HLVjIG/HwKitUANpVFF9VTnt/B+S92ihTA9mFX15NBTDoQvCq+QgmgXTcixEeUpBqn7HANCR3O+
+	U2cRaCF7G07JKQolzjKHil+ia0L2kT85rkYYTFXFyLbCTGzMsIWXrARgM26D5GsZfBeGj4av9T1
+	pNYVQdvWQxcobv40s16qwHku4MWSKrowTndKjIwQAsvCOUrQ7IR5Svbq/t/4evIzLNsUwjJG8k/
+	d5aCZZrNp2vBErw1hIJDM6441xJrGQ3G8ffu/qHTzX3uKE893YfHFdb+LFN0HbmPbYOBuFJOoxT
+	iBfMtPg==
+X-Received: by 2002:a17:907:3e0f:b0:b9b:155a:6f92 with SMTP id
+ a640c23a62f3a-b9b155a77ccmr272420566b.7.1774489996810; Wed, 25 Mar 2026
+ 18:53:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] iov: Bypass usercopy hardening for kernel iterators
+References: <20260306044536.149204-1-rosenp@gmail.com> <20260319220901.GD950375@killaraus.ideasonboard.com>
+ <CAKxU2N856yYXURRf3td-_RCpe9hyX=zAy3qtD3ki23RjgO+a4Q@mail.gmail.com> <202603201114.9A02FDA977@keescook>
+In-Reply-To: <202603201114.9A02FDA977@keescook>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Wed, 25 Mar 2026 18:53:05 -0700
+X-Gm-Features: AQROBzBSJyDOFvefMdXxKt78jroAsA-q-37591igukparmS24ZzPgm6s7TLFqAI
+Message-ID: <CAKxU2N-eVyzunEC1PivSmRF9xctOF2NZHDJyoVUMYHHXCN6qoA@mail.gmail.com>
+Subject: Re: [PATCH] media: nxp: imx8-isi: remove kzalloc_objs
 To: Kees Cook <kees@kernel.org>
-Cc: viro@zeniv.linux.org.uk, gustavoars@kernel.org,
- linux-hardening@vger.kernel.org, linux-block@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
- Chuck Lever <chuck.lever@oracle.com>
-References: <20260303162932.22910-1-cel@kernel.org>
- <202603251421.20D29E29@keescook>
-From: Chuck Lever <cel@kernel.org>
-Content-Language: en-US
-Organization: kernel.org
-In-Reply-To: <202603251421.20D29E29@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, gustavoars@kernel.org, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, 
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, 
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/25/26 5:27 PM, Kees Cook wrote:
-> On Tue, Mar 03, 2026 at 11:29:32AM -0500, Chuck Lever wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->>
->> Profiling NFSD under an iozone workload showed that hardened
->> usercopy checks consume roughly 1.3% of CPU in the TCP receive
->> path. The runtime check in check_object_size() validates that
->> copy buffers reside in expected slab regions, which is
->> meaningful when data crosses the user/kernel boundary but adds
->> no value when both source and destination are kernel addresses.
->>
->> Split check_copy_size() so that copy_to_iter() can bypass the
->> runtime check_object_size() call for kernel-only iterators
->> (ITER_BVEC, ITER_KVEC). Existing callers of check_copy_size()
->> are unaffected; user-backed iterators still receive the full
->> usercopy validation.
->>
->> This benefits all kernel consumers of copy_to_iter(), including
->> the TCP receive path used by the NFS client and server,
->> NVMe-TCP, and any other subsystem that uses ITER_BVEC or
->> ITER_KVEC receive buffers.
-> 
-> So, I'm not a big fan of this just because the whole point is to catch
-> unexpected conditions, but there is a reasonable point to be made that
-> this case shouldn't be covered by kernel/kernel copies.
-> 
->>
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> ---
->>  include/linux/ucopysize.h | 10 +++++++++-
->>  include/linux/uio.h       |  9 +++++++--
->>  2 files changed, 16 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/linux/ucopysize.h b/include/linux/ucopysize.h
->> index 41c2d9720466..b3eacb4869a8 100644
->> --- a/include/linux/ucopysize.h
->> +++ b/include/linux/ucopysize.h
->> @@ -42,7 +42,7 @@ static inline void copy_overflow(int size, unsigned long count)
->>  }
->>  
->>  static __always_inline __must_check bool
->> -check_copy_size(const void *addr, size_t bytes, bool is_source)
->> +check_copy_size_nosec(const void *addr, size_t bytes, bool is_source)
-> 
-> "nosec" is kind of ambiguous. Since this is doing the compile-time
-> checks, how about naming this __compiletime_check_copy_size() or so?
-
-No problem.
-
-
->>  {
->>  	int sz = __builtin_object_size(addr, 0);
->>  	if (unlikely(sz >= 0 && sz < bytes)) {
->> @@ -56,6 +56,14 @@ check_copy_size(const void *addr, size_t bytes, bool is_source)
->>  	}
->>  	if (WARN_ON_ONCE(bytes > INT_MAX))
->>  		return false;
->> +	return true;
->> +}
->> +
->> +static __always_inline __must_check bool
->> +check_copy_size(const void *addr, size_t bytes, bool is_source)
->> +{
->> +	if (!check_copy_size_nosec(addr, bytes, is_source))
->> +		return false;
->>  	check_object_size(addr, bytes, is_source);
->>  	return true;
->>  }
->> diff --git a/include/linux/uio.h b/include/linux/uio.h
->> index a9bc5b3067e3..f860529abfbe 100644
->> --- a/include/linux/uio.h
->> +++ b/include/linux/uio.h
->> @@ -216,8 +216,13 @@ size_t copy_page_to_iter_nofault(struct page *page, unsigned offset,
->>  static __always_inline __must_check
->>  size_t copy_to_iter(const void *addr, size_t bytes, struct iov_iter *i)
->>  {
->> -	if (check_copy_size(addr, bytes, true))
->> -		return _copy_to_iter(addr, bytes, i);
->> +	if (user_backed_iter(i)) {
->> +		if (check_copy_size(addr, bytes, true))
->> +			return _copy_to_iter(addr, bytes, i);
->> +	} else {
->> +		if (check_copy_size_nosec(addr, bytes, true))
->> +			return _copy_to_iter(addr, bytes, i);
->> +	}
->>  	return 0;
->>  }
-> 
-> This seems reasonable with the renaming, though I might come back some
-> day and ask that this get a boot param or something (we have a big
-> hammer boot param for usercopy checking already, but I like this more
-> focused check).
-> 
-
-Thanks for having a look. An additional question is whether the
-"copy from" direction needs similar treatment. Performance analysis
-found "copy to" was an issue for my particular workload (NFSD) but
-it's plausible that "copy from" should be handled similarly.
-
--- 
-Chuck Lever
+On Fri, Mar 20, 2026 at 11:15=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> On Thu, Mar 19, 2026 at 05:11:22PM -0700, Rosen Penev wrote:
+> > Technically kzalloc_flex is simpler but I assume a devm version of
+> > that will be handled in another treewide commit.
+>
+> Yup, that's coming. I wanted to get the "first pass" of the base kmalloc
+> family converted first. There are a few classes of "kmalloc wrappers"
+> like devm_* that I'm hoping to convert to type-based allocations. devm
+> is next. :)
+As an aside, I recently noticed a pattern of kzalloc + kmemdup_array.
+As kzalloc_flex is basically, kzalloc + kcalloc, Would a kmemdup_flex
+make sense?
+>
+> --
+> Kees Cook
