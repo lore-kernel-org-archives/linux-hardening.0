@@ -1,161 +1,174 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E142C1FF61E
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 02:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774491817; cv=pass; b=IRb6cnXjkP1zaQVAni7c9gxlYAJYW2uL8q3kA7BEgCsseFGyFzQ6pgnRL/qHESu5Xo8ln119hUwYBZrHW1amLbvPTF/bkezXXOupk+saU8TPITTYPE7lHf/qNBF7lvxCKNo16lOd4hPiE4P3ET8lRufAh5fY7wiQkM/Ww5lmf8U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774491817; c=relaxed/simple;
-	bh=BI/2ZzBnY7PxSi9Tr8bBTb2UihcEEreGXl3MBqk5W/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nGd2tbOOUnoli9t80alpLMcJgtLdwrTrF7IIqMHlFwMF/5A53rNbUNS7u52pE60p2xbuiA59ZLWXPNa/58S4EoGBOJ6vDGCFSh2/Nav365wLcqHUjmJlELcrtI2iI2spAOAULPTD/GrtzUAQemAddPdHfPiAMXRwQ/JkK/3b00U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EpyrGKNr; arc=pass smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1507238159
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 02:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774492274; cv=none; b=qp6YLVN3C4E7FZipTD8SOCyfrRg6lOMN9XTzrM8R0sNaOnj6553NSiGEm90OcEpvaFd4N4bQRC91JvhEnKOQdEEdCCRf+VFCh4uGWmPRZwJb2DXuKNmo5MQApr9sg/o5NqjAQgSo/Oappn3Wr9xhRRq4tOJ1I2lyDcF1MzHs2Ew=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774492274; c=relaxed/simple;
+	bh=jQfNAZzZ4dda+HzpCv0yCuQI7I25AxD4tAt/W/mftOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gKqnKkterbReTIRJntDepvECHSujVI+1Y/FAt/dFitnNt+0kcJMvEp1Wndrw7pREFXt61ef36u2btBLOtg3EO9SbL1pFQQkTj+soLnXJys9vraMxtq7DVZTRoDJ7YXfEgXSCmeQWVBYv6bXW+zzUH57mPl1D3oAJOtE3u8pjY5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cLlVGEJQ; arc=none smtp.client-ip=74.125.82.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EpyrGKNr"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b9b1df1a6b3so51184366b.0
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Mar 2026 19:23:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774491813; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UIuRTfc/N9X2P76G6P2mf/CpV+8Sh6o8YjkREcTorXEVRgaNjjB8T41xt98Qgncbsl
-         9NrntsmVWDlrgT4jvcKd/SsVRd0pJkjG/ICovmdIHIGHW21SZTvTAsnqtEgBbECgPlpf
-         SHjdf7+PpCmCyace+Wx3ImjK8TWOuid9ZXI4U3B+w0QUm21IhyhVn9rzXJgojEMv2Mmh
-         jE5kbwLISsNFL3W8l385GmVMgR1yc6sr2pnBDjdbnTYhRWufQnc09aslNfCFYMDoI+/H
-         ftbayxA7wEnCNsclK9y4c+jtMWI1VsXc1P3cO4OlxAyS9CAD4gKBOPJO/znhcwCjErGb
-         UgpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=0s9BYVcUXYfDOp1vglCDYA9VUszvYb7bPcrqX3W0hQs=;
-        fh=5mcjdeTZgoUpl/WnQ4iBOLJTeHogYiIEXfi6DaOVeD4=;
-        b=MkxD3J9llCOjt3rihITjk8Ku43cRL3zVfy6xD3bbOXvD9qWowYB950B3Es9ZqpaXri
-         J96VDooCfy93woP4zkEPrCRIfSMkseFuKrXqTXIjppGtuc7GB7KNXKxbe9hNiSI7OC+k
-         zY7x4w5g5dSjK1x8NYnUZ9P57iOERd3YLxAqB8FyLFf3JxoFFVAWwfxxkY61rBhqspx8
-         ks6khnAzBLTr4BR3G/yT7bV9TajPvmZI55YK8sqaKn9ZnuWNCsrqPaPG2mgsaQjRczhZ
-         NrbzaBhloiql86YNh47IuK3ohSk+Y35TH1bC/kZNCOYtfRAVXMZPIHmYhph0uKH6dG+6
-         GVEg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLlVGEJQ"
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-1271195d2a7so1184459c88.0
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Mar 2026 19:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774491813; x=1775096613; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0s9BYVcUXYfDOp1vglCDYA9VUszvYb7bPcrqX3W0hQs=;
-        b=EpyrGKNrM+85hsIy6olGYgk14PcgGp6/QT4GAFwdhp3bZeT7Tx1PZQyDHYBUr8su8e
-         cjuUMYIPh16KzW58qnhm++qZDIrA0LMdgjuaeHGmzFSq3kmQ99+Drj/DfEFwlGTr/oAM
-         IMLGAXT+KcjHcMtdofRoz3aU7jSGMqT2ZuRIzS/gU/MaF92sZECytkTS4QvX66EV5MjV
-         2MkryB0kd55PQgluXu/ufrinME/ejzVYYM2gRnolWYunlodsWUfPjLjxaBN7m3+gZFip
-         j4pE+avSs/uIDimNscQWuDKieUw04gtzmUWgL89t6fZw6kGCSljDrLv0/nqpce1bxGMK
-         vmog==
+        d=gmail.com; s=20251104; t=1774492272; x=1775097072; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pBcJSzFuctU+GfEBiYZvWLtMmVeo006YejPME9qEv9c=;
+        b=cLlVGEJQaDqEna6V66S6gjHvuerZfPes7FPEfzX+hWVG1SUD2/ixCFxXR2cZHxBcNG
+         9kxUM9pw2lDBaSIbXNWJrQZkywe3OkXNBYlzx1puDpks+xTreldg7mBP0iLYFbpzyCsF
+         kiXhJqjzBsYVxPEfPA+qf3/VJTaTKgqCB0hR+2fzCxXL8vJIGoW/HMuygFbyJucVlnxy
+         Y2OZG+EyMHS+knvJ8DdN0ooAvcBdJ88QaVp656VFAdvV7OZWGKSfziZ5bBu7w9e16BDE
+         t5/ZKg//zdBf9koa0w7aoYVch5LMHh7hBRSKO9FrwQBsePkg72+dlqZQbfFbFkbyTQVC
+         bUdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774491813; x=1775096613;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0s9BYVcUXYfDOp1vglCDYA9VUszvYb7bPcrqX3W0hQs=;
-        b=cUOeMw07XvejaKOWDFvIiXYGZHsJiqNk3/l9Ljhoh43Xn+QcksOsS/alfdWtlfI8eK
-         OFHtaAJIdey3lqAAajU3r/t+O8BL8pihx2DmHrvvFpOhso8021aOYDNtXuFMvvjUkgQy
-         gQNHsbTTK6C8HSdpnx6PLEZsW6s8HHsUtaWNRjbKGtLry1S34oLCB7U2M8Dh+0TeuyUd
-         deOfUyqxYsmsk+VZ4trQg8mKQ8vrst7gUnrIfKQEvEHECn2rGBG2f7bhQvFH+SMq2Vss
-         D0FzdMOSIFYqplVm5ery/mweZ3BZUROeW77VHbMJxHCFI+SwuP7c5VsH6rW2w4WzT2/R
-         bmow==
-X-Forwarded-Encrypted: i=1; AJvYcCVImL/3CN1dk9X/m8NSR+8vd6DTN4B7XALeCyIst2nMsIPh6XWJWt/OZbshwNKinb2W7IBYQMoqIICV0pxzGpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTXs9V72jYMIlfqjCZniOfeoM992hQ8yJgZ55OJWSqatkZZXzw
-	DN2W3GonEb6ub6/CjuyvTYRl5eLZ4+7mpu8YNPfJJYZ0u9UhBsSyl8FUSZTG5K79kFJD+PZS0De
-	1OdHc+cz/b8AuBAMzjjUwxKFJmTo1IGA=
-X-Gm-Gg: ATEYQzzrkhprT2UFMysq03n/Pkd+priCGEncUwq5UKyKGHvLsZPXg/bPhMnJGg3aUbK
-	PL3dIEe21LTKGH6S6+AoxrZkEapVXSxpyezyd1qmmjUPjIdw3ofe2xXkYdfTD9YaWap2CwIGkYZ
-	FMIwqjPekHa2yTl5RVBtcYVNRGJWOR59Z0O1sy2BgMct2+IRCc6CLsAQTmHK+dQBrsbf8ZSC9V1
-	967GxbI8X4/y7tHrJqzG4OE3eqd05rlc+7reObiXX351dkhWPyba7nb+EsnoY3iYhkIMb9cEBKE
-	5P2F2OHX7tVAQJsTDKzVYmCN9dSUTZTQQWS0RGkSqtTm2s7Cm+QDPpJurU0/rq9ST9I81Rdzo4s
-	XP2E+9A==
-X-Received: by 2002:a17:906:ee8e:b0:b94:cfd:f37b with SMTP id
- a640c23a62f3a-b9a5426928dmr370259166b.45.1774491813119; Wed, 25 Mar 2026
- 19:23:33 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774492272; x=1775097072;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pBcJSzFuctU+GfEBiYZvWLtMmVeo006YejPME9qEv9c=;
+        b=EwgHGsUNqFYvjRCfpjUBjSBLlQlzTnkF5B0cl1FF0845xWWCipnSCFawZk0AD2n7Ex
+         A17PSM23ophMuHqctMhX+JDTqUxpAAu1iPAoKLaUZhGM825HReVCFpAnOm+uJbGfPT+l
+         IrwxR2e6ckeDzX6AGpBaBKyayH0sMbZmc1Yc/iqB7fSOvF6Ud5XvBkYypHdgke2uoDvk
+         qqZDIkRwqDPn50lXDzO761uFDUr4LzaWzFkulsrbRtLYH8FqK0B+FKCiGz7u+1ewRbZ3
+         evk/jVm5LjzgoFIyiTdJUZZD7/Qh+uxr6CG7GpAlyh0dRKYpI8lZQY+0xR6MxQnwxW+4
+         Ij8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWvazNSxZ3foEfxRNShXwnCvtgIhV4qEKkRygKaYFAJ/vCNoy+W68upQdpGG9lpURqQjRqcutGlBBlWY5PnJJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh1qsIER4mFwX8g1ClXwwrFCshl9Ezj4ZCJxnr4zfuoRzsqDd8
+	hlhXEoTm4PPNXrHp2wMHCbUc/cXs7Dm7qz3AjFyzB+tEorSLAXoNNthX
+X-Gm-Gg: ATEYQzx8Ce+Kyc8U5AiMWh9o5YXkaf1Y8WU2RQfQ5UPyo/GsvWmx9VpvZj3dUNBHd3l
+	75K3YxYZ0dOJ7NVijCq4iWW7P34SsH1agr6RmyBZCZXpdxZTzNhKcmli21eppVfbZuDseJKWZrg
+	IW+KnZKbCCbkHPYOUeyR+4O8LIPVIpWq9XdE9CkSLwx42utVq4v4bmd5/Yb+7Ludy3hmyZWrvCF
+	kl8AiJFSQpVT9/XeeVdTX3bmKChOfgJI+V5y1jm6a1U823pmYHS6X+xa8RhhElg3XWyssbAKKsP
+	CR+pSnIOe65lAA0JbvOeSlE1IA363vuXc7ZC+WE9v30gjPGUWZ+KpNDOREho9/A/KP4mkfdhNq0
+	B4prUZG6bIsI/rHosVFyogCFGdeY6PnITqCpPhZFMQawpagbmTWRrB0ULKyqpJM1Csht/GQT3II
+	UnCMZ08BwHvb87AepIB4P/BTUwqqxi2r0PVVaaA69e1YIGNf153TSeLsc=
+X-Received: by 2002:a05:7022:ec86:b0:119:e569:f277 with SMTP id a92af1059eb24-12a96eeafbfmr3092480c88.32.1774492271674;
+        Wed, 25 Mar 2026 19:31:11 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12aa6e5beb2sm2181796c88.1.2026.03.25.19.31.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2026 19:31:11 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-sound@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	sound-open-firmware@alsa-project.org (moderated list:SOUND - SOUND OPEN FIRMWARE (SOF) DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] ASoC: SOF: topology: use kzalloc_flex
+Date: Wed, 25 Mar 2026 19:30:53 -0700
+Message-ID: <20260326023053.53493-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260324032243.26387-1-rosenp@gmail.com> <20260325172734.GA334461@horms.kernel.org>
-In-Reply-To: <20260325172734.GA334461@horms.kernel.org>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Wed, 25 Mar 2026 19:23:21 -0700
-X-Gm-Features: AQROBzDvM9KixCzVDe_3rsnW2weihEvz36neZ5eOgzFxNGkIRclOewKV8fXC478
-Message-ID: <CAKxU2N9RJ520QS=rsXujp1RUs=1=DvyC_JF_PNBwnCn4fkpN3A@mail.gmail.com>
-Subject: Re: [PATCH] atm: nicstar: simplify allocation
-To: Simon Horman <horms@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Chas Williams <3chas3@gmail.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"moderated list:ATM" <linux-atm-general@lists.sourceforge.net>, 
-	"open list:ATM" <netdev@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 25, 2026 at 10:27=E2=80=AFAM Simon Horman <horms@kernel.org> wr=
-ote:
->
-> On Mon, Mar 23, 2026 at 08:22:43PM -0700, Rosen Penev wrote:
-> > Use a flexible array member with kzalloc_flex to combine allocations
-> > into one.
-> >
-> > Add __counted_by for extra runtime analysis. Move counting variable
-> > assignment to right after allocation as required by __counted_by.
-> >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
->
-> To be honest I'd prefer that we discussed deprecating and removing ATM
-> rather than cleaning it up. Is anyone using it?
-Beats me.
->
-> > ---
-> >  drivers/atm/nicstar.c | 17 +++++------------
-> >  drivers/atm/nicstar.h |  4 ++--
-> >  2 files changed, 7 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/atm/nicstar.c b/drivers/atm/nicstar.c
-> > index 24e51343df15..2f6a3637aeab 100644
-> > --- a/drivers/atm/nicstar.c
-> > +++ b/drivers/atm/nicstar.c
-> > @@ -867,23 +867,17 @@ static scq_info *get_scq(ns_dev *card, int size, =
-u32 scd)
-> >       if (size !=3D VBR_SCQSIZE && size !=3D CBR_SCQSIZE)
-> >               return NULL;
-> >
-> > -     scq =3D kmalloc_obj(*scq);
-> > +     scq =3D kmalloc_flex(*scq, skb, size / NS_SCQE_SIZE);
-> >       if (!scq)
-> >               return NULL;
-> > -        scq->org =3D dma_alloc_coherent(&card->pcidev->dev,
-> > -                                   2 * size,  &scq->dma, GFP_KERNEL);
-> > +
-> > +     scq->num_entries =3D size / NS_SCQE_SIZE;
-> > +
-> > +     scq->org =3D dma_alloc_coherent(&card->pcidev->dev, 2 * size, &sc=
-q->dma, GFP_KERNEL);
-> >       if (!scq->org) {
-> >               kfree(scq);
-> >               return NULL;
-> >       }
-> > -     scq->skb =3D kzalloc_objs(*scq->skb, size / NS_SCQE_SIZE);
-> > -     if (!scq->skb) {
-> > -             dma_free_coherent(&card->pcidev->dev,
-> > -                               2 * size, scq->org, scq->dma);
-> > -             kfree(scq);
-> > -             return NULL;
-> > -     }
-> > -     scq->num_entries =3D size / NS_SCQE_SIZE;
->
-> AI review points out that previously the skb array was zeroed on allocati=
-on,
-> which is relied on by the code. But that is no longer the case.
-Will fix.
->
-> --
-> pw-bot: changes requested
+Simplify allocation by using a flexible array member.
+
+Add __counted_by for extra runtime analysis.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ sound/soc/sof/sof-audio.h |  2 +-
+ sound/soc/sof/topology.c  | 14 ++------------
+ 2 files changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/sound/soc/sof/sof-audio.h b/sound/soc/sof/sof-audio.h
+index 80b11625915d..138e5fcc2dd0 100644
+--- a/sound/soc/sof/sof-audio.h
++++ b/sound/soc/sof/sof-audio.h
+@@ -411,11 +411,11 @@ struct snd_sof_dai_link {
+ 	struct snd_sof_tuple *tuples;
+ 	int num_tuples;
+ 	struct snd_soc_dai_link *link;
+-	struct snd_soc_tplg_hw_config *hw_configs;
+ 	int num_hw_configs;
+ 	int default_hw_cfg_id;
+ 	int type;
+ 	struct list_head list;
++	struct snd_soc_tplg_hw_config hw_configs[] __counted_by(num_hw_configs);
+ };
+ 
+ /* ASoC SOF DAPM widget */
+diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
+index 63d637db7053..413003e86f6c 100644
+--- a/sound/soc/sof/topology.c
++++ b/sound/soc/sof/topology.c
+@@ -1908,18 +1908,12 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
+ 		return -EINVAL;
+ 	}
+ 
+-	slink = kzalloc_obj(*slink);
++	slink = kzalloc_flex(*slink, hw_configs, le32_to_cpu(cfg->num_hw_configs));
+ 	if (!slink)
+ 		return -ENOMEM;
+ 
+ 	slink->num_hw_configs = le32_to_cpu(cfg->num_hw_configs);
+-	slink->hw_configs = kmemdup_array(cfg->hw_config,
+-					  slink->num_hw_configs, sizeof(*slink->hw_configs),
+-					  GFP_KERNEL);
+-	if (!slink->hw_configs) {
+-		kfree(slink);
+-		return -ENOMEM;
+-	}
++	memcpy(slink->hw_configs, cfg->hw_config, le32_to_cpu(cfg->num_hw_configs) * sizeof(*slink->hw_configs));
+ 
+ 	slink->default_hw_cfg_id = le32_to_cpu(cfg->default_hw_config_id);
+ 	slink->link = link;
+@@ -1932,7 +1926,6 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
+ 			       private->array, le32_to_cpu(private->size));
+ 	if (ret < 0) {
+ 		dev_err(scomp->dev, "Failed tp parse common DAI link tokens\n");
+-		kfree(slink->hw_configs);
+ 		kfree(slink);
+ 		return ret;
+ 	}
+@@ -2003,7 +1996,6 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
+ 	/* allocate memory for tuples array */
+ 	slink->tuples = kzalloc_objs(*slink->tuples, num_tuples);
+ 	if (!slink->tuples) {
+-		kfree(slink->hw_configs);
+ 		kfree(slink);
+ 		return -ENOMEM;
+ 	}
+@@ -2061,7 +2053,6 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
+ 
+ err:
+ 	kfree(slink->tuples);
+-	kfree(slink->hw_configs);
+ 	kfree(slink);
+ 
+ 	return ret;
+@@ -2078,7 +2069,6 @@ static int sof_link_unload(struct snd_soc_component *scomp, struct snd_soc_dobj
+ 
+ 	kfree(slink->tuples);
+ 	list_del(&slink->list);
+-	kfree(slink->hw_configs);
+ 	kfree(slink);
+ 	dobj->private = NULL;
+ 
+-- 
+2.53.0
+
