@@ -1,73 +1,74 @@
-Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B9137C0F2
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 19:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2448E381B16
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 19:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774639467; cv=none; b=d2KIwjxzDENrqSZIk+k9Qv3KE6f90sX+Ru4DE13F9DmVIVD/O8aZ+n/5NJrTLKOGJAYLhfUpReq2jJldBljE/tlcaJ1fJG2kvuem/oA33e5G78j//+xHf6Uco3ARssv7VBYoiVetn9jrWFz08o+ptsHr+If11ItwneVpyAtA6CY=
+	t=1774641466; cv=none; b=f7ON95lJD88YWUr4SILxC9iHIJJAcr2AlquPd2el+BB76fS8Q6o6Zamge1SH1+oPonXFR9JH0xTvrjDu9IxkPstBL2MtDYz3sQYN0oLq21VTo21DoG0p0g+u635TTJEww4Zhob09IBha59dXlegHxAWePALoFKFMoJnhGNSxvms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774639467; c=relaxed/simple;
-	bh=L23tTLiBe2b7sgdSRGfvZfLh7KNUbOvlds6WSVyPQYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L+E58jF50k0lkhvTppOKYE5NzXFY214xWRQAfWixO5maiFYynEaHmq6igI0nR7TwuWM7BXoVH7l2jBJdHC1iYRCuBaF4R7VvJGyggzbgMf4SAqJe8a2L/17OT92QpfYRyLhuzQkgNUZHW08zg1RLfRSNyozigoWpDqAJnhyLZ7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DZz3y3zG; arc=none smtp.client-ip=74.125.82.180
+	s=arc-20240116; t=1774641466; c=relaxed/simple;
+	bh=wz1OGCVcy0nrMSQ5p8MWSwMy2j3Y/e0VxNE08nTwkgQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l/VOnWjpUKex/R0cmhMgANhU9mwLW8DXQsVPl0Z+X6Y5nnGmPBdbUBYJXZYOUeMgwsGhTjo/KdLytb1V8oS0GKvO0g/KL/hKNE36X4Nr+UYOyAHd65wtOr+im8vcNJz4tVaS0z9LIcprT2Kndex+2aXC4Yow4pO0uf32Jo2qtg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JHOicVq2; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZz3y3zG"
-Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-2c1092cc08cso1326493eec.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 12:24:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JHOicVq2"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-48540d21f7dso28126135e9.0
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 12:57:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774639466; x=1775244266; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774641463; x=1775246263; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DHdbMRwuqWnRYgbmqY+SsmGUlT6k9iE5mPMFEtpe0wE=;
-        b=DZz3y3zGvoc+cRtoD1znqO8c/RsrwGuf9IkrGONYB/Jn9AlUPNDnGqHzJXno17r519
-         xiQmZPn2cpxpr3Vdk9S4a/ssLRLIHoGhqxiFffUHyU+lJyRqEv5eNsg8SZtIhEfRSO/u
-         L+JrYPXjIUiQZ1uXOX2RfcjYs7FHAvaY9rsewD1TbscScdyDIMhWcrfOg48r4c5GKaVr
-         J1m523EFBoogvAYgO85mRwAKlqkSgKUOy+80ai2ehO4jNDDOeYVxRcGK9DLJqDpFmmNf
-         GcS+W3BCVKbk7J6/sChcdlLkmrHdg9VWbrw9BDUcDmkA/0PFDFoFDaek1r83EIGjNNyS
-         z5cA==
+        bh=ZFg98qZ3lCCSVt8lr34pw3VzQMgyzjSNpkoFfcv1k64=;
+        b=JHOicVq216V8imKWWWXk31m3ubCPVrq5xQ766X8vWash9tf78CgO09vC5Xnwv7di4+
+         6nAY2dEIAP2J5kQbmfzESTT6oyZEZKoBi2tvyHzCjpjrP7PlZPeM60RIm+puJMt/nmxE
+         /N3G+Ogdjy8Zw2SgN6GQOO2hJYbeu42VCyPOh3cjNJxqvh9dVD28bCfSEKsC0lFatTj7
+         82niPltrBBE3J/ihlgwPYseGtJJMt/iKdplmwGzkiLrxcb06mI/0wYDK1meTDL3GyD8b
+         ybfwvaljHWqCfn5lTWqO5TufoCiGQM3HzOlDo6FmBLAzp3pANJwtZn+6vdUQrXpjbhHD
+         KFVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774639466; x=1775244266;
+        d=1e100.net; s=20251104; t=1774641463; x=1775246263;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DHdbMRwuqWnRYgbmqY+SsmGUlT6k9iE5mPMFEtpe0wE=;
-        b=tE+V0GjyRQAaaRrFrs1anxgcd9egjak1qitozXgZRPV6vOS7D5g+XXB8qO1lXCuo3W
-         bxmaO3FW3meLbLty4FyLpdAg+kRZdtO5xqHVbCLgg7Js48o1FW+Jx59EhIYzb1/0uGmn
-         sNkXHLlXhbraHTWVvtjJ0/iILhSklT9uh+cXA2qwwluFIHPO97by7UHcSza7rBZNB1x2
-         BMplvy2fNGxFL2XiV1SvJPbCtIi5SxJRTDUg8Sci5+ZBqw5I7pJ4dSCA/NEAFX7WtB21
-         w3OiIPDYyrEzfbjvTArSOTk0IDBlaV09hng3zt4ZdG76kajpkGslzABQKzZQzJ6TfDZ3
-         yYGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7pXTfHV3S6qQ9qOiIGOjgSAhsVlvjyXZ20rdTnFuUwsDtkjxHhESVheKTzui8V5smSEhjLhlnVjNcKN7D0wE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySX8SUYdR40uLl6cLkQ2v8zC39Ht09aLgU6zfJFlMob7t5u7UI
-	d0wUiqKRbfDr3YTtL/CDU0jzsE7N2drlBvknMn4icnGKIvcRQD0WG7gs
-X-Gm-Gg: ATEYQzzNjbGlrodBFFcAzLtKW6KjEcVO/tRZFj0ZBBMYu57OMWVhyewb+YAppih2laS
-	baHP0XwO7JaLTXdsgEleoaytp/Efsegb/LXG6bLnsfJ0EtkrYTXXm9onHG+j2v59MpfcpxuxSeW
-	SybGB2SIDnJao2sepo4h8QW96rBhsV44qUwnyN9UwuX1WOQwVD1tuRoTeEeAh7A3fsNGMcasaQ3
-	3c7I3TWIFMW9t+SEMIUpbYabx5AYWI+cZ5y3/omH9f7LVVipZkKnbC/6B+fduUwcgLr1CF4gjyA
-	dea2P6lOo8We+uPhwsuHH8g3qK+6DSZ/kkwDR0iktrwzzAeRyD7s1IX4hII+iOgFFrQpQ8gX7z1
-	3OY0RBSLMxpcRm7l4xKzj1HJJKzNqG4CZSIBhXORhhtuB/4cQbqIbItqaoeyxr6IO815ZiL1Q13
-	7cAjEh70QJal9LJmPVMaGkmK20rdUotasZmeuWvtqJekH6Lx566qkCYtNf/S5EVAbe5A==
-X-Received: by 2002:a05:7301:6781:b0:2c0:f814:5885 with SMTP id 5a478bee46e88-2c185dfe365mr2188934eec.18.1774639465478;
-        Fri, 27 Mar 2026 12:24:25 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c79722e0sm187279eec.31.2026.03.27.12.24.23
+        bh=ZFg98qZ3lCCSVt8lr34pw3VzQMgyzjSNpkoFfcv1k64=;
+        b=U8neboiQrHB3mIZq3vFGxr0jfzFjVP06zWm7L2qb7Lk8WEKE3Vg4V8BofyNeXTkNXT
+         XxLsZTn2QgWTzGnik5oOPWsW6LQE5bwj2J23UIZ8ecZzNsFMYS59jNGAYUJHHRn1BgtW
+         WK7PXMUwW2T1QvIj0y1a4Uq18twKi/mooT0rfyb58/isV15v66UbBKO20ibjOqMBWtBl
+         p3PbPNlTlUw5BhXHezgHI3n1coEV03HefQpvEOygTPZbXLQzufHqypq0BB5/wRLIQDsN
+         IBhsZQZDu/wUAVkAnEOZCSu7XBxYmX5kuTILRBeM7l2Wu2Tdwy0cIrlOwqo1U0R7mrP0
+         wJCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYzx+pK86SVGcLj6KsAtXQfXEBPu+nS0UunX0MBVWCaFAwpVKMTfvwGdJ+7l+bJ0pq3/MqSb2qNh9hD574YbA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNzFZF0TGqHu3iSBjJ46E5Qr++u4OUJeoqcENW2YLrWbEeBRzf
+	ZvqxWX53hbSakkN9+d9uFMTV2Eo6pkNt/5sfTR/dAeYG1ec3j1jbeVeT
+X-Gm-Gg: ATEYQzzRcDP7jj5duKHWf3VW8QsAitbNnbDyUi9Gk71azOos/9+cFAKmdOa6iQ9Qqs4
+	JwtJ/JPB6mwf1ak85ZNddeE44ICQAAuk5lQVKGsihwmcZtxpkRvR1bloUx5+VYXFmfb3DgLrpOm
+	SWQkoKLMIPHAJQ5ul5OykfeiO9BMOy5vZ81XxipK/f8uK8XJHGjrOovoQFF8qPl5p1vRta1ki5X
+	vxst8SuZz7NeWJxG7v0rHuT+7gDV3o4KJrhqajFuL/eouzQa94Y+Y512ZmjoZbkycMgGnCQll1+
+	Uw9dwaFhVQr8Xy0kjfWBHJU6/46MwmYLBy6epSPgm/Z1P4wbXlWOpiGEMYyYjzyqeojosxV9wUH
+	tuqQQrf7M5dk1sdwhCCA4DKAzgyQ1vT6HJDMqqbaPRaOc2d6LsCaq68kxPkHb8kGZBF6pZEacjw
+	86+fm68XDNuoMDdNmo3o9EgqaQ+qd94VYwTNESyVYF4GQuwI251xpE1QGbrMARtYbKVkxvsf72O
+	VvzR0McLx9u
+X-Received: by 2002:a05:600c:1d15:b0:483:703e:4ad9 with SMTP id 5b1f17b1804b1-48727ee9b10mr63168225e9.19.1774641463293;
+        Fri, 27 Mar 2026 12:57:43 -0700 (PDT)
+Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-487306acb47sm3065875e9.15.2026.03.27.12.57.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2026 12:24:24 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-atm-general@lists.sourceforge.net
-Cc: Chas Williams <3chas3@gmail.com>,
+        Fri, 27 Mar 2026 12:57:43 -0700 (PDT)
+From: david.laight.linux@gmail.com
+To: Andrew Morton <akpm@linux-foundation.org>,
 	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	netdev@vger.kernel.org (open list:ATM),
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv3] atm: nicstar: simplify allocation
-Date: Fri, 27 Mar 2026 12:24:07 -0700
-Message-ID: <20260327192407.365369-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	Andy Shevchenko <andy@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH next] string: Optimise strlen()
+Date: Fri, 27 Mar 2026 19:57:37 +0000
+Message-Id: <20260327195737.89537-1-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,84 +77,62 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member with kzalloc_flex to combine allocations
-into one.
+From: David Laight <david.laight.linux@gmail.com>
 
-Add __counted_by for extra runtime analysis. Move counting variable
-assignment to right after allocation as required by __counted_by.
+Unrolling the loop once significantly improves performance on some CPU.
+Userspace testing on a Zen-5 shows it runs at two bytes/clock rather than
+one byte/clock with only a marginal additional overhead.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Using 'byte masking' is faster for longer strings - the break-even point
+is around 56 bytes on the same Zen-5 (there is much larger overhead, then
+it runs at 16 bytes in 3 clocks).
+But the majority of kernel calls won't be near that length.
+There will also be extra overhead for big-endian systems and those
+without a fast ffs().
+
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
- v3: reduce to 80 columns
- v2: use kzalloc_flex
- drivers/atm/nicstar.c | 18 ++++++------------
- drivers/atm/nicstar.h |  5 +++--
- 2 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/atm/nicstar.c b/drivers/atm/nicstar.c
-index 24e51343df15..c0bed85daf96 100644
---- a/drivers/atm/nicstar.c
-+++ b/drivers/atm/nicstar.c
-@@ -867,23 +867,18 @@ static scq_info *get_scq(ns_dev *card, int size, u32 scd)
- 	if (size != VBR_SCQSIZE && size != CBR_SCQSIZE)
- 		return NULL;
+For reference 'rep scasb' comes in at 150 + 3 per byte on Zen-5.
 
--	scq = kmalloc_obj(*scq);
-+	scq = kzalloc_flex(*scq, skb, size / NS_SCQE_SIZE);
- 	if (!scq)
- 		return NULL;
--        scq->org = dma_alloc_coherent(&card->pcidev->dev,
--				      2 * size,  &scq->dma, GFP_KERNEL);
-+
-+	scq->num_entries = size / NS_SCQE_SIZE;
-+
-+	scq->org = dma_alloc_coherent(&card->pcidev->dev, 2 * size, &scq->dma,
-+				      GFP_KERNEL);
- 	if (!scq->org) {
- 		kfree(scq);
- 		return NULL;
- 	}
--	scq->skb = kzalloc_objs(*scq->skb, size / NS_SCQE_SIZE);
--	if (!scq->skb) {
--		dma_free_coherent(&card->pcidev->dev,
--				  2 * size, scq->org, scq->dma);
--		kfree(scq);
--		return NULL;
--	}
--	scq->num_entries = size / NS_SCQE_SIZE;
- 	scq->base = PTR_ALIGN(scq->org, size);
- 	scq->next = scq->base;
- 	scq->last = scq->base + (scq->num_entries - 1);
-@@ -928,7 +923,6 @@ static void free_scq(ns_dev *card, scq_info *scq, struct atm_vcc *vcc)
- 				}
- 			}
- 	}
--	kfree(scq->skb);
- 	dma_free_coherent(&card->pcidev->dev,
- 			  2 * (scq->num_entries == VBR_SCQ_NUM_ENTRIES ?
- 			       VBR_SCQSIZE : CBR_SCQSIZE),
-diff --git a/drivers/atm/nicstar.h b/drivers/atm/nicstar.h
-index 1b7f1dfc1735..76635d46016e 100644
---- a/drivers/atm/nicstar.h
-+++ b/drivers/atm/nicstar.h
-@@ -667,14 +667,15 @@ typedef struct scq_info {
- 	ns_scqe *next;
- 	volatile ns_scqe *tail;	/* Not related to the nicstar register */
- 	unsigned num_entries;
--	struct sk_buff **skb;	/* Pointer to an array of pointers
--				   to the sk_buffs used for tx */
- 	u32 scd;		/* SRAM address of the corresponding
- 				   SCD */
- 	int tbd_count;		/* Only meaningful on variable rate */
- 	wait_queue_head_t scqfull_waitq;
- 	volatile char full;	/* SCQ full indicator */
- 	spinlock_t lock;	/* SCQ spinlock */
-+	struct sk_buff *skb[] __counted_by(num_entries);
-+	/* Pointer to an array of pointers
-+	   to the sk_buffs used for tx */
- } scq_info;
+I've not tested any Intel CPU, I don't think they can run a
+'1 clock loop' but the change might improve performance from
+2 clocks/byte to 1 clock/byte.
+I can test Intel up to i7-7xxx but don't have any older AMD CPU
+or any other architecutes (apart from a pi-5).
 
- typedef struct rsq_info {
---
-2.53.0
+Other architectures may well see an improvement.
+If only because of a reduced number of taken branches.
+
+I did notice that arm64 uses a very large asm block that is clearly
+optimised for very long strings - I suspect the C version will be
+faster in the kernel.
+
+ lib/string.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/lib/string.c b/lib/string.c
+index b632c71df1a5..31de9aa86409 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -415,11 +415,13 @@ EXPORT_SYMBOL(strnchr);
+ #ifndef __HAVE_ARCH_STRLEN
+ size_t strlen(const char *s)
+ {
+-	const char *sc;
++	size_t len;
+ 
+-	for (sc = s; *sc != '\0'; ++sc)
+-		/* nothing */;
+-	return sc - s;
++	for (len = 0; likely(s[len]); len += 2) {
++		if (!s[len + 1])
++			return len + 1;
++	}
++	return len;
+ }
+ EXPORT_SYMBOL(strlen);
+ #endif
+-- 
+2.39.5
 
