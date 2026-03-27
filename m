@@ -1,77 +1,72 @@
-Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455472248A3
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 19:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B9137C0F2
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 19:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774638684; cv=none; b=iyHcXmrgz2O+fONrApsOyQV7vByI9MhW3HHjA9R6jFnDDkDL8+4d5hQleO8Wvd3DsT+AcRHjff3voTF+prfmYStqMzyIk1uJKwOjVn1QGtcd7G72Mm5EDL7nmHLHwv3MEZXF518fGJiXQCfyeDwO/xa5Acu5FtCcIwwbYZEtzbk=
+	t=1774639467; cv=none; b=d2KIwjxzDENrqSZIk+k9Qv3KE6f90sX+Ru4DE13F9DmVIVD/O8aZ+n/5NJrTLKOGJAYLhfUpReq2jJldBljE/tlcaJ1fJG2kvuem/oA33e5G78j//+xHf6Uco3ARssv7VBYoiVetn9jrWFz08o+ptsHr+If11ItwneVpyAtA6CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774638684; c=relaxed/simple;
-	bh=MY7cvhxbG7/wiNuf5e5sQpLEVRQoOMUVb6G8zWyUBs0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=drOKNJyGVwWp7K1h2aeRZVHP88CJJiHFOJ05YQ8owirvhHgnUfyEdIrmsLFF4GYblwyePZtQBcA0WxWd7CE2Ifea5MlDrOBhsfucDFRJHV+Zj2IDRBfsPhQywSiKMIfoBxWgSr+4HP33eZ5SGpXwPDhUe1wN5vhGlk4K2pARW5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HHqLCdt3; arc=none smtp.client-ip=74.125.82.47
+	s=arc-20240116; t=1774639467; c=relaxed/simple;
+	bh=L23tTLiBe2b7sgdSRGfvZfLh7KNUbOvlds6WSVyPQYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L+E58jF50k0lkhvTppOKYE5NzXFY214xWRQAfWixO5maiFYynEaHmq6igI0nR7TwuWM7BXoVH7l2jBJdHC1iYRCuBaF4R7VvJGyggzbgMf4SAqJe8a2L/17OT92QpfYRyLhuzQkgNUZHW08zg1RLfRSNyozigoWpDqAJnhyLZ7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DZz3y3zG; arc=none smtp.client-ip=74.125.82.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHqLCdt3"
-Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-128e4d0cc48so3138190c88.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 12:11:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZz3y3zG"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-2c1092cc08cso1326493eec.1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 12:24:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774638682; x=1775243482; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774639466; x=1775244266; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zCbLjBWf2b55Ge/3z8jm9aEiQT0X4UuXkcvJNvdHJnc=;
-        b=HHqLCdt3HSwMxY8SYohSVOvhhyob2P4NRsXJ/z/ifCwWrpXxpXmxXLMA7STK1BD+Fd
-         MYprgzZ/mS58Cbes6VYME0bfqbboBhlQQCXF1u+wlJ27nbBAO6D5GNzzPD3D4tUZDgdH
-         Pu5ZsD+WYdx5gkmE9VhbQPIyezQSzlNd61mGUQMUtzH9NXgZVsKTorgzvBhU6Hr7nYMr
-         X7ngEDqpKy3/hO3VV/32VkNLNpTMixvlPCBk5H5NC1y6Pim6rDVA0rOss4/Mx/84kOFr
-         EwP/axiCkpc+085PcYoIWOs6pHO0sWRblbttDK63eye7Cij6ywhhnWzC0Jx7OAgbGjOF
-         Pf/w==
+        bh=DHdbMRwuqWnRYgbmqY+SsmGUlT6k9iE5mPMFEtpe0wE=;
+        b=DZz3y3zGvoc+cRtoD1znqO8c/RsrwGuf9IkrGONYB/Jn9AlUPNDnGqHzJXno17r519
+         xiQmZPn2cpxpr3Vdk9S4a/ssLRLIHoGhqxiFffUHyU+lJyRqEv5eNsg8SZtIhEfRSO/u
+         L+JrYPXjIUiQZ1uXOX2RfcjYs7FHAvaY9rsewD1TbscScdyDIMhWcrfOg48r4c5GKaVr
+         J1m523EFBoogvAYgO85mRwAKlqkSgKUOy+80ai2ehO4jNDDOeYVxRcGK9DLJqDpFmmNf
+         GcS+W3BCVKbk7J6/sChcdlLkmrHdg9VWbrw9BDUcDmkA/0PFDFoFDaek1r83EIGjNNyS
+         z5cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774638682; x=1775243482;
+        d=1e100.net; s=20251104; t=1774639466; x=1775244266;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zCbLjBWf2b55Ge/3z8jm9aEiQT0X4UuXkcvJNvdHJnc=;
-        b=lyZ05E8lbSK/HC1SCcIK7HlAYJ8dZXrUbr2UAyKi4Iw0cW+0QYtDP8lImlLgi/hQBb
-         HY9SnsEaJrHUFhg0enDoxFQa098B0Ob/avi971icMnJlVmxa8oZkhlpOl57C7KtHPO97
-         4Qybr6GdgfzjGUIN3uUDhWFlwpQIAiubv29O2og4kAznpShvTU3bl/N9kDhrvqYmkfjK
-         C+OxTG00hYM7ONRvt41TF/CZ2Z/WymzrYRZiyqrea02HVp927ZY8ljXI/ZiqAyPElHfY
-         a8f2N5kHYIYSmaeTnREKLHu4I62EtSvmmOLaoKEyuFksa+Nlh5ymhrooPjrm7tSm6g+7
-         BRRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWaqaetxtJmWIGq0ZbnRch/ZUmx96Slf23lNigBTs6M/Zn+SnrifT44enS7UTHthjhXVuccFXwKhvLjkeuc0Ko=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGFk+DpQFYUbrybMm/A46RWZZWV79se0yAhzeeShENw6GROqak
-	CXANokW0NwmnY2FrUISOx8+8k02w11w83XKKv/DjNskq1i7/YNou3/Dc
-X-Gm-Gg: ATEYQzwrnr0J5JNQlVJ6aaG9GZcpiArUdsVxw0zDrZmvhNwNONN7qBecKt5fXD/ccw1
-	IcZ86aPG+CQc1XTX1H2zBvetdfNVnOkoPA4V09mhrIb6UdbNaBi5E+Qk5xeOBxY3OZ03kxPzqQp
-	W64qXk6Vytuf3Ou/xSMJ6OCs5M2+7sdVLBOC1x9jOLl3sKt+DomxtiAU/0xxDsQfvgAMN+71S8L
-	1zbK8tdNgH2gDNfiAImLf14XVVOEGoNtnS9O8IHejMrJ+rhKkW5CRhnB1OvKmCMY57JeOdQDkKa
-	KB4VlVgD1N7DpVwDVIcBv1X8wayYXAMLJfk7dyMwcRuahGiEnas+CTSOuGFP88iLY6zYDe8/IAD
-	qkTRSd1jE0Ov0qFRDJreLz8TYl0Dl8/vnCQU5l83zbQADnO8L+Io9Hydxvk/S3UHqwUanJl7iCx
-	5LxdlIyX7CXHNOzOyNi7zk685W3d7buAJi5g6/dJh9FTI2CKs4/5Zw51I=
-X-Received: by 2002:a05:7022:6191:b0:127:3b1e:7e0e with SMTP id a92af1059eb24-12ab28cb779mr2194710c88.20.1774638682181;
-        Fri, 27 Mar 2026 12:11:22 -0700 (PDT)
+        bh=DHdbMRwuqWnRYgbmqY+SsmGUlT6k9iE5mPMFEtpe0wE=;
+        b=tE+V0GjyRQAaaRrFrs1anxgcd9egjak1qitozXgZRPV6vOS7D5g+XXB8qO1lXCuo3W
+         bxmaO3FW3meLbLty4FyLpdAg+kRZdtO5xqHVbCLgg7Js48o1FW+Jx59EhIYzb1/0uGmn
+         sNkXHLlXhbraHTWVvtjJ0/iILhSklT9uh+cXA2qwwluFIHPO97by7UHcSza7rBZNB1x2
+         BMplvy2fNGxFL2XiV1SvJPbCtIi5SxJRTDUg8Sci5+ZBqw5I7pJ4dSCA/NEAFX7WtB21
+         w3OiIPDYyrEzfbjvTArSOTk0IDBlaV09hng3zt4ZdG76kajpkGslzABQKzZQzJ6TfDZ3
+         yYGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7pXTfHV3S6qQ9qOiIGOjgSAhsVlvjyXZ20rdTnFuUwsDtkjxHhESVheKTzui8V5smSEhjLhlnVjNcKN7D0wE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySX8SUYdR40uLl6cLkQ2v8zC39Ht09aLgU6zfJFlMob7t5u7UI
+	d0wUiqKRbfDr3YTtL/CDU0jzsE7N2drlBvknMn4icnGKIvcRQD0WG7gs
+X-Gm-Gg: ATEYQzzNjbGlrodBFFcAzLtKW6KjEcVO/tRZFj0ZBBMYu57OMWVhyewb+YAppih2laS
+	baHP0XwO7JaLTXdsgEleoaytp/Efsegb/LXG6bLnsfJ0EtkrYTXXm9onHG+j2v59MpfcpxuxSeW
+	SybGB2SIDnJao2sepo4h8QW96rBhsV44qUwnyN9UwuX1WOQwVD1tuRoTeEeAh7A3fsNGMcasaQ3
+	3c7I3TWIFMW9t+SEMIUpbYabx5AYWI+cZ5y3/omH9f7LVVipZkKnbC/6B+fduUwcgLr1CF4gjyA
+	dea2P6lOo8We+uPhwsuHH8g3qK+6DSZ/kkwDR0iktrwzzAeRyD7s1IX4hII+iOgFFrQpQ8gX7z1
+	3OY0RBSLMxpcRm7l4xKzj1HJJKzNqG4CZSIBhXORhhtuB/4cQbqIbItqaoeyxr6IO815ZiL1Q13
+	7cAjEh70QJal9LJmPVMaGkmK20rdUotasZmeuWvtqJekH6Lx566qkCYtNf/S5EVAbe5A==
+X-Received: by 2002:a05:7301:6781:b0:2c0:f814:5885 with SMTP id 5a478bee46e88-2c185dfe365mr2188934eec.18.1774639465478;
+        Fri, 27 Mar 2026 12:24:25 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c46a0a84sm216527eec.9.2026.03.27.12.11.20
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c79722e0sm187279eec.31.2026.03.27.12.24.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2026 12:11:21 -0700 (PDT)
+        Fri, 27 Mar 2026 12:24:24 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-omap@vger.kernel.org
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Russell King <linux@armlinux.org.uk>,
+To: linux-atm-general@lists.sourceforge.net
+Cc: Chas Williams <3chas3@gmail.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM SUB-ARCHITECTURES),
+	netdev@vger.kernel.org (open list:ATM),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv2] ARM: omap2: simplify allocation for omap_device
-Date: Fri, 27 Mar 2026 12:11:04 -0700
-Message-ID: <20260327191104.206512-1-rosenp@gmail.com>
+Subject: [PATCHv3] atm: nicstar: simplify allocation
+Date: Fri, 27 Mar 2026 12:24:07 -0700
+Message-ID: <20260327192407.365369-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -81,107 +76,84 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member to combine allocations.
+Use a flexible array member with kzalloc_flex to combine allocations
+into one.
 
-Add __counted_by for extra runtime analysis.
-
-Remove goto paths as they are not really needed anymore.
+Add __counted_by for extra runtime analysis. Move counting variable
+assignment to right after allocation as required by __counted_by.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- v2: remove kfree and fix compilation.
- arch/arm/mach-omap2/omap_device.c | 29 ++++++++++-------------------
- arch/arm/mach-omap2/omap_device.h |  4 ++--
- 2 files changed, 12 insertions(+), 21 deletions(-)
+ v3: reduce to 80 columns
+ v2: use kzalloc_flex
+ drivers/atm/nicstar.c | 18 ++++++------------
+ drivers/atm/nicstar.h |  5 +++--
+ 2 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap_device.c b/arch/arm/mach-omap2/omap_device.c
-index 79db4c49ffc9..77a75b0b9ae6 100644
---- a/arch/arm/mach-omap2/omap_device.c
-+++ b/arch/arm/mach-omap2/omap_device.c
-@@ -307,35 +307,27 @@ static struct omap_device *omap_device_alloc(struct platform_device *pdev,
- 	int ret = -ENOMEM;
- 	struct omap_device *od;
- 	int i;
--	struct omap_hwmod **hwmods;
-+	struct omap_hwmod *hwmod;
+diff --git a/drivers/atm/nicstar.c b/drivers/atm/nicstar.c
+index 24e51343df15..c0bed85daf96 100644
+--- a/drivers/atm/nicstar.c
++++ b/drivers/atm/nicstar.c
+@@ -867,23 +867,18 @@ static scq_info *get_scq(ns_dev *card, int size, u32 scd)
+ 	if (size != VBR_SCQSIZE && size != CBR_SCQSIZE)
+ 		return NULL;
 
--	od = kzalloc_obj(struct omap_device);
--	if (!od)
--		goto oda_exit1;
-+	od = kzalloc_flex(*od, hwmods, oh_cnt);
-+	if (!od) {
-+		dev_err(&pdev->dev, "omap_device: build failed (%d)\n", ret);
-+		return ERR_PTR(ret);
-+	}
-
- 	od->hwmods_cnt = oh_cnt;
-+	memcpy(od->hwmods, ohs, oh_cnt * sizeof(*od->hwmods));
-
--	hwmods = kmemdup_array(ohs, oh_cnt, sizeof(*hwmods), GFP_KERNEL);
--	if (!hwmods)
--		goto oda_exit2;
--
--	od->hwmods = hwmods;
- 	od->pdev = pdev;
- 	pdev->archdata.od = od;
-
- 	for (i = 0; i < oh_cnt; i++) {
--		hwmods[i]->od = od;
--		_add_hwmod_clocks_clkdev(od, hwmods[i]);
-+		hwmod = od->hwmods[i];
-+		hwmod->od = od;
-+		_add_hwmod_clocks_clkdev(od, hwmod);
+-	scq = kmalloc_obj(*scq);
++	scq = kzalloc_flex(*scq, skb, size / NS_SCQE_SIZE);
+ 	if (!scq)
+ 		return NULL;
+-        scq->org = dma_alloc_coherent(&card->pcidev->dev,
+-				      2 * size,  &scq->dma, GFP_KERNEL);
++
++	scq->num_entries = size / NS_SCQE_SIZE;
++
++	scq->org = dma_alloc_coherent(&card->pcidev->dev, 2 * size, &scq->dma,
++				      GFP_KERNEL);
+ 	if (!scq->org) {
+ 		kfree(scq);
+ 		return NULL;
  	}
+-	scq->skb = kzalloc_objs(*scq->skb, size / NS_SCQE_SIZE);
+-	if (!scq->skb) {
+-		dma_free_coherent(&card->pcidev->dev,
+-				  2 * size, scq->org, scq->dma);
+-		kfree(scq);
+-		return NULL;
+-	}
+-	scq->num_entries = size / NS_SCQE_SIZE;
+ 	scq->base = PTR_ALIGN(scq->org, size);
+ 	scq->next = scq->base;
+ 	scq->last = scq->base + (scq->num_entries - 1);
+@@ -928,7 +923,6 @@ static void free_scq(ns_dev *card, scq_info *scq, struct atm_vcc *vcc)
+ 				}
+ 			}
+ 	}
+-	kfree(scq->skb);
+ 	dma_free_coherent(&card->pcidev->dev,
+ 			  2 * (scq->num_entries == VBR_SCQ_NUM_ENTRIES ?
+ 			       VBR_SCQSIZE : CBR_SCQSIZE),
+diff --git a/drivers/atm/nicstar.h b/drivers/atm/nicstar.h
+index 1b7f1dfc1735..76635d46016e 100644
+--- a/drivers/atm/nicstar.h
++++ b/drivers/atm/nicstar.h
+@@ -667,14 +667,15 @@ typedef struct scq_info {
+ 	ns_scqe *next;
+ 	volatile ns_scqe *tail;	/* Not related to the nicstar register */
+ 	unsigned num_entries;
+-	struct sk_buff **skb;	/* Pointer to an array of pointers
+-				   to the sk_buffs used for tx */
+ 	u32 scd;		/* SRAM address of the corresponding
+ 				   SCD */
+ 	int tbd_count;		/* Only meaningful on variable rate */
+ 	wait_queue_head_t scqfull_waitq;
+ 	volatile char full;	/* SCQ full indicator */
+ 	spinlock_t lock;	/* SCQ spinlock */
++	struct sk_buff *skb[] __counted_by(num_entries);
++	/* Pointer to an array of pointers
++	   to the sk_buffs used for tx */
+ } scq_info;
 
- 	return od;
--
--oda_exit2:
--	kfree(od);
--oda_exit1:
--	dev_err(&pdev->dev, "omap_device: build failed (%d)\n", ret);
--
--	return ERR_PTR(ret);
- }
-
- static void omap_device_delete(struct omap_device *od)
-@@ -344,7 +336,6 @@ static void omap_device_delete(struct omap_device *od)
- 		return;
-
- 	od->pdev->archdata.od = NULL;
--	kfree(od->hwmods);
- 	kfree(od);
- }
-
-diff --git a/arch/arm/mach-omap2/omap_device.h b/arch/arm/mach-omap2/omap_device.h
-index aa8096ecb23c..fae09cfce137 100644
---- a/arch/arm/mach-omap2/omap_device.h
-+++ b/arch/arm/mach-omap2/omap_device.h
-@@ -37,11 +37,11 @@
- /**
-  * struct omap_device - omap_device wrapper for platform_devices
-  * @pdev: platform_device
-- * @hwmods: (one .. many per omap_device)
-  * @hwmods_cnt: ARRAY_SIZE() of @hwmods
-  * @_state: one of OMAP_DEVICE_STATE_* (see above)
-  * @flags: device flags
-  * @_driver_status: one of BUS_NOTIFY_*_DRIVER from <linux/device.h>
-+ * @hwmods: (one .. many per omap_device)
-  *
-  * Integrates omap_hwmod data into Linux platform_device.
-  *
-@@ -51,11 +51,11 @@
-  */
- struct omap_device {
- 	struct platform_device		*pdev;
--	struct omap_hwmod		**hwmods;
- 	unsigned long			_driver_status;
- 	u8				hwmods_cnt;
- 	u8				_state;
- 	u8                              flags;
-+	struct omap_hwmod		*hwmods[] __counted_by(hwmods_cnt);
- };
-
- /* Device driver interface (call via platform_data fn ptrs) */
+ typedef struct rsq_info {
 --
 2.53.0
 
