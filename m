@@ -1,60 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1123624B5;
-	Fri, 27 Mar 2026 10:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960BF28D8D1;
+	Fri, 27 Mar 2026 10:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774605799; cv=none; b=gnIgoCrsNpEkqJzF+15PgQfTGilGj52Y8ZtmBXd/QO1SdOyvc84hPNWOTk+weHe5aJhu92jsKdaYKkAPJwcDPLmby47FNSWQJDFF3gX6wtxWi4j4lP0MjK10oQg0Qzc2bgJBtQnJJc88OCl31h0jrLHVt7tjY3ZDUYtomkldCD0=
+	t=1774606011; cv=none; b=DUUkv23Hy/9P5rON9vz0njZcntQzidgbBy46nYYbkFB4m5lZIwtk1uCR6cOrd98SzXcLKd+5r5P3/aHnNNJ+Ljqo02mUyK4oPEqOC+cDMeN7n8YvKMdHFpb5BH0VNkntpJc03phyfxAUkncJq+W9HCz3VzQqtewmQh6EJrwUaSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774605799; c=relaxed/simple;
-	bh=TJMWG88GbfSP08Ul6H198k/o250hEUBjpCdAWHzrTzg=;
+	s=arc-20240116; t=1774606011; c=relaxed/simple;
+	bh=RQ6IHNBx01dBJbWQ6PcCmxvviJY8Ftqwgxc8xMjoN0Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nleu5Q7apTFx85W0YljsPS2Cy0Wf3JU5vGMrTHcxMCCBtjDL4JKfK3Z+AaSXzbKh/eUj69xs2jwkB90Nsz4rb6+H4nT2hpqkC7dNcP/1q0P4HjL12E/jj9wwMAXTGLERNFupaCg6NVutQUK87tztEcnxOYU89vR/SIJlIcrN9ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WQIwHlFg; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aDoKuK5jFjif690SJEBrDskXDcV3qcU43Ja2tOcbC3/l83wWymbpIl2dr/aq2gRsrq8oWjjDomkLU++6PBTYlLjgUKyHei1bR+0YHx4Bn5u8wqq+9I9/w437n4OcRVx/VRUmQSFVBmFeYOU3bsP07sdldLzjrZiJXR2PlVjh2zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=a0ZUXc74; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WQIwHlFg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774605796; x=1806141796;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TJMWG88GbfSP08Ul6H198k/o250hEUBjpCdAWHzrTzg=;
-  b=WQIwHlFgXMzlS6kWryZwnXIVWL0anAyKsOEVJrMwamU0EN0zlT4KGofg
-   pqum65AFYoaIDOku/Uv9M2Ar+6RoO+2IvfBY3ytbGYrcgfYDE6vgrH2XW
-   K6za0BSFaWnowFSbR/KK1aMKnI5tL6pB3tWomkt4oJzJ+dOijESx1iSmv
-   UceqU85NdmHvpp+VA/IsOYoxGqFrkx0/ZKW2kT3vVQsl8AxPsCXk2Umt0
-   SEDPKikejIY3f+M8c5qvHUHwoCoYHn+7LQSKa0PFrpwvEi+DqUGAKPtUJ
-   xVl2wsb5ql6JJgLtkHKXI4P+UxODI+04KQgfeav3dFKiQho3SRrJS6roA
-   Q==;
-X-CSE-ConnectionGUID: ANv3UzkMRqOgh4ELVoyqLg==
-X-CSE-MsgGUID: CthYhuEkS9yalybjqi+Afw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11741"; a="86297546"
-X-IronPort-AV: E=Sophos;i="6.23,143,1770624000"; 
-   d="scan'208";a="86297546"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 03:03:15 -0700
-X-CSE-ConnectionGUID: xEqYDXdfS/Cdbo2txEU4HQ==
-X-CSE-MsgGUID: b4uFh7DDS+adEmKEjk76UQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,143,1770624000"; 
-   d="scan'208";a="218653732"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.127])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 03:03:13 -0700
-Date: Fri, 27 Mar 2026 12:03:11 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: dmaengine@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="a0ZUXc74"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=4QzfYaLe/rXOHs+mVzfwGVshXWnq3+lcNx4XDowLmVY=; 
+	b=a0ZUXc74/1e6kzIhdvVuxxUMrsvKdlw6sre0AwUe7RMDlU42cTHobkKWmwFjMIdZKdhFySCK5Lu
+	6O5QBrh13CvDfIe7CkDax5OA884h//hU10X0UtlyRgn8eBd6NImAonJOna5naVY8Yhlp1CXAHfVyk
+	HM/rGBhpk0en4bUjSfuu4Zz4p0VbnAEInBJ2LltuPJ0bSICwDTSjL3DBYqQ1FiXOAtwlI/buXtZB/
+	12UEe59s3U668P1RMc8BsWYl749mNTmW23d2ZpwW/WazmaXMrB8+klHwTAjAF45yacdIrSBSiZKVC
+	aBaQ6lvpR5K7BbUv1uHCBcMGWOSEGo/2BKvg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1w63fn-001bmP-2t;
+	Fri, 27 Mar 2026 18:06:31 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 27 Mar 2026 19:06:30 +0900
+Date: Fri, 27 Mar 2026 19:06:30 +0900
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Haren Myneni <haren@us.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"open list:INTEL MID (Mobile Internet Device) PLATFORM" <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: hsu: use kzalloc_flex
-Message-ID: <acZV35Q80GfDKkkd@ashevche-desk.local>
-References: <20260327025943.8178-1-rosenp@gmail.com>
+	linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] crypto: nx - annotate struct nx842_crypto_header with
+ __counted_by
+Message-ID: <acZWps0gefzjyktn@gondor.apana.org.au>
+References: <20260317201804.1393389-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,81 +55,20 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260327025943.8178-1-rosenp@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20260317201804.1393389-3-thorsten.blum@linux.dev>
 
-On Thu, Mar 26, 2026 at 07:59:43PM -0700, Rosen Penev wrote:
-> Simplifies allocations by using a flexible array member in this struct.
+On Tue, Mar 17, 2026 at 09:18:06PM +0100, Thorsten Blum wrote:
+> Add the __counted_by() compiler attribute to the flexible array member
+> 'group' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
 > 
-> Remove hsu_dma_alloc_desc. It now offers no readability advantages in
-> this single usage.
-> 
-> Add __counted_by to get extra runtime analysis.
-> 
-> Apply the exact same treatment to struct hsu_dma and devm_kzalloc.
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  drivers/crypto/nx/nx-842.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-We refer to the functions in the comments and commit messages as func().
-Please, update this patch accordingly.
-
-...
-
->  static void hsu_dma_desc_free(struct virt_dma_desc *vdesc)
->  {
->  	struct hsu_dma_desc *desc = to_hsu_dma_desc(vdesc);
->  
-> -	kfree(desc->sg);
->  	kfree(desc);
-
-It can be collapsed to a single line, but for the sake of clarity the above is
-okay.
-
->  }
-
-...
-
-> -	desc = hsu_dma_alloc_desc(sg_len);
-> +	desc = kzalloc_flex(*desc, sg, sg_len, GFP_NOWAIT);
->  	if (!desc)
->  		return NULL;
->  
-> +	desc->nents = sg_len;
-> +
-
-> -	desc->nents = sg_len;
->  	desc->direction = direction;
->  	/* desc->active = 0 by kzalloc */
->  	desc->status = DMA_IN_PROGRESS;
-
-This nents move makes disruption is the field assignment block.
-Please, move them all up.
-
-...
-
->  	void __iomem *addr = chip->regs + chip->offset;
->  	unsigned short i;
->  	int ret;
-> +	unsigned short nr_channels;
-
-Preserve reversed xmas tree order.
-
-...
-
-> -	hsu = devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL);
-> +	/* Calculate nr_channels from the IO space length */
-> +	nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
-> +	hsu = devm_kzalloc(chip->dev, struct_size(hsu, chan, nr_channels), GFP_KERNEL);
->  	if (!hsu)
->  		return -ENOMEM;
->  
-> +	hsu->nr_channels = nr_channels;
-
-+ blank line.
-
->  	chip->hsu = hsu;
-
+Patch applied.  Thanks.
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
