@@ -1,105 +1,93 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EB63BFE3B
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 06:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC60D39F175
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 08:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774594212; cv=none; b=JZ6YgzIvbCyJchvMC/H+bLapWvxJa90cuksWojEjNioFCZ6ZQ1qlbpICwS6cKAhDDPyFhwOYUhAr6NMe/rxjV43i0ZoJWhSxNNTfMlTwMiZ1bYY7F/pegQGu3bl1nV7qKJko3lMpuIIG/j0iYr5zxfAaiUrbiyPZKBMjmiriVKo=
+	t=1774599176; cv=none; b=LvrrRHFz1JWMIkclFECv0m6bXx6NCZL3z+AlGjtkxJR/UYcB3xa26EaeuEMst2X1IeQBa3jzQciq6Bj96DqGeMfxspvTpVtN9h40Gfq3eOvQo3m8ZMMUJ3CuppDfzjmSDRXDSGWQBd0gMwcGm16PP0HKBU0jiagCjcMcKY2dEeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774594212; c=relaxed/simple;
-	bh=1dWUyOdg++Elf+xJ9paDNfSROfcsFdUXQ2M05px6OnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MaXBom+7LJOMwxEvEpDNb9iLLv5mOeRq7jL4GhCwVFgYzDYMbb7yuBc1Ffs0Ku4z0bDTL92vxN543uG/69GU04jlbzrvBwj9vme9H9dhaudncroVkfQi+HA3xQx1G6zxlqBKe2glIEN9k6H7Xv/g3WyBgP9b+UA3nHc2oVF8sn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1w610p-000269-BY; Fri, 27 Mar 2026 07:49:43 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1w610o-002LYU-36;
-	Fri, 27 Mar 2026 07:49:43 +0100
-Received: from pengutronix.de (p4ffb2dc6.dip0.t-ipconnect.de [79.251.45.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id A940650DE7F;
-	Fri, 27 Mar 2026 06:49:42 +0000 (UTC)
-Date: Fri, 27 Mar 2026 07:49:42 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	Thorsten Scherer <t.scherer@eckelmann.de>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	"open list:KERNEL HARDENING not covered by other areas:Keyword:b__counted_by_le|_be?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] siox: use kzalloc_flex
-Message-ID: <20260327-cunning-eccentric-ant-d791c8-mkl@pengutronix.de>
-X-AI: stop_reason: "refusal"
-References: <20260326044725.234216-1-rosenp@gmail.com>
- <20260326-pastel-monumental-bullfinch-44df90-mkl@pengutronix.de>
- <CAKxU2N_0EJfv4EHyLbBJsn27Hui9U3SvaZ_bnbcnmAx8=mZAvw@mail.gmail.com>
+	s=arc-20240116; t=1774599176; c=relaxed/simple;
+	bh=OZGqJJfaEt/rjtDGos1NluAEyyy3h8Cy72WfdbXAyDI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=oJtFvN8KK+og06rJ1f44Jdv9zZd/x/1Mjo5B+JmYm83avHoGEPnltg1gc7fbFBRsLy5b4ibJ8JIDjHChZkmsifqbeKVqkm+pHUJcAW1nVWtT7xV10jeqDZ0W8qlW/XVBoAk8Xgm+Ype7Y3ur2JQ5qme9ohkP77LL9Glj+CD0rBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LkK7r9Ro; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LkK7r9Ro"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 690DAC406B4;
+	Fri, 27 Mar 2026 08:13:19 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id CB03D60230;
+	Fri, 27 Mar 2026 08:12:50 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C206510450F0D;
+	Fri, 27 Mar 2026 09:12:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1774599169; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=OZGqJJfaEt/rjtDGos1NluAEyyy3h8Cy72WfdbXAyDI=;
+	b=LkK7r9Rok7+IDw2bhHIfnlBcoX+sM7VqOTP5NqIAsNihE8APKIBgpkSo0dr3V0Lsr7lisE
+	gQwHsbz1WX9XxTOaCZx1m7oLc0JldTCgVVlCy4Cj8cVwAQuHUSXqRoymRdHbZgdLN03Yl3
+	EEDf/NGDgaCkx5hTyh899P+YqfDLpbk6CASDGuXWT2szmX0QR8yB4kw0wPBIIG461YO1tb
+	Yr3+OJRKETu1T1z2PZaWAFYsx9uxlwbkSKo7ZfiUOx9FLM+3xyJPHCeqWReN+mF1T6KoaT
+	6QgW1oE+2rOPYY2lsZNLIj5627NdxAHE1JHQJKp/ayE2gpJIG/Y60K1Dpy7x7w==
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cgmyhfkbc2e5bvzs"
-Content-Disposition: inline
-In-Reply-To: <CAKxU2N_0EJfv4EHyLbBJsn27Hui9U3SvaZ_bnbcnmAx8=mZAvw@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
-
-
---cgmyhfkbc2e5bvzs
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] siox: use kzalloc_flex
-MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Mar 2026 09:12:46 +0100
+Message-Id: <DHDEWIRRJTP1.58HXGTBGH4A@bootlin.com>
+Subject: Re: [PATCH] i2c: atr: use kzalloc_flex
+Cc: "Tomi Valkeinen" <tomi.valkeinen@ideasonboard.com>, "Wolfram Sang"
+ <wsa+renesas@sang-engineering.com>, "Kees Cook" <kees@kernel.org>, "Gustavo
+ A. R. Silva" <gustavoars@kernel.org>, "open list"
+ <linux-kernel@vger.kernel.org>, "open list:KERNEL HARDENING (not covered by
+ other areas):Keyword:b__counted_by(_le|_be)?b"
+ <linux-hardening@vger.kernel.org>, "Cosmin Tanislav"
+ <demonsingur@gmail.com>, "Romain Gantois" <romain.gantois@bootlin.com>
+To: "Rosen Penev" <rosenp@gmail.com>, <linux-i2c@vger.kernel.org>
+From: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
+X-Mailer: aerc 0.20.1
+References: <20260327030310.8502-1-rosenp@gmail.com>
+In-Reply-To: <20260327030310.8502-1-rosenp@gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 26.03.2026 12:17:34, Rosen Penev wrote:
-> > NACK - What's you motivation to do this?
+Hello Rosen,
 
-> > The "size" extra space is not used for master->buf, but for
-> > dev->driver_data. master->buf is allocated in siox_device_add().
++Cc Cosmin, Romain
 
-> I assume this means a new struct member should be added and
-    ^^^^^^
-> kzalloc_flex modified to work on that.
+On Fri Mar 27, 2026 at 4:03 AM CET, Rosen Penev wrote:
+> Convert kzalloc_obj + kcalloc to kzalloc_flex to save an allocation.
+>
+> Add __counted_by to get extra runtime analysis.
+>
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
-I suggest you look at the code, try to understand what it currently
-does, then re-think what your proposed changed do, what problem your
-changes fix.
+This is the second version of the previous patch, so the subject line
+should start with "[PATCH v2]". You may try using b4 to automate this, it
+takes over this and many other boring-but-useful details.
 
-regards,
-Marc
+Additionally I suspect b4 would have a more complete Cc list, including
+recent contributors to this driver like Cosmin Tanislav and Romain Gantois
+who might want to review this patch. I'm Cc-ing them this time.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+> ---
 
---cgmyhfkbc2e5bvzs
-Content-Type: application/pgp-signature; name="signature.asc"
+Also a changelog would be nice after the '---' marker, to help reviewers,
+and a link to previous versions. It took a moment to me to realize I had
+already reviewed almost the exact same code.
 
------BEGIN PGP SIGNATURE-----
+Other than than the patch looks good:
 
-iHUEABYKAB0WIQSl+MghEFFAdY3pYJLMOmT6rpmt0gUCacYogwAKCRDMOmT6rpmt
-0qWmAQDyg5WO7uTlOUyWKCwnFp1cZjwjLSs/9YPkeE5i/FEl9QD7Bwc5aUhwQpxt
-FcSQqQ9nAM5vZHP6WRb2W65/YEN4og8=
-=Lw4o
------END PGP SIGNATURE-----
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
---cgmyhfkbc2e5bvzs--
+--
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
