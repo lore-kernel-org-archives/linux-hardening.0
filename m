@@ -1,72 +1,71 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F082737EE
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 02:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6BA340D90
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 02:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774580153; cv=none; b=ONmfHzpssVDd9qTNkMAuxmteXm1RdmYg+pnyyybi7fnLQJ/5rpU0vidhw2P2vpU06+1bItqCB/09IpEcJ9wSi1vB54hsBXfXEBOKJ0DBYK1y+RA7HXvZ1FKOUZjK9l+IQqEDKpfb36/Fx9rpFGlLnk+3mV8vnBu6GMdLroQKDQc=
+	t=1774580350; cv=none; b=jvq9lBfDfb3uAi9MCnsUuInNaEmxUgeAfCT3wCkOoEyhFHMTt7Hac5znCnyGOEHYm+n6+KqY9lzky7S9a61gWVngeh0/bDzw6mKJ+EOxL82L+P+iiJsEsLgNSvvMn/rsfrKsEOhw1zzV9/90x8Rmcxw6mvJeU91xMuDFW+QasRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774580153; c=relaxed/simple;
-	bh=iINfrVicT0U5ezZ3pE2giAjTHpsPII0vZlDnVZgk1BU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s2ExR8KlOCW5WihHNE/aYy+e2Pl5n8gUS0jOciLC7xtw7uMs0XdTjj5mZynOHQOXq5z3e4u6FNKUt+inf4zeuba/SQPyXw/JNafUM+cMrSRs6ZwsYzaY6Xht6JgkQoKfsstfXgNv6zoBCNsp+17brEhrTopBGDpn7GHj91XwnGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=awCdkszt; arc=none smtp.client-ip=209.85.210.169
+	s=arc-20240116; t=1774580350; c=relaxed/simple;
+	bh=NaKCyVm1WYHg1WscLfFbkDQ6k04fmBF8uk6h/mVsmHA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FfFf8rQGaFNS+OZUHkE3yQKc1SFGtFw7tnnie0Ibx8LXPGTckkqqHH4YuKERImLzxrKw6zqPABvVR2z/tR4rbZE0ushaVubJjUEJHkvURjL7e3TjABoS1YivecoTHPcaw/SGBAU6u8RFo+r+xghPoc4jNYXCS5ODNeE1nAeY7Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asbumraR; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awCdkszt"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-823c56765fdso895515b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 19:55:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asbumraR"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-829afe24fb5so1206430b3a.0
+        for <linux-hardening@vger.kernel.org>; Thu, 26 Mar 2026 19:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774580152; x=1775184952; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774580347; x=1775185147; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jxOcLQAL828r9gNJF4VDxn22m5oC9wjYM2C1LJJwNlw=;
-        b=awCdksztQSH1m9srS8WvlXY8s8eMij47LZRcVIjbHnQ8BKPJzn0vV1Qojw4yfAwLnY
-         tDqsJ39RdPE7G3c+OFLqlsOnkFUpjjKs0wNJmS/fJd8izXibn0gJgjEN6djJdHoOngJj
-         pSBlQaYJOqTCOG+m+erYfjyoTKPI3Mq71ovQBKNkZL1I1riy7C0QYPJ20mRjqZ+BqEHP
-         X9uqOvdUbcXhQChS9crtdoprifBhLkKEn/Ki4fIEmNjehDgH4q4NwhBZIldOCmKl6fyH
-         Lm0K9jspV/w63AvgEh0i4lrNK7XDh0h4G8PMzuDgaQokaj1awJ9xr5qAETqRUrX52gsh
-         FtPg==
+        bh=nlhO9dnDtgKKk75FhfoMSHhoMn3ErPiErmZ+IolhpDg=;
+        b=asbumraRodVOLML5oYt7ovjc4hBOEtAHO294uevxdUMmgbl7u61eBrVtw2+D+CKjRh
+         coe3Lhumbeqsish+XbxkRMJ2qGK34oBHC8wwwTp5dk1B68DvRSqIV/vyLebfvL02sp1Z
+         PsLy2oSw1xqRfOE8DWx3JeoRe91qAccRKRqJ3XcNZb9x7WFJk8pf27IfhIEyDdiv8h3c
+         DSJNHWu+ov8YXeD5uiA6hnkHYXiK1RlM7GrLrZJBiqjrriznr9fdGvnoAmkPOb6lj4tf
+         nnjdxg7e6vOLzoBVddO0MzryuyfAqwPYhgYAlPb5DJsWe+vrjxxsoIa7VgnZowNwqKqb
+         gyGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774580152; x=1775184952;
+        d=1e100.net; s=20251104; t=1774580347; x=1775185147;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jxOcLQAL828r9gNJF4VDxn22m5oC9wjYM2C1LJJwNlw=;
-        b=Wi1veHau0C2pO2BzMYiuV+q6mNlEmf4xNbyKi0inXkthrjbZ8w3TZR6uHP/90nHmMH
-         wHy0bPq4EvvoWQmFwJAppAjJ4I4r5K6BDQ9NKd9rgOJhi3gXwXTHb2yZ3dfsyshBOdLk
-         LH/OMw/DmRCLBYTzXjVTRlFYji3V+BANb/wtJjPus5B53M/QVIl5+NrGD8p5+eG6+/9I
-         k/FMeNqUrTcr+7LvcF+SwsKwWlchEGs8ureLBBESbQV+sZMo0Js53Nlm24wu+Y9kNbxI
-         BVNLgBAcoNAilJY+Dz2++z78pxiomA1hse43hlnCEv34f6j1eAqwJgruSE1IGoovR8wf
-         Z/cw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMK4d/HMBWtY8EWSQLizFnElj4fpSSJMlYDj3dbzi4TdSglRcvVK+sCFiOSiZH6Gm6/OjEn/QaCLhHIWzoEfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGT6SpvNI8o8OePn58ull4GLVy3Ag71r5cTQhc/4JVjOLspG69
-	Dk9HqN2oxByHEwFrlv/6YCBhFHF2QR84duyrUewy11UdSUi4nwvpSSw+
-X-Gm-Gg: ATEYQzzn8Z5ql0gsVNlymz/C7zDiouAGh/Vm39E2nxKCiolKI2aQKqLaDJIOa/1JJeK
-	pM5dqZDsNE7AQ9UZna/sEIWTizMAsV1hzoOF0p6BlFlJY5Cg4IlNJgdBkd0X6OF9qK6NMx+MDgB
-	Jyj6ipKTPlA6k4IzrclTSOArhWuLv1jn/bemnPgwav6W8pB8tQOP3T9uyFh7RnxDU5/OA/U0TjY
-	BC+HpAwLDiLn048xuPkh618E9W+6yL97Wjhouj75ILz5Yk6f9p+IpQOv6uXwLE/ipSO6NIGZr1S
-	Scx+/VQ75hch+/2jJIQnpiDRSYyfpSo+b2yb84hGyPQPUu1MJJ1YXqNwBle2pkeMkLK3mhAqmpO
-	gIEsUds32J2AIwhFKyMMXE4T5znvk9GllQZfP6IDiYfeEXw63VPv9rEjMxb05rUIb+MuCjlB5z2
-	qpNbcJFKqfMLoLLtMwn4+u4D/FLqRWAAiapvDGtuRCopUV7r2d/5Gv9q8=
-X-Received: by 2002:a05:6a00:3e21:b0:82a:7f1a:758c with SMTP id d2e1a72fcca58-82c95c27a26mr779771b3a.11.1774580151840;
-        Thu, 26 Mar 2026 19:55:51 -0700 (PDT)
+        bh=nlhO9dnDtgKKk75FhfoMSHhoMn3ErPiErmZ+IolhpDg=;
+        b=aCNd68X+yabzkP5zPnr60+jDBOHRvwoErXG5UIJnUj1FhB/3gcCdv9+Iwm4qYXdaP1
+         GKcvvmyCVsCaad/RlJf8nXqLCxjh078TobTS/fY6GBiIryLM6b4GMcRQiZSPCZ6J4KDq
+         +INWCl4peHasAU+9U3zg44xolr/Wnd1IWBtkCghponmQtjkN2YE8RnqMWRZDN0Xj5Azf
+         hytyTd7yOV5PlYOCgvGMbwzuK/CUGTENvk63lpHvEqjn2XSPIH1BPnqCPTadN44S9t7Q
+         MysFkkA89ptTE43Pws7kRkko/im36+0ltIv5mXFHren9cZhSvqP4jysAZPspCP28kg9H
+         CI6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU+9TTLxeKnBxnlL5Xu0/eFjjqSpETZEi4xPMw+fgUzLJ8lKNvm0ddX4+JUXjKTPiecuHMhBSqPVIrgPYG5fZ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMyMieenO+r4gKmQaQNGIjYiW9l0jngVGd5wllkK0YPuUZ6qYn
+	Vz0AipGT2DRidwcTH06wjO/9nyjQZDzJ8IiZ79pkmcEZ9Q93sDJfra3h
+X-Gm-Gg: ATEYQzxbjfz3SSLNW9Plb+qAq5fP8O8XyOQB1WI7pmZkRe49o8VeSw6QcPk5Yf689yN
+	taw8xLWdF6WOyZpGU8T9kgYByNMHaSXeJad4WG9l4kVQu7ahe6+0TFIPV+Dl+b4EQk1ABZFgyDz
+	I0N8hQecSpwKpBY+I3qsZl3ACLpMvp6bJihGxTDpv7bwsa5/UVT12ock1CT8kDynP8gxyascQHd
+	GHjHZsp45nZJguJoPfJiktAjBFeIxHHdpL4o1Z/Kyqv2ydRty65c2MKT2rFjcyKXW5kxKK/Dz//
+	KBK2k0YoN/8EV7CMww31UXT7M07QNfpjKxRkXJxukwFuj8brm7AjJNuNDM0ZkW7wxGgHf0YZVk4
+	F2L4g8t9PX0FxDjBpBRPIiKAcOH7cCe2nL4myx8kceJsxrpp+O14YzZVN2orA/IlzLzztP//Y3i
+	ur8reYAoDvuQb5I4KSqbeSxkqDzZhrylpFUBaVKuMqiAGK+V5f09sslVc=
+X-Received: by 2002:a05:6a00:170b:b0:82c:21b8:4a1f with SMTP id d2e1a72fcca58-82c95c19881mr773878b3a.5.1774580347440;
+        Thu, 26 Mar 2026 19:59:07 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82c7d1e63b6sm4205803b3a.12.2026.03.26.19.55.50
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82c7d23c7a4sm3969059b3a.27.2026.03.26.19.59.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2026 19:55:51 -0700 (PDT)
+        Thu, 26 Mar 2026 19:59:06 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-arm-msm@vger.kernel.org
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
+To: linux-mmc@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] soc: qcom: wcnss: simplify allocation of req
-Date: Thu, 26 Mar 2026 19:55:34 -0700
-Message-ID: <20260327025534.7864-1-rosenp@gmail.com>
+Subject: [PATCH] mmc: mmc_test: use kzalloc_flex
+Date: Thu, 26 Mar 2026 19:58:49 -0700
+Message-ID: <20260327025849.8085-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -76,77 +75,121 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Get rid of automatic kfree and move allocation down to where it's used.
+Simplifies allocations by using a flexible array member in these structs.
 
-Use kzalloc_flex as we're dealing with a flexible array member.
-
-Use struct_size to avoid some pointer math.
-
-Add __counted_by for extra runtime analysis. Move the counting variable
-assignment to right after allocation as required by __counted_by.
+Add __counted_by to get extra runtime analysis.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/soc/qcom/wcnss_ctrl.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/mmc/core/mmc_test.c | 28 ++++++++++------------------
+ 1 file changed, 10 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/soc/qcom/wcnss_ctrl.c b/drivers/soc/qcom/wcnss_ctrl.c
-index 62b424e90d90..ffb31a049d4a 100644
---- a/drivers/soc/qcom/wcnss_ctrl.c
-+++ b/drivers/soc/qcom/wcnss_ctrl.c
-@@ -94,7 +94,7 @@ struct wcnss_download_nv_req {
- 	u16 seq;
- 	u16 last;
- 	u32 frag_size;
--	u8 fragment[];
-+	u8 fragment[] __counted_by(frag_size);
- } __packed;
+diff --git a/drivers/mmc/core/mmc_test.c b/drivers/mmc/core/mmc_test.c
+index 43fdb67d5407..f5c542855037 100644
+--- a/drivers/mmc/core/mmc_test.c
++++ b/drivers/mmc/core/mmc_test.c
+@@ -51,12 +51,12 @@ struct mmc_test_pages {
  
  /**
-@@ -201,16 +201,12 @@ static int wcnss_download_nv(struct wcnss_ctrl *wcnss, bool *expect_cbc)
- {
- 	const struct firmware *fw;
- 	struct device *dev = wcnss->dev;
-+	struct wcnss_download_nv_req *req;
- 	const char *nvbin = NVBIN_FILE;
- 	const void *data;
- 	ssize_t left;
- 	int ret;
+  * struct mmc_test_mem - allocated memory.
+- * @arr: array of allocations
+  * @cnt: number of allocations
++ * @arr: array of allocations
+  */
+ struct mmc_test_mem {
+-	struct mmc_test_pages *arr;
+ 	unsigned int cnt;
++	struct mmc_test_pages arr[] __counted_by(cnt);
+ };
  
--	struct wcnss_download_nv_req *req __free(kfree) = kzalloc(sizeof(*req) + NV_FRAGMENT_SIZE,
--								  GFP_KERNEL);
--	if (!req)
--		return -ENOMEM;
--
- 	ret = of_property_read_string(dev->of_node, "firmware-name", &nvbin);
- 	if (ret < 0 && ret != -EINVAL)
- 		return ret;
-@@ -224,11 +220,15 @@ static int wcnss_download_nv(struct wcnss_ctrl *wcnss, bool *expect_cbc)
- 	data = fw->data;
- 	left = fw->size;
+ /**
+@@ -135,21 +135,22 @@ struct mmc_test_dbgfs_file {
+  * struct mmc_test_card - test information.
+  * @card: card under test
+  * @scratch: transfer buffer
+- * @buffer: transfer buffer
+  * @highmem: buffer for highmem tests
+  * @area: information for performance tests
+  * @gr: pointer to results of current testcase
++ * @buffer: transfer buffer
+  */
+ struct mmc_test_card {
+ 	struct mmc_card	*card;
  
-+	req = kzalloc_flex(*req, fragment, NV_FRAGMENT_SIZE);
-+	if (!req)
-+		return -ENOMEM;
+ 	u8		scratch[BUFFER_SIZE];
+-	u8		*buffer;
+ #ifdef CONFIG_HIGHMEM
+ 	struct page	*highmem;
+ #endif
+ 	struct mmc_test_area		area;
+ 	struct mmc_test_general_result	*gr;
 +
-+	req->frag_size = NV_FRAGMENT_SIZE;
- 	req->hdr.type = WCNSS_DOWNLOAD_NV_REQ;
--	req->hdr.len = sizeof(*req) + NV_FRAGMENT_SIZE;
-+	req->hdr.len = struct_size(req, fragment, NV_FRAGMENT_SIZE);
++	u8		buffer[];
+ };
  
- 	req->last = 0;
--	req->frag_size = NV_FRAGMENT_SIZE;
- 
- 	req->seq = 0;
- 	do {
-@@ -264,6 +264,7 @@ static int wcnss_download_nv(struct wcnss_ctrl *wcnss, bool *expect_cbc)
- 
- release_fw:
- 	release_firmware(fw);
-+	kfree(req);
- 
- 	return ret;
+ enum mmc_test_prep_media {
+@@ -315,7 +316,6 @@ static void mmc_test_free_mem(struct mmc_test_mem *mem)
+ 	while (mem->cnt--)
+ 		__free_pages(mem->arr[mem->cnt].page,
+ 			     mem->arr[mem->cnt].order);
+-	kfree(mem->arr);
+ 	kfree(mem);
  }
+ 
+@@ -348,14 +348,10 @@ static struct mmc_test_mem *mmc_test_alloc_mem(unsigned long min_sz,
+ 	if (max_segs > max_page_cnt)
+ 		max_segs = max_page_cnt;
+ 
+-	mem = kzalloc_obj(*mem);
++	mem = kzalloc_flex(*mem, arr, max_segs);
+ 	if (!mem)
+ 		return NULL;
+ 
+-	mem->arr = kzalloc_objs(*mem->arr, max_segs);
+-	if (!mem->arr)
+-		goto out_free;
+-
+ 	while (max_page_cnt) {
+ 		struct page *page;
+ 		unsigned int order;
+@@ -3099,7 +3095,7 @@ static ssize_t mtf_test_write(struct file *file, const char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 
+-	test = kzalloc_obj(*test);
++	test = kzalloc_flex(*test, buffer, BUFFER_SIZE);
+ 	if (!test)
+ 		return -ENOMEM;
+ 
+@@ -3111,7 +3107,6 @@ static ssize_t mtf_test_write(struct file *file, const char __user *buf,
+ 
+ 	test->card = card;
+ 
+-	test->buffer = kzalloc(BUFFER_SIZE, GFP_KERNEL);
+ #ifdef CONFIG_HIGHMEM
+ 	test->highmem = alloc_pages(GFP_KERNEL | __GFP_HIGHMEM, BUFFER_ORDER);
+ 	if (!test->highmem) {
+@@ -3120,17 +3115,14 @@ static ssize_t mtf_test_write(struct file *file, const char __user *buf,
+ 	}
+ #endif
+ 
+-	if (test->buffer) {
+-		mutex_lock(&mmc_test_lock);
+-		mmc_test_run(test, testcase);
+-		mutex_unlock(&mmc_test_lock);
+-	}
++	mutex_lock(&mmc_test_lock);
++	mmc_test_run(test, testcase);
++	mutex_unlock(&mmc_test_lock);
+ 
+ #ifdef CONFIG_HIGHMEM
+ 	__free_pages(test->highmem, BUFFER_ORDER);
+ free_test_buffer:
+ #endif
+-	kfree(test->buffer);
+ 	kfree(test);
+ 
+ 	return count;
 -- 
 2.53.0
 
