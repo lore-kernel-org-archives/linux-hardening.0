@@ -1,142 +1,187 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18BF410D18
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 18:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774636557; cv=pass; b=XCeSIZ2T0dgrOz7H5ERcb5ti0qNsuLfXe6vXvM1GbNtveuGcqjgcW7xSweKBmHeY6dnqDExN+LBLd9dRyViohlEvcl1W+lz/jmDNL06TP818iby7GvV/vowVubkmiK1E+SMxv4sLpeu93oldcT39IOVx7MsvdIxAD/+9hb34thU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774636557; c=relaxed/simple;
-	bh=v5X0zYzLvx13iVIiY+jHgdPrq0zyDUhqyAsIlrZnjhQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h6tdvtrqUTBVelbvgP9cdArPveD5UVuNlqbxicc4cf+AjZs2NowHW7o/7/06hrB9cMGIUx54Bv/n4xsi3oHoAycNwqPzwYHUvpK/Amawm5nW46iV3NCw4IkK4PooM5qxf8odOQDLZlN/p7CSlgdmDIt0WV54xjMvX6JAmW+PLmw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rPryKOpP; arc=pass smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455472248A3
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 19:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774638684; cv=none; b=iyHcXmrgz2O+fONrApsOyQV7vByI9MhW3HHjA9R6jFnDDkDL8+4d5hQleO8Wvd3DsT+AcRHjff3voTF+prfmYStqMzyIk1uJKwOjVn1QGtcd7G72Mm5EDL7nmHLHwv3MEZXF518fGJiXQCfyeDwO/xa5Acu5FtCcIwwbYZEtzbk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774638684; c=relaxed/simple;
+	bh=MY7cvhxbG7/wiNuf5e5sQpLEVRQoOMUVb6G8zWyUBs0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=drOKNJyGVwWp7K1h2aeRZVHP88CJJiHFOJ05YQ8owirvhHgnUfyEdIrmsLFF4GYblwyePZtQBcA0WxWd7CE2Ifea5MlDrOBhsfucDFRJHV+Zj2IDRBfsPhQywSiKMIfoBxWgSr+4HP33eZ5SGpXwPDhUe1wN5vhGlk4K2pARW5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HHqLCdt3; arc=none smtp.client-ip=74.125.82.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rPryKOpP"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6611f41eebcso3281157a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 11:35:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774636554; cv=none;
-        d=google.com; s=arc-20240605;
-        b=kwHZWqts9YZ9c0H6qy02XSxfScj7cy/ywkYwdMBvw9jYeg1Zmn+2hmcAQ9voGXgx6U
-         CRCg8v3y17mubil1PhZYr7NZ4P51/PAu69W3mGOWoJJa/2jr30dTu42u+sRtBIaNgLDA
-         5rVPmlx6ev3fYGovKV8PyE6y/UWuFZWkdUJ7yebtq6gXbEKP5Z5Amlfexm7tFVcdJ/2q
-         3BiMw6elLbDClPpkkIk2qaTYjUmD10G0BBRuFU5FzXfwmh45IviwiRlsa5RQ4GZshAjN
-         f3m5uwRbSbDOAiDCqlI5Cs377R4LGKAwFvvYs4h3CEvFx6TYC1T7OcCbnqfCqqvrLkhj
-         Q6BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=v5X0zYzLvx13iVIiY+jHgdPrq0zyDUhqyAsIlrZnjhQ=;
-        fh=vJcVGnFO0Sn6DTnD8MWbWqxgOph9iMyBK0K6FnyvcjY=;
-        b=a80F0cI28V0iqigtHqRCWRfOh5sNjDQoJSbcVtbkmFXu5MLLvRPhUE11y2HtOMQUZf
-         e9LLz8e7kbDCw4+dDCH4+lADI6dj0xtvVqiWB+UxZw1L2ewoAT667RJ/Kp4y934UBSDy
-         FpcG89TqIwXQLKiKT4hQ6SSV8fLUeJUsjS30u+M2IXgeqGAvSJAshOAij9jBsihj6fbx
-         VfGtjOd4fHv992AdmKFbuKF2tAIAaAxjxRGwoKSPfnIhcnpMQySTJljod42auD9UuzvN
-         nNprpllFUTK/AlUmlXSU2SP5wi76MyudFqcthyO8PFobVF0nAi4sKPFp+XjdEts4QOWM
-         LS2Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHqLCdt3"
+Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-128e4d0cc48so3138190c88.1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Mar 2026 12:11:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774636554; x=1775241354; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v5X0zYzLvx13iVIiY+jHgdPrq0zyDUhqyAsIlrZnjhQ=;
-        b=rPryKOpPzY16cdqL+RO7c6Vi8KkMV4fg4uaQ6eLGkQji1YKHG/sdkJKRO4NZZkft6m
-         pbH/2gCZQV5J+FNIAcF2BF/Hbg1G0j1wCD+Us9ZalpE6SvHuCOFNDTyd7l8Ba0iRftiR
-         3rFP5ISKQdNLtrd1gRBMxxgP+OF2y2ej3wozGmDapjt3GbO76d2O1J46LpWs5HtG7JPo
-         DYpr75J+Nx8dk9pfWGySJ9aw2j7BY8ZszouBY54rA0/oYMwL2Yod8/D9TN5kRs8mKPnS
-         EOWnP4MuGO1LJD5Gjr4AQPxZfNmOb3RHx5cWR/tQG15Y7ecxzreFLqsGI0P3N2c9xMDP
-         OIlw==
+        d=gmail.com; s=20251104; t=1774638682; x=1775243482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zCbLjBWf2b55Ge/3z8jm9aEiQT0X4UuXkcvJNvdHJnc=;
+        b=HHqLCdt3HSwMxY8SYohSVOvhhyob2P4NRsXJ/z/ifCwWrpXxpXmxXLMA7STK1BD+Fd
+         MYprgzZ/mS58Cbes6VYME0bfqbboBhlQQCXF1u+wlJ27nbBAO6D5GNzzPD3D4tUZDgdH
+         Pu5ZsD+WYdx5gkmE9VhbQPIyezQSzlNd61mGUQMUtzH9NXgZVsKTorgzvBhU6Hr7nYMr
+         X7ngEDqpKy3/hO3VV/32VkNLNpTMixvlPCBk5H5NC1y6Pim6rDVA0rOss4/Mx/84kOFr
+         EwP/axiCkpc+085PcYoIWOs6pHO0sWRblbttDK63eye7Cij6ywhhnWzC0Jx7OAgbGjOF
+         Pf/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774636554; x=1775241354;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=v5X0zYzLvx13iVIiY+jHgdPrq0zyDUhqyAsIlrZnjhQ=;
-        b=OkN+mZt5IdWGPOhaBa7FKcqVtr4Cko/o3Fw/m7/UBkRJRYVVrVE+XyilfUbFs358/F
-         ZPfaIHmwIiuUzM3QKA8eTgLPqMbJaWsSEO0L64CxL9eoE3OW1IEPAaal4ri8arCTQjJG
-         eOczgg/2duncJYzfsA9tfsfgtiTnLUIhEh7T6E4ljSsCduQhJSDL78IMXoWCSTvPoeFW
-         zH1zkIdHdn8FJpTbryAX1SXDZmSRZv7fmZs0J1roVq2OwGfRgXuSAnbq72V2T9fuWoMV
-         jNmX6ETqzLy+oyMYig08oi2xV8fWJ3uVW1T+v13PlMNxW9/Jm20UrxzGuvM+1EjQW8Zt
-         Mt4g==
-X-Forwarded-Encrypted: i=1; AJvYcCU+QXpjajOHD2a73EznPqzycwAnUcfXN+6p5f9iaGJfqsmhCx6OwBcss0aWD2bTWPAgUpczGFtSSiOoCHrKq/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE4aPtUiiiE9koA8mwYjSy53xOm41fBJy9u/0lDpD0rYtLBh9+
-	znD4LuFWuP0oAt6+o99w4mUIlP/rafBTcAWs0iyiqZEm4RUvVFXm6cyyrlhEqjaov0ld1Ymk46V
-	Poj75lwLwwPrJTTLP1viRUivf8nLIqBU=
-X-Gm-Gg: ATEYQzwEQVUABBRRf/KasyGHKOu+bW2fX54XduuN5W5YY1osc5tDcTOelOMPCWjvu1S
-	SYG3CM+46b+u8o2nlEHINo+AnFN/Xp1f9p0mLLeQL+b4wawhSZFKyQKJ3kf/yC6b2H6X6Iplg+L
-	hI+tJRHQoPzs/O0NT+Kjs8NL2MDqXOx+0ehWRE//wBvctX6MJ1f+vTLGxeYrzpeCLQMtIt9HtTy
-	YqDGkDlE6BsOWS3qg3Ejf/vZnPmBkul5BV8URhgI8SuHGBonMm7QB3DFE2WuTWPLu2Vr4Xw0cgt
-	ZBnEbaV7uypG7/U7FIkDFotqL9wGAJuYSTybek4vbGHlJk9LaWSbIUuZUKN0ZXTfgctFz1ih/Tt
-	5AtFLuA==
-X-Received: by 2002:a05:6402:4494:b0:663:6d0a:6f97 with SMTP id
- 4fb4d7f45d1cf-66b28f72394mr2419395a12.27.1774636553813; Fri, 27 Mar 2026
- 11:35:53 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774638682; x=1775243482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zCbLjBWf2b55Ge/3z8jm9aEiQT0X4UuXkcvJNvdHJnc=;
+        b=lyZ05E8lbSK/HC1SCcIK7HlAYJ8dZXrUbr2UAyKi4Iw0cW+0QYtDP8lImlLgi/hQBb
+         HY9SnsEaJrHUFhg0enDoxFQa098B0Ob/avi971icMnJlVmxa8oZkhlpOl57C7KtHPO97
+         4Qybr6GdgfzjGUIN3uUDhWFlwpQIAiubv29O2og4kAznpShvTU3bl/N9kDhrvqYmkfjK
+         C+OxTG00hYM7ONRvt41TF/CZ2Z/WymzrYRZiyqrea02HVp927ZY8ljXI/ZiqAyPElHfY
+         a8f2N5kHYIYSmaeTnREKLHu4I62EtSvmmOLaoKEyuFksa+Nlh5ymhrooPjrm7tSm6g+7
+         BRRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaqaetxtJmWIGq0ZbnRch/ZUmx96Slf23lNigBTs6M/Zn+SnrifT44enS7UTHthjhXVuccFXwKhvLjkeuc0Ko=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGFk+DpQFYUbrybMm/A46RWZZWV79se0yAhzeeShENw6GROqak
+	CXANokW0NwmnY2FrUISOx8+8k02w11w83XKKv/DjNskq1i7/YNou3/Dc
+X-Gm-Gg: ATEYQzwrnr0J5JNQlVJ6aaG9GZcpiArUdsVxw0zDrZmvhNwNONN7qBecKt5fXD/ccw1
+	IcZ86aPG+CQc1XTX1H2zBvetdfNVnOkoPA4V09mhrIb6UdbNaBi5E+Qk5xeOBxY3OZ03kxPzqQp
+	W64qXk6Vytuf3Ou/xSMJ6OCs5M2+7sdVLBOC1x9jOLl3sKt+DomxtiAU/0xxDsQfvgAMN+71S8L
+	1zbK8tdNgH2gDNfiAImLf14XVVOEGoNtnS9O8IHejMrJ+rhKkW5CRhnB1OvKmCMY57JeOdQDkKa
+	KB4VlVgD1N7DpVwDVIcBv1X8wayYXAMLJfk7dyMwcRuahGiEnas+CTSOuGFP88iLY6zYDe8/IAD
+	qkTRSd1jE0Ov0qFRDJreLz8TYl0Dl8/vnCQU5l83zbQADnO8L+Io9Hydxvk/S3UHqwUanJl7iCx
+	5LxdlIyX7CXHNOzOyNi7zk685W3d7buAJi5g6/dJh9FTI2CKs4/5Zw51I=
+X-Received: by 2002:a05:7022:6191:b0:127:3b1e:7e0e with SMTP id a92af1059eb24-12ab28cb779mr2194710c88.20.1774638682181;
+        Fri, 27 Mar 2026 12:11:22 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c46a0a84sm216527eec.9.2026.03.27.12.11.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2026 12:11:21 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-omap@vger.kernel.org
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM SUB-ARCHITECTURES),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCHv2] ARM: omap2: simplify allocation for omap_device
+Date: Fri, 27 Mar 2026 12:11:04 -0700
+Message-ID: <20260327191104.206512-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260327030310.8502-1-rosenp@gmail.com> <DHDEWIRRJTP1.58HXGTBGH4A@bootlin.com>
-In-Reply-To: <DHDEWIRRJTP1.58HXGTBGH4A@bootlin.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Fri, 27 Mar 2026 11:35:42 -0700
-X-Gm-Features: AQROBzBmB0kpJXECWuRS7Ed_1LjUhTq7PZ0stLx1p30txIODqyrw8I4yJhCfQ60
-Message-ID: <CAKxU2N-21Zt3+5D5Q=ZjTdS27QtJWOPZZDTiqHGENqjxgCpR3A@mail.gmail.com>
-Subject: Re: [PATCH] i2c: atr: use kzalloc_flex
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: linux-i2c@vger.kernel.org, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>, Cosmin Tanislav <demonsingur@gmail.com>, 
-	Romain Gantois <romain.gantois@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 27, 2026 at 1:12=E2=80=AFAM Luca Ceresoli <luca.ceresoli@bootli=
-n.com> wrote:
->
-> Hello Rosen,
->
-> +Cc Cosmin, Romain
->
-> On Fri Mar 27, 2026 at 4:03 AM CET, Rosen Penev wrote:
-> > Convert kzalloc_obj + kcalloc to kzalloc_flex to save an allocation.
-> >
-> > Add __counted_by to get extra runtime analysis.
-> >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
->
-> This is the second version of the previous patch, so the subject line
-> should start with "[PATCH v2]". You may try using b4 to automate this, it
-> takes over this and many other boring-but-useful details.
-Didn't realize that. I searched for attr vs atr in Sent...
->
-> Additionally I suspect b4 would have a more complete Cc list, including
-> recent contributors to this driver like Cosmin Tanislav and Romain Gantoi=
-s
-> who might want to review this patch. I'm Cc-ing them this time.
-I use ./scripts/get_maintainer.pl --no-git-fallback as it was
-requested elsewhere.
->
-> > ---
->
-> Also a changelog would be nice after the '---' marker, to help reviewers,
-> and a link to previous versions. It took a moment to me to realize I had
-> already reviewed almost the exact same code.
-Will do.
->
-> Other than than the patch looks good:
->
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->
-> --
-> Luca Ceresoli, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Use a flexible array member to combine allocations.
+
+Add __counted_by for extra runtime analysis.
+
+Remove goto paths as they are not really needed anymore.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v2: remove kfree and fix compilation.
+ arch/arm/mach-omap2/omap_device.c | 29 ++++++++++-------------------
+ arch/arm/mach-omap2/omap_device.h |  4 ++--
+ 2 files changed, 12 insertions(+), 21 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/omap_device.c b/arch/arm/mach-omap2/omap_device.c
+index 79db4c49ffc9..77a75b0b9ae6 100644
+--- a/arch/arm/mach-omap2/omap_device.c
++++ b/arch/arm/mach-omap2/omap_device.c
+@@ -307,35 +307,27 @@ static struct omap_device *omap_device_alloc(struct platform_device *pdev,
+ 	int ret = -ENOMEM;
+ 	struct omap_device *od;
+ 	int i;
+-	struct omap_hwmod **hwmods;
++	struct omap_hwmod *hwmod;
+
+-	od = kzalloc_obj(struct omap_device);
+-	if (!od)
+-		goto oda_exit1;
++	od = kzalloc_flex(*od, hwmods, oh_cnt);
++	if (!od) {
++		dev_err(&pdev->dev, "omap_device: build failed (%d)\n", ret);
++		return ERR_PTR(ret);
++	}
+
+ 	od->hwmods_cnt = oh_cnt;
++	memcpy(od->hwmods, ohs, oh_cnt * sizeof(*od->hwmods));
+
+-	hwmods = kmemdup_array(ohs, oh_cnt, sizeof(*hwmods), GFP_KERNEL);
+-	if (!hwmods)
+-		goto oda_exit2;
+-
+-	od->hwmods = hwmods;
+ 	od->pdev = pdev;
+ 	pdev->archdata.od = od;
+
+ 	for (i = 0; i < oh_cnt; i++) {
+-		hwmods[i]->od = od;
+-		_add_hwmod_clocks_clkdev(od, hwmods[i]);
++		hwmod = od->hwmods[i];
++		hwmod->od = od;
++		_add_hwmod_clocks_clkdev(od, hwmod);
+ 	}
+
+ 	return od;
+-
+-oda_exit2:
+-	kfree(od);
+-oda_exit1:
+-	dev_err(&pdev->dev, "omap_device: build failed (%d)\n", ret);
+-
+-	return ERR_PTR(ret);
+ }
+
+ static void omap_device_delete(struct omap_device *od)
+@@ -344,7 +336,6 @@ static void omap_device_delete(struct omap_device *od)
+ 		return;
+
+ 	od->pdev->archdata.od = NULL;
+-	kfree(od->hwmods);
+ 	kfree(od);
+ }
+
+diff --git a/arch/arm/mach-omap2/omap_device.h b/arch/arm/mach-omap2/omap_device.h
+index aa8096ecb23c..fae09cfce137 100644
+--- a/arch/arm/mach-omap2/omap_device.h
++++ b/arch/arm/mach-omap2/omap_device.h
+@@ -37,11 +37,11 @@
+ /**
+  * struct omap_device - omap_device wrapper for platform_devices
+  * @pdev: platform_device
+- * @hwmods: (one .. many per omap_device)
+  * @hwmods_cnt: ARRAY_SIZE() of @hwmods
+  * @_state: one of OMAP_DEVICE_STATE_* (see above)
+  * @flags: device flags
+  * @_driver_status: one of BUS_NOTIFY_*_DRIVER from <linux/device.h>
++ * @hwmods: (one .. many per omap_device)
+  *
+  * Integrates omap_hwmod data into Linux platform_device.
+  *
+@@ -51,11 +51,11 @@
+  */
+ struct omap_device {
+ 	struct platform_device		*pdev;
+-	struct omap_hwmod		**hwmods;
+ 	unsigned long			_driver_status;
+ 	u8				hwmods_cnt;
+ 	u8				_state;
+ 	u8                              flags;
++	struct omap_hwmod		*hwmods[] __counted_by(hwmods_cnt);
+ };
+
+ /* Device driver interface (call via platform_data fn ptrs) */
+--
+2.53.0
+
