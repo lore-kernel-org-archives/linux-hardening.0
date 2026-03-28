@@ -1,216 +1,156 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4D02D2382
-	for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 19:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C573431E7
+	for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 19:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774725428; cv=none; b=kix3CBXr1PE7RbpuNTuEbrY/PZVUkaD0ZvicoEvoqco71dJ9sgeHXnIdOnnWpu2jp12Ju5NbHKbjCoqR3QiOyyCLpENTemtk8LvUFyte9iXlzCBnQqQ2jMrRlIW1YPXSgNYMRymfXub99zjPcMNn2+p05K+akj7WraLeJ3SgKho=
+	t=1774725434; cv=none; b=F7aed43oXdX3rdFBr3qDqG/uuxS99va0TxkUtJ1dthpawH0zUxYsgAUvXZGQZ6b18hGCFrnZMED3acH1arhfUdxo1jgFx1flDgk9zdHN6UsOMvu8XunovFiG973gsjFFZTZ3rWhrbnyXLqK7QpKTA+NNu35zmzrBEtTth7fX7PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774725428; c=relaxed/simple;
-	bh=KA91jLkFZtNxj2oGP5XZfhlzSkR2p/GJzKrWyVJLYZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=re/kAeA0Nc8YdKJ6TzLrjxhOKY8oUrtwO3tYQSDoLoeKGLRXSUpdFNjpV7+D2f1cCkb9s6LzrjgxiCjy4hlfOVuddgkG5YqcQpoIGzWpZNCI8RzfY8YRgX0LT6FMX3bRBmJ6kiS8S4LIu43eravJlpAIjvp5QJ9C2eHtZtvMgkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WAj61LVA; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774725434; c=relaxed/simple;
+	bh=SwNri+m6r5Pc4DADGOBN1ypwIFXaYHog8hy+qDQAWHM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YCaLYBVSe91apJUdQkPXK23tJEEEsFiNiSy/Zlb0lKu6K+vGKdrDYgwQcn7gFoRCRBXK4ndJ3T3u4cW0I37tKdSjv0xCPHSqcu+QXt2BrWiv1vUBBMzNrKNAf+pKmnYCX5HQEIs05SyW4qolrL0MfFenPO9ga2Yd5L1yUBML0LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DWRBXcaW; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAj61LVA"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-829a9d08644so1691540b3a.1
-        for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 12:17:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DWRBXcaW"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b979d16dd0cso572417066b.1
+        for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 12:17:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774725424; x=1775330224; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F4t9PIf27Y9InCdf+CxT4mVnKUfDVoG1AnPBiKECu30=;
-        b=WAj61LVA/iFQVdVhuuBgdRFhudViLCQLEEI9uunrIegMrdMm20v3sRp7pFGGzLq4o+
-         EpdMJWgIh1T6M+Pn600pgsGJnu8bO6HsfRVbbhh9O0nds+PplfGYl3qKIoad8STNtlCe
-         bd6wTaB7xMsVS0SH+cHWijmlxDoKrHM0TNz1SMCyHfmPCJeUgCnkTFoBqHSRvU0td00Q
-         0wxNKIqbsmvR7rCcf0fAZcNZFCfjwDxZGRLpZ1RBoqk0zK1CnKMOhfn6MT/e+ev6h4IU
-         /6oKGXDjU/Ah+FKBfitlGK2+R7LKCgzOuT3fp7nbdvnubiSM15lqXIbv/1ZqcZ8Wc3D/
-         73qQ==
+        d=linux-foundation.org; s=google; t=1774725429; x=1775330229; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=F+xcA9ciccWstUGPjkLGPmgeR3rFmlOhLADsIoRH1EE=;
+        b=DWRBXcaWork0RUdn5bMH1fLpYB1GzDXc1BH2ZSoZJK7wt7gWH3nhbs+Bw60WlIsGwW
+         9kKXZ3DKnVPpFGup1u+RXgXI4UmV95dLg6Ug3ckcxwcLIOfVe/rXDm9Yb2SyuPVsnk7m
+         Gp2Cao97hkR9dFp7t4eP1jKYwdxKdxobazLds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774725424; x=1775330224;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1774725429; x=1775330229;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F4t9PIf27Y9InCdf+CxT4mVnKUfDVoG1AnPBiKECu30=;
-        b=HW4ELZCbQp2jNqF261H8uySGaRL8RZBOhYMRYXFplDgNqUiTloLs4z95+CR80jedWh
-         QMLGGCTExucBJwv2UGADURGPwQKQcIXAfchYIfdF89I4T/i7VH6hAUMJfEJ/gidJHAQ/
-         Zwpmng5tQAk47ruGfUCheIfoFcg3xs/VR0PHvH4TEYMHaPSf08LJvPMe3AC8MUjV236Y
-         9RVf3yj65/WEiSZIV2uJMsGJNvqz7luwGwEBLKUt3U2Lvk22Vb3MwXrfm46iVFUGUAzR
-         pnAPDx3Xg7KJxzc8eR4UEltq3pRbTz8dACGPsNBawXJjSXmAFzc4w6JgN9NrNpMaBO2s
-         QARg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOgNZPLn2z9RBSWAASW5Ik92YKpddErXDw/9XhHSPooDjOQMU6mYo6W2p4jkSN4aXf5BKhhGLo8ke4HR683VY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDqq4zZ5gA8MrxlhGhhwaSpOCkguqCZzm3c1AmOoPfePsejHyM
-	0o1oq+7Oki6KuxVtlULGKIgbFQNf6C4NzsCWKdnCGvsWQ8xV+Qb9HSQM
-X-Gm-Gg: ATEYQzyOp+M3DJHhzReKutm5qaIUL/3GHSAC8FqqNPkOgcK1SVwu0DKP13MLPZPDSFf
-	u8K6YSROXo6fQa2XiXw1UZO8xfTIGtqNLkrlsas4lnsG1VYkuGLrFo4Y4I4lvkgc+ebJ1yYaIup
-	l9DP9J78dQh+qveW5dzOoIf/yqGfsTpgmuANkB4qsQluqyuiFiog5dMAXRYDp7WtjSTV+9Ftjer
-	dV8cPkAWJwAwCLVyb+HRQj55SI6QtpTEDU1WC0QeIo6zkp7BXBi7gDzN7d+NUXEVE+3YOSCfjWx
-	CFeX0FUHYHyUGysj/qt1v9ClFPaGLAHk/x7kHmI65Gx8Z/eyujyF/eWXfbcUukPfcr5/rGtZ9Dt
-	5U9+qza2TX6paCBbfITCMxa0NPzyBfiBhtigE7hYyfy3AmIY6jcqKmxc7Z7coc6aX7dgbaFiS+6
-	omLx4f4pJov0NIynaH7m9GCzm8aYfTrwX3yJP3ER/eL8upvxONs5xLnGk=
-X-Received: by 2002:a05:6a00:bb0d:b0:82c:70a8:fae6 with SMTP id d2e1a72fcca58-82c95e71d96mr6682847b3a.22.1774725424350;
-        Sat, 28 Mar 2026 12:17:04 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82ca8464576sm2774950b3a.14.2026.03.28.12.17.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2026 12:17:03 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:INTEL MID (Mobile Internet Device) PLATFORM),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv2] dmaengine: hsu: use kzalloc_flex()
-Date: Sat, 28 Mar 2026 12:16:46 -0700
-Message-ID: <20260328191646.312298-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        bh=F+xcA9ciccWstUGPjkLGPmgeR3rFmlOhLADsIoRH1EE=;
+        b=NipKnnu7cXPIGvCUGh1LTcA/6LzrXE5o6TEkiWf+n9WwquZEd5fKXSLRbj+xAaQJfB
+         MGKAkoCmJwqjZmZXWOK79O9qUDTNeWYwrXuPq1sgOiUFc4dK8LxXc3GkCHI5xHpgtBv9
+         FnMiBQLsi373LBSGkpTA19UQ9bWNYYiZM13AL2O4ytiq0MM6ZS3vnIbleV/4/NgS8mez
+         TFdl2wrYRzvkozWWgfaHCLsQMRXjIEerOqUUUP4MW4PsjJKooEXHHDatAy7LVphuQ8pl
+         oDa9X8hRFBL5MVZRagwZTcm2kFQGXSXrst4NtHPq+szq1B4KV3ZVOsSMza+F2v3qHOP7
+         w7XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVy28QsYFStwfkZg++KGov2s/th5prnHT0BTNDC5jTqPO8RqwkLb9NcGLNbUItnajug1ogdX+drpVCeO9eHw24=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFQCEVmGVSsx6aZEl0lTnCn57i1hfllYGyxFgqqyuXs6nOhhnE
+	2WI2rF/mVjHbYek1W/ZbA4yGOxcUug51znsKMcdsAyjAvnT49qh96Uvr5gM9tv8ALQg9p/U/863
+	Nvzm6LVE=
+X-Gm-Gg: ATEYQzzBvIfvb+jRX1lAjBVM/v/cBgTB1/umIf4ogXw+s4GXzImybKz7R+qHKYk63Df
+	n38htR6Snk4yOcIfwaQ4mMja/zQ226D9bgxOzPOyJhL2n1YMxvgGqgJwNKcJagOL8R6bSLYeOHd
+	VX4eGpucpEE4ZKroWdSvGxazuF091wFEj5hDY4ckHOoxhDOQqdAxgOHZULX6b9uq431MFXYV69f
+	zctaAEcSpkK2OkcN54yGaKKRTEdVhKDh46vzdWgwvvXIkrJCmkxspmznTcBeaUG9Zmzvnm775/+
+	fs9QA7/m1B16FtwvQ/HHk/AvpcXTwMBXdzzwLpUlCF1SGvyhz+OXR0gUGWbD8+JbXTYk7gNQLRy
+	7cO/1XJkeXUTKu9HLfFgrH1267Yiytp4coGbfqRESc9l6b43i9vSfpq1gYV9QcPIz56suRixq5x
+	sBNhsjzRpdMzuNLy8r0FFYaxO1WDX3j8Bk7v64ItQOFa0fLonp4Qd95r/u3mp6MyESKK2bP94T
+X-Received: by 2002:a17:907:960b:b0:b98:3fdc:150e with SMTP id a640c23a62f3a-b9b5016b0dbmr464661466b.2.1774725428901;
+        Sat, 28 Mar 2026 12:17:08 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9b7ae269ddsm104116866b.5.2026.03.28.12.17.08
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Mar 2026 12:17:08 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-66b3d06e2bbso3271074a12.2
+        for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 12:17:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUleT1g1z6P1ZymHDGg/AFvGrX8HR8Vg8H2pmHH6ZSGQnmSMYqK1YE7/rpqGEBlB5hDZ+EIXngtHDspQT6GF2w=@vger.kernel.org
+X-Received: by 2002:a05:6402:4587:b0:66b:a96e:5eca with SMTP id
+ 4fb4d7f45d1cf-66ba96e613bmr631314a12.14.1774725428093; Sat, 28 Mar 2026
+ 12:17:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260327195737.89537-1-david.laight.linux@gmail.com>
+ <CAHk-=wgADjjXEN_8ANbU_E94uxbQHW-3v5p0-pwLOtTvL+0Wrw@mail.gmail.com>
+ <20260327224928.7c4220cb@pumpkin> <CAHk-=wgHK0tyYym=gkq4YRHMywbuETcn835=A7uSTSTPspzf1A@mail.gmail.com>
+ <20260328110814.0a59e12f@pumpkin>
+In-Reply-To: <20260328110814.0a59e12f@pumpkin>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 28 Mar 2026 12:16:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiwRPqvYLsWn_dbFHs5hHry=5HW2OZF8pT_mBzpbJvW7Q@mail.gmail.com>
+X-Gm-Features: AQROBzAMYfpWyjNrFJDdcZffOpwjA3KcTK3cThIpxyvl2QrUW8Ov2g-Km0K-SwQ
+Message-ID: <CAHk-=wiwRPqvYLsWn_dbFHs5hHry=5HW2OZF8pT_mBzpbJvW7Q@mail.gmail.com>
+Subject: Re: [PATCH next] string: Optimise strlen()
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Simplifies allocations by using a flexible array member in this struct.
+On Sat, 28 Mar 2026 at 04:08, David Laight <david.laight.linux@gmail.com> wrote:
+>
+> On Fri, 27 Mar 2026 17:29:21 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > The trivial cases don't even matter, because all the cost of execve()
+> > are elsewhere for those cases.
+> >
+> > But the cases where the strings *do* matter, they are many and long.
+>
+> Is that the strncpy_from_user() path?
 
-Remove hsu_dma_alloc_desc(). It now offers no readability advantages in
-this single usage.
+No. For annoying reasons, execve() mainly uses "strnlen_user()"
+followed by "copy_from_user()".
 
-Add __counted_by to get extra runtime analysis.
+See fs/exec.v: copy_strings().
 
-Apply the exact same treatment to struct hsu_dma and devm_kzalloc.
+The reason is that it needs to know the size of the string before it
+can start copying it, because the destination address will depend on
+it.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- v2: address review comments.
- drivers/dma/hsu/hsu.c | 45 ++++++++++++-------------------------------
- drivers/dma/hsu/hsu.h |  4 ++--
- 2 files changed, 14 insertions(+), 35 deletions(-)
+And yes, it's racy, and yes, if y ou modify the arguments or the
+environment while an exevbe() is going on, you get what you deserve
+(but it's not a security issue, it's just a "resulting argv[] array is
+odd", but you could have made it odd in the first place, so whatever).
 
-diff --git a/drivers/dma/hsu/hsu.c b/drivers/dma/hsu/hsu.c
-index f62d60d7bc6b..78a2352ada8c 100644
---- a/drivers/dma/hsu/hsu.c
-+++ b/drivers/dma/hsu/hsu.c
-@@ -241,28 +241,10 @@ int hsu_dma_do_irq(struct hsu_dma_chip *chip, unsigned short nr, u32 status)
- }
- EXPORT_SYMBOL_GPL(hsu_dma_do_irq);
+It would be lovely to be able to od it in one go and not walk the
+source string twice, but that's sadly not how the execve() interface
+works (or somebody would need to come up with a clever trick).
 
--static struct hsu_dma_desc *hsu_dma_alloc_desc(unsigned int nents)
--{
--	struct hsu_dma_desc *desc;
--
--	desc = kzalloc_obj(*desc, GFP_NOWAIT);
--	if (!desc)
--		return NULL;
--
--	desc->sg = kzalloc_objs(*desc->sg, nents, GFP_NOWAIT);
--	if (!desc->sg) {
--		kfree(desc);
--		return NULL;
--	}
--
--	return desc;
--}
--
- static void hsu_dma_desc_free(struct virt_dma_desc *vdesc)
- {
- 	struct hsu_dma_desc *desc = to_hsu_dma_desc(vdesc);
+The main user of strncpy_from_user() is the path copying: see the
+'getname' variations in fs/namei.c.
 
--	kfree(desc->sg);
- 	kfree(desc);
- }
+And sometimes pathnames are short, but we had a semi-recent discussion
+about the distribution of pathname lengths due to some allocation
+optimizations recently:
 
-@@ -276,10 +258,15 @@ static struct dma_async_tx_descriptor *hsu_dma_prep_slave_sg(
- 	struct scatterlist *sg;
- 	unsigned int i;
+    https://lore.kernel.org/all/CAGudoHEMjWCOLEp+TdKLjuguHEKn9+e+aZwfKyK_sYpTZY8HRg@mail.gmail.com/
 
--	desc = hsu_dma_alloc_desc(sg_len);
-+	desc = kzalloc_flex(*desc, sg, sg_len, GFP_NOWAIT);
- 	if (!desc)
- 		return NULL;
+so while short names are common, longer names aren't *uncommon*, and
+and loads that use them tend to keep using them.
 
-+	desc->nents = sg_len;
-+	desc->direction = direction;
-+	/* desc->active = 0 by kzalloc */
-+	desc->status = DMA_IN_PROGRESS;
-+
- 	for_each_sg(sgl, sg, sg_len, i) {
- 		desc->sg[i].addr = sg_dma_address(sg);
- 		desc->sg[i].len = sg_dma_len(sg);
-@@ -287,11 +274,6 @@ static struct dma_async_tx_descriptor *hsu_dma_prep_slave_sg(
- 		desc->length += sg_dma_len(sg);
- 	}
+We ended up aiming for ~128 bytes for the initial allocation
+(EMBEDDED_NAME_MAX is 168 in one common config) for that reason.
 
--	desc->nents = sg_len;
--	desc->direction = direction;
--	/* desc->active = 0 by kzalloc */
--	desc->status = DMA_IN_PROGRESS;
--
- 	return vchan_tx_prep(&hsuc->vchan, &desc->vdesc, flags);
- }
+Don't get me wrong: there are certainly many other users of
+strnlen_user() and strncpy_from_user(), but the ones I've seen in any
+half-way normal loads are those two: execve() and pathname copying.
 
-@@ -428,22 +410,19 @@ int hsu_dma_probe(struct hsu_dma_chip *chip)
- {
- 	struct hsu_dma *hsu;
- 	void __iomem *addr = chip->regs + chip->offset;
-+	unsigned short nr_channels;
- 	unsigned short i;
- 	int ret;
+> I started looking at this because someone was trying to write the 'bit-masking'
+> version for (possibly) RISC-V and I deciding that they weren't making a good
+> job of it and that it probably wasn't worth while (since x86-64 just uses
+> the byte code).
 
--	hsu = devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL);
-+	/* Calculate nr_channels from the IO space length */
-+	nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
-+	hsu = devm_kzalloc(chip->dev, struct_size(hsu, chan, nr_channels), GFP_KERNEL);
- 	if (!hsu)
- 		return -ENOMEM;
+Ok.
 
--	chip->hsu = hsu;
--
--	/* Calculate nr_channels from the IO space length */
--	hsu->nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
-+	hsu->nr_channels = nr_channels;
+I do think that in user space, strlen() and friends can be absolutely
+critical for some loads, because the C string model is horrible.
 
--	hsu->chan = devm_kcalloc(chip->dev, hsu->nr_channels,
--				 sizeof(*hsu->chan), GFP_KERNEL);
--	if (!hsu->chan)
--		return -ENOMEM;
-+	chip->hsu = hsu;
+But in the kernel, I really don't think any of this matters. Our
+strlen() is bad not because it's bad - it's bad because nobody really
+should *care*.
 
- 	INIT_LIST_HEAD(&hsu->dma.channels);
- 	for (i = 0; i < hsu->nr_channels; i++) {
-diff --git a/drivers/dma/hsu/hsu.h b/drivers/dma/hsu/hsu.h
-index 3bca577b98a1..f6ca1014bccf 100644
---- a/drivers/dma/hsu/hsu.h
-+++ b/drivers/dma/hsu/hsu.h
-@@ -71,11 +71,11 @@ struct hsu_dma_sg {
- struct hsu_dma_desc {
- 	struct virt_dma_desc vdesc;
- 	enum dma_transfer_direction direction;
--	struct hsu_dma_sg *sg;
- 	unsigned int nents;
- 	size_t length;
- 	unsigned int active;
- 	enum dma_status status;
-+	struct hsu_dma_sg sg[] __counted_by(nents);
- };
+Some of our "rep scas" users have been kept around exactly because
+absolutely nobody cares, and it's a cute remnant of a very naive young
+Linus who was using them because he was trying to learn things about
+his new i80386 CPU, and started a whole small hobby project as a
+result...
 
- static inline struct hsu_dma_desc *to_hsu_dma_desc(struct virt_dma_desc *vdesc)
-@@ -115,8 +115,8 @@ struct hsu_dma {
- 	struct dma_device		dma;
-
- 	/* channels */
--	struct hsu_dma_chan		*chan;
- 	unsigned short			nr_channels;
-+	struct hsu_dma_chan		chan[] __counted_by(nr_channels);
- };
-
- static inline struct hsu_dma *to_hsu_dma(struct dma_device *ddev)
---
-2.53.0
-
+               Linus
