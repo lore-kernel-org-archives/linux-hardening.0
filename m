@@ -1,73 +1,73 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34B6335063
-	for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 19:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4D02D2382
+	for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 19:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774725080; cv=none; b=C4sQ8mPmiN/E3xLLPfx7sd7ywO34rxM3iUBnK8zCxvzasY/tFpwqrwYn7cesT0iOUgVOtSWs+NtNmpNgMNEYPuj0+mbp+beVl46f7Ea/tm4B7GR+j/kuucz46tjfPEEJtgg2/a1rQrgeUXi7Bd+gy8V+cLOfoMVKXYiOGqMppDE=
+	t=1774725428; cv=none; b=kix3CBXr1PE7RbpuNTuEbrY/PZVUkaD0ZvicoEvoqco71dJ9sgeHXnIdOnnWpu2jp12Ju5NbHKbjCoqR3QiOyyCLpENTemtk8LvUFyte9iXlzCBnQqQ2jMrRlIW1YPXSgNYMRymfXub99zjPcMNn2+p05K+akj7WraLeJ3SgKho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774725080; c=relaxed/simple;
-	bh=n0HQlw14mlBy8VD4FMqmG3MO5wp4QGqgD7K1F5YngUU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=etS3ziS7xZ/X+aFnscyLLM9hHxPBzCVjwWCD/bH7+0eEVZkHrgrgLKg54jfR1aQjz3mbhHe9kyZQ0cl+pdSC2SDZ3d5Ihie/gFXD6XPOa90Gh7gTFMoKKFs/ElP/2slaKtukevEbdeCL/XhHQ05R0x3gGJ+ZVbd9djnQ2Mxh8iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aYDr6hm9; arc=none smtp.client-ip=209.85.210.173
+	s=arc-20240116; t=1774725428; c=relaxed/simple;
+	bh=KA91jLkFZtNxj2oGP5XZfhlzSkR2p/GJzKrWyVJLYZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=re/kAeA0Nc8YdKJ6TzLrjxhOKY8oUrtwO3tYQSDoLoeKGLRXSUpdFNjpV7+D2f1cCkb9s6LzrjgxiCjy4hlfOVuddgkG5YqcQpoIGzWpZNCI8RzfY8YRgX0LT6FMX3bRBmJ6kiS8S4LIu43eravJlpAIjvp5QJ9C2eHtZtvMgkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WAj61LVA; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYDr6hm9"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-829781b2b01so1691584b3a.2
-        for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 12:11:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAj61LVA"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-829a9d08644so1691540b3a.1
+        for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 12:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774725078; x=1775329878; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774725424; x=1775330224; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dKR1Fjg9EIN1soZ4AQdVbiBT3aVB1LqBRdnYJ6CyzyM=;
-        b=aYDr6hm94XSdtRfAJ20EEnJopJox+LYqx1jpSc14wpHVeQe66/UhMuB+QkMEv9pYst
-         gK17UU0o9WSzflSPwZtpw6XYNmHij3BviflHqmEU4PhE0oTTlqlPSF4OFWWxHkdkhpbL
-         94PF+DWF8XvI12YuSjKd0usIkrHlfaBQZ6DClmJxmF8S2cwkmvmQdI29R9P7mt2FtMGV
-         N3aOmv1JHbKUqix3VAh4m2FS/cuzXnGF45GmVZ+DPqYteTdRFyh7pqKx4dSDt4+77k2W
-         Pddnn9q+wL10rUPEXGAodx+WHZG+NnnN4USPPf5kGZVhpw3jeU+99JHlXXNc0CYjSbcw
-         HcvQ==
+        bh=F4t9PIf27Y9InCdf+CxT4mVnKUfDVoG1AnPBiKECu30=;
+        b=WAj61LVA/iFQVdVhuuBgdRFhudViLCQLEEI9uunrIegMrdMm20v3sRp7pFGGzLq4o+
+         EpdMJWgIh1T6M+Pn600pgsGJnu8bO6HsfRVbbhh9O0nds+PplfGYl3qKIoad8STNtlCe
+         bd6wTaB7xMsVS0SH+cHWijmlxDoKrHM0TNz1SMCyHfmPCJeUgCnkTFoBqHSRvU0td00Q
+         0wxNKIqbsmvR7rCcf0fAZcNZFCfjwDxZGRLpZ1RBoqk0zK1CnKMOhfn6MT/e+ev6h4IU
+         /6oKGXDjU/Ah+FKBfitlGK2+R7LKCgzOuT3fp7nbdvnubiSM15lqXIbv/1ZqcZ8Wc3D/
+         73qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774725078; x=1775329878;
+        d=1e100.net; s=20251104; t=1774725424; x=1775330224;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dKR1Fjg9EIN1soZ4AQdVbiBT3aVB1LqBRdnYJ6CyzyM=;
-        b=hZld5+u9lUlistm/zwLZTpYuP3RdIzOVV36Y+AhMh2CxoleuNSaHD2r2rfdjqoXKPH
-         iQZL2WJHyigJyECZVEdyGMcWSVAZtSC77z3z8rL49gaDp3wHoYqr4Xx49rdfGDehc5Wv
-         o8AzrJ8+doT7eFI+gy8ww/PdH6lHR2KS4/bElFmjdDDehBEySV9jvyEnj+pAtBljthtY
-         psjdhbIeRGZCL62ZHOAeMwyuSL+j9HBBH50nYOXjS41b9+xqfCmxftYN8CLZGtAMKeOj
-         zqvv0pg5w02RQpBtB4Swcj520AkBZE0ubIuSEOGtqf4BEwcQKK5muK6k/P8vB4ANHkpH
-         AUvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxw9GCn7P38UvkFNdi0vfM5xq8GzPrp7Z+veil9LIBNjsLaK0pNgPiXhapzCaI8IvqAWkmeR211qEt7fDfXiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc1gtKh3nRiMEY2AKKE70qeaw9JfD8TerfB4vD4z4BZfskE1AM
-	q3FaIK0O7M08oSUEZeHS/bsPqQBD3Z0+d+ZhAbFURzvCSgkxw1oTJcF6
-X-Gm-Gg: ATEYQzx2NvdkTn4Nwi8NFf9jb+X8A7fnXF6suGEHrRxg339mowGjqAZQCgBjPhBkNzy
-	Cq9e8FxgB/G7shUyc5N+xN8g/iWW0rlEJcocAyBqvCDkCmTPz/Y3EysSW9JFfN+s5cVUYlUhOyC
-	4Y6QfotQEIiV1ChhCUjzAnDHHXSYys/6FhSmiXKGK3Ud2eb5qf5H3egM4Ic5iOPE4ZVnp0YgdB8
-	hmflL5nUD/cMneaHCxKgc5U0CTg9RQuS5JVbouCh681SoBLCK34Mwa1PaQljgXq6lTDPJ671O/B
-	rf63tY3R18UezLOv8yDKI1LOF1DL/t0elpt0SVjduHep9h2uvPjocHkdJ+sqw3Bf2t0Dmzd7jG8
-	2Tyn8l3/dnO7g0mVvtD1pQcgqb0wCWvJYnGcN6iAk0psDk+N24hnyJc8DUPQvnEpS79eNAkzGhE
-	HaaQvuFXTpgjbz1iL9/eYxrRZmoXoaMI9fpMJs6Pwp1tDSyBJcCWWPuTQ=
-X-Received: by 2002:a05:6a00:3697:b0:82a:18a2:91b9 with SMTP id d2e1a72fcca58-82c9602633fmr6665277b3a.49.1774725078111;
-        Sat, 28 Mar 2026 12:11:18 -0700 (PDT)
+        bh=F4t9PIf27Y9InCdf+CxT4mVnKUfDVoG1AnPBiKECu30=;
+        b=HW4ELZCbQp2jNqF261H8uySGaRL8RZBOhYMRYXFplDgNqUiTloLs4z95+CR80jedWh
+         QMLGGCTExucBJwv2UGADURGPwQKQcIXAfchYIfdF89I4T/i7VH6hAUMJfEJ/gidJHAQ/
+         Zwpmng5tQAk47ruGfUCheIfoFcg3xs/VR0PHvH4TEYMHaPSf08LJvPMe3AC8MUjV236Y
+         9RVf3yj65/WEiSZIV2uJMsGJNvqz7luwGwEBLKUt3U2Lvk22Vb3MwXrfm46iVFUGUAzR
+         pnAPDx3Xg7KJxzc8eR4UEltq3pRbTz8dACGPsNBawXJjSXmAFzc4w6JgN9NrNpMaBO2s
+         QARg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOgNZPLn2z9RBSWAASW5Ik92YKpddErXDw/9XhHSPooDjOQMU6mYo6W2p4jkSN4aXf5BKhhGLo8ke4HR683VY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDqq4zZ5gA8MrxlhGhhwaSpOCkguqCZzm3c1AmOoPfePsejHyM
+	0o1oq+7Oki6KuxVtlULGKIgbFQNf6C4NzsCWKdnCGvsWQ8xV+Qb9HSQM
+X-Gm-Gg: ATEYQzyOp+M3DJHhzReKutm5qaIUL/3GHSAC8FqqNPkOgcK1SVwu0DKP13MLPZPDSFf
+	u8K6YSROXo6fQa2XiXw1UZO8xfTIGtqNLkrlsas4lnsG1VYkuGLrFo4Y4I4lvkgc+ebJ1yYaIup
+	l9DP9J78dQh+qveW5dzOoIf/yqGfsTpgmuANkB4qsQluqyuiFiog5dMAXRYDp7WtjSTV+9Ftjer
+	dV8cPkAWJwAwCLVyb+HRQj55SI6QtpTEDU1WC0QeIo6zkp7BXBi7gDzN7d+NUXEVE+3YOSCfjWx
+	CFeX0FUHYHyUGysj/qt1v9ClFPaGLAHk/x7kHmI65Gx8Z/eyujyF/eWXfbcUukPfcr5/rGtZ9Dt
+	5U9+qza2TX6paCBbfITCMxa0NPzyBfiBhtigE7hYyfy3AmIY6jcqKmxc7Z7coc6aX7dgbaFiS+6
+	omLx4f4pJov0NIynaH7m9GCzm8aYfTrwX3yJP3ER/eL8upvxONs5xLnGk=
+X-Received: by 2002:a05:6a00:bb0d:b0:82c:70a8:fae6 with SMTP id d2e1a72fcca58-82c95e71d96mr6682847b3a.22.1774725424350;
+        Sat, 28 Mar 2026 12:17:04 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82caf97abfesm1497851b3a.1.2026.03.28.12.11.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82ca8464576sm2774950b3a.14.2026.03.28.12.17.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2026 12:11:17 -0700 (PDT)
+        Sat, 28 Mar 2026 12:17:03 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-ide@vger.kernel.org
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
+To: dmaengine@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
+	linux-kernel@vger.kernel.org (open list:INTEL MID (Mobile Internet Device) PLATFORM),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv2] ata: libahci_platform: use flex array for platform PHYs
-Date: Sat, 28 Mar 2026 12:10:58 -0700
-Message-ID: <20260328191058.311509-1-rosenp@gmail.com>
+Subject: [PATCHv2] dmaengine: hsu: use kzalloc_flex()
+Date: Sat, 28 Mar 2026 12:16:46 -0700
+Message-ID: <20260328191646.312298-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -77,97 +77,140 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member with struct_size to combine the allocations.
+Simplifies allocations by using a flexible array member in this struct.
 
-Added __counted_by support for extra runtime analysis.
+Remove hsu_dma_alloc_desc(). It now offers no readability advantages in
+this single usage.
+
+Add __counted_by to get extra runtime analysis.
+
+Apply the exact same treatment to struct hsu_dma and devm_kzalloc.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- v2: update commit title
- drivers/ata/ahci.h             |  3 ++-
- drivers/ata/libahci_platform.c | 33 +++++++++++++++------------------
- 2 files changed, 17 insertions(+), 19 deletions(-)
+ v2: address review comments.
+ drivers/dma/hsu/hsu.c | 45 ++++++++++++-------------------------------
+ drivers/dma/hsu/hsu.h |  4 ++--
+ 2 files changed, 14 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 293b7fb216b5..9e8b6319025c 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -357,7 +357,6 @@ struct ahci_host_priv {
- 	 * If platform uses PHYs. There is a 1:1 relation between the port number and
- 	 * the PHY position in this array.
- 	 */
--	struct phy		**phys;
- 	unsigned		nports;		/* Number of ports */
- 	void			*plat_data;	/* Other platform data */
- 	unsigned int		irq;		/* interrupt line */
-@@ -379,6 +378,8 @@ struct ahci_host_priv {
- 	/* only required for per-port MSI(-X) support */
- 	int			(*get_irq_vector)(struct ata_host *host,
- 						  int port);
+diff --git a/drivers/dma/hsu/hsu.c b/drivers/dma/hsu/hsu.c
+index f62d60d7bc6b..78a2352ada8c 100644
+--- a/drivers/dma/hsu/hsu.c
++++ b/drivers/dma/hsu/hsu.c
+@@ -241,28 +241,10 @@ int hsu_dma_do_irq(struct hsu_dma_chip *chip, unsigned short nr, u32 status)
+ }
+ EXPORT_SYMBOL_GPL(hsu_dma_do_irq);
+
+-static struct hsu_dma_desc *hsu_dma_alloc_desc(unsigned int nents)
+-{
+-	struct hsu_dma_desc *desc;
+-
+-	desc = kzalloc_obj(*desc, GFP_NOWAIT);
+-	if (!desc)
+-		return NULL;
+-
+-	desc->sg = kzalloc_objs(*desc->sg, nents, GFP_NOWAIT);
+-	if (!desc->sg) {
+-		kfree(desc);
+-		return NULL;
+-	}
+-
+-	return desc;
+-}
+-
+ static void hsu_dma_desc_free(struct virt_dma_desc *vdesc)
+ {
+ 	struct hsu_dma_desc *desc = to_hsu_dma_desc(vdesc);
+
+-	kfree(desc->sg);
+ 	kfree(desc);
+ }
+
+@@ -276,10 +258,15 @@ static struct dma_async_tx_descriptor *hsu_dma_prep_slave_sg(
+ 	struct scatterlist *sg;
+ 	unsigned int i;
+
+-	desc = hsu_dma_alloc_desc(sg_len);
++	desc = kzalloc_flex(*desc, sg, sg_len, GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
+
++	desc->nents = sg_len;
++	desc->direction = direction;
++	/* desc->active = 0 by kzalloc */
++	desc->status = DMA_IN_PROGRESS;
 +
-+	struct phy		*phys[] __counted_by(nports);
- };
-
- /*
-diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-index f37247e7a5cb..6e072d681341 100644
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -482,15 +482,29 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
- 	struct ahci_host_priv *hpriv;
- 	u32 mask_port_map = 0;
- 	u32 max_port;
-+	int nports;
-
- 	if (!devres_open_group(dev, NULL, GFP_KERNEL))
- 		return ERR_PTR(-ENOMEM);
-
--	hpriv = devres_alloc(ahci_platform_put_resources, sizeof(*hpriv),
-+	/* find maximum port id for allocating structures */
-+	max_port = ahci_platform_find_max_port_id(dev);
-+	/*
-+	 * Set nports according to maximum port id. Clamp at
-+	 * AHCI_MAX_PORTS, warning message for invalid port id
-+	 * is generated later.
-+	 * When DT has no sub-nodes max_port is 0, nports is 1,
-+	 * in order to be able to use the
-+	 * ahci_platform_[en|dis]able_[phys|regulators] functions.
-+	 */
-+	nports = min(AHCI_MAX_PORTS, max_port + 1);
-+	hpriv = devres_alloc(ahci_platform_put_resources, struct_size(hpriv, phys, nports),
- 			     GFP_KERNEL);
- 	if (!hpriv)
- 		goto err_out;
-
-+	hpriv->nports = nports;
-+
- 	devres_add(dev, hpriv);
-
- 	/*
-@@ -573,23 +587,6 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
- 		goto err_out;
+ 	for_each_sg(sgl, sg, sg_len, i) {
+ 		desc->sg[i].addr = sg_dma_address(sg);
+ 		desc->sg[i].len = sg_dma_len(sg);
+@@ -287,11 +274,6 @@ static struct dma_async_tx_descriptor *hsu_dma_prep_slave_sg(
+ 		desc->length += sg_dma_len(sg);
  	}
 
--	/* find maximum port id for allocating structures */
--	max_port = ahci_platform_find_max_port_id(dev);
--	/*
--	 * Set nports according to maximum port id. Clamp at
--	 * AHCI_MAX_PORTS, warning message for invalid port id
--	 * is generated later.
--	 * When DT has no sub-nodes max_port is 0, nports is 1,
--	 * in order to be able to use the
--	 * ahci_platform_[en|dis]able_[phys|regulators] functions.
--	 */
--	hpriv->nports = min(AHCI_MAX_PORTS, max_port + 1);
+-	desc->nents = sg_len;
+-	desc->direction = direction;
+-	/* desc->active = 0 by kzalloc */
+-	desc->status = DMA_IN_PROGRESS;
 -
--	hpriv->phys = devm_kcalloc(dev, hpriv->nports, sizeof(*hpriv->phys), GFP_KERNEL);
--	if (!hpriv->phys) {
--		rc = -ENOMEM;
--		goto err_out;
--	}
- 	/*
- 	 * We cannot use devm_ here, since ahci_platform_put_resources() uses
- 	 * target_pwrs after devm_ have freed memory
+ 	return vchan_tx_prep(&hsuc->vchan, &desc->vdesc, flags);
+ }
+
+@@ -428,22 +410,19 @@ int hsu_dma_probe(struct hsu_dma_chip *chip)
+ {
+ 	struct hsu_dma *hsu;
+ 	void __iomem *addr = chip->regs + chip->offset;
++	unsigned short nr_channels;
+ 	unsigned short i;
+ 	int ret;
+
+-	hsu = devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL);
++	/* Calculate nr_channels from the IO space length */
++	nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
++	hsu = devm_kzalloc(chip->dev, struct_size(hsu, chan, nr_channels), GFP_KERNEL);
+ 	if (!hsu)
+ 		return -ENOMEM;
+
+-	chip->hsu = hsu;
+-
+-	/* Calculate nr_channels from the IO space length */
+-	hsu->nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
++	hsu->nr_channels = nr_channels;
+
+-	hsu->chan = devm_kcalloc(chip->dev, hsu->nr_channels,
+-				 sizeof(*hsu->chan), GFP_KERNEL);
+-	if (!hsu->chan)
+-		return -ENOMEM;
++	chip->hsu = hsu;
+
+ 	INIT_LIST_HEAD(&hsu->dma.channels);
+ 	for (i = 0; i < hsu->nr_channels; i++) {
+diff --git a/drivers/dma/hsu/hsu.h b/drivers/dma/hsu/hsu.h
+index 3bca577b98a1..f6ca1014bccf 100644
+--- a/drivers/dma/hsu/hsu.h
++++ b/drivers/dma/hsu/hsu.h
+@@ -71,11 +71,11 @@ struct hsu_dma_sg {
+ struct hsu_dma_desc {
+ 	struct virt_dma_desc vdesc;
+ 	enum dma_transfer_direction direction;
+-	struct hsu_dma_sg *sg;
+ 	unsigned int nents;
+ 	size_t length;
+ 	unsigned int active;
+ 	enum dma_status status;
++	struct hsu_dma_sg sg[] __counted_by(nents);
+ };
+
+ static inline struct hsu_dma_desc *to_hsu_dma_desc(struct virt_dma_desc *vdesc)
+@@ -115,8 +115,8 @@ struct hsu_dma {
+ 	struct dma_device		dma;
+
+ 	/* channels */
+-	struct hsu_dma_chan		*chan;
+ 	unsigned short			nr_channels;
++	struct hsu_dma_chan		chan[] __counted_by(nr_channels);
+ };
+
+ static inline struct hsu_dma *to_hsu_dma(struct dma_device *ddev)
 --
 2.53.0
 
