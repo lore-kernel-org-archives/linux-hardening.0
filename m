@@ -1,185 +1,72 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DD237104E
-	for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 21:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F253126DA;
+	Sat, 28 Mar 2026 21:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774734468; cv=none; b=j0oVTX9ibJNF6GBb3Nble0DDJE4pf4LY7hp3c3GeGQ9niUOY7G6fWiv4/o7EmqIJR0I6fg6RYIsr13mHKbdsPRsjEvwh9e/FXyqR0S197TkRtueZ8C8Fll0nEI/r7puiy5ZYlItY/bxe9W1Hrp2D4pLBkTnQ//LLN27Zrzb/VEA=
+	t=1774734523; cv=none; b=MA89IMBNq0p8Gq1Q51vvbyvTImiCHkCl56wFvvZVnKVtZcTuSH31st2kOpVlFlrm6K025ft85auMYlqpbFy0TBorWPytL+8URvikPfemUBxSjTfKURVKY825+/rDxhB0oJzrjEmCUK9dzsjsLqEcAxlzdoidSMTLxdOTqpwZ2So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774734468; c=relaxed/simple;
-	bh=yxhOb/sA1eae8EhO3b1vyRl/xrvrV9jEzITLFK3GdBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hEZiQsAvthHstXIjvghO6s94TpDdevoVzEDHr0jms3hiU66Wp1OsGiV5JBw9wmm+kuf0Fe67p07d3NTM5gdG9eU3LQ1SvUpGAw2JaBiwEaEnR4f2kaFTvXqv4T4l1hLZ8mw8S0t8yKtjkzVYotKe4i1QMak4J9CVJ73FWSp+xbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MQNKhPki; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774734523; c=relaxed/simple;
+	bh=WdcLOf3svQq0pbGjMCHTBHUm48SYKu/F1/YYKI5rUoc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QY2qZfmmDis+c8802B4uQ3O1idDasd3VYZP3cjKPaQlfcUY06pgOx5KrYWIgSRGqk6aXVaJBfFJI+wgBczMtbVKbBH7HKHt2FYTtV6frIsH2oK0Hjz3i2+mZjRyy3+SD0OOgV98SJFWa6vgQhzsQkhNXI8ZZ0D8R82Da0wo+Aaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=r3OIk9Ld; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQNKhPki"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-48540d21f7dso37558155e9.0
-        for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 14:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774734466; x=1775339266; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JTm/41VbTcqn2SmQHER5I6FBnBkh8yJq74TulTex1Vs=;
-        b=MQNKhPki057uq3pBfQgbmxKkXUkqk7Wtra899SReXHJn7kozsoRnOWazzHqz2TWZoA
-         7/0gfPbycoEaWWvbpHBO+OqTHQgi2vmc84X38IpHsDnlLarx1bgOauRWJio5rDjoGuYx
-         nuR1mQT4byzCcmbLbD8rBUdRMOYXb2PdWrpRshmBjIPDc7xkss2SmncXHxl22miAX4wD
-         auPyTi/8ePg/BWly47zdemb7X+bED5oSTtk3OUBbcziyS3VvD2HgrXGVHM+vJln0OxZL
-         /i8O9Efn9NKz49lU0qwFJd/wQIrawr/65YlfRapx5G2XpJlSTQM/IspdLXakU7PiWs6l
-         j4sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774734466; x=1775339266;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JTm/41VbTcqn2SmQHER5I6FBnBkh8yJq74TulTex1Vs=;
-        b=mRWP8L0xQSBmhYQxU3ue8627fJVTdKRgqVOTELRej8WFaKiRmgvO+J2esnrDtzjDWu
-         j09looOOQSwVWM1POhRLOgw2lUJpHVs4J3BUo3GmEWdgAiqYPkMZE/1HN4sOopOjuA5v
-         Pgm35mlAnGJbT7VNLVkLrecZlyNW5pOrFQ8vnmW2jotop30qdm7PwoSnu3divsru2VMY
-         D0pRymaahcKMFpCq98PWZOwHzgmZDz+KhVBuQdC7skvkzUIRLf1NI/ugB5DSwTQbGyyT
-         ivzvQG9FOv8k6v3Z4fDu5iIKzuu1qIpbE3k2Vp1xOWPIOWkK+ZmdHH1hygdOihAK+3yC
-         fJLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVK1G4Zded8h+bCoRoWO1XdHuTRfWuDnpRj6WhD5KpR9P8PYneiKY3WyVaJ3/79eMMXnBPFUrjYTAFTHwl5mes=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2SybiX4mqjvjPA8lVcVsm+C1oqnb8gDtr1yFHI5BIYO+u+wcU
-	Odey/KBGUuFmfDUjDznNkR/sg34wHipVI7CyfmLATQWcfkQnn4TM5vVGYOrmyZR6
-X-Gm-Gg: ATEYQzxm39rFD8ThHpSVG2yN+9yFUVvT4h9vp8hMzDLMMQ/YE4A7bL2bcdx0PQDs5oK
-	ITIP0nspEOCoDcM2aYLQ5cgQDeEQrSSA0BpRJ6flnIqTaCxJv9ErGnO0EuSGc3GoNkI6AGlhMSl
-	TbmGW4NofvP6hMbvriHmr7L8z2cdIEaypYI/EzfW7r7gj9ajw3YLs2VrPZPr5ka4hz8zvXAcEoJ
-	+aCh2JxvmWH+nBKEK//2vc1712uHhU/kJylnnUWcfj8WjnGyvE7H6I7JcybqUxtHGYOxHiiHmOq
-	3T+rKcQipoR8s1/V1hl4tkfG4P4i/t2aoIGNsgPnOHXn6YK8CSLZ9iPSlQhk3eF2oNDyyDRwXgA
-	wl1QUHLzpcz8bCTuaNx7XfC0nOFkoeIYrJ5k5flJk0jr+k/bLpiKAwD3/k3HWqLxZWjBmvnw1Ep
-	35cxxDjVhahCRTeUvtfzwUGU0eDTDADRS2YYCdysXNS4S30ObXwBzA4AHF/JA/0bPE
-X-Received: by 2002:a05:600c:4505:b0:483:6d42:25c6 with SMTP id 5b1f17b1804b1-48727f01296mr108891515e9.23.1774734465411;
-        Sat, 28 Mar 2026 14:47:45 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48722c9506dsm167386745e9.7.2026.03.28.14.47.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2026 14:47:45 -0700 (PDT)
-Date: Sat, 28 Mar 2026 21:47:43 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH next] string: Optimise strlen()
-Message-ID: <20260328214743.6f04bda2@pumpkin>
-In-Reply-To: <CAHk-=wiwRPqvYLsWn_dbFHs5hHry=5HW2OZF8pT_mBzpbJvW7Q@mail.gmail.com>
-References: <20260327195737.89537-1-david.laight.linux@gmail.com>
-	<CAHk-=wgADjjXEN_8ANbU_E94uxbQHW-3v5p0-pwLOtTvL+0Wrw@mail.gmail.com>
-	<20260327224928.7c4220cb@pumpkin>
-	<CAHk-=wgHK0tyYym=gkq4YRHMywbuETcn835=A7uSTSTPspzf1A@mail.gmail.com>
-	<20260328110814.0a59e12f@pumpkin>
-	<CAHk-=wiwRPqvYLsWn_dbFHs5hHry=5HW2OZF8pT_mBzpbJvW7Q@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="r3OIk9Ld"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qSKGCd7VWbHRigvx+F48Ja5jjh+fhWpoJ8zcbIAmliw=; b=r3OIk9LddPfhU9aX0rOSHlJo0s
+	e/oieOqkR5VWTN8/ziTimwAlGha/njcpBCBU8QPuKm+VldP91p2nNaCDwQBYn8vmBJMpkYbeatTfj
+	Fa20YjaHNHc3OdcyjoI1dMUQpy61yR9m1TRgWP8IKb0iPA36Zsi2u7BrDMSA1rjwbXiPQdJZIy2OS
+	Bi34ayB/qGSS3j4OoKNwR555t+I8OX0VUCvmPudA64u5LUGIlfiOC8ninAff7rfcyDs3LQ/2dEsPv
+	NkgpxWRB3c+QvRCjPi3mjoWQJSW/gZGvYSpPpAYJGkfN8TNbxXHnHqVa8e5dFJP/8csJYovFVcqvC
+	fFf+nv3Q==;
+Received: from [179.93.13.238] (helo=[192.168.1.54])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1w6bWI-007hxG-M2; Sat, 28 Mar 2026 22:48:38 +0100
+Message-ID: <0766e8e2-0781-d452-62cd-51c27a2f2c0d@igalia.com>
+Date: Sat, 28 Mar 2026 18:48:35 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] pstore/ftrace: Keep ftrace module parameter and debugfs
+ switch in sync
+Content-Language: en-US
+To: kees@kernel.org, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?=
+ <u.kleine-koenig@baylibre.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ tony.luck@intel.com, kernel-dev@igalia.com, kernel@gpiccoli.net
+References: <20260301192704.1263589-1-gpiccoli@igalia.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20260301192704.1263589-1-gpiccoli@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, 28 Mar 2026 12:16:52 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On 01/03/2026 16:26, Guilherme G. Piccoli wrote:
+> Commit a5d05b07961a ("pstore/ftrace: Allow immediate recording")
+> introduced a kernel parameter to enable early-boot collection for
+> ftrace frontend. But then, if we enable the debugfs later, the
+> parameter remains set as N. This is not a biggie, things work fine;
+> but at the same time, why not have both in sync if possible, right?
+> 
+> Cc: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-> On Sat, 28 Mar 2026 at 04:08, David Laight <david.laight.linux@gmail.com> wrote:
-> >
-> > On Fri, 27 Mar 2026 17:29:21 -0700
-> > Linus Torvalds <torvalds@linux-foundation.org> wrote:  
-> > > The trivial cases don't even matter, because all the cost of execve()
-> > > are elsewhere for those cases.
-> > >
-> > > But the cases where the strings *do* matter, they are many and long.  
-> >
-> > Is that the strncpy_from_user() path?  
-> 
-> No. For annoying reasons, execve() mainly uses "strnlen_user()"
-> followed by "copy_from_user()".
-> 
-> See fs/exec.v: copy_strings().
-> 
-> The reason is that it needs to know the size of the string before it
-> can start copying it, because the destination address will depend on
-> it.
-> 
-> And yes, it's racy, and yes, if y ou modify the arguments or the
-> environment while an exevbe() is going on, you get what you deserve
-> (but it's not a security issue, it's just a "resulting argv[] array is
-> odd", but you could have made it odd in the first place, so whatever).
-> 
-> It would be lovely to be able to od it in one go and not walk the
-> source string twice, but that's sadly not how the execve() interface
-> works (or somebody would need to come up with a clever trick).
-
-That sounds like a challenge :-)
-
-> 
-> The main user of strncpy_from_user() is the path copying: see the
-> 'getname' variations in fs/namei.c.
-> 
-> And sometimes pathnames are short, but we had a semi-recent discussion
-> about the distribution of pathname lengths due to some allocation
-> optimizations recently:
-> 
->     https://lore.kernel.org/all/CAGudoHEMjWCOLEp+TdKLjuguHEKn9+e+aZwfKyK_sYpTZY8HRg@mail.gmail.com/
-> 
-> so while short names are common, longer names aren't *uncommon*, and
-> and loads that use them tend to keep using them.
-> 
-> We ended up aiming for ~128 bytes for the initial allocation
-> (EMBEDDED_NAME_MAX is 168 in one common config) for that reason.
-> 
-> Don't get me wrong: there are certainly many other users of
-> strnlen_user() and strncpy_from_user(), but the ones I've seen in any
-> half-way normal loads are those two: execve() and pathname copying.
-> 
-> > I started looking at this because someone was trying to write the 'bit-masking'
-> > version for (possibly) RISC-V and I deciding that they weren't making a good
-> > job of it and that it probably wasn't worth while (since x86-64 just uses
-> > the byte code).  
-> 
-> Ok.
-> 
-> I do think that in user space, strlen() and friends can be absolutely
-> critical for some loads, because the C string model is horrible.
-> 
-> But in the kernel, I really don't think any of this matters. Our
-> strlen() is bad not because it's bad - it's bad because nobody really
-> should *care*.
-
-You've said that before - which is why I dissuaded the RISC-V people
-from writing a cache-destroying strlen().
-Actually strscpy() is also optimised for long strings - that is now
-being used all over the place (I think/hope most constant strings get
-converted to memcpy()), I suspect the typical length is 10 bytes!
-That probably wants de-optimising :-)
-
-The 'one size fits all' for the string functions doesn't help.
-If the source contained a constant 'hint' for a typical size then
-an appropriate algorithm could be picked. 
-
-> Some of our "rep scas" users have been kept around exactly because
-> absolutely nobody cares, and it's a cute remnant of a very naive young
-> Linus who was using them because he was trying to learn things about
-> his new i80386 CPU, and started a whole small hobby project as a
-> result...
-
-When you wrote those they weren't that bad at all.
-The 386 book has 'rep scas' as 5+8n (as does the 286 book) - much faster
-than the equivalent instructions.
-I am surprised they survived the P4.
-
-In 1990 I was writing driver code for multi-cpu sparc systems (not solaris)
-and worrying about TSO and the store buffer.
-(and seeing the cpu stall for 150 clocks while the mmu did a page table walk.)
-
-	David
+Hi folks, gentle ping about this trivial patch - any thoughts?
+Thanks in advance,
 
 
-> 
->                Linus
-
+Guilherme
