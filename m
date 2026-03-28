@@ -1,156 +1,134 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C573431E7
-	for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 19:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB2F2264A7;
+	Sat, 28 Mar 2026 21:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774725434; cv=none; b=F7aed43oXdX3rdFBr3qDqG/uuxS99va0TxkUtJ1dthpawH0zUxYsgAUvXZGQZ6b18hGCFrnZMED3acH1arhfUdxo1jgFx1flDgk9zdHN6UsOMvu8XunovFiG973gsjFFZTZ3rWhrbnyXLqK7QpKTA+NNu35zmzrBEtTth7fX7PI=
+	t=1774734465; cv=none; b=UpJlKWAVzCOGhXLIVSWnDeca3oaU26602rok+TV9ph7XzORXmgnGHJk/C0HfuxzWFJc9ePApKLU923C1uAZl3hJ+x7E58IdpXTSL65l/txciE3S5mNKyZ5j/YQq5ZiEGj3SMUT1bGhp4kSg1vfEgIfbonK4SsG7cxmAQWz3tmRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774725434; c=relaxed/simple;
-	bh=SwNri+m6r5Pc4DADGOBN1ypwIFXaYHog8hy+qDQAWHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YCaLYBVSe91apJUdQkPXK23tJEEEsFiNiSy/Zlb0lKu6K+vGKdrDYgwQcn7gFoRCRBXK4ndJ3T3u4cW0I37tKdSjv0xCPHSqcu+QXt2BrWiv1vUBBMzNrKNAf+pKmnYCX5HQEIs05SyW4qolrL0MfFenPO9ga2Yd5L1yUBML0LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DWRBXcaW; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1774734465; c=relaxed/simple;
+	bh=O+XIcTn2/dfvtEMvpJRdQ7ehCWE7UipeXD0TLdr109c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n7sOFZzWjiX9vOfLU7lxyFEfqLikdFbD44oCwMybkkLwPiBVk/Us+95P7Xkpl8IAPKPs63IfGh5GJJrB7w1x2KI/mUzNj1whOyTUpILTTXdiO17UHf8QnHwKMRw6pjtdzEleWd9LmMJ1NXMD2yvyq4VKzycXBGB1S5uCk6MYh5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=WbxECUUh; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DWRBXcaW"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b979d16dd0cso572417066b.1
-        for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 12:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1774725429; x=1775330229; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F+xcA9ciccWstUGPjkLGPmgeR3rFmlOhLADsIoRH1EE=;
-        b=DWRBXcaWork0RUdn5bMH1fLpYB1GzDXc1BH2ZSoZJK7wt7gWH3nhbs+Bw60WlIsGwW
-         9kKXZ3DKnVPpFGup1u+RXgXI4UmV95dLg6Ug3ckcxwcLIOfVe/rXDm9Yb2SyuPVsnk7m
-         Gp2Cao97hkR9dFp7t4eP1jKYwdxKdxobazLds=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774725429; x=1775330229;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F+xcA9ciccWstUGPjkLGPmgeR3rFmlOhLADsIoRH1EE=;
-        b=NipKnnu7cXPIGvCUGh1LTcA/6LzrXE5o6TEkiWf+n9WwquZEd5fKXSLRbj+xAaQJfB
-         MGKAkoCmJwqjZmZXWOK79O9qUDTNeWYwrXuPq1sgOiUFc4dK8LxXc3GkCHI5xHpgtBv9
-         FnMiBQLsi373LBSGkpTA19UQ9bWNYYiZM13AL2O4ytiq0MM6ZS3vnIbleV/4/NgS8mez
-         TFdl2wrYRzvkozWWgfaHCLsQMRXjIEerOqUUUP4MW4PsjJKooEXHHDatAy7LVphuQ8pl
-         oDa9X8hRFBL5MVZRagwZTcm2kFQGXSXrst4NtHPq+szq1B4KV3ZVOsSMza+F2v3qHOP7
-         w7XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVy28QsYFStwfkZg++KGov2s/th5prnHT0BTNDC5jTqPO8RqwkLb9NcGLNbUItnajug1ogdX+drpVCeO9eHw24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFQCEVmGVSsx6aZEl0lTnCn57i1hfllYGyxFgqqyuXs6nOhhnE
-	2WI2rF/mVjHbYek1W/ZbA4yGOxcUug51znsKMcdsAyjAvnT49qh96Uvr5gM9tv8ALQg9p/U/863
-	Nvzm6LVE=
-X-Gm-Gg: ATEYQzzBvIfvb+jRX1lAjBVM/v/cBgTB1/umIf4ogXw+s4GXzImybKz7R+qHKYk63Df
-	n38htR6Snk4yOcIfwaQ4mMja/zQ226D9bgxOzPOyJhL2n1YMxvgGqgJwNKcJagOL8R6bSLYeOHd
-	VX4eGpucpEE4ZKroWdSvGxazuF091wFEj5hDY4ckHOoxhDOQqdAxgOHZULX6b9uq431MFXYV69f
-	zctaAEcSpkK2OkcN54yGaKKRTEdVhKDh46vzdWgwvvXIkrJCmkxspmznTcBeaUG9Zmzvnm775/+
-	fs9QA7/m1B16FtwvQ/HHk/AvpcXTwMBXdzzwLpUlCF1SGvyhz+OXR0gUGWbD8+JbXTYk7gNQLRy
-	7cO/1XJkeXUTKu9HLfFgrH1267Yiytp4coGbfqRESc9l6b43i9vSfpq1gYV9QcPIz56suRixq5x
-	sBNhsjzRpdMzuNLy8r0FFYaxO1WDX3j8Bk7v64ItQOFa0fLonp4Qd95r/u3mp6MyESKK2bP94T
-X-Received: by 2002:a17:907:960b:b0:b98:3fdc:150e with SMTP id a640c23a62f3a-b9b5016b0dbmr464661466b.2.1774725428901;
-        Sat, 28 Mar 2026 12:17:08 -0700 (PDT)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9b7ae269ddsm104116866b.5.2026.03.28.12.17.08
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Mar 2026 12:17:08 -0700 (PDT)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-66b3d06e2bbso3271074a12.2
-        for <linux-hardening@vger.kernel.org>; Sat, 28 Mar 2026 12:17:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUleT1g1z6P1ZymHDGg/AFvGrX8HR8Vg8H2pmHH6ZSGQnmSMYqK1YE7/rpqGEBlB5hDZ+EIXngtHDspQT6GF2w=@vger.kernel.org
-X-Received: by 2002:a05:6402:4587:b0:66b:a96e:5eca with SMTP id
- 4fb4d7f45d1cf-66ba96e613bmr631314a12.14.1774725428093; Sat, 28 Mar 2026
- 12:17:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="WbxECUUh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=LJ0U52fV+r3cZTVwkIgP6Ll/KicnrvAlY4fpvmQpM90=; b=WbxECUUh5bYH4CgNLA+Zn2jjb+
+	+607iLQ8nt97hr+/GQXUkVlVmDtqcufe4pkNTlY6yZcj9XdFam6qLhM4Fw8pKqRqNBr7n/ESbUG1c
+	Y/RpWM+gXVIY5WOBioaA06VMuUvyvQYsk1D/eBbzLow0B6GJa5Heh2vcTt0+u/6eUbaKjJC0AlrgR
+	wQm4putuUGfFJEXsDdJUDkmCxDjaFCz4ipXC38DpC55+aen1fZJVYGRDkNj/9HtEaaj8PNtH7ls7r
+	yUV5I13qp85kT9LwARRl8TtwlpZTjHKrXaR+IpBuomHPQbyiUuU4yrU4AFzUwuJPwLdAMC7fxvjwY
+	CDkciuqw==;
+Received: from [179.93.13.238] (helo=[192.168.1.54])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1w6bVD-007hwI-52; Sat, 28 Mar 2026 22:47:31 +0100
+Message-ID: <deba7cb8-9cbe-0166-4c1a-843a3767b33e@igalia.com>
+Date: Sat, 28 Mar 2026 18:47:27 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260327195737.89537-1-david.laight.linux@gmail.com>
- <CAHk-=wgADjjXEN_8ANbU_E94uxbQHW-3v5p0-pwLOtTvL+0Wrw@mail.gmail.com>
- <20260327224928.7c4220cb@pumpkin> <CAHk-=wgHK0tyYym=gkq4YRHMywbuETcn835=A7uSTSTPspzf1A@mail.gmail.com>
- <20260328110814.0a59e12f@pumpkin>
-In-Reply-To: <20260328110814.0a59e12f@pumpkin>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 28 Mar 2026 12:16:52 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiwRPqvYLsWn_dbFHs5hHry=5HW2OZF8pT_mBzpbJvW7Q@mail.gmail.com>
-X-Gm-Features: AQROBzAMYfpWyjNrFJDdcZffOpwjA3KcTK3cThIpxyvl2QrUW8Ov2g-Km0K-SwQ
-Message-ID: <CAHk-=wiwRPqvYLsWn_dbFHs5hHry=5HW2OZF8pT_mBzpbJvW7Q@mail.gmail.com>
-Subject: Re: [PATCH next] string: Optimise strlen()
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] pstore/ftrace: Factor KASLR offset in the core kernel
+ instruction addresses
+Content-Language: en-US
+To: kees@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ tony.luck@intel.com, kernel-dev@igalia.com, kernel@gpiccoli.net,
+ Steven Rostedt <rostedt@goodmis.org>
+References: <20260313201010.1622406-3-gpiccoli@igalia.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20260313201010.1622406-3-gpiccoli@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, 28 Mar 2026 at 04:08, David Laight <david.laight.linux@gmail.com> wrote:
->
-> On Fri, 27 Mar 2026 17:29:21 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > The trivial cases don't even matter, because all the cost of execve()
-> > are elsewhere for those cases.
-> >
-> > But the cases where the strings *do* matter, they are many and long.
->
-> Is that the strncpy_from_user() path?
+On 13/03/2026 17:00, Guilherme G. Piccoli wrote:
+> The pstore ftrace frontend works by purely collecting the
+> instruction address, saving it on the persistent area through
+> the backend and when the log is read, on next boot for example,
+> the address is then resolved by using the regular printk symbol
+> lookup (%pS for example).
+> 
+> Problem: if we are running a relocatable kernel with KASLR enabled,
+> this is a recipe for failure in the symbol resolution on next boots,
+> since the addresses are offset'ed by the KASLR address. So, naturally
+> the way to go is factor the KASLR address out of instruction address
+> collection, and adding the fresh offset when resolving the symbol
+> on future boots.
+> 
+> Problem #2: modules also have varying addresses that float based
+> on module base address and potentially the module ordering in
+> memory, meaning factoring KASLR offset for them is useless.
+> So, let's hereby only take KASLR offset into account for core
+> kernel addresses, leaving module ones as is.
+> 
+> And we have yet a 3rd complexity: not necessarily the check range
+> for core kernel addresses holds true on future boots, since the
+> module base address will vary. With that, the choice was to mark
+> the addresses as being core vs module based on its MSB. And with
+> that...
+> 
+> ...we have the 4th challenge here: for some "simple" architectures,
+> the CPU number is saved bit-encoded on the instruction pointer, to
+> allow bigger timestamps - this is set through the PSTORE_CPU_IN_IP
+> define for such architectures. Hence, the approach here is to skip
+> such architectures (at least in a first moment).
+> 
+> TL;DR: let's factor KASLR offsets on pstore/ftrace for core kernel
+> addresses, leaving module addresses out and also leaving the
+> architectures that define PSTORE_CPU_IN_IP.
+> 
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> ---
+> 
+> 
+> Hi folks, first of all thanks in advance for reviews and comments!
+> 
+> I was testing a pstore/ftrace patch the other day and noticed
+> the lack of the KASLR support. But to my surprise, it was not
+> as easy to fix up as I expected heh
+> 
+> Main reason is the obvious thing with modules: the way to
+> go, I think, is to somehow save the module name (or some other
+> id?) and the instruction offset inside such module, to then
+> resolve that in next boot, when printing. But that would require
+> more intrusive changes in the way pstore/ftrace saves the IP
+> (which is quite simple now), leading to some potentially
+> meaningful perf overhead.
+> 
+> Hence, I've decided to just mess with core kernel addresses
+> so far, lemme know WDYT - should I somehow pursue fixing
+> modules addr resolution as well? Or doesn't worth the changes?
+> Any ideas on how to approach that? I noticed that currently,
+> modules' symbols are sometimes resolved fine, sometimes they're
+> bogus but point to the module at least (not some other random
+> code), but eventually they are just nonsense addresses.
+> 
+> Regarding the choice of using the MSB to store if an addr is core
+> kernel or module, well this was also a choice taking into account
+> simplicity and performance, lemme know please if it's no good and
+> any suggestions on how to better do it, I can easily re-implement!
+> Thanks again,
+> 
+> Guilherme
+> 
 
-No. For annoying reasons, execve() mainly uses "strnlen_user()"
-followed by "copy_from_user()".
+Hi Kees, gentle ping about this one - lemme know if you have suggestions
+or questions, and thanks in advance =)
 
-See fs/exec.v: copy_strings().
 
-The reason is that it needs to know the size of the string before it
-can start copying it, because the destination address will depend on
-it.
+Guilherme
 
-And yes, it's racy, and yes, if y ou modify the arguments or the
-environment while an exevbe() is going on, you get what you deserve
-(but it's not a security issue, it's just a "resulting argv[] array is
-odd", but you could have made it odd in the first place, so whatever).
-
-It would be lovely to be able to od it in one go and not walk the
-source string twice, but that's sadly not how the execve() interface
-works (or somebody would need to come up with a clever trick).
-
-The main user of strncpy_from_user() is the path copying: see the
-'getname' variations in fs/namei.c.
-
-And sometimes pathnames are short, but we had a semi-recent discussion
-about the distribution of pathname lengths due to some allocation
-optimizations recently:
-
-    https://lore.kernel.org/all/CAGudoHEMjWCOLEp+TdKLjuguHEKn9+e+aZwfKyK_sYpTZY8HRg@mail.gmail.com/
-
-so while short names are common, longer names aren't *uncommon*, and
-and loads that use them tend to keep using them.
-
-We ended up aiming for ~128 bytes for the initial allocation
-(EMBEDDED_NAME_MAX is 168 in one common config) for that reason.
-
-Don't get me wrong: there are certainly many other users of
-strnlen_user() and strncpy_from_user(), but the ones I've seen in any
-half-way normal loads are those two: execve() and pathname copying.
-
-> I started looking at this because someone was trying to write the 'bit-masking'
-> version for (possibly) RISC-V and I deciding that they weren't making a good
-> job of it and that it probably wasn't worth while (since x86-64 just uses
-> the byte code).
-
-Ok.
-
-I do think that in user space, strlen() and friends can be absolutely
-critical for some loads, because the C string model is horrible.
-
-But in the kernel, I really don't think any of this matters. Our
-strlen() is bad not because it's bad - it's bad because nobody really
-should *care*.
-
-Some of our "rep scas" users have been kept around exactly because
-absolutely nobody cares, and it's a cute remnant of a very naive young
-Linus who was using them because he was trying to learn things about
-his new i80386 CPU, and started a whole small hobby project as a
-result...
-
-               Linus
