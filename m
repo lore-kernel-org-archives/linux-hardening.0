@@ -1,144 +1,149 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B31A36492D
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 20:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774903790; cv=pass; b=ZLH45t3Ay9a5X5WTEHSV/jKEBvH33zEHBuTTsipTLrzLHoC9SsrMNG9K4rUIriS6b18ss6m1sEsMA5w6RGd+pYZpnXjkOZhmJOb5hXXbubt5hHiCDTpOVd6rHZmglcC9+tD/PnTo8k9gQrdTLWaAOe/Gg+VUGeDZxwtiQNMKTIY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774903790; c=relaxed/simple;
-	bh=7Uvyxu6dO2WjAV8JM3coYG64kde0G9aWlWGcKq+w6GE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=floQ2Bh+/18LSrSgoVaw85ITgNhKXZ2r0Tvs0MzpOi7WRRGzZW3bC3M1FbAzhxdaRbTf8eSo1Y2VrGpvvrERgigOpLRkFxVWhmhWhLiCfRaN8haUMxx5LlQXEUXapbjWCFqAnQTSWNj0xNugTtlpD5OfyYn8Fcy69PiHqweCDmA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JouUFRec; arc=pass smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9178392814
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 20:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774904124; cv=none; b=CIqeebGQWwLSFJNCT3EHE9HtKyY2ImxnwENNDapSSlxiTBrK2z7o9Wegaf/N3A/b7/JU5yJpgbQfGRj4SvwncZinX8AAM0ukxdvXvEZU2d20DTbNVGDN2p7KOQFB4UW3Qq0na3YabVd2FdIcV6kqqxASwG4A+Kt/K2f3+N2TwZA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774904124; c=relaxed/simple;
+	bh=8jn+fVkl/eNqRs3jl/U0wHO5LY3q+igW5+gBbA/y328=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T/6sER6JC8t7T0s51NWebq6k/0Msff4jvLnu7UfiRjwpi0ckZPnIOxSBB5Y6Af5SgzRXrpTanyjGwvI4/SD/uA8QEJ6rh0hyrHH3eSLRZs1iC/zxFHvAG25Kj715hQ97fAZyr5Kdd/RDTiRCoHxp3a1YTxnVYS/+f0HZW70u5xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DOHSCJ7b; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JouUFRec"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-66abe08cdf5so7464485a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 13:49:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774903787; cv=none;
-        d=google.com; s=arc-20240605;
-        b=P41WyesvQCLcissbRgaF0aTmrtkiBEWMnN/6HYlebde2+TVlr86X2iMd9844iR/Lnz
-         wwzoRsiYoze2l8iag/zKe8aSJ1TaFKT3Qce4wnAYoDPij+znToWKqAd0u5LE1o9UDaVj
-         7EOikQCbkKdUp4ese+BtKem42qyCsP5SESKzLIi9V1sANblRgoT91BP2Rz4HlWatiHPM
-         UmJdZyVWfRIAonAOpc4Mlw6xFjAqx/cs1yzxNMet8ospQJB6yIDuyqcvhpnQ9aQ2AOjt
-         Uk1HfMQhUaXDxtOVIt0pXOGkJS50J59FdSggmOGwRoshTz/ZxWUjCQYwUEksQ5YYQOwp
-         rfHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=nBsfzZvqDoaxsyYBwg93l2/XbXx8XSN89/j4CI7HfEk=;
-        fh=z47t3A0oJyEftpjkRk5bIk6Y59PNFAI6UBAwOWLWHhk=;
-        b=jNqZrgtmUr6bqVV1KVKagQsDbq8ZuURkp9M22mqQJx2A5B3KBiazC+H+yPLiLvJu45
-         /SAwA4P7PCtI0uzzg+6iuRwQMx5bIFVM1wCm2oxCuhGgPLVNAhcuoaPo8j0JcBLhbhv6
-         f83MpEVqYeR9kKhdUuZ9Tqdpt5P61tuV7peSVtNYl2mhbso3m7wE9fSAdWgQAxUnKIqC
-         UtR458v5YYEWBDdBKvFdyOtocyOIvPVw44Ux4HyaM4jOpri/OM9XtLkVbR8gWtiv2jAg
-         e3gVl1C9ZiMpnyaj+gwHUyUl2YnUVVmWG+hOqKm1ELIXxJlDByQk/URg4jXF6BOWseU4
-         G2Kg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOHSCJ7b"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ad617d5b80so34550155ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 13:55:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774903787; x=1775508587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nBsfzZvqDoaxsyYBwg93l2/XbXx8XSN89/j4CI7HfEk=;
-        b=JouUFRecBZ/MiYmWJHq7Nn2WOmXHyVB8k6GzVBjE95lQCWKZdGccEm9n03s3Rhmo90
-         aW6obfBZ0k6QM6UEfkSB7xGoHYt4cgNt+mdoTzvrgW6Glrvy0rHHYsXzIPcr6BXzpqR5
-         X7+zYCt4n7OarlJAvO1KaQ1u/ojn3QTiwYhv7WX9Jh+HT68ZawR4YyFhpT4qbMef6Ntx
-         U4mUIP+2Sdp0/R2J9AclNHL25jMB+6JvdEwOTvJCnCE5DHChRiHWosVTCA8ZfubsrMsd
-         0LHcblDMD7q6wWjYhWLMuZ+L665KGfQWPijr4gaUU5Z5BQOrytpPTmB8q7PJmf/sEunl
-         utQg==
+        d=gmail.com; s=20251104; t=1774904122; x=1775508922; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QuBN5LC4CCoVTyDBa2ABz4OuVl7GEpGiv+ePoy4pqeE=;
+        b=DOHSCJ7bKnGPv1wBbYqAqQQr3KiN/lbWv76G9RN2AEWu/smmyMmulL+CY0CZzROGTD
+         TTC2snE7LQPffsypvRQ2rUvO4UHtl8XyBTtsPdNUVjz187lLSsIB69wugQrEnuVyZyk0
+         hcPqpVWJFllabuD5iFC5AIbwSsaFB+zV2rZgvzGpIrPfYLzn1Skvlq/18CprU5Rym/lz
+         qJSUZgSMTe3VwyxqTVRxTuuFZ4rS9FgQ/RWrEBHcQUb2Bu5Og+wseKIpttPCfaQJSCcF
+         5jNhxi+1L7H5mlM98f32t1lYdJrxQrFp3w/9wCitppDZRv763ilkdLmfL/fp24Pq8cbH
+         +zhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774903787; x=1775508587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=nBsfzZvqDoaxsyYBwg93l2/XbXx8XSN89/j4CI7HfEk=;
-        b=jaqe27iQi+tZ24TEBrZ1fiFq/C3PJgIZPE9efmRkBBB8w5tkYtymFuk/CPRjqHgD3b
-         MQnXVNz3c/39doN/IhuAl+K3Pb8Eb9UE66HdMsoJWICAUi+FegQmdnZFnnyj5NQKA6/E
-         190bUUef5PuVbtDZXHztq2n6Q6rXFh4MbWPrjf9Y7bLbGDBHUiS/xYwawOmY61povkCG
-         2klAv8LGH2dfz1HKIMqnTlbBzYXfXNmFhhrlSXG7hRB9iPWvIk48PEq/PxRCc91AX+Mx
-         c9242c4Q5y3Xqt37OcQZOiQhkVVDL+90gGxkpWNPhP+BV/zDkBdkDJylrzDoyJ8h+Iz6
-         IphQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIGsGwG1ESOYHFK/ClT2wKA4YVJWFNJruv74eo3PSumAHI+i9wn98MVh6UUoevI/4mb5eEyAJ3u0EhIa09EfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQzQjQt5F3N2ZEnwuDgb9epWImE/RdgDUOOQ6MJkSD9nvmOumu
-	GG9BOiR8HTn+uwdB2fZvAWHNONz62KCuooo9/CG0DIBiS4nJkP87VZZc03XgFlbLW8hXG9AqshL
-	oZUfoAsBV5SMsJz6FNTLCVkFdUkbXkA1d6w==
-X-Gm-Gg: ATEYQzy0bKlc9RC1Y/kPYlWsd9YRvSyQ0qLJP/i0xByRK0q/UAq+CW15xebuLDu9d4k
-	eMVHzjEaNr2kFZmmAOE1jhDlsXtdxA5CRnl6ON9AfBsssWRBiXOK7a1OriTseGkLea2Xi8wL55p
-	a/we3QvAGS8Z3HQDTpOcTsl1Pj76ge0pjKfBuweF9bdmHt5ZY4UTuudZIVsGhExY/wisoC8J1g1
-	4Ohe8ZaGOO2Xucq9pJfwHcl/2hLoIKuBHOB0dssKiMnS7d2Z2rkh3xAfxgGUHzFLwX2tvE4fMSv
-	NB2kuJ/hMAKekZZxGa3Sc3UQWArZFbAp6r+uCrJEGhU8kQCPeI/66dmmC76ysABhpeT7TSYeaRO
-	AMqRXgA==
-X-Received: by 2002:aa7:d9d4:0:b0:66b:3dec:e8d5 with SMTP id
- 4fb4d7f45d1cf-66b3decf4dcmr5222339a12.2.1774903787350; Mon, 30 Mar 2026
- 13:49:47 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774904122; x=1775508922;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QuBN5LC4CCoVTyDBa2ABz4OuVl7GEpGiv+ePoy4pqeE=;
+        b=Bua7NAiHc23s1MNEJGm7WgrnJ5QhKBkcz3oWVYPkIYZx9xbqYPgvKHXgqoGlsbMQRq
+         hIJtzVH+gIO4junJov848r72CKEfXuGXCeUjmKGCffgwaPkX0wFDoxaVHPY2pUG428Ef
+         wEtmmhNfFDpWBlYO1KFOhmqtsmf8riqQiYSfIxkx6sOmjRKw97F8+ydvcSB7pGExpcQI
+         /gdANgJqfumRw/h1sUAylxiGHvzYo1aLJbnfmddRa48ZJ8TDwjy195i6IOVOewLgvFxH
+         SPb8xeMWMGFHzrKWZN6qUqrpb4jwDWZkZ9utj0q3SE2L1r3ReBpBdf1WCsVZ6W17ydRX
+         CQ/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWeFnzp1MeyLJJ92S9+RGgWiO/gWCd4ziLTULEzt5BUuyPG6C+HwOGyyedOzu9OoRFb2Kq4yqY7ciTLbK0bufQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEl6+vcw53HocpIEJdUNVvuCySjYBSAWJpaZfX5sjnakjxjOnT
+	B+yN2dEhGlmi4WWXAlqCdtUGFkvSm9Las09lSrY4sVFQbXEyuNU3uZDl
+X-Gm-Gg: ATEYQzyNX3lUcUEcSJ/NSTGEAcIKutgzPiX+8OA2N3qW8jy9IOM8O3RR1yundKIQb5v
+	AOzhRExLx13/2u2yyxTjjXHHnYbJhrj+b6KLwAYtr+QvRoUBDVyq0iQLjvhMOHmWHhj73lIQr97
+	+k+RbD9J6pY/Fd+lkfZSSnwhedHo3kz0kZkbNkzq9jfVj2G7OaeMJFP72yJnjG1p3ouvsWsBGQC
+	36MLVvsTFww1wNpDTAgVDAFLx20y21Asq9j0HNNH0TPfGrO/A3NhP13Owvm+Icx30TN3XXL7fi8
+	sSGpLS/SZnOY/J1gsDtbqUUDm2Jvhegq7jQeS5wbvS76TMMSElu2T6tuFcvYOCcF0X3SAJM1chP
+	F5C/FQWh1tEGNGbrJbu7jUPHW1bGJYcd9IZ6uUEOraPepjfZdz6aLGvJs775NhTJvuYTyW31smZ
+	VLHkv8RWgGeAQmsnTgcqn0wL9UpxFrz8ztCHaujvQd/mrtlkL4xfiJk0M=
+X-Received: by 2002:a17:902:ea05:b0:2b0:5dcb:84cb with SMTP id d9443c01a7336-2b0cdc240c6mr134127465ad.2.1774904122159;
+        Mon, 30 Mar 2026 13:55:22 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b242642887sm104673825ad.1.2026.03.30.13.55.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2026 13:55:21 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-clk@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,...),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCHv2] clk: kirkwood: use kzalloc_flex
+Date: Mon, 30 Mar 2026 13:55:04 -0700
+Message-ID: <20260330205504.10143-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260327024828.7377-1-rosenp@gmail.com> <20260330151536.GDacqTmBlWRznyeoMG@fat_crate.local>
-In-Reply-To: <20260330151536.GDacqTmBlWRznyeoMG@fat_crate.local>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Mon, 30 Mar 2026 13:49:36 -0700
-X-Gm-Features: AQROBzAQRLuVcHgB3Qxt8IE08Jitj0rOszTyGILx96JimU4Uuu7Tkat2ssdZToU
-Message-ID: <CAKxU2N8HqFRT+qb5ctCVckC6c=viR7u+xyUaHgm-87C5=yo1ig@mail.gmail.com>
-Subject: Re: [PATCHv3] EDAC/mc: Use kzalloc_flex()
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 30, 2026 at 8:15=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrot=
-e:
->
-> On Thu, Mar 26, 2026 at 07:48:28PM -0700, Rosen Penev wrote:
-> > Convert struct mem_ctl_info to use flex array and use the new flex
-> > array helpers to simplify initialization.
->
-> Meh, simplify... rather to teach an old dog like me new tricks... :)
->
-> > Add __counted_by for extra runtime analysis when requested.
-> >
-> > Move counting assignment immediately after allocation as required by
-> > __counted_by.
->
-> So far so good.
->
-> > Move memcpy to make it clear that this should have been kmemdup_array.
->
-> But you lost me here. What do you mean with the "should have been
-> kmemdup_array"?
-kzalloc_flex =3D=3D kzalloc + kcalloc.
-kmemdup =3D=3D kzalloc + memcpy.
-kmemdup_array =3D=3D kcalloc + memcpy.
+Simplify allocation by using a flexible array member and kzalloc_flex to
+combine allocations.
 
-So all together,
-kzalloc + kcalloc + memcpy.
+Add __counted_by for extra runtime analysis. Move counting variable
+assignment to right after allocation as required by __counted_by.
 
-Or
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v2: remove unused goto.
+ drivers/clk/mvebu/kirkwood.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-kzalloc_flex + memcpy.
+diff --git a/drivers/clk/mvebu/kirkwood.c b/drivers/clk/mvebu/kirkwood.c
+index ed061d82fb65..f4f62b241193 100644
+--- a/drivers/clk/mvebu/kirkwood.c
++++ b/drivers/clk/mvebu/kirkwood.c
+@@ -253,8 +253,8 @@ struct clk_muxing_soc_desc {
 
-Placing the memcpy right after counting variable assignment enables
-coccinelle to transform this whole thing into a single
+ struct clk_muxing_ctrl {
+ 	spinlock_t *lock;
+-	struct clk **muxes;
+ 	int num_muxes;
++	struct clk *muxes[] __counted_by(num_muxes);
+ };
 
-kmemdup_flex
+ static const char *powersave_parents[] = {
+@@ -297,21 +297,18 @@ static void __init kirkwood_clk_muxing_setup(struct device_node *np,
+ 	if (WARN_ON(!base))
+ 		return;
 
-call if such a thing were to eventually be introduced.
->
-> Thx.
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+-	ctrl = kzalloc_obj(*ctrl);
+-	if (WARN_ON(!ctrl))
+-		goto ctrl_out;
+-
+-	/* lock must already be initialized */
+-	ctrl->lock = &ctrl_gating_lock;
+-
+ 	/* Count, allocate, and register clock muxes */
+ 	for (n = 0; desc[n].name;)
+ 		n++;
+
++	ctrl = kzalloc_flex(*ctrl, muxes, n);
++	if (WARN_ON(!ctrl))
++		goto ctrl_out;
++
+ 	ctrl->num_muxes = n;
+-	ctrl->muxes = kzalloc_objs(struct clk *, ctrl->num_muxes);
+-	if (WARN_ON(!ctrl->muxes))
+-		goto muxes_out;
++
++	/* lock must already be initialized */
++	ctrl->lock = &ctrl_gating_lock;
+
+ 	for (n = 0; n < ctrl->num_muxes; n++) {
+ 		ctrl->muxes[n] = clk_register_mux(NULL, desc[n].name,
+@@ -324,8 +321,6 @@ static void __init kirkwood_clk_muxing_setup(struct device_node *np,
+ 	of_clk_add_provider(np, clk_muxing_get_src, ctrl);
+
+ 	return;
+-muxes_out:
+-	kfree(ctrl);
+ ctrl_out:
+ 	iounmap(base);
+ }
+--
+2.53.0
+
