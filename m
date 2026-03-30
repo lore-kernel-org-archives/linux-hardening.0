@@ -1,74 +1,72 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB45636EAA7
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 21:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4458C3A1A5B
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 21:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774905376; cv=none; b=aKqjJcQpWIae1/m/rrcl5wbcLpm7sNvL9oHG4g8xlJGCH/e0vboIi3YMAGvi64IVjAE/fW9Na4iGUkjlGi/Ch84qwUzat7+DEllGhJv2rfuGA2Rm0F1waiqerUi0XFYLPTrfcVPr629QfPTb4IgKxhHji69/Gr047jdTp/PhMYw=
+	t=1774905544; cv=none; b=Ztu4deDAm4b4jftGKS8YKEMDlkCzozEQYx8NBdi3bgMT77slZfvjzaCppWZdS6PA1jPHl96XAm/6uIM4JIUSFDb8HFUiw+Vu9FoNV61j+ChbMoxdfXori6JpdNkUltwt5np/M/DI2Sup2PTBCUlEuO7ye7K3g9cqbfOWUZeGCdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774905376; c=relaxed/simple;
-	bh=0r/vyHKpOF0SAyTRzVOWBuBNrSAHVSAnFjY+aUU7feE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JDFXqJzOgFkG8p19ZvCLF9UrCnSxjPtiKmAD2QJiC94qt7/LiFb1Fuh+fl/6jt6laB72CWWwKfaNs6aOMyEaWmSx7AN0V7k7FYDxn1jYgl/17gkVnu/QK6jdHaTAbQkLEqT1tVmNFDdEDT6jWX+LD7li+atZGGco8Px1ICIUNX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qVqPXLA3; arc=none smtp.client-ip=209.85.210.177
+	s=arc-20240116; t=1774905544; c=relaxed/simple;
+	bh=PhRTmmrveIbs1YS6D0M0TYAfJEj9eHYwILWhDTlfj4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c6l3zhmwIgs1WSx9Qo296kk09gzbjxTDlmXYZqLhxiSr/wBtYsNbueudCvRKx20oEVkPH9WZhhhjgxTu2EjZ+yFGRnE+H/TvG0jsXXdx7aPTblCmks7jQj02n7URV9FAOpp/eLmfJavEqNB2z3FrZPc/YcEnZezLfZm28y+wRCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LuNn7ri2; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qVqPXLA3"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-82985f42664so2775073b3a.0
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 14:16:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuNn7ri2"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-82cd70febc7so207954b3a.2
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 14:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774905373; x=1775510173; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774905542; x=1775510342; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UW7odxZPYSWuCgnGtpRjdMtnRpvYwb8B9YLZ+r/hXWM=;
-        b=qVqPXLA3yxBBmZ0hI8z3W/QxuMqN8LeHfE6Crf9oHi9Xn3ahHHV2UMvQy0VavnNX0P
-         MqTJcYh/LXNPRGnfaj59nmw1eWa1GpIEgb6IVsB8bsswTU+3Rm/qgTYiOqj+WyTPf+AG
-         b5D78XlPUh2mM9WMbB9pk8PqKmIuZ7/istJsU5413Z1atVULQIAmhL8xJfbStEH+kjlo
-         Ba0RciEVCngd/rdrf/CKAS6AhExjqnQ/grncE9NfllHarOZJdhVSCoayUzv7mA7sLtt5
-         tHGbLnn/4NgDIe3Y5yq+0qgKi2TaeOlmHdUGGkvjOXDsO/ZXxjNoL3wogmfkhK3GEbUM
-         1hyA==
+        bh=CTj819lvZos1BeuAanfcJHdbt5aBcVuD9J9vyYH7J9A=;
+        b=LuNn7ri2cZ5kw23wWq2irMVUbHPKCqQSaykFpE+tc3zxDhkrIuluAlNHMxUFR82UhP
+         9iot3Q6RZUmv++msGupsnQUgvvbgWxpeymWEkb8OWKFQT0S/IcmaHXZzGhLU88zpeOp/
+         CvgI40zL+c5iKZEV3iShuBlqliluDhgZXItwyMvMSx3yKazt4dXtKG17gH9VXK2qNXBh
+         HFRX7gweGBDSe6W/Abp6C0vYHv++qO8+IIhV2TUP/OghvlD5nKjDtNcC/LAOpGfSB111
+         HW2xPr/2SFpKoppefg2sCtsTVyiVFzAUEqOJqtoenxc8KrJ46Vtg9Jokv4hKeqy2FyPp
+         XB5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774905373; x=1775510173;
+        d=1e100.net; s=20251104; t=1774905542; x=1775510342;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UW7odxZPYSWuCgnGtpRjdMtnRpvYwb8B9YLZ+r/hXWM=;
-        b=g6O+48236Usx6ce18uyT4UVY5z2ft3UW0E65gx8BVR4KxPwPNQHF3ZxlCY9lQkOq/F
-         8VuOrHMmE7iTbwMCmEFo0Pyc/Jdq+lph7n9Eo0U4HIKFcYf4Ao/A5s8MgPUeyrkXDY+t
-         jziRze3tfTSKwvKR84ufXULxGouhIaU1iTZsXnFcePhNFbjCXhzR9IGxb59zx8S2RVNd
-         1yvfD82UW53z3ph5NfUQcAzeXAQqmkmbOkH3j3QL9zLh9B53nlW22Z2l8whfY8ZCChg6
-         9GG6TTLSco9rgr1DjIAXQV96oCwQzgRMNPw9EquJbRCyoYuB1FH08PyGHDAlkIHblJ2P
-         3WcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4ugR65La/Hmlxq7CfD3Rrxx54inzGaKZzm7NiHSSZCSiP3X8JVvxlcV1mt07bUvQlBaCqgS4/Yw1NQ9vbUpc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLaGzYiumBo+7eFfQcehptYP03IbsDFWdjOSLmD383m8w2xVk6
-	519ACP29Mswqvp6gtSD/eQd18Vsc7S5UkbD75o/bCB4NWnvdLRhs3Dx9
-X-Gm-Gg: ATEYQzy1hWvmHCtZH5U0hxfeoxsgHANOKUNV6pKXnWtePNNT4d3mWN4Z54Uv+mXhLW8
-	K8ADyFndaDFDrlQuoNs9v4c/TiBEtEQZjqb1Oga1UJa8bWEPr0skYkkFEnr7f7sHe/RLbmY/D14
-	4wxZeT+IIUQMYoBmNr4tofNt8etVC2lik4wXRhaDh8rFKYzIwncf0dIt3NTrOG78m+ZtETvBuB8
-	N5lmRCcNyA1LMNO81kNs70EqixuwOPL+6Lb+7kFMnGbC/wU0JUgEWivEkduKfElgrc7gR4W1pPn
-	UTdNdUcUBusb7W2wRMpvNOmdOecsSs42r2OqaopgWfg0FRqkFUfZ8GAsQUPz9XsiC2i4J4oYjh1
-	VwDREHAZT24PkdldNhB3rbqviYihIx0x8zgmMS35sr07XE5L6zaUf1ucX/2PyIHVerhPYqmdhot
-	gTVuKelKLRPAc9kR8NhIpmxZV/bjb9TLgj1PWJD45hjyMPcfaws/TO3Qw=
-X-Received: by 2002:a05:6a00:4146:b0:82c:9126:31f1 with SMTP id d2e1a72fcca58-82c95c2188bmr14066508b3a.14.1774905373173;
-        Mon, 30 Mar 2026 14:16:13 -0700 (PDT)
+        bh=CTj819lvZos1BeuAanfcJHdbt5aBcVuD9J9vyYH7J9A=;
+        b=fa9/dBYqVh6jJ/ha8MKecez/mh+Sh4O6NdPUhOk7E4eim/xHnojH4tCikgZrWDgA/x
+         JKEAz9mcwRA74bZEKti0RZSrFPCxIhTahizYWh4GqrrgYHpAZQOYXEY+XdiMMpCGPIv2
+         u/Qsu21q+GNiQjyMKZDhBEtParoq6Az8mLKtRxbivO/kENlWy0/S4YeDq6q0BU+RE5sJ
+         nVZHW5lArJaMYYUnwd6N4rq54VcDwQV8jEvsCfL61bpg85dMuPLhAWpuxwZOXkWQqdRy
+         PU/lzHcxA2+aoMMIHKbLFb0z6/mrVSpp2zinB3HpOAIMMDy51up31Dd2x9qtALJvzbsh
+         N90w==
+X-Forwarded-Encrypted: i=1; AJvYcCXClcish3Isxv/+mI3JdzX/EpwytO24Sq95zaJQSdK6ZiIxMED6Wy6zs5C5AUoF9K+O7nbnMtdx7q9p/lgjM6k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5oxaGvCy5Stgvb0pOKfBtzGcI0Z9TB0BUfR6BCmtLt6B+3LxM
+	H2Nd6PPNz0em9+hOA38kLMiZRVPwVOpWToaFjHZLYpIpEhojQJrmgeYC
+X-Gm-Gg: ATEYQzwUaZGSaI5aKJC3G2pZGA7hY7OGcbyVaUWSCp0lXF3QEXjl0UpULOe5FASWneN
+	tCtbnL+aQeDRUbVn8rhyYLHV83AjLHwKpR0l7jiLuLLs4ugNQJKnzfPpfOV834TN/8ilwXGV7nw
+	7qQYXAcvl6N+OZ5WsVo/P6ODzdZxkueaOwyXBYYrsY5ehM+5Qc/veW3HHb8IK2XjWfuJlKqJyIP
+	DwLQiRGD4HmeggdZckL5P+3PPAk2hdI9XBdSAT0WGqXdwPuS6ytYgIdzBjnAa8PlDEu6TRvS/T9
+	Pf5HryRYu1RXKIu3fA/iW3zqu+Hx5k9CCSRA8y8QZqNHkPYnUzH3eyMSfNb9M6eltBj/Ddm8Tgw
+	CwDxycGpRHLrJ6CDkT/3W7SPCHZQtG3J7PY+4cSdB1w3hTRtLPZO3dVNTYkJ01UklszK8e7AZ1e
+	l1fLfn60B5oxiz1xbiuhr+PcW87YYPkCtkLCIXdr/4qVW83++zJ4QdrirD92rNOZ4r+A==
+X-Received: by 2002:a05:6a00:430c:b0:82a:1044:3563 with SMTP id d2e1a72fcca58-82c95d32c02mr12534654b3a.23.1774905542485;
+        Mon, 30 Mar 2026 14:19:02 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82ca8466d89sm8661610b3a.22.2026.03.30.14.16.11
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82ca85fc756sm7575756b3a.47.2026.03.30.14.19.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2026 14:16:12 -0700 (PDT)
+        Mon, 30 Mar 2026 14:19:01 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Patrice Chotard <patrice.chotard@foss.st.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
+To: linux-leds@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/STI ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] dmaengine: st_fdma: simplify allocation
-Date: Mon, 30 Mar 2026 14:15:55 -0700
-Message-ID: <20260330211555.13974-1-rosenp@gmail.com>
+Subject: [PATCH] leds: qcom-lpg: allocate channels with main struct
+Date: Mon, 30 Mar 2026 14:18:44 -0700
+Message-ID: <20260330211844.14796-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -78,95 +76,175 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member to combine kzalloc and kcalloc to a single
-allocation.
+Use a flexible array member to combine kzalloc and kcalloc. This
+required moving the struct lpg_channel definition up as flexible array
+members require a full definition.
 
-Add __counted_by for extra runtime analysis. Assign counting variable
-after allocation as required by __counted_by.
+Add __counted_by for extra runtime analysis.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/dma/st_fdma.c | 27 ++++++++-------------------
- drivers/dma/st_fdma.h |  4 ++--
- 2 files changed, 10 insertions(+), 21 deletions(-)
+ drivers/leds/rgb/leds-qcom-lpg.c | 117 +++++++++++++++----------------
+ 1 file changed, 56 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
-index d9547017f3bd..3ec0d6731b8d 100644
---- a/drivers/dma/st_fdma.c
-+++ b/drivers/dma/st_fdma.c
-@@ -710,16 +710,6 @@ static const struct of_device_id st_fdma_match[] = {
- };
- MODULE_DEVICE_TABLE(of, st_fdma_match);
+diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+index f6061c47f863..83cedf4a0cbf 100644
+--- a/drivers/leds/rgb/leds-qcom-lpg.c
++++ b/drivers/leds/rgb/leds-qcom-lpg.c
+@@ -80,58 +80,8 @@
+ #define SDAM_PAUSE_HI_MULTIPLIER_OFFSET	0x8
+ #define SDAM_PAUSE_LO_MULTIPLIER_OFFSET	0x9
  
--static int st_fdma_parse_dt(struct platform_device *pdev,
--			const struct st_fdma_driverdata *drvdata,
--			struct st_fdma_dev *fdev)
--{
--	snprintf(fdev->fw_name, FW_NAME_SIZE, "fdma_%s_%d.elf",
--		drvdata->name, drvdata->id);
+-struct lpg_channel;
+ struct lpg_data;
+ 
+-/**
+- * struct lpg - LPG device context
+- * @dev:	pointer to LPG device
+- * @map:	regmap for register access
+- * @lock:	used to synchronize LED and pwm callback requests
+- * @pwm:	PWM-chip object, if operating in PWM mode
+- * @data:	reference to version specific data
+- * @lut_base:	base address of the LUT block (optional)
+- * @lut_size:	number of entries in the LUT block
+- * @lut_bitmap:	allocation bitmap for LUT entries
+- * @pbs_dev:	PBS device
+- * @lpg_chan_sdam:	LPG SDAM peripheral device
+- * @lut_sdam:	LUT SDAM peripheral device
+- * @pbs_en_bitmap:	bitmap for tracking PBS triggers
+- * @triled_base: base address of the TRILED block (optional)
+- * @triled_src:	power-source for the TRILED
+- * @triled_has_atc_ctl:	true if there is TRI_LED_ATC_CTL register
+- * @triled_has_src_sel:	true if there is TRI_LED_SRC_SEL register
+- * @channels:	list of PWM channels
+- * @num_channels: number of @channels
+- */
+-struct lpg {
+-	struct device *dev;
+-	struct regmap *map;
 -
--	return of_property_read_u32(pdev->dev.of_node, "dma-channels",
--				    &fdev->nr_channels);
--}
- #define FDMA_DMA_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
- 				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
- 				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
-@@ -742,27 +732,26 @@ static int st_fdma_probe(struct platform_device *pdev)
- 	struct st_fdma_dev *fdev;
- 	struct device_node *np = pdev->dev.of_node;
- 	const struct st_fdma_driverdata *drvdata;
-+	u32 nr_channels;
- 	int ret, i;
+-	struct mutex lock;
+-
+-	struct pwm_chip *pwm;
+-
+-	const struct lpg_data *data;
+-
+-	u32 lut_base;
+-	u32 lut_size;
+-	unsigned long *lut_bitmap;
+-
+-	struct pbs_dev *pbs_dev;
+-	struct nvmem_device *lpg_chan_sdam;
+-	struct nvmem_device *lut_sdam;
+-	unsigned long pbs_en_bitmap;
+-
+-	u32 triled_base;
+-	u32 triled_src;
+-	bool triled_has_atc_ctl;
+-	bool triled_has_src_sel;
+-
+-	struct lpg_channel *channels;
+-	unsigned int num_channels;
+-};
+-
+ /**
+  * struct lpg_channel - per channel data
+  * @lpg:	reference to parent lpg
+@@ -216,6 +166,55 @@ struct lpg_led {
+ 	struct lpg_channel *channels[] __counted_by(num_channels);
+ };
  
- 	drvdata = device_get_match_data(&pdev->dev);
++/**
++ * struct lpg - LPG device context
++ * @dev:	pointer to LPG device
++ * @map:	regmap for register access
++ * @lock:	used to synchronize LED and pwm callback requests
++ * @pwm:	PWM-chip object, if operating in PWM mode
++ * @data:	reference to version specific data
++ * @lut_base:	base address of the LUT block (optional)
++ * @lut_size:	number of entries in the LUT block
++ * @lut_bitmap:	allocation bitmap for LUT entries
++ * @pbs_dev:	PBS device
++ * @lpg_chan_sdam:	LPG SDAM peripheral device
++ * @lut_sdam:	LUT SDAM peripheral device
++ * @pbs_en_bitmap:	bitmap for tracking PBS triggers
++ * @triled_base: base address of the TRILED block (optional)
++ * @triled_src:	power-source for the TRILED
++ * @triled_has_atc_ctl:	true if there is TRI_LED_ATC_CTL register
++ * @triled_has_src_sel:	true if there is TRI_LED_SRC_SEL register
++ * @channels:	list of PWM channels
++ * @num_channels: number of @channels
++ */
++struct lpg {
++	struct device *dev;
++	struct regmap *map;
++
++	struct mutex lock;
++
++	struct pwm_chip *pwm;
++
++	const struct lpg_data *data;
++
++	u32 lut_base;
++	u32 lut_size;
++	unsigned long *lut_bitmap;
++
++	struct pbs_dev *pbs_dev;
++	struct nvmem_device *lpg_chan_sdam;
++	struct nvmem_device *lut_sdam;
++	unsigned long pbs_en_bitmap;
++
++	u32 triled_base;
++	u32 triled_src;
++	bool triled_has_atc_ctl;
++	bool triled_has_src_sel;
++
++	unsigned int num_channels;
++	struct lpg_channel channels[] __counted_by(num_channels);
++};
++
+ /**
+  * struct lpg_channel_data - per channel initialization data
+  * @sdam_offset:	Channel offset in LPG SDAM
+@@ -1475,12 +1474,6 @@ static int lpg_init_channels(struct lpg *lpg)
+ 	struct lpg_channel *chan;
+ 	int i;
  
--	fdev = devm_kzalloc(&pdev->dev, sizeof(*fdev), GFP_KERNEL);
--	if (!fdev)
+-	lpg->num_channels = data->num_channels;
+-	lpg->channels = devm_kcalloc(lpg->dev, data->num_channels,
+-				     sizeof(struct lpg_channel), GFP_KERNEL);
+-	if (!lpg->channels)
 -		return -ENOMEM;
 -
--	ret = st_fdma_parse_dt(pdev, drvdata, fdev);
-+	ret = of_property_read_u32(pdev->dev.of_node, "dma-channels", &nr_channels);
- 	if (ret) {
- 		dev_err(&pdev->dev, "unable to find platform data\n");
--		goto err;
-+		return ret;
- 	}
+ 	for (i = 0; i < data->num_channels; i++) {
+ 		chan = &lpg->channels[i];
  
--	fdev->chans = devm_kcalloc(&pdev->dev, fdev->nr_channels,
--				   sizeof(struct st_fdma_chan), GFP_KERNEL);
--	if (!fdev->chans)
-+	fdev = devm_kzalloc(&pdev->dev, struct_size(fdev, chans, nr_channels), GFP_KERNEL);
-+	if (!fdev)
+@@ -1603,18 +1596,20 @@ static int lpg_init_sdam(struct lpg *lpg)
+ 
+ static int lpg_probe(struct platform_device *pdev)
+ {
++	const struct lpg_data *data;
+ 	struct lpg *lpg;
+ 	int ret;
+ 	int i;
+ 
+-	lpg = devm_kzalloc(&pdev->dev, sizeof(*lpg), GFP_KERNEL);
++	data = of_device_get_match_data(&pdev->dev);
++	if (!data)
++		return -EINVAL;
++
++	lpg = devm_kzalloc(&pdev->dev, struct_size(lpg, channels, data->num_channels), GFP_KERNEL);
+ 	if (!lpg)
  		return -ENOMEM;
  
-+	fdev->nr_channels = nr_channels;
- 	fdev->dev = &pdev->dev;
- 	fdev->drvdata = drvdata;
-+	snprintf(fdev->fw_name, FW_NAME_SIZE, "fdma_%s_%d.elf", drvdata->name, drvdata->id);
-+
- 	platform_set_drvdata(pdev, fdev);
- 
- 	fdev->irq = platform_get_irq(pdev, 0);
-diff --git a/drivers/dma/st_fdma.h b/drivers/dma/st_fdma.h
-index f1e746f7bc7d..27ded555879f 100644
---- a/drivers/dma/st_fdma.h
-+++ b/drivers/dma/st_fdma.h
-@@ -136,13 +136,13 @@ struct st_fdma_dev {
- 
- 	int irq;
- 
--	struct st_fdma_chan *chans;
+-	lpg->data = of_device_get_match_data(&pdev->dev);
+-	if (!lpg->data)
+-		return -EINVAL;
 -
- 	spinlock_t dreq_lock;
- 	unsigned long dreq_mask;
++	lpg->num_channels = data->num_channels;
+ 	lpg->dev = &pdev->dev;
+ 	mutex_init(&lpg->lock);
  
- 	u32 nr_channels;
- 	char fw_name[FW_NAME_SIZE];
-+
-+	struct st_fdma_chan chans[] __counted_by(nr_channels);
- };
- 
- /* Peripheral Registers*/
 -- 
 2.53.0
 
