@@ -1,164 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7B33E9F96;
-	Mon, 30 Mar 2026 22:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9573E3EC2F8;
+	Mon, 30 Mar 2026 22:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774910365; cv=none; b=dgxntStS5+7kuey6BLkjmgpBYN2aUQnr1xj2e/9PJIRuag/VdLy+nz9TeVAlpdaJBkn0d3HkRG3TCm/gpktTisfYJWpK8jghu1ogO8UtEompAfY/iFTCURhYEmHqCBvE4f91GLrSAVPdSedZ13Z64WsvQUtVvQr6httAzZjv15Q=
+	t=1774910552; cv=none; b=k6w8CmG9rgpnm8c9GupQFHSOph/yGfWI+Ejpl4tJ8RnYkZu7ke4VPqjC6p2K/EmcHXL8Wl2OqvoS9+dZF878+K7+6TZxC45afN/npQ/zrh+ETk8bDA2veG3zsoGAk14GHdph4JnEOeByviitdT3tYp1qyLQi2iaGLEqJPFK1bno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774910365; c=relaxed/simple;
-	bh=TwsrmNJ7QssX1MDhmOKLBLHVuRzzNYSq93LE55QsCVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gvqnkI64DkpFZEoj8lXF+X1EpdZL2RUJ+eQI+7smwvaiOCXaCO37uhCXNzdtDP9cBAxJ2XsSAsHSvuz1w/LYCEI5S9w39nv1gYkM5A5a3QRdQzzjc3rxyWPqr7tWbyJjXsgFNtGn7Ll/Te4n36tq+6c/8epZYXP47h4HvKJSPyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwdqFiTo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774910552; c=relaxed/simple;
+	bh=V9lVea5HpUKO/Cr6B805fKYQpU4Kqye/hhllmjbj1lE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KGYcpZL/3xOXJ5AqdLxuVETrRBMnEOjNW5IKVUHn20BA1PJfS1T3RAOKzxQPBs/n1h9dh6dxzR6dHxpU2UFZldLrYNxPBLtzMAm98lpeVHHs+JfMxL7nkYeapobMg0A+4kEsaU3rgSDhn8CzqueANxi/D6t8302b08VFicagRYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7y3ltqp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwdqFiTo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AC12C4CEF7;
-	Mon, 30 Mar 2026 22:39:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7y3ltqp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28AD3C2BCB1;
+	Mon, 30 Mar 2026 22:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774910364;
-	bh=TwsrmNJ7QssX1MDhmOKLBLHVuRzzNYSq93LE55QsCVc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GwdqFiTogc7F2gsU+gMrS6MyLFsi0Z2jZ+MtjuE3l52DlAaQgpBkftxgsoTTB9jSa
-	 PPzBO537tnppzqKFwmisVIe/ZjYklkkMTal7xkBy3EP3M1J+NPyxkNckpJFWYdtUzF
-	 rKToAB2AE11OqXOD3Ib3N47fuaPAVaw6hEvblflyrK7htesktJCcZqB2xcIKjs2nlP
-	 9HMTg1tHgfTUH1wSgz3urU6s4DEMpNwntLn7lMN7W+Pja2VG7Y2DXAKeDpuu7TeAUT
-	 x0Nvum+zUm3klepemH1UTsEDY0CHkQcl11AyBa0EtWN9QRO4f9jhRThx3YJbDXKBGh
-	 VK6Kr2w/eJ65Q==
-Date: Mon, 30 Mar 2026 16:38:18 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: [PATCH v2][next] bpf: Avoid thousands of
- -Wflex-array-members-not-at-end warnings
-Message-ID: <acr7Whmn0br3xeBP@kspp>
+	s=k20201202; t=1774910552;
+	bh=V9lVea5HpUKO/Cr6B805fKYQpU4Kqye/hhllmjbj1lE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Q7y3ltqphwEflxX3mJBV7UZNJfL1BggiZwzu2LH7ZYc/vOU0Qn+C6DWIhu727lzIg
+	 Oge8UjVSPDkOG25mwgcEMV6vJTlCXK/9ekT85xopNThFb5rnn8QC8HAfncA/ssiCjS
+	 IcsIx0CTY4sQZapVYKk7wIRgMidY6uTV3vjFwz2yYfCkXGzomEGy2JpQyaVQQ8GtJq
+	 /mATvRar+TmM/bQicDv2BVCjiDddPgKCTyD5Hlz5dSOHnGfWZ2yC0/Acpl2ZFDn/Fn
+	 3u7/TD3sFyVHh3twynzHy94aWQrQRLRbS+AWrXEXzGkln4v+mRLA/9rNBZdur9bWVT
+	 Qll05DBruZIsA==
+From: Mark Brown <broonie@kernel.org>
+To: linux-sound@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ sound-open-firmware@alsa-project.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20260326023053.53493-1-rosenp@gmail.com>
+References: <20260326023053.53493-1-rosenp@gmail.com>
+Subject: Re: [PATCH] ASoC: SOF: topology: use kzalloc_flex
+Message-Id: <177489791033.241608.2454580256127378749.b4-ty@b4>
+Date: Mon, 30 Mar 2026 20:11:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev-3ac6c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1091; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=V9lVea5HpUKO/Cr6B805fKYQpU4Kqye/hhllmjbj1lE=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBpyvxUxujB0/aH2zlP7Cx3mRJsLIkdw20wII804
+ 7vgjMa0l0yJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCacr8VAAKCRAk1otyXVSH
+ 0AjrB/sF2whXH2Cl+PVEh5oOykLJIoKy3ESJ+nmNhvaSocTUEVdfA+3IWpTWzIislBxXL06tLU0
+ qcIijZf2fC+ceNVMTT1InzV91nv+FMWXECtOCEy1nG/mHFqxTetPUdMf+uEGSbaxiIsHZoxNUS+
+ DDGXJze74C/ViBbpipG0Z0J/C+0dkMH9xOM3T6D4939IuML+EWWugtvfpUza2zmgBkFNaUi1iy7
+ baCIkNU0mbIp8rgp6guw4lU/Q6AqCpYUQG0Sw6Y5ID/SC+Td4OLhhCaBl2F1zumxOc3a6wG9JJE
+ wEQfAWdH8M+WLUMD1CDzpwVUmjdxEUnRqmxlrewoVKNLyfXb
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Apparently, struct bpf_empty_prog_array exists entirely to populate a
-single element of "items" in a global variable. "null_prog" is only
-used during the initializer.
+On Wed, 25 Mar 2026 19:30:53 -0700, Rosen Penev wrote:
+> ASoC: SOF: topology: use kzalloc_flex
 
-None of this is needed; globals will be correctly sized with an array
-initializer of a flexible-array member.
+Applied to
 
-So, remove struct bpf_empty_prog_array and adjust the rest of the code,
-accordingly. 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.1
 
-With these changes, fix the following warnings:
+Thanks!
 
-7659 ./include/linux/bpf.h:2369:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+[1/1] ASoC: SOF: topology: use kzalloc_flex
+      https://git.kernel.org/broonie/sound/c/d3d75c767680
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Remove struct bpf_empty_prog_array. (Kees)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-v1:
- -Link: https://lore.kernel.org/linux-hardening/aaZr2A1UPJq33127@kspp/
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
- include/linux/bpf-cgroup.h |  2 +-
- include/linux/bpf.h        |  7 +------
- kernel/bpf/core.c          | 12 +++++++-----
- 3 files changed, 9 insertions(+), 12 deletions(-)
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
-index 2f535331f926..b2e79c2b41d5 100644
---- a/include/linux/bpf-cgroup.h
-+++ b/include/linux/bpf-cgroup.h
-@@ -184,7 +184,7 @@ static inline bool cgroup_bpf_sock_enabled(struct sock *sk,
- 	struct bpf_prog_array *array;
- 
- 	array = rcu_access_pointer(cgrp->bpf.effective[type]);
--	return array != &bpf_empty_prog_array.hdr;
-+	return array != &bpf_empty_prog_array;
- }
- 
- /* Wrappers for __cgroup_bpf_run_filter_skb() guarded by cgroup_bpf_enabled. */
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 05b34a6355b0..4f5b9e85a20c 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -2365,18 +2365,13 @@ struct bpf_prog_array {
- 	struct bpf_prog_array_item items[];
- };
- 
--struct bpf_empty_prog_array {
--	struct bpf_prog_array hdr;
--	struct bpf_prog *null_prog;
--};
--
- /* to avoid allocating empty bpf_prog_array for cgroups that
-  * don't have bpf program attached use one global 'bpf_empty_prog_array'
-  * It will not be modified the caller of bpf_prog_array_alloc()
-  * (since caller requested prog_cnt == 0)
-  * that pointer should be 'freed' by bpf_prog_array_free()
-  */
--extern struct bpf_empty_prog_array bpf_empty_prog_array;
-+extern struct bpf_prog_array bpf_empty_prog_array;
- 
- struct bpf_prog_array *bpf_prog_array_alloc(u32 prog_cnt, gfp_t flags);
- void bpf_prog_array_free(struct bpf_prog_array *progs);
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 67eb12b637a5..ca39d2e690b9 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2613,8 +2613,10 @@ static struct bpf_prog_dummy {
- 	},
- };
- 
--struct bpf_empty_prog_array bpf_empty_prog_array = {
--	.null_prog = NULL,
-+struct bpf_prog_array bpf_empty_prog_array = {
-+	.items = {
-+		{ .prog = NULL },
-+	},
- };
- EXPORT_SYMBOL(bpf_empty_prog_array);
- 
-@@ -2625,14 +2627,14 @@ struct bpf_prog_array *bpf_prog_array_alloc(u32 prog_cnt, gfp_t flags)
- 	if (prog_cnt)
- 		p = kzalloc_flex(*p, items, prog_cnt + 1, flags);
- 	else
--		p = &bpf_empty_prog_array.hdr;
-+		p = &bpf_empty_prog_array;
- 
- 	return p;
- }
- 
- void bpf_prog_array_free(struct bpf_prog_array *progs)
- {
--	if (!progs || progs == &bpf_empty_prog_array.hdr)
-+	if (!progs || progs == &bpf_empty_prog_array)
- 		return;
- 	kfree_rcu(progs, rcu);
- }
-@@ -2653,7 +2655,7 @@ static void __bpf_prog_array_free_sleepable_cb(struct rcu_head *rcu)
- 
- void bpf_prog_array_free_sleepable(struct bpf_prog_array *progs)
- {
--	if (!progs || progs == &bpf_empty_prog_array.hdr)
-+	if (!progs || progs == &bpf_empty_prog_array)
- 		return;
- 	call_rcu_tasks_trace(&progs->rcu, __bpf_prog_array_free_sleepable_cb);
- }
--- 
-2.43.0
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
