@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1C4331A5E;
-	Mon, 30 Mar 2026 23:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C114739A06B;
+	Mon, 30 Mar 2026 23:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774914623; cv=none; b=lM3vXJTKNhoJZoD92ZFGHpXvbsuoGYJoIDPVkpc2O2IQAb5QZyYtIQvKM1f5RgbesqUgvAzZAmndNMm9JpnS1TKeDh1xAX1iIOAAXk1sI2Muv88NMfYhcbXlQZ3m/J/RH5MxRBhHseehoXSoOVkTNdNLgkX7ifbangg0OEpsQRc=
+	t=1774914868; cv=none; b=j4UdHVZRzlTzNaLdDFX1hB6jN1Ri2Xcsost0zLSakNNaWWTO1c32vuDzui5NpCf2d1Qo7dcaxqPRyuTLPZqJBXCpTx7oQqF0zUzzlLURKTNWRUhy1VYfIvwzHsTM8XpjZ1bbk2VA4xONm6YZ3M7IR7TO8Gu/fFS6g2d22cdj+Cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774914623; c=relaxed/simple;
-	bh=S8TvrXXYbTGdUmf8zAYnrXIAtiQEMKVDFz9XcPyEtlo=;
+	s=arc-20240116; t=1774914868; c=relaxed/simple;
+	bh=jAbF37JHJZ7yAvWaljHIVlybXwa+rgOL2qaxswOkMM8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=acDk2RlJR8W7O2AOUxlgf++93O2kvKElGdgTRa5iCMDaM6HnREBFiIQ0lnSJiG1i1oIT4l+L+YbS6lXARCYJspWT3RDt8OpA0urqgCZrHz/6MyqtCPrKJu2aQJvFrFDb87LjeyLrDZW6HHAsRMxKbezfOfTFXQJZ6o11UXqdjdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwemHsxF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mr7TdB4YtAtwQ9bAFHSsZSK0wlzZ15qrUaJMkcpsBkdHcUjHmIfABMHVgoxWD9sBlHUWF5Sa+CMlMXjCrv2C9HFYlR6vKurIpdDyet5unsv+/lwHoEVKl5I7VT62gTR0c8a3LvtqSUW53UfkvmIwMGLRpz40xTk4Qp5Qct7RkqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujjQSRN8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwemHsxF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9CA3C19423;
-	Mon, 30 Mar 2026 23:50:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujjQSRN8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695CFC2BCB1;
+	Mon, 30 Mar 2026 23:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774914622;
-	bh=S8TvrXXYbTGdUmf8zAYnrXIAtiQEMKVDFz9XcPyEtlo=;
+	s=k20201202; t=1774914868;
+	bh=jAbF37JHJZ7yAvWaljHIVlybXwa+rgOL2qaxswOkMM8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gwemHsxFpu99wMUqJdaf4jby/tkKZwLpQEghjbfbbuqeaTURLIb7ciN1vpYKZ2GG4
-	 jx8Uho1mGDLTpnPWU4Tmjta1wGidYm2g1w7DE0DglYZUTDF2J0IYDIQ4oW2EMTfB3u
-	 teXm2nM0dqbH+5N+2GM+8pQtPS1dtb8DkI9Z2BEG+w3NF3GW/KHB+WuzIPg8vNjf/k
-	 pIbEpPz9xD56KUzzClYPgyL9QqhcQQQ1/aykMKlV0Br7M5b4QTjwOKLDnOYOvo7YUc
-	 hKm/0S0OKeAmYKuhzaAdZ+iEbsoCHW+fvvB93g8LPqjKqaXqAdSQuWQvu4V+wh35t7
-	 K2kLjJ1gj6pRw==
-Date: Mon, 30 Mar 2026 16:50:22 -0700
+	b=ujjQSRN8crbDIi1p2qdvgrkQqfeDszBibPTiaZXX2yjuHMPS4u6EXQ6J1VgFCCMpW
+	 TmMs+0my0RqVU5XHSqIVH3K0fh3vGodLFUKrjWLrmHn8/OJsQNw5dtRhg061RSTRph
+	 63iz75xO3h/DMH/6jKlqSZviaC8N+B7hXfogE53zBkiJb8L9eAwwnDuIwWOU1aq3IL
+	 Z6yvbGtNYp7T7NayRY/cnQcNmvrVCK6t5OTqAlbSkfoBc5X4hp4t76bFYCzsKoKSgp
+	 g+FM2qi++8RbqjwDUyN0Xvd2Ysai3d1vg1XMJSBD4C2OoWFk7SJhesE9pWwNKjsKJf
+	 WifwzQD8FFPVw==
+Date: Mon, 30 Mar 2026 16:54:27 -0700
 From: Kees Cook <kees@kernel.org>
 To: david.laight.linux@gmail.com
 Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next 1/3] fortify: replace __compiletime_lessthan() with
- statically_true()
-Message-ID: <202603301649.A136F870E@keescook>
+Subject: Re: [PATCH next 2/3] fortify: Optimise strnlen()
+Message-ID: <202603301650.E7C1536632@keescook>
 References: <20260330132003.3379-1-david.laight.linux@gmail.com>
- <20260330132003.3379-2-david.laight.linux@gmail.com>
+ <20260330132003.3379-3-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,175 +42,147 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260330132003.3379-2-david.laight.linux@gmail.com>
+In-Reply-To: <20260330132003.3379-3-david.laight.linux@gmail.com>
 
-On Mon, Mar 30, 2026 at 02:20:01PM +0100, david.laight.linux@gmail.com wrote:
+On Mon, Mar 30, 2026 at 02:20:02PM +0100, david.laight.linux@gmail.com wrote:
 > From: David Laight <david.laight.linux@gmail.com>
 > 
-> __compiletime_lessthan(a, b) is exactly the same as statically_true(a < b)
-> Replace the former by the latter.
+> If the string is constant there is no need to call __real_strlen()
+> even when maxlen is a variable - just return the smaller value.
 > 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> If the size of the string variable is unknown fortify_panic() can't be
+> called, change the condition so that the compiler can optimise it away.
+> 
+> Change __compiletime_strlen(p) to return a 'non-constant' value
+> for non-constant strings (the same as __builtin_strlen()).
+> Simplify since it is only necessary to check that the size is constant
+> and that the last character is '\0'.
+> Explain why it is different from __builtin_strlen().
+> Update the kunit tests to match.
 
-This one is a clear win: I didn't know about statically_true(). This
-results in identical code.
+This will need very very careful checking. It took a lot of tweaking to
+get __compiletime_strlen() to behave correctly across all supported
+versions of GCC and Clang. It has some very ugly glitches possible. I'm
+not saying your replacement is broken: I mean to say I'm going to need
+to spend a bunch of time proving to myself that this is a safe
+replacement.
 
-I'll pick this one up.
+Outside of that, though, I don't think dropping the various SIZE_MAX
+tests is correct. Again, I'll need to spend some time double-checking.
 
 -Kees
 
+> 
+> Signed-off-by: David Laight <david.laight.linux@gmail.com>
 > ---
->  include/linux/fortify-string.h | 47 +++++++++++++++-------------------
->  1 file changed, 21 insertions(+), 26 deletions(-)
+>  include/linux/fortify-string.h | 44 +++++++++++++++++-----------------
+>  lib/tests/fortify_kunit.c      |  8 +++----
+>  2 files changed, 26 insertions(+), 26 deletions(-)
 > 
 > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-> index 171982e53c9a..214d237214d5 100644
+> index 214d237214d5..758afd7c5f8a 100644
 > --- a/include/linux/fortify-string.h
 > +++ b/include/linux/fortify-string.h
-> @@ -154,11 +154,6 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
->  #define POS0			__pass_object_size(0)
->  #endif
+> @@ -58,19 +58,22 @@ void __read_overflow2_field(size_t avail, size_t wanted) __compiletime_warning("
+>  void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
+>  void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("detected write beyond size of field (1st parameter); maybe use struct_group()?");
 >  
-> -#define __compiletime_lessthan(bounds, length)	(	\
-> -	__builtin_constant_p((bounds) < (length)) &&	\
-> -	(bounds) < (length)				\
-> -)
-> -
->  /**
->   * strncpy - Copy a string to memory with non-guaranteed NUL padding
->   *
-> @@ -196,7 +191,7 @@ char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
->  {
->  	const size_t p_size = __member_size(p);
+> -#define __compiletime_strlen(p)					\
+> -({								\
+> -	char *__p = (char *)(p);				\
+> -	size_t __ret = SIZE_MAX;				\
+> -	const size_t __p_size = __member_size(p);		\
+> -	if (__p_size != SIZE_MAX &&				\
+> -	    __builtin_constant_p(*__p)) {			\
+> -		size_t __p_len = __p_size - 1;			\
+> -		if (__builtin_constant_p(__p[__p_len]) &&	\
+> -		    __p[__p_len] == '\0')			\
+> -			__ret = __builtin_strlen(__p);		\
+> -	}							\
+> -	__ret;							\
+> +/*
+> + * __builtin_strlen() generates a compile-time error for 'const char foo[4] = "abcd";'.
+> + * But that is a valid source for both strnlen() and strscpy() with a constant
+> + * length less than or equal to 4.
+> + * __compiletime_strlen() returns a non-constant for such items.
+> + * Beware of strings with embedded '\0', __builtin_strlen() can be much smaller
+> + * than __member_size();
+> + * The return value must only be used when it is a constant.
+> + */
+> +extern size_t __fortify_undefined;
+> +#define __compiletime_strlen(p)							\
+> +({										\
+> +	char *__p = (char *)(p);						\
+> +	const size_t __p_size = __member_size(p);				\
+> +	__p_size == SIZE_MAX || !statically_true(__p[__p_size - 1] == '\0') ?	\
+> +		__fortify_undefined : __builtin_strlen(__p);			\
+>  })
 >  
-> -	if (__compiletime_lessthan(p_size, size))
-> +	if (statically_true(p_size < size))
->  		__write_overflow();
->  	if (p_size < size)
->  		fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE, p_size, size, p);
-> @@ -287,14 +282,14 @@ __FORTIFY_INLINE ssize_t sized_strscpy(char * const POS p, const char * const PO
->  	 * If size can be known at compile time and is greater than
->  	 * p_size, generate a compile time write overflow error.
->  	 */
-> -	if (__compiletime_lessthan(p_size, size))
-> +	if (statically_true(p_size < size))
->  		__write_overflow();
+>  #if defined(__SANITIZE_ADDRESS__)
+> @@ -215,16 +218,13 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
+>  	const size_t p_len = __compiletime_strlen(p);
+>  	size_t ret;
 >  
->  	/* Short-circuit for compile-time known-safe lengths. */
-> -	if (__compiletime_lessthan(p_size, SIZE_MAX)) {
-> +	if (statically_true(p_size < SIZE_MAX)) {
+> -	/* We can take compile-time actions when maxlen is const. */
+> -	if (__builtin_constant_p(maxlen) && p_len != SIZE_MAX) {
+> -		/* If p is const, we can use its compile-time-known len. */
+> -		if (maxlen >= p_size)
+> -			return p_len;
+> -	}
+> +	/* If p is const, we can use its compile-time-known len. */
+> +	if (__builtin_constant_p(p_len))
+> +		return p_len < maxlen ? p_len : maxlen;
+>  
+>  	/* Do not check characters beyond the end of p. */
+> -	ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+> -	if (p_size <= ret && maxlen != ret)
+> +	ret = __real_strnlen(p, p_size < maxlen ? p_size : maxlen);
+> +	if (ret == p_size && p_size < maxlen)
+>  		fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ, p_size, ret + 1, ret);
+>  	return ret;
+>  }
+> @@ -289,7 +289,7 @@ __FORTIFY_INLINE ssize_t sized_strscpy(char * const POS p, const char * const PO
+>  	if (statically_true(p_size < SIZE_MAX)) {
 >  		len = __compiletime_strlen(q);
 >  
-> -		if (len < SIZE_MAX && __compiletime_lessthan(len, size)) {
-> +		if (len < SIZE_MAX && statically_true(len < size)) {
+> -		if (len < SIZE_MAX && statically_true(len < size)) {
+> +		if (statically_true(len < size)) {
 >  			__underlying_memcpy(p, q, len + 1);
 >  			return len;
 >  		}
-> @@ -469,12 +464,12 @@ __FORTIFY_INLINE bool fortify_memset_chk(__kernel_size_t size,
->  		 */
+> diff --git a/lib/tests/fortify_kunit.c b/lib/tests/fortify_kunit.c
+> index fc9c76f026d6..9b3b7201c02d 100644
+> --- a/lib/tests/fortify_kunit.c
+> +++ b/lib/tests/fortify_kunit.c
+> @@ -102,11 +102,11 @@ static void fortify_test_known_sizes(struct kunit *test)
+>  	KUNIT_EXPECT_EQ(test, __compiletime_strlen(unchanging_12), 12);
 >  
->  		/* Error when size is larger than enclosing struct. */
-> -		if (__compiletime_lessthan(p_size_field, p_size) &&
-> -		    __compiletime_lessthan(p_size, size))
-> +		if (statically_true(p_size_field < p_size) &&
-> +		    statically_true(p_size < size))
->  			__write_overflow();
+>  	KUNIT_EXPECT_FALSE(test, __is_constexpr(__builtin_strlen(array_unknown)));
+> -	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_unknown), SIZE_MAX);
+> +	KUNIT_EXPECT_FALSE(test, __is_constexpr(__compiletime_strlen(array_unknown)));
 >  
->  		/* Warn when write size is larger than dest field. */
-> -		if (__compiletime_lessthan(p_size_field, size))
-> +		if (statically_true(p_size_field < size))
->  			__write_overflow_field(p_size_field, size);
+>  	/* Externally defined and dynamically sized string pointer: */
+>  	KUNIT_EXPECT_FALSE(test, __is_constexpr(__builtin_strlen(test->name)));
+> -	KUNIT_EXPECT_EQ(test, __compiletime_strlen(test->name), SIZE_MAX);
+> +	KUNIT_EXPECT_FALSE(test, __is_constexpr(__compiletime_strlen(test->name)));
+>  }
+>  
+>  /* This is volatile so the optimizer can't perform DCE below. */
+> @@ -128,12 +128,12 @@ static noinline size_t want_minus_one(int pick)
+>  		str = "1";
+>  		break;
 >  	}
->  	/*
-> @@ -557,15 +552,15 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
->  		 */
+> -	return __compiletime_strlen(str);
+> +	return __builtin_constant_p(__compiletime_strlen(str));
+>  }
 >  
->  		/* Error when size is larger than enclosing struct. */
-> -		if (__compiletime_lessthan(p_size_field, p_size) &&
-> -		    __compiletime_lessthan(p_size, size))
-> +		if (statically_true(p_size_field < p_size) &&
-> +		    statically_true(p_size < size))
->  			__write_overflow();
-> -		if (__compiletime_lessthan(q_size_field, q_size) &&
-> -		    __compiletime_lessthan(q_size, size))
-> +		if (statically_true(q_size_field < q_size) &&
-> +		    statically_true(q_size < size))
->  			__read_overflow2();
->  
->  		/* Warn when write size argument larger than dest field. */
-> -		if (__compiletime_lessthan(p_size_field, size))
-> +		if (statically_true(p_size_field < size))
->  			__write_overflow_field(p_size_field, size);
->  		/*
->  		 * Warn for source field over-read when building with W=1
-> @@ -573,8 +568,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
->  		 * the same time.
->  		 */
->  		if ((IS_ENABLED(KBUILD_EXTRA_WARN1) ||
-> -		     __compiletime_lessthan(p_size_field, size)) &&
-> -		    __compiletime_lessthan(q_size_field, size))
-> +		     statically_true(p_size_field < size)) &&
-> +		    statically_true(q_size_field < size))
->  			__read_overflow2_field(q_size_field, size);
->  	}
->  	/*
-> @@ -699,7 +694,7 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
+>  static void fortify_test_control_flow_split(struct kunit *test)
 >  {
->  	const size_t p_size = __struct_size(p);
+> -	KUNIT_EXPECT_EQ(test, want_minus_one(pick), SIZE_MAX);
+> +	KUNIT_EXPECT_FALSE(test, want_minus_one(pick));
+>  }
 >  
-> -	if (__compiletime_lessthan(p_size, size))
-> +	if (statically_true(p_size < size))
->  		__read_overflow();
->  	if (p_size < size)
->  		fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ, p_size, size, NULL);
-> @@ -713,9 +708,9 @@ int memcmp(const void * const POS0 p, const void * const POS0 q, __kernel_size_t
->  	const size_t q_size = __struct_size(q);
->  
->  	if (__builtin_constant_p(size)) {
-> -		if (__compiletime_lessthan(p_size, size))
-> +		if (statically_true(p_size < size))
->  			__read_overflow();
-> -		if (__compiletime_lessthan(q_size, size))
-> +		if (statically_true(q_size < size))
->  			__read_overflow2();
->  	}
->  	if (p_size < size)
-> @@ -730,7 +725,7 @@ void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
->  {
->  	const size_t p_size = __struct_size(p);
->  
-> -	if (__compiletime_lessthan(p_size, size))
-> +	if (statically_true(p_size < size))
->  		__read_overflow();
->  	if (p_size < size)
->  		fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ, p_size, size, NULL);
-> @@ -742,7 +737,7 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
->  {
->  	const size_t p_size = __struct_size(p);
->  
-> -	if (__compiletime_lessthan(p_size, size))
-> +	if (statically_true(p_size < size))
->  		__read_overflow();
->  	if (p_size < size)
->  		fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ, p_size, size, NULL);
-> @@ -755,7 +750,7 @@ __FORTIFY_INLINE void *kmemdup_noprof(const void * const POS0 p, size_t size, gf
->  {
->  	const size_t p_size = __struct_size(p);
->  
-> -	if (__compiletime_lessthan(p_size, size))
-> +	if (statically_true(p_size < size))
->  		__read_overflow();
->  	if (p_size < size)
->  		fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ, p_size, size,
-> @@ -793,7 +788,7 @@ char *strcpy(char * const POS p, const char * const POS q)
->  		return __underlying_strcpy(p, q);
->  	size = strlen(q) + 1;
->  	/* Compile-time check for const size overflow. */
-> -	if (__compiletime_lessthan(p_size, size))
-> +	if (statically_true(p_size < size))
->  		__write_overflow();
->  	/* Run-time check for dynamic size overflow. */
->  	if (p_size < size)
+>  #define KUNIT_EXPECT_BOS(test, p, expected, name)			\
 > -- 
 > 2.39.5
 > 
