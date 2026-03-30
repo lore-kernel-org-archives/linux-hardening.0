@@ -1,191 +1,63 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013030.outbound.protection.outlook.com [40.107.159.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657A219644B;
-	Mon, 30 Mar 2026 16:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774888745; cv=fail; b=OGq4yI8HXqy6jVM9ptx4JLLU8N2VIvRMQXfRncZUDbtq53J1dUGJKlPWlJpN5c4so1u0BpVKp9c4BChl08mAq2+SPCx50SVhfzt8/LBttnCLEbcFzKAM0Xhwl3SgtmZgjMfygdbBMzneNyPFIsyX9owS6GO46ASQY8btOkcsEsM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774888745; c=relaxed/simple;
-	bh=2DFm9h90KeOB6p1F7LPJbesEt4TbPFZvXKW5RxRxjDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QPky56yvgkXWyURja3zopamm1JTVd21lqk3M5360sswN0VuZbxW5SULflebLTQ5SWDsQ+498/Vg1HX+rmOxc/u9DTdibfutJQHpMh4A9O+TP4jJ9cREsYc7+LmRTnv9jliGkTxs/eTi9QHfsRQBq/xqltTRDtvN2EQn8t++OMJQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=NEX+sU45; arc=fail smtp.client-ip=40.107.159.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739CC40DFC1;
+	Mon, 30 Mar 2026 17:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774891122; cv=none; b=anf6V0CF0Hsco6BdfiNfM3mbAyKZjsK4nPsWUPWtamuguLx7NQt9uUqIhVSTdYbQZxRzYhBGgP78OGZ+8yizcRw6gi2bPrttmiPLmcE/zga7TZi5Q80BYcDE0dOg2Vm+52P5QPLusbi4eiCiTKmFRGkqXBUQmMeV5YWNa4fGQ8A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774891122; c=relaxed/simple;
+	bh=ndQto9udr35L7Pv25t6GhkNkta5ASsee84f+b99axKQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=GBqbc3gyy/858A6WPMi9wMohchcMMHcq+32meMn0nB3VwOuRaY3fVRQW2QAVDjWyjHSt0e1w/rbW/a5WrD8LxCGhFy8El7HMOIEDQLVTHYtj9sLma4z373os1ONL87jH2WRQfdsg9P3zQdUokQeMb/23PMP0i7Itczi4gRkkOzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+HLw9v6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="NEX+sU45"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AevDMHgWqTpjftfnmU4g7Y+k3eP5ysmsjBxErFn8PQ9ZG1w+7jc7g9hBrG3cxFDO42YY6aFIrka8Z8Z8WA6cYCYhW1upqK4Ye4b968mZKi+fpspsY1ZHzDZ4WMdMUnobBykoWpVqmyPMQzqGjEsvCdQUhYjUN3igg4aOQNmrQyNgkpOmqKf+pICf0nGAqZpgdoH+yGy1h4Kz9mlFMzIi3FBZLmUBQDR62aU1ZJRAsmbbDrw/+3G805zHogYCT7ccMUcG1ajG1tKuhmif5+BNMjumCRiXTrqPq4g89HB3Jlzjxds/OMMdzms6snvmfYp8pTOBHh3xELFfPCQu0TgXeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dUZOPC9xDAOtB0gLaCGZ8CVXwW8bdNbIx0NIOs3EE4M=;
- b=H96eCV3w3GnNhA7auTd7ft58JC3hVVfWjTJ19JYdOSltlIBI86lh6jVEdMsqBitlip2STiRMY+tOf2Ar4O6h/QIYbOZF0oWaC5IGpg1haqPOoJ/qCK3tpkUIoVzFiQ/Soe6s1pZhoS4UmI4FVPFzdKRNSIq1qurym+VkhqJ1ClhuKb9z2sOo9k2xOstNA+lWbWao4WV3nL7KD4PYkFXL12WEd9PtWabJTMM/IRCLSJSzkFmLm7d4wFrLt9X6CweioEICIwJQRKOHc/w1gIg2KCqWVF18clUWSIQwJ57mJj/sPzdmFMaTwboFEoume4kMfBt/iHsG7yvFdDqZfNAjFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dUZOPC9xDAOtB0gLaCGZ8CVXwW8bdNbIx0NIOs3EE4M=;
- b=NEX+sU45f3j8uDeINDKCSwtjcSwzyRg53T3EheEEw+17VP7tCDzlD8X3yEBCHUdmLL2FhURy6LiCZxnYK4nwV5eiBslU9ZKS5nmnVGJo5Z9qy8aA83PhLW7rMsUTG82k+zs9lkwQ9HgMhWFUehYKn2PenanNL/JY8nofJAiSmaQ72ZPczv5X4+X97vEOeNper+vesEFx79FDInn3uhEI7ptAl87e4HxBwhRizKejeZNG5qtFKrUdhZ2sc5lCWhvQjQPWe96prYSdtzdgpwSvDBmp/JiIkkackNjCaKb7QxN7eDAk/lopVjV0Jwa/QUGiHwMkVoffzITPLg0bhwdnFQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by PA4PR04MB9271.eurprd04.prod.outlook.com (2603:10a6:102:2a6::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.28; Mon, 30 Mar
- 2026 16:38:58 +0000
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9745.027; Mon, 30 Mar 2026
- 16:38:58 +0000
-Date: Mon, 30 Mar 2026 12:38:51 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCHv2] dmaengine: idma64: use kzalloc_flex
-Message-ID: <acqnG90crIEzRfAC@lizhi-Precision-Tower-5810>
-References: <20260321034931.9950-1-rosenp@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260321034931.9950-1-rosenp@gmail.com>
-X-ClientProxiedBy: PH7P220CA0017.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:326::9) To PA4PR04MB9366.eurprd04.prod.outlook.com
- (2603:10a6:102:2a9::8)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+HLw9v6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80557C4CEF7;
+	Mon, 30 Mar 2026 17:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774891122;
+	bh=ndQto9udr35L7Pv25t6GhkNkta5ASsee84f+b99axKQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=U+HLw9v66obNAq5+e+s0SWUDUpqGufH3ACQeeCh/Hu5RT1awvoY3eSusvyYo2tbYV
+	 QDjCZY97v876wNZ+/xw9exfYyrGeVsamQWTxnY2h9xv4gpQbL/F78ZrEhMF5kgb+Gf
+	 Sbl9bhzsoJ0+GorFY99319XxEMsvQ5j/4xuyc+iDrHyiPc6BoLpIZCf8GcmiaWCZTu
+	 nGK8uAKCIVIjxpjpJLDpCT6MwnL6TWqXDYR3ZmRogS7xNJEXGrN1JuRGtVjUQ9bbbY
+	 CTIhlu35ZQ9TlJ7Fp6vA+zli/FItG2HA0P6f9zOF5LttSSz//GJQGhNKzMZ5pG7Tn5
+	 S4yiF3xUlXq1w==
+From: Leon Romanovsky <leon@kernel.org>
+To: linux-rdma@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20260327030124.8385-1-rosenp@gmail.com>
+References: <20260327030124.8385-1-rosenp@gmail.com>
+Subject: Re: [PATCH] RDMA/core: use kzalloc_flex
+Message-Id: <177489111890.3854404.9407326250267964747.b4-ty@kernel.org>
+Date: Mon, 30 Mar 2026 13:18:38 -0400
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PA4PR04MB9271:EE_
-X-MS-Office365-Filtering-Correlation-Id: 73cbcaf0-c409-4b90-908e-08de8e7ad750
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|19092799006|376014|52116014|38350700014|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	MWRVlxGAzQyS7fzURCAnAB5RSRAI41dN4WSKMI3aW8Hvc/pfIQK0tJu7Jn8rNWzabe5bfGM5rdXfcgtTzBLZrNkiz6og8HJFtx6jMDn4JaDc9cG83s8HWghxARgppY4aEvzzVFngoAe4qD1+x7sVCmprwk08551Sm4KFOOCA4oMCpdIIM9bnjMhqpXwxZ4eRbAqLfakdMaRQ2GfZoK71jfxXNt9yjhe3UZGCzPGz7X0TjvTulNcb0vj1ABQ9sfbc8T3e35IIZ6OSSpfeviTkEK1UiU4MyIJBieIfGPj8WXKSbwYX21zkxjvxikMpJyk4J/b6ROM4s+XOqtEzVMQic+f1pKpnxXZ0Jr8jCKgcSiHgFMlBkF8cmroKyBW1VkR5kfEyeSXk7ruLl1xbzNGRaPO/QlruwFeFSq0H60EQCaz2a5xVCOkqShhKCVzOCveudEqzG4SZU6qbQFa7k51Q9Y/NKHmXR0q5ziO/KFrUkpNpYD2IZXCSH96kDAR2wDJD2tFy7OaSMi6A7tSuJLoGarsaY0iN3XYTPA55k6p2Ivfkluhw/V8NmGtvjt5dlpeRnuYsY3MkqylR2bsWcnMNc5q9mJK8RS6SEVn8ZVnla0Vs7jQ75NwlyxcjIwIWoikkI453bO6l2MHrZfn+wP//d4XNNlrNvS49XVoGfrKS+soR/8RtgQC6BkZzJhs2a3DYeWaVu5wMMHijXrKhGIvPdesIMsCjjT+W7m48SzJh5fDIr2Mj+MK0/NKLxdKTpLab4o/bZzc0DxuQM1UQOfd14awGp+Dw4TaP5fKwGlLeafk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(19092799006)(376014)(52116014)(38350700014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7i6x9ieI0irlpqWBPLKyP36q9YFWWlCfNbNAcsQo6DJf6yo3UKEmIj/Dmvgq?=
- =?us-ascii?Q?X//Un3ktL0K7y5dmPqiyspVPzOOCswIwiKGMl+1DkPdo0tC4lYOZXadT8zoe?=
- =?us-ascii?Q?v7BuShPD0RuXWru24gAPD/n/GRccWfE2GBmXjlffSMDTqZVaLLgCPeVFSbrj?=
- =?us-ascii?Q?rV2LUa7U1zxcMjzBP/s/ORFnnlw1Y9Kzf3C67rPLtxL9Y+p/JT+sN7QadjmW?=
- =?us-ascii?Q?ntTUUvIN17yRoYkfESUW6lqRJn6T6ESEjVNcZTbMIf0BJDaDyILpEPH65xiX?=
- =?us-ascii?Q?R51M3ssLwHzJZDdK6u+8g/7jKzMGhapmLc03f8CgM1oK0vEnOCr5n2zJGBZx?=
- =?us-ascii?Q?XBpW+oZQaNoYw+QnRlUXU0o4Nu6QzfegMVNr74xsd0l9BdbsNLcN62g4b165?=
- =?us-ascii?Q?O8f0kCw8Lp5vUlrlD2QXdO2gN94rPyVDX/7U8AhvoJWQFcjQ3Oc8/Tfs1AA4?=
- =?us-ascii?Q?e2IQntWZnxdV2BWL5sdMNujARM5r3D2lPRIaLi4DeE15M1BjT4CFqDnaTOOj?=
- =?us-ascii?Q?NnzwjLxqtGvxn30bs/QflPByPbnDio7CKNS4LvTKVo+hQkITIzXGeJu3qy1N?=
- =?us-ascii?Q?kVFDkeIBAsARN0YjAFBbjhnmTOu3gcxkhe0kk+fzAVZ+OKm8RC1NhDezd/Wl?=
- =?us-ascii?Q?helLPsoitNiOB7yyT/xna/lmGKRHn+J+aqWsiemeiXq01+5bgCn+/ERg+Seu?=
- =?us-ascii?Q?/y7ATZ4TpF8AX7K6fnbolhcrBqO5FqhhNoCReSY40bUg+/k3z/hWYq3qBkZq?=
- =?us-ascii?Q?c8O7pimCMDCxxBeCZQ+UhL83By7tXbUwxaGImul7DjfoUo3XaJN2tkTV8sSh?=
- =?us-ascii?Q?r1wu5MT1NSkJthYZ1D47+Qq4chNGtrORxNnk/bkra2e2oQkGy3KK0NHyG+ne?=
- =?us-ascii?Q?2ApfHtD37oOHMPljXLX/AkJyKipZT5honQA5eX+iD6Dh5Th7guqs1maOh1T4?=
- =?us-ascii?Q?jg88NvtKpwkNzPjBipdv0M9zH5FyOUhN+ec5h7uNrS6FONpA8rGfF7/dnGOG?=
- =?us-ascii?Q?IBksitDpuZwltCZAtRlJKBiFtw2DI0UMKfMsGXUO7j9LEch4xLbaKdJzPMPw?=
- =?us-ascii?Q?U1mtkeZxeK/8lRlZeVrx+czvEOiUeInirpWW7ubroZrwMVTVNlOS9im1ae5u?=
- =?us-ascii?Q?Csw8YmE8m2nYofsX79Uaw3Ww7VRelMF680yjtQ6GszK9Bpuu37/UbVd5WOLU?=
- =?us-ascii?Q?id19R8NEfBrZ+4VmB/lnyVHCuvnirpv8kehWA3G5SLnY4C3EOTgAzaCKt68t?=
- =?us-ascii?Q?mYaPqrpYXBkLsy1ebun5wSKd0Z7qVH0kpsK94np9T1ogs1iek7DxN8St8cFP?=
- =?us-ascii?Q?DPBFQdEPLPA4VMA9CBeipAWr0ig+xb87Rcr1fvnnpQmSgLc7/lfg2/yAUVr/?=
- =?us-ascii?Q?muKXWjKg8pGua4/NQIuyLi0SmmCg7LKJXhwRGhMoa/BunfEIFQrFXa6EkeEx?=
- =?us-ascii?Q?0TGlar1Je86kINRbppujeX5LJlEfMegGhoLmhiOuXPIqw3lgTCGV7mKVA0cu?=
- =?us-ascii?Q?3SpreBlxVM5sLxl4YtUFEM/4cqmvcLfv4yp+4noIILDFO2GrmK1uOXkvYJfw?=
- =?us-ascii?Q?gLAslrORKGy0gZ563yI+LYmegkV8yzXfnPzCsqYff8/py8T+JJo7NU4qOooJ?=
- =?us-ascii?Q?yjTX+efJKDWlcyqAtiy6CV+wnmws/4oLoYjL7c+oD9vETyLghSJJQ8jUjQNE?=
- =?us-ascii?Q?wM4B+/9sYHh7PXIqW8ZEAAB6DxsdVneeM36Wv8OPB/HnckaMMNXZpPblvKRf?=
- =?us-ascii?Q?Wz8HsmwZGg=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73cbcaf0-c409-4b90-908e-08de8e7ad750
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2026 16:38:58.5122
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lJXo1VImDGlBUfmCKRoiJ9DSAKCsIlo2Xw+9NAmlQIm6za1SdQPZVN3/DPhnyzcJsjWetCi5ZczMG5gCM+d5nw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9271
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-18f8f
 
-On Fri, Mar 20, 2026 at 08:49:31PM -0700, Rosen Penev wrote:
+
+On Thu, 26 Mar 2026 20:01:24 -0700, Rosen Penev wrote:
 > Simplifies allocations by using a flexible array member in this struct.
->
-> Remove idma64_alloc_desc. It now offers no readability advantages in
-> this single usage.
->
+> 
 > Add __counted_by to get extra runtime analysis.
->
-> Apply the exact same treatment to struct idma64_dma and devm_kzalloc.
->
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  v2: allocate with GFP_NOWAIT. Was mistakenly removed.
->  drivers/dma/idma64.c | 30 ++++--------------------------
->  drivers/dma/idma64.h |  4 ++--
->  2 files changed, 6 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
-> index 5fcd1befc92d..d914f50ec309 100644
-> --- a/drivers/dma/idma64.c
-> +++ b/drivers/dma/idma64.c
-> @@ -192,23 +192,6 @@ static irqreturn_t idma64_irq(int irq, void *dev)
->
->  /* ---------------------------------------------------------------------- */
->
-> -static struct idma64_desc *idma64_alloc_desc(unsigned int ndesc)
-> -{
-> -	struct idma64_desc *desc;
-> -
-> -	desc = kzalloc_obj(*desc, GFP_NOWAIT);
-> -	if (!desc)
-> -		return NULL;
-> -
-> -	desc->hw = kzalloc_objs(*desc->hw, ndesc, GFP_NOWAIT);
-> -	if (!desc->hw) {
-> -		kfree(desc);
-> -		return NULL;
-> -	}
-> -
-> -	return desc;
-> -}
-> -
->  static void idma64_desc_free(struct idma64_chan *idma64c,
->  		struct idma64_desc *desc)
->  {
-> @@ -223,7 +206,6 @@ static void idma64_desc_free(struct idma64_chan *idma64c,
->  		} while (i);
->  	}
->
-> -	kfree(desc->hw);
->  	kfree(desc);
->  }
->
-> @@ -307,10 +289,12 @@ static struct dma_async_tx_descriptor *idma64_prep_slave_sg(
->  	struct scatterlist *sg;
->  	unsigned int i;
->
-> -	desc = idma64_alloc_desc(sg_len);
-> +	desc = kzalloc_flex(*desc, hw, sg_len, GFP_NOWAIT);
->  	if (!desc)
->  		return NULL;
->
-> +	desc->ndesc = sg_len;
-> +
 
-This patch is okay, but suggest use sg_nents_for_dma() later
+Applied, thanks!
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+[1/1] RDMA/core: use kzalloc_flex
+      https://git.kernel.org/rdma/rdma/c/55893530ad19bf
 
->
+Best regards,
+-- 
+Leon Romanovsky <leon@kernel.org>
+
