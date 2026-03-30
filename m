@@ -1,121 +1,220 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7843BB48
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 23:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1C4331A5E;
+	Mon, 30 Mar 2026 23:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774914464; cv=none; b=dkHlxhte/jXQY8eLl2d72JO9ECcwHS1juiOOkbkq5wgEctvtGWZ0VAOIG4xPqq9X185SWt3G44JaKi+5YU+t8199NPrwJoZmLPZeLiqeyrQ4OX0paGNNQfAOyOuAGW+dpgDhre7aNS01KAp+8asvfgg2DxxbRc9Eh3e79D46uQI=
+	t=1774914623; cv=none; b=lM3vXJTKNhoJZoD92ZFGHpXvbsuoGYJoIDPVkpc2O2IQAb5QZyYtIQvKM1f5RgbesqUgvAzZAmndNMm9JpnS1TKeDh1xAX1iIOAAXk1sI2Muv88NMfYhcbXlQZ3m/J/RH5MxRBhHseehoXSoOVkTNdNLgkX7ifbangg0OEpsQRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774914464; c=relaxed/simple;
-	bh=+3fwCG1qKxLOojihPmepQSc2ZE/nZklG+DGJatd29uQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bf5ZjUgCPRP8stflY5fm989izwpCNEfLxEnLgse8SVKvgsR5DbD/smYZxiTgKcSGjZb+GVaLPWP6O1GPHficsuE/8pBal13BuDSwYkpf/UfXzZMMLIaUFyRlGTqL7a1njzOe1P1ui0O3VcdHpGqrgzMawMWnaB4sxSp8rgUjeeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=NcLpuMzz; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1774914623; c=relaxed/simple;
+	bh=S8TvrXXYbTGdUmf8zAYnrXIAtiQEMKVDFz9XcPyEtlo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=acDk2RlJR8W7O2AOUxlgf++93O2kvKElGdgTRa5iCMDaM6HnREBFiIQ0lnSJiG1i1oIT4l+L+YbS6lXARCYJspWT3RDt8OpA0urqgCZrHz/6MyqtCPrKJu2aQJvFrFDb87LjeyLrDZW6HHAsRMxKbezfOfTFXQJZ6o11UXqdjdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwemHsxF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NcLpuMzz"
-Received: from eig-obgw-6003b.ext.cloudfilter.net ([10.0.30.175])
-	by cmsmtp with ESMTPS
-	id 7IyywW8QWshqQ7MKXwO0XA; Mon, 30 Mar 2026 23:47:37 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 7MKWwaJ7qHtqh7MKWwLUjO; Mon, 30 Mar 2026 23:47:36 +0000
-X-Authority-Analysis: v=2.4 cv=AtXu3P9P c=1 sm=1 tr=0 ts=69cb0b98
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=7T7KSl7uo7wA:10 a=r1p2_3pzAAAA:8
- a=pGLkceISAAAA:8 a=dDOLuRY1p3SJo1XcY-4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=r_pkcD-q9-ctt7trBg_g:22 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4/rBevFXE6E7bBuTDPVuFgP11XxT7qV//szAEW71+DM=; b=NcLpuMzzeyVS2f5ifqYbMzkaS8
-	IYDciHUvu162hFsoueHqTLw0xmnUi1jxmYM7pa6v7hsNk71EAvkkVPEDbMT+OvkMzQYjOaL6mYdAG
-	mADJB4NTwqzhLpSMZLq6Qstqh2MC6f4W99nVKqSPMmZZYaGe8RF1/n5rG2gUoTBd9rXgH8AJUycmo
-	MpT5A+CvMtkYlSMQsAxVR77s7QZXx36absmZmtrrwmufU/+KeZ4ym1/Ui7XHULFKbWYZmMAmoqlq6
-	4NVfp/LDeXuNOEeWtI5OuJT4L9FfuNjL+c4hdZno1nLShfxQ0XUucIO2iTB0xf1NdNC8gxKjynRYq
-	iuHtPe8w==;
-Received: from [177.238.16.13] (port=50212 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.99.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1w7MKV-00000002F8t-3hkJ;
-	Mon, 30 Mar 2026 18:47:36 -0500
-Message-ID: <37378f49-437f-438b-ad6c-d60480feb306@embeddedor.com>
-Date: Mon, 30 Mar 2026 17:46:09 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwemHsxF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9CA3C19423;
+	Mon, 30 Mar 2026 23:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774914622;
+	bh=S8TvrXXYbTGdUmf8zAYnrXIAtiQEMKVDFz9XcPyEtlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gwemHsxFpu99wMUqJdaf4jby/tkKZwLpQEghjbfbbuqeaTURLIb7ciN1vpYKZ2GG4
+	 jx8Uho1mGDLTpnPWU4Tmjta1wGidYm2g1w7DE0DglYZUTDF2J0IYDIQ4oW2EMTfB3u
+	 teXm2nM0dqbH+5N+2GM+8pQtPS1dtb8DkI9Z2BEG+w3NF3GW/KHB+WuzIPg8vNjf/k
+	 pIbEpPz9xD56KUzzClYPgyL9QqhcQQQ1/aykMKlV0Br7M5b4QTjwOKLDnOYOvo7YUc
+	 hKm/0S0OKeAmYKuhzaAdZ+iEbsoCHW+fvvB93g8LPqjKqaXqAdSQuWQvu4V+wh35t7
+	 K2kLjJ1gj6pRw==
+Date: Mon, 30 Mar 2026 16:50:22 -0700
+From: Kees Cook <kees@kernel.org>
+To: david.laight.linux@gmail.com
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next 1/3] fortify: replace __compiletime_lessthan() with
+ statically_true()
+Message-ID: <202603301649.A136F870E@keescook>
+References: <20260330132003.3379-1-david.laight.linux@gmail.com>
+ <20260330132003.3379-2-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] vfio: pci: use kzalloc_flex
-To: Rosen Penev <rosenp@gmail.com>, Alex Williamson <alex@shazbot.org>
-Cc: kvm@vger.kernel.org, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- open "list:KERNEL" HARDENING "(not" covered by other
- "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>,
- Leon Romanovsky <leon@kernel.org>
-References: <20260326023747.54485-1-rosenp@gmail.com>
- <20260330161933.6471d473@shazbot.org>
- <CAKxU2N8rpaLXXsD7sUvw3ffMe8JUREGc9ru_HX0r4Uw4RT_q1g@mail.gmail.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <CAKxU2N8rpaLXXsD7sUvw3ffMe8JUREGc9ru_HX0r4Uw4RT_q1g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.16.13
-X-Source-L: No
-X-Exim-ID: 1w7MKV-00000002F8t-3hkJ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:50212
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfG99+a59O6t1z5vqfcOJQnpvUMLTZPt+LmG7YfSKerOONQbbRPg/e/pXn/ow2u1mn4NPqblz2L85Rx2yrhXcNPTqHTXezr0YCuPuGPfDLBiAn2jlh61o
- AINQcFbaNaGeFt9hiio9vMkC/sLnuwPkeg6L9tjQB8XfqcFEGnA7dBV/+BZCVuKwRogKe7/HKhITMhJa9CUTtE3NaPU7SZXvZkiuY4EdhRs9mk8KzXEUcmm/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260330132003.3379-2-david.laight.linux@gmail.com>
 
+On Mon, Mar 30, 2026 at 02:20:01PM +0100, david.laight.linux@gmail.com wrote:
+> From: David Laight <david.laight.linux@gmail.com>
+> 
+> __compiletime_lessthan(a, b) is exactly the same as statically_true(a < b)
+> Replace the former by the latter.
+> 
+> Signed-off-by: David Laight <david.laight.linux@gmail.com>
 
+This one is a clear win: I didn't know about statically_true(). This
+results in identical code.
 
-On 3/30/26 17:24, Rosen Penev wrote:
-> On Mon, Mar 30, 2026 at 4:16 PM Alex Williamson <alex@shazbot.org> wrote:
->>
->> [Cc +Leon]
->>
->> On Wed, 25 Mar 2026 19:37:47 -0700
->> Rosen Penev <rosenp@gmail.com> wrote:
->>
->>> Simplify allocation by using a flexible array member and kzalloc_flex.
->>> Less memory management needed.
->>>
->>> Use __counted_by for extra runtime analysis. Move assignment to after
->>> allocation as required by __counted_by.
->>
->> I don't understand this statement, nr_ranges was previously set after
->> the allocation of phys_vec.  The only reordering was relative to
->> setting vdev, but that appears arbitrary.
-> Yes that one. My understanding is __counted_by mandates immediate
-> assignment after allocation. Otherwise UBSAN complains.
+I'll pick this one up.
 
-Not true. However, it's best practice.
+-Kees
 
-The requirement is that the _counter_ must be initialized before
-the first reference to the flexible-array member.
+> ---
+>  include/linux/fortify-string.h | 47 +++++++++++++++-------------------
+>  1 file changed, 21 insertions(+), 26 deletions(-)
+> 
+> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+> index 171982e53c9a..214d237214d5 100644
+> --- a/include/linux/fortify-string.h
+> +++ b/include/linux/fortify-string.h
+> @@ -154,11 +154,6 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
+>  #define POS0			__pass_object_size(0)
+>  #endif
+>  
+> -#define __compiletime_lessthan(bounds, length)	(	\
+> -	__builtin_constant_p((bounds) < (length)) &&	\
+> -	(bounds) < (length)				\
+> -)
+> -
+>  /**
+>   * strncpy - Copy a string to memory with non-guaranteed NUL padding
+>   *
+> @@ -196,7 +191,7 @@ char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
+>  {
+>  	const size_t p_size = __member_size(p);
+>  
+> -	if (__compiletime_lessthan(p_size, size))
+> +	if (statically_true(p_size < size))
+>  		__write_overflow();
+>  	if (p_size < size)
+>  		fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE, p_size, size, p);
+> @@ -287,14 +282,14 @@ __FORTIFY_INLINE ssize_t sized_strscpy(char * const POS p, const char * const PO
+>  	 * If size can be known at compile time and is greater than
+>  	 * p_size, generate a compile time write overflow error.
+>  	 */
+> -	if (__compiletime_lessthan(p_size, size))
+> +	if (statically_true(p_size < size))
+>  		__write_overflow();
+>  
+>  	/* Short-circuit for compile-time known-safe lengths. */
+> -	if (__compiletime_lessthan(p_size, SIZE_MAX)) {
+> +	if (statically_true(p_size < SIZE_MAX)) {
+>  		len = __compiletime_strlen(q);
+>  
+> -		if (len < SIZE_MAX && __compiletime_lessthan(len, size)) {
+> +		if (len < SIZE_MAX && statically_true(len < size)) {
+>  			__underlying_memcpy(p, q, len + 1);
+>  			return len;
+>  		}
+> @@ -469,12 +464,12 @@ __FORTIFY_INLINE bool fortify_memset_chk(__kernel_size_t size,
+>  		 */
+>  
+>  		/* Error when size is larger than enclosing struct. */
+> -		if (__compiletime_lessthan(p_size_field, p_size) &&
+> -		    __compiletime_lessthan(p_size, size))
+> +		if (statically_true(p_size_field < p_size) &&
+> +		    statically_true(p_size < size))
+>  			__write_overflow();
+>  
+>  		/* Warn when write size is larger than dest field. */
+> -		if (__compiletime_lessthan(p_size_field, size))
+> +		if (statically_true(p_size_field < size))
+>  			__write_overflow_field(p_size_field, size);
+>  	}
+>  	/*
+> @@ -557,15 +552,15 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+>  		 */
+>  
+>  		/* Error when size is larger than enclosing struct. */
+> -		if (__compiletime_lessthan(p_size_field, p_size) &&
+> -		    __compiletime_lessthan(p_size, size))
+> +		if (statically_true(p_size_field < p_size) &&
+> +		    statically_true(p_size < size))
+>  			__write_overflow();
+> -		if (__compiletime_lessthan(q_size_field, q_size) &&
+> -		    __compiletime_lessthan(q_size, size))
+> +		if (statically_true(q_size_field < q_size) &&
+> +		    statically_true(q_size < size))
+>  			__read_overflow2();
+>  
+>  		/* Warn when write size argument larger than dest field. */
+> -		if (__compiletime_lessthan(p_size_field, size))
+> +		if (statically_true(p_size_field < size))
+>  			__write_overflow_field(p_size_field, size);
+>  		/*
+>  		 * Warn for source field over-read when building with W=1
+> @@ -573,8 +568,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+>  		 * the same time.
+>  		 */
+>  		if ((IS_ENABLED(KBUILD_EXTRA_WARN1) ||
+> -		     __compiletime_lessthan(p_size_field, size)) &&
+> -		    __compiletime_lessthan(q_size_field, size))
+> +		     statically_true(p_size_field < size)) &&
+> +		    statically_true(q_size_field < size))
+>  			__read_overflow2_field(q_size_field, size);
+>  	}
+>  	/*
+> @@ -699,7 +694,7 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
+>  {
+>  	const size_t p_size = __struct_size(p);
+>  
+> -	if (__compiletime_lessthan(p_size, size))
+> +	if (statically_true(p_size < size))
+>  		__read_overflow();
+>  	if (p_size < size)
+>  		fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ, p_size, size, NULL);
+> @@ -713,9 +708,9 @@ int memcmp(const void * const POS0 p, const void * const POS0 q, __kernel_size_t
+>  	const size_t q_size = __struct_size(q);
+>  
+>  	if (__builtin_constant_p(size)) {
+> -		if (__compiletime_lessthan(p_size, size))
+> +		if (statically_true(p_size < size))
+>  			__read_overflow();
+> -		if (__compiletime_lessthan(q_size, size))
+> +		if (statically_true(q_size < size))
+>  			__read_overflow2();
+>  	}
+>  	if (p_size < size)
+> @@ -730,7 +725,7 @@ void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
+>  {
+>  	const size_t p_size = __struct_size(p);
+>  
+> -	if (__compiletime_lessthan(p_size, size))
+> +	if (statically_true(p_size < size))
+>  		__read_overflow();
+>  	if (p_size < size)
+>  		fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ, p_size, size, NULL);
+> @@ -742,7 +737,7 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
+>  {
+>  	const size_t p_size = __struct_size(p);
+>  
+> -	if (__compiletime_lessthan(p_size, size))
+> +	if (statically_true(p_size < size))
+>  		__read_overflow();
+>  	if (p_size < size)
+>  		fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ, p_size, size, NULL);
+> @@ -755,7 +750,7 @@ __FORTIFY_INLINE void *kmemdup_noprof(const void * const POS0 p, size_t size, gf
+>  {
+>  	const size_t p_size = __struct_size(p);
+>  
+> -	if (__compiletime_lessthan(p_size, size))
+> +	if (statically_true(p_size < size))
+>  		__read_overflow();
+>  	if (p_size < size)
+>  		fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ, p_size, size,
+> @@ -793,7 +788,7 @@ char *strcpy(char * const POS p, const char * const POS q)
+>  		return __underlying_strcpy(p, q);
+>  	size = strlen(q) + 1;
+>  	/* Compile-time check for const size overflow. */
+> -	if (__compiletime_lessthan(p_size, size))
+> +	if (statically_true(p_size < size))
+>  		__write_overflow();
+>  	/* Run-time check for dynamic size overflow. */
+>  	if (p_size < size)
+> -- 
+> 2.39.5
+> 
 
--Gustavo
+-- 
+Kees Cook
