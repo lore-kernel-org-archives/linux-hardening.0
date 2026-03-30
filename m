@@ -1,201 +1,204 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4888E39D6C5
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 21:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953673DEADF;
+	Mon, 30 Mar 2026 22:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774906548; cv=none; b=op5HEvWQAabETuSUi/kQEbckS6VeNTukGSsfl+LRP7gxUR+hE3w3xGfCkRFfLlPmh/fWJp1r6KMDVzy+Iwka5wh6fPQ8niDPnjaGczENtD72gSnaCfYf7UVPMTfbBnpAU7EO9iKC+06FtnjUqmx2ZpkGmrd8jVYc3Rro10m4Iy8=
+	t=1774909190; cv=none; b=oaoXnTazJBcX9xnUDZ7vuTpqC8bxBhzuH4KB/sbnoYmy6w33K4JiRrupR2Y120TZpC083FyeACo0fK6cApELCkAiVqTn8EVkx+D8R5dEGSeuKfADo+i7DVBKwwu57rcU8R0b1iekVK9+8XAjops6q6er1jdWHy+1naAsyM4QJIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774906548; c=relaxed/simple;
-	bh=FBG264/as4xr5hoTu9a5yO1BMLPpFQRBi0Esu2p/Djo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GLHYhZM+83OPK1KAEwObbLwAThyuQ19+P5g4oVSNR7NY0lEWVRYHXZ/tefAjaT0PfQyNXJMGTTtd3gkRw5vGnkW46z3Q5XCXpNr47rLJCiB5GZ2nvhtF69v7Vr84FcQfmlxMOkZkbB+ZJ5AWrhD9rZ1/gXnss4DUr69JGq45VNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qy7hVKPZ; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774909190; c=relaxed/simple;
+	bh=JnqD3TyeRpoIZtONomIeXGLdtj9GythGM2M0IEDzOHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hzSJa06CwE1bTcNcZjZRFV8Q+5o8l2CiWTAFfZuloO5FCEHSgqNOFqqlmfZKFEpFBt5L7OC4NMXiJ1b5z/joNiG06uYVqDZJhznCyv2n1DtUmM4sKJdBRD45aEuytuTgvd7jQvUbeBvGYfYWr2aTEhlzYCV5UK/SFAZSSog7ipg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=rsMDelTK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Uw23/BER; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qy7hVKPZ"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2b24fcc2b5dso11159935ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Mar 2026 14:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774906547; x=1775511347; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uL4VcJmIWiPMelM8MkKEBxP0uSyKH0wJwktcMh1N2Xk=;
-        b=qy7hVKPZdv6OH7HWHOhV86/+AcZu86Qgva/XEDQlUVOK4uQCqYbcrlsibrFh64Sj8k
-         Qec8g9a+I6gYaVPWLDs+/ft34phRaC8n2nxN6VO5/fmI/t3tpWhInr82nh/mCI/x2+2n
-         5cpwMfaJbHchFV9AGMI30pqmvGMf1A/OO5W6Bz61Fta+otCOeIzroi671i+T/lYhkfOL
-         AT9PdxkNP0tCBSSU27lv/jL1bjjqEhqv4ZofV+kUhEY/Z7eIE0HjVzSifHe4SXsCvdmH
-         MLtwZD7rN+WJj9dQccauzg6yW+vx2kKBJBPQKx0okM5X7lxMf3tz50wVRlufLQa8Uy76
-         EGaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774906547; x=1775511347;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uL4VcJmIWiPMelM8MkKEBxP0uSyKH0wJwktcMh1N2Xk=;
-        b=clrJVijTuCM9DMJJYnr+sf8KCRABgi407v1Ek9Ln1gE9waScFUuaEIlgJfXmcqavm3
-         7rjxERcDRYyzTeaoKj0ARqDQmhACQMFzgTr+PrCjF4fMjdnfyim0iJyCZv0AC1JWPjt8
-         FNR3GyqOMKJlKcyCR33heQRjNvpdXROtpbmLg7CnARB9UIOk8yo4Pam2vapQ7xu3VBFW
-         8q/6W8o+/3atUYZkSgsTJ1TML83XQoZgdlhAJeuuOZN/aIfgDx8ZUwjLm9bqMmFJNGn8
-         51z26j8HD/vNpWOn002LBYI8+SCg/R7LUFOPTyOVC5IdBdlcTvPvT/B8lHdwviWaSEmH
-         BxsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVt6ln8ydB6QvdX8RgrWIUuHhVHckEmN1LaaRjZvNfwEsEImRq5dl/SRMas1UbPRXTQOLE55XPcbSCjkbb4YJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYlTMsz0s3a2YSeI9oouqtng5uj8lypDbMuLZjp5DZQpwM8wZ8
-	SG8CmtVpWSEFCcORmfy2fiX2tYT5B9+1ZkrmdfcE4dJ7itje9Yk1V7mq
-X-Gm-Gg: ATEYQzwasTX4I87dXcGfuVDaxG+YMjDt7xHPOFm3iUbkdo5SA4pthwAlgD2eV3RhAm0
-	upA/GpTLDD5oGkSGEuORpTpgZ1G80fMRwiR+Xcxwdk8bPjGhXvHRqFxv3LHcUYAcymeJVrB29O0
-	ioppt/57zdKoo8XHjpl6LnIhGg3gd1sDswK6Co3paQbdQdCi/rDAzQz2K2Sni3j/xzy/gjfMwnL
-	LDQpI1pC8xmJiizHruZqOgO4CPuIy4J9ebOxrV0ss970/Fga1K/TsUx8WSdbWz4uh5VzDlogpKy
-	GQsF61ASiXMIxDwKwFyU1uz4E9vIDNQuJrYFDT+tzaPje4TdLAN6MaB2LE0t4xzxTxTwDryRGuB
-	mD+iZD2LTN3J7alVULDpwkL7/hg189f9DWv+b9iPXp9fSGYsZDRo3hK8oRATPOpyI2B/nyTGBJT
-	AERl5HhJwtwrOYiiJ1kmGomFuiGvaVODBZlEHlNmjI2VPeicbs6NpGKRA=
-X-Received: by 2002:a17:902:f54d:b0:2b0:5cb4:d894 with SMTP id d9443c01a7336-2b0cdc215ddmr134897835ad.13.1774906546605;
-        Mon, 30 Mar 2026 14:35:46 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b24278501esm93975165ad.58.2026.03.30.14.35.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2026 14:35:45 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-omap@vger.kernel.org
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM SUB-ARCHITECTURES),
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv3] ARM: omap2: simplify allocation for omap_device
-Date: Mon, 30 Mar 2026 14:35:28 -0700
-Message-ID: <20260330213528.18187-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="rsMDelTK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Uw23/BER"
+Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A34571400236;
+	Mon, 30 Mar 2026 18:19:35 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Mon, 30 Mar 2026 18:19:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1774909175;
+	 x=1774995575; bh=KC7yQsjEhXBnsf9FMpaaJaCC82chs8zFL/gXSJLxi9E=; b=
+	rsMDelTKjUOtps85fyCwciCwrhsEZRaJeLLPC1xzRUM1MA1FPPq0TgUNkDRDZXAO
+	Vctc87CcmrabRVOQ4Tf273hTccJeuqG4ZDNHlXKB+spuHl/HWYqhQaaN7MbP9fKJ
+	SF76/criD00FzDJ87r30ko5Z0i+QfCGMETxKXEEWNbIHxe7ALZnmIkuCQ9yavhcI
+	qzCESEAJXzSqJi5knf9ZpHJyeWaH3sNO5olARxe+0tVUfY9+s3raAjfSlWdaw9Rv
+	+0owSTg4GHBUg8AZoBEv8cjBGFozJbMto9MJbRGIcXCemz3ZH82sSwXRhuuSHSc0
+	T8OvPhE5duzEmgpv68Yg5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774909175; x=
+	1774995575; bh=KC7yQsjEhXBnsf9FMpaaJaCC82chs8zFL/gXSJLxi9E=; b=U
+	w23/BERkzzcwlsh4WH1Xs+QYpJTrqlfYCHWGiAx+qtSrqJobvpO81iVv3R9nCH7Y
+	Pf1LzRd9gJU9Lm6zeHNYZfvEhz9QAaAF9rDxYUQk2+zNSzG3zDaeRQQEMVrnpL/H
+	Z9Cb06pQ1fbajbbj0s4dXHhQvFiUHGVvHJ7J5xkzD9+bfPxGfXaKvhX6pUbomZ94
+	armodre+frmYICv0ejpQVcTbt2m8pc6vBTvERIyqMHV44gsqlpOI5JiI6nTtWkiF
+	JPeuRZR8k/p3/fcOpMXEjNEGSxDC6c0ML8Sogq1+qdV56zCC9KCT+pOsOe8VEy+f
+	/2u2kCy/9PgfbpETaStkA==
+X-ME-Sender: <xms:9_bKabkc3dpjrtQAnKkuVjHxE1R_iFwY1GKsortez2ee5vF9AreLLQ>
+    <xme:9_bKaVnBQkMSoeP5D2iq-cJKxTwN_aUnRNH-MviyQU6LE8cFYli_G9q20ciwM2B-E
+    XpZWQRa0M6RNhJ4FLDouJONxrLXwyb7bb8zwZZlm0JmZJJ0bqq6sg>
+X-ME-Received: <xmr:9_bKaTYp4juNpEsp7XMxMBUqMqTCOtC3pCXxaBgzFL9kJ18bfZbCW1CL4SM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefgedtudeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpeetlhgvgicu
+    hghilhhlihgrmhhsohhnuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtffrrg
+    htthgvrhhnpedvkeefjeekvdduhfduhfetkedugfduieettedvueekvdehtedvkefgudeg
+    veeuueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grlhgvgiesshhhrgiisghothdrohhrghdpnhgspghrtghpthhtohepkedpmhhouggvpehs
+    mhhtphhouhhtpdhrtghpthhtoheprhhoshgvnhhpsehgmhgrihhlrdgtohhmpdhrtghpth
+    htohepkhhvmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvggvshes
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhushhtrghvohgrrhhssehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigsehshhgriigsohhtrdhorhhgpdhr
+    tghpthhtoheplhgvohhnsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:9_bKafTkNwlnUcq_IgCXAGRCCNidkuumwzg0fCKMRuoIQMam7o9nQw>
+    <xmx:9_bKaVtp_No0rgSUUCcqBvtqHnpS_b-F7s9Xxa_S3SRw6VKdLsSN5w>
+    <xmx:9_bKaZHNhI_jdvb9s6k7S8gaw9KnqS8XV23VC0WHyx0QIMrSQNlaOg>
+    <xmx:9_bKaeyCib2l4_7XgjZZ_AdgwMW8w1ZkVztL1gFrQG1ZCBQkBpevaw>
+    <xmx:9_bKafnkmGLDis_p3tmuzKDCNAAcv6D7_NwVSytkq-eoCkhw8_ceRsBo>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 30 Mar 2026 18:19:34 -0400 (EDT)
+Date: Mon, 30 Mar 2026 16:19:33 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: kvm@vger.kernel.org, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, linux-kernel@vger.kernel.org (open list),
+ linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by
+ other areas):Keyword:\b__counted_by(_le|_be)?\b), alex@shazbot.org, Leon
+ Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH] vfio: pci: use kzalloc_flex
+Message-ID: <20260330161933.6471d473@shazbot.org>
+In-Reply-To: <20260326023747.54485-1-rosenp@gmail.com>
+References: <20260326023747.54485-1-rosenp@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Use a flexible array member (FAM) to combine hwmods array allocation
-with the omap_device structure. This reduces the number of allocations
-from two separate calls (one for the device, one for the array) to a
-single allocation, improving efficiency and reducing memory fragmentation.
+[Cc +Leon]
 
-The FAM approach also enables bounds checking through __counted_by(),
-which provides runtime verification that array accesses stay within
-the allocated size. This improves security and helps catch bugs during
-development.
+On Wed, 25 Mar 2026 19:37:47 -0700
+Rosen Penev <rosenp@gmail.com> wrote:
 
-Simplify error handling by removing the unnecessary multi-label goto
-pattern. The new code is more straightforward: allocate, verify, copy
-data, and either return success or error immediately.
+> Simplify allocation by using a flexible array member and kzalloc_flex.
+> Less memory management needed.
+> 
+> Use __counted_by for extra runtime analysis. Move assignment to after
+> allocation as required by __counted_by.
 
-Also removes the now-redundant kfree(od->hwmods) in omap_device_delete()
-since the hwmods array is now embedded in the structure rather than
-separately allocated.
+I don't understand this statement, nr_ranges was previously set after
+the allocation of phys_vec.  The only reordering was relative to
+setting vdev, but that appears arbitrary.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- v3: add a verbose description explaining why. Powered by Claude Sonnet
- 4.5.
- v2: remove kfree and fix compilation.
- arch/arm/mach-omap2/omap_device.c | 29 ++++++++++-------------------
- arch/arm/mach-omap2/omap_device.h |  4 ++--
- 2 files changed, 12 insertions(+), 21 deletions(-)
+In fact, we don't need to explicitly set the __counted_by variable at
+all, kzalloc_flex() handles that.  So if anything, it's now redundant.
 
-diff --git a/arch/arm/mach-omap2/omap_device.c b/arch/arm/mach-omap2/omap_device.c
-index 79db4c49ffc9..77a75b0b9ae6 100644
---- a/arch/arm/mach-omap2/omap_device.c
-+++ b/arch/arm/mach-omap2/omap_device.c
-@@ -307,35 +307,27 @@ static struct omap_device *omap_device_alloc(struct platform_device *pdev,
- 	int ret = -ENOMEM;
- 	struct omap_device *od;
- 	int i;
--	struct omap_hwmod **hwmods;
-+	struct omap_hwmod *hwmod;
+Leon, any other comments?  This should have a v2 removing the
+redundancy and fixing the commit log.
 
--	od = kzalloc_obj(struct omap_device);
--	if (!od)
--		goto oda_exit1;
-+	od = kzalloc_flex(*od, hwmods, oh_cnt);
-+	if (!od) {
-+		dev_err(&pdev->dev, "omap_device: build failed (%d)\n", ret);
-+		return ERR_PTR(ret);
-+	}
+NB. This will be a bit messy to merge since kref and completion exist in
+linux-next via drm, but maybe Linus will consolidate the hole in the
+structure when he resolves it.  Thanks,
 
- 	od->hwmods_cnt = oh_cnt;
-+	memcpy(od->hwmods, ohs, oh_cnt * sizeof(*od->hwmods));
+Alex
 
--	hwmods = kmemdup_array(ohs, oh_cnt, sizeof(*hwmods), GFP_KERNEL);
--	if (!hwmods)
--		goto oda_exit2;
--
--	od->hwmods = hwmods;
- 	od->pdev = pdev;
- 	pdev->archdata.od = od;
-
- 	for (i = 0; i < oh_cnt; i++) {
--		hwmods[i]->od = od;
--		_add_hwmod_clocks_clkdev(od, hwmods[i]);
-+		hwmod = od->hwmods[i];
-+		hwmod->od = od;
-+		_add_hwmod_clocks_clkdev(od, hwmod);
- 	}
-
- 	return od;
--
--oda_exit2:
--	kfree(od);
--oda_exit1:
--	dev_err(&pdev->dev, "omap_device: build failed (%d)\n", ret);
--
--	return ERR_PTR(ret);
- }
-
- static void omap_device_delete(struct omap_device *od)
-@@ -344,7 +336,6 @@ static void omap_device_delete(struct omap_device *od)
- 		return;
-
- 	od->pdev->archdata.od = NULL;
--	kfree(od->hwmods);
- 	kfree(od);
- }
-
-diff --git a/arch/arm/mach-omap2/omap_device.h b/arch/arm/mach-omap2/omap_device.h
-index aa8096ecb23c..fae09cfce137 100644
---- a/arch/arm/mach-omap2/omap_device.h
-+++ b/arch/arm/mach-omap2/omap_device.h
-@@ -37,11 +37,11 @@
- /**
-  * struct omap_device - omap_device wrapper for platform_devices
-  * @pdev: platform_device
-- * @hwmods: (one .. many per omap_device)
-  * @hwmods_cnt: ARRAY_SIZE() of @hwmods
-  * @_state: one of OMAP_DEVICE_STATE_* (see above)
-  * @flags: device flags
-  * @_driver_status: one of BUS_NOTIFY_*_DRIVER from <linux/device.h>
-+ * @hwmods: (one .. many per omap_device)
-  *
-  * Integrates omap_hwmod data into Linux platform_device.
-  *
-@@ -51,11 +51,11 @@
-  */
- struct omap_device {
- 	struct platform_device		*pdev;
--	struct omap_hwmod		**hwmods;
- 	unsigned long			_driver_status;
- 	u8				hwmods_cnt;
- 	u8				_state;
- 	u8                              flags;
-+	struct omap_hwmod		*hwmods[] __counted_by(hwmods_cnt);
- };
-
- /* Device driver interface (call via platform_data fn ptrs) */
---
-2.53.0
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_dmabuf.c | 18 +++++-------------
+>  1 file changed, 5 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_dmabuf.c b/drivers/vfio/pci/vfio_pci_dmabuf.c
+> index 3a803923141b..40e7e035a720 100644
+> --- a/drivers/vfio/pci/vfio_pci_dmabuf.c
+> +++ b/drivers/vfio/pci/vfio_pci_dmabuf.c
+> @@ -14,12 +14,12 @@ struct vfio_pci_dma_buf {
+>  	struct vfio_pci_core_device *vdev;
+>  	struct list_head dmabufs_elm;
+>  	size_t size;
+> -	struct phys_vec *phys_vec;
+>  	struct p2pdma_provider *provider;
+>  	u32 nr_ranges;
+>  	struct kref kref;
+>  	struct completion comp;
+>  	u8 revoked : 1;
+> +	struct phys_vec phys_vec[] __counted_by(nr_ranges);
+>  };
+>  
+>  static int vfio_pci_dma_buf_attach(struct dma_buf *dmabuf,
+> @@ -95,7 +95,6 @@ static void vfio_pci_dma_buf_release(struct dma_buf *dmabuf)
+>  		up_write(&priv->vdev->memory_lock);
+>  		vfio_device_put_registration(&priv->vdev->vdev);
+>  	}
+> -	kfree(priv->phys_vec);
+>  	kfree(priv);
+>  }
+>  
+> @@ -258,33 +257,28 @@ int vfio_pci_core_feature_dma_buf(struct vfio_pci_core_device *vdev, u32 flags,
+>  	if (ret)
+>  		goto err_free_ranges;
+>  
+> -	priv = kzalloc_obj(*priv);
+> +	priv = kzalloc_flex(*priv, phys_vec, get_dma_buf.nr_ranges);
+>  	if (!priv) {
+>  		ret = -ENOMEM;
+>  		goto err_free_ranges;
+>  	}
+> -	priv->phys_vec = kzalloc_objs(*priv->phys_vec, get_dma_buf.nr_ranges);
+> -	if (!priv->phys_vec) {
+> -		ret = -ENOMEM;
+> -		goto err_free_priv;
+> -	}
+>  
+> -	priv->vdev = vdev;
+>  	priv->nr_ranges = get_dma_buf.nr_ranges;
+> +	priv->vdev = vdev;
+>  	priv->size = length;
+>  	ret = vdev->pci_ops->get_dmabuf_phys(vdev, &priv->provider,
+>  					     get_dma_buf.region_index,
+>  					     priv->phys_vec, dma_ranges,
+>  					     priv->nr_ranges);
+>  	if (ret)
+> -		goto err_free_phys;
+> +		goto err_free_priv;
+>  
+>  	kfree(dma_ranges);
+>  	dma_ranges = NULL;
+>  
+>  	if (!vfio_device_try_get_registration(&vdev->vdev)) {
+>  		ret = -ENODEV;
+> -		goto err_free_phys;
+> +		goto err_free_priv;
+>  	}
+>  
+>  	exp_info.ops = &vfio_pci_dmabuf_ops;
+> @@ -323,8 +317,6 @@ int vfio_pci_core_feature_dma_buf(struct vfio_pci_core_device *vdev, u32 flags,
+>  	dma_buf_put(priv->dmabuf);
+>  err_dev_put:
+>  	vfio_device_put_registration(&vdev->vdev);
+> -err_free_phys:
+> -	kfree(priv->phys_vec);
+>  err_free_priv:
+>  	kfree(priv);
+>  err_free_ranges:
 
