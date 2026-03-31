@@ -1,124 +1,159 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F833ADB1
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 17:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774977861; cv=none; b=S5SV1c7twtKjDsv//C1TG3g+KzD7OSXRFNzrGrZrx6C/JGhjvTOysAd307xX0Vx5QFrnKw/My174spLhUZDz1mOx4ObMYuJIfWvy7gxKGEG1MCjDCBmrmxaPeYE/aSNs6D41tQMMKu8g3mkQrlE/n9iBKjTbJoxOEJeFOKSaAbk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774977861; c=relaxed/simple;
-	bh=X8mgB91EilmZX84/+DAl/QEGzBiT68+EQBIZrGj6ois=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDDD43E4AC
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 17:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774979279; cv=pass; b=UqpKd8Iwyzqr+MymU9g+VZNmkDNapp5B034/K83WUiWFZZO9+fYyIXwHgCqLhHjcTC6xOAmwlHikC3JY5btBDu/K47qmrQpQAaDc5PudnqtigNqI6QLZMS3jo9SUh5Q0e9fWXKCXmbnh8gh/+tldrNvx5U1xshH0+ugYIEXasoI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774979279; c=relaxed/simple;
+	bh=0gsHE02IRJdRhrhJLMxNqQrK8YKfaYio1tL3SdU4Cww=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A8geH9rE38nMJ6pPe0dOvxPDlvSMowC4biVVBTqzQeittc1ZNr+YLTUuf4tfq4cRtYS9fG857A00TiUs8EiAyf0UHvnYhdt9uf4x/WtYWrXq1CvYRQSYahpvNaeoV1/UIZ959XO2HFFPjP4XwFb64Hc9UkExvdHOAZZJfXwcpcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=boq5vpzg; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=CZkZLR7QtdCbu/Z4iKTfnMQwTCBIchFPegF/6bUzv/EkoH8N/8gJQLXQ5C3f21ip5X/9Rtt8XF1iECzI568CPZQo3U6xUHlN8bsbz2g+eARypWpW1RUZRw4cJjjiB0CujE3Np3bvr4Ehg8y6e8UcbDCdkIZ9NzcIxvKJCtfhUPY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=btmB3XFt; arc=pass smtp.client-ip=74.125.82.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="boq5vpzg"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-661b16ac011so11265324a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:24:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btmB3XFt"
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-124713e4244so348174c88.2
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:47:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774979277; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Kt3EoFfU1Aa1DVdQFKzg7bfPYxFqyd6wSmhj0Nu9sZj5y+c/Q2M+97Cs0VRIcL9C2T
+         N1Df7O3DnckMMDAWwTYovSXPcNmVtx5XPDNW4HqOd+pQ3ePK41Zbkr+BbJQsNTA+7pgx
+         XOp87zQQCGQmqeRONZaoJ6jlqAl674QAtU6b5hg2VLh/nsK+kyL7twm44bigiFIBy6Uf
+         8o2kjvbn1T739NFd4oqEG7e3DUFHb+4V4qPQVOrmjIh3hMVsmlryn0iZGxviY9BF7Jf0
+         ukeSY4NXWdSIZm1Y2LjixI3qJNkr7AGEf9sJM+nu9VAwqFbKytTRMKIqPSoSx636vB/0
+         Whuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ysi2hafA+ptpgLLenBdk3UcWnvRmrwggzaNQGDWt5QA=;
+        fh=SDeFeQinDBZGX7PdugP2MOo164nZVWlax400DuWjcwo=;
+        b=a0/b1AHKfAcEqotQTHRt71MX8OC6n6Pfhf0OlmUlc4P5fZlbaMG+1LmiH0lZVsV7qb
+         8lCjNmyCKDWHnl8DJdST5cn0UKJgtJ5MA/nefdKbG9J46dOlxWmxmdqXv2Cju8M2qE+U
+         UAKqLwkKAm1g3WWLup7KddYo2RLpkfY4kf6ipneiZnOxNTTO2VfVzsmYc1giMqHHorCb
+         gglvQNL5hdYew6sAiMoWi+xPrhVlHEFkFEHbPbHs0o4ALMD8QvRx6p4RLR76nDcD46QE
+         4akZMUDefHtUNtUcVjDcQnwqThWd6U8/Jptzx8LlUDlkONWizX9dWwKbnBUrqKDKcWo5
+         RzIQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1774977858; x=1775582658; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RzhkbeYcTn/pueZLzsl1uKI6wC45DhSkVKoC+DMZrjs=;
-        b=boq5vpzgmokr9CCfqX5G08GmYNiD3jf5Fm1fvtqGavEkTYd8isUDP1L6aiSWMCDx9h
-         Sz54Jc4OXNrWCd15zLOIn/8GpRU3hDBHyjqkqaioM7oAI2ubUp8fpmZsTDV7oNS1t8/A
-         DeV0ppRXLlBSnvqyUHlJl2tmWXH/W6r1RtTic=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774977858; x=1775582658;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1774979277; x=1775584077; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RzhkbeYcTn/pueZLzsl1uKI6wC45DhSkVKoC+DMZrjs=;
-        b=KO2m3wrNqXiT4eBSEphvMeg7jQg2RNJ0HUDb+heDpqJPzvABELsakyhIuB6kaBWn60
-         EkaZfglwdPkrpqnq0LMOJRkSSqV9AgRSbqwwkoU3Il4fUIWrZZhOJCsj2TydtDgrFTK/
-         MyIKwf5ZzpzUHRRS1rnquJlhQkq3BGKbojNJ13nmH2nMH58e90FP+919Gc5Jk7aVY8vs
-         0gLhfeYGSuor/KAb+T9Iuy/EEGGQQFzzJ3y2/pdSoj0my/+rt78P3Gy1w3ZvwKwpQX3T
-         0T9h4MoNIGmp8JsXa2Pum04qyNDDCmVK42KCMvk1m+gAR4g4MNK7n/uxgHMzrYSkm6Pw
-         RaeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqIsx4Yp2Wz1hAVmky3I171ZPA3ewg9zLVeyxgW2qzD5fIhif/XwEoFCOi/wqFQ7Y2Kcr0fKTz+NNILfAbziY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHq2jdhpOcUWqNkoyqAlJ/f+j1cxCD/96aRdHz/cq+uAWmbZ2Q
-	qnz061Ygyy3c4sNyITJCWxhu8DLzTAjShfDe2+pJGhZ61FqTUyjS3hH5y8SaZmqjoRPfV2vGfkN
-	RTjgVSAu1TQ==
-X-Gm-Gg: ATEYQzzzUO6h9pazy9FWkuj5efD461lKGEnXtTboPQexG2OVSL/KdnkTUyUpl/i/EWe
-	9Lz/XZrv8Tuca05Gw5W8gj3p9ierj+6wYD00X9lmv9T7Cjz8unIoaisuwebl3EYOeVHMK5orbbI
-	DpYTWrEWfYQWhUELTZcMROm6OkHk2KPlsov97P13DcElryU7e7CgQrup8Kw0XNqv6P+0URirINV
-	dx3jlZfkSeJjvRv0j63jxcNscQjaIbhgpdOuYXk2CQlrzlth2jLjWqS0y1TOJhcu0NdQ1NYdXQN
-	GdcUdkbTz9cu8FIyvvBK8JVawvydhiYEaIy1JSXlTe7O1evbtFIGuLibTld/G/uT8dccpSIGNXz
-	FUsMsnnnUkiqKj8VvJR31G/BtXM203edluSlaZTke7hMHsa0A98v7VkKcGkPQvpPWv77GQnlbcZ
-	4UCAWAc+Mw+9W9kKzy4zRPHQiKz7SlYaNZbk3reAm8JacIikDasLHdcve4g52NFqmFTmkt4HJi
-X-Received: by 2002:a17:906:6bd6:b0:b97:aba7:1969 with SMTP id a640c23a62f3a-b9c13cb1a18mr24322266b.45.1774977857437;
-        Tue, 31 Mar 2026 10:24:17 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9b7ae7371asm437392366b.27.2026.03.31.10.24.17
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2026 10:24:17 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b9382e59c0eso961059666b.0
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:24:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXfkUan+k5aAH8iK3DmCTcNPzzO1MTnNSxVKbZRG/cJHjdGFUrGpC1zrPfqpG3uDkc1o68Asc33fwnIA7ZiShY=@vger.kernel.org
-X-Received: by 2002:a17:907:a604:b0:b97:b9d5:4ae4 with SMTP id
- a640c23a62f3a-b9c138e5f3bmr33991866b.20.1774977427566; Tue, 31 Mar 2026
- 10:17:07 -0700 (PDT)
+        bh=ysi2hafA+ptpgLLenBdk3UcWnvRmrwggzaNQGDWt5QA=;
+        b=btmB3XFtp4LixOK2c4UFCeR5b6tfKUvUYhR3vnU3nFxkJHl4SrrkPapy+cHtb30M/v
+         k1eXNFxhdIPR86KCcF51ufDyUS//+/wo3RjBmQTQu6lejkedge4KdU3fsh+PzNJP/8OV
+         PtxHW274Ra/LVp97xypVHozFahjLQ22/etehT5ibRL2HZIoent9W2lsWOK4IZNWWktfE
+         rUAcPv824IJX8EgDkjViOgIdIyU6sIH84G3U6vMUyKalbRVvU2COz0dOzghIK4RSlk6T
+         B4W83BsNLiVSK4Yu6Z3Ucb3EBOWLFwRQzLxOmUW+/WdwxBLZUufRDHbCQqSNIeb7xW/4
+         39zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774979277; x=1775584077;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ysi2hafA+ptpgLLenBdk3UcWnvRmrwggzaNQGDWt5QA=;
+        b=jUH6O/kan/HQe0r57i1K2b0N5LuhmSMupgqw9CDh7syegTM50+bQefoefmFSfayBZu
+         WEJm+R5JE/OzATReT4xikWPkQDUZMB26ZGCN5l/zh3CCwyntkGH6fNN0zil+FNKXAN3H
+         R1mIYCBJH16b2GsIuUrWWSLVtb0U0Lrt+n1tUJ2YGG9hTUi3IQUB3Yuj/noBC6SjcP1C
+         xj/ttfZWUQBBebDvuyJEwkbcivs4dPB4JSoIuGpcf8dyTx/EARnPf3PFCncZloTXFV4A
+         avoxjjjsXS2hYJTGqdHZuHVwCo1DrriRVTkIerhjZvEsSm+EL0t3LET6IvTVDHOhwyIb
+         IMtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXcOWNfBMqRnpFMiS6d0ZPk8Z620jhvE5PlFxaZ1f6uQyIfQUvqM9a26/vfZBWDHEVDcAFQwFb5Z0X8yzlAug=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSXvzu9I0C/+/1XPDupMlYj2db7bXnzGBHRovktEA8VheTSdrr
+	w4yUX5kVX0Z1PdzMssh4UdPjvA4TztsHdEZSbiWTUKdUKV1ISaodYoxYe1pr5FaCSbT9nBvafMW
+	l1CK0KU9YUEBGyxwzCffcuN9HOcVg8FA=
+X-Gm-Gg: ATEYQzzO7iNO6QMM4oIGs5LtxXRfaGGRbXDe2dMnT4mleiCUn1GleXoLqsLQOlUKuy6
+	vNdCGfJAWMyiYH5uCw6BrQLsOtZcYOFyq7Tc/Aaei/s0bAhGXkDsAGWDdzQ7WYVd/w/xFznhIt6
+	+LqvMQyaozwxfnjl1c2jW1MfR/Tr+0dUuNnGFc6eZq8fs7YUrEd5vdYNDf+tsdyGz1TQmK5Xk+u
+	YMVutFPKDJcLsNyu0N0FLY4vv5rGVzJK7M8iAei59ZmKKzg3erbiTDPvrV3fs9vDPovesywIxa+
+	ZYG98yHjySNz58S4R5UctL0VFggfNqqSRHzfwLjgjiDEafdFW+eGbSt7yA7FsAPh29WQ2gpUkav
+	VjZ0NXZXtPV3/I934SL+Hw8U=
+X-Received: by 2002:a05:693c:3013:b0:2be:1f56:ed0d with SMTP id
+ 5a478bee46e88-2c9333b1713mr40887eec.6.1774979276969; Tue, 31 Mar 2026
+ 10:47:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-3-kees@kernel.org>
-In-Reply-To: <20260331163725.2765789-3-kees@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 31 Mar 2026 10:16:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg=q7ptcMyUAqPGDbX_DKHivJVppc8bP0zpQqzOky_avA@mail.gmail.com>
-X-Gm-Features: AQROBzBItZBmx5_N-ynlPw8E_7o3PG43Wcm0ba7e3I2MR7-9HUZsFelf3Nv9M7s
-Message-ID: <CAHk-=wg=q7ptcMyUAqPGDbX_DKHivJVppc8bP0zpQqzOky_avA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
- __ob_trap and __ob_wrap
-To: Kees Cook <kees@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Justin Stitt <justinstitt@google.com>, 
-	Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	llvm@lists.linux.dev, Nicolas Schier <nsc@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-5-kees@kernel.org>
+ <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
+In-Reply-To: <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 31 Mar 2026 19:47:44 +0200
+X-Gm-Features: AQROBzCQ6Wo3TBLhc4gV7S4by1XCetN63ihcS6-yEhM3XyLxgnvaM_4biv0PCmo
+Message-ID: <CANiq72kL3rTKyDNYmD7wXiKCVJSfa1bnp2L8NShXU7OPmWjJ4w@mail.gmail.com>
+Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar types
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Mark Rutland <mark.rutland@arm.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>, Finn Thain <fthain@linux-m68k.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	llvm@lists.linux.dev, Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Nicolas Schier <nsc@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-kbuild@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 31 Mar 2026 at 09:37, Kees Cook <kees@kernel.org> wrote:
->> +
-> +  typedef unsigned int __attribute__((overflow_behavior(trap))) safe_uint;
-> +  typedef unsigned int __attribute__((overflow_behavior(wrap))) wrapping_uint;
+On Tue, Mar 31, 2026 at 7:11=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> No stupid one-character things. If we go down this path it would need
+> to be "wrapping_u32" or whatever.
 
-This is fundamentally broken sh*t.
+That sounds close to similar types provided by Rust, i.e. if something
+like these types are used, then it would be nice to match names if
+possible (assuming they are similar enough, i.e. no surprises).
 
-Stop thinking that trapping is "safe".
+e.g. with generics they do `Wrapping<u32>` or, in other cases, without
+generics they name them something like e.g. `NonZeroU32`.
 
-It damn well isn't. A dead machine is not a safe machine.
+Having said that...
 
-Any patches that call trapping behavior safe will ne NAK'ed by me.,
+> This needs to look _very_different_.
 
-We have decades of peoiple using BUG_ON() as a safety measure, and it
-has been a HUGE PROBLEM.
+I think there is an actual risk of someone e.g. copying an expression
+from one place to another, with the operators behaving differently,
+yeah.
 
-There is no way in hell that we are ever adding implicit BUG_ON()
-things that are this hidden, this easy to use, and then mislabeled as
-being "safe".
+In the Rust side, even if those "explicit" types like the
+`wrapping_u32` you suggest exist, we generally use the methods on the
+normal integers instead, e.g.
 
-Guys, that's the same logic as having a airbag in your car that just
-shoots you in the head. You're certainly "safe" from the vagaries of
-bad healthcare. But dammit, if anybody thinks that a "bullet to the
-head" should be called "safe", then that person damn well shouldn't be
-involved with kernel development.
+    i.wrapping_add(1)
 
-So NAK NAK NAK NAK.
+    micros.saturating_mul(NSEC_PER_USEC)
 
-The only safe trapping behavior is something that has a clear an
-unambiguous and simple to use way to *HANDLE* it. Not just "mark it
-trapping".
+    self.index.checked_mul(page::PAGE_SIZE)?
 
-              Linus
+etc.
+
+The advantage is precisely that it is more explicit and avoids
+confusing the operators when copy-pasting code and so on.
+
+So that could perhaps be an option? Kees et al. have been thinking
+about this for a long time as far as I recall.
+
+[ And for the usual operators on integer primitives, we panic by
+default (configurable via Kconfig), but at least that applies to all
+Rust code, which is all new, and kernel developers get accustomed to
+think about what they actually want for a particular operation and
+whether they need one of the explicit behaviors above, so it has been
+good so far, but it remains to be seen what happens when we have way
+more code around etc. It does mean someone copying a simple math
+expression from C to Rust could forget about it, though... ]
+
+Cheers,
+Miguel
