@@ -1,124 +1,167 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1F7317150
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 21:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774991133; cv=none; b=ejaZCdKfSJd1LW5VI7Y/6KYyxw0d5vrh12TmhJSxjDJYCOVubAPvHWvMp5f8Gtcj/BeTwUtJdCWZzIozU01qxtKC9KBOYxHqf0Eo6j8yoVcx/RECb6+lqQpI8Z6Ek7NbJugz+kJ80JgswNWFXPQ9LBrrWULlSDmheg93gvCmjTo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774991133; c=relaxed/simple;
-	bh=JdtX1HxX10vKkEIJTgN8UNt8Jx8wkMFYsFGA9S+Pp3s=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58134657FA
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 21:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774992671; cv=pass; b=tSGK0kNEv5adMgwh2DWemwAagwDu13fGFUojyhLS+s2LOjnZ/vm7rBMiLbV/pEpDSimsVqyMNiDwdpG3fLmU0RUVWpGdjPAAF5QzgiFuhtTZXah4eeQ+uIGjcdLz5jJNFyf7ZJeFTBTt6YX7w3FadincsEbhlS+tYBAZSTmVwZY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774992671; c=relaxed/simple;
+	bh=2A2JmefpCGzhygpv75dI+lo6EAqlpCUDR/JlkgSbrRs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aa4Zqm+21Z5LZZU4hAd2G6ZhDbtCbMK3vU1gklHcsAjG2Lw51Bs1d/xyAnB4Hi2N0Z96O0PsFZ7+nACkqZKQVyhoMjwQUqK800/01/CKtmqDqH5MAaDZK3zhbLi+Se/R6Uz4WKhd4PF1Unq51dkBgslQ7TSc0somcAfvhgvINg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dxiZpzWQ; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=Gzf0/b1eEoP9MW7eCK3og8pbKp/i4ZefuGNH7UphpQFX5BTFSnmLq607IlmaQnkLqBaGtnN0IrXOFDKDW4/ztiZx0dVeYvqdr6RtQ2glDJjYR/XIy6s+9Fv8g9YHTJUwpS3akldOnaz/qcKfYKRSgZMi2AMzCmnrkdypcbhy0SY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BhlLMpCA; arc=pass smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dxiZpzWQ"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6618bc129acso9088749a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 14:05:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BhlLMpCA"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-66c43d3ba7eso1736798a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 14:31:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774992668; cv=none;
+        d=google.com; s=arc-20240605;
+        b=j0LqD1fHLmM52QWFFWN2oNVPpgC3QnVG6bkCm+ejtrW0pyJE7adZVcGKnTmQS+qFtY
+         Fb25cTKrVvcYhBaLqBz0R49qX59fDKjPiw/pqlcuzSfojFYjL5sXPIHTAYdHOOZ2ZXK7
+         bkABDPoG6WRpjzzmq6PelBpS/ft4tJXjZcFVLJ2yaBq4zOj/Nq0rNUSZYh1b+ll/b1Uj
+         DvhKEMMBaYHXZOpdJqGbWbMvBv4YzkUL74/1lV6yg7mpOIwKFdMLFcvmPpLVdZ87PNcq
+         Twzws6NEmLBmvEE405EtdpAXbOEdHOdRWfrCCQ5NBekp7lfMRpe7tgPMmMlHSee5H0j/
+         atjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=0gAZxdKTrtG0UNe7fhqbtNVst5TpR+8MqiteFQr6YFg=;
+        fh=UyNuGoI/AX+GH6qKhsefw2WWO1cPFeTRPOVWbgT4I6c=;
+        b=GuiPYj/5tzKOgZX8ThW3baBPhGJ+y8AOGRLLCJ0DJGoGI1ISnmPlt3FnUtrsPdXTt4
+         zO3QEcOU97s8D3N689DDCMUtWUhL3OOE/olVkz/4GWkc8VejNjKJa0f4WTyIwmXYiG5k
+         4pFOhr/Krt4nR0p+eyRjTywXECKhY0IkV5v1w/1Mctnu3qb+wPxEZvDvo7GOsN1F8YrL
+         0XPXQnyR99OkDVS8nOtlC8Y0KrdVuFz7sa6qYip99I2QtUF5EptM3Vf0wixjATjHVVwo
+         8cJYjZjwOm1bZqDe9kunz2lUTHYGBxGqiXF/UXdXxVbBExR3JHxCgKWErZGKS5JZkSwH
+         lFZQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1774991130; x=1775595930; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dPaiD4OsZpalA+NXE9JYeLKvQIkP47+Rdll9Ghzi+s0=;
-        b=dxiZpzWQb/VnAe2xpjxbA6oaHyfuyWnaEtQJgl+MlX4ElA1YGpCG506wVITAMWGHwK
-         Ej+QIQV55WyVebPOwDRakg+8nV0RSH+UQnhtZNaSgNoyQ0uxvISNVTJbp7CpYrKUlPtK
-         OsdUXK21lAGyBS26Hu0yZpFZoS9YAkjcz0bBg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774991130; x=1775595930;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1774992668; x=1775597468; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dPaiD4OsZpalA+NXE9JYeLKvQIkP47+Rdll9Ghzi+s0=;
-        b=iLguTdRXj7CXhuZuqfLWVOYBkrJoCtNRS/Pr+L5CG2NbMy3nDmwZn2vphwpqTAvmuL
-         9uIELZLcpnvBnzq3JBfSPRnP3uEnY4vYdpXSZlPHFiapXhQhhXiRTz3I4xWh/yd2BgP8
-         aYfDuApBz4cfrQLx7fiZ+XuN5ekKFuYx0BlUtZJzkzYzvz8PO/9Nxq4egk2nZcYJPDkb
-         k+MKkOM4TxNCtobjtsBbHvkPHN5J0bOZkvVjQf8qTyODVFVqZjEIWCyf1qhwURBVZXlk
-         A2BmqiiHTNTMRFiid7wZnuL4wfDo89J/VgkPsumTf69TkIvwhEdFDFO77pZiymIjKwF8
-         /w9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXQD/4AqzjCDi2pQu1eTdvHd+0jtGmgd9kr5sPZsX7wilH41V5t0QRe9dCzUO1Lq/nQml3SG8O+h+krVrOxovc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu83jUsTsRiH3GDE/WX5H4Um/EGkQlf6zSKnRXWpZvhZUD/V2y
-	+12WEjFulmWzc7/yu67if0z7y0yorvTeqxmO2Entzxb8MsJcCkNYZLBHkzHBcMUDzz9dIQ5Ob5D
-	GQeZTRqtm+g==
-X-Gm-Gg: ATEYQzzwjMJN8phHD9F5BB+5P41iiCKCm0D6NrpT13D0QpakQlSWK76ce+VLvmNsmfa
-	nMmJpgY122QVILosU9IiLz7GUF8H7SjEn5jNd11YQyQWkyzUlhRaXHXN8gbeSYEmpTdl7ujAr8L
-	tRhCyAYE0/dSZUGvIFJ7n5UKCIE8X67cFCIj4hOx0qVSowytMQyMvBNnBXGfOh9r4huU2p29gjc
-	hkMXq5Ocn6aM+1DTcYSndr4FDiLiEUKcPq3ItiCzwmtCDjAyWo2/PXpCa8gVJoWmPhkvNea5+6C
-	E0UEywBXULELEebHbLqmDYX/cU3WGLXgNnVBKr7XOi27k2wS0juXVxCaoWJnsShCuuJRJJwT9PB
-	+lVX8uA9I/Kg051Xk8m2BD1FMYkwrSkY1W+X5JGw0+Q1ZA/UsTkWZUjYDAMSCXYwO2rGthMUJ82
-	AhzoIXbAtZbTEw/HaKDcdlzdwzs86GBC8x7HIbR98I8rhY+V2coB6AF74V5AEpzN4Y5yNkAaUc
-X-Received: by 2002:a05:6402:210f:b0:66b:3dec:e440 with SMTP id 4fb4d7f45d1cf-66db9efd254mr651178a12.26.1774991130049;
-        Tue, 31 Mar 2026 14:05:30 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-66b75ba970esm3962060a12.19.2026.03.31.14.05.29
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2026 14:05:29 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-66dd0531d01so196739a12.3
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 14:05:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX0u7BPWdw9le/bjRl5QdnK3vwoobSBWIRru3xUKXE4GKjZ2FQ+jxD5Z0ao4C7tgiiaPxc8zFFdlBRykRJavSQ=@vger.kernel.org
-X-Received: by 2002:a17:907:84d1:b0:b9b:1b9f:8397 with SMTP id
- a640c23a62f3a-b9c13b0a2a8mr62577666b.31.1774990733647; Tue, 31 Mar 2026
- 13:58:53 -0700 (PDT)
+        bh=0gAZxdKTrtG0UNe7fhqbtNVst5TpR+8MqiteFQr6YFg=;
+        b=BhlLMpCAhFyvu5S5DhCtDeVfYc8uN/TrrB+L2WWjdry4LGFFuw5vPn4uJuVuFSpYEE
+         C0Ulc8DVEGp29GpwarEof2pfnS6t7A0p0Vcz23IHyOb1snGU+Bbqn24gvhBiL9lUvEmc
+         Ty+TSfhBMbWOQaCh22rQwhXRMAWllw5VIhFQCyLnJKMnYOv2dPrN9IvQeotReEc0MOt5
+         jUiJTCxAuBeilSyELeJFL8lXD9NNNZ8YBdycFnNQEbf/iO92F+s2uqkgGC43uiJVOVoo
+         KrMf51fVZHOl2iuza9z/bZOEJGz1jhHvhc6Dp0ltFQXLAnuVeVyVtVPeY/coO1uB8h2V
+         TkVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774992668; x=1775597468;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0gAZxdKTrtG0UNe7fhqbtNVst5TpR+8MqiteFQr6YFg=;
+        b=HvYZ8VzGYGEsrZXn49DkwGq+QEhwJvmt0vSAIJte/eecnViEta+fXFdZafXK35lCQd
+         sOrIL3Jt82yHeMKd4uTY4TNGMcDiNoPAAIv4axX13BGw9NUIrFfvsXJrpXoOrZbiZC8T
+         lZ4xV1WwBIGnoIr0UZUgr8lasbloaZ18eXYEgFLHokqQm/Ro13YANi+nYaELSRS3B6vN
+         JnaOEFlz2scpiktckz/yOsE3C6d5fvH7AiOigBL1G82zmejepLMVvxd8lS/7StuwwB7i
+         T5xZ52cnAZJAzsp9LXGEztZINrijdmYI/oQe9GbJRxoxrM+zJd0YSdIPGWFQc45RrHJX
+         jbuA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyoziZLBPUdFgOWJ5OqTVFXGIrZAJjS6V7R5UES84MAXC+MFSnWNH4F6oiqXFPMGnZEem+r//jI/yYoTm8+t4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnTT81XKX6i7mFHLi26uIFIVdIdjmVe6CGcdGW5BUXliOnnIxe
+	CJVokdy4Jl6zNr5KzFxCrbJmFzFIdeqaqVoeBTO1ffNsmluyfrKN9M6Fp6L2rBvGZoKMJ4IG/gZ
+	kTliaruUr4NXPH5Smn8rxB/TyueOvaCg=
+X-Gm-Gg: ATEYQzz7sxrElrXczvwNkIYHfqnH/Ru0v/J7JXp+E7UPYMwIZV3U14al3aAw3VL714f
+	jb+deMd2iS7DOykqjLi5AAhzc4ZizDd0vuv+6q+QNvMo0MEPe7l0rz9iEa7GWMdCL8roXnrgnsA
+	LGVnWbQha3x7l0AYqsPVA1X4dOTmxVSl1V+oYTPkR3s/+gm8BNwyqiEDgMZp916CggP5hEDOALm
+	Ezt/gtorV5SzXtKSeem2pvtXrxdhU6Ejasyv2cYlZKExthZwJfEqLOhBjiG36CtN+PGveFcYpaK
+	YlJS98JRX46i9cc6odg+ERzT0ZfUhW8LimtZ/7h3xChIieZs+Q4oXG5dycXS8cR2dujfizWddK+
+	ygrbpCQ==
+X-Received: by 2002:a05:6402:a0d5:b0:66b:aa56:ee5c with SMTP id
+ 4fb4d7f45d1cf-66db3f96414mr555333a12.28.1774992668047; Tue, 31 Mar 2026
+ 14:31:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-5-kees@kernel.org>
- <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
- <202603311253.95C54588E@keescook> <CAHk-=wjSOGaausLeTD13yAqso7qM09EnkDFiN7wF15kH0VWmZQ@mail.gmail.com>
- <202603311321.4EE9FEA@keescook>
-In-Reply-To: <202603311321.4EE9FEA@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 31 Mar 2026 13:58:37 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj9pWsgsbrLDOk7ipKnHbz3JvuqsmQ3DhGg-OKgKS9DUA@mail.gmail.com>
-X-Gm-Features: AQROBzDlSIWhA3UXAi4kJQxb1nvYqS4u6S5fbtJpBgdW6doJTV11HfE6t_3dlps
-Message-ID: <CAHk-=wj9pWsgsbrLDOk7ipKnHbz3JvuqsmQ3DhGg-OKgKS9DUA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar types
-To: Kees Cook <kees@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Justin Stitt <justinstitt@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Mark Rutland <mark.rutland@arm.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>, Finn Thain <fthain@linux-m68k.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	llvm@lists.linux.dev, Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Nicolas Schier <nsc@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
+References: <20260328191646.312298-1-rosenp@gmail.com> <CAHp75VfXO1acijFMySQTCtYEE9dRyUMk7xJ7ff7m0hgy42g7=A@mail.gmail.com>
+ <CAKxU2N_SXeEgwZ5e1eARpK5jAorx-ycnPdf=Ut2jUvSM2xYZFw@mail.gmail.com> <CAHp75Vdvn9n_qgBsXTBw8mRxdJcrmCi01JfAGz7oTkKQ1uXBmw@mail.gmail.com>
+In-Reply-To: <CAHp75Vdvn9n_qgBsXTBw8mRxdJcrmCi01JfAGz7oTkKQ1uXBmw@mail.gmail.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 31 Mar 2026 14:30:56 -0700
+X-Gm-Features: AQROBzDOlWtP4rTa212l85ZHquL-AO6utx3CmRcZmj7oHcqq8AvGqVreKjXveeQ
+Message-ID: <CAKxU2N-QT6KAKzAYDUp_d9ug=1VxHMvegEQDbxS4GumH+8QBWg@mail.gmail.com>
+Subject: Re: [PATCHv2] dmaengine: hsu: use kzalloc_flex()
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: dmaengine@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"open list:INTEL MID (Mobile Internet Device) PLATFORM" <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 31 Mar 2026 at 13:31, Kees Cook <kees@kernel.org> wrote:
+On Mon, Mar 30, 2026 at 9:29=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> (Isn't this just an implicit "try"?)
+> On Mon, Mar 30, 2026 at 11:41=E2=80=AFPM Rosen Penev <rosenp@gmail.com> w=
+rote:
+> > On Mon, Mar 30, 2026 at 1:46=E2=80=AFAM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Sat, Mar 28, 2026 at 9:17=E2=80=AFPM Rosen Penev <rosenp@gmail.com=
+> wrote:
+>
+> ...
+>
+> > > > -       hsu =3D devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL);
+> > > > +       /* Calculate nr_channels from the IO space length */
+> > > > +       nr_channels =3D (chip->length - chip->offset) / HSU_DMA_CHA=
+N_LENGTH;
+> > > > +       hsu =3D devm_kzalloc(chip->dev, struct_size(hsu, chan, nr_c=
+hannels), GFP_KERNEL);
+> > > >         if (!hsu)
+> > > >                 return -ENOMEM;
+> > > >
+> > > > -       chip->hsu =3D hsu;
+> > > > -
+> > > > -       /* Calculate nr_channels from the IO space length */
+> > > > -       hsu->nr_channels =3D (chip->length - chip->offset) / HSU_DM=
+A_CHAN_LENGTH;
+> > > > +       hsu->nr_channels =3D nr_channels;
+> > > >
+> > > > -       hsu->chan =3D devm_kcalloc(chip->dev, hsu->nr_channels,
+> > > > -                                sizeof(*hsu->chan), GFP_KERNEL);
+> > > > -       if (!hsu->chan)
+> > > > -               return -ENOMEM;
+> > > > +       chip->hsu =3D hsu;
+> > >
+> > > Don't know these _flex() APIs enough, but can we leave the chip->hsu =
+=3D
+> > > hsu; in the same place as it's now?
+> > __counted_by requires the first assignment after allocation to be the
+> > counting variable. The _flex macros do this automatically for GCC15
+> > and above.
+>
+> Why? The hsu member has nothing to do with VLA, where is this
+> requirement coming from? My understanding is that the check should
+> imply the minimum sizeof of the data structure and the compiler should
+> know that way before doing any allocations.
+Not sure I follow. This patch changes hsu's chan member to a FAM.
+Where is VLA coming from?
 
-Yes. And I think that's ok.
+The current code is devm_kzalloc(x, struct_size()). When it gets
+introduced, I'm sure there will be a treewide conversion to
+devm_kzalloc_flex, which would automatically set the counting variable
+for >=3DGCC15.
 
-I think try/catch is broken for a few reasons, but the fact that catch
-and try are tied together so closely is the main one. You can't "try"
-inside a scope without having the "catch" inside the same scope.
-
-So then the solution is to just move the try to the outermost layer,
-and I think that's pretty much what everybody does.
-
-But at that point, why not just move it *all* the way out, and make it
-implicit and invisible?
-
-Which is kind of exactly what your suggestion is all about, and that's
-why I like it so much.
-
-It *literally* fixes try/catch. It makes the only really valid usage
-model just work better.
-
-(There are other reasons I dislike try/catch too, the whole
-"exceptions across function boundaries" being another one that your
-model avoids).
-
-                Linus
+It's best practice to assign right after since kzalloc_flex does it anyways=
+.
+>
+> My understanding seems in align with what Gustavo blogged:
+> https://people.kernel.org/gustavoars/how-to-use-the-new-counted_by-attrib=
+ute-in-c-and-linux
+>
+> The same is written in the GCC patch description
+> https://gcc.gnu.org/pipermail/gcc-patches/2024-May/653123.html
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
