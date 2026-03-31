@@ -1,143 +1,128 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBD6342C88
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 17:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774977476; cv=pass; b=utLsL+THRjqsYzBctH4qtAKUDhYOWhpKJzu9KhnTb6FA0Wc1NtK6mrf0wV9lAfpRJTf4CElSgcwzJgnayHEwqwMcAxErzkIGKv3Uglwjvzs9I0Sa3696r52/qyVXhE3sFWZx9ihrFwrlRACNTcDwh4xWT3Rvx+7WFtNkpqT59yg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774977476; c=relaxed/simple;
-	bh=XfvO/nNrfp6wJ8ltBre7ekP/xZ/Y79d2E/5o49cgJb8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFA034166B
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 17:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774977519; cv=none; b=UCSM7o+JA5I+CFuSVhU9GNUx9WyoyeY3+8+wwX1sCPPBSHantmGpIELbWn/CFGpVUDJFmo0cQc9tDiNCwzxGQgLEn5lgx1gUPvjdMlaYVEdcSOYUmLo5oQSf4fd830CS3cXPFTnWLSASg8rDSRnZzjvPSJrOEtag0U4ocup+LHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774977519; c=relaxed/simple;
+	bh=fvOPupQEnVmV/NcMv1g9ULLTpQ2SLYsqRQYOCWOIjsA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YPCcgrAitsij8lQrNG4HXEkRAnTSDq9z/fAWlbGfYkHMZR6R2xINOr5ssGUD6z4iBB3eRN3H2Y2eFVA0H/5EFfJkGoRqHpMF1CyFKUxfyPphonP8NDFk1WsGl/dMZ4tqeG24lk/ospIGmL2Ah/Phk3GzF7M+2pxzh4IlRIrjeFQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g4GSVzlP; arc=pass smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Xy/K/e/z2VPkmu8T7ObNRxClKOfx0NPlA8QZ0/TG9BuwELD0sSQ80+/AGO+T50ywyuVrb89iu4B4RbrcnK8E1SIH6T9QZSSWuJUWrw2aaOVSdX2KV04og1/JVV4yqKImyFDPiLRvIMpLP5u0dF8o+0bJMz+DdyFXbcOMur9cbjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ODDlg+1s; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g4GSVzlP"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-953b15c764dso1450992241.2
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:17:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774977474; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JPgwxhiNWkE1rYsewwRQJt0xXZZDD09Ab7DvzXWhGBbN9NM/Ay3nagxd4YF1VBfhIN
-         SPIehjtokKLbnL8p5NKQfFYyLwxbIRnH+bC5RsNnnskB1BuZ5G9An/zBP9VHt0EPjZXq
-         tL2HDmuBQ/NNCzSTB1qQ9MYUsjTcgNCgO/kR84ZMa9VwHhOf9FKCGKlNOVcpCdz2RCX5
-         y2rY7fZ5Ih85sVr04zPiWGZ5e3pEf76vK8ZHxPpAK5J8xrvQGhb31CCSTZXwJUX/3BAB
-         m/+7ptw5Z5VYb5Nh1M7Ei2u0fggiCIlBKTrRd981iRPcroE52Lf9t/+Dk/zgc5ZdOtNT
-         K+fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=XfvO/nNrfp6wJ8ltBre7ekP/xZ/Y79d2E/5o49cgJb8=;
-        fh=ku9yXoXsat+u2X79Lffxj1g+VuP/laWnoeRac/Mo9W0=;
-        b=YImY5qRou4lNPDtz7IVRjQzGrYKXHjSNwzJRuYNJyvIV+Mob3ABDmYk1LdDmiClrD7
-         mogIv0Nx7E8yfIfiRJ5138p9oKzYwyZfWF0+DEF45vMyvakJBpxSMneu12pKHV5TFQQT
-         JqMtnjg7dnWROVvEdezzGSxD4VjfgKa9zkaX3OEA9ZKxf6V1T8PKJqcQN1kmSYxUtZB6
-         Rw+CANORi/Q9VV9JM8Ncw8oL/oOT+l2kP3vFPTQaDQ7VAobxIe9oondTqA2pec+GZNl6
-         KKH6+IT8oYlKYxMKk3VH/vDg5b2QT28ReDr12hz3QxQB6bJwvehueQe1IDJAItikRub5
-         /UNQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ODDlg+1s"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-661b16ac011so11255620a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:18:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774977474; x=1775582274; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XfvO/nNrfp6wJ8ltBre7ekP/xZ/Y79d2E/5o49cgJb8=;
-        b=g4GSVzlPvZyTxCdQRik9r58eeT3v3a/iTwQpqVjcArg3oZq/1wkwpys2I1Cf/kxCFH
-         6djOmhHrT7fomF/WgtcNZDLzyYQG7WnV6dNM9A7kHloTjNwFhbvPNBwNiPJCGMFgJvIv
-         nrhzSa9HTdWbe2JaOROrd9RyBsYf5ETfj7+f1cYQgn9sjWCJ6+9OaafpGTm7j+7zglNw
-         f/qze2XNhWiUM6J9/gfNoCCvR6g2PRwDDfs22f4RpveOsgfYG+5tEw0DLmTfMu8kRX1Y
-         BnOZP+h6/0JJ7yqPuJjm6+pnI+7oVbmcSmdZUcSCKm5Loyc7/zq8j0IZ99OVMY+olF7G
-         Jz4w==
+        d=linux-foundation.org; s=google; t=1774977515; x=1775582315; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5+4YPeQId4Y1cXleVK3wn4GXPFCaXiKdSrMa6qJPwN4=;
+        b=ODDlg+1sKBigxb8IKslRzrsn95g72L80+2oNbPnYfjZpvHClsb+DjSYchl0oam4F7/
+         e+nXC1h5wDpyvt1oxGrZh4dxFD8w0S4IjrEt+OS+z3saRS2fWsh4BKuRDl+jK4bT9pVf
+         vyM9UbBzDsOEL0Ci3jgUUJ3GiHhiyRnSc3LaA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774977474; x=1775582274;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XfvO/nNrfp6wJ8ltBre7ekP/xZ/Y79d2E/5o49cgJb8=;
-        b=kfbsqfiSjhgS3UF6lC8ghTkCI3pkrRj48oxe4qsD0XZiZDR7IRVFFpeRO+BHYimZhs
-         XwP+5Yh+uXup7TqC2JoH+/bu2UyqvnkYEDy+etWasNZtneZWlxzqK6SJ6GeVNSRWRPYr
-         tA0mZafpLXEo/V3TBJ5Nlev8EYQsxspBYActIdKQV9zu+0NbYZ02lMXiO2ce2J0RJrx4
-         p7i+MLw+cmXqW+PASqDgZrauaT9QvbqDxP9uehUDYiWTfsp7NePfYicVP21ieCWrWheO
-         E7fl1JSToZQNpt3vb7K1/1Txe60+aUUArZbzFKL/GG8tqAs8UXdmff3KeeqrFnLPNsUB
-         PzNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUKSCbr9Fl8NiRW8jkOSluIFrnDZ+gVW+287vMz2WzVHw6YWHVYz4kC/3+6x6XLAkOU+xlgtzPRq8FfZzZrlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSAPBka8A2aZQGFhalde1aWepomAd/6FRe9X/JDNJ6BvK2jOQG
-	t32visGs7LGKHKCjEamf0x+DcxC+iJtk7Gz/y9cJsQKPYBhWzOiIH9jAJQHBYBlocP7RjcjB/IF
-	varGIVYl6FikYjB8WEMrcA15D3R8S0AGmJR3+r08s
-X-Gm-Gg: ATEYQzzd6V1OMbR4ZvF7fcQPwJdnc24pMHPJg2OhrE2CztKJX0Xk/3sodSdhD+Pt8BU
-	C1eqskkiN/rLKSIBB9LhzwwcXL7acytFUKeDSOBDBYNcKdviSMTrfaRd+fmAz8DX7qidprnVWAT
-	dFPnJgv2Ke8g1PvcOJ3PfD4/aREleLObSZzRJWCYk1Wl1Ouk+kj187JIfsdaCM4ar2Kru7A1QNj
-	q0ZOiP7tquSCQHHpNmzdJe1PxXC9Ps0zPTdFg5vspSmYhGo6oBuIk2srO607z8UFmYr/V79cB+b
-	o2X33EQ=
-X-Received: by 2002:a05:6102:c94:b0:602:ace8:f20e with SMTP id
- ada2fe7eead31-60567e8d127mr40188137.14.1774977473726; Tue, 31 Mar 2026
- 10:17:53 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774977515; x=1775582315;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5+4YPeQId4Y1cXleVK3wn4GXPFCaXiKdSrMa6qJPwN4=;
+        b=PstPtCK8nG+DpX3JyO2PdX+ESZePnWMt0qr3++Og1xoKe2Owt1SzPJgnBjgi2337xi
+         wuPVgeBxl7jVfTzIbQ747BHDUwG84cmabONFzQROndphpSYIy/dHNdlYScxdn1lYyv46
+         r8kzedD77u4XngnNS37UcrSvspKb7HyKVJSLzlsqI5keq5wBDBjxdbR9geyqlZaDz6fs
+         D4GAOgYXEe7nuIcxFmG2oIRDw5wETPFl6Ubz3JGrN24m2/J4h3u9h4lF32Y7qX2EFymL
+         hg33p6QSytjE4EyCZ0E0/fiqw0sUL5ek5YRjyhZluHoqsWSPbCRrYGDexrSZCjNpGQZM
+         RisA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqYdW3zac52AMII04j3FlwueriAPmI1c7Fhb/2afbvE6o1ZIpNrsIwss7VPTs8xFbphFdd1bNDRd4qUdxM7qc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKNhJZ+vypXhIQ6T/blZM/2jYyPP62Vb/fofjq3A1IJ+pRxNX0
+	AGnoXOgSvU7vi5WrAG8LVCnAbYV9IjC2DZZm9QK/cpfk5klzYGLUP8NcNe9B33C3kvRUEjsL7BA
+	g1jnEa+IYsQ==
+X-Gm-Gg: ATEYQzw9E+kcyV/y+egyyY5AT9Zj1q9ip2DwaiPyE9+unmFJDdfru3gAoXyCnUUTf0q
+	8emLmyYyvDYHrF9qI7hkI1XugqqYtcSny/0mhlrBzcHd4BjK0y/cl3SLcG8nM+n/3GGr18W/0uA
+	x2C0+YHth0nweUePv2I/RQMQcMn2V9AnZZdiLaKNa+SNGwPK2B6AgAUua7WkAHUgMi8eeJlFd7S
+	sl1uICfahoEdvD4LUSuLMOINRCqtrvOIYH4euc4ducAsCnWLAJ2qrTwQRHrNDbLw05kIot7OjFW
+	4UXlYrnrtMczygF64Ssqm31Kj0y8rgPP5a573KHT4cIg6cPibxaS8/YhKNk7n9wUHKVPCLKv2Jv
+	FUG2LWWpDZKDKDXr+xk6cgg7m346uNRk7R1FGxFu6FxL2XNR5dw5UYWCEZaicv6rPC2d4jSw0BS
+	ZGHT+tf9i/HPQ4NMkS2e+AwmXztMnrX7pKaFwtWck6LrhMEFcAOFP7FVNqUVI9R3Wqcl2z4WjF
+X-Received: by 2002:a05:6402:1f4c:b0:66c:167a:30c2 with SMTP id 4fb4d7f45d1cf-66db02ab1e7mr218359a12.8.1774977515598;
+        Tue, 31 Mar 2026 10:18:35 -0700 (PDT)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-66b76078a28sm3737526a12.22.2026.03.31.10.18.35
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2026 10:18:35 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b9358dd7f79so54598066b.1
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:18:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWuz52if7gI0H+ka7Fvw6tDmlPHGM2Di/zagy0VW00joxyEpCOKgP4LZdp0OuVZnBUY6SdBqCmukJwWr8aKKnA=@vger.kernel.org
+X-Received: by 2002:a05:6402:320a:b0:66c:2ab4:1c17 with SMTP id
+ 4fb4d7f45d1cf-66db02ab9fcmr248797a12.9.1774977068945; Tue, 31 Mar 2026
+ 10:11:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-3-kees@kernel.org>
- <CANiq72mK9fz6Spmgt4js3hScqhqvZb2YP2T7tDfR0fHPDFWJ7g@mail.gmail.com>
- <CAFhGd8paijFboDVr8rJDjScob047q+zgYAs038WuVozOG0aYaQ@mail.gmail.com> <CANiq72mQPU2Uyz27mBtfT6UF4Zgoq_osodALs21kJ4qOFLVhUQ@mail.gmail.com>
-In-Reply-To: <CANiq72mQPU2Uyz27mBtfT6UF4Zgoq_osodALs21kJ4qOFLVhUQ@mail.gmail.com>
-From: Justin Stitt <justinstitt@google.com>
-Date: Tue, 31 Mar 2026 10:17:41 -0700
-X-Gm-Features: AQROBzDziq6Gf2V5ut4O-Crb8XfwsiZEe1mK1jC7L_WO2ZUVxZo1u0OLGaY1nqw
-Message-ID: <CAFhGd8o2C5T4_-p3zsSbygwi=yDPOdpDBPC69X=R8qoefbVXew@mail.gmail.com>
-Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
- __ob_trap and __ob_wrap
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	llvm@lists.linux.dev, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Nicolas Schier <nsc@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-5-kees@kernel.org>
+In-Reply-To: <20260331163725.2765789-5-kees@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 31 Mar 2026 10:10:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
+X-Gm-Features: AQROBzDm3gEHu3WZ_nfCrD45b6_U9t89WHlDWMoUx8NfrAs9jBI1Qm6jv38zdhA
+Message-ID: <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
+Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar types
+To: Kees Cook <kees@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Justin Stitt <justinstitt@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Mark Rutland <mark.rutland@arm.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>, Finn Thain <fthain@linux-m68k.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	llvm@lists.linux.dev, Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Nicolas Schier <nsc@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-kbuild@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, 31 Mar 2026 at 09:37, Kees Cook <kees@kernel.org> wrote:
+>
+> Current straw-man proposal is single letter suffix because it vaguely
+> felt like the least bad of all choices, and they should be short or
+> everyone will just continue to type "int". :)
 
-On Tue, Mar 31, 2026 at 10:14=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Tue, Mar 31, 2026 at 7:09=E2=80=AFPM Justin Stitt <justinstitt@google.=
-com> wrote:
-> >
-> > __ob_trap and __ob_wrap are defined by the compiler.
-> >
-> > There are some examples within the documentation additions of this patc=
-h.
-> >
-> > Kees, is it possible to make it more clear about what we expect of
-> > kernel developers in terms of style? Should they use keyword
-> > spellings? attribute spellings? only use custom types?
->
-> Yeah, I noticed that right after sending the email, sorry.
->
-> So I tried to use a macro even if happens to have the same name as the
-> keyword, since that form is a bit more flexible, but it is fine either
-> way.
->
-> What I would suggest is adding to the comment that these were decided
-> to be used as keywords, and thus we only need to define them as empty
-> in the disabled case.
+Violently disagree.
 
-Agreed.
+I'd rather have people continue to use other types than have somethign
+that isn't visually obvious for *VERY* subtle semantic changes.
 
->
-> Thanks!
->
-> Cheers,
-> Miguel
+If somebody starts using explicitly trapping types, they need to say
+so. Not just *say* so, but scream it at the top of their lungs. No
+hidden subtle behavior changes. This needs to look _very_different_.
 
-Justin
+No stupid one-character things. If we go down this path it would need
+to be "wrapping_u32" or whatever.
+
+That said, I think the trapping behavior is unacceptable unless
+there's some way to recover from it. An dno, that "some way" is not
+the broken C++ style exception handling. That thing is pure and utter
+shit, and fragile as hell. Anything that requires trying to unwind the
+stack is just a complete no-go because it's going to be buggy and
+untestable (sure, you can have test-cases and the unwinding will work
+for *those*, but...)
+
+I don't actually see any sane interface. The "unsafe_get_user()" thing
+with actual labels and exception tables works very well, but it would
+require wrapping all trapping operations in a macro.
+
+Which is maybe not a bad idea - it's almost certainly better than the
+overflow builtins - but might also be disgusting. Hard to tell.
+
+              Linus
