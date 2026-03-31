@@ -1,161 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5652426686;
-	Tue, 31 Mar 2026 16:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774975046; cv=none; b=PnbO255MRcW+aRP4ryirODdgsKypg/t2BycE/ZK6yRzO9tBcwQ0e3CqejguL//uEyT1nWX0jX3nwLwYXakZnRkObzYtR/qUfV0jFkLjIGeaO560HPDayFiuj4f5f916UtogMXt5tmEbZvbO4+xM3sSLWsoMiQywkZSy3KCSxTjM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774975046; c=relaxed/simple;
-	bh=a4JG7usT6Z6N0Znenn9HJ2Ff5uUsHYvIsmUVVM1ha74=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q3uNRHeQL6hciqVKt9AJQIHfRZgZ21+yHWFzpqTkcftt7qWRahBHkNTkvSmhz5eq6/QTDfTpSCG7A6A4yiRk2xwLeL5L9zK2JHKR5wbUgy2k4UOYqFhKBKWGkVyCu7DZm7XZMNXxvMq+PPGJowk4xn7o5tWYOywPpijfv84g9Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqAi4pN1; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FBB2FE042
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 17:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774976530; cv=pass; b=eXmsbsk1vDyFeN0hZGDpPqbG5V6esB8QykQKQpzHKAscuOUZRuPfu5kEaNN1vt5vj/MdfMVOdIwiNo0BcMz04BSdxGOQF5K8ugkGTYrykpgCyVPAH9nReLv6QZ1zQ4gAvb+g6EHnTIc9JfrGCqqgL9j4mom19G/WVEPCBXFRtNs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774976530; c=relaxed/simple;
+	bh=g/vQPQS0w9Xxi55W5EhGbOlAIubJN7tvka1LWWLiAXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rN2tbTwWctFiikgrwRk7oxeaUqq/edqtRK+Uf2eqUvdaWzhT+x/iCXAl/EJf7yxevNkxfgErdsh1HNQnoGfvAnd8lE7fvzyJxx+BtGTJeTKWDgIySAxOBxWOv4ufjwpiSYR2Wixptqo1B1bCR2u0vVlz7lf4zAiNHxS3whIMzQQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4MYfcI8; arc=pass smtp.client-ip=74.125.82.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqAi4pN1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721D1C4AF10;
-	Tue, 31 Mar 2026 16:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774975046;
-	bh=a4JG7usT6Z6N0Znenn9HJ2Ff5uUsHYvIsmUVVM1ha74=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uqAi4pN1Z8ucCsiUu+1eUEmYdhAcjaNzGIJbAW+vfqMgV8q3KsXOGzY9mWLYYBh4X
-	 ZQmhGSdJI0TaVO58Lqu8FphqRR/iCQuxsIEoFxRTMV10UPeK1QpZHaoQc6t4W1XQkq
-	 BFU35lt9z23/4W+IlSN/mxlZGuzkQtOetnlmjbx7J4KDGU1y1i09LU3wc+GH515fgH
-	 Ln57eaoQYAeAdygThC3LXzzmc3niIpq/H6kXByGfjh4w6u/KVwFJYl4klVEYZPDgNk
-	 SK8qHE5w7mFovWtXo0waaUNjsVuo8A08pE+SHHf1H908opsLv2laztVDYGj754m/W8
-	 SQZuSHzyfBFTA==
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Finn Thain <fthain@linux-m68k.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	llvm@lists.linux.dev,
-	Marco Elver <elver@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Nicolas Schier <nsc@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar types
-Date: Tue, 31 Mar 2026 09:37:23 -0700
-Message-Id: <20260331163725.2765789-5-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260331163716.work.696-kees@kernel.org>
-References: <20260331163716.work.696-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4MYfcI8"
+Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-2c7e5f38a69so27096eec.1
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:02:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774976528; cv=none;
+        d=google.com; s=arc-20240605;
+        b=J6vfy0lgTmy3gTZESUgwFqG8y5R7SKkG5hfprkkx6jTPsrVCjDBw6IAz21oY3iP+qH
+         iXmeqHLW6WX7wXsM5NgJmHwIDgI10ukJ5mRUCLJQ1edi82zypNv1mKpf3sRYCQrZ/Hg2
+         MatkltBHOpS0WJZeaPzaZtHypRL4jfNgvdjD2MTh7fPQpLYWzXvrU9oZDcpL5ERXNZC3
+         A8T0grnjfPRROsSNxw5wCnAYDM+Z3XjR/XKgHYrF7McLlN4AYOSYFFW8V0dT8/3xW+bi
+         6Z0F7YD61dNJiylKKwp7S2al4ayXX0u8UMHx1bvXIk/VW40kyLnLKqA1lmfyJLxwsIkS
+         MQcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=IU4m3ma81SYxNj71QUeHGIKcLWU6SzNh0VTIbMzWeYY=;
+        fh=7VI/hmixivRnfNii6mPlV60oiUld3yJGdnT8U3ylHYk=;
+        b=kbS21wW4s/wzzPbSXQ42LXw2vEKPX4LRTWrVRE8fdAJw+RehwBDxfcI27gGVU1vT8v
+         A5/5YHDa2CUg/hdf5a64j6p1yLaDgq+gHZfHT45PYGIm2/dV1Pgv+4eGfiZAw/QMoFDV
+         GvliiCSXB+s7kjXIuLLV7b2lBpKMORbrMWQpkNxGg/Ja5MzuQCLu3cmdInBpwaNqoS5r
+         r6s/FIvFRN27J1HsZ8dXZHvafvqShS73lEFv96OsAA3TcF+UgYduXIT4PKXc5G7Rsxum
+         FTtdsYtB12X6wIim3EqJjwzED8QX8jhIZnH1x7UabLzluXHRQrGTj9i17kxkVGd4/DAG
+         0wKA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774976528; x=1775581328; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IU4m3ma81SYxNj71QUeHGIKcLWU6SzNh0VTIbMzWeYY=;
+        b=h4MYfcI8slTRlGMHt1sQIa64V5DXkkM2nRCsSYDP4oWK8+qzdbA+zJqcCdGqnXOMS5
+         mgSuxxfmZhRiCIoKC0/6HTMbXMt7u2IAtQRwvb5O77jWrHxW2XYOE9y5hrNuU1n4+zR0
+         e1XnmQiNA+sSvBSVH4vROfkT4PLFPzDHkJqSmbcWB7YHp9fGU2uH5/0H/l+xqlpwsbgR
+         UCSf5Sm0s3783Xsc5fVL37YeD1MMnILpPWekNfUXVzA92b7/0h+ehNgcSOOUXFBVZctj
+         VAGCLbIP43kiaKdaLoR7D38heKXa0NoSeRPKT9iG0Aw3sZOac7kV19IyrIRKqFYo65Lo
+         52bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774976528; x=1775581328;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IU4m3ma81SYxNj71QUeHGIKcLWU6SzNh0VTIbMzWeYY=;
+        b=n7N1u1kxGzDP8DjJmrfcCR9VLhJ8p0fXDGtwMLNM4awmASeT2KbGpiKKwya5ACfzo1
+         7prH7EQCVK0Q0ULWNoN4u94+t5sOtjJSo36xG8GZ7iDa9biTFPYzep2mAtQyeQg9PMDx
+         vNMpjjJ7QZlT+H/9E1am145WVIGzE6ufCOHI7ySWOFFeHtShnL7EGguxEIp5rYr4YT0E
+         JteWYzqDo0nPDnE6dA7W59R7m0B7M/aG2ta80+GfTjA5tM5bIUORaZJ7DFEJECQd3fRb
+         AAmOgqnWcAe54z9EWEEKnT8ICY0ZpjG7dfLQnSUOXoyYVGJLP2q+xnmSvut31kISWmnD
+         nyhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqexn4SIY137CkFN78u2ooU/lGk/wAWfikICR8+k4qB2k2BZfG6MB7GlJcyDRCAIfN7gOxswF0WL6hrY9/S1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyScLoDyHxUFhT6b0g/FllQp91BLHcj/xgaXtkZCWThKIzsNrLT
+	r47LJqkES+oYLPYdSX4SctCH3+3fvwFuG+DifK04I+AicXmFPEXHwEwjHKwOSCb18kgZuPoa6Eg
+	DYCBPu5lUNHkCiYBY4Nk7isaIT0T/swc=
+X-Gm-Gg: ATEYQzypPp7jI6ma9lKg343wh/MAF8Y6gyupCOMmEf6HqR7YWiGDp5aSz82vmfFzRQM
+	2JGAX3jPcd4NMw/Bw9Elj+zPJUhRK2vj6Bd+TvUOK5vaLnKlOLQNNZVXer4dZPAixP3NCVq3nHM
+	Gl/1nkapBRR4pGjmpXom+YMfjkjYojs9sdeuZpCGLZPc/VjPKwZpNG0odQKPb1+pvoONOJzNbrF
+	J22ImUhL/1tyTLl7te2iu6mE4PSAskemQqtoiXva6aloU8nfAqErPcjZVGOg45WF/3YeLkTdUoj
+	Wsnb4VZ+tUJm9ryssl7SYoJEHzIbLBvpd82odyngUZQ5CLm/tBY8YYKX7rmJhoihzvRibxrAHL2
+	qKfipQFByS1f9Fjh1eeXJYug=
+X-Received: by 2002:a05:7300:8c05:b0:2c8:aef9:cf3c with SMTP id
+ 5a478bee46e88-2c8aef9d5bbmr578311eec.8.1774976528009; Tue, 31 Mar 2026
+ 10:02:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3375; i=kees@kernel.org; h=from:subject; bh=a4JG7usT6Z6N0Znenn9HJ2Ff5uUsHYvIsmUVVM1ha74=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmnfzgZ57sa8O8X3MkZ/Vz6c6bB4oNsS4PMX3XHaUXdd 3ZlaXrbUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCMBG3aEaGzeJcdxR3hV4+v/KV nrJlaC3f6y/mnHum/TX2kJ0qnP/oCcMfnoIja5QXO+2M6nzmfkX759RuaybtVE0Zge6GW/u+tpi xAAA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-3-kees@kernel.org>
+In-Reply-To: <20260331163725.2765789-3-kees@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 31 Mar 2026 19:01:55 +0200
+X-Gm-Features: AQROBzACBmAh1Gj6cURe9fgjRYkC4LMT-gxdC_n35omwVPBYsPI5mIuUgNZG76o
+Message-ID: <CANiq72mK9fz6Spmgt4js3hScqhqvZb2YP2T7tDfR0fHPDFWJ7g@mail.gmail.com>
+Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
+ __ob_trap and __ob_wrap
+To: Kees Cook <kees@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Justin Stitt <justinstitt@google.com>, 
+	Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
+	llvm@lists.linux.dev, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Nicolas Schier <nsc@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-While Linux's use of -fno-strict-overflow means that all arithmetic
-operations have a defined behavior (2's-complement wrapping), there
-isn't a way to unambiguously specify if a given variable was designed
-or intended to wrap around by the author.
+On Tue, Mar 31, 2026 at 6:37=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> +/*
+> + * Optional: only supported by Clang with -Xclang -experimental-foverflo=
+w-behavior-types
+> + * passed via CONFIG_OVERFLOW_BEHAVIOR_TYPES. When not available, define=
+ empty macros for
+> + * the trap/wrap annotations.
+> + *
+> + * clang: https://clang.llvm.org/docs/OverflowBehaviorTypes.html
+> + */
+> +#if !__has_attribute(overflow_behavior) || !defined(OVERFLOW_BEHAVIOR_TY=
+PES)
+> +# define __ob_trap
+> +# define __ob_wrap
+> +#endif
 
-Introduce explicit trapping and wrapping types for all bit widths
-including architecture word length (i.e. "long"), signed and unsigned,
-for use going forward for unambiguous arithmetic, now available via
-Clang 23+'s Overflow Behavior Types[1] (CONFIG_OVERFLOW_BEHAVIOR_TYPES=y).
+Should that have `CONFIG_*`? i.e.
 
-Bike shedding time! How should these be named? We already have the short
-bit width types, named as: {u,s}{8,16,32,64}. We need to construct new
-type names that also indicate their overflow behavior: "trapping" or
-"wrapping". And we need to capture the "architectural word" length type
-too (i.e. what "unsigned long" or "size_t" captures).
+     !defined(CONFIG_OVERFLOW_BEHAVIOR_TYPES)
 
-Whole word addition:
-- Pro: Unambiguous
-- Con: Long. E.g. suffixed "u16_trap", or prefixed "wrap_u16"
+In addition, since this depends on a `CONFIG_`, with the current setup
+we would put them elsewhere instead of `compiler_attributes.h` until
+they are promoted to be "unconditional" (i.e. without the compiler
+flag):
 
-Single letter addition, "t" for "trap" and "w" for "wrap":
-- At the end: but "u8t" looks like the "t" is "type", like "uint8_t".
-- At the front: but "wu8" looks like the "w" is "wide", like "wchar_t".
+     * Any other "attributes" (i.e. those that depend on a configuration op=
+tion,
+     * on a compiler, on an architecture, on plugins, on other attributes..=
+.)
+     * should be defined elsewhere (e.g. compiler_types.h or compiler-*.h).
+     * The intention is to keep this file as simple as possible, as well as
+     * compiler- and version-agnostic (e.g. avoiding GCC_VERSION checks).
 
-Current straw-man proposal is single letter suffix because it vaguely
-felt like the least bad of all choices, and they should be short or
-everyone will just continue to type "int". :)
+However, thinking about it, why is the config needed?
 
-Link: https://clang.llvm.org/docs/OverflowBehaviorTypes.html [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Finn Thain <fthain@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Thomas Weißschuh" <thomas.weissschuh@linutronix.de>
-Cc: <llvm@lists.linux.dev>
----
- include/linux/types.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+i.e. if the compiler is not passed that flag, shouldn't the
+`__has_attribute` simply return false?
 
-diff --git a/include/linux/types.h b/include/linux/types.h
-index 7e71d260763c..786eb2c9775f 100644
---- a/include/linux/types.h
-+++ b/include/linux/types.h
-@@ -94,6 +94,30 @@ typedef unsigned int		uint;
- typedef unsigned long		ulong;
- typedef unsigned long long	ullong;
- 
-+/* Trapping types. */
-+typedef u8 __ob_trap		u8t;
-+typedef u16 __ob_trap		u16t;
-+typedef u32 __ob_trap		u32t;
-+typedef u64 __ob_trap		u64t;
-+typedef unsigned long __ob_trap	ulongt;
-+typedef s8 __ob_trap		s8t;
-+typedef s16 __ob_trap		s16t;
-+typedef s32 __ob_trap		s32t;
-+typedef s64 __ob_trap		s64t;
-+typedef signed long __ob_trap	slongt;
-+
-+/* Wrapping types. */
-+typedef u8 __ob_wrap		u8w;
-+typedef u16 __ob_wrap		u16w;
-+typedef u32 __ob_wrap		u32w;
-+typedef u64 __ob_wrap		u64w;
-+typedef unsigned long __ob_wrap	ulongw;
-+typedef s8 __ob_wrap		s8w;
-+typedef s16 __ob_wrap		s16w;
-+typedef s32 __ob_wrap		s32w;
-+typedef s64 __ob_wrap		s64w;
-+typedef signed long __ob_wrap	slongw;
-+
- #ifndef __BIT_TYPES_DEFINED__
- #define __BIT_TYPES_DEFINED__
- 
--- 
-2.34.1
+Also, I am a bit confused -- does the compiler flag automatically
+recognize the names like `__ob_trap`? i.e. I see the docs mention
+using the attribute,
 
+    typedef unsigned int __attribute__((overflow_behavior(trap))) safe_uint=
+;
+    typedef unsigned int __attribute__((overflow_behavior(wrap))) wrapping_=
+uint;
+
+But then we don't actually use it?
+
+Or should this just be like the rest of the attributes, i.e. we
+actually define them here?
+
+Thanks!
+
+Cheers,
+Miguel
