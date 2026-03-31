@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BA4256C6C;
-	Tue, 31 Mar 2026 05:11:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C649F175A6B;
+	Tue, 31 Mar 2026 05:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774933874; cv=none; b=a+vqLJ4MaziHRv816YLMcjs1BhJvztBgut8JcQcp1uSPKOjI1QVFLsk/Asja/uwdVZsZ2dFCC2reCd0AZKBaqM/MVfR5WpGFH7qkl8ATU9ddYWbX7AIu0cCNJFNMPf8UnveGxwhCSBy5elGd8o4tyuJ5y66neZtN8pKhkvMtSLc=
+	t=1774935286; cv=none; b=RO+YjDx30sgDi2IuaLCmaetxjnGEVGs8QYFhtJrIgrnGhXBtVOxiKcoUOQD4PhrEdB0EI1ZcWASL6W/k1SIEK5P+C3b9VZ54J353QYFFYTylAjHItg8Wizw4yOJx3yy2wJzsHm9jHcSzBA7aBpHibgMD+4roGlKkTZCF8StzAW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774933874; c=relaxed/simple;
-	bh=qgwGjSndI7dIefRX9sQjFUQoAk0IrScVdd35+gJU8sY=;
+	s=arc-20240116; t=1774935286; c=relaxed/simple;
+	bh=ERgkL2Rh8Uk73V3Zb2z9UjJCCMin0IIArfID3g+LSbk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=urNwSE/Uv9Z7Vr3Jdyey2IfPqN3m6lrOqYAetreUvJDKW8saPK7/wNXT81hzfR50m5AUJxV37x2zgiB5Cgae2rzmGscQB1nPYhdV+HWswDAk7vTjfSTZv8eulkOoofTM5Ca+NxVWZNqMwsRjVYnIqP3tJvlnAsaAvEr+sO11Iaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2No6rJz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JpFD+T5H2bLaWqqAcF18LQNawjo2WSThSItk7uNlz2IYBwPr/EevyKGUSLdQ2IecZ6DftU2yeFR1/xnz+nPu2cRCIwjZhhupoElmta9W4uRmlLucURJlz5R9Up1tgHsFxX2czdYtM7SoK2yC2tzIB0mqYSWPT+crzB+4iIt18Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwzrqdnY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2No6rJz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9170BC19423;
-	Tue, 31 Mar 2026 05:11:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwzrqdnY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A73DC19424;
+	Tue, 31 Mar 2026 05:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774933873;
-	bh=qgwGjSndI7dIefRX9sQjFUQoAk0IrScVdd35+gJU8sY=;
+	s=k20201202; t=1774935286;
+	bh=ERgkL2Rh8Uk73V3Zb2z9UjJCCMin0IIArfID3g+LSbk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N2No6rJzRsar/Awuif++9FOunv81fRGhhWzTTye52bshVpLWDahwf0Q+UPa7ehVUN
-	 CNWOb49A5f2F+S1lBfsWDwUlUJsgS319a+AvWayg1NHINTzppW7LA6ibEv94wp1STZ
-	 nbK/gYYEayDP+FqK6/NauZqk9XLNVLvb4904T9pTFK3zOuTWApBvVL8fkhmv383fdb
-	 hQyIa6bE2iHAxOtZLDVM3QANyKjUZJY6uWqel71wOTsjCYyt04CjwDN5Qg+ASAGqRx
-	 mzctmt1endF6KcjYY8fPBTUXZrYl5kYKT5+IDVjOaXqiwDNnmc7ef0PhfOk2tSqym9
-	 eu5DAV7ZJP20Q==
-Date: Tue, 31 Mar 2026 08:11:08 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Alex Williamson <alex@shazbot.org>
-Cc: Rosen Penev <rosenp@gmail.com>, kvm@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] vfio: pci: use kzalloc_flex
-Message-ID: <20260331051108.GY814676@unreal>
-References: <20260326023747.54485-1-rosenp@gmail.com>
- <20260330161933.6471d473@shazbot.org>
- <CAKxU2N8rpaLXXsD7sUvw3ffMe8JUREGc9ru_HX0r4Uw4RT_q1g@mail.gmail.com>
- <68be750c-694b-40ad-9818-809f80849795@app.fastmail.com>
+	b=NwzrqdnYKdEzHYC3yTxdkylUQ1f/98RlsJ5axnZ7I7R/tVsGV4biNd2hgONpDJ7g2
+	 qW0H0i8yTJug3ZPpHlP9XeHTf92syolzyfxB+PMYIEkPZh5EotX/7F6Bl4gOFUNg0+
+	 wpOKKjZKVm4/Xr8jpVZciDfs/7fEMb2hMBUpznpkyoaDs8t2lzZxTqRmPg3aGm3tWn
+	 mip77J2Rgp93M0L2OHVAcbZepnWHmf2Ax7+S2C9Fq5BIXr8aBETGODFOJzoxQUFqRE
+	 uCmh100aL7SEvftal4YMDH/TFg1hb4jk5Agu6UC4YtvaNMS04nAzVpoC2zzrlI5ncE
+	 nnMkoYZM8k0wQ==
+Date: Tue, 31 Mar 2026 11:04:32 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: rafael@kernel.org, jonathan.cameron@huawei.com, helgaas@kernel.org, 
+	guohanjun@huawei.com, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev, linux-hardening@vger.kernel.org, 
+	Shiju Jose <shiju.jose@huawei.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 2/3] PCI: hisi: Use
+ devm_ghes_register_vendor_record_notifier()
+Message-ID: <i4pg4fvo3vulzevo5cnjb5qku73cqtucuxqwhiw73dfxcufhqi@ofsvdrffsegl>
+References: <20260330094203.38022-1-kaihengf@nvidia.com>
+ <20260330094203.38022-3-kaihengf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,132 +49,74 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <68be750c-694b-40ad-9818-809f80849795@app.fastmail.com>
+In-Reply-To: <20260330094203.38022-3-kaihengf@nvidia.com>
 
-On Mon, Mar 30, 2026 at 06:23:05PM -0600, Alex Williamson wrote:
-> On Mon, Mar 30, 2026, at 5:24 PM, Rosen Penev wrote:
-> > On Mon, Mar 30, 2026 at 4:16 PM Alex Williamson <alex@shazbot.org> wrote:
-> >>
-> >> [Cc +Leon]
-> >>
-> >> On Wed, 25 Mar 2026 19:37:47 -0700
-> >> Rosen Penev <rosenp@gmail.com> wrote:
-> >>
-> >> > Simplify allocation by using a flexible array member and kzalloc_flex.
-> >> > Less memory management needed.
-> >> >
-> >> > Use __counted_by for extra runtime analysis. Move assignment to after
-> >> > allocation as required by __counted_by.
-> >>
-> >> I don't understand this statement, nr_ranges was previously set after
-> >> the allocation of phys_vec.  The only reordering was relative to
-> >> setting vdev, but that appears arbitrary.
-> > Yes that one. My understanding is __counted_by mandates immediate
-> > assignment after allocation. Otherwise UBSAN complains.
-> >>
-> >> In fact, we don't need to explicitly set the __counted_by variable at
-> >> all, kzalloc_flex() handles that.  So if anything, it's now redundant.
-> > Redundant with GCC`15 and above.
+On Mon, Mar 30, 2026 at 05:41:56PM +0800, Kai-Heng Feng wrote:
+> Switch to the device-managed variant so the notifier is automatically
+> unregistered on device removal, allowing the open-coded remove callback
+> to be dropped entirely.
 > 
-> Sorry, this seems like a -2 on Rusty's manifesto of API design[1].  Why are we doing this?  We could do the math to do a single allocation and add the annotation for UBSAN without introducing this helper that's not obvious how to use correctly and at best introduces a redundant counter initialization.  Thanks,
+> Cc: Shiju Jose <shiju.jose@huawei.com>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
 
-My comment is that we can simply drop this patch. It adds no value and only
-creates unnecessary churn.
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
-Thanks
+Since there is an API dependency, feel free to take it through ACPI tree.
 
+- Mani
+
+> ---
+> v3:
+>  - No change.
+> v2:
+>  - New patch.
 > 
-> Alex
+>  drivers/pci/controller/pcie-hisi-error.c | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
 > 
-> [1] https://gist.github.com/mjball/9cd028ac793ae8b351df1379f1e721f9
+> diff --git a/drivers/pci/controller/pcie-hisi-error.c b/drivers/pci/controller/pcie-hisi-error.c
+> index aaf1ed2b6e59..36be86d827a8 100644
+> --- a/drivers/pci/controller/pcie-hisi-error.c
+> +++ b/drivers/pci/controller/pcie-hisi-error.c
+> @@ -287,25 +287,16 @@ static int hisi_pcie_error_handler_probe(struct platform_device *pdev)
+>  
+>  	priv->nb.notifier_call = hisi_pcie_notify_error;
+>  	priv->dev = &pdev->dev;
+> -	ret = ghes_register_vendor_record_notifier(&priv->nb);
+> +	ret = devm_ghes_register_vendor_record_notifier(&pdev->dev, &priv->nb);
+>  	if (ret) {
+>  		dev_err(&pdev->dev,
+>  			"Failed to register hisi pcie controller error handler with apei\n");
+>  		return ret;
+>  	}
+>  
+> -	platform_set_drvdata(pdev, priv);
+> -
+>  	return 0;
+>  }
+>  
+> -static void hisi_pcie_error_handler_remove(struct platform_device *pdev)
+> -{
+> -	struct hisi_pcie_error_private *priv = platform_get_drvdata(pdev);
+> -
+> -	ghes_unregister_vendor_record_notifier(&priv->nb);
+> -}
+> -
+>  static const struct acpi_device_id hisi_pcie_acpi_match[] = {
+>  	{ "HISI0361", 0 },
+>  	{ }
+> @@ -317,7 +308,6 @@ static struct platform_driver hisi_pcie_error_handler_driver = {
+>  		.acpi_match_table = hisi_pcie_acpi_match,
+>  	},
+>  	.probe		= hisi_pcie_error_handler_probe,
+> -	.remove		= hisi_pcie_error_handler_remove,
+>  };
+>  module_platform_driver(hisi_pcie_error_handler_driver);
+>  
+> -- 
+> 2.50.1 (Apple Git-155)
 > 
-> >>
-> >> Leon, any other comments?  This should have a v2 removing the
-> >> redundancy and fixing the commit log.
-> >>
-> >> NB. This will be a bit messy to merge since kref and completion exist in
-> >> linux-next via drm, but maybe Linus will consolidate the hole in the
-> >> structure when he resolves it.  Thanks,
-> >>
-> >> Alex
-> >>
-> >> >
-> >> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> >> > ---
-> >> >  drivers/vfio/pci/vfio_pci_dmabuf.c | 18 +++++-------------
-> >> >  1 file changed, 5 insertions(+), 13 deletions(-)
-> >> >
-> >> > diff --git a/drivers/vfio/pci/vfio_pci_dmabuf.c b/drivers/vfio/pci/vfio_pci_dmabuf.c
-> >> > index 3a803923141b..40e7e035a720 100644
-> >> > --- a/drivers/vfio/pci/vfio_pci_dmabuf.c
-> >> > +++ b/drivers/vfio/pci/vfio_pci_dmabuf.c
-> >> > @@ -14,12 +14,12 @@ struct vfio_pci_dma_buf {
-> >> >       struct vfio_pci_core_device *vdev;
-> >> >       struct list_head dmabufs_elm;
-> >> >       size_t size;
-> >> > -     struct phys_vec *phys_vec;
-> >> >       struct p2pdma_provider *provider;
-> >> >       u32 nr_ranges;
-> >> >       struct kref kref;
-> >> >       struct completion comp;
-> >> >       u8 revoked : 1;
-> >> > +     struct phys_vec phys_vec[] __counted_by(nr_ranges);
-> >> >  };
-> >> >
-> >> >  static int vfio_pci_dma_buf_attach(struct dma_buf *dmabuf,
-> >> > @@ -95,7 +95,6 @@ static void vfio_pci_dma_buf_release(struct dma_buf *dmabuf)
-> >> >               up_write(&priv->vdev->memory_lock);
-> >> >               vfio_device_put_registration(&priv->vdev->vdev);
-> >> >       }
-> >> > -     kfree(priv->phys_vec);
-> >> >       kfree(priv);
-> >> >  }
-> >> >
-> >> > @@ -258,33 +257,28 @@ int vfio_pci_core_feature_dma_buf(struct vfio_pci_core_device *vdev, u32 flags,
-> >> >       if (ret)
-> >> >               goto err_free_ranges;
-> >> >
-> >> > -     priv = kzalloc_obj(*priv);
-> >> > +     priv = kzalloc_flex(*priv, phys_vec, get_dma_buf.nr_ranges);
-> >> >       if (!priv) {
-> >> >               ret = -ENOMEM;
-> >> >               goto err_free_ranges;
-> >> >       }
-> >> > -     priv->phys_vec = kzalloc_objs(*priv->phys_vec, get_dma_buf.nr_ranges);
-> >> > -     if (!priv->phys_vec) {
-> >> > -             ret = -ENOMEM;
-> >> > -             goto err_free_priv;
-> >> > -     }
-> >> >
-> >> > -     priv->vdev = vdev;
-> >> >       priv->nr_ranges = get_dma_buf.nr_ranges;
-> >> > +     priv->vdev = vdev;
-> >> >       priv->size = length;
-> >> >       ret = vdev->pci_ops->get_dmabuf_phys(vdev, &priv->provider,
-> >> >                                            get_dma_buf.region_index,
-> >> >                                            priv->phys_vec, dma_ranges,
-> >> >                                            priv->nr_ranges);
-> >> >       if (ret)
-> >> > -             goto err_free_phys;
-> >> > +             goto err_free_priv;
-> >> >
-> >> >       kfree(dma_ranges);
-> >> >       dma_ranges = NULL;
-> >> >
-> >> >       if (!vfio_device_try_get_registration(&vdev->vdev)) {
-> >> >               ret = -ENODEV;
-> >> > -             goto err_free_phys;
-> >> > +             goto err_free_priv;
-> >> >       }
-> >> >
-> >> >       exp_info.ops = &vfio_pci_dmabuf_ops;
-> >> > @@ -323,8 +317,6 @@ int vfio_pci_core_feature_dma_buf(struct vfio_pci_core_device *vdev, u32 flags,
-> >> >       dma_buf_put(priv->dmabuf);
-> >> >  err_dev_put:
-> >> >       vfio_device_put_registration(&vdev->vdev);
-> >> > -err_free_phys:
-> >> > -     kfree(priv->phys_vec);
-> >> >  err_free_priv:
-> >> >       kfree(priv);
-> >> >  err_free_ranges:
-> >>
+
+-- 
+மணிவண்ணன் சதாசிவம்
