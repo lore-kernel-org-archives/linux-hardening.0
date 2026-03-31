@@ -1,110 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1436A3F9F57
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 14:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15523E8C4B;
+	Tue, 31 Mar 2026 14:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774965931; cv=none; b=K9pe2dcmBsJGPSdCZzJQvbPGs+tI69F19qd9C9BKXD4Hnr7EEPMb18QV58oFLtSyp1JZaSiBBB2B2fNW6gK3vFBZuWonBLFUw3LrRZg2Xe3s5tpwnv2fmiLtFQYb7KboFB2BsNxpyIW/EQPJfiARFDVjIiQk4jKf99vsQL16Hhk=
+	t=1774968142; cv=none; b=Ncn5ZUkFyvDNDvDPRwYyavdrJsfdqzbIqQtH5NKjSanM7I0g0rM0vglo3aq+rWlLTCPubijcZj4we2S4404Q2tDWw1mzgSdfcQNqyE9fsk/vxgErbSCIT0b9SJ+c5AUK6AOYLE1hk8OdYhBWHbGi9XuNMiv+e4PtuVSjsDVSSso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774965931; c=relaxed/simple;
-	bh=MHPubSiQQDuhGllrpi7wOq/Rvc/2bLlTMoYFqbq0jDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=rPZnEuJhQkHCtusX+pXwUpwoBVTyWRSgAZELejzc1bCx9+ZJdk6tS4MES2hXDh5EgUGOVGeEmEKiIyVEMbYtrM2SSAxEJsGy33c+Mc9/joc1//91GQsmNTB7aOqmdVTStrBBhQiDi6cm3D50psJFGmBZHdQxwtIw7ZNxboq7Hc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MMRjTiNe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MMRjTiNe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774965928;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lZCByEtmnsNYIdWYLf1KzEBvQz2XTmeXiioZ2Mxrxog=;
-	b=MMRjTiNegYiq0Blnt0B3BzlLV85ZYEwrkxJiShpnJHc9IsSbO+b+Vifnxink4eEhLHJWEs
-	GBNXKpSPuNVYUqzhltqRvw0Az99FcW4uFrDZrkEoG/M/5jDMiJjR+nD+yf1kT2pV1ylpuH
-	Zfa1xA45G7HqLhFha7S0QE9Zk0EuAtE=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-499--RyRAETQM8mQ6V30FNglMw-1; Tue, 31 Mar 2026 10:05:25 -0400
-X-MC-Unique: -RyRAETQM8mQ6V30FNglMw-1
-X-Mimecast-MFC-AGG-ID: -RyRAETQM8mQ6V30FNglMw_1774965925
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8cfdc479f5bso1609171585a.2
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 07:05:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774965925; x=1775570725;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lZCByEtmnsNYIdWYLf1KzEBvQz2XTmeXiioZ2Mxrxog=;
-        b=nfRytoDDpVxvLn5UUp53CqT6zCqYKl5MKyLE60VK/b0nxoQGV1uteOJDrDuOwITSHh
-         RqmhRIOM2RLjZt/Io1VjmP8XXE2zepXFLladl61glc8d1eIl0R8i5ga48QYvv6aIPk7K
-         sPHuStqys2tHcJtvq7uWNNRWfu88joGcOlhmypfjGexG2w8JH43iFZvZLsJlndK56aWb
-         UerGxaX7HGGh/7D6DpeSQ/K5Y19MNoizEQUUlmF2D55mvGumEIRR8huVqozxZOLBp56j
-         JUXxqONBD8tp4TIiiZXSoGwVHLpWz9Ebho4eVqhrF8qxfkC3MATg1+LTyEIxG1IVzr3c
-         d2HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwloMejSjS7JVucD0Qz1VCabCDqcYqHV6qWsgEoIBxgd3/Z3VcfgXVsJ4Vv2PRtfoYmJjbfljtTHT1VULObD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6W18caks1vsYe7Oq7Riu7HLamB90a54XKXFFFjmiBPqwJwj3X
-	MrgtPTwKg21Ct3ivwF1WTX8atpArHuPMkb7m/PAcXmzPmugwK9COsF8ShDc7udyFSkXnoAD/TwT
-	DjfF/EhVtsVeFMoNiowwxIUmFSSapybHb0uq/l3ZZhmrXoAuvMcZcCJfzhm08dgh6xdxS2A==
-X-Gm-Gg: ATEYQzyTQzxOUuWYL/G9eeEiv8jec3CxzrLTL6gGNHF4XnjF0P3lrbVmIaHo/GIi+Yz
-	2bJfQ0y4GWfDrDFSTevDWO5eD5WBvLczYyMGxIicX9T6hdOOmvD4SXZnjJOvxQNBmCZrR6h+9dB
-	3Ohv19jT+uGlIFFTMNy8ftn+E2Y+pc7uQki8sVUVnK/nAvbkATYnUvn+pTyi6hRBVeqWbm86/jZ
-	fM3A2vOoIoJXZZ4AWn5lmbvr5xAdDNE5sAnxlx6uFwY3zn9498qBL6DDRd2mE+AkGrUVOM6j+R4
-	3JZS9U290wx4jU4d0lnr7GgeCI0WbppKRi47F+NSB4FaNgqNmO2xsIioJg5Bkk+l7jmWIjXZRAI
-	Jsed2tgumTeRkwqYM
-X-Received: by 2002:a05:620a:44d4:b0:8cf:dfc9:c0a0 with SMTP id af79cd13be357-8d01c616e7bmr2226417985a.7.1774965924886;
-        Tue, 31 Mar 2026 07:05:24 -0700 (PDT)
-X-Received: by 2002:a05:620a:44d4:b0:8cf:dfc9:c0a0 with SMTP id af79cd13be357-8d01c616e7bmr2226411385a.7.1774965924295;
-        Tue, 31 Mar 2026 07:05:24 -0700 (PDT)
-Received: from redhat.com ([96.66.166.93])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8d027edb8e0sm1021432985a.8.2026.03.31.07.05.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 07:05:23 -0700 (PDT)
-Date: Tue, 31 Mar 2026 10:05:21 -0400
-From: Brian Masney <bmasney@redhat.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-clk@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCHv2] clk: kirkwood: use kzalloc_flex
-Message-ID: <acvUoSOOF_9UQC75@redhat.com>
-References: <20260330205504.10143-1-rosenp@gmail.com>
+	s=arc-20240116; t=1774968142; c=relaxed/simple;
+	bh=fYIT+cqEDxgHSO28QxCRmWesd/bKgSrSZYDth0wro10=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=s8rr4Ephz0W5GLvp3MCoeUGwQjK6Em/TB+LLH/t7Yzcn5YMAhre0VH7oZB6Pm+sFNqIOy9dLado/84YADo+ueSP/fAe8EWBG1p/5MXz5cV2yTR/V5NV7zw5Hx9wZDVWzV0FyjeDvWp3z+J4SYMHxNWw+WTMNA1j7+ckg5liVV4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4flW5h6S3GzHnGdq;
+	Tue, 31 Mar 2026 22:41:28 +0800 (CST)
+Received: from dubpeml500006.china.huawei.com (unknown [7.214.146.138])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4300540587;
+	Tue, 31 Mar 2026 22:42:16 +0800 (CST)
+Received: from dubpeml500008.china.huawei.com (7.214.146.94) by
+ dubpeml500006.china.huawei.com (7.214.146.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 31 Mar 2026 15:42:15 +0100
+Received: from dubpeml500008.china.huawei.com ([7.214.146.94]) by
+ dubpeml500008.china.huawei.com ([7.214.146.94]) with mapi id 15.02.1544.011;
+ Tue, 31 Mar 2026 15:42:15 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Kai-Heng Feng <kaihengf@nvidia.com>, "rafael@kernel.org"
+	<rafael@kernel.org>
+CC: Jonathan Cameron <jonathan.cameron@huawei.com>, "helgaas@kernel.org"
+	<helgaas@kernel.org>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"acpica-devel@lists.linux.dev" <acpica-devel@lists.linux.dev>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, "Tony
+ Luck" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, "Mauro Carvalho
+ Chehab" <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>, "Len
+ Brown" <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, "Fabio M. De
+ Francesco" <fabio.m.de.francesco@linux.intel.com>, Breno Leitao
+	<leitao@debian.org>, Jason Tian <jason@os.amperecomputing.com>
+Subject: RE: [PATCH v3 1/3] ACPI: APEI: GHES: Add
+ devm_ghes_register_vendor_record_notifier()
+Thread-Topic: [PATCH v3 1/3] ACPI: APEI: GHES: Add
+ devm_ghes_register_vendor_record_notifier()
+Thread-Index: AQHcwCmNhLqdgm9+6UO86Dnyr2nw5LXIuGrg
+Date: Tue, 31 Mar 2026 14:42:15 +0000
+Message-ID: <1d4350a5e55640c68d051229e8d79576@huawei.com>
+References: <20260330094203.38022-1-kaihengf@nvidia.com>
+ <20260330094203.38022-2-kaihengf@nvidia.com>
+In-Reply-To: <20260330094203.38022-2-kaihengf@nvidia.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260330205504.10143-1-rosenp@gmail.com>
-User-Agent: Mutt/2.3.0 (2026-01-25)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 8GMm7pl85c89qzgGX4K01LRRdetkIOgJloS1kr0DAO0_1774965925
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Mar 30, 2026 at 01:55:04PM -0700, Rosen Penev wrote:
-> Simplify allocation by using a flexible array member and kzalloc_flex to
-> combine allocations.
-> 
-> Add __counted_by for extra runtime analysis. Move counting variable
-> assignment to right after allocation as required by __counted_by.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  v2: remove unused goto.
+>-----Original Message-----
+>From: Kai-Heng Feng <kaihengf@nvidia.com>
+>Sent: 30 March 2026 10:42
+>To: rafael@kernel.org
+>Cc: Jonathan Cameron <jonathan.cameron@huawei.com>;
+>helgaas@kernel.org; Guohanjun (Hanjun Guo) <guohanjun@huawei.com>;
+>linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
+>pci@vger.kernel.org; acpica-devel@lists.linux.dev; linux-
+>hardening@vger.kernel.org; Kai-Heng Feng <kaihengf@nvidia.com>; Shiju Jose
+><shiju.jose@huawei.com>; Tony Luck <tony.luck@intel.com>; Borislav Petkov
+><bp@alien8.de>; Mauro Carvalho Chehab <mchehab@kernel.org>; Shuai Xue
+><xueshuai@linux.alibaba.com>; Len Brown <lenb@kernel.org>; Robert Moore
+><robert.moore@intel.com>; Fabio M. De Francesco
+><fabio.m.de.francesco@linux.intel.com>; Breno Leitao <leitao@debian.org>;
+>Jason Tian <jason@os.amperecomputing.com>
+>Subject: [PATCH v3 1/3] ACPI: APEI: GHES: Add
+>devm_ghes_register_vendor_record_notifier()
+>
+>Add a device-managed wrapper around
+>ghes_register_vendor_record_notifier()
+>so drivers can avoid manual cleanup on device removal or probe failure.
+>
+>Cc: Shiju Jose <shiju.jose@huawei.com>
+>Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
 
-Reviewed-by: Brian Masney <bmasney@redhat.com>
-
-For the future, if someone asks for changes in a previous version, then
-be sure to CC them on the next revision.
+Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
+>---
+>v3:
+> - Change patch title
+> - Move documentation to header file.
+>v2:
+> - New patch.
+>
+> drivers/acpi/apei/ghes.c | 18 ++++++++++++++++++
+> include/acpi/ghes.h      | 11 +++++++++++
+> 2 files changed, 29 insertions(+)
+>
+>diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c index
+>8acd2742bb27..3236a3ce79d6 100644
+>--- a/drivers/acpi/apei/ghes.c
+>+++ b/drivers/acpi/apei/ghes.c
+>@@ -689,6 +689,24 @@ void ghes_unregister_vendor_record_notifier(struct
+>notifier_block *nb)  }
+>EXPORT_SYMBOL_GPL(ghes_unregister_vendor_record_notifier);
+>
+>+static void ghes_vendor_record_notifier_destroy(void *nb) {
+>+	ghes_unregister_vendor_record_notifier(nb);
+>+}
+>+
+>+int devm_ghes_register_vendor_record_notifier(struct device *dev,
+>+					      struct notifier_block *nb)
+>+{
+>+	int ret;
+>+
+>+	ret =3D ghes_register_vendor_record_notifier(nb);
+>+	if (ret)
+>+		return ret;
+>+
+>+	return devm_add_action_or_reset(dev,
+>+ghes_vendor_record_notifier_destroy, nb); }
+>+EXPORT_SYMBOL_GPL(devm_ghes_register_vendor_record_notifier);
+>+
+> static void ghes_vendor_record_work_func(struct work_struct *work)  {
+> 	struct ghes_vendor_record_entry *entry; diff --git
+>a/include/acpi/ghes.h b/include/acpi/ghes.h index
+>7bea522c0657..8d7e5caef3f1 100644
+>--- a/include/acpi/ghes.h
+>+++ b/include/acpi/ghes.h
+>@@ -71,6 +71,17 @@ int ghes_register_vendor_record_notifier(struct
+>notifier_block *nb);
+>  */
+> void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
+>
+>+/**
+>+ * devm_ghes_register_vendor_record_notifier - device-managed vendor
+>+ * record notifier registration.
+>+ * @dev: device that owns the notifier lifetime
+>+ * @nb: pointer to the notifier_block structure of the vendor record
+>+handler
+>+ *
+>+ * Return: 0 on success, negative errno on failure.
+>+ */
+>+int devm_ghes_register_vendor_record_notifier(struct device *dev,
+>+					      struct notifier_block *nb);
+>+
+> struct list_head *ghes_get_devices(void);
+>
+> void ghes_estatus_pool_region_free(unsigned long addr, u32 size);
+>--
+>2.50.1 (Apple Git-155)
+>
 
