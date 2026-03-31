@@ -1,253 +1,138 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5A54657CD
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 22:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8280C27456;
+	Tue, 31 Mar 2026 23:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774994959; cv=none; b=cTqp+SYWyS1u36qFizauzWwrv+OZMHCyDhNMkdE1lJ3U7WvOaMDJ6ubAsvLtJ2JPo7/PhkLWuqgkRXwiUnVAp2ceORADznnHwv4/5MYnE3e0AO53ENK9A/RHNy4Dfr5klOxuYLalx1DpAhmFTRLZkHydXFgw5Jk5POzBi92Lb+c=
+	t=1775000953; cv=none; b=SqC6jLJn2pSdHbZ2LzxV82MuNBpwllmrrgC/cvu/p0OyZudT2hJHBaboaLBmP/plpV4mRWowJ6/Ckw3DQpXhMIrdrVxbIk7JQwz1aEDwoaAHMWTXf4cjX+X5oav6A26xNbIL1Gh10jcj59fuUGFpXJLl003DFDFqu0guvufJSyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774994959; c=relaxed/simple;
-	bh=TeRzgKvD5hUspoHYnTDSdmhEx2iKocN/3k3LW+fT7vg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WSKnYnU8G2u1/ZLuJaKickzRKuu+X7YbXd1CiFhhmt55YslocO/5ucYKG051JWyJmSYbyBvEAaJIXlgv+LzTvRzFKyQGYA0KdFeRuQF13OUzrV0iDbP0fkiUw424hpxuJWCVeWC/LOrVfFcHu3ZD2Tw6OspWeO1byhd/uGvVRAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jl8tnbVd; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775000953; c=relaxed/simple;
+	bh=6YJkmQVzpKV7KhQnIqpsWBqhHxlFy7A4yeFwdgNV0iY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d8vGOiepfFLE49TjuLiXsfWW1W1GBw7fc6Q0NGTvFnfQfctE6Qkh8xwXScuCpXXAEeXXu8bDJS6Mtw+3amhMMFeMIW3SOHldOu1jjW8aZZ/kDWqOXdhmpH8DLSkD3pWJ5ialEg8NRJD4NSxsEJHhTIjuFE1wy6/0idLJF5qUU14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgbIMLga; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jl8tnbVd"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-43b41b545d9so6705774f8f.2
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 15:09:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774994956; x=1775599756; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PUkLqXR4h9jICGmO64tviodP5HvxECocFMsQXQehtzg=;
-        b=Jl8tnbVdP34IrFq+4oSb9800FV9tRHE0O1thNV4ugAEp+0zobHeBQEPNZ/8fkwcUEk
-         j02vRk04Lwkj4mOQ8Cqo0vPDH6fDrD2HPqX2T4yzeLCQGLnYItENdS9wds9iLmeP7i7F
-         ZbYTDJ0ShkNzBUa5Pz7hLJuEl0cjn3J/crrjZ8oZak3iD9DC80VVfGZCFY0Il9bNh5+i
-         wgq37UtgfHjmfknSCuI1HeBDfXu61DZI39njN3KZ+byj3bJvjgX6q90sb9GHZNZDEwrv
-         9QzQeiDPHZl7NrRMnBujG8uRE89EGxvOU51ish2T5T06yHchLsp4PPcdsffD7ZJZ+qH2
-         fMrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774994956; x=1775599756;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PUkLqXR4h9jICGmO64tviodP5HvxECocFMsQXQehtzg=;
-        b=f0vB3idc6DpMttRSwwcKTiL6t8ZnUsDGAgGAlVrisijIQKuOhCsRHz01sh2eBu7AQ2
-         ybty57ldDxQgJ0q3Re3n+QSMDXbqMnGK8GFKYJVLriLqlsUkmZebWk7v2wf9vYVdidIg
-         dhPslt0iQssCx9X4wA/xG90zPTIXZ67zB5nV26KUHGHNI5CDSW3IeUnSDnwNsREWvxLJ
-         HBmc9Z7SyUjh3zz7u3rurRyq/b3Ap8PKPD03nHkyw0AKcfnb5O5PVjLjXP7/J4zTdjWr
-         6FXYbiANQKc4wTPZ3yQUWPMmGBPaxO0MS/0lgzvfopTN4yHy427YG9YqNFmpNe3xfO6D
-         Nu6Q==
-X-Gm-Message-State: AOJu0Yxa21wFHe82FNvObw6hsEbXYiuG0+WbwGvdLjeR4NIjsJxdPptC
-	EpI8cPR1UJpMOavTDsz2+hLFXDfGPHJPIMpp9G2JKDNt/Ho3bgU9fbHpHZzogNe7
-X-Gm-Gg: ATEYQzzjMR/zjKPjfb6fSZl7ByD0x9uPd2no7/mpV6Ncow+L75Ip3uzBv4A503718SY
-	fEL+5q1NAZdxMLLbjYxguyfgKyEEZULAI7mRUGQ1vvMdQOfClA2CD4EcQWJoPTfWZBsZ5J6+APo
-	Z1qPOGJoFmaPt7TtSvxTvkdtYIx0Cg8KZaW4fYWOt6eS8vSUN2pf6NMYCDkVpGsX55vwjpMc3kG
-	HX6DyOkiCL0pe5gys/u6e51J3y7Onx5RDwLRJaVcKscx64YzmtbpUdJfgCaM5rTyoNq2itZoYrK
-	uKE2XlOP8AxCPZ0SS/FsX9bZ1BPR0xAaQ33JcUweSvvGUhMrIAzrR4TNyLLL2Kgftw53kME+6pq
-	HvUQl/L2IApINB/jWdzmRTKtLuv42htz+/oJhjEAJKLZiRAYlcWpgIGwlFIJVRZaZhdQo0V9kpx
-	y/wiwkfo6QJDNvZ0WK9e5rYqjf53t3F8e79AtVQeIdiRAb+WEVNqCr1ohO4cXs
-X-Received: by 2002:a05:6000:1446:b0:439:b991:5c07 with SMTP id ffacd0b85a97d-43d150d7fd7mr2187846f8f.40.1774994956336;
-        Tue, 31 Mar 2026 15:09:16 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43cf21e26basm28153650f8f.3.2026.03.31.15.09.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 15:09:15 -0700 (PDT)
-Date: Tue, 31 Mar 2026 23:09:14 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next 2/3] fortify: Optimise strnlen()
-Message-ID: <20260331230914.43698e74@pumpkin>
-In-Reply-To: <202603301650.E7C1536632@keescook>
-References: <20260330132003.3379-1-david.laight.linux@gmail.com>
-	<20260330132003.3379-3-david.laight.linux@gmail.com>
-	<202603301650.E7C1536632@keescook>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgbIMLga"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1183AC19423;
+	Tue, 31 Mar 2026 23:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775000953;
+	bh=6YJkmQVzpKV7KhQnIqpsWBqhHxlFy7A4yeFwdgNV0iY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EgbIMLga6uhGrTXrqPK69a5DzQZS22lZKQ2ecq7f+/WWbxz/OAlVZskmgNyhWoCov
+	 zMj5dKwtvVI6cEq14tHbJRacm/CtOAnYAEbcMe2No/+g5C/XPZ0//R5TSfrPaEkNtH
+	 ZbwCL4dEMu390lwFfkk55OSeHGvEZwFtQJBN6yKtZtCC2N1aQZg18BV+5psaOXfzig
+	 J6UX0W4TxHzyzMaE17dT7pH1Y0Sc5BbLelSSjKNB5F23LxyBywmRk2YAufd/jrGt2E
+	 VrbXS9umSaJVton9h/etZAhfDU7yfjz7YKUKBDm63h/HPYYAbXNmORujHKN0EMPFFj
+	 HFRKQsZ7yFOgQ==
+Date: Tue, 31 Mar 2026 16:49:12 -0700
+From: Kees Cook <kees@kernel.org>
+To: Justin Stitt <justinstitt@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Finn Thain <fthain@linux-m68k.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	llvm@lists.linux.dev, Marco Elver <elver@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nsc@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar
+ types
+Message-ID: <202603311643.47D533CD4@keescook>
+References: <20260331163716.work.696-kees@kernel.org>
+ <20260331163725.2765789-5-kees@kernel.org>
+ <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
+ <202603311253.95C54588E@keescook>
+ <CAHk-=wjSOGaausLeTD13yAqso7qM09EnkDFiN7wF15kH0VWmZQ@mail.gmail.com>
+ <202603311321.4EE9FEA@keescook>
+ <CAHk-=wj9pWsgsbrLDOk7ipKnHbz3JvuqsmQ3DhGg-OKgKS9DUA@mail.gmail.com>
+ <CAFhGd8rE+ggYghcwUphSRc2ftQMaX7LbKKPwQZzsw43bg9VVmA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFhGd8rE+ggYghcwUphSRc2ftQMaX7LbKKPwQZzsw43bg9VVmA@mail.gmail.com>
 
-On Mon, 30 Mar 2026 16:54:27 -0700
-Kees Cook <kees@kernel.org> wrote:
-
-> On Mon, Mar 30, 2026 at 02:20:02PM +0100, david.laight.linux@gmail.com wrote:
-> > From: David Laight <david.laight.linux@gmail.com>
-> > 
-> > If the string is constant there is no need to call __real_strlen()
-> > even when maxlen is a variable - just return the smaller value.
-> > 
-> > If the size of the string variable is unknown fortify_panic() can't be
-> > called, change the condition so that the compiler can optimise it away.
-> > 
-> > Change __compiletime_strlen(p) to return a 'non-constant' value
-> > for non-constant strings (the same as __builtin_strlen()).
-> > Simplify since it is only necessary to check that the size is constant
-> > and that the last character is '\0'.
-> > Explain why it is different from __builtin_strlen().
-> > Update the kunit tests to match.  
+On Tue, Mar 31, 2026 at 02:50:39PM -0700, Justin Stitt wrote:
+> On Tue, Mar 31, 2026 at 2:05 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Tue, 31 Mar 2026 at 13:31, Kees Cook <kees@kernel.org> wrote:
+> > >
+> > > (Isn't this just an implicit "try"?)
+> >
+> > Yes. And I think that's ok.
+> >
+> > I think try/catch is broken for a few reasons, but the fact that catch
+> > and try are tied together so closely is the main one. You can't "try"
+> > inside a scope without having the "catch" inside the same scope.
+> >
+> > So then the solution is to just move the try to the outermost layer,
+> > and I think that's pretty much what everybody does.
+> >
+> > But at that point, why not just move it *all* the way out, and make it
+> > implicit and invisible?
 > 
-> This will need very very careful checking. It took a lot of tweaking to
-> get __compiletime_strlen() to behave correctly across all supported
-> versions of GCC and Clang. It has some very ugly glitches possible. I'm
-> not saying your replacement is broken: I mean to say I'm going to need
-> to spend a bunch of time proving to myself that this is a safe
-> replacement.
-
-There are two differences:
-1) I removed the check for p[0] being constant, just p[size - 1].
-2) The return value is 'not constant' (rather than SIZE_MAX) for
-   non-constant strings.
-   This includes any case where __builtin_strlen() returns a non-constant.
-
-I did wonder what happens if you have:
-static char foo[] = "foo";
-then later:
-	foo[1] = 0;
-The compiler could determine that both foo[0] and foo[3] are never
-changed, so (both versions of) __compiletime_strlen() would return
-the non-constant result of __builtin_strlen().
-The current compilers don't report foo[3] as being constant unless
-the string itself in constant, but they might get 'better'. 
-
-> Outside of that, though, I don't think dropping the various SIZE_MAX
-> tests is correct. Again, I'll need to spend some time double-checking.
-
-They needed changing to match the function returning 'not constant'
-rather than SIZE_MAX.
-
-Actually, as I noted in the other email (after writing, but not sending,
-this one) __compiletime_strlen() is fundamentally broken with the current
-compilers.
-Any uses should be replaced by __builtin_strlen().
-
-	David
-
+> How do we feel about type-defined labels? We can specify sane default
+> handlers where we define the types:
 > 
-> -Kees
+>    typedef int __attribute__((overflow_behavior(trap, __handle_me))) trapping_int;
 > 
-> > 
-> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> > ---
-> >  include/linux/fortify-string.h | 44 +++++++++++++++++-----------------
-> >  lib/tests/fortify_kunit.c      |  8 +++----
-> >  2 files changed, 26 insertions(+), 26 deletions(-)
-> > 
-> > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-> > index 214d237214d5..758afd7c5f8a 100644
-> > --- a/include/linux/fortify-string.h
-> > +++ b/include/linux/fortify-string.h
-> > @@ -58,19 +58,22 @@ void __read_overflow2_field(size_t avail, size_t wanted) __compiletime_warning("
-> >  void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
-> >  void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("detected write beyond size of field (1st parameter); maybe use struct_group()?");
-> >  
-> > -#define __compiletime_strlen(p)					\
-> > -({								\
-> > -	char *__p = (char *)(p);				\
-> > -	size_t __ret = SIZE_MAX;				\
-> > -	const size_t __p_size = __member_size(p);		\
-> > -	if (__p_size != SIZE_MAX &&				\
-> > -	    __builtin_constant_p(*__p)) {			\
-> > -		size_t __p_len = __p_size - 1;			\
-> > -		if (__builtin_constant_p(__p[__p_len]) &&	\
-> > -		    __p[__p_len] == '\0')			\
-> > -			__ret = __builtin_strlen(__p);		\
-> > -	}							\
-> > -	__ret;							\
-> > +/*
-> > + * __builtin_strlen() generates a compile-time error for 'const char foo[4] = "abcd";'.
-> > + * But that is a valid source for both strnlen() and strscpy() with a constant
-> > + * length less than or equal to 4.
-> > + * __compiletime_strlen() returns a non-constant for such items.
-> > + * Beware of strings with embedded '\0', __builtin_strlen() can be much smaller
-> > + * than __member_size();
-> > + * The return value must only be used when it is a constant.
-> > + */
-> > +extern size_t __fortify_undefined;
-> > +#define __compiletime_strlen(p)							\
-> > +({										\
-> > +	char *__p = (char *)(p);						\
-> > +	const size_t __p_size = __member_size(p);				\
-> > +	__p_size == SIZE_MAX || !statically_true(__p[__p_size - 1] == '\0') ?	\
-> > +		__fortify_undefined : __builtin_strlen(__p);			\
-> >  })
-> >  
-> >  #if defined(__SANITIZE_ADDRESS__)
-> > @@ -215,16 +218,13 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
-> >  	const size_t p_len = __compiletime_strlen(p);
-> >  	size_t ret;
-> >  
-> > -	/* We can take compile-time actions when maxlen is const. */
-> > -	if (__builtin_constant_p(maxlen) && p_len != SIZE_MAX) {
-> > -		/* If p is const, we can use its compile-time-known len. */
-> > -		if (maxlen >= p_size)
-> > -			return p_len;
-> > -	}
-> > +	/* If p is const, we can use its compile-time-known len. */
-> > +	if (__builtin_constant_p(p_len))
-> > +		return p_len < maxlen ? p_len : maxlen;
-> >  
-> >  	/* Do not check characters beyond the end of p. */
-> > -	ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
-> > -	if (p_size <= ret && maxlen != ret)
-> > +	ret = __real_strnlen(p, p_size < maxlen ? p_size : maxlen);
-> > +	if (ret == p_size && p_size < maxlen)
-> >  		fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ, p_size, ret + 1, ret);
-> >  	return ret;
-> >  }
-> > @@ -289,7 +289,7 @@ __FORTIFY_INLINE ssize_t sized_strscpy(char * const POS p, const char * const PO
-> >  	if (statically_true(p_size < SIZE_MAX)) {
-> >  		len = __compiletime_strlen(q);
-> >  
-> > -		if (len < SIZE_MAX && statically_true(len < size)) {
-> > +		if (statically_true(len < size)) {
-> >  			__underlying_memcpy(p, q, len + 1);
-> >  			return len;
-> >  		}
-> > diff --git a/lib/tests/fortify_kunit.c b/lib/tests/fortify_kunit.c
-> > index fc9c76f026d6..9b3b7201c02d 100644
-> > --- a/lib/tests/fortify_kunit.c
-> > +++ b/lib/tests/fortify_kunit.c
-> > @@ -102,11 +102,11 @@ static void fortify_test_known_sizes(struct kunit *test)
-> >  	KUNIT_EXPECT_EQ(test, __compiletime_strlen(unchanging_12), 12);
-> >  
-> >  	KUNIT_EXPECT_FALSE(test, __is_constexpr(__builtin_strlen(array_unknown)));
-> > -	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_unknown), SIZE_MAX);
-> > +	KUNIT_EXPECT_FALSE(test, __is_constexpr(__compiletime_strlen(array_unknown)));
-> >  
-> >  	/* Externally defined and dynamically sized string pointer: */
-> >  	KUNIT_EXPECT_FALSE(test, __is_constexpr(__builtin_strlen(test->name)));
-> > -	KUNIT_EXPECT_EQ(test, __compiletime_strlen(test->name), SIZE_MAX);
-> > +	KUNIT_EXPECT_FALSE(test, __is_constexpr(__compiletime_strlen(test->name)));
-> >  }
-> >  
-> >  /* This is volatile so the optimizer can't perform DCE below. */
-> > @@ -128,12 +128,12 @@ static noinline size_t want_minus_one(int pick)
-> >  		str = "1";
-> >  		break;
-> >  	}
-> > -	return __compiletime_strlen(str);
-> > +	return __builtin_constant_p(__compiletime_strlen(str));
-> >  }
-> >  
-> >  static void fortify_test_control_flow_split(struct kunit *test)
-> >  {
-> > -	KUNIT_EXPECT_EQ(test, want_minus_one(pick), SIZE_MAX);
-> > +	KUNIT_EXPECT_FALSE(test, want_minus_one(pick));
-> >  }
-> >  
-> >  #define KUNIT_EXPECT_BOS(test, p, expected, name)			\
-> > -- 
-> > 2.39.5
-> >   
+> ... and define specialized handlers later on
 > 
+> int func()
+> {
+>         ...
+>         u8 __attribute__((overflow_behavior(trap, __BOOOOM))) product = 5;
+>         ...
+>         product = a * b; // if store is truncated, goto __overflow
+>         ...
+>         return product;
+> 
+> __BOOOOM:
+>         pr_info("%u\n", product); // shows "5"
+>         return -1;
+> }
 
+Yeah, I think this could work. As long as there's nothing special about
+the label mapping (i.e. many types can share the same label).
+
+> We would then probably want a kernel shorthand to avoid long type definitions.
+> 
+>         #define __TRAP(handler) __attribute__((overflow_behavior(trap,
+> handler)))
+> 
+> 
+> At least this way the label is always defined somewhere in-source
+> rather than by a magic -fhandle-my-overflow-at=__overflow
+
+Yeah, this sticks to Peter's "define in source" mandate from Plumbers.
+
+Linus, does that still sound reasonable?
+
+Also, is the preference still for "loud" names ("trap_u32") for the
+trapping scalar typedefs, or does the advent of the "required label on
+usage" make it more reasonable to have shorter names ("u32t")? I'm fine
+either way. I think there are pros and cons all over the place for the
+naming.
+
+-Kees
+
+-- 
+Kees Cook
