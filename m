@@ -1,112 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BE23DDDB2;
-	Tue, 31 Mar 2026 15:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77249423A80;
+	Tue, 31 Mar 2026 16:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774972620; cv=none; b=K4Ft3Ae6RvRbjwYCmIjX8YOr5jt8hpMzhXZzkjKglQJ4nfgL6KMfMz0Wc/MBhjNdweEYViTkk27zRNl008wvZ0gCJ29wMCc7p5mwOaPdvJO9xFk23EKztLaVgWgbF7I/ddayKe1tULcEnPp+7xwmylx/0GBLJjX7rdLqHWa3pNE=
+	t=1774975046; cv=none; b=pFgCBRxGj4zcpNgNdpeLPJL0UmgUbx3bLhyg29U2nJZjWfYNLsg1Yf5g2Geh3c9RZVrkBgb0xQnp7dWnpmCWMZ19APGmZEzfpif/yW0OwvGp/BVPmFinW60VUE/xhXBKhIxGmhd58mqMdc4xhUaxfWtQAi+XcUv4sQW0ClHSf6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774972620; c=relaxed/simple;
-	bh=cMB/hxflKGdMnWo7hIlIqDPGCm8N+gymbuXM5qpBwug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KDzcBE0Q9VKo5tC0QmuuJroAUebeo349z2/8v4KJ/oGhvrA+tJAh2am6X6Owk8ORtURY7qS0gW5bJWN37ZSwP25guOFern3mYJHxK0D2PW+1Sa4+57XhxO60xyU1X3F6DpZ2zFevpGI6fHfucd5F9B0+l2mp0pGzEknvaU4UkEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W85sgUYc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774975046; c=relaxed/simple;
+	bh=dRUACUfYM3hpUKt4oHZzZpLCHG7xwGYcgN8GkPASyZU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bJk8f3MQYkxoOV5OM7obEFxluB1mjvNs2TN1QZae8uqW31e91ZV+Qo6otZpqoYruJUneNOMi598h8Kt6bnQtKtegDG6jUd3fIeGKLDLH2/v6XXADaGuo3tLKvsbBAIUW6L3WyOJq4uHKT5QHdS37Sb3gDSa8qa6tpMSIHbj51iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mx9+0th8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W85sgUYc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEEF8C19423;
-	Tue, 31 Mar 2026 15:56:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mx9+0th8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34C23C19424;
+	Tue, 31 Mar 2026 16:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774972619;
-	bh=cMB/hxflKGdMnWo7hIlIqDPGCm8N+gymbuXM5qpBwug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W85sgUYc/UUp7TF8tFrfLKZ9mXjxmRh/qTSx1kMGT44p+DJ1e86yVVC/jpS+EZi/h
-	 /iXKvgCAgLbJPa4+1E2HMOMtBRz/pTuwxCJ8VqFqU5h/F/cZAjoT+TxBMm28IT0VKX
-	 EWteg6xZRntKhtuVW+S9XMD10atrf3x0mCieNWlpBwfelEnL1qplsal3+W9vIaKInP
-	 GYd291LRt7l5zu3tIAw6EFzXN8Mr6DxwCmVeE36r8/FNXqslLLTdna6+uW/nqYJDVm
-	 izmY/dO0nP1iTwu5uefN/M1cCOj81JbaCc9wusteUfyDLHv/VQkIqFmiumK/GDGYMg
-	 IHnil7OtVVVSQ==
-Date: Tue, 31 Mar 2026 08:56:59 -0700
+	s=k20201202; t=1774975046;
+	bh=dRUACUfYM3hpUKt4oHZzZpLCHG7xwGYcgN8GkPASyZU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Mx9+0th8pvcSxWRvrrGWA1SxYzlIrfH/HDcZF3Sfp4ilvNE70PI8fbV60dps73LV+
+	 ql9/kGvtatJYWvGiTq03UQSnhF6rPVLKOezvLBT3BqkAzS48eqZxIvJ+jelzsjAwqI
+	 HKK/EtEZNMOWtzo2Uh7xw3ewdW6WtOF9f2mdtVayiBui2ykpfK/xOybWsgvQAn/jUy
+	 eFIIF7fswGILddpC2a0Tg3klWU7b6oAQUAEkxQ5gbKAg1ob6O6NjzDNwOxYyjNb8EC
+	 r34iZKrLorKyjejfdidY4GK/skyXXVzCIGktFY9p7sBXIAvsmXUVKpZXNzMLEomdDW
+	 LQRKlfpq38Tfw==
 From: Kees Cook <kees@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next 2/3] fortify: Optimise strnlen()
-Message-ID: <202603310853.E7248DDB5@keescook>
-References: <20260330132003.3379-1-david.laight.linux@gmail.com>
- <20260330132003.3379-3-david.laight.linux@gmail.com>
- <202603302335.0AEEF9154@keescook>
- <20260331111428.0b0575dd@pumpkin>
- <20260331155541.0451cb29@pumpkin>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Gary Guo <gary@garyguo.net>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Nicolas Schier <nsc@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 1/5] refcount: Remove unused __signed_wrap function annotations
+Date: Tue, 31 Mar 2026 09:37:19 -0700
+Message-Id: <20260331163725.2765789-1-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260331163716.work.696-kees@kernel.org>
+References: <20260331163716.work.696-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260331155541.0451cb29@pumpkin>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3451; i=kees@kernel.org; h=from:subject; bh=dRUACUfYM3hpUKt4oHZzZpLCHG7xwGYcgN8GkPASyZU=; b=owGbwMvMwCVmps19z/KJym7G02pJDJmnfzjK7LzR55a3/gbn9ZMvGFiuWGzI0L91uq5bYbeS1 doc6dAJHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPpKGVkWN5yPK/dyLb64jZ7 Wb3rJw8LhXBf31h2mFeiSj1j4grZdEaGiXtDoi15rZQu3+QMezF3PpN/T/7xYPbvD9ilrEoPe+z hBAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 31, 2026 at 03:55:41PM +0100, David Laight wrote:
-> On Tue, 31 Mar 2026 11:14:28 +0100
-> David Laight <david.laight.linux@gmail.com> wrote:
-> 
-> > On Mon, 30 Mar 2026 23:36:07 -0700
-> > Kees Cook <kees@kernel.org> wrote:
-> > 
-> > > On Mon, Mar 30, 2026 at 02:20:02PM +0100, david.laight.linux@gmail.com wrote:  
-> > > > From: David Laight <david.laight.linux@gmail.com>
-> > > > 
-> > > > If the string is constant there is no need to call __real_strlen()
-> > > > even when maxlen is a variable - just return the smaller value.
-> > > > 
-> > > > If the size of the string variable is unknown fortify_panic() can't be
-> > > > called, change the condition so that the compiler can optimise it away.
-> > > > 
-> > > > Change __compiletime_strlen(p) to return a 'non-constant' value
-> > > > for non-constant strings (the same as __builtin_strlen()).
-> > > > Simplify since it is only necessary to check that the size is constant
-> > > > and that the last character is '\0'.
-> > > > Explain why it is different from __builtin_strlen().
-> > > > Update the kunit tests to match.    
-> > > 
-> > > See also
-> > > commit d07c0acb4f41 ("fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL")
-> > > 
-> > > -Kees
-> ...
+With CONFIG_UBSAN_INTEGER_WRAP being replaced by Overflow Behavior
+Types, remove the __signed_wrap function annotation as it is already
+unused, and any future work here will use OBT annotations instead.
 
-Your series does pass all the wacky corner case tests that got added
-over the years, though I need to go through older GCC and Clang releases
-to double-check. I've pushed a branch to kernel.org for 0day testing:
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=dev/v7.0-rc2/fortify-strlen
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Will Deacon <will@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Boqun Feng <boqun@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Gary Guo <gary@garyguo.net>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+---
+ include/linux/compiler_types.h |  9 +--------
+ include/linux/refcount.h       | 10 +++++-----
+ 2 files changed, 6 insertions(+), 13 deletions(-)
 
-> > That really means you can only use __builtin_strlen().
-> > Which means you'll get a compile-time error from:
-> > 	char foo[3] = "foo";
-> > 	__builtin_strlen(foo);
-> > rather the 'not a constant' when checking strscpy(tgt, foo, 3);
-> > At a guess that never happens except in the tests.
-> 
-> I wrote this change a while ago, I tried using __builtin_strlen()
-> but got a compile error in the tests.
-> 
-> However I've just built an x86-64 allmodconfig kernel on top of
-> my patches with:
-> #define __compiletime_strlen(p) __builtin_strlen()
-> so something must have changed since then (probably related to the
-> __nonstring changes).
-> 
-> So the actual fix for the above is to use __builtin_strlen().
-> IIRC it also detects a few more strings being constant.
-
-Hrm, the "no NUL in the string" case is a weird one, but yeah, probably
-hit by the __nonstring work.
-
-Can you write up new test cases to validate what you're after? I can
-update the branch I pushed.
-
--Kees
-
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 890076d0974b..e8fd77593b68 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -432,18 +432,11 @@ struct ftrace_likely_data {
+ #define at_least
+ #endif
+ 
+-/* Do not trap wrapping arithmetic within an annotated function. */
+-#ifdef CONFIG_UBSAN_INTEGER_WRAP
+-# define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
+-#else
+-# define __signed_wrap
+-#endif
+-
+ /* Section for code which can't be instrumented at all */
+ #define __noinstr_section(section)					\
+ 	noinline notrace __attribute((__section__(section)))		\
+ 	__no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
+-	__no_sanitize_memory __signed_wrap
++	__no_sanitize_memory
+ 
+ #define noinstr __noinstr_section(".noinstr.text")
+ 
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 3da377ffb0c2..ba7657ced281 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -170,7 +170,7 @@ static inline unsigned int refcount_read(const refcount_t *r)
+ 	return atomic_read(&r->refs);
+ }
+ 
+-static inline __must_check __signed_wrap
++static inline __must_check
+ bool __refcount_add_not_zero(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = refcount_read(r);
+@@ -212,7 +212,7 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+ 	return __refcount_add_not_zero(i, r, NULL);
+ }
+ 
+-static inline __must_check __signed_wrap
++static inline __must_check
+ bool __refcount_add_not_zero_limited_acquire(int i, refcount_t *r, int *oldp,
+ 					     int limit)
+ {
+@@ -244,7 +244,7 @@ __refcount_inc_not_zero_limited_acquire(refcount_t *r, int *oldp, int limit)
+ 	return __refcount_add_not_zero_limited_acquire(1, r, oldp, limit);
+ }
+ 
+-static inline __must_check __signed_wrap
++static inline __must_check
+ bool __refcount_add_not_zero_acquire(int i, refcount_t *r, int *oldp)
+ {
+ 	return __refcount_add_not_zero_limited_acquire(i, r, oldp, INT_MAX);
+@@ -277,7 +277,7 @@ static inline __must_check bool refcount_add_not_zero_acquire(int i, refcount_t
+ 	return __refcount_add_not_zero_acquire(i, r, NULL);
+ }
+ 
+-static inline __signed_wrap
++static inline
+ void __refcount_add(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = atomic_fetch_add_relaxed(i, &r->refs);
+@@ -383,7 +383,7 @@ static inline void refcount_inc(refcount_t *r)
+ 	__refcount_inc(r, NULL);
+ }
+ 
+-static inline __must_check __signed_wrap
++static inline __must_check
+ bool __refcount_sub_and_test(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = atomic_fetch_sub_release(i, &r->refs);
 -- 
-Kees Cook
+2.34.1
+
