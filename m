@@ -1,74 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE5F19CD1D;
-	Tue, 31 Mar 2026 08:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428EB3B19A6
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 08:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774947131; cv=none; b=ZLHZplwK7gxAsqWPdLqW43BBpmxTujv9HbuRJjMciN5ufxdbYgSMSuMYAWXyHjfpG9UivFih9KtUG59dBAF3sKxDBTN6d9q8n8vJBrnlH42bMhlfFLwg+/z9sIDJlY6w2QQUfD5vBQWmuD+LedhzoJVsYw579UPDLPdtaZ6GaAU=
+	t=1774947495; cv=none; b=RB82XqfAb1uoBeDRzGBs57kxXNqb2hBVRzcWK3TiFuVLXSfNDJlsY5YaYVltkBbWLNiq6Vtow8nfeHrXo/NUY2zQlCSnNFaLfwrCykn4VoVtXtlxQVLmMIEgrmgsZvDQz+kjsfkw0E9oPXUQmmkizwg3hKSmdz3ag1q6OaE04Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774947131; c=relaxed/simple;
-	bh=xYphjV24OzYN0uWW3HnE5oc6HHM3KpcvOkbLMWDFNiM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kMnFnwbW8e1aaxUci+Fo5Rt0cGidunzU4VH2B14LK5EsrYxtFbRovB7SkPitaQ/JAP0aVFVlIIdFm+Ya4sgxjgripea/roJvFWxiGyGQ881ko/Tzga1CK8lhrHfon8pNXHuYumNo1hyx6ab28vFrwxPwbqqMA27hMFXseJDMBtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKvqL7Xa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774947495; c=relaxed/simple;
+	bh=d7YZnLvS+h+0HdiguMBa6VMgZIVwCHnjN+73m5Nnd1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X4euNmOykUPb5IELr8iVdsgIQbruXP1aJP+tVb+SziJnGalWKBMDpKfMWxQ6D8qsJ0Jd8USR7jehKedtnoAslxh18G/IpTq1leRBEg0fb/LCUZAtliL0yqFtP+DfnZmtwoO0R/j6sWyq/uUXz0R3YOkOOxycfGGrtS8ee2t8VP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dOx1ewDn; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKvqL7Xa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E0BFC19423;
-	Tue, 31 Mar 2026 08:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774947131;
-	bh=xYphjV24OzYN0uWW3HnE5oc6HHM3KpcvOkbLMWDFNiM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VKvqL7XaeLgxQetBIasmJra4BPojNi3iOb9FJYmpozvh5rUq7dXcYBpys4oY8iw5a
-	 57mfinus+6odyAfSyzq0Z5JfnxquZuvhu3EQv4EKVblDOD4Su92OkpwHBE7MnSVtU3
-	 ncDCrPv+CnS6CVdP/ON4iJVDXdvXOvFZW1/zl/9FFgH4B1MqOta3FBHzJROGMptAJq
-	 VJ6Wngh+pgRsz70QNqfXAmbtbymazYaHWNTYlSdyiaPWSr6wRa+oIPTvApvN7rBkGr
-	 epRckwDGx8rsFxyt/Eh9bW2mkt7vgBHjyYT2PDQc2Pz49gFoJbPhRfzCgpTDYcd890
-	 sC6uVYzb1l/Uw==
-From: Niklas Cassel <cassel@kernel.org>
-To: linux-ide@vger.kernel.org,
-	Rosen Penev <rosenp@gmail.com>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCHv3] ata: libahci_platform: use flex array for platform PHYs
-Date: Tue, 31 Mar 2026 10:52:06 +0200
-Message-ID: <177494701275.1772503.6566506022926347086.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260330203737.3995-1-rosenp@gmail.com>
-References: <20260330203737.3995-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOx1ewDn"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-486ff3a0fc1so48860765e9.2
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 01:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774947493; x=1775552293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xUBFmNIoijQTwDFycTPLWNTUdbsDcUl9Qdi01ngFzW8=;
+        b=dOx1ewDnLnvyrv2L5daLy9oAlTrhV+xzEsgJzWmqojXpTuQ3xN82/JhbRoKhNi0KxO
+         JQW/eI+4a3a15gaOAHL5dHrevzObRo5m0rzk6a4S8tpB8/IQSv3hVQAWHo9DTuINA/Mx
+         15YgIYpMucBC0LfqF1FcmWfHyfGQ+l8M9TGoS9hzWUe7OmUzp5T1g4VwMmHQPXpna/Y4
+         tyIGqZ+e0YIvJCpZydaKPxsmjfxWvm67vf1ImISvJbz5EbwCkp57L+gy/ubwSg9i4+su
+         pg+w2BzS0NU6PigVLJnC6rI+NCMhpp1EYGlUoDau/OHx1zkyRJs3MvHck9wEo91bQBr2
+         8/uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774947493; x=1775552293;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xUBFmNIoijQTwDFycTPLWNTUdbsDcUl9Qdi01ngFzW8=;
+        b=cSq27vcZleTeAM2JfMQi3DZhdV3AYS6zOA2CSEFsY5ErssSb/R2ynVB+erCzVGpl4u
+         HuBWkjGfLy79IpDpwrhn+rsx7LzSbX0MuR02cYF0vopTRsf9wlYBYunltSltGFe9qwUL
+         kvdQgvJaj/gDHG115Rhg+IJXQjCB9FOwohrfyRc9HTAsA4CfFbiD7HePYlkVMFB/kvQc
+         9d6uOH18e97OZ8SdtKHann/4CF/BFetawfqV5fyMCGLtr2nqAndcHtfDCGIrxPhQJd5L
+         nGkFjQ+7Y6/jXe2I7xNpFhKh9eMqM2zYSx1JQBtPWLQht3Uj3pwi7bshcp9g+bStRY5I
+         MBmg==
+X-Gm-Message-State: AOJu0Yxa46ASLPsS0PnnQ/LG7Y68dlkDHM1RhAEVrQwfvxYbVxfkCNm6
+	sMtd5ZCvs+E9QY1t2MRHp1FypkrSgAnkOaBQmdwhHsCilvyMFnNiC9t/I2gajCo9
+X-Gm-Gg: ATEYQzz8OI9VLSMzwXAFucoC9qSOgxjzFL0/gzts65FkrJ3pEZhPmDMSEzWjbdzRb/v
+	TSGCSCn/YHnAJuGoVEPQSL/JgEL0sJ25nHt+Jsnw9iID93U2OOdrSp1qEIIRV5dyIb6vHZRs/oX
+	szG0KXp+NleWBCLw5kOX7utLekQU05U1tE4/0yGw1vojdaaFQtbXS8EdWEwIFcJng+3reQMob1o
+	0mFlMKjFcbbe4E9eIFMFIs5ODsTWM4glz8nR5WquJrA6V4NhjtZLgBhrxCbMSLaRMsXRjIL9ThZ
+	m6HLIXyqR4+MR4SE+FHB1BePmFZ7TbSlAoFSHU8iPAdXSL+c+iRU0xHoJNoFO1DyaYEGIAZRyFp
+	dgG/B3AJBgCMCZT99Gk3ioGMJX3VOR6DsPao3FjYeQ+voTiJOWSUtj3xGSat/1jFIIHlxw1lxg3
+	gmMqkVPFZDRgr1z7HqUQps+nm1Ztnj3D2RIW2ASe3VVBV/JHe50myzzswdiZfj
+X-Received: by 2002:a05:600d:1c:b0:485:3f17:425 with SMTP id 5b1f17b1804b1-48727ec7681mr205715195e9.21.1774947492313;
+        Tue, 31 Mar 2026 01:58:12 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887a630901sm19437755e9.0.2026.03.31.01.58.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 01:58:12 -0700 (PDT)
+Date: Tue, 31 Mar 2026 09:58:10 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next 3/3] fortify: Simplify strlen() logic
+Message-ID: <20260331095810.30da7b05@pumpkin>
+In-Reply-To: <202603302305.19F4EF8@keescook>
+References: <20260330132003.3379-1-david.laight.linux@gmail.com>
+	<20260330132003.3379-4-david.laight.linux@gmail.com>
+	<202603302305.19F4EF8@keescook>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=646; i=cassel@kernel.org; h=from:subject:message-id; bh=xYphjV24OzYN0uWW3HnE5oc6HHM3KpcvOkbLMWDFNiM=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDJPd5uruNw5Fdr3UvNu3o7YGlb9/Nef7Ofu3+L6Ui+08 dAEDqGajlIWBjEuBlkxRRbfHy77i7vdpxxXvGMDM4eVCWQIAxenAExk/UdGhsnSl85ME9soLt2y dEF0/o1XXbp6rEJH1OMlv+0+2M2Seozhn+mOy5wPoo/smfrppZ7bqRU2M6e0Z178Ka1ouZpjl47 vTUYA
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Mar 2026 13:37:37 -0700, Rosen Penev wrote:
-> Modify struct ahci_host_priv to use a flexible array member for an adapter port
-> PHYs and use struct_size to combine the allocation of this array together with
-> the adapter private data structure. __counted_by() annotation is added for the
-> phys field to support runtime analysis.
+On Mon, 30 Mar 2026 23:07:01 -0700
+Kees Cook <kees@kernel.org> wrote:
+
+> On Mon, Mar 30, 2026 at 02:20:03PM +0100, david.laight.linux@gmail.com wrote:
+> > From: David Laight <david.laight.linux@gmail.com>
+> > 
+> > The __builtin_choose_expr() doesn't gain you anything, replace with
+> > a simple ?: operator.
+> > Then __is_constexpr() can then be replaced with __builtin_constant_p().
+> > This still works for static initialisers - the expression can contain
+> > a function call - provided it isn't actually called.  
 > 
+> But __is_constexpr() != __builtin_constant_p(). I will go find the
+> horrible examples of why this, too, needed so much careful construction.
 > 
 
-Commit log was wrapped at 80 lines, I re-wrapped the commit log to 75 lines
-while applying.
+I know all about that.
+Loosely __is_constexpr() requires that the initial compilation pass
+sees something that is constant, whereas __builtin_constant_p() can
+initially say 'not sure' and then a later compilation pass (eg after
+function inlining) can determine that it is true after all.
+There are a few places where C requires an 'integer constant expression',
+otherwise __builtin_constant_p() is good enough.
+
+__builtin_choose_expr() is also pretty much exactly the same as ?:
+except that the types of the two expressions can differ.
+In particular both bits of code have to compile without warnings
+and have to be valid where it is used.
+
+Note that you can have a function call in a static initialiser but not a
+statement expression ({...}). C requires the expression be constant
+- so the function can't be called, but it is syntactically valid.
+So if you have a ({...}) in the unselected code of a __builtin_choose_expr()
+you can't use it for a static initialiser.
+
+Once you've relaxed the __builtin_choose_expr() to ?: you can relax
+the test to __builtin_constant_p().
+That is then (usually) true for constant values passed into inline functions.
+I think I found a few cases where it made a difference.
+
+	David
 
 
-Applied to libata/linux.git (for-7.1), thanks!
-
-[1/1] ata: libahci_platform: use flex array for platform PHYs
-      https://git.kernel.org/libata/linux/c/d5d28615
-
-Kind regards,
-Niklas
