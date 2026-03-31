@@ -1,67 +1,67 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C26342524
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 17:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F833ADB1
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 17:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774977537; cv=none; b=q09i5EBAKf8yoLh6PuWP3IZzjkO+iN1gjtl7EmqGHi3VlLlAOTOcVBNQc4jguZW0SctSgdt+/oEirw9sm6I8QC+Sost0PjS6cFulHQkOZS74DXXu5xVYnFoLDM/WCcs5Mr8ohb4YU8lknrfVe2bzyo5DDuEqJc0rZGY4tDg1Cxc=
+	t=1774977861; cv=none; b=S5SV1c7twtKjDsv//C1TG3g+KzD7OSXRFNzrGrZrx6C/JGhjvTOysAd307xX0Vx5QFrnKw/My174spLhUZDz1mOx4ObMYuJIfWvy7gxKGEG1MCjDCBmrmxaPeYE/aSNs6D41tQMMKu8g3mkQrlE/n9iBKjTbJoxOEJeFOKSaAbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774977537; c=relaxed/simple;
-	bh=6ac9F4nte1Yiyo3mPmvL0jRUpnUVgMzCJ+yaIK6fLrw=;
+	s=arc-20240116; t=1774977861; c=relaxed/simple;
+	bh=X8mgB91EilmZX84/+DAl/QEGzBiT68+EQBIZrGj6ois=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gaUkP6mZBO7EYzAKTWcnq+ZZEAt72vLPf9ICRzJqk49m9ackmGK4WLzS7ROAmfiLQUmVO70jJlO7+DrN4h3GmzOOVNqG2QT9tDWHQsPVyL4CpyIfTjuuWn9gm3iWZjRCOsACQQtKQJ2W6RqxKMs1FPfhCu5m0JZEW5Ddjz3Xs0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GtScww03; arc=none smtp.client-ip=209.85.218.51
+	 To:Cc:Content-Type; b=A8geH9rE38nMJ6pPe0dOvxPDlvSMowC4biVVBTqzQeittc1ZNr+YLTUuf4tfq4cRtYS9fG857A00TiUs8EiAyf0UHvnYhdt9uf4x/WtYWrXq1CvYRQSYahpvNaeoV1/UIZ959XO2HFFPjP4XwFb64Hc9UkExvdHOAZZJfXwcpcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=boq5vpzg; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GtScww03"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b97e6e48b24so1003452466b.2
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:18:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="boq5vpzg"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-661b16ac011so11265324a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1774977534; x=1775582334; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1774977858; x=1775582658; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4f6EWJpSf2F8Fa/9meaVrgxvLf6j4eAN5dwsMo8lPrs=;
-        b=GtScww03pFgORotIst0RaygJ4xUlaG+Fd772YnjSHdILzAqzaMC+b3kgchAp1igrUJ
-         zWy4pmOpyujoFcxTFqjYluOLDVw9q9NW2cWCbaxIvLupraLFxsOVjESsR09HC3MryDGI
-         gwxNYml8lTQKMnlC1JsOVEpH5INs1Y7gL/gOY=
+        bh=RzhkbeYcTn/pueZLzsl1uKI6wC45DhSkVKoC+DMZrjs=;
+        b=boq5vpzgmokr9CCfqX5G08GmYNiD3jf5Fm1fvtqGavEkTYd8isUDP1L6aiSWMCDx9h
+         Sz54Jc4OXNrWCd15zLOIn/8GpRU3hDBHyjqkqaioM7oAI2ubUp8fpmZsTDV7oNS1t8/A
+         DeV0ppRXLlBSnvqyUHlJl2tmWXH/W6r1RtTic=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774977534; x=1775582334;
+        d=1e100.net; s=20251104; t=1774977858; x=1775582658;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4f6EWJpSf2F8Fa/9meaVrgxvLf6j4eAN5dwsMo8lPrs=;
-        b=TVO4sdDLGDI39TPjwag05+LnPZGwKNvmgoeKT6Z08pT6FdXZXVW+yrPSYkp5ILp3x+
-         9CIe2uoBnrL0TChm31uwXPZ8DilNETC+IZaN8i0ZQqUmF+OwUcQlDwz92XPrM2ParoIf
-         F7J4sfKbf0jQX4zKQlK5xvdN4p8Fq0lSGaFOAod03cVm7t2Zwhk1XnZm63ha4nQyiIQN
-         wypqkSA2A+2m51Ea3TFZyMGDYEBvf2JKhUKDXmYfSMXOABDiJrWq5StwI5A1FP229WGz
-         qYtOwLMXoPHSvA24qyVIXPaOYQdA3K6Gd3u8YF9oE+A+9cCZb9TPs/47c335pgKmu0tL
-         qSLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjIxlMy8gofR0R7KMIObEaXs9cap/QF0NenYTuNnsuaMNbd26dU4o1LxrAW2utui5g5i3X8GX+r8brTMF2gU0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG9jpjGAxthptqcJuGZ1t91kwNB/zhz1SWEkW2LeBThJq0N5iA
-	lTrSlrPenKtbHbybSiEZ45W6H2XYEB5jIeUZ7X191DB7/av6ua4afddNdrydhbGcBR6o5osgTXG
-	Bn4nHPYJ5Hg==
-X-Gm-Gg: ATEYQzzZzd1jxL6g1Av1W8TYZMFbMWT4Q+0WIqpF62DHlA3y7N94tTAiI2/eRvekCZw
-	/XZi7H49nOz6xG76DniQyftj9kH82mOVghC6fs7llz0ygePIGpXICjzyfZNj6RNV9cc4lA9klV+
-	yWUE7ZSMg6w1I35CJcqFbK1m4plJX555WZEmFNhfcgyMZiO5StIPyzD2jhyae3q6VBXheuWkMl2
-	LSymFaMoksx2pU/dEaHQWcYk7BadEwdgAhR1bhRZ+j3cVTmBaczuDWtt/0AteQIdw+GBQMJF105
-	U8HBuI/VTVZ9Dsh6F7qZGBu2NMY0osvsSBcE+9l16rQigHFyFvSXsFXLQDDoHtr6DeoN+eY0hnc
-	lXPYHLNv2EGru5eKLkZoGv/5w8JGrESaWNe4hlXjDZ12+tsHDHptHK0icOl8DWM9h4gnWterfvb
-	Cz7w091ySAHTd7a7lwNPREAFXSDtqMNsKHnRgWPtBsoJ2ma3rlTJqoc4d94pD96x8EDgnV0gcP
-X-Received: by 2002:a17:906:8417:b0:b98:2496:1b0f with SMTP id a640c23a62f3a-b9c1391782emr31032366b.20.1774977534420;
-        Tue, 31 Mar 2026 10:18:54 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9b7b225193sm428506266b.57.2026.03.31.10.18.52
+        bh=RzhkbeYcTn/pueZLzsl1uKI6wC45DhSkVKoC+DMZrjs=;
+        b=KO2m3wrNqXiT4eBSEphvMeg7jQg2RNJ0HUDb+heDpqJPzvABELsakyhIuB6kaBWn60
+         EkaZfglwdPkrpqnq0LMOJRkSSqV9AgRSbqwwkoU3Il4fUIWrZZhOJCsj2TydtDgrFTK/
+         MyIKwf5ZzpzUHRRS1rnquJlhQkq3BGKbojNJ13nmH2nMH58e90FP+919Gc5Jk7aVY8vs
+         0gLhfeYGSuor/KAb+T9Iuy/EEGGQQFzzJ3y2/pdSoj0my/+rt78P3Gy1w3ZvwKwpQX3T
+         0T9h4MoNIGmp8JsXa2Pum04qyNDDCmVK42KCMvk1m+gAR4g4MNK7n/uxgHMzrYSkm6Pw
+         RaeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqIsx4Yp2Wz1hAVmky3I171ZPA3ewg9zLVeyxgW2qzD5fIhif/XwEoFCOi/wqFQ7Y2Kcr0fKTz+NNILfAbziY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHq2jdhpOcUWqNkoyqAlJ/f+j1cxCD/96aRdHz/cq+uAWmbZ2Q
+	qnz061Ygyy3c4sNyITJCWxhu8DLzTAjShfDe2+pJGhZ61FqTUyjS3hH5y8SaZmqjoRPfV2vGfkN
+	RTjgVSAu1TQ==
+X-Gm-Gg: ATEYQzzzUO6h9pazy9FWkuj5efD461lKGEnXtTboPQexG2OVSL/KdnkTUyUpl/i/EWe
+	9Lz/XZrv8Tuca05Gw5W8gj3p9ierj+6wYD00X9lmv9T7Cjz8unIoaisuwebl3EYOeVHMK5orbbI
+	DpYTWrEWfYQWhUELTZcMROm6OkHk2KPlsov97P13DcElryU7e7CgQrup8Kw0XNqv6P+0URirINV
+	dx3jlZfkSeJjvRv0j63jxcNscQjaIbhgpdOuYXk2CQlrzlth2jLjWqS0y1TOJhcu0NdQ1NYdXQN
+	GdcUdkbTz9cu8FIyvvBK8JVawvydhiYEaIy1JSXlTe7O1evbtFIGuLibTld/G/uT8dccpSIGNXz
+	FUsMsnnnUkiqKj8VvJR31G/BtXM203edluSlaZTke7hMHsa0A98v7VkKcGkPQvpPWv77GQnlbcZ
+	4UCAWAc+Mw+9W9kKzy4zRPHQiKz7SlYaNZbk3reAm8JacIikDasLHdcve4g52NFqmFTmkt4HJi
+X-Received: by 2002:a17:906:6bd6:b0:b97:aba7:1969 with SMTP id a640c23a62f3a-b9c13cb1a18mr24322266b.45.1774977857437;
+        Tue, 31 Mar 2026 10:24:17 -0700 (PDT)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9b7ae7371asm437392366b.27.2026.03.31.10.24.17
         for <linux-hardening@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2026 10:18:53 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-66d24c6963bso595962a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:18:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXqh0hVdz6k23ZVaihbedaTN6oc89vfrggm9gocQ9T1eAP/QzWsVXT7O8/FHrxZXPUyIdsHJFkh6rW2dS+FkJ0=@vger.kernel.org
-X-Received: by 2002:a05:6402:43cd:b0:66b:b46f:cbee with SMTP id
- 4fb4d7f45d1cf-66dafead9ebmr239737a12.4.1774977532763; Tue, 31 Mar 2026
- 10:18:52 -0700 (PDT)
+        Tue, 31 Mar 2026 10:24:17 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b9382e59c0eso961059666b.0
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:24:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXfkUan+k5aAH8iK3DmCTcNPzzO1MTnNSxVKbZRG/cJHjdGFUrGpC1zrPfqpG3uDkc1o68Asc33fwnIA7ZiShY=@vger.kernel.org
+X-Received: by 2002:a17:907:a604:b0:b97:b9d5:4ae4 with SMTP id
+ a640c23a62f3a-b9c138e5f3bmr33991866b.20.1774977427566; Tue, 31 Mar 2026
+ 10:17:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,13 +69,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-3-kees@kernel.org>
- <CAHk-=wg=q7ptcMyUAqPGDbX_DKHivJVppc8bP0zpQqzOky_avA@mail.gmail.com>
-In-Reply-To: <CAHk-=wg=q7ptcMyUAqPGDbX_DKHivJVppc8bP0zpQqzOky_avA@mail.gmail.com>
+In-Reply-To: <20260331163725.2765789-3-kees@kernel.org>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 31 Mar 2026 10:18:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whfF-T-qrvL567DYD3ymqUhEXm_455CS=Xqvngjucd+Pg@mail.gmail.com>
-X-Gm-Features: AQROBzDZPm_0YIwJ05O5Tx8cRSfkjvtMjCTPVCmkYZWKjM8JxXDJ7ksIZ8sr0Tg
-Message-ID: <CAHk-=whfF-T-qrvL567DYD3ymqUhEXm_455CS=Xqvngjucd+Pg@mail.gmail.com>
+Date: Tue, 31 Mar 2026 10:16:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg=q7ptcMyUAqPGDbX_DKHivJVppc8bP0zpQqzOky_avA@mail.gmail.com>
+X-Gm-Features: AQROBzBItZBmx5_N-ynlPw8E_7o3PG43Wcm0ba7e3I2MR7-9HUZsFelf3Nv9M7s
+Message-ID: <CAHk-=wg=q7ptcMyUAqPGDbX_DKHivJVppc8bP0zpQqzOky_avA@mail.gmail.com>
 Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
  __ob_trap and __ob_wrap
 To: Kees Cook <kees@kernel.org>
@@ -90,19 +89,36 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Justin Stitt <justinstitt@google.com>
 	linux-kbuild@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 31 Mar 2026 at 10:16, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> The only safe trapping behavior is something that has a clear an
-> unambiguous and simple to use way to *HANDLE* it. Not just "mark it
-> trapping".
+On Tue, 31 Mar 2026 at 09:37, Kees Cook <kees@kernel.org> wrote:
+>> +
+> +  typedef unsigned int __attribute__((overflow_behavior(trap))) safe_uint;
+> +  typedef unsigned int __attribute__((overflow_behavior(wrap))) wrapping_uint;
 
-Side note: this is the same kind of complete and utter idiocy that
-made Rust people have allocators that abort when running out of
-memory, because it's "safer" than returning NULL.
+This is fundamentally broken sh*t.
 
-THAT KIND OF THINKING IS NOT ACCEPTABLE IN THE KERNEL.
+Stop thinking that trapping is "safe".
 
-I don't know why people keep doing this. Stop it.
+It damn well isn't. A dead machine is not a safe machine.
 
-                   Linus
+Any patches that call trapping behavior safe will ne NAK'ed by me.,
+
+We have decades of peoiple using BUG_ON() as a safety measure, and it
+has been a HUGE PROBLEM.
+
+There is no way in hell that we are ever adding implicit BUG_ON()
+things that are this hidden, this easy to use, and then mislabeled as
+being "safe".
+
+Guys, that's the same logic as having a airbag in your car that just
+shoots you in the head. You're certainly "safe" from the vagaries of
+bad healthcare. But dammit, if anybody thinks that a "bullet to the
+head" should be called "safe", then that person damn well shouldn't be
+involved with kernel development.
+
+So NAK NAK NAK NAK.
+
+The only safe trapping behavior is something that has a clear an
+unambiguous and simple to use way to *HANDLE* it. Not just "mark it
+trapping".
+
+              Linus
