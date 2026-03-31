@@ -1,135 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156F7371D04;
-	Tue, 31 Mar 2026 19:52:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8DB371D19;
+	Tue, 31 Mar 2026 20:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774986731; cv=none; b=FcOUQEOJIw9FkyBRh9k0wUgOCSDlttDWMIJbnHC9wy1opQCF3bWEqjG1MngUePOi765/Uf3gc9J4OKER7Et+SmdqfCHmTICaYIY8+/G33ImTXG9pWZ1GvUuEGYVGsYJQIDVauFa7QQYDCZvdQJXsKeZE1LeVW1onfvUYNlCZ0zg=
+	t=1774987386; cv=none; b=bhhYkfYrIAZUIKOxelBfTgsvET+3ZlWzkUR/RpMw1SF9SV7hbe8LCbB2PETKB1pXi9X82j63p8WVmoYeSJWBPOK55xMDQSpfuEyksW3bT+Vvtzy/XoA3GzQrFdCdRmU+cr2uL/508rRlS3oKoDMzpF6xcG7LnGCzJ7Q9Y67aH/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774986731; c=relaxed/simple;
-	bh=yDqHYQlphNi7NM7Fr9Z0F57GE+N/2wp/OlWZUNKCtFM=;
+	s=arc-20240116; t=1774987386; c=relaxed/simple;
+	bh=xX8PflvEnLDxFDAe0II3o/hEoXyXPKqwR8t9T1TR67Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WS08QpLt+jRNutdD+YTG9aTdzB3lYuQVlft3/WlZIooirEHzDHQ90ihPdDwtyMAWvy/rh8mHgsPJ+O+UysnEhpQ5UC3ZI8iSVqKkxz9WWHs22Zjg5sYCi/yqnF6tqYIvOGDScW6OwBbvfUZeMPGysv/4m2pUri3EdITLbrlrYh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GoS4l/ty; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJVJ+OEPsdzxY2e1t1xkyZugb/nYddvFdbUMXnGsV/Gz1teMj9+gI+bwpXcqjNFb7GtnBy934ZSu8iR8QUjIuCf+nPxZUdzNc1aobCrqYELQ4DPXk4i99r+Y6M/9QcygSTf25OuJ1OE11IljEjWfdaXXsZR8usEnTmVNgoQBKHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1BcSPj5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GoS4l/ty"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850ACC19423;
-	Tue, 31 Mar 2026 19:52:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1BcSPj5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 516D3C19423;
+	Tue, 31 Mar 2026 20:03:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774986730;
-	bh=yDqHYQlphNi7NM7Fr9Z0F57GE+N/2wp/OlWZUNKCtFM=;
+	s=k20201202; t=1774987386;
+	bh=xX8PflvEnLDxFDAe0II3o/hEoXyXPKqwR8t9T1TR67Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GoS4l/tyGpgkmFwUGs4aAbnB1/BYsqPONwZgpACMtl6kEqKP+DAfcl8RvP1T8zwha
-	 4q0mIhdzm5L84l9/QOKb1qs8zQw/vMoNicYpclxNEwoIUd9Fa4CyL5rIscq2G4oLDr
-	 xC8LiQi9xCR+HHp26+Sfh9RoSrP6eu82EuykpIIwt0+5N5zudICUDTYLKU8QECw4zy
-	 fFz4itvKaPgiJaSUKhqkKVdQW7ejg2YeCvQ6YrCY3ulZKEMkrj9Cmb84to6ppt3I5B
-	 jF0nNbH0Pxw5H55bdqdJ7jEEMjoc/kESkP7rAb2bkqS97TUb7HWnF7W20X/D1Fj7Oc
-	 o9WyB/1v1fIMg==
-Date: Tue, 31 Mar 2026 12:52:10 -0700
+	b=G1BcSPj5ocGNquHbNBcvPqVWwQhuyXmi8e80E9Ub+5yWjYcKcXY1aG/MuvcL1sI19
+	 9tFJZqy9iOG60YiRZ4NmN8AHHGD+UqeRFaO5bQVLQdaTvcXuBpTfa+NCJnOr7b03ih
+	 kvfgz9f/dMi1hdjpVxdEdYduOy6rsQjnH/3WijBKukwHXSb8+jly/9k4D05eplapL1
+	 eG9ZQTmR5/u0ZUkKvZ4D8beVsasHNlfvvuWuHjADxY3tF3UmlwnsxgVdUSW1/e7Dxb
+	 CvMXSDzTZ4B7jm/AQSBfQlt9LWpbBRuaJKzb/comSFOXODi3rU/SOjuakOXCJCZu3Y
+	 kX3af3qFmhWww==
+Date: Tue, 31 Mar 2026 13:03:05 -0700
 From: Kees Cook <kees@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Justin Stitt <justinstitt@google.com>,
 	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>, kasan-dev@googlegroups.com,
-	linux-doc@vger.kernel.org, llvm@lists.linux.dev,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Nicolas Schier <nsc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Finn Thain <fthain@linux-m68k.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	llvm@lists.linux.dev, Marco Elver <elver@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nsc@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
- __ob_trap and __ob_wrap
-Message-ID: <202603311249.30B44C66@keescook>
+Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar
+ types
+Message-ID: <202603311253.95C54588E@keescook>
 References: <20260331163716.work.696-kees@kernel.org>
- <20260331163725.2765789-3-kees@kernel.org>
- <CANiq72mK9fz6Spmgt4js3hScqhqvZb2YP2T7tDfR0fHPDFWJ7g@mail.gmail.com>
- <CAFhGd8paijFboDVr8rJDjScob047q+zgYAs038WuVozOG0aYaQ@mail.gmail.com>
+ <20260331163725.2765789-5-kees@kernel.org>
+ <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8paijFboDVr8rJDjScob047q+zgYAs038WuVozOG0aYaQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
 
-On Tue, Mar 31, 2026 at 10:09:33AM -0700, Justin Stitt wrote:
-> Hi,
+On Tue, Mar 31, 2026 at 10:10:52AM -0700, Linus Torvalds wrote:
+> On Tue, 31 Mar 2026 at 09:37, Kees Cook <kees@kernel.org> wrote:
+> >
+> > Current straw-man proposal is single letter suffix because it vaguely
+> > felt like the least bad of all choices, and they should be short or
+> > everyone will just continue to type "int". :)
+> [...]
+> If somebody starts using explicitly trapping types, they need to say
+> so. Not just *say* so, but scream it at the top of their lungs. No
+> hidden subtle behavior changes. This needs to look _very_different_.
 > 
-> On Tue, Mar 31, 2026 at 10:02 AM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> > On Tue, Mar 31, 2026 at 6:37 PM Kees Cook <kees@kernel.org> wrote:
-> > >
-> > > +/*
-> > > + * Optional: only supported by Clang with -Xclang -experimental-foverflow-behavior-types
-> > > + * passed via CONFIG_OVERFLOW_BEHAVIOR_TYPES. When not available, define empty macros for
-> > > + * the trap/wrap annotations.
-> > > + *
-> > > + * clang: https://clang.llvm.org/docs/OverflowBehaviorTypes.html
-> > > + */
-> > > +#if !__has_attribute(overflow_behavior) || !defined(OVERFLOW_BEHAVIOR_TYPES)
-> > > +# define __ob_trap
-> > > +# define __ob_wrap
-> > > +#endif
-> >
-> > Should that have `CONFIG_*`? i.e.
-> >
-> >      !defined(CONFIG_OVERFLOW_BEHAVIOR_TYPES)
-> >
-> > In addition, since this depends on a `CONFIG_`, with the current setup
-> > we would put them elsewhere instead of `compiler_attributes.h` until
-> > they are promoted to be "unconditional" (i.e. without the compiler
-> > flag):
-> >
-> >      * Any other "attributes" (i.e. those that depend on a configuration option,
-> >      * on a compiler, on an architecture, on plugins, on other attributes...)
-> >      * should be defined elsewhere (e.g. compiler_types.h or compiler-*.h).
-> >      * The intention is to keep this file as simple as possible, as well as
-> >      * compiler- and version-agnostic (e.g. avoiding GCC_VERSION checks).
-> >
-> > However, thinking about it, why is the config needed?
-> >
-> > i.e. if the compiler is not passed that flag, shouldn't the
-> > `__has_attribute` simply return false?
-> >
-> > Also, I am a bit confused -- does the compiler flag automatically
-> > recognize the names like `__ob_trap`? i.e. I see the docs mention
-> > using the attribute,
-> >
-> >     typedef unsigned int __attribute__((overflow_behavior(trap))) safe_uint;
-> >     typedef unsigned int __attribute__((overflow_behavior(wrap))) wrapping_uint;
-> >
-> > But then we don't actually use it?
-> 
-> __ob_trap and __ob_wrap are defined by the compiler.
-> 
-> There are some examples within the documentation additions of this patch.
-> 
-> Kees, is it possible to make it more clear about what we expect of
-> kernel developers in terms of style? Should they use keyword
-> spellings? attribute spellings? only use custom types?
+> No stupid one-character things. If we go down this path it would need
+> to be "wrapping_u32" or whatever.
 
-I think for this series, __ob_trap/__ob_wrap is what should be used.
+Yeah, that's fine. I'm fine calling these types whatever we want
+(regardless of how we ultimately bolt exception handling to them).
 
-And for other folks, the background here is that we originally wanted
-to use macros for "__trap" and "__wrap", but the powerpc C compiler
-(both Clang and GCC) have a builtin macro named "__trap" already. So
-I switched to just using the Clang-native type qualifier. We can use
-the attribute style too, but there was a lot of confusion during the
-Clang development phases where people kept forgetting this was a type
-qualifier, not an attribute (i.e. the attribute is an internal alias
-for the qualifier, and the qualifier is a new type).
+The only reason I had this proposal using a short forms was to make
+it "easy" to get counters/indexes/iterators with as few characters as
+possible. It all comes back to my "favorite" security flaw where a u8
+counter wrapped during post-increment in a while loop. Why was it "u8"?
+No good reason besides "it was even less to type than 'int'" AFAICT. :P
+
+> I don't actually see any sane interface. The "unsafe_get_user()" thing
+> with actual labels and exception tables works very well, but it would
+> require wrapping all trapping operations in a macro.
+
+Mark Rutland had strong reservations about function-level annotations,
+but I wonder if the combination of new type _and_ function-level
+annotation could get us something near what would be palatable:
+
+
+int __overflow_label(boom)
+something(...)
+{
+	u8 __ob_trap count;
+	...
+	take_locks();
+	...
+	while (thing())
+		count++;
+	destroy_the_world_if_count_wraps(count);
+	...
+	return 0;
+
+boom:
+	unlock_and_clean_up(...);
+	return -EINVAL;
+}
+
+
+This way not _all_ math is covered by the label, only the trapping math.
+
+Or we could make the label a global part of the language itself so it
+wouldn't need to be a function annotation, but rather a _required_
+element of any function that uses a trapping type?
+
+-Kees
 
 -- 
 Kees Cook
