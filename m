@@ -1,72 +1,72 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428EB3B19A6
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 08:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407F33A6B9A
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774947495; cv=none; b=RB82XqfAb1uoBeDRzGBs57kxXNqb2hBVRzcWK3TiFuVLXSfNDJlsY5YaYVltkBbWLNiq6Vtow8nfeHrXo/NUY2zQlCSnNFaLfwrCykn4VoVtXtlxQVLmMIEgrmgsZvDQz+kjsfkw0E9oPXUQmmkizwg3hKSmdz3ag1q6OaE04Mo=
+	t=1774952073; cv=none; b=BfvjMn+AVizLH+ALD6CN3QGhhMGLbEFtJa72v+ChP3abqtQP7XrLUWd5lCmSfhBmTchFc9Z+i0v2HAN3mfy4wisfp3FswOUUW4dmFheF0cYYu2j5C6yqxJzXJTMXSEWSEvedP7WsHTm83uheO6pJ7aYf7w4Z4I9YenPnllhkUw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774947495; c=relaxed/simple;
-	bh=d7YZnLvS+h+0HdiguMBa6VMgZIVwCHnjN+73m5Nnd1I=;
+	s=arc-20240116; t=1774952073; c=relaxed/simple;
+	bh=pBJIPnybKnLg/DdwBPJji7V9mFWY9KFpzKug0waH6Ac=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X4euNmOykUPb5IELr8iVdsgIQbruXP1aJP+tVb+SziJnGalWKBMDpKfMWxQ6D8qsJ0Jd8USR7jehKedtnoAslxh18G/IpTq1leRBEg0fb/LCUZAtliL0yqFtP+DfnZmtwoO0R/j6sWyq/uUXz0R3YOkOOxycfGGrtS8ee2t8VP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dOx1ewDn; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version:Content-Type; b=F/9XCFdkpRyAVWyLVumjxwl+8tO5rChN+QBGXGbX1/f451EbW7Iw4FgZNsx8SuxWrhhGSmwgIf4JDrye6h5+Q1Dx0eJy4MquWAblXdQXxL2vMG333xaqkZsefB6OGAt058xDmyHCH4wqpI7vG/xlkWRoGJvBFBXlxjmoq3GrZyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZ2YSgSe; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOx1ewDn"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-486ff3a0fc1so48860765e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 01:58:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZ2YSgSe"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-43cfd1f9fd1so1361584f8f.3
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 03:14:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774947493; x=1775552293; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774952071; x=1775556871; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xUBFmNIoijQTwDFycTPLWNTUdbsDcUl9Qdi01ngFzW8=;
-        b=dOx1ewDnLnvyrv2L5daLy9oAlTrhV+xzEsgJzWmqojXpTuQ3xN82/JhbRoKhNi0KxO
-         JQW/eI+4a3a15gaOAHL5dHrevzObRo5m0rzk6a4S8tpB8/IQSv3hVQAWHo9DTuINA/Mx
-         15YgIYpMucBC0LfqF1FcmWfHyfGQ+l8M9TGoS9hzWUe7OmUzp5T1g4VwMmHQPXpna/Y4
-         tyIGqZ+e0YIvJCpZydaKPxsmjfxWvm67vf1ImISvJbz5EbwCkp57L+gy/ubwSg9i4+su
-         pg+w2BzS0NU6PigVLJnC6rI+NCMhpp1EYGlUoDau/OHx1zkyRJs3MvHck9wEo91bQBr2
-         8/uQ==
+        bh=rHAguR9gpH9bNNCcSAAdxkGuK61fpqt8X9EW7Veme/0=;
+        b=jZ2YSgSeLYlRefI7GcScWp5fKAnDWwiNg1GnxFb5Hgn80dosCDAvxAnRz7oUO3NSFk
+         CwpQy85qSicoLJHzyK11bFVy0a4Z0phC0T0Mnif2DLaIWpuqr1B8ZIMlIrmeFKrlHRjV
+         6kEDctfqEYI9hJ4YkvcanrAjWksXdQnsOB0Z3lXUsFNyM5jLSPZBwQibhVkxpjRLbkV6
+         HQVorcb1YAQQp9hn+sRikCXZPpeZXnabp2Tvyu3oaEv9TkJ6B3nryrxRfuwsqfMtUaCi
+         oanaPAyPmPHz/Guzu4o4drDGUrZWfhF+OebBfnATM/T1/4kAqRRvtnkCyTQu0gTD5PNP
+         0RBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774947493; x=1775552293;
+        d=1e100.net; s=20251104; t=1774952071; x=1775556871;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=xUBFmNIoijQTwDFycTPLWNTUdbsDcUl9Qdi01ngFzW8=;
-        b=cSq27vcZleTeAM2JfMQi3DZhdV3AYS6zOA2CSEFsY5ErssSb/R2ynVB+erCzVGpl4u
-         HuBWkjGfLy79IpDpwrhn+rsx7LzSbX0MuR02cYF0vopTRsf9wlYBYunltSltGFe9qwUL
-         kvdQgvJaj/gDHG115Rhg+IJXQjCB9FOwohrfyRc9HTAsA4CfFbiD7HePYlkVMFB/kvQc
-         9d6uOH18e97OZ8SdtKHann/4CF/BFetawfqV5fyMCGLtr2nqAndcHtfDCGIrxPhQJd5L
-         nGkFjQ+7Y6/jXe2I7xNpFhKh9eMqM2zYSx1JQBtPWLQht3Uj3pwi7bshcp9g+bStRY5I
-         MBmg==
-X-Gm-Message-State: AOJu0Yxa46ASLPsS0PnnQ/LG7Y68dlkDHM1RhAEVrQwfvxYbVxfkCNm6
-	sMtd5ZCvs+E9QY1t2MRHp1FypkrSgAnkOaBQmdwhHsCilvyMFnNiC9t/I2gajCo9
-X-Gm-Gg: ATEYQzz8OI9VLSMzwXAFucoC9qSOgxjzFL0/gzts65FkrJ3pEZhPmDMSEzWjbdzRb/v
-	TSGCSCn/YHnAJuGoVEPQSL/JgEL0sJ25nHt+Jsnw9iID93U2OOdrSp1qEIIRV5dyIb6vHZRs/oX
-	szG0KXp+NleWBCLw5kOX7utLekQU05U1tE4/0yGw1vojdaaFQtbXS8EdWEwIFcJng+3reQMob1o
-	0mFlMKjFcbbe4E9eIFMFIs5ODsTWM4glz8nR5WquJrA6V4NhjtZLgBhrxCbMSLaRMsXRjIL9ThZ
-	m6HLIXyqR4+MR4SE+FHB1BePmFZ7TbSlAoFSHU8iPAdXSL+c+iRU0xHoJNoFO1DyaYEGIAZRyFp
-	dgG/B3AJBgCMCZT99Gk3ioGMJX3VOR6DsPao3FjYeQ+voTiJOWSUtj3xGSat/1jFIIHlxw1lxg3
-	gmMqkVPFZDRgr1z7HqUQps+nm1Ztnj3D2RIW2ASe3VVBV/JHe50myzzswdiZfj
-X-Received: by 2002:a05:600d:1c:b0:485:3f17:425 with SMTP id 5b1f17b1804b1-48727ec7681mr205715195e9.21.1774947492313;
-        Tue, 31 Mar 2026 01:58:12 -0700 (PDT)
+        bh=rHAguR9gpH9bNNCcSAAdxkGuK61fpqt8X9EW7Veme/0=;
+        b=ZdZOlkJj4TF2TEnfqnZakOKmPP+dB4yTsG2JINbK5kSwXKX3I73BpyQ5frmahBYhd8
+         +NuTg+UHtGGqa5+l6/kWyXUWEt4ZQ1trRfA5yexPibirvZlgUzawFafDwFZz3LA3WDGW
+         v5WNkEHjce0mpu0d69SUmWBW5TIBp6VvWlZfTCVJvLfBxwdcojU33WtVcDcLUqpAlhJK
+         +c4BLjZ6NiEpo9sp5LVzf1RSXdoxppLfhkuuSBDWV+KqP76sjwt8OWCxHVc4P0tAMZ79
+         gz188Yvd7tFLnfY6vNx6lh/6C7mQOyQ4KXSTbi9iee9FIpmT55Xvkvl51mB7YfbaH7Nk
+         Ly9w==
+X-Gm-Message-State: AOJu0YzzxUZjZpq8DIvouWrGUq62DJFkxagiIFlDlx6KK4v9DfW4IHVJ
+	KMaO5rfW9wGAmYTyeH2IdNWdBAGt8t6M8yTRn06bpdP8YZc9+78wUCctmNmMGS71
+X-Gm-Gg: ATEYQzx3U3Z3ByqGPUUaH2OoVPm5vaDqzou+nHfS0fa9ghoetVszK0YOZfd6DMkvThh
+	qptzYyNgEv0Y1Dbnh/Hq9T7ryTQyqcLmXRHXXQ/QJj6C92CXclSJgbXBJX9FPrHoCPU4wRqavjf
+	vTfGRS9tKY0igL2A5gH0dShvNRWLLifddivqpei7ruGv6xNV44vnJxul6zMWQFdRN7U+bK83H46
+	HqoExgLHwOHyPpRvfiXkIJ5UBtxsLxQTxX59GiAlxEL5AlJrMZgSzmIUwKl10S7CzIYwsgRY/Xd
+	FhuvzCChnFhsXYfy1UGU0bWECqAivMCaa2SIbE74Lrs/FaDSjWT+UwOUG5/fDnjJsCzCKEP+zQY
+	YRzhEA31QS+uQ5vh4hQUXqMrVlKAMCLdAEfUDNLR+hZxJ/8wNDxFIBGx3N2ZIddWpmP9QuHuztd
+	mHkK78CPAuj5kGZYiNorQxeOaemujfuukFN8yWafTbUP490x5mCrUckHsc5o1V0RQusIbZRgo=
+X-Received: by 2002:a05:600c:4e15:b0:477:7ae0:cd6e with SMTP id 5b1f17b1804b1-48727d5a16fmr270937105e9.5.1774952070406;
+        Tue, 31 Mar 2026 03:14:30 -0700 (PDT)
 Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887a630901sm19437755e9.0.2026.03.31.01.58.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e83682fsm26530635e9.7.2026.03.31.03.14.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 01:58:12 -0700 (PDT)
-Date: Tue, 31 Mar 2026 09:58:10 +0100
+        Tue, 31 Mar 2026 03:14:30 -0700 (PDT)
+Date: Tue, 31 Mar 2026 11:14:28 +0100
 From: David Laight <david.laight.linux@gmail.com>
 To: Kees Cook <kees@kernel.org>
 Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next 3/3] fortify: Simplify strlen() logic
-Message-ID: <20260331095810.30da7b05@pumpkin>
-In-Reply-To: <202603302305.19F4EF8@keescook>
+Subject: Re: [PATCH next 2/3] fortify: Optimise strnlen()
+Message-ID: <20260331111428.0b0575dd@pumpkin>
+In-Reply-To: <202603302335.0AEEF9154@keescook>
 References: <20260330132003.3379-1-david.laight.linux@gmail.com>
-	<20260330132003.3379-4-david.laight.linux@gmail.com>
-	<202603302305.19F4EF8@keescook>
+	<20260330132003.3379-3-david.laight.linux@gmail.com>
+	<202603302335.0AEEF9154@keescook>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -77,46 +77,127 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Mar 2026 23:07:01 -0700
+On Mon, 30 Mar 2026 23:36:07 -0700
 Kees Cook <kees@kernel.org> wrote:
 
-> On Mon, Mar 30, 2026 at 02:20:03PM +0100, david.laight.linux@gmail.com wrote:
+> On Mon, Mar 30, 2026 at 02:20:02PM +0100, david.laight.linux@gmail.com wrote:
 > > From: David Laight <david.laight.linux@gmail.com>
 > > 
-> > The __builtin_choose_expr() doesn't gain you anything, replace with
-> > a simple ?: operator.
-> > Then __is_constexpr() can then be replaced with __builtin_constant_p().
-> > This still works for static initialisers - the expression can contain
-> > a function call - provided it isn't actually called.  
+> > If the string is constant there is no need to call __real_strlen()
+> > even when maxlen is a variable - just return the smaller value.
+> > 
+> > If the size of the string variable is unknown fortify_panic() can't be
+> > called, change the condition so that the compiler can optimise it away.
+> > 
+> > Change __compiletime_strlen(p) to return a 'non-constant' value
+> > for non-constant strings (the same as __builtin_strlen()).
+> > Simplify since it is only necessary to check that the size is constant
+> > and that the last character is '\0'.
+> > Explain why it is different from __builtin_strlen().
+> > Update the kunit tests to match.  
 > 
-> But __is_constexpr() != __builtin_constant_p(). I will go find the
-> horrible examples of why this, too, needed so much careful construction.
+> See also
+> commit d07c0acb4f41 ("fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL")
+> 
+> -Kees
 > 
 
-I know all about that.
-Loosely __is_constexpr() requires that the initial compilation pass
-sees something that is constant, whereas __builtin_constant_p() can
-initially say 'not sure' and then a later compilation pass (eg after
-function inlining) can determine that it is true after all.
-There are a few places where C requires an 'integer constant expression',
-otherwise __builtin_constant_p() is good enough.
+It is far more subtle that that;
+There shouldn't be a run-time access to __p[__p_len] at all.
+And you really don't want one.
 
-__builtin_choose_expr() is also pretty much exactly the same as ?:
-except that the types of the two expressions can differ.
-In particular both bits of code have to compile without warnings
-and have to be valid where it is used.
+The problematic code was:
+	if (__builtin_constant(__p[__p_len]) && __p[__p_len] == 0)
+If the compiler thinks __p[__p_len] is constant then it will also
+think that __p[0] is constant.
+So the extra check should really make no difference.
 
-Note that you can have a function call in a static initialiser but not a
-statement expression ({...}). C requires the expression be constant
-- so the function can't be called, but it is syntactically valid.
-So if you have a ({...}) in the unselected code of a __builtin_choose_expr()
-you can't use it for a static initialiser.
+I suspect this is what happened, consider:
+	const char *foo;
+	if (cond)
+		foo = "foo";
+	else
+		foo = "fubar";
+	return __compiletime_strlen(foo);
 
-Once you've relaxed the __builtin_choose_expr() to ?: you can relax
-the test to __builtin_constant_p().
-That is then (usually) true for constant values passed into inline functions.
-I think I found a few cases where it made a difference.
+This is first converted to (ignoring any silly typos):
+	const char *foo;
+	if (cond)
+		foo = "foo";
+	else
+		foo = "fubar";
+	len = __builtin_object_size(foo,1) - 1; // 6 - 1
+	if (__builtin_constant(foo[len]) && foo[len] == 0)
+		return __builtin_strlen(foo);
+	return SIZE_MAX;
+Since foo isn't constant that returns SIZE_MAX.
+
+The code is then moved into the conditional giving:
+	if (cond) {
+		foo = "foo";
+		if (__builtin_constant(foo[5]) && foo[5] == 0)
+			return __builtin_strlen(foo);
+		return SIZE_MAX;
+	} else {
+		foo = "fubar";
+		if (__builtin_constant(foo[5]) && foo[5] == 0)
+			return __builtin_strlen(foo);
+		return SIZE_MAX;
+	}	
+
+Since since foo is now 'pointer to constant' foo[] is constant, giving: 
+	if (cond) {
+		foo = "foo";
+		if (foo[5] == 0)
+			return __builtin_strlen(foo);
+		return SIZE_MAX;
+	} else {
+		foo = "fubar";
+		if (foo[5] == 0)
+			return __builtin_strlen(foo);
+		return SIZE_MAX;
+	}	
+
+In the bottom bit foo[5] is well defined and known to be zero.
+In the top bit foo[5] is UB and gcc leaves the code it, giving:
+	if (cond) {
+		foo = "foo";
+		if (foo[5] == 0)
+			return __builtin_strlen(foo);
+		return SIZE_MAX;
+	} else {
+		foo = "fubar";
+		return __builtin_strlen(foo);
+	}
+
+and you get a real reference off the end of foo[] - which UBSAN_LOCAL_BOUNDS
+rightly picks up on.
+
+clang has a habit of silently deleting everything after UB, so might
+generate:
+	if (cond) {
+		return whatever_happens_to_be_in_ax;
+	} else {
+		foo = "fubar";
+		return __builtin_strlen(foo);
+	}
+
+The 'fix' of checking __p[0] actually makes no real difference.
+I'd guess that the longer code block stops gcc moving the code
+into the conditional and hides the bug.
+But that could easily change by just breathing on the code somewhere
+or in a future compiler version.
+
+I suspect this should be a compiler bug.
+But with the compiler behaving this way you can't write
+__compiletime_strlen() with a check for the '\0' terminator.
+
+That really means you can only use __builtin_strlen().
+Which means you'll get a compile-time error from:
+	char foo[3] = "foo";
+	__builtin_strlen(foo);
+rather the 'not a constant' when checking strscpy(tgt, foo, 3);
+At a guess that never happens except in the tests.
 
 	David
-
 
