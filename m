@@ -1,234 +1,113 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315B31C860C;
-	Tue, 31 Mar 2026 00:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBCE2C08D4
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 00:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774916610; cv=none; b=nWb2Wu7zKKJ1MCDwESPMud6GsMZa37g1w3x2IaOGjXQI9iH1zvasGbY4/DbdzPGidWcxZ0zD05Oe7XPK1UZre7eGcJefitAL/99bH9NcCbapGm3rb2TbGUbxQ8IhlM4cgOiwzrErN5tpKkkaXdcWR8IvyoeNrcgXXdvatKKb9qI=
+	t=1774918340; cv=none; b=ry1EwXuzHjwRKEoBRqgLjFLgQVk7/FI76FyffQMQ1pOmMzD7amU0r/0YnNIL3C6Prm66rocByJrR8AiMM+5xKRYQTgvTNxFrsdIwx9IQ2g1xx9zoEq3rZShkzlAwaqdekrq6JYZ+crJYDoevQ2MK8lKO2Tb07lnkfMRRfVIE1MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774916610; c=relaxed/simple;
-	bh=GCzVZzW/duwsjble9aoDXX1PUCepNmI4cXJTmfE2f4c=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qCTOYbDbC37/qcdxSRj9Jpy8AjQVNkxnMfuJvqKipR0l8Jn92udxRwgZHK8QVBHfRGIsKDIrYlHlh7rNLGAkCKzvamG8fjEC4UuBhfzErQ1g3pVHb6mrUG6L8eoeVYk3S1AiYA7/JdM+RzZfRyIBR88HKeb3F+aY1hRWaIzQCLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=B/puBoXS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=V0u+dQVr; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	s=arc-20240116; t=1774918340; c=relaxed/simple;
+	bh=v4spxuzpf6zkGjarYezY7T+F8nrvptDEqHIeGCd9ypc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kHKoEuXyLjHmgT+8+Ca7s4L73tjXdJvTRF1aHzh22Z7sFkoNaHCkPQym1Ck8OyluDc5RWX7LDwIwDojO8kmcq8R7rbg4fjA/J/Wn3a7cAnpVr+ap6UIQhcPtZxNY2pxqTJQoJBxyDRfut4evPhBe+ZuUlpm+10IkVr04zRKyrgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=SrbXkw/0; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="B/puBoXS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V0u+dQVr"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 297031400270;
-	Mon, 30 Mar 2026 20:23:26 -0400 (EDT)
-Received: from phl-imap-18 ([10.202.2.89])
-  by phl-compute-02.internal (MEProxy); Mon, 30 Mar 2026 20:23:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1774916606;
-	 x=1775003006; bh=cWoDg1S5xG56Rd1oGlYnr5p4rgAcD9wjrqoTHNlBhfg=; b=
-	B/puBoXS5cM5AJIvaLQazYUj4dU+LW9ELtN8WVR0pIFkkVq39Ku94XsT3dqTI4PC
-	kX8S9ier4yfMxdPhUuqk7zQK8csOtldZMHq9GctUl+P5nChe4ALIxnuaGlYa4jxs
-	Vz0HC6bEGD07u3M+FE+boghErN8uT3f1kVza3AtUvr7KNbk/bFRZZbkuN3y9zHoO
-	9oJsByWDQL4vRmzkNGmRmCu4PcaI5GhestvOPF9DDjveinPnVr9C86rVG7lh3Eqd
-	ZDhio7cUMCyUCrlfe1fqekkzY5+7X+dleVk423dDgNMQBUwIPMlnWss526D6GIIo
-	J1bQ/VpVAeYYaOCFb2IHxg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774916606; x=
-	1775003006; bh=cWoDg1S5xG56Rd1oGlYnr5p4rgAcD9wjrqoTHNlBhfg=; b=V
-	0u+dQVrvWOqc4Z4DWbHdT99ed7vFW2KvfDz9EGGIaqHUqa6e4V3tDi+82xyjbVPG
-	I5y27GAF65bb57s2HifRDT7ZX9EYnYMBO2kCAkpJ3GsKXLopEE7nLAMxB5/o5lbj
-	+doDJCaclsOSkLa9XLXfQbCMOgfuRBCEnEfMZNhBW/fF3ks3AqpzupXJPoEFsJbB
-	VWKYdyrSszmA4d77AyD1L1pfyd145Tj2R6qROeisxtxs1nF204Uj8NbCPSoJnbcw
-	y2Bj6QhiptyZAU6p2dKuBkACpoCi6jeE/OS3yWyT7gv0dYFWvwFVTVsZpmwGdwBK
-	wSp+sMk2+xD2G7ABnPggw==
-X-ME-Sender: <xms:_hPLaUZXkOooaKdGZqDSr6wDFXNP-obgu-0chKr8dw5o1ehMBmI42A>
-    <xme:_hPLaaPg9JFIFCDd-ywucAFhBdZV3CEqKjHhnCdK_4T0quD-QC23iOpJzAJLT6wRU
-    Sa2hk3rF6zuRjdZrDbjnJGBGS8zZcpj02vfuFpwPtiYCp6pAJxZiw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefgedtgeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehlvgig
-    ucghihhllhhirghmshhonhdfuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtf
-    frrghtthgvrhhnpeehffeuteehjedvleekieeggeefgfeuueejjeegkeefhedvueeugfej
-    jefhheetjeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghlvgigsehshhgriigsohhtrdho
-    rhhgpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
-    hrohhsvghnphesghhmrghilhdrtghomhdprhgtphhtthhopehguhhsthgrvhhorghrshes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlvghonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhvmhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinh
-    hgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
-    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:_hPLaVeplWVL0FT1k-5pu81AKOObq4rbj-og786NnK-obsvNuKazIA>
-    <xmx:_hPLaSQ_etMJvWX58Cqdg1Oj4aToxYo5BmCzm_Vt196kqpS_FT4Bpg>
-    <xmx:_hPLaUv4g-AlhohUHHJb6rvsz-9sYCdyV7Xi58D1O6HD2b9J_Ln9fQ>
-    <xmx:_hPLabc3UY3AdFmRQ8UxMUvMSiKf06viMjMvtijpj4iliWgGbj7MpA>
-    <xmx:_hPLaeKdvPmEu9ddgHKS1HFqdb1G-eYkoZMLA5QUIEoVkuC1qN9VJ1cl>
-Feedback-ID: i03f14258:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E784415C008C; Mon, 30 Mar 2026 20:23:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="SrbXkw/0"
+Received: from eig-obgw-5001b.ext.cloudfilter.net ([10.0.29.181])
+	by cmsmtp with ESMTPS
+	id 7JiOwkXDiObRf7NL3wSJfC; Tue, 31 Mar 2026 00:52:13 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 7NL2wnsHveVHC7NL3w1utX; Tue, 31 Mar 2026 00:52:13 +0000
+X-Authority-Analysis: v=2.4 cv=TfSWtQQh c=1 sm=1 tr=0 ts=69cb1abd
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=7T7KSl7uo7wA:10
+ a=8nCX5qW_8wIiqptpIdUA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qPBTmWA2iyDxau001Y18REJbXYG14dqlLlHfbpR0TE0=; b=SrbXkw/0A2i/exVb9RzomTHJXJ
+	q3tr1cstPpLeMymJe0/YRlZlW8XaRoBWJjRkmquRs+qcPZVO3d4sW7DfT/3PnxftbA29WGpa8l+dw
+	MQ2tuLPi6EWUNARJn1R38cC2EaDHH8t/vG0gQDqUiFfFAQwKEqt1eEDSqJTH9tBHQ3w7Y7OwWmT2p
+	uUVl/Zx35NBpCyQEtQj9GwTWJyibO7y8kd5CKBCtr2NeH2feW9TRVt2Naqr1fAkxM1gOChFwfHrGi
+	4qYrIR1JszqAYypvlg3EtFkOfV10NiGHz3OE+nsGft1sfoqyFJ3VxGtuMIiUTfP6Q9ujFGlJw89CF
+	08MurN4w==;
+Received: from [177.238.16.13] (port=47112 helo=[192.168.0.21])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1w7NL2-00000003HJj-0P80;
+	Mon, 30 Mar 2026 19:52:12 -0500
+Message-ID: <e5207fad-2235-4849-b238-c85ee62508bf@embeddedor.com>
+Date: Mon, 30 Mar 2026 18:51:01 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A6P6aVCjxLYF
-Date: Mon, 30 Mar 2026 18:23:05 -0600
-From: "Alex Williamson" <alex@shazbot.org>
-To: "Rosen Penev" <rosenp@gmail.com>
-Cc: kvm@vger.kernel.org, "Kees Cook" <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- "open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>,
- "Leon Romanovsky" <leon@kernel.org>
-Message-Id: <68be750c-694b-40ad-9818-809f80849795@app.fastmail.com>
-In-Reply-To: 
- <CAKxU2N8rpaLXXsD7sUvw3ffMe8JUREGc9ru_HX0r4Uw4RT_q1g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] vfio: pci: use kzalloc_flex
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Alex Williamson <alex@shazbot.org>, kvm@vger.kernel.org,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ open "list:KERNEL" HARDENING "(not" covered by other
+ "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>,
+ Leon Romanovsky <leon@kernel.org>
 References: <20260326023747.54485-1-rosenp@gmail.com>
  <20260330161933.6471d473@shazbot.org>
  <CAKxU2N8rpaLXXsD7sUvw3ffMe8JUREGc9ru_HX0r4Uw4RT_q1g@mail.gmail.com>
-Subject: Re: [PATCH] vfio: pci: use kzalloc_flex
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+ <37378f49-437f-438b-ad6c-d60480feb306@embeddedor.com>
+ <CAKxU2N_o=x=wSjiQqyB68VvhxP_ZoGoSyQagKm=0BdKkgrmPnw@mail.gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <CAKxU2N_o=x=wSjiQqyB68VvhxP_ZoGoSyQagKm=0BdKkgrmPnw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.13
+X-Source-L: No
+X-Exim-ID: 1w7NL2-00000003HJj-0P80
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [177.238.16.13]:47112
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHVbbF1lAGpbjdTe1yLI+9kLg3cPz8Zb+HFSM5RHrn36SrCcGH+msgF4J2svY8evq3lxKdcEAIdTEbItGXhv5naQAS5q5BzQ1ULsqwJY4zaQdWAwroCU
+ go7ABsqPV+Vo8ISzYfuz97lKz8H8QCUgS5WUbF+dk0hXv+kMRMw+k4rSeKTWKJdwFXCgCL836rW8ht7VkEnL7z3ONRvQhLiannI05N1py2BRmbBG7TEqIKAC
 
-On Mon, Mar 30, 2026, at 5:24 PM, Rosen Penev wrote:
-> On Mon, Mar 30, 2026 at 4:16=E2=80=AFPM Alex Williamson <alex@shazbot.=
-org> wrote:
->>
->> [Cc +Leon]
->>
->> On Wed, 25 Mar 2026 19:37:47 -0700
->> Rosen Penev <rosenp@gmail.com> wrote:
->>
->> > Simplify allocation by using a flexible array member and kzalloc_fl=
-ex.
->> > Less memory management needed.
->> >
->> > Use __counted_by for extra runtime analysis. Move assignment to aft=
-er
->> > allocation as required by __counted_by.
->>
->> I don't understand this statement, nr_ranges was previously set after
->> the allocation of phys_vec.  The only reordering was relative to
->> setting vdev, but that appears arbitrary.
-> Yes that one. My understanding is __counted_by mandates immediate
-> assignment after allocation. Otherwise UBSAN complains.
->>
->> In fact, we don't need to explicitly set the __counted_by variable at
->> all, kzalloc_flex() handles that.  So if anything, it's now redundant.
-> Redundant with GCC`15 and above.
 
-Sorry, this seems like a -2 on Rusty's manifesto of API design[1].  Why =
-are we doing this?  We could do the math to do a single allocation and a=
-dd the annotation for UBSAN without introducing this helper that's not o=
-bvious how to use correctly and at best introduces a redundant counter i=
-nitialization.  Thanks,
+>>>>> Use __counted_by for extra runtime analysis. Move assignment to after
+>>>>> allocation as required by __counted_by.
+>>>>
+>>>> I don't understand this statement, nr_ranges was previously set after
+>>>> the allocation of phys_vec.  The only reordering was relative to
+>>>> setting vdev, but that appears arbitrary.
+>>> Yes that one. My understanding is __counted_by mandates immediate
+>>> assignment after allocation. Otherwise UBSAN complains.
+>>
+>> Not true. However, it's best practice.
+>>
+>> The requirement is that the _counter_ must be initialized before
+>> the first reference to the flexible-array member.
+> OTOH kzalloc_flex automatically sets it for GCC15 and above. Useful to
 
-Alex
+That's what the "it's best practice." comment above alludes to.
 
-[1] https://gist.github.com/mjball/9cd028ac793ae8b351df1379f1e721f9
-
->>
->> Leon, any other comments?  This should have a v2 removing the
->> redundancy and fixing the commit log.
->>
->> NB. This will be a bit messy to merge since kref and completion exist=
- in
->> linux-next via drm, but maybe Linus will consolidate the hole in the
->> structure when he resolves it.  Thanks,
->>
->> Alex
->>
->> >
->> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
->> > ---
->> >  drivers/vfio/pci/vfio_pci_dmabuf.c | 18 +++++-------------
->> >  1 file changed, 5 insertions(+), 13 deletions(-)
->> >
->> > diff --git a/drivers/vfio/pci/vfio_pci_dmabuf.c b/drivers/vfio/pci/=
-vfio_pci_dmabuf.c
->> > index 3a803923141b..40e7e035a720 100644
->> > --- a/drivers/vfio/pci/vfio_pci_dmabuf.c
->> > +++ b/drivers/vfio/pci/vfio_pci_dmabuf.c
->> > @@ -14,12 +14,12 @@ struct vfio_pci_dma_buf {
->> >       struct vfio_pci_core_device *vdev;
->> >       struct list_head dmabufs_elm;
->> >       size_t size;
->> > -     struct phys_vec *phys_vec;
->> >       struct p2pdma_provider *provider;
->> >       u32 nr_ranges;
->> >       struct kref kref;
->> >       struct completion comp;
->> >       u8 revoked : 1;
->> > +     struct phys_vec phys_vec[] __counted_by(nr_ranges);
->> >  };
->> >
->> >  static int vfio_pci_dma_buf_attach(struct dma_buf *dmabuf,
->> > @@ -95,7 +95,6 @@ static void vfio_pci_dma_buf_release(struct dma_b=
-uf *dmabuf)
->> >               up_write(&priv->vdev->memory_lock);
->> >               vfio_device_put_registration(&priv->vdev->vdev);
->> >       }
->> > -     kfree(priv->phys_vec);
->> >       kfree(priv);
->> >  }
->> >
->> > @@ -258,33 +257,28 @@ int vfio_pci_core_feature_dma_buf(struct vfio=
-_pci_core_device *vdev, u32 flags,
->> >       if (ret)
->> >               goto err_free_ranges;
->> >
->> > -     priv =3D kzalloc_obj(*priv);
->> > +     priv =3D kzalloc_flex(*priv, phys_vec, get_dma_buf.nr_ranges);
->> >       if (!priv) {
->> >               ret =3D -ENOMEM;
->> >               goto err_free_ranges;
->> >       }
->> > -     priv->phys_vec =3D kzalloc_objs(*priv->phys_vec, get_dma_buf.=
-nr_ranges);
->> > -     if (!priv->phys_vec) {
->> > -             ret =3D -ENOMEM;
->> > -             goto err_free_priv;
->> > -     }
->> >
->> > -     priv->vdev =3D vdev;
->> >       priv->nr_ranges =3D get_dma_buf.nr_ranges;
->> > +     priv->vdev =3D vdev;
->> >       priv->size =3D length;
->> >       ret =3D vdev->pci_ops->get_dmabuf_phys(vdev, &priv->provider,
->> >                                            get_dma_buf.region_index,
->> >                                            priv->phys_vec, dma_rang=
-es,
->> >                                            priv->nr_ranges);
->> >       if (ret)
->> > -             goto err_free_phys;
->> > +             goto err_free_priv;
->> >
->> >       kfree(dma_ranges);
->> >       dma_ranges =3D NULL;
->> >
->> >       if (!vfio_device_try_get_registration(&vdev->vdev)) {
->> >               ret =3D -ENODEV;
->> > -             goto err_free_phys;
->> > +             goto err_free_priv;
->> >       }
->> >
->> >       exp_info.ops =3D &vfio_pci_dmabuf_ops;
->> > @@ -323,8 +317,6 @@ int vfio_pci_core_feature_dma_buf(struct vfio_p=
-ci_core_device *vdev, u32 flags,
->> >       dma_buf_put(priv->dmabuf);
->> >  err_dev_put:
->> >       vfio_device_put_registration(&vdev->vdev);
->> > -err_free_phys:
->> > -     kfree(priv->phys_vec);
->> >  err_free_priv:
->> >       kfree(priv);
->> >  err_free_ranges:
->>
+-Gustavo
