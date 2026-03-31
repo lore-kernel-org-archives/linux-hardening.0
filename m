@@ -1,203 +1,224 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407F33A6B9A
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 10:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C323630AD
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 11:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774952073; cv=none; b=BfvjMn+AVizLH+ALD6CN3QGhhMGLbEFtJa72v+ChP3abqtQP7XrLUWd5lCmSfhBmTchFc9Z+i0v2HAN3mfy4wisfp3FswOUUW4dmFheF0cYYu2j5C6yqxJzXJTMXSEWSEvedP7WsHTm83uheO6pJ7aYf7w4Z4I9YenPnllhkUw0=
+	t=1774955072; cv=none; b=reZSRb/Wd0Q+7Ic1SBNLtgJl8whEgkImmtIoUgP6+bwTsncHs+MxZfUoPMlSeWXXN78qBkXgKikMMpD8+KsPx02NCogZNMXTHqnvnN9Y4nQO5ySBLIYcFmaSY7gj2tzQaYKhtGSQ7jigYrK1pOOsnOzfZpybPpu7JDStM/x1LEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774952073; c=relaxed/simple;
-	bh=pBJIPnybKnLg/DdwBPJji7V9mFWY9KFpzKug0waH6Ac=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F/9XCFdkpRyAVWyLVumjxwl+8tO5rChN+QBGXGbX1/f451EbW7Iw4FgZNsx8SuxWrhhGSmwgIf4JDrye6h5+Q1Dx0eJy4MquWAblXdQXxL2vMG333xaqkZsefB6OGAt058xDmyHCH4wqpI7vG/xlkWRoGJvBFBXlxjmoq3GrZyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZ2YSgSe; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774955072; c=relaxed/simple;
+	bh=M6EIu6Afc0oBMVsCGDUeBE0bnZVnmi9c0EPuIf/RvQY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BU1av18NFsW6Xzkh7RrQ0YqYNs+gO/eXWjy91DwnGmBjIfaQ1Gj2C1Kuf8QKwCCgFkMdkjje48mrBltjeVewWKkW/23sE2tnYcSTHSYI8/wvhx4xUBwzma/dBAJGud2KcBt0EEz/bs7kJWNczoCPyavX5sB9EkrLf6nWIHZNF+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jnaIXz+d; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZ2YSgSe"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-43cfd1f9fd1so1361584f8f.3
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 03:14:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jnaIXz+d"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-43d07f0aca0so611328f8f.3
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Mar 2026 04:04:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774952071; x=1775556871; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rHAguR9gpH9bNNCcSAAdxkGuK61fpqt8X9EW7Veme/0=;
-        b=jZ2YSgSeLYlRefI7GcScWp5fKAnDWwiNg1GnxFb5Hgn80dosCDAvxAnRz7oUO3NSFk
-         CwpQy85qSicoLJHzyK11bFVy0a4Z0phC0T0Mnif2DLaIWpuqr1B8ZIMlIrmeFKrlHRjV
-         6kEDctfqEYI9hJ4YkvcanrAjWksXdQnsOB0Z3lXUsFNyM5jLSPZBwQibhVkxpjRLbkV6
-         HQVorcb1YAQQp9hn+sRikCXZPpeZXnabp2Tvyu3oaEv9TkJ6B3nryrxRfuwsqfMtUaCi
-         oanaPAyPmPHz/Guzu4o4drDGUrZWfhF+OebBfnATM/T1/4kAqRRvtnkCyTQu0gTD5PNP
-         0RBA==
+        d=google.com; s=20251104; t=1774955069; x=1775559869; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=36J1iwO3uewGR7LwpckoN3+SUciZBWS6Lj6AbSclXvk=;
+        b=jnaIXz+dLPIrhmBzZiENoHbiO63tBAx3Yn0EG3j0gEOlRWHi09r5BX6ouLMQs93sdw
+         QRcJMJIW4nPVYqNe8X49rFUP7o2gUiKDt1kOs6Fx5NtVkYVg6CziLbXN0HZsoTFKgTqA
+         nyVPBVn0Yn7HtY1PoCE1+s3fmn/iJI6t0LorstqlYxSr8pWHK70860tJuuCCRix3Ss+5
+         BxIcS7cDF2gMXTQgetK+g5/+Itt2MKfrZBNMCB6jWYlKKc+1ncA5lFMKkXtXYNPaFLKL
+         iY0n9H9n6ESAPQZlFus53ey3dmOhoVTPsoRw/oM2iq1aNPnTQmzjM+OV68rWWHtxHOlQ
+         YUzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774952071; x=1775556871;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=rHAguR9gpH9bNNCcSAAdxkGuK61fpqt8X9EW7Veme/0=;
-        b=ZdZOlkJj4TF2TEnfqnZakOKmPP+dB4yTsG2JINbK5kSwXKX3I73BpyQ5frmahBYhd8
-         +NuTg+UHtGGqa5+l6/kWyXUWEt4ZQ1trRfA5yexPibirvZlgUzawFafDwFZz3LA3WDGW
-         v5WNkEHjce0mpu0d69SUmWBW5TIBp6VvWlZfTCVJvLfBxwdcojU33WtVcDcLUqpAlhJK
-         +c4BLjZ6NiEpo9sp5LVzf1RSXdoxppLfhkuuSBDWV+KqP76sjwt8OWCxHVc4P0tAMZ79
-         gz188Yvd7tFLnfY6vNx6lh/6C7mQOyQ4KXSTbi9iee9FIpmT55Xvkvl51mB7YfbaH7Nk
-         Ly9w==
-X-Gm-Message-State: AOJu0YzzxUZjZpq8DIvouWrGUq62DJFkxagiIFlDlx6KK4v9DfW4IHVJ
-	KMaO5rfW9wGAmYTyeH2IdNWdBAGt8t6M8yTRn06bpdP8YZc9+78wUCctmNmMGS71
-X-Gm-Gg: ATEYQzx3U3Z3ByqGPUUaH2OoVPm5vaDqzou+nHfS0fa9ghoetVszK0YOZfd6DMkvThh
-	qptzYyNgEv0Y1Dbnh/Hq9T7ryTQyqcLmXRHXXQ/QJj6C92CXclSJgbXBJX9FPrHoCPU4wRqavjf
-	vTfGRS9tKY0igL2A5gH0dShvNRWLLifddivqpei7ruGv6xNV44vnJxul6zMWQFdRN7U+bK83H46
-	HqoExgLHwOHyPpRvfiXkIJ5UBtxsLxQTxX59GiAlxEL5AlJrMZgSzmIUwKl10S7CzIYwsgRY/Xd
-	FhuvzCChnFhsXYfy1UGU0bWECqAivMCaa2SIbE74Lrs/FaDSjWT+UwOUG5/fDnjJsCzCKEP+zQY
-	YRzhEA31QS+uQ5vh4hQUXqMrVlKAMCLdAEfUDNLR+hZxJ/8wNDxFIBGx3N2ZIddWpmP9QuHuztd
-	mHkK78CPAuj5kGZYiNorQxeOaemujfuukFN8yWafTbUP490x5mCrUckHsc5o1V0RQusIbZRgo=
-X-Received: by 2002:a05:600c:4e15:b0:477:7ae0:cd6e with SMTP id 5b1f17b1804b1-48727d5a16fmr270937105e9.5.1774952070406;
-        Tue, 31 Mar 2026 03:14:30 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e83682fsm26530635e9.7.2026.03.31.03.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 03:14:30 -0700 (PDT)
-Date: Tue, 31 Mar 2026 11:14:28 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next 2/3] fortify: Optimise strnlen()
-Message-ID: <20260331111428.0b0575dd@pumpkin>
-In-Reply-To: <202603302335.0AEEF9154@keescook>
-References: <20260330132003.3379-1-david.laight.linux@gmail.com>
-	<20260330132003.3379-3-david.laight.linux@gmail.com>
-	<202603302335.0AEEF9154@keescook>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20251104; t=1774955069; x=1775559869;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=36J1iwO3uewGR7LwpckoN3+SUciZBWS6Lj6AbSclXvk=;
+        b=Yw5b+nnwePc5v2igfmwaRnt5X8UQrkavyEway5+BgIm3uKTd4L3Uyrjc7xsGm2wpry
+         fTfPqBhXlbPu2tUYUJTedM6cX8HDo8YQ0Pk3Tk5qaJ4uGquIPaKG2bOBtD0vDlQKO7Zv
+         IoM4vz1/Le/fZAHWvndDfPyBB0SwFREcJSXTNg5BSM/wWjKV1V9OcP3pC9VUcZCQvynH
+         2NuPLOyR9wtgzCz5/rSpLkDx/pOLahwO0PYpvjc92zQgyhis+k91fLNIDrXYbuPuADIa
+         I5wOWR+FmXV4jotzmQqieLUGAnQ6F22sS/tlycV9TDbG25hLaXXwjrV0iZx8Rz3RzEdz
+         Cj3g==
+X-Gm-Message-State: AOJu0YxCpcfgLeCMsHOEB6Wp/QfbVRR5Dk0xMoou4wOjJ1R5QDvpstcd
+	NfsEG86IO7wu1miwYi3ymwcml6QfuZ0XGZAk+vEqzRQxInapwu3iK4TwZLuK1EHF+R128YqZ9A=
+	=
+X-Received: from wrnl9.prod.google.com ([2002:adf:e9c9:0:b0:43c:ffbe:2059])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:4013:b0:43b:5b25:67f8
+ with SMTP id ffacd0b85a97d-43b9e99790bmr28653172f8f.20.1774955068516; Tue, 31
+ Mar 2026 04:04:28 -0700 (PDT)
+Date: Tue, 31 Mar 2026 13:04:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5752; i=ardb@kernel.org;
+ h=from:subject; bh=UkgpvkytwmrQFmSMa05ABh3qtcMUUiZ2w9uwBJoLROk=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIfP0KvPZS/7WLjKrffvxxo/vfMwzRDb/yF08s3iforadt
+ u62vumXOkpZGMS4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBEmm0Y/leWZ9/Ou39Sbc4p
+ xeaZWQKKpWtUxB4ktlU4vJx6Vfj7BH6G/xEtFzaX8MoutFYJKLH+u4Sxt3Vt30tTz0n1X1rY/zO 2cgEA
+X-Mailer: git-send-email 2.53.0.1018.g2bb0e51243-goog
+Message-ID: <20260331110422.301901-2-ardb+git@google.com>
+Subject: [PATCH v8] arm64: Use static call trampolines when kCFI is enabled
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-hardening@vger.kernel.org, will@kernel.org, mark.rutland@arm.com, 
+	Ard Biesheuvel <ardb@kernel.org>, Carlos Llamas <cmllamas@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Sean Christopherson <seanjc@google.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Will McVicker <willmcvicker@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 30 Mar 2026 23:36:07 -0700
-Kees Cook <kees@kernel.org> wrote:
+From: Ard Biesheuvel <ardb@kernel.org>
 
-> On Mon, Mar 30, 2026 at 02:20:02PM +0100, david.laight.linux@gmail.com wrote:
-> > From: David Laight <david.laight.linux@gmail.com>
-> > 
-> > If the string is constant there is no need to call __real_strlen()
-> > even when maxlen is a variable - just return the smaller value.
-> > 
-> > If the size of the string variable is unknown fortify_panic() can't be
-> > called, change the condition so that the compiler can optimise it away.
-> > 
-> > Change __compiletime_strlen(p) to return a 'non-constant' value
-> > for non-constant strings (the same as __builtin_strlen()).
-> > Simplify since it is only necessary to check that the size is constant
-> > and that the last character is '\0'.
-> > Explain why it is different from __builtin_strlen().
-> > Update the kunit tests to match.  
-> 
-> See also
-> commit d07c0acb4f41 ("fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL")
-> 
-> -Kees
-> 
+Implement arm64 support for the 'unoptimized' static call variety, which
+routes all calls through a trampoline that performs a tail call to the
+chosen function, and wire it up for use when kCFI is enabled. This works
+around an issue with kCFI and generic static calls, where the prototypes
+of default handlers such as __static_call_nop() and __static_call_ret0()
+don't match the expected prototype of the call site, resulting in kCFI
+false positives [0].
 
-It is far more subtle that that;
-There shouldn't be a run-time access to __p[__p_len] at all.
-And you really don't want one.
+Since static call targets may be located in modules loaded out of direct
+branching range, this needs a ADRP/ADD pair to load the branch target
+into R16 and a branch-to-register (BR) instruction to perform an
+indirect call. This is the exact code sequence that is used by modules
+when the call target is out of direct branching range.
 
-The problematic code was:
-	if (__builtin_constant(__p[__p_len]) && __p[__p_len] == 0)
-If the compiler thinks __p[__p_len] is constant then it will also
-think that __p[0] is constant.
-So the extra check should really make no difference.
+Unlike on x86, there is no pressing need on arm64 to avoid indirect
+calls at all cost, but hiding it from the compiler as is done here does
+have some benefits:
+- the literal is located in .rodata, which gives us the same robustness
+  advantage that code patching does;
+- no D-cache pollution from fetching hash values from .text sections.
 
-I suspect this is what happened, consider:
-	const char *foo;
-	if (cond)
-		foo = "foo";
-	else
-		foo = "fubar";
-	return __compiletime_strlen(foo);
+From an execution speed PoV, this is unlikely to make any difference at
+all.
 
-This is first converted to (ignoring any silly typos):
-	const char *foo;
-	if (cond)
-		foo = "foo";
-	else
-		foo = "fubar";
-	len = __builtin_object_size(foo,1) - 1; // 6 - 1
-	if (__builtin_constant(foo[len]) && foo[len] == 0)
-		return __builtin_strlen(foo);
-	return SIZE_MAX;
-Since foo isn't constant that returns SIZE_MAX.
+[0] https://lore.kernel.org/all/20260311225822.1565895-1-cmllamas@google.com/
 
-The code is then moved into the conditional giving:
-	if (cond) {
-		foo = "foo";
-		if (__builtin_constant(foo[5]) && foo[5] == 0)
-			return __builtin_strlen(foo);
-		return SIZE_MAX;
-	} else {
-		foo = "fubar";
-		if (__builtin_constant(foo[5]) && foo[5] == 0)
-			return __builtin_strlen(foo);
-		return SIZE_MAX;
-	}	
+Cc: Carlos Llamas <cmllamas@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will McVicker <willmcvicker@google.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+v8: Simplify the trampoline by combining the NULL and RET0 cases, and
+    dropping the conditional branch and return
+v7: https://lore.kernel.org/all/20260313061852.4025964-1-cmllamas@google.com/
 
-Since since foo is now 'pointer to constant' foo[] is constant, giving: 
-	if (cond) {
-		foo = "foo";
-		if (foo[5] == 0)
-			return __builtin_strlen(foo);
-		return SIZE_MAX;
-	} else {
-		foo = "fubar";
-		if (foo[5] == 0)
-			return __builtin_strlen(foo);
-		return SIZE_MAX;
-	}	
+ arch/arm64/Kconfig                   |  1 +
+ arch/arm64/include/asm/static_call.h | 31 ++++++++++++++++++++
+ arch/arm64/kernel/Makefile           |  1 +
+ arch/arm64/kernel/static_call.c      | 23 +++++++++++++++
+ arch/arm64/kernel/vmlinux.lds.S      |  1 +
+ 5 files changed, 57 insertions(+)
 
-In the bottom bit foo[5] is well defined and known to be zero.
-In the top bit foo[5] is UB and gcc leaves the code it, giving:
-	if (cond) {
-		foo = "foo";
-		if (foo[5] == 0)
-			return __builtin_strlen(foo);
-		return SIZE_MAX;
-	} else {
-		foo = "fubar";
-		return __builtin_strlen(foo);
-	}
-
-and you get a real reference off the end of foo[] - which UBSAN_LOCAL_BOUNDS
-rightly picks up on.
-
-clang has a habit of silently deleting everything after UB, so might
-generate:
-	if (cond) {
-		return whatever_happens_to_be_in_ax;
-	} else {
-		foo = "fubar";
-		return __builtin_strlen(foo);
-	}
-
-The 'fix' of checking __p[0] actually makes no real difference.
-I'd guess that the longer code block stops gcc moving the code
-into the conditional and hides the bug.
-But that could easily change by just breathing on the code somewhere
-or in a future compiler version.
-
-I suspect this should be a compiler bug.
-But with the compiler behaving this way you can't write
-__compiletime_strlen() with a check for the '\0' terminator.
-
-That really means you can only use __builtin_strlen().
-Which means you'll get a compile-time error from:
-	char foo[3] = "foo";
-	__builtin_strlen(foo);
-rather the 'not a constant' when checking strscpy(tgt, foo, 3);
-At a guess that never happens except in the tests.
-
-	David
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 38dba5f7e4d2..9ea19b74b6c3 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -252,6 +252,7 @@ config ARM64
+ 	select HAVE_RSEQ
+ 	select HAVE_RUST if RUSTC_SUPPORTS_ARM64
+ 	select HAVE_STACKPROTECTOR
++	select HAVE_STATIC_CALL if CFI
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_KPROBES
+ 	select HAVE_KRETPROBES
+diff --git a/arch/arm64/include/asm/static_call.h b/arch/arm64/include/asm/static_call.h
+new file mode 100644
+index 000000000000..b73960c949e4
+--- /dev/null
++++ b/arch/arm64/include/asm/static_call.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_STATIC_CALL_H
++#define _ASM_STATIC_CALL_H
++
++#define __ARCH_DEFINE_STATIC_CALL_TRAMP(name, target)		    \
++	asm("	.pushsection .static_call.text, \"ax\"		\n" \
++	    "	.align	4					\n" \
++	    "	.globl	" name "				\n" \
++	    name ":						\n" \
++	    "	hint	34	/* BTI C */			\n" \
++	    "	adrp	x16, 1f					\n" \
++	    "	ldr	x16, [x16, :lo12:1f]			\n" \
++	    "	br	x16					\n" \
++	    "	.type	" name ", %function			\n" \
++	    "	.size	" name ", . - " name "			\n" \
++	    "	.popsection					\n" \
++	    "	.pushsection .rodata, \"a\"			\n" \
++	    "	.align	3					\n" \
++	    "1:	.quad	" #target "				\n" \
++	    "	.popsection					\n")
++
++#define ARCH_DEFINE_STATIC_CALL_TRAMP(name, func)			\
++	__ARCH_DEFINE_STATIC_CALL_TRAMP(STATIC_CALL_TRAMP_STR(name), #func)
++
++#define ARCH_DEFINE_STATIC_CALL_NULL_TRAMP(name)			\
++	ARCH_DEFINE_STATIC_CALL_TRAMP(name, __static_call_return0)
++
++#define ARCH_DEFINE_STATIC_CALL_RET0_TRAMP(name)			\
++	ARCH_DEFINE_STATIC_CALL_TRAMP(name, __static_call_return0)
++
++#endif /* _ASM_STATIC_CALL_H */
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 76f32e424065..fe627100d199 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -46,6 +46,7 @@ obj-$(CONFIG_MODULES)			+= module.o module-plts.o
+ obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o perf_callchain.o
+ obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF)	+= watchdog_hld.o
+ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
++obj-$(CONFIG_HAVE_STATIC_CALL)		+= static_call.o
+ obj-$(CONFIG_CPU_PM)			+= sleep.o suspend.o
+ obj-$(CONFIG_KGDB)			+= kgdb.o
+ obj-$(CONFIG_EFI)			+= efi.o efi-rt-wrapper.o
+diff --git a/arch/arm64/kernel/static_call.c b/arch/arm64/kernel/static_call.c
+new file mode 100644
+index 000000000000..8b3a19e10871
+--- /dev/null
++++ b/arch/arm64/kernel/static_call.c
+@@ -0,0 +1,23 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/static_call.h>
++#include <linux/memory.h>
++#include <asm/text-patching.h>
++
++void arch_static_call_transform(void *site, void *tramp, void *func, bool tail)
++{
++	u64 literal;
++	int ret;
++
++	if (!func)
++		func = __static_call_return0;
++
++	/* decode the instructions to discover the literal address */
++	literal = ALIGN_DOWN((u64)tramp + 4, SZ_4K) +
++		  aarch64_insn_adrp_get_offset(le32_to_cpup(tramp + 4)) +
++		  8 * aarch64_insn_decode_immediate(AARCH64_INSN_IMM_12,
++						    le32_to_cpup(tramp + 8));
++
++	ret = aarch64_insn_write_literal_u64((void *)literal, (u64)func);
++	WARN_ON_ONCE(ret);
++}
++EXPORT_SYMBOL_GPL(arch_static_call_transform);
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 2964aad0362e..2d1e75263f03 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -191,6 +191,7 @@ SECTIONS
+ 			LOCK_TEXT
+ 			KPROBES_TEXT
+ 			HYPERVISOR_TEXT
++			STATIC_CALL_TEXT
+ 			*(.gnu.warning)
+ 	}
+ 
+-- 
+2.53.0.1018.g2bb0e51243-goog
 
