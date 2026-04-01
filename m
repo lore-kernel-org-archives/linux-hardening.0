@@ -1,138 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358D840DFC5;
-	Wed,  1 Apr 2026 00:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613451FB1;
+	Wed,  1 Apr 2026 00:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775002296; cv=none; b=HegZd28fNwlxKQ75iMq1hfQaBmNNKAavqJ2/3ckZQnMEBtGU/1kfIH9R9wEMk1eQF3L2CV0/dBzCDBhM08WQHhLdGPiMyqjlHS/Hg3OwZU8d5RJiBSLspHgYvbosIDGgvOPBKjiI9nvBze5t+lRhuaXsDnn946nQTojX1bYAo9Q=
+	t=1775002560; cv=none; b=TuLGlwoqjA94rGUa5EgFP1TNlG3gvuL4ewUYL0AXzSWHZQupW/+/nCAO++sDxPysvgFL/mc4r0zm1b3SDkTNcBRQVKzKnDEj3boN7xIRNK+mNKM8P9C3k9hUPs+dzfth3GH3t3CMx4luMTaSPh5b+rqHnDgtXJesKnI6i/dz3Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775002296; c=relaxed/simple;
-	bh=HVNXu9Usi5qdDEbn2j9WggrU/Vy8Vy+O6o+xCAH1Ke0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hiY6C4FW4rD7qYYEIRwf6B5qeyR/g3yU5j8mGVeOZCResT0HMknVY7Z1NH8PyKYNw6po+NxaEWSwm7xcd7QbBOBVgZc+71HHSiEOFcaqfc7qxpXr2+znXdDxdtTWmu8qnFBVPBT5c4LHeoy08kfmPA9P6nviED++r4auIMjX2fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmuM8Pwl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775002560; c=relaxed/simple;
+	bh=p8Z3lolQagYsE0bHiEOMDsAn1qm62Ea/Xke5C/hxLEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgvBfhDwXeMxJnd4iQgbrETyOGOkCrTMJk/Ipz6Xv2YpgPkrld1pCZdzNdRpz1Ps2teCC3zkQzhpBI0BPO3aCor/BxRw77ytzszQIDLgUG+urMIrDMCtWACuTL2uoI4OgNpfkmGMNxsrbwwjgpFPQURUDYY/yIbAJmplD1nnyOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VbrRjoH2; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmuM8Pwl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDCAAC19423;
-	Wed,  1 Apr 2026 00:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775002296;
-	bh=HVNXu9Usi5qdDEbn2j9WggrU/Vy8Vy+O6o+xCAH1Ke0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qmuM8Pwly8KE3iAVlWKUS6Q5wnmoCMMcvRTyUamezhqGhPjCDoVHVf1rRlktV0p6a
-	 PTWAGZJ/5rLeVIT+vAtxAGRUnbZrBkdi5B/PJF3g9YS71K15lsjWhFOYtjcRan8C0x
-	 Q4FhxdqMfon0pd9CF6NSxoC6g86e5nScLBpP7m1E7rBACT4xXNfZMWV5YWM4f7LJu+
-	 0gqueRyTk08PczMlsYnTRCPej95Sz6syiHevVF1KTYtZzKAdAvazVig7A65xbp5SDR
-	 5nY8j6KRofhOqCtOVZ1ciG00Sq9QmC9wHirB5hqpOw7Srl1ftDDaSqb4GsfPhLxAWi
-	 tReR+CFUP2Ezw==
-From: Kees Cook <kees@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Sun Jian <sun.jian.kdev@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	bpf@vger.kernel.org,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v4] libbpf: Replace strncpy() with strnlen()+memcpy() in skel_map_create()
-Date: Tue, 31 Mar 2026 17:11:34 -0700
-Message-Id: <20260401001130.it.781-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VbrRjoH2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775002560; x=1806538560;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=p8Z3lolQagYsE0bHiEOMDsAn1qm62Ea/Xke5C/hxLEc=;
+  b=VbrRjoH2XEaU9v40+VHTnmOfvjeFuudtWKaqFNrnV5cuEmj31J8Wdqk1
+   MjwxUbmB4s0r9jHlnbr+a2URciLQFDEu7uQ5ABNKhBYMMinKq2kK0+eEc
+   Fn25JLjnEccSo2qZFa7/2O1lOP1Mko1qb/Ev9N8nLTOMbiWsiGe7+BNfn
+   +OBaZBPtHUWKt7M2NilzeK/3v6x1/Nz2DWbW5x4l+xeskeESY33h2cvun
+   DxwBVzVbG7fo6atbk4CvsKaaBRXuPhp5vP5U8mOiHEgyv1jw8+1UE+1Xj
+   rOyMba/SoCcfy9G1wQr7cf2ZmmWIyh6MPue10BPYHWsvgwP4XGbxpvh3D
+   w==;
+X-CSE-ConnectionGUID: K5vNEi7xQImW2zPjKzFt8w==
+X-CSE-MsgGUID: lcEitSgOTlmxXMSO3mFKGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="75069428"
+X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
+   d="scan'208";a="75069428"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 17:15:59 -0700
+X-CSE-ConnectionGUID: 1A2psLgWTLyT/b+bsyLG1w==
+X-CSE-MsgGUID: vUdoNcJwSeKHnAQ92R5I9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
+   d="scan'208";a="226388635"
+Received: from lkp-server01.sh.intel.com (HELO 283bf2e1b94a) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 31 Mar 2026 17:15:56 -0700
+Received: from kbuild by 283bf2e1b94a with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w7jFQ-000000004Sj-1XBm;
+	Wed, 01 Apr 2026 00:15:52 +0000
+Date: Wed, 1 Apr 2026 08:15:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: david.laight.linux@gmail.com, Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	David Laight <david.laight.linux@gmail.com>
+Subject: Re: [PATCH next 2/3] fortify: Optimise strnlen()
+Message-ID: <202604010835.IWCsUV7z-lkp@intel.com>
+References: <20260330132003.3379-3-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3367; i=kees@kernel.org; h=from:subject:message-id; bh=HVNXu9Usi5qdDEbn2j9WggrU/Vy8Vy+O6o+xCAH1Ke0=; b=owGbwMvMwCVmps19z/KJym7G02pJDJlnkrY1WBbOS5n9RO9d22WVB1+4N1p8PrRxUfyVyIBru lbhza1xHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABO5/Ibhn4nUx3PvNOxPVfE1 77PaW39k1UH1/hPPZtkxPu40dpzta8LI0Po3LELKVKo6P9s7fMum9MD/W34/3tz4QfJ2xh3JnWq pXAA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260330132003.3379-3-david.laight.linux@gmail.com>
 
-BPF is the last user of the deprecated[1] strncpy() in the kernel.
-Replace it with a length check via strnlen() on the source followed
-by memcpy(). Normally strscpy() would be used in this case, but
-skel_internal.h is shared between kernel and userspace tools, and
-strscpy() is not available in the userspace build context.
+Hi,
 
-The source map_name is a NUL-terminated C string (the only caller
-passes the "__loader.map" 12 character string literal). The destination
-attr.map_name is char[BPF_OBJ_NAME_LEN] (16 bytes) in union bpf_attr,
-ultimately passed to the bpf() syscall.
+kernel test robot noticed the following build errors:
 
-The bpf(BPF_MAP_CREATE) syscall, through bpf_obj_name_cpy(), requires a
-NUL terminator within this 16-byte array, rejecting names that use all 16
-bytes. Valid names are therefore at most 15 characters, but this wasn't
-being checked via the skel_map_create() path. Add a matching check and
-refuse 16+ character strings early, as they would be refused later by
-bpf_obj_name_cpy().
+[auto build test ERROR on next-20260327]
 
-The attr is pre-zeroed with memset() at the top of the function, so
-the last byte of attr.map_name is always NUL, meaning the memcpy()
-of just the non-NUL characters from the source will always produce a
-NUL-terminated destination string.
+url:    https://github.com/intel-lab-lkp/linux/commits/david-laight-linux-gmail-com/fortify-replace-__compiletime_lessthan-with-statically_true/20260331-041123
+base:   next-20260327
+patch link:    https://lore.kernel.org/r/20260330132003.3379-3-david.laight.linux%40gmail.com
+patch subject: [PATCH next 2/3] fortify: Optimise strnlen()
+config: x86_64-buildonly-randconfig-001-20260331 (https://download.01.org/0day-ci/archive/20260401/202604010835.IWCsUV7z-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260401/202604010835.IWCsUV7z-lkp@intel.com/reproduce)
 
-Link: https://github.com/KSPP/linux/issues/90 [1]
-Suggested-by: Sun Jian <sun.jian.kdev@gmail.com>
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v4: Reformat commit log slightly, confirm last user of strnlen in -next
- v3: https://lore.kernel.org/lkml/20260324161605.make.168-kees@kernel.org/
- v2: https://lore.kernel.org/lkml/20260324053036.it.906-kees@kernel.org/
- v1: https://lore.kernel.org/lkml/20260324040535.work.851-kees@kernel.org/
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: sun jian <sun.jian.kdev@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Song Liu <song@kernel.org>
-Cc: Yonghong Song <yonghong.song@linux.dev>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: Stanislav Fomichev <sdf@fomichev.me>
-Cc: Hao Luo <haoluo@google.com>
-Cc: <bpf@vger.kernel.org>
----
- tools/lib/bpf/skel_internal.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604010835.IWCsUV7z-lkp@intel.com/
 
-diff --git a/tools/lib/bpf/skel_internal.h b/tools/lib/bpf/skel_internal.h
-index 6a8f5c7a02eb..2d38c387f43c 100644
---- a/tools/lib/bpf/skel_internal.h
-+++ b/tools/lib/bpf/skel_internal.h
-@@ -236,6 +236,7 @@ static inline int skel_map_create(enum bpf_map_type map_type,
- {
- 	const size_t attr_sz = offsetofend(union bpf_attr, excl_prog_hash_size);
- 	union bpf_attr attr;
-+	size_t map_name_len;
- 
- 	memset(&attr, 0, attr_sz);
- 
-@@ -243,7 +244,12 @@ static inline int skel_map_create(enum bpf_map_type map_type,
- 	attr.excl_prog_hash = (unsigned long) excl_prog_hash;
- 	attr.excl_prog_hash_size = excl_prog_hash_sz;
- 
--	strncpy(attr.map_name, map_name, sizeof(attr.map_name));
-+	/* attr.map_name must be NUL-terminated, like bpf_obj_name_cpy() */
-+	map_name_len = strnlen(map_name, sizeof(attr.map_name));
-+	if (map_name_len == sizeof(attr.map_name))
-+		return -EINVAL;
-+	memcpy(attr.map_name, map_name, map_name_len);
-+
- 	attr.key_size = key_size;
- 	attr.value_size = value_size;
- 	attr.max_entries = max_entries;
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: undefined symbol: __fortify_undefined
+   >>> referenced by fortify-string.h:290 (include/linux/fortify-string.h:290)
+   >>>               vmlinux.o:(parse_early_param)
+   >>> referenced by fortify-string.h:218 (include/linux/fortify-string.h:218)
+   >>>               vmlinux.o:(parse_early_param)
+   >>> referenced by fortify-string.h:290 (include/linux/fortify-string.h:290)
+   >>>               vmlinux.o:(setup_boot_config)
+   >>> referenced 2103 more times
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
