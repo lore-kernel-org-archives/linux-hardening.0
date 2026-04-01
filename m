@@ -1,68 +1,64 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC243624C4;
-	Wed,  1 Apr 2026 08:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1ACB3BC693;
+	Wed,  1 Apr 2026 09:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775033848; cv=none; b=JDbaUta/iSL890gPIVRwQif1edyxj80d7A0DuIJ4XuEiBJRODcVOtBomdGgrEWPKFqv9xnVGEhfCd5SWgi1VTW6iEXGBqMArcDEKSzwP0f7J+MRIReAgjfEfqrjop7vPK3IKqlyNbPYDZ9tNC/eWmxCcAOkEPlHuVNWLhDLyp8M=
+	t=1775034510; cv=none; b=qPAQQ5DeRcvkdrx/9AUZooyE98v4p2mv/5g+GC42n8E6mFkjX7tnQ3az1axW6WX/03b2Bd3hZRdzETy4KmNv3ueDfgivu9Woli23bUgPJF+/t0HElUbsm/NeJ8+vDT5YDMRBb/afRL1uTUII3vFTCi76BCCnqnFtqNV+rD8uvnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775033848; c=relaxed/simple;
-	bh=MO5Dtje2grOtBQTnEYTUa7IHkS/+xLx5hH8FxLfUSqA=;
+	s=arc-20240116; t=1775034510; c=relaxed/simple;
+	bh=3LLAPWAYbZO7e389qVAkSxpu6fTCAdD2m4xwSDRe09M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fSHUtbd5xpPKucok68b7XMj0Kg0Kgt6MlDI98SdUBhVOHA0B2Ia/YWIdvoE0qoxQIJs9Daywb2seYLsoletvzhBm/esQqV1B4V2P95rVlPIfaE+v2b25s6b1Ma1b6sz34VeYDC85twTTkzPJzL6iYVl/ZOkfngPHI3Y0Ys95cuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SJrQ47v0; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZFIb/7JRbJ3bKXSUmyqvDhnUw/wlTb4bEGKmasDyj7nAm06m515Tf4VqRu5GHbQPad8JeEFTUgg70C4MniAuRC0wk2XL2q0n3oqMzEknqh9RCKL91kHR8otR/qbvSniyU8uo6l2Cb6uezONkch5SSgO0tQHF/Lz4JFsEuBgbTz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZtMwKSn/; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SJrQ47v0"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZtMwKSn/"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BSOlLzvS3EKkRVsstBVsGVbDsJymklK0utfYJvW9Xso=; b=SJrQ47v0lAhZLjMS3HczkFUno3
-	p6Y1cPKEa+2xK1mwcNjWTk7wLq2Rv4fTksCldcsfd8US8aWsQ5nLPoMxu83WeLwUAej4Bge+1hcXB
-	PwrPy2YmFv4wne0pSxhr2HeQGNN3KgOi/49+CrP6HffS6f5Ml8SyVNlhH+QsIlvdnj5PEXlNuHeA9
-	mg4UvawYnldkdZcdrUK2sYOPJaJEJM37YK/PuSkuv4OkThj/1WDVy1Z0oYW9Upmd8f85gAI/9Ln0E
-	TqcUOedfHbcW6IZwjTqjTM8hiQ2lx5cJ1S6ItOftfpxaJ/CRbEppJ7mM06xuzrpIV/JpTdC9ZgTxi
-	nOPVjzug==;
+	bh=Dy5F2xOgf5sDAMW36PnFeNCX4KH4DzWDRyg/Apw8tTg=; b=ZtMwKSn/uOy7LsxrQ+7UB+C92o
+	fvLIHexT3M430ciafifuis2tJqwvmDWA7dvZwlcXBYfMK7kR1tOhQGDv5ifJysG5wz0zwypzPmS6W
+	OMWb/BNIjXcWCNJitJfMjHBA9QMIdxbMkFg6bvw5D0JCcLvFh1yT8g7gl2OkZklaUf84oKTIpnN+o
+	732DH6p5oDPGzsKsUTC4g3lYb1GiEFwLU8LhvJml292Uv6xWz4Dee6M4fPQe8yiF1vECo9dRTicSw
+	MrnLu/QI4r+c68MP89Nxdf9pr8QlISU2JYZmUMIHPx5FBcTOY6zh2QloExnzxIJpOrrvVJBKbBm3A
+	Lkr9+BxA==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w7rNz-0000000HU5p-0eCn;
-	Wed, 01 Apr 2026 08:57:15 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w7rYm-0000000A6Xt-1LQ0;
+	Wed, 01 Apr 2026 09:08:24 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 326F23032D1; Wed, 01 Apr 2026 10:57:06 +0200 (CEST)
-Date: Wed, 1 Apr 2026 10:57:06 +0200
+	id C3FA13032D8; Wed, 01 Apr 2026 11:08:15 +0200 (CEST)
+Date: Wed, 1 Apr 2026 11:08:15 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Justin Stitt <justinstitt@google.com>,
+Cc: Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Finn Thain <fthain@linux-m68k.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	llvm@lists.linux.dev, Marco Elver <elver@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nsc@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, llvm@lists.linux.dev,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Nicolas Schier <nsc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
 	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar
- types
-Message-ID: <20260401085706.GU3738786@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
+ __ob_trap and __ob_wrap
+Message-ID: <20260401090815.GV3738786@noisy.programming.kicks-ass.net>
 References: <20260331163716.work.696-kees@kernel.org>
- <20260331163725.2765789-5-kees@kernel.org>
- <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
- <202603311253.95C54588E@keescook>
- <CAHk-=wjSOGaausLeTD13yAqso7qM09EnkDFiN7wF15kH0VWmZQ@mail.gmail.com>
- <202603311321.4EE9FEA@keescook>
+ <20260331163725.2765789-3-kees@kernel.org>
+ <CANiq72mK9fz6Spmgt4js3hScqhqvZb2YP2T7tDfR0fHPDFWJ7g@mail.gmail.com>
+ <CAFhGd8paijFboDVr8rJDjScob047q+zgYAs038WuVozOG0aYaQ@mail.gmail.com>
+ <202603311249.30B44C66@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,28 +67,21 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202603311321.4EE9FEA@keescook>
+In-Reply-To: <202603311249.30B44C66@keescook>
 
-On Tue, Mar 31, 2026 at 01:31:16PM -0700, Kees Cook wrote:
+On Tue, Mar 31, 2026 at 12:52:10PM -0700, Kees Cook wrote:
 
-> int func()
-> {
-> 	...
-> 	u8 __ob_trap product = 5;
-> 	...
-> 	product = a * b; // if store is truncated, goto __overflow
-> 	...
-> 	return product;
+> I think for this series, __ob_trap/__ob_wrap is what should be used.
 > 
-> __overflow:
-> 	pr_info("%u\n", product); // shows "5"
+> And for other folks, the background here is that we originally wanted
+> to use macros for "__trap" and "__wrap", but the powerpc C compiler
+> (both Clang and GCC) have a builtin macro named "__trap" already. So
+> I switched to just using the Clang-native type qualifier. We can use
+> the attribute style too, but there was a lot of confusion during the
+> Clang development phases where people kept forgetting this was a type
+> qualifier, not an attribute (i.e. the attribute is an internal alias
+> for the qualifier, and the qualifier is a new type).
 
-I'm confused by this 'product is still 5' thing. It seems to me that
-making this happen will, in general, require more instructions/registers
-than allowing the old value to be clobbered and have product be the
-truncated result of whatever overflow.
+Since you mention qualifiers...
 
-Specifically, what is the value of preserving the old value?
-
-> 	return -1;
-> }
+What is the result of __typeof_unqual__(int __ob_trap) ?
