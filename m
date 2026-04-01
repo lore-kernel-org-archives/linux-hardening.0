@@ -1,125 +1,81 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E39C3BAD89;
-	Wed,  1 Apr 2026 09:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939B43DD52C
+	for <linux-hardening@vger.kernel.org>; Wed,  1 Apr 2026 10:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775036315; cv=none; b=JnwfpmX4fErUfrucASC5FjtJ9lm7+Thr0QyCSWImjqIiEwZGFLvNc+j2AcisybLEELoxw5YU23VDJN7h3IVgDmb7MVVHLDuE+4AibQ2BhI/11DzB4VkpFGOElkIfbgdcjtHRXwJfZ4D5gipJ7f5vawvxxgXLJH8L5mMTbWgzKRk=
+	t=1775037832; cv=none; b=jrWebmQ4cv1zXttxg+/Hk0o9nBALjBiRvjYnA6Q+WZ4pqeXrTixss4K9/DdfjRvXYGtghuobksDbname/2S/vD+FPrZYIYkeisjbmvUGdKkiDgM1a3QPYO1WK2Sg8VcfRoxsecpZB1yZQDRtWNai24PUTqkh/Dt0SaeuSLgSFvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775036315; c=relaxed/simple;
-	bh=S5UG8dJ7Ck4Vf/JeKcjjHBUeBzp8hqY3Luo1ezTn8r0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIekebq8AoP2FkRmULISs+fDcOyCOrUJSMANa0BowUJCEhk/cv823Aux+9ZDZWzV2xd6ew2FuEoD+wMBTb4HkMHJ/Bppad1+P2Q0zS3pfzTyt361fm+6R+H0NDoD06eKSMn3nj6a2nne12QedVkesZPqcd1N4Xfa2I9E+rE33mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cOhq5+xc; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1775037832; c=relaxed/simple;
+	bh=L47v1qYcYUJeT2CaqpGyEU8mGhhYz5fMVzs69xNtNCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qP1Ts+dnwhdTB+5a6D8maM6kqYHYc+iwD8ytrjTN728sWBLz2U9M5XaE4RPubJ4TpxpnqcUrvDmR4mqULy5C13XJ0zLZHxsgx3fbmaab53rIC5J8z1oMbNfGr2lfd5MVSm56Mc8flYSvtOHNQF2eudbQw2FQD8GMiDcs57fK8kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbtKx9JI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cOhq5+xc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=m3TISuomgoe0SUdyDD+xWo6RRl4JcWzzeqjoC2TU2Lk=; b=cOhq5+xc28XN5RXGUt8q+tDp41
-	Z+Nl0I2QfNhsFUJSfArRTil+zjOK7CToBs4x75Ae6nzazDnyiXMuoT/BNedZ0ZyibtSTjWh4Vx3o7
-	V+SL0PwFr048uWkhBoVE3HWhpidavI14kQ48rnP5sQdvMRwG7/1YTIHFVO9cQAFYfUWGh+6nuCrVz
-	JqtyY7ZaDFx9d+i7vcVS4PYKj2YGV9KS+y0KMU6iKNmMiAlI3saus5gyqMUZ5C4XckDX/4dIVVyp+
-	WuftGc+5k/Gfx+PRbavzDtxarwgaW0xK/QWK8/QJjTmYyRu2iV5aalcmecrF3QbNfr46ebupefWWA
-	AzeZIj7A==;
-Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w7s1r-0000000A8qA-0g1E;
-	Wed, 01 Apr 2026 09:38:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B36763032E1; Wed, 01 Apr 2026 11:38:20 +0200 (CEST)
-Date: Wed, 1 Apr 2026 11:38:20 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Finn Thain <fthain@linux-m68k.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	llvm@lists.linux.dev, Marco Elver <elver@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nsc@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar
- types
-Message-ID: <20260401093820.GX3738786@noisy.programming.kicks-ass.net>
-References: <20260331163716.work.696-kees@kernel.org>
- <20260331163725.2765789-5-kees@kernel.org>
- <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
- <202603311253.95C54588E@keescook>
- <CAHk-=wjSOGaausLeTD13yAqso7qM09EnkDFiN7wF15kH0VWmZQ@mail.gmail.com>
- <202603311321.4EE9FEA@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbtKx9JI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 772CDC2BCB0;
+	Wed,  1 Apr 2026 10:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775037832;
+	bh=L47v1qYcYUJeT2CaqpGyEU8mGhhYz5fMVzs69xNtNCk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WbtKx9JID1o8Afdksqhd51oIWlCK09+RbBMr4J36pVRCnxUfPkqOF/IHN9+vndjOP
+	 NwYQZ2ng/y26oqDKDqtB3oXYoxuM6FhDF4mf5WM7VyycrBcgq0AfA9+89rLlT5Hf2K
+	 q0k5z4XWER9GEoMx0YOrDNitlkTou5yScn+rrgqVqjS12kd+OGm2TdNNunNPz5gtRo
+	 /TZRz7e91iolCyyQhuBzhQ+TOh+KzHeUlckDXIve8xdvWxyAC3diys9psf6WCVwooy
+	 QcrhG25aU4jP9piqjA6wK2yuIcJsgXfjv/3WICqJujTwvStzxlfpD95LSu3IlX6MeN
+	 LnWf7DCItGzpA==
+From: Will Deacon <will@kernel.org>
+To: linux-arm-kernel@lists.infradead.org,
+	Ard Biesheuvel <ardb+git@google.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	mark.rutland@arm.com,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Will McVicker <willmcvicker@google.com>
+Subject: Re: [PATCH v8] arm64: Use static call trampolines when kCFI is enabled
+Date: Wed,  1 Apr 2026 11:03:43 +0100
+Message-ID: <177503506493.2514486.12265333685036392947.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260331110422.301901-2-ardb+git@google.com>
+References: <20260331110422.301901-2-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202603311321.4EE9FEA@keescook>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 31, 2026 at 01:31:16PM -0700, Kees Cook wrote:
-
-> int func()
-> {
-> 	...
-> 	u8 __ob_trap product = 5;
-> 	...
-> 	product = a * b; // if store is truncated, goto __overflow
-> 	...
-> 	return product;
+On Tue, 31 Mar 2026 13:04:23 +0200, Ard Biesheuvel wrote:
+> Implement arm64 support for the 'unoptimized' static call variety, which
+> routes all calls through a trampoline that performs a tail call to the
+> chosen function, and wire it up for use when kCFI is enabled. This works
+> around an issue with kCFI and generic static calls, where the prototypes
+> of default handlers such as __static_call_nop() and __static_call_ret0()
+> don't match the expected prototype of the call site, resulting in kCFI
+> false positives [0].
 > 
-> __overflow:
-> 	pr_info("%u\n", product); // shows "5"
-> 	return -1;
-> }
-> 
-> (Isn't this just an implicit "try"?)
+> [...]
 
-So I like this implicit try with a default label, and mostly I expect
-this will be fine.
+Applied to arm64 (for-next/fixes), thanks!
 
-But as Linus already mentioned, sometimes you might want more. Could we
-perhaps also have an explicit version, something along the lines of:
+[1/1] arm64: Use static call trampolines when kCFI is enabled
+      https://git.kernel.org/arm64/c/e70c2335f889
 
-int func()
-{
-	int __ob_trap size;
+Cheers,
+-- 
+Will
 
-	size = try(count * flex_size, __mul_overflow);
-	size = try(size + base_size, __add_overflow);
-
-	obj = kzalloc(size,...);
-
-}
-
-where we have something like:
-
-#define try(stmt, _label) ({		\
-	__label __overflow; 		\
-	if (0) {			\
-__overflow:				\
-		goto _label;		\
-	}				\
-	stmt; })
-
-That is, have the overflow trapped and confined in the
-statement-expression by using the overflow label as a local label and
-use this little trampoline to re-direct to a custom label.
-
-
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
