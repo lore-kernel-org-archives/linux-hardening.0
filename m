@@ -1,101 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613451FB1;
-	Wed,  1 Apr 2026 00:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA34175A6B;
+	Wed,  1 Apr 2026 01:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775002560; cv=none; b=TuLGlwoqjA94rGUa5EgFP1TNlG3gvuL4ewUYL0AXzSWHZQupW/+/nCAO++sDxPysvgFL/mc4r0zm1b3SDkTNcBRQVKzKnDEj3boN7xIRNK+mNKM8P9C3k9hUPs+dzfth3GH3t3CMx4luMTaSPh5b+rqHnDgtXJesKnI6i/dz3Mk=
+	t=1775008518; cv=none; b=GNsFA6iJ9J938RyMha6W+4znAjUAwS/SKr29M86mJNmzp1deGIsIhU7SmV07DSZt+F5ohKAEeD67mtjoS5Oz05BFQJkDC0y8tYgLyaJeOXtPBTdryXBHMuuTh17y1p4SO83qgGrvc5Yj9A26fGffsgXDcckZ3JkmndezDfwtXVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775002560; c=relaxed/simple;
-	bh=p8Z3lolQagYsE0bHiEOMDsAn1qm62Ea/Xke5C/hxLEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cgvBfhDwXeMxJnd4iQgbrETyOGOkCrTMJk/Ipz6Xv2YpgPkrld1pCZdzNdRpz1Ps2teCC3zkQzhpBI0BPO3aCor/BxRw77ytzszQIDLgUG+urMIrDMCtWACuTL2uoI4OgNpfkmGMNxsrbwwjgpFPQURUDYY/yIbAJmplD1nnyOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VbrRjoH2; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1775008518; c=relaxed/simple;
+	bh=q50Bz65E+OyJ9vDk1N9jM1vlWen+ne5EUNUrgXUwgJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e+xfYYa5Fv7JREk6InJccbjrRUkXhisSpyNwuwFx2q/Tu4A8AdwjXtx+UT5gcvZd4D2cnIhjpU1qZORkxwmPzBoCrEMKsQ4s2CTgZmn+6VClMY4Cx10JwRMYDCqBqZy+HiX1xCEG5BTQ8Gg8o090tW57sN56nTCC0GxVucWwHQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NOWj6NiB; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VbrRjoH2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775002560; x=1806538560;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p8Z3lolQagYsE0bHiEOMDsAn1qm62Ea/Xke5C/hxLEc=;
-  b=VbrRjoH2XEaU9v40+VHTnmOfvjeFuudtWKaqFNrnV5cuEmj31J8Wdqk1
-   MjwxUbmB4s0r9jHlnbr+a2URciLQFDEu7uQ5ABNKhBYMMinKq2kK0+eEc
-   Fn25JLjnEccSo2qZFa7/2O1lOP1Mko1qb/Ev9N8nLTOMbiWsiGe7+BNfn
-   +OBaZBPtHUWKt7M2NilzeK/3v6x1/Nz2DWbW5x4l+xeskeESY33h2cvun
-   DxwBVzVbG7fo6atbk4CvsKaaBRXuPhp5vP5U8mOiHEgyv1jw8+1UE+1Xj
-   rOyMba/SoCcfy9G1wQr7cf2ZmmWIyh6MPue10BPYHWsvgwP4XGbxpvh3D
-   w==;
-X-CSE-ConnectionGUID: K5vNEi7xQImW2zPjKzFt8w==
-X-CSE-MsgGUID: lcEitSgOTlmxXMSO3mFKGQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="75069428"
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="75069428"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 17:15:59 -0700
-X-CSE-ConnectionGUID: 1A2psLgWTLyT/b+bsyLG1w==
-X-CSE-MsgGUID: vUdoNcJwSeKHnAQ92R5I9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="226388635"
-Received: from lkp-server01.sh.intel.com (HELO 283bf2e1b94a) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 31 Mar 2026 17:15:56 -0700
-Received: from kbuild by 283bf2e1b94a with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w7jFQ-000000004Sj-1XBm;
-	Wed, 01 Apr 2026 00:15:52 +0000
-Date: Wed, 1 Apr 2026 08:15:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: david.laight.linux@gmail.com, Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	David Laight <david.laight.linux@gmail.com>
-Subject: Re: [PATCH next 2/3] fortify: Optimise strnlen()
-Message-ID: <202604010835.IWCsUV7z-lkp@intel.com>
-References: <20260330132003.3379-3-david.laight.linux@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NOWj6NiB"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1775008512; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=etQknAdonqm8UWH0ocwzl5DXIHYZ47qOaMPkJRg7jIs=;
+	b=NOWj6NiB9lHDbjmZvcCt+/GLnHv+rSKBrXzp+PfSAPpXtI0fcVpYmsaeBt3TLBOZ/rA6g4pbSOZCUT1Dg6BTyo3askrxS9gTzLBdtynHsUV2/GdQi8GdmojM0k8bbIcaZ38ltzpg/M4tSxMB/Vl4vMlI7nx9m7NvGQ+rIT1bkmw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X061LQV_1775008509;
+Received: from 30.246.177.235(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X061LQV_1775008509 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 01 Apr 2026 09:55:10 +0800
+Message-ID: <32ad70fc-c07e-47c0-8511-fed3bc3fc76f@linux.alibaba.com>
+Date: Wed, 1 Apr 2026 09:55:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260330132003.3379-3-david.laight.linux@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] ACPI: APEI: GHES: Add
+ devm_ghes_register_vendor_record_notifier()
+To: Kai-Heng Feng <kaihengf@nvidia.com>, rafael@kernel.org
+Cc: jonathan.cameron@huawei.com, helgaas@kernel.org, guohanjun@huawei.com,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev,
+ linux-hardening@vger.kernel.org, Shiju Jose <shiju.jose@huawei.com>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Len Brown <lenb@kernel.org>,
+ Robert Moore <robert.moore@intel.com>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Breno Leitao <leitao@debian.org>, Jason Tian <jason@os.amperecomputing.com>
+References: <20260330094203.38022-1-kaihengf@nvidia.com>
+ <20260330094203.38022-2-kaihengf@nvidia.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260330094203.38022-2-kaihengf@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-kernel test robot noticed the following build errors:
 
-[auto build test ERROR on next-20260327]
+On 3/30/26 5:41 PM, Kai-Heng Feng wrote:
+> Add a device-managed wrapper around ghes_register_vendor_record_notifier()
+> so drivers can avoid manual cleanup on device removal or probe failure.
+> 
+> Cc: Shiju Jose <shiju.jose@huawei.com>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/david-laight-linux-gmail-com/fortify-replace-__compiletime_lessthan-with-statically_true/20260331-041123
-base:   next-20260327
-patch link:    https://lore.kernel.org/r/20260330132003.3379-3-david.laight.linux%40gmail.com
-patch subject: [PATCH next 2/3] fortify: Optimise strnlen()
-config: x86_64-buildonly-randconfig-001-20260331 (https://download.01.org/0day-ci/archive/20260401/202604010835.IWCsUV7z-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260401/202604010835.IWCsUV7z-lkp@intel.com/reproduce)
+LGTM.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604010835.IWCsUV7z-lkp@intel.com/
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: __fortify_undefined
-   >>> referenced by fortify-string.h:290 (include/linux/fortify-string.h:290)
-   >>>               vmlinux.o:(parse_early_param)
-   >>> referenced by fortify-string.h:218 (include/linux/fortify-string.h:218)
-   >>>               vmlinux.o:(parse_early_param)
-   >>> referenced by fortify-string.h:290 (include/linux/fortify-string.h:290)
-   >>>               vmlinux.o:(setup_boot_config)
-   >>> referenced 2103 more times
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks.
+Shuai
