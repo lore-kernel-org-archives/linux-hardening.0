@@ -1,107 +1,175 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13B2A2D0C82
-	for <linux-hardening@vger.kernel.org>; Wed,  1 Apr 2026 14:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9A522D4E9;
+	Wed,  1 Apr 2026 19:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775053931; cv=none; b=nPhw1xQxCJ6s9UrkAikXoMhvVOzQHH/Cqf3bHRfYW71bZhzY/TnDNDd58l/wjVopIcK64kf4NYYFLY+udnVX+0WaV2a25A+wKkVt6cJiTuKgL7L0yGwrkyH7IC6soFOG4/FQUAZPOKyYzeGUZia0Z0n/ziaCVclGLaQ/Rhu6+VA=
+	t=1775072523; cv=none; b=cOpUiMIKVTchHYPcJgdq160wCUS9KSCfZ/mg5KqEwbQUeZTB+4jAO541VWT5PM682PAaTdvfEaaPdGZDF7MsRE2Y4YmBieTFaEnDnUXxE34sRcp2RYWGMv8yN+30i96hA0FYR+sV8eh8YKFRJKv+OY82XI5TgDAUA8n5tKvGr0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775053931; c=relaxed/simple;
-	bh=Q5Skf/Q0cN2o/FcGvISUP7ojEcZPEcIVT4XxZbbG56U=;
+	s=arc-20240116; t=1775072523; c=relaxed/simple;
+	bh=6rRGHVxPREHYm9wPCaHRgKXoqSKaSIjkZI8d+MlPP2Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lv4NWmZvLuxqNRHOnV9KOXM6+Wktc2sAgBBl6qPP4VWg03WcK3owW4daHbkanN5CZzIABlh6EMSitgJbqds7nyiNTNuO1RhuK7dzL2HOYtOqGGTDojkI89BT+Y/38sEzrLDlGM3jcxZDmoJNKmkW0k42hfmMXux+tFJ3VQrCIXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ocjoGJEI; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OgzOc59DdBFR/npg8wfT+Yht8paqB6t5dTvujD4p8jxt2CFWayMIQnBP432xZSB1Umj6/9CC+xXmDhYXknCGk0GKc6ADtSVKlaaTu1E9XNGruNMIqJauPPtQF7I1bBzSFckqzZg4ykvTwZkq/HJmI8W4MswHqfP5Z8Lfp7qXLBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFMe9OxE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ocjoGJEI"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45B7931DB;
-	Wed,  1 Apr 2026 07:32:02 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 575E33F641;
-	Wed,  1 Apr 2026 07:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1775053927; bh=Q5Skf/Q0cN2o/FcGvISUP7ojEcZPEcIVT4XxZbbG56U=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFMe9OxE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3A9DC4CEF7;
+	Wed,  1 Apr 2026 19:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775072522;
+	bh=6rRGHVxPREHYm9wPCaHRgKXoqSKaSIjkZI8d+MlPP2Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ocjoGJEIuL/I405PfYBiKYb3mKbyYL+3xOsmXuBWe0APxYaSuqgvVZoVmazTed82h
-	 BV4doXjYNU9Ujd1jqab/F4/Xg9rCDNWb1SnLoJde/jRnIwzo/7NSKNPEBTlreoPo9x
-	 BZA/EdfxOqa48ogaOFhzyRSJ335fUzjHABgnuyWA=
-Date: Wed, 1 Apr 2026 15:31:59 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	Ard Biesheuvel <ardb+git@google.com>, kernel-team@android.com,
-	linux-hardening@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Carlos Llamas <cmllamas@google.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Will McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH v8] arm64: Use static call trampolines when kCFI is
- enabled
-Message-ID: <ac0sX46TwAQAChWG@arm.com>
-References: <20260331110422.301901-2-ardb+git@google.com>
- <177503506493.2514486.12265333685036392947.b4-ty@kernel.org>
- <2b0b9c69-650c-46bb-8579-4af85c17b8ab@app.fastmail.com>
+	b=pFMe9OxECJSsnMlfo9ttUe2IwOhM7R+wvb23CSB2DeIAZtMznZLM/8lOwN69yHOOB
+	 9taDCyegwySv2LOXo0XGfQHlBnS4XVTNBa8G2cXYWsnUfZTqIu/cNerzXlQp8o79lt
+	 aiEigISKNddc8Yq9zM9LUaWxS5z7Nn21/zXtqAPmz4amlTq4JOnEldOLrvS+WhRnkY
+	 FRuK/5EJRSFhdOoZ6ZSc7Mm/rfE4CXSrhlzgNM9VqjpWVTsxapSVBZu9UefHfaPG1G
+	 3DcBaO8/7fpUlJXbfQTyEGxbv45A3ATev+soKF6lUlkxlrnay4BrU3XpsXs9qvDBxY
+	 +R0q0Nb8moVpw==
+Date: Wed, 1 Apr 2026 12:42:02 -0700
+From: Kees Cook <kees@kernel.org>
+To: Vincent Mailhol <mailhol@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, llvm@lists.linux.dev,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Nicolas Schier <nsc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
+ __ob_trap and __ob_wrap
+Message-ID: <202604011231.1D0BAE9A@keescook>
+References: <20260331163716.work.696-kees@kernel.org>
+ <20260331163725.2765789-3-kees@kernel.org>
+ <bd0a4235-a7f0-4624-802c-aa49a9d13f29@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <2b0b9c69-650c-46bb-8579-4af85c17b8ab@app.fastmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bd0a4235-a7f0-4624-802c-aa49a9d13f29@kernel.org>
 
-On Wed, Apr 01, 2026 at 02:03:22PM +0200, Ard Biesheuvel wrote:
-> 
-> On Wed, 1 Apr 2026, at 12:03, Will Deacon wrote:
-> > On Tue, 31 Mar 2026 13:04:23 +0200, Ard Biesheuvel wrote:
-> >> Implement arm64 support for the 'unoptimized' static call variety, which
-> >> routes all calls through a trampoline that performs a tail call to the
-> >> chosen function, and wire it up for use when kCFI is enabled. This works
-> >> around an issue with kCFI and generic static calls, where the prototypes
-> >> of default handlers such as __static_call_nop() and __static_call_ret0()
-> >> don't match the expected prototype of the call site, resulting in kCFI
-> >> false positives [0].
-> >> 
-> >> [...]
-> >
-> > Applied to arm64 (for-next/fixes), thanks!
-> >
-> > [1/1] arm64: Use static call trampolines when kCFI is enabled
-> >       https://git.kernel.org/arm64/c/e70c2335f889
-> >
-> 
-> Thanks,
-> 
-> I just spotted that the function name gets stringified twice inadvertently.
-> 
-> E.g., the assembler may see
-> 
-> .quad "__static_call_return0"
-> 
-> rather than the intended
-> 
-> .quad __static_call_return0
-> 
-> The assembler does not seem to care, and still emits an ABS64 relocation against the correct symbol, but it is definitely unintentional.
-> 
-> I can send a follow-up fix if you prefer, or you could just tweak the patch in place:
-> 
-> --- a/arch/arm64/include/asm/static_call.h
-> +++ b/arch/arm64/include/asm/static_call.h
-> @@ -16,7 +16,7 @@
->             "   .popsection                                     \n" \
->             "   .pushsection .rodata, \"a\"                     \n" \
->             "   .align  3                                       \n" \
-> -           "1: .quad   " #target "                             \n" \
-> +           "1: .quad   " target "                              \n" \
->             "   .popsection                                     \n")
+On Wed, Apr 01, 2026 at 09:19:51AM +0200, Vincent Mailhol wrote:
+> Many thanks for this series. Great work and I am ready it with a lot of
+> interest!
 
-Not sure Will is going to look at this until next week. I folded it into
-the arm64 for-next/fixes branch and pushed out.
+Yay! Glad to have folks looking at it all.
+
+> I just wanted to ask how much consideration was put into this last
+> "saturate" option.
+> 
+> When speaking of "safe" as in "functional safety" this seems a good
+> option to me. The best option is of course proper handling, but as
+> discussed, we are speaking of the scenario in which the code is already
+> buggy and which is the fallout option doing the least damage.
+
+Right -- harm reduction. :)
+
+> What I have in mind is a new __ob_saturate type qualifier. Something like:
+> 
+> 	void foo(int num)
+> 	{
+> 		int __ob_saturate saturate_var = num;
+> 	
+> 		saturate_var += 42;
+> 	}
+> 
+> would just print a warning and continue execution, thus solving the
+> trapping issue. The above code would generate something equivalent to that:
+> 
+> 	void foo(int num)
+> 	{
+> 		int __ob_saturate saturate_var = num;
+> 	
+> 		if (check_add_overflow(saturate_var, increment,
+> 				       &saturate_var) {
+> 			WARN(true, "saturation occurred");
+> 			saturate_var = type_max(saturate_var);
+> 	}
+
+Right, yes. Note that __ob_saturate is entirely unimplemented, but we
+wanted to leave the door open for other Overflow Behaviors. (It was
+tricky enough to even get the semantics worked out from wrap and trap,
+so we wanted to get to a distinct first step landed first.)
+
+For the "warn" part with __ob_trap, we borrowed the Sanitizer
+infrastructure since architecturally it's in exactly the same places
+that __ob_trap needs to be checking, and already has everything
+available. In the case of __ob_saturate, it would only be informational.
+(Arguably, there should be no "warn" at all, as it's the "expected"
+behavior, just like __ob_wrap has no "warn" on wrap-around. But it seems
+sensible to me to make that available by enabling the sanitizers too.)
+
+> People using those saturating integers could then later check that the
+> value is still in bound.
+> 
+> This is basically what your size_add() from overflow.h is already doing.
+> If an overflow occurred, the allocation the addition does not trap, it
+> just saturates and let the allocation functions properly handle the issue.
+
+Right.
+
+> The saturation can neutralize many security attacks and can mitigate
+> some safety issues. Think of the Ariane 5 rocket launch: a saturation
+> could have prevented the unintended fireworks.
+> 
+> The caveat I can think of is that the old overflow check pattern becomes
+> invalid. Doing:
+> 
+> 	if (saturate_var + increment < increment)
+> 
+> is now bogus and would need to be caught if possible by static analysis.
+> So those saturating integers will only be usable in newly written code
+> and could not be easily retrofitted.
+
+In theory, the "ignored patterns" (or "idiom exclusions") would already
+allow this to continue to behave correctly, though it may be worth trying
+to figure out if this is "correct" or not.
+
+> > +In the C standard, three basic types can be involved in arithmetic, and each
+> > +has a default strategy for solving the overflow problem:
+> > +
+> > +  - Signed overflow is undefined
+> > +  - Unsigned overflow explicitly wraps around
+> > +  - Pointer overflow is undefined
+> 
+> Nitpick: the C standard uses different definitions than yours. In the
+> standard:
+> 
+>   - overflow is *always* undefined
+>   - unsigned integer wraparound
+>   - signed integer overflow
+> 
+> The nuance is that in the standard unsigned integers do not overflow,
+> they just wraparound.
+
+I guess that's technically true, but for understanding the "overflow
+resolution" properties (from a mathematical perspective), the question
+is "what happens when a value cannot be represented by the bit pattern
+of the storage?" But I think we understand each other here. :)
+So given that under C, signed is undefined and unsigned in wraparound,
+this is how we ended up phrasing it.
+
+> I am not asking you to change your terminology, but it could be good to
+> state in your document that your definition of overflow differs from the
+> standard's definition. Maybe a terminology section could help.
+
+I'm open to whatever you think would make this more clear. :)
+
+-Kees
 
 -- 
-Catalin
+Kees Cook
