@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE9A33064D;
-	Wed,  1 Apr 2026 19:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4442A347FD7;
+	Wed,  1 Apr 2026 20:21:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775072640; cv=none; b=jGrUY7bs6ZfDNhmElyLqzxw1AQCi/Q0z2W9cYbvDwXL/2f3P5ZnBiaA+3SRdM8AIAIMuGJ+6vBr2FaDeJTL25oSlCZ8FjLPk8J/SL5X8QT0CqDbcqAqjkv8DGhvFW/E1JhtwbEHm6pA+x3OxfoffhzFnt4WWFjtb9oI1LtT4nJQ=
+	t=1775074878; cv=none; b=hH6fMj41qOLOdWlWq7FTu+h1VVeRZcYKMzi8ud55J5Y3m1Uxz5rkMP9PKKZ/kYpDkPQSmi9Gs5e++aRqQGcal6PMEPTAGbkfe6Xrh0TY4EKhPf1FTkVnBciLlusl824CbtLAuPfZq3wLpz+2iLTNYhLh1uQWSDtNBDS7HIOJa24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775072640; c=relaxed/simple;
-	bh=1To5xCj/Euwv8pr6OLe9LCSI7BHddugktrqQ0mZeMp4=;
+	s=arc-20240116; t=1775074878; c=relaxed/simple;
+	bh=mySSOX1eMH9lkLEstjY1owDlY4OX6KNodlTz5TrWrYc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fy3+4trGJe1rddsh463+sdcNE6jPOYUcqQD4oPJ8eI/Nv0Den6wULVE4zCAzLOlYGj0Rxx2MIhAIRHX9aFWGqsMoFKa3GmAO93zmiCa6663FCqeE/Tc0C5yGSVkX1bVEnZ52Vc5JgtLgYlL64E5PjbolQejc57IQ00cxHmreNx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PVOB1TcH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEU3Qmzu9p1RJTLpCv0L6dY+DbqcEK3Be24BdklAHFsZ3j31b5FcmXCWtfkjTXiybvbqyoAbJOWSUMCEge3HWkJTVJIyMIdWI2/NCfdueHkz8cFpS9sdBpUcMuY4ZmbaEkQVaNxwos0siqOySueCzRRP4zMvJWX1dEdisaEDCA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKOt72U8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PVOB1TcH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DFC6C4CEF7;
-	Wed,  1 Apr 2026 19:43:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKOt72U8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1179C4CEF7;
+	Wed,  1 Apr 2026 20:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775072639;
-	bh=1To5xCj/Euwv8pr6OLe9LCSI7BHddugktrqQ0mZeMp4=;
+	s=k20201202; t=1775074877;
+	bh=mySSOX1eMH9lkLEstjY1owDlY4OX6KNodlTz5TrWrYc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PVOB1TcHVUKd9k/gnI553hVBiTFtwTm1KybDl5S+zpnNkqtvWrmVTMotcFdyrlDul
-	 s3SUsTN5h5bfOz+200DOWwUfhFxno2Vxue4RtoJcxnZFHFzMXgP7trFyim/j3NLvFt
-	 qYME2Kif8AWTXoyKqWMeRX04GbWJTvG3cbI8wFLX5ghp/QBiNZbZyt06IP18NzkuiS
-	 zhz4Rpqb2igFE1anUz18faBvQYXFi4K2CST9m9kcMxYD7//pmBAaOfaH29wHyDGrHu
-	 xjthNsDDmRxIngn3YCxoy0gzf1PRVPqRxgDL8o2qIHmM2xQQ0nHkvt56+3wFWBGE1u
-	 fYWrAippeO/6Q==
-Date: Wed, 1 Apr 2026 12:43:58 -0700
+	b=IKOt72U8I3MNCNIkO87bmygnXuIZF/wDjIcycxuEVFS+EiHkfM3WCWjFKJmkO8Q8O
+	 5owcKWxHBSZiSDP/dZ+GFdE2Ze6q492frV0XnQoAjOZr2nclmRAPi/uONfPMwDj1t6
+	 xXdkR5auEQl/M6UWMBFUN9dT5Vm6qgvh70VKgqfH5pJZbYMqEw2ZZ/rGi0ggJbI/f8
+	 q3N9Vlyqkm9Cqv/Hj0XsrBnpIPxXyLIRWrNWR4JtCNZSpEFstAneHziHHq5DdumDfT
+	 4Tt13dDABvdHZ0rL5JvxZ9UaGSZHFkbzd5YkjR40czMeS5PH1J9s5w8SogVSBoZNGQ
+	 jDhaKEkN49kzg==
+Date: Wed, 1 Apr 2026 13:21:17 -0700
 From: Kees Cook <kees@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Vincent Mailhol <mailhol@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
+Cc: Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
 	Marco Elver <elver@google.com>,
 	Andrey Konovalov <andreyknvl@gmail.com>,
 	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
@@ -47,84 +47,50 @@ Cc: Vincent Mailhol <mailhol@kernel.org>,
 	linux-kbuild@vger.kernel.org
 Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
  __ob_trap and __ob_wrap
-Message-ID: <202604011242.3E8F635CD@keescook>
+Message-ID: <202604011313.AD471BC8@keescook>
 References: <20260331163716.work.696-kees@kernel.org>
  <20260331163725.2765789-3-kees@kernel.org>
- <bd0a4235-a7f0-4624-802c-aa49a9d13f29@kernel.org>
- <20260401092027.GW3738786@noisy.programming.kicks-ass.net>
+ <CANiq72mK9fz6Spmgt4js3hScqhqvZb2YP2T7tDfR0fHPDFWJ7g@mail.gmail.com>
+ <CAFhGd8paijFboDVr8rJDjScob047q+zgYAs038WuVozOG0aYaQ@mail.gmail.com>
+ <202603311249.30B44C66@keescook>
+ <20260401090815.GV3738786@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260401092027.GW3738786@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260401090815.GV3738786@noisy.programming.kicks-ass.net>
 
-On Wed, Apr 01, 2026 at 11:20:27AM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 01, 2026 at 09:19:51AM +0200, Vincent Mailhol wrote:
-> > Le 31/03/2026 à 18:37, Kees Cook a écrit :
+On Wed, Apr 01, 2026 at 11:08:15AM +0200, Peter Zijlstra wrote:
+> On Tue, Mar 31, 2026 at 12:52:10PM -0700, Kees Cook wrote:
 > 
-> > > +  - Saturate (explicitly hold the maximum or minimum representable value)
+> > I think for this series, __ob_trap/__ob_wrap is what should be used.
 > > 
-> > I just wanted to ask how much consideration was put into this last
-> > "saturate" option.
-> > 
-> > When speaking of "safe" as in "functional safety" this seems a good
-> > option to me. The best option is of course proper handling, but as
-> > discussed, we are speaking of the scenario in which the code is already
-> > buggy and which is the fallout option doing the least damage.
-> > 
-> > What I have in mind is a new __ob_saturate type qualifier. Something like:
-> > 
-> > 	void foo(int num)
-> > 	{
-> > 		int __ob_saturate saturate_var = num;
-> > 	
-> > 		saturate_var += 42;
-> > 	}
-> > 
-> > would just print a warning and continue execution, thus solving the
-> > trapping issue. The above code would generate something equivalent to that:
-> > 
-> > 	void foo(int num)
-> > 	{
-> > 		int __ob_saturate saturate_var = num;
-> > 	
-> > 		if (check_add_overflow(saturate_var, increment,
-> > 				       &saturate_var) {
-> > 			WARN(true, "saturation occurred");
-> > 			saturate_var = type_max(saturate_var);
-> > 	}
+> > And for other folks, the background here is that we originally wanted
+> > to use macros for "__trap" and "__wrap", but the powerpc C compiler
+> > (both Clang and GCC) have a builtin macro named "__trap" already. So
+> > I switched to just using the Clang-native type qualifier. We can use
+> > the attribute style too, but there was a lot of confusion during the
+> > Clang development phases where people kept forgetting this was a type
+> > qualifier, not an attribute (i.e. the attribute is an internal alias
+> > for the qualifier, and the qualifier is a new type).
 > 
-> So I would like to second this option as being interesting.
+> Since you mention qualifiers...
 > 
-> But while pondering it, I did want to note that all of the options, with
-> the exception of __ob_wrap (which is effectively what we have today for
-> *everything*), will be 'interesting' to compose with _Atomic, another
-> one of these qualifiers.
-> 
-> Now, in the kernel we don't use _Atomic, so strictly speaking I don't
-> care ;-) But here goes...
-> 
-> Something like _Atomic int __ob_wrap, is trivial and good.
-> 
-> _Atomic int __ob_trap is either doable or impossible depending on how
-> you define the result to be on 'trap'. Specifically, the semantics
-> proposed where it keeps the old value makes it impossible.
-> 
-> And _Atomic int __ob_saturate is equally 'challenging', since the
-> fundamental thing of 'reset to min/max on under/over-flow' is rather
-> a non-atomic kind of thing. Look at the trouble we went through with
-> refcount_t to sort of make this work.
+> What is the result of __typeof_unqual__(int __ob_trap) ?
 
-Yeah, this is mainly why we didn't spend time working on an
-__ob_saturate implementation: the primary place we want it in Linux is
-already solved with all the refcount_t work. That said, if the behavior
-could be replicated using a future __ob_saturate, that would be very
-nice. :)
+Hmm, it seems like "const" doesn't get peeled off. That can be fixed, if
+that's needed?
+
+'typeof_unqual(int)' (aka 'int')
+'typeof_unqual(__ob_trap int)' (aka '__ob_trap int')
+'typeof_unqual(const int)' (aka 'int')
+'typeof_unqual(__ob_trap const int)' (aka '__ob_trap const int')
+
+-Kees
 
 -- 
 Kees Cook
