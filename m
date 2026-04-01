@@ -1,126 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AD133C507;
-	Wed,  1 Apr 2026 21:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123E0230BDB
+	for <linux-hardening@vger.kernel.org>; Wed,  1 Apr 2026 21:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775079662; cv=none; b=F0TkNseV/v8G6mmjFfbWkPxCkWBbMcQAII2dALYjuQXIv4x1Av9Jo0OTEqMscApYC/XuiHSUClltxsbcefMXYVYo5h8mqPxzaksQE/P1QAa8UVUnKn42EY2Mjx+2+5qV/yS6md2JJnJugv9/n1v7wzvBPpvN4WTuokKMfIltuwk=
+	t=1775080066; cv=none; b=awyx8+44prtdTfODsXBNuVnkQ1rid67jIXlCE43MRNHMFVg7iqPhUYoIS1iESuGKI2xg1P7jqLM823MBFn/4GOrl8LZ8eIr1LIjfaFglrjQjlO07SBD+SqKTk6SNenWiAWxW7lz/oVIbr7xl4lQIM3dBjAEEFScLI0s9BqWD6rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775079662; c=relaxed/simple;
-	bh=pDwgJl6Fh9R0ESyyzZwZ3nyL/1KbhhNvMwGXe/yD3k8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOoPOhbCBewe5mpVrDQi/YbJu8znlTnrq6G7uJzKaw1iCcZFnhxuNNNRZH8D5fSUBhAC+khSYqb3mdQWtvTjqL0ZIsEyj6Hnw6PSij66JjyfFGf9JA/704BYiil3Dc/5wCAHqTYoEGbizJlH7MRC+hRvZwU0aKchdi/nNMdEaKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjZ4krda; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775080066; c=relaxed/simple;
+	bh=ZOD32CPLt9QK3aMBProd892mYoMeBAWfZ1nsyKYtZeU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q0ACIzkDujCvoau9liUpcIks/pARcqpBiwqA3ZELMzrhjoKlJZLam/Dbm7IKaOFYL5Kl5wv570Gbp2PIeYG7mgeRBiJ0+pdnd70icnEAVeJzo99fy1Ej3FftC0ew9+XYTWokn6zyS2yssjS6mebz7lo88maKYAqIOpIQz2e+lME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pU/EYg0k; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjZ4krda"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78247C4CEF7;
-	Wed,  1 Apr 2026 21:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775079661;
-	bh=pDwgJl6Fh9R0ESyyzZwZ3nyL/1KbhhNvMwGXe/yD3k8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rjZ4krdarwjCTk3lcfRgblqKEGSYvMlE4Ub7PB8ZhtVDNHJU53EvsLHOqIa783mjS
-	 uh1Ye5ifYSc+2lJDlHDbyCO1JC4udIlqGMyo95ZakDYbnYiWtqS5FyW0hIoidj/qen
-	 euu68aHI4r+tt1y/ZW63ZJiZ4im12Cq7kvxhAeaFT0Bk5vG9kUopONhOl2i1Kl7x1K
-	 SYxvvMSN1EGRjhFwvZ4L++cQMIxATWc83jCSm1elVC3UFuAoMNGQ+Sdm/JZuUkYqkC
-	 NLdK0LTq7V2d5cfKjTF3ejhgpUSuPge2iqLHnRnctbC7k57HMb0LIt8rHdrO17qxgq
-	 hi+/R+7AcOy4Q==
-Date: Wed, 1 Apr 2026 14:41:00 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Finn Thain <fthain@linux-m68k.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	llvm@lists.linux.dev, Marco Elver <elver@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nsc@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar
- types
-Message-ID: <202604011438.E5D2335@keescook>
-References: <20260331163716.work.696-kees@kernel.org>
- <20260331163725.2765789-5-kees@kernel.org>
- <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
- <202603311253.95C54588E@keescook>
- <CAHk-=wjSOGaausLeTD13yAqso7qM09EnkDFiN7wF15kH0VWmZQ@mail.gmail.com>
- <202603311321.4EE9FEA@keescook>
- <20260401093820.GX3738786@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pU/EYg0k"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ab46931cf1so9622425ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 01 Apr 2026 14:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775080064; x=1775684864; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iGt1a4sLfrhxByIJ29j9DQkf7gSkmMPtiPiOxDIoUcA=;
+        b=pU/EYg0kUPUWlpO4fh8GHmk3QM1FrO+JuYtA9VDMZC2Gtx5GKXRzbEXikPJ3SJs53Z
+         0fMG1cbT1BjkwHLIWOt5Y9w0fBnrwp0j7tKvnv+Yt4H3E/N6KzrBMi4Le0StwGMjxkOW
+         hKlx/8c9uFIJOocDiTXWkAzC2n3Gy70ryFtHvut7QY4l4Nu4q5U985acrp2Ar2/k7kqO
+         Zo5onLx281aXWs4gWpOu3k6uPlwMXAtOuouNj2rLhDq3zGu9fcfGSbz1OdoxVBBlCuUm
+         rFkS3cpAbvUVn0471pUlQhz1c94IhVWBI2+sHUK5/nS0hsk0eR02IEudD2fQnjwo76Zh
+         CQ8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775080064; x=1775684864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iGt1a4sLfrhxByIJ29j9DQkf7gSkmMPtiPiOxDIoUcA=;
+        b=M+FVC/uFqzRHHWvtuE1li7+Mul9C1zWNUV9PxACz/Untpu7uFgvqVvSq+iS1KZnZAw
+         gGk31HZkS0Yj2BFptnGKHjBLqYySMHUX2S6SIflcCUteUbAxPPdOQ+OfZbEDY/jICa9T
+         Jlq9N8JtrO8mlT8SSId2TUOtlCFGmFdVJsKDteS93kw/PN3/TPJIul9gFRoJkH6pN8i+
+         wDW6F5phANYBo3ii80JN7jGww019SUO5CL8keS8dUmdHC/riFdC3jh94f9NRkJj5p5BC
+         XuWgeVVLBK9gRxOKnwtakfaYY2pxS6kkU1ICmlxiBvASnzd/BzXi0+HTXBBMU4B7Fbt+
+         zWUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSxlICIytN6P2pUWO0ztU4XGe3fY41hWAlR7EfA+rWVLxrd7iCEbyQ0cFxIc1xO99rPi58U5Rg20MCuoys1BE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEKW5y5bLjQxsppMd4UORkhEgN47MY0wWD6yrK+LESk2msotDH
+	CBpKRQLZNtVVkkGt+2Q9JYezBFXY7Ng9MxhIlQErrxH/FcBquargmZd/
+X-Gm-Gg: ATEYQzzrGdjUNPgMuegvsyWrH7opjNogaBWnjUS9PMmK0uDAiDkJSgDA/yrTlYXeek2
+	uaB9rvgUFdrxff0IHcNsPB5Xih6BsDP7rPwnZyIsVbdF78VZajfl3U31ZVrKz9slSJgKMyknkC+
+	JNshfdksXnbPLu66oA2OqFDpFRIBDT/bfbZP7KYfa+4K0LwB0NqHFeGjBYX+biMA+VEkBNDXuEM
+	ca0oaEWxZQDogIwvwJQddE+c3UMgHjSvKe6Rh143t1hQDnuXd0rMUQA/I0DAfATdEttf5akCMJ8
+	/57u8vi5shLYDkhzawtNMMfCSXpXNXBy36md2gIs+HFsgeHRxGEEqQhTUqI5CnOEYpXDRXd/ng1
+	AqL21fHcEriXj/4vVz7gG4XpLy7Q6kfubrbyHWY6IZcU0piBxK9Z7B7kjHmJv5gMKxzkk0v/PzK
+	X6nqS5s5LMQYMHYE+NwxUPNvyw5eIleRvECgeSoHKTnXAOrtNacSvyk5k=
+X-Received: by 2002:a17:903:24e:b0:2b0:6ba2:3d78 with SMTP id d9443c01a7336-2b277d62983mr342125ad.3.1775080064337;
+        Wed, 01 Apr 2026 14:47:44 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b27478cb4fsm7777625ad.29.2026.04.01.14.47.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2026 14:47:43 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-usb@vger.kernel.org
+Cc: Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCHv2] thunderbolt: tunnel: simplify allocation
+Date: Wed,  1 Apr 2026 14:47:26 -0700
+Message-ID: <20260401214726.3911-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260401093820.GX3738786@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 01, 2026 at 11:38:20AM +0200, Peter Zijlstra wrote:
-> On Tue, Mar 31, 2026 at 01:31:16PM -0700, Kees Cook wrote:
-> 
-> > int func()
-> > {
-> > 	...
-> > 	u8 __ob_trap product = 5;
-> > 	...
-> > 	product = a * b; // if store is truncated, goto __overflow
-> > 	...
-> > 	return product;
-> > 
-> > __overflow:
-> > 	pr_info("%u\n", product); // shows "5"
-> > 	return -1;
-> > }
-> > 
-> > (Isn't this just an implicit "try"?)
-> 
-> So I like this implicit try with a default label, and mostly I expect
-> this will be fine.
-> 
-> But as Linus already mentioned, sometimes you might want more. Could we
-> perhaps also have an explicit version, something along the lines of:
-> 
-> int func()
-> {
-> 	int __ob_trap size;
-> 
-> 	size = try(count * flex_size, __mul_overflow);
-> 	size = try(size + base_size, __add_overflow);
-> 
-> 	obj = kzalloc(size,...);
-> 
-> }
-> 
-> where we have something like:
-> 
-> #define try(stmt, _label) ({		\
-> 	__label __overflow; 		\
-> 	if (0) {			\
-> __overflow:				\
-> 		goto _label;		\
-> 	}				\
-> 	stmt; })
-> 
-> That is, have the overflow trapped and confined in the
-> statement-expression by using the overflow label as a local label and
-> use this little trampoline to re-direct to a custom label.
+Use a flexible array member and kzalloc_flex to combine allocations.
 
-Yeah, that should work, and gives us a nice way to create handler
-overrides. We've have to make sure the "locally defined" labels (with
-__label__) and __ob_trap worked together sanely.
+Add __counted_by for extra runtime analysis. Move counting variable
+assignment after allocation. kzalloc_flex with GCC >= 15 does this
+automatically.
 
--- 
-Kees Cook
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v2: move kernel-doc and reword slightly.
+ drivers/thunderbolt/tunnel.c | 10 ++--------
+ drivers/thunderbolt/tunnel.h |  5 +++--
+ 2 files changed, 5 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
+index 89676acf1290..f38f7753b6e4 100644
+--- a/drivers/thunderbolt/tunnel.c
++++ b/drivers/thunderbolt/tunnel.c
+@@ -180,19 +180,14 @@ static struct tb_tunnel *tb_tunnel_alloc(struct tb *tb, size_t npaths,
+ {
+ 	struct tb_tunnel *tunnel;
+
+-	tunnel = kzalloc_obj(*tunnel);
++	tunnel = kzalloc_flex(*tunnel, paths, npaths);
+ 	if (!tunnel)
+ 		return NULL;
+
+-	tunnel->paths = kzalloc_objs(tunnel->paths[0], npaths);
+-	if (!tunnel->paths) {
+-		kfree(tunnel);
+-		return NULL;
+-	}
++	tunnel->npaths = npaths;
+
+ 	INIT_LIST_HEAD(&tunnel->list);
+ 	tunnel->tb = tb;
+-	tunnel->npaths = npaths;
+ 	tunnel->type = type;
+ 	kref_init(&tunnel->kref);
+
+@@ -219,7 +214,6 @@ static void tb_tunnel_destroy(struct kref *kref)
+ 			tb_path_free(tunnel->paths[i]);
+ 	}
+
+-	kfree(tunnel->paths);
+ 	kfree(tunnel);
+ }
+
+diff --git a/drivers/thunderbolt/tunnel.h b/drivers/thunderbolt/tunnel.h
+index 2c44fc8a10bc..4878763a82b3 100644
+--- a/drivers/thunderbolt/tunnel.h
++++ b/drivers/thunderbolt/tunnel.h
+@@ -37,7 +37,6 @@ enum tb_tunnel_state {
+  * @src_port: Source port of the tunnel
+  * @dst_port: Destination port of the tunnel. For discovered incomplete
+  *	      tunnels may be %NULL or null adapter port instead.
+- * @paths: All paths required by the tunnel
+  * @npaths: Number of paths in @paths
+  * @pre_activate: Optional tunnel specific initialization called before
+  *		  activation. Can touch hardware.
+@@ -69,13 +68,13 @@ enum tb_tunnel_state {
+  * @dprx_work: Worker that is scheduled to poll completion of DPRX capabilities read
+  * @callback: Optional callback called when DP tunnel is fully activated
+  * @callback_data: Optional data for @callback
++ * @paths: All paths required by the tunnel
+  */
+ struct tb_tunnel {
+ 	struct kref kref;
+ 	struct tb *tb;
+ 	struct tb_port *src_port;
+ 	struct tb_port *dst_port;
+-	struct tb_path **paths;
+ 	size_t npaths;
+ 	int (*pre_activate)(struct tb_tunnel *tunnel);
+ 	int (*activate)(struct tb_tunnel *tunnel, bool activate);
+@@ -107,6 +106,8 @@ struct tb_tunnel {
+ 	struct delayed_work dprx_work;
+ 	void (*callback)(struct tb_tunnel *tunnel, void *data);
+ 	void *callback_data;
++
++	struct tb_path *paths[] __counted_by(npaths);
+ };
+
+ struct tb_tunnel *tb_tunnel_discover_pci(struct tb *tb, struct tb_port *down,
+--
+2.53.0
+
