@@ -1,63 +1,63 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9617A3542D1
-	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 03:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDDC34250E
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 03:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775099095; cv=none; b=WMhLHfx3iAhKTcNUCBWKBsLDPQZTHq1K3k/7ojzJpUvQ6s8F3JeTU3+n+aOn2WNqnxxn8yqnEC6cfJfIOZeLJPlaqRNMmaYI0bP3L6sUk+zx/ZHHZmXyyEeahRNOMSXlp/AHJk33YLJ9QgzUGhPKP5jhacfh1LWdmbqEmm8R8qk=
+	t=1775099097; cv=none; b=UQugMM5C2cyHY0DieglBvHTBYgNHQAma0E4mDbi6PUdSeBYFj2xiumM1ZzsoJWwaLus4NUvjIdEOVwMkUXt0hDgr+huRNjWS8VQjnkC2A9HxiGZNxJpTpQ54AjQk5B6vABgl1CZgwHDikKtvNwIGCer5bPB4UDkfACMBEAJMoQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775099095; c=relaxed/simple;
-	bh=uNa3V+l2+zMvQBRPMDJlv1PjVBSkIBsWCPDk3WYqUHg=;
+	s=arc-20240116; t=1775099097; c=relaxed/simple;
+	bh=9IIzc+eywz6mbGH5F5bMbvFGszQOAFr0MEDFHAbMnUI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b6/Zj0A3LRhsKRimd4V1GAZNvRB6mXPzJqBqJLYiIgLSX0RqX4XNJmpyM9ImpHGNHU4ufHzT5ifYU97XMVzXYOTGmrQ+up3z2UHHDONreF7GQwYU7rxSKCimEkF9W5P7QyC7PHHmZ3LHQhEGEaPmcbht6jj12gKKWOFVmfHh/GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYhBndW9; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version; b=ldM7+xydWOtYWxhNpWddZUd2tgH4lp0F/kkjLzXWK2gM467UW8ZV4tBIlW15TRwJVAdPtJaCfWJdVF555v0F9R1CvoG7RghNAeimvS7VaUJYrf082xdz6pnTBEmma38NbW8sH97pv4CFFfZagzAFDxfsT1nDJwQxyCfJSErs2EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UR0MBCwx; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYhBndW9"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-35da2d35eccso214029a91.0
-        for <linux-hardening@vger.kernel.org>; Wed, 01 Apr 2026 20:04:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UR0MBCwx"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-35d90833cacso184082a91.2
+        for <linux-hardening@vger.kernel.org>; Wed, 01 Apr 2026 20:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775099093; x=1775703893; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775099094; x=1775703894; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u0ucHKBOty4mZVVfHvLn6hix9SbADzLEqJq1CauEJu4=;
-        b=OYhBndW9zZGJBS2rebGgm5kyBN4rBegW/DNCCcbc4jDOK2sybbphlOY05o1fYyw1jI
-         HVYdyX4tvuMgqMNFtWs/ZEX9hdH4rW5kVxaJQjQ1nDsZJ6I2qUKYF3RCxRwD29KNCcnM
-         6HJWbmwZxG6wLpjzuP38mzBh8CS5ue5wT29jSXkR/7I0tRbuwL7lUmAQeCj4OeE5KeB2
-         b97GuwYhGk7ctDmaRQFkSHSw0UI37zuk9VVTrouLZaYIXqKwcKlvcdXFCx7pdWZa5P7S
-         7LAX022qqD9oecqSDREzy7tREFl1IC1RwsAFjHACxLsvURGSxOb7m409v+LBE+WYFKA2
-         +L4g==
+        bh=nmCC7f15JgRcCuYZBiyTal7ZYGjILnrKEbih3hVx7XU=;
+        b=UR0MBCwxlGWdKrWpaP4ODocLpxMeu9f3tBy4t/1Z0Zunuhg2AuTKPzo0GrvMSdHV4L
+         i1au/VMByUZfZ+xiX8HTVB4gwj9l61Sd2Y1b4fQd+jKolSgI8yanZlCNLzIEF+fD2iCs
+         sa/gkHeiEAbteAZMJ0SWDkyJKvgg0CWgBDN+1aDLjxsWUMK8Og5CljPc2ZCG9nSwYsvD
+         fcf2dq2M5bA+VYlg23EyNpGq+wfzXNMLMUVdZGG2tn3YvbLFJGdIltC+oEGH+IoqaQj8
+         oO1WxViJ6XQWSFJTGPbMWgB7RO0oYKOXuBjr+ralAAA8BWZi/ZZlMVku5L+XPP84YNLF
+         ikvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775099093; x=1775703893;
+        d=1e100.net; s=20251104; t=1775099094; x=1775703894;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=u0ucHKBOty4mZVVfHvLn6hix9SbADzLEqJq1CauEJu4=;
-        b=lk0AwJZNcahBE5c8uwmhjpYI9CMaTHSCvfg5OHjNBJv1qncoN0IWvlMpzMVmgi9AuL
-         AshAmwdNJWoYAsf/uIwjGygKL7JjB091x1QMwHIHXQ4gnS4Tj22+nlqkpSx21bGXgoGC
-         jwo/IMF0g/UghFOSqqlWr1yhII8BYGkV6icX2MV3DxwVD0FN1uXtrpdQ7sdF1qSHTxa+
-         2PveTiJY/RizxqWW1M1joLSq8SVF9dY9A5zALqbDHhXnlgaMtPPu9gVmsaqzofl6eOZq
-         Q23yJEa5jJjmZdLBZNatyO9zYBjTx+xQ8yAxugV1ZH/ZdXtRR5hVb19PyBsu/UYo8fI2
-         mhOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW++sEHWCqHJLdvih8H7jj22Nlm85LzYs/bOYAeq3MjtAO6NZNAusSx5hQowqsMFzrw/o9tOwwfF6iuy0TXgtw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi9rLb50Zi5Tk+RNwW3lXEEHOvisTwt6ngJ91IzU/ERYGX7PU3
-	NYq88j6516azIC93a9ZI0lelnyI2T/AA7+3WdlKy1c/bsNFS9aM21DZV
-X-Gm-Gg: ATEYQzzmL+ls3MMY+KlJcrBtDdCGiuT7By0zb/RtK9nUzL4d8C0ZSl5Step6JeGUlZ4
-	huggXe3XCOr9u5A2w+PBCTqvP040Me9Nfh4XmGeJcI/2z+4iZWzU2ulVFvAH2uHKn9SmlOImUrh
-	kknTz0p4vsD5yfTA1L123NPybDGzLuAEyp2qylp6pHnj/pDQiVAUvD24xXR1fxaDqQrR85yc2oE
-	GafW4M2qkFyuDWzJOpJEvqtLqGVpVdFGus1ptDa70fjIAtHvkwOOy+fbXrraRkEOVtIhnyRFkcC
-	23rIhUaRvFA2nbC5c07ZNHzQi6TwV9xL0cH7+hOY4ZbIsRaHUJ2tt/wVe+OwC/S514OBQrtzz57
-	GOIADMkBcX8zmYMF7QaHyFpDWGkSeJM7q0ciivg2uMF6QiyBcl7bY0eqt+mbskUFqEfADoNsBdu
-	uJEnmZQKPPemqr+OpWzzIvjsseE/P+dpDnIEhT4UX1xG9w2tryj5ztvWI=
-X-Received: by 2002:a17:90b:2ecb:b0:35d:9482:2233 with SMTP id 98e67ed59e1d1-35dc6fc83b5mr5204534a91.24.1775099092867;
-        Wed, 01 Apr 2026 20:04:52 -0700 (PDT)
+        bh=nmCC7f15JgRcCuYZBiyTal7ZYGjILnrKEbih3hVx7XU=;
+        b=X+BTQMSySQd8AulP1CaVYsQnsmDQWAUVZTU+sIL46B59WjHk5+8nlQeAp/BKe35lGb
+         Kd2bJbK8EYKhKlucN4lHjqBHjiarGR7eEhBaSjB+AlZENYn8USkY/aQLi7bIloudk33k
+         FQu/xhlNfN651AxyapYgQeKl7mu+qIwy+yih2EMjka1iRGuCUjOHZGz43uK3UmNVq5hr
+         LePOEtL0fAQu9xQJoQWnYTE8k3R/1WSMkVCBI2DqnxCQ8ftjQj3I1QQEYw96MdjStdbU
+         paptTO3dQNGPRJ9F8TAXDTS/ReijL/TCLKIcxi7NdCLUfYDSsyJukUAbqcUaE/jNYZIm
+         eCyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUblr47Hd61GypytUUnulgyeZuSPwX/EZ3V8vaEfqFJDuPJb+UNHOqswyD0ipdbu8yuT4J7ei4MPtFDR5AujGY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwAIlijdkyUhrNje9vb5xBGDow2IR1j9lOGIAY/0NIrZcVOy9f
+	zuaD54hg1jAVe+NIjQVm6u1o9LyA+2AzlSr0VaGCA5Ka1jHvTXw8r62n
+X-Gm-Gg: ATEYQzwhMF6C6WGR9eFIa4RPTzlA7E7ColhPc4gTkkwxX7CfEE11td3IEeMsHUiwqBE
+	wAuxHi/SifR0b0e0Hip7clNDbMnHdKZ0yvE+esDs9BBzjI1L1cxhiG3d0LG8R35jfdq1MlTYcUj
+	Zgv+ZDTr49ptTJz7lSym0QqbdcU7pIOlIuRHiWvZWB+ZbY7Cerqc+avWlYqSeJPf+YPnUGFUBDx
+	DwqO25r/KZRm1PKK6MK88cejv+/RbOkpmmveYUuuqYVaplFE5O+AO0lMCqEXG827xE0R+iDn4nJ
+	6F5Kga91ZV4h7JnqvWO7weMtukPoefYrVjqV+bTBT/pgRBx4W8d++DFH7p2vLZ/VEFNNdkXwbZn
+	3mKAVy8XUGpZF6kOL/vheUmIrx/SLoSgcW5cMqBJKJmq2RL/gIUtWHK7omwx8W1aeg28G78XSmC
+	po/ac7KIlq/g6+wqTv+OK0OWNdSxakp5DlqOZJaqesxNDM12h5/yGmHOw=
+X-Received: by 2002:a17:90b:4b90:b0:359:f77f:8cff with SMTP id 98e67ed59e1d1-35dc6f4cd92mr5416790a91.19.1775099094428;
+        Wed, 01 Apr 2026 20:04:54 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dbe9379f3sm6395873a91.9.2026.04.01.20.04.51
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dbe9379f3sm6395873a91.9.2026.04.01.20.04.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2026 20:04:52 -0700 (PDT)
+        Wed, 01 Apr 2026 20:04:53 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: linux-clk@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzk@kernel.org>,
@@ -71,9 +71,9 @@ Cc: Krzysztof Kozlowski <krzk@kernel.org>,
 	linux-samsung-soc@vger.kernel.org (open list:SAMSUNG SOC CLOCK DRIVERS),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH 2/3] clk: samsung: cpu: use kzalloc_flex
-Date: Wed,  1 Apr 2026 20:04:31 -0700
-Message-ID: <20260402030432.101066-3-rosenp@gmail.com>
+Subject: [PATCH 3/3] clk: samsung: pll: use kzalloc_flex
+Date: Wed,  1 Apr 2026 20:04:32 -0700
+Message-ID: <20260402030432.101066-4-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260402030432.101066-1-rosenp@gmail.com>
 References: <20260402030432.101066-1-rosenp@gmail.com>
@@ -85,91 +85,186 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member to combine allocations.
+Simplify allocation by using a flexible array member to combine
+allocations and remove a kfree.
 
-As kmemdup_array is really kcalloc + memcpy and kzalloc_flex kzalloc +
-kcalloc, kzalloc and kcalloc combine leaving the memcpy.
+Use __counted_by for extra runtime analysis. Assign after allocation as
+required by __counted_by.
+
+Since rate_table is now a flexible array member, NULL checks don't work.
+So use the counting variable to check allocation.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/clk/samsung/clk-cpu.c | 30 +++++++++++-------------------
- 1 file changed, 11 insertions(+), 19 deletions(-)
+ drivers/clk/samsung/clk-pll.c | 56 ++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
-index ffc33e5decf5..ad08d6288baa 100644
---- a/drivers/clk/samsung/clk-cpu.c
-+++ b/drivers/clk/samsung/clk-cpu.c
-@@ -101,11 +101,11 @@ struct exynos_cpuclk {
- 	const struct clk_hw			*alt_parent;
- 	void __iomem				*base;
- 	spinlock_t				*lock;
--	const struct exynos_cpuclk_cfg_data	*cfg;
- 	const unsigned long			num_cfgs;
- 	struct notifier_block			clk_nb;
- 	unsigned long				flags;
- 	const struct exynos_cpuclk_chip		*chip;
-+	struct exynos_cpuclk_cfg_data		cfg[];
+diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+index fdb84bcec912..e74552846ba3 100644
+--- a/drivers/clk/samsung/clk-pll.c
++++ b/drivers/clk/samsung/clk-pll.c
+@@ -28,7 +28,7 @@ struct samsung_clk_pll {
+ 	unsigned short		lock_offs;
+ 	enum samsung_pll_type	type;
+ 	unsigned int		rate_count;
+-	const struct samsung_pll_rate_table *rate_table;
++	struct samsung_pll_rate_table rate_table[] __counted_by(rate_count);
  };
  
- /* ---- Common code --------------------------------------------------------- */
-@@ -660,10 +660,6 @@ static int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
- 		return -EINVAL;
+ #define to_clk_pll(_hw) container_of(_hw, struct samsung_clk_pll, hw)
+@@ -1593,35 +1593,32 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ {
+ 	struct samsung_clk_pll *pll;
+ 	struct clk_init_data init;
+-	int ret, len;
++	unsigned int len = 0;
++	int ret;
+ 
+-	pll = kzalloc_obj(*pll);
++	if (pll_clk->rate_table) {
++		/* find count of rates in rate_table */
++		while (pll_clk->rate_table[len].rate != 0)
++			len++;
++	}
++
++	pll = kzalloc_flex(*pll, rate_table, len);
+ 	if (!pll) {
+ 		pr_err("%s: could not allocate pll clk %s\n",
+ 			__func__, pll_clk->name);
+ 		return;
  	}
  
--	cpuclk = kzalloc_obj(*cpuclk);
--	if (!cpuclk)
--		return -ENOMEM;
--
- 	parent_name = clk_hw_get_name(parent);
- 
- 	init.name = clk_data->name;
-@@ -672,6 +668,15 @@ static int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
++	pll->rate_count = len;
++	if (len)
++		memcpy(pll->rate_table, pll_clk->rate_table,
++		       len * sizeof(*pll->rate_table));
++
+ 	init.name = pll_clk->name;
+ 	init.flags = pll_clk->flags;
+ 	init.parent_names = &pll_clk->parent_name;
  	init.num_parents = 1;
- 	init.ops = &exynos_cpuclk_clk_ops;
  
-+	/* Find count of configuration rates in cfg */
-+	for (num_cfgs = 0; clk_data->cfg[num_cfgs].prate != 0; )
-+		num_cfgs++;
-+
-+	cpuclk = kzalloc_flex(*cpuclk, cfg, num_cfgs);
-+	if (!cpuclk)
-+		return -ENOMEM;
-+
-+	memcpy(cpuclk->cfg, clk_data->cfg, num_cfgs * sizeof(*cpuclk->cfg));
- 	cpuclk->alt_parent = alt_parent;
- 	cpuclk->hw.init = &init;
- 	cpuclk->base = ctx->reg_base + clk_data->offset;
-@@ -687,29 +692,16 @@ static int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
- 		goto free_cpuclk;
- 	}
- 
--	/* Find count of configuration rates in cfg */
--	for (num_cfgs = 0; clk_data->cfg[num_cfgs].prate != 0; )
--		num_cfgs++;
+-	if (pll_clk->rate_table) {
+-		/* find count of rates in rate_table */
+-		for (len = 0; pll_clk->rate_table[len].rate != 0; )
+-			len++;
 -
--	cpuclk->cfg = kmemdup_array(clk_data->cfg, num_cfgs, sizeof(*cpuclk->cfg),
--				    GFP_KERNEL);
--	if (!cpuclk->cfg) {
--		ret = -ENOMEM;
--		goto unregister_clk_nb;
+-		pll->rate_count = len;
+-		pll->rate_table = kmemdup_array(pll_clk->rate_table,
+-						pll->rate_count,
+-						sizeof(*pll->rate_table),
+-						GFP_KERNEL);
+-		WARN(!pll->rate_table,
+-			"%s: could not allocate rate table for %s\n",
+-			__func__, pll_clk->name);
 -	}
 -
- 	ret = clk_hw_register(NULL, &cpuclk->hw);
+ 	switch (pll_clk->type) {
+ 	case pll_2126:
+ 		init.ops = &samsung_pll2126_clk_ops;
+@@ -1640,7 +1637,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_a9fracm:
+ 		pll->enable_offs = PLL35XX_ENABLE_SHIFT;
+ 		pll->lock_offs = PLL35XX_LOCK_STAT_SHIFT;
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll35xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll35xx_clk_ops;
+@@ -1659,7 +1656,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_0732x:
+ 		pll->enable_offs = PLL0822X_ENABLE_SHIFT;
+ 		pll->lock_offs = PLL0822X_LOCK_STAT_SHIFT;
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll0822x_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll0822x_clk_ops;
+@@ -1669,7 +1666,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 		break;
+ 	case pll_4502:
+ 	case pll_4508:
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll45xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll45xx_clk_ops;
+@@ -1679,7 +1676,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_2650:
+ 		pll->enable_offs = PLL36XX_ENABLE_SHIFT;
+ 		pll->lock_offs = PLL36XX_LOCK_STAT_SHIFT;
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll36xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll36xx_clk_ops;
+@@ -1687,7 +1684,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_0831x:
+ 		pll->enable_offs = PLL0831X_ENABLE_SHIFT;
+ 		pll->lock_offs = PLL0831X_LOCK_STAT_SHIFT;
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll0831x_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll0831x_clk_ops;
+@@ -1703,7 +1700,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_4650:
+ 	case pll_4650c:
+ 	case pll_1460x:
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll46xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll46xx_clk_ops;
+@@ -1712,19 +1709,19 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 		init.ops = &samsung_pll2550x_clk_ops;
+ 		break;
+ 	case pll_2550xx:
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll2550xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll2550xx_clk_ops;
+ 		break;
+ 	case pll_2650x:
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll2650x_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll2650x_clk_ops;
+ 		break;
+ 	case pll_2650xx:
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll2650xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll2650xx_clk_ops;
+@@ -1734,7 +1731,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 		init.ops = &samsung_pll531x_clk_ops;
+ 		break;
+ 	case pll_1031x:
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_pll1031x_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll1031x_clk_ops;
+@@ -1742,7 +1739,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_a9fraco:
+ 		pll->enable_offs = PLLA9FRACO_ENABLE_SHIFT;
+ 		pll->lock_offs = PLLA9FRACO_LOCK_STAT_SHIFT;
+-		if (!pll->rate_table)
++		if (!pll->rate_count)
+ 			init.ops = &samsung_a9fraco_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_a9fraco_clk_ops;
+@@ -1761,7 +1758,6 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
  	if (ret) {
- 		pr_err("%s: could not register cpuclk %s\n", __func__,
- 		       clk_data->name);
--		goto free_cpuclk_data;
-+		goto unregister_clk_nb;
+ 		pr_err("%s: failed to register pll clock %s : %d\n",
+ 			__func__, pll_clk->name, ret);
+-		kfree(pll->rate_table);
+ 		kfree(pll);
+ 		return;
  	}
- 
- 	samsung_clk_add_lookup(ctx, &cpuclk->hw, clk_data->id);
- 	return 0;
- 
--free_cpuclk_data:
--	kfree(cpuclk->cfg);
- unregister_clk_nb:
- 	clk_notifier_unregister(parent->clk, &cpuclk->clk_nb);
- free_cpuclk:
 -- 
 2.53.0
 
