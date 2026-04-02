@@ -1,108 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770BC308F15;
-	Thu,  2 Apr 2026 08:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABEA371CFE
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 09:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775118648; cv=none; b=Hz6acYWTpVXqhiFGDK3B5AynhciAAdBwA7fmrGQOsfuyGdB2lKCFr2/bQd/1HN93BNwEwsS/Fd8u7We0dYbD34ES3al9ssI1qFpkd/sCMb2BauLkOJEp2Io+Y43dXLZhid1NF+Zmy/Tv6fDMzW9++IccJgT2CDwFztzpwK+2C4U=
+	t=1775121236; cv=none; b=HOJSxBXUMYnpXzd+VHH6Nvz05CoxaBrlTE8P94kBpTc4/z4bpxBS7EsdgWMU9wMfd89nIAzGLsIYOOV9I4YiXszfTnPmxeh7afNYsaUWppZSYuauL7+MK9DdDTK9WszLkGw5AaD6fhMAKUguxw83lK+Ii0tUyyuyTiKwtl9yfKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775118648; c=relaxed/simple;
-	bh=pxl/fkJM7dYtMIlvsje5y2GJQuVk3FGPx73Bi7fwTEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cNBVMNNCcBwP+c5HE6HFFe5eBi1ryttoZuBTBmMBzTBSitAY1zb1oYILOKUH2swc8NB9r0JLoXE2OeYSr8MKkgl1FnAosABlcIOTFNXA2Fe9rbTM8iWP3fT8S1v1YFVqNf/BSCDyGW4m5zt4+3o4bcStfoP9CEavQZgdK/koXkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YlWKOGIH; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1775121236; c=relaxed/simple;
+	bh=Ue86H1KysRcjf2OINDQFXuIhBR4ESQnxLFwGpvhWUfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YEQmJTvER2iIi7Hivyh+1Xb0u1Mdc0b5ZBSrEobH7COlcTze2YobW2WypehOdV6PgWfYcUBAp+YATMY44tsxjgHpEiOBMslG8kXf0FPSZjEkXWZb4at5v1vYs2MGCKRKKWdnefcJc9gZ7xt6N8zWEOiRtxKeNHHsMAiCvDpfmEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5n06+QP; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YlWKOGIH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775118647; x=1806654647;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=pxl/fkJM7dYtMIlvsje5y2GJQuVk3FGPx73Bi7fwTEw=;
-  b=YlWKOGIH+SflkDiRrn7hFZvEIUi5ica7aNu4p/kSdwtefN8lV4D/YFPk
-   QwDKW6pP0IhKnqJ1bki68Gkf4s5XKNEqAlDL7gcktXdaIs/KIE4eaezJ/
-   t4fgLMC+y7AfElKgyAFKM9z99lJOHlasp3CzP1HQDVZCl1q/CBhQNcUdT
-   BKXlx8s+QO9S3siVaPIs46cGSzGZYm+HkqPFRuh2xn+weq2H+hd9gLbIp
-   qm54OqQwFn7reJhO3u2aHmXyhU4uxMQjecnWcezhvrk8tHF0dFNP31mVh
-   JKdzIeIg1q8RTXygLxTUVO9JUDvub+9Nfb3+Dmr58yBDmc88Cg34wqGtC
-   Q==;
-X-CSE-ConnectionGUID: EubxaxfyRv6/rR4yx2Xguw==
-X-CSE-MsgGUID: Hi/U1GN5ShWNZuNmgEoLeg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="76063570"
-X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
-   d="scan'208";a="76063570"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 01:30:46 -0700
-X-CSE-ConnectionGUID: oHORlP+pTZ+I5DDFwdjPDQ==
-X-CSE-MsgGUID: 5g7pmLHDSyGDS7wMtm149Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
-   d="scan'208";a="220257882"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.245.31])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 01:30:45 -0700
-Date: Thu, 2 Apr 2026 11:30:43 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Kees Cook <kees@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/5] lib and lib/cmdline enhancements
-Message-ID: <ac4pM6kHVI8cK1Xb@ashevche-desk.local>
-References: <20260212164413.889625-1-dmantipov@yandex.ru>
- <87799485ed44bf023f0e1a7ed67f2e5268763c73.camel@yandex.ru>
- <aZXDSbyH8tWmTPPL@smile.fi.intel.com>
- <4ece2ada3067d3668fc380d3dcf807ff73073c21.camel@yandex.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5n06+QP"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4887d4c6234so7989445e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Apr 2026 02:13:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775121231; x=1775726031; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qr0tec9oGf/SBDgbf+2rD33HNBftwB6KGbVP3Dhy5ew=;
+        b=A5n06+QPfUFaXxI/M3g/2ZIAVBIeHbAFIn9fGxXft8XKXsdeYwFLrT028wcoA2aKfh
+         ERiSVNU05FnkjivehGxg+oTWbZUwi88KjkNlqZNBuzj0EzfXGeIMPkU9qUDcJO13u42n
+         Qc+ToNX90wZatSr1UpDFyAIlOAWNRj5Iey84lKGAC8oPZnFP1/xhoIVKNw/RSkQZhGVC
+         LkZhmMkiERw1w+Lqwvz5S1IMxAdtRlgS991nqazXXwMC0Q5FFDV55aopH6vHp5gcvO5d
+         LLk4BkcUPU5LEV1MeB/R4F8tSYVJqHiT7Ti//bkOyEVfeVVHxdf12QoAkbSObQ/O7O7+
+         P4iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775121231; x=1775726031;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Qr0tec9oGf/SBDgbf+2rD33HNBftwB6KGbVP3Dhy5ew=;
+        b=iIW7zA2nLuDRAINbkCjzinF+4OpLkYiO7kEwY1T8vPfVclL26vqLUh72tAGePf7QXb
+         o6JAO8ISQSwcuwqfRshFisA386S5T7GfYTfa+Khh6DCOfbL+DFyJjfupaqYE9krJgPIC
+         glNpj5Sh0woYGCnAfQhtnk3R7Q7taMXponZ0xvqku9SviRS/6VLZOZpJEp0b3WIVGPcp
+         N6IH2GNv4BWaWiQfUxsBOhNVO4op1tKC5JQsaIyYOAGyksm41wL1+BFwICg46VVJW80c
+         TivXK7djRUKbxB7P69N+4mfegd/ryloCQT2KzSh9XNl75W2UfLZ3HanM0iIuCNA3H4AG
+         EgMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVow8ZlQvueEgsFBN5xjfyU1mLuJHyrA+AVxSr1dlBreyEOJiW6qO7hSFQa8x41TpJZhTR+24RJ8diBRjoOSBg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySbyUk+MhgUQl1qP9j+lMGIQ2n0GEgss1ZZCX+aj41vYAL7250
+	4UKx/4rKq8mPztE/es1Z/6VRMPLhhXqP4oHiIYQs/3CL3OSWQ/FkBcuDFN2xW3CO
+X-Gm-Gg: ATEYQzykLkEUT9aHgbfRr59BQyRC4CJmFdr4SSQTkjw8MqWyIDbUNUyYhIBkS62Lrf7
+	HEsLiDHImlO5VMb7PDDzN3TIiTUcJq6rv5Cm98XEtX1RaOYcvdhotkWJcVox8S1wL7zw/OarR8i
+	igMcQjgQXxSsESuppPUkNqhvq5DLsNZnTZH0SVuguWTGsgaphFYwfyff4gF2xmndB/WWr73cOPH
+	CLUXAe3CxhyQFodyOsHqiEuIDV3YKxT8sbPoftZEU19o9LtOZTQQPYW78Mn9i6DAoXQTun0y6M8
+	8Ph8ykxSb4mlS04lf5/zq+6ALJKfD3IFwnVc2JdciUmTeTyX0/Aqm8PA0/LjKBJndHyxQdVnmQY
+	Zh2EJI1BsJAUqxJTl1AQi+a1HrF/wzTV/ENV/0QdDTQ3Nn+gi0H+jT3ShY5cPImRBmSGNIwvz+a
+	KZpdS2+8cVYHXjhd57/JSBDRyMhOVhmczDqeJMwk7btg1lqz7AiKYBG8rbqmIlzuwRs1VJTw0=
+X-Received: by 2002:a05:600c:3514:b0:47e:e48b:506d with SMTP id 5b1f17b1804b1-4888358c8b3mr115476365e9.16.1775121230625;
+        Thu, 02 Apr 2026 02:13:50 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e952b0bsm162303495e9.12.2026.04.02.02.13.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2026 02:13:50 -0700 (PDT)
+Date: Thu, 2 Apr 2026 10:13:48 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Justin Stitt
+ <justinstitt@google.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, kasan-dev@googlegroups.com,
+ linux-doc@vger.kernel.org, llvm@lists.linux.dev, Linus Torvalds
+ <torvalds@linux-foundation.org>, Nicolas Schier <nsc@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
+ __ob_trap and __ob_wrap
+Message-ID: <20260402101348.2f758a58@pumpkin>
+In-Reply-To: <202604011313.AD471BC8@keescook>
+References: <20260331163716.work.696-kees@kernel.org>
+	<20260331163725.2765789-3-kees@kernel.org>
+	<CANiq72mK9fz6Spmgt4js3hScqhqvZb2YP2T7tDfR0fHPDFWJ7g@mail.gmail.com>
+	<CAFhGd8paijFboDVr8rJDjScob047q+zgYAs038WuVozOG0aYaQ@mail.gmail.com>
+	<202603311249.30B44C66@keescook>
+	<20260401090815.GV3738786@noisy.programming.kicks-ass.net>
+	<202604011313.AD471BC8@keescook>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4ece2ada3067d3668fc380d3dcf807ff73073c21.camel@yandex.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 02, 2026 at 09:56:45AM +0300, Dmitry Antipov wrote:
-> On Wed, 2026-02-18 at 15:48 +0200, Andy Shevchenko wrote:
-> > On Wed, Feb 18, 2026 at 04:40:28PM +0300, Dmitry Antipov wrote:
-> > > On Thu, 2026-02-12 at 19:44 +0300, Dmitry Antipov wrote:
+On Wed, 1 Apr 2026 13:21:17 -0700
+Kees Cook <kees@kernel.org> wrote:
+
+> On Wed, Apr 01, 2026 at 11:08:15AM +0200, Peter Zijlstra wrote:
+> > On Tue, Mar 31, 2026 at 12:52:10PM -0700, Kees Cook wrote:
+> >   
+> > > I think for this series, __ob_trap/__ob_wrap is what should be used.
 > > > 
-> > > > Adjust '_parse_integer_limit()' and 'memparse()' to not ignore
-> > > > overflows, extend string to 64-bit integer conversion tests, add
-> > > > KUnit-based test for 'memparse()' and fix kernel-doc glitches
-> > > > found in lib/cmdline.c.
-> > > > 
-> > > > Dmitry Antipov (5):
-> > > >   lib: fix _parse_integer_limit() to handle overflow
-> > > >   lib: fix memparse() to handle overflow
-> > > >   lib: add more string to 64-bit integer conversion overflow tests
-> > > >   lib/cmdline_kunit: add test case for memparse()
-> > > >   lib/cmdline: adjust a few comments to fix kernel-doc -Wreturn warnings
-> > > 
-> > > Any chance to move forward with this?
+> > > And for other folks, the background here is that we originally wanted
+> > > to use macros for "__trap" and "__wrap", but the powerpc C compiler
+> > > (both Clang and GCC) have a builtin macro named "__trap" already. So
+> > > I switched to just using the Clang-native type qualifier. We can use
+> > > the attribute style too, but there was a lot of confusion during the
+> > > Clang development phases where people kept forgetting this was a type
+> > > qualifier, not an attribute (i.e. the attribute is an internal alias
+> > > for the qualifier, and the qualifier is a new type).  
 > > 
-> > I think it's a grace period due to ongoing merge window.
-> > Also we need more input on the first patch from others,
-> > perhaps Kees and Andrew can take a look when they will be
-> > less busy.
+> > Since you mention qualifiers...
+> > 
+> > What is the result of __typeof_unqual__(int __ob_trap) ?  
 > 
-> The same question again...
+> Hmm, it seems like "const" doesn't get peeled off. That can be fixed, if
+> that's needed?
+> 
+> 'typeof_unqual(int)' (aka 'int')
+> 'typeof_unqual(__ob_trap int)' (aka '__ob_trap int')
+> 'typeof_unqual(const int)' (aka 'int')
+> 'typeof_unqual(__ob_trap const int)' (aka '__ob_trap const int')
+> 
+> -Kees
+> 
 
-I'm not sure why. The patches are in Linux Next for several days already.
-$ git tag --contains b85c7e022e1c # the last one
-next-20260401
+Adding all the required cases to the _Generic() doesn't scale.
 
-Yet it needs to be merged into nomm-stable (if I understood the process right).
+typeof_unqual() needs to die.
+Just using 'auto a = b;' should remove const and volatile - but gcc is buggy.
+There are some alternatives that work in many cases.
+(It has all been discussed before.)
+In most cases you can use 'auto a = (b) + 0'.
+That does do integer promotions - but they happen as soon as 'a' is
+used; so it pretty much doesn't change the type of value, just the
+type of the variable.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+	David
 
