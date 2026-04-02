@@ -1,165 +1,145 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AB73EF67A
-	for <linux-hardening@vger.kernel.org>; Wed,  1 Apr 2026 23:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775086987; cv=pass; b=dVtR29BZPZt3x2PO6du2HmssRmeUQXDKLFQ1PFbmfzi5OIMtYTwrayE2ku8D5ellEh/MjKM6D98832ZJwK/Xe5sjOrDLi1uMBca8BlRHZ//nbboJHA16Vw04FUUZZ3UhWz+8Msfm3DLfA5YCXOrs07WP/u4r46R0WotE1Qtzyp0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775086987; c=relaxed/simple;
-	bh=vb8ZZRP0AUsWH7D3wGTnRXL9a0COAZFzJBs4dfJtueY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MggNX+uAVCbR30uTMRGiHEhFULkkhrN0EcV72xuMiZSeFabwvDspYHV1BgTo4Z7ahJ7dEfy46b/hnBVJZ0btylPDzN1LvO2YN1dx5gl015tUM5SYwxPUK0rXH2sthSd3Md59ytkmo8mjM2j5uV6ArgeESfqUYiKaGVXz/v8nEkA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WdVowrbu; arc=pass smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763881A681C
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 00:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775089231; cv=none; b=NT3brBVSznkGU04qXKUTSV74DOY4wmKZ7fzXhDUV3VE3gqCrsIB0fYH8DGJUrRlzpR3eGoberZt4ziXGAObcmAHiu2KTAo/Sva0Aqj/AhuJoVZ+KZICuQ0MfZpUoqxaZjEMQGu8H9Oa7U49U6oFHhDrS/+Z5NT000XQ3nQNPheg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775089231; c=relaxed/simple;
+	bh=/6ausaTtB1EwdmgBARDVXnzjs0gUU73ZHyMDrVpLs0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jVPwNZDZeDAHWVixws8ikKKMIProSyb5PYs5dkVHcR/kRJrkvvlwIgZ4ci1H2C39l7pcNU9RC0JAGQ95pHWq16SScpBJ/r9Ogrw1PgcGcJkNawpQGY4P29vPhXaS9yzCABGJiQYXwsjJR26lBPR0LvqiOEkUKcb0IUCVeSS2deE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nkIygf1F; arc=none smtp.client-ip=74.125.82.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WdVowrbu"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-94ab69af6c8so1003670241.0
-        for <linux-hardening@vger.kernel.org>; Wed, 01 Apr 2026 16:43:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775086985; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Ppc6jWhTN/0re+JgcXk13syzW3JEZAjzqeKjubP1HnzNK8hwNiUn3ZA13fGsZ30cLY
-         rgn13c3I2T/hNB9IOq1mIG+xI8LPM7GFWRsiIWxlnwJ0kEzFgUwoatuLGn/ya4EpMkgd
-         7gFIMOxah/SqWmdYAoByMGBWBPPRS5ygilM5UkcFGG4tse9PArcmlj7ty2J1szF7b3Iy
-         0d5WiaTmbWN11PaQ12RbTHhUuRxXIbQ/rWb4yYHCTcUsgVFoZKoSFZvzjLUToSErcA3A
-         M2/UebMXAcEZ3XW2tSLBM1QBd6sEip4UjMlswKBrX5RXl+Ko//qqpw3qQMers2pvleK5
-         uHUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=vb8ZZRP0AUsWH7D3wGTnRXL9a0COAZFzJBs4dfJtueY=;
-        fh=vzptO7hFsbQr8FsWuZrbuArNeEe2goxDmtOm/eL5WVk=;
-        b=WkCKaMa7txn5kwR3BJ5w1ZYXKETM5V44YvGuZ3nCceti40KfqIKvJ1pXY4CcTbj+jj
-         SwBI0bfkCAGUEa6fziapLsydGt5JYmJwZtPdGdQN5D0OHupPWO9Zl4Qky/afkTQPJIyU
-         bGccI/ir/LBoVBUoswmbXeFHYwNyo00Y2R/Xf3viaeGYp8m68NkOQor3bNvG55K+D9Tz
-         p81zSFGHVOoYXid+MrfpgQuibZ/Yi7tQ+LWcrU9r+iGsDaY/vY3R3gffaPWQhcn/Owfk
-         5ZcfFr37ZTPuiYlkxJ2lqDRyBxk2iUGS771XeT9Y4Ci6jYpo1TPgchuw5gwbufnqTwKF
-         AOng==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkIygf1F"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-2b4520f6b32so512073eec.0
+        for <linux-hardening@vger.kernel.org>; Wed, 01 Apr 2026 17:20:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775086985; x=1775691785; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vb8ZZRP0AUsWH7D3wGTnRXL9a0COAZFzJBs4dfJtueY=;
-        b=WdVowrbuUfX2c+pzomoH0r26x9jw3GpIqiYAjlEiXUrSCLaJjPOf0F3tTbGTfHElRo
-         MV26Ymi7xGB/DpSGNWZdL1ts58WSmXQDC2hFGVb3YEhZSNGOtq4q4gHJKD/JSv2hcWDp
-         XBx8NKs2wH2tvmlPu9ngOCkJh/YKdXMRA6RQbDyX1r51eaQwBaL/P0jQSUszJzKuTSQo
-         mxcmMzlt5qM6iY8OLtzREbwBmBFVTzGJ2mpluRRQj+o2e4+GQUA0zq5WjB3luk9S07+j
-         USuGz1AYlY6Tc58kCyUlc2PEkfnbhxxsx1uR4DdFRZZZ33iMljvydPhDTBfIr2e+IGdt
-         QqRg==
+        d=gmail.com; s=20251104; t=1775089230; x=1775694030; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LXMgCcTK6RGFXVFZT8A9Tz2PiBZRhwxEuoWHnwTbJPI=;
+        b=nkIygf1Fs6p8dz+51xl1LbLJLOkRAj7efZtLLBFtWJuMOV7UT9UK6xZBJc/2GhAe9X
+         ckhPXGfF3DKwtTI+CyAVfik3qIwp8LzInuoPWljl3N8BSG7JRhr15lp5ni2hLqzAWWVF
+         ydAmPm4p0vjjL/5w+ww9jg5msQHFSoMu69YaPpQQGoJBeTwa0qIyCdJXwreIuqSjjdMu
+         5srkF1gn0K2oawqruqddAAonnjb+2AwfRfzyH9QhVZE3wpUA5NOSdNQaFMxfu72GWMB4
+         YspQZw2R7KNEdQO9S8WlluIjNNwBxumLRBm47mefokhpv83WFZuumA+Rc/TKB99Vp+DQ
+         7rZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775086985; x=1775691785;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vb8ZZRP0AUsWH7D3wGTnRXL9a0COAZFzJBs4dfJtueY=;
-        b=kaGEJUAQitNvsoVOWyA3l0p2T4UMZMdHZu04VnbZVWagN8pHOa3DwA06BXW9+LTd4K
-         sL5f7j2GLDlqBR8HR4SIXg6Ylj9zh4D5P8QRuA3h0ia+1jS8uEtVW5/gMdZdnU1XZ+ee
-         X9b2WqqJzoaIQigWoVwXjQhBh/PruTU8BmX146Xkr2TlwpBfNqfCg8SY7wWSX7VUqQFN
-         CA8Qcjua9zK171P5Xwmt8g3jh4zuchVFxot842qtuaaDE+hNqxtO+PAvAQX4o0RkjyKC
-         sMLz6QL941Ii5Qg6qYEqmtFxJShxAl2MAEbRnQSO0UjhZX7pS/XusDMSdL8NgbCMFq+M
-         Hdfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbvrL6LIwqMN4bNHbRp+HC3D22tE9fd8sHzo2QlUbyTbGTldguq5iI0Yf9oa+XuyCRKtfsKe9/1KyV9b9FJrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3T9Jt8IDay++t+6JAau9dNbueEmbLzqP8ZwpF9GoQhdhbdekR
-	xclFBP7LKslIYDWTRQDyb/fIltcs2TFMWLncdKo8vLlbW8IgINi25fieSsPA5a9JqErwXRS6Q/4
-	ATig9aS8KfoMjsoituZ11tqCeUrGKSililqiP2FKW
-X-Gm-Gg: ATEYQzzg2aR3nn6mqGTpr/b9zXF9bogBVLgpWV1ralvR+tQoheaquFUZ5kJ59+xB/p3
-	5fCNju6Gpq2rnPURyb1WJ9OizppDciJZOplk1Okffp/jv7fmVvcyhZsnw7SAfIQAbq7fbZr+KYF
-	IecV1QuTi6cA44rjTjUaG/+DzrtH3u4XWD1XYISkNWh6b/MkNyiBvpb0RlAhXmykSYTdnCM1Ytj
-	O2ANJesjccHlDCzvJ31hqssams81Jshz5zIirTj8hZQNIKDL9mr9Ie+rhq7tqkbYhCmr9VvB989
-	jEsPSKQ=
-X-Received: by 2002:a05:6102:3e19:b0:602:70ca:64ff with SMTP id
- ada2fe7eead31-6058a9eb523mr128831137.20.1775086984541; Wed, 01 Apr 2026
- 16:43:04 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775089230; x=1775694030;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LXMgCcTK6RGFXVFZT8A9Tz2PiBZRhwxEuoWHnwTbJPI=;
+        b=OKSOQd6aL4r9luT8MPu9SUGxkHd1aWFbE6ZaSzmqXI2zUAxS67c0gGO/K9O+Ew7guE
+         +x0cBP2FjvikFHybKNoaxEEMvqR+MmZDGPz7VSYVraaRqgtpX6okpqrBKNPKAin+u+8i
+         JtPuARCIwz02uzxJVGLNHm4bGsvvpwG2xPfdif89lRskIitmZBYD4hxxG6bHjxz8705T
+         kN5B7Tgj1ECqpkxTasWj/LepXTV3Vrx32ohT1aYwTJeGCA9wRV2SE8Txg5MHag5OWrAV
+         hxNzx2m8funt6OXnjSTEm60fRyLeSt7+rJMxB08V6ysZf2AUg/tg1JmBmrosu+cmvzH/
+         qG3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU48AkwdP/pIqpZ11iEW3SDKP9NB8p7Ae5eVEytUa6N0J4tC1Gtb5bFcku0/sSU1h15v7ObIytQnx57nciJgSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymbyTxnGBBXHgH2ifoAJlxyY8Sm9gPLSEZRGvn89RAiuRQpYbQ
+	0f0d5qKqUk4hKoJGMcOWuPIubV6hqpNhqxCBO59WpyQrQNq4loAMtJqx
+X-Gm-Gg: ATEYQzzR98zlvPjYglgS4OL/pokD4WC0G1vNh/axpDd6eXIQAX7DoB1HsmnQ1DesSZL
+	Q+OeE2cy3zHIuv1oATS/r3LpMFAXMi9EoxK9qkz50Ah/pjyXz9kIjqo8+/Hz9pEb/u5dkMuClpf
+	OuIoTajHuDd9dCMV94vaPfSffSqMchO5Z4T+jGnT48by/ddbG804XpY3dRbQTg6nsn0Yix/m/T7
+	QrKKEc98QyyEkTq4o7C4c1dU1vXiFHX2TQ1oj6j1uCZoMZqEn2V7EfLWltYHzF7zNJEWOjYxLGs
+	zlGNE2xqrPO5QujLLAWIbaNBzCMrZeR/KjGhto8IqYWIWrnsDVp6/FHWCVg5k7GhkRjvI0jBui2
+	l8Ey21pBSkqmeOWLj/vLbfBDvoO6WR6cfSjY2mxtg77YiSQ284KKTHwnTFZgcKlGeivVEMBHowK
+	R3nxUymNjLzeScBxfs/eZUbGMDeZ+pPFbwzR0oF10IwSw108hT1W1XlWc=
+X-Received: by 2002:a05:7300:e613:b0:2c0:ba91:48b6 with SMTP id 5a478bee46e88-2c932eb27abmr2824768eec.26.1775089229350;
+        Wed, 01 Apr 2026 17:20:29 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca79e1d93bsm1031337eec.12.2026.04.01.17.20.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2026 17:20:28 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-clk@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,...),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] clk: mvebu: use kzalloc_flex
+Date: Wed,  1 Apr 2026 17:20:11 -0700
+Message-ID: <20260402002011.89926-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-3-kees@kernel.org>
- <CANiq72mK9fz6Spmgt4js3hScqhqvZb2YP2T7tDfR0fHPDFWJ7g@mail.gmail.com>
- <CAFhGd8paijFboDVr8rJDjScob047q+zgYAs038WuVozOG0aYaQ@mail.gmail.com>
- <202603311249.30B44C66@keescook> <20260401090815.GV3738786@noisy.programming.kicks-ass.net>
- <202604011313.AD471BC8@keescook> <20260401203053.GC3254421@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260401203053.GC3254421@noisy.programming.kicks-ass.net>
-From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 1 Apr 2026 16:42:52 -0700
-X-Gm-Features: AQROBzD_rcuI-ARbXbMVr7h8U1mc5_5HGF_2wM-4PZhtBnHiHxrvNEdk_0yl788
-Message-ID: <CAFhGd8opNwwqjU35TqkbxRvHgwSb8KZ3+wa0Tr4KWumvjfRVTg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] compiler_attributes: Add overflow_behavior macros
- __ob_trap and __ob_wrap
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Kees Cook <kees@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	llvm@lists.linux.dev, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Nicolas Schier <nsc@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Use a flexible array member to combine kzalloc and kcalloc in one
+allocation so they can be freed together.
 
-On Wed, Apr 1, 2026 at 1:31=E2=80=AFPM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Wed, Apr 01, 2026 at 01:21:17PM -0700, Kees Cook wrote:
-> > On Wed, Apr 01, 2026 at 11:08:15AM +0200, Peter Zijlstra wrote:
-> > > On Tue, Mar 31, 2026 at 12:52:10PM -0700, Kees Cook wrote:
-> > >
-> > > > I think for this series, __ob_trap/__ob_wrap is what should be used=
-.
-> > > >
-> > > > And for other folks, the background here is that we originally want=
-ed
-> > > > to use macros for "__trap" and "__wrap", but the powerpc C compiler
-> > > > (both Clang and GCC) have a builtin macro named "__trap" already. S=
-o
-> > > > I switched to just using the Clang-native type qualifier. We can us=
-e
-> > > > the attribute style too, but there was a lot of confusion during th=
-e
-> > > > Clang development phases where people kept forgetting this was a ty=
-pe
-> > > > qualifier, not an attribute (i.e. the attribute is an internal alia=
-s
-> > > > for the qualifier, and the qualifier is a new type).
-> > >
-> > > Since you mention qualifiers...
-> > >
-> > > What is the result of __typeof_unqual__(int __ob_trap) ?
-> >
-> > Hmm, it seems like "const" doesn't get peeled off. That can be fixed, i=
-f
-> > that's needed?
-> >
-> > 'typeof_unqual(int)' (aka 'int')
-> > 'typeof_unqual(__ob_trap int)' (aka '__ob_trap int')
-> > 'typeof_unqual(const int)' (aka 'int')
-> > 'typeof_unqual(__ob_trap const int)' (aka '__ob_trap const int')
->
-> So how can something be called a qualifier if unqual doesn't strip it?
->
+Add __counted_by for extra runtime analysis. Move counting variable
+assignment right after allocation as done by kzalloc_flex with GCC >=
+15.
 
-Within Clang internals we call it a "type specifier" keyword with the
-closest analogous thing being _BitInt. Even the attribute spelling of
-OBTs boils down to a type specifier being applied to a base type.
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/clk/mvebu/common.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-This hasn't been clearly externalized in the documentation -- we can
-work to improve that.
+diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
+index 28f2e1b2a932..4129690fcae0 100644
+--- a/drivers/clk/mvebu/common.c
++++ b/drivers/clk/mvebu/common.c
+@@ -189,10 +189,10 @@ DEFINE_SPINLOCK(ctrl_gating_lock);
+ 
+ struct clk_gating_ctrl {
+ 	spinlock_t *lock;
+-	struct clk **gates;
+ 	int num_gates;
+ 	void __iomem *base;
+ 	u32 saved_reg;
++	struct clk *gates[] __counted_by(num_gates);
+ };
+ 
+ static struct clk_gating_ctrl *ctrl;
+@@ -257,24 +257,21 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
+ 		clk_put(clk);
+ 	}
+ 
+-	ctrl = kzalloc_obj(*ctrl);
++	/* Count, allocate, and register clock gates */
++	for (n = 0; desc[n].name;)
++		n++;
++
++	ctrl = kzalloc_flex(*ctrl, gates, n);
+ 	if (WARN_ON(!ctrl))
+ 		goto ctrl_out;
+ 
++	ctrl->num_gates = n;
++
+ 	/* lock must already be initialized */
+ 	ctrl->lock = &ctrl_gating_lock;
+ 
+ 	ctrl->base = base;
+ 
+-	/* Count, allocate, and register clock gates */
+-	for (n = 0; desc[n].name;)
+-		n++;
+-
+-	ctrl->num_gates = n;
+-	ctrl->gates = kzalloc_objs(*ctrl->gates, ctrl->num_gates);
+-	if (WARN_ON(!ctrl->gates))
+-		goto gates_out;
+-
+ 	for (n = 0; n < ctrl->num_gates; n++) {
+ 		const char *parent =
+ 			(desc[n].parent) ? desc[n].parent : default_parent;
+-- 
+2.53.0
 
-> (We might already have had this discussion, but I can't find the answer
-> in the LLVM documentation page and didn't search our previous
-> correspondence on this).
->
-
-Justin
