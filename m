@@ -1,107 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644F130F7F8;
-	Thu,  2 Apr 2026 16:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77961A6822
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 17:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775146168; cv=none; b=HeimTx6R/MXunu2Q48uWYhe6muhuNhR21yU0kwa3zb2ri3Zg3CqUueRCEQ1hoJEMDV28DOd0zaZQl1zv3nTPh9ILNP8fJ0tOi2LZb5ugVDqdRabsFsJ1HaAnDEJdK3FZsShHVjcWFJWKi2LZQpRUv2hMzcChOeYzlwnVfxWeabQ=
+	t=1775149545; cv=none; b=Ad/p4U9clIGWd5QdKAxHzGjKQ7q8GqkvlMhipqcZ1/0sCmA5/pUtXHssUk38hLgwQmJiBnytK5AwfXJR8ETTrpn447pHdf2+HT/yS4H7z3gRWdoqnOPWlGm+X3FG5s2KRWQaZ+FbnGh859iHxUizREZv/ISvMixSwUrftrlyrX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775146168; c=relaxed/simple;
-	bh=ENqcqlwsijEUI2JZyTQw+q8xylUM+Tq3LtcmnqpFXsc=;
+	s=arc-20240116; t=1775149545; c=relaxed/simple;
+	bh=Zo8OAngOh0P8c1OR78bqc8BgST7jOqfQbaCLKvgsal8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lzr1vXtBb2ngxI1jX0H2YKLfP55WtAk2JRxOldeZVecMHwSXp0zU9b+dLcWOxnjK3JQSgEeb5Igs5k3IHaSF7PqXNkgWN+meYnbuMvVqZ5yBwvx0WuXW6dOdOa5rNCYwhQ91ktBnlKYexMtVYqzAtWgL+GP2HkuOKG1yQKd4zcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ll3JaM6Q; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AHbu7qZ0muMtt4i926hXLWt9ebM8rHuZ8K6ktOQAgFxCjz/8xDDjFRh8lTBsljpcddylYgJi1Uf0AVonp2AOycL5+cGpmWK/NhwJ0Z51SvT7vtcHEknxPNiohuweRMJ8w33o6Ggall+tYYjEX1Oe05KatFGLmh2s5cmYH4MOdvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WjLk+B+S; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ll3JaM6Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775146166; x=1806682166;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ENqcqlwsijEUI2JZyTQw+q8xylUM+Tq3LtcmnqpFXsc=;
-  b=ll3JaM6QGpiSQV013rSBg9qx6ibo7G45dmxmoVI+Lo/IYhJJSw0m2G1r
-   P9KU6J7D+guciS43+7X9NdeO/A2WzfUpejWQj7qPWl3UZJ9f/UIHbKzOP
-   t19lcaQJBU1R7hcDJbsQg2xpQ52MH22W/SopVpZpC3eWr3024kN4PuetM
-   0jBTp6vvSs6diGsRCwmaZ7JcSiqB7R2KGzhlaswsM/Y9puavM15vcyuuv
-   a2/RssEUTtS4VLxr3uWb8si5AVKtCabACWqdflciqxa0l7ta3EdKvenH0
-   FAyM5wDGdJnytJJAxPjcU6RyZJ9/dFyJj3Mvw6wq/2d6b4S7psQlS7mKN
-   g==;
-X-CSE-ConnectionGUID: Us/4RG5lTyOkgHfn7Pf0pw==
-X-CSE-MsgGUID: epc8DtCwRYqDqycDASat3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11747"; a="76326872"
-X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
-   d="scan'208";a="76326872"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 09:09:25 -0700
-X-CSE-ConnectionGUID: qxbEoKBoSI6q5Kz22fdW2g==
-X-CSE-MsgGUID: noXLK0jKRoyZA19T6WSFFA==
-X-ExtLoop1: 1
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.245.31])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 09:09:23 -0700
-Date: Thu, 2 Apr 2026 19:09:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dmitry Antipov <dmantipov@yandex.ru>,
-	David Laight <david.laight.linux@gmail.com>,
-	Kees Cook <kees@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/5] lib and lib/cmdline enhancements
-Message-ID: <ac6UsaCCJQjFtpLA@ashevche-desk.local>
-References: <20260212164413.889625-1-dmantipov@yandex.ru>
- <87799485ed44bf023f0e1a7ed67f2e5268763c73.camel@yandex.ru>
- <aZXDSbyH8tWmTPPL@smile.fi.intel.com>
- <4ece2ada3067d3668fc380d3dcf807ff73073c21.camel@yandex.ru>
- <ac4pM6kHVI8cK1Xb@ashevche-desk.local>
- <20260402090030.b5a03939994b3b426ea37032@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjLk+B+S"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4887ca8e529so8439485e9.0
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Apr 2026 10:05:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775149534; x=1775754334; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IJ96XmrvwmNmdc1Ry2/PJXAWh8krLD6ljIYp6nVbJmg=;
+        b=WjLk+B+SlJ46EL88K6CreuBSgDMyUHEBeWLKd2Bi+PUN/iHaMS6QtCdarA0ZfH+Zrq
+         Srrl1ifH5TtI7OMW3xrj0qN6E4VndG5nokYMSN1eYIZcJ8jkvuPJNdNKGhB3z5O/TrR8
+         ii9DG3rPWF0mIBkR4PqjXOw5HwYEBlF3zfafHabMyjCSYh3eAasYrx/8+u6SR60lJZPY
+         WKWC5aNcthE83iUpuHi6baRXcT6iBxFfaXSyIayqtSBZlDKLWowZwYcirMS1p/MrgBN4
+         TlavIYBFG/nTd2AtAp2bHVTvVAFcDB9Yq9AiD/4XLqRpRCp7TqBtHGCVo7QqHxvdZXs7
+         IgQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775149534; x=1775754334;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IJ96XmrvwmNmdc1Ry2/PJXAWh8krLD6ljIYp6nVbJmg=;
+        b=RDZrtr/6iKuNIEO0HHIwPjRy1yPC6ANA7U30GeifDbQihd+BpaCBfh/8YLxNW8ZDgw
+         HCJ74UD2xRyING6ON5WUmcTblt7pNB+sDlrxeg+oQn2JanCTpTWUfRn+q+LJ49R5ul7M
+         LAY+Ocp8LLZFeh3//FqJl9pz2tf9H+AJNsALsOFT9uXqQY8oAeZ62uaQ8lrClpgsxLSO
+         eqszf2OBs9Gye9wMOjkABpdfM9Yz23efPXLCipRgtD15PtWmc3JxmDjjpu/VSiTPnO4r
+         Z/GQaLMH5ePrDcDJKQKUsKOH3brpdoK0mfh/XSHp4l4qTHMA2VWRh1PENGYLf/xjrCRB
+         KCHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPseJatCOPr5eeuhWak+Af6zUYwQ8siwmBZLV6YKmUyjezquvFHNchrqYyjm0QjzhMWT9DL1RDSxx5BCQE4Jg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbKC+dXxcEwziiy5za6Y7SMeLsJv+TUMHRA8fAev0a4D0F0TJA
+	j4z2QUwyjd1zHcGqmGZv7PbiHE30XBnBRDgQw+257X7MfYECJC9Pf8m6
+X-Gm-Gg: ATEYQzza7sv7NxP6+a2GNpZ82CTpytatldH9Qj7oZ4+ASAnY/GuAqz+kvVwNTRBVEDG
+	DZ+RZ+TrkXmq+o9oyeERfjtqKvkDTVgcXijZpdmidStRHbT7CGB9PHatmqVn9369DeydrbVnZIq
+	OqKDcAOL6CgfqLWRsJmnv2LHfS0xfyk4RJVMZp9nSuP8/uPBAoXavLBMb2a1/8TnumNDe58+cjk
+	wJbddS+Gn1es8rmO6yHD0Yg1nMGYmklu92+qYmO/PU9QBHbcd16GkLz6LByevXCRPxoC1OwA/EJ
+	G+i/Sb/CMFLmpypVPOCLRJtxVg0BNp+n11/FHFuzaeI5ujxFuAXgSu8h1iVh0DBzrCcLolGgDEy
+	H7jeYW7tOep5m4kJf2Riuy4XlZoapns1Wdwr7RBF2qDje/ANUO/eEVCYekL4kR+xVYk4ms9WsYs
+	8gtL1reWWRhLwL7rXhpYA=
+X-Received: by 2002:a05:600c:3b0a:b0:486:f893:56c6 with SMTP id 5b1f17b1804b1-4888e09ba82mr46503895e9.10.1775149534150;
+        Thu, 02 Apr 2026 10:05:34 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e80a63esm265992305e9.3.2026.04.02.10.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2026 10:05:33 -0700 (PDT)
+Date: Thu, 2 Apr 2026 20:05:30 +0300
+From: Dan Carpenter <error27@gmail.com>
+To: Marco Elver <elver@google.com>
+Cc: oe-kbuild@lists.linux.dev, Vlastimil Babka <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, lkp@intel.com,
+	oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux-foundation.org>,
+	Harry Yoo <harry.yoo@oracle.com>, Hao Li <hao.li@linux.dev>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kasan-dev@googlegroups.com
+Subject: Re: [PATCH v1] slab: support for compiler-assisted type-based slab
+ cache partitioning
+Message-ID: <ac6h2jF-KJ5pm1WM@stanley.mountain>
+References: <20260331111240.153913-1-elver@google.com>
+ <202604020400.jEq32K95-lkp@intel.com>
+ <CANpmjNOsM1e8jMvRKtEizMmZgPCCZ9YqpuZKad61Zg7PAGW7RA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260402090030.b5a03939994b3b426ea37032@linux-foundation.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <CANpmjNOsM1e8jMvRKtEizMmZgPCCZ9YqpuZKad61Zg7PAGW7RA@mail.gmail.com>
 
-On Thu, Apr 02, 2026 at 09:00:30AM -0700, Andrew Morton wrote:
-> On Thu, 2 Apr 2026 11:30:43 +0300 Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> > > > > >   lib/cmdline_kunit: add test case for memparse()
-> > > > > >   lib/cmdline: adjust a few comments to fix kernel-doc -Wreturn warnings
-> > > > > 
-> > > > > Any chance to move forward with this?
-> > > > 
-> > > > I think it's a grace period due to ongoing merge window.
-> > > > Also we need more input on the first patch from others,
-> > > > perhaps Kees and Andrew can take a look when they will be
-> > > > less busy.
-> > > 
-> > > The same question again...
-> > 
-> > I'm not sure why. The patches are in Linux Next for several days already.
-> > $ git tag --contains b85c7e022e1c # the last one
-> > next-20260401
-> > 
-> > Yet it needs to be merged into nomm-stable (if I understood the process right).
+On Thu, Apr 02, 2026 at 03:48:20PM +0200, Marco Elver wrote:
+> On Thu, 2 Apr 2026 at 15:33, Dan Carpenter <error27@gmail.com> wrote:
+> >
+> > Hi Marco,
+> >
+> > kernel test robot noticed the following build warnings:
+> >
+> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> >
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Marco-Elver/slab-support-for-compiler-assisted-type-based-slab-cache-partitioning/20260401-035608
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+> > patch link:    https://lore.kernel.org/r/20260331111240.153913-1-elver%40google.com
+> > patch subject: [PATCH v1] slab: support for compiler-assisted type-based slab cache partitioning
+> > config: um-randconfig-r072-20260401
+> > compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> > smatch: v0.5.0-9004-gb810ac53
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Reported-by: Dan Carpenter <error27@gmail.com>
+> > | Closes: https://lore.kernel.org/r/202604020400.jEq32K95-lkp@intel.com/
+> >
+> > New smatch warnings:
+> > drivers/misc/lkdtm/heap.c:118 lkdtm_READ_AFTER_FREE() warn: potential pointer math issue ('base' is a 32 bit pointer)
+> > drivers/misc/lkdtm/heap.c:169 lkdtm_KFENCE_READ_AFTER_FREE() warn: potential pointer math issue ('base' is a 32 bit pointer)
 > 
-> Yes, these are on track for the upcoming merge window.
+> How is this related to the patch I sent? Did the <linux/slab.h> change
+> force rechecking of all these files and it found latent issues?
 > 
-> However I believe the riscv32 build breakage remains unresolved?
-> 
-> https://lore.kernel.org/all/202603041925.KLKqpK6N-lkp@intel.com/T/#u
 
-I haven't heard any move of that. Ard proposed a fix/workaround. Nobody seems care.
-So I think leaving it as is is also okay as risc-v people simply do not care.
-Alternatively we may apply one of the suggested approaches: disabling EFI for 32-bit
-or a patch that enables shift from a GCC library — in-kernel copy of it.
+Oh, crud.  It turns out that for this check Smatch allows
+integer_array[sizeof()]so long as we know that the index is within
+bounds.  What happened is that your patch renamed the kmalloc()
+function so Smatch stopped knowing the size of the buffer.
 
--- 
-With Best Regards,
-Andy Shevchenko
+For these zero day bot warnings, the emails are automatically generated
+so I don't have any context outside what's in the email.  I saw that
+Kees wrote the code, but I figured maybe you forwarded it or something.
+Sorry about that.
 
+regards,
+dan carpenter
 
