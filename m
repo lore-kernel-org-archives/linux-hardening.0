@@ -1,148 +1,188 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77961A6822
-	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 17:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775149545; cv=none; b=Ad/p4U9clIGWd5QdKAxHzGjKQ7q8GqkvlMhipqcZ1/0sCmA5/pUtXHssUk38hLgwQmJiBnytK5AwfXJR8ETTrpn447pHdf2+HT/yS4H7z3gRWdoqnOPWlGm+X3FG5s2KRWQaZ+FbnGh859iHxUizREZv/ISvMixSwUrftrlyrX4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775149545; c=relaxed/simple;
-	bh=Zo8OAngOh0P8c1OR78bqc8BgST7jOqfQbaCLKvgsal8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AHbu7qZ0muMtt4i926hXLWt9ebM8rHuZ8K6ktOQAgFxCjz/8xDDjFRh8lTBsljpcddylYgJi1Uf0AVonp2AOycL5+cGpmWK/NhwJ0Z51SvT7vtcHEknxPNiohuweRMJ8w33o6Ggall+tYYjEX1Oe05KatFGLmh2s5cmYH4MOdvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WjLk+B+S; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549E936B071
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 18:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775153713; cv=pass; b=NcCSTzu8sL2lmjux2A/9/L4ZuzbMQUHhjPFpTNX5DX6xIfYocabQEnEaY6vKai2n0ABYNykSqLlBKrQ/RBIz52XMf/fJJ1PlXVqmvvcRF12x2MDTs+U1Hxq7XYLyY6fz5QazEUAispvZvxN+LlcpndPPW3kiJc7Zq8AE+uGVhCA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775153713; c=relaxed/simple;
+	bh=Sn4LT39O9NSgJAy7nat8kIE5WLTDW2VUZ5FpZsLriZA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TF1W8L/HXjZvAgjCmJQrgvsJi5cgAjWynbmLRfF75TZIuF9yqPUkjPqMLHbetRPQ2jDAOGrAxx4nYhIDe5KwfBPxUxhHo+ovmV8ELGSVKXX1ibLVJGPU6hIT5gdowHsNRC2Ed1oHsxfHR1Kjoi7DjTIc+e6P5O77XhEVxK1UqeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U/+ygeJm; arc=pass smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjLk+B+S"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4887ca8e529so8439485e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Apr 2026 10:05:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/+ygeJm"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-486b96760easo13171805e9.2
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Apr 2026 11:15:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775153710; cv=none;
+        d=google.com; s=arc-20240605;
+        b=cdg+SAQTh+D/ZFTw8o4XjTYpk3nsOK+ULhtwNx7az8qVPSQNfQp0furx3W66431tuo
+         oQ7LGUyN54aHFgQ64aa4r4jF7R9GmRfuChowFkEO0UIM8VWGsE3f2C6V7DD3vGklOZM8
+         n+W4vUSPjGDEh7/I8a5Qy3fjMmikKuguSla9vU6IC0Ezx7YGtb8IdH1/URASx+4Htf4h
+         pNP9WB2zp6vJTgOJviJ6zOR7JC/l47k0FCBHg/sWaMkWZjqQvvm+ACWFHVDZThwoEupf
+         1jED6njOFs8LO6yTBenYfROtGRSr/LG2jT2Y+7ot/vduf46PPtZQDHDxhAnf5lJe5Bu+
+         sU5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=tvtbj/pfnSFbmaQEY4ut9E3uKs4A0zJrB8Fz4YhGcl0=;
+        fh=H1P3eyOzx9sh8VP9Pj3vokYOoKzOUKzJSG3yOtIaeTk=;
+        b=dPn8NYL7qXvrkBDbrdQFt0lMuxPHpR8xRyipH4btViHMNuH+9PbjENiKNXTDOWEB5b
+         1lRmj9c/kp3XhMWwHjYY5cVZ4/zU9+Y//7i8Drw9zJofgxTeoaq2yGMM7Op7RTEcG/zU
+         aldrltgT/kzs7AM0pnMWwoRTw7BnDnsgPi0iLe2gWoJYCFQtgxl8WuE+FrAYVAaQW3fT
+         koqpNM+20vfEy7cS/G3eEIn1HJyiTcKSrveY3fJ+v+yla5svPx9V6BqXuQYOdXMgIk1e
+         YunzDaUNpSgyQaxVrJREgbfZTuWr1ZawTPPvy1+iN4LzRdhOVj/R1e/A4sLIBcAifVe3
+         dkNQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775149534; x=1775754334; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IJ96XmrvwmNmdc1Ry2/PJXAWh8krLD6ljIYp6nVbJmg=;
-        b=WjLk+B+SlJ46EL88K6CreuBSgDMyUHEBeWLKd2Bi+PUN/iHaMS6QtCdarA0ZfH+Zrq
-         Srrl1ifH5TtI7OMW3xrj0qN6E4VndG5nokYMSN1eYIZcJ8jkvuPJNdNKGhB3z5O/TrR8
-         ii9DG3rPWF0mIBkR4PqjXOw5HwYEBlF3zfafHabMyjCSYh3eAasYrx/8+u6SR60lJZPY
-         WKWC5aNcthE83iUpuHi6baRXcT6iBxFfaXSyIayqtSBZlDKLWowZwYcirMS1p/MrgBN4
-         TlavIYBFG/nTd2AtAp2bHVTvVAFcDB9Yq9AiD/4XLqRpRCp7TqBtHGCVo7QqHxvdZXs7
-         IgQA==
+        d=gmail.com; s=20251104; t=1775153710; x=1775758510; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tvtbj/pfnSFbmaQEY4ut9E3uKs4A0zJrB8Fz4YhGcl0=;
+        b=U/+ygeJmWBrrV1wFhpvevLEgVtVYYDISW/mx31gBo7sgRV8ZQan36zNuAg1YqqMUKE
+         jWehhhyt5kmerrKXLyHnwihPmNWyKDd5BUWI/f41jwPrRHTiqnjEXa9tMnaMD5HOxtbz
+         4d08FiN1Y0eiXnPqIH6dIN/d076J5/a72G0f/VNKjZrDbXWzf5h0DyyBVUgTQQMhygsi
+         3W0O/RUGY3dWwJ03zyjmgpdCdHqaD14VMDNc1vPlee+bnKZBrHBk/kmLudiJjWohuexj
+         II03b1mLtz7W+4DCN15ocXOB5ZkiFdYrWXZEHb0LJZjxFQl/ma4WEsde1Pfz3seWzYuN
+         p2rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775149534; x=1775754334;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IJ96XmrvwmNmdc1Ry2/PJXAWh8krLD6ljIYp6nVbJmg=;
-        b=RDZrtr/6iKuNIEO0HHIwPjRy1yPC6ANA7U30GeifDbQihd+BpaCBfh/8YLxNW8ZDgw
-         HCJ74UD2xRyING6ON5WUmcTblt7pNB+sDlrxeg+oQn2JanCTpTWUfRn+q+LJ49R5ul7M
-         LAY+Ocp8LLZFeh3//FqJl9pz2tf9H+AJNsALsOFT9uXqQY8oAeZ62uaQ8lrClpgsxLSO
-         eqszf2OBs9Gye9wMOjkABpdfM9Yz23efPXLCipRgtD15PtWmc3JxmDjjpu/VSiTPnO4r
-         Z/GQaLMH5ePrDcDJKQKUsKOH3brpdoK0mfh/XSHp4l4qTHMA2VWRh1PENGYLf/xjrCRB
-         KCHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPseJatCOPr5eeuhWak+Af6zUYwQ8siwmBZLV6YKmUyjezquvFHNchrqYyjm0QjzhMWT9DL1RDSxx5BCQE4Jg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbKC+dXxcEwziiy5za6Y7SMeLsJv+TUMHRA8fAev0a4D0F0TJA
-	j4z2QUwyjd1zHcGqmGZv7PbiHE30XBnBRDgQw+257X7MfYECJC9Pf8m6
-X-Gm-Gg: ATEYQzza7sv7NxP6+a2GNpZ82CTpytatldH9Qj7oZ4+ASAnY/GuAqz+kvVwNTRBVEDG
-	DZ+RZ+TrkXmq+o9oyeERfjtqKvkDTVgcXijZpdmidStRHbT7CGB9PHatmqVn9369DeydrbVnZIq
-	OqKDcAOL6CgfqLWRsJmnv2LHfS0xfyk4RJVMZp9nSuP8/uPBAoXavLBMb2a1/8TnumNDe58+cjk
-	wJbddS+Gn1es8rmO6yHD0Yg1nMGYmklu92+qYmO/PU9QBHbcd16GkLz6LByevXCRPxoC1OwA/EJ
-	G+i/Sb/CMFLmpypVPOCLRJtxVg0BNp+n11/FHFuzaeI5ujxFuAXgSu8h1iVh0DBzrCcLolGgDEy
-	H7jeYW7tOep5m4kJf2Riuy4XlZoapns1Wdwr7RBF2qDje/ANUO/eEVCYekL4kR+xVYk4ms9WsYs
-	8gtL1reWWRhLwL7rXhpYA=
-X-Received: by 2002:a05:600c:3b0a:b0:486:f893:56c6 with SMTP id 5b1f17b1804b1-4888e09ba82mr46503895e9.10.1775149534150;
-        Thu, 02 Apr 2026 10:05:34 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e80a63esm265992305e9.3.2026.04.02.10.05.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2026 10:05:33 -0700 (PDT)
-Date: Thu, 2 Apr 2026 20:05:30 +0300
-From: Dan Carpenter <error27@gmail.com>
-To: Marco Elver <elver@google.com>
-Cc: oe-kbuild@lists.linux.dev, Vlastimil Babka <vbabka@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, lkp@intel.com,
-	oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux-foundation.org>,
-	Harry Yoo <harry.yoo@oracle.com>, Hao Li <hao.li@linux.dev>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alexander Potapenko <glider@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kasan-dev@googlegroups.com
-Subject: Re: [PATCH v1] slab: support for compiler-assisted type-based slab
- cache partitioning
-Message-ID: <ac6h2jF-KJ5pm1WM@stanley.mountain>
-References: <20260331111240.153913-1-elver@google.com>
- <202604020400.jEq32K95-lkp@intel.com>
- <CANpmjNOsM1e8jMvRKtEizMmZgPCCZ9YqpuZKad61Zg7PAGW7RA@mail.gmail.com>
+        d=1e100.net; s=20251104; t=1775153710; x=1775758510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tvtbj/pfnSFbmaQEY4ut9E3uKs4A0zJrB8Fz4YhGcl0=;
+        b=qNgFJo6DtyxYq0EamSKTE3Cj/wu5ISFG4cv9wrARWrXWmCGmyQFzTm9EycsnBOq45x
+         94YyhRDy+UhUTMN1iDxCt/613SGgf7zBwOdw8XNHUDiZvmthZp8RdSX68ZKgNLuRhiKl
+         LdobGvHoK2hrgfu5i2HEoyiRJCOepml27EI3Tu9QC0ILE1+ad/7XC09Is2Xvq7FTGN2n
+         db9d8hdKSl9RQ5Vk4r1fbQ7zoG+NNawID+tlBxWYfyNmyVj5cZfzTkpycIK8KbSuTdAH
+         S+hoHqcGNw+wWNx3ebvDwG+RZef17pseCdQRvX2tmMlB0vDRqCK4+Pt7eryOtcdumYeJ
+         ZZFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnvJqYwRF5M9+GDuIGtVoNcStWDULEqqqoO1514sge5t0JTILIJi8LZW189ZOMZaIQxHgR0mHpOcPnOLqGgQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe1dUcdKTtgU0t8GVk4XNNvxPpomXKzWRolEqXiwLIwKLa1B+9
+	KVXZImzn9+yVenZ71e0L11AxN54Ah9gGEWsNnpJxFTZOLo32EJTJARPKsVlvXCmI24VidpgLC8d
+	zsrhMq1iBAmgZqUL0bc8XbkgKDPnAc8I=
+X-Gm-Gg: ATEYQzz75aewYiJYYPWBktW/tUo/sDOY+DfIUrYwYeS2LM3GmmCfCuow73Jm8o+HvXi
+	VhCOMKaU0t0JUoe1WgcyYM0AkKW+yoEG7GMvPY4aQnBQ19hV4VafC81okBiQEKkBI6Xzvqc+9/j
+	qOG0R40IP5bq0HP/4U6HHf5XGC5gzyyuig3DiwoptmbE77owiDrN5fj2fEbnJ20HsyYEZr4rHZg
+	1o2zD6obvlOZomPqDIDHrTwEOYt1QVw2Zf+OCMt/deM87qLefKiz9+4EbwNfaLTOXzRBAGBH/WT
+	TKXGRRqKw1Fyrtp4i49qIyf+mWQtpxTRK4l78ArpHZeuENOUuA7f7gnvYRzfORMuPYYQ4vdF7ET
+	IAt44OC+a7fPOqNUGauRHv01Jqw==
+X-Received: by 2002:a05:600c:3acb:b0:485:46fd:7887 with SMTP id
+ 5b1f17b1804b1-4889972b76amr738535e9.13.1775153709443; Thu, 02 Apr 2026
+ 11:15:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNOsM1e8jMvRKtEizMmZgPCCZ9YqpuZKad61Zg7PAGW7RA@mail.gmail.com>
+References: <20260401001130.it.781-kees@kernel.org>
+In-Reply-To: <20260401001130.it.781-kees@kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 2 Apr 2026 11:14:58 -0700
+X-Gm-Features: AQROBzA0whlgw33SO7-FIcOvrodFQ31yM_rEB-MHu0JHEguOX2LrpV09lIUze-k
+Message-ID: <CAADnVQJ+uSCvtpv4A33YeRi=_LCnZRaxB_ejVgdxPDO5u3+oeg@mail.gmail.com>
+Subject: Re: [PATCH v4] libbpf: Replace strncpy() with strnlen()+memcpy() in skel_map_create()
+To: Kees Cook <kees@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Sun Jian <sun.jian.kdev@gmail.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	bpf <bpf@vger.kernel.org>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 02, 2026 at 03:48:20PM +0200, Marco Elver wrote:
-> On Thu, 2 Apr 2026 at 15:33, Dan Carpenter <error27@gmail.com> wrote:
-> >
-> > Hi Marco,
-> >
-> > kernel test robot noticed the following build warnings:
-> >
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Marco-Elver/slab-support-for-compiler-assisted-type-based-slab-cache-partitioning/20260401-035608
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-> > patch link:    https://lore.kernel.org/r/20260331111240.153913-1-elver%40google.com
-> > patch subject: [PATCH v1] slab: support for compiler-assisted type-based slab cache partitioning
-> > config: um-randconfig-r072-20260401
-> > compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> > smatch: v0.5.0-9004-gb810ac53
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Reported-by: Dan Carpenter <error27@gmail.com>
-> > | Closes: https://lore.kernel.org/r/202604020400.jEq32K95-lkp@intel.com/
-> >
-> > New smatch warnings:
-> > drivers/misc/lkdtm/heap.c:118 lkdtm_READ_AFTER_FREE() warn: potential pointer math issue ('base' is a 32 bit pointer)
-> > drivers/misc/lkdtm/heap.c:169 lkdtm_KFENCE_READ_AFTER_FREE() warn: potential pointer math issue ('base' is a 32 bit pointer)
-> 
-> How is this related to the patch I sent? Did the <linux/slab.h> change
-> force rechecking of all these files and it found latent issues?
-> 
+On Tue, Mar 31, 2026 at 5:11=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> BPF is the last user of the deprecated[1] strncpy() in the kernel.
+> Replace it with a length check via strnlen() on the source followed
+> by memcpy(). Normally strscpy() would be used in this case, but
+> skel_internal.h is shared between kernel and userspace tools, and
+> strscpy() is not available in the userspace build context.
+>
+> The source map_name is a NUL-terminated C string (the only caller
+> passes the "__loader.map" 12 character string literal). The destination
+> attr.map_name is char[BPF_OBJ_NAME_LEN] (16 bytes) in union bpf_attr,
+> ultimately passed to the bpf() syscall.
+>
+> The bpf(BPF_MAP_CREATE) syscall, through bpf_obj_name_cpy(), requires a
+> NUL terminator within this 16-byte array, rejecting names that use all 16
+> bytes. Valid names are therefore at most 15 characters, but this wasn't
+> being checked via the skel_map_create() path. Add a matching check and
+> refuse 16+ character strings early, as they would be refused later by
+> bpf_obj_name_cpy().
+>
+> The attr is pre-zeroed with memset() at the top of the function, so
+> the last byte of attr.map_name is always NUL, meaning the memcpy()
+> of just the non-NUL characters from the source will always produce a
+> NUL-terminated destination string.
+>
+> Link: https://github.com/KSPP/linux/issues/90 [1]
+> Suggested-by: Sun Jian <sun.jian.kdev@gmail.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  v4: Reformat commit log slightly, confirm last user of strnlen in -next
+>  v3: https://lore.kernel.org/lkml/20260324161605.make.168-kees@kernel.org=
+/
+>  v2: https://lore.kernel.org/lkml/20260324053036.it.906-kees@kernel.org/
+>  v1: https://lore.kernel.org/lkml/20260324040535.work.851-kees@kernel.org=
+/
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: sun jian <sun.jian.kdev@gmail.com>
+> Cc: Andrii Nakryiko <andrii@kernel.org>
+> Cc: Eduard Zingerman <eddyz87@gmail.com>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> Cc: Song Liu <song@kernel.org>
+> Cc: Yonghong Song <yonghong.song@linux.dev>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: KP Singh <kpsingh@kernel.org>
+> Cc: Stanislav Fomichev <sdf@fomichev.me>
+> Cc: Hao Luo <haoluo@google.com>
+> Cc: <bpf@vger.kernel.org>
+> ---
+>  tools/lib/bpf/skel_internal.h | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/bpf/skel_internal.h b/tools/lib/bpf/skel_internal.=
+h
+> index 6a8f5c7a02eb..2d38c387f43c 100644
+> --- a/tools/lib/bpf/skel_internal.h
+> +++ b/tools/lib/bpf/skel_internal.h
+> @@ -236,6 +236,7 @@ static inline int skel_map_create(enum bpf_map_type m=
+ap_type,
+>  {
+>         const size_t attr_sz =3D offsetofend(union bpf_attr, excl_prog_ha=
+sh_size);
+>         union bpf_attr attr;
+> +       size_t map_name_len;
+>
+>         memset(&attr, 0, attr_sz);
+>
+> @@ -243,7 +244,12 @@ static inline int skel_map_create(enum bpf_map_type =
+map_type,
+>         attr.excl_prog_hash =3D (unsigned long) excl_prog_hash;
+>         attr.excl_prog_hash_size =3D excl_prog_hash_sz;
+>
+> -       strncpy(attr.map_name, map_name, sizeof(attr.map_name));
+> +       /* attr.map_name must be NUL-terminated, like bpf_obj_name_cpy() =
+*/
+> +       map_name_len =3D strnlen(map_name, sizeof(attr.map_name));
+> +       if (map_name_len =3D=3D sizeof(attr.map_name))
+> +               return -EINVAL;
+> +       memcpy(attr.map_name, map_name, map_name_len);
 
-Oh, crud.  It turns out that for this check Smatch allows
-integer_array[sizeof()]so long as we know that the index is within
-bounds.  What happened is that your patch renamed the kmalloc()
-function so Smatch stopped knowing the size of the buffer.
+this is plain ugly and inefficient.
+Just #ifdef kernel and use strscpy in that branch.
 
-For these zero day bot warnings, the emails are automatically generated
-so I don't have any context outside what's in the email.  I saw that
-Kees wrote the code, but I figured maybe you forwarded it or something.
-Sorry about that.
-
-regards,
-dan carpenter
-
+pw-bot: cr
