@@ -1,155 +1,192 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6987E37C93D
-	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 19:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775156963; cv=pass; b=lTexdu0rMQSxIcbs0JECcztWSPPNRBWgzl6cWzsyJgvY57U/ylRWLm1tLwB1EeA4hyXFIkTmtGIs1JXCZBU/+2tno2IVtiR3G/2ImwK/7Jt1fwSt6i1Vx5bBv2hMuONBwr7JQP+VpG49f1NDbWF3aVBdLrOdtGxAm5+1n267iAM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775156963; c=relaxed/simple;
-	bh=AkTXuskHgqFSHuPaesiQpEtKQBcqndFo0G825t42ZQ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CjJPVY5YmZFofJltLuWvryImtmtVd6bU60m+hpE6wPBxVKIyuKCFkJU1b0JgufWPdXiINnfOG9u7NfbfjpfKSSDem4oNUrUoE2ivjyp1y6Sn0Dl+1i7onvtqsxOqAH/H01PhqNHbXLNm0rPUYxgubz3ZXd5qZdLIdHasvnCouI0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VGMOaEkS; arc=pass smtp.client-ip=74.125.82.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C8A3D47A9
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Apr 2026 22:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775169865; cv=none; b=Ef3hicT4GWLM8Rcj9yAciRDQnUPUhz65aQ1JuXyk5rfdywIXKMXxLYDcBEEVwdsehEEpxWaOZ83sJXXNARiedi+9QcN62rQVB/fA65aFihmMOC9pzwF6ZstbyBhhur8TRvqgzVskCO94qxcWyBkJTLweWNWbNncHWNS4Wf7Yw+E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775169865; c=relaxed/simple;
+	bh=z2S0O+Z6SKjDTzHmNBzLfCiFcj/fjoPQu0kmvFQE9mQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hafIJi+gNHIgE+2FuPqma/Tm3s04o2izMpiN0zd23ddXh+6uI0VS+4ekHF2t8HQePhvXJX6DrJcxU2Ey1DU9o8X7oOA5Gl8lYo+BQw6LiBC7uaTJaqVMckDbVMsE0IhZLmkQ3cCJVF79C3ZYblDmJI/pndY1GJlC1U3Vu17nopQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CZqA4XKt; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=H/UEqsj/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VGMOaEkS"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-12a74039dc6so1124444c88.0
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Apr 2026 12:09:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775156961; cv=none;
-        d=google.com; s=arc-20240605;
-        b=I3NuNofBIxUo/pOPUJ2zGCuEFeQpuf5QLQyniZLtzoG7Efaa342Kf78Tb0URA82v0A
-         U1LLW6f2ovtApqCedEWWGAH8tMdPF+2+5YzNhbd+WpJcsvjLIui2RcY2gO0fZRt3IjSD
-         /SJ5YsoZtGeXCNMgx7PV6BW0ipqRRiJ5RIMQX9toUdq4lyBI2q6DdR74C0WA6MrzCo/Y
-         VvAxvTmJ6h2t8WCc+GsGpaylw6qE/x6E0a7osN4ofHJvcwjBRAcTnW9Lqhe3d3Jjrl8r
-         waoYUoCAZrxWUmLEsG3ARCb7tyMERJ8TyAb/wE8v2g8tOgx511htch8hFAtTcrGCnqFB
-         r9hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=26jnDOH9sfu0NBZTRbOR7+Wdjzvvt/AkBoHu3e7kTgM=;
-        fh=uhZPxFhvlFwxMGUCGUFsN7sh1/RrAxJUTkYZy7DokKA=;
-        b=frM4l4X1iLRzTJvuDugaW4AKSToGN5Jf3JinKd1wZaG7dtiBpdxeaRPrC/kbt34v8+
-         hWouWOOIpg5x6iUdxZLdTUXOZrLsXhwJRK89q/m3R7cwy41XvJ6gCb8zor57dEG9pAX6
-         IAQcGvn+De6cWEMXiB6ox1BCHJvY14ZWqM+vpudbdwcwAd7iYfW5PkyGhbHy+LLfaVLd
-         AsgioxD3m9jrFNk8y74fJ2mBMixBZsjr+r4/9fbvjEfnbmE3pr3dARe32XO2s5pGDzK0
-         qvv696S1UOcBSbO0RsPR0Mpn9jEMG4KXAshltVGgFn1YH6qGtZE4y/9/IoJJXvAO4AlN
-         c5tw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CZqA4XKt";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="H/UEqsj/"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 632KOtYO2707214
+	for <linux-hardening@vger.kernel.org>; Thu, 2 Apr 2026 22:44:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	6UFKNSmLGChWbcHC+BOvNrJhyweshXNps/7M9u5hOUM=; b=CZqA4XKt5yhWCJ4J
+	psylQCzfLI6KnBTytFRESmxSBv5qf3fyao5e1/MBTsTIujIbrhhFd5d1jyHCEQOf
+	SBLJJjTu5haDqu0nWpqDO/FEiGJ3n6FnjGIv8TJE0CndxXGAmlTY5kt493jfcae5
+	fKZb2rC+i3vgHQbggTM1hCAq6cC3rddGnd44LUMjFN8wgZNXVPh/rolI1qSSVZOb
+	2bgIfCDqc3UL7DYIotLw9MZQQO1T+7g8lxVcvklMSfT6UVhVtGFUBlZKUni+cH7W
+	1t9Ii5gsiqpKCM9r8m6IGIT/qKpNYol2NKT6Zozty9xTASY2Tp9hR4FBaSiaFZKB
+	ctYIKA==
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d9yfjg9x9-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Thu, 02 Apr 2026 22:44:20 +0000 (GMT)
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so1597778eec.0
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Apr 2026 15:44:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775156961; x=1775761761; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=26jnDOH9sfu0NBZTRbOR7+Wdjzvvt/AkBoHu3e7kTgM=;
-        b=VGMOaEkSOxjy1YLxZiA4Fm3sc8vHVgOV6Tk9/NjLqNcZfTVB6s1lbaadXm7knQhHJV
-         eHTDdP2wMHlKHlylZcsHC2Krr/NHovpEuVmHBiyJE9+kDXS7mu6ArhnljKG52SbJbL69
-         mBxdjgBKmNV5n1Gtfy3hLD/m9eUXc5MvR/HJEVclfpEZgpc+Zi94GXuOJZjRNZkEjcSk
-         wAc++e8gEFB2Sv3reOU3QU44q/CRauE4wCBtOxp+xnPyPacCvOpnKq43H40AyarCP48W
-         2IEZRiVBzWcPvoKpZm5m0df0xPTfC2iANN9tq6R6BhI8gcJ07Vmzq8KOLhMeyM7oN3PW
-         jJog==
+        d=oss.qualcomm.com; s=google; t=1775169859; x=1775774659; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6UFKNSmLGChWbcHC+BOvNrJhyweshXNps/7M9u5hOUM=;
+        b=H/UEqsj/Q3CTMJtmlEdZ83svffwVo1C6IRvu2i7RNsDq94BbabBOsKwcATZV6Pm/AG
+         rWjOCJp/qHW21/BOEZVpCX3nmzg+DzLRmOz77j1LqR5gNvYaPJv5zLqFdFXDcBs7oC/T
+         VQRQqqQK2nnWWRsnGvLocTBH07haxuHV22pnhx2jueFhfiOjOGpypurhxSpeSJZQAgno
+         XyIbwNCmYtvz/JmCw13xtRL9Tx0NGo5PbA2NVYhlglTzg7UmsYsaZPFJIHw+KPCtvfzM
+         VwXCScoK1z0xMG5Ejw7FjBWy8lMFZ4PmmDOiVynMAp9LTXRbPkB0sEt6XDyfLqktfBsH
+         T/GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775156961; x=1775761761;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=26jnDOH9sfu0NBZTRbOR7+Wdjzvvt/AkBoHu3e7kTgM=;
-        b=gqyvpPodz/Ym0fY/fKGMOFTm6LAacaaizgIYdM/49RxyORUnKvmv+d3kzMAU0FnXyv
-         8b76Ynr9dJP4ja03wxEIzqiTp/K0izWoYSPj8/4503zp2EqSxYjAOfKfuJ7T1U2kGOZY
-         C7zd/Pa51GtAmqk1zT8FmnqdJlXej+cTCLqLpwmOtEqcWBHRaGe450fuTyZw08Z/WQ9X
-         Q7rK3mn24SxU/ZhjZQv1tlsCEvdDCVpFsyhZw3fZRUNYIZlTXWWKtzqYA3h2xS1f5ZFh
-         ljzGx4J089tnoY2PEIaerpip/myxKuzXPd2Xn9Yf8Jt7R7zjgoqBZR1E7K1vFDvKCEnu
-         P67w==
-X-Forwarded-Encrypted: i=1; AJvYcCUN7d/mCfrP+EHgmIUbqE1m/AwCkLnyo9fr2OkxK+7FgciyY/57yPvLs0MasOZsoDmHfSfvjoHrmTv+ooYljEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0ZBKMGAV2NqNyQXS3GeWO2qBqcCjSqNVgAykrZ8pOBfgUL8WU
-	kATIhII+W9Wzjj9ISkI5+RlmHpjXPHb6wAaHG6sr7NdFqJredmkY6gEVM5lRDFbaJQ9xa0waEK9
-	cfWM7tUWZonGcU4BzlU7ZPpDqWDPrYsIw1BlhXMbU
-X-Gm-Gg: ATEYQzwT8qu2USi10FkV8NqJvNbWI5NTAIRvsWgw1r2J5e5pAI3rlCbnkLDI5/AfFKt
-	JtXoVO1MRWPoqZVzYRzJ0dEtUtBMavd+NqRq+MiCAzVYUWhevsvaygCj8ThBYENP7DeDKff0amu
-	VPY7BvGAWjkxeStv54csMtroH82s+YwswHoUF/lwkKVdQ/K25hNjXFPL+OFLVpJUV7Oi/JfJC64
-	0vFwLhxHQCU6oUKFQjh0F8gT13XZhwMDhDRUm9zAhn/Ux/kBioAkhKR6VS4CWivIQC6uSwWLc0U
-	X8ZffZdTMem5bB+rt17TSTjHH623+2fx1JauLc8/utT1XBE62A==
-X-Received: by 2002:a05:7022:ec17:b0:12b:ebb8:e518 with SMTP id
- a92af1059eb24-12bfb779d53mr79037c88.35.1775156960783; Thu, 02 Apr 2026
- 12:09:20 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775169859; x=1775774659;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6UFKNSmLGChWbcHC+BOvNrJhyweshXNps/7M9u5hOUM=;
+        b=WsRTybaO4TZoxjGatMiLvgkk2JkMBdzZ2qaOnPQXg0yiM7KEEFCi1yExRWLsE1R5Oy
+         KaGgH8YdSuzd5TC4mznYGHK+no0Dy3AdHk7l2nqPuBPszaUmv/h80+HYOb8yQgYCqNGb
+         XWaQ6LFpJMdiBMxfp4t+5pZqKL+BI2vK3ZMS3WFX4WdmP7uVywnlDv5G36qJJ8U44zph
+         QevCPi5XjfHV+9G4m4R/h6nk1jL4tqmXNUMGCT9TtUBlx3wkZelZE9MEqZKztmC1PyVo
+         /qw202YUpOVtojI3LL80rtBT+LBETpYeeEl+d1/Pym9xq/dD+a5ebX4k11k/oCDiv8uW
+         BFZw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9TETRd4O7M2mHpjdKYN7cmdyfVjHGWxDSAcS5YNV1VvYkcqXiqyNSeXk2LRTtErA2371431tCvoxsWVED6cM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXUkAoBfk4SgNANF3caORTwbY5lWNIVop82xGZtia592ifOqat
+	JGevoeLIm+Bo+jHI39YErTAgLfNdd/9wT7d7rtlS54gSZeSxhDoLxel27uVkVqXsONeDhcbZ1fg
+	8TkwdxCs5kfnnNUQPoHItUozGowH05aPgcAPyD4kRyItxkNhGg2psRsDVNLzMEcqbfxBoTA==
+X-Gm-Gg: AeBDiesECwjSBPTbMJg981epIgww8iPiyiFHaWiWH9JZjZcMNlA7CZBvB2EeYWHVVBv
+	w4mMF7bk+uon/VJxA6CfUpmUDBJ5ch8pndcP0sIUCJAuswTFvX1sxGShbhm3Fnu8xf+Btt6ieby
+	9n9STyFiwKuZzsUY9kWZ6Lye/Xby2FFzV//d1KK/1NN7q94jckyfnyGfam5XnBNYwoCYdTqtqjp
+	X4TFjUFJPCEAkwzd4aIjvr6p1zPQ6go3zND8wk9VIMVqzxP+0HrUTKZtdOefvX8uUbcOFc/pzbQ
+	xr7x36IN0EnbyU5ikQM6L7ek4BxoTZ4Qh8l1gj53V3ZelxMdSFdVVLjSOSvNjXerWqY0O7zgzI3
+	07Eoggw+CTqaFPbPP6Qq7QNI3EdT0MpqYMUoCuJb8k+NeiB3pY+EdJLwj3rpXXDdK7sU41kmLTA
+	==
+X-Received: by 2002:a05:693c:3005:b0:2ba:6819:2e9b with SMTP id 5a478bee46e88-2cbf9503894mr507959eec.3.1775169859349;
+        Thu, 02 Apr 2026 15:44:19 -0700 (PDT)
+X-Received: by 2002:a05:693c:3005:b0:2ba:6819:2e9b with SMTP id 5a478bee46e88-2cbf9503894mr507940eec.3.1775169858727;
+        Thu, 02 Apr 2026 15:44:18 -0700 (PDT)
+Received: from hu-fruiz-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2cba62d7590sm1943062eec.24.2026.04.02.15.44.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2026 15:44:18 -0700 (PDT)
+Date: Thu, 2 Apr 2026 15:44:16 -0700
+From: Francisco Munoz Ruiz <francisco.ruiz@oss.qualcomm.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor@kernel.org>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Rob Herring <robh@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH 1/3] dt-bindings: cache: qcom,llcc: Document Hawi and
+ future SoCs
+Message-ID: <20260402224416.uia466lzbgef77oz@hu-fruiz-lv.qualcomm.com>
+References: <20260401-external_llcc_changes2set-v1-0-97645ede9f6a@oss.qualcomm.com>
+ <20260401-external_llcc_changes2set-v1-1-97645ede9f6a@oss.qualcomm.com>
+ <20260402-dynamic-axolotl-of-tempest-eeeb7c@quoll>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331111240.153913-1-elver@google.com> <202604020400.jEq32K95-lkp@intel.com>
- <CANpmjNOsM1e8jMvRKtEizMmZgPCCZ9YqpuZKad61Zg7PAGW7RA@mail.gmail.com> <ac6h2jF-KJ5pm1WM@stanley.mountain>
-In-Reply-To: <ac6h2jF-KJ5pm1WM@stanley.mountain>
-From: Marco Elver <elver@google.com>
-Date: Thu, 2 Apr 2026 21:08:44 +0200
-X-Gm-Features: AQROBzAm7ykm8zO9ipWjQHBso2-gdwz4n-a0cr85SYjLzctukNDeZ0kKGTltKIc
-Message-ID: <CANpmjNPME07RK+jKnw233BYHX7wVMqCzFYpB2cSN4+DMgTSpuQ@mail.gmail.com>
-Subject: Re: [PATCH v1] slab: support for compiler-assisted type-based slab
- cache partitioning
-To: Dan Carpenter <error27@gmail.com>
-Cc: oe-kbuild@lists.linux.dev, Vlastimil Babka <vbabka@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, lkp@intel.com, oe-kbuild-all@lists.linux.dev, 
-	Linux Memory Management List <linux-mm@kvack.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Christoph Lameter <cl@linux-foundation.org>, Harry Yoo <harry.yoo@oracle.com>, 
-	Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260402-dynamic-axolotl-of-tempest-eeeb7c@quoll>
+X-Proofpoint-GUID: QlO3GQDBxlETk9Guiun0P_cEEvquk4X0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDIwMiBTYWx0ZWRfX+5ypUmIoOwBP
+ FX0PsKKVJzR4vI07hlGDJQh38r6d9s4kgujKPAp6nFVUIdnuTCz0GiPpW4DjKpio3AKVD02t7nW
+ Q4No++YlIsbn6MGCLE/2KMnHxHchi4C/EzZI5C67tiBa6LvHVF2/BkhFliCNSWBOgMW/F9K40Y7
+ ICxrFyHx024WxlX4rXbpy9iUvZIJhUcVML4DN+BsLfIyQoXS3OKFAXk+aDX5aU/o/kOc5wxr1cJ
+ SgkEkUM9XtzP0JBB49miX4nyGn9TwxuTBwWaKYsUaDFbBOeIAki7/AlWsw5nYMtVtLzeNCmmS9x
+ pBrYFH/Jlc/WiF/7/IUbz0D/4b8n5LixrJN9FKVxbR/0fE05aYeKTyNsVit+VZvUDaKxyOOz2xu
+ s6YdX2Z1v88+KuyiCBqRp1VgoMpu9peP0xcwEK5phDVvCjQnSJl6Mx40y4Zj7tq3xg768Lh6Zwj
+ zdvHGmi7dvynyz4BoUA==
+X-Authority-Analysis: v=2.4 cv=OrpCCi/t c=1 sm=1 tr=0 ts=69cef144 cx=c_pps
+ a=cFYjgdjTJScbgFmBucgdfQ==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
+ a=EUspDBNiAAAA:8 a=WGe_n8jcfaY_jPX_giEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=scEy_gLbYbu1JhEsrz4S:22
+X-Proofpoint-ORIG-GUID: QlO3GQDBxlETk9Guiun0P_cEEvquk4X0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-02_04,2026-04-02_05,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 adultscore=0 suspectscore=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604020202
 
-On Thu, 2 Apr 2026 at 19:05, Dan Carpenter <error27@gmail.com> wrote:
->
-> On Thu, Apr 02, 2026 at 03:48:20PM +0200, Marco Elver wrote:
-> > On Thu, 2 Apr 2026 at 15:33, Dan Carpenter <error27@gmail.com> wrote:
-> > >
-> > > Hi Marco,
-> > >
-> > > kernel test robot noticed the following build warnings:
-> > >
-> > > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> > >
-> > > url:    https://github.com/intel-lab-lkp/linux/commits/Marco-Elver/slab-support-for-compiler-assisted-type-based-slab-cache-partitioning/20260401-035608
-> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-> > > patch link:    https://lore.kernel.org/r/20260331111240.153913-1-elver%40google.com
-> > > patch subject: [PATCH v1] slab: support for compiler-assisted type-based slab cache partitioning
-> > > config: um-randconfig-r072-20260401
-> > > compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> > > smatch: v0.5.0-9004-gb810ac53
-> > >
-> > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > > the same patch/commit), kindly add following tags
-> > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > | Reported-by: Dan Carpenter <error27@gmail.com>
-> > > | Closes: https://lore.kernel.org/r/202604020400.jEq32K95-lkp@intel.com/
-> > >
-> > > New smatch warnings:
-> > > drivers/misc/lkdtm/heap.c:118 lkdtm_READ_AFTER_FREE() warn: potential pointer math issue ('base' is a 32 bit pointer)
-> > > drivers/misc/lkdtm/heap.c:169 lkdtm_KFENCE_READ_AFTER_FREE() warn: potential pointer math issue ('base' is a 32 bit pointer)
-> >
-> > How is this related to the patch I sent? Did the <linux/slab.h> change
-> > force rechecking of all these files and it found latent issues?
-> >
->
-> Oh, crud.  It turns out that for this check Smatch allows
-> integer_array[sizeof()]so long as we know that the index is within
-> bounds.  What happened is that your patch renamed the kmalloc()
-> function so Smatch stopped knowing the size of the buffer.
+On Thu, Apr 02, 2026 at 11:19:42AM +0200, Krzysztof Kozlowski wrote:
+> On Wed, Apr 01, 2026 at 08:01:34PM -0700, Francisco Munoz Ruiz wrote:
+> > Add documentation for the Last Level Cache Controller (LLCC) bindings to
+> > support Hawi and upcoming Qualcomm SoCs where the System Cache Table (SCT)
+> > is programmed by firmware outside of Linux.
+> > 
+> > Introduce a property that specifies the base address of the shared memory
+> > region from which the driver should read SCT descriptors provided by
+> > firmware.
+> 
+> Subject - I do not see any future SoCs in the binding. Which future SoCs
+> are you documenting here?
+> 
+You're right.
+The "future SoCs" wording is not justified by what is currently
+documented. I'll drop that wording.
+> > 
+> > Signed-off-by: Francisco Munoz Ruiz <francisco.ruiz@oss.qualcomm.com>
+> > Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> > ---
+> >  .../devicetree/bindings/cache/qcom,llcc.yaml       | 29 ++++++++++++++++++----
+> >  1 file changed, 24 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/cache/qcom,llcc.yaml b/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
+> > index 995d57815781..ca1313de10ca 100644
+> > --- a/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
+> > +++ b/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
+> > @@ -11,16 +11,17 @@ maintainers:
+> >  
+> >  description: |
+> >    LLCC (Last Level Cache Controller) provides last level of cache memory in SoC,
+> > -  that can be shared by multiple clients. Clients here are different cores in the
+> > -  SoC, the idea is to minimize the local caches at the clients and migrate to
+> > -  common pool of memory. Cache memory is divided into partitions called slices
+> > -  which are assigned to clients. Clients can query the slice details, activate
+> > -  and deactivate them.
+> > +  that can be shared by multiple clients. Clients here are different cores in
+> > +  the SoC. The idea is to minimize the local caches at the clients and migrate
+> > +  to a common pool of memory. Cache memory is divided into partitions called
+> > +  slices which are assigned to clients. Clients can query the slice details,
+> > +  activate and deactivate them.
+> 
+> I don't get why you are changing this. I read it and still cannot find
+> the difference.
+> 
+> Introducing irrelevant changes only obfuscates the work you are doing
+> here.
+> 
+> Best regards,
+> Krzysztof
+> 
+Agreed — The description change is unnecessary.
+I'll fix both in a V2 of the series once more feedback is collected.
 
-Oh, I see. Smatch doesn't respect the __alloc_size attribute then?
+Thank you,
+Francisco.
 
-> For these zero day bot warnings, the emails are automatically generated
-> so I don't have any context outside what's in the email.  I saw that
-> Kees wrote the code, but I figured maybe you forwarded it or something.
-> Sorry about that.
-
-No worries and thanks!
