@@ -1,162 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DC93AA4F3;
-	Fri,  3 Apr 2026 14:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8711F230BDB;
+	Fri,  3 Apr 2026 15:54:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775225034; cv=none; b=qD2xWQb3ZTgPoCnL9479wzLWz6HJWGLxqWrOkbUgyplJ5HoIGTheXn+pRZ51xIqJ9M4BrxTkAmEoER8vaIm5WP+bv9hDx49fjgl7ZigNP1Hc66GvE9mD3o1B8R6nzrHn3DRwC9HQPM3je1+iiw2Cu5GTa3mYXI/MWuGLCFkoqo4=
+	t=1775231677; cv=none; b=Xz/K6iGtinskl55KhH9fSyZT/PzJTWUde1u+FlT2sLFTL6uWM8dtUtW+TZLvmAGuvZZ1JkBOqM8VqFCQ5dHSn91i8ETq4AubViEirTa/Jk2KcK7bsbxu3bDkLZG9LPe8uqGL1V++9nqXiCkcOjEdA+mBkaPxFfD4AqQd1Zp4YP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775225034; c=relaxed/simple;
-	bh=4RCGYKzKvjqw6dRyZ1WZ1cabXeFnkUPkqKqCAUHF/Vs=;
+	s=arc-20240116; t=1775231677; c=relaxed/simple;
+	bh=taGDzVaqhYmXMFPSKm+ArXZcDQIHGJL6OcwO+HcC9cM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h1dAijum8MHafEO5Gqu0kZrlpliXFIbi36RcPAmMV3iyTCUZrvbqiixpVq+T5PfXK+s5rNUyyrHo1kfy0+dOs7OuTaTC7GcACbABTARrBYiQ2RQoNnpk7WUcRI4qdhxUvWEkXU5RBh1J/U//hlnLBGHl3zQSYSeJjff+NPeF5/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkUY/4mA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fp8ppExI2nOxljS9pZMK9lRmHyyF2bfMSHh7RYO7xnANDS2FOHWOszNk5ZAbjtR3Ddg4iXDExfq/r6sdgb7EfD1TeV2MUXHT3dXIYfcO72PRnHpP+PxusiAWfh8IGXG3Tvo7tkrT/IXbk3FWOd1d6Z789Prt8Y8sv0g5Duyc+gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OFvEZeOZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkUY/4mA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC9BC4CEF7;
-	Fri,  3 Apr 2026 14:03:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFvEZeOZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D367C4CEF7;
+	Fri,  3 Apr 2026 15:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775225034;
-	bh=4RCGYKzKvjqw6dRyZ1WZ1cabXeFnkUPkqKqCAUHF/Vs=;
+	s=k20201202; t=1775231677;
+	bh=taGDzVaqhYmXMFPSKm+ArXZcDQIHGJL6OcwO+HcC9cM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gkUY/4mAIPXiVTcRvDpQiusVSAIqL5ZhjMjkbMe+epj/H9B7YUb2fdN3TBU0S3/nt
-	 94M/L5pTBpiYQCtBQV4dVmecQti3kRCbmX0tIrHZ3nCDq3yyqGvPPNmAq5+aIrRq9S
-	 hdr8BNSvBAS9HBeM1GXCV9i4ujgjM646YgHBktXfdb354iV+5JPSzGaCSlCOHA4pCV
-	 vKaoPSJRVF6drMXBr+7p1CD9Zu15UmW/kuAX9s/g/zPed4VDCJOfjvXvksKSqL2cpm
-	 25nFNUtxRkrXq5tr+4JNKmseqHc8f4oluvHSV5Kpr+qipPLPXrTSmYCQhckf2Sd3xv
-	 g4hM2qdw47Vlw==
-Date: Fri, 3 Apr 2026 15:03:47 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Emil Renner Berthing <kernel@esmil.dk>, Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	JeeHeng Sia <jeeheng.sia@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>
-Subject: Re: [PATCH v1 22/22] riscv: dts: starfive: jhb100: Add clocks and
- resets nodes
-Message-ID: <20260403-composed-overvalue-f6bf1a1fc220@spud>
-References: <20260402105523.447523-1-changhuang.liang@starfivetech.com>
- <20260402105523.447523-23-changhuang.liang@starfivetech.com>
- <20260402-fox-overhand-9a45ec670bce@spud>
- <ZQ4PR01MB12025313E4A491A86580558DF25E2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+	b=OFvEZeOZ6WpNK2LXAoHgivcU4CpGINBjQe6IAf1Pmd1musmmohUGu/eKNb+ujo24v
+	 tTHxVGAR9KQR9M1pj9W1w/eX4xMI0bxXGQAiKY5l6vBMes1CNTHjAP2L5QGfaFAdUn
+	 2+f75VOAMfHEf/Aj45LkKZ9W575ozPUvtN1C/Nqzvfe0jmK7TqTFUtpDa0UiS0AzFj
+	 nr2qMC67NdY78pQ9Or/h/RjGQCITzoQ4vchaiDqPuI/9Icp+V8Ej/mTJ0gZb/KnsMd
+	 PPREzvainXb9MdfTAA5f+pjq7q9nuqnF1hFjpVNzhwRAdBjmH6gsgqlJclUovHFkgA
+	 kpKmLZkujBacw==
+Date: Fri, 3 Apr 2026 08:54:36 -0700
+From: Kees Cook <kees@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Sun Jian <sun.jian.kdev@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, bpf <bpf@vger.kernel.org>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4] libbpf: Replace strncpy() with strnlen()+memcpy() in
+ skel_map_create()
+Message-ID: <202604030852.D0F31E6@keescook>
+References: <20260401001130.it.781-kees@kernel.org>
+ <CAADnVQJ+uSCvtpv4A33YeRi=_LCnZRaxB_ejVgdxPDO5u3+oeg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="A6JRgh3YACkqS410"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZQ4PR01MB12025313E4A491A86580558DF25E2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJ+uSCvtpv4A33YeRi=_LCnZRaxB_ejVgdxPDO5u3+oeg@mail.gmail.com>
 
+On Thu, Apr 02, 2026 at 11:14:58AM -0700, Alexei Starovoitov wrote:
+> On Tue, Mar 31, 2026 at 5:11 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > BPF is the last user of the deprecated[1] strncpy() in the kernel.
+> > Replace it with a length check via strnlen() on the source followed
+> > by memcpy(). Normally strscpy() would be used in this case, but
+> > skel_internal.h is shared between kernel and userspace tools, and
+> > strscpy() is not available in the userspace build context.
+> >
+> > The source map_name is a NUL-terminated C string (the only caller
+> > passes the "__loader.map" 12 character string literal). The destination
+> > attr.map_name is char[BPF_OBJ_NAME_LEN] (16 bytes) in union bpf_attr,
+> > ultimately passed to the bpf() syscall.
+> >
+> > The bpf(BPF_MAP_CREATE) syscall, through bpf_obj_name_cpy(), requires a
+> > NUL terminator within this 16-byte array, rejecting names that use all 16
+> > bytes. Valid names are therefore at most 15 characters, but this wasn't
+> > being checked via the skel_map_create() path. Add a matching check and
+> > refuse 16+ character strings early, as they would be refused later by
+> > bpf_obj_name_cpy().
+> >
+> > The attr is pre-zeroed with memset() at the top of the function, so
+> > the last byte of attr.map_name is always NUL, meaning the memcpy()
+> > of just the non-NUL characters from the source will always produce a
+> > NUL-terminated destination string.
+> >
+> > Link: https://github.com/KSPP/linux/issues/90 [1]
+> > Suggested-by: Sun Jian <sun.jian.kdev@gmail.com>
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> >  v4: Reformat commit log slightly, confirm last user of strnlen in -next
+> >  v3: https://lore.kernel.org/lkml/20260324161605.make.168-kees@kernel.org/
+> >  v2: https://lore.kernel.org/lkml/20260324053036.it.906-kees@kernel.org/
+> >  v1: https://lore.kernel.org/lkml/20260324040535.work.851-kees@kernel.org/
+> > Cc: Alexei Starovoitov <ast@kernel.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: sun jian <sun.jian.kdev@gmail.com>
+> > Cc: Andrii Nakryiko <andrii@kernel.org>
+> > Cc: Eduard Zingerman <eddyz87@gmail.com>
+> > Cc: Daniel Borkmann <daniel@iogearbox.net>
+> > Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> > Cc: Song Liu <song@kernel.org>
+> > Cc: Yonghong Song <yonghong.song@linux.dev>
+> > Cc: John Fastabend <john.fastabend@gmail.com>
+> > Cc: KP Singh <kpsingh@kernel.org>
+> > Cc: Stanislav Fomichev <sdf@fomichev.me>
+> > Cc: Hao Luo <haoluo@google.com>
+> > Cc: <bpf@vger.kernel.org>
+> > ---
+> >  tools/lib/bpf/skel_internal.h | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/lib/bpf/skel_internal.h b/tools/lib/bpf/skel_internal.h
+> > index 6a8f5c7a02eb..2d38c387f43c 100644
+> > --- a/tools/lib/bpf/skel_internal.h
+> > +++ b/tools/lib/bpf/skel_internal.h
+> > @@ -236,6 +236,7 @@ static inline int skel_map_create(enum bpf_map_type map_type,
+> >  {
+> >         const size_t attr_sz = offsetofend(union bpf_attr, excl_prog_hash_size);
+> >         union bpf_attr attr;
+> > +       size_t map_name_len;
+> >
+> >         memset(&attr, 0, attr_sz);
+> >
+> > @@ -243,7 +244,12 @@ static inline int skel_map_create(enum bpf_map_type map_type,
+> >         attr.excl_prog_hash = (unsigned long) excl_prog_hash;
+> >         attr.excl_prog_hash_size = excl_prog_hash_sz;
+> >
+> > -       strncpy(attr.map_name, map_name, sizeof(attr.map_name));
+> > +       /* attr.map_name must be NUL-terminated, like bpf_obj_name_cpy() */
+> > +       map_name_len = strnlen(map_name, sizeof(attr.map_name));
+> > +       if (map_name_len == sizeof(attr.map_name))
+> > +               return -EINVAL;
+> > +       memcpy(attr.map_name, map_name, map_name_len);
+> 
+> this is plain ugly and inefficient.
+> Just #ifdef kernel and use strscpy in that branch.
 
---A6JRgh3YACkqS410
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think you're asking for:
 
-On Fri, Apr 03, 2026 at 01:07:48AM +0000, Changhuang Liang wrote:
-> Hi, Conor
->=20
-> > On Thu, Apr 02, 2026 at 03:55:23AM -0700, Changhuang Liang wrote:
-> > > Add clocks and resets nodes for JHB100 RISC-V BMC SoC. They contain
-> > > sys0crg/sys1crg/sys2crg/per0crg/per1crg/per2crg/per3crg.
-> > >
-> > > Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
-> > > ---
-> > >  arch/riscv/boot/dts/starfive/jhb100.dtsi | 198
-> > > ++++++++++++++++++++++-
-> > >  1 file changed, 195 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/arch/riscv/boot/dts/starfive/jhb100.dtsi
-> > > b/arch/riscv/boot/dts/starfive/jhb100.dtsi
-> > > index 4d03470f78ab..700d00f800bc 100644
-> > > --- a/arch/riscv/boot/dts/starfive/jhb100.dtsi
-> > > +++ b/arch/riscv/boot/dts/starfive/jhb100.dtsi
-> > > @@ -4,6 +4,8 @@
-> > >   */
-> > >
-> > >  /dts-v1/;
-> > > +#include <dt-bindings/clock/starfive,jhb100-crg.h>
-> > > +#include <dt-bindings/reset/starfive,jhb100-crg.h>
-> > >
-> > >  / {
-> > >  	compatible =3D "starfive,jhb100";
-> > > @@ -268,12 +270,96 @@ pmu {
-> > >  			<0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;	/* Event
-> > ID 34 */
-> > >  	};
-> > >
-> > > -	clk_uart: clk-uart {
-> > > -		compatible =3D "fixed-clock"; /* Initial clock handler for UART */
-> > > +	osc: osc {
-> > > +		compatible =3D "fixed-clock";
-> > >  		#clock-cells =3D <0>;
-> > >  		clock-frequency =3D <25000000>;
-> > >  	};
-> >=20
-> > Is this really on the SoC?
->=20
-> This is not on the SoC.
->=20
-> >=20
-> > >
-> > > +	pll0: pll0 {
-> > > +		compatible =3D "fixed-clock";
-> > > +		#clock-cells =3D <0>;
-> > > +		clock-frequency =3D <2400000000>;
-> > > +	};
-> >=20
-> > What's providing all of these PLLs? Are they all fixed-frequency on-chi=
-p PLLs
-> > without an off-chip reference? I find that somewhat unlikely.
-> >=20
-> > Since devicetrees are now being imported into U-Boot, it's important to=
- make
-> > sure that I'm not merging fixed-clocks that later get replaced by dedic=
-ated
-> > drivers that U-Boot won't have.
-> >=20
-> > To that end, I won't apply the series this depends on without this patc=
-h being
-> > applied at the same time.
->=20
-> I am preparing a PLL driver series, but PLL0 and PLL1 will still retain f=
-ixed frequencies.=20
-> The reference clock for each PLL comes from the osc. Perhaps I can use "f=
-ixed-factor-clock"=20
-> to indicate the relationship of the reference clock.
+#ifdef __KERNEL__
+	if (strscpy(attr.map_name, map_name) < 0)
+		return -EINVAL;
+#else
+	strncpy(attr.map_name, map_name, sizeof(attr.map_name));
+#endif
 
-I'll reserve judgement until I see that series so, but it wasn't as if
-any of this was going into 7.1 anyway (or maybe even 7.2) so not a
-problem.
+Is that right?
 
---A6JRgh3YACkqS410
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCac/IwAAKCRB4tDGHoIJi
-0qWuAP45kSoUpbgjkvCJMmJeVgPQwqzykf0EcvPgM4HWcs0dDgEA8YZtZ6Vyulfg
-x37EvusJc3nMGl8IOH7sy2iN3jGeUwg=
-=LpLD
------END PGP SIGNATURE-----
-
---A6JRgh3YACkqS410--
+-- 
+Kees Cook
