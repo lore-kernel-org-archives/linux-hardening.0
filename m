@@ -1,112 +1,205 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2090.outbound.protection.partner.outlook.cn [139.219.17.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E982FD69A;
-	Fri,  3 Apr 2026 02:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775181950; cv=none; b=NzZnuQ+Rsdu3TUCuPnXObg8IdHwUYWm+KsXExemQ84LTOBqxalvpCqfv535AlrnXVmfkXpMn/+fOlUfJpoYYi9Sf9537PNJtC3X16P7Jdndtx8J5TlPeDUe3RATuDg+hLP7tA/hHF66m1Y1OjCfUhmk+opmoGiw90b/V9HIauFQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775181950; c=relaxed/simple;
-	bh=5V9QkxKPbuXvjEVL/pPgQZQDPdMzGhVMa4EoBzK/pg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eZtPzEVsD123UsdiAE/wtlpyMc0AHuvJbFk9k1gMv8LvptomHLvKnyd5Vj+xBE4TbHY7XYc2m5UQm7EQWrBKN5e0ZEMZHUQLXgasYbrBX6p07fER5OUXIQSFl9ARbBmtG3T5RHymPH7dvT5Q4zIcBYvRd25zZgYCoySpLAGS44g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=jCqOGlTV; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jCqOGlTV"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 632FBr3r2879390;
-	Fri, 3 Apr 2026 02:05:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=1NvQBbpSWlfXcgtrlLhfPayDq+mNWdEUvHf8YGAmFlU=; b=
-	jCqOGlTV1HduDMun13VVNj6iMaJzogNelNm7OeWmdV8USjHvBkP8tDnj5xq5LkJG
-	m+mcF+TmB5U4JIcYW3hAx8yymBEAxZ4OhiNkLu57bvkibvNV7vtg0M8DJxvjK+kE
-	dCkzjt/8kxWG1ZAVDj2GEdyBcUjUVNeY7bHaF4ijdqq1BGZRxMiK0up1d2VYrBjs
-	P0wEKbwVij/gJCG7eXA6gYcekBMHrc0ws8foCPvc3J9XJWT2U0TnKYrjaMrHg9c0
-	X5MT7OkuryCACwcNIrsdGOf9ZpWj6IVync7675DZrW034Fq/mbnP7SMB6h54L2Zn
-	JB8Pew7tYQue4GpeyVCeew==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4d65s11gae-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 03 Apr 2026 02:05:45 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 6330qqGa029103;
-	Fri, 3 Apr 2026 02:05:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4d65eddp5m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 03 Apr 2026 02:05:45 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 63325cqh017364;
-	Fri, 3 Apr 2026 02:05:44 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4d65eddp33-6;
-	Fri, 03 Apr 2026 02:05:44 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: Kees Cook <kees@kernel.org>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: target: Replace strncpy() with strscpy() in VPD dump functions
-Date: Thu,  2 Apr 2026 22:05:29 -0400
-Message-ID: <177517593431.3522679.14923158633747124728.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260323171311.work.101-kees@kernel.org>
-References: <20260323171311.work.101-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CF2340280;
+	Fri,  3 Apr 2026 03:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775187661; cv=fail; b=FMgkZwFk3mvquzMs24n6WyH9ht7qrgHaXa+B1Ry1EVo3TrGDuPEQ7rA4DWOvVUBY0XM9tmwkePaLPlOoMZ2Qc52nGLAb3pYQFJa7col8Ll1GdYzR+nG2lU/qzZlYZ5+g6kccnVrRisnOhVsZjugcCdEoIUj3c0Sb2IVVSYATGVc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775187661; c=relaxed/simple;
+	bh=w/PhTHOYfv/DdHGrUiQBOj4e9PBEDJOioQz5f2Mw+3E=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fD9XvNFwU+XAki8E+VE2e39lj1LLEOFPnloPKXZsd/Xq3MQqjviTn3rff57ekZnFFrYJjCwa1viF0HF/r5h3kndvW++JMo1QOFC1mYGO+A1jv0Q4lSk+A6W1tySoRTCySOAWHZTsIzoTQliHwO9G6Yy/1TUzJnfGzcJQSK97wQk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Is96KV8aRnrq2LQKFW7dJE6st9Efyak5vevYoUzZzEBXTETyiyUzrEPLuxZ7ARPTi3gF02SBRNkpbdR9Vh2pQxpZRRxuzKtCQDJNvEG9c8GuK/dJC5EiXKRmBhbY5CwqOEA+WtUEFMJwqJ1mMNp1KOqeZ0CMH/4+ulizgyUSQTOZSidMuUyGumGPeVXgdQ8/IP9gyLczeUH8IXRbKlPjgIqFDbJgSRRr4xeMsB2hc3bqgVWBdxpw3HEb94wC9OEPv0CNT6ICpUSrN0KmJHgYY+VnUTF9HaG0XuyFMDgOe07OXbBwWrkNjYE3TbGtQ9ASfoYzjbg+IHxVqVi3jqxjTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0P4YssrS/yDASRO+4SS5ajBlRd6hKXf3bWb/JjZJqdk=;
+ b=LKhHYFv4084yjj1VMxDMe9RanAyQONr8QzBnx4d0vHpMPNDwxz+0pie6D7CG59X8LJc1LV+oRj5gSWBMIy2ryA/p63EAubziCpHyPQdJflpfLk68Mg/DVKu/iTpDBHtBTfmD69JxkGDc6wP/j14kq/qo9PcMMoeUPfAr4B5kNtyKERXgujxfFzHR33vIKePJZ/2RZ2YgICoivyHISw6jhHWlrYSfvIIxGelzgsPtwE2YL29qkrJ9Jr7kbaZ2R1y3JNi3HMYH6oqRrk/owe6LNMOTJLWiiS8aIFogoSl4SqkveDX46TYSWcgDu7Z/da/Mn9IW85+IB3VxG4ZKr4clHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::6) by ZQ4PR01MB1235.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:15::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.18; Fri, 3 Apr
+ 2026 01:07:48 +0000
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e7d4:256c:b066:850d]) by
+ ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%5])
+ with mapi id 15.20.9769.020; Fri, 3 Apr 2026 01:07:48 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Michael Turquette <mturquette@baylibre.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Paul Walmsley
+	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Emil Renner Berthing <kernel@esmil.dk>, Kees Cook
+	<kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Richard
+ Cochran <richardcochran@gmail.com>, "linux-clk@vger.kernel.org"
+	<linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, JeeHeng Sia <jeeheng.sia@starfivetech.com>, Hal
+ Feng <hal.feng@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>
+Subject: Re: [PATCH v1 22/22] riscv: dts: starfive: jhb100: Add clocks and
+ resets nodes
+Thread-Topic: [PATCH v1 22/22] riscv: dts: starfive: jhb100: Add clocks and
+ resets nodes
+Thread-Index: AQHcwo9YmfBTEkKdxUm0c+lYETzpKbXLr3UAgADX/ZA=
+Date: Fri, 3 Apr 2026 01:07:48 +0000
+Message-ID:
+ <ZQ4PR01MB12025313E4A491A86580558DF25E2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+References: <20260402105523.447523-1-changhuang.liang@starfivetech.com>
+ <20260402105523.447523-23-changhuang.liang@starfivetech.com>
+ <20260402-fox-overhand-9a45ec670bce@spud>
+In-Reply-To: <20260402-fox-overhand-9a45ec670bce@spud>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1235:EE_
+x-ms-office365-filtering-correlation-id: 3c69da36-b625-49c9-3e28-08de911d6bd2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700021|56012099003|22082099003|18002099003;
+x-microsoft-antispam-message-info:
+ E/rjzM1MFY6CwaV4cRpRJBN5JpED16YzI8Ev89M3BtXeeTGPyMPDeBG4Ps74hq2HFiuhMYaq95iDz+C7zN31HKFjt4o8AbQmdbRQNt4L2Eovv5D14YE47YG1zLpNS66wR4/iRM+12FR8JuLnrQ2PgOVRUImM3h+sSJIWJEveqnvMBGSiSArADVjh2O0IuolXN1QP7SoxdUnilmTCMEsjoQcCTkMIEmLlTGELNj3/0rn4B0TZXbj7ErdNC2weIrxylRgNeyVPuBbcuxui/bVpjJ/hTdWxvXmvEYb7BQmE/Yysb90HZD+HUc7GRh/ayedrQgkgLYNCRFb7bcsNBeoTUxBcABtxWtg+4ojpVVk4x5/5UQ/X0WuyPC8PbpBwB1EknaPyEfsmyCi376WCBQIIY28edq9vBIWOhgmqQejbJG28VQ34LI1rdWWG2fKEDhGuIeOUgZn5h/PpY5dbY7NlPqYEkU2wZTDW2PC6nZ84eiIDI0zIKnYe7fmc9r9oD3Sub8c15d+kaZQRBNrw0U3v66DLsHSktMTD6dykTOzzdaOgy5xjb/90dUIe7dXWLwx3u6oY8r3pGgwv5DfrIL8NnLaLgYAJPM8iGbRvXJ6TvUY=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700021)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ntTMaczhEB/VMXHk//khsCx41PJN47jXbaFJlLv5DIgOqi6YfcZHmdXlyGfH?=
+ =?us-ascii?Q?a5mhYi0UpqdQeucRy0pbYuAT6YNxFioh96nOe2QKwKS+DJuloGSfhVp7lZzv?=
+ =?us-ascii?Q?4009SfwFddF+ViGt8NOUimroG81zNZJmWy1rzc8gNom8vzL/Q4rtt4VZRl1F?=
+ =?us-ascii?Q?e3nA55Rc+nZpvw3wriggBer/5j6y4/xiVYL/kTZVeppUG1dK6LPoYJn21E7E?=
+ =?us-ascii?Q?GH1is/tpMdYNfre3ubeNT6PsjF33b+funBjSep83Tt1tOdRs0bES+cTdt0Hs?=
+ =?us-ascii?Q?IN0iim6w26pQHDtLchclGkoHUBysq9lviOWrt7eB4wfAn19Ace+xmZ2WYSGs?=
+ =?us-ascii?Q?fQfvIzHVEQcyBl5yBnhOJr4IrAFnG6HSJKI/EpXcOSEShNS8pgJh/lS1marB?=
+ =?us-ascii?Q?/vfswznJPQHbu77R014fwpFyv/IJ3V6p5PfKJqIcZkwp2IfJfDSAoYNFd+N6?=
+ =?us-ascii?Q?Hg24JL8TM7F1nERxP4G1r6iKiY6xFYUn45SAmk+JII1NDxyPxixletdFsgH7?=
+ =?us-ascii?Q?ktX9r0EWUknP4WcnjbQokCSumSQg2K39xaOJ9UGThcR2m3gu4T2JydGmO36y?=
+ =?us-ascii?Q?iWoeGWwhVSUnWfmRVTSwpUb1v5+lydWMhVf3DKuNNKCjNGX1Lur9KJscFqEK?=
+ =?us-ascii?Q?RFxQnUaSzelIuzOrLxY6AkuIdGAnwHGQqgdKbqweIwBVwhviJJp+MaEP0bpY?=
+ =?us-ascii?Q?yIwnFKdWLIEMOgEm0DlnyZPcSu0xzrqdb2J87jFWZ01Y6t9AmMHERk1sBDjB?=
+ =?us-ascii?Q?aO7vOz9BsaDC+JAELd+8Ywz9guv61cYIL8tz3zd2+q/rd6gf+J/QUW/ipJlO?=
+ =?us-ascii?Q?agbEKWlr5PoTdWsTLeni//VRswcrMWVs9ooMAvWStBshXxMC1GGLSPh+lkPl?=
+ =?us-ascii?Q?yD4yNwOF3pIoeZIj0JGcB6iYqWp0KiFDrjcTCt4lzXT9mW1s3Oqkau8V6QXL?=
+ =?us-ascii?Q?J3z7Ix7R4jxh8lktGQmenBoGTK7LQpyRk/ogj34P+8cNfezvq8ZrXCOgJe33?=
+ =?us-ascii?Q?50QOCKQiJcdqNHAnbbzbBspCC4sNTZOJewUIydKvLjDDrgKu3R2ym1OWuIFd?=
+ =?us-ascii?Q?8KLEbw4B2glQaXyV+GZQO5ORG3SEgqMV5zV34ZluD0Px9bXWQWEwrD7iC+yi?=
+ =?us-ascii?Q?kQYvbr3P50Rk5tkaiFM0Knz+soV12mmlKgpEeWdFOhvsVNzaLEfM8SMtVFr3?=
+ =?us-ascii?Q?YEv4zSvl8Q1SiiNXOkLTvPHB4OOMq3GP4c/7kzt7HDEV9KnQNWOO5/RBCV8g?=
+ =?us-ascii?Q?/35DlHGVV8/lyU063JvAGTretFsbSm8VNYwPWcanlkL4XkdQFi67YoL71g/9?=
+ =?us-ascii?Q?/1A0SV01PvrKCtV2YNo87qMglCvEOxvPJthJnpjqrU/DeUpdiozJ4SI8pQ73?=
+ =?us-ascii?Q?LEqTZsM/J9Kf+kXDOWJlgVNcfrC/wSuT0vNEfeW9opFyUMPK7AxnuFvDTZzN?=
+ =?us-ascii?Q?C7xzPguebMTjrqMr3xPkFE9y3wYw9Ymb9zIOqtuu0Is1Kto/bNYuZ3mmAkAw?=
+ =?us-ascii?Q?NQtdBvzTdCTeM/Aj2XSZuNQlxbK7JCDQwNRHcwbR9yxrQnWn9UQhFpyBuar/?=
+ =?us-ascii?Q?NWA/OIpMz0VgO8o/kRj7AKMWiI3b0tSHd97pOgfVx9mc4z0/w9HCGrlhHUz5?=
+ =?us-ascii?Q?yLRYkYJVNDSY0bRG05PGyp1gkUN8x1aRD3zl09Mc4g6999m25JcagzeRd3+A?=
+ =?us-ascii?Q?oOjLheDstc+y42SlDzOfGx1lHsxm+wZ1nsHpweUsiGz+tus2Rc3Gsp1pDIZk?=
+ =?us-ascii?Q?QgKkkC1qhp2mdU9gg9VMExZ/VWfwFaM=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-02_04,2026-04-02_05,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 spamscore=0
- malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2603050001
- definitions=main-2604030017
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAzMDAxNyBTYWx0ZWRfX2/6qBNHAa1dO
- XBWRskRD/IG1HEXBVINGpXUhizN1q3NVAEswZLFN/YLcjatrcRLybkw3l9/k5JoeMg8qpLEgSEb
- zXgO1CUatA0n1212whyyTyJK4lZcIgxK9WI43IxRoTD/C73zk7YD//zLu82AgdXO9DRO6iOv5BL
- NqM5dsdzWXR8lKCTs6afuh1KiwB+Js/iTdmTrXfi48Iq9lzJJ3pz75xMQ2hcqCxY6PYmRecXoIS
- klokMB9A53sT//Bju7IOlaKIP+xs4narSd+1WBL+clOGqmD9ku/WGO0d9GHfdBgqwDt4ww+JQ4q
- 44Oc0HgREw3lL4NFPBXfk7Ouy5IGTCxpWTaejnYKbdY+tqDEKewW2Uuv5nOWJ7aIgoDGA8cXaTJ
- uvLLdCMslMgyHGwM4DQ0jeYeyfDKHawlxrOKrGDRNWYmsZ76AN4yxU4TzhOcrCjinRmMkLScONg
- Cqc/RZO+gm38Qljut+w==
-X-Proofpoint-ORIG-GUID: EjeZY0bpFmKaAvai252AZPzNypnUxqIb
-X-Authority-Analysis: v=2.4 cv=BvOQAIX5 c=1 sm=1 tr=0 ts=69cf207a b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=jiCTI4zE5U7BLdzWsZGv:22 a=o5oIOnhZENCTenyL_yNV:22 a=VwQbUJbxAAAA:8
- a=0OMCWzbaks6jYXudNfoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: EjeZY0bpFmKaAvai252AZPzNypnUxqIb
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c69da36-b625-49c9-3e28-08de911d6bd2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2026 01:07:48.1650
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AAZcpXpb6/c4mSFsaKzB5WZQ857rx86QT3P4wOZdnIyCaYXwEoGYGE3km23jGF4ZYRpgpBSYTeDQ4HjYgquAEOxtTG8OHcdDWuLd7XA6z8cLS6qQcMielCyykKVPoo/7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1235
 
-On Mon, 23 Mar 2026 10:13:15 -0700, Kees Cook wrote:
+Hi, Conor
 
-> Replace the deprecated[1] strncpy() with strscpy() in
-> transport_dump_vpd_proto_id(), transport_dump_vpd_assoc(),
-> transport_dump_vpd_ident_type(), and transport_dump_vpd_ident().
-> 
-> All four functions follow the same pattern: a local
-> buf[VPD_TMP_BUF_SIZE] (254 bytes) is zeroed with memset(), populated
-> via sprintf()/snprintf() (always NUL-terminated), then conditionally
-> copied to p_buf with strncpy(). The p_buf destination is used as a
-> C string by all callers in target_core_configfs.c: strlen(buf) and
-> sprintf(page+len, "%s", buf) to build sysfs output.
-> 
-> [...]
+> On Thu, Apr 02, 2026 at 03:55:23AM -0700, Changhuang Liang wrote:
+> > Add clocks and resets nodes for JHB100 RISC-V BMC SoC. They contain
+> > sys0crg/sys1crg/sys2crg/per0crg/per1crg/per2crg/per3crg.
+> >
+> > Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+> > ---
+> >  arch/riscv/boot/dts/starfive/jhb100.dtsi | 198
+> > ++++++++++++++++++++++-
+> >  1 file changed, 195 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> > b/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> > index 4d03470f78ab..700d00f800bc 100644
+> > --- a/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> > +++ b/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> > @@ -4,6 +4,8 @@
+> >   */
+> >
+> >  /dts-v1/;
+> > +#include <dt-bindings/clock/starfive,jhb100-crg.h>
+> > +#include <dt-bindings/reset/starfive,jhb100-crg.h>
+> >
+> >  / {
+> >  	compatible =3D "starfive,jhb100";
+> > @@ -268,12 +270,96 @@ pmu {
+> >  			<0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;	/* Event
+> ID 34 */
+> >  	};
+> >
+> > -	clk_uart: clk-uart {
+> > -		compatible =3D "fixed-clock"; /* Initial clock handler for UART */
+> > +	osc: osc {
+> > +		compatible =3D "fixed-clock";
+> >  		#clock-cells =3D <0>;
+> >  		clock-frequency =3D <25000000>;
+> >  	};
+>=20
+> Is this really on the SoC?
 
-Applied to 7.1/scsi-queue, thanks!
+This is not on the SoC.
 
-[1/1] scsi: target: Replace strncpy() with strscpy() in VPD dump functions
-      https://git.kernel.org/mkp/scsi/c/665fb6a64319
+>=20
+> >
+> > +	pll0: pll0 {
+> > +		compatible =3D "fixed-clock";
+> > +		#clock-cells =3D <0>;
+> > +		clock-frequency =3D <2400000000>;
+> > +	};
+>=20
+> What's providing all of these PLLs? Are they all fixed-frequency on-chip =
+PLLs
+> without an off-chip reference? I find that somewhat unlikely.
+>=20
+> Since devicetrees are now being imported into U-Boot, it's important to m=
+ake
+> sure that I'm not merging fixed-clocks that later get replaced by dedicat=
+ed
+> drivers that U-Boot won't have.
+>=20
+> To that end, I won't apply the series this depends on without this patch =
+being
+> applied at the same time.
 
--- 
-Martin K. Petersen
+I am preparing a PLL driver series, but PLL0 and PLL1 will still retain fix=
+ed frequencies.=20
+The reference clock for each PLL comes from the osc. Perhaps I can use "fix=
+ed-factor-clock"=20
+to indicate the relationship of the reference clock.
+
+Best Regards,
+Changhuang
