@@ -1,96 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8580B1F151C;
-	Fri,  3 Apr 2026 18:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45E433C19E;
+	Fri,  3 Apr 2026 18:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775240971; cv=none; b=S4pxv01mxf322x+J7PRbs1u5TeE48cDW0UXlSG1xxpO8EoDbNqLxN2N2f8UoAC99IN2g6GjaqktXPLQu/gTmjXiY3ZXvLpT8hmhSGAtWwSEKMkFTQzA8u0snVP6a+HldB6nakPAajNAUkWADU+1NDURqIkcPqMGHNP4d3PdDw8c=
+	t=1775241036; cv=none; b=jAg4LugCXlqx/C3l75lYyjQYmVO8S48aqf5/YjbGgLZSz4jJ4tLxeuPJjrjra5ExMphNaAdwINMucUETwMPXVURGu47j6ayHjHO0XnNmbTRZFHJ7747QMKYE1fa9d/RXDl/mOO1xtNERfgzpURt9B2+8zSd0ukqHkvQsc5/yI0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775240971; c=relaxed/simple;
-	bh=2LaCesgEqKearbmEy0CIdH1OxXGy3hFRgnwk7wdkISs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AeEKAZycWT1fYhdm2ApqiXRlS+qq4RbNrtkGWcwi0+f04oNkUtZOSr/MlrnwPZxiyau+O+GrGVoIj6sB80lgpcBofrkPCH2hFF4yzCYY0NF1sAHduvEcTjNLZrRBQ4n8pDF6LE1fGYELHhhbMUMDzkN+KtjkgW44F0OHuk16PWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFfoe+Od; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775241036; c=relaxed/simple;
+	bh=ZxDxHuRXsUksBWz4VNVFLZCmFXgaegcpougScwFOAy4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=O3bED+hey0DxNDnVKMMzxhTtaPDk0WNE49t5hwP7DPgj5im19oeqkPuKzydHLENOU/mqN0AJiCJxuwCCGv7sTboCBHOjF96eqbCJ+uT9YS1lfracDnpZtePSzyP3T3xAVKvqFX0Ui3V/THbAxIDVmnLFg1EbxtCy20IYEoBM4XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ux+tH3IC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFfoe+Od"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7854CC4CEF7;
-	Fri,  3 Apr 2026 18:29:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ux+tH3IC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58BFEC4CEF7;
+	Fri,  3 Apr 2026 18:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775240971;
-	bh=2LaCesgEqKearbmEy0CIdH1OxXGy3hFRgnwk7wdkISs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JFfoe+OdYtwOwBNifEpqm7IRcYHNx8GK/H/UXt4zENrJ40+pbi/suVM7tB5nwYUoz
-	 43CneCDysSjvSJwT+97osxUozGqQ+k5rrR2f4w2qfF4s2/ynhOqo4sYElxPb4UicWQ
-	 Cxamq9EAHCCoyEZydeL5mxRYYT6UjLxLmnLPyHwfsKR1qDviIVBuTYbLnjyXeef3pv
-	 eOVagQAWx/m+AoA6Y8ONDtRjXtl8nMq62cTqwkYwaJAFUYDxK/FKCjy+W25DGNIwUH
-	 s+We36PVVj6YWendwlyyYb0TQpiVfCOj+MvYwC5WWcCxerl2j/g3bwHB3jnNoFPC/W
-	 fYMAxj+aKPE2A==
-Message-ID: <d0fe363c-2e8f-44a4-9b64-3fa3ba9a5773@kernel.org>
-Date: Fri, 3 Apr 2026 20:29:22 +0200
+	s=k20201202; t=1775241036;
+	bh=ZxDxHuRXsUksBWz4VNVFLZCmFXgaegcpougScwFOAy4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Ux+tH3ICNYp/eOEhmiKgPme9HUPekC/USQXOK626zkVNzEBRu1Mw1LwxuYmhGas5j
+	 c2HZwVND0rpqDuOuDEvJRCrctASGeoEv97V3vcUZeOA23ln6UCBaMixQUYTfCdEHb/
+	 aeVOtg0NAzi6/iD8qhv9LjM3CXO3lPixhmmqk2NHBJCwjX+PDZ/kS3dDwwpfj51oXa
+	 lJWuM6Nb5A/3I0qEStkLpSVXtbolJAMVd2hero8GmE0dxawiIX/WJrlM4I7NyGgVBp
+	 xguMmO18cPUfwQ1d6H9JDNgdDUB0iAMdlGKozhnl2m+9TJSApAlNUzpARIkq6fn6X4
+	 AbiaEopINPwzw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FE923809A14;
+	Fri,  3 Apr 2026 18:30:19 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] slab: support for compiler-assisted type-based slab
- cache partitioning
-Content-Language: en-US
-To: "Harry Yoo (Oracle)" <harry@kernel.org>, Marco Elver <elver@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
- Christoph Lameter <cl@gentwo.org>, Hao Li <hao.li@linux.dev>,
- David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Alexander Potapenko <glider@google.com>,
- Dmitry Vyukov <dvyukov@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org,
- kasan-dev@googlegroups.com, llvm@lists.linux.dev,
- Andrey Konovalov <andreyknvl@gmail.com>, Florent Revest <revest@google.com>,
- GONG Ruiqi <gongruiqi@huaweicloud.com>, Jann Horn <jannh@google.com>,
- KP Singh <kpsingh@kernel.org>, Matteo Rizzo <matteorizzo@google.com>
-References: <20260331111240.153913-1-elver@google.com>
- <ac9d5O5XehnXRc5A@hyeyoo>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <ac9d5O5XehnXRc5A@hyeyoo>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v7 0/8] riscv: optimize string functions and add kunit
+ tests
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <177524101803.1406513.15222599050806931246.git-patchwork-notify@kernel.org>
+Date: Fri, 03 Apr 2026 18:30:18 +0000
+References: <20260130025018.172925-1-jiangfeng@kylinos.cn>
+In-Reply-To: <20260130025018.172925-1-jiangfeng@kylinos.cn>
+To: Feng Jiang <jiangfeng@kylinos.cn>
+Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, akpm@linux-foundation.org,
+ kees@kernel.org, andy@kernel.org, ebiggers@kernel.org,
+ martin.petersen@oracle.com, herbert@gondor.apana.org.au,
+ samuel.holland@sifive.com, ajones@ventanamicro.com,
+ conor.dooley@microchip.com, charlie@rivosinc.com, nathan@kernel.org,
+ linusw@kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-On 4/3/26 08:27, Harry Yoo (Oracle) wrote:
->> diff --git a/include/linux/slab.h b/include/linux/slab.h
->> index 15a60b501b95..c0bf00ee6025 100644
->> --- a/include/linux/slab.h
->> +++ b/include/linux/slab.h
->> @@ -864,10 +877,10 @@ unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf);
->>   * with the exception of kunit tests
->>   */
->>  
->> -void *__kmalloc_noprof(size_t size, gfp_t flags)
->> +void *__kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
->>  				__assume_kmalloc_alignment __alloc_size(1);
->>  
->> -void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
->> +void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node, kmalloc_token_t token)
->>  				__assume_kmalloc_alignment __alloc_size(1);
-> 
-> So the @token parameter is unused when CONFIG_PARTITION_KMALLOC_CACHES is
-> disabled but still increases the kernel size by a few kilobytes...
-> but yeah I'm not sure if we can get avoid it without hurting readability.
-> 
-> Just saying. (does anybody care?)
+Hello:
 
-Well we did care enough with CONFIG_SLAB_BUCKETS to hide the unused param
-using DECL_BUCKET_PARAMS(), so maybe extend that idea?
-I think it's not just kernel size, but increased register pressure etc.
+This series was applied to riscv/linux.git (for-next)
+by Paul Walmsley <pjw@kernel.org>:
+
+On Fri, 30 Jan 2026 10:50:10 +0800 you wrote:
+> This series provides optimized implementations of strnlen(), strchr(),
+> and strrchr() for the RISC-V architecture. The strnlen() implementation
+> is derived from the existing optimized strlen(). For strchr() and
+> strrchr(), the current versions use simple byte-by-byte assembly logic,
+> which will serve as a baseline for future Zbb-based optimizations.
+> 
+> The patch series is organized into three parts:
+> 1. Correctness Testing: The first three patches add KUnit test cases
+>    for strlen(), strnlen(), and strrchr() to ensure the baseline and
+>    optimized versions are functionally correct.
+> 2. Benchmarking Tool: Patches 4 and 5 extend string_kunit to include
+>    performance measurement capabilities, allowing for comparative
+>    analysis within the KUnit environment.
+> 3. Architectural Optimizations: The final three patches introduce the
+>    RISC-V specific assembly implementations.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v7,1/8] lib/string_kunit: add correctness test for strlen()
+    https://git.kernel.org/riscv/c/abd6819bbf5b
+  - [v7,2/8] lib/string_kunit: add correctness test for strnlen()
+    https://git.kernel.org/riscv/c/31a361f466a2
+  - [v7,3/8] lib/string_kunit: add correctness test for strrchr()
+    https://git.kernel.org/riscv/c/68768cdba710
+  - [v7,4/8] lib/string_kunit: add performance benchmark for strlen()
+    https://git.kernel.org/riscv/c/54a7a0ca4b60
+  - [v7,5/8] lib/string_kunit: extend benchmarks to strnlen() and chr searches
+    https://git.kernel.org/riscv/c/d52a2222768b
+  - [v7,6/8] riscv: lib: add strnlen() implementation
+    https://git.kernel.org/riscv/c/018ffd93d25f
+  - [v7,7/8] riscv: lib: add strchr() implementation
+    https://git.kernel.org/riscv/c/bf74efe28f7c
+  - [v7,8/8] riscv: lib: add strrchr() implementation
+    https://git.kernel.org/riscv/c/3dcf058583a1
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
