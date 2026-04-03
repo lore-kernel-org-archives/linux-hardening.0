@@ -1,166 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFD237107B
-	for <linux-hardening@vger.kernel.org>; Fri,  3 Apr 2026 13:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DC93AA4F3;
+	Fri,  3 Apr 2026 14:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775222972; cv=none; b=NL9tqthQgtgYwE/NrpA/fJGZxBytbO2IyN3c9V1WbyeBKqpuFmOi0qptmKcgE+mrUkDnd9kKB89vyhnB1J3f3Bdyglk3EzYWS62dXaTTCwc4eBBJDFJBUlYw2wUXG69N+ps+OrUP15C3hoHM1wdM1G3WDeYa2PaI+YHRg153JZQ=
+	t=1775225034; cv=none; b=qD2xWQb3ZTgPoCnL9479wzLWz6HJWGLxqWrOkbUgyplJ5HoIGTheXn+pRZ51xIqJ9M4BrxTkAmEoER8vaIm5WP+bv9hDx49fjgl7ZigNP1Hc66GvE9mD3o1B8R6nzrHn3DRwC9HQPM3je1+iiw2Cu5GTa3mYXI/MWuGLCFkoqo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775222972; c=relaxed/simple;
-	bh=blHK4KzH5lgN9+DZFvRNfi2lm0KKMuYwwQPYPh1mRlY=;
+	s=arc-20240116; t=1775225034; c=relaxed/simple;
+	bh=4RCGYKzKvjqw6dRyZ1WZ1cabXeFnkUPkqKqCAUHF/Vs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=BCKxljqB9dI67GasPAXzDv7Xnta3H2iTekXG5mydupBSTMgEZmuw3Ft/RVgwEla3Su8hnjK2zVQmGeFTmvkuBeEapTaCXFz8iyCjuys9IHxMGfqwk1S4IfyqvNnEk2LKYUKmh4H9F8UH6tuB0Yhu4Prw/Hon78RUfNIMZ5NX0wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IWM7nKIc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=h1dAijum8MHafEO5Gqu0kZrlpliXFIbi36RcPAmMV3iyTCUZrvbqiixpVq+T5PfXK+s5rNUyyrHo1kfy0+dOs7OuTaTC7GcACbABTARrBYiQ2RQoNnpk7WUcRI4qdhxUvWEkXU5RBh1J/U//hlnLBGHl3zQSYSeJjff+NPeF5/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkUY/4mA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IWM7nKIc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775222970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D3TgrwVgeoZcZASDHDP/iFsOkmG4q/7olBpiPeQBlYk=;
-	b=IWM7nKIchRdQTtzs2/2MJmMLN5J7DFgRpEXcnuhImOXTVk/QNuk5tUtrXd1mfWlEvrJFG9
-	D+RGKIplfJXafe5fckIqbEhH8EfIlFHhGlrJkvz87xfZXVodg8LIjGAE6Zp9wtR9clW+o4
-	ISwIduyjiYhfJ17OLWn1FsVSD57IaNs=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-196-vvhHTpqjMEWLPrhtE6m4Sg-1; Fri, 03 Apr 2026 09:29:29 -0400
-X-MC-Unique: vvhHTpqjMEWLPrhtE6m4Sg-1
-X-Mimecast-MFC-AGG-ID: vvhHTpqjMEWLPrhtE6m4Sg_1775222969
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50d5aa81907so35924841cf.0
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Apr 2026 06:29:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775222969; x=1775827769;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=D3TgrwVgeoZcZASDHDP/iFsOkmG4q/7olBpiPeQBlYk=;
-        b=crFZb/b154VF8wc+812LZKrNh+Qo/DweMQwXxu4Vs/KfLGeqAcMwdJ0V9ZwtJFWzMJ
-         Joidv9cPhWNe/vAxRngcQLRxqQ+Zwef5yV+8Q8FgHiknqnqyIMj+VuhCjfQsOEWgNT38
-         YSqm1fVe1QM0JYCFPlZxrGR9Q2j06KTAr8h7ZwrMPNHKC/WduA0hLJzbM5qf9kE2QXUW
-         SZMjCOlSZ7KCAuPgihHtC0R5xy7b4C1aHRQAIinOXO74Zbsb8r29h8qfXs5WfJHuliFh
-         48ueq9vOcg6RK16/4aXgLr3qZ7gyFQYO3DOJLLgcjGiLLBTaupasJJOFZpIl9mIOQa+S
-         yDiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXE+1sdbE/A6U3oWgjO7QZwkxIPngQdZgJWehAG37z7/ETRWgLdtl2q0JliaGSML0L44w19bnDrap1CS6PMiPU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSTxj9/6KOhl6Vcm2peOoUzSMG4arzVkQF91v02Td5ZWARGh+q
-	eVH9u60Ue0ELhFXTgDKCPfhaM34C7sqP6P+9jsgzNxTiChqZgM+3cxyQ0GJ/blKPH+jzFumGys1
-	FK1yYzUvkFOOJ+nGiboGZ1cxWPc8ziwMAOkVw4sTejxjMg6sVcdM6CKjPZi+MkdDpeRWtAg==
-X-Gm-Gg: ATEYQzx6jRzT43YnAD79y3jrB5u1ura+s0QZt+d3YTHIvIuLwR4hXfajelLYii3W2vf
-	JAd/4mzsIU6/LNQavtEE4ncAdwLT/U40jsp3zDcvKvaTEHW95S+dsY3Xwv08318KkfuG9noFhkN
-	jk6JjES9BQCAITur5ALoFdb4rucGjk9hOa28PdAjSpgP0PXp7iT+GiYUaG7B99AF7LMG4xmAXxQ
-	AF6erKIaf5wg/A3HEgCVN32INUSYelckI7aFgy0znvNjHzKbqlS/zQ8puuT9ip3f1xpNHYEC3l1
-	jjBbxyfttKWiszBPkk8WZ2bsAzYKV1JbjvgFA00S0QpGZgLx93vT7/ppn1zGBdC1+93mYSeBzGN
-	zTConJNhwabWVNWQVex2rld7JNeOkvn9vzKoaWHQ3pIkz7GPBLFMLsIJA
-X-Received: by 2002:ac8:7f88:0:b0:50b:37ff:727e with SMTP id d75a77b69052e-50d62a95729mr48480101cf.44.1775222969005;
-        Fri, 03 Apr 2026 06:29:29 -0700 (PDT)
-X-Received: by 2002:ac8:7f88:0:b0:50b:37ff:727e with SMTP id d75a77b69052e-50d62a95729mr48479561cf.44.1775222968488;
-        Fri, 03 Apr 2026 06:29:28 -0700 (PDT)
-Received: from redhat.com (c-73-183-52-120.hsd1.pa.comcast.net. [73.183.52.120])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50d63962c30sm17886441cf.10.2026.04.03.06.29.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2026 06:29:27 -0700 (PDT)
-Date: Fri, 3 Apr 2026 09:29:26 -0400
-From: Brian Masney <bmasney@redhat.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-clk@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] clk: mvebu: use kzalloc_flex
-Message-ID: <ac_AtoG1j_I2m9Ja@redhat.com>
-References: <20260402002011.89926-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkUY/4mA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC9BC4CEF7;
+	Fri,  3 Apr 2026 14:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775225034;
+	bh=4RCGYKzKvjqw6dRyZ1WZ1cabXeFnkUPkqKqCAUHF/Vs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gkUY/4mAIPXiVTcRvDpQiusVSAIqL5ZhjMjkbMe+epj/H9B7YUb2fdN3TBU0S3/nt
+	 94M/L5pTBpiYQCtBQV4dVmecQti3kRCbmX0tIrHZ3nCDq3yyqGvPPNmAq5+aIrRq9S
+	 hdr8BNSvBAS9HBeM1GXCV9i4ujgjM646YgHBktXfdb354iV+5JPSzGaCSlCOHA4pCV
+	 vKaoPSJRVF6drMXBr+7p1CD9Zu15UmW/kuAX9s/g/zPed4VDCJOfjvXvksKSqL2cpm
+	 25nFNUtxRkrXq5tr+4JNKmseqHc8f4oluvHSV5Kpr+qipPLPXrTSmYCQhckf2Sd3xv
+	 g4hM2qdw47Vlw==
+Date: Fri, 3 Apr 2026 15:03:47 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Emil Renner Berthing <kernel@esmil.dk>, Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	JeeHeng Sia <jeeheng.sia@starfivetech.com>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>
+Subject: Re: [PATCH v1 22/22] riscv: dts: starfive: jhb100: Add clocks and
+ resets nodes
+Message-ID: <20260403-composed-overvalue-f6bf1a1fc220@spud>
+References: <20260402105523.447523-1-changhuang.liang@starfivetech.com>
+ <20260402105523.447523-23-changhuang.liang@starfivetech.com>
+ <20260402-fox-overhand-9a45ec670bce@spud>
+ <ZQ4PR01MB12025313E4A491A86580558DF25E2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260402002011.89926-1-rosenp@gmail.com>
-User-Agent: Mutt/2.3.0 (2026-01-25)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: fWNOkHlrq5Cseg7TfkjIfihRwtorZke_uHrTBXe7CPk_1775222969
-X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="A6JRgh3YACkqS410"
+Content-Disposition: inline
+In-Reply-To: <ZQ4PR01MB12025313E4A491A86580558DF25E2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+
+
+--A6JRgh3YACkqS410
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rosen,
+On Fri, Apr 03, 2026 at 01:07:48AM +0000, Changhuang Liang wrote:
+> Hi, Conor
+>=20
+> > On Thu, Apr 02, 2026 at 03:55:23AM -0700, Changhuang Liang wrote:
+> > > Add clocks and resets nodes for JHB100 RISC-V BMC SoC. They contain
+> > > sys0crg/sys1crg/sys2crg/per0crg/per1crg/per2crg/per3crg.
+> > >
+> > > Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+> > > ---
+> > >  arch/riscv/boot/dts/starfive/jhb100.dtsi | 198
+> > > ++++++++++++++++++++++-
+> > >  1 file changed, 195 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> > > b/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> > > index 4d03470f78ab..700d00f800bc 100644
+> > > --- a/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> > > +++ b/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> > > @@ -4,6 +4,8 @@
+> > >   */
+> > >
+> > >  /dts-v1/;
+> > > +#include <dt-bindings/clock/starfive,jhb100-crg.h>
+> > > +#include <dt-bindings/reset/starfive,jhb100-crg.h>
+> > >
+> > >  / {
+> > >  	compatible =3D "starfive,jhb100";
+> > > @@ -268,12 +270,96 @@ pmu {
+> > >  			<0x00 0x22 0xFFFFFFFF 0xFFFFFF22 0x00007FF8>;	/* Event
+> > ID 34 */
+> > >  	};
+> > >
+> > > -	clk_uart: clk-uart {
+> > > -		compatible =3D "fixed-clock"; /* Initial clock handler for UART */
+> > > +	osc: osc {
+> > > +		compatible =3D "fixed-clock";
+> > >  		#clock-cells =3D <0>;
+> > >  		clock-frequency =3D <25000000>;
+> > >  	};
+> >=20
+> > Is this really on the SoC?
+>=20
+> This is not on the SoC.
+>=20
+> >=20
+> > >
+> > > +	pll0: pll0 {
+> > > +		compatible =3D "fixed-clock";
+> > > +		#clock-cells =3D <0>;
+> > > +		clock-frequency =3D <2400000000>;
+> > > +	};
+> >=20
+> > What's providing all of these PLLs? Are they all fixed-frequency on-chi=
+p PLLs
+> > without an off-chip reference? I find that somewhat unlikely.
+> >=20
+> > Since devicetrees are now being imported into U-Boot, it's important to=
+ make
+> > sure that I'm not merging fixed-clocks that later get replaced by dedic=
+ated
+> > drivers that U-Boot won't have.
+> >=20
+> > To that end, I won't apply the series this depends on without this patc=
+h being
+> > applied at the same time.
+>=20
+> I am preparing a PLL driver series, but PLL0 and PLL1 will still retain f=
+ixed frequencies.=20
+> The reference clock for each PLL comes from the osc. Perhaps I can use "f=
+ixed-factor-clock"=20
+> to indicate the relationship of the reference clock.
 
-On Wed, Apr 01, 2026 at 05:20:11PM -0700, Rosen Penev wrote:
-> Use a flexible array member to combine kzalloc and kcalloc in one
-> allocation so they can be freed together.
-> 
-> Add __counted_by for extra runtime analysis. Move counting variable
-> assignment right after allocation as done by kzalloc_flex with GCC >=
-> 15.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  drivers/clk/mvebu/common.c | 19 ++++++++-----------
->  1 file changed, 8 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
-> index 28f2e1b2a932..4129690fcae0 100644
-> --- a/drivers/clk/mvebu/common.c
-> +++ b/drivers/clk/mvebu/common.c
-> @@ -189,10 +189,10 @@ DEFINE_SPINLOCK(ctrl_gating_lock);
->  
->  struct clk_gating_ctrl {
->  	spinlock_t *lock;
-> -	struct clk **gates;
->  	int num_gates;
->  	void __iomem *base;
->  	u32 saved_reg;
-> +	struct clk *gates[] __counted_by(num_gates);
->  };
->  
->  static struct clk_gating_ctrl *ctrl;
-> @@ -257,24 +257,21 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
->  		clk_put(clk);
->  	}
->  
-> -	ctrl = kzalloc_obj(*ctrl);
-> +	/* Count, allocate, and register clock gates */
-> +	for (n = 0; desc[n].name;)
-> +		n++;
-> +
-> +	ctrl = kzalloc_flex(*ctrl, gates, n);
->  	if (WARN_ON(!ctrl))
->  		goto ctrl_out;
->  
-> +	ctrl->num_gates = n;
-> +
->  	/* lock must already be initialized */
->  	ctrl->lock = &ctrl_gating_lock;
->  
->  	ctrl->base = base;
->  
-> -	/* Count, allocate, and register clock gates */
-> -	for (n = 0; desc[n].name;)
-> -		n++;
-> -
-> -	ctrl->num_gates = n;
-> -	ctrl->gates = kzalloc_objs(*ctrl->gates, ctrl->num_gates);
-> -	if (WARN_ON(!ctrl->gates))
-> -		goto gates_out;
+I'll reserve judgement until I see that series so, but it wasn't as if
+any of this was going into 7.1 anyway (or maybe even 7.2) so not a
+problem.
 
-The gates_out label and kfree() needs to be removed.
+--A6JRgh3YACkqS410
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Brian
+-----BEGIN PGP SIGNATURE-----
 
-> -
->  	for (n = 0; n < ctrl->num_gates; n++) {
->  		const char *parent =
->  			(desc[n].parent) ? desc[n].parent : default_parent;
-> -- 
-> 2.53.0
-> 
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCac/IwAAKCRB4tDGHoIJi
+0qWuAP45kSoUpbgjkvCJMmJeVgPQwqzykf0EcvPgM4HWcs0dDgEA8YZtZ6Vyulfg
+x37EvusJc3nMGl8IOH7sy2iN3jGeUwg=
+=LpLD
+-----END PGP SIGNATURE-----
 
+--A6JRgh3YACkqS410--
