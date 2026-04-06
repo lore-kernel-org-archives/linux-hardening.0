@@ -1,77 +1,101 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A29438C2D6
-	for <linux-hardening@vger.kernel.org>; Mon,  6 Apr 2026 17:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556AE38F24C;
+	Mon,  6 Apr 2026 19:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775498342; cv=none; b=q7l5ktmJEk/JofsB0NEL5SiCsEuFy16ZutTMfUAMKxCCW87JWipF4rmEgIF+FYytwgGa2Bu+ShM1L1vQzU5tDBNK3qQF6je5D/ZHMcGn6e+Jc3FchfWBJXcPau6PQbjQXEIWkkTm6pmwZrIYbUfIL+CzpHJwYdDEannjRb2qTHQ=
+	t=1775504071; cv=none; b=H2YJfVQQQjcLfOfoUiXTT1Dm/JwjznUxTNK5HrpWSssREUpZRcDtvgQ9YkCliVzci/PRQPtMAWnkbTgCckwEVBKpXycf9nZjNkbKNZ/vGUXGBgu2srD4t3b6vnseNwqwFLapgukcesqbxiFJZ2wDSeE3YUov4H7/3Fn2pguhXck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775498342; c=relaxed/simple;
-	bh=WKatVZ4ijznTXfeAzfxBPkp0ScePMGQUAQ2+GI9ot5o=;
+	s=arc-20240116; t=1775504071; c=relaxed/simple;
+	bh=LS8osYZkFWGCw5Tv9fxALxptLqlXe9FberpBOc+5JFg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KkaaqF8L4LFvbw86L73HaYqq7P5PEZUxFuHZsxktZr/ccdLoByrYO6Rn2sPlFX8agFhrODN8uVTop7E3gNM5hqQIrFWx/RUKEajmLtpcsEJeScjl17C4NIWE7+6J49OEzW3z6hbFL6ckx4xGFiFu8J/HclQOiRzLnjbZZ8uo2DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fKGHf8DK; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 MIME-Version; b=WAbo2QtFeAoebLavE9KNXmrk50mRyxHZ6RSyg8FIcxs9oS/MjPXu/AgWq6gcti63Bxl+kzWNyRzbbtes8w5Gwr8ctGMKzCgUcm4S67Vpg3KB095c+heEHEdCPdo7Ij6IJBZM2nYcFU4dQk9cQhqfylZUi6UayAxIJUYiFkypasA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lX0vuRqj; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fKGHf8DK"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775498339;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GsA0DQ7RZ25+fuPh8E9nbhfynHH+2ccVrJP5vTigsvs=;
-	b=fKGHf8DKSJ6N5tXqc6Yv5YQpuEsbs0mtXnxqRlrkOvO0on3gfEYEdFkV/IuUzYqJ/tVILG
-	k3LB0F7bPedV91BXyF5/FmsD8Qu5xYKc2cK74vxN6qoH8v/ElX7drvZv2hdjXId7nR7Xnq
-	X+YMqxaZS+FqMBHQR0z0yDT7V4HlofQ=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next 2/2] KEYS: annotate struct user_key_payload with __counted_by
-Date: Mon,  6 Apr 2026 19:58:10 +0200
-Message-ID: <20260406175810.1018681-4-thorsten.blum@linux.dev>
-In-Reply-To: <20260406175810.1018681-3-thorsten.blum@linux.dev>
-References: <20260406175810.1018681-3-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lX0vuRqj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775504068; x=1807040068;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LS8osYZkFWGCw5Tv9fxALxptLqlXe9FberpBOc+5JFg=;
+  b=lX0vuRqjTfayriXBcMVzUVKXIPaF8Sjc1yiJcn0rLO3fu3GFCmOTzBFe
+   g8Pt9ToYiRJtqZEhJnOtNLw9VM4Nfj4mkTfSfnLb3Vc5nZNVWV1Om7eEq
+   /pot8eFSCqodb011lmbqxC0xTJdOyyd4NrZk4dpUZ7OBj28HMkZD2x/il
+   Bj+V/tAIXIzlKRSLRO7FnAEzgwX5vCqJTVRaUThzJZDwrV4MKd4cuhjZe
+   1SfK3IhxSXLHt8abzCcvEVFef5mayvIpcD/0iGDvSu17poq44a09gnTYh
+   8Gazcu4sGlDmm0U1HtJpIvyGPe3H2zq0oL7l1LvvMZyxPehnJQ56rNS3Q
+   w==;
+X-CSE-ConnectionGUID: 1T/DVgL5QNeAXG0EYcHQHQ==
+X-CSE-MsgGUID: 4e9nr14oSt210qJ8RiXZMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11751"; a="76421552"
+X-IronPort-AV: E=Sophos;i="6.23,164,1770624000"; 
+   d="scan'208";a="76421552"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2026 12:34:27 -0700
+X-CSE-ConnectionGUID: Bszym1/KSW+eUJDKBTGzkA==
+X-CSE-MsgGUID: oZDzYq6dSfawJVcwUDFLPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,164,1770624000"; 
+   d="scan'208";a="227898400"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa008.jf.intel.com with ESMTP; 06 Apr 2026 12:34:27 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 5CF6B99; Mon, 06 Apr 2026 21:34:26 +0200 (CEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v1 2/2] lib/tests: string_helpers: Don't use "proxy" headers
+Date: Mon,  6 Apr 2026 21:32:48 +0200
+Message-ID: <20260406193425.1534197-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260406193425.1534197-1-andriy.shevchenko@linux.intel.com>
+References: <20260406193425.1534197-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=834; i=thorsten.blum@linux.dev; h=from:subject; bh=WKatVZ4ijznTXfeAzfxBPkp0ScePMGQUAQ2+GI9ot5o=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJmXv1jzr01u3xn/MXrvXOn5BrseRLkuc7MKcOvhTyx79 azih4lgRykLgxgXg6yYIsuDWT9m+JbWVG4yidgJM4eVCWQIAxenAExEWYCRYVFc6Yq7x8Lec72d +qVY5UfxRPuaO7cmm+4Nl3w3beFs34uMDCePXp9r0/7j+mu/mmZuVT3/+d07hEIvsTxaGNsz4Ur uLz4A
-X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Add the __counted_by() compiler attribute to the flexible array member
-'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+Update header inclusions to follow IWYU (Include What You Use) principle.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/keys/user-type.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/tests/string_helpers_kunit.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/include/keys/user-type.h b/include/keys/user-type.h
-index 386c31432789..2305991f4fcd 100644
---- a/include/keys/user-type.h
-+++ b/include/keys/user-type.h
-@@ -27,7 +27,8 @@
- struct user_key_payload {
- 	struct rcu_head	rcu;		/* RCU destructor */
- 	unsigned short	datalen;	/* length of this data */
--	char		data[] __aligned(__alignof__(u64)); /* actual data */
-+	char		data[]		/* actual data */
-+			__aligned(__alignof__(u64)) __counted_by(datalen);
- };
+diff --git a/lib/tests/string_helpers_kunit.c b/lib/tests/string_helpers_kunit.c
+index cd08e79a857d..9fbe91079c7e 100644
+--- a/lib/tests/string_helpers_kunit.c
++++ b/lib/tests/string_helpers_kunit.c
+@@ -5,11 +5,16 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- extern struct key_type key_type_user;
+ #include <kunit/test.h>
++
+ #include <linux/array_size.h>
+-#include <linux/kernel.h>
++#include <linux/bug.h>
++#include <linux/limits.h>
++#include <linux/module.h>
+ #include <linux/random.h>
+-#include <linux/string.h>
++#include <linux/slab.h>
++#include <linux/sprintf.h>
+ #include <linux/string_helpers.h>
++#include <linux/types.h>
+ 
+ static void test_string_check_buf(struct kunit *test,
+ 				  const char *name, unsigned int flags,
+-- 
+2.50.1
+
