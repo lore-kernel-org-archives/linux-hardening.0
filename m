@@ -1,303 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011059.outbound.protection.outlook.com [52.101.65.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E8734A788;
-	Mon,  6 Apr 2026 04:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775449696; cv=none; b=RFl/vLDyrgq4UnO7Ca93grurU8ytex6RvKjuymU7JY0yFUpE4VvrTEepdh5jud7uP+E/lCbopOELLAb1XX8TfjgRUVOUPSjAzlYtrrgSY5+iu+Q4tTcmE1sTPZD035nqsXY+4hUIpzf4brMdTzg1AL5n9tA4eSCgYUMlTicGloI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775449696; c=relaxed/simple;
-	bh=uYGceNTzNuZmnfMgHyxFjYMImRSA6EY2IdzY776syzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mlani9lGQlXObkyqMvelX+SiQMXAS15vVKmKuhnwcOQCDpnk42cDQHxyAJJWdd5SrgbWI+gZIArsP6aDwbKp+G+4Pl0+SDV17q7B67F9BhcW/jIHSQo5VZJDbAbn4XYoQ5VCJOeTafgJtadGu3vBgWC39GXos9la9gD9DqqVeus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrIhyVRw; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0164086A;
+	Mon,  6 Apr 2026 10:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775470147; cv=fail; b=tH0JvgFzpaao7dAUF3TY9D339Tj+k8munUeIbDlXCIVB8Hm5K6nPlz3UuydLR1HEXP3I2wJ2Sw6peeuN+CNbp2Gvh7eOu4VUL1afmKS302m3CBnSo75PGCJFNxaY3nAb58D1m4IhIsf90EeFQpS/n/dTBooKpausIaaKHTtDeK0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775470147; c=relaxed/simple;
+	bh=LDQ6WkMQdVWCEpy/05lK4DdeJtiUG9SnKIJdhKf3uEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LEGcbD6ctr7T8vsJUbUW/DFGXe7qqk2ol/OHVjdz4z1gOWqNsJAwI/9czVhaUEnznNUQfTTP7kC+vuSYfK//HiOpeVZRtlt+NsF1kk6rClhgD43mHfyWxIfZdsUjIUCJwC55+Q/G6S5y0tapCK6zWcJjAAfpH2miMjGyAWnooWI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=INzIuGKM; arc=fail smtp.client-ip=52.101.65.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrIhyVRw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD13C4CEF7;
-	Mon,  6 Apr 2026 04:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775449695;
-	bh=uYGceNTzNuZmnfMgHyxFjYMImRSA6EY2IdzY776syzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LrIhyVRwlhPr2buj/spqkEinh0TSUCphFFxWRJXa2SZtyWFV6c4MxfuD5ms92G8Gl
-	 vF2Xwudli8dgQTWDDFEh2TVvmX9GKFpLuavPEKdvydy+HtFjT5cJUef0ABrMCT60Bh
-	 7jGHLax2sgOPSsQvn0dFRvioqMBwroi6D1bIVOv3zMa8uJc1tQU4nXJY0ouygzxw4d
-	 BSuRScIDayM5+b1FbWHSly4IL1lsYndWt71ihRoSN3F/8njW79cQ5nAfOC8QuJgyYW
-	 JRi2kSAo5UKGNlmcsgsdFWu0K7wAXftMgPVNCSFAi5N4Xegxsa1y1AlDGKWok42OFq
-	 MW/UF3hsWgP/w==
-Date: Mon, 6 Apr 2026 13:28:13 +0900
-From: "Harry Yoo (Oracle)" <harry@kernel.org>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
-	Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="INzIuGKM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yU0dDGsgktJexgS7VN29EFpseXi77eV3vziSH4yFuVctAvLDUF7zKvWLRuIUTsAqkLo8jwtSiknlbnklZ7Na2/Z69DVMBnvcuBdO9X9atiocEX2Ittyxz1a41ykjIyjWtrMTxBdBCHmw8qqsyqX3TuE+8RdqiwWXz9903goonAUDAhyoR3EUkdAvs8SXcQya9tdBdCs9yRujfH4p/8O4P0MEsnwD/YcJ5pgGfvleGNbLFI9W7BQVCAoZfX+sjKix2s+liK7CMhMOf0z/RQKFQA3BAti6jkMhr9WowqL6O4w8pNg9eYH0Hj+MKgK4M/XzFMctTp83xUAp3Ep7HtD6Bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DpjkjyyWN9kdXFMfpy/lzqo573t0R84eMSLhWu2iMdk=;
+ b=paIJiaK6SzotsU0uW/24aKo8OF+GCFwmQqHUvMUD7IQBNG56sGjbZeeAEh45FblgJ5EtpabtyDIMwZJH4FTIE3zN7X6jtdbbwfDdD0nkecPYKqtUXjKpaHgstafgGwaIYA95hF6Nzs+Dpo/dHYTI+hIFuiSyk8yZpedvdZGQ2vJB7nmMkN91iGqXpX6BMAq+pxYWoFw0pRhHcNnglhGGdIpGStQEqvOJS4YhW56Wp9d7japLcjyL1HrhxlAqXZc4BR87S0puGl4FCaIDimZN/npGEKCCMHawMtkjjZX9fDItP/wB4szxA4fLuQakt6BaZs6QtpNeTDlY4BWQYFhyWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DpjkjyyWN9kdXFMfpy/lzqo573t0R84eMSLhWu2iMdk=;
+ b=INzIuGKM+oMVDGIjLV2w654DwjM04uCh/bC6THeBJW9Jfx7i5Sb1A3Mcrk2pxKo8RlikfpbG72SxoqG2JmOC6kHg0fmV+U8IHfUFlG0hmgCBa/8r+Ocklrt383VRfrII3sjs3CTyfDkZmYuC4mvGAdG26xEnzMRL1d8b6Ybim9vxjEKMct9V99vsxdwqx/sJLEXpmclhoWkwXzxifZEwRyvWXkitaalJVvme12Nfpz16bdy1kNu4kyma9VMrPtC7w4HdVPtS8Bjp++sp9FbqRx+BmJ6zZsUJmX4Euav+tuw/pDZYM5RaIJfqnLjfcoyctSk8WLdX+kCLTj//WTjkyA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by GVXPR04MB11017.eurprd04.prod.outlook.com (2603:10a6:150:21c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Mon, 6 Apr
+ 2026 10:09:01 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9769.018; Mon, 6 Apr 2026
+ 10:09:01 +0000
+Date: Mon, 6 Apr 2026 06:08:53 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: dmaengine@vger.kernel.org,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alexander Potapenko <glider@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
-	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
-	Florent Revest <revest@google.com>,
-	GONG Ruiqi <gongruiqi@huaweicloud.com>,
-	Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>,
-	Matteo Rizzo <matteorizzo@google.com>
-Subject: Re: [PATCH v1] slab: support for compiler-assisted type-based slab
- cache partitioning
-Message-ID: <adM2XVZf1DekahlY@hyeyoo>
-References: <20260331111240.153913-1-elver@google.com>
- <ac9d5O5XehnXRc5A@hyeyoo>
- <d0fe363c-2e8f-44a4-9b64-3fa3ba9a5773@kernel.org>
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: dw-axi-dmac: simplify allocation
+Message-ID: <adOGNU7awDqeY2Je@lizhi-Precision-Tower-5810>
+References: <20260330211128.12319-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260330211128.12319-1-rosenp@gmail.com>
+X-ClientProxiedBy: SJ0PR05CA0040.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::15) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0fe363c-2e8f-44a4-9b64-3fa3ba9a5773@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|GVXPR04MB11017:EE_
+X-MS-Office365-Filtering-Correlation-Id: b8d80e8e-194f-42eb-d0fa-08de93c48644
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|19092799006|1800799024|376014|52116014|18002099003|22082099003|56012099003|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	UbSriYPYXnHw8ZdZbvVPnsykWWQCkb4IHPA5+CxFmWPmk5U5C0HpeOGMmup786oVDWTZLoI4U91KEQnQ0o4zgyJG08MZ7ao1HYrP9BCmvPiWc0t+k8lGH5LS16G7HLHsazOoX7uNLynlm83il889WkxJ7VCWh2/AQyStDLmVqqtn1If09YfrQH4puSCAhAyes4ALoKpghEIbQDE+eWswWXCIw9NPScplLDtfKqlfeJsVQ0YY1Pu4RCxygiahTGcnxm7GcizgRZlYljG1exzRgdhETR7Wl3K2CUN67F6gFaW8WgyqVXuVKGE1XSrHDq5x3NsclfDGKUtCc2t9Y3ETNLTZl2OutsEKB0HBG8iwMSP9D8UWt/nP2WuSwAHhzGGfvgmyqwAKdi+GihpNnnda3ptnzl9j8n0GcvQkLw3keOPVBrxOekOc6FbmQqf4M/q8veFYuHXlONF0yO2RpnjXLzk7fnYvfObYQrmUUhAFD024AAz92QCo2BfF5HlD+bQuGC7qILScygNSSB6b8Wznrim+GZ8lbdvSpZaelLAHxR1jmvvJYyErwBa3KlnSs0eTKLhNhkgRuzwW2UTgDBrhBXJFkfYCaLHIkBSEVMECKaV9SthB4FKYlEw2R/GH7tVO19iosVfrpqXRBoSCItOLs/Cz9QZ6zoPhOg8ibV3CxVbBmvoGl3xSfmNiCb4flwXGiJwDYdftz9r3Jia3AFBkjHe8gZumBS9Cexay+eRvxcCx6h2RilYjqM9kCHxqIE67Ovb4ghun0T4J46V9q7idtnr3IwDJCPPLObrYf9Vx3fM=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(1800799024)(376014)(52116014)(18002099003)(22082099003)(56012099003)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oRtF1IOYt9gx1pj/E5fdLkP5eGEq+uaYV6Qs8PoRL8R8KV3KTIMRrzZFHvTd?=
+ =?us-ascii?Q?QauIWvbK6dWKUAet7E8MoUVUuYoYY+dUxLf807HvDIDm8C1Mw1GH0reXiU4x?=
+ =?us-ascii?Q?3R3Rm+xO4cbk4RuyPKkMO1cmyzaUo5tk6zhu/eYznPhirxmj/CddCowyIFlo?=
+ =?us-ascii?Q?BQ8PhcS6zg47XqNNkSNak4ARLmYrkQhH311pl7dmxsalv75YPr2Ex2oHB/TO?=
+ =?us-ascii?Q?xn3XsB6VvlrDtAJ0ZOEB/loyl6jSKcHwqCLZwBlFfXLbs1aspIEvMGXidKmX?=
+ =?us-ascii?Q?7kCzJrilaua4/KnYpzTKER3Ms2i3FGE5uKqFyNEdloboXyJcWlrtB9IUSx0Z?=
+ =?us-ascii?Q?9IYWTZhMn5529/6BxbfVoPWLEqRj9SnGAKyzQ8l/Rywv08fBAFKkNuPEuy9/?=
+ =?us-ascii?Q?vUBAFbegVTXkDXbnWX8W35HfCT0R/Xl2lTW5b5GBx4ONHpFy7EsTn8DinQHx?=
+ =?us-ascii?Q?h/0baxY0v9kZSJtC6nPXWy5oXi3gJa6vKMKOQUr7L/DeZBFK3LNB1Jj2lPJo?=
+ =?us-ascii?Q?7uIPQ1yl+ZiugRaqnM+RBvr3TrHiAVziRLhj2PRLr1eJGqpDBZPbTN1PJOwW?=
+ =?us-ascii?Q?KCfrpdvUsPE9EGvQo1npBdX4s76o6Yljfg0Z8uO2JmxW5w15j1H+DMwWHEXg?=
+ =?us-ascii?Q?bOeBDKxbyTeOMGY2/mQ7HvDVOy1LH9QKNrnq1qdKp6NdPMs6Oi1G36U8nOa0?=
+ =?us-ascii?Q?uHvkBolbFWLdNLKA5pKuMz1uBopmdENGByV7fS3hG2luzMRvgdQWBlzQGVNu?=
+ =?us-ascii?Q?p8rQdhqX6haMYgSs5lJalxTMLsMkBWJWzuWhrgMAcQHYQERET/PCki2nghdK?=
+ =?us-ascii?Q?BrZ4welDbppJgZEauJzfMwwfhFRrQvmD220CBt9UzGlAzgaDTwg3EkkhUuPL?=
+ =?us-ascii?Q?9x9GH86VstJS0f7aATbmVjMLrsIGZ8n4oaWKQXQFg1d6Nu58JaUtLXGAdPIp?=
+ =?us-ascii?Q?ipN4193/3XcFY1h7uinWt1R2EeUmMq8r8VjVlUAfSY5/mocnL0gDXO+SvzUI?=
+ =?us-ascii?Q?+PuzQlSR8abH76DXxz1PDE61hfJuwGCwOeI3aV+B7t740Bq+VUAsw4V7eBEJ?=
+ =?us-ascii?Q?bDzSgA92AInhkReSrhe6wJ0khnrv61KNOidFaQ7h1BJ2iNENqgIaZsQlkGO1?=
+ =?us-ascii?Q?hFhBwpUPCrOr9PV90kEiVVClyZ5QDiwqIMuprEzgq+JBJbdmSt6Nf666S3Ai?=
+ =?us-ascii?Q?nJa6c3aCm0MWIMxQWZiA/8UjgqdNERnTSpeQeig8QlD6l55rDfAtv5CT5X1m?=
+ =?us-ascii?Q?iRYJcO9ld0NQ2hS/1z4+fpt61RGCRGViaYOs23NKi1R4gy9nfE+nEh7VwPcR?=
+ =?us-ascii?Q?AHMuSKoMpyGQanzb/dGfFB8jaYBeUo8bNfPCeXb2dud4cyPQ0dZLxrLoLbow?=
+ =?us-ascii?Q?t2gsBhLsqABax4csGQUAEqu3y3WHuaKZuQmKZrcTE34DnSBDm3/urntCAFSn?=
+ =?us-ascii?Q?QGofU4FkC9+s2Fu4RzxUEL6GYFlmpceJ9W72s+4tWgTdWdgM0XvCGNky5iOu?=
+ =?us-ascii?Q?aldee5D+Uj9dcf1wJk+BquO+A//FYUbagOR7WfYpwDx2l6IkHC2TCtWpBgg8?=
+ =?us-ascii?Q?8OdACU23SExzSjxTpBvJ3lHzfJXTVk6O05C6lBOpN9sw8agjeePYKwQvsP46?=
+ =?us-ascii?Q?Bmk3WYxoMMOj/eiAcDEfW4D+ndHIxfBUs50/0cvzJIuLHfIjIeNA94Cna6h8?=
+ =?us-ascii?Q?SkDoymv/LIHS+60u3Yq9xt57jj+uU7pBos8muSRADODNScHw?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8d80e8e-194f-42eb-d0fa-08de93c48644
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2026 10:09:01.0232
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7yHE6+i12fjGN9DvVrUTebxGj0WcnNm0jquE3PtoN0OhI5FRR9aNP+BRnRxHbGRVItKVDK6DeBP7e8+tJyp5Ag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB11017
 
-On Fri, Apr 03, 2026 at 08:29:22PM +0200, Vlastimil Babka (SUSE) wrote:
-> On 4/3/26 08:27, Harry Yoo (Oracle) wrote:
-> >> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> >> index 15a60b501b95..c0bf00ee6025 100644
-> >> --- a/include/linux/slab.h
-> >> +++ b/include/linux/slab.h
-> >> @@ -864,10 +877,10 @@ unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf);
-> >>   * with the exception of kunit tests
-> >>   */
-> >>  
-> >> -void *__kmalloc_noprof(size_t size, gfp_t flags)
-> >> +void *__kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
-> >>  				__assume_kmalloc_alignment __alloc_size(1);
-> >>  
-> >> -void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
-> >> +void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node, kmalloc_token_t token)
-> >>  				__assume_kmalloc_alignment __alloc_size(1);
-> > 
-> > So the @token parameter is unused when CONFIG_PARTITION_KMALLOC_CACHES is
-> > disabled but still increases the kernel size by a few kilobytes...
-> > but yeah I'm not sure if we can get avoid it without hurting readability.
-> > 
-> > Just saying. (does anybody care?)
-> 
-> Well we did care enough with CONFIG_SLAB_BUCKETS to hide the unused param
-> using DECL_BUCKET_PARAMS(),
+On Mon, Mar 30, 2026 at 02:11:28PM -0700, Rosen Penev wrote:
+> Use a flexible array member with kzalloc_flex to combine allocations.
+>
+> Add __counted_by for extra runtime analysis.
+>
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
 
-Hmm yeah.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-I wasn't sure if we could do this without hurting readability,
-but perhaps we could...
-
-> so maybe extend that idea?
-> I think it's not just kernel size, but increased register pressure etc.
-
-Something like this should work? (diff on top of this patch)
-
--- 
-Cheers,
-Harry / Hyeonggon
-
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index c0bf00ee6025..0496d2e63f5e 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -871,16 +871,32 @@ unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf);
- #define PASS_BUCKET_PARAM(_b)		NULL
- #endif
-
-+#ifdef CONFIG_PARTITION_KMALLOC_CACHES
-+#define DECL_TOKEN_PARAM(_token)	, kmalloc_token_t (_token)
-+#define _PASS_TOKEN_PARAM(_token)	, (_token)
-+#define PASS_TOKEN_PARAM(_token)	(_token)
-+#else
-+#define DECL_TOKEN_PARAM(_token)
-+#define _PASS_TOKEN_PARAM(_token)
-+#define PASS_TOKEN_PARAM(_token)	((kmalloc_token_t){})
-+#endif
-+
-+#define DECL_KMALLOC_PARAMS(_size, _b, _token)	DECL_BUCKET_PARAMS(_size, _b) \
-+						DECL_TOKEN_PARAM(_token)
-+
-+#define PASS_KMALLOC_PARAMS(_size, _b, _token)	PASS_BUCKET_PARAMS(_size, _b) \
-+						_PASS_TOKEN_PARAM(_token)
-+
- /*
-  * The following functions are not to be used directly and are intended only
-  * for internal use from kmalloc() and kmalloc_node()
-  * with the exception of kunit tests
-  */
-
--void *__kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
-+void *__kmalloc_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags)
- 				__assume_kmalloc_alignment __alloc_size(1);
-
--void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node, kmalloc_token_t token)
-+void *__kmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags, int node)
- 				__assume_kmalloc_alignment __alloc_size(1);
-
- void *__kmalloc_cache_noprof(struct kmem_cache *s, gfp_t flags, size_t size)
-@@ -964,7 +980,7 @@ static __always_inline __alloc_size(1) void *_kmalloc_noprof(size_t size, gfp_t
- 				kmalloc_caches[kmalloc_type(flags, token)][index],
- 				flags, size);
- 	}
--	return __kmalloc_noprof(size, flags, token);
-+	return __kmalloc_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags);
- }
- #define kmalloc_noprof(...)			_kmalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
- #define kmalloc(...)				alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-@@ -1075,10 +1091,10 @@ void *_kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node, kmalloc_tok
- 	__alloc_flex(kvzalloc, default_gfp(__VA_ARGS__), typeof(P), FAM, COUNT)
-
- #define kmem_buckets_alloc(_b, _size, _flags)	\
--	alloc_hooks(__kmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE, __kmalloc_token(_size)))
-+	alloc_hooks(__kmalloc_node_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), _flags, NUMA_NO_NODE))
-
- #define kmem_buckets_alloc_track_caller(_b, _size, _flags)	\
--	alloc_hooks(__kmalloc_node_track_caller_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE, _RET_IP_, __kmalloc_token(_size)))
-+	alloc_hooks(__kmalloc_node_track_caller_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), _flags, NUMA_NO_NODE, _RET_IP_))
-
- static __always_inline __alloc_size(1) void *_kmalloc_node_noprof(size_t size, gfp_t flags, int node, kmalloc_token_t token)
- {
-@@ -1093,7 +1109,7 @@ static __always_inline __alloc_size(1) void *_kmalloc_node_noprof(size_t size, g
- 				kmalloc_caches[kmalloc_type(flags, token)][index],
- 				flags, node, size);
- 	}
--	return __kmalloc_node_noprof(PASS_BUCKET_PARAMS(size, NULL), flags, node, token);
-+	return __kmalloc_node_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags, node);
- }
- #define kmalloc_node_noprof(...)		_kmalloc_node_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
- #define kmalloc_node(...)			alloc_hooks(kmalloc_node_noprof(__VA_ARGS__))
-@@ -1154,10 +1170,10 @@ static inline __realloc_size(2, 3) void * __must_check krealloc_array_noprof(voi
-  */
- #define kcalloc(n, size, flags)		kmalloc_array(n, size, (flags) | __GFP_ZERO)
-
--void *__kmalloc_node_track_caller_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node,
--					 unsigned long caller, kmalloc_token_t token) __alloc_size(1);
-+void *__kmalloc_node_track_caller_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags, int node,
-+					 unsigned long caller) __alloc_size(1);
- #define kmalloc_node_track_caller_noprof(size, flags, node, caller) \
--	__kmalloc_node_track_caller_noprof(PASS_BUCKET_PARAMS(size, NULL), flags, node, caller, __kmalloc_token(size))
-+	__kmalloc_node_track_caller_noprof(PASS_KMALLOC_PARAMS(size, NULL, __kmalloc_token(size)), flags, node, caller)
- #define kmalloc_node_track_caller(...)		\
- 	alloc_hooks(kmalloc_node_track_caller_noprof(__VA_ARGS__, _RET_IP_))
-
-@@ -1183,7 +1199,7 @@ static inline __alloc_size(1, 2) void *_kmalloc_array_node_noprof(size_t n, size
- 		return NULL;
- 	if (__builtin_constant_p(n) && __builtin_constant_p(size))
- 		return _kmalloc_node_noprof(bytes, flags, node, token);
--	return __kmalloc_node_noprof(PASS_BUCKET_PARAMS(bytes, NULL), flags, node, token);
-+	return __kmalloc_node_noprof(PASS_KMALLOC_PARAMS(bytes, NULL, token), flags, node);
- }
- #define kmalloc_array_node_noprof(...)		_kmalloc_array_node_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
- #define kmalloc_array_node(...)			alloc_hooks(kmalloc_array_node_noprof(__VA_ARGS__))
-@@ -1209,10 +1225,10 @@ static inline __alloc_size(1) void *_kzalloc_noprof(size_t size, gfp_t flags, km
- #define kzalloc(...)				alloc_hooks(kzalloc_noprof(__VA_ARGS__))
- #define kzalloc_node(_size, _flags, _node)	kmalloc_node(_size, (_flags)|__GFP_ZERO, _node)
-
--void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), unsigned long align,
--			     gfp_t flags, int node, kmalloc_token_t token) __alloc_size(1);
-+void *__kvmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token), unsigned long align,
-+			     gfp_t flags, int node) __alloc_size(1);
- #define kvmalloc_node_align_noprof(_size, _align, _flags, _node)	\
--	__kvmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, NULL), _align, _flags, _node, __kmalloc_token(_size))
-+	__kvmalloc_node_noprof(PASS_KMALLOC_PARAMS(_size, NULL, __kmalloc_token(_size)), _align, _flags, _node)
- #define kvmalloc_node_align(...)		\
- 	alloc_hooks(kvmalloc_node_align_noprof(__VA_ARGS__))
- #define kvmalloc_node(_s, _f, _n)		kvmalloc_node_align(_s, 1, _f, _n)
-@@ -1225,7 +1241,7 @@ void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), unsigned long align,
- #define kvzalloc_node(_size, _flags, _node)	kvmalloc_node(_size, (_flags)|__GFP_ZERO, _node)
-
- #define kmem_buckets_valloc(_b, _size, _flags)	\
--	alloc_hooks(__kvmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, _b), 1, _flags, NUMA_NO_NODE, __kmalloc_token(_size)))
-+	alloc_hooks(__kvmalloc_node_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), 1, _flags, NUMA_NO_NODE))
-
- static inline __alloc_size(1, 2) void *
- _kvmalloc_array_node_noprof(size_t n, size_t size, gfp_t flags, int node, kmalloc_token_t token)
-@@ -1235,7 +1251,7 @@ _kvmalloc_array_node_noprof(size_t n, size_t size, gfp_t flags, int node, kmallo
- 	if (unlikely(check_mul_overflow(n, size, &bytes)))
- 		return NULL;
-
--	return __kvmalloc_node_noprof(PASS_BUCKET_PARAMS(bytes, NULL), 1, flags, node, token);
-+	return __kvmalloc_node_noprof(PASS_KMALLOC_PARAMS(bytes, NULL, token), 1, flags, node);
- }
- #define kvmalloc_array_node_noprof(...)		_kvmalloc_array_node_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
- #define kvmalloc_array_noprof(...)		kvmalloc_array_node_noprof(__VA_ARGS__, NUMA_NO_NODE)
-diff --git a/mm/slub.c b/mm/slub.c
-index 5630dde94df0..84f129d79c99 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5293,15 +5293,17 @@ void *__do_kmalloc_node(size_t size, kmem_buckets *b, gfp_t flags, int node,
- 	trace_kmalloc(caller, ret, size, s->size, flags, node);
- 	return ret;
- }
--void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node, kmalloc_token_t token)
-+void *__kmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags, int node)
- {
--	return __do_kmalloc_node(size, PASS_BUCKET_PARAM(b), flags, node, _RET_IP_, token);
-+	return __do_kmalloc_node(size, PASS_BUCKET_PARAM(b), flags, node,
-+				 _RET_IP_, PASS_TOKEN_PARAM(token));
- }
- EXPORT_SYMBOL(__kmalloc_node_noprof);
-
--void *__kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
-+void *__kmalloc_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags)
- {
--	return __do_kmalloc_node(size, NULL, flags, NUMA_NO_NODE, _RET_IP_, token);
-+	return __do_kmalloc_node(size, PASS_BUCKET_PARAM(b), flags,
-+				 NUMA_NO_NODE, _RET_IP_, PASS_TOKEN_PARAM(token));
- }
- EXPORT_SYMBOL(__kmalloc_noprof);
-
-@@ -5394,10 +5396,11 @@ void *_kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node, kmalloc_tok
- }
- EXPORT_SYMBOL_GPL(_kmalloc_nolock_noprof);
-
--void *__kmalloc_node_track_caller_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags,
--					 int node, unsigned long caller, kmalloc_token_t token)
-+void *__kmalloc_node_track_caller_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags,
-+					 int node, unsigned long caller)
- {
--	return __do_kmalloc_node(size, PASS_BUCKET_PARAM(b), flags, node, caller, token);
-+	return __do_kmalloc_node(size, PASS_BUCKET_PARAM(b), flags, node,
-+				 caller, PASS_TOKEN_PARAM(token));
-
- }
- EXPORT_SYMBOL(__kmalloc_node_track_caller_noprof);
-@@ -6812,8 +6815,8 @@ static gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
-  *
-  * Return: pointer to the allocated memory of %NULL in case of failure
-  */
--void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), unsigned long align,
--			     gfp_t flags, int node, kmalloc_token_t token)
-+void *__kvmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token),
-+			     unsigned long align, gfp_t flags, int node)
- {
- 	bool allow_block;
- 	void *ret;
-@@ -6824,7 +6827,7 @@ void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), unsigned long align,
- 	 */
- 	ret = __do_kmalloc_node(size, PASS_BUCKET_PARAM(b),
- 				kmalloc_gfp_adjust(flags, size),
--				node, _RET_IP_, token);
-+				node, _RET_IP_, PASS_TOKEN_PARAM(token));
- 	if (ret || size <= PAGE_SIZE)
- 		return ret;
-
---
-2.43.0
+>  drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 8 +-------
+>  drivers/dma/dw-axi-dmac/dw-axi-dmac.h          | 4 ++--
+>  2 files changed, 3 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> index 4d53f077e9d2..d3ca202dc478 100644
+> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> @@ -294,15 +294,10 @@ static struct axi_dma_desc *axi_desc_alloc(u32 num)
+>  {
+>  	struct axi_dma_desc *desc;
+>
+> -	desc = kzalloc_obj(*desc, GFP_NOWAIT);
+> +	desc = kzalloc_flex(*desc, hw_desc, num, GFP_NOWAIT);
+>  	if (!desc)
+>  		return NULL;
+>
+> -	desc->hw_desc = kzalloc_objs(*desc->hw_desc, num, GFP_NOWAIT);
+> -	if (!desc->hw_desc) {
+> -		kfree(desc);
+> -		return NULL;
+> -	}
+>  	desc->nr_hw_descs = num;
+>
+>  	return desc;
+> @@ -339,7 +334,6 @@ static void axi_desc_put(struct axi_dma_desc *desc)
+>  		dma_pool_free(chan->desc_pool, hw_desc->lli, hw_desc->llp);
+>  	}
+>
+> -	kfree(desc->hw_desc);
+>  	kfree(desc);
+>  	atomic_sub(descs_put, &chan->descs_allocated);
+>  	dev_vdbg(chan2dev(chan), "%s: %d descs put, %d still allocated\n",
+> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+> index 67cc199e24d1..a04a4e03eb3d 100644
+> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+> @@ -98,14 +98,14 @@ struct axi_dma_hw_desc {
+>  };
+>
+>  struct axi_dma_desc {
+> -	struct axi_dma_hw_desc	*hw_desc;
+> -
+>  	struct virt_dma_desc		vd;
+>  	struct axi_dma_chan		*chan;
+>  	u32				completed_blocks;
+>  	u32				length;
+>  	u32				period_len;
+>  	u32				nr_hw_descs;
+> +
+> +	struct axi_dma_hw_desc		hw_desc[] __counted_by(nr_hw_descs);
+>  };
+>
+>  struct axi_dma_chan_config {
+> --
+> 2.53.0
+>
