@@ -1,143 +1,140 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA5A322A
-	for <linux-hardening@vger.kernel.org>; Mon,  6 Apr 2026 19:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775504685; cv=none; b=OdB9n5qfE4IRdKuZN0dJqz1Z2bjpcU/kPPklrTLMPKKqxVIAq9tfP0PyfdsE61MbR1KR41tN1k8A7ZvMXFHiI3Pky4gbLOMoAIJilxg/ojV1AmsqNC+1k/KuG6obtEZ6SOFHIsp8vwDuypjae/mHxTqdIn9LnJgsUj89mvFjzTI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775504685; c=relaxed/simple;
-	bh=GR2DfTz553Yog8V3bm8Wviid+hmeEqLWZb0hdHRbJqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S1d/r+NsCYy6Grhm93vYUAA7oWISqrtYLhSTiLmdyabsSoH4RpXJSantttGUzEGvFAT6NnEg4m9R8WRDrW4u54SPPuslfwSBnsy2ciFXFFI71I0lnrA1PJR+IMApP08Ubg0ltcavu8SKP2Mp9YU5hZEuCqUkClChkulMx7NxRbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AlcThNXc; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C9A332614
+	for <linux-hardening@vger.kernel.org>; Mon,  6 Apr 2026 23:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775517892; cv=pass; b=HT9SmJu/bEBhFpqlO9HaDjcwr+0tWhQV33lkSwmwmLzgSQWaZm1ONTA6klDM0gRbBfB2rbi9UFx/KhjPP3ORDVDKptvHqCMHomkauxTG7iGhlw29dBTMyULCZhknrN+UoSF9Zp3/yiDfyToodISCZdGfmDRUPZSc4NqsHVaG+ss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775517892; c=relaxed/simple;
+	bh=gCJIqEfBHdWZLIfLLkUByoZiap4h9NMvkXjnioy5hKY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FcOrKRIBIKPlgwvL3gScKHT5fIUxB6GY5rOzENNgf+agyCy1TFKlJJBV6r9pq0wwHsZajNav9XfH9ZtSnrKbL+0RfXJWwiNPaiL+tVGfaucHXe84bcwFF5/UYxVYsqtEm+uSlj+Aq0k2XNO3H935tebesc/XPOqFlyCcoKNvYxM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J3cnK4yU; arc=pass smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlcThNXc"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-8a016799d2cso57779806d6.1
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Apr 2026 12:44:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3cnK4yU"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-488a9033b2cso20440995e9.2
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Apr 2026 16:24:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775517888; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PBnGKvmrvb4CwKj3gAWSvBkOHaWqNHwNc4uyDQOpHyEGf0W/ieCazJ37HvGxh9lAl4
+         1yJ4JEirSbvJvwjeFqNvJa04Su7XP3Sv3sWpTY9ObS4JJltFnl9wSUw1qs/dr6T8y2dJ
+         OSyLQ2jg1t0qhsvg9EnT3t6One9Mg3NO9mOUrRU1gQBkKaoqv9fLbNfvJ/wxYa/glZTl
+         mQFEonLtMknbJmJjFqZ5GfiKDwRoWrqpWn7mLnvzodHhI04+O6+NPcm8d9y+4raAKclH
+         P2x/4RhRkwUPmcSLRP/q/g58AaW1o+nNYjDQ/X7aKrY8IhGo5vbWGhVxyZZf3FGZkHwR
+         OkRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=giiyAPaGWC/+H4R0yj89JGnzz5C2kC6xrCa4cJrqs9k=;
+        fh=jRm4OQUA+OjCnduws41vNd2ScARxSTl058Kqa+m5PuI=;
+        b=D5dri/nx7dAQs6leMCodgCvLkokm+vpo7XVysRv/w/+7rqPbSTuuT3qU/YhBIC8PY/
+         P2oRssJ1kV5eY96kaiiUBF3OkVR7FwMD504ha+FM78ieRXzhMovQMFWkeExd4oHGy6Lw
+         S/0N0yWmOl9QJ1L3SG7z1SXqHxSWSC04AAix8SobCqC1GN/oGO4oxkXPJEf+N4g3TsYE
+         JXwv3Lqc0b1UJJgL+duf33uexIRF7TK01jbbs4EWxJI0MuflnfIiIipXFWq8w3rzbIz4
+         uvIoWqi62+jbBWUKGnKB/ZKoCeBp/LLKegfibpZKYk57lIVaGMTc/IZ84VQPCSTuYfU1
+         vX4g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775504683; x=1776109483; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8TKUkyB7WvjQA6crvLqj/5jSGIGyrb8D9bz30WYCfA4=;
-        b=AlcThNXcUsJCE30LnfdKvG6lIi7PWMEKIoNJhnHzSxnSS4FpaACodnbUh6m6C7/nEc
-         dcvsXCL4VqINHvBuT3o/IIroQyhsCovZ5z/KhQ7ug/tR137nWPj6hyqB/IKzlNqlLBgA
-         WwoQZmvA19bBXFagJG8NBvQumw5eftu2x/RzS5fs/5yR2oQxR2MBKa4FLEC/78jTVU7I
-         mO3xa1ImnGCw4ZT9VonelXB2Ot2ZkZE8r2UnLJMh/UK72oSlk62LB8cNqxogrQmBRfa4
-         XPohfquQRbxvNwg15l07kFQ0jriekKFXil9xgHMiyHYAy8KK2mRmh5+ji33z0p16ymTk
-         MZXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775504683; x=1776109483;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1775517888; x=1776122688; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8TKUkyB7WvjQA6crvLqj/5jSGIGyrb8D9bz30WYCfA4=;
-        b=aKqQG+yzTlyqHh4Mw2nraUH6YoIBhle8ekAYznISIrP/+IyTNmtsvXh7KlLEiVzws6
-         P1UhvHIrCGZRS0ZYXJvRI0u71J5LjRtDJXhV4aNmZ2cQvAWkTEBPYulRjn6OoQiT3lfK
-         mJN0TIhawa3dnCBHqbOnG+LQ2OmklEVBeigoHvZ4t0apZ/wLJ9ydfVLqXpJO5eMZ7g3q
-         /SWx3xFyvy0xiIsAIL7B5/1EyHvIJ7a0u453KoQ/OogOIHqXfMYh2VmlqtKBlO6DMfke
-         akZACeKuR5Sscop9hB3RJN1Cwr5KoV+m3omqHCaU5+SFzfmg68EKcgMqJ+miFf6mz4et
-         xd3g==
-X-Forwarded-Encrypted: i=1; AJvYcCX6hLLbcz28L90r4ku4JplzoJZnkvoj3LTqFrtzoO8gFD+DR+TpX77WWe5cKMDz/FobhJ46dSmOipJpx1g7KRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8wY4Mq8KMCU2ZpSSW8no4FzNans8lWPhOtt7GJCzBVq1L3Qqn
-	7IK2RYa0KmZEbCXT98PUYpilQKgJDCdEB7Jo7uIpq2ySsvmn+Mg3NzoQ
-X-Gm-Gg: AeBDiesY+8yXm19HyBgS0KD3LsUo09lhazlSUKATEANxSTgkmcJz9s/L8j6qKpP7y+P
-	02zUbJosAU4yDQ243aB8U+OG8M1+JcDCCo3yu2/YqkC+c6MaSl5PC+OKbz7CNxOx4F95dwEWC5Y
-	Mvx8tZ+oi7op457PEdtnhVlwB18/Zuenuw0IQSfI2RRaLj1WsC7ltqpFVNMTdevaR9S3tGxXb0T
-	0V5rwujvzMW7bjhLM9reqXt4tliBe9hZVNwuxTyhfGlOmcPLo1fcgLudw63zZzS+NmCV6y5yDOO
-	TL3IvIEHx/odf5o+1haqVmmcJR7TWt0PsDywOnfVtDeklmic0vS++leM7mZHMcIyn5cWq+A5JAD
-	PqYCO+DHm5HXFNlzmFu/mq5E7IzJ6WybNVTS5DIXODaUbw9GvxWlbXqkgIfoMkHtdwuG+7v7jAA
-	p3IF0rQ4UukgJCtQRcJP7g94XKG8EQaVCXCRIMp9Kay4TCfDqDu3tK/8A=
-X-Received: by 2002:a05:6214:f0c:b0:89c:c668:9d3a with SMTP id 6a1803df08f44-8a7022bb7c9mr241401586d6.12.1775504682954;
-        Mon, 06 Apr 2026 12:44:42 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8a5969156d3sm129833856d6.31.2026.04.06.12.44.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2026 12:44:42 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv2] dmaengine: dw-axi-dmac: simplify allocation
-Date: Mon,  6 Apr 2026 12:44:24 -0700
-Message-ID: <20260406194424.13365-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        bh=giiyAPaGWC/+H4R0yj89JGnzz5C2kC6xrCa4cJrqs9k=;
+        b=J3cnK4yUKb8M9LewhSmna0CD1zNwgZebvdnxVmzN9Rq7KuZHSrho7PwcBafPWH1dir
+         Z8k4EeDfzhLucdY3lQtcMV9kREh7saN4p5eUOX/nSmnIA0Rq9Yz5PWjXJUX2JdLMhdOs
+         /x/sWRzIbE7EAEN7OoBEyJ9JBvjC8bKUzWjlSGuY4fA4cBV6Pm5yrcby3UFKIWmRZBlo
+         rkJtDBhwkd3s6yGl++5RxfGUKxl/aq0/AJ3wPboMKA8qrj6HSyJFxAaU1HcHVQdNFPIr
+         0rYiHa+CMH6tjO2CDh3Fnirue34uqR1XQMAqjRgaBnH9h0ew0IEQMiAGkOf6l+NzPfVA
+         qVQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775517888; x=1776122688;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=giiyAPaGWC/+H4R0yj89JGnzz5C2kC6xrCa4cJrqs9k=;
+        b=gRo4/A9nJsX6Rc3ZYIQ08C8Ysx4ow//gXbyM5XVqhq4FmcJYI/4IUiFgsZptsdSpro
+         ZZoisZfQvLej7DQRllH5Wj0+NKvSUQWwNV2BsBnxW/6RGBAb2Dxrf/nNxQrBU0IAn0WI
+         1f9Uo8GGnQiap5OcBCb4lnMvqmTL4a0faylSH6fJW2WxekjATM55aLW94cEcx3W3lEzg
+         Z6EicERekQq1XMWLhnCWjymTGgw1aZnvZONVjv4Eqv+kdaYFIvWm45mzKztnQN62uAdU
+         BFTxNxCHKCK4Uf5lheE9nhR+z7zXNmwVM4QKcCmmaa4Vp4vKTdO4jrYfKbG9wNF+cqyi
+         d64g==
+X-Forwarded-Encrypted: i=1; AJvYcCV2wy40PZFgi5piggUzVmWiAX2+R2V6zLasYkomnPbTo3eN7ry4I3ij5CVNy7dZ/rRQXfGUyjNOh7am47VxH0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR046NuOlGBb82DbKC+s1YLZm5oCjTrTXIuf+/FeTlZH3zvdQ/
+	dMxpQKpUUN/v+6OEHpwpI0wfj5Xo/wmc9dxh7JY1OGShtFK7kmHxuBEF9nQwWmeXbGD0D0Er+ii
+	nN0ZQb3r9w7ibMsfNNNNTzehYbRAcq3A=
+X-Gm-Gg: AeBDieurpef2p95I0bRurXzr0sqYKfH0EDL0hWXgoFeiePh7MII4V22QbK/9ZQs2ekD
+	fKuYK7PCRCSoCPUsXHKfyrF3ZnVO8dIIO72/ANE08vxB67BpUJDWTkDKLNqTw7DpwGhc6MMUF3w
+	AW9lXP4aXZs4O/s4SNUQlzLtKGMqyVi0gZDPHiZNOMgXLmigTxglEmMejJ/jMzukfIhbTu96Ve0
+	VspBG1osS30RIVlf6ma1YXI7EfbvyfFbtqOaz+8peA4Qv3W7zTaEwsbNahZIxHer0KV9b/foGzM
+	2hypqCXVEfAclaSKYtbJ08z0qS+9HOILSjjwVKCa/gkJAH0vIe622nAoDOKnSFuPwTCIB1Ciw/c
+	NLwZzud4HBsl0Ba1RzhyQ4O9+Ww==
+X-Received: by 2002:a05:600c:a47:b0:487:1108:48bc with SMTP id
+ 5b1f17b1804b1-48899775d9amr222192405e9.17.1775517888153; Mon, 06 Apr 2026
+ 16:24:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <acr7Whmn0br3xeBP@kspp> <CAADnVQL1kaAZE0L2k6svR4FK8UZvw44WXp=g+Df+SseMkc7xGA@mail.gmail.com>
+ <202604052007.4EF0560F@keescook>
+In-Reply-To: <202604052007.4EF0560F@keescook>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 6 Apr 2026 16:24:35 -0700
+X-Gm-Features: AQROBzDda2R46zaFR44hh-lUnrF-5MQQDqCYqqirlLv6uqn548J31w5zS_2FGPQ
+Message-ID: <CAADnVQ+NMQMpkG8gZPnwBD1MMPsH+uJ65C9bMeGf_YH5Cchxpg@mail.gmail.com>
+Subject: Re: [PATCH v2][next] bpf: Avoid thousands of -Wflex-array-members-not-at-end
+ warnings
+To: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use a flexible array member with kzalloc_flex() to combine allocations.
+On Sun, Apr 5, 2026 at 8:27=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Sun, Apr 05, 2026 at 07:44:51PM -0700, Alexei Starovoitov wrote:
+> > On Mon, Mar 30, 2026 at 3:39=E2=80=AFPM Gustavo A. R. Silva
+> > <gustavoars@kernel.org> wrote:
+> > >
+> > > Apparently, struct bpf_empty_prog_array exists entirely to populate a
+> > > single element of "items" in a global variable. "null_prog" is only
+> > > used during the initializer.
+> > >
+> > > None of this is needed; globals will be correctly sized with an array
+> > > initializer of a flexible-array member.
+> > >
+> > > So, remove struct bpf_empty_prog_array and adjust the rest of the cod=
+e,
+> > > accordingly.
+> > >
+> > > With these changes, fix the following warnings:
+> > >
+> > > 7659 ./include/linux/bpf.h:2369:31: warning: structure containing a f=
+lexible array member is not at the end of another structure [-Wflex-array-m=
+ember-not-at-end]
+> > >
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > ---
+> > > Changes in v2:
+> > >  - Remove struct bpf_empty_prog_array. (Kees)
+> >
+> > Kees,
+> >
+> > It really bothers me that you ask people to clean up
+> > warnings for the sake of removing warnings.
+>
+> It's not for the sake of warnings; this is to remove the ambiguously
+> sized objects (i.e. structs that the compiler cannot reason about the
+> size of).
 
-Add __counted_by for extra runtime analysis.
-
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- v2: use () for kzalloc_flex in description.
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 8 +-------
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h          | 4 ++--
- 2 files changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 4d53f077e9d2..d3ca202dc478 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -294,15 +294,10 @@ static struct axi_dma_desc *axi_desc_alloc(u32 num)
- {
- 	struct axi_dma_desc *desc;
- 
--	desc = kzalloc_obj(*desc, GFP_NOWAIT);
-+	desc = kzalloc_flex(*desc, hw_desc, num, GFP_NOWAIT);
- 	if (!desc)
- 		return NULL;
- 
--	desc->hw_desc = kzalloc_objs(*desc->hw_desc, num, GFP_NOWAIT);
--	if (!desc->hw_desc) {
--		kfree(desc);
--		return NULL;
--	}
- 	desc->nr_hw_descs = num;
- 
- 	return desc;
-@@ -339,7 +334,6 @@ static void axi_desc_put(struct axi_dma_desc *desc)
- 		dma_pool_free(chan->desc_pool, hw_desc->lli, hw_desc->llp);
- 	}
- 
--	kfree(desc->hw_desc);
- 	kfree(desc);
- 	atomic_sub(descs_put, &chan->descs_allocated);
- 	dev_vdbg(chan2dev(chan), "%s: %d descs put, %d still allocated\n",
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index 67cc199e24d1..a04a4e03eb3d 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -98,14 +98,14 @@ struct axi_dma_hw_desc {
- };
- 
- struct axi_dma_desc {
--	struct axi_dma_hw_desc	*hw_desc;
--
- 	struct virt_dma_desc		vd;
- 	struct axi_dma_chan		*chan;
- 	u32				completed_blocks;
- 	u32				length;
- 	u32				period_len;
- 	u32				nr_hw_descs;
-+
-+	struct axi_dma_hw_desc		hw_desc[] __counted_by(nr_hw_descs);
- };
- 
- struct axi_dma_chan_config {
--- 
-2.53.0
-
+I read through the AI debug logs. What steps it took to reason that
+the fix is correct, and it convinced me that I'm wrong.
+Applied.
