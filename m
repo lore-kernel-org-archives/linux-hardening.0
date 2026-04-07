@@ -1,190 +1,228 @@
-Received: from mail-dl1-f41.google.com (mail-dl1-f41.google.com [74.125.82.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1912765DF
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Apr 2026 11:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775560673; cv=pass; b=kUwsPIip6QRO0mgTbPBelhkOhcFDlqn6Az/erBoWIa5Lo7JpMK8NrUUUmW0bRv3arpI5DJp8fRQhnHc8uh5T3cQDmE8w2+Ca80+ruo7RFtp7aoE743oX1t3Sji8H0zUUGhZ7t84fAxd1ahgDkkykFJseuP/89Pquc7/qMyEGvqs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775560673; c=relaxed/simple;
-	bh=ZqkWlF3HcKw9IeQbnlO7Z8vKgfQ7zuIoMkMXPESU5qE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EIj8A9uJXtYzQ4tick587U6Sl4g6qc9ABWHv2IqHp0i+Ha3taWxAcQtFXjx3jkqzzRjjVvAt7HWx5UH7jadHbSvWqXJxA1iDoR5nMc3qH+iHlfuZg/KyKACkUy4N/rVk/V7sTgurwZxIdl+jXArkOfKEW9EBdEUuWuo6F5VeTUA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YrBQxaki; arc=pass smtp.client-ip=74.125.82.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB883B4EAD;
+	Tue,  7 Apr 2026 12:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775566469; cv=none; b=g3HvL2mBDftUL65abd7nVk0I5PN+yU2nesNGDedJjeA4T/aE/nFL9eUl4TCS2hl+SCTXODcSB+KtLiXiG8IQFyqy8Pj+emA51fNOH3Jqw7r6DzzLf37jRagenDjNiAikGtGGAZSKYKWeYaHGUPDz+GasErx+uB8BJafnaKcDQcg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775566469; c=relaxed/simple;
+	bh=8Ji12lgxQFeQ0eoD/lANGRdEYLLrVV374G+C+Ni88gs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aRo0XjnJsBdd384ZhJWoSJn1yVePHxMh82ZLI6sLd2WDsU1wsnhxOmXg745K//E3WUp+P5KKC+5BgFjAo0aaI4jM0NJ6qcNsYSXF7wQOnmIFsdrqgTKNFVhLIRcsO8VkzLvnd4n4uj3aJaxg/8AUQnINijzASFNLZfw5oaEl1p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnI3bSt3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YrBQxaki"
-Received: by mail-dl1-f41.google.com with SMTP id a92af1059eb24-1271195d2a7so211716c88.0
-        for <linux-hardening@vger.kernel.org>; Tue, 07 Apr 2026 04:17:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775560671; cv=none;
-        d=google.com; s=arc-20240605;
-        b=kVeucBm/TBeRdrJ5NdA4V2iR2ER9rrGM3d5Wp96rMs2S1uByHqFoRS2GQuLNH+0FUw
-         5X1VXxw/MDVCq7ooHSgxdd3g+KzRuiJaeXJo9jGUJAnvdg2lQmWAfFvnT97leO5mb9BU
-         xVR8OqmSFaa8iaRh8xnClhFi5HCgcVyBbioqcR39px6reOGLmfQCICvAySWr/ErtznxF
-         HewO1g3YliYY7kFGv5ZC/hlKmxYO9An38pviqqW7SW0/lzDWXyGG0/k/RNNoXbRDYx16
-         goeICfEtv2nJ41JZfX2y0RpnVYvwXyEfhSDj/KbXXhtU4o5C/GDH4TDtmniqGHUh5TOp
-         qlow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=7Ot/6cmUyAYlu4w3F36LFgW3QWHoYVPnUsR/JCweN/I=;
-        fh=DRgHfrQsHp7X3sx3tmkjI/efNsGRIATdTN/LUWEBiWs=;
-        b=K478YdqEh+eFqkf535xX/uS3t0G+wAotP9GozywFds7g221DBg2c/Oe9DAgw0Wn+CZ
-         9Ffc1T8yDo+lpEBc5bLKKoaOrgZGOyjUIXD+FtndJBc+aYoV3iWjdH7yfleaQ/yVzbnM
-         rQBkvhUVgpjbPfZKYoF7dUYlN7QXavEAiIfYKwpXqpVJEHkIRKzmuNMhrWemvhO6y1/t
-         Y32ERi9uFEiSZG42sY3DUygaHRA0XHvuDZMV92yJ2pADTaAU++UrkIoU2zEoSAiVVzYm
-         +/uoxY9LLhZhBXpkX3WQQ+qbuDbChYGii9VB9I55Fc9u5XkXvKkBcTxjrdqANuL9epz0
-         Lz3Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775560671; x=1776165471; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Ot/6cmUyAYlu4w3F36LFgW3QWHoYVPnUsR/JCweN/I=;
-        b=YrBQxakidi3vabOXFxkgxHz2kX35SIlIHgxGb/JhZsN4qDbU63Vt0JkXSDGiQwZASw
-         FJU6cermHMj9rzzq0CiARK3umd27UjwEt84d2uKobn+07To8R5u/ViLK6k+9vA/Vpj40
-         dIc025r8aqIFbxpX+jqQhKF49FRyic3w/V3WPcRBv3EpdzE9DL5Lf2v++tX/cN+4wY4E
-         iSu6GqmcigtZuYW5vsY+r0in+sSlRM1fplKk/2sR4eGRLriAH98exu3+3GoI3eklx31T
-         Bb9r9TCv065HYMvO8SJ7WS1IBaXT+rCaH5fZLf9FfHY+S4KgIDrpRrdEKEJT8JATPO1p
-         heXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775560671; x=1776165471;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Ot/6cmUyAYlu4w3F36LFgW3QWHoYVPnUsR/JCweN/I=;
-        b=nNvLAP65JInLBW0Vm0uHTs0stsq/p4+4CIVERi+MgeUZVMR2/nvYGOe226e5LyYVYI
-         CpkzbLbwDfrkP9pWs4vk2B5c0GS3h1hkv+PhfTJZDL+FNV2QlOL15Nqpf4ku/Tmt5/AS
-         6k1w1w9QtnBYxEwckL1hKG/OvC+kcq6aVJVKTSC5ojAp8L+6X+djy1xWRfRGCt3sV0Za
-         XZ9pUhFJi8SMxLbUPUWaV/RX84r+BetRohhEZFlF2ZixtLIfdoMg81llNan4IjpVIwzx
-         PrTH5u+sPfVZPPul0XOKUdBKkB12l+uexn9rZICz1TLJMU6vo6AimpTBcEu+XsZ/wAtB
-         oJtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFzCKSvqkmiNhXrt94xTfekq1qaChsf5XElFH4EsBfFCFIib46GlREzAWE6PrzHDRxMBoyZXW22cN8i08qP7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgXRzSVvgZTLt07Iw20xsAPp+gxR1q2cjnR5W3FrNPXRf3TNKO
-	dx9pzeKxfMeKC+tfDPVm8CNaIuOOUy5Cc3a9zCHsfCG3MZPEjhS7UZZUd7VRh+sSX/6nQZUCfJ2
-	ESUEYLhdTeYcoD77kvT4z+p6BD0w5D0UQUwjQjkp7
-X-Gm-Gg: AeBDiesAb8DwTxeExJoShyrywIFQ9FFfOda5U15mfWrKSPiVHwjS02+RwjQhk+wn9HE
-	VrKGxw3Bml85u5lT2R/AJbJi8p0b1Gn3DQqxWqSFeaBsoAWAeZ1Pf8kY6/364uvXyLP541CSCWb
-	fsaGa+0KRjX0Uk9Picxb+FSj+7M9aQVTK9M7wC/PClGfw+9a7gJHLroZSUu2OdgAYvMjIikm0Eu
-	1p4JGBY+Z40W3ZyFZCtTUDS1D8a/t/JRrIGlwlgLUKEH+eC06P0s9jOf9rLDKRdV8ZitqJbsuzt
-	CsAR5xIICygIOX7bJgSwH/Sq/irwCU1g/01vJzo=
-X-Received: by 2002:a05:701b:270e:b0:12b:fc21:874d with SMTP id
- a92af1059eb24-12bfc218ac5mr4490405c88.19.1775560670230; Tue, 07 Apr 2026
- 04:17:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnI3bSt3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 590FEC116C6;
+	Tue,  7 Apr 2026 12:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775566468;
+	bh=8Ji12lgxQFeQ0eoD/lANGRdEYLLrVV374G+C+Ni88gs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fnI3bSt3HjVWVA4CO18XQVLGmXmaHI/PKaj09L7MapKBTgBF4+vYcp9Jpow9HVjs2
+	 DG92KMxitrIZCZARQetbo8EnLBE8T2X2FbWU3JaKcFRK1K+r0XZYT74/NJ5ANEVIFg
+	 Cfngzxlk4UBRGAtHCHgM4ThECBTQUK0GyDMnh1ey7StBxjuCP9RRuqr8n/Km2uGIgW
+	 Awb9Nc0AulMbQvJX+oqeIbriKr28hBesaYc99msxR90dQKzhvjDluT8Z8v1qg1aKq9
+	 0lsRYCmM+tu+6LJJQm1s/c+MCVcn38JhjgrtMndZoni8FzQZHzjdWPlixpx30YRqHJ
+	 8mwjy8KvYS6Tw==
+Date: Tue, 7 Apr 2026 21:54:26 +0900
+From: "Harry Yoo (Oracle)" <harry@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+	Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
+	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
+	Florent Revest <revest@google.com>,
+	GONG Ruiqi <gongruiqi@huaweicloud.com>,
+	Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>,
+	Matteo Rizzo <matteorizzo@google.com>
+Subject: Re: [PATCH v1] slab: support for compiler-assisted type-based slab
+ cache partitioning
+Message-ID: <adT-gkVmVDDXR1h_@hyeyoo>
+References: <20260331111240.153913-1-elver@google.com>
+ <ac9d5O5XehnXRc5A@hyeyoo>
+ <d0fe363c-2e8f-44a4-9b64-3fa3ba9a5773@kernel.org>
+ <adM2XVZf1DekahlY@hyeyoo>
+ <CANpmjNMeaWWuDMAj_n38U9XRqgZQz30ca82Vy10Bg=NoDfZ5ng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331111240.153913-1-elver@google.com> <ac9d5O5XehnXRc5A@hyeyoo>
- <d0fe363c-2e8f-44a4-9b64-3fa3ba9a5773@kernel.org> <adM2XVZf1DekahlY@hyeyoo>
-In-Reply-To: <adM2XVZf1DekahlY@hyeyoo>
-From: Marco Elver <elver@google.com>
-Date: Tue, 7 Apr 2026 13:17:14 +0200
-X-Gm-Features: AQROBzAgGN0NN5VZKje-TIGicheiDUli6J3RmxbH29tvqb2R9oxdlLQMmt6dDl8
-Message-ID: <CANpmjNMeaWWuDMAj_n38U9XRqgZQz30ca82Vy10Bg=NoDfZ5ng@mail.gmail.com>
-Subject: Re: [PATCH v1] slab: support for compiler-assisted type-based slab
- cache partitioning
-To: "Harry Yoo (Oracle)" <harry@kernel.org>
-Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>, 
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, Hao Li <hao.li@linux.dev>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com, 
-	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Florent Revest <revest@google.com>, GONG Ruiqi <gongruiqi@huaweicloud.com>, 
-	Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>, 
-	Matteo Rizzo <matteorizzo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMeaWWuDMAj_n38U9XRqgZQz30ca82Vy10Bg=NoDfZ5ng@mail.gmail.com>
 
-On Mon, 6 Apr 2026 at 06:28, 'Harry Yoo (Oracle)' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
-> On Fri, Apr 03, 2026 at 08:29:22PM +0200, Vlastimil Babka (SUSE) wrote:
-> > On 4/3/26 08:27, Harry Yoo (Oracle) wrote:
-> > >> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> > >> index 15a60b501b95..c0bf00ee6025 100644
-> > >> --- a/include/linux/slab.h
-> > >> +++ b/include/linux/slab.h
-> > >> @@ -864,10 +877,10 @@ unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf);
-> > >>   * with the exception of kunit tests
-> > >>   */
-> > >>
-> > >> -void *__kmalloc_noprof(size_t size, gfp_t flags)
-> > >> +void *__kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
-> > >>                            __assume_kmalloc_alignment __alloc_size(1);
-> > >>
-> > >> -void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
-> > >> +void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node, kmalloc_token_t token)
-> > >>                            __assume_kmalloc_alignment __alloc_size(1);
+On Tue, Apr 07, 2026 at 01:17:14PM +0200, Marco Elver wrote:
+> On Mon, 6 Apr 2026 at 06:28, 'Harry Yoo (Oracle)' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
+> > On Fri, Apr 03, 2026 at 08:29:22PM +0200, Vlastimil Babka (SUSE) wrote:
+> > > On 4/3/26 08:27, Harry Yoo (Oracle) wrote:
+> > > >> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> > > >> index 15a60b501b95..c0bf00ee6025 100644
+> > > >> --- a/include/linux/slab.h
+> > > >> +++ b/include/linux/slab.h
+> > > >> @@ -864,10 +877,10 @@ unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf);
+> > > >>   * with the exception of kunit tests
+> > > >>   */
+> > > >>
+> > > >> -void *__kmalloc_noprof(size_t size, gfp_t flags)
+> > > >> +void *__kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
+> > > >>                            __assume_kmalloc_alignment __alloc_size(1);
+> > > >>
+> > > >> -void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
+> > > >> +void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node, kmalloc_token_t token)
+> > > >>                            __assume_kmalloc_alignment __alloc_size(1);
+> > > >
+> > > > So the @token parameter is unused when CONFIG_PARTITION_KMALLOC_CACHES is
+> > > > disabled but still increases the kernel size by a few kilobytes...
+> > > > but yeah I'm not sure if we can get avoid it without hurting readability.
+> > > >
+> > > > Just saying. (does anybody care?)
 > > >
-> > > So the @token parameter is unused when CONFIG_PARTITION_KMALLOC_CACHES is
-> > > disabled but still increases the kernel size by a few kilobytes...
-> > > but yeah I'm not sure if we can get avoid it without hurting readability.
-> > >
-> > > Just saying. (does anybody care?)
+> > > Well we did care enough with CONFIG_SLAB_BUCKETS to hide the unused param
+> > > using DECL_BUCKET_PARAMS(),
 > >
-> > Well we did care enough with CONFIG_SLAB_BUCKETS to hide the unused param
-> > using DECL_BUCKET_PARAMS(),
+> > Hmm yeah.
+> >
+> > I wasn't sure if we could do this without hurting readability,
+> > but perhaps we could...
+> >
+> > > so maybe extend that idea?
+> > > I think it's not just kernel size, but increased register pressure etc.
+> 
+> I'll take a closer look at generated code.
+
+> In some cases the compiler ought to omit zero-sized arguments,
+
+Oh, didn't know that was a thing.
+
+Not sure if it's safe to do that for exported functions though (since
+modules can be built w/ a different compiler).
+
+> so I want to be sure we're not
+> prematurely optimizing and the size increase is not some other effect.
+
+Great, thanks for looking into it.
+
+> > Something like this should work? (diff on top of this patch)
+> 
+> Thanks, I'll consider it.
+
+Thanks.
+
+> Re your other comments:
+> 
+> > Assuming not all people building the kernel are security experts...
+> > (including myself) could you please add some insights/guidance on how to
+> > decide between RANDOM_KMALLOC_CACHES and TYPED_KMALLOC_CACHES?
+> 
+> You can find different arguments for either, and in the original RFC
+> that was part of the discussion.
+
+Yeah, I had fun time following the discussions :)
+
+> However, my biased view is that type-based partitioning in general
+> is the stronger security boundary.
+> Because it creates a deterministic separation; specifically isolating
+> pointer-containing objects from pointerless ones: it effectively kills
+> certain classes of exploit techniques that probabilistic defenses
+> (like randomization) only delay, especially in environments where
+> attackers can retry or use side-channels.
+
+That's a fair argument.
+
+Could we possibly put some of those arguments (in a neutral/technical
+sense) in help text to make people's lives easier?
+
+Err, trying to provide unbiased (tm) help text...
+Something like:
+
+config RANDOM_KMALLOC_CACHES
+	bool "Randomize slab caches for normal kmalloc"
+	help
+	  Randomly pick a slab cache based on code address and a per-boot
+	  random seed.
+
+	  This makes it harder for attackers to predict object co-location.
+	  The placement is random: while attackers don't know which kmalloc
+	  cache an object will be allocated from, they might circumvent
+	  the randomization by retrying attacks across multiple machines until
+	  the target objects are co-located.
+
+config TYPED_KMALLOC_CACHES
+	bool "Type based slab cache selection for normal kmalloc"
+	depends on $(cc-option,-falloc-token-max=123)
+	help
+	  Rely on Clang's allocation tokens to choose a slab cache, where token
+	  IDs are derived from the allocated type.
+
+	  Unlike RANDOM_KMALLOC_CACHES, the cache assignment is deterministic
+	  and based on type, which guarantees that objects of certain types
+	  are not placed in the same cache. This effectively mitigates
+	  certain classes of exploits that probabilistic defenses like
+	  RANDOM_KMALLOC_CACHES only make harder but not impossible.
+	  However, this also means the cache assignment is predictable.
+
+	  For example, a token ID scheme might separate pointer-containing
+	  objects and pointerless objects to prevent buffer overflows on
+	  primitive buffers from directly corrupting pointer-containing objects.
+
+	  The current effectiveness of Clang's type inference can be judged by
+	  -Rpass=alloc-token, which provides diagnostics where (after dead-code
+	  elimination) type inference failed.
+
+	  Requires Clang 22 or later.
+
+endchoice
+
+> The current pointer/non-pointer scheme is relatively intuitive with
+> well-understood properties, and a good start.
 >
-> Hmm yeah.
->
-> I wasn't sure if we could do this without hurting readability,
-> but perhaps we could...
->
-> > so maybe extend that idea?
-> > I think it's not just kernel size, but increased register pressure etc.
+> However, an open research question is if better alloc-token ID schemes exist:
+> one that is tailored to kernel data structures that would meaningfully
+> increase exploitation difficulty further without increasing the number of
+> partitions.
 
-I'll take a closer look at generated code. In some cases the compiler
-ought to omit zero-sized arguments, so I want to be sure we're not
-prematurely optimizing and the size increase is not some other effect.
+Haha, that's too adventurous research question for me :P
 
-> Something like this should work? (diff on top of this patch)
+> Since an improved scheme could simply be activated with a
+> compiler flag, having the baseline infrastructure available and
+> maintained is the first step.
 
-Thanks, I'll consider it.
+Agreed.
 
-Re your other comments:
+> > Now somewhat out-of-scope (or at least pre-existing) review comments
+> > from Sashiko that I think are still worth mentioning...
+> 
+> Indeed, these are pre-existing issues with RANDOM_KMALLOC_CACHES.
+> Worth follow-up patches, but this patch here wants to just get the
+> TYPED_KMALLOC_CACHES infrastructure in place so we can build on top of
+> it.
 
-> Assuming not all people building the kernel are security experts...
-> (including myself) could you please add some insights/guidance on how to
-> decide between RANDOM_KMALLOC_CACHES and TYPED_KMALLOC_CACHES?
+Yeah, that's totally fine!
 
-You can find different arguments for either, and in the original RFC
-that was part of the discussion. However, my biased view is that
-type-based partitioning in general is the stronger security boundary.
-Because it creates a deterministic separation; specifically isolating
-pointer-containing objects from pointerless ones: it effectively kills
-certain classes of exploit techniques that probabilistic defenses
-(like randomization) only delay, especially in environments where
-attackers can retry or use side-channels.
-
-The current pointer/non-pointer scheme is relatively intuitive with
-well-understood properties, and a good start. However, an open
-research question is if better alloc-token ID schemes exist: one that
-is tailored to kernel data structures that would meaningfully increase
-exploitation difficulty further without increasing the number of
-partitions. Since an improved scheme could simply be activated with a
-compiler flag, having the baseline infrastructure available and
-maintained is the first step.
-
-> Now somewhat out-of-scope (or at least pre-existing) review comments
-> from Sashiko that I think are still worth mentioning...
-
-Indeed, these are pre-existing issues with RANDOM_KMALLOC_CACHES.
-Worth follow-up patches, but this patch here wants to just get the
-TYPED_KMALLOC_CACHES infrastructure in place so we can build on top of
-it.
-
-Thanks,
--- Marco
+-- 
+Cheers,
+Harry / Hyeonggon
