@@ -1,96 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356AA25A2C6;
-	Tue,  7 Apr 2026 14:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1C33793C2
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Apr 2026 19:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775573588; cv=none; b=FY8q73bHuMwhKtnpqg6EaNAP7bdsZN/sKlT3EKbjsAmCRYv7P5zZvzCB0Le8fitItp8qB7tVTQ1SZcwtLpFELcTjTEhAGH4BDaS2v6c/nQrubPtkmYEmG02ifRHB/+ynYPf75a40fEeyWyl6chKWjUPvWA+i5NeonWjGF6XwaAg=
+	t=1775591938; cv=none; b=twlccb8z4MpB6Ddnhm9HsAwj3JSMBmB1T9CyMx2FkJodOgj1tp2vhalRdj4fJ4Ps2EX8WbwfxefYgTJh27tOHyLBtqIQq2Yh7xwTpLPEzqVA4iC0RaEDUfyOpAGaT+pHR4ZFwnAfH7zRtpnkDOodva2CquJ9ou3jDgq5HNrCCQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775573588; c=relaxed/simple;
-	bh=7KnGwQuVLRhKTI/XFGjYHDnXGe4PLS1Mec3+OBZjAPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Plp55cCF9UzXt73xkB1/XXAFLd8mm9vk519TcXFiU3lDzHTftBbs72zEXHDpDQCty4D6qIYhnIiPRxtfDlNyR7DGLO2KsUz2IX6cR1mOjpQ828DflF3hgji6XXDLwm3QOz2IJF0ebhjj4+E/pXccYLaEtO2h8M9u2H6ejWVneBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RS/KQp5i; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1775591938; c=relaxed/simple;
+	bh=Z6velnEz/B2uUTLmaqxbse9s2ja6/VD05qH9aqa+eGM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n8Lj0UMQ2M6sXT2UtHl9Yu+PKob5LpV8/vDMHH4e/IjsnMLRHvBTEIyY3Z3xDo400YQZ5J5FwcEAuSY/FBYFFfJEXtwLTJflY8xiIcfBiwzokWw2C0w51A0nvPDZS1uAWLY3G+ooZAe/xC497tUa5hWlWQy4mv1NAI68lwcqL8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ovYykCZu; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RS/KQp5i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775573587; x=1807109587;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7KnGwQuVLRhKTI/XFGjYHDnXGe4PLS1Mec3+OBZjAPQ=;
-  b=RS/KQp5i+HJZxupQ6vz6m9GpYehkIjosYug6bfI5SZCE5xEStMHwgXai
-   w5QqZKBSk+Xs+P7DyngQJ3axXXgO+j8p2FEvcFTgyPDZJ/4NQE71jyBTX
-   LVsCr5/k/HMMuL4OBLi7ueTlp0hv6DlK5dzFzV4o6kATVg7n5qWqUUrFZ
-   lIiIeTLQj2+54PMJVvE8EgyYcvK5NJhHlbZSgHj2wZGoBJQoI5PuvFCY4
-   3gWpG+UB324IOJkD8tHLVw3AQfyHxc4htmwy22EybIgUKsAxYKFIH32yZ
-   /V9iUneeb5bKWPTbp0LS9uLf1LvfecoZafpFlOza/KBMxkj9KPtq0cmsY
-   g==;
-X-CSE-ConnectionGUID: PYBGoT5cTligQGatTuFMVA==
-X-CSE-MsgGUID: 6fa7hRC/QmqkZ/2dlTMitQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="93927652"
-X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="93927652"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 07:53:06 -0700
-X-CSE-ConnectionGUID: caLrySRjRxm9atDpLtoTvg==
-X-CSE-MsgGUID: cZ944G/JQPGkyfvaJ2vd0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="223891063"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 07:53:04 -0700
-Date: Tue, 7 Apr 2026 17:53:02 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Shuvam Pandey <shuvampandey1@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lib/string_helpers: fix string_get_size() unit promotion
- after rounding
-Message-ID: <adUaTrU_DZuK1Kd8@ashevche-desk.local>
-References: <20260407143306.78809-1-shuvampandey1@gmail.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ovYykCZu"
+Received: from eig-obgw-6002b.ext.cloudfilter.net ([10.0.30.203])
+	by cmsmtp with ESMTPS
+	id ACHBwTVzpnwj2ACZdwPgkB; Tue, 07 Apr 2026 19:58:57 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id ACZcwu83YwWe6ACZcw7Cm4; Tue, 07 Apr 2026 19:58:56 +0000
+X-Authority-Analysis: v=2.4 cv=RfSQC0tv c=1 sm=1 tr=0 ts=69d56201
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=chC0KcwHAXg1M6QkddG+Hg==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=e9iTn1YT0ADnaAsSjdMA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Ftx1xvaens4tD60bx30l+0J5ZoIN5FuIm41gSlSbF7M=; b=ovYykCZudC5eWXWUoETHRq3Jh+
+	9h56ItZnoxviFExq4NOVyR276Jy4LzgQ8yDpWw0QMvZKS2k31LYVaP0SwudkrsM0olfV7q3y8VXv3
+	AT2zbKvPvCU34hE9GVynQ6Nzo1bUYnlGPC9cz+ZS9ULbR61xxg/kU2va4eok8lprH+ctJ8vEIOE+j
+	bmz37MuAqP0j3WBFPlPHXTIVA4aio1+SgPfVFfAGfN8CSB3sbul6eK3kJggYOS9DeCIbaNUbErmMj
+	rCsn8lMZBwWyCrfZl8lVrrpgyjhtyByKRvYCk7s01EABm74swPB6QWZBwFkdHSwYh54xgZLxOGAZ6
+	bQWz3S3w==;
+Received: from [177.238.18.219] (port=37324 helo=[192.168.0.36])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1wACZL-00000003Nk6-0Fqb;
+	Tue, 07 Apr 2026 14:58:39 -0500
+Message-ID: <d04e11af-5c1b-44a2-aebc-a0ee4fb79802@embeddedor.com>
+Date: Tue, 7 Apr 2026 13:57:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260407143306.78809-1-shuvampandey1@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] Bluetooth: hci.h: Avoid a couple
+ -Wflex-array-member-not-at-end warnings
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <aZ1FrL8qvvKuktBF@kspp>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <aZ1FrL8qvvKuktBF@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.18.219
+X-Source-L: No
+X-Exim-ID: 1wACZL-00000003Nk6-0Fqb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.36]) [177.238.18.219]:37324
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfG2+Woumo2C1EhftTpHTxCKMIllnt2TU1Bje/OELCoxrbXAeIXz07lv87RjHtbJJ9MXu4YRNgWrejFOH+XOqxE+0gwe8KE3DGyu2qnbK/U7g5VhZGVvq
+ FkRfaP1HAXZXad511rnXpbXm+X1QNsLirqu0BM5/7yLy861OxDpQEZ7zbkzUcCHKh8sNxope/4jOr7urXN7KDP3RAQSWZA7icvVlAUXTWPTNpVfnpolxDQwt
 
-On Tue, Apr 07, 2026 at 08:18:06PM +0545, Shuvam Pandey wrote:
-> string_get_size() rounds the fractional part before formatting the
-> result. If that carry pushes the integer part to the unit divisor, the
-> value is still printed in the old unit.
+Hi all,
+
+Friendly ping: who can take this, please?
+
+Thanks
+-Gustavo
+
+On 2/24/26 00:31, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> This yields outputs like "1000 kB" for 999500 bytes and "1024 KiB" for
-> 1048064 bytes instead of promoting them to the next unit.
-
-What does it print for 1048575, 1048576, 1048577 respectively?
-(before and after your patch)
-
-All the same for numbers around 2MiB.
-
-> Renormalize the value after the carry so it is promoted before
-> formatting. Add KUnit coverage for the decimal and binary boundary
-> cases.
-
-...
-
-> --- a/lib/tests/string_helpers_kunit.c
-> +++ b/lib/tests/string_helpers_kunit.c
-
-Thumb up for the test cases!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> struct hci_std_codecs and struct hci_std_codecs_v2 are flexible
+> structures, this is structures that contain a flexible-array member
+> (__u8 codec[]; and struct hci_std_codec_v2 codec[];, correspondingly.)
+> 
+> Since struct hci_rp_read_local_supported_codecs and struct
+> hci_rp_read_local_supported_codecs_v2 are defined by hardware, we
+> create the new struct hci_std_codecs_hdr and struct hci_std_codecs_v2_hdr
+> types, and use them to replace the object types causing trouble in
+> struct hci_rp_read_local_supported_codecs and struct
+> hci_rp_read_local_supported_codecs_v2, namely struct hci_std_codecs
+> std_codecs; and struct hci_std_codecs_v2_hdr std_codecs;.
+> 
+> Also, once -fms-extensions is enabled, we can use transparent struct
+> members in both struct hci_std_codecs and struct hci_std_codecs_v2_hdr.
+> 
+> Notice that the newly created types does not contain the flex-array
+> member `codec`, which is the object causing the -Wfamnae warnings.
+> 
+> After these changes, the size of struct hci_rp_read_local_supported_codecs
+> and struct hci_rp_read_local_supported_codecs_v2, along with their
+> member's offsets remain the same, hence the memory layouts don't
+> change:
+> 
+> Before changes:
+> struct hci_rp_read_local_supported_codecs {
+>          __u8                       status;               /*     0     1 */
+>          struct hci_std_codecs      std_codecs;           /*     1     1 */
+>          struct hci_vnd_codecs      vnd_codecs;           /*     2     1 */
+> 
+>          /* size: 3, cachelines: 1, members: 3 */
+>          /* last cacheline: 3 bytes */
+> } __attribute__((__packed__));
+> 
+> struct hci_rp_read_local_supported_codecs_v2 {
+>          __u8                       status;               /*     0     1 */
+>          struct hci_std_codecs_v2   std_codecs;           /*     1     1 */
+>          struct hci_vnd_codecs_v2   vendor_codecs;        /*     2     1 */
+> 
+>          /* size: 3, cachelines: 1, members: 3 */
+>          /* last cacheline: 3 bytes */
+> } __attribute__((__packed__));
+> 
+> After changes:
+> struct hci_rp_read_local_supported_codecs {
+> 	__u8                       status;               /*     0     1 */
+> 	struct hci_std_codecs_hdr  std_codecs;           /*     1     1 */
+> 	struct hci_vnd_codecs      vnd_codecs;           /*     2     1 */
+> 
+> 	/* size: 3, cachelines: 1, members: 3 */
+> 	/* last cacheline: 3 bytes */
+> } __attribute__((__packed__));
+> 
+> struct hci_rp_read_local_supported_codecs_v2 {
+> 	__u8                       status;               /*     0     1 */
+> 	struct hci_std_codecs_v2_hdr std_codecs;         /*     1     1 */
+> 	struct hci_vnd_codecs_v2   vendor_codecs;        /*     2     1 */
+> 
+> 	/* size: 3, cachelines: 1, members: 3 */
+> 	/* last cacheline: 3 bytes */
+> } __attribute__((__packed__));
+> 
+> With these changes fix the following warnings:
+> 
+> include/net/bluetooth/hci.h:1490:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> include/net/bluetooth/hci.h:1525:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   include/net/bluetooth/hci.h | 16 ++++++++++++----
+>   1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index 89ad9470fa71..572b1c620c5d 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -1468,8 +1468,12 @@ struct hci_rp_read_data_block_size {
+>   } __packed;
+>   
+>   #define HCI_OP_READ_LOCAL_CODECS	0x100b
+> -struct hci_std_codecs {
+> +struct hci_std_codecs_hdr {
+>   	__u8	num;
+> +} __packed;
+> +
+> +struct hci_std_codecs {
+> +	struct hci_std_codecs_hdr;
+>   	__u8	codec[];
+>   } __packed;
+>   
+> @@ -1487,7 +1491,7 @@ struct hci_vnd_codecs {
+>   
+>   struct hci_rp_read_local_supported_codecs {
+>   	__u8	status;
+> -	struct hci_std_codecs std_codecs;
+> +	struct hci_std_codecs_hdr std_codecs;
+>   	struct hci_vnd_codecs vnd_codecs;
+>   } __packed;
+>   
+> @@ -1504,8 +1508,12 @@ struct hci_std_codec_v2 {
+>   	__u8	transport;
+>   } __packed;
+>   
+> -struct hci_std_codecs_v2 {
+> +struct hci_std_codecs_v2_hdr {
+>   	__u8	num;
+> +} __packed;
+> +
+> +struct hci_std_codecs_v2 {
+> +	struct hci_std_codecs_v2_hdr;
+>   	struct hci_std_codec_v2 codec[];
+>   } __packed;
+>   
+> @@ -1522,7 +1530,7 @@ struct hci_vnd_codecs_v2 {
+>   
+>   struct hci_rp_read_local_supported_codecs_v2 {
+>   	__u8	status;
+> -	struct hci_std_codecs_v2 std_codecs;
+> +	struct hci_std_codecs_v2_hdr std_codecs;
+>   	struct hci_vnd_codecs_v2 vendor_codecs;
+>   } __packed;
+>   
 
