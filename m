@@ -1,164 +1,158 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2090.outbound.protection.partner.outlook.cn [139.219.17.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC007EEA8
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Apr 2026 01:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775523719; cv=none; b=nc1Y4DswHIUgHo5awOopufnNlTrTIJpxfwW+LFDXm7in/c+jRCTXSvlvt4lq7rzU5ZGbfg/HNkMLwsMt25eNpRkcSGdoAw1dllpl9gqBOXoOcRF4dnscGb8MeDLh9xDA6xUR2YowBYufgyjdgf9cpOtpd8ejkgqp0ufuDFO2gF4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775523719; c=relaxed/simple;
-	bh=ldVkH82Ogb1CKzMVpqM/V/WVuLz1cIfwYBAeg4IRBJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GdE9GcavEawKdi7FMOj7eJHpDqJ3yO76Mw2+gzl1/5zqkE3QWAGzsmWxdt4K1IMnAllp38UF49pShgtgEizGJolv//jK88aeu3M+N7dutg5SYKWDAQX34MG7K7X36VLRtjcD+yKWMUnKXDThJr4wSCWkkY3w+q4GA/+RWCd0g90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AjOLlmtf; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjOLlmtf"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2b2ae8a0103so1669175ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Apr 2026 18:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775523718; x=1776128518; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PtZf8qslJlc/Qs5L5CsqmY7NGi+VR5R6jMYyuK26CRA=;
-        b=AjOLlmtfxw0+0QfSGdRB9VMleQoHQv9YEk2/92cZArjSutajN5cTGqcfOXcvYA7TCL
-         +TY+ydstEJVBxK3mDUztJjkd19VD2CkEzUHdUndc/VwARZYi/5hKwGaN6MdzjVTMUR9b
-         4JHRAlEkHZlIHTypd8ZQ7Dv42uJpAsglxarDdYJ9oz0ha3Lln+KiTniEwRDhyJPJMr5y
-         uLdrxla38CIwFaUj2eDcLromrVYKWWm/jos/xjkNIbw3XNsZehJaQuC2kuBW1BfqZMBf
-         PgqmVBk8WQpn/FWlblRAQtko408rAnTI7KQVmvrJ8eJCwIk5CAVC0rvGCO9LkbF0lDo3
-         uq7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775523718; x=1776128518;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PtZf8qslJlc/Qs5L5CsqmY7NGi+VR5R6jMYyuK26CRA=;
-        b=hZWmgeBJv7oY3a3NQoDl2RX0u67EEvNn5x/qUcCw9ScGrexLLa/7595lA90CKBtNH7
-         qUQdqEG+Uu5j17360c65GI81PI16l7PcEOKJzlfm37GbaBeU4D/Bd99R6Hh91vw00dq+
-         l2WELsD+OiiXF+Qze9tBqjldndjwt+MTfhEYvPoRDK+s4ebV4JseIL1re19eboqZV8lK
-         +fbE5Owwgp4WsqRg2xXLaJQRXM94lafZk0CTR3Bfyl3G9eyk0Ui5bL9J2ELUq1XT/2Nr
-         qDiOWvseaTBnxsyhlWE8gZm+g8gXImjDcc13vUTURTx2yVXpiZdKgCz3VhhV0xEyVpCy
-         Cvhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXeSEdBfRQlRmVVFJo2oAtw8QtpY85rRCqqsv03MI/1yRYNPY+RzZSzpByFlsKTDI1e/wE5gyFLUHrOssuc/28=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJosT4+DTUX6wi2L7NONRl1pfQU9erwDOpsw9+2qDHc/JHMixU
-	hc9i67wMrCfctl6sM5IrIWi5fHwAH0D/Chcqqz9o3zhxM+vYzQ4/g2DD
-X-Gm-Gg: AeBDievwhiBSgwfmEO994q6OHpjdMjt+Gr2mb1RxHzl8R6KFdOTCRna4k7fGQ57ek5o
-	3W6tseHfL56xAmsuuGjLI0xGmGnfTTVl60bcNGaXLfcxs0z7k8HNgKlVDTseB5Pbly3T4++thel
-	qBYmUf4J9QjMaI+pNBeZ5GfoAIp8QKgRTUl1uUQPblbPLBSzQpOdTX1fo7NoddDrqRGng2Sy5v2
-	hvx6ntSKu8gXVxMFw4ZjvWDhvMwIlSNDrQ58xHtXxUGb9qM1qt9VpK/dAO2588AUttNw9LhpLzq
-	dF5UJkc684Tqi+KqpIO4xelL73eqIj5gCsVbNOHARCV/he/n3DH447QUrAIky7cXKqtl9mRx+NM
-	Y+fRs7JKpkQCempOzB5EuwnlOmvttDpPMw0otKlmE0PvUuHA2LduLIdhYNt5ar1YSjU1oCvFBYZ
-	vlAZExpSpyzRc6tDICWM4T6ZVswXlfS0bdwsPVZe32tgpfWj6RgmTmPlo=
-X-Received: by 2002:a17:903:384c:b0:2b2:65db:8c5f with SMTP id d9443c01a7336-2b28176a464mr150754885ad.27.1775523718187;
-        Mon, 06 Apr 2026 18:01:58 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b2747341a8sm153194735ad.3.2026.04.06.18.01.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2026 18:01:57 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] media: dvb_ca_en50221: simplify ca allocation
-Date: Mon,  6 Apr 2026 18:01:40 -0700
-Message-ID: <20260407010140.3229-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B530A8248B;
+	Tue,  7 Apr 2026 01:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775525870; cv=fail; b=CEpTZ8SH3ZHm7B9/GSAlblj9Urm6+/v2/RKcIsIHdUjFbo+wRvOqNrLxnfFxl1h9wmX5dkFm4sANvY6pfIIm0jdUgiSBb20Sbsi3w0kwUiDUZxKioiWphFPT21r5iHVQg+zh0vYkTVO+iH18EY1lCUtlEzuOKm21zit3g1t2hsQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775525870; c=relaxed/simple;
+	bh=9svDytkhrZ7DQHwJawwXS+yCnJBh0YFeMHC3PXNvR5g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NJu0gWSrTN+YiPBxx6SfflZQI+kNoTRlFMmbLa6gvn8y0/uqBQBMkU4A0KWnvgCkqhNdxxWOQxA2gpYwqlLtFi3S4dl/4YV8gql48duOcEI3sVQbn1c9wf/ycWFkd2S09Dix6qo9whqHelbAKJzSHCgP9/hG+SqU7ZvyQNX+Drc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hgQPe7QB8rf/RmdIHIo0eCCGFDYc5YhEnRV1aRLWXfdOe4jouAHT5psEpLzSUDWy2Nnn22cFH/wYhj6JifXg5UenLBJF4RpHPvm6QdLol3l1J5vK/bCoK18RLophcyPP3YpWIdYg8EkM++IBWKYirIPpxGIY7LjKxND9TFWC4xOqDPHh8Mlu/7pkL6NJns9Hy5vuDO5WZe84Libop+9LR+M22EgQ1DaZy6iYCjz9jg7bFsZmQgiNnHWle/d2/P+cIHTxYByRzvUy2hKXK62/qyCSrNh9ac01vVeAhihPoJN+Yu2B42oi+4jJe1CBSH/sBUkg+G03QBAgXmQse54vPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9svDytkhrZ7DQHwJawwXS+yCnJBh0YFeMHC3PXNvR5g=;
+ b=bswlf3lHns0CKPu5XhZIZjbXn9/8mpsXHceYz6FFskh1DdT77kltLcwE8i+mRXWIgJgASrISRa1Eu7arW/W6CkmwcjHsAfqxI1jGewQXN/YaAvu54mvONTb8vY9sNfVaujWt63qsVigP9XrRCVOWbf36Jw83QrL6+wESuOpeSQ4a8HpRAq3Wm9TKmOY3O0FanTEsf5KWxEAwIA8V+Wm3i6iEb33WmuJ1NA8RxTie0mBhZSq+cQBaSar7k+4AmIk/8oNAkkHaB5F/WiNzgNQ+FBsxOlijiPfT9PZWeDxURRh1i08hw8JpeAUrQiV9D8KSbBIm2W56WfeRuo2CTEmWMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::6) by ZQ4PR01MB1300.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:14::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.19; Tue, 7 Apr
+ 2026 01:37:37 +0000
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e7d4:256c:b066:850d]) by
+ ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%5])
+ with mapi id 15.20.9769.020; Tue, 7 Apr 2026 01:37:37 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Michael Turquette <mturquette@baylibre.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Paul Walmsley
+	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Emil Renner Berthing <kernel@esmil.dk>, Kees Cook
+	<kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Richard
+ Cochran <richardcochran@gmail.com>, "linux-clk@vger.kernel.org"
+	<linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, JeeHeng Sia <jeeheng.sia@starfivetech.com>, Hal
+ Feng <hal.feng@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>
+Subject: Re: [PATCH v1 17/22] dt-bindings: clock: Add StarFive JHB100
+ Peripheral-2 clock and reset generator
+Thread-Topic: [PATCH v1 17/22] dt-bindings: clock: Add StarFive JHB100
+ Peripheral-2 clock and reset generator
+Thread-Index: AQHcwo9TQLfYd6wApEuyD9hxN+QHMrXOyPcAgAQQIeA=
+Date: Tue, 7 Apr 2026 01:37:37 +0000
+Message-ID:
+ <ZQ4PR01MB12020E711CD7E1FAFD01B8A4F25A2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+References: <20260402105523.447523-1-changhuang.liang@starfivetech.com>
+ <20260402105523.447523-18-changhuang.liang@starfivetech.com>
+ <20260404-valiant-auburn-raven-c24be6@quoll>
+In-Reply-To: <20260404-valiant-auburn-raven-c24be6@quoll>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1300:EE_
+x-ms-office365-filtering-correlation-id: f3538206-cb30-402c-f796-08de94463fb7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|22082099003|38070700021|56012099003|18002099003;
+x-microsoft-antispam-message-info:
+ qmEP3bjgB6m9MPjt13YYbGxaYp04mGE7lmQibnSouKS3DhYzJsXk1bmqYbo2btr7bf4x43dt6M+f0n67dVlT1aFdFSy+1oc2CO2pPeRzsQx0PFUgRtZ17RGIPAVDCNgapObjyPR6qCU1Y9Uaj186KUljwlZvSvGsZj8n9aONL3xaxVDSSDpXbFZx5+Wqs7W33aYr01ff5D72abOpjp19WxRXAefVjYLSAi6sJ0WPIDwEUOGfNxlMN1SB8db3fKCViC3irEi2RRDBtTo8O7DqAwmKG0BFemQGHYR1T/mGMkI6Ht1OJyRI/JdRRgm443lMb/5qO8PdM2DtkWYK5zkA3jM4V3VoZ1kYt5waJwge324PfVXb7tAJDm730cLVgGMOJMkZ8CQXOG3SMTI/9262EsSjFg0jX6qkdeA+CO35ojfE4NC8M7aCU0WFnhL1e7lgJl+W52D5dtLFZ65IRvbe6u46fmlWLg3cgK5HjrZGGzKH8ToFCb52MODicMNbcFU52PinkvEIfd4kb4RUcWkFQgU+ZB/vFO8PB1YYMSnLfoRBanE+fxUAVBDu5/8BEW4FnpB27C/374YiPiIznpJORN05186bnyGp0mF6QYJR0eU=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(22082099003)(38070700021)(56012099003)(18002099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?OVZsME1oZVBrMkw1eCszd29BbFEvWHA2Rkh3VjdDN3RneGp1R3laRFBjMThX?=
+ =?utf-8?B?aFVVSS9zbmxGUGYxNm9PN2VqQ0gwRzlsR2ZVbTByQlUyTzJwZEtyN1R0R0ht?=
+ =?utf-8?B?OFlhamc5T3Jva2RZSEFyS3hZU1JMZHZqWlVMT21GNDhoM1hsbzA0dU9OcEVZ?=
+ =?utf-8?B?REV6UUhxaW1oSDZwMU1Pem9uVzFtMUxRR09RWC9rZVZPMTg3ejVCbUxPRWZk?=
+ =?utf-8?B?bU40TmZvODFxQk1zQVBMR0NwZGNnWmV5bGxQV0dmZ1ZmSWVuTWxld3NEOElv?=
+ =?utf-8?B?RE5XZm9aOVdyYmVEdHdBcFROdURsK05tK3NxUm5DaFJEaEdEbXZzTnA1MzIz?=
+ =?utf-8?B?WDBIRHhYOVFJOWZCSkxXYUZaQ1JFV2xVNGdqWSs3NHFJMUJDbzYxZDYyQUJV?=
+ =?utf-8?B?bURQSmlaNFBucWh4eDF0N2hDRTZNdTJwaC90WklKdXVZdEhwNzhvdlNFU3Bk?=
+ =?utf-8?B?WndwMjBXZUgreWx5RDNUK0gxVDhqRmdud0x0anRZejlpOVRUOVNkRnlmRDFP?=
+ =?utf-8?B?bUdiVzd1eDdkVkdTTURMR0U3MzgwVDFwTE93d3pyOG56Z3JOUm10Q3ZCMysy?=
+ =?utf-8?B?YnRLQUdId2szNkVEVFZkLzd6UzdzQ2NacTdCVjNTMTBNZC9scmFDdlk5dEJh?=
+ =?utf-8?B?ZTVMWkZDUEoraUR2VlJYdVl2OXV3b09EeEtXbUZCSk9ZUDNVTUJHUTNyZEht?=
+ =?utf-8?B?c0pNSXMrZDBBRGpKNXlveDVIV3ZFNUJwRVZ2SHJZOTdtMkpkbDQvZmViOVNX?=
+ =?utf-8?B?YS9EUXVvNmZmUUF2Rk5OZTZ5bkxhdnUrcHJnSFlzL3lFSkNPbk5sczZFR1dt?=
+ =?utf-8?B?YTM4RUZiTFIwN0VkaDJuTDdNdERjZk5rc2pUcmJ5V2d1Yzd3TTkvQzlteHg3?=
+ =?utf-8?B?VERSMWN5UUNtVDhoeE13WGMrNjgxcytpVFNYelVBaHlFcFlLT2FZM29ZVHlv?=
+ =?utf-8?B?ZHBUSnRxMWtLYjdSc3BWc2svSkJpbDRLQVpnZ1k1TDViUjlGY0I1MFNpYlRP?=
+ =?utf-8?B?aHZSRGhwWWpUMjkyMTZOUUU1N1dmdGNHWEkvczNHU1daNTV3eXBYY3FnTHlv?=
+ =?utf-8?B?NzM3UEU1RFR6N3ZnMkpudDRPQVF3NEtNYmNaUXBpQlg4WThVME1TMWs5cnd5?=
+ =?utf-8?B?RTVoSmtvTGNMTXBHYkc4UWpZL3BaekFDeDZPQ2tCWGdrNS9LalJKMjd4Z0NP?=
+ =?utf-8?B?dHQ1c0hRL3NOYjMwVHZnbmFSUDVIN0hPVzBQeEgyaTl5MU9JZmhSS0UxWmtk?=
+ =?utf-8?B?R0VLTWlJNVkwV04zVms5VkdKQmhqQzJmNUJialFFVmE2eURHcS9NREZCSXQz?=
+ =?utf-8?B?NmRXZW81S3VjaXZWYzlEOHNVRnlhWFpvU0lTdGxrSjZpRlhIQWRPY2RoUVdv?=
+ =?utf-8?B?akdiNHdvVTBDMUhOOU01cjloQ24wTUQwUmcreUlvazBTZU80Q2RQZzkzRDNV?=
+ =?utf-8?B?WGpZb0NGVjBYOEgrZmpMcG9MRUxSNFJuSFVmaDRtY0krdEptNmphQWQ0S0RO?=
+ =?utf-8?B?M2JsVkR1d2VWdlF5R05iNDB4dFNqN2hURUFMbDlrZWRLUXpGVmlzL2ViWU1x?=
+ =?utf-8?B?bktuTDVnaE9rQTVpUDlFa3lMQlpyMUxoVXNTS3lCb0gxZE8zbTNHRURoWUdt?=
+ =?utf-8?B?MlJ4QXhYZWRQV3RNN25HM255T0szMTZaRE42MHBic0o1ajlKNkJyOWYxNlRx?=
+ =?utf-8?B?bnFwWFl3VUxNWGdPc1JEajBWMGlZRXFLK3N0MmVjVXdJUjBPcVBYcVVVcVJV?=
+ =?utf-8?B?VExVamN1UXIycGx5dlc1R0RTdVhkMVFVSjUvTGVMTGVxYWFacEtET1Z0a2g4?=
+ =?utf-8?B?THUrTVFQVU02NGluaDUwb3ZzeDdvQ2FJaDZqTUlPa3U0S0hYSFhteGJFME5O?=
+ =?utf-8?B?aXdBSnNUU3g5VVlOeUJwMStQTTBVR0hudEtzVmN2NnVpM1hXWm1KNjI2d1Vy?=
+ =?utf-8?B?SnA4aHlWOGZsbEtHdFN1UUt1YTZScFVXK3RvOHVMbVVsQzBEdXBGUW94TUFk?=
+ =?utf-8?B?QjNibGRUZnhGVDdJN05GMEFGSlhXYWJ0MjN1eFhhTlp6cXFOOFpaTUcxSnRk?=
+ =?utf-8?B?dXVEMVlBQzFZMEx0OWMySmZaZURrQmJwdFNKbzc5elNaR2FEVDZZdldibER6?=
+ =?utf-8?B?SUNNRDA0MmJVMExoSWRTL2JodlVmZ1hTaEVFSk4xRjZuNll1cUxvV2t2SVdF?=
+ =?utf-8?B?c0pUbFJNa3ZDMm1BR2x2djhWY3RMR0QrN0M3KzRtMk44dnFJZElRODFReWQv?=
+ =?utf-8?B?TmhtVFNicVRIUXV3WmhzZ2c5TUIrZlFLYmhvRTZ0aW02TGxveTIybThMdm0y?=
+ =?utf-8?B?dzFBaktBaDhwbUxSZ01aTmU4RHdsbDBRc0FmYVFUMUR3R2pEa2hQRE5pSmM5?=
+ =?utf-8?Q?CMyUmAh2+xHVXGsQ=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3538206-cb30-402c-f796-08de94463fb7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2026 01:37:37.0592
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: poZ2b2XHPUzOJESYh4R4e7yLVh7YXpX3f/RJJlT0iWplisl12Dk38brZz85Mq796BbGO9I9Q5VMWEGTK+pr+MpMZOnMq/s6Yc6C+XIQCALKyvSQd77tJwbaZRtUbfV+g
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1300
 
-Use a flexible array member to combine allocations and simplify memory
-handling slightly.
-
-Add __counted_by for extra runtime analysis. Move counting variable
-assignment after allocation as done by kzalloc_flex for GCC >= 15.
-
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/media/dvb-core/dvb_ca_en50221.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/media/dvb-core/dvb_ca_en50221.c b/drivers/media/dvb-core/dvb_ca_en50221.c
-index 1b91ebb8f667..a792feb076ef 100644
---- a/drivers/media/dvb-core/dvb_ca_en50221.c
-+++ b/drivers/media/dvb-core/dvb_ca_en50221.c
-@@ -125,9 +125,6 @@ struct dvb_ca_private {
- 	/* number of slots supported by this CA interface */
- 	unsigned int slot_count;
- 
--	/* information on each slot */
--	struct dvb_ca_slot *slot_info;
--
- 	/* wait queues for read() and write() operations */
- 	wait_queue_head_t wait_queue;
- 
-@@ -157,6 +154,9 @@ struct dvb_ca_private {
- 
- 	/* Whether the device is disconnected */
- 	int exit;
-+
-+	/* information on each slot */
-+	struct dvb_ca_slot slot_info[] __counted_by(slot_count);
- };
- 
- static void dvb_ca_private_free(struct dvb_ca_private *ca)
-@@ -167,7 +167,6 @@ static void dvb_ca_private_free(struct dvb_ca_private *ca)
- 	for (i = 0; i < ca->slot_count; i++)
- 		vfree(ca->slot_info[i].rx_buffer.data);
- 
--	kfree(ca->slot_info);
- 	kfree(ca);
- }
- 
-@@ -1880,20 +1879,15 @@ int dvb_ca_en50221_init(struct dvb_adapter *dvb_adapter,
- 		return -EINVAL;
- 
- 	/* initialise the system data */
--	ca = kzalloc_obj(*ca);
-+	ca = kzalloc_flex(*ca, slot_info, slot_count);
- 	if (!ca) {
- 		ret = -ENOMEM;
- 		goto exit;
- 	}
-+	ca->slot_count = slot_count;
- 	kref_init(&ca->refcount);
- 	ca->pub = pubca;
- 	ca->flags = flags;
--	ca->slot_count = slot_count;
--	ca->slot_info = kzalloc_objs(struct dvb_ca_slot, slot_count);
--	if (!ca->slot_info) {
--		ret = -ENOMEM;
--		goto free_ca;
--	}
- 	init_waitqueue_head(&ca->wait_queue);
- 	ca->open = 0;
- 	ca->wakeup = 0;
-@@ -1904,7 +1898,7 @@ int dvb_ca_en50221_init(struct dvb_adapter *dvb_adapter,
- 	ret = dvb_register_device(dvb_adapter, &ca->dvbdev, &dvbdev_ca, ca,
- 				  DVB_DEVICE_CA, 0);
- 	if (ret)
--		goto free_slot_info;
-+		goto free_ca;
- 
- 	/* now initialise each slot */
- 	for (i = 0; i < slot_count; i++) {
-@@ -1939,8 +1933,6 @@ int dvb_ca_en50221_init(struct dvb_adapter *dvb_adapter,
- 
- unregister_device:
- 	dvb_unregister_device(ca->dvbdev);
--free_slot_info:
--	kfree(ca->slot_info);
- free_ca:
- 	kfree(ca);
- exit:
--- 
-2.53.0
-
+SGksIEtyenlzenRvZg0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gT24gVGh1LCBBcHIg
+MDIsIDIwMjYgYXQgMDM6NTU6MThBTSAtMDcwMCwgQ2hhbmdodWFuZyBMaWFuZyB3cm90ZToNCj4g
+PiArICBjbG9ja3M6DQo+ID4gKyAgICBpdGVtczoNCj4gPiArICAgICAgLSBkZXNjcmlwdGlvbjog
+UGVyaXBoZXJhbC0yIDYwME1Ieg0KPiA+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBQZXJpcGhlcmFs
+LTIgNDAwTUh6DQo+ID4gKyAgICAgIC0gZGVzY3JpcHRpb246IFBlcmlwaGVyYWwtMiAxMjVNSHoN
+Cj4gPiArICAgICAgLSBkZXNjcmlwdGlvbjogUGVyaXBoZXJhbC0yIEdNQUMyIFJHTUlJIFJYDQo+
+ID4gKyAgICAgIC0gZGVzY3JpcHRpb246IFBlcmlwaGVyYWwtMiBHTUFDMiBSTUlJIFJlZmVyZW5j
+ZQ0KPiA+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBQZXJpcGhlcmFsLTIgR01BQzMgU0dNSUkgVFgN
+Cj4gPiArICAgICAgLSBkZXNjcmlwdGlvbjogUGVyaXBoZXJhbC0yIEdNQUMzIFNHTUlJIFJYDQo+
+ID4gKyAgICAgIC0gZGVzY3JpcHRpb246IE1haW4gT3NjaWxsYXRvciAoMjUgTUh6KQ0KPiA+ICsN
+Cj4gPiArICBjbG9jay1uYW1lczoNCj4gPiArICAgIGl0ZW1zOg0KPiA+ICsgICAgICAtIGNvbnN0
+OiBwZXIyXzYwMA0KPiANCj4gRG9lcyBub3QgaGF2ZSBhbnkgbWVhbmluZ2Z1bCBuYW1lIGluIGRh
+dGFzaGVldCAvIGNsb2NrIGhpZXJhcmNoeT8NCg0KWWVzLCBzb21lIGNsb2NrcyBhcmUgbmFtZWQg
+ZGlyZWN0bHkgYnkgZnJlcXVlbmN5Lg0KDQpJIHdpbGwgdHJ5IHRvIGZpbmQgaWYgdGhlcmUgYXJl
+IG90aGVyIG1lYW5pbmdmdWwgbmFtaW5nIG9wdGlvbnMuDQoNCkJlc3QgUmVnYXJkcywNCkNoYW5n
+aHVhbmcNCg0K
