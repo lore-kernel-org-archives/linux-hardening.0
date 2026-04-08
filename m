@@ -1,107 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9184348465;
-	Wed,  8 Apr 2026 16:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772EC38D6AB;
+	Wed,  8 Apr 2026 20:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775665583; cv=none; b=OPKyq44AVIu1wE4IwKcEKkwXI49ZnK3FaxwJ4ey+xbzXR1hxnKwIcBYJ3fRaqPuEtMMTLJ3cluv7+XYVow4VZ4YqaSJ3JEo8Ba21qRwlwHUxmXkbz2x4XLpbBdL+9tdeDYUQkP4A8BTZZCnzsM2s+x2gMOJ0kVuaYuZDWNVa2P0=
+	t=1775679629; cv=none; b=FeQgrkY7cXYrV9vJaEyKTSv4DFH7jx/gn7Bj3oL2pwLtM3kZpf90GrmVdQ7WSWsDHCdbf2pgeX7NYtDk7fc1Eu44ui304FSuYyGxIF7YqQSfIpi4zstrsS8i2bA3UjNuyz+DaEV2mSEIaoZk/rGj3gaIx01JEQ/NGVgcI8hMOBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775665583; c=relaxed/simple;
-	bh=paRGL9e82dHaLbjAcC4/Vy1sJ+vwpBDGXlAEv2gx80I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D+15415y5BTZ9mzGbrODxtGv39Okh4qhwDF5r5yQRomApfHxE6h+acTiCrjC9wfSm31HNXXnAKlueH/H34qsA8ndjOziH0E1Qc0h4Rn/oQmvEbCBkmclp9dIl3LmNeHiSf0EWSlod6N4Hdd9JpNiTXMgw2DbcJjBRMcniW3HFvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvQlyg/T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775679629; c=relaxed/simple;
+	bh=JHJ4QinlnrF8WrNXZvCq4WRQrio33RdljaeZwcyewWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SHGd63UcT9LxvaqmMX9I0EwpZ3FjM9Bd4d7jGHplZwkt3FiWG/3eAsfGCzyD18h7qdk1iUbRsa74xSmV4iwHjpwcuZWGFiGQ198jlXdhW32aMw5Fkl/T66JzOT1JxWAq7iY7XByDvuRkkeBY2nliqxBEteA74aA7NyMrwwfgZ+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FE95iFB7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvQlyg/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5157AC19421;
-	Wed,  8 Apr 2026 16:26:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FE95iFB7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D10C19421;
+	Wed,  8 Apr 2026 20:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775665583;
-	bh=paRGL9e82dHaLbjAcC4/Vy1sJ+vwpBDGXlAEv2gx80I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RvQlyg/TcZxLExv0BhOJYAApo8cdiTt5ZMJxVYUjGkUW8odOezy6eRHTFMbHiYKUt
-	 iROBSA64nPjMoHMt9GDy0rLyteW9sEzs7UerFelVZAX8uga0hXRo0pqz49/6KEYcTA
-	 PenYCtcFTynJs97l8picYVMwDzEaNQfnR+XieyoNIUXvPdbFcTVEauS1N8I6qb+5Tw
-	 YVQmVyToWhig9Ggi29rttEXIRqBiG0+eTHG7YIMxDH/1/bBc3Ss29P0ZQ7rePp55oy
-	 ybJXE0SoB98VDMoK8pZ77gvk/j8nc1iuavmmbZoiSPA3VKTCM2rDB6FRT5RH0ty7P5
-	 gSIzA2Tkmv9fw==
-From: Kees Cook <kees@kernel.org>
-To: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Kees Cook <kees@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
+	s=k20201202; t=1775679628;
+	bh=JHJ4QinlnrF8WrNXZvCq4WRQrio33RdljaeZwcyewWg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FE95iFB7p02sEPxjxJZ6mN+30YFlKABSCBTsvKpqBEmKdqXnnID8AfNdQ//UNgcDp
+	 032uovvjSHyOcOsq5hufYPnIX8jGb8SdY+430y/urnufwVtfyaRSHSbr9Epf+EMpUV
+	 yrWdD3Ixsz/szlAzTpktZHrZiL+wofkoZxQB9OCGkQkzJ/roQP8aAGBWUF63+AL6D6
+	 YIl+6zhJjZIR9ov3qs0vplWTKgpYLIDWNeEfk8Avmo5DVshOkBK+eh9gP9AfyGXVo+
+	 +VEbPQl8tKzauDsrUOwrwFMDu6ueo8RM0AH6Eqgb2qLLkODyylWE7z/FooqADogiwj
+	 08Yvcb8bu3Bxg==
+Date: Wed, 8 Apr 2026 14:19:22 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] gcov: Disable GCOV_PROFILE_ALL on 32-bit UML with Clang 20/21
-Date: Wed,  8 Apr 2026 09:26:12 -0700
-Message-Id: <20260408162607.it.347-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH][next] wifi: iwlwifi: mld: tlc: Avoid a
+ -Wflex-array-member-not-at-end warning
+Message-ID: <ada4SvJPdt2DahPG@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2387; i=kees@kernel.org; h=from:subject:message-id; bh=paRGL9e82dHaLbjAcC4/Vy1sJ+vwpBDGXlAEv2gx80I=; b=owGbwMvMwCVmps19z/KJym7G02pJDJnXGhevdv8z6bu6lLhPx4QY5zn75yyLtjBbHNTSKGP84 vsiTzePjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlor2BkOK7UoLPBc+WJCo+Q OYvMPu5axrp4qswLz55FRz9leHYqZDP8M+c97jD5+u+/x0qyXt8VtF61eBbn+Sknv036s2HPqbc aF9kA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Clang 20 and 21 miscompute __builtin_object_size() when -fprofile-arcs
-is active on 32-bit UML targets, which passes incorrect object size
-calculations for local variables through always_inline copy_to_user()
-and check_copy_size(), causing spurious compile-time errors:
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-  include/linux/ucopysize.h:52:4: error: call to '__bad_copy_from' declared with 'error' attribute: copy source size is too small
+Use an anonymous embedded struct (enabled via -fms-extensions) to split
+the header portion from the flexible-array member in struct iwl_dhc_cmd,
+so the new header type struct iwl_dhc_cmd_hdr can be referenced
+independently (of the flexible-array member), and fix the following
+warning:
 
-The regression was introduced in LLVM commit 02b8ee281947 ("[llvm]
-Improve llvm.objectsize computation by computing GEP, alloca and malloc
-parameters bound"), which shipped in Clang 20. It was fixed in LLVM
-by commit 45b697e610fd ("[MemoryBuiltins] Consider index type size
-when aggregating gep offsets"), which was backported to the LLVM 22.x
-release branch.
+drivers/net/wireless/intel/iwlwifi/mld/tlc.c:544:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-The bug requires 32-bit UML + GCOV_PROFILE_ALL (which uses -fprofile-arcs),
-though the exact trigger depends on optimizer decisions influenced by other
-enabled configs.
+Add comments and a static_assert() to prevent adding new members
+directly to struct iwl_dhc_cmd. Any new members must be added to
+struct iwl_dhc_cmd_hdr instead. This preserves the expected memory
+layout between the header and the flexible-array member.
 
-Prevent the broken combination by disabling GCOV_PROFILE_ALL on 32-bit
-UML when using Clang 20.x or 21.x.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202604030531.O6FveVgn-lkp@intel.com/
-Assisted-by: Claude:claude-opus-4-6[1m]
-Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- v2: fixed typo in version comparison: needed < not <= (Sashiko)
- v1: https://lore.kernel.org/lkml/20260408005958.work.271-kees@kernel.org/
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: <llvm@lists.linux.dev>
----
- kernel/gcov/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ .../net/wireless/intel/iwlwifi/fw/api/dhc.h   | 21 ++++++++++++++++---
+ drivers/net/wireless/intel/iwlwifi/mld/tlc.c  |  2 +-
+ 2 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 04f4ebdc3cf5..56abff785654 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -42,6 +42,9 @@ config GCOV_PROFILE_ALL
- 	depends on !COMPILE_TEST
- 	depends on GCOV_KERNEL
- 	depends on ARCH_HAS_GCOV_PROFILE_ALL
-+	# Clang 20 & 21 miscompute __builtin_object_size() under -fprofile-arcs
-+	# on 32-bit UML, causing spurious compile-time errors in check_copy_size().
-+	depends on !(UML && !64BIT && CC_IS_CLANG && CLANG_VERSION >= 200000 && CLANG_VERSION < 220100)
- 	default n
- 	help
- 	This options activates profiling for the entire kernel.
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/dhc.h b/drivers/net/wireless/intel/iwlwifi/fw/api/dhc.h
+index b6d79c678cd8..bce4097fee27 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/dhc.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/dhc.h
+@@ -51,7 +51,7 @@ enum iwl_dhc_umac_integration_table {
+ #define DHC_TARGET_UMAC BIT(27)
+ 
+ /**
+- * struct iwl_dhc_cmd - debug host command
++ * struct iwl_dhc_cmd_hdr - debug host command header
+  * @length: length in DWs of the data structure that is concatenated to the end
+  *	of this struct
+  * @index_and_mask: bit 31 is 1 for data set operation else it's 0
+@@ -62,14 +62,29 @@ enum iwl_dhc_umac_integration_table {
+  *	bit 26 is 0 if the cmd targeted to LMAC0 and 1 if targeted to LMAC1,
+  *	relevant only if bit 27 set to 0
+  *	bits 0-25 is a specific entry index in the table specified in bits 28-30
++ */
++struct iwl_dhc_cmd_hdr {
++	__le32 length;
++	__le32 index_and_mask;
++} __packed;
++
++/**
++ * struct iwl_dhc_cmd - debug host command
++ *
++ * (NOTE: New members MUST NOT be added directly to this struct. Add them to
++ * struct iwl_dhc_cmd_hdr instead.)
+  *
++ * @iwl_dhc_cmd_hdr: anonymous embedded header - members are directly
++ *		     accessible
+  * @data: the concatenated data.
++ *
+  */
+ struct iwl_dhc_cmd {
+-	__le32 length;
+-	__le32 index_and_mask;
++	struct iwl_dhc_cmd_hdr;
+ 	__le32 data[];
+ } __packed; /* DHC_CMD_API_S */
++static_assert(offsetof(struct iwl_dhc_cmd, data) == sizeof(struct iwl_dhc_cmd_hdr),
++	      "New members must be added to struct iwl_dhc_cmd_hdr instead.");
+ 
+ /**
+  * struct iwl_dhc_payload_hdr - DHC payload header
+diff --git a/drivers/net/wireless/intel/iwlwifi/mld/tlc.c b/drivers/net/wireless/intel/iwlwifi/mld/tlc.c
+index 78d6162d9297..b6f41a8c138e 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mld/tlc.c
++++ b/drivers/net/wireless/intel/iwlwifi/mld/tlc.c
+@@ -619,7 +619,7 @@ static void iwl_mld_send_tlc_cmd(struct iwl_mld *mld,
+ int iwl_mld_send_tlc_dhc(struct iwl_mld *mld, u8 sta_id, u32 type, u32 data)
+ {
+ 	struct {
+-		struct iwl_dhc_cmd dhc;
++		struct iwl_dhc_cmd_hdr dhc;
+ 		struct iwl_dhc_tlc_cmd tlc;
+ 	} __packed cmd = {
+ 		.tlc.sta_id = sta_id,
 -- 
-2.34.1
+2.43.0
 
