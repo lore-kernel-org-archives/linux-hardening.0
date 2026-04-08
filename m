@@ -1,40 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3969D26F29B;
-	Wed,  8 Apr 2026 20:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0400439DBDF;
+	Wed,  8 Apr 2026 21:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775679712; cv=none; b=L8/0aYle0uJNss6f3u17I6O/iZzpT9z6DxJ7yJLGYp46SXSSlRA7RZflbP1eZx+IXiqc2SQcAQzAp8X8rVQUiYeb5kDzyBXVpTQavJQVzbvQoZUmR+SWkAtyR0bdjyze6+NVWKuBSZDiGqmOeqiGLmgubbvxuSmyGjZJeUxewBE=
+	t=1775683691; cv=none; b=sckh4MV9ud54V+o8wu98G3Qz/IdPBPdBotJFDe/HsvpjCxWafh+Ok/97Al+lqMrNzxkp2sDSR5VToQ72Lra6XJ2O4GmpHxkV2MrE+ZgMg2xVjymDaVRRDYAAWm3kd7QEArz8M7NEDNBCU9CgqQ885UhnHGOMUt6ycLq6hhneeWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775679712; c=relaxed/simple;
-	bh=BVou9F0SrGtga1GQXF8xZ89pmIJJKkDR1j3Ghv7t+4A=;
+	s=arc-20240116; t=1775683691; c=relaxed/simple;
+	bh=WpE0MYfaSpWNmYLrKupwzmNe/zhoMgBoUNCb8zcFtzM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aa9V+SY1qbANiVbLiI6zg14Vz8iys2Vnc0uELF6F67gSVfXXNW+vxB0WPQtHITMVt9QDzynk7PP7mgPPvB+YTS1pMual9XzyixNqdxsVWDYfkqc8Fo1OXpRxIm66M7nWqz1bp9JM1pjzWlkchBHQXnqD/Cwjz9iCRBear33rCXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME2LKMB7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=X4E92H1KmgPzPRfFBBgFkhhracD/OIJpRRGwHQHklGmxhFWkC+CVU3u1zP8MKEdTxb0M4OGikoLqurZvRDiWjF4/t5X7E8ymLWblRlPpnqvwjwNf3WOcd9cug4VncqcuROCx1JpCbuEH4UvOa63hdeypBB6m8V8Dfbyi0u+dMfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=llybHSbR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME2LKMB7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2344EC19421;
-	Wed,  8 Apr 2026 20:21:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="llybHSbR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 255A7C19421;
+	Wed,  8 Apr 2026 21:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775679711;
-	bh=BVou9F0SrGtga1GQXF8xZ89pmIJJKkDR1j3Ghv7t+4A=;
+	s=k20201202; t=1775683690;
+	bh=WpE0MYfaSpWNmYLrKupwzmNe/zhoMgBoUNCb8zcFtzM=;
 	h=Date:From:To:Cc:Subject:From;
-	b=ME2LKMB7bLM1rKawwrRWht9ldeC2LdjqyePI9s6loiNYq0EUFtphoVJeYGL+M+9Nt
-	 35IOreY/y82jRevjJCQizmxdNtkbuHz4MvqRAN26VfXVeJyVErmZNwYAYpTNivkmHF
-	 mOWLSQhAfKe1TjCqTfWUBDfF9eOTDtjv3MWzpv8zJ8y1rmJNQa5lfgRpV4xEkQWZeH
-	 /pKETQiBiw4GOkM+X5cYRSFoVn087SOeCfQjx+ndFuHxSK9e0iZDVQGrZAO5YZj3y1
-	 slR3pdYN3Am/EuoQ2bwu1spz9sE6ubn0ja4GMhgT/D3Ex/JhXOfRNoaUYnOAkQ+hkd
-	 WvNFiKPlLXKNQ==
-Date: Wed, 8 Apr 2026 14:20:46 -0600
+	b=llybHSbRhF0IyGzCiVkubRm6jznBYSJKm41Is2adPV68oSVITizRNvt4u0qfNvig0
+	 nGCGlPd2WKRsvxlirftnlfXF6UdpbKqg7y44STD3RFBepBvnQ/PmjXCbnr6J5wj+HG
+	 /T1IBIhUJA6MGraadSUCIbeGE90GXpC/ltH0Xz4atoobzu7QGhBIbTTyAAfHmiI/bH
+	 CE4V15DY/RgcqIAbqnyu3+e8Rq4JHHhF09KT6lRZKbCI2UtMH/IC64Vyi8cyuj+3nA
+	 8GO7gbEtUBA3d+4DiWzgxuiv+F6ppXJyaAoUr2ye2oMa9pIpLGFp7/w1TLEFCRODCI
+	 I2SLx2sXaWacA==
+Date: Wed, 8 Apr 2026 15:27:04 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: iwlwifi: mld: rx: Avoid a
- -Wflex-array-member-not-at-end warning
-Message-ID: <ada4nkgytDjxs-Hv@kspp>
+Subject: [PATCH][next] netfilter: x_tables: Avoid a couple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <adbIKC0cZcK7VcCF@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,80 +53,76 @@ Content-Disposition: inline
 -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
 getting ready to enable it, globally.
 
-Use an anonymous embedded struct (enabled via -fms-extensions) to split the
-header portion from the flexible-array member in struct iwl_rxq_sync_cmd,
-so the new header type struct iwl_rxq_sync_cmd_hdr can be referenced
-independently (of the flexible-array member), and fix the following
-warning:
+struct compat_xt_standard_target and struct compat_xt_error_target are
+only used in xt_compat_check_entry_offsets(). Remove these structs and
+instead define the same memory layout on the stack via flexible struct
+compat_xt_entry_target and DEFINE_RAW_FLEX(). Adjust the rest of the
+code accordingly.
 
-drivers/net/wireless/intel/iwlwifi/mld/rx.c:2172:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+With these changes, fix the following warnings:
 
-Add comments and a static_assert() to prevent adding new members
-directly to struct iwl_rxq_sync_cmd. Any new members must be added
-to struct iwl_rxq_sync_cmd_hdr instead. This preserves the expected
-memory layout between the header and the flexible-array member.
+1 net/netfilter/x_tables.c:816:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+1 net/netfilter/x_tables.c:811:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/fw/api/rx.h    | 21 ++++++++++++++++---
- drivers/net/wireless/intel/iwlwifi/mld/rx.c   |  2 +-
- 2 files changed, 19 insertions(+), 4 deletions(-)
+ net/netfilter/x_tables.c | 30 +++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/rx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/rx.h
-index ac6c1ef2cbcd..02a5bacfb175 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/rx.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/rx.h
-@@ -918,19 +918,34 @@ struct iwl_rss_config_cmd {
- #define IWL_MULTI_QUEUE_SYNC_SENDER_MSK 0xf
+diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
+index b39017c80548..a58107038a24 100644
+--- a/net/netfilter/x_tables.c
++++ b/net/netfilter/x_tables.c
+@@ -817,17 +817,6 @@ int xt_compat_match_to_user(const struct xt_entry_match *m,
+ }
+ EXPORT_SYMBOL_GPL(xt_compat_match_to_user);
  
- /**
-- * struct iwl_rxq_sync_cmd - RXQ notification trigger
-+ * struct iwl_rxq_sync_cmd_hdr - RXQ notification trigger header
-  *
-  * @flags: flags of the notification. bit 0:3 are the sender queue
-  * @rxq_mask: rx queues to send the notification on
-  * @count: number of bytes in payload, should be DWORD aligned
-- * @payload: data to send to rx queues
-  */
--struct iwl_rxq_sync_cmd {
-+struct iwl_rxq_sync_cmd_hdr {
- 	__le32 flags;
- 	__le32 rxq_mask;
- 	__le32 count;
-+} __packed;
+-/* non-compat version may have padding after verdict */
+-struct compat_xt_standard_target {
+-	struct compat_xt_entry_target t;
+-	compat_uint_t verdict;
+-};
+-
+-struct compat_xt_error_target {
+-	struct compat_xt_entry_target t;
+-	char errorname[XT_FUNCTION_MAXNAMELEN];
+-};
+-
+ int xt_compat_check_entry_offsets(const void *base, const char *elems,
+ 				  unsigned int target_offset,
+ 				  unsigned int next_offset)
+@@ -850,18 +839,25 @@ int xt_compat_check_entry_offsets(const void *base, const char *elems,
+ 		return -EINVAL;
+ 
+ 	if (strcmp(t->u.user.name, XT_STANDARD_TARGET) == 0) {
+-		const struct compat_xt_standard_target *st = (const void *)t;
++		DEFINE_RAW_FLEX(const struct compat_xt_entry_target, st, data,
++				sizeof(compat_uint_t));
++		compat_uint_t *verdict = (compat_uint_t *)st->data;
+ 
+-		if (COMPAT_XT_ALIGN(target_offset + sizeof(*st)) != next_offset)
++		st = (const void *)t;
 +
-+/**
-+ * struct iwl_rxq_sync_cmd - RXQ notification trigger
-+ *
-+ * (NOTE: New members MUST NOT be added directly to this struct. Add them to
-+ * struct iwl_rxq_sync_cmd_hdr instead.)
-+ *
-+ * @iwl_rxq_sync_cmd_hdr: anonymous embedded header - members are directly
-+ *			  accessible
-+ * @payload: data to send to rx queues
-+ */
-+struct iwl_rxq_sync_cmd {
-+	struct iwl_rxq_sync_cmd_hdr;
- 	u8 payload[];
- } __packed; /* MULTI_QUEUE_DRV_SYNC_HDR_CMD_API_S_VER_1 */
-+static_assert(offsetof(struct iwl_rxq_sync_cmd, payload) == sizeof(struct iwl_rxq_sync_cmd_hdr),
-+	      "New members must be added to struct iwl_rxq_sync_cmd_hdr instead.");
++		if (COMPAT_XT_ALIGN(target_offset + __struct_size(st)) !=
++				next_offset)
+ 			return -EINVAL;
  
- /**
-  * struct iwl_rxq_sync_notification - Notification triggered by RXQ
-diff --git a/drivers/net/wireless/intel/iwlwifi/mld/rx.c b/drivers/net/wireless/intel/iwlwifi/mld/rx.c
-index a2e586c6ea67..492c03b8e5a0 100644
---- a/drivers/net/wireless/intel/iwlwifi/mld/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mld/rx.c
-@@ -2172,7 +2172,7 @@ void iwl_mld_sync_rx_queues(struct iwl_mld *mld,
- {
- 	u8 num_rx_queues = mld->trans->info.num_rxqs;
- 	struct {
--		struct iwl_rxq_sync_cmd sync_cmd;
-+		struct iwl_rxq_sync_cmd_hdr sync_cmd;
- 		struct iwl_mld_internal_rxq_notif notif;
- 	} __packed cmd = {
- 		.sync_cmd.rxq_mask = cpu_to_le32(BIT(num_rx_queues) - 1),
+-		if (!verdict_ok(st->verdict))
++		if (!verdict_ok(*verdict))
+ 			return -EINVAL;
+ 	} else if (strcmp(t->u.user.name, XT_ERROR_TARGET) == 0) {
+-		const struct compat_xt_error_target *et = (const void *)t;
++		DEFINE_RAW_FLEX(const struct compat_xt_entry_target, et, data,
++				XT_FUNCTION_MAXNAMELEN);
++		et = (const void *)t;
+ 
+-		if (!error_tg_ok(t->u.target_size, sizeof(*et),
+-				 et->errorname, sizeof(et->errorname)))
++		if (!error_tg_ok(t->u.target_size, __struct_size(et),
++				 et->data, __member_size(et->data)))
+ 			return -EINVAL;
+ 	}
+ 
 -- 
 2.43.0
 
