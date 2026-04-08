@@ -1,88 +1,78 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBE6382368
-	for <linux-hardening@vger.kernel.org>; Wed,  8 Apr 2026 12:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F5538A715;
+	Wed,  8 Apr 2026 13:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775650896; cv=none; b=HTOXFWfL0B9gBx7U2LB1sE8FYCnGnKy+2eCpdjcYh9utiW6THYd62Pr5/ZtxIeLW6GNlo7tEv6Qrm+98HzKcNnmeZrlo0Bvp7wxbYmz6P94sMUyuLEA9icnsCSmIzHphnc5Kc9sV/9dv3uWMeM8iy1pklJnpQTGZXKbmffH74h4=
+	t=1775653828; cv=none; b=lKUFnLyuiaa4Bv/iTstGoqB02aD2VVu8fQaCWEwsmiPG8fKd04+CsF1J7GTdFt2IDXxuqREPiPjpPxcYTJtCzgt0e5GIiVCa3jip3VEvwadzfZjSJNbXXp/sKmIDIBWnPicupmRxQ/xkIp06/cMtTPN/W4mIBk1IomCja+aNTUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775650896; c=relaxed/simple;
-	bh=To1t6onb6iRbQ4NI9iTporpAVWGW80BE37Sq12ywklU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1qW7IhaPm8fAJMLU3gpfHfYrw8SWhdxU4chIABKxa5vtVnU51nqq+jQf4k2RCEQPgICQjS+H3XDKSNE0MPkY55oRqIrK9jmReDfRgz5jwwt/NbBkX+llQOvGwEEyD/pqyi9WJWif4ThOV8LSI0LnftZ4VycJMMMNGInb5+UQ5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wsQz5oi7; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1775653828; c=relaxed/simple;
+	bh=2jrQkvbOoMMZmUGotqn3VCNdfbae0aM9rV4pSStr6G8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=i3CkJIyK0rPkBMGkAzOul9Q00ftv4t9Ul+ZE26UoTooaYDmxeJF46byQxAaoQbz4oHr+SD9cBPeN2riS4j5NOCaKbEBK+3EIkpLQj20/y/9ngng0diEcHOKjg63h1TvAtf89wuTuuwyP3yhqazrcOJYbybRVDkXaSTqbdlQYgio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1Cm/gnN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wsQz5oi7"
-Date: Wed, 8 Apr 2026 14:21:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775650882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OV1C/PCBzbDZKqr7KrHh/nB0c1sre56nEKvZgPQ9aaA=;
-	b=wsQz5oi7bs0U2vAjNNVb4rupFIvMQmqt4Cn/lYAyNgEV8sQNNYdmXcZv7hiHp9ZOzv4f0Q
-	9hdKcEG57WyYt+lHdjqqmFkV88St4iVkObqCpd7RyLWuEivAdM3cRLIKXlqaOK5Pi76OUS
-	zhK8QCRF+v35BIdw1x78HP4IPgjlR70=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: David Howells <dhowells@redhat.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next 2/2] KEYS: annotate struct user_key_payload with
- __counted_by
-Message-ID: <adZIP8w0IttbIZa2@linux.dev>
-References: <20260406175810.1018681-3-thorsten.blum@linux.dev>
- <20260406175810.1018681-4-thorsten.blum@linux.dev>
- <adYZoWK_CTv2-RA_@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1Cm/gnN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB98C19421;
+	Wed,  8 Apr 2026 13:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775653828;
+	bh=2jrQkvbOoMMZmUGotqn3VCNdfbae0aM9rV4pSStr6G8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=g1Cm/gnNxCygY4m1n8jEDLMWmqgethrpuC0WX9utoGJxqCv/pr1WVDC7Iv3SRQ3Gs
+	 QfwcrXSNsMkUrNPhEuhh6X+pQ55/QL02jDsZwCMA4pUZm7znnYAuuAywaY9EyM6z6G
+	 1NqxLsWwWVFS2tt7ArW2LttS1LcggruG6zauCMrfy6ek3X2HwmBZQa8vFktshzdMrR
+	 lHwGHFbKI3V86fvVXb/c17ZfJjP5PNPpnXIB0lW6RNUpZFPYDJ9NuSPfsWQmk6RD3m
+	 YMk97sBoiU2g7LE3Uj+zTPb4hPxAFZfNaF8gcuVCcnxAnhRKz5ohhj6Ruc0tD60w8q
+	 rZxZAPxip95/Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FCDE3809A3C;
+	Wed,  8 Apr 2026 13:10:06 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <adYZoWK_CTv2-RA_@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH RESEND][next] Bluetooth: hci.h: Avoid a couple
+ -Wflex-array-member-not-at-end warnings
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <177565380504.258768.1367030329813803809.git-patchwork-notify@kernel.org>
+Date: Wed, 08 Apr 2026 13:10:05 +0000
+References: <adVmLsJCQrBCMDD6@kspp>
+In-Reply-To: <adVmLsJCQrBCMDD6@kspp>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
-On Wed, Apr 08, 2026 at 12:02:25PM +0300, Jarkko Sakkinen wrote:
-> On Mon, Apr 06, 2026 at 07:58:10PM +0200, Thorsten Blum wrote:
-> > Add the __counted_by() compiler attribute to the flexible array member
-> > 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> > CONFIG_FORTIFY_SOURCE.
-> > 
-> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > ---
-> >  include/keys/user-type.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/keys/user-type.h b/include/keys/user-type.h
-> > index 386c31432789..2305991f4fcd 100644
-> > --- a/include/keys/user-type.h
-> > +++ b/include/keys/user-type.h
-> > @@ -27,7 +27,8 @@
-> >  struct user_key_payload {
-> >  	struct rcu_head	rcu;		/* RCU destructor */
-> >  	unsigned short	datalen;	/* length of this data */
-> > -	char		data[] __aligned(__alignof__(u64)); /* actual data */
-> > +	char		data[]		/* actual data */
-> > +			__aligned(__alignof__(u64)) __counted_by(datalen);
-> >  };
-> >  
-> >  extern struct key_type key_type_user;
+Hello:
+
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+
+On Tue, 7 Apr 2026 14:16:46 -0600 you wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> You don't provide any evidence of any improvement.
+> struct hci_std_codecs and struct hci_std_codecs_v2 are flexible
+> structures, this is structures that contain a flexible-array member
+> (__u8 codec[]; and struct hci_std_codec_v2 codec[];, correspondingly.)
+> 
+> [...]
 
-It's a proactive hardening change to help avoid future mistakes.
+Here is the summary with links:
+  - [RESEND,next] Bluetooth: hci.h: Avoid a couple -Wflex-array-member-not-at-end warnings
+    https://git.kernel.org/bluetooth/bluetooth-next/c/710f92b5b912
 
-The __counted_by() annotation makes the bounds visible to the compiler
-and at runtime so that future ->data accesses can be checked against
-->datalen.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-The current code is correct regarding ->data accesses and doesn't
-require any changes.
+
