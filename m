@@ -1,78 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F5538A715;
-	Wed,  8 Apr 2026 13:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 886D43CFF7E;
+	Wed,  8 Apr 2026 13:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775653828; cv=none; b=lKUFnLyuiaa4Bv/iTstGoqB02aD2VVu8fQaCWEwsmiPG8fKd04+CsF1J7GTdFt2IDXxuqREPiPjpPxcYTJtCzgt0e5GIiVCa3jip3VEvwadzfZjSJNbXXp/sKmIDIBWnPicupmRxQ/xkIp06/cMtTPN/W4mIBk1IomCja+aNTUM=
+	t=1775655817; cv=none; b=P0dFODUU3UhpOpCP/56aHmqgGyzhOpf7ewFNsNuihP+Ii9FW0hYlUi2AG9G5FkufMTECrjxDHKRGyRzONzPV0kd3es69Er/WgKhxtZehiXOgBYl4vmsCYfX6283C97/QALUNxkD/aM1q66+cIGhfMCe4CEqn9fmpR9HWkyyA+sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775653828; c=relaxed/simple;
-	bh=2jrQkvbOoMMZmUGotqn3VCNdfbae0aM9rV4pSStr6G8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=i3CkJIyK0rPkBMGkAzOul9Q00ftv4t9Ul+ZE26UoTooaYDmxeJF46byQxAaoQbz4oHr+SD9cBPeN2riS4j5NOCaKbEBK+3EIkpLQj20/y/9ngng0diEcHOKjg63h1TvAtf89wuTuuwyP3yhqazrcOJYbybRVDkXaSTqbdlQYgio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1Cm/gnN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775655817; c=relaxed/simple;
+	bh=APSRIzYq127UdDGuSl50AgJ/vrTdGsi6czgv23BVJwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wnhi0AUnundalmfshKYVku0Cz+EoDWLF/GfKojuiXcktmnNAtMRYPnSfdvDf5EIE2gVioBtpV4d6FArLLQHmI/7mrEHZR7rdWzWijMBagqdYug+DLCxYv9tnKyBYJW/2+7O1hJR1MNVGtl6eBZkowE05nledFKYkKDXtnzTCLR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=UEJQ9anJ; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1Cm/gnN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB98C19421;
-	Wed,  8 Apr 2026 13:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775653828;
-	bh=2jrQkvbOoMMZmUGotqn3VCNdfbae0aM9rV4pSStr6G8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=g1Cm/gnNxCygY4m1n8jEDLMWmqgethrpuC0WX9utoGJxqCv/pr1WVDC7Iv3SRQ3Gs
-	 QfwcrXSNsMkUrNPhEuhh6X+pQ55/QL02jDsZwCMA4pUZm7znnYAuuAywaY9EyM6z6G
-	 1NqxLsWwWVFS2tt7ArW2LttS1LcggruG6zauCMrfy6ek3X2HwmBZQa8vFktshzdMrR
-	 lHwGHFbKI3V86fvVXb/c17ZfJjP5PNPpnXIB0lW6RNUpZFPYDJ9NuSPfsWQmk6RD3m
-	 YMk97sBoiU2g7LE3Uj+zTPb4hPxAFZfNaF8gcuVCcnxAnhRKz5ohhj6Ruc0tD60w8q
-	 rZxZAPxip95/Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FCDE3809A3C;
-	Wed,  8 Apr 2026 13:10:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="UEJQ9anJ"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4FE82BC4;
+	Wed,  8 Apr 2026 06:43:28 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5E783F641;
+	Wed,  8 Apr 2026 06:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1775655814; bh=APSRIzYq127UdDGuSl50AgJ/vrTdGsi6czgv23BVJwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UEJQ9anJgeUmtd8DTENXwcmCoXpPyLdKpcr/YAU0Jj6mkWVKnIiODmF+dex/3TNNX
+	 wXQXaAwwFlush8K52iPu6GFVM4CkkwKpiNgpRLOQx2OIs8g/EL3pDJU/rnhQCBsD8t
+	 SH0tpbksaZzJcLxe/QBKj/YnOcLLGCHXw5l0N6u0=
+Date: Wed, 8 Apr 2026 14:43:29 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	will@kernel.org, mark.rutland@arm.com,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Liz Prucka <lizprucka@google.com>,
+	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 01/13] arm64: Move the zero page to rodata
+Message-ID: <adZbgYJqY6bisaoZ@arm.com>
+References: <20260320145934.2349881-15-ardb+git@google.com>
+ <20260320145934.2349881-16-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH RESEND][next] Bluetooth: hci.h: Avoid a couple
- -Wflex-array-member-not-at-end warnings
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <177565380504.258768.1367030329813803809.git-patchwork-notify@kernel.org>
-Date: Wed, 08 Apr 2026 13:10:05 +0000
-References: <adVmLsJCQrBCMDD6@kspp>
-In-Reply-To: <adVmLsJCQrBCMDD6@kspp>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260320145934.2349881-16-ardb+git@google.com>
 
-Hello:
+Hi Ard,
 
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+On Fri, Mar 20, 2026 at 03:59:36PM +0100, Ard Biesheuvel wrote:
+> diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+> index 2964aad0362e..2d021a576e50 100644
+> --- a/arch/arm64/kernel/vmlinux.lds.S
+> +++ b/arch/arm64/kernel/vmlinux.lds.S
+> @@ -229,6 +229,7 @@ SECTIONS
+>  #endif
+>  
+>  	reserved_pg_dir = .;
+> +	empty_zero_page = .;
+>  	. += PAGE_SIZE;
+>  
+>  	swapper_pg_dir = .;
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index a6a00accf4f9..795743913ce5 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -66,9 +66,8 @@ long __section(".mmuoff.data.write") __early_cpu_boot_status;
+>  
+>  /*
+>   * Empty_zero_page is a special page that is used for zero-initialized data
+> - * and COW.
+> + * and COW. Defined in the linker script.
+>   */
+> -unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
+>  EXPORT_SYMBOL(empty_zero_page);
 
-On Tue, 7 Apr 2026 14:16:46 -0600 you wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> struct hci_std_codecs and struct hci_std_codecs_v2 are flexible
-> structures, this is structures that contain a flexible-array member
-> (__u8 codec[]; and struct hci_std_codec_v2 codec[];, correspondingly.)
-> 
-> [...]
+I looked at Sashiko's reports
+(https://sashiko.dev/#/patchset/20260320145934.2349881-15-ardb+git@google.com)
+and it has a point here that with MTE, map_mem() doesn't map the
+empty_zero_page as Tagged in the for_each_mem_range() loop. The
+subsequent cpu_enable_mte() will fail to initialise the tags. I think
+this problem disappears with patch 11 where all the linear map is now
+Tagged.
 
-Here is the summary with links:
-  - [RESEND,next] Bluetooth: hci.h: Avoid a couple -Wflex-array-member-not-at-end warnings
-    https://git.kernel.org/bluetooth/bluetooth-next/c/710f92b5b912
+We either ignore it or we temporarily map the kernel as Tagged until the
+linear alias is removed later:
 
-You are awesome, thank you!
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 795743913ce5..5290f7537074 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -1175,7 +1175,7 @@ static void __init map_mem(pgd_t *pgdp)
+ 	 * so we should avoid them here.
+ 	 */
+ 	__map_memblock(pgdp, kernel_start, kernel_end,
+-		       PAGE_KERNEL, NO_CONT_MAPPINGS);
++		       pgprot_tagged(PAGE_KERNEL), NO_CONT_MAPPINGS);
+ 	memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
+ 	arm64_kfence_map_pool(early_kfence_pool, pgdp);
+ }
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Catalin
