@@ -1,198 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FC838F64A;
-	Thu,  9 Apr 2026 12:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE45315D40;
+	Thu,  9 Apr 2026 14:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775738662; cv=none; b=o3VZt2KURlTGzZX6JQUGBVdj24tK5FRwquh+rlCLYGbSlPMrr9+e+9SNP7yN2htLNaGr7FOiL8U1c0yJ0sAXpGNZ0KDSOUWS9sY/mlu8BoFM3kVxFEjpaDiUjFoq0HXYSpexSoBFThShf38GXNwv6GFUpvs7e6GYZjg3L4o+rsI=
+	t=1775746075; cv=none; b=IQq+9eoY+2gWdC5PzIDXR8wesCGZEIav5IeU41aNZwNCqAk9peH/OI3epAPwv5x1DjFgSvzQ8aYFiszbQ61xahvfHhpIZPJnORdmL9MkNGyziVKHrPBZs7/xOvS5s4LP+nUqomi8l++bKmCRYu44+VvGHWoe5ZlddkAeKTjtQRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775738662; c=relaxed/simple;
-	bh=Pp8wkpHe/N8l3YLpLzTsSLHH6JWr1V3ysnoI4h8B3eg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Clzqy/L+kDirC129qGcI0w7B81D2yK+Nr42st9gHHRC7NMCUB44pArDll0+0aku7r+tjg2I74zZxr5Zn3cZsovi48FBWb3QXakIPWrtp5sQRPMTfaTOZ/A7bwoBkDWm0itdlJ3+sxsGMrMOhBKAzPYhcvQwenkqVq4G5fQ+wa1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWs8DI/H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775746075; c=relaxed/simple;
+	bh=4qnlhWkrVAC2M+j7AtAL9W6fLDOd3C2x6KpG3K+AnaU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oJt49DHoFkk3oSg2Vea6lh9GZa0Ov0tricHM5f5OlznPc5gSIrff4cNPBtl9rpu2eNbrf7s6/DbvNDXEOgKi8BuVfePUmxTpEEtPUyuNe8ECuk9gBT8OqFLDIbaw0BwtSTh3Eig1A7FgPOVDfKtQFfdZcyszarurX27tp3NNzrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=JUcDj1so; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWs8DI/H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A295FC19424;
-	Thu,  9 Apr 2026 12:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775738662;
-	bh=Pp8wkpHe/N8l3YLpLzTsSLHH6JWr1V3ysnoI4h8B3eg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TWs8DI/H8O05aowgqN+0Bw8OrUYW1xiChQl5DaFtAz96jiTANNxv6QU11FYEmNPd8
-	 NwGvHkwDfJt6T6DQxo+17pk2NyxxS6Ph6QwisPkBq5L9mvoyZDWkJeDllj+rB2Kor7
-	 myQ1IkcAQmzlpSiE+hJlHpCzs5WRsa/8/dvc3qEFUiYwFwhgNPHsFugbuXq2trHs/p
-	 yqFbI0KoSGDz0pA4YL5jSnSQn5Ay44bGSCnE6Y6krQCLShYQVM6huB0gQkGneF/GIS
-	 jYjPJAXnFssgC8corYP0P+KuCra0eTv73opFyaK98sR+0hXna9OSKJm6nQQC4qj4al
-	 zllxxnGn++z2A==
-Date: Thu, 9 Apr 2026 13:44:17 +0100
-From: Lee Jones <lee@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] leds: pca955x: kzalloc + kcalloc to single kzalloc
-Message-ID: <20260409124417.GA3290953@google.com>
-References: <20260320040821.46540-1-rosenp@gmail.com>
- <20260326113336.GK1141718@google.com>
- <CAKxU2N_8BnBETT8YeDa44bDvC_srepskpA7iDYOwPQJsfb0dXw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="JUcDj1so"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=vtWvECdJsOce5KQBkQ6BB16WnHR2lmUFEE8FNue2MfA=;
+	t=1775746064; x=1776955664; b=JUcDj1so+5PMg8X/Ilo2vk9KWS1t9Snio50ZnblPUR+nmGX
+	i6UY3K0mCsnoJmk7ZV5ZA61txcAa2LYLCXcJUfUAZjeQT9wiEP9xQaUF759a96X5JUIg//B/mNrdx
+	/BIQqz/zng/os+ydUbK3I/C4HYo1XRGX2EJWHphf0Y5C8opROcL4gOv+eXvADA8WCB0/u7uTE67YU
+	otT1CYg8Lz2eoL/shg+jU/CUJ1n2PTAptU7ICAnXIJWDJJXq2BIc/F2mb3BGX9CzdoZpnCCd2l5RU
+	yJbOC2aFice2zXKmACNCA8bPj5TrETuR78ijaQCHVTHJBKtwgURN895JYIH6iONg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1wAqfN-0000000G2eD-3CNn;
+	Thu, 09 Apr 2026 16:47:33 +0200
+Message-ID: <5cf1d83227fd5a6af784f0b11fcdebf9a0bc9f94.camel@sipsolutions.net>
+Subject: Re: [PATCH v3] gcov: Disable GCOV_PROFILE_ALL on 32-bit UML with
+ Clang 20/21
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Kees Cook <kees@kernel.org>, Richard Weinberger <richard@nod.at>
+Cc: kernel test robot <lkp@intel.com>, Nathan Chancellor
+ <nathan@kernel.org>,  Anton Ivanov <anton.ivanov@cambridgegreys.com>, Peter
+ Oberparleiter <oberpar@linux.ibm.com>, Nick Desaulniers
+ <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, Justin
+ Stitt	 <justinstitt@google.com>, llvm@lists.linux.dev,
+ linux-um@lists.infradead.org, 	linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Date: Thu, 09 Apr 2026 16:47:32 +0200
+In-Reply-To: <20260409052038.make.995-kees@kernel.org>
+References: <20260409052038.make.995-kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKxU2N_8BnBETT8YeDa44bDvC_srepskpA7iDYOwPQJsfb0dXw@mail.gmail.com>
+X-malware-bazaar: not-scanned
 
-On Thu, 26 Mar 2026, Rosen Penev wrote:
+Hi,
 
-> On Thu, Mar 26, 2026 at 4:33 AM Lee Jones <lee@kernel.org> wrote:
-> >
-> > On Thu, 19 Mar 2026, Rosen Penev wrote:
-> >
-> > > Two fewer allocations as a result.
-> > >
-> > > Required placing some structs before others as flexible array members
-> > > require a complete definition. Declaration is not enough.
-> > >
-> > > Added __counted_by support for one of the structs for extra runtime
-> > > analysis.
-> > >
-> > > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > > ---
-> > >  drivers/leds/leds-pca955x.c | 45 ++++++++++++++-----------------------
-> > >  1 file changed, 17 insertions(+), 28 deletions(-)
-> > >
-> > > diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
-> > > index 2007fe6217ec..ee5f02eaa3c9 100644
-> > > --- a/drivers/leds/leds-pca955x.c
-> > > +++ b/drivers/leds/leds-pca955x.c
-> > > @@ -112,19 +112,6 @@ static const struct pca955x_chipdef pca955x_chipdefs[] = {
-> > >       },
-> > >  };
-> > >
-> > > -struct pca955x {
-> > > -     struct mutex lock;
-> > > -     struct pca955x_led *leds;
-> > > -     const struct pca955x_chipdef    *chipdef;
-> > > -     struct i2c_client       *client;
-> > > -     unsigned long active_blink;
-> > > -     unsigned long active_pins;
-> > > -     unsigned long blink_period;
-> > > -#ifdef CONFIG_LEDS_PCA955X_GPIO
-> > > -     struct gpio_chip gpio;
-> > > -#endif
-> > > -};
-> > > -
-> > >  struct pca955x_led {
-> > >       struct pca955x  *pca955x;
-> > >       struct led_classdev     led_cdev;
-> > > @@ -137,8 +124,21 @@ struct pca955x_led {
-> > >  #define led_to_pca955x(l)    container_of(l, struct pca955x_led, led_cdev)
-> > >
-> > >  struct pca955x_platform_data {
-> > > -     struct pca955x_led      *leds;
-> > >       int                     num_leds;
-> > > +     struct pca955x_led      leds[] __counted_by(num_leds);
+Maybe the subject should say "um:" instead of "gcov:" now?
 
-I'm not sure we should we be embedding the full 'struct pca955x_led'
-(which contains runtime framework structures like 'struct led_classdev')
-directly inside the platform data?  Besides platform data should ideally
-be restricted to static configuration properties rather than runtime
-state.
+(I'm assuming you want us to apply it to uml tree.)
 
-> > Where is the memory allocated to this now?
-> The kzalloc call was updated to use struct_size to allocate it
-> together with the struct.
-> >
-> > Why do we need this in both structs?
-> kzalloc and kcalloc can be combined in both locations.
+> Prevent the bad combination by disabling UML's ARCH_HAS_GCOV_PROFILE_ALL
+> on 32-bit when using Clang 20.x or 21.x.
 
-I believe my original question might have been misunderstood.  I was
-asking about the architectural design choice.  Why does the same 'leds'
-array need to exist in both the 'pca955x' runtime structure and the
-'pca955x_platform_data' configuration structure?  Could we look at
-eliminating this redundancy to avoid storing duplicate data?
+You say 20.x or 21.x,
 
-> >
-> > > +};
-> > > +
-> > > +struct pca955x {
-> > > +     struct mutex lock;
-> > > +     const struct pca955x_chipdef    *chipdef;
-> > > +     struct i2c_client       *client;
-> > > +     unsigned long active_blink;
-> > > +     unsigned long active_pins;
-> > > +     unsigned long blink_period;
-> > > +#ifdef CONFIG_LEDS_PCA955X_GPIO
-> > > +     struct gpio_chip gpio;
-> > > +#endif
+> +	# Clang 20 & 21 miscompute __builtin_object_size() under -fprofile-arcs
+> +	# on 32-bit, causing spurious compile-time errors in check_copy_size().
+> +	select ARCH_HAS_GCOV_PROFILE_ALL if !(!64BIT && CLANG_VERSION >=3D 2000=
+00 && CLANG_VERSION < 220100)
 
-#ifdef statements are to be avoided in C files.
+and I see that 22.0 doesn't even exist, and maybe that's a general
+pattern, but it still looks confusing? Wouldn't it be better simpler to
+say < 220000? At least to me that more obviously is "up to 21.x". After
+all, 20.0 also didn't exist, and you did >=3D200000, not >200000 or
+>=3D200100?
 
-Please find another way to do this (if it's required).
-
-> > > +     struct pca955x_led leds[];
-> > >  };
-> > >
-> > >  /* 8 bits per input register */
-> > > @@ -542,15 +542,11 @@ pca955x_get_pdata(struct i2c_client *client, const struct pca955x_chipdef *chip)
-> > >       if (count > chip->bits)
-> > >               return ERR_PTR(-ENODEV);
-> > >
-> > > -     pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-> > > +     pdata = devm_kzalloc(&client->dev, struct_size(pdata, leds, chip->bits), GFP_KERNEL);
-> > >       if (!pdata)
-> > >               return ERR_PTR(-ENOMEM);
-> > >
-> > > -     pdata->leds = devm_kcalloc(&client->dev,
-> > > -                                chip->bits, sizeof(struct pca955x_led),
-> > > -                                GFP_KERNEL);
-> > > -     if (!pdata->leds)
-> > > -             return ERR_PTR(-ENOMEM);
-> > > +     pdata->num_leds = chip->bits;
-> > >
-> > >       device_for_each_child_node(&client->dev, child) {
-> > >               u32 reg;
-> > > @@ -568,8 +564,6 @@ pca955x_get_pdata(struct i2c_client *client, const struct pca955x_chipdef *chip)
-> > >               fwnode_property_read_u32(child, "type", &led->type);
-> > >       }
-> > >
-> > > -     pdata->num_leds = chip->bits;
-> > > -
-> > >       return pdata;
-> > >  }
-> > >
-> > > @@ -623,15 +617,10 @@ static int pca955x_probe(struct i2c_client *client)
-> > >               return -ENODEV;
-> > >       }
-> > >
-> > > -     pca955x = devm_kzalloc(&client->dev, sizeof(*pca955x), GFP_KERNEL);
-> > > +     pca955x = devm_kzalloc(&client->dev, struct_size(pca955x, leds, chip->bits), GFP_KERNEL);
-> > >       if (!pca955x)
-> > >               return -ENOMEM;
-> > >
-> > > -     pca955x->leds = devm_kcalloc(&client->dev, chip->bits,
-> > > -                                  sizeof(*pca955x_led), GFP_KERNEL);
-> > > -     if (!pca955x->leds)
-> > > -             return -ENOMEM;
-> > > -
-> > >       i2c_set_clientdata(client, pca955x);
-> > >
-> > >       mutex_init(&pca955x->lock);
-> > > --
-> > > 2.53.0
-> > >
-> >
-> > --
-> > Lee Jones [李琼斯]
-> 
-
--- 
-Lee Jones [李琼斯]
+johannes
