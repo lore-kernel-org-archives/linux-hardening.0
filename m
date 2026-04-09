@@ -1,117 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7153228E0;
-	Thu,  9 Apr 2026 05:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46FC3290B7
+	for <linux-hardening@vger.kernel.org>; Thu,  9 Apr 2026 07:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775712044; cv=none; b=PgXEUq40yMw28w/SpUBhurBSVm8eDL8H8A8rElYzrc3e80/HZg57H8MdjffsqOgtTouxDkS5iVJ1s5Oj3boFf3vWy1J6/MZ7Gfqxs68J4rdsgqZ5u5nOSnY7nz9XO1Fgc2cv3DY6oYVbguYFSzcwLuSLZXB5oFK5hjxdArLCX8E=
+	t=1775720318; cv=none; b=nYvDUab5weh84AAV7Eky5sbKZE2t1PNkguityXrlb1XbYmKLwGMiOxUIMqfuIKno/Q8byQOLc34evxohGyCE0ESYsNqEIgzYna8xB/MNyCBqRh+ZReuQw19bsfFbchEjhY4d614GkdDYq5LcoCtHaB5bxglRvrAc0JIE86cLW6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775712044; c=relaxed/simple;
-	bh=iSD8lx//1/eG9pu6VCuAmWIXKptBjif+THnfHLu57Wc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GM4U/ZjEMm1jBHpckOJ+ud6k3x+aD7aSuKQgJfPHTQdEGuIGatxTfVvYR3DF99tPbnJDOG4N3O2Gflquum0laDXol/7SabnYNJStbVG1VdnVbCnV3nU0BlnN8mee892s0Y9DeBnrmIbJQk8ZVmuPTEQc3eTZ/0lO8cLhBZapHRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6e803eG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775720318; c=relaxed/simple;
+	bh=jUVCD18qBj55kiQf5LCb0CfnXhvlUgd5d4yqTC7/xCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GvdRhCZk2p/GhdOi56VgEg1DBRaUka8muQVNAhVb35lZzaEuFquSlL0UJ0/tLQcjz+8Gxbl4TeMkGaLqVclW6Qp6sHf8BLIn5nuNtOOCPPlya45syTkQwqPadCSv/bJcw0r0HYP8PXouClgpN+uLStkAesNONSXdfxES6oOANcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZOJUrxfH; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6e803eG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09AEDC4CEF7;
-	Thu,  9 Apr 2026 05:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775712044;
-	bh=iSD8lx//1/eG9pu6VCuAmWIXKptBjif+THnfHLu57Wc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=s6e803eGHZ7f5pAcGpSy62LjCUmp2EEphoJ7K+n5FnrTALwXBY/E9jYyD/AhavxA8
-	 f5o58JeRKyuX7aQ/9wxppGcImlZcsRRWBde6yOqJLcdzbqRnCPoKQ8BlkfW/QxYtot
-	 yrtETniNog8G+DzzuvH+5vNjISUWudoTFmtsTUfnDwYXTt16YzwUVIDTH6xtSpSvOL
-	 JggL868gL33D2gDQjZuWvbKC/siKN72J8GQ90txUl/fMy5NXDhKecgNwiB2kX4s7X0
-	 UDdDFDYuh6klvc4UrpNm4x/Xd2F6meVVbp+SIhQG2GhcWyYB0qB1R8oEK61HeqXrUc
-	 d8ClQdT2trLfQ==
-From: Kees Cook <kees@kernel.org>
-To: Richard Weinberger <richard@nod.at>
-Cc: Kees Cook <kees@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	llvm@lists.linux.dev,
-	linux-um@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZOJUrxfH"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1775720315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AiTN0Mif+OlOP/8EPg85nSXf7Y5Nv8jHlAvMHMDCs20=;
+	b=ZOJUrxfHxIiSMG4KLG5gzEWNzkptjlTg0dGlAbWcYpARzsszbaCh6rjBSg2l/hpxn74yun
+	gcigbuZOgomb074+8LBZV6iYejbJjvrq9A1ZKjnHKcMjpND++QW/XOuyta5B/nJB/zjEwB
+	HUJWB8BVcNjOggS16UcsgqU02Kj8uVU=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	netdev@vger.kernel.org,
+	keyrings@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] gcov: Disable GCOV_PROFILE_ALL on 32-bit UML with Clang 20/21
-Date: Wed,  8 Apr 2026 22:20:42 -0700
-Message-Id: <20260409052038.make.995-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH RESEND net-next 2/2] KEYS: annotate struct user_key_payload with __counted_by
+Date: Thu,  9 Apr 2026 09:37:13 +0200
+Message-ID: <20260409073711.57020-6-thorsten.blum@linux.dev>
+In-Reply-To: <20260409073711.57020-4-thorsten.blum@linux.dev>
+References: <20260409073711.57020-4-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2693; i=kees@kernel.org; h=from:subject:message-id; bh=iSD8lx//1/eG9pu6VCuAmWIXKptBjif+THnfHLu57Wc=; b=owGbwMvMwCVmps19z/KJym7G02pJDJnXzbXmbQrbJ+OnZaHhK/M/hX/p6mS3doXdIQ7ZSn/Fu BhNfAo7SlkYxLgYZMUUWYLs3ONcPN62h7vPVYSZw8oEMoSBi1MAJsLAwPA//tFOTYGCSH6Oy2cU n/Q92F/85+jv+R67uGc/ab7HyHA2meF/3C/pD2v1lq7b86Jo+9tr288HMlqtOfhTUTWRh0OBTU+ XAwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+X-Developer-Signature: v=1; a=openpgp-sha256; l=930; i=thorsten.blum@linux.dev; h=from:subject; bh=jUVCD18qBj55kiQf5LCb0CfnXhvlUgd5d4yqTC7/xCg=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJnXw9WXpfasVXvPK1hQdNRTsS/H/d9hIaVFq3ZMXxEoc eSmUtHNjlIWBjEuBlkxRZYHs37M8C2tqdxkErETZg4rE8gQBi5OAZhISw0jw436jQL9uVbnEyP2 NLP3affN2rMyLKG1To9TTvuA9W9hSYb/Ecfy1XQne6aeS/D/uVBHtKVurui6qkOBlkWsuxSctzR zAgA=
+X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Clang 20 and 21 miscompute __builtin_object_size() when -fprofile-arcs
-is active on 32-bit UML targets, which passes incorrect object size
-calculations for local variables through always_inline copy_to_user()
-and check_copy_size(), causing spurious compile-time errors:
+Add the __counted_by() compiler attribute to the flexible array member
+'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-  include/linux/ucopysize.h:52:4: error: call to '__bad_copy_from' declared with 'error' attribute: copy source size is too small
-
-The regression was introduced in LLVM commit 02b8ee281947 ("[llvm]
-Improve llvm.objectsize computation by computing GEP, alloca and malloc
-parameters bound"), which shipped in Clang 20. It was fixed in LLVM
-by commit 45b697e610fd ("[MemoryBuiltins] Consider index type size
-when aggregating gep offsets"), which was backported to the LLVM 22.x
-release branch.
-
-The bug requires 32-bit UML + GCOV_PROFILE_ALL (which uses -fprofile-arcs),
-though the exact trigger depends on optimizer decisions influenced by other
-enabled configs.
-
-Prevent the bad combination by disabling UML's ARCH_HAS_GCOV_PROFILE_ALL
-on 32-bit when using Clang 20.x or 21.x.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202604030531.O6FveVgn-lkp@intel.com/
-Suggested-by: Nathan Chancellor <nathan@kernel.org>
-Assisted-by: Claude:claude-opus-4-6[1m]
-Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- v3: disable via ARCH_HAS_GCOV_PROFILE_ALL instead (Nathan)
- v2: https://lore.kernel.org/lkml/20260408162607.it.347-kees@kernel.org/
- v1: https://lore.kernel.org/lkml/20260408005958.work.271-kees@kernel.org/
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: <llvm@lists.linux.dev>
-Cc: <linux-um@lists.infradead.org>
+Resending this because patch 2/2 didn't go to netdev@ (Jakub)
+Cc: netdev@vger.kernel.org
 ---
- arch/um/Kconfig | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/keys/user-type.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index 098cda44db22..d9541d13d9eb 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -11,7 +11,9 @@ config UML
- 	select ARCH_HAS_CACHE_LINE_SIZE
- 	select ARCH_HAS_CPU_FINALIZE_INIT
- 	select ARCH_HAS_FORTIFY_SOURCE
--	select ARCH_HAS_GCOV_PROFILE_ALL
-+	# Clang 20 & 21 miscompute __builtin_object_size() under -fprofile-arcs
-+	# on 32-bit, causing spurious compile-time errors in check_copy_size().
-+	select ARCH_HAS_GCOV_PROFILE_ALL if !(!64BIT && CLANG_VERSION >= 200000 && CLANG_VERSION < 220100)
- 	select ARCH_HAS_KCOV
- 	select ARCH_HAS_STRNCPY_FROM_USER
- 	select ARCH_HAS_STRNLEN_USER
--- 
-2.34.1
-
+diff --git a/include/keys/user-type.h b/include/keys/user-type.h
+index 386c31432789..2305991f4fcd 100644
+--- a/include/keys/user-type.h
++++ b/include/keys/user-type.h
+@@ -27,7 +27,8 @@
+ struct user_key_payload {
+ 	struct rcu_head	rcu;		/* RCU destructor */
+ 	unsigned short	datalen;	/* length of this data */
+-	char		data[] __aligned(__alignof__(u64)); /* actual data */
++	char		data[]		/* actual data */
++			__aligned(__alignof__(u64)) __counted_by(datalen);
+ };
+ 
+ extern struct key_type key_type_user;
