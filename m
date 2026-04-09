@@ -1,78 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345D9364E8B;
-	Thu,  9 Apr 2026 16:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7102D2496;
+	Thu,  9 Apr 2026 16:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775751560; cv=none; b=UJ1sq62BJGHzGUuoQxpFCSNcXF3wf+Jj6tOPWjCdjQxGrvvgxYeLyXH7EN9+VVWqkjChLsXEmWi+US4NovuAJto6jypWdUzPs3ku22Vd3UIJ/b9MK/oquSMPzBZFpRijlWyR+R8DF9cGbhRclOXIpaYLKTEQJRDPOlXbSXpJB9k=
+	t=1775752167; cv=none; b=TPUGnbfRd3K9/2QJiaNC2upknedjFx6zcH6zcXbTJ4YTjnbx2D2+DO+UIQR2jnh777IqXhnh0Rr9KK0pOwwLTF7YNrW7GldlXYGUTFnq3ix5HZkAniB9BON5P2wXELKjtNfKofZSbALcXj0WJxe6oZzmHH1eXt9WYjbz2LV7dQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775751560; c=relaxed/simple;
-	bh=NjYHdVddOsPpBbe9fcWFupW2MzC2TdUxZdnSF0jBFZ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e9337lzDOhbc0TbZ7yEVWaEjp7cEXVM6jtLHMSFwymjuks8RUNxcRJjkhdtrFG7EhHUxBSFrnexlhWdC5GtMVmL2Ix6qwxW4PfOuRofCiv3jiaQd9KqSOO+JEZDU79Aui+yQv//6HEUxFDLS2GmZgj8vv98fRcwUi50x2RQLjyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsEUFpLq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775752167; c=relaxed/simple;
+	bh=0PYLzHiQW4t3ziI2iibnh/BE/gLcKoKFZi9FCjfOoYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bm9dbuIDFuN+lmtBlTiQJwnVivbHx0Y7+6yh36HiDCpc2yDY+v0j+6GYvjiYn0nrRtbuO82DlpuiRerC0tg1Q7UTD1ZvAqwcLDDRfAswmtz+sYiUSeM0Dsn1l2GtftquI8pBse5pnzqRTYQg5Arjz1MDWR4wWXX8UQbozEfLqks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrKuwMii; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsEUFpLq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3CD4C4CEF7;
-	Thu,  9 Apr 2026 16:19:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrKuwMii"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 989BDC4CEF7;
+	Thu,  9 Apr 2026 16:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775751559;
-	bh=NjYHdVddOsPpBbe9fcWFupW2MzC2TdUxZdnSF0jBFZ4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VsEUFpLqgZ/IowOYR9KvD021WEO6i0h7kZ9VWHl7c2cWxNnQQLH0Cbgj1ZfAkfSjj
-	 O61p1rSX/a5TxEajOp4VeR+ulw8yKoYpYoMi9xRX8qZSfcyW7Jr6stetqQ9at6gdIi
-	 aIud1jkXErYF2IHRGVeCDJFnVNPU1ZYcuykFHj4MosFRIGEBDB/MZ7yTjlc1P00fav
-	 ZxdhvY8+y9hC8u5DBIEEdto16TFQ2HxFsCh5WGwaMYrjWTZkC2pIXwIgHcWuV4eMlh
-	 herM+BjOrLKVhPCqNuJe2elD7zeLF7sIo0J/f5FywLecviE8bLciei+vwqgBlhNDPa
-	 uH9anHjyObpgQ==
-From: Kees Cook <kees@kernel.org>
-To: linux-hardening@vger.kernel.org,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	tony.luck@intel.com,
-	kernel-dev@igalia.com,
-	kernel@gpiccoli.net,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH V2] pstore/ftrace: Factor KASLR offset in the core kernel instruction addresses
-Date: Thu,  9 Apr 2026 09:19:17 -0700
-Message-Id: <177575155448.470733.612810320980206517.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260409153830.2560633-1-gpiccoli@igalia.com>
-References: <20260409153830.2560633-1-gpiccoli@igalia.com>
+	s=k20201202; t=1775752167;
+	bh=0PYLzHiQW4t3ziI2iibnh/BE/gLcKoKFZi9FCjfOoYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rrKuwMiiVK0wH2SSeSYHrFn8Cc6LXHpns6aSQLfsAWCUahBmAgLkoHmMwTJp30APz
+	 zF+/SkrRQGbLMF9pKSgOgQfKjFwCPENVUgIDvT2IJyvcs06Hgz3/5ZtX3TkzKqJnzJ
+	 batiAo9M9Fd1F8sAJ0yNluNfOMnRu3reGJEtDBRN5cCgLlWqfCv/JpznEJ9GwjD9Pn
+	 QwbPKqva2q0LdwAoL8+0MXq/5pAJ6ubY0KSBLfrfek75i/onxcbzBxOhmvfK1TJX/G
+	 JneiE1qSu5t/6M6JZyO0xRfQ4eDCdJluX+9oXB1ehhGlYtnjgoUvHbBuAvqoqD7XF9
+	 yvysEfg0FVAAw==
+Date: Thu, 9 Apr 2026 18:29:22 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-i2c@vger.kernel.org, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] i2c: atr: use kzalloc_flex
+Message-ID: <adfTdfty7q0nygeo@zenone.zhora.eu>
+References: <20260327030310.8502-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260327030310.8502-1-rosenp@gmail.com>
 
-On Thu, 09 Apr 2026 12:12:29 -0300, Guilherme G. Piccoli wrote:
-> The pstore ftrace frontend works by purely collecting the
-> instruction address, saving it on the persistent area through
-> the backend and when the log is read, on next boot for example,
-> the address is then resolved by using the regular printk symbol
-> lookup (%pS for example).
-> 
-> Problem: if we are running a relocatable kernel with KASLR enabled,
-> this is a recipe for failure in the symbol resolution on next boots,
-> since the addresses are offset'ed by the KASLR address. So, naturally
-> the way to go is factor the KASLR address out of instruction address
-> collection, and adding the fresh offset when resolving the symbol
-> on future boots.
-> 
-> [...]
+Hi Rosen,
 
-Applied to for-next/pstore, thanks!
+along with Luca's comments, I will ask you for one more change:
 
-[1/1] pstore/ftrace: Factor KASLR offset in the core kernel instruction addresses
-      https://git.kernel.org/kees/c/187e3865f298
+...
 
-Take care,
+>  	/* Protects aliases and use_mask */
+>  	spinlock_t lock;
+> -	u16 *aliases;
+>  	unsigned long *use_mask;
+> +	u16 aliases[] __counted_by(size);
 
--- 
-Kees Cook
+...
 
+> -	alias_pool = kzalloc_obj(*alias_pool);
+> +	alias_pool = kzalloc_flex(*alias_pool, aliases, num_aliases);
+>  	if (!alias_pool)
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	alias_pool->size = num_aliases;
+
+this line is not needed anymore because kzalloc_flex will resolve
+to alias_pool size and will set it tu num_aliases.
+
+We can remove it.
+
+Thanks,
+Andi
+
+> -	alias_pool->aliases = kcalloc(num_aliases, sizeof(*alias_pool->aliases), GFP_KERNEL);
+> -	if (!alias_pool->aliases) {
+> -		ret = -ENOMEM;
+> -		goto err_free_alias_pool;
+> -	}
+> -
