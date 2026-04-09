@@ -1,110 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEAB395DA9;
-	Thu,  9 Apr 2026 22:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC18390223;
+	Thu,  9 Apr 2026 22:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775774150; cv=none; b=GpOJ52SINGT2aLNjMzWyJqCRdI2FW3gv82zfJkTmaihDSMrg2TFOEQidgCZgZRQ8EJSHQW8/fh5EL39jbT/x8emIEH7u2/UzOeupsNkzyq5Cg3x4C/pgzOXFozjYelLvCIo85eaxOrWcNUZYjX8goqmmsWxXeJoLgANmmyP5hGI=
+	t=1775775508; cv=none; b=pAjtuExGkhWp+optwSKyEn0qUCWUHnSaOoId/BcSqrQdz6Pbz2RomXOvAFCjhUZO0hqzXBfiM0YFx5eAdMh6Dveew0uvcxlcvlZwnWmzjWc1CB6UOZLaOhedyEbjDkBEYdHZy3a5rvV4JwGa4FtwlAYAaAJiE2RkthZS2YdLL2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775774150; c=relaxed/simple;
-	bh=J/2ZuFqPndxjtk3a4BAUjbPeGRBmaU9iiJajKE46LAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bdoc//029K4XH+KfkQfKozsUQJwTgQFMktbhkECPb5J/A9dEjSiTh1jSJN5INjh87Voa1h5Roif6/4m1nnrZZym+xWnlo9fHVA9wFzS8BME5M5rCq1u2+hdamKANWwgDy0559j+GKCU5a5pcWRFdn1KbeNcg40B/ahuZXKlXJ3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sY6ukHw2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775775508; c=relaxed/simple;
+	bh=qrSPnQzw/gdM7fHPn1fcyeOsexQXKfPqSvfyGGPJJrE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XPyIVLkyoGl41YqxBJ8IFsYmVHXwUd5vjF+90zGn7crH5r/AIoiqPrV5v5ow2QYC156YbrhNXuhsxnPzrHeBPNvEXtTNr7/68DgCbnHuvzeQ93ikDfN+97LVsBUDErcOAF4u+Zoehz8QqvTkereMbp85EoHpW0wBM0BsRFhnaYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qMZOHPM/; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sY6ukHw2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74285C2BC87;
-	Thu,  9 Apr 2026 22:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775774150;
-	bh=J/2ZuFqPndxjtk3a4BAUjbPeGRBmaU9iiJajKE46LAs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=sY6ukHw2RK3yFOrsBaDr1fi35Wj3daX+cGyFXiJU+td55zqp7UTyrkyF8PwYUhnew
-	 CrHTtnESfl9Dh3msfXnkXgtK4hbayqmhK0xFnZSxfoYlQd1xDUQRLPelRZ/qHEEwY2
-	 DHjicNmXyRoxFeprGuK5ofhMbEXkPA8CVfgRE/XJu8pP8/5OAtAmVtCHzz5SN+Js4B
-	 4jnSj6jxWIWJ2MEMOB3lIRdqh5IF4ps6OAj6tTnK1iyv2F13et/hqvIbwDy3qPY7uS
-	 UUoSr6NUwZZ8YrfsYnGZjo+BYaTF9FcHc2SIhIeYS5HtXSM4QX09g0++LmTOdpumFb
-	 Cl1HgDSAcNadw==
-Date: Thu, 9 Apr 2026 16:34:43 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Pablo Neira Ayuso <pablo@netfilter.org>,
-	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: [PATCH v3][next] netfilter: x_tables: Avoid a couple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <adgpg3W5FiX9m49-@kspp>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qMZOHPM/"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1775775505;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2QmwkRKwrZzFhOxslhCRneQBH4U9C3GkVTQuu656kzs=;
+	b=qMZOHPM/7ty4cnPkjzbbz6CmjOCC2XKzHAX7lpC2B2e9cQEhIkSFwPJIaVCahV5frckWaE
+	3bMU5YFA/qqoP8621JrmvneahZFZ8TonJ9FI+JLq7h7GOvjl4vapOiQH1cdd6GVxTaqSpm
+	jBoUiCYNArKPs8atoOEPv298StbT0Bg=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	netdev@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next v2 2/2] KEYS: annotate struct user_key_payload with __counted_by
+Date: Fri, 10 Apr 2026 00:57:05 +0200
+Message-ID: <20260409225703.158552-7-thorsten.blum@linux.dev>
+In-Reply-To: <20260409225703.158552-4-thorsten.blum@linux.dev>
+References: <20260409225703.158552-4-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=996; i=thorsten.blum@linux.dev; h=from:subject; bh=qrSPnQzw/gdM7fHPn1fcyeOsexQXKfPqSvfyGGPJJrE=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJk39I4s/9y/RLjCglO/XbLz4FJB70sJXLbNrz/3Pp5vG VOr1f+so5SFQYyLQVZMkeXBrB8zfEtrKjeZROyEmcPKBDKEgYtTACYSdpORoevz5+vKMqJbmiUK 4x23T/X6yCFg9OB320QXD3EZ/T1G/Ax/OL8e2hE1/1fwh8y73UsmC8/tu/tqpVRxpndHxaLLCy0 W8gAA
+X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Add the __counted_by() compiler attribute to the flexible array member
+'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-Use the TRAILING_OVERLAP() helper to fix the following warnings:
-
-1 net/netfilter/x_tables.c:816:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-1 net/netfilter/x_tables.c:811:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-This helper creates a union between a flexible-array member (FAM)
-and a set of members that would otherwise follow it. This overlays
-the trailing members onto the FAM while preserving the original
-memory layout.
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
-Changes in v3:
- - Use the TRAILING_OVERLAP() helper.
-  - Update changelog text.
-
 Changes in v2:
- - Update verdict after (compat_uint_t *)st->data;
- - Link: https://lore.kernel.org/linux-hardening/adgL5wPm9VpaV3MO@kspp/
+- Use __aligned(8) as suggested by David
+- v1: https://lore.kernel.org/lkml/20260409073711.57020-6-thorsten.blum@linux.dev/
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/adbIKC0cZcK7VcCF@kspp/
+Cc: netdev@vger.kernel.org
+---
+ include/keys/user-type.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- net/netfilter/x_tables.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-index b39017c80548..9f837fb5ceb4 100644
---- a/net/netfilter/x_tables.c
-+++ b/net/netfilter/x_tables.c
-@@ -819,13 +819,17 @@ EXPORT_SYMBOL_GPL(xt_compat_match_to_user);
- 
- /* non-compat version may have padding after verdict */
- struct compat_xt_standard_target {
--	struct compat_xt_entry_target t;
--	compat_uint_t verdict;
-+	/* Must be last as it ends in a flexible-array member. */
-+	TRAILING_OVERLAP(struct compat_xt_entry_target, t, data,
-+		compat_uint_t verdict;
-+	);
+diff --git a/include/keys/user-type.h b/include/keys/user-type.h
+index 386c31432789..c29ed9f5d300 100644
+--- a/include/keys/user-type.h
++++ b/include/keys/user-type.h
+@@ -27,7 +27,8 @@
+ struct user_key_payload {
+ 	struct rcu_head	rcu;		/* RCU destructor */
+ 	unsigned short	datalen;	/* length of this data */
+-	char		data[] __aligned(__alignof__(u64)); /* actual data */
++	char		data[]		/* actual data */
++			__aligned(8) __counted_by(datalen);
  };
  
- struct compat_xt_error_target {
--	struct compat_xt_entry_target t;
--	char errorname[XT_FUNCTION_MAXNAMELEN];
-+	/* Must be last as it ends in a flexible-array member. */
-+	TRAILING_OVERLAP(struct compat_xt_entry_target, t, data,
-+		char errorname[XT_FUNCTION_MAXNAMELEN];
-+	);
- };
- 
- int xt_compat_check_entry_offsets(const void *base, const char *elems,
--- 
-2.43.0
-
+ extern struct key_type key_type_user;
