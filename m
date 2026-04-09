@@ -1,84 +1,70 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC18390223;
-	Thu,  9 Apr 2026 22:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6246C26FA5A;
+	Thu,  9 Apr 2026 23:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775775508; cv=none; b=pAjtuExGkhWp+optwSKyEn0qUCWUHnSaOoId/BcSqrQdz6Pbz2RomXOvAFCjhUZO0hqzXBfiM0YFx5eAdMh6Dveew0uvcxlcvlZwnWmzjWc1CB6UOZLaOhedyEbjDkBEYdHZy3a5rvV4JwGa4FtwlAYAaAJiE2RkthZS2YdLL2A=
+	t=1775776955; cv=none; b=B/cUuf0cOhuFKtfkvmDkDMJsWaWMgWUWtsrqMoV+hSXOY+b33skhYQjdZuOiw0shf9B52CwOX+4Sb4p/my0X9IHWHTPqRF3St1MnMse2iFqoO6wtE1PIoKY4d4nKQFniTjnAhI+5qKMiVysTpjzDSbXeuLrnjLzjZKptq66F3KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775775508; c=relaxed/simple;
-	bh=qrSPnQzw/gdM7fHPn1fcyeOsexQXKfPqSvfyGGPJJrE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XPyIVLkyoGl41YqxBJ8IFsYmVHXwUd5vjF+90zGn7crH5r/AIoiqPrV5v5ow2QYC156YbrhNXuhsxnPzrHeBPNvEXtTNr7/68DgCbnHuvzeQ93ikDfN+97LVsBUDErcOAF4u+Zoehz8QqvTkereMbp85EoHpW0wBM0BsRFhnaYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qMZOHPM/; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1775776955; c=relaxed/simple;
+	bh=F/kb+h9jHzZ9HxLjt+vGzWqzzwCyExO/qnVVtOJ8hJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N6ocbtpLEuEGqYIdl49c7mcZZ0/P2a69OREdSEEkFOER/2BzeQao46s99ANtI4iIKKbntUehGBTgmVhoTb+ByL3cxgaWdVW68b2ACy04z47QSt1uA+b9G3zzHwmM7P460vHC8n/44micgZHpd074hkv6tU0Wo2ilbhFC47676oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHvNu3VH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qMZOHPM/"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775775505;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2QmwkRKwrZzFhOxslhCRneQBH4U9C3GkVTQuu656kzs=;
-	b=qMZOHPM/7ty4cnPkjzbbz6CmjOCC2XKzHAX7lpC2B2e9cQEhIkSFwPJIaVCahV5frckWaE
-	3bMU5YFA/qqoP8621JrmvneahZFZ8TonJ9FI+JLq7h7GOvjl4vapOiQH1cdd6GVxTaqSpm
-	jBoUiCYNArKPs8atoOEPv298StbT0Bg=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	netdev@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next v2 2/2] KEYS: annotate struct user_key_payload with __counted_by
-Date: Fri, 10 Apr 2026 00:57:05 +0200
-Message-ID: <20260409225703.158552-7-thorsten.blum@linux.dev>
-In-Reply-To: <20260409225703.158552-4-thorsten.blum@linux.dev>
-References: <20260409225703.158552-4-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHvNu3VH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742BEC4CEF7;
+	Thu,  9 Apr 2026 23:22:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775776954;
+	bh=F/kb+h9jHzZ9HxLjt+vGzWqzzwCyExO/qnVVtOJ8hJU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OHvNu3VH0CyYc3I9ZwUx2gVphIBieaJusoal+mErKbxPVLQ4QVpbvgc2WPL9yZgWv
+	 9YWf/G8F0G4yd9l4nWj8ZNWrEF8iKpZKEKNW8c1+k9xRSCByXqRbpONJ0K35Yry/zZ
+	 +yyjIRu6O0YR4KZnFe/HAfrvql8vybUv3lOjSnS9lzY+KFjKw07hvwg0Rgv/12pwPs
+	 0PkTd+RVWlWr8/u79p7ainU+2sp3eK3Y5PvatdcwebCxiBlBx9pUCUGoxcjGZqrC90
+	 OffJkUZGxK3JmmEFA04aTpU9CCKP+MOIjSToBjakprBnQr6nh1tpB1v6lfQriweZdF
+	 7EJIIOQJZT8PQ==
+Date: Fri, 10 Apr 2026 01:22:31 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-i2c@vger.kernel.org, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] i2c: atr: use kzalloc_flex
+Message-ID: <adg0kP1OZDbnUaQZ@zenone.zhora.eu>
+References: <20260327030310.8502-1-rosenp@gmail.com>
+ <adfTdfty7q0nygeo@zenone.zhora.eu>
+ <CAKxU2N9tkjDeE6Zz6diMEMT4uNzYg4D36gow0BTbaC=AyAeT3A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=996; i=thorsten.blum@linux.dev; h=from:subject; bh=qrSPnQzw/gdM7fHPn1fcyeOsexQXKfPqSvfyGGPJJrE=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJk39I4s/9y/RLjCglO/XbLz4FJB70sJXLbNrz/3Pp5vG VOr1f+so5SFQYyLQVZMkeXBrB8zfEtrKjeZROyEmcPKBDKEgYtTACYSdpORoevz5+vKMqJbmiUK 4x23T/X6yCFg9OB320QXD3EZ/T1G/Ax/OL8e2hE1/1fwh8y73UsmC8/tu/tqpVRxpndHxaLLCy0 W8gAA
-X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKxU2N9tkjDeE6Zz6diMEMT4uNzYg4D36gow0BTbaC=AyAeT3A@mail.gmail.com>
 
-Add the __counted_by() compiler attribute to the flexible array member
-'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
+Hi Rosen,
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Use __aligned(8) as suggested by David
-- v1: https://lore.kernel.org/lkml/20260409073711.57020-6-thorsten.blum@linux.dev/
+> > > -     alias_pool = kzalloc_obj(*alias_pool);
+> > > +     alias_pool = kzalloc_flex(*alias_pool, aliases, num_aliases);
+> > >       if (!alias_pool)
+> > >               return ERR_PTR(-ENOMEM);
+> > >
+> > >       alias_pool->size = num_aliases;
+> >
+> > this line is not needed anymore because kzalloc_flex will resolve
+> > to alias_pool size and will set it tu num_aliases.
+> I believe that only works with GCC15 and above.
 
-Cc: netdev@vger.kernel.org
----
- include/keys/user-type.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yes, you're right, it works with clang.
 
-diff --git a/include/keys/user-type.h b/include/keys/user-type.h
-index 386c31432789..c29ed9f5d300 100644
---- a/include/keys/user-type.h
-+++ b/include/keys/user-type.h
-@@ -27,7 +27,8 @@
- struct user_key_payload {
- 	struct rcu_head	rcu;		/* RCU destructor */
- 	unsigned short	datalen;	/* length of this data */
--	char		data[] __aligned(__alignof__(u64)); /* actual data */
-+	char		data[]		/* actual data */
-+			__aligned(8) __counted_by(datalen);
- };
- 
- extern struct key_type key_type_user;
+Merged to i2c/i2c-host.
+
+Thanks,
+Andi
