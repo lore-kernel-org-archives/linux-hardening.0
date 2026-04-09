@@ -1,91 +1,140 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEB63BFE3C;
-	Thu,  9 Apr 2026 16:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7661A2D7817
+	for <linux-hardening@vger.kernel.org>; Thu,  9 Apr 2026 16:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775751239; cv=none; b=sj4LodVsteeSdMEejen998Tdax4T+kZGv9KbX3Ge/jjgzMOimhHBZouKWYRDhCXnbso+hxnPIIrH2SbRMhDWoAhKARicdFf7goJxNDRs8TQh4tCBwxVI5QKEPlmw/V7NjyqQlF5zNw19zMZxXM80SjI9o5T7FP/2dN5PM4z0dPY=
+	t=1775751423; cv=none; b=nlP8IJyjUkvIWAPHkq13CjNf4GrAD7p29Q6qDXxEfR2aTKZcm+MNmDaqhN6Lt/F6Ep7Gx1m4IGeXOu4yaZuLdRMPW1X/3Iiud3tQiAcYzokJGTzF4fwjWZoWyoaHynIXd6RhAgyuzi6kOOur5VbqsZDkOkhOsoM0cM+L+sjr+dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775751239; c=relaxed/simple;
-	bh=fPZbJyTRNUQdoxjECuHRN4wBArcP+sqxGk2yn+YQ1CQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:Cc:References:
-	 In-Reply-To:Content-Type; b=s7APk+wreTW3NvQKb8QEYIkgsGI2u/gp4oH977Jjx/aShSK+Lk2Ueoi2AU3F7NWtcU8dbuop5vbPtVwraG2kFV4B6k1FGK1evHG33KGUK71jvNSH3WPOVZu1+bVpyQ5V83a++mr2n8NPomdy0VD24fyexJsjRxFm9aHl4tLLd04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=kwyHTX37; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1775751423; c=relaxed/simple;
+	bh=xfTIKtj5PwV74myDp2OytDSJiXzkqlmmQuhRTaEsOu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VvFcGLHIsnHWgXKCy9wIRbEIlyRI+7o8x7SyzXiMnfuZ7I0GbvPNblV+Vi+yyl0g3DRD1SRSlbDv51e2n99nmp2WjnlFw2V5/7XSUyMCtb0aKtu2Fga85VJCpgGg3KnQ0Xj0qkki1I1bdraBjVASMtIUBAGUARr4mspOc9kJaBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvNaBqC0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="kwyHTX37"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=9pSD6e3SAXfscapnv9+Nc/KqJ397PTPXlJJVK4aPo1k=; b=kwyHTX377XnEHm0xYfpDcqCqCp
-	E6BToIJmM8ejdRIMKLSmQiv6kr0Hrk9dKhTvOLcvCudKwJOahkcDydMrQTYMcf522U89CuTZXRcvH
-	CkBYbauR0YOZ15+7tCGI3GJNUm17tghYiTaC6yzvW6vslN/tL3FChmwZrXlNvvtQYVGW+Qxl5jVij
-	fCh5JQ/nROm7qUGH3Hmq1oi1KXiRF2cWkMzCedbEVH9dfmBs4Rizy2GYK42fMd1UHu3zqlio6dnws
-	6SOZIs3N39YFSqmAuZW2ZxGfAMEZMwuIGaLYc6SXKgFcboBAk4GJ5sK3dwvTCDZ0b/BBgpWzPUaMf
-	X7DgJ/bA==;
-Received: from [177.189.74.94] (helo=[192.168.1.54])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1wAs0u-00E0sx-Jx; Thu, 09 Apr 2026 18:13:52 +0200
-Message-ID: <df4c3da5-37f6-e695-dcf7-cb15f19d8fbc@igalia.com>
-Date: Thu, 9 Apr 2026 13:13:49 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvNaBqC0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FBF6C4CEF7;
+	Thu,  9 Apr 2026 16:17:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775751423;
+	bh=xfTIKtj5PwV74myDp2OytDSJiXzkqlmmQuhRTaEsOu4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QvNaBqC0APcc0tKfH69RdqAkFZFZBmiGyUnWAHpoCcPV6gs8Kp/jQHBVBJ/aLRpqM
+	 GizjPlN3OFjgFi4ZkIx6GSdj+XASzOKkMLGu4bI34Ya8jgD3aAd+xQIy4NqR4kF6I/
+	 /H9A6QCRVFGcLprEj/bdA3BNNPx+7h1WkcboP0culFUskstkrtkSIP0oycNrGx8Cus
+	 tHAqeMI5uiJIkCMGnOnhiwkX5VW+pxacU7d508qBhBUFKgKxC8hEDyngwyiIM2tD9p
+	 FrFs4eef89n/l5xFK3rz4ziuIBdqM58hxqaqTraz8GXJtH9R48ro/4qLZ8imO3GUAQ
+	 +7Chh8RPlyRzQ==
+Date: Thu, 9 Apr 2026 09:17:02 -0700
+From: Kees Cook <kees@kernel.org>
+To: Xu Laiguang <xulaiguang@lixiang.com>,
+	Ryan Roberts <ryan.roberts@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, gustavoars@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] arm64: syscall: use cntvct_el0 for kstack offset
+ randomization
+Message-ID: <202604090914.10F22B6@keescook>
+References: <20260409095322.1774250-1-xulaiguang@lixiang.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] pstore/ftrace: Factor KASLR offset in the core kernel
- instruction addresses
-Content-Language: en-US
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, tony.luck@intel.com, kernel-dev@igalia.com,
- kernel@gpiccoli.net, Steven Rostedt <rostedt@goodmis.org>
-References: <20260313201010.1622406-3-gpiccoli@igalia.com>
- <202603311445.F9975321B1@keescook>
- <f1f2408c-8fd0-2fa8-052a-176485e81961@igalia.com>
-In-Reply-To: <f1f2408c-8fd0-2fa8-052a-176485e81961@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260409095322.1774250-1-xulaiguang@lixiang.com>
 
-On 01/04/2026 19:28, Guilherme G. Piccoli wrote:
-> On 31/03/2026 18:48, Kees Cook wrote:
->> [...]
->>>  /* This doesn't need to be atomic: speed is chosen over correctness here. */
->>>  static u64 pstore_ftrace_stamp;
->>> +unsigned long kaslr_off;
->>
->> This should at least be "static", but why have it sitting in the data
->> segment at all, only to be scraped out by attackers with a arbitrary read
->> primitives? Can we just call kaslr_offset() directly as needed instead
->> (it's already an inline)?
->>
->> -Kees
->>
+On Thu, Apr 09, 2026 at 09:53:22AM +0000, Xu Laiguang wrote:
+> On PREEMPT_RT kernels, get_random_u16() can suffer significant lock
+> contention in the syscall hot path.  The batched entropy layer uses
+> local_lock, which on RT maps to a real spinlock.  When a batch refill
+> is in progress, other tasks on the same CPU block on the lock.  Under
+> heavy syscall load on a 24-core RT system, worst-case latencies of
+> 16.65ms have been observed.
 > 
-> Hi Kees, thanks for the review!
+>  contended   total wait     max wait     caller
+>        307     86.18 ms     16.65 ms     get_random_u16+0x64
 > 
-> Totally feasible - I thought in some form of optimization, since it's
-> tracing, but if you think doesn't worth, I can easily just put the call
-> to kaslr_offset() there, as I did in my internal V0 heh
+> The kstack offset randomization only needs 6 bits of entropy (the
+> value is masked by KSTACK_OFFSET_MAX to bits [9:4] on 64-bit).  This
+> does not require cryptographic-strength randomness -- the goal is to
+> make the kernel stack offset unpredictable enough to frustrate stack
+> layout attacks.
 > 
-> I can try some perf measurements, let's see how it goes ...
-> Cheers,
+> Other architectures already use lightweight hardware counters for this
+> purpose:
+>   - x86:       rdtsc()              (arch/x86/include/asm/entry-common.h)
+>   - powerpc:   mftb()               (arch/powerpc/kernel/syscall.c)
+>   - loongarch: drdtime()            (arch/loongarch/kernel/syscall.c)
+>   - s390:      get_tod_clock_fast()  (arch/s390/include/asm/entry-common.h)
 > 
+> Replace get_random_u16() with a bare read of cntvct_el0 (the ARM
+> generic timer virtual count register).  The read is performed without
+> ISB or arch_counter_enforce_ordering because kstack randomization does
+> not require timing accuracy -- only unpredictability.
 > 
-> Guilherme
+> Signed-off-by: Xu Laiguang <xulaiguang@lixiang.com>
 
-Just for closing the loop here: V2 was just sent.
+Everything here has been replaced recently. Can you check again with the
+-next tree?
 
-Link:
-https://lore.kernel.org/r/20260409153830.2560633-1-gpiccoli@igalia.com/
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=for-next/hardening
 
-Cheers!
+See commits:
+	randomize_kstack: Maintain kstack_offset per task
+	randomize_kstack: Unify random source across arches
+
+-Kees
+
+> ---
+>  arch/arm64/kernel/syscall.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+> index c062badd1a56..c0ee9fa529ca 100644
+> --- a/arch/arm64/kernel/syscall.c
+> +++ b/arch/arm64/kernel/syscall.c
+> @@ -35,6 +35,21 @@ static long __invoke_syscall(struct pt_regs *regs, syscall_fn_t syscall_fn)
+>  	return syscall_fn(regs);
+>  }
+>  
+> +/*
+> + * Read the virtual counter without ISB or other ordering barriers.
+> + * This is intentional: kstack randomization only needs unpredictability,
+> + * not timing accuracy.  Speculative execution of the read, if it occurs,
+> + * actually helps by making the precise value less predictable to an
+> + * attacker.
+> + */
+> +static inline u64 kstack_entropy_cntvct(void)
+> +{
+> +	u64 cnt;
+> +
+> +	asm volatile("mrs %0, cntvct_el0" : "=r"(cnt));
+> +	return cnt;
+> +}
+> +
+>  static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+>  			   unsigned int sc_nr,
+>  			   const syscall_fn_t syscall_table[])
+> @@ -62,7 +77,7 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+>  	 *
+>  	 * The resulting 6 bits of entropy is seen in SP[9:4].
+>  	 */
+> -	choose_random_kstack_offset(get_random_u16());
+> +	choose_random_kstack_offset(kstack_entropy_cntvct());
+>  }
+>  
+>  static inline bool has_syscall_work(unsigned long flags)
+> -- 
+> 2.43.0
+> 
+> 声明：这封邮件只允许文件接收者阅读，有很高的机密性要求。禁止其他人使用、打开、复制或转发里面的任何内容。如果本邮件错误地发给了你，请联系邮件发出者并删除这个文件。机密及法律的特权并不因为误发邮件而放弃或丧失。任何提出的观点或意见只属于作者的个人见解，并不一定代表本公司。
+> Disclaimer: This email is intended to be read only by the designated recipient of the document and has high confidentiality requirements. Anyone else is prohibited from using, opening, copying or forwarding any of the contents inside. If this email was sent to you by mistake, please contact the sender of the email and delete this file immediately. Confidentiality and legal privileges are not waived or lost by misdirected emails. Any views or opinions expressed in the email are those of the author and do not necessarily represent those of the Company.
+> 
+
+-- 
+Kees Cook
