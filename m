@@ -1,82 +1,235 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE45315D40;
-	Thu,  9 Apr 2026 14:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D373C3C0E;
+	Thu,  9 Apr 2026 15:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775746075; cv=none; b=IQq+9eoY+2gWdC5PzIDXR8wesCGZEIav5IeU41aNZwNCqAk9peH/OI3epAPwv5x1DjFgSvzQ8aYFiszbQ61xahvfHhpIZPJnORdmL9MkNGyziVKHrPBZs7/xOvS5s4LP+nUqomi8l++bKmCRYu44+VvGHWoe5ZlddkAeKTjtQRQ=
+	t=1775747577; cv=none; b=byuqzJj9McsvKpWHSXB5DgJJm4sXqDxGX2N/nkBY19ykhVYszMiLi7zjPyLn0IqV1rMgcmMSG+/bulVrJOJOn/hUHskQ0MbwgpKdfy2yQdIS9GaTtR+nWKspFxYQ36+1Ys3Tg5clHeyV6Re61Q52KwmTpKLTh0OCoczjz1iqQWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775746075; c=relaxed/simple;
-	bh=4qnlhWkrVAC2M+j7AtAL9W6fLDOd3C2x6KpG3K+AnaU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oJt49DHoFkk3oSg2Vea6lh9GZa0Ov0tricHM5f5OlznPc5gSIrff4cNPBtl9rpu2eNbrf7s6/DbvNDXEOgKi8BuVfePUmxTpEEtPUyuNe8ECuk9gBT8OqFLDIbaw0BwtSTh3Eig1A7FgPOVDfKtQFfdZcyszarurX27tp3NNzrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=JUcDj1so; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1775747577; c=relaxed/simple;
+	bh=XZ0j55lDt+ITPdEqlDtIZHLtAJWhK74mOYmyr6CkMFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o4YQugHB4ZwuuuYwB+rxpLKQWhsZpzN+soK5rommXM4qX/lSv/jkh090fRHpW4UhjS6TN4krcY0dRvRKiu/jSghCl49Tz2TbfEi9WhGhRALhwtRRU9fYyyOPzsJ0SWAiTaUsDpigNPieD0tCZ77cEGwI0DS5ioDmSqzppUzK7XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHSRoZvi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="JUcDj1so"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=vtWvECdJsOce5KQBkQ6BB16WnHR2lmUFEE8FNue2MfA=;
-	t=1775746064; x=1776955664; b=JUcDj1so+5PMg8X/Ilo2vk9KWS1t9Snio50ZnblPUR+nmGX
-	i6UY3K0mCsnoJmk7ZV5ZA61txcAa2LYLCXcJUfUAZjeQT9wiEP9xQaUF759a96X5JUIg//B/mNrdx
-	/BIQqz/zng/os+ydUbK3I/C4HYo1XRGX2EJWHphf0Y5C8opROcL4gOv+eXvADA8WCB0/u7uTE67YU
-	otT1CYg8Lz2eoL/shg+jU/CUJ1n2PTAptU7ICAnXIJWDJJXq2BIc/F2mb3BGX9CzdoZpnCCd2l5RU
-	yJbOC2aFice2zXKmACNCA8bPj5TrETuR78ijaQCHVTHJBKtwgURN895JYIH6iONg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1wAqfN-0000000G2eD-3CNn;
-	Thu, 09 Apr 2026 16:47:33 +0200
-Message-ID: <5cf1d83227fd5a6af784f0b11fcdebf9a0bc9f94.camel@sipsolutions.net>
-Subject: Re: [PATCH v3] gcov: Disable GCOV_PROFILE_ALL on 32-bit UML with
- Clang 20/21
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Kees Cook <kees@kernel.org>, Richard Weinberger <richard@nod.at>
-Cc: kernel test robot <lkp@intel.com>, Nathan Chancellor
- <nathan@kernel.org>,  Anton Ivanov <anton.ivanov@cambridgegreys.com>, Peter
- Oberparleiter <oberpar@linux.ibm.com>, Nick Desaulniers
- <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, Justin
- Stitt	 <justinstitt@google.com>, llvm@lists.linux.dev,
- linux-um@lists.infradead.org, 	linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Date: Thu, 09 Apr 2026 16:47:32 +0200
-In-Reply-To: <20260409052038.make.995-kees@kernel.org>
-References: <20260409052038.make.995-kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHSRoZvi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C65C4CEF7;
+	Thu,  9 Apr 2026 15:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775747577;
+	bh=XZ0j55lDt+ITPdEqlDtIZHLtAJWhK74mOYmyr6CkMFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PHSRoZvijMwHrrt1Ouw1xOi6RIbE+2T9n21Tpw00cAAA56c+UOCzCA7eW4fWk3iAH
+	 6UPVYAQiMJU/HlBAV2nD3nz+uBx9SoL2A/MSn5J0YOn62MZ3f7HW3U2cGCNav/Z3vw
+	 u2sja/edfPtY08bt8GlHZPU57Ydv+aSAvTEfLSH2MfP18sMp4f4vsl2ORVDKG0n7DR
+	 5KAO+KcnmMddb1MZ/SrHeGukDqb0ReAuz3VLKE2dVLYsb41t4ElbE/MyMzZliIMV6r
+	 peHK2DURcRdaH/6LfkUDLWygP7sJWC7cCINu1BLcp16FGfhZ/s+ZDpYDPCTbQ/MtU8
+	 x8x+bv6Zt3cmg==
+Date: Thu, 9 Apr 2026 16:12:53 +0100
+From: Lee Jones <lee@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] leds: qcom-lpg: allocate channels with main struct
+Message-ID: <20260409151253.GH3290953@google.com>
+References: <20260330211844.14796-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260330211844.14796-1-rosenp@gmail.com>
 
-Hi,
+On Mon, 30 Mar 2026, Rosen Penev wrote:
 
-Maybe the subject should say "um:" instead of "gcov:" now?
+> Use a flexible array member to combine kzalloc and kcalloc. This
+> required moving the struct lpg_channel definition up as flexible array
+> members require a full definition.
+> 
+> Add __counted_by for extra runtime analysis.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  drivers/leds/rgb/leds-qcom-lpg.c | 117 +++++++++++++++----------------
+>  1 file changed, 56 insertions(+), 61 deletions(-)
+> 
+> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+> index f6061c47f863..83cedf4a0cbf 100644
+> --- a/drivers/leds/rgb/leds-qcom-lpg.c
+> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
+> @@ -80,58 +80,8 @@
+>  #define SDAM_PAUSE_HI_MULTIPLIER_OFFSET	0x8
+>  #define SDAM_PAUSE_LO_MULTIPLIER_OFFSET	0x9
+>  
+> -struct lpg_channel;
+>  struct lpg_data;
+>  
+> -/**
+> - * struct lpg - LPG device context
+> - * @dev:	pointer to LPG device
+> - * @map:	regmap for register access
+> - * @lock:	used to synchronize LED and pwm callback requests
+> - * @pwm:	PWM-chip object, if operating in PWM mode
+> - * @data:	reference to version specific data
+> - * @lut_base:	base address of the LUT block (optional)
+> - * @lut_size:	number of entries in the LUT block
+> - * @lut_bitmap:	allocation bitmap for LUT entries
+> - * @pbs_dev:	PBS device
+> - * @lpg_chan_sdam:	LPG SDAM peripheral device
+> - * @lut_sdam:	LUT SDAM peripheral device
+> - * @pbs_en_bitmap:	bitmap for tracking PBS triggers
+> - * @triled_base: base address of the TRILED block (optional)
+> - * @triled_src:	power-source for the TRILED
+> - * @triled_has_atc_ctl:	true if there is TRI_LED_ATC_CTL register
+> - * @triled_has_src_sel:	true if there is TRI_LED_SRC_SEL register
+> - * @channels:	list of PWM channels
+> - * @num_channels: number of @channels
+> - */
+> -struct lpg {
+> -	struct device *dev;
+> -	struct regmap *map;
+> -
+> -	struct mutex lock;
+> -
+> -	struct pwm_chip *pwm;
+> -
+> -	const struct lpg_data *data;
+> -
+> -	u32 lut_base;
+> -	u32 lut_size;
+> -	unsigned long *lut_bitmap;
+> -
+> -	struct pbs_dev *pbs_dev;
+> -	struct nvmem_device *lpg_chan_sdam;
+> -	struct nvmem_device *lut_sdam;
+> -	unsigned long pbs_en_bitmap;
+> -
+> -	u32 triled_base;
+> -	u32 triled_src;
+> -	bool triled_has_atc_ctl;
+> -	bool triled_has_src_sel;
+> -
+> -	struct lpg_channel *channels;
+> -	unsigned int num_channels;
+> -};
+> -
+>  /**
+>   * struct lpg_channel - per channel data
+>   * @lpg:	reference to parent lpg
+> @@ -216,6 +166,55 @@ struct lpg_led {
+>  	struct lpg_channel *channels[] __counted_by(num_channels);
+>  };
+>  
+> +/**
+> + * struct lpg - LPG device context
+> + * @dev:	pointer to LPG device
+> + * @map:	regmap for register access
+> + * @lock:	used to synchronize LED and pwm callback requests
+> + * @pwm:	PWM-chip object, if operating in PWM mode
+> + * @data:	reference to version specific data
+> + * @lut_base:	base address of the LUT block (optional)
+> + * @lut_size:	number of entries in the LUT block
+> + * @lut_bitmap:	allocation bitmap for LUT entries
+> + * @pbs_dev:	PBS device
+> + * @lpg_chan_sdam:	LPG SDAM peripheral device
+> + * @lut_sdam:	LUT SDAM peripheral device
+> + * @pbs_en_bitmap:	bitmap for tracking PBS triggers
+> + * @triled_base: base address of the TRILED block (optional)
+> + * @triled_src:	power-source for the TRILED
+> + * @triled_has_atc_ctl:	true if there is TRI_LED_ATC_CTL register
+> + * @triled_has_src_sel:	true if there is TRI_LED_SRC_SEL register
+> + * @channels:	list of PWM channels
+> + * @num_channels: number of @channels
+> + */
 
-(I'm assuming you want us to apply it to uml tree.)
+Should we be reordering the kerneldoc descriptions for '@channels' and
+'@num_channels' here to correctly match the updated order in the struct below?
 
-> Prevent the bad combination by disabling UML's ARCH_HAS_GCOV_PROFILE_ALL
-> on 32-bit when using Clang 20.x or 21.x.
+> +struct lpg {
+> +	struct device *dev;
+> +	struct regmap *map;
+> +
+> +	struct mutex lock;
+> +
+> +	struct pwm_chip *pwm;
+> +
+> +	const struct lpg_data *data;
+> +
+> +	u32 lut_base;
+> +	u32 lut_size;
+> +	unsigned long *lut_bitmap;
+> +
+> +	struct pbs_dev *pbs_dev;
+> +	struct nvmem_device *lpg_chan_sdam;
+> +	struct nvmem_device *lut_sdam;
+> +	unsigned long pbs_en_bitmap;
+> +
+> +	u32 triled_base;
+> +	u32 triled_src;
+> +	bool triled_has_atc_ctl;
+> +	bool triled_has_src_sel;
+> +
+> +	unsigned int num_channels;
+> +	struct lpg_channel channels[] __counted_by(num_channels);
+> +};
+> +
+>  /**
+>   * struct lpg_channel_data - per channel initialization data
+>   * @sdam_offset:	Channel offset in LPG SDAM
+> @@ -1475,12 +1474,6 @@ static int lpg_init_channels(struct lpg *lpg)
+>  	struct lpg_channel *chan;
+>  	int i;
+>  
+> -	lpg->num_channels = data->num_channels;
+> -	lpg->channels = devm_kcalloc(lpg->dev, data->num_channels,
+> -				     sizeof(struct lpg_channel), GFP_KERNEL);
+> -	if (!lpg->channels)
+> -		return -ENOMEM;
+> -
+>  	for (i = 0; i < data->num_channels; i++) {
+>  		chan = &lpg->channels[i];
+>  
+> @@ -1603,18 +1596,20 @@ static int lpg_init_sdam(struct lpg *lpg)
+>  
+>  static int lpg_probe(struct platform_device *pdev)
+>  {
+> +	const struct lpg_data *data;
+>  	struct lpg *lpg;
+>  	int ret;
+>  	int i;
+>  
+> -	lpg = devm_kzalloc(&pdev->dev, sizeof(*lpg), GFP_KERNEL);
+> +	data = of_device_get_match_data(&pdev->dev);
+> +	if (!data)
+> +		return -EINVAL;
+> +
+> +	lpg = devm_kzalloc(&pdev->dev, struct_size(lpg, channels, data->num_channels), GFP_KERNEL);
+>  	if (!lpg)
+>  		return -ENOMEM;
+>  
+> -	lpg->data = of_device_get_match_data(&pdev->dev);
 
-You say 20.x or 21.x,
+You just NULL-ptr-derefed yourself.  Did you test this?
 
-> +	# Clang 20 & 21 miscompute __builtin_object_size() under -fprofile-arcs
-> +	# on 32-bit, causing spurious compile-time errors in check_copy_size().
-> +	select ARCH_HAS_GCOV_PROFILE_ALL if !(!64BIT && CLANG_VERSION >=3D 2000=
-00 && CLANG_VERSION < 220100)
+> -	if (!lpg->data)
+> -		return -EINVAL;
+> -
+> +	lpg->num_channels = data->num_channels;
+>  	lpg->dev = &pdev->dev;
+>  	mutex_init(&lpg->lock);
+>  
+> -- 
+> 2.53.0
+> 
+> 
 
-and I see that 22.0 doesn't even exist, and maybe that's a general
-pattern, but it still looks confusing? Wouldn't it be better simpler to
-say < 220000? At least to me that more obviously is "up to 21.x". After
-all, 20.0 also didn't exist, and you did >=3D200000, not >200000 or
->=3D200100?
-
-johannes
+-- 
+Lee Jones [李琼斯]
