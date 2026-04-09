@@ -1,127 +1,198 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8263B7756
-	for <linux-hardening@vger.kernel.org>; Thu,  9 Apr 2026 12:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FC838F64A;
+	Thu,  9 Apr 2026 12:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775737386; cv=none; b=a6v9xx9ut4J0iuNhHBjUOeXY2Rrg4rnP4DhbvXR6zqiJ8bT1hC2ZGiQX6ShO9O+2Dx7gpwkbjXFN3Tkv3eEIzTr73y10YbosjOz2Js+FsLv6C7+fIyT8EnHDJ4VYVoIaiiZLvqiro+OI5FrDmrU+AAIzu0qDnQQrklt31mLrRhQ=
+	t=1775738662; cv=none; b=o3VZt2KURlTGzZX6JQUGBVdj24tK5FRwquh+rlCLYGbSlPMrr9+e+9SNP7yN2htLNaGr7FOiL8U1c0yJ0sAXpGNZ0KDSOUWS9sY/mlu8BoFM3kVxFEjpaDiUjFoq0HXYSpexSoBFThShf38GXNwv6GFUpvs7e6GYZjg3L4o+rsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775737386; c=relaxed/simple;
-	bh=8ha08POWCdts2kcxBytAF07AGORB5Xw+1RHSI50iK3M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SZ2n0tzqsa9/GBT4XCfcU18eSx3XvrOe+A9PfWMX7rVUWGlqkAJKdEABv3Kc4TIbb8C91bu2eCEK1H+8+Nd01G9kW2IC13ya0ovtjxKoJp/4dIEV7efW23IDq+n9Edyz7tXKBisUaEIlrxctfsaWcZj3pBbhrXHeEIizrZ9mFlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OEiGXjJT; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1775738662; c=relaxed/simple;
+	bh=Pp8wkpHe/N8l3YLpLzTsSLHH6JWr1V3ysnoI4h8B3eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Clzqy/L+kDirC129qGcI0w7B81D2yK+Nr42st9gHHRC7NMCUB44pArDll0+0aku7r+tjg2I74zZxr5Zn3cZsovi48FBWb3QXakIPWrtp5sQRPMTfaTOZ/A7bwoBkDWm0itdlJ3+sxsGMrMOhBKAzPYhcvQwenkqVq4G5fQ+wa1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWs8DI/H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OEiGXjJT"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-48896199cbaso8420975e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 09 Apr 2026 05:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1775737383; x=1776342183; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bNUR+AEM+0xI0nm5DHe+rKxaeNx6oASLbxq9t2PiLlQ=;
-        b=OEiGXjJTi57weYjl+rhiQNvazHT2ysm2cUX3YIA27lwwzCFHaPZbsXpndWn60MGp0o
-         DVrrw+VtarCCVRX96UvNaBAu2z9v6pwvm+cQ84aZeFSTzzhdfGLmG4sbjVu91ih06F02
-         YG1IWyi0Do33dl02HAxtBzlzteHp0xEOeh8yGzl4Ys+cc6vNPH2ndFLwmdi+zEfs8CQC
-         7tjsLu1PQhReACU1uqhDjCumpcos7kWg+98w+V1ZE0kuM760A5m47y2gX+xDG5mqWEoJ
-         ypTwtmZGODY09vjY0t4Gn7Qgg3Zs6KTrGMeKXyYeB+QM8446mAstDGV3Uq0Oxp8mPf4L
-         9P5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775737383; x=1776342183;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bNUR+AEM+0xI0nm5DHe+rKxaeNx6oASLbxq9t2PiLlQ=;
-        b=CB20qecUmNvw9+bxiNJyZOJBiqD47BUOIQ8GiDP2bXYqW310J89cCp9DtKchZ5E5Q/
-         PhEa203Ca63r9aWZvWCcIj2JuhWjtmxFRRwY3RYRpk9CSqYpCjxmYB2gREfnb6+y4tux
-         TWK02BfAcbyvpCQX9xAYs5VYHwuQ9OBrramFstIqAXr+ylPMCFhrWe8ZK2X8begin4bM
-         7NjFPe0VaF4NrSfa2k1KbStGM2uWDbIla247YJdfsRN7BLqrZf48Xle/tkekXoXTvWfN
-         /Xc2zi6AyJIt+n0UadlMY4Vl43mgUNF6obhucmRHyinasPMh89Wkjucy4sYQf/n9iJ85
-         cHtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWoN1XjEnfxue71XHVCTUPR/hqD/2YeCohmDjMk5l3PDWxenTb8uEFcBWmBDVG2z4drzPdOkDHhZsJrYqWxBok=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9kiU52LJHcWZfBcWpvcmU55nykdCbcnmFiBqpwE2LvNMTi0zv
-	el+RMiofh8kGKUhpO31XZD6XcZ9V69nEPPnKD6MJEoUC8xdsA7qLtoPuozyBn391IM8=
-X-Gm-Gg: AeBDiet37W2i75a+626lfyC+BkrM+9fleyPwGSQ9y/btwUCWHALRNdvUvQ9I/2QRTxA
-	ulGGx0MVx8D2s4YX0djhbAKUC8PrIBKz2hLNbPQTaLCKQ9LYExuZ0j+etN1//Y/ncY3zbjewTVw
-	pgm1POhQiD++paDh0S9dx0QiqKp6mBnjElAgQdL7fJ6CRbyhE6F+P2E4UyN/qjZtfiJ+ox7XPB4
-	qZ4dmnLMXnVSMs18Xwd5TTNq7mdwyrM0FwSSry5tQyY1E9uhBegVxkSCfG/LP0QN467hemBUQB6
-	SBeCm3o5Yh6kqnNBHD0p+qEUlQ9VG2Spv3dVUNDjfN8QdqRzHMWHVyrsqgYjZBrgRv9Lkk0QRVM
-	DajpQjLi7AmJdwe+6DX/t7tV3DzHtVXIkWTv8QE5iE47nX0+0CVK48GaaRujDp61gFmIsYKQgJW
-	hWzdLBOmrsrp+71v53KP3/vS33WZXRTB9CNieuE73Pjg==
-X-Received: by 2002:a05:600c:1554:b0:488:a639:b787 with SMTP id 5b1f17b1804b1-488ccfb7907mr47873215e9.11.1775737383421;
-        Thu, 09 Apr 2026 05:23:03 -0700 (PDT)
-Received: from [10.11.12.108] ([79.115.63.48])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cd21b604sm69928745e9.10.2026.04.09.05.23.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2026 05:23:03 -0700 (PDT)
-Message-ID: <63087cad-a8d1-4ff0-870a-6e1a738ff8b8@linaro.org>
-Date: Thu, 9 Apr 2026 15:22:59 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWs8DI/H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A295FC19424;
+	Thu,  9 Apr 2026 12:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775738662;
+	bh=Pp8wkpHe/N8l3YLpLzTsSLHH6JWr1V3ysnoI4h8B3eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TWs8DI/H8O05aowgqN+0Bw8OrUYW1xiChQl5DaFtAz96jiTANNxv6QU11FYEmNPd8
+	 NwGvHkwDfJt6T6DQxo+17pk2NyxxS6Ph6QwisPkBq5L9mvoyZDWkJeDllj+rB2Kor7
+	 myQ1IkcAQmzlpSiE+hJlHpCzs5WRsa/8/dvc3qEFUiYwFwhgNPHsFugbuXq2trHs/p
+	 yqFbI0KoSGDz0pA4YL5jSnSQn5Ay44bGSCnE6Y6krQCLShYQVM6huB0gQkGneF/GIS
+	 jYjPJAXnFssgC8corYP0P+KuCra0eTv73opFyaK98sR+0hXna9OSKJm6nQQC4qj4al
+	 zllxxnGn++z2A==
+Date: Thu, 9 Apr 2026 13:44:17 +0100
+From: Lee Jones <lee@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] leds: pca955x: kzalloc + kcalloc to single kzalloc
+Message-ID: <20260409124417.GA3290953@google.com>
+References: <20260320040821.46540-1-rosenp@gmail.com>
+ <20260326113336.GK1141718@google.com>
+ <CAKxU2N_8BnBETT8YeDa44bDvC_srepskpA7iDYOwPQJsfb0dXw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] thermal: samsung: Add support for Google GS101 TMU
-To: Alexey Klimov <alexey.klimov@linaro.org>, daniel.lezcano@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20260119-acpm-tmu-v2-0-e02a834f04c6@linaro.org>
- <DHNUUPQPD5DR.18P18VV0LNTI8@linaro.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <DHNUUPQPD5DR.18P18VV0LNTI8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKxU2N_8BnBETT8YeDa44bDvC_srepskpA7iDYOwPQJsfb0dXw@mail.gmail.com>
 
+On Thu, 26 Mar 2026, Rosen Penev wrote:
 
+> On Thu, Mar 26, 2026 at 4:33 AM Lee Jones <lee@kernel.org> wrote:
+> >
+> > On Thu, 19 Mar 2026, Rosen Penev wrote:
+> >
+> > > Two fewer allocations as a result.
+> > >
+> > > Required placing some structs before others as flexible array members
+> > > require a complete definition. Declaration is not enough.
+> > >
+> > > Added __counted_by support for one of the structs for extra runtime
+> > > analysis.
+> > >
+> > > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > > ---
+> > >  drivers/leds/leds-pca955x.c | 45 ++++++++++++++-----------------------
+> > >  1 file changed, 17 insertions(+), 28 deletions(-)
+> > >
+> > > diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
+> > > index 2007fe6217ec..ee5f02eaa3c9 100644
+> > > --- a/drivers/leds/leds-pca955x.c
+> > > +++ b/drivers/leds/leds-pca955x.c
+> > > @@ -112,19 +112,6 @@ static const struct pca955x_chipdef pca955x_chipdefs[] = {
+> > >       },
+> > >  };
+> > >
+> > > -struct pca955x {
+> > > -     struct mutex lock;
+> > > -     struct pca955x_led *leds;
+> > > -     const struct pca955x_chipdef    *chipdef;
+> > > -     struct i2c_client       *client;
+> > > -     unsigned long active_blink;
+> > > -     unsigned long active_pins;
+> > > -     unsigned long blink_period;
+> > > -#ifdef CONFIG_LEDS_PCA955X_GPIO
+> > > -     struct gpio_chip gpio;
+> > > -#endif
+> > > -};
+> > > -
+> > >  struct pca955x_led {
+> > >       struct pca955x  *pca955x;
+> > >       struct led_classdev     led_cdev;
+> > > @@ -137,8 +124,21 @@ struct pca955x_led {
+> > >  #define led_to_pca955x(l)    container_of(l, struct pca955x_led, led_cdev)
+> > >
+> > >  struct pca955x_platform_data {
+> > > -     struct pca955x_led      *leds;
+> > >       int                     num_leds;
+> > > +     struct pca955x_led      leds[] __counted_by(num_leds);
 
-On 4/8/26 5:49 PM, Alexey Klimov wrote:
-> On Mon Jan 19, 2026 at 12:08 PM GMT, Tudor Ambarus wrote:
->> Add support for the Thermal Management Unit (TMU) on the Google GS101
->> SoC.
->>
->> The GS101 TMU implementation utilizes a hybrid architecture where
->> management is shared between the kernel and the Alive Clock and
->> Power Manager (ACPM) firmware.
+I'm not sure we should we be embedding the full 'struct pca955x_led'
+(which contains runtime framework structures like 'struct led_classdev')
+directly inside the platform data?  Besides platform data should ideally
+be restricted to static configuration properties rather than runtime
+state.
+
+> > Where is the memory allocated to this now?
+> The kzalloc call was updated to use struct_size to allocate it
+> together with the struct.
+> >
+> > Why do we need this in both structs?
+> kzalloc and kcalloc can be combined in both locations.
+
+I believe my original question might have been misunderstood.  I was
+asking about the architectural design choice.  Why does the same 'leds'
+array need to exist in both the 'pca955x' runtime structure and the
+'pca955x_platform_data' configuration structure?  Could we look at
+eliminating this redundancy to avoid storing duplicate data?
+
+> >
+> > > +};
+> > > +
+> > > +struct pca955x {
+> > > +     struct mutex lock;
+> > > +     const struct pca955x_chipdef    *chipdef;
+> > > +     struct i2c_client       *client;
+> > > +     unsigned long active_blink;
+> > > +     unsigned long active_pins;
+> > > +     unsigned long blink_period;
+> > > +#ifdef CONFIG_LEDS_PCA955X_GPIO
+> > > +     struct gpio_chip gpio;
+> > > +#endif
+
+#ifdef statements are to be avoided in C files.
+
+Please find another way to do this (if it's required).
+
+> > > +     struct pca955x_led leds[];
+> > >  };
+> > >
+> > >  /* 8 bits per input register */
+> > > @@ -542,15 +542,11 @@ pca955x_get_pdata(struct i2c_client *client, const struct pca955x_chipdef *chip)
+> > >       if (count > chip->bits)
+> > >               return ERR_PTR(-ENODEV);
+> > >
+> > > -     pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> > > +     pdata = devm_kzalloc(&client->dev, struct_size(pdata, leds, chip->bits), GFP_KERNEL);
+> > >       if (!pdata)
+> > >               return ERR_PTR(-ENOMEM);
+> > >
+> > > -     pdata->leds = devm_kcalloc(&client->dev,
+> > > -                                chip->bits, sizeof(struct pca955x_led),
+> > > -                                GFP_KERNEL);
+> > > -     if (!pdata->leds)
+> > > -             return ERR_PTR(-ENOMEM);
+> > > +     pdata->num_leds = chip->bits;
+> > >
+> > >       device_for_each_child_node(&client->dev, child) {
+> > >               u32 reg;
+> > > @@ -568,8 +564,6 @@ pca955x_get_pdata(struct i2c_client *client, const struct pca955x_chipdef *chip)
+> > >               fwnode_property_read_u32(child, "type", &led->type);
+> > >       }
+> > >
+> > > -     pdata->num_leds = chip->bits;
+> > > -
+> > >       return pdata;
+> > >  }
+> > >
+> > > @@ -623,15 +617,10 @@ static int pca955x_probe(struct i2c_client *client)
+> > >               return -ENODEV;
+> > >       }
+> > >
+> > > -     pca955x = devm_kzalloc(&client->dev, sizeof(*pca955x), GFP_KERNEL);
+> > > +     pca955x = devm_kzalloc(&client->dev, struct_size(pca955x, leds, chip->bits), GFP_KERNEL);
+> > >       if (!pca955x)
+> > >               return -ENOMEM;
+> > >
+> > > -     pca955x->leds = devm_kcalloc(&client->dev, chip->bits,
+> > > -                                  sizeof(*pca955x_led), GFP_KERNEL);
+> > > -     if (!pca955x->leds)
+> > > -             return -ENOMEM;
+> > > -
+> > >       i2c_set_clientdata(client, pca955x);
+> > >
+> > >       mutex_init(&pca955x->lock);
+> > > --
+> > > 2.53.0
+> > >
+> >
+> > --
+> > Lee Jones [李琼斯]
 > 
-> Do you plan to update or work on this series? If, by some reason,
 
-I'd like to resubmit, but I got derailed by other tasks.
-
-> this series is postphoned I can rebase it and re-send, for example.
-> IIRC it needs a clean rebase as a minimial change.
-> 
-
-No, it's more than that. When I talked with Daniel about this driver, he
-suggested I shall really focus on using the .set_trips callback instead of
-.set_trip_temp. I'm not sure if it's possible given the static nature of
-the ACPM interface. So it needs a bit of investigation, which I couldn't
-do lately.
-
-If we can go initially with .set_trip_temp and then come up with an iterative
-patch about .set_trips, I can of course respin, it takes me just a few
-minutes to rebase and test. But it's Daniel to decide.
-
-Oh, and the device tree needs a little update on the trip points, but other
-than that, we're good to go.
-
-Cheers,
-ta
+-- 
+Lee Jones [李琼斯]
