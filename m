@@ -1,75 +1,49 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857F921257E
-	for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 19:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D01E23EA92;
+	Fri, 10 Apr 2026 20:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775849117; cv=none; b=NCCZ4ZLk2m7qnzuilwLGS/zB34c/gA+vVY+TXd19OwHtBlbEs2+krMKrpMhAryyY7Z79+0FYk6VzdiDp084aeZpV0ZqxjBaFRprkEXLeQPGRy9YDQoFu74SYRClA7LOxaTV/cVWW0oV7Vfa4r9cMBu7w8z+gOIoj3w3dVZY6cwk=
+	t=1775854747; cv=none; b=kOKM84eUaSpSk+v/VIhv+/hXEcOzrkYsPAXfZvFMw5MhJXfKG+vH5fuqrRIX8O1nsrSKMfkElNmlAP3712Wuq4riNabAXIApbvsCYl9JD4Krk343j1lw8rDnp1eZPu6lEqYRdgMRF2tXTaO7lJWUv2PdipeVAdl9gluLf4Z6ilk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775849117; c=relaxed/simple;
-	bh=HyGNKjUaw8UHRjJdnt6VyhCrwMTZ6pcFQiVCJDVCsuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=njGNDZkIH6+i9Aa4zy/fhRSlnbsJ4gbCHqI/RMhE6vgO/2PwNe92Mc5dyk4M+sZMWyCoxPNM4Ky+L44/WVw0JwZS6SN/bDpnJa+IyM1flR5r8OZ6yny/7zisK+tzyiLwTP4PUeNv4KLNFQCqNzL/EQf7Rn/vMInJpWoB7v5aOGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YUCn68kt; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775854747; c=relaxed/simple;
+	bh=0QCFJUFf5PVlEQ02FEz9hm5DUsasOTVmVQKsl54AEYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zv/8yXjMN0FTW1GFYAkCrXptlzfl2lVbwF6yYH66dEbDH+ags5AqO0GuhuIVhWP6ndyZ35cv8Uq8eQmywJPX/t5M/albWzK9ThUa6qAxHpuR6L1324XKESJOxH0OeUtQK4pcspIZAmgJDCgEAyYT/JAeFUhYEhloJTCgLsUZbJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=cW6xCoIW; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUCn68kt"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-48896199cbaso25682105e9.1
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 12:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775849114; x=1776453914; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DmYI2M5dHslYk9GTB/2ip8+v8uMXE6KQ+B9xsHJTP0o=;
-        b=YUCn68kty2lsbkxERxHHaJCYWht//gcwM/7bosagoURJbtXOxMYTEwq0nXi0xEorb1
-         slx1/tUlSOVOH178wFnpyeLi7lWIPi159l5rW7iNJ+eTFckSwPVOnvmZsVa/SjTNYi7n
-         ge4Ra6frblJd6DaOHYHtBPgoPkAouRDCta2vyHcjhErMPnPKWF6lBpu+CFcvzhJBwYgS
-         VUDJQRxC7ZhScmq44P//5T4IIzuaqDXWrNSQXcBNFbPK44tRNMrvltkMvwzh6v+3km7r
-         IQBG2ueHqZ2zRSn7kWsw+NBkZfHQQ0+aIw4hlxAQ4x5cDB9PokH7X/S0pXRxrnfuKhaG
-         QB3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775849114; x=1776453914;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DmYI2M5dHslYk9GTB/2ip8+v8uMXE6KQ+B9xsHJTP0o=;
-        b=SD57AA4IUvQIi1NeejBieTE6nt4ODnipCwsiYB85McZU1FiqGX4ck5Bh2gNmLdoLMJ
-         mf3nkEsV8ahaNaey0zryQD0KyR68qtCSk3YkaVhDltPF900JjcL1HggYPepaE+ZgDUJz
-         zNLRmSTXAXEi8DVHPkOvT5mlpx/CjLD6X7IaGFreCNEOVu2QZF98iX0YqybaQ/MWZ+n7
-         dMYdLjBx2HOCILDlJsJAHnygVVRB4Ef0W8afzVYjwVC3Jml2BeDfKa2NilqOIwdZVWAq
-         yQ+WhmJzZq1EFO9VlnCxnxCB0HjSUJ8O+FqEbTTD4cQf6z31vziQshMljIZ+eTvh0Y6G
-         dDJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXcvfeEDsawhfvUwWFUrjlLHls43BwXiLyeaZVfotJsPVRxpzEfKdX6JyrRq0BmIztNGpgijQ14/mQKh2XehgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/nMhTJuRzUcHS+IBHmLzI4+IZSgDwV5tmf+3/nAWycK0tWX6p
-	7Rx1GLAFAakQamkvlE5FroEYTHT3lr2K/5FSQEx1idTpW46XU9O9kKBj
-X-Gm-Gg: AeBDies+HHX6YSkVqBVJMA1XgN47QlVzwDG/minXvdHTbben1BH0n+HE7CYBX1Vyn1l
-	GQGtdnRKzZNSg5lKHhrCiGVO81WZc4zw3wsjMg0XTtkrSX9b1I6JthrQcpuBhHioaogt/3glA7Y
-	jJVV+8VQVlVjagICqIKKusxZ/3yEOEPXg6V+Vvk2U2E/6aDErgEIlRiijbswZ4SaCMAehCbayb7
-	V9CUXEzMv5M2rWYHu1WbbVJ6dG7pUKbjDmf11rJlW3sviY0jLc3HQF0S9H6lwAjbEfn9Lne28EX
-	/l/lDCUcSwn3IIk2zn/2a/cWddXOdWofjTkhhwn2SL18UK6yvyA4qu6vR9XMdKg29530oAoL91Y
-	oAU6e+7TnCXhbZVI99NXJPmeyGgMPI5QXEREGqtLWXLUEBi23CFTGr2Zfwh4RaaroDu30qvvmru
-	a2FJhWOs2H5/mjI3Nspi4L/KWhqkSJpIgHu2gyeuKd3BYXwwcSqA==
-X-Received: by 2002:a05:600c:45cd:b0:488:9ed3:1492 with SMTP id 5b1f17b1804b1-488d67f0bb7mr50727815e9.10.1775849113569;
-        Fri, 10 Apr 2026 12:25:13 -0700 (PDT)
-Received: from localhost.localdomain ([72.255.58.127])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d5cf2e70sm50930135e9.0.2026.04.10.12.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2026 12:25:13 -0700 (PDT)
-From: Mahad Ibrahim <mahad.ibrahim.dev@gmail.com>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Mahad Ibrahim <mahad.ibrahim.dev@gmail.com>
-Subject: [PATCH] HID: usbhid: replace strlcat with better alternatives
-Date: Fri, 10 Apr 2026 15:24:47 -0400
-Message-Id: <20260410192447.7059-1-mahad.ibrahim.dev@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="cW6xCoIW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=jyJgZgiFWGGETeXaRP2i3dOeIwVdIL3/MmC4kkxH3d4=; b=cW6xCoIWpp5HqfeT7/uV+VtJNS
+	NtEpyRShGBX01D2aW/Ffped4RcTRrY+V/7dqokuL0WPJj4G6m8JPFLp3OKXD7Jrli8MViC0oH2t8d
+	AFRzcBCfNYDQlPJ1GrULOVz9KaZ82HzHDn4JKADXZzL91HVk+oPcvFCKuXavKJSoq8jhkQDeSPJAB
+	W8agj1jZp2beabHfpNSwORZfnf+yPfSLP7RkEATISRueSc09O3RC29k6x1R8kNF1mSxYP9CRk2N1X
+	6tfM1oNMW2o7MUBkARJuEUS5pM1azaJVlNZfrm2EZ4PXKrhUxTn6fNZfWntvx88cDlFp2jPW8dbfP
+	gbr1qLDw==;
+Received: from [177.189.74.94] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1wBIwO-00EYpe-KD; Fri, 10 Apr 2026 22:59:01 +0200
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: linux-hardening@vger.kernel.org,
+	kees@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	tony.luck@intel.com,
+	kernel-dev@igalia.com,
+	kernel@gpiccoli.net,
+	rostedt@goodmis.org,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH V3] pstore/ftrace: Factor KASLR offset in the core kernel instruction addresses
+Date: Fri, 10 Apr 2026 17:49:26 -0300
+Message-ID: <20260410205848.2607169-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,210 +52,182 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for the removal of the strlcat() API as per the KSPP,
-replace the string concatenation logic in hid-core, usbkbd, and
-usbmouse with struct seq_buf, which tracks the current write position
-and remaining space internally. The changes implemented include:
+The pstore ftrace frontend works by purely collecting the
+instruction address, saving it on the persistent area through
+the backend and when the log is read, on next boot for example,
+the address is then resolved by using the regular printk symbol
+lookup (%pS for example).
 
-- Replace device name and phys concatenation with seq_buf_puts().
-- Include Struct seq_buf and its initialization.
-- Include header file of seq_buf.
-- Replace strlen() with seq_buf_used() on the string buffer which was
-  tracked by seq_buf to increase speed.
-- Add size_t len in files which did not have it.
-- Use of strscpy with length in place of strlcat.
+Problem: if we are running a relocatable kernel with KASLR enabled,
+this is a recipe for failure in the symbol resolution on next boots,
+since the addresses are offset'ed by the KASLR address. So, naturally
+the way to go is factor the KASLR address out of instruction address
+collection, and adding the fresh offset when resolving the symbol
+on future boots.
 
-Testing: This driver was compiled as a module as well as in-built in
-QEMU with the QEMU basic mouse, and QEMU basic keyboard. The testing was
-done in the following steps.
-- Add Hardware Mouse in QEMU checking the usbhid module.
-- Verify dmesg string name of mouse.
-- Blacklist hidusb module from auto-loading, and removing the module via
-  rmmod.
-- Load usbmouse module, and reattach QEMU mouse.
-- Verify dmesg string name of mouse.
-- Repeat same procedure on usbkbd module.
+Problem #2: modules also have varying addresses that float based
+on module base address and potentially the module ordering in
+memory, meaning factoring KASLR offset for them is useless.
+So, let's hereby only take KASLR offset into account for core
+kernel addresses, leaving module ones as is.
 
-This aligns the driver with KSPP security guidelines.
+And we have yet a 3rd complexity: not necessarily the check range
+for core kernel addresses holds true on future boots, since the
+module base address will vary. With that, the choice was to mark
+the addresses as being core vs module based on its MSB. And with
+that...
 
-Link: https://github.com/KSPP/linux/issues/370
+...we have the 4th challenge here: for some "simple" architectures,
+the CPU number is saved bit-encoded on the instruction pointer, to
+allow bigger timestamps - this is set through the PSTORE_CPU_IN_IP
+define for such architectures. Hence, the approach here is to skip
+such architectures (at least in a first moment).
 
-Signed-off-by: Mahad Ibrahim <mahad.ibrahim.dev@gmail.com>
+Finished? No. On top of all previous complexities, we have one
+extra pain point: kaslr_offset() is inlined and fully "resolved"
+at boot-time, after kernel decompression, through ELF relocation
+mechanism. Once the offset is known, it's patched to the kernel
+text area, wherever it is used. The mechanism, and its users, are
+only built-in - incompatible with module usage. Though there are
+possibly some hacks (as computing the offset using some kallsym
+lookup), the choice here is to restrict this optimization to the
+(hopefully common) case of CONFIG_PSTORE=y.
+
+TL;DR: let's factor KASLR offsets on pstore/ftrace for core kernel
+addresses, only when PSTORE is built-in and leaving module addresses
+out, as well as architectures that define PSTORE_CPU_IN_IP.
+
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- drivers/hid/usbhid/hid-core.c | 17 ++++++++++-------
- drivers/hid/usbhid/usbkbd.c   | 15 ++++++++++-----
- drivers/hid/usbhid/usbmouse.c | 15 ++++++++++-----
- 3 files changed, 30 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-index ddd5d77fb5a5..476308378e90 100644
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -27,6 +27,7 @@
- #include <linux/wait.h>
- #include <linux/workqueue.h>
- #include <linux/string.h>
-+#include <linux/seq_buf.h>
+Here it goes the V3, shortly after V2; my bad, I should have
+noticed the issue reported by the kernel robot [0] but I
+unfortunately skipped that. Thanks Kees for pointing that out!
+
+Happens that kaslr_offset() is not compatible with modules.
+The function relies on linker symbols, and as described in the
+V2 [1], the offset is known on boot time and then it is patched
+on vmlinux text through ELF relocation handling. There are
+possible "hacks" to compute this offset inside a module, but I
+tend to prefer use the pristine approach and restrict the
+KASLR factoring to built-in PSTORE, which I think is the common
+case (at least, ACPI/APEI forces that on x86, for example).
+
+I tried to condense that info a bit more in the (already big)
+commit message. LMK what you think, as usual reviews/suggestions
+are greatly appreciated!
+Cheers,
+
+
+Guilherme
+
+
+[0] https://lore.kernel.org/r/202604051301.skV8JLnH-lkp@intel.com/
+[1] V2: https://lore.kernel.org/r/20260409153830.2560633-1-gpiccoli@igalia.com/
+
+
+ fs/pstore/ftrace.c   | 28 ++++++++++++++++++++++++++--
+ fs/pstore/inode.c    |  6 ++++--
+ fs/pstore/internal.h |  2 ++
+ 3 files changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/fs/pstore/ftrace.c b/fs/pstore/ftrace.c
+index 776cae20af4e..fb3f10954493 100644
+--- a/fs/pstore/ftrace.c
++++ b/fs/pstore/ftrace.c
+@@ -18,11 +18,35 @@
+ #include <linux/cache.h>
+ #include <linux/slab.h>
+ #include <asm/barrier.h>
++#include <asm/setup.h>
+ #include "internal.h"
  
- #include <linux/usb.h>
+ /* This doesn't need to be atomic: speed is chosen over correctness here. */
+ static u64 pstore_ftrace_stamp;
  
-@@ -1365,6 +1366,7 @@ static int usbhid_probe(struct usb_interface *intf, const struct usb_device_id *
- 	struct usb_device *dev = interface_to_usbdev(intf);
- 	struct usbhid_device *usbhid;
- 	struct hid_device *hid;
-+	struct seq_buf hid_name;
- 	unsigned int n, has_in = 0;
- 	size_t len;
- 	int ret;
-@@ -1399,7 +1401,7 @@ static int usbhid_probe(struct usb_interface *intf, const struct usb_device_id *
- 	hid->vendor = le16_to_cpu(dev->descriptor.idVendor);
- 	hid->product = le16_to_cpu(dev->descriptor.idProduct);
- 	hid->version = le16_to_cpu(dev->descriptor.bcdDevice);
--	hid->name[0] = 0;
-+	seq_buf_init(&hid_name, hid->name, sizeof(hid->name));
- 	if (intf->cur_altsetting->desc.bInterfaceProtocol ==
- 			USB_INTERFACE_PROTOCOL_MOUSE)
- 		hid->type = HID_TYPE_USBMOUSE;
-@@ -1407,22 +1409,23 @@ static int usbhid_probe(struct usb_interface *intf, const struct usb_device_id *
- 		hid->type = HID_TYPE_USBNONE;
++static inline unsigned long adjust_ip(unsigned long ip)
++{
++#if defined(CONFIG_RANDOMIZE_BASE) && !defined(PSTORE_CPU_IN_IP) && IS_BUILTIN(CONFIG_PSTORE)
++	if (core_kernel_text(ip))
++		return ip - kaslr_offset();
++
++	__clear_bit(BITS_PER_LONG - 1, &ip);
++#endif
++	return ip;
++}
++
++inline unsigned long decode_ip(unsigned long ip)
++{
++#if defined(CONFIG_RANDOMIZE_BASE) && !defined(PSTORE_CPU_IN_IP) && IS_BUILTIN(CONFIG_PSTORE)
++	if (test_bit(BITS_PER_LONG - 1, &ip))
++		return ip + kaslr_offset();
++
++	__set_bit(BITS_PER_LONG - 1, &ip);
++
++#endif
++	return ip;
++}
++
+ static void notrace pstore_ftrace_call(unsigned long ip,
+ 				       unsigned long parent_ip,
+ 				       struct ftrace_ops *op,
+@@ -47,8 +71,8 @@ static void notrace pstore_ftrace_call(unsigned long ip,
  
- 	if (dev->manufacturer)
--		strscpy(hid->name, dev->manufacturer, sizeof(hid->name));
-+		seq_buf_puts(&hid_name, dev->manufacturer);
+ 	local_irq_save(flags);
  
- 	if (dev->product) {
- 		if (dev->manufacturer)
--			strlcat(hid->name, " ", sizeof(hid->name));
--		strlcat(hid->name, dev->product, sizeof(hid->name));
-+			seq_buf_puts(&hid_name, " ");
-+		seq_buf_puts(&hid_name, dev->product);
- 	}
+-	rec.ip = ip;
+-	rec.parent_ip = parent_ip;
++	rec.ip = adjust_ip(ip);
++	rec.parent_ip = adjust_ip(parent_ip);
+ 	pstore_ftrace_write_timestamp(&rec, pstore_ftrace_stamp++);
+ 	pstore_ftrace_encode_cpu(&rec, raw_smp_processor_id());
+ 	psinfo->write(&record);
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index 83fa0bb3435a..62e678f3527d 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -105,17 +105,19 @@ static int pstore_ftrace_seq_show(struct seq_file *s, void *v)
+ 	struct pstore_private *ps = s->private;
+ 	struct pstore_ftrace_seq_data *data = v;
+ 	struct pstore_ftrace_record *rec;
++	unsigned long ip, parent_ip;
  
--	if (!strlen(hid->name))
-+	if (!seq_buf_used(&hid_name))
- 		snprintf(hid->name, sizeof(hid->name), "HID %04x:%04x",
- 			 le16_to_cpu(dev->descriptor.idVendor),
- 			 le16_to_cpu(dev->descriptor.idProduct));
+ 	if (!data)
+ 		return 0;
  
- 	usb_make_path(dev, hid->phys, sizeof(hid->phys));
--	strlcat(hid->phys, "/input", sizeof(hid->phys));
--	len = strlen(hid->phys);
-+	len = strnlen(hid->phys, sizeof(hid->phys));
-+	strscpy(hid->phys + len, "/input", sizeof(hid->phys) - len);
-+	len = strnlen(hid->phys, sizeof(hid->phys));
- 	if (len < sizeof(hid->phys) - 1)
- 		snprintf(hid->phys + len, sizeof(hid->phys) - len,
- 			 "%d", intf->altsetting[0].desc.bInterfaceNumber);
-diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
-index 6b33e6ad0846..83d4df0d7a45 100644
---- a/drivers/hid/usbhid/usbkbd.c
-+++ b/drivers/hid/usbhid/usbkbd.c
-@@ -20,6 +20,7 @@
- #include <linux/init.h>
- #include <linux/usb/input.h>
- #include <linux/hid.h>
-+#include <linux/seq_buf.h>
+ 	rec = (struct pstore_ftrace_record *)(ps->record->buf + data->off);
  
- /*
-  * Version Information
-@@ -266,8 +267,10 @@ static int usb_kbd_probe(struct usb_interface *iface,
- 	struct usb_endpoint_descriptor *endpoint;
- 	struct usb_kbd *kbd;
- 	struct input_dev *input_dev;
-+	struct seq_buf kbd_name;
- 	int i, pipe, maxp;
- 	int error = -ENOMEM;
-+	size_t len;
++	ip = decode_ip(rec->ip);
++	parent_ip = decode_ip(rec->parent_ip);
+ 	seq_printf(s, "CPU:%d ts:%llu %08lx  %08lx  %ps <- %pS\n",
+ 		   pstore_ftrace_decode_cpu(rec),
+ 		   pstore_ftrace_read_timestamp(rec),
+-		   rec->ip, rec->parent_ip, (void *)rec->ip,
+-		   (void *)rec->parent_ip);
++		   ip, parent_ip, (void *)ip, (void *)parent_ip);
  
- 	interface = iface->cur_altsetting;
+ 	return 0;
+ }
+diff --git a/fs/pstore/internal.h b/fs/pstore/internal.h
+index a0fc51196910..079284120db9 100644
+--- a/fs/pstore/internal.h
++++ b/fs/pstore/internal.h
+@@ -9,6 +9,7 @@
+ extern unsigned int kmsg_bytes;
  
-@@ -292,24 +295,26 @@ static int usb_kbd_probe(struct usb_interface *iface,
- 	kbd->usbdev = dev;
- 	kbd->dev = input_dev;
- 	spin_lock_init(&kbd->leds_lock);
-+	seq_buf_init(&kbd_name, kbd->name, sizeof(kbd->name));
- 
- 	if (dev->manufacturer)
--		strscpy(kbd->name, dev->manufacturer, sizeof(kbd->name));
-+		seq_buf_puts(&kbd_name, dev->manufacturer);
- 
- 	if (dev->product) {
- 		if (dev->manufacturer)
--			strlcat(kbd->name, " ", sizeof(kbd->name));
--		strlcat(kbd->name, dev->product, sizeof(kbd->name));
-+			seq_buf_puts(&kbd_name, " ");
-+		seq_buf_puts(&kbd_name, dev->product);
- 	}
- 
--	if (!strlen(kbd->name))
-+	if (!seq_buf_used(&kbd_name))
- 		snprintf(kbd->name, sizeof(kbd->name),
- 			 "USB HIDBP Keyboard %04x:%04x",
- 			 le16_to_cpu(dev->descriptor.idVendor),
- 			 le16_to_cpu(dev->descriptor.idProduct));
- 
- 	usb_make_path(dev, kbd->phys, sizeof(kbd->phys));
--	strlcat(kbd->phys, "/input0", sizeof(kbd->phys));
-+	len = strnlen(kbd->phys, sizeof(kbd->phys));
-+	strscpy(kbd->phys + len, "/input0", sizeof(kbd->phys) - len);
- 
- 	input_dev->name = kbd->name;
- 	input_dev->phys = kbd->phys;
-diff --git a/drivers/hid/usbhid/usbmouse.c b/drivers/hid/usbhid/usbmouse.c
-index 7cc4f9558e5f..b3b2abeee614 100644
---- a/drivers/hid/usbhid/usbmouse.c
-+++ b/drivers/hid/usbhid/usbmouse.c
-@@ -18,6 +18,7 @@
- #include <linux/init.h>
- #include <linux/usb/input.h>
- #include <linux/hid.h>
-+#include <linux/seq_buf.h>
- 
- /* for apple IDs */
- #ifdef CONFIG_USB_HID_MODULE
-@@ -110,8 +111,10 @@ static int usb_mouse_probe(struct usb_interface *intf, const struct usb_device_i
- 	struct usb_endpoint_descriptor *endpoint;
- 	struct usb_mouse *mouse;
- 	struct input_dev *input_dev;
-+	struct seq_buf mouse_name;
- 	int pipe, maxp;
- 	int error = -ENOMEM;
-+	size_t len;
- 
- 	interface = intf->cur_altsetting;
- 
-@@ -140,24 +143,26 @@ static int usb_mouse_probe(struct usb_interface *intf, const struct usb_device_i
- 
- 	mouse->usbdev = dev;
- 	mouse->dev = input_dev;
-+	seq_buf_init(&mouse_name, mouse->name, sizeof(mouse->name));
- 
- 	if (dev->manufacturer)
--		strscpy(mouse->name, dev->manufacturer, sizeof(mouse->name));
-+		seq_buf_puts(&mouse_name, dev->manufacturer);
- 
- 	if (dev->product) {
- 		if (dev->manufacturer)
--			strlcat(mouse->name, " ", sizeof(mouse->name));
--		strlcat(mouse->name, dev->product, sizeof(mouse->name));
-+			seq_buf_puts(&mouse_name, " ");
-+		seq_buf_puts(&mouse_name, dev->product);
- 	}
- 
--	if (!strlen(mouse->name))
-+	if (!seq_buf_used(&mouse_name))
- 		snprintf(mouse->name, sizeof(mouse->name),
- 			 "USB HIDBP Mouse %04x:%04x",
- 			 le16_to_cpu(dev->descriptor.idVendor),
- 			 le16_to_cpu(dev->descriptor.idProduct));
- 
- 	usb_make_path(dev, mouse->phys, sizeof(mouse->phys));
--	strlcat(mouse->phys, "/input0", sizeof(mouse->phys));
-+	len = strnlen(mouse->phys, sizeof(mouse->phys));
-+	strscpy(mouse->phys + len, "/input0", sizeof(mouse->phys) - len);
- 
- 	input_dev->name = mouse->name;
- 	input_dev->phys = mouse->phys;
+ #ifdef CONFIG_PSTORE_FTRACE
++extern unsigned long decode_ip(unsigned long ip);
+ extern void pstore_register_ftrace(void);
+ extern void pstore_unregister_ftrace(void);
+ ssize_t pstore_ftrace_combine_log(char **dest_log, size_t *dest_log_size,
+@@ -16,6 +17,7 @@ ssize_t pstore_ftrace_combine_log(char **dest_log, size_t *dest_log_size,
+ #else
+ static inline void pstore_register_ftrace(void) {}
+ static inline void pstore_unregister_ftrace(void) {}
++static inline unsigned long decode_ip(unsigned long ip) { return ip; }
+ static inline ssize_t
+ pstore_ftrace_combine_log(char **dest_log, size_t *dest_log_size,
+ 			  const char *src_log, size_t src_log_size)
 -- 
-2.39.5
+2.50.1
 
