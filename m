@@ -1,161 +1,287 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB2B3A75B0
-	for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 17:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775843307; cv=pass; b=MB8Bc7q2FhuQxBCZHNK8fGlzoKegsNmXwo7ZKHbpgxrQTFh8nehVhlLTg9zyygg0+r+cjh2xKR6l9KAeqCo2njX7zmsuQ4RcvchcAsMj5ZBP+4iPLQXgBMBxoKiMf+9WsHw18ghPsIu127m5jfgrcj2xPWDCDteod75S6wyNNVE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775843307; c=relaxed/simple;
-	bh=fP8aWal1X6Qsox11Ia6GNPWsn7HNwxIrcnSxBo1eXxA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q8isbOW5ZrmtzwwBaTPkAKBMxWMnh6v0iG876rZP86TzerGpVZOjnYw1e+w4vkjCt/juYin94jsHgYTrupWgBD9uFc4QQ6Nf0Wjc8fXoVGHlWQN9M5afCkCHZhPKJkIUi5k1E8WT8Dq3JU2Rs4WOFGUL28SracqmU/SGNRspQCs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gSQDBema; arc=pass smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857F921257E
+	for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 19:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775849117; cv=none; b=NCCZ4ZLk2m7qnzuilwLGS/zB34c/gA+vVY+TXd19OwHtBlbEs2+krMKrpMhAryyY7Z79+0FYk6VzdiDp084aeZpV0ZqxjBaFRprkEXLeQPGRy9YDQoFu74SYRClA7LOxaTV/cVWW0oV7Vfa4r9cMBu7w8z+gOIoj3w3dVZY6cwk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775849117; c=relaxed/simple;
+	bh=HyGNKjUaw8UHRjJdnt6VyhCrwMTZ6pcFQiVCJDVCsuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=njGNDZkIH6+i9Aa4zy/fhRSlnbsJ4gbCHqI/RMhE6vgO/2PwNe92Mc5dyk4M+sZMWyCoxPNM4Ky+L44/WVw0JwZS6SN/bDpnJa+IyM1flR5r8OZ6yny/7zisK+tzyiLwTP4PUeNv4KLNFQCqNzL/EQf7Rn/vMInJpWoB7v5aOGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YUCn68kt; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gSQDBema"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-951c5ac6253so757286241.0
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 10:48:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775843305; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JyNH9FzQm4dOxOIovOduRXKFeCZ359qwdP59Pn4ITwvV4EVTyfuYkpMHDzPXHym363
-         GPmn9t9EmTvA813v43HKD2AkBG6eJkelWIgIJhabELw20eQYYzKSCeIwdfVaS8GUd0m/
-         NohQeUbBBpCeHpxubc2vuI3hQfd5JJPuqeE+3wrVKMMoYzGRwRpnmvAhf09RO5ATbDpf
-         I3PZS/NqUeTLWgFzTc/eE3g0e6OzN9rKDnWbQsu5zYhjumW1/Lavob+J9EGoETzknPHD
-         NbOBtUdYA5A/KfUUSlkHdPR79L1MhwOe2AIiQ59KIiRu0G7uMJ8015W758Xi8Johmj4G
-         A6pQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/l4nSTrukrhbCr2YaIjwfXniIaAMtCTR7SdWmyWxQV4=;
-        fh=OZ4DtnWMu2Z1wHnio5lPGe7fQftSnmku7rUuKIwDO1g=;
-        b=cculQZZ6WcQvhNxlwLEOOfov0xOhCW3FqZtliJGSnHT8IXgHQfeUxoZHz5aUZ31ovx
-         n8ZyoDrgrsT+HFx2mi3usHHwa+CFRwYOFzInspjoZBdkedDjeyp0AW3BzBbphpZ+y3Lg
-         iqRbTgJKVjtZFYVi6Cm807O7G4M/X230XVXnDjEH8aqMC0KMK2xE3ZAtUSGMTIbvfguc
-         0o4iepq3AHUOv3ei9g+xOhxOfcuGPffshJVp9PDE7P9AnYYt1e+G5sanQYJIcvQIGo7o
-         okvJLKi1kJtolzVEqB/btiTmCozpRNbDLvt/w1w/tG/kVVxHEgz5l0aeQgfvCXpBrLiE
-         +cHA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUCn68kt"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-48896199cbaso25682105e9.1
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 12:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1775843305; x=1776448105; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/l4nSTrukrhbCr2YaIjwfXniIaAMtCTR7SdWmyWxQV4=;
-        b=gSQDBemaBCVuUAhLqAdtcC033WLVaTqXhhUHappsfe6OonnsPA7yp1uQmMHmVhBe2a
-         2nt9DT+5/sSX7WwBAHuo9ICl0EstSMIMgeUPgX89Tk6yHm92trgWiK9dXxDj8N+818Wx
-         5utmoj6/EC9kT0wzhmWOoVLGwSBQ8O+lkf9Fc1wqV7YY/LFfOBlvjfYblbiQdmkrKQeT
-         br5P3wdF2Km3utxoh9CSpR7tXWe0AOEQ4yUnIy7rQafxKmIhJFFzXfgYZqYFxX44FySP
-         ocQJbflhiS/n7FgV9vknSUAmp//xB1neCvPwFKx/e6t/APYZgGBLvtJ+jw6hP2nxn8h+
-         Za/g==
+        d=gmail.com; s=20251104; t=1775849114; x=1776453914; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DmYI2M5dHslYk9GTB/2ip8+v8uMXE6KQ+B9xsHJTP0o=;
+        b=YUCn68kty2lsbkxERxHHaJCYWht//gcwM/7bosagoURJbtXOxMYTEwq0nXi0xEorb1
+         slx1/tUlSOVOH178wFnpyeLi7lWIPi159l5rW7iNJ+eTFckSwPVOnvmZsVa/SjTNYi7n
+         ge4Ra6frblJd6DaOHYHtBPgoPkAouRDCta2vyHcjhErMPnPKWF6lBpu+CFcvzhJBwYgS
+         VUDJQRxC7ZhScmq44P//5T4IIzuaqDXWrNSQXcBNFbPK44tRNMrvltkMvwzh6v+3km7r
+         IQBG2ueHqZ2zRSn7kWsw+NBkZfHQQ0+aIw4hlxAQ4x5cDB9PokH7X/S0pXRxrnfuKhaG
+         QB3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775843305; x=1776448105;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/l4nSTrukrhbCr2YaIjwfXniIaAMtCTR7SdWmyWxQV4=;
-        b=GrY1D3x21e1qClGYUbLzIm9nZ7HueY78wW0aHCd0yYzBYB9gkp89NhPF6F5VPtK1B/
-         4PI5oGAr6HN3o3FlInmLf8az4OXoUqsUvQFfs0Telytyh4VnNgk5kz24W4hkNzWaEEVm
-         e8IjAKa95t+dJal+jND4qckfIkfe6dsoSs88IPQBCDvoCp9zopqy8O/sHJf0fQau/Itq
-         62Y0kDXEhJ2mSy0m0cFG0IYFqwyqrnfdnCCSlt2wVWEoH8B3NVhxq+TKuJF2Rgb9gCLE
-         76+mAIBc/shp0aw4ag7lhD6/6+8fRUN9TiIRZgN70Khu7EpO3oe/PxyNSPACiii9Y87s
-         eGwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZIacJI5R+4NBZCPUORShplXQIp1Jgc29YYJWe/dbRaB9jgopvBIe6cZxgTXtOwERhr5KzfAzAuYeRbbsEWnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEoG3/aFL4o6YUGUOJqLz4gseeTeTDhF/yLxh1JcVxfkRzxT09
-	iudW65EgZmxS+MNfqLz5P+t7QV3yhUz1VAZEj4JL92L5I5EWOJdDqQEUIZZu5mbD9uPv945k8Yj
-	g8vtR7M5FDzNQvsrBdbvZSt/J+mtbDHxyyyqxNKed
-X-Gm-Gg: AeBDiesC1Mtmv6RsQNbKx+o2VPh3+MmBLyRUREOEvSpbGVMkLiNik4qrsOZ64bE2rKQ
-	uB1WIKikqsekQOXoZdxEazqcF9uKzWQ9Ep65hodbdAhjJ8l02MJWfb3RjRqJfx7nwTexJEMBiFW
-	xRlHsyoGOk+y1Kacj+UblNjhdRcjALvQWGb3x17UJ3ZL5n655qZje8Fj8jUdntxYRxVmfcB7gpE
-	gVfoIG8is740UpNev7lKMIS3hyNm7+OlAEOoGdhKumzHFSU65R6KbUxDslmpBp4zDbWtNGg6oJN
-	ZcGbIMMoH+fPvuIuog==
-X-Received: by 2002:a67:e7c1:0:b0:607:7991:f02e with SMTP id
- ada2fe7eead31-60a0125a157mr1913972137.26.1775843305006; Fri, 10 Apr 2026
- 10:48:25 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775849114; x=1776453914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DmYI2M5dHslYk9GTB/2ip8+v8uMXE6KQ+B9xsHJTP0o=;
+        b=SD57AA4IUvQIi1NeejBieTE6nt4ODnipCwsiYB85McZU1FiqGX4ck5Bh2gNmLdoLMJ
+         mf3nkEsV8ahaNaey0zryQD0KyR68qtCSk3YkaVhDltPF900JjcL1HggYPepaE+ZgDUJz
+         zNLRmSTXAXEi8DVHPkOvT5mlpx/CjLD6X7IaGFreCNEOVu2QZF98iX0YqybaQ/MWZ+n7
+         dMYdLjBx2HOCILDlJsJAHnygVVRB4Ef0W8afzVYjwVC3Jml2BeDfKa2NilqOIwdZVWAq
+         yQ+WhmJzZq1EFO9VlnCxnxCB0HjSUJ8O+FqEbTTD4cQf6z31vziQshMljIZ+eTvh0Y6G
+         dDJw==
+X-Forwarded-Encrypted: i=1; AJvYcCXcvfeEDsawhfvUwWFUrjlLHls43BwXiLyeaZVfotJsPVRxpzEfKdX6JyrRq0BmIztNGpgijQ14/mQKh2XehgY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/nMhTJuRzUcHS+IBHmLzI4+IZSgDwV5tmf+3/nAWycK0tWX6p
+	7Rx1GLAFAakQamkvlE5FroEYTHT3lr2K/5FSQEx1idTpW46XU9O9kKBj
+X-Gm-Gg: AeBDies+HHX6YSkVqBVJMA1XgN47QlVzwDG/minXvdHTbben1BH0n+HE7CYBX1Vyn1l
+	GQGtdnRKzZNSg5lKHhrCiGVO81WZc4zw3wsjMg0XTtkrSX9b1I6JthrQcpuBhHioaogt/3glA7Y
+	jJVV+8VQVlVjagICqIKKusxZ/3yEOEPXg6V+Vvk2U2E/6aDErgEIlRiijbswZ4SaCMAehCbayb7
+	V9CUXEzMv5M2rWYHu1WbbVJ6dG7pUKbjDmf11rJlW3sviY0jLc3HQF0S9H6lwAjbEfn9Lne28EX
+	/l/lDCUcSwn3IIk2zn/2a/cWddXOdWofjTkhhwn2SL18UK6yvyA4qu6vR9XMdKg29530oAoL91Y
+	oAU6e+7TnCXhbZVI99NXJPmeyGgMPI5QXEREGqtLWXLUEBi23CFTGr2Zfwh4RaaroDu30qvvmru
+	a2FJhWOs2H5/mjI3Nspi4L/KWhqkSJpIgHu2gyeuKd3BYXwwcSqA==
+X-Received: by 2002:a05:600c:45cd:b0:488:9ed3:1492 with SMTP id 5b1f17b1804b1-488d67f0bb7mr50727815e9.10.1775849113569;
+        Fri, 10 Apr 2026 12:25:13 -0700 (PDT)
+Received: from localhost.localdomain ([72.255.58.127])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d5cf2e70sm50930135e9.0.2026.04.10.12.25.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2026 12:25:13 -0700 (PDT)
+From: Mahad Ibrahim <mahad.ibrahim.dev@gmail.com>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Cc: linux-usb@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Mahad Ibrahim <mahad.ibrahim.dev@gmail.com>
+Subject: [PATCH] HID: usbhid: replace strlcat with better alternatives
+Date: Fri, 10 Apr 2026 15:24:47 -0400
+Message-Id: <20260410192447.7059-1-mahad.ibrahim.dev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-5-kees@kernel.org>
- <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
- <202603311253.95C54588E@keescook> <CAHk-=wjSOGaausLeTD13yAqso7qM09EnkDFiN7wF15kH0VWmZQ@mail.gmail.com>
- <202603311321.4EE9FEA@keescook> <20260401083137.GT3738786@noisy.programming.kicks-ass.net>
- <202604011328.D3821379@keescook> <20260402053840.GD3254421@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260402053840.GD3254421@noisy.programming.kicks-ass.net>
-From: Justin Stitt <justinstitt@google.com>
-Date: Fri, 10 Apr 2026 10:48:13 -0700
-X-Gm-Features: AQROBzBa6VKBq4ACJ1_R_EdvKeRsco9AeWVrSeipdWQAbkoYS53l26rCnLm5lXU
-Message-ID: <CAFhGd8q_avLPfOsFkOd52eVJ7A50eKZ0HJo8ehqhG9P-s7P4-A@mail.gmail.com>
-Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar types
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Kees Cook <kees@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Mark Rutland <mark.rutland@arm.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>, Finn Thain <fthain@linux-m68k.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	llvm@lists.linux.dev, Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Nicolas Schier <nsc@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+In preparation for the removal of the strlcat() API as per the KSPP,
+replace the string concatenation logic in hid-core, usbkbd, and
+usbmouse with struct seq_buf, which tracks the current write position
+and remaining space internally. The changes implemented include:
 
-On Wed, Apr 1, 2026 at 10:38=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Wed, Apr 01, 2026 at 01:52:26PM -0700, Kees Cook wrote:
->
-> > (Though I would note that GCC does _not_ refuse the jump when there is =
-a
-> > cleanup; it only see the other two uninitialized values.)
->
-> Yeah.. I know, but since we also build with clang, any such issue will
-> get discovered.
->
-> > So that makes it not totally broken, but it does make it a bit fragile.
->
-> Right.
->
-> > Another concern I have is dealing with older compilers and how to
-> > "hide" the label and its code. e.g. if I remove the "goto" from above:
-> >
-> > ../drivers/misc/lkdtm/bugs.c:1060:1: warning: label 'weird' defined but=
- not used [-Wunused-label]
-> >  1060 | weird:
-> >       | ^~~~~
-> >
-> > Oddly, the unreachable code isn't a problem, so we could just wrap the
-> > label is some macro like:
-> >
-> > #define force_label(x) if (0) goto x; x
-> >
-> > force_label(weird):
-> >         pr_info("value: %lu\n", value);
-> >         pr_info("outcome: %zu\n", outcome);
-> >
->
-> __maybe_unused also works on labels. Like:
->
-> __overflow: __maybe_unused
->         dead-code-here;
->
->
+- Replace device name and phys concatenation with seq_buf_puts().
+- Include Struct seq_buf and its initialization.
+- Include header file of seq_buf.
+- Replace strlen() with seq_buf_used() on the string buffer which was
+  tracked by seq_buf to increase speed.
+- Add size_t len in files which did not have it.
+- Use of strscpy with length in place of strlcat.
 
-Completing the loop: Here's the Clang RFC discussing obt label handler
-design [1]
+Testing: This driver was compiled as a module as well as in-built in
+QEMU with the QEMU basic mouse, and QEMU basic keyboard. The testing was
+done in the following steps.
+- Add Hardware Mouse in QEMU checking the usbhid module.
+- Verify dmesg string name of mouse.
+- Blacklist hidusb module from auto-loading, and removing the module via
+  rmmod.
+- Load usbmouse module, and reattach QEMU mouse.
+- Verify dmesg string name of mouse.
+- Repeat same procedure on usbkbd module.
 
-[1]: https://discourse.llvm.org/t/rfc-linux-kernel-discusses-overflowbehavi=
-ortypes/90486
+This aligns the driver with KSPP security guidelines.
 
-Jusin
+Link: https://github.com/KSPP/linux/issues/370
+
+Signed-off-by: Mahad Ibrahim <mahad.ibrahim.dev@gmail.com>
+---
+ drivers/hid/usbhid/hid-core.c | 17 ++++++++++-------
+ drivers/hid/usbhid/usbkbd.c   | 15 ++++++++++-----
+ drivers/hid/usbhid/usbmouse.c | 15 ++++++++++-----
+ 3 files changed, 30 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+index ddd5d77fb5a5..476308378e90 100644
+--- a/drivers/hid/usbhid/hid-core.c
++++ b/drivers/hid/usbhid/hid-core.c
+@@ -27,6 +27,7 @@
+ #include <linux/wait.h>
+ #include <linux/workqueue.h>
+ #include <linux/string.h>
++#include <linux/seq_buf.h>
+ 
+ #include <linux/usb.h>
+ 
+@@ -1365,6 +1366,7 @@ static int usbhid_probe(struct usb_interface *intf, const struct usb_device_id *
+ 	struct usb_device *dev = interface_to_usbdev(intf);
+ 	struct usbhid_device *usbhid;
+ 	struct hid_device *hid;
++	struct seq_buf hid_name;
+ 	unsigned int n, has_in = 0;
+ 	size_t len;
+ 	int ret;
+@@ -1399,7 +1401,7 @@ static int usbhid_probe(struct usb_interface *intf, const struct usb_device_id *
+ 	hid->vendor = le16_to_cpu(dev->descriptor.idVendor);
+ 	hid->product = le16_to_cpu(dev->descriptor.idProduct);
+ 	hid->version = le16_to_cpu(dev->descriptor.bcdDevice);
+-	hid->name[0] = 0;
++	seq_buf_init(&hid_name, hid->name, sizeof(hid->name));
+ 	if (intf->cur_altsetting->desc.bInterfaceProtocol ==
+ 			USB_INTERFACE_PROTOCOL_MOUSE)
+ 		hid->type = HID_TYPE_USBMOUSE;
+@@ -1407,22 +1409,23 @@ static int usbhid_probe(struct usb_interface *intf, const struct usb_device_id *
+ 		hid->type = HID_TYPE_USBNONE;
+ 
+ 	if (dev->manufacturer)
+-		strscpy(hid->name, dev->manufacturer, sizeof(hid->name));
++		seq_buf_puts(&hid_name, dev->manufacturer);
+ 
+ 	if (dev->product) {
+ 		if (dev->manufacturer)
+-			strlcat(hid->name, " ", sizeof(hid->name));
+-		strlcat(hid->name, dev->product, sizeof(hid->name));
++			seq_buf_puts(&hid_name, " ");
++		seq_buf_puts(&hid_name, dev->product);
+ 	}
+ 
+-	if (!strlen(hid->name))
++	if (!seq_buf_used(&hid_name))
+ 		snprintf(hid->name, sizeof(hid->name), "HID %04x:%04x",
+ 			 le16_to_cpu(dev->descriptor.idVendor),
+ 			 le16_to_cpu(dev->descriptor.idProduct));
+ 
+ 	usb_make_path(dev, hid->phys, sizeof(hid->phys));
+-	strlcat(hid->phys, "/input", sizeof(hid->phys));
+-	len = strlen(hid->phys);
++	len = strnlen(hid->phys, sizeof(hid->phys));
++	strscpy(hid->phys + len, "/input", sizeof(hid->phys) - len);
++	len = strnlen(hid->phys, sizeof(hid->phys));
+ 	if (len < sizeof(hid->phys) - 1)
+ 		snprintf(hid->phys + len, sizeof(hid->phys) - len,
+ 			 "%d", intf->altsetting[0].desc.bInterfaceNumber);
+diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
+index 6b33e6ad0846..83d4df0d7a45 100644
+--- a/drivers/hid/usbhid/usbkbd.c
++++ b/drivers/hid/usbhid/usbkbd.c
+@@ -20,6 +20,7 @@
+ #include <linux/init.h>
+ #include <linux/usb/input.h>
+ #include <linux/hid.h>
++#include <linux/seq_buf.h>
+ 
+ /*
+  * Version Information
+@@ -266,8 +267,10 @@ static int usb_kbd_probe(struct usb_interface *iface,
+ 	struct usb_endpoint_descriptor *endpoint;
+ 	struct usb_kbd *kbd;
+ 	struct input_dev *input_dev;
++	struct seq_buf kbd_name;
+ 	int i, pipe, maxp;
+ 	int error = -ENOMEM;
++	size_t len;
+ 
+ 	interface = iface->cur_altsetting;
+ 
+@@ -292,24 +295,26 @@ static int usb_kbd_probe(struct usb_interface *iface,
+ 	kbd->usbdev = dev;
+ 	kbd->dev = input_dev;
+ 	spin_lock_init(&kbd->leds_lock);
++	seq_buf_init(&kbd_name, kbd->name, sizeof(kbd->name));
+ 
+ 	if (dev->manufacturer)
+-		strscpy(kbd->name, dev->manufacturer, sizeof(kbd->name));
++		seq_buf_puts(&kbd_name, dev->manufacturer);
+ 
+ 	if (dev->product) {
+ 		if (dev->manufacturer)
+-			strlcat(kbd->name, " ", sizeof(kbd->name));
+-		strlcat(kbd->name, dev->product, sizeof(kbd->name));
++			seq_buf_puts(&kbd_name, " ");
++		seq_buf_puts(&kbd_name, dev->product);
+ 	}
+ 
+-	if (!strlen(kbd->name))
++	if (!seq_buf_used(&kbd_name))
+ 		snprintf(kbd->name, sizeof(kbd->name),
+ 			 "USB HIDBP Keyboard %04x:%04x",
+ 			 le16_to_cpu(dev->descriptor.idVendor),
+ 			 le16_to_cpu(dev->descriptor.idProduct));
+ 
+ 	usb_make_path(dev, kbd->phys, sizeof(kbd->phys));
+-	strlcat(kbd->phys, "/input0", sizeof(kbd->phys));
++	len = strnlen(kbd->phys, sizeof(kbd->phys));
++	strscpy(kbd->phys + len, "/input0", sizeof(kbd->phys) - len);
+ 
+ 	input_dev->name = kbd->name;
+ 	input_dev->phys = kbd->phys;
+diff --git a/drivers/hid/usbhid/usbmouse.c b/drivers/hid/usbhid/usbmouse.c
+index 7cc4f9558e5f..b3b2abeee614 100644
+--- a/drivers/hid/usbhid/usbmouse.c
++++ b/drivers/hid/usbhid/usbmouse.c
+@@ -18,6 +18,7 @@
+ #include <linux/init.h>
+ #include <linux/usb/input.h>
+ #include <linux/hid.h>
++#include <linux/seq_buf.h>
+ 
+ /* for apple IDs */
+ #ifdef CONFIG_USB_HID_MODULE
+@@ -110,8 +111,10 @@ static int usb_mouse_probe(struct usb_interface *intf, const struct usb_device_i
+ 	struct usb_endpoint_descriptor *endpoint;
+ 	struct usb_mouse *mouse;
+ 	struct input_dev *input_dev;
++	struct seq_buf mouse_name;
+ 	int pipe, maxp;
+ 	int error = -ENOMEM;
++	size_t len;
+ 
+ 	interface = intf->cur_altsetting;
+ 
+@@ -140,24 +143,26 @@ static int usb_mouse_probe(struct usb_interface *intf, const struct usb_device_i
+ 
+ 	mouse->usbdev = dev;
+ 	mouse->dev = input_dev;
++	seq_buf_init(&mouse_name, mouse->name, sizeof(mouse->name));
+ 
+ 	if (dev->manufacturer)
+-		strscpy(mouse->name, dev->manufacturer, sizeof(mouse->name));
++		seq_buf_puts(&mouse_name, dev->manufacturer);
+ 
+ 	if (dev->product) {
+ 		if (dev->manufacturer)
+-			strlcat(mouse->name, " ", sizeof(mouse->name));
+-		strlcat(mouse->name, dev->product, sizeof(mouse->name));
++			seq_buf_puts(&mouse_name, " ");
++		seq_buf_puts(&mouse_name, dev->product);
+ 	}
+ 
+-	if (!strlen(mouse->name))
++	if (!seq_buf_used(&mouse_name))
+ 		snprintf(mouse->name, sizeof(mouse->name),
+ 			 "USB HIDBP Mouse %04x:%04x",
+ 			 le16_to_cpu(dev->descriptor.idVendor),
+ 			 le16_to_cpu(dev->descriptor.idProduct));
+ 
+ 	usb_make_path(dev, mouse->phys, sizeof(mouse->phys));
+-	strlcat(mouse->phys, "/input0", sizeof(mouse->phys));
++	len = strnlen(mouse->phys, sizeof(mouse->phys));
++	strscpy(mouse->phys + len, "/input0", sizeof(mouse->phys) - len);
+ 
+ 	input_dev->name = mouse->name;
+ 	input_dev->phys = mouse->phys;
+-- 
+2.39.5
+
