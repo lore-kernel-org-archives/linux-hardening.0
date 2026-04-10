@@ -1,44 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6246C26FA5A;
-	Thu,  9 Apr 2026 23:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4814B3290DC;
+	Fri, 10 Apr 2026 02:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775776955; cv=none; b=B/cUuf0cOhuFKtfkvmDkDMJsWaWMgWUWtsrqMoV+hSXOY+b33skhYQjdZuOiw0shf9B52CwOX+4Sb4p/my0X9IHWHTPqRF3St1MnMse2iFqoO6wtE1PIoKY4d4nKQFniTjnAhI+5qKMiVysTpjzDSbXeuLrnjLzjZKptq66F3KE=
+	t=1775787052; cv=none; b=o+osE7gGbQ5P33dBj3biP56VKDlmIOQTyiYJ/qTR/wvlu0xhLDYp8qBwKNmG5gLKJ+KsyucXvjxu8isDdZIGe5dOeFTHYZOfUYTm3/SIY/ben4bTigyobBzn5OqcFtyLkQ8j54qcOQfIiB6A1VKcX0VlDxI1PAAmy8ekQzv0to4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775776955; c=relaxed/simple;
-	bh=F/kb+h9jHzZ9HxLjt+vGzWqzzwCyExO/qnVVtOJ8hJU=;
+	s=arc-20240116; t=1775787052; c=relaxed/simple;
+	bh=sYEJlC+80a5TUPCyGZHLWRArwG8vmKPmnR+IrEgx5A4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6ocbtpLEuEGqYIdl49c7mcZZ0/P2a69OREdSEEkFOER/2BzeQao46s99ANtI4iIKKbntUehGBTgmVhoTb+ByL3cxgaWdVW68b2ACy04z47QSt1uA+b9G3zzHwmM7P460vHC8n/44micgZHpd074hkv6tU0Wo2ilbhFC47676oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHvNu3VH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pd8iV84RO7G4jQYJCkxGgX8WH+F6BDCfPzbhsf5ZM6DHxE68whp4fw+hXUFHaOW5F8nha3P5fkCvLC4YXrV8xaf2NpyNboly9yXYE14MQC10K7nf5tKUUbj+rA1gK9onO1Db/PvP5I80MEI2r4mig28TzMRLs9Lt+k3dDyuEDQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4tLeQJf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHvNu3VH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742BEC4CEF7;
-	Thu,  9 Apr 2026 23:22:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4tLeQJf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 799ACC4CEF7;
+	Fri, 10 Apr 2026 02:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775776954;
-	bh=F/kb+h9jHzZ9HxLjt+vGzWqzzwCyExO/qnVVtOJ8hJU=;
+	s=k20201202; t=1775787051;
+	bh=sYEJlC+80a5TUPCyGZHLWRArwG8vmKPmnR+IrEgx5A4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OHvNu3VH0CyYc3I9ZwUx2gVphIBieaJusoal+mErKbxPVLQ4QVpbvgc2WPL9yZgWv
-	 9YWf/G8F0G4yd9l4nWj8ZNWrEF8iKpZKEKNW8c1+k9xRSCByXqRbpONJ0K35Yry/zZ
-	 +yyjIRu6O0YR4KZnFe/HAfrvql8vybUv3lOjSnS9lzY+KFjKw07hvwg0Rgv/12pwPs
-	 0PkTd+RVWlWr8/u79p7ainU+2sp3eK3Y5PvatdcwebCxiBlBx9pUCUGoxcjGZqrC90
-	 OffJkUZGxK3JmmEFA04aTpU9CCKP+MOIjSToBjakprBnQr6nh1tpB1v6lfQriweZdF
-	 7EJIIOQJZT8PQ==
-Date: Fri, 10 Apr 2026 01:22:31 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-i2c@vger.kernel.org, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] i2c: atr: use kzalloc_flex
-Message-ID: <adg0kP1OZDbnUaQZ@zenone.zhora.eu>
-References: <20260327030310.8502-1-rosenp@gmail.com>
- <adfTdfty7q0nygeo@zenone.zhora.eu>
- <CAKxU2N9tkjDeE6Zz6diMEMT4uNzYg4D36gow0BTbaC=AyAeT3A@mail.gmail.com>
+	b=r4tLeQJfd+vN9qPkw7uJDjgl7R1cWD7iGKz3zMVvIUlierwn/u/iPnlSeDHMZHxwP
+	 F/bz5k3nRbvK5s3c3ZL/V4w8iYT/lZ4nouO/LlhquLbR8R9xz5YCAfnhy5gaWGZYHy
+	 CLhOTZ2JjllHI3lQDgvAzZgMHzRc8M5d9I0eN0ggS8SyDhnBHiR6Sx4ijxq8YDKLXh
+	 qEHnTm45l/RcSxwgCIDoSjB+Y4ZNA43eGpD4V8pwxyIRDNVBGtPLacCzOYsmYz6Qyp
+	 WmlO4XdncK7IPKPYCuqglYMgN3oYZuS96duJOS0SMh9xqWhYmMezOOt9TnZV1eC7iE
+	 CNjvptAiRAk5g==
+Date: Fri, 10 Apr 2026 11:10:49 +0900
+From: "Harry Yoo (Oracle)" <harry@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+	Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
+	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
+	Florent Revest <revest@google.com>,
+	GONG Ruiqi <gongruiqi@huaweicloud.com>,
+	Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>,
+	Matteo Rizzo <matteorizzo@google.com>
+Subject: Re: [PATCH v1] slab: support for compiler-assisted type-based slab
+ cache partitioning
+Message-ID: <adhcKZGytWdaLxJu@hyeyoo>
+References: <20260331111240.153913-1-elver@google.com>
+ <ac9d5O5XehnXRc5A@hyeyoo>
+ <d0fe363c-2e8f-44a4-9b64-3fa3ba9a5773@kernel.org>
+ <adM2XVZf1DekahlY@hyeyoo>
+ <CANpmjNMeaWWuDMAj_n38U9XRqgZQz30ca82Vy10Bg=NoDfZ5ng@mail.gmail.com>
+ <adT-gkVmVDDXR1h_@hyeyoo>
+ <CANpmjNO1aNm3mKphDGWasK_NUfVY8q4K9GCjyREZFqrOu9WLcw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,24 +74,83 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKxU2N9tkjDeE6Zz6diMEMT4uNzYg4D36gow0BTbaC=AyAeT3A@mail.gmail.com>
+In-Reply-To: <CANpmjNO1aNm3mKphDGWasK_NUfVY8q4K9GCjyREZFqrOu9WLcw@mail.gmail.com>
 
-Hi Rosen,
-
-> > > -     alias_pool = kzalloc_obj(*alias_pool);
-> > > +     alias_pool = kzalloc_flex(*alias_pool, aliases, num_aliases);
-> > >       if (!alias_pool)
-> > >               return ERR_PTR(-ENOMEM);
-> > >
-> > >       alias_pool->size = num_aliases;
+On Thu, Apr 09, 2026 at 10:19:09PM +0200, Marco Elver wrote:
+> On Tue, 7 Apr 2026 at 14:54, 'Harry Yoo (Oracle)' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
 > >
-> > this line is not needed anymore because kzalloc_flex will resolve
-> > to alias_pool size and will set it tu num_aliases.
-> I believe that only works with GCC15 and above.
+> > On Tue, Apr 07, 2026 at 01:17:14PM +0200, Marco Elver wrote:
+> > > On Mon, 6 Apr 2026 at 06:28, 'Harry Yoo (Oracle)' via kasan-dev
+> > > <kasan-dev@googlegroups.com> wrote:
+> > > > On Fri, Apr 03, 2026 at 08:29:22PM +0200, Vlastimil Babka (SUSE) wrote:
+> > > > > On 4/3/26 08:27, Harry Yoo (Oracle) wrote:
+> > > > > >> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> > > > > >> index 15a60b501b95..c0bf00ee6025 100644
+> > > > > >> --- a/include/linux/slab.h
+> > > > > >> +++ b/include/linux/slab.h
+> > > > > >> @@ -864,10 +877,10 @@ unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf);
+> > > > > >>   * with the exception of kunit tests
+> > > > > >>   */
+> > > > > >>
+> > > > > >> -void *__kmalloc_noprof(size_t size, gfp_t flags)
+> > > > > >> +void *__kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
+> > > > > >>                            __assume_kmalloc_alignment __alloc_size(1);
+> > > > > >>
+> > > > > >> -void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
+> > > > > >> +void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node, kmalloc_token_t token)
+> > > > > >>                            __assume_kmalloc_alignment __alloc_size(1);
+> > > > > >
+> > > > > > So the @token parameter is unused when CONFIG_PARTITION_KMALLOC_CACHES is
+> > > > > > disabled but still increases the kernel size by a few kilobytes...
+> > > > > > but yeah I'm not sure if we can get avoid it without hurting readability.
+> > > > > >
+> > > > > > Just saying. (does anybody care?)
+> > > > >
+> > > > > Well we did care enough with CONFIG_SLAB_BUCKETS to hide the unused param
+> > > > > using DECL_BUCKET_PARAMS(),
+> > > >
+> > > > Hmm yeah.
+> > > >
+> > > > I wasn't sure if we could do this without hurting readability,
+> > > > but perhaps we could...
+> > > >
+> > > > > so maybe extend that idea?
+> > > > > I think it's not just kernel size, but increased register pressure etc.
+> > >
+> > > I'll take a closer look at generated code.
+> >
+> > > In some cases the compiler ought to omit zero-sized arguments,
+> >
+> > Oh, didn't know that was a thing.
+> 
+> So I checked with Clang and GCC. Looks like Clang does omit the
+> zero-sized struct argument, i.e. generated code is identical to
+> before. Whereas GCC wastes a few bytes of stack space at callsites.
 
-Yes, you're right, it works with clang.
+Thanks for confirming that.
 
-Merged to i2c/i2c-host.
+> Which is sad, because that means we need the macro workaround.
+> 
+> Do you want to be credited with Co-authored-by
 
-Thanks,
-Andi
+I'd appreciate that. (I guess you meant Co-developed-by)
+
+> - in which case I need your Signed-off-by.
+
+Signed-off-by: Harry Yoo (Oracle) <harry@kernel.org>
+
+> > Not sure if it's safe to do that for exported functions though (since
+> > modules can be built w/ a different compiler).
+> 
+> Kernel modules built with a different config (implicit if different
+> compiler) are not supported, and never have been. If it works, it's
+> just luck (I know people do this, but it's just a disaster waiting to
+> happen).
+
+And if GCC folks somehow fix this at some point, even kernel modules
+built with a different version of GCC might not be supported?
+
+-- 
+Cheers,
+Harry / Hyeonggon
