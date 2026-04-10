@@ -1,197 +1,161 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C3A3BE163
-	for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 17:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB2B3A75B0
+	for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 17:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775842843; cv=pass; b=K0JO/dUPAzT3OpjttOoD3eqSApjeyQBxg6H3P62eagE/mGe/EKaDSSxCPO0UGO3VZSx/bT/dlEib7Pz/Kv0j8mEHON0gbXaKmSM9Y+WMVXII/G4sUwbyWFI5LjquMUaUg1xfnANt8RKwvV2bTJ3oCb/8P7GyjGkCYAtmlsZOenA=
+	t=1775843307; cv=pass; b=MB8Bc7q2FhuQxBCZHNK8fGlzoKegsNmXwo7ZKHbpgxrQTFh8nehVhlLTg9zyygg0+r+cjh2xKR6l9KAeqCo2njX7zmsuQ4RcvchcAsMj5ZBP+4iPLQXgBMBxoKiMf+9WsHw18ghPsIu127m5jfgrcj2xPWDCDteod75S6wyNNVE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775842843; c=relaxed/simple;
-	bh=EB+hFHu4o8mR5IB8DxbDE45H1JTJFvQueNfIGjdGdOo=;
+	s=arc-20240116; t=1775843307; c=relaxed/simple;
+	bh=fP8aWal1X6Qsox11Ia6GNPWsn7HNwxIrcnSxBo1eXxA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HtX6Q5S5yYg3DJECfy4TPp2EaPOtSLFNLmvuPkp0b1qc7Jwmn3UzxIoZXNMtHMuLLo819KLVF3Wmm1HqOh1hp6J50tthTujDN5pRDxY93dFlEtKLfzrnkQ0Tw6KJtAo0eV3jNSluFmO8P+0uUPoeS7Egc/SOX9ItJTgKkEYtlDk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lyk6oZWb; arc=pass smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=q8isbOW5ZrmtzwwBaTPkAKBMxWMnh6v0iG876rZP86TzerGpVZOjnYw1e+w4vkjCt/juYin94jsHgYTrupWgBD9uFc4QQ6Nf0Wjc8fXoVGHlWQN9M5afCkCHZhPKJkIUi5k1E8WT8Dq3JU2Rs4WOFGUL28SracqmU/SGNRspQCs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gSQDBema; arc=pass smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyk6oZWb"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b9c11eba219so281761466b.2
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 10:40:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775842840; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gSQDBema"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-951c5ac6253so757286241.0
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Apr 2026 10:48:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775843305; cv=none;
         d=google.com; s=arc-20240605;
-        b=T7UguADRn8w69chJ6jnoQCvHk91oX9q/XuF1kAPDsobb5JIKZD7BLCnZHVw7knDjLR
-         6BncMcWFD8bDjJOLsg6Am8dZfXwDgNjg1AnVC4Ye9fJInzp0hASPJ4RxfbvsqwU6/jTz
-         U3ZsTbmdP/SwQpsi4Osdi7QbL1H9KCXMHsTpAwkfPAIDpbw4ElmG0nIQSB02T+9S6AKG
-         V4C8zu1iLbbQH4liS9GHZXbrSiztanyZDHsQR2NRmyEu+nit/tLEtvCf7j3feq/yZoA9
-         xbt5T5hipojmDR2THGSBOHUFJWsW/z2y0forToGC8cO5FQgXnHut7X8+lUD56FLX5jtF
-         +AqQ==
+        b=JyNH9FzQm4dOxOIovOduRXKFeCZ359qwdP59Pn4ITwvV4EVTyfuYkpMHDzPXHym363
+         GPmn9t9EmTvA813v43HKD2AkBG6eJkelWIgIJhabELw20eQYYzKSCeIwdfVaS8GUd0m/
+         NohQeUbBBpCeHpxubc2vuI3hQfd5JJPuqeE+3wrVKMMoYzGRwRpnmvAhf09RO5ATbDpf
+         I3PZS/NqUeTLWgFzTc/eE3g0e6OzN9rKDnWbQsu5zYhjumW1/Lavob+J9EGoETzknPHD
+         NbOBtUdYA5A/KfUUSlkHdPR79L1MhwOe2AIiQ59KIiRu0G7uMJ8015W758Xi8Johmj4G
+         A6pQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=dN6OHHDaiTfVdHomxkKXHWudndDr0TAk+XE4EiflmuI=;
-        fh=L9Ftw0ZdjDbBGFZLqpYeJ8hvhVVDd2PCMzQ5yLRZ87A=;
-        b=EhSTRbkdH6po+Y1tt5dLM+a15sPx1dWvvR7hcL6mpBAgDg7lbpJu2jSl8DbjWuTzft
-         6oCRozTdZpVdoG19logaSNYpCZ2ySJkaBRGbeBd//GMzxtiTlod7TRvUcDjA6wC+Se3W
-         3X8E8MNLVHNzQ4jUIk6Nq+iCxW/7OwyGVHDVyT5vaTnza6mPZNevZaIN6KlTFfhRqP2z
-         EuEMU/r5+n14oa0rK19MHU1mpJc3T/JwOXPqYM+Dfhuif+2JjH042ccfJvuA4QVq5AR2
-         nOrgNRPtqDlCjp4YI5mlk31iqnueCCwa0Uh5ZjNwnhIjVaSD3iS1wzq+3InjKUJkA0mv
-         4yXg==;
+        bh=/l4nSTrukrhbCr2YaIjwfXniIaAMtCTR7SdWmyWxQV4=;
+        fh=OZ4DtnWMu2Z1wHnio5lPGe7fQftSnmku7rUuKIwDO1g=;
+        b=cculQZZ6WcQvhNxlwLEOOfov0xOhCW3FqZtliJGSnHT8IXgHQfeUxoZHz5aUZ31ovx
+         n8ZyoDrgrsT+HFx2mi3usHHwa+CFRwYOFzInspjoZBdkedDjeyp0AW3BzBbphpZ+y3Lg
+         iqRbTgJKVjtZFYVi6Cm807O7G4M/X230XVXnDjEH8aqMC0KMK2xE3ZAtUSGMTIbvfguc
+         0o4iepq3AHUOv3ei9g+xOhxOfcuGPffshJVp9PDE7P9AnYYt1e+G5sanQYJIcvQIGo7o
+         okvJLKi1kJtolzVEqB/btiTmCozpRNbDLvt/w1w/tG/kVVxHEgz5l0aeQgfvCXpBrLiE
+         +cHA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775842840; x=1776447640; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1775843305; x=1776448105; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dN6OHHDaiTfVdHomxkKXHWudndDr0TAk+XE4EiflmuI=;
-        b=lyk6oZWbtyGzOzCJkXEAP+xRBcdymw/pLvvCJvJCkU076Bx9aby2Y6xsh3bnqZsWdP
-         FEfqCc4EcgjSGvTFRGZgY1OuzCBwW2Zpu5lcGAlGo9Yq+VKlg6sxcScmOu+WXE0jnVra
-         SoJRwKT8uPs3o7TEFsrc8p4gHacUnivZJYwBbsCQ6sb/97VK6ENzOBZvNfVeOB1O/8Jw
-         eCNiFrjWTi4hNZU65mX6G0HZANqtmIs8yZ74RpajXgIvxGLvMLIai71hFUZk0Lx6nkbe
-         zuLHBYOfq+me42TGxV/+nnjuxD5Gj45TCtqVGe7vMxC0APC5lPPB7FdTJjjxEPic/V44
-         yxWw==
+        bh=/l4nSTrukrhbCr2YaIjwfXniIaAMtCTR7SdWmyWxQV4=;
+        b=gSQDBemaBCVuUAhLqAdtcC033WLVaTqXhhUHappsfe6OonnsPA7yp1uQmMHmVhBe2a
+         2nt9DT+5/sSX7WwBAHuo9ICl0EstSMIMgeUPgX89Tk6yHm92trgWiK9dXxDj8N+818Wx
+         5utmoj6/EC9kT0wzhmWOoVLGwSBQ8O+lkf9Fc1wqV7YY/LFfOBlvjfYblbiQdmkrKQeT
+         br5P3wdF2Km3utxoh9CSpR7tXWe0AOEQ4yUnIy7rQafxKmIhJFFzXfgYZqYFxX44FySP
+         ocQJbflhiS/n7FgV9vknSUAmp//xB1neCvPwFKx/e6t/APYZgGBLvtJ+jw6hP2nxn8h+
+         Za/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775842840; x=1776447640;
+        d=1e100.net; s=20251104; t=1775843305; x=1776448105;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=dN6OHHDaiTfVdHomxkKXHWudndDr0TAk+XE4EiflmuI=;
-        b=bgVh9HprSqhizGgKCWbvu9+1HnOQlYwtw8oQNAH6qkJ1lyJG6vhFgbyiRNOCz0aHaf
-         4F+JeDXt4JUarHBHksPLbsGoQg7MzH7JaaHcbqbKVv4L5Ehh6fgES66SsM+x4F4F9K0c
-         webIIE3yWcMPvTdE/mkkaPa7XTwXakblC6c/AdLad+0vZH6LX+XX98IV7wDrOlk0Rs40
-         x6cMuwmcFx+EUAZuPzO0BiSlzBY3MQK6WNb8HFhQmfSImkguMrSi4ciYI2I69SytB8cy
-         6xYJ1bsbsANTsbv8/F75eOLcLS9JYpQ2zCiTHhHdLH5GFh5oUjTTT+3G9Bg6J1ANyLu6
-         Wa+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUmufz3AjePo/gdnuM3MJEo+uToV6FHjsduTnJqJzvd5PSQN0+/DpYInqsPxw40PfK+mUmrylcMcf5+e35KSt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRsw/Bniimc8hIw4pE2NkhkVLyMZbnNsKjmFaNXews2OU9Uovk
-	4BITA64n3Ia3XpYML04uQXZfN2ZloA+ddiSdoqFQ7ncTGQCPEF/147ovz4NK7tlJMHnPNst64pk
-	MGJRxJIqv2GXHvQsw41uxRhPKeYoyZk0=
-X-Gm-Gg: AeBDiesIdmQK/PXXUNYvjq9YJ/v5/O4FRFSLH6XGlk39D0aBCiK+JG8/hwifXHWen8S
-	H4xrQRtlPY2JhLl6vg39sDdIh4YBg2czfXPm/nBvbEoaAXnOGHgKhDecc//HSNL1xSQ5XKHhs4W
-	jfq+o+o1NHlhdpEkP7AGSVFKn9lqAwHkKMChYJLxfQ1Fd9xne2W3YUMJY8RXDmxFDWAgkmhVY89
-	c5csvjgM2j9xvSS1y2OSM2kM8zbGMzzCIK6ucWd3441MJdlqWPaO8GVD6Rj6cBIJ9/rtIMDvU6c
-	K5AHdWrjGZM/xuWfiHXeTpVoZL6DZZHHlSo374CYQPVhBV1kRIrDjtGDaG/TCd8+jOIFInXh6lo
-	Vz/u5P3U6crz/kHTq
-X-Received: by 2002:a17:906:eece:b0:b9c:350b:f849 with SMTP id
- a640c23a62f3a-b9d7297e205mr254084166b.24.1775842840105; Fri, 10 Apr 2026
- 10:40:40 -0700 (PDT)
+        bh=/l4nSTrukrhbCr2YaIjwfXniIaAMtCTR7SdWmyWxQV4=;
+        b=GrY1D3x21e1qClGYUbLzIm9nZ7HueY78wW0aHCd0yYzBYB9gkp89NhPF6F5VPtK1B/
+         4PI5oGAr6HN3o3FlInmLf8az4OXoUqsUvQFfs0Telytyh4VnNgk5kz24W4hkNzWaEEVm
+         e8IjAKa95t+dJal+jND4qckfIkfe6dsoSs88IPQBCDvoCp9zopqy8O/sHJf0fQau/Itq
+         62Y0kDXEhJ2mSy0m0cFG0IYFqwyqrnfdnCCSlt2wVWEoH8B3NVhxq+TKuJF2Rgb9gCLE
+         76+mAIBc/shp0aw4ag7lhD6/6+8fRUN9TiIRZgN70Khu7EpO3oe/PxyNSPACiii9Y87s
+         eGwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZIacJI5R+4NBZCPUORShplXQIp1Jgc29YYJWe/dbRaB9jgopvBIe6cZxgTXtOwERhr5KzfAzAuYeRbbsEWnI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEoG3/aFL4o6YUGUOJqLz4gseeTeTDhF/yLxh1JcVxfkRzxT09
+	iudW65EgZmxS+MNfqLz5P+t7QV3yhUz1VAZEj4JL92L5I5EWOJdDqQEUIZZu5mbD9uPv945k8Yj
+	g8vtR7M5FDzNQvsrBdbvZSt/J+mtbDHxyyyqxNKed
+X-Gm-Gg: AeBDiesC1Mtmv6RsQNbKx+o2VPh3+MmBLyRUREOEvSpbGVMkLiNik4qrsOZ64bE2rKQ
+	uB1WIKikqsekQOXoZdxEazqcF9uKzWQ9Ep65hodbdAhjJ8l02MJWfb3RjRqJfx7nwTexJEMBiFW
+	xRlHsyoGOk+y1Kacj+UblNjhdRcjALvQWGb3x17UJ3ZL5n655qZje8Fj8jUdntxYRxVmfcB7gpE
+	gVfoIG8is740UpNev7lKMIS3hyNm7+OlAEOoGdhKumzHFSU65R6KbUxDslmpBp4zDbWtNGg6oJN
+	ZcGbIMMoH+fPvuIuog==
+X-Received: by 2002:a67:e7c1:0:b0:607:7991:f02e with SMTP id
+ ada2fe7eead31-60a0125a157mr1913972137.26.1775843305006; Fri, 10 Apr 2026
+ 10:48:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260401220643.12802-1-rosenp@gmail.com> <b772c81c-3628-45c5-ab11-a0737a94b812@oss.qualcomm.com>
-In-Reply-To: <b772c81c-3628-45c5-ab11-a0737a94b812@oss.qualcomm.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Fri, 10 Apr 2026 10:40:28 -0700
-X-Gm-Features: AQROBzAGbFQNHO1NpZGhgy_hzsDylIa-uvfdzOOR1DS2GBgDZwb6wKvs4Zz0Xlg
-Message-ID: <CAKxU2N96X31nsB-Vyt-Sm1rQMTo8cuZG+UDN=37av8c_5n-EcQ@mail.gmail.com>
-Subject: Re: [PATCHv2] accel/qaic: kcalloc + kzalloc to kzalloc
-To: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, 
-	Carl Vanderlip <carl.vanderlip@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:QUALCOMM CLOUD AI (QAIC) DRIVER" <dri-devel@lists.freedesktop.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260331163716.work.696-kees@kernel.org> <20260331163725.2765789-5-kees@kernel.org>
+ <CAHk-=wiJ6Q_qMHSe-hs+QvqKVZphvDZjvFP_gQLw1eaWimv8+w@mail.gmail.com>
+ <202603311253.95C54588E@keescook> <CAHk-=wjSOGaausLeTD13yAqso7qM09EnkDFiN7wF15kH0VWmZQ@mail.gmail.com>
+ <202603311321.4EE9FEA@keescook> <20260401083137.GT3738786@noisy.programming.kicks-ass.net>
+ <202604011328.D3821379@keescook> <20260402053840.GD3254421@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260402053840.GD3254421@noisy.programming.kicks-ass.net>
+From: Justin Stitt <justinstitt@google.com>
+Date: Fri, 10 Apr 2026 10:48:13 -0700
+X-Gm-Features: AQROBzBa6VKBq4ACJ1_R_EdvKeRsco9AeWVrSeipdWQAbkoYS53l26rCnLm5lXU
+Message-ID: <CAFhGd8q_avLPfOsFkOd52eVJ7A50eKZ0HJo8ehqhG9P-s7P4-A@mail.gmail.com>
+Subject: Re: [PATCH 5/5] types: Add standard __ob_trap and __ob_wrap scalar types
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <kees@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Mark Rutland <mark.rutland@arm.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>, Finn Thain <fthain@linux-m68k.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	llvm@lists.linux.dev, Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Nicolas Schier <nsc@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 10, 2026 at 10:01=E2=80=AFAM Jeff Hugo <jeff.hugo@oss.qualcomm.=
-com> wrote:
+Hi,
+
+On Wed, Apr 1, 2026 at 10:38=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
 >
-> For future reference, $SUBJECT should have a space between "PATCH" and
-> the version. git format-patch will do it correctly for you if you use
-> the -v option.
+> On Wed, Apr 01, 2026 at 01:52:26PM -0700, Kees Cook wrote:
 >
-> On 4/1/2026 4:06 PM, Rosen Penev wrote:
-> > Consolidate the two-element allocation into a single allocation using a
-> > flexible array member. This reduces memory fragmentation and simplifies
-> > the error path by eliminating the need to check for allocation failure
-> > between the two allocations.
-> >
-> > Add __counted_by for runtime bounds checking.
+> > (Though I would note that GCC does _not_ refuse the jump when there is =
+a
+> > cleanup; it only see the other two uninitialized values.)
 >
-> This reword addresses my "why" comment on v1.  However I don't see that
-> you responded to my question about how this was validated. I don't
-> require a v3 of this patch, nor do I really want one. I want you to
-> reply to this message and detail what validation you performed on this
-> patch.
-None. This is a straightforward conversion to a flexible array member
-(and future devm_kzalloc_flex).
+> Yeah.. I know, but since we also build with clang, any such issue will
+> get discovered.
 >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > ---
-> >   v2: use macro for number of elements. reword commit message.
+> > So that makes it not totally broken, but it does make it a bit fragile.
 >
-> Also for future reference, a blank line to separate the change log from
-> the patch diff here makes the change log easier to find and read.
+> Right.
 >
-> >   drivers/accel/qaic/qaic.h     | 4 ++--
-> >   drivers/accel/qaic/qaic_drv.c | 8 +++-----
-> >   2 files changed, 5 insertions(+), 7 deletions(-)
+> > Another concern I have is dealing with older compilers and how to
+> > "hide" the label and its code. e.g. if I remove the "goto" from above:
 > >
-> > diff --git a/drivers/accel/qaic/qaic.h b/drivers/accel/qaic/qaic.h
-> > index fa7a8155658c..e237020f6aa9 100644
-> > --- a/drivers/accel/qaic/qaic.h
-> > +++ b/drivers/accel/qaic/qaic.h
-> > @@ -152,8 +152,6 @@ struct qaic_device {
-> >       struct list_head        cntl_xfer_list;
-> >       /* Synchronizes MHI control device transactions and its xfer list=
- */
-> >       struct mutex            cntl_mutex;
-> > -     /* Array of DBC struct of this device */
-> > -     struct dma_bridge_chan  *dbc;
-> >       /* Work queue for tasks related to MHI control device */
-> >       struct workqueue_struct *cntl_wq;
-> >       /* Synchronizes all the users of device during cleanup */
-> > @@ -206,6 +204,8 @@ struct qaic_device {
-> >       void                    *ssr_mhi_buf;
-> >       /* DBC which is under SSR. Sentinel U32_MAX would mean that no SS=
-R in progress */
-> >       u32                     ssr_dbc;
-> > +     /* Array of DBC struct of this device */
-> > +     struct dma_bridge_chan  dbc[] __counted_by(num_dbc);
-> >   };
+> > ../drivers/misc/lkdtm/bugs.c:1060:1: warning: label 'weird' defined but=
+ not used [-Wunused-label]
+> >  1060 | weird:
+> >       | ^~~~~
 > >
-> >   struct qaic_drm_device {
-> > diff --git a/drivers/accel/qaic/qaic_drv.c b/drivers/accel/qaic/qaic_dr=
-v.c
-> > index 63fb8c7b4abc..1dda8dfea5a4 100644
-> > --- a/drivers/accel/qaic/qaic_drv.c
-> > +++ b/drivers/accel/qaic/qaic_drv.c
-> > @@ -43,6 +43,7 @@ MODULE_IMPORT_NS("DMA_BUF");
-> >   #define QAIC_DESC                   "Qualcomm Cloud AI Accelerators"
-> >   #define CNTL_MAJOR                  5
-> >   #define CNTL_MINOR                  0
-> > +#define DBC_NUM                              16
+> > Oddly, the unreachable code isn't a problem, so we could just wrap the
+> > label is some macro like:
 > >
-> >   struct qaic_device_config {
-> >       /* Indicates the AIC family the device belongs to */
-> > @@ -405,15 +406,12 @@ static struct qaic_device *create_qdev(struct pci=
-_dev *pdev,
-> >       struct drm_device *drm;
-> >       int i, ret;
+> > #define force_label(x) if (0) goto x; x
 > >
-> > -     qdev =3D devm_kzalloc(dev, sizeof(*qdev), GFP_KERNEL);
-> > +     qdev =3D devm_kzalloc(dev, struct_size(qdev, dbc, DBC_NUM), GFP_K=
-ERNEL);
-> >       if (!qdev)
-> >               return NULL;
-> >
-> > +     qdev->num_dbc =3D DBC_NUM;
-> >       qdev->dev_state =3D QAIC_OFFLINE;
-> > -     qdev->num_dbc =3D 16;
-> > -     qdev->dbc =3D devm_kcalloc(dev, qdev->num_dbc, sizeof(*qdev->dbc)=
-, GFP_KERNEL);
-> > -     if (!qdev->dbc)
-> > -             return NULL;
-> >
-> >       qddev =3D devm_drm_dev_alloc(&pdev->dev, &qaic_accel_driver, stru=
-ct qaic_drm_device, drm);
-> >       if (IS_ERR(qddev))
-> > --
-> > 2.53.0
+> > force_label(weird):
+> >         pr_info("value: %lu\n", value);
+> >         pr_info("outcome: %zu\n", outcome);
 > >
 >
+> __maybe_unused also works on labels. Like:
+>
+> __overflow: __maybe_unused
+>         dead-code-here;
+>
+>
+
+Completing the loop: Here's the Clang RFC discussing obt label handler
+design [1]
+
+[1]: https://discourse.llvm.org/t/rfc-linux-kernel-discusses-overflowbehavi=
+ortypes/90486
+
+Jusin
