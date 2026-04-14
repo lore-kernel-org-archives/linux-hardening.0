@@ -1,169 +1,150 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841E430CD85
-	for <linux-hardening@vger.kernel.org>; Tue, 14 Apr 2026 08:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776154005; cv=pass; b=SDhrIhYIHYgaRUB4Zz4WU6pEWYgUXFyDZ+jKZFN+BQoiELJniVxuwe9x0eHgC2cHotl3O9nIqEMtAy/s0HWRuFkPbLj+4NURYmFb3fKY9xJ1kAYkCKjAk+FG1IlW6CWbuUwcFuQ+5ZDy83/hyR5Hhs78b9c+/lSlXA7C1jAUEHk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776154005; c=relaxed/simple;
-	bh=fmGVbtsBI1VoOe9OcSZWHLOEsNoUrYJLI1DgVfRukRQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nHB0c9c+ZOOn+fFBUveSvjE0KiSl3tv6UZRviY1nGkCmoHM5M0hmvoghPYokvDUq1j0p0mrxrJRrRslEV7lNuVbpKSnWMtn31sTIxg30LXRwJXGIJRFYwQ+1K0zgELb28yQRK0Cg4GN6SKzOHmrcFxNEkWNwyQSNu1w9hR/eSV0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bi+jQTj4; arc=pass smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D30C3E5ECE;
+	Tue, 14 Apr 2026 12:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776170475; cv=none; b=OZWWgtAkLvkVPbMQN5qz6jp/na24AcTVDHpJkAKYi74VP1LRkFBpkrDC4v8OaGb/gXIPJ0lSFQ+opLcPu2HVHW/ceBjVAqI6Iq5my0ZcILKY3s302XuUcjbvIXw2cg753cBkoLBjsAhYNLdOndauKv21mpIiw2IpXaU/2B6C18Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776170475; c=relaxed/simple;
+	bh=G8U+4WpNt4in0UMMQOdtgMiZYV2gUKxHt4bziHo0gnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V31UxOjtQzYow6Z0Up4ajw0KoMS921uV0GxCL3lgMMqBAf2TpJN+MUi+uIzeWn8abV+tpo6L6BKprZ1UmKOqyJ3cpp9xSElKts2SgQhZRkG+XMeXJbG/IU9Os2a8K/BS48cddjQDrDsOo5TUkp/S8wxLatPDybz8LbtYn4LSLCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQ9Vvq38; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi+jQTj4"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-607f1fac33cso1764314137.3
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Apr 2026 01:06:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776154003; cv=none;
-        d=google.com; s=arc-20240605;
-        b=VXI3aTYwIyvSgvsRi6yKt/2/ecM8VbNtXGG2RN/AjHRi+ZMJLUhulMs6vNKggvYny2
-         j/1uAKjkOft3idekbYzIfJDSHj0WHxuz8hwUwYBQXFLSb8qbDNVTOopSvsNanMd8ciJp
-         eJnAj+qxdOQPEIR8tKcY3nBgYTxUK6PXU3VvH3iQZix2grRWnfZuNTmNAv66SvWssEnk
-         2qPoLLwjs6wEmgeTKFhpvPl9PbXq1VJxkxusXSkwweQMn0/Rw/eKOcugMQqhG8Biq2YN
-         w0nmou4kBha6BMNJRg04jKUsfPhueS3WHN5yd6kHl7jqV+7LMCqB9eQmgXgnIOtSwz/3
-         mKwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=uc24Ki9VYMqHvv8n6woz43UOOq8epixfEuksTZtbwnI=;
-        fh=evfFoudx3jsm0TEUazmDVEzGA0c0jzMYpuOr4YvO45Y=;
-        b=UxI9zV54IZBOZyD/6DlF3Td7dq9wrzn1peqBa3nhCwRzBgmIoOPoyVS3nTBW/8l2WE
-         yMflUhngjWxVDynJiQihCIxoRgoi8FUE5Orm2PeJhuvYFzGBEtDhq0w7KEmwyNKOF6jo
-         hwX3TE9ClqCUP7eBagpy8JWlDO3aISlM8b7UV4h+lQ5CSXX3UCp7MdrAfJUMFtd3RyKP
-         1DzsX9aAMDGcmT0+ZvgM8TK6bZbRF2ydxQ4UAgSlH0nwb/r2QWihqCq3VHSr3E+PHJ/w
-         j3JCp4isI0AvXTOTnmNEMfa9KBkuqun3pV0YO3Fl0IPE0WyW2IzTdSxnrEUWWVMgtHsk
-         wPEg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776154003; x=1776758803; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uc24Ki9VYMqHvv8n6woz43UOOq8epixfEuksTZtbwnI=;
-        b=bi+jQTj4hNN5zJw60heIboixFqA+PCmjkIB5EFC7Coh3NYcrGcFPllLd1gnILaXtAY
-         wVnCLqhl4SrRbI3w/cSeAa81W063X8eF00AW2kJQKBSj02f1A9KPz0wwzzKuxWU0xGN1
-         zpf3HDE63q7z31Wfd10n1XbKW+RQL+JOlQAWVoZ/KusazmLmwGeRi/CjQK6hHJUdtoU0
-         wz1MVwuH2t2PcZ/OhooymHuXjWufK0fZ59D74ngyLVB1MNkwxjDoIqduECZgKRjiMNJ3
-         8UUrGHqt9UIxyUde9Ga1T5IS+KbTaY8EWgZtqcgImdbi0VQrbjtAkz4Ft6/uDnEbm3Jl
-         5OrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776154003; x=1776758803;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uc24Ki9VYMqHvv8n6woz43UOOq8epixfEuksTZtbwnI=;
-        b=iTnjeJQhI+hJRMxK8wlGUfDaBw7z7tJfNSR46J7AzCn6PVulMv20tBKqHfdt6jpPfa
-         SwyeugQ76a4kfXv/8OM49cJDmvFEUh0eFPcEHQIgxhO5dvQ+bGeIg8wniS9nKRk462IR
-         2A29KeDrzwdWpy7vCWai7lFagDoiFfsZiSFXLdr8o1IVGHdarw/phQazU8qU0Gmgfa53
-         kBX89IkX9yW2L2lB6YOL8XMuSvvCPq5daGNjmhTf/YUjIk5EoznYVhj1OW6haypMP9Hf
-         V7sdC1VbTGaYdqNwixUUxT+8xdVBNWXVz5qO5zkzanj/DY30YL/hTrvXdjjWHycQKF1e
-         LxOg==
-X-Forwarded-Encrypted: i=1; AFNElJ/WFFF7WG7T+oH3/535LgcPRHG39dlevhzZb5lF5p5vuwgLSdE2Qe5x5tDZywqBiUkjiKMpDCtWLAnW/pZzibs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl0oQw0iy3oM+uJsdIvlPZH2s7Kn5uVMJK/nrCRVnnHL1M6UV8
-	uHPcEpvp0iE+rNL+IwcM04dHgihCS/L96Te0XiwX3uHG5Kc3/VSY69JbkCAYE80gqIk14LEwdCN
-	I7VrjtYn/mGM2zJ5IxTHW2Cff8Qh2I/A=
-X-Gm-Gg: AeBDieuI+HGJ6sHIeOUFYt/S/2ukEfEK5kN7G4lDxFX3pvywZHWIOVZiue03mRhdyX+
-	fWy5G6vF3aAwCkPnbySAxrxYx+2QlLxollKgUATWUQkO+aeD7mrgHFK8so46GLlGjqsaBwMa9ts
-	IqDi7bSadePhgzczmgUa7Sh2rMHyoKWn2UKBSVXBTM7UvgdH8HgJtPPKuYWCxFcL7hFQiugIoIk
-	+5/muFANaUkIkbdr1sSijCPw/U5gYPk8ML44YChDRA89207EDhNF7fpiQBIPN3TwJIMIChTixsD
-	Yx+O18/LENqdIN1OQmZX3CyQyEca5Q8EmUX4xQH3
-X-Received: by 2002:a05:6102:4a94:b0:60f:f4e0:f139 with SMTP id
- ada2fe7eead31-60ff4e0f446mr2279103137.9.1776154003394; Tue, 14 Apr 2026
- 01:06:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQ9Vvq38"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776170474; x=1807706474;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=G8U+4WpNt4in0UMMQOdtgMiZYV2gUKxHt4bziHo0gnw=;
+  b=BQ9Vvq38Yb+j00XpFbLYr7k96Uuw2fV9mMTGtbGEmMLpFyhqOYOsQB7a
+   vQkOo+EHIqmHao0oc6q43DVNgIqFRi8JOcIoEtxoz2zbyPz2BgunmcqLl
+   kfxCcxIehFH/1jPDmMVRaDMXjy3VbAyZEL4PzxPGHPfNkKlekvr4V2zTR
+   w6Yuk1sgMzVAARTDMIhAxqgS466Vp8r/vu4/DkEjZqdvUBoZ4Fb7I6K/4
+   eNtXaAKBIoFcF4xrgCDxLWea8LSD6kRW/TxnSIRzXKXa4VkDZTtahGseY
+   RAI4I6FPr6Jm/rNFs1zeVulikUIPzWbAkzP+PbJn1rKSJ107tcDV9oM/8
+   A==;
+X-CSE-ConnectionGUID: NU5QM2OgR8am53KoFHwcZw==
+X-CSE-MsgGUID: cLaMj8XNTPKCfYF66yUgRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="77002554"
+X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
+   d="scan'208";a="77002554"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 05:41:13 -0700
+X-CSE-ConnectionGUID: Akqxntp1TEC0Sj8nmTzS0g==
+X-CSE-MsgGUID: MhslQKxFTZebrRUR0gjwBw==
+X-ExtLoop1: 1
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.106])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 05:41:11 -0700
+Date: Tue, 14 Apr 2026 15:41:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rosen Penev <rosenp@gmail.com>, dmaengine@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"open list:INTEL MID (Mobile Internet Device) PLATFORM" <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCHv2] dmaengine: hsu: use kzalloc_flex()
+Message-ID: <ad415SF1zIrCof8W@ashevche-desk.local>
+References: <20260328191646.312298-1-rosenp@gmail.com>
+ <CAHp75VfXO1acijFMySQTCtYEE9dRyUMk7xJ7ff7m0hgy42g7=A@mail.gmail.com>
+ <CAKxU2N_SXeEgwZ5e1eARpK5jAorx-ycnPdf=Ut2jUvSM2xYZFw@mail.gmail.com>
+ <CAHp75Vdvn9n_qgBsXTBw8mRxdJcrmCi01JfAGz7oTkKQ1uXBmw@mail.gmail.com>
+ <CAKxU2N-QT6KAKzAYDUp_d9ug=1VxHMvegEQDbxS4GumH+8QBWg@mail.gmail.com>
+ <CAHp75Vf_Q4OqYgEOBhoFxpKpAkw5_+GJxQCTbA6LnbR0xhOnMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260407143306.78809-1-shuvampandey1@gmail.com>
- <adUaTrU_DZuK1Kd8@ashevche-desk.local> <CANAAWH+ihOpBVB5_Q4gxLs0_zO=pHb-kF53UXE-pqg1U9E9OKw@mail.gmail.com>
- <adayT_7xAtOLiVlq@ashevche-desk.local> <CANAAWHKDBoi1x=MpAyU5bQ88=ZOOrkaJNziyhcK9Ei7c8oNSHg@mail.gmail.com>
- <CANAAWHKZXbFAr7=DRCrS46GDsWi88Q=v883RQrgF4+EScksP=w@mail.gmail.com> <ad3qeKiW1jIKHOMi@ashevche-desk.local>
-In-Reply-To: <ad3qeKiW1jIKHOMi@ashevche-desk.local>
-From: Shuvam Pandey <shuvampandey1@gmail.com>
-Date: Tue, 14 Apr 2026 13:51:31 +0545
-X-Gm-Features: AQROBzBvD_axoHP3mQnIJNooQzq5tbx-MevM5aj4WTh2jGEfTqz7nqEgGcG6T0Y
-Message-ID: <CANAAWHKLxpWOE1E5smBicb6bz6H5JdQndhbL434vsa6z+4K9ug@mail.gmail.com>
-Subject: Re: [PATCH] lib/string_helpers: fix string_get_size() unit promotion
- after rounding
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vf_Q4OqYgEOBhoFxpKpAkw5_+GJxQCTbA6LnbR0xhOnMA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Andy,
+On Wed, Apr 01, 2026 at 04:32:13PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 1, 2026 at 12:31 AM Rosen Penev <rosenp@gmail.com> wrote:
+> > On Mon, Mar 30, 2026 at 9:29 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Mon, Mar 30, 2026 at 11:41 PM Rosen Penev <rosenp@gmail.com> wrote:
+> > > > On Mon, Mar 30, 2026 at 1:46 AM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > On Sat, Mar 28, 2026 at 9:17 PM Rosen Penev <rosenp@gmail.com> wrote:
 
-Sorry, I should have kept the discussion on-list.
+...
 
-This is about the string_get_size() patch for outputs like "1000 kB" and
-"1024 KiB", i.e. cases where the current code has already rounded to the
-unit divisor but still prints the old unit.
+> > > > > > -       hsu = devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL);
+> > > > > > +       /* Calculate nr_channels from the IO space length */
+> > > > > > +       nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
+> > > > > > +       hsu = devm_kzalloc(chip->dev, struct_size(hsu, chan, nr_channels), GFP_KERNEL);
+> > > > > >         if (!hsu)
+> > > > > >                 return -ENOMEM;
+> > > > > >
+> > > > > > -       chip->hsu = hsu;
+> > > > > > -
+> > > > > > -       /* Calculate nr_channels from the IO space length */
+> > > > > > -       hsu->nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
+> > > > > > +       hsu->nr_channels = nr_channels;
+> > > > > >
+> > > > > > -       hsu->chan = devm_kcalloc(chip->dev, hsu->nr_channels,
+> > > > > > -                                sizeof(*hsu->chan), GFP_KERNEL);
+> > > > > > -       if (!hsu->chan)
+> > > > > > -               return -ENOMEM;
+> > > > > > +       chip->hsu = hsu;
+> > > > >
+> > > > > Don't know these _flex() APIs enough, but can we leave the chip->hsu =
+> > > > > hsu; in the same place as it's now?
+> > > > __counted_by requires the first assignment after allocation to be the
+> > > > counting variable. The _flex macros do this automatically for GCC15
+> > > > and above.
+> > >
+> > > Why? The hsu member has nothing to do with VLA, where is this
+> > > requirement coming from? My understanding is that the check should
+> > > imply the minimum sizeof of the data structure and the compiler should
+> > > know that way before doing any allocations.
+> > Not sure I follow. This patch changes hsu's chan member to a FAM.
+> > Where is VLA coming from?
+> 
+> VLA: variable-length array
+> FAM: flexible array member
+> The second one is VLA member + size member.
+> 
+> What your patch is doing is changing a pointer to VLA member.
+> 
+> > The current code is devm_kzalloc(x, struct_size()). When it gets
+> > introduced, I'm sure there will be a treewide conversion to
+> > devm_kzalloc_flex, which would automatically set the counting variable
+> > for >=GCC15.
+> >
+> > It's best practice to assign right after since kzalloc_flex does it anyways.
+> 
+> Still, I'm not convinced we should blindly follow this rule. The
+> length needs to be known before accessing the VLA, but it's okay to
+> access other members. Leaving hsu member assignment where it's now is
+> fine, no need to move it around.
+> 
+> > > My understanding seems in align with what Gustavo blogged:
+> > > https://people.kernel.org/gustavoars/how-to-use-the-new-counted_by-attribute-in-c-and-linux
+> > >
+> > > The same is written in the GCC patch description
+> > > https://gcc.gnu.org/pipermail/gcc-patches/2024-May/653123.html
 
-> I'm trying to understand the current behaviour better and the logic of your
-> change. But looking at the above I think your patch doesn't improve the case.
-> And might even be another bug in the current code. I mean, do we have to round
-> the numbers? 1048575 and lower are not equal 1.00 MiB strictly speaking.
-> It's rather 0.999 MiB.
+If you agree with my reasoning, please send a v4, I will give you a tag.
 
-I took another look at the code and the old versions. I think the issue
-here is narrower than whether values should cross the boundary at all.
+Otherwise I really would like to understand the justification why the
+assignment going first is the best practice and how it may help the developer.
 
-For the base-10 values you asked about earlier, and for the binary
-boundary case, the current code already rounds across the boundary.
-With blk_size = 1, it prints:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-  999999   -> 1000 kB
-  1000000  -> 1.00 MB
-  1000001  -> 1.00 MB
 
-and
-
-  1048575  -> 1024 KiB
-  1048576  -> 1.00 MiB
-  1048577  -> 1.00 MiB
-
-So the patch does not introduce new cross-boundary rounding. It only changes
-how those already-rounded results are displayed: it renormalizes 1000 kB to
-1.00 MB and 1024 KiB to 1.00 MiB.
-
-Around the first MB/MiB boundary with blk_size = 1, the display changes for:
-
-  STRING_UNITS_10: 999500 .. 999999
-  STRING_UNITS_2:  1048064 .. 1048575
-
-with the adjacent values staying unchanged, e.g.:
-
-  999499   -> 999 kB
-  1000000  -> 1.00 MB
-  1048063  -> 1023 KiB
-  1048576  -> 1.00 MiB
-
-That behavior comes from the arithmetic-rounding logic added by
-564b026fbd0d ("string_helpers: fix precision loss for some inputs").
-Before that change, 999999 printed 999 kB and 1048575 printed 1023 KiB,
-so my original Fixes tag was wrong.
-
-The v2 will carry:
-
-  Fixes: 564b026fbd0d ("string_helpers: fix precision loss for some inputs")
-
-If the intended policy is instead that values below 1.00 MB / MiB must
-never round across the unit boundary, then I agree this is broader than a
-renormalization bug and the rounding policy itself would need changing.
-
-But with the current documented 3 significant figures behavior, leaving
-the result as 1000 kB / 1024 KiB is inconsistent with that formatting,
-because the existing rounding has already carried the value to the next
-unit boundary.
-
-Unless there is a reason to take a different approach, I'll send a v2 with
-the corrected Fixes tag, an updated changelog framing this as post-rounding
-renormalization, and threshold tests around the affected ranges.
-
-Thanks,
-Shuvam
