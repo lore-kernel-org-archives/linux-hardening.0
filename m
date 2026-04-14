@@ -1,224 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CA578F26;
-	Tue, 14 Apr 2026 07:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776151166; cv=none; b=R/FJyvqEIGNWFNJHZjgOcrQbs68IxhecO/UdquJGhOxmfWbTKckXBTf5+sZ6p+u00Xz7eHrz2cHleuMY2op+4qtRpzFntrXzhDrl4H3a1izwgU5z0lLXJglDZaI/7o0Ns4XSASa6UqCpTuTaEqVSuLPJI+rw8WdjjX2ay8opGCw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776151166; c=relaxed/simple;
-	bh=rPGmaE1xqOgLUeSHPd8fc+sxOLh2iVIIDmWEDlwbN4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CmSsNYY8iN0GP7HGrt7p0UoWozxhHauMYR7EirwqI9oCML55VDhdm+Tn0refG34m5RcUstEad5eqHcVg7U419QPfltO1de9ZqIpzKybu5JT92I/rzdtNmJhXD0twoe2UO3e4N1GRPXuXN+Si473YCBoJLZfmozG2SKVDoj3tICU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B3lBTpYQ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841E430CD85
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Apr 2026 08:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776154005; cv=pass; b=SDhrIhYIHYgaRUB4Zz4WU6pEWYgUXFyDZ+jKZFN+BQoiELJniVxuwe9x0eHgC2cHotl3O9nIqEMtAy/s0HWRuFkPbLj+4NURYmFb3fKY9xJ1kAYkCKjAk+FG1IlW6CWbuUwcFuQ+5ZDy83/hyR5Hhs78b9c+/lSlXA7C1jAUEHk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776154005; c=relaxed/simple;
+	bh=fmGVbtsBI1VoOe9OcSZWHLOEsNoUrYJLI1DgVfRukRQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nHB0c9c+ZOOn+fFBUveSvjE0KiSl3tv6UZRviY1nGkCmoHM5M0hmvoghPYokvDUq1j0p0mrxrJRrRslEV7lNuVbpKSnWMtn31sTIxg30LXRwJXGIJRFYwQ+1K0zgELb28yQRK0Cg4GN6SKzOHmrcFxNEkWNwyQSNu1w9hR/eSV0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bi+jQTj4; arc=pass smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3lBTpYQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776151164; x=1807687164;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=rPGmaE1xqOgLUeSHPd8fc+sxOLh2iVIIDmWEDlwbN4c=;
-  b=B3lBTpYQNemZ3OMy7bZn/QQLinRO+Vu7ScnNuloTBNn5PQGoiRPY8qRR
-   7EUQj8lOGNB6+d2jn17fuKaOkOn4zWJnvo4RElR+tZkZWdwTQowd/mTWP
-   V9ZwpjKU3QFN9GQLGk1xQIDKt/bGc3GfOxBprtb6h4RTGhmMvDFmKfKJd
-   W82ACPkwmpWj82SzOn9uKC9W1ilWqIm0Kk4Hd8gbgJ+as7GLSICsnIOLK
-   tA58G9GNL40LvV3R5rw4xPfw2nvTqYLsAuhD0/BOWUiqP1Y1m//5UXBHq
-   iKfp1aNpV5Vm1xV6uuCyx8dIt7Xe9H1T19tMsPoeGmZvgGO46jN1teX0g
-   g==;
-X-CSE-ConnectionGUID: AWy2oXfcRemFoo0w1h2M4w==
-X-CSE-MsgGUID: D546ZSzcQEKruf3Jd8imOQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11758"; a="87403328"
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="87403328"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 00:19:24 -0700
-X-CSE-ConnectionGUID: yDtTyHdyTQmFXZbJ3bjvGg==
-X-CSE-MsgGUID: NPpzxYHOThyhdMtsInFhEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="227354373"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.106])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 00:19:22 -0700
-Date: Tue, 14 Apr 2026 10:19:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Shuvam Pandey <shuvampandey1@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lib/string_helpers: fix string_get_size() unit promotion
- after rounding
-Message-ID: <ad3qeKiW1jIKHOMi@ashevche-desk.local>
-References: <20260407143306.78809-1-shuvampandey1@gmail.com>
- <adUaTrU_DZuK1Kd8@ashevche-desk.local>
- <CANAAWH+ihOpBVB5_Q4gxLs0_zO=pHb-kF53UXE-pqg1U9E9OKw@mail.gmail.com>
- <adayT_7xAtOLiVlq@ashevche-desk.local>
- <CANAAWHKDBoi1x=MpAyU5bQ88=ZOOrkaJNziyhcK9Ei7c8oNSHg@mail.gmail.com>
- <CANAAWHKZXbFAr7=DRCrS46GDsWi88Q=v883RQrgF4+EScksP=w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi+jQTj4"
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-607f1fac33cso1764314137.3
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Apr 2026 01:06:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776154003; cv=none;
+        d=google.com; s=arc-20240605;
+        b=VXI3aTYwIyvSgvsRi6yKt/2/ecM8VbNtXGG2RN/AjHRi+ZMJLUhulMs6vNKggvYny2
+         j/1uAKjkOft3idekbYzIfJDSHj0WHxuz8hwUwYBQXFLSb8qbDNVTOopSvsNanMd8ciJp
+         eJnAj+qxdOQPEIR8tKcY3nBgYTxUK6PXU3VvH3iQZix2grRWnfZuNTmNAv66SvWssEnk
+         2qPoLLwjs6wEmgeTKFhpvPl9PbXq1VJxkxusXSkwweQMn0/Rw/eKOcugMQqhG8Biq2YN
+         w0nmou4kBha6BMNJRg04jKUsfPhueS3WHN5yd6kHl7jqV+7LMCqB9eQmgXgnIOtSwz/3
+         mKwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=uc24Ki9VYMqHvv8n6woz43UOOq8epixfEuksTZtbwnI=;
+        fh=evfFoudx3jsm0TEUazmDVEzGA0c0jzMYpuOr4YvO45Y=;
+        b=UxI9zV54IZBOZyD/6DlF3Td7dq9wrzn1peqBa3nhCwRzBgmIoOPoyVS3nTBW/8l2WE
+         yMflUhngjWxVDynJiQihCIxoRgoi8FUE5Orm2PeJhuvYFzGBEtDhq0w7KEmwyNKOF6jo
+         hwX3TE9ClqCUP7eBagpy8JWlDO3aISlM8b7UV4h+lQ5CSXX3UCp7MdrAfJUMFtd3RyKP
+         1DzsX9aAMDGcmT0+ZvgM8TK6bZbRF2ydxQ4UAgSlH0nwb/r2QWihqCq3VHSr3E+PHJ/w
+         j3JCp4isI0AvXTOTnmNEMfa9KBkuqun3pV0YO3Fl0IPE0WyW2IzTdSxnrEUWWVMgtHsk
+         wPEg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776154003; x=1776758803; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uc24Ki9VYMqHvv8n6woz43UOOq8epixfEuksTZtbwnI=;
+        b=bi+jQTj4hNN5zJw60heIboixFqA+PCmjkIB5EFC7Coh3NYcrGcFPllLd1gnILaXtAY
+         wVnCLqhl4SrRbI3w/cSeAa81W063X8eF00AW2kJQKBSj02f1A9KPz0wwzzKuxWU0xGN1
+         zpf3HDE63q7z31Wfd10n1XbKW+RQL+JOlQAWVoZ/KusazmLmwGeRi/CjQK6hHJUdtoU0
+         wz1MVwuH2t2PcZ/OhooymHuXjWufK0fZ59D74ngyLVB1MNkwxjDoIqduECZgKRjiMNJ3
+         8UUrGHqt9UIxyUde9Ga1T5IS+KbTaY8EWgZtqcgImdbi0VQrbjtAkz4Ft6/uDnEbm3Jl
+         5OrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776154003; x=1776758803;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uc24Ki9VYMqHvv8n6woz43UOOq8epixfEuksTZtbwnI=;
+        b=iTnjeJQhI+hJRMxK8wlGUfDaBw7z7tJfNSR46J7AzCn6PVulMv20tBKqHfdt6jpPfa
+         SwyeugQ76a4kfXv/8OM49cJDmvFEUh0eFPcEHQIgxhO5dvQ+bGeIg8wniS9nKRk462IR
+         2A29KeDrzwdWpy7vCWai7lFagDoiFfsZiSFXLdr8o1IVGHdarw/phQazU8qU0Gmgfa53
+         kBX89IkX9yW2L2lB6YOL8XMuSvvCPq5daGNjmhTf/YUjIk5EoznYVhj1OW6haypMP9Hf
+         V7sdC1VbTGaYdqNwixUUxT+8xdVBNWXVz5qO5zkzanj/DY30YL/hTrvXdjjWHycQKF1e
+         LxOg==
+X-Forwarded-Encrypted: i=1; AFNElJ/WFFF7WG7T+oH3/535LgcPRHG39dlevhzZb5lF5p5vuwgLSdE2Qe5x5tDZywqBiUkjiKMpDCtWLAnW/pZzibs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl0oQw0iy3oM+uJsdIvlPZH2s7Kn5uVMJK/nrCRVnnHL1M6UV8
+	uHPcEpvp0iE+rNL+IwcM04dHgihCS/L96Te0XiwX3uHG5Kc3/VSY69JbkCAYE80gqIk14LEwdCN
+	I7VrjtYn/mGM2zJ5IxTHW2Cff8Qh2I/A=
+X-Gm-Gg: AeBDieuI+HGJ6sHIeOUFYt/S/2ukEfEK5kN7G4lDxFX3pvywZHWIOVZiue03mRhdyX+
+	fWy5G6vF3aAwCkPnbySAxrxYx+2QlLxollKgUATWUQkO+aeD7mrgHFK8so46GLlGjqsaBwMa9ts
+	IqDi7bSadePhgzczmgUa7Sh2rMHyoKWn2UKBSVXBTM7UvgdH8HgJtPPKuYWCxFcL7hFQiugIoIk
+	+5/muFANaUkIkbdr1sSijCPw/U5gYPk8ML44YChDRA89207EDhNF7fpiQBIPN3TwJIMIChTixsD
+	Yx+O18/LENqdIN1OQmZX3CyQyEca5Q8EmUX4xQH3
+X-Received: by 2002:a05:6102:4a94:b0:60f:f4e0:f139 with SMTP id
+ ada2fe7eead31-60ff4e0f446mr2279103137.9.1776154003394; Tue, 14 Apr 2026
+ 01:06:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAAWHKZXbFAr7=DRCrS46GDsWi88Q=v883RQrgF4+EScksP=w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20260407143306.78809-1-shuvampandey1@gmail.com>
+ <adUaTrU_DZuK1Kd8@ashevche-desk.local> <CANAAWH+ihOpBVB5_Q4gxLs0_zO=pHb-kF53UXE-pqg1U9E9OKw@mail.gmail.com>
+ <adayT_7xAtOLiVlq@ashevche-desk.local> <CANAAWHKDBoi1x=MpAyU5bQ88=ZOOrkaJNziyhcK9Ei7c8oNSHg@mail.gmail.com>
+ <CANAAWHKZXbFAr7=DRCrS46GDsWi88Q=v883RQrgF4+EScksP=w@mail.gmail.com> <ad3qeKiW1jIKHOMi@ashevche-desk.local>
+In-Reply-To: <ad3qeKiW1jIKHOMi@ashevche-desk.local>
+From: Shuvam Pandey <shuvampandey1@gmail.com>
+Date: Tue, 14 Apr 2026 13:51:31 +0545
+X-Gm-Features: AQROBzBvD_axoHP3mQnIJNooQzq5tbx-MevM5aj4WTh2jGEfTqz7nqEgGcG6T0Y
+Message-ID: <CANAAWHKLxpWOE1E5smBicb6bz6H5JdQndhbL434vsa6z+4K9ug@mail.gmail.com>
+Subject: Re: [PATCH] lib/string_helpers: fix string_get_size() unit promotion
+ after rounding
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-First of all, do not top-post!
+Hi Andy,
 
-Second, I just realised now that the discussion was done in private emails, do
-not do this. Please, answer again with all what was discussed to the public
-mailing lists as this message does.
+Sorry, I should have kept the discussion on-list.
 
-On Fri, Apr 10, 2026 at 09:11:59PM +0545, Shuvam Pandey wrote:
-> I think the open question is whether string_get_size() is intended to
-> round across a unit boundary at all.
-> There seem to be two possible interpretations:
-> 
-> 1. Keep the current 3-significant figure rounding, and if that rounding
-> carries to the unit divisor, renormalize into the next unit. That is
-> what my patch does.
-> 
-> 2. Treat the unit boundary as hard, so values below 1.00 MiB / 1.00 MB
-> stay below that threshold and are not rounded across it.
-> 
-> If (2) is the intended behavior, then this is broader than the
-> carry-renormalization case and my patch is not the right fix.
-> 
-> Which behavior should string_get_size() implement here, or am I
-> missing a third intended behavior?
-> 
-> On Thu, Apr 9, 2026 at 1:55 AM Shuvam Pandey <shuvampandey1@gmail.com>
-> wrote:
-> 
-> > I checked the additional base 10 values as well.
-> >
-> > For blk_size = 1, the current code gives:
-> >
-> > 999999:
-> >
-> > STRING_UNITS_10: before 1000 kB, after 1.00 MB
-> >
-> > 1000000:
-> >
-> > STRING_UNITS_10: before 1.00 MB, after 1.00 MB
-> >
-> > 1000001:
-> >
-> > STRING_UNITS_10: before 1.00 MB, after 1.00 MB
-> >
-> > 1048575:
-> >
-> > STRING_UNITS_2: before 1024 KiB, after 1.00 MiB
-> >
-> > 1048576:
-> >
-> > STRING_UNITS_2: before 1.00 MiB, after 1.00 MiB
-> >
-> > 1048577:
-> >
-> > STRING_UNITS_2: before 1.00 MiB, after 1.00 MiB
-> >
-> > So this patch only changes the carry-to-divisor cases, where the current
-> > code rounds the value up but still prints it in the old unit.
-> >
-> > That said, I think your point about the broader semantics is valid.
-> >
-> > string_get_size() has long rounded to 3 significant figures, and my
-> > change only makes that existing behavior consistent after a carry. If
-> > intended behavior is instead that values like 1048575 should stay
-> > below 1.00 MiB, then the real issue is not just the missing promotion
-> > here, but the rounding policy itself.
-> >
-> > So I think the patch is correct for the current implementation, but it
-> > may not be the right fix if the intended behavior near unit boundaries
-> > is supposed to be different.
-> >
-> > I'll take another look at the expected behavior around these boundary
-> > cases and follow up once I've re-evaluated that.
-> >
-> > On Thu, Apr 9, 2026 at 1:38 AM Andy Shevchenko <
-> > andriy.shevchenko@intel.com> wrote:
-> >
-> >> On Tue, Apr 07, 2026 at 08:48:59PM +0545, Shuvam Pandey wrote:
-> >> > For blk_size = 1:
-> >> >
-> >> > 1048575:
-> >> >   STRING_UNITS_10: before 1.05 MB, after 1.05 MB
-> >> >   STRING_UNITS_2:  before 1024 KiB, after 1.00 MiB
-> >> >
-> >> > 1048576:
-> >> >   STRING_UNITS_10: before 1.05 MB, after 1.05 MB
-> >> >   STRING_UNITS_2:  before 1.00 MiB, after 1.00 MiB
-> >> >
-> >> > 1048577:
-> >> >   STRING_UNITS_10: before 1.05 MB, after 1.05 MB
-> >> >   STRING_UNITS_2:  before 1.00 MiB, after 1.00 MiB
-> >> >
-> >> > Likewise around 2 MiB:
-> >> >
-> >> > 2097151:
-> >> >   STRING_UNITS_10: before 2.10 MB, after 2.10 MB
-> >> >   STRING_UNITS_2:  before 2.00 MiB, after 2.00 MiB
-> >> >
-> >> > 2097152:
-> >> >   STRING_UNITS_10: before 2.10 MB, after 2.10 MB
-> >> >   STRING_UNITS_2:  before 2.00 MiB, after 2.00 MiB
-> >> >
-> >> > 2097153:
-> >> >   STRING_UNITS_10: before 2.10 MB, after 2.10 MB
-> >> >   STRING_UNITS_2:  before 2.00 MiB, after 2.00 MiB
-> >> >
-> >> > So the change only affects the carry-to-divisor case itself; values that
-> >> > are already in the next unit stay unchanged.
-> >> >
-> >> > I also rechecked the neighboring value 1048574, and it changes from 1024
-> >> > KiB to 1.00 MiB as well. I can add coverage for 1048574..1048577 in v2
-> >> if
-> >> > you think that would be useful.
-> >>
-> >> Also with base 10 for 999999 1000000 1000001...
-> >>
-> >> I'm trying to understand the current behaviour better and the logic of
-> >> your
-> >> change. But looking at the above I think your patch doesn't improve the
-> >> case.
-> >> And might even be another bug in the current code. I mean, do we have to
-> >> round
-> >> the numbers? 1048575 and lower are not equal 1.00 MiB strictly speaking.
-> >> It's rather 0.999 MiB.
-> >>
-> >> > On Tue, Apr 7, 2026 at 8:38 PM Andy Shevchenko <
-> >> andriy.shevchenko@intel.com>
-> >> > wrote:
-> >> >
-> >> > > On Tue, Apr 07, 2026 at 08:18:06PM +0545, Shuvam Pandey wrote:
-> >> > > > string_get_size() rounds the fractional part before formatting the
-> >> > > > result. If that carry pushes the integer part to the unit divisor,
-> >> the
-> >> > > > value is still printed in the old unit.
-> >> > > >
-> >> > > > This yields outputs like "1000 kB" for 999500 bytes and "1024 KiB"
-> >> for
-> >> > > > 1048064 bytes instead of promoting them to the next unit.
-> >> > >
-> >> > > What does it print for 1048575, 1048576, 1048577 respectively?
-> >> > > (before and after your patch)
-> >> > >
-> >> > > All the same for numbers around 2MiB.
-> >> > >
-> >> > > > Renormalize the value after the carry so it is promoted before
-> >> > > > formatting. Add KUnit coverage for the decimal and binary boundary
-> >> > > > cases.
+This is about the string_get_size() patch for outputs like "1000 kB" and
+"1024 KiB", i.e. cases where the current code has already rounded to the
+unit divisor but still prints the old unit.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> I'm trying to understand the current behaviour better and the logic of your
+> change. But looking at the above I think your patch doesn't improve the case.
+> And might even be another bug in the current code. I mean, do we have to round
+> the numbers? 1048575 and lower are not equal 1.00 MiB strictly speaking.
+> It's rather 0.999 MiB.
 
+I took another look at the code and the old versions. I think the issue
+here is narrower than whether values should cross the boundary at all.
 
+For the base-10 values you asked about earlier, and for the binary
+boundary case, the current code already rounds across the boundary.
+With blk_size = 1, it prints:
+
+  999999   -> 1000 kB
+  1000000  -> 1.00 MB
+  1000001  -> 1.00 MB
+
+and
+
+  1048575  -> 1024 KiB
+  1048576  -> 1.00 MiB
+  1048577  -> 1.00 MiB
+
+So the patch does not introduce new cross-boundary rounding. It only changes
+how those already-rounded results are displayed: it renormalizes 1000 kB to
+1.00 MB and 1024 KiB to 1.00 MiB.
+
+Around the first MB/MiB boundary with blk_size = 1, the display changes for:
+
+  STRING_UNITS_10: 999500 .. 999999
+  STRING_UNITS_2:  1048064 .. 1048575
+
+with the adjacent values staying unchanged, e.g.:
+
+  999499   -> 999 kB
+  1000000  -> 1.00 MB
+  1048063  -> 1023 KiB
+  1048576  -> 1.00 MiB
+
+That behavior comes from the arithmetic-rounding logic added by
+564b026fbd0d ("string_helpers: fix precision loss for some inputs").
+Before that change, 999999 printed 999 kB and 1048575 printed 1023 KiB,
+so my original Fixes tag was wrong.
+
+The v2 will carry:
+
+  Fixes: 564b026fbd0d ("string_helpers: fix precision loss for some inputs")
+
+If the intended policy is instead that values below 1.00 MB / MiB must
+never round across the unit boundary, then I agree this is broader than a
+renormalization bug and the rounding policy itself would need changing.
+
+But with the current documented 3 significant figures behavior, leaving
+the result as 1000 kB / 1024 KiB is inconsistent with that formatting,
+because the existing rounding has already carried the value to the next
+unit boundary.
+
+Unless there is a reason to take a different approach, I'll send a v2 with
+the corrected Fixes tag, an updated changelog framing this as post-rounding
+renormalization, and threshold tests around the affected ranges.
+
+Thanks,
+Shuvam
