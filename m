@@ -1,131 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C0922D0603;
-	Wed, 15 Apr 2026 15:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4947B3803F8
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Apr 2026 18:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776268241; cv=none; b=gTCUIGsPEnjCwE7klndQjoit1GwwLoZZt7t/5F5tPxeFYBzmmaiCMIWFKYiVarxhhIVitziZ/vRfUmPLxGhn2uY2zjVj6m1iflGaNUAkSIMlM6PpvCfPSD5XIVN4Ckdpsr0GD0GipqBsqYmmmYyK7moXzSn7c6RDZ6qDOOK/mEM=
+	t=1776278337; cv=none; b=FuBRUb1sMz+93ZeNOgrDsoQW5+HhNqqnGBwnvAdovS2RyeVElNA6Bzd5Acw5pECohF84gh9K4uTVtS7KM+dwiplRqSFufsTBbyXAPIahO51F/qxuomxPYDb1zGj7hTG5p7Nx1UHDFGRt0rI/r/2ufJrNycjeBrAGWhCqbxATe4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776268241; c=relaxed/simple;
-	bh=KOMJEclslTGko0CKo3zJ9nnmBRPTykeI0IPan0usj1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ncbFtwDwCcYSjTitQtq9unBTAGSQVBh59Qexi2c7x3trCXU1/XTj9FJaitZCfMdj7wIBY3kVw2e56K75kVjNmZnzmjJD5YY0KY60fcGduE5/orWmuBLHAV54L3pwsFUXwA5Nv3axia9JN0xBBytw2RW96SgGz7EJFKqhu6VLD3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=hR3+dovg; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1776278337; c=relaxed/simple;
+	bh=6VzPvjn6SlsaPNHRPPpez6ncx8IwPQo3kOQ6NYhJvSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jSk+4kSWFUfNLM16xN0AlqHs81N1horLj+uI1RawQIOcFgV5+EfQQ1n6On8sffEnND2vg1ci7hXhryHYXnitJWukE1O30iWJG6BDwZPINNGVcvizjfEYjmq5Z1nAj42RRulpXTBnO3xSmLOKgRAGa+PtPfjKS/tMiiF7zzIHkVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=maUZSdRP; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="hR3+dovg"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77E3F3543;
-	Wed, 15 Apr 2026 08:50:33 -0700 (PDT)
-Received: from [10.57.61.135] (unknown [10.57.61.135])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AC703F7B4;
-	Wed, 15 Apr 2026 08:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1776268239; bh=KOMJEclslTGko0CKo3zJ9nnmBRPTykeI0IPan0usj1E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hR3+dovgqaAoCeD7Tj26ImE/aKDrkOG7n2ey9QHxI3X9difSYSy69sYtkr08iAEHk
-	 fyQlQqCCEJG3ZsAktdUrlv/o6tLioBkfsevEDHaXxc5Hh//9nV+0z8WKgSU1JBm0v0
-	 6SAa+zLxImrdvyYlNd1yAhbhoIUq82FWMkSjwMhM=
-Message-ID: <fea9c939-f955-4020-bed6-427e592f0024@arm.com>
-Date: Wed, 15 Apr 2026 17:50:29 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maUZSdRP"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-488ab2db91aso110030545e9.3
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Apr 2026 11:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776278335; x=1776883135; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dqlBBTCIOKsamPbXZbMcmO0lTLqgGDxSRYX2crrZHzI=;
+        b=maUZSdRPQI4B/DkFX9jS9TtUByS5aC607qgDMON1JCScHu1nmMe43f3n4nJKpUgQx3
+         TElN7DNpuRrl38wpKFXGmype9VqHXKe8kGNRMy6XGRU3I/qSbxUCXthZJybit03O2sYE
+         MTU+f7KoUqKPCT3ebiSFeYyH2W3xbx8KsctaJ9I1OxMnH55S5E6be0NH3kBnphq1wQkY
+         r3o1DC24YydEx9oDwkOR6YpBmDzdSbCj7LMElt4DT0jflD2j7JLVwCu9mATke9ioOQ4l
+         BoDZnd02iX93cLg0l7I3+qb1L8m0bhGx+hsaMNnDFXA2oNIIJcdh9rgVwCuOFGwUT8yM
+         Ci0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776278335; x=1776883135;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dqlBBTCIOKsamPbXZbMcmO0lTLqgGDxSRYX2crrZHzI=;
+        b=b808ZD2NMmIyPLkW23zTSYYfsWKO/HWHL+QTMSgHdjbpS3E+6xURegDUbugAhFLV3C
+         YqHbNi6YSUei0r5RJDzWnTbYaK7AEYRLwmqUx7C8OGMERc/FKG2hiPK6Bzpc0eQ5/vXu
+         hAR9Gbp9tul6Qx602xvQmaIHOIw8HUFXzLPryZSLfAxXQ3QCDYZC0Ux2RJmSGzaF+vPD
+         WoWWlIODRE4um55Rl/R63eirlfKyFaHpmP9Bnj7hX9S08aF1fygz52cH+vjBrx8oUdAG
+         PyPEiTgQZp0hzjj4xMfA7WHy8M9hvgeBZMjNl8eUvcmbLr813/dIxTqxaXe/X3ic2qAF
+         ESPw==
+X-Forwarded-Encrypted: i=1; AFNElJ/S/5es2ZERNy4mESt2JfJ0WRXqtTlrTUq/XDfaB1zsbG6vOPaSVxbV6qCPE5M3EXOuQ9RTA30dEGMfxHJBxho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV7ZQcFlX0/xN49cboCHHU8yj0VWgBRV63vbhkLvUV8hbjW3N/
+	9sjosNt+Oreq9EGWCvUMGG5/Herlui4ypZEwVpfgRKOs4VvbGzJLpREze1tkGowG
+X-Gm-Gg: AeBDiesx/aclpJeCf+FdEmFT8/+qxdwsoPpk+vKWUlPPga4d+vD1ubnAINjaxRGb/qH
+	9TM3XB977EXAmNMo21+pXJzPknUBd/QzsvzHQNSLLGjq27nVDnRkwEjUwFo0TvG8/obCTEURGmB
+	4c3K5XO1FMD9Hk8HioR1GOA2FICqh2bDQA1TMRtPSSiLEtBZ6B4GGOVEMp3iRL7ep+0k4n4+NhN
+	scHvePbkI1xpbuyiwmo39rmd/YLpi10wPkkKjHs5A1oofbTnmmwhJKBlARa+zVUI+vscr0yh1BT
+	ExBbonHh3yJNL5CqjW/DJ23emJMmQqMgTTbv3I69xzmvYBP/JhycGVzD+ElYKr+nHZE99IVqr2w
+	MmKaaDJQVnvDUurjMyjTirdJ6/NVQFqT1XM6qqZKDQ4Kyn8yITnYvbekiRjaUBcE9FjBwvDsoYW
+	9VfCyC+KhZo/xYqq4hBbp2KlrASYuLgpSYlp5xTYnAVSse4fJoT+2YoFUh3lCnYmOA
+X-Received: by 2002:a05:6000:186a:b0:43d:77c6:be78 with SMTP id ffacd0b85a97d-43d77c6c462mr21260031f8f.39.1776278334509;
+        Wed, 15 Apr 2026 11:38:54 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43ead401ca0sm6144220f8f.36.2026.04.15.11.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2026 11:38:54 -0700 (PDT)
+Date: Wed, 15 Apr 2026 19:38:52 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>, Andrew Morton
+ <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, Andy Shevchenko
+ <andy@kernel.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] lib/string_helpers: drop redundant allocation in
+ kasprintf_strarray
+Message-ID: <20260415193852.3171301b@pumpkin>
+In-Reply-To: <ad-j4eGpltrb-WQj@ashevche-desk.local>
+References: <20260415122542.370926-4-thorsten.blum@linux.dev>
+	<ad-j4eGpltrb-WQj@ashevche-desk.local>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/30] mm: Introduce kpkeys
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
- Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
- Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
- <20260227175518.3728055-2-kevin.brodsky@arm.com>
- <eaca640b-5006-489b-8b2d-148a3c4073da@kernel.org>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <eaca640b-5006-489b-8b2d-148a3c4073da@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 15/04/2026 15:00, David Hildenbrand (Arm) wrote:
-> On 2/27/26 18:54, Kevin Brodsky wrote:
->> kpkeys is a simple framework to enable the use of protection keys
->> (pkeys) to harden the kernel itself. This patch introduces the basic
->> API in <linux/kpkeys.h>: a couple of functions to set and restore
->> the pkey register and macros to define guard objects.
->>
->> kpkeys introduces a new concept on top of pkeys: the kpkeys level.
->> Each level is associated to a set of permissions for the pkeys
->> managed by the kpkeys framework. kpkeys_set_level(lvl) sets those
->> permissions according to lvl, and returns the original pkey
->> register, to be later restored by kpkeys_restore_pkey_reg(). To
->> start with, only KPKEYS_LVL_DEFAULT is available, which is meant
->> to grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since
->> this is the only available pkey for now).
->>
->> Because each architecture implementing pkeys uses a different
->> representation for the pkey register, and may reserve certain pkeys
->> for specific uses, support for kpkeys must be explicitly indicated
->> by selecting ARCH_HAS_KPKEYS and defining the following functions in
->> <asm/kpkeys.h>, in addition to the macros provided in
->> <asm-generic/kpkeys.h>:
-> I don't quite understand the reason for using levels. Levels sounds like
-> it would all be in some ordered fashion, where higher levels have access
-> to lower levels.
+On Wed, 15 Apr 2026 17:42:41 +0300
+Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 
-That was originally the idea indeed, but in practice I don't expect
-levels to have a strict ordering, as it's not practical for composing
-features.
+> On Wed, Apr 15, 2026 at 02:25:43PM +0200, Thorsten Blum wrote:
+> > kasprintf_strarray() returns an array of N strings and kfree_strarray()
+> > also frees N entries.  However, kasprintf_strarray() currently allocates
+> > N+1 char pointers.  Allocate exactly N pointers instead of N+1.
+> > 
+> > Also update the kernel-doc for @n.  
+> 
+> Have you checked all current users that they do not rely on the NULL terminated
+> array?
+> 
+> Note, that was done on purpose that once allocated it can allow user
+> to drop the track of the number of strings and rely on NULL terminator.
+> I.o.w.  the number of strings may be just a local variable somewhere
+> where kasprintf_strarray() is called.
+> 
+> I tend to NAK this change, rather you can update kernel-doc to explain
+> why it's done this way (see above).
+> 
 
-> Think of that as a key that can unlock all "lower" locks, not just a
-> single lock.
->
-> Then, the question is about the ordering once we introduce new
-> keys/locks. With two, it obviously doesn't matter :)
->
-> So naturally I wonder whether levels is really the right abstraction
-> here, and why we are not simply using "distinct" keys, like
->
-> KPKEY_DEFAULT
-> KPKEY_PGTABLE
-> KPKEY_SUPER_SECRET1
-> KPKEY_SUPER_SECRET2
->
-> Is it because you want KPKEY_PGTABLE also be able to write to KPKEY_DEFAULT?
+It isn't as though it is going to make much difference to the memory
+footprint.
+Allocating an extra trailing NULL is just a bit safer.
 
-Right, and in general a given level may be able to write to any number
-of pkeys. That's why I don't want to conflate pkeys and levels. Agreed
-that "level" might not be the clearest term though, since there's no
-strict ordering.
+	David
 
-> But how would you handle KPKEY_SUPER_SECRET1 and KPKEY_SUPER_SECRET2 then?
-
-Presumably those would also have access to KPKEY_DEFAULT. However, if
-you consider the reverse situation where the level is less privileged
-than the default (say an eBPF program), then write access to
-KPKEY_DEFAULT would not be granted.
-
-Also worth noting on the notion of level that POE2 will bring further
-per-level restrictions, besides which pkeys can be accessed. For
-instance, we could prevent an unprivileged level from executing certain
-instructions. This isn't in scope for this series, but this is a
-consideration in the design of the kpkeys abstractions.
-
-- Kevin
+ 
