@@ -1,115 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B6231714F;
-	Wed, 15 Apr 2026 12:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335B52D1303
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Apr 2026 12:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776254918; cv=none; b=V7AKm0Sxe1jLpq6F/DkXzd2tmgg2ctkt6s29y5Tq6vEIkJayKV7KytWm6tsmzOgIgO18tnhCrS92cVRqySgDGfcuOM9MarcpjQLop4UYz9RSWPMCRqrBhrXOPw+eFYhUV+0LZnFOfbhcRZvYfY+x5xYrWMFpapE7lVQkmyVgxq0=
+	t=1776256028; cv=none; b=MjBaSsvJYXZ2YEzgobIgV0h+3fzOCH8Gcxcyx1QABsUsrLnB5nsHJOvshumGiM2xbKXkZddFFzVGwBKmKjcHqXEneeKQBuYwdz2i6z8/Sv3WWfLMI3u4YwsojPmxWtqU84zZx66pQPFkmy2QzAdP4Z2TIhSUvvVXmB/hffi2hiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776254918; c=relaxed/simple;
-	bh=uykFcHYs5XbFbRSMsJKgZxNwKQCnwgz6lqEF9ZKrZ7A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jOidQNKV1yyvpVEdqX0dyXgth2nSj5cN1li4Mn1aPiw5s7AyLLgqmRuICWeNLZ3OP3oEDwt8mJOgH062TkbEhZmD+jihPqWx6OQE+Jj7FajvVB9RxQt+GpooDuotC8a4Kk9LK0EAmguXG8ZPZZHHV0iPDBnJ3pL3DQlzG+OaUss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUv526Qi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776256028; c=relaxed/simple;
+	bh=PRdNEVKlER3EhuO8MoENAEJfXHr7gcOKzROOoi08T+g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XOSmlveLc3tfyJRy0IlL5tQ9yT9hDttm2fswv2qGRYHgIOV1qyr6gdnn+kMFgWDFfgWJlXfZao9FD56cZbxNvJ9vG7OCDPSCDoa6fe46ietJSAKheAUkTpuMchYILgunPoB6Vmc3qAPbi9bghZiXQ5vXgYNcZGkhw52G71C3ZuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=D5XICtxm; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUv526Qi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7D9C19424;
-	Wed, 15 Apr 2026 12:08:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776254917;
-	bh=uykFcHYs5XbFbRSMsJKgZxNwKQCnwgz6lqEF9ZKrZ7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iUv526QiHFL9Xp9EvuhOxHOtAnjQzg6fk5HyKW0bR/QRzckXI2cr1Nn6ZN1squea1
-	 ak6hfr4s2AK+pXAaFpvmNUV96EHPDYUrC1wn+iDCzZQWeWdv0xPKuC+H1SkCtPsyIq
-	 4Hyx1aViSG7ypNoYR45odIPoqmlA8lfyGyVchptrn9Iu0InlTjxxKOO07dvdb5yZUT
-	 yEqfrWSfRGQ1ENaxHRgsJGDUC9fVr34ZERv4NOUF+Wa6oRsUWpD4ANjZcSHGgeQ4al
-	 cWsAHZyktQARomACoNMLB7Vcc206FvVDYMAE9WkwrnxjxMOeZ4dG3zsuzhoLKnXjS2
-	 tXZqt+7ZKWaeA==
-Date: Wed, 15 Apr 2026 15:08:33 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: David Howells <dhowells@redhat.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next 2/2] KEYS: annotate struct user_key_payload with
- __counted_by
-Message-ID: <ad9_wQfq7fYEU7mS@kernel.org>
-References: <20260406175810.1018681-3-thorsten.blum@linux.dev>
- <20260406175810.1018681-4-thorsten.blum@linux.dev>
- <adYZoWK_CTv2-RA_@kernel.org>
- <adZIP8w0IttbIZa2@linux.dev>
- <ad7UjdtT1vLwlu0_@kernel.org>
- <ad9dCoEsiwwgRK2L@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="D5XICtxm"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776256015;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YwV/DAxh34EhOmkw7GpaiTkHBm2P4+xVNeretb73iuc=;
+	b=D5XICtxmlaK9aSzvVSRLwSTw6gD1g7zQkqgGPprrp8V/jQwunozeiqfEDhzvuZe+XVR21M
+	so1H6TrS9n1457VGUvxHrypZiNPSR2SD1yX+cTewESe0JTASt+EqYX7/89DCuDhdIhelwv
+	8KwQnThpVhGNCbh6P9IC/ZVrtC2E57s=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] lib/string_helpers: drop redundant allocation in kasprintf_strarray
+Date: Wed, 15 Apr 2026 14:25:43 +0200
+Message-ID: <20260415122542.370926-4-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1261; i=thorsten.blum@linux.dev; h=from:subject; bh=PRdNEVKlER3EhuO8MoENAEJfXHr7gcOKzROOoi08T+g=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJn3m4/d38aicsjLj7PF6Wi2U79A2I/qHzsTi+smtv2Ku M1bv+xTRykLgxgXg6yYIsuDWT9m+JbWVG4yidgJM4eVCWQIAxenAEykW5vhf6a1ZO5Pu8vuff85 E5ceq3OyPvljruLaoqaUpzw3feadKGb4zaITnqb0pkxwusW11pOL2Jw4dnaKihyYohprp1ok4m3 JAgA=
+X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ad9dCoEsiwwgRK2L@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 15, 2026 at 11:40:26AM +0200, Thorsten Blum wrote:
-> On Wed, Apr 15, 2026 at 02:58:05AM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Apr 08, 2026 at 02:21:19PM +0200, Thorsten Blum wrote:
-> > > On Wed, Apr 08, 2026 at 12:02:25PM +0300, Jarkko Sakkinen wrote:
-> > > > On Mon, Apr 06, 2026 at 07:58:10PM +0200, Thorsten Blum wrote:
-> > > > > Add the __counted_by() compiler attribute to the flexible array member
-> > > > > 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> > > > > CONFIG_FORTIFY_SOURCE.
-> > > > > 
-> > > > > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > > > > ---
-> > > > >  include/keys/user-type.h | 3 ++-
-> > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/include/keys/user-type.h b/include/keys/user-type.h
-> > > > > index 386c31432789..2305991f4fcd 100644
-> > > > > --- a/include/keys/user-type.h
-> > > > > +++ b/include/keys/user-type.h
-> > > > > @@ -27,7 +27,8 @@
-> > > > >  struct user_key_payload {
-> > > > >  	struct rcu_head	rcu;		/* RCU destructor */
-> > > > >  	unsigned short	datalen;	/* length of this data */
-> > > > > -	char		data[] __aligned(__alignof__(u64)); /* actual data */
-> > > > > +	char		data[]		/* actual data */
-> > > > > +			__aligned(__alignof__(u64)) __counted_by(datalen);
-> > > > >  };
-> > > > >  
-> > > > >  extern struct key_type key_type_user;
-> > > > 
-> > > > You don't provide any evidence of any improvement.
-> > > 
-> > > It's a proactive hardening change to help avoid future mistakes.
-> > > 
-> > > The __counted_by() annotation makes the bounds visible to the compiler
-> > > and at runtime so that future ->data accesses can be checked against
-> > > ->datalen.
-> > > 
-> > > The current code is correct regarding ->data accesses and doesn't
-> > > require any changes.
-> > 
-> > OK I'll buy that but send +1 version:
-> > 
-> > ~/work/kernel.org/jarkko/linux-tpmdd next
-> > ❯ git am -3 20260406_thorsten_blum_keys_dns_drop_unused_upayload_data_nul_terminator.mbx
-> > Applying: keys, dns: drop unused upayload->data NUL terminator
-> > error: sha1 information is lacking or useless (net/dns_resolver/dns_key.c).
-> > error: could not build fake ancestor
-> > Patch failed at 0001 keys, dns: drop unused upayload->data NUL terminator
-> > hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> > When you have resolved this problem, run "git am --continue".
-> > If you prefer to skip this patch, run "git am --skip" instead.
-> > To restore the original branch and stop patching, run "git am --abort".
-> 
-> AFAICT, linux-tpmdd/next is missing this change:
-> 
-> https://lore.kernel.org/all/20260226214930.785423-3-thorsten.blum@linux.dev/
+kasprintf_strarray() returns an array of N strings and kfree_strarray()
+also frees N entries.  However, kasprintf_strarray() currently allocates
+N+1 char pointers.  Allocate exactly N pointers instead of N+1.
 
-By pratical means, that is lacking any proper commit message.
+Also update the kernel-doc for @n.
 
-BR, Jarkko
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ lib/string_helpers.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index 169eaf583494..6a8db441b6fd 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -752,7 +752,7 @@ EXPORT_SYMBOL_GPL(kstrdup_and_replace);
+  * kasprintf_strarray - allocate and fill array of sequential strings
+  * @gfp: flags for the slab allocator
+  * @prefix: prefix to be used
+- * @n: amount of lines to be allocated and filled
++ * @n: number of strings to be allocated and filled
+  *
+  * Allocates and fills @n strings using pattern "%s-%zu", where prefix
+  * is provided by caller. The caller is responsible to free them with
+@@ -765,7 +765,7 @@ char **kasprintf_strarray(gfp_t gfp, const char *prefix, size_t n)
+ 	char **names;
+ 	size_t i;
+ 
+-	names = kcalloc(n + 1, sizeof(char *), gfp);
++	names = kcalloc(n, sizeof(char *), gfp);
+ 	if (!names)
+ 		return NULL;
+ 
