@@ -1,112 +1,151 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-dy1-f194.google.com (mail-dy1-f194.google.com [74.125.82.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551FD390238
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Apr 2026 14:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C843DEAD1
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Apr 2026 14:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776349360; cv=none; b=o2OXb9lwZXTAE9sreeNGtWteC5sL7YCNxvBV3fnX5EVHDFovk8CPsZlKSMLC0q8xqRm2NP4UIRwKTus/FlHiVYCYhN42XJ46xd+7JUDxqf9U9psLVYde3MDVeIY1pXuJOhxgmP/uGvQbpU9oH8g1fsI3d1VYqvoNTU4cSUBZknU=
+	t=1776349611; cv=none; b=BnTr3qpLwkmenR2vdqbK4Evnu17V0NvDGlZynDJFYuBSLn0dGkUmG78Atc1gAdilVBz6KNcW8zkFOlsjuSuaGidU6FmnM+orBhvzBOz4qrYu00fA3iftihhqhDeZS+mhcspnMktF41k1jA4zk7UAujDhrunudhnc/NOK7Q+t3ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776349360; c=relaxed/simple;
-	bh=/t/B/kYVydX8f6TTXhmjK3BbLpZIcvW0orZukRUWePc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ifGRzrtr0Dc5JM8mPpHpeH65nLn3gXGE5g+rygQr+c/3ZxCwboiA5namAcPIjBX2lQkMbI3S6Od2pwXl2ujb2O6UcHyDzXiZAYuRQatDP1QmubGo3ork0Qk4NQCVQK+bFnvawAHa9+fNJvVVd4ZgAtnAtYjmItiz1/rDNhqaTQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kb5V3Hfp; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776349611; c=relaxed/simple;
+	bh=+ihRt159uDvL5POKuTFYrUQrN+nOHKn/wmFeBTjQ8PU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=rH7b7AMhxbCkrWl3wcpq6EtHS61KKcf7JlBjLbjVFAfZpPYFiLayW2ApuQCk0nHUPbg9drq0k8iVFOH8Qo8SEIQX9209+xBbCbAcPGEliljIMS2fzWQnTZUkUDTPnvpFXjt5EsRHBeN3oaoI6vEIpG4J3Zgzj6h1amcQZFqCIbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20251104.gappssmtp.com header.i=@mojatatu-com.20251104.gappssmtp.com header.b=D2eODzek; arc=none smtp.client-ip=74.125.82.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kb5V3Hfp"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-48334ee0aeaso78683965e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Apr 2026 07:22:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20251104.gappssmtp.com header.i=@mojatatu-com.20251104.gappssmtp.com header.b="D2eODzek"
+Received: by mail-dy1-f194.google.com with SMTP id 5a478bee46e88-2bdd40d3c61so7275003eec.1
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Apr 2026 07:26:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776349358; x=1776954158; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i3/1T6CTURA+p/RPufsshs1EdDdC1zwNiHx3/QhDcKs=;
-        b=kb5V3HfpHMgfGUWsigu9UUEt4C2c+Vjr88vGNrc5UdyEwet8ghnYj07Rg0Pb1YV06e
-         3+m0PQgwQFURr3QNtKsRNWIZH24alN01X/VmKTfjM8nsWiuURGIaD3akjw5Z60FpBxdd
-         RTdO2I3euXlTPdHmBJ6qWqWQNpux+5YvfESCteuO+59MHw2aiEbsvj2Q4RZFy1VZayCA
-         +j8rJelZZFLK5BZGLkE/WG6Z1oRKpl5ZiHBNgTm2KItVD/97lRSYXmaRFTPQHhI5srzN
-         t5cRxljTXD0yDW1IxlXwcBp1Ai+UvlJkVytJq5GT3LEQkXVelczQTrIVCqArBahpa3NQ
-         q/dw==
+        d=mojatatu-com.20251104.gappssmtp.com; s=20251104; t=1776349609; x=1776954409; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:subject:from:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B8v+obRShzSvZ2yzdjqq0ScZzC9F5RXeUMbtvLHvstk=;
+        b=D2eODzek1m1dEqfD7qSAVgbyTV+MyOeLxa5HQR5esESnXiSr3tAPBRP+1pXqxcNBwy
+         WmUQaxK4XbLTDtJP75r7ctiHgPlDfX1ZnHTWKfD27gQ3rAOAXl7TC51koVwj1kkDEw/B
+         Qvip0lt6QQdRh5ro09uoMppnelNjmG8e+iebEkp5k8LsVGgbiS2lcp48szOyc/9BBgm2
+         ZH4+Yn/9D1L9/mgaGa3CBq+gEHd2+ww7WpvrPeskR7sq3wQZD/nBKh4MxX1nq+znKE+C
+         1as70PB0roi4Cfv1FHvrjKt9LXzHflGHKmJqOcKmgH6ThvnYuQPQkGo1ipKdkEtWKyBQ
+         sLrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776349358; x=1776954158;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=i3/1T6CTURA+p/RPufsshs1EdDdC1zwNiHx3/QhDcKs=;
-        b=m3J7aL2hE622cMvzxWhbxz3lsoXm6KpiN516Sq/XdFVbolDD1tYOBzCeU21BRCOdg/
-         yCZRW3FjCbcwZACpLtZPazpgbmvRGA3k07Ck1uqF0EMmcuLKznfv62kk6NphljryB0zU
-         Nt/HJQO8lSIQdTg4gY1zTzpLOCGM2MZcX+kOA+9BfGkzrl7T6bxGk4hU5PEekD2P7PX1
-         nN7sBSfHXNH27FwIN7tUhpxvo3afnQFRbEynqK6ZkUc+StDjNC5SHSam271kEDpkwmyb
-         79uxznEomphRjyI31nwlZUNzzWRFQKmU6m13ju1mS9pGq2Fx5q2IUpAQJzwWHW/EG3OE
-         RJxQ==
-X-Gm-Message-State: AOJu0YwhtJBdAhyaDr/kOEC/nwePSOcoYroBcFLCtrVhNRWMhrMkAKtQ
-	J7nRrRIhH/E0gpHPoUPm4KG/PPF5MVAw+e7+neMaMx2+mnmZCNsPUmDwm20ao83F
-X-Gm-Gg: AeBDieufAc/nFoy/avqZmqxIjL/zYZK+Ly52sMLdcR9w14vDpM6PibE24Kp8msTKe5z
-	kyJM/++Y8Yl7xnm8XsJzO89ctz4G5rEta04h9+74nr2UDwNiSat8eF5BM3mMbG2YXxfiLPJqD5e
-	dtftBdYEJ0njIDeVfKEeKZhq0Ov7aOvimsaIT7Ko2YZS6Xkvf3aSn0KbLeH9JledqchDMQVO6+Z
-	lDXy8ZMQjeQs1AMe8+HfLga/mdTSwRs2lRZqwRSrKIbsP2XUYmmIwAwR8HOj9CSHNDqzpoY7yKk
-	KSGZbI4dYQj4e2JGp1kB1jUf+Z4mzSgOFT+VGETIDYZIFGKh39/cy5oRAleDGdJkdKbBEX0Id1H
-	PrlSPMecF9Vb7Zdayu+qvnmiA9DGVQWORB/938tlYWSI7/vcQfyXQ3kuuCbgEM4EBFD2Fk4Rz/N
-	UCjoUkotEaA65LGnKGjbHox+yXLLvzhvZ+v24MPlE9RuC03lVKvu9I+OddOxujJ6qz
-X-Received: by 2002:a05:600c:a11c:b0:488:af14:f1da with SMTP id 5b1f17b1804b1-488d67f9a25mr266952635e9.7.1776349357518;
-        Thu, 16 Apr 2026 07:22:37 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488f5827da4sm54856085e9.14.2026.04.16.07.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2026 07:22:37 -0700 (PDT)
-Date: Thu, 16 Apr 2026 15:22:35 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next 2/3] fortify: Optimise strnlen()
-Message-ID: <20260416152235.44470829@pumpkin>
-In-Reply-To: <202603311650.A59396A@keescook>
-References: <20260330132003.3379-1-david.laight.linux@gmail.com>
-	<20260330132003.3379-3-david.laight.linux@gmail.com>
-	<202603301650.E7C1536632@keescook>
-	<20260331230914.43698e74@pumpkin>
-	<202603311650.A59396A@keescook>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20251104; t=1776349609; x=1776954409;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B8v+obRShzSvZ2yzdjqq0ScZzC9F5RXeUMbtvLHvstk=;
+        b=rpCGPr4xKEp1TQR+piTzcqt+7vbPNj1YBJUJNWNqGA7WbHJo3tZIVfCpwiDl21zq2B
+         TSWokuI/7Eg9VBdMG3wqMNfJ2y09Kj+l8CzJ5Rbw20PA1Iez/coG47yVyboWBjnmHh9C
+         8PFeI40ebEs7tZuxU/2VDPmpddaoQlsLyKRz/xdml2W4YU/0edyLW8v+vlU9n+TOwtdr
+         miMLH3R/jfGw1DKndvaAPe4/tOcDYlUZl/Bal7EkPGlV3IZGtIu3CsoRRiZ4WdTHL4cz
+         fX16fbVufJ3JxOGTWB943upiw5/ao6OOfc+tJzfPtBxkF0jgHnyHc/bbOMG1mcrCpHpM
+         NjKQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9LUdGXBfqAPYvyyfrGV7234wvLBxAV3i/sSqewG1tWtl31ztTCVVhVjN30e1cIdflfXy7SDP2cCE3GsUl/pig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwpXAgbI3BjfzxuPIXxBP1tRlczUk8c+sSDmKBHWn80Eb6d27l
+	paOUGvIOs3n0erTUIJ1icPFQXrN6d2kYz8qJijTXNFfjUOAAMlRndKU6SkUqn1mwiw==
+X-Gm-Gg: AeBDietJyK+CXrn/zufRT8qKR7yAAuWbp+FrTlDmaJ21+fdm1ihVsfaX4Cy1IvgWN9I
+	xWIMEcpbw7aJw652rzJfSmcXmLi+fUhV2BWuWHqWU9wHfUYtdxeaI4zEuoXSMhvzxUhPqzDE7lo
+	CQuUxPbvAcZ+n41cxJsh/vcLj5RQuXIVSYTxVMAwbtO5Cu2ACP79K3u/OF60/cL3gVSKI5BKVkM
+	WBjHjWr54W08HXPYp0sLR4ntGOoRpChGUJvS3MdbK1h6inibmntuO5hMO5y3tM6QyIW64kDyXdr
+	MU3uhLYYrsEpqygcqJ6yVHwRYnm3d8IERz6YarFJFLLgBjvNJjyXeSNUzqip14MUU6cS4i3dVVQ
+	CCpa899PiT0nOxMyluTUcqa1zZ9jx7lBbx8dACKHgg2ITC9plz+FQGdn8FCoKGEj84H8dw7VkDb
+	s37IEPxIfG2X5QAdES6rwnlnGYlM5XwjApNA==
+X-Received: by 2002:a05:7301:1691:b0:2e1:e5c0:7992 with SMTP id 5a478bee46e88-2e1e5c07da4mr1262505eec.8.1776349608900;
+        Thu, 16 Apr 2026 07:26:48 -0700 (PDT)
+Received: from ?IPV6:2804:14d:5c54:4d67::1c9d? ([2804:14d:5c54:4d67::1c9d])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2de8f569f4bsm7303516eec.21.2026.04.16.07.26.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2026 07:26:48 -0700 (PDT)
+Message-ID: <8070149c-87c8-4d9c-ae12-6b9a956fb763@mojatatu.com>
+Date: Thu, 16 Apr 2026 11:26:38 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+From: Victor Nogueira <victor@mojatatu.com>
+Subject: Re: [PATCH v1 net 1/1] net/sched: sch_dualpi2: fix limit/memlimit
+ enforcement when dequeueing L-queue
+To: chia-yu.chang@nokia-bell-labs.com, linux-hardening@vger.kernel.org,
+ kees@kernel.org, gustavoars@kernel.org, jhs@mojatatu.com, jiri@resnulli.us,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ horms@kernel.org, ij@kernel.org, ncardwell@google.com,
+ koen.de_schepper@nokia-bell-labs.com, g.white@cablelabs.com,
+ ingemar.s.johansson@ericsson.com, mirja.kuehlewind@ericsson.com,
+ cheshire@apple.com, rs.ietf@gmx.at, Jason_Livingood@comcast.com,
+ vidhi_goel@apple.com
+References: <20260413163711.56191-1-chia-yu.chang@nokia-bell-labs.com>
+Content-Language: en-US
+In-Reply-To: <20260413163711.56191-1-chia-yu.chang@nokia-bell-labs.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 31 Mar 2026 16:51:26 -0700
-Kees Cook <kees@kernel.org> wrote:
-
-> On Tue, Mar 31, 2026 at 11:09:14PM +0100, David Laight wrote:
-> > Any uses should be replaced by __builtin_strlen().  
+On 13/04/2026 13:37, chia-yu.chang@nokia-bell-labs.com wrote:
+> From: Chia-Yu Chang <chia-yu.chang@nokia-bell-labs.com>
 > 
-> When I looked at this before, __builtin_strlen() flip to run-time strlen
-> on non-constant strings, which is why I had to jump through all the
-> hoops to avoid calling it in those cases.
+> Fix dualpi2_change() to correctly enforce updated limit and memlimit values
+> after a configuration change of the dualpi2 qdisc.
 > 
+> Before this patch, dualpi2_change() always attempted to dequeue packets via
+> the root qdisc (C-queue) when reducing backlog or memory usage, and
+> unconditionally assumed that a valid skb will be returned. When traffic
+> classification results in packets being queued in the L-queue while the
+> C-queue is empty, this leads to a NULL skb dereference during limit or
+> memlimit enforcement.
+> 
+> This is fixed by first dequeuing from the C-queue path if it is non-empty.
+> Once the C-queue is empty, packets are dequeued directly from the L-queue.s
+> Return values from qdisc_dequeue_internal() are checked for both queues. When
+> dequeuing from the L-queue, the parent qdisc qlen and backlog counters are
+> updated explicitly to keep overall qdisc statistics consistent.
+> [...]
+> ---
+>   net/sched/sch_dualpi2.c | 24 +++++++++++++++++++-----
+>   1 file changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/sched/sch_dualpi2.c b/net/sched/sch_dualpi2.c
+> index 6d7e6389758d..56d4422970b6 100644
+> --- a/net/sched/sch_dualpi2.c
+> +++ b/net/sched/sch_dualpi2.c
+> @@ -872,11 +872,25 @@ static int dualpi2_change(struct Qdisc *sch, struct nlattr *opt,
+>   	old_backlog = sch->qstats.backlog;
+>   	while (qdisc_qlen(sch) > sch->limit ||
+>   	       q->memory_used > q->memory_limit) {
+> -		struct sk_buff *skb = qdisc_dequeue_internal(sch, true);
+> -
+> -		q->memory_used -= skb->truesize;
+> -		qdisc_qstats_backlog_dec(sch, skb);
+> -		rtnl_qdisc_drop(skb, sch);
+> +		int c_len = qdisc_qlen(sch) - qdisc_qlen(q->l_queue);
+> +		struct sk_buff *skb = NULL;
+> +
+> +		if (c_len) {
+> +			skb = qdisc_dequeue_internal(sch, true);
+> +			if (!skb)
+> +				break;
+> +			q->memory_used -= skb->truesize;
+> +			rtnl_qdisc_drop(skb, sch);
+> +		} else if (qdisc_qlen(q->l_queue)) {
+> +			skb = qdisc_dequeue_internal(q->l_queue, true);
+> +			if (!skb)
+> +				break;
+> +			q->memory_used -= skb->truesize;
+> +			rtnl_qdisc_drop(skb, q->l_queue);
+> +			/* Keep the overall qdisc stats consistent */
+> +			--sch->q.qlen;
+> +			qdisc_qstats_backlog_dec(sch, skb);
 
-I've (finally) looked at this. - and found some extra strlen() calls.
-The bloat-o-meter also showed a few places that shrank - not looked at them.
+Sashiko is hallucinating saying this will cause a UAF, it won't.
+However it is good to maintain a consistent order here.
+For example, see how sch_choke is doing [1].
 
-I'll look again, probably doing:
-	if (__builtin_constant(str[0]) {
-		len = __builting_strlen(str);
-		if (__builtin_constant(len)) {
-			/* got a constant string */
-			...
-			return ...;
-		}
-	}
-	/* non-constant */
-	...
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/tree/net/sched/sch_choke.c?id=1f5ffc672165ff851063a5fd044b727ab2517ae3#n394
 
-It only matters for a couple of functions where you don't want the
-actual length, trying to factor it out is probably too fragile.
-
-	David
-
+cheers,
+Victor
