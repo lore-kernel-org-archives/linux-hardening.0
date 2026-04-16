@@ -1,122 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4B938C402;
-	Thu, 16 Apr 2026 07:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B4B39C007
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Apr 2026 10:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776325738; cv=none; b=b+vmUqqLcgjNfrr+YCLaGfgMbNnbwfXDOF6K8GSVr9Sd1BnYV0BjJHvL88tQFwsJBnzv6Fhuwp5ai3nBqPZxMz4UJmEi4d8zpL3OD4IRH2beWuv7Sk54YsTwAX0Zx0Dm9klv6JK6K7KMKY2UDhxcOWTeCY79r8NsYxbFtcSRNI0=
+	t=1776334425; cv=none; b=h1jI02EteCU7yQyE1KsYMy4fB343GdiJvTmOoAROIe0h6QiZIKMvqgkl7qhjYUZKd6Bhy94xPIBZcoZ9rHqValM19nPCXCP/eFJ7yPLajl6/CFdnqOVDckB4msKoabbPQwxOQCc4iOVFuiV4Z7bmerZEGkN/sCOnm/Mdnaw+ygI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776325738; c=relaxed/simple;
-	bh=tQkUEZUx9d6HdjXWqQ38KZT5w/og4tfGlbhyaD/jvsc=;
+	s=arc-20240116; t=1776334425; c=relaxed/simple;
+	bh=ArcIWCZmBPTDwwsC/vDqAb5wp9IUKWfD7vKLk5BsjGM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQ5Et9qylveHi2Xqd3M6pPFAl414P9FsuZjR5R7QwldqHyZ8K28lzYYxfp8ZWO3lnQz3CVmYrxTugi3SCyFCpfUS/eFlz+B1s7nluY0xGwF5f5TjL+uu8V+E0tXdnfGVyEMpZCyY5BiRQKontHscIZ8I6TajAnsvD8XhMuFJfxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lRRvKFIk; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lVR0rgzL+fOk75UmkJLb5zaPIVMgktQ1ewogCxvnASDSYcWi9m/ubk8cg+7UaBgpZzNotYTsW4fqCq96/hlKlkBzFvgiOnCa4quvc1aHaVoYRbuNHVpX44O9pN66oRS3PsVl/sXvXsd5GoeQD+07KXsfPshnBSH3okmcw8Rkf2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QuOGEMes; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lRRvKFIk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776325736; x=1807861736;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tQkUEZUx9d6HdjXWqQ38KZT5w/og4tfGlbhyaD/jvsc=;
-  b=lRRvKFIkrqpccb2skYlo3FJh7poWuZTEuzY31kGeNq+2q9C39jdNUYbW
-   rsX9PSxvngI/JvCHjcJutxrZww6Sbn5QLYdqVJXYZF2J9sSLlaeOFzssr
-   ZTTHmdC0OhClQNqj6ihfC0C4palYDHBUuNCOJDVknf6YKxM+TjlM62luZ
-   1EB+U9c6LCQkbXNRPZLAhE2l0ZD4SoiDV/CMNPZVxxBakfvxTBOtFhbVk
-   LzqlKGiiMr5nTicWyJULXr8lvWwj4HN+oEJb3KRbW3aotudG5Inx7mKfj
-   DlpKwVUW30NHlxJ1suzKVh+i3L7FNOKFcraPlAzrObzmrE5dHfMchsgvq
-   g==;
-X-CSE-ConnectionGUID: E12yyCwxQFGFsd1F2wunhQ==
-X-CSE-MsgGUID: SxgRJRXZRG6bjAWPkzYlJQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11760"; a="77291935"
-X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
-   d="scan'208";a="77291935"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2026 00:48:56 -0700
-X-CSE-ConnectionGUID: o1oV2mttQXuGw9TAOakYkg==
-X-CSE-MsgGUID: cgoIPRzHSTanlRyffGNJOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
-   d="scan'208";a="226329966"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.173])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2026 00:48:54 -0700
-Date: Thu, 16 Apr 2026 10:48:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] lib/string_helpers: drop redundant allocation in
- kasprintf_strarray
-Message-ID: <aeCUY_BH3s9b8qKG@ashevche-desk.local>
-References: <20260415122542.370926-4-thorsten.blum@linux.dev>
- <ad-j4eGpltrb-WQj@ashevche-desk.local>
- <ad-vKhbh4KNV87gu@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QuOGEMes"
+Date: Thu, 16 Apr 2026 12:13:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776334411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cEP3FwppOq3TV1mgmtnkSnFGLCh9cN1Mu28D/6VMLvQ=;
+	b=QuOGEMeskI5EHg8WF/aN2FDxxyoBCBMMDRWLZC0h8nwkBkwFFFIfd8azWo96C/GLU6PQzQ
+	qb+W2G2Sdow+98lNEaUKyWepNCtZtxmREM1iiQ/vDr2jqBbOy/wi2MuBTf+DXHn7ERUwbY
+	fMGFg4r1+TSUfgcWsO7S72b5S+okw1o=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: David Howells <dhowells@redhat.com>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next 2/2] KEYS: annotate struct user_key_payload with
+ __counted_by
+Message-ID: <aeC2SNPslfdMV-Rh@linux.dev>
+References: <20260406175810.1018681-3-thorsten.blum@linux.dev>
+ <20260406175810.1018681-4-thorsten.blum@linux.dev>
+ <adYZoWK_CTv2-RA_@kernel.org>
+ <adZIP8w0IttbIZa2@linux.dev>
+ <ad7UjdtT1vLwlu0_@kernel.org>
+ <ad9dCoEsiwwgRK2L@linux.dev>
+ <ad9_wQfq7fYEU7mS@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ad-vKhbh4KNV87gu@linux.dev>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ad9_wQfq7fYEU7mS@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 15, 2026 at 05:30:50PM +0200, Thorsten Blum wrote:
-> On Wed, Apr 15, 2026 at 05:42:41PM +0300, Andy Shevchenko wrote:
-> > On Wed, Apr 15, 2026 at 02:25:43PM +0200, Thorsten Blum wrote:
-> > > kasprintf_strarray() returns an array of N strings and kfree_strarray()
-> > > also frees N entries.  However, kasprintf_strarray() currently allocates
-> > > N+1 char pointers.  Allocate exactly N pointers instead of N+1.
+On Wed, Apr 15, 2026 at 03:08:33PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Apr 15, 2026 at 11:40:26AM +0200, Thorsten Blum wrote:
+> > On Wed, Apr 15, 2026 at 02:58:05AM +0300, Jarkko Sakkinen wrote:
+> > > On Wed, Apr 08, 2026 at 02:21:19PM +0200, Thorsten Blum wrote:
+> > > > On Wed, Apr 08, 2026 at 12:02:25PM +0300, Jarkko Sakkinen wrote:
+> > > > > On Mon, Apr 06, 2026 at 07:58:10PM +0200, Thorsten Blum wrote:
+> > > > > > Add the __counted_by() compiler attribute to the flexible array member
+> > > > > > 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+> > > > > > CONFIG_FORTIFY_SOURCE.
+> > > > > > 
+> > > > > > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > > > > > ---
+> > > > > >  include/keys/user-type.h | 3 ++-
+> > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > > 
+> > > > > > diff --git a/include/keys/user-type.h b/include/keys/user-type.h
+> > > > > > index 386c31432789..2305991f4fcd 100644
+> > > > > > --- a/include/keys/user-type.h
+> > > > > > +++ b/include/keys/user-type.h
+> > > > > > @@ -27,7 +27,8 @@
+> > > > > >  struct user_key_payload {
+> > > > > >  	struct rcu_head	rcu;		/* RCU destructor */
+> > > > > >  	unsigned short	datalen;	/* length of this data */
+> > > > > > -	char		data[] __aligned(__alignof__(u64)); /* actual data */
+> > > > > > +	char		data[]		/* actual data */
+> > > > > > +			__aligned(__alignof__(u64)) __counted_by(datalen);
+> > > > > >  };
+> > > > > >  
+> > > > > >  extern struct key_type key_type_user;
+> > > > > 
+> > > > > You don't provide any evidence of any improvement.
+> > > > 
+> > > > It's a proactive hardening change to help avoid future mistakes.
+> > > > 
+> > > > The __counted_by() annotation makes the bounds visible to the compiler
+> > > > and at runtime so that future ->data accesses can be checked against
+> > > > ->datalen.
+> > > > 
+> > > > The current code is correct regarding ->data accesses and doesn't
+> > > > require any changes.
 > > > 
-> > > Also update the kernel-doc for @n.
+> > > OK I'll buy that but send +1 version:
+> > > 
+> > > ~/work/kernel.org/jarkko/linux-tpmdd next
+> > > ❯ git am -3 20260406_thorsten_blum_keys_dns_drop_unused_upayload_data_nul_terminator.mbx
+> > > Applying: keys, dns: drop unused upayload->data NUL terminator
+> > > error: sha1 information is lacking or useless (net/dns_resolver/dns_key.c).
+> > > error: could not build fake ancestor
+> > > Patch failed at 0001 keys, dns: drop unused upayload->data NUL terminator
+> > > hint: Use 'git am --show-current-patch=diff' to see the failed patch
+> > > When you have resolved this problem, run "git am --continue".
+> > > If you prefer to skip this patch, run "git am --skip" instead.
+> > > To restore the original branch and stop patching, run "git am --abort".
 > > 
-> > Have you checked all current users that they do not rely on the NULL terminated
-> > array?
-> 
-> Yes, I've checked all call sites, and none of them rely on the NULL
-> terminator. Specifically, I checked:
-> 
->   drivers/gpio/gpio-mockup.c
-> 
-> which uses PROPERTY_ENTRY_STRING_ARRAY_LEN(), and
-> 
->   drivers/pinctrl/bcm/pinctrl-bcm4908.c
->   drivers/pinctrl/intel/pinctrl-intel-platform.c
->   drivers/pinctrl/meson/pinctrl-amlogic-a4.c
->   drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
->   drivers/pinctrl/pinctrl-at91.c
->   drivers/pinctrl/pinctrl-rockchip.c
->   drivers/pinctrl/pinctrl-st.c
-> 
-> all of which use the size N to iterate over the returned array.
-
-Thanks for confirming.
-
-> Also, kfree_strarray() explicitly takes the number of entries N,
-> indicating that callers are expected to keep track of it.
-
-Still we might have an API that requires a NULL terminated arrays (when it
-doesn't take size), which a caller wants to use.
-
-> > Note, that was done on purpose that once allocated it can allow user
-> > to drop the track of the number of strings and rely on NULL terminator.
-> > I.o.w.  the number of strings may be just a local variable somewhere
-> > where kasprintf_strarray() is called.
+> > AFAICT, linux-tpmdd/next is missing this change:
 > > 
-> > I tend to NAK this change, rather you can update kernel-doc to explain
-> > why it's done this way (see above).
+> > https://lore.kernel.org/all/20260226214930.785423-3-thorsten.blum@linux.dev/
+> 
+> By pratical means, that is lacking any proper commit message.
 
-Given pros and cons, and what David said I'm still not sure that this is
-going to be a beneficial patch. I leave it Kees and Andrew to decide.
+My point was that it has been in linux-next since February, but it's
+missing in linux-tpmdd/next, which is why patch 1/2 doesn't apply.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'll send a new version with 'char data[] __aligned(8) ...' on a single
+line in patch 2/2 after the merge window - please let me know if there's
+anything else that should be changed.
 
-
+Thanks,
+Thorsten
