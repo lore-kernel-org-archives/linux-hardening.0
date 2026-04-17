@@ -1,140 +1,167 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA082066DE
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Apr 2026 16:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BD92D0614;
+	Fri, 17 Apr 2026 17:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776444156; cv=none; b=FamluYCLAPdoHXnJcUMFQsRlaXG3sqD75PBBGF/BRENVMTwztiih+UP2RpKExoa/YixwoLytN6U8ciIRckJbG9jotM26v0W6shg1QyFdEVR9yZ8ro+wRxMa/hL7usREevQEOxnoa1KoePzVOZ8smazNMXAwDQZ6XMLZsLf4y+3A=
+	t=1776447545; cv=none; b=I+OJkF5oeuebd9DXcgcOAHP/lBR0lzE6pAsjXJxfrANkEH70jYfMQZ/laXYDMyuRPVYuoSp96zPaJzlXBaFZFNLjQJxCkplCMQa+Nr4VTUsGwSo3FNO0wBLayLawUoiCEfRwl6VNC2AqeLFURXdAhp13+EEqwhTVUc1swxEzxWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776444156; c=relaxed/simple;
-	bh=ByaTmtPJ/K+xsN3Lt6JkLMGAoSVGIDe5dtLgioDjxYo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EGa6CrT3JhPId87sE5xX7ohexn+X0dlwoyZAgdk2oE5T8pRrBKEKneZW3rpkZpDkRl+CWvOO0qz4WFf+11KToJCfMB25ZAZNWuEdHpzN8myRxczqt5fIizC1PY/e3ip8wLVXE12zTKlzi+B1s/EnQxjDV91tB86IXNreVoPSKcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OVxpG0FH; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Ahk5uRuD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1776447545; c=relaxed/simple;
+	bh=rtaHgFZXQZ78ik4SRZtEsybXv6W9bNkHH0T25TFSeL0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gMMzKRf2oij5illdGj7aXNVfHGwKtjFysYhnmhPBYQmectH2EKHq8tVQXumUnz8EpfQYGoSBDs2YVdqcJCByHWhx0Uf9AT91BYDZyDeUOd0e8h9Zr09NnfchM79tTLCplAjoiGt1VzHONbI0BXZZbdxaoGGxqX7mOV+LsizZGqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2/EyyMb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OVxpG0FH";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Ahk5uRuD"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63HG4Bui3929310
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Apr 2026 16:42:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=W7Nil3ecXcj
-	6h98aqBWWZjhPtJLGkI6jnT03x/3dt5s=; b=OVxpG0FHfDhisAA84Imu2jNoHrk
-	ur50hhXxKLhjankYxhqcY165Zwce30QWhedsWqDIswjE2a5EaT3L0SmPlsjHWrCs
-	0Mn7TzIQq3feYCKMoY3pGttWOv+NpbkpEsO8085SOvhfHO131iBOSOwWhq7CFZtK
-	3E7Hh8rzM1Aobu2hbrK+RrTuONBfvvS7TTeoy3un07o7WzqHXkIWA2NhxsPYl9aM
-	Yan3KlWta8QVZxDnNGTzgsNMrJYyNTyAHf+/8aI15RYv/M39M9P/WVW+IKADDRN0
-	Fu8EzldaPBWEhzLNtDfB22k/X8h4RbtCAzXaWNSicGyvSknc3epTidtxOJQ==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dkqujg5mp-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Apr 2026 16:42:33 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50da529ff48so21685991cf.3
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Apr 2026 09:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1776444152; x=1777048952; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W7Nil3ecXcj6h98aqBWWZjhPtJLGkI6jnT03x/3dt5s=;
-        b=Ahk5uRuDWQKSx6i+tLUGeZVkJQy0e/DJTe1B/uUm2CsL+QkJFqy9kNl8IBHB1YdjwB
-         eUSXi5aBCvf5RpCtbSBtzN2xQXA+mhOcTAtIFt8rAvh+mtdNT4WsEEDT3NYV/G1XMhAj
-         eEGx4MWoHt3QnTyz/qAuyQA+1cfh82EGsW1HvfS40989D1Rf6N7oTXn9Fg13Xm8GzI2a
-         yiAFVheR/jvNDzvqnzPW3or93nnkJ8eoGd5ITQpJiPGg+2eeumL3L04ATHZvUIAwr55s
-         lOqlT40ZICUpQHsCkNvydG5LGNmGn0rPHnMFVcNYc2RRWQ9fzf+/9E+p1a6K9skbW7jS
-         thoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776444152; x=1777048952;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=W7Nil3ecXcj6h98aqBWWZjhPtJLGkI6jnT03x/3dt5s=;
-        b=dZdmAZd/il1fDGIG18zvaib2JWtSOCO58SMRBvULB/X/qtNFyu3OihZA0up/p1X8I+
-         qKyYJ8R83XQ4AkjuS8QSSI/VhQwMxbPAnVVgJHJmc5TC7ObA1SHD1lxFlaSvpi6RzRD2
-         NJySQzeTfeIBcHDiNDUWLMfavC1+nL0oHFpOv1NuEi1GZ+pnkMa2FCJB5MTtmMsr6bM4
-         OsMrwysOu062GaAGl+Pt8qZ3mAJhL6jpMxyou70Xhnyx9QaYZNpGgejk9fA92H3PMOyV
-         CD8/uSY0Rf8BNQnYjl90Y99uaUyGNlps0afxlrpHBFdcMTi+FxSu3rjRPQTKzmp7XsUl
-         RglQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+T7H5m7x4DrPvA9N8T28a8DY3yy/9/jnTcmzAI/S2RuGDtlHCNcjuftIBeNFtLb9QSTCmSUWITbR3EMw0zWF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX3H/YTBRRN8bpfBNQeeqeJ9zJNOjGQKRdO2zHwY1c8RhnnD6d
-	qSs64lptmE2rFS+VCEXt3ymMdpNOfDX6Leii94pOrc+lTGRWvmdd8yWw1+1/aRR9LQg+vM7Ks8v
-	Zy8XdjgvG5cu+Vj8/FzrRVJiB2mPMss951MsFL3+Vo057WzMrOfsSzSfk8Im0ggVeAJMCfAY=
-X-Gm-Gg: AeBDievlew75sUkC8ANRgMc77tKgLJokmySdgsa1/+CvKM/s3hobXSYSp/S1EYkpUSo
-	sCRfb9DsGqNvtTCGjnQERa7QCZ3qeqlUe08VtTB0MFYGBN0RI7qnDXqC3TJR3bt4kQ2nVxHKqfi
-	oWo0LCe2vgFQCJuX9Is+UQGWorshkypxAxHM0TYL64sfB8LZKTT/H0i7c/xzR1Nw4+/fBBp9PPw
-	BJmsx9ix18WCXHitShzhT4+tRGEQdHoSnt8dFJ1CPhVq5lXo3oeBBUB7SK2DZoq/2KI2j6dbW1l
-	A3BF24wYl7xTn7Pmjth38q7eYqZE4IniXkkWhWFna7Fj1rqhv5L6/R5aZ8UKWnyYPJGu6iE4eXM
-	RVYu0BFSUSLmOOkCRG/TD/61syg58cVguBIq+tl6gbQQXIl6grQ8XXkqIei+C0ejFG2pznRIy
-X-Received: by 2002:ac8:7c56:0:b0:50d:9b07:9c2b with SMTP id d75a77b69052e-50e36c8da62mr51569091cf.56.1776444152539;
-        Fri, 17 Apr 2026 09:42:32 -0700 (PDT)
-X-Received: by 2002:ac8:7c56:0:b0:50d:9b07:9c2b with SMTP id d75a77b69052e-50e36c8da62mr51568571cf.56.1776444152093;
-        Fri, 17 Apr 2026 09:42:32 -0700 (PDT)
-Received: from hu-yabdulra-ams.qualcomm.com ([212.136.9.4])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba45553e502sm71796466b.61.2026.04.17.09.42.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 09:42:31 -0700 (PDT)
-From: Youssef Samir <youssef.abdulrahman@oss.qualcomm.com>
-To: rosenp@gmail.com
-Cc: carl.vanderlip@oss.qualcomm.com, dri-devel@lists.freedesktop.org,
-        gustavoars@kernel.org, jeff.hugo@oss.qualcomm.com, kees@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ogabbay@kernel.org
-Subject: Re: [PATCHv2] accel/qaic: kcalloc + kzalloc to kzalloc
-Date: Fri, 17 Apr 2026 18:42:30 +0200
-Message-ID: <20260417164230.3158014-1-youssef.abdulrahman@oss.qualcomm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260401220643.12802-1-rosenp@gmail.com>
-References: <20260401220643.12802-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2/EyyMb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E384FC19425;
+	Fri, 17 Apr 2026 17:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776447545;
+	bh=rtaHgFZXQZ78ik4SRZtEsybXv6W9bNkHH0T25TFSeL0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u2/EyyMbkNoksqyFV6DhyMLgjgwjvgYI+oEXVsEeJHbk1ckE8Z09qoH0k6nFGQFm9
+	 cY75hCwPK09VXs+Xm520/ICdasDxYK+68y0wlLNPceDO8WaB2iNuZu5lBnyugyK8mH
+	 FtC7u0OpIzmBSwpTZQYHkrrhJLkHKDaQ/uH3RpDJYHzA/vrhG/xwVSk7i4jOMnmtx+
+	 kfIciHnRXI8LXvxbZUpxFSrLKOnTtcOJi+GpcJPKkJzPjyI29rI5qjq57rjoiI3FSj
+	 56GoJa6eh3WUF9kwy5eyLXswYoVwGrq+EKOl7BDlJQuKsL7Catq5Czvt+C9MJ72ICR
+	 qXUGtyz6RjjMQ==
+Message-ID: <cd2bcc09-2507-4ed4-bb92-2d53baedaf04@kernel.org>
+Date: Fri, 17 Apr 2026 19:38:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/30] mm: Introduce kpkeys
+To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+ Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
+References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
+ <20260227175518.3728055-2-kevin.brodsky@arm.com>
+ <00b24db8-0063-48d6-8bc4-e8b670d8f0d5@kernel.org>
+ <913002a5-e002-4001-ad19-037102d1f97d@arm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <913002a5-e002-4001-ad19-037102d1f97d@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE3MDE2OCBTYWx0ZWRfX6tdEXreyqQ2l
- jYgzBTRsmf1L60HChDnP55mLmZfzBgZdbTMeEAMrV7gsBXJPoak/BADQCcszbQmxEZzTu1uyTBU
- /xwYfqr4tMVlAGBsvAMpnNrjwKbfcqJbDULUOQRLmlZ7iQIjyyZKq1ALxzBhFefNzblPWdqulgY
- TWwkUROKC7FoXX2MFW2RLgzVQrfV4znbYzcgw4JNcNwwLQedua+NteJrR61l5EV9jtRu7yiXpJQ
- tHkV8OMd/wyYRkcwDvMhgTglju3LE/VselKAYIUGQJRrp0LbdfqSNMy6vuHYbFj25wcQbsXgmsh
- 531l2FNmtgC/gcfmtU88ByWtJVIDeXvTEdmkp/a7qF2ZcJ7eGDoLXF8kcFa+7IK9pacRKyaEeIh
- OQRGrZK1QwKPIZVIshLMBBUQeJLYIXwu+PSA1UPIkI5tDP0VgemQqtFGobv1O95FhFbUc+HzT/V
- 0DwRD5QFLavMnbT5frw==
-X-Proofpoint-ORIG-GUID: QPRH4DyaJ2WgccmA-XPzlfN4si9aq-Ec
-X-Authority-Analysis: v=2.4 cv=FP0rAeos c=1 sm=1 tr=0 ts=69e262f9 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=dNlqnMcrdpbb+gQrTujlOQ==:17
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22 a=EUspDBNiAAAA:8
- a=pGLkceISAAAA:8 a=1lcS69py3Ix-9TsBHUMA:9 a=zgiPjhLxNE0A:10
- a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-GUID: QPRH4DyaJ2WgccmA-XPzlfN4si9aq-Ec
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-17_01,2026-04-17_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 impostorscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
- adultscore=0 priorityscore=1501 malwarescore=0 phishscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604170168
 
-On 4/1/2026 11:06 PM, Rosen Penev wrote:
-> Consolidate the two-element allocation into a single allocation using a
-> flexible array member. This reduces memory fragmentation and simplifies
-> the error path by eliminating the need to check for allocation failure
-> between the two allocations.
+On 4/17/26 17:59, Kevin Brodsky wrote:
+> On 17/04/2026 16:37, David Hildenbrand (Arm) wrote:
+>> On 2/27/26 18:54, Kevin Brodsky wrote:
+>>> kpkeys is a simple framework to enable the use of protection keys
+>>> (pkeys) to harden the kernel itself. This patch introduces the basic
+>>> API in <linux/kpkeys.h>: a couple of functions to set and restore
+>>> the pkey register and macros to define guard objects.
+>>>
+>>> kpkeys introduces a new concept on top of pkeys: the kpkeys level.
+>>> Each level is associated to a set of permissions for the pkeys
+>>> managed by the kpkeys framework. kpkeys_set_level(lvl) sets those
+>>> permissions according to lvl, and returns the original pkey
+>>> register, to be later restored by kpkeys_restore_pkey_reg(). To
+>>> start with, only KPKEYS_LVL_DEFAULT is available, which is meant
+>>> to grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since
+>>> this is the only available pkey for now).
+>>>
+>>> Because each architecture implementing pkeys uses a different
+>>> representation for the pkey register, and may reserve certain pkeys
+>>> for specific uses, support for kpkeys must be explicitly indicated
+>>> by selecting ARCH_HAS_KPKEYS and defining the following functions in
+>>> <asm/kpkeys.h>, in addition to the macros provided in
+>>> <asm-generic/kpkeys.h>:
+>>>
+>>> - arch_kpkeys_set_level()
+>>> - arch_kpkeys_restore_pkey_reg()
+>>> - arch_kpkeys_enabled()
+>> Another thing: why not simply drop the "arch_" stuff from these helpers?
 > 
-> Add __counted_by for runtime bounds checking.
->
-I've tested this on AI100 and it works fine.
+> The first two are not meant to be directly called, they're the
+> arch-specific implementation of kpkeys_set_level() and
+> kpkeys_restore_pkey_reg(), and those generic functions handle some
+> generic logic.
+> 
+> arch_kpkeys_enabled() is directly used in generic code, so I suppose it
+> could be renamed to kpkeys_enabled()? It's actually implemented in an
+> arch header so I wasn't too sure about it.
+I was skimming over patch #13 and spotted:
 
-Tested-by: Youssef Samir <youssef.abdulrahman@oss.qualcomm.com>
++void·__init·kpkeys_hardened_pgtables_init(void)
++{
++›	if·(!arch_kpkeys_enabled())
++›	›	return;
++
++›	static_branch_enable(&kpkeys_hardened_pgtables_key);
++}
 
-Thanks
-- Youssef
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
+The arch_* there can just go IMHO.
 
+I'd also do it for the two ones used by the GUARD macros. If we don't
+expect common code wrappers (arch_kpkeys_enabled() vs. kpkeys_enabled),
+then the arch_ is unnecessary information -- IMHO
+
+-- 
+Cheers,
+
+David
