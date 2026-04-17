@@ -1,33 +1,67 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1D8537266D;
-	Fri, 17 Apr 2026 13:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D047314B6D
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Apr 2026 13:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776431468; cv=none; b=jfW1ySlFLOnJxSqDnPjuJgBuLGGcC3FRJKBvihtELzbY+guL4LrEe1/I/pfJhFBVI8L8Sem8D4eqpbbxQwO9YNf6LGK8Of2obpiEF6/OkV0RcPz/qvEiewYMW5bONcA+WEIbzT8wdEqm2Vt6NjF/Xl5Q/FDgBedNFfEp7KcNS3c=
+	t=1776432533; cv=none; b=J/Kwn2eqO3H95srdWVAOJIwj0PreR8uF5uklMQsWk8SvStM8nSu9+4Dkq7D5YZR1leAfAyWDY0mJv0fIBkaldkeXTZ90twN2tJdNioZ1G2MMBaiwvQ5YJxfkvvrPPyU4RbHlvx8R2ol/h+GqOaQK+KmqOGoA9PeeUb/ZpNhSrfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776431468; c=relaxed/simple;
-	bh=UZ+9QdPmSTx/ezgB1oRSxcs6WFStfM5GyAzSgULBfK0=;
+	s=arc-20240116; t=1776432533; c=relaxed/simple;
+	bh=LX0qWu7Xbd8TT1NvBOE97BzH3UzHyHp8aIxB3oRV2iQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ViGuuV+BjpGYwZydUt3KfRw+VijEEX/P0UwPqslu3c4RbB6RaMTA3CN5F3VtX5NJg2AIzuFIM+VztF5C3nbzQqu0+jmpKtUh3OpPbGJNN+sR+AMvmKPCO/WDvZnNaQ9vK4VdFP8NbcWCehnRGLZv3/lC0CfpXHs6Rp0XTLZXNqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=nLP9+NmO; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 In-Reply-To:Content-Type; b=Zqtf/yhvUauSPxwlqBypM1WhNyiRF//bk+rX2SWmIKjLSSkxUPQQRONSW2guIQ4/DgBFCRvuXb9Wl8YvTyfoiseve+9+lZHuoOJEZrrkxGbNkrCmeqTCEL3D5TwL2VuEfRy5paLPPToPfd+J7zGkUYx35KR5c3ZWOCSPL08r64U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fGYXAHpe; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="nLP9+NmO"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1216A1C2B;
-	Fri, 17 Apr 2026 06:10:59 -0700 (PDT)
-Received: from [10.57.63.31] (unknown [10.57.63.31])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 312443F7D8;
-	Fri, 17 Apr 2026 06:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1776431464; bh=UZ+9QdPmSTx/ezgB1oRSxcs6WFStfM5GyAzSgULBfK0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nLP9+NmOP4Js5PxqLmjA9erzChDc1WNxHz0qocmuG+AsyaZz8t5QVQ1Lo5Rct4eL2
-	 KPNqAe7G2utJg38/pHsrTnSjhvBlhhVTbSoisuYuAhC7ve0hNuyJOThpP/YByANyjN
-	 MdbXC7wVzrfGBlCo2N0+cUxzbDtoHJT7TGqJbU94=
-Message-ID: <5adc64e5-d4e3-42f1-8cf2-6e824bad2bf6@arm.com>
-Date: Fri, 17 Apr 2026 15:10:52 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fGYXAHpe"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-488c2690057so7018955e9.0
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Apr 2026 06:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1776432530; x=1777037330; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LiSRutZE2i6BYCdYYnb6mg9P5OvuB1XSyhcSB7iODxI=;
+        b=fGYXAHpe1Soi9YINpIgSZWLTi0aHWdHeqniatQYcxVVGY/osBdF+OfGFMELkn8ZC2S
+         kbqy3Za0da5vNOq0qF8yGzKgvNErTWQExc4GnlG4ODFp2Q0lfKV3WrXLKcE2DUCOkGA5
+         v69RB/Tzs4dmgp7TGA//CWuCznEqEVu/Nlg7RodmWwBDhRswLkS7t2xJYJMWtFSeNBml
+         MkeCcmqxj4z0sI1JDYEUbAparuCZe4k/tNVGtzp1idM0OWB9qYZWp6me00EqOx41bNTO
+         H+elb4tbHxGNVpAHjyQiWNuHhp4JiUoX/3mQ3Zhs1aqO7LtZlVzEGa6eSqUAd8GeJJLY
+         hodQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776432530; x=1777037330;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LiSRutZE2i6BYCdYYnb6mg9P5OvuB1XSyhcSB7iODxI=;
+        b=bpNE4FmflPcXbeHevCF06r2/AfFzCJebUNE08aa6jNKPdM8a/AwbWYr/eUoPbcVq/o
+         JR0xlb4w5XFFIhePjttdAkmv9jPTkFfaWNgcWwrDLMB0In1jDHX+340ZjuFzCfcpNnIe
+         X/x0RhvL0OauOcpfxgT6hnWPF16h842JnK04NBbZGt3ovPFfh6pkkvt8IlrZEAPncNCR
+         P8oXmZY8J/OIHiF4r4ejqXUO9Ewqo1TLy+wQ/b3nN8Sd9P1Xq++UFZWb9yFIG+A3lX9i
+         KBVy+kbYW5fjgiAid0mNpdxH4q4C0JhgvWB0t0wBRAi2P3717gAbLbvx3Xd6qjhnh8qq
+         KKDg==
+X-Forwarded-Encrypted: i=1; AFNElJ9R5kvzorVY3pEZHBIZF8rznS76KhmJMMbMyG+Q1O5bCYja5gaLIv3HEov13fcIrXWGb0/pbrITVfqVRP/8WCs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9qglV+K3bZC1JLyXwwjz+ExfrPqJX6h11DaYKRVmlIAhGTpPJ
+	xLoEMDQmUPyExPdbygQEmMImhPFztZMXVGYBZGHOXzNI6jETD2oKfUQI1/ecJy3Sy7RALS93LPQ
+	whsu4GfQ=
+X-Gm-Gg: AeBDies34x8tWg9ZG1vT72UEXGtw2eFmByI/neSEoLEaERew5vdhNE5gUWr+hKNvGNz
+	DKckxvyIGBRWhK1maL1RDOKd6QN6lk+bkD4cTa1SSKnzUVq6PgaMGOU09AFoStO8as9KnmHtj8v
+	j8jY5S0JcrhBOJDXbCEs3QlGUnqMyO9s8YuDIumCwJsTHT8MdeigqTYFdpFG+HPFkyIwZ3uE70p
+	qczYPQefLwY673BL19RsrO76V4HeGdptoodRKx+vY1HIcWP3L5PSbdTXaw+zkoVC4tBPGLwAaw4
+	Jf2tZotOU0N04TpmL2gkuOYs0BQFaOmUnUO/EJ54Jfi0xxjqzR8ZER15JTULYoo/j2WyNLUudiA
+	ZEmzWtMZlHLYD1EKBLWXPZRxJdJjNPVj7Nrgbcy10QnXzounHbcouFyN1h2gGVhu0XSPbBTFNp1
+	CR7A+l3swZWC2t9u3aaeKninblfbuzHHMW5OZNTOX31w==
+X-Received: by 2002:a05:600c:a318:b0:486:fdca:ea8d with SMTP id 5b1f17b1804b1-488fb784662mr31297785e9.25.1776432530464;
+        Fri, 17 Apr 2026 06:28:50 -0700 (PDT)
+Received: from [10.11.12.108] ([79.115.63.48])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc1c0354sm40049075e9.11.2026.04.17.06.28.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2026 06:28:50 -0700 (PDT)
+Message-ID: <3a36821a-4a44-4f3a-9f0d-5ce521b323aa@linaro.org>
+Date: Fri, 17 Apr 2026 16:28:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,105 +69,71 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/30] mm: Introduce kpkeys
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
- Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
- Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
- <20260227175518.3728055-2-kevin.brodsky@arm.com>
- <eaca640b-5006-489b-8b2d-148a3c4073da@kernel.org>
- <fea9c939-f955-4020-bed6-427e592f0024@arm.com>
- <cf9da9e0-310b-4dc0-81aa-3154077fff85@kernel.org>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <cf9da9e0-310b-4dc0-81aa-3154077fff85@kernel.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: thermal: Add Google GS101 TMU
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <20260119-acpm-tmu-v2-0-e02a834f04c6@linaro.org>
+ <20260119-acpm-tmu-v2-1-e02a834f04c6@linaro.org>
+ <DGUJIFLIOK7Y.1Q4PZQU3MOWTT@linaro.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <DGUJIFLIOK7Y.1Q4PZQU3MOWTT@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 17/04/2026 14:00, David Hildenbrand (Arm) wrote:
-> On 4/15/26 17:50, Kevin Brodsky wrote:
->> On 15/04/2026 15:00, David Hildenbrand (Arm) wrote:
->>> On 2/27/26 18:54, Kevin Brodsky wrote:
->>>> kpkeys is a simple framework to enable the use of protection keys
->>>> (pkeys) to harden the kernel itself. This patch introduces the basic
->>>> API in <linux/kpkeys.h>: a couple of functions to set and restore
->>>> the pkey register and macros to define guard objects.
->>>>
->>>> kpkeys introduces a new concept on top of pkeys: the kpkeys level.
->>>> Each level is associated to a set of permissions for the pkeys
->>>> managed by the kpkeys framework. kpkeys_set_level(lvl) sets those
->>>> permissions according to lvl, and returns the original pkey
->>>> register, to be later restored by kpkeys_restore_pkey_reg(). To
->>>> start with, only KPKEYS_LVL_DEFAULT is available, which is meant
->>>> to grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since
->>>> this is the only available pkey for now).
->>>>
->>>> Because each architecture implementing pkeys uses a different
->>>> representation for the pkey register, and may reserve certain pkeys
->>>> for specific uses, support for kpkeys must be explicitly indicated
->>>> by selecting ARCH_HAS_KPKEYS and defining the following functions in
->>>> <asm/kpkeys.h>, in addition to the macros provided in
->>>> <asm-generic/kpkeys.h>:
->>> I don't quite understand the reason for using levels. Levels sounds like
->>> it would all be in some ordered fashion, where higher levels have access
->>> to lower levels.
->> That was originally the idea indeed, but in practice I don't expect
->> levels to have a strict ordering, as it's not practical for composing
->> features.
+
+
+On 3/5/26 5:48 AM, Alexey Klimov wrote:
+> Hi Tudor,
+> 
+> On Mon Jan 19, 2026 at 12:08 PM GMT, Tudor Ambarus wrote:
+>> Document the Thermal Management Unit (TMU) found on the Google GS101 SoC.
 >>
->>> Think of that as a key that can unlock all "lower" locks, not just a
->>> single lock.
->>>
->>> Then, the question is about the ordering once we introduce new
->>> keys/locks. With two, it obviously doesn't matter :)
->>>
->>> So naturally I wonder whether levels is really the right abstraction
->>> here, and why we are not simply using "distinct" keys, like
->>>
->>> KPKEY_DEFAULT
->>> KPKEY_PGTABLE
->>> KPKEY_SUPER_SECRET1
->>> KPKEY_SUPER_SECRET2
->>>
->>> Is it because you want KPKEY_PGTABLE also be able to write to KPKEY_DEFAULT?
->> Right, and in general a given level may be able to write to any number
->> of pkeys. That's why I don't want to conflate pkeys and levels. Agreed
->> that "level" might not be the clearest term though, since there's no
->> strict ordering.
-> As discussed offline, maybe the right terminology to use here would be
-> something like a "context".
->
-> You'd be activating/setting a context.
->
-> KPKEY_CTX_DEFAULT
-> KPKEY_CTX_PGTABLE
-> KPKEY_CTX_SUPER_SECRET1
+>> The GS101 TMU utilizes a hybrid control model shared between the
+>> Application Processor (AP) and the ACPM (Alive Clock and Power Manager)
+>> firmware.
+>>
+>> While the TMU is a standard memory-mapped IP block, on this platform
+> 
+> this ^^
+> 
 
-Sounds good to me, that's more accurate than "level" if it is possible
-to give access to arbitrary pkeys to each context, which is the current
-assumption.
+okay
 
-> What is accessible (and how) is defined for each context. For example, I
-> would assume that all context allow for read/write access to everything
-> that KPKEY_CTX_DEFAULT has access to.
+cut
 
-Most contexts would, although as I mentioned in the previous email,
-unprivileged contexts such as eBPF programs may be further restricted.
+> Is it Google TMU hardware block or Exynos/Samsung TMU block?
+> 
+> My understanding at this point is that ACPM interface, ACPM protocols, etc
+> appeared on Samsung SoCs before gs101 (maybe even before initial SCMI
+> prototyping). It looks like ACPM firmware, communication via mailboxes,
+> TMU channel, dealing with TMU behing ACPM, etc are actually a standard
+> Samsung Exynos architectural feature, rather than a Google-specific
+> implementation. I can't say though what was the first chipset where it
+> was implemented.
 
-- Kevin
+autov920, exynos850 too can use the hybrid ACPM TMU approach.
+I'll generalize the description.
+> 
+> Given that this is a Samsung design that predates the gs101, would it
+> make sense to use more generic name for this binding to reflect that
+> it is Exynos-derived? That would save us from generalizing things later
+
+The name has to match the compatible. We can rename it when other Samsung
+compatibles are added.
+
+Cheers,
+ta
