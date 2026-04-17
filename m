@@ -1,278 +1,1202 @@
-Received: from mx0b-00230701.pphosted.com (mx0b-00230701.pphosted.com [148.163.158.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C206833DED1;
-	Thu, 16 Apr 2026 22:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.158.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776380183; cv=fail; b=BPYjUf4OVgK9xuHGnZCeOavqOjZ26bJvSrbklv9hP7P9BvTEiM2m1LUVO4Brx+V4HjdTVdcOWkGb9db8W1SOEVWN0MEA8tKiW4MowiCpAovwO/4Xq+cIpF2JYt84WCdXJ7IsU+agsXrMxidCxZcqHYUGvtaCZsm6NE+ta3M8EQ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776380183; c=relaxed/simple;
-	bh=kNejwV7fQziQKzLJ40MIEiMO6s9hbU4YL90N46+/kVA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=q6VP75w4+yEKja5tkDCUw6tCMAfAj8Qn5iPw3YUYw0WXgkcrNyBA9zckUjcPh/tg6dfTPpErwR8h6EPIddWUqLiJ1B1BavS/Af/pdqDRIzgi00bskR/CTPnHny3n0tfmEdPVC9aUiCwvwqm0/DJNjAhUTWvDT999akFuDn3mxgg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com; spf=pass smtp.mailfrom=synopsys.com; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=AHT7/eLS; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=loDUUuON; dkim=fail (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=BLajoP9A reason="signature verification failed"; arc=fail smtp.client-ip=148.163.158.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=synopsys.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951313A8750;
+	Fri, 17 Apr 2026 08:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776413869; cv=none; b=JqbwT8bmshe1XvFSwMQLel3/RjRmWe8v5x5YgiI0ZPF8C8rkJFyI4Dt1NGUK0x8o6kzNb8bth/UmlmrbrhM4sHR2fPYeZ6xQXsTPkF+Tv2y0u8Lc8F1w/SRF3wkkakMJay5keugrJq50sXtPNEjZMh657QrrpUOE7lEAw7sL5Ek=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776413869; c=relaxed/simple;
+	bh=NxjTVXEoqInyLyDowclHJaOujchs2bJfZWMy99Iuysg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=u3pxz2X15DoDWwPTm13t+L8kFrGv8RJTCVYjVwx9V2O6SPk4Im30smIpS3z3l3CgiVImecAQm3EyCmgSI5lbFGUKELtAOwEvj/l0tyTg3FwepfeIK1uKq/UfBWO834kImFPC5tnrdt8G6nMF7rI9Ab8ZOi5r/lUDVz1ihf75m00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVht2ABj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AHT7/eLS";
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="loDUUuON";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BLajoP9A"
-Received: from pps.filterd (m0297265.ppops.net [127.0.0.1])
-	by mx0a-00230701.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63GLZjvC715698;
-	Thu, 16 Apr 2026 15:55:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com; h=
-	cc:content-id:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	pfptdkimsnps; bh=kNejwV7fQziQKzLJ40MIEiMO6s9hbU4YL90N46+/kVA=; b=
-	AHT7/eLSMLEkv7G6Q6AYUmeSbRSnMrhJN4+TWWLEkna71yRfhSo/YNm4dRy0x+ah
-	QKLXdTgC2syJZssBOQuQErZSoS8kmzThiOqGsxXteMo1xyQ0CZAmAcMqh818PwWp
-	XTiYH70KcFV+Q8Gd/yneLi9wuSkCUV4GbQZy4hBJUP1ma93/PjBBnAOZ4PN/hzly
-	MzSrJAsj/hlKTQr4xqfr9vf/mvIvpRzWsprb649muEVt+EChz87Xx5c0yqdsRYvy
-	oQeBlIkR4Y4PtJXiUebrug4uAaqGD9p/ydUqZAeMlVp7T7ZRdw+ENwrC2ePh5twS
-	g+DZXy9tuSTujYFiHFDHzg==
-Received: from smtprelay-out1.synopsys.com (smtprelay-out1.synopsys.com [149.117.87.133])
-	by mx0a-00230701.pphosted.com (PPS) with ESMTPS id 4dk4dd9swh-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 16 Apr 2026 15:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-	t=1776380157; bh=kNejwV7fQziQKzLJ40MIEiMO6s9hbU4YL90N46+/kVA=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=loDUUuONjsv3ushy+IQ5mP+5yjmuMvJZkO5Yfi1ewmuo9ftLZnmHYiqetCcDaDpzA
-	 vnGQsmLNMX9vJMFMoFNQGa+GQ91MWOxtq9sZsbfgb69EyMI/8jQN5I9ZQtysS6h/n4
-	 dzP1Pof7Jd+/DbHNsd/qLKNZnvodgqm36mSYdCcb2joycVjmOsg6ZuUV4RqQ9gghyM
-	 aaXeK3KAAY8lygRwqcZB650OoZ/zV/1pK+O0j712o0LBIGnL0PIPB5xujG1UZ+ejZH
-	 B5cSgKbmcldOk8JNxSIgKhOQgEEqjAogDXugluiaezeZtEjmlJpmyQcVTcV+dKRUlV
-	 2IdM6RkBCYn+Q==
-Received: from mailhost.synopsys.com (sv1-mailhost1.synopsys.com [10.205.2.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits)
-	 client-signature RSA-PSS (2048 bits))
-	(Client CN "mailhost.synopsys.com", Issuer "SNPSica2" (verified OK))
-	by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4D7994010F;
-	Thu, 16 Apr 2026 22:55:57 +0000 (UTC)
-Received: from o365relay-in.synopsys.com (us03-o365relay3.synopsys.com [10.4.161.139])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits)
-	 client-signature RSA-PSS (2048 bits))
-	(Client CN "o365relay-in.synopsys.com", Issuer "Sectigo Public Server Authentication CA OV R36" (not verified))
-	by mailhost.synopsys.com (Postfix) with ESMTPS id 0F192A02B2;
-	Thu, 16 Apr 2026 22:55:57 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-	dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.a=rsa-sha256 header.s=selector1 header.b=BLajoP9A;
-	dkim-atps=neutral
-Received: from PH0PR07CU006.outbound.protection.outlook.com (mail-ph0pr07cu00600.outbound.protection.outlook.com [40.93.23.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256
-	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
-	(Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (verified OK))
-	by o365relay-in.synopsys.com (Postfix) with ESMTPS id 8C3AC4021B;
-	Thu, 16 Apr 2026 22:55:56 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pEcsAm9nVGbvUnYfkvtuIMIZ+8CLyG9HdOsdt6IOH1qA1GrfvOjYbhHjqac6479hzXyAZeHUksFOTPipPcvOL97nXEM3tsnUK+lMDIS04Fm4OpYdhZ9hB9fT4q+yK+gwoYwHakKs8wAc19+pMw2Tm7W35YgE3dvgUg8AEhStnhG4Hfk3VfRtGgoZtgTdMeMBwNSp+hXmZpUFr7A0byLN74ouYp2b88Vc0loOBShKivLucGORIdtMl6Iuv1sPt0FLu9jEOpPiFIsiCHe2nfw/QW00IEjkA7i9tbz+DlK2XQsBENVC3eoTcuzL7Q0yjW1MwGxCxsY4wqZyxoI0DrPwTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kNejwV7fQziQKzLJ40MIEiMO6s9hbU4YL90N46+/kVA=;
- b=qqdstVg93oBGOQv/dsM4mnHfagdmHniasfZKBw3MA8BwARe75JnpYSbUxov3mvk1Z8xJG5UmS8TYO3oG52baJPRoD2kp+3n0NskbBpndXFeHIeH3n8cTndnZIiia3S/OpFqCHTfSzXhHuTvoqRcMchWZwZhdeCN/5lmqa8N/+VQm+1ELICwPs3g/vU8ccsejn7r0BOaBXKae/FngaL4ZrB4dmv1DKg7TixixBrGN9b79gqxJpt+KvG23wXwYeYh/38tTSkwqJW83sq6tIo5hMuSK3EoDu3rGBSK3w2PwXuoxU+1N/8x1toByzw92YmFceCvnvxrJTLvL5Qh8DfJLHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kNejwV7fQziQKzLJ40MIEiMO6s9hbU4YL90N46+/kVA=;
- b=BLajoP9AsLrEBQfEPKndvqYOEYKxPT11NITptTdGuVt7545ZksSEW2clhsgNUrGNIl/n0jmGDYCMezqCy+2CJ+fbtmrPj3u9w9mSWsDcSQJNr/VGcnjEJvD1IZ8xBEO0wqRQCM6I59eP2bcpWWvX8wMA8u3FxMhVy7yHKfzqnwk=
-Received: from LV2PR12MB5990.namprd12.prod.outlook.com (2603:10b6:408:170::16)
- by DM4PR12MB5940.namprd12.prod.outlook.com (2603:10b6:8:6b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.20; Thu, 16 Apr
- 2026 22:55:51 +0000
-Received: from LV2PR12MB5990.namprd12.prod.outlook.com
- ([fe80::7b72:b921:b9bd:4899]) by LV2PR12MB5990.namprd12.prod.outlook.com
- ([fe80::7b72:b921:b9bd:4899%6]) with mapi id 15.20.9818.017; Thu, 16 Apr 2026
- 22:55:50 +0000
-X-SNPS-Relay: synopsys.com
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To: Rosen Penev <rosenp@gmail.com>
-CC: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL HARDENING (not covered  by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] usb: dwc3: qcom: allocate clks with main struct
-Thread-Topic: [PATCH] usb: dwc3: qcom: allocate clks with main struct
-Thread-Index: AQHcyWXzTmC4YSS+30iC2JN5o4RlH7XiVXuA
-Date: Thu, 16 Apr 2026 22:55:50 +0000
-Message-ID: <20260416225537.wrajd7riin6ynut5@synopsys.com>
-References: <20260411034719.161736-1-rosenp@gmail.com>
-In-Reply-To: <20260411034719.161736-1-rosenp@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV2PR12MB5990:EE_|DM4PR12MB5940:EE_
-x-ms-office365-filtering-correlation-id: 15e9a852-2e47-4fb1-113f-08de9c0b4e6b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|56012099003|18002099003|22082099003|38070700021;
-x-microsoft-antispam-message-info:
- vo+Ys0TXbJb/kQ1RltQK5Y8cZVJaYuhOkiMORHOEnNQYGlPKt5POEzbFpvR7oIQpSoUS6PsV/5K9BnVi87UBVsL+6hTi+BxIDL9vEbqufnioJrvSbNN5M411mxR19xiX+jgsV0gjH+5vg71hO91P9R6C4Ku4tkgwnaL8CNUKxRrgKBPg4HEC1C6udlD5jcRTkYN+zTzXJ7PILCQOEHw7H/rDSJz0zXp51GBBcjx0kuMHCcia7+a3TlO9n2QrjmIgp2UrmsAUxZL1x6UQ9CmBuJrCrXR0FfKLyM3sf5zDcx8Uwgo7ZXtpiJqvtHCdE0XHpCuET5D2KSzZIAPpEgJpRN6JPsXQUBEyHBluN53T3kPIayKfXJJ2RaIY3tlGokmCFV8icNcKAQ4Dg1jlhulFbndTfUEdPSClJea48QaqPp21MQ/3DqbRNlhCvQj7LO1lRbJj57ejgFO3UX6G1agFK9iQZw6xnJi7us9Ob7Ef7+2spYj4LVYWm0I/1OV1QyMEJQGY8hGii02SL2ufWeclfs+RFv4jgYcAjl2ZRokTwVmpHPnCDcIXKzc/WcAi00rSltEHL8tvKyYRqPlnUEJmTGLBTmrirr3KzKvW0VGht0OASqH1R1sverq+MS6sODjeHe6Yy/MLaVTu1rwdqz6EvK6npEPcsP+RVwSS2TPwK/t5h/uGi4ytlRFNQXwzF5Yf0E1Q40Zs3ySffZ8aTcTBF8pfQWVBK/wgJhlSb4ZhPa5vhiF4gveoHd1AUIQ/EgBNJ06YluZvO9fWgN2DuslWVuwpCZSjCKtchECRigDyZEs=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(56012099003)(18002099003)(22082099003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?RTVUVzYwS045QnVkZHhkNU1TN2JUbGZkWFQyMGxoS3FXT1F4ZXFkR21OVHdl?=
- =?utf-8?B?RkZuK1NMSXdLY0k3cy9jSmRZTXpNbW9IR3llR3NIWndzb0p5T01CRmFZR05E?=
- =?utf-8?B?d25MaHlTSGZtUTYrbVY2TC9SaDBKaFhkQUpSeGpmbHFWS2FjTGd3b0hmTzNF?=
- =?utf-8?B?amlYZFZpVUFNamhuSUg5eSsveVlweG9LakVaNVZKNGJ4cE9UdE9ySXdQaEY2?=
- =?utf-8?B?cU4rbittRVBkWEUrZE1pdmRCcjR6NEdSYitkK2NkdHFCMzg1TlVkUzFMSFVl?=
- =?utf-8?B?WHhYdURxRTgxWklHWXN1NytvTllJVWxJRmkyZnZWeC9nNlZWTGw3b0ZNM1l2?=
- =?utf-8?B?MGxtdmdRV21QeWhlSW1oaVFmanh2UjZOQ3lWUHU5SmpuTk82NktUb1g4bHho?=
- =?utf-8?B?QllTNzlIcXFzbzFCZlZzaURYT2Q3TnhjdzNUN3hycHFmalJUbEkyNHJKM3Ft?=
- =?utf-8?B?YStGUFBBc2ZNS0F4TUpsMllaaWlIUUJtNmFHS0dmZkNmd3FLWW90bW90L3Ro?=
- =?utf-8?B?WWdISk9qRmYyT0NYSGplRXlXR0xSaWFIcTFsNWNUN05Sa3AwTnM5bjN5SVoy?=
- =?utf-8?B?T3BjN2ZVWFVHZWhGV29lb1N4YnFPb25yNDZnK2hzQnJyVkFqbCtDOVRSaXVW?=
- =?utf-8?B?N1FpQVBqcGYwRU5tWUNqOTFwUFRXTHpjZVExRTZ4Wkx2YTJETVZydDl1STZF?=
- =?utf-8?B?dW1CT29uWGVVakt0Z085ZTVEUG56SkJ6THIycXpEN0RJalNxRTJIeXdsMTVI?=
- =?utf-8?B?dmkvWXZyaDBVT1VSSGVJYlpQaGplWkdzcys3RG45VG94OEFqZlJkWW1vSG16?=
- =?utf-8?B?d3NHbmRMU29GbkFqblhLRUFiOCs2dWJERWlSSXcySW16Yy9Va3o2ckRJczF6?=
- =?utf-8?B?OXNtc2l4Qkx6US9BbTV6OVpUTlBvUzNkYXE5Vmo5QVViWmNIUEhFK0J5N0xY?=
- =?utf-8?B?VXN1TThmcjNJMUZMZHk5WEw3UU9BU21mL29uQTNpV00xbUg5a2RxS1Y2cUZP?=
- =?utf-8?B?aWNVa2p0UzlhbytyRFJ6WFBvK0hCb1FXc2Y0T2hRRDlvNUNLOVJsOXZwRVlq?=
- =?utf-8?B?OG1nMXBRUDRIV2w0ZlVOYmRiVmk1T0ZkcVVXaEdoK1VZT0Z1YnArT3lvdSt5?=
- =?utf-8?B?V1RleHNvS21ucWpHdUo2SDVPWHltN2RxUzVPZytpdjErK0ptdTZPaHUyY2d0?=
- =?utf-8?B?RlAvY2JvbTQrYVFpYUNQcjI3bDNRcDJVUzJ2WVdZM0MzU3B0Z2NVaEU0cnY5?=
- =?utf-8?B?OEl0T3FiSVN5MlhqYk1tQnd1M3FRaTJGK1psK3BHY011T1ZzUW1ZYnVuQUcx?=
- =?utf-8?B?YUFUVW9ybnlUZC84bEhmT0Mwckc5WGltRy9qa1dZQkl0eElodVhwQTJtVUNI?=
- =?utf-8?B?aVUwNVI3ZW1USktCRVc5WUc2NGRYNFFXaTNCM2pPeGp3dWlzcTBuYnVpelpC?=
- =?utf-8?B?MzVzYkxRVmVGRzJUOVZHQVE0VS9mQ0NzRlA2eHNDbVM0SDFTVTF0cjVoZ2du?=
- =?utf-8?B?Z2NRN0Q2MFNyWlJGcHAxNVZlNVdja3NzbG1wT2hIdXFaTXE2ZjdKdDV6ZkFO?=
- =?utf-8?B?UEE0ZE51akYvaEVTM1pWMTdFYjB4THQ0RkRsMDd5bVhQRlVPRU1WTGlTMkRI?=
- =?utf-8?B?bytQQndhMEFpazR4OGxKdmF2SnhjYnpCVjdDUkRFbTBLaytsVy9pMVp5ZDdu?=
- =?utf-8?B?RXhQempsRHpiNEl1Um5ubjB4ckMzUjNnUG9ISUdyQjBMMUpVZkFhZlpsdmpH?=
- =?utf-8?B?dWVmaXEzSnZHcWw2TmhXK1ZFR0pmRFN0WlhvZFVJWmF3eG4xK3U2WmN5U0sv?=
- =?utf-8?B?bWZQSlpuTXR5TWFpWEkzaXFWcVE3eGRERytITWNiWHgzZnFHM2o3RWFhUU5k?=
- =?utf-8?B?ZnlKOE85cndqWUpyN2FYelQ1YXN2ZWpnVUdaVTNqcXRzdmlMRXE3N3JmcmxW?=
- =?utf-8?B?L0hWUDFSRFhXb010b1RQc2xNM1RlRGtYZVJubDNReHBoVXFrVVFpbmVBVlds?=
- =?utf-8?B?YXRJTmNmY2NNa1JxT3gyU0JycEZrRmN0TVI1WnY5MStMYS8xSUF5RkxxZ3lR?=
- =?utf-8?B?S1h0S2ZmWStKOEltYjBHWjRrbk5XcHZhVzNPeXJsQzB0TFM3d1QvUFQwN3pa?=
- =?utf-8?B?dFhmc1FrS0VUUEdITFBISWRsaWh3RnpsTjFVVDhZZjE3UG5nMjBTVGMyTHpk?=
- =?utf-8?B?dEdQYU1PeTFZRkxzT3RqWU5JcUdsdjVWaURlV1Rub0hjUkpLRzhsSER4Z2FV?=
- =?utf-8?B?V2ZKTTZSWTA5RUIyRXZVVEpTdmMzQ2FHZ1VzcDZRZkRHSm5RUkUxQm9FbEtJ?=
- =?utf-8?B?aFBhekVaZTNReVpvQ3d4Y2ZmbmtuNXlKbWRQSGpJbEdDWDY2d2hEQT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D431CEF470A2A5469C3372E15489EAE8@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVht2ABj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5946CC2BCB8;
+	Fri, 17 Apr 2026 08:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776413869;
+	bh=NxjTVXEoqInyLyDowclHJaOujchs2bJfZWMy99Iuysg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=hVht2ABj4jqWnnm1Mu6ypV6dw94RrKv615XgFTm1SO9i9eU+JXceMKwQrUpfI1q7b
+	 mUlVYFOjJnulhCiouwEtOzZ7srKAzeGjZ/nRn49en5BEie26hxRb+bciAKoUGPNMiL
+	 fLja96hJIRIVr47lWPLg1BEKT+KLmYe7rQyLn33db8xarEZIkXaanleAl8OuG6OlXH
+	 eq/dQa3WXrVl07h2vJOcCN48By6U+7yfxQYO4ZiGKgtlgKXJ2jay6zOF6xGONMb1Us
+	 A2tW3uRNZV85RDm7JjrhTpBY1QoddyZYJXwHIIONC4KdqVlKKYV2Cpfr8Vz4cFTre2
+	 Bq1wasXdKYdlA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507A3F8E4BC;
+	Fri, 17 Apr 2026 08:17:49 +0000 (UTC)
+From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Date: Fri, 17 Apr 2026 09:17:31 +0100
+Subject: [PATCH RFC v3 2/9] iio: frequency: ad9910: initial driver
+ implementation
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked:
-	niFx0b4+4yvWqpAA+fqnQuw+nTAxyC9h+NGGxWlRg09fV0MzLfVrFlbWQ4+GbvNI41sKqVsb3wyHSMRHXu0fw0saY1ut4jeOnestZmW9sJ3dE5Znlz828WCvKs7hFMwCWz/OnwUKqHLIkUIw0wERFdYnZ4z2aX9yvgiZ0DPaWSLQc0SUu7Dn3nv2QHn48DJye8u0HPz0V63Db1L6n2n39I2mHSleN7AFKADtFCfc+EGVT8dQH4Y37Qjn2l14nDcqsOag/f+wI3puW2yyvI8uS0mxtjpxGhJKrMXoDnSxL+RLxBGRSLqWY8+YacMn/v8Z8GUTTPos9YdyJGlbdc6+tA==
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	5Rtsklh00vvndT0uY/b5UA89y39ZsGHVGTDv19Z582SCCDBpHEJx2SUxvyua3I6pOjUM5qfmT7JmTw4MpePp9wKm/rTYgdRsszrtktIVzC/d2Tn8GHMzZAxoa7k+AisQeENwVH9M04J9jbPeodgBV3JpzOtin/6cKu4y8cbrh06XTTniu1/bg3AB3XWFByjysyRVxWEGCBEYUKWRIjZ+gizP+gdkTV/g/VyRcsXruAf68K6A6eLPyBDnuyHbxOxM3/uI+DyT+g03nUTMh5uZkjnYvtdLTWFVaLXgiLPYb3A2s77/jercOv4418Ohl21ZVcKvg0m8zP+V0fOVqsDADiWzQqL2wb2PHsUdubDReZ34Eo5Fm/YVFe4mpJRCPGOcubTdkUB2PSxc/B43wqrxw4dwS5ND/Q4MVwMAoP0ODzyk6+mknhf09LqSnSB/fvAfADJor+2naeAbs35mjsU8rZaAIkCd3y+BpjJ/DPUsPia3ggi3MXVV8I/KMsRXWHopDO283I7TD8As0uLeZqM0d7+/gtNLYkKCjPamPM9peKUJ5OBgwjj1D2/o7mAnDMllwJPB4nviXuwMSX+zmJGjo7cBXDfpfRxS955dl6EJlnxekCtUS3EsU06iTDz9OpfLXUbCNOp/8Ugytt7wcXoHLw==
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15e9a852-2e47-4fb1-113f-08de9c0b4e6b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2026 22:55:50.6809
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JJZjM4ivVg4R+q9K9PU82fyeM5rOu7CRYa3o7wiH43bczjPfHiV9rFO1/Glzoc9ZzOo0mUT4DwepunNUgN84xw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5940
-X-Authority-Analysis: v=2.4 cv=Zvjd7d7G c=1 sm=1 tr=0 ts=69e168fe cx=c_pps
- a=t4gDRyhI9k+KZ5gXRQysFQ==:117 a=t4gDRyhI9k+KZ5gXRQysFQ==:17
- a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=qPHU084jO2kA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=tU_645BZ7FZt8VqRJtHG:22 a=-4-sGo8i1FcW4KD7_GeR:22
- a=pGLkceISAAAA:8 a=0BOyVNAB8tdlYOhFzfAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: FmZFCaHNgVqtsO7wYH_RXCf4mMofNIqg
-X-Proofpoint-ORIG-GUID: FmZFCaHNgVqtsO7wYH_RXCf4mMofNIqg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE2MDIxNyBTYWx0ZWRfX/mkA8bOpttRF
- 9YqzzCbQoz+zh0e1eTvx0lUCcLgNPMQbI3g0t7O0mPCLJnOmD04xhT7RWIR1NM7je06W29GoHxz
- ISVOUUrzNg4Dq0EJe4yWSoYQHWGLanJ31kuAfzAOG01WxlIdBU4QC0CPy8fRAUW5yFkPdnCIjFT
- jmqmsykrwHLYmPaB4+y9QLuQopOfRbS3CXIHGi4kCchwYX88LMWVfuMjBSPUhxVxD1rOlM0wNgl
- NCym18FNFKlJdw/Gmlwg1l8ktCUUhEImCBQK30/C3P0/F4rCfm6NlQbpxz42KTdqW0T2YYm0pxO
- 2MRzin3R+1k5zI13X4OKpMyxHCqrEBdashOH42EnLwtkzMJzQgcBRYVVyTV0a5y+l4m2+NSmpx7
- pIiq/4ws/l6Fk2cJP3NRYDH5efBGM/B9aAorSVgsS0eYwgmdsRpTByHZ9+tKPhEHDF6yv4I5ucf
- Nev97aQS0BMaAWoxRlQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-16_03,2026-04-16_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_active_cloned_notspam
- policy=outbound_active_cloned score=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 clxscore=1011 malwarescore=0 phishscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.22.0-2604070000 definitions=main-2604160217
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260417-ad9910-iio-driver-v3-2-29b93712a228@analog.com>
+References: <20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com>
+In-Reply-To: <20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com>
+To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rodrigo Alencar <rodrigo.alencar@analog.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776413867; l=34655;
+ i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
+ bh=FY6dM9B307/WkfwSr8NolPTjTF/0C/dyOtOTyNzgUYM=;
+ b=H/ls3TykJ03zlL9Xcwp7FZldcas4gqTkjJiQ+uaC9cHKlxWgMD7ha64LFJhsFGC6tbFbPGBad
+ UT7Hc8whZreDXdTPiHu5OTJ8qrq5re9sL6qJxJliUde3c0SNJEemBrr
+X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
+ pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
+X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
+ with auth_id=561
+X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Reply-To: rodrigo.alencar@analog.com
 
-T24gRnJpLCBBcHIgMTAsIDIwMjYsIFJvc2VuIFBlbmV2IHdyb3RlOg0KPiBVc2UgYSBmbGV4aWJs
-ZSBhcnJheSBtZW1iZXIgdG8gY29tYmluZSBhbGxvY2F0aW9ucy4NCj4gDQo+IEFkZCBfX2NvdW50
-ZWRfYnkgZm9yIGV4dHJhIHJ1bnRpbWUgYW5hbHlzaXMuDQo+IA0KPiBDaGFuZ2UgZHdjM19xY29t
-X2Nsa19pbml0IHRvIGEgc2luZ2xlIHBhcmFtZXRlci4gTm8gbmVlZCB0byBwYXNzIGNvdW50DQo+
-IHNlcGFyYXRlbHkgbm93Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUm9zZW4gUGVuZXYgPHJvc2Vu
-cEBnbWFpbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy91c2IvZHdjMy9kd2MzLXFjb20tbGVnYWN5
-LmMgfCAyMSArKysrKysrKysrLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNl
-cnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Vz
-Yi9kd2MzL2R3YzMtcWNvbS1sZWdhY3kuYyBiL2RyaXZlcnMvdXNiL2R3YzMvZHdjMy1xY29tLWxl
-Z2FjeS5jDQo+IGluZGV4IGQzZmFkMGZjZmRhYy4uNTY1ZDAzZWIwMWI4IDEwMDY0NA0KPiAtLS0g
-YS9kcml2ZXJzL3VzYi9kd2MzL2R3YzMtcWNvbS1sZWdhY3kuYw0KPiArKysgYi9kcml2ZXJzL3Vz
-Yi9kd2MzL2R3YzMtcWNvbS1sZWdhY3kuYw0KPiBAQCAtNzQsNyArNzQsNiBAQCBzdHJ1Y3QgZHdj
-M19xY29tIHsNCj4gIAlzdHJ1Y3QgZGV2aWNlCQkqZGV2Ow0KPiAgCXZvaWQgX19pb21lbQkJKnFz
-Y3JhdGNoX2Jhc2U7DQo+ICAJc3RydWN0IHBsYXRmb3JtX2RldmljZQkqZHdjMzsNCj4gLQlzdHJ1
-Y3QgY2xrCQkqKmNsa3M7DQo+ICAJaW50CQkJbnVtX2Nsb2NrczsNCj4gIAlzdHJ1Y3QgcmVzZXRf
-Y29udHJvbAkqcmVzZXRzOw0KPiAgCXN0cnVjdCBkd2MzX3Fjb21fcG9ydAlwb3J0c1tEV0MzX1FD
-T01fTUFYX1BPUlRTXTsNCj4gQEAgLTkwLDYgKzg5LDcgQEAgc3RydWN0IGR3YzNfcWNvbSB7DQo+
-ICAJYm9vbAkJCXBtX3N1c3BlbmRlZDsNCj4gIAlzdHJ1Y3QgaWNjX3BhdGgJCSppY2NfcGF0aF9k
-ZHI7DQo+ICAJc3RydWN0IGljY19wYXRoCQkqaWNjX3BhdGhfYXBwczsNCj4gKwlzdHJ1Y3QgY2xr
-CQkqY2xrc1tdIF9fY291bnRlZF9ieShudW1fY2xvY2tzKTsNCj4gIH07DQo+ICANCj4gIHN0YXRp
-YyBpbmxpbmUgdm9pZCBkd2MzX3Fjb21fc2V0Yml0cyh2b2lkIF9faW9tZW0gKmJhc2UsIHUzMiBv
-ZmZzZXQsIHUzMiB2YWwpDQo+IEBAIC02NTMsMTAgKzY1MywxMSBAQCBzdGF0aWMgaW50IGR3YzNf
-cWNvbV9zZXR1cF9pcnEoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAlyZXR1cm4g
-MDsNCj4gIH0NCj4gIA0KPiAtc3RhdGljIGludCBkd2MzX3Fjb21fY2xrX2luaXQoc3RydWN0IGR3
-YzNfcWNvbSAqcWNvbSwgaW50IGNvdW50KQ0KPiArc3RhdGljIGludCBkd2MzX3Fjb21fY2xrX2lu
-aXQoc3RydWN0IGR3YzNfcWNvbSAqcWNvbSkNCj4gIHsNCj4gIAlzdHJ1Y3QgZGV2aWNlCQkqZGV2
-ID0gcWNvbS0+ZGV2Ow0KPiAgCXN0cnVjdCBkZXZpY2Vfbm9kZQkqbnAgPSBkZXYtPm9mX25vZGU7
-DQo+ICsJaW50CQkJY291bnQgPSBxY29tLT5udW1fY2xvY2tzOw0KPiAgCWludAkJCWk7DQo+ICAN
-Cj4gIAlpZiAoIW5wIHx8ICFjb3VudCkNCj4gQEAgLTY2NSwxMyArNjY2LDYgQEAgc3RhdGljIGlu
-dCBkd2MzX3Fjb21fY2xrX2luaXQoc3RydWN0IGR3YzNfcWNvbSAqcWNvbSwgaW50IGNvdW50KQ0K
-PiAgCWlmIChjb3VudCA8IDApDQo+ICAJCXJldHVybiBjb3VudDsNCj4gIA0KPiAtCXFjb20tPm51
-bV9jbG9ja3MgPSBjb3VudDsNCj4gLQ0KPiAtCXFjb20tPmNsa3MgPSBkZXZtX2tjYWxsb2MoZGV2
-LCBxY29tLT5udW1fY2xvY2tzLA0KPiAtCQkJCSAgc2l6ZW9mKHN0cnVjdCBjbGsgKiksIEdGUF9L
-RVJORUwpOw0KPiAtCWlmICghcWNvbS0+Y2xrcykNCj4gLQkJcmV0dXJuIC1FTk9NRU07DQo+IC0N
-Cj4gIAlmb3IgKGkgPSAwOyBpIDwgcWNvbS0+bnVtX2Nsb2NrczsgaSsrKSB7DQo+ICAJCXN0cnVj
-dCBjbGsJKmNsazsNCj4gIAkJaW50CQlyZXQ7DQo+IEBAIC03MzYsMTMgKzczMCwxOCBAQCBzdGF0
-aWMgaW50IGR3YzNfcWNvbV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAg
-CXN0cnVjdCBkZXZpY2UJCSpkZXYgPSAmcGRldi0+ZGV2Ow0KPiAgCXN0cnVjdCBkd2MzX3Fjb20J
-KnFjb207DQo+ICAJaW50CQkJcmV0LCBpOw0KPiArCWludAkJCW51bV9jbG9ja3M7DQo+ICAJYm9v
-bAkJCWlnbm9yZV9waXBlX2NsazsNCj4gIAlib29sCQkJd2FrZXVwX3NvdXJjZTsNCj4gIA0KPiAt
-CXFjb20gPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpxY29tKSwgR0ZQX0tFUk5F
-TCk7DQo+ICsJbnVtX2Nsb2NrcyA9IG9mX2Nsa19nZXRfcGFyZW50X2NvdW50KG5wKTsNCj4gKwlx
-Y29tID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHN0cnVjdF9zaXplKHFjb20sIGNsa3MsIG51
-bV9jbG9ja3MpLA0KPiArCQkJR0ZQX0tFUk5FTCk7DQo+ICAJaWYgKCFxY29tKQ0KPiAgCQlyZXR1
-cm4gLUVOT01FTTsNCj4gIA0KPiArCXFjb20tPm51bV9jbG9ja3MgPSBudW1fY2xvY2tzOw0KPiAr
-DQo+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgcWNvbSk7DQo+ICAJcWNvbS0+ZGV2ID0g
-JnBkZXYtPmRldjsNCj4gIA0KPiBAQCAtNzY2LDcgKzc2NSw3IEBAIHN0YXRpYyBpbnQgZHdjM19x
-Y29tX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJCWdvdG8gcmVzZXRf
-YXNzZXJ0Ow0KPiAgCX0NCj4gIA0KPiAtCXJldCA9IGR3YzNfcWNvbV9jbGtfaW5pdChxY29tLCBv
-Zl9jbGtfZ2V0X3BhcmVudF9jb3VudChucCkpOw0KPiArCXJldCA9IGR3YzNfcWNvbV9jbGtfaW5p
-dChxY29tKTsNCj4gIAlpZiAocmV0KSB7DQo+ICAJCWRldl9lcnJfcHJvYmUoZGV2LCByZXQsICJm
-YWlsZWQgdG8gZ2V0IGNsb2Nrc1xuIik7DQo+ICAJCWdvdG8gcmVzZXRfYXNzZXJ0Ow0KPiAtLSAN
-Cj4gMi41My4wDQo+IA0KDQpJIGRvbid0IHNlZSBob3cgdGhpcyBpcyBiZXR0ZXIgdGhhbiBiZWZv
-cmUsIGVzcGVjaWFsbHkgd2hlbiBpdCdzDQpkZXZpYXRpbmcgZnJvbSB0aGUgbmV3IGR3YzMtcWNv
-bSBsb2dpYy4gUGxlYXNlIHJldmlldyB0aGUgZHdjMy1xY29tDQppbnN0ZWFkIGJlZm9yZSBtYWtp
-bmcgY2hhbmdlcyB0byB0aGUgbGVnYWN5IGRyaXZlci4gSSBwcmVmZXIgbmV3DQpkZXZlbG9wbWVu
-dCB0byBiZSBkb25lIGluIHRoZSBuZXcgZHdjMy1xY29tIGRyaXZlci4NCg0KVGhhbmtzLA0KVGhp
-bmg=
+From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+
+Add the core AD9910 DDS driver infrastructure with single tone mode
+support. This includes SPI register access, profile management via GPIO
+pins, PLL/DAC configuration from firmware properties, and single tone
+frequency/phase/amplitude control through IIO attributes.
+
+Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+---
+ MAINTAINERS                    |    1 +
+ drivers/iio/frequency/Kconfig  |   18 +
+ drivers/iio/frequency/Makefile |    1 +
+ drivers/iio/frequency/ad9910.c | 1052 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 1072 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ca8b68e5daa..6403439b530d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1636,6 +1636,7 @@ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/iio/frequency/adi,ad9910.yaml
++F:	drivers/iio/frequency/ad9910.c
+ 
+ ANALOG DEVICES INC MAX22007 DRIVER
+ M:	Janani Sunil <janani.sunil@analog.com>
+diff --git a/drivers/iio/frequency/Kconfig b/drivers/iio/frequency/Kconfig
+index 583cbdf4e8cd..180e74f62d11 100644
+--- a/drivers/iio/frequency/Kconfig
++++ b/drivers/iio/frequency/Kconfig
+@@ -23,6 +23,24 @@ config AD9523
+ 
+ endmenu
+ 
++menu "Direct Digital Synthesis"
++
++config AD9910
++	tristate "Analog Devices AD9910 Direct Digital Synthesizer"
++	depends on SPI
++	depends on GPIOLIB
++	help
++	  Say yes here to build support for Analog Devices AD9910
++	  1 GSPS, 14-Bit DDS with integrated DAC.
++
++	  Supports single tone mode with 8 configurable profiles
++	  and digital ramp generation.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called ad9910.
++
++endmenu
++
+ #
+ # Phase-Locked Loop (PLL) frequency synthesizers
+ #
+diff --git a/drivers/iio/frequency/Makefile b/drivers/iio/frequency/Makefile
+index 70d0e0b70e80..39271dd209ca 100644
+--- a/drivers/iio/frequency/Makefile
++++ b/drivers/iio/frequency/Makefile
+@@ -5,6 +5,7 @@
+ 
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_AD9523) += ad9523.o
++obj-$(CONFIG_AD9910) += ad9910.o
+ obj-$(CONFIG_ADF4350) += adf4350.o
+ obj-$(CONFIG_ADF4371) += adf4371.o
+ obj-$(CONFIG_ADF4377) += adf4377.o
+diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
+new file mode 100644
+index 000000000000..e9005037db1a
+--- /dev/null
++++ b/drivers/iio/frequency/ad9910.c
+@@ -0,0 +1,1052 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * AD9910 SPI DDS (Direct Digital Synthesizer) driver
++ *
++ * Copyright 2026 Analog Devices Inc.
++ */
++
++#include <linux/array_size.h>
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/device/devres.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/log2.h>
++#include <linux/math64.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/property.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
++#include <linux/spi/spi.h>
++#include <linux/sysfs.h>
++#include <linux/types.h>
++#include <linux/units.h>
++#include <linux/unaligned.h>
++
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++
++/* Register addresses */
++#define AD9910_REG_CFR1			0x00
++#define AD9910_REG_CFR2			0x01
++#define AD9910_REG_CFR3			0x02
++#define AD9910_REG_AUX_DAC		0x03
++#define AD9910_REG_IO_UPDATE_RATE	0x04
++#define AD9910_REG_FTW			0x07
++#define AD9910_REG_POW			0x08
++#define AD9910_REG_ASF			0x09
++#define AD9910_REG_MULTICHIP_SYNC	0x0A
++#define AD9910_REG_DRG_LIMIT		0x0B
++#define AD9910_REG_DRG_STEP		0x0C
++#define AD9910_REG_DRG_RATE		0x0D
++#define AD9910_REG_PROFILE0		0x0E
++#define AD9910_REG_PROFILE1		0x0F
++#define AD9910_REG_PROFILE2		0x10
++#define AD9910_REG_PROFILE3		0x11
++#define AD9910_REG_PROFILE4		0x12
++#define AD9910_REG_PROFILE5		0x13
++#define AD9910_REG_PROFILE6		0x14
++#define AD9910_REG_PROFILE7		0x15
++#define AD9910_REG_RAM			0x16
++
++#define AD9910_REG_NUM_CACHED		0x16
++
++#define AD9910_REG_PROFILE(x)		(AD9910_REG_PROFILE0 + (x))
++#define AD9910_REG_HIGH32_FLAG_MSK	BIT(8)
++
++/* CFR1 bit definitions */
++#define AD9910_CFR1_RAM_ENABLE_MSK		BIT(31)
++#define AD9910_CFR1_RAM_PLAYBACK_DEST_MSK	GENMASK(30, 29)
++#define AD9910_CFR1_OSK_MANUAL_EXT_CTL_MSK	BIT(23)
++#define AD9910_CFR1_INV_SINC_EN_MSK		BIT(22)
++#define AD9910_CFR1_INT_PROFILE_CTL_MSK		GENMASK(20, 17)
++#define AD9910_CFR1_SELECT_SINE_MSK		BIT(16)
++#define AD9910_CFR1_LOAD_LRR_IO_UPDATE_MSK	BIT(15)
++#define AD9910_CFR1_AUTOCLR_DIG_RAMP_ACCUM_MSK	BIT(14)
++#define AD9910_CFR1_AUTOCLR_PHASE_ACCUM_MSK	BIT(13)
++#define AD9910_CFR1_CLEAR_DIG_RAMP_ACCUM_MSK	BIT(12)
++#define AD9910_CFR1_CLEAR_PHASE_ACCUM_MSK	BIT(11)
++#define AD9910_CFR1_LOAD_ARR_IO_UPDATE_MSK	BIT(10)
++#define AD9910_CFR1_OSK_ENABLE_MSK		BIT(9)
++#define AD9910_CFR1_SELECT_AUTO_OSK_MSK		BIT(8)
++#define AD9910_CFR1_DIGITAL_POWER_DOWN_MSK	BIT(7)
++#define AD9910_CFR1_DAC_POWER_DOWN_MSK		BIT(6)
++#define AD9910_CFR1_REFCLK_INPUT_POWER_DOWN_MSK	BIT(5)
++#define AD9910_CFR1_AUX_DAC_POWER_DOWN_MSK	BIT(4)
++#define AD9910_CFR1_SOFT_POWER_DOWN_MSK		GENMASK(7, 4)
++#define AD9910_CFR1_EXT_POWER_DOWN_CTL_MSK	BIT(3)
++#define AD9910_CFR1_SDIO_INPUT_ONLY_MSK		BIT(1)
++#define AD9910_CFR1_LSB_FIRST_MSK		BIT(0)
++
++/* CFR2 bit definitions */
++#define AD9910_CFR2_AMP_SCALE_SINGLE_TONE_MSK	BIT(24)
++#define AD9910_CFR2_INTERNAL_IO_UPDATE_MSK	BIT(23)
++#define AD9910_CFR2_SYNC_CLK_EN_MSK		BIT(22)
++#define AD9910_CFR2_DRG_DEST_MSK		GENMASK(21, 20)
++#define AD9910_CFR2_DRG_ENABLE_MSK		BIT(19)
++#define AD9910_CFR2_DRG_NO_DWELL_HIGH_MSK	BIT(18)
++#define AD9910_CFR2_DRG_NO_DWELL_LOW_MSK	BIT(17)
++#define AD9910_CFR2_DRG_NO_DWELL_MSK		GENMASK(18, 17)
++#define AD9910_CFR2_READ_EFFECTIVE_FTW_MSK	BIT(16)
++#define AD9910_CFR2_IO_UPDATE_RATE_CTL_MSK	GENMASK(15, 14)
++#define AD9910_CFR2_PDCLK_ENABLE_MSK		BIT(11)
++#define AD9910_CFR2_PDCLK_INVERT_MSK		BIT(10)
++#define AD9910_CFR2_TXENABLE_INVERT_MSK		BIT(9)
++#define AD9910_CFR2_MATCHED_LATENCY_EN_MSK	BIT(7)
++#define AD9910_CFR2_DATA_ASM_HOLD_LAST_MSK	BIT(6)
++#define AD9910_CFR2_SYNC_TIMING_VAL_DISABLE_MSK	BIT(5)
++#define AD9910_CFR2_PARALLEL_DATA_PORT_EN_MSK	BIT(4)
++#define AD9910_CFR2_FM_GAIN_MSK			GENMASK(3, 0)
++
++/* CFR3 bit definitions */
++#define AD9910_CFR3_OPEN_MSK			0x08070000
++#define AD9910_CFR3_DRV0_MSK			GENMASK(29, 28)
++#define AD9910_CFR3_VCO_SEL_MSK			GENMASK(26, 24)
++#define AD9910_CFR3_ICP_MSK			GENMASK(21, 19)
++#define AD9910_CFR3_REFCLK_DIV_BYPASS_MSK	BIT(15)
++#define AD9910_CFR3_REFCLK_DIV_RESETB_MSK	BIT(14)
++#define AD9910_CFR3_PFD_RESET_MSK		BIT(10)
++#define AD9910_CFR3_PLL_EN_MSK			BIT(8)
++#define AD9910_CFR3_N_MSK			GENMASK(7, 1)
++
++/* Auxiliary DAC Control Register Bits */
++#define AD9910_AUX_DAC_FSC_MSK			GENMASK(7, 0)
++
++/* ASF Register Bits */
++#define AD9910_ASF_RAMP_RATE_MSK		GENMASK(31, 16)
++#define AD9910_ASF_SCALE_FACTOR_MSK		GENMASK(15, 2)
++#define AD9910_ASF_STEP_SIZE_MSK		GENMASK(1, 0)
++
++/* Multichip Sync Register Bits */
++#define AD9910_MC_SYNC_VALIDATION_DELAY_MSK	GENMASK(31, 28)
++#define AD9910_MC_SYNC_RECEIVER_ENABLE_MSK	BIT(27)
++#define AD9910_MC_SYNC_GENERATOR_ENABLE_MSK	BIT(26)
++#define AD9910_MC_SYNC_GENERATOR_POLARITY_MSK	BIT(25)
++#define AD9910_MC_SYNC_STATE_PRESET_MSK		GENMASK(23, 18)
++#define AD9910_MC_SYNC_OUTPUT_DELAY_MSK		GENMASK(15, 11)
++#define AD9910_MC_SYNC_INPUT_DELAY_MSK		GENMASK(7, 3)
++
++/* Profile Register Format (Single Tone Mode) */
++#define AD9910_PROFILE_ST_ASF_MSK		GENMASK_ULL(61, 48)
++#define AD9910_PROFILE_ST_POW_MSK		GENMASK_ULL(47, 32)
++#define AD9910_PROFILE_ST_FTW_MSK		GENMASK_ULL(31, 0)
++
++/* Device constants */
++#define AD9910_PI_NANORAD		3141592653UL
++
++#define AD9910_MAX_SYSCLK_HZ		(1000 * HZ_PER_MHZ)
++#define AD9910_MAX_PHASE_MICRORAD	(AD9910_PI_NANORAD / 500)
++
++#define AD9910_ASF_MAX			GENMASK(13, 0)
++#define AD9910_POW_MAX			GENMASK(15, 0)
++#define AD9910_NUM_PROFILES		8
++
++/* PLL constants */
++#define AD9910_PLL_MIN_N		12
++#define AD9910_PLL_MAX_N		127
++
++#define AD9910_PLL_IN_MIN_FREQ_HZ	(3200 * HZ_PER_KHZ)
++#define AD9910_PLL_IN_MAX_FREQ_HZ	(60 * HZ_PER_MHZ)
++
++#define AD9910_PLL_OUT_MIN_FREQ_HZ	(420 * HZ_PER_MHZ)
++#define AD9910_PLL_OUT_MAX_FREQ_HZ	(1000 * HZ_PER_MHZ)
++
++#define AD9910_VCO0_RANGE_AUTO_MAX_HZ	(457 * HZ_PER_MHZ)
++#define AD9910_VCO1_RANGE_AUTO_MAX_HZ	(530 * HZ_PER_MHZ)
++#define AD9910_VCO2_RANGE_AUTO_MAX_HZ	(632 * HZ_PER_MHZ)
++#define AD9910_VCO3_RANGE_AUTO_MAX_HZ	(775 * HZ_PER_MHZ)
++#define AD9910_VCO4_RANGE_AUTO_MAX_HZ	(897 * HZ_PER_MHZ)
++#define AD9910_VCO_RANGE_NUM		6
++
++#define AD9910_REFCLK_OUT_DRV_DISABLED	0
++
++#define AD9910_ICP_MIN_uA		212
++#define AD9910_ICP_MAX_uA		387
++#define AD9910_ICP_STEP_uA		25
++
++#define AD9910_DAC_IOUT_MAX_uA		31590
++#define AD9910_DAC_IOUT_DEFAULT_uA	20070
++#define AD9910_DAC_IOUT_MIN_uA		8640
++
++#define AD9910_REFDIV2_MIN_FREQ_HZ	(120 * HZ_PER_MHZ)
++#define AD9910_REFDIV2_MAX_FREQ_HZ	(1900 * HZ_PER_MHZ)
++
++#define AD9910_SPI_DATA_IDX		1
++#define AD9910_SPI_DATA_LEN_MAX		sizeof(__be64)
++#define AD9910_SPI_MESSAGE_LEN_MAX	(AD9910_SPI_DATA_IDX + AD9910_SPI_DATA_LEN_MAX)
++#define AD9910_SPI_READ_MSK		BIT(7)
++#define AD9910_SPI_ADDR_MSK		GENMASK(4, 0)
++
++/**
++ * enum ad9910_channel - AD9910 channel identifiers in priority order
++ *
++ * @AD9910_CHANNEL_PHY: Physical output channel
++ * @AD9910_CHANNEL_PROFILE_0: Profile 0 output channel
++ * @AD9910_CHANNEL_PROFILE_1: Profile 1 output channel
++ * @AD9910_CHANNEL_PROFILE_2: Profile 2 output channel
++ * @AD9910_CHANNEL_PROFILE_3: Profile 3 output channel
++ * @AD9910_CHANNEL_PROFILE_4: Profile 4 output channel
++ * @AD9910_CHANNEL_PROFILE_5: Profile 5 output channel
++ * @AD9910_CHANNEL_PROFILE_6: Profile 6 output channel
++ * @AD9910_CHANNEL_PROFILE_7: Profile 7 output channel
++ */
++enum ad9910_channel {
++	AD9910_CHANNEL_PHY = 100,
++	AD9910_CHANNEL_PROFILE_0 = 101,
++	AD9910_CHANNEL_PROFILE_1 = 102,
++	AD9910_CHANNEL_PROFILE_2 = 103,
++	AD9910_CHANNEL_PROFILE_3 = 104,
++	AD9910_CHANNEL_PROFILE_4 = 105,
++	AD9910_CHANNEL_PROFILE_5 = 106,
++	AD9910_CHANNEL_PROFILE_6 = 107,
++	AD9910_CHANNEL_PROFILE_7 = 108,
++};
++
++enum {
++	AD9910_CHAN_IDX_PHY,
++	AD9910_CHAN_IDX_PROFILE_0,
++	AD9910_CHAN_IDX_PROFILE_1,
++	AD9910_CHAN_IDX_PROFILE_2,
++	AD9910_CHAN_IDX_PROFILE_3,
++	AD9910_CHAN_IDX_PROFILE_4,
++	AD9910_CHAN_IDX_PROFILE_5,
++	AD9910_CHAN_IDX_PROFILE_6,
++	AD9910_CHAN_IDX_PROFILE_7,
++	AD9910_CHAN_IDX_PARALLEL_PORT,
++	AD9910_CHAN_IDX_DRG,
++	AD9910_CHAN_IDX_DRG_RAMP_UP,
++	AD9910_CHAN_IDX_DRG_RAMP_DOWN,
++	AD9910_CHAN_IDX_RAM,
++	AD9910_CHAN_IDX_OSK,
++};
++
++enum {
++	AD9910_POWERDOWN,
++};
++
++struct ad9910_data {
++	u32 sysclk_freq_hz;
++	u32 dac_output_current;
++
++	u16 pll_charge_pump_current;
++	u8 refclk_out_drv;
++	bool pll_enabled;
++};
++
++union ad9910_reg {
++	u64 val64;
++	u32 val32;
++	u16 val16;
++};
++
++struct ad9910_state {
++	struct spi_device *spi;
++	struct clk *refclk;
++
++	struct gpio_desc *gpio_pwdown;
++	struct gpio_desc *gpio_update;
++	struct gpio_descs *gpio_profile;
++
++	/* cached registers */
++	union ad9910_reg reg[AD9910_REG_NUM_CACHED];
++
++	/* Lock for accessing device registers and state variables */
++	struct mutex lock;
++
++	struct ad9910_data data;
++	u8 profile;
++
++	union {
++		__be64 be64;
++		__be32 be32;
++		__be16 be16;
++	} rx_buf;
++	/*
++	 * RAM loading requires a reasonable amount of bytes, at the same time
++	 * DMA capable SPI drivers requires the transfer buffers to live in
++	 * their own cache lines.
++	 */
++	u8 tx_buf[AD9910_SPI_MESSAGE_LEN_MAX] __aligned(IIO_DMA_MINALIGN);
++};
++
++/**
++ * ad9910_rational_scale() - Perform scaling of input given a reference.
++ * @input: The input value to be scaled.
++ * @scale: The numerator of the scaling factor.
++ * @reference: The denominator of the scaling factor.
++ *
++ * Closest rounding with mul_u64_add_u64_div_u64
++ *
++ * Return: The scaled value.
++ */
++#define ad9910_rational_scale(input, scale, reference) ({	\
++	u64 _tmp = (reference);					\
++	mul_u64_add_u64_div_u64(input, scale, _tmp >> 1, _tmp);	\
++})
++
++static int ad9910_io_update(struct ad9910_state *st)
++{
++	if (st->gpio_update) {
++		gpiod_set_value_cansleep(st->gpio_update, 1);
++		udelay(1);
++		gpiod_set_value_cansleep(st->gpio_update, 0);
++	}
++
++	return 0;
++}
++
++static inline int ad9910_spi_read(struct ad9910_state *st, u8 reg, size_t len)
++{
++	st->tx_buf[0] = AD9910_SPI_READ_MSK |
++			FIELD_PREP(AD9910_SPI_ADDR_MSK, reg);
++	return spi_write_then_read(st->spi, st->tx_buf, 1, &st->rx_buf, len);
++}
++
++static inline int ad9910_spi_write(struct ad9910_state *st, u8 reg, size_t len,
++				   bool update)
++{
++	int ret;
++
++	st->tx_buf[0] = FIELD_PREP(AD9910_SPI_ADDR_MSK, reg);
++	ret = spi_write(st->spi, st->tx_buf, AD9910_SPI_DATA_IDX + len);
++	if (!ret && update)
++		return ad9910_io_update(st);
++
++	return ret;
++}
++
++#define AD9910_REG_READ_FN(nb)						\
++static int ad9910_reg##nb##_read(struct ad9910_state *st, u8 reg,	\
++				 u##nb * data)				\
++{									\
++	int ret;							\
++									\
++	ret = ad9910_spi_read(st, reg, sizeof(*data));			\
++	if (ret)							\
++		return ret;						\
++									\
++	*data = be##nb##_to_cpu(st->rx_buf.be##nb);			\
++	return ret;							\
++}
++
++AD9910_REG_READ_FN(16)
++AD9910_REG_READ_FN(32)
++AD9910_REG_READ_FN(64)
++
++#define AD9910_REG_WRITE_FN(nb)						\
++static int ad9910_reg##nb##_write(struct ad9910_state *st, u8 reg,	\
++				  u##nb data, bool update)		\
++{									\
++	int ret;							\
++									\
++	put_unaligned_be##nb(data, &st->tx_buf[AD9910_SPI_DATA_IDX]);	\
++	ret = ad9910_spi_write(st, reg, sizeof(data), update);		\
++	if (ret)							\
++		return ret;						\
++									\
++	st->reg[reg].val##nb = data;					\
++	return ret;							\
++}
++
++AD9910_REG_WRITE_FN(16)
++AD9910_REG_WRITE_FN(32)
++AD9910_REG_WRITE_FN(64)
++
++#define AD9910_REG_UPDATE_FN(nb)					\
++static int ad9910_reg##nb##_update(struct ad9910_state *st,		\
++				   u8 reg, u##nb mask,			\
++				   u##nb data, bool update)		\
++{									\
++	u##nb reg_val = (st->reg[reg].val##nb & ~mask) | (data & mask);	\
++									\
++	if (reg_val == st->reg[reg].val##nb && !update)			\
++		return 0;						\
++									\
++	return ad9910_reg##nb##_write(st, reg, reg_val, update);	\
++}
++
++AD9910_REG_UPDATE_FN(16)
++AD9910_REG_UPDATE_FN(32)
++AD9910_REG_UPDATE_FN(64)
++
++static int ad9910_set_dac_current(struct ad9910_state *st, bool update)
++{
++	u32 fsc_code;
++
++	/* FSC = (86.4 / Rset) * (1 + CODE/256) where Rset = 10k ohms */
++	fsc_code = DIV_ROUND_CLOSEST(st->data.dac_output_current, 90) - 96;
++	fsc_code &= 0xFFU;
++
++	return ad9910_reg32_write(st, AD9910_REG_AUX_DAC, fsc_code, update);
++}
++
++static int ad9910_set_sysclk_freq(struct ad9910_state *st, u32 freq_hz,
++				  bool update)
++{
++	u32 sysclk_freq_hz, refclk_freq_hz = clk_get_rate(st->refclk);
++	u32 tmp32, vco_sel;
++	int ret;
++
++	if (st->data.pll_enabled) {
++		if (refclk_freq_hz < AD9910_PLL_IN_MIN_FREQ_HZ ||
++		    refclk_freq_hz > AD9910_PLL_IN_MAX_FREQ_HZ) {
++			dev_err(&st->spi->dev,
++				"REF_CLK frequency %u Hz is out of PLL input range\n",
++				refclk_freq_hz);
++			return -ERANGE;
++		}
++
++		tmp32 = DIV_ROUND_CLOSEST(freq_hz, refclk_freq_hz);
++		tmp32 = clamp(tmp32, AD9910_PLL_MIN_N, AD9910_PLL_MAX_N);
++		sysclk_freq_hz = refclk_freq_hz * tmp32;
++
++		if (sysclk_freq_hz < AD9910_PLL_OUT_MIN_FREQ_HZ ||
++		    sysclk_freq_hz > AD9910_PLL_OUT_MAX_FREQ_HZ) {
++			dev_err(&st->spi->dev,
++				"PLL output frequency %u Hz is out of range\n",
++				sysclk_freq_hz);
++			return -ERANGE;
++		}
++
++		if (sysclk_freq_hz <= AD9910_VCO0_RANGE_AUTO_MAX_HZ)
++			vco_sel = 0;
++		else if (sysclk_freq_hz <= AD9910_VCO1_RANGE_AUTO_MAX_HZ)
++			vco_sel = 1;
++		else if (sysclk_freq_hz <= AD9910_VCO2_RANGE_AUTO_MAX_HZ)
++			vco_sel = 2;
++		else if (sysclk_freq_hz <= AD9910_VCO3_RANGE_AUTO_MAX_HZ)
++			vco_sel = 3;
++		else if (sysclk_freq_hz <= AD9910_VCO4_RANGE_AUTO_MAX_HZ)
++			vco_sel = 4;
++		else
++			vco_sel = 5;
++
++		ret = ad9910_reg32_update(st, AD9910_REG_CFR3,
++					  AD9910_CFR3_N_MSK | AD9910_CFR3_VCO_SEL_MSK,
++					  FIELD_PREP(AD9910_CFR3_N_MSK, tmp32) |
++					  FIELD_PREP(AD9910_CFR3_VCO_SEL_MSK, vco_sel),
++					  update);
++		if (ret)
++			return ret;
++	} else {
++		tmp32 = DIV_ROUND_CLOSEST(refclk_freq_hz, freq_hz);
++		tmp32 = clamp(tmp32, 1, 2);
++		sysclk_freq_hz = refclk_freq_hz / tmp32;
++		tmp32 = FIELD_PREP(AD9910_CFR3_REFCLK_DIV_BYPASS_MSK, tmp32 % 2);
++		ret = ad9910_reg32_update(st, AD9910_REG_CFR3,
++					  AD9910_CFR3_REFCLK_DIV_BYPASS_MSK,
++					  tmp32, update);
++		if (ret)
++			return ret;
++	}
++
++	st->data.sysclk_freq_hz = sysclk_freq_hz;
++
++	return 0;
++}
++
++static int ad9910_profile_set(struct ad9910_state *st, u8 profile)
++{
++	DECLARE_BITMAP(values, BITS_PER_TYPE(profile));
++
++	st->profile = profile;
++	values[0] = profile;
++	gpiod_multi_set_value_cansleep(st->gpio_profile, values);
++
++	return 0;
++}
++
++static int ad9910_powerdown_set(struct ad9910_state *st, bool enable)
++{
++	return gpiod_set_value_cansleep(st->gpio_pwdown, enable);
++}
++
++static ssize_t ad9910_ext_info_read(struct iio_dev *indio_dev,
++				    uintptr_t private,
++				    const struct iio_chan_spec *chan,
++				    char *buf)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++	int val;
++
++	guard(mutex)(&st->lock);
++
++	switch (private) {
++	case AD9910_POWERDOWN:
++		val = !!FIELD_GET(AD9910_CFR1_SOFT_POWER_DOWN_MSK,
++				  st->reg[AD9910_REG_CFR1].val32);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return iio_format_value(buf, IIO_VAL_INT, 1, &val);
++}
++
++static ssize_t ad9910_ext_info_write(struct iio_dev *indio_dev,
++				     uintptr_t private,
++				     const struct iio_chan_spec *chan,
++				     const char *buf, size_t len)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++
++	u32 val32;
++	int ret;
++
++	ret = kstrtou32(buf, 10, &val32);
++	if (ret)
++		return ret;
++
++	guard(mutex)(&st->lock);
++
++	switch (private) {
++	case AD9910_POWERDOWN:
++		val32 = val32 ? AD9910_CFR1_SOFT_POWER_DOWN_MSK : 0;
++		ret = ad9910_reg32_update(st, AD9910_REG_CFR1,
++					  AD9910_CFR1_SOFT_POWER_DOWN_MSK,
++					  val32, true);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return ret ?: len;
++}
++
++#define AD9910_EXT_INFO_TMPL(_name, _ident, _shared, _fn_desc) { \
++	.name = _name, \
++	.read = ad9910_ ## _fn_desc ## _read, \
++	.write = ad9910_ ## _fn_desc ## _write, \
++	.private = _ident, \
++	.shared = _shared, \
++}
++
++#define AD9910_EXT_INFO(_name, _ident, _shared) \
++	AD9910_EXT_INFO_TMPL(_name, _ident, _shared, ext_info)
++
++static const struct iio_chan_spec_ext_info ad9910_phy_ext_info[] = {
++	AD9910_EXT_INFO("powerdown", AD9910_POWERDOWN, IIO_SEPARATE),
++	{ }
++};
++
++#define AD9910_PROFILE_CHAN(idx) {				\
++	.type = IIO_ALTVOLTAGE,					\
++	.indexed = 1,						\
++	.output = 1,						\
++	.channel = AD9910_CHANNEL_PROFILE_ ## idx,		\
++	.address = AD9910_CHAN_IDX_PROFILE_ ## idx,		\
++	.scan_index = -1,					\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |	\
++			      BIT(IIO_CHAN_INFO_FREQUENCY) |	\
++			      BIT(IIO_CHAN_INFO_PHASE) |	\
++			      BIT(IIO_CHAN_INFO_SCALE),		\
++}
++
++static const struct iio_chan_spec ad9910_channels[] = {
++	[AD9910_CHAN_IDX_PHY] = {
++		.type = IIO_ALTVOLTAGE,
++		.indexed = 1,
++		.output = 1,
++		.channel = AD9910_CHANNEL_PHY,
++		.address = AD9910_CHAN_IDX_PHY,
++		.scan_index = -1,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_SAMP_FREQ),
++		.ext_info = ad9910_phy_ext_info,
++	},
++	[AD9910_CHAN_IDX_PROFILE_0] = AD9910_PROFILE_CHAN(0),
++	[AD9910_CHAN_IDX_PROFILE_1] = AD9910_PROFILE_CHAN(1),
++	[AD9910_CHAN_IDX_PROFILE_2] = AD9910_PROFILE_CHAN(2),
++	[AD9910_CHAN_IDX_PROFILE_3] = AD9910_PROFILE_CHAN(3),
++	[AD9910_CHAN_IDX_PROFILE_4] = AD9910_PROFILE_CHAN(4),
++	[AD9910_CHAN_IDX_PROFILE_5] = AD9910_PROFILE_CHAN(5),
++	[AD9910_CHAN_IDX_PROFILE_6] = AD9910_PROFILE_CHAN(6),
++	[AD9910_CHAN_IDX_PROFILE_7] = AD9910_PROFILE_CHAN(7),
++};
++
++static int ad9910_read_raw(struct iio_dev *indio_dev,
++			   struct iio_chan_spec const *chan,
++			   int *val, int *val2, long info)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++	u64 tmp64;
++	u32 tmp32;
++
++	guard(mutex)(&st->lock);
++
++	switch (info) {
++	case IIO_CHAN_INFO_ENABLE:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = (chan->channel - AD9910_CHANNEL_PROFILE_0);
++			*val = (tmp32 == st->profile);
++			break;
++		default:
++			return -EINVAL;
++		}
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_FREQUENCY:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp32 = FIELD_GET(AD9910_PROFILE_ST_FTW_MSK,
++					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
++			break;
++		default:
++			return -EINVAL;
++		}
++		tmp64 = (u64)tmp32 * st->data.sysclk_freq_hz;
++		*val = tmp64 >> 32;
++		*val2 = ((tmp64 & GENMASK_ULL(31, 0)) * MICRO) >> 32;
++		return IIO_VAL_INT_PLUS_MICRO;
++	case IIO_CHAN_INFO_PHASE:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = FIELD_GET(AD9910_PROFILE_ST_POW_MSK,
++					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
++			tmp32 = (tmp64 * AD9910_MAX_PHASE_MICRORAD) >> 16;
++			*val = tmp32 / MICRO;
++			*val2 = tmp32 % MICRO;
++			return IIO_VAL_INT_PLUS_MICRO;
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SCALE:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = FIELD_GET(AD9910_PROFILE_ST_ASF_MSK,
++					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
++			*val = 0;
++			*val2 = tmp64 * MICRO >> 14;
++			return IIO_VAL_INT_PLUS_MICRO;
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PHY:
++			*val = st->data.sysclk_freq_hz;
++			return IIO_VAL_INT;
++		default:
++			return -EINVAL;
++		}
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ad9910_write_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan,
++			    int val, int val2, long info)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++	u64 tmp64;
++	u32 tmp32;
++
++	guard(mutex)(&st->lock);
++
++	switch (info) {
++	case IIO_CHAN_INFO_ENABLE:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			if (!val) {
++				if (tmp32 != st->profile)
++					return 0;
++
++				tmp32 = (tmp32 + 1) % AD9910_NUM_PROFILES;
++			}
++
++			return ad9910_profile_set(st, tmp32);
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_FREQUENCY:
++		if (!in_range(val, 0, st->data.sysclk_freq_hz / 2))
++			return -EINVAL;
++
++		tmp64 = ad9910_rational_scale((u64)val * MICRO + val2, BIT_ULL(32),
++					      (u64)MICRO * st->data.sysclk_freq_hz);
++		tmp64 = min(tmp64, U32_MAX);
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_FTW_MSK, tmp64);
++			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
++						   AD9910_PROFILE_ST_FTW_MSK,
++						   tmp64, true);
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_PHASE:
++		if (val < 0 || val2 < 0)
++			return -EINVAL;
++
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = (u64)val * MICRO + val2;
++			if (tmp64 >= AD9910_MAX_PHASE_MICRORAD)
++				return -EINVAL;
++
++			tmp64 <<= 16;
++			tmp64 = DIV_U64_ROUND_CLOSEST(tmp64, AD9910_MAX_PHASE_MICRORAD);
++			tmp64 = min(tmp64, AD9910_POW_MAX);
++			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_POW_MSK, tmp64);
++			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
++						   AD9910_PROFILE_ST_POW_MSK,
++						   tmp64, true);
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SCALE:
++		if (val < 0 || val > 1 || (val == 1 && val2 > 0))
++			return -EINVAL;
++
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = ((u64)val * MICRO + val2) << 14;
++			tmp64 = DIV_U64_ROUND_CLOSEST(tmp64, MICRO);
++			tmp64 = min(tmp64, AD9910_ASF_MAX);
++			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_ASF_MSK, tmp64);
++			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
++						   AD9910_PROFILE_ST_ASF_MSK,
++						   tmp64, true);
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		return ad9910_set_sysclk_freq(st, val, true);
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ad9910_write_raw_get_fmt(struct iio_dev *indio_dev,
++				    struct iio_chan_spec const *chan,
++				    long mask)
++{
++	switch (mask) {
++	case IIO_CHAN_INFO_ENABLE:
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_FREQUENCY:
++		return IIO_VAL_INT_PLUS_MICRO;
++	case IIO_CHAN_INFO_PHASE:
++	case IIO_CHAN_INFO_SCALE:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			return IIO_VAL_INT_PLUS_MICRO;
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		return IIO_VAL_INT;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ad9910_debugfs_reg_read(struct ad9910_state *st, bool high32,
++				   unsigned int reg, unsigned int *readval)
++{
++	union ad9910_reg tmp;
++	int ret;
++
++	switch (reg) {
++	case AD9910_REG_DRG_LIMIT:
++	case AD9910_REG_DRG_STEP:
++	case AD9910_REG_PROFILE0 ... AD9910_REG_PROFILE7:
++		ret = ad9910_reg64_read(st, reg, &tmp.val64);
++		if (ret)
++			return ret;
++		*readval = high32 ? upper_32_bits(tmp.val64) :
++				    lower_32_bits(tmp.val64);
++		return 0;
++	case AD9910_REG_POW:
++		ret = ad9910_reg16_read(st, reg, &tmp.val16);
++		if (ret)
++			return ret;
++		*readval = tmp.val16;
++		return 0;
++	default:
++		ret = ad9910_reg32_read(st, reg, &tmp.val32);
++		if (ret)
++			return ret;
++		*readval = tmp.val32;
++		return 0;
++	}
++}
++
++static int ad9910_debugfs_reg_write(struct ad9910_state *st, bool high32,
++				    unsigned int reg, unsigned int writeval)
++{
++	switch (reg) {
++	case AD9910_REG_DRG_LIMIT:
++	case AD9910_REG_DRG_STEP:
++	case AD9910_REG_PROFILE0 ... AD9910_REG_PROFILE7:
++		if (high32)
++			return ad9910_reg64_update(st, reg, GENMASK_ULL(63, 32),
++						   FIELD_PREP(GENMASK_ULL(63, 32), writeval),
++						   true);
++
++		return ad9910_reg64_update(st, reg, GENMASK_ULL(31, 0),
++					   writeval, true);
++	case AD9910_REG_POW:
++		return ad9910_reg16_write(st, reg, writeval, true);
++	default:
++		return ad9910_reg32_write(st, reg, writeval, true);
++	}
++}
++
++static int ad9910_debugfs_reg_access(struct iio_dev *indio_dev,
++				     unsigned int reg, unsigned int writeval,
++				     unsigned int *readval)
++{
++	bool high32 = FIELD_GET(AD9910_REG_HIGH32_FLAG_MSK, reg);
++	struct ad9910_state *st = iio_priv(indio_dev);
++
++	/*
++	 * REG_HIGH32_FLAG is only used for regiter access to indicate upper 32
++	 * bits of 64-bit registers. It is a workaround for debugfs_reg_access()
++	 * limitation which only supports 32-bit values.
++	 */
++	reg &= ~AD9910_REG_HIGH32_FLAG_MSK;
++	if (reg >= AD9910_REG_RAM)
++		return -EINVAL;
++
++	guard(mutex)(&st->lock);
++
++	if (readval)
++		return ad9910_debugfs_reg_read(st, high32, reg, readval);
++	else
++		return ad9910_debugfs_reg_write(st, high32, reg, writeval);
++}
++
++static const struct iio_info ad9910_info = {
++	.read_raw = ad9910_read_raw,
++	.write_raw = ad9910_write_raw,
++	.write_raw_get_fmt = ad9910_write_raw_get_fmt,
++	.debugfs_reg_access = &ad9910_debugfs_reg_access,
++};
++
++static int ad9910_cfg_sysclk(struct ad9910_state *st, bool update)
++{
++	u32 tmp32, cfr3 = AD9910_CFR3_OPEN_MSK;
++
++	cfr3 |= AD9910_CFR3_VCO_SEL_MSK |
++		FIELD_PREP(AD9910_CFR3_DRV0_MSK, st->data.refclk_out_drv);
++
++	if (st->data.pll_enabled) {
++		tmp32 = st->data.pll_charge_pump_current - AD9910_ICP_MIN_uA;
++		tmp32 = DIV_ROUND_CLOSEST(tmp32, AD9910_ICP_STEP_uA);
++		cfr3 |= FIELD_PREP(AD9910_CFR3_ICP_MSK, tmp32) |
++			AD9910_CFR3_PLL_EN_MSK;
++	} else {
++		cfr3 |= AD9910_CFR3_REFCLK_DIV_RESETB_MSK |
++			AD9910_CFR3_PFD_RESET_MSK;
++	}
++	st->reg[AD9910_REG_CFR3].val32 = cfr3;
++
++	return ad9910_set_sysclk_freq(st, AD9910_PLL_OUT_MAX_FREQ_HZ, update);
++}
++
++static int ad9910_parse_fw(struct ad9910_state *st)
++{
++	static const char * const refclk_out_drv0[] = {
++		"disabled", "low", "medium", "high",
++	};
++	struct device *dev = &st->spi->dev;
++	u32 tmp;
++	int ret;
++
++	st->data.pll_enabled = device_property_read_bool(dev, "adi,pll-enable");
++	if (st->data.pll_enabled) {
++		tmp = AD9910_ICP_MIN_uA;
++		device_property_read_u32(dev, "adi,charge-pump-current-microamp", &tmp);
++		if (tmp < AD9910_ICP_MIN_uA || tmp > AD9910_ICP_MAX_uA)
++			return dev_err_probe(dev, -ERANGE,
++					     "invalid charge pump current %u\n", tmp);
++		st->data.pll_charge_pump_current = tmp;
++
++		st->data.refclk_out_drv = AD9910_REFCLK_OUT_DRV_DISABLED;
++		ret = device_property_match_property_string(dev,
++							    "adi,refclk-out-drive-strength",
++							    refclk_out_drv0,
++							    ARRAY_SIZE(refclk_out_drv0));
++		if (ret >= 0)
++			st->data.refclk_out_drv = ret;
++	}
++
++	tmp = AD9910_DAC_IOUT_DEFAULT_uA;
++	device_property_read_u32(dev, "adi,dac-output-current-microamp", &tmp);
++	if (tmp < AD9910_DAC_IOUT_MIN_uA || tmp > AD9910_DAC_IOUT_MAX_uA)
++		return dev_err_probe(dev, -ERANGE,
++				     "Invalid DAC output current %u uA\n", tmp);
++	st->data.dac_output_current = tmp;
++
++	return 0;
++}
++
++static int ad9910_setup(struct ad9910_state *st, struct reset_control *dev_rst)
++{
++	u32 reg32;
++	int ret;
++
++	ret = reset_control_deassert(dev_rst);
++	if (ret)
++		return ret;
++
++	ret = ad9910_reg32_write(st, AD9910_REG_CFR1,
++				 AD9910_CFR1_SDIO_INPUT_ONLY_MSK, false);
++	if (ret)
++		return ret;
++
++	reg32 = AD9910_CFR2_AMP_SCALE_SINGLE_TONE_MSK |
++		AD9910_CFR2_SYNC_TIMING_VAL_DISABLE_MSK |
++		AD9910_CFR2_DRG_NO_DWELL_MSK |
++		AD9910_CFR2_DATA_ASM_HOLD_LAST_MSK |
++		AD9910_CFR2_SYNC_CLK_EN_MSK |
++		AD9910_CFR2_PDCLK_ENABLE_MSK;
++	ret = ad9910_reg32_write(st, AD9910_REG_CFR2, reg32, false);
++	if (ret)
++		return ret;
++
++	ret = ad9910_cfg_sysclk(st, false);
++	if (ret)
++		return ret;
++
++	ret = ad9910_set_dac_current(st, false);
++	if (ret)
++		return ret;
++
++	return ad9910_io_update(st);
++}
++
++static void ad9910_release(void *data)
++{
++	struct ad9910_state *st = data;
++
++	if (!ad9910_powerdown_set(st, true))
++		return;
++
++	ad9910_reg32_update(st, AD9910_REG_CFR1,
++			    AD9910_CFR1_SOFT_POWER_DOWN_MSK,
++			    AD9910_CFR1_SOFT_POWER_DOWN_MSK,
++			    true);
++}
++
++static int ad9910_probe(struct spi_device *spi)
++{
++	static const char * const supplies[] = {
++		"dvdd-io33", "avdd33", "dvdd18", "avdd18",
++	};
++	struct reset_control *dev_rst;
++	struct gpio_desc *io_rst_gpio;
++	struct device *dev = &spi->dev;
++	struct iio_dev *indio_dev;
++	struct ad9910_state *st;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	st = iio_priv(indio_dev);
++	st->spi = spi;
++
++	st->refclk = devm_clk_get_enabled(dev, "ref_clk");
++	if (IS_ERR(st->refclk))
++		return dev_err_probe(dev, PTR_ERR(st->refclk),
++				     "Failed to get reference clock\n");
++
++	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(supplies), supplies);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to get regulators\n");
++
++	ret = devm_mutex_init(dev, &st->lock);
++	if (ret)
++		return ret;
++
++	indio_dev->name = "ad9910";
++	indio_dev->info = &ad9910_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = ad9910_channels;
++	indio_dev->num_channels = ARRAY_SIZE(ad9910_channels);
++
++	dev_rst = devm_reset_control_get_optional_exclusive(dev, NULL);
++	if (IS_ERR(dev_rst))
++		return dev_err_probe(dev, PTR_ERR(dev_rst),
++				     "failed to get device reset control\n");
++
++	/*
++	 * The IO RESET pin is not used in this driver, as we assume that all
++	 * SPI transfers are complete, but if it is wired up, we need to make
++	 * sure it is not floating. We can use either a reset controller or a
++	 * GPIO for this.
++	 */
++	io_rst_gpio = devm_gpiod_get_optional(dev, "io-reset", GPIOD_OUT_LOW);
++	if (IS_ERR(io_rst_gpio))
++		return dev_err_probe(dev, PTR_ERR(io_rst_gpio),
++				     "failed to get io reset gpio\n");
++
++	st->gpio_pwdown = devm_gpiod_get_optional(dev, "powerdown",
++						  GPIOD_OUT_LOW);
++	if (IS_ERR(st->gpio_pwdown))
++		return dev_err_probe(dev, PTR_ERR(st->gpio_pwdown),
++				     "failed to get powerdown gpio\n");
++
++	st->gpio_update = devm_gpiod_get_optional(dev, "update", GPIOD_OUT_LOW);
++	if (IS_ERR(st->gpio_update))
++		return dev_err_probe(dev, PTR_ERR(st->gpio_update),
++				     "failed to get update gpio\n");
++
++	st->gpio_profile = devm_gpiod_get_array_optional(dev, "profile",
++							 GPIOD_OUT_LOW);
++	if (IS_ERR(st->gpio_profile))
++		return dev_err_probe(dev, PTR_ERR(st->gpio_profile),
++				     "failed to get profile gpios\n");
++
++	ret = ad9910_parse_fw(st);
++	if (ret)
++		return ret;
++
++	ret = ad9910_setup(st, dev_rst);
++	if (ret)
++		return dev_err_probe(dev, ret, "device setup failed\n");
++
++	ret = devm_add_action_or_reset(dev, ad9910_release, st);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to add release action\n");
++
++	return devm_iio_device_register(dev, indio_dev);
++}
++
++static const struct spi_device_id ad9910_id[] = {
++	{ "ad9910" },
++	{ }
++};
++MODULE_DEVICE_TABLE(spi, ad9910_id);
++
++static const struct of_device_id ad9910_of_match[] = {
++	{ .compatible = "adi,ad9910" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ad9910_of_match);
++
++static struct spi_driver ad9910_driver = {
++	.driver = {
++		.name = "ad9910",
++		.of_match_table = ad9910_of_match,
++	},
++	.probe = ad9910_probe,
++	.id_table = ad9910_id,
++};
++module_spi_driver(ad9910_driver);
++
++MODULE_AUTHOR("Rodrigo Alencar <rodrigo.alencar@analog.com>");
++MODULE_DESCRIPTION("Analog Devices AD9910 DDS driver");
++MODULE_LICENSE("GPL");
+
+-- 
+2.43.0
+
+
