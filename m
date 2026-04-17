@@ -1,703 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1895A3AB297;
-	Fri, 17 Apr 2026 08:17:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEC42E9757;
+	Fri, 17 Apr 2026 12:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776413870; cv=none; b=DZYgoH5jKVo4wfjHmzwcbXqQI1HKd1WMh/hgWIRBW5smNbPeNw4a+GNXyzd3F5V7H8ieY7Ew1+oFLo9lhzPxJxFqtx+yY6Xgw+IUPm7kb9bsH66/955AyBpp4Wfx+ijd1ieA1FYrC4owfnFmy9A+pi9y4yl4UsB8HWtTLcK59uM=
+	t=1776427263; cv=none; b=tbXJrM0u+9ayiLa7QR9SHsjOfU6F4b3lgt1nfd/CJv1cy3i5jLhWAqSl2eXpjuGuZgxnzWuCTOwjZu0sCYfRSghRI4EV8NMELnTJj0hEWnO6olH/f2o2EYVqPNak6OpAhRE3NbsA2XfI1/Nxzs7Yzu6ExmlYlqx3dzcxm4K3fJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776413870; c=relaxed/simple;
-	bh=NEm0TGLA3gcYYYjTUp+QK5b7yTpbgHpgo0HJhWghSXY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TAu/7hZdcT2dp3yzOXRTlP6uItRLuEwm8MQcBMi0Y1Ru/z6vwD9dgatk01zb1w9oKJe+W0DD8N+bQyb7KQl0rVidYmVnaWLSyrk5NHoJgCzhay/MGOgUH9e9q6ufJzD+ZjJS/zijQfl/Sy9dHVyFRuVA8ewlcRh3rnhlFtlaPW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxXMd02U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776427263; c=relaxed/simple;
+	bh=mU3rZj67IqrTTnj++/n+dIVHR+LNXGChH2TwgHtrl7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P5ekKViEpZQt/YUovM/GdZMIcLTl17/+jWTLPfw+dN2jIgf0pwR5IdQZdm0jGpW0gqkq4Qu+Mx8HBotqsAfGpFzZ0dd4nBpNj4Z1mMrj3kaKCyT3CRJ6NdZuVXg6bEpp7scT5AAdu6fcCP1xqkn09BNgwuhstgGBOLZI1WTnzIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gixXRhDe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxXMd02U"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DB47DC2BCC9;
-	Fri, 17 Apr 2026 08:17:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gixXRhDe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2638AC19425;
+	Fri, 17 Apr 2026 12:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776413870;
-	bh=NEm0TGLA3gcYYYjTUp+QK5b7yTpbgHpgo0HJhWghSXY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=NxXMd02U8SaXXorgFUzhcp3JGPwIYGNTZabUz6tXnHgLKO3lTKoxMPIYrADEX4FxK
-	 c1i08oCpRssu7nJJZffpXDq6ryyne7U0Tlrvb4GRS6y9KrqVgBWk+RZruAFXTp1yDF
-	 OCBqC/oF27DmipN/Wf+9Bwy5J1Ze6SKcNeWZCJbNLsxBkupYZgUKKpgY10u3Qp9p1D
-	 MqOZzaeBINevQj338IpsvI20TmzuELFHeLeKuL15mwss/Abn/ut5Ayi1WgGNGWmoP9
-	 l7nMUhTqu5oFjzB1r13ggDpAMGhARxetwnmcVYmf1Qj0DKaEYReA23WJ1PbbZbNjV7
-	 qXuznL/y22oEA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA3BF8DFCE;
-	Fri, 17 Apr 2026 08:17:49 +0000 (UTC)
-From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Fri, 17 Apr 2026 09:17:38 +0100
-Subject: [PATCH RFC v3 9/9] docs: iio: add documentation for ad9910 driver
+	s=k20201202; t=1776427263;
+	bh=mU3rZj67IqrTTnj++/n+dIVHR+LNXGChH2TwgHtrl7c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gixXRhDebXpKk32RlamutnzhZ1GLLADsv69hPJWEWYEjKtp3w8dF8lF6PgtCGdwZM
+	 tHyhMMIUE1WhuCUXAIevFo9WCqiNv6W5zqdELOSVxL8JkzeDVQP/bUGzP00tcpX5Me
+	 8noj3V3GvefKdJTw10NZe+Dl1Qh7flMuer7J7K+UfzlR//frRT9NBnPz7gyBws+jj5
+	 xD5K/9xYPH3+BjB4PtpVCdRXZvdqpJXiJtSCkbniaMGj83hycL+c6WB0+res+2nkir
+	 1EB5YpMtEuQeKnM0Z7JXWRYUpCp3tkdfiWJmZrf6xu1CNqzLIqcS3OMLbBNOnef/jQ
+	 OoJolHOLfmzOg==
+Message-ID: <cf9da9e0-310b-4dc0-81aa-3154077fff85@kernel.org>
+Date: Fri, 17 Apr 2026 14:00:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/30] mm: Introduce kpkeys
+To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+ Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
+References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
+ <20260227175518.3728055-2-kevin.brodsky@arm.com>
+ <eaca640b-5006-489b-8b2d-148a3c4073da@kernel.org>
+ <fea9c939-f955-4020-bed6-427e592f0024@arm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <fea9c939-f955-4020-bed6-427e592f0024@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260417-ad9910-iio-driver-v3-9-29b93712a228@analog.com>
-References: <20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com>
-In-Reply-To: <20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com>
-To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rodrigo Alencar <rodrigo.alencar@analog.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776413867; l=19554;
- i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=Y26wAyOqIam/Qw4mkE9gvDQBeSfzE+n262gq7Zqll/I=;
- b=MRyqpS6EGq5flmVCXnToRWN4aGN5dj2qYiYDqQSQHzgr1gf9ZdGO1ESuIzsb2fD3RPIBQ/8nK
- qP4XFEBDhx0ArjNqghKRnxc223Zer9KLixb2+1x+cAjLSakxIGz6uzZ
-X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
- pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
-X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
- with auth_id=561
-X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Reply-To: rodrigo.alencar@analog.com
 
-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+On 4/15/26 17:50, Kevin Brodsky wrote:
+> On 15/04/2026 15:00, David Hildenbrand (Arm) wrote:
+>> On 2/27/26 18:54, Kevin Brodsky wrote:
+>>> kpkeys is a simple framework to enable the use of protection keys
+>>> (pkeys) to harden the kernel itself. This patch introduces the basic
+>>> API in <linux/kpkeys.h>: a couple of functions to set and restore
+>>> the pkey register and macros to define guard objects.
+>>>
+>>> kpkeys introduces a new concept on top of pkeys: the kpkeys level.
+>>> Each level is associated to a set of permissions for the pkeys
+>>> managed by the kpkeys framework. kpkeys_set_level(lvl) sets those
+>>> permissions according to lvl, and returns the original pkey
+>>> register, to be later restored by kpkeys_restore_pkey_reg(). To
+>>> start with, only KPKEYS_LVL_DEFAULT is available, which is meant
+>>> to grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since
+>>> this is the only available pkey for now).
+>>>
+>>> Because each architecture implementing pkeys uses a different
+>>> representation for the pkey register, and may reserve certain pkeys
+>>> for specific uses, support for kpkeys must be explicitly indicated
+>>> by selecting ARCH_HAS_KPKEYS and defining the following functions in
+>>> <asm/kpkeys.h>, in addition to the macros provided in
+>>> <asm-generic/kpkeys.h>:
+>> I don't quite understand the reason for using levels. Levels sounds like
+>> it would all be in some ordered fashion, where higher levels have access
+>> to lower levels.
+> 
+> That was originally the idea indeed, but in practice I don't expect
+> levels to have a strict ordering, as it's not practical for composing
+> features.
+> 
+>> Think of that as a key that can unlock all "lower" locks, not just a
+>> single lock.
+>>
+>> Then, the question is about the ordering once we introduce new
+>> keys/locks. With two, it obviously doesn't matter :)
+>>
+>> So naturally I wonder whether levels is really the right abstraction
+>> here, and why we are not simply using "distinct" keys, like
+>>
+>> KPKEY_DEFAULT
+>> KPKEY_PGTABLE
+>> KPKEY_SUPER_SECRET1
+>> KPKEY_SUPER_SECRET2
+>>
+>> Is it because you want KPKEY_PGTABLE also be able to write to KPKEY_DEFAULT?
+> 
+> Right, and in general a given level may be able to write to any number
+> of pkeys. That's why I don't want to conflate pkeys and levels. Agreed
+> that "level" might not be the clearest term though, since there's no
+> strict ordering.
 
-Add documentation for the AD9910 DDS IIO driver, which describes channels,
-DDS modes, attributes and ABI usage examples.
+As discussed offline, maybe the right terminology to use here would be
+something like a "context".
 
-Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
----
- Documentation/iio/ad9910.rst | 586 +++++++++++++++++++++++++++++++++++++++++++
- Documentation/iio/index.rst  |   1 +
- MAINTAINERS                  |   1 +
- 3 files changed, 588 insertions(+)
+You'd be activating/setting a context.
 
-diff --git a/Documentation/iio/ad9910.rst b/Documentation/iio/ad9910.rst
-new file mode 100644
-index 000000000000..a79819b5afe5
---- /dev/null
-+++ b/Documentation/iio/ad9910.rst
-@@ -0,0 +1,586 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+=============
-+AD9910 driver
-+=============
-+
-+DDS (Direct Digital Synthesizer) driver for the Analog Devices Inc. AD9910.
-+The module name is ``ad9910``.
-+
-+* `AD9910 <https://www.analog.com/en/products/ad9910.html>`_
-+
-+The AD9910 is a 1 GSPS DDS with a 14-bit DAC, driven over SPI. The driver
-+exposes the device through the IIO ``altvoltage`` channel type and supports
-+five DDS operating modes: single tone, parallel port modulation, digital ramp
-+generation (DRG), RAM playback and output shift keying (OSK). The device has
-+8 hardware profiles, each capable of storing independent single tone and RAM
-+playback parameters.
-+
-+
-+Channel hierarchy
-+=================
-+
-+The driver exposes the following IIO output channels, each identified by a
-+unique channel number and a human-readable label:
-+
-+* ``out_altvoltage100``: ``phy``: Physical output: system clock and profile control
-+
-+  * ``out_altvoltage101``: ``profile[0]``: Single tone control for profile 0:
-+    frequency, phase, amplitude
-+
-+  * ``out_altvoltage102``: ``profile[1]``: Single tone control for profile 1:
-+    frequency, phase, amplitude
-+
-+  * ``out_altvoltage103``: ``profile[2]``: Single tone control for profile 2:
-+    frequency, phase, amplitude
-+
-+  * ``out_altvoltage104``: ``profile[3]``: Single tone control for profile 3:
-+    frequency, phase, amplitude
-+
-+  * ``out_altvoltage105``: ``profile[4]``: Single tone control for profile 4:
-+    frequency, phase, amplitude
-+
-+  * ``out_altvoltage106``: ``profile[5]``: Single tone control for profile 5:
-+    frequency, phase, amplitude
-+
-+  * ``out_altvoltage107``: ``profile[6]``: Single tone control for profile 6:
-+    frequency, phase, amplitude
-+
-+  * ``out_altvoltage108``: ``profile[7]``: Single tone control for profile 7:
-+    frequency, phase, amplitude
-+
-+  * ``out_altvoltage110``: ``parallel_port``: Parallel port modulation: enable
-+    and offset/scale parameters
-+
-+  * ``out_altvoltage120``: ``digital_ramp_generator``: DRG control: enable
-+
-+    * ``out_altvoltage121``: ``digital_ramp_up``: DRG ramp-up parameters:
-+      no-dwell enable, limits, step sizes, ramp rate
-+    * ``out_altvoltage122``: ``digital_ramp_down``: DRG ramp-down parameters:
-+      no-dwell enable, limits, step sizes, ramp rate
-+
-+  * ``out_altvoltage130``: ``ram_control``: RAM playback: enable, frequency,
-+    phase and sampling frequency for active profile. Other configurations are
-+    provided through a firmware upload interface.
-+
-+  * ``out_altvoltage150``: ``output_shift_keying``: OSK: enable, amplitude
-+    scale, ramp rate, auto/manual control
-+
-+The ``phy`` channel is the root of the hierarchy. Changing its
-+``sampling_frequency`` reconfigures the system clock (SYSCLK) which affects all
-+other channels.
-+
-+All mode-specific channels (single-tone, parallel port, DRG, RAM, OSK) have an
-+``enable`` attribute that turns the mode on/off.
-+
-+DDS modes
-+=========
-+
-+The AD9910 supports multiple modes of operation that can be configured
-+independently or in combination. Such modes and their corresponding IIO channels
-+are described in this section. The following tables are extracted from the
-+AD9910 datasheet and summarizes the control parameters for each mode and their
-+priority when multiple sources are enabled simultaneously:
-+
-+.. flat-table:: DDS Frequency Control
-+   :header-rows: 1
-+
-+   * - Priority
-+     - Data Source
-+     - Conditions
-+
-+   * - Highest Priority
-+     - RAM
-+     - RAM enabled and data destination is frequency
-+
-+   * -
-+     - DRG
-+     - DRG enabled and data destination is frequency
-+
-+   * -
-+     - Parallel data and FTW (frequency_offset)
-+     - Parallel data port enabled and data destination is frequency
-+
-+   * -
-+     - FTW (frequency)
-+     - RAM enabled and data destination is not frequency
-+
-+   * -
-+     - FTW (frequency) in single tone channel for the active profile
-+     - DRG enabled and data destination is not frequency
-+
-+   * -
-+     - FTW (frequency) in single tone channel for the active profile
-+     - Parallel data port enabled and data destination is not frequency
-+
-+   * - Lowest Priority
-+     - FTW (frequency) in single tone channel for the active profile
-+     - None
-+
-+.. flat-table:: DDS Phase Control
-+   :header-rows: 1
-+
-+   * - Priority
-+     - Data Source
-+     - Conditions
-+
-+   * - Highest Priority
-+     - RAM
-+     - RAM enabled and data destination is phase or polar
-+
-+   * -
-+     - DRG
-+     - DRG enabled and data destination is phase
-+
-+   * -
-+     - Parallel data port
-+     - Parallel data port enabled and data destination is phase
-+
-+   * -
-+     - Parallel data port and POW register LSBs (phase_offset)
-+     - Parallel data port enabled and data destination is polar
-+
-+   * -
-+     - POW (phase)
-+     - RAM enabled and destination is not phase nor polar
-+
-+   * -
-+     - POW (phase) in single tone channel for the active profile
-+     - DRG enabled and data destination is not phase
-+
-+   * -
-+     - POW (phase) in single tone channel for the active profile
-+     - Parallel data port enabled and data destination is not phase nor polar
-+
-+   * - Lowest Priority
-+     - POW (phase) in single tone channel for the active profile
-+     - None
-+
-+.. flat-table:: DDS Amplitude Control
-+   :header-rows: 1
-+
-+   * - Priority
-+     - Data Source
-+     - Conditions
-+
-+   * - Highest Priority
-+     - OSK generator
-+     - OSK enabled (auto mode)
-+
-+   * -
-+     - ASF register
-+     - OSK enabled (manual mode)
-+
-+   * -
-+     - RAM
-+     - RAM enabled and data destination is amplitude or polar
-+
-+   * -
-+     - DRG
-+     - DRG enabled and data destination is amplitude
-+
-+   * -
-+     - Parallel data port
-+     - Parallel data port enabled and data destination is amplitude
-+
-+   * -
-+     - Parallel data port and ASF register LSBs (scale_offset)
-+     - Parallel data port enabled and data destination is polar
-+
-+   * - Lowest Priority
-+     - ASF (scale) in single tone channel for the active profile
-+     - (Amplitude scale is already enabled by default)
-+
-+Single tone mode
-+----------------
-+
-+Single tone is the baseline operating mode. The ``profile[Y]`` channels
-+provides enable, frequency, phase and amplitude control:
-+
-+.. flat-table::
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Unit
-+     - Description
-+
-+   * - ``en``
-+     - boolean
-+     - Enable/disable profile Y. Only one profile can be active at a
-+       time. Then enabling a profile disables the current active profile.
-+       Disabling an active profile enables the next profile in ascending order,
-+       wrapping around from 7 to 0.
-+
-+   * - ``frequency``
-+     - Hz
-+     - Output frequency. Range [0, SYSCLK/2). Stored in the profile's frequency
-+       tuning word (FTW).
-+
-+   * - ``phase``
-+     - rad
-+     - Phase offset. Range [0, 2*pi). Stored in the profile's phase offset word
-+       (POW).
-+
-+   * - ``scale``
-+     - fractional
-+     - Amplitude scale factor. Range [0, 1]. Stored in the profile's amplitude
-+       scale factor (ASF).
-+
-+Profile switching is allowed while RAM mode is enabled. In that case single tone
-+parameters are stored in a shadow register and are not written to hardware until
-+RAM mode is disabled.
-+
-+Usage examples
-+^^^^^^^^^^^^^^
-+
-+Set the active profile to 2 and configure a 100 MHz tone:
-+
-+.. code-block:: bash
-+
-+	echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage103_en
-+	echo 100000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage103_frequency
-+	echo 0.5 > /sys/bus/iio/devices/iio:device0/out_altvoltage103_scale
-+	echo 0 > /sys/bus/iio/devices/iio:device0/out_altvoltage103_phase
-+
-+Read back the current single tone frequency:
-+
-+.. code-block:: bash
-+
-+	cat /sys/bus/iio/devices/iio:device0/out_altvoltage103_frequency
-+
-+Parallel port mode
-+------------------
-+
-+When enabled, the parallel port allows real-time modulation of DDS parameters
-+through a 16-bit external data bus.
-+
-+.. flat-table::
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Unit
-+     - Description
-+
-+   * - ``en``
-+     - boolean
-+     - Enable/disable the parallel data port.
-+
-+   * - ``frequency_scale``
-+     - power-of-2
-+     - FM gain multiplier applied to 16-bit parallel input. Range [1, 32768],
-+       must be a power of 2.
-+
-+   * - ``frequency_offset``
-+     - Hz
-+     - Base FTW to which scaled parallel data is added. Range [0, SYSCLK/2).
-+
-+   * - ``phase_offset``
-+     - rad
-+     - Base phase for polar modulation. Lower 8 bits of POW register.
-+       Range [0, 2*pi/256).
-+
-+   * - ``scale_offset``
-+     - fractional
-+     - Base amplitude for polar modulation. Lower 6 bits of ASF register.
-+       Range [0, 1/256).
-+
-+Usage examples
-+^^^^^^^^^^^^^^
-+
-+Enable parallel port with a frequency scale of 16 and a 50 MHz offset:
-+
-+.. code-block:: bash
-+
-+	echo 16 > /sys/bus/iio/devices/iio:device0/out_altvoltage110_frequency_scale
-+	echo 50000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage110_frequency_offset
-+  echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage110_en
-+
-+Digital ramp generator (DRG)
-+----------------------------
-+
-+The DRG produces linear frequency, phase or amplitude sweeps using dedicated
-+hardware. It is controlled through three channels: a parent control channel
-+(``digital_ramp_generator``) and two child ramp channels
-+(``digital_ramp_up``, ``digital_ramp_down``). DRG destination is set when
-+ramp attributes are written, i.e. writing to ``frequency`` or ``frequency_step``
-+sets the destination to frequency.
-+
-+Control channel attributes
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+.. flat-table::
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Unit
-+     - Description
-+
-+   * - ``en``
-+     - boolean
-+     - Enable/disable the DRG.
-+
-+Ramp channel attributes
-+^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+The ``digital_ramp_up`` and ``digital_ramp_down`` channels share the same
-+attribute set but configure ascending and descending ramp parameters
-+independently:
-+
-+.. flat-table::
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Unit
-+     - Description
-+
-+   * - ``en``
-+     - boolean
-+     - Enable/disable the ramp no-dwell behavior. Enabling both creates a
-+       bidirectional continuous ramp (Triangular pattern). Other configurations
-+       creates a single-shot ramp at the trasition of the DRCTL pin: ramp-up
-+       only, ramp-down only or bidirectional with dwell at the limits.
-+
-+   * - ``frequency``
-+     - Hz
-+     - Frequency ramp limit. Range [0, SYSCLK/2).
-+
-+   * - ``phase``
-+     - rad
-+     - Phase ramp limit. Range [0, 2*pi).
-+
-+   * - ``scale``
-+     - fractional
-+     - Amplitude scale ramp limit. Range [0, 1).
-+
-+   * - ``sampling_frequency``
-+     - Hz
-+     - Ramp clock rate: SYSCLK / (4 * divider).
-+
-+   * - ``frequency_step``
-+     - Hz
-+     - Per-tick frequency increment/decrement. Range [0, SYSCLK/2).
-+
-+   * - ``phase_step``
-+     - rad
-+     - Per-tick phase increment/decrement. Range [0, 2*pi).
-+
-+   * - ``scale_step``
-+     - fractional
-+     - Per-tick amplitude scale increment/decrement. Range [0, 1).
-+
-+Usage examples
-+^^^^^^^^^^^^^^
-+
-+Configure a frequency sweep from 40 MHz to 60 MHz at a 1 kHz step:
-+
-+.. code-block:: bash
-+
-+	# Enable both no-dwell modes for a bidirectional ramp
-+	echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage121_en
-+  echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage122_en
-+
-+	# Set ramp limits
-+	echo 60000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage121_frequency
-+	echo 40000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage122_frequency
-+
-+	# Set ramp step size to 1 kHz
-+	echo 1000 > /sys/bus/iio/devices/iio:device0/out_altvoltage121_frequency_step
-+	echo 1000 > /sys/bus/iio/devices/iio:device0/out_altvoltage122_frequency_step
-+
-+	# Set ramp rate at 25 MHz
-+	echo 25000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage121_sampling_frequency
-+  echo 25000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage122_sampling_frequency
-+
-+	# Enable the DRG
-+	echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage120_en
-+
-+RAM mode
-+--------
-+
-+The AD9910 contains a 1024 x 32-bit RAM that can be loaded with waveform data
-+and played back to modulate frequency, phase, amplitude, or polar (phase +
-+amplitude) parameters.
-+
-+RAM control channel attributes
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+.. flat-table::
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Unit
-+     - Description
-+
-+   * - ``en``
-+     - boolean
-+     - Enable/disable RAM playback. Toggling swaps profile registers between
-+       single tone and RAM configurations across all 8 profiles.
-+
-+   * - ``frequency``
-+     - Hz
-+     - Frequency tuning word used as the single tone frequency when
-+       RAM destination is not ``frequency``. Range [0, SYSCLK/2).
-+
-+   * - ``phase``
-+     - rad
-+     - Phase offset word used as the single tone phase when RAM destination
-+       is not ``phase``. Range [0, 2*pi).
-+
-+   * - ``sampling_frequency``
-+     - Hz
-+     - RAM playback step rate of the active profile, which controls how fast the
-+       address counter advances: SYSCLK / (4 * step_rate).
-+
-+Loading RAM data
-+^^^^^^^^^^^^^^^^
-+
-+RAM data is loaded through the firmware upload framework. The driver registers
-+a firmware upload sysfs entry named ``iio_deviceX:ram``. The FW data follows
-+a simple binary format:
-+
-+- 72-byte header:
-+  - 4-byte big-endian word count: number of 32-bit words to be loaded (0-1024)
-+  - 4-byte big-endian CFR1 value: configuration for the CFR1 register. Only
-+    bits relevant to RAM mode (data destination and internal profile control)
-+    are considered. Other bits are ignored and have no effect.
-+    - Bits [30:29]: RAM data destination:
-+      - 00: frequency
-+      - 01: phase
-+      - 10: amplitude
-+      - 11: polar
-+    - Bits [20:17]: Internal profile control (see Table 14 of the datasheet).
-+  - 8 sets of 8-byte big-endian profile data for profiles 0-7. Each set contains:
-+    - Bits [55:40]: Address step rate value
-+    - Bits [39:30]: End address for the profile
-+    - Bits [23:14]: Start address for the profile
-+    - Bit [5]: no-dwell high for ramp-up mode
-+    - Bit [3]: zero-crossing for direct-switch mode
-+    - Bits [2:0]: operating mode:
-+      - 000: direct switch
-+      - 001: ramp-up
-+      - 010: bidirectional
-+      - 011: bidirectional continuous
-+      - 100: ramp-up continuous
-+- Followed by the specified number of 32-bit big-endian data words.
-+
-+Usage examples
-+^^^^^^^^^^^^^^
-+
-+Configure RAM mode with frequency destination and load a waveform:
-+
-+.. code-block:: bash
-+
-+	# Load RAM data via firmware upload
-+	echo 1 > /sys/class/firmware/iio\:device0\:ram/loading
-+	cat waveform.bin > /sys/class/firmware/iio\:device0\:ram/data
-+	echo 0 > /sys/class/firmware/iio\:device0\:ram/loading
-+
-+	# Enable RAM mode
-+	echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage130_en
-+
-+Output shift keying (OSK)
-+-------------------------
-+
-+OSK controls the output amplitude envelope, allowing the output to be ramped
-+on/off rather than switched abruptly.
-+
-+.. flat-table::
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Unit
-+     - Description
-+
-+   * - ``en``
-+     - boolean
-+     - Enable/disable OSK.
-+
-+   * - ``scale``
-+     - fractional
-+     - Target amplitude for the OSK ramp. 14-bit ASF field. Range [0, 1).
-+
-+   * - ``sampling_frequency``
-+     - Hz
-+     - OSK ramp rate: SYSCLK / (4 * divider).
-+
-+   * - ``pinctrl_en``
-+     - boolean
-+     - Enable manual external pin control. When enabled, the OSK pin directly
-+       gates the output on/off instead of using the automatic ramp.
-+
-+   * - ``scale_step``
-+     - fractional
-+     - Automatic OSK amplitude step. Writing non-zero enables automatic OSK
-+       and sets the per-tick increment. Writing ``0`` disables it. Rounded to
-+       nearest hardware step: 0.000061, 0.000122, 0.000244 or 0.000488.
-+
-+Usage examples
-+^^^^^^^^^^^^^^
-+
-+Enable OSK with automatic ramping:
-+
-+.. code-block:: bash
-+
-+	# Set ramp rate
-+	echo 1000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage150_sampling_frequency
-+
-+	# Enable automatic OSK with step size
-+	echo 0.000244 > /sys/bus/iio/devices/iio:device0/out_altvoltage150_scale_step
-+
-+	# Enable OSK
-+	echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage150_en
-+
-+Enable manual pin-controlled OSK:
-+
-+.. code-block:: bash
-+
-+	# Enable manual pin control
-+	echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage150_pinctrl_en
-+	echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage150_en
-+
-+	# Set target amplitude to full scale
-+	echo 1.0 > /sys/bus/iio/devices/iio:device0/out_altvoltage150_scale
-+
-+Physical channel
-+================
-+
-+The ``phy`` channel provides device-level control:
-+
-+.. flat-table::
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Unit
-+     - Description
-+
-+   * - ``sampling_frequency``
-+     - Hz
-+     - System clock (SYSCLK) frequency. With PLL enabled, configures the PLL
-+       multiplier (range 420-1000 MHz). Without PLL, ref clock can only be
-+       divided by 2.
-+
-+   * - ``powerdown``
-+     - boolean
-+     - Software power-down. Writing 1 powers down the digital core, DAC,
-+       reference clock input and auxiliary DAC simultaneously.
-+
-+Usage examples
-+--------------
-+
-+Set the system clock to 1 GHz:
-+
-+.. code-block:: bash
-+
-+	echo 1000000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage100_sampling_frequency
-+
-+Read current system clock frequency:
-+
-+.. code-block:: bash
-+
-+	cat /sys/bus/iio/devices/iio:device0/out_altvoltage100_sampling_frequency
-+
-+Power down the device:
-+
-+.. code-block:: bash
-+
-+	echo 1 > /sys/bus/iio/devices/iio:device0/out_altvoltage100_powerdown
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index ba3e609c6a13..55cb1ce84ba8 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -29,6 +29,7 @@ Industrial I/O Kernel Drivers
-    ad7606
-    ad7625
-    ad7944
-+   ad9910
-    ade9000
-    adis16475
-    adis16480
-diff --git a/MAINTAINERS b/MAINTAINERS
-index edd87ee7da5f..14e4272357ce 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1637,6 +1637,7 @@ S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9910
- F:	Documentation/devicetree/bindings/iio/frequency/adi,ad9910.yaml
-+F:	Documentation/iio/ad9910.rst
- F:	drivers/iio/frequency/ad9910.c
- 
- ANALOG DEVICES INC MAX22007 DRIVER
+KPKEY_CTX_DEFAULT
+KPKEY_CTX_PGTABLE
+KPKEY_CTX_SUPER_SECRET1
+
+What is accessible (and how) is defined for each context. For example, I
+would assume that all context allow for read/write access to everything
+that KPKEY_CTX_DEFAULT has access to.
 
 -- 
-2.43.0
+Cheers,
 
-
+David
