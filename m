@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEC42E9757;
-	Fri, 17 Apr 2026 12:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD51D16FF37
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Apr 2026 13:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776427263; cv=none; b=tbXJrM0u+9ayiLa7QR9SHsjOfU6F4b3lgt1nfd/CJv1cy3i5jLhWAqSl2eXpjuGuZgxnzWuCTOwjZu0sCYfRSghRI4EV8NMELnTJj0hEWnO6olH/f2o2EYVqPNak6OpAhRE3NbsA2XfI1/Nxzs7Yzu6ExmlYlqx3dzcxm4K3fJU=
+	t=1776431182; cv=none; b=Z9dyz5W6dvS3R3XzE/t+Q6jEEs+uNXOHMb7wUZBEl9q/DbT6n4fksckJHZe53YlFDWWoJQgzXwSX19bVr/9JCxQgNxJRzAXx0hUoiXcdR8NtaUw0HFty8lByryVtDYaReyRNkmaNqzLX/9fX3gzlkNeh0Z45Hfh9uARHmSn8HeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776427263; c=relaxed/simple;
-	bh=mU3rZj67IqrTTnj++/n+dIVHR+LNXGChH2TwgHtrl7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P5ekKViEpZQt/YUovM/GdZMIcLTl17/+jWTLPfw+dN2jIgf0pwR5IdQZdm0jGpW0gqkq4Qu+Mx8HBotqsAfGpFzZ0dd4nBpNj4Z1mMrj3kaKCyT3CRJ6NdZuVXg6bEpp7scT5AAdu6fcCP1xqkn09BNgwuhstgGBOLZI1WTnzIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gixXRhDe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776431182; c=relaxed/simple;
+	bh=ArPcEjtZ9SivxH550C9rk73iUbB8go/eI9x6T8uYRDs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UtDUZeHMXGVlzK2pqVezbnaF+bZdd99Ctc2i+J2mjzqGfhuQEuyFqT8F6WdjjdfS0muJrVqlS+kr6ODcICyJOkgtiu14ozBThaGbmX9m3ybDWN+3MhG0sEFz0sHmGdiCsPffBwK2VQT6018oBgMu9+s3xgpnqJEydsEBREA2xSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oNM71OER; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gixXRhDe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2638AC19425;
-	Fri, 17 Apr 2026 12:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776427263;
-	bh=mU3rZj67IqrTTnj++/n+dIVHR+LNXGChH2TwgHtrl7c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gixXRhDebXpKk32RlamutnzhZ1GLLADsv69hPJWEWYEjKtp3w8dF8lF6PgtCGdwZM
-	 tHyhMMIUE1WhuCUXAIevFo9WCqiNv6W5zqdELOSVxL8JkzeDVQP/bUGzP00tcpX5Me
-	 8noj3V3GvefKdJTw10NZe+Dl1Qh7flMuer7J7K+UfzlR//frRT9NBnPz7gyBws+jj5
-	 xD5K/9xYPH3+BjB4PtpVCdRXZvdqpJXiJtSCkbniaMGj83hycL+c6WB0+res+2nkir
-	 1EB5YpMtEuQeKnM0Z7JXWRYUpCp3tkdfiWJmZrf6xu1CNqzLIqcS3OMLbBNOnef/jQ
-	 OoJolHOLfmzOg==
-Message-ID: <cf9da9e0-310b-4dc0-81aa-3154077fff85@kernel.org>
-Date: Fri, 17 Apr 2026 14:00:53 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oNM71OER"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-43d734223e4so473406f8f.0
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Apr 2026 06:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1776431179; x=1777035979; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ArPcEjtZ9SivxH550C9rk73iUbB8go/eI9x6T8uYRDs=;
+        b=oNM71OERX4KhOiKjcbBD4pV5dVL4SdouB5WISWYHk2dYkwPSUdV2Z3e6ZG+ovXx8b6
+         MHkjHw8UkV1KqhC8MbkxqC9+0N2npozrkyh6sHDm+TaC+AVkB8nWEMqVB+K2O6eLJR1T
+         tJPl2exDX4Tr9/Py12mOxNLtG69wJy6cOdLx+lFqmuQL2jjQ1YnJOH3qCQmuiMTDuuok
+         AHoDhBCOU9MLdpAE5mYL4RQxzu1nn4tj9XK/cwa0Ky95afRGLKtle/e3bViA6X203luN
+         tiktKkPVFbjw+osnIgutB5VtoEoyOFqnpKPmDyfBZekI2NeC44StG/SdC77P/g9runqt
+         nlow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776431179; x=1777035979;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ArPcEjtZ9SivxH550C9rk73iUbB8go/eI9x6T8uYRDs=;
+        b=sB3wxgq9VKUPSTZEAshwjFwCRqI9obC/JjcBHrBy/HoF4nhKOEDNxcnXYIgSANiNaT
+         LUBQvZWNdncgN5qKjDS2mIFEXEJSz723DilgqOek+i6yHkZ9fhGI0xTHdAd/Q8x/BkJM
+         BzCbbdrxIDdOX/X5PugosBHxHPx8Gs26glgmES1mXqEksk/br1FnoaSeKWh8/JXC8AWX
+         EA1zPguDMBlLqVVzbSpctAVup7961/HnUW5lgrz/AAJ1z1XZivQhkPek57jyP7JeufAr
+         bfZ4cTWEpsJt/kjBR8eU791xiLxpMb+RBTduSTBB7YlgcyC74ZyCpI0hLpiKsJHtawUi
+         SyAQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/9/uwvZD+a+H9rYqQ23p73OTtkIl8jPHlaxYYlR5yaP+7P4pnMAa2+ardLsVtq7ldYNhA2oTVxr26w7j476O0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKXE3SDTUPs1XVClgr44lXH+mv/wsgiP6+scbVVudnUY2xJfCc
+	zVHiUO3YVWBQnTDP6HFsRATHlWWJsLUPJYkEo56nUekmEZiFMQSbMHmjaoQmzSJkIGg=
+X-Gm-Gg: AeBDiesiGwzHdgpJLINQBn0po6JrdQykSq/DAIGjhp7LZNp/RqchQNM825ASvGqEZK4
+	iKLggHeXqooVulo8R1W/+yNNfBV16KMfBZpNaA0J5Oy/BpNp4qWSa9lxt6YAdh5TV2vs6llnr7t
+	xxTRLbdJWLy8VmnGoOoE4h2YrxK3uLaDFZu+7pqR+tJ0zhNPJ0pZrf+oVwrZihlRQk6M7m4QXJe
+	991QK3NepxARUEZ9CwB/qK3/y39GeLTa3dyNsJGQeGvmbZDjntgHwWQ3HJWENrN4IoLU3EGyH/q
+	lX7whqky9jRTj/HHuoFyzn0ddcmpKdxYX+FYRMFULjAK7dP4gXqSA2we51nCcQ9Nj4UC5DjaVHZ
+	CA8AHCqRAKqcPam9tN0PhW+6sjLHTs7sCz30fNZn39Id6jB7wB5kc2HZIOxt4bwIIQiMVpFfxCG
+	I3c6QRaF7U3uzXqeSD8WLHs6eh/QxsFBf9aJtwhszK7w==
+X-Received: by 2002:a05:6000:210d:b0:43f:df55:fe5e with SMTP id ffacd0b85a97d-43fe3de41demr2740203f8f.0.1776431179277;
+        Fri, 17 Apr 2026 06:06:19 -0700 (PDT)
+Received: from [10.11.12.108] ([79.115.63.48])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4cc09b1sm4687367f8f.9.2026.04.17.06.06.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2026 06:06:17 -0700 (PDT)
+Message-ID: <976440e5-f433-424f-8ff6-c7553799f1d1@linaro.org>
+Date: Fri, 17 Apr 2026 16:06:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,145 +67,41 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/30] mm: Introduce kpkeys
-To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
- Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
- Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
- <20260227175518.3728055-2-kevin.brodsky@arm.com>
- <eaca640b-5006-489b-8b2d-148a3c4073da@kernel.org>
- <fea9c939-f955-4020-bed6-427e592f0024@arm.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: Re: [PATCH v2 0/7] thermal: samsung: Add support for Google GS101 TMU
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: Alexey Klimov <alexey.klimov@linaro.org>, daniel.lezcano@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <20260119-acpm-tmu-v2-0-e02a834f04c6@linaro.org>
+ <DHNUUPQPD5DR.18P18VV0LNTI8@linaro.org>
+ <63087cad-a8d1-4ff0-870a-6e1a738ff8b8@linaro.org>
 Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <fea9c939-f955-4020-bed6-427e592f0024@arm.com>
+In-Reply-To: <63087cad-a8d1-4ff0-870a-6e1a738ff8b8@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/15/26 17:50, Kevin Brodsky wrote:
-> On 15/04/2026 15:00, David Hildenbrand (Arm) wrote:
->> On 2/27/26 18:54, Kevin Brodsky wrote:
->>> kpkeys is a simple framework to enable the use of protection keys
->>> (pkeys) to harden the kernel itself. This patch introduces the basic
->>> API in <linux/kpkeys.h>: a couple of functions to set and restore
->>> the pkey register and macros to define guard objects.
->>>
->>> kpkeys introduces a new concept on top of pkeys: the kpkeys level.
->>> Each level is associated to a set of permissions for the pkeys
->>> managed by the kpkeys framework. kpkeys_set_level(lvl) sets those
->>> permissions according to lvl, and returns the original pkey
->>> register, to be later restored by kpkeys_restore_pkey_reg(). To
->>> start with, only KPKEYS_LVL_DEFAULT is available, which is meant
->>> to grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since
->>> this is the only available pkey for now).
->>>
->>> Because each architecture implementing pkeys uses a different
->>> representation for the pkey register, and may reserve certain pkeys
->>> for specific uses, support for kpkeys must be explicitly indicated
->>> by selecting ARCH_HAS_KPKEYS and defining the following functions in
->>> <asm/kpkeys.h>, in addition to the macros provided in
->>> <asm-generic/kpkeys.h>:
->> I don't quite understand the reason for using levels. Levels sounds like
->> it would all be in some ordered fashion, where higher levels have access
->> to lower levels.
-> 
-> That was originally the idea indeed, but in practice I don't expect
-> levels to have a strict ordering, as it's not practical for composing
-> features.
-> 
->> Think of that as a key that can unlock all "lower" locks, not just a
->> single lock.
->>
->> Then, the question is about the ordering once we introduce new
->> keys/locks. With two, it obviously doesn't matter :)
->>
->> So naturally I wonder whether levels is really the right abstraction
->> here, and why we are not simply using "distinct" keys, like
->>
->> KPKEY_DEFAULT
->> KPKEY_PGTABLE
->> KPKEY_SUPER_SECRET1
->> KPKEY_SUPER_SECRET2
->>
->> Is it because you want KPKEY_PGTABLE also be able to write to KPKEY_DEFAULT?
-> 
-> Right, and in general a given level may be able to write to any number
-> of pkeys. That's why I don't want to conflate pkeys and levels. Agreed
-> that "level" might not be the clearest term though, since there's no
-> strict ordering.
 
-As discussed offline, maybe the right terminology to use here would be
-something like a "context".
 
-You'd be activating/setting a context.
+On 4/9/26 3:22 PM, Tudor Ambarus wrote:
+> No, it's more than that. When I talked with Daniel about this driver, he
+> suggested I shall really focus on using the .set_trips callback instead of
+> .set_trip_temp. I'm not sure if it's possible given the static nature of
+> the ACPM interface. So it needs a bit of investigation, which I couldn't
+> do lately.
 
-KPKEY_CTX_DEFAULT
-KPKEY_CTX_PGTABLE
-KPKEY_CTX_SUPER_SECRET1
+FYI, I switched to .set_trips and testing went fine. I'll recheck the
+review feedback and resubmit.
 
-What is accessible (and how) is defined for each context. For example, I
-would assume that all context allow for read/write access to everything
-that KPKEY_CTX_DEFAULT has access to.
-
--- 
 Cheers,
-
-David
+ta
