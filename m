@@ -1,140 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013013.outbound.protection.outlook.com [52.101.83.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD753B27F6;
-	Fri, 17 Apr 2026 14:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776436687; cv=none; b=V9D5VK3XU/UmM5l/yE3ekNFlRPIROLEaLbHRgJ8NAP7E9Q5u+ZRxCmRmn3DuGhfI2wLl6rb8Ujeon+sceyiYaOzRrFOYjNooAQ9/Oz30fguz12FKWUFpTr3hhCXJGZaikblK5JKgHNY34IGnFrWQK6/HOVwFj3gaPS4ioiAzlJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776436687; c=relaxed/simple;
-	bh=71fI7RYCKU2/+pXbICCBe4Ry1z/5h9g3tXZ1OoB1U/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rqmxH/pTtNXIWCeWFbQp3vS1L+D5e9d2GbbeWzoQLF/g8D9rvkME1bR1QG4+GOD4m2cszBJqtbZcRyc7ejwPcGDjmyIn0nnuYrxkRU2cx/qqnGNUUwIXCVD8m/oeeW8BjZeWYAdPaJQuzXk76k4uHEV2avzu1pCJx9GwGN59BjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhWujADd; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081F222B8C5;
+	Fri, 17 Apr 2026 15:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776439560; cv=fail; b=LlX4muNfjFFnpd3PCgvzZqUsDM8Ony9ki+XW76yPqtC8IYbAtSFZy2w9OTxZ23ODZArH1kTAWy8D1aNmNA0MvbOQmkFGT1zJfdATR37ZzYymLQ8ETWw0SUDzM4qm465TiVgxZMc0R3ykKA2IK3b7Mg85zPzgD6+epgdwav/ZfHk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776439560; c=relaxed/simple;
+	bh=JRA/729BlAcGbyJup5mN7IXy7AmnjHiZtin0nydbrsc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VLsIePqllWPWubr7N5FS7e8NvRZspAscbKVhbanDlfzWCCnvtsjsk1I7X7x3TVJPPqnls2LZZa8XJW4bhOhK/rb6zHrnGMcSI39jicyasf6Mbeb5HzDpiR9wLLTHzZKMqSamd9OaGceRTIkyJphDwR30uMjWphAb8IqHy4I3OpM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia-bell-labs.com; spf=fail smtp.mailfrom=nokia-bell-labs.com; dkim=pass (2048-bit key) header.d=nokia-bell-labs.com header.i=@nokia-bell-labs.com header.b=J9oCVxMQ; arc=fail smtp.client-ip=52.101.83.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia-bell-labs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia-bell-labs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhWujADd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B2EC19425;
-	Fri, 17 Apr 2026 14:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776436687;
-	bh=71fI7RYCKU2/+pXbICCBe4Ry1z/5h9g3tXZ1OoB1U/0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qhWujADdKcxaZq684kVHsaixqi43r/+f8Y1XaTTTq0IwyZ1W8nBK3UeRlRM0uD1uJ
-	 fqC8lfgLKFwv9mL88pW9wUWubXkwgxoNc1nUFE/KuuZ5kkHdvYSaj2uMPk4v/6SBBv
-	 4txQqVgAu3KAqmGjtbj4R+96nromnLjZEMjnjXYM9K0FpYVHZdU0pwOKAisqNhm3qz
-	 jyTOHmjPpWKs0hUO4y4T+SptGdjS8GWMR8i9xS4ylx/9AK/Ac49ghXdwZJUcv0rpqj
-	 mOwZ9DEkTWYl9yCe9TZTgKMZD3LgrupjSR9NB52nHpKDt7Fz3l3IUzRH7rohQsAtni
-	 NO+5o5ZDjWo7w==
-Message-ID: <00b24db8-0063-48d6-8bc4-e8b670d8f0d5@kernel.org>
-Date: Fri, 17 Apr 2026 16:37:58 +0200
+	dkim=pass (2048-bit key) header.d=nokia-bell-labs.com header.i=@nokia-bell-labs.com header.b="J9oCVxMQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=D34ImskdIA1Ts1l1+ZyVllPr9+ZF1PS7QSmvANoLm/EsKl/2IZ45OuY2QXOOe8asy39CaPDIR23uIwog+6uFaCpb9pN3M04yuU+PkLhaQsjBmXe4T9faqjCGkLxaQfWVq4QjXCGFTxsByYAgGtdp6VVqMg8umkOACV5CjBwI79E/sRe09+nIlPb5hwQ/sgoKL38Q7B0APria7uxgdYI+3S4m/DZmPVBVxwRzA8XO+RdpYGrLCa2zMu7f5/++vfQ34slfEAL72cksRJl+h0N4+F3OuCf0cl8/Jilxps7OhxQm4vKK2Ze4QyUcgpkBKbUBdN/XlwQOnn8uKYLogbiW3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mjiA1QP+a8hz/IBSgz0kUIIyvMPl4fPVNkjK6Cx0w7s=;
+ b=S9RZ4v/wAzHmE+5GWucHctg62oGQrFjKReI3cA/XaRVLmD4IrJOxv0mKaDBCUiyFcoNOpy3ohBNAHm2gNAjoj5GMXmkUoK79CYNpXuCpXSB4z8PRY11DLbAk0l1uj/f3jy4/SZotsbQ/EQHmizbrsvu0y2PJm+wINO2bwGp1mWm606gmWQrGsfiEAcmRY79PGy1lg7mT/fVTsyBfTtlZoX650pGAoQeB/2ELtxNrSVxr8JcTNIktKyAX3gpei7nye3blYogwgSgn0NQM+jE82YQFwrAdA/qCvmVGf0qX+H1clNppIJZoHRAAx+oDbi0lOWZv/6RcuWc/PJnJ681xlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 131.228.2.240) smtp.rcpttodomain=apple.com smtp.mailfrom=nokia-bell-labs.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nokia-bell-labs.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia-bell-labs.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mjiA1QP+a8hz/IBSgz0kUIIyvMPl4fPVNkjK6Cx0w7s=;
+ b=J9oCVxMQeMgwvOQzlrUZqzfDZFig4dXzv2LsWL8fPIPn8H9XBxILhPUZxANYG32UxPkXqYjHdIRJvmZHuwsNPn3nRxUYF9HS8MKJzd0nGSig+7DYCtvXtyrgdTxc2s/uwJ708lH64krNl2mnUI3IEFT6tX7ilwAHlyFJ1g0igqPpGUTmrL1Oy9nzgwkPioWJoIeIb4r6BSDcCwT3XrrrD4vHsEJ2lhTpyFgxwIFm0e0u8pD5dphtGx7AcE+/JkXufxgin00vC4jESBI7wTeVwCnZ+kz1OSKM6KyxeWcdulQ/SGbqiLhIOgsCYaj4NICdvbtzyQK4XJmDggl8nghsTA==
+Received: from DUZP191CA0011.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:4f9::9) by
+ AMBPR07MB10730.eurprd07.prod.outlook.com (2603:10a6:20b:6a6::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.25; Fri, 17 Apr
+ 2026 15:25:54 +0000
+Received: from DU6PEPF0000A7E2.eurprd02.prod.outlook.com
+ (2603:10a6:10:4f9:cafe::af) by DUZP191CA0011.outlook.office365.com
+ (2603:10a6:10:4f9::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.52 via Frontend Transport; Fri,
+ 17 Apr 2026 15:25:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 131.228.2.240)
+ smtp.mailfrom=nokia-bell-labs.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nokia-bell-labs.com;
+Received-SPF: Pass (protection.outlook.com: domain of nokia-bell-labs.com
+ designates 131.228.2.240 as permitted sender)
+ receiver=protection.outlook.com; client-ip=131.228.2.240;
+ helo=fihe3nok0735.emea.nsn-net.net; pr=C
+Received: from fihe3nok0735.emea.nsn-net.net (131.228.2.240) by
+ DU6PEPF0000A7E2.mail.protection.outlook.com (10.167.8.42) with Microsoft SMTP
+ Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.17 via
+ Frontend Transport; Fri, 17 Apr 2026 15:25:54 +0000
+Received: from sarah.nbl.nsn-rdnet.net (sarah.nbl.nsn-rdnet.net [10.0.73.150])
+	by fihe3nok0735.emea.nsn-net.net (Postfix) with ESMTP id 2B27723625;
+	Fri, 17 Apr 2026 18:25:53 +0300 (EEST)
+From: chia-yu.chang@nokia-bell-labs.com
+To: victor@mojatatu.com,
+	hxzene@gmail.com,
+	linux-hardening@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	jhs@mojatatu.com,
+	jiri@resnulli.us,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	horms@kernel.org,
+	ij@kernel.org,
+	ncardwell@google.com,
+	koen.de_schepper@nokia-bell-labs.com,
+	g.white@cablelabs.com,
+	ingemar.s.johansson@ericsson.com,
+	mirja.kuehlewind@ericsson.com,
+	cheshire@apple.com,
+	rs.ietf@gmx.at,
+	Jason_Livingood@comcast.com,
+	vidhi_goel@apple.com
+Cc: Chia-Yu Chang <chia-yu.chang@nokia-bell-labs.com>
+Subject: [PATCH v3 net 1/1] net/sched: sch_dualpi2: drain both C-queue and L-queue in dualpi2_change()
+Date: Fri, 17 Apr 2026 17:25:51 +0200
+Message-Id: <20260417152551.71648-1-chia-yu.chang@nokia-bell-labs.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/30] mm: Introduce kpkeys
-To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
- Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
- Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
- <20260227175518.3728055-2-kevin.brodsky@arm.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260227175518.3728055-2-kevin.brodsky@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU6PEPF0000A7E2:EE_|AMBPR07MB10730:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: b11cb446-1bd4-4471-0733-08de9c959de5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|36860700016|376014|921020|13003099007|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	XqKKbuYjrh2Dw9+dZfrm5UenNO9Z9NCs7m1m/O1NB58JKgm1PH6dPHoFg2uU8eZ/hgjQlcHnFmjRC37exujH455FgcuLLa5HhcSly4oMVZwcQVcX4XU7zJW+4S1e9ymoGXso09fruGNMQJdsg/KIf/9jZIn53Ap5mqwOUMw56eegSiTqLbGpJcR0Hmcef8dIDn6qOFkJPNwwOWesl1W/gvpjh0DKHF/tGrPC6jCBEf8dzJzzeo0PTooM63IimTasO6QqQgsZQGVA2FXu6zV3IPBU7Vt58ln5ryaG9U52M7b7sU0tI/IPO+SnL8/HJLyqXjhEJVIZ7pg5eiQULZb9ig9jiYMQP6WmExFyv2HnGvphJksXzhdGuMaBvA2TNbo90wFSkFM+1qtCtzsQf2r9eVRTq0zB0u33UfNvTeI0gC1TF93khB0mBlQhzmYYTBpSSg7K0mpNYIIc0mvUgerh7wZiQBztjUoE4TmxNo6hJEUM8LyfXsvRSrQV2IO/KVV+8Ct4mj8A4XRI+qwOSSg8RkXBIlC9e6eTC1zd1zACApKypBWi5X45M7d6QbtU3K+pTVQI6UI0xAfhBeuip32VdWkKRSX7BUcUIfa31tr24HEvCjhAm1OFWfUe1pA8k6IQHepy357S70GvSNOavBjGHjCNTPh2OtdZEm6OmZ/kliMuZuglR/Y8ZJ/0mAxllmz1ZVcxPW2flSjNoXI+oNyohg3AdmC+lZ36kp0SRXdML5C7IlgI+KZ8+784TFuJHFpcxq42ht9/cXj4M6kZBssBv+R78U8c0nqeZjvoet/4tWU9IObB5bVnepZm3U6G5XcMJ3CcQr3aRNwdR1AsyDUkEw==
+X-Forefront-Antispam-Report:
+	CIP:131.228.2.240;CTRY:FI;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:fihe3nok0735.emea.nsn-net.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(36860700016)(376014)(921020)(13003099007)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	dLpgKL3J4lrp6O7l5ImRuDgPrKJIXT/5Cg43ch18kMQccwRn1Du7KbFgN+jFQ2mfe5vXreMLsdunI7/dfCgHEQoVud+G7e1LMhwsg3h8116bx+27/jUqJ9/KpqYJIWTIH+Lpi+82vyCLcmAqxXLixQFhmAuFlvzXY8ZIxnyObTRKd8L5pEs05QWpKVX7PizCrzRlNxRsL/0gwUFCoxC2kN17eYOL8vOnDbWB4YV8TnY7ARdbRAU5jUi5YssvG95Cur76HoESNP8c9Pw1KLs6WykpRdM1Yi7Af7qd/swbS11eV1xANsW0V3qsQJ9x1antJp27diryiZJs64QYdklgv9F6kvV0ShsZj7UBloNYsua+3tikEZFheCN68U0TvMfgdaMIPIOip7hTbPwJW9bmh2Gi3xuenUUbtBoWEga3BzQc82LepKMb0TqPv2m3IGOM
+X-OriginatorOrg: nokia-bell-labs.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2026 15:25:54.5223
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b11cb446-1bd4-4471-0733-08de9c959de5
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5d471751-9675-428d-917b-70f44f9630b0;Ip=[131.228.2.240];Helo=[fihe3nok0735.emea.nsn-net.net]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-DU6PEPF0000A7E2.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AMBPR07MB10730
 
-On 2/27/26 18:54, Kevin Brodsky wrote:
-> kpkeys is a simple framework to enable the use of protection keys
-> (pkeys) to harden the kernel itself. This patch introduces the basic
-> API in <linux/kpkeys.h>: a couple of functions to set and restore
-> the pkey register and macros to define guard objects.
-> 
-> kpkeys introduces a new concept on top of pkeys: the kpkeys level.
-> Each level is associated to a set of permissions for the pkeys
-> managed by the kpkeys framework. kpkeys_set_level(lvl) sets those
-> permissions according to lvl, and returns the original pkey
-> register, to be later restored by kpkeys_restore_pkey_reg(). To
-> start with, only KPKEYS_LVL_DEFAULT is available, which is meant
-> to grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since
-> this is the only available pkey for now).
-> 
-> Because each architecture implementing pkeys uses a different
-> representation for the pkey register, and may reserve certain pkeys
-> for specific uses, support for kpkeys must be explicitly indicated
-> by selecting ARCH_HAS_KPKEYS and defining the following functions in
-> <asm/kpkeys.h>, in addition to the macros provided in
-> <asm-generic/kpkeys.h>:
-> 
-> - arch_kpkeys_set_level()
-> - arch_kpkeys_restore_pkey_reg()
-> - arch_kpkeys_enabled()
+From: Chia-Yu Chang <chia-yu.chang@nokia-bell-labs.com>
 
-Another thing: why not simply drop the "arch_" stuff from these helpers?
+Fix dualpi2_change() to correctly enforce updated limit and memlimit
+values after a configuration change of the dualpi2 qdisc.
 
+Before this patch, dualpi2_change() always attempted to dequeue packets
+via the root qdisc (C-queue) when reducing backlog or memory usage, and
+unconditionally assumed that a valid skb will be returned. When traffic
+classification results in packets being queued in the L-queue while the
+C-queue is empty, this leads to a NULL skb dereference during limit or
+memlimit enforcement.
+
+This is fixed by first dequeuing from the C-queue path if it is
+non-empty. Once the C-queue is empty, packets are dequeued directly from
+the L-queue. Return values from qdisc_dequeue_internal() are checked for
+both queues. When dequeuing from the L-queue, the parent qdisc qlen and
+backlog counters are updated explicitly to keep overall qdisc statistics
+consistent.
+
+Fixes: 320d031ad6e4 ("sched: Struct definition and parsing of dualpi2 qdisc")
+Reported-by: "Kito Xu (veritas501)" <hxzene@gmail.com>
+Closes: https://lore.kernel.org/netdev/20260413075740.2234828-1-hxzene@gmail.com/
+Signed-off-by: Chia-Yu Chang <chia-yu.chang@nokia-bell-labs.com>
+---
+ net/sched/sch_dualpi2.c | 32 ++++++++++++++++++++++++++++----
+ 1 file changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/net/sched/sch_dualpi2.c b/net/sched/sch_dualpi2.c
+index fe6f5e889625..241e6a46bd00 100644
+--- a/net/sched/sch_dualpi2.c
++++ b/net/sched/sch_dualpi2.c
+@@ -868,11 +868,35 @@ static int dualpi2_change(struct Qdisc *sch, struct nlattr *opt,
+ 	old_backlog = sch->qstats.backlog;
+ 	while (qdisc_qlen(sch) > sch->limit ||
+ 	       q->memory_used > q->memory_limit) {
+-		struct sk_buff *skb = qdisc_dequeue_internal(sch, true);
++		struct sk_buff *skb = NULL;
+ 
+-		q->memory_used -= skb->truesize;
+-		qdisc_qstats_backlog_dec(sch, skb);
+-		rtnl_qdisc_drop(skb, sch);
++		if (qdisc_qlen(sch) > qdisc_qlen(q->l_queue)) {
++			skb = qdisc_dequeue_internal(sch, true);
++			if (unlikely(!skb)) {
++				WARN_ON_ONCE(1);
++				break;
++			}
++			q->memory_used -= skb->truesize;
++			rtnl_qdisc_drop(skb, sch);
++		} else if (qdisc_qlen(q->l_queue)) {
++			skb = qdisc_dequeue_internal(q->l_queue, true);
++			if (unlikely(!skb)) {
++				WARN_ON_ONCE(1);
++				break;
++			}
++			/* L-queue packets are counted in both sch and
++			 * l_queue on enqueue; qdisc_dequeue_internal()
++			 * handled l_queue, so we further account for sch.
++			 */
++			--sch->q.qlen;
++			qdisc_qstats_backlog_dec(sch, skb);
++			q->memory_used -= skb->truesize;
++			rtnl_qdisc_drop(skb, q->l_queue);
++			qdisc_qstats_drop(sch);
++		} else {
++			WARN_ON_ONCE(1);
++			break;
++		}
+ 	}
+ 	qdisc_tree_reduce_backlog(sch, old_qlen - qdisc_qlen(sch),
+ 				  old_backlog - sch->qstats.backlog);
 -- 
-Cheers,
+2.34.1
 
-David
