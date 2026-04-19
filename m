@@ -1,150 +1,142 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7694B28DC4;
-	Sun, 19 Apr 2026 02:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F714277C81
+	for <linux-hardening@vger.kernel.org>; Sun, 19 Apr 2026 10:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776565114; cv=none; b=eDAaQ1+61XuFvvi+WBtZk6eVNWecSEyAbdoPWzGyQHD1tAE38Ty1mvnjdQyQQaThhF5tAdVYG5QIpT0Q2pgR05ehztJ5EaZxz4S6WfnYAfWzSRljPMZ6A43xez7DJQAK3GyfDDXqXu7G1U07sSMKaoGtIEaP3ARdvaxZaV9hpy0=
+	t=1776595282; cv=none; b=nrxha89BM2X0tuZ9qAEYuzXt/OzwRnBaJleFC7l7yEyHmEjoVaEPChNTiV0r0JzM7fOST+gKxi9zM0QmfZKr3PQOeeiOd4tb2Lo4Fx4bNRbG1TfM8R+SYixA/t1f7Ml7Z5+LEskwwNNzWsIOS7xYr0JFdh50/IZSiRecYE23TZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776565114; c=relaxed/simple;
-	bh=hc9yjXTvFE5hQRZtgAPnvRo6IKxNCc/DLaoBFkkR73M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uQKgUxpIHMrTY5nmuZyICzgQ0r4TioPLMdMU0qW/hEtaLDB3sTztD7ULrCLZWgG88EGkEAubtYfzxwPwBcC7Bs9MytR/dbr1dM0zFoSmfsByZG8qWI/k+CQ8WtVxXA82XE6OA6tJDOQg7LpzOHPCyYrsnMYFM51oEhapvfeaQnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=M68cStHl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Db6rIZ1J; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1776595282; c=relaxed/simple;
+	bh=qS6jpmxPn0ciU4hAsvRwK00rIYLp0V6xTjVqSfHBlQU=;
+	h=Date:From:To:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z3M2FzzvcmKqQEcasMwYMtgZnIBlU0IP4U7DKxuyTxCKDXlim6bJ0hydfaYVfjmom9bQr22cShTqLmd1UrP8lLLopjw9+a6SIJDLoKu+r/p3ezaldZXXfaNjjV4YyhbH0wnDYWMeoyZd1zgAikWE+lWcZ877PrQTc9Ooppa9rHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rIepnjRy; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="M68cStHl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Db6rIZ1J"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 744AF7A008F;
-	Sat, 18 Apr 2026 22:18:31 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Sat, 18 Apr 2026 22:18:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	ethancedwards.com; h=cc:cc:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1776565111;
-	 x=1776651511; bh=TYLsRJ5Z49GMVYyuofLnGMu8XEo64b0ve+1ho39BAZY=; b=
-	M68cStHlxI0EFlek9lOr8ztPg0S2APMi45pKyBqQdN4Qwr5fYj6b0nnZUGBfqtCU
-	WI3uEnTn/M9iDlX5bHZXzx//8T6IZhppr6NyZiZHrvdMuCw0ns8unas7OZhN5iZK
-	g8WNt9yAqw8tTHmViBjxaVxefXQNOWXYVr4ckx24BmaCNhPEQ2acJtsNy1BlcOeC
-	B96iXcwXNER4NiEjvz2f6lv8LZPQuaVLXcBPQ+LIiVtNWMiNzgq88Nsq0lCfLdzt
-	3VAOzDtqsDH+7j3Wuy86hPq4p+KoecJiyWWhhk9llMw3j6425B5wKkiF5V83/YhH
-	S2+LWAQHHlToIEYWOcRRxQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1776565111; x=1776651511; bh=TYLsRJ5Z49GMVYyuofLnGMu8XEo64b0ve+1
-	ho39BAZY=; b=Db6rIZ1JMu/e68tnv5e1gMYSsDixCHSNMmMzKJQ1AqQnRWaPgPu
-	xTcwnu9uFwvyDmFL+fFqGpa31oKEwvL2VqvUXqJq2U6zxOYLK/cTx5nrV0WTvvxi
-	FvkS0tcfxCxoZ30HROxzewMOfrUnGydmeJekHhKixU9eMw3VyhA9pL3to8JqNps6
-	6tQaRV5JjHe6WJ9ijFYGDURUxkp7eGtdKV/TsGhHmPtlFGVAS6w8LjseRRW7aJ7q
-	joU/a0/ixp8bN6om+IoNhf+O1hwKNqNbHoP7fgf+pkV1YhUMODfRFTPcJYqpHYzZ
-	/Qmu2jgX7LQiQceqAhLi4BF0yQiyZnRvT4A==
-X-ME-Sender: <xms:djvkaVUvaxDIf9ioxVj-4d27AtOIUmnfxGDTa85tmkg8NF8UzMtlJg>
-    <xme:djvkaX2JU6HY60r-WWdbwwD9QDetrqnOAlNYbwYfrHcUO18BKTwafBSc48UBaecCd
-    4NjslVz5iwSSG-SkW7yAqro7hlW_DXHRbPtxKJieGlM4b_GYTKq-30Q>
-X-ME-Received: <xmr:djvkaTq0l87kTbsQOKfKdIpUTIcIAbJLyFZpnW-pNo0CDo0uiOKcjmAXfso3>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdehgeegvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdfstddttddvnecuhfhrohhmpefgthhhrghnucev
-    rghrthgvrhcugfgufigrrhgushcuoegvthhhrghnsegvthhhrghntggvugifrghrughsrd
-    gtohhmqeenucggtffrrghtthgvrhhnpedtfefhffehhfehueevtddtkeetkefgkeegjeel
-    uddtffeiffevgfelheejteeljeenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvg
-    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpegvthhhrghnsegvthhhrghntggvugifrghrughsrdgtohhmpdhnsggprhgtph
-    htthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsohgtkhgvthgtrghn
-    sehhrghrthhkohhpphdrnhgvthdprhgtphhtthhopehmkhhlsehpvghnghhuthhrohhnih
-    igrdguvgdprhgtphhtthhopehlihhnuhigqdgtrghnsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhdqjhgrnhhithhorhhssehvghgvrh
-    drkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:djvkaeVGq0JjPKIz-FaaLaXKJFoTNmbS-g3w1w2EOTwpdme6itp-tw>
-    <xmx:djvkaebBb31wCzB0w5iXVgH7avEUXDjgBzCLmVwFlbxcSsBRyWB45A>
-    <xmx:djvkabeSH1fexqS-x2nW1saKMMisXsT15Wj-LoKmHEZFM7uNGQ3wLQ>
-    <xmx:djvkaY090NyIVEINGsi8EUVd52r497RviXKzXQARO9ZgTJZw7r_CWg>
-    <xmx:dzvkaeI0h8p_cvgn6lVkuCOBZChGVyBXGnMnhnavZyQvOwYUCjNKruXW>
-Feedback-ID: ibf9e487c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 18 Apr 2026 22:18:30 -0400 (EDT)
-Date: Sat, 18 Apr 2026 22:18:30 -0400
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-To: Oliver Hartkopp <socketcan@hartkopp.net>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] can: bcm: Replace strcpy() with strscpy(), simplify call
-Message-ID: <bt56uwgpxdtuocw6lwbnuwz5v32evruy6zx5cbp247cpsa3dbj@oy4zzozwandr>
-References: <20260418-can-bcm-strscpy-v1-1-993eb8de9f77@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rIepnjRy"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-48374014a77so26119565e9.3
+        for <linux-hardening@vger.kernel.org>; Sun, 19 Apr 2026 03:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776595279; x=1777200079; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:to:from:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SewYd26qMSqsJ3PdBJdB1FU0Fv0N/RaIvQ2whLAWfGQ=;
+        b=rIepnjRy33BSUCRbiBUu1zmJbkUmoIlmq7WoBhJCBKxwFvni3KBJCXAvZ+dmLwBEU/
+         VFivMEldX+wkiLA87zEtLT4+/S0QK2tgLU/WG1McLa6OH1hQKqrJV9ZX6y4jdGO5bcjb
+         KqoikEZ5QUQZlHucRP3RKCbztYjbNPDJ2I6oFpcBBpGcatxieTDFt0D69mEVk0cSYcOa
+         5li4qH9L2n4Rx9g6v6hWI4tWSKgBLnDexSi0W0Tzj5Zx5Q+u/LUhQhFmHouWDZa3baYG
+         XNDywxEoQsYIB6mdM8NT+T00L/fioc18rLAc2jrIBSDkOhwNz6bYpVz0B7FsGDbhD4tN
+         l8YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776595279; x=1777200079;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:to:from:date:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SewYd26qMSqsJ3PdBJdB1FU0Fv0N/RaIvQ2whLAWfGQ=;
+        b=RFYaJz5cInRwqb7XHnYMGImdJnecrdvB6dA5Yu8YTRg1VRXJjou3o3OayFRZ6yxZM0
+         HT0GIWmwrFEoIovFJJXrNpC3gu7ZJl2RZSJ92Xkhk30ssSi1T9yKEXA9FnzPbY6QhVbi
+         F1i+0aDMw8+c4ensiuZ5J2VqEfyinde2/XqHCrLBUtksDmjoT1ds9xCml4eKPqYBaRm7
+         fR4AWybJRThoqmgN6iYhC7Fgo0O6rV7MFBEp3EuI6qhttHtnQHNABTg7U2U626jTE89d
+         6+rwcMgDqQQn1uhbARsBJx0i6djitdnIAePS8BcTHNx/X/T38nYUksvVPpOvudrvv631
+         RahA==
+X-Forwarded-Encrypted: i=1; AFNElJ+M6M/NWHEAAaq6CRcPHoVhWTXYYab3fycg9ukQd5Z3Eor0t+xJH7ul1JjDeVKgV/unkIqYUkIvs/YYYT9CGAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw68c8cRH3mqJRt0aluqc7m6EKSxcbhe+pwKZZp5jAFAdBjpLQz
+	nlkLf7zGfsqk8e/qOWiVMjlQ507GZJ0W5dOnN5gkrBlGFhXG0DikehFd
+X-Gm-Gg: AeBDiev1W6nP9ZMBgngTL8MK8L3km+2wtd+FOzjir1kmHm16U4M3UucXI5QwrNebA+k
+	OMSF1tMG2fwI74pNjomA00MFEtWRdpHpbBAU4HsrwontamQ3Wzs6s8ytRFaLG4L8GSRIRckWTgy
+	hFl7z5yOgbZyyEn/8BTSo+VQvuXqL1EkWTI0V8nW6mun/E337/79GRTh9jq3z+GDj38fL3NBb0I
+	ROzkCX1Q0pesvTNmV87AX3M5XI6akY+dOHdDON1sVu73tzOUNaV/UY8coQkmTmkXHSGBtEI6282
+	Zwa/8BEKC66QAOJM0p6weXLVyv16l6TBaZ65YDh3OsIOjcNO/yv7x1PvNW8/0lZNRNdn4+QIkwp
+	La6jNehYmVaVoIanXJ9W9s249apozT6RCJuAZXFeIQ0gV6D5XoBO17bZLhbMSuRkxtYzB4qCrSC
+	EOJ2wwT0F1qj40XNYoOG5cmWYBpZMRDtUgdu1h8akNSd2uXhise3ijf0fF+zlybKWzhFjA/fMDF
+	OA=
+X-Received: by 2002:a05:600d:10:b0:489:1b0c:8b43 with SMTP id 5b1f17b1804b1-4891b0c8c48mr4142765e9.1.1776595278820;
+        Sun, 19 Apr 2026 03:41:18 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4cc2cacsm19934215f8f.13.2026.04.19.03.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2026 03:41:18 -0700 (PDT)
+Date: Sun, 19 Apr 2026 11:41:17 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH next] string: Optimise strlen()
+Message-ID: <20260419114117.7cf50b2b@pumpkin>
+In-Reply-To: <20260327195737.89537-1-david.laight.linux@gmail.com>
+References: <20260327195737.89537-1-david.laight.linux@gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260418-can-bcm-strscpy-v1-1-993eb8de9f77@ethancedwards.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 26/04/18 10:00PM, Ethan Carter Edwards wrote:
-> strcpy() is deprecated; use the safer strscpy() instead.
+On Fri, 27 Mar 2026 19:57:37 +0000
+david.laight.linux@gmail.com wrote:
+
+> From: David Laight <david.laight.linux@gmail.com>
 > 
-> While the src is char array at bcm_proc_getifname's call sites, the src
-> is passed to the function as a char*. Including the IFNAMSIZ length
-> makes the call safer.
+> Unrolling the loop once significantly improves performance on some CPU.
+> Userspace testing on a Zen-5 shows it runs at two bytes/clock rather than
+> one byte/clock with only a marginal additional overhead.
+
+I hate benchmarks.
+
+I've finally got around to looking at this again (on x86-64).
+I changed the order of the 'single byte' and 'two byte' tests and the
+'two byte' loop slowed down massively - to pretty much the same speed
+as the 'single byte' loop.
+gcc had swapped over the two functions in the object file.
+Swapping the order changed the alignment of the loop top between odd and
+even multiples of 16 (this alignment is disabled in kernel to avoid bloat).
+The loop in the 'two byte' code is 17 bytes, in the slow case the loop
+top is aligned to an odd boundary so that the last byte is in a different
+32 byte code block - which is presumably slow.
+Changing the two 'cmpb $0, mem' to (say) 'cmpb %cl, mem' would reduce
+the loop to 15 bytes and so wouldn't cross a 16 byte boundary.
+(The 'single byte' loop doesn't cross a 16 byte boundary in the test program.)
+
+The kernel build I just looked at has strlen() aligned to a 16 byte
+boundary with the branch crossing the next 16 byte boundary.
+So, if the same is true as in my test program, strlen() will run a
+lot slower on 50% of kernel builds.
+(And other cpu may have costs associated with the 16 byte boundary.)
+
+Mostly this means that however hard you try you are guaranteed to
+lose somewhere :-(
+
 > 
-> Use turnary over if/else to simplify code.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
->  net/can/bcm.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/net/can/bcm.c b/net/can/bcm.c
-> index a4bef2c48a55..c133dab1202e 100644
-> --- a/net/can/bcm.c
-> +++ b/net/can/bcm.c
-> @@ -196,10 +196,7 @@ static char *bcm_proc_getifname(struct net *net, char *result, int ifindex)
->  
->  	rcu_read_lock();
->  	dev = dev_get_by_index_rcu(net, ifindex);
-> -	if (dev)
-> -		strcpy(result, dev->name);
-> -	else
-> -		strcpy(result, "???");
-> +	strscpy(result, dev ? dev->name : "???", IFNAMSIZ);
+> Using 'byte masking' is faster for longer strings - the break-even point
+> is around 56 bytes on the same Zen-5 (there is much larger overhead, then
+> it runs at 16 bytes in 3 clocks).
+> But the majority of kernel calls won't be near that length.
+> There will also be extra overhead for big-endian systems and those
+> without a fast ffs().
 
-On second thought:
+I've had a further thought on that as well.
 
-would it just be better here to do:
+The 'byte masking' code is somewhat larger (112 rather than 32 or 48).
+While the extra overhead is ~20 clocks, that is less than a 'branch
+mispredict' penalty that the byte loop suffers every time the length
+changes.
+So for randomly changing lengths I'm beginning to think the 'byte mask'
+version is better.
 
-if (dev)
-    strscpy(result, dev->name, IFNAMSIZ);
-else
-    memcpy(result, "???\0", 4);
+I ran the code on a Haswell a while back, the break even length was
+also somewhat shorter (I'm remembering 32 bytes).
 
-for the sake of compiler optimizations/speed?
+This all means the byte masking code may actually be sensible provided.
+- LE or BE with byte swapping memory read.
+- fast ffsl()
+- 64bit
 
-reading this: https://lore.kernel.org/lkml/20251023092046.4f556e0f@pumpkin/
+	David
 
-I'm not sure.
-
->  	rcu_read_unlock();
->  
->  	return result;
-> 
-> ---
-> base-commit: c7275b05bc428c7373d97aa2da02d3a7fa6b9f66
-> change-id: 20260418-can-bcm-strscpy-56a0e402a660
-> 
-> Best regards,
-> -- 
-> Ethan Carter Edwards <ethan@ethancedwards.com>
-> 
