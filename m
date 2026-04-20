@@ -1,202 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [85.215.255.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB3C214204;
-	Mon, 20 Apr 2026 10:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776680900; cv=none; b=Nrk9UhgFXAxvYOrR1HJBXrE1pfZS+1134dILIm/oTdl/dYFkJZ9/DPAnH0Lt4eKsGGYKN6O1zYlu6/iXPbldGJWtWljc00bXYGByKAqAblpOJ3V9ycv+jTElth2QgdfbEtLazJkO/OTN1/oIaalZ0R62e5GgO6yWOY6gTKrkSME=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776680900; c=relaxed/simple;
-	bh=Ndln9vQTZpiFLL6wQKrdieqa21z6eByrPd0QvS1gFb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mHeLGRNi7oeKown54CB+v6F2T2U68e9gQNoHeuONJItfYQhYx5Qf2Ge4TGvJtEUZ/f7/fsMbxY67rkis5UxRSVS3NLTFcp8siUxmfzt5cqOsUuK6Y6mScGftBh7DDCAzvAmLpY/+PNCk/en7T/iC8wYcLFSLVxJbh4035w01WMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMJaDPvY; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BE72B2D7;
+	Mon, 20 Apr 2026 11:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776684248; cv=pass; b=UgW+6OPIYjLE2zFW5wPsH+W+ZTguSScrDJ/canPF0PH8y+E6VZ11076mY4pT1sZCUlKfYbf5Zk0L1SLHfClEKxsyBvB1Ydhad4W8rvwsMErNnApRCTaXThEPTme0IDmCy3ayBy4BLiFQGvKGR5XFN7AcZoVTEsLtZVZsCoYLLvU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776684248; c=relaxed/simple;
+	bh=XyL9LHKQBM15ZRau2LEWtpW4hPqgbzio8vOy+Mz46lI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZWzhoiEIz+cLk9dPm/HPCSe152/FAmaRo7zk5zBUXQlARxdnGWWRFLIlm0Y6pud+FtbsDYp/KWC9qQ/HG3xEzkNvKw+MxBfadU7uuj/Y2+gbrsQGQLrgL1/NQJVee1jJbUzMGmzeaP8GzfwS1A1hy9IexnSWPLv5IgMZ/rQDlTU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net; spf=fail smtp.mailfrom=hartkopp.net; dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=F6N+swyj; dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=j9wDErgo; arc=pass smtp.client-ip=85.215.255.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hartkopp.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMJaDPvY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDECC19425;
-	Mon, 20 Apr 2026 10:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776680900;
-	bh=Ndln9vQTZpiFLL6wQKrdieqa21z6eByrPd0QvS1gFb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mMJaDPvYVyO7t3gR6EGUpa7cpPBZiqH7/ywZCh9nANqephTKzNzCl+wZ+YoewhE+B
-	 W09n9eyGn0HdRCoh6LxwpixOa9UYgRcwU7GNhCNUdcnwLslShTO0IDNYI1Jxj2DoDo
-	 +t0GKNhemcX3iNy2sz7kAg4xLdcRWaGguwrTcnoLnwVfNiGcyf6lVONN5vx65N2sDU
-	 7LomD2dDKftkucHQ63ivJiRG3diRD7koZ9P961FAsFYlrt4/7NVnwd3+5a6TTZIGko
-	 FQGZJWWKYqIaARmVYEgOQySolBf8dX+qwpwHKT1V5HeG/4kF4RWS5aE19C4TJq1nG3
-	 BJU5+XXuV5s/Q==
-Date: Mon, 20 Apr 2026 19:28:17 +0900
-From: "Harry Yoo (Oracle)" <harry@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
-	Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alexander Potapenko <glider@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
-	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
-	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Matteo Rizzo <matteorizzo@google.com>,
-	GONG Ruiqi <gongruiqi1@huawei.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2] slab: support for compiler-assisted type-based slab
- cache partitioning
-Message-ID: <aeX_wbOBX3l8PJqi@hyeyoo>
-References: <20260415143735.2974230-1-elver@google.com>
- <aeXU-wwGSwcx2dvy@hyeyoo>
- <CANpmjNN0dYD8MB3PpPoxpz4ey2U9xA0w6oVO9hambtRwzSSkiQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="F6N+swyj";
+	dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="j9wDErgo"
+ARC-Seal: i=1; a=rsa-sha256; t=1776681239; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=rEpdHb1/K6G11n5xNguKJmzXEhVgM/tLa2J4rkWxHiK/DXZ/JhQyTMvLWM0ojoLOPG
+    Mpl89iv4L2RJQDj2ZN8Z6lqOb6eOkQq4HmQM2k7XxX/rzl6JnFRfStFN3D3hvHTd5Tky
+    CQkWaeVetHbY60sMYQ0u/MQ12wD/hDjoknx/IfmQPmY1nwq5BrXzpXfWYwrfEw/EJWsF
+    Mo1I51kb7Qi7d6I7gG+jAfo4qHdsg+TtkIKXg0/dVDtlaXodtb1vrt8m2Lraaz41KiPs
+    R2CTinnqgV8YuadioyPStiXol/logdh9r1X8LlBrIfOCnrN9hUOJ7/NoCuazfUVPnd+6
+    yH/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1776681239;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=Q0v4zcYQhu4TY3J+onFrpJZsn9wbFA+k0t415oWwq34=;
+    b=G8M/yECGvI20v43l9L0Q/oM8kJwAjWpCvLMnC1bJInmIrVdJwHJQjGwkyPYMl1wBCO
+    G4WEJYMz7KViIEdbi5i7A8pOjUQiZ1i7c/kMCSXz4iKJ/SkssuzOqUM3FpuxBc8RU6mS
+    6yXv4TDjYQyb3IEemRqOqpuKXmTsrLVYlyHe3mF3PYeHglFnl3IlbiBHgYa1HOagwdrr
+    MQRLso6QmCl8pzpmxe5XrqXD4jzE/nfC5TJ7pX63Ge+Z4Q8/4j0ck8g5Wkw0q2Xa8XnI
+    OgxN76DXJJ0mwDgCe5zDcDT7jdmv0M/Oo0HrI2DWVQSReWnTylEl1pN2qkY9ujbTOtzR
+    Vhyg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1776681239;
+    s=strato-dkim-0002; d=hartkopp.net;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=Q0v4zcYQhu4TY3J+onFrpJZsn9wbFA+k0t415oWwq34=;
+    b=F6N+swyjjzVAzlkh9W6+30Y6w7hCpDdmbhJmZbFpcbktjHEMKuSpJR991cM8vtGOui
+    3KoN51WKzHxEUsERh+b25rY9Ya8nw8oHtZCFlLo8NjjHXXnHpxdeT653WCqwOz2XzoNW
+    w6WOXzrT4QUhSSkdVxcJZUybiXc62QGiUt81s0P0oK+m6nmzvuKFqc+esWeFwai8U4de
+    +kd4eOM7G10BhVBbAyBfN/2Alyhz+MOOdTIHAwMeaUrpxWuKawDAiLSXStLO6yT4YVQI
+    RWmkW3ZKLnbXVm4V5uDB2YF4ZMpVtnIAKfPioOkyZc9T14BVleswU1i0dTqmODJyuLFF
+    i3Qg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1776681239;
+    s=strato-dkim-0003; d=hartkopp.net;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=Q0v4zcYQhu4TY3J+onFrpJZsn9wbFA+k0t415oWwq34=;
+    b=j9wDErgoatqCelDe/mjF3uGhZSevirul12X725guW1K/ShYtNaQu8fs4iWLqX0jz5i
+    cK0qQ0BBwvofs5sCwfCw==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjH4JKvMdQv2tTUsMrZpkO3Mw3lZ/t54cFxeFQ7s1YTqptmo87qzm6sElmZEI+VN6rw=="
+Received: from [IPV6:2a00:6020:4a38:6800:3499:34c0:1f42:76da]
+    by smtp.strato.de (RZmta 55.0.1 AUTH)
+    with ESMTPSA id Kba96d23KAXwX9z
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 20 Apr 2026 12:33:58 +0200 (CEST)
+Message-ID: <6d162723-a76b-400a-9b54-11a5c60c2f7d@hartkopp.net>
+Date: Mon, 20 Apr 2026 12:33:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNN0dYD8MB3PpPoxpz4ey2U9xA0w6oVO9hambtRwzSSkiQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] can: bcm: Replace strcpy() with strscpy(), simplify call
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+ Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20260418-can-bcm-strscpy-v1-1-993eb8de9f77@ethancedwards.com>
+Content-Language: en-US
+From: Oliver Hartkopp <socketcan@hartkopp.net>
+In-Reply-To: <20260418-can-bcm-strscpy-v1-1-993eb8de9f77@ethancedwards.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 20, 2026 at 11:30:23AM +0200, Marco Elver wrote:
-> On Mon, 20 Apr 2026 at 09:25, Harry Yoo (Oracle) <harry@kernel.org> wrote:
-> > [CC'ing RUST ALLOC folks for rust bindings]
-> > On Wed, Apr 15, 2026 at 04:37:05PM +0200, Marco Elver wrote:
-> > A few comments on V2:
-> >
-> > # comment 1
-> >
-> > I'm not a big fan of how k[v]realloc_node_align()
-> > and kmalloc_nolock() define and pass the token parameter.
-> >
-> > IMHO it'll be fine to use {DECL,PASS}_KMALLOC_PARAMS() in those
-> > functions, since SLAB_BUCKETS users already passes NULL bucket
-> > to most of __kmalloc*() calls anyway.
+Hello Ethan,
+
+On 19.04.26 04:00, Ethan Carter Edwards wrote:
+> strcpy() is deprecated; use the safer strscpy() instead.
 > 
-> I'm not sure I agree. 2 reasons:
+> While the src is char array at bcm_proc_getifname's call sites, the src
+> is passed to the function as a char*. Including the IFNAMSIZ length
+> makes the call safer.
+
+I'm not sure what makes the call "safer" here.
+
+The use of IFNAMSIZ in dev->name and in ifname[IFNAMSIZ] in 
+bcm_proc_show() makes it 100% clear that we only can copy data between 
+identical sized buffers. Adding strscpy() with IFNAMSIZ is a nop.
+
+The only issue could be that someone reduces IFNAMSIZ to a value smaller 
+than sizeof("???") - which is not addressed here.
+
+I see no real benefit changing this code in the proposed way.
+
+Especially as we are not talking about some dynamic content here.
+
+Best regards,
+Oliver
+
 > 
-> 1. Even though it's "just" k[v]realloc_node_align() and
-> kmalloc_nolock() - despite their relatively less frequent use - just
-> put one of them in a hot path and you're sacrificing performance even
-> further. There are only so many arguments that can be passed in
-> registers (depending on arch), and may cause more stack spilling.
+> Use turnary over if/else to simplify code.
 > 
-> 2. We'd misleadingly declare that these functions do something with
-> the bucket arg. This is wrong.
-
-Both are valid points. But it still feels wrong to have:
-
-void *krealloc_node_align_noprof(const void *objp, size_t new_size,
-				 unsigned long align,
-				 gfp_t flags, int nid DECL_TOKEN_PARAM(token));
-
-n = krealloc_node_align_noprof(p, size, align, kmalloc_gfp_adjust(flags, size), nid _PASS_TOKEN_PARAM(token));
-
-Actually the problem here is that some of parameters in
-DECL_KMALLOC_PARAMS() are not necessary in some functions.
-
-Perhaps we could have
-
-DECL_KMALLOC_PARAMS(size, b, token) # declare size, bucket, token
-
-DECL_BUCKET_PARAMS(size, token) # declare size, bucket;
-				# but, actually, we don't need this!
-
-DECL_TOKEN_PARAMS(size, b) # declare size, token only;
-			   # for kmalloc_nolock and k[v]realloc_node_align()
-
-and use DECL_TOKEN_PARAMS(), PASS_TOKEN_PARAMS() for those functions?
-(just like how DECL_BUCKET_PARAMS() worked before)
-
-What do you think?
-
-> Both feels wrong, and would only make this change if you confirm both
-> are trade-offs that you strongly prefer.
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+>   net/can/bcm.c | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> > # comment 2
-> >
-> > This breaks Documentation/.
-> >
-> > Problems:
-> >
-> > - The document generator doesn't handle DECL_KMALLOC_PARAMS() well.
-> >
-> > - The signature of the function that users call (krealloc_node_align())
-> >   and the function that has kerneldoc (krealloc_node_align_noprof())
-> >   don't match.
-> >
-> > - Even worse, moving kerneldoc to the macro doesn't work because
-> >   it uses variable arguments (...)
+> diff --git a/net/can/bcm.c b/net/can/bcm.c
+> index a4bef2c48a55..c133dab1202e 100644
+> --- a/net/can/bcm.c
+> +++ b/net/can/bcm.c
+> @@ -196,10 +196,7 @@ static char *bcm_proc_getifname(struct net *net, char *result, int ifindex)
+>   
+>   	rcu_read_lock();
+>   	dev = dev_get_by_index_rcu(net, ifindex);
+> -	if (dev)
+> -		strcpy(result, dev->name);
+> -	else
+> -		strcpy(result, "???");
+> +	strscpy(result, dev ? dev->name : "???", IFNAMSIZ);
+>   	rcu_read_unlock();
+>   
+>   	return result;
 > 
-> Well, some were broken before, now it's just broken more. :-)
-
-Ouch... ;-)
-
-> We could move the documentation to macros and switch to explicit args
-> instead of (...).
-
-That works for me!
-
-> Otherwise, I don't see any way to fix this. Preferences?
+> ---
+> base-commit: c7275b05bc428c7373d97aa2da02d3a7fa6b9f66
+> change-id: 20260418-can-bcm-strscpy-56a0e402a660
 > 
-> > # comment 3
-> >
-> > Looking at how rust generates helper functions,
-> > in rust/helpers/slab.c:
-> > | // SPDX-License-Identifier: GPL-2.0
-> > |
-> > | #include <linux/slab.h>
-> > |
-> > | __rust_helper void *__must_check __realloc_size(2)
-> > | rust_helper_krealloc_node_align(const void *objp, size_t new_size, unsigned long align,
-> > |                               gfp_t flags, int node)
-> > | {
-> > |       return krealloc_node_align(objp, new_size, align, flags, node);
-> > | }
-> > |
-> > | __rust_helper void *__must_check __realloc_size(2)
-> > | rust_helper_kvrealloc_node_align(const void *p, size_t size, unsigned long align,
-> > |                                gfp_t flags, int node)
-> > | {
-> > |       return kvrealloc_node_align(p, size, align, flags, node);
-> > | }
-> >
-> > Rust code probably won't pass any meaningful token?
-> > (something you may want to address in the future)
-> 
-> Yes, it'll just pass '0' by default. We could force Rust's allocation
-> to be in the pointer-containing range - if we assume Rust code is less
-> prone to contain bugs, but the assumption is that such allocations
-> both originate and are confined to the Rust side. One easy way to do
-> this is to write:
-> 
->        return kvrealloc_node_align(p, size + 0 * sizeof(long*), align,
-> flags, node);
-> 
-> But I'd defer that for now, until we're sure the above assumption
-> holds (Rust originated + confined).
+> Best regards,
 
-Ack.
-
-By the way, since Allocator trait uses realloc() to allocate new memory,
-IIUC all k[v]malloc, k[v]realloc usage from Rust will be affected.
-
--- 
-Cheers,
-Harry / Hyeonggon
