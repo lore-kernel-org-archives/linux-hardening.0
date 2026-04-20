@@ -1,213 +1,180 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22B637A493
-	for <linux-hardening@vger.kernel.org>; Mon, 20 Apr 2026 06:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776668206; cv=pass; b=jsgI374Hltl6oltonmHA4LR3CdO/eqToCoYxWX3I6tuU2K+uY0WcYshcK+JGuKRN8c/B+nfSVBEghEp660h3EqrFjf50Bque/wtyOBycIUkyi1UvxOhUMSVCZCa/95SXA4z3+9gizHMvF6TrMsOznvfY7N2N/frQLCuSizVMtoM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776668206; c=relaxed/simple;
-	bh=q2h2S+ybPyUuORfyPrVUgIx6M1XZ4AInwFwtr0lmqIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bu5TAv/M1jEJ4WRn6ssSz3FtnHeeam3wjuMJQRKLT7Lx151hwQMtfAKGM3r7FozI1pLnhjTqENqYZcuoJ3CGYF7+S9N9Q2GdAoh/Xb7Cu3D2PDV8GLEf/4SGre3D3VQS3z1F69Jtxn8Rhdi1NZ+6t0CPgGDPY+IZB9LhGfaVEbo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qna4vtBj; arc=pass smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2BA288C08;
+	Mon, 20 Apr 2026 07:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776668515; cv=none; b=Kn1qUmUFfW4q6iA5rM49cR/2Rf7458yQrymAG9LZmziWHF9oWh45+/gx4fVKcqxujm4rXb+X8hnzz6bRxd6sCUP5AfszyKziHJaxM1PvLaaLv616qeWYqGvrOCvoa86ulX5gaIADwVFLDUtPhxRFLmx+dmHEbqjo4Kl0E9uO6S0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776668515; c=relaxed/simple;
+	bh=2HubVmemKYFSrpjdVlLvyLMzuA44GJ7AxdEWaTIopnc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OK2wyIhOWXa5us76790Qw0ygWzVIB3ike1cQ7r3tqfTFoYEW9m8mNYxBYfVxx0vBlmDIv/Z5FWzwCIF7Y6yKvi3dX7cVIcV7kAnh2xL9/UpDQNngFpKVgWz72DnLXu7wZ8HBMbeYmTSnZFdESVJ+8PyFtmwwbmI0UgZKUZpU7No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOoS5Wx6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qna4vtBj"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ba60d78aff3so181398566b.2
-        for <linux-hardening@vger.kernel.org>; Sun, 19 Apr 2026 23:56:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776668203; cv=none;
-        d=google.com; s=arc-20240605;
-        b=AuMC7ux/DSntd1DU7hZI3LglKnc0zFiDYbgM6ALXL+jih3Tljj2+4tECx8LDS5cgs7
-         0RNlOi46K4ZEUFyDt4yw/zenzr2xJNfwcY4RzA7ObtJwNQ1bGB3Y97l2UMH94KJNAcfU
-         Roy3nQPnMSNvjq/j9PvrEnfGmhUgEibb/3es1DeemZxW8F7jrCwYwR9gY0Y7CSdxnwQG
-         6adLleJs2DhJWm/BlyQeTWoPX1jSYIhF77sgd2bBQ7h1Gkw+8LKUPQ8k1WXkdkVDdhKE
-         GJi2cIuis8XZsTm/h0PHC2RrUCb+2gOcb5ZpF96hVsBJTc5R3tO2F+DB3OZDfto7t65P
-         1McA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=bVaZtqMT64CADYWqi8aDaSmUgUoGBxSGLKSrX44BRFQ=;
-        fh=FRM+9/VKEgIYar8w3+aa27/OOFRFLMgFOs91vKz1FSI=;
-        b=i3UFvw0UHnhhOmuJ2h7MQYgERYWYBsAai4rJuaSwP7sHEeHjjjY4NPCv4MTYDQTP0Q
-         YnGpFhkBmApon2pnlMCQX0irYiOomr9hzyvN2Q4vLkJmIxFo/J7uc0WWoKIMACM1uTzY
-         RroP2Y0FThCu67aqMXrHgC7vrII6UriT3M6FS0U+imWfyldhn2dW+m16k3LNBZor0dVe
-         NK4JjFsARXCeu6jCVLrFsjMG0XHVhmnQvptb1JOrJgV9Locdha1F6Eray0kDMqgxcTSu
-         fMOpbzTXop9iUEJI+8RM1QbYCt8iYPSZThs/BOyQC+X/oNOYQByBktJh9wa1K2USJ468
-         2NCQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776668203; x=1777273003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bVaZtqMT64CADYWqi8aDaSmUgUoGBxSGLKSrX44BRFQ=;
-        b=Qna4vtBjfGS7sTxzR8ymtlzx4QPNFBz5P3mM8jM3E1pOUvueMr/RT9o/vDxb8Lu6fG
-         tTxSC3/YZmqcbb1Q+w3JyOeM7PZFJfFOdF47wlDHsHY0Cc5q8vMX/SqLQzUwAP5wgqJP
-         4vDd39XaA45+A87GZkxdyMbA9rBJpUOjhqb06carxWwiZ2Viam3ZOv4gfSzl/H3SOnzX
-         SGWJhTbRsQuek7RIVtx496QP5bCWZu/ppUiVYi/Fa0VM0UjLtVl2P+hG9/hzyOVc1yRR
-         JvY7cppG+l33iquD1z4FyzWUKbNCIA3jtVeE4ns200nPkOi+p9tsQX8xRbHDJbTcFvg1
-         T9qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776668203; x=1777273003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bVaZtqMT64CADYWqi8aDaSmUgUoGBxSGLKSrX44BRFQ=;
-        b=KdMkBxk/x6V03DRNAZwPTwKHhjkQTxJgxuntV5GG9mbY+XOnOOubw1meuIiQ7cwqJX
-         6vX9lTnkRH+uE8VirtdiVKMvt9umbwKlEzp72c9YBau+e8A0F2r5LuEFEmcnGUY+8Dtq
-         ysLvNk0GYZIwIbaEtlrU/rcCgyD4ZyOhacmgbAVcFb9ed/0dM02SuE5fKwe44qpzSjc9
-         v3scpdFXG0yGr7i59iF8iXOeme7gAQAUAEOWM9KTyIVkWyq5NZWWqYwvC4ABConKUCXG
-         1mKtBJ/DhlZDsL7rIW3C7W4AyLfPQq3UwB/3ZRtusY7n3VzIJyy8px3lmtHZ3zyibOze
-         IbwQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8Tbi+5XoL3dUqh3pyoMvpIHpEFn1M4rH3LULiE3kJ8nyY/iA2o8tmylYnDtjpTG/PfnR7fEPZqvfNsJRvpI7g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTGxorUFzCgKsvdSHn31CUQ2DWpuBFr+nOPmsfKOTm6rHiYEFq
-	npOJl2zj9UQqsKHGGn5elEBRPYN9a1gbPwMxw9XKQcpDDln8eULgZMp1/s7/EgAwf4k/qfz8DXM
-	T6puO2ATt6FLA03WphEfI2kY7ZsSKjus=
-X-Gm-Gg: AeBDietdEgA29H0vLk6NST5S1Qfu3IPQLQ8cKJmQHsta+Er+u4W42/xVCdjrxIoYEow
-	JR6eeo+rSko/1v3/1oWpR0ZUIcM+OTh4eQfZEafFQ3zV9mwi/X2sMPW6OytMAO6TfyQpdv9nK5t
-	Rb5wP9gCz13zaexcr8A+SkLiPF1wWgwdcbhCUw8EqYSkhqTF9Ks7Qo35EhfAAYCMR2433Uhlv/h
-	2BO+z4nxiZnt25NYR1vU6GB1g4W5fqnlAi23xFfGPtXvf0Bb7tE4Cinj4fRFpHj0JEJ6xs74HkW
-	EACdF5KkiDxEAuUR2TW07dinehUTA3LCmz/bttAvXysCnIAE9ILwow/foZuxNzXWRwRoWZ1Nd4L
-	AkCEUEZSJqMaTQvF4FQ==
-X-Received: by 2002:a17:906:4fc5:b0:b97:aea3:86dc with SMTP id
- a640c23a62f3a-ba419074424mr620683866b.15.1776668202651; Sun, 19 Apr 2026
- 23:56:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOoS5Wx6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95BBFC19425;
+	Mon, 20 Apr 2026 07:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776668514;
+	bh=2HubVmemKYFSrpjdVlLvyLMzuA44GJ7AxdEWaTIopnc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YOoS5Wx6pMZKMZlHW21lbBbviCZhxubZdgxsA5GEOdEF+RMDw+un8C/pDE2dE88W1
+	 QIPOW1WJ9wC+EUw+ikTEoHL/aHm8POBVuM99jhiygKKqp8sluMUIQKxs7Fm8q45l2R
+	 FD/lAPTX3x51DyEOcxfERLKVSxw1mOFWkJ/Q1RDJ6woo8j5PXAMGu76M75jfBaxvMQ
+	 iB5Eg8bM2xbBf1fSvLksohlm4V1RiGmP+aAr4E3Qq5cK5Op3ox663otj5ljWjc1psQ
+	 6c8cEwZgIq1aYGMGHLnhY7HX6UXVDMByfegV4FefqoJqMO0NS8404or0Dzmw/FM0O/
+	 qC9LVkf/tnk6w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1wEidk-0000000CylX-00qd;
+	Mon, 20 Apr 2026 07:01:52 +0000
+Date: Mon, 20 Apr 2026 08:01:51 +0100
+Message-ID: <86se8q15eo.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Cc: Oliver Upton <oupton@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu
+ <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	devel@daynix.com,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 2/4] KVM: arm64: PMU: Protect the list of PMUs with RCU
+In-Reply-To: <483e5cf2-a54c-4781-ac6d-49f5bc7128ba@rsg.ci.i.u-tokyo.ac.jp>
+References: <20260418-hybrid-v7-0-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp>
+	<20260418-hybrid-v7-2-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp>
+	<87mryzauib.wl-maz@kernel.org>
+	<483e5cf2-a54c-4781-ac6d-49f5bc7128ba@rsg.ci.i.u-tokyo.ac.jp>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260407143306.78809-1-shuvampandey1@gmail.com> <20260419153111.90635-1-shuvampandey1@gmail.com>
-In-Reply-To: <20260419153111.90635-1-shuvampandey1@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 20 Apr 2026 09:56:05 +0300
-X-Gm-Features: AQROBzBB7sr9V9y3776Xm-nQgbVWK8ePbaEINiPI1wlUAH7f5fhqOgGYD5-wWmI
-Message-ID: <CAHp75VcW0cexQk6Zg-RwKSMBpOxPa3YCAomK7PFXEGLQ0VkrMQ@mail.gmail.com>
-Subject: Re: [PATCH v2] lib/string_helpers: renormalize string_get_size()
- after rounding carry
-To: Shuvam Pandey <shuvampandey1@gmail.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: odaki@rsg.ci.i.u-tokyo.ac.jp, oupton@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, kees@kernel.org, gustavoars@kernel.org, pbonzini@redhat.com, corbet@lwn.net, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Please, keep the author of the original change in the loop.
+On Mon, 20 Apr 2026 07:21:45 +0100,
+Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
+> 
+> On 2026/04/19 23:34, Marc Zyngier wrote:
+> > On Sat, 18 Apr 2026 09:14:24 +0100,
+> > Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
+> >> 
+> >> Convert the list of PMUs to a RCU-protected list that has primitives to
+> >> avoid read-side contention.
+> >> 
+> >> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+> >> ---
+> >>   arch/arm64/kvm/pmu-emul.c | 14 ++++++--------
+> >>   1 file changed, 6 insertions(+), 8 deletions(-)
+> >> 
+> >> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+> >> index 59ec96e09321..ef5140bbfe28 100644
+> >> --- a/arch/arm64/kvm/pmu-emul.c
+> >> +++ b/arch/arm64/kvm/pmu-emul.c
+> >> @@ -7,9 +7,9 @@
+> >>   #include <linux/cpu.h>
+> >>   #include <linux/kvm.h>
+> >>   #include <linux/kvm_host.h>
+> >> -#include <linux/list.h>
+> >>   #include <linux/perf_event.h>
+> >>   #include <linux/perf/arm_pmu.h>
+> >> +#include <linux/rculist.h>
+> >>   #include <linux/uaccess.h>
+> >>   #include <asm/kvm_emulate.h>
+> >>   #include <kvm/arm_pmu.h>
+> >> @@ -26,7 +26,6 @@ static bool kvm_pmu_counter_is_enabled(struct kvm_pmc *pmc);
+> >>     bool kvm_supports_guest_pmuv3(void)
+> >>   {
+> >> -	guard(mutex)(&arm_pmus_lock);
+> >>   	return !list_empty(&arm_pmus);
+> > 
+> > Please read include/linux/rculist.h and the discussion about the
+> > interaction of list_empty() with RCU-protected lists. How about using
+> > list_first_or_null_rcu() for peace of mind?
+> 
+> list_first_or_null_rcu() is useful to replace a sequence of
+> list_empty() and list_first_entry() that is protected by a lock, but
+> this function instead requires the invariant that nobody deletes an
+> element from the list, and list_first_or_null_rcu() does not allow
+> removing the requirement.
+>
+> The header file says:
+> > Where are list_empty_rcu() and list_first_entry_rcu()?
+> >
+> > They do not exist because they would lead to subtle race conditions:
+> >
+> > if (!list_empty_rcu(mylist)) {
+> >	struct foo *bar = list_first_entry_rcu(mylist, struct foo,
+> >					       list_member);
+> >	do_something(bar);
+> > }
+> >
+> > The list might be non-empty when list_empty_rcu() checks it, but it
+> > might have become empty by the time that list_first_entry_rcu()
+> > rereads the ->next pointer, which would result in a SEGV.
+> >
+> > When not using RCU, it is OK for list_first_entry() to re-read that
+> > pointer because both functions should be protected by some lock that
+> > blocks writers.
+> >
+> > When using RCU, list_empty() uses READ_ONCE() to fetch the
+> > RCU-protected ->next pointer and then compares it to the address of
+> > the  list head.  However, it neither dereferences this pointer nor
+> > provides  this pointer to its caller.  Thus, READ_ONCE() suffices
+> > (that is,  rcu_dereference() is not needed), which means that
+> > list_empty() can be used anywhere you would want to use
+> > list_empty_rcu().  Just don't expect anything useful to happen if you
+> > do a subsequent lockless call to list_first_entry_rcu()!!!
+> >
+> > See list_first_or_null_rcu for an alternative.
+> 
+> However, kvm_supports_guest_pmuv3() locked a mutex when calling
+> list_empty() and unlocked it immediately after that, instead of
+> re-reading list_first_entry(). This construct inherently had a race
+> condition with code that deletes an element; when the caller of
+> kvm_supports_guest_pmuv3() decides to enable guest PMUv3, the host PMU
+> may have been gone. But it was still safe because no one deletes an
+> element.
+> 
+> The same logic also applies when using RCU. As the comment says, we
+> can use list_empty() instead of the hypothetical list_empty_rcu()
+> macro because we don't expect it to magically enable something like
+> list_first_entry_rcu(). This function instead keep relying on the fact
+> that no one deletes an element of the list.
 
-James, what do you think?
+And that's exactly the sort of thing I am trying to plan for. *Should*
+we introduce a way to remove PMUs from the list, this predicate
+becomes unsafe.
 
-On Sun, Apr 19, 2026 at 6:31=E2=80=AFPM Shuvam Pandey <shuvampandey1@gmail.=
-com> wrote:
->
-> string_get_size() rounds the fractional part before formatting the
-> result. If that carry pushes the integer part to the unit divisor, the
-> helper still prints the old unit and produces strings like "1000 kB"
-> and "1024 KiB".
->
-> That misformatted carry case comes from the arithmetic rounding added by
-> commit 564b026fbd0d ("string_helpers: fix precision loss for some
-> inputs"). The helper already rounds those values up numerically; it
-> just fails to renormalize them into the next unit before formatting.
->
-> Renormalize the carried result into the next named unit so those cases
-> print as "1.00 MB" and "1.00 MiB" instead. Only do that when another
-> named unit exists, so the existing "UNK" fallback is preserved at the
-> top end. Extend the KUnit coverage around the first decimal and binary
-> boundaries, including adjacent values and non-byte block sizes that hit
-> the same carry path.
->
-> Fixes: 564b026fbd0d ("string_helpers: fix precision loss for some inputs"=
-)
-> Signed-off-by: Shuvam Pandey <shuvampandey1@gmail.com>
-> ---
-> Changes in v2:
-> - correct the Fixes tag to 564b026fbd0d
-> - renormalize only when another named unit exists
-> - preserve the top-end UNK fallback
-> - add decimal and binary boundary/neighbor KUnit coverage
-> - add non-byte block-size cases that hit the same carry path
->
->  lib/string_helpers.c             | 12 ++++++++++++
->  lib/tests/string_helpers_kunit.c | 25 +++++++++++++++++++++++++
->  2 files changed, 37 insertions(+)
->
-> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-> index 169eaf5834949..bcabb24fe0dbf 100644
-> --- a/lib/string_helpers.c
-> +++ b/lib/string_helpers.c
-> @@ -121,6 +121,18 @@ int string_get_size(u64 size, u64 blk_size, const en=
-um string_size_units units,
->                 size +=3D 1;
->         }
->
-> +       /*
-> +        * Renormalize into the next named unit, but preserve the top-end
-> +        * UNK fallback. After promotion the value is exactly 1 of the ne=
-xt
-> +        * unit, so keep two fractional digits for the usual 1.00 formatt=
-ing.
-> +        */
-> +       if (size >=3D divisor[units_base] && i + 1 < ARRAY_SIZE(units_2))=
- {
-> +               size =3D 1;
-> +               remainder =3D 0;
-> +               i++;
-> +               j =3D 2;
-> +       }
-> +
->         if (j) {
->                 snprintf(tmp, sizeof(tmp), ".%03u", remainder);
->                 tmp[j+1] =3D '\0';
-> diff --git a/lib/tests/string_helpers_kunit.c b/lib/tests/string_helpers_=
-kunit.c
-> index c853046183d24..67822cb48fd15 100644
-> --- a/lib/tests/string_helpers_kunit.c
-> +++ b/lib/tests/string_helpers_kunit.c
-> @@ -558,6 +558,31 @@ static void test_get_size(struct kunit *test)
->         /* weird block sizes */
->         test_string_get_size_one(3000, 1900, "5.70 MB", "5.44 MiB");
->
-> +       /* rounding carry into the next unit at the first decimal boundar=
-y */
-> +       test_string_get_size_one(999499, 1, "999 kB", "976 KiB");
-> +       test_string_get_size_one(999500, 1, "1.00 MB", "976 KiB");
-> +       test_string_get_size_one(999999, 1, "1.00 MB", "977 KiB");
-> +       test_string_get_size_one(1000000, 1, "1.00 MB", "977 KiB");
-> +       test_string_get_size_one(1000001, 1, "1.00 MB", "977 KiB");
-> +
-> +       /* rounding carry into the next unit at the first binary boundary=
- */
-> +       test_string_get_size_one(1048063, 1, "1.05 MB", "1023 KiB");
-> +       test_string_get_size_one(1048064, 1, "1.05 MB", "1.00 MiB");
-> +       test_string_get_size_one(1048575, 1, "1.05 MB", "1.00 MiB");
-> +       test_string_get_size_one(1048576, 1, "1.05 MB", "1.00 MiB");
-> +       test_string_get_size_one(1048577, 1, "1.05 MB", "1.00 MiB");
-> +
-> +       /* values already in the next binary unit stay unchanged */
-> +       test_string_get_size_one(2097151, 1, "2.10 MB", "2.00 MiB");
-> +       test_string_get_size_one(2097152, 1, "2.10 MB", "2.00 MiB");
-> +       test_string_get_size_one(2097153, 1, "2.10 MB", "2.00 MiB");
-> +
-> +       /* non-byte block sizes hit the same carry path */
-> +       test_string_get_size_one(4997, 200, "999 kB", "976 KiB");
-> +       test_string_get_size_one(4998, 200, "1.00 MB", "976 KiB");
-> +       test_string_get_size_one(9981, 105, "1.05 MB", "1023 KiB");
-> +       test_string_get_size_one(9982, 105, "1.05 MB", "1.00 MiB");
-> +
->         /* huge values */
->         test_string_get_size_one(U64_MAX, 4096, "75.6 ZB", "64.0 ZiB");
->         test_string_get_size_one(4096, U64_MAX, "75.6 ZB", "64.0 ZiB");
-> --
-> 2.50.1 (Apple Git-155)
->
+So I want at least a comment explaining this to the unsuspecting
+reader, as this is rather subtle.
 
+	M.
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Without deviation from the norm, progress is not possible.
