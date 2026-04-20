@@ -1,310 +1,363 @@
-Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5ADA389104
-	for <linux-hardening@vger.kernel.org>; Mon, 20 Apr 2026 09:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776677464; cv=pass; b=ORlEF044DPG8R3gSg3XAFRc5aa1KdkAhTkxk9jovYRQqvXfdEJgeDgpcuT9s/1LjEgi4huoHHvp0aNujsCjHl9KQcpqAOpvyfM1YfA9ffCkNrIWU0kgw3Ed1e8kCdIA8Ev4n/ncHtUtbSwokoQ+3Os+fu8GpTPjtin0XpqMWbw8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776677464; c=relaxed/simple;
-	bh=AYtIN+DV/14zAGGZ+sPiagOSGUF1db+pHMUYlKur3JM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aVXELASMfEZxk0RSDIyAF4PjL1JwsNJXrNIlJtCCuq+rIxkwIb9br2ZWPqK+En7p+4UT0G1sT1xYY4YVKC5aFfW+DLD6JR4SjPTPILQ+/uIfQ903VlHwfo4eTVQsYXU8GSYpfiPj5hCo63GcVK9mZ3l3yffF2PD3xMYs2gkC7Vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qu9qLn8H; arc=pass smtp.client-ip=74.125.82.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D20D2C11F1;
+	Mon, 20 Apr 2026 09:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776678721; cv=none; b=hfMAXAgZIJQWVI5fNqtkt87yGJQsMWMHqDznV1m2OmGvb6SwmGc+I5WPDK4u00G1aa7bI8zGuUycjuOioA4HC96j13IO74CpCG6fv+XQ37P+7FL8VgjX/Z7Gmn2qqlQWUbBOM4ZXm+d4lIBlKYzp9QmdrQHluUE3u7KKEzuXcqU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776678721; c=relaxed/simple;
+	bh=XYhx9+CFohe0iWyUB9sZOynfbxZLAMSrZvs0/XibZHw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RILJKqn2rsN1P4cdEbjPGCCb4pMQdW9/QF9zKKrpApzvjhB4Lxiz3gkt4SfdgI/MKKG3ByzzWhzgNazTsOz1tPo9jWsuOTO/VXY91/EciS+hebXw7tDtv3G7buSHZsfGak5BC3JSmyupSM6KaDKFATm8RHFn08v9b5aBdETJHPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLcSna+Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qu9qLn8H"
-Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-12c8f9846c8so602194c88.0
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Apr 2026 02:31:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776677461; cv=none;
-        d=google.com; s=arc-20240605;
-        b=TyR1ELA8gqSyVmWJRcgiP9cCKfbDUl0eYS6YVnk4YoDI3uaoBKgGTdDihHijQkwXpm
-         R2z93Jhasc2ywXMBNMjR8jszaMOUNE3rXAc2AW6diUyAmwgZ7+rbZYU326uhuCoZvHNr
-         ipiYLu3zcgCrqkbQaoFuooG9Rz4+eBVJr1HgemZZ3A25XBO0OMg4g8wy+Ql53mFbR9rd
-         wWUEJWaDQyLCTjF0B9Cu0xBhrnjEOTIvSlMu7LAJ7R1mhh3VNzZMvFM5fRxJaQsyQFz4
-         Wb46Y6XkquiTuh+P69jmNKaRH5ReQ3aj0WLqKjaoR/6WOIt5U9m4oAfeIfAHEswbnfMS
-         00xA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=Psv86sYw6WRRa2dc8XVnn4F/sQNlqX7p+36B++yB2PI=;
-        fh=L5hmB2dHCsjuXK9sZ1Hjdvn+9dPX9vVSGOyhszKQ6MU=;
-        b=Xt6iDyGxPrigH4Spz9ihkKpIFRMVSdrA7fpubrp8xvepKQDd8FoN6x5ukm3jm3p4Z3
-         MdqdarekN55SNKHZk2PE4fyhdAVPb+elCldDYhhN37MABo+I1Eiwwyt+d6S/pMag5b0o
-         +9fGSAP7tu5ub+IdYzGls6GzeS7WTkg53lHsmL72GgWdCBzVW13rUUSSPFqRknR6OGtj
-         yaQyd0cXPC3UWEzm4RxwUojtR01MNRwQMcj+3Zgic3c19+31wmBdoTRBFD4Y7+FKMJPL
-         /+nWEYNXog+8Z7nyKHNekSYDQoXmDUZR4z+YaCBUuU0roB24/fDLTo5ybSl6mNKWcnj7
-         y9Aw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776677461; x=1777282261; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Psv86sYw6WRRa2dc8XVnn4F/sQNlqX7p+36B++yB2PI=;
-        b=qu9qLn8HHz61QR5V3SW7GrkOXBE5+bE97lfJkh6JZtn0V3ujhGqkUJb4wbV0pBRXc0
-         QVJ8bXEFow/sWF5JhZ+oco58ZhXnG20vZMHXwyS60vLu5yEkMBmcC32msNmCGOIofjDL
-         Z6tOOnCV0apr6slgRcgAshqO2yq02vHqk0t+d7o+F3BsklOWSZncR8/ups4LAbMbYHPi
-         DY6SVMw83CC7IsHPRXPDeNhxVgkcu5RTwfL1t8uf267UYW/+kj0hhYQEKgx2l0rZ+Z9Y
-         DZY2vQ3U4COK2q+XBazjAomqkMQoBQ69lw4pB5VEU9lDUw6rAbDGtVrblJv3pUpcHJ5u
-         IQMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776677461; x=1777282261;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Psv86sYw6WRRa2dc8XVnn4F/sQNlqX7p+36B++yB2PI=;
-        b=sar15ilCXXgPL2RH5VKbJaPth3NPlfzNcfLa65A3bT2GBFoq9GjUhjO/tmmUTXdEAN
-         8ZAReFdlisNk+LZ8xpkYdExppmexrTsYCS0bsNA1Z+QAtta8ZwJqKczK/V6gwIjbnHuV
-         +N7BMaTViaMjg1PF5VkPzVtBKiKBysd0SjZNkqgHKvXXQqlJJXk2w1ZGcdZZ1119s2pz
-         xUWgt8mfOw7zCGbMlfaTP448PWHwbK4ik2RTIiW4cm5sAez697gv7Wei6eKQSYtBU1RT
-         4IBxAtPE+ZwAsjF80bcdN7p/vKyAiXuHM0a13JflIQX8DYoTDJQeNcWuVPy/cx6LpN+c
-         EjUQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9Tw76iaR6SKP4vVHRQBUJdYUsaoQ3HXMiBWQJCkbgZSNHvCRWqCYJKkD6kRI1tgAO0CypVntuvPvzTKnkc9eg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdQl5sD/rFIWv3gV2nbHMQwj/T0JWo+kH5BZnMMCuG3orkN57D
-	ZHyEYxTNEMQfcRNNH7sJlya8k0OsCBDdnQhbnCkbBx96bDBKlANvlOMg0CgHfsHXwlOeglF8JPF
-	Q36XApHO88SyYULkmBSiUF1iPpCKizGJq5yL5NXqy
-X-Gm-Gg: AeBDietI6de8LdItxaH/RrZcHj52UTQZDewDMdtc1qo4HPT0rPm5+5yoLIeA2k3Wpaq
-	MJtfHBrVIgfnIPNFOPJ3I2mVVl2dmEdNBq76rC9usWd4r96dMYP0QHiBddMz0n1DeJ/0rbtSQRk
-	bt+6VhRb5iNzYNOAVWDIdWy1KBmA0sNXkugnwn1yRyWZNNOs2tXjmVQfE1qP+hbnZVrImqBKVh+
-	iCqY7M1sn8Yb03dQ+kcFsB1mcWwwKNE4Gy5XgG3DCZWbJOQOrilDNRzM7NbDnHkXkb+4LQdl1Yu
-	1ygJB280spn9K1oMwjPNLilkPNKc3z0uUjLHaKOxGeJ5yqFKFDTGlbWA1zLY0Xw4czX/
-X-Received: by 2002:a05:7022:90a:b0:127:33e0:ea40 with SMTP id
- a92af1059eb24-12c73f7fbaamr5617278c88.15.1776677460282; Mon, 20 Apr 2026
- 02:31:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLcSna+Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C80F5C19425;
+	Mon, 20 Apr 2026 09:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776678721;
+	bh=XYhx9+CFohe0iWyUB9sZOynfbxZLAMSrZvs0/XibZHw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gLcSna+Q6Yk8c35tT8OV/c6Mq0u6l8OWNuBwMXESWipUaU6r3wJgKVht+lG4Xmd8M
+	 I1gmZPtEPoqVjEWVHuBFTJSD63ep0KvmMz/riSc+pc9a2cF8/LB/xBjB7zyRT0VE5N
+	 8+Io6FUZzWUGTgn33z9WmPQPZ/y1JI8DIYWUFSAIIMKfJaXfMvSUtfPyI22e6odlsK
+	 yDYKDgQpN3uQ1tKc1CrDteF2V7AUY6l8mmJ7Y1pGC9YjGE8CDPjb5ux8mlAkKYQGIz
+	 1UJGcUO2EoCpnLdlk0r/6wRAiBQiBxoOglYo2DO62tT3vjidQAmwtayWS4ikVqcMp6
+	 S9NxbQOgckMWQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1wElIM-0000000D19Y-1hWs;
+	Mon, 20 Apr 2026 09:51:58 +0000
+Date: Mon, 20 Apr 2026 10:51:57 +0100
+Message-ID: <86qzoa0xj6.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Cc: Oliver Upton <oupton@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu
+ <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	devel@daynix.com,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 3/4] KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
+In-Reply-To: <06c6664c-7f0c-47b2-babf-ba2a541fd9f2@rsg.ci.i.u-tokyo.ac.jp>
+References: <20260418-hybrid-v7-0-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp>
+	<20260418-hybrid-v7-3-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp>
+	<87ldeic1gk.wl-maz@kernel.org>
+	<06c6664c-7f0c-47b2-babf-ba2a541fd9f2@rsg.ci.i.u-tokyo.ac.jp>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260415143735.2974230-1-elver@google.com> <aeXU-wwGSwcx2dvy@hyeyoo>
-In-Reply-To: <aeXU-wwGSwcx2dvy@hyeyoo>
-From: Marco Elver <elver@google.com>
-Date: Mon, 20 Apr 2026 11:30:23 +0200
-X-Gm-Features: AQROBzCDqXBXEzcrST_0Skn6GXHUWSKau4IE3IO7VWholE-9v6QWyxVbFP_MsxE
-Message-ID: <CANpmjNN0dYD8MB3PpPoxpz4ey2U9xA0w6oVO9hambtRwzSSkiQ@mail.gmail.com>
-Subject: Re: [PATCH v2] slab: support for compiler-assisted type-based slab
- cache partitioning
-To: "Harry Yoo (Oracle)" <harry@kernel.org>
-Cc: Vlastimil Babka <vbabka@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>, 
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, Hao Li <hao.li@linux.dev>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com, 
-	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>, 
-	Matteo Rizzo <matteorizzo@google.com>, GONG Ruiqi <gongruiqi1@huawei.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Uladzislau Rezki <urezki@gmail.com>, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: odaki@rsg.ci.i.u-tokyo.ac.jp, oupton@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, kees@kernel.org, gustavoars@kernel.org, pbonzini@redhat.com, corbet@lwn.net, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, 20 Apr 2026 at 09:25, Harry Yoo (Oracle) <harry@kernel.org> wrote:
->
-> [CC'ing RUST ALLOC folks for rust bindings]
->
-> On Wed, Apr 15, 2026 at 04:37:05PM +0200, Marco Elver wrote:
-> > Rework the general infrastructure around RANDOM_KMALLOC_CACHES into more
-> > flexible PARTITION_KMALLOC_CACHES, with the former being a partitioning
-> > mode of the latter.
-> >
-> > Introduce a new mode, TYPED_KMALLOC_CACHES, which leverages a feature
-> > available in Clang 22 and later, called "allocation tokens" via
-> > __builtin_infer_alloc_token [1]. Unlike RANDOM_KMALLOC_CACHES, this mode
-> > deterministically assigns a slab cache to an allocation of type T,
-> > regardless of allocation site.
-> >
-> > The builtin __builtin_infer_alloc_token(<malloc-args>, ...) instructs
-> > the compiler to infer an allocation type from arguments commonly passed
-> > to memory-allocating functions and returns a type-derived token ID. The
-> > implementation passes kmalloc-args to the builtin: the compiler performs
-> > best-effort type inference, and then recognizes common patterns such as
-> > `kmalloc(sizeof(T), ...)`, `kmalloc(sizeof(T) * n, ...)`, but also
-> > `(T *)kmalloc(...)`. Where the compiler fails to infer a type the
-> > fallback token (default: 0) is chosen.
-> >
-> > Note: kmalloc_obj(..) APIs fix the pattern how size and result type are
-> > expressed, and therefore ensures there's not much drift in which
-> > patterns the compiler needs to recognize. Specifically, kmalloc_obj()
-> > and friends expand to `(TYPE *)KMALLOC(__obj_size, GFP)`, which the
-> > compiler recognizes via the cast to TYPE*.
-> >
-> > Clang's default token ID calculation is described as [1]:
-> >
-> >    typehashpointersplit: This mode assigns a token ID based on the hash
-> >    of the allocated type's name, where the top half ID-space is reserved
-> >    for types that contain pointers and the bottom half for types that do
-> >    not contain pointers.
-> >
-> > Separating pointer-containing objects from pointerless objects and data
-> > allocations can help mitigate certain classes of memory corruption
-> > exploits [2]: attackers who gains a buffer overflow on a primitive
-> > buffer cannot use it to directly corrupt pointers or other critical
-> > metadata in an object residing in a different, isolated heap region.
-> >
-> > It is important to note that heap isolation strategies offer a
-> > best-effort approach, and do not provide a 100% security guarantee,
-> > albeit achievable at relatively low performance cost. Note that this
-> > also does not prevent cross-cache attacks: while waiting for future
-> > features like SLAB_VIRTUAL [3] to provide physical page isolation, this
-> > feature should be deployed alongside SHUFFLE_PAGE_ALLOCATOR and
-> > init_on_free=1 to mitigate cross-cache attacks and page-reuse attacks as
-> > much as possible today.
-> >
-> > With all that, my kernel (x86 defconfig) shows me a histogram of slab
-> > cache object distribution per /proc/slabinfo (after boot):
-> >
-> >   <slab cache>      <objs> <hist>
-> >   kmalloc-part-15    1465  ++++++++++++++
-> >   kmalloc-part-14    2988  +++++++++++++++++++++++++++++
-> >   kmalloc-part-13    1656  ++++++++++++++++
-> >   kmalloc-part-12    1045  ++++++++++
-> >   kmalloc-part-11    1697  ++++++++++++++++
-> >   kmalloc-part-10    1489  ++++++++++++++
-> >   kmalloc-part-09     965  +++++++++
-> >   kmalloc-part-08     710  +++++++
-> >   kmalloc-part-07     100  +
-> >   kmalloc-part-06     217  ++
-> >   kmalloc-part-05     105  +
-> >   kmalloc-part-04    4047  ++++++++++++++++++++++++++++++++++++++++
-> >   kmalloc-part-03     183  +
-> >   kmalloc-part-02     283  ++
-> >   kmalloc-part-01     316  +++
-> >   kmalloc            1422  ++++++++++++++
-> >
-> > The above /proc/slabinfo snapshot shows me there are 6673 allocated
-> > objects (slabs 00 - 07) that the compiler claims contain no pointers or
-> > it was unable to infer the type of, and 12015 objects that contain
-> > pointers (slabs 08 - 15). On a whole, this looks relatively sane.
-> >
-> > Additionally, when I compile my kernel with -Rpass=alloc-token, which
-> > provides diagnostics where (after dead-code elimination) type inference
-> > failed, I see 186 allocation sites where the compiler failed to identify
-> > a type (down from 966 when I sent the RFC [4]). Some initial review
-> > confirms these are mostly variable sized buffers, but also include
-> > structs with trailing flexible length arrays.
-> >
-> > Link: https://clang.llvm.org/docs/AllocToken.html [1]
-> > Link: https://blog.dfsec.com/ios/2025/05/30/blasting-past-ios-18/ [2]
-> > Link: https://lwn.net/Articles/944647/ [3]
-> > Link: https://lore.kernel.org/all/20250825154505.1558444-1-elver@google.com/ [4]
-> > Link: https://discourse.llvm.org/t/rfc-a-framework-for-allocator-partitioning-hints/87434
-> > Acked-by: GONG Ruiqi <gongruiqi1@huawei.com>
-> > Co-developed-by: Harry Yoo (Oracle) <harry@kernel.org>
-> > Signed-off-by: Harry Yoo (Oracle) <harry@kernel.org>
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> > v2:
-> > * Avoid empty function argument if !PARTITION_KMALLOC_CACHES
-> >   (co-developed-by Harry). While Clang does optimize out the empty
-> >   struct argument (and generated code is identical to before if
-> >   PARTITION_KMALLOC_CACHES is disabled), GCC doesn't do so. So we need
-> >   to fully remove the argument if not actually required.
-> > * Cover krealloc() which was missed before, resulting in ~100 additional
-> >   objects in the pointer-containing caches in above histogram.
-> > * Unify kmalloc_token_t definition.
->
-> > * Expand Kconfig help text.
->
-> Thanks. I find the help text much more useful.
->
-> >
-> > v1: https://lore.kernel.org/all/20260331111240.153913-1-elver@google.com/
-> > * Rebase and switch to builtin name that was released in Clang 22.
-> > * Keep RANDOM_KMALLOC_CACHES the default.
-> >
-> > RFC: https://lore.kernel.org/all/20250825154505.1558444-1-elver@google.com/
-> > ---
->
-> A few comments on V2:
->
-> # comment 1
->
-> I'm not a big fan of how k[v]realloc_node_align()
-> and kmalloc_nolock() define and pass the token parameter.
->
-> IMHO it'll be fine to use {DECL,PASS}_KMALLOC_PARAMS() in those
-> functions, since SLAB_BUCKETS users already passes NULL bucket
-> to most of __kmalloc*() calls anyway.
+On Mon, 20 Apr 2026 09:36:16 +0100,
+Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
+> 
+> On 2026/04/20 2:19, Marc Zyngier wrote:
+> > On Sat, 18 Apr 2026 09:14:25 +0100,
+> > Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
+> >> 
+> >> On a heterogeneous arm64 system, KVM's PMU emulation is based on the
+> >> features of a single host PMU instance. When a vCPU is migrated to a
+> >> pCPU with an incompatible PMU, counters such as PMCCNTR_EL0 stop
+> >> incrementing.
+> >> 
+> >> Although this behavior is permitted by the architecture, Windows does
+> >> not handle it gracefully and may crash with a division-by-zero error.
+> >> 
+> >> The current workaround requires VMMs to pin vCPUs to a set of pCPUs
+> >> that share a compatible PMU. This is difficult to implement correctly in
+> >> QEMU/libvirt, where pinning occurs after vCPU initialization, and it
+> >> also restricts the guest to a subset of available pCPUs.
+> >> 
+> >> Introduce the KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY attribute to
+> >> create a "fixed-counters-only" PMU. When set, KVM exposes a PMU that is
+> >> compatible with all pCPUs but that does not support programmable
+> >> event counters which may have different feature sets on different PMUs.
+> >> 
+> >> This allows Windows guests to run reliably on heterogeneous systems
+> >> without crashing, even without vCPU pinning, and enables VMMs to
+> >> schedule vCPUs across all available pCPUs, making full use of the host
+> >> hardware.
+> >> 
+> >> Much like KVM_ARM_VCPU_PMU_V3_IRQ and other read-write attributes, this
+> >> attribute provides a getter that facilitates kernel and userspace
+> >> debugging/testing.
+> > 
+> > OK, so that's the sales pitch. But how is it implemented? I would like
+> > to be able to read a high-level description of the implementation
+> > trade-offs.
+> 
+> Implementation-wise it is very trivial. Essentially the following
+> addition in kvm_arm_pmu_v3_get_attr() is the entire implementation:
+> +	case KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY:
+> +		if (test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY,
+> &vcpu->kvm->arch.flags))
+> +			return 0;
+> 
+> Both its functionality and code complexity is trivial. So we can argue that:
+> - the functionality is too trivial to be useful or
+> - the interface/implementation complexity is so trivial that it does not
+>   incur maintenance burden
+> 
+> In this case the selftest uses the getter so I was more inclined to
+> have it, but adding one just for the selftest sounds too ad-hoc, so
+> here I looked into other attributes to ensure that it was not
+> introducing inconsistency with existing interfaces.
+> 
+> As the result, I found there are other read-write attributes; in fact
+> there are more read-write attributes than write-only ones.
 
-I'm not sure I agree. 2 reasons:
+You're completely missing the point. I'm referring to the whole of the
+commit message, which is more of a marketing slide than a technical
+description.
 
-1. Even though it's "just" k[v]realloc_node_align() and
-kmalloc_nolock() - despite their relatively less frequent use - just
-put one of them in a hot path and you're sacrificing performance even
-further. There are only so many arguments that can be passed in
-registers (depending on arch), and may cause more stack spilling.
+I really don't care about the getter at this stage, which while
+pointless, does not make things more awful than they already are.
 
-2. We'd misleadingly declare that these functions do something with
-the bucket arg. This is wrong.
+> 
+> > 
+> >> 
+> >> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+> >> ---
+> >>   Documentation/virt/kvm/devices/vcpu.rst |  29 ++++++
+> >>   arch/arm64/include/asm/kvm_host.h       |   2 +
+> >>   arch/arm64/include/uapi/asm/kvm.h       |   1 +
+> >>   arch/arm64/kvm/arm.c                    |   1 +
+> >>   arch/arm64/kvm/pmu-emul.c               | 155 +++++++++++++++++++++++---------
+> >>   include/kvm/arm_pmu.h                   |   2 +
+> >>   6 files changed, 147 insertions(+), 43 deletions(-)
+> >> 
+> >> diff --git a/Documentation/virt/kvm/devices/vcpu.rst b/Documentation/virt/kvm/devices/vcpu.rst
+> >> index 60bf205cb373..e0aeb1897d77 100644
+> >> --- a/Documentation/virt/kvm/devices/vcpu.rst
+> >> +++ b/Documentation/virt/kvm/devices/vcpu.rst
+> >> @@ -161,6 +161,35 @@ explicitly selected, or the number of counters is out of range for the
+> >>   selected PMU. Selecting a new PMU cancels the effect of setting this
+> >>   attribute.
+> >>   +1.6 ATTRIBUTE: KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
+> >> +------------------------------------------------------
+> >> +
+> >> +:Parameters: no additional parameter in kvm_device_attr.addr
+> >> +
+> >> +:Returns:
+> >> +
+> >> +	 =======  =====================================================
+> >> +	 -EBUSY   Attempted to set after initializing PMUv3 or running
+> >> +		  VCPU, or attempted to set for the first time after
+> >> +		  setting an event filter
+> >> +	 -ENXIO   Attempted to get before setting
+> >> +	 -ENODEV  Attempted to set while PMUv3 not supported
+> >> +	 =======  =====================================================
+> >> +
+> >> +If set, PMUv3 will be emulated without programmable event counters. The VCPU
+> >> +will use any compatible hardware PMU. This attribute is particularly useful on
+> > 
+> > Not quite "any PMU". It will use *the* PMU of the physical CPU,
+> > irrespective of the implementation.
+> 
+> I think:
+> 
+> - this comment
+> - one on the KVM_EXIT_FAIL_ENTRY_CPU_UNSUPPORTED note
+> - one on kvm_pmu_create_perf_event()
+> - and one on kvm_arm_pmu_v3_set_pmu_fixed_counters_only()
+> 
+> All boil down into one question: will it support all possible CPUs, or
+> will it support a subset? Let me answer here:
+> 
+> This patch is written to support a subset instead of all possible
+> CPUs. If a pCPU does not have a compatible PMU, the pCPU will not be
+> supported and cause KVM_EXIT_FAIL_ENTRY_CPU_UNSUPPORTED.
 
-Both feels wrong, and would only make this change if you confirm both
-are trade-offs that you strongly prefer.
+This is not a thing. Either *all* the CPUs have a PMU that can be used
+for KVM, or PMU support is not offered to guests. That's a hard line
+in the sand. And the code already upholds this by checking the
+sanitised PMUVer field.
 
-> # comment 2
 >
-> This breaks Documentation/.
->
-> Problems:
->
-> - The document generator doesn't handle DECL_KMALLOC_PARAMS() well.
->
-> - The signature of the function that users call (krealloc_node_align())
->   and the function that has kerneldoc (krealloc_node_align_noprof())
->   don't match.
->
-> - Even worse, moving kerneldoc to the macro doesn't work because
->   it uses variable arguments (...)
+> This patch does not enforce all possible CPUs are covered by the
+> compatible PMUs. Theoretically speaking,
+> kvm_arm_pmu_get_pmuver_limit() enables the PMU emulation when real
+> PMUv3 hardware covers all possible CPUs *or* the relevant registers
+> can be trapped with IMPDEF, so some pCPU may not have a compatible PMU
+> and only provide the IMPDEF trapping.
 
-Well, some were broken before, now it's just broken more. :-)
+How is that possible? Please describe the case where that can happen,
+and I will make sure that such a system stops booting. The intent is
+definitely that that:
 
-We could move the documentation to macros and switch to explicit args
-instead of (...).
+- for early CPUs, we take the minimal capability of all CPUs
 
-Otherwise, I don't see any way to fix this. Preferences?
+- for late CPUs, either they match at least the capability recorded by
+  early CPUs, or they don't boot.
 
-> # comment 3
->
-> Looking at how rust generates helper functions,
-> in rust/helpers/slab.c:
-> | // SPDX-License-Identifier: GPL-2.0
-> |
-> | #include <linux/slab.h>
-> |
-> | __rust_helper void *__must_check __realloc_size(2)
-> | rust_helper_krealloc_node_align(const void *objp, size_t new_size, unsigned long align,
-> |                               gfp_t flags, int node)
-> | {
-> |       return krealloc_node_align(objp, new_size, align, flags, node);
-> | }
-> |
-> | __rust_helper void *__must_check __realloc_size(2)
-> | rust_helper_kvrealloc_node_align(const void *p, size_t size, unsigned long align,
-> |                                gfp_t flags, int node)
-> | {
-> |       return kvrealloc_node_align(p, size, align, flags, node);
-> | }
->
-> Rust code probably won't pass any meaningful token?
-> (something you may want to address in the future)
+> Practically, I don't think any sane configuration will ever have such
+> a subset support, so we can explicitly enforce all possible CPUs are
+> covered by the compatible PMUs if desired.
 
-Yes, it'll just pass '0' by default. We could force Rust's allocation
-to be in the pointer-containing range - if we assume Rust code is less
-prone to contain bugs, but the assumption is that such allocations
-both originate and are confined to the Rust side. One easy way to do
-this is to write:
+That's not just desired. This is a requirement. And it is already
+enforced AFAICS.
 
-       return kvrealloc_node_align(p, size + 0 * sizeof(long*), align,
-flags, node);
+> 
+> > 
+> >> +heterogeneous systems where different hardware PMUs cover different physical
+> >> +CPUs. The compatibility of hardware PMUs can be checked with
+> >> +KVM_ARM_VCPU_PMU_V3_SET_PMU. All VCPUs in a VM share this attribute. It isn't
+> >> +possible to set it for the first time if a PMU event filter is already present.
+> > 
+> > "for the first time" gives the impression that it will work if you try
+> > again. I'd rather we say that "This feature is incompatible with the
+> > existence of a PMU event filter".
+> 
+> The following sequence will work:
+> 1. Set KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
+> 2. Set KVM_ARM_VCPU_PMU_V3_FILTER
+> 3. Set KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
+> 
+> This is to make the behavior conistent with KVM_ARM_VCPU_PMU_V3_SET_PMU.
 
-But I'd defer that for now, until we're sure the above assumption
-holds (Rust originated + confined).
+I don't think this is correct. Filtering is completely at odds with
+this patch, and I don't want to have to reason about the combination.
+
+[...]
+
+> >> +	int i;
+> >> +
+> >> +	for_each_set_bit(i, &mask, 32) {
+> >> +		pmc = kvm_vcpu_idx_to_pmc(vcpu, i);
+> >> +		if (!pmc->perf_event)
+> >> +			continue;
+> >> +
+> >> +		cpu_pmu = to_arm_pmu(pmc->perf_event->pmu);
+> >> +		if (!cpumask_test_cpu(vcpu->cpu, &cpu_pmu->supported_cpus)) {
+> >> +			kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
+> >> +			break;
+> >> +		}
+> >> +	}
+> >> +}
+> >> +
+> > 
+> > Why do we need to inflict this on VMs that do not have the fixed
+> > counter restriction?
+> 
+> This function is to re-create the perf_event in case the current
+> perf_event does not support the pCPU because e.g., the pCPU is a
+> E-core while the perf_event only covers the P-cores.
+
+That's not what I meant. This code is only here to support the
+fixed-function feature. It makes no sense outside of it, because *we
+don't support counter migration across implementations*.
+
+So what's the purpose of this stuff for the normal KVM setup?
+
+> 
+> > 
+> > And even then, all you have to reconfigure is the cycle counter. So
+> > why the loop? All we want to find out is whether the cycle counter is
+> > instantiated on the PMU that matches the current CPU.
+> 
+> I just wanted to avoid hardcoding assumptions on the fixed
+> counter(s). FEAT_PMUv3_ICNTR will be naturaly handled with a loop, for
+> example.
+
+Well, not that loop, since ICNTR is counter 32. So please let's stop
+the nonsense and only add what is required?
+
+[...]
+
+> >>   +
+> >> clear_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY,
+> >> &kvm->arch.flags);
+> > 
+> > Why does this need to be cleared? I'd rather we make sure it is never
+> > set the first place.
+> 
+> KVM_ARM_VCPU_PMU_V3_SET_PMU and
+> KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY can be set on the same
+> VCPU. The last KVM_ARM_VCPU_PMU_V3_SET_PMU or
+> KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY setting will be effective.
+> 
+> A VMM may try set these attributes to check if the setting is
+> supported. For example, the RFC QEMU patch first uses
+> KVM_ARM_VCPU_PMU_V3_SET_PMU to find a compatible PMU that covers all
+> pCPUs, and then falls back to
+> KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY. The order of such probing is
+> up to the VMM.
+
+KVM_ARM_VCPU_PMU_V3_SET_PMU is not a probing mechanism. You must probe
+the PMUs by looking in /sys/bus/event_source/devices/, like kvmtool
+does.
+
+So there is no reason to support this stuff, and the two flags should
+be made mutually exclusive.
+
+[...]
+
+> >>
+> > 
+> > In conclusion, I find this patch to be rather messy. For a start, it
+> > needs to be split in at least 5 patches:
+> > 
+> > - at least two for the refactoring
+> > - one for the PMU core changes
+> > - one for the UAPI
+> > - one for documentation
+> 
+> That clarifies the expected granurarity of patches. The next version
+> will be in that layout, perhaps with more patches if an additional
+> change. Thanks for the guidance.
+> 
+> > 
+> > I'd also like some clarification on how this is intended to work if we
+> > enable FEAT_PMUv3_ICNTR, because the definition seems to be designed
+> > to encompass all fixed-function counters, and I expect this to grow
+> > over time.
+> 
+> Indeed the UAPI was designed to encompass all fixed-function counters
+> as suggested by Oliver.
+> 
+> To support the UAPI, the implementation avoids hardcoding the
+> assumption on the fixed counter(s). FEAT_PMUv3_INCTR will be naturaly
+> supported once the common code is properly updated (i.e., the size of
+> the event counter bitmask is grown the corresponding registers are
+> wired up with a proper check of the feature.)
+> 
+> I expect migration will be handled with the conventional register
+> getters and setters, but please share if you have a concern.
+
+At the very least I want to see some documentation explaining that.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
