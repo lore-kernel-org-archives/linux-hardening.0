@@ -1,39 +1,33 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92E9381B0D;
-	Mon, 20 Apr 2026 06:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885E1382378;
+	Mon, 20 Apr 2026 06:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776666152; cv=none; b=PpsV/vDTZ2eykA15l6X6is/F9VrRlQneYKDZj6iWOjdYJACqfxRMphJNnLapPmfXa9Dc8TM72rGAaMCBMgIL230IkgzDfE6xHkQZ50OcT/919Tsm1OV0YjB2lMkPC4Hy4fMWAwhz00BHSPeEwSWUyGKhZgOyrlB9t81Qwmsum2A=
+	t=1776667632; cv=none; b=choo+F+wt4rKJv/GuTdO1D05k4RXHDcDRiPqR6zp/UWqfnrhQQ7OwjeMxOUyTv4qwUVwiWEGokLmmzvOo/orZodu97gglMeuo6/NSjgrQ5LSPKsNXXTrnZG+Dx99ovkC7UMsFn1y699+2tYJ+X3xqkJLo4olcNHxKXnCFAQvf8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776666152; c=relaxed/simple;
-	bh=4gcTz+8sS8b31hqBB1wlc7iFgF0lAJ8qLJYbhTEXAjU=;
+	s=arc-20240116; t=1776667632; c=relaxed/simple;
+	bh=FOT+rxetMCCm/Vt/n/onmxMCYGq9cNElSNypd+yNhnw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IiZpuS+eZOlZqCilEUmU1DUNd56WiqQF+phUOUNmlYhB1dZSchJ9tKoW77MiuJ6UFfYCz2k/UVL85xDmQBl6kVy0LndEJYI2PUmLQSirfU6l6/MKroBGdeyktrEafxXz7ds2995J+BmOY/rP696h4FbVyfzHFSjD8kvMwSf7RYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=Fab4JszZ reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	 In-Reply-To:Content-Type; b=AtUygPHklOLTBjg/I/hO3dd9rcDRJ67hxkp09DkQfhRFCDP3PgV/+sZsWlMQhPEhSG58yZng6Xwn+bNVZ/LuVBEW8hJxb9sFONL5iQ3/jEQM4rbhyBTeIiBtWqwHobdXUkABWbrCLRpUbSCHTjc3ahQN9tYcG61lOksprcluJNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=j4epmrx6; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="Fab4JszZ"
-Received: from [133.11.54.205] (h205.csg.ci.i.u-tokyo.ac.jp [133.11.54.205])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 63K6Lj2B066789
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 20 Apr 2026 15:21:46 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=FJ5CdXSzLkVwwaN2gkjigUMa98BbQG4sZbq6fGjnjvg=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1776666106; v=1;
-        b=Fab4JszZTcVq1Wcnn3GPi67jiAAuyi0vN2G2vLUb9wiEHaXeyWOJkP8k6OKIG/Bc
-         MSLW8jYjzMErRS7+BPGAzAQj37qGFNtOApRCwgTMTfkhtKcrAVGud92dlFVeUf3M
-         waOVb7QFgWsztepP+AjxR8oCG+yuABP9noUYDjyPUIuNlXuFXLU2Ufakz/L5MeEi
-         5dnVj6poWbruKOBnHfQR3bWRS5xFuBh/fEVbPRwR3kCe8bA9K93Cc1OFqoB6KHfI
-         fT64THxfBFME0MahSZA486qwy7PBjndEm7kgZ+ygWf59mGkv/qAIE7bYBie4RBIi
-         J84VxqyKbF5pYOy69uV7tg==
-Message-ID: <483e5cf2-a54c-4781-ac6d-49f5bc7128ba@rsg.ci.i.u-tokyo.ac.jp>
-Date: Mon, 20 Apr 2026 15:21:45 +0900
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="j4epmrx6"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0650E1516;
+	Sun, 19 Apr 2026 23:47:03 -0700 (PDT)
+Received: from [10.57.63.177] (unknown [10.57.63.177])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 84A3F3F641;
+	Sun, 19 Apr 2026 23:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1776667628; bh=FOT+rxetMCCm/Vt/n/onmxMCYGq9cNElSNypd+yNhnw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j4epmrx6ayUafCVEQ7h5jQnxg6ml5eCR2lSQ+K/AG8/lUgNRBeMqJIC9TwDXgnhFL
+	 m4RmLBmEqyihwgMV+Er/qJM7r3qMVW+zoaiWAHClxUtZ0fNTb8Y2Qj6fEA/l8Wldud
+	 UmkwT8YdneFQ678p88xVouNXYqX+mgCG6ljkWgoQ=
+Message-ID: <c78a9048-52a0-4a22-ad69-4bb5e84895b8@arm.com>
+Date: Mon, 20 Apr 2026 08:46:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,114 +35,111 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/4] KVM: arm64: PMU: Protect the list of PMUs with RCU
-To: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu
- <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, devel@daynix.com, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260418-hybrid-v7-0-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp>
- <20260418-hybrid-v7-2-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp>
- <87mryzauib.wl-maz@kernel.org>
-Content-Language: en-US
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <87mryzauib.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v6 01/30] mm: Introduce kpkeys
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+ linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+ Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
+References: <20260227175518.3728055-1-kevin.brodsky@arm.com>
+ <20260227175518.3728055-2-kevin.brodsky@arm.com>
+ <00b24db8-0063-48d6-8bc4-e8b670d8f0d5@kernel.org>
+ <913002a5-e002-4001-ad19-037102d1f97d@arm.com>
+ <cd2bcc09-2507-4ed4-bb92-2d53baedaf04@kernel.org>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <cd2bcc09-2507-4ed4-bb92-2d53baedaf04@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2026/04/19 23:34, Marc Zyngier wrote:
-> On Sat, 18 Apr 2026 09:14:24 +0100,
-> Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
+On 17/04/2026 19:38, David Hildenbrand (Arm) wrote:
+> On 4/17/26 17:59, Kevin Brodsky wrote:
+>> On 17/04/2026 16:37, David Hildenbrand (Arm) wrote:
+>>> On 2/27/26 18:54, Kevin Brodsky wrote:
+>>>> kpkeys is a simple framework to enable the use of protection keys
+>>>> (pkeys) to harden the kernel itself. This patch introduces the basic
+>>>> API in <linux/kpkeys.h>: a couple of functions to set and restore
+>>>> the pkey register and macros to define guard objects.
+>>>>
+>>>> kpkeys introduces a new concept on top of pkeys: the kpkeys level.
+>>>> Each level is associated to a set of permissions for the pkeys
+>>>> managed by the kpkeys framework. kpkeys_set_level(lvl) sets those
+>>>> permissions according to lvl, and returns the original pkey
+>>>> register, to be later restored by kpkeys_restore_pkey_reg(). To
+>>>> start with, only KPKEYS_LVL_DEFAULT is available, which is meant
+>>>> to grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since
+>>>> this is the only available pkey for now).
+>>>>
+>>>> Because each architecture implementing pkeys uses a different
+>>>> representation for the pkey register, and may reserve certain pkeys
+>>>> for specific uses, support for kpkeys must be explicitly indicated
+>>>> by selecting ARCH_HAS_KPKEYS and defining the following functions in
+>>>> <asm/kpkeys.h>, in addition to the macros provided in
+>>>> <asm-generic/kpkeys.h>:
+>>>>
+>>>> - arch_kpkeys_set_level()
+>>>> - arch_kpkeys_restore_pkey_reg()
+>>>> - arch_kpkeys_enabled()
+>>> Another thing: why not simply drop the "arch_" stuff from these helpers?
+>> The first two are not meant to be directly called, they're the
+>> arch-specific implementation of kpkeys_set_level() and
+>> kpkeys_restore_pkey_reg(), and those generic functions handle some
+>> generic logic.
 >>
->> Convert the list of PMUs to a RCU-protected list that has primitives to
->> avoid read-side contention.
->>
->> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
->> ---
->>   arch/arm64/kvm/pmu-emul.c | 14 ++++++--------
->>   1 file changed, 6 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
->> index 59ec96e09321..ef5140bbfe28 100644
->> --- a/arch/arm64/kvm/pmu-emul.c
->> +++ b/arch/arm64/kvm/pmu-emul.c
->> @@ -7,9 +7,9 @@
->>   #include <linux/cpu.h>
->>   #include <linux/kvm.h>
->>   #include <linux/kvm_host.h>
->> -#include <linux/list.h>
->>   #include <linux/perf_event.h>
->>   #include <linux/perf/arm_pmu.h>
->> +#include <linux/rculist.h>
->>   #include <linux/uaccess.h>
->>   #include <asm/kvm_emulate.h>
->>   #include <kvm/arm_pmu.h>
->> @@ -26,7 +26,6 @@ static bool kvm_pmu_counter_is_enabled(struct kvm_pmc *pmc);
->>   
->>   bool kvm_supports_guest_pmuv3(void)
->>   {
->> -	guard(mutex)(&arm_pmus_lock);
->>   	return !list_empty(&arm_pmus);
-> 
-> Please read include/linux/rculist.h and the discussion about the
-> interaction of list_empty() with RCU-protected lists. How about using
-> list_first_or_null_rcu() for peace of mind?
+>> arch_kpkeys_enabled() is directly used in generic code, so I suppose it
+>> could be renamed to kpkeys_enabled()? It's actually implemented in an
+>> arch header so I wasn't too sure about it.
+> I was skimming over patch #13 and spotted:
+>
+> +void·__init·kpkeys_hardened_pgtables_init(void)
+> +{
+> +›	if·(!arch_kpkeys_enabled())
+> +›	›	return;
+> +
+> +›	static_branch_enable(&kpkeys_hardened_pgtables_key);
+> +}
+>
+> The arch_* there can just go IMHO.
+>
+> I'd also do it for the two ones used by the GUARD macros. If we don't
+> expect common code wrappers (arch_kpkeys_enabled() vs. kpkeys_enabled),
+> then the arch_ is unnecessary information -- IMHO
 
-list_first_or_null_rcu() is useful to replace a sequence of list_empty() 
-and list_first_entry() that is protected by a lock, but this function 
-instead requires the invariant that nobody deletes an element from the 
-list, and list_first_or_null_rcu() does not allow removing the requirement.
+Makes sense. I could just rename arch_kpkeys_enabled() to
+kpkeys_enabled(), but I'm thinking having an arch abstraction could be
+clearer, after looking into protecting sparse-vmemmap page tables. The
+new version would look like this:
 
-The header file says:
- > Where are list_empty_rcu() and list_first_entry_rcu()?
- >
- > They do not exist because they would lead to subtle race conditions:
- >
- > if (!list_empty_rcu(mylist)) {
- >	struct foo *bar = list_first_entry_rcu(mylist, struct foo,
- >					       list_member);
- >	do_something(bar);
- > }
- >
- > The list might be non-empty when list_empty_rcu() checks it, but it
- > might have become empty by the time that list_first_entry_rcu()
- > rereads the ->next pointer, which would result in a SEGV.
- >
- > When not using RCU, it is OK for list_first_entry() to re-read that
- > pointer because both functions should be protected by some lock that
- > blocks writers.
- >
- > When using RCU, list_empty() uses READ_ONCE() to fetch the
- > RCU-protected ->next pointer and then compares it to the address of
- > the  list head.  However, it neither dereferences this pointer nor
- > provides  this pointer to its caller.  Thus, READ_ONCE() suffices
- > (that is,  rcu_dereference() is not needed), which means that
- > list_empty() can be used anywhere you would want to use
- > list_empty_rcu().  Just don't expect anything useful to happen if you
- > do a subsequent lockless call to list_first_entry_rcu()!!!
- >
- > See list_first_or_null_rcu for an alternative.
+* <asm/kpkeys.h>:
+    - arch_supports_kpkeys()
+    - arch_supports_kpkeys_early() [can be called before features have
+been detected]
 
-However, kvm_supports_guest_pmuv3() locked a mutex when calling 
-list_empty() and unlocked it immediately after that, instead of 
-re-reading list_first_entry(). This construct inherently had a race 
-condition with code that deletes an element; when the caller of 
-kvm_supports_guest_pmuv3() decides to enable guest PMUv3, the host PMU 
-may have been gone. But it was still safe because no one deletes an element.
+* <linux/kpkeys.h> defines:
+    - kpkeys_enabled() -> arch_supports_kpkeys()
+    - kpkeys_hardened_pgtables_enabled() -> static key
+    - kpkeys_hardened_pgtables_early_enabled() ->
+arch_supports_kpkeys_early() [called when setting up sparse-vmemmap,
+linear map, etc.]
 
-The same logic also applies when using RCU. As the comment says, we can 
-use list_empty() instead of the hypothetical list_empty_rcu() macro 
-because we don't expect it to magically enable something like 
-list_first_entry_rcu(). This function instead keep relying on the fact 
-that no one deletes an element of the list.
+There is extra #ifdef'ing going on in <linux/kpkeys.h>, but
+<asm/kpkeys.h> doesn't need to worry about it. I think this might be
+easier to follow, I don't like too much having an interface function
+like kpkeys_enabled() defined in an arch header (not great for
+kernel-doc comments either). Any thoughts?
 
-Regards,
-Akihiko Odaki
+- Kevin
