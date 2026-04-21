@@ -1,101 +1,120 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307461DE2D3;
-	Tue, 21 Apr 2026 03:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776740695; cv=none; b=OOa/1ZFNelxhh6PCkyGsfS0J9DSmoPRe2hH58KEM90W6uCz2kO78UW6cKtl1ybqJNTE3vBUSn1ItzKiPm3jAf7sglmYGY684jy97nK0RZJq0rvB+5A43gMqaVY3gEibGH3IA7raWKZ35pIMkOBCesq5ZqI8/tJNfjhdzTSrGhTw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776740695; c=relaxed/simple;
-	bh=QedeqSgJ/vg9i18kzTL0jxOM7m5pUWSmsCLs9aukxEo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mzCykWNJpzLLP/x3Y4+e7HiQrTzL1eKWF2+9KCYwQUatBTZ6yV3TCy0lPpdDe9dbSgHHF75ujsUbEEEJSHa7MrH4s4dydWhVf9Us5ye4kvdyxzIhpcbTvTDA6PCB0JDOUpMBWhY5dHunQH276lzwbVgKcR0HNJOd3vG0xQmmgqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=MPx1IoLK; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF05423B61B
+	for <linux-hardening@vger.kernel.org>; Tue, 21 Apr 2026 03:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776742694; cv=pass; b=Wm4Wb9BABeOv/pq5V2EiDwjM2IS75twfNkM/G+2aO5/VbCLmBaTz8CaH6pAn10+967esF/zoM6GdFeZ6oeEmVmQ1dbUuvRyJPKgXQotODRjhGbbhSFDqU9jhoUUTV8JqpZoylGA6bq35+9t0xDoAe3QDgQo7MI5waDtcCMPjYJc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776742694; c=relaxed/simple;
+	bh=mKFT7rn+lf8y2NCobvHQRkP8qQoexlul1ItbreUJpDY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SA7dawgA//PrSFNsjn2Hcs/ZiQyXobbHj2JRAoyMLLZJMpCxZFqLpL0BHCZwUTufO7jDFVHUWbxqNFjJ4G6iviKS1H1j2QjDQM9HPq0KC1WSjkTkdw68n3f2khJSAncs0VtyY3IyUaVidpe8XTDMYha9Fq/4W8LFCu/2oc2KSYE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4/pw5DB; arc=pass smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MPx1IoLK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1776740692;
-	bh=QedeqSgJ/vg9i18kzTL0jxOM7m5pUWSmsCLs9aukxEo=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=MPx1IoLKFYEfPlG65UJ07BQvcXaq3Y/PPGGeTBOWmmWSyNaa15l+ImjB62MQlFbPF
-	 9WTaImEaJ658tCh9GJJyXzCwpPXm+iyZgdPnr6P+N8uInzy1xJgv/+3GtuPi1kLkAa
-	 Jqz5WVRA7w8HvDtMg/zPX1nGB3K0h5THzon/YW5w=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4300:d341::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id C397B1C02EE;
-	Mon, 20 Apr 2026 23:04:51 -0400 (EDT)
-Message-ID: <150cda6feffe0826cfd43e5d8f0b4199b6268486.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2] lib/string_helpers: renormalize string_get_size()
- after rounding carry
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Shuvam Pandey
-	 <shuvampandey1@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko
-	 <andy@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 20 Apr 2026 23:04:50 -0400
-In-Reply-To: <CAHp75VcW0cexQk6Zg-RwKSMBpOxPa3YCAomK7PFXEGLQ0VkrMQ@mail.gmail.com>
-References: <20260407143306.78809-1-shuvampandey1@gmail.com>
-	 <20260419153111.90635-1-shuvampandey1@gmail.com>
-	 <CAHp75VcW0cexQk6Zg-RwKSMBpOxPa3YCAomK7PFXEGLQ0VkrMQ@mail.gmail.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4/pw5DB"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-56a86f0a23bso3918629e0c.0
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Apr 2026 20:38:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776742692; cv=none;
+        d=google.com; s=arc-20240605;
+        b=HfsV6+yGb8z3k/vNyEVSZ6JrO6plNJE3gXSIlEJEjzGEbCxfywy18NeAQ9BQA0BIfa
+         QoEZPWanCwOqSIFNlbH1+61EqRs56psReHycElAVGOzWw2LjwJ3DGgG0eJbu6i1HJbpT
+         2lerIc0/fVnSHYL66z7pIvPVgOcM+qXtvutyPiNLlCEdO/rzvfqpDgIqllTWDa+AVWXM
+         IdV9JwMausQb28zDty2lWRw+WvoQE881nIrIspNg9YZSfgY0WzrkLpPWLyz7i5J2bIG6
+         suZP65SmKWik4bBELYE+UBrLtkJKmPQ4G038ajF1f7IFgzmT88lkUqcVUWoHKPys+66v
+         t5jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=mKFT7rn+lf8y2NCobvHQRkP8qQoexlul1ItbreUJpDY=;
+        fh=gsSJIXzxr4R1r4LW1yk3gP0DcHkuvqGEyIO1nN67/zw=;
+        b=EN0OcW117MB2UczLv5ir7JTgZupR1dNgoTDf6usDMUOazwU1SSP4Tp6TpjTlytuky0
+         1VOdOb7eNWo3b9uTqVwmxaMWEt4LkZJYp52ONzgpC7ft3tz/d+J+eL5uyUP7lyLgCAZJ
+         mnBDOkIvZfCq8Myl04/Z6yfy9rMnZTcUCyjV04dpcOPdtHVpuvQZSBuhXauN1uKkgwgB
+         skci+mLDiKwddtfuxuicc/3byv4r9he0XioyXsXnOMd94wsbrTaNpccWDGhTlCR8Cymj
+         nspspnE01JK+Q4EeaFCM3dcXCAtAcpRuN8no9jEG+9wWhih29eJLokx+G/txR2uHIT8A
+         BDRA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776742692; x=1777347492; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mKFT7rn+lf8y2NCobvHQRkP8qQoexlul1ItbreUJpDY=;
+        b=S4/pw5DBghS/Jxmnhodvy/IdnE6ZUKA+maKiVx0Ky2enrbmI3n04kMdfdAEzbbaT9k
+         TcyONGAYSkqEYiJuJl2d012IAMS/TYO06HGcCFRJHYdf4ZkPoYHvdxDf7QBHtas+coiL
+         mQpTjIVXKzk2PB1xEo3oRY9jSkbkRBSEpvSLMhR89ku4xEBqXLts4zhhVxIqQ0gOrKdn
+         fbRigM0aYt+yG3MMsmLuSQ35CVWwSkv3Co4HK0ucCwhYHEyoNZPx7NcIVcEv5xI3VeDp
+         j+lcusBeFEVwXNsUKhLhW5Fp4ZyGIHOflKTTFXJnkS7fJzOE4bQDsiwFErVQQkLm4Xub
+         M//g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776742692; x=1777347492;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mKFT7rn+lf8y2NCobvHQRkP8qQoexlul1ItbreUJpDY=;
+        b=OX58ODqEsmmexxnyc6yXwErNdXsws7UfSOZbJ3LsjZlLMq5ubCq0fIq3r6rDWiCAq/
+         EGWyutZDYa+64W/9VXdhNZSicqoD69mfDRCyRG6O/oQF/p7c8V9ez1oPWfrKpn0xSJPB
+         jIMddrtAR3oJ1rfGIEhQUySKsgn3xm7m5+cJa9Fx3E5EvAK1bHTT5dDraD0zUT8lWEeb
+         Qj7+zw0LJEXLHgWXUu4Ocgx5X67QReRt44fUMvT/HA9eMGEjBq5MEjG4RVvwv/dQiQoQ
+         2rpokHDkYIYC0IFE8HSdAFNzdqkCRYNYM1nkbnPpQ9CFcWbEyLUnjSBY9uY0+gwNYlBN
+         WDIQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+1c+lMHaOdbuedTrccS/+A9X5+SEzddU7CrczY9yRuhq9OXjNJ+3ULgyRRGzaU3oHKsHyYhl18KeASaClEg/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxRN5F2BCE+WBZfVUwVqYg290z5evr8mYqOW3EYBZgXzgYRrxD
+	th+ib9ttyBV3gVTN3/DJHJta1hrNCd1tyjN9H4zS4oFxyTAM/K56ZorsWULLagb2hxkRpA5DKS1
+	u9uF7OkjIq0Fa6mn3pT44QwILJR9u6Lk=
+X-Gm-Gg: AeBDieu75uTG0XGOZCgUJI7nrhb042IHV/Mf/moBg/Rw5VmfQcPIxC677RltZjQGLfc
+	/kHOr4TdFsRKcyhRSWmxzWpbWk+d7EArjg/q0aPcdgCAq0JUPdpeyXUTjMO3U5lFRmmb2+PhJmb
+	HdTEHZ+CwcaYsbjNDn5wGwv9dlmhBITfbJ5S+H1Z/jHdtlk+BUnnd//qIe9Lh0RsFnSNxAd3Ekj
+	eqWRZoHWDFWUSOW3hrDKw6etkT9pw848pBa1wRuLc2RoXyMJIW4HlNS5a4nJE5XktCCSI2K+5H0
+	z4Oa0rRuy4ZBaEiT/OTF+1mu//KV8Nkz2paSWlv3X1onflSIH2w=
+X-Received: by 2002:a05:6122:8d3:b0:56c:d5cd:1e7c with SMTP id
+ 71dfb90a1353d-56fa58856b1mr7843051e0c.5.1776742692568; Mon, 20 Apr 2026
+ 20:38:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260407143306.78809-1-shuvampandey1@gmail.com>
+ <20260419153111.90635-1-shuvampandey1@gmail.com> <CAHp75VcW0cexQk6Zg-RwKSMBpOxPa3YCAomK7PFXEGLQ0VkrMQ@mail.gmail.com>
+ <150cda6feffe0826cfd43e5d8f0b4199b6268486.camel@HansenPartnership.com>
+In-Reply-To: <150cda6feffe0826cfd43e5d8f0b4199b6268486.camel@HansenPartnership.com>
+From: Shuvam Pandey <shuvampandey1@gmail.com>
+Date: Tue, 21 Apr 2026 09:23:01 +0545
+X-Gm-Features: AQROBzCeBvx0yCHMDdPakdU7RajGbQ86Qa117LyBUdiwSmvh7nLRWQEeICr3ieo
+Message-ID: <CANAAWHKpYc5EJvFg9yMQ5JPhCt4_EGERi+9iG1j3TX-1GRqGQw@mail.gmail.com>
+Subject: Re: [PATCH v2] lib/string_helpers: renormalize string_get_size()
+ after rounding carry
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Andy Shevchenko <andy@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2026-04-20 at 09:56 +0300, Andy Shevchenko wrote:
-> Please, keep the author of the original change in the loop.
+Hi James,
 
-> James, what do you think?
+> Well firstly I would note that the original behaviour isn't a bug.
+> ...
+> However, if the desire is for this only ever to print out three
+> significant figures ...
+> Isn't right.
 
-Well firstly I would note that the original behaviour isn't a bug.  It
-works that way because of the binary case.  So if you feed in 1023 in
-for STRING_UNITS_2 it will return 1023 B. If we're going to allow that
-slop for binary, it didn't seem reasonable to be precious about the
-over by 1 of decimal.
+Thanks, that clarifies it.
 
-However, if the desire is for this only ever to print out three
-significant figures (is that the desire? because I don't really get it
-from the changelog) then this:
+I was looking at the 1000 kB / 1024 KiB cases as a narrow formatting
+issue after the rounding carry, but that is too narrow a reading. As
+you point out, the current helper is not based on a strict always 3
+significant figures rule, and my patch only adjusts one carry case
+rather than addressing the broader behaviour.
 
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (size >=3D divisor[units_base]=
- && i + 1 <
-> > ARRAY_SIZE(units_2)) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 size =3D 1;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 remainder =3D 0;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 i++;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 j =3D 2;
+So I agree this should not go forward as a bug fix in its current form.
+I'll drop this patch here and revisit it only if I can come back with a
+better understanding of the intended semantics.
 
-Isn't right.  Size is base_10 here, so it should always be compared
-against 1000 and, for the STRING_UNITS_2 case, the lower two digits
-need to be carried over to the remainder (with roundup).  I'd also drop
-the comparison against ARRAY_SIZE because  you'd still violate the 3sf
-rule even if the unit is UNK.
-
-Regards,
-
-James
-
+Thanks,
+Shuvam
