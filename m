@@ -1,185 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6142E6CCD;
-	Tue, 21 Apr 2026 17:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C816374170
+	for <linux-hardening@vger.kernel.org>; Tue, 21 Apr 2026 19:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776792163; cv=none; b=a5OccQyLKzv617W90gioHWgx6LxNO8iqZawVuQcNCHYFXHog1DhKbZxmshpRVztwoalnMZ5tu3x3JbPZGf3EdD9Dwn4drAqUo/7M+D9awMYjiQGixAxWx2VbMGonR6FqhdG9V8vpLVqxo290/0RsDyArHNnUA1nM0zYtfrHSSGQ=
+	t=1776798564; cv=none; b=fLXmD6vHeImUpO/Xj7mV9zHfVYpyn80nC0U+vEcWCeOMuznr3FIt8czi95iO4igilagNZY9vGfkm035QlZ8uYW1f8qPOOaSkvl4qDC9pgWnUnQ5DUmHEKnh0Ri+r7PxuEVzyZg6S0bFvxr5QfAPz2XqNIPcs20ylrKeS5oDG8rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776792163; c=relaxed/simple;
-	bh=nNMDSilb+/zXGXVw/f0Wvgf6NfzWoClrWzQe893lPEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LoVrQXbpbNKmD6UPBoTE+bo5mXBmbGvImraPMQ1lqLs3JceOsnzZnWqTSrdJKtfbIdJ3qRNOM8CIxzS7KtiRaFhjtdj0wNQen/xqRPrmiwmorGFtZrbW+kfT12CthHgavfubmG4Bt8atF3ZEJ2KpSrw6KkjWVe3xEvoq47lcWbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APakOZVU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776798564; c=relaxed/simple;
+	bh=/DgMXYHEa+hLzLcOPcZq/M4u+RrxEt38YAZt7yM2nxs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=k8akcWdbmsCtYy1PoK1vhMeVllmn+bjb7tkPRIT8we/+7Dord9wMf8DsbjQ3nSooRYkknPUf6VAN6oK+mt8erDSLpbPUaPeEy4CCJQ71xLSICP5Acx1w1ooM7Cf6uxB++Cyphf8xGzIvfhKbghg0nq1N+iuSiTHUXjtKECtP3lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=o0cANMyN; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APakOZVU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EBAC2BCB0;
-	Tue, 21 Apr 2026 17:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776792163;
-	bh=nNMDSilb+/zXGXVw/f0Wvgf6NfzWoClrWzQe893lPEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=APakOZVU5qkL6vWUVTFAYa7wyo8CQ/+TvO3KSSP5ZRkDiG7GeNDpX9/D3iHleKfe1
-	 MLfTi0udDG+jOpm+5Xn4s1LPuyDV1GjPm5WyWeylmQcPRpTdUr4wN6Wphw9pRBWjvp
-	 AFg73IKKfpBPJxMEn0orz74mE/laLUKi9r0tIzNilLIjUUoRRx6ZmVFNLcpHJ2jhqO
-	 9u6201KZx3sh5Vh5HklBamSzUt8geRNlHbsS29kwq6LjTPzkRABmYgpIHbRj1EegtK
-	 3rpG+i7AR/Kg7ZinHcHxHHk8cKqG2KeeONe/KAX35msVFasIfncY2lD0aiM3rVQyVg
-	 VyqNHsIu0GGSQ==
-Date: Tue, 21 Apr 2026 10:22:42 -0700
-From: Kees Cook <kees@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
-	Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alexander Potapenko <glider@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
-	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
-	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Matteo Rizzo <matteorizzo@google.com>,
-	GONG Ruiqi <gongruiqi1@huawei.com>
-Subject: Re: [PATCH v2] slab: support for compiler-assisted type-based slab
- cache partitioning
-Message-ID: <202604210954.84C57E5E0@keescook>
-References: <20260415143735.2974230-1-elver@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="o0cANMyN"
+Message-ID: <62c87071-51ab-4449-bcef-9c21e03713ae@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776798550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8sb/gJnXDsoanW6gaV5O7OvCI9qKrXN++ZSYB0knuOw=;
+	b=o0cANMyNhUhQ+9I5HKQ29Ambp4SgAmcSt2MTD4ge9dKw9Eb4n76gQ1gtoX24QeR57NMIA3
+	XPYep6+qE9pdsMT1hveDmPbaVO4SQlm5GlneQUT45zGWoQpBzVOXCPawN4Yz20FRxX7rg5
+	Cki+OcOV/RJXo3QzQ+DQtZXlGrWOgWM=
+Date: Tue, 21 Apr 2026 21:08:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260415143735.2974230-1-elver@google.com>
+Subject: Re: [PATCH] RDMA/siw: use kzalloc_flex
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Bernard Metzler <bernard.metzler@linux.dev>
+To: Rosen Penev <rosenp@gmail.com>, linux-rdma@vger.kernel.org
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ open "list:KERNEL" HARDENING "(not" covered by other
+ "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260327030056.8321-1-rosenp@gmail.com>
+ <49794f9f-8a35-4e36-af19-26b68c89decd@linux.dev>
+In-Reply-To: <49794f9f-8a35-4e36-af19-26b68c89decd@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 15, 2026 at 04:37:05PM +0200, Marco Elver wrote:
-> The builtin __builtin_infer_alloc_token(<malloc-args>, ...) instructs
-> the compiler to infer an allocation type from arguments commonly passed
-> to memory-allocating functions and returns a type-derived token ID. The
-> implementation passes kmalloc-args to the builtin: the compiler performs
-> best-effort type inference, and then recognizes common patterns such as
-> `kmalloc(sizeof(T), ...)`, `kmalloc(sizeof(T) * n, ...)`, but also
-> `(T *)kmalloc(...)`. Where the compiler fails to infer a type the
-> fallback token (default: 0) is chosen.
+Hi Rosen, all,
+
+thanks for your patch. As stated, I think we shall make a change
+to it, which exchanges 'num_pages' with more appropriate
+'num_chunks' logic. Since I haven't received a response to my
+first reply yet, I'll send an RFC patch right away. I'll
+restrict it to linux-rdma list and other individuals on cc
+in your patch.
+
+Thanks,
+Bernard.
+
+On 29.03.2026 15:21, Bernard Metzler wrote:
+> On 27.03.2026 04:00, Rosen Penev wrote:
+>> Simplifies allocations by using a flexible array member in this struct.
+>>
+>> Add __counted_by to get extra runtime analysis.
+>>
+>> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+>> ---
+>>   drivers/infiniband/sw/siw/siw.h     |  2 +-
+>>   drivers/infiniband/sw/siw/siw_mem.c | 12 +++---------
+>>   2 files changed, 4 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/infiniband/sw/siw/siw.h b/drivers/infiniband/sw/siw/siw.h
+>> index f5fd71717b80..2b327a899a1c 100644
+>> --- a/drivers/infiniband/sw/siw/siw.h
+>> +++ b/drivers/infiniband/sw/siw/siw.h
+>> @@ -119,9 +119,9 @@ struct siw_page_chunk {
+>>   struct siw_umem {
+>>       struct ib_umem *base_mem;
+>> -    struct siw_page_chunk *page_chunk;
+>>       int num_pages;
 > 
-> Note: kmalloc_obj(..) APIs fix the pattern how size and result type are
-> expressed, and therefore ensures there's not much drift in which
-> patterns the compiler needs to recognize. Specifically, kmalloc_obj()
-> and friends expand to `(TYPE *)KMALLOC(__obj_size, GFP)`, which the
-> compiler recognizes via the cast to TYPE*.
+> Shouldn't we replace 'num_pages' by a 'num_chunks' and change
+> memory allocation and release code accordingly?
+> 
+>>       u64 fp_addr; /* First page base address */
+>> +    struct siw_page_chunk page_chunk[] __counted_by(num_pages);
+>>   };
+>>   struct siw_pble {
+>> diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
+>> index 98c802b3ed72..08047fcf0df1 100644
+>> --- a/drivers/infiniband/sw/siw/siw_mem.c
+>> +++ b/drivers/infiniband/sw/siw/siw_mem.c
+>> @@ -50,7 +50,6 @@ void siw_umem_release(struct siw_umem *umem)
+>>           kfree(umem->page_chunk[i].plist);
+>>           num_pages -= PAGES_PER_CHUNK;
+>>       }
+>> -    kfree(umem->page_chunk);
+>>       kfree(umem);
+>>   }
+>> @@ -347,16 +346,12 @@ struct siw_umem *siw_umem_get(struct ib_device *base_dev, u64 start,
+>>       num_pages = PAGE_ALIGN(start + len - first_page_va) >> PAGE_SHIFT;
+>>       num_chunks = (num_pages >> CHUNK_SHIFT) + 1;
+>> -    umem = kzalloc_obj(*umem);
+>> +    umem = kzalloc_flex(*umem, page_chunk, num_chunks);
+>>       if (!umem)
+>>           return ERR_PTR(-ENOMEM);
+>> -    umem->page_chunk =
+>> -        kzalloc_objs(struct siw_page_chunk, num_chunks);
+>> -    if (!umem->page_chunk) {
+>> -        rv = -ENOMEM;
+>> -        goto err_out;
+>> -    }
+>> +    umem->num_pages = num_pages;
+>> +
+>>       base_mem = ib_umem_get(base_dev, start, len, rights);
+>>       if (IS_ERR(base_mem)) {
+>>           rv = PTR_ERR(base_mem);
+>> @@ -385,7 +380,6 @@ struct siw_umem *siw_umem_get(struct ib_device *base_dev, u64 start,
+>>           umem->page_chunk[i].plist = plist;
+>>           while (nents--) {
+>>               *plist = sg_page_iter_page(&sg_iter);
+>> -            umem->num_pages++;
+>>               num_pages--;
+>>               plist++;
+>>               if (!__sg_page_iter_next(&sg_iter))
+> 
 
-Great! I'm glad this gets deterministically handled for the kmalloc_obj*
-cases.
-
-> Additionally, when I compile my kernel with -Rpass=alloc-token, which
-> provides diagnostics where (after dead-code elimination) type inference
-> failed, I see 186 allocation sites where the compiler failed to identify
-> a type (down from 966 when I sent the RFC [4]). Some initial review
-> confirms these are mostly variable sized buffers, but also include
-> structs with trailing flexible length arrays.
-
-For the call-site-partitioning series[1] I sent before, I had
-per-site caches for fixed-sized allocations and size bucket caches for
-variably-sized allocations. I'd like to see something similar for this
-series. Specifically, I replaced "kmalloc_slab" with "choose_slab" that
-did O(1) to find the dedicated cache/bucket for the allocation[2].
-
-In this case, we now have a build-time-constant value that it should be
-possible to use to look up a _single_ dedicated cache/bucket for the
-given unique type: there is no need to do hashing.
-
-> [...]
-> -config RANDOM_KMALLOC_CACHES
-> -	default n
-> +config PARTITION_KMALLOC_CACHES
->  	depends on !SLUB_TINY
-> -	bool "Randomize slab caches for normal kmalloc"
-> +	bool "Partitioned slab caches for normal kmalloc"
->  	help
-> -	  A hardening feature that creates multiple copies of slab caches for
-> -	  normal kmalloc allocation and makes kmalloc randomly pick one based
-> -	  on code address, which makes the attackers more difficult to spray
-> -	  vulnerable memory objects on the heap for the purpose of exploiting
-> -	  memory vulnerabilities.
-> +	  A hardening feature that creates multiple isolated copies of slab
-> +	  caches for normal kmalloc allocations. This makes it more difficult
-> +	  to exploit memory-safety vulnerabilities by attacking vulnerable
-> +	  co-located memory objects. Several modes are provided.
->  
->  	  Currently the number of copies is set to 16, a reasonably large value
-
-The "16" buckets seems to hold for TYPED_KMALLOC_CACHES too? My goal
-with the earlier type-partitioning was to get _total_ isolation, not
-simply bucketed: 1 cache (or sizes-bucket) for each type. The "16"
-limitation from RANDOM_KMALLOC_CACHES was kind of arbitrary due to the
-hashing.
-
->  	  that effectively diverges the memory objects allocated for different
->  	  subsystems or modules into different caches, at the expense of a
-> -	  limited degree of memory and CPU overhead that relates to hardware and
-> -	  system workload.
-> +	  limited degree of memory and CPU overhead that relates to hardware
-> +	  and system workload.
-> +
-> +choice
-> +	prompt "Partitioned slab cache mode"
-> +	depends on PARTITION_KMALLOC_CACHES
-> +	default RANDOM_KMALLOC_CACHES
-
-I think this should be adjusted a bit:
-
-config CC_HAS_ALLOC_TOKEN
-	def_bool $(cc-option,-falloc-token-max=123)
-
-...
-choice
-	prompt "Partitioned slab cache mode"
-	depends on PARTITION_KMALLOC_CACHES
-	default TYPED_KMALLOC_CACHES if CC_HAS_ALLOC_TOKEN
-	default RANDOM_KMALLOC_CACHES
-
-And actually, perhaps a global rename of the options so the selection
-naming is at the end of the CONFIG phrase, and bundle the on/off into
-the choice:
-
-
-choice
-	prompt "Partitioned slab cache mode"
-	depends on PARTITION_KMALLOC_CACHES
-	default KMALLOC_PARTITION_TYPED if !SLUB_TINY && CC_HAS_ALLOC_TOKEN
-	default KMALLOC_PARTITION_RANDOM if !SLUB_TINY
-	default KMALLOC_PARTITION_NONE
-
-config KMALLOC_PARTITION_NONE
-...
-config KMALLOC_PARTITION_RANDOM
-	depends on !SLUB_TINY
-...
-config KMALLOC_PARTITION_TYPED
-	depends on !SLUB_TINY && CC_HAS_ALLOC_TOKEN
-
--Kees
-
-[1] https://lore.kernel.org/lkml/20240809072532.work.266-kees@kernel.org/
-[2] https://lore.kernel.org/lkml/20240809073309.2134488-5-kees@kernel.org/
-
--- 
-Kees Cook
