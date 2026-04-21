@@ -1,118 +1,219 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972E426ACC
-	for <linux-hardening@vger.kernel.org>; Tue, 21 Apr 2026 04:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776747275; cv=pass; b=l84iM/WG9uSjTG88zO8/yQanq/7ADgPkfkv5GK26lDp4dVnm5zJhv+OwS+GUQ3U1lFqgRDw7hmab/m93yfl1680emuTmFZI4fiP2wcQne7Dg5uVppLw3BN6jI756LtWgOzxMeeoq2moZvMDkRCf77U0MV8u7DJevLUoO0lHp8nk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776747275; c=relaxed/simple;
-	bh=zoEuG8hBEwU+J0NdVTvnR9oirCOkP2yu1ASGnIzv29M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hhmUz+lejNb+XCkpToYOGgK1g3TlBi2u1ZU0Abrhh+SzQZEy1ZKdwykMJQ9a/cJSedvkJxK5tXxtvW9+LCAyZqj4zfl8/lmMWOWSULoGOckI4PxvIswlMxozj8YDiF2ktGscCZN2x8lNa1KbMg3TTZ9GfcZCrzSodLEH2KafWgM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pzoGRvLl; arc=pass smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75D92765DF
+	for <linux-hardening@vger.kernel.org>; Tue, 21 Apr 2026 05:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776750364; cv=none; b=S7TNZ04f2U2PIDnxJFvnybjN9pg8WXurYYI7UvG3tv1CFRRnJkWM17EQGFSA77rzzkjZ9Lvj8zdyu1+CRBE8yZWAOFTB0uZtXkdMuHlj7pddC4TkzDX9/V/FyyBCbb9GsFYQa5ykMU59fIxls0UnO4l6CXoYmYnkKcBYOj1Gkx4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776750364; c=relaxed/simple;
+	bh=ugc6+ZYGJyMCOUkhMb6FWkMm6dpDUkzS58ll+uEljko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HdvKBwA7DywuuS8ywPE2nOPFty13lda0Ju6wP1+BsuTLQd+14t8c2QxkVbYSLJEGZmgNOv5WL8gsF7P4+fnbkZP4FAsUDOG+xqX68i84cBmCF91EfY8ZYMZuOTtCtR01MXbAonHihQFiScddMQLBKA5HZArth2JtD6CaIdEWtdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=lNx6Fzxa; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzoGRvLl"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b8f9568e074so654585366b.0
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Apr 2026 21:54:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776747272; cv=none;
-        d=google.com; s=arc-20240605;
-        b=lxcoov6E45mpWEF4LV0A0UMEIf7/wvR1WYRpOBbJBjcK1FIWr07hHlgeYJf2a+4dx1
-         zphIb4IEY0deSGVpVpI32a1+Q8FPnQ5TC9BvEWOOlYQrkqJ+fxY1fWl2ltN4SBu1oZHt
-         kBvpUEiIMCDsvr33kRpmfGrRXl21RLbubc/FyvW0e+NsE03ozhdrT+md7iZYLYEF5UAV
-         fotAzdi0ajWzFXJZEXa41TOtaSuxfqH4WQ7Y1a9wd+vnt2lqIjq3Kr2sVVevEAPe9jgr
-         8eVRd47BhsZ1z2XYKxdqUnOXhl8PhURTgwgdTU77QfmwAgh9FwRlK2CD8OzjtcqVR6Ac
-         hhDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=zoEuG8hBEwU+J0NdVTvnR9oirCOkP2yu1ASGnIzv29M=;
-        fh=vpek+QZG8fabwEgO5WfSJbiBFzIrNc4+Sdr0bb+lBJA=;
-        b=AkK/f/fy9CNIy6RXOaX49vn5hpJA0ulnU8JNzYosoZ3+FlGFDSjcti+sem4JlXDl10
-         3n6/kroN9QRHjAKWoVqHGAr7AD4fWJACgVxjnGRll0v2+GMFF3MI97UonwNgMvFw31we
-         QHIiDj2+MR6Bwyqd5Gw9OJ+Q9rJKmUNgGlc59CGLBrbowJl1tNQ+WhCaa3UX6AeFd7sp
-         MKLGJmmJN+lkFppnN2dmu3fx3ig3ZsXlk26mXWT5lbON4CKW8ym+hANAaiLITcRyJdD4
-         MHFlxjF2M0enlnsDSUHTwoKEuxJ5f/JZf5CmG7KtX/mFe7BqDYWmHQEprh8rXr2L4Qqs
-         1i7g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776747272; x=1777352072; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zoEuG8hBEwU+J0NdVTvnR9oirCOkP2yu1ASGnIzv29M=;
-        b=pzoGRvLluOWht/MMWWRqawS086Ow0tCQY2kzEtyBcLMDQF4RLM0cdqKmrldJ4Sb/0a
-         djPbQgCJc0gqeJjHjkb3N1AulpoHTRUY42FmifZ+vtiabI+v+n9yG6FOYJR1CT40trzh
-         zWqNFxvrsR+sHFG7ybgV8stWfBHexR1UmUGzxuNSbgygasLys0VeS4mgsMB6qxd8zJDe
-         LO/1LoteDnS6NX+aow4C0104vXr6dQ8Sxty+GW4sjOm6qjGqJ/ZyC7KcxSCcaXh9pnjA
-         U/srMI8mhOUteNpNUKDLGHCNen5naVZlgS5cN/c2ytKwwBK0OAIjfzSRIqxjF7zvn59l
-         YeJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776747272; x=1777352072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=zoEuG8hBEwU+J0NdVTvnR9oirCOkP2yu1ASGnIzv29M=;
-        b=RiW7rRw15NQmbxLz6jJMP5RcmtbYohGDkwtU4avFi+pE5qD6SSF1zTqUpqzuuUO697
-         ZPvkSRWC34z9aMLHlReSdXgh22nr36RXKzJpi8x8hjB1MoqVxzQofCS8cAdJFV4hKvZ4
-         +IclbQ537X+IsiLQhurJcexCZyLe1lhBFKcFewLPr+LwPhOPefhGOHGguyV5N5m4CULO
-         O/2TUdNfg27OyIEPbW9Xwh/FzRX86gqXC6AVjX8Go3UV9rRuHvhwb7p8dwVO3rFA9DEs
-         dunr96LRG8LQBzT+TWs+JM8xZwx32Z48M1x2OtY2ZFL84TpbSea9OSPzOzPUyVDhkgNx
-         oiIw==
-X-Forwarded-Encrypted: i=1; AFNElJ8dX1jdcM69jAJZ9i3hN/1fSfpCcgPwMUBg+xBH+9F30hu3KGN6YcSOqJR7vCOeT+5IidFbmLWSJkbifmTidfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWf4Dcja3oxSjYhN+iX+9kE4rOBSwyUDzzn4hPE3A5KEmAgXHl
-	CXqYL9nrVwSkvg+dotTVXoVVFIjvgyNarRWKVJ0Xv+cXRJA0pKu1O5equ4B83aSA6paX56U6gLO
-	MEpleXwgc2N3oFFoooBHOVOvuVSjT11EXhcOI
-X-Gm-Gg: AeBDietDNf49q0oCj2XglUztSSbF/9ysRSj0QVfptYHYBmFvncrrI4vAy1Mne02BQHi
-	czGCgAeOYEMVXUp+YIN3/D2R5q37+Wh5hkVBpzlWSDsrNPGhBfcPz60ki94wW4YtmNHyTjPJ9v6
-	2GfvisF9KoTICWKgoUjwZxPytUVTS+EBim+iKrCBEJmQBbCxoe9SnF9nqs+rsQnHXyQ0uV0Q2Pb
-	b4nZoaj3dllZf41IrbkrLBOOTUyzGSH99z4QhoDZadO8qKs+rFmXtMsVM+PYAESwPNAw4PDlNZJ
-	DfU08aFy2eoxyx9195m+rzARvoIue+66G91Psd8eGOIr7c4FdzQgz1bP2lZXjqJirwgAhiJIYhy
-	BuI5d5KK3VuAn884Hnu+WS7sGAurxmOOwqtOTphSy
-X-Received: by 2002:a17:907:94c7:b0:ba8:422:6015 with SMTP id
- a640c23a62f3a-ba804226350mr281797166b.1.1776747271585; Mon, 20 Apr 2026
- 21:54:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="lNx6Fzxa"
+Received: from eig-obgw-5007b.ext.cloudfilter.net ([10.0.29.167])
+	by cmsmtp with ESMTPS
+	id EycFwGdC04RkpF3vowGE8C; Tue, 21 Apr 2026 05:45:56 +0000
+Received: from gator4166.hostgator.com ([108.167.190.91])
+	by cmsmtp with ESMTPS
+	id F3vmw5qyexUZ2F3vmwGINw; Tue, 21 Apr 2026 05:45:54 +0000
+X-Authority-Analysis: v=2.4 cv=HJHDFptv c=1 sm=1 tr=0 ts=69e70f12
+ a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=_Wotqz80AAAA:8 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=BW2cartU-NgVh40cIl0A:9
+ a=QEXdDO2ut3YA:10 a=buJP51TR1BpY-zbLSsyS:22 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=k2MujxfBQqzgiiXQDSt6oAK7PDUCOtwHcqJ4Zb7jY+Q=; b=lNx6Fzxa2OtxX8oxQ8tkG0Jm6I
+	BDArh2UzLFuoRAH0cFfrRqN61RBcnXDH/4cBIziLdh7CHgDgqnTUB8QRmdX42kEGovwUMoWv1W3eM
+	NraZM1HrIbBJ05Avu/DGymTgIHKu4FxW5nmgrthwdrFwqgLE6zcvtajuyBtjs9FSq1aUpc0CvRY3i
+	Zxg1e8tmTlwL8uS02gvSNre/rpXy/3+VMvLZW4kwnT480tc1R+S371sXfVRAoI64+NSG9lvB6KHtV
+	J06RT/9IlW9N/V5rE3DIITJfm4Jd7nus/2BCyEL450r7k8stqQQSupbzaOZBs/dK5PJVRYp2cXpxa
+	o5XkBoJA==;
+Received: from [177.238.16.218] (port=36590 helo=[192.168.0.104])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1wF3vl-00000003Qw0-0Sff;
+	Tue, 21 Apr 2026 00:45:53 -0500
+Message-ID: <2650bb0e-804d-4858-a07f-c4190fb41038@embeddedor.com>
+Date: Mon, 20 Apr 2026 23:44:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260407143306.78809-1-shuvampandey1@gmail.com>
- <20260419153111.90635-1-shuvampandey1@gmail.com> <CAHp75VcW0cexQk6Zg-RwKSMBpOxPa3YCAomK7PFXEGLQ0VkrMQ@mail.gmail.com>
- <150cda6feffe0826cfd43e5d8f0b4199b6268486.camel@HansenPartnership.com> <CANAAWHKpYc5EJvFg9yMQ5JPhCt4_EGERi+9iG1j3TX-1GRqGQw@mail.gmail.com>
-In-Reply-To: <CANAAWHKpYc5EJvFg9yMQ5JPhCt4_EGERi+9iG1j3TX-1GRqGQw@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 21 Apr 2026 07:53:55 +0300
-X-Gm-Features: AQROBzBtxt6MXTT_aCTe0vSF2u06G-x2Q80A73S2V6nEm_U-M-nVEH1dAoE0W3E
-Message-ID: <CAHp75VfB0Y7K=chk5wpKtZcgVfCN5X7zhNEq6QSrirdgHs5_bQ@mail.gmail.com>
-Subject: Re: [PATCH v2] lib/string_helpers: renormalize string_get_size()
- after rounding carry
-To: Shuvam Pandey <shuvampandey1@gmail.com>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, Kees Cook <kees@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH ath-next] wifi: ath12k: use kzalloc_flex
+To: Baochen Qiang <baochen.qiang@oss.qualcomm.com>,
+ Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
+Cc: Jeff Johnson <jjohnson@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "open list:QUALCOMM ATH12K WIRELESS DRIVER" <ath12k@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ open "list:KERNEL" HARDENING "(not" covered by other
+ "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260313001434.118010-1-rosenp@gmail.com>
+ <a92cb332-b525-47f4-a529-a59080cb33dd@oss.qualcomm.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <a92cb332-b525-47f4-a529-a59080cb33dd@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.218
+X-Source-L: No
+X-Exim-ID: 1wF3vl-00000003Qw0-0Sff
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.104]) [177.238.16.218]:36590
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMQ1F2Lih2MUVVMIAeZaoRX0cURFnpjrcl0RC86u4WJlBWNM2IE6LakJF9yaUMmSUl8smSFsYkxwSQArcSF6STfWJk0kac5Pp9TQhF1FVLebet8K3svY
+ 3v5IK9OnHJ6jzmEwcQCo+8xX/w4+vi+W75P7bR7/z6Q0V20Yotzu4qjWHvTeUeYU2OqJwfxtbm7Td3BNGzm5Y+dIs/yv5Po51gGNabHytwadZIFgM+vz8ner
 
-On Tue, Apr 21, 2026 at 6:38=E2=80=AFAM Shuvam Pandey <shuvampandey1@gmail.=
-com> wrote:
 
-> > Well firstly I would note that the original behaviour isn't a bug.
 
-James, thank you for the prompt reply!
+On 4/20/26 20:53, Baochen Qiang wrote:
+> 
+> 
+> On 3/13/2026 8:14 AM, Rosen Penev wrote:
+>> Convert kzalloc_obj + kcalloc to kzalloc_flex to save an allocation.
+>>
+>> Add __counted_by to get extra runtime analysis. 
 
-> So I agree this should not go forward as a bug fix in its current form.
-> I'll drop this patch here and revisit it only if I can come back with a
-> better understanding of the intended semantics.
+>> Move counting variable
+>> assignment immediately after allocation as required by __counted_by.
 
-Shuvam, perhaps we need to add a few more test cases first to
-understand current behaviour better?
+Not true. This should be phrased differently[1]
 
---=20
-With Best Regards,
-Andy Shevchenko
+-Gustavo
+
+[1] https://lore.kernel.org/linux-hardening/37378f49-437f-438b-ad6c-d60480feb306@embeddedor.com/
+
+>>
+>> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+>> ---
+>>   drivers/net/wireless/ath/ath12k/mac.c | 29 +++++++--------------------
+>>   drivers/net/wireless/ath/ath12k/wmi.h |  2 +-
+>>   2 files changed, 8 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+>> index 553ec28b6aaa..b7c43a64e37b 100644
+>> --- a/drivers/net/wireless/ath/ath12k/mac.c
+>> +++ b/drivers/net/wireless/ath/ath12k/mac.c
+>> @@ -5611,12 +5611,14 @@ static int ath12k_mac_initiate_hw_scan(struct ieee80211_hw *hw,
+>>   	if (ret)
+>>   		goto exit;
+>>
+>> -	arg = kzalloc_obj(*arg);
+>> +	arg = kzalloc_flex(*arg, chan_list, n_channels);
+>>   	if (!arg) {
+>>   		ret = -ENOMEM;
+>>   		goto exit;
+>>   	}
+>>
+>> +	arg->num_chan = n_channels;
+>> +
+>>   	ath12k_wmi_start_scan_init(ar, arg);
+>>   	arg->vdev_id = arvif->vdev_id;
+>>   	arg->scan_id = ATH12K_SCAN_ID;
+>> @@ -5638,18 +5640,8 @@ static int ath12k_mac_initiate_hw_scan(struct ieee80211_hw *hw,
+>>   		arg->scan_f_passive = 1;
+>>   	}
+>>
+>> -	if (n_channels) {
+>> -		arg->num_chan = n_channels;
+>> -		arg->chan_list = kcalloc(arg->num_chan, sizeof(*arg->chan_list),
+>> -					 GFP_KERNEL);
+>> -		if (!arg->chan_list) {
+>> -			ret = -ENOMEM;
+>> -			goto exit;
+>> -		}
+>> -
+>> -		for (i = 0; i < arg->num_chan; i++)
+>> -			arg->chan_list[i] = chan_list[i]->center_freq;
+>> -	}
+>> +	for (i = 0; i < arg->num_chan; i++)
+>> +		arg->chan_list[i] = chan_list[i]->center_freq;
+>>
+>>   	ret = ath12k_start_scan(ar, arg);
+>>   	if (ret) {
+>> @@ -5674,7 +5666,6 @@ static int ath12k_mac_initiate_hw_scan(struct ieee80211_hw *hw,
+>>
+>>   exit:
+>>   	if (arg) {
+>> -		kfree(arg->chan_list);
+>>   		kfree(arg->extraie.ptr);
+>>   		kfree(arg);
+>>   	}
+>> @@ -13735,19 +13726,13 @@ int ath12k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
+>>   	scan_time_msec = hw->wiphy->max_remain_on_channel_duration * 2;
+>>
+>>   	struct ath12k_wmi_scan_req_arg *arg __free(kfree) =
+>> -					kzalloc_obj(*arg);
+>> +					kzalloc_flex(*arg, chan_list, 1);
+>>   	if (!arg)
+>>   		return -ENOMEM;
+>>
+>> -	ath12k_wmi_start_scan_init(ar, arg);
+>>   	arg->num_chan = 1;
+>> +	ath12k_wmi_start_scan_init(ar, arg);
+>>
+>> -	u32 *chan_list __free(kfree) = kcalloc(arg->num_chan, sizeof(*chan_list),
+>> -					       GFP_KERNEL);
+>> -	if (!chan_list)
+>> -		return -ENOMEM;
+>> -
+>> -	arg->chan_list = chan_list;
+>>   	arg->vdev_id = arvif->vdev_id;
+>>   	arg->scan_id = ATH12K_SCAN_ID;
+>>   	arg->chan_list[0] = chan->center_freq;
+>> diff --git a/drivers/net/wireless/ath/ath12k/wmi.h b/drivers/net/wireless/ath/ath12k/wmi.h
+>> index 0bf0a7941cd3..190e7a4a92d0 100644
+>> --- a/drivers/net/wireless/ath/ath12k/wmi.h
+>> +++ b/drivers/net/wireless/ath/ath12k/wmi.h
+>> @@ -3586,7 +3586,6 @@ struct ath12k_wmi_scan_req_arg {
+>>   	u32 num_bssid;
+>>   	u32 num_ssids;
+>>   	u32 n_probes;
+>> -	u32 *chan_list;
+>>   	u32 notify_scan_events;
+>>   	struct cfg80211_ssid ssid[WLAN_SCAN_MAX_NUM_SSID];
+>>   	struct ath12k_wmi_mac_addr_params bssid_list[WLAN_SCAN_MAX_NUM_BSSID];
+>> @@ -3595,6 +3594,7 @@ struct ath12k_wmi_scan_req_arg {
+>>   	u32 num_hint_bssid;
+>>   	struct ath12k_wmi_hint_short_ssid_arg hint_s_ssid[WLAN_SCAN_MAX_HINT_S_SSID];
+>>   	struct ath12k_wmi_hint_bssid_arg hint_bssid[WLAN_SCAN_MAX_HINT_BSSID];
+>> +	u32 chan_list[] __counted_by(num_chan);
+>>   };
+>>
+>>   struct wmi_ssid_arg {
+>> --
+>> 2.53.0
+>>
+>>
+> 
+> Reviewed-by: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
+> 
+> 
+
