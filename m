@@ -1,49 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52CA2D876B;
-	Wed, 22 Apr 2026 20:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A3A346E66;
+	Wed, 22 Apr 2026 20:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776888459; cv=none; b=ulVbEMif61ctyojqaEDAeUu/ZNeQj2KrTI4ChCH5+s8rmC+FVaUbAtmFXFOEeM+mmO8HaYhOV7wKuCmYMUUsfe3TViOIPbUDC75Pqh/mmFsRTG75uOvFvA907UI435/p6c/IhAfO3/OTlQxHL7ji7a8Sk5kw3LtFsjnmKZOqSfg=
+	t=1776889515; cv=none; b=PmJf/xrvHJ09y4KJUUCMwii1mUqGCpR3QRNnddxs66M2OfTa2+A+2ESHZwq4AOM470bp3I0xDykEhTAWl5v4OLo2DBNt3D2UZmkzdj6eSb+6oaRcI2MkFv/3JS/ivU7cO3apAyrfEhb/5C2wBZQlmqIVQ/Kebzt8ytwZ9l3Hluo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776888459; c=relaxed/simple;
-	bh=HLLau1ZgdCGc/DGcEKTpYpZPx17o1JJfEXRatzhhzec=;
+	s=arc-20240116; t=1776889515; c=relaxed/simple;
+	bh=GpYOFPNHiOrthT2QhxIuN1DShVpLeeiB+wkDzqoFwGs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6g1B14BRsSZapkY0B263gAiaVtyMNv+/naqdgDG4EbvwygZMjvpohkLuZ4uv5h7/W0Hl/e+y3zUp9c3EnwDrfqplfzfQbw76ZmH6Btz6KU9cbUFLMkW3z0URB99lxbxFuyr03UXRkDD3KMypJAxJVXhImKfqEyv9DctpMQnuKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OI8JhCyk; arc=none smtp.client-ip=192.198.163.7
+	 Content-Type:Content-Disposition:In-Reply-To; b=gsUc1T8XR1wK9MyddmDwX4UKoZYxUIktLTxf5rYJgCGp2Dqwor2IRp9UAAHL+SZ1TbvaLcvu5wIrPyH7YQesMdFDEUGSzDrgp46uYZY2hvSbyjneHMd0wFDQjSrqMSUQi/1Wn8SJAYRMXC+JhdNMmXmNJYpWC4ziXCMPL8luPK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jhRWxIJV; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OI8JhCyk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jhRWxIJV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776888458; x=1808424458;
+  t=1776889514; x=1808425514;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=HLLau1ZgdCGc/DGcEKTpYpZPx17o1JJfEXRatzhhzec=;
-  b=OI8JhCykbTKrVUG6nuhTfKc1igvfzuLos2XYkdu7JR1VCOcjVHze7LqL
-   CdUn/nETDGT6y2uN9Cet301KizCa50zgEBQSyT0B2I62mLf4ef1DqeNYU
-   nROTXVcWfSz0fLm1XscdBVymUoWS42hbUd8VgHcFEK5YfrrgIpg6M6ZXJ
-   Qk/1xmj+mhF1tWWfvkdU3RnkGw1EapmWa6WdV4kbKKh1lpbHS/CasL6nN
-   LxOwKMAx7eNFrJJ2Aj/XRAzgLLaQsZSfacPIFyLTa4KZth5dgzbfH8R7Y
-   FCmhRv6ocljKJSQ65qZTzzNhcG1SVHx4pp8CxBAAWb/OSuvKFTDeE1P0W
-   g==;
-X-CSE-ConnectionGUID: /1l40OONQ/SWLYzw7Fm2YQ==
-X-CSE-MsgGUID: qRCpBSUfT7q+wf2JIgETlA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="103313439"
+   mime-version:in-reply-to;
+  bh=GpYOFPNHiOrthT2QhxIuN1DShVpLeeiB+wkDzqoFwGs=;
+  b=jhRWxIJVOcOVPzPNFHwATPWQEwjfIW7MesFEd+XhqLdPuxMRmHhxKmiy
+   imccrZMdC/wEmJbfAj2+ZUTlKkwyBycYbqyNCLmiC9Bhktg16Xx+23RVE
+   yhk3qPgF7LGCvJScdDB/EYFlKlaXLouPSr1l/Of0vAETMCKTRO4JIBAbZ
+   ziIeORH2Iw6C17XeVt9fgoCw2sNEkUUE+bJ9QlHboY3xejYczZFI5I/XD
+   moeVrOv9QiKcmV7U+rJSDClXRskLPD1uJmHUPop9hxPqO4x/iGd5bOnIO
+   zwGU7gMFw4o29hjI4zVoSxA1rIKB492+UltB16/GskY5t3OrSu7vUQsiS
+   w==;
+X-CSE-ConnectionGUID: hSOF78nlRFuqoHJohUvKRA==
+X-CSE-MsgGUID: iOK8iD4iSPeWxaCmOAM4JQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="78039867"
 X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="103313439"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 13:07:37 -0700
-X-CSE-ConnectionGUID: gcil6mfXRw+lb+YR44BQJQ==
-X-CSE-MsgGUID: m0p8rUT6QY6Z70p3Sq0Gfg==
+   d="scan'208";a="78039867"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 13:25:13 -0700
+X-CSE-ConnectionGUID: 3l3FowGeSzKAwKNWasZJ2A==
+X-CSE-MsgGUID: pyalDTcRT8SO7OWN1AiqCA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="236448206"
+   d="scan'208";a="262841716"
 Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.201])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 13:07:33 -0700
-Date: Wed, 22 Apr 2026 23:07:30 +0300
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 13:25:10 -0700
+Date: Wed, 22 Apr 2026 23:25:07 +0300
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: rodrigo.alencar@analog.com
 Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
@@ -58,36 +58,68 @@ Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
 	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 17/22] iio: dac: ad5686: update device list description
-Message-ID: <aekqgoWnBOPmN64s@ashevche-desk.local>
+Subject: Re: [PATCH 12/22] iio: dac: ad5686: fix powerdown control
+Message-ID: <aekuo0Kn-LEiWn8C@ashevche-desk.local>
 References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
- <20260422-ad5313r-iio-support-v1-17-ed7dca001d1b@analog.com>
- <aekqUXej04Dg8wk2@ashevche-desk.local>
+ <20260422-ad5313r-iio-support-v1-12-ed7dca001d1b@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aekqUXej04Dg8wk2@ashevche-desk.local>
+In-Reply-To: <20260422-ad5313r-iio-support-v1-12-ed7dca001d1b@analog.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Apr 22, 2026 at 11:06:47PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 22, 2026 at 03:45:51PM +0100, Rodrigo Alencar via B4 Relay wrote:
+On Wed, Apr 22, 2026 at 03:45:46PM +0100, Rodrigo Alencar via B4 Relay wrote:
+
+> This patch fixes powerdown control issues by protecting the cached
+
+Please, read Submitting Patches documentation. It clearly says to use
+imperative mood.
+
+> powerdown states with mutex access, and by using a proper bit shift for
+> the powerdown mask values. During initialization, powerdown bits are
+> initialized so that unused bits are set to 1 and the correct bit shift is
+> used.
+> 
+> Dual-channel devices use one-hot encondig in the address and that reflects
+> on the position of the powerdown bits, which are not channel-index based
+> for that case. Quad-channel devices also use one-hot encondig for the
+> channel address but the result of log2(address) coincides with the channel
+> index value.
+
+When I see a word "fix" and no Fixes tag I got confused. Please, align commit
+message and tags (either make it just refactor, or a real fix, or explain at
+bare minimum in the comments block why there is "fix" w/o Fixes tag).
 
 ...
 
-> Looking at the core description it let me think that that has to be in i2c and
-> spi cases as well. One may deduct the list of supported devices from the ID
-> table(s). This also increases a lot readability — instead of searaching in the
-> monolithic list, the ID tables are ordered and one per line. Much easier to
-> find if user's device is supported or not.
+>  {
+>  	struct ad5686_state *st = iio_priv(indio_dev);
+> +	int val, shift = ad5686_pd_mask_shift(chan);
+>  
+> -	return sysfs_emit(buf, "%d\n", !!(st->pwr_down_mask &
+> -				       (0x3 << (chan->channel * 2))));
+> +	mutex_lock(&st->lock);
+> +	val = !!(st->pwr_down_mask & (0x3 << shift));
+> +	mutex_unlock(&st->lock);
+> +
+> +	return sysfs_emit(buf, "%d\n", val);
+>  }
 
-Also make sure the MODULE_DESCRIPTION() text is aligned with this.
+Why not use guard()() from day 1?
+
+...
+
+>  	struct ad5686_state *st;
+> -	int ret, i;
+> +	int ret, i, shift;
+
+Do 'i' and 'shift' need to be signed?
 
 -- 
 With Best Regards,
