@@ -1,111 +1,248 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776283806DD
-	for <linux-hardening@vger.kernel.org>; Tue, 21 Apr 2026 23:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776813159; cv=pass; b=HlxS8lUSJESIuZQ6IIzK+DwutrmGwQXLyHsl73A/pHHncW4xwREKLr9+Xr1Bc6HMeypzjE4yGnmzauj4uoXfgyRqtB6jH2UMqS5jwxm1AigpCQr0A7Bzi1cbnm+nWStw4UhOqfeRZg26kyrJZw6wX8vOXyamPomnLqRy2GGjcEI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776813159; c=relaxed/simple;
-	bh=kEqeOOMJL0MyuLpaUxwclHIgWXv9VRMqv4q5M1RKiok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F1gy0GAZKWWJ4vMJwOkGdS9nzG0c6eGWtYDr/xeZLtyppbhav2PQd7zzrW9wLLgKjFXp6FaXPRIi9bonrRT7llx4zutXyftCPrHwSAc9H+JrG6IiDUO8Si2bvbpP1W35oaTMxIlN0H5MPYbCpPCft2f+sHnj/n7zel37yr8gIkw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWlr6zMq; arc=pass smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA66B369965;
+	Wed, 22 Apr 2026 07:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776841688; cv=none; b=RHJr+bqMfACyyTUpo9N/CkmEV07Enye84x0Si5n6XBCmIqRZeYkzffw3VbYA2ylqOTG2OMtBFhw9emQ06vM0ktshzic2iLDDgfgJA93zZ7V3FyfshDS+yF99bz1tX3bDJsO2XXrN5wuv5bqrmiUYUDdjqtd8mVixERGYF68Kw7M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776841688; c=relaxed/simple;
+	bh=gqk3uD4R/tE9ZWWfHwCVoKk1/vJMJjFUD5vCjQ+gtRE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AQhPKKpVcnwvLRCzULFp/g5r0qd0phMXpCienoMSLrproavxcmjCEAGYN+g+ec42Zr6reO0CzSUG4Ej/PRAyxsrGjQoJmzEW4fvx9Ea5AfhaYQ0nQ1LALcZJDLTjbhZTqw5iXdnF7ukjJX4fSFTdXxorCo4TycbloYrtkaClvaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=nazrWpPO reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWlr6zMq"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b9c603ec2dfso628461966b.1
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Apr 2026 16:12:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776813157; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ir3GbqV+047G9OhbWWDBkB4HAB3/xkoRCoOnKtSzl0Gkrt6Lg74v+r2O/3hC6wjHSL
-         e5UAlu4uTkrrHUrkgJHXm/zvzOYknjkYm4CqVoN+Vwq1QHG32JkNjEt/zn4uO1NuJIZo
-         K239THBTzREduw79GZKldBDqvzdLDHRcnW3nM4Pyg1LnNWGQ7xS8fzC71mJgmyzkqg9+
-         r50cUgjIeOkJXGqivnajUYKVMupEQIAKGuXqOSS9OdckViA9gurWtYbFEstzHjLvYT8Z
-         2wuFr0ugqUYidOOrIj1OPNfB4ZQuaZ66ivkRBDr/mw6BP97OCSd79sJocl1uSZa6lUKM
-         6T6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=kEqeOOMJL0MyuLpaUxwclHIgWXv9VRMqv4q5M1RKiok=;
-        fh=1kIVaRkcpnIQQWnswCnnWuEmzwUjvI0BQ4a2FD+Xmw0=;
-        b=AYTd3KTLHNo1ojX31EKwVe+IjJ7mAYFYKgHyUPtyCffY0R7mW1Twih74ZSoJ+1of8c
-         ecwC6+K/ZhFQn/5R3VontS97UjdfFIqwmITDnJlilqbP9RBsQSOz8gztRSLpAmYUJ8jY
-         ixRyqy2tQJkRPa88YK7+QxLMSxaippnca4pk8hjnuao7hXZB5WQuML0PD7PTp1QHFvKH
-         W7CNB4bbAapZWxZMkGa2eAGnXtL3xooH+ADHta+BGC4rcpFD7ia/QHY0BsiYzT87i3Xv
-         IsNNTa0lTANvSIbai50Gf2vGGwhHkwSqTOgKe+GMXRfGsEwL6errTE9oE/Xv7yCBEbWk
-         NSfw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776813157; x=1777417957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kEqeOOMJL0MyuLpaUxwclHIgWXv9VRMqv4q5M1RKiok=;
-        b=YWlr6zMqeGj0Caw8FxwX9Htw3VYPgUrscs6b5bHq0fdKoca3ogRO0SvAfyZAZ0Ic77
-         b3rltOI2tU842gMqO3q456usKvVPDl7xXyvHf+dQQD+iYuqZXhvq1aJaaxzAD02FJh0Z
-         QVfhrVE3Iy+Ek6zyWdUQgrQFQJuTY3HZMWABiPlWZ0+xt64AOnyPlzPCzcmIcgdTso9j
-         PxBDwEMtlXJ9DFJtDfli6CWWFRlO7RVp3c38bzT3ff3L6+6s5YYPE9QNlivg8cNp/0MH
-         JIg9+UU71y1ubgeSpivxU6ury5CuEUkQGLzMragZ6uLQEszxPUuqdRWiVvAV8b6pe8Lx
-         OnZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776813157; x=1777417957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kEqeOOMJL0MyuLpaUxwclHIgWXv9VRMqv4q5M1RKiok=;
-        b=l/hID+RJawjASoMcyLniHWLBF5T7tGukjH56esfpWsOMDBpePoIvp7FiUHhYd0Yjc2
-         GWbhZzaXZknUCsXtkHNVN4Ms5kqMBBWm54o5dshri7GPeVGjwrcH08KDEk05IkVbV2N8
-         wvIrGoqOARgVQdKP3Df+pq94o0CtddT4tlrF73q6KJTXABPp7PWawvZWLCWSyqWDU/gu
-         QWbRCx8+V/mQtY9qju1NOQtwCyWVuULsi+/0CVouhQJtGvgwHq7LV4eC4TBRntrO2utf
-         lcX+LqY8Nr/Edf/FupFsNsSWwodlE93ZYQAbf04YIh34aRWlpe5i3e/DJLy09eA55skt
-         iJkg==
-X-Forwarded-Encrypted: i=1; AFNElJ9iEYR0rHhHQrLPlDpaLJyf87fWyKiydRayDL5E6lJRNuae3ONu3wvL+g/sngfylGg+GblzR0839vh4fDY/JwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/jTPz5hM8Ohs2ej5FN89WCSxUqQ7+MVEGQryMPs4DE7rr4D5w
-	Qd+3rTjZpVvBojz2mqdf5TsTGtO9irZflvqq9WJxCmiwizWJQpWTXMrC/coQtXxwRgA07A/Vf4/
-	fTQuT4SXkpRNqG2iThrLvbqBYmr27s0aOkg==
-X-Gm-Gg: AeBDieuG1DMmaUBz//Vpd2LDIEZFoZtmQCjlgGnxGeVkbt3ZhbjIPfyxZ0q5HQEiLMX
-	uqRU4VlQ3ROE8WoeloboODhKdCgZLHa1QoMOjWls6XIDhx7UxAsdw/pwpguMAC75s+hfqz0BKlv
-	yGtkQnK8PFwrekhPAwCS23ajxYL9f+24Pzn8CPEppnyblWettnWvEZj5u/Ou6SiSeHcrbKy3dyU
-	z36+m0xBLQIATvA4bKiFOWKOfZLHWfdeDP633YPFMTkGKpSCOa/qrjVYRxgKIeIUGhiGUaWEs/u
-	Wft70VH6xsMW8rfkq8e8ni2CSQGzsnVhuq49OZpRTsfBUuTMio3svvxw/+ISfCbpVmz2Li6npXQ
-	UI1GRPGzQ7vIDEIyJrw0cdmf7Hgef0u7bSWj4N8RShpVEOmnR
-X-Received: by 2002:a17:907:3f16:b0:b9d:6d06:b78a with SMTP id
- a640c23a62f3a-ba418985765mr855604466b.17.1776813156675; Tue, 21 Apr 2026
- 16:12:36 -0700 (PDT)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="nazrWpPO"
+Received: from [133.11.54.205] (h205.csg.ci.i.u-tokyo.ac.jp [133.11.54.205])
+	(authenticated bits=0)
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 63M726wI004805
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 22 Apr 2026 16:02:06 +0900 (JST)
+	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
+DKIM-Signature: a=rsa-sha256; bh=spF9IOW2V15dt6bJE0CRBrgMv2oh2xWd5j7mz2cgmZk=;
+        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
+        h=From:Message-ID:To:Subject:Date;
+        s=rs20250326; t=1776841326; v=1;
+        b=nazrWpPOx1MUGEQQP5jnqy7DnpgSUPBt+epaBv0wb9yxB67VjM13b0XbIxSdZ8Dz
+         T5CQmSpsVMKBnJWJBfvZMyngEYKJFfZMNjN4w3ZhdoyB/XSw+qLYb41eEckAGS2X
+         BEH57BHzIM/fhzGcS+hQUiDIl6RRIFTOkCguyNTRX1mIApCowv428/0fWfm5Kd6Z
+         7toEuwuPTFRzu6kLLpeWean3D2SrmYR7F6yyBrnOXU1DR15c0U959WEwh6XJm81g
+         ttzTKQqQ/7GXlyL+w+Y5UGnyurFKA4AzE/cgET+zMT1z4YjUDTpISkP1n8h/yvfC
+         7KGiBzQMkIDtiEEF+lvS1A==
+Message-ID: <327f74e4-78b8-4629-a418-d1d3ba78859f@rsg.ci.i.u-tokyo.ac.jp>
+Date: Wed, 22 Apr 2026 16:02:05 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260313001608.118294-1-rosenp@gmail.com> <ebca61af-7873-4a6a-aae7-151e81b328e5@oss.qualcomm.com>
-In-Reply-To: <ebca61af-7873-4a6a-aae7-151e81b328e5@oss.qualcomm.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Tue, 21 Apr 2026 16:12:25 -0700
-X-Gm-Features: AQROBzBcYSBBxPxgApn-xQFzTqpKuD71x22LJW6s29Kys3ic7Z6oH4hLyooD4wY
-Message-ID: <CAKxU2N--N9psvqkoHetoz+o49ipBxfTT_gP23zA5Wd4p=+nDhw@mail.gmail.com>
-Subject: Re: [PATCH ath-next] wifi: ath11k: use kzalloc_flex
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: linux-wireless@vger.kernel.org, Jeff Johnson <jjohnson@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:QUALCOMM ATHEROS ATH11K WIRELESS DRIVER" <ath11k@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/4] KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
+To: Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu
+ <yuzenghui@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <shuah@kernel.org>, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, devel@daynix.com, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260418-hybrid-v7-0-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp>
+ <20260418-hybrid-v7-3-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp>
+ <87ldeic1gk.wl-maz@kernel.org>
+ <06c6664c-7f0c-47b2-babf-ba2a541fd9f2@rsg.ci.i.u-tokyo.ac.jp>
+ <86qzoa0xj6.wl-maz@kernel.org>
+ <ad44c69e-2f99-4f31-81b4-faae52eea080@rsg.ci.i.u-tokyo.ac.jp>
+ <86ldeh20xg.wl-maz@kernel.org>
+Content-Language: en-US
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+In-Reply-To: <86ldeh20xg.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 21, 2026 at 4:03=E2=80=AFPM Jeff Johnson
-<jeff.johnson@oss.qualcomm.com> wrote:
->
-> On 3/12/2026 5:16 PM, Rosen Penev wrote:
-> > Convert kzalloc_obj + kcalloc to kzalloc_flex to save an allocation.
-> >
-> > Add __counted_by to get extra runtime analysis. Move counting variable
-> > assignment immediately after allocation as required by __counted_by.
->
-> can you update this like you did for the ath12k patch?
-Done.
->
+On 2026/04/20 22:53, Marc Zyngier wrote:
+> On Mon, 20 Apr 2026 13:07:15 +0100,
+> Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
+>>
+>> On 2026/04/20 18:51, Marc Zyngier wrote:
+>>> On Mon, 20 Apr 2026 09:36:16 +0100,
+>>> Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
+>>>>
+>>>> On 2026/04/20 2:19, Marc Zyngier wrote:
+>>>>> On Sat, 18 Apr 2026 09:14:25 +0100,
+>>>>> Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
+>>>>>>
+>>>>>> On a heterogeneous arm64 system, KVM's PMU emulation is based on the
+>>>>>> features of a single host PMU instance. When a vCPU is migrated to a
+>>>>>> pCPU with an incompatible PMU, counters such as PMCCNTR_EL0 stop
+>>>>>> incrementing.
+>>>>>>
+>>>>>> Although this behavior is permitted by the architecture, Windows does
+>>>>>> not handle it gracefully and may crash with a division-by-zero error.
+>>>>>>
+>>>>>> The current workaround requires VMMs to pin vCPUs to a set of pCPUs
+>>>>>> that share a compatible PMU. This is difficult to implement correctly in
+>>>>>> QEMU/libvirt, where pinning occurs after vCPU initialization, and it
+>>>>>> also restricts the guest to a subset of available pCPUs.
+>>>>>>
+>>>>>> Introduce the KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY attribute to
+>>>>>> create a "fixed-counters-only" PMU. When set, KVM exposes a PMU that is
+>>>>>> compatible with all pCPUs but that does not support programmable
+>>>>>> event counters which may have different feature sets on different PMUs.
+>>>>>>
+>>>>>> This allows Windows guests to run reliably on heterogeneous systems
+>>>>>> without crashing, even without vCPU pinning, and enables VMMs to
+>>>>>> schedule vCPUs across all available pCPUs, making full use of the host
+>>>>>> hardware.
+>>>>>>
+>>>>>> Much like KVM_ARM_VCPU_PMU_V3_IRQ and other read-write attributes, this
+>>>>>> attribute provides a getter that facilitates kernel and userspace
+>>>>>> debugging/testing.
+>>>>>
+>>>>> OK, so that's the sales pitch. But how is it implemented? I would like
+>>>>> to be able to read a high-level description of the implementation
+>>>>> trade-offs.
+>>>>
+>>>> Implementation-wise it is very trivial. Essentially the following
+>>>> addition in kvm_arm_pmu_v3_get_attr() is the entire implementation:
+>>>> +	case KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY:
+>>>> +		if (test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY,
+>>>> &vcpu->kvm->arch.flags))
+>>>> +			return 0;
+>>>>
+>>>> Both its functionality and code complexity is trivial. So we can argue that:
+>>>> - the functionality is too trivial to be useful or
+>>>> - the interface/implementation complexity is so trivial that it does not
+>>>>     incur maintenance burden
+>>>>
+>>>> In this case the selftest uses the getter so I was more inclined to
+>>>> have it, but adding one just for the selftest sounds too ad-hoc, so
+>>>> here I looked into other attributes to ensure that it was not
+>>>> introducing inconsistency with existing interfaces.
+>>>>
+>>>> As the result, I found there are other read-write attributes; in fact
+>>>> there are more read-write attributes than write-only ones.
+>>>
+>>> You're completely missing the point. I'm referring to the whole of the
+>>> commit message, which is more of a marketing slide than a technical
+>>> description.
+>>
+>> In terms of implementation, the obvious tradeoff is that it adds more
+>> code to implement the feature. One thing to note is that
+>> kvm_vcpu_load_pmu() is added and is called each time a vCPU migrates
+>> across pCPUs. The heavy part, making the KVM_REQ_RELOAD_PMU request,
+>> only happens when the feature is enabled.
+> 
+> Well, that's what I want to see. The repeated blurb about Windows
+> being broken is cover letter material, but not fir for a commit
+> message.
+
+I understand. I'll leave the Windows issue the cover letter and write 
+focused patch messages after splitting patches.
+
+> 
+> [...]
+> 
+>>>>> "for the first time" gives the impression that it will work if you try
+>>>>> again. I'd rather we say that "This feature is incompatible with the
+>>>>> existence of a PMU event filter".
+>>>>
+>>>> The following sequence will work:
+>>>> 1. Set KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
+>>>> 2. Set KVM_ARM_VCPU_PMU_V3_FILTER
+>>>> 3. Set KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
+>>>>
+>>>> This is to make the behavior conistent with KVM_ARM_VCPU_PMU_V3_SET_PMU.
+>>>
+>>> I don't think this is correct. Filtering is completely at odds with
+>>> this patch, and I don't want to have to reason about the combination.
+>>
+>> kvm_arm_pmu_v3_set_pmu() has the following condition:
+>>
+>> if (kvm_vm_has_ran_once(kvm) ||
+>>      (kvm->arch.pmu_filter && kvm->arch.arm_pmu != arm_pmu)) {
+>> 	ret = -EBUSY;
+>> 	break;
+>> }
+>>
+>> kvm_arm_pmu_v3_set_pmu_fixed_counters_only() has the corresponding
+>> condition for consistency:
+>>
+>> if (kvm_vm_has_ran_once(kvm) ||
+>>      (kvm->arch.pmu_filter &&
+>>       !test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY,
+>> 	       &kvm->arch.flags)))
+>> 	return -EBUSY;
+>>
+>> We can of course kill the PMU event filter for
+>> FIXED_COUNTERS_ONLY. The filter is effectively no-op with
+>> FIXED_COUNTERS_ONLY and I don't think that consistency matters much.
+> 
+> We shouldn't allow weird combinations in the UAPI. Since it makes no
+> sense to have both fixed-function *and* filters, we should make them
+> mutually exclusive.
+
+Then I think it makes sense to make KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS 
+mutually exclusive for consistency, but I found something weird with it.
+
+The documentation says it already "mandates that a PMU has explicitly 
+been selected via KVM_ARM_VCPU_PMU_V3_SET_PMU", but apparently that's 
+not properly implemented.
+
+kvm_arm_pmu_v3_set_nr_counters() has the following check:
+	if (!kvm->arch.arm_pmu)
+		return -EINVAL;
+
+I suspect it is intended to check if a PMU has explicitly been selected, 
+but this check is effectively no-op because kvm_arm_set_default_pmu() 
+has already set kvm->arch.arm_pmu before reaching there.
+
+Furthermore, tools/testing/selftests/kvm/arm64/vpmu_counter_access.c 
+seems to expect KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS to work without 
+selecting a PMU via KVM_ARM_VCPU_PMU_V3_SET_PMU.
+
+How should we deal with the discrepancy between the documentation and 
+the implementation/selftest?
+
+> 
+> [...]
+> 
+>>>> I expect migration will be handled with the conventional register
+>>>> getters and setters, but please share if you have a concern.
+>>>
+>>> At the very least I want to see some documentation explaining that.
+>>
+>> What kind of documentation do you expect?
+> 
+> A description of what counters are exposed by this feature, and what
+> architectural features they are dependent on.
+
+I'll update the attribute documentation accordingly.
+
+> 
+>> If we change kvm_vcpu_load_pmu() to avoid for_each_set_bit(), there
+>> would be a good chance to forget updating it when mechanically
+>> updating existing for_each_set_bit() instances, so it is a candidate
+>> for documentation. But I don't have a good idea where to place it
+>> either.
+> 
+> The moment we introduce FEAT_PMUv3_ICNTR, the whole PMUv3 emulation
+> will catch fire anyway, as we already limit ourselves to 32 bits for
+> reset and nesting switch.
+> 
+> So this will be a major redesign anyway. If you are really worried,
+> leave a comment in there.
+
+I'll leave one line comment in the implementation corresponding to the 
+attribute documentation.
+
+Regards,
+Akihiko Odaki
