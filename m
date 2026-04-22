@@ -1,118 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7937332E72F;
-	Wed, 22 Apr 2026 15:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DD3371860;
+	Wed, 22 Apr 2026 19:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776873561; cv=none; b=iq6HOXC2ugAiMSxdnuEJPMZt2bSHqSJcu/wsQUaAopVm/AhobTWbV7e/TDjr9XUdfqsUnkfIYdbjz9f2MsNvk4RLaF1YDWKiWmeXcCGIw1yg93jFb1M72tAURhI3C1J1zY4K0VydyLWJni0DrxGBFUI+LwcnCjIVwLCWoM9CZqo=
+	t=1776887038; cv=none; b=MNtUZZ55HMIGse3MZNbTBWGNCsbFdDFDmmIm6FC5G3l++tpefYd6dxUHZ8wyj7jgWD6saTcrYF5LoA6u64EJgML8emeSjTyYvqe9fg5IsNTOh8B1Pxe9hg0E554fYDRVh2ocUAdEiAN2obORdxZ4m+41Q53M29uAadHzrvPyfow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776873561; c=relaxed/simple;
-	bh=RZ/5dbC8MnDILJIRSCKet73ixD4oBZWe1jy13l0HzS0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bNPLaZFhtv06qwgYR4BS4LN9NsTiQGnKOpVcQELqARMoUaUwi1mul1WF7dvz6pfXT7ODvMGOPWYAVu/14JTEnWG6CRcOlP9oHWpapMW/gUjk1puUXWbe8bM0qsFrBeDrxus58h69ZXOj1hdpFbMqEXYyKHWY97mCZqOVUU2iArM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gz/ANckz; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776887038; c=relaxed/simple;
+	bh=rqvwkL/RkzxnVelFdCXSL9oC8PSWNs3dkhPNmRmXNR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i7v214YiMy+4wN8YZSeIx+DQOT+HHsuIleJfo+SQcoVB/pF8CxrWfVLFeH8ZIuVGBA/6WfwsYEGoTrhXaTOtpFiSpM1NnR2NOtCH6M6Ad1Jkw6fPhF7j9GgOcwo5GLZUarw9tw3LTHB004KBhq2vEfuixHBL+/Ou5Ao48onXRbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Onz4IvbH; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gz/ANckz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Onz4IvbH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776873560; x=1808409560;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RZ/5dbC8MnDILJIRSCKet73ixD4oBZWe1jy13l0HzS0=;
-  b=Gz/ANckzYZAkrpxby3r9a5blLuD9K6qVhhpqcrDDXb/aMpV17TWBae0I
-   AJfUyZgMxT2hUTyEarpId0ANIAOxENU1r3yz33gze1evrek1RPv4bY2wE
-   MFwEFKg0/p+3EdlRYi8oiDskVsL2p7X4f7OIqItbtFQoC2EDlvMFrQn1I
-   fqrdeHfPnk+Kn22wh9of73xTPyV0lr8HwNsMzMxAP115sPyiYgJO/6wcG
-   KRCHFyqP54KbZwCF6CdTJ/7yd6RmyN0jRhaca9zulmZTMeQ7Wen0LMHmM
-   mKbrbm9NLOkAJe0c/B7A3xXg73/nVP6d16eaupHz/N7pysl3aODQq2NCb
+  t=1776887037; x=1808423037;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rqvwkL/RkzxnVelFdCXSL9oC8PSWNs3dkhPNmRmXNR0=;
+  b=Onz4IvbH4UjmjkgfBu7KidhusIFIPMqBdzzvioOOGe3H9iqsT8+gQkjs
+   kWLbKvl7/+W2+z0iZKfYPwsQe4QdklXS/mgBKZkjXO7XoXwO8jCtTzFYF
+   Sc5GT0RsQ9Dqu3Tg+r+eTS6kaq0gaYIAY355WfzDuF5ul+jHtbmOfwR3c
+   LHybOhTDKervmYtqnrzVnUHeyI04s3uuGI3okvHdlId8lzB9/Fx/1okEW
+   UmwxDSXtvgmHqvCrsYHfhCvwuTWYqT2Ccq6lfS/hFFIIqmLzvn+6VJWAl
+   pQj+uu/SestoWbv0PtARZOMQ6DB+DeEwTf/sgIA0jXmxM4eH152lNhKRm
    A==;
-X-CSE-ConnectionGUID: gFDq24zdQQ6Wr92he8tZHQ==
-X-CSE-MsgGUID: 3ijpq/rbSC2BmYeqKzGMYg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="88906154"
+X-CSE-ConnectionGUID: 0E7h+vs+RrC/IbwHfMDwNQ==
+X-CSE-MsgGUID: IFtFVTa6TC+TLtC3Ht9Drg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="77912872"
 X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="88906154"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 08:58:31 -0700
-X-CSE-ConnectionGUID: VSo1VDwOSgO2Y3K7pyFEmA==
-X-CSE-MsgGUID: lwMlpIgMSFOYoq4Tcd7RNw==
+   d="scan'208";a="77912872"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 12:43:56 -0700
+X-CSE-ConnectionGUID: DelarHGzSYia8EEAWwWrIg==
+X-CSE-MsgGUID: XeCT+TvVQHaxOpq+vBeTfQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="262781604"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa002.jf.intel.com with ESMTP; 22 Apr 2026 08:58:29 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id CAD7D95; Wed, 22 Apr 2026 17:58:27 +0200 (CEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+   d="scan'208";a="234230950"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.201])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 12:43:52 -0700
+Date: Wed, 22 Apr 2026 22:43:50 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: rodrigo.alencar@analog.com
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Michael Auchter <michael.auchter@ni.com>,
 	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 1/1] string: Group zero related memory APIs in the header
-Date: Wed, 22 Apr 2026 17:58:24 +0200
-Message-ID: <20260422155824.769913-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 07/22] iio: dac: ad5686: refactor include headers
+Message-ID: <aekk9ib1s4HYoAFP@ashevche-desk.local>
+References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
+ <20260422-ad5313r-iio-support-v1-7-ed7dca001d1b@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260422-ad5313r-iio-support-v1-7-ed7dca001d1b@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Move mem_is_zero() closer to memzero_explicit() to group semantically
-close APIs in the header for better browsing experience. No functional
-changes.
+On Wed, Apr 22, 2026 at 03:45:41PM +0100, Rodrigo Alencar via B4 Relay wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/string.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+> Apply IWYU principle, replacing unused/generic headers for
+> specific/missing headers. The resulting include directive list is sorted
+> accordingly.
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index b850bd91b3d8..3840be921d79 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -284,18 +284,6 @@ static inline void memcpy_flushcache(void *dst, const void *src, size_t cnt)
- void *memchr_inv(const void *s, int c, size_t n);
- char *strreplace(char *str, char old, char new);
- 
--/**
-- * mem_is_zero - Check if an area of memory is all 0's.
-- * @s: The memory area
-- * @n: The size of the area
-- *
-- * Return: True if the area of memory is all 0's.
-- */
--static inline bool mem_is_zero(const void *s, size_t n)
--{
--	return !memchr_inv(s, 0, n);
--}
--
- extern void kfree_const(const void *x);
- 
- extern char *kstrdup(const char *s, gfp_t gfp) __malloc;
-@@ -367,6 +355,18 @@ static inline void memzero_explicit(void *s, size_t count)
- 	barrier_data(s);
- }
- 
-+/**
-+ * mem_is_zero - Check if an area of memory is all 0's.
-+ * @s: The memory area
-+ * @n: The size of the area
-+ *
-+ * Return: True if the area of memory is all 0's.
-+ */
-+static inline bool mem_is_zero(const void *s, size_t n)
-+{
-+	return !memchr_inv(s, 0, n);
-+}
-+
- /**
-  * kbasename - return the last part of a pathname.
-  *
+...
+
+> -#include "ad5686.h"
+> -
+> +#include <asm/byteorder.h>
+
+asm/* is another group and goes after linux/* generic ones.
+
+> +#include <linux/array_size.h>
+> +#include <linux/err.h>
+> +#include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/spi/spi.h>
+>  
+> +#include "ad5686.h"
+
+> -#include <linux/interrupt.h>
+> -#include <linux/fs.h>
+> -#include <linux/device.h>
+> +#include <linux/array_size.h>
+> +#include <linux/err.h>
+> +#include <linux/export.h>
+>  #include <linux/module.h>
+> -#include <linux/kernel.h>
+> -#include <linux/slab.h>
+> -#include <linux/sysfs.h>
+>  #include <linux/regulator/consumer.h>
+
+> -
+> -#include <linux/iio/iio.h>
+> -#include <linux/iio/sysfs.h>
+
+Leave linux/iio/* group separated.
+
+> +#include <linux/sysfs.h>
+>  
+>  #include "ad5686.h"
+
+It should be something like this at the end:
+
+linux/* generic headers
+blank line
+asm/* generic headers
+blank line
+linux/iio/*
+blank line
+"private headers"
+
+...
+
+Same applies to the rest of the patch.
+
 -- 
-2.50.1
+With Best Regards,
+Andy Shevchenko
+
 
