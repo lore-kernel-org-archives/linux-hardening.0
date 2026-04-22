@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8093D32F764;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84AD33D4E2;
 	Wed, 22 Apr 2026 14:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776869184; cv=none; b=POsDXNchSG8LTv51YSmwf34IIUlwRHcaXX5/nmoarL38TYCDnhppWSJ/7wrULT6cofBC6OM+R340I82tViYatYuXAACI4I44nzliSGPVWsWOaXDDenra3h0y+S6KNriOTd1TaeiUSo8PfkxFfxZn+B2rRRJmtBvJ0gWPrAMozoI=
+	t=1776869184; cv=none; b=ANQlugPvlNvg5Q6I66io8sR4aWT/BTKQWswIoSCYezAvH9SdczROWAo2FMPsJ4hXGefp8QEeW6D14yl1QG4F2pvhIZkOSJKYq+kXP+YYOlfWt68QhdfStGpDyMj5rktftDMxVmQwKLJZ93m5yUNve7uPBxAwJhTylfloqXb5eVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776869184; c=relaxed/simple;
-	bh=F9Nr0dL97FhuwgP6JQ6EOPNw/sgLvryAOIT0llXjf58=;
+	bh=K+xFdI3qumlz2bfGS97Hrd7C3kyFTVbwY0YIscqxoxY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UFWqXwmrl/8+V5e1i0ARZibmEFrOQVdprJwpBRR+Byppl8yxDpbdMfVKThxnA6fDHdcM6yEsXlPovc36Y5ff8Cry+xJoNpAQtJ534efovMeoQ40f/On7CY0kDQSao3Ns5KASd859l+PgeByxYnwW7Y6LExYcUfXAFv9yIGk2h38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dM+Lo0kC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=eUg8CrMg/cfpTInw0iLye8kBtTGXg1TMCpI3d0wzkgU6coqZtEu47f4g4RLEGp/ntA5JB/30WAXv9U/fL+neAvhqsj6tAlBXi238V+w4s3sxFeOcmmTINcnP+fzXdTcw1Q2TOoUUqpJ6E40m8IUi1VOxhYwObOLSrVmO7K4r17g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjhUJK/+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dM+Lo0kC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F381C4AF15;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjhUJK/+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81293C4AF11;
 	Wed, 22 Apr 2026 14:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1776869184;
-	bh=F9Nr0dL97FhuwgP6JQ6EOPNw/sgLvryAOIT0llXjf58=;
+	bh=K+xFdI3qumlz2bfGS97Hrd7C3kyFTVbwY0YIscqxoxY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dM+Lo0kCsHbMM0ajj1yIvZuM1pWf2bv2iPI09Y2Yb0XwlVfw5bHcZtWQTAfh4MimO
-	 pjkc/gji4Bmo1e7bL9Rbsr8ZawULAILJkEZs7oMU/gb05m8YBvzPph1zXBaDlaj/ww
-	 zPOcYpC12V5wd076aLM618VoGHSwi191zmTe/cX+l78u3P3RLH6MgajjAhe1c9i3ro
-	 DVcXPCWsWXcBrfIJ2Tsu7H1bZdZ+E0fvXxblrD2RhiSKRQbOQbO1ObMzgTFDNpVGAC
-	 eD0G9gaBONWwHAN9OHLbQ5X6ND2Ng6oZDyFXlgVO67GSvOpCR75aY0UgbpaUf8/QMC
-	 awv6X6pJqyHKw==
+	b=RjhUJK/+sveXbGxjLKrSndX4MqsHeBteXGR42YDhdtTMYLbbmm0IZzZ/B4V+cXuoO
+	 fw6JX0O3EhMXdlZpg8fmhUq1W+ZL0PY76EXd6K0zW1b1RjdVS0di5ppKZcDccTa1/e
+	 J5IiCCvsRNj+4WTKgywALBwVDo5oPKGUg7vLbiT/kZl+cufmO36HsQ/4GbizuzmwWf
+	 sCRifK+Mi0gzmkr3keAADsIf4qCUOTcMprbllqul1XK3c/KA4CcDd8WdHr3kbRfIN5
+	 4T4YjUJlZkhQMEoSnCn8gVz0p5gJdZvlRNzOjwAO2NJ6T/4uwLicJTv2JnY4251hHf
+	 LfEKTmw9G+z1g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46136F9EDC9;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7F7F9EDF5;
 	Wed, 22 Apr 2026 14:46:24 +0000 (UTC)
 From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Wed, 22 Apr 2026 15:45:42 +0100
-Subject: [PATCH 08/22] iio: dac: ad5686: remove redundant register
- definition
+Date: Wed, 22 Apr 2026 15:45:44 +0100
+Subject: [PATCH 10/22] iio: dac: ad5686: add of_match table to the spi
+ driver
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260422-ad5313r-iio-support-v1-8-ed7dca001d1b@analog.com>
+Message-Id: <20260422-ad5313r-iio-support-v1-10-ed7dca001d1b@analog.com>
 References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
 In-Reply-To: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
 To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, 
@@ -56,11 +56,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  Philipp Zabel <p.zabel@pengutronix.de>, 
  Rodrigo Alencar <rodrigo.alencar@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776869181; l=2846;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776869181; l=1849;
  i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=ohjQW1AWDwRd84EWTvh6fCxsW2xwkyxLY5jzdH+7/fM=;
- b=qxDCy61RCTrZvVxcG8tC7f+4uoyo/zcsS/ec1eJJ3Wa2EkE8J9O1RVCm/uwwJGf8S9kyw9ZZP
- T/TaWDBqmogAa7fr38zUKzWEft2UIXBAMh459R2VgNLjOvH8CMuzdGV
+ bh=C7y+tv8tl9vSOd2HafCCTEPh7cdjuxKwc/v91PQUx9E=;
+ b=WY9x4RgC1GHSTS1QD9/Q94sNL6zKsziziM763el98x+DfBvcFe4tmyKCLisSjkDIxK4C0CE7f
+ UFWhFLHkHdxCMUuvCbOkbiY2GZCQSHCfY1qW6qpYQ0RtOBDl8Jk3GUg
 X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
  pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
 X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
@@ -70,102 +70,49 @@ Reply-To: rodrigo.alencar@analog.com
 
 From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-AD5683_REGMAP and AD5693_REGMAP behave the same way in the common code,
-and that is because they target single channel devices from the same
-sub-family. There is no reason to separate them and it will make things
-simpler when refactoring the chip info table.
+Add of_match table for the SPI device variants to be consistent with the
+AD5696 I2C driver.
 
 Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
- drivers/iio/dac/ad5686.c | 19 +++++--------------
- drivers/iio/dac/ad5686.h |  2 --
- 2 files changed, 5 insertions(+), 16 deletions(-)
+ drivers/iio/dac/ad5686-spi.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
-index 1a6eb3832f22..0bc925bd827e 100644
---- a/drivers/iio/dac/ad5686.c
-+++ b/drivers/iio/dac/ad5686.c
-@@ -93,10 +93,6 @@ static ssize_t ad5686_write_dac_powerdown(struct iio_dev *indio_dev,
- 		if (chan->channel > 0x7)
- 			address = 0x8;
- 		break;
--	case AD5693_REGMAP:
--		shift = 13;
--		ref_bit_msk = AD5693_REF_BIT_MSK;
--		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -277,7 +273,7 @@ static const struct ad5686_chip_info ad5686_chip_info_tbl[] = {
- 		.channels = ad5311r_channels,
- 		.int_vref_mv = 2500,
- 		.num_channels = 1,
--		.regmap_type = AD5693_REGMAP,
-+		.regmap_type = AD5683_REGMAP,
- 	},
- 	[ID_AD5337R] = {
- 		.channels = ad5337r_channels,
-@@ -399,24 +395,24 @@ static const struct ad5686_chip_info ad5686_chip_info_tbl[] = {
- 		.channels = ad5691r_channels,
- 		.int_vref_mv = 2500,
- 		.num_channels = 1,
--		.regmap_type = AD5693_REGMAP,
-+		.regmap_type = AD5683_REGMAP,
- 	},
- 	[ID_AD5692R] = {
- 		.channels = ad5692r_channels,
- 		.int_vref_mv = 2500,
- 		.num_channels = 1,
--		.regmap_type = AD5693_REGMAP,
-+		.regmap_type = AD5683_REGMAP,
- 	},
- 	[ID_AD5693] = {
- 		.channels = ad5693_channels,
- 		.num_channels = 1,
--		.regmap_type = AD5693_REGMAP,
-+		.regmap_type = AD5683_REGMAP,
- 	},
- 	[ID_AD5693R] = {
- 		.channels = ad5693_channels,
- 		.int_vref_mv = 2500,
- 		.num_channels = 1,
--		.regmap_type = AD5693_REGMAP,
-+		.regmap_type = AD5683_REGMAP,
- 	},
- 	[ID_AD5694] = {
- 		.channels = ad5684_channels,
-@@ -508,11 +504,6 @@ int ad5686_probe(struct device *dev,
- 		cmd = AD5686_CMD_INTERNAL_REFER_SETUP;
- 		ref_bit_msk = 0;
- 		break;
--	case AD5693_REGMAP:
--		cmd = AD5686_CMD_CONTROL_REG;
--		ref_bit_msk = AD5693_REF_BIT_MSK;
--		st->use_internal_vref = !has_external_vref;
--		break;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/drivers/iio/dac/ad5686.h b/drivers/iio/dac/ad5686.h
-index 3fcc792ea656..fe6482e84178 100644
---- a/drivers/iio/dac/ad5686.h
-+++ b/drivers/iio/dac/ad5686.h
-@@ -45,7 +45,6 @@
- 
- #define AD5310_REF_BIT_MSK			BIT(8)
- #define AD5683_REF_BIT_MSK			BIT(12)
--#define AD5693_REF_BIT_MSK			BIT(12)
- 
- /**
-  * ad5686_supported_device_ids:
-@@ -88,7 +87,6 @@ enum ad5686_regmap_type {
- 	AD5310_REGMAP,
- 	AD5683_REGMAP,
- 	AD5686_REGMAP,
--	AD5693_REGMAP
+diff --git a/drivers/iio/dac/ad5686-spi.c b/drivers/iio/dac/ad5686-spi.c
+index 7a7a19a01b56..6c9b70880da9 100644
+--- a/drivers/iio/dac/ad5686-spi.c
++++ b/drivers/iio/dac/ad5686-spi.c
+@@ -118,9 +118,30 @@ static const struct spi_device_id ad5686_spi_id[] = {
  };
+ MODULE_DEVICE_TABLE(spi, ad5686_spi_id);
  
- struct ad5686_state;
++static const struct of_device_id ad5686_of_match[] = {
++	{ .compatible = "adi,ad5310r", .data = &ad5310r_chip_info },
++	{ .compatible = "adi,ad5672r", .data = &ad5672r_chip_info },
++	{ .compatible = "adi,ad5674r", .data = &ad5674r_chip_info },
++	{ .compatible = "adi,ad5676",  .data = &ad5676_chip_info },
++	{ .compatible = "adi,ad5676r", .data = &ad5676r_chip_info },
++	{ .compatible = "adi,ad5679r", .data = &ad5679r_chip_info },
++	{ .compatible = "adi,ad5681r", .data = &ad5681r_chip_info },
++	{ .compatible = "adi,ad5682r", .data = &ad5682r_chip_info },
++	{ .compatible = "adi,ad5683",  .data = &ad5683_chip_info },
++	{ .compatible = "adi,ad5683r", .data = &ad5683r_chip_info },
++	{ .compatible = "adi,ad5684",  .data = &ad5684_chip_info },
++	{ .compatible = "adi,ad5684r", .data = &ad5684r_chip_info },
++	{ .compatible = "adi,ad5685r", .data = &ad5685r_chip_info },
++	{ .compatible = "adi,ad5686",  .data = &ad5686_chip_info },
++	{ .compatible = "adi,ad5686r", .data = &ad5686r_chip_info },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ad5686_of_match);
++
+ static struct spi_driver ad5686_spi_driver = {
+ 	.driver = {
+ 		.name = "ad5686",
++		.of_match_table = ad5686_of_match,
+ 	},
+ 	.probe = ad5686_spi_probe,
+ 	.id_table = ad5686_spi_id,
 
 -- 
 2.43.0
