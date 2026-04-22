@@ -1,334 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570CD35F19D;
-	Wed, 22 Apr 2026 14:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2880F30DD30
+	for <linux-hardening@vger.kernel.org>; Wed, 22 Apr 2026 15:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776869185; cv=none; b=PgxDGz64cIX/4ngx6ZUXWuf6uHk7ABbqwZ311FhjuBEs5SKmAVRkKldUm8imcI2ZtqtCX+eZNoWhC2y88MdhzXkP93FYQKTF7gQVkxuPp5DdayBohq0OY3/TMSk3UK7BDl5CYbC6MA0vwW/n/s9gHv+gkdsjFbej2XFW3ZN1IK8=
+	t=1776871603; cv=none; b=XlA1Dz1iX8yAfsRnlAxjr4b08HkQC33eQzJwJZCBmDYaOrouq/SZ/CzOSLAW+hiPG2NdRDTyzN2Lq+sMm7VKajoTzrte0yg/yMJukVChdYYhIndzdfOIpal6UybDadnaxdM3DCf0n4kp6k28J+ClxSvBxgqz0TXOpDeyr7n/7iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776869185; c=relaxed/simple;
-	bh=HGcbT32nNh84iYmZUhGVRdfg3yoExBseX8EJ16yXRFY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eUsKxh9sfnEDvoMFJtZIQGP5HbcA4yYwHpodZVR4fO/p4QG/PF6IsdFww455EW70HtdCDuYvJMNfI1MWFrPvxiy7WbTePWHxmtciS+KURSPLHJMqKxX9wefrOAwK91wEjY2CQW5w5e3OEvnyqv44HFBroiE/y6OJlUzBKTPAurM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6Me3c56; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776871603; c=relaxed/simple;
+	bh=rdCUpxrjSHkQ3T98egy1ZBC2mo3Rw+rJgkqg+TeHKq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bd0+fwAA7ZFgfWXdclBKrbyKNefsFsoupjK0d/O4ytWqRQxWAUsQWOP83XySBjVmoJDrM8K5tVRmNV4INsoWvPWfwR3CRwUBHccL4UF1aunUSHeQv+coNbDAsGBe7DVv4XBpWLMdIAf0lnFjoaj2JjGLT6c9NVmbiX9WRsZTpxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kebRykF/; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6Me3c56"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2F9C9C2BCF5;
-	Wed, 22 Apr 2026 14:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776869185;
-	bh=HGcbT32nNh84iYmZUhGVRdfg3yoExBseX8EJ16yXRFY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=X6Me3c56vJsqV4BIFESreWbPuz3klvdYVSrZARJIF5ltA5eLXZX0/l6bBKFBrzGSh
-	 SkVMVUNXZ9BKxNZmqLNmEAATTOhO0w6j6ejXuZCi3MuZGydzyqxQlBIBJ2lF+xWIeG
-	 S4LmJxEYIyKgwyZguYRVQG9jK4avG4phkTWiIJNVXvoeZz/RWrstB9JhMLoDBo8r33
-	 kJr6TxazPFGAhzqJYkzeDfZp1vN8Q2d2RqEpEG++hFTAr0W1QaxYxK8P7VOsONKLZ3
-	 vvzh5U+Y+q+hBw7FFPMmb8Lti3rB9JmGvy1SdK6ZBFwsZhS2FFpNH8MM+zm43Olf7l
-	 ilEzgO6U5XiCA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27858F9EDF9;
-	Wed, 22 Apr 2026 14:46:25 +0000 (UTC)
-From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Wed, 22 Apr 2026 15:45:54 +0100
-Subject: [PATCH 20/22] iio: dac: ad5686: implement new sync() op for the
- spi bus
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kebRykF/"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5a1307438ddso5155347e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 22 Apr 2026 08:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776871600; x=1777476400; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mguVNYCKn1UqNE6wCiBdJA3G/L2uqCAslGSj7SsF/bg=;
+        b=kebRykF/iKN0MOF0TikW5UpSBJzoL0z4MwT8LOiuCL5ocTdPMBaRMSz6hxQ76ZVVev
+         iom2xB46niCqzvdGg5KpN4QsUB0pOpjQ1nxH0HAUqq1hVNXBOd5MuSh8UEEwhS755vHm
+         roxos3HRQzmUi5jJxCDkhR0MTNEbNnPddA45VssaI5zlb+jnR2gAzsjz83T7X2vDUg5l
+         Rd0mALwyPOenYoRbuUhoesKGCrolOYMmEvgYwN/xP7sRIh2CcDiH6ol2Uk2zZsiGeHD3
+         p+F5j+O8Ew2wNYJGTuvrzob8ad7U4bGSr6TU40DYBntY1tD9aBUu0vQf3Il94prydNgp
+         Tqaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776871600; x=1777476400;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mguVNYCKn1UqNE6wCiBdJA3G/L2uqCAslGSj7SsF/bg=;
+        b=Xgh776OtblysmXskStUqPNNIaGmBqHM36VtBP9fq2uYeLAmPNebBYsjfC5DovSfGJq
+         3Nj9j2QBljJZv2H2xCtNOZL6p1arjIP6p3cybVl25iOT/s5bWCMRQ+9/raYjybrPj/hL
+         vqP9xMnuDSNPM9PGQTEXQO54lh12SVqR23KzN1fK11bub4I2hRAKNDAh+Azo799Oo+CO
+         Y29bgGWj/GF7bQ4yefJINOwwnuGF9SGzw2QvE81q40u6+2YymfTZxYQ0GDOxkyXS8/09
+         TZJxuygq+fajrpEm+HSce5d4WGAnH3AScfUjBQtxe2F0lJFMWJp+J24XUc8zmX0v5+RV
+         pIqw==
+X-Forwarded-Encrypted: i=1; AFNElJ+j6mAzbsl7zrgfFHmfSiWJ4Uys67IO3ZcARhW9wZSFLSGjen+h9nc/Z2KlS/jmAv1hZpdQvPT7HZ0bJjMPkg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/1R1EamPoLwus8KmNpRkpCMn3Ab6G/PYDyhnBvoEO6FvJHuVh
+	h/8pPq0W4wE+3GiTPx+YoB0I7wr3MgbSG+aAy28FRS6sI76KPKlf4ZXiArNmt3DKPw==
+X-Gm-Gg: AeBDiet0CAhJ5g5nCmtKAYo9+IkucOLVgiNwc8NijtjPkOc7Ea2RymicsSroK3DHEfx
+	BPeTgTX09xRkNwDiNUill6TdLrGdw3gBG39YSfuNtduVWsuaP8EhlqtZgREL0DCdHOxgxgYgFGy
+	r+FQvKYrlXSRCFZrjfjunUwm6ijQpjoj/i7XeLbntEPaOYuOUyrWziuDTUf7QBesJRiHVRBKEr9
+	WZuFSCdsarS0hZem8Jgi85f4NyG5AEQanTLFUR0Vwx0zLGCMdjI4RseU6hHtiwlufUOLnjZ49Im
+	WhBKALubPap1nd7MvSULkA0QBqEPRFYikIDONZI3RcL9P7rPKlrvvfsdRKrb1d/3gtOsWuDV7bH
+	AkAmt2hnbp42nCcm9H4Wzulf9gqy+vWZM+V/FndWxY/9jllHE2mmrejIEHs7/nBlZT8gPmt87M+
+	UnQQkSGXTnWb9dDvZmpf5izRFXo1rG5Uaq/zcvvxp9LhepCHBysOXJ29ost8Q8jesk9jDcZ+hXi
+	sHHbZOqAVaPpj319RBb
+X-Received: by 2002:a05:6512:3d20:b0:5a3:ff44:f019 with SMTP id 2adb3069b0e04-5a4172ca21dmr9302999e87.11.1776871599679;
+        Wed, 22 Apr 2026 08:26:39 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:2834:9:ec7d:19d1:709a:2171])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a4185ad30asm4558169e87.16.2026.04.22.08.26.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2026 08:26:38 -0700 (PDT)
+Date: Wed, 22 Apr 2026 17:26:30 +0200
+From: Marco Elver <elver@google.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+	Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
+	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
+	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH v2] slab: support for compiler-assisted type-based slab
+ cache partitioning
+Message-ID: <aejopk23CsntyFOB@elver.google.com>
+References: <20260415143735.2974230-1-elver@google.com>
+ <202604210954.84C57E5E0@keescook>
+ <CANpmjNO8CcR56LXAQf4GQhGcbU4MQkRCa7gVvwuAfvVrzEUhQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260422-ad5313r-iio-support-v1-20-ed7dca001d1b@analog.com>
-References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
-In-Reply-To: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
-To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Auchter <michael.auchter@ni.com>, linux-hardening@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Rodrigo Alencar <rodrigo.alencar@analog.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776869181; l=8074;
- i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=25qHTNPh69lU6r2wtccMyMUIekl87dfZK6NbWnQppHc=;
- b=qphIWVok7TmHf2La4HtYhXJDWfppAgGVjCLLMZDJgGxRjEynQm333kNAlOIv/ImHe7UdK2dl6
- n694gf/A4VJB8XrMXI9uzrDpiWs8S6bQdRSQ3vmVsj7OxV7wqvnRx+8
-X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
- pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
-X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
- with auth_id=561
-X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Reply-To: rodrigo.alencar@analog.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNO8CcR56LXAQf4GQhGcbU4MQkRCa7gVvwuAfvVrzEUhQg@mail.gmail.com>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+On Tue, Apr 21, 2026 at 09:13PM +0200, Marco Elver wrote:
+[...]
+> > And actually, perhaps a global rename of the options so the selection
+> > naming is at the end of the CONFIG phrase, and bundle the on/off into
+> > the choice:
+> >
+> >
+> > choice
+> >         prompt "Partitioned slab cache mode"
+> >         depends on PARTITION_KMALLOC_CACHES
+> >         default KMALLOC_PARTITION_TYPED if !SLUB_TINY && CC_HAS_ALLOC_TOKEN
+> >         default KMALLOC_PARTITION_RANDOM if !SLUB_TINY
+> >         default KMALLOC_PARTITION_NONE
+> >
+> > config KMALLOC_PARTITION_NONE
+> > ...
+> > config KMALLOC_PARTITION_RANDOM
+> >         depends on !SLUB_TINY
+> > ...
+> > config KMALLOC_PARTITION_TYPED
+> >         depends on !SLUB_TINY && CC_HAS_ALLOC_TOKEN
+> 
+> There was a comment somewhere else that even introducing
+> PARTITION_KMALLOC_CACHES might confuse users of RANDOM_KMALLOC_CACHES.
+> I think completely getting rid of and renaming RANDOM_KMALLOC_CACHES
+> has marginal benefit, and will cause friction for existing users (even
+> moreso than already). I see little benefit here, and would prefer not
+> to break user configs more than needed: configs that already set
+> RANDOM_KMALLOC_CACHES, upon rebuild will be prompted to enable
+> PARTITION_KMALLOC_CACHES; if user says Y, then their previous
+> selection (RANDOM) would already be picked and they don't have to
+> rediscover that it exists under a new name.
+> 
+> I can make this change, but only if you're sure the benefit outweighs
+> the downsides here.
 
-Use of local SPI bus data to manage a collection of SPI transfers and
-flush them to the SPI platform driver with the sync() operation. This
-allows for faster handling of multiple channel DAC writes, avoiding kernel
-overhead per spi_sync() call, which will be helpful when enabling
-triggered buffer support.
+Upon further reflection, since the transition isn't smooth anyway, I'm
+probably going to rename, but have them all use the PARTITION_KMALLOC_*
+prefix so it's easy to just search for "CONFIG_PARTITION_KMALLOC_". I
+don't see the need for a "NONE" variant - I've seen this pattern
+elsewhere, and then you end up with users reading the .config and
+concluding "CONFIG_PARTITION_KMALLOC_CACHES is enabled ... but oh never
+mind actually it isn't" which I find confusing. This could be useful if
+we had a dynamic on/off toggle and the default is NONE, but that's not
+the case here.
 
-Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
----
- drivers/iio/dac/ad5686-spi.c | 110 +++++++++++++++++++++++++++++++------------
- drivers/iio/dac/ad5686.c     |   4 +-
- drivers/iio/dac/ad5686.h     |   8 +++-
- drivers/iio/dac/ad5696-i2c.c |   2 +-
- 4 files changed, 89 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/iio/dac/ad5686-spi.c b/drivers/iio/dac/ad5686-spi.c
-index ebfc40efa679..bacfb1deab31 100644
---- a/drivers/iio/dac/ad5686-spi.c
-+++ b/drivers/iio/dac/ad5686-spi.c
-@@ -13,57 +13,80 @@
- #include <linux/err.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/overflow.h>
- #include <linux/spi/spi.h>
+diff --git a/Makefile b/Makefile
+index f70170ed1522..d1f63ffb85f0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -989,7 +989,7 @@ KBUILD_CFLAGS	+= $(CC_AUTO_VAR_INIT_ZERO_ENABLER)
+ endif
+ endif
  
- #include "ad5686.h"
+-ifdef CONFIG_TYPED_KMALLOC_CACHES
++ifdef CONFIG_PARTITION_KMALLOC_TYPED
+ # PARTITION_KMALLOC_CACHES_NR + 1
+ KBUILD_CFLAGS	+= -falloc-token-max=16
+ endif
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 0537c3596163..b46300037ca5 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -501,10 +501,10 @@ int kmem_cache_shrink(struct kmem_cache *s);
  
-+struct ad5686_spi_data {
-+	struct spi_message msg;
-+	unsigned int size;
-+	unsigned int capacity;
-+	struct spi_transfer xfers[] __counted_by(capacity);
-+};
-+
- static int ad5686_spi_write(struct ad5686_state *st,
- 			    u8 cmd, u8 addr, u16 val)
- {
--	struct spi_device *spi = to_spi_device(st->dev);
--	u8 tx_len, *buf;
-+	struct ad5686_spi_data *bus_data = st->bus_data;
-+	struct spi_transfer *xfer;
-+
-+	if (bus_data->size >= bus_data->capacity)
-+		return -E2BIG;
-+
-+	if (bus_data->size)
-+		bus_data->xfers[bus_data->size - 1].cs_change = 1;
-+	else
-+		spi_message_init(&bus_data->msg);
-+
-+	xfer = &bus_data->xfers[bus_data->size];
-+	xfer->rx_buf = NULL;
-+	xfer->cs_change = 0;
+ #ifdef CONFIG_PARTITION_KMALLOC_CACHES
+ typedef struct { unsigned long v; } kmalloc_token_t;
+-#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++#ifdef CONFIG_PARTITION_KMALLOC_RANDOM
+ extern unsigned long random_kmalloc_seed;
+ #define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
+-#elif defined(CONFIG_TYPED_KMALLOC_CACHES)
++#elif defined(CONFIG_PARTITION_KMALLOC_TYPED)
+ #define __kmalloc_token(...) ((kmalloc_token_t){ .v = __builtin_infer_alloc_token(__VA_ARGS__) })
+ #endif
+ #define DECL_TOKEN_PARAM(_token)	, kmalloc_token_t (_token)
+@@ -732,11 +732,11 @@ static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags, kmalloc
+ 	 * with a single branch for all the relevant flags.
+ 	 */
+ 	if (likely((flags & KMALLOC_NOT_NORMAL_BITS) == 0))
+-#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++#ifdef CONFIG_PARTITION_KMALLOC_RANDOM
+ 		/* PARTITION_KMALLOC_CACHES_NR (=15) copies + the KMALLOC_NORMAL */
+ 		return KMALLOC_PARTITION_START + hash_64(token.v ^ random_kmalloc_seed,
+ 							 ilog2(PARTITION_KMALLOC_CACHES_NR + 1));
+-#elif defined(CONFIG_TYPED_KMALLOC_CACHES)
++#elif defined(CONFIG_PARTITION_KMALLOC_TYPED)
+ 		return KMALLOC_PARTITION_START + token.v;
+ #else
+ 		return KMALLOC_NORMAL;
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 6d44bd2633bb..d8510913fbeb 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -265,12 +265,12 @@ config PARTITION_KMALLOC_CACHES
+ choice
+ 	prompt "Partitioned slab cache mode"
+ 	depends on PARTITION_KMALLOC_CACHES
+-	default TYPED_KMALLOC_CACHES if CC_HAS_ALLOC_TOKEN
+-	default RANDOM_KMALLOC_CACHES
++	default PARTITION_KMALLOC_TYPED if CC_HAS_ALLOC_TOKEN
++	default PARTITION_KMALLOC_RANDOM
+ 	help
+ 	  Selects the slab cache partitioning mode.
  
- 	switch (st->chip_info->regmap_type) {
- 	case AD5310_REGMAP:
--		st->data[0].d16 = cpu_to_be16(AD5310_CMD(cmd) |
--					      val);
--		buf = &st->data[0].d8[0];
--		tx_len = 2;
-+		st->data[bus_data->size].d16 = cpu_to_be16(AD5310_CMD(cmd) |
-+							   val);
-+		xfer->tx_buf = &st->data[bus_data->size].d8[0];
-+		xfer->len = 2;
- 		break;
- 	case AD5683_REGMAP:
--		st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
--					      AD5683_DATA(val));
--		buf = &st->data[0].d8[1];
--		tx_len = 3;
-+		st->data[bus_data->size].d32 = cpu_to_be32(AD5686_CMD(cmd) |
-+							   AD5683_DATA(val));
-+		xfer->tx_buf = &st->data[bus_data->size].d8[1];
-+		xfer->len = 3;
- 		break;
- 	case AD5686_REGMAP:
--		st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
--					      AD5686_ADDR(addr) |
--					      val);
--		buf = &st->data[0].d8[1];
--		tx_len = 3;
-+		st->data[bus_data->size].d32 = cpu_to_be32(AD5686_CMD(cmd) |
-+							   AD5686_ADDR(addr) |
-+							   val);
-+		xfer->tx_buf = &st->data[bus_data->size].d8[1];
-+		xfer->len = 3;
- 		break;
- 	default:
- 		return -EINVAL;
+-config RANDOM_KMALLOC_CACHES
++config PARTITION_KMALLOC_RANDOM
+ 	bool "Randomize slab caches for normal kmalloc"
+ 	help
+ 	  Randomly pick a slab cache based on code address and a per-boot
+@@ -282,17 +282,17 @@ config RANDOM_KMALLOC_CACHES
+ 	  the randomization by retrying attacks across multiple machines until
+ 	  the target objects are co-located.
+ 
+-config TYPED_KMALLOC_CACHES
++config PARTITION_KMALLOC_TYPED
+ 	bool "Type based slab cache selection for normal kmalloc"
+ 	depends on CC_HAS_ALLOC_TOKEN
+ 	help
+ 	  Rely on Clang's allocation tokens to choose a slab cache, where token
+ 	  IDs are derived from the allocated type.
+ 
+-	  Unlike RANDOM_KMALLOC_CACHES, cache assignment is deterministic based
++	  Unlike PARTITION_KMALLOC_RANDOM, cache assignment is deterministic based
+ 	  on type, which guarantees that objects of certain types are not
+ 	  placed in the same cache. This effectively mitigates certain classes
+-	  of exploits that probabilistic defenses like RANDOM_KMALLOC_CACHES
++	  of exploits that probabilistic defenses like PARTITION_KMALLOC_RANDOM
+ 	  only make harder but not impossible. However, this also means the
+ 	  cache assignment is predictable.
+ 
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 21ab7dd79b5e..ca5e2a6d4e46 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -742,7 +742,7 @@ kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES] __ro_after_init =
+ { /* initialization for https://llvm.org/pr42570 */ };
+ EXPORT_SYMBOL(kmalloc_caches);
+ 
+-#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++#ifdef CONFIG_PARTITION_KMALLOC_RANDOM
+ unsigned long random_kmalloc_seed __ro_after_init;
+ EXPORT_SYMBOL(random_kmalloc_seed);
+ #endif
+@@ -1010,7 +1010,7 @@ void __init create_kmalloc_caches(void)
+ 		for (i = KMALLOC_SHIFT_LOW; i <= KMALLOC_SHIFT_HIGH; i++)
+ 			new_kmalloc_cache(i, type);
  	}
+-#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++#ifdef CONFIG_PARTITION_KMALLOC_RANDOM
+ 	random_kmalloc_seed = get_random_u64();
+ #endif
  
--	return spi_write(spi, buf, tx_len);
-+	spi_message_add_tail(xfer, &bus_data->msg);
-+	bus_data->size++;
-+
-+	return 0;
-+}
-+
-+static int ad5686_spi_sync(struct ad5686_state *st)
-+{
-+	struct spi_device *spi = to_spi_device(st->dev);
-+	struct ad5686_spi_data *bus_data = st->bus_data;
-+
-+	bus_data->size = 0; /* always reset, even on sync failure */
-+	return spi_sync(spi, &bus_data->msg);
- }
- 
- static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
- {
--	struct spi_transfer t[] = {
--		{
--			.tx_buf = &st->data[0].d8[1],
--			.len = 3,
--			.cs_change = 1,
--		}, {
--			.tx_buf = &st->data[1].d8[1],
--			.rx_buf = &st->data[2].d8[1],
--			.len = 3,
--		},
--	};
- 	struct spi_device *spi = to_spi_device(st->dev);
-+	struct ad5686_spi_data *bus_data = st->bus_data;
-+	struct spi_transfer *xfer = &bus_data->xfers[0];
- 	u8 cmd = 0;
- 	int ret;
- 
-@@ -84,8 +107,18 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
- 				      AD5686_ADDR(addr));
- 	st->data[1].d32 = cpu_to_be32(AD5686_CMD(AD5686_CMD_NOOP));
- 
--	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
--	if (ret < 0)
-+	xfer[0].tx_buf = &st->data[0].d8[1];
-+	xfer[0].len = 3;
-+	xfer[0].cs_change = 1;
-+	xfer[1].tx_buf = &st->data[1].d8[1];
-+	xfer[1].rx_buf = &st->data[2].d8[1];
-+	xfer[1].len = 3;
-+	xfer[1].cs_change = 0;
-+
-+	spi_message_init_with_transfers(&bus_data->msg, xfer, 2);
-+
-+	ret = spi_sync(spi, &bus_data->msg);
-+	if (ret)
- 		return ret;
- 
- 	return be32_to_cpu(st->data[2].d32);
-@@ -94,12 +127,27 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
- static const struct ad5686_bus_ops ad5686_spi_ops = {
- 	.write = ad5686_spi_write,
- 	.read = ad5686_spi_read,
-+	.sync = ad5686_spi_sync,
- };
- 
- static int ad5686_spi_probe(struct spi_device *spi)
- {
--	return ad5686_probe(&spi->dev, spi_get_device_match_data(spi),
--			    spi->modalias, &ad5686_spi_ops);
-+	const struct ad5686_chip_info *info = spi_get_device_match_data(spi);
-+	struct ad5686_spi_data *bus_data;
-+	unsigned int capacity;
-+
-+	/* read operation requires at least 2 transfers */
-+	capacity = max(info->num_channels, 2);
-+	bus_data = devm_kzalloc(&spi->dev,
-+				struct_size(bus_data, xfers, capacity),
-+				GFP_KERNEL);
-+	if (!bus_data)
-+		return -ENOMEM;
-+
-+	bus_data->capacity = capacity;
-+
-+	return ad5686_probe(&spi->dev, info, spi->modalias, &ad5686_spi_ops,
-+			    bus_data);
- }
- 
- static const struct spi_device_id ad5686_spi_id[] = {
-diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
-index d37b4902766f..a065c614c874 100644
---- a/drivers/iio/dac/ad5686.c
-+++ b/drivers/iio/dac/ad5686.c
-@@ -508,7 +508,8 @@ EXPORT_SYMBOL_NS_GPL(ad5679r_chip_info, "IIO_AD5686");
- 
- int ad5686_probe(struct device *dev,
- 		 const struct ad5686_chip_info *chip_info,
--		 const char *name, const struct ad5686_bus_ops *ops)
-+		 const char *name, const struct ad5686_bus_ops *ops,
-+		 void *bus_data)
- {
- 	struct reset_control *rstc;
- 	struct iio_dev *indio_dev;
-@@ -523,6 +524,7 @@ int ad5686_probe(struct device *dev,
- 
- 	st->dev = dev;
- 	st->ops = ops;
-+	st->bus_data = bus_data;
- 	st->chip_info = chip_info;
- 
- 	ret = devm_regulator_get_enable_optional(dev, "vdd");
-diff --git a/drivers/iio/dac/ad5686.h b/drivers/iio/dac/ad5686.h
-index 3b7460178632..ff30c96e1730 100644
---- a/drivers/iio/dac/ad5686.h
-+++ b/drivers/iio/dac/ad5686.h
-@@ -24,6 +24,7 @@
- 
- #define AD5686_ADDR_DAC(chan)			(0x1 << (chan))
- #define AD5686_ADDR_ALL_DAC			0xF
-+#define AD5686_MAX_CHANNELS			16
- 
- #define AD5686_CMD_NOOP				0x0
- #define AD5686_CMD_WRITE_INPUT_N		0x1
-@@ -130,6 +131,7 @@ extern const struct ad5686_chip_info ad5679r_chip_info;
-  * @pwr_down_mode:	current power down mode
-  * @use_internal_vref:	set to true if the internal reference voltage is used
-  * @lock:		lock to protect the data buffer during regmap ops
-+ * @bus_data:		bus specific data
-  * @data:		transfer buffers
-  */
- struct ad5686_state {
-@@ -142,6 +144,7 @@ struct ad5686_state {
- 	unsigned int			pwr_down_mode;
- 	bool				use_internal_vref;
- 	struct mutex			lock;
-+	void				*bus_data;
- 
- 	/*
- 	 * DMA (thus cache coherency maintenance) may require the
-@@ -152,13 +155,14 @@ struct ad5686_state {
- 		__be32 d32;
- 		__be16 d16;
- 		u8 d8[4];
--	} data[3] __aligned(IIO_DMA_MINALIGN);
-+	} data[AD5686_MAX_CHANNELS] __aligned(IIO_DMA_MINALIGN);
- };
- 
- 
- int ad5686_probe(struct device *dev,
- 		 const struct ad5686_chip_info *chip_info,
--		 const char *name, const struct ad5686_bus_ops *ops);
-+		 const char *name, const struct ad5686_bus_ops *ops,
-+		 void *bus_data);
- 
- static inline int ad5686_write(struct ad5686_state *st, u8 cmd, u8 addr, u16 val)
- {
-diff --git a/drivers/iio/dac/ad5696-i2c.c b/drivers/iio/dac/ad5696-i2c.c
-index e75c5f8c65aa..41dd4fe8054e 100644
---- a/drivers/iio/dac/ad5696-i2c.c
-+++ b/drivers/iio/dac/ad5696-i2c.c
-@@ -70,7 +70,7 @@ static const struct ad5686_bus_ops ad5686_i2c_ops = {
- static int ad5686_i2c_probe(struct i2c_client *i2c)
- {
- 	return ad5686_probe(&i2c->dev, i2c_get_match_data(i2c),
--			    i2c->name, &ad5686_i2c_ops);
-+			    i2c->name, &ad5686_i2c_ops, NULL);
- }
- 
- static const struct i2c_device_id ad5686_i2c_id[] = {
-
--- 
-2.43.0
-
-
