@@ -1,118 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF71372685;
-	Wed, 22 Apr 2026 20:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A1232692B;
+	Wed, 22 Apr 2026 23:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776889688; cv=none; b=mi5tPVd+09lHVkYpFt0qLa/QQb4ChwzKR8q/qgkdbYD7Q+477gCWMaOFeyO53CdOtoKunaRkq6GVsUGFBIvzf5Mxf5Q/fMNdGmxZQidCC+1tQtJJ4TFMH7OEoK0p7XYLTrwcyogDcX4Ger8gkNwoKg3UTbTmojbvBeY7+Jz8pMs=
+	t=1776902234; cv=none; b=Tj44MRsjmDqd38oX9PIVyOP2zc5mprkC34o1LEK6sYZr5D694X1GR/znzWsUHrGrJsrE+pISO8kErtMEuEP3n6bX+xXyRgZYJRaD9Y9Xp65t3gY9UCKZVcSy6JRFkMMW6+GXVgMiapS8B7Qii+EWarAhveniz+7dOqhk/UFNK08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776889688; c=relaxed/simple;
-	bh=nNeRYHOhXQoZprrKwwxdGkcK5H+iTWY8NjFprmFvOps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDDxAmNJH7o3ZsR/Uq5J5lI4lRhi+2BPB146XI4K7oJqJpOO/8tEN8ylCMZRi0u3vNKIYbGVxixXe38MO3YP0lD6P3u+tfGZJLJuo44n5qvBxS24MTYXyucWaaNk7vst/QdvhJy8j10bLzHnVdbB+GrgQzvvw1Q2LAfSY3pm6T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SiJG6fQ0; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1776902234; c=relaxed/simple;
+	bh=h6ggrtCedybWSPNMwswG0DZDcNwcm7cnvs/LOyD/wNQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Y+xNKaq0Fo4jcp1l+xRvyR5jD/mzr8WSdmv7Lf8/NjrQI+9Nu26gdELaEab7NGmoVfLV4Bf65P5nmvw2zyvHgce7f3l29C291eX3ulH8IzjcQatU1g+klQCjbvQDsDjpTj+fF5Zoz3OUtUsdy+DcpDjYWOtKFzpunMCY5YV+t1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNFB+xdW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SiJG6fQ0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776889687; x=1808425687;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nNeRYHOhXQoZprrKwwxdGkcK5H+iTWY8NjFprmFvOps=;
-  b=SiJG6fQ0JavthR/54rYfh2lkK/YZL+5WYsGPrKJVzkxeMjG5K1H2uwjo
-   hYMu9tozwqY5FtE8NSYqSv5wVf7yvhF04ZEpLUta7UeyTDYvtsKs6Qj5y
-   i2IQ+Rsw1zankEe3BR2s075IN8vlDi6oT77zk99JawwJMw4r4XlgTJuFn
-   JTpnp0YrWVWMILF8brd4D2R7nVO+4LGsiZ5h1T9+6eDJO0QpvLs10T5Ah
-   HQhWnh1TlNm4403+/3jQ+AchCfglnUdVMcp/STojSAIAyIeC6siqFb3oj
-   d3VhSCMbTi7MQv5y9uWMSGuEbzy+pRIXbnbitys9+ypqtqNTnGIh79xKu
-   w==;
-X-CSE-ConnectionGUID: AtWfFK2gTQWg10U7FW/pTQ==
-X-CSE-MsgGUID: FxZiRLvYTkutqibYYDxbew==
-X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="103315023"
-X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="103315023"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 13:28:07 -0700
-X-CSE-ConnectionGUID: +i85qFizRXWElbz1ps92OA==
-X-CSE-MsgGUID: g3HNlv3yQz6DCMJMCpGm0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="236452322"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.201])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 13:28:03 -0700
-Date: Wed, 22 Apr 2026 23:28:00 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: rodrigo.alencar@analog.com
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Michael Auchter <michael.auchter@ni.com>,
-	linux-hardening@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 00/22] Extend device support for AD5686 driver
-Message-ID: <aekvUKh2SoAaLKW6@ashevche-desk.local>
-References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNFB+xdW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDB8C19425;
+	Wed, 22 Apr 2026 23:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776902233;
+	bh=h6ggrtCedybWSPNMwswG0DZDcNwcm7cnvs/LOyD/wNQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=mNFB+xdWLZKpCxXZm4/ECJ7c866xDmRQuYKee2ZmooLdAboj4IF919Yq3Iw0bINsX
+	 RA4s2JA6QITi2C8+PeIS8/KussEZgcuvkC/xnNNHlYcTPzfY/A3b0ztWYGAPRFwI7q
+	 dFrML80TrDtSrx81rSV0kIXhdCtQo7zA0q26ALnYgDR5M/YJ++seIkDSgNLESZuZoO
+	 x0ElHg5+r32UBFskPnb1kuB1/kBSU2lIvB4V/c0IfQCt5g8Tm+EL2o7hCU8m71CPuJ
+	 558uJ+lGCcjFbOFFld46ZXtKgYDBP2LW5O7Tcc5SS8XOXouVemuXDANtK9uPhHYsdE
+	 QBLGa3JPbkmZQ==
+Date: Wed, 22 Apr 2026 16:57:11 -0700
+From: Kees Cook <kees@kernel.org>
+To: Marco Elver <elver@google.com>
+CC: Vlastimil Babka <vbabka@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
+ Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+ Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>,
+ Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+ kasan-dev@googlegroups.com, llvm@lists.linux.dev,
+ Andrey Konovalov <andreyknvl@gmail.com>, Florent Revest <revest@google.com>,
+ Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>,
+ Matteo Rizzo <matteorizzo@google.com>, GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_slab=3A_support_for_compiler-?=
+ =?US-ASCII?Q?assisted_type-based_slab_cache_partitioning?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <aejopk23CsntyFOB@elver.google.com>
+References: <20260415143735.2974230-1-elver@google.com> <202604210954.84C57E5E0@keescook> <CANpmjNO8CcR56LXAQf4GQhGcbU4MQkRCa7gVvwuAfvVrzEUhQg@mail.gmail.com> <aejopk23CsntyFOB@elver.google.com>
+Message-ID: <D3E316B3-9909-408E-85BF-647383810CFF@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-
-On Wed, Apr 22, 2026 at 03:45:34PM +0100, Rodrigo Alencar via B4 Relay wrote:
-> This series adds support for multiple nanoDAC parts, adding triggered
-> buffer and gain control support to the ad5686 DAC driver family, along
-> with a number of driver cleanups and fixes.
-> 
-> Initial patches update the device-tree bindings:
-> - Add compatible entries for missing and new parts;
-> - Add GPIO properties for RESET, GAIN and LDAC pins;
-> - Add missing power supplies properties.
-
-> Driver cleanups and fixes:
-> - Refactor include headers (IWYU);
-> - Switch to device managed mutex initialization;
-> - Drop enum chip id in favor of per-device chip_info structs;
-> - Fix voltage reference control on single-channel devices;
-> - Fix powerdown control on dual-channel devices;
-> - Introduce bus ops struct with a sync() operation for batching
->   bus transfers.
-> 
-> New functionality:
-> - Device support for: AD5316R, AD5675, AD5697R, AD5313R, AD5317R,
->   AD5674, AD5679, AD5687, AD5687R, AD5689 and AD5689R;
-> - Consume optional reset and new power supplies;
-> - LDAC GPIO handling (active-low, held low when unused);
-> - SPI bus sync() implementation for batching multiple transfers;
-> - Triggered buffer support, leveraging LDAC and sync() to flush
->   all channel writes atomically;
-> - Gain control support through the scale property.
-
-This is rather long series. Please, start from the fixes series first that is
-independent on the features.
-
-I see here ~3 sequential series. Can we rather do them this way?
-
-Personally I stopped reviewing on patch 12 (without even opening DT stuff)
-because it's exhaustive. Documentation usually suggests the series to be
-limited by ~15 patches IIRC.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
+
+On April 22, 2026 8:26:30 AM PDT, Marco Elver <elver@google=2Ecom> wrote:
+>On Tue, Apr 21, 2026 at 09:13PM +0200, Marco Elver wrote:
+>[=2E=2E=2E]
+>> > And actually, perhaps a global rename of the options so the selection
+>> > naming is at the end of the CONFIG phrase, and bundle the on/off into
+>> > the choice:
+>> >
+>> >
+>> > choice
+>> >         prompt "Partitioned slab cache mode"
+>> >         depends on PARTITION_KMALLOC_CACHES
+>> >         default KMALLOC_PARTITION_TYPED if !SLUB_TINY && CC_HAS_ALLOC=
+_TOKEN
+>> >         default KMALLOC_PARTITION_RANDOM if !SLUB_TINY
+>> >         default KMALLOC_PARTITION_NONE
+>> >
+>> > config KMALLOC_PARTITION_NONE
+>> > =2E=2E=2E
+>> > config KMALLOC_PARTITION_RANDOM
+>> >         depends on !SLUB_TINY
+>> > =2E=2E=2E
+>> > config KMALLOC_PARTITION_TYPED
+>> >         depends on !SLUB_TINY && CC_HAS_ALLOC_TOKEN
+>>=20
+>> There was a comment somewhere else that even introducing
+>> PARTITION_KMALLOC_CACHES might confuse users of RANDOM_KMALLOC_CACHES=
+=2E
+>> I think completely getting rid of and renaming RANDOM_KMALLOC_CACHES
+>> has marginal benefit, and will cause friction for existing users (even
+>> moreso than already)=2E I see little benefit here, and would prefer not
+>> to break user configs more than needed: configs that already set
+>> RANDOM_KMALLOC_CACHES, upon rebuild will be prompted to enable
+>> PARTITION_KMALLOC_CACHES; if user says Y, then their previous
+>> selection (RANDOM) would already be picked and they don't have to
+>> rediscover that it exists under a new name=2E
+>>=20
+>> I can make this change, but only if you're sure the benefit outweighs
+>> the downsides here=2E
+>
+>Upon further reflection, since the transition isn't smooth anyway, I'm
+>probably going to rename, but have them all use the PARTITION_KMALLOC_*
+>prefix so it's easy to just search for "CONFIG_PARTITION_KMALLOC_"=2E I
+>don't see the need for a "NONE" variant - I've seen this pattern
+>elsewhere, and then you end up with users reading the =2Econfig and
+>concluding "CONFIG_PARTITION_KMALLOC_CACHES is enabled =2E=2E=2E but oh n=
+ever
+>mind actually it isn't" which I find confusing=2E This could be useful if
+>we had a dynamic on/off toggle and the default is NONE, but that's not
+>the case here=2E
+
+There is now the "transitional" Kconfig keyword too, which should make it =
+easy to move to the new name=2E
+
+For the naming, I tend to prefer the noun-verb (e=2Eg=2E timer_start()) an=
+d noun-feature-option ordering (e=2Eg=2E CONFIG_SLAB_FREELIST_RANDOM)=2E Th=
+is feature isn't about partition tables, so I don't think the first word sh=
+ould be "partition"=2E :)
+
+As far as doing the full isolation later, yeah, that's fine, and I think w=
+ith this Kconfig change it's easy to add a new mode=2E
+
+-Kees
+
+--=20
+Kees Cook
