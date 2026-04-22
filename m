@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39116318EE7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5551432143D;
 	Wed, 22 Apr 2026 14:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776869184; cv=none; b=pobvrBLo7Rnl/ZboRiJPiibI8wJW/dmis4W6wwdv1VMdLzUAZRhXDjT/qXQRYCUHyDXhCUIsYwZW8C1tj6on0oOWxSUSKV7cogw5/eiBri5JsGij6sQF/gsVS9QA6iniD7nq69EHKE/Og2v4dlVwtXOL9B23K/malCBjPAsDKj0=
+	t=1776869184; cv=none; b=AGkvvvU1d56UTTWEVGGqS9nQE2LjOvvEqTapawtWolqTDtS+o0tvbIUu9YXJmnqnH62/rK5VL9cWhsR/IHTBmCuPp/oGAG13uZY9OKx09qXTZ/UVgTR9H/A3ODpIMyWypGJOHTE+Q41eyuRARasbVMUzt1Dnw5pk4WJrzeJvQ2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776869184; c=relaxed/simple;
-	bh=xxutEXxm9rgHXUJpYjoukNdmX7/D20P+XlqLd31i94k=;
+	bh=wYMJ0asaxMRDeWv5Nx7Q3Fd4tXlmnv2sQIesKgmiuEg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jZwzMDYoPlu1SwL0pZWf51fjGHjLnkMmY1pBJLDpGNAhyTEKlnva7L6IUeZ6ONr3Kayg+IWaJlycPixlgr/28UQAOLiqepCaC3cObIwuel21Ggslh1L1rm3qSeOj1AolPK65fwmGyX0fSp5/yXKZ2HdmyBA+7CdmKrc2is5goRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KS7ICVYv; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=fzbf4W6pVDYIyJkKGMpgps8s215aRjc4gp9XM22TMnWibVO764sbkMZfdRvmb4L/9t5QEAquTNZc3uKU/r+WzzXlcHUWC3b4GwiYyHbFV3cgbs6/IZq6eU7bnXclSBaCwpEDNWj+ulUTFM6MjJCV4do1xuhjMwrTbaykmwxRUj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoANxEWj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KS7ICVYv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EA1C0C2BCB7;
-	Wed, 22 Apr 2026 14:46:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoANxEWj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 05F89C2BCB8;
+	Wed, 22 Apr 2026 14:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1776869184;
-	bh=xxutEXxm9rgHXUJpYjoukNdmX7/D20P+XlqLd31i94k=;
+	bh=wYMJ0asaxMRDeWv5Nx7Q3Fd4tXlmnv2sQIesKgmiuEg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KS7ICVYv223/Y3P/49WzwpIcP9xt0kLANc8PHrQHxt5TrNaNNPgqBkC6vkdBR/H7a
-	 ylPCWbK6N/UawP7TqTwCT2SIXIhg4Hi/kPW+63EiiRHqTiJhox65mOsoM4Z1MIOfph
-	 N6WTcGLFc8Bgi3oL8wLwegXOAwgUdiwe5JkY4ouXfyPQ4SDXBSClIxo1vOGf2rmyBB
-	 tKNrba6QVhnBQPRazxQ+dQ3DEhbsvSg25qkKCP9BFsK8vnrAhXtRBiAJOy4JjSNDZO
-	 AwFn/9mHXkVBsmeABKwCXqH0MgATmeSEWSSseZmytwpg2AHLIYYw91rK1o7a1thB6c
-	 w3XlBozi6BDUg==
+	b=eoANxEWjqfFkPmW2yZ2lyTpaYGwKtMXzIhbjwf6iKaxs3tJtqdl3GJ7B7JOaAfug2
+	 E5EnPMMidvs3q4v47cx723fyPzisFd9+qGkw5PXmYDnwt2x3T3Qg0clIj3CmzjUkGX
+	 UEur+Ad6eb5pzEyrMbm3btPCaPrheTpmIKCSL2vsSZ7SA5yHugX7xhEdk/OOxnBV4M
+	 70dR3hrm6Rpw9emMnPVAUJcHiIC6z3ReIXfZwrLtttfFvG7bvf6LXBQi+ovyc+GRx3
+	 oVn9jizaoAxrEmsv9mhFBLouIjh5NDa2vIb8xdEBlZSa8GIHNEN+QHMhXvnQF4fjlM
+	 mSXjzaqhSUx1A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26B7F9EDEB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24CFF9EDC9;
 	Wed, 22 Apr 2026 14:46:23 +0000 (UTC)
 From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Wed, 22 Apr 2026 15:45:37 +0100
-Subject: [PATCH 03/22] dt-bindings: iio: dac: ad5696: rework on power
- supplies
+Date: Wed, 22 Apr 2026 15:45:38 +0100
+Subject: [PATCH 04/22] dt-bindings: iio: dac: ad5686: extend device support
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260422-ad5313r-iio-support-v1-3-ed7dca001d1b@analog.com>
+Message-Id: <20260422-ad5313r-iio-support-v1-4-ed7dca001d1b@analog.com>
 References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
 In-Reply-To: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
 To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, 
@@ -56,11 +55,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  Philipp Zabel <p.zabel@pengutronix.de>, 
  Rodrigo Alencar <rodrigo.alencar@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776869181; l=1859;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776869181; l=1669;
  i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=1236hzCkqKqmziCwLICDAiFEWcH70pEVjQM4fWoD3cE=;
- b=KGaW/CCBXk2IGuhChc+a7r9Q3nj3yr2KhBU0eKijuxjA+L0wfzFYJc+djA7P8NGETkdonjbZ6
- EzDN00+ByOBBXSxflMJZMnLaGqwfgI+8OjTA5rYHYD2D0rMqfM3c3fw
+ bh=HqOQ9v1hLDh+jrtLmYJHNFXNPvRsvM+6yK2HXF19r28=;
+ b=cHWHdVPDJIqbj+S6F/eVxycOYC4pyjly5Gl0bzbdm6grFkRPv+GWsRvR7XhXvPovUjPQJb425
+ wZlCBBDGyifByfTkcEZSY/J6BLPzkhBCoxOYItNNwAj4iDYjErdaUJU
 X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
  pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
 X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
@@ -70,56 +69,56 @@ Reply-To: rodrigo.alencar@analog.com
 
 From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Add supplies for VDD, VLOGIC and VREF input voltage pins. The vcc-supply
-property is deprecated. Certain devices require vref-supply to be
-available once an internal reference voltage is absent. Still, this patch
-does not add those as 'required' so that the ABI is not broken.
+Add compatible entries for AD5313R, AD5317R, AD5674, AD5679, AD5687,
+AD5687R, AD5689, AD5689R. These devices have unique combination of channel
+count, bit resolution and supported command set, so that fallback
+compatibles are not used. Also, a small copy-and-paste error is fixed to
+the title field.
 
 Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
- .../devicetree/bindings/iio/dac/adi,ad5696.yaml     | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/iio/dac/adi,ad5686.yaml | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5696.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5696.yaml
-index f286e5072abc..21b80fe597d1 100644
---- a/Documentation/devicetree/bindings/iio/dac/adi,ad5696.yaml
-+++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5696.yaml
-@@ -38,9 +38,22 @@ properties:
+diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5686.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5686.yaml
+index 713f535bb33a..cb035741529f 100644
+--- a/Documentation/devicetree/bindings/iio/dac/adi,ad5686.yaml
++++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5686.yaml
+@@ -4,7 +4,7 @@
+ $id: http://devicetree.org/schemas/iio/dac/adi,ad5686.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: Analog Devices AD5360 and similar SPI DACs
++title: Analog Devices AD5686 and similar SPI DACs
+ 
+ maintainers:
+   - Michael Hennerich <michael.hennerich@analog.com>
+@@ -14,10 +14,14 @@ properties:
+   compatible:
+     enum:
+       - adi,ad5310r
++      - adi,ad5313r
++      - adi,ad5317r
+       - adi,ad5672r
++      - adi,ad5674
+       - adi,ad5674r
+       - adi,ad5676
+       - adi,ad5676r
++      - adi,ad5679
+       - adi,ad5679r
+       - adi,ad5681r
+       - adi,ad5682r
+@@ -28,6 +32,10 @@ properties:
+       - adi,ad5685r
+       - adi,ad5686
+       - adi,ad5686r
++      - adi,ad5687
++      - adi,ad5687r
++      - adi,ad5689
++      - adi,ad5689r
+ 
    reg:
      maxItems: 1
- 
-+  vdd-supply:
-+    description: Input power supply.
-+
-+  vlogic-supply:
-+    description:
-+      Digital power supply. If not supplied, it is assumed to be the same as
-+      vdd-supply. VLOGIC may be hardwired to VDD in some board designs or
-+      internally connected in small packages.
-+
-+  vref-supply:
-+    description:
-+      Reference voltage supply. If not supplied the internal reference is used.
-+
-   vcc-supply:
--    description: |
--      The regulator supply for DAC reference voltage.
-+    deprecated: true
-+    description: Use vref-supply instead.
- 
-   reset-gpios:
-     description: Active-low RESET pin to reset the device.
-@@ -88,7 +101,9 @@ examples:
-       ad5696: dac@0 {
-         compatible = "adi,ad5696";
-         reg = <0>;
--        vcc-supply = <&dac_vref>;
-+        vdd-supply = <&dac_vdd>;
-+        vlogic-supply = <&dac_vlogic>;
-+        vref-supply = <&dac_vref>;
-         ldac-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
-       };
-     };
 
 -- 
 2.43.0
