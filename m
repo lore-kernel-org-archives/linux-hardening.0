@@ -1,134 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A1232692B;
-	Wed, 22 Apr 2026 23:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D332505AA
+	for <linux-hardening@vger.kernel.org>; Thu, 23 Apr 2026 08:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776902234; cv=none; b=Tj44MRsjmDqd38oX9PIVyOP2zc5mprkC34o1LEK6sYZr5D694X1GR/znzWsUHrGrJsrE+pISO8kErtMEuEP3n6bX+xXyRgZYJRaD9Y9Xp65t3gY9UCKZVcSy6JRFkMMW6+GXVgMiapS8B7Qii+EWarAhveniz+7dOqhk/UFNK08=
+	t=1776931989; cv=none; b=QnagdyhNuCNzC6/obBxNOsZERPy3cIpxdU9pmDvNDSZgeVBfbFVkQGLX9OO4p4uFvudHOvDs1RsR8UmBaj4XKqDsMYdc2oiCIN09AnqjuL8q/i76R2gncLJpELMIPKDXhCjjZNVHPxbNbXqnkV8foctNSb8rMkZvF961sc486Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776902234; c=relaxed/simple;
-	bh=h6ggrtCedybWSPNMwswG0DZDcNwcm7cnvs/LOyD/wNQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Y+xNKaq0Fo4jcp1l+xRvyR5jD/mzr8WSdmv7Lf8/NjrQI+9Nu26gdELaEab7NGmoVfLV4Bf65P5nmvw2zyvHgce7f3l29C291eX3ulH8IzjcQatU1g+klQCjbvQDsDjpTj+fF5Zoz3OUtUsdy+DcpDjYWOtKFzpunMCY5YV+t1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNFB+xdW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776931989; c=relaxed/simple;
+	bh=LnSlgQumZUymdbffnu2vKTkuUg/jqjTtpU53P+tI4/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qM5FcKG40l+E+sVFqeO1182RO04Zs2XNiQgsJuaE/LiLvJKWNwzt056AIoUWRpJ8VBE7me9ziSQTWF0NmaU00e3Pzw5bHMa7QyB7XWpaVM4xNfdPb+vpGewr9ZzeYlZ+GUvE0utYzJ5a0yqPFQ6uZ6GeIJvJBkDIMWyV+aFn45M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HzewHmE8; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNFB+xdW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDB8C19425;
-	Wed, 22 Apr 2026 23:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776902233;
-	bh=h6ggrtCedybWSPNMwswG0DZDcNwcm7cnvs/LOyD/wNQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=mNFB+xdWLZKpCxXZm4/ECJ7c866xDmRQuYKee2ZmooLdAboj4IF919Yq3Iw0bINsX
-	 RA4s2JA6QITi2C8+PeIS8/KussEZgcuvkC/xnNNHlYcTPzfY/A3b0ztWYGAPRFwI7q
-	 dFrML80TrDtSrx81rSV0kIXhdCtQo7zA0q26ALnYgDR5M/YJ++seIkDSgNLESZuZoO
-	 x0ElHg5+r32UBFskPnb1kuB1/kBSU2lIvB4V/c0IfQCt5g8Tm+EL2o7hCU8m71CPuJ
-	 558uJ+lGCcjFbOFFld46ZXtKgYDBP2LW5O7Tcc5SS8XOXouVemuXDANtK9uPhHYsdE
-	 QBLGa3JPbkmZQ==
-Date: Wed, 22 Apr 2026 16:57:11 -0700
-From: Kees Cook <kees@kernel.org>
-To: Marco Elver <elver@google.com>
-CC: Vlastimil Babka <vbabka@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
- Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>,
- Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org,
- kasan-dev@googlegroups.com, llvm@lists.linux.dev,
- Andrey Konovalov <andreyknvl@gmail.com>, Florent Revest <revest@google.com>,
- Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>,
- Matteo Rizzo <matteorizzo@google.com>, GONG Ruiqi <gongruiqi1@huawei.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_slab=3A_support_for_compiler-?=
- =?US-ASCII?Q?assisted_type-based_slab_cache_partitioning?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aejopk23CsntyFOB@elver.google.com>
-References: <20260415143735.2974230-1-elver@google.com> <202604210954.84C57E5E0@keescook> <CANpmjNO8CcR56LXAQf4GQhGcbU4MQkRCa7gVvwuAfvVrzEUhQg@mail.gmail.com> <aejopk23CsntyFOB@elver.google.com>
-Message-ID: <D3E316B3-9909-408E-85BF-647383810CFF@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzewHmE8"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-488b150559bso50332335e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 23 Apr 2026 01:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776931984; x=1777536784; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TJ/DBvdc9fYsH91lLLkmQGITtRq+02I8omXtrs2jaHE=;
+        b=HzewHmE88QfzJe5H8u7jpQ9L32urpkszkqUX7kZb83fDqw12zm3MQ5qRLHIkWFehkC
+         b6JtwqSubFjuZAZCoZalERm03pCc2syyDbUwQg/CQJmgcZW4fNofqKBiUZDLD0AzvMfZ
+         ZIiL1/36bZ3+jSD2Lsyp5OwzSf6Du9eGUw4KXevieTB1MrXEb3nEtt/424neKKaQHiHq
+         g9HqqJsq464f1gs1twntie7bepbsyFIMtZqL8YAKS9Rcs4eWcB+67JLpPdfhKl1Ky7eM
+         4uny3ylFz9R0ucfO0b63dC1RAgWgGub2zTlzlFPboIt00yHEwc3Q3qK1VL1QKs9klw1P
+         W8MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776931984; x=1777536784;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TJ/DBvdc9fYsH91lLLkmQGITtRq+02I8omXtrs2jaHE=;
+        b=iUe6/IHSGJsLmE/MBg8jWn1Gt/sKxdJ4jWLuYbeytgu/gu7pxfk/syItLgOS/w0LYK
+         qkOsK1dLgsQLgbnu+w5dKcjtvO7E67yct/VLQHgewq800Eq3/rM/oR9/EQKWvRQMG5X+
+         Tp+WcEyX4wYXvtPLIvTuwHbi+Qq8/JqN1uiC3Y9G6aiShek1NPHb605jU79/4mhuBrzc
+         iTLzkRkltX6peJka3b6g/Nnj+ehNw3LkfHu39d/F0hdSe68he3tKP8ecn0yFUR6JEnpG
+         uyRErWCpp1pUc5vak0KOuwWQdlq01sGHajbOZJZDdcDryM15arYIuinXaC6t2yzCuG0u
+         Rmsg==
+X-Forwarded-Encrypted: i=1; AFNElJ+wU1yPA68FI1TGyroQd/qwGJIRSw8lM9PT73dOwqTjzhN/wbyfDH68jY94gEpTpFUPbrVrNdtWWeW8pSzDtck=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz45SXD6hajEwPQuR15H6zyVTx/IzxUwSklAr3In3gfSYt/Y45B
+	n/Oei4ewDO732X2iDX491L9GtOl/szHp3VqZUUUkvK3PDsfU4jkcoJC0
+X-Gm-Gg: AeBDieuaqXkV1H0asCmfYtnwexA3NMwJxafFPHvKBofWHBwKZZ/DMS7oV2GLakQ0IZQ
+	yKM4kJORihPXIJB+OrJdhRj5yjzohHWE2otC8x7UzpURoCZq3JzXI0YmzsvON0l3Y0U4qk9uvD2
+	fEy5HKDPVkyQpOL64cuCtP/VaAULCeEEkI0NhG7j2Zzp8eNYc/VEda6palxnYyqkpCXpj5rlQJz
+	vTPVieocNAOPRZ5UqumhQVXlRXFBzUXncB4G/u9pFNqtEf3PSE1Cq4ynUjJhEVI4310n5wYzuQn
+	mwPGPMbuGRTchBGce0JG1MDbaoAaOlG2ZqohZPAkW5ZvNp1Qd7Lg9PnzXZgAUV2MsoOWmCO9les
+	kw8x2AxYM9kNEP7921ZBu5EmmuigsM3KEY0GmAQGnnjqiNEebjOAQ9wC6hXDPMrQBVLQ+KcNZ3i
+	lW2Tn4NWkBdw6qHIilVEcSzDjr
+X-Received: by 2002:a05:600d:10:b0:489:1b0c:8b43 with SMTP id 5b1f17b1804b1-4891b0c8c48mr201117645e9.1.1776931984093;
+        Thu, 23 Apr 2026 01:13:04 -0700 (PDT)
+Received: from nsa ([45.94.208.131])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc100162sm517098165e9.5.2026.04.23.01.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2026 01:13:03 -0700 (PDT)
+Date: Thu, 23 Apr 2026 09:13:54 +0100
+From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+To: rodrigo.alencar@analog.com
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michael Auchter <michael.auchter@ni.com>, linux-hardening@vger.kernel.org, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 13/22] iio: dac: ad5686: fix input raw value check
+Message-ID: <aenUZEkeDGaovVir@nsa>
+References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
+ <20260422-ad5313r-iio-support-v1-13-ed7dca001d1b@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260422-ad5313r-iio-support-v1-13-ed7dca001d1b@analog.com>
 
+On Wed, Apr 22, 2026 at 03:45:47PM +0100, Rodrigo Alencar via B4 Relay wrote:
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> 
+> Use in_range() to fix range check for input raw value, which is off by
+> one, i.e., for a 10-bit DAC the max valid value is 1023, but 1 << 10
+> equals 1024, which passes the previous check, allowing an out-of-range
+> write.
+> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> ---
 
+I'll reply just to this one but it seems to apply to all "fixes"
+patches. They look like a real fix so I would expect to see a Fixes tag
+(as Andy suggested) and see those commits coming first in the series.
 
-On April 22, 2026 8:26:30 AM PDT, Marco Elver <elver@google=2Ecom> wrote:
->On Tue, Apr 21, 2026 at 09:13PM +0200, Marco Elver wrote:
->[=2E=2E=2E]
->> > And actually, perhaps a global rename of the options so the selection
->> > naming is at the end of the CONFIG phrase, and bundle the on/off into
->> > the choice:
->> >
->> >
->> > choice
->> >         prompt "Partitioned slab cache mode"
->> >         depends on PARTITION_KMALLOC_CACHES
->> >         default KMALLOC_PARTITION_TYPED if !SLUB_TINY && CC_HAS_ALLOC=
-_TOKEN
->> >         default KMALLOC_PARTITION_RANDOM if !SLUB_TINY
->> >         default KMALLOC_PARTITION_NONE
->> >
->> > config KMALLOC_PARTITION_NONE
->> > =2E=2E=2E
->> > config KMALLOC_PARTITION_RANDOM
->> >         depends on !SLUB_TINY
->> > =2E=2E=2E
->> > config KMALLOC_PARTITION_TYPED
->> >         depends on !SLUB_TINY && CC_HAS_ALLOC_TOKEN
->>=20
->> There was a comment somewhere else that even introducing
->> PARTITION_KMALLOC_CACHES might confuse users of RANDOM_KMALLOC_CACHES=
-=2E
->> I think completely getting rid of and renaming RANDOM_KMALLOC_CACHES
->> has marginal benefit, and will cause friction for existing users (even
->> moreso than already)=2E I see little benefit here, and would prefer not
->> to break user configs more than needed: configs that already set
->> RANDOM_KMALLOC_CACHES, upon rebuild will be prompted to enable
->> PARTITION_KMALLOC_CACHES; if user says Y, then their previous
->> selection (RANDOM) would already be picked and they don't have to
->> rediscover that it exists under a new name=2E
->>=20
->> I can make this change, but only if you're sure the benefit outweighs
->> the downsides here=2E
->
->Upon further reflection, since the transition isn't smooth anyway, I'm
->probably going to rename, but have them all use the PARTITION_KMALLOC_*
->prefix so it's easy to just search for "CONFIG_PARTITION_KMALLOC_"=2E I
->don't see the need for a "NONE" variant - I've seen this pattern
->elsewhere, and then you end up with users reading the =2Econfig and
->concluding "CONFIG_PARTITION_KMALLOC_CACHES is enabled =2E=2E=2E but oh n=
-ever
->mind actually it isn't" which I find confusing=2E This could be useful if
->we had a dynamic on/off toggle and the default is NONE, but that's not
->the case here=2E
+Other than that, code looks good (for those patches)
 
-There is now the "transitional" Kconfig keyword too, which should make it =
-easy to move to the new name=2E
-
-For the naming, I tend to prefer the noun-verb (e=2Eg=2E timer_start()) an=
-d noun-feature-option ordering (e=2Eg=2E CONFIG_SLAB_FREELIST_RANDOM)=2E Th=
-is feature isn't about partition tables, so I don't think the first word sh=
-ould be "partition"=2E :)
-
-As far as doing the full isolation later, yeah, that's fine, and I think w=
-ith this Kconfig change it's easy to add a new mode=2E
-
--Kees
-
---=20
-Kees Cook
+- Nuno Sá
+>  drivers/iio/dac/ad5686.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+> index 19d791c655b7..07a944311f0e 100644
+> --- a/drivers/iio/dac/ad5686.c
+> +++ b/drivers/iio/dac/ad5686.c
+> @@ -185,7 +185,7 @@ static int ad5686_write_raw(struct iio_dev *indio_dev,
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_RAW:
+> -		if (val > (1 << chan->scan_type.realbits) || val < 0)
+> +		if (!in_range(val, 0, 1 << chan->scan_type.realbits))
+>  			return -EINVAL;
+>  
+>  		mutex_lock(&st->lock);
+> 
+> -- 
+> 2.43.0
+> 
+> 
