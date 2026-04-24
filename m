@@ -1,66 +1,66 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B1C37C901
-	for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 08:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC923603D8
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 08:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777018122; cv=none; b=BmXLZQiTU4CKAaP0MYcGzV+ZpVXAA1GnX0Jl5JhKEnrzAr9Jm98169jZNALrgavNQzC024Ntk+++CirWg+nwMCWWvsm7g4evjZi9YQo8+1oBCPlAT39azy/Rs09eTWsrOOUWpQ8sWVJXUn2eEOos0JKIK1rPYWjk7mrjUCIqGEM=
+	t=1777021129; cv=none; b=LY9721V7B+MM6kXGtULT3I/F+sISHE+07gPchGahYyD7FEsgjN8IU8TuBkwG5LmbG3/AiYGyLIj1CXZYo/+LApy7DG4bPU4BV4QwR706HayABJtyXXTOMDkpW+s7jKZ5ngTtu3oJCRJR7K72Lbg9JDHlCwH1kZe5DC+dhol9qH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777018122; c=relaxed/simple;
-	bh=7FiijmYu3Dj8mlC564v1KV2nBi9KBlwe5DUSdSCtYYc=;
+	s=arc-20240116; t=1777021129; c=relaxed/simple;
+	bh=sZYJR4j7YT/ilJC6eLQiVd2XnfG0DbLHqN8CF7NpW3A=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JXTBDCr6txp60FLltz5+w2iVqF6mtq21H6brb5kkDRMnuHIU0DzmprhLRhT5yIL7JoPiVu2BcAzQaldu4AdCXXMcAvnzRc3fJcZIsAiDQtcKvN2NGHuSQ2xaaTdQmNeZBo+T2ZUNyjp9cbFLyLSdNEG2dijKnMDqXFTon3Bl7eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UJ38r0Kx; arc=none smtp.client-ip=209.85.128.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=eNmGkYvHrpXiaXmk79LPcwoxw6u2MBWB1KyePOXZwFJrVv7m7d8nM5Dj3FG6nEBMLkWz/WCf3UvJSIv1WA+09bM6E4f6JTtzjcExMI0fDyHDmWLkWA8hMbzTmtG6pTZ2a4YUW9Rp3pb4NwAsc03iMYTAXiOJ/ERCiQ/kLh5PvYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yeea2HXe; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UJ38r0Kx"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso50532565e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 01:08:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yeea2HXe"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-48a3e9862f0so37677605e9.1
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 01:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777018118; x=1777622918; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777021126; x=1777625926; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qyquCGe5ofz0hi3dMWSPP6IFFimcOu7be/w7dUl/RaE=;
-        b=UJ38r0Kx7SEdEShhcakqmlL9+v5z+oG5vq50iW1JlKxQQXQQ4RpUPhjJKUv0s+K4US
-         hsI+zIl98wSflLz1EoWNlwD+iifrIqlv6Pf0kvQZ0goZhNRc8Ftl2J48NGTUdsruwbm6
-         KPV4sRYa4fKdsWcBHV5DlsV9L53DIwmIetEEPAj60L172ljUVIt6GJueakiJQSlCM09u
-         soVBbHll8XNBhzOZT9czd2BwCTVFNJ8CLm4uR7uFM0K7HSvuym4jW6mXg9EQxpV4dj+g
-         3+lgCaHN1ZgUnKO93Ydjwewy7sOYY8y99YliOOxtxkGhUJ51PBBWsCrxkVD/MAaozOfi
-         xsOg==
+        bh=mHTpcysjvEEWS5SCY/OAqYlcWcxfCpMildoVnj/KeDo=;
+        b=Yeea2HXegP/UjlYEAIZvXEpnx3WoMOoc6jJsGgClCRQD5HhoxQJnt84oCUONeQ0wj6
+         e5g9EJTN7xfcjRZpaYToZbDyegjUVHs5yg04v2olEP1/Fs6Ztw2VkO5UfsBbwoiHNWHC
+         AhPLxYLLN8AUudr1M9GTUU/h63fVABWhakuaHgEXeFK5pTzyUPbETcgiK1I1HKgEpTdR
+         J+iNuiF8XTBrU5DXS2JfiIKaBRYJYa3SiJfqr0MvDqsmFKvSgaXWdB8CkA1M5F3L+NpW
+         YehDWWMgJ1euPcU3pQVhWariDEi5fcYpxtGo+CSfQ/Uo5bA5rMIYaOX21Y2nT7IPtBFE
+         3zKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777018118; x=1777622918;
+        d=1e100.net; s=20251104; t=1777021126; x=1777625926;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qyquCGe5ofz0hi3dMWSPP6IFFimcOu7be/w7dUl/RaE=;
-        b=fY8Xvq3HZt4GzfSehnCsxFETJRnIIILl8rwIxKbyj6soKXIJaCuZwLlejl0YxbXYPl
-         BPor9c7qBxvkOMRfR14LOWGNwR4z8zL+JMwwkOADaJK0HwcLa8F4hwy4EDe5fxQbwe2n
-         vNEm+qUU7iAB23yicy4fCDB9+pEjLdquuwMfFaXv6zZUNF6aE5mihv2WTKPTvDBsgc5K
-         HfTU/BKPGkWRrvD00toJePnUDXeuSgTUtF4oUsCrlSQQUYGrP85cz9Rl0rsaHTjfGG3X
-         8AsWj8h4QuGzY7fD0TnU1Jm9plQ+fEubu22zwcvPMnfoBnbKIRPhXJgJPxa0WYVOi4eV
-         ZskA==
-X-Forwarded-Encrypted: i=1; AFNElJ8MI4kv3nHWZTEa5l9cShVTDrMEL0WrOiVBFs0BB+vn3H0fEyBi8cVi4uCRq/J2H2oOMqn+tQinWO1DqFiRavI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySNGG4qXLO8kN5UVTfxnqVDGjtrz+Ahxi/30EkIn0TYNTdtP+O
-	BbWFNvvgDGKN2l7bmS5tA4lBAjo+LLB0KeNkkKwghPFg/m3SNSRfW0J/
-X-Gm-Gg: AeBDieuIeNr3x5BT8dzfe4MUPJZAFp3sE56O3fvc/kzcJU7lpfjgaB6u2c2GGF7iYb2
-	YP9pl9rfGGQd5I/dasAzRp+xqfiqiqnGisMUuLG1QKXa8r5FNI/q36C2ePe3BS7SRfUqvMGoCz4
-	da+0sGWzxotRXUxCRd4ua8yJg4HFLtPj2ZIlH9AOBZq6qOQTaeLMQzequ7dHRguvlbQVI51vBVo
-	1Eoea38v0o6RAu+7I2iUBSL02StmExQ1TlraKKtvf58tzRMKlDY8taJRTpfHxuFMCKTLBcMAWyZ
-	0v14XRDAwl7IjJjw56x1gab+aP+0Eq8Kz8jhw1L8n32w5oCz+nOWDZj0i6mnaHrqdM2Q9ZlwOWC
-	6uJBGRWpx6fWbOjJmJ5oEIa7gAWlX9cGLKaV0Mv94QepqPc0n6lDtE/sMJGhmoSXIyev9GUqscj
-	pnFEZMU8qZ4sKZh5vsd7F4P/6P2ImeMEnNoIwLlODsPcFHUhsseN7/MxMI/nGKU7U/g3sgxSI/Z
-	Yev4lDe+3mfAfitrv+2ClBJy+2l0sN5lgRJ+tcMEN/oWvnksE+oegSl8LHtdA==
-X-Received: by 2002:a05:600c:3006:b0:487:1108:48b8 with SMTP id 5b1f17b1804b1-488fb739f86mr239225625e9.2.1777018118104;
-        Fri, 24 Apr 2026 01:08:38 -0700 (PDT)
+        bh=mHTpcysjvEEWS5SCY/OAqYlcWcxfCpMildoVnj/KeDo=;
+        b=DXL+UUNR21iPNLtVO4QosOxnICrjyjMmSWB8ij/L5b2OSZJMWuv1y7hI0o3KPamxrO
+         Eg/lgXcDd0KAc5cki8q3F/XLX3QE8RDN0ayV+j+bkcDPqP06nwvkkccNFYzbnUEMHoqe
+         eYpZiMFh34q/k7QpicQrQ4m0KzyYpvOprpjJk8uOPhYarM71OMNlb2DfdylmSUuq1NE/
+         PkPTl90eR9io5e8D+wtbGrE+MdrwhSuLxkgZQOG1TYH/sSmpq/gIVGQfHDLHMxNJ7PP5
+         TB8CPDqUplZ9EaJaCw0aCPF9J9vWpJBWfFTenkU6RIuYgvUGL6iJtHtKC9HKzxRqWiWN
+         4T/g==
+X-Forwarded-Encrypted: i=1; AFNElJ+yCUCmFKO6bw0e4dX1KE02fbg+TybA/CdRceWzNgYQN10dT+zOtZ8SAQWwn0jDkUwQT8fWWqMXkU8hvd6RSfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+upE+3s//+6ZVQJ58SH4GncCKY6wiJo2AjJCHNJgeTJ8kaCJA
+	mPt/QNRLUeCWbc/g6wPQy/8gi5iV1s6kHoXmiLmHD5s31I9bMlnv5s0e
+X-Gm-Gg: AeBDieuao7eN+vfe+bzuSoUZf6rSuOc9+v/9nCGK1VHYenR57d/nbClDHq0Pk7clXEH
+	Mp95UjIXzTgTbdZe+kcsMjdc48ZSMqWUwFO5R1c0EcbHdXqPgOaeRyR6QY5+jnKcnh5ZlKegqca
+	Amdeqw0u3JtBkJpd2bVC1bKcxoFFUdNIwO+so5oWYxGEwSEvOzd2lY9q4glT3DOIETkn5SJ7cae
+	E6vDD26CIIMGdGEk2HHSYYWBhmjy6FUw3ov2clEcFdzGpMwL/iFdjOGZYHqu1ZcX52c7V4dZbfq
+	cA6kCHATeAAG+cNp2fjZeqvTsq+4OTj/go29fA3XwXdI3/n7wx6wOumDCLv24AEgH6QxJj7NAEr
+	rHNubtmq4C3xRZHiXx+GTwgTad2Zb3QNvnYVCeml+uTpkz0/uJToGL0Sltj1ZaeQ6Ml67GIIBZp
+	/QCZjvU9N9oyAvPLV2y1TIjj9XwPzYslFGSZMzXwppKQXlFCi54YBxC8YEvyvKdqx+glJ5Dnn7+
+	QdPmO0d5keWYL4qAYjCp+IxuB6cralcfUMj89VOPqAJfaNI2BWfj/bRciN4lA==
+X-Received: by 2002:a05:600c:b96:b0:48a:5339:a46 with SMTP id 5b1f17b1804b1-48a53390f6cmr232014255e9.9.1777021126073;
+        Fri, 24 Apr 2026 01:58:46 -0700 (PDT)
 Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc18bccfsm521542255e9.8.2026.04.24.01.08.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc1c773fsm655407835e9.12.2026.04.24.01.58.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 01:08:37 -0700 (PDT)
+        Fri, 24 Apr 2026 01:58:45 -0700 (PDT)
 From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Fri, 24 Apr 2026 09:08:30 +0100
+Date: Fri, 24 Apr 2026 09:58:39 +0100
 To: Jonathan Cameron <jic23@kernel.org>, 
 	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
 Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
@@ -70,12 +70,12 @@ Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
 	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 14/22] iio: dac: ad5686: add support for missing power
- supplies
-Message-ID: <mr2roj56empkjsfmeptr4iemblzca4myxohcieobk7bx5ikpy4@5a2j52x7x7lo>
+Subject: Re: [PATCH 20/22] iio: dac: ad5686: implement new sync() op for the
+ spi bus
+Message-ID: <umhebqm7nwcg6h5y77egrh7nirtpjpin5t42oxifo5em4jmsyj@gavxnwsadyuh>
 References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
- <20260422-ad5313r-iio-support-v1-14-ed7dca001d1b@analog.com>
- <20260423190524.12ef4acb@jic23-huawei>
+ <20260422-ad5313r-iio-support-v1-20-ed7dca001d1b@analog.com>
+ <20260423191833.0de9fb8c@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -84,51 +84,71 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260423190524.12ef4acb@jic23-huawei>
+In-Reply-To: <20260423191833.0de9fb8c@jic23-huawei>
 
-On 26/04/23 07:05PM, Jonathan Cameron wrote:
-> On Wed, 22 Apr 2026 15:45:48 +0100
+On 26/04/23 07:18PM, Jonathan Cameron wrote:
+> On Wed, 22 Apr 2026 15:45:54 +0100
 > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 > 
 > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > > 
-> > Get optional regulators for vdd, vlogic and vref input power pins. vdd is
-> > the input power supply, while vlogic powers the digital side. vref is
-> > replacing vcc, which is being deprecated, but still supported. The value
-> > of vref_mv is checked so that a device without internal voltage reference
-> > cannot proceed without an explicit supply. Error report uses
-> > dev_err_probe(), which helps debugging an init issue.
+> > Use of local SPI bus data to manage a collection of SPI transfers and
+> > flush them to the SPI platform driver with the sync() operation. This
+> > allows for faster handling of multiple channel DAC writes, avoiding kernel
+> > overhead per spi_sync() call, which will be helpful when enabling
+> > triggered buffer support.
+> > 
+> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> Interesting approach to potentially optimise for SPI.  Do you have
+> perf numbers or similar to support it being worth the effort?
+
+Short answer is no, I can try to produce some benchmarks, but I am not sure it
+is needed. The implementation here prepares the ground for triggered buffer support,
+which adds the capability of implementing a control loop in userspace that updates
+all the enabled channels at once. That will happen in a trigger handler, then we want
+that to be as fast as possible, so it can be prepared for the next trigger event.
+It is not really about calling a function once rather than multiple times, but the
+problem happens when the device is sharing the spi bus with other devices and how busy the
+system is in general, so there may be context switches in the spi platform driver with
+one or two mutex acquire/release operations, which may add bigger delays between
+transfers, which depends on what the other devices are doing. I suppose that devices with
+high channel count like 8 or 16 can benefit with this.
+
+> Otherwise a few minor comments inline.
 
 ...
 
-> > -	ret = devm_regulator_get_enable_read_voltage(dev, "vcc");
-> > +	ret = devm_regulator_get_enable_optional(dev, "vdd");
-> > +	if (ret && ret != -ENODEV)
-> > +		return dev_err_probe(dev, ret, "failed to enable vdd supply\n");
-> vdd is very rarely optional.  Can we not rely on the stub regulator
-> that will be provided if there isn't one in DT?
-
-Corret, vdd should not be optional, but I havent made it required in the dt-binding
-doc. Should I be concerned on breaking existing dts in the driver implementation?
-
-> > +
-> > +	ret = devm_regulator_get_enable_optional(dev, "vlogic");
-> Also doesn't sound very optional.
-
-The same way, that is not required in the dt-binding doc. Also, there are different
-packaging for the same device, on which vlogic is internally connected to vdd and only
-vdd is exposed. Some board designs may also do the same externally.
-
-> > +	if (ret && ret != -ENODEV)
-> > +		return dev_err_probe(dev, ret, "failed to enable vlogic supply\n");
-> > +
-> > +	ret = devm_regulator_get_enable_read_voltage(dev, "vref");
-> > +	if (ret == -ENODEV) /* vcc-supply is deprecated, but supported still */
-> > +		ret = devm_regulator_get_enable_read_voltage(dev, "vcc");
-> >  	if (ret < 0 && ret != -ENODEV)
-> > -		return ret;
-> > +		return dev_err_probe(dev, ret, "failed to read vref voltage\n");
+> > @@ -84,8 +107,18 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+> >  				      AD5686_ADDR(addr));
+> >  	st->data[1].d32 = cpu_to_be32(AD5686_CMD(AD5686_CMD_NOOP));
 > >  
+> > -	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
+> > -	if (ret < 0)
+> > +	xfer[0].tx_buf = &st->data[0].d8[1];
+> > +	xfer[0].len = 3;
+> > +	xfer[0].cs_change = 1;
+> > +	xfer[1].tx_buf = &st->data[1].d8[1];
+> > +	xfer[1].rx_buf = &st->data[2].d8[1];
+> > +	xfer[1].len = 3;
+> > +	xfer[1].cs_change = 0;
+> > +
+> > +	spi_message_init_with_transfers(&bus_data->msg, xfer, 2);
+> 
+> Why not carry on using spi_sync_transfer() here?
+> We'll end up with an spi message the stack but I suspect that's
+> not a significant performance cost.
+
+True, it would be around 200 extra bytes in the stack, and read operations
+would not happen concurrently with writes, so why not reuse resources
+(message and transfer structs) that is now available in the bus data?
+To me, it allows for consistency in this implementation. 
+
+> > +
+> > +	ret = spi_sync(spi, &bus_data->msg);
+> > +	if (ret)
+> >  		return ret;
+> >  
+> >  	return be32_to_cpu(st->data[2].d32);
 
 -- 
 Kind regards,
