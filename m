@@ -1,129 +1,113 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C17346ACD
-	for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 09:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75A1386C24
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 09:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777022452; cv=none; b=Mq+UjAnn/uV7rqzB7xrGyXfwyCgRgP7CsXovuUcfJlWoKh1aTlM265NZH3cRU8Tdme+BJ6RKOaOGimTDiJ2ixse/S6weCCH55DLmgywe7Y4hnqHTfB19BTETJcuOzINIRqwT3WlXKzOk4SdumZLmjyfBVmYK1ntbKu4yu00pAHE=
+	t=1777022773; cv=none; b=ebk59GeVFRPGg4evjKpQMBhpDeSlWSKpKKFsPjhp8MUSBTowYtGdN1wWAPu5xfPBt6MAbv1T3bbmkJrL8ZYrR+TG6NJXnECvr/T1BvjZnSUOH94lT+28aaz5aPq9KH3Ze2FmbNq7gKycTRNW05wVAvYtNITgY8B8xL5pwj7AMu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777022452; c=relaxed/simple;
-	bh=3QluWGMR+jHmo+7IdSGCtayU9+fIrN4dk4r82ov60Mg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qpx3LTyzg4/FsMBrAaVIe+SiPaluyJmFLIpQ8z3dhOhf6F5TxqMWkutPVtPNvJtXgZlsAJya/wTxvxfszaDUXN3jUjR6pGjDDivuRg9KU1xcEtlR1iro71Jk6zNUptqMmzT+TRVPvpn6b4hmvEUWa1CM9szL9/jMW8bTo8ZssYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WcpNHEpD; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcpNHEpD"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488b0e1b870so124483005e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 02:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777022450; x=1777627250; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Lw13ndhj4hcVsNP3zE5oxceQrXyrN1eVPpHFMKp7r4=;
-        b=WcpNHEpDL+yjUcZBCKH0Y8pegl45kvF0gJZk43Pz6FtGDWPks0QQfvEho3E/NpYNxX
-         9QEqItjO8XYFyZ7PoKcg3dLSOR2MCawfFjnO64DFT5ka9ddpNHcOitYlgQfgsGgBlJUw
-         KXSC3xrJ+cIHIDoIrvZ91YvVUc6bjSqU3A7pKFZhOtq10lRybQwTZtlCGmmxiu6Piyx/
-         coY0H8ARp0pdOVLST3y/rnYm+XokPxAPAiq8ia8nKNbVQG/cf1ykQOyHyz05o4uANO/O
-         BJNQ1YkRiLvl+WOZRA01DNfvlX+FqSk7HYf17ypwrXzkGwV66NECXozfxa9+SVizXBT2
-         fYaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777022450; x=1777627250;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Lw13ndhj4hcVsNP3zE5oxceQrXyrN1eVPpHFMKp7r4=;
-        b=qyQRC2FT/45L4OW3Pli3InVynBfV9UjPCiMtH6CtF9lKWU2R5/MyEUvO0aGmw6d9qT
-         f/aNibm7XFGEEFxi9kmqGjE/4MobHEO0kk34kYym0qeu+6Bmw7hkgsjuaT8fZZzHK1/4
-         YodC8ApvLvq+fYQ0qtsk9W6ilD1UC4qgef6ysfgtUofddyh2dwCMXn6d+oVnBAAokKe7
-         lJVdVH6IcW8XJ7K+1bI7TChR43e6oTnO3Ls6HlNGRYXbdDJjlwlnAMXhyOXj9iz0i8N7
-         M5RVSElXdYn6LB73v1hVxUOYrxAdVi0muyzcMRY8mrdQYGDnsMLtw0B/oNKvWHw+F2mf
-         8hCg==
-X-Forwarded-Encrypted: i=1; AFNElJ/lnxEefXyjPz8v1t2ClpGJpeOYPvyv4rvp1zn1jXCGHAAcv6Mfjdu2klV8hfLu0B4ojUh1yFKoq+BKgE4O5K0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywr0X9x1LVvzY4F19DNxOdk3ZPaaQvZTy/dur96DOXXVlhZ/2P
-	bHLYXiQIVY5xJ9HxEIKARWkRLmjLK7FKIkdlPW+/xVRIu21jTPfJkeST
-X-Gm-Gg: AeBDiesweE5P/foyawCSxf6LnIKq2upkzBsy/tnglAOnWdl64DAZdRk7tWipidSbCT7
-	yrNCa3RV65Xz9YnlfrJwp2Ip9hjvb0XdCjPlxQqSBZdnPf0nUPT2TmimmLBE/GaKImZwmmedh6a
-	YJ4/D08si5rmDYzdg/t38hFYNpmRtFsvWXuZITW08G+Io3X9KrVk1tA96YZ9bPzI33/Dt2mMt0D
-	T/iwdfQ4lZfXED0CTuVp/L0xl+QXQTlgzmrteLc1ezMAG5eDJ3C6YXEy3XCKUfD4zS+EqMrz70F
-	FxbBaAbgp5mjRSFV7uHtn1Qf1JskYX8Im0WgMsHsM4v8PXb/0mUGpPdiPQnbMEGUZspTGItygUo
-	T0URrUPzx4sjd6smMhSggW5PzP0j8khAvt8Vx5AOdT87ER9uECTd0G8hNDHmb3VxFrTueQglmlF
-	V7dcyGxWHHrZjI09qwaYKdkcVwqgq+f4QpDik+u6J53+Vok3D8bF9O0h0PxvJ5/Yw8z5iVjrpB2
-	OaPqQfo/CTKD7hZQe9a/KfSgbMPPhOAiFv51xSWBdn3QP0+mnNgmDBamgkckHgY9/r59dQ=
-X-Received: by 2002:a05:600c:4746:b0:488:9439:881a with SMTP id 5b1f17b1804b1-488fb738412mr415441935e9.2.1777022449653;
-        Fri, 24 Apr 2026 02:20:49 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a52583fe7sm276246255e9.13.2026.04.24.02.20.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 02:20:49 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Fri, 24 Apr 2026 10:20:43 +0100
-To: Jonathan Cameron <jic23@kernel.org>, 
-	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Auchter <michael.auchter@ni.com>, linux-hardening@vger.kernel.org, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 21/22] iio: dac: ad5686: add triggered buffer support
-Message-ID: <h65ofgapkjztmi5szcmtejcwtjchiyxyp73njefrppxyalw7y3@fjz764sgxkbz>
+	s=arc-20240116; t=1777022773; c=relaxed/simple;
+	bh=m6WV7EWKujpqNzwSC6VrIDZlcXz5kzfkgETq5VnefOM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=n+rCzOzNnfwtUfqh78KPb9ts8xy7geajft6DsAMWldhzBBlvclLlRo8JkK3Fm74GCeEnFHhwoADHsj66hpkoKbE5QizaIVh/j8RS16jsvDO7MbyIxU58/ywYar5QAN6QwjbldOtMXU1tz7vUmZ694CkrbUyN/Z3Ql80Mg+4vv+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1wGCnP-0004S8-9Z; Fri, 24 Apr 2026 11:25:59 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1wGCnN-006yIh-2c;
+	Fri, 24 Apr 2026 11:25:57 +0200
+Received: from pza by lupine with local (Exim 4.98.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1wGCnN-000000005kQ-2zTp;
+	Fri, 24 Apr 2026 11:25:57 +0200
+Message-ID: <a38717c7b357a8e7669a8b05f9f41751d1bbf627.camel@pengutronix.de>
+Subject: Re: [PATCH 18/22] iio: dac: ad5686: consume optional reset signal
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: rodrigo.alencar@analog.com, Jonathan Cameron <jic23@kernel.org>, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Michael Auchter <michael.auchter@ni.com>, 
+	linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich	
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>, Kees
+ Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Date: Fri, 24 Apr 2026 11:25:57 +0200
+In-Reply-To: <20260422-ad5313r-iio-support-v1-18-ed7dca001d1b@analog.com>
 References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
- <20260422-ad5313r-iio-support-v1-21-ed7dca001d1b@analog.com>
- <20260423192714.04eaa55e@jic23-huawei>
+	 <20260422-ad5313r-iio-support-v1-18-ed7dca001d1b@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-0+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260423192714.04eaa55e@jic23-huawei>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 
-On 26/04/23 07:27PM, Jonathan Cameron wrote:
-> On Wed, 22 Apr 2026 15:45:55 +0100
-> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+On Mi, 2026-04-22 at 15:45 +0100, Rodrigo Alencar via B4 Relay wrote:
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+>=20
+> Add RESET pin GPIO support through an optional reset controller, which is
+> local to the probe function and deasserted by default.
+>=20
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> ---
+>  drivers/iio/dac/ad5686.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+> index cfbc1624e01c..f239880d1cc7 100644
+> --- a/drivers/iio/dac/ad5686.c
+> +++ b/drivers/iio/dac/ad5686.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/export.h>
+>  #include <linux/module.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/wordpart.h>
+> =20
+> @@ -509,6 +510,7 @@ int ad5686_probe(struct device *dev,
+>  		 const struct ad5686_chip_info *chip_info,
+>  		 const char *name, const struct ad5686_bus_ops *ops)
+>  {
+> +	struct reset_control *rstc;
+>  	struct iio_dev *indio_dev;
+>  	struct ad5686_state *st;
+>  	int ret, i, shift;
+> @@ -544,6 +546,11 @@ int ad5686_probe(struct device *dev,
+>  		return dev_err_probe(dev, -EINVAL,
+>  				     "invalid or not provided vref voltage\n");
+> =20
+> +	rstc =3D devm_reset_control_get_optional_exclusive_deasserted(dev, NULL=
+);
+> +	if (IS_ERR(rstc))
+> +		return dev_err_probe(dev, PTR_ERR(rstc),
+> +				     "Failed to get reset controller\n");
+> +
 
-...
+Nitpick: "reset control" [1]
 
-> > +static irqreturn_t ad5686_trigger_handler(int irq, void *p)
-> > +{
-> > +	struct iio_poll_func *pf = p;
-> > +	struct iio_dev *indio_dev = pf->indio_dev;
-> > +	struct iio_buffer *buffer = indio_dev->buffer;
-> > +	struct ad5686_state *st = iio_priv(indio_dev);
-> > +	const struct iio_chan_spec *chan;
-> > +	u16 val[AD5686_MAX_CHANNELS];
-> 
-> I may be wrong but I suspect the static analysers won't like the
-> fact that only part of this is initialised and they can't
-> tell how much of it is then used. We might need some sanity checks
-> to keep them happy even though we know they will always be fine
-> (branch predictors should quickly make them near cost free).
+[1] https://docs.kernel.org/driver-api/reset.html#glossary
 
-will just add = { } to end, so it get initialized to zero:
+Same in the commit description. Otherwise,
 
-	u16 val[AD5686_MAX_CHANNELS] = { };
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-> > +	int ret, ch, i = 0;
-> > +	bool async_update;
-> > +	u8 cmd;
-> > +
-> > +	ret = iio_pop_from_buffer(buffer, val);
-> At somepoint we should probably add a sanity check on buffer size to that.
-
-nothing to be done here then, I suppose that should be an API-level change
-for iio_pop_from_buffer().
-
-> > +	if (ret)
-> > +		goto out;
-
--- 
-Kind regards,
-
-Rodrigo Alencar
+regards
+Philipp
