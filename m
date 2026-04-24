@@ -1,131 +1,136 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56B73074A1
-	for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 08:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B1C37C901
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 08:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777017783; cv=none; b=pNlpDdTkuEi4SgP48Mtase9j3ia9yAD0akkUJ6vSDUDVahzfVZEQnyVMsJ3GLBxCk+72JTNmy3Dkx01ZrDYWHxSpWCeD1v8aY8GYI6jHMZpOvY+8B0S1g22M9v2GkVs93qFCv+1JR7LaIyClVQC2d3cJXD/tbvUD28dF+cAE69o=
+	t=1777018122; cv=none; b=BmXLZQiTU4CKAaP0MYcGzV+ZpVXAA1GnX0Jl5JhKEnrzAr9Jm98169jZNALrgavNQzC024Ntk+++CirWg+nwMCWWvsm7g4evjZi9YQo8+1oBCPlAT39azy/Rs09eTWsrOOUWpQ8sWVJXUn2eEOos0JKIK1rPYWjk7mrjUCIqGEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777017783; c=relaxed/simple;
-	bh=Hj1tOHvncsJQ+78/m2uGWzzPNp6G6CHf+6pvVXpzTcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fjy2na3d9wscMYAPyazhDhoSuljCN1FRoGpxy+IyP9722boa/zezQR9t13/1Yi4FT3nDZLTsnKAOmSqCI+3jz9hxxS/lOkJ6mviN+fZrNUyPeAwcR12/SwFvz2N9ho5VSh+3fZvQ612dW0ILp5UiSn4Bqpq2UZwDKmigQXiYG1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NjIpbkR7; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1777018122; c=relaxed/simple;
+	bh=7FiijmYu3Dj8mlC564v1KV2nBi9KBlwe5DUSdSCtYYc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JXTBDCr6txp60FLltz5+w2iVqF6mtq21H6brb5kkDRMnuHIU0DzmprhLRhT5yIL7JoPiVu2BcAzQaldu4AdCXXMcAvnzRc3fJcZIsAiDQtcKvN2NGHuSQ2xaaTdQmNeZBo+T2ZUNyjp9cbFLyLSdNEG2dijKnMDqXFTon3Bl7eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UJ38r0Kx; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjIpbkR7"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4852a9c6309so69367795e9.0
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 01:03:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UJ38r0Kx"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso50532565e9.2
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 01:08:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777017779; x=1777622579; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Itef6o5U+8hhDJZnzY0W0DUQufh1131w2DOWcXoqxCE=;
-        b=NjIpbkR7tt9BS/Uj3eRrp2RnlbW6toliQsFDAOaFhI1Hu9CjpROKHavE1MnzsSavXo
-         3bILRojtAHSNpnvdxBgTarU1383dF2CgDJ9qNG3VRti+zSzGac97/lUC6FMVm8Y45iOg
-         lnrnaNHZ2//R3+tSnDogDDqIeOFtX9LF6KVELfwux1fa+wZ2MMhx2/Ip8jZnG9TgqJvh
-         5dAuD9Az8N9WUFv4/f3dcLr9n0nTM8tsABBd3pUU8OYXeP7wwS4uZ38xnmVvdqKaot9V
-         5B/J/Tl+S1J22ZdxNprUOhSpw3UgK8M4x6qCZJwLqEgsBKrBYc+M/oe4+stt1OQ8zx22
-         jREA==
+        d=gmail.com; s=20251104; t=1777018118; x=1777622918; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qyquCGe5ofz0hi3dMWSPP6IFFimcOu7be/w7dUl/RaE=;
+        b=UJ38r0Kx7SEdEShhcakqmlL9+v5z+oG5vq50iW1JlKxQQXQQ4RpUPhjJKUv0s+K4US
+         hsI+zIl98wSflLz1EoWNlwD+iifrIqlv6Pf0kvQZ0goZhNRc8Ftl2J48NGTUdsruwbm6
+         KPV4sRYa4fKdsWcBHV5DlsV9L53DIwmIetEEPAj60L172ljUVIt6GJueakiJQSlCM09u
+         soVBbHll8XNBhzOZT9czd2BwCTVFNJ8CLm4uR7uFM0K7HSvuym4jW6mXg9EQxpV4dj+g
+         3+lgCaHN1ZgUnKO93Ydjwewy7sOYY8y99YliOOxtxkGhUJ51PBBWsCrxkVD/MAaozOfi
+         xsOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777017779; x=1777622579;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Itef6o5U+8hhDJZnzY0W0DUQufh1131w2DOWcXoqxCE=;
-        b=GdRRXuy/MOj70V4BSNaBcwN79BM9iEbhjm22Xr55gFbkK2n/ledrHjWUTpd52DB+Jg
-         GgNZrjGtc/xKuY7dXGwi+gHNEMOmqLAEcelEIIM9gxoycvVgfw2bh/sRVHqhWN06P3lM
-         P35zEnQPCwhAzVjXr0YVbPn0BbBoj9o66qHNp6XCSCtY00X9siuH2Ds2wRzi5i5tO2q7
-         UA8HcEWfbOb62KVTQzouWrsu/fdHBzavvLlr6OmxbKLaH40Xo5JPgiCWlJ39hb7Wmh+3
-         9f4vS/RgH39GeKGx3uyDOB1N5Uie5TK/N/QK5aubi75NGJ5nNYM5VCB3lOFxTysPta8V
-         +kQA==
-X-Forwarded-Encrypted: i=1; AFNElJ/asHgvr8sYXtWbVXykqfoCxkI7SPsjgYc+nvBI/VBCRwB1V7Q+JF9PpSpuJ68RsIrpPo9+143ZH09W38KOwNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8zem0LZkgLq5MU5zzlG8MIFtcNuI6Fzb2MQfIZfR1M2ij1sy9
-	m2z9vwmPEzkbMsqlfNtLSbKet2LX3f5Pl/lh1gNKdKh9P8rwy+qobXGe
-X-Gm-Gg: AeBDietaoTug4oeC2BYl5W+By0M33nX1QwCStkjhc4RCBGxffN92zSlP8mqsWZove2g
-	QKmJzf9W+nFahAWsdXgRDmKDA/dh8dcNnSGqbJT9rrsYZrctqQrCQsviZFS9I0OD5Z6clc7ED4w
-	C0nY3E/KOyK+k/sp354Eb+MFtEiAuZfBDEJQlx8LvjqQ1W+aXOrnZuiIzuq/pHhWrwpVfpWDofK
-	WveAp14WKJ/NRNap41Eq4a/MNdLseQodnvdRnqUA7mf5WPuKHfnH+5ck2BR+Uwc14mnuWRp0EWV
-	fEYn5uS8mNs1kARDIrZsD1CN8P2rBjI74zMF94pTPpf5Ogq6+of+GB69GjAT9L9Spj4setJcC0a
-	vOEiK5G4ilATT5vMXf6/3GvwdzhZArstsvpkIT3qajngimFaVej50t351USuiTM1dZQZ0bOYGuf
-	/J0xvI8ermAuhbhR526OkTgsc=
-X-Received: by 2002:a05:600c:3110:b0:487:243f:dc3e with SMTP id 5b1f17b1804b1-488fb739cf6mr445107995e9.6.1777017779044;
-        Fri, 24 Apr 2026 01:02:59 -0700 (PDT)
-Received: from nsa ([185.128.9.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4e4d5b1sm62272531f8f.30.2026.04.24.01.02.57
+        d=1e100.net; s=20251104; t=1777018118; x=1777622918;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qyquCGe5ofz0hi3dMWSPP6IFFimcOu7be/w7dUl/RaE=;
+        b=fY8Xvq3HZt4GzfSehnCsxFETJRnIIILl8rwIxKbyj6soKXIJaCuZwLlejl0YxbXYPl
+         BPor9c7qBxvkOMRfR14LOWGNwR4z8zL+JMwwkOADaJK0HwcLa8F4hwy4EDe5fxQbwe2n
+         vNEm+qUU7iAB23yicy4fCDB9+pEjLdquuwMfFaXv6zZUNF6aE5mihv2WTKPTvDBsgc5K
+         HfTU/BKPGkWRrvD00toJePnUDXeuSgTUtF4oUsCrlSQQUYGrP85cz9Rl0rsaHTjfGG3X
+         8AsWj8h4QuGzY7fD0TnU1Jm9plQ+fEubu22zwcvPMnfoBnbKIRPhXJgJPxa0WYVOi4eV
+         ZskA==
+X-Forwarded-Encrypted: i=1; AFNElJ8MI4kv3nHWZTEa5l9cShVTDrMEL0WrOiVBFs0BB+vn3H0fEyBi8cVi4uCRq/J2H2oOMqn+tQinWO1DqFiRavI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySNGG4qXLO8kN5UVTfxnqVDGjtrz+Ahxi/30EkIn0TYNTdtP+O
+	BbWFNvvgDGKN2l7bmS5tA4lBAjo+LLB0KeNkkKwghPFg/m3SNSRfW0J/
+X-Gm-Gg: AeBDieuIeNr3x5BT8dzfe4MUPJZAFp3sE56O3fvc/kzcJU7lpfjgaB6u2c2GGF7iYb2
+	YP9pl9rfGGQd5I/dasAzRp+xqfiqiqnGisMUuLG1QKXa8r5FNI/q36C2ePe3BS7SRfUqvMGoCz4
+	da+0sGWzxotRXUxCRd4ua8yJg4HFLtPj2ZIlH9AOBZq6qOQTaeLMQzequ7dHRguvlbQVI51vBVo
+	1Eoea38v0o6RAu+7I2iUBSL02StmExQ1TlraKKtvf58tzRMKlDY8taJRTpfHxuFMCKTLBcMAWyZ
+	0v14XRDAwl7IjJjw56x1gab+aP+0Eq8Kz8jhw1L8n32w5oCz+nOWDZj0i6mnaHrqdM2Q9ZlwOWC
+	6uJBGRWpx6fWbOjJmJ5oEIa7gAWlX9cGLKaV0Mv94QepqPc0n6lDtE/sMJGhmoSXIyev9GUqscj
+	pnFEZMU8qZ4sKZh5vsd7F4P/6P2ImeMEnNoIwLlODsPcFHUhsseN7/MxMI/nGKU7U/g3sgxSI/Z
+	Yev4lDe+3mfAfitrv+2ClBJy+2l0sN5lgRJ+tcMEN/oWvnksE+oegSl8LHtdA==
+X-Received: by 2002:a05:600c:3006:b0:487:1108:48b8 with SMTP id 5b1f17b1804b1-488fb739f86mr239225625e9.2.1777018118104;
+        Fri, 24 Apr 2026 01:08:38 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc18bccfsm521542255e9.8.2026.04.24.01.08.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 01:02:58 -0700 (PDT)
-Date: Fri, 24 Apr 2026 09:03:49 +0100
-From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>, 
-	rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Michael Auchter <michael.auchter@ni.com>, 
-	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+        Fri, 24 Apr 2026 01:08:37 -0700 (PDT)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
+Date: Fri, 24 Apr 2026 09:08:30 +0100
+To: Jonathan Cameron <jic23@kernel.org>, 
+	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michael Auchter <michael.auchter@ni.com>, linux-hardening@vger.kernel.org, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 13/22] iio: dac: ad5686: fix input raw value check
-Message-ID: <aesjWjs1i6rd1HaB@nsa>
+Subject: Re: [PATCH 14/22] iio: dac: ad5686: add support for missing power
+ supplies
+Message-ID: <mr2roj56empkjsfmeptr4iemblzca4myxohcieobk7bx5ikpy4@5a2j52x7x7lo>
 References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
- <20260422-ad5313r-iio-support-v1-13-ed7dca001d1b@analog.com>
- <20260423190302.338ecdbe@jic23-huawei>
+ <20260422-ad5313r-iio-support-v1-14-ed7dca001d1b@analog.com>
+ <20260423190524.12ef4acb@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260423190302.338ecdbe@jic23-huawei>
+In-Reply-To: <20260423190524.12ef4acb@jic23-huawei>
 
-On Thu, Apr 23, 2026 at 07:03:02PM +0100, Jonathan Cameron wrote:
-> On Wed, 22 Apr 2026 15:45:47 +0100
+On 26/04/23 07:05PM, Jonathan Cameron wrote:
+> On Wed, 22 Apr 2026 15:45:48 +0100
 > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 > 
 > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > > 
-> > Use in_range() to fix range check for input raw value, which is off by
-> > one, i.e., for a 10-bit DAC the max valid value is 1023, but 1 << 10
-> > equals 1024, which passes the previous check, allowing an out-of-range
-> > write.
-> > 
-> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > ---
-> >  drivers/iio/dac/ad5686.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
-> > index 19d791c655b7..07a944311f0e 100644
-> > --- a/drivers/iio/dac/ad5686.c
-> > +++ b/drivers/iio/dac/ad5686.c
-> > @@ -185,7 +185,7 @@ static int ad5686_write_raw(struct iio_dev *indio_dev,
+> > Get optional regulators for vdd, vlogic and vref input power pins. vdd is
+> > the input power supply, while vlogic powers the digital side. vref is
+> > replacing vcc, which is being deprecated, but still supported. The value
+> > of vref_mv is checked so that a device without internal voltage reference
+> > cannot proceed without an explicit supply. Error report uses
+> > dev_err_probe(), which helps debugging an init issue.
+
+...
+
+> > -	ret = devm_regulator_get_enable_read_voltage(dev, "vcc");
+> > +	ret = devm_regulator_get_enable_optional(dev, "vdd");
+> > +	if (ret && ret != -ENODEV)
+> > +		return dev_err_probe(dev, ret, "failed to enable vdd supply\n");
+> vdd is very rarely optional.  Can we not rely on the stub regulator
+> that will be provided if there isn't one in DT?
+
+Corret, vdd should not be optional, but I havent made it required in the dt-binding
+doc. Should I be concerned on breaking existing dts in the driver implementation?
+
+> > +
+> > +	ret = devm_regulator_get_enable_optional(dev, "vlogic");
+> Also doesn't sound very optional.
+
+The same way, that is not required in the dt-binding doc. Also, there are different
+packaging for the same device, on which vlogic is internally connected to vdd and only
+vdd is exposed. Some board designs may also do the same externally.
+
+> > +	if (ret && ret != -ENODEV)
+> > +		return dev_err_probe(dev, ret, "failed to enable vlogic supply\n");
+> > +
+> > +	ret = devm_regulator_get_enable_read_voltage(dev, "vref");
+> > +	if (ret == -ENODEV) /* vcc-supply is deprecated, but supported still */
+> > +		ret = devm_regulator_get_enable_read_voltage(dev, "vcc");
+> >  	if (ret < 0 && ret != -ENODEV)
+> > -		return ret;
+> > +		return dev_err_probe(dev, ret, "failed to read vref voltage\n");
 > >  
-> >  	switch (mask) {
-> >  	case IIO_CHAN_INFO_RAW:
-> > -		if (val > (1 << chan->scan_type.realbits) || val < 0)
-> > +		if (!in_range(val, 0, 1 << chan->scan_type.realbits))
-> 
-> Might just be me, but I do find in range a bit weird when the offset is 0.
-> 
-> I'd be tempted to just make the check >=
 
-FWIW, I also don't love the fact that we need to define the range instead
-of pure min/max. But in this case, given that "min" is 0 it actually
-works without extra defines :)
+-- 
+Kind regards,
 
-Having said the above, no preferences on my side.
-
-- Nuno Sá
->  
-> >  			return -EINVAL;
-> >  
-> >  		mutex_lock(&st->lock);
-> > 
-> 
+Rodrigo Alencar
