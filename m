@@ -1,122 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B37D3E123E;
-	Fri, 24 Apr 2026 17:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B573E51DB;
+	Fri, 24 Apr 2026 17:10:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050618; cv=none; b=KA1wvFzQNgcCnmwvkqxGiinanWDcB6U/IanhFz+YazJuTWPhwBRGNUmtfomV+BENxI8cLylfVODsNsbsSzONSDj52TGjstlh0+l15JN0FG7WTbuwIEfEgIpdAqYjWYixb6aXvxNjesEc6/mRypHKgUdG3d5PZ8qPnU2mtH75MW8=
+	t=1777050642; cv=none; b=bBr5c4itwUIxNW20nfPkm36WvATFPSegrgIWHbkyvUlByJxAhKsLqQipXcXr4623Bl3LGt8AdFiUwpPGWLC6jbveGpxXQXfE1C++xGAIdERYUmqPJnoS2oJ83L8X0MDU0cryVaq7kOQcf+w13v/pSvVlkI7EmkLBmVq7yOfvTMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050618; c=relaxed/simple;
-	bh=pZTKz0r3FnQTUYi2TaeztC9J9FgJpRDBffiIPoBkYY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HsJ7SZNtvyoq9JVB7Qhrm9tK2Jsdlk8x5iXAQfP5pRhNJxVwCMzbfq+QdTkZM6yifJApjX6twaktq2aa94P37oaMKv5TOFMG1qrDKX8sTNaGmQ0u8FQDkW7YoLmoH9ndtp1OM+AuwLQhkw6INfSvdRkrphuiI2V8JSBu6h7+rsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fS9D98lJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777050642; c=relaxed/simple;
+	bh=Ammc+9LMdTmtT/fzG979zu8syJ7zUShBhwZ/8YHoqXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nSvrktB0tGJV4vGDkGlxONHZla1Z9HTXnXGZI4WzeBnM3uFLZeHgtFSV3Kl/VPoXX7xDscGstDmEKdiUauhlDF5Qa3TceqZGNhaOpwT4+wdyTXIgALejjpsRoRnhyEmWCpYZnnOSdcAb9k5rHtNbMwVcpRYTj2ydAzlK90FsLsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLp+9G0o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fS9D98lJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0D3C19425;
-	Fri, 24 Apr 2026 17:10:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLp+9G0o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E09E4C19425;
+	Fri, 24 Apr 2026 17:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050618;
-	bh=pZTKz0r3FnQTUYi2TaeztC9J9FgJpRDBffiIPoBkYY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fS9D98lJIQIyTXmqy3F952YYTBx2qdbzdY/mJcg5SxDv4CRMwqrynvL3acboQOhG3
-	 X61HWNPv0P0pXMScNf0GkZxLbjDvTBcqYeX7FWo1QY/ZjvCp1FIF5KQBqtGE4LUrRX
-	 DCTj2Lt88Fs9vpV2/JDSw/Mr9+favwN5ez6ZENebE5evBL8hEkyX3l6ARwKd7VVFGR
-	 0+HAxGlU0suln8u2RtaBFdAjxRogPXkjdhkKlfd4QWyW9lAp5genxjr51taT6VzBIs
-	 lUSezKOEms3Dwpu0SItXU+ogM0IC9WNk4H1KW0UciRMURDWjKujV1bB/prKb1u0N1L
-	 KEDrmPmCRf+rg==
-Date: Fri, 24 Apr 2026 18:10:12 +0100
-From: Conor Dooley <conor@kernel.org>
+	s=k20201202; t=1777050642;
+	bh=Ammc+9LMdTmtT/fzG979zu8syJ7zUShBhwZ/8YHoqXE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RLp+9G0oZHF26TKhq0clrLk7CySnxTuc9+JpkdUqYj3lc5xyEPSzjilNOvAGWxOzI
+	 oEOOnRFGNagkfc9RCvqvG6d92ynU+duuyowy3mxOMnXO4MEUS02yXEnIJmSxt0KoHs
+	 mAesDwegNtYtDUJwxvt7AzQppM2CHbPvyxULiEQG44d7Yo0qfk3oJsUr1OBmgsXaZC
+	 asaqRFTUgYgfrCKRdllPl5kxtqCx7q1CWnelmzIhIiKjqq2yXccrCTJP1iu5CYA9GW
+	 ZIcQB+lqEwbxigVF4o9w8Cfzana2pWmDCrqkQ1CvH/cxPNQJJ705/Nh3bji/rrezhq
+	 ewl8rPUkjVROg==
+Date: Fri, 24 Apr 2026 18:10:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
 To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: rodrigo.alencar@analog.com, Jonathan Cameron <jic23@kernel.org>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Auchter <michael.auchter@ni.com>,
-	linux-hardening@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 06/22] dt-bindings: iio: dac: ad5686: rework on power
+Cc: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>,
+ rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Auchter
+ <michael.auchter@ni.com>, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees
+ Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 14/22] iio: dac: ad5686: add support for missing power
  supplies
-Message-ID: <20260424-likeness-landmine-9ad041b89f0d@spud>
+Message-ID: <20260424181031.2270a508@jic23-huawei>
+In-Reply-To: <mr2roj56empkjsfmeptr4iemblzca4myxohcieobk7bx5ikpy4@5a2j52x7x7lo>
 References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
- <20260422-ad5313r-iio-support-v1-6-ed7dca001d1b@analog.com>
- <20260423-revenue-sensation-c62f759e457a@spud>
- <p76mchyeawpgqghojx6ww4yrw3fxxv7u32clkn4wwa7hzb3yx4@52ivn6p5hxu2>
+	<20260422-ad5313r-iio-support-v1-14-ed7dca001d1b@analog.com>
+	<20260423190524.12ef4acb@jic23-huawei>
+	<mr2roj56empkjsfmeptr4iemblzca4myxohcieobk7bx5ikpy4@5a2j52x7x7lo>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kLD5DQfEhrGS6/qD"
-Content-Disposition: inline
-In-Reply-To: <p76mchyeawpgqghojx6ww4yrw3fxxv7u32clkn4wwa7hzb3yx4@52ivn6p5hxu2>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 24 Apr 2026 09:08:30 +0100
+Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
 
---kLD5DQfEhrGS6/qD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 24, 2026 at 08:35:51AM +0100, Rodrigo Alencar wrote:
-> On 26/04/23 06:32PM, Conor Dooley wrote:
-> > On Wed, Apr 22, 2026 at 03:45:40PM +0100, Rodrigo Alencar via B4 Relay =
-wrote:
+> On 26/04/23 07:05PM, Jonathan Cameron wrote:
+> > On Wed, 22 Apr 2026 15:45:48 +0100
+> > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+> >   
 > > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > >=20
-> > > Add supplies for VDD, VLOGIC and VREF input voltage pins. The vcc-sup=
-ply
-> > > property is deprecated. Certain devices require vref-supply to be
-> >=20
-> > Why is it deprecated? Is the naming incorrect?
->=20
-> Yes, vcc does not exist. It is also misleading as it may sound as the inp=
-ut
-> power supply, but in fact it is being used a voltage reference for the DA=
-C output,
-> which has a proper name, vref.
-
-Please put this information in the commit message.
-
-> =20
-> > > available once an internal reference voltage is absent. Still, this p=
-atch
-> > > does not add those as 'required' so that the ABI is not broken.
->=20
+> > > 
+> > > Get optional regulators for vdd, vlogic and vref input power pins. vdd is
+> > > the input power supply, while vlogic powers the digital side. vref is
+> > > replacing vcc, which is being deprecated, but still supported. The value
+> > > of vref_mv is checked so that a device without internal voltage reference
+> > > cannot proceed without an explicit supply. Error report uses
+> > > dev_err_probe(), which helps debugging an init issue.  
+> 
 > ...
->=20
-> > > +  vref-supply:
-> > > +    description:
-> > > +      Reference voltage supply. If not supplied the internal referen=
-ce is used.
+> 
+> > > -	ret = devm_regulator_get_enable_read_voltage(dev, "vcc");
+> > > +	ret = devm_regulator_get_enable_optional(dev, "vdd");
+> > > +	if (ret && ret != -ENODEV)
+> > > +		return dev_err_probe(dev, ret, "failed to enable vdd supply\n");  
+> > vdd is very rarely optional.  Can we not rely on the stub regulator
+> > that will be provided if there isn't one in DT?  
+> 
+> Corret, vdd should not be optional, but I havent made it required in the dt-binding
+> doc. Should I be concerned on breaking existing dts in the driver implementation?
+
+If we never read the voltage then the stub regulator you'll get
+with devm_regulator_get_enable() should be fine.
+
+Making the binding say that it is required is fine (as long as clear
+reasons given) but the driver must continue working without it.
+That can be via stub regulators though.
+
+
+> 
 > > > +
-> > >    vcc-supply:
-> > > -    description: If not supplied the internal reference is used.
-> > > +    deprecated: true
-> > > +    description: Use vref-supply instead.
->=20
-> --=20
-> Kind regards,
->=20
-> Rodrigo Alencar
+> > > +	ret = devm_regulator_get_enable_optional(dev, "vlogic");  
+> > Also doesn't sound very optional.  
+> 
+> The same way, that is not required in the dt-binding doc. Also, there are different
+> packaging for the same device, on which vlogic is internally connected to vdd and only
+> vdd is exposed. Some board designs may also do the same externally.
 
---kLD5DQfEhrGS6/qD
-Content-Type: application/pgp-signature; name="signature.asc"
+Ugly if it's a packaging thing.  In some sense those different packaged
+versions aren't compatible in that case.  It wouldn't be correct to use
+a stub regulator in this case as we should be mapping it to the same
+one connected to vdd (reference count should just end up as 2 for that one).
 
------BEGIN PGP SIGNATURE-----
+Any way we can detect the packaging difference?  I think for some similar
+cases we've taken the view that this makes the parts incompatible so
+they need different compatibles, but that seems overkill for this.
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaeuj9AAKCRB4tDGHoIJi
-0oJPAP0eDmdwnjHlvlMEp/TYr271yOQnfMMZ5TtbJamut7L1FwD/cEB9xyDwmbA5
-Xn8j/91iIqgx4INknarYTPw0unanVwM=
-=tMNn
------END PGP SIGNATURE-----
+If not I think I'd go with a stub regulator (so drop the _optional)
+and just not worry too much that it might ideally be the one on vdd.
 
---kLD5DQfEhrGS6/qD--
+> 
+> > > +	if (ret && ret != -ENODEV)
+> > > +		return dev_err_probe(dev, ret, "failed to enable vlogic supply\n");
+> > > +
+> > > +	ret = devm_regulator_get_enable_read_voltage(dev, "vref");
+> > > +	if (ret == -ENODEV) /* vcc-supply is deprecated, but supported still */
+> > > +		ret = devm_regulator_get_enable_read_voltage(dev, "vcc");
+> > >  	if (ret < 0 && ret != -ENODEV)
+> > > -		return ret;
+> > > +		return dev_err_probe(dev, ret, "failed to read vref voltage\n");
+> > >    
+> 
+
