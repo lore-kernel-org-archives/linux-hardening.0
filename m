@@ -1,511 +1,136 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFE93D47A7
-	for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 13:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE15333987E;
+	Fri, 24 Apr 2026 17:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777037087; cv=none; b=n88PtfGJhDJk8JbdMNHlxO+vWN88YhTtxMqsQR6E3pBIAWNFrOAbVCB3vPIEuIeR271pgqxLRVxbEO7ZXzpstKOw6LfsMJ11aR0sknLnFsDb+bKt0x84DzkhlcvfydX8gSAZ0s8O/sSx0KLifQ9KGaEsc7w6wtdx5pCYfrg4e34=
+	t=1777050166; cv=none; b=iFriZ5jqAKnZkfaUEW7PXlKsoPJNm4YSirLvOnMZMWoKg/OUVyn+XpFblu9qrXh8TbX0eGleyJzG/t+KsPWc3inCWlIPEPh8Fj7ftdeDkx9kdQeKwWrv96cGQqh0X/rNwA2Bgz28n5TfKgOfynzEswrAmO7Lv48yjVbalpn3S7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777037087; c=relaxed/simple;
-	bh=R/086B0ovQWiWcQvty+ZEgsjYqafICZtyanm4hqb8f8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=l0skqIrFtsnDbRjXx85szupIuhQAee8DJdhedQiUYTnvL39Fz/Q0qjTWjdJSOj0zUMZFeu++jmUJLTZ4yDlaHe+gRSQ2027OhUMsXf8/OZ7js3DOUURfTWY2KX8zypyn6S6duSlaGCFViWmawDFTk30ysqwLPIYWCxA0nfxLAjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V9CQq9OP; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+	s=arc-20240116; t=1777050166; c=relaxed/simple;
+	bh=uqzsbccj3Dgkca8d0rOxX0X6qxKogMm1MwQifoj5s+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PJDsYksAdTqX5F7oMl+m8yWWdrcInHEx9BoXqG93cr8EW35ZgFKGXKSkH7fgCOTOw8GWmW1/6iBDwBnuJTG+o0NRi3D/M9DnsrprsGjNm8CAw9ov1abxGcW2Msa7zZROB15VANsFNRxv1p6Pkg3dJm0Fy+M8yMCtRaOTZQcRRf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U91G8c1d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V9CQq9OP"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-488d8deb75fso65249395e9.3
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 06:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777037083; x=1777641883; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E2wPIwL5iML28/7AmVBGfGMGsfL6v2mEfuOT0orVLws=;
-        b=V9CQq9OP2RGuttTgnBeuM3OB4kOH8RhOpu8mfHO/pIHDE/NVm9A7ZyRu+Dyyussn4T
-         IMb+LY3gxUuPPW5aGccAvXC+janxqCVbcN7R6WpkSwo0d6j+uOUBK7sndLNIcMijuEwR
-         jncDEpQOP1xNMH+RlDTuqTQHQe1OLFa5EKq2q6LEOQD/G1oW6eavYVWtIA/hOvaA0FJl
-         15gIlsZGSpf3f/gQ5jq9wx6aq9N76lfCrsvicg72JwJviN0R4Fg5G2XWTnbgtsfAwfeS
-         o6MnH5AgLWQrUMyEKN+X+rL+zscIbgsAwXcd9JIG6XskLsc8MxvtmxGS8IhiB/1WJe5m
-         S72A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777037083; x=1777641883;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E2wPIwL5iML28/7AmVBGfGMGsfL6v2mEfuOT0orVLws=;
-        b=Ny6ejXbZQ3BsgokvSHy+F4o1sPnB4pII+c+74qpXBW21rqWLPgzPOLZmiOyQS29ayG
-         pLLNWZoPxYLRJUY6L60QZ5+7WWMiZk45h74soTPQfJbkuzf0kGO3YhS2iZ3GCTpasAf9
-         BydLJGmkCMivQ+mS9bE5uQgL5VFIusuCHiS8ss2UeUURMiqaJTLlNYC9MzDR/stPH5Rn
-         bGeSQK9/3oMEJKrR4wP3RP+6q+XSbMFP+cFhescMkZF2UOBPmMe9rTMvjpkg9zDStgbK
-         FQeQeLEpSa4Lzopg/xznua6aYwrxS8BM+jVnyR8odRtFfxIlumjF6M0J2o+p2dm5k/gR
-         q9dg==
-X-Forwarded-Encrypted: i=1; AFNElJ+bzq11upOFnIBdyjgKZA9Mg/aRD5dVRviK+/5/3AlcEZQaXGJ59aQYI4WnVYDvxzapDDM3DlTJO7EfifixHhI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFA9wLS5w9yFvIK7FjNReAgbOy4zNXYHVFwAn59HU0fPF8bn3v
-	JwTfDAO4kWAvHJ2OrZXOeMzOuPjPnLta8PwtUxu9RUTxDm8KnyqIj9mayxZeGPcsr5tVLe4mJ7v
-	IBQ==
-X-Received: from wmjl23.prod.google.com ([2002:a7b:c357:0:b0:485:f1d7:164d])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5295:b0:486:f634:ef1
- with SMTP id 5b1f17b1804b1-488fb77d0fdmr450013595e9.17.1777037083109; Fri, 24
- Apr 2026 06:24:43 -0700 (PDT)
-Date: Fri, 24 Apr 2026 15:24:02 +0200
-In-Reply-To: <20260424132427.2703076-1-elver@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U91G8c1d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB1A3C19425;
+	Fri, 24 Apr 2026 17:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777050166;
+	bh=uqzsbccj3Dgkca8d0rOxX0X6qxKogMm1MwQifoj5s+0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=U91G8c1dElZdqg38sSti1bxHVAUCMGBVP6aenc+n4DABi+M2jKLTMDYKLCI1RyRC9
+	 mvvI3iyXIDvDPyQwA+84qbpnMFEhT1ilX13xScPgYpDAUL/KC+tAf3EKQMsVOU7pU8
+	 LLWZALhMWrvBMx6QNxp8PWh/WL+T3jyutQSdN+PZ4S62zyuATLed1Kf8daqYb+V4EO
+	 rvhFLXbQgpXk4rAKGl2VGpmc6msgCRSGIo1Vsu1Z2C07HldKBs3Orv67xS+p8VvMSG
+	 RhozLzdNIgxyGdQCEJq/4drQYFTaVq+BwBf7XJWLIC1qq0aAlMleJsfN7962sv2YsZ
+	 rgYnRp+3+uj2A==
+Date: Fri, 24 Apr 2026 18:02:35 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>,
+ rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Auchter
+ <michael.auchter@ni.com>, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees
+ Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 20/22] iio: dac: ad5686: implement new sync() op for the
+ spi bus
+Message-ID: <20260424180235.22bdf98c@jic23-huawei>
+In-Reply-To: <umhebqm7nwcg6h5y77egrh7nirtpjpin5t42oxifo5em4jmsyj@gavxnwsadyuh>
+References: <20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com>
+	<20260422-ad5313r-iio-support-v1-20-ed7dca001d1b@analog.com>
+	<20260423191833.0de9fb8c@jic23-huawei>
+	<umhebqm7nwcg6h5y77egrh7nirtpjpin5t42oxifo5em4jmsyj@gavxnwsadyuh>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260424132427.2703076-1-elver@google.com>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260424132427.2703076-2-elver@google.com>
-Subject: [PATCH v3 2/2] slab: fix kernel-docs for mm-api
-From: Marco Elver <elver@google.com>
-To: elver@google.com, Vlastimil Babka <vbabka@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>, 
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>, 
-	Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The mm-api kernel-doc comments have been broken for a while, as many
-documented symbols shifted from being direct function definitions to
-macros wrapping _noprof implementations during the introduction of
-allocation tagging (starting with commit 7bd230a26648 "mm/slab: enable
-slab allocation tagging for kmalloc and friends").
+On Fri, 24 Apr 2026 09:58:39 +0100
+Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
 
-When the kernel-doc block remains above the internal implementation
-function but uses the public API name, the documentation generator fails
-to associate the documented symbol and generates warnings and fails to
-emit the documentation.
+> On 26/04/23 07:18PM, Jonathan Cameron wrote:
+> > On Wed, 22 Apr 2026 15:45:54 +0100
+> > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+> >   
+> > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > > 
+> > > Use of local SPI bus data to manage a collection of SPI transfers and
+> > > flush them to the SPI platform driver with the sync() operation. This
+> > > allows for faster handling of multiple channel DAC writes, avoiding kernel
+> > > overhead per spi_sync() call, which will be helpful when enabling
+> > > triggered buffer support.
+> > > 
+> > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>  
+> > Interesting approach to potentially optimise for SPI.  Do you have
+> > perf numbers or similar to support it being worth the effort?  
+> 
+> Short answer is no, I can try to produce some benchmarks, but I am not sure it
+> is needed. The implementation here prepares the ground for triggered buffer support,
+> which adds the capability of implementing a control loop in userspace that updates
+> all the enabled channels at once. That will happen in a trigger handler, then we want
+> that to be as fast as possible, so it can be prepared for the next trigger event.
+> It is not really about calling a function once rather than multiple times, but the
+> problem happens when the device is sharing the spi bus with other devices and how busy the
+> system is in general, so there may be context switches in the spi platform driver with
+> one or two mutex acquire/release operations, which may add bigger delays between
+> transfers, which depends on what the other devices are doing. I suppose that devices with
+> high channel count like 8 or 16 can benefit with this.
 
-Fix this by:
+Fair enough.  There is enough complexity here that maybe a perf
+number would strengthen the argument.  I'm reasonably happy with
+that complexity anyway so this would be if anyone else pushed back.
 
-1. Moving the kernel-doc comment blocks from slub.c to slab.h, placing
-   them directly above the user-facing macros.
-
-2. Converting the variadic macros for the documented APIs to use
-   explicit arguments.
-
-No functional change intended.
-
-Signed-off-by: Marco Elver <elver@google.com>
----
- include/linux/slab.h | 192 ++++++++++++++++++++++++++++++++-----------
- mm/slub.c            |  98 ----------------------
- 2 files changed, 144 insertions(+), 146 deletions(-)
-
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index c232f8a10af6..dcff0da1c01c 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -530,7 +530,46 @@ void * __must_check krealloc_node_align_noprof(const void *objp,
- 					       unsigned long align,
- 					       gfp_t flags, int nid) __realloc_size(2);
- #define krealloc_noprof(_o, _s, _f)	krealloc_node_align_noprof(_o, PASS_TOKEN_PARAMS(_s, __kmalloc_token(_s)), 1, _f, NUMA_NO_NODE)
--#define krealloc_node_align(_o, _s, _a, _f, _n)	alloc_hooks(krealloc_node_align_noprof(_o, PASS_TOKEN_PARAMS(_s, __kmalloc_token(_s)), _a, _f, _n))
-+/**
-+ * krealloc_node_align - reallocate memory. The contents will remain unchanged.
-+ * @p: object to reallocate memory for.
-+ * @new_size: how many bytes of memory are required.
-+ * @align: desired alignment.
-+ * @flags: the type of memory to allocate.
-+ * @nid: NUMA node or NUMA_NO_NODE
-+ *
-+ * If @p is %NULL, krealloc() behaves exactly like kmalloc().  If @new_size
-+ * is 0 and @p is not a %NULL pointer, the object pointed to is freed.
-+ *
-+ * Only alignments up to those guaranteed by kmalloc() will be honored. Please see
-+ * Documentation/core-api/memory-allocation.rst for more details.
-+ *
-+ * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
-+ * initial memory allocation, every subsequent call to this API for the same
-+ * memory allocation is flagged with __GFP_ZERO. Otherwise, it is possible that
-+ * __GFP_ZERO is not fully honored by this API.
-+ *
-+ * When slub_debug_orig_size() is off, krealloc() only knows about the bucket
-+ * size of an allocation (but not the exact size it was allocated with) and
-+ * hence implements the following semantics for shrinking and growing buffers
-+ * with __GFP_ZERO::
-+ *
-+ *           new             bucket
-+ *   0       size             size
-+ *   |--------|----------------|
-+ *   |  keep  |      zero      |
-+ *
-+ * Otherwise, the original allocation size 'orig_size' could be used to
-+ * precisely clear the requested size, and the new size will also be stored
-+ * as the new 'orig_size'.
-+ *
-+ * In any case, the contents of the object pointed to are preserved up to the
-+ * lesser of the new and old sizes.
-+ *
-+ * Return: pointer to the allocated memory or %NULL in case of error
-+ */
-+#define krealloc_node_align(p, new_size, align, flags, nid) \
-+	alloc_hooks(krealloc_node_align_noprof(p, PASS_TOKEN_PARAMS(new_size, __kmalloc_token(new_size)), align, flags, nid))
- #define krealloc_node(_o, _s, _f, _n)	krealloc_node_align(_o, _s, 1, _f, _n)
- #define krealloc(...)			krealloc_node(__VA_ARGS__, NUMA_NO_NODE)
- 
-@@ -913,6 +952,22 @@ void *__kmalloc_large_noprof(size_t size, gfp_t flags)
- void *__kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
- 				__assume_page_alignment __alloc_size(1);
- 
-+static __always_inline __alloc_size(1) void *_kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
-+{
-+	if (__builtin_constant_p(size) && size) {
-+		unsigned int index;
-+
-+		if (size > KMALLOC_MAX_CACHE_SIZE)
-+			return __kmalloc_large_noprof(size, flags);
-+
-+		index = kmalloc_index(size);
-+		return __kmalloc_cache_noprof(
-+				kmalloc_caches[kmalloc_type(flags, token)][index],
-+				flags, size);
-+	}
-+	return __kmalloc_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags);
-+}
-+#define kmalloc_noprof(...)			_kmalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
- /**
-  * kmalloc - allocate kernel memory
-  * @size: how many bytes of memory are required.
-@@ -968,27 +1023,22 @@ void *__kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
-  *	Try really hard to succeed the allocation but fail
-  *	eventually.
-  */
--static __always_inline __alloc_size(1) void *_kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
--{
--	if (__builtin_constant_p(size) && size) {
--		unsigned int index;
--
--		if (size > KMALLOC_MAX_CACHE_SIZE)
--			return __kmalloc_large_noprof(size, flags);
--
--		index = kmalloc_index(size);
--		return __kmalloc_cache_noprof(
--				kmalloc_caches[kmalloc_type(flags, token)][index],
--				flags, size);
--	}
--	return __kmalloc_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags);
--}
--#define kmalloc_noprof(...)			_kmalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
--#define kmalloc(...)				alloc_hooks(kmalloc_noprof(__VA_ARGS__))
-+#define kmalloc(size, flags)			alloc_hooks(kmalloc_noprof(size, flags))
- 
- void *_kmalloc_nolock_noprof(DECL_TOKEN_PARAMS(size, token), gfp_t gfp_flags, int node);
- #define kmalloc_nolock_noprof(_s, _f, _n)	_kmalloc_nolock_noprof(PASS_TOKEN_PARAMS(_s, __kmalloc_token(_s)), _f, _n)
--#define kmalloc_nolock(...)			alloc_hooks(kmalloc_nolock_noprof(__VA_ARGS__))
-+/**
-+ * kmalloc_nolock - Allocate an object of given size from any context.
-+ * @size: size to allocate
-+ * @gfp_flags: GFP flags. Only __GFP_ACCOUNT, __GFP_ZERO, __GFP_NO_OBJ_EXT
-+ * allowed.
-+ * @node: node number of the target node.
-+ *
-+ * Return: pointer to the new object or NULL in case of error.
-+ * NULL does not mean EBUSY or EAGAIN. It means ENOMEM.
-+ * There is no reason to call it again and expect !NULL.
-+ */
-+#define kmalloc_nolock(size, gfp_flags, node)	alloc_hooks(kmalloc_nolock_noprof(size, gfp_flags, node))
- 
- /**
-  * __alloc_objs - Allocate objects of a given type using
-@@ -1115,23 +1165,36 @@ static __always_inline __alloc_size(1) void *_kmalloc_node_noprof(size_t size, g
- #define kmalloc_node_noprof(...)		_kmalloc_node_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
- #define kmalloc_node(...)			alloc_hooks(kmalloc_node_noprof(__VA_ARGS__))
- 
-+static inline __alloc_size(1, 2) void *_kmalloc_array_noprof(size_t n, size_t size, gfp_t flags, kmalloc_token_t token)
-+{
-+	size_t bytes;
-+
-+	if (unlikely(check_mul_overflow(n, size, &bytes)))
-+		return NULL;
-+	return _kmalloc_noprof(bytes, flags, token);
-+}
-+#define kmalloc_array_noprof(...)		_kmalloc_array_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
- /**
-  * kmalloc_array - allocate memory for an array.
-  * @n: number of elements.
-  * @size: element size.
-  * @flags: the type of memory to allocate (see kmalloc).
-  */
--static inline __alloc_size(1, 2) void *_kmalloc_array_noprof(size_t n, size_t size, gfp_t flags, kmalloc_token_t token)
-+#define kmalloc_array(n, size, flags)		alloc_hooks(kmalloc_array_noprof(n, size, flags))
-+
-+static inline __realloc_size(2, 3) void * __must_check _krealloc_array_noprof(void *p,
-+								       size_t new_n,
-+								       size_t new_size,
-+								       gfp_t flags, kmalloc_token_t token)
- {
- 	size_t bytes;
- 
--	if (unlikely(check_mul_overflow(n, size, &bytes)))
-+	if (unlikely(check_mul_overflow(new_n, new_size, &bytes)))
- 		return NULL;
--	return _kmalloc_noprof(bytes, flags, token);
--}
--#define kmalloc_array_noprof(...)		_kmalloc_array_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
--#define kmalloc_array(...)			alloc_hooks(kmalloc_array_noprof(__VA_ARGS__))
- 
-+	return krealloc_node_align_noprof(p, PASS_TOKEN_PARAMS(bytes, token), 1, flags, NUMA_NO_NODE);
-+}
-+#define krealloc_array_noprof(...)		_krealloc_array_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
- /**
-  * krealloc_array - reallocate memory for an array.
-  * @p: pointer to the memory chunk to reallocate
-@@ -1149,20 +1212,7 @@ static inline __alloc_size(1, 2) void *_kmalloc_array_noprof(size_t n, size_t si
-  * In any case, the contents of the object pointed to are preserved up to the
-  * lesser of the new and old sizes.
-  */
--static inline __realloc_size(2, 3) void * __must_check _krealloc_array_noprof(void *p,
--								       size_t new_n,
--								       size_t new_size,
--								       gfp_t flags, kmalloc_token_t token)
--{
--	size_t bytes;
--
--	if (unlikely(check_mul_overflow(new_n, new_size, &bytes)))
--		return NULL;
--
--	return krealloc_node_align_noprof(p, PASS_TOKEN_PARAMS(bytes, token), 1, flags, NUMA_NO_NODE);
--}
--#define krealloc_array_noprof(...)		_krealloc_array_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
--#define krealloc_array(...)			alloc_hooks(krealloc_array_noprof(__VA_ARGS__))
-+#define krealloc_array(p, new_n, new_size, flags) alloc_hooks(krealloc_array_noprof(p, new_n, new_size, flags))
- 
- /**
-  * kcalloc - allocate memory for an array. The memory is set to zero.
-@@ -1214,17 +1264,17 @@ static inline __alloc_size(1, 2) void *_kmalloc_array_node_noprof(size_t n, size
-  */
- #define kmem_cache_zalloc(_k, _flags)		kmem_cache_alloc(_k, (_flags)|__GFP_ZERO)
- 
--/**
-- * kzalloc - allocate memory. The memory is set to zero.
-- * @size: how many bytes of memory are required.
-- * @flags: the type of memory to allocate (see kmalloc).
-- */
- static inline __alloc_size(1) void *_kzalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
- {
- 	return _kmalloc_noprof(size, flags | __GFP_ZERO, token);
- }
- #define kzalloc_noprof(...)			_kzalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
--#define kzalloc(...)				alloc_hooks(kzalloc_noprof(__VA_ARGS__))
-+/**
-+ * kzalloc - allocate memory. The memory is set to zero.
-+ * @size: how many bytes of memory are required.
-+ * @flags: the type of memory to allocate (see kmalloc).
-+ */
-+#define kzalloc(size, flags)			alloc_hooks(kzalloc_noprof(size, flags))
- #define kzalloc_node(_size, _flags, _node)	kmalloc_node(_size, (_flags)|__GFP_ZERO, _node)
- 
- void *__kvmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token), unsigned long align,
-@@ -1233,7 +1283,26 @@ void *__kvmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token), unsigned long
- 	__kvmalloc_node_noprof(PASS_KMALLOC_PARAMS(_size, NULL, __kmalloc_token(_size)), _align, _flags, _node)
- #define kvmalloc_node_align(...)		\
- 	alloc_hooks(kvmalloc_node_align_noprof(__VA_ARGS__))
--#define kvmalloc_node(_s, _f, _n)		kvmalloc_node_align(_s, 1, _f, _n)
-+/**
-+ * kvmalloc_node - attempt to allocate physically contiguous memory, but upon
-+ * failure, fall back to non-contiguous (vmalloc) allocation.
-+ * @size: size of the request.
-+ * @flags: gfp mask for the allocation - must be compatible (superset) with GFP_KERNEL.
-+ * @node: numa node to allocate from
-+ *
-+ * Only alignments up to those guaranteed by kmalloc() will be honored. Please see
-+ * Documentation/core-api/memory-allocation.rst for more details.
-+ *
-+ * Uses kmalloc to get the memory but if the allocation fails then falls back
-+ * to the vmalloc allocator. Use kvfree for freeing the memory.
-+ *
-+ * GFP_NOWAIT and GFP_ATOMIC are supported, the __GFP_NORETRY modifier is not.
-+ * __GFP_RETRY_MAYFAIL is supported, and it should be used only if kmalloc is
-+ * preferable to the vmalloc fallback, due to visible performance drawbacks.
-+ *
-+ * Return: pointer to the allocated memory of %NULL in case of failure
-+ */
-+#define kvmalloc_node(size, flags, node)	kvmalloc_node_align(size, 1, flags, node)
- #define kvmalloc_node_noprof(size, flags, node)	\
- 	kvmalloc_node_align_noprof(size, 1, flags, node)
- #define kvmalloc(...)				kvmalloc_node(__VA_ARGS__, NUMA_NO_NODE)
-@@ -1266,8 +1335,35 @@ _kvmalloc_array_node_noprof(size_t n, size_t size, gfp_t flags, int node, kmallo
- 
- void *kvrealloc_node_align_noprof(const void *p, DECL_TOKEN_PARAMS(size, token), unsigned long align,
- 				  gfp_t flags, int nid) __realloc_size(2);
--#define kvrealloc_node_align(_p, _s, _a, _f, _n)	\
--	alloc_hooks(kvrealloc_node_align_noprof(_p, PASS_TOKEN_PARAMS(_s, __kmalloc_token(_s)), _a, _f, _n))
-+/**
-+ * kvrealloc_node_align - reallocate memory; contents remain unchanged
-+ * @p: object to reallocate memory for
-+ * @size: the size to reallocate
-+ * @align: desired alignment
-+ * @flags: the flags for the page level allocator
-+ * @nid: NUMA node id
-+ *
-+ * If @p is %NULL, kvrealloc() behaves exactly like kvmalloc(). If @size is 0
-+ * and @p is not a %NULL pointer, the object pointed to is freed.
-+ *
-+ * Only alignments up to those guaranteed by kmalloc() will be honored. Please see
-+ * Documentation/core-api/memory-allocation.rst for more details.
-+ *
-+ * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
-+ * initial memory allocation, every subsequent call to this API for the same
-+ * memory allocation is flagged with __GFP_ZERO. Otherwise, it is possible that
-+ * __GFP_ZERO is not fully honored by this API.
-+ *
-+ * In any case, the contents of the object pointed to are preserved up to the
-+ * lesser of the new and old sizes.
-+ *
-+ * This function must not be called concurrently with itself or kvfree() for the
-+ * same memory allocation.
-+ *
-+ * Return: pointer to the allocated memory or %NULL in case of error
-+ */
-+#define kvrealloc_node_align(p, size, align, flags, nid)	\
-+	alloc_hooks(kvrealloc_node_align_noprof(p, PASS_TOKEN_PARAMS(size, __kmalloc_token(size)), align, flags, nid))
- #define kvrealloc_node(_p, _s, _f, _n)		kvrealloc_node_align(_p, _s, 1, _f, _n)
- #define kvrealloc(...)				kvrealloc_node(__VA_ARGS__, NUMA_NO_NODE)
- 
-diff --git a/mm/slub.c b/mm/slub.c
-index ccb208cfbecd..dbc3c947e5be 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5310,17 +5310,6 @@ void *__kmalloc_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags)
- }
- EXPORT_SYMBOL(__kmalloc_noprof);
- 
--/**
-- * kmalloc_nolock - Allocate an object of given size from any context.
-- * @size: size to allocate
-- * @gfp_flags: GFP flags. Only __GFP_ACCOUNT, __GFP_ZERO, __GFP_NO_OBJ_EXT
-- * allowed.
-- * @node: node number of the target node.
-- *
-- * Return: pointer to the new object or NULL in case of error.
-- * NULL does not mean EBUSY or EAGAIN. It means ENOMEM.
-- * There is no reason to call it again and expect !NULL.
-- */
- void *_kmalloc_nolock_noprof(DECL_TOKEN_PARAMS(size, token), gfp_t gfp_flags, int node)
- {
- 	gfp_t alloc_gfp = __GFP_NOWARN | __GFP_NOMEMALLOC | gfp_flags;
-@@ -6717,44 +6706,6 @@ __do_krealloc(const void *p, size_t new_size, unsigned long align, gfp_t flags,
- 	return ret;
- }
- 
--/**
-- * krealloc_node_align - reallocate memory. The contents will remain unchanged.
-- * @p: object to reallocate memory for.
-- * @new_size: how many bytes of memory are required.
-- * @align: desired alignment.
-- * @flags: the type of memory to allocate.
-- * @nid: NUMA node or NUMA_NO_NODE
-- *
-- * If @p is %NULL, krealloc() behaves exactly like kmalloc().  If @new_size
-- * is 0 and @p is not a %NULL pointer, the object pointed to is freed.
-- *
-- * Only alignments up to those guaranteed by kmalloc() will be honored. Please see
-- * Documentation/core-api/memory-allocation.rst for more details.
-- *
-- * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
-- * initial memory allocation, every subsequent call to this API for the same
-- * memory allocation is flagged with __GFP_ZERO. Otherwise, it is possible that
-- * __GFP_ZERO is not fully honored by this API.
-- *
-- * When slub_debug_orig_size() is off, krealloc() only knows about the bucket
-- * size of an allocation (but not the exact size it was allocated with) and
-- * hence implements the following semantics for shrinking and growing buffers
-- * with __GFP_ZERO::
-- *
-- *           new             bucket
-- *   0       size             size
-- *   |--------|----------------|
-- *   |  keep  |      zero      |
-- *
-- * Otherwise, the original allocation size 'orig_size' could be used to
-- * precisely clear the requested size, and the new size will also be stored
-- * as the new 'orig_size'.
-- *
-- * In any case, the contents of the object pointed to are preserved up to the
-- * lesser of the new and old sizes.
-- *
-- * Return: pointer to the allocated memory or %NULL in case of error
-- */
- void *krealloc_node_align_noprof(const void *p, DECL_TOKEN_PARAMS(new_size, token), unsigned long align,
- 				 gfp_t flags, int nid)
- {
-@@ -6797,28 +6748,6 @@ static gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
- 	return flags;
- }
- 
--/**
-- * __kvmalloc_node - attempt to allocate physically contiguous memory, but upon
-- * failure, fall back to non-contiguous (vmalloc) allocation.
-- * @size: size of the request.
-- * @b: which set of kmalloc buckets to allocate from.
-- * @token: allocation token.
-- * @align: desired alignment.
-- * @flags: gfp mask for the allocation - must be compatible (superset) with GFP_KERNEL.
-- * @node: numa node to allocate from
-- *
-- * Only alignments up to those guaranteed by kmalloc() will be honored. Please see
-- * Documentation/core-api/memory-allocation.rst for more details.
-- *
-- * Uses kmalloc to get the memory but if the allocation fails then falls back
-- * to the vmalloc allocator. Use kvfree for freeing the memory.
-- *
-- * GFP_NOWAIT and GFP_ATOMIC are supported, the __GFP_NORETRY modifier is not.
-- * __GFP_RETRY_MAYFAIL is supported, and it should be used only if kmalloc is
-- * preferable to the vmalloc fallback, due to visible performance drawbacks.
-- *
-- * Return: pointer to the allocated memory of %NULL in case of failure
-- */
- void *__kvmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token), unsigned long align,
- 			     gfp_t flags, int node)
- {
-@@ -6900,33 +6829,6 @@ void kvfree_sensitive(const void *addr, size_t len)
- }
- EXPORT_SYMBOL(kvfree_sensitive);
- 
--/**
-- * kvrealloc_node_align - reallocate memory; contents remain unchanged
-- * @p: object to reallocate memory for
-- * @size: the size to reallocate
-- * @align: desired alignment
-- * @flags: the flags for the page level allocator
-- * @nid: NUMA node id
-- *
-- * If @p is %NULL, kvrealloc() behaves exactly like kvmalloc(). If @size is 0
-- * and @p is not a %NULL pointer, the object pointed to is freed.
-- *
-- * Only alignments up to those guaranteed by kmalloc() will be honored. Please see
-- * Documentation/core-api/memory-allocation.rst for more details.
-- *
-- * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
-- * initial memory allocation, every subsequent call to this API for the same
-- * memory allocation is flagged with __GFP_ZERO. Otherwise, it is possible that
-- * __GFP_ZERO is not fully honored by this API.
-- *
-- * In any case, the contents of the object pointed to are preserved up to the
-- * lesser of the new and old sizes.
-- *
-- * This function must not be called concurrently with itself or kvfree() for the
-- * same memory allocation.
-- *
-- * Return: pointer to the allocated memory or %NULL in case of error
-- */
- void *kvrealloc_node_align_noprof(const void *p, DECL_TOKEN_PARAMS(size, token), unsigned long align,
- 				  gfp_t flags, int nid)
- {
--- 
-2.54.0.545.g6539524ca2-goog
+> 
+> > Otherwise a few minor comments inline.  
+> 
+> ...
+> 
+> > > @@ -84,8 +107,18 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+> > >  				      AD5686_ADDR(addr));
+> > >  	st->data[1].d32 = cpu_to_be32(AD5686_CMD(AD5686_CMD_NOOP));
+> > >  
+> > > -	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
+> > > -	if (ret < 0)
+> > > +	xfer[0].tx_buf = &st->data[0].d8[1];
+> > > +	xfer[0].len = 3;
+> > > +	xfer[0].cs_change = 1;
+> > > +	xfer[1].tx_buf = &st->data[1].d8[1];
+> > > +	xfer[1].rx_buf = &st->data[2].d8[1];
+> > > +	xfer[1].len = 3;
+> > > +	xfer[1].cs_change = 0;
+> > > +
+> > > +	spi_message_init_with_transfers(&bus_data->msg, xfer, 2);  
+> > 
+> > Why not carry on using spi_sync_transfer() here?
+> > We'll end up with an spi message the stack but I suspect that's
+> > not a significant performance cost.  
+> 
+> True, it would be around 200 extra bytes in the stack, and read operations
+> would not happen concurrently with writes, so why not reuse resources
+> (message and transfer structs) that is now available in the bus data?
+> To me, it allows for consistency in this implementation. 
+> 
+Reusing transfers makes sense.  I was a little less clear on reusing the
+message because we can't then use the helper (which is all spi_sync_transfer()
+really is).  Not particularly important either way.
+> > > +
+> > > +	ret = spi_sync(spi, &bus_data->msg);
+> > > +	if (ret)
+> > >  		return ret;
+> > >  
+> > >  	return be32_to_cpu(st->data[2].d32);  
+> 
 
