@@ -1,73 +1,74 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4431F192E
-	for <linux-hardening@vger.kernel.org>; Sat, 25 Apr 2026 01:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E6221A457
+	for <linux-hardening@vger.kernel.org>; Sat, 25 Apr 2026 01:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777081341; cv=none; b=KfpterEq4yKRh9qv1EnOXR/QKiTuGdybBRBy7PpM81fyz0q3XX1zj19QOKp9K++KXIdJvekA1SvliQtk3sB9a6m43n3pk9KOh103byphbRIYxArjN9PFavUi3C2cyUfDsWzITzFKNgjLX6kJIxaVpkvzJOM6LxrPhxXnnXaRdwQ=
+	t=1777081463; cv=none; b=JRTVlsU0e8KAIvjSb+ASpBED3P8Hh0vGGu4ZHiQ/LxQPZJv5uLj+fyd02/lo7z6TrcLtnRA4LmqUFcot0jSkCASH9zVRlalcouI5mSpqnaCrF16mTuxfOwizOUWSanQL2hZZ7oOsycQbahSsmhYrP+rMfNUL4hmw5WReAjx3qtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777081341; c=relaxed/simple;
-	bh=mj3qfGYlr+bMveVNY0NmGwQ8Jz+/4iRwZC+w+LJ21Ww=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A/IIYVdQ93+yiNxOuuaDm+vGIjGL3CzTQjKLZwfdGeLQG7rxcmLzZjDNGaeXzba4sMHUO7Ljgto5Lk2rGMlK/Pv3JI3n2TIr9wfSF8Wuo+Pbuw6heZgrJL7SWS+UiPT12WKAIclBg4Z45+ro4m8+Cc+aHUpAeHADI5fe/9qa7sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TtNcuHTq; arc=none smtp.client-ip=209.85.216.41
+	s=arc-20240116; t=1777081463; c=relaxed/simple;
+	bh=WbM8aoFDL1xInf9fk989KxgvWM34KxbOYADLDMviZ7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aKTKhmL51QhNGF1paxcg8P859/+tJ7VUde/Wo8N/2f+BCojM6jWvkot8kTRwSWZ9n4r1kSCNMG+SuRTgjg7ikUQpGkkImmdsfwiJUKYWLiW/Iw7Z0N7ntTHUVE2U7xzjpQz/WYCVP2xEoBM+zXR62JhRsah/lYU0g/6k01wg0Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pHYl6JtV; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TtNcuHTq"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3614826eca4so7598889a91.1
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 18:42:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHYl6JtV"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ad4d639db3so42689225ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 18:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777081339; x=1777686139; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777081461; x=1777686261; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4OxYR+RFt6UrbmMauhFwdJjJ5w7Lq82SA2vzvpVn2KI=;
-        b=TtNcuHTqY8iR0xBAIn/qlkWOiuLT3CMqmKxEL0x6cgAXG7sP0QN2htCPZc5KeZxjE8
-         cQJy02bNPs+jD5Fh7W7vIO09kChXVTkMcKbrg+uDd1hRPplxoP95eYi+PM7qxgmbUv1S
-         G12G0LI0yVSlb7NZfwhk1ckzgZNGet6Z/UoiTIX1eyB2hD5/xN4+uY+/jNEDeBcQvgci
-         InTnxYPGIvl1gDB+ds1VHXkEt5P9Hb6q7Lb0y5lB6TmL5KFyG0pXlgUpBEGM8Zyovigj
-         waJRvO02yIwlWF9f+cjszwDpdkh0AdnUIg/R5ntxH860gzUOogPREcUzO9ZjFGdCdAOf
-         KRGQ==
+        bh=j1KowH/KQePREcpPaMinSKl3adwCAV357FzMEtXwkvI=;
+        b=pHYl6JtVgluhk/YnrjUZTxkVirDurvSI6PENKtrhUYncW0S9UA5EGQHeWJqjh8YP/o
+         TW+Gklo3Vp4PpcB/0+PVk2A7tHJPEr8RPEG4prEWpSlwWY3fRaLFnshy5uPxZyPjvTHT
+         fXAYc14c6DZF/QUc9Y3T2C6mlr8JcZY/cd2v5Hs0KfbzDQHDDE5TYjSGnydUISJS51DS
+         82chxJGRMXIwcNtkpOAsY35PLmpC6ub+olGy8gYzI3JtytksaOSnfl8GM1leRxPnrL0V
+         xWIaquYcra4AwK6cCIvU1vFjuKC1cdchkw3HOB2ZcPqMLv/uco5Foa57p7MeaWsu1X74
+         bjvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777081339; x=1777686139;
+        d=1e100.net; s=20251104; t=1777081461; x=1777686261;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4OxYR+RFt6UrbmMauhFwdJjJ5w7Lq82SA2vzvpVn2KI=;
-        b=Zm/FB9ciUOf4JPyshKnYl4s8ahmgNnJUnJbuiZdOChsHQW0B/jxYk+AJy3TOa2mWbf
-         zh3XJpCpxdmlbRTzaJJCK8CDvoeeN17UWhAvQeXetix9eSXl483wM1kLJ4Cwf1fJD4hp
-         dw3SInO9SEdon0KRpMXHpN9Ooqf9MLCzoKrDWfQgWIXyPBsTSC3AXgh2AmiIRcUFzaN2
-         UPOGwgm5mmM5yJrKfZOfYDD5tRuGvOHirQd7NkkXzSkcXKGY8uFAZfQqgcowQHDFZZH0
-         74zEaie8uptdTheaJRTIwhSzHBzSp+b5lF3gzvR7L1cScvTXKgSgFruXKsEtQCq3qBw+
-         ndhg==
-X-Forwarded-Encrypted: i=1; AFNElJ8rczdbbRAfqH9eM3Pko/NPVjstClhlZhfByQCrIYnzt53QrxhqaIbSL2mhy5E1zYSLv+bO3IS5WquYAzU22X0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUwYloz2Q8VE9bfoQ4t6Xz797LjagzyE5PJP0ppGHu05nblDqU
-	/2dmqOBg+otJxUZ+w93hQpsz4Dy1jLQUFfJFFWZHqicJ3c55ttFrXu0ZVj1/Zw==
-X-Gm-Gg: AeBDietq5JtpEk6HGq3tsw7ONpu+TPGuSiXf3O3ELbPQLkSPp92DceNOQxeNoFjFnF9
-	ELwHBjdMe3OIquJqlcHSpXehrZn8DLaoF4T73j+MO451g24jYkclz3TQoI71tsRqQFHDdzQcn7g
-	Bz9mCUCNMA1BgebtTmvp/cYfFJuAx6d69TECmR3XESjd9pzStV2WsPHbC/5/XvAAxGkAXFfVoci
-	xYugl7L9JpmeZjc9cXFTbnfFuKb2+JjXaUCnHGY54UYADu1dmd3Ee5M0+qHTW9NGE77K3a3ko25
-	xqvQVIQ5PnHrQKB+qHc3m9dFNB1fWdhFAdok/iqx/OFpD75rsteLTYzqIag6SuqyUpJndWjaCVe
-	RWRB6ac8twdbjmgG1msVRbBbC+zFLfEunbhPY7ulQardUk7ppRAkrdewjNZcDzgCDFL2B+P+Nq3
-	B2jVuBHDS1qrmca7gVidF/ZpeniBdgMiPITP2kUt4mtwOMaCUq0J2yGRTaMDOk6Id4epTkxY9Y+
-	2yOxgt1nrvMetpokMhZSSIrfoiEIPHog/Mr
-X-Received: by 2002:a17:90b:4fcc:b0:35f:b293:7ac6 with SMTP id 98e67ed59e1d1-361403bd8camr37022135a91.6.1777081339252;
-        Fri, 24 Apr 2026 18:42:19 -0700 (PDT)
+        bh=j1KowH/KQePREcpPaMinSKl3adwCAV357FzMEtXwkvI=;
+        b=DwGZC3LmxBVkp63LmOinaxlNrOSErVyqc/3T5V8PJqLbCpvDYC8NbTNYGBQ8xRSk2k
+         CgOj2JsR2zhS9Uvrdzvdr6e+lYDv9HryyXQ91L1YgdTkfys7uTfuNKZS0YYY/X91IMAZ
+         4NKPrkEnvP9mL391qyf4Ib4HLDo8a2QGIk6Tar8RZwuHChSXJUpxMenTpN2EbjOHTUiJ
+         D+Gl9sRIurt7FcrRRD7qxhBY9pFU+p9fiXXv/e0uCgW4axdh2Xwfwst8B9ywdVEb6xxr
+         uwbpaVRNriSHDj6k9IjezUYTPL6ORkO51McsKgVpvUC4NxNSnSq/9a+C6zVrsZBpE81M
+         AMcA==
+X-Forwarded-Encrypted: i=1; AFNElJ+IQcWESC25+WVYn2oc0s5N4OpR4h2E+VZg4nUPInCAcWC8pjzn6DLnXJy5dbLpH9DuosbaJYT868/+dyjdNII=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZn2NqDdCXRRski+VwfwHOFfwGs0mjRT3CPoj/H7Jkr5aGpqVm
+	lMYYQf0/RMwfeeIHnjzi+Obw5C/A5iFb6oYC44/9BREQ100UcR6xUVP2
+X-Gm-Gg: AeBDievTXA8nZGsITh25E/QPr2wRci6aBJOYexdv3rvpULOiyGM91t5v9ffTHwkw8wq
+	zSRoV+3N+TA9y4ScJnBQ4jxoFy7YHiVwcsDVLO4PLlveXDTbT80qhDaeThOkoCuWicSWcRShepg
+	RqIrXVVc6fntE1tnVux0e6bYoMYmLmVgmysKd5uNDV7IYy1Gux5zTxvDkUkloAYLO+zxlbcA4PK
+	58MglH7iIhu4xoIJCzLSW8g4dPaELBAd5Wg04YSZWio5FUlPK6RqLzppwQkhTRen6/1XgtAzNld
+	w0uWdS6fxJcmbIWX84qHVhxPUkMG74rer3rxgq+EaCEMw4b2euG1VUzTQ5cQM+bGdQ7JrMT+wBJ
+	B3nNaF+BUX4EvhM8qxWG+Gwt0N1i9QawHsn32k6u2XVYkJqnRPwUQudhlhvF6xpfTL5RUDhNEer
+	wbiIy18hsJ3FOCZTUusEj/7tEb+xSMiLEPBzMu1Jq13E17HlyCmi3IsjdZc5A12EIa+6M8lag6m
+	gbzcemfM9XXxA5tr4iGcB1LGQ==
+X-Received: by 2002:a17:903:200d:b0:2b2:5597:bad4 with SMTP id d9443c01a7336-2b5f9ffa730mr262055295ad.30.1777081461529;
+        Fri, 24 Apr 2026 18:44:21 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-362c69b8257sm9967412a91.7.2026.04.24.18.42.18
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fa9ff918sm254121425ad.13.2026.04.24.18.44.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 18:42:18 -0700 (PDT)
+        Fri, 24 Apr 2026 18:44:20 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-usb@vger.kernel.org
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
+	linux-kernel@vger.kernel.org (open list:TRACING),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] usb: typec: intel_pmc_mux: combine kzalloc + kcalloc
-Date: Fri, 24 Apr 2026 18:42:01 -0700
-Message-ID: <20260425014201.439251-1-rosenp@gmail.com>
+Subject: [PATCH] tracing: simplify pages allocation
+Date: Fri, 24 Apr 2026 18:44:03 -0700
+Message-ID: <20260425014403.440786-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -77,71 +78,101 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A flexible array member can be used to combine allocations and simplify
-handling slightly.
+Change to a flexible array member to allocate together with the array
+struct.
 
-Add __counted_by for extra runtime analysis.
+Simplifies code slightly by removing no longer correct null checks for
+pages and removing kfrees.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/usb/typec/mux/intel_pmc_mux.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ kernel/trace/tracing_map.c | 32 +++++++++++---------------------
+ kernel/trace/tracing_map.h |  2 +-
+ 2 files changed, 12 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
-index 1698428654ab..e22b070a140f 100644
---- a/drivers/usb/typec/mux/intel_pmc_mux.c
-+++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-@@ -151,13 +151,14 @@ struct pmc_usb {
- 	u8 num_ports;
- 	struct device *dev;
- 	struct intel_scu_ipc_dev *ipc;
--	struct pmc_usb_port *port;
- 	struct acpi_device *iom_adev;
- 	void __iomem *iom_base;
- 	u32 iom_port_status_offset;
- 	u8 iom_port_status_size;
+diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+index bf1a507695b6..627cc3fdf69e 100644
+--- a/kernel/trace/tracing_map.c
++++ b/kernel/trace/tracing_map.c
+@@ -288,9 +288,6 @@ static void tracing_map_array_clear(struct tracing_map_array *a)
+ {
+ 	unsigned int i;
  
- 	struct dentry *dentry;
+-	if (!a->pages)
+-		return;
+-
+ 	for (i = 0; i < a->n_pages; i++)
+ 		memset(a->pages[i], 0, PAGE_SIZE);
+ }
+@@ -302,44 +299,37 @@ static void tracing_map_array_free(struct tracing_map_array *a)
+ 	if (!a)
+ 		return;
+ 
+-	if (!a->pages)
+-		goto free;
+-
+ 	for (i = 0; i < a->n_pages; i++) {
+ 		if (!a->pages[i])
+ 			break;
+ 		kmemleak_free(a->pages[i]);
+ 		free_page((unsigned long)a->pages[i]);
+ 	}
+-
+-	kfree(a->pages);
+-
+- free:
+-	kfree(a);
+ }
+ 
+ static struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
+ 						  unsigned int entry_size)
+ {
+ 	struct tracing_map_array *a;
++	unsigned int entry_size_shift;
++	unsigned int entries_per_page;
++	unsigned int n_pages;
+ 	unsigned int i;
+ 
+-	a = kzalloc_obj(*a);
++	entry_size_shift = fls(roundup_pow_of_two(entry_size) - 1);
++	entries_per_page = PAGE_SIZE / (1 << entry_size_shift);
++	n_pages = max(1, n_elts / entries_per_page);
 +
-+	struct pmc_usb_port port[] __counted_by(num_ports);
++	a = kzalloc_flex(*a, pages, n_pages);
+ 	if (!a)
+ 		return NULL;
+ 
+-	a->entry_size_shift = fls(roundup_pow_of_two(entry_size) - 1);
+-	a->entries_per_page = PAGE_SIZE / (1 << a->entry_size_shift);
+-	a->n_pages = n_elts / a->entries_per_page;
+-	if (!a->n_pages)
+-		a->n_pages = 1;
++	a->entry_size_shift = entry_size_shift;
++	a->entries_per_page = entries_per_page;
++	a->n_pages = n_pages;
+ 	a->entry_shift = fls(a->entries_per_page) - 1;
+ 	a->entry_mask = (1 << a->entry_shift) - 1;
+ 
+-	a->pages = kcalloc(a->n_pages, sizeof(void *), GFP_KERNEL);
+-	if (!a->pages)
+-		goto free;
+-
+ 	for (i = 0; i < a->n_pages; i++) {
+ 		a->pages[i] = (void *)get_zeroed_page(GFP_KERNEL);
+ 		if (!a->pages[i])
+diff --git a/kernel/trace/tracing_map.h b/kernel/trace/tracing_map.h
+index 99c37eeebc16..18a02959d77b 100644
+--- a/kernel/trace/tracing_map.h
++++ b/kernel/trace/tracing_map.h
+@@ -167,7 +167,7 @@ struct tracing_map_array {
+ 	unsigned int entry_shift;
+ 	unsigned int entry_mask;
+ 	unsigned int n_pages;
+-	void **pages;
++	void *pages[] __counted_by(n_pages);
  };
  
- static struct dentry *pmc_mux_debugfs_root;
-@@ -731,27 +732,25 @@ static int pmc_usb_probe(struct platform_device *pdev)
- {
- 	struct fwnode_handle *fwnode = NULL;
- 	struct pmc_usb *pmc;
-+	u8 num_ports;
- 	int i = 0;
- 	int ret;
- 
--	pmc = devm_kzalloc(&pdev->dev, sizeof(*pmc), GFP_KERNEL);
--	if (!pmc)
--		return -ENOMEM;
--
- 	device_for_each_child_node(&pdev->dev, fwnode)
--		pmc->num_ports++;
-+		num_ports++;
- 
- 	/* The IOM microcontroller has a limitation of max 4 ports. */
--	if (pmc->num_ports > 4) {
-+	if (num_ports > 4) {
- 		dev_err(&pdev->dev, "driver limited to 4 ports\n");
- 		return -ERANGE;
- 	}
- 
--	pmc->port = devm_kcalloc(&pdev->dev, pmc->num_ports,
--				 sizeof(struct pmc_usb_port), GFP_KERNEL);
--	if (!pmc->port)
-+	pmc = devm_kzalloc(&pdev->dev, struct_size(pmc, port, num_ports), GFP_KERNEL);
-+	if (!pmc)
- 		return -ENOMEM;
- 
-+	pmc->num_ports = num_ports;
-+
- 	pmc->ipc = devm_intel_scu_ipc_dev_get(&pdev->dev);
- 	if (!pmc->ipc)
- 		return -EPROBE_DEFER;
+ #define TRACING_MAP_ARRAY_ELT(array, idx)				\
 -- 
 2.54.0
 
