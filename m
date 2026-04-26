@@ -1,178 +1,115 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E6221A457
-	for <linux-hardening@vger.kernel.org>; Sat, 25 Apr 2026 01:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BCE2882B6;
+	Sun, 26 Apr 2026 11:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777081463; cv=none; b=JRTVlsU0e8KAIvjSb+ASpBED3P8Hh0vGGu4ZHiQ/LxQPZJv5uLj+fyd02/lo7z6TrcLtnRA4LmqUFcot0jSkCASH9zVRlalcouI5mSpqnaCrF16mTuxfOwizOUWSanQL2hZZ7oOsycQbahSsmhYrP+rMfNUL4hmw5WReAjx3qtk=
+	t=1777201310; cv=none; b=UTpLzoi2OTLk9ZVElbNIjv/O983Riq6Ml9UkJc1W70rW8mRkxIAGANZjbumywwcuFijX7itgxz49ZTZ1ZgrPL5p6VwIMuI6WvTFQJkfYkYLADSMe3IRtUR8C395nAFj7IV2vGDL7xmKC7BQIOceUHQqJY0xZpJHD/pwXhklI0i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777081463; c=relaxed/simple;
-	bh=WbM8aoFDL1xInf9fk989KxgvWM34KxbOYADLDMviZ7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aKTKhmL51QhNGF1paxcg8P859/+tJ7VUde/Wo8N/2f+BCojM6jWvkot8kTRwSWZ9n4r1kSCNMG+SuRTgjg7ikUQpGkkImmdsfwiJUKYWLiW/Iw7Z0N7ntTHUVE2U7xzjpQz/WYCVP2xEoBM+zXR62JhRsah/lYU0g/6k01wg0Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pHYl6JtV; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777201310; c=relaxed/simple;
+	bh=5mbT5zxJLttGO9IREsSuDDnHGoOb579Xt7g8NCSKqGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bpwkakXqQcM6VWwrWWxvzsZdapsDn8jWZuoWojhC0ydXoG/TJB70bp3RLlPBVPaDb8ZT5+CBmGLFa8psztgl9jeJHBjEbLHn1N+wjaSpjtgmrKJTWEK3sPs2ucGmZQWO7EEq22+o3khbx+CGHsy04DZyR6TSaNbtJkyCjabxes0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8tXNY3f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHYl6JtV"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ad4d639db3so42689225ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Apr 2026 18:44:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777081461; x=1777686261; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j1KowH/KQePREcpPaMinSKl3adwCAV357FzMEtXwkvI=;
-        b=pHYl6JtVgluhk/YnrjUZTxkVirDurvSI6PENKtrhUYncW0S9UA5EGQHeWJqjh8YP/o
-         TW+Gklo3Vp4PpcB/0+PVk2A7tHJPEr8RPEG4prEWpSlwWY3fRaLFnshy5uPxZyPjvTHT
-         fXAYc14c6DZF/QUc9Y3T2C6mlr8JcZY/cd2v5Hs0KfbzDQHDDE5TYjSGnydUISJS51DS
-         82chxJGRMXIwcNtkpOAsY35PLmpC6ub+olGy8gYzI3JtytksaOSnfl8GM1leRxPnrL0V
-         xWIaquYcra4AwK6cCIvU1vFjuKC1cdchkw3HOB2ZcPqMLv/uco5Foa57p7MeaWsu1X74
-         bjvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777081461; x=1777686261;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j1KowH/KQePREcpPaMinSKl3adwCAV357FzMEtXwkvI=;
-        b=DwGZC3LmxBVkp63LmOinaxlNrOSErVyqc/3T5V8PJqLbCpvDYC8NbTNYGBQ8xRSk2k
-         CgOj2JsR2zhS9Uvrdzvdr6e+lYDv9HryyXQ91L1YgdTkfys7uTfuNKZS0YYY/X91IMAZ
-         4NKPrkEnvP9mL391qyf4Ib4HLDo8a2QGIk6Tar8RZwuHChSXJUpxMenTpN2EbjOHTUiJ
-         D+Gl9sRIurt7FcrRRD7qxhBY9pFU+p9fiXXv/e0uCgW4axdh2Xwfwst8B9ywdVEb6xxr
-         uwbpaVRNriSHDj6k9IjezUYTPL6ORkO51McsKgVpvUC4NxNSnSq/9a+C6zVrsZBpE81M
-         AMcA==
-X-Forwarded-Encrypted: i=1; AFNElJ+IQcWESC25+WVYn2oc0s5N4OpR4h2E+VZg4nUPInCAcWC8pjzn6DLnXJy5dbLpH9DuosbaJYT868/+dyjdNII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZn2NqDdCXRRski+VwfwHOFfwGs0mjRT3CPoj/H7Jkr5aGpqVm
-	lMYYQf0/RMwfeeIHnjzi+Obw5C/A5iFb6oYC44/9BREQ100UcR6xUVP2
-X-Gm-Gg: AeBDievTXA8nZGsITh25E/QPr2wRci6aBJOYexdv3rvpULOiyGM91t5v9ffTHwkw8wq
-	zSRoV+3N+TA9y4ScJnBQ4jxoFy7YHiVwcsDVLO4PLlveXDTbT80qhDaeThOkoCuWicSWcRShepg
-	RqIrXVVc6fntE1tnVux0e6bYoMYmLmVgmysKd5uNDV7IYy1Gux5zTxvDkUkloAYLO+zxlbcA4PK
-	58MglH7iIhu4xoIJCzLSW8g4dPaELBAd5Wg04YSZWio5FUlPK6RqLzppwQkhTRen6/1XgtAzNld
-	w0uWdS6fxJcmbIWX84qHVhxPUkMG74rer3rxgq+EaCEMw4b2euG1VUzTQ5cQM+bGdQ7JrMT+wBJ
-	B3nNaF+BUX4EvhM8qxWG+Gwt0N1i9QawHsn32k6u2XVYkJqnRPwUQudhlhvF6xpfTL5RUDhNEer
-	wbiIy18hsJ3FOCZTUusEj/7tEb+xSMiLEPBzMu1Jq13E17HlyCmi3IsjdZc5A12EIa+6M8lag6m
-	gbzcemfM9XXxA5tr4iGcB1LGQ==
-X-Received: by 2002:a17:903:200d:b0:2b2:5597:bad4 with SMTP id d9443c01a7336-2b5f9ffa730mr262055295ad.30.1777081461529;
-        Fri, 24 Apr 2026 18:44:21 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fa9ff918sm254121425ad.13.2026.04.24.18.44.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 18:44:20 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:TRACING),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] tracing: simplify pages allocation
-Date: Fri, 24 Apr 2026 18:44:03 -0700
-Message-ID: <20260425014403.440786-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8tXNY3f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF72C2BCAF;
+	Sun, 26 Apr 2026 11:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777201310;
+	bh=5mbT5zxJLttGO9IREsSuDDnHGoOb579Xt7g8NCSKqGo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J8tXNY3fYHJBBvA/VMVCTzeMAlg7/Q4PdaCuLa6ffOydAiPMmjIjDOCMhBgmkgf3/
+	 8++bCPFlnU+9jUVXXVNnqoNKlmTqQ8tq2VCDZSJLmaMeM/1OHnfqv89h0CmerKAQht
+	 Y6V3Th9yK9j3cymhdrd79fea6t7TidchIGtVTh4VEwpHWewzsBibbyOSoCznVzkpSQ
+	 hp0i/m0GnWu3ccbfc46PsT1riC6PQIgHE663KFulWy7Kzz8y96fgWd+yLGXWS1BlRb
+	 OfmSGXsX+ZjFQJoI6dI1DUwg7v//qEb63h3J1AcjckZl2nyOwTo2kyT9/5Qmt6FqHe
+	 g8PWJIcnUVn/A==
+Date: Sun, 26 Apr 2026 12:01:39 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH RFC v3 1/9] dt-bindings: iio: frequency: add ad9910
+Message-ID: <20260426120139.3fb8f3da@jic23-huawei>
+In-Reply-To: <20260417-ad9910-iio-driver-v3-1-29b93712a228@analog.com>
+References: <20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com>
+	<20260417-ad9910-iio-driver-v3-1-29b93712a228@analog.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Change to a flexible array member to allocate together with the array
-struct.
+On Fri, 17 Apr 2026 09:17:30 +0100
+Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 
-Simplifies code slightly by removing no longer correct null checks for
-pages and removing kfrees.
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> 
+> DT-bindings for AD9910, a 1 GSPS DDS with 14-bit DAC. It includes
+> configurations for clocks, DAC current, reset and basic GPIO control.
+> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> ---
+>  .../bindings/iio/frequency/adi,ad9910.yaml         | 189 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 +
+>  2 files changed, 196 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,ad9910.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,ad9910.yaml
+> new file mode 100644
+> index 000000000000..61e879bca5c2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/frequency/adi,ad9910.yaml
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- kernel/trace/tracing_map.c | 32 +++++++++++---------------------
- kernel/trace/tracing_map.h |  2 +-
- 2 files changed, 12 insertions(+), 22 deletions(-)
+...
 
-diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
-index bf1a507695b6..627cc3fdf69e 100644
---- a/kernel/trace/tracing_map.c
-+++ b/kernel/trace/tracing_map.c
-@@ -288,9 +288,6 @@ static void tracing_map_array_clear(struct tracing_map_array *a)
- {
- 	unsigned int i;
- 
--	if (!a->pages)
--		return;
--
- 	for (i = 0; i < a->n_pages; i++)
- 		memset(a->pages[i], 0, PAGE_SIZE);
- }
-@@ -302,44 +299,37 @@ static void tracing_map_array_free(struct tracing_map_array *a)
- 	if (!a)
- 		return;
- 
--	if (!a->pages)
--		goto free;
--
- 	for (i = 0; i < a->n_pages; i++) {
- 		if (!a->pages[i])
- 			break;
- 		kmemleak_free(a->pages[i]);
- 		free_page((unsigned long)a->pages[i]);
- 	}
--
--	kfree(a->pages);
--
-- free:
--	kfree(a);
- }
- 
- static struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
- 						  unsigned int entry_size)
- {
- 	struct tracing_map_array *a;
-+	unsigned int entry_size_shift;
-+	unsigned int entries_per_page;
-+	unsigned int n_pages;
- 	unsigned int i;
- 
--	a = kzalloc_obj(*a);
-+	entry_size_shift = fls(roundup_pow_of_two(entry_size) - 1);
-+	entries_per_page = PAGE_SIZE / (1 << entry_size_shift);
-+	n_pages = max(1, n_elts / entries_per_page);
-+
-+	a = kzalloc_flex(*a, pages, n_pages);
- 	if (!a)
- 		return NULL;
- 
--	a->entry_size_shift = fls(roundup_pow_of_two(entry_size) - 1);
--	a->entries_per_page = PAGE_SIZE / (1 << a->entry_size_shift);
--	a->n_pages = n_elts / a->entries_per_page;
--	if (!a->n_pages)
--		a->n_pages = 1;
-+	a->entry_size_shift = entry_size_shift;
-+	a->entries_per_page = entries_per_page;
-+	a->n_pages = n_pages;
- 	a->entry_shift = fls(a->entries_per_page) - 1;
- 	a->entry_mask = (1 << a->entry_shift) - 1;
- 
--	a->pages = kcalloc(a->n_pages, sizeof(void *), GFP_KERNEL);
--	if (!a->pages)
--		goto free;
--
- 	for (i = 0; i < a->n_pages; i++) {
- 		a->pages[i] = (void *)get_zeroed_page(GFP_KERNEL);
- 		if (!a->pages[i])
-diff --git a/kernel/trace/tracing_map.h b/kernel/trace/tracing_map.h
-index 99c37eeebc16..18a02959d77b 100644
---- a/kernel/trace/tracing_map.h
-+++ b/kernel/trace/tracing_map.h
-@@ -167,7 +167,7 @@ struct tracing_map_array {
- 	unsigned int entry_shift;
- 	unsigned int entry_mask;
- 	unsigned int n_pages;
--	void **pages;
-+	void *pages[] __counted_by(n_pages);
- };
- 
- #define TRACING_MAP_ARRAY_ELT(array, idx)				\
--- 
-2.54.0
+> +
+> +  reset-gpios:
+> +    description:
+> +      GPIOs controlling the Main Device reset.
+> +
+> +  io-reset-gpios:
+> +    maxItems: 1
+> +    description:
+> +      GPIO controlling the I/O_RESET pin.
+> +
+> +  powerdown-gpios:
+> +    maxItems: 1
+> +    description:
+> +      GPIO controlling the EXT_PWR_DWN pin.
+> +
+> +  update-gpios:
+> +    maxItems: 1
+> +    description:
+> +      GPIO controlling the I/O_UPDATE pin.
+> +
+> +  profile-gpios:
+> +    minItems: 3
+> +    maxItems: 3
+> +    description:
+> +      GPIOs controlling the PROFILE[2:0] pins for profile selection.
+> +
+> +  sync-err-gpios:
+> +    maxItems: 1
+> +    description:
+> +      GPIO used to read SYNC_SMP_ERR pin status.
+Looking at the datasheet there are a few other things that might want to be here.
+
+pll-lock for example might be wired to a gpio to allow a check that lock has
+occurred.  Maybe sync-samp-err as well though possibly that one wants to be an
+interrupt?
 
