@@ -1,99 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D253B19D4;
-	Mon, 27 Apr 2026 23:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F62364E92;
+	Mon, 27 Apr 2026 23:21:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777331709; cv=none; b=pZ0qXcV8EJskpzuLDGLMbT0Q9xSUrPLR9UR4Y6ZiS4NC1T4pBvx76Wvprr2hHegBgGRafx7XlvSL6q9pUiipdgdh1AGbtvbcRtodHlDO3yOY644nwdc4zt3/bctefXgt1GHmEQNdDP/p6t3NFepDQMJxqeh/aOvo3Z7xddZVb3A=
+	t=1777332113; cv=none; b=QeCBg+4r8XCPNjK8OHSPbeRTsr8MOrXTUkra2gkoSc9g1OnVxguP8I4jQEhxRQrVlmQhsyAkd67SNJA+bd9a/zuBvl0RtifpVDJzhICS4chlbheB3BxRl5w3BzmYONsMSMyaGSrn6lWmHIRMYgTTwvOQpyFalFWhoKM1Cp3hl7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777331709; c=relaxed/simple;
-	bh=UZm8itTuqte324ypWLZllEeciHe5OEJKjyiMosMVzQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=i/HXhL7gw+j2zg7+7vhX1S9OD2wCnenezpOKXQleTP/OkO7KKoQci/Km4+i+g7OiRg5sPGks2YkgbySRAa9OmMzJce5IBCuzZvZnOxmJm9TZVoq10bTiM8QHwYBc/L+UEO/StU22aco0xQuKz50p0P+qFL7S0ACLW9k++6KxQ2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GT2KNs3a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777332113; c=relaxed/simple;
+	bh=Q2hQsgYw45RQ6lsi5Z/STthBpvPXGMk2unvl5kytVUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RbOMcaNwYq/Ep81+5nRq8gpRA3P+A617LHzC3K6eg4rvFh+JkoNzcdTYn4w3rACw4KXv4FJP7VKUgtWqMlMmskZuOBG3b7uQORiyFTJlokzCWS+7s5qv0GkSlfOwZsko6yY/yoBdGGH4zPJRoMaYkDcm3qZlx9ME3rJGGwZMhPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpaqMdl2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GT2KNs3a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 685A5C19425;
-	Mon, 27 Apr 2026 23:15:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpaqMdl2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 426DEC19425;
+	Mon, 27 Apr 2026 23:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777331708;
-	bh=UZm8itTuqte324ypWLZllEeciHe5OEJKjyiMosMVzQo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GT2KNs3aaq3OuFlS873NyVfL3dR00Jw4QHuvWS5ycYswwK3sUybz09CjXH1zARbvl
-	 dl25TAv8b7r7a4G6uPmjGr3PavoT2lTb59hK2KX+JLmMCNNtdwYADv0a8zUKB6QfOL
-	 oXDvrw8qFTIULszXmGuSKe3H689nOHNaspWs3BcllyMQGcm5thlaBZm63GwpJPzFS8
-	 S6oaC44YVpO09EEW/sO856MVvv12HK5oUTXZCpP+RQSNbNZa70GzVH1ukuqCbaD2db
-	 oeF59+888nOYxafF1YrJmbqwvmukVY8UsRS2xnARcOEU7gMd4gjPc1xZI91Xd62y0V
-	 KZA0CMXBGQcNA==
-Date: Mon, 27 Apr 2026 17:15:05 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Michal Simek <michal.simek@amd.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm: xlnx: zynqmp_disp: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <ae_t-fkryL-qw4eN@kspp>
+	s=k20201202; t=1777332112;
+	bh=Q2hQsgYw45RQ6lsi5Z/STthBpvPXGMk2unvl5kytVUM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fpaqMdl2a8ebYpyDMjN1575+a0FgqoEi2U0gT+5RN4H1nn8N3frBjBQX5YmMOkNfo
+	 SWGKSYU+4hlcJc+NAE5mcmKhPjfmYs3wAKHK8/I0D0CFbzfeaS6mF8S9G04jhz88OT
+	 cICNl0qP+lhEBeubdB16wJRTiZsJEA5c9e53BnN6g7ytx6UR6ObgFjZ+yo1xjiMAQW
+	 Yk4BkALpWq+e1Xp+h/HfanCpl2wyVHlZxoc+ObYm7VZPmk2in3ufZbe0WPRx2mlvJy
+	 oBtOvsfC0LB6qUwSgE25UAZ7lLprxtXUA6AVIYvUFcZvgfb6UEW6ojkscLyL/wWwNE
+	 5Xhve7SgE1ILQ==
+Date: Mon, 27 Apr 2026 16:21:51 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: David Howells <dhowells@redhat.com>, Jarkko Sakkinen
+ <jarkko@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Tim Bird <tim.bird@sony.com>,
+ keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v3 1/2] keys, dns: drop unused upayload->data
+ NUL terminator
+Message-ID: <20260427162151.37fee368@kernel.org>
+In-Reply-To: <20260427114422.313356-3-thorsten.blum@linux.dev>
+References: <20260427114422.313356-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Mon, 27 Apr 2026 13:44:23 +0200 Thorsten Blum wrote:
+> Subject: [PATCH net-next v3 1/2] keys, dns: drop unused upayload->data NUL terminator
 
-Use the TRAILING_OVERLAP() helper to fix the following warning:
-
-drivers/gpu/drm/xlnx/zynqmp_disp.c:102:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-This helper creates a union between a flexible-array member (FAM)
-and a set of members that would otherwise follow it. This overlays
-the trailing members onto the FAM while preserving the original
-memory layout.
-
-Lastly, the static_assert() ensures the alignment between the FAM and
-struct data_chunk sgl; is not inadvertently changed, and it's
-intentionally placed inmediately after the related structure (that is,
-no blank line in between),
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/xlnx/zynqmp_disp.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-index 9a8f38230cb4..05807c7a93d7 100644
---- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-@@ -99,9 +99,14 @@ struct zynqmp_disp_format {
-  */
- struct zynqmp_disp_layer_dma {
- 	struct dma_chan *chan;
--	struct dma_interleaved_template xt;
--	struct data_chunk sgl;
-+
-+	/* Must be last as it ends in a flexible-array member. */
-+	TRAILING_OVERLAP(struct dma_interleaved_template, xt, sgl,
-+		struct data_chunk sgl;
-+	);
- };
-+static_assert(offsetof(struct zynqmp_disp_layer_dma, xt.sgl) ==
-+	      offsetof(struct zynqmp_disp_layer_dma, sgl));
- 
- /**
-  * struct zynqmp_disp_layer_info - Static layer information
--- 
-2.51.0
-
+to be clear - I expect "keys" maintainers to handle this, not net-next
+directly.
