@@ -1,146 +1,253 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DF231AF07
-	for <linux-hardening@vger.kernel.org>; Tue, 28 Apr 2026 20:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777408070; cv=pass; b=fll6aan2kb2IwgSA/NbMQsv629gGK6FLt7aLQ16Z8LBMceMiCn3Rsixx+mLBc7WBFn7tfJbh7j81FMLV2p+GTc2Z0qb8phL5rvjONQJJU2WBb/ZabBogmqcg3M9Kc7NomWWUmpHoGdHVjm7NxR+5Oaujr62NurprZswEnNTWuz4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777408070; c=relaxed/simple;
-	bh=8pZqDLVXGdKS4vEGYY/DHdErCtozb81IbFmeZdDnZOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QMKR6dL47dKRJaGqbM7WLXq9/HGocUE5n/bZxK6MI+wq38Lt7xpub3rsB8ztgT6Jfpq2JTw06fyIwipTfAPyhrvJ2z8C7KMjiXvyRmaoizUf85WgPQA8iR0sFq3u/idZVL1RBq++TKg0H3KUTm/IUXYUB8go6YuPmnOZcHz+Lgw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bYgXDGyj; arc=pass smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D69E36BCC9
+	for <linux-hardening@vger.kernel.org>; Tue, 28 Apr 2026 20:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777409436; cv=none; b=HiXlRLwEVblSfm/cZkU2ZH2x4b2kz+GCzM8w8MIbjY34NCMLa3E63uHNa63ZnW77XtZNKX9F6fXB21GuVsdtFYGeBBppW5alsAHBs69x+HRvjh4amlUdoxh8Xr4gKeGZ7R12Q69pfhaFsa7B2qcKdeyvv3IEYYA/1i8kj5Vdooc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777409436; c=relaxed/simple;
+	bh=96eFmX7Hw7uaVXtRcZ0NGiKwvwPVVaFtiROart6yDJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pWWssFG1kblWmptayw//z3yBgaal2jLbeB7mAC+bLggXqVY3ZL2OFiOtXnfaVQ5Lq83YgEg3mRwy1B6k9HUw9+JuNvVE17sbVKKzdP71Poo3Tw4QNpHwMChDHEPBw6CRdsZu9qVrk391LoBrIR/P57AyUYDw0tSAZRMuO0DSxns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=osE5EJhf; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYgXDGyj"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-67179ed133dso13269588a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 28 Apr 2026 13:27:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777408067; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UFC2UGC4TvEZrth3jzTmv/mMmrrz8NmOoWfKdgdt5tYdt6iwx5MVlQ3f7uVQH/eVU7
-         HmiJKHZrGIkl8N0cnn8l/qQB3d9OHKN/jKOGBSUU1VYUS68DFSol2NfMOj5wTB5Zu5cG
-         luaA/XEE5jqknGjQ6vqWCrqaIDtf4xQxcwFqqESdtcQXTFRTGwAU/za7R3upNIzLEGFs
-         kQxbXRMGjknbDUnWbPm8DWHdTXRidZqVcoaW+01TIyrfKitgavNbTp5TGkrpjZUZeniy
-         uuaGqwI+BpCAv3gKR8CijKCoyam3oKZt4rgGxFU71iis9GcTjjHLBRWVDt5J0+BvJi04
-         Iu5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=1ep7cTthGT0TRjukvSCw1U5zbGWRlXkdi2Yh6rincrk=;
-        fh=VAhV/GXhC5CPvDkKH23NLJCM8mqgVzkORKcVElaRFGU=;
-        b=VJ5JdpyCn4u1Wq9uyr4P9rgoDjhEFt/J08AuFgKGMLWIenw44wqpN/x7PNmlbWa68E
-         r8r8u9WVKKA+OHsfSuvI3eleSpmkJ6aecBBQakuj1v83IldJQA9EWYZhKw3ztabX4ECO
-         mH6fobvZqmN8iB9cce4pGyeUP/sYyEgT4xKiyTQq8/KH16C/7D5fK3JouwVdhWTWnTki
-         X7ERzyBDDUtynmiZyUTwXL6tbl/5ePhxqy/5yoZMVDXIeD58TGMEhCuhGBBWh0hbXNCQ
-         8NaRVq2By1kaVa3vDjwBtOKFwQqs24Ro+txzNx7aleQNNhu7PniBiFZz3B+wb03+9cg2
-         LY8A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="osE5EJhf"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-83177129e28so2564372b3a.1
+        for <linux-hardening@vger.kernel.org>; Tue, 28 Apr 2026 13:50:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777408067; x=1778012867; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ep7cTthGT0TRjukvSCw1U5zbGWRlXkdi2Yh6rincrk=;
-        b=bYgXDGyjWJZMsmVGWhGSIGIDyj+PqD7RHshfyw5CpKA7Bmpmd+5MiKTD6lCsFczOzT
-         A+D/orHAHFm9JaklPGvS43eftIPkAWtL48QGRim2+VPFumuCfQTaD5m69qbC7tlGIHbe
-         5I9l+DRten1uo+GqZjHoUSqIDo5DwOcTSL+2GsdSn6F088TZ4av5OSUw3RjEf2xKsZMk
-         BY0+FZm/9pduSozg9lr4fH6MwuF/uuNFq45Xbx5gRj0rpI7CUB9IgQx7vH/zBBGOQqnh
-         WZ2fxj298x1Lw231rn3OS8hwxWDw0gp+BYMXxw8B0ixV/fGf8UmogmROz53QftGYpKyM
-         S8eA==
+        d=gmail.com; s=20251104; t=1777409435; x=1778014235; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8NzPUuQXwNwzOXO6cxunjkL9bjxxgNti1T1DyCWU3h0=;
+        b=osE5EJhfAVhySA+zQ+NnsH21dS/78NLTjQECUwtE1Drj2T2IuP9P2vzsBMKQUrg+G9
+         H/jOQQnZbcRQ81edbqUyBD87T6wyAYIpW1ylCzHGU/i2W/w1uRrM68UfJ+Sqj57dV9bu
+         PrUOmEnJSN0KU5qesVlaBCDUmadQLxH2+r4Q+WyQcMHWoNW+9c55c5CyBo7tx/8OEFy0
+         iGpJlBOzfQa6JzciV1yY1TNv2McsbrerhzTWSxFM01z7qZFaGtMOG9DdLZyG7D0ILWnH
+         qHjFeUwB/YEZKOBb14dXx/cCTrIftqccS7Lp1w9znh14x6kWfDmpvlyhnga+iGbcVuCQ
+         rcgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777408067; x=1778012867;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1ep7cTthGT0TRjukvSCw1U5zbGWRlXkdi2Yh6rincrk=;
-        b=jgQQLIRI71jpyyeZn2PjYUYJx5kTxXk9awtQewgUqx3TSXHikwepN2JTgUZd+eld1K
-         qzabt8iSrcgFPv2JaKbcJThbKPajQ180j+HucGCLk+9Y7pN/e3RyNvrp1qajtDrFRclN
-         0+g9BsBxVQCBk3laxka9eojJaCVlGme5oHw+WjYzY6/G9WaJXgSZliGvvA0NAirvGx0/
-         dGYo5Kz2O+1IycNV6NmJQP0SZPwznCgwPX7r9oA7ss4eBGKCksZz76oNnZ5wbRs8MaHV
-         WlrFwF3/MRR02lBnPChDabDTkE1lmfVOa9fFNydikqgB8V+A9WJsWA53ZRCf6EL53sq2
-         zJyA==
-X-Forwarded-Encrypted: i=1; AFNElJ+pPilA6fDVN9WLka3at9TDMxv3JZ88qv1Zd7FxyjcabAsdB3Vi8XDQzWksHHoxhVV9G/t2EV6jzH/9JwhtwTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfC9Y1kwYjzQkwbDqEl0mBjlgpN3FgMp8JsbCl8jwpcC5o7jFO
-	2z12ev8GLRKSQNAy95Zlud174tTocLJArfqdvBPRnjwoQ9I5F4CAZ/ZyxUa7o41Q6hMkJNWzxVd
-	LxqE6TqRrUmEeWt0FlxAgZU+LpMUwewg=
-X-Gm-Gg: AeBDiesovLX8ksqzx53J1fsLFRnGsN4D/WShd0obOJOj96Q+Vkoukctk49t4mYV98fG
-	7+FPCxy54n88oLJdGToobbNcKfS9IKOjUEMlWgFMmh856l95cTIz1xx41Ltpfkm0ho/uLqkbIEK
-	VZX9Ygq8i/bq3XqcIlQ/GGzltQl+n61ikkAJYc92vvu1G2RrNbQMdYXbSDG3MIMotEeBoRsUQo3
-	mKU/5kQjRhAQOLsBnmaN3qwk1d0fBa8Mt+5/wKx6Iz3fHjwsJgU2vyItHNuJSiw/Dg034m9YoJ6
-	sMQ8KyCJLQA+bO19ZXI57WCrKTATXbV8si52x7b575s2Gluq2SrlDO5ukeyYInVdsuALZdJvzNI
-	7tsRu6wiH7aC+gR8RrGcM6GIQtRmapbgoxz1jOWQu1eqTe7GxZuGB2832Wwo=
-X-Received: by 2002:a05:6402:e94:b0:66d:d2f9:520c with SMTP id
- 4fb4d7f45d1cf-679bb0982efmr2165877a12.19.1777408066633; Tue, 28 Apr 2026
- 13:27:46 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777409435; x=1778014235;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8NzPUuQXwNwzOXO6cxunjkL9bjxxgNti1T1DyCWU3h0=;
+        b=HSLWpWvuzzygbwNyVDs7jK1LE6Hos8ai2eUo6kf9nkgzZ4hLJJ+S9Zzd95UytDsstk
+         PhwGRQh4hTf6Tcilp52Hl1AlfjR7JrIodm0Di7OaRv1eLEeFfqctiuhemcyRxjxEKqOp
+         e4KBjX3ThvX6kzCEDrp27laCeKyR+BGV/SCXFUnzhs3kGpQjkWuh7QaRxIp7hvo26tEt
+         fYUOscPyRxj6LG3yssmk/0TyfplGKmbvBhzB4lXAcRfk7jWhlR5OVia88+k6ZZE+MTmC
+         9aYfbGa1s9sbJ/yc0whlR29Sd4oC1D2KrXPIycWu7a8NnWglLaAj2De/BMkZwerwsKMQ
+         W5Bg==
+X-Forwarded-Encrypted: i=1; AFNElJ9v6SmBwBoSuN8mrPZ177YNPHwAQ6+aHHNtTHjrMyFze/2ab5pT3jI9ooeZwVrUMdaFJ1H/UMyxt9aZ9cKsGeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi6/D2PC4PRsk1vJRgNAknh436TrEjvQWF0MkPg7YvngfgWXIx
+	vXClZYjBBtgWC4XaeZ2vng1+Qps4QuuT5JdpcxOi7rgzQ2NLzkVY3W5r
+X-Gm-Gg: AeBDiesInVT28DZWldfLBwcBNNtLn0oX+Y4fMQR35XEZxjvJxYzx5EAsJyNmE7qfYQG
+	/9+QCdrc5GBYtim34pAJpiIQ3aXt2hww8bO/13JAiXB1+S3fMY7Z4EEPPA6GbBHkL7ZJY4dPo0y
+	zse9h4S9Sn4kzzBfn1sknIIpM/xFmWiRcpskPxR7o9sUyoWCslG6pJ7NzBlaPCpjHOHlh48d+Rl
+	yyxoOyg5zJJxB1zbWlEP7fWkOz11fWAhsu3lcVfbuMDRnR+RIj8h6IjEzaMHmjP0ML2S2YZkn6y
+	nKT5t8X4rkeKSBKT4dnU7gzMyRc9YHqqi4SdMjAXRAqxskCaqr9LQLLT6IbDcMWTcvrgrsNWu9h
+	TaHhVIUGPKGmBZqx4PVhzAF9TXJzlKwn4SkwYS0YMmVS43lCqmQIaOwPezeSTv6xmB5cuhijAs0
+	fDDHwZ7cqBwjYW9SlPsvGqNwpzdmNv1Qsyk7zvx3oJc1P62XGl8BGZmNPHupCqvQZjD5qOe2+f3
+	8NHvqqELxCXfZhfkGrW+4ZeHQ==
+X-Received: by 2002:a05:6a00:950d:b0:81f:ac81:d597 with SMTP id d2e1a72fcca58-834ea2200cdmr812642b3a.0.1777409434826;
+        Tue, 28 Apr 2026 13:50:34 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-834dae1fd8esm3301581b3a.13.2026.04.28.13.50.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2026 13:50:34 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-wireless@vger.kernel.org
+Cc: Jeff Johnson <jjohnson@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	ath11k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH11K WIRELESS DRIVER),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCHv3 ath-next] wifi: ath11k: use kzalloc_flex
+Date: Tue, 28 Apr 2026 13:50:17 -0700
+Message-ID: <20260428205017.26288-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260427172817.417614-3-thorsten.blum@linux.dev> <DI4OKZA3428E.5TJAYEV50JH2@bootlin.com>
-In-Reply-To: <DI4OKZA3428E.5TJAYEV50JH2@bootlin.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Tue, 28 Apr 2026 13:27:34 -0700
-X-Gm-Features: AVHnY4Jkk0RBV4cH1i-ipNNk5Jr5JuI7AhhHwp3PjTVZY3bKpVhsokcMSgzE7Yc
-Message-ID: <CAKxU2N8OUcsTxG4XDH=cbROz4954-V5ximN-XHQ5RrPagTfUjQ@mail.gmail.com>
-Subject: Re: [PATCH] i2c: atr: annotate i2c_atr_adap_desc->aliases with __counted_by_ptr
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Romain Gantois <romain.gantois@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 28, 2026 at 2:30=E2=80=AFAM Luca Ceresoli <luca.ceresoli@bootli=
-n.com> wrote:
->
-> Hello Thorsten,
->
-> +Cc Romain, author of the involved code
-> +Cc Rosen, author of a similar patch elsewhere in i2c-atr [0]
->
-> [0] https://lore.kernel.org/linux-i2c/20260327030310.8502-1-rosenp@gmail.=
-com/
->
-> On Mon Apr 27, 2026 at 7:28 PM CEST, Thorsten Blum wrote:
-> > Add the __counted_by_ptr() compiler attribute to ->aliases to improve
-> > bounds checking via CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
-> >
-> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > ---
-> >  include/linux/i2c-atr.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
-> > index 2bb54dc87c8e..b52a7b9ec536 100644
-> > --- a/include/linux/i2c-atr.h
-> > +++ b/include/linux/i2c-atr.h
-> > @@ -71,7 +71,7 @@ struct i2c_atr_adap_desc {
-> >       struct device *parent;
-> >       struct fwnode_handle *bus_handle;
-> >       size_t num_aliases;
-> > -     u16 *aliases;
-> > +     u16 *aliases __counted_by_ptr(num_aliases);
->
-> I'm not fully proficient about all counted_by things, but the patch looks
-> OK to me, and definitely @num_aliases is the number of items @aliases mus=
-t
-> have, so:
-I prefer my patch.
+Convert kzalloc_obj + kcalloc to kzalloc_flex to save an allocation.
 
-__counted_by is supported by more versions of GCC/Clang than __counted_by_p=
-tr.
->
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->
-> --
-> Luca Ceresoli, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Add __counted_by to get extra runtime analysis. Move counting variable
+assignment immediately after allocation before any potential accesses.
+kzalloc_flex does this anyway for GCC >= 15.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v3: remove one more kfree for chan_list.
+ v2: reword counting variable comment.
+ drivers/net/wireless/ath/ath11k/mac.c | 72 ++++++++++-----------------
+ drivers/net/wireless/ath/ath11k/wmi.h |  2 +-
+ 2 files changed, 28 insertions(+), 46 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+index 4a68bb9ca4fa..8d9e1e33e47d 100644
+--- a/drivers/net/wireless/ath/ath11k/mac.c
++++ b/drivers/net/wireless/ath/ath11k/mac.c
+@@ -4228,13 +4228,14 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
+ 	if (ret)
+ 		goto exit;
+ 
+-	arg = kzalloc_obj(*arg);
++	arg = kzalloc_flex(*arg, chan_list, req->n_channels);
+ 
+ 	if (!arg) {
+ 		ret = -ENOMEM;
+ 		goto exit;
+ 	}
+ 
++	arg->num_chan = req->n_channels;
+ 	ath11k_wmi_start_scan_init(ar, arg);
+ 	arg->vdev_id = arvif->vdev_id;
+ 	arg->scan_id = ATH11K_SCAN_ID;
+@@ -4262,38 +4263,27 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
+ 		arg->scan_f_passive = 1;
+ 	}
+ 
+-	if (req->n_channels) {
+-		arg->num_chan = req->n_channels;
+-		arg->chan_list = kcalloc(arg->num_chan, sizeof(*arg->chan_list),
+-					 GFP_KERNEL);
++	for (i = 0; i < arg->num_chan; i++) {
++		if (test_bit(WMI_TLV_SERVICE_SCAN_CONFIG_PER_CHANNEL,
++			     ar->ab->wmi_ab.svc_map)) {
++			arg->chan_list[i] =
++				u32_encode_bits(req->channels[i]->center_freq,
++						WMI_SCAN_CONFIG_PER_CHANNEL_MASK);
+ 
+-		if (!arg->chan_list) {
+-			ret = -ENOMEM;
+-			goto exit;
+-		}
+-
+-		for (i = 0; i < arg->num_chan; i++) {
+-			if (test_bit(WMI_TLV_SERVICE_SCAN_CONFIG_PER_CHANNEL,
+-				     ar->ab->wmi_ab.svc_map)) {
+-				arg->chan_list[i] =
+-					u32_encode_bits(req->channels[i]->center_freq,
+-							WMI_SCAN_CONFIG_PER_CHANNEL_MASK);
+-
+-				/* If NL80211_SCAN_FLAG_COLOCATED_6GHZ is set in scan
+-				 * flags, then scan all PSC channels in 6 GHz band and
+-				 * those non-PSC channels where RNR IE is found during
+-				 * the legacy 2.4/5 GHz scan.
+-				 * If NL80211_SCAN_FLAG_COLOCATED_6GHZ is not set,
+-				 * then all channels in 6 GHz will be scanned.
+-				 */
+-				if (req->channels[i]->band == NL80211_BAND_6GHZ &&
+-				    req->flags & NL80211_SCAN_FLAG_COLOCATED_6GHZ &&
+-				    !cfg80211_channel_is_psc(req->channels[i]))
+-					arg->chan_list[i] |=
+-						WMI_SCAN_CH_FLAG_SCAN_ONLY_IF_RNR_FOUND;
+-			} else {
+-				arg->chan_list[i] = req->channels[i]->center_freq;
+-			}
++			/* If NL80211_SCAN_FLAG_COLOCATED_6GHZ is set in scan
++			 * flags, then scan all PSC channels in 6 GHz band and
++			 * those non-PSC channels where RNR IE is found during
++			 * the legacy 2.4/5 GHz scan.
++			 * If NL80211_SCAN_FLAG_COLOCATED_6GHZ is not set,
++			 * then all channels in 6 GHz will be scanned.
++			 */
++			if (req->channels[i]->band == NL80211_BAND_6GHZ &&
++			    req->flags & NL80211_SCAN_FLAG_COLOCATED_6GHZ &&
++			    !cfg80211_channel_is_psc(req->channels[i]))
++				arg->chan_list[i] |=
++					WMI_SCAN_CH_FLAG_SCAN_ONLY_IF_RNR_FOUND;
++		} else {
++			arg->chan_list[i] = req->channels[i]->center_freq;
+ 		}
+ 	}
+ 
+@@ -4336,7 +4326,6 @@ static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
+ 
+ exit:
+ 	if (arg) {
+-		kfree(arg->chan_list);
+ 		kfree(arg->extraie.ptr);
+ 		kfree(arg);
+ 	}
+@@ -9736,19 +9725,14 @@ static int ath11k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
+ 
+ 	scan_time_msec = ar->hw->wiphy->max_remain_on_channel_duration * 2;
+ 
+-	arg = kzalloc_obj(*arg);
++	arg = kzalloc_flex(*arg, chan_list, 1);
+ 	if (!arg) {
+ 		ret = -ENOMEM;
+ 		goto exit;
+ 	}
+-	ath11k_wmi_start_scan_init(ar, arg);
++
+ 	arg->num_chan = 1;
+-	arg->chan_list = kcalloc(arg->num_chan, sizeof(*arg->chan_list),
+-				 GFP_KERNEL);
+-	if (!arg->chan_list) {
+-		ret = -ENOMEM;
+-		goto free_arg;
+-	}
++	ath11k_wmi_start_scan_init(ar, arg);
+ 
+ 	arg->vdev_id = arvif->vdev_id;
+ 	arg->scan_id = ATH11K_SCAN_ID;
+@@ -9769,7 +9753,7 @@ static int ath11k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
+ 		spin_lock_bh(&ar->data_lock);
+ 		ar->scan.state = ATH11K_SCAN_IDLE;
+ 		spin_unlock_bh(&ar->data_lock);
+-		goto free_chan_list;
++		goto free_arg;
+ 	}
+ 
+ 	ret = wait_for_completion_timeout(&ar->scan.on_channel, 3 * HZ);
+@@ -9779,7 +9763,7 @@ static int ath11k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
+ 		if (ret)
+ 			ath11k_warn(ar->ab, "failed to stop scan: %d\n", ret);
+ 		ret = -ETIMEDOUT;
+-		goto free_chan_list;
++		goto free_arg;
+ 	}
+ 
+ 	ieee80211_queue_delayed_work(ar->hw, &ar->scan.timeout,
+@@ -9787,8 +9771,6 @@ static int ath11k_mac_op_remain_on_channel(struct ieee80211_hw *hw,
+ 
+ 	ret = 0;
+ 
+-free_chan_list:
+-	kfree(arg->chan_list);
+ free_arg:
+ 	kfree(arg);
+ exit:
+diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
+index baed501b640b..b2dade0516ac 100644
+--- a/drivers/net/wireless/ath/ath11k/wmi.h
++++ b/drivers/net/wireless/ath/ath11k/wmi.h
+@@ -3423,7 +3423,6 @@ struct scan_req_params {
+ 	u32 num_bssid;
+ 	u32 num_ssids;
+ 	u32 n_probes;
+-	u32 *chan_list;
+ 	u32 notify_scan_events;
+ 	struct wlan_ssid ssid[WLAN_SCAN_PARAMS_MAX_SSID];
+ 	struct wmi_mac_addr bssid_list[WLAN_SCAN_PARAMS_MAX_BSSID];
+@@ -3436,6 +3435,7 @@ struct scan_req_params {
+ 	struct hint_bssid hint_bssid[WLAN_SCAN_MAX_HINT_BSSID];
+ 	struct wmi_mac_addr mac_addr;
+ 	struct wmi_mac_addr mac_mask;
++	u32 chan_list[] __counted_by(num_chan);
+ };
+ 
+ struct wmi_ssid_arg {
+-- 
+2.54.0
+
