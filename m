@@ -1,52 +1,33 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D5A32E128
-	for <linux-hardening@vger.kernel.org>; Tue, 28 Apr 2026 16:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE023B0ACA;
+	Tue, 28 Apr 2026 19:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777394035; cv=none; b=PsuC73NyMj7jWnEuYTUnKfYzHqQrOTYsYcV217Pw0qOHvXVJYEPsS6/vQ95T2fuh3y02kdepM8Pse+SwqAtnv5zjtyoPGdD7dhGxkQ8BKnlJvRLloq6LCchKP2RtumMnMC6HdnbEnPYGpzWmGBULrCF5nBhAlQw37UiuonvMHfU=
+	t=1777405877; cv=none; b=VI6IVmByIjzvjEaL4nQuZ9A63rK+bHnVig/rcJ+v4J32v7uSOEUVwWn8Jys2CYO571ubTMKRK9Y4x+/G66l3/1Oer2x3JFFYibxZiaIqgdzHSBROwgWuKonIfWsdZTvXeEKGGHM2gfK+j8aBESZSMEuz4olNdMUl67J5z3JmoFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777394035; c=relaxed/simple;
-	bh=bSztWseBI4uNBAYrWdJtHs+i3Q9HVGBL9Xvk63DM8y0=;
+	s=arc-20240116; t=1777405877; c=relaxed/simple;
+	bh=Nhfmyw9bPmtRKlxPV1In2mC53XW8ms1qpcByR8ySSaY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XFkQcs2RHuD82oGrvWsqIEVU/UpnvnUbMr6cS7/Ekfc4cME9z+9EHj+kzfoSIVO4cFEF/GalNJc9WSnNtJ6L3fRLVOmwrC+ujFO1wtrgzYhbtHvd1OcDInoU2C/MwXxG1mtIWO67JLSQCO8yTd/5rvGlRjobvs390qetm773scg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=PoIIE7t8; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=o+dxHt8rwAJW8Dxm7vytaZzdbkVpVJ+WF4N++Efdv5oXrVj5APu0srb2PIpjF4LLtchWV3ODtthQnRDd9gckiRm1csPhE/4yPxqiUYwmbqDXPCRtlEtpwLjvsRby0YCAAH7eNwxHXcBdc6P1fhfh3hL4EIAHGlyatB+x3UHLJDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nm3/Up7F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="PoIIE7t8"
-Received: from eig-obgw-6002b.ext.cloudfilter.net ([10.0.30.203])
-	by cmsmtp with ESMTPS
-	id HiaawvNY9jw8YHlNbw3PS7; Tue, 28 Apr 2026 16:33:47 +0000
-Received: from gator4166.hostgator.com ([108.167.190.91])
-	by cmsmtp with ESMTPS
-	id HlNawpIgfbONDHlNbw4jx1; Tue, 28 Apr 2026 16:33:47 +0000
-X-Authority-Analysis: v=2.4 cv=XdKJzJ55 c=1 sm=1 tr=0 ts=69f0e16b
- a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=7T7KSl7uo7wA:10 a=c92rfblmAAAA:8
- a=VwQbUJbxAAAA:8 a=-lHa08R6ZhYopAfIOb8A:9 a=QEXdDO2ut3YA:10
- a=GvGzcOZaWPEFPQC_NcjD:22 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kSmTUZAfKefQAJxg+Et3xbccxjjS+rHdTDM7iO/aGJg=; b=PoIIE7t8n8jY0K+Mpg66RBRyA8
-	9Fy2G6XGaYrEml+Remx4NKm4lR0Wef0L2dhGw2k5X7eX6RJy05ZE73E+w2vm4t97jj8gq7gZViMPa
-	o0Q3ADNqI8PZdbJfRnvD2utGzt7kOGniLg7+EWngjPL0pdnksoKTA0VT/oi2R3lF4lExoeqfz/nAc
-	ilNc6ywR9wtoH2a7OWEj9IMaL9pjI3B2GACSI6A+NLJRhMh617wiwV2IgTjKDdBglkuhXIlpDMxK3
-	/p5ETmpokgvbQI9D8j8v68TI49yduwZo3vWjzxuHESCRMCMdrhi2z7S5wcUR3ogoz1NVMxLiBR7ww
-	v20qHb1g==;
-Received: from [177.238.19.10] (port=48828 helo=[192.168.0.104])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.99.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1wHlNZ-00000002RuV-1Y66;
-	Tue, 28 Apr 2026 11:33:45 -0500
-Message-ID: <2d713338-1eb5-4164-816a-6c0f91c8a9e4@embeddedor.com>
-Date: Tue, 28 Apr 2026 10:32:46 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nm3/Up7F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA90C2BCAF;
+	Tue, 28 Apr 2026 19:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777405876;
+	bh=Nhfmyw9bPmtRKlxPV1In2mC53XW8ms1qpcByR8ySSaY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nm3/Up7Fte+HsSj4Zi+YOwznbJD7iPvMtnYo665KKkx6dWJcE7Gzd0pPiMSQo+jK4
+	 jne31Wtcxx5AG8x5gUZVH9V8RjxMZw7APbTvdkucjJW3hbn/Kxv2fYWn4d4iNwidcq
+	 oxgP3xyTt8eJTpuPlhI6M7N8t55F9QFPaHEBiZMxlU5purCnr6aeQmlod1arAb7qyT
+	 TejgemR812N9nuTYeJuBNAVDkdX15SepZsM2cm3UB+os/1GK6MzazI8reQvK4XdYJx
+	 2vglztBGG3fVOstGGeKmJzZujOc0herLstlCzqy++2TxoMjnhbtu7LcpirMLnVykhl
+	 0WusTNZOxXBdA==
+Message-ID: <3d1a6b5c-f3bf-462f-879a-cdb5b60868ac@kernel.org>
+Date: Tue, 28 Apr 2026 21:51:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,218 +35,107 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/i915/gvt: Avoid -Wflex-array-member-not-at-end
- warning
-To: Jani Nikula <jani.nikula@linux.intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Zhenyu Wang <zhenyuw.linux@gmail.com>, Zhi Wang <zhi.wang.linux@gmail.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-Cc: intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ae_4GkBsNl_0SYTm@kspp>
- <4d5f5949b34f7bba00ed570ad2098074aa0c05f5@intel.com>
+Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
+To: Ard Biesheuvel <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
+ mark.rutland@arm.com, Ard Biesheuvel <ardb@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org
+References: <20260427153416.2103979-17-ardb+git@google.com>
+ <20260427153416.2103979-19-ardb+git@google.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <4d5f5949b34f7bba00ed570ad2098074aa0c05f5@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260427153416.2103979-19-ardb+git@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.19.10
-X-Source-L: No
-X-Exim-ID: 1wHlNZ-00000002RuV-1Y66
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.104]) [177.238.19.10]:48828
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfAW4GxWQupsl6Cg6uBtd38+gI70D5FFO1bbG8GLZs00xLMrQgqQE8c4HBwCEJ1cMOjBLpMwiAYq4mFmS+xZ7VqHdTe/Y7oMQM5cABjX3rmDKInGXklZP
- hchEgNb9qn9fFNrDhdgr7+eW8RHh/yc8/GVxT15UdaUeC0BV4GmAsH1KjG8+hzbvCpAPUZZw37sTSHLV4y/C1uteZ8bmCJgpVS5GAfbAYxopMBskvC7JbUIs
 
-
-
-On 4/28/26 01:53, Jani Nikula wrote:
-> On Mon, 27 Apr 2026, "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the TRAILING_OVERLAP() helper to fix the following warning:
->>
->> drivers/gpu/drm/i915/gvt/opregion.c:126:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> This helper creates a union between a flexible-array member (FAM)
->> and a set of members that would otherwise follow it. This overlays
->> the trailing members onto the FAM while preserving the original
->> memory layout.
->>
->> Lastly, the static_assert() ensures the alignment between the FAM and
->> struct efp_child_device_config child0; is not inadvertently changed,
->> and it's intentionally placed inmediately after the related structure
->> (that is, no blank line in between).
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/gpu/drm/i915/gvt/opregion.c | 20 ++++++++++++--------
->>   1 file changed, 12 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/i915/gvt/opregion.c b/drivers/gpu/drm/i915/gvt/opregion.c
->> index d6e76ba31d60..efe457c02788 100644
->> --- a/drivers/gpu/drm/i915/gvt/opregion.c
->> +++ b/drivers/gpu/drm/i915/gvt/opregion.c
->> @@ -122,17 +122,21 @@ struct vbt {
->>   	struct bdb_data_header general_features_header;
->>   	struct bdb_general_features general_features;
->>   
->> -	struct bdb_data_header general_definitions_header;
->> -	struct bdb_general_definitions general_definitions;
->> -
->> -	struct efp_child_device_config child0;
->> -	struct efp_child_device_config child1;
->> -	struct efp_child_device_config child2;
->> -	struct efp_child_device_config child3;
->> -
->>   	struct bdb_data_header driver_features_header;
->>   	struct bdb_driver_features driver_features;
->> +
->> +	struct bdb_data_header general_definitions_header;
->> +
->> +	/* Must be last as it ends in a flexible-array member. */
->> +	TRAILING_OVERLAP(struct bdb_general_definitions, general_definitions, devices,
->> +		struct efp_child_device_config child0;
->> +		struct efp_child_device_config child1;
->> +		struct efp_child_device_config child2;
->> +		struct efp_child_device_config child3;
->> +	);
+On 4/27/26 17:34, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
 > 
-> So this impacts the generation of a binary blob, parsed by the client OS
-> driver. In theory, the order of the BDB blocks shouldn't matter, but who
-> knows.
+> The empty zero page is used to back any kernel or user space mapping
+> that is supposed to remain cleared, and so the page itself is never
+> supposed to be modified.
 > 
-> Anyway, I'm more worried about inadvertent padding potentially being
-> introduced. struct vbt should have __packed attribute, which is missing,
-> but I also think the union and the struct within TRAILING_OVERLAP()
-> should also have __packed.
+> So make it __ro_after_init rather than __page_aligned_bss: on most
+> architectures, this ensures that both the kernel's mapping of it and any
+> aliases that are accessible via the kernel direct (linear) map are
+> mapped read-only, and cannot be used (inadvertently or maliciously) to
+> corrupt the contents of the zero page.
 > 
-> Like, if struct efp_child_device_config gets extended by one byte,
-> what's going to happen with padding? It's __packed on its own, but IIUC
-> that doesn't automatically apply to the enclosing structs or unions.
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  mm/mm_init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index f9f8e1af921c..6ca01ed2a5a4 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -57,7 +57,7 @@ unsigned long zero_page_pfn __ro_after_init;
+>  EXPORT_SYMBOL(zero_page_pfn);
+>  
+>  #ifndef __HAVE_COLOR_ZERO_PAGE
+> -uint8_t empty_zero_page[PAGE_SIZE] __page_aligned_bss;
+> +uint8_t empty_zero_page[PAGE_SIZE] __ro_after_init __aligned(PAGE_SIZE);
+>  EXPORT_SYMBOL(empty_zero_page);
+>  
+>  struct page *__zero_page __ro_after_init;
 
-We have __TRAILING_OVERLAP() to add attributes like __packed to the
-overlapping group of MEMBERS.
+I am no expert on BSS etc, but from what I understand, we'll still get zeroed
+page-aligned memory. I don't know if there is any other impact on not having it
+in bss.page_aligned. I assume no
 
-So, the patch would look as follows (including the addition of __packed to
-struct vbt):
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
-diff --git a/drivers/gpu/drm/i915/gvt/opregion.c b/drivers/gpu/drm/i915/gvt/opregion.c
-index d6e76ba31d60..f4fabba56a1b 100644
---- a/drivers/gpu/drm/i915/gvt/opregion.c
-+++ b/drivers/gpu/drm/i915/gvt/opregion.c
-@@ -122,17 +122,21 @@ struct vbt {
-         struct bdb_data_header general_features_header;
-         struct bdb_general_features general_features;
+-- 
+Cheers,
 
--       struct bdb_data_header general_definitions_header;
--       struct bdb_general_definitions general_definitions;
--
--       struct efp_child_device_config child0;
--       struct efp_child_device_config child1;
--       struct efp_child_device_config child2;
--       struct efp_child_device_config child3;
--
-         struct bdb_data_header driver_features_header;
-         struct bdb_driver_features driver_features;
--};
-+
-+       struct bdb_data_header general_definitions_header;
-+
-+       /* Must be last as it ends in a flexible-array member. */
-+       __TRAILING_OVERLAP(struct bdb_general_definitions, general_definitions, devices, __packed,
-+               struct efp_child_device_config child0;
-+               struct efp_child_device_config child1;
-+               struct efp_child_device_config child2;
-+               struct efp_child_device_config child3;
-+       );
-+} __packed;
-+static_assert(offsetof(struct vbt, general_definitions.devices) ==
-+             offsetof(struct vbt, child0));
-
-However, Sashiko says this[1]:
-
-"Does moving these fields physically change the byte-for-byte layout and
-block sequence of the VBT exposed to the guest VM?
-struct vbt represents the exact layout of the synthetic VBT exposed to the
-guest VM via the OpRegion. In intel_vgpu_init_opregion(), the structure is
-directly copied to guest memory:
-drivers/gpu/drm/i915/gvt/opregion.c:intel_vgpu_init_opregion() {
-         ...
-         memcpy(buf + INTEL_GVT_OPREGION_VBT_OFFSET, &v, sizeof(struct vbt));
-         ...
-}"
-
-If shuffling fields around actually causes any issues, I can use a different
-approach, like the one below (thanks to -fms-extensions):
-
-diff --git a/drivers/gpu/drm/i915/display/intel_vbt_defs.h b/drivers/gpu/drm/i915/display/intel_vbt_defs.h
-index 0dc13d080e8a..b238636e315e 100644
---- a/drivers/gpu/drm/i915/display/intel_vbt_defs.h
-+++ b/drivers/gpu/drm/i915/display/intel_vbt_defs.h
-@@ -568,7 +568,7 @@ struct child_device_config {
-         u32 edp_data_rate_override_reserved:20;                 /* 263+ */
-  } __packed;
-
--struct bdb_general_definitions {
-+struct bdb_general_definitions_hdr {
-         /* DDC GPIO */
-         u8 crt_ddc_gmbus_pin;
-
-@@ -581,7 +581,10 @@ struct bdb_general_definitions {
-         /* boot device bits */
-         u8 boot_display[2];
-         u8 child_dev_size;
-+} __packed;
-
-+struct bdb_general_definitions {
-+       struct bdb_general_definitions_hdr;
-         /*
-          * Device info:
-          * If TV is present, it'll be at devices[0].
-diff --git a/drivers/gpu/drm/i915/gvt/opregion.c b/drivers/gpu/drm/i915/gvt/opregion.c
-index d6e76ba31d60..3ebdc4c28c5b 100644
---- a/drivers/gpu/drm/i915/gvt/opregion.c
-+++ b/drivers/gpu/drm/i915/gvt/opregion.c
-@@ -123,7 +123,7 @@ struct vbt {
-         struct bdb_general_features general_features;
-
-         struct bdb_data_header general_definitions_header;
--       struct bdb_general_definitions general_definitions;
-+       struct bdb_general_definitions_hdr general_definitions;
-
-         struct efp_child_device_config child0;
-         struct efp_child_device_config child1;
-@@ -132,7 +132,7 @@ struct vbt {
-
-         struct bdb_data_header driver_features_header;
-         struct bdb_driver_features driver_features;
--};
-+} __packed;
-
-  static void virt_vbt_generation(struct vbt *v)
-  {
-
-However, in this particular case, __TRAILING_OVERLAP() is more robust.
-
-Thanks for the feedback!
--Gustavo
-
-[1] https://sashiko.dev/#/patchset/ae_4GkBsNl_0SYTm%40kspp
+David
