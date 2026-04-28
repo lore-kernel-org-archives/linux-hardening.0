@@ -1,141 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE023B0ACA;
-	Tue, 28 Apr 2026 19:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777405877; cv=none; b=VI6IVmByIjzvjEaL4nQuZ9A63rK+bHnVig/rcJ+v4J32v7uSOEUVwWn8Jys2CYO571ubTMKRK9Y4x+/G66l3/1Oer2x3JFFYibxZiaIqgdzHSBROwgWuKonIfWsdZTvXeEKGGHM2gfK+j8aBESZSMEuz4olNdMUl67J5z3JmoFg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777405877; c=relaxed/simple;
-	bh=Nhfmyw9bPmtRKlxPV1In2mC53XW8ms1qpcByR8ySSaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o+dxHt8rwAJW8Dxm7vytaZzdbkVpVJ+WF4N++Efdv5oXrVj5APu0srb2PIpjF4LLtchWV3ODtthQnRDd9gckiRm1csPhE/4yPxqiUYwmbqDXPCRtlEtpwLjvsRby0YCAAH7eNwxHXcBdc6P1fhfh3hL4EIAHGlyatB+x3UHLJDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nm3/Up7F; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DF231AF07
+	for <linux-hardening@vger.kernel.org>; Tue, 28 Apr 2026 20:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777408070; cv=pass; b=fll6aan2kb2IwgSA/NbMQsv629gGK6FLt7aLQ16Z8LBMceMiCn3Rsixx+mLBc7WBFn7tfJbh7j81FMLV2p+GTc2Z0qb8phL5rvjONQJJU2WBb/ZabBogmqcg3M9Kc7NomWWUmpHoGdHVjm7NxR+5Oaujr62NurprZswEnNTWuz4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777408070; c=relaxed/simple;
+	bh=8pZqDLVXGdKS4vEGYY/DHdErCtozb81IbFmeZdDnZOk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QMKR6dL47dKRJaGqbM7WLXq9/HGocUE5n/bZxK6MI+wq38Lt7xpub3rsB8ztgT6Jfpq2JTw06fyIwipTfAPyhrvJ2z8C7KMjiXvyRmaoizUf85WgPQA8iR0sFq3u/idZVL1RBq++TKg0H3KUTm/IUXYUB8go6YuPmnOZcHz+Lgw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bYgXDGyj; arc=pass smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nm3/Up7F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA90C2BCAF;
-	Tue, 28 Apr 2026 19:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777405876;
-	bh=Nhfmyw9bPmtRKlxPV1In2mC53XW8ms1qpcByR8ySSaY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nm3/Up7Fte+HsSj4Zi+YOwznbJD7iPvMtnYo665KKkx6dWJcE7Gzd0pPiMSQo+jK4
-	 jne31Wtcxx5AG8x5gUZVH9V8RjxMZw7APbTvdkucjJW3hbn/Kxv2fYWn4d4iNwidcq
-	 oxgP3xyTt8eJTpuPlhI6M7N8t55F9QFPaHEBiZMxlU5purCnr6aeQmlod1arAb7qyT
-	 TejgemR812N9nuTYeJuBNAVDkdX15SepZsM2cm3UB+os/1GK6MzazI8reQvK4XdYJx
-	 2vglztBGG3fVOstGGeKmJzZujOc0herLstlCzqy++2TxoMjnhbtu7LcpirMLnVykhl
-	 0WusTNZOxXBdA==
-Message-ID: <3d1a6b5c-f3bf-462f-879a-cdb5b60868ac@kernel.org>
-Date: Tue, 28 Apr 2026 21:51:09 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYgXDGyj"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-67179ed133dso13269588a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 28 Apr 2026 13:27:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777408067; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UFC2UGC4TvEZrth3jzTmv/mMmrrz8NmOoWfKdgdt5tYdt6iwx5MVlQ3f7uVQH/eVU7
+         HmiJKHZrGIkl8N0cnn8l/qQB3d9OHKN/jKOGBSUU1VYUS68DFSol2NfMOj5wTB5Zu5cG
+         luaA/XEE5jqknGjQ6vqWCrqaIDtf4xQxcwFqqESdtcQXTFRTGwAU/za7R3upNIzLEGFs
+         kQxbXRMGjknbDUnWbPm8DWHdTXRidZqVcoaW+01TIyrfKitgavNbTp5TGkrpjZUZeniy
+         uuaGqwI+BpCAv3gKR8CijKCoyam3oKZt4rgGxFU71iis9GcTjjHLBRWVDt5J0+BvJi04
+         Iu5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=1ep7cTthGT0TRjukvSCw1U5zbGWRlXkdi2Yh6rincrk=;
+        fh=VAhV/GXhC5CPvDkKH23NLJCM8mqgVzkORKcVElaRFGU=;
+        b=VJ5JdpyCn4u1Wq9uyr4P9rgoDjhEFt/J08AuFgKGMLWIenw44wqpN/x7PNmlbWa68E
+         r8r8u9WVKKA+OHsfSuvI3eleSpmkJ6aecBBQakuj1v83IldJQA9EWYZhKw3ztabX4ECO
+         mH6fobvZqmN8iB9cce4pGyeUP/sYyEgT4xKiyTQq8/KH16C/7D5fK3JouwVdhWTWnTki
+         X7ERzyBDDUtynmiZyUTwXL6tbl/5ePhxqy/5yoZMVDXIeD58TGMEhCuhGBBWh0hbXNCQ
+         8NaRVq2By1kaVa3vDjwBtOKFwQqs24Ro+txzNx7aleQNNhu7PniBiFZz3B+wb03+9cg2
+         LY8A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777408067; x=1778012867; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1ep7cTthGT0TRjukvSCw1U5zbGWRlXkdi2Yh6rincrk=;
+        b=bYgXDGyjWJZMsmVGWhGSIGIDyj+PqD7RHshfyw5CpKA7Bmpmd+5MiKTD6lCsFczOzT
+         A+D/orHAHFm9JaklPGvS43eftIPkAWtL48QGRim2+VPFumuCfQTaD5m69qbC7tlGIHbe
+         5I9l+DRten1uo+GqZjHoUSqIDo5DwOcTSL+2GsdSn6F088TZ4av5OSUw3RjEf2xKsZMk
+         BY0+FZm/9pduSozg9lr4fH6MwuF/uuNFq45Xbx5gRj0rpI7CUB9IgQx7vH/zBBGOQqnh
+         WZ2fxj298x1Lw231rn3OS8hwxWDw0gp+BYMXxw8B0ixV/fGf8UmogmROz53QftGYpKyM
+         S8eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777408067; x=1778012867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1ep7cTthGT0TRjukvSCw1U5zbGWRlXkdi2Yh6rincrk=;
+        b=jgQQLIRI71jpyyeZn2PjYUYJx5kTxXk9awtQewgUqx3TSXHikwepN2JTgUZd+eld1K
+         qzabt8iSrcgFPv2JaKbcJThbKPajQ180j+HucGCLk+9Y7pN/e3RyNvrp1qajtDrFRclN
+         0+g9BsBxVQCBk3laxka9eojJaCVlGme5oHw+WjYzY6/G9WaJXgSZliGvvA0NAirvGx0/
+         dGYo5Kz2O+1IycNV6NmJQP0SZPwznCgwPX7r9oA7ss4eBGKCksZz76oNnZ5wbRs8MaHV
+         WlrFwF3/MRR02lBnPChDabDTkE1lmfVOa9fFNydikqgB8V+A9WJsWA53ZRCf6EL53sq2
+         zJyA==
+X-Forwarded-Encrypted: i=1; AFNElJ+pPilA6fDVN9WLka3at9TDMxv3JZ88qv1Zd7FxyjcabAsdB3Vi8XDQzWksHHoxhVV9G/t2EV6jzH/9JwhtwTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfC9Y1kwYjzQkwbDqEl0mBjlgpN3FgMp8JsbCl8jwpcC5o7jFO
+	2z12ev8GLRKSQNAy95Zlud174tTocLJArfqdvBPRnjwoQ9I5F4CAZ/ZyxUa7o41Q6hMkJNWzxVd
+	LxqE6TqRrUmEeWt0FlxAgZU+LpMUwewg=
+X-Gm-Gg: AeBDiesovLX8ksqzx53J1fsLFRnGsN4D/WShd0obOJOj96Q+Vkoukctk49t4mYV98fG
+	7+FPCxy54n88oLJdGToobbNcKfS9IKOjUEMlWgFMmh856l95cTIz1xx41Ltpfkm0ho/uLqkbIEK
+	VZX9Ygq8i/bq3XqcIlQ/GGzltQl+n61ikkAJYc92vvu1G2RrNbQMdYXbSDG3MIMotEeBoRsUQo3
+	mKU/5kQjRhAQOLsBnmaN3qwk1d0fBa8Mt+5/wKx6Iz3fHjwsJgU2vyItHNuJSiw/Dg034m9YoJ6
+	sMQ8KyCJLQA+bO19ZXI57WCrKTATXbV8si52x7b575s2Gluq2SrlDO5ukeyYInVdsuALZdJvzNI
+	7tsRu6wiH7aC+gR8RrGcM6GIQtRmapbgoxz1jOWQu1eqTe7GxZuGB2832Wwo=
+X-Received: by 2002:a05:6402:e94:b0:66d:d2f9:520c with SMTP id
+ 4fb4d7f45d1cf-679bb0982efmr2165877a12.19.1777408066633; Tue, 28 Apr 2026
+ 13:27:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
-To: Ard Biesheuvel <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
- mark.rutland@arm.com, Ard Biesheuvel <ardb@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
- Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-hardening@vger.kernel.org
-References: <20260427153416.2103979-17-ardb+git@google.com>
- <20260427153416.2103979-19-ardb+git@google.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260427153416.2103979-19-ardb+git@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260427172817.417614-3-thorsten.blum@linux.dev> <DI4OKZA3428E.5TJAYEV50JH2@bootlin.com>
+In-Reply-To: <DI4OKZA3428E.5TJAYEV50JH2@bootlin.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 28 Apr 2026 13:27:34 -0700
+X-Gm-Features: AVHnY4Jkk0RBV4cH1i-ipNNk5Jr5JuI7AhhHwp3PjTVZY3bKpVhsokcMSgzE7Yc
+Message-ID: <CAKxU2N8OUcsTxG4XDH=cbROz4954-V5ximN-XHQ5RrPagTfUjQ@mail.gmail.com>
+Subject: Re: [PATCH] i2c: atr: annotate i2c_atr_adap_desc->aliases with __counted_by_ptr
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Romain Gantois <romain.gantois@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/27/26 17:34, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> The empty zero page is used to back any kernel or user space mapping
-> that is supposed to remain cleared, and so the page itself is never
-> supposed to be modified.
-> 
-> So make it __ro_after_init rather than __page_aligned_bss: on most
-> architectures, this ensures that both the kernel's mapping of it and any
-> aliases that are accessible via the kernel direct (linear) map are
-> mapped read-only, and cannot be used (inadvertently or maliciously) to
-> corrupt the contents of the zero page.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  mm/mm_init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index f9f8e1af921c..6ca01ed2a5a4 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -57,7 +57,7 @@ unsigned long zero_page_pfn __ro_after_init;
->  EXPORT_SYMBOL(zero_page_pfn);
->  
->  #ifndef __HAVE_COLOR_ZERO_PAGE
-> -uint8_t empty_zero_page[PAGE_SIZE] __page_aligned_bss;
-> +uint8_t empty_zero_page[PAGE_SIZE] __ro_after_init __aligned(PAGE_SIZE);
->  EXPORT_SYMBOL(empty_zero_page);
->  
->  struct page *__zero_page __ro_after_init;
+On Tue, Apr 28, 2026 at 2:30=E2=80=AFAM Luca Ceresoli <luca.ceresoli@bootli=
+n.com> wrote:
+>
+> Hello Thorsten,
+>
+> +Cc Romain, author of the involved code
+> +Cc Rosen, author of a similar patch elsewhere in i2c-atr [0]
+>
+> [0] https://lore.kernel.org/linux-i2c/20260327030310.8502-1-rosenp@gmail.=
+com/
+>
+> On Mon Apr 27, 2026 at 7:28 PM CEST, Thorsten Blum wrote:
+> > Add the __counted_by_ptr() compiler attribute to ->aliases to improve
+> > bounds checking via CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
+> >
+> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > ---
+> >  include/linux/i2c-atr.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
+> > index 2bb54dc87c8e..b52a7b9ec536 100644
+> > --- a/include/linux/i2c-atr.h
+> > +++ b/include/linux/i2c-atr.h
+> > @@ -71,7 +71,7 @@ struct i2c_atr_adap_desc {
+> >       struct device *parent;
+> >       struct fwnode_handle *bus_handle;
+> >       size_t num_aliases;
+> > -     u16 *aliases;
+> > +     u16 *aliases __counted_by_ptr(num_aliases);
+>
+> I'm not fully proficient about all counted_by things, but the patch looks
+> OK to me, and definitely @num_aliases is the number of items @aliases mus=
+t
+> have, so:
+I prefer my patch.
 
-I am no expert on BSS etc, but from what I understand, we'll still get zeroed
-page-aligned memory. I don't know if there is any other impact on not having it
-in bss.page_aligned. I assume no
-
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-
--- 
-Cheers,
-
-David
+__counted_by is supported by more versions of GCC/Clang than __counted_by_p=
+tr.
+>
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>
+> --
+> Luca Ceresoli, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
