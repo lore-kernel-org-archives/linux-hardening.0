@@ -1,96 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CA2428828;
-	Tue, 28 Apr 2026 12:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B3331E833;
+	Tue, 28 Apr 2026 14:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777379253; cv=none; b=lhJ2LMJ/OS7x/0hdWtXrsh89hEbsyaty6VjUktOT41kKD7g0ZsJNyHxG1bTDUwTn3NLHtcSvOjNA1AcxAjXtMr0dkdiIDGq/r3H17RaDE3T19ol9/6kFQ6akZXejYkwX11xr7vN32kfB56cZNoGFdQANJ7bq1HiLXGBCHBVGxdI=
+	t=1777385795; cv=none; b=uO7mrlUh/E6nE1hDW+pZc84QLRDPXD9bewlQKWYkXxiVOwvdlqC66aAxHtfhDj/rDacxaOZyB2N0t9AP6C+7Om0hYmqKKJR3aAXlGORKWt9a7lSrSa3bx2HYyx4Yo0cMRmKDUPdVvxMErXaeqPEQ5Spm1O/Dvb0WI6oErj9R50U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777379253; c=relaxed/simple;
-	bh=oXW2BuxDEEJJgDVSv85Sq/XrKA16JupO5CMfYwPGdtM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S6O2SUTlldwNzbQgaXPlvdZJh2k7R0y1xkiV0MU6aq90J14hoG43fpiOqs3Kl/Pqv3r+63l3zdP4DX37zk/GGitFqk2KpJnZRmWm5elYKc0qD0CH+SH2QryPKJc00v11E62e256y+HP5eXfc1DScgVlr7aoBaD2Juu/X2Zgf8xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TtFCNgTA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777385795; c=relaxed/simple;
+	bh=btCZZuKZwDHwegac4lZwAmmkykNullD5FLtTtCs4fM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fXowqkSWJowkjp01VHY2kOwOoW0fB+EslQELRqpS1fv3S55ny75JIbdfJdN8KCoD1TfxcdMf4uYSLIAL4/mivkoeXcdC8MVmSpAhquR7+RhiNIUTEqIA5JtsVy2WOWRaafcUjjDMyRnjFnA+C7theQe2sVZDl886Bj+ukFJEp/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KZBlPQ1s; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TtFCNgTA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0504EC2BCAF;
-	Tue, 28 Apr 2026 12:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777379252;
-	bh=oXW2BuxDEEJJgDVSv85Sq/XrKA16JupO5CMfYwPGdtM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TtFCNgTA2p/mjwznidoIND1qLBGVv3UQduA0gVwAsewf5q1TlbcO5jwTODxHc5JoN
-	 h1RCw0V5QVuBkeotKfTgdSjuW5CO2ySjpRm4tI+y7L7FuAqaa7Dp9QQ69H7u8Ehn7i
-	 IC7yJnJQPhLrycdgF17ueA+2wox7S8UIsB00pQqIZomyw2wX/EU2MWDh84xmHzN0sV
-	 DJ7XTFv3JBHxH6uuIy352oeNt9n8HWU1MprKg+AIjkg/gVuoVf2oa5dWa2tLl2fAmA
-	 c0QmFGBXbzw9Lt5wv4wdPuEWr6Ri4UVEuxyRnGA4fOBleln596cayCqahje7lwUg0V
-	 cLm2ZHZXfE+BQ==
-Date: Tue, 28 Apr 2026 14:27:23 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Liz Prucka <lizprucka@google.com>,
-	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
-Message-ID: <afCnq17NWvM4T4vC@kernel.org>
-References: <20260427153416.2103979-17-ardb+git@google.com>
- <20260427153416.2103979-19-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KZBlPQ1s"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD7841C2B;
+	Tue, 28 Apr 2026 07:16:22 -0700 (PDT)
+Received: from [10.57.63.26] (unknown [10.57.63.26])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48BFF3F763;
+	Tue, 28 Apr 2026 07:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1777385788; bh=btCZZuKZwDHwegac4lZwAmmkykNullD5FLtTtCs4fM0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KZBlPQ1sPDbrJhxD9GJVH5ERW4UKB3ReLaGE3w6Rs7y5sqoZtBJxYyDPoySmzUimS
+	 O2W2ca7Bx0rNnlTgvtXYIkX9i8isJ3q6U5bEoSdMuy+joC8i+kcUX/Pz9lnXt+pwSX
+	 DREPzwlNeterBeiJ8pRPWspZwsPTrQUst6s1cJdo=
+Message-ID: <82091dd4-9d11-4054-89ec-99aadaeec7b2@arm.com>
+Date: Tue, 28 Apr 2026 16:16:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260427153416.2103979-19-ardb+git@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/15] arm64: mm: Map the linear alias of text/rodata
+ as tagged
+To: Ard Biesheuvel <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
+ mark.rutland@arm.com, Ard Biesheuvel <ardb@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ David Hildenbrand <david@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org
+References: <20260427153416.2103979-17-ardb+git@google.com>
+ <20260427153416.2103979-18-ardb+git@google.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260427153416.2103979-18-ardb+git@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 27, 2026 at 05:34:19PM +0200, Ard Biesheuvel wrote:
+On 27/04/2026 17:34, Ard Biesheuvel wrote:
 > From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> The empty zero page is used to back any kernel or user space mapping
-> that is supposed to remain cleared, and so the page itself is never
-> supposed to be modified.
-> 
-> So make it __ro_after_init rather than __page_aligned_bss: on most
-> architectures, this ensures that both the kernel's mapping of it and any
-> aliases that are accessible via the kernel direct (linear) map are
-> mapped read-only, and cannot be used (inadvertently or maliciously) to
-> corrupt the contents of the zero page.
-> 
+>
+> Before moving the empty_zero_page into the __ro_after_init section, make
+> sure it has the memory-tagged type. This is needed to ensure that
+> cpu_enable_mte() will be able to initialize the tags correctly.
+
+mark_linear_text_alias_ro() is called after all features have been
+detected and enabled, so do we actually need this?
+
+AFAICT the lines that matter for cpu_enable_mte() are those, in map_mem():
+
+    __map_memblock(pgdp, kernel_start, kernel_end,
+               PAGE_KERNEL, NO_CONT_MAPPINGS);
+
+It is probably this call that needs to be changed to use
+pgprot_tagged(PAGE_KERNEL).
+
+- Kevin
+
 > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
 > ---
->  mm/mm_init.c | 2 +-
+>  arch/arm64/mm/mmu.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index f9f8e1af921c..6ca01ed2a5a4 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -57,7 +57,7 @@ unsigned long zero_page_pfn __ro_after_init;
->  EXPORT_SYMBOL(zero_page_pfn);
+>
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index dd85e093ffdb..f084993024ab 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1049,7 +1049,7 @@ void __init mark_linear_text_alias_ro(void)
+>  	 */
+>  	update_mapping_prot(__pa_symbol(_text), (unsigned long)lm_alias(_text),
+>  			    (unsigned long)__init_begin - (unsigned long)_text,
+> -			    PAGE_KERNEL_RO);
+> +			    pgprot_tagged(PAGE_KERNEL_RO));
+>  }
 >  
->  #ifndef __HAVE_COLOR_ZERO_PAGE
-> -uint8_t empty_zero_page[PAGE_SIZE] __page_aligned_bss;
-> +uint8_t empty_zero_page[PAGE_SIZE] __ro_after_init __aligned(PAGE_SIZE);
->  EXPORT_SYMBOL(empty_zero_page);
->  
->  struct page *__zero_page __ro_after_init;
-> -- 
-> 2.54.0.rc2.544.gc7ae2d5bb8-goog
-> 
-
--- 
-Sincerely yours,
-Mike.
+>  #ifdef CONFIG_KFENCE
