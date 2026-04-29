@@ -1,33 +1,33 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B79149C7B
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Apr 2026 14:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0DDE34D926;
+	Wed, 29 Apr 2026 14:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777472875; cv=none; b=eXRA81COngVR/pxuCmI/QhO0baNCH3cr9XWir8f7gL+VYSSe1BuZSyJnm/oVPggYGybTSvpXe/tnjmC/sYibhjoRjQBv6tfQvcpjQbj0viOYEFYzAxV0dRlbfhyz1/pqu8DSH1FY3k/ljoNx96h0Ps2ztXOcbFrAvHFH9T4yVXY=
+	t=1777473042; cv=none; b=Sb1N0SXeqSKFPhPIZWy8lgw/dIBGsm+xpfnWJ/DpkG3b6ENvykVw4wli4FBJu0/+uUbTrvPvdqSXCekHrSndNGT0WTAGTkyE5wbSGNmbZN4RbL5M3yqidDF1DgQaO65QsvmR2o1RWn7OIZFADEuC0PoleP0cLL0rCVXMe7Wbmoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777472875; c=relaxed/simple;
-	bh=F3PVZBZmNefwkqlKIjOUbFnAYv8PA6YsXVkn7/L/i0g=;
+	s=arc-20240116; t=1777473042; c=relaxed/simple;
+	bh=yYUcrffafPaOm77R9dKuGdogYVbwK0I1WaJfySVSriM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X6haK/UShOQVHjIxzGRQkbz/IJMuWEb4An7qNKrmCqmkviGh/swn64zp9YJnLqbLoY7XTPQTAyN+bsuwrbXTHoGon0nRY6ipn2jyY5JZM+u+Kxf45W3+aPLc2qPxh7CJObpSTiH4EH8SwyqoDfQoIWrNGQ+Y297SExTxSX0LHCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1CtxZVH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=LkA0PHCgLI72rYhpAOmlEiGrstWOuw34vxczp/aRPm1UGBCTuLsw+j62dltyfgca0/vbrOhcHqzQesjJRKUPdJcxtim7uJqyPC/R890jW2ay/nhD9vF1ZrB0gzwFzwUZtcieSNMVOxQKkDCQ8I9MTer/Rf9d6YPS1802ncjPFc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=uyCgDRP/; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1CtxZVH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DF5CC19425;
-	Wed, 29 Apr 2026 14:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777472875;
-	bh=F3PVZBZmNefwkqlKIjOUbFnAYv8PA6YsXVkn7/L/i0g=;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="uyCgDRP/"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82B5E1BCB;
+	Wed, 29 Apr 2026 07:30:34 -0700 (PDT)
+Received: from [10.57.62.76] (unknown [10.57.62.76])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE18C3F62B;
+	Wed, 29 Apr 2026 07:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1777473040; bh=yYUcrffafPaOm77R9dKuGdogYVbwK0I1WaJfySVSriM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H1CtxZVHfBOutby2kB0KcUf8Gk/UWp5/ZLYbImHPIbrS7Co6CWhf58bieD2lEbI5G
-	 97Yk1/kPcX3+93H4Fwsk1xoKu5gbMxgjTvUd9C8eVrYKmfXmSYrxp9sucqtk6btXoj
-	 gY/x2IxDF8YgbWXJ+78qMLS4NRG1C7FgHBznAnC9F3raesvvg84H8Ge9H1ne4b/Eku
-	 1UdnhHAOkzawYUlTpBntxG7hedJTEOBfeyy6Y1jWzOOSZtHSqVVVw2URXCTmKNyh21
-	 Lpqar+d97OoG+86S5v0owdL0YMSY+UyedcHv0RTeaQmXeQlYaXVrQvKajadocsN7IB
-	 kIqgU4u3CFRag==
-Message-ID: <bdfe4f8b-02f1-4331-a07a-eca2b7de1063@kernel.org>
-Date: Wed, 29 Apr 2026 16:27:52 +0200
+	b=uyCgDRP/abTLDH1GF4bhkMX0G6Uck4hgIgyUBRuXB/drSr9g4g9bKGm5viIR9oygl
+	 cP56E8UqUoyxELCQIEk1OYF0wK9VrLrDWxYYc+nMmpWw8waMr9WI7BvBrp4N2WqRfM
+	 sg1QsRk3kKCYoyYwdAkATJHWTz8jmDVV0zK0xhLo=
+Message-ID: <2f5692d7-6589-4717-8258-f43d8227d74a@arm.com>
+Date: Wed, 29 Apr 2026 16:30:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,94 +35,77 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: fortify_test_known_sizes: EXPECTATION FAILED at
- lib/tests/fortify_kunit.c:90 (v7.0.2, ppc)
-To: Erhard Furtner <erhard_f@mailbox.org>, linux-hardening@vger.kernel.org,
- Kees Cook <kees@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-References: <f45fd960-335c-4761-9590-ff8eccb62e9a@mailbox.org>
-Content-Language: fr-FR
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-In-Reply-To: <f45fd960-335c-4761-9590-ff8eccb62e9a@mailbox.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 11/15] arm64: mm: Don't abuse memblock NOMAP to check
+ for overlaps
+To: Ard Biesheuvel <ardb@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ David Hildenbrand <david@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org
+References: <20260427153416.2103979-17-ardb+git@google.com>
+ <20260427153416.2103979-28-ardb+git@google.com>
+ <8a315ca2-3754-4a66-990e-55b85191aa6e@arm.com>
+ <1f9c1ca5-c15c-4a08-aa8c-cbe64f7f205b@app.fastmail.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <1f9c1ca5-c15c-4a08-aa8c-cbe64f7f205b@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 29/04/2026 16:23, Ard Biesheuvel wrote:
+> On Wed, 29 Apr 2026, at 12:54, Kevin Brodsky wrote:
+>> On 27/04/2026 17:34, Ard Biesheuvel wrote:
+>>> From: Ard Biesheuvel <ardb@kernel.org>
+>>>
+>>> Now that the DRAM mapping routines respect existing table mappings and
+>>> contiguous block and page mappings, it is no longer needed to fiddle
+>>> with the memblock tables to set and clear the NOMAP attribute in order
+>>> to omit text and rodata when creating the linear map.
+>>>
+>>> Instead, map the kernel text and rodata alias first with the desired
+>>> attributes, so that they will not be remapped later with different
+>>> attributes when mapping the memblocks.
+>>>
+>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>>> ---
+>>>  arch/arm64/mm/mmu.c | 24 +++++++-------------
+>>>  1 file changed, 8 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>> index 5e2348b15783..1a4b4337d29a 100644
+>>> --- a/arch/arm64/mm/mmu.c
+>>> +++ b/arch/arm64/mm/mmu.c
+>>> @@ -1148,12 +1148,15 @@ static void __init map_mem(void)
+>>>  		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>>>  
+>>>  	/*
+>>> -	 * Take care not to create a writable alias for the
+>>> -	 * read-only text and rodata sections of the kernel image.
+>>> -	 * So temporarily mark them as NOMAP to skip mappings in
+>>> -	 * the following for-loop
+>>> +	 * Map the linear alias of the [_text, __init_begin) interval
+>>> +	 * as non-executable now, and remove the write permission in
+>>> +	 * mark_linear_text_alias_ro() above (which will be called after
+>>> +	 * alternative patching has completed). This makes the contents
+>>> +	 * of the region accessible to subsystems such as hibernate,
+>>> +	 * but protects it from inadvertent modification or execution.
+>>>  	 */
+>>> -	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+>>> +	__map_memblock(kernel_start, kernel_end, pgprot_tagged(PAGE_KERNEL),
+>> Is it now necessary for that mapping to be tagged? If so, it should
+>> probably be called out in the commit message.
+>>
+> As you've pointed out, the initial r/w mapping of the linear alias of rodata
+> will need to be mapped tagged before moving the zero page there. So this patch
+> will just preserve that, rather than remapping the region tagged explicitly as
+> it does now.
 
+Right! I got lost in all the mappings :)
 
-Le 29/04/2026 à 12:17, Erhard Furtner a écrit :
-> Greetings!
-> 
-> Getting this on my G4 DP on kernel v7.0.2 and v7.1-rc1 at running 
-> fortify_kunit test:
-> 
-> [...]
-> KTAP version 1
-> 1..1
->      KTAP version 1
->      # Subtest: fortify
->      # module: fortify_kunit
->      1..26
->      # fortify_test_known_sizes: EXPECTATION FAILED at lib/tests/ 
-> fortify_kunit.c:90
->      Expected ({ char *__p = (char *)(stack); size_t __ret = 
-> (~(size_t)0); const size_t __p_size = 
-> __builtin_dynamic_object_size(stack, 1); if (__p_size != (~(size_t)0) && 
-> __builtin_constant_p(*__p)) { size_t __p_len = __p_size - 1; if 
-> (__builtin_constant_p(__p[__p_len]) && __p[__p_len] == '\0') __ret = 
-> __builtin_strlen(__p); } __ret; }) == 5, but
->          ({ char *__p = (char *)(stack); size_t __ret = (~(size_t)0); 
-> const size_t __p_size = __builtin_dynamic_object_size(stack, 1); if 
-> (__p_size != (~(size_t)0) && __builtin_constant_p(*__p)) { size_t 
-> __p_len = __p_size - 1; if (__builtin_constant_p(__p[__p_len]) && 
-> __p[__p_len] == '\0') __ret = __builtin_strlen(__p); } __ret; }) == 
-> 4294967295 (0xffffffff)
->      not ok 1 fortify_test_known_sizes
-
-I have the same on QEMU with pmac32_defconfig + FORTITY + KUNIT ...
-
-Apparently it is due to __builtin_constant_p(*__p) returning FALSE, if I 
-understand correctly it is expected that it returns TRUE.
-
-This is with GCC 15.2
-
-Christophe
-
-
->      ok 2 fortify_test_control_flow_split
->      ok 3 fortify_test_alloc_size_kmalloc_const
->      ok 4 fortify_test_alloc_size_kmalloc_dynamic
->      ok 5 fortify_test_alloc_size_vmalloc_const
->      ok 6 fortify_test_alloc_size_vmalloc_dynamic
->      ok 7 fortify_test_alloc_size_kvmalloc_const
->      ok 8 fortify_test_alloc_size_kvmalloc_dynamic
->      ok 9 fortify_test_alloc_size_devm_kmalloc_const
->      ok 10 fortify_test_alloc_size_devm_kmalloc_dynamic
->      ok 11 fortify_test_realloc_size
->      ok 12 fortify_test_strlen
->      ok 13 fortify_test_strnlen
->      ok 14 fortify_test_strcpy
->      ok 15 fortify_test_strncpy
->      ok 16 fortify_test_strscpy
->      ok 17 fortify_test_strcat
->      ok 18 fortify_test_strncat
->      ok 19 fortify_test_strlcat
->      ok 20 fortify_test_memcpy
->      ok 21 fortify_test_memmove
->      ok 22 fortify_test_memscan
->      ok 23 fortify_test_memchr
->      ok 24 fortify_test_memchr_inv
->      ok 25 fortify_test_memcmp
->      ok 26 fortify_test_kmemdup
-> # fortify: pass:25 fail:1 skip:0 total:26
-> # Totals: pass:25 fail:1 skip:0 total:26
-> 
-> 
-> Suppose this may be a ppc/BE specific test failure as I don't get it on 
-> my Thinkpad T60 (x86).
-> 
-> Full dmesg and kernel .config available on request.
-> 
-> Greetings,
-> Erhard
-> 
-
+- Kevin
