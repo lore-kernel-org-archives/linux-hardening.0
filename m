@@ -1,96 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3AD175A7E;
-	Wed, 29 Apr 2026 03:00:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44D814F70;
+	Wed, 29 Apr 2026 03:46:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777431630; cv=none; b=cn1z1gLQBHDF9WDqlrpwzeLwUYiD965Z69OeX2mpetgOexN7U9HjuT+Quj/GKzc25oFFMbN/HXSiPHe9negajZF5sC6R218PGUO9PQJZMTBdsJ4kzUhmf8s0LVrHsGYn+45Z862Htf6GG/BPbFYVfwkra8Din7YFHpwQOsvzBVU=
+	t=1777434396; cv=none; b=M7yvvD0HMr87Dv52MRVcXOQcif8ySlQEfoqStO7WYeaiylsxD7jvVA7NgsI2QLeLeDAMqa14pVdDuRg6iqpKyLqsiBaCRnHX3zKCHujqxl1/bzjko4KpKOczFiUyQ9EV5p6aF3+XBKcl2FFvRZgA/CAQRueWcLau0dTZNRCacTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777431630; c=relaxed/simple;
-	bh=vzaqTQhYZh+xvOuS+0eBnjbB2FREkk6iH/xqM4TGa0k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gNwhtneuG2kqOQhYRfpnhUpMCD5hCrrrRgiqxejQQ7fmLRNIE9H+5zXUHmqjnTrD+h/O3fPTz3y+XlHc6yDrkHjDtNtlwQwzhRXr+kOIV3ZCmjb1Xi1FTLt3yUKIVoESy60Olaj1Xz6jpo9ScAQKagE9pS0sKVdCviMrkNTUK4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsxnAek+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777434396; c=relaxed/simple;
+	bh=JCo4W17yGNJHr5uT0G56EQ6Zm1r/LAPTIa0A3S5ajik=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=b6EDxX3vH8maq2dfpCesdIDiRUXcw+js1Bpz3pUne3m91lABGNDUMHqFd80z+3++GLlv9cgfmByb0itRvbNby+ocpRl/g2mgJjkB1EyUjBZ7Q3kG7/oD71EDo51qJYd6K6wc7c1rQ27EaX7+p8jsFy/9tawZKIXoGpmNcPyt9YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhDyBkug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsxnAek+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AB5CC2BCC4;
-	Wed, 29 Apr 2026 03:00:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhDyBkug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C2A8C19425;
+	Wed, 29 Apr 2026 03:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777431630;
-	bh=vzaqTQhYZh+xvOuS+0eBnjbB2FREkk6iH/xqM4TGa0k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bsxnAek+AMbwi0N65LCy7M6WCqVTp1H47KxteLyooGCKrEkUx3kxhCRSYDmr+H1qG
-	 lLBpl2juOFBqZJS0NZ2SwELArbPj3YkPUJkrGxH4vcJGW5WDgzP5Zns/cJ8sEnvkdn
-	 cbgn7yyJ2+xp3ZLZqUVao6oWs/N69grhMAkzvWDgexR2rjl+5Kz0gja0+P9nR6dirt
-	 Uonjfe6KaXmG0EBy9T85kbVicJ0FsVMrkpmZyIq+93cyWzYAUSPe6QtkplGvGsYqJo
-	 yQ7qwMVoJona2c0H8COiE9EN+8KdErI6sVgueZT0FePYdhv9h6Z0eNSimnSoaDOyCg
-	 8UnzEsM/F7V8A==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 28 Apr 2026 22:59:14 -0400
-Subject: [PATCH 08/14] riscv: Remove tautological condition from selection
- of ARCH_SUPPORTS_CFI
+	s=k20201202; t=1777434396;
+	bh=JCo4W17yGNJHr5uT0G56EQ6Zm1r/LAPTIa0A3S5ajik=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=rhDyBkuglDUdr17bfckZvaDzNWH8iutFm1MvIv0t2GXkauS07g1klRGLTJOMAoys1
+	 oQdmGUCcpE4SO7+aqFUZED9IhEbmegs7RKGRUapcuJp1+yxvL0swbFNLm4+VVjaffY
+	 OraKQT5km0aGs0P6r5RWVvc+VE2xMXfm8Xuz5XpRApASBBg4DhS5eLEwOogm24qmNk
+	 Ni+MHf4+A2Kb0x/hKFUOfiRo26AeG5wRfCEiFSPdsDSK/1dEi8Aylsb1eypOWYwSBc
+	 x77ASs2wP0bEEVOEljHPwCtOz1M00UvzHmXKDwH2poYnOcyrfvTKzGNF/O+vqAFpsD
+	 WXSDUhYZHJkQw==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-bump-minimum-supported-llvm-version-to-17-v1-8-81d9b2e8ee75@kernel.org>
-References: <20260428-bump-minimum-supported-llvm-version-to-17-v1-0-81d9b2e8ee75@kernel.org>
-In-Reply-To: <20260428-bump-minimum-supported-llvm-version-to-17-v1-0-81d9b2e8ee75@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- linux-kbuild@vger.kernel.org, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Kees Cook <kees@kernel.org>, 
- linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org
-X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=nathan@kernel.org;
- h=from:subject:message-id; bh=vzaqTQhYZh+xvOuS+0eBnjbB2FREkk6iH/xqM4TGa0k=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDJkfS4xceOsWfnF6scCyy4z3QLXIStO0d89vnI1/9El25
- qZ6nxP+HaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAiD9oYGZawJs126fvEfMFA
- bFfAz1IV/qMhjzfoXV77kyfpqfKOq9wMf+Wlb3vK6r+VmnfI4FX82ccPLVOcP24tPX+1+6kDb83
- WbhYA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260306032540.47815-1-rosenp@gmail.com>
+References: <20260306032540.47815-1-rosenp@gmail.com>
+Subject: Re: [PATCH] clk-lpc18xx-ccu: kzalloc + kcalloc to kzalloc_flex
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Vladimir Zapolskiy <vz@mleia.com>, Kees Cook <kees@kernel.org>, Gustavo A. R. Silva <gustavoars@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+To: Rosen Penev <rosenp@gmail.com>, linux-clk@vger.kernel.org
+Date: Tue, 28 Apr 2026 20:46:34 -0700
+Message-ID: <177743439425.5403.3623468674307849088@lazor>
+User-Agent: alot/0.12
 
-Now that the minimum supported version of LLVM for building the kernel
-has been raised to 17.0.1, the condition of the selection of
-CONFIG_ARCH_SUPPORTS_CFI is always true, so it can be removed.
+Quoting Rosen Penev (2026-03-05 19:25:40)
+> Simplifies allocation by using a flexible array member.
+>=20
+> Also allows using __counted_by for extra runtime analysis.
+>=20
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
 
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-Cc: Paul Walmsley <pjw@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Kees Cook <kees@kernel.org>
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-hardening@vger.kernel.org
----
- arch/riscv/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index d235396c4514..7ffbf6032b61 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -61,8 +61,7 @@ config RISCV
- 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT
- 	select ARCH_STACKWALK
- 	select ARCH_SUPPORTS_ATOMIC_RMW
--	# clang >= 17: https://github.com/llvm/llvm-project/commit/62fa708ceb027713b386c7e0efda994f8bdc27e2
--	select ARCH_SUPPORTS_CFI if (!CC_IS_CLANG || CLANG_VERSION >= 170000)
-+	select ARCH_SUPPORTS_CFI
- 	select ARCH_SUPPORTS_DEBUG_PAGEALLOC if MMU
- 	select ARCH_SUPPORTS_HUGE_PFNMAP if TRANSPARENT_HUGEPAGE
- 	select ARCH_SUPPORTS_HUGETLBFS if MMU
-
--- 
-2.54.0
-
+Applied to clk-next
