@@ -1,148 +1,227 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191DA388380
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Apr 2026 17:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DE4381AE7
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Apr 2026 17:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777482171; cv=none; b=htjTuaO54PjsKeQgiJSPNFzt6ScpkdwcVAsVtuSN687Rl8HH62bTjF9MluEp1fQgPrZOzexmHLMLetJVEg4SVhxo8Tc1pjnW2RDYWB94QFBpKt3VEz9qF3RXWllfxWky26VhreUFG2Ird+g8TVFEamd0wOjrfr9sS4k/xjaDsUA=
+	t=1777484278; cv=none; b=rxssQJCHT0j7m/7ArX7dGLNAa0Q9Mg4Rv3gxOapoUAE3TnmmIzn3iGKaGwYNsUYP2By+D7v6tv11zBxxgT7z8qWc6b/mq5VMiBkjFQZ5kX3EqFqIQOrP42reHfBLeVI7im3RMMaSoajDp8gl7mDwR3GINkiz6QAZ3+Mk3maXFg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777482171; c=relaxed/simple;
-	bh=oP0CV+puQtnqAudPjWQ6eG2kcGlvGEf4j8WHFrP4gG4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YgpxMTslAKRu+EsIUdQRdKTqn3GCqO9oH4BDkKCYehA3K0nOmyudbWWNuwTgrmQxv/elP19MicU5j9O+86BzUMbEwxRkA969Q0tD8QuUPkk/Yjy0cFzmyZ7ynu+aRavVjH0y7/e/WtXBOI3MP99nGZ1lGcO8JpLGSj4b+bYIIZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M8ZDn9J8; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1777484278; c=relaxed/simple;
+	bh=vfvNLdQCP2QhgLDeoKvh1hjaGJlPfVJ1+fo5Yn6Jecc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Y/7v/RkevaKegx/JUTLAyyim9V/zRTjiiVs74NmsyuqCVxiIwOQXCwICQMZybizEWHJGpjWfIRllXsbCw3174OSYfl3rOVTSPqdmM/QH11mhyKTDRwOxuD5hf5gWnaXtG15sx0ruo1Y7PdUb/qWw0nNx9BPsV8/Vn/d+tYhlgfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhWTc2kL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M8ZDn9J8"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso117983205e9.3
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Apr 2026 10:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1777482168; x=1778086968; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0DSk2ikmD/TKHxP326DjLJj6TQaKaQdWjt46lW8P0oM=;
-        b=M8ZDn9J8Msr3NDylCnVIxwOwQz08PjGveWyRb7/XjqkWB5UDx082NPsg34OU9g6aPJ
-         TqcQJpVTaakQuUf9Y2g6yj5Isf7op9kV6MbFG6wACZofFn8TMj35e5KyPoSFl5pwuuQH
-         6sBItpme8djYXD0GoY5kYPmKOhFpbKCPS4EJ17m5wVjlZBSMk+CDzN8c5Zr0jz5tJdkS
-         u9taszG5vc0LCQ2EzpSe3MoyXYj0Uv4DSNEEmOVtt5oJTf1jy6mfnPWkvb/UkjmGs/D1
-         NN3BAwVUlMXWaxesZAR6VG/PGwIDyqYgC2PevACW14bE7u61kuE0DbDN5FruguT3Y4Zz
-         Mqjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777482168; x=1778086968;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0DSk2ikmD/TKHxP326DjLJj6TQaKaQdWjt46lW8P0oM=;
-        b=IMK66Ne2x1BBMGSMs7foCyp3Rn/6MHjkZGsWac7R7NUpAbbh9VneM/iAjfmp062rw+
-         PR0a7A8yb7seXPjjdiisu+d5Wl5Ucm79Q2UmqW5quYWwtYmqte7kcwucDTZMDBOYec+h
-         zzSvJHKsiR2AHmgoFodWLJobCMpzd2LdB9IaIug1EVgh3oP6KxyB4pCb0a0TuEtfaeHp
-         IZp3j/sYsWo3iMgoCwCPEx+dE4cjoBz7l1Mrwc9Zpwu9BQ8C2v76McHbKdDUf2w4ygCj
-         XA2VE9ikjj+DIuT6P4RJ8FIpH1Y4mIIlLj8YMekNno2soAFJoArwHNjXfN2/DUm8fsAq
-         tjyg==
-X-Forwarded-Encrypted: i=1; AFNElJ+N7ACJQstsJGKSJkj6Yxg1tn5zvYsYQ8WDgnbkcpn5rvVqdorBspUGC/4JjQ/HFv4Mr12n5qpDMuW7Bc+S7FU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjiBVqUQAKCuGTchuNb/oIXvrY1iZblOwm2QfXoajaGWoeThVH
-	VxEIMikojLRs8KmzoGd+0zWxF3ZF0LIU5qN/k3RUEpJ5YCBQJfL9lb8lA6fk1dDHGm16GFIq96w
-	+8EwFwSE=
-X-Gm-Gg: AeBDieu9fqX/HpkPHU8FB+pCw4mA3jsm6NBx1bL12DgudPc6euiHifN1P/K9WE9I7Cs
-	UCS150Z8xduGALqw2v2AvM+HX1YGbXJFmW2XFcWPorlcMojaWMThmePQX3g/gGFBOBnjdQ/zFXE
-	NX0tELIdNt2Xw7k1ZB7fKx6ge2abe/+qyvh7xCKPgG7qakjfjwIP/6OUQnqTRT7kRT84gYfiVc9
-	5FPbcUYFi0W4osvMhkzSWWm/iXBkM4z+qeMY18BHYMBqysiFow6k1bKSmUzloe9UtzXJ0p4+dEk
-	rT/pXPc5C+VlH+V/hlp2bkYMjQQQiYq62lo6MOrKYICvnoFxgj689jLUWVhnPbpl2WMEGvaQL40
-	guh8bCGlfz0hTXRGpmo8a0fvlq6bhPV8+pQu2kdHhaVx+Yu/EeD/Io/E+rUPxBCvMoDCgZHB6i2
-	16Xac8Nlo+J5cGHx2iOiWEsxh1nTHOkf7UxuoVQzsnrMM=
-X-Received: by 2002:a05:600c:4f0c:b0:489:1c2d:211e with SMTP id 5b1f17b1804b1-48a77ae5386mr141380935e9.5.1777482168330;
-        Wed, 29 Apr 2026 10:02:48 -0700 (PDT)
-Received: from [10.11.12.108] ([79.115.63.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b3d481fdsm7255405f8f.8.2026.04.29.10.02.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2026 10:02:47 -0700 (PDT)
-Message-ID: <83c64dc4-6dd8-4edb-8acf-3c731048d73d@linaro.org>
-Date: Wed, 29 Apr 2026 20:02:44 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhWTc2kL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 255A8C2BCB8;
+	Wed, 29 Apr 2026 17:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777484278;
+	bh=vfvNLdQCP2QhgLDeoKvh1hjaGJlPfVJ1+fo5Yn6Jecc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=NhWTc2kLqISC5cwpSaPxT08oZAR2+Ea2mdTwaAtC7zfURsVmZFc5zYzcXqeODPoMT
+	 GfLpls0zUnpArSFmLXmZZxEe6rMgSWJXOYLv6cGvbDhYy6FMYhtIlpMU4KBUubq0MG
+	 nb9IORFEQRoWwqut9t+ISmzEiL0RAO7cg0BxgUeLjfl6lppK/6Yaa5f/dnBPqVNmF0
+	 ynDULK1FvJNJ2jjAL2d3Np7Ix9i6mD/mpOi+kJIZB+f9KgWJAZrFOsgpcy3N8sSJbU
+	 0a3eQI+pvfcmfprB8bguLRFdvz/SStQqI697+nnKZDepWjxQl3yRmbI07PelexrSYM
+	 e3nVc53WtHTfw==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 17A57F40068;
+	Wed, 29 Apr 2026 13:37:57 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Wed, 29 Apr 2026 13:37:57 -0400
+X-ME-Sender: <xms:9UHyabil4gFIhI35RxQ22UuSNHNUkw9Gl9vB9hejUQPNihaezXAeVg>
+    <xme:9UHyaS2zkp-hVMCSov8m8UGYssLiK3_6M3qyfK4l3l_D1CjpRGZmC909PkD83E_Fi
+    eSKrvH9Eu7cVaZTPiq9OolwN5mpRfGrLbWaGcLNzr8EpoLZ_TZaN7Y>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekhedtiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhguuceu
+    ihgvshhhvghuvhgvlhdfuceorghruggssehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
+    htvghrnhepvdeuheeitdevtdelkeduudetgffftdelteefteevjeevjeeiheefhfejieej
+    fedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeijedthedttdejledq
+    feefvdduieegudehqdgrrhgusgeppehkvghrnhgvlhdrohhrghesfihorhhkohhfrghrug
+    drtghomhdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegrnhhshhhumhgrnhdrkhhhrghnughurghlsegrrhhmrdgtohhmpdhrtghpthhtoh
+    eptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopehkvghv
+    ihhnrdgsrhhoughskhihsegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrdhruhhtlh
+    grnhgusegrrhhmrdgtohhmpdhrtghpthhtoheprhihrghnrdhrohgsvghrthhssegrrhhm
+    rdgtohhmpdhrtghpthhtoheprghruggsodhgihhtsehgohhoghhlvgdrtghomhdprhgtph
+    htthhopehlihiiphhruhgtkhgrsehgohhoghhlvgdrtghomhdprhgtphhtthhopehsvght
+    hhhjvghnkhhinhhssehgohhoghhlvgdrtghomhdprhgtphhtthhopegurghvihgusehkvg
+    hrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:9UHyaWgQb1qiAVaJjoQmSh7-aME5apWDBmmct_h1ZbRpaWqUF1O1ZQ>
+    <xmx:9UHyaTU2aUe7OQDYsiV3OM63w4dVKA3wC2sabKazPUG70HBRWQ_JEw>
+    <xmx:9UHyaftUUZf1dvcEHx9i6fPR6mCODp2HqXCW28kYfGqXHQNunaTWHA>
+    <xmx:9UHyacZvo8qjSYr5_Z8113kMxB2VDyho27deuIeQoZQVj8k6BrOasg>
+    <xmx:9UHyaY4XbJ-nGJxGfmQQyDaIGs8Ez_hlo6t2c5K8X0b_4QYOsYPSyMkH>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id E9C20700065; Wed, 29 Apr 2026 13:37:56 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/11] firmware: samsung: acpm: Consolidate transfer
- initialization helper
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Daniel Lezcano <daniel.lezcano@kernel.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Lee Jones <lee@kernel.org>
-Cc: willmcvicker@google.com, jyescas@google.com, shin.son@samsung.com,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20260423-acpm-tmu-v4-0-8b59f8548634@linaro.org>
- <20260423-acpm-tmu-v4-2-8b59f8548634@linaro.org>
- <a63d4dc7-b01a-4da2-ac1f-6679c9030db6@kernel.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <a63d4dc7-b01a-4da2-ac1f-6679c9030db6@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Date: Wed, 29 Apr 2026 19:37:36 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Kevin Brodsky" <kevin.brodsky@arm.com>,
+ "Ard Biesheuvel" <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, "Will Deacon" <will@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Ryan Roberts" <ryan.roberts@arm.com>,
+ "Anshuman Khandual" <anshuman.khandual@arm.com>,
+ "Liz Prucka" <lizprucka@google.com>, "Seth Jenkins" <sethjenkins@google.com>,
+ "Kees Cook" <kees@kernel.org>, "Mike Rapoport" <rppt@kernel.org>,
+ "David Hildenbrand" <david@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org
+Message-Id: <5279ea66-0e31-4f53-ad76-4fd8ebc012fc@app.fastmail.com>
+In-Reply-To: <15555e9f-65ab-4811-b20c-8ada90bdc9d0@arm.com>
+References: <20260427153416.2103979-17-ardb+git@google.com>
+ <20260427153416.2103979-30-ardb+git@google.com>
+ <15555e9f-65ab-4811-b20c-8ada90bdc9d0@arm.com>
+Subject: Re: [PATCH v4 13/15] arm64: mm: Unmap kernel data/bss entirely from the linear
+ map
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 
 
-On 4/28/26 12:25 PM, Krzysztof Kozlowski wrote:
-> On 23/04/2026 17:22, Tudor Ambarus wrote:
->>  	acpm_dvfs_init_get_rate_cmd(cmd, clk_id);
->> -	acpm_dvfs_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id, true);
->> +	acpm_set_xfer(&xfer, cmd, ARRAY_SIZE(cmd), acpm_chan_id, true);
->>  
->>  	ret = acpm_do_xfer(handle, &xfer);
->>  	if (ret)
->> diff --git a/drivers/firmware/samsung/exynos-acpm-pmic.c b/drivers/firmware/samsung/exynos-acpm-pmic.c
->> index 0c50993cc9a8..f032f2c69685 100644
->> --- a/drivers/firmware/samsung/exynos-acpm-pmic.c
->> +++ b/drivers/firmware/samsung/exynos-acpm-pmic.c
->> @@ -58,16 +58,6 @@ static inline u32 acpm_pmic_get_bulk(u32 data, unsigned int i)
->>  	return (data >> (ACPM_PMIC_BULK_SHIFT * i)) & ACPM_PMIC_BULK_MASK;
+On Wed, 29 Apr 2026, at 15:55, Kevin Brodsky wrote:
+> On 27/04/2026 17:34, Ard Biesheuvel wrote:
+>> From: Ard Biesheuvel <ardb@kernel.org>
+>>
+>> The linear aliases of the kernel text and rodata are mapped read-only in
+>> the linear map as well. Given that the contents of these regions are
+>> mostly identical to the version in the loadable image, mapping them
+>> read-only and leaving their contents visible is a reasonable hardening
+>> measure.
+>>
+>> Data and bss, however, are now also mapped read-only but the contents of
+>> these regions are more likely to contain data that we'd rather not leak.
+>
+> That sounds like a good rationale but I wonder, is there anything
+> stopping us from unmapping text/rodata as well?
+>
+
+There is the zero page now, which may be accessed via
+'page_address(ZERO_PAGE(0))'. Also, anything that dereferences page tables
+(like /sys/kernel/debug/kernel_page_tables) will expect to have read-only
+access to swapper_pg_dir.
+
+
+>> So let's unmap these entirely in the linear map when the kernel is
+>> running normally.
+>>
+>> When going into hibernation or waking up from it, these regions need to
+>> be mapped, so map the region initially, and toggle the valid bit so
+>> map/unmap the region as needed.
+>
+> Doesn't safe_copy_page() already handle that? I suppose this is an
+> optimisation to avoid modifying the linear map for every page, but if so
+> it would be good to spell it out.
+>
+
+Uhm, good question.
+
+When hibernate was first implemented for arm64, we had to bring back the
+linear alias of the kernel image, and when I started working on this, I
+hadn't realised that we have safe_copy_page() now which should take care
+of this even if the linear alias is invalid.
+
+However, if I remove this handling, things breaks mysteriously, and it
+is a bit tricky to debug so it may take me some time to answer this
+question. In any case, I will address this in the next revision, and
+put you on cc.
+
+>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>> ---
+>>  arch/arm64/mm/mmu.c | 44 ++++++++++++++++----
+>>  1 file changed, 37 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 9361b7efb848..a464f3d2d2df 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -24,6 +24,7 @@
+>>  #include <linux/mm.h>
+>>  #include <linux/vmalloc.h>
+>>  #include <linux/set_memory.h>
+>> +#include <linux/suspend.h>
+>>  #include <linux/kfence.h>
+>>  #include <linux/pkeys.h>
+>>  #include <linux/mm_inline.h>
+>> @@ -1040,6 +1041,31 @@ static void __init __map_memblock(phys_addr_t start, phys_addr_t end,
+>>  				 end - start, prot, early_pgtable_alloc, flags);
 >>  }
 >>  
->> -static void acpm_pmic_set_xfer(struct acpm_xfer *xfer, u32 *cmd, size_t cmdlen,
->> -			       unsigned int acpm_chan_id)
->> -{
->> -	xfer->txd = cmd;
->> -	xfer->rxd = cmd;
->> -	xfer->txcnt = cmdlen;
->> -	xfer->rxcnt = cmdlen;
->> -	xfer->acpm_chan_id = acpm_chan_id;
-> 
-> The code is not equivalent. RX bits were always cleared. This should be
-> explained in the commit msg which would also provide a proof that you
-> actually analyzed if it has any impact.
-> 
-Indeed, my commit message is inaccurate because I claimed the
-acpm_pmic/dvfs_set_xfer() were identical.
+>> +static void remap_linear_data_alias(bool unmap)
+>> +{
+>> +	set_memory_valid((unsigned long)lm_alias(__init_end),
+>> +			 (unsigned long)(__fixmap_pgdir_start - __init_end) / PAGE_SIZE,
+>> +			 !unmap);
+>> +}
+>> +
+>> +static int arm64_hibernate_pm_notify(struct notifier_block *nb,
+>> +				     unsigned long mode, void *unused)
+>> +{
+>> +	switch (mode) {
+>> +	default:
+>> +		break;
+>> +	case PM_POST_HIBERNATION:
+>> +	case PM_POST_RESTORE:
+>> +		remap_linear_data_alias(true);
+>> +		break;
+>> +	case PM_HIBERNATION_PREPARE:
+>> +	case PM_RESTORE_PREPARE:
+>> +		remap_linear_data_alias(false);
+>> +		break;
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>>  void __init mark_linear_text_alias_ro(void)
+>>  {
+>>  	/*
+>> @@ -1048,6 +1074,16 @@ void __init mark_linear_text_alias_ro(void)
+>>  	update_mapping_prot(__pa_symbol(_text), (unsigned long)lm_alias(_text),
+>>  			    (unsigned long)__init_begin - (unsigned long)_text,
+>>  			    pgprot_tagged(PAGE_KERNEL_RO));
+>> +
+>> +	remap_linear_data_alias(true);
+>
+> It's really hard to know what this does without looking at the function.
+> How about mark_linear_data_alias_valid(false)?
+>
 
-There's no change in functionality: in the original
-`acpm_pmic_set_xfer()`, the RX parameters were unconditionally assigned
-(`xfer->rxd = cmd;` and `xfer->rxcnt = cmdlen;`). In this patch, all the
-updated PMIC call sites now pass `true` for the `response` argument.
-This ensures the unified helper takes the `if (response)` branch, which
-performs those exact same assignments, preserving the original PMIC
-behavior.
+Sure.
 
-Will update the commit message. And revisit the other patches when
-splitting the firmware patches into their own set.
+>> +
+>> +	if (IS_ENABLED(CONFIG_HIBERNATION)) {
+>> +		static struct notifier_block nb = {
+>> +			.notifier_call = arm64_hibernate_pm_notify
+>> +		};
+>> +
+>> +		register_pm_notifier(&nb);
+>> +	}
+>>  }
+>>  
+>>  #ifdef CONFIG_KFENCE
+>> @@ -1162,7 +1198,7 @@ static void __init map_mem(void)
+>>  
+>>  	/* Map the kernel data/bss so it can be remapped later */
+>>  	__map_memblock(init_end, kernel_end, pgprot_tagged(PAGE_KERNEL),
+>> -		       flags);
+>> +		       flags | NO_BLOCK_MAPPINGS);
+>
+> Might be an obvious question but why do we need this?
+>
 
-Thanks,
-ta
+set_memory_valid() only works on regions that are mapped down to pages.
+
+
