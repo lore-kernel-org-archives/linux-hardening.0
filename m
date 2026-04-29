@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746F5340A6B;
-	Wed, 29 Apr 2026 03:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3AD175A7E;
+	Wed, 29 Apr 2026 03:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777431620; cv=none; b=HYy97HapIEO3KRtuC2p4iaY5fWt/BJGj7Bqz6bvkTWzU/uHc6NXMSIehZ5AerNezu+V/NBB4+YJdi4hQqhMMYtkfePzUoIFagl0YWB/guTx8XsQrfvwKiZ1S/vRPS1fYuS/TejJ+uFHrVRwLFvrK48pAVdYFna4QOAuUQIl5k6M=
+	t=1777431630; cv=none; b=cn1z1gLQBHDF9WDqlrpwzeLwUYiD965Z69OeX2mpetgOexN7U9HjuT+Quj/GKzc25oFFMbN/HXSiPHe9negajZF5sC6R218PGUO9PQJZMTBdsJ4kzUhmf8s0LVrHsGYn+45Z862Htf6GG/BPbFYVfwkra8Din7YFHpwQOsvzBVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777431620; c=relaxed/simple;
-	bh=9T93uB95pVrsxHtr9II06T4tYAb0HlcivHrApuK+RBk=;
+	s=arc-20240116; t=1777431630; c=relaxed/simple;
+	bh=vzaqTQhYZh+xvOuS+0eBnjbB2FREkk6iH/xqM4TGa0k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I8z6c57gxdVRevaOqnvet+jugdZ+TqWkD/bzv+fdukLEWEBSYPGiju+qIPyO6vmGnrHgWHR8DSyJWQzCUMdb4kZ5pO+7GokCYy5MVwmdl6JyPjWt116Px1oWv7Uro+/HJczL/6BSZC8APoyQMCXhBtHYCnJUEHtqQUCmrihZlnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DaeMfYvH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=gNwhtneuG2kqOQhYRfpnhUpMCD5hCrrrRgiqxejQQ7fmLRNIE9H+5zXUHmqjnTrD+h/O3fPTz3y+XlHc6yDrkHjDtNtlwQwzhRXr+kOIV3ZCmjb1Xi1FTLt3yUKIVoESy60Olaj1Xz6jpo9ScAQKagE9pS0sKVdCviMrkNTUK4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsxnAek+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DaeMfYvH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BDB1C2BCB9;
-	Wed, 29 Apr 2026 03:00:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsxnAek+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AB5CC2BCC4;
+	Wed, 29 Apr 2026 03:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777431620;
-	bh=9T93uB95pVrsxHtr9II06T4tYAb0HlcivHrApuK+RBk=;
+	s=k20201202; t=1777431630;
+	bh=vzaqTQhYZh+xvOuS+0eBnjbB2FREkk6iH/xqM4TGa0k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DaeMfYvHy79ys9CE5ZZsNEFLBLfXTp5oSAY6RqMzom+sFc0tAMJrCGclgzBsVKAjI
-	 2Bs4O2Lgp3UY79RAdseBL4hJXKiwJOxprphR9s5i/1P4G7zcOHrDXAR4qheHdG99oF
-	 +CHnq4ApYv/Zrm2pEW63W1KkdOcjKyLWyiFBudy0niS+0ing+e/qkGXx4p66h81UYr
-	 J0HjAquCa9P/3LTUxR+sgxnxBqQryJ7nyC6DaHEnz+ISRNRDehzV9ywKC5NBf5vhql
-	 a/KweTzEUkBhS7YdFLUqYxqwzYCo7w42kkMaKJX50z9DMwH9ZsONRF5MjQ2IZpK/f0
-	 SPTmYgSHfDAPQ==
+	b=bsxnAek+AMbwi0N65LCy7M6WCqVTp1H47KxteLyooGCKrEkUx3kxhCRSYDmr+H1qG
+	 lLBpl2juOFBqZJS0NZ2SwELArbPj3YkPUJkrGxH4vcJGW5WDgzP5Zns/cJ8sEnvkdn
+	 cbgn7yyJ2+xp3ZLZqUVao6oWs/N69grhMAkzvWDgexR2rjl+5Kz0gja0+P9nR6dirt
+	 Uonjfe6KaXmG0EBy9T85kbVicJ0FsVMrkpmZyIq+93cyWzYAUSPe6QtkplGvGsYqJo
+	 yQ7qwMVoJona2c0H8COiE9EN+8KdErI6sVgueZT0FePYdhv9h6Z0eNSimnSoaDOyCg
+	 8UnzEsM/F7V8A==
 From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 28 Apr 2026 22:59:10 -0400
-Subject: [PATCH 04/14] security/Kconfig.hardening: Remove tautological
- condition from CC_HAS_RANDSTRUCT
+Date: Tue, 28 Apr 2026 22:59:14 -0400
+Subject: [PATCH 08/14] riscv: Remove tautological condition from selection
+ of ARCH_SUPPORTS_CFI
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,54 +38,58 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-bump-minimum-supported-llvm-version-to-17-v1-4-81d9b2e8ee75@kernel.org>
+Message-Id: <20260428-bump-minimum-supported-llvm-version-to-17-v1-8-81d9b2e8ee75@kernel.org>
 References: <20260428-bump-minimum-supported-llvm-version-to-17-v1-0-81d9b2e8ee75@kernel.org>
 In-Reply-To: <20260428-bump-minimum-supported-llvm-version-to-17-v1-0-81d9b2e8ee75@kernel.org>
 To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
  Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
  Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
 Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- linux-kbuild@vger.kernel.org, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- linux-hardening@vger.kernel.org, linux-security-module@vger.kernel.org
+ linux-kbuild@vger.kernel.org, Paul Walmsley <pjw@kernel.org>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Kees Cook <kees@kernel.org>, 
+ linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1097; i=nathan@kernel.org;
- h=from:subject:message-id; bh=9T93uB95pVrsxHtr9II06T4tYAb0HlcivHrApuK+RBk=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDJkfS4yMNcRmXbpw5LuJ4vQbGgW7SizeT7s+6eRhpbTT3
- 9eFdX7a1lHKwiDGxSArpshS/Vj1uKHhnLOMN05NgpnDygQyhIGLUwAmEm7N8D+ulKGp9c6B8rxc
- Rg7mi663j39b76d6qUJzw4XKif7vt99l+J/dcVuq5/TPP919zloifkppW10zEvgDz1xpt847HZT
- OzQkA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=vzaqTQhYZh+xvOuS+0eBnjbB2FREkk6iH/xqM4TGa0k=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDJkfS4xceOsWfnF6scCyy4z3QLXIStO0d89vnI1/9El25
+ qZ6nxP+HaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAiD9oYGZawJs126fvEfMFA
+ bFfAz1IV/qMhjzfoXV77kyfpqfKOq9wMf+Wlb3vK6r+VmnfI4FX82ccPLVOcP24tPX+1+6kDb83
+ WbhYA
 X-Developer-Key: i=nathan@kernel.org; a=openpgp;
  fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
 Now that the minimum supported version of LLVM for building the kernel
-has been raised to 17.0.1, the '!Clang || Clang >= 16' dependency for
-CONFIG_CC_HAS_RANDSTRUCT is always true, so it can be removed.
+has been raised to 17.0.1, the condition of the selection of
+CONFIG_ARCH_SUPPORTS_CFI is always true, so it can be removed.
 
 Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
+Cc: Paul Walmsley <pjw@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>
 Cc: Kees Cook <kees@kernel.org>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: linux-riscv@lists.infradead.org
 Cc: linux-hardening@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
 ---
- security/Kconfig.hardening | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/riscv/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index e4f23c08a17a..b90cf9ed4642 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -274,9 +274,6 @@ endmenu
- 
- config CC_HAS_RANDSTRUCT
- 	def_bool $(cc-option,-frandomize-layout-seed-file=/dev/null)
--	# Randstruct was first added in Clang 15, but it isn't safe to use until
--	# Clang 16 due to https://github.com/llvm/llvm-project/issues/60349
--	depends on !CC_IS_CLANG || CLANG_VERSION >= 160000
- 
- choice
- 	prompt "Randomize layout of sensitive kernel structures"
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index d235396c4514..7ffbf6032b61 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -61,8 +61,7 @@ config RISCV
+ 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT
+ 	select ARCH_STACKWALK
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+-	# clang >= 17: https://github.com/llvm/llvm-project/commit/62fa708ceb027713b386c7e0efda994f8bdc27e2
+-	select ARCH_SUPPORTS_CFI if (!CC_IS_CLANG || CLANG_VERSION >= 170000)
++	select ARCH_SUPPORTS_CFI
+ 	select ARCH_SUPPORTS_DEBUG_PAGEALLOC if MMU
+ 	select ARCH_SUPPORTS_HUGE_PFNMAP if TRANSPARENT_HUGEPAGE
+ 	select ARCH_SUPPORTS_HUGETLBFS if MMU
 
 -- 
 2.54.0
