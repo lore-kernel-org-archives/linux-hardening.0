@@ -1,46 +1,46 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011047.outbound.protection.outlook.com [52.101.62.47])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012044.outbound.protection.outlook.com [40.107.200.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1803E3B27FA;
-	Wed, 29 Apr 2026 08:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E27B3B38BE;
+	Wed, 29 Apr 2026 08:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777451319; cv=fail; b=fMtDcC80LYvzkMEPg9vDiEEVu5r0oisO4XRnFUhP9IXsRpL9CBvj0RVhRETT8NWnckZ1W2B3y9xP3KfW2aSTzetillRrR59Eb/EtUfmlYWBLfJ7oI8+sOpZe29MRtxiqvxOnoC10YCQuZ0WReu3EI2JmOh0aMlay+TKiKBnp2tM=
+	t=1777451319; cv=fail; b=WA/t83s98uxVXbR5WX21tE0mT+YQhR25plPD+QRZyri7WHcMXNpma7oKWryakZEIZA6d13/Pq/VCYnd/wQBrHFhj7s7BMHYw8WF/FrKEEly9hPC/8ocsYWy3Dbinwo7cQMyb94fUArIJztmoUdQE8avJkZR+XcNt5RG/Y1RLEIM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777451319; c=relaxed/simple;
-	bh=Ucjisp6nk0YvlnOIpLK8TFWIqvUWOKBzdTFnWQ4MAlA=;
+	bh=um4WLFVrwDgoU2VKc/3wvQW8Co0Ji4wUOD5AiIMJBuk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=iexAebYwBlwEZSwl52d98CzCHMxty221pxEsANQLbqmR8oEe1Ho8U0rLZMOYnBEbvCNQiD+7lh2cVimpB9ja6hxfx9FN3ochJBZIQsxDyW516AHlwabTtY8dFmARuBvSKd7HEmGmrm1Ccp+gc//jVpA5KGTQDh/mIe3xevOD+I0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ny1NZ4i4; arc=fail smtp.client-ip=52.101.62.47
+	 In-Reply-To:To:CC; b=Ydw+w7EUtO1kH5ZzhLh3nZYT3JSqcZkPCje0akH8lEqWdO2AeyUO+Keu2Ea270/oob7U0cboIzWuuMuldh3QSP6vX717F9uY0ZEJcuOC3cb/2PDvAEjhlgHjoUibpGaNv1Wb2pYa1dw+PGv9Lt0hazsdxcFblptGGG0zJWjdrn4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vhwIY40S; arc=fail smtp.client-ip=40.107.200.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ny1NZ4i4"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vhwIY40S"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VeyADGurhBYuAy6EqOdhlnKB3rKwicqIDpwoOIEmo2TOd0pldu/vRyonTEHke44V7nPBlct8y3wleWnanjj1xEbYTJ6Fp4C7mhHU+HPNYGcCIj3UrbgYnw1spUD/gkHpSKkFF+4iwSymWyU1h7H/NYG8nhrJehTzmvQMzaWTO488KBDkMmJmKPIC65k18wpgzDtttSZTQsbRzgTtW8yNCCpZpZkw2rHFlIX3NNcR1Y15iNasRL9O4Hb40i3hKgKZCixTSbRvukddgyvmBuvPyeLRmJAjy0lhBwlGukQSMje+dCJfWlwl7VswOv6GX8stUU3DxRK9SwsqoTHZ5Hny/Q==
+ b=j2wMNe+qvPPKv2sOdAg9ibs4BATbWq5+HNCao+Ynp7icuVVnnVDIfwn4bEJa9AJcbJMe61SFsCpqgZVxV9Pue0pfKCHe7Y9K4XzStAyEi9xJIWxhnA3oG/bA0A1V4R8HU2406J8rKDNRutcKSwgmk0G/3LWOVSeIDyjRdUjcXNoXlA/LWQlruH5dastuVbtVftSmfd0MdT2fHufG008SEHVZW1bOvV1tCznWQmtaQvtw72jXZktEztJI7IX9/d2ed5zXxG+Zwz94X9GnG1IOwb+T57h3FpNYMZBHOSQxJZQt8QcxeJM6BjWjX6Ax9nmOqHIPvM/sTVVfZAc8MLxVdw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=doZ/9wYbxmhKZ7FEYapGPYYSUg7Q72G22YZpkzIk1To=;
- b=WxXkAbIpDuKZtcxp4BSSMYycT0wAmxUdaWapZqc2x/g9N1BAizDkb6P6toTqne5Teo3AJSivSAeKz+q7L6296WlRAzloyCfdRl/RBpQhQtT3zes6m5KoW+BMXPfWGMt+aChTyKpM9kYpLHzKeQQZv9j4Lsz5RmeoUpUZlg7tLEYkgtLGFPKz/f7qCmZitES7ZBhq+7qFCB07VnNrbthmRKcezlb3Wdq1lpNOWjhW+8lPaAhP+I2aoti+OLLOAGYitxPCiyOivibbP1s37G8MEfhClV7AkEmasvRgYwUJrl7jKNqE8GHRkYqFyIEc5upn6cPV7twgfY022g/PyUTu1w==
+ bh=x23hehrKiM8NIyZIMJTH7Ruuujg7b53WQ7E6k8JiXcY=;
+ b=cvy8lp9Gq7NZX5IQ1J0fTawdJ05LXXBzMcuhs5FdVIYCXHcHh8WJqjL9wuVoKPzH5QDry9SIS1y7ejUK15vzZg157bWAKif4MluKZL8O0x/G53wKHD4A6pttG7YcdxJcgewAb35zGnhNPjOiKT/qwvHOmdW5oM7FQVmKwmRSuoqcKXI2opkmNY0Okm97zly9ZqLatADh5osaBlIYTPl5xWwlYoBoUj9SuZEo817cy1WuVe0fDqzqxY9DPZRGIf3/rhTumD8Xr4nQsWT1G6HZQAwA9ZJxZWuo92zn3+i1qvcs/ctiCAFVESwpNrrxiplgMslpHcqXcsv2VLRc72HHqg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=doZ/9wYbxmhKZ7FEYapGPYYSUg7Q72G22YZpkzIk1To=;
- b=ny1NZ4i4sCQc0MLvjxdSqh/pWUBx2tNS9t3iQQiJY4ZhYEbFTkfWPH3T7pD0/k2DsWlSPgRCmb9H7Kg6cNgsLX58Hv4nrfP3LVH29YT5K9mzEF4BgfNGWA1LEGMiV5YJL9q1FrIsdAdDTYVIIHh6RE4h39dFdUBwlVRRRqCtK/o=
-Received: from BL1P223CA0002.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:2c4::7)
- by MN2PR12MB4408.namprd12.prod.outlook.com (2603:10b6:208:26c::14) with
+ bh=x23hehrKiM8NIyZIMJTH7Ruuujg7b53WQ7E6k8JiXcY=;
+ b=vhwIY40SLsAirTDPRAFcxWgmQFVLMXuxYiV1BByqWn+9aF6jHxnFHItWR8/vDzTLU6m7ma4Vr9VbuU9AKzKGcutemnOdzZHi7IjQM8lfeNYXKtfheyZYwiTqVjmQfsCBbs5cWMZdSe+f72U0AYg1GV3xi/wDaLesg0+V7mcwny8=
+Received: from MN0P221CA0023.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:52a::9)
+ by IA0PR12MB8304.namprd12.prod.outlook.com (2603:10b6:208:3dc::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.20; Wed, 29 Apr
- 2026 08:28:33 +0000
-Received: from BL02EPF0001A105.namprd05.prod.outlook.com
- (2603:10b6:208:2c4:cafe::f8) by BL1P223CA0002.outlook.office365.com
- (2603:10b6:208:2c4::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.26 via Frontend Transport; Wed,
- 29 Apr 2026 08:28:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.18; Wed, 29 Apr
+ 2026 08:28:31 +0000
+Received: from BL02EPF0001A101.namprd05.prod.outlook.com
+ (2603:10b6:208:52a:cafe::60) by MN0P221CA0023.outlook.office365.com
+ (2603:10b6:208:52a::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.29 via Frontend Transport; Wed,
+ 29 Apr 2026 08:28:31 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,17 +48,16 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BL02EPF0001A105.mail.protection.outlook.com (10.167.241.137) with Microsoft
+ BL02EPF0001A101.mail.protection.outlook.com (10.167.241.132) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9846.18 via Frontend Transport; Wed, 29 Apr 2026 08:28:33 +0000
+ 15.20.9846.18 via Frontend Transport; Wed, 29 Apr 2026 08:28:31 +0000
 Received: from [127.0.1.1] (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 29 Apr
- 2026 03:28:32 -0500
+ 2026 03:28:30 -0500
 From: "Nikhil P. Rao" <nikhil.rao@amd.com>
-Date: Wed, 29 Apr 2026 08:28:22 +0000
-Subject: [PATCH net-next 6/6] pds_core: add debugfs support for host backed
- memory
+Date: Wed, 29 Apr 2026 08:28:20 +0000
+Subject: [PATCH net-next 4/6] pds_core: add PLDM component info display
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,7 +66,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20260429-b4-pldm-b4-v1-6-394fafba526f@amd.com>
+Message-ID: <20260429-b4-pldm-b4-v1-4-394fafba526f@amd.com>
 References: <20260429-b4-pldm-b4-v1-0-394fafba526f@amd.com>
 In-Reply-To: <20260429-b4-pldm-b4-v1-0-394fafba526f@amd.com>
 To: Brett Creeley <brett.creeley@amd.com>, Andrew Lunn
@@ -77,112 +76,158 @@ To: Brett Creeley <brett.creeley@amd.com>, Andrew Lunn
 	<gustavoars@kernel.org>
 CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-hardening@vger.kernel.org>, "Nikhil P. Rao" <nikhil.rao@amd.com>,
-	<eric.joyner@amd.com>, Vamsi Atluri <Vamsi.Atluri@amd.com>
+	<eric.joyner@amd.com>
 X-Mailer: b4 0.13.0
 X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A105:EE_|MN2PR12MB4408:EE_
-X-MS-Office365-Filtering-Correlation-Id: deb38821-e257-4de2-4e5b-08dea5c94d35
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A101:EE_|IA0PR12MB8304:EE_
+X-MS-Office365-Filtering-Correlation-Id: 159965eb-d481-4ae7-279c-08dea5c94bfd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|7416014|22082099003|18002099003|56012099003;
+	BCL:0;ARA:13230040|36860700016|82310400026|376014|7416014|1800799024|18002099003|22082099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	wTmCuZYKUaLwJJD3SD0y4wg3YiTEy5EC1s4XRe86y+4VIiN0umqBKl3MFsAXs7kJybnAM26Bt6q+8DicyZR19y/cd5xNzlGlRMIUAV9tp6bMSGGH2OGPCgmjqiuhvfaWr/KKZ/dWPKxJkQPsZQHCLOFcdZGxCkRzvUt3ZdgT+amBJuR/muhJ1fduYjmKLnAUCOvnBHmHn5fVhjzv45HCh3rS9YN5mJLrcnxfnMP/Hi+mSqCIkG9EzvpeHYRG57NhYhgb99/IIev5KBaj5WvbbWPtNfYwUS1UfF/KBNpKFBHpRBJ4Q2OGEF1sQkLPQwXKKKp0xWRrbhfosYtaDdokSKFFAmFXHzgz3Msvi9rWbLNaMKBzsDkOBsOXVbdNJg/TjBOn5uV8Ufy9kSQYF3wSwQgr7lBxsrztQ3aLI6n++IEkO+LIaZqsVmgCGXreMRGy97v4JYhNeYzvXqwTBCag79PiYn7+4+h1WcTDck0X2oOKv+SuzAvLR4w8IOos1U+hZKbfiVSEnbOoty5HTdA0aCrpg1PBybisPgrtSDjQaTjxlXZkDcOjNnQ9MDOppKjGmhO7SWLUIeyZDHKH4avGwoEE2MGjO0+VeawE35UztcI9OlefB76OlOaDj3cwIrWYN3KnhZ6+bbi0xVKpS3urhan9zw/E4vJcwAGbiHK3kdaXbJmPzA6CHZD7TN+84eonWk1onyH/iI4+YqW1OV7ZY8ICQ1Skie4aLd4xq4pnB6vY+OuXu7tYjg+3amd31zsnLv3fTz2G4CB9AYa9fsPHnw==
+	pI8atkWiF/NWL4t01Lk40YGZzrEe/IziXp775r2fucM+uvcG8LyozimrSgUcmT1NVPXOQiPVOV0MLgN4M5hhfnSWit3U48Q6Di0If6+KEBDYD/RLkiv59bF3lQe77zk6yveK/QMh8zY/Ec9zOzW090N7hV152p2RDByb5Joe+m2nnX5/yDBBt5JLPWpxS9R7+RRxaG2HwRTm36WuYVylHosf73tadpaOCKPjJp9ncGwKf8PNQLaewuPXs4UPDR6DsjiRnuAOe841hfVeogxGgUTQ6cZEpvgW/30A19URT6peZbql7RnV1+VzRTi+t2r62veavdjWsNttVGYDWN5p27kqgdPYeAYjVTgomF9/QfGOyeZrn6W+vLPpbNdFEj/+36M7An84nSgkBMPRcQyzNmNM8/0VVuc+eO1mIKvwDA4swAVUmHHhFuarl/0S/ARW0fB12zIU9VuIacB6M+szN3d4+NU1gdCHLOCXCbNMBK5SBAH9+QIH/L0kmhLyuDj7MrOVBVGVAf7yJZYvxaQNp9R+YshbsK7ge2+JvmrNf1Z2y5nnm8yvNjWKeDVFxkbVq0uB4yJN1om3TqskQGq3XxOREMtGN/v1hGzza7SeUC64WxW/7MG3BsxyhIHBy/wnxgBZbPTTL+J0H2OxK0K93ZE38SOW6EOTVTQHftkwFXIXhMZNC1Tv9PvfhvsvbQSLZQpgDc1i7E6O/X2G8Fvo8HwsXdXAGCu0DnAYArqsPzXsD9Vymhulg/536LuQilPRm5181B+beE6uBg0T3JZ2xg==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(7416014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(376014)(7416014)(1800799024)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	kvFInFzNRAJpKM2Re+7BuxcR9OEfw3gJ3RTjfypqv7KoNTFH/YCIyTNhyOLRYyWke+Rz27CwdKkyJDP47t1apWgkKbs2CiRulcA7EESgImvrvITF008c6UCiczje24eWAQkdatGfWWSmQXnkJc5TTAhQGEZTBbmccQ/6hsLNBd6ZBjBKy1oTV4lqBTxm5Lx1Z+6OjR75HQMbrtNSoJA2RM4tBQug0eSi6mgP90PYBIzg3e1vp+QYvog+Bt4KuLYMWXKN8IEm4KLhH2M2WX2Ty3HqPRwYf3/XSbGvDCwEr0+FEWQpChh06p4Uk8yGFm4VyWRvdaJZcQBrZGjOLW/JB+cuO2CDzB3ITJhZUnlunFGBNYSL6jVBMBUFMelqF9JGxGu/y8nkggG+69mYyesfjLAWQE0+Yxmu3Jp0mPDonOl1UR98p4aMEsGpLrW/XJJ3
+	Q/MwIvzeZOd00UuVdLT0bwSFBtAX7s+SqZW7VUgdKJipO1/OFUsSVcFJ7+awrmqpbyH8TyHmST1LOsEs4WwuYp04dCyJNRjMxKM6OSC9orFfyk5Svy3c8gB2OWc8af91sfZyS/b9p9QmmV++mHiu2LsOZ6/BP4OasIoKS02hDq7RoE+WpVBSFBYDIEHt1SW7kuL56hiyBfRbACM6dRG+qlT3LMFr7C0NzGkwScMg6aWEzU+WvBsx1fPPoDKPbe/7P4hEEDGIBWbvjanHNSnVcFNqZfWTsuvnnuDGyPwESnJGyU8SSG4hc0k+lL2svZHXjwt7TTSFt/ypfm6FLLj1zRee8/uWAa2pdySl5I45KImMYUnktYuaNiIsI0Edz9eqVdAgq5A2VUX+QriimzUec7fHnsR8jp1SeLWhi7+wn5syFSXNOOmDplCmZuYM1lwF
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2026 08:28:33.5093
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2026 08:28:31.4635
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: deb38821-e257-4de2-4e5b-08dea5c94d35
+X-MS-Exchange-CrossTenant-Network-Message-Id: 159965eb-d481-4ae7-279c-08dea5c94bfd
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A105.namprd05.prod.outlook.com
+	BL02EPF0001A101.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4408
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8304
 
-From: Vamsi Atluri <Vamsi.Atluri@amd.com>
+From: Brett Creeley <brett.creeley@amd.com>
 
-Add debugfs file to display host memory allocations including tag,
-size, order, and physical address for each memory request.
+Add detailed component information display. This allows users to see
+individual firmware components, their versions, and update status via
+devlink info. Components are marked as fixed, running, or stored based
+on their flags.
 
-Signed-off-by: Vamsi Atluri <Vamsi.Atluri@amd.com>
+Example output:
+  $ devlink dev info pci/0000:b5:00.0
+  ...
+  versions:
+    running:
+      fw.goldfw 1.2.3
+      fw.mainfwa 1.2.4
+      fw.mainfwb 1.2.3
+
+Signed-off-by: Brett Creeley <brett.creeley@amd.com>
 ---
- drivers/net/ethernet/amd/pds_core/debugfs.c | 43 +++++++++++++++++++++++++++++
- drivers/net/ethernet/amd/pds_core/main.c    |  2 ++
- 2 files changed, 45 insertions(+)
+ drivers/net/ethernet/amd/pds_core/devlink.c | 75 ++++++++++++++++++++++++++---
+ 1 file changed, 69 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/amd/pds_core/debugfs.c b/drivers/net/ethernet/amd/pds_core/debugfs.c
-index 04c5e3abd8d7..79312107f721 100644
---- a/drivers/net/ethernet/amd/pds_core/debugfs.c
-+++ b/drivers/net/ethernet/amd/pds_core/debugfs.c
-@@ -173,3 +173,46 @@ void pdsc_debugfs_del_qcq(struct pdsc_qcq *qcq)
- 	debugfs_remove_recursive(qcq->dentry);
- 	qcq->dentry = NULL;
+diff --git a/drivers/net/ethernet/amd/pds_core/devlink.c b/drivers/net/ethernet/amd/pds_core/devlink.c
+index 7f44e1a8d4fd..c519fde45d71 100644
+--- a/drivers/net/ethernet/amd/pds_core/devlink.c
++++ b/drivers/net/ethernet/amd/pds_core/devlink.c
+@@ -93,14 +93,61 @@ int pdsc_dl_flash_update(struct devlink *dl,
+ 	return pdsc_firmware_update(pdsc, params, extack);
  }
-+
-+static int host_mem_show(struct seq_file *seq, void *v)
+ 
++static int pdsc_dl_component_info_get(struct devlink *dl,
++				      struct devlink_info_req *req,
++				      struct netlink_ext_ack *extack)
 +{
-+	struct pdsc *pdsc = seq->private;
-+	struct pdsc_host_mem *hm;
++	struct pds_core_component_list_info *list_info;
++	struct pdsc *pdsc = devlink_priv(dl);
++	u8 num_components;
++	char buf[32];
++	int err;
 +	int i;
 +
-+	if (!pdsc->host_mem_reqs || pdsc->num_host_mem_reqs == 0) {
-+		seq_puts(seq, "No host memory allocated\n");
-+		return 0;
++	err = pdsc_get_component_info(pdsc);
++	if (err) {
++		dev_err(pdsc->dev, "Failed to get component_info %pe", ERR_PTR(err));
++		return err;
 +	}
 +
-+	seq_printf(seq, "Host memory requests: %d\n\n", pdsc->num_host_mem_reqs);
-+	seq_puts(seq, "Tag    Size         Order  PA\n");
-+	seq_puts(seq, "---    ----         -----  --\n");
++	list_info = &pdsc->fw_components;
++	num_components = min_t(u8, list_info->num_components,
++			       le16_to_cpu(pdsc->dev_ident.max_fw_slots));
++	for (i = 0; i < num_components; i++) {
++		enum devlink_info_version_type dl_ver_type = DEVLINK_INFO_VERSION_TYPE_NONE;
++		struct pds_core_fw_component_info *info = &list_info->info[i];
++		u16 flags = le16_to_cpu(info->flags);
 +
-+	for (i = 0; i < pdsc->num_host_mem_reqs; i++) {
-+		hm = &pdsc->host_mem_reqs[i];
++		snprintf(buf, sizeof(buf), "fw.%s", info->name);
++		if (flags & PDS_CORE_FW_COMPONENT_INFO_F_UPDATE_BY_NAME)
++			dl_ver_type = DEVLINK_INFO_VERSION_TYPE_COMPONENT;
 +
-+		if (!hm->pg)
-+			continue;
++		if (flags & PDS_CORE_FW_COMPONENT_INFO_F_FIXED)
++			err = devlink_info_version_fixed_put(req, buf,
++							     info->version);
++		else if (flags & PDS_CORE_FW_COMPONENT_INFO_F_RUNNING)
++			err = devlink_info_version_running_put_ext(req, buf,
++								   info->version, dl_ver_type);
++		else
++			err = devlink_info_version_stored_put_ext(req, buf,
++								  info->version, dl_ver_type);
 +
-+		seq_printf(seq, "%-6d %-12u %-6d 0x%llx\n",
-+			   hm->tag, hm->size, hm->order,
-+			   (unsigned long long)hm->pa);
++		if (err)
++			return err;
 +	}
 +
 +	return 0;
 +}
-+DEFINE_SHOW_ATTRIBUTE(host_mem);
 +
-+void pdsc_debugfs_add_host_mem(struct pdsc *pdsc)
-+{
-+	if (!(pdsc->dev_ident.capabilities & cpu_to_le64(PDS_CORE_DEV_CAP_HOST_MEM)))
-+		return;
-+
-+	/* This file will already exist in the reset flow */
-+	if (debugfs_lookup("host_mem", pdsc->dentry))
-+		return;
-+
-+	debugfs_create_file("host_mem", 0400, pdsc->dentry,
-+			    pdsc, &host_mem_fops);
+ static char *fw_slotnames[] = {
+ 	"fw.goldfw",
+ 	"fw.mainfwa",
+ 	"fw.mainfwb",
+ };
+ 
+-int pdsc_dl_info_get(struct devlink *dl, struct devlink_info_req *req,
+-		     struct netlink_ext_ack *extack)
++static int pdsc_dl_fw_list_info_get(struct devlink *dl,
++				    struct devlink_info_req *req,
++				    struct netlink_ext_ack *extack)
+ {
+ 	union pds_core_dev_cmd cmd = {
+ 		.fw_control.opcode = PDS_CORE_CMD_FW_CONTROL,
+@@ -132,11 +179,27 @@ int pdsc_dl_info_get(struct devlink *dl, struct devlink_info_req *req,
+ 			return err;
+ 	}
+ 
+-	err = devlink_info_version_running_put(req,
+-					       DEVLINK_INFO_VERSION_GENERIC_FW,
+-					       pdsc->dev_info.fw_version);
+-	if (err)
++	return devlink_info_version_running_put(req,
++						DEVLINK_INFO_VERSION_GENERIC_FW,
++						pdsc->dev_info.fw_version);
 +}
-diff --git a/drivers/net/ethernet/amd/pds_core/main.c b/drivers/net/ethernet/amd/pds_core/main.c
-index 0a0542bf7cbb..4c14198eaafe 100644
---- a/drivers/net/ethernet/amd/pds_core/main.c
-+++ b/drivers/net/ethernet/amd/pds_core/main.c
-@@ -264,6 +264,8 @@ static int pdsc_init_pf(struct pdsc *pdsc)
- 
- 	mutex_unlock(&pdsc->config_lock);
- 
-+	pdsc_debugfs_add_host_mem(pdsc);
 +
- 	err = pdsc_auxbus_dev_add(pdsc, pdsc, PDS_DEV_TYPE_FWCTL, &pdsc->padev);
- 	if (err)
- 		goto err_out_stop;
++int pdsc_dl_info_get(struct devlink *dl, struct devlink_info_req *req,
++		     struct netlink_ext_ack *extack)
++{
++	struct pdsc *pdsc = devlink_priv(dl);
++	char buf[32];
++	int err;
++
++	if (pdsc->dev_ident.version >= PDS_CORE_IDENTITY_VERSION_2)
++		err = pdsc_dl_component_info_get(dl, req, extack);
++	else
++		err = pdsc_dl_fw_list_info_get(dl, req, extack);
++	if (err) {
++		dev_err(pdsc->dev, "Failed to get devlink info for identity version %u: %pe\n",
++			pdsc->dev_ident.version, ERR_PTR(err));
+ 		return err;
++	}
+ 
+ 	snprintf(buf, sizeof(buf), "0x%x", pdsc->dev_info.asic_type);
+ 	err = devlink_info_version_fixed_put(req,
 
 -- 
 2.43.0
