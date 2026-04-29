@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728C33F54AB
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Apr 2026 14:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8383F33998
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Apr 2026 14:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777471750; cv=none; b=CwSAUlW6576FOtTSbpWiLQGD4aONz+GALL1fwLvzAPBpEJqAyNaTBQhVpXEs283t/eG/BGf6yyp9dZClZZ0Ndggp25RnX/2XwUM2PPiXZ82Dpwodziir4cKe5Pb63BEIfIChRtZO8x+s//tjMXxLEFyg1XRqH1F1Xr0SXF3dp4E=
+	t=1777472624; cv=none; b=jRuBskq6s7elQabj4lvOJvFBv7Fqjq8bGVetSuZee0RKY1eGMzhUiHGMYR+X6URX4p62k9he2q+FEHKSbE8vO1weEXDjMyS3/rBFPaQ7ojRj94EPqBhZTjXvDoVUwvdxyg1CwBMF+wvMwf9eRE64DKmA7fLpHpU18BjxWFmj8OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777471750; c=relaxed/simple;
-	bh=MyPkCw4jiFzhBkwRoZCQ5vZDCBPFzZNsYDO5Ul8+pDM=;
+	s=arc-20240116; t=1777472624; c=relaxed/simple;
+	bh=1DoYAyGOTScVVD3GXpdNNQST/38xq+/hMaqnmr473Bs=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=AL/HGxNJ65ro3gHsB3Hv6EaMARlaQvlmtFYec87AuFD0IlAC2N/HbomjqklCk9fWLsJsLXy0K6N4QIsfCu/U0eGyH9dsnJ6R/paPqDgEQ3w27osk/wcyKpIxzEmxBOIAKKTykFy3wTQ8n6JG+YYMkN5MGTUyX8a+3G5Tdh3wTuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvkrbslP; arc=none smtp.client-ip=10.30.226.201
+	 Subject:Content-Type; b=E4WL+m+PAk/2eKpfOmUJHSCEUYhykkrcy9KkU7JzvcscdHR+V1U+t07805kgwiIHWGZAS1j28K9JBVuxUxXZ/4boya1TppAsqx9rSeSZzkQmRPzjpcAO0knGnBYAVGL6KedyS/AygRPEEUyl2U1iqOq7/iA3tfV05HvRMYKieHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+d91KjT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvkrbslP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D44C4AF09;
-	Wed, 29 Apr 2026 14:09:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+d91KjT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC2A3C4AF09;
+	Wed, 29 Apr 2026 14:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777471750;
-	bh=MyPkCw4jiFzhBkwRoZCQ5vZDCBPFzZNsYDO5Ul8+pDM=;
+	s=k20201202; t=1777472624;
+	bh=1DoYAyGOTScVVD3GXpdNNQST/38xq+/hMaqnmr473Bs=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=GvkrbslP/xhdKJvHpqOyen0INL8SLOmZNu6E4wYpQdza02dOyBb3PBmTle1kQ/33p
-	 Vt919aGM/B+6kb26JcRM2kKyMjjzaZFtJB7fenpPCNK05hEmwhgWo6pw9S8DL+tBxl
-	 ngFCz4B7AcO53hXHQ+qdsSRdjCJiu676D5OUIT8yZ3BvOGyDn/k/8VOic8a+Oas+Ck
-	 9a6DqRZa/yUvikwYhd6028WYPsOTF5VX0OkNvv01rLSUp0mu0yv5mZdR+g9yYYNYAu
-	 fmofb4WU6OVnLbR3kjAClZ/ej+ePosGPDdQbalAovib3P7c3axIb31T+05CW0Ko1OU
-	 QrNulooYd/eRg==
+	b=D+d91KjTTrM+lBnQ44Qx5TmdF/ui8FYG7riluu2LEkceRos9M2RXCy/huWD2rHFbk
+	 UZ0bxWyoCYJBzLVkVf2ZhXbnpzm/XXLxEYS7qjdAvLnsraGoQZe9UKyJnTuJgT974q
+	 j+EkKT6u7bZ4J4CmzpGeolUiepyZgE/zABzHbergVuaLqEVNd6YD96dpQQzMP4Bzju
+	 gN2G1YFkAt6HF5fb0NF2fHHdLnzgbb/Eay7BLp+q3r+uTOMXWyP2eFu+ml06IRx4AH
+	 LHnKjiw12g7mYF/wPW2KJUDX1yM+xxwO5xeMlajk12CKWQlU2G3bYJsLxLi1zVDZ9R
+	 HLwOZtcL0ayew==
 Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C7AF0F40072;
-	Wed, 29 Apr 2026 10:09:08 -0400 (EDT)
+	by mailfauth.phl.internal (Postfix) with ESMTP id C6D6EF40081;
+	Wed, 29 Apr 2026 10:23:42 -0400 (EDT)
 Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Wed, 29 Apr 2026 10:09:08 -0400
-X-ME-Sender: <xms:BBHyaegzIbsF-36lyYjViSyRSbWG03AfdMOlRVyxm2zRLO_jWi6maA>
-    <xme:BBHyaZ1dNGfn8xUgJn5iF7rJDtBrPWiw-FGV1Vdgd4VBs3SKgQDr7rZPNFVuuzD_z
-    g1AY688QHCx20U-NPxM_c4SC9ZI7n_LKFh-K2QL4WUTZl6CDT6vaRc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekgeeigecutefuodetggdotefrod
+  by phl-compute-01.internal (MEProxy); Wed, 29 Apr 2026 10:23:42 -0400
+X-ME-Sender: <xms:bhTyaRuedy8IaKVEUb6zYplqea_IyrVJ49HkQ4RUPpdmpAElw4kXEw>
+    <xme:bhTyaVRnbbQOqYIc9uQZ-srPlIHJH6Ecz-9CNLTmo6l72SQrfGLC7rXy5RwNoSO5c
+    PfLjljA9mfzOFgztLYmln-dyEK2WRsD3kpgdEUY7fyEOc7nsh2YDdQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekgeeijecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhguuceu
@@ -52,14 +52,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekgeeigecutefuodetgg
     htthhopehlihiiphhruhgtkhgrsehgohhoghhlvgdrtghomhdprhgtphhtthhopehsvght
     hhhjvghnkhhinhhssehgohhoghhlvgdrtghomhdprhgtphhtthhopegurghvihgusehkvg
     hrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:BBHyaRjbJpfo3Sp2bx_kbAgIBsznqF-7o2l8YvD3KVKbNBxsKgDoMw>
-    <xmx:BBHyaSWjBLyZpyeGWlwyvH7noyRiDot0fPUFzM4D8_UA7Hm1H4OshA>
-    <xmx:BBHyaStXnm6Tst5HguJgmDEkVJO6WSz_MgFXe3fHquwDnJ6GJCHxtQ>
-    <xmx:BBHyaTZ-pErfCj9Z36BHMOK4XbgWHcaHgvtLC0GhgQMZfK5Wtgxvzg>
-    <xmx:BBHyaT7dF4IIVlcesDLk5ihBXcH9ZhuVpxtkNa4meQGsB6_8ezuitEWf>
+X-ME-Proxy: <xmx:bhTyaYQqbQnVIvDQGr_EIyoNqMUxhwXG4G4jtXeNWeDmpwZFsfnQFA>
+    <xmx:bhTyaZ5UU3sOLPELciR1S3yUNipryJRU-wfpnldnvQeR7ny2GQoX_A>
+    <xmx:bhTyaS26ba8LHTkWKJhLTLhqgOLfm1ol0gbWKJiQ7XNXpSI0HVb3_Q>
+    <xmx:bhTyaWlPWrFeCV-JEl10S10qMtJqxcSJLGeaFD4PPzxewiMEq2oA5g>
+    <xmx:bhTyaYj-PQwy2tOxiSz7NljYKJXKPYJnt1JMl7HQF9Vpthrm4_c5Y-60>
 Feedback-ID: ice86485a:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A10BF700069; Wed, 29 Apr 2026 10:09:08 -0400 (EDT)
+	id 9D519700065; Wed, 29 Apr 2026 10:23:42 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -67,7 +67,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 29 Apr 2026 16:08:48 +0200
+Date: Wed, 29 Apr 2026 16:23:22 +0200
 From: "Ard Biesheuvel" <ardb@kernel.org>
 To: "Kevin Brodsky" <kevin.brodsky@arm.com>,
  "Ard Biesheuvel" <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
@@ -80,36 +80,63 @@ Cc: linux-kernel@vger.kernel.org, "Will Deacon" <will@kernel.org>,
  "David Hildenbrand" <david@kernel.org>,
  "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
  linux-hardening@vger.kernel.org
-Message-Id: <5e0a87ad-50d5-420b-ad5a-c2882a619b35@app.fastmail.com>
-In-Reply-To: <21a547ae-7121-4cd1-b203-4d8182eb7cc9@arm.com>
+Message-Id: <1f9c1ca5-c15c-4a08-aa8c-cbe64f7f205b@app.fastmail.com>
+In-Reply-To: <8a315ca2-3754-4a66-990e-55b85191aa6e@arm.com>
 References: <20260427153416.2103979-17-ardb+git@google.com>
- <20260427153416.2103979-32-ardb+git@google.com>
- <21a547ae-7121-4cd1-b203-4d8182eb7cc9@arm.com>
-Subject: Re: [PATCH v4 15/15] arm64: mm: Remap linear aliases of the fixmap page tables
- read-only
+ <20260427153416.2103979-28-ardb+git@google.com>
+ <8a315ca2-3754-4a66-990e-55b85191aa6e@arm.com>
+Subject: Re: [PATCH v4 11/15] arm64: mm: Don't abuse memblock NOMAP to check for
+ overlaps
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-Hi Ard,
 
-On Wed, 29 Apr 2026, at 15:57, Kevin Brodsky wrote:
+
+On Wed, 29 Apr 2026, at 12:54, Kevin Brodsky wrote:
 > On 27/04/2026 17:34, Ard Biesheuvel wrote:
->> [...]
+>> From: Ard Biesheuvel <ardb@kernel.org>
+>>
+>> Now that the DRAM mapping routines respect existing table mappings and
+>> contiguous block and page mappings, it is no longer needed to fiddle
+>> with the memblock tables to set and clear the NOMAP attribute in order
+>> to omit text and rodata when creating the linear map.
+>>
+>> Instead, map the kernel text and rodata alias first with the desired
+>> attributes, so that they will not be remapped later with different
+>> attributes when mapping the memblocks.
+>>
+>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>> ---
+>>  arch/arm64/mm/mmu.c | 24 +++++++-------------
+>>  1 file changed, 8 insertions(+), 16 deletions(-)
 >>
 >> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index 84d81bae07a7..e76fe5b0c5fe 100644
+>> index 5e2348b15783..1a4b4337d29a 100644
 >> --- a/arch/arm64/mm/mmu.c
 >> +++ b/arch/arm64/mm/mmu.c
->> @@ -1076,6 +1076,11 @@ void __init mark_linear_text_alias_ro(void)
->>  			    (unsigned long)__init_begin - (unsigned long)_text,
->>  			    pgprot_tagged(PAGE_KERNEL_RO));
+>> @@ -1148,12 +1148,15 @@ static void __init map_mem(void)
+>>  		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
 >>  
->> +	/* Map the fixmap PTE table at __fixmap_pgdir_start R/O in linear map too */
->> +	update_mapping_prot(__pa_symbol(__fixmap_pgdir_start),
->> +			    (unsigned long)lm_alias(__fixmap_pgdir_start),
->> +			    PAGE_SIZE, pgprot_tagged(PAGE_KERNEL_RO));
+>>  	/*
+>> -	 * Take care not to create a writable alias for the
+>> -	 * read-only text and rodata sections of the kernel image.
+>> -	 * So temporarily mark them as NOMAP to skip mappings in
+>> -	 * the following for-loop
+>> +	 * Map the linear alias of the [_text, __init_begin) interval
+>> +	 * as non-executable now, and remove the write permission in
+>> +	 * mark_linear_text_alias_ro() above (which will be called after
+>> +	 * alternative patching has completed). This makes the contents
+>> +	 * of the region accessible to subsystems such as hibernate,
+>> +	 * but protects it from inadvertent modification or execution.
+>>  	 */
+>> -	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+>> +	__map_memblock(kernel_start, kernel_end, pgprot_tagged(PAGE_KERNEL),
 >
-> Is that definitely just one page?
+> Is it now necessary for that mapping to be tagged? If so, it should
+> probably be called out in the commit message.
 >
 
-No it most definitely is not - thanks for spotting that :-)
+As you've pointed out, the initial r/w mapping of the linear alias of rodata
+will need to be mapped tagged before moving the zero page there. So this patch
+will just preserve that, rather than remapping the region tagged explicitly as
+it does now.
