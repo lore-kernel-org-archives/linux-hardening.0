@@ -1,422 +1,229 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B272737703A
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Apr 2026 06:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9E13A16AE;
+	Thu, 30 Apr 2026 07:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777531302; cv=none; b=NP6TGEB6F2TWbUYNCtbIWGlxdTVVx2V0musGmUEst9UfisGS5w+WdtG1Byeu7fA2opXWPbJj25fMYEJbxTLUPAgoSD3/7FNMpUQplz0WAa4kgTAox678TnVfkK/Jy/8l960RR9eG6oRX6sUnS+51Z0vycpASjkSFrnAuU+sVbp0=
+	t=1777534183; cv=none; b=DXLMF3Xrbw7cO/P1qRVuINN/VFVZV563llsb6/X6CeaYW7NtjS1NsWwNfPTXEnLx6WBpUhhoIuF9LFQBxqJhlhxTFqqCvDHXy93pn8PLxtuN9ORTSgdzLOhPqq9DQWLIyuXnl+UnK54xYgk+KiE57FzORjZn5E0+DBglZsqi920=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777531302; c=relaxed/simple;
-	bh=s+D4E7weVxpoi/KNR6/hyKngEDgrfBntCkFkFSTnwJQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ebj5tKLBYjr/OknrRdiBzZj1loO4osiGblkdZtSriWvw2pmhvqjPl/iQu/4B9Q1T/3DDB3z+JWYJJV7g1w+n3xmm0gIbtRewfcO8y328vtToNqPccRjBMUpu0s1dEzpJdwcZ15tChewEVYQk7F7o+viRvKfHwdf0+fJsS0kl2cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bye0Jmhr; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777534183; c=relaxed/simple;
+	bh=1FV9NIGv0z3KLCU98AzhoYdsRjE1xM/rdy+ns4jnleA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bZfG1yNC46FUyyaaZQDIaAVJQDeY5PSrMjx8t7e5ogoo86+FTOVklCkfzIYlQtrO1hZTA/DHb9dZRAELGnNQdVQgWhA/jc+ghdveQmzeSDQLVcrEloMXdPQh71b4zsrIfVksUl5SacFXdOBjq+kAltDQLhAF5sipX/jSP/kDAIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=4qrHUuqj; arc=none smtp.client-ip=113.46.200.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bye0Jmhr"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-82f0884bcfaso432102b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Apr 2026 23:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777531300; x=1778136100; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=olN7yyAJdML/hgufOM5IAEYIPUlmPuDpGh2nWEkwNIQ=;
-        b=bye0Jmhr8zrMWa2+biTY0x1ieFJHAwci/wcz1aM/IG99hKfV+Kd1ztVZuBPOTbtuc3
-         I2bXO89/uDpqyLE4pqUnCp7G+Pq+hBoOAysUfb0US6d84Fryh0DjVRL8vaK/AK4QO+It
-         beDeWKiU05QfYHShF/VSN5FDDojDKd9gr58sElU+7jX2GDRYGclzfxAzzdxhP5DplXXs
-         pxNAoWl4p78QvcdJ4zcavbTRjpiShJzi2hbYpjSYAACGMbovrAFJJf+Dzr/Eza9KYJh7
-         y4IVGLbRBXPpN8RLwYu4fG4yM0R694Qe9M90rT+HYc5kTXuncVhOmYxWZiLpBMi3digd
-         TH0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777531300; x=1778136100;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=olN7yyAJdML/hgufOM5IAEYIPUlmPuDpGh2nWEkwNIQ=;
-        b=HMu4ROkSQXIW3LaAD6t+0LGm2I+e9KeP+/v/pYwfxU7Fm9J5OH2rMSEVRmlKSr42Iv
-         q2SMZZKEZk9l4vHTvwdcmVJzS4zd7HT8eHeiHGRMDOQ17hJI5m8X9d1wvoWqmBfPv31o
-         D3TcN1Go5JXpUMy2uEn1iPMotmTEIMwfTN65XKeVLtNeBw7uxuj/3y6Qw0dXDncgFCA2
-         vOfuNzQGRNtLJceI/IaTByx1Fy2y7Rdq6azTsiOmivZa0Y51D0dg7CAwvqL1ZtQJ4NXy
-         e+YhYXd5f0V2li5XM0bTO19x2eb/85Wcz6AuEJ7gn+z7G6bNDw+yvKPV1ERrlEgS8QjW
-         CUTA==
-X-Forwarded-Encrypted: i=1; AFNElJ9kLMZhCUYgVax4wvQ+S11zaUORY1dFxotuTYuvmP8iH62KupgXPRmDLYj6Ov5RMBKjpsr87Gi76RvCkqIwSy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw81EKY1jbpmEeLSjXPBpgT2L85JugKml8VsFajn3iVNQk3ScwM
-	LButgNC9L5CYK6XSCsErRH5cjx9suDlrguAEKjd4QAVQXI/j7DQ/ajEu
-X-Gm-Gg: AeBDiescYr1bLo+zwsDoj4yLfNph8Dl5MKj2RNoBI2KSTv3FZJLv6qvJQ2hnfbfVJfJ
-	UXkywRyh5u/L8QyQPluaTTttOP0XOm9U/TLs0G996gq5mldOhc33TlMC7SOuA1GnCOCHjSU4g7W
-	tM67Rs6AWAkviQEPJ/3rzl1KT3vPD81GregoNUB9tP9dlXStPTT72CVbiP4tMv17pGiUQTTIiyG
-	wdyxEmdyExjXAFYAJZ9SedN72QqS/PjCj4G0h8s5/veMmhZn7wp4Sup8jbmlaiQ3PMPZuOiLtWF
-	neEnlo/jKpgyuOSsmLCAx/aEwEauEMMwlUAxrGZGqK22zJVJqnHGAfMBwa0y8GsyHaygKG+578H
-	ub8qpO+LUxN0wpkjvtjLNCIPXK/CJUkQY/vm3jKhCOphMqnta08mmj4C3KhVx1+AVtv8p5UjU/q
-	YROtUdEC74j+VgBKA7WjuD4cHcqKTJOewY5u7nj6n1
-X-Received: by 2002:a05:6a00:3e0f:b0:832:e65:ddcd with SMTP id d2e1a72fcca58-834fdc8235emr2083774b3a.45.1777531299876;
-        Wed, 29 Apr 2026 23:41:39 -0700 (PDT)
-Received: from localhost ([103.74.250.37])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-834ed6df1f6sm4096088b3a.30.2026.04.29.23.41.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2026 23:41:39 -0700 (PDT)
-From: Jiazi Li <jqqlijiazi@gmail.com>
-To: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Jiazi Li <jqqlijiazi@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	"mingzhu.wang" <mingzhu.wang@transsion.com>
-Subject: [PATCH v2 2/2] coccinelle: Add rules to find str_alloc_free() replacements
-Date: Thu, 30 Apr 2026 14:40:41 +0800
-Message-ID: <2ec1942dae69caf3c387e68a65091f84c40249d5.1777529232.git.jqqlijiazi@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1777529232.git.jqqlijiazi@gmail.com>
-References: <cover.1777529232.git.jqqlijiazi@gmail.com>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="4qrHUuqj"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=0ltKK1NTBIxI4tmmAgwYrZVN6incxK415s9umw/K/2s=;
+	b=4qrHUuqjB2Ldo30BrvO8GDtQwcXYf/SUQegRFIHagkY2YXiyDLNvC41gVmtFFr/iBfcb5isoc
+	Npajhmjp8FKg0Jpbvz6VON5wcTxGVpgCTIDC9VNtit5G2VY68n30v26Nfo6V+8TD5qavdAEW5Cr
+	oNJ7ANEM3xfP1kZEXPTkew0=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4g5lx72NsnznTZF;
+	Thu, 30 Apr 2026 15:22:19 +0800 (CST)
+Received: from kwepemj100009.china.huawei.com (unknown [7.202.194.3])
+	by mail.maildlp.com (Postfix) with ESMTPS id A9AB64064A;
+	Thu, 30 Apr 2026 15:29:29 +0800 (CST)
+Received: from DESKTOP-A37P9LK.huawei.com (10.67.109.17) by
+ kwepemj100009.china.huawei.com (7.202.194.3) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Thu, 30 Apr 2026 15:29:29 +0800
+From: Xie Yuanbin <xieyuanbin1@huawei.com>
+To: <chleroy@kernel.org>, <andriy.shevchenko@intel.com>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<kees@kernel.org>, <andy@kernel.org>
+CC: <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <lilinjie8@huawei.com>,
+	<liaohua4@huawei.com>, <xieyuanbin1@huawei.com>
+Subject: Re: [PATCH 2/2] powerpc/text-patching: Fix possible stringop-overread compilation error
+Date: Thu, 30 Apr 2026 15:28:38 +0800
+Message-ID: <20260430072913.62348-1-xieyuanbin1@huawei.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <5cfae419-427a-471b-8bbe-645f56442e2c@kernel.org>
+References: <5cfae419-427a-471b-8bbe-645f56442e2c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemj100009.china.huawei.com (7.202.194.3)
 
-Add rules for finding places where str_alloc_free()/str_free_alloc
-can be used.
-This currently finds 4 locations.
+Hi, Christophe Leroy!
 
-Adjust the position of some coccinelle rules, so they sorted in the
-same order as they appear in the header.
+On Mon, 9 Feb 2026 14:41:51 +0100, Christophe Leroy (CS GROUP) wrote:
+> On 09/02/2026 14:25, Xie Yuanbin wrote:
+>> When CONFIG_PPC64_ELF_ABI_V1=y, it seems that the try of lookupinp
+>> the original non-dot symbol is missing.
+>>
+>> What about this (Only the compilation test is performed):
+>> ```c
+>> static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
+>> {
+>> 	unsigned long addr = kallsyms_lookup_name(name);
+>>
+>> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
+>> 		addr = ppc_function_entry((void *)addr);
+>>
+>> 	return addr;
+>> }
+>>
+>> #define ppc_kallsyms_lookup_name(x) ({					\
+>> 		unsigned long addr = 0;					\
+>> 		if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1))		\
+>> 			addr = __ppc_kallsyms_lookup_name("." x);	\
+>> 		if (!addr)						\
+>> 			addr = __ppc_kallsyms_lookup_name(x);		\
+>> 		addr;							\
+>> 	})
+>> ```
+>
+> Good point.
+>
+> To avoid duplicating the string I'd suggest:
+>
+> static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
+> {
+> 	unsigned long addr = kallsyms_lookup_name(name);
+>
+> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1) && !addr)
+> 		addr = kallsyms_lookup_name(name + 1);
+> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
+> 		addr = ppc_function_entry((void *)addr);
+>
+> 	return addr;
+> }
+>
+> #ifdef CONFIG_PPC64_ELF_ABI_V1
+> #define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name("." x);
+> #else
+> #define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name(x)
+> #endif
 
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Tested-by: mingzhu.wang <mingzhu.wang@transsion.com>
-Signed-off-by: Jiazi Li <jqqlijiazi@gmail.com>
+I would like to submit the modification as a new patch, and include you
+as Co-developer. Do you agree?
+
+Full of the patch:
+```patch
+From fbf07e5c1a97da7c8572435537f2b92213ede39d Mon Sep 17 00:00:00 2001
+From: Xie Yuanbin <xieyuanbin1@huawei.com>
+Date: Thu, 30 Apr 2026 14:15:26 +0800
+Subject: [PATCH V2] powerpc/text-patching: simplify the implementation of ppc_kallsyms_lookup_name()
+
+ppc_kallsyms_lookup_name() is called only twice in the kernel code, and
+the parameters are all constant strings. strnlen(name, KSYM_NAME_LEN) is
+called inside ppc_kallsyms_lookup_name(), when the compiler detects that
+KSYM_NAME_LEN is larger then the constant strings,
+the following error will be triggered:
+```log
+  CC      arch/powerpc/kernel/optprobes.o
+In file included from ./arch/powerpc/include/asm/kprobes.h:24,
+                 from ./include/linux/kprobes.h:31,
+                 from arch/powerpc/kernel/optprobes.c:8:
+In function ‘ppc_kallsyms_lookup_name’,
+    inlined from ‘arch_prepare_optimized_kprobe’ at arch/powerpc/kernel/optprobes.c:209:21:
+./arch/powerpc/include/asm/text-patching.h:232:13: error: ‘strnlen’ specified bound 512 exceeds source size 19 [-Werror=stringop-overread]
+  232 |         if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function ‘ppc_kallsyms_lookup_name’,
+    inlined from ‘arch_prepare_optimized_kprobe’ at arch/powerpc/kernel/optprobes.c:210:22:
+./arch/powerpc/include/asm/text-patching.h:232:13: error: ‘strnlen’ specified bound 512 exceeds source size 13 [-Werror=stringop-overread]
+  232 |         if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+```
+
+The error can be reproduced in the following ways:
+Use lastest linux-next source, change ppc_kallsyms_lookup_name() to
+__always_inline, use default ppc64_defconfig, set CONFIG_EXPERT=y,
+CONFIG_PPC64_BIG_ENDIAN_ELF_ABI_V2=n, CONFIG_CC_OPTIMIZE_FOR_SIZE=y,
+and use gcc-14 or a later version for compilation.
+
+Since ppc_kallsyms_lookup_name() is called only twice in the kernel,
+and the parameters are all constant strins, simplify the implementation
+of ppc_kallsyms_lookup_name() and avoid calling strnlen().
+
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Kees Cook <kees@kernel.org>
+Co-developed-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
 ---
-V2: Keep coccinelle stances sorted in the same order as they appear in
-the header.
----
- scripts/coccinelle/api/string_choices.cocci | 228 ++++++++++++--------
- 1 file changed, 133 insertions(+), 95 deletions(-)
+v1->v2: https://lore.kernel.org/20260205100517.292858-2-xieyuanbin1@huawei.com
+  - Not use strlen()
 
-diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
-index 375045086912..516b30828380 100644
---- a/scripts/coccinelle/api/string_choices.cocci
-+++ b/scripts/coccinelle/api/string_choices.cocci
-@@ -7,109 +7,81 @@ virtual patch
- virtual context
- virtual report
- 
--@str_plural depends on patch@
-+@str_alloc_free depends on patch disable neg_if_exp@
- expression E;
- @@
--(
---	((E == 1) ? "" : "s")
--+	str_plural(E)
--|
---	((E > 1) ? "s" : "")
--+	str_plural(E)
--)
-+-      ((E) ? "alloc" : "free")
-++      str_alloc_free(E)
- 
--@str_plural_r depends on !patch@
-+@str_alloc_free_r depends on !patch disable neg_if_exp@
- expression E;
- position P;
- @@
--(
--*	(E@P == 1) ? "" : "s"
--|
--*	(E@P > 1) ? "s" : ""
--)
-+*      E@P ? "alloc" : "free"
- 
- @script:python depends on report@
--p << str_plural_r.P;
--e << str_plural_r.E;
-+p << str_alloc_free_r.P;
-+e << str_alloc_free_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_plural(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_alloc_free(%s)" % e)
- 
--@str_up_down depends on patch disable neg_if_exp@
-+@str_free_alloc depends on patch disable neg_if_exp@
- expression E;
- @@
---	((E) ? "up" : "down")
--+	str_up_down(E)
-+-      ((E) ? "free" : "alloc")
-++      str_free_alloc(E)
- 
--@str_up_down_r depends on !patch disable neg_if_exp@
-+@str_free_alloc_r depends on !patch disable neg_if_exp@
- expression E;
- position P;
- @@
--*	E@P ? "up" : "down"
-+*      E@P ? "free" : "alloc"
- 
- @script:python depends on report@
--p << str_up_down_r.P;
--e << str_up_down_r.E;
-+p << str_free_alloc_r.P;
-+e << str_free_alloc_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_up_down(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_free_alloc(%s)" % e)
- 
--@str_down_up depends on patch disable neg_if_exp@
--expression E;
--@@
---      ((E) ? "down" : "up")
--+      str_down_up(E)
+ arch/powerpc/include/asm/text-patching.h | 42 ++++++++----------------
+ 1 file changed, 17 insertions(+), 33 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/text-patching.h b/arch/powerpc/include/asm/text-patching.h
+index e7f14720f630..2d3f698cb4f1 100644
+--- a/arch/powerpc/include/asm/text-patching.h
++++ b/arch/powerpc/include/asm/text-patching.h
+@@ -221,39 +221,23 @@ static inline unsigned long ppc_global_function_entry(void *func)
+  * - For ABIv1, we lookup the dot variant.
+  * - For ABIv2, we return the local entry point.
+  */
+-static inline unsigned long ppc_kallsyms_lookup_name(const char *name)
+-{
+-	unsigned long addr;
+-#ifdef CONFIG_PPC64_ELF_ABI_V1
+-	/* check for dot variant */
+-	char dot_name[1 + KSYM_NAME_LEN];
+-	bool dot_appended = false;
 -
--@str_down_up_r depends on !patch disable neg_if_exp@
--expression E;
--position P;
--@@
--*      E@P ? "down" : "up"
+-	if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
+-		return 0;
 -
--@script:python depends on report@
--p << str_down_up_r.P;
--e << str_down_up_r.E;
--@@
--
--coccilib.report.print_report(p[0], "opportunity for str_down_up(%s)" % e)
--
--@str_true_false depends on patch disable neg_if_exp@
-+@str_enable_disable depends on patch@
- expression E;
- @@
---      ((E) ? "true" : "false")
--+      str_true_false(E)
-+-      ((E) ? "enable" : "disable")
-++      str_enable_disable(E)
- 
--@str_true_false_r depends on !patch disable neg_if_exp@
-+@str_enable_disable_r depends on !patch@
- expression E;
- position P;
- @@
--*      E@P ? "true" : "false"
-+*      E@P ? "enable" : "disable"
- 
- @script:python depends on report@
--p << str_true_false_r.P;
--e << str_true_false_r.E;
-+p << str_enable_disable_r.P;
-+e << str_enable_disable_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_true_false(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_enable_disable(%s)" % e)
- 
--@str_false_true depends on patch disable neg_if_exp@
-+@str_enabled_disabled depends on patch@
- expression E;
- @@
---      ((E) ? "false" : "true")
--+      str_false_true(E)
-+-      ((E) ? "enabled" : "disabled")
-++      str_enabled_disabled(E)
- 
--@str_false_true_r depends on !patch disable neg_if_exp@
-+@str_enabled_disabled_r depends on !patch@
- expression E;
- position P;
- @@
--*      E@P ? "false" : "true"
-+*      E@P ? "enabled" : "disabled"
- 
- @script:python depends on report@
--p << str_false_true_r.P;
--e << str_false_true_r.E;
-+p << str_enabled_disabled_r.P;
-+e << str_enabled_disabled_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_false_true(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_enabled_disabled(%s)" % e)
- 
- @str_hi_lo depends on patch disable neg_if_exp@
- expression E;
-@@ -187,43 +159,24 @@ e << str_low_high_r.E;
- 
- coccilib.report.print_report(p[0], "opportunity for str_low_high(%s)" % e)
- 
--@str_enable_disable depends on patch@
--expression E;
--@@
---      ((E) ? "enable" : "disable")
--+      str_enable_disable(E)
--
--@str_enable_disable_r depends on !patch@
--expression E;
--position P;
--@@
--*      E@P ? "enable" : "disable"
--
--@script:python depends on report@
--p << str_enable_disable_r.P;
--e << str_enable_disable_r.E;
--@@
--
--coccilib.report.print_report(p[0], "opportunity for str_enable_disable(%s)" % e)
--
--@str_enabled_disabled depends on patch@
-+@str_on_off depends on patch@
- expression E;
- @@
---      ((E) ? "enabled" : "disabled")
--+      str_enabled_disabled(E)
-+-      ((E) ? "on" : "off")
-++      str_on_off(E)
- 
--@str_enabled_disabled_r depends on !patch@
-+@str_on_off_r depends on !patch@
- expression E;
- position P;
- @@
--*      E@P ? "enabled" : "disabled"
-+*      E@P ? "on" : "off"
- 
- @script:python depends on report@
--p << str_enabled_disabled_r.P;
--e << str_enabled_disabled_r.E;
-+p << str_on_off_r.P;
-+e << str_on_off_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_enabled_disabled(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_on_off(%s)" % e)
- 
- @str_read_write depends on patch disable neg_if_exp@
- expression E;
-@@ -263,24 +216,81 @@ e << str_write_read_r.E;
- 
- coccilib.report.print_report(p[0], "opportunity for str_write_read(%s)" % e)
- 
--@str_on_off depends on patch@
-+@str_true_false depends on patch disable neg_if_exp@
- expression E;
- @@
---      ((E) ? "on" : "off")
--+      str_on_off(E)
-+-      ((E) ? "true" : "false")
-++      str_true_false(E)
- 
--@str_on_off_r depends on !patch@
-+@str_true_false_r depends on !patch disable neg_if_exp@
- expression E;
- position P;
- @@
--*      E@P ? "on" : "off"
-+*      E@P ? "true" : "false"
- 
- @script:python depends on report@
--p << str_on_off_r.P;
--e << str_on_off_r.E;
-+p << str_true_false_r.P;
-+e << str_true_false_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_on_off(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_true_false(%s)" % e)
+-	if (name[0] != '.') {
+-		dot_name[0] = '.';
+-		dot_name[1] = '\0';
+-		strlcat(dot_name, name, sizeof(dot_name));
+-		dot_appended = true;
+-	} else {
+-		dot_name[0] = '\0';
+-		strlcat(dot_name, name, sizeof(dot_name));
+-	}
+-	addr = kallsyms_lookup_name(dot_name);
+-	if (!addr && dot_appended)
+-		/* Let's try the original non-dot symbol lookup	*/
+-		addr = kallsyms_lookup_name(name);
+-#elif defined(CONFIG_PPC64_ELF_ABI_V2)
+-	addr = kallsyms_lookup_name(name);
+-	if (addr)
+-		addr = ppc_function_entry((void *)addr);
+-#else
+-	addr = kallsyms_lookup_name(name);
+-#endif
+-	return addr;
+-}
++static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
++{
++	unsigned long addr = kallsyms_lookup_name(name);
 +
-+@str_false_true depends on patch disable neg_if_exp@
-+expression E;
-+@@
-+-      ((E) ? "false" : "true")
-++      str_false_true(E)
++	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1) && !addr)
++		addr = kallsyms_lookup_name(name + 1);
++	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
++		addr = ppc_function_entry((void *)addr);
 +
-+@str_false_true_r depends on !patch disable neg_if_exp@
-+expression E;
-+position P;
-+@@
-+*      E@P ? "false" : "true"
++	return addr;
++}
 +
-+@script:python depends on report@
-+p << str_false_true_r.P;
-+e << str_false_true_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_false_true(%s)" % e)
-+
-+@str_up_down depends on patch disable neg_if_exp@
-+expression E;
-+@@
-+-	((E) ? "up" : "down")
-++	str_up_down(E)
-+
-+@str_up_down_r depends on !patch disable neg_if_exp@
-+expression E;
-+position P;
-+@@
-+*	E@P ? "up" : "down"
-+
-+@script:python depends on report@
-+p << str_up_down_r.P;
-+e << str_up_down_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_up_down(%s)" % e)
-+
-+@str_down_up depends on patch disable neg_if_exp@
-+expression E;
-+@@
-+-      ((E) ? "down" : "up")
-++      str_down_up(E)
-+
-+@str_down_up_r depends on !patch disable neg_if_exp@
-+expression E;
-+position P;
-+@@
-+*      E@P ? "down" : "up"
-+
-+@script:python depends on report@
-+p << str_down_up_r.P;
-+e << str_down_up_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_down_up(%s)" % e)
++#ifdef CONFIG_PPC64_ELF_ABI_V1
++#define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name("." x)
++#else
++#define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name(x)
++#endif
  
- @str_yes_no depends on patch@
- expression E;
-@@ -300,3 +310,31 @@ e << str_yes_no_r.E;
- @@
- 
- coccilib.report.print_report(p[0], "opportunity for str_yes_no(%s)" % e)
-+
-+@str_plural depends on patch@
-+expression E;
-+@@
-+(
-+-	((E == 1) ? "" : "s")
-++	str_plural(E)
-+|
-+-	((E > 1) ? "s" : "")
-++	str_plural(E)
-+)
-+
-+@str_plural_r depends on !patch@
-+expression E;
-+position P;
-+@@
-+(
-+*	(E@P == 1) ? "" : "s"
-+|
-+*	(E@P > 1) ? "s" : ""
-+)
-+
-+@script:python depends on report@
-+p << str_plural_r.P;
-+e << str_plural_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_plural(%s)" % e)
+ /*
+  * Some instruction encodings commonly used in dynamic ftracing
 -- 
-2.49.0
-
+2.53.0
+```
