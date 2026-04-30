@@ -1,74 +1,74 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E2D2C0299
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Apr 2026 22:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B773537E2FD
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Apr 2026 22:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777587102; cv=none; b=JlAVGUjtKrAP1T8wTi8NolghErllHSa4m3uHRFiRssv6N9BU2kxNEEjepJ3vmMy3NAON6YUnH4S+vQ9eywlKyYLRaaJ/YfmB2oE4X30oO4ynSn4KMrd1nXA6W6FbUYhENh5QO/Ad/vMAC5STdNpi+nzwZbnGhMLA0AG+3xq03B4=
+	t=1777587377; cv=none; b=ELgyMQUUp6pf2R+/ksPUDcyhivPLrVO2fBeF03MQMqwxaXL0jXe44JVQPy0E7nRXMBJkJOs8eip4+B0kKWvgCTDENkB9NGCmgfKSRPYtLOMqrU1wGgVl/z3mvwsb7YWHY5kNBS9bQh8Z5zRgN5/JiMJv0h2PqUPxaOeO62VXH9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777587102; c=relaxed/simple;
-	bh=vFGv55dfkj0ETD0g0nqltAGLsOx/oLvtbrwX44RQX6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oigBZ9oJ7ffg+W0FPV6LddVVAKasBfowQKIPxsgNnYxkKCEeNZ3AKE3PkjSS9l/b4z8brlXIab11gr/jdO2CyJ09uQ+rjSSKN9SsBexP7c54AWqH01nM+lVETA+x3heOD9FrRTZMwQjqlnaOeIDZTNVbhEj74/FlmqdwpPlg/Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7Qe6JAS; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1777587377; c=relaxed/simple;
+	bh=KIoMyWKvhjgZMM30/KFdKVEMyY27M/KUH7AVPeHarE0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S+kbb3cMKNqAendDAnV8ZkXAvqIdfr3Pt2blYpD4fMH3djmUtQ8tHszy4dkvuR+ahcZ7S1fUoKxNs3jrKElMVDbpGjz00yqt3fWb/KJ4jAoI9llrw1rQZbZJJc1+ZEJwQOMsbZ2+j3NSatPRBAMjyCEg0EJBaMqcAXA2IZ/62og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pw1jZazi; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7Qe6JAS"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-82cebbdbdccso881358b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Apr 2026 15:11:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pw1jZazi"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-8d4f78fc9f6so143230685a.3
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Apr 2026 15:16:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777587101; x=1778191901; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777587375; x=1778192175; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+CyYpr5DG2wVXaggugKyiSvcVLQEXsc/QvDPZHxp5lw=;
-        b=R7Qe6JASjtDSiB8xbVqqBe19ZACFgfEjFFile8iFLJ8mzXfBuBzuNDY69MxCnyQkjn
-         266HYjIwHgRQk7sMgBLcWD+d4U/6POwmZfIPWfUL/qzrfNiJoFUr9Yl89Yi2DMIxWezf
-         F1MVW9ndvmjYxhohJ57oteOvgQJnvP5I6Nv0drwbpP6CYcyixR4ah/L7z0OSROvukNLa
-         6TJc3RabQmk6e4CVmyu29PxjL8GfVMwGx3QQU3af9Va3iAxq8nwpFbH3i2xJm5e7ukRF
-         ER2MCgyQ4VUkldb5JuRtdq0l9OCCAy+xFBDsABs0eCi9HSD2tKB5eGWCwrNGVKLx5zsX
-         Sw/w==
+        bh=b0Rsfg16xdotslJA1zN20XDN16KykAdChmHnTzqvbpY=;
+        b=Pw1jZazi9tPyqdTSFzFpnn9SQOvt7m9MwiqmVUBqpZCTvbP1NfMiNVWsUUoQgSpm29
+         ocJTViGezNkFzTFDuHigWoYsXEZpVFf8vU5j5zpjlXAT1e2JtlpKiObaP7QEyBqVY6+t
+         N3IUDxa7FlS99JfRN8z5chzGKLWKo8L5YAVl9VlCG2++whC2vBwIE0dOaRagrw8Xy2+h
+         uqEPqcXbb0ho0SK6hvSGjp1/DEP8O64ms6jsWbSQhpEuV9tV3xvIa4AADQXmBCRXL+Mv
+         i7eGglEfASgz9PQVv102VnqGOUfcKFeGiM1l9kAAIEZHz0xLGmAMUrCW7tvK1eH78ud6
+         7owQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777587101; x=1778191901;
+        d=1e100.net; s=20251104; t=1777587375; x=1778192175;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+CyYpr5DG2wVXaggugKyiSvcVLQEXsc/QvDPZHxp5lw=;
-        b=nK9TmTpBmYlLeSbOj2xeG9gMK5q+uYR2zA9xYBHYZKWxrmCSXlmJKzUNP6CTKRUFbl
-         0Q58mL6cUKP4/gGYPm4qVixHt3mijaCWmaZxw/qDX9OpjfkFhx7UL0AOxKS5H4VuV/2o
-         Qjrg54UP71QbFJKf5U7SSIb8mDD6A/iv0nYob7recsRCwmxPVTzk+6aEptBONDukcH5r
-         wLat/Bny2iUFqIkLESeDzP4oAlytr1yzZRnqMRkG/nDqawOm9A3AIg9TW2jd4ATMzr16
-         BUU3+TwvLEXg/cHqhq/HPYVpih+I5w4TmyeL+qRLseiPYHvBIAdVhHW6ByMXVIwm8H2G
-         UFJA==
-X-Forwarded-Encrypted: i=1; AFNElJ/NfZqfUYMuqmWthL5yLpuzav+RsuEvqxCdu+vNYdzOqZ+xdwWU05eqq3aXhXqblmjoI6SocthnZ4DAXqzEJRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1GrqttZOLJgex8Pwv4/6CN6gm2rwSpZFqmIDnQZ06t8GZi+6F
-	y9Rezk1Atz5H4R+i1SDRns/FLTIz9TF4D12O/u4pT1369XmlqMcSqNU8
-X-Gm-Gg: AeBDiesOq34BtoehGV+fX1CxA9xLuuzfR5TfyEdpZ1Ho/TFC7Go1u0xY0d4hCwn6VM6
-	OUUGkAP2T7I9VNTLtHXrYcB2lWuA1SHe08CpiZpyFj8HjhIhjvaF9eUJ7L952YzhHWSXqDhvwv7
-	1vW77fJKlR7t5VvrkP9/7SYmy9xkGjcIgf0CMwV0CPn7aRP3MsEwUz+/drunxcQ8KjUt23gDxmb
-	x+8vAhre7qAeh5Mt3EqhM+DvRFLS3nlt6F8NvWYLpA/TIVi81LIq2mPMRm6EzB3wswyk/8EYXsm
-	XYUiehZi+yAAyEfXLg7vbFOZd3+/57H/24qd2sTUG4zMVO5DtHHnJXPOWPeoTtm10HL0gFTfId5
-	OmAes6hBU6p/914hpDwoTMkWwLjUi+6s6pRIgUmcP30u0zxdMaF/V5hHaFvg9pfPO78J/1RT+do
-	7LUfqsgAbh8OeNbwNmib74siikf094sMIVJdu55JLC6ECZsYswvzFHS5AMoOGv8snYFz3wgA7De
-	N771h5GJR+ajog8Mi6O+m/fEarDemPulUgr+fMohQgg6qa8TDq3bGt4
-X-Received: by 2002:a05:6a00:299b:b0:82c:1cd0:2f7e with SMTP id d2e1a72fcca58-8350017cb7amr4240028b3a.20.1777587101053;
-        Thu, 30 Apr 2026 15:11:41 -0700 (PDT)
+        bh=b0Rsfg16xdotslJA1zN20XDN16KykAdChmHnTzqvbpY=;
+        b=ijB9gH54jSaG8EjsgHP7dR1Ez4byt+fhCFG36ecfAJNSCvSmuUBZS9merJJ3fnIfQT
+         ZzM1OmaRS7mkIhHgr6EdRPvWc2eMRqz1o/qABXZ3iNvWnklF6M+RyaRRhh/Zm4YWKhzh
+         7gVy5ZLpVUWGdcDSQmkWgAjMN6PwLyQzfKwnlWBUutfQdkIKdrApEKOmIyJBuxVhcBmd
+         2mAjZR+dyvNeXgusDaTpQExzg4ruSyDJPX+QgaN1aHUBMoQ5k9LI0/b45hov9dw3mayz
+         qNh26gk9jeCH4DSfD+/LMFQ4IO01g6/KiGXXOm8JRPrtdaDPuf/Iu0uZ3UgcMBgev4Y1
+         fsNA==
+X-Forwarded-Encrypted: i=1; AFNElJ8pKNO+APMWcIUNejA54/kC6AnTGx3kdnEM5bVIusqCOQetw/RPGDXGgkSBQoP8m7px7D8Lemm4/kwR/dp0Bek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnktuR14bCY0CDqITWnYAlFZ9bBuva8Ngiu55pcQnDl8bTLPtx
+	xnHrsEF3/GkJSLzjuG2WQNogTnryhRtJ5+0pNvUwoeh+CBJlpdROUd/F
+X-Gm-Gg: AeBDievK5r63kC3o2fNikE7KO3lkUFrRf0QhkgwL8gDRHGpeTAEVnFBtcQSG1VQiZqT
+	Pp95IJK8gveC+yV7zEj3QWzirQxYmkrP7IrB/rbf+nw24+Y4Ejus1Z7XJlcOX4gs/h6+pW+D3NS
+	XL9qTrKaSJNWdghEXPgcVFEIqm+c+WdTrGcGgn/PfusQZARBodmGb9ZNCzM42uPWGvUB/njqDxv
+	HoFUzBggaJJXaaDnVrRcKcVJeufGYdW3dhcuNs79Jn8s8y4hhkUVuYc7icf5ysoOi/rp8Xy26N+
+	yq0L/AoKuxBmtMkvNVPhaV0l0IyT3mkOfxn2axh+tjFC+8A6V5Kr7nWMWs5FIeMEe1uKp60mc3V
+	gstZefAAxkXcDk2pV//cr9VxSRbT9zfjFWQQU7p/w12XapgJzInNv60w8Of7WR/0Fz/e8u8Tw8w
+	l5Hf2KCMxSdu2xWy/YOP7Uhs+O60YfapdhGQ4mokibYoYJwxsFqTlZxHh0pEuqCifQS4bVgy/X3
+	MoXwBlf38xKyqoyfQoY2vqsnWhgcj3jmflvJ3EuxlzlZI2kt0x67cvE
+X-Received: by 2002:a05:620a:31a4:b0:8ee:a1d:baf1 with SMTP id af79cd13be357-8fa8922aa56mr779761685a.42.1777587374557;
+        Thu, 30 Apr 2026 15:16:14 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83515838b34sm626013b3a.4.2026.04.30.15.11.39
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8fbf3f20c99sm37649485a.45.2026.04.30.15.16.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 15:11:40 -0700 (PDT)
+        Thu, 30 Apr 2026 15:16:13 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Nishanth Menon <nm@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
+To: platform-driver-x86@vger.kernel.org
+Cc: Kenneth Chan <kenneth.t.chan@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:TEXAS INSTRUMENTS' SYSTEM CONTROL INTERFACE (TI...),
+	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] firmware: ti_sci: simplify resource allocation
-Date: Thu, 30 Apr 2026 15:11:23 -0700
-Message-ID: <20260430221123.79947-1-rosenp@gmail.com>
+Subject: [PATCH] platform/x86: panasonic-laptop: simplify allocation of sinf
+Date: Thu, 30 Apr 2026 15:15:55 -0700
+Message-ID: <20260430221555.83351-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -78,51 +78,91 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a flexible array member to combine allocations.
+Change to a flexible array member to allocate once instead of twice.
 
-Add __counted_by for extra runtime analysis.
+Use __counted_by for extra runtime analysis. Move the counting
+variable assignment to right after allocation as done by
+kzalloc_flex for GCC 15 and above.
+
+Remove + 1 to allocation. It's already done in the previous line.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/firmware/ti_sci.c              | 7 +------
- include/linux/soc/ti/ti_sci_protocol.h | 2 +-
- 2 files changed, 2 insertions(+), 7 deletions(-)
+ v3: Rephrased.
+ v2: Rebased.
+ drivers/platform/x86/panasonic-laptop.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index e027a2bd8f26..04d99c1fafa1 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -3574,16 +3574,11 @@ devm_ti_sci_get_resource_sets(const struct ti_sci_handle *handle,
- 	bool valid_set = false;
- 	int i, ret, res_count;
- 
--	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-+	res = devm_kzalloc(dev, struct_size(res, desc, sets), GFP_KERNEL);
- 	if (!res)
- 		return ERR_PTR(-ENOMEM);
- 
- 	res->sets = sets;
--	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
--				 GFP_KERNEL);
--	if (!res->desc)
--		return ERR_PTR(-ENOMEM);
--
- 	for (i = 0; i < res->sets; i++) {
- 		ret = handle->ops.rm_core_ops.get_range(handle, dev_id,
- 							sub_types[i],
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index fd104b666836..7632bb11c862 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -599,7 +599,7 @@ struct ti_sci_handle {
- struct ti_sci_resource {
- 	u16 sets;
- 	raw_spinlock_t lock;
--	struct ti_sci_resource_desc *desc;
-+	struct ti_sci_resource_desc desc[] __counted_by(sets);
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 1337f7c49805..2fe8ff0d32a8 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -246,11 +246,11 @@ struct pcc_acpi {
+ 	int			ac_brightness;
+ 	int			dc_brightness;
+ 	int			current_brightness;
+-	u32			*sinf;
+ 	struct acpi_device	*device;
+ 	struct input_dev	*input_dev;
+ 	struct backlight_device	*backlight;
+ 	struct platform_device	*platform;
++	u32			sinf[] __counted_by(num_sifr);
  };
- 
- #if IS_ENABLED(CONFIG_TI_SCI_PROTOCOL)
--- 
+
+ /*
+@@ -1003,21 +1003,15 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+ 	 */
+ 	num_sifr++;
+
+-	pcc = kzalloc_obj(struct pcc_acpi);
++	pcc = kzalloc_flex(*pcc, sinf, num_sifr);
+ 	if (!pcc) {
+ 		pr_err("Couldn't allocate mem for pcc");
+ 		return -ENOMEM;
+ 	}
+
+-	pcc->sinf = kcalloc(num_sifr + 1, sizeof(u32), GFP_KERNEL);
+-	if (!pcc->sinf) {
+-		result = -ENOMEM;
+-		goto out_hotkey;
+-	}
+-
++	pcc->num_sifr = num_sifr;
+ 	pcc->device = device;
+ 	pcc->handle = device->handle;
+-	pcc->num_sifr = num_sifr;
+ 	device->driver_data = pcc;
+ 	strscpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
+ 	strscpy(acpi_device_class(device), ACPI_PCC_CLASS);
+@@ -1025,7 +1019,7 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+ 	result = acpi_pcc_init_input(pcc);
+ 	if (result) {
+ 		pr_err("Error installing keyinput handler\n");
+-		goto out_sinf;
++		goto out_hotkey;
+ 	}
+
+ 	if (!acpi_pcc_retrieve_biosdata(pcc)) {
+@@ -1106,10 +1100,8 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+ 	backlight_device_unregister(pcc->backlight);
+ out_input:
+ 	input_unregister_device(pcc->input_dev);
+-out_sinf:
+-	device->driver_data = NULL;
+-	kfree(pcc->sinf);
+ out_hotkey:
++	device->driver_data = NULL;
+ 	kfree(pcc);
+
+ 	return result;
+@@ -1139,7 +1131,6 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
+
+ 	device->driver_data = NULL;
+
+-	kfree(pcc->sinf);
+ 	kfree(pcc);
+ }
+
+--
 2.54.0
 
