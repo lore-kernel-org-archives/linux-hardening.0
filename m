@@ -1,173 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCFE40B6F4;
-	Thu, 30 Apr 2026 13:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3957C40629C
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Apr 2026 13:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777554227; cv=none; b=ahD1HG9h9FUWCHGsBq/dRbcBYouoBYzeMn8lSZ4Dc/hL7CIl5zwZq6LBlxHzI4En2Eta0kr4z6JoQJsShiVnRLxiEyl15XKAEMQefKTNolmVGXmCQVZ9vmX7CDEgIDVGqO0j07nUJOsBlpMuOi6b1axhV0QMe/xcAayxh6JuSG4=
+	t=1777554477; cv=none; b=PExKXky3s/03D2jd2P+2ZFCRwJJZHT41QTvSaHJNiNVHjP3O+nTG3GPl0K1pakuP7mrGcxZzO8DXAckhF4pjSGiiP8ugG/ET4JZYt9SoZTWOiYIIqlO1dKT8Ao252OL2UVQYhdkgdXFwD63X6aA4vuR0tRC/ZGm7Uf+CdcF4bRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777554227; c=relaxed/simple;
-	bh=cBQTATODAw7GU5owkTlr0LLrjvqtSjmzxEuiN88xSno=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jjr8JL0voywVTI9PfrhSmqlXAihKXmsMe024oXhgaBerVveFno3TEfX3vkmwiYtlIcXzSnTAb0JhXWGeSaATjM4SFjnskAHmXces5dLMGSF9b6hZwhd9nvMzKDv0cseOOVk/dmz7T1rxQjEgwPW9obTpaXYZRuU34Rv9F2p27SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/GHjLbS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777554477; c=relaxed/simple;
+	bh=KhRQj+iRqtW+9HWFZenOFSuPZ0WQQSN49Yl9CqgIP6A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=T69N4aizOOTrzY0zOAKHWMwlozoOBR9QZTPqrYACQPQKJ416JOLhQcqCdPl8MPZPqQ9EHQdNLmPfqzpa2QrJVQp4wHHR/ujrhhl8jjHfz2jkaEFnNKlYoPMxXr7Qy9ITuQQ7dYgYPzE6IeGOivImHu2mEBODpOTU/4H7zVkpESU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ttx6BUAe; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/GHjLbS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28CC1C2BCB3;
-	Thu, 30 Apr 2026 13:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777554226;
-	bh=cBQTATODAw7GU5owkTlr0LLrjvqtSjmzxEuiN88xSno=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P/GHjLbSzFjFrlVHylyxgW146QEiVuSbq9zns8CvEtQWM6rfKglawHpEP2u9xPcYD
-	 n3OBk3+Ewlgqev591zz+QCAQgiLG/qP61tXvzAfUfEQLwdQHwTwAU25Aj5LWtq0ssC
-	 Py4+RuG35KzGqQGDwDYrQBdOVZdxd0CJdMkCftbMMRJ+Vn4lj8BMpYe90ygfYSWXhL
-	 QBkmykY+5Edz3mfHgsWFepJ+dgw1c9jtCr9bUrTjjQDuGQo/DV+Ac3KfT2VPxfrHbG
-	 MQEorLNtV9QSlJs1xBmN8laC9jqntUFj6tSOuoQZVm/5hfg77vKNKa3lfHUZSpajL8
-	 F0h9gjQtxZnXA==
-Message-ID: <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
-Date: Thu, 30 Apr 2026 15:03:38 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ttx6BUAe"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-488b3f8fa2bso19993955e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Apr 2026 06:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1777554475; x=1778159275; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mvDuNaRN8hH9izY7kpqOKXTCHfnDxHlyvhuaEy6Gtkk=;
+        b=Ttx6BUAekpqaGc16Ygjpw/uU2dRApAkiv3xEZObvHlcKWC5otMLkdORqENVRXZaJxz
+         0pnBJd2FuVIZXxBe6Led+GIDxzYGoTlSaNE0NoaWdbAR/6KMvzfuyk8cHWRCBd1Rsi/A
+         0XrTFrIlAoRVazq3ThcTRMFZL3SWuRdrKPmOvftVEexLSEYzEALy+Vx53YgRzAjVX27J
+         FZj+iDDY1EvD6un8sRQ94LWTNG9Y8ZnFD4OCfD/BsXH9v33Yyf9t/TRX84c9LdLEwLwJ
+         DauQlxuv4zVHq4ZwdxE995o0BvgMbE+cseFlc6S0XXQgXh6KRUyR7AUPjQjwoNj7jAwz
+         m4Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777554475; x=1778159275;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mvDuNaRN8hH9izY7kpqOKXTCHfnDxHlyvhuaEy6Gtkk=;
+        b=QpXnm6wwDSFMFYOyzoaxLSIp8jtkdVnWn0J2wk6cpGbsfkcxZ8Ds88vOJUCpDrBKb/
+         hwNGDWQmasX3ewV7rikfm07kV6p4MkO+GyOIg7mfNszTSTLQA+DcwID70HjUsLbr7L2A
+         A1Va5VQowQy9CGef4LGlf+MSh8afGl4rbW0zxl5oYphSXQRJnQy6ygyr4ghA//HQ7Rso
+         kBUmHWPIQUxEV+B2BbGIsA9TYsJ5kK1wrn9uNvBk67NtfPcmv5l/YSh5wUrVPHDmA3xt
+         FX449E3ciLsfpiTDsntbFQXEDEURZu5PbQJCiac1AdquONjCUV8B72ZXiKMJFKThzQ38
+         1s1Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8NfVbI+xb6CZDIrkyx6wiJsbGP5Hw7e1t9gphYSMsz70ugMNjLQj7zvXSVIOIRZffBJB1iCEVZ4qxr3m13KqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuZysAjnfAInvHifHZtLNGcoNyv8K+/0vNyfAXx2PRwDjQrJHG
+	nq+tQwL2XiUtJzuYuU2UH4yJLpouHt/ZN5IpUaH6qhWtpGq/Lqdd5t7urhrz8VPc4Go=
+X-Gm-Gg: AeBDieuFMooaftVHhEV4imNJNOy5qzPZsawyvkddWBsp/x6tYezoKBq8EAwV0bba5zj
+	QoVspigTEk3whk3Wdu20k3NL9htwU7OIuS3x3MaeEx1OvsnlVIEygo8PYlO4bds8Q3f1uhbm3fZ
+	9PMP9HE/BH3SRgwyPwNzXxxTNzCnePDDNFpQFY25jvifrO+VCsPP8GscANQfMrvJId5rioTv++t
+	YN2JnRZ3t1pMN2IDDhD7I4TltAYpXUZ6aY1YTDsttoKFLIrF2DWF0sZyy7rpm1Ic0lXgVzs0bXq
+	3eFf3jKs9nhHACgGZLiUJfVSsS9cjtuUgzWJ8gRt2JuJm3kmOqpfYkbuO7wFVD3lZTur9wkF8uP
+	VhnW+v/ymMuTwyjnQhTZe0LaksSMHLMWQ8Hi4jzABQTiituJXqsFO/ZHZaQVus/GU8OjRpwHCZ6
+	Mvh133+uz6WZhTQt+EyTq0do7oXQ0pfQp9FHOIyxh+qAiE1R5FN05rDoUr7Ij3of6lvxEPFef2n
+	2DdLRlxqXPXUcezUTZIkbpZlA==
+X-Received: by 2002:a05:600c:4b1a:b0:488:aa33:dc8f with SMTP id 5b1f17b1804b1-48a85dc37c2mr23717425e9.0.1777554474275;
+        Thu, 30 Apr 2026 06:07:54 -0700 (PDT)
+Received: from localhost ([2a00:2381:fd67:101:b0e1:a8:4337:b2a4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a822d4a9asm71861585e9.14.2026.04.30.06.07.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2026 06:07:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] slab: support for compiler-assisted type-based
- slab cache partitioning
-Content-Language: en-US
-To: Marco Elver <elver@google.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
- Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>,
- Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Alexander Potapenko <glider@google.com>,
- Dmitry Vyukov <dvyukov@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
- llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
- Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>,
- KP Singh <kpsingh@kernel.org>, Matteo Rizzo <matteorizzo@google.com>,
- GONG Ruiqi <gongruiqi1@huawei.com>
-References: <20260424132427.2703076-1-elver@google.com>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <20260424132427.2703076-1-elver@google.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Thu, 30 Apr 2026 14:07:52 +0100
+Message-Id: <DI6IGZIW2HZ8.OBLZIORMOH2F@linaro.org>
+Cc: <willmcvicker@google.com>, <jyescas@google.com>, <shin.son@samsung.com>,
+ <linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-hardening@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@oss.qualcomm.com>
+Subject: Re: [PATCH v4 08/11] thermal: samsung: Add Exynos ACPM TMU driver
+ GS101
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Zhang Rui" <rui.zhang@intel.com>, "Lukasz Luba"
+ <lukasz.luba@arm.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzk@kernel.org>, "Alim Akhtar"
+ <alim.akhtar@samsung.com>, "Bartlomiej Zolnierkiewicz"
+ <bzolnier@gmail.com>, "Kees Cook" <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, "Peter Griffin" <peter.griffin@linaro.org>,
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, "Daniel Lezcano"
+ <daniel.lezcano@kernel.org>, "Sylwester Nawrocki" <s.nawrocki@samsung.com>,
+ "Chanwoo Choi" <cw00.choi@samsung.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Lee Jones"
+ <lee@kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20260423-acpm-tmu-v4-0-8b59f8548634@linaro.org>
+ <20260423-acpm-tmu-v4-8-8b59f8548634@linaro.org>
+In-Reply-To: <20260423-acpm-tmu-v4-8-8b59f8548634@linaro.org>
 
-On 4/24/26 15:24, Marco Elver wrote:
+On Thu Apr 23, 2026 at 4:22 PM BST, Tudor Ambarus wrote:
+> Add driver for the Thermal Management Unit (TMU) managed via the Alive
+> Clock and Power Manager (ACPM), found on Samsung Exynos SoCs such as
+> Google GS101 (and Exynos850, autov920, etc.).
+>
+> The TMU on utilizes a hybrid management model shared between the
+> Application Processor (AP) and the ACPM firmware. The driver maintains
+> direct memory-mapped access to the TMU interrupt pending registers to
+> identify thermal events, while delegating functional tasks - such as
+> sensor initialization, threshold configuration, and temperature
+> acquisition - to the ACPM firmware via the ACPM IPC protocol.
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+> ---
+>  drivers/thermal/samsung/Kconfig    |  17 ++
+>  drivers/thermal/samsung/Makefile   |   2 +
+>  drivers/thermal/samsung/acpm-tmu.c | 547 +++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 566 insertions(+)
 
-> @@ -938,7 +968,7 @@ void *__kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
->   *	Try really hard to succeed the allocation but fail
->   *	eventually.
->   */
-> -static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t flags)
-> +static __always_inline __alloc_size(1) void *_kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
->  {
->  	if (__builtin_constant_p(size) && size) {
->  		unsigned int index;
-> @@ -948,14 +978,16 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
->  
->  		index = kmalloc_index(size);
->  		return __kmalloc_cache_noprof(
-> -				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
-> +				kmalloc_caches[kmalloc_type(flags, token)][index],
+[...]
 
-While reviewing this, it occured to me we might have been using _RET_IP_
-here in a suboptimal way ever since this was introduced. Since this is all
-inlined, shouldn't have we been using _THIS_IP_ to really randomize using
-the kmalloc() callsite, and not its parent?
+> +static struct platform_driver acpm_tmu_driver =3D {
+> +	.driver =3D {
+> +		.name   =3D "gs-tmu",
 
-And after this patch, we get the token passed to _kmalloc_noprof()...
+What "gs" stands for in the name?
+Shouldn't it be called something more acpm-ish generic like acpm-tmu
+at least?
 
->  				flags, size);
->  	}
-> -	return __kmalloc_noprof(size, flags);
-> +	return __kmalloc_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags);
-
-... and used also here for the non-constant-size, where previously
-__kmalloc_noprof() (not inline function) would correctly use _RET_IP_ on its
-own ...
-
->  }
-> +#define kmalloc_noprof(...)			_kmalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
-
-... and the token comes from here. With random partitioning that's
-#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
-
-so that AFAIK makes the situation worse as now the cases without constant
-size also start randomizing by the parent callsite and not the kmalloc callsite.
-
-But there are many users of __kmalloc_token() and maybe some are corrent in
-using _RET_IP_, I haven't checked, maybe we'll need two variants, or further
-change things around.
-
->  #define kmalloc(...)				alloc_hooks(kmalloc_noprof(__VA_ARGS__))
->  
-> -void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node);
-> +void *_kmalloc_nolock_noprof(DECL_TOKEN_PARAMS(size, token), gfp_t gfp_flags, int node);
-> +#define kmalloc_nolock_noprof(_s, _f, _n)	_kmalloc_nolock_noprof(PASS_TOKEN_PARAMS(_s, __kmalloc_token(_s)), _f, _n)
->  #define kmalloc_nolock(...)			alloc_hooks(kmalloc_nolock_noprof(__VA_ARGS__))
->  
->  /**
-
-<snip>
-
->  
-> -#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-> -#define __KMALLOC_RANDOM_CONCAT(a, b) a ## b
-> -#define KMALLOC_RANDOM_NAME(N, sz) __KMALLOC_RANDOM_CONCAT(KMA_RAND_, N)(sz)
-> -#define KMA_RAND_1(sz)                  .name[KMALLOC_RANDOM_START +  1] = "kmalloc-rnd-01-" #sz,
-> -#define KMA_RAND_2(sz)  KMA_RAND_1(sz)  .name[KMALLOC_RANDOM_START +  2] = "kmalloc-rnd-02-" #sz,
-> -#define KMA_RAND_3(sz)  KMA_RAND_2(sz)  .name[KMALLOC_RANDOM_START +  3] = "kmalloc-rnd-03-" #sz,
-> -#define KMA_RAND_4(sz)  KMA_RAND_3(sz)  .name[KMALLOC_RANDOM_START +  4] = "kmalloc-rnd-04-" #sz,
-> -#define KMA_RAND_5(sz)  KMA_RAND_4(sz)  .name[KMALLOC_RANDOM_START +  5] = "kmalloc-rnd-05-" #sz,
-> -#define KMA_RAND_6(sz)  KMA_RAND_5(sz)  .name[KMALLOC_RANDOM_START +  6] = "kmalloc-rnd-06-" #sz,
-> -#define KMA_RAND_7(sz)  KMA_RAND_6(sz)  .name[KMALLOC_RANDOM_START +  7] = "kmalloc-rnd-07-" #sz,
-> -#define KMA_RAND_8(sz)  KMA_RAND_7(sz)  .name[KMALLOC_RANDOM_START +  8] = "kmalloc-rnd-08-" #sz,
-> -#define KMA_RAND_9(sz)  KMA_RAND_8(sz)  .name[KMALLOC_RANDOM_START +  9] = "kmalloc-rnd-09-" #sz,
-> -#define KMA_RAND_10(sz) KMA_RAND_9(sz)  .name[KMALLOC_RANDOM_START + 10] = "kmalloc-rnd-10-" #sz,
-> -#define KMA_RAND_11(sz) KMA_RAND_10(sz) .name[KMALLOC_RANDOM_START + 11] = "kmalloc-rnd-11-" #sz,
-> -#define KMA_RAND_12(sz) KMA_RAND_11(sz) .name[KMALLOC_RANDOM_START + 12] = "kmalloc-rnd-12-" #sz,
-> -#define KMA_RAND_13(sz) KMA_RAND_12(sz) .name[KMALLOC_RANDOM_START + 13] = "kmalloc-rnd-13-" #sz,
-> -#define KMA_RAND_14(sz) KMA_RAND_13(sz) .name[KMALLOC_RANDOM_START + 14] = "kmalloc-rnd-14-" #sz,
-> -#define KMA_RAND_15(sz) KMA_RAND_14(sz) .name[KMALLOC_RANDOM_START + 15] = "kmalloc-rnd-15-" #sz,
-> -#else // CONFIG_RANDOM_KMALLOC_CACHES
-> -#define KMALLOC_RANDOM_NAME(N, sz)
-> +#ifdef CONFIG_KMALLOC_PARTITION_CACHES
-> +#define __KMALLOC_PARTITION_CONCAT(a, b) a ## b
-> +#define KMALLOC_PARTITION_NAME(N, sz) __KMALLOC_PARTITION_CONCAT(KMA_PART_, N)(sz)
-> +#define KMA_PART_1(sz)                  .name[KMALLOC_PARTITION_START +  1] = "kmalloc-part-01-" #sz,
-> +#define KMA_PART_2(sz)  KMA_PART_1(sz)  .name[KMALLOC_PARTITION_START +  2] = "kmalloc-part-02-" #sz,
-> +#define KMA_PART_3(sz)  KMA_PART_2(sz)  .name[KMALLOC_PARTITION_START +  3] = "kmalloc-part-03-" #sz,
-> +#define KMA_PART_4(sz)  KMA_PART_3(sz)  .name[KMALLOC_PARTITION_START +  4] = "kmalloc-part-04-" #sz,
-> +#define KMA_PART_5(sz)  KMA_PART_4(sz)  .name[KMALLOC_PARTITION_START +  5] = "kmalloc-part-05-" #sz,
-> +#define KMA_PART_6(sz)  KMA_PART_5(sz)  .name[KMALLOC_PARTITION_START +  6] = "kmalloc-part-06-" #sz,
-> +#define KMA_PART_7(sz)  KMA_PART_6(sz)  .name[KMALLOC_PARTITION_START +  7] = "kmalloc-part-07-" #sz,
-> +#define KMA_PART_8(sz)  KMA_PART_7(sz)  .name[KMALLOC_PARTITION_START +  8] = "kmalloc-part-08-" #sz,
-> +#define KMA_PART_9(sz)  KMA_PART_8(sz)  .name[KMALLOC_PARTITION_START +  9] = "kmalloc-part-09-" #sz,
-> +#define KMA_PART_10(sz) KMA_PART_9(sz)  .name[KMALLOC_PARTITION_START + 10] = "kmalloc-part-10-" #sz,
-> +#define KMA_PART_11(sz) KMA_PART_10(sz) .name[KMALLOC_PARTITION_START + 11] = "kmalloc-part-11-" #sz,
-> +#define KMA_PART_12(sz) KMA_PART_11(sz) .name[KMALLOC_PARTITION_START + 12] = "kmalloc-part-12-" #sz,
-> +#define KMA_PART_13(sz) KMA_PART_12(sz) .name[KMALLOC_PARTITION_START + 13] = "kmalloc-part-13-" #sz,
-> +#define KMA_PART_14(sz) KMA_PART_13(sz) .name[KMALLOC_PARTITION_START + 14] = "kmalloc-part-14-" #sz,
-> +#define KMA_PART_15(sz) KMA_PART_14(sz) .name[KMALLOC_PARTITION_START + 15] = "kmalloc-part-15-" #sz,
-> +#else // CONFIG_KMALLOC_PARTITION_CACHES
-> +#define KMALLOC_PARTITION_NAME(N, sz)
->  #endif
-
-We're renaming the caches visible in /proc/slabinfo. Maybe it's fine as
-people who care will just adapt their tools without complaining. Not the
-first time we've changes something here.
-
-
+Best regards,
+Alexey
