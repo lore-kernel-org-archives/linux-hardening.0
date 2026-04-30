@@ -1,95 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F37355F54;
-	Wed, 29 Apr 2026 23:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0B1239567
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Apr 2026 01:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777504792; cv=none; b=nTDmghU3IoucYYiUuz4BgqukVhS24GIoyqyYL3FGf8dlNXMyutiaapxyEZHzkYzPQ/pNGD0/l3RezxcaeOkqVEB3kqGBJbbpYbIEvH2HoKohg1t8U2R2qtbUU8yp1xldnlvcZZ5uXpmprd1Pzzp9AIlelWH4v5YvYPKrjHcpgos=
+	t=1777514242; cv=none; b=cuEoTtLFbXb62W/9TsTpNsUsjcSd8lT/ek5geXLYq1qHnb616DAJDTSukneA0pgzvpqsDW3ntuvBILgCXe2SsFeZ4QSVSe+24KzE6JOjRYYEjF73KwqLktvX4U9Ri7Z5aq9tdQ/zjJm6SCPQzBfcmdSIBeY9qC6ImMMO2c6XaME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777504792; c=relaxed/simple;
-	bh=XqiVdwLtQFthu7nh0kBQRc3auy5Ysg/jY1GPAXlIAfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nOeD2+iMUIdSShKhW7rq2CH1P59+eOaJeFFuBBHMJBOXgPa+zu+6TYx8VJjiNYFdRAxvrndFx/Ys/EbFD+0+/nPSY4ASbnZA/01gH18n5YmI6XxU0RM6WfLt684Kv7g7OQXZTW85lefqQcr24JJC8X+3N1NVCpCGQtdGTs+Hk78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkeuhTi8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777514242; c=relaxed/simple;
+	bh=sDBuvvPNj/8lIs5qqYsxqXtlUBXF5eAmaCQLsztXsJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tKE5VyRvTzytA5eK5S2ToSfMDeY7pPChVvyKj1iYe/3vyMXEOHAQGXokDx2PLKH/0ij78oXxTcBMstn6GVmtL/ldIh1KumnKYJDdIQFZw52w3+/eVkKoQY0n4U0q9CDWPLO/YIA0CLFw2K8NWnv4YWHQppc58UC7OSnmd+zX+Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=S/fc83ng; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkeuhTi8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ACB7C19425;
-	Wed, 29 Apr 2026 23:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777504792;
-	bh=XqiVdwLtQFthu7nh0kBQRc3auy5Ysg/jY1GPAXlIAfI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=hkeuhTi8H/29ki9H0sr9MxGKwDQmRwIwY6dseeQK7KMPmWol4RVIAsTitJ4UNJjP+
-	 nQc15zYDZVd2aXamISQfDVqEEZKRvm68eM2I7C8q+mIov0hIdhLsHEMoODW88Q6Aan
-	 UjDkwBm1ME17LvYoJ4A2QV3xX37u36cFlyfZGKX3vCc43Xq4FPPbkkIFuQox6Qi90F
-	 nYvjdKXKejzH3XIOqelNMcYF6DWQC88MZ5/Lsq35YLKxlPbRLBp+1vdWuAH7Px40zb
-	 iy5X347swtAVbhTRoSc1fKrUL7+w03ntlY0bw+fHoX1U3txR4gMYJhimJD/72kbwC7
-	 8ZRGZRBi56IPw==
-Date: Wed, 29 Apr 2026 17:19:49 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ASoC: soc-topology: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <afKSFY3qrlSOJ0EJ@kspp>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="S/fc83ng"
+Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
+	by cmsmtp with ESMTPS
+	id IBwOwwNMrrDqVIGeWwHRkr; Thu, 30 Apr 2026 01:57:20 +0000
+Received: from gator4166.hostgator.com ([108.167.190.91])
+	by cmsmtp with ESMTPS
+	id IGeVwlwKrTFL7IGeVwF08o; Thu, 30 Apr 2026 01:57:19 +0000
+X-Authority-Analysis: v=2.4 cv=euTfzppX c=1 sm=1 tr=0 ts=69f2b6ff
+ a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=P1BnusSwAAAA:8 a=PHKDr0J8e_G5cKxf1GUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=D0XLA9XvdZm18NrgonBM:22 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=MHItyzqf7SwPLrpek6vQPMDnHHj4H3gOYNQHmNEoJMM=; b=S/fc83nguT3kykY9eT/ufEgNZX
+	Am6tj5BlTiMqMFqZ4YSbGPsQVyZTFq6T/JQ0bp2cCk88sHpsCITuqUAsYjgTfFTuKRAvCcS3T/0LV
+	XGkzBqi6fYcn5DC+iy7pAk0NofqRJ9dc85B/w5g3Mgg1KyQ8NWLL7DM0fQhNYpp5aDxuI9/KvdyLr
+	5RspZm8/Fx5tDciifOChbsb8/qK28dnt/30JambDvDqVS6NAEn3d0q3aidvV5HjaSdjh7FtH+gCIL
+	r44RdgJR5LDe9gTFB2dRywec2DUmCodao6k+hQRgiFfaWjOFaqcNPeoTQA9LOJdHvPf6+16k4BixO
+	WVBfshAA==;
+Received: from [177.238.19.10] (port=40062 helo=[192.168.0.37])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1wIGeU-00000003bqL-2hmO;
+	Wed, 29 Apr 2026 20:57:18 -0500
+Message-ID: <7259aa90-85a3-467f-afbb-f6794d181207@embeddedor.com>
+Date: Wed, 29 Apr 2026 19:57:16 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] media: xilinx: Avoid -Wflex-array-member-not-at-end
+ warning
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+References: <afJiL-iZ4QbJ5v12@kspp>
+ <20260429202449.GA132396@killaraus.ideasonboard.com>
+ <20260429202801.GB132396@killaraus.ideasonboard.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20260429202801.GB132396@killaraus.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.19.10
+X-Source-L: No
+X-Exim-ID: 1wIGeU-00000003bqL-2hmO
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.37]) [177.238.19.10]:40062
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfIIuwP4Sl/9x3I57GhDfPV3gUzVUi1TTn3kZ0C8mlpdgcogjc+PcC4Tc1GutTpZZ1zxfpQOund9tKyFMfHihWejxVU+3nEcz4V2A3IhVs/7JSp235FP+
+ dvDKu0KjKRU+MqYUfxWLg34mV0OUhcJ1vK9Y+v9yE3Pl61hK5YoV2Fd8utaeiMX24cO7bhvZV79Chb2FzXM5geuXC7+jBwu32N3h8xL4bAVb4y2lF4/heBjC
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
 
-Use the __TRAILING_OVERLAP() helper to fix the following warning:
 
-sound/soc/soc-topology-test.c:136:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+On 4/29/26 14:28, Laurent Pinchart wrote:
+> I forgot to ask, how do you want to get this merged? Will you collect
+> all similar patches and send a tree-wide pull request, or should they be
+> merged by individual subsystems ? In the latter case, Tomi, could you
+> please handle this with other Xilinx patches ?
 
-This helper creates a union between a flexible-array member (FAM)
-and a set of members that would otherwise follow it. This overlays
-the trailing members onto the FAM while preserving the original
-memory layout.
+You folks can take this in your tree. 🙂
 
-Lastly, the static_assert() ensures the alignment between the FAM
-and struct snd_soc_tplg_hdr pcm_header; is not inadvertently changed,
-and it's intentionally placed immediately after the related structure
-(that is, no blank line in between).
+Thanks!
+-Gustavo
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- sound/soc/soc-topology-test.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/soc-topology-test.c b/sound/soc/soc-topology-test.c
-index c8f2ec29e970..ef6725613b01 100644
---- a/sound/soc/soc-topology-test.c
-+++ b/sound/soc/soc-topology-test.c
-@@ -133,10 +133,15 @@ static struct tplg_tmpl_001 tplg_tmpl_empty = {
- 
- struct tplg_tmpl_002 {
- 	struct snd_soc_tplg_hdr header;
--	struct snd_soc_tplg_manifest manifest;
--	struct snd_soc_tplg_hdr pcm_header;
--	struct snd_soc_tplg_pcm pcm;
-+
-+	/* Must be last as it ends in a flexible-array member. */
-+	__TRAILING_OVERLAP(struct snd_soc_tplg_manifest, manifest, priv.data, __packed,
-+		struct snd_soc_tplg_hdr pcm_header;
-+		struct snd_soc_tplg_pcm pcm;
-+	);
- } __packed;
-+static_assert(offsetof(struct tplg_tmpl_002, manifest.priv.data) ==
-+	      offsetof(struct tplg_tmpl_002, pcm_header));
- 
- static struct tplg_tmpl_002 tplg_tmpl_with_pcm = {
- 	.header = {
--- 
-2.51.0
+> 
+> On Wed, Apr 29, 2026 at 11:24:50PM +0300, Laurent Pinchart wrote:
+>> CC'ing Tomi Valkeinen.
+>>
+>> On a side note, Tomi, can I send a patch to add you to the "XILINX VIDEO
+>> IP CORES" section of MAINTAINERS ?
+>>
+>> On Wed, Apr 29, 2026 at 01:55:27PM -0600, Gustavo A. R. Silva wrote:
+>>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>>> getting ready to enable it, globally.
+>>>
+>>> Use the TRAILING_OVERLAP() helper to fix the following warning:
+>>>
+>>> drivers/media/platform/xilinx/xilinx-dma.h:99:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>>
+>>> This helper creates a union between a flexible-array member (FAM)
+>>> and a set of members that would otherwise follow it. This overlays
+>>> the trailing members onto the FAM while preserving the original
+>>> memory layout.
+>>>
+>>> Lastly, the static_assert() ensures the alignment between the FAM
+>>> and struct data_chunk sgl; is not inadvertently changed, and it's
+>>> intentionally placed inmediately after the related structure (that
+>>> is, no blank line in between).
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>
+>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>
+>>> ---
+>>>   drivers/media/platform/xilinx/xilinx-dma.h | 9 +++++++--
+>>>   1 file changed, 7 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/media/platform/xilinx/xilinx-dma.h b/drivers/media/platform/xilinx/xilinx-dma.h
+>>> index 18f77e1a7b39..65f6147ff6c6 100644
+>>> --- a/drivers/media/platform/xilinx/xilinx-dma.h
+>>> +++ b/drivers/media/platform/xilinx/xilinx-dma.h
+>>> @@ -96,9 +96,14 @@ struct xvip_dma {
+>>>   
+>>>   	struct dma_chan *dma;
+>>>   	unsigned int align;
+>>> -	struct dma_interleaved_template xt;
+>>> -	struct data_chunk sgl;
+>>> +
+>>> +	/* Must be last as it ends in a flexible-array member. */
+>>> +	TRAILING_OVERLAP(struct dma_interleaved_template, xt, sgl,
+>>> +		struct data_chunk sgl;
+>>> +	);
+>>>   };
+>>> +static_assert(offsetof(struct xvip_dma, xt.sgl) ==
+>>> +	      offsetof(struct xvip_dma, sgl));
+>>>   
+>>>   #define to_xvip_dma(vdev)	container_of(vdev, struct xvip_dma, video)
+>>>   
+> 
 
