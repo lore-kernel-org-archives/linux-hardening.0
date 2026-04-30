@@ -1,229 +1,428 @@
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9E13A16AE;
-	Thu, 30 Apr 2026 07:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77DA3C73CC;
+	Thu, 30 Apr 2026 07:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777534183; cv=none; b=DXLMF3Xrbw7cO/P1qRVuINN/VFVZV563llsb6/X6CeaYW7NtjS1NsWwNfPTXEnLx6WBpUhhoIuF9LFQBxqJhlhxTFqqCvDHXy93pn8PLxtuN9ORTSgdzLOhPqq9DQWLIyuXnl+UnK54xYgk+KiE57FzORjZn5E0+DBglZsqi920=
+	t=1777534825; cv=none; b=qLBx+avMTXawF3gEMS5lMl5znFwCEIq+I+vBYpwB2ux96fyS48B7u7xi+50BdzH/jiJ4Bk7mK6ml/k30jhLo+OQ9RkxoZzVZWI2jvebSShyZhO1a+jc2q+xiwRHxQ/NIdu/iH3IBnISYu0+/PP4qcTL0yKXPd09FkPqIHicaHLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777534183; c=relaxed/simple;
-	bh=1FV9NIGv0z3KLCU98AzhoYdsRjE1xM/rdy+ns4jnleA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bZfG1yNC46FUyyaaZQDIaAVJQDeY5PSrMjx8t7e5ogoo86+FTOVklCkfzIYlQtrO1hZTA/DHb9dZRAELGnNQdVQgWhA/jc+ghdveQmzeSDQLVcrEloMXdPQh71b4zsrIfVksUl5SacFXdOBjq+kAltDQLhAF5sipX/jSP/kDAIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=4qrHUuqj; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1777534825; c=relaxed/simple;
+	bh=EyPHxf0ehRzXEsuoJlskpc8fqHb5W7l8rppyyRuygo8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=G5bF1D3hjeoZS3Y55xvS/SPYWp90W8OB/Cl+ULpLk/ynJlqyW5L0UIYUxPVP4m8peCLGnQwHH2Thj4qiIb1xCatsErT7WO2XnvGEWyk6RVVDREgdLa4mEqSxAKVXcEzbNIL1Fu8uq7wvl9gWed7IZEXGIhZkNSFii0S0Ey1PISg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nQOR0aFq; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="4qrHUuqj"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=0ltKK1NTBIxI4tmmAgwYrZVN6incxK415s9umw/K/2s=;
-	b=4qrHUuqjB2Ldo30BrvO8GDtQwcXYf/SUQegRFIHagkY2YXiyDLNvC41gVmtFFr/iBfcb5isoc
-	Npajhmjp8FKg0Jpbvz6VON5wcTxGVpgCTIDC9VNtit5G2VY68n30v26Nfo6V+8TD5qavdAEW5Cr
-	oNJ7ANEM3xfP1kZEXPTkew0=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4g5lx72NsnznTZF;
-	Thu, 30 Apr 2026 15:22:19 +0800 (CST)
-Received: from kwepemj100009.china.huawei.com (unknown [7.202.194.3])
-	by mail.maildlp.com (Postfix) with ESMTPS id A9AB64064A;
-	Thu, 30 Apr 2026 15:29:29 +0800 (CST)
-Received: from DESKTOP-A37P9LK.huawei.com (10.67.109.17) by
- kwepemj100009.china.huawei.com (7.202.194.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Thu, 30 Apr 2026 15:29:29 +0800
-From: Xie Yuanbin <xieyuanbin1@huawei.com>
-To: <chleroy@kernel.org>, <andriy.shevchenko@intel.com>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<kees@kernel.org>, <andy@kernel.org>
-CC: <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, <lilinjie8@huawei.com>,
-	<liaohua4@huawei.com>, <xieyuanbin1@huawei.com>
-Subject: Re: [PATCH 2/2] powerpc/text-patching: Fix possible stringop-overread compilation error
-Date: Thu, 30 Apr 2026 15:28:38 +0800
-Message-ID: <20260430072913.62348-1-xieyuanbin1@huawei.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <5cfae419-427a-471b-8bbe-645f56442e2c@kernel.org>
-References: <5cfae419-427a-471b-8bbe-645f56442e2c@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nQOR0aFq"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemj100009.china.huawei.com (7.202.194.3)
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1777534809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uWbOTpyRniAKjshI/2NiVtoUUbISuGkNkeknFU1zfVA=;
+	b=nQOR0aFqq66/NT0rEUhedqhEbI9q6p60CQBfgO1Y5fIzXQfDLZO4MBdzUxPm1Y8C4DE1rF
+	fiDZhka3pWI8VeHltk1tHQzdJ1uwPzKONw0mzQO6aFFzn57BhFko5RUeNto8dPUc4Fz8a2
+	gIcnb9knHuCNabztZ2kIiwPZcY0lJsQ=
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 30 Apr 2026 15:39:51 +0800
+Message-Id: <DI6BHTW4FFN1.2YLR7O1P8F0Y3@linux.dev>
+Cc: <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <linux-riscv@lists.infradead.org>, <spacemit@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>, "Yixun
+ Lan" <dlan@gentoo.org>, "Longbin Li" <looong.bin@gmail.com>
+Subject: Re: [PATCH 2/2] phy: spacemit: Add USB3/PCIe comb PHY driver for
+ Spacemit K3
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Ze Huang" <huang.ze@linux.dev>
+To: "Inochi Amaoto" <inochiama@gmail.com>, "Vinod Koul" <vkoul@kernel.org>,
+ "Neil Armstrong" <neil.armstrong@linaro.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Yixun Lan" <dlan@kernel.org>, "Kees Cook"
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, "Paul
+ Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>, "Ze Huang"
+ <huang.ze@linux.dev>, "Alex Elder" <elder@riscstar.com>
+References: <20260430022843.1090138-1-inochiama@gmail.com>
+ <20260430022843.1090138-3-inochiama@gmail.com>
+In-Reply-To: <20260430022843.1090138-3-inochiama@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi, Christophe Leroy!
-
-On Mon, 9 Feb 2026 14:41:51 +0100, Christophe Leroy (CS GROUP) wrote:
-> On 09/02/2026 14:25, Xie Yuanbin wrote:
->> When CONFIG_PPC64_ELF_ABI_V1=y, it seems that the try of lookupinp
->> the original non-dot symbol is missing.
->>
->> What about this (Only the compilation test is performed):
->> ```c
->> static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
->> {
->> 	unsigned long addr = kallsyms_lookup_name(name);
->>
->> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
->> 		addr = ppc_function_entry((void *)addr);
->>
->> 	return addr;
->> }
->>
->> #define ppc_kallsyms_lookup_name(x) ({					\
->> 		unsigned long addr = 0;					\
->> 		if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1))		\
->> 			addr = __ppc_kallsyms_lookup_name("." x);	\
->> 		if (!addr)						\
->> 			addr = __ppc_kallsyms_lookup_name(x);		\
->> 		addr;							\
->> 	})
->> ```
+On Thu Apr 30, 2026 at 10:28 AM CST, Inochi Amaoto wrote:
+> The comb PHY on K3 requires to configure a syscon device for the
+> right mux configuration. And it requires calibration before any
+> usage.
 >
-> Good point.
+> Add USB3/PCIe comb PHY driver for Spacemit K3.
 >
-> To avoid duplicating the string I'd suggest:
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> ---
+>  drivers/phy/spacemit/Kconfig          |  16 ++
+>  drivers/phy/spacemit/Makefile         |   2 +
+>  drivers/phy/spacemit/phy-k3-combphy.c | 250 ++++++++++++++++
+>  drivers/phy/spacemit/phy-k3-common.c  | 398 ++++++++++++++++++++++++++
+>  drivers/phy/spacemit/phy-k3-common.h  |  27 ++
+>  5 files changed, 693 insertions(+)
+>  create mode 100644 drivers/phy/spacemit/phy-k3-combphy.c
+>  create mode 100644 drivers/phy/spacemit/phy-k3-common.c
+>  create mode 100644 drivers/phy/spacemit/phy-k3-common.h
 >
-> static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
-> {
-> 	unsigned long addr = kallsyms_lookup_name(name);
->
-> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1) && !addr)
-> 		addr = kallsyms_lookup_name(name + 1);
-> 	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
-> 		addr = ppc_function_entry((void *)addr);
->
-> 	return addr;
-> }
->
-> #ifdef CONFIG_PPC64_ELF_ABI_V1
-> #define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name("." x);
-> #else
-> #define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name(x)
-> #endif
+> diff --git a/drivers/phy/spacemit/Kconfig b/drivers/phy/spacemit/Kconfig
+> index 50b0005acf66..5fdf18fce499 100644
+> --- a/drivers/phy/spacemit/Kconfig
+> +++ b/drivers/phy/spacemit/Kconfig
+> @@ -23,3 +23,19 @@ config PHY_SPACEMIT_K1_USB2
+>  	help
+>  	  Enable this to support K1 USB 2.0 PHY driver. This driver takes care =
+of
+>  	  enabling and clock setup and will be used by K1 udc/ehci/otg/xhci dri=
+ver.
+> +
+> +config PHY_SPACEMIT_K3_COMMON_OPS
+> +	tristate
+> +	select MFD_SYSCON
+> +	select GENERIC_PHY
+> +
+> +config PHY_SPACEMIT_K3_COMBO_PHY
+> +	tristate "SpacemiT K3 USB3/PCIe PHY support"
+> +	depends on (ARCH_SPACEMIT || COMPILE_TEST) && OF
+> +	depends on COMMON_CLK
+> +	select PHY_SPACEMIT_K3_COMMON_OPS
+> +	help
+> +	  Enable this to support K3 USB3/PCIe combo PHY driver. This
+> +	  driver takes care of enabling and clock setup and will be used
+> +	  by K3 dwc3 driver.
+> +	  If unsure, say N.
+> diff --git a/drivers/phy/spacemit/Makefile b/drivers/phy/spacemit/Makefil=
+e
+> index a821a21d6142..41be7b0388da 100644
+> --- a/drivers/phy/spacemit/Makefile
+> +++ b/drivers/phy/spacemit/Makefile
+> @@ -1,3 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  obj-$(CONFIG_PHY_SPACEMIT_K1_PCIE)		+=3D phy-k1-pcie.o
+>  obj-$(CONFIG_PHY_SPACEMIT_K1_USB2)		+=3D phy-k1-usb2.o
+> +obj-$(CONFIG_PHY_SPACEMIT_K3_COMBO_PHY)		+=3D phy-k3-combphy.o
+> +obj-$(CONFIG_PHY_SPACEMIT_K3_COMMON_OPS)	+=3D phy-k3-common.o
+> diff --git a/drivers/phy/spacemit/phy-k3-combphy.c b/drivers/phy/spacemit=
+/phy-k3-combphy.c
+> new file mode 100644
+> index 000000000000..66fa6330ad6e
+> --- /dev/null
+> +++ b/drivers/phy/spacemit/phy-k3-combphy.c
+> @@ -0,0 +1,250 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * phy-k3-usb3.c - SpacemiT K3 Type-C Orientation Switch Driver
+> + *
+> + * Copyright (c) 2025 SpacemiT Technology Co. Ltd
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/io.h>
 
-I would like to submit the modification as a new patch, and include you
-as Co-developer. Do you agree?
+...
 
-Full of the patch:
-```patch
-From fbf07e5c1a97da7c8572435537f2b92213ede39d Mon Sep 17 00:00:00 2001
-From: Xie Yuanbin <xieyuanbin1@huawei.com>
-Date: Thu, 30 Apr 2026 14:15:26 +0800
-Subject: [PATCH V2] powerpc/text-patching: simplify the implementation of ppc_kallsyms_lookup_name()
+> +
+> +	phy->apb_spare =3D syscon_regmap_lookup_by_phandle(node, "spacemit,apb-=
+spare");
+> +	if (IS_ERR(phy->apb_spare))
+> +		return dev_err_probe(dev, PTR_ERR(phy->apb_spare),
+> +				     "Failed to fine APB SPARE syscon");
 
-ppc_kallsyms_lookup_name() is called only twice in the kernel code, and
-the parameters are all constant strings. strnlen(name, KSYM_NAME_LEN) is
-called inside ppc_kallsyms_lookup_name(), when the compiler detects that
-KSYM_NAME_LEN is larger then the constant strings,
-the following error will be triggered:
-```log
-  CC      arch/powerpc/kernel/optprobes.o
-In file included from ./arch/powerpc/include/asm/kprobes.h:24,
-                 from ./include/linux/kprobes.h:31,
-                 from arch/powerpc/kernel/optprobes.c:8:
-In function ‘ppc_kallsyms_lookup_name’,
-    inlined from ‘arch_prepare_optimized_kprobe’ at arch/powerpc/kernel/optprobes.c:209:21:
-./arch/powerpc/include/asm/text-patching.h:232:13: error: ‘strnlen’ specified bound 512 exceeds source size 19 [-Werror=stringop-overread]
-  232 |         if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function ‘ppc_kallsyms_lookup_name’,
-    inlined from ‘arch_prepare_optimized_kprobe’ at arch/powerpc/kernel/optprobes.c:210:22:
-./arch/powerpc/include/asm/text-patching.h:232:13: error: ‘strnlen’ specified bound 512 exceeds source size 13 [-Werror=stringop-overread]
-  232 |         if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-```
+typo, s/fine/find
 
-The error can be reproduced in the following ways:
-Use lastest linux-next source, change ppc_kallsyms_lookup_name() to
-__always_inline, use default ppc64_defconfig, set CONFIG_EXPERT=y,
-CONFIG_PPC64_BIG_ENDIAN_ELF_ABI_V2=n, CONFIG_CC_OPTIMIZE_FOR_SIZE=y,
-and use gcc-14 or a later version for compilation.
+> +
+> +	apmu =3D syscon_regmap_lookup_by_phandle_args(node, "spacemit,apmu", 1,=
+ &config);
+> +	if (IS_ERR(apmu))
+> +		return dev_err_probe(dev, PTR_ERR(phy->apb_spare),
+> +				     "Failed to fine APMU syscon");
 
-Since ppc_kallsyms_lookup_name() is called only twice in the kernel,
-and the parameters are all constant strins, simplify the implementation
-of ppc_kallsyms_lookup_name() and avoid calling strnlen().
+1. typo, s/fine/find
+2. PTR_ERR(phy->apb_spare) should be PTR_ERR(apmu)
 
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Kees Cook <kees@kernel.org>
-Co-developed-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
-Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
-Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
----
-v1->v2: https://lore.kernel.org/20260205100517.292858-2-xieyuanbin1@huawei.com
-  - Not use strlen()
+> +
+> +	ret =3D k3_comb_phy_update_config(apmu, config);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to set lane configuration");
+> +
+> +	phy->dev =3D dev;
+> +	platform_set_drvdata(pdev, phy);
+> +
+> +	ret =3D k3_phy_calibrate(phy->apb_spare);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to calibrate phy");
+> +
+> +	ret =3D k3_comb_phy_init_lanes(phy, config);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to init lanes");
+> +
+> +	provider =3D devm_of_phy_provider_register(dev, k3_comb_phy_xlate);
+> +	if (IS_ERR(provider))
+> +		return dev_err_probe(dev, PTR_ERR(provider),
+> +				     "Failed to register provider\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id k3_comb_phy_of_match[] =3D {
+> +	{ .compatible =3D "spacemit,k3-comb-phy" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, k3_comb_phy_of_match);
+> +
+> +static struct platform_driver k3_comb_phy_driver =3D {
+> +	.probe =3D k3_comb_phy_probe,
+> +	.driver =3D {
+> +		.name =3D "spacemit,k3-comb-phy",
+> +		.of_match_table =3D k3_comb_phy_of_match,
+> +	},
+> +};
+> +module_platform_driver(k3_comb_phy_driver);
+> +
+> +MODULE_DESCRIPTION("SpacemiT K3 USB3/PCIe comb PHY driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/phy/spacemit/phy-k3-common.c b/drivers/phy/spacemit/=
+phy-k3-common.c
+> new file mode 100644
+> index 000000000000..77c4b4073b96
+> --- /dev/null
+> +++ b/drivers/phy/spacemit/phy-k3-common.c
+> @@ -0,0 +1,398 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/usb.h>
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +#include "phy-k3-common.h"
+> +
+> +/* PHY Registers */
+> +#define PHY_VERSION			0x0
+> +
+> +#define PHY_RESET_CFG			0x04
+> +
+> +#define PHY_RESET_RXBUF_RST		BIT(0)
+> +#define PHY_RESET_SOFT_RST_PCS		BIT(1)
+> +#define PHY_RESET_SOFT_RST_AHB		BIT(2)
+> +#define PHY_RESET_EN_SD_AFTER_LOCK	BIT(6)
+> +
+> +#define PHY_CLK_CFG			0x08
+> +
+> +#define PHY_CLK_PLL_READY		BIT(0)
+> +#define PHY_CLK_TXCLK_INV		BIT(2)
+> +#define PHY_CLK_RXCLK_EN		BIT(3)
+> +#define PHY_CLK_TXCLK_EN		BIT(4)
+> +#define PHY_CLK_PCLK_EN			BIT(5)
+> +#define PHY_CLK_PIPE_PCLK_EN		BIT(6)
+> +#define PHY_CLK_REFCLK_FREQ		GENMASK(10, 7)
+> +#define PHY_CLK_REFCLK_24M		2
+> +#define PHY_CLK_SW_INIT_DONE		BIT(11)
+> +#define PHY_CLK_PU_SSC_OUT		BIT(23)
+> +
+> +#define PHY_MODE_CFG			0x0C
+> +
+> +#define PHY_MODE_PCIE_INT_EN		BIT(0)
+> +#define PHY_MODE_LFPS_TPERIOD		GENMASK(9, 8)
+> +#define PHY_MODE_LFPS_TPERIOD_USB	3
+> +
+> +#define PHY_PU_SEL			0x40
+> +
+> +#define PHY_PU_CFG_STATUS		BIT(9)
+> +#define PHY_PU_OVRD_STATUS		BIT(10)
+> +
+> +#define PHY_PU_CK_REG			0x54
+> +
+> +#define PHY_PU_REFCLK_100		BIT(25)
+> +
+> +#define PHY_PLL_REG1			0x58
+> +
+> +#define PHY_PLL_FREF_SEL		GENMASK(15, 13)
+> +#define PHY_PLL_FREF_24M		0x1
+> +#define PHY_PLL_SSC_DEP_SEL		GENMASK(27, 24)
+> +#define PHY_PLL_SSC_5000PPM		0xa
+> +#define PHY_PLL_SSC_MODE		GENMASK(29, 28)
+> +#define PHY_PLL_SSC_MODE_CENTER_SPREAD	0
+> +#define PHY_PLL_SSC_MODE_UP_SPREAD	1
+> +#define PHY_PLL_SSC_MODE_DOWN_SPREAD	2
+> +#define PHY_PLL_SSC_MODE_DOWN_SPREAD1	3
+> +
+> +#define PHY_PLL_REG2			0x5c
+> +
+> +#define PHY_PLL_SEL_REF100		BIT(21)
+> +
+> +/* PHY RX Register Definitions */
+> +#define PHY_RX_REG_A			0x60
+> +
+> +#define PHY_RX_REG0_RLOAD		BIT(4)
+> +#define PHY_RX_REG1_RTERM		GENMASK(11, 8)
+> +#define PHY_RX_REG1_RC_CALI		GENMASK(15, 12)
+> +#define PHY_RX_REG2_CSEL		GENMASK(19, 16)
+> +#define PHY_RX_REG2_FORCE_CSEL		BIT(20)
+> +#define PHY_RX_REG2_PSEL		GENMASK(23, 21)
+> +#define PHY_RX_REG3_I_LOAD		GENMASK(26, 24)
+> +#define PHY_RX_REG3_SEL_CBOOST_CODE	BIT(27)
+> +#define PHY_RX_REG3_ADJ_BIAS		GENMASK(29, 28)
+> +#define PHY_RX_REG3_RDEG1		GENMASK(31, 30)
+> +
+> +#define PHY_RX_REG_B			0x64
+> +
+> +#define PHY_RX_REGB_MASK		GENMASK(23, 0)
+> +
+> +#define PHY_RX_REG4_RDEG2		GENMASK(2, 1)
+> +#define PHY_RX_REG4_ENVOS		BIT(4)
+> +#define PHY_RX_REG4_RTERM_SEL		BIT(5)
+> +#define PHY_RX_REG4_MANUAL_CFG		BIT(7)
+> +#define PHY_RX_REG5_RCELL_VCM		GENMASK(11, 8)
+> +#define PHY_RX_REG5_RCELL_BIAS		GENMASK(15, 12)
+> +#define PHY_RX_REG6_H1_REG		GENMASK(19, 16)
+> +#define PHY_RX_REG6_ADAPT_GAIN		GENMASK(21, 20)
+> +#define PHY_RX_REG6_BYPASS_ADPT		BIT(22)
+> +
+> +#define PHY_ADPT_CFG0			0x140
+> +#define PHY_ADPT_AFE_RST_OVRD_EN	BIT(1)
+> +#define PHY_ADPT_AFE_RST_OVRD_VAL	BIT(4)
+> +
+> +#define PHY_RXEQ_TIME			0xb4
+> +#define PHY_RXEQ_TIME_OVRD_POST_C_SOC	BIT(21)
+> +#define PHY_RXEQ_TIME_CFG_AMP_SOC	GENMASK(23, 22)
+> +#define PHY_RXEQ_TIME_AMP_SOC_650M	0
+> +#define PHY_RXEQ_TIME_AMP_SOC_800M	1
+> +#define PHY_RXEQ_TIME_AMP_SOC_870M	2
+> +#define PHY_RXEQ_TIME_AMP_SOC_900M	3
+> +#define PHY_RXEQ_TIME_OVRD_AMP_SOC	BIT(24)
+> +
+> +#define PCIE_PU_ADDR_CLK_CFG		0x0008
+> +#define PHY_CLK_PLL_READY		BIT(0)
+> +#define PCIE_INITAL_TIMER		GENMASK(6, 3)
+> +#define CFG_INTERNAL_TIMER_ADJ		GENMASK(10, 7)
+> +#define CFG_SW_PHY_INIT_DONE		BIT(11)
+> +
+> +/* Lane RX/TX configuration (per=E2=80=91lane, at lane_base) */
+> +#define PCIE_RX_REG1			0x050
+> +#define PCIE_TX_REG1			0x064
+> +
+> +#define PCIE_PLL_TIMEOUT		500000
+> +#define PCIE_POLL_DELAY			500
+> +
+> +
 
- arch/powerpc/include/asm/text-patching.h | 42 ++++++++----------------
- 1 file changed, 17 insertions(+), 33 deletions(-)
+...
 
-diff --git a/arch/powerpc/include/asm/text-patching.h b/arch/powerpc/include/asm/text-patching.h
-index e7f14720f630..2d3f698cb4f1 100644
---- a/arch/powerpc/include/asm/text-patching.h
-+++ b/arch/powerpc/include/asm/text-patching.h
-@@ -221,39 +221,23 @@ static inline unsigned long ppc_global_function_entry(void *func)
-  * - For ABIv1, we lookup the dot variant.
-  * - For ABIv2, we return the local entry point.
-  */
--static inline unsigned long ppc_kallsyms_lookup_name(const char *name)
--{
--	unsigned long addr;
--#ifdef CONFIG_PPC64_ELF_ABI_V1
--	/* check for dot variant */
--	char dot_name[1 + KSYM_NAME_LEN];
--	bool dot_appended = false;
--
--	if (strnlen(name, KSYM_NAME_LEN) >= KSYM_NAME_LEN)
--		return 0;
--
--	if (name[0] != '.') {
--		dot_name[0] = '.';
--		dot_name[1] = '\0';
--		strlcat(dot_name, name, sizeof(dot_name));
--		dot_appended = true;
--	} else {
--		dot_name[0] = '\0';
--		strlcat(dot_name, name, sizeof(dot_name));
--	}
--	addr = kallsyms_lookup_name(dot_name);
--	if (!addr && dot_appended)
--		/* Let's try the original non-dot symbol lookup	*/
--		addr = kallsyms_lookup_name(name);
--#elif defined(CONFIG_PPC64_ELF_ABI_V2)
--	addr = kallsyms_lookup_name(name);
--	if (addr)
--		addr = ppc_function_entry((void *)addr);
--#else
--	addr = kallsyms_lookup_name(name);
--#endif
--	return addr;
--}
-+static inline unsigned long __ppc_kallsyms_lookup_name(const char *name)
-+{
-+	unsigned long addr = kallsyms_lookup_name(name);
-+
-+	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1) && !addr)
-+		addr = kallsyms_lookup_name(name + 1);
-+	if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V2) && addr)
-+		addr = ppc_function_entry((void *)addr);
-+
-+	return addr;
-+}
-+
-+#ifdef CONFIG_PPC64_ELF_ABI_V1
-+#define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name("." x)
-+#else
-+#define ppc_kallsyms_lookup_name(x)	__ppc_kallsyms_lookup_name(x)
-+#endif
- 
- /*
-  * Some instruction encodings commonly used in dynamic ftracing
--- 
-2.53.0
-```
+> +static int k3_pcie_phy_init(struct phy *phy)
+> +{
+> +	struct k3_lane_group *lg =3D phy_get_drvdata(phy);
+> +	void __iomem *phy_base =3D lg->base + lg->data->offsets[0];
+> +	u32 val;
+> +	int ret;
+> +	int i;
+> +
+> +	val =3D readl(phy_base + PHY_PLL_REG1);
+> +	val =3D u32_replace_bits(val, 0x2, GENMASK(15, 12));
+> +	writel(val, phy_base + PHY_PLL_REG1);
+> +
+> +	val =3D readl(phy_base + PHY_PLL_REG2);
+> +	val =3D u32_replace_bits(val, 0, BIT(21));
+> +	writel(val, phy_base + PHY_PLL_REG2);
+> +
+> +	for (i =3D 0; i < lg->data->lanes; i++) {
+> +		void __iomem *lane_base =3D lg->base + lg->data->offsets[i];
+> +
+
+> +		val =3D readl(lane_base + PCIE_RX_REG1);
+> +		val =3D u32_replace_bits(val, 0, 0x3);
+> +		writel(val, phy_base + PCIE_RX_REG1);
+
+This looks like a copy-paste bug.
+
+Read from lane_base but write the modified value to phy_base.
+
+> +	}
+> +
+> +	val =3D readl(phy_base + PHY_PLL_REG2);
+> +	val |=3D BIT(20);
+> +	writel(val, phy_base + PHY_PLL_REG2);
+> +
+
+> +	writel(0x00006505, phy_base + PCIE_RX_REG1);
+
+Is it intentional? The loop above configured PCIE_RX_REG1, while the
+hard-coded 0x00006505 overwrites what's done for lane0.
+
+> +
+> +	/* pll_reg1 of lane0, disable SSC: pll_reg4[3:0] =3D 0 */
+> +	val =3D readl(phy_base + PHY_PLL_REG1);
+> +	val =3D u32_replace_bits(val, 0, GENMASK(27, 24));
+> +	writel(val, phy_base + PHY_PLL_REG1);
+
+A little confusing here, comment says "pll_reg4[3:0] =3D 0" but the code is
+modifying PHY_PLL_REG1[27:24]
+
+> +
+> +	for (i =3D 0; i < lg->data->lanes; i++) {
+> +		void __iomem *lane_base =3D lg->base + lg->data->offsets[i];
+> +
+> +		/* set cfg_tx_send_dummy_data to be 1'b1 for disable dash data */
+> +		val =3D readl(lane_base + PHY_PU_SEL);
+> +		val =3D u32_replace_bits(val, 1, BIT(13));
+> +		writel(val, lane_base + PHY_PU_SEL);
+> +
+> +		/* disable en_sample_data_after_cdr_locked */
+> +		val =3D readl(lane_base + PHY_RESET_CFG);
+> +		val =3D u32_replace_bits(val, 0, BIT(6));
+> +		writel(val, lane_base + PHY_RESET_CFG);
+> +
+> +		/* Dynamic Lock */
+> +		val =3D readl(lane_base + PHY_MODE_CFG);
+> +		val =3D u32_replace_bits(val, 1, BIT(2));
+> +		writel(val, lane_base + PHY_MODE_CFG);
+> +
+> +		val =3D FIELD_PREP(GENMASK(7, 0), 0x10) |
+> +			FIELD_PREP(GENMASK(15, 8), 0x78) |
+> +			FIELD_PREP(GENMASK(23, 16), 0x98) |
+> +			FIELD_PREP(GENMASK(31, 24), 0xdf);
+> +		writel(val, lane_base + PHY_RX_REG_A);
+> +
+> +		val =3D readl(lane_base + PHY_RX_REG_B);
+> +		val &=3D ~PHY_RX_REGB_MASK;
+> +		val |=3D FIELD_PREP(GENMASK(7, 0), 0xb4) |
+> +			FIELD_PREP(GENMASK(15, 8), 0x88) |
+> +			FIELD_PREP(GENMASK(23, 16), 0x28);
+> +		writel(val, lane_base + PHY_RX_REG_B);
+
+Can we define macros for these values? Just like you did for
+PHY_CLK_CFG.
+
+> +
+> +		/* Set init done */
+> +		val =3D readl(lane_base + PCIE_PU_ADDR_CLK_CFG);
+> +		val =3D u32_replace_bits(val, 1, CFG_SW_PHY_INIT_DONE);
+> +		writel(val, lane_base + PCIE_PU_ADDR_CLK_CFG);
+> +	}
+> +
+> +	ret =3D readl_poll_timeout(phy_base + PCIE_PU_ADDR_CLK_CFG, val,
+> +				 (val & PHY_CLK_PLL_READY), PCIE_POLL_DELAY,
+> +				 PCIE_PLL_TIMEOUT);
+> +	if (ret) {
+> +		dev_err(&lg->phy->dev, "PHY PLL lock timeout\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
