@@ -1,164 +1,222 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013036.outbound.protection.outlook.com [40.93.196.36])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DDD31F994;
-	Fri,  1 May 2026 20:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777665790; cv=fail; b=pbncvllABC7bbaFx0lFdbx2VgeCObPC0aB1zSoD4DXHM19d3nFHtC9bAfPR05MBIyzsmYP6Z+X6YL/J9w24NSebAm7yPinKbDWGH8VxeITq/Jg9qQygyMxhmHvfPWlXzGhhmTpHtR2iAqVEJVSd6UzXDTnU/E+A8SXPhzAFYmGk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777665790; c=relaxed/simple;
-	bh=GQ5pjv4ZUbeuy2tjDbBfIMpWJRVB6YsY5M23srQyx58=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=L5HoC1YWIxRTrT97WEBnITOBtgi6TlpJFhQy7Px7cqf5XCpwFfvZmulx61y6zw1EbIaTChdkj9sz9pbMKFVlE/Gv0pwSR4YV0iWqf5W9jQXSJBDkNdVTs8W5ewFUP6yCcLLXrToy1z51eYJ1jBciaL922v/LOkzDk2ezwhVYsE8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PVv1h5QW; arc=fail smtp.client-ip=40.93.196.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D396359A94;
+	Fri,  1 May 2026 21:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777670656; cv=none; b=rWwHeAKc4QMti/kedvnCNENOjuoUc24txl6gSsj5E+dFdvK5wOVLOPaL+xDdc1JixJDCfj+kHmmXT2n7sVqUmm3ye4Kczk7iD3S43TkGkvZUUFG4nFGVxt4XZ43HIRv8eLUs5lEDCjPIdbz507CriLLaxRDDML9m9ZlW8Hqvimo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777670656; c=relaxed/simple;
+	bh=SkdcsE7EjRLTtFgjUs6SYSwxlkTqmPmRyFhUGVS2CTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=untW+bbpafC3oUtqpxQnw1+eMYf6jYI6NoHOt+f8s5kp/a6GTlffqUXz2kZzMe8x0QkD6nlizTdHQEusTDpIJVbry+cAQt5otiABEyeC6eOVfkt30KdXuLk20ngGM3PbmEVyqCZ3mqlRWbCEFog/DUVD/jWYlbmdl04rmt1qS0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h6yXd77I; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PVv1h5QW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U6G+12vpmXXl3fUgWmwZzmr3Fs1pkvJI/4N/jq6sAaMbV3C5NeiUqCsZZrSI9kCDX4RdDefcUmnB5XVrcSmLXFDmA9LxpPHRnCAktrzn/h5SXqIhCCz+fDWkHdkyt1uXZl2fn7FDmRyNkaWS2Ntm05ghShV8xAp7wouOHzDV/skbtbu/WOxJKfVZYBldRWW63WUI9T2rgQCuH1yZZyBGm0hgpuKCEMwH0v5zy8FiFxPFdhH17xLFsnv8Ft90n9qL29K7oMngyG7g0sOHn99XKvWWKolPiODlh+tv4fYr0mUFNa8KFGbQ5GP58nTpme31im9+8P6h+C9T9k4Dz8I9Nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v5QqI+UnmdA+eZ9HUSnN0UhFYCMxnUjAz6wo0QuF76A=;
- b=TeDVbTR4Q/zcKdV4iyOMvs7jeiR6WYmBMfiE2np3BBPL38sd1fMuXAhYuB25G/Q2onwaYgOAII4pfIahV6uff7rJcg16/aJM7Lw5ue/wygZ88Dgo2vyhZQtJrlZq8NKSwVUOfmeovlFgFWK2cDlJutupjavwr/0dGQYajqJgCDwBle/crO4i0oSwg97xeDWV/8oL2bOx/R1JSzc1EA1VyubBBqivahWgZF2r5HrxCrlL0GeD7J2/PnHvFL3uS4jodPUUyPIW84hz/X8ETBE4mHWBfeoRNzCLOL/wI+q+DISrGM1nAOxajYvajf1bAwZwkVL58BZY04JRVWsJroe/Uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v5QqI+UnmdA+eZ9HUSnN0UhFYCMxnUjAz6wo0QuF76A=;
- b=PVv1h5QWlIgiNyZNQHuWYSVg5sU2+U1P0Wshbu/GEmOnAWJg6qYsRdRyxVc/viiFV5+UEd3bQAJWGUKllduQIbS4K9FwKgfkdUMAho+ZB3xjhbPIz3GLQIZ0hgqKrmO1aMP3jrnSNcsqhrhP/gdChMuh4c/yNMxw1sZzyIEy64c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN2SPR01MB0088.namprd12.prod.outlook.com
- (2603:10b6:208:16c::31) by CH2PR12MB4135.namprd12.prod.outlook.com
- (2603:10b6:610:7c::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.23; Fri, 1 May
- 2026 20:03:05 +0000
-Received: from MN2SPR01MB0088.namprd12.prod.outlook.com
- ([fe80::6278:fbab:13f1:cd4a]) by MN2SPR01MB0088.namprd12.prod.outlook.com
- ([fe80::6278:fbab:13f1:cd4a%6]) with mapi id 15.20.9870.020; Fri, 1 May 2026
- 20:03:05 +0000
-Message-ID: <f0ce259f-1a58-46d7-a875-b69c1fdec479@amd.com>
-Date: Fri, 1 May 2026 13:03:01 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 3/6] pds_core: add PLDM firmware update support
- via devlink flash
-To: Jakub Kicinski <kuba@kernel.org>, "Nikhil P. Rao" <nikhil.rao@amd.com>
-Cc: Brett Creeley <brett.creeley@amd.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, eric.joyner@amd.com
-References: <20260429-b4-pldm-b4-v1-0-394fafba526f@amd.com>
- <20260429-b4-pldm-b4-v1-3-394fafba526f@amd.com>
- <20260430180521.6457e61f@kernel.org>
-Content-Language: en-US
-From: "Rao, Nikhil" <nikhirao@amd.com>
-In-Reply-To: <20260430180521.6457e61f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR16CA0025.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::38) To MN2SPR01MB0088.namprd12.prod.outlook.com
- (2603:10b6:208:16c::31)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h6yXd77I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777670655; x=1809206655;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SkdcsE7EjRLTtFgjUs6SYSwxlkTqmPmRyFhUGVS2CTo=;
+  b=h6yXd77IjJIGABQaNqnBmVq9lZIWY5uXgeW6r9EeSfCUNuhb8DFf5ceS
+   4WziuBl18bOofgs1CJZHiTZj0gowa+Fbew/yGfHC5SAXlMJBOiDDNUNe2
+   dFGPOxD6fHZeRpRzesa6fgrlHkzcqdRJhTgSn2NOgNgZb64xdn3wbsY9i
+   rPsX1fWE7cdk7V8TgCTPpWNrOlpSridnY47DnN/l7zCyIIjV/kac5HYHp
+   +AE3cV5R6FL5GevzUYDc6Rr2ABENv8k9nceuqy+Ne4PXEAGUg+5TJ0UYp
+   ugoA6hK3GXHlOfEvVeXb/4Da5JuAJTFQyuFzCJn71j/Id3gXE/+YzGikE
+   w==;
+X-CSE-ConnectionGUID: 2xnsrKwJSP6m6pCgE/R2Gw==
+X-CSE-MsgGUID: yIb1jZUqTkC/fXMoBgi48g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11773"; a="78336659"
+X-IronPort-AV: E=Sophos;i="6.23,210,1770624000"; 
+   d="scan'208";a="78336659"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2026 14:24:14 -0700
+X-CSE-ConnectionGUID: cuA302NCQx6UIkdwvA9iaQ==
+X-CSE-MsgGUID: FTqA9a0NQFK949u8bG4wFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,210,1770624000"; 
+   d="scan'208";a="233932326"
+Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.88.27.138])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2026 14:24:14 -0700
+Date: Fri, 1 May 2026 14:24:13 -0700
+From: David Box <david.e.box@linux.intel.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86/intel/vsec: allocate res with intel_vsec_dev
+Message-ID: <fdmwbmlp44n5kspjau4w56ww3ynexep3xg47ixizmhdrdxwf7w@4pzll4a2epbl>
+References: <20260430224307.109311-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2SPR01MB0088:EE_|CH2PR12MB4135:EE_
-X-MS-Office365-Filtering-Correlation-Id: a41a9a80-4a71-4872-144b-08dea7bca7d9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	fVQ0AyCTnKUamwSZXrBACQdf3vIyFXHP4VFH1miiYZ+CxGeZyD6vuonMXYoa3L0AG68txR5qO8iXoxK9EkVpwH8MsJfKW7fisC0eJL3Ithbmb25Jzajr/iGUPtCjHOSaHTvMDIMFD3CIhOCFff0jrK0o6jwxhdQu30daRC5G7PX9ts+jWIAAf+p38/+APLRxeGBzlcwLw2AJD6HUxBlF2hBL7QOs38HS9XEJI0NaJcE6t6TAF5xzPoSdix/ht7hGZTbcxO4aRclaXWnAxzkE7T5MfZC7GIbjrKAc/WMgf5LiF6uQ6BWY1iq3Up6je8xbLm/aWyb4O+r+p52WgD+FP7oY4ffYgXc/3+v0VwzVzPR3hcv9JlIHNbqBsvzKxrbpk6Y/boLDO7EZ96kJ2r6WVAwAM2c7h0MUTnOo+6qW4fPSG6EVfo1CTVGom6YeyxifO9RF2kK/Db7UBb30wO7ta5wjltVCr48wv4ldvabu2yjOX4JE4bysGqjM3utH4XctlZgJzDC+z67+2UEMXGkhYfEjvD4EQJz6EDnkswsZF5U63o7wPCJgPpVA57IATOa+0r4GvW6PdHk+nblCxv9m43TMQfmQG4jirP2kthOl8oTy5e9RHN37+i0lqq+tY6m2ADjnvbAUY1CzqX4Xrm/FNXQ9aFFpRlzcDmBqU0du3H+rWT3YEENnnS/tV9hRlozv
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2SPR01MB0088.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NWtLSGRmcjhkclppN1BIWWtNVlprVFYvcnFMNlVaRTBWc0xiUjF4RE9EbEp6?=
- =?utf-8?B?cThKUExhWG1GOHExRFdlTjNCbHErajBvNk8xOHdpWGdLYll4TXNZZitYbGdl?=
- =?utf-8?B?VWJUOERvVHZhV3pHOUpzSE1KV2k1Z1NtVFBxTlhucXVmUzBsdjBKbHFXck9U?=
- =?utf-8?B?LzVGK2NSK2ZDc2NHcmpMSGwvTlZHSHYxU1lWejRPNyswam5OZnNZRy9NTW4z?=
- =?utf-8?B?QTh4NGdhcThqL0xwN0NqUUIxM3lNQzArbnRuREhGMTFwMDlGcFdMd3o1UDdI?=
- =?utf-8?B?N2g4VHB3Z1UwcDZjRGZlYjAvNjVBLzRTR1RYWVJrSGxZWDEwZEx5SnlaYW9T?=
- =?utf-8?B?S0U2bktxa0JpSTRhd0hoQU9QUzRzdi9uYmR1UGtUSHVmYnFLQUdSR0F5OHdS?=
- =?utf-8?B?N1VVMWRNQjVBeHRCc3htSGthQytNK1pZelpocTlaLzhKZm9QUnkxMlVGdEND?=
- =?utf-8?B?RmdpdHVocmhzVmFSNVlnUzNBc3BTdmszNGZxRDEzWVZPY0lJYmU5V3RjLzU5?=
- =?utf-8?B?eE9BREZVN2xYbzlSNFhaVlY5RVFsTjF2UXBLMy9qekNzTXJtamdHenN4eG4v?=
- =?utf-8?B?TTErbVM4Ky9La3pSWmtFWEVUU0EwbGs0b0dJY25od0dCcjJZc09RUXNuQTR2?=
- =?utf-8?B?OUNiVHkvekpKRFhKNTZEOHA1NzRJLzVnWmVGUXdwRU1WSDdoZ2dzK0lLOXNx?=
- =?utf-8?B?TE94WGpVbzJydHJSOHJNblhUdUdCR2dPMTdoYThGWG1tUmJjNUQ3SktpeXRT?=
- =?utf-8?B?czN6c2VXai93cFd6cldRdGRhNzJ1alkwVlJ1WE44djZMRVhpa0lSTzhRejlN?=
- =?utf-8?B?Q2M2RGkvYVp6cHJRd2lwM3pySi9YZjRxWXFMT0xON1VxUG5xTjk0V1RkV0NK?=
- =?utf-8?B?TGRKNlBMcUIzY3dQZVN2TEFMaGdNV050TW1lWWRYZ2VSYXFiakZjMElmanRR?=
- =?utf-8?B?dzFjSjV5ajBucVNwUFEwblZ3ckg1UXdxVWZSdFpHYTdhSC92TlIyeG8vNWlL?=
- =?utf-8?B?Y1lLd3lqQmRSdEljRjhHc1FSMDh0cXlKSWpJVGVQdE92N3ZNdHRjelZjTGcv?=
- =?utf-8?B?SzY4dE1NZnZ4RHIvamN4UlJvckVaYVV1QkhBc0lYUHRLV2tPUlMwNC85UW5K?=
- =?utf-8?B?aTI1UUVPZEtzREtSUTNjOTBvNXR4REt1c1JtWEVPcFpqS1JrUlgzU0JvMlpa?=
- =?utf-8?B?UmlLdExsZ0VaaG9vL3FoRWJ2ckhEbGk3UUcrdFBWRWxtd1VVNnJnYUpYMU9k?=
- =?utf-8?B?Z3V2Rm5XQitVWjFiaFRKME1aMkJUcGFrTEZaOGl2dHZmV1JRY0xCU21NNFRE?=
- =?utf-8?B?dVZ1YjY0R0I0QTNVc2xYRU1nN3BELzZKcFU1bDErYnUxVzU4VSt2ZFdBdHdv?=
- =?utf-8?B?TC9JTWFSbE04OCtwS2lnWXNxbEZZZjlucFhwNzRUNzBsYTVRNkp4andZMUlt?=
- =?utf-8?B?NUI1M1RJT0ZMTUVaM2hoM1lzL3lIa3ltamdsd3ZiSjNmaERhNTdmU2E1VERh?=
- =?utf-8?B?bXVNT0N0dXQ4azIrMkdNV3l2QkxiYWdkN0F5TEJmb0JON2tBUDNlaFR0Tmp4?=
- =?utf-8?B?QTVqOHcvaXVzWFFDRkRqZjVOWXJacndiYjNTMGNULzhueFRoT3NaTFJJeENL?=
- =?utf-8?B?dmdYRml4aWpkZXlSQ3hwS1dDVmpaRGVBR2ZEMHFIVERXbTRSeHJKOG9SWHJH?=
- =?utf-8?B?VmlGL0VWUWthWHRweDJMWHI1bDcvUXZzenBSMG1DMzVnQ3ZTazdXdGJyemVH?=
- =?utf-8?B?b1Z6NlhUS29KcUk2TEtTN1NRb0hCWm8xVUxSOUlPOE8yditEekpiMXNMOU52?=
- =?utf-8?B?QTF6UjY1dWtuWDhvZDNoT0N6QmN4c0tMM2owSXFsYkRlSERSOE04MUR1Z1lF?=
- =?utf-8?B?Q013YktVdk5pTTN3T0RMZzFCUlhWZHVxV3pWWHg0THBqODBKR3duRHUyVGJy?=
- =?utf-8?B?WTE3RW9mRmxTNEdWNC9lVlo4eFk3YXZBejNoanVOWjdTT3lFd0tSZlozbGhC?=
- =?utf-8?B?ZDU0V2FLWkxIdUJNajczd3VKUFlHbU1EYXhFamtsMHJ1bmpCMGNwMmFkUmJR?=
- =?utf-8?B?VzJwakFwdzM2bTJkeXdnYnhaVG9nYUtYOUx6RlY3V21USjZrdmhSRW16TUFN?=
- =?utf-8?B?YSt1SHU2Skk4NHJzRFZQZ2tGSW92ZEYxdEF1UEdqNUZ4dW93VHg2RTFGV0s5?=
- =?utf-8?B?bGN6Zkl4aU5BWlJqdm1SSkQwdVBSeXlmbXJDSnE0bTVjTDJKNjdYZHJsR1Bl?=
- =?utf-8?B?QTBteVpJdWJkcERsRWhEK1dnUjFjR1VyNDM2QXl5MmpZSjREUE4zTiswYlUw?=
- =?utf-8?B?SnpyckVyelgyaWhaUzljanRNeGYzcGt3TmxyZ2hMNFpHNTI1WG56Zz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a41a9a80-4a71-4872-144b-08dea7bca7d9
-X-MS-Exchange-CrossTenant-AuthSource: MN2SPR01MB0088.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2026 20:03:05.2847
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OF3xgJS76CbwViCbstmMT3XLHqqwLMHm/B/wC2qccDqrzb/DJh2Iy2+68eawTJgM+LucZwcy3pJH7a1/XN9fwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4135
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260430224307.109311-1-rosenp@gmail.com>
 
-
-
-On 4/30/2026 6:05 PM, Jakub Kicinski wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+On Thu, Apr 30, 2026 at 03:43:07PM -0700, Rosen Penev wrote:
+> Use a flexible array member to combine allocations. Avoids having to
+> free separately.
 > 
+> Add __counted_by for extra runtime analysis.
 > 
-> On Wed, 29 Apr 2026 08:28:19 +0000 Nikhil P. Rao wrote:
->> +#define PDS_CORE_FW_COMPONENT_LIST_LEN       ((PDS_PAGE_SIZE - \
->> +             sizeof(struct pds_core_component_list_info)) / \
->> +             sizeof(struct pds_core_fw_component_info))
->> +
->> +#if defined(__has_attribute) && !__has_attribute(__counted_by__)
->> +#define __counted_by(member)
->> +#endif
+> Move counting variable assignment to after allocations as is already
+> done by kzalloc_flex for GCC 15 and above.
 > 
-> Please don't redefined kernel-level primitives.
-> It's a huge pain in the rear to deal with when indexing the code.
-> 
-> This patch also adds a bunch of kdoc warnings.
-> 
-> Last but not least Sashiko points out a number of bugs
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
-Thanks for the review.
+Tested-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: David E. Box <david.e.box@linux.intel.com>
 
-We will fix the issues above in v2 and also use Sashiko to review v2 and 
-future patches before submission.
+Thanks
 
-Nikhil
+> ---
+>  drivers/platform/x86/intel/vsec.c      | 14 ++++----------
+>  drivers/platform/x86/intel/vsec_tpmi.c | 13 ++++---------
+>  include/linux/intel_vsec.h             |  6 +++---
+>  3 files changed, 11 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+> index 7d5dbc1c1d05..9ef0f043bbee 100644
+> --- a/drivers/platform/x86/intel/vsec.c
+> +++ b/drivers/platform/x86/intel/vsec.c
+> @@ -112,7 +112,6 @@ static void intel_vsec_dev_release(struct device *dev)
+>  	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
+>  
+>  	kfree(intel_vsec_dev->acpi_disc);
+> -	kfree(intel_vsec_dev->resource);
+>  	kfree(intel_vsec_dev);
+>  }
+>  
+> @@ -225,7 +224,6 @@ int intel_vsec_add_aux(struct device *parent,
+>  	ret = xa_alloc(&auxdev_array, &intel_vsec_dev->id, intel_vsec_dev,
+>  		       PMT_XA_LIMIT, GFP_KERNEL);
+>  	if (ret < 0) {
+> -		kfree(intel_vsec_dev->resource);
+>  		kfree(intel_vsec_dev);
+>  		return ret;
+>  	}
+> @@ -233,7 +231,6 @@ int intel_vsec_add_aux(struct device *parent,
+>  	id = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
+>  	if (id < 0) {
+>  		xa_erase(&auxdev_array, intel_vsec_dev->id);
+> -		kfree(intel_vsec_dev->resource);
+>  		kfree(intel_vsec_dev);
+>  		return id;
+>  	}
+> @@ -282,7 +279,7 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
+>  			      unsigned long cap_id, u64 base_addr)
+>  {
+>  	struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
+> -	struct resource __free(kfree) *res = NULL;
+> +	struct resource *res;
+>  	struct resource *tmp;
+>  	struct device *parent;
+>  	unsigned long quirks = info->quirks;
+> @@ -306,13 +303,12 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
+>  		return -EINVAL;
+>  	}
+>  
+> -	intel_vsec_dev = kzalloc_obj(*intel_vsec_dev);
+> +	intel_vsec_dev = kzalloc_flex(*intel_vsec_dev, resource, header->num_entries);
+>  	if (!intel_vsec_dev)
+>  		return -ENOMEM;
+>  
+> -	res = kzalloc_objs(*res, header->num_entries);
+> -	if (!res)
+> -		return -ENOMEM;
+> +	intel_vsec_dev->num_resources = header->num_entries;
+> +	res = intel_vsec_dev->resource;
+>  
+>  	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
+>  		header->offset >>= TABLE_OFFSET_SHIFT;
+> @@ -342,8 +338,6 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
+>  	}
+>  
+>  	intel_vsec_dev->dev = dev;
+> -	intel_vsec_dev->resource = no_free_ptr(res);
+> -	intel_vsec_dev->num_resources = header->num_entries;
+>  	intel_vsec_dev->quirks = info->quirks;
+>  	intel_vsec_dev->base_addr = info->base_addr;
+>  	intel_vsec_dev->priv_data = info->priv_data;
+> diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
+> index 79c0cbea2dee..908f3377b05a 100644
+> --- a/drivers/platform/x86/intel/vsec_tpmi.c
+> +++ b/drivers/platform/x86/intel/vsec_tpmi.c
+> @@ -626,15 +626,12 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+>  	if (!name)
+>  		return -EOPNOTSUPP;
+>  
+> -	res = kzalloc_objs(*res, pfs->pfs_header.num_entries);
+> -	if (!res)
+> +	feature_vsec_dev = kzalloc_flex(*feature_vsec_dev, resource, pfs->pfs_header.num_entries);
+> +	if (!feature_vsec_dev)
+>  		return -ENOMEM;
+>  
+> -	feature_vsec_dev = kzalloc_obj(*feature_vsec_dev);
+> -	if (!feature_vsec_dev) {
+> -		kfree(res);
+> -		return -ENOMEM;
+> -	}
+> +	feature_vsec_dev->num_resources = pfs->pfs_header.num_entries;
+> +	res = feature_vsec_dev->resource;
+>  
+>  	snprintf(feature_id_name, sizeof(feature_id_name), "tpmi-%s", name);
+>  
+> @@ -647,8 +644,6 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+>  	}
+>  
+>  	feature_vsec_dev->dev = vsec_dev->dev;
+> -	feature_vsec_dev->resource = res;
+> -	feature_vsec_dev->num_resources = pfs->pfs_header.num_entries;
+>  	feature_vsec_dev->priv_data = &tpmi_info->plat_info;
+>  	feature_vsec_dev->priv_data_size = sizeof(tpmi_info->plat_info);
+>  	feature_vsec_dev->ida = &intel_vsec_tpmi_ida;
+> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+> index 1fe5665a9d02..07ea563f524e 100644
+> --- a/include/linux/intel_vsec.h
+> +++ b/include/linux/intel_vsec.h
+> @@ -135,8 +135,6 @@ struct intel_vsec_platform_info {
+>   * struct intel_vsec_device - Auxbus specific device information
+>   * @auxdev:        auxbus device struct for auxbus access
+>   * @dev:           struct device associated with the device
+> - * @resource:      PCI discovery resources (BAR windows), one per discovery
+> - *                 instance. Valid only when @src == INTEL_VSEC_DISC_PCI
+>   * @acpi_disc:     ACPI discovery tables, each entry is two QWORDs
+>   *                 in little-endian format as defined by the PMT ACPI spec.
+>   *                 Valid only when @src == INTEL_VSEC_DISC_ACPI.
+> @@ -149,11 +147,12 @@ struct intel_vsec_platform_info {
+>   * @quirks:        specified quirks
+>   * @base_addr:     base address of entries (if specified)
+>   * @cap_id:        the enumerated id of the vsec feature
+> + * @resource:      PCI discovery resources (BAR windows), one per discovery
+> + *                 instance. Valid only when @src == INTEL_VSEC_DISC_PCI
+>   */
+>  struct intel_vsec_device {
+>  	struct auxiliary_device auxdev;
+>  	struct device *dev;
+> -	struct resource *resource;
+>  	u32 (*acpi_disc)[4];
+>  	enum intel_vsec_disc_source src;
+>  	struct ida *ida;
+> @@ -164,6 +163,7 @@ struct intel_vsec_device {
+>  	unsigned long quirks;
+>  	u64 base_addr;
+>  	unsigned long cap_id;
+> +	struct resource resource[] __counted_by(num_resources);
+>  };
+>  
+>  /**
+> -- 
+> 2.54.0
+> 
