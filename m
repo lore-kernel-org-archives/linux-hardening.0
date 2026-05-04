@@ -1,87 +1,66 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759BA26980F
-	for <linux-hardening@vger.kernel.org>; Mon,  4 May 2026 06:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F23E2D2495
+	for <linux-hardening@vger.kernel.org>; Mon,  4 May 2026 06:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777877557; cv=none; b=OHljRO0Lqrioo27WAG/DpWku53XnLO3xuX3dGxd6kTL9n6+8/aij0kJuc/VmMitCtSDIGSN+5BFpYLKhlNreB6Cm15CHh1gMqk7FTCvzEOYAfmy/Hy+fhUKudcCBCPutw/qLCgAsa6DFGFG1bWtbuKztRy1/MU41UtliWyRAtdE=
+	t=1777877677; cv=none; b=bagmUkATfF1trNp03zpwHH+FpFAbfSS/ZKbHO5/NOH900SZQqw7Jf3d0a7GMUUJz6BVe9FBs9FBxzy4npu8idqRhfAIQ7LrMZ6onhdoGX7xO69MSscD8iRdcQNhYKkWruIImkLJIq/bK6QTbF8XhUyAEiP70GPvCKh1NK8YyZXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777877557; c=relaxed/simple;
-	bh=eela6IqwWByFF0zNF6QNmsicVYeSk74s1XZMlJpdnBI=;
+	s=arc-20240116; t=1777877677; c=relaxed/simple;
+	bh=t3yyCXoUlFSP6J1vBioofcJE0mnlQ9kZBF98z9J5in0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uqr0su9jdoDH8RtgFSUDs4ramDnI4dtbL7ZvjCnsByfbe3VyWTAH6ybjK8/pFIa09rXkLghKKDJG0czlaShxHtSXF7BWEq+tIudAqBLekY5BVdaGyebTzYWTFJwfWZUD8cBAZEujgSGoqmyVUcQbE3rHE8ENVQeEQrVGpBAIcz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Knhz77nu; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=JesfuVTC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=lcwNtrVT3TOffMCkt6wrmQPkzPS6NpD1OzDa3DwTogO/g/UUANhn0ZKNDS1W06ULUGr6sm9StVMeIUgHqWLziZRurD82XdZbiNQ9SVM7ggYeHoR0A4BKGdZJjwWcfOjoPG/DIa9R3Y7u9vl5Bv/ZCzrvu1mWyQl27r7XiZMLPFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=adDGCnUI; arc=none smtp.client-ip=74.125.224.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Knhz77nu";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="JesfuVTC"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6446DwRo877381
-	for <linux-hardening@vger.kernel.org>; Mon, 4 May 2026 06:52:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pw+QGNnD2aXDEvze4NDnuqATbVP5Mz7Pd3Jir1xluBQ=; b=Knhz77nub5NVmsev
-	r6pOeYc8F9YwhbJNYoqJK2yWTBREnLWN3p2cr8+VXj8mhmgw4TeOcwefDMnahQA2
-	SKMF+rn8M7u47PZKJdg0UBEeCjMF6qSygnFJF1Vpi0HNcSrEyjQYlFs/Fz+nf12B
-	xb5xZWxcnBrqZkc2nFHolu/NdWgypSyeOGwyxWW6IpAizir5uPyfdqCAFfC4Mafd
-	92oByUhnGHCh9EA9I3POBhYYmxFP6HH0zAiHid5ZbHw5pnn4cIl/0p1LcszXSUaO
-	ktFnufIUNGCY9IuhuZd5oh0/xwy4vbBEIF1FUi0AopxBjTW7jVP4UXS6I/G64iF9
-	uTiTcQ==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dwa1emj39-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 04 May 2026 06:52:35 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2b7aba0af02so37357895ad.2
-        for <linux-hardening@vger.kernel.org>; Sun, 03 May 2026 23:52:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adDGCnUI"
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-65c09c1d000so793746d50.1
+        for <linux-hardening@vger.kernel.org>; Sun, 03 May 2026 23:54:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1777877555; x=1778482355; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pw+QGNnD2aXDEvze4NDnuqATbVP5Mz7Pd3Jir1xluBQ=;
-        b=JesfuVTCfZvoEcML3g4obXK62RbvQPmNI1Kr6tbfGsEdk84iVCsLZzSMrpslMAHwy3
-         HJN5gOm+RtnGAngdIdWRAT3dIMNkS07KBdAGDQk0rFi83ILqlKCKGiqhVl3GuLM4gBVH
-         b5WA8tsRWJyL20hOyo85hsu5TxdHzkE9qirESTq6eyeUzLnGbxlYTdKUwWb42HpYeyv6
-         r00PgIfbyO9DWMqUn7Tv9IkbZGG+fvgDCCPmPKCi1GKLdNjT7O+P9g579HjZcYrzvoX1
-         NNjmXHluNHmXnY2VJ2AvBEjG9qrVfNXqby57p4qUBseS4rh6IbD0EB0LQlYQMJK7/M8y
-         QaYw==
+        d=gmail.com; s=20251104; t=1777877674; x=1778482474; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Q3PtWOL8UivZc2UE5OchDAX7JIISrPFY46s4A3DMNx4=;
+        b=adDGCnUIIDzfScx85smPY4Dm8fYL6QoObfLQJrmEnVlhLtKXPY1QqPIv6rCTHqwcr3
+         /Wav789i6WRquPReHO2j5r25MHLidc+uD2NOVZbpMtLRCGCY+O9z8aa/I9YIasSonIID
+         uxTxp0s9iLD5sPGKIeFF3fOGxz2OgZ6yfpUfi3S/pmUDJ+HwpA73TlptbKPwdbRyiltu
+         +cWTlTDIsz2RZrEXzBE/f+0G8kErOIhaPCcjkPmkmnYtUInqbUxdNnupMb/0BrAKVT5t
+         D19qdNwl95k5J0rzUOat9S7bkbPsaosapbEKuGvZzXPRL8OAi/mk5UBapWRsOFtytXli
+         ltOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777877555; x=1778482355;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pw+QGNnD2aXDEvze4NDnuqATbVP5Mz7Pd3Jir1xluBQ=;
-        b=bnmJ8dJDtwIgpe/oGd6qAJ6dQclg1PpuLsEC8sf+FSo1H/M/+SsLktaIP61uPgZzeD
-         HhVIE/lfP0pGMpg4WLZZDbhKUHsFko1j+nstyNyOf0yik21IvuffGCKl9yZY/FIooBJi
-         IrlmusivRIzKBBkKdqTtp6jk1YSBjMK4y9un5XtpxCrgCJN0/Q3c3qgwK3O89yMVE2WL
-         lETVdhkXAygHRiicliJV24YZZRGkGdDuoX3V9LNG3vWHdj9lLParN4k4hNMgElsyIYko
-         PZbvKB+K+uX7G9798qfydOI+jeGcdvESzWd2auHNMhrhMMCDTiRwrOhH7ch4VeHQqygd
-         kw2g==
-X-Forwarded-Encrypted: i=1; AFNElJ+849wdI767+Sj5358chLURwL5BZ0sIPC+vLGSJistnJNv9KyLhUNQXSO4ppk3Fxo8gv7vnEQWS38V/xiB9R1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQPdp2+kZ5EtGrtzCOdf7HuZKEfiPKWQtIcG4ujaYssyOQgJIT
-	GgXscj5nDsMwhJztpdneaaQEvJcci4a1il7Mf//PEo3hwpYEYfZVGrnwxNkMRbvMxEZUy8Rvc7T
-	oz55PdRDOptV1Zy9OEGw3UletMOtM7tnn+tO6TGyXp+7faxgxLFkQpDGqOuKRP1ebOYzZUQ==
-X-Gm-Gg: AeBDievEGFRBx8jang6PeF3zcpcmrSlhxRuxFtJJ/l8fBr0VCnNYxgUpJsaRjohETZE
-	nidF1X5awSdzKgCJJ2p1qd2SYmhWJt3EUQhplHRoyvdI3T5WpPz1gR9IysP4SMmFduBt7hPT68H
-	9ln4dgA2eEeMe1PgOBZUC0/BbtkC3RWO+c1EWriJ0l8ch0m0+0rr7xnDE6iz/TH+eUzMWFf37qY
-	OB1NLWeLTRSbAFAo5TAwIsN6RJ84uM0I6Rvc3SvilG0DjaSF3+HEhWu/egslJWCnSuA7y2nSmaV
-	c42BC/ifW7WiZqcSBhqMjpit3kt0QXipry7Ni97QqMWyVNxPFdFygZb5BaJR9PFx74YCacDexva
-	ej+FF/ixGICqe+pYRrgwgKITCTzdTcDXk1j5cFEKuQ7HPpI5vxwAFNeVv/gSj04Mo5MLW4sE0TB
-	eDajOcUwGCeldkvqiMGItOn1nGyR0lbw==
-X-Received: by 2002:a17:902:ce08:b0:2aa:d5e5:b136 with SMTP id d9443c01a7336-2b9f284e08dmr89328645ad.38.1777877555126;
-        Sun, 03 May 2026 23:52:35 -0700 (PDT)
-X-Received: by 2002:a17:902:ce08:b0:2aa:d5e5:b136 with SMTP id d9443c01a7336-2b9f284e08dmr89328255ad.38.1777877554527;
-        Sun, 03 May 2026 23:52:34 -0700 (PDT)
-Received: from [192.168.0.74] (n1-41-240-65.bla22.nsw.optusnet.com.au. [1.41.240.65])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b9caa7e791sm93849295ad.7.2026.05.03.23.52.27
+        d=1e100.net; s=20251104; t=1777877674; x=1778482474;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q3PtWOL8UivZc2UE5OchDAX7JIISrPFY46s4A3DMNx4=;
+        b=s7dJa9/48iRHSbt+Vdkpr6/PI4mAK5i4yMsW1t2oK378KkuOJMhabEwPsHPVikNrYv
+         TnAVIdP4GetsIkAeQHy/ob7e4p0hdtZKl7IvdnkLT+WIg6OFQScsY7Aa/4BRw7OVm5iY
+         XyAaJMcAWhUmBHx5chZuWGLDGfKwT2xAHejhqLZbVxqICoWa45VKQlqOgsrXX+za/cQ/
+         n4/AXWfsJC2dIchmsn2qCgZ2ZOvYMFjw0vT+XFLiBIgX3CMwN1FXtKvRFFOEd9MA5ifN
+         8/TCjXHwtEE3rri/mozDKfYxUmEUnwF2fMbQejhItCnAGkNpojEi7/vrjm6olB+/Dz0I
+         h9Ww==
+X-Forwarded-Encrypted: i=1; AFNElJ/ZGuYdEqIz5TVR+GIuUrdStlw4/VyhPQ20Z7MYxME7tAbxG/7VVz3sVjxNLXr6TfzvQJlbV0Ea8pWG1QjtnE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNsB1nymDmZX+UuWaLeCekZoJhzLPfXykUD9upNQxoNMxt+Gyx
+	NWxoJ4LpSvh1MOKVjl/TiyOrgqb+EXWYMM/we9Qsrvq4R8fOEgw377i6
+X-Gm-Gg: AeBDieuTHkbZme+DpiKHoOW7obdIEV1iQdj4WNJmBL6IaVDVIOMm6BNP7YKWBktZUc/
+	k3XpdC03M/s8DkaA3nGrDDbN46ziwnuapF4C+Uiw72huaa/sXPymk3Px1U4m1Yn1y/M02MCisG1
+	uD9D0FWNonfwEGXIq9kVS2R2abK1ngTz+cwQ5hd96je9GqePKMPSQr7InyrVYygfwmpVKshqj08
+	57F0A/lM5VGUeLkZBfGsYq2q5fX/cmrrkXXYSK/eQ1SX6crP01sPuQv9ku3HJ5Z22zamERDQrhi
+	o+1A8nTmVaIdAAvGmZNFjwoCrH2s7PSuNhkJ2JAoZy5qCosfW2Aqzyq6rKl+LVHGnV5WLfC2bvk
+	LHphGrFMg2jpvQY5eFnI02cr8gg3LhFgfRt72hZxwNUl64vm6FqL3v+p4PSikbZb4dUsRK+GnkS
+	oxQyIB0RNLU8EHtD8bmuPbCDJwqPUW1KvDKGbLBd+/kJhKr1AGi6yldbohFIIx40CsdMUuPdGq/
+	02+31qNsh9stToL+xgn9neWLIGkIFS+994bBfv/uXbRP3/jaEVuGeEH+jqBSN8=
+X-Received: by 2002:a05:690e:1186:b0:652:c12f:18cc with SMTP id 956f58d0204a3-65c3d0296c3mr6446418d50.29.1777877674154;
+        Sun, 03 May 2026 23:54:34 -0700 (PDT)
+Received: from [10.138.34.110] (h69-131-150-190.cncrtn.broadband.dynamic.tds.net. [69.131.150.190])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-65c2df83478sm5043742d50.2.2026.05.03.23.54.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 May 2026 23:52:33 -0700 (PDT)
-Message-ID: <e73bc74f-ede9-484e-b171-a7bbdb2c7c21@oss.qualcomm.com>
-Date: Mon, 4 May 2026 16:52:24 +1000
+        Sun, 03 May 2026 23:54:32 -0700 (PDT)
+Message-ID: <79b24e6f-91a2-4dd0-a5f2-c01a9247ea9c@gmail.com>
+Date: Mon, 4 May 2026 02:54:27 -0400
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -89,147 +68,533 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 08/11] tee: add Qualcomm TEE driver
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu <quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Sumit Garg <sumit.garg@oss.qualcomm.com>
-References: <20250910-qcom-tee-using-tee-ss-without-mem-obj-v11-0-520e867b3d74@oss.qualcomm.com>
- <20250910-qcom-tee-using-tee-ss-without-mem-obj-v11-8-520e867b3d74@oss.qualcomm.com>
- <ljfhoo5o45m3t5fsqypg75c46qohvszd5azcqxyjdcr5unx7ob@vcgip4yzkmmn>
+Subject: Re: [PATCH] crypto: af_alg - Remove zero-copy support from AF_ALG
+To: Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org,
+ Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Taeyang Lee <0wn@theori.io>, Brian Pak <bpak@theori.io>,
+ Juno Im <juno@theori.io>, Jungwon Lim <setuid0@theori.io>,
+ Tim Becker <tjbecker@theori.io>, Feng Ning <feng@innora.ai>,
+ stable@vger.kernel.org
+References: <20260504061532.172013-1-ebiggers@kernel.org>
 Content-Language: en-US
-From: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-In-Reply-To: <ljfhoo5o45m3t5fsqypg75c46qohvszd5azcqxyjdcr5unx7ob@vcgip4yzkmmn>
+From: Demi Marie Obenour <demiobenour@gmail.com>
+Autocrypt: addr=demiobenour@gmail.com; keydata=
+ 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
+ +MYSfkEjBz0E8CLOcAw7JIwAaeBT
+In-Reply-To: <20260504061532.172013-1-ebiggers@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------iz8Wad90fpAUJ1vk3kybhMyP"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------iz8Wad90fpAUJ1vk3kybhMyP
+Content-Type: multipart/mixed; boundary="------------RFg6B0Sa8aDCRWUoxK0mZBek";
+ protected-headers="v1"
+Message-ID: <79b24e6f-91a2-4dd0-a5f2-c01a9247ea9c@gmail.com>
+Date: Mon, 4 May 2026 02:54:27 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] crypto: af_alg - Remove zero-copy support from AF_ALG
+To: Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org,
+ Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Taeyang Lee <0wn@theori.io>, Brian Pak <bpak@theori.io>,
+ Juno Im <juno@theori.io>, Jungwon Lim <setuid0@theori.io>,
+ Tim Becker <tjbecker@theori.io>, Feng Ning <feng@innora.ai>,
+ stable@vger.kernel.org
+References: <20260504061532.172013-1-ebiggers@kernel.org>
+Content-Language: en-US
+From: Demi Marie Obenour <demiobenour@gmail.com>
+Autocrypt: addr=demiobenour@gmail.com; keydata=
+ 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
+ +MYSfkEjBz0E8CLOcAw7JIwAaeBT
+In-Reply-To: <20260504061532.172013-1-ebiggers@kernel.org>
+
+--------------RFg6B0Sa8aDCRWUoxK0mZBek
+Content-Type: multipart/mixed; boundary="------------vKv7YvnUzM2a5flb5KLz0xGw"
+
+--------------vKv7YvnUzM2a5flb5KLz0xGw
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: xW24lbt8YXBvhDhq_BBXphQ-lkRAMQUv
-X-Proofpoint-GUID: xW24lbt8YXBvhDhq_BBXphQ-lkRAMQUv
-X-Authority-Analysis: v=2.4 cv=e7U2j6p/ c=1 sm=1 tr=0 ts=69f84233 cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=hi51d+lTLNy/RbqRqnOomQ==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
- a=NEAV23lmAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
- a=t0CO8BxZkIs7AVVQ4zsA:9 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
- a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA0MDA3MiBTYWx0ZWRfX5JthR1wNlB7Z
- 1v75k39AsbALoexUdaChlqBDM6O8Ipu+doBSTCJBaqvO5ubEr2RIELI8mPB+iTHGsYiBZNorixF
- iq98o8inIgqtD3o/dwKEAc85MTCGe+tcJGJHq5W7GpKb7s01qOgAtpD0apVJinyR1HmY/By4g9h
- O/xKL0WCtvvElqmAC4RZF62Dghe8iA3dWS7apnveoJRbRF69RuhL57Y5M1L43s/aO0tmQkRgjBt
- RaG2xvFfj+3zaF4iUI9TwIZ8V6FVBo1ujq/ZbXhzP9b/GL6yCYd4ryDds8dNFciWUGRF9rfJROZ
- oC+ADSl6J+mqBzdM9TfxM1525Xc9nKRzLB9SlbvUBB6WTSXN/idpZgM+gTKgFE0x1Omb+n8uBkK
- z58MBFWkQa+Bc6fgu+ULBfGiSuac0p+YxN72JW/WPhUnjg8LsXOLb7lKJhcN8kwWtrP5UYU1a3g
- tkEJspxM+ItTwmyss6Q==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-04_02,2026-04-30_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
- bulkscore=0 clxscore=1011 impostorscore=0 malwarescore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605040072
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 5/4/26 02:15, Eric Biggers wrote:
+> The zero-copy support is one of the riskiest aspects of AF_ALG.  It
+> allows userspace to request cryptographic operations directly on
+> pagecache pages of files like the 'su' binary.  It also allows userspac=
+e
+> to concurrently modify the memory which is being operated on, a huge
+> recipe for TOCTOU vulnerabilities.
+>=20
+> While zero-copy support is more valuable in other areas of the kernel
+> like the frequently used networking and file I/O code, it has far less
+> value in AF_ALG, which is a niche UAPI.  AF_ALG primarily just exists
+> for backwards compatibility with a small set of userspace programs such=
 
-On 4/28/2026 7:21 PM, Dmitry Baryshkov wrote:
-> On Wed, Sep 10, 2025 at 08:41:21PM -0700, Amirreza Zarrabi wrote:
->> Introduce qcomtee_object, which represents an object in both QTEE and
->> the kernel. QTEE clients can invoke an instance of qcomtee_object to
->> access QTEE services. If this invocation produces a new object in QTEE,
->> an instance of qcomtee_object will be returned.
->>
->> Similarly, QTEE can request services from by issuing a callback
->> request, which invokes an instance of qcomtee_object.
->>
->> Implement initial support for exporting qcomtee_object to userspace
->> and QTEE, enabling the invocation of objects hosted in QTEE and userspace
->> through the TEE subsystem.
->>
->> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
->> Tested-by: Harshal Dev <quic_hdev@quicinc.com>
->> Acked-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
->> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
->> ---
->>  MAINTAINERS                          |   6 +
->>  drivers/tee/Kconfig                  |   1 +
->>  drivers/tee/Makefile                 |   1 +
->>  drivers/tee/qcomtee/Kconfig          |  12 +
->>  drivers/tee/qcomtee/Makefile         |   7 +
->>  drivers/tee/qcomtee/async.c          | 182 +++++++
->>  drivers/tee/qcomtee/call.c           | 813 +++++++++++++++++++++++++++++++
->>  drivers/tee/qcomtee/core.c           | 906 +++++++++++++++++++++++++++++++++++
->>  drivers/tee/qcomtee/qcomtee.h        | 143 ++++++
->>  drivers/tee/qcomtee/qcomtee_msg.h    | 304 ++++++++++++
->>  drivers/tee/qcomtee/qcomtee_object.h | 316 ++++++++++++
->>  drivers/tee/qcomtee/shm.c            | 153 ++++++
->>  drivers/tee/qcomtee/user_obj.c       | 692 ++++++++++++++++++++++++++
->>  include/uapi/linux/tee.h             |   1 +
->>  14 files changed, 3537 insertions(+)
->>
->> +
->> +static int
->> +qcomtee_object_invoke_ctx_invoke(struct qcomtee_object_invoke_ctx *oic,
->> +				 int *result, u64 *res_type)
->> +{
->> +	phys_addr_t out_msg_paddr;
->> +	phys_addr_t in_msg_paddr;
->> +	int ret;
->> +	u64 res;
->> +
->> +	tee_shm_get_pa(oic->out_shm, 0, &out_msg_paddr);
->> +	tee_shm_get_pa(oic->in_shm, 0, &in_msg_paddr);
->> +	if (!(oic->flags & QCOMTEE_OIC_FLAG_BUSY))
->> +		ret = qcom_scm_qtee_invoke_smc(in_msg_paddr, oic->in_msg.size,
->> +					       out_msg_paddr, oic->out_msg.size,
->> +					       &res, res_type);
->> +	else
->> +		ret = qcom_scm_qtee_callback_response(out_msg_paddr,
->> +						      oic->out_msg.size,
->> +						      &res, res_type);
->> +
->> +	if (ret)
->> +		pr_err("QTEE returned with %d.\n", ret);
->> +	else
->> +		*result = (int)res;
-> 
-> After enablign QCOMTEE driver, I observe the following error during the
-> bootup on RB3 Gen2:
-> 
-> [    4.720777] qcomtee: QTEE returned with -22.
-> [    4.725251] qcomtee: QTEE version 0.0.0
-> 
-> 
+> as 'iwd' that haven't yet been fixed to use userspace crypto code.
+>=20
+> Originally AF_ALG was intended to be used to access hardware crypto
+> accelerators.  However, it isn't an efficient interface for that anyway=
+,
+> and it turned out to be rarely used in this way in practice.
+>=20
+> Thus, the risks of the zero-copy support in AF_ALG vastly outweigh its
+> benefits.  Just remove it.
+>=20
+> Note that this isn't a hard break, since the splice syscall is still
+> supported.  The data is just now copied instead.  So it still works,
+> just a bit slower in some cases.
+>=20
+> Tested with libkcapi/test.sh.  All its test cases still pass.  I also
+> verified that this would have prevented the copy.fail exploit as well.
+>=20
+> Fixes: 8ff590903d5f ("crypto: algif_skcipher - User-space interface for=
+ skcipher operations")
+> Fixes: 400c40cf78da ("crypto: algif - add AEAD support")
+> Reported-by: Taeyang Lee <0wn@theori.io>
+> Reported-by: Feng Ning <feng@innora.ai>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+> ---
+>  Documentation/crypto/userspace-if.rst | 30 ++---------
+>  crypto/af_alg.c                       | 73 +++++++++------------------=
 
-We are using the RB3 Gen2, and it successfully reports 5.2.0 as the version
-number. However, seeing 0.0.0 is not necessarily a problem. What TZ build
-are you using?
+>  crypto/algif_aead.c                   |  8 +--
+>  3 files changed, 32 insertions(+), 79 deletions(-)
+>=20
+> diff --git a/Documentation/crypto/userspace-if.rst b/Documentation/cryp=
+to/userspace-if.rst
+> index 021759198fe7..80eb2819901a 100644
+> --- a/Documentation/crypto/userspace-if.rst
+> +++ b/Documentation/crypto/userspace-if.rst
+> @@ -325,37 +325,13 @@ CRYPTO_USER_API_RNG_CAVP option:
+>     but only after the entropy has been set.
+> =20
+>  Zero-Copy Interface
+>  -------------------
+> =20
+> -In addition to the send/write/read/recv system call family, the AF_ALG=
 
-It's possible that the service responsible for returning the version number
-is not available on your device, even though the object invocation itself is
-supported.
+> -interface can be accessed with the zero-copy interface of
+> -splice/vmsplice. As the name indicates, the kernel tries to avoid a co=
+py
+> -operation into kernel space.
+> -
+> -The zero-copy operation requires data to be aligned at the page
+> -boundary. Non-aligned data can be used as well, but may require more
+> -operations of the kernel which would defeat the speed gains obtained
+> -from the zero-copy interface.
+> -
+> -The system-inherent limit for the size of one zero-copy operation is 1=
+6
+> -pages. If more data is to be sent to AF_ALG, user space must slice the=
 
-Are you able to make any object-invoke calls from userspace? A simple test -
-such as running the TA diagnostics tool - can help verify this:
-https://github.com/quic/quic-teec
+> -input into segments with a maximum size of 16 pages.
+> -
+> -Zero-copy can be used with the following code example (a complete
+> -working example is provided with libkcapi):
+> -
+> -::
+> -
+> -    int pipes[2];
+> -
+> -    pipe(pipes);
+> -    /* input data in iov */
+> -    vmsplice(pipes[1], iov, iovlen, SPLICE_F_GIFT);
+> -    /* opfd is the file descriptor returned from accept() system call =
+*/
+> -    splice(pipes[0], NULL, opfd, NULL, ret, 0);
+> -    read(opfd, out, outlen);
+> +AF_ALG used to have zero-copy support, but it was removed due to it be=
+ing a
+> +frequent source of vulnerabilities.  For backwards compatibility the s=
+plice
+> +system call is still supported, but the data will simply be copied.
+> =20
+> =20
+>  Setsockopt Interface
+>  --------------------
+> =20
+> diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+> index 5a00c18eb145..fce0b87c2b65 100644
+> --- a/crypto/af_alg.c
+> +++ b/crypto/af_alg.c
+> @@ -971,11 +971,11 @@ int af_alg_sendmsg(struct socket *sock, struct ms=
+ghdr *msg, size_t size,
+>  		struct scatterlist *sg;
+>  		size_t len =3D size;
+>  		ssize_t plen;
+> =20
+>  		/* use the existing memory in an allocated page */
+> -		if (ctx->merge && !(msg->msg_flags & MSG_SPLICE_PAGES)) {
+> +		if (ctx->merge) {
+>  			sgl =3D list_entry(ctx->tsgl_list.prev,
+>  					 struct af_alg_tsgl, list);
+>  			sg =3D sgl->sg + sgl->cur - 1;
+>  			len =3D min_t(size_t, len,
+>  				    PAGE_SIZE - sg->offset - sg->length);
+> @@ -1015,64 +1015,41 @@ int af_alg_sendmsg(struct socket *sock, struct =
+msghdr *msg, size_t size,
+>  				 list);
+>  		sg =3D sgl->sg;
+>  		if (sgl->cur)
+>  			sg_unmark_end(sg + sgl->cur - 1);
+> =20
+> -		if (msg->msg_flags & MSG_SPLICE_PAGES) {
+> -			struct sg_table sgtable =3D {
+> -				.sgl		=3D sg,
+> -				.nents		=3D sgl->cur,
+> -				.orig_nents	=3D sgl->cur,
+> -			};
+> -
+> -			plen =3D extract_iter_to_sg(&msg->msg_iter, len, &sgtable,
+> -						  MAX_SGL_ENTS - sgl->cur, 0);
+> -			if (plen < 0) {
+> -				err =3D plen;
+> +		do {
+> +			struct page *pg;
+> +			unsigned int i =3D sgl->cur;
+> +
+> +			plen =3D min_t(size_t, len, PAGE_SIZE);
+> +
+> +			pg =3D alloc_page(GFP_KERNEL);
+> +			if (!pg) {
+> +				err =3D -ENOMEM;
+>  				goto unlock;
+>  			}
+> =20
+> -			for (; sgl->cur < sgtable.nents; sgl->cur++)
+> -				get_page(sg_page(&sg[sgl->cur]));
+> +			sg_assign_page(sg + i, pg);
+> +
+> +			err =3D memcpy_from_msg(page_address(sg_page(sg + i)),
+> +					      msg, plen);
+> +			if (err) {
+> +				__free_page(sg_page(sg + i));
+> +				sg_assign_page(sg + i, NULL);
+> +				goto unlock;
+> +			}
+> +
+> +			sg[i].length =3D plen;
+>  			len -=3D plen;
+>  			ctx->used +=3D plen;
+>  			copied +=3D plen;
+>  			size -=3D plen;
+> -		} else {
+> -			do {
+> -				struct page *pg;
+> -				unsigned int i =3D sgl->cur;
+> -
+> -				plen =3D min_t(size_t, len, PAGE_SIZE);
+> -
+> -				pg =3D alloc_page(GFP_KERNEL);
+> -				if (!pg) {
+> -					err =3D -ENOMEM;
+> -					goto unlock;
+> -				}
+> -
+> -				sg_assign_page(sg + i, pg);
+> -
+> -				err =3D memcpy_from_msg(
+> -					page_address(sg_page(sg + i)),
+> -					msg, plen);
+> -				if (err) {
+> -					__free_page(sg_page(sg + i));
+> -					sg_assign_page(sg + i, NULL);
+> -					goto unlock;
+> -				}
+> -
+> -				sg[i].length =3D plen;
+> -				len -=3D plen;
+> -				ctx->used +=3D plen;
+> -				copied +=3D plen;
+> -				size -=3D plen;
+> -				sgl->cur++;
+> -			} while (len && sgl->cur < MAX_SGL_ENTS);
+> -
+> -			ctx->merge =3D plen & (PAGE_SIZE - 1);
+> -		}
+> +			sgl->cur++;
+> +		} while (len && sgl->cur < MAX_SGL_ENTS);
+> +
+> +		ctx->merge =3D plen & (PAGE_SIZE - 1);
+> =20
+>  		if (!size)
+>  			sg_mark_end(sg + sgl->cur - 1);
+>  	}
+> =20
+> diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+> index cb651ab58d62..c6c2ce21895d 100644
+> --- a/crypto/algif_aead.c
+> +++ b/crypto/algif_aead.c
+> @@ -7,14 +7,14 @@
+>   * This file provides the user-space API for AEAD ciphers.
+>   *
+>   * The following concept of the memory management is used:
+>   *
+>   * The kernel maintains two SGLs, the TX SGL and the RX SGL. The TX SG=
+L is
+> - * filled by user space with the data submitted via sendmsg (maybe wit=
+h
+> - * MSG_SPLICE_PAGES).  Filling up the TX SGL does not cause a crypto o=
+peration
+> - * -- the data will only be tracked by the kernel. Upon receipt of one=
+ recvmsg
+> - * call, the caller must provide a buffer which is tracked with the RX=
+ SGL.
+> + * filled by user space with the data submitted via sendmsg.  Filling =
+up the TX
+> + * SGL does not cause a crypto operation -- the data will only be trac=
+ked by the
+> + * kernel. Upon receipt of one recvmsg call, the caller must provide a=
+ buffer
+> + * which is tracked with the RX SGL.
+>   *
+>   * During the processing of the recvmsg operation, the cipher request =
+is
+>   * allocated and prepared. As part of the recvmsg operation, the proce=
+ssed
+>   * TX buffers are extracted from the TX SGL into a separate SGL.
+>   *
+>=20
+> base-commit: 6d35786de28116ecf78797a62b84e6bf3c45aa5a
 
-Regards,
-Amir
+In light of https://lore.kernel.org/all/afYcc-tZFwvZZo76@ans-MacBook-Pro.=
+local/,
+yes please!
 
->> +
->> +	return ret;
->> +}
->> +
-> 
+Should there be a Link: tag referencing that email?
 
+With or without it:
+
+Reviewed-by: Demi Marie Obenour <demiobenour@gmail.com>
+--=20
+Sincerely,
+Demi Marie Obenour (she/her/hers)
+--------------vKv7YvnUzM2a5flb5KLz0xGw
+Content-Type: application/pgp-keys; name="OpenPGP_0xB288B55FFF9C22C1.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB288B55FFF9C22C1.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xsFNBFp+A0oBEADffj6anl9/BHhUSxGTICeVl2tob7hPDdhHNgPR4C8xlYt5q49y
+B+l2nipdaq+4Gk6FZfqC825TKl7eRpUjMriwle4r3R0ydSIGcy4M6eb0IcxmuPYf
+bWpr/si88QKgyGSVZ7GeNW1UnzTdhYHuFlk8dBSmB1fzhEYEk0RcJqg4AKoq6/3/
+UorR+FaSuVwT7rqzGrTlscnTDlPWgRzrQ3jssesI7sZLm82E3pJSgaUoCdCOlL7M
+MPCJwI8JpPlBedRpe9tfVyfu3euTPLPxwcV3L/cfWPGSL4PofBtB8NUU6QwYiQ9H
+zx4xOyn67zW73/G0Q2vPPRst8LBDqlxLjbtx/WLR6h3nBc3eyuZ+q62HS1pJ5EvU
+T1vjyJ1ySrqtUXWQ4XlZyoEFUfpJxJoN0A9HCxmHGVckzTRl5FMWo8TCniHynNXs
+BtDQbabt7aNEOaAJdE7to0AH3T/Bvwzcp0ZJtBk0EM6YeMLtotUut7h2Bkg1b//r
+6bTBswMBXVJ5H44Qf0+eKeUg7whSC9qpYOzzrm7+0r9F5u3qF8ZTx55TJc2g656C
+9a1P1MYVysLvkLvS4H+crmxA/i08Tc1h+x9RRvqba4lSzZ6/Tmt60DPM5Sc4R0nS
+m9BBff0Nm0bSNRS8InXdO1Aq3362QKX2NOwcL5YaStwODNyZUqF7izjK4QARAQAB
+zTxEZW1pIE9iZW5vdXIgKElUTCBFbWFpbCBLZXkpIDxhdGhlbmFAaW52aXNpYmxl
+dGhpbmdzbGFiLmNvbT7CwY4EEwEIADgWIQR2h02fEza6IlkHHHGyiLVf/5wiwQUC
+X6YJvQIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRCyiLVf/5wiwWRhD/0Y
+R+YYC5Kduv/2LBgQJIygMsFiRHbR4+tWXuTFqgrxxFSlMktZ6gQrQCWe38WnOXkB
+oY6n/5lSJdfnuGd2UagZ/9dkaGMUkqt+5WshLFly4BnP7pSsWReKgMP7etRTwn3S
+zk1OwFx2lzY1EnnconPLfPBc6rWG2moA6l0WX+3WNR1B1ndqpl2hPSjT2jUCBWDV
+rGOUSX7r5f1WgtBeNYnEXPBCUUM51pFGESmfHIXQrqFDA7nBNiIVFDJTmQzuEqIy
+Jl67pKNgooij5mKzRhFKHfjLRAH4mmWZlB9UjDStAfFBAoDFHwd1HL5VQCNQdqEc
+/9lZDApqWuCPadZN+pGouqLysesIYsNxUhJ7dtWOWHl0vs7/3qkWmWun/2uOJMQh
+ra2u8nA9g91FbOobWqjrDd6x3ZJoGQf4zLqjmn/P514gb697788e573WN/MpQ5XI
+Fl7aM2d6/GJiq6LC9T2gSUW4rbPBiqOCeiUx7Kd/sVm41p9TOA7fEG4bYddCfDsN
+xaQJH6VRK3NOuBUGeL+iQEVF5Xs6Yp+U+jwvv2M5Lel3EqAYo5xXTx4ls0xaxDCu
+fudcAh8CMMqx3fguSb7Mi31WlnZpk0fDuWQVNKyDP7lYpwc4nCCGNKCj622ZSocH
+AcQmX28L8pJdLYacv9pU3jPy4fHcQYvmTavTqowGnM08RGVtaSBNYXJpZSBPYmVu
+b3VyIChsb3ZlciBvZiBjb2RpbmcpIDxkZW1pb2Jlbm91ckBnbWFpbC5jb20+wsF4
+BBMBAgAiBQJafgNKAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyiLVf
+/5wiwYa/EACv8a2+MMou9cSCNoZBQaU+fTmyzft9hUE+0d5W2UY1RY3OsjFIzm9R
+/4SVccfsqOYLEo+S0vQMIIIqFEq3FCpXXwPzyimotps05VA8U3Bd7yseojFygOgK
+sAMOAee2RCaDDOnoJue01dfZMzzHPO/TVdp3OvnpWipfv5G1Xg96rwbhMLE3tg6N
+xwAHa31Bv4/Xq8CJOoIWvx6fcmZQpz01/lSvsYn0KrfEbTKkuUf0vM9JrCTCP2oz
+VNN5BYzqaq2M4r+jmSyeXLim922VOWqGkUEQ85BSEemqrRS06IU6NtEMsF8EWt/b
+hWjk/9GDKTcnpdJHTrMxTspExBiNrvpI2t+YPU5B/dJJAUxvmhFrbSIbdB8umBZs
+I3AMYrEmpAbh5x7jEjoskUC7uN3o9vpg1oCLS2ePDLtAtyBtbHnkA4xGD7ar8mem
+xpH9lY/i+sC6CyyIUWcUDnnagKyJP0m9ks0GLsTeOCA0bft2XA6rD6aaCnMUsndT
+ctrab42CV5XypjmC4U1rPJ8JQJUh1/3P48/8sMH+3krxpJ06KNWNFaUbaMTGiltZ
+7x9DngklSYrX0T+2G4kVXNmjaljwkoLahwLla2gUWwBSyofXdqyhQdwZsp01KXNQ
+UCyT/Pg+aDcm/E7OMV3d4lf7g/CSxiX2GSEe6BlhSz+Lmd7ZJ3g32M1ARGVtaSBN
+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
+EtJuZYM5blWncBOJCoWMnBEcTEo/viU3GgcVRw=3D=3D
+=3Dx94R
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------vKv7YvnUzM2a5flb5KLz0xGw--
+
+--------------RFg6B0Sa8aDCRWUoxK0mZBek--
+
+--------------iz8Wad90fpAUJ1vk3kybhMyP
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEopQtqVJW1aeuo9/sszaHOrMp8lMFAmn4QqQACgkQszaHOrMp
+8lOMdA/8CvV5k6VlmK8MMHItznw1oSct2L2hpgyojlpEazL4ZWm5xii1SsLeVFJ8
+ogn+r57Ww3hxgJOyghwcPfuX8/hejoF5fmO1aT0/b+k5oGA4RXXVOgZE5LJzS+m8
+c9Z8VRA4z7CNP2darthmD8qARYpvjnSOqlJBXAW0bfY6vOiesUOkIk2Sje6w73O0
+36F1Yc04Ut96PpRfxv4XGC5aI3kKuqFonSz0TQRGPIFq3zuG86QBbTFCo9e2TV3v
+iXYj9L67MygPZuOWa57yOosRis/IyAv5kA3UC4w8afAKhBjBt8O8e+ainYKRQ4UN
+E/81KLFdU+Zz4BeSNYbYChy0wSr9Z0dYbzxgEbU6Y6sYqxwx5QKdMxoxojFTZUkE
+idfifOlTQ2JUF6N93yoMiQ77yyTJu3VftemITFrs8IOYjCLqLgEutv4CrJqAwPFU
+VAZPBf9LTCipoFaJtrTEVSQ8Z+IP6p65MZdIrBJwUFzTWdP9UaY3scD6V8XObH0l
+NRMeHjZIeoBhZsVhbrb2ZRmpLleXJr3jffRg3lz9MYYYS6YKJfV/yDRBbUY9GZ6s
+nl6HKojnGwGPLozq2QVOupv9YeCsJSE0HfHohZkbhNpbhXllhCuPH/41Wi0+v3qa
+9z4FkSQ8PctwMtIr5w9LdudI7qdO6APcHlEzpW9mih3BI4IRn2c=
+=sIls
+-----END PGP SIGNATURE-----
+
+--------------iz8Wad90fpAUJ1vk3kybhMyP--
