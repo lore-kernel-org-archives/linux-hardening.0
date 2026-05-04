@@ -1,103 +1,175 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3740B3D3016
-	for <linux-hardening@vger.kernel.org>; Mon,  4 May 2026 19:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1EE31716F
+	for <linux-hardening@vger.kernel.org>; Mon,  4 May 2026 21:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777924275; cv=none; b=kvV3bThoPofHv3TQ5Pw57nIfxTyLhaeU4c+WGKdRGkrvpKgA8ebC27VqYJof67DYvniTLINiM2JMc5mT7zravty4UIgOlQ5bnMLtxKu5x70blDYwxRIptTV+H6vUA1pnK24C1qwxU1pJnfJdDH3aYkIcaKWoG8S9NeEbUUL2niM=
+	t=1777929788; cv=none; b=c/NWzKykJZJLsHHL8Cl+LdlhznWCg/udcQtKubcAw1+msWbf5ZcYdRpbvor/HLAkndJCvym15fmJDt+AqJiqyvGbNSHIVGrYBAe4rmQhxayRk0qbU0y5Hiwwws+I3yfQVzeFdBD3ipUibVlBVCfCNAVzl6OXUT0ycpNoefv4j9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777924275; c=relaxed/simple;
-	bh=LEy4a/kt7Cm33Haz282wh8z9T1PMXUkHfvsS7l3ikU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HdrKwTYlc1Kh5hnxg6XpMkh5CG2mtGHxGwi08+mTkc8f7h/5rKUxXW2mbseW/wE7wwj2PuNZmC4DnJm+H233mWIvUIM57Pwu0UmEjW7kwhsEy8mcjbQfJxzpPvy5rlOWnOkxtgw00FM3vbCi3YeW0jWzPcmep/Sy609bD/jmXGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=MjQI769D; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1777929788; c=relaxed/simple;
+	bh=KZ9hGIdTsGnZ8NOGTupuIQLH8lJmHaX97JFhAZBXiOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KbWGcQ3ndFrnr4iHqBGhdJoNntgh6bRLDud7ybgIsPj8JHnGC4dW26gNGw0Rrn5XGcZKi2+hFYI75xpfpC7bxxZSVadUtDDCvv14RVG6DD5i4UHdTlvqqYQqa3GU9UNgrBxphloamxThyIKfyO7kU34WyO3bBR5evYaLs5AX6WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gAN727wL; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MjQI769D"
-Received: from eig-obgw-6003b.ext.cloudfilter.net ([10.0.30.175])
-	by cmsmtp with ESMTPS
-	id Jgm6wLMUZ4RkpJzJqw8UMT; Mon, 04 May 2026 19:51:07 +0000
-Received: from gator4166.hostgator.com ([108.167.190.91])
-	by cmsmtp with ESMTPS
-	id JzJpwqWLFWrBXJzJpwmLzu; Mon, 04 May 2026 19:51:06 +0000
-X-Authority-Analysis: v=2.4 cv=ALkt6GG8 c=1 sm=1 tr=0 ts=69f8f8aa
- a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=WsHKUha7AAAA:8 a=WtPqWeQF5UC7N-3dKWgA:9 a=QEXdDO2ut3YA:10
- a=H4LAKuo8djmI0KOkngUh:22 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BsyHKmKFoPpLbvqiWeXm/ob1Z52o7Jh/Wreo8Q7/3wM=; b=MjQI769DJeeIWqMJV41/UgaMXX
-	8d3CwotB+cWLfxhelO+8qhLPO38MS+luPczwkwXHeX4dxKaBTsFWo/wK8mNx4pPuVns6mWCBpeAuq
-	ewN+y7jwIu73czEi6KhOBF/Mr9sWkS01W1ZS6K62pPwMt4cUkgt0fhEBNHrjvF6XvEubOpCEY4gph
-	Eiy3DxMDCkP3aK2+trHSDGgJAWkwxep1REjSewVnZ02/HnIpRG5oD9CYo6o4Z9NmBCOcZ899v09WY
-	fyQYVQm/vFCXbbye4stbn5m70eOCcEBOh8+aF2Yer+z4DKKWQ8Tbj3n5FAD01j4BL+ybFKskJIDko
-	rDSW0x7g==;
-Received: from [177.238.18.176] (port=35438 helo=[192.168.0.36])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.99.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1wJzJi-00000000osC-1Dwe;
-	Mon, 04 May 2026 14:50:58 -0500
-Message-ID: <7aa0f09e-5d35-49e1-916b-7564d074df70@embeddedor.com>
-Date: Mon, 4 May 2026 13:50:50 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gAN727wL"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-488e1a8ac40so43636015e9.2
+        for <linux-hardening@vger.kernel.org>; Mon, 04 May 2026 14:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777929785; x=1778534585; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=igyU2nx2iftItHLeQpILR+qCdofiKDiQQ2B3kQIIdT0=;
+        b=gAN727wLdVBGRLnCVb/rcO9iZcIiEIGMYtmTGAtlo6VFbrcWOO0htajhVW3PCLFdlx
+         g7XytLlFTpE8LAQK1x68Er9l5MQrSg6wGrzq7LVvQyoDX8u8grYJgnn+3flbw8plISjM
+         TR+nYc60eL7HWJLxbGx970A2Q0E72665XTPDhS3MCMu01YuHr1Ln6sQ0X6zRT5rfmilo
+         Gp18k9WYU5MAz7zE5F/clL6GkEYiHtVMce3600FoCuXB3CLHLrHc4mEBpyDdySYMdLZH
+         yvoryNdQibVwDmGJyXg9TvT7IUU7puGOTXSzmiOAnIP6q3vA4OATF83/xZbsRpds5Aig
+         QKmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777929785; x=1778534585;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=igyU2nx2iftItHLeQpILR+qCdofiKDiQQ2B3kQIIdT0=;
+        b=nvzn/GYk+i4j03NgYDUXKn6apLSWbv4Z6nIC0u5BIOKERhJeiAGrMb8dzZeWz2qIHN
+         N4MLPcofkZuWs0urOWvgBaRD02JpRHd83hctSfYpTGxE4Swtcv5fZ+yG6eKA2bd+Tvm8
+         QXMX4DfN/4tnsmnGb+1nJ+4f4MGDjp1n6LUAFzG/63ri8cNlDXQ5k++rqAU2XAL7Czwc
+         J264AA8gXeK5xMzcKl5i59qAFCLLdCMNW+6OdUqfVntnbjm2sAAyQ9S5NXA5vYFV2dbE
+         DQlJEiN7InBbTcj9sL8uF3F/kOP/5V/yUv6pCEdjyunC78++ZeZjtIKnvS32kX2xYUZO
+         gbOg==
+X-Forwarded-Encrypted: i=1; AFNElJ9aX+iE77JWtg6YHgP4zW5lvIQ/jySyMZ6hLy0OwcTqymbtDG+kQ9xVpVdTucY1gE+XIDeEMzhzWhrx3HtJQtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRlCxi+XUwGckMPKb1gc/4vIGcDUciXOGWeNh83GYeA6GdTg/Z
+	YYc3Dk0/MDdaTsMPxBl+BLxWIiU84sdx7NrQU04TSqOMJtAhNmZ4eslMjPuE6lvk9g==
+X-Gm-Gg: AeBDievUpPr5E40AAqJ6ijr5JE2blOx/Zc9nrCc2IWom07z36bVP08F7jahl3DRNj5h
+	cj/gk1zQ2lwSk8NM25K7k1P1paTDYWUe7yDYrAqh2Y4olsFeMe65i0ret4NbI3o3HG1iuuoflkF
+	IUAiOJjzW8uDD3XPO84rSJbo54YfWubZarpH+QHDaq5eX5mK7Gi0TZlIKe/3iEc6gCXw4n9/b2+
+	TkKfPwTU5TVN1uy75SNshe8QA9ZFLq8vhuxyPAFwXiCMC5MBiZ02OCy7aGCuW+3AFbrPo2lhikM
+	f+3aK8Y90iZGvsvJneNxUth/rcZMyiIwwzIHGOYZzUI9rzGGDzPOB3+1IoDlVUocaN32H5hZd6Z
+	NYdEemWMgD+gH0uI2zSWNBIO4QAri8KJQjnemyhxsRweF+Z1e4Qg0iwfEnLLxUhd1Jw5Xphbppl
+	HaXol+DzCvECYWqfXI4TQe6wW8OrQgE4oPnugzTAgJrMQmkmlqGlI3bvYp/e0bTvpAMTmNrZY+1
+	mQOHnOnrA==
+X-Received: by 2002:a05:600c:a30a:b0:489:1a3a:9e45 with SMTP id 5b1f17b1804b1-48d18cea8damr2194915e9.26.1777929784562;
+        Mon, 04 May 2026 14:23:04 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:2834:9:fba5:1281:871d:3fd6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8eb694fcsm323128615e9.3.2026.05.04.14.23.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2026 14:23:03 -0700 (PDT)
+Date: Mon, 4 May 2026 23:22:56 +0200
+From: Marco Elver <elver@google.com>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+	Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
+	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
+	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH v3 1/2] slab: support for compiler-assisted type-based
+ slab cache partitioning
+Message-ID: <afkOMIPu1WNFE9MS@elver.google.com>
+References: <20260424132427.2703076-1-elver@google.com>
+ <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] perf/x86: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-To: Peter Zijlstra <peterz@infradead.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-References: <afJcDg1I5ZU5ZkXf@kspp>
- <20260504083228.GQ3126523@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20260504083228.GQ3126523@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.18.176
-X-Source-L: No
-X-Exim-ID: 1wJzJi-00000000osC-1Dwe
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.36]) [177.238.18.176]:35438
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJkHgzcGJdYa4cc0zNAizujlZ+SR7HNJKyCiK9iA29Bfue8zepKbutM1VTeUIhBjAp3fcnHl1eylqzxJMNqxIxTWnZCyU20SQd2PseP1jPeIJAbrS3j+
- dO5aqvVlNPv0PbBdhlchpe9vc82x+DQnynYcD2WxooaTNiT+p45VByroiTife296GVG94Q1ApwrsMfsCXg9fZEY33vzy6wn8KYJE5S+7Jtbyo0XIDyLq/pf1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
->    https://lore.kernel.org/all/20240806113254.GG12673@noisy.programming.kicks-ass.net/ 
+On Thu, Apr 30, 2026 at 03:03PM +0200, Vlastimil Babka (SUSE) wrote:
+> On 4/24/26 15:24, Marco Elver wrote:
+> 
+> > @@ -938,7 +968,7 @@ void *__kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
+> >   *	Try really hard to succeed the allocation but fail
+> >   *	eventually.
+> >   */
+> > -static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t flags)
+> > +static __always_inline __alloc_size(1) void *_kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
+> >  {
+> >  	if (__builtin_constant_p(size) && size) {
+> >  		unsigned int index;
+> > @@ -948,14 +978,16 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
+> >  
+> >  		index = kmalloc_index(size);
+> >  		return __kmalloc_cache_noprof(
+> > -				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+> > +				kmalloc_caches[kmalloc_type(flags, token)][index],
+> 
+> While reviewing this, it occured to me we might have been using _RET_IP_
+> here in a suboptimal way ever since this was introduced. Since this is all
+> inlined, shouldn't have we been using _THIS_IP_ to really randomize using
+> the kmalloc() callsite, and not its parent?
+> 
+> And after this patch, we get the token passed to _kmalloc_noprof()...
+> 
+> >  				flags, size);
+> >  	}
+> > -	return __kmalloc_noprof(size, flags);
+> > +	return __kmalloc_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags);
+> 
+> ... and used also here for the non-constant-size, where previously
+> __kmalloc_noprof() (not inline function) would correctly use _RET_IP_ on its
+> own ...
+> 
+> >  }
+> > +#define kmalloc_noprof(...)			_kmalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
+> 
+> ... and the token comes from here. With random partitioning that's
+> #define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
+> 
+> so that AFAIK makes the situation worse as now the cases without constant
+> size also start randomizing by the parent callsite and not the kmalloc callsite.
+> 
+> But there are many users of __kmalloc_token() and maybe some are corrent in
+> using _RET_IP_, I haven't checked, maybe we'll need two variants, or further
+> change things around.
 
-Feel free to apply it.
+Good catch. I don't think we need multiple variants (otherwise the TYPED
+variant would be broken) - we're moving token generation to the callers
+(not even inlined anymore) with all this macro magic.
 
+I think this is all we need:
+
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -503,7 +503,7 @@ int kmem_cache_shrink(struct kmem_cache *s);
+ typedef struct { unsigned long v; } kmalloc_token_t;
+ #ifdef CONFIG_KMALLOC_PARTITION_RANDOM
+ extern unsigned long random_kmalloc_seed;
+-#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
++#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _THIS_IP_ })
+ #elif defined(CONFIG_KMALLOC_PARTITION_TYPED)
+ #define __kmalloc_token(...) ((kmalloc_token_t){ .v = __builtin_infer_alloc_token(__VA_ARGS__) })
+ #endif
+
+Plus a paragraph in the commit message.  Let me add that.
