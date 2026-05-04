@@ -1,279 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805314C97;
-	Mon,  4 May 2026 07:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC55B308F3E;
+	Mon,  4 May 2026 08:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777878823; cv=none; b=b9i1VTw8PyJxJfRubnjSs0MgvTJj03FS1LeDVATwSO+LYx1bjiBU0Gq8VlNyaMsLJniUo7CKoiKLnv59AaioYRtISJQAf3jQb2UkcFfaK0gwHaZweGx0TiqqAmemTcIHROSX87PmidTr8N4Ihp1wU1hI7tLR7WS8b1+usHLQOCg=
+	t=1777883567; cv=none; b=sv0M4ETxJ17xGkyEur7uKZhzpsEFy4aKxXG+e+dUclBZGaBypTgufFU9z6cFo8dG6i5Ltgw5EdEehNC8YFh+yjSnZ0CcMi+KI5s4ilkxH/YnfYnbr33qmK6DH0TWJKZV5/THSESiVPSo0aAIoCGr0gD3awIpbO/3aAm1Wxd5tZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777878823; c=relaxed/simple;
-	bh=8nNjo6NtiO8TiRvxGn5ZegTCsBknx+MOnUGPsTEfwqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I7I8nYzJFbVumlO1OwZOVXCHvLFg4DK9Qvkz3QElP+vCTYmpmOjC6gpmKbjgBmFUFpAf8ns6fe8WViZ45YA5nT4QGhg9gMNwIICNSGJaS/sK1MD1yxWRV1Cqeb5FnNjZMbUT+HXCw0WtF8d0lOgK4vtgKhRWiwVxCsctmjNoLkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpQXJdM2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777883567; c=relaxed/simple;
+	bh=jUpKBKbDAjJfYqlWM6jPVIqw3bJI9hVpxAGx3BPjrME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m7UtjRpbFQonSv0Zpjx3qXlf64r80XwsrQGzvtaSVeeymyIpjCgZKsgQpuP1zwfQusrohtTCR9+biCvqjq7VJaqVtlzcoVlHyWRjUlUTp2G31FEpSs9o9sNw4fAUVgY4pn2f6djfEa+gI4UV6+rkYUcEjOMjvgOkNvkNjRk/gTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H5PH/Bz1; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpQXJdM2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D5AC2BCB8;
-	Mon,  4 May 2026 07:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777878823;
-	bh=8nNjo6NtiO8TiRvxGn5ZegTCsBknx+MOnUGPsTEfwqc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gpQXJdM2bNH+ddDq1qFGZ4Zt9qjcIwam/DLeC8fT84bbFQXgOZ//z+VCBo2CC0NJ1
-	 WalvQU0AIGYmlDEdEjL7ShkJeMG6yD5RQoeitPlfsfIx9ctnLkMoxGRmaXuRxPokV2
-	 CpuZ/Q1eKwH1bHYcF03nK5SFs+IMgKS+77OxgVjoCOZI92yOvGoOl1OsxcdnzC9aWz
-	 pX9DUXP2qzblkB7YOOj3eQTaFG9zNtW31dd1ayJcQCuU+e07LBEWTe8wt2lUAS6TRh
-	 gMapoDeKj7AFdLNgesW8fvlSecC5QZr9j8WqNGmPe9q+mdbo0j9MjewabcRZQ2SSH3
-	 VZo4eu3+/N1/g==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Taeyang Lee <0wn@theori.io>,
-	Brian Pak <bpak@theori.io>,
-	Juno Im <juno@theori.io>,
-	Jungwon Lim <setuid0@theori.io>,
-	Tim Becker <tjbecker@theori.io>,
-	Demi Marie Obenour <demiobenour@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Feng Ning <feng@innora.ai>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] crypto: af_alg - Remove zero-copy support from AF_ALG
-Date: Mon,  4 May 2026 00:10:25 -0700
-Message-ID: <20260504071025.180058-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260504070724.GC112568@sol>
-References: <20260504070724.GC112568@sol>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H5PH/Bz1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hfDkmo30U2+i90gKGLs3gEKZ0jQpgUb+IDc2ox9NSrA=; b=H5PH/Bz1uxLaimZi40dCVaG2aL
+	wu3rdwoxbHQaAM3LVYGdy4YxeWFyTZaF4eC2M6B79ScKKemru7nWTbzHmW4jIniGt+QIjOKE3Ccwc
+	Z6PgUNr9NkJtU+Fa0i2VyB/QgMjMpBkU7wThi/4ySspvX1qWeLqzaWv47/GjwXGPLq2KVyEDhE46n
+	tlT8IvQ7rRxCC4l8f+EzsqMEpV0MI3BGWu0606QrtCkP3RFqH3XTw+Hxjh0hOL2z39/HorU10ffBZ
+	pe0Z8RwFfG9fs3+1lp/1kdex9g74kmThJTS6uWkSkDHt6wIg3+HZOfiZ3bz+9UsmswkLkmE5hHI0d
+	rz7VedYg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wJoj6-0000000BA5w-46Pz;
+	Mon, 04 May 2026 08:32:29 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1A099300390; Mon, 04 May 2026 10:32:28 +0200 (CEST)
+Date: Mon, 4 May 2026 10:32:28 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] perf/x86: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <20260504083228.GQ3126523@noisy.programming.kicks-ass.net>
+References: <afJcDg1I5ZU5ZkXf@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afJcDg1I5ZU5ZkXf@kspp>
 
-The zero-copy support is one of the riskiest aspects of AF_ALG.  It
-allows userspace to request cryptographic operations directly on
-pagecache pages of files like the 'su' binary.  It also allows userspace
-to concurrently modify the memory which is being operated on, a huge
-recipe for TOCTOU vulnerabilities.
+On Wed, Apr 29, 2026 at 01:29:18PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the TRAILING_OVERLAP() helper to fix the following warnings:
+> 
+> 14 arch/x86/events/intel/../perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 6 arch/x86/events/amd/../perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 3 arch/x86/events/perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 1 arch/x86/xen/../events/perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 1 arch/x86/events/zhaoxin/../perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 1 ./arch/x86/include/generated/../../events/perf_event.h:326:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> This helper creates a union between a flexible-array member (FAM)
+> and a set of members that would otherwise follow it. This overlays
+> the trailing members onto the FAM while preserving the original
+> memory layout.
+> 
+> Lastly, the static_assert() ensures the alignment between the FAM
+> and struct perf_branch_entry lbr_entries[MAX_LBR_ENTRIES]; is not
+> inadvertently changed, and it's intentionally placed inmediately
+> after the related structure (that is, no blank line in between).
+> 
+> It's also worth mentioning that the entire Intel LBR bits block
+> is moved just to avoid splitting it.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  arch/x86/events/perf_event.h | 41 ++++++++++++++++++++----------------
+>  1 file changed, 23 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index fad87d3c8b2c..9641b888cbee 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -318,24 +318,6 @@ struct cpu_hw_events {
+>  	/* Cached CFG_C values */
+>  	u64			cfg_c_val[X86_PMC_IDX_MAX];
+>  
+> -	/*
+> -	 * Intel LBR bits
+> -	 */
+> -	int				lbr_users;
+> -	int				lbr_pebs_users;
+> -	struct perf_branch_stack	lbr_stack;
+> -	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+> -	u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
+> -	union {
+> -		struct er_account		*lbr_sel;
+> -		struct er_account		*lbr_ctl;
+> -	};
+> -	u64				br_sel;
+> -	void				*last_task_ctx;
+> -	int				last_log_id;
+> -	int				lbr_select;
+> -	void				*lbr_xsave;
+> -
+>  	/*
+>  	 * Intel host/guest exclude bits
+>  	 */
+> @@ -384,7 +366,30 @@ struct cpu_hw_events {
+>  	void				*kfree_on_online[X86_PERF_KFREE_MAX];
+>  
+>  	struct pmu			*pmu;
+> +
+> +	/*
+> +	 * Intel LBR bits
+> +	 */
+> +	int				lbr_users;
+> +	int				lbr_pebs_users;
+> +	union {
+> +		struct er_account		*lbr_sel;
+> +		struct er_account		*lbr_ctl;
+> +	};
+> +	u64				br_sel;
+> +	void				*last_task_ctx;
+> +	int				last_log_id;
+> +	int				lbr_select;
+> +	void				*lbr_xsave;
+> +
+> +	/* Must be last as it ends in a flexible-array member. */
+> +	TRAILING_OVERLAP(struct perf_branch_stack, lbr_stack, entries,
+> +		struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+> +		u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
+> +	);
+>  };
+> +static_assert(offsetof(struct cpu_hw_events, lbr_stack.entries) ==
+> +	      offsetof(struct cpu_hw_events, lbr_entries));
 
-While zero-copy support is more valuable in other areas of the kernel
-like the frequently used networking and file I/O code, it has far less
-value in AF_ALG, which is a niche UAPI.  AF_ALG primarily just exists
-for backwards compatibility with a small set of userspace programs such
-as 'iwd' that haven't yet been fixed to use userspace crypto code.
+This is horrible. That code was perfectly fine, and now you've made it
+an unholy trainwreck just because compiler is stupid :-(
 
-Originally AF_ALG was intended to be used to access hardware crypto
-accelerators.  However, it isn't an efficient interface for that anyway,
-and it turned out to be rarely used in this way in practice.
+Also, we seem to be going around in circles, what was wrong with:
 
-Thus, the risks of the zero-copy support in AF_ALG vastly outweigh its
-benefits.  Just remove it.
-
-Note that this isn't a hard break, since the splice syscall is still
-supported.  The data is just now copied instead.  So it still works,
-just a bit slower in some cases.
-
-Tested with libkcapi/test.sh.  All its test cases still pass.  I also
-verified that this would have prevented the copy.fail exploit as well.
-
-Fixes: 8ff590903d5f ("crypto: algif_skcipher - User-space interface for skcipher operations")
-Fixes: 400c40cf78da ("crypto: algif - add AEAD support")
-Reported-by: Taeyang Lee <0wn@theori.io>
-Link: https://copy.fail/
-Reported-by: Feng Ning <feng@innora.ai>
-Closes: https://lore.kernel.org/r/afYcc-tZFwvZZo76@ans-MacBook-Pro.local
-Reviewed-by: Demi Marie Obenour <demiobenour@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
----
-
-v2: added tags
-
- Documentation/crypto/userspace-if.rst | 30 ++---------
- crypto/af_alg.c                       | 73 +++++++++------------------
- crypto/algif_aead.c                   |  8 +--
- 3 files changed, 32 insertions(+), 79 deletions(-)
-
-diff --git a/Documentation/crypto/userspace-if.rst b/Documentation/crypto/userspace-if.rst
-index 021759198fe7..80eb2819901a 100644
---- a/Documentation/crypto/userspace-if.rst
-+++ b/Documentation/crypto/userspace-if.rst
-@@ -325,37 +325,13 @@ CRYPTO_USER_API_RNG_CAVP option:
-    but only after the entropy has been set.
- 
- Zero-Copy Interface
- -------------------
- 
--In addition to the send/write/read/recv system call family, the AF_ALG
--interface can be accessed with the zero-copy interface of
--splice/vmsplice. As the name indicates, the kernel tries to avoid a copy
--operation into kernel space.
--
--The zero-copy operation requires data to be aligned at the page
--boundary. Non-aligned data can be used as well, but may require more
--operations of the kernel which would defeat the speed gains obtained
--from the zero-copy interface.
--
--The system-inherent limit for the size of one zero-copy operation is 16
--pages. If more data is to be sent to AF_ALG, user space must slice the
--input into segments with a maximum size of 16 pages.
--
--Zero-copy can be used with the following code example (a complete
--working example is provided with libkcapi):
--
--::
--
--    int pipes[2];
--
--    pipe(pipes);
--    /* input data in iov */
--    vmsplice(pipes[1], iov, iovlen, SPLICE_F_GIFT);
--    /* opfd is the file descriptor returned from accept() system call */
--    splice(pipes[0], NULL, opfd, NULL, ret, 0);
--    read(opfd, out, outlen);
-+AF_ALG used to have zero-copy support, but it was removed due to it being a
-+frequent source of vulnerabilities.  For backwards compatibility the splice
-+system call is still supported, but the data will simply be copied.
- 
- 
- Setsockopt Interface
- --------------------
- 
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index 5a00c18eb145..fce0b87c2b65 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -971,11 +971,11 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 		struct scatterlist *sg;
- 		size_t len = size;
- 		ssize_t plen;
- 
- 		/* use the existing memory in an allocated page */
--		if (ctx->merge && !(msg->msg_flags & MSG_SPLICE_PAGES)) {
-+		if (ctx->merge) {
- 			sgl = list_entry(ctx->tsgl_list.prev,
- 					 struct af_alg_tsgl, list);
- 			sg = sgl->sg + sgl->cur - 1;
- 			len = min_t(size_t, len,
- 				    PAGE_SIZE - sg->offset - sg->length);
-@@ -1015,64 +1015,41 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 				 list);
- 		sg = sgl->sg;
- 		if (sgl->cur)
- 			sg_unmark_end(sg + sgl->cur - 1);
- 
--		if (msg->msg_flags & MSG_SPLICE_PAGES) {
--			struct sg_table sgtable = {
--				.sgl		= sg,
--				.nents		= sgl->cur,
--				.orig_nents	= sgl->cur,
--			};
--
--			plen = extract_iter_to_sg(&msg->msg_iter, len, &sgtable,
--						  MAX_SGL_ENTS - sgl->cur, 0);
--			if (plen < 0) {
--				err = plen;
-+		do {
-+			struct page *pg;
-+			unsigned int i = sgl->cur;
-+
-+			plen = min_t(size_t, len, PAGE_SIZE);
-+
-+			pg = alloc_page(GFP_KERNEL);
-+			if (!pg) {
-+				err = -ENOMEM;
- 				goto unlock;
- 			}
- 
--			for (; sgl->cur < sgtable.nents; sgl->cur++)
--				get_page(sg_page(&sg[sgl->cur]));
-+			sg_assign_page(sg + i, pg);
-+
-+			err = memcpy_from_msg(page_address(sg_page(sg + i)),
-+					      msg, plen);
-+			if (err) {
-+				__free_page(sg_page(sg + i));
-+				sg_assign_page(sg + i, NULL);
-+				goto unlock;
-+			}
-+
-+			sg[i].length = plen;
- 			len -= plen;
- 			ctx->used += plen;
- 			copied += plen;
- 			size -= plen;
--		} else {
--			do {
--				struct page *pg;
--				unsigned int i = sgl->cur;
--
--				plen = min_t(size_t, len, PAGE_SIZE);
--
--				pg = alloc_page(GFP_KERNEL);
--				if (!pg) {
--					err = -ENOMEM;
--					goto unlock;
--				}
--
--				sg_assign_page(sg + i, pg);
--
--				err = memcpy_from_msg(
--					page_address(sg_page(sg + i)),
--					msg, plen);
--				if (err) {
--					__free_page(sg_page(sg + i));
--					sg_assign_page(sg + i, NULL);
--					goto unlock;
--				}
--
--				sg[i].length = plen;
--				len -= plen;
--				ctx->used += plen;
--				copied += plen;
--				size -= plen;
--				sgl->cur++;
--			} while (len && sgl->cur < MAX_SGL_ENTS);
--
--			ctx->merge = plen & (PAGE_SIZE - 1);
--		}
-+			sgl->cur++;
-+		} while (len && sgl->cur < MAX_SGL_ENTS);
-+
-+		ctx->merge = plen & (PAGE_SIZE - 1);
- 
- 		if (!size)
- 			sg_mark_end(sg + sgl->cur - 1);
- 	}
- 
-diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
-index cb651ab58d62..c6c2ce21895d 100644
---- a/crypto/algif_aead.c
-+++ b/crypto/algif_aead.c
-@@ -7,14 +7,14 @@
-  * This file provides the user-space API for AEAD ciphers.
-  *
-  * The following concept of the memory management is used:
-  *
-  * The kernel maintains two SGLs, the TX SGL and the RX SGL. The TX SGL is
-- * filled by user space with the data submitted via sendmsg (maybe with
-- * MSG_SPLICE_PAGES).  Filling up the TX SGL does not cause a crypto operation
-- * -- the data will only be tracked by the kernel. Upon receipt of one recvmsg
-- * call, the caller must provide a buffer which is tracked with the RX SGL.
-+ * filled by user space with the data submitted via sendmsg.  Filling up the TX
-+ * SGL does not cause a crypto operation -- the data will only be tracked by the
-+ * kernel. Upon receipt of one recvmsg call, the caller must provide a buffer
-+ * which is tracked with the RX SGL.
-  *
-  * During the processing of the recvmsg operation, the cipher request is
-  * allocated and prepared. As part of the recvmsg operation, the processed
-  * TX buffers are extracted from the TX SGL into a separate SGL.
-  *
-
-base-commit: 6d35786de28116ecf78797a62b84e6bf3c45aa5a
--- 
-2.54.0
-
+  https://lore.kernel.org/all/20240806113254.GG12673@noisy.programming.kicks-ass.net/
