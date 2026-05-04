@@ -1,133 +1,90 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759AD354AE3
-	for <linux-hardening@vger.kernel.org>; Mon,  4 May 2026 11:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFCD3451A9;
+	Mon,  4 May 2026 12:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777893918; cv=none; b=b8a514Sr5yN6dGQBEfJ8wWmrMliJZwvfHy9nNRPxG7tentGIqoskmkXvLo3ALEVf0ZoynAL0fC3wHxfV1ZeniyyrXY7I0UdTzA1SBo2pXCuugzlD9yUvKwTDmVxyqaoFSkxw2NuOKgH/qXaeBlyc46fmk2zQJkYM+LeVOSw1NqQ=
+	t=1777897629; cv=none; b=FfrQTT1Wh0Lbw1Q/e/p3ovfFT86YL9mFVxtHt6R4I2VmvvxcDCajvsZQyF+1wPXsgz4j7GuuC2bGuhwItxoTYi9aamjPETGoQIJNjwd5uuMvES6bL+rVKQnHAcCP9SWSRL68iCUpZABo4TssjizWoUdH+i6fGfuTDYoLMbKVAdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777893918; c=relaxed/simple;
-	bh=HscUiJVZ3RmQ3xNaZ4sAweXHRrvtYD8/65kto23AtMc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ensn240VnkVYk7sPZwhjt+4+QlYOlnyCrSSsWvNR4gsdpkvUoDqLbSxsTIhYEFvZrqgYuqL6YI6KTRMjcoLp8TGIrTWhj4SImDdloUBtQi3PilYAk1bx4tkwQ1vl8J0MI/5S4dUeCKsWxbIuJL3tmfO3EQ4iGZdSes0lZWLIZPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G2xHpJgw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JbivaMws; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G2xHpJgw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JbivaMws; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1777897629; c=relaxed/simple;
+	bh=4dd097CnrafbvDCotwd65kOuY4LE3XlUIvC8fyltNys=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=H573RvhzqYzN4K+CzrLl7hdfnVvYl+mnab8OBaLNc+lAHMbGsOXECJc+G7e79Ji7h8hl3HXkqr8iBPWMWjxX0ZsL4MSdKD2OAkE58z/8YrbrQTx091fw8PSi/yIUQ6BsIsabFRomiTpoWBe0LLju+4+2x5QPfC4KHIBm79U/Lxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=u5FjNnr9; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G2xHpJgw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JbivaMws";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G2xHpJgw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JbivaMws"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="u5FjNnr9"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A1F9B5C58B;
-	Mon,  4 May 2026 11:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1777893908; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4g8LVm4885z9v7B;
+	Mon,  4 May 2026 14:26:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1777897616;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oVSRMOhB8TBD9s+hZEyz4dUiL28YrCE9p+dIEatHQCk=;
-	b=G2xHpJgw91lfraWUAVcXPoxbGwPRInDN+/MDIlILzG2mLhloPmL2Cos1AAYSv/J7dfl3M7
-	AJM36CueA00PeiaPe5tqqASDWHFc/EugKoXXaoOIl0il+wUHAG5rxcln8VKemRk+9Qet2O
-	jbjwRaXWrz2FWSPsodbjeMiYHKGCCQw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1777893908;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oVSRMOhB8TBD9s+hZEyz4dUiL28YrCE9p+dIEatHQCk=;
-	b=JbivaMwsaxfUpb1kYuG3bE4X5ihMoZs2qJQvensbpd8XfnLv3A4/UNVOARkpYvvLy+97xv
-	QhPto8vH4pLdbXAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1777893908; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oVSRMOhB8TBD9s+hZEyz4dUiL28YrCE9p+dIEatHQCk=;
-	b=G2xHpJgw91lfraWUAVcXPoxbGwPRInDN+/MDIlILzG2mLhloPmL2Cos1AAYSv/J7dfl3M7
-	AJM36CueA00PeiaPe5tqqASDWHFc/EugKoXXaoOIl0il+wUHAG5rxcln8VKemRk+9Qet2O
-	jbjwRaXWrz2FWSPsodbjeMiYHKGCCQw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1777893908;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oVSRMOhB8TBD9s+hZEyz4dUiL28YrCE9p+dIEatHQCk=;
-	b=JbivaMwsaxfUpb1kYuG3bE4X5ihMoZs2qJQvensbpd8XfnLv3A4/UNVOARkpYvvLy+97xv
-	QhPto8vH4pLdbXAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4E5E7593A3;
-	Mon,  4 May 2026 11:25:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EIywERSC+Gm3GQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 04 May 2026 11:25:08 +0000
-Date: Mon, 04 May 2026 13:25:07 +0200
-Message-ID: <87zf2fxvqk.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-sound@vger.kernel.org,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas)__counted_by:Keyword:b(_le|_be)?b)
-Subject: Re: [PATCH] ALSA: seq: oss/rw: allocate evrec with main struct
-In-Reply-To: <20260430210413.31185-1-rosenp@gmail.com>
-References: <20260430210413.31185-1-rosenp@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	bh=4dd097CnrafbvDCotwd65kOuY4LE3XlUIvC8fyltNys=;
+	b=u5FjNnr9H5dWQfKm6tE4g3faw679cJ9BET6fSVbpW6wEkzaQ2cb9+tUX+TeICwR92rBBhd
+	byX8uF/qz+LAc2opI03Iw47enzoO/f36UfjN1wqbfXr/Jrl4BbBtQRsgujmUXOAqWpzg0n
+	EwXBZqdGsUrqudoL0gvhD/MMR+QWrnUXjZBTnRvK8SntMP4yl2oDzWGjRL1AU7XTfU0Rdo
+	0aIaVdLEUPcZWUF0xEbAMOjnzJ8gkK2yjcTOK0OlNp0UMRbZf4YYydynvRD/4vZ0fSofAK
+	VqeZcjVbIM2l1S5W81Rl7tXKlbjeiRaagdYnsNPfHw564h/NaAdWwwdGDG9a3Q==
+Message-ID: <d9845986b6db299315f6e5e2c02b1f030e03ce45.camel@mailbox.org>
+Subject: Re: [PATCH] string: use strnlen in strlcat
+From: Manuel Ebner <manuelebner@mailbox.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, Andy Shevchenko
+	 <andy.shevchenko@gmail.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>, Andrew Morton
+	 <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, Andy Shevchenko
+	 <andy@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Mon, 04 May 2026 14:26:48 +0200
+In-Reply-To: <afW3tJH4XfeX_OXG@ashevche-desk.local>
+References: <20260430205050.400822-4-thorsten.blum@linux.dev>
+	 <CAHp75Vd10OdNQfhb-hOAapJ4=uhZ+t26vp_WMAoeCska6NCyOA@mail.gmail.com>
+	 <afW3tJH4XfeX_OXG@ashevche-desk.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Flag: NO
+MIME-Version: 1.0
+X-MBO-RS-META: wro5564gwcwfrtdshujp1htrp4uaom69
+X-MBO-RS-ID: 576db9731e4a54d9e5a
 
-On Thu, 30 Apr 2026 23:04:13 +0200,
-Rosen Penev wrote:
-> 
-> Use a flexible array member to simplify allocation slightly.
-> 
-> Add the header as flexible array members require full definitions.
-> 
-> Remove null check and just kfree. The former is not needed.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+On Sat, 2026-05-02 at 11:37 +0300, Andy Shevchenko wrote:
+> On Fri, May 01, 2026 at 11:55:33AM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 30, 2026 at 11:53=E2=80=AFPM Thorsten Blum <thorsten.blum@l=
+inux.dev>
+> > wrote:
+> > >=20
+> > > Use strnlen() to limit the destination scan to the provided buffer si=
+ze.
+> > > Remove the redundant comment.
+> >=20
+> > Please, do not spend time on amending strlcat(). This function must
+> > die. Instead, convert current users to use alternative ways.
+>=20
+> Note, there is a patch by Kees to address this in partitions framework
+> (vast of the users of strlcat() in the kernel). Not sure if it's already
+> pending in Linux Next or not yet.
+>=20
+> I have done a simple one in ACPI recently (in upstream already I believe)=
+.
+> So, you can use those two examples and continue killing strlcat().
 
-Applied to for-next branch.  Thanks.
+Hi,
+i would like to add this to the file Documentation/process/deprecated.rst.
+Does right after strlcpy() make sense?
 
+Could you point me to the examples?
 
-Takashi
+Thanks
+ Manuel
