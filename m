@@ -1,35 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E3CA481FC8
-	for <linux-hardening@vger.kernel.org>; Tue,  5 May 2026 16:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF18539A04A
+	for <linux-hardening@vger.kernel.org>; Tue,  5 May 2026 16:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777997245; cv=none; b=gyVKHzGfJoyGkLryFDvuYU7LZsaV2BPWEdGotm/W+TV/IQwKYv0SJ5CojhcNR9cEeP7MremPhYO9/sP0auo4VQA0sTyk5d04MIPIKA5jImNvaelDv6Vvyw9hKAq5+8DI8KBOLmH7+I8npIa+i+vKDWuAjiYP8YMidnFSQ/bMXF4=
+	t=1777997249; cv=none; b=f9FqZvhIQgf8IPAKxk/HjXAm9Gpb5ugHcHyTfu78g3DpFxVTdloxsTJcm10j2UbgK3sl/2JzmhtMeFOKm4XJfXPycNR8FV1r7L2O1e/QZoosri1D2/MjMOXkMlAIDvnpu5eRCSA7URrmU4Imu5ZUd92fJVKK2LnmnXIlrwFSI8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777997245; c=relaxed/simple;
-	bh=UwGP8FTfDtcj8k/6otcjhFkm2uk3iMrLq2Ub63GdAmQ=;
+	s=arc-20240116; t=1777997249; c=relaxed/simple;
+	bh=6h53wIhICiTdohxtZ773SNUpArSJEO1cKJs65JAmPCY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lLYYdumV7OUSb3ozv/dxAE1a8eI34tPHjKc8bqvYWjj9va+TcdN+islc/oMywd+K2KkN7Rq6dSII51Fk84fo+Ewm2TNqe1swyAir0/bQ/w/HiBPS2xzhKYQF9XL9e91HienOi0XwsheHkNiY3xpqU8mxmp+RJtUQMg0OBdh0ibU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fPUSUhFG; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=tZNoo/M9HJfL2VTXfZs2qQ/0nNsi2bu9rYdjODyknwXQRxgUMAcG9zKKnUSMdueGcjMa9rMwrqQ9Qj8LgkuirRt1lP0/Mu3igWn1CXLpfU7+HBAU6H249+z8I3nyoxiME6nfnCyvXy7cJO8YWd9ScuG/qtSvL5V481zfmYZLJ7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=d2gpOI5g; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fPUSUhFG"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="d2gpOI5g"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C3C71A9A;
-	Tue,  5 May 2026 09:07:17 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF37514BF;
+	Tue,  5 May 2026 09:07:21 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A79873F763;
-	Tue,  5 May 2026 09:07:18 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21CC83F763;
+	Tue,  5 May 2026 09:07:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1777997242; bh=UwGP8FTfDtcj8k/6otcjhFkm2uk3iMrLq2Ub63GdAmQ=;
+	t=1777997247; bh=6h53wIhICiTdohxtZ773SNUpArSJEO1cKJs65JAmPCY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fPUSUhFG9xMoZNvTzxCiKap9c369Fj03UMwYjUAwZadKlqvzHztRcbdEf5retEkJ+
-	 G4MLTGHCNZIQGscu6VlrxumG4LdRNa+lwwQoHE3PAodK41Txy2XVyhX1xBvWyUKpOT
-	 HV2Agmo5HTrW+zlMTxY7kY5ds0e1HgKBRjMuiXHU=
+	b=d2gpOI5gY7qiZ6klE1noMUGXimHfRGXXfFw+/eM4tO7XW+EALiXnHmq1wjynsIv+G
+	 KggwbbLDH3ULPGGYBhxAF57HxF7iuKb7O+JN4F44w7LnIGL5e2z5c1jXFkxZrybi0O
+	 ZFh8CEGhMPWhgXvF9lkm0kTEcgXMpk4ij4xg1hsI=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 05 May 2026 17:05:53 +0100
-Subject: [PATCH RFC v7 04/24] arm64: Introduce por_elx_set_pkey_perms()
- helper
+Date: Tue, 05 May 2026 17:05:54 +0100
+Subject: [PATCH RFC v7 05/24] arm64: Implement asm/kpkeys.h using POE
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260505-kpkeys-v7-4-20c0bdd97197@arm.com>
+Message-Id: <20260505-kpkeys-v7-5-20c0bdd97197@arm.com>
 References: <20260505-kpkeys-v7-0-20c0bdd97197@arm.com>
 In-Reply-To: <20260505-kpkeys-v7-0-20c0bdd97197@arm.com>
 To: linux-hardening@vger.kernel.org
@@ -64,89 +63,112 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
  Vlastimil Babka <vbabka@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777997220; l=2402;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777997220; l=2665;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=UwGP8FTfDtcj8k/6otcjhFkm2uk3iMrLq2Ub63GdAmQ=;
- b=qrLCWuhFGAMdVVdM+nsjEEPr+OkOl5O7n85109CRGnj6WWFdPkNSMGwXOial/zTZI8G1kqXnr
- dFVzJaKzKeKDKKY2A7n5g8spoGW06Jg4suAbywI6wQ1f3+RazBfkkwQ
+ bh=6h53wIhICiTdohxtZ773SNUpArSJEO1cKJs65JAmPCY=;
+ b=kMmOZAzlr5JiNYZ8sm1nG7q9J8yJ+5iLF5bQYnzwypt2/PnQ0z9eV0aNwTIPyYfR+nQ0ESKVw
+ Fi7x6wj+1aNCumcVAwAGrapKsxO92BmroPdMDLaQgffctO55Vf5ZLh3
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 
-Introduce a helper that sets the permissions of a given pkey
-(POIndex) in the POR_ELx format, and make use of it in
-arch_set_user_pkey_access().
+Implement the kpkeys interface if CONFIG_ARM64_POE is enabled.
+The permissions for KPKEYS_PKEY_DEFAULT (pkey 0) are set to RWX as
+this pkey is also used for code mappings.
+
+To allow <asm/kpkeys.h> to be included from assembly, also add
+appropriate #ifdef's to <asm/por.h>.
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/include/asm/por.h |  7 +++++++
- arch/arm64/mm/mmu.c          | 26 ++++++++++----------------
- 2 files changed, 17 insertions(+), 16 deletions(-)
+ arch/arm64/include/asm/kpkeys.h | 59 +++++++++++++++++++++++++++++++++++++++++
+ arch/arm64/include/asm/por.h    |  4 +++
+ 2 files changed, 63 insertions(+)
 
-diff --git a/arch/arm64/include/asm/por.h b/arch/arm64/include/asm/por.h
-index d913d5b529e4..bffb4d2b1246 100644
---- a/arch/arm64/include/asm/por.h
-+++ b/arch/arm64/include/asm/por.h
-@@ -31,4 +31,11 @@ static inline bool por_elx_allows_exec(u64 por, u8 pkey)
- 	return perm & POE_X;
- }
- 
-+static inline u64 por_elx_set_pkey_perms(u64 por, u8 pkey, u64 perms)
-+{
-+	u64 shift = POR_ELx_PERM_SHIFT(pkey);
+diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
+new file mode 100644
+index 000000000000..7dad3532cacf
+--- /dev/null
++++ b/arch/arm64/include/asm/kpkeys.h
+@@ -0,0 +1,59 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __ASM_KPKEYS_H
++#define __ASM_KPKEYS_H
 +
-+	return (por & ~(POE_MASK << shift)) | (perms << shift);
++#include <asm/barrier.h>
++#include <asm/cpufeature.h>
++#include <asm/por.h>
++
++#include <asm-generic/kpkeys.h>
++
++/*
++ * Equivalent to por_set_kpkeys_context(0, KPKEYS_CTX_DEFAULT), but can also be
++ * used in assembly.
++ */
++#define POR_EL1_INIT	POR_ELx_PERM_PREP(KPKEYS_PKEY_DEFAULT, POE_RWX)
++
++#ifndef __ASSEMBLY__
++
++static inline bool arch_supports_kpkeys(void)
++{
++	return system_supports_poe();
 +}
 +
- #endif /* _ASM_ARM64_POR_H */
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index dd85e093ffdb..493310cf0486 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -2339,8 +2339,8 @@ void __cpu_replace_ttbr1(pgd_t *pgdp, bool cnp)
- #ifdef CONFIG_ARCH_HAS_PKEYS
- int arch_set_user_pkey_access(int pkey, unsigned long init_val)
++#ifdef CONFIG_ARM64_POE
++
++static inline u64 por_set_kpkeys_context(u64 por, int ctx)
++{
++	por = por_elx_set_pkey_perms(por, KPKEYS_PKEY_DEFAULT, POE_RWX);
++
++	return por;
++}
++
++static __always_inline void __kpkeys_set_pkey_reg_nosync(u64 pkey_reg)
++{
++	write_sysreg_s(pkey_reg, SYS_POR_EL1);
++}
++
++static __always_inline int arch_kpkeys_set_context(int ctx)
++{
++	u64 prev_por = read_sysreg_s(SYS_POR_EL1);
++	u64 new_por = por_set_kpkeys_context(prev_por, ctx);
++
++	__kpkeys_set_pkey_reg_nosync(new_por);
++	isb();
++
++	return prev_por;
++}
++
++static __always_inline void arch_kpkeys_restore_pkey_reg(u64 pkey_reg)
++{
++	__kpkeys_set_pkey_reg_nosync(pkey_reg);
++	isb();
++}
++
++#endif /* CONFIG_ARM64_POE */
++
++#endif	/* __ASSEMBLY__ */
++
++#endif	/* __ASM_KPKEYS_H */
+diff --git a/arch/arm64/include/asm/por.h b/arch/arm64/include/asm/por.h
+index bffb4d2b1246..58dce4b8021b 100644
+--- a/arch/arm64/include/asm/por.h
++++ b/arch/arm64/include/asm/por.h
+@@ -10,6 +10,8 @@
+ 
+ #define POR_EL0_INIT	POR_ELx_PERM_PREP(0, POE_RWX)
+ 
++#ifndef __ASSEMBLY__
++
+ static inline bool por_elx_allows_read(u64 por, u8 pkey)
  {
--	u64 new_por;
--	u64 old_por;
-+	u64 new_perms;
-+	u64 por;
- 
- 	if (!system_supports_poe())
- 		return -ENOSPC;
-@@ -2354,25 +2354,19 @@ int arch_set_user_pkey_access(int pkey, unsigned long init_val)
- 		return -EINVAL;
- 
- 	/* Set the bits we need in POR:  */
--	new_por = POE_RWX;
-+	new_perms = POE_RWX;
- 	if (init_val & PKEY_DISABLE_WRITE)
--		new_por &= ~POE_W;
-+		new_perms &= ~POE_W;
- 	if (init_val & PKEY_DISABLE_ACCESS)
--		new_por &= ~POE_RW;
-+		new_perms &= ~POE_RW;
- 	if (init_val & PKEY_DISABLE_READ)
--		new_por &= ~POE_R;
-+		new_perms &= ~POE_R;
- 	if (init_val & PKEY_DISABLE_EXECUTE)
--		new_por &= ~POE_X;
-+		new_perms &= ~POE_X;
- 
--	/* Shift the bits in to the correct place in POR for pkey: */
--	new_por = POR_ELx_PERM_PREP(pkey, new_por);
--
--	/* Get old POR and mask off any old bits in place: */
--	old_por = read_sysreg_s(SYS_POR_EL0);
--	old_por &= ~(POE_MASK << POR_ELx_PERM_SHIFT(pkey));
--
--	/* Write old part along with new part: */
--	write_sysreg_s(old_por | new_por, SYS_POR_EL0);
-+	por = read_sysreg_s(SYS_POR_EL0);
-+	por = por_elx_set_pkey_perms(por, pkey, new_perms);
-+	write_sysreg_s(por, SYS_POR_EL0);
- 
- 	return 0;
+ 	u8 perm = POR_ELx_PERM_GET(pkey, por);
+@@ -38,4 +40,6 @@ static inline u64 por_elx_set_pkey_perms(u64 por, u8 pkey, u64 perms)
+ 	return (por & ~(POE_MASK << shift)) | (perms << shift);
  }
+ 
++#endif	/* __ASSEMBLY__ */
++
+ #endif /* _ASM_ARM64_POR_H */
 
 -- 
 2.51.2
