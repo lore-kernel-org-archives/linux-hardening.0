@@ -1,34 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25AC9481FB8
-	for <linux-hardening@vger.kernel.org>; Tue,  5 May 2026 16:08:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A3C83630A7
+	for <linux-hardening@vger.kernel.org>; Tue,  5 May 2026 16:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777997320; cv=none; b=Yl9Tra5x1xCHmIxb3nYnkhAZ2QEo7KCnVfFF9FGVsILmfJ/+CmIp4/gdIDV2E7Mg3J3mv1Kh7lLJh4okY0ZFXxRAOho+2Y6+D1vjt4CZ9smklaRkwshPPo1uHGJz/UOCzZewlsL28skGULhuntFRwxPHXAllP4bgyvFqvCDD+80=
+	t=1777997324; cv=none; b=hbFmizuCsVtrjUNrHccV9SUIImw9gFSlyYmVKsUgFm8YdgGoswVvNF1YMpHQf6yenKCri9u3Si+jhwo9chUp4xKfq+yUG8hmD3uHoS66ZF/GfDwOAtuOHlkgDwyPeDhKyuccF8k8C8cYBMKWj6jyoI97GYfN9y844ZJvPeHa63U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777997320; c=relaxed/simple;
-	bh=EySxOil8TcwYwuEGrwoYGjRX1REQ6GfG8Z5Pa273DNk=;
+	s=arc-20240116; t=1777997324; c=relaxed/simple;
+	bh=f+o3e9jzGdoDfuO+adnmSdYfcmQjcKxMxDU6OWrV3wo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OJpTVI4weH3ecJ7VR9HGIZ8DTD0dODg8NGyvWHQzd6HJojDp0RIFyZ+E7Y7pb5q7gEce4P2AQbpllqfTTNpoCrHX2oPi+zeIIbsQOwkmTygE3pc1ewoY0sTGhZfu4/1WeraCHytY9FAcJT3f29mTCz7QhSCQbzxWJzhNi9PjARs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Yu3zLptz; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=LEt7GUvpovxNuBru9aSNDJsjXcxJiXuNUe6yL0p7EpjbYGQx44iDlzqbevEG++o1Zf+2QEyzi2pL5Up0eY9dd6+Kv3e+EX82YUorv2L8qbzS8OLLHfHYGWu0a9CXJNdZuu9Pl5AtAnumylD9BnhUXPH7BoG3OvxayX7hSeMuQ1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=X6x3WfuV; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Yu3zLptz"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="X6x3WfuV"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BF2714BF;
-	Tue,  5 May 2026 09:08:33 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78F252681;
+	Tue,  5 May 2026 09:08:37 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47D613F763;
-	Tue,  5 May 2026 09:08:34 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B442D3F763;
+	Tue,  5 May 2026 09:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1777997318; bh=EySxOil8TcwYwuEGrwoYGjRX1REQ6GfG8Z5Pa273DNk=;
+	t=1777997322; bh=f+o3e9jzGdoDfuO+adnmSdYfcmQjcKxMxDU6OWrV3wo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Yu3zLptzCPLqvH8Q+sqa85JAVjpLwPQbG+OrPDX/KS8hogd41ekg7h6crakPjmpTP
-	 Ku9IYp3fgjgPyxdJNPDSBF8daqF1TwN29q45z9YMD/uBuVQz7gAeTh6JYGL+Nv70LQ
-	 G4Sp3UZIpY0k6OvcGBMLg4rsfaNYhxFbPLZEUqfc=
+	b=X6x3WfuVRAyqbywkdsGnl0sui3YNIg5jFtn36geeq5uIEHXTnZmlVP54JVQL0nTMi
+	 l0h3QOXe0Y9H0WSc0BT3GMN+z99Q9Y04Vj9LsR0A4OVhSv9K9aGgc1CFyI6h+Ju+Nm
+	 DwVPp+3fY4/FMQY8kOZlG2ej8NT0JNEYj+KaczZg=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 05 May 2026 17:06:10 +0100
-Subject: [PATCH RFC v7 21/24] arm64: kpkeys: Guard page table writes
+Date: Tue, 05 May 2026 17:06:11 +0100
+Subject: [PATCH RFC v7 22/24] arm64: kpkeys: Batch KPKEYS_CTX_PGTABLES
+ switches
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260505-kpkeys-v7-21-20c0bdd97197@arm.com>
+Message-Id: <20260505-kpkeys-v7-22-20c0bdd97197@arm.com>
 References: <20260505-kpkeys-v7-0-20c0bdd97197@arm.com>
 In-Reply-To: <20260505-kpkeys-v7-0-20c0bdd97197@arm.com>
 To: linux-hardening@vger.kernel.org
@@ -63,150 +64,139 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
  Vlastimil Babka <vbabka@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777997220; l=4227;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777997220; l=4465;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=EySxOil8TcwYwuEGrwoYGjRX1REQ6GfG8Z5Pa273DNk=;
- b=mRcytsacp6RNX+Hj6r9mKLTM3GOBVXID2ixTkPwGAnuh7HX9DpNNqWA8cg4SGJhhJl7bEh0zm
- 1Jw6+Pn/60MCHN6q6Oe4v/RN3AvQYzLlIvhzlxWAB1KFdXTIH/hF8uY
+ bh=f+o3e9jzGdoDfuO+adnmSdYfcmQjcKxMxDU6OWrV3wo=;
+ b=PPAeqK+xR0TL5xmJOHSr96gQ6oYWuWxUNLJ9UTPTSIBd6v9as7uP3u6NrAS0h5F6THC0xVx9N
+ xbLQf16NKwrCBNePl8I/XEO8e4jgpt7i+z5HiRQG9jpr65qSQ2+dILS
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 
-When CONFIG_KPKEYS_HARDENED_PGTABLES is enabled, page tables (both
-user and kernel) are mapped with a privileged pkey in the linear
-mapping. As a result, they can only be written in a privileged
-kpkeys context.
+The kpkeys_hardened_pgtables feature currently switches kpkeys
+context in every helper that writes to page tables, such as
+set_pte(). With kpkeys implemented using POE, this entails a pair of
+ISBs whenever such helper is called.
 
-Introduce a kpkeys guard that sets POR_EL1 appropriately to allow
-writing to page tables, and use this guard wherever necessary. The
-scope is kept as small as possible, so that POR_EL1 is quickly reset
-to its default value. Where atomics are involved, the guard's scope
-encompasses the whole loop to avoid switching POR_EL1 unnecessarily.
+A simple way to reduce this overhead is to make use of the lazy MMU
+mode. We amend the kpkeys_hardened_pgtables guard so that no kpkeys
+context switch (i.e. POR_EL1 update) is issued while the lazy MMU
+mode is active. Instead, we switch to KPKEYS_CTX_PGTABLES when
+entering the lazy MMU mode, and restore the previous context when
+exiting it.
 
-This patch is a no-op if CONFIG_KPKEYS_HARDENED_PGTABLES is disabled
-(default).
+Restoring the previous kpkeys context requires storing the original
+value of POR_EL1 somewhere. This is a full 64-bit value so we cannot
+simply use a TIF flag. There is no straightforward way to reuse
+current->thread.por_el1 for that purpose - this is where the current
+value of POR_EL1 is stored on a context switch, i.e. the value
+corresponding to KPKEYS_CTX_PGTABLES inside a lazy_mmu section.
+Instead, we add a new member to thread_struct to hold that value
+temporarily. This isn't optimal as that member is unused outside of
+lazy MMU sections, but it is the simplest option. Nesting of
+sections is not a concern as arch_{enter,leave}_lazy_mmu_mode() are
+not called in inner sections (nor do we need to do anything there).
+
+A further optimisation this patch makes is to merge the ISBs when
+exiting lazy_mmu mode. That is, if an ISB is going to be issued by
+emit_pte_barriers() because kernel pgtables were modified in the
+lazy MMU section, we skip the ISB after restoring POR_EL1. This is
+done by checking TIF_LAZY_MMU_PENDING and ensuring that POR_EL1 is
+restored before emit_pte_barriers() is called.
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/include/asm/pgtable.h | 22 +++++++++++++++++++++-
- arch/arm64/mm/fault.c            |  2 ++
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/pgtable.h   | 50 +++++++++++++++++++++++++++++++++++---
+ arch/arm64/include/asm/processor.h |  1 +
+ 2 files changed, 47 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 4dfa42b7d053..20072f32677d 100644
+index 20072f32677d..1c0dcfd14678 100644
 --- a/arch/arm64/include/asm/pgtable.h
 +++ b/arch/arm64/include/asm/pgtable.h
-@@ -39,6 +39,14 @@
- #include <linux/mm_types.h>
- #include <linux/sched.h>
- #include <linux/page_table_check.h>
-+#include <linux/kpkeys.h>
+@@ -43,10 +43,44 @@
+ 
+ #ifdef CONFIG_KPKEYS_HARDENED_PGTABLES
+ KPKEYS_GUARD_COND(kpkeys_hardened_pgtables, KPKEYS_CTX_PGTABLES,
+-		  kpkeys_hardened_pgtables_enabled())
+-#else
++		  kpkeys_hardened_pgtables_enabled() &&
++		  !is_lazy_mmu_mode_active())
 +
-+#ifdef CONFIG_KPKEYS_HARDENED_PGTABLES
-+KPKEYS_GUARD_COND(kpkeys_hardened_pgtables, KPKEYS_CTX_PGTABLES,
-+		  kpkeys_hardened_pgtables_enabled())
-+#else
-+KPKEYS_GUARD_NOOP(kpkeys_hardened_pgtables)
-+#endif
++static void kpkeys_lazy_mmu_enter(void)
++{
++	if (!kpkeys_hardened_pgtables_enabled())
++		return;
++
++	current->thread.por_el1_lazy_mmu = kpkeys_set_context(KPKEYS_CTX_PGTABLES);
++}
++
++static void kpkeys_lazy_mmu_exit(void)
++{
++	u64 saved_por_el1;
++
++	if (!kpkeys_hardened_pgtables_enabled())
++		return;
++
++	saved_por_el1 = current->thread.por_el1_lazy_mmu;
++
++	/*
++	 * We skip any barrier if TIF_LAZY_MMU_PENDING is set:
++	 * emit_pte_barriers() will issue an ISB just after this function
++	 * returns.
++	 */
++	if (test_thread_flag(TIF_LAZY_MMU_PENDING))
++		__kpkeys_set_pkey_reg_nosync(saved_por_el1);
++	else
++		arch_kpkeys_restore_pkey_reg(saved_por_el1);
++}
++#else /* CONFIG_KPKEYS_HARDENED_PGTABLES */
+ KPKEYS_GUARD_NOOP(kpkeys_hardened_pgtables)
+-#endif
++
++static void kpkeys_lazy_mmu_enter(void) {}
++static void kpkeys_lazy_mmu_exit(void) {}
++#endif /* CONFIG_KPKEYS_HARDENED_PGTABLES */
++
++
  
  static inline void emit_pte_barriers(void)
  {
-@@ -359,6 +367,7 @@ static inline pte_t pte_clear_uffd_wp(pte_t pte)
- 
- static inline void __set_pte_nosync(pte_t *ptep, pte_t pte)
- {
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*ptep, pte);
+@@ -79,7 +113,10 @@ static inline void queue_pte_barriers(void)
+ 	}
  }
  
-@@ -830,6 +839,7 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
- 	}
- #endif /* __PAGETABLE_PMD_FOLDED */
+-static inline void arch_enter_lazy_mmu_mode(void) {}
++static inline void arch_enter_lazy_mmu_mode(void)
++{
++	kpkeys_lazy_mmu_enter();
++}
  
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*pmdp, pmd);
+ static inline void arch_flush_lazy_mmu_mode(void)
+ {
+@@ -89,6 +126,11 @@ static inline void arch_flush_lazy_mmu_mode(void)
  
- 	if (pmd_valid(pmd))
-@@ -894,6 +904,7 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
- 		return;
- 	}
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*pudp, pud);
- 
- 	if (pud_valid(pud))
-@@ -975,6 +986,7 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
- 		return;
- 	}
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*p4dp, p4d);
- 	queue_pte_barriers();
+ static inline void arch_leave_lazy_mmu_mode(void)
+ {
++	/*
++	 * The ordering should be preserved to allow kpkeys_lazy_mmu_exit()
++	 * to skip any barrier when TIF_LAZY_MMU_PENDING is set.
++	 */
++	kpkeys_lazy_mmu_exit();
+ 	arch_flush_lazy_mmu_mode();
  }
-@@ -1103,6 +1115,7 @@ static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
- 		return;
- 	}
  
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*pgdp, pgd);
- 	queue_pte_barriers();
- }
-@@ -1307,6 +1320,7 @@ static inline bool __ptep_test_and_clear_young(struct vm_area_struct *vma,
- {
- 	pte_t old_pte, pte;
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	pte = __ptep_get(ptep);
- 	do {
- 		old_pte = pte;
-@@ -1354,7 +1368,10 @@ static inline pte_t __ptep_get_and_clear_anysz(struct mm_struct *mm,
- 					       pte_t *ptep,
- 					       unsigned long pgsize)
- {
--	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
-+	pte_t pte;
-+
-+	scoped_guard(kpkeys_hardened_pgtables)
-+		pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
- 
- 	switch (pgsize) {
- 	case PAGE_SIZE:
-@@ -1427,6 +1444,7 @@ static inline void ___ptep_set_wrprotect(struct mm_struct *mm,
- {
- 	pte_t old_pte;
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	do {
- 		old_pte = pte;
- 		pte = pte_wrprotect(pte);
-@@ -1460,6 +1478,7 @@ static inline void __clear_young_dirty_pte(struct vm_area_struct *vma,
- {
- 	pte_t old_pte;
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	do {
- 		old_pte = pte;
- 
-@@ -1507,6 +1526,7 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
- 		unsigned long address, pmd_t *pmdp, pmd_t pmd)
- {
- 	page_table_check_pmd_set(vma->vm_mm, address, pmdp, pmd);
-+	guard(kpkeys_hardened_pgtables)();
- 	return __pmd(xchg_relaxed(&pmd_val(*pmdp), pmd_val(pmd)));
- }
- #endif
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 0f3c5c7ca054..858f5d3e8f22 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -216,6 +216,8 @@ int __ptep_set_access_flags_anysz(struct vm_area_struct *vma,
- 	if (pte_same(pte, entry))
- 		return 0;
- 
-+	guard(kpkeys_hardened_pgtables)();
-+
- 	/* only preserve the access flags and write permission */
- 	pte_val(entry) &= PTE_RDONLY | PTE_AF | PTE_WRITE | PTE_DIRTY;
- 
+diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+index 6095322343fc..c3a86ddce637 100644
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@ -193,6 +193,7 @@ struct thread_struct {
+ 	u64			tpidr2_el0;
+ 	u64			por_el0;
+ 	u64			por_el1;
++	u64			por_el1_lazy_mmu;
+ #ifdef CONFIG_ARM64_GCS
+ 	unsigned int		gcs_el0_mode;
+ 	unsigned int		gcs_el0_locked;
 
 -- 
 2.51.2
