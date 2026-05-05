@@ -1,90 +1,91 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AD23E4C61;
-	Tue,  5 May 2026 08:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA703254AF;
+	Tue,  5 May 2026 09:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777969399; cv=none; b=PWL5tj2gCjZoW1mO/C5zUMUq6fnTOhq5ZsJ/1P0M3TddFt8FgVjMKThIXM16TKyTOLU5ZnrcHAS49ArEg4yuJisi/r3NG69Tute4vPOMt34wIvfOKBrmFFX813sU5nUH54bDxRje/SO7WV5o3Ah7bwyPpcVs6Kuc7P/tPxhE4Ig=
+	t=1777971633; cv=none; b=A4My0FGp4YyxC0cDR/CPNoFbGlb5ovkZ2yaTFwFWo1LEpM/7hrf8jyuz7ym8xn30UFhbyIenRLWTvzdUPDND0424xLFJ/bh9AL77z5kG9+yj/AtL9Ej00StAPmARxBcq+IVZ8dKvM4KjpqRyF42M55xR+GTFEeIaijuWvvaHXBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777969399; c=relaxed/simple;
-	bh=s8tRxJbbfwrCnkwj+IvJip8DNnvpQbZWo/ddocX/+VE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J0sWKjgVdtEzn60H9R8WvJDYYtL62ZWEVyRy+pBER1X9jyeusrQiZpcSVRN+ya+pm9Aayo9/M8UYRHJnql8JhBBsPtPcDfc85movhVOEGI2NXEFsCHjYTcFllZFJNLnW+aYF/oQTJPXSWcWEsRGWnnduePA8/7LczXXczY3kTHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=B0+ihSpr; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1777971633; c=relaxed/simple;
+	bh=q/NatlP+cOQS2FmvC7zHrLNZ8KeWMGRc9gqXfXgWdIE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=nb8DpQYxQOnNYnOmNesestvnDHM2LOGbUkmMdIDxKLG4gng4fMYhMr46RBjONzJd52BDT37L7uE2D179okDYVfhQe1wEIdvujU6v8dp0vTCc33jb95JNqgVZw2EjVrkNx7K9/4rxNOWhbg1IeYbcxNv0MMULRghY6bVlH8V0QRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hd2gXySX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="B0+ihSpr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
-	from:content-type:reply-to; bh=AZzxSu0X3NGt+Y8kBHu5qY0cSTMYriJuRZ0POdO9TTA=; 
-	b=B0+ihSpr1z/xxR2YpHkjsjuDUnSZE7p5tmXCTk05LO5WrUTbBBu+qSNDqULGXY61nGNiuszq425
-	5EvZgUOzoMBB9sl/T/PNPcus0pDNTQ5I6aVAOo+RgIKDLGMsozM2BIlT9+L166EjlZdJIXm+PAE6T
-	GVR2pdcsqhmYkqsl2lfMj2XlPke2AdsL36PA+BmMvEod//kcGCkOa+Hzh5edZzGS3mKixvAstaN/v
-	7iUWVj0qy6js6uEXv/d8hMb6YnvQcktUbKgKg0YJye296Xyy0cyedkYL597ERbM1ZcgMoUa+ZB0Ca
-	h/FKWhOr7WzDW8dxrB//YcmbNIm619ym8e7Q==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1wKB3a-00BMcq-2K;
-	Tue, 05 May 2026 16:23:07 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 05 May 2026 16:23:06 +0800
-Date: Tue, 5 May 2026 16:23:06 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCHv2] talitos: allocate channels with main struct
-Message-ID: <afmo6sJlqbjCWd9A@gondor.apana.org.au>
-References: <20260505073705.8810-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hd2gXySX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B73AEC2BCB4;
+	Tue,  5 May 2026 09:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777971633;
+	bh=q/NatlP+cOQS2FmvC7zHrLNZ8KeWMGRc9gqXfXgWdIE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Hd2gXySX/yopYveQ7ncqd+JJxc8m6aieD1vGJWHaXXGkOMVFdYUNrAKL1bg/Wz2Zw
+	 m02e1kw5xEjz4DRaZNRvCWJiMe6CxA1obf5297rzFoE0oQhwTlNL6Dl0y5d2akJURZ
+	 pvlUZZHEPPihMWjNF7RBMXwLdvMTiQ5vatUSE5qpWiRwbSKB9FWktUzA+AB1cXwV/0
+	 SZ+GokEtmPxemeWde0C0e9IdA1snN8dypwKniHjbY9kYJlR2iiwt51/88Wd4nLJr+j
+	 XG+iDHKM9h1t3XiKeq6Oyo0emqs60ivK30sH54wfK/T+HP+PCRXbKljSqVuFHMEsnl
+	 so0BNnYIRNfww==
+Date: Tue, 05 May 2026 04:00:30 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260505073705.8810-1-rosenp@gmail.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, 
+ Srinivas Kandagatla <srini@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Scott Branden <sbranden@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ linux-rpi-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-hardening@vger.kernel.org
+To: Gregor Herburger <gregor.herburger@linutronix.de>
+In-Reply-To: <20260505-rpi-otp-driver-v2-1-e9176ec72837@linutronix.de>
+References: <20260505-rpi-otp-driver-v2-0-e9176ec72837@linutronix.de>
+ <20260505-rpi-otp-driver-v2-1-e9176ec72837@linutronix.de>
+Message-Id: <177797163082.1577508.5643979416868173390.robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: raspberrypi,bcm2835-firmware: Add
+ bcm2712-firmware compatible
 
-On Tue, May 05, 2026 at 12:37:05AM -0700, Rosen Penev wrote:
-> Use a flexible array member to combine allocations.
+
+On Tue, 05 May 2026 09:25:09 +0200, Gregor Herburger wrote:
+> Add a compatible string for the bcm2712 firmware.
 > 
-> Add __counted_by for extra runtime analysis.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
 > ---
->  v2: add check for of_property_read_u32
->  drivers/crypto/talitos.c | 19 +++++++------------
->  drivers/crypto/talitos.h |  5 +++--
->  2 files changed, 10 insertions(+), 14 deletions(-)
+>  .../devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml     | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-> index bc61d0fe3514..e1f009684216 100644
-> --- a/drivers/crypto/talitos.c
-> +++ b/drivers/crypto/talitos.c
-> @@ -3409,14 +3409,20 @@ static int talitos_probe(struct platform_device *ofdev)
->  	struct device *dev = &ofdev->dev;
->  	struct device_node *np = ofdev->dev.of_node;
->  	struct talitos_private *priv;
-> +	unsigned int num_channels;
->  	int i, err;
->  	int stride;
->  	struct resource *res;
->  
-> -	priv = devm_kzalloc(dev, sizeof(struct talitos_private), GFP_KERNEL);
-> +	if (of_property_read_u32(np, "fsl,num-channels", &num_channels))
-> +		num_channels = 0;
 
-Does this driver still work with zero channels? It should just fail
-the probe.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml:26:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.kernel.org/project/devicetree/patch/20260505-rpi-otp-driver-v2-1-e9176ec72837@linutronix.de
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
