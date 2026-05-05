@@ -1,313 +1,144 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BBF346AC0;
-	Tue,  5 May 2026 18:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778006784; cv=none; b=jw90Rmoy+a6WK5XQpN5Gak27mCoxqGYUV+kgEgRCan00okoO+eS0fryHs8rpt1fA8tH0DnFH2wrdQg43142lP/eCsrPa8RnTb89f0kKcxefzlNepBZrF9nax2a/qhIDwYQqlQlg7WquSD5Ft3Gab9Dbj88ZILsZlL9HZVqQi+0E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778006784; c=relaxed/simple;
-	bh=0I5KyOATbzVMrULFJ1otd/3Jt3jVzt1Kww6lSfNXw7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u+/yThz8aLXuaLaMOWwS2fLWn32vrkFw+Owx51PxqcoKAk8K1rDu+Efa7P+/IccecEKIlv3MFza3ILcrCt0tvPR5fjxS8HyFQM4qOiP32tYGcwA+er9R2db+j7Q3COqBI1nxSVB08ZJc/Iu9fvJtvWzfFfqQOecqmrE41MenIlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=LsTkprKQ; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85333264FF
+	for <linux-hardening@vger.kernel.org>; Tue,  5 May 2026 22:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778021003; cv=pass; b=RUAETnY0z3iQTbwdY2A56EcOuS5dca61JSgMjZzIlhOqkyZOEK0qoAgSYFe6rbRWsMlTzxrqaIh/CwVK1eMW/NhbV4kVTihyFwKSIkvHQE66i1RQyAWKRC188gnRLzBCLVozAdQGMVB88HNbjiTH6uEFAIR8k2DCqwwOU6xcrcI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778021003; c=relaxed/simple;
+	bh=iIkKJXiKA5O+0rk8H/q91t9S2KnW+ZRKSQpznvFiTeI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tqb6bGnzeLgJfm7rGIcIwuKazQ/0Hbr0eXEyNhVA1/OrR/l4C70HXnMFUdPvvT5Vx3h/8xXE2LMLtIXhcCllvPv6HJ6LZl9peZGnpRsg4D7qXh46Zcg9+ZisjtO/d4v9lWpmIY2Y1qwwF5vDOY+i38/zpROFg/HSrLEZCoA3KKE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gTtqZlZc; arc=pass smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="LsTkprKQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=cIHShsNDWJmn62koeyu1g39PsU0+Rb7aEMk1CkKQJ+g=; b=LsTkprKQyFFJvlyjW9nzbST9HS
-	a7ZlAyBYGfV7JZtmhl2q7JcAOucD5QDQDlkLzFzWW/8MYIYKroJN4HDiPF7t69jYgSqpqzA3/hD0T
-	G7s+GqQALT8NMX3o9PCywZanJ7Gq04M8XzYVZoNM+X7dK1pDNtsw0l4KM1lsgxH3OPKwJW+8EBIYR
-	uiJ/F339BI5oTSolhocrLD/8oI97TkO5Pph6dgXirPasLDGEEBnXCY4Xua3RznUPoV+4PU1ylU+VQ
-	+YmIrspehF9juhlAbAHovc4MdwvU+PXs0w2ya2Wq43P8I06ZV8H0PTIShls51qG/ggLca0h6ew4dF
-	4pudqAtg==;
-Received: from [189.7.87.137] (helo=[192.168.0.5])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1wKKmZ-006ZVq-Km; Tue, 05 May 2026 20:46:11 +0200
-Message-ID: <f4b64049-e7f4-4d96-84f2-e8dac2cf5322@igalia.com>
-Date: Tue, 5 May 2026 15:46:02 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTtqZlZc"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3938d17d6c5so30536721fa.1
+        for <linux-hardening@vger.kernel.org>; Tue, 05 May 2026 15:43:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778020999; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JthjPQQiyTkgFt9xRKAhIRxwc1+o//ghjQcCVIDFUOfulzVn1IRdevcbOSR8PF0hde
+         3K+LxhfvmSyhpQbfHjfGfJffKhm9AFiCSJ3u5yn/2GNB6pmsu4+TbqwyPS3vT8+4aSSn
+         z+9dSQPToh24nGjfFDsfEiEVBSeQJYuVWruDNafkUhlbJtqeOAflduQYFjuq4R8Ns1iG
+         uD/YOCUSsY5b2G+yLpqLvuk+2QP2mxeZ0FOsI1hBpLcSiELhop+0axeGLe8R6RfDEVJ2
+         kiWw6AUXrI+7kqa0jKWG72l8yi1Z/kzeuZ3tUlyryv4cW6p5RuDmLWCaIOS69UN1wzxq
+         3pBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=NyngZeINrYkAsC1U6D4ztqT6mI0eVivk/jzOO+xk58w=;
+        fh=EXQniKtiTDDd8/rCSzh7Rewjgr+3M54pAf1xzYvluu8=;
+        b=ZUxHexNToN6RxXHA9FgcA8UHmGTMFjpmSThD+H/Aiw+KxDWVSFa/eFEMFrL6+sxMCA
+         BVNazTZ5Gz3aJ0rjxXDQVFiDRvOp4J56nb1yCtTOHSX8tkzMdNK1Z3YXarBprcK7SnI3
+         RgE2mccXRTN2mF7QYaeA+SrUAoK0Aq2LDur5woXbkcovJFStsVQdyPsdgcbD8JkiN+zS
+         vkyc3dguzs8OyTHnZduL7SQZJXSGYvZR3TWL0fF2UcLrK3TVZ2N+G7aVUgrN5fp8JXY0
+         Cz2ahVcMv1YMBK28Jnu2E4ewriIy3w9LYj1BvzuR8h4dFEZ2AsupVWaF8w1cIux8yiRn
+         pMOQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778020999; x=1778625799; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NyngZeINrYkAsC1U6D4ztqT6mI0eVivk/jzOO+xk58w=;
+        b=gTtqZlZcNQ9y2kuRw4WBAO1uuW3/YUYFvyNDeKV2CH8pue9EYajww+2suW9dnlIODg
+         t+sB2GVx+4ysjvQe11Ldci0uJqW/C4MlIqCI9G3v5eFudUGr+Yaiul6F9Tu4OAPUKLTs
+         auKhbw7n/QrO/7AeCyU54M/6LTea7XE1OG2GSHrsD7tZz8jn659Abv1CosLGDAt+FdHx
+         e0z3YQ9oAjLU3nZECEOyWDu1HW7+cn+pnHmSIpodyZt4AnACLVOV5N4eLRaWgqHgxxrk
+         2L7DUsfCkrDv6rCsmsLqxrybBE0t2pc0j8jrSZMrwRJ4/Ljjq3eRpCasndpjtao2rllL
+         at/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778020999; x=1778625799;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NyngZeINrYkAsC1U6D4ztqT6mI0eVivk/jzOO+xk58w=;
+        b=UdblQoZRG2wBc7avnnHajJqk9gF3UleB6tOBIijmmjKMh5gnbN+gjGSCUaj0bUXoam
+         j4V9xS4gaKCrOTPO8hDuW2V0Fzw2F9PvCeMg5FXZ4xKDUfVTwK9vTvWjCu2CgciLOH9c
+         qWfjIFsNyiOOCawzgv+8hWYu/N87yy8/vbm/NuykD3gWvV7oBWzjzYZay5LXWTTQd8FG
+         gP4yrpq4JZ7KZ9Xw5HqsYe87c8fWnh7Cmzzw+Ee+W6/FaQhNA63u9xoKB7b5QQGcCcBl
+         eQa1hVTvv3hdjfi1nrg4Lzb7ndBVeJHHolYDdgZRLLcIXcIYWtXOohqM1clRdomiE/2e
+         Y/eA==
+X-Forwarded-Encrypted: i=1; AFNElJ9QJ4HiXJdoQ1fIxUILcaxu2xEqwrQwNeJ9hzToGHmkmEse4p1fQfAzWodcM3p+qbpX6c91pXveNdyJmeiJuW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/9dquHIUgICJ0IjZodd/NRu2X1NEh0vhxwsaWe8fNC4e1FGB5
+	Td/hA7rcSHcW+Saboz99Afp/iZoCIYygYkhW2FK8jo1MB4QMPAu2rW/5dLK8mpMb//AdpeTrPjG
+	6ezdWskuoXhN3flC424THPAwiy0Q9PzA=
+X-Gm-Gg: AeBDiet4ae+CG5vYnkMwwO6SpHpqwmhyfKWDlT1oxokTLi3pdgDrlhgZewZ2fgM6LGL
+	fWkf1zwdjQY695f7R/Yzin26LvLiJZDr3AAv7Jjlksnhy3i/7BNV+V65bme9olCK5EmiBuZeUs+
+	os/z5orUKVJuJUxaksowOMBqvPTBtibBKQE9YwH4VyI0ivEs5zAtPNi4W0fHnV1w1vKogNlslMH
+	FX6XjSX0ZNJsAgGfZ2e069z0voCX32nVYE3D8Dk3K64h668hEp2Lh7apPwMa2KOnB9mxteXPQTS
+	em97UK5QmfTiR8XsBu063onTRvUO88AEb6IgQym3SMSwEp/TrfArFpu0QLJRsPrZ0yedLakSpsd
+	BfsdTUM7HV4MbvNuTeFw46a9VXMciXPyBKVkDb9UImJpcohA/VvmrxLd9evoYGAB81tzA41R5BR
+	cSYdk=
+X-Received: by 2002:a05:6512:3a93:b0:5a4:e6:8fb4 with SMTP id
+ 2adb3069b0e04-5a887ae2861mr210106e87.14.1778020998499; Tue, 05 May 2026
+ 15:43:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] accel: ethosu: Add performance counter support
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Tomeu Vizoso <tomeu@tomeuvizoso.net>, Oded Gabbay <ogabbay@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org
-References: <20260306163658.2741860-2-robh@kernel.org>
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Content-Language: en-US
-Autocrypt: addr=mcanal@igalia.com; keydata=
- xsBNBGcCwywBCADgTji02Sv9zjHo26LXKdCaumcSWglfnJ93rwOCNkHfPIBll85LL9G0J7H8
- /PmEL9y0LPo9/B3fhIpbD8VhSy9Sqz8qVl1oeqSe/rh3M+GceZbFUPpMSk5pNY9wr5raZ63d
- gJc1cs8XBhuj1EzeE8qbP6JAmsL+NMEmtkkNPfjhX14yqzHDVSqmAFEsh4Vmw6oaTMXvwQ40
- SkFjtl3sr20y07cJMDe++tFet2fsfKqQNxwiGBZJsjEMO2T+mW7DuV2pKHr9aifWjABY5EPw
- G7qbrh+hXgfT+njAVg5+BcLz7w9Ju/7iwDMiIY1hx64Ogrpwykj9bXav35GKobicCAwHABEB
- AAHNIE1hw61yYSBDYW5hbCA8bWNhbmFsQGlnYWxpYS5jb20+wsCRBBMBCAA7FiEE+ORdfQEW
- dwcppnfRP/MOinaI+qoFAmcCwywCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ
- P/MOinaI+qoUBQgAqz2gzUP7K3EBI24+a5FwFlruQGtim85GAJZXToBtzsfGLLVUSCL3aF/5
- O335Bh6ViSBgxmowIwVJlS/e+L95CkTGzIIMHgyUZfNefR2L3aZA6cgc9z8cfow62Wu8eXnq
- GM/+WWvrFQb/dBKKuohfBlpThqDWXxhozazCcJYYHradIuOM8zyMtCLDYwPW7Vqmewa+w994
- 7Lo4CgOhUXVI2jJSBq3sgHEPxiUBOGxvOt1YBg7H9C37BeZYZxFmU8vh7fbOsvhx7Aqu5xV7
- FG+1ZMfDkv+PixCuGtR5yPPaqU2XdjDC/9mlRWWQTPzg74RLEw5sz/tIHQPPm6ROCACFls7A
- TQRnAsMsAQgAxTU8dnqzK6vgODTCW2A6SAzcvKztxae4YjRwN1SuGhJR2isJgQHoOH6oCItW
- Xc1CGAWnci6doh1DJvbbB7uvkQlbeNxeIz0OzHSiB+pb1ssuT31Hz6QZFbX4q+crregPIhr+
- 0xeDi6Mtu+paYprI7USGFFjDUvJUf36kK0yuF2XUOBlF0beCQ7Jhc+UoI9Akmvl4sHUrZJzX
- LMeajARnSBXTcig6h6/NFVkr1mi1uuZfIRNCkxCE8QRYebZLSWxBVr3h7dtOUkq2CzL2kRCK
- T2rKkmYrvBJTqSvfK3Ba7QrDg3szEe+fENpL3gHtH6h/XQF92EOulm5S5o0I+ceREwARAQAB
- wsB2BBgBCAAgFiEE+ORdfQEWdwcppnfRP/MOinaI+qoFAmcCwywCGwwACgkQP/MOinaI+qpI
- zQf+NAcNDBXWHGA3lgvYvOU31+ik9bb30xZ7IqK9MIi6TpZqL7cxNwZ+FAK2GbUWhy+/gPkX
- it2gCAJsjo/QEKJi7Zh8IgHN+jfim942QZOkU+p/YEcvqBvXa0zqW0sYfyAxkrf/OZfTnNNE
- Tr+uBKNaQGO2vkn5AX5l8zMl9LCH3/Ieaboni35qEhoD/aM0Kpf93PhCvJGbD4n1DnRhrxm1
- uEdQ6HUjWghEjC+Jh9xUvJco2tUTepw4OwuPxOvtuPTUa1kgixYyG1Jck/67reJzMigeuYFt
- raV3P8t/6cmtawVjurhnCDuURyhUrjpRhgFp+lW8OGr6pepHol/WFIOQEg==
-In-Reply-To: <20260306163658.2741860-2-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20260505073705.8810-1-rosenp@gmail.com> <afmo6sJlqbjCWd9A@gondor.apana.org.au>
+In-Reply-To: <afmo6sJlqbjCWd9A@gondor.apana.org.au>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 5 May 2026 15:43:06 -0700
+X-Gm-Features: AVHnY4Ju2pQzmdQ5_EYMwW3Rvst_VPzsAJVY8Rv5tf7BEwqrm-X72SNtp8pvaZY
+Message-ID: <CAKxU2N-T0t0K9Bx6UYm6XUxBUMGys6_avcPH3aBjc2Vh2JFe7Q@mail.gmail.com>
+Subject: Re: [PATCHv2] talitos: allocate channels with main struct
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rob,
-
-On 06/03/26 13:36, Rob Herring (Arm) wrote:
-> The Arm Ethos-U NPUs have a PMU with performance counters. The PMU h/w
-> supports up to 4 (U65) or 8 (U85) counters which can be programmed for
-> different events. There is also a dedicated cycle counter.
-> 
-> The ABI and implementation are copied from the V3D driver. The main
-
-I'm planning to send a series fixing some perfmon locking issues in the
-V3D driver later this week. But, to give you a brief summary of the main
-issues:
-
-1. The active perfmon is not protected against races (run_job() vs.
-IOCTLs).
-
-2. ethosu_switch_perfmon() only starts/stops the perfmon in run_job().
-This means that if nothing is further queued up, a perfmon will never
-actually be stopped.
-
-More comments inline:
-
-> difference in the ABI is there is no query API for the the event list.
-> The events differ between the U65 and U85, so the events lists are
-> maintained in userspace along with other differences between the U65 and
-> U85.
-> 
-> The cycle counter is always enabled when the PMU is enabled. When the
-> user requests N events, reading the counters will return the N events
-> plus the cycle counter.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> MR for mesa with initial support is here:
-> https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/40269
-> 
->   drivers/accel/ethosu/Makefile         |   2 +-
->   drivers/accel/ethosu/ethosu_device.h  |  21 ++
->   drivers/accel/ethosu/ethosu_drv.c     |  17 +-
->   drivers/accel/ethosu/ethosu_drv.h     |  62 ++++++
->   drivers/accel/ethosu/ethosu_job.c     |  35 +++-
->   drivers/accel/ethosu/ethosu_job.h     |   2 +
->   drivers/accel/ethosu/ethosu_perfmon.c | 282 ++++++++++++++++++++++++++
->   include/uapi/drm/ethosu_accel.h       |  59 +++++-
->   8 files changed, 469 insertions(+), 11 deletions(-)
->   create mode 100644 drivers/accel/ethosu/ethosu_perfmon.c
-> 
-
-[...]
-
-> diff --git a/drivers/accel/ethosu/ethosu_drv.h b/drivers/accel/ethosu/ethosu_drv.h
-> index 9e21dfe94184..57eee79e4b83 100644
-> --- a/drivers/accel/ethosu/ethosu_drv.h
-> +++ b/drivers/accel/ethosu/ethosu_drv.h
-> @@ -3,13 +3,75 @@
->   #ifndef __ETHOSU_DRV_H__
->   #define __ETHOSU_DRV_H__
->   
-> +#include <linux/idr.h>
-> +#include <linux/mutex.h>
->   #include <drm/gpu_scheduler.h>
->   
->   struct ethosu_device;
-> +struct drm_device;
-> +struct drm_file;
->   
->   struct ethosu_file_priv {
->   	struct ethosu_device *edev;
->   	struct drm_sched_entity sched_entity;
-> +
-> +	struct {
-> +		struct idr idr;
-
-You may want to consider moving to XArray as we did in V3D [1].
-
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0a5b0d095bcdb219348ed8ae1c97ee99fc4913b8
-
-> +		struct mutex lock;
-> +	} perfmon;
-> +};
-> +
-> +/* Performance monitor object. The perform lifetime is controlled by userspace
-> + * using perfmon related ioctls. A perfmon can be attached to a submit_cl
-> + * request, and when this is the case, HW perf counters will be activated just
-> + * before the submit_cl is submitted to the GPU and disabled when the job is
-> + * done. This way, only events related to a specific job will be counted.
-> + */
-> +struct ethosu_perfmon {
-> +	/* Tracks the number of users of the perfmon, when this counter reaches
-> +	 * zero the perfmon is destroyed.
-> +	 */
-> +	refcount_t refcnt;
-> +
-> +	/* Protects perfmon stop, as it can be invoked from multiple places. */
-> +	struct mutex lock;
-
-I'm not familiar with the Ethos hardware, but *if* it has only a single
-performance monitor active in HW at any given moment (like v3d), this
-lock doesn't enforce this restriction.
-
-This lock only serializes start/stop of *one* perfmon object against
-itself, but the invariant (at least on v3d) that needs protection is
-device-wide: there is exactly one active perfmon at any moment in HW.
-
-> +
-> +	/* Number of counters activated in this perfmon instance
-> +	 * (should be less than or equal to DRM_ETHOSU_MAX_PERF_COUNTERS).
-> +	 */
-> +	u8 ncounters;
-> +
-> +	/* Events counted by the HW perf counters. */
-> +	u16 counters[DRM_ETHOSU_MAX_PERF_EVENT_COUNTERS];
-> +
-> +	/* Storage for counter values. Counters are incremented by the
-> +	 * HW perf counter values every time the perfmon is attached
-> +	 * to a GPU job.  This way, perfmon users don't have to
-
-s/GPU/NPU job maybe?
-
-> +	 * retrieve the results after each job if they want to track
-> +	 * events covering several submissions.  Note that counter
-> +	 * values can't be reset, but you can fake a reset by
-> +	 * destroying the perfmon and creating a new one.
-> +	 */
-> +	u64 values[] __counted_by(ncounters);
->   };
->   
-> +/* ethosu_perfmon.c */
-> +void ethosu_perfmon_init(struct ethosu_device *ethosu);
-> +void ethosu_perfmon_get(struct ethosu_perfmon *perfmon);
-> +void ethosu_perfmon_put(struct ethosu_perfmon *perfmon);
-> +void ethosu_perfmon_start(struct ethosu_device *ethosu, struct ethosu_perfmon *perfmon);
-> +void ethosu_perfmon_stop(struct ethosu_device *ethosu, struct ethosu_perfmon *perfmon,
-> +		      bool capture);
-> +struct ethosu_perfmon *ethosu_perfmon_find(struct ethosu_file_priv *ethosu_priv, int id);
-> +void ethosu_perfmon_open_file(struct ethosu_file_priv *ethosu_priv);
-> +void ethosu_perfmon_close_file(struct ethosu_file_priv *ethosu_priv);
-> +int ethosu_ioctl_perfmon_create(struct drm_device *dev, void *data,
-> +			     struct drm_file *file_priv);
-> +int ethosu_ioctl_perfmon_destroy(struct drm_device *dev, void *data,
-> +			      struct drm_file *file_priv);
-> +int ethosu_ioctl_perfmon_get_values(struct drm_device *dev, void *data,
-> +				 struct drm_file *file_priv);
-> +int ethosu_ioctl_perfmon_set_global(struct drm_device *dev, void *data,
-> +				 struct drm_file *file_priv);
-> +
->   #endif
-> diff --git a/drivers/accel/ethosu/ethosu_job.c b/drivers/accel/ethosu/ethosu_job.c
-> index ec85f4156744..8bf5a3aa8420 100644
-> --- a/drivers/accel/ethosu/ethosu_job.c
-> +++ b/drivers/accel/ethosu/ethosu_job.c
-> @@ -147,6 +147,8 @@ static void ethosu_job_err_cleanup(struct ethosu_job *job)
->   {
->   	unsigned int i;
->   
-> +	ethosu_perfmon_put(job->perfmon);
-> +
->   	for (i = 0; i < job->region_cnt; i++)
->   		drm_gem_object_put(job->region_bo[i]);
->   
-> @@ -181,6 +183,24 @@ static void ethosu_job_free(struct drm_sched_job *sched_job)
->   	ethosu_job_put(job);
->   }
->   
-> +static void
-> +ethosu_switch_perfmon(struct ethosu_device *ethosu, struct ethosu_job *job)
-> +{
-> +	struct ethosu_perfmon *perfmon = ethosu->global_perfmon;
-
-You might consider using READ_ONCE for global_perfmon, as this can race
-with the set_global IOCTL.
-
-> +
-> +	if (!perfmon)
-> +		perfmon = job->perfmon;
-> +
-> +	if (perfmon == ethosu->active_perfmon)
-> +		return;
-> +
-> +	if (perfmon != ethosu->active_perfmon)
-> +		ethosu_perfmon_stop(ethosu, ethosu->active_perfmon, true);
-> +
-> +	if (perfmon && ethosu->active_perfmon != perfmon)
-> +		ethosu_perfmon_start(ethosu, perfmon);
-> +}
-> +
->   static struct dma_fence *ethosu_job_run(struct drm_sched_job *sched_job)
->   {
->   	struct ethosu_job *job = to_ethosu_job(sched_job);
-
-[...]
-
-> +int ethosu_ioctl_perfmon_set_global(struct drm_device *dev, void *data,
-> +				 struct drm_file *file_priv)
-> +{
-> +	struct ethosu_file_priv *ethosu_priv = file_priv->driver_priv;
-> +	struct drm_ethosu_perfmon_set_global *req = data;
-> +	struct ethosu_device *ethosu = to_ethosu_device(dev);
-> +	struct ethosu_perfmon *perfmon;
-> +
-> +	if (req->flags & ~DRM_ETHOSU_PERFMON_CLEAR_GLOBAL)
-> +		return -EINVAL;
-> +
-> +	perfmon = ethosu_perfmon_find(ethosu_priv, req->id);
-> +	if (!perfmon)
-> +		return -EINVAL;
-> +
-> +	/* If the request is to clear the global performance monitor */
-> +	if (req->flags & DRM_ETHOSU_PERFMON_CLEAR_GLOBAL) {
-> +		if (!ethosu->global_perfmon)
-
-In case of failure, I believe you need to put the perfmon to avoid
-leaking a reference.
-
-Best regards,
-- Maíra
-
-> +			return -EINVAL;
-> +
-> +		xchg(&ethosu->global_perfmon, NULL);
-> +
-> +		return 0;
-> +	}
-> +
-> +	if (cmpxchg(&ethosu->global_perfmon, NULL, perfmon))
-> +		return -EBUSY;
-> +
-> +	return 0;
-> +}
+On Tue, May 5, 2026 at 1:23=E2=80=AFAM Herbert Xu <herbert@gondor.apana.org=
+.au> wrote:
+>
+> On Tue, May 05, 2026 at 12:37:05AM -0700, Rosen Penev wrote:
+> > Use a flexible array member to combine allocations.
+> >
+> > Add __counted_by for extra runtime analysis.
+> >
+> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > ---
+> >  v2: add check for of_property_read_u32
+> >  drivers/crypto/talitos.c | 19 +++++++------------
+> >  drivers/crypto/talitos.h |  5 +++--
+> >  2 files changed, 10 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+> > index bc61d0fe3514..e1f009684216 100644
+> > --- a/drivers/crypto/talitos.c
+> > +++ b/drivers/crypto/talitos.c
+> > @@ -3409,14 +3409,20 @@ static int talitos_probe(struct platform_device=
+ *ofdev)
+> >       struct device *dev =3D &ofdev->dev;
+> >       struct device_node *np =3D ofdev->dev.of_node;
+> >       struct talitos_private *priv;
+> > +     unsigned int num_channels;
+> >       int i, err;
+> >       int stride;
+> >       struct resource *res;
+> >
+> > -     priv =3D devm_kzalloc(dev, sizeof(struct talitos_private), GFP_KE=
+RNEL);
+> > +     if (of_property_read_u32(np, "fsl,num-channels", &num_channels))
+> > +             num_channels =3D 0;
+>
+> Does this driver still work with zero channels? It should just fail
+> the probe.
+I looked through the dts files. All of them have this property. I'll
+have the change.
+>
+> Thanks,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
