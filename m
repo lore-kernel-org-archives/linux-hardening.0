@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47FF30F819;
-	Tue,  5 May 2026 09:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C6830E0D5;
+	Tue,  5 May 2026 09:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777972887; cv=none; b=GVNA99qxySTa0XeBvscx8RaNFHVGD1d2MtpQb3XZ7BORYB5V3rsOZKJDYoz05MrUtEqo+d2367ST0HORZsqip7VX5vfpOCllFmwG3NtdzITY2qWLKCFwaLzpBcWIDZbH5QTtfl9QV9+DXR4UVV+dSDkVNekGWwNVZ5zFT3bFDz8=
+	t=1777972981; cv=none; b=dvRybZ3JUmJB26AVQY6IoBGbn8Da5OKmqsRNrmmAt9ipyZrTyD7mn59+t4ukCDC8IukAMf7jjFqAbSxFSWEl6PoMxIpK3NN5GUdiCc6aZreNNwAsfjd4wwuBoOIVCzcfjsuu5WUi/pePvyFeB0Fea2LoIGNYrSOeY3VORJXQ98Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777972887; c=relaxed/simple;
-	bh=cjJotk3bfylAlMnKQqrDu7m2XUwafNZD55u22HyFfTs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ah6cxkkrPwAE2Gv0MG6pabymzBRsfjnX1m3WIjALKVBZjEv/GNkNy1W777UnZ2ycTjsIlHrabHYb4iqTGphl3VmTe2iFMAANbLtM6I/cSBJLZNCt60qCYW3c/eWCb92gK89TiORgQeG/Nj0cyEg1DBOdr1AdJibvaFpSjyBJVpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEf6FXKJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777972981; c=relaxed/simple;
+	bh=bqXesqkNRRYIGa0VDl2myGu9lN6sR5MsNkS5b+oqC2g=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=D4EodEcKWQ5xuLp8ooo2h9l3nI0JKQILinlbxTEx5qyS+FuYqI5O47562AdBJT7lGDPs0XRmYDNXKOg5+uAi+sT0jymhWpd3dnitOZnaMWhAQTDuMOAG7RXmUC7c6wmWg/bcDrHDUERjRkpovnZdEDmUI4EeXygfgZkN0OCs2Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FAPmhzA6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEf6FXKJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D0DAC2BCB4;
-	Tue,  5 May 2026 09:21:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FAPmhzA6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EAC8C2BCB4;
+	Tue,  5 May 2026 09:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777972887;
-	bh=cjJotk3bfylAlMnKQqrDu7m2XUwafNZD55u22HyFfTs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vEf6FXKJTFT7+qhAyHYl4I9byeeEAzF8rpWIcftMJKHfqdjZ0GZrXDqARrxnyVe1m
-	 2zzibRl6ZYMgrPOBT8nJS1KHJGxompqioNhliBGWhvK90scFAqWUFUX2dU0f93SfJZ
-	 xuhCivp3fY4lt8ssKzprRC8YgPEB/oX5I7GNatiW1QTwMSETn0ml/5VQTYUYyI2LPX
-	 s7ey0XNy++66pzZAJa1FWhQ6yY5QLSo7wW1rB0gYzqHjv05YsA4Lv/X35X9tP/TPSu
-	 kql61H0QXhkXrmsbMEiOZ/17PBmcL9h41vn5BfTrc5bgVJwZjn9lsznG5LrBkA3O7d
-	 gFPffcTGtL6Jw==
-Message-ID: <6155d6aa-5e66-4043-a7b2-da447548056d@kernel.org>
-Date: Tue, 5 May 2026 11:21:21 +0200
+	s=k20201202; t=1777972980;
+	bh=bqXesqkNRRYIGa0VDl2myGu9lN6sR5MsNkS5b+oqC2g=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=FAPmhzA6ZaZo7H0+M4EbksxS3NvDQvZHBq4cPx2Dqsw8Ikomcv+5f8IxxAvXVnxwo
+	 YcwKrWYBZCFt7UiQ0iakXxGce6503ml5k4faSY1hR/+Bwvtezo40qtOz/KxP8BuEZ7
+	 0JcabXxDWYxZaFJf7cmtyKqmqNj8cacD2PD5Q+rrbE94GJKsrtxEgpu5eTaRnMACdH
+	 43ybN2I0v+WCWDkXbwFGE+h/ML3DChkEhBepQbee+lFM7b1CqVeD8qewMLW9cijczN
+	 Ryf6VAnMUZGX72rhAoqI+v1tHsP4MCYLg7rKCNrgPPkZ6ZfgTloW0+7OOjzYBNFlFj
+	 o09lVrFci4dBg==
+Message-ID: <64af1e4b-0cf6-4288-a3ee-f65fc9e14e94@kernel.org>
+Date: Tue, 5 May 2026 11:22:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,6 +37,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 4/4] arm64: dts: broadcom: bcm2712: add
  bcm2712-firmware compatible
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Gregor Herburger <gregor.herburger@linutronix.de>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>,
@@ -51,7 +52,7 @@ Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
  linux-hardening@vger.kernel.org
 References: <20260505-rpi-otp-driver-v2-0-e9176ec72837@linutronix.de>
  <20260505-rpi-otp-driver-v2-4-e9176ec72837@linutronix.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <6155d6aa-5e66-4043-a7b2-da447548056d@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -96,34 +97,39 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260505-rpi-otp-driver-v2-4-e9176ec72837@linutronix.de>
+In-Reply-To: <6155d6aa-5e66-4043-a7b2-da447548056d@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 05/05/2026 09:25, Gregor Herburger wrote:
-> The Raspberry Pi 5 firmware exposes additional features. Update the
-> compatible to reflect these differences.
+On 05/05/2026 11:21, Krzysztof Kozlowski wrote:
+> On 05/05/2026 09:25, Gregor Herburger wrote:
+>> The Raspberry Pi 5 firmware exposes additional features. Update the
+>> compatible to reflect these differences.
+>>
+>> Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
+>> ---
+>>  arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
+>> index b7a6bc34ae1a..7283078fd441 100644
+>> --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
+>> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
+>> @@ -46,7 +46,7 @@ power_button: power-button {
+>>  
+>>  	firmware {
+>>  		firmware: rpi-firmware {
+>> -			compatible = "raspberrypi,bcm2835-firmware", "simple-mfd";
+>> +			compatible = "raspberrypi,bcm2712-firmware", "simple-mfd";
 > 
-> Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
-> ---
->  arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This breaks users without mentioning and without proper reason.
+> "Additional features" is not a reason to break users. At least not
+> without explaining the actual impact, but even with the impact IMO this
+> is just wrong.
 > 
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
-> index b7a6bc34ae1a..7283078fd441 100644
-> --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
-> @@ -46,7 +46,7 @@ power_button: power-button {
->  
->  	firmware {
->  		firmware: rpi-firmware {
-> -			compatible = "raspberrypi,bcm2835-firmware", "simple-mfd";
-> +			compatible = "raspberrypi,bcm2712-firmware", "simple-mfd";
 
-This breaks users without mentioning and without proper reason.
-"Additional features" is not a reason to break users. At least not
-without explaining the actual impact, but even with the impact IMO this
-is just wrong.
+
+Heh, and you ignored completely our final comments in last discussion.
 
 Best regards,
 Krzysztof
