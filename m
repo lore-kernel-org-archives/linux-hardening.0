@@ -1,563 +1,145 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751163EB807
-	for <linux-hardening@vger.kernel.org>; Wed,  6 May 2026 10:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B50B39B974
+	for <linux-hardening@vger.kernel.org>; Wed,  6 May 2026 11:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778064072; cv=none; b=A15en9hhkxO6Tl1tSikJv8WP111AgCPfFIGofTvd6Q4KPFv6jCO7M2SUi25ncFXxvRfx9IaSX51Yd0XnyuUr84IC5A88E9HtA/zNAuMhfYEbjaPij/vM8Ff2pJOtMj9gyp4A6E9dliXVJJtJ+sQ6eyK6QOoQAZdKU3iQ6Wcdgoo=
+	t=1778065459; cv=none; b=ntgjEqfGpJoYLN6pczOOtUcJhXqyPWZNVlBAWx/Wj6YxxLrXKpKShvx2U6RwFSaAXZCPktGfznQB1Gh6Xt8NWwsSn1TSBWOnuYOQzjQizXkpd0sTuN8sjCryYYg2cp5g8abup7geCnX5NKn1UQ67mvZI30bXO4SWGrJX6cWaLFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778064072; c=relaxed/simple;
-	bh=YGdrnZDHEAKU19puluFb0aQrRnmCH5AJB66zLm2mhzs=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cqJCmZTXHyXlEu7aBITn21tp6S0aPj9Zu7v4zDsZCf2nG1rlGI0SjcxCeawLRJzFhierWvVDiVrIux2+xDXx2XNqPQXMUOjHWwk0lSUgvzhZ5VUpJDAKXn5oglVp0p8tJ8PGdqjPYMRN0ngN6ITbyL/gr303tTw9L+RLTmripdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D1xgW5IJ; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778065459; c=relaxed/simple;
+	bh=iXDLwNu9nO2bWAjc5u6p4s9RSDwMepAwVA9DZhNtcew=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eQaPCW0MECW4bbVsLUK2dMsV9+tD60dhRiotIXpEXuL8L8VYtwYrqr1GNAnTX8yP+sgXckPturK48dwsS8BagAlQL2jZ7zewjMwm++okp++18T6pmQG9hUIrBP4N1+EXwVaEm91bWVe8NgBkMoP20tJm2V7XY1LYWSvjnsKp87w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NoEwzf4v; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1xgW5IJ"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-44ce78ab5feso3268812f8f.0
-        for <linux-hardening@vger.kernel.org>; Wed, 06 May 2026 03:41:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NoEwzf4v"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4893940bb5eso34847705e9.3
+        for <linux-hardening@vger.kernel.org>; Wed, 06 May 2026 04:04:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778064069; x=1778668869; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eAMMS6+ymkXk81im8PQp9ngpssGuoAIg/fNUOQlqE+c=;
-        b=D1xgW5IJZQDHV/Ke/TctsM2v6C28KsdfiNWCIJ6dkDvwCGF6FPZSBEClVZif6IR/IO
-         alqhQtkdRtKwQ86ovhXS7zoQChwkpp87vNv/OAxy4lZumqOCu8zAP39x/66FPV8BS1Pf
-         eOtxWqYZWRQAfOJhnbCtu1s9AR0Dt6V9V/eHmnQGJd0Y7l7rBxpbwZUpYKOqCiHxn7LQ
-         sJ5xaDK2vushhdG5birTHrgsW+6qnu1XQ3c5CQV5PEQxjSodurdJJJSpMSsSLj6uN1SB
-         x5j+4g0+Lg8QMhj3M9GmD35V7dQYlVCj1Sansajb3SaR1/E8/cdn5u84erAlqrQvYi9n
-         DqfQ==
+        d=linaro.org; s=google; t=1778065456; x=1778670256; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SecJtaa/94NbrUg2zXVMpkghDsLJXP3FycQnhFxHBw4=;
+        b=NoEwzf4vLFDea+U5HOHrKy7XSW1qElerzawPrPr0/Hjzol5GPGARXaRF/QHyqCxch9
+         CCdJJMROmB8pOAmEVdrnk+3LiBlr2FquxlU5fIL8Tv57/uqxale9fZoZi1EIt8NEFGBw
+         9KPkz2nKDuonduapouPC8iqaGNDZABqSmW8xWm7AXWaahsWVHCM2/W2OEMQys7mOWXgF
+         Ee3v5H522hDO3osok6L5VcJTs5mChpUkz+soyt5pcBB5HvW+LRAQwPjMAB1CwAfVienE
+         1KVBz0U44cYxq7i8gBiUUEShET2gw/yZTyMSVYho6R6iiX/tt42hlizkVYMz69iQQCgP
+         fXOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778064069; x=1778668869;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eAMMS6+ymkXk81im8PQp9ngpssGuoAIg/fNUOQlqE+c=;
-        b=MfZNs3+3kGixT562ZDsAtErVda3UdgXr1mmMcRn3hGeldmq5ZHwAKJiEQTzNwBm+mn
-         2WcV1yCYRDgZIG7J0ub3gvIqsOvcRBQ5Kk9FNGGm9rH9JgaY+rmOMkw1yvTx2px/In4H
-         NqxzkQjCNL2Ay0QO+LrMziEAozhto7ADCuAdowDTVp95Q75BqCq+h3yXeuvslEMicdd2
-         HGShNvnppGv7iVMzSeey8gReQCNlBn8tCnNZ3l6LUCrhjckLF8SmelXrr+XpfI4TPgGB
-         VZwKc1LKUnQI9SJPosh78l1u183qnrrzc3oEOL7LtE3ZPMtQq6XDSVoYweaeg91PSl1j
-         JUvg==
-X-Forwarded-Encrypted: i=1; AFNElJ/Japkzr52nMUy7BVVPptrqYpbDDL+YpDunvpebgFvW4daaWlyxADy6sF4b36uKto6mmoWtkidd988s/cK4cSc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDhj8WdG2/U+rZbRCsHMchGAS8dlGT9NwS6UTO46UI4wujT8IM
-	Djx2F3ocN1pzkgMKYGziaJjFtDk9c2NJ0Bc7lpnjblVV5KUsHhuGJS8J
-X-Gm-Gg: AeBDieutRlhzKKhZY4RhPB9pHr900ZUyeflr4Otgx2IJ4RtllrP0Qj8TR40sUWA8aV+
-	v3gJBY+jYvuwulgSqmqn/A0Rpfg9ABDOfzQTEQqu9QvN5cSiDPqWOY04ib8emS8rShXl3mpefcu
-	uoT/SCddiFjgz5bYNN08AQWEDqhMu/kV4d3P4M8FdsxkGcL++/bWkmW06fmsx54yo7JdG5q4Uf/
-	yvSf0m33/JfIKnu5RmCNg2PAnTH9ZJXI8FjRpmpbCy47Gd1Wcbovuc9JVRQWf+L/8uTPypRiJ/W
-	S1YAyGlp2SFcvXQM9yzdgCw07D2G7TdcIy3a/B4bH++vbGqZEGM82rUhCKH1hxh+BvoDQjAVtXZ
-	fTd5VXDUd8V9aH6b2uiO21tNYRoH4nIXJBgBaUVxzxmGoDHLaodS4ZEWG0Yqw44/emXJRAwTOOa
-	/84r7gTAFJ9n1yMpInldn4LK20pypfRfPmQzPW/u20Zq50Cu5CXBj4BlK/Z8bgqHBm3DdYzFqJf
-	2mLrr9knvObrcYX0GxeSQRb8KECl1vbKasGH01gc1vluONfXhaAq8yALHKG
-X-Received: by 2002:adf:f44d:0:b0:452:1868:8e5f with SMTP id ffacd0b85a97d-45218688ee3mr1327753f8f.3.1778064068378;
-        Wed, 06 May 2026 03:41:08 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45054b02c5asm11432708f8f.19.2026.05.06.03.41.05
+        d=1e100.net; s=20251104; t=1778065456; x=1778670256;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SecJtaa/94NbrUg2zXVMpkghDsLJXP3FycQnhFxHBw4=;
+        b=bP022pnYdDLb2ZBvajphKyCq4slBOmwhjuOKw0Q6/j6rZoBlUe7dw3QVcJeZrA8Xex
+         OL8kUPm+caNTPSicdOjl92leoKzz2fKt1N/R4slLAg6b3Fi/jycKSvfGlp0OCpZOq2w6
+         Qq1GfZ10ChOI6vIo0DoHYh/vbBL+I0A+5lc0eKH3qaxxGCS/sty1G0CiGFozUJVYqdHp
+         jvJOXKRUrucXmZRod8hNWSeEyMkf4i2gJJen2RfhuaJ/ZvMBVPillep2lo87wSLXxq4z
+         4Eq7OxPemK/3adcsH5FJVGouMP33zEtBDbtlWmPqJw8DcbdbfrMoSTusFgSNhamh7auz
+         cqiA==
+X-Forwarded-Encrypted: i=1; AFNElJ9M3yyLjyMWjS31NoAR8KpaK6hMbVfJ0hQ0kYWW//uN53qE+EYFwzAZuC8N5Qt7LQjxhlFXfacaJTY2VwuEeEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPC21nbqQSeIrt5iDgUsuNH/hqw0hRf3NfljpJw65Bmcpo6glI
+	lMWTGwzBwOhXWVU162GgoyaQu5PJSPfVPIjMnpFQcEToQYJyllUiBMaSdSxfIH9dWBY=
+X-Gm-Gg: AeBDievFgoojZ1tAq6CJ7tz6Po2G61F0Mi2yA4Py1sl4igg5rJ1OrwjJW6pqowRsq18
+	+6JsqKVhIthVHAmM+kKmFA3ZfIkp1el+KdGHb4SumPFRn4JXHT0dcCU2zWCIeQRvh2zAEZPti/T
+	ZGmrP1ABFmSo5jtfcxcYGwBMSz6O6M/1+Dh3574cNu1jv7nGd4F7dP6m7bbcG4Za/+F4pNV9PuW
+	jXKbmO9rX2drtSqVfrEvWxBzYd86b3luWL9i13Xnn2H+WBXNqNk/EN4RC60kNPp3M/hDCP24Afl
+	Reewh5+2jIYzj6S0ITmlIY9Ldf4JAIzlwiqhiQ4n+UaVvEstGmMRDvgNlwtmS4EBrZQCTPe+X3V
+	B/38qP2aEYEL1gmj2M7lwNc8s2bJ4PEOIf9pySsREsxyHt2Uwb/E4j41j2QPleZnLz9g2Os1P0l
+	8TmJJFVm/wq0kPCyfUuMCQl3OIGojsvvJd6nUFByTjpT4wZx5KkfjWeXfLn/OV/T+J2xnt31sVO
+	lECnMFsXwJ8j0QNbg==
+X-Received: by 2002:a05:600c:4f53:b0:486:fb0b:ad79 with SMTP id 5b1f17b1804b1-48e51f4456cmr50856805e9.20.1778065455968;
+        Wed, 06 May 2026 04:04:15 -0700 (PDT)
+Received: from ta2.c.googlers.com (17.83.155.104.bc.googleusercontent.com. [104.155.83.17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e5312de76sm14072305e9.21.2026.05.06.04.04.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 03:41:07 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Wed, 6 May 2026 11:41:00 +0100
-To: Jonathan Cameron <jic23@kernel.org>, 
-	Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: 
-	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>, rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH RFC v3 9/9] docs: iio: add documentation for ad9910 driver
-Message-ID: <kwx4kgvagwoaljurnkvuvwggrss2qdjwzszpju6mkdxjfi4n4n@yjsv33ewxkzy>
-References: <20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com>
- <20260417-ad9910-iio-driver-v3-9-29b93712a228@analog.com>
- <20260426141007.345c76e4@jic23-huawei>
- <lkvrmc6y2z45b4qsmaxg3c2iaiar6hjmim3hdbkxqx3536yx3p@o6h7de4ire2d>
- <20260427104608.7819a134@jic23-huawei>
- <dsppqeyqtelrt3arkgxdgkhxvgtqpxkvf6n3rbkz4wk7zgfwqb@cn4rqk7p4g6i>
- <20260505180827.2972124e@jic23-huawei>
+        Wed, 06 May 2026 04:04:15 -0700 (PDT)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Date: Wed, 06 May 2026 11:04:12 +0000
+Subject: [PATCH] docs: kernel-doc: python: strip __counted_by_ptr macro
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260505180827.2972124e@jic23-huawei>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260506-kdoc-__counted_by_ptr-v1-1-70763486871f@linaro.org>
+X-B4-Tracking: v=1; b=H4sIACsg+2kC/x3MQQqAIBBA0avErBPUyEVXiZDSsYZAQysK8e5Jy
+ 7f4P0PCSJhgaDJEvClR8BWibcBss1+Rka0GyaXiPVdst8EwrU24/IlWL68+zsgESq5c54Q1Amp
+ 7RHT0/N9xKuUDCqTfGWcAAAA=
+X-Change-ID: 20260506-kdoc-__counted_by_ptr-1e206f3f1dc1
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, peter.griffin@linaro.org, 
+ andre.draszik@linaro.org, willmcvicker@google.com, jyescas@google.com, 
+ krzk@kernel.org, kernel-team@android.com, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778065455; l=2198;
+ i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
+ bh=iXDLwNu9nO2bWAjc5u6p4s9RSDwMepAwVA9DZhNtcew=;
+ b=DD9qRHf57+HpkJB/GiRWD55KAmJqAW9s0RITiy7nGE1BtIfdn/pW6yuj+d5U8vwgV6dByu+i5
+ vb7MQFHQAIpCMPtU31zyXQarbcpZKsJDSS9/wbvt1UlWtG+rFRusEQj
+X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
+ pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
-On 26/05/05 06:08PM, Jonathan Cameron wrote:
-> On Mon, 27 Apr 2026 15:35:21 +0100
-> Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
-> 
-> > On 26/04/27 10:46AM, Jonathan Cameron wrote:
-> > > On Sun, 26 Apr 2026 21:42:15 +0100
-> > > Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
-> > >   
-> > > > On 26/04/26 02:10PM, Jonathan Cameron wrote:  
-> > > > > On Fri, 17 Apr 2026 09:17:38 +0100
-> > > > > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
-> > > > >     
-> > > > > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > > > > > 
-> > > > > > Add documentation for the AD9910 DDS IIO driver, which describes channels,
-> > > > > > DDS modes, attributes and ABI usage examples.
-> > > > > > 
-> > > > > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>    
-> > > > > 
-> > > > > Hi Rodrigo,
-> > > > > 
-> > > > > I think this is getting close to something workable subject to some tweaks
-> > > > > to not make the priority thing visible and use rate of change parameters
-> > > > > so /Sec rather than steps.    
-> > > > 
-> > > > I am not sure about this one. Getting the value into units per seconds will
-> > > > increase the range of values by a lot, e.g., for the frequency case the step
-> > > > size can range from a few Hz up to the entire supported range (hundreds of
-> > > > MHz), and if you consider that one would often have the sampling_frequency
-> > > > at 250 MHz... an attribute frequency_roc could have an order of 10^17 Hz/s,
-> > > > and I am not sure how practical is that, although it can have a physical meaning,
-> > > > like a "chirp slope".  
-> > > 
-> > > That scaling is indeed a bit of a pain though it will go in a 64 bit int
-> > > however, seems likely we'll get higher frequency devices one day that will
-> > > limb even faster.
-> > > 
-> > > Maybe wait and see if anyone else has input on this.
+The `__counted_by_ptr` macro was recently introduced [1] to extend
+bounds checking semantics to standard dynamically allocated pointers.
 
-Maybe we add this _roc ABI for this device and figure out scaling issues on new devices
-later.
+However, the new Python implementation of kernel-doc does not currently
+recognize it as a compiler attribute. When kernel-doc encounters a
+struct member annotated with this macro, it fails to parse the variable
+name correctly, resulting in false-positive warnings like:
 
-> > > >   
-> > > > > 
-> > > > > Given this defines the ABI for a whole class of new devices that are
-> > > > > rather complex, one concern is whether whatever we define here is general
-> > > > > enough to be useful.  
-> > > > > 
-> > > > > Do you have any other DDS in your queue to upstream? Maybe it's worth
-> > > > > sanity checking the ABI against them to see if it is fit for purpose?    
-> > > > 
-> > > > Not really, still the only DDS. Other DDS of the same family have a similar
-> > > > Digital Ramp Generator with controls over ramp limits, rates and step.   
-> > > 
-> > > There are two in staging that have been there a very long time... 
-> > > ad9832 and ad9834.  I haven't looked at how they correspond to this.  
-> > 
-> > It seems they can benefit of this child channel concept, as they define
-> > multiple frequency and phase configuration for the same physical DAC.
-> > I see the following in the most complicated one:
-> > - out_altvoltage0_frequency0
-> > - out_altvoltage0_frequency1
-> > - out_altvoltage0_frequency_scale
-> > - out_altvoltage0_phase0
-> > - out_altvoltage0_phase1
-> > - out__altvoltage0_phase_scale
-> > - out_altvoltage0_pincontrol_en
-> > - out_altvoltage0_frequencysymbol
-> > - out_altvoltage0_phasesymbol
-> > - out_altvoltage0_out_enable
-> > - out_altvoltage0_out1_enable
-> > - out_altvoltage0_out0_wavetype
-> > - out_altvoltage0_out1_wavetype
-> > - out_altvoltage0_out0_wavetype_available
-> > - out_altvoltage0_out1_wavetype_available
-> > 
-> > less complicated, no RAM, no DRG nor parallel port. In terms of common stuff I can see
-> > frequency_scale and pinctrl_en.  
-> 
-> My main concern here is IIRC these are very much PSK / FSK devices with expectation
-> of symbol being externally controlled. (maybe I remembered that wrong ;)
-> So the symbol relationship would need to map to child channels in some fashion.
+  Warning: ... struct member '__counted_by_ptr(cmdcnt' not described
 
-With multiple channels, I'd say that is already figured with the standard "enable" ABI,
-As the "symbol" to select is a choice of one of the channels to enable. Like it is
-being done here for the single tone profiles. Being externally controlled is a user
-problem, being its responsability to make sure that expectations on the values are
-aligned during some specific actions. For instance, this very driver, expects the selected profile
-to be trully selected by the profile pins so that RAM loading works. Also, there is another
-weird case, where the profile needs to be selected to make sure a read of the profile register
-works (which is another reason to use cached reads). Apart from those cases, I suppose
-profile pin control can be "detached" from the driver. 
+Add `__counted_by_ptr` to the `struct_xforms` regex list so it gets
+safely stripped out during the parsing phase, mirroring the existing
+behavior for `__counted_by`. Update the corresponding unit tests.
 
-> 
-> > 
-> > > We should think hard about whether to bring them inline with this
-> > > and out of staging, or just delete them.
-> > >   
-> > > > 
-> > > > ...
-> > > >   
-> > > > > > +DDS modes
-> > > > > > +=========
-> > > > > > +
-> > > > > > +The AD9910 supports multiple modes of operation that can be configured
-> > > > > > +independently or in combination. Such modes and their corresponding IIO channels
-> > > > > > +are described in this section. The following tables are extracted from the
-> > > > > > +AD9910 datasheet and summarizes the control parameters for each mode and their
-> > > > > > +priority when multiple sources are enabled simultaneously:    
-> > > > > 
-> > > > > Maybe add a bit on what priority means.  Does it mean that only the highest
-> > > > > priority one is acted on?  If so why do we need to expose that others are
-> > > > > enabled? Just report only the highest priority one as enabled.
-> > > > > 
-> > > > > I can see the hardware needs to do priority so it knows where to go when
-> > > > > a given source is disabled but from a software point of view that
-> > > > > can be controlled by us enabling that next item (and the driver does
-> > > > > things in the right order to get the appropriate transition)
-> > > > > 
-> > > > > That may mean that if all modes are disabled, we have to disable any output
-> > > > > but seems doable.    
-> > > > 
-> > > > That is a bit complicated, as you can see, this part has modes that target
-> > > > one DDS parameter or multiple (destinations: phase, frequency, amplitude).
-> > > > Also, multiple modes can coexist, when they target different parameters/destination.
-> > > > At the same time, RAM mode complicates everything because even though it targets
-> > > > one specific parameter, once it is enabled influences the base mode for the
-> > > > other parameters because single-tone is off. I have ordered the mode channels so
-> > > > that higher index have higher priority, so that can be a bit clearer.
-> > > > 
-> > > > Right now, all the controls are provided, what might be missing is a way
-> > > > to query which level of those priorities is currently active, but those levels
-> > > > are not the same thing as the controls. If we turn the priority levels into the
-> > > > controls themselves it would be a different ABI and it would get a lot messy.
-> > > > That is why I am dumping this priority table in this document! =(  
-> > > 
-> > > I understand (at least some) of the hardware complexity but I don't like
-> > > the fact this is effectively exposing it to userspace. + I really don't want
-> > > more ABI to indicate whether a mode is actively doing anything or not.
-> > > Whilst I agree the code will be more complex, having clarity on what is
-> > > enabled at any given time is definitely something we ant to aim for.  
-> > 
-> > This part seems special, so I would not bother with the fact that userspace
-> > needs to figure some things out.
-> 
-> I'm kind of fine for that being needed for complex usecases but if I want
-> to do something simple I'd like that to be standard and intuitive.
-> Obviously gets blurry wrt to what counts as simple.
-> 
-> > 
-> > Since there is this priority, there is a difference on enable vs active,
-> > and things are different for each DDS parameter. Take the single tone example
-> > when it is enabled, should that mean that it is active on frequency, phase
-> > or amplitude? that granularity could be exposed like that if we create dedicated
-> > channels for each parameter on every mode possible, which turns the ABI into
-> > a greater mess.
-> 
-> I did wonder if we should separate those but agree it's tricky.
-> 
-> > 
-> > > Can we work out a transition diagram?  That might make it easier to
-> > > tell whether it's possible to map it as single enables at a time and
-> > > incorporate weird corners like the RAM one.  Maybe not needed if the
-> > > RAM one is the only real oddity and otherwise it's just going up
-> > > and down the priority lists.  
-> > 
-> > I still think it is not that simple, an enable is just a control for
-> > a specific mode-destination pair.
-> >  
-> > > One complexity I can see with single enables is that they'd need
-> > > to be separate for each of frequency, phase and amplitude to reflect
-> > > the transitions that can occur.  
-> > 
-> > As mentioned above, that would be messy to interface with...
-> >  
-> > > Also the fun of profiles, where those profile pins are basically picking
-> > > symbols - could be used for multi level PSK or FSK for example if wired
-> > > up to an external symbol source.  I'd be a bit surprised if those are
-> > > always wired up to a host CPU.  
-> > 
-> > Yes, some users may want to control the profile pins through an FPGA.
-> > 
-> > > *sigh* I'm talking my self around to needing ABI to indicate a channel
-> > > is active.  The symbol stuff gets us some of the way there (and would
-> > > work for the tones) but doesn't cover the added complexity of RAM etc.
-> > > So 'maybe' new ABI for _isactive or something like that?  
-> > 
-> > active_params or active_targets? listing out DDS parameters that is currently
-> > active for that mode/channel? like printing "frequency phase amplitude", so
-> > that would mean the mode is driving all of them. That would be a read-only
-> > status. 
-> 
-> Would have to be simple per channel sysfs attribute that would say
-> is this particular channel actually contributing to the current output.
-> Where it can contribute in multiple ways we'll need separate attributes.
-> 
-> Anything else is going to break the rules on one thing per each sysfs
-> attribute.
-> out_altvoltageXXX_phase_active
-> out_altvoltageXXX_freq_active
-> or something like that.
+Link: https://git.kernel.org/torvalds/c/150a04d817d8 [1]
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ tools/lib/python/kdoc/xforms_lists.py | 1 +
+ tools/unittests/test_cmatch.py        | 1 +
+ 2 files changed, 2 insertions(+)
 
-Yes, that could be done. This would be just informative, and I suppose that
-any userspace software that knows how to control the part would not even
-look at those. Probably it would just be used while debugging.
+diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
+index f6ea9efb11ae..118156ea8cd2 100644
+--- a/tools/lib/python/kdoc/xforms_lists.py
++++ b/tools/lib/python/kdoc/xforms_lists.py
+@@ -29,6 +29,7 @@ class CTransforms:
+         (CMatch("__aligned"), ""),
+         (CMatch("__counted_by"), ""),
+         (CMatch("__counted_by_(le|be)"), ""),
++        (CMatch("__counted_by_ptr"), ""),
+         (CMatch("__guarded_by"), ""),
+         (CMatch("__pt_guarded_by"), ""),
+         (CMatch("__packed"), ""),
+diff --git a/tools/unittests/test_cmatch.py b/tools/unittests/test_cmatch.py
+index 7b996f83784d..109141cd2ab8 100755
+--- a/tools/unittests/test_cmatch.py
++++ b/tools/unittests/test_cmatch.py
+@@ -320,6 +320,7 @@ class TestSubWithLocalXforms(TestCaseDiff):
+         (CMatch('__aligned'), ' '),
+         (CMatch('__counted_by'), ' '),
+         (CMatch('__counted_by_(le|be)'), ' '),
++        (CMatch('__counted_by_ptr'), ' '),
+         (CMatch('__guarded_by'), ' '),
+         (CMatch('__pt_guarded_by'), ' '),
  
-> > 
-> > > Perhaps the boundary we put on this is the ABI should be such that
-> > > simple choices such as enabling a single tone, or single RAM mode
-> > > setting are intuitive. 
-> > > 
-> > > Why do we only have one ram channel? I'd kind of expect the firmware
-> > > to fill all 8 RAM profiles because of that 'external' profile pins
-> > > use case.  
-> > 
-> > Most of the RAM configuration is now comming from the firmware, so there
-> > is no much info to display/configure in multiple channels. The per-profile
-> > configs require the weird ABI like operating modes and address start/end.
-> > By removing those, I have mostly "global" stuff.
-> If folk are doing profile control from external pins I'd kind of expect to
-> see some description of what they are controlling even if it's read only.
-> 
-> Maybe we don't do this now but we should make sure there is space in the ABI
-> by thinking what it might look like.
 
-Right now, I am not seeing anything generic in RAM control appart from a
-"sampling_frequency". A lot of it seems device-specific:
+---
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+change-id: 20260506-kdoc-__counted_by_ptr-1e206f3f1dc1
 
-- Destination (freq/phase/amplitude/polar)
-- Internal profile control config (sequenced modes I had before)
-- Per-profile config:
-	- Start address
-	- End address
-	- Address step rate (sampling freq)
-	- RAM mode:
-		- direct switch
-		- ramp-up
-		- bidirectional
-		- bidirectional continuous
-		- ramp-up continuous
-	- No-dwell high bit (specific to ramp-up mode)
-	- Zero-crossing bit (specific to direct switch mode)
-
-...
-
-> > > > > > +Digital ramp generator (DRG)
-> > > > > > +----------------------------
-> > > > > > +
-> > > > > > +The DRG produces linear frequency, phase or amplitude sweeps using dedicated
-> > > > > > +hardware. It is controlled through three channels: a parent control channel
-> > > > > > +(``digital_ramp_generator``) and two child ramp channels
-> > > > > > +(``digital_ramp_up``, ``digital_ramp_down``). DRG destination is set when
-> > > > > > +ramp attributes are written, i.e. writing to ``frequency`` or ``frequency_step``
-> > > > > > +sets the destination to frequency.
-> > > > > > +
-> > > > > > +Control channel attributes
-> > > > > > +^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > > > > > +
-> > > > > > +.. flat-table::
-> > > > > > +   :header-rows: 1
-> > > > > > +
-> > > > > > +   * - Attribute
-> > > > > > +     - Unit
-> > > > > > +     - Description
-> > > > > > +
-> > > > > > +   * - ``en``
-> > > > > > +     - boolean
-> > > > > > +     - Enable/disable the DRG.
-> > > > > > +
-> > > > > > +Ramp channel attributes
-> > > > > > +^^^^^^^^^^^^^^^^^^^^^^^^
-> > > > > > +
-> > > > > > +The ``digital_ramp_up`` and ``digital_ramp_down`` channels share the same
-> > > > > > +attribute set but configure ascending and descending ramp parameters
-> > > > > > +independently:
-> > > > > > +
-> > > > > > +.. flat-table::
-> > > > > > +   :header-rows: 1
-> > > > > > +
-> > > > > > +   * - Attribute
-> > > > > > +     - Unit
-> > > > > > +     - Description
-> > > > > > +
-> > > > > > +   * - ``en``
-> > > > > > +     - boolean
-> > > > > > +     - Enable/disable the ramp no-dwell behavior. Enabling both creates a
-> > > > > > +       bidirectional continuous ramp (Triangular pattern). Other configurations
-> > > > > > +       creates a single-shot ramp at the trasition of the DRCTL pin: ramp-up    
-> > > > > 
-> > > > > transition
-> > > > >     
-> > > > > > +       only, ramp-down only or bidirectional with dwell at the limits.    
-> > > > > 
-> > > > > Feels a little unintuitive to use the generic enable for this.
-> > > > > We might need a specific control for this one.     
-> > > > 
-> > > > How about dwell_en, but it might not sound that generic. I used "enable" because:
-> > > > - no-dwell high means a ramp-up pattern (only enabling the ramp-up channel)
-> > > > - no-dwell low means a ramp-down pattern (only enabling the ramp-down channel)
-> > > > - both no-dwell is a continuous ramp that goes up and down. (both enabled)
-> > > > The last case is a bit off though, when both are disabled we get the normal mode, which
-> > > > is also a ramps up and down, but dwelling in the limits.
-> > > >    
-> > > > > > +
-> > > > > > +   * - ``frequency``
-> > > > > > +     - Hz
-> > > > > > +     - Frequency ramp limit. Range [0, SYSCLK/2).
-> > > > > > +
-> > > > > > +   * - ``phase``
-> > > > > > +     - rad
-> > > > > > +     - Phase ramp limit. Range [0, 2*pi).  
-> > > 
-> > > Looking at this again, how do we set the DRG mode?  E.g. if it effects
-> > > only phase?   
-> > 
-> > You mean the destination? I removed the destination ABI. so now destination is
-> > set when we write to either frequency, phase or scale properties.
-> > * writing to frequency or frequency_step sets the destination to frequency
-> > * writing to phase or phase_step sets the destination to phase
-> > * writing to scale or scale_step sets the destination to amplitude
-> 
-> So it's last write that sets it.  We definitely need a way to know which
-> one is active if we get multiple writes.  What do the others return if they
-> were set but something else has been set since?
-
-All those values represent the same set of registers with different scaling for
-frequency, phase or scale units. I can get the other values to return -EBUSY
-when reading a destination attribute that was not set.
-
-> > 
-> > The DRG mode (dwell mode) is now controlled with the enable bits in the ramp
-> > up/down channels 
-> > 
-> > > > > > +
-> > > > > > +   * - ``scale``
-> > > > > > +     - fractional
-> > > > > > +     - Amplitude scale ramp limit. Range [0, 1).
-> > > > > > +
-> > > > > > +   * - ``sampling_frequency``
-> > > > > > +     - Hz
-> > > > > > +     - Ramp clock rate: SYSCLK / (4 * divider).
-> > > > > > +
-> > > > > > +   * - ``frequency_step``
-> > > > > > +     - Hz
-> > > > > > +     - Per-tick frequency increment/decrement. Range [0, SYSCLK/2).    
-> > > > > 
-> > > > > So this was the bit I referred to earlier.  Normally we do
-> > > > > rate of change measurements for this stuff rather than what happens on
-> > > > > each tick (based on how we handle things like ROC events)
-> > > > > 
-> > > > > So could we make these
-> > > > > 	``frequency_roc`` units HZ/Sec
-> > > > > etc?  Then from the mix configured would need to work out the optimum
-> > > > > tick to deliver it.
-> > > > > 
-> > > > > I suppose it's possible that someone might want a stepped frequency
-> > > > > though which would break this approach?  Does anyone actually do that?
-> > > > > If so we'd need to keep the samping_frequency but then control _roc
-> > > > > with that in mind.    
-> > > > 
-> > > > yeah... frequency steps would make sense when the user controls when to
-> > > > perform the updates, or when it comes from certain events.  
-> > > 
-> > > You've lost me here.  How can they do that?  Some external clocking
-> > > or event?  
-> > 
-> > That would depend on what the user does. This part has this DRHOLD pin
-> > which can freeze the ramp. If the user sets this HIGH and creates pulses
-> > it is able to control the stepping of the RAMP manually. But I assume
-> > that no one would do that... such application is unknown to me.
-> 
-> They'd have to sync that with the clock driving the ramp. I guess that's
-> possible - but nasty.  I vote we pretend this usecase doesn't exist for now ;)
-> 
-> > > > > > +
-> > > > > > +Output shift keying (OSK)    
-> > > > > This is a new one on me...     
-> > > > > > +-------------------------
-> > > > > > +
-> > > > > > +OSK controls the output amplitude envelope, allowing the output to be ramped
-> > > > > > +on/off rather than switched abruptly.    
-> > > > >     
-> > > > > > +
-> > > > > > +.. flat-table::
-> > > > > > +   :header-rows: 1
-> > > > > > +
-> > > > > > +   * - Attribute
-> > > > > > +     - Unit
-> > > > > > +     - Description
-> > > > > > +
-> > > > > > +   * - ``en``
-> > > > > > +     - boolean
-> > > > > > +     - Enable/disable OSK.
-> > > > > > +
-> > > > > > +   * - ``scale``
-> > > > > > +     - fractional
-> > > > > > +     - Target amplitude for the OSK ramp. 14-bit ASF field. Range [0, 1).
-> > > > > > +
-> > > > > > +   * - ``sampling_frequency``
-> > > > > > +     - Hz
-> > > > > > +     - OSK ramp rate: SYSCLK / (4 * divider).
-> > > > > > +
-> > > > > > +   * - ``pinctrl_en``
-> > > > > > +     - boolean
-> > > > > > +     - Enable manual external pin control. When enabled, the OSK pin directly
-> > > > > > +       gates the output on/off instead of using the automatic ramp.    
-> > > > > 
-> > > > > I wonder if we should split the various OSK modes into different channels given
-> > > > > only some properties apply to each of automatic and manual modes. Also I think
-> > > > > automatic mode is meaningless without pinctrl_en (so that can be replaced
-> > > > > by simply enabling that mode).  I have no idea if anyone cares about pin ctrl
-> > > > > with manual mode or not?  That one seems even more odd.    
-> > > > 
-> > > > OSK is either in manual or auto:
-> > > > * In manual mode the OSK pin enables and disables the output based on its level.
-> > > > * In auto, the OSK pin controls the direction the amplitude updates. 
-> > > > 
-> > > > If we enable RAM mode, and other modes do not target amplitude, the only way to
-> > > > manually configure the amplitude in software (i.e. without using an OSK gpio)
-> > > > is going manual mode (scale_step == 0), disable this pinctrl_en and then set the
-> > > > scale property (ASF register). That is the only reason I added this property.  
-> > > 
-> > > Ah.  Maybe we hide that away and make the amplitude a property of RAM channel?  
-> > 
-> > And what if a user is in fact willing to use the OSK pin?
-> 
-> Sigh. I don't have a good answer, but I don't like the weird 'special' nature
-> of this attribute.  I guess sometimes there isn't a good answer to be found.
-> 
-> OSK + RAM is odd enough that I'm not that bothered if we have to go weird
-> here.
-
-I will remove this then. I suppose that adding another possible value for
-scale_roc allows us to go around this, i.e., if scale_roc is such that the
-amplitude step is a value equal or greater than the amplitude itself (or even the
-max amplitude value) I could assume that this would be the manual mode with pinctrl
-enable as it would be like an automatic mode with no ramp, but an immediate on-off
-transition. Then scale_roc == 0 means manual mode with pinctrl disabled.
-Will try to develop on this....
-
-> > 
-> > > It can do this magic under the hood. I don't mind the attributes for OSK changing
-> > > if this trick is in use (they won't be active anyway).  
-> > 
-> > OSK has the highest priority of all, but it only acts on the amplitude.
-> > 
-> > > > > > +
-> > > > > > +   * - ``scale_step``
-> > > > > > +     - fractional
-> > > > > > +     - Automatic OSK amplitude step. Writing non-zero enables automatic OSK
-> > > > > > +       and sets the per-tick increment. Writing ``0`` disables it. Rounded to
-> > > > > > +       nearest hardware step: 0.000061, 0.000122, 0.000244 or 0.000488.    
-> > > > > 
-> > > > > Similar thing about rate of change of amplitude fitting better with current ABI
-> > > > > than step does.    
-> > > > 
-> > > > ok... and this one is still missing the correspondent available attr.  
-> > > 
-> > > Available is a bit tricky when there is an inverse relationship involved in the maths
-> > > as what do we put the step as.  Maybe we should add a note on that to the ABI
-> > > docs.  [min step max] where step gives the minimum step that due to non linearity
-> > > may not be applicable between discrete values that may be taken away from that
-> > > minimum granularity base value.  If that occurs the driver will round to the
-> > > nearest possible value.  
-
+Best regards,
 -- 
-Kind regards,
+Tudor Ambarus <tudor.ambarus@linaro.org>
 
-Rodrigo Alencar
