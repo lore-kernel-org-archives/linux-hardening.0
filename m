@@ -1,127 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57B53F54C9;
-	Wed,  6 May 2026 16:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A4430FC23;
+	Wed,  6 May 2026 22:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778086248; cv=none; b=SAdlbkZDSZtrO1sR4cQH0SS4/Bk91rpQ+xL3FtcHvbWGM0m4041ZcwKmGw54V7Cy6rIDKxuFmEfgoDmwA+R5Js5yOOjOibcn4Zd8lkVOoV9cINKDiZ5VKNakw8a+b1xMrF+wPk7P8OdqR1aqg0k0IEAlQCmxfEriJDhfKhJJf4c=
+	t=1778106263; cv=none; b=O7lpkOeJoGeSHqZB6gDeApF/IrVkGVAkcMukr0JE03bQsn4lyvFGe0MJxpPts/Rr1yTkHdzZ2I+mgLMPtjiTS+KI/9WFpO5z61FhZJX6eBRSPjxJCYEQAgf1+cl1nQbmcbhs8xbxULIZz8v+YkEXdpJMa2yUJxHvhHQA/rLFd+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778086248; c=relaxed/simple;
-	bh=pOJDXd9BTWPHOrjma3w01gKJ9yQD8JR6DABPprD4juo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=POmOFGwBzBPRHRigr2qRd9vlwLqpq1YBa8srLFe7sV/UfzJdOtd+Kwyo+dBlg9P4CQxMA268TNS6wcZpzKSEOODqL6jhv4Zkz6VURAhw0JLeAk/P78k6+HhlZ1Nlzvi9uW37Y0zp1xG8Z0z+KpR13vGpEO0xjKvHxZU5ve0JFmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYTUWoW3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778106263; c=relaxed/simple;
+	bh=C3mebG4xQF/8bmrtHQtaU2n+DtqkjaRZNTf90X58E2o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VlBJinaQXz6+RP0KHG1pu+H67BcV/wE5hAra0TptlMkOrLa1MPgXWZm0RO2EA3p/tNk42UJKWa/dX2SZPBwWtE+Sm5eqGUkaQvvKpJSVDB+r+xGu5loG5yCgN/VL4sX0MEAp74r3SoEAs4YEvZ2mKo5TuFtZwfSrnNGqUVq5G80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NfArlEGd; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYTUWoW3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24968C2BCB0;
-	Wed,  6 May 2026 16:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778086248;
-	bh=pOJDXd9BTWPHOrjma3w01gKJ9yQD8JR6DABPprD4juo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VYTUWoW3H5vCjUCgmrfCcJ/xz6rEsCUmILwoWgjoP2FHvtApH+1w3Vy/jxbLBst6R
-	 akCmqailADl4hfXoVntaPUvLrq7AnApapbbgNOurAdHmoucg1zZ9uQDZz9PJBnzm7y
-	 8imo50Li3WywN/NhjMuvwp3HxdNCc8p8GMmsNZosl7f/TyINq0pBcERAHSCKt1KnCc
-	 Hepe+KOWvYHScz+5mq8pVtMJgjB+IsL0pQyRULt3atNtks0TVmegYWRMT9gQQBeY4T
-	 IHerAaQxJVTV/TIiORWAe3XwExBQD+j7W9NL5s+BKeQOH7qLSv0G0GwOBnWEN7q1cl
-	 P6mIWE3jq8Qkw==
-Date: Wed, 6 May 2026 17:50:42 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Gregor Herburger <gregor.herburger@linutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>,
-	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: raspberrypi,bcm2835-firmware: Add
- bcm2712-firmware compatible
-Message-ID: <20260506-unguided-duty-892b11b7c618@spud>
-References: <20260506-rpi-otp-driver-v3-0-294602663695@linutronix.de>
- <20260506-rpi-otp-driver-v3-1-294602663695@linutronix.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NfArlEGd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=vi0t2C7a2R6SnUYU4KKYj9AxGRg+DnRXadjNE3N8EBA=; b=NfArlEGdAWPcCoH/FJoIcjd/Xx
+	v0VGf6G9ZMr/C3p0KzULi7+62TDDz7ebLBBgAmDOAZQNtgc9Rd3hxGYM8n1/c7WRjxMH5TdUYHS1Y
+	xYuKQj1ejx357aaKz0hG9dse8x1UPxgU3dN29LjnqHee5FqusRcl0K0JAu/xagKnH3iYfRLTSM26w
+	4eE0aukax1J5xQV1gRZfrsGnhPrhv9J0Iw2g8DJbW+jVwOLNsChttgsUyfQ0TL1GW5NgAISwcvxYn
+	Hm/a6fJOepDWp7SOi88ubhonH1e3+02KScPOHGIr3nWDSfjs808TNY4p0Fu5a9XRhhEVxpn1eg6JL
+	NdTQZrXw==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wKkfF-00000002BjH-2T1G;
+	Wed, 06 May 2026 22:24:21 +0000
+Message-ID: <927e9642-f5b5-41e7-aaaf-0a263dfb82a3@infradead.org>
+Date: Wed, 6 May 2026 15:24:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UAK+6adw4mTfXo2d"
-Content-Disposition: inline
-In-Reply-To: <20260506-rpi-otp-driver-v3-1-294602663695@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: kernel-doc: python: strip __counted_by_ptr macro
+To: Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-hardening@vger.kernel.org, peter.griffin@linaro.org,
+ andre.draszik@linaro.org, willmcvicker@google.com, jyescas@google.com,
+ krzk@kernel.org, kernel-team@android.com
+References: <20260506-kdoc-__counted_by_ptr-v1-1-70763486871f@linaro.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260506-kdoc-__counted_by_ptr-v1-1-70763486871f@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---UAK+6adw4mTfXo2d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 06, 2026 at 02:28:15PM +0200, Gregor Herburger wrote:
-> Add a compatible string for the bcm2712 firmware.
->=20
-> Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
+On 5/6/26 4:04 AM, Tudor Ambarus wrote:
+> The `__counted_by_ptr` macro was recently introduced [1] to extend
+> bounds checking semantics to standard dynamically allocated pointers.
+> 
+> However, the new Python implementation of kernel-doc does not currently
+> recognize it as a compiler attribute. When kernel-doc encounters a
+> struct member annotated with this macro, it fails to parse the variable
+> name correctly, resulting in false-positive warnings like:
+> 
+>   Warning: ... struct member '__counted_by_ptr(cmdcnt' not described
+> 
+> Add `__counted_by_ptr` to the `struct_xforms` regex list so it gets
+> safely stripped out during the parsing phase, mirroring the existing
+> behavior for `__counted_by`. Update the corresponding unit tests.
+> 
+> Link: https://git.kernel.org/torvalds/c/150a04d817d8 [1]
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Thanks.
+
 > ---
->  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml      | 13 +++++++=
-+++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm283=
-5-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm=
-2835-firmware.yaml
-> index 983ea80eaec9..fbcfa2bc168a 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmw=
-are.yaml
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmw=
-are.yaml
-> @@ -21,9 +21,16 @@ select:
-> =20
->  properties:
->    compatible:
-> -    items:
-> -      - const: raspberrypi,bcm2835-firmware
-> -      - const: simple-mfd
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - raspberrypi,bcm2712-firmware
-> +              - raspberrypi,bcm2835-firmware
-> +          - const: simple-mfd
-> +      - items:
-> +          - const: raspberrypi,bcm2712-firmware
-> +          - const: raspberrypi,bcm2835-firmware
-> +          - const: simple-mfd
+>  tools/lib/python/kdoc/xforms_lists.py | 1 +
+>  tools/unittests/test_cmatch.py        | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
+> index f6ea9efb11ae..118156ea8cd2 100644
+> --- a/tools/lib/python/kdoc/xforms_lists.py
+> +++ b/tools/lib/python/kdoc/xforms_lists.py
+> @@ -29,6 +29,7 @@ class CTransforms:
+>          (CMatch("__aligned"), ""),
+>          (CMatch("__counted_by"), ""),
+>          (CMatch("__counted_by_(le|be)"), ""),
+> +        (CMatch("__counted_by_ptr"), ""),
+>          (CMatch("__guarded_by"), ""),
+>          (CMatch("__pt_guarded_by"), ""),
+>          (CMatch("__packed"), ""),
+> diff --git a/tools/unittests/test_cmatch.py b/tools/unittests/test_cmatch.py
+> index 7b996f83784d..109141cd2ab8 100755
+> --- a/tools/unittests/test_cmatch.py
+> +++ b/tools/unittests/test_cmatch.py
+> @@ -320,6 +320,7 @@ class TestSubWithLocalXforms(TestCaseDiff):
+>          (CMatch('__aligned'), ' '),
+>          (CMatch('__counted_by'), ' '),
+>          (CMatch('__counted_by_(le|be)'), ' '),
+> +        (CMatch('__counted_by_ptr'), ' '),
+>          (CMatch('__guarded_by'), ' '),
+>          (CMatch('__pt_guarded_by'), ' '),
+>  
+> 
+> ---
+> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+> change-id: 20260506-kdoc-__counted_by_ptr-1e206f3f1dc1
+> 
+> Best regards,
 
-This diff doesn't make sense, either the new firmware is compatible with
-the old one or it is not. It shouldn't appear twice.
-
-pw-bot: changes-requested
-
-Cheers,
-Conor.
-
-> =20
->    mboxes:
->      maxItems: 1
->=20
-> --=20
-> 2.47.3
->=20
-
---UAK+6adw4mTfXo2d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaftxYgAKCRB4tDGHoIJi
-0sjZAP4qTF2TnlozstYloQhMzmmjOpygViy+wQxmE1B/ZrNgHwEAxV3cIWEz1ig7
-ohLMbJt8aoOkyiAMSEZJajxAUxfmfwg=
-=bVxd
------END PGP SIGNATURE-----
-
---UAK+6adw4mTfXo2d--
+-- 
+~Randy
