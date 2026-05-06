@@ -1,145 +1,186 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010052.outbound.protection.outlook.com [52.101.201.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B50B39B974
-	for <linux-hardening@vger.kernel.org>; Wed,  6 May 2026 11:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778065459; cv=none; b=ntgjEqfGpJoYLN6pczOOtUcJhXqyPWZNVlBAWx/Wj6YxxLrXKpKShvx2U6RwFSaAXZCPktGfznQB1Gh6Xt8NWwsSn1TSBWOnuYOQzjQizXkpd0sTuN8sjCryYYg2cp5g8abup7geCnX5NKn1UQ67mvZI30bXO4SWGrJX6cWaLFs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778065459; c=relaxed/simple;
-	bh=iXDLwNu9nO2bWAjc5u6p4s9RSDwMepAwVA9DZhNtcew=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eQaPCW0MECW4bbVsLUK2dMsV9+tD60dhRiotIXpEXuL8L8VYtwYrqr1GNAnTX8yP+sgXckPturK48dwsS8BagAlQL2jZ7zewjMwm++okp++18T6pmQG9hUIrBP4N1+EXwVaEm91bWVe8NgBkMoP20tJm2V7XY1LYWSvjnsKp87w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NoEwzf4v; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AE83F54A4;
+	Wed,  6 May 2026 11:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778065759; cv=fail; b=fp1WMVYzuzrnyWAe5C7jkAKxG68DwVpSUieQssg7oddLFDcHKv7zDn2ZQcmeZFW222wvMnHWnil7gltYiQxxEtVjqxGWvjPBaI3C53XkMJwXEjCKWT6ADCDt/g0l8F/e6wpCpNskjApx16O4ooHAWgXBB6a0Icx4NYbqdByl8gM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778065759; c=relaxed/simple;
+	bh=TyITGkmoezXOzhekPOxf6z/9scRhN4eszL4/83OBJag=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MiO8tTnLIFfnkdyOAxYkAOA5a6f+RUI1O0FrDYy6/rO6nlr1zjYswnUWl77g9UskdkOBca+bNFby8P7h/redlUsICuKvn7blmd67RoZuhRMeFu/3o690uMY/Up8RpA/shgrwlLy3PUtrItKQiV8em5C4KoxLRPbdFPaOVBsNJjY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Ub1n0yeo; arc=fail smtp.client-ip=52.101.201.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NoEwzf4v"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4893940bb5eso34847705e9.3
-        for <linux-hardening@vger.kernel.org>; Wed, 06 May 2026 04:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778065456; x=1778670256; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SecJtaa/94NbrUg2zXVMpkghDsLJXP3FycQnhFxHBw4=;
-        b=NoEwzf4vLFDea+U5HOHrKy7XSW1qElerzawPrPr0/Hjzol5GPGARXaRF/QHyqCxch9
-         CCdJJMROmB8pOAmEVdrnk+3LiBlr2FquxlU5fIL8Tv57/uqxale9fZoZi1EIt8NEFGBw
-         9KPkz2nKDuonduapouPC8iqaGNDZABqSmW8xWm7AXWaahsWVHCM2/W2OEMQys7mOWXgF
-         Ee3v5H522hDO3osok6L5VcJTs5mChpUkz+soyt5pcBB5HvW+LRAQwPjMAB1CwAfVienE
-         1KVBz0U44cYxq7i8gBiUUEShET2gw/yZTyMSVYho6R6iiX/tt42hlizkVYMz69iQQCgP
-         fXOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778065456; x=1778670256;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SecJtaa/94NbrUg2zXVMpkghDsLJXP3FycQnhFxHBw4=;
-        b=bP022pnYdDLb2ZBvajphKyCq4slBOmwhjuOKw0Q6/j6rZoBlUe7dw3QVcJeZrA8Xex
-         OL8kUPm+caNTPSicdOjl92leoKzz2fKt1N/R4slLAg6b3Fi/jycKSvfGlp0OCpZOq2w6
-         Qq1GfZ10ChOI6vIo0DoHYh/vbBL+I0A+5lc0eKH3qaxxGCS/sty1G0CiGFozUJVYqdHp
-         jvJOXKRUrucXmZRod8hNWSeEyMkf4i2gJJen2RfhuaJ/ZvMBVPillep2lo87wSLXxq4z
-         4Eq7OxPemK/3adcsH5FJVGouMP33zEtBDbtlWmPqJw8DcbdbfrMoSTusFgSNhamh7auz
-         cqiA==
-X-Forwarded-Encrypted: i=1; AFNElJ9M3yyLjyMWjS31NoAR8KpaK6hMbVfJ0hQ0kYWW//uN53qE+EYFwzAZuC8N5Qt7LQjxhlFXfacaJTY2VwuEeEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPC21nbqQSeIrt5iDgUsuNH/hqw0hRf3NfljpJw65Bmcpo6glI
-	lMWTGwzBwOhXWVU162GgoyaQu5PJSPfVPIjMnpFQcEToQYJyllUiBMaSdSxfIH9dWBY=
-X-Gm-Gg: AeBDievFgoojZ1tAq6CJ7tz6Po2G61F0Mi2yA4Py1sl4igg5rJ1OrwjJW6pqowRsq18
-	+6JsqKVhIthVHAmM+kKmFA3ZfIkp1el+KdGHb4SumPFRn4JXHT0dcCU2zWCIeQRvh2zAEZPti/T
-	ZGmrP1ABFmSo5jtfcxcYGwBMSz6O6M/1+Dh3574cNu1jv7nGd4F7dP6m7bbcG4Za/+F4pNV9PuW
-	jXKbmO9rX2drtSqVfrEvWxBzYd86b3luWL9i13Xnn2H+WBXNqNk/EN4RC60kNPp3M/hDCP24Afl
-	Reewh5+2jIYzj6S0ITmlIY9Ldf4JAIzlwiqhiQ4n+UaVvEstGmMRDvgNlwtmS4EBrZQCTPe+X3V
-	B/38qP2aEYEL1gmj2M7lwNc8s2bJ4PEOIf9pySsREsxyHt2Uwb/E4j41j2QPleZnLz9g2Os1P0l
-	8TmJJFVm/wq0kPCyfUuMCQl3OIGojsvvJd6nUFByTjpT4wZx5KkfjWeXfLn/OV/T+J2xnt31sVO
-	lECnMFsXwJ8j0QNbg==
-X-Received: by 2002:a05:600c:4f53:b0:486:fb0b:ad79 with SMTP id 5b1f17b1804b1-48e51f4456cmr50856805e9.20.1778065455968;
-        Wed, 06 May 2026 04:04:15 -0700 (PDT)
-Received: from ta2.c.googlers.com (17.83.155.104.bc.googleusercontent.com. [104.155.83.17])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e5312de76sm14072305e9.21.2026.05.06.04.04.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 04:04:15 -0700 (PDT)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Wed, 06 May 2026 11:04:12 +0000
-Subject: [PATCH] docs: kernel-doc: python: strip __counted_by_ptr macro
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ub1n0yeo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LMvbCv5HfemFg2sSV7O/cXMjpJqJCCdDMW87FfXLH/NMqI+pVvO8viVOeZeiUpp5Ryt3p5HYBSQ/F/+v2kAjeKd2zubmh9FRPsRF5g9gmGSyI47GTLqS15BhZv8NjOKvapTZdT0LBMefVaBsMSxWLVqwAIYQoG77FU9m7Hh3FCYr3eAaTV+fSUpqSZKM1a9EU2Rm0b8pLuwIfKNSMtKgafcVnM6XkkwxOEFSCuK7urAIkWtdeth7vK1YNp34C962rOmCYY+PifT5UiSYVI4htbhy8yjBkCMljrdJTj6kFIJygpDc8bv2ZLerXwNUu4CwG4QLa90cq5rVZUn3nxNLoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AfN0H5M8Q/r16hqwDOVheTHjmfIEomibxA1V1NGFP4E=;
+ b=BQjY+VCuW8zES14bdrZjV3r1P1l+Vfvk38cykvpDdx7bT0GZgSp3sodFwtwn57cF7Wm7yt4LMinU+chPO/NRo6+FyjcXiXEzYPGtCzQbv6bdRYFzDkGUT/g+QptRhTaWilIZ8295ZG/tDSOH7hEyZdiQYko65H5m4/Vx1rQHqIKgwFLivmN4M+UrPbX8FtQgpnGBw9XgntKrGhd8njwssWYQbK6Qyb2rj+emFALMqRu6YP2nFiQJsPWjF2jiE8SX+/x4sGNctffOUsO7+0rkdXuLjUH4exZYYsi6yxcb6bsdTjU5hMHxa451mZU/y+Z1J6msa+1De79y4U54nZ5vMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.23.194) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AfN0H5M8Q/r16hqwDOVheTHjmfIEomibxA1V1NGFP4E=;
+ b=Ub1n0yeoe5YVPBx5XP/6xXg4bb1J21JeMZy0/52ZZqHx/XvkJ3ZIPAaqRzF/QwBVsaf0/ynPN6wahtk2+Jy4FmWsBEPDZK9sFL3iCpMXWaaM6qgprvz07jXL+F0nvvOM2h99NFTXCy6jxUgU91d8OOy+Hi+/KtdXTY7jkDkCJ/E=
+Received: from CY5PR15CA0075.namprd15.prod.outlook.com (2603:10b6:930:18::7)
+ by MN2PR10MB4238.namprd10.prod.outlook.com (2603:10b6:208:1d3::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.15; Wed, 6 May
+ 2026 11:09:15 +0000
+Received: from CY4PEPF0000E9DB.namprd05.prod.outlook.com
+ (2603:10b6:930:18:cafe::55) by CY5PR15CA0075.outlook.office365.com
+ (2603:10b6:930:18::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9891.15 via Frontend Transport; Wed,
+ 6 May 2026 11:09:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
+Received: from lewvzet200.ext.ti.com (198.47.23.194) by
+ CY4PEPF0000E9DB.mail.protection.outlook.com (10.167.241.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9891.9 via Frontend Transport; Wed, 6 May 2026 11:09:15 +0000
+Received: from DLEE205.ent.ti.com (157.170.170.85) by lewvzet200.ext.ti.com
+ (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Wed, 6 May
+ 2026 06:09:11 -0500
+Received: from DLEE205.ent.ti.com (157.170.170.85) by DLEE205.ent.ti.com
+ (157.170.170.85) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Wed, 6 May
+ 2026 06:09:11 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE205.ent.ti.com
+ (157.170.170.85) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37 via Frontend
+ Transport; Wed, 6 May 2026 06:09:11 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 646B9BOV938080;
+	Wed, 6 May 2026 06:09:11 -0500
+Date: Wed, 6 May 2026 06:09:11 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Rosen Penev <rosenp@gmail.com>
+CC: <dmaengine@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Vignesh R <vigneshr@ti.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
+	<Frank.Li@kernel.org>, Tero Kristo <kristo@kernel.org>, Santosh Shilimkar
+	<ssantosh@kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCHv2] firmware: ti_sci: simplify resource allocation
+Message-ID: <20260506110910.su2s6ncsi2xfdiwm@pureblood>
+References: <20260504031209.618949-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260506-kdoc-__counted_by_ptr-v1-1-70763486871f@linaro.org>
-X-B4-Tracking: v=1; b=H4sIACsg+2kC/x3MQQqAIBBA0avErBPUyEVXiZDSsYZAQysK8e5Jy
- 7f4P0PCSJhgaDJEvClR8BWibcBss1+Rka0GyaXiPVdst8EwrU24/IlWL68+zsgESq5c54Q1Amp
- 7RHT0/N9xKuUDCqTfGWcAAAA=
-X-Change-ID: 20260506-kdoc-__counted_by_ptr-1e206f3f1dc1
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-hardening@vger.kernel.org, peter.griffin@linaro.org, 
- andre.draszik@linaro.org, willmcvicker@google.com, jyescas@google.com, 
- krzk@kernel.org, kernel-team@android.com, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778065455; l=2198;
- i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=iXDLwNu9nO2bWAjc5u6p4s9RSDwMepAwVA9DZhNtcew=;
- b=DD9qRHf57+HpkJB/GiRWD55KAmJqAW9s0RITiy7nGE1BtIfdn/pW6yuj+d5U8vwgV6dByu+i5
- vb7MQFHQAIpCMPtU31zyXQarbcpZKsJDSS9/wbvt1UlWtG+rFRusEQj
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
- pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260504031209.618949-1-rosenp@gmail.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DB:EE_|MN2PR10MB4238:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34bbb321-7ae3-4e62-c19a-08deab5fe942
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700016|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	MCHrfzp7qPstGYsPC9FAZZzoZXtL/cfSDd2zG+VWsILLPuS3Y2dejWvvtpTBmR3PcFcuWcmGe2zKDTNMZVeHapkztEern63jYkxk7KTt50hXcrtS6dCLJnDMSLI+fcYIPc2Z3vjbVZikkdCp1P8X+D2MPMg9x1yQdysoavW5l8Z9FaYYpVusTiNt4goPWTRV9Pzb9Wux79WahC0EnS+U5RAdajA7Qydt6copDdIOgz78QNuWpLW/fcHkO5lwlR1TkrHMP1t567mkPRO24DBWymyRra26b3uWUCUMocEYsuqjZQxZD4/J/IVOYem40SdClsfPmm3D5I8FdV1cCh54vFkPJ4pLDXr/2wMirTcZwuhxB0Hw264QPNE9dKJ4AKiECMPwJsTDM9bYiV0zLccRBwH+S7beWfgYr4USBIhdVXEV51Zb6xRPgj8P0i493XwZUf5RYmxQVTVAsDpfgK3GyeNDKdr5ae6oSpkQcZcFO0Ib7qdav892Pf/Hz0VnbEvGeHLExNcKIwwbrvftZTPozzGBNek5FxKhKx9kV/H1t0eVOYNRvSmHmREZ9EFkpSsrMb5XSabvzPGpnHpzqv/0UEK2dp1azHpi0BQmWXECrTtEkr+QZD+XWbaAvONhyedd1GiHaWY0frpR0yY4jj2f/4MMizcrDQEzjtTvZf2B0de7J0D/0niEqRvk2VzR11ZuWZHToGlga3ojEWyCU0kAfVTfJYrVVlzp40Um8K8DdzI=
+X-Forefront-Antispam-Report:
+	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700016)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	GS6tE7L4WyLqHfNFvWXFtioBvtzrjTm+0caSi8pjAynSRuXvWIBEc95P19AStLVMuNH3e43fIyD82Wh8g2Hi4GwoRQjvLVJ7pTImqR5EJZbFReq+QAELfMYTItRjnppY9arCd6y0wpz27y4OjB20hH/j3RQDXYuYU2gcAcccStHiazA5DWsP+n5NeRtGh5yWpzePv536iqbH15kyYWohFrnWAvpDpUcB4BJs1yKKLc8b4/Gy0PSi6N1lvbCz6AC6AiUNeYhzSv78riy0rXn+ufDRYXJVOW7AWnXMYYvEGRJCzX8AjbbhaQfVfzKDfOw/ouyp3KZZMezelUiZCVZaaeKTMvDjwDVdD5ew9pkD9Equz3rOdYbYZfRUbYBWiF/LLzdOw1L+XlgyB4dLnVa2kmdw7/w2ll3HRugVvGpVLJ5Hg4swNoe/h72dx/mmwT0l
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2026 11:09:15.6030
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34bbb321-7ae3-4e62-c19a-08deab5fe942
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9DB.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4238
 
-The `__counted_by_ptr` macro was recently introduced [1] to extend
-bounds checking semantics to standard dynamically allocated pointers.
+For some reason, replying drops the CC list. manually added them in.
 
-However, the new Python implementation of kernel-doc does not currently
-recognize it as a compiler attribute. When kernel-doc encounters a
-struct member annotated with this macro, it fails to parse the variable
-name correctly, resulting in false-positive warnings like:
+On 20:12-20260503, Rosen Penev wrote:
+> Use a flexible array member to combine allocations.
+> 
+> Add __counted_by for extra runtime analysis.
+> 
+> Fixup k3-udma as well since ti_sci_resource is used there as well and
+> needs fixing up to use kzalloc_flex.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  v2: add k3-udma fixes.
+>  drivers/dma/ti/k3-udma.c               | 180 +++++++++++++------------
+>  drivers/firmware/ti_sci.c              |   7 +-
+>  include/linux/soc/ti/ti_sci_protocol.h |   2 +-
+>  3 files changed, 98 insertions(+), 91 deletions(-)
 
-  Warning: ... struct member '__counted_by_ptr(cmdcnt' not described
+Since majority of the changes are via k3-udma.c, if this could go via
+dma tree, it would be nice. Else, please give an ack and I can carry on
+my tree.
 
-Add `__counted_by_ptr` to the `struct_xforms` regex list so it gets
-safely stripped out during the parsing phase, mirroring the existing
-behavior for `__counted_by`. Update the corresponding unit tests.
+For the following:
+Reviewed-by: Nishanth Menon <nm@ti.com>
 
-Link: https://git.kernel.org/torvalds/c/150a04d817d8 [1]
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- tools/lib/python/kdoc/xforms_lists.py | 1 +
- tools/unittests/test_cmatch.py        | 1 +
- 2 files changed, 2 insertions(+)
+> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+> index e027a2bd8f26..04d99c1fafa1 100644
+> --- a/drivers/firmware/ti_sci.c
+> +++ b/drivers/firmware/ti_sci.c
+> @@ -3574,16 +3574,11 @@ devm_ti_sci_get_resource_sets(const struct ti_sci_handle *handle,
+>  	bool valid_set = false;
+>  	int i, ret, res_count;
+>  
+> -	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
+> +	res = devm_kzalloc(dev, struct_size(res, desc, sets), GFP_KERNEL);
+>  	if (!res)
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	res->sets = sets;
+> -	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
+> -				 GFP_KERNEL);
+> -	if (!res->desc)
+> -		return ERR_PTR(-ENOMEM);
+> -
+>  	for (i = 0; i < res->sets; i++) {
+>  		ret = handle->ops.rm_core_ops.get_range(handle, dev_id,
+>  							sub_types[i],
+> diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+> index fd104b666836..7632bb11c862 100644
+> --- a/include/linux/soc/ti/ti_sci_protocol.h
+> +++ b/include/linux/soc/ti/ti_sci_protocol.h
+> @@ -599,7 +599,7 @@ struct ti_sci_handle {
+>  struct ti_sci_resource {
+>  	u16 sets;
+>  	raw_spinlock_t lock;
+> -	struct ti_sci_resource_desc *desc;
+> +	struct ti_sci_resource_desc desc[] __counted_by(sets);
+>  };
+>  
+>  #if IS_ENABLED(CONFIG_TI_SCI_PROTOCOL)
+> -- 
+> 2.54.0
+> 
 
-diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
-index f6ea9efb11ae..118156ea8cd2 100644
---- a/tools/lib/python/kdoc/xforms_lists.py
-+++ b/tools/lib/python/kdoc/xforms_lists.py
-@@ -29,6 +29,7 @@ class CTransforms:
-         (CMatch("__aligned"), ""),
-         (CMatch("__counted_by"), ""),
-         (CMatch("__counted_by_(le|be)"), ""),
-+        (CMatch("__counted_by_ptr"), ""),
-         (CMatch("__guarded_by"), ""),
-         (CMatch("__pt_guarded_by"), ""),
-         (CMatch("__packed"), ""),
-diff --git a/tools/unittests/test_cmatch.py b/tools/unittests/test_cmatch.py
-index 7b996f83784d..109141cd2ab8 100755
---- a/tools/unittests/test_cmatch.py
-+++ b/tools/unittests/test_cmatch.py
-@@ -320,6 +320,7 @@ class TestSubWithLocalXforms(TestCaseDiff):
-         (CMatch('__aligned'), ' '),
-         (CMatch('__counted_by'), ' '),
-         (CMatch('__counted_by_(le|be)'), ' '),
-+        (CMatch('__counted_by_ptr'), ' '),
-         (CMatch('__guarded_by'), ' '),
-         (CMatch('__pt_guarded_by'), ' '),
- 
-
----
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-change-id: 20260506-kdoc-__counted_by_ptr-1e206f3f1dc1
-
-Best regards,
 -- 
-Tudor Ambarus <tudor.ambarus@linaro.org>
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+https://ti.com/opensource
