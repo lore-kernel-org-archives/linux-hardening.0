@@ -1,400 +1,110 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FA63F54B4
-	for <linux-hardening@vger.kernel.org>; Wed,  6 May 2026 09:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778061476; cv=none; b=Imh/AFJk5RTeGjJSXHiaXmzNjeW+N6lBy/TQyFY7SLG1aX6BtFcFnWGraU18z8Lh3Vj+KrTk6uNBZpnMdEvZKx8GTwLz2HqvPmL3Dqbt0Hk2FPgEhrhcu2rBKmaUJkBdvmhY1GkHxNglU7hRTZfRPfRJH4TZzJcg1gww9XgA4Ao=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778061476; c=relaxed/simple;
-	bh=cR1oohkKV3PcSi2aOygDCfEDndNVHUEiBPyQq3y2RyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cfo4ZKcaC3hDFQRVO/zxD+RtH6qD7ZEZqcLzJ/CyXNWai49QJA1u4j6DCmS2+XUYPKGEsg9RPh+khFWmikOH0S1jlkMnCCkCICjKm/F6zDos4gnkvVaPPS5ECLiJ5uXzbMdI8gU95nHMjdijf/n2fbW1IBuEHC7rd2B0w9Qg1LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lqEmKvnt; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D935294E
+	for <linux-hardening@vger.kernel.org>; Wed,  6 May 2026 10:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778063628; cv=pass; b=f0ZsIk5FJzFOszpOkpS/CvBORZSQqfeSdpaovwMMcEbjy/c/QNHRl1I22XZqqKdmq/apiUrR5rdcTI1BNlM7sAPzCyoiFf3CPzdBs2Nte89EMuJlq+Li8P97AA28pW4TD7s+nYhiRmLbhDgeNGQ0yb+g2rpKxRFpSYj0o4ynTUk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778063628; c=relaxed/simple;
+	bh=itYO7koBljhuNP8z6PAZMHBfcMKQI9wg1RuqF8VDQPw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W/oMze2mMVSqTqPZzixZ6mYpaMTtri1IyrlqLEkyN4vtk8kru5yif/eiNCt+A58r5peaAsk+QhnrAyXadjo3wB9VjCy/GFAMoHroWB9XYIxg2UQkFAHxxK0iGF1dsSO/BQW1IoKlL+KLgTYCEDhfpYdZx+jgVPVrSfAa9SXfBx0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F1r4geIS; arc=pass smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqEmKvnt"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2ba0fc8b1f0so21197015ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 06 May 2026 02:57:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1r4geIS"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-bc3582acc23so385582166b.3
+        for <linux-hardening@vger.kernel.org>; Wed, 06 May 2026 03:33:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778063625; cv=none;
+        d=google.com; s=arc-20240605;
+        b=dkz/6ZERnaVzecYUZ4VJbrrcxQbHKUhOT/Dq0MZkngJ0Vh5ngFOSHWD3/SpjUonNrS
+         oRS22H+IjLFfTT/5xGv64fsPaYOGOwRG+dfH8t6WdNtfbo4E6Zg2IHblVzmVMU/lsPOS
+         hPoOs55lOj95DXHQkGaldzK9hcjXCAPD6jR/zQPjwElKBxWASY8B5xFLZt+0gLbs8f9w
+         41G2KJe6v6XvBR/pU4PlgZBVc4p+WMm79wRfmOOhOitWGGemRfoNbPJykgwWyz6kRh5G
+         ubJPxsDDZvFCDYhwUkocct3YPDhHlS+qwNYvfnfZJJwrQX1iLZd16ibiwOR6f3p5OqKY
+         7I5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=itYO7koBljhuNP8z6PAZMHBfcMKQI9wg1RuqF8VDQPw=;
+        fh=fYTn2mRBVNFBiAgHvAFJ6yv2cr2PjJxQ0ut8oPfauZ0=;
+        b=EYLf56gGfWaXYOEIGTfCldQaWaSnFA5yTz3ewK+PYkuAKIj33l1ztB/RR2Frv4bWEm
+         55QOITmDFo7Z3+Ya5clr4yBxkm1gSWGAJhTNHVFEWRQ1GbHBrUHH1ZEJdqmEhaJNkud+
+         s9UJOuagGO4pMCqmB+quThdVGvuNiWsJ9/aGE4ymX71ytmGv7oUoepdesSJGNd76L9UM
+         HdVCLoBvmbIscgJA94YTOOMPm5b2nEUr7WtmK++kgizvBqnVk+l0Tz5ta/J0Jaj4XVan
+         F5nGNSq07txXxOAX+1VJBEKCjvPGqIPFeGGkuprM1xDkzYnmAIUw1QRAH0gPievuOvNf
+         R4wQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778061463; x=1778666263; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ro28UUKQ+6LuLkDZX/nentMS1XTWwGIlGBWvZqrPbYU=;
-        b=lqEmKvnt9/v4iVlb8LpXPRYLiBzMNjufiLDDqE1OKRCYkzx9Qnf2R4G7jZj9M69smO
-         kyabDYxT9QqP+JTZlcEJMogozSMTmsZXk5pemu8hHUOioI6kKTdkxT7ZweYEVpFU3eC4
-         OEnx/7qac2YhPU5pxwREYHTAQm4xfUhb+4cnkorUgKjrRGvg9U45VWE/SUMkzMSFJO5p
-         H+H8IO7S+LQArtXktWKjgdNNEpjTfQvpTTYneyV/GDOdYCVUj9DvyvGaDN4S82e/lCyh
-         qEQFN6EdP4pH/CaeFWklIHw2tK0sClCEpRkrK1w6mPsqZV3/Y55Y8uGJGdDG7ogUrWSs
-         jJkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778061463; x=1778666263;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1778063625; x=1778668425; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ro28UUKQ+6LuLkDZX/nentMS1XTWwGIlGBWvZqrPbYU=;
-        b=BOkkkbg6WPi1KLPYvSBb895l1YRN8NriwETMv0A5Bp575u2yaOjlQ7XrtiByxpoLyT
-         7X74G1nY912zOErHTUhhmbME8bt3CEdwLrByaZ2KSn+ZyUxHVD6XHcauFqyQ9Et3OLT5
-         UDPejGmSsldUpg3GT96EJzZtYGBM5iJz1ON8oxsuunIU7nMEOE2QsuacvRobEJmxA420
-         qJYbZb5VO/6hunFvmdyqXrd3oXm9gh/SVjphyLHrEVxdFiNnp4VRuXv0XQRY6hTfYzx9
-         86flHat3g+NerEoRN2v0cVO9f2h2NN/mhIGyzodMNCJax7uSmjWiY3pNxCDri1ngVyCG
-         xaEQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8l3Pu4bly+hD4hQ3pfLguv4HHF70kFkSo19nJeK2RnmlrVUVK2KGPKDCLY+sPCbVVchq62E4m25IxN5x2tP8Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt1U+TmeLOezidW37+Z7t3hlVTAgQqZ21GsaUPViOHCqX+B3t7
-	JWtyj6h8sCxnVN83AdAvJROeKqlR7EIEhmncRok1nml2KdptxG3DULuL
-X-Gm-Gg: AeBDievUDTTTN+AB4BU1oxY3buvyyZa+qU8vYJsX9jn1aR/CqFZOpl95+NL25Pj/N6M
-	HG5q8lsep55JiPjVxWKxAxjrzGz0Xw+b/uclB7nkPIhXu7B/pDTOgFDkywEv+DPhJq2w2f8PHfH
-	4MxtG693WK2i9KK82whVnYpfxQ8jvX6gNM549/8ZA1Erkqn1LjOa0X83hJufc5DGxCW3cn/GBZF
-	mzIw1COE/3olmxGrFn2ZqPNGhtYYHrf3Lw/FEv0f7xSRIjDjMTbX/vaknztYt1zh51c/K65IJhU
-	l9mkbmonxENqMdm2pfRbvOdne5WdVg38wW1POWXiLP6zFSL9ID6TIkPMrimUikqzuwyh1RX3BZL
-	rUx8Sl5uItIo0yef1QE99GOtAr0ZKMmD/uaC0QGmbppvOXri3Zi49j9A+t3GVJyavmjH4lUOIOQ
-	z+ojWReTKA8QW1c0DBAZtXjxkvqmu+1a9yr2wqdVKs
-X-Received: by 2002:a17:902:e790:b0:2ba:bfc:76b5 with SMTP id d9443c01a7336-2ba78b40166mr28226925ad.4.1778061462485;
-        Wed, 06 May 2026 02:57:42 -0700 (PDT)
-Received: from localhost ([103.74.250.37])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ba7c9e1cc4sm20385205ad.48.2026.05.06.02.57.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 May 2026 02:57:42 -0700 (PDT)
-From: Jiazi Li <jqqlijiazi@gmail.com>
-To: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Jiazi Li <jqqlijiazi@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	"mingzhu.wang" <mingzhu.wang@transsion.com>
-Subject: [PATCH v3] coccinelle: Adjust the position of some coccinelle rules
-Date: Wed,  6 May 2026 17:56:36 +0800
-Message-ID: <20260506095638.8752-1-jqqlijiazi@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        bh=itYO7koBljhuNP8z6PAZMHBfcMKQI9wg1RuqF8VDQPw=;
+        b=F1r4geISRsZ/jzymISR3Kbanhw7ooLhYvCEgIxK0yuhhPEc4SyWdR8zAnC+EgrIAEy
+         BR4vcKpKcvqogKLdyDZ9AaDPMh1AQQ1eibaC1Y17GWnZQkMKRru9TtXeFLUU1fdEkbxZ
+         yoW4Y56R116xoIY9lm5h/QZeX1Paj57QpSIMYHnYV9ZQ44P5/jqIv/3B3fOrhLsA6bYj
+         cD5/XC/y2wDkGD0B3B7N6XguMtJW6xzggdsMuG9pOMFv6bSztRlCkVSqHZ/WG/xdUB74
+         UNZETsKfF5pGhlkq7P0vKTHuDIyX18ZjySIwsJuDspJKztm0J0Xb9OumLsPQh9GuaNhs
+         gIdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778063625; x=1778668425;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=itYO7koBljhuNP8z6PAZMHBfcMKQI9wg1RuqF8VDQPw=;
+        b=i53qCFasIHOvWQfMoJqajlTIlH76e0swz0Y3wA6+OpqtGLJEq469oZvYiZEyTOOq+P
+         9Xn+J1wAZAgZ97xX8+KzYPCSckczYfWr1PP1ZbBEPTqeataT+ER/mUcdnMRZHd3jU0Iq
+         JzCMjEAW5hz/47Vl6Nmp01wpaoxlfak2eTM/k5dnx/Wmeb6m3cJD/x8sKgW0cUQSh2on
+         DQWhBO4VTT6sn90KDzcPg1d7dFLhey5+74FgERC1ek7aJT1fJtVmZIj/p6546dlTnooD
+         cUxPeQ6+5rmMJ+X6QESnxbp2jI9TU1ctwGL4FHNL6+7AdkHyw4/9X560DaTavc+fJCjq
+         soxg==
+X-Forwarded-Encrypted: i=1; AFNElJ97WzgCyxlj7v/De8jTOdMZCnsOZhhafW3b/FiPFnNFZSZl4SG5oai76WisWImNr6fvDOa7V+8A3MxMX9JNc+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHBic7mOIU4BeStkT3Qbso1iQN/f+T66fPNWVQDDM70DkYupZN
+	QRGC92y2NgvWVAb+qTIKOavQsm7+g64qu1/m/y5JXtn3Zspi2PyEiH+tRPt+jFw0TuWT6N3I3cs
+	wjZ69W/NfyQuNRx2vFM9UILhmnrnq8Ds=
+X-Gm-Gg: AeBDievJ0Mig/MZpBLgtV9tui5Am/1/6AmWOc18HU1hh5aqbxCwt8kiC88nbw810TN9
+	7j4pMua6I13BYhXvMwMxwKF23K1BLHIlsnKyzhZ9l/j72r4oHHMqiecjqQb8QxklbfVYy+iWquE
+	YwJaPx9028sKETvWBkAcCeXNf6R3Z5rfspaV0+W+wxP4nqzptSasLAOuHQvc25tqfHoqF3+Lh/v
+	s3k9V0K9CVc/LUbTkD9MsoikVgdg4zM4KYjE6MK2yBrUvvr/d/9K5uZqOTEbVWegVCn6iLC5fX+
+	B8UFM2D6+DkQicFsmGC4Dz/knvN+RTsqFCzpni2sVWlsTUo/IA27tCUv5/CDzHjMO1NxcezF1oa
+	ek5fy1VC1nCfaI/ciuw==
+X-Received: by 2002:a17:907:7b94:b0:ba2:e022:c146 with SMTP id
+ a640c23a62f3a-bc56dd16ddcmr135637066b.43.1778063625195; Wed, 06 May 2026
+ 03:33:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260506095638.8752-1-jqqlijiazi@gmail.com>
+In-Reply-To: <20260506095638.8752-1-jqqlijiazi@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 6 May 2026 13:33:06 +0300
+X-Gm-Features: AVHnY4JKUYT2urvmkmmt88cL50lE103tO8QFou3R6Fcm1HB6g_jx1gQNxceg4kM
+Message-ID: <CAHp75VdHY814NRfyUfWeqRd4-DwYzHGh25OTsUB5EFpRKpVQLQ@mail.gmail.com>
+Subject: Re: [PATCH v3] coccinelle: Adjust the position of some coccinelle rules
+To: Jiazi Li <jqqlijiazi@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
+	linux-hardening@vger.kernel.org, "mingzhu.wang" <mingzhu.wang@transsion.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Adjust the position of some coccinelle rules, so they sorted in the
-same order as they appear in the header.
+On Wed, May 6, 2026 at 12:57=E2=80=AFPM Jiazi Li <jqqlijiazi@gmail.com> wro=
+te:
+>
+> Adjust the position of some coccinelle rules, so they sorted in the
+> same order as they appear in the header.
 
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Tested-by: mingzhu.wang <mingzhu.wang@transsion.com>
-Signed-off-by: Jiazi Li <jqqlijiazi@gmail.com>
----
-Changes in v3:
-Split position adjustment to a separate patch
+LGTM, thanks
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-v2: https://lore.kernel.org/linux-hardening/CAHp75Vdvdr0TPzuDDPSoJ4Nixk-6qO_x6Or9iY9LNwSO1Q6mHg@mail.gmail.com/T/#t
----
- scripts/coccinelle/api/string_choices.cocci | 234 ++++++++++----------
- 1 file changed, 117 insertions(+), 117 deletions(-)
-
-diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
-index 375045086912..7b2b76a42acc 100644
---- a/scripts/coccinelle/api/string_choices.cocci
-+++ b/scripts/coccinelle/api/string_choices.cocci
-@@ -7,109 +7,43 @@ virtual patch
- virtual context
- virtual report
- 
--@str_plural depends on patch@
--expression E;
--@@
--(
---	((E == 1) ? "" : "s")
--+	str_plural(E)
--|
---	((E > 1) ? "s" : "")
--+	str_plural(E)
--)
--
--@str_plural_r depends on !patch@
--expression E;
--position P;
--@@
--(
--*	(E@P == 1) ? "" : "s"
--|
--*	(E@P > 1) ? "s" : ""
--)
--
--@script:python depends on report@
--p << str_plural_r.P;
--e << str_plural_r.E;
--@@
--
--coccilib.report.print_report(p[0], "opportunity for str_plural(%s)" % e)
--
--@str_up_down depends on patch disable neg_if_exp@
--expression E;
--@@
---	((E) ? "up" : "down")
--+	str_up_down(E)
--
--@str_up_down_r depends on !patch disable neg_if_exp@
--expression E;
--position P;
--@@
--*	E@P ? "up" : "down"
--
--@script:python depends on report@
--p << str_up_down_r.P;
--e << str_up_down_r.E;
--@@
--
--coccilib.report.print_report(p[0], "opportunity for str_up_down(%s)" % e)
--
--@str_down_up depends on patch disable neg_if_exp@
--expression E;
--@@
---      ((E) ? "down" : "up")
--+      str_down_up(E)
--
--@str_down_up_r depends on !patch disable neg_if_exp@
--expression E;
--position P;
--@@
--*      E@P ? "down" : "up"
--
--@script:python depends on report@
--p << str_down_up_r.P;
--e << str_down_up_r.E;
--@@
--
--coccilib.report.print_report(p[0], "opportunity for str_down_up(%s)" % e)
--
--@str_true_false depends on patch disable neg_if_exp@
-+@str_enable_disable depends on patch@
- expression E;
- @@
---      ((E) ? "true" : "false")
--+      str_true_false(E)
-+-      ((E) ? "enable" : "disable")
-++      str_enable_disable(E)
- 
--@str_true_false_r depends on !patch disable neg_if_exp@
-+@str_enable_disable_r depends on !patch@
- expression E;
- position P;
- @@
--*      E@P ? "true" : "false"
-+*      E@P ? "enable" : "disable"
- 
- @script:python depends on report@
--p << str_true_false_r.P;
--e << str_true_false_r.E;
-+p << str_enable_disable_r.P;
-+e << str_enable_disable_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_true_false(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_enable_disable(%s)" % e)
- 
--@str_false_true depends on patch disable neg_if_exp@
-+@str_enabled_disabled depends on patch@
- expression E;
- @@
---      ((E) ? "false" : "true")
--+      str_false_true(E)
-+-      ((E) ? "enabled" : "disabled")
-++      str_enabled_disabled(E)
- 
--@str_false_true_r depends on !patch disable neg_if_exp@
-+@str_enabled_disabled_r depends on !patch@
- expression E;
- position P;
- @@
--*      E@P ? "false" : "true"
-+*      E@P ? "enabled" : "disabled"
- 
- @script:python depends on report@
--p << str_false_true_r.P;
--e << str_false_true_r.E;
-+p << str_enabled_disabled_r.P;
-+e << str_enabled_disabled_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_false_true(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_enabled_disabled(%s)" % e)
- 
- @str_hi_lo depends on patch disable neg_if_exp@
- expression E;
-@@ -187,43 +121,24 @@ e << str_low_high_r.E;
- 
- coccilib.report.print_report(p[0], "opportunity for str_low_high(%s)" % e)
- 
--@str_enable_disable depends on patch@
--expression E;
--@@
---      ((E) ? "enable" : "disable")
--+      str_enable_disable(E)
--
--@str_enable_disable_r depends on !patch@
--expression E;
--position P;
--@@
--*      E@P ? "enable" : "disable"
--
--@script:python depends on report@
--p << str_enable_disable_r.P;
--e << str_enable_disable_r.E;
--@@
--
--coccilib.report.print_report(p[0], "opportunity for str_enable_disable(%s)" % e)
--
--@str_enabled_disabled depends on patch@
-+@str_on_off depends on patch@
- expression E;
- @@
---      ((E) ? "enabled" : "disabled")
--+      str_enabled_disabled(E)
-+-      ((E) ? "on" : "off")
-++      str_on_off(E)
- 
--@str_enabled_disabled_r depends on !patch@
-+@str_on_off_r depends on !patch@
- expression E;
- position P;
- @@
--*      E@P ? "enabled" : "disabled"
-+*      E@P ? "on" : "off"
- 
- @script:python depends on report@
--p << str_enabled_disabled_r.P;
--e << str_enabled_disabled_r.E;
-+p << str_on_off_r.P;
-+e << str_on_off_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_enabled_disabled(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_on_off(%s)" % e)
- 
- @str_read_write depends on patch disable neg_if_exp@
- expression E;
-@@ -263,24 +178,81 @@ e << str_write_read_r.E;
- 
- coccilib.report.print_report(p[0], "opportunity for str_write_read(%s)" % e)
- 
--@str_on_off depends on patch@
-+@str_true_false depends on patch disable neg_if_exp@
- expression E;
- @@
---      ((E) ? "on" : "off")
--+      str_on_off(E)
-+-      ((E) ? "true" : "false")
-++      str_true_false(E)
- 
--@str_on_off_r depends on !patch@
-+@str_true_false_r depends on !patch disable neg_if_exp@
- expression E;
- position P;
- @@
--*      E@P ? "on" : "off"
-+*      E@P ? "true" : "false"
- 
- @script:python depends on report@
--p << str_on_off_r.P;
--e << str_on_off_r.E;
-+p << str_true_false_r.P;
-+e << str_true_false_r.E;
- @@
- 
--coccilib.report.print_report(p[0], "opportunity for str_on_off(%s)" % e)
-+coccilib.report.print_report(p[0], "opportunity for str_true_false(%s)" % e)
-+
-+@str_false_true depends on patch disable neg_if_exp@
-+expression E;
-+@@
-+-      ((E) ? "false" : "true")
-++      str_false_true(E)
-+
-+@str_false_true_r depends on !patch disable neg_if_exp@
-+expression E;
-+position P;
-+@@
-+*      E@P ? "false" : "true"
-+
-+@script:python depends on report@
-+p << str_false_true_r.P;
-+e << str_false_true_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_false_true(%s)" % e)
-+
-+@str_up_down depends on patch disable neg_if_exp@
-+expression E;
-+@@
-+-	((E) ? "up" : "down")
-++	str_up_down(E)
-+
-+@str_up_down_r depends on !patch disable neg_if_exp@
-+expression E;
-+position P;
-+@@
-+*	E@P ? "up" : "down"
-+
-+@script:python depends on report@
-+p << str_up_down_r.P;
-+e << str_up_down_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_up_down(%s)" % e)
-+
-+@str_down_up depends on patch disable neg_if_exp@
-+expression E;
-+@@
-+-      ((E) ? "down" : "up")
-++      str_down_up(E)
-+
-+@str_down_up_r depends on !patch disable neg_if_exp@
-+expression E;
-+position P;
-+@@
-+*      E@P ? "down" : "up"
-+
-+@script:python depends on report@
-+p << str_down_up_r.P;
-+e << str_down_up_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_down_up(%s)" % e)
- 
- @str_yes_no depends on patch@
- expression E;
-@@ -300,3 +272,31 @@ e << str_yes_no_r.E;
- @@
- 
- coccilib.report.print_report(p[0], "opportunity for str_yes_no(%s)" % e)
-+
-+@str_plural depends on patch@
-+expression E;
-+@@
-+(
-+-	((E == 1) ? "" : "s")
-++	str_plural(E)
-+|
-+-	((E > 1) ? "s" : "")
-++	str_plural(E)
-+)
-+
-+@str_plural_r depends on !patch@
-+expression E;
-+position P;
-+@@
-+(
-+*	(E@P == 1) ? "" : "s"
-+|
-+*	(E@P > 1) ? "s" : ""
-+)
-+
-+@script:python depends on report@
-+p << str_plural_r.P;
-+e << str_plural_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_plural(%s)" % e)
--- 
-2.49.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
