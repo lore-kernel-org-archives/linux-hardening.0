@@ -1,229 +1,477 @@
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81F946AEE1
-	for <linux-hardening@vger.kernel.org>; Wed,  6 May 2026 13:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778072652; cv=pass; b=GfII8PviPKqI3+61IWixqJfk+vZX5BNSqZed+8EfXlij6lJlKn96oys6H9cX8qNn012XnWFflUrk/DmxetvpbF3sQ+8uj3TG3D74EjKs2+qPYTC0Tf3NO90RyRJryCJeyLLlyNvYlRVMLoyk+Sw6qValoLeNUEo5NJ/kKDoKoBY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778072652; c=relaxed/simple;
-	bh=oQH4MCqtsx8PuDqkHCstgNaDMaf3tjzD1L/6gzNJxyo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NvCo2+8lNmFuktHhaBrBT6si1OgNgh7QzKSriZzCw4LcsTKQuYhTf5d8MN4N/HJ2OtJccaNS0rWY4vllIcXRkk7fTe2LFYPgE86Tqb6mkHJBG3A29uIw4b0qyV+yqPQfceboGRXk+JZwZaDKfFbjRPsSpJ1vfZmYwpsFQQV9n/8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C0kEHzIy; arc=pass smtp.client-ip=74.125.82.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03494418D7;
+	Wed,  6 May 2026 14:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778078093; cv=none; b=EUkid0vr0xkyIJZ4FLZw1pqbjKnrXkJwTkJUBCzrrhjfk0SiHIOse3lCPPelJtwbV5UCKWelC85DWiWhs82tK3jgA73aoZIi4ehd6OixW4Ry92j1Fe57OVCovcj8/y6Rc+QceufkK6zhA0Xk2PGK381q5XhbaEWWWkebGjKdTzs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778078093; c=relaxed/simple;
+	bh=rWWauLQzlV2wptjyoaQgJpNJJ+5e4n9FrJgSH3PBKM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nOZFFZqXDCBptHXfwQC5X07dB1OcfrFMtsLf9d414Sr9SfTEzxgEM+QWCSJkJF+6rKZMc76XaA3c5aHTo1vJl9fT+xMd2jlITPZ3Pqcl5VdYhqCqjbeCzNGUoPVwD7pzn5a2T2ubRDNqLbUjOBVphLvt3HJGLD/dTUZZECtcMlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQoT3f0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C0kEHzIy"
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1305908ae11so5498083c88.1
-        for <linux-hardening@vger.kernel.org>; Wed, 06 May 2026 06:04:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778072644; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jy55qxMdWsDDxV4nfZirOGjGwTo3dxqVtL288cOUwki7V12mwR9s5mDMpbePkrIN7M
-         XWy88Atx+thV9yIvcnzamtYTZevEIC4z1YPd9YLAz2g60hHJuqFa4ea//b05kMRHC01C
-         cGtIaIXY+3hgzw2vU+XllFrz7efUKpPgOaCTXOc0F0S6xwvVknMGdl21O63/uZGhVhFN
-         DZ+5+dbOZ8zGuZe7xTJj8E3b7Yt6N7MGADW3JXLYei4TDTpZRTc0AY7bCuGzJdPTADcK
-         0qVCExfjkLlNXislwoTUoJ7Tv2kP1KZhed0DenMVd6/I89t2c8IrD45kK9K70IZwpUzM
-         on1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=VyxSzMGcG4YBihOth/kzEfCuby+TU4nCMC26Shuc0DM=;
-        fh=Pwrkxi6+ZZqVVDKhii2zcDd2mEjmvKOL0w8RzzuDsr8=;
-        b=a/Mq1CiOHM8A/cwHq5Ghz2n/fvPHb/nGv7ylwi3QO6F43eopelxdJzz40uH8xd4AgF
-         EP3Qh3Z3jzI9Jwso6lT7+vAerQ+meg4h9E/nng9dhTWR+f5EfsBHJJhCTErnzDyCTJzs
-         wtxQDq7NU5yPnBjr2yU5lpppYSVN5mLwaDclXO54IAoCilzxSpXui5L7zSwbJn6op/oD
-         ulOKuIHR3fjczB5jiLYklZjNllE97j8VJA8j6yPAPjENG9T2rPouAzFAwnr554bEwM/o
-         gZyCRr9fxsmXBzxOornY9mS9ylJf1HtdpDtYnlqq5fVhmVoFUgveuaKJ2hH73tAXPpgv
-         zODg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778072644; x=1778677444; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VyxSzMGcG4YBihOth/kzEfCuby+TU4nCMC26Shuc0DM=;
-        b=C0kEHzIyDwhVBmmjqxqHzs21svB+wnu99Y5niHFkAha16rE2wnsglrZgYOmOSlVbPA
-         cmRrDaGaZ1uEnnMs1zi8/cO6O92ahFth3+1qqRQeKjTI+52e33nZU8vBbN465FqNBhGS
-         CjAV27De+QhJMSPaoehxd0uUr94xvdXHjGCi0QegZLdiOUTYJMCtN/IqTbbHt7702/5R
-         DSpAU43AFxuWBjdTDIUag3fGcllLiUcVI64kD/x4LNIGq/UUhSjpUU0bL+m6nZAfnaqO
-         dvTUVekDpehqbDhaZ8HUuoQpZ0KnXS7nLzNR1SmZFUbz0syR1Z2hSClQRwiZpM40DFiV
-         NSsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778072644; x=1778677444;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VyxSzMGcG4YBihOth/kzEfCuby+TU4nCMC26Shuc0DM=;
-        b=GtBFR08V4gwdDPCyKMPWBXUty4NtzV1QyMH57Q3MrXysjW83gm7GzDETGDdDoc3YHy
-         6LZn3AVo0Jvf9/yPOHeb5LN0UXcz5jIU3S8HjPOH3CY6PMQOsY1xqL7EMMgMVq3Xb7XY
-         q0s5ADOBFYGKlDXLG02yjNoCBkWpyJv7GzHyH3rKbVuvMYkZd/8YtZcVhN5zG4l5bG0b
-         12nXj1HvQ8HaiJxTEcmKrU/ebXSy5SMFtl1R56MJXguRGAV+wTU16XjJcLIi/tm79DZL
-         nbfAofa7LAQmIprGdQjVzWFuJwzf0SNNecqfugQkvaByNcNKptUxtcy1ROqCmZKwVkvu
-         rrNA==
-X-Forwarded-Encrypted: i=1; AFNElJ9g9EqjEOn/jwsiyo5/n2ifRJwHOmV8RW4Kpmc9puLmMT0WeLFzUmkKgOD7BEUkZeJcl0a/DS51YcW/m5crHFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU3WUvJs7AJ/88VyjsLwK8RlgI26V5YgLNq6r4qotzUxtCnlZm
-	tiaaW1X9mesdNY7I9Ta2tFi0HW3HR7sMNPb74oyMQLQYkauwxJ4IaLo0HbK7KSx8isDiMF4ECid
-	XCQdg3l+grIr0uUrY8koMMPsbEE6enc1AiNF6y47Z
-X-Gm-Gg: AeBDievoVeR1lJlWI6YnFMWhvKbJNKsYFawfXOXi0qa3+GuEQkL0urdtBnbU305RGvN
-	jhf4zvK5V+mt9GC6vDq6KED4e4DBuTjHqlbi0ETmqAMddEatkE+TXrfOMmcvpm9PiFYtlj5IkoR
-	H5Igw6IiaeZTdMTNagGES2BOgd4/LcF8hmfdagBXtzHNhKDwVUg3SNdqJvDCfsxht4TheBPzJ9g
-	DWjwa+Mj+cQX1+uXPSHefKVgyAzzKoxRUDxmfgBiPuNTL7fAHxGiMx2hoGJsxqawFYtYH7IZW0Q
-	1DP15s0Bh2gQMjimzBpAzapTxTq0aT5MzhCJPxJFGIXhcpDMiYFjxEeFke46KtgHJAG7ujI=
-X-Received: by 2002:a05:7022:ec0b:b0:12d:f7a6:e641 with SMTP id
- a92af1059eb24-1318e9178d9mr1882135c88.25.1778072643669; Wed, 06 May 2026
- 06:04:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQoT3f0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D32FC2BCB8;
+	Wed,  6 May 2026 14:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778078092;
+	bh=rWWauLQzlV2wptjyoaQgJpNJJ+5e4n9FrJgSH3PBKM4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lQoT3f0MffEWko7rP2yJrR5fTcTMyGuC1ryQVukmca/OYBQzzkaVUP+wNMlJIue1j
+	 GIwXN7+jpv+N77kzEg9jtaXrMkTT6XhHO2/Hu4Yn9s3Kit6BZXicuI1e7Jfq2hclrA
+	 iHYLX0nyOp55x157evsGbrLVXbuekhNf701GmgURxSPvhfeRMkTByAtyaipkq2jQzo
+	 qnJ/niAuOiQEI3sLlRzrbzvEi9vsUbVTgCNp+AFFHEp/h/lbJCMluv/KOseJsPv9tX
+	 5mjqm8ScChWy/CFOOAMKFNQCnSzVYM9m5VjC9PsXe3GTBFVohPbg1hy7Kt7nnKqqaf
+	 Q0b323rH+rfVQ==
+Date: Wed, 6 May 2026 15:34:40 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>,
+ rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH RFC v3 9/9] docs: iio: add documentation for ad9910
+ driver
+Message-ID: <20260506153440.0d1811ab@jic23-huawei>
+In-Reply-To: <kwx4kgvagwoaljurnkvuvwggrss2qdjwzszpju6mkdxjfi4n4n@yjsv33ewxkzy>
+References: <20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com>
+	<20260417-ad9910-iio-driver-v3-9-29b93712a228@analog.com>
+	<20260426141007.345c76e4@jic23-huawei>
+	<lkvrmc6y2z45b4qsmaxg3c2iaiar6hjmim3hdbkxqx3536yx3p@o6h7de4ire2d>
+	<20260427104608.7819a134@jic23-huawei>
+	<dsppqeyqtelrt3arkgxdgkhxvgtqpxkvf6n3rbkz4wk7zgfwqb@cn4rqk7p4g6i>
+	<20260505180827.2972124e@jic23-huawei>
+	<kwx4kgvagwoaljurnkvuvwggrss2qdjwzszpju6mkdxjfi4n4n@yjsv33ewxkzy>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260424132427.2703076-1-elver@google.com> <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
- <afkOMIPu1WNFE9MS@elver.google.com>
-In-Reply-To: <afkOMIPu1WNFE9MS@elver.google.com>
-From: Marco Elver <elver@google.com>
-Date: Wed, 6 May 2026 15:03:27 +0200
-X-Gm-Features: AVHnY4I_sIIXoZtb7Dp2LdZncViXZn8dSOWAzjV1MMogggcywyvPBFhYkIJG5fI
-Message-ID: <CANpmjNM261J5qefMvmUXWZGBVz-KBs7GkbpdNMfTOvNJ-=LiZQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] slab: support for compiler-assisted type-based
- slab cache partitioning
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com, 
-	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>, 
-	Matteo Rizzo <matteorizzo@google.com>, GONG Ruiqi <gongruiqi1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 4 May 2026 at 23:23, Marco Elver <elver@google.com> wrote:
->
-> On Thu, Apr 30, 2026 at 03:03PM +0200, Vlastimil Babka (SUSE) wrote:
-> > On 4/24/26 15:24, Marco Elver wrote:
-> >
-> > > @@ -938,7 +968,7 @@ void *__kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
-> > >   * Try really hard to succeed the allocation but fail
-> > >   * eventually.
-> > >   */
-> > > -static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t flags)
-> > > +static __always_inline __alloc_size(1) void *_kmalloc_noprof(size_t size, gfp_t flags, kmalloc_token_t token)
-> > >  {
-> > >     if (__builtin_constant_p(size) && size) {
-> > >             unsigned int index;
-> > > @@ -948,14 +978,16 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
-> > >
-> > >             index = kmalloc_index(size);
-> > >             return __kmalloc_cache_noprof(
-> > > -                           kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
-> > > +                           kmalloc_caches[kmalloc_type(flags, token)][index],
-> >
-> > While reviewing this, it occured to me we might have been using _RET_IP_
-> > here in a suboptimal way ever since this was introduced. Since this is all
-> > inlined, shouldn't have we been using _THIS_IP_ to really randomize using
-> > the kmalloc() callsite, and not its parent?
-> >
-> > And after this patch, we get the token passed to _kmalloc_noprof()...
-> >
-> > >                             flags, size);
-> > >     }
-> > > -   return __kmalloc_noprof(size, flags);
-> > > +   return __kmalloc_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags);
-> >
-> > ... and used also here for the non-constant-size, where previously
-> > __kmalloc_noprof() (not inline function) would correctly use _RET_IP_ on its
-> > own ...
-> >
-> > >  }
-> > > +#define kmalloc_noprof(...)                        _kmalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
-> >
-> > ... and the token comes from here. With random partitioning that's
-> > #define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
-> >
-> > so that AFAIK makes the situation worse as now the cases without constant
-> > size also start randomizing by the parent callsite and not the kmalloc callsite.
-> >
-> > But there are many users of __kmalloc_token() and maybe some are corrent in
-> > using _RET_IP_, I haven't checked, maybe we'll need two variants, or further
-> > change things around.
->
-> Good catch. I don't think we need multiple variants (otherwise the TYPED
-> variant would be broken) - we're moving token generation to the callers
-> (not even inlined anymore) with all this macro magic.
->
-> I think this is all we need:
->
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -503,7 +503,7 @@ int kmem_cache_shrink(struct kmem_cache *s);
->  typedef struct { unsigned long v; } kmalloc_token_t;
->  #ifdef CONFIG_KMALLOC_PARTITION_RANDOM
->  extern unsigned long random_kmalloc_seed;
-> -#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
-> +#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _THIS_IP_ })
->  #elif defined(CONFIG_KMALLOC_PARTITION_TYPED)
->  #define __kmalloc_token(...) ((kmalloc_token_t){ .v = __builtin_infer_alloc_token(__VA_ARGS__) })
->  #endif
->
-> Plus a paragraph in the commit message.  Let me add that.
+On Wed, 6 May 2026 11:41:00 +0100
+Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
 
-Bah, this is why it doesn't work:
+> On 26/05/05 06:08PM, Jonathan Cameron wrote:
+> > On Mon, 27 Apr 2026 15:35:21 +0100
+> > Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+> >   
+> > > On 26/04/27 10:46AM, Jonathan Cameron wrote:  
+> > > > On Sun, 26 Apr 2026 21:42:15 +0100
+> > > > Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+> > > >     
+> > > > > On 26/04/26 02:10PM, Jonathan Cameron wrote:    
+> > > > > > On Fri, 17 Apr 2026 09:17:38 +0100
+> > > > > > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+> > > > > >       
+> > > > > > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > > > > > > 
+> > > > > > > Add documentation for the AD9910 DDS IIO driver, which describes channels,
+> > > > > > > DDS modes, attributes and ABI usage examples.
+> > > > > > > 
+> > > > > > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>      
+> > > > > > 
+> > > > > > Hi Rodrigo,
+> > > > > > 
+> > > > > > I think this is getting close to something workable subject to some tweaks
+> > > > > > to not make the priority thing visible and use rate of change parameters
+> > > > > > so /Sec rather than steps.      
+> > > > > 
+> > > > > I am not sure about this one. Getting the value into units per seconds will
+> > > > > increase the range of values by a lot, e.g., for the frequency case the step
+> > > > > size can range from a few Hz up to the entire supported range (hundreds of
+> > > > > MHz), and if you consider that one would often have the sampling_frequency
+> > > > > at 250 MHz... an attribute frequency_roc could have an order of 10^17 Hz/s,
+> > > > > and I am not sure how practical is that, although it can have a physical meaning,
+> > > > > like a "chirp slope".    
+> > > > 
+> > > > That scaling is indeed a bit of a pain though it will go in a 64 bit int
+> > > > however, seems likely we'll get higher frequency devices one day that will
+> > > > limb even faster.
+> > > > 
+> > > > Maybe wait and see if anyone else has input on this.  
+> 
+> Maybe we add this _roc ABI for this device and figure out scaling issues on new devices
+> later.
 
->> drivers/gpu/drm/msm/msm_gpu.c:272:4: error: cannot jump from this indirect goto statement to one of its possible targets
-     272 |                         drm_exec_retry_on_contention(&exec);
-         |                         ^
-   include/drm/drm_exec.h:123:4: note: expanded from macro
-'drm_exec_retry_on_contention'
-     123 |                         goto *__drm_exec_retry_ptr;             \
-         |                         ^
-   drivers/gpu/drm/msm/msm_gpu.c:304:16: note: possible target of
-indirect goto statement
-     304 |                 state->bos = kcalloc(submit->nr_bos,
-         |                              ^
-   include/linux/slab.h:1173:34: note: expanded from macro 'kcalloc'
-    1173 | #define kcalloc(n, size, flags)         kmalloc_array(n,
-size, (flags) | __GFP_ZERO)
-         |                                         ^
-   include/linux/slab.h:1133:42: note: expanded from macro 'kmalloc_array'
-    1133 | #define kmalloc_array(...)
-alloc_hooks(kmalloc_array_noprof(__VA_ARGS__))
-         |                                                             ^
-   include/linux/slab.h:1132:71: note: expanded from macro
-'kmalloc_array_noprof'
-    1132 | #define kmalloc_array_noprof(...)
-_kmalloc_array_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
-         |
-                       ^
-   include/linux/slab.h:506:55: note: expanded from macro '__kmalloc_token'
-     506 | #define __kmalloc_token(...) ((kmalloc_token_t){ .v = _THIS_IP_ })
-         |                                                       ^
-   include/linux/instruction_pointer.h:10:41: note: expanded from
-macro '_THIS_IP_'
-      10 | #define _THIS_IP_  ({ __label__ __here; __here: (unsigned
-long)&&__here; })
-         |                                         ^
-   drivers/gpu/drm/msm/msm_gpu.c:304:16: note: jump enters a statement
-expression
+That sounds like a way forwards. If we do end up with a more complex ABI long term
+we can always add it to this driver if useful - but only once we know what it needs
+to look like.
+
+> 
+> > > > >     
+> > > > > > 
+> > > > > > Given this defines the ABI for a whole class of new devices that are
+> > > > > > rather complex, one concern is whether whatever we define here is general
+> > > > > > enough to be useful.  
+> > > > > > 
+> > > > > > Do you have any other DDS in your queue to upstream? Maybe it's worth
+> > > > > > sanity checking the ABI against them to see if it is fit for purpose?      
+> > > > > 
+> > > > > Not really, still the only DDS. Other DDS of the same family have a similar
+> > > > > Digital Ramp Generator with controls over ramp limits, rates and step.     
+> > > > 
+> > > > There are two in staging that have been there a very long time... 
+> > > > ad9832 and ad9834.  I haven't looked at how they correspond to this.    
+> > > 
+> > > It seems they can benefit of this child channel concept, as they define
+> > > multiple frequency and phase configuration for the same physical DAC.
+> > > I see the following in the most complicated one:
+> > > - out_altvoltage0_frequency0
+> > > - out_altvoltage0_frequency1
+> > > - out_altvoltage0_frequency_scale
+> > > - out_altvoltage0_phase0
+> > > - out_altvoltage0_phase1
+> > > - out__altvoltage0_phase_scale
+> > > - out_altvoltage0_pincontrol_en
+> > > - out_altvoltage0_frequencysymbol
+> > > - out_altvoltage0_phasesymbol
+> > > - out_altvoltage0_out_enable
+> > > - out_altvoltage0_out1_enable
+> > > - out_altvoltage0_out0_wavetype
+> > > - out_altvoltage0_out1_wavetype
+> > > - out_altvoltage0_out0_wavetype_available
+> > > - out_altvoltage0_out1_wavetype_available
+> > > 
+> > > less complicated, no RAM, no DRG nor parallel port. In terms of common stuff I can see
+> > > frequency_scale and pinctrl_en.    
+> > 
+> > My main concern here is IIRC these are very much PSK / FSK devices with expectation
+> > of symbol being externally controlled. (maybe I remembered that wrong ;)
+> > So the symbol relationship would need to map to child channels in some fashion.  
+> 
+> With multiple channels, I'd say that is already figured with the standard "enable" ABI,
+> As the "symbol" to select is a choice of one of the channels to enable. Like it is
+> being done here for the single tone profiles. Being externally controlled is a user
+> problem, being its responsability to make sure that expectations on the values are
+> aligned during some specific actions. For instance, this very driver, expects the selected profile
+> to be trully selected by the profile pins so that RAM loading works. Also, there is another
+> weird case, where the profile needs to be selected to make sure a read of the profile register
+> works (which is another reason to use cached reads). Apart from those cases, I suppose
+> profile pin control can be "detached" from the driver. 
+
+If you are doing FSK or PSK they are almost always detached from the driver as driven by
+some high speed external source.  This chip is probably massive overkill for anyone
+wanting to do something so simple. So maybe it's not a thing.
+If we need to retrofit it I can see assigning a new _symbol type label to
+channels as a way to make it obvious how they are related.  Can solve
+that when we need to (if we ever do!)
 
 
-Apparently using _THIS_IP_ creates a possible indirect jump target,
-but because it's in a statement expression, it's invalid, so the
-compiler complains. This is obviously nonsense, because the actual
-indirect jump in this gpu driver code would never jump to the
-_THIS_IP_ __here label, but that's what it is.
+> > > > *sigh* I'm talking my self around to needing ABI to indicate a channel
+> > > > is active.  The symbol stuff gets us some of the way there (and would
+> > > > work for the tones) but doesn't cover the added complexity of RAM etc.
+> > > > So 'maybe' new ABI for _isactive or something like that?    
+> > > 
+> > > active_params or active_targets? listing out DDS parameters that is currently
+> > > active for that mode/channel? like printing "frequency phase amplitude", so
+> > > that would mean the mode is driving all of them. That would be a read-only
+> > > status.   
+> > 
+> > Would have to be simple per channel sysfs attribute that would say
+> > is this particular channel actually contributing to the current output.
+> > Where it can contribute in multiple ways we'll need separate attributes.
+> > 
+> > Anything else is going to break the rules on one thing per each sysfs
+> > attribute.
+> > out_altvoltageXXX_phase_active
+> > out_altvoltageXXX_freq_active
+> > or something like that.  
+> 
+> Yes, that could be done. This would be just informative, and I suppose that
+> any userspace software that knows how to control the part would not even
+> look at those. Probably it would just be used while debugging.
 
-Given this pre-existing issue, we probably need to continue using
-_RET_IP_, as before. I tried to fix _THIS_IP_, but it's incredibly
-brittle (e.g. __always_inline function returning address of label
-doesn't work on Clang, but would on GCC).
+Agreed it is mostly about debugging but I think this thing is complex enough
+that it's useful info.  I guess we could put it in debugfs for now.
+
+>  
+> > >   
+> > > > Perhaps the boundary we put on this is the ABI should be such that
+> > > > simple choices such as enabling a single tone, or single RAM mode
+> > > > setting are intuitive. 
+> > > > 
+> > > > Why do we only have one ram channel? I'd kind of expect the firmware
+> > > > to fill all 8 RAM profiles because of that 'external' profile pins
+> > > > use case.    
+> > > 
+> > > Most of the RAM configuration is now comming from the firmware, so there
+> > > is no much info to display/configure in multiple channels. The per-profile
+> > > configs require the weird ABI like operating modes and address start/end.
+> > > By removing those, I have mostly "global" stuff.  
+> > If folk are doing profile control from external pins I'd kind of expect to
+> > see some description of what they are controlling even if it's read only.
+> > 
+> > Maybe we don't do this now but we should make sure there is space in the ABI
+> > by thinking what it might look like.  
+> 
+> Right now, I am not seeing anything generic in RAM control appart from a
+> "sampling_frequency". A lot of it seems device-specific:
+> 
+> - Destination (freq/phase/amplitude/polar)
+> - Internal profile control config (sequenced modes I had before)
+> - Per-profile config:
+> 	- Start address
+> 	- End address
+> 	- Address step rate (sampling freq)
+> 	- RAM mode:
+> 		- direct switch
+> 		- ramp-up
+> 		- bidirectional
+> 		- bidirectional continuous
+> 		- ramp-up continuous
+> 	- No-dwell high bit (specific to ramp-up mode)
+> 	- Zero-crossing bit (specific to direct switch mode)
+
+It's the external use of the profile pins that makes me wonder if we
+will need this at somepoint. For now it may just be a case of making
+sure there is room in the channel numbering etc which I guess there
+already is.
+
+> 
+> ...
+> 
+> > > > > > > +Digital ramp generator (DRG)
+> > > > > > > +----------------------------
+> > > > > > > +
+> > > > > > > +The DRG produces linear frequency, phase or amplitude sweeps using dedicated
+> > > > > > > +hardware. It is controlled through three channels: a parent control channel
+> > > > > > > +(``digital_ramp_generator``) and two child ramp channels
+> > > > > > > +(``digital_ramp_up``, ``digital_ramp_down``). DRG destination is set when
+> > > > > > > +ramp attributes are written, i.e. writing to ``frequency`` or ``frequency_step``
+> > > > > > > +sets the destination to frequency.
+> > > > > > > +
+> > > > > > > +Control channel attributes
+> > > > > > > +^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > > > > > > +
+> > > > > > > +.. flat-table::
+> > > > > > > +   :header-rows: 1
+> > > > > > > +
+> > > > > > > +   * - Attribute
+> > > > > > > +     - Unit
+> > > > > > > +     - Description
+> > > > > > > +
+> > > > > > > +   * - ``en``
+> > > > > > > +     - boolean
+> > > > > > > +     - Enable/disable the DRG.
+> > > > > > > +
+> > > > > > > +Ramp channel attributes
+> > > > > > > +^^^^^^^^^^^^^^^^^^^^^^^^
+> > > > > > > +
+> > > > > > > +The ``digital_ramp_up`` and ``digital_ramp_down`` channels share the same
+> > > > > > > +attribute set but configure ascending and descending ramp parameters
+> > > > > > > +independently:
+> > > > > > > +
+> > > > > > > +.. flat-table::
+> > > > > > > +   :header-rows: 1
+> > > > > > > +
+> > > > > > > +   * - Attribute
+> > > > > > > +     - Unit
+> > > > > > > +     - Description
+> > > > > > > +
+> > > > > > > +   * - ``en``
+> > > > > > > +     - boolean
+> > > > > > > +     - Enable/disable the ramp no-dwell behavior. Enabling both creates a
+> > > > > > > +       bidirectional continuous ramp (Triangular pattern). Other configurations
+> > > > > > > +       creates a single-shot ramp at the trasition of the DRCTL pin: ramp-up      
+> > > > > > 
+> > > > > > transition
+> > > > > >       
+> > > > > > > +       only, ramp-down only or bidirectional with dwell at the limits.      
+> > > > > > 
+> > > > > > Feels a little unintuitive to use the generic enable for this.
+> > > > > > We might need a specific control for this one.       
+> > > > > 
+> > > > > How about dwell_en, but it might not sound that generic. I used "enable" because:
+> > > > > - no-dwell high means a ramp-up pattern (only enabling the ramp-up channel)
+> > > > > - no-dwell low means a ramp-down pattern (only enabling the ramp-down channel)
+> > > > > - both no-dwell is a continuous ramp that goes up and down. (both enabled)
+> > > > > The last case is a bit off though, when both are disabled we get the normal mode, which
+> > > > > is also a ramps up and down, but dwelling in the limits.
+> > > > >      
+> > > > > > > +
+> > > > > > > +   * - ``frequency``
+> > > > > > > +     - Hz
+> > > > > > > +     - Frequency ramp limit. Range [0, SYSCLK/2).
+> > > > > > > +
+> > > > > > > +   * - ``phase``
+> > > > > > > +     - rad
+> > > > > > > +     - Phase ramp limit. Range [0, 2*pi).    
+> > > > 
+> > > > Looking at this again, how do we set the DRG mode?  E.g. if it effects
+> > > > only phase?     
+> > > 
+> > > You mean the destination? I removed the destination ABI. so now destination is
+> > > set when we write to either frequency, phase or scale properties.
+> > > * writing to frequency or frequency_step sets the destination to frequency
+> > > * writing to phase or phase_step sets the destination to phase
+> > > * writing to scale or scale_step sets the destination to amplitude  
+> > 
+> > So it's last write that sets it.  We definitely need a way to know which
+> > one is active if we get multiple writes.  What do the others return if they
+> > were set but something else has been set since?  
+> 
+> All those values represent the same set of registers with different scaling for
+> frequency, phase or scale units. I can get the other values to return -EBUSY
+> when reading a destination attribute that was not set.
+
+Given the overlap is non obvious I think that making it clear the channel is not
+in use makes sense.  Mind you it's a bit of an odd interface to return -EBUSY on
+reads but allow writes.  I'd like others input on this one.
+
+> 
+> > > 
+> > > The DRG mode (dwell mode) is now controlled with the enable bits in the ramp
+> > > up/down channels 
+> > >   
+> > > > > > > +
+> > > > > > > +   * - ``scale``
+> > > > > > > +     - fractional
+> > > > > > > +     - Amplitude scale ramp limit. Range [0, 1).
+> > > > > > > +
+> > > > > > > +   * - ``sampling_frequency``
+> > > > > > > +     - Hz
+> > > > > > > +     - Ramp clock rate: SYSCLK / (4 * divider).
+> > > > > > > +
+> > > > > > > +   * - ``frequency_step``
+> > > > > > > +     - Hz
+> > > > > > > +     - Per-tick frequency increment/decrement. Range [0, SYSCLK/2).      
+> > > > > > 
+> > > > > > So this was the bit I referred to earlier.  Normally we do
+> > > > > > rate of change measurements for this stuff rather than what happens on
+> > > > > > each tick (based on how we handle things like ROC events)
+> > > > > > 
+> > > > > > So could we make these
+> > > > > > 	``frequency_roc`` units HZ/Sec
+> > > > > > etc?  Then from the mix configured would need to work out the optimum
+> > > > > > tick to deliver it.
+> > > > > > 
+> > > > > > I suppose it's possible that someone might want a stepped frequency
+> > > > > > though which would break this approach?  Does anyone actually do that?
+> > > > > > If so we'd need to keep the samping_frequency but then control _roc
+> > > > > > with that in mind.      
+> > > > > 
+> > > > > yeah... frequency steps would make sense when the user controls when to
+> > > > > perform the updates, or when it comes from certain events.    
+> > > > 
+> > > > You've lost me here.  How can they do that?  Some external clocking
+> > > > or event?    
+> > > 
+> > > That would depend on what the user does. This part has this DRHOLD pin
+> > > which can freeze the ramp. If the user sets this HIGH and creates pulses
+> > > it is able to control the stepping of the RAMP manually. But I assume
+> > > that no one would do that... such application is unknown to me.  
+> > 
+> > They'd have to sync that with the clock driving the ramp. I guess that's
+> > possible - but nasty.  I vote we pretend this usecase doesn't exist for now ;)
+> >   
+> > > > > > > +
+> > > > > > > +Output shift keying (OSK)      
+> > > > > > This is a new one on me...       
+> > > > > > > +-------------------------
+> > > > > > > +
+> > > > > > > +OSK controls the output amplitude envelope, allowing the output to be ramped
+> > > > > > > +on/off rather than switched abruptly.      
+> > > > > >       
+> > > > > > > +
+> > > > > > > +.. flat-table::
+> > > > > > > +   :header-rows: 1
+> > > > > > > +
+> > > > > > > +   * - Attribute
+> > > > > > > +     - Unit
+> > > > > > > +     - Description
+> > > > > > > +
+> > > > > > > +   * - ``en``
+> > > > > > > +     - boolean
+> > > > > > > +     - Enable/disable OSK.
+> > > > > > > +
+> > > > > > > +   * - ``scale``
+> > > > > > > +     - fractional
+> > > > > > > +     - Target amplitude for the OSK ramp. 14-bit ASF field. Range [0, 1).
+> > > > > > > +
+> > > > > > > +   * - ``sampling_frequency``
+> > > > > > > +     - Hz
+> > > > > > > +     - OSK ramp rate: SYSCLK / (4 * divider).
+> > > > > > > +
+> > > > > > > +   * - ``pinctrl_en``
+> > > > > > > +     - boolean
+> > > > > > > +     - Enable manual external pin control. When enabled, the OSK pin directly
+> > > > > > > +       gates the output on/off instead of using the automatic ramp.      
+> > > > > > 
+> > > > > > I wonder if we should split the various OSK modes into different channels given
+> > > > > > only some properties apply to each of automatic and manual modes. Also I think
+> > > > > > automatic mode is meaningless without pinctrl_en (so that can be replaced
+> > > > > > by simply enabling that mode).  I have no idea if anyone cares about pin ctrl
+> > > > > > with manual mode or not?  That one seems even more odd.      
+> > > > > 
+> > > > > OSK is either in manual or auto:
+> > > > > * In manual mode the OSK pin enables and disables the output based on its level.
+> > > > > * In auto, the OSK pin controls the direction the amplitude updates. 
+> > > > > 
+> > > > > If we enable RAM mode, and other modes do not target amplitude, the only way to
+> > > > > manually configure the amplitude in software (i.e. without using an OSK gpio)
+> > > > > is going manual mode (scale_step == 0), disable this pinctrl_en and then set the
+> > > > > scale property (ASF register). That is the only reason I added this property.    
+> > > > 
+> > > > Ah.  Maybe we hide that away and make the amplitude a property of RAM channel?    
+> > > 
+> > > And what if a user is in fact willing to use the OSK pin?  
+> > 
+> > Sigh. I don't have a good answer, but I don't like the weird 'special' nature
+> > of this attribute.  I guess sometimes there isn't a good answer to be found.
+> > 
+> > OSK + RAM is odd enough that I'm not that bothered if we have to go weird
+> > here.  
+> 
+> I will remove this then. I suppose that adding another possible value for
+> scale_roc allows us to go around this, i.e., if scale_roc is such that the
+> amplitude step is a value equal or greater than the amplitude itself (or even the
+> max amplitude value) I could assume that this would be the manual mode with pinctrl
+> enable as it would be like an automatic mode with no ramp, but an immediate on-off
+> transition. Then scale_roc == 0 means manual mode with pinctrl disabled.
+> Will try to develop on this....
+
+I'll reserve judgement on this.  Might work out but I'm never that keen on values
+that aren't intuitive such as scaling anything by 0.
+
+> 
+> > >   
+> > > > It can do this magic under the hood. I don't mind the attributes for OSK changing
+> > > > if this trick is in use (they won't be active anyway).    
+> > > 
+> > > OSK has the highest priority of all, but it only acts on the amplitude.
+> > >   
+> > > > > > > +
+> > > > > > > +   * - ``scale_step``
+> > > > > > > +     - fractional
+> > > > > > > +     - Automatic OSK amplitude step. Writing non-zero enables automatic OSK
+> > > > > > > +       and sets the per-tick increment. Writing ``0`` disables it. Rounded to
+> > > > > > > +       nearest hardware step: 0.000061, 0.000122, 0.000244 or 0.000488.      
+> > > > > > 
+> > > > > > Similar thing about rate of change of amplitude fitting better with current ABI
+> > > > > > than step does.      
+> > > > > 
+> > > > > ok... and this one is still missing the correspondent available attr.    
+> > > > 
+> > > > Available is a bit tricky when there is an inverse relationship involved in the maths
+> > > > as what do we put the step as.  Maybe we should add a note on that to the ABI
+> > > > docs.  [min step max] where step gives the minimum step that due to non linearity
+> > > > may not be applicable between discrete values that may be taken away from that
+> > > > minimum granularity base value.  If that occurs the driver will round to the
+> > > > nearest possible value.    
+> 
+
