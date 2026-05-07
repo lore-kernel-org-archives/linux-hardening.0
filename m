@@ -1,57 +1,69 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CCC3806AF;
-	Thu,  7 May 2026 08:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCCC39EF27;
+	Thu,  7 May 2026 09:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778143590; cv=none; b=Cs40hz94UqWxzN8sO/E6Y7tj0klm3noODtL2AWFSVgvYzd1ruhWcHYcQoojDfzNfaM2EVo9PaB3s4Hry5LEwohp/pSOc6wKLdmxkgFihpZ3amY9I8LNDHGy2plLDibuLeWXyeSCATvlD76orRaeGEzpVlAlqv2ii2bJJR4lYy7g=
+	t=1778146733; cv=none; b=M9FxZqxW9g5dsqjhNgeginkdfVGEtUhi1xeULBxl7FADcc1oSvE3UPVsw/cNcTq01vC7LUvaT3p5D5T4oU+hqJE93rKssskEQ9BjUMMfhzl8/+oCNOdL4+JGqzZq8Wd5H6U18+JpGjeLHj/zkn1zhoS2g1Iy892qAgDZlcenl9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778143590; c=relaxed/simple;
-	bh=xN6s8qTCagkaRUEyuSIWh9m+rNdxQUEhlkayhoY6VAI=;
+	s=arc-20240116; t=1778146733; c=relaxed/simple;
+	bh=DeehgTNF5Iahk7h3I13ggfT+xXDlph1I0HFCnVNDg0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hi7LClkZHgpWRwO0Vg9MJ8e2JG1lDdBC6jbZmCohSA74yiDo4vwwyg0U5W/sUDnBR2i/s2+Lwk2DndXGJm/DzzClOZ8B9E6cYf6OH7Poxc2fVZQe+uxjGGPZHaopnAsE+L30qC2JKqkVHV+uqMdtCxe2Mgkdjq73bpllzo4jZ+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mEGUx7lK; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ew5yOfeHLVZSlEqxhsRFgvnJJ0kUoV7ZptnI3NnUTCOVtBtF5fW+gkhk0ethLnXHaBV/qDr9GdmHPfyGIpN6/avptxaGMl9Fw/PeVIPwlUNAqVuUeQ2b4uJx10CKSWipfW+ERtI154JW2yreeZC9fifxJlkolcFKthZ6DfkIOqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XyO8gvHl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mEGUx7lK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lRnM4fFKPPMoEdkTS+bDMQuR7pEpTZgpnipU4NMWWWo=; b=mEGUx7lKjwMMXn1aZgT5RnbhKM
-	jFceouLYIULOyIUk68GqwF2iEmy4ROYD14iCPqjZmRvAHsl1LjAUEUHFbVBdvilnUSnnGgBHYFdMg
-	dWw/l8A7YCdY420WsF0qXoHwj+z+gzP7bwJ/TXQf4zjsqcQB/ojfMWFQ2kt0Q50+9Tz599g1m71vx
-	g4LDyjD0+FNJ4G45sv2xukjTiN1AMB83KqFF81nSue35F9GrbKkfKb7KaDe+umzhn1BpjBro5mfFZ
-	1ajrJtYQC1IXPSiTPLvPcYU2su3qJCSaKkU51B/hpVVCloPGyPGF2gzYoc+D0oFGsrbaLAy/J47tD
-	GBtnqkZg==;
-Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKuN5-00000002xQR-2bSx;
-	Thu, 07 May 2026 08:46:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3F13E3008D6; Thu, 07 May 2026 10:46:15 +0200 (CEST)
-Date: Thu, 7 May 2026 10:46:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] perf/x86: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <20260507084615.GP1026330@noisy.programming.kicks-ass.net>
-References: <afJcDg1I5ZU5ZkXf@kspp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XyO8gvHl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFC9C2BCB2;
+	Thu,  7 May 2026 09:38:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778146733;
+	bh=DeehgTNF5Iahk7h3I13ggfT+xXDlph1I0HFCnVNDg0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XyO8gvHlTYz5Ac3kAslP2rYTLBXXjZBXfAg33vMz43SMC73uGVpdjA7lqedr4NbZS
+	 r4++aofHVyBihvJdp4Ii6SozxNddx4pbxHH/H5S66/G06kMHKw3BmnBO12S8t41QNT
+	 zbOCDErsoabOWxotbveYBwdayaw1VLGyYwMYsXwFRh0pmQVV2TRvS1QKRBgYQqlrTC
+	 BK447mA28HbOjWW6piRRG0Q7sfGLGC+m7J+JRqObbZizbiwjc1sH5W3jpNSM/m2o5L
+	 IZyp3aaYELVPdN50gxcjZiUr6jEwr8U6T6k5E5+60ZhibIwXnoDZS5mgWDHiSImqCG
+	 bEYnJFheuItMg==
+Date: Thu, 7 May 2026 17:38:43 +0800
+From: Nathan Chancellor <nathan@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+	Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
+	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
+	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH v3 1/2] slab: support for compiler-assisted type-based
+ slab cache partitioning
+Message-ID: <20260507093843.GA1826581@ax162>
+References: <20260424132427.2703076-1-elver@google.com>
+ <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
+ <afkOMIPu1WNFE9MS@elver.google.com>
+ <CANpmjNM261J5qefMvmUXWZGBVz-KBs7GkbpdNMfTOvNJ-=LiZQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,38 +72,68 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <afJcDg1I5ZU5ZkXf@kspp>
+In-Reply-To: <CANpmjNM261J5qefMvmUXWZGBVz-KBs7GkbpdNMfTOvNJ-=LiZQ@mail.gmail.com>
 
-On Wed, Apr 29, 2026 at 01:29:18PM -0600, Gustavo A. R. Silva wrote:
+On Wed, May 06, 2026 at 03:03:27PM +0200, Marco Elver wrote:
+> Bah, this is why it doesn't work:
+> 
+> >> drivers/gpu/drm/msm/msm_gpu.c:272:4: error: cannot jump from this indirect goto statement to one of its possible targets
+>      272 |                         drm_exec_retry_on_contention(&exec);
+>          |                         ^
+>    include/drm/drm_exec.h:123:4: note: expanded from macro
+> 'drm_exec_retry_on_contention'
+>      123 |                         goto *__drm_exec_retry_ptr;             \
+>          |                         ^
+>    drivers/gpu/drm/msm/msm_gpu.c:304:16: note: possible target of
+> indirect goto statement
+>      304 |                 state->bos = kcalloc(submit->nr_bos,
+>          |                              ^
+>    include/linux/slab.h:1173:34: note: expanded from macro 'kcalloc'
+>     1173 | #define kcalloc(n, size, flags)         kmalloc_array(n,
+> size, (flags) | __GFP_ZERO)
+>          |                                         ^
+>    include/linux/slab.h:1133:42: note: expanded from macro 'kmalloc_array'
+>     1133 | #define kmalloc_array(...)
+> alloc_hooks(kmalloc_array_noprof(__VA_ARGS__))
+>          |                                                             ^
+>    include/linux/slab.h:1132:71: note: expanded from macro
+> 'kmalloc_array_noprof'
+>     1132 | #define kmalloc_array_noprof(...)
+> _kmalloc_array_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
+>          |
+>                        ^
+>    include/linux/slab.h:506:55: note: expanded from macro '__kmalloc_token'
+>      506 | #define __kmalloc_token(...) ((kmalloc_token_t){ .v = _THIS_IP_ })
+>          |                                                       ^
+>    include/linux/instruction_pointer.h:10:41: note: expanded from
+> macro '_THIS_IP_'
+>       10 | #define _THIS_IP_  ({ __label__ __here; __here: (unsigned
+> long)&&__here; })
+>          |                                         ^
+>    drivers/gpu/drm/msm/msm_gpu.c:304:16: note: jump enters a statement
+> expression
+> 
+> 
+> Apparently using _THIS_IP_ creates a possible indirect jump target,
+> but because it's in a statement expression, it's invalid, so the
+> compiler complains. This is obviously nonsense, because the actual
+> indirect jump in this gpu driver code would never jump to the
+> _THIS_IP_ __here label, but that's what it is.
+> 
+> Given this pre-existing issue, we probably need to continue using
+> _RET_IP_, as before. I tried to fix _THIS_IP_, but it's incredibly
+> brittle (e.g. __always_inline function returning address of label
+> doesn't work on Clang, but would on GCC).
 
-> +	/*
-> +	 * Intel LBR bits
-> +	 */
-> +	int				lbr_users;
-> +	int				lbr_pebs_users;
-> +	union {
-> +		struct er_account		*lbr_sel;
-> +		struct er_account		*lbr_ctl;
-> +	};
-> +	u64				br_sel;
-> +	void				*last_task_ctx;
-> +	int				last_log_id;
-> +	int				lbr_select;
-> +	void				*lbr_xsave;
-> +
-> +	/* Must be last as it ends in a flexible-array member. */
-> +	TRAILING_OVERLAP(struct perf_branch_stack, lbr_stack, entries,
-> +		struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
-> +		u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
-> +	);
+For what it's worth, both LLVM and GCC consider the generic version of
+_THIS_IP_ to be broken (even if it works currently), as the address of a
+label is only expected to be used with a computed goto (hence the clang
+error above, it just looks for possible computed goto targets):
 
-FWIW, this thing is horrible crap. Per construction this thing does not
-need to be last at all, you can have multiple such constructs in a
-single structure and things would be perfectly fine.
+  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=44298
+  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071
+  https://github.com/llvm/llvm-project/issues/138272
 
-Also, your TRAILING_OVERLAP() thing should probably have
-__no_randomize_layout in ATTRS, rather than empty (and I'm assuming
-__packed implies __no_randomized_layout, otherwise 'fun' things can
-happen).
-
->  };
+-- 
+Cheers,
+Nathan
