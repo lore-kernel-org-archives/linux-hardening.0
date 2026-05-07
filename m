@@ -1,131 +1,97 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84F2386C31
-	for <linux-hardening@vger.kernel.org>; Thu,  7 May 2026 08:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778143434; cv=pass; b=CmqPtumAR5A4jt6Cqi1exSsrRyj80ppYOjpFZXsRyY6s1cvEY2mKIMj4Q9fUHqK+rMpeuH3FhurZUq9HwxKEjNlpjf35ZA1YbL3Szs7JBAAK2zYx2ZABokZhT9PXdTRVlDJKx5vzqH+dsLN3EGCjzngl0Dd/33EITxIhEMrGpLc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778143434; c=relaxed/simple;
-	bh=V7ma49FkYJcCWGCL389vm+sTxnEVG3lw3+caRpcBK4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c24YARGtoeQJo2oDt3qee3/8V6cVKf9ZxGVQYRmJcgzGUzKCCLX0/VEQ6QOs2VBbGN4m+TeMs5cjkGUfpSZX4BYt8FnGeKYA/97a5xWEUFQ/6c7Ebnz4QWM6H6wuuB6z40I0n8WCZRTW3Za4Llvb9uDxjg7Hql44RZnWy6JIlTg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qnU3BZ+A; arc=pass smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CCC3806AF;
+	Thu,  7 May 2026 08:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778143590; cv=none; b=Cs40hz94UqWxzN8sO/E6Y7tj0klm3noODtL2AWFSVgvYzd1ruhWcHYcQoojDfzNfaM2EVo9PaB3s4Hry5LEwohp/pSOc6wKLdmxkgFihpZ3amY9I8LNDHGy2plLDibuLeWXyeSCATvlD76orRaeGEzpVlAlqv2ii2bJJR4lYy7g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778143590; c=relaxed/simple;
+	bh=xN6s8qTCagkaRUEyuSIWh9m+rNdxQUEhlkayhoY6VAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hi7LClkZHgpWRwO0Vg9MJ8e2JG1lDdBC6jbZmCohSA74yiDo4vwwyg0U5W/sUDnBR2i/s2+Lwk2DndXGJm/DzzClOZ8B9E6cYf6OH7Poxc2fVZQe+uxjGGPZHaopnAsE+L30qC2JKqkVHV+uqMdtCxe2Mgkdjq73bpllzo4jZ+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mEGUx7lK; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnU3BZ+A"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-67c2b4809baso978535a12.3
-        for <linux-hardening@vger.kernel.org>; Thu, 07 May 2026 01:43:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778143426; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jXLwHUWy/PZXwhN9xuqTSt1eB/YdB5bosCseTpJxadxsJuIMQkMQewn9v6sEnPzYsD
-         scWRuLMYRfTj9UODJAJY60w2jcC7grmG3QN5ba/itpumREOqnre1DBoXtSJwBQyrQJg0
-         VlPQeELvq0I22cl059KHd8Fjdyzmc27MQLmfRS0695bTHp6ejvKWGdXkRTpINCuSXPcL
-         MqvSU/o2UhRQySbZG1/8JhXSI1N9gNj/be9ZwiOGb/8D4sgnfNbRuzwBAv+Clj2Q11lW
-         tFwDEWpZMD6YXaKEJ00h7xZG2BeVcE4g02LNzcHEGSD/8jLcOjW8XoSeKNcoA5EaUvXe
-         BlXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=cPfGi80pkrEIBYkOE6vfVIEYDa38ruK3NtL9UiWIuzo=;
-        fh=bhwndtBEh0NEQ0ZpsZTIiPh7Uy3DolBswLk2CEO16fg=;
-        b=RTkIvY3mQg4kkXixvLtEsYy+xUamJH96M0uQfo8s4QcocEiq2YTRBzP/3+r1fXN7rT
-         wmynUTTFa4nBp0Hy0P7gxJrQtV21sGLfcpwyo14Y2i40/K9T+LYhhBOfxvvLoOUWRL7C
-         jL4QDReAuIuf9iyTh7DGN/JuViuI1BNwR1LTVItwDH4rYaP6ItqYgXzuIZIB/5p6sqXx
-         l+siT7ZVrr9VI7L8D9rAUp5SJkdK3mZjUqW1+58n5VJPI6mn/bDn4IaN5hEx/FnZwgzk
-         YzZSnvRfvbFATnIutJ24cDXOEIoZ6Sb+OmEyhXFSlItGCYY4Piflyk6g4wVYB4uUXl0/
-         CtYg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778143426; x=1778748226; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cPfGi80pkrEIBYkOE6vfVIEYDa38ruK3NtL9UiWIuzo=;
-        b=qnU3BZ+AMX+fCls92OZ1QIqmpkgCoeLR8FZI5pZw/63xbzg/rFqfpn4Ax6wr4urz9u
-         DQc0j6hDGLS/anviRyUln31c0i0IU/+LOl8sGHa0wOO/MZ1LZQyuJCui7vDW+sPCiyer
-         maIch84YbySfjwkFo40QXbylPQYopknaN54/WwPFHvVKH/sPUBYYTbPp85oh9naofQZA
-         pCN4zdUk+n2yT7X2v9p061a2AbHVN5QAdt/C31j7PAJfW2eLHYlIEcafSn4R65IYGPyV
-         YdmesX/7Lw7vL/CowFX/llMZ2v+W9EYW2bO+6p1iDOI0Z1FzZ8ipNvopmS8Rpr5v2jTQ
-         D2mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778143426; x=1778748226;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=cPfGi80pkrEIBYkOE6vfVIEYDa38ruK3NtL9UiWIuzo=;
-        b=T4ZdX1AVfbxWshkGrbZBvwfvEHX/2DGu/1VAjS/yoXjlXWQZ0NXgbpC9BGlf6aSQ8V
-         iW4BF/RRZSe45NL6oCQ9AD1NrJuy87fIJZ9uM3fT55rKyoQ/oWqYDcNvr16/OONzdd+s
-         5N9R9QVOa70Sts5V6KUb/Kdf3iozXuLFibd71FtVo/q1wwKWyY4Oc7LPJLxrdX4ffgQc
-         +SdevKvySPlsI/fFEvTNaIn11tOrWFw0/n1F0ccxwcVncwVejCem1uzqMebU7qJtgzHI
-         yvOY8rzmD3yPOPuu0ZitlkOt+uPXITaJBgDL+iY9Vdu8uOXnNjUpnOb4yEyjRne4lZye
-         MPug==
-X-Forwarded-Encrypted: i=1; AFNElJ/1nKkr52JPGLFYY+8y2tV6KVvj3WCYOleMM/c+82OpnOzyJwF8lXYHSHyXhqVxvHHcYMPNUSontAGjuHAhDjo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlWMWBRcDEiE/30CC4R+ql9peOS0YUuUgfYqO9XLAcyiuitltp
-	eSMIqOo+EGKCfUF1eCFYYHzan3b7XitkVGRJ5wqCXxEFXoGEeqLjbDY8lOfH9agr8pHhRUucgzK
-	JkU6OkJ5lytrImPGNlM9uttt5f6+PoS0=
-X-Gm-Gg: AeBDietsjvjVUlCRSKKfVyJuLbCcw4bjKZXC48Ue+o10PBpGu0QNoOUoF04OETXIE8P
-	u1HndopI0Bp3F2l3ULU2CjdeKHiAi/Eq9mPC9P+b2L2Vp2fkaGwhoVsaMxMOUgZt+8gMQC90w49
-	AfFsNjRJ4MFHwMmf+nxVox/JiGPxPFcjwVwOxGC7D0FRV9AKOLRSWGRPp5SuOIxF37o+yo3fuUh
-	+gQaVyx+zHpmpc3/GoEmJUohv5xZ+LrAvjp5nBCwy6MYwKVS31gHIGksr9WufkRDsQxmPJ677Sp
-	ieWyIVqaFDMF9npyzYMIjL+LdlDQkp1ZZ5K8ppMKJD1PyU28SuqvlsoVqd7Ho70QtdcCqsDYBKg
-	YvkQAxJwk3PIM4murqKL5X9Ob/oomWlegflPUwbv0KNiQd72s7P7jIQBrjvpm0OZIgi5j
-X-Received: by 2002:a05:6402:540c:b0:66e:43ef:2951 with SMTP id
- 4fb4d7f45d1cf-67d638ae7d5mr3725735a12.4.1778143426001; Thu, 07 May 2026
- 01:43:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mEGUx7lK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lRnM4fFKPPMoEdkTS+bDMQuR7pEpTZgpnipU4NMWWWo=; b=mEGUx7lKjwMMXn1aZgT5RnbhKM
+	jFceouLYIULOyIUk68GqwF2iEmy4ROYD14iCPqjZmRvAHsl1LjAUEUHFbVBdvilnUSnnGgBHYFdMg
+	dWw/l8A7YCdY420WsF0qXoHwj+z+gzP7bwJ/TXQf4zjsqcQB/ojfMWFQ2kt0Q50+9Tz599g1m71vx
+	g4LDyjD0+FNJ4G45sv2xukjTiN1AMB83KqFF81nSue35F9GrbKkfKb7KaDe+umzhn1BpjBro5mfFZ
+	1ajrJtYQC1IXPSiTPLvPcYU2su3qJCSaKkU51B/hpVVCloPGyPGF2gzYoc+D0oFGsrbaLAy/J47tD
+	GBtnqkZg==;
+Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wKuN5-00000002xQR-2bSx;
+	Thu, 07 May 2026 08:46:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3F13E3008D6; Thu, 07 May 2026 10:46:15 +0200 (CEST)
+Date: Thu, 7 May 2026 10:46:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] perf/x86: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <20260507084615.GP1026330@noisy.programming.kicks-ass.net>
+References: <afJcDg1I5ZU5ZkXf@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260506233833.178357-1-rosenp@gmail.com> <4c57b107-e1eb-4eef-ad77-021d9669900d@linaro.org>
-In-Reply-To: <4c57b107-e1eb-4eef-ad77-021d9669900d@linaro.org>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Thu, 7 May 2026 01:43:33 -0700
-X-Gm-Features: AVHnY4JM2dxCd6zuxzhCeNAz9P3fP-g5qTDGdrW5tuHIZgkThcJR8iARdOQf4HY
-Message-ID: <CAKxU2N-kx+rOibE1uc=gAOSFPkMvv1w6nZ9nkPutY-Lq3zEQKA@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] clk: samsung: use kzalloc_flex
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: linux-clk@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Brian Masney <bmasney@redhat.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:SAMSUNG SOC CLOCK DRIVERS" <linux-samsung-soc@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afJcDg1I5ZU5ZkXf@kspp>
 
-On Thu, May 7, 2026 at 1:33=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro.=
-org> wrote:
->
-> Hi!
->
-> On 5/7/26 2:38 AM, Rosen Penev wrote:
-> > Switch three structs to flexible array members to combine allocations.
-> >
->
-> What's changed in v2?
-Fixed compilation by adding back samsung_clk_alloc_reg_dump as it's
-used elsewhere.
->
-> Cheers,
-> ta
-> > Rosen Penev (3):
-> >   v2: fix compilation and reword descriptions
-> >   clk: samsung: use kzalloc_flex
-> >   clk: samsung: cpu: use kzalloc_flex
-> >   clk: samsung: pll: use kzalloc_flex
-> >
-> >  drivers/clk/samsung/clk-cpu.c | 34 +++++++++------------
-> >  drivers/clk/samsung/clk-pll.c | 56 ++++++++++++++++-------------------
-> >  drivers/clk/samsung/clk.c     | 11 +++----
-> >  drivers/clk/samsung/clk.h     |  2 +-
-> >  4 files changed, 47 insertions(+), 56 deletions(-)
-> >
->
+On Wed, Apr 29, 2026 at 01:29:18PM -0600, Gustavo A. R. Silva wrote:
+
+> +	/*
+> +	 * Intel LBR bits
+> +	 */
+> +	int				lbr_users;
+> +	int				lbr_pebs_users;
+> +	union {
+> +		struct er_account		*lbr_sel;
+> +		struct er_account		*lbr_ctl;
+> +	};
+> +	u64				br_sel;
+> +	void				*last_task_ctx;
+> +	int				last_log_id;
+> +	int				lbr_select;
+> +	void				*lbr_xsave;
+> +
+> +	/* Must be last as it ends in a flexible-array member. */
+> +	TRAILING_OVERLAP(struct perf_branch_stack, lbr_stack, entries,
+> +		struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+> +		u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
+> +	);
+
+FWIW, this thing is horrible crap. Per construction this thing does not
+need to be last at all, you can have multiple such constructs in a
+single structure and things would be perfectly fine.
+
+Also, your TRAILING_OVERLAP() thing should probably have
+__no_randomize_layout in ATTRS, rather than empty (and I'm assuming
+__packed implies __no_randomized_layout, otherwise 'fun' things can
+happen).
+
+>  };
