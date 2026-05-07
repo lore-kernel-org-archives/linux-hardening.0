@@ -1,72 +1,92 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7626D3EC2E0;
-	Thu,  7 May 2026 11:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB3E3B8BD4;
+	Thu,  7 May 2026 12:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778153897; cv=none; b=TJPjHGsFPnn0TyUiGaY7tCQkkf7BQqghVRYz5/uAJtICxXQOKij7dMvI7oNzEr2ikighLNJ1eKzm/5EPT/VLMcaBlzrrWSCC8qpI4BqTmr4tzeGhXAhbjN6v3zT5Vvh6EAo7mTzJYc/fEEOe+isbDh6eQWSGRLnYR2RQmzla2qs=
+	t=1778155213; cv=none; b=G4nzyOvoWMPsR0/StIYlyOcTIM9d3aUqf9s+wOxFGSQl+SiZ5X1adYrrrf402bokKizgnjd61qvEER+4j9YhTQz7I3BoKNx/zA6UUuEHdhD+60zgn5JDEXrFj/Fz5luVoNHo5rghIoBc7L6q0PzWBMEMpjQFGyNKsF8+Sf6Xb4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778153897; c=relaxed/simple;
-	bh=JQmsOPqiQvG2uQuddF/SQF9vXsPHXdDJ4NGB35X+Zio=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FJPpWRJvqOGReU1P0t5xWb+drIMKqur6bEgZC9tUdcL9uTKK8hfy0bSfmz9rfWWuMHAUEBC0RXBJ8AhMVYTciGuaig9RDpHoXVvHz8BaLYlN1aUpfXIgI2c6/1h8K0mHvwxBFEkqkwvfaYx0BFJMVxt98BWStYtlj+ZINsZJcXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=none smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Z+Zo3cV1; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1778155213; c=relaxed/simple;
+	bh=4P63+pMF5hPGAISna7ea2oO0XmA+Gl8rd2gi9zdqbEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WXv5Xa60GIb9zwQur1chqEheD35P/XHGxHU5TZR4qADj5PvmVgppc+jJ8ztxjv7JqcG0g7m/05kWTf0bnoboeehDBZmGjqxJS48A0+BQw5fAkJDrPN0d9Y911Lq+SmgGWPtRGk7lxoS11hKxfs2EXJKS6LC/lK+xmWXuR1Rbflo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dj6NZvVv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Z+Zo3cV1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=JQmsOPqiQvG2uQuddF/SQF9vXsPHXdDJ4NGB35X+Zio=;
-	t=1778153894; x=1779363494; b=Z+Zo3cV1/23fwv4hXjUTcPb5qp3j7+up7IaXz94dRmoFqkb
-	aE1wsf+w8ORkVoq1R3tjcf8LfAulWpV0Qp8eTko3bw4sDDbuosSMExwTh+9zhrcfLmaPvsuTwo4ec
-	ErFVSAOTM+2/b4Nx1DhAHm5DM2fMRVY00mFUD9Hs+2CDdZEb6PQqYvEDPhQFFr4ctpcy4Tcju3Xsm
-	zMrXftb+pfBA+8CsvxKtRpMeLrFsmk0wf4SlXR/lAJWpp+71XvZR00UsyUrnPg8/oUIA3GEHkvp7r
-	5JJ4dmQaj3mnol49tCwzoht5XOZmJ0Adh80DVdDKM9zOXIpD7ldBF82OGiKghmUA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1wKwcG-00000003DIr-0Uxu;
-	Thu, 07 May 2026 13:10:04 +0200
-Message-ID: <fe81137b849e349bd9b0529c7e0e4be6b4099a5b.camel@sipsolutions.net>
-Subject: Re: [PATCH v3 0/3] Add str_alloc_free() helper
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Jiazi Li <jqqlijiazi@gmail.com>, Kees Cook <kees@kernel.org>, Andy
- Shevchenko <andy@kernel.org>, Ping-Ke Shih <pkshih@realtek.com>, Julia
- Lawall <Julia.Lawall@inria.fr>,  Nicolas Palix <nicolas.palix@imag.fr>
-Cc: linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org
-Date: Thu, 07 May 2026 13:10:03 +0200
-In-Reply-To: <cover.1778051552.git.jqqlijiazi@gmail.com>
-References: <cover.1778051552.git.jqqlijiazi@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dj6NZvVv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F70AC2BCB8;
+	Thu,  7 May 2026 12:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778155211;
+	bh=4P63+pMF5hPGAISna7ea2oO0XmA+Gl8rd2gi9zdqbEc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dj6NZvVvVdOgDw+LjcXmghm4lgzB0yLDuhWRWp6+T1Ab+ZYzJKC2uAEiWaO1m8cmY
+	 6fFESU1DwxI99LL4EouzKOWCzyS2GGh9n5dErai0qC1ZuojTipZeVZEbk1Q94thy4d
+	 P0VP9ZdJ2RiUYT2vfZ31Gr2SVPLgg5n9ba0LinPQ4w8HC8ywZ764RI8QLKbVhBFDno
+	 36OuvxzmLV7EDgAIy6A9MdahCwYHddaXy+bLHpaCkPBW4GLNaKzCV2gGN2zzCeJT1v
+	 jh8ToM18pipZRbdpWWSgbSr3cU2OHxam70kBlSkRnXAUGiRxib+9on4Q4WWMvjhu2n
+	 jdKoP6EWKNK3g==
+Date: Thu, 7 May 2026 13:00:03 +0100
+From: Lee Jones <lee@kernel.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, willmcvicker@google.com,
+	jyescas@google.com, shin.son@samsung.com,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v3 03/10] firmware: samsung: acpm: Drop redundant _ops
+ suffix in acpm_ops members
+Message-ID: <20260507120003.GG305027@google.com>
+References: <20260420-acpm-tmu-v3-0-3dc8e93f0b26@linaro.org>
+ <20260420-acpm-tmu-v3-3-3dc8e93f0b26@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260420-acpm-tmu-v3-3-3dc8e93f0b26@linaro.org>
 
-On Thu, 2026-05-07 at 19:03 +0800, Jiazi Li wrote:
-> Currently finds 4 locations:
-> ./drivers/net/wireless/realtek/rtw89/fw.c:2557:7-12: opportunity for str_=
-alloc_free(valid)
-> ./drivers/net/wireless/realtek/rtw89/fw.c:2693:7-12: opportunity for str_=
-alloc_free(valid)
-> ./drivers/android/tests/binder_alloc_kunit.c:196:6-21: opportunity for st=
-r_alloc_free(alloc -> pages [ i ])
-> ./mm/slub.c:1634:3-8: opportunity for str_alloc_free(alloc)
+On Mon, 20 Apr 2026, Tudor Ambarus wrote:
 
-It's what, three characters shorter for four users each? Is there really
-much point?
+> Rename the `dvfs_ops` and `pmic_ops` members of `struct acpm_ops` to
+> `dvfs` and `pmic` respectively.
+> 
+> Since these members are housed within the `acpm_ops` structure and
+> utilize the `acpm_*_ops` types, the `_ops` suffix on the variable names
+> creates unnecessary redundancy (e.g., `handle.ops.dvfs_ops`).
+> 
+> This cleanup removes the stuttering, leading to cleaner consumer code.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
+>  drivers/clk/samsung/clk-acpm.c                        | 8 ++++----
+>  drivers/firmware/samsung/exynos-acpm.c                | 4 ++--
+>  drivers/mfd/sec-acpm.c                                | 6 +++---
 
-Reading just the name also is really confusing - yes it lines up with
-str_assert_deassert, but "alloc_free" really doesn't seem very obvious -
-why would you alloc and free a string in one function call?
+Acked-by: Lee Jones <lee@kernel.org>
 
-johannes
+>  include/linux/firmware/samsung/exynos-acpm-protocol.h | 4 ++--
+>  4 files changed, 11 insertions(+), 11 deletions(-)
+
+-- 
+Lee Jones
