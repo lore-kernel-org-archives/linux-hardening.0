@@ -1,82 +1,113 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39BB331A63;
-	Thu,  7 May 2026 08:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FF93624C9
+	for <linux-hardening@vger.kernel.org>; Thu,  7 May 2026 08:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778141433; cv=none; b=bsgAPmkQjtwR63V5ElGCVBxzIHUttFuWA4lkFHFlSMf+j2Pv27SWIoI37GoMafIQny0p+/w3seZnHiXKs0tPeRDinrMrDfZPOdPK7PNrrqpVs9uHNPgu0NUK0okhEIvsRmtlWBtgsxFHapHcnYgETyGp9CLsVb/wQgXOjy1XjEE=
+	t=1778142788; cv=none; b=WgDhGx6XH+yEfu5arE5+AJYykzxkuoRfWlAdJ5vHJdB0XMZxN3tHRxRHq8HAadvosQnzAyqsRAnBaZ3mfCJPlMCED10M7tFXKPFL2j2Owacqvj0B1hhS101AxsqkOvGydIjNgKwiYaZ7zyijQ9sW/OnKKJ6kkSbAEcMZEkKHCME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778141433; c=relaxed/simple;
-	bh=e5rksMSqIHqBjBbfvp63wF7CpbxkVjza1Ujamq1Ctig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fKxBiPfOcDEi/UcH10T40ifsCYvMOkpd0shZ9fBkR4thX6tuQSauUeaTu+xEA19XXkX7CJjqn/mASYa88wUSW0k/5jlYXq4urlYNFyXy6UsrAnjT6idTUkd2RdzpnSzOzU1oDeV4k6Zow4HfP9YBZun6VftsXNDgqJhqRXZ/ce4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ir9a+aQS; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1778142788; c=relaxed/simple;
+	bh=qcvqULrg1L127w3Mirj0n3N+6vWZ6Q9bK1d+khDDJxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dP3z+t+KBOv+l5TMBv8geaMhBy+ZXqyWZUY25PwV75XDgSVmrxu7ejyfHnyICXa8bQ1HR0SHL/y+OXAua+CCFYHlfSU9ICF38CqC+FKs4kvapq91eb0PtbWcYkNVcadYxIp2+AcpfMsq6hPTXNxUJJSdquM4zLFnHDGESRDEr2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RFlRHiz0; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ir9a+aQS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rAaLZS67dYIlzvdtgWzP5jbZxEn3Jj0dh3pCM4gNADs=; b=Ir9a+aQSswzm9crBs5eK5+1wCn
-	nHxIj0oB1cupnH6jGWVn5AsyZgkaZfaSwfDwCGclbJclkiHrTtJj9WFd1/Z6oM/sP536f1xKGczUm
-	+HI0rrSzOe9YKZtFEZmQZlhc7nGFRB88SWVHI+T4UXIcBVEBBmbns3i+uOc4LREIHLPbPcSlITCk+
-	kwHdiERm8opz09nyYiir2YdMOG98eb0CqjagcPPYK4wp32wxatLK4+LLu/uxFsXwa1WWAXIvGbaF7
-	hdDA+SE6gChdyjtmr5mkZiCgP3NCLRhs4MMBUHVC8cwbih8hAj8nykoS/sDkNk/u5g/zSENtF1Fvo
-	BgXyBWyw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKtoD-00000002Vb8-42Jq;
-	Thu, 07 May 2026 08:10:14 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8A2C83008D6; Thu, 07 May 2026 10:10:12 +0200 (CEST)
-Date: Thu, 7 May 2026 10:10:12 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH][next] perf/x86: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <20260507081012.GI3126523@noisy.programming.kicks-ass.net>
-References: <afJcDg1I5ZU5ZkXf@kspp>
- <20260504083228.GQ3126523@noisy.programming.kicks-ass.net>
- <7aa0f09e-5d35-49e1-916b-7564d074df70@embeddedor.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RFlRHiz0"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso4519705e9.2
+        for <linux-hardening@vger.kernel.org>; Thu, 07 May 2026 01:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1778142782; x=1778747582; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=86qRkTYkeTPGUaExOcKsMIcF7KjnGIGTELhJaNsShJE=;
+        b=RFlRHiz0xIR8BEf/KDhg3GsLONezsF92ljL6JIYuU1LCLE9jgDZ6niEgbIdEYIlUrf
+         KM2UhAzE3ajNssSxlm9YE5wg6D8lpMFRGZ0EuNU4TuylA2u3FcWdn1WvjhTinIwdM5KM
+         Yxl6oBagrgsIRlRgsNaKr3p6ytGyBFPxmBZs/iTk7sLHi4GKy/vPelNJ1hx+R54THio7
+         OaaF6fHWoKjVOQrPlSSgN7lZ3nQcE95HHe40tSZ9/XjEnPbwg6WnW09vGJFr+q5nULuh
+         Cmy81hpSiKiDdyqFCbcnMwMrbS23V237yfBWmtPOO7xdSA4v6qOoWvgwUUQllMjcD+SN
+         gYNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778142782; x=1778747582;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=86qRkTYkeTPGUaExOcKsMIcF7KjnGIGTELhJaNsShJE=;
+        b=HEKzeM9XpFJoK9MG2dltdiFpyVjQsb1kua8pzUVKQQ3VWGHuY2cEpdMnUj/Dr9ixwP
+         RT/O+0KI9GqtZVZjNowrVq6FnUfwF9aoR0tW6Ybxm8E8AgUYTt2a3bWykGHPfPNqgD+Y
+         RAk8O+gZRx1qhmrMroHs+h24iZQwMtNxfdLGqEKj1IEyn+8vzLYXQ7dYC4iGkhJ8A+bC
+         JdX8WJMwHjVfiMAmjn4YeRmJnlQZudAr8JcoRXLlcOPQRYHktMTKdPyHuYQaX2r6it4e
+         IkhFq52KNQ5qMAEUo3i1UBVWHqJ+nl6SDNrMRN5SRbJ8ZbS4riSeyEHwKidBI2Hk3Ehe
+         NXQQ==
+X-Forwarded-Encrypted: i=1; AFNElJ87MOqTGdYgFDWhiCzySOHtvfQb1h0aIVXU4JACQRPQ0kXOZPVSdxMJqpYNoxHBvHmArPConk4AVeWNYVtEBlQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvCse0A8BZiiJNbRoRNbqypYRhQTYU7Jjfd5l+ifYEXB98KSxE
+	gn6Jsm0u4CT+ffC5w/CaW0b2f7bLL+ZVqj9r2WGBax3ym+GOhlYG7hOwkR0yAfeYXgNRoJ0d2on
+	Rhg52XSOgHQ==
+X-Gm-Gg: AeBDies3rR9cRRi7ADtIbAXMBTW+tG3hLnZx4wd3XoNZSxIVv0CiQucBrb9Hy7cowRF
+	idDlhmkk5JGYhvC0DNHFFQjgGUnuN8HX0e0Qer8ePeEvrwrMbQwt0smYenu3lFB3eKvLNQcDpu9
+	71fk+G5jC9iBeeeiTQWH4hpy4lXTIWnoRKeszaGZnTwYhO5KBpVso1JCWb609GT3+ROhsKNxL/8
+	5h8fs4TeyNCjLSJ8vI8/sG5NXWHPj5kwOsOqcWT/iuJlGiqy6jydyYnrSJRjr0nYwIeZSCZDS3y
+	xqBzgWj0PJdu27XYirCZUwic09tgJq2oVyQNQuK+z5jKgW1gm+xYBBQWmVgpYn8TSk6abvO4NDm
+	ij32q7MCzOJOnNiPZbO9VgUyaDHLrXkN4G/XsQ2xTMmkNZCiwWDWca0K6OGvt/uwrpIhzmY+l60
+	oAOC8wdXkywbXh/WDki5rvVxRjLypRdrz4k9XUreji95yVnRo5ASMUjw==
+X-Received: by 2002:a05:600c:a317:b0:488:a977:8d6 with SMTP id 5b1f17b1804b1-48e52bd4f32mr82461455e9.19.1778142781642;
+        Thu, 07 May 2026 01:33:01 -0700 (PDT)
+Received: from [10.11.12.108] ([79.115.63.228])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e5390f854sm104780755e9.14.2026.05.07.01.32.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2026 01:33:01 -0700 (PDT)
+Message-ID: <4c57b107-e1eb-4eef-ad77-021d9669900d@linaro.org>
+Date: Thu, 7 May 2026 11:32:53 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7aa0f09e-5d35-49e1-916b-7564d074df70@embeddedor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 0/3] clk: samsung: use kzalloc_flex
+To: Rosen Penev <rosenp@gmail.com>, linux-clk@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Brian Masney <bmasney@redhat.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "open list:SAMSUNG SOC CLOCK DRIVERS" <linux-samsung-soc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ open "list:KERNEL" HARDENING "(not" covered by other
+ "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260506233833.178357-1-rosenp@gmail.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20260506233833.178357-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 04, 2026 at 01:50:50PM -0600, Gustavo A. R. Silva wrote:
-> >    https://lore.kernel.org/all/20240806113254.GG12673@noisy.programming.kicks-ass.net/
+Hi!
+
+On 5/7/26 2:38 AM, Rosen Penev wrote:
+> Switch three structs to flexible array members to combine allocations.
 > 
-> Feel free to apply it.
 
-Bah, stupid warning :/
+What's changed in v2?
 
-There really is no sane way to tell the compiler that the code is fine
-and it should just STFU already? I mean, it is directly followed by an
-array of the right type to fill that flex thing.
-
-Anyway, I suppose this all very much relies on the structure not getting
-randomized, so let me stick __no_randomize_layout on it at the very
-least.
+Cheers,
+ta
+> Rosen Penev (3):
+>   v2: fix compilation and reword descriptions
+>   clk: samsung: use kzalloc_flex
+>   clk: samsung: cpu: use kzalloc_flex
+>   clk: samsung: pll: use kzalloc_flex
+> 
+>  drivers/clk/samsung/clk-cpu.c | 34 +++++++++------------
+>  drivers/clk/samsung/clk-pll.c | 56 ++++++++++++++++-------------------
+>  drivers/clk/samsung/clk.c     | 11 +++----
+>  drivers/clk/samsung/clk.h     |  2 +-
+>  4 files changed, 47 insertions(+), 56 deletions(-)
+> 
 
