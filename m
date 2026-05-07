@@ -1,116 +1,106 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9673A6EFC;
-	Thu,  7 May 2026 10:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCCB306B3B
+	for <linux-hardening@vger.kernel.org>; Thu,  7 May 2026 11:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778148905; cv=none; b=ZNxJ3ZyIr3UIPX+zAUMLz2m6V2t44DdbzPLTBkN3cTBHTJ7zBcpT80WJHWW0DCskfRnyDXCRTEfenZ1eD92yny/Hk8wb9tY1PrhvhzpntTYhtSFyKr2WSETuj8vxwLu7hdgU7ydJaGlUFUnKmF1IZ3Es7fUyhobvphnju2ve8Ng=
+	t=1778151851; cv=none; b=TJXeheo2cBpbUohXFjaph+c0uDFUpxkiwQY4ZR7fBHpdkWFGyqU8k2dtDsaNfh02aRd3ww5slZsKadLCMmEtBeTU+QhrGC7TjFD/WJpkznDXvxfElbFFVNeFs60mJuRrRqEXKSmNjwrz3Kc8+dgFVP/VvNWHx6vii67QGLt+Ujw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778148905; c=relaxed/simple;
-	bh=IHBwWJ/tasIPeaU2FIIM1pe9bcDw/+HjDJbpuMIyt1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LDWUqVGnle8LYyPxcN5NbFSHBg9nrsody6V7CKczM8SPyqXykqOO7jU0RNQeqRLTTdfm0Fcuxzh2fQ0lKIjAa6f/e5bYEuvnQprCZeZMBXCeMGLF1HrDeRW7VpRzSjxBBwTBfVM0pryv3xIhW98UrP+a+FYf6muqDOUeTcaRfLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dchbhVkB; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1778151851; c=relaxed/simple;
+	bh=muy4ln8oosRMTLMN8Ir5RlGdNWkfxHNe7px5ZbQvV90=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XLi9QFsVAdK3CfrFiT1aLcTQO09AFVNwhK5ggNlmzHZHMJDUsuulM7hHppYAXbBQilrTwTkIf4ALnb6ivcLeZ4yiazOcGZccSPebHAJES8yi6HwxwzSiUSk1m8lHYQlP3TFQC9LKMFOSrgg8krM3btRk9CCtW5I4t29ibas6wk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lg6aOoCs; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dchbhVkB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=VNiftqS7fgET61dsxPWuBVOSGCj2rgUc1Iz9hwjBz+o=; b=dchbhVkB1r1i9Nb4lRxNEqY2qQ
-	CFIixTHOstyrQ/JDb5RX+Hzh4Qx+wxyxWZ1yfxhBkDAx2rkD6Cq3182VwupG6bW5RtwjcWBC/TNrB
-	EsvDEXZo1fDyygMxTOJhP2U9MHWySSkXXcbzaeL1b6JmloqhGLrk6TA4Ubx4mUPC77+9XNS8s79c/
-	ttF4EwgUur6lFvdk4XxQA0Xm/T/h6CQcFkAoSFd3hGeswrR3unWG+igkkbfVvfgINIPtIefmlR6JG
-	k/f3RiT+Hl3+JNp0Mq2A/sZN9F7n2QG5ZBQgIw31CRdoOQdcI3sPClbuY4/H6e2YA3HEYSlLNk2/3
-	DCU+EJdg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKvkh-00000002fNP-097o;
-	Thu, 07 May 2026 10:14:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A5DEA301261; Thu, 07 May 2026 12:14:41 +0200 (CEST)
-Date: Thu, 7 May 2026 12:14:41 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH][next] perf/x86: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <20260507101441.GC1174357@noisy.programming.kicks-ass.net>
-References: <afJcDg1I5ZU5ZkXf@kspp>
- <20260504083228.GQ3126523@noisy.programming.kicks-ass.net>
- <7aa0f09e-5d35-49e1-916b-7564d074df70@embeddedor.com>
- <20260507081012.GI3126523@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lg6aOoCs"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-c801b30188dso260910a12.3
+        for <linux-hardening@vger.kernel.org>; Thu, 07 May 2026 04:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778151850; x=1778756650; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZmrgafWER5TklrlynvzNXexUVxLr7++bugjx6nPpFyQ=;
+        b=lg6aOoCsQOoRdgaZ6Nb2ZcEFdGIAiz7gAVSladZLaak2XyA7i95gK9R1azMUrrRtub
+         lDo+c0Na/EB+3lAnGUxtSKwxI1JSu8tFG7gva28yJHzkYtJyASBm+adtHFi8QFTquOPf
+         wJfwY8hLRfywKCaIdKPdJkIDk91alavQDlu4A5JixVSbjP5QJaHPPhllQcJN9zJWXodQ
+         6ahgX3GgJ1tPG1ldemGuPvpOrp6GWTdVZPJv9D0lVLuLHGzJpYAYXVUOKUU4lt7qDqX6
+         oBsuDrT6kKItitC/jm8IcvEK37DhJxIvCIh4yu/muvPk8Zk3uMzUELHAppNjlic0Pzlu
+         bFWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778151850; x=1778756650;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZmrgafWER5TklrlynvzNXexUVxLr7++bugjx6nPpFyQ=;
+        b=dgJmDKVIYNKfnG6ayWp5XJB1MN0NFUC3ndJ22GV1PTT4KHeBX5z073J+WawIcQpZ7i
+         cMACASjSGUZbkbF/KJN8x3xoWiygY/oaJBhvEqee7GOUbDbfHOmRxRohoE+JtqAMpmIO
+         ygBg5PJ0iu484SO+SUI53BPcGDxB0oO5t0nlAJtYn4rYZymgnNwGxK9/PLtnizGBYtV0
+         VwsulRmgD96p58VjPX9g+0qYbtvGec/k7ezgSuUMa7efCHX6kV1ll+1ZzmXw/1aVS6e/
+         n/B0GOHz6Gxig9396+l0EhSlDlcVFtc7Z/Dgz40zB5COcAbVrFUSs3Rrd0rc8zNaw/BE
+         8Gtw==
+X-Forwarded-Encrypted: i=1; AFNElJ+6aBAfu+DNXzhNVaOUgdSO+6akG2yR1ptqhF9G3fEK2cL0iv+ONpm99qkCcct9VFZL5tAB0rYDqHwIQfKM3VY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb+V9YIH/BeHtPc7dGNPUcoktaybcCOqezf/XOyEmB6uL7MMaz
+	v9w2YsU1pzr4FcBxDOo23zVEICLPNrXV7Ui/sFydsJd+ESRe0xq2Gy9H
+X-Gm-Gg: AeBDieuY/ZhfMwItWRD/O0saZAOx5GMKCa2uxaw6pb6cQGqGEP7ez9pAlx/i8mtO6py
+	tN29cGmZ8Ep6DuCFJ8GNBh29RJLLxUca/8cAlFJfsEfa5zMlPJaOYIf7YxtKCQJjmikRd9IhE35
+	jXURhYgZxCWnbtCbekpoaNoAn58nb4a8zpU7ZN4l95ky8SdBVzMJOHXLRxTMlz6NcYp3SvBaeZZ
+	AnLGmzcdkYNYwu59sWemSUA71iganUl+TGQhRI8vRe8DXWzoQQhLEhzqfJdrEZAf1Vk+BbL7r4U
+	Y1p0bSHe/N2KLXS2xQGvSqQr2Ygfyis3fyw4+0zaonLW6SobGy9hBlg/tQgbMM9qnikupRj4R4I
+	AdXYAqbsAHoJZY0jID7BaXKFXtSW0wt5SNUf4YwXbjmuKLzKe0W72y9ikcm9lkm5H+KsTkOKjFC
+	IdjcOeTf7dkGV4P8CO49fKfn+WkaOQr/3eVR6LBm5x2IFcm2EGVk8=
+X-Received: by 2002:a05:6a20:6a2c:b0:39f:24a5:3065 with SMTP id adf61e73a8af0-3aa5a72c4abmr8140964637.7.1778151849968;
+        Thu, 07 May 2026 04:04:09 -0700 (PDT)
+Received: from localhost ([103.74.250.37])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c8253b493c5sm1835163a12.28.2026.05.07.04.04.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 May 2026 04:04:09 -0700 (PDT)
+From: Jiazi Li <jqqlijiazi@gmail.com>
+To: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>
+Cc: Jiazi Li <jqqlijiazi@gmail.com>,
+	linux-hardening@vger.kernel.org,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH v3 0/3] Add str_alloc_free() helper
+Date: Thu,  7 May 2026 19:03:02 +0800
+Message-ID: <cover.1778051552.git.jqqlijiazi@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260507081012.GI3126523@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 07, 2026 at 10:10:12AM +0200, Peter Zijlstra wrote:
-> On Mon, May 04, 2026 at 01:50:50PM -0600, Gustavo A. R. Silva wrote:
-> > >    https://lore.kernel.org/all/20240806113254.GG12673@noisy.programming.kicks-ass.net/
-> > 
-> > Feel free to apply it.
-> 
-> Bah, stupid warning :/
-> 
-> There really is no sane way to tell the compiler that the code is fine
-> and it should just STFU already? I mean, it is directly followed by an
-> array of the right type to fill that flex thing.
-> 
-> Anyway, I suppose this all very much relies on the structure not getting
-> randomized, so let me stick __no_randomize_layout on it at the very
-> least.
+Currently finds 4 locations:
+./drivers/net/wireless/realtek/rtw89/fw.c:2557:7-12: opportunity for str_alloc_free(valid)
+./drivers/net/wireless/realtek/rtw89/fw.c:2693:7-12: opportunity for str_alloc_free(valid)
+./drivers/android/tests/binder_alloc_kunit.c:196:6-21: opportunity for str_alloc_free(alloc -> pages [ i ])
+./mm/slub.c:1634:3-8: opportunity for str_alloc_free(alloc)
 
-Ideally GCC would get fixed to allow something like so:
+Patch 3 is based on
+https://lore.kernel.org/linux-hardening/CAHp75VdHY814NRfyUfWeqRd4-DwYzHGh25OTsUB5EFpRKpVQLQ@mail.gmail.com/T/#t.
 
-struct bar;
+---
+Changes in v3: Add first user for this helper
 
-struct foo {
-	...
-	struct bar entries[];
-};
+v2: https://lore.kernel.org/linux-hardening/CAHp75Vdvdr0TPzuDDPSoJ4Nixk-6qO_x6Or9iY9LNwSO1Q6mHg@mail.gmail.com/T/#mfb405519f7b3a06f4fcaa8e5a799da5299d9ee85
 
-struct ponies {
-	...
-	struct foo my_foo __sized_by(my_bars);
-	struct bar my_bars[16];
-	...
-};
+Jiazi Li (3):
+  lib/string_choices: Add str_alloc_free() helper
+  wifi: rtw89: Make use of str_alloc_free helper
+  coccinelle: Add rules to find str_alloc_free() replacements
 
-Such that the __sized_by() applies to foo::entries and ensures the
-member is no longer considered unsized.
+ drivers/net/wireless/realtek/rtw89/fw.c     |  4 +--
+ include/linux/string_choices.h              |  6 ++++
+ scripts/coccinelle/api/string_choices.cocci | 38 +++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 2 deletions(-)
 
-But I suspect this needs the whole of the flexarray insanity fixed;
-because for some idiotic reason it is allowed for offsetof(struct foo,
-entries) != sizeof(struct foo), and if that is the case, then everything
-goes sideways in a hurry.
+-- 
+2.49.0
 
-Note that the kernel very much does not rely on that weird behaviour,
-since it always allocates sizeof(foo) + count * sizeof(foo::entries[0])
-like. So we always have sufficient space at the end of the object.
-
-And then I'm sure fixing flexarray is considered breaking ABI and so
-we're left up a creek without no paddles on.
-
-This is a giant shitshow, is what.
