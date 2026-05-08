@@ -1,149 +1,196 @@
-Received: from mail-dl1-f41.google.com (mail-dl1-f41.google.com [74.125.82.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D1E30BBBF
-	for <linux-hardening@vger.kernel.org>; Fri,  8 May 2026 16:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778257635; cv=pass; b=H+hKPZiGFM6kniLm0M6AVptCptBeUtgaumeV0hXLIliGnAuVFInnzB9OszdfUthWYzQ7fLkvAz8G85zvZsb2VkcEP4fFlCHtJEphs94q//1nRu55y4dFNNxYMO/eOTYZcwMokT42oS0QdxZAQa3ANf4Pftjr7dml3uSwxt/QG48=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778257635; c=relaxed/simple;
-	bh=q9+X7pxW5kSsnaeT11MvKU+Neq6+weTqZPmaeqJBu9U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EqWyDHJ9xcWKiPfXIAEzAiT9zKYzigndIk+a/7Liiiv+JiRc6Tlm8WdFHtfdCDFLl55/EpkKSJ8PKdHsxzAJZX0f7JfHtK2rRwVLJTmNJPm50nYsNSmvDZpfAllVAiscZet9KeuhB1rixnKVfNaMYti3z9fMV+hWr2xxTzBc1+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H3Qs6PD0; arc=pass smtp.client-ip=74.125.82.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AA02EBDDE;
+	Fri,  8 May 2026 17:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778259634; cv=none; b=jFmHn2alv8GrahVglj30TDyiAxQ7IHu2mgOlVmSTPeSy9bsUNPXOTWdTGlWSy71th4YpumLtYY0QRtewPb3dnVBViRHq4Ipfz9ttoddJ57huW7TVVW9ACZxDe0zgjlKWIb/PZXf1z20MvpX2ogHtJTkmVDkOpnqvkXxw7MgUnZw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778259634; c=relaxed/simple;
+	bh=hwFcZ1rYADG5Vl5cAE7VhwuunL029cCrXItus5CFbJE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GlbgXnq3+kEUJoYKLo39UDXRLFfsuPoQYA4zCcTpYbU7AMZdE6MD7b77pk84xYJ9aUr7OGhOI6zN4aPPQXp2/fYZplDd78ApuCTlcU/8ttYneVDBZHmTXoUqPg7f8xZvH7XFMviTfHcMfKx7D1s7phYk0sZhCtVWigw1FN13H2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwaIEUxK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H3Qs6PD0"
-Received: by mail-dl1-f41.google.com with SMTP id a92af1059eb24-126ea4e9697so9309c88.1
-        for <linux-hardening@vger.kernel.org>; Fri, 08 May 2026 09:27:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778257632; cv=none;
-        d=google.com; s=arc-20240605;
-        b=gs7e3cSQJw/hhvJR6BdL1oe0SrBMX3TBMm05ghohUu+HWsceCAAmH5E8zCZ7qik0yi
-         CJnxyQR81DoITu4XgpWnA+TbzUt31CoL+itUi4JysyjNZoXGOWFV0cSDG2Td7VUXkNSS
-         mOXaj8fGu/rzfexqW6qR7sjSv6kREfJ6GbU9kivLstsVxFWha+IOmH14rJK4xsXC1L/V
-         lfJK6IwRsUjdtztvFKR5C7B+FLJmU55jn4grhdrJ5C8MQR5NDxAaxFt/OaKRv1e21vu2
-         WruQWX8EtBRoXu0+OXHfObt8sxhZqUUVShx4ncLUiU2zF2cvhxNhLPSV0l8ywzzLmoX0
-         7mdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LWrAzUBaU8exS/YJJSUkuMAq0O5XPD4cN6KpasU2G7k=;
-        fh=hZZbzeD+iMNcRDMSnAPdiktzyYXMSvPwSb8fbvPCP4Y=;
-        b=Z9pQa4Ymk/SUarN96/tvoOxdDQB/xzhYzCgtRoGjV4o2jR6KN6Ye9vI/GrPkwkK+ri
-         evI2ILRtvdYyBdJNmUA30fl2d+oxVGos1Q8y8+CFA5wzI8v7aDRu3HNTFJKH0lbjQmGS
-         bpP4oGaL5Ow3NRaYo/NH/1S6qIlhl/Em4QA5VKHKc0AS3qxudnyX3fxGwX1ZdCGi4x1u
-         FEHrsZe3L+8mJ1KuWc0WPw1O1l6jjQ5GA0ikFriYFAun6ln8wXKxc/rjMmsr/BizzkFJ
-         8d07mk8pCFBT/Hh6y3QiY7x9cFyGIzgwMrn5VLTp311RBkl5+1GQ+0ggV1LMNt8WSJH6
-         P4KA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778257632; x=1778862432; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LWrAzUBaU8exS/YJJSUkuMAq0O5XPD4cN6KpasU2G7k=;
-        b=H3Qs6PD0zJCltlHQjAbX47JZXO4XNtngzDMvSAlbVtI/5taLqbtlRwZIYVSJ1urbxu
-         1fyoY77sluDH6mvzhkinIWhkPMFtCc7ftFi55tNXyCsgRkNRQ5hsCNOxP1Ga+IE2Vu8n
-         +j5lOQwfYqfHS6B1dxF/Lo5GLd+LBJP7zx9mrNMpd4F/w4VJxvfQbAugeIHeml5I9lqa
-         +jkBtYc+wWDq/BpIiTlJEuR8Gyqmkn462VQ1v0V+My+6iuV0cWEWSHijNeDeZCkhXTRV
-         usMheqhsoT/kOQ3FXsZocvzq+srT+WCPyVirbaeqyF/YTbKOFC6uUa15xq3qwqGT0tcA
-         WUvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778257632; x=1778862432;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LWrAzUBaU8exS/YJJSUkuMAq0O5XPD4cN6KpasU2G7k=;
-        b=ej3MWauhAm2tqp1VS2k4pNCb9XfaWWA1of8kw/EmGTI5oaHc8rbVg9YyC0AlVk1q7d
-         HOa7HMKuJZnshKdYxxZo887YIlIhwI6DfXOl6HjqaO6yc3OgRYLptxEBCSn52lvgno53
-         rrE84EFmFlDjsEOD/nYItc/GEtym5AknZVMxU9tRIM/DUhxywqTESUDWgfrfixISMf0n
-         ZjWCoHWK1vRS+5CBiM657UppSaKajwrwNiHNS4t6T0GEpyUbhxy26J1uQPl/wgEjGpPE
-         lYbqsKUZnjfYU4aHDgeoj7ngaJvxYBaV/f+mZPuJDwPF0XkOIRN/1YRffmgGWSDyF05i
-         M3TA==
-X-Forwarded-Encrypted: i=1; AFNElJ++p2yV2tmrmhxgZHTLclO7oO9y0NNLVt0XNW/i7DbiiYjvX81if6Io/ndmEm13FG6dGTfUb7yMgfCSsMUPDnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRk9CZunrrOeaVeFLGsW5eUB5rVCZSJCO977EtA8bWACyQie3s
-	d+74aqXBrepMaqd9+MQ6rxZekPpws9djnYU8ceioRiiOr/BVjazeln4MjMPfc2aFjISkdNKCEby
-	oUa/RiNfYvzyY5X/LQtYQsC9d6/CmlwlPnQg1qmqQ
-X-Gm-Gg: AeBDiesPiPdh51FxX9hwa4BiaU5dw1v2uXFwoDuxmhzmFdWr+AoGhh+nUe1iCYJOvcB
-	Uk7CawUANsN2UihXe/q573QpEBtIjuOhtQBwvFR/7S0/jqXmN6HMYcuYHcrKNORVNKDpNOL4FEG
-	8AAbfn1r6bm7PnF7hUUVYMB4zbEEHhpGwd+aY/KrWRNjkihPJPSnvR8xY2AhDiYyPJaPOF672AG
-	taV5X9lCYuLu4HpJbEXnbH+py7dGscZHm8VbiiVHnvLZ706kKyvTGe3bvXnGxxN/OE28lP4TugT
-	kFnNi1+urCUEOn7WrqhNRSafZ9IIDJPjDCOW4NdoPcDc3KGW
-X-Received: by 2002:a05:7022:1b07:b0:132:1e01:86c6 with SMTP id
- a92af1059eb24-1326f1adf79mr146458c88.3.1778257631452; Fri, 08 May 2026
- 09:27:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwaIEUxK"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 80C0AC2BCC7;
+	Fri,  8 May 2026 17:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778259634;
+	bh=hwFcZ1rYADG5Vl5cAE7VhwuunL029cCrXItus5CFbJE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=IwaIEUxKuwfFkuYpuWO4zk8yEqUpAhDSeEPvyKN1vhIv5NFUnJ1qVcz8LzbRYNxwT
+	 IoeVOHn2ciwGAz/v/4CmxiNEQUrLqveb6B3hOcmCLo/cbE0Ei47AV/NDzrvVcLBq0A
+	 e2wFSAkUVe8yIulD3uhQFxhUYYaFlJdljvlh9W47ey5wMIT10w0kTFJiYGA9BptR83
+	 ze/LyuTYoaD6SygERz7RMrK+lC5Gu1JRLgFeXpFjpkQGrK5wY+HLq3Tc1fZC/qNiUN
+	 6u1JPOz4y2rnuyWrCRjiyZxYKk5Jw2kAl//0UeBsT741Qo6zJY8V2WXVjczRLDqRn2
+	 N4/RwrcSeY3PA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E08CD37AD;
+	Fri,  8 May 2026 17:00:34 +0000 (UTC)
+From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Date: Fri, 08 May 2026 18:00:18 +0100
+Subject: [PATCH RFC v4 02/10] iio: core: support 64-bit register through
+ debugfs
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
-In-Reply-To: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 8 May 2026 18:26:32 +0200
-X-Gm-Features: AVHnY4Ie_zoehI8s5zgNqv30LukVADTdXtN2wjCtxwLZ63ygAkVHFVZmFiSPGIE
-Message-ID: <CAG48ez2ed44M=-qsZO7gwcz5L2njdRdk54d47jEg48MhWTkaew@mail.gmail.com>
-Subject: Re: [PATCH] mm: make zeropage read-only
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mm@kvack.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Seth Jenkins <sethjenkins@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260508-ad9910-iio-driver-v4-2-d26bfd20ee3d@analog.com>
+References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+In-Reply-To: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rodrigo Alencar <rodrigo.alencar@analog.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778259632; l=4625;
+ i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
+ bh=YRlk/iiq4eVXfrqmyO+o0NNkYu0tyVA5S+8lWtEXHes=;
+ b=0VV39g/Wnx+Ah8y4F3SqtMhm46W0xUme5DPPPwUnSzegUyZaFwwhGljivE9L2qlhtG3+Ojke2
+ J4FIBcPJvcjAEnLuYOBFDDpnYHjN/U/D69WiNtIOHXBWTRbLToDRpMi
+X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
+ pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
+X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
+ with auth_id=561
+X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Reply-To: rodrigo.alencar@analog.com
 
-On Fri, May 8, 2026 at 6:12=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
-> Put the zeropage in the read-only data section - nothing should ever chan=
-ge
-> its contents. Set up a new section .rodata..page_aligned to mirror the
-> existing .data..page_aligned and .bss..page_aligned sections.
->
-> There have been several security bugs where the kernel grabs references t=
-o
-> pages from some userspace-specified source, via GUP or splice, with
-> read-only semantics; and then later on, the kernel loses track of the
-> pages' read-only semantics and writes into them.
->
-> I have seen such bugs in out-of-tree GPU drivers before, and recently
-> upstream Linux bugs of this shape have been discovered as well.
->
-> One problem with these bugs is that fuzzers and such will have a hard tim=
-e
-> noticing them, because the kernel has no mechanism to directly detect tha=
-t
-> such a bug has occurred. It would be nice if we had debug infrastructure =
-to
-> keep track of whether file pages are supposed to be writable, or such; bu=
-t
-> for now, the easiest way to make these bugs detectable in at least some
-> cases is to make sure that writing the 4K zeropage is mapped as read-only
-> in the kernel, so that attempting to write into it immediately crashes
-> (unless the write happens through a vmap mapping or such).
->
-> This patch might increase the size of vmlinux by 4K since .rodata is stor=
-ed
-> in the ELF file while .bss is not; but the compressed kernel image size
-> shouldn't change much, since it's compressed.
->
-> I have tested that with this patch applied, calling
-> `get_user_pages_fast(address, 1, 0, &page)` on a freshly-created anonymou=
-s
-> VMA and writing into the page with
-> `*(volatile char *)page_address(page) =3D 0` will cause an oops.
->
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
->  include/asm-generic/vmlinux.lds.h | 1 +
->  include/linux/linkage.h           | 1 +
->  mm/mm_init.c                      | 2 +-
->  3 files changed, 3 insertions(+), 1 deletion(-)
+From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Seth pointed out that this is more or less a duplicate of Ard's
-<https://lore.kernel.org/all/20260427153416.2103979-19-ardb+git@google.com/=
->.
+Add debugfs_reg64_access function pointer field into iio_info and modify
+file operation callbacks to favor 64-bit variant when it is available.
 
-So this patch is redundant; sorry for the noise.
+Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+---
+ drivers/iio/industrialio-core.c | 33 ++++++++++++++++++++++++---------
+ include/linux/iio/iio.h         |  4 ++++
+ 2 files changed, 28 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index bd6f4f9f4533..cb4e2ade25c0 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -386,6 +386,7 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+ 	struct iio_dev *indio_dev = file->private_data;
+ 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+ 	unsigned int val = 0;
++	u64 val64 = 0;
+ 	int ret;
+ 
+ 	if (*ppos > 0)
+@@ -393,9 +394,17 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+ 					       iio_dev_opaque->read_buf,
+ 					       iio_dev_opaque->read_buf_len);
+ 
+-	ret = indio_dev->info->debugfs_reg_access(indio_dev,
+-						  iio_dev_opaque->cached_reg_addr,
+-						  0, &val);
++	if (indio_dev->info->debugfs_reg64_access) {
++		ret = indio_dev->info->debugfs_reg64_access(indio_dev,
++							    iio_dev_opaque->cached_reg_addr,
++							    0, &val64);
++	} else {
++		ret = indio_dev->info->debugfs_reg_access(indio_dev,
++							  iio_dev_opaque->cached_reg_addr,
++							  0, &val);
++		val64 = val;
++	}
++
+ 	if (ret) {
+ 		dev_err(indio_dev->dev.parent, "%s: read failed\n", __func__);
+ 		return ret;
+@@ -403,7 +412,7 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+ 
+ 	iio_dev_opaque->read_buf_len = snprintf(iio_dev_opaque->read_buf,
+ 						sizeof(iio_dev_opaque->read_buf),
+-						"0x%X\n", val);
++						"0x%llX", val64);
+ 
+ 	return simple_read_from_buffer(userbuf, count, ppos,
+ 				       iio_dev_opaque->read_buf,
+@@ -415,8 +424,9 @@ static ssize_t iio_debugfs_write_reg(struct file *file,
+ {
+ 	struct iio_dev *indio_dev = file->private_data;
+ 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+-	unsigned int reg, val;
++	unsigned int reg;
+ 	char buf[80];
++	u64 val64;
+ 	int ret;
+ 
+ 	if (count >= sizeof(buf))
+@@ -429,7 +439,7 @@ static ssize_t iio_debugfs_write_reg(struct file *file,
+ 
+ 	buf[ret] = '\0';
+ 
+-	ret = sscanf(buf, "%i %i", &reg, &val);
++	ret = sscanf(buf, "%i %lli", &reg, &val64);
+ 
+ 	switch (ret) {
+ 	case 1:
+@@ -437,8 +447,12 @@ static ssize_t iio_debugfs_write_reg(struct file *file,
+ 		break;
+ 	case 2:
+ 		iio_dev_opaque->cached_reg_addr = reg;
+-		ret = indio_dev->info->debugfs_reg_access(indio_dev, reg,
+-							  val, NULL);
++		if (indio_dev->info->debugfs_reg64_access)
++			ret = indio_dev->info->debugfs_reg64_access(indio_dev, reg,
++								    val64, NULL);
++		else
++			ret = indio_dev->info->debugfs_reg_access(indio_dev, reg,
++								  val64, NULL);
+ 		if (ret) {
+ 			dev_err(indio_dev->dev.parent, "%s: write failed\n",
+ 				__func__);
+@@ -469,7 +483,8 @@ static void iio_device_register_debugfs(struct iio_dev *indio_dev)
+ {
+ 	struct iio_dev_opaque *iio_dev_opaque;
+ 
+-	if (indio_dev->info->debugfs_reg_access == NULL)
++	if (!indio_dev->info->debugfs_reg_access &&
++	    !indio_dev->info->debugfs_reg64_access)
+ 		return;
+ 
+ 	if (!iio_debugfs_dentry)
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 96b05c86c325..86d17ee69e05 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -484,6 +484,7 @@ struct iio_trigger; /* forward declaration */
+  * @update_scan_mode:	function to configure device and scan buffer when
+  *			channels have changed
+  * @debugfs_reg_access:	function to read or write register value of device
++ * @debugfs_reg64_access: function to read or write 64-bit register value of device
+  * @fwnode_xlate:	fwnode based function pointer to obtain channel specifier index.
+  * @hwfifo_set_watermark: function pointer to set the current hardware
+  *			fifo watermark level; see hwfifo_* entries in
+@@ -572,6 +573,9 @@ struct iio_info {
+ 	int (*debugfs_reg_access)(struct iio_dev *indio_dev,
+ 				  unsigned int reg, unsigned int writeval,
+ 				  unsigned int *readval);
++	int (*debugfs_reg64_access)(struct iio_dev *indio_dev,
++				    unsigned int reg, u64 writeval,
++				    u64 *readval);
+ 	int (*fwnode_xlate)(struct iio_dev *indio_dev,
+ 			    const struct fwnode_reference_args *iiospec);
+ 	int (*hwfifo_set_watermark)(struct iio_dev *indio_dev, unsigned int val);
+
+-- 
+2.43.0
+
+
