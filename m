@@ -1,122 +1,563 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5F737755C
-	for <linux-hardening@vger.kernel.org>; Fri,  8 May 2026 10:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6343E3C5C
+	for <linux-hardening@vger.kernel.org>; Fri,  8 May 2026 14:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778234765; cv=none; b=Uxx9UNj+e4hFvqZS++R9BywTmz7oRlfKC5yOMynzWAML0WiqlM4eYxyYyK6dUXe3wVNTHzjVjW04dETwTNATtFSW5+THTuK4ORkEhZ8LA4tfCdDVV+UIuuAwevn58CwEMFbxKw502t4meH43m/LIG8/62VR7U9HtjZy5nTkrRTo=
+	t=1778250110; cv=none; b=t+bGJxl+Z8R5yqu6BH+9YKBvrotGOxwPHD/v8rxIdywYm0GGFCY4WvKswo5wEGlQMpU2MKCamEvuqPeK7b3w0jGPOMHCsxT7OuPDYTk99wTWIa0dwa9XZi/xLqy2aSgEEmtoBkearCMD05/B+7TR37Eqq2dLcMpgDzIJL6MhLxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778234765; c=relaxed/simple;
-	bh=7HtEkn1G6Gt+KqI9Inj3vguOrvstZekSSZzl3+vPWJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RIV/YTh7f/l/N9ym1FF3bP2PgLi137f+/Xqv7F/2CBkk3xGN/s0ztekSQf1+/oTJkfKgW7FUaXNsiLBl5Diz6Ue78Bxj2Kiy9dCUdI3pDPoEEr/cmu1jB4XOSW9kED3g34WRUYGsc3IMqY16UZFyw1Qe73RqVGcDrGYOOPy25+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mKX3v2cy; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1778250110; c=relaxed/simple;
+	bh=noJSLUYrP0lnI0v/DfCD3Pyd2+I5E3Z3OZvUKXERpyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iT4Ksrz/l8Nibzd7nS+wmIn8kpX8OQQDbqso5Ek9rurYKZ08D27wLgf5SI7PYWIm7029BUoBkphb0UZUZrvXzb2XBs9B5ZJ/rViQ4In8l6yZjY+XNI/MDtnNl4lnxRSxsq5SXlcfscOh9DPIqkt4uYcLFNMtJ70dAGDjhSCLO4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lxmCDmGM; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mKX3v2cy"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-67e9b3037dcso1667002a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 08 May 2026 03:06:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lxmCDmGM"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-488ff90d6c7so18529175e9.2
+        for <linux-hardening@vger.kernel.org>; Fri, 08 May 2026 07:21:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778234760; x=1778839560; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4hxarCXBu2q9FLo6gBfwZV7234oitg8nQDrnEw0Apq8=;
-        b=mKX3v2cyUXfWRT5X5osfq2WBcZQATjRgkcPJfkaRqDd7Jxcxcvu1eCHXYuOtLrSzuP
-         /uHIAOZEuZdDEsumX7xFK0exxOEh9BeBB/dz1iK3LI2xYClnX6PvHLyOsbZwX6SAgow6
-         zTUdzKHj/QI0eqswypAEnd5kEc+IwWBMVxj1E93c4VxjHCD0lvYxFjlXD2KxF21azkCJ
-         /+iMtseDkn5OLBKA9kgLSnv1shtQ6u2ho0P179u0jFl21E14BOk6PqgHQKISKlO4whXF
-         Z5irl0CBpfpwN7HLPZwUqYSNO4a1o4m58hrOQ4QMU5oo8EagJUoYQWzbAFNmtJICFqAv
-         h3jg==
+        d=google.com; s=20251104; t=1778250107; x=1778854907; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rVtMnBbfRCAgkpWYc10MAqsksMPJC+rFMf+ol8dg7l8=;
+        b=lxmCDmGMyqnDZx/7wAsUNvGpsRQzBgpWiC3vG+0LnvmUXUP4H3Pgg0L9dUIDxRIN+1
+         SnXRRzhO/qEtgSJIRchjBXQSvgUGJcofJN7fG3DIH/P38Z8t+H3WZ8zaUi1homdr5PiQ
+         BxKqSBlV4QTLOw7pHF1d4ymwqIFQMrY/rqHTDZp/J+J7uW0rK9vLHn1FqpZOF99KZyuH
+         h7eABtdT2Lawe1EJq//aqWTvTHUNYiXtPQTDi84W0r9CJ5rUySvJSx0TrorXjVEjyQlk
+         Dq0i9wfOM8J38V2AkClBedjSU2tBCwrfQ36QfKQedurn6XJDSoYAHgenR9PrSSdXaVVc
+         SA6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778234760; x=1778839560;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4hxarCXBu2q9FLo6gBfwZV7234oitg8nQDrnEw0Apq8=;
-        b=pCqOGWJvx5iKmXZ0pBjM3dh6RIiOVA0R4tHYBH0xSROONlhOfft8L13U7XxKmkgTme
-         WoGcbLlhT+81IPDIuCq/nAjKiA8JP/nEoZn+vkMWdCup5xGFwQNvTdbNAWS6ciJGI2Hh
-         weZ3nkymq8ZMI1L5kIiHpS3RC191uToindeyXJebiZeKw2Q+bbeB1Llijm/a6PmaQ24t
-         5//MPfwTZoDWB9O2Y9H1uBHR9w6wb2bRiOrmkp01/Zn1E5UggQk7MPwotyT6FwArQHfl
-         wYdkswmInB69QdGK1Am10HLnjEteQ2iZd5k8DHmaJKefKtFM87GtnxmOfyBFmFnzH5vm
-         Xu9w==
-X-Forwarded-Encrypted: i=1; AFNElJ9wnz2GhkjLlHr6ry7gXYbYY6Ztoc7wmR8SQG+Fp1efAbcv1pBuut/yDKFtYjiISWH0/uLd3cYBRnS/W7n/0NI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9ZnVzlil5XZRRX+aWdTxS8KyURs5q2HsGgnXi6OQM21xit+Vp
-	sKZoau8zQO3dMyXlOCfXpHl37eHUgkh5HMC+Tmtvy8LMHfYEVvE5FFFIuLb73Oo4bOY=
-X-Gm-Gg: Acq92OG37i4OZIbmoaXiowGm4SNn1pUXkdQQ94cl/FDfZ72R6b7Gm+PTtrMJTDzJjVY
-	DEfqj5TNqjDc/bkTiUHEZdbD9vviTsVZ85dutHGDH/cWK/Vr7E+IY7rQ1CnE/K+Yv0z3Ug3C+ne
-	rrAiK1KSrPdYzOOEsyHOLIJtoyV3imSIWwiTYEbOWWEpTdZRugT+nJsEdZ68IgIbQFUoBD2c0jD
-	BxvvgWhFOavXbcdm+B3aSBJxQz5DuX0gFLcdfiiIOusciD1zfyUlWV0JW90nKBthcsjlXjnwRBa
-	axSIZrt+DakWIUAftnkcQnZYgCIT9D/Zm7vPqiDJog2vMdCLv4TtVXSGzACqiqWDASntqyaPsNk
-	RyCEthie0bgRfZCWiA3C6gGbfYpage2UEaUkJ6YbK5HVulGP5AfI86++20/GgqjOH8ehRrPkPjT
-	cUpppsYfxgydFKqe1i5PjjwLlQqKWvFIabmgI=
-X-Received: by 2002:a05:6402:5287:b0:674:b1b1:d039 with SMTP id 4fb4d7f45d1cf-67ef0787b80mr978564a12.11.1778234760387;
-        Fri, 08 May 2026 03:06:00 -0700 (PDT)
-Received: from [192.168.0.167] ([109.76.20.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-67ef0b3bb2asm477788a12.6.2026.05.08.03.05.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2026 03:05:59 -0700 (PDT)
-Message-ID: <f6121050-3b27-4651-9fa9-9300ad299df7@linaro.org>
-Date: Fri, 8 May 2026 11:05:58 +0100
+        d=1e100.net; s=20251104; t=1778250107; x=1778854907;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rVtMnBbfRCAgkpWYc10MAqsksMPJC+rFMf+ol8dg7l8=;
+        b=NJtRcCUBdGG+86povDhbVphORuEeAAk2+Ezqq/nkfSRANZ1JB6tpteQH9Ec5LRl1pJ
+         C9+iXPCHdUe1ecw323P83X5W9hLk4aH9jkfEcHjBFH9TUIwZ5rPdr1eddX+IJdJ1VSK/
+         s7lrPj/c44qMmVZhhNLToXRJEwXDJXl3+FS1cQZpyNCMdxbQg59RA9hc1YR+Fj+SVbbD
+         MZOveYdR+/dYd9Pqq3GbO7+eFyv9otNUNPKRMD2mk6Q6bSOvln9s5l8M03EhNMHr1FFN
+         cFAFNBJks4CXDCWYnQ0PPT1QtKYfYK0E10wpk69jVg2ofvyJISeJdPjqrvkr451keU0d
+         oKLQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/LRU7HUa4Y1z5IwIP82HsnMXFY4Yl4LIpwCOQQ4GIIy7OpFnd+QJtowVr6ofh29xpTjMsOqkma94c+phCfjiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMCcyzHm3qtr444Mnnj141Tv1os/A+doz4FYUV74SdcMVsHALX
+	rRuCUQUj9UxDPVmcOzHIqSkprGGyvsWgd+IeY9pA0RhjlOU3TT/7ucqg95ug5gzSow==
+X-Gm-Gg: AeBDiesXOl8+XVAW8tbpFa4h0FUK4rV6sdCx+Uglu56qXDCoz8yPDv70LhR196Rh38/
+	VeEsuTK3QrzqCC1CWRiK23wkJFkV3qeMam3Ly4G6/1ZQN4gSq5M9SSCHgFfVlEb0J7K3oeCdn/0
+	TQiKTF4YsDaEdFiZ7eLFW/kRVs1yvODKYlyaMe7SrCeIotKtubCOM3I5BTYNOFnD2PWvGuERZrY
+	FkLIO7KPIwcG9OXYznWEsv2DBf1LYFXSWZ/fo9ZKAKpv97++bJGLUIxmb6o6mcJgyaeZoByexku
+	mwhXJlLh61aYbnRvBSeDXbzMm557um9gYft2DLCQjeAPkvNSp64qN8T0k1ze4f9uIE2401qbfYb
+	t+TQLsfhwqGwB/pnCfJVY39f370Ok06xtEc0IvklFP/YFWchbLgrvu/7RJ457s+GY9w/PaMej0Y
+	Ryo7rIAZF/BjlWioyucL2U1KoAFtxncGPQK/TLMDRDFDirfQ0ISeLpYlebAXNbsUOqcA89c8Koo
+	vFUr3zJ3g==
+X-Received: by 2002:a05:600c:6290:b0:485:3f30:6250 with SMTP id 5b1f17b1804b1-48e51f3fd58mr229916195e9.20.1778250105972;
+        Fri, 08 May 2026 07:21:45 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:2834:9:d73a:30f6:7b4c:5d8b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e6d8d3113sm1750015e9.2.2026.05.08.07.21.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2026 07:21:44 -0700 (PDT)
+Date: Fri, 8 May 2026 16:21:36 +0200
+From: Marco Elver <elver@google.com>
+To: "Harry Yoo (Oracle)" <harry@kernel.org>
+Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+	Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
+	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
+	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH v3 1/2] slab: support for compiler-assisted type-based
+ slab cache partitioning
+Message-ID: <af3xcFjrZSZFG846@elver.google.com>
+References: <20260424132427.2703076-1-elver@google.com>
+ <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
+ <afkOMIPu1WNFE9MS@elver.google.com>
+ <CANpmjNM261J5qefMvmUXWZGBVz-KBs7GkbpdNMfTOvNJ-=LiZQ@mail.gmail.com>
+ <afz7pZADZPD4mKJr@MacBook-Air.tail10959e.ts.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/15] media: qcom: camss: Add camss-isp-sched helper
-To: Loic Poulain <loic.poulain@oss.qualcomm.com>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Bryan O'Donoghue <bod@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com,
- kieran.bingham@ideasonboard.com, johannes.goede@oss.qualcomm.com
-References: <20260508-camss-isp-ope-v3-0-bb1055274603@oss.qualcomm.com>
- <20260508-camss-isp-ope-v3-5-bb1055274603@oss.qualcomm.com>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Content-Language: en-US
-In-Reply-To: <20260508-camss-isp-ope-v3-5-bb1055274603@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afz7pZADZPD4mKJr@MacBook-Air.tail10959e.ts.net>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-On 07/05/2026 23:49, Loic Poulain wrote:
-> +/**
-> + * struct camss_isp_job_ops - per-job operation callbacks
-> + *
-> + * @ready:  Optional; return %true if the job can be submitted to hardware.
-> + *          Called outside the scheduler spinlock.  May be NULL (always ready).
-> + * @run:    Start the hardware for this job.  Called from workqueue context.
-> + *          @ctx_changed is %true when this job differs from the previously
-> + *          run job (i.e. first run ever, or a different context took over).
-> + * @abort:  Optional; abort a running job (e.g. trigger a HW reset).
-> + *          Called from process context during camss_isp_sched_cancel().
-> + *          May be NULL.
-> + */
-> +struct camss_isp_job_ops {
-> +	bool	(*ready)(void *priv);
-> +	void	(*run)(void *priv, bool ctx_changed);
-> +	void	(*abort)(void *priv);
-> +};
+On Thu, May 07, 2026 at 11:49PM +0200, 'Harry Yoo (Oracle)' via kasan-dev wrote:
+> On Wed, May 06, 2026 at 03:03:27PM +0100, Marco Elver wrote:
+> > On Mon, 4 May 2026 at 23:23, Marco Elver <elver@google.com> wrote:
+> > > On Thu, Apr 30, 2026 at 03:03PM +0200, Vlastimil Babka (SUSE) wrote:
+> > > > On 4/24/26 15:24, Marco Elver wrote:
+> > > > > @@ -948,14 +978,16 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
+> > > > >
+> > > > >             index = kmalloc_index(size);
+> > > > >             return __kmalloc_cache_noprof(
+> > > > > -                           kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+> > > > > +                           kmalloc_caches[kmalloc_type(flags, token)][index],
+> > > >
+> > > > While reviewing this, it occured to me we might have been using _RET_IP_
+> > > > here in a suboptimal way ever since this was introduced. Since this is all
+> > > > inlined, shouldn't have we been using _THIS_IP_ to really randomize using
+> > > > the kmalloc() callsite, and not its parent?
+> > > >
+> > > > And after this patch, we get the token passed to _kmalloc_noprof()...
+> > > >
+> > > > >                             flags, size);
+> > > > >     }
+> > > > > -   return __kmalloc_noprof(size, flags);
+> > > > > +   return __kmalloc_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags);
+> > > >
+> > > > ... and used also here for the non-constant-size, where previously
+> > > > __kmalloc_noprof() (not inline function) would correctly use _RET_IP_ on its
+> > > > own ...
+> > > >
+> > > > >  }
+> > > > > +#define kmalloc_noprof(...)                        _kmalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
+> > > >
+> > > > ... and the token comes from here. With random partitioning that's
+> > > > #define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
+> > > >
+> > > > so that AFAIK makes the situation worse as now the cases without constant
+> > > > size also start randomizing by the parent callsite and not the kmalloc callsite.
+> > > >
+> > > > But there are many users of __kmalloc_token() and maybe some are corrent in
+> > > > using _RET_IP_, I haven't checked, maybe we'll need two variants, or further
+> > > > change things around.
+> > >
+> > > Good catch. I don't think we need multiple variants (otherwise the TYPED
+> > > variant would be broken) - we're moving token generation to the callers
+> > > (not even inlined anymore) with all this macro magic.
+> > >
+> > > I think this is all we need:
+> > >
+> > > --- a/include/linux/slab.h
+> > > +++ b/include/linux/slab.h
+> > > @@ -503,7 +503,7 @@ int kmem_cache_shrink(struct kmem_cache *s);
+> > >  typedef struct { unsigned long v; } kmalloc_token_t;
+> > >  #ifdef CONFIG_KMALLOC_PARTITION_RANDOM
+> > >  extern unsigned long random_kmalloc_seed;
+> > > -#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
+> > > +#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _THIS_IP_ })
+> > >  #elif defined(CONFIG_KMALLOC_PARTITION_TYPED)
+> > >  #define __kmalloc_token(...) ((kmalloc_token_t){ .v = __builtin_infer_alloc_token(__VA_ARGS__) })
+> > >  #endif
+> > >
+> > > Plus a paragraph in the commit message.  Let me add that.
+> 
+> Err, I was like "yes, this is the way to go!"
+> 
+> and then...
+> 
+> > Bah, this is why it doesn't work:
+> > 
+> > >> drivers/gpu/drm/msm/msm_gpu.c:272:4: error: cannot jump from this indirect goto statement to one of its possible targets
+> >      272 |                         drm_exec_retry_on_contention(&exec);
+> >          |                         ^
+> >    include/drm/drm_exec.h:123:4: note: expanded from macro
+> > 'drm_exec_retry_on_contention'
+> >      123 |                         goto *__drm_exec_retry_ptr;             \
+> >          |                         ^
+> >    drivers/gpu/drm/msm/msm_gpu.c:304:16: note: possible target of
+> > indirect goto statement
+> >      304 |                 state->bos = kcalloc(submit->nr_bos,
+> >          |                              ^
+> >    include/linux/slab.h:1173:34: note: expanded from macro 'kcalloc'
+> >     1173 | #define kcalloc(n, size, flags)         kmalloc_array(n,
+> > size, (flags) | __GFP_ZERO)
+> >          |                                         ^
+> >    include/linux/slab.h:1133:42: note: expanded from macro 'kmalloc_array'
+> >     1133 | #define kmalloc_array(...)
+> > alloc_hooks(kmalloc_array_noprof(__VA_ARGS__))
+> >          |                                                             ^
+> >    include/linux/slab.h:1132:71: note: expanded from macro
+> > 'kmalloc_array_noprof'
+> >     1132 | #define kmalloc_array_noprof(...)
+> > _kmalloc_array_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
+> >          |
+> >                        ^
+> >    include/linux/slab.h:506:55: note: expanded from macro '__kmalloc_token'
+> >      506 | #define __kmalloc_token(...) ((kmalloc_token_t){ .v = _THIS_IP_ })
+> >          |                                                       ^
+> >    include/linux/instruction_pointer.h:10:41: note: expanded from
+> > macro '_THIS_IP_'
+> >       10 | #define _THIS_IP_  ({ __label__ __here; __here: (unsigned
+> > long)&&__here; })
+> >          |                                         ^
+> >    drivers/gpu/drm/msm/msm_gpu.c:304:16: note: jump enters a statement
+> > expression
+> > 
+> > Apparently using _THIS_IP_ creates a possible indirect jump target,
+> 
+> Didn't even realize people use indirect gotos, heh :)
+> 
+> > but because it's in a statement expression, it's invalid, so the
+> > compiler complains. This is obviously nonsense, because the actual
+> > indirect jump in this gpu driver code would never jump to the
+> > _THIS_IP_ __here label, but that's what it is.
+> 
+> Yeah, I guess it's quite tricky to handle when you don't know where
+> it'd jump to as it's an indirect one, and there's an invalid jump
+> label...
+> 
+> > Given this pre-existing issue, we probably need to continue using
+> > _RET_IP_, as before.
 
-I'll reiterate, I don't think this is needed and is overkill.
+I think I have a solution for this mess, see below.
 
-v4l2_m2m_ops already has device_run(), job_abort() and job_ready().
+I would not send it as 1 series, but only include the slab changes (+
+instruction_pointer.h change to introduce _CODE_LOCATION_) as one
+series, to go through the slab tree. The rest of the patches would go to
+respective arch maintainers.
 
-:g/ISP_SCHED_PAUSED/s//v4l2_m2m->suspend()/resume()/g
+------ >8 ------
 
-This seems like codebomb of a parallel implementation, which can be 
-largely covered by existing v4l2 stuff and if not then should be 
-justified in v4l2 as a new design paradigm.
-
----
-bod
+diff --git a/arch/alpha/include/asm/linkage.h b/arch/alpha/include/asm/linkage.h
+index aa8661fa60dc..88617cfaa0f7 100644
+--- a/arch/alpha/include/asm/linkage.h
++++ b/arch/alpha/include/asm/linkage.h
+@@ -6,4 +6,6 @@
+ #define SYSCALL_ALIAS(alias, name)					\
+ 	asm ( #alias " = " #name "\n\t.globl " #alias)
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("br %0, 1f\n1:" : "=r" (__ip)); __ip; })
++
+ #endif
+diff --git a/arch/arc/include/asm/linkage.h b/arch/arc/include/asm/linkage.h
+index ba3cb65b5eaa..3fb91d1672ba 100644
+--- a/arch/arc/include/asm/linkage.h
++++ b/arch/arc/include/asm/linkage.h
+@@ -75,6 +75,8 @@
+ #define __arcfp_data __section(".data")
+ #endif
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("mov %0, pcl" : "=r" (__ip)); __ip; })
++
+ #endif /* __ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arm/include/asm/linkage.h b/arch/arm/include/asm/linkage.h
+index c4670694ada7..416e6a242dc4 100644
+--- a/arch/arm/include/asm/linkage.h
++++ b/arch/arm/include/asm/linkage.h
+@@ -9,4 +9,6 @@
+   .type name, %function; \
+   END(name)
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("1: adr %0, 1b" : "=r" (__ip)); __ip; })
++
+ #endif
+diff --git a/arch/arm64/include/asm/linkage.h b/arch/arm64/include/asm/linkage.h
+index 40bd17add539..73eabc82a6bb 100644
+--- a/arch/arm64/include/asm/linkage.h
++++ b/arch/arm64/include/asm/linkage.h
+@@ -43,4 +43,6 @@
+ 	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)	\
+ 	bti c ;
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("adr %0, ." : "=r" (__ip)); __ip; })
++
+ #endif
+diff --git a/arch/csky/include/asm/linkage.h b/arch/csky/include/asm/linkage.h
+new file mode 100644
+index 000000000000..04afd3583e25
+--- /dev/null
++++ b/arch/csky/include/asm/linkage.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_CSKY_LINKAGE_H
++#define __ASM_CSKY_LINKAGE_H
++
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("grs %0, ." : "=r" (__ip)); __ip; })
++
++#endif /* __ASM_CSKY_LINKAGE_H */
+diff --git a/arch/hexagon/include/asm/linkage.h b/arch/hexagon/include/asm/linkage.h
+index ebdb581939e8..b3808f093e62 100644
+--- a/arch/hexagon/include/asm/linkage.h
++++ b/arch/hexagon/include/asm/linkage.h
+@@ -9,4 +9,6 @@
+ #define __ALIGN		.align 4
+ #define __ALIGN_STR	".align 4"
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("call 1f\n1: %0 = r31" : "=r" (__ip) : : "r31"); __ip; })
++
+ #endif
+diff --git a/arch/loongarch/include/asm/linkage.h b/arch/loongarch/include/asm/linkage.h
+index a1bd6a3ee03a..f175b25068d7 100644
+--- a/arch/loongarch/include/asm/linkage.h
++++ b/arch/loongarch/include/asm/linkage.h
+@@ -77,4 +77,6 @@
+ 
+ #define SYM_SIGFUNC_END(name) SYM_FUNC_END(name)
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("pcaddi %0, 0" : "=r" (__ip)); __ip; })
++
+ #endif
+diff --git a/arch/m68k/include/asm/linkage.h b/arch/m68k/include/asm/linkage.h
+index c8b84282764c..9ed2f36830d0 100644
+--- a/arch/m68k/include/asm/linkage.h
++++ b/arch/m68k/include/asm/linkage.h
+@@ -35,4 +35,6 @@
+ 	__asmlinkage_protect_n(ret, "m" (arg1), "m" (arg2), "m" (arg3), \
+ 			      "m" (arg4), "m" (arg5), "m" (arg6))
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("lea %%pc@(.), %0" : "=a" (__ip)); __ip; })
++
+ #endif
+diff --git a/arch/microblaze/include/asm/linkage.h b/arch/microblaze/include/asm/linkage.h
+new file mode 100644
+index 000000000000..fc3873e0e9b6
+--- /dev/null
++++ b/arch/microblaze/include/asm/linkage.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_MICROBLAZE_LINKAGE_H
++#define _ASM_MICROBLAZE_LINKAGE_H
++
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("mfs %0, rpc" : "=r" (__ip)); __ip; })
++
++#endif /* _ASM_MICROBLAZE_LINKAGE_H */
+diff --git a/arch/mips/include/asm/linkage.h b/arch/mips/include/asm/linkage.h
+index fd44ba754f1a..0579eac57def 100644
+--- a/arch/mips/include/asm/linkage.h
++++ b/arch/mips/include/asm/linkage.h
+@@ -10,4 +10,14 @@
+ #define SYSCALL_ALIAS(alias, name)					\
+ 	asm ( #alias " = " #name "\n\t.globl " #alias)
+ 
++#define _THIS_IP_ ({				\
++	unsigned long __ip;			\
++	asm volatile("bal 1f\n\t"		\
++		     " nop\n\t"			\
++		     "1: move %0, $ra"		\
++		     : "=r" (__ip) : : "$ra"	\
++	);					\
++	__ip;					\
++})
++
+ #endif
+diff --git a/arch/nios2/include/asm/linkage.h b/arch/nios2/include/asm/linkage.h
+index 211302301a8a..c4073235852b 100644
+--- a/arch/nios2/include/asm/linkage.h
++++ b/arch/nios2/include/asm/linkage.h
+@@ -12,4 +12,6 @@
+ #define __ALIGN .align 4
+ #define __ALIGN_STR ".align 4"
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("nextpc %0" : "=r" (__ip)); __ip; })
++
+ #endif
+diff --git a/arch/openrisc/include/asm/linkage.h b/arch/openrisc/include/asm/linkage.h
+index 25aa449ac30e..a96e808b5d1a 100644
+--- a/arch/openrisc/include/asm/linkage.h
++++ b/arch/openrisc/include/asm/linkage.h
+@@ -18,4 +18,14 @@
+ #define __ALIGN      .align 0
+ #define __ALIGN_STR ".align 0"
+ 
++#define _THIS_IP_ ({				\
++	unsigned long __ip;			\
++	asm volatile("l.jal 1f\n\t"		\
++		     " l.nop\n\t"		\
++		     "1: l.ori %0, r9, 0"	\
++		     : "=r" (__ip) : : "r9"	\
++	);					\
++	__ip;					\
++})
++
+ #endif /* __ASM_OPENRISC_LINKAGE_H */
+diff --git a/arch/parisc/include/asm/linkage.h b/arch/parisc/include/asm/linkage.h
+index d4cad492b971..d4d8ff7735c7 100644
+--- a/arch/parisc/include/asm/linkage.h
++++ b/arch/parisc/include/asm/linkage.h
+@@ -37,4 +37,12 @@ name:		ASM_NL\
+ 
+ #endif /* __ASSEMBLER__ */
+ 
++#define _THIS_IP_ ({                           \
++	unsigned long __ip;                     \
++	asm volatile("b,l 1f, %0\n\t"           \
++		     " nop\n\t"                 \
++		     "1:" : "=r" (__ip));       \
++	__ip;                                   \
++})
++
+ #endif  /* __ASM_PARISC_LINKAGE_H */
+diff --git a/arch/powerpc/include/asm/linkage.h b/arch/powerpc/include/asm/linkage.h
+index b71b9582e754..aa469e7bef0b 100644
+--- a/arch/powerpc/include/asm/linkage.h
++++ b/arch/powerpc/include/asm/linkage.h
+@@ -13,4 +13,13 @@
+ 	     "\t.globl ." #alias "\n\t.set ." #alias ", ." #name)
+ #endif
+ 
++#define _THIS_IP_ ({				\
++	unsigned long __ip;			\
++	asm volatile("bcl 20,31,1f\n\t"		\
++		     "1: mflr %0"		\
++		     : "=r" (__ip) : : "lr"	\
++	);					\
++	__ip;					\
++})
++
+ #endif	/* _ASM_POWERPC_LINKAGE_H */
+diff --git a/arch/riscv/include/asm/linkage.h b/arch/riscv/include/asm/linkage.h
+index 9e88ba23cd2b..7e0210ef4eb4 100644
+--- a/arch/riscv/include/asm/linkage.h
++++ b/arch/riscv/include/asm/linkage.h
+@@ -9,4 +9,6 @@
+ #define __ALIGN		.balign 4
+ #define __ALIGN_STR	".balign 4"
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("auipc %0, 0" : "=r" (__ip)); __ip; })
++
+ #endif /* _ASM_RISCV_LINKAGE_H */
+diff --git a/arch/s390/include/asm/linkage.h b/arch/s390/include/asm/linkage.h
+index df3fb7d8227b..1b3ac553a642 100644
+--- a/arch/s390/include/asm/linkage.h
++++ b/arch/s390/include/asm/linkage.h
+@@ -7,4 +7,6 @@
+ #define __ALIGN .balign CONFIG_FUNCTION_ALIGNMENT, 0x07
+ #define __ALIGN_STR __stringify(__ALIGN)
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("larl %0, ." : "=d" (__ip)); __ip; })
++
+ #endif
+diff --git a/arch/sh/include/asm/linkage.h b/arch/sh/include/asm/linkage.h
+index 7c2fa27a43f8..af56b38b6001 100644
+--- a/arch/sh/include/asm/linkage.h
++++ b/arch/sh/include/asm/linkage.h
+@@ -5,4 +5,6 @@
+ #define __ALIGN .balign 4
+ #define __ALIGN_STR ".balign 4"
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("mova 1f, %0\n1:" : "=z" (__ip)); __ip; })
++
+ #endif
+diff --git a/arch/sparc/include/asm/linkage.h b/arch/sparc/include/asm/linkage.h
+new file mode 100644
+index 000000000000..3f24e2da88be
+--- /dev/null
++++ b/arch/sparc/include/asm/linkage.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_SPARC_LINKAGE_H
++#define _ASM_SPARC_LINKAGE_H
++
++#ifdef CONFIG_SPARC64
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("rd %%pc, %0" : "=r" (__ip)); __ip; })
++#else
++#define _THIS_IP_ ({				\
++	unsigned long __ip;			\
++	asm volatile("call 1f\n\t"		\
++		     " nop\n\t"			\
++		     "1: mov %%o7, %0"		\
++		     : "=r" (__ip) : : "o7"	\
++	);					\
++	__ip;					\
++})
++#endif
++
++#endif /* _ASM_SPARC_LINKAGE_H */
+diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.h
+index a7294656ad90..bce3c6f4b94f 100644
+--- a/arch/x86/include/asm/linkage.h
++++ b/arch/x86/include/asm/linkage.h
+@@ -13,11 +13,12 @@
+  * The generic version tends to create spurious ENDBR instructions under
+  * certain conditions.
+  */
+-#define _THIS_IP_ ({ unsigned long __here; asm ("lea 0(%%rip), %0" : "=r" (__here)); __here; })
++#define _THIS_IP_ ({ unsigned long __here; asm volatile("lea 0(%%rip), %0" : "=r" (__here)); __here; })
+ #endif
+ 
+ #ifdef CONFIG_X86_32
+ #define asmlinkage CPP_ASMLINKAGE __attribute__((regparm(0)))
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("call 1f\n1: pop %0" : "=r" (__ip)); __ip; })
+ #endif /* CONFIG_X86_32 */
+ 
+ #define __ALIGN		.balign CONFIG_FUNCTION_ALIGNMENT, 0x90;
+diff --git a/arch/xtensa/include/asm/linkage.h b/arch/xtensa/include/asm/linkage.h
+index 0ba9973235d9..9e6f5cc81964 100644
+--- a/arch/xtensa/include/asm/linkage.h
++++ b/arch/xtensa/include/asm/linkage.h
+@@ -6,4 +6,6 @@
+ #define __ALIGN		.align 4
+ #define __ALIGN_STR	".align 4"
+ 
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("call0 1f\n1: mov %0, a0" : "=r" (__ip) : : "a0"); __ip; })
++
+ #endif
+diff --git a/include/linux/instruction_pointer.h b/include/linux/instruction_pointer.h
+index aa0b3ffea935..dfe73aafddb8 100644
+--- a/include/linux/instruction_pointer.h
++++ b/include/linux/instruction_pointer.h
+@@ -8,6 +8,30 @@
+ 
+ #ifndef _THIS_IP_
+ #define _THIS_IP_  ({ __label__ __here; __here: (unsigned long)&&__here; })
++/*
++ * The current generic definition of _THIS_IP_ is considered broken by GCC [1]
++ * and Clang [2]. In particular, the address of a label is only expected to be
++ * used with a computed goto.
++ *
++ *   [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071
++ *   [2] https://github.com/llvm/llvm-project/issues/138272
++ *
++ * Mark it as broken, so that appropriate fallback options can be implemented
++ * for architectures that do not define their won _THIS_IP_.
++ */
++#define HAS_BROKEN_THIS_IP
++#endif
++
++/*
++ * _CODE_LOCATION_ provides a unique identifier for the current code location.
++ * When _THIS_IP_ is broken (generic version), we fall back to a static marker
++ * which guarantees uniqueness and resolves to a constant address at link time,
++ * avoiding runtime overhead and compiler optimizations breaking it.
++ */
++#ifdef HAS_BROKEN_THIS_IP
++#define _CODE_LOCATION_ ({ static const char __here; (unsigned long)&__here; })
++#else
++#define _CODE_LOCATION_ _THIS_IP_
+ #endif
+ 
+ #endif /* _LINUX_INSTRUCTION_POINTER_H */
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 5e1249e36b0d..a4bf1585411f 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -503,7 +503,7 @@ int kmem_cache_shrink(struct kmem_cache *s);
+ typedef struct { unsigned long v; } kmalloc_token_t;
+ #ifdef CONFIG_KMALLOC_PARTITION_RANDOM
+ extern unsigned long random_kmalloc_seed;
+-#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
++#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _CODE_LOCATION_ })
+ #elif defined(CONFIG_KMALLOC_PARTITION_TYPED)
+ #define __kmalloc_token(...) ((kmalloc_token_t){ .v = __builtin_infer_alloc_token(__VA_ARGS__) })
+ #endif
