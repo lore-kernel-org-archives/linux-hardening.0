@@ -1,109 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088ED3F7AA6;
-	Fri,  8 May 2026 14:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F0327FB37;
+	Fri,  8 May 2026 14:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778251376; cv=none; b=c+EHefpWJEJYThP6H3nrQd9Z50HVl4fagq1W6ZnLLb3BIYIA0vCSpXmG0QN113SobBzfEK1TDUXb7mbB1SsPn0LbdU0UCNPTHGpMTxe3tnjsxB4iDvQ8M6miubm6wMCrqJNpOS9V4hVm4OEL+xr0LD/pOAu6eFvOZB9izN7cDBc=
+	t=1778252337; cv=none; b=Jq6mJCiG3VbCU9jmwYRWGusrhyVp2/+EoFdouWIEZAq88SJkfeP/32AgR6ZyxF08Rboe7hzMk5xIuVhnRjyrmJsBhLSSVtuKPQo+fYuP6JcTHu1NEHJadaCoHYBynE6PxILQp7JB51WHGMk7HwU2aYkyjB+Vm2GjIrck5wty7J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778251376; c=relaxed/simple;
-	bh=DABsoMXDk2P+S/P+yyf588Zuvkfjmm33Pz1/j6lJE/4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RHrjnahHMUpsnYT9zwyQe7IUpuCcAWKvKobUCU/hxzY67YYPI25SslXbcFqH7qpJmCNExNj/dRBHotMaFhZE1u2OF8DSnf2sWZxIh6SN+zO/XamKkjPNv5GG59k8SrhYDPX1O0lftFcWbFflui/vFQUo6GmBL/sERodLco6u7es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CHSB4s5a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=niIffQua; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1778252337; c=relaxed/simple;
+	bh=iU8xvemEPvi13FOszxkwNqtqWHubaRoaKkMRSG+6ycA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qc1H/fMhefUojrn07UPzoU6AnQpRLeh/oVR1gHQ096MFPLwds+uwmjF0sty0+sz9fO0OMEKQveUGIaZuJ++3VBPNQfm/PJ1va7Bq7oyoVuh7h+LkqGqPYx4hMMnONhH9mf/eywXGvBO6UMLReixT1RVfsSrSS/s0mRcLQq753AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHZc6wPe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CHSB4s5a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="niIffQua"
-From: Gregor Herburger <gregor.herburger@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1778251372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dKIj7vjKy9Y9Vae3A4dMKPMfxiFmPnyG5vDmw/Z5sss=;
-	b=CHSB4s5aYDs7S4QMCOXnymg7ULPR08n77kPrYl+rsyga2SQhoLt6+G8ang6TfCWAXlUURk
-	4KIhUhrNMEYYg8ukdH7FLvMTto85iAereEMV9t3Nb6xs7DCGRHQyNdLwROHVtzzUrQr0EZ
-	TOCKb8zVFOFqXP/DKHGCA0PVXaeGZZAxJnKKd8xwxjpooMXmKM6yIzVNesUskGeNZM9hcM
-	j3CwN5pSVSIpGaEkrF+/ZHCUcO2Q8cJ+Hwdmbbs5qkahsullsXOlnBRMJxdsXz3nvMdiUI
-	M/d6oU8roGTn2tQCrkv6Y5fcdBrkEQSIiwprt32tdbXdSTyjROssNrobnirHmg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1778251372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dKIj7vjKy9Y9Vae3A4dMKPMfxiFmPnyG5vDmw/Z5sss=;
-	b=niIffQua2d/AOucZGbFiN67+AiliRCE5LWjHdcmrq444/SZ7Cy1/SOd1CVHws80K/FwYRs
-	BxY1nWHmhLtJgdDg==
-Date: Fri, 08 May 2026 16:42:48 +0200
-Subject: [PATCH v4 5/5] dt-bindings: raspberrypi,bcm2835-firmware: Drop
- unnecessary select
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHZc6wPe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E094C2BCC7;
+	Fri,  8 May 2026 14:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778252336;
+	bh=iU8xvemEPvi13FOszxkwNqtqWHubaRoaKkMRSG+6ycA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nHZc6wPeiZFMKCv3PPNH/MsE9nhhIcWtz8SLdXtZFdiQSGW0KCJ7ntCNcdeTt8hst
+	 VXPAm2llVXvR8ObNmmTXsD7762ZhjI/Iyv5dMGfbv3YAEaigSXhsNAZBKv8q3y5acF
+	 XWQ+LoLWePEVaan/qddmPNfWzUIPFyrQ1iUJ8ub38XT8KL+7RneMLiKfhA37KEAUqc
+	 mEpY3G+/+SSfxTJQPfNQ3uMtKDG3yFkl6ZalpNBYdHOx1VwRSHGmL5yO6X88Te/Qwx
+	 8ofX4rUQlFdho6YTjU+uiqNVxl6rEtQyksap4yoOqS6Z2Uo370sMEE/QkLpkPT6IGW
+	 G2yqqGUPTEqJg==
+Date: Fri, 8 May 2026 15:58:51 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Gregor Herburger <gregor.herburger@linutronix.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>,
+	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: raspberrypi,bcm2835-firmware: Add
+ bcm2712-firmware compatible
+Message-ID: <20260508-lasso-catcall-393c97e3a258@spud>
+References: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
+ <20260508-rpi-otp-driver-v4-1-cf8d725d8821@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260508-rpi-otp-driver-v4-5-cf8d725d8821@linutronix.de>
-References: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
-In-Reply-To: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
- Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Gregor Herburger <gregor.herburger@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778251369; l=1100;
- i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
- bh=DABsoMXDk2P+S/P+yyf588Zuvkfjmm33Pz1/j6lJE/4=;
- b=gPPKOgDjiowGSTTjFyrQ567SKtkM82Nof41P9IAw2e6PGA7Hc+THk5vpI8G6BT21JUkoEUzRG
- 1z16YPnGfaTCWUAVsYhlgIuHDvZLNqsttQ7yM9NZMsjWlOD8v/JzsHO
-X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
- pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="89dAeV3S41oOtMTA"
+Content-Disposition: inline
+In-Reply-To: <20260508-rpi-otp-driver-v4-1-cf8d725d8821@linutronix.de>
 
-The select schema is not necessary because the
-raspberrypi,bcm2835-firmware compatible is already matched by the
-compatible string values. The documentation says "Most bindings should
-not need select", so remove it.
 
-Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
----
- .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml           | 9 ---------
- 1 file changed, 9 deletions(-)
+--89dAeV3S41oOtMTA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-index a3a5243b9170..7cf9a6fa1e5b 100644
---- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-+++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-@@ -10,15 +10,6 @@ maintainers:
-   - Eric Anholt <eric@anholt.net>
-   - Stefan Wahren <wahrenst@gmx.net>
- 
--select:
--  properties:
--    compatible:
--      contains:
--        const: raspberrypi,bcm2835-firmware
--
--  required:
--    - compatible
--
- properties:
-   compatible:
-     oneOf:
+On Fri, May 08, 2026 at 04:42:44PM +0200, Gregor Herburger wrote:
+> Add a compatible string for the bcm2712 firmware. The bcm2712-firmware
+> is compatible with the bcm2835-firmware so allow the bcm2835-firmware as
+> fallback.
+>=20
+> Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
 
--- 
-2.47.3
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+pw-bot: not-applicable
 
+> ---
+>  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml        | 11 +++++=
++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm283=
+5-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm=
+2835-firmware.yaml
+> index 983ea80eaec9..a3a5243b9170 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmw=
+are.yaml
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmw=
+are.yaml
+> @@ -21,9 +21,14 @@ select:
+> =20
+>  properties:
+>    compatible:
+> -    items:
+> -      - const: raspberrypi,bcm2835-firmware
+> -      - const: simple-mfd
+> +    oneOf:
+> +      - items:
+> +          - const: raspberrypi,bcm2835-firmware
+> +          - const: simple-mfd
+> +      - items:
+> +          - const: raspberrypi,bcm2712-firmware
+> +          - const: raspberrypi,bcm2835-firmware
+> +          - const: simple-mfd
+> =20
+>    mboxes:
+>      maxItems: 1
+>=20
+> --=20
+> 2.47.3
+>=20
+
+--89dAeV3S41oOtMTA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaf36KwAKCRB4tDGHoIJi
+0ny3AP4uWOY9MtPYzPYsTZvAtLSYdIfWpcZzL4yudt7quTegjQEAwzBXfuk5eRM3
+cvjo/yvG+jikUFJNznNFJlR/HjTKpwI=
+=mT8k
+-----END PGP SIGNATURE-----
+
+--89dAeV3S41oOtMTA--
