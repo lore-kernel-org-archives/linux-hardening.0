@@ -1,87 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B11016132A;
-	Sat,  9 May 2026 15:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2E6372B3B
+	for <linux-hardening@vger.kernel.org>; Sat,  9 May 2026 22:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778342218; cv=none; b=tPV+Ty7xj9Es9ADX7c+HEV7qE6MtUUcSlHenpNZsOLpHnKteKtcvE8AyzwaTL+s8Yv0l8Di9mYoO83FwlSogHGae3x+DT5ZCX8nDTNG8y1o9Wm8D8tou34z9m8ccfXjSSAVRQcvi6HXld/RWPN86/tx/oR/ioMz37C9FyDQwc4Y=
+	t=1778365870; cv=none; b=lrGtyJrcj2c9DhR8r5JQLZp3D31nD11f+N/P3HOy+g2v6S4wTNNa5XY7xEcOhiW2fxmeMgxr6u71p0Zj919fO3n9f0TYi1QNxUXqn9UVyZwp7533xRi2GP3Xc2JgKqIVoH9eVHWyOjv+8AB6Y/Gha+/of5YLPIywZtQ4kblsiWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778342218; c=relaxed/simple;
-	bh=Zr4m8EO3YhFxN6CoauY25unQTyVYNNdKNzU/2dfC/f8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p34nYHtmWv9c/1WVTEi2lr8SvUbMTuTSm6hDhL+ZiclDUBFnQ/0rcOBHEhqUR5WV0kwQyRrVg4F3MGWxsYehj9oyyIEOWXSpwRUiUDqvA/TbDQfyIGRUyloqRIfPd7Ap3OpU8t7dvEJKFZghwXBpz8ttricHKpQN3CfPo+2wKRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmO/0+iL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778365870; c=relaxed/simple;
+	bh=R8MHtyw3iUgVFaiy87HeuWdQOOUu7CPfgsXOVX8YVH8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nv7nIv68+/3eEtCPyQ1CVidiURcgq/RGM0S1AA/UuG+ef/wN6X7p1a5prqa6bO7bebaw7U777kZ7WeO7jwmVFq0odCRI9dGSKNTMo94Ouy5LhmzJFrwr6eMXvJ8lLWDTFdpTrFxqldQ+Yrf2dSc9Swaj2DmPMQexfqhnEV/FqAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=x4EOIbg0; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmO/0+iL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8372C2BCB2;
-	Sat,  9 May 2026 15:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778342218;
-	bh=Zr4m8EO3YhFxN6CoauY25unQTyVYNNdKNzU/2dfC/f8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HmO/0+iLYfR73DzP+ymTgRYt6HckcF7rGoQCiVrmhwQiB7Q/CSEV6AQkBymmR6tOh
-	 /+obMeqDlir2WdtBtazs3Aa202G61ojjW8Jc1vP/G0pjvL8yC3QlyANWnvZIiRgMeK
-	 gmsRnv9xkVqh9mK1iOl9ff1pNMsTSTlb8SlYGnqMRBx5gw63l3QODppExMutvykqTL
-	 VibxNq4BLvWWYtVOhtBgTwvv3RYZG/uC+Bqi0maZS1FbZydBAdfq2ixAY+QuDUbmJX
-	 x0DBvzSUXuX11IcRgoKvizVaL0X7QN3bYhWhZrXXoYb8RhTOQvYsL/8nOm1ob8DJNr
-	 hDduTp1VNd85w==
-Date: Sat, 9 May 2026 16:56:52 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Gregor Herburger <gregor.herburger@linutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>,
-	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] dt-bindings: raspberrypi,bcm2835-firmware: Drop
- unnecessary select
-Message-ID: <20260509-polio-barrette-07f4368a0cc6@spud>
-References: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
- <20260508-rpi-otp-driver-v4-5-cf8d725d8821@linutronix.de>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="x4EOIbg0"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-42fe552aedeso1121191fac.0
+        for <linux-hardening@vger.kernel.org>; Sat, 09 May 2026 15:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1778365868; x=1778970668; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OOHQiWAMyC4vDuld0j5M/eJDZswBebyHXatCRNu2gCc=;
+        b=x4EOIbg0hMWcmd5dZM7MB96+L2rJ+gmreyufR2L+xnijpfI0JZS9i97HqzmtYC9XzP
+         dx/kYOPitMFrvKRH4948PeVhD/Ws7dhgYtMfwVZCWFN0KEuBFpE7U5NqvKU0Itdy0nnG
+         lnlkykjOu5WBDFXdatiY42qCYr/cHcvcSkJrCbKrvrCeimGp5ymLQmoZ93IUg3bMWAe2
+         R+fJDJWF8sWAPkgovsQk4IGBue5y2O8YJwDJsi4zY36q3E24t1sxTTk0elHfGm746ofx
+         ljxlKpwAUAPWxzqZGqc8CVadKc3v/YDuXYLFR4/x3LSbrqKpwzZFEivSGjHfJWhY/HPL
+         /Arg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778365868; x=1778970668;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OOHQiWAMyC4vDuld0j5M/eJDZswBebyHXatCRNu2gCc=;
+        b=fL4mFfqFYT8/iI/zNQ55VfiFWmLBzllHoZMEEOYfwfuTel/zDW32GIgshfP0M4usdF
+         SXMguv6FDpq47OL/DCoNwKA8X0nXBPo3UwVk6hZaH5fzYHrUm8Zl4Xq2IuSpM1ml81g5
+         +Cq6ht0WzZUzA5Q/fjS4R+VhcrNU9jqvbjDtERuLmsbPZNGmKkjWuINldgmTuJ31z79U
+         CstKUkAmvr5Dz9onMzbWEW5/pK5ZnmX6dXIZ3+kpaB7scPNWjFNUFKdOnMo4ZZzdOXCm
+         CX0UjpSTcqiJX4pqBHWjGXmUrnLGGqlVjLKpZcTPI1+d06P9uf+1ZKU2rNPkxqPTO78j
+         caMw==
+X-Forwarded-Encrypted: i=1; AFNElJ/AAq/ExjORVv+TnJMIEKV6CsFh2f0QskZQKO4LdSW0tTaoOBqDBrGFfi62GyZVUja7Dzrk0L1dhzzD2XAys0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5gi1ipH/rwWYY99wwPQOho+GpVlqb9nD8+e+WZBak3lgu/Wm8
+	yHo3hLmeOolM24h84NVm7dstzRBh8mdNpWdfJmDvh1kZain0IGHe7Miy0Sp1v3kxjZM=
+X-Gm-Gg: Acq92OFXw/cT3cEEckTz37w8kKuVhDV0LjOgxFZqGnBXY404kLPedqIA13z61V7C/lZ
+	7HC7/x5npEX9Yld4UbM9EvDQLRUlcEHfhGBl1JaSI2NoqrkcLmY7zWly2yLucv7wEzsNbFriGM3
+	v3Aa/t7BEC1Uo2x3h8va18xwjbw7S/4H7sgv+4f4UYG11LsApmYvHVZ/wNYrTEKpx+SHpk3NFaO
+	xQRGKzPh6Oej8apXkuW20e+06ZJVj112kttZRihkCTdiDRcb+rL99Dh6YOyA3eWcIss3qWl8L5k
+	6yqUKLnp2nQ/VE7p5YLqxRcEK1aQbjQ1Npb2Lu7cH1aquL29i1kej5/R5d6hotn6fY60+ZntvX6
+	ruGBweRSBu20+2wmpOxirV64rIejItCSR++9PDB9bgCXHhg51ts/M4NkA9gViiZQVljQlqfTaO0
+	PwoSPT3H70gPTVgQrvc+KdOXtUUCWbkFmPIKsfx9NBrIp/i7TI293W8BARCGOtRrS397ZHqmY=
+X-Received: by 2002:a05:6820:2206:b0:699:b131:d589 with SMTP id 006d021491bc7-69b36ad3840mr2252792eaf.3.1778365867934;
+        Sat, 09 May 2026 15:31:07 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:500:12a0:9178:ab4:39cc? ([2600:8803:e7e4:500:12a0:9178:ab4:39cc])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-69b25dc00acsm3226661eaf.10.2026.05.09.15.31.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2026 15:31:06 -0700 (PDT)
+Message-ID: <f3bb9f64-a0ef-4862-afdd-74ee39d7bfc1@baylibre.com>
+Date: Sat, 9 May 2026 17:31:03 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cT+9g1ZKW4ABma7Y"
-Content-Disposition: inline
-In-Reply-To: <20260508-rpi-otp-driver-v4-5-cf8d725d8821@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v4 00/10] AD9910 Direct Digital Synthesizer
+To: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 5/8/26 12:00 PM, Rodrigo Alencar via B4 Relay wrote:
+> This patch series adds support for the Analog Devices AD9910 DDS.
+> This is a RFC so that we can agree/discuss on the design that follows:
+> 
+> This is a follow-up of the V3 discussion. For V1, we reached into
+> this channel composition agreement where physical channels may have
+> sub-channels. That adds the flexibility necessary for this design.
+> During V2, some feedback indicated that the ABI is too device-specific,
+> so DRG/RAM destination and operating modes are configured through
+> alternate paths and profile channels are created. In V3, there was
+> further discussion on the ABI and on mode priority debug.
+> 
+What happened with the idea of adding a new attribute to show the
+relationship of the sub-channels to the actual physical output
+channels?
 
---cT+9g1ZKW4ABma7Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 08, 2026 at 04:42:48PM +0200, Gregor Herburger wrote:
-> The select schema is not necessary because the
-> raspberrypi,bcm2835-firmware compatible is already matched by the
-> compatible string values. The documentation says "Most bindings should
-> not need select", so remove it.
->=20
-> Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-pw-bot: not-applicable
-
---cT+9g1ZKW4ABma7Y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaf9ZRAAKCRB4tDGHoIJi
-0iz8AP4wQV7fiXVYvXG5n3LuNtCriQQf9xbaAci0C0/7BYAu+gD/euZqqTLSAhLr
-dHptMO1Ira9axxHjVUdsdRL1HNUEcgY=
-=8zrw
------END PGP SIGNATURE-----
-
---cT+9g1ZKW4ABma7Y--
