@@ -1,79 +1,75 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A67135C181
-	for <linux-hardening@vger.kernel.org>; Sun, 10 May 2026 10:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31B0381B06;
+	Sun, 10 May 2026 12:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778410063; cv=none; b=tKUV/LNXXEquigtE/8grAn9WzLe0JBKpC5Ls4A8/snrbBlFeSzDtAar0+sFUxLjA+0gd60Q4l0YFZSdtKE4wpamVn/YqjTGW2ZUVpETC9mEzNQ5NieThKVtZHW2y4AGRx8aM9n9Q4hA+u0uUfyfH91DiBhvxj50gCc176FPYaGY=
+	t=1778416343; cv=none; b=f+9fPZKReefjyxtG0WN7I582lN+e5Rr8lW2zwkbEPVa62Hlguznm9td9fINLkqNd0kE4brkPpLXNSV1/AbAenxBIDwgwyK37F4okMlKqKvX336EgGALt/UgDGfdLi1CwNXH42SSo+ewD6MbdsdtznnW5Du8S8KenA6/a3uyKdSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778410063; c=relaxed/simple;
-	bh=TItSsgo6xk+A+nS+xKDE670mrpC2vv49TvVJ4oJCwlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JpP4t2DiH9E8HrixqkfMNBzOSJrjYKqIxSZbmWJHH4Rih6POFBnjgKw9Ts2I/XqJiHTZ11wlIXDtwOjMvx2iU7hZt78rFG5pYuCwRWXOsFKcsbYknudpc+iF+8MJC99WQhnb9qvy6jOFXzKGv+s5JT4GI36WLkdpSX1WZ8EXueI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J9BzUyLY; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1778416343; c=relaxed/simple;
+	bh=PfAtiR22BeLI1xNkWhQObSwYDHOrQpp5c0BjbJTPJhI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=X1wUcTqEa6R3iBNI+qxmp3uGC8n/GCIGFEZ1ZeCoXAKquaX+1nRpYoGx+ZcJGIUBfaTEzoOS8P7Bu8QCS5QuJBnzL2EuooYAumrLkagpxQq1IXDnr6DVJB14OV4lG9mp9L12bm2SaphJBzpLbUBVKIr5+9r3xEAENqwlk2EO1c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzzHPD46; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J9BzUyLY"
-Date: Sun, 10 May 2026 12:47:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778410049;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u4Pzr0iNwGtAMfR8p6Nf/I699yHeqKq0hYur9yHLEUg=;
-	b=J9BzUyLYpergVOZqFXjwm3zUjZBK1n4RkTHIQtTJoBEt2yYnGmOF+X9WsJALlZhOYRzeb/
-	IQHhnD3UMa3mS2xFW83AIbwz9+x7+rw54cOVwn7nLRmzcSrUAgKG76NhSlmO67KC9GrrlT
-	52/8c3djOd6TftdBYjgB6YKQorpzPFk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: David Howells <dhowells@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Tim Bird <tim.bird@sony.com>, keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/2] KEYS: annotate struct user_key_payload
- with __counted_by
-Message-ID: <agBiPEJZhWHydwuz@linux.dev>
-References: <20260427114422.313356-3-thorsten.blum@linux.dev>
- <20260427114422.313356-4-thorsten.blum@linux.dev>
- <af8ZUXn4uStU_vs5@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzzHPD46"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53031C2BCB8;
+	Sun, 10 May 2026 12:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778416343;
+	bh=PfAtiR22BeLI1xNkWhQObSwYDHOrQpp5c0BjbJTPJhI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=pzzHPD46ljrfTpClixgvb4yANKVJ3v32sIl13C8+ea2jLszSd0oPgFXSSbP5Duv9f
+	 QgfbscxCIdx2reDe4iTULpGdBFZ2AouPjzwdjbXqaLJ9JpJLD5DcEXQd+ISSb9GqV+
+	 kZrGaFjVM2IPkBzH0ScNm1Nq60jYspEAwOPGW6BSrMC5BBaqxRmJwzAVkGHuvkHTtP
+	 BlM0ij6KRT8uDlbAYyyb5hd2ckkXy/Zd61r3Ap9luWAxpWFWDF3QS2yyBEK4kzkZa3
+	 PC28WofTtsac7virgk4Bc0WZOsBesX4ghbjyP0C1+Y6JEUQYIKO5BzsfjKoGfMnPP8
+	 sgJqPMOxl+77w==
+From: Vinod Koul <vkoul@kernel.org>
+To: linux-phy@lists.infradead.org, Rosen Penev <rosenp@gmail.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20260306222457.8400-1-rosenp@gmail.com>
+References: <20260306222457.8400-1-rosenp@gmail.com>
+Subject: Re: [PATCHv2 0/2] phy: miphy28lp: build and simplify allocation
+Message-Id: <177841633994.434434.11599287536410953289.b4-ty@kernel.org>
+Date: Sun, 10 May 2026 18:02:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af8ZUXn4uStU_vs5@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Sat, May 09, 2026 at 02:24:01PM +0300, Jarkko Sakkinen wrote:
-> On Mon, Apr 27, 2026 at 01:44:24PM +0200, Thorsten Blum wrote:
-> > Add the __counted_by() compiler attribute to the flexible array member
-> > 'data' to improve bounds checking via CONFIG_UBSAN_BOUNDS and
-> > CONFIG_FORTIFY_SOURCE.
-> > 
-> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+
+On Fri, 06 Mar 2026 14:24:55 -0800, Rosen Penev wrote:
+> First patch allows compilation on at least x86.
 > 
-> This is again a crippled commit message.
+> Second uses a flexible array member to simplify allocation.
 > 
-> I.e. this requires either knowing, remembering and/or cross-referencing
-> "bunch of" unrelated to keyring.
+> v2: add first patch and fix second.
+> 
+> Rosen Penev (2):
+>   phy: miphy28lp: add COMPILE_TEST
+>   phy: miphy28lp: kzalloc + kcalloc to single kzalloc
+> 
+> [...]
 
-I kept the commit message short because it follows the same pattern as
-many other __counted_by() patches that have been accepted across several
-subsystems.
+Applied, thanks!
 
-I'm not sure which part of the message you want expanded. Could you be
-more specific?
+[1/2] phy: miphy28lp: add COMPILE_TEST
+      commit: cc68a1728abfcbde12d36015f244046ae74ddd44
+[2/2] phy: miphy28lp: kzalloc + kcalloc to single kzalloc
+      commit: f3508a61c892c592e4e893a3681e568a5c671027
 
-Thanks,
-Thorsten
+Best regards,
+-- 
+~Vinod
+
+
