@@ -1,98 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494F939FCAD;
-	Sun, 10 May 2026 15:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5A1282F3F
+	for <linux-hardening@vger.kernel.org>; Sun, 10 May 2026 20:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778425953; cv=none; b=OAQcLEARl2GtyGku+N6vG10KljLrvC7hvUDD9lA87YMjGddle6sGee7NsM7M95snm4Y2ladYRKb7U/wWAy/v5kkl35qNabJeC/PE3LpgDXiPYOZv61y0joxjIppRSxYbgHf4TI//foSPQ3tSBcfpngdOfmb/fEmRkw4U32GlyGk=
+	t=1778445180; cv=none; b=tSx1/KVJJNUbOhCg3LEPW6M4ASrjacqvzFX3pSfSX5nS4bXn/4eEgkUKq4r3AkmFI2F0OrQeoKvqxJchLgUeU77uCHNyVmI7mU/L6JuCDddMe8KcrdbaIOppcMzFnHD6Q7kUSQfLtexLTqjVa/8lGTMyjOfQtw5205rSjzU5KXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778425953; c=relaxed/simple;
-	bh=N+XZMSgicn8mI99CZ460axGdpor6zxJtBh7/Zgbh1yk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QBTtRuypVLWTgaZPCACyPGPUv7bQemO5IlDCXB6RpAf2N8wozAJ2NsgFjE7TBQiCHCYO1Yv7LZINnqeK0vXsA5mKXTfOKbGPuNlFSFWpfOEvdYUwCH9Fgb+Z3bNRE8klm+0KYsdULU0S5HT4CIzgrBXcI5JGFiZdG3HmSH8nMAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M+sv/KZY; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1778445180; c=relaxed/simple;
+	bh=XQUzK84HynaCOxTdgEwhL6AEUJLt3+fqRpgNfkWmrsE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KN88JpXmhYNdu0Wm9TCgbMFgpe9Nkc4tHt/i27h2ktr/RPjn30VEr2/oVMPRem2Z3pWmB/58YCE7qI3Nf/KoZbMuIes9q49icdFRm5Mb/i3z/4EYSqgGvfGAQVMvyqQNQ2RvBef1nIkU3faIoXmzaOnOmt5p8ljG7vkS/X3r3MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZMroBtJu; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M+sv/KZY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778425949; x=1809961949;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N+XZMSgicn8mI99CZ460axGdpor6zxJtBh7/Zgbh1yk=;
-  b=M+sv/KZYE9WP5dhv/F2+V5i7HNAUeEYQxbxg+8mpxs7R+IiEeWMvceCg
-   YsYIaLymdBZh0PReive4CTK8sGEU7p6bYfEyk81NMlEVKIHiJKEMr6A6a
-   6TsjLYDT9eNJuvLrkpjhkEg+U/fC2pTAg7BnIB7pqC8QMf7Thi5yVuqCx
-   48gX8jDMhuOGUkQ0NdyCQVwSwHfw/axMQvkEgmSqKdSMt8d+y6XGWOlE7
-   CrIn4SEG58c9EKy/lNw4K4q6AoXm82kDJC+F4LJFjzpHebHhNYuxuo4eQ
-   Abjy4sJqbQjuTHPaJ14Hd7ZQBE6KKG12/JPv3HVTpJh1fyhimXJF2NzWD
-   g==;
-X-CSE-ConnectionGUID: UMRuuzcDQGOFx6zUHnUblA==
-X-CSE-MsgGUID: FPbtmJDgRGSaWDQaaRTDVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11781"; a="96753731"
-X-IronPort-AV: E=Sophos;i="6.23,227,1770624000"; 
-   d="scan'208";a="96753731"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2026 08:12:28 -0700
-X-CSE-ConnectionGUID: AM6aWGUATqKZXBH+JQ1pSg==
-X-CSE-MsgGUID: KfSRvOSTTuKI0VJjlUESPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,227,1770624000"; 
-   d="scan'208";a="237175762"
-Received: from lkp-server01.sh.intel.com (HELO 82327192134e) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 10 May 2026 08:12:27 -0700
-Received: from kbuild by 82327192134e with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wM5pQ-000000002LB-084H;
-	Sun, 10 May 2026 15:12:24 +0000
-Date: Sun, 10 May 2026 23:12:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH] mm: make zeropage read-only
-Message-ID: <202605102300.PHd18T7k-lkp@intel.com>
-References: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZMroBtJu"
+Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
+	by cmsmtp with ESMTPS
+	id LnqMwiIxunwj2MApZw4vFm; Sun, 10 May 2026 20:32:53 +0000
+Received: from gator4166.hostgator.com ([108.167.190.91])
+	by cmsmtp with ESMTPS
+	id MApYwcr6XkWUFMApZwOfFO; Sun, 10 May 2026 20:32:53 +0000
+X-Authority-Analysis: v=2.4 cv=frTcZE4f c=1 sm=1 tr=0 ts=6a00eb75
+ a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=7T7KSl7uo7wA:10
+ a=Xn-DZyyB-tC0dpwOAtYA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
+ a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qmpCMxkpzSQC5550b9jS4HBEZiBG5nYRYB4x+ATjtNo=; b=ZMroBtJuc7WxUDw7JWRiPhN1vI
+	NzsnAd5e0Hvte3p8yFvq47Q2BNLQgF8smCmeOESClS0Ngfur9u6BJLk8ObNLDm2NX8XtxxWTfMJaE
+	Iud/sgybAXIDXPAxNaYd3zXUf/NL9JcapSYNja98AeZJHWoMOPRl5D91oLy8FhKIjRbfJMkfzQKBY
+	xYpD86RAimfgr6miCqHoKsVhqPo/FX+pZes37qubZdiaUI8Ua7S2yTRinL9fcXk4noQfIvy3B2J8h
+	Ja6UomXTdI7FQLpQmVTY4a5ajnuDC87ypel0gUVziE+PMVVw8IBmTB/UgkX7mp4Fq+Czi4KAt5CEK
+	qV5K+gZQ==;
+Received: from [177.238.18.176] (port=42958 helo=[192.168.0.11])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1wMApV-000000012VZ-3kne;
+	Sun, 10 May 2026 15:32:49 -0500
+Message-ID: <531e960a-c2b5-484d-8265-e07ac021f272@embeddedor.com>
+Date: Sun, 10 May 2026 14:32:40 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 2/2] KEYS: annotate struct user_key_payload
+ with __counted_by
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+ Jarkko Sakkinen <jarkko@kernel.org>
+Cc: David Howells <dhowells@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Tim Bird <tim.bird@sony.com>,
+ keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260427114422.313356-3-thorsten.blum@linux.dev>
+ <20260427114422.313356-4-thorsten.blum@linux.dev>
+ <af8ZUXn4uStU_vs5@kernel.org> <agBiPEJZhWHydwuz@linux.dev>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <agBiPEJZhWHydwuz@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.18.176
+X-Source-L: No
+X-Exim-ID: 1wMApV-000000012VZ-3kne
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.11]) [177.238.18.176]:42958
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfN1hPHKd0/djhbiceACTI84WPCWqqTL+Fx3mQq4Ql2ujSmOSF0mkN3tNgtQA+Xd4c7YpTReBnfeavePB3/o7nH0n3pK1ui0M2JWHMYyhZrUb2OcJws47
+ tGhbO3kZdlk1HCfF935kbKo3t7xSc6vlmRICJcfD4/J11RUJCZ2wYV40vQeveKPtxDIPGyRc6JPhMQSK+UIIS8B/u1MlUGWRQBVQye70pXLhXKButtOr0o3L
 
-Hi Jann,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on 917719c412c48687d4a176965d1fa35320ec457c]
+On 5/10/26 04:47, Thorsten Blum wrote:
+> On Sat, May 09, 2026 at 02:24:01PM +0300, Jarkko Sakkinen wrote:
+>> On Mon, Apr 27, 2026 at 01:44:24PM +0200, Thorsten Blum wrote:
+>>> Add the __counted_by() compiler attribute to the flexible array member
+>>> 'data' to improve bounds checking via CONFIG_UBSAN_BOUNDS and
+>>> CONFIG_FORTIFY_SOURCE.
+>>>
+>>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+>>
+>> This is again a crippled commit message.
+>>
+>> I.e. this requires either knowing, remembering and/or cross-referencing
+>> "bunch of" unrelated to keyring.
+> 
+> I kept the commit message short because it follows the same pattern as
+> many other __counted_by() patches that have been accepted across several
+> subsystems.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jann-Horn/mm-make-zeropage-read-only/20260510-200814
-base:   917719c412c48687d4a176965d1fa35320ec457c
-patch link:    https://lore.kernel.org/r/20260508-ro-zeropage-v1-1-9808abc20b49%40google.com
-patch subject: [PATCH] mm: make zeropage read-only
-config: powerpc-allnoconfig (https://download.01.org/0day-ci/archive/20260510/202605102300.PHd18T7k-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260510/202605102300.PHd18T7k-lkp@intel.com/reproduce)
+That's clearly not a good example of how to document changes, so I wouldn't
+use it as a reference.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605102300.PHd18T7k-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   /tmp/ccjZQT3J.s: Assembler messages:
->> /tmp/ccjZQT3J.s:3163: Warning: setting incorrect section attributes for .rodata..page_aligned
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-Gustavo
