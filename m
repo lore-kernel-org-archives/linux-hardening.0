@@ -1,120 +1,141 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5A1282F3F
-	for <linux-hardening@vger.kernel.org>; Sun, 10 May 2026 20:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA9033D4E9;
+	Sun, 10 May 2026 21:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778445180; cv=none; b=tSx1/KVJJNUbOhCg3LEPW6M4ASrjacqvzFX3pSfSX5nS4bXn/4eEgkUKq4r3AkmFI2F0OrQeoKvqxJchLgUeU77uCHNyVmI7mU/L6JuCDddMe8KcrdbaIOppcMzFnHD6Q7kUSQfLtexLTqjVa/8lGTMyjOfQtw5205rSjzU5KXw=
+	t=1778447434; cv=none; b=qmsZNXDQIbto/8E6caMxD4CYObe/HQj70S0DGchZVvmLfBO43AZ5ylxXTOXQYy8tiUxhFbvPcIuZ+tJZ3Pmx5h5CzcDilT7tB6P6Kn7IW5M3wFrAwmsDx5FpxeMCMbpsV1dtFSwNvakg/OuLIreU+Am/9x84dbIhDtWmLLtc7zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778445180; c=relaxed/simple;
-	bh=XQUzK84HynaCOxTdgEwhL6AEUJLt3+fqRpgNfkWmrsE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KN88JpXmhYNdu0Wm9TCgbMFgpe9Nkc4tHt/i27h2ktr/RPjn30VEr2/oVMPRem2Z3pWmB/58YCE7qI3Nf/KoZbMuIes9q49icdFRm5Mb/i3z/4EYSqgGvfGAQVMvyqQNQ2RvBef1nIkU3faIoXmzaOnOmt5p8ljG7vkS/X3r3MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZMroBtJu; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1778447434; c=relaxed/simple;
+	bh=mPNEZix8x1dfm+jDYOJGD8MkjI6F8K7kOIU+tWvfLRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aJA2oxbq5qk5k+zxJIYsM4o2sLvsXaKJWet3L3OhwuGEqlwCgxRrpovWzt2oz2U7K+DMeCzvItxV7TihPRP3Zt/NNqm61c/yQevTwNFVG0Hcw58zLKUMmP2xvAo3jaed/QV70DNS+HSaUWP7N5e3TIMpp1JYW2kqTgUWXnX09eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GO1Yrowi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZMroBtJu"
-Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
-	by cmsmtp with ESMTPS
-	id LnqMwiIxunwj2MApZw4vFm; Sun, 10 May 2026 20:32:53 +0000
-Received: from gator4166.hostgator.com ([108.167.190.91])
-	by cmsmtp with ESMTPS
-	id MApYwcr6XkWUFMApZwOfFO; Sun, 10 May 2026 20:32:53 +0000
-X-Authority-Analysis: v=2.4 cv=frTcZE4f c=1 sm=1 tr=0 ts=6a00eb75
- a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=7T7KSl7uo7wA:10
- a=Xn-DZyyB-tC0dpwOAtYA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
- a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qmpCMxkpzSQC5550b9jS4HBEZiBG5nYRYB4x+ATjtNo=; b=ZMroBtJuc7WxUDw7JWRiPhN1vI
-	NzsnAd5e0Hvte3p8yFvq47Q2BNLQgF8smCmeOESClS0Ngfur9u6BJLk8ObNLDm2NX8XtxxWTfMJaE
-	Iud/sgybAXIDXPAxNaYd3zXUf/NL9JcapSYNja98AeZJHWoMOPRl5D91oLy8FhKIjRbfJMkfzQKBY
-	xYpD86RAimfgr6miCqHoKsVhqPo/FX+pZes37qubZdiaUI8Ua7S2yTRinL9fcXk4noQfIvy3B2J8h
-	Ja6UomXTdI7FQLpQmVTY4a5ajnuDC87ypel0gUVziE+PMVVw8IBmTB/UgkX7mp4Fq+Czi4KAt5CEK
-	qV5K+gZQ==;
-Received: from [177.238.18.176] (port=42958 helo=[192.168.0.11])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.99.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1wMApV-000000012VZ-3kne;
-	Sun, 10 May 2026 15:32:49 -0500
-Message-ID: <531e960a-c2b5-484d-8265-e07ac021f272@embeddedor.com>
-Date: Sun, 10 May 2026 14:32:40 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GO1Yrowi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E4F0C2BCF6;
+	Sun, 10 May 2026 21:10:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778447434;
+	bh=mPNEZix8x1dfm+jDYOJGD8MkjI6F8K7kOIU+tWvfLRU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=GO1YrowisMog6tFpp/TeklGarS5R4a2QwUo3e8ME9tcN3p5V6jNl1ILDLBBryULpw
+	 Ng5DTJNim9VztYYXtSaSBWCJl0X1t0iJyg5QwIeOBFkLIU1ugM610UIgC276ivT6lI
+	 Wne6EGfB9Y/wFRcYa4JOuNLxon0Bereg+QUQj7EpJ3Lus1cd5oV6a43uKiUyhh7pk2
+	 FDXwcAqKdPuu4a9DRqlleu6dooPHWzkjyE611yaIneuPSJKUUfUY5QYHDtEFFBUCmY
+	 lUap1B0Uf8yRlpmrlcOJJdbWI1mfmaV8EjXXc9KwovDvrfkpJwR5psm4jwRhB9COY9
+	 SUR2sO0IWwOsQ==
+Date: Sun, 10 May 2026 15:10:31 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] stddef: Document designated initializer semantics
+ for __TRAILING_OVERLAP()
+Message-ID: <agD0R-kNbg9YMOCT@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 2/2] KEYS: annotate struct user_key_payload
- with __counted_by
-To: Thorsten Blum <thorsten.blum@linux.dev>,
- Jarkko Sakkinen <jarkko@kernel.org>
-Cc: David Howells <dhowells@redhat.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Tim Bird <tim.bird@sony.com>,
- keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260427114422.313356-3-thorsten.blum@linux.dev>
- <20260427114422.313356-4-thorsten.blum@linux.dev>
- <af8ZUXn4uStU_vs5@kernel.org> <agBiPEJZhWHydwuz@linux.dev>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <agBiPEJZhWHydwuz@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.18.176
-X-Source-L: No
-X-Exim-ID: 1wMApV-000000012VZ-3kne
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.11]) [177.238.18.176]:42958
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfN1hPHKd0/djhbiceACTI84WPCWqqTL+Fx3mQq4Ql2ujSmOSF0mkN3tNgtQA+Xd4c7YpTReBnfeavePB3/o7nH0n3pK1ui0M2JWHMYyhZrUb2OcJws47
- tGhbO3kZdlk1HCfF935kbKo3t7xSc6vlmRICJcfD4/J11RUJCZ2wYV40vQeveKPtxDIPGyRc6JPhMQSK+UIIS8B/u1MlUGWRQBVQye70pXLhXKButtOr0o3L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Document the designated initializer behavior for overlapping storage
+between NAME and MEMBERS, and clarify the implications for static
+initialization to help avoid unintended overwrites.
 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Fix a couple of typos.
+ - Update format.
 
-On 5/10/26 04:47, Thorsten Blum wrote:
-> On Sat, May 09, 2026 at 02:24:01PM +0300, Jarkko Sakkinen wrote:
->> On Mon, Apr 27, 2026 at 01:44:24PM +0200, Thorsten Blum wrote:
->>> Add the __counted_by() compiler attribute to the flexible array member
->>> 'data' to improve bounds checking via CONFIG_UBSAN_BOUNDS and
->>> CONFIG_FORTIFY_SOURCE.
->>>
->>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->>
->> This is again a crippled commit message.
->>
->> I.e. this requires either knowing, remembering and/or cross-referencing
->> "bunch of" unrelated to keyring.
-> 
-> I kept the commit message short because it follows the same pattern as
-> many other __counted_by() patches that have been accepted across several
-> subsystems.
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/af6p68531gNsTM5U@kspp/
 
-That's clearly not a good example of how to document changes, so I wouldn't
-use it as a reference.
+ include/linux/stddef.h | 65 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
--Gustavo
+diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+index 80b6bfb944f0..ce0e5d7b205b 100644
+--- a/include/linux/stddef.h
++++ b/include/linux/stddef.h
+@@ -100,6 +100,71 @@ enum {
+  * Creates a union between a flexible-array member (FAM) in a struct and a set
+  * of additional members that would otherwise follow it.
+  *
++ * Beware that, as this helper encloses TYPE NAME and MEMBERS in the same
++ * union, designated initializers for MEMBERS may overwrite portions
++ * previously initialized through NAME.
++ *
++ * For example:
++ *
++ * struct flex {
++ *	size_t count;
++ *	u8 fam[];
++ * };
++ *
++ * struct composite {
++ *	...
++ *	__TRAILING_OVERLAP(struct flex, flex, fam, __packed,
++ *		u8 data;
++ *	);
++ * } __packed;
++ *
++ * static struct composite comp = {
++ *	.flex = {
++ *		.count = 1,
++ *	},
++ *	.data = 2,
++ * };
++ *
++ * In the example above, .flex and .data initialize different views of the same
++ * union storage. Since .data is initialized last, it _may_ overwrite portions
++ * previously initialized through .flex, leading to .flex.count being zeroed
++ * out.
++ *
++ * A couple of alternatives are shown below.
++ *
++ * a) Initialize only one view of the overlapped storage and assign the rest
++ *    at runtime:
++ *
++ *	static struct composite comp = {
++ *		.flex = {
++ *			.count = 1,
++ *		},
++ *	};
++ *
++ *	static void foo(void)
++ *	{
++ *		comp.data = 2;
++ *		...
++ *	}
++ *
++ *	(Compiler Explorer test code: https://godbolt.org/z/voM4E36dT)
++ *
++ * b) Alternatively, replace designated initializers with runtime assignments.
++ *
++ *	static void foo(void)
++ *	{
++ *		struct composite comp;
++ *
++ *		comp.flex.count = 1;
++ *		comp.data = 2;
++ *		...
++ *	}
++ *
++ * For another example of the above see commit 5e54510a9389 ("acpi: nfit:
++ * intel: avoid multiple -Wflex-array-member-not-at-end warnings")
++ *
++ * Link: https://git.kernel.org/linus/5e54510a9389caa9
++ *
+  * @TYPE: Flexible structure type name, including "struct" keyword.
+  * @NAME: Name for a variable to define.
+  * @FAM: The flexible-array member within @TYPE
+-- 
+2.51.0
+
