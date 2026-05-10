@@ -1,40 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA9033D4E9;
-	Sun, 10 May 2026 21:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674F232692B;
+	Sun, 10 May 2026 21:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778447434; cv=none; b=qmsZNXDQIbto/8E6caMxD4CYObe/HQj70S0DGchZVvmLfBO43AZ5ylxXTOXQYy8tiUxhFbvPcIuZ+tJZ3Pmx5h5CzcDilT7tB6P6Kn7IW5M3wFrAwmsDx5FpxeMCMbpsV1dtFSwNvakg/OuLIreU+Am/9x84dbIhDtWmLLtc7zo=
+	t=1778449253; cv=none; b=mKi3YWc7z78eZhLm+LQ9WEMclRwX1SuNsyhg92tU8UKokUKoVolQRbMN71achaudFHZqijgMUaMSkJE9bFMB12LkBh3Qd3r0LFlVvedFt4qr3OcfCspLHowYT8L99OjEJ6TjyY1S2MH7yRolK9YYmSdAA56Rbv+eTkAil153Czc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778447434; c=relaxed/simple;
-	bh=mPNEZix8x1dfm+jDYOJGD8MkjI6F8K7kOIU+tWvfLRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aJA2oxbq5qk5k+zxJIYsM4o2sLvsXaKJWet3L3OhwuGEqlwCgxRrpovWzt2oz2U7K+DMeCzvItxV7TihPRP3Zt/NNqm61c/yQevTwNFVG0Hcw58zLKUMmP2xvAo3jaed/QV70DNS+HSaUWP7N5e3TIMpp1JYW2kqTgUWXnX09eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GO1Yrowi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778449253; c=relaxed/simple;
+	bh=hXygK0G1nkNaf+vivvqESQJciIwrQ+dae5+fHbGeSio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u/UEI/js/L0Pf38O0lIsYWJibQq7IwsbtBxmYmayTSBkRF96ZPSMI8lK0E0N/l/GEkBI4yRByImowr7h8aNR162f90p+9gWSHy02g5bO0+wWCHbZoXPaW9zRvVLa5bk4LpC+QypYzz3KCRuW2HHkRL8USlahYUXEBvSml25UfGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQSTQ/vT; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GO1Yrowi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E4F0C2BCF6;
-	Sun, 10 May 2026 21:10:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778447434;
-	bh=mPNEZix8x1dfm+jDYOJGD8MkjI6F8K7kOIU+tWvfLRU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GO1YrowisMog6tFpp/TeklGarS5R4a2QwUo3e8ME9tcN3p5V6jNl1ILDLBBryULpw
-	 Ng5DTJNim9VztYYXtSaSBWCJl0X1t0iJyg5QwIeOBFkLIU1ugM610UIgC276ivT6lI
-	 Wne6EGfB9Y/wFRcYa4JOuNLxon0Bereg+QUQj7EpJ3Lus1cd5oV6a43uKiUyhh7pk2
-	 FDXwcAqKdPuu4a9DRqlleu6dooPHWzkjyE611yaIneuPSJKUUfUY5QYHDtEFFBUCmY
-	 lUap1B0Uf8yRlpmrlcOJJdbWI1mfmaV8EjXXc9KwovDvrfkpJwR5psm4jwRhB9COY9
-	 SUR2sO0IWwOsQ==
-Date: Sun, 10 May 2026 15:10:31 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] stddef: Document designated initializer semantics
- for __TRAILING_OVERLAP()
-Message-ID: <agD0R-kNbg9YMOCT@kspp>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQSTQ/vT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778449251; x=1809985251;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hXygK0G1nkNaf+vivvqESQJciIwrQ+dae5+fHbGeSio=;
+  b=IQSTQ/vT6sXIAVlnePa/elToEHKfPYnyFHrf8hHtl23ErrKqFFKu25bm
+   GhiVuvZJNnCxDGGnhNSgPxuOUKiG4+4PwRD0kPidyjiB9xyN9uT7nPfKP
+   zdsTGZY1851f/g4+hU6E8GGlNFylpNul5VD1PCVP4qYPw26qCEMf1y7z+
+   tI0LNJPJINRh0PXZ+kRTCJkoJNX4oDZGQ6dow/zp8qONKT4Kx6iEObdnE
+   Im5xN3XJg9PW8rLo2FBMsUayssLF1WU6tY2yr7C8g/EotD53xA6Vm5KSx
+   nh68yI4TysMpg6WMifPFDLHjxIeOp59ohpLNIJSQFp0NDlzoGEx4PuVcE
+   Q==;
+X-CSE-ConnectionGUID: vV4SY7JWRF2NbrjtKfEKCg==
+X-CSE-MsgGUID: dWQEEr9XRkW9hBpCNXuAUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11782"; a="104797735"
+X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
+   d="scan'208";a="104797735"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2026 14:40:50 -0700
+X-CSE-ConnectionGUID: JpwARR4wQqWWIRcLPmbppQ==
+X-CSE-MsgGUID: x5NVtusiQTqC0hpHwIzVig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
+   d="scan'208";a="237511727"
+Received: from igk-lkp-server01.igk.intel.com (HELO bdf09bfdbd5f) ([10.211.93.152])
+  by orviesa007.jf.intel.com with ESMTP; 10 May 2026 14:40:48 -0700
+Received: from kbuild by bdf09bfdbd5f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wMBtG-000000007mz-20dT;
+	Sun, 10 May 2026 21:40:46 +0000
+Date: Sun, 10 May 2026 23:40:10 +0200
+From: kernel test robot <lkp@intel.com>
+To: Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH] mm: make zeropage read-only
+Message-ID: <202605102324.g5xWKUc3-lkp@intel.com>
+References: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,99 +67,32 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
 
-Document the designated initializer behavior for overlapping storage
-between NAME and MEMBERS, and clarify the implications for static
-initialization to help avoid unintended overwrites.
+Hi Jann,
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Fix a couple of typos.
- - Update format.
+kernel test robot noticed the following build warnings:
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/af6p68531gNsTM5U@kspp/
+[auto build test WARNING on 917719c412c48687d4a176965d1fa35320ec457c]
 
- include/linux/stddef.h | 65 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+url:    https://github.com/intel-lab-lkp/linux/commits/Jann-Horn/mm-make-zeropage-read-only/20260510-200814
+base:   917719c412c48687d4a176965d1fa35320ec457c
+patch link:    https://lore.kernel.org/r/20260508-ro-zeropage-v1-1-9808abc20b49%40google.com
+patch subject: [PATCH] mm: make zeropage read-only
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260510/202605102324.g5xWKUc3-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260510/202605102324.g5xWKUc3-lkp@intel.com/reproduce)
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 80b6bfb944f0..ce0e5d7b205b 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -100,6 +100,71 @@ enum {
-  * Creates a union between a flexible-array member (FAM) in a struct and a set
-  * of additional members that would otherwise follow it.
-  *
-+ * Beware that, as this helper encloses TYPE NAME and MEMBERS in the same
-+ * union, designated initializers for MEMBERS may overwrite portions
-+ * previously initialized through NAME.
-+ *
-+ * For example:
-+ *
-+ * struct flex {
-+ *	size_t count;
-+ *	u8 fam[];
-+ * };
-+ *
-+ * struct composite {
-+ *	...
-+ *	__TRAILING_OVERLAP(struct flex, flex, fam, __packed,
-+ *		u8 data;
-+ *	);
-+ * } __packed;
-+ *
-+ * static struct composite comp = {
-+ *	.flex = {
-+ *		.count = 1,
-+ *	},
-+ *	.data = 2,
-+ * };
-+ *
-+ * In the example above, .flex and .data initialize different views of the same
-+ * union storage. Since .data is initialized last, it _may_ overwrite portions
-+ * previously initialized through .flex, leading to .flex.count being zeroed
-+ * out.
-+ *
-+ * A couple of alternatives are shown below.
-+ *
-+ * a) Initialize only one view of the overlapped storage and assign the rest
-+ *    at runtime:
-+ *
-+ *	static struct composite comp = {
-+ *		.flex = {
-+ *			.count = 1,
-+ *		},
-+ *	};
-+ *
-+ *	static void foo(void)
-+ *	{
-+ *		comp.data = 2;
-+ *		...
-+ *	}
-+ *
-+ *	(Compiler Explorer test code: https://godbolt.org/z/voM4E36dT)
-+ *
-+ * b) Alternatively, replace designated initializers with runtime assignments.
-+ *
-+ *	static void foo(void)
-+ *	{
-+ *		struct composite comp;
-+ *
-+ *		comp.flex.count = 1;
-+ *		comp.data = 2;
-+ *		...
-+ *	}
-+ *
-+ * For another example of the above see commit 5e54510a9389 ("acpi: nfit:
-+ * intel: avoid multiple -Wflex-array-member-not-at-end warnings")
-+ *
-+ * Link: https://git.kernel.org/linus/5e54510a9389caa9
-+ *
-  * @TYPE: Flexible structure type name, including "struct" keyword.
-  * @NAME: Name for a variable to define.
-  * @FAM: The flexible-array member within @TYPE
--- 
-2.51.0
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605102324.g5xWKUc3-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
+
+   /tmp/ccZJHv5S.s: Assembler messages:
+>> /tmp/ccZJHv5S.s:14940: Warning: setting incorrect section attributes for .rodata..page_aligned
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
