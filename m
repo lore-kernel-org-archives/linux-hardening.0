@@ -1,51 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E2934F479;
-	Sun, 10 May 2026 14:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494F939FCAD;
+	Sun, 10 May 2026 15:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778422520; cv=none; b=lIdmgMsJIYKaMs7e3Sb/LchDYLhukv8AzqnuxQiCdOktyHq7DLff9/uyulFXRSfMKpjnwo8IxG+610dmN7cv3UnfswgLp5Kcyt0d7Y9qwwUv5UYnWVdfW8CnC7WNfOFM1i+FO1F3bfBbaYOF/cYH2o33F/pimPXJ4NTzsb2ZMCs=
+	t=1778425953; cv=none; b=OAQcLEARl2GtyGku+N6vG10KljLrvC7hvUDD9lA87YMjGddle6sGee7NsM7M95snm4Y2ladYRKb7U/wWAy/v5kkl35qNabJeC/PE3LpgDXiPYOZv61y0joxjIppRSxYbgHf4TI//foSPQ3tSBcfpngdOfmb/fEmRkw4U32GlyGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778422520; c=relaxed/simple;
-	bh=wRR1xeuPXc/ERpuUkGr/Dud0hz+KfTf1fQDlI/t+kC4=;
+	s=arc-20240116; t=1778425953; c=relaxed/simple;
+	bh=N+XZMSgicn8mI99CZ460axGdpor6zxJtBh7/Zgbh1yk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bK2O0fYpIptKIEIsmkrMt1C71OufswOHVhzkildC9JeVDXjaRFGVEk2YbWFFKoqBlnUlBkDoAW60NBZwnFxXuspD+CR6/J0R2ky5Uumlo6ZxxEocIKhnDXZFw81R6mGdG1ghpw8t45zn1xWt0vbZ4wUDTwoj/hF8AmN0i2YT14A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1ZLSQzx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QBTtRuypVLWTgaZPCACyPGPUv7bQemO5IlDCXB6RpAf2N8wozAJ2NsgFjE7TBQiCHCYO1Yv7LZINnqeK0vXsA5mKXTfOKbGPuNlFSFWpfOEvdYUwCH9Fgb+Z3bNRE8klm+0KYsdULU0S5HT4CIzgrBXcI5JGFiZdG3HmSH8nMAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M+sv/KZY; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1ZLSQzx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77527C2BCB8;
-	Sun, 10 May 2026 14:15:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778422520;
-	bh=wRR1xeuPXc/ERpuUkGr/Dud0hz+KfTf1fQDlI/t+kC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R1ZLSQzxfp11nndKq6q8tPg8mHk2I6A6l1hUNEpiMHhoSQFtaoXHhlJN2Q9iqsmcD
-	 zluYrv8RGIbknYuFZCJiNldBWcLB1piH4ihTFttnefD6a1DzFNTPrVJBa6M5OCpj6T
-	 Ibc7rqv0Rrdq7mlwEiwK6FdbFGnNyGB4ilFkWQmHND3YvZzQ+kR60h6LqUppqEe1hj
-	 RsuJZl4fqbAmJaxSg+4O8Goy2Yd50p3nfw+v1dfXIhEGGFmbpa379Cqn6uejxjnEP5
-	 Ct+E+onCyqEP9Z7AePh6eWINRqbxWy16/XprN/YB2ItP9kEzDZe7p/Sj0AgTDbJuKG
-	 gcqb+fQfr5eIw==
-Date: Sun, 10 May 2026 17:14:56 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: David Howells <dhowells@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Tim Bird <tim.bird@sony.com>, keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/2] KEYS: annotate struct user_key_payload
- with __counted_by
-Message-ID: <agCS4O1E336c1aYc@kernel.org>
-References: <20260427114422.313356-3-thorsten.blum@linux.dev>
- <20260427114422.313356-4-thorsten.blum@linux.dev>
- <af8ZUXn4uStU_vs5@kernel.org>
- <agBiPEJZhWHydwuz@linux.dev>
- <agCSNaiHTcsN3Ye8@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M+sv/KZY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778425949; x=1809961949;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N+XZMSgicn8mI99CZ460axGdpor6zxJtBh7/Zgbh1yk=;
+  b=M+sv/KZYE9WP5dhv/F2+V5i7HNAUeEYQxbxg+8mpxs7R+IiEeWMvceCg
+   YsYIaLymdBZh0PReive4CTK8sGEU7p6bYfEyk81NMlEVKIHiJKEMr6A6a
+   6TsjLYDT9eNJuvLrkpjhkEg+U/fC2pTAg7BnIB7pqC8QMf7Thi5yVuqCx
+   48gX8jDMhuOGUkQ0NdyCQVwSwHfw/axMQvkEgmSqKdSMt8d+y6XGWOlE7
+   CrIn4SEG58c9EKy/lNw4K4q6AoXm82kDJC+F4LJFjzpHebHhNYuxuo4eQ
+   Abjy4sJqbQjuTHPaJ14Hd7ZQBE6KKG12/JPv3HVTpJh1fyhimXJF2NzWD
+   g==;
+X-CSE-ConnectionGUID: UMRuuzcDQGOFx6zUHnUblA==
+X-CSE-MsgGUID: FPbtmJDgRGSaWDQaaRTDVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11781"; a="96753731"
+X-IronPort-AV: E=Sophos;i="6.23,227,1770624000"; 
+   d="scan'208";a="96753731"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2026 08:12:28 -0700
+X-CSE-ConnectionGUID: AM6aWGUATqKZXBH+JQ1pSg==
+X-CSE-MsgGUID: KfSRvOSTTuKI0VJjlUESPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,227,1770624000"; 
+   d="scan'208";a="237175762"
+Received: from lkp-server01.sh.intel.com (HELO 82327192134e) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 10 May 2026 08:12:27 -0700
+Received: from kbuild by 82327192134e with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wM5pQ-000000002LB-084H;
+	Sun, 10 May 2026 15:12:24 +0000
+Date: Sun, 10 May 2026 23:12:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH] mm: make zeropage read-only
+Message-ID: <202605102300.PHd18T7k-lkp@intel.com>
+References: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,40 +67,32 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <agCSNaiHTcsN3Ye8@kernel.org>
+In-Reply-To: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
 
-On Sun, May 10, 2026 at 05:12:13PM +0300, Jarkko Sakkinen wrote:
-> On Sun, May 10, 2026 at 12:47:24PM +0200, Thorsten Blum wrote:
-> > On Sat, May 09, 2026 at 02:24:01PM +0300, Jarkko Sakkinen wrote:
-> > > On Mon, Apr 27, 2026 at 01:44:24PM +0200, Thorsten Blum wrote:
-> > > > Add the __counted_by() compiler attribute to the flexible array member
-> > > > 'data' to improve bounds checking via CONFIG_UBSAN_BOUNDS and
-> > > > CONFIG_FORTIFY_SOURCE.
-> > > > 
-> > > > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > > 
-> > > This is again a crippled commit message.
-> > > 
-> > > I.e. this requires either knowing, remembering and/or cross-referencing
-> > > "bunch of" unrelated to keyring.
-> > 
-> > I kept the commit message short because it follows the same pattern as
-> > many other __counted_by() patches that have been accepted across several
-> > subsystems.
-> > 
-> > I'm not sure which part of the message you want expanded. Could you be
-> > more specific?
-> 
-> "Describe your problem. Whether your patch is a one-line bug fix or 5000
-> lines of a new feature, there must be an underlying problem that
-> motivated you to do this work. Convince the reviewer that there is a
-> problem worth fixing and that it makes sense for them to read past the
-> first paragraph."
-> 
-> This is a direct quote from https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
+Hi Jann,
 
-And there's pretty good reasons to do this too as commit message is not
-just a cover leter for a patch. It's also reminder in the commit log why
-something was done.
+kernel test robot noticed the following build warnings:
 
-BR, Jarkko
+[auto build test WARNING on 917719c412c48687d4a176965d1fa35320ec457c]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jann-Horn/mm-make-zeropage-read-only/20260510-200814
+base:   917719c412c48687d4a176965d1fa35320ec457c
+patch link:    https://lore.kernel.org/r/20260508-ro-zeropage-v1-1-9808abc20b49%40google.com
+patch subject: [PATCH] mm: make zeropage read-only
+config: powerpc-allnoconfig (https://download.01.org/0day-ci/archive/20260510/202605102300.PHd18T7k-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260510/202605102300.PHd18T7k-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605102300.PHd18T7k-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   /tmp/ccjZQT3J.s: Assembler messages:
+>> /tmp/ccjZQT3J.s:3163: Warning: setting incorrect section attributes for .rodata..page_aligned
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
