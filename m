@@ -1,75 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31B0381B06;
-	Sun, 10 May 2026 12:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA65F39B49F;
+	Sun, 10 May 2026 14:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778416343; cv=none; b=f+9fPZKReefjyxtG0WN7I582lN+e5Rr8lW2zwkbEPVa62Hlguznm9td9fINLkqNd0kE4brkPpLXNSV1/AbAenxBIDwgwyK37F4okMlKqKvX336EgGALt/UgDGfdLi1CwNXH42SSo+ewD6MbdsdtznnW5Du8S8KenA6/a3uyKdSY=
+	t=1778422333; cv=none; b=rf45LwyhG+luGNEvYYPhob4/k00cXBwqgjmTn902KF93klqO1kuTVlbKV3ZeL5LPErZzV3vzJPXhcX3Ornb4CcQtHIP7KAaEfMK1v5WIAzh+LpF6215bYCi0Ao9U3UaSVsViw+kMwijYyzMb7TayC2HUpBwIaZxmi6YQ1yO5xPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778416343; c=relaxed/simple;
-	bh=PfAtiR22BeLI1xNkWhQObSwYDHOrQpp5c0BjbJTPJhI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=X1wUcTqEa6R3iBNI+qxmp3uGC8n/GCIGFEZ1ZeCoXAKquaX+1nRpYoGx+ZcJGIUBfaTEzoOS8P7Bu8QCS5QuJBnzL2EuooYAumrLkagpxQq1IXDnr6DVJB14OV4lG9mp9L12bm2SaphJBzpLbUBVKIr5+9r3xEAENqwlk2EO1c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzzHPD46; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778422333; c=relaxed/simple;
+	bh=BLl+/W7VW9QtdhdpgQ4Gyg9VVkG5/0xjqw+dAMoiJyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HR8iQnDVrClBtfP1b7iO7FMbwXBakt+fvRt9dLYS2/EvaPjoL3kjKDAKiRgK6iRHDqHq56bb4ntqtP00iFe1KTbgRha1RvFyYPwzWzzkPypbmoacNCNM5VeImKkgNeNKScVZ6ArZkv+gdEEG+UJf13wtmWgLBzHpE+RugOh+IYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIB5EraM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzzHPD46"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53031C2BCB8;
-	Sun, 10 May 2026 12:32:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIB5EraM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08590C2BCB8;
+	Sun, 10 May 2026 14:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778416343;
-	bh=PfAtiR22BeLI1xNkWhQObSwYDHOrQpp5c0BjbJTPJhI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pzzHPD46ljrfTpClixgvb4yANKVJ3v32sIl13C8+ea2jLszSd0oPgFXSSbP5Duv9f
-	 QgfbscxCIdx2reDe4iTULpGdBFZ2AouPjzwdjbXqaLJ9JpJLD5DcEXQd+ISSb9GqV+
-	 kZrGaFjVM2IPkBzH0ScNm1Nq60jYspEAwOPGW6BSrMC5BBaqxRmJwzAVkGHuvkHTtP
-	 BlM0ij6KRT8uDlbAYyyb5hd2ckkXy/Zd61r3Ap9luWAxpWFWDF3QS2yyBEK4kzkZa3
-	 PC28WofTtsac7virgk4Bc0WZOsBesX4ghbjyP0C1+Y6JEUQYIKO5BzsfjKoGfMnPP8
-	 sgJqPMOxl+77w==
-From: Vinod Koul <vkoul@kernel.org>
-To: linux-phy@lists.infradead.org, Rosen Penev <rosenp@gmail.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20260306222457.8400-1-rosenp@gmail.com>
-References: <20260306222457.8400-1-rosenp@gmail.com>
-Subject: Re: [PATCHv2 0/2] phy: miphy28lp: build and simplify allocation
-Message-Id: <177841633994.434434.11599287536410953289.b4-ty@kernel.org>
-Date: Sun, 10 May 2026 18:02:19 +0530
+	s=k20201202; t=1778422333;
+	bh=BLl+/W7VW9QtdhdpgQ4Gyg9VVkG5/0xjqw+dAMoiJyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HIB5EraMcgxMAT+wKydH5XNlirWzPUHVAWQ3cpGUhA0d8xQ6wMjE2miEx9zJ8gYGY
+	 wzOfgHbN9vk9/XO7EkL4uUcOxpZtJMSS49q6w7xShnjLJFxTuU64jPuS2sKfY+xKKJ
+	 eiI2xQm2JgmpdhN3lnFsLycXHpMsxIRJKPp2mUeA4AoyaLPM+vLF3btVruG2562ygS
+	 yU5plsx2znq/EcdaynSG/iS2gi3oJCw/v4z7qyYNIusT6xzoinUtNfkccgVE0ivC4Z
+	 XO3PtTaXUEgYmV4p44txKNMBs0EJl6QMzKq3FzhMXbDDVas23k70AnPysIs/hV6kpv
+	 ssmZ59thbSlig==
+Date: Sun, 10 May 2026 17:12:05 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: David Howells <dhowells@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Tim Bird <tim.bird@sony.com>, keyrings@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v3 2/2] KEYS: annotate struct user_key_payload
+ with __counted_by
+Message-ID: <agCSNaiHTcsN3Ye8@kernel.org>
+References: <20260427114422.313356-3-thorsten.blum@linux.dev>
+ <20260427114422.313356-4-thorsten.blum@linux.dev>
+ <af8ZUXn4uStU_vs5@kernel.org>
+ <agBiPEJZhWHydwuz@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <agBiPEJZhWHydwuz@linux.dev>
 
-
-On Fri, 06 Mar 2026 14:24:55 -0800, Rosen Penev wrote:
-> First patch allows compilation on at least x86.
+On Sun, May 10, 2026 at 12:47:24PM +0200, Thorsten Blum wrote:
+> On Sat, May 09, 2026 at 02:24:01PM +0300, Jarkko Sakkinen wrote:
+> > On Mon, Apr 27, 2026 at 01:44:24PM +0200, Thorsten Blum wrote:
+> > > Add the __counted_by() compiler attribute to the flexible array member
+> > > 'data' to improve bounds checking via CONFIG_UBSAN_BOUNDS and
+> > > CONFIG_FORTIFY_SOURCE.
+> > > 
+> > > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > 
+> > This is again a crippled commit message.
+> > 
+> > I.e. this requires either knowing, remembering and/or cross-referencing
+> > "bunch of" unrelated to keyring.
 > 
-> Second uses a flexible array member to simplify allocation.
+> I kept the commit message short because it follows the same pattern as
+> many other __counted_by() patches that have been accepted across several
+> subsystems.
 > 
-> v2: add first patch and fix second.
+> I'm not sure which part of the message you want expanded. Could you be
+> more specific?
+
+"Describe your problem. Whether your patch is a one-line bug fix or 5000
+lines of a new feature, there must be an underlying problem that
+motivated you to do this work. Convince the reviewer that there is a
+problem worth fixing and that it makes sense for them to read past the
+first paragraph."
+
+This is a direct quote from https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
+
 > 
-> Rosen Penev (2):
->   phy: miphy28lp: add COMPILE_TEST
->   phy: miphy28lp: kzalloc + kcalloc to single kzalloc
-> 
-> [...]
+> Thanks,
+> Thorsten
 
-Applied, thanks!
-
-[1/2] phy: miphy28lp: add COMPILE_TEST
-      commit: cc68a1728abfcbde12d36015f244046ae74ddd44
-[2/2] phy: miphy28lp: kzalloc + kcalloc to single kzalloc
-      commit: f3508a61c892c592e4e893a3681e568a5c671027
-
-Best regards,
--- 
-~Vinod
-
-
+BR, Jarkko
