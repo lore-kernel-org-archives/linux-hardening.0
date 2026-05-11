@@ -1,170 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B2A46AECC;
-	Mon, 11 May 2026 18:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C454A3412;
+	Mon, 11 May 2026 18:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778523266; cv=none; b=NU1WieSwg0Sptxy7y8muRoKURbLTxfNANk4FUVJbhbN1Ilh5H1xwwOjU0IGTOPPI1YreKnjyqyzx3Y7pxdswFO0fWD6DOhwhn6c1ekvLzEd5l0FgwnRGOHZ8SsUS9U3G4fejCD3L/5XJASC5PXRSMh6ode0ylowdvqZhOKsYUVA=
+	t=1778525140; cv=none; b=GcH+Op2ILKamkgtnVor50eIIxbkLFHt+sIvS7GFjE8lp0CpLse0hBTgzCB5tupgsVV8NiqktbwfnRB3tl9Eifm2Ked1woCPrho2ilaZJ3BLllIFds31tVzfOGowDTmaSjN8VdAy/P0zJaNCN69v/bk2BNOB//A3+J7j45F3/EY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778523266; c=relaxed/simple;
-	bh=kYJAjhBLTK5188tkpp895MuAn5ZwQjFTPdmZuwhzdKQ=;
+	s=arc-20240116; t=1778525140; c=relaxed/simple;
+	bh=TwOfOoVHvAk5+BCmHU/0l16HBggiVxIlTk/wO3uefzU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ME4RMi+SUXDetXqRImEaIr5zpeV9iSRgHtSFqOhR9xRJnyT54lvRXV9XH/6eHFfvG/QLsIMot/KpdNJbM+aLWsSuDFWd5/9mgvQvC6oEv0f9x+lJa9ZxJbpZBimwzaLIZB61P2f2mG4BsdPSCZ5EXgHJM7Fr9+lmRsq7V+2XLvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yik00MFs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H4++cgyMqn3L85m3VX/zq+7q6P66C9hzr3F0tJz0ygYHeCLegLOTcypiUv7m6XrFD0o0F74WwgAF9pNh0yRUAFusLCGd03Ewm9y8sslJkDI0tpsmYFSTKdR9nhq4H0zAnBRZgJr1xF1yV1f5eKLIlxCZbjZYof19Cu799Tr5fvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gD5uFrrl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yik00MFs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6274CC2BCB0;
-	Mon, 11 May 2026 18:14:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gD5uFrrl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEFBEC2BCB0;
+	Mon, 11 May 2026 18:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778523266;
-	bh=kYJAjhBLTK5188tkpp895MuAn5ZwQjFTPdmZuwhzdKQ=;
+	s=k20201202; t=1778525140;
+	bh=TwOfOoVHvAk5+BCmHU/0l16HBggiVxIlTk/wO3uefzU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yik00MFsZZExqbxCaceAPJlMwLQrmJmplumBUszioAlx10aTI4RdUFOzjXo+x+c5u
-	 /VZ6lGT4BZS+HALjze4VbOO1Pro9OETfEq58RSG64GOXUNLfBpoyrkzVnsxu2HjQPW
-	 gmZdwzKpsmcDJCxfMa1NGnelSgreX+FZK15c0Rs05bF11sNGvdbSuIDjH+/77RO3F/
-	 i4eCb0+n3xVp33OV69kdFRqIfPru7ydqw9Q8xz1B73DIYRHGuvEenFrzdyXLnXfzES
-	 QUCSmeTH40A82aP4edYnZ8dDwBoXOb+P4FLxUoEv0Y7xclsqSNwlkWKi6e9qcA8e82
-	 70fz60b4WW4dA==
-Date: Mon, 11 May 2026 11:14:25 -0700
+	b=gD5uFrrlE+wG2vwML+Aua/biLzAAyLJ+t6tbI+rhZSnVTjogUz6PrsXYzBDuv04SE
+	 5UossI/jUrt1BWF56+0ts/0MbUWbyhisN9TyfCmJ1yDkACDU33yNP81cnVfETNey5h
+	 0P68FO0RXg4OZxf2Pt+hfo0cdCjBMwJbrdOEd3Pdl3PRLkTmcYaqHGBxXGM1vY4PSS
+	 2qvPgHjG3FGAWF/6ZLxS2SoQBF9+nqr4cWLDQUhYH6dRDjnMxv/hnqfMec5S8pNKfa
+	 4cWUtMHZ2B4dAzEHpMKQC27h9YzXrLWXzskKQEkFDNph7Ozt4lOUU0MxDlojcCKrDp
+	 FduI08HJYAMQg==
+Date: Mon, 11 May 2026 11:45:39 -0700
 From: Kees Cook <kees@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: "Harry Yoo (Oracle)" <harry@kernel.org>,
-	"Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
-	Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+To: Jann Horn <jannh@google.com>
+Cc: Ard Biesheuvel <ardb+git@google.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Liz Prucka <lizprucka@google.com>,
+	Seth Jenkins <sethjenkins@google.com>,
 	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alexander Potapenko <glider@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
-	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>,
-	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Matteo Rizzo <matteorizzo@google.com>,
-	GONG Ruiqi <gongruiqi1@huawei.com>
-Subject: Re: [PATCH v3 1/2] slab: support for compiler-assisted type-based
- slab cache partitioning
-Message-ID: <202605111113.5076F0DC@keescook>
-References: <20260424132427.2703076-1-elver@google.com>
- <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
- <afkOMIPu1WNFE9MS@elver.google.com>
- <CANpmjNM261J5qefMvmUXWZGBVz-KBs7GkbpdNMfTOvNJ-=LiZQ@mail.gmail.com>
- <afz7pZADZPD4mKJr@MacBook-Air.tail10959e.ts.net>
- <af3xcFjrZSZFG846@elver.google.com>
- <rz7dt4wghum6beghfgm6suqje6jeivrensojjalfis5zeuyen7@6bj7kfpqb4q5>
- <CANpmjNNevjTo0uwo3DJdDc=PpQpyzj301kFT39OBoCNLW0A8VQ@mail.gmail.com>
+	David Hildenbrand <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
+Message-ID: <202605111144.349EF737E@keescook>
+References: <20260427153416.2103979-17-ardb+git@google.com>
+ <20260427153416.2103979-19-ardb+git@google.com>
+ <CAG48ez1DJ88a0pBCE-Q0VXyDuJgng8zdunb38g4b4JPU88exww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANpmjNNevjTo0uwo3DJdDc=PpQpyzj301kFT39OBoCNLW0A8VQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez1DJ88a0pBCE-Q0VXyDuJgng8zdunb38g4b4JPU88exww@mail.gmail.com>
 
-On Mon, May 11, 2026 at 11:34:53AM +0200, Marco Elver wrote:
-> On Mon, 11 May 2026 at 10:31, 'Harry Yoo (Oracle)' via kasan-dev
-> <kasan-dev@googlegroups.com> wrote:
+On Fri, May 08, 2026 at 07:02:51PM +0200, Jann Horn wrote:
+> On Mon, Apr 27, 2026 at 5:44 PM Ard Biesheuvel <ardb+git@google.com> wrote:
+> > The empty zero page is used to back any kernel or user space mapping
+> > that is supposed to remain cleared, and so the page itself is never
+> > supposed to be modified.
 > >
-> > On Fri, May 08, 2026 at 04:21:36PM +0200, Marco Elver wrote:
-> > > I think I have a solution for this mess, see below.
-> > >
-> > > I would not send it as 1 series, but only include the slab changes (+
-> > > instruction_pointer.h change to introduce _CODE_LOCATION_) as one
-> > > series, to go through the slab tree. The rest of the patches would go to
-> > > respective arch maintainers.
+> > So make it __ro_after_init rather than __page_aligned_bss: on most
+> > architectures, this ensures that both the kernel's mapping of it and any
+> > aliases that are accessible via the kernel direct (linear) map are
+> > mapped read-only, and cannot be used (inadvertently or maliciously) to
+> > corrupt the contents of the zero page.
 > >
-> > I'm assuming this will be a follow-up and reviewing patch 1
-> > (and waiting for Jon's thuoghts on patch 2)
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 > 
-> I'll be sending v4 shortly.
+> Reviewed-by: Jann Horn <jannh@google.com>
 > 
-> > > diff --git a/include/linux/instruction_pointer.h b/include/linux/instruction_pointer.h
-> > > index aa0b3ffea935..dfe73aafddb8 100644
-> > > --- a/include/linux/instruction_pointer.h
-> > > +++ b/include/linux/instruction_pointer.h
-> > > @@ -8,6 +8,30 @@
-> > >
-> > >  #ifndef _THIS_IP_
-> > >  #define _THIS_IP_  ({ __label__ __here; __here: (unsigned long)&&__here; })
-> > > +/*
-> > > + * The current generic definition of _THIS_IP_ is considered broken by GCC [1]
-> > > + * and Clang [2]. In particular, the address of a label is only expected to be
-> > > + * used with a computed goto.
-> > > + *
-> > > + *   [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071
-> > > + *   [2] https://github.com/llvm/llvm-project/issues/138272
-> > > + *
-> > > + * Mark it as broken, so that appropriate fallback options can be implemented
-> > > + * for architectures that do not define their won _THIS_IP_.
+> Sorry, I should have looked at this properly earlier instead of ending
+> up duplicating this patch with
+> <https://lore.kernel.org/all/20260508-ro-zeropage-v1-1-9808abc20b49@google.com/>.
 
-Teeny typo above: "won" -> "own".
-
-> > > + */
-> > > +#define HAS_BROKEN_THIS_IP
-> > > +#endif
-> >
-> > As long as _THIS_IP_ is broken on some arches, it cannot be used anyway
-> > when in a general API that can be used by arbitrary users?
-> 
-> It more or less works today, and for debugging or tracing it's "good
-> enough" in most cases.
-> 
-> The plan would be to phase out the generic _THIS_IP_ once all
-> architectures have a correct _THIS_IP_ implementation.
-> 
-> > Is it something that can be fixed in all arches over time?
-> 
-> Yes, I have patches for that.
-> 
-> > > +/*
-> > > + * _CODE_LOCATION_ provides a unique identifier for the current code location.
-> > > + * When _THIS_IP_ is broken (generic version), we fall back to a static marker
-> > > + * which guarantees uniqueness and resolves to a constant address at link time,
-> > > + * avoiding runtime overhead and compiler optimizations breaking it.
-> > > + */
-> > > +#ifdef HAS_BROKEN_THIS_IP
-> > > +#define _CODE_LOCATION_ ({ static const char __here; (unsigned long)&__here; })
-> >
-> > Nice!
-> >
-> > Yes, we don't really need the exact code location
-> > for partitioning kmalloc caches.
-> >
-> > IIRC lockdep does a similar thing to define lock classes (unique for
-> > each lock init location)
-> >
-> > > +#else
-> > > +#define _CODE_LOCATION_ _THIS_IP_
-> > >  #endif
-> >
-> > Probably we don't need this fallback?
-> 
-> x86-64 is the only arch that has working fast _THIS_IP_, and adding
-> static __here markers to bss is rather wasteful.
-> 
-> More architectures will be supporting _THIS_IP_ properly once I get to
-> send the patches. The mainstream architectures all have a reasonable
-> and fast way to get the current IP, so we don't need to waste bss
-> space there.
-
-Thanks for finding a solution for this!
+As you mention in your testing of the patch, could we add an LKDTM test
+that does the same to catch any regressions?
 
 -- 
 Kees Cook
