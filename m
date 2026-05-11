@@ -1,131 +1,183 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192143D9028
-	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 14:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778510494; cv=pass; b=uIj9zwS5SsEfCWNjcv7cISjDbz7tJ2wega9qPIA7nbZTN8mMtJQRf2sY2bZAVnGQ2OZKpfF6yXry88x0qXD48Tfeo6otOhJqHZWD/N9huxqaOUAZW5AEG9Qi6T5/h4VQeo6tkxq/NkvJTpTp93lUeh2cSNbzXt1InNzQaxz1LmA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778510494; c=relaxed/simple;
-	bh=GiADQYNsvJD57osJGhfe+F1XB5kGSaFvK/unm9lUQBc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bDM/RLjrqvKp3Qthf2MaZMcmQ5qlJD3oYh2Ty5XcmeFiemH/rvmaLMB53T54YmucAEyC5yNcnAHUb/OfXPFOUy9dyCptLzY+0u0wD0hk93uxdrTvVduQo0z8QLTxGlgdacpQP0Hrmimv3rLe5Y1zPVf9K8g1iVa0oyzvd6c8aJc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wGKC5p1L; arc=pass smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B70F3FE35E
+	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 14:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778510822; cv=none; b=jLBQaGTQTGtW11xmTZjDj11IH47M0HjPFEIHEBVzbzqCpIq2XymI7bEGKWvZOn8l8qIktmRJ3UMfFWYmxHiNDNWXiF6ilfcFlseHdX2XTFCNBTmnEPq0737pixewq0skhXRCQrsawuM+FhQXTYZzHNQWOCiIrL6vdMwbRBXPTac=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778510822; c=relaxed/simple;
+	bh=SICTXImZa4mMy4Kgs5BlhwJ8zVJUierNkIzSeoAS2I8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dxo23DCkwxzHXPnwz5/bzYCrBGGzCY6fSH7G3sETvTluS/ihoQgzGEG4b+AHSdbJdfDDs7NIazfmsK7CJ+3wiFRnADDj1FZgMqd5r7ijHSnX5M1c0y3g1ePO+8JKtePjgxccUrpasovvwy8hhBv/WZKe3GogI2an5XI/vMoWIBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=pUfBrgRJ; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wGKC5p1L"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-671588ab0cfso316a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 07:41:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778510491; cv=none;
-        d=google.com; s=arc-20240605;
-        b=AMZG7hVlThFG2PaP3vGxfRs9NkSP/Ds34Y6BbnB+XgXAopXIH4tvpOQXU4aRPeIC+4
-         Vz2DD63/f9zPviPGUTDYBz6Ir6ZjGPAf3e8/V3ch4LKAvJuTolpER2wGMQHHTLXyChqx
-         vwmZ/BfFIBP1fOgUCRVq6SIFUBVWpfg3GXDVP79DpG1F06AeRG89fZTwffraQb72j/uT
-         x4WtNy9T2/co1ltxsm9hdOTWRFjqQqxODSUipIJtMUrDc9oJhSvUFISvcY/aktRkNhQO
-         2hYCGdhjPLIqjHUCRDCLuGkmpLVUkuYPrZygVcptv7KvUk3R67XkrgdyPkPs+EgbDoy5
-         H8bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Z170Amak81rqK1Z7ArZ4RiigKBxs4M8ehBqJt+giuPU=;
-        fh=jnw/EBD2Lo99RdM1JmWDBS5hBvOjA+1ELdokhXaMWzY=;
-        b=VZngUNYN8q2wm4mt+UjPW96itV2ogpUHZp+Xuv3a2QKOw8KJAUnv5Bh2k2uLTwfj+Y
-         f3wfxBy84rTi+8y0phE/jzQk7tNMBrp4R71YCCUqxF7SvN7pl1WKxkTKIq8u+Y71rgU/
-         D/2+C4oA3sxrUzqWvCkSUuoowa/SslsfDiZ7Nsux2zSgkI/QhtrkeCvmkrN5USvft1Am
-         MS5tgwBtyIW9MJ2CbNl8ykEp2LwcyniVf9yZswY+Bpps0xfjjB0pFY5AFdFuQoPZzhnr
-         3OcigfUGAuuUCVcp08ZMmm3MiSIR3K7KTvr5tbxcPZfL+kRyNOWD9lm2U+YCNF2VSaMG
-         nzYQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="pUfBrgRJ"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-463f00cda04so2389472b6e.2
+        for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 07:47:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778510491; x=1779115291; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z170Amak81rqK1Z7ArZ4RiigKBxs4M8ehBqJt+giuPU=;
-        b=wGKC5p1LZDIuzCdfDf+U60JYcReEY7l4MrGeB8SsKw8gNQskospwG99TpNUcVRPz3B
-         aGiCSqMQxHxnhbIw7HQmqU1mtlt7Tktd9T5HGMx5mpk5w/f5jcd3pH4GU8zF1WrNVkbr
-         YMjXuzqjJSMiDGFHesqsrzw3iveVBeb95/58kbnbuT/xkLhTbeTUAB3Scl8CkuSMRp6n
-         G+1Kpfbo9G6Bt1A3QoALLLhT4aDSg5LeiYwdaZAkUwxNbtpag0/dXjWlxBeXBh2bYeJ0
-         4xl7+OyfG5n5p7ftx4Gkk5EzSzccEYeKmLEZemFrjginEP/gBIlAWs6uym7OkbQ0xGHr
-         hJHw==
+        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1778510819; x=1779115619; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qEELPpISKPMY3OnOVJz/i6LMwFlmgDNP8fOvagl4Uf4=;
+        b=pUfBrgRJ+2elUdz0lvJ9Tads7hP5t9qy/4AVVBeZ7Z0meOn48JThSLiseM0PsfCno6
+         fD2VQQNCHA9Bxp5gZyRFoiNDrhxvcVUVbNucl7SrI1CmJ1VSnH3R1jWneZlTEkiO/t+k
+         KqijGSbF+EVBZEjQ+BURzFJnLfFBf8nseJ+pKVExSKeBxsPSElgt00AgzWnzgEigHrIA
+         KLoroSfK5abQMAbOfiu9LaGbBXOjweFxmjYfXAk+SPNMLBAvcZJV5Ouu6zJCFIiQ/F6x
+         QUfeBnb+qMh3T0UYCKL51QJFe2oJt8aebs8h/wZwJd2GF8zb/2gsjLJCqY6aD1rxW/6i
+         G0Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778510491; x=1779115291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Z170Amak81rqK1Z7ArZ4RiigKBxs4M8ehBqJt+giuPU=;
-        b=nQ3Sdg+o9O/yt6zsQDGtF2wmoXfEGCrh5vQ4fHIIgTam248eO3e4xpPPWQWP4QnJRU
-         9BP7AuvJEiSPjiI/cvtOyYCRcsnwnQct1vN2b3uy2znW5HzeWSw2Uwf3+BoA2/n9eruT
-         ecWjbbIvW1oQXphj0HShAE5anx9SLnpGjGxEHNmGdVCnqdt/hI9xgHurkZpQ/c4xS2E4
-         TcoWtfHzz3GoofgtI3J5ikdIBYEeTlA48yKiRrmwopjv1u4F8OzLERNs+U8qCwMvkfcA
-         xt9s31wP0vjYVbFqtc4M0APzNNlK3EfpNdivSQLLVLXGsj0kGSybo8B8nlF9HCTeXMc8
-         uoZA==
-X-Forwarded-Encrypted: i=1; AFNElJ8Gzyn7prDZJbDrAizbBWLeiSvhnE3qZxApWW9NL1oMDDILWVtLAA3xmRJBMDZgDAgSi4ThkqdN9oGeRfieohc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWOa+n0uoF6oohDDtRHFCVWoEpB2rnjfDAlEUK0v9kHDp5DSx3
-	UHlvBHJr+qileQG5QzeOa/GbPd8ESr+5SFdW1larweMK/7DwAP6wKWelqfZT9OJiM9piDJ6b7Bm
-	9fQHkwKzVpGDDYhtp6YjH/04lpGS8SGylZejC88Py
-X-Gm-Gg: Acq92OE2BCQx7i4QEgcPNy6+OBrngPzVQyAjnGf6nJrdzy2q1Pw5wWczoD8/xCA1XX2
-	G2O67uQif6TmfVWlLRkOuF1wJ4VWdcqFvMKzP5J7vkIBhaEXMEe62jDmonaUrcbTPMfjcioBXTW
-	xe5AY15iVaYmLxnyukKNRIUVO47hD3iA9csLILNMil37ZJ9bevanJGzkvn4Ra55+Wp46VoyGntO
-	3GvSRmo0LcYG8Fo4tT8uob/3yOH71a63cYscfN3KsVD5fvEr58wFZb8a/pN6jFczljsyDuSagD8
-	G18pKFFiZzBNk1L2LLBdGQ4mJXSj0PloTgIZANoXg0rONseX
-X-Received: by 2002:aa7:d702:0:b0:678:a5c3:4d12 with SMTP id
- 4fb4d7f45d1cf-67f67ef588bmr85386a12.3.1778510490891; Mon, 11 May 2026
- 07:41:30 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1778510819; x=1779115619;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qEELPpISKPMY3OnOVJz/i6LMwFlmgDNP8fOvagl4Uf4=;
+        b=R8dRRIHXLNT1E3ULqwkkgPhOUsykoHDgJdBgX3EpOuH+2gaLWEKUWAJiB4hVg/J1Ep
+         Lv7vi7ifecd7baTNJS3FfPPEcf0CjNGtcBhoz+pnb3rttMWj/skkJomZ0aHt7ZDZUVl9
+         WGiC9+7i0y+qARNJRvI318gVZnA6Ta451+CUYqSzjBljtBDTVt8EzVHzcYYB4J6R4wC9
+         84SM/VnC2cxlT63GnmLvjtHVNDlCg2Rmfqtt0pwNySFQFhwD+9TUo29NAa72Q/xyqjyK
+         E639XPCfYtfTPW6aGJ52yr4Os0OPFshx0tLO1DLBEqtV9qibKo49XiOjV19216tItCaY
+         WcfQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8xswOFs0FRYl9EClJeWXPbJ1vsYXqZAdHXQwKD9KeyaE8KC+qE77WelZA/XHY6FofvKiAjNaR6MWs9vTsfvzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU1Y+TL4+njfBCPtxQmZroL1Bkc2gBYnySGx7HoOQMYMyckmED
+	3Rcnn7GiBYQJlpjPaLaWufFITOUFBwbFdy1zgkuYY/IKppVlt9WVa/qZNJ9MjBCvk2Q=
+X-Gm-Gg: Acq92OGC0knEWZvRWVNFrfj8bBvSrEAemMCeVssZqXH68GPQCBMk0IU5JOVuuSzhBKR
+	w3+SW0PRLcxpb37yGKMzB6b9H1sDXGSeUoWoVDDbYh+AQ6g2SHn6p1lSFSCLFf4jD6ZFU0V56aF
+	qZTAeNw4Bs32D5W6OIzcrFpbibPCGqQ/ezh6XM8BpbpxEjFBIAQs9ahGdphsdpP/o/3Hwdlq/zc
+	4YphIr9XmF5C+w+rl/9/0DaVrYv/Lx8nglC286dZSKdmx+o9oWWK+NlO3CWpkqQCYpmooOLyg8n
+	R8/X2fxXW8pKs57N4bcI4z1n8XVgSwrqlIBykr6cA8aBmMc12xd80JqHcHSZ1BiDrq9ZFFE447Y
+	RxsUwcjj/bMB46bMRW2DCD8OoSeOraLKevM7sKmFQb+ZdvLI4PjdPO5hAc+ELDn/LjE38TzRHjy
+	qeK+3U6qXOn7nfIYNOGo6Ke1CCg3myVNifS7pD3zCOaMkiCwPP7aI70KFSot7OVa7JJXJo48hak
+	XBPJiGxPw==
+X-Received: by 2002:a05:6808:e40a:b0:467:1212:46eb with SMTP id 5614622812f47-4804249c60dmr10483498b6e.35.1778510819130;
+        Mon, 11 May 2026 07:46:59 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:500:591:4577:3439:3a1e? ([2600:8803:e7e4:500:591:4577:3439:3a1e])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e367be2238sm6968520a34.6.2026.05.11.07.46.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2026 07:46:58 -0700 (PDT)
+Message-ID: <18c2eab9-c0c7-4e93-b4e8-73b18531e784@baylibre.com>
+Date: Mon, 11 May 2026 09:46:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260427153416.2103979-17-ardb+git@google.com>
- <20260427153416.2103979-19-ardb+git@google.com> <CAG48ez1DJ88a0pBCE-Q0VXyDuJgng8zdunb38g4b4JPU88exww@mail.gmail.com>
- <31252c1d-a98d-4635-ab61-ce5b649e256f@app.fastmail.com>
-In-Reply-To: <31252c1d-a98d-4635-ab61-ce5b649e256f@app.fastmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 11 May 2026 16:40:54 +0200
-X-Gm-Features: AVHnY4LoyjasIFmS74GQZueVkF8l7m5tKta7HqO6wHGgS7XuvrG5_IpYer7LdIM
-Message-ID: <CAG48ez2xJwJDgxSH0u2G==9dOQJQxQ7WsQfU14O1H5hEWic1eA@mail.gmail.com>
-Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>, 
-	Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v4 10/10] docs: iio: add documentation for ad9910
+ driver
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>,
+ rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+ <20260508-ad9910-iio-driver-v4-10-d26bfd20ee3d@analog.com>
+ <b8f9a174-f3d0-4cb8-a571-605be79165d6@baylibre.com>
+ <zvulxrrvg4sf7m5pjfpfucg7yssgallfu6zi6mcyblu2qy24hn@wdzs7h77vkoz>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <zvulxrrvg4sf7m5pjfpfucg7yssgallfu6zi6mcyblu2qy24hn@wdzs7h77vkoz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 11, 2026 at 10:59=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> w=
-rote:
-> I think we should simply do something along the lines of the below,
-> considering that the size of a data object tends to correlate with
-> its minimum alignment.
->
-> I do find it rather puzzling that the compiler emits empty_zero_page
-> *after* zero_page_pfn - ideally, we'd combine the below with
-> -fdata-sections so that the linker sees all individual objects, but
-> I suspect that would create some problems elsewhere.
->
->
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -452,7 +452,7 @@
->  #define RO_AFTER_INIT_DATA                                   \
->         . =3D ALIGN(8);                                         \
->         __start_ro_after_init =3D .;                            \
-> -       *(.data..ro_after_init)                               \
-> +       *(SORT_BY_ALIGNMENT(.data..ro_after_init))            \
+On 5/10/26 4:30 AM, Rodrigo Alencar wrote:
+> On 26/05/09 06:42PM, David Lechner wrote:
+>> On 5/8/26 12:00 PM, Rodrigo Alencar via B4 Relay wrote:
+>>> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+>>>
+>>> Add documentation for the AD9910 DDS IIO driver, which describes channels,
+>>> DDS modes, attributes and ABI usage examples.
+> 
+> ...
+> 
+>>> +       must be a power of 2.
+>>> +
+>>> +   * - ``frequency_offset``
+>>> +     - Hz
+>>> +     - Base FTW to which scaled parallel data is added. Range :math:`[0, f_{SYSCLK}/2)`.
+>>> +
+>>> +   * - ``phase_offset``
+>>> +     - rad
+>>> +     - Base phase for polar modulation. Lower 8 bits of POW register.
+>>> +       Range :math:`[0, 2\pi/256)`.
+>>> +
+>>> +   * - ``scale_offset``
+>>> +     - fractional
+>>> +     - Base amplitude for polar modulation. Lower 6 bits of ASF register.
+>>> +       Range :math:`[0, 1/256)`.
+>>> +
+>>
+>> I guess there was some discussion on these attributes. I see some of these in the
+>> ad9832 driver in staging, but I'm guessing they are new ABI. It isn't clear to
+>> me from the documentation here what they actually do though. I guess they are
+>> just basic transformations on the input signal?
+> 
+> Not sure how the ABI is not clear:
+> 
+> 	For a channel that allows amplitude control through buffers, this
+> 	represents the value for a base amplitude scale. The actual output
+> 	amplitude scale is a result with the sum of this value.
+> 
+> So yes, it is a basic transformation.
 
-Oh, neat, I didn't realize that's possible. That seems like a nicer
-approach... (Assuming that it doesn't cause cache efficiency issues
-somehow, I imagine it could be possible that source-code-adjacent
-objects should also be located next to each other for cache/TLB
-efficiency... but I have no concrete reason to think that, just a
-thought.)
+I didn't have time to read the ABI docs yet. For scale_offset though,
+how is that different from the existing offset attribute?
+
+> 
+>>
+>> And a practical note, they should be "frequencyscale". I don't like that it is
+>> harder to read, but it is easier for a machine to parse.
+> 
+> Parsers like the ones in libiio is not having problems with that.
+> 
+>>> +Usage examples
+>>> +^^^^^^^^^^^^^^
+>>> +
+>>> +Set parallel port frequency modulation with a scale of 16 and a 50 MHz
+>>> +offset:
+>>> +
+>>> +.. code-block:: bash
+>>> +
+>>> +  echo 16 > /sys/bus/iio/devices/iio:device0/out_altvoltage113_frequency_scale
+>>> +  echo 50000000 > /sys/bus/iio/devices/iio:device0/out_altvoltage113_frequency_offset
+>>> +
+>>> +Digital ramp generator (DRG)
+>>> +----------------------------
+>>> +
+>>> +The DRG produces linear frequency, phase or amplitude sweeps using dedicated
+>>> +hardware. It is controlled through three channels: a parent control channel
+>>> +(``digital_ramp_generator``) and two child ramp channels
+>>> +(``digital_ramp_up``, ``digital_ramp_down``). DRG destination is set when
+>>> +ramp attributes are written, i.e. writing to ``frequency`` or ``frequency_roc``
+>>> +sets the destination to frequency.
+>>
+>> Would it be better to say that the destination is set when the the
+>> value is non-zero? Otherwise, how would one change the destination
+>> once set?
+> 
+> Destination is only one, so you just need to write phase or phase_roc, if you want
+> to target phase then. Does that not sound intuitive?
+
+I was thinking about if you needed to change the configuration.
+If you set it to phase, then want to change it to frequency, how
+could you do that if 0 is a valid value for phase?
+
+Also how could you know which is selected by reading back the
+values if 0 is a valid value?
+
+> 
+> Zero is a valid value to be written.
+> 
+>>
