@@ -1,145 +1,192 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9E42DA74C;
-	Mon, 11 May 2026 08:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8152F3BC68D
+	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 08:59:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778488305; cv=none; b=Ha+vjPYB7SCMI4n77BgxgSM52dAGQ+PLlcZXqOy4cV/cr8cxvjxTtwd21GJQQ8fqtsD/zXu5S6gBohWB9yRsnM92Jo83Ch+oc0qvPgyMe12mD+kLbAbaLlQsSLsGC7/nzagRInMS6JGup+WqK1d8WY8h2olon/wLGOG6cCggODQ=
+	t=1778489980; cv=none; b=Om2A0CMzxzyIi3YozSlssqhtgm7MTVUd/yWMfSi7qDY8yUSbwwKGsFJlQlsPzmYChRL7Fs8x23UKsMvTh/Ptfb8+6E1XWc71pL4Yt2RAFg3LN3ayvZwww7myMspUnKFfztlDFb/3/KbehpE0AQy1goV3xLgNkRj4Dn+spCW6b18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778488305; c=relaxed/simple;
-	bh=W2ygD+/z3RlK3HF7zT5mQCUgbAvqMl8VdS2THByT95g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R9IDNhEa76g0TAd4wjTt5iCyE8Ynlj17rqdQkzdF0OmG+evM/MeNCvboJR5OilWHy9kxKqN086GNU0bMGQyQrCfc32TV5Sbasq/JdFLelGaiqFB7/f6sxBpmBsWDD6IrNkfBDfcuUr5VloBkBFYkbV9gU7WXdDIQVpOcP7R4Dvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+NV15du; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778489980; c=relaxed/simple;
+	bh=pvy6NTMFmdxYmqrWBMSd1MjoiQi19wsMVW3eEKzhiNY=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=GZkh45orUKDIQ1hkH7STnFhTMHPCbLq+N+rgF0MS8lWAWXPRrMgDha3QnFIRiNip/xsylLwlFJDD93Z0d3yjAIhreD/3Sg4aOq9TnO/M2rTqJOx5vNvXWMFxD1/llurRM8p3sNwJDB+2oWZ+4GHGiOC+z0TeHEbGPSDs326wtRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uC278g/6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+NV15du"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9EEC2BCB0;
-	Mon, 11 May 2026 08:31:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uC278g/6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1F5EC2BCF7;
+	Mon, 11 May 2026 08:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778488301;
-	bh=W2ygD+/z3RlK3HF7zT5mQCUgbAvqMl8VdS2THByT95g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A+NV15duwlz6Ndqvdm4yPwCd4z9GzDWQ8L4aeo4shak/0LxcZJUH+ile8v5Wzuigb
-	 LGQWBRY8et9jUhNZSeJergMJ0DiVoojpnzIioMQsBvJJe1LwmjFlzFOzQhU/LCALZD
-	 l9ankpw9UUTZVHn4KiSrYXzI8E2KiZ7FSiw+qAiBZembo50ncEe89P6h5NgZwHP5Dq
-	 Tg1ZG9EYhq9nm1MCIWXWAqKg2CnFb+79oAK7g4xz3eL4PmmNzLGqZsWL7wXhJ8wBZa
-	 EnGM2aUHLHlS14Pt8GlSWf0/4/gjKBA4hntKPt5L378RytYha4qFu87gh1HLm1uthW
-	 Q08x09X2Z7E5g==
-Date: Mon, 11 May 2026 17:31:38 +0900
-From: "Harry Yoo (Oracle)" <harry@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Christoph Lameter <cl@gentwo.org>, Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Alexander Potapenko <glider@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com, 
-	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>, 
-	Matteo Rizzo <matteorizzo@google.com>, GONG Ruiqi <gongruiqi1@huawei.com>
-Subject: Re: [PATCH v3 1/2] slab: support for compiler-assisted type-based
- slab cache partitioning
-Message-ID: <rz7dt4wghum6beghfgm6suqje6jeivrensojjalfis5zeuyen7@6bj7kfpqb4q5>
-References: <20260424132427.2703076-1-elver@google.com>
- <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
- <afkOMIPu1WNFE9MS@elver.google.com>
- <CANpmjNM261J5qefMvmUXWZGBVz-KBs7GkbpdNMfTOvNJ-=LiZQ@mail.gmail.com>
- <afz7pZADZPD4mKJr@MacBook-Air.tail10959e.ts.net>
- <af3xcFjrZSZFG846@elver.google.com>
+	s=k20201202; t=1778489980;
+	bh=pvy6NTMFmdxYmqrWBMSd1MjoiQi19wsMVW3eEKzhiNY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=uC278g/6wcZXS/TECokjs2CKqBLAAIxUQXBQ4W6K/LvV2cTgxi3+2zo1RK1wLtotT
+	 Qn6V56vnf5O4Z0ewruwmAxAlOlB5flBpO1rMunySxoPCyWmDW4zQVwUnIVoNZgd8rw
+	 34xPqEQcU9tQ/jbYe3ELDh+VWdv6+1i1sK5qfRrOM8w1usBGEp+xYAJMs1ez3ge5pw
+	 yG2mdBwYO7zGlnv8W8LAhZdPlNCRL62lqPK8T9aZQYfEi0ZnZCqXK1hwpeZYNP+YhJ
+	 Nt6Sou/dVX74pLH9EoHCJAfc8sXz8WzyM4beQ4NWBlKrjLPLH9PqghlqB6sKYUDHtD
+	 bU7jmckMb7LWA==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D79BAF40085;
+	Mon, 11 May 2026 04:59:38 -0400 (EDT)
+Received: from phl-imap-14 ([10.202.2.87])
+  by phl-compute-01.internal (MEProxy); Mon, 11 May 2026 04:59:38 -0400
+X-ME-Sender: <xms:epoBauLUKWQQFlZDizE4OuZE6nJAHfoxTRN4JweXZ0D331C0Gx9k2w>
+    <xme:epoBag-E-VKCrhgu6pw8Omzhcj6zCZiOwRk3M7qAOAuWkSHFeksC-b68pGQn6zV2B
+    utsXaz8NMFa0DCSHbDGj34WYVjf2jkvaYQNfX7MXBNbmfao4rY71IXY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduudekheefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrugcu
+    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
+    htthgvrhhnpeefhefgtefgkefhgfdvffdukeejheeuvedthfdtiefhleejhfefjeffieeu
+    jeefteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrugdomhgvshhmthhprghuthhhphgv
+    rhhsohhnrghlihhthidqudeijedthedttdejledqfeefvdduieegudehqdgrrhgusgeppe
+    hkvghrnhgvlhdrohhrghesfihorhhkohhfrghrugdrtghomhdpnhgspghrtghpthhtohep
+    udejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhhshhhumhgrnhdrkhhhrg
+    hnughurghlsegrrhhmrdgtohhmpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgr
+    shesrghrmhdrtghomhdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtg
+    homhdprhgtphhtthhopehrhigrnhdrrhhosggvrhhtshesrghrmhdrtghomhdprhgtphht
+    thhopegrrhgusgdoghhithesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhgrnhhnhh
+    esghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihprhhutghkrgesghhoohhglhgv
+    rdgtohhmpdhrtghpthhtohepshgvthhhjhgvnhhkihhnshesghhoohhglhgvrdgtohhmpd
+    hrtghpthhtohepuggrvhhiugeskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:epoBaoK2PXNYJrbD9UF4L2Rfa83SRHRE4Tx3RlxLmwBWbX8OHFdGYw>
+    <xmx:epoBakdLmSzav7YxfV8QIgIsf4qOoKU27Ca4E2o7m-mLwVLuB7rQDQ>
+    <xmx:epoBaqV5UGjTnEjdVxMC3Vd39E4_WOaS7hl6JmkVEkAAyxPW_yFdxg>
+    <xmx:epoBaijI7jp1hWClAtSGGNjLOjDz0kfcPsFqs9xn0feG0Uj96kj0pA>
+    <xmx:epoBakjFQJe8ZqPXns0Mett1u_CYVhCbwTSLmPbB_izBow8_pPo9ccGW>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id AE438C4006E; Mon, 11 May 2026 04:59:38 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af3xcFjrZSZFG846@elver.google.com>
+Date: Mon, 11 May 2026 10:59:18 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Jann Horn" <jannh@google.com>, "Ard Biesheuvel" <ardb+git@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "Will Deacon" <will@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Ryan Roberts" <ryan.roberts@arm.com>,
+ "Anshuman Khandual" <anshuman.khandual@arm.com>,
+ "Liz Prucka" <lizprucka@google.com>, "Seth Jenkins" <sethjenkins@google.com>,
+ "Kees Cook" <kees@kernel.org>, "Mike Rapoport" <rppt@kernel.org>,
+ "David Hildenbrand" <david@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org
+Message-Id: <31252c1d-a98d-4635-ab61-ce5b649e256f@app.fastmail.com>
+In-Reply-To: 
+ <CAG48ez1DJ88a0pBCE-Q0VXyDuJgng8zdunb38g4b4JPU88exww@mail.gmail.com>
+References: <20260427153416.2103979-17-ardb+git@google.com>
+ <20260427153416.2103979-19-ardb+git@google.com>
+ <CAG48ez1DJ88a0pBCE-Q0VXyDuJgng8zdunb38g4b4JPU88exww@mail.gmail.com>
+Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 08, 2026 at 04:21:36PM +0200, Marco Elver wrote:
-> I think I have a solution for this mess, see below.
-> 
-> I would not send it as 1 series, but only include the slab changes (+
-> instruction_pointer.h change to introduce _CODE_LOCATION_) as one
-> series, to go through the slab tree. The rest of the patches would go to
-> respective arch maintainers.
 
-I'm assuming this will be a follow-up and reviewing patch 1
-(and waiting for Jon's thuoghts on patch 2)
+On Fri, 8 May 2026, at 19:02, Jann Horn wrote:
+> On Mon, Apr 27, 2026 at 5:44=E2=80=AFPM Ard Biesheuvel <ardb+git@googl=
+e.com> wrote:
+>> The empty zero page is used to back any kernel or user space mapping
+>> that is supposed to remain cleared, and so the page itself is never
+>> supposed to be modified.
+>>
+>> So make it __ro_after_init rather than __page_aligned_bss: on most
+>> architectures, this ensures that both the kernel's mapping of it and =
+any
+>> aliases that are accessible via the kernel direct (linear) map are
+>> mapped read-only, and cannot be used (inadvertently or maliciously) to
+>> corrupt the contents of the zero page.
+>>
+>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>
+> Reviewed-by: Jann Horn <jannh@google.com>
+>
 
-> diff --git a/include/linux/instruction_pointer.h b/include/linux/instruction_pointer.h
-> index aa0b3ffea935..dfe73aafddb8 100644
-> --- a/include/linux/instruction_pointer.h
-> +++ b/include/linux/instruction_pointer.h
-> @@ -8,6 +8,30 @@
->  
->  #ifndef _THIS_IP_
->  #define _THIS_IP_  ({ __label__ __here; __here: (unsigned long)&&__here; })
-> +/*
-> + * The current generic definition of _THIS_IP_ is considered broken by GCC [1]
-> + * and Clang [2]. In particular, the address of a label is only expected to be
-> + * used with a computed goto.
-> + *
-> + *   [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071
-> + *   [2] https://github.com/llvm/llvm-project/issues/138272
-> + *
-> + * Mark it as broken, so that appropriate fallback options can be implemented
-> + * for architectures that do not define their won _THIS_IP_.
-> + */
-> +#define HAS_BROKEN_THIS_IP
-> +#endif
+Thanks
 
-As long as _THIS_IP_ is broken on some arches, it cannot be used anyway
-when in a general API that can be used by arbitrary users?
+> Sorry, I should have looked at this properly earlier instead of ending
+> up duplicating this patch with
+> <https://lore.kernel.org/all/20260508-ro-zeropage-v1-1-9808abc20b49@go=
+ogle.com/>.
+>
 
-Is it something that can be fixed in all arches over time?
+No worries. I might borrow some of that rationale btw
 
-> +/*
-> + * _CODE_LOCATION_ provides a unique identifier for the current code location.
-> + * When _THIS_IP_ is broken (generic version), we fall back to a static marker
-> + * which guarantees uniqueness and resolves to a constant address at link time,
-> + * avoiding runtime overhead and compiler optimizations breaking it.
-> + */
-> +#ifdef HAS_BROKEN_THIS_IP
-> +#define _CODE_LOCATION_ ({ static const char __here; (unsigned long)&__here; })
+>> ---
+>>  mm/mm_init.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>> index f9f8e1af921c..6ca01ed2a5a4 100644
+>> --- a/mm/mm_init.c
+>> +++ b/mm/mm_init.c
+>> @@ -57,7 +57,7 @@ unsigned long zero_page_pfn __ro_after_init;
+>>  EXPORT_SYMBOL(zero_page_pfn);
+>>
+>>  #ifndef __HAVE_COLOR_ZERO_PAGE
+>> -uint8_t empty_zero_page[PAGE_SIZE] __page_aligned_bss;
+>> +uint8_t empty_zero_page[PAGE_SIZE] __ro_after_init __aligned(PAGE_SI=
+ZE);
+>
+> I think this is fine as-is; but FWIW:
+> "__ro_after_init __aligned(PAGE_SIZE)" means that this will land
+> in the middle of the .data..ro_after_init section, with padding in
+> front of it to create 4K alignment. So this probably wastes some
+> RAM on padding.
+>
+> Looking at "nm ../linux-out/vmlinux | sort" with this patch applied
+> (from a build without any LTO or such), I see this:
+> ```
+> [...]
+> ffffffff8473d378 d shmem_inode_cachep
+> ffffffff8473d380 d user_buckets
+> ffffffff8473e000 D zero_page_pfn
+> ffffffff8473f000 D empty_zero_page
+> ffffffff84740000 D __zero_page
+> ffffffff84740008 D pcpu_reserved_chunk
+> [...]
+> ```
+> So I think there are almost 4K of padding between zero_page_pfn and
+> empty_zero_page for alignment; and I think when the linker linked
+> mm-init.o with the rest of the kernel, it also had to align the
+> compilation unit's entire .data..ro_after_init section to 4K, which is
+> why I also got ~3K of padding before zero_page_pfn, resulting in a
+> total of ~7K of padding.
+>
+> If you want to change this:
+> I searched through the arch-specific linker scripts, and I think they
+> all rely on the generic RO_DATA() macro for emitting the rodata
+> section; so creating an analogous page-aligned rodata section should
+> be as simple as adding "*(.rodata..page_aligned)" directly after
+> "__start_rodata =3D .;", as I did in my duplicate patch.
 
-Nice!
+I think we should simply do something along the lines of the below,
+considering that the size of a data object tends to correlate with
+its minimum alignment.
 
-Yes, we don't really need the exact code location
-for partitioning kmalloc caches.
+I do find it rather puzzling that the compiler emits empty_zero_page
+*after* zero_page_pfn - ideally, we'd combine the below with
+-fdata-sections so that the linker sees all individual objects, but
+I suspect that would create some problems elsewhere.
 
-IIRC lockdep does a similar thing to define lock classes (unique for
-each lock init location)
 
-> +#else
-> +#define _CODE_LOCATION_ _THIS_IP_
->  #endif
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -452,7 +452,7 @@
+ #define RO_AFTER_INIT_DATA                                   \
+        . =3D ALIGN(8);                                         \
+        __start_ro_after_init =3D .;                            \
+-       *(.data..ro_after_init)                               \
++       *(SORT_BY_ALIGNMENT(.data..ro_after_init))            \
+        JUMP_TABLE_DATA                                       \
+        STATIC_CALL_DATA                                      \
+        __end_ro_after_init =3D .;
 
-Probably we don't need this fallback?
 
->  #endif /* _LINUX_INSTRUCTION_POINTER_H */
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 5e1249e36b0d..a4bf1585411f 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -503,7 +503,7 @@ int kmem_cache_shrink(struct kmem_cache *s);
->  typedef struct { unsigned long v; } kmalloc_token_t;
->  #ifdef CONFIG_KMALLOC_PARTITION_RANDOM
->  extern unsigned long random_kmalloc_seed;
-> -#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _RET_IP_ })
-> +#define __kmalloc_token(...) ((kmalloc_token_t){ .v = _CODE_LOCATION_ })
->  #elif defined(CONFIG_KMALLOC_PARTITION_TYPED)
->  #define __kmalloc_token(...) ((kmalloc_token_t){ .v = __builtin_infer_alloc_token(__VA_ARGS__) })
->  #endif
-
--- 
-Cheers,
-Harry / Hyeonggon
