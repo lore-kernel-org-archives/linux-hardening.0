@@ -1,108 +1,124 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDE23D812D
-	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 10:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A52C39BFF4;
+	Mon, 11 May 2026 12:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778496434; cv=none; b=aBg9TxhMsdM+g1C8vad6YYBJ6RdvTnB+JDUNw+H2CCyLxSXYUY1leJP44GS0rIJNzDbmEWdnTECrfkNzsjdffCOGMNR9XxwNDqS3GWT0QIlOd0KU0vFtiCHay0oN/GaOh8ud/gyB0fFp9awltNQkMDUTizvXwEh4K6R8G7SMj5Y=
+	t=1778501270; cv=none; b=nLI9DoyuRD3nsEsbilMraOk6kLJfkvh8F841aBIk1k3qfT3cihS4vBY/bBuoADSLb6Puy7gtrAc81U9HHQs1QtbV4QT0p5pHif+bIVbZLet1pBEuVyGn+fzw/PLjy4mECJD7huTMm6G4k7Z7tIVBob0OTihfdglPhWd01CKi3WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778496434; c=relaxed/simple;
-	bh=y8ANxseZcjXB0D/a9PMQdY4ylscTf10eyL70cW6tP+w=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FN3UYwe+BC3iERm2C5BCYOCt3f8kpMKzqn15MMkBvRZV8qXYjdbc1CLajNsWPptydEEDNaObAGnXTPFT5SEhxIt542MknoQir+sBAAlkOzNYh+ajTshxqbCty4V0ybcZ7wyvXJhxW1W3oDSSlfrwt8Io+fJCjhBpKsT/wkpv248=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTAt0m1d; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778501270; c=relaxed/simple;
+	bh=XJZrn11TDzQfh5nANwCT6M8kUFD6U0DGy379pNKKf8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mg9fcS6WvDVxynPWNywnM5y/7+ZsNVVbDT3TYtfP07C28LYx7qr2XZ4cJwEGI2m99vNkQnmM53HCpKaXdY6CtEE4QxjPI/qU4WVD2S2KTfEmtJI5SuNflPPK0/YJE5ws3DOmTkYoSMCmpEphxmzNXZkLcOLLir/TkdLKVSanRN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibjbkZwF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTAt0m1d"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-488e1a8ac40so41029885e9.2
-        for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 03:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778496431; x=1779101231; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=e96lh8A8aYVtvEFVfiS50ol4K/XN4qkYpcoofOpmoIE=;
-        b=OTAt0m1dbZtZfk4M4u/Atrtex9+xcXgOp0eyOkk5xGNlVJc1ezPa+pv8kaP+r14D//
-         mYIQfHCUcjQk/2B3+lfbBKBb8y8JKk5pGMdhb7z4hIrNYht2SHFmjivcmVeJbNbDleRp
-         ncq8nqifNNu+EcuJpIgDtTrAQyqChRfcI/bNEPNYSmdK0bkpkhxWBkKdy6V6DudIyqCz
-         qexVsUnB1onGwBS35VKgSUi99J/ZA/rpj9J8k36sjamMDIawlYracknQBYNeySFf0Ocs
-         mhSvU3yvxq1VJlf1IAPv2xQXO7rHRbHN7GmUYV7fxeQ8V7Pha+DaV9xBrDIrqO3Hcfoi
-         FH/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778496431; x=1779101231;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e96lh8A8aYVtvEFVfiS50ol4K/XN4qkYpcoofOpmoIE=;
-        b=mYKQONmdyMg9cKOfBDyxaWxxJmPKuNCh+NgV7wpEHt2/npbbW6y5zcQpM5rOwos4lI
-         Om1G+vF/EnquaIIFmFJSPZqVN4sZLd81ZNBSX7KTIAOjcPFoeu7cjfHqKuODzNz3ggmK
-         b3vKR7S/8KDaii6SA7r9EWw1z3JNJifKAfLeu1nJBeHqo4sLLdlI4LzrClgL9bt+TPv/
-         rKi3PH9Z7QHyoQ2cfVHdRrSH7yDcMsz5eKq6Bcm5F4ro4FjkJ+nhR0ZSnREdAoyg9GOK
-         mDI0xVHeByACZXOETNKFR1yYUAeso57m3Xk0ToGPONY/OV8FEjyB2IS3XzVSeSuqn+d+
-         vodA==
-X-Forwarded-Encrypted: i=1; AFNElJ+S9ewcOni6FBCHcJI548kCNtFCqEoi23AybNXTjgOqgS6jxxgEwY23yvReCEgkggnnoa2deBngK3yRymIBWwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwewcXfUe2td02BXRlYkKeNxWX6vVXJ1U3jWRUOxdIl/ii2zU78
-	3v+sqcRlG5ggR3UT7dI2KGWsgaRMWF6QAQ/4hRHDQR7CwsYbt0kU1tbs
-X-Gm-Gg: Acq92OHAKebJb8SvDgS5pPGrb89Yfbo3/nCFJRGtY2jaXHddKhsO4bP3DOaIfo8Z16u
-	0YNfl4hARh73VvHDVKUTau1buIio1nusOASRINYwLYmnAnT7m8q7Q4hmEpm9Gx+SfAOPh16LEhk
-	44frQbg7mjuuk+Wuz80TzsjrTGq6nJqJWzb2I22V8n8oU89EmILD0183aBK0mWM0ya3rWVW510e
-	F+6kRLvAJM/9kkVk/R6Z3BMulpAy+iqhH40PGBrP68j5IcI8wB/cfFWAjqXQkc2K4C869PY8aCQ
-	B0vIpzZRfvX+ZEftNkUakXucwrIJY+GgUCmEGU1a71RI64Hfq5b0n+b+NjEY8vW1TmSZhHKSZHK
-	ZdZJ02p1bkgVE3SybeSQhEX4mIFH0rjK5GGTfg5Fcd/Yshx8O2PWMU3Dxk+Ba9v/QqfMWBAF2HW
-	LuyaGIYRmYcfqRcpRUJJD4fDFFDQGgPE0DKof1GNRz2cUlx/rFxZwsOfKqxJF/FwWm7b+C5E1bf
-	qGCGq93y9othGpLnLiPmH/sG8YHK3feShv4phhTHasXVBOKSQ==
-X-Received: by 2002:a05:600c:3b96:b0:48a:66a8:9981 with SMTP id 5b1f17b1804b1-48e51f55272mr391731065e9.27.1778496431033;
-        Mon, 11 May 2026 03:47:11 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e6dafa61esm78368735e9.4.2026.05.11.03.47.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 03:47:10 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Mon, 11 May 2026 11:47:05 +0100
-To: Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	rodrigo.alencar@analog.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH RFC v4 02/10] iio: core: support 64-bit register through
- debugfs
-Message-ID: <4lljp4qxuxqpanjnacteto3pqasjytjp3jysbgntv2jsuzlbsk@2fnit3aiecnv>
-References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
- <20260508-ad9910-iio-driver-v4-2-d26bfd20ee3d@analog.com>
- <agBY5K4qN3jda2up@ashevche-desk.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibjbkZwF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A12C2BCB0;
+	Mon, 11 May 2026 12:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778501269;
+	bh=XJZrn11TDzQfh5nANwCT6M8kUFD6U0DGy379pNKKf8Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ibjbkZwF2wXnJAldnE6kmyyqGGSID2Bc9jjAZ7CmPnbHIpPK9V5MhJnkkssrsla5M
+	 TCEnI1WgfWvVs/1fjjPQ7XcqEoTa/hK5QEXzZpxjHsrfJdUtL80tdnk9GPBLcaNNUh
+	 Dz1VrECQFTWep3M2pb7EfDNqTCG/s4CaVghUsLmw3JrSmqNDgUIPL5j7Lpyfp7m8YW
+	 q6DoQtrE/id+udKogPXf4b1Yyf3etERPPuZRYII2z4tRvKYkHMhIVv2JaD3xRIUH9X
+	 LytFu1InWXDWc50X86CajW1gTwTUSZ2HboiZXGVlEjmld61KcI4RsqaNjC9EwSIS/6
+	 KIIoWzhQRPkuA==
+Message-ID: <8354c3ee-85c0-4765-a114-20f350ae6e65@kernel.org>
+Date: Mon, 11 May 2026 14:07:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <agBY5K4qN3jda2up@ashevche-desk.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] slab: fix kernel-docs for mm-api
+To: Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
+ Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+ Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>,
+ Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Alexander Potapenko <glider@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
+ llvm@lists.linux.dev, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+References: <20260424132427.2703076-1-elver@google.com>
+ <20260424132427.2703076-2-elver@google.com>
+ <9c321184-9080-4d5c-bd1a-a16cd0bbaed3@kernel.org>
+ <CANpmjNN_=g31Eoa+w1NrFALfp1dDBi5oHEZdr_bA_48-tS2M=Q@mail.gmail.com>
+ <afi0nQ84k1oz5RyH@elver.google.com>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Content-Language: en-US
+In-Reply-To: <afi0nQ84k1oz5RyH@elver.google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 26/05/10 01:07PM, Andy Shevchenko wrote:
-> On Fri, May 08, 2026 at 06:00:18PM +0100, Rodrigo Alencar via B4 Relay wrote:
+On 5/4/26 17:00, Marco Elver wrote:
+> On Thu, Apr 30, 2026 at 03:59PM +0200, Marco Elver wrote:
+>> On Thu, 30 Apr 2026 at 15:40, Vlastimil Babka (SUSE) <vbabka@kernel.org> wrote:
+>> >
+>> > On 4/24/26 15:24, Marco Elver wrote:
+>> > > The mm-api kernel-doc comments have been broken for a while, as many
+>> > > documented symbols shifted from being direct function definitions to
+>> > > macros wrapping _noprof implementations during the introduction of
+>> > > allocation tagging (starting with commit 7bd230a26648 "mm/slab: enable
+>> > > slab allocation tagging for kmalloc and friends").
+>> > >
+>> > > When the kernel-doc block remains above the internal implementation
+>> > > function but uses the public API name, the documentation generator fails
+>> > > to associate the documented symbol and generates warnings and fails to
+>> > > emit the documentation.
+>> > >
+>> > > Fix this by:
+>> > >
+>> > > 1. Moving the kernel-doc comment blocks from slub.c to slab.h, placing
+>> > >    them directly above the user-facing macros.
+>> > >
+>> > > 2. Converting the variadic macros for the documented APIs to use
+>> > >    explicit arguments.
+>> > >
+>> > > No functional change intended.
+>> > >
+>> > > Signed-off-by: Marco Elver <elver@google.com>
+>> >
+>> > +Cc Jon
+>> >
+>> > I thought it was supposed to work because the kernel-doc scripts were at the
+>> > time taught by commit 51a7bf0238c2 ("scripts/kernel-doc: drop "_noprof" on
+>> > function prototypes") to handle _noprof. In the current form git grep finds:
+>> >
+>> > tools/lib/python/kdoc/kdoc_parser.py:        suffixes = [ '_noprof' ]
+>> > tools/lib/python/kdoc/xforms_lists.py:        (KernRe("_noprof"), ""),
+>> >
+>> > Doesn't it work for you then?
+>> 
+>> Ah, I see. So it doesn't work anymore because we add the '_' prefix, too.
+>> 
+>> I guess the question is if we want to proliferate more kdoc parser
+>> special cases, or just move the docs to the macros. The downside of
+>> macros is that they lose the types in the displayed function
+>> signature.
+>> 
+>> Preferences?
 > 
-> > Add debugfs_reg64_access function pointer field into iio_info and modify
-> > file operation callbacks to favor 64-bit variant when it is available.
-> 
-> To write a value with bit 63 set it will require negative number, right?
-> Isn't this  counter intuitive and may lead to rejection of the (correct)
-> values?
+> How about the below, i.e. adding type decls that only the kernel-doc
+> parser sees? One complication is also DECL_KMALLOC_PARAMS, and adding
+> kernel-doc parser hacks for that looks pretty awful, so this is a lot
+> cleaner.
 
-In two's complement systems it works in practice, but it might be UB.
-However scanf with %i accepts hex and octal, which is desirable for register
-addresses and values.
- 
--- 
-Kind regards,
+Looks like a good workaround to me, unless something gets confused by seeing
+both the declaration and the define.
 
-Rodrigo Alencar
