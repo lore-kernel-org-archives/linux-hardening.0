@@ -1,76 +1,60 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A39A3D6463
-	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 16:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202DA3D668F;
+	Mon, 11 May 2026 17:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778518316; cv=none; b=NE9xanpRMy+xW+XqVwz/d5LasiXF0TTvZ70UuX9u8O3gVs0t1Sf599la0Of0nMRC9MUCAxRRnQM6WzbEIwB3vqrBpTWroXTWBD2gpvQPjCO5WGo/VNGXjswrF1Ytc7ouB8hx071YiXlAWNTnNUNRC/Ji+1VBQSeSYSSHWaxIJM8=
+	t=1778521998; cv=none; b=PidYDFTzJgRuzER3tle7A6ROE3bM3FSByFVYDr2YfTvrTfhEzmzw4jsGmAFNOtvTsXzOFEm7QaR8KT/KxGdfZpmZcx+ofSfn0evPZjS0Sbq8CJduhJTTYgCSDKSQBzHQCgk0xUd3Mws4O+FQwsDd6/FRNI99uyg3MDW5Qtsfs/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778518316; c=relaxed/simple;
-	bh=sEezEQwh16ztL+41daNSGtYAfN9UHu+rNwfkaAQd+is=;
+	s=arc-20240116; t=1778521998; c=relaxed/simple;
+	bh=3QodnBCUa9xlCndM4+Du9LVU9OPtBp5ZRACmS7Gc1Y4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=K8FRzGoJmSUFsJvWo9ju93mh07wPOe1ZEploCrg0OMr++RCLCW5QIzk73I+xms4biM+yqJP5y4R7OrK2+9bW/9joBfeV0hnWskXFitEt9ph/zh06Dzk1V7OQ6o65Sg+OGgw2z7e4spnCRAfNOyRh1G4yMmqJfGXPKHBj4Q1frIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=drYPQJkU; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 MIME-Version:Content-Type; b=r1VXU03zp34A6g0Kmx2H34wJpdW1Ysz3tnHIL/Lqxj2rbOeR364ZVAANBFkojg2rj6SmDg6xStGLb1cnncEcQ1q05qV2VCQhGyEZvXPS4fErCeOGJYPgmfwzvUQP4w/7c1EYsvoUcyG6WAHJ6pnVFgdWJjJ+udK7UdFIHbe8oSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=APCOcG/b; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="drYPQJkU"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2b458ca2296so29909335ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 09:51:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1778518314; x=1779123114; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UCCfdV5epOfYo3BsJom2sySg0/nC1lFfsXrTGiNtRwc=;
-        b=drYPQJkUQJeDrV3JRSRe6LjICU0/GmoOXK0dehCo+POHmijhuYgW/nik+ou4Fm8dlJ
-         nr7pHe1FmdXAwSVN6wlZei2COLMpZfzMOqvllW4ItlD5wr44dB+p/sJhsxC/uDpbdg1h
-         1dNbIC7HZiFDLT/Pm9jnM648fKE1UEeX53XEhGD4dP5S8WmuqqMdE8IN2rgwf40entQT
-         4/WKp6ido463k5VMBGM/WJltHIvJa2DfenTwl/1KQ0inkas++Wb2ENAtmtdTYVokuTGy
-         0xJqgzhGm5DimSyJEA/pcgXxH3U22MQ/MqP2DM+FzYOsdG+cuB+aT80UcjboeTuGuziJ
-         c3MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778518314; x=1779123114;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UCCfdV5epOfYo3BsJom2sySg0/nC1lFfsXrTGiNtRwc=;
-        b=QGnf23QyWTVnW1kOu7XW7mrh+r8tQgFdhw3AsRXwp9Pz1GZ3Tb8dhiU3aKyR4AlqkP
-         X2nwDeX+YWExebi/PkElCgZnJT3aznD/XU08rRylxLa9DYNe6FnRjY7ST8UFi2YjP486
-         qOAA012Hcw9c+8MFdYctRBd03bYbZ4fUQZFMcqR+FPENlDKHKcgw6OMcw6zKkRAsOc/r
-         hd84BWbD8t4iBHcGgjCFvIh6Rul7VYi5in2kp/EpltgZ7V4d4q3DpUFdKevFslFNvmFR
-         xZYYfnDCbJvaRD4rrJm9yr8ntPra60IFKrzt8bxHeExOovLkmSD76/tzc7fUJlYM+wBw
-         rM+A==
-X-Forwarded-Encrypted: i=1; AFNElJ/IBiDcxkqEcQCQdbLsRsvUTFo5jeK/09OiSPW3RAfnuyNPMV98gusOxpRDJE/F8QZzebMLQhePlvQkRJHMdXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSpM+M7D1SGZ0efJRsEMVG/Ec8h805Q4rNXksAV3BsjKy7RT4S
-	2FiTsc+wwF8++HofMiOccyNg2wm3/oys7X0/6Wb2e4BHRKe9CZMrEsHRbxRj/U417Zs=
-X-Gm-Gg: Acq92OG3aD1M/YAD8fAMWGLydsGt4N+KXGtbPw380wnMl4K8udg1QhhPxpjSexmd3JR
-	judNxVyvkPJbcCSVkRCY6LBVmf6laCk8rdQz9LyuHKscpOA3s/JRN/0CsitJ8g0ZywIBzAOO9et
-	WzCnA07ldN3zsoxogCe/rHY8PFp/LvysRXhhQTYYtuLGKT32KwVlA0vMOQ1+rTLyDs6q6hiNcgL
-	8eRF7t9GdeZRb5LWD0p17H0cDxosep4yt0likOj23JkUyU9+s27yF4yDDkWlyG1NntM50o+nwiu
-	nzbQjgWnETe4u/o+CCuIVobjbdcu2NM2w2Qs3rd8m48qH3jLscfb/glqSQ2u0MxbPbPYQxQZQfS
-	24BCukNoN2CKmoaLt4/HhLgNb1tMI/4udq8RMz38RvELkG0yJRq70l7Lz27UVhSrUijeM83iIJM
-	zJp9Kr0nFxMwK0SoLaXyGKZ5EmC2A8dA==
-X-Received: by 2002:a17:902:f70b:b0:2ba:5e44:ce8f with SMTP id d9443c01a7336-2baf0bd5421mr154830895ad.0.1778518314037;
-        Mon, 11 May 2026 09:51:54 -0700 (PDT)
-Received: from localhost ([97.126.187.42])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2baf1d40a65sm109201975ad.20.2026.05.11.09.51.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 09:51:53 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: linux-omap@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Andreas Kemnade <andreas@kemnade.info>, Roger Quadros <rogerq@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="APCOcG/b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778521996; x=1810057996;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=3QodnBCUa9xlCndM4+Du9LVU9OPtBp5ZRACmS7Gc1Y4=;
+  b=APCOcG/bCQHdfzmf43KZJpBONCOa+P1z8MBitYu82OD8QKW9ZHsh94ht
+   xVFPgHKrvxzgnHwgqfVGB3KUiFZ/IEy7BfDV4Hdv9WIyE7m3U8YoyHnCT
+   RED823a4MxwEhB4x5TGTEAjc/CDZz0wZuNBL0Q7o49j4kVcrJm2NmhFOs
+   jvt4cl0oQHJbWmCm4z9sQB0K/ezcSQnvj8m0Dy1CwPZVw3P+eSCRa1ZR8
+   YiWVx6Z/CnePTlybEQJQPJNwqN3tXztSfpBCQetADpg5HNV1gtfZgM4LD
+   XjC/W7FOn4m1PdX0mPTNRSgObFpvkgnEpg4YDoK8dDiId6zsbb+ClwOTN
+   Q==;
+X-CSE-ConnectionGUID: Eq8+IYAbQs+uAlqrEm1E9Q==
+X-CSE-MsgGUID: v/JRIg/zSIuVfJInLVP+kg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="83033371"
+X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
+   d="scan'208";a="83033371"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 10:53:14 -0700
+X-CSE-ConnectionGUID: 6kcEojnoT2GIOva9dVpv9A==
+X-CSE-MsgGUID: AXOOovO2Tx6fh/JDSRVtww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
+   d="scan'208";a="234857697"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 10:53:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: Kenneth Chan <kenneth.t.chan@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
  linux-hardening@vger.kernel.org
-In-Reply-To: <20260330213528.18187-1-rosenp@gmail.com>
-References: <20260330213528.18187-1-rosenp@gmail.com>
-Subject: Re: [PATCHv3] ARM: omap2: simplify allocation for omap_device
-Message-Id: <177851831304.45285.1551367657338168278.b4-ty@b4>
-Date: Mon, 11 May 2026 09:51:53 -0700
+In-Reply-To: <20260430221555.83351-1-rosenp@gmail.com>
+References: <20260430221555.83351-1-rosenp@gmail.com>
+Subject: Re: [PATCH] platform/x86: panasonic-laptop: simplify allocation of
+ sinf
+Message-Id: <177852198558.27853.167418180738728210.b4-ty@linux.intel.com>
+Date: Mon, 11 May 2026 20:53:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -79,28 +63,30 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+X-Mailer: b4 0.13.0
 
+On Thu, 30 Apr 2026 15:15:55 -0700, Rosen Penev wrote:
 
-On Mon, 30 Mar 2026 14:35:28 -0700, Rosen Penev wrote:
-> Use a flexible array member (FAM) to combine hwmods array allocation
-> with the omap_device structure. This reduces the number of allocations
-> from two separate calls (one for the device, one for the array) to a
-> single allocation, improving efficiency and reducing memory fragmentation.
+> Change to a flexible array member to allocate once instead of twice.
 > 
-> The FAM approach also enables bounds checking through __counted_by(),
-> which provides runtime verification that array accesses stay within
-> the allocated size. This improves security and helps catch bugs during
-> development.
+> Use __counted_by for extra runtime analysis. Move the counting
+> variable assignment to right after allocation as done by
+> kzalloc_flex for GCC 15 and above.
+> 
+> Remove + 1 to allocation. It's already done in the previous line.
 > 
 > [...]
 
-Applied, thanks!
 
-[1/1] ARM: omap2: simplify allocation for omap_device
-      commit: 2a7a9e20b9e8b5dc4fdef777e67d390dcb3a8ea4
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-Best regards,
--- 
-Kevin Hilman (TI) <khilman@baylibre.com>
+The list of commits applied:
+[1/1] platform/x86: panasonic-laptop: simplify allocation of sinf
+      commit: a3d0dbd18ce908292607bb6cf37c978ece8a33d4
+
+--
+ i.
 
