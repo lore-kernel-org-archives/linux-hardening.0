@@ -1,70 +1,232 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA382BDC0F;
-	Mon, 11 May 2026 19:31:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA08377EDD
+	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 19:49:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778527890; cv=none; b=NWl8loSeBe68ty8AppoRS+8ha+Ma3isUbjnFrmFYu5XZLMUDJezpFqjYLoCp9FxZTyqVyaS5OZSlAMM39flspDOBRrSdlIKVFg+FIvfDSRs62cGCss2W/M0kyLCtsQuJagg+jQ3B8CrMScZg4SgyYFFEG0zbExp/I2fXPWcj2wc=
+	t=1778528943; cv=none; b=C5/uLcUaIj7S2OBwobxqNblcWcx5BiJCF5aRo93oeEsbFnhOVSsulpdGfXwHimrLtkZy2zl4YZDYBGTx0yOrKzZ1Rj2mMZIplenx44nNAbH0syr8VAKsXW44qUpauWYvJujY5jeMZVSu9vwqE2ZDJBn18yI47XjQ7QAjAOhzwac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778527890; c=relaxed/simple;
-	bh=KrGrYXDQBEe3HlrkPoqTDtByhqTYffazSDqdjTNwfho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jgweABoHlqtg2kJWnxEzRvEtM0Fsomupr8FE4dJzKzd5iDMRPQKuQmETv5fMsrueSBpEPYQJrED4INj048/ivKxco+yuB/NxFA/PDVMG19CmVt9JPCm+4lzi/bXlmeW9xfCLygONnMP5vLicqGiCYv8KQHFO9lQqUUVKhxbLXH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C42KQ41W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778528943; c=relaxed/simple;
+	bh=26JfIk9q28JBA8I09mOFeKrUsypLG4hEofvKPKgZbQI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wx4x9bfd63XOHfNQfTRwlfrjRWPfvKchWlJ7DHmIydTQMi95VP47mTOcUcNgMRmU0xCwSXfANB68IAxaLBbcJ/wPhOEFXdKqCcL3Jn2tmPk3Cpg7jsxfFfAZGJQ+ACp6rGCLP5lGimWYR/14mOw0n0ThAShURfJoXfXhgEEYY3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=trmXXQac; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C42KQ41W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E9DC2BCB0;
-	Mon, 11 May 2026 19:31:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="trmXXQac"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB699C2BCC9;
+	Mon, 11 May 2026 19:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778527890;
-	bh=KrGrYXDQBEe3HlrkPoqTDtByhqTYffazSDqdjTNwfho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C42KQ41WDl6E16K2sXNnZdJ6mkv02370w16Q79c5SjJ6iNELNizZrDkTBtEu3rwH8
-	 8559f3t5fRDYNoKvDUCMIM4pdCe4SGopIITxTgygiIiK+hmxC7BlFCVh8sMqOHAqNJ
-	 e8dCExJTTySn4GlYqjseq3UTyQ1oLtqf2k/wwZCDjWeOhdYA4KT7/0kwZf3H0/hBYX
-	 R2NTtpkYVByPJBB+hZQn2qzXBHtD79krifKRrae2Keuy/Rx/EtBB3cNjah6tQ0cz5+
-	 jpmXmUc64vrWehrBu2/kgCWe/Lg3lQu57ZT4BSIFmSQo7jjYvPM5D6WQ1ui/TRY85d
-	 acAmtws2evcYA==
-Date: Mon, 11 May 2026 12:31:29 -0700
+	s=k20201202; t=1778528942;
+	bh=26JfIk9q28JBA8I09mOFeKrUsypLG4hEofvKPKgZbQI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=trmXXQacaNTeOMz/VIdUbywB6l/LW7PpOGut+8tgEnXgFzhOu01Bfk8CIrCpEghX9
+	 AbBvJP2yUhQDli6Po4x093AX2ruOQMeRlYuQ5/MtKUasf/XAHQqmi7NywmVlgjRiqU
+	 qOEWq9WogXu3YS8ZtLBlocu4vfiCXITsFB02H6eQKdfcqwajsI4wSQi+rdXrIguVok
+	 /oQqc/4O+1PlLeY2Cvido+beYM05KTRuINV16j3ypoZXhXCX1a+aDIFErlYAsEH7wu
+	 Af5xNo2z7nBgXyCXiMxlQBU7KFlKhtnyzU+lDee1zon3bDaCiUwQGpI0YESbLmtc+n
+	 JCnWlncCJAKyw==
 From: Kees Cook <kees@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Jiazi Li <jqqlijiazi@gmail.com>, Andy Shevchenko <andy@kernel.org>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Add str_alloc_free() helper
-Message-ID: <202605111230.319F9EDB2@keescook>
-References: <cover.1778051552.git.jqqlijiazi@gmail.com>
- <fe81137b849e349bd9b0529c7e0e4be6b4099a5b.camel@sipsolutions.net>
+To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>,
+	Jeff Law <jeffreyalaw@gmail.com>,
+	Andrew Pinski <pinskia@gmail.com>,
+	Jakub Jelinek <jakub@redhat.com>,
+	Martin Uecker <uecker@tugraz.at>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable, Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v11 0/7] Introduce Kernel Control Flow Integrity ABI [PR107048]
+Date: Mon, 11 May 2026 12:48:44 -0700
+Message-Id: <20260511194847.faster.180-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe81137b849e349bd9b0529c7e0e4be6b4099a5b.camel@sipsolutions.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8645; i=kees@kernel.org; h=from:subject:message-id; bh=26JfIk9q28JBA8I09mOFeKrUsypLG4hEofvKPKgZbQI=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlMRgsWu135dGVFAeOHP0HGCwRm7wji/lCy2eaKeMzpx WqsZucMO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACYivZaR4arTpdAgecmCrpfn v04PtRSMyWmy0Xuy/+L+ezyfzffV32L4H79u+Zv1H6fxC1+LLhU7ILvzxDJe+QqdTy2RE+YYyV1 WYwMA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 07, 2026 at 01:10:03PM +0200, Johannes Berg wrote:
-> On Thu, 2026-05-07 at 19:03 +0800, Jiazi Li wrote:
-> > Currently finds 4 locations:
-> > ./drivers/net/wireless/realtek/rtw89/fw.c:2557:7-12: opportunity for str_alloc_free(valid)
-> > ./drivers/net/wireless/realtek/rtw89/fw.c:2693:7-12: opportunity for str_alloc_free(valid)
-> > ./drivers/android/tests/binder_alloc_kunit.c:196:6-21: opportunity for str_alloc_free(alloc -> pages [ i ])
-> > ./mm/slub.c:1634:3-8: opportunity for str_alloc_free(alloc)
-> 
-> It's what, three characters shorter for four users each? Is there really
-> much point?
-> 
-> Reading just the name also is really confusing - yes it lines up with
-> str_assert_deassert, but "alloc_free" really doesn't seem very obvious -
-> why would you alloc and free a string in one function call?
+Hi,
 
-Yeah, there seems to only be 1 source file instance of this? I don't
-think this needs the entire helper infrastructure.
+This series implements[1][2] the Linux Kernel Control Flow Integrity
+ABI, which provides a function prototype based forward edge control flow
+integrity protection by instrumenting every indirect call to check for
+a hash value before the target function address. If the hash at the call
+site and the hash at the target do not match, execution will trap.
+
+I was asked to wait to resend this series until gcc 16 released, which
+it has now. I'm hoping we can land the front-, middle-, and back-ends
+for aarch64 and x86_64. I'd really like to get this in a position where
+more people can test with GCC snapshots, etc. Since I don't have commit
+access, who is the right person to commit this?
+
+Thanks!
+
+-Kees
+
+Changes since v10[3]:
+
+- Rebase to latest.
+- Update tests to aarch64 brk instruction immediate printing in hex.
+
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=107048
+[2] https://github.com/KSPP/linux/issues/369
+[3] https://lore.kernel.org/linux-hardening/20260107200301.better.465-kees@kernel.org/
+
+Kees Cook (7):
+  typeinfo: Introduce KCFI typeinfo mangling API
+  kcfi: Add core Kernel Control Flow Integrity infrastructure
+  kcfi: Add regression test suite
+  x86: Add x86_64 Kernel Control Flow Integrity implementation
+  aarch64: Add AArch64 Kernel Control Flow Integrity implementation
+  arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
+  riscv: Add RISC-V Kernel Control Flow Integrity implementation
+
+ gcc/kcfi.h                                    |  59 ++
+ gcc/kcfi.cc                                   | 696 ++++++++++++++
+ gcc/config/aarch64/aarch64-protos.h           |   4 +
+ gcc/config/arm/arm-protos.h                   |   4 +
+ gcc/config/i386/i386-protos.h                 |   2 +-
+ gcc/config/i386/i386.h                        |   3 +-
+ gcc/config/riscv/riscv-protos.h               |   3 +
+ gcc/config/aarch64/aarch64.md                 |  56 ++
+ gcc/config/arm/arm.md                         |  62 ++
+ gcc/config/i386/i386.md                       |  63 +-
+ gcc/config/riscv/riscv.md                     |  76 +-
+ gcc/config/aarch64/aarch64.cc                 |  93 ++
+ gcc/config/arm/arm.cc                         | 170 ++++
+ gcc/config/i386/i386-expand.cc                |  22 +-
+ gcc/config/i386/i386.cc                       | 210 ++++-
+ gcc/config/riscv/riscv.cc                     | 180 ++++
+ gcc/doc/extend.texi                           | 137 +++
+ gcc/doc/invoke.texi                           | 127 +++
+ gcc/doc/tm.texi                               |  32 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi.exp            |  51 ++
+ gcc/testsuite/lib/target-supports.exp         |  14 +
+ .../gcc.dg/builtin-typeinfo-errors.c          |  28 +
+ gcc/testsuite/gcc.dg/builtin-typeinfo.c       | 350 +++++++
+ .../gcc.dg/kcfi/kcfi-aarch64-ilp32.c          |   7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c    | 114 +++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-ip.c |  15 +
+ .../gcc.dg/kcfi/kcfi-arm-fixed-r12.c          |  15 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c       | 149 +++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c |  90 ++
+ .../gcc.dg/kcfi/kcfi-cold-partition.c         | 126 +++
+ .../gcc.dg/kcfi/kcfi-complex-addressing.c     | 203 ++++
+ .../gcc.dg/kcfi/kcfi-complex-addressing.s     |   0
+ .../gcc.dg/kcfi/kcfi-ipa-robustness.c         |  54 ++
+ .../gcc.dg/kcfi/kcfi-move-preservation.c      | 118 +++
+ .../gcc.dg/kcfi/kcfi-no-sanitize-inline.c     | 100 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c  |  39 +
+ .../gcc.dg/kcfi/kcfi-offset-validation.c      |  38 +
+ .../gcc.dg/kcfi/kcfi-patchable-entry-only.c   |  64 ++
+ .../gcc.dg/kcfi/kcfi-patchable-incompatible.c |   7 +
+ .../gcc.dg/kcfi/kcfi-patchable-large.c        |  54 ++
+ .../gcc.dg/kcfi/kcfi-patchable-medium.c       |  60 ++
+ .../gcc.dg/kcfi/kcfi-patchable-prefix-only.c  |  61 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c  |   7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t1.c         |   7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t2.c         |   7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t3.c         |   7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c      | 276 ++++++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c   | 140 +++
+ .../gcc.dg/kcfi/kcfi-trap-encoding.c          |  70 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c |  29 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c    |   7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c    |  93 ++
+ .../gcc.dg/kcfi/kcfi-x86-fixed-r10.c          |   7 +
+ .../gcc.dg/kcfi/kcfi-x86-fixed-r11.c          |   7 +
+ .../gcc.dg/kcfi/kcfi-x86-retpoline-r11.c      |  40 +
+ gcc/Makefile.in                               |   2 +
+ gcc/c-family/c-common.h                       |   1 +
+ gcc/flag-types.h                              |   2 +
+ gcc/gimple.h                                  |  22 +
+ gcc/kcfi-typeinfo.h                           |  32 +
+ gcc/selftest.h                                |   1 +
+ gcc/tree-pass.h                               |   1 +
+ gcc/c-family/c-attribs.cc                     |  17 +-
+ gcc/c-family/c-common.cc                      |   2 +
+ gcc/c/c-parser.cc                             |  72 ++
+ gcc/common.opt                                |   8 +
+ gcc/df-scan.cc                                |   7 +
+ gcc/doc/tm.texi.in                            |  12 +
+ gcc/final.cc                                  |   3 +
+ gcc/kcfi-typeinfo.cc                          | 866 ++++++++++++++++++
+ gcc/opts.cc                                   |   2 +
+ gcc/passes.cc                                 |   1 +
+ gcc/passes.def                                |   1 +
+ gcc/rtl.def                                   |   6 +
+ gcc/rtlanal.cc                                |   5 +
+ gcc/selftest-run-tests.cc                     |   1 +
+ gcc/target.def                                |  39 +
+ gcc/toplev.cc                                 |  12 +
+ gcc/tree-inline.cc                            |  10 +
+ gcc/varasm.cc                                 |  37 +-
+ 80 files changed, 5571 insertions(+), 44 deletions(-)
+ create mode 100644 gcc/kcfi.h
+ create mode 100644 gcc/kcfi.cc
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi.exp
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo-errors.c
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-aarch64-ilp32.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-ip.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-r12.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-cold-partition.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.s
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-ipa-robustness.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-incompatible.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t1.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t2.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t3.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-encoding.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r10.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r11.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-retpoline-r11.c
+ create mode 100644 gcc/kcfi-typeinfo.h
+ create mode 100644 gcc/kcfi-typeinfo.cc
 
 -- 
-Kees Cook
+2.34.1
+
