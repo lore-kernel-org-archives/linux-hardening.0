@@ -1,119 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB873A8756
-	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 20:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E396C34A3AB
+	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 23:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778532065; cv=none; b=YB7vfHHegsoyvZNJd8SVxoIXT/WQ1SClLyz6mr8w9Q0zblV12Tvtr072l0+0gepOt0m/ILBMBUzEvtAfVs1BQ+eJoK7ayPmwsnQtTTaNmLr69MDegbpczdkrnQRoeDxj87JeQBTJP++irS4+Jry2+G5JKqWUY8B541CKyazolps=
+	t=1778540501; cv=none; b=Vh1o994W5rOnnIHj0q98xYkLTwNNPVg2Sv0EfaNr8zNlS67okR00bR+bxwTOz5IY4zeJuCe6GOTpxM2fZ1tMtOy7hK9+1buKRmymjcBwTQ+J0LmpgOYZd+RIrxTZkW0YdK+IvlzvEgJ9WzE4kg7c5d+b3D5EOD7rfELdc7rJVXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778532065; c=relaxed/simple;
-	bh=u1V8iehSXepv4Y+johTcqyCQLf3jLPWNgISabYhtCfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j6DwYZ5Yso/CJJLLizjxIhIHZwQN9H+jWi8eBG67iPkFXryRMJ6bk2tese6JVgg7+9pbsdLMI83oLtu5jmRXcCdOYkR1SOif5/uBbZuU/GOqbhthcpAlFXO0FdRINn5/Uz6JWlOg9Ca9ekkwT89MQaohVCSpC0vozQia6Oymn1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPttTshJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778540501; c=relaxed/simple;
+	bh=4FFTVIrcGb5bEnEr3mxiZfFcOT2unW9/+Rjfsb9tZis=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ElLABk3LoHYiIjZqibvNXKYEDJ102bhS8rAC23qN8DzASON8BkutLxAeHpges+ArgkKl4TiDxppY220i8owAkBJvl5lP9vTCcpxLa7/qNXCZY0ByjWWAyGB+jXYte59AkBLHfABKzIiyVorFX11BCU1r8fcyQmLwwJGB0ySLUUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nEzXtW+i; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPttTshJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DE0C2BCC9;
-	Mon, 11 May 2026 20:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778532064;
-	bh=u1V8iehSXepv4Y+johTcqyCQLf3jLPWNgISabYhtCfg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mPttTshJlZQtskc1ZkhMasTB1U5SEwQMIB44tuD+RXxaGWHXyy/qCNn3D+oH1+wX4
-	 IAlIVGmCvCeAVBnFG3ufwyI3NLkztXhzoLdP2+akhxEsLDnMQ/XmPLErzgLTd/Frtx
-	 8c2qO5qqmFdGYY6SFtipqziPjOlU+CQXnEIY1VyirpQ8lnu4ADuXCWjPCfx9qnCzzK
-	 NVGI7IK1oue8BxOTjod8uV1VKmjJC0LcxLXNf/sXa/fj2rn4SFEDYRm5BUl3JsyELR
-	 zi8ehNqS6QsgWR0NYekgwFSqx24rhB5ZUrJmqtXcZY+31Kvvuqlldgc4Wyj6dAmAxw
-	 oNFtWCbB/EHSg==
-Date: Mon, 11 May 2026 13:41:04 -0700
-From: Kees Cook <kees@kernel.org>
-To: Martin Uecker <uecker@tugraz.at>
-Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
-	Uros Bizjak <ubizjak@gmail.com>, Joseph Myers <josmyers@redhat.com>,
-	Richard Biener <rguenther@suse.de>,
-	Jeff Law <jeffreyalaw@gmail.com>, Andrew Pinski <pinskia@gmail.com>,
-	Jakub Jelinek <jakub@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
-	"Constable, Scott D" <scott.d.constable@intel.com>,
-	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v11 1/7] typeinfo: Introduce KCFI typeinfo mangling API
-Message-ID: <202605111337.62C81472F5@keescook>
-References: <20260511194847.faster.180-kees@kernel.org>
- <20260511194902.701280-1-kees@kernel.org>
- <62bf9b04fa4eaac6912a0ffd1c4a5114afb5df7d.camel@tugraz.at>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEzXtW+i"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3660b84347dso2998624a91.1
+        for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 16:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778540499; x=1779145299; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7yrHUiu1eclhnN5DTCiPARDxM7SXoj9Pgm5FYtgWEls=;
+        b=nEzXtW+i7/1PKQWSNBTkjgNZcMeBQROkpclQKITNPT1hf4iJbiQQqGOMdi5tY1c7jK
+         sae8WeqNO/i3kw3v434tw44gM4Vh3Kav46ojBQNWaTuVQoBvQ1c9G7MEEODWKdqdSMpo
+         sTmDXFzOkDF2K+qIZLcmJ3IA1McPskD7aZOfswN/Ic73VI+KYeWeHFMvjD229dthlckZ
+         7Pw7CmYUiUgEdrPbmWR9RWUFPoxEHhuvAxS/CB946w8djUzW0+SV8KcyOCQ2gt794dVP
+         lQE4deofuKkQmV65yAZRe4Gfjr2ECh9SoQ09Wp7h+3FO5wUA4ylhZHsPP47V9uScZjBP
+         OWjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778540499; x=1779145299;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7yrHUiu1eclhnN5DTCiPARDxM7SXoj9Pgm5FYtgWEls=;
+        b=ViNMR77MzkaDNDRGi9oSbRLAcM2bI0Fe3mE95rM0WAlBJwxv0MWYa1cSY2ymT0COCa
+         7q6Xer/Hm/cFeBT9zdibd634h0a4LPoEVB1IAmMB3Il6FG0V/j9UOtfAED4OLpEX/tan
+         SqYJ9Ok3gcNZjQxF5EkPQ+Tv0SfcVUCU5L4/GrwF0KwBHyu5hb1RtWRh9jA2My73crC0
+         MEPpsGT9/0efdAO7zkCUAEZ7B2EVCfXSCQP/9e7gcB37rOlaQqCGWht7vYVuiAvypG8k
+         +AM3LZB6c/oBKYjjT+ACkvnWX0flCnjp0F7Hj0/3yB1G0M2SR7QMLtVeH7gMNRodaCUr
+         xQgw==
+X-Forwarded-Encrypted: i=1; AFNElJ/85Mh0C1pf1G7LRYcSDfUDifq2NSwUwJHDSbyjhB6suEHPRzu+/SbtMv0wUy+u6US91aIv2fML+kiaBs68Kwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV+/04kyH79yybh4A6GscKGeIIudMedFSaUT8x883QZM2hlIJ4
+	FkwWVkOxUD6Q7gmg6j/XMmqjORQlkl6afnRpRBxXHRVTGk5Qns9OoAKC
+X-Gm-Gg: Acq92OGNFndQUX45qDwwLnozjtlNzixX0H2uG8A5NPa4Jo0jPnkIZnxzcdnT/TJUXgF
+	nIq9ESxj0KMb/qeKNUvepEEprmPuvem8AfL5Kr4B8H9Nq5XXbG9tJREGBFQhObr99hSuAOl01JT
+	o1OpZeL1BCjvj/QijtocaP/D4IuJbAnK0TDHQsUg4dTVOcF+PhAfwoTfyJhAplEiM1repiT/fTy
+	LP0K3gH8C8eSe3Sp8dYwuBNHJZzNu6HjGik2fhj0C21UtaN4w/eivBEhac+KNsZgSbJIc/q+VsX
+	DMsr6Pdjog+ViD0fLjrGtyXKVxla5Q1XJkY0pHO0Xhso6pERY4oSHhweSXdSJwMOPL3rFC+UlaH
+	bPTump2qPddYf3GlaXlrEdRNPEtsf3AetzDy4S/QA8vDgzv83Pq2kHaNdjKoW1C+OnSWufSV0e3
+	HswOva7LpG78H3IQM7DbiLrB+LhdKbNUZbNtnghJqb05dlDb/3CKWOW7bGLOtk9/9dFcOPWdTrU
+	HQ+Q6ckz3L+0Tw6TyWU09kJfLrZ/xG5Nlg=
+X-Received: by 2002:a17:90b:3502:b0:35e:5051:fb18 with SMTP id 98e67ed59e1d1-368b27411c6mr531978a91.26.1778540499305;
+        Mon, 11 May 2026 16:01:39 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-368ace2a5cdsm312982a91.2.2026.05.11.16.01.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2026 16:01:38 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-sound@vger.kernel.org
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] ALSA: asihpi: Use flexible array for control cache
+Date: Mon, 11 May 2026 16:01:21 -0700
+Message-ID: <20260511230121.28606-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62bf9b04fa4eaac6912a0ffd1c4a5114afb5df7d.camel@tugraz.at>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 11, 2026 at 10:08:06PM +0200, Martin Uecker wrote:
-> Am Montag, dem 11.05.2026 um 12:48 -0700 schrieb Kees Cook:
-> > To support the KCFI typeid and future type-based allocators, which need
-> > to convert unique types into unique 32-bit values, add a mangling system
-> > based on the Itanium C++ mangling ABI, adapted for C types. Introduce
-> > __builtin_typeinfo_hash for the hash, and __builtin_typeinfo_name for
-> > testing and debugging (to see the human-readable mangling form). Add
-> > tests for typeinfo validation and error handling.
-> > 
-> > This ABI needs to match what is used by LLVM Rust (which matches the Clang
-> > ABI) so that KCFI can work on mixed GCC with LLVM-Rust kernel builds.
-> > Instead of inventing a new ABI, all use the existing Itanium C++ mangling
-> > which matches KCFI's needs.
-> > 
-> > An important aspect of the C++ typeinfo behavior that is retained here
-> > is that typedefs are treated as pass-through except when the underlying
-> > type lacks a tag (i.e. anonymous struct, union, or enum). This provides a
-> > distinction between those typedefs and typedefs used to provide _aliases_
-> > (u8, uint16_t).
-> > 
-> > In the future, an additional "strict mode" builtin helper pair could
-> > also be added to follow strict ISO C type equivalency instead of the
-> > existing typeinfo used here, but that is out of scope for this patch.
-> 
-> Note that ISO C would require *less* strict rules, so the current
-> mangling would reject compliant code.
-> 
-> These ABI issues were recently discussed also on the rust side.
-> 
-> I now worry that it might actually be a mistake to enshrine
-> the wrong rules into the ABI, creating language interoperability
-> issues which might then plague us for years.
+Store the ASIHPI control-cache lookup table in the control-cache
+allocation instead of allocating it separately.
 
-Well, this matches what we've already created (and have been using for
-years) on the Clang side. I'm happy to rename this to whatever you want
-to avoid confusion, but I don't really want to change the rules of this
-ABI. I'd rather get it working as-is, and then if we want to make
-mangling changes, do that simultaneously between GCC and Clang.
+This keeps the lookup table tied to the cache object lifetime and
+removes the extra allocation and free path.
 
-And this is totally do-able, e.g. I've already created the transition
-path on the Clang side for changing the hashing algo. For KCFI, we don't
-need to worry about cross-ABI-version compatibility: the kernel is built
-as one binary, effectively. We just need to worry about GCC/Clang
-compatibilities given the Rust side of things.
+Assisted-by: Codex:GPT-5.5
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ sound/pci/asihpi/hpicmn.c | 16 ++++------------
+ sound/pci/asihpi/hpicmn.h |  4 ++--
+ 2 files changed, 6 insertions(+), 14 deletions(-)
 
--Kees
-
+diff --git a/sound/pci/asihpi/hpicmn.c b/sound/pci/asihpi/hpicmn.c
+index d846777e7462..0674fd854cc8 100644
+--- a/sound/pci/asihpi/hpicmn.c
++++ b/sound/pci/asihpi/hpicmn.c
+@@ -641,17 +641,12 @@ void hpi_cmn_control_cache_sync_to_msg(struct hpi_control_cache *p_cache,
+ struct hpi_control_cache *hpi_alloc_control_cache(const u32 control_count,
+ 	const u32 size_in_bytes, u8 *p_dsp_control_buffer)
+ {
+-	struct hpi_control_cache *p_cache = kmalloc_obj(*p_cache);
++	struct hpi_control_cache *p_cache;
++
++	p_cache = kzalloc_flex(*p_cache, p_info, control_count);
+ 	if (!p_cache)
+ 		return NULL;
+ 
+-	p_cache->p_info =
+-		kzalloc_objs(*p_cache->p_info, control_count);
+-	if (!p_cache->p_info) {
+-		kfree(p_cache);
+-		return NULL;
+-	}
+-
+ 	p_cache->cache_size_in_bytes = size_in_bytes;
+ 	p_cache->control_count = control_count;
+ 	p_cache->p_cache = p_dsp_control_buffer;
+@@ -661,10 +656,7 @@ struct hpi_control_cache *hpi_alloc_control_cache(const u32 control_count,
+ 
+ void hpi_free_control_cache(struct hpi_control_cache *p_cache)
+ {
+-	if (p_cache) {
+-		kfree(p_cache->p_info);
+-		kfree(p_cache);
+-	}
++	kfree(p_cache);
+ }
+ 
+ static void subsys_message(struct hpi_message *phm, struct hpi_response *phr)
+diff --git a/sound/pci/asihpi/hpicmn.h b/sound/pci/asihpi/hpicmn.h
+index 8ec656cf8848..40af7329587a 100644
+--- a/sound/pci/asihpi/hpicmn.h
++++ b/sound/pci/asihpi/hpicmn.h
+@@ -37,10 +37,10 @@ struct hpi_control_cache {
+ 	u16 adap_idx;
+ 	u32 control_count;
+ 	u32 cache_size_in_bytes;
+-	/** pointer to allocated memory of lookup pointers. */
+-	struct hpi_control_cache_info **p_info;
+ 	/** pointer to DSP's control cache. */
+ 	u8 *p_cache;
++	/** pointer to allocated memory of lookup pointers. */
++	struct hpi_control_cache_info *p_info[] __counted_by(control_count);
+ };
+ 
+ struct hpi_adapter_obj *hpi_find_adapter(u16 adapter_index);
 -- 
-Kees Cook
+2.54.0
+
