@@ -1,72 +1,72 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E17231842
-	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 04:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F1221E098
+	for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 04:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778473194; cv=none; b=HzU7IC2qLiCC6WQrjZoz18FRyOZwlZ1f68F/PiAXlksuQ73nB6TkovRDZl2C7cxMdxq4Ilz4+gRCWzt8hM28ZLiimJn5wSYJ1fqgApLxasH3o8wlVyV3DlPBrshYvEzMMUqjd7pF9zsGfEzvm+SuT0CuJR+YKnN2fOhHlodFSVQ=
+	t=1778473261; cv=none; b=F9YSlawO4tEfsk23Lb235YBBc5MLdYJ523ZHATDfMnMbFI8jQcExl0DTfhiLC91vKsfUZgbmUMdqoLHgxsq7eGmW8i3EvvwNyCpz9sjKh6y7X7aGeWkqBYUJikVKB81wGaQbWUrAhoQwyFtTW11qxYW36V1JIo5GK+wRD9K4pGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778473194; c=relaxed/simple;
-	bh=l9r0k9O845xmFH49LN0SvAE9g5m1PdtjkXkKvP0Tdwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rj5XOzgDdvHD1mNHkk5SPklcIvLavtDGSmuKX9VuvDEa5vJ78S4SaQFMQnIYZ3yAToqy01/lZPQqs3NFgBlY5fRGjYzPSPxZoZTg86UrFBDm+CGoxaHgono5QdzxldKCD/qOCEoEvzHlxnuFO2Mta1cnT2ZN/+N8li2J8+kFAkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bq6pa+pM; arc=none smtp.client-ip=209.85.215.174
+	s=arc-20240116; t=1778473261; c=relaxed/simple;
+	bh=hIPAJ8hojM8GgeoKrEwNAzY7zEI56ACG1AfbKYQ8ELk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PTABFWBp4Ozg+gh4OH4cfCTxJEj0q/H45zhQVgwn/Ofy+bGWV+JJ7rSN7DVOoflc5xJ3kb4rqPtEOXquX5/3CkrFJ9gqqSUCvXKV2+6uorBZkVKQlrpOAADBRjWDD5e7nj7mzKPm23AsPX9/PZ9FZ87GZtXG24qrXkdZ9hNlcBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bc9fGyr7; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bq6pa+pM"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-c798fc1a28cso1588420a12.3
-        for <linux-hardening@vger.kernel.org>; Sun, 10 May 2026 21:19:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bc9fGyr7"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2ba21d32776so25252685ad.2
+        for <linux-hardening@vger.kernel.org>; Sun, 10 May 2026 21:21:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778473192; x=1779077992; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778473259; x=1779078059; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yuGDf9iNAynlSPvBXud+v9E3yiQ53OcQ/UBsB/xF9OA=;
-        b=Bq6pa+pMaeQ6MDDQkvze95i95EGTsiP1FgnEWMej1kItue/bfaDEUpGc4+pgho/TJZ
-         tIaoDcyXUiLccLncam/3JFKkZLduyqZP6Cd1EQidcHa8XV1I25VWOW+z5h8cLwVTVA3p
-         5wqw9lwm4X6FcwOze0ybtdu+W4U7wuG9sheFdHxIpvask/0nzin7N6zrNZUjrbidTGel
-         Auri7mvp87Vm7dDUA4y7jUi1lpdN4sg2P79hI2pU/AGspQh6oFKCHNa7kdTVLmz8lGaH
-         0Vm2Js5d0ZVCDzSOBsEs+aLjM0X369HN1LZ3bj/Jq0TIS8m3CNAc+j9suMg7v+1Y+JdK
-         GEzQ==
+        bh=xTR7mTxLAlp1FX5tjnAs7/WkIvr6zEWiJrL5MefUt1E=;
+        b=Bc9fGyr7a+kjE1klxpzNHLxW18hqTybMqUa2s6IW+Kg4/ZmCbNYfQP3ALizaBglQGS
+         hMryXcLxmUMnSTzxcPCYH+Sg1bKZ/LPHHffpsI/HrNLzQPcc6b4xcxJV4ZvNDTRqLvv5
+         nQhOHhmoTHWmmbUyel3bsHvhQlrmrirsqOScmHImcPBchwIiAn9yjLs7gOb3J9IuxO79
+         wZogdbeJasjHZVVc5uPGunyVjc7RQrCGqVKNQ4o4aI93nikQzPDJstmaWJoANaAiKCOP
+         WfQpr3wTc/FqHnGgnfb/syh3t/TuYSb+J/3mZoNXN3AWzAz8EJHez0dwvDF4TYJV3DIi
+         odmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778473192; x=1779077992;
+        d=1e100.net; s=20251104; t=1778473259; x=1779078059;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yuGDf9iNAynlSPvBXud+v9E3yiQ53OcQ/UBsB/xF9OA=;
-        b=Evah49QeX8RpdUIGxtGf2Xgyge+w7esJ8rV8T3LLRkBPXRYMrm0H8j/+3AnMbYyUqX
-         78VgT1WKCsJbMki3cf0ADoYolAiV659lT+CPv6ZXPemwgsTN520GPIJV8gOZTMUJ63pR
-         7g74CQms4lYpS0UKibE32hQ4LuLmHiqzrgNg4fWHV2v7xlwQppFealD3QEyP3UYIoF/R
-         cD7kQ1O2V8byqnwVhPvEYfBvBqeH71ePVGP+BoCVM30xmi0XjPdfbuHiqd8ZK1+xZW9q
-         3rkaNdPjlcV3fzpncnbEgZsqpJ5vXfZhNNhXtwe0/DByuD3PFd/IAbiprahltS9jNEDu
-         MIVw==
-X-Forwarded-Encrypted: i=1; AFNElJ9g8Yg4T4nVoBCirazjdunLvPQrEJb19BQ2svQ2KhURpRbYXrHJ4Xrs2Ap4yJ2vydelfXtD8WVi8gEQt6bGsYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOLn+Ntus/cXGaMJsg3DVvGuZxIN0UuXAst47QBhMSwnr+9+q2
-	/AS3w/8PMhESkeomVreSz9u6Bp0GuXp9xycgqRQKHNk3FfdZkBX7ck80
-X-Gm-Gg: Acq92OFa6CnG8oIDk4MaZbgNXwBOZEwWF+APaa49Za4nUObDNXPUiLtlBK+lFrQ8xfq
-	YbV+AESTCr6VIDf/GjnGwZgw/RLn8NQafTQqTpyVGyFnmrl1XmYmQsRL3EXq3PpLp05gv7qQ7kt
-	D+L7si3mbQ1bVAlZNGB0oOrx5wZ48EKt5uewdoELEh9TZK1BrkUEPTfmTGBNw/QqG704wLLrCsM
-	r+3Z9ovesBSJLma754TzbYm4n4Ps7Y0SbjvvDzVjvTol8MVmzUav4svpmm2FmU3Id4Fht3h1q8p
-	IdE5HF7oB5C+UYiz7dbPC7586x3oYoOmuvskNLswP+8ZOPUGJZGMv4hPFDN/2D2bprrgLFcSMmO
-	o47MBC21N/bCQZD5W7GR0DDc4OJJf+OkgqLDhLs5qAH1BiDa3E52P64g1fBo5OASTUxg9BzhL6G
-	GOg/mMqp1We0zYtwUmbrrNEH6Al2Q7GSj1Qb1F5edvT5roAnj3nic15EWS+bDQYhG4RhoXgE0Jk
-	pmg5T/b6YBGJqRbxb24F7HdT86WRdDL6f5tFTlj+OjpmA==
-X-Received: by 2002:a05:6a00:2e90:b0:831:7f71:c810 with SMTP id d2e1a72fcca58-83a5d96fa9dmr22809905b3a.35.1778473192058;
-        Sun, 10 May 2026 21:19:52 -0700 (PDT)
+        bh=xTR7mTxLAlp1FX5tjnAs7/WkIvr6zEWiJrL5MefUt1E=;
+        b=N8ufPy7bEhChX8Slof0chRTF4JIXa5fknFEYq8vOZI1ZSoQMtvbxcKST8kciLTyaJR
+         sI857adPjekKRcHD8fWUdcCYyV/By99VnkIqhwzw/hYyLShMxwpFLG+Ej8fZjxzVe2dx
+         uzqY2uJDqnATQ1VJ55pKQi2KETpLLTICNPyEYU2bVj2Pe0MO3fWb9+dkRdv4o9Zvc3QV
+         d/6RAhlJMY4EcEVDSOErqD9X54/I8WzYqcP5mEO7lBDub8newHJ6YtKN+HVchBoaVozS
+         8nec5d1AKixORSKMbRPP5YHvbDa+q78viLFRYLUIl9Qwt636dwP8zFgV1zTd016C0XGb
+         WuFQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/yMPXddvXfVV/jfPbfwQ+LKR6SVoZdWABosSP89cgK9KqKNIXcBipNsPwXn1dN6eSWHqx3b5/vuT/8xMErie8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGZL1GLmpxISo6cQE01tbNV/4alJcGI1yCzh5Rf8Lrs/QF0c1L
+	Lvq+ffdvINhm7c34VbK1ku234Mqt7tutBrgD3J4X9fGB3jUWA+XBojcG
+X-Gm-Gg: Acq92OHKCPbfEcAqMzQPaxA44q0ACzJlBzxBqioVEDOh0cnEoV4S8HNiYNlU1+3P3km
+	Axk9dw6OwZv/uhD0kPAuyxoLGd2y34APJ+pW30gZH2JrgU2xpRcB5JViHRamoRZXfmWhiGz7aqy
+	IPMy2PwHLZN411Nek5GmOKNjlgCINPITmrJHfjYPXff+MwAwLRwlgQBjIfpR87+2Di53T1NRmL0
+	nDcpDI3QfSZuMeXkX30m6BHUeZQtfNmLuUxUCjdY2W+ZJj1kU0W9uPpE2/f2IRhjvWUQY94jTPx
+	iaOMM8uexlWXG6/cAr96WOxQPHE1E3Ls+RP/Hw/ZROIPFX8GuS5ANduPowQAIWjWRPf3pc9bbL8
+	f8nfCJ8cAlrCSzq4dc+kVJF4jpg/VhXah2yQhgwc56lBfE6+TQpvUTkAxBpZmFuSuzdUlbvl/M8
+	xEgXECqR/AWNU6Cn7jOD/01z7kyW450KX0R63Udaay9Vn76KM/2KylWg+d7QC8rZmblx0h8n9Zw
+	w8lYiSRywb5c92hYBVmB1vPh4u5Exo8LcUjuh1sFYkOwA==
+X-Received: by 2002:a17:903:3d49:b0:2ba:7699:4137 with SMTP id d9443c01a7336-2ba792ae937mr166753505ad.28.1778473259513;
+        Sun, 10 May 2026 21:20:59 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-839659498f1sm23736106b3a.17.2026.05.10.21.19.50
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1d27055sm87752185ad.6.2026.05.10.21.20.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2026 21:19:51 -0700 (PDT)
+        Sun, 10 May 2026 21:20:59 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-wireless@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>,
+To: linux-kernel@vger.kernel.org
+Cc: Alexandru Ciobotaru <alcioa@amazon.com>,
+	The AWS Nitro Enclaves Team <aws-nitro-enclaves-devel@amazon.com>,
+	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	b43-dev@lists.infradead.org (open list:B43LEGACY WIRELESS DRIVER),
-	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH wireless-next] wifi: b43legacy: Use flexible array for DMA metadata
-Date: Sun, 10 May 2026 21:19:34 -0700
-Message-ID: <20260511041934.378209-1-rosenp@gmail.com>
+Subject: [PATCH] virt: nitro_enclaves: Use flexible array for memory pages
+Date: Sun, 10 May 2026 21:20:41 -0700
+Message-ID: <20260511042041.378366-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -76,115 +76,77 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Store the per-descriptor metadata in the DMA ring allocation instead of
-allocating it separately.
+Store the per-region page pointers in the memory region allocation
+instead of allocating them separately.
 
-This ties the metadata lifetime directly to the ring, removes a separate
-allocation failure path, and keeps the descriptor count available for
-__counted_by() bounds checking.
+Keep the allocated page-pointer capacity separate from the number of
+pinned pages so __counted_by() describes the flexible array bounds while
+nr_pages continues to track pages that need to be released.
 
 Assisted-by: Codex:GPT-5.5
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/net/wireless/broadcom/b43legacy/dma.c | 24 ++++++++-----------
- drivers/net/wireless/broadcom/b43legacy/dma.h |  4 ++--
- 2 files changed, 12 insertions(+), 16 deletions(-)
+ drivers/virt/nitro_enclaves/ne_misc_dev.c | 15 ++-------------
+ drivers/virt/nitro_enclaves/ne_misc_dev.h |  2 +-
+ 2 files changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43legacy/dma.c b/drivers/net/wireless/broadcom/b43legacy/dma.c
-index a9557356c9ab..6c3d847242bb 100644
---- a/drivers/net/wireless/broadcom/b43legacy/dma.c
-+++ b/drivers/net/wireless/broadcom/b43legacy/dma.c
-@@ -610,25 +610,25 @@ struct b43legacy_dmaring *b43legacy_setup_dmaring(struct b43legacy_wldev *dev,
- 	int nr_slots;
- 	dma_addr_t dma_test;
+diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+index c91300a73f50..c0045b2cf7f3 100644
+--- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
++++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+@@ -927,19 +927,11 @@ static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
+ 	if (rc < 0)
+ 		return rc;
  
--	ring = kzalloc_obj(*ring);
-+	if (for_tx)
-+		nr_slots = B43legacy_TXRING_SLOTS;
-+	else
-+		nr_slots = B43legacy_RXRING_SLOTS;
-+
-+	ring = kzalloc_flex(*ring, meta, nr_slots);
- 	if (!ring)
- 		goto out;
-+
-+	ring->nr_slots = nr_slots;
- 	ring->type = type;
- 	ring->dev = dev;
+-	ne_mem_region = kzalloc_obj(*ne_mem_region);
++	max_nr_pages = mem_region.memory_size / NE_MIN_MEM_REGION_SIZE;
++	ne_mem_region = kzalloc_flex(*ne_mem_region, pages, max_nr_pages);
+ 	if (!ne_mem_region)
+ 		return -ENOMEM;
  
--	nr_slots = B43legacy_RXRING_SLOTS;
--	if (for_tx)
--		nr_slots = B43legacy_TXRING_SLOTS;
+-	max_nr_pages = mem_region.memory_size / NE_MIN_MEM_REGION_SIZE;
 -
--	ring->meta = kzalloc_objs(struct b43legacy_dmadesc_meta, nr_slots);
--	if (!ring->meta)
--		goto err_kfree_ring;
- 	if (for_tx) {
- 		ring->txhdr_cache = kcalloc(nr_slots,
- 					sizeof(struct b43legacy_txhdr_fw3),
- 					GFP_KERNEL);
- 		if (!ring->txhdr_cache)
--			goto err_kfree_meta;
-+			goto err_kfree_ring;
+-	ne_mem_region->pages = kzalloc_objs(*ne_mem_region->pages, max_nr_pages);
+-	if (!ne_mem_region->pages) {
+-		rc = -ENOMEM;
+-
+-		goto free_mem_region;
+-	}
+-
+ 	phys_contig_mem_regions.regions = kzalloc_objs(*phys_contig_mem_regions.regions,
+ 						       max_nr_pages);
+ 	if (!phys_contig_mem_regions.regions) {
+@@ -1049,7 +1041,6 @@ static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
+ 		put_page(ne_mem_region->pages[i]);
+ free_mem_region:
+ 	kfree(phys_contig_mem_regions.regions);
+-	kfree(ne_mem_region->pages);
+ 	kfree(ne_mem_region);
  
- 		/* test for ability to dma to txhdr_cache */
- 		dma_test = dma_map_single(dev->dev->dma_dev, ring->txhdr_cache,
-@@ -643,7 +643,7 @@ struct b43legacy_dmaring *b43legacy_setup_dmaring(struct b43legacy_wldev *dev,
- 					sizeof(struct b43legacy_txhdr_fw3),
- 					GFP_KERNEL | GFP_DMA);
- 			if (!ring->txhdr_cache)
--				goto err_kfree_meta;
-+				goto err_kfree_txhdr_cache;
+ 	return rc;
+@@ -1398,8 +1389,6 @@ static void ne_enclave_remove_all_mem_region_entries(struct ne_enclave *ne_encla
+ 		for (i = 0; i < ne_mem_region->nr_pages; i++)
+ 			put_page(ne_mem_region->pages[i]);
  
- 			dma_test = dma_map_single(dev->dev->dma_dev,
- 					ring->txhdr_cache,
-@@ -660,7 +660,6 @@ struct b43legacy_dmaring *b43legacy_setup_dmaring(struct b43legacy_wldev *dev,
- 				 DMA_TO_DEVICE);
+-		kfree(ne_mem_region->pages);
+-
+ 		kfree(ne_mem_region);
  	}
- 
--	ring->nr_slots = nr_slots;
- 	ring->mmio_base = b43legacy_dmacontroller_base(type, controller_index);
- 	ring->index = controller_index;
- 	if (for_tx) {
-@@ -694,8 +693,6 @@ struct b43legacy_dmaring *b43legacy_setup_dmaring(struct b43legacy_wldev *dev,
- 	free_ringmemory(ring);
- err_kfree_txhdr_cache:
- 	kfree(ring->txhdr_cache);
--err_kfree_meta:
--	kfree(ring->meta);
- err_kfree_ring:
- 	kfree(ring);
- 	ring = NULL;
-@@ -720,7 +717,6 @@ static void b43legacy_destroy_dmaring(struct b43legacy_dmaring *ring)
- 	free_ringmemory(ring);
- 
- 	kfree(ring->txhdr_cache);
--	kfree(ring->meta);
- 	kfree(ring);
  }
- 
-diff --git a/drivers/net/wireless/broadcom/b43legacy/dma.h b/drivers/net/wireless/broadcom/b43legacy/dma.h
-index b5c1a51db2a4..edd06225b64f 100644
---- a/drivers/net/wireless/broadcom/b43legacy/dma.h
-+++ b/drivers/net/wireless/broadcom/b43legacy/dma.h
-@@ -122,8 +122,6 @@ enum b43legacy_dmatype {
- struct b43legacy_dmaring {
- 	/* Kernel virtual base address of the ring memory. */
- 	void *descbase;
--	/* Meta data about all descriptors. */
--	struct b43legacy_dmadesc_meta *meta;
- 	/* Cache of TX headers for each slot.
- 	 * This is to avoid an allocation on each TX.
- 	 * This is NULL for an RX ring.
-@@ -161,6 +159,8 @@ struct b43legacy_dmaring {
- 	/* Last time we injected a ring overflow. */
- 	unsigned long last_injected_overflow;
- #endif /* CONFIG_B43LEGACY_DEBUG*/
-+	/* Meta data about all descriptors. */
-+	struct b43legacy_dmadesc_meta meta[] __counted_by(nr_slots);
+diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.h b/drivers/virt/nitro_enclaves/ne_misc_dev.h
+index 2a4d2224baba..f419e04007f8 100644
+--- a/drivers/virt/nitro_enclaves/ne_misc_dev.h
++++ b/drivers/virt/nitro_enclaves/ne_misc_dev.h
+@@ -28,8 +28,8 @@ struct ne_mem_region {
+ 	struct list_head	mem_region_list_entry;
+ 	u64			memory_size;
+ 	unsigned long		nr_pages;
+-	struct page		**pages;
+ 	u64			userspace_addr;
++	struct page		*pages[];
  };
  
- 
+ /**
 -- 
 2.54.0
 
