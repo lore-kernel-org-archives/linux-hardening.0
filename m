@@ -1,98 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674F232692B;
-	Sun, 10 May 2026 21:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE0B36494B;
+	Mon, 11 May 2026 02:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778449253; cv=none; b=mKi3YWc7z78eZhLm+LQ9WEMclRwX1SuNsyhg92tU8UKokUKoVolQRbMN71achaudFHZqijgMUaMSkJE9bFMB12LkBh3Qd3r0LFlVvedFt4qr3OcfCspLHowYT8L99OjEJ6TjyY1S2MH7yRolK9YYmSdAA56Rbv+eTkAil153Czc=
+	t=1778468166; cv=none; b=i+qGXgTelixoDbtst2ivXOn65zxZJIc0u1+e5whQR4RfnWJvLx6gQIqyUKoBGQJ6hSgvzdZaqwU12jYn1gp/3utxUTzRv0QoTlpO0FzTXKLTYPQUCi+bESI9uV96PrJm18VqPOaxoWgEYYaxCu7n0K12RFowF5eZVO2kiaxvWAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778449253; c=relaxed/simple;
-	bh=hXygK0G1nkNaf+vivvqESQJciIwrQ+dae5+fHbGeSio=;
+	s=arc-20240116; t=1778468166; c=relaxed/simple;
+	bh=y+M3UoaxPO64rUtSQGFXguLqRLn4phJrx2W4zZYFbcU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u/UEI/js/L0Pf38O0lIsYWJibQq7IwsbtBxmYmayTSBkRF96ZPSMI8lK0E0N/l/GEkBI4yRByImowr7h8aNR162f90p+9gWSHy02g5bO0+wWCHbZoXPaW9zRvVLa5bk4LpC+QypYzz3KCRuW2HHkRL8USlahYUXEBvSml25UfGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQSTQ/vT; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aB4lygGu+xq9AOm2RrFwM9U+8pMjuRvn0hqMt3gNSC6iOGovLcfwTnB7LE4b6RE/JbdViut9I9mzTgLV0xe5hezc94E6nejpNVRacZcTWpD2JC59CWgWJmIgPsGJZojlouGmHihOBAexObLhJeg/nL7mQY41BiN54aiH64gJrtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=uYHZXYuu; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQSTQ/vT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778449251; x=1809985251;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hXygK0G1nkNaf+vivvqESQJciIwrQ+dae5+fHbGeSio=;
-  b=IQSTQ/vT6sXIAVlnePa/elToEHKfPYnyFHrf8hHtl23ErrKqFFKu25bm
-   GhiVuvZJNnCxDGGnhNSgPxuOUKiG4+4PwRD0kPidyjiB9xyN9uT7nPfKP
-   zdsTGZY1851f/g4+hU6E8GGlNFylpNul5VD1PCVP4qYPw26qCEMf1y7z+
-   tI0LNJPJINRh0PXZ+kRTCJkoJNX4oDZGQ6dow/zp8qONKT4Kx6iEObdnE
-   Im5xN3XJg9PW8rLo2FBMsUayssLF1WU6tY2yr7C8g/EotD53xA6Vm5KSx
-   nh68yI4TysMpg6WMifPFDLHjxIeOp59ohpLNIJSQFp0NDlzoGEx4PuVcE
-   Q==;
-X-CSE-ConnectionGUID: vV4SY7JWRF2NbrjtKfEKCg==
-X-CSE-MsgGUID: dWQEEr9XRkW9hBpCNXuAUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11782"; a="104797735"
-X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
-   d="scan'208";a="104797735"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2026 14:40:50 -0700
-X-CSE-ConnectionGUID: JpwARR4wQqWWIRcLPmbppQ==
-X-CSE-MsgGUID: x5NVtusiQTqC0hpHwIzVig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
-   d="scan'208";a="237511727"
-Received: from igk-lkp-server01.igk.intel.com (HELO bdf09bfdbd5f) ([10.211.93.152])
-  by orviesa007.jf.intel.com with ESMTP; 10 May 2026 14:40:48 -0700
-Received: from kbuild by bdf09bfdbd5f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wMBtG-000000007mz-20dT;
-	Sun, 10 May 2026 21:40:46 +0000
-Date: Sun, 10 May 2026 23:40:10 +0200
-From: kernel test robot <lkp@intel.com>
-To: Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH] mm: make zeropage read-only
-Message-ID: <202605102324.g5xWKUc3-lkp@intel.com>
-References: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="uYHZXYuu"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1778468155; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=0upIL/r5PlHA2QmAdZKfeZ5Wg4iPfn0PljTHC25lCFM=;
+	b=uYHZXYuupdm71JRKi5At4wOfByW6BFKCxsGLSV2iMcgraoD0O88djuhrZ+NRqvfct/ia/eyCzgOX+lTgQO0n9o68gVojs3N6C1BpDgSSWwFASPRXgy8C9qLeXMIfObVV2AvLv3rgE5d4efrfqQOtkAUdBV1WIORxCKUq8VmN71k=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=feng.tang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0X2dsRpW_1778468153;
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0X2dsRpW_1778468153 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 11 May 2026 10:55:54 +0800
+Date: Mon, 11 May 2026 10:55:53 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Liz Prucka <lizprucka@google.com>,
+	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
+Message-ID: <agFFOZvRHMWCtPHm@U-2FWC9VHC-2323.local>
+References: <20260427153416.2103979-17-ardb+git@google.com>
+ <20260427153416.2103979-19-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260508-ro-zeropage-v1-1-9808abc20b49@google.com>
+In-Reply-To: <20260427153416.2103979-19-ardb+git@google.com>
 
-Hi Jann,
+On Mon, Apr 27, 2026 at 05:34:19PM +0200, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> The empty zero page is used to back any kernel or user space mapping
+> that is supposed to remain cleared, and so the page itself is never
+> supposed to be modified.
+> 
+> So make it __ro_after_init rather than __page_aligned_bss: on most
+> architectures, this ensures that both the kernel's mapping of it and any
+> aliases that are accessible via the kernel direct (linear) map are
+> mapped read-only, and cannot be used (inadvertently or maliciously) to
+> corrupt the contents of the zero page.
 
-kernel test robot noticed the following build warnings:
+Reviewed-by: Feng Tang <feng.tang@linux.alibaba.com>
 
-[auto build test WARNING on 917719c412c48687d4a176965d1fa35320ec457c]
+We did hit the issue that zero page got corrupted due to non-kernel
+reason earlier this year, and it took us weeks to track it down to
+zero page corruption and the final root cause, as it randomly happened
+to different user space tasks. Thanks for the patch!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jann-Horn/mm-make-zeropage-read-only/20260510-200814
-base:   917719c412c48687d4a176965d1fa35320ec457c
-patch link:    https://lore.kernel.org/r/20260508-ro-zeropage-v1-1-9808abc20b49%40google.com
-patch subject: [PATCH] mm: make zeropage read-only
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260510/202605102324.g5xWKUc3-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260510/202605102324.g5xWKUc3-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605102324.g5xWKUc3-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   /tmp/ccZJHv5S.s: Assembler messages:
->> /tmp/ccZJHv5S.s:14940: Warning: setting incorrect section attributes for .rodata..page_aligned
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  mm/mm_init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index f9f8e1af921c..6ca01ed2a5a4 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -57,7 +57,7 @@ unsigned long zero_page_pfn __ro_after_init;
+>  EXPORT_SYMBOL(zero_page_pfn);
+>  
+>  #ifndef __HAVE_COLOR_ZERO_PAGE
+> -uint8_t empty_zero_page[PAGE_SIZE] __page_aligned_bss;
+> +uint8_t empty_zero_page[PAGE_SIZE] __ro_after_init __aligned(PAGE_SIZE);
+>  EXPORT_SYMBOL(empty_zero_page);
+>  
+>  struct page *__zero_page __ro_after_init;
+> -- 
+> 2.54.0.rc2.544.gc7ae2d5bb8-goog
+> 
