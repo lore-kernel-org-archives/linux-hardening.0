@@ -1,151 +1,162 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556B22D0C97
-	for <linux-hardening@vger.kernel.org>; Tue, 12 May 2026 03:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778556082; cv=pass; b=ECiZ/DMl/lrrdrm+oUauXgGFHmNAWlH8CCRNKGfmXqhnmZnYWNNvU8KedJBQXI7rb+4xbBsNkqhl1lYs/su5nAnyMpRixj8BMCaUcpTCq1U27EaNITWBA84P6mAxVr99q09E0VlkpAK/3rmlXvNfxcYOmDeAfntUZ/rTZGFgP30=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778556082; c=relaxed/simple;
-	bh=DQ6N9oauDzHXFObRY052Krwwsu+VJK2/LFDTGHUly6I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pxWqAzsdc/MoaBCs7JmmIVhKxCxZCMBDM455NOn7IGHMr1R6FcJeSX7fP2/YjrtDLmWK/Of/E04cWDi0FHJnkoYtpf2qPWQ3+ckIKHBek9naGg1nUd2Dcp4T3E2xJjzV62RgMNqK+Frnln+k5oGEwNJREq139XEUc1ljrEmzh10=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgf4XXcr; arc=pass smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E37226D18;
+	Tue, 12 May 2026 03:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778557049; cv=none; b=SHFqa8Sdgp26ZHYS7QHIt9lFTkX2YYkOasr8advX9/29iAAAF/OfjhCiNwZ/zqIVLIycQSfn9Z1zXohknVq4qzpctzshrROubo24us4ojapkx+/D2tspeiNt+hSHx01n45MhZeQFjnvVW7bcy5TUM6nD9/8Xy1g5JtdItjM6LCU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778557049; c=relaxed/simple;
+	bh=pwneY8tqOMXV/Za/BC8NmNmIjbTm6BzCxeG9cSc4u/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FV1FffrVAwHrkWS8iLWa9Q7dbpIBJXeQ4GQ9nzWR70fXPHFpa7mFax/bmVqXpuG0UjgFDhYykGfHJQ+x6vYFeKRX/RZ8PNlYla6gTiAwTGWDr4XC5xguKbD5yaYD06GYcrO0t5cTcP/Uz78Pbp2rR/xF16HA+r7NMwbEHC0IYLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFnyuxLx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgf4XXcr"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-bcf41831af1so281590566b.3
-        for <linux-hardening@vger.kernel.org>; Mon, 11 May 2026 20:21:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778556080; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jWfA9U2l6IrKw4AIxTHhetNrK3mJsGgBKunjievuEBDkximbt0IHZMRfnxjut7fGE5
-         uX4LplORgXImHFOTnqVr5H89BCzEpMjho8p6JSQA5ihVpjdhUOu5H/dTcbpzbnu9sXSN
-         eLbKdJt7lJi4u9uzM2TCdoQh+0Tvr1P5YGVO28xYGY4324/IJvI9K8RVgt1qhQMNO0rL
-         tVfvBLyp66WlXfguGDoFzI44lqlv3yXorbLgWXOXs85BfrW0q0DJ7kyroOBPiF6fg24t
-         BtcdjvHpF9wPFOlTyCH5nwKRzwGU+hDvRpJoitiO4waGkDm57kVL++40eqgmpxD0Aeou
-         lLgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=HYMrozMNVZ904cuoOkrVpAxkzPl3CJ2UJtFltjYOwQU=;
-        fh=2r5DhSZakd36OTuIwoDcBBwdiTLn531/JvFAW2bfLQE=;
-        b=LCPE90ZpVC0l+xLsEtobr8LDT3egK37BTkz2jsWBANqAikzoRhz4DKSuXvWCaSL8dg
-         EbCRys1abuDPgFDjyzBp7mfUuob4fHJQZO5Vnqn525Yg1UMbhxtR5CesQaSZCAlL9Vaz
-         4uW1ApUGtaGetmr2LFESOf/6l1fNzUtH5gVpi6z0RLNHl9vKSJQN3B45T8O9R9Unj70T
-         RWCxo8L5aPTRngPyVtmOhSo0ZI/bfdVJpeAf+uI/NIe9BGSnHINXNhJlcLuwg17ilvMl
-         KUSSM2pX/PN6kxoEcnp96N6FlDvZKnBeyxUiX1+UPV6o8CB2GavOnC/enpO7zNj6q38p
-         zyHQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778556080; x=1779160880; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HYMrozMNVZ904cuoOkrVpAxkzPl3CJ2UJtFltjYOwQU=;
-        b=hgf4XXcrpZKhUcXa64RtGRaGTYt/keJqkQr5boTlmfhkBzpCQqFP21hk7tiuPF9uIB
-         e0n369ctGt1nZ5Dk7uTNcsgtA2yvZaH/FE/tOB4R/+u60i78pmVVxzygySaHccjWpNvm
-         J9C64EVQqFrIHdmAYB7bHDaUjSeC7mNWW3x6ljzODRESFN52EXmNNUFTVsHIMsCSNlPa
-         tkgFczbZdDbalV7FfHrf/9Clv3Q4hVcBbsytMMK9y/TuUowEnBfOw4hwdbSG8zBth7nm
-         vVSBObsJ6S/suYMDND7sOGSqyts7PA+Vmn0p8URT1eHi7CQoEl9py1niAwM0TSZEIrtJ
-         otLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778556080; x=1779160880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HYMrozMNVZ904cuoOkrVpAxkzPl3CJ2UJtFltjYOwQU=;
-        b=lXqpIdKZWKqNSpHKSeVV8Asgtt93pNqwtCyAvRoXRqy9Vnd/gjwN+W9l7RarpwHwP8
-         W0N4z2PdvNfOQaqV42CcqjNnXkqkqn1FGuPNdgirExTEWy4/z+Wk1aja9zNbaX+18SKQ
-         5gz6w8toGYE+8sgOSxgpq3mS7hqTQZe7vkUKu4nv95Yk1e/mtDBKmj+3VRobPvDj6C3c
-         UlStTn3gD72C6TooBA1nq07zACicDVgchzo4T2uu72sCzPm66fEP7UhBKjxnO1IfIGr6
-         s6G9OOw5ZB3XDK291Kts0Q+slYYVR3NyRKRWocxsysfCEVDM4Sq7deDGA3txcinuJwFX
-         RbbA==
-X-Forwarded-Encrypted: i=1; AFNElJ9P9ioWS0dNyMLTKSaa6CtigN0R0ukZhav6Ep5q/XBjOLFfzKIeYEWc4oT3nV3FLmRItQwr3ZlYsDVnHiA3vTw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0wFJ8EZ8uZIwpRA2QX4LoH9ZximCtTmw7Kk2SplzgssJw2xVx
-	Y0s2nIBr5NF1xZfpDlsd0hyfojvbxkIkweR+Fc/bxB/8reknEl54rHNY0yvFHk6sccxQCH/Sakt
-	+EOpRCPpofcjj5f8ke9Wc5Uc2385nhrE=
-X-Gm-Gg: Acq92OEUh2XSzAAUzD6vXmfTuNuYhgAWFZfmLytHV7mf6Yf31MKfThJHad5/aQx3wUL
-	kFYYGMmv+q1670ntWp7XsDmFaeGjoCgSFC/ZpBRhMjHu+qZQE+DDCnAvDOhE1RjbcIUk1/2qefV
-	MbEcGAUdpL8NAiIiuOJH6om/WI8RxsGgghuq5aHBwRCpgE36of3r8OtARzhckLz1xdOs60/EHi0
-	/8AdLsPSHeZcecISu23waADmiJr1/oZD6yYPLgHfNi12g9rqSHXExtS1Eqz7VF7vaP/uDB/Ld6g
-	d2b2b3CF2IMW7kgT+iyM7LZ3Ee511Dxu7/GiUQJHStptNZSsKOhg6ktwAiiAxB3Zsq2wr2XqJpS
-	2h7rO8seORbcV4h5Dqt+xfA9a2EqN8LsqzWr3Y7wF4a7Spf1dZNnVlAehzg==
-X-Received: by 2002:a17:907:7242:b0:b9c:9594:e00 with SMTP id
- a640c23a62f3a-bd28de035e9mr47365766b.1.1778556079539; Mon, 11 May 2026
- 20:21:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFnyuxLx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95198C2BCB0;
+	Tue, 12 May 2026 03:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778557049;
+	bh=pwneY8tqOMXV/Za/BC8NmNmIjbTm6BzCxeG9cSc4u/Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CFnyuxLxWLewCmqP9tCc5Fky1tBtI6M2DzFY+XCXdM055KYVpjAXEhrZFv12K9rSX
+	 vvebPC5LSDOHGqH9Ou8b7C8Re4H9WoEDHi/9t8KFdGi3S+xG3TObCkdsIhBN93Dagk
+	 pwdDcXB86/Q5KOh7qMV4KCNaU2JbMgP3GPxs1mnKzGFYbR140Fzdqsm9N3KL0eIRNC
+	 +eB5zuc9zgC942F+V+GICImCZ2T6vEWOC4LjMO+ur9mQ6u5ksQioBSm+cK9J4iDlfZ
+	 7goNZYbpZCB18QSHEuII/i3YlMN4MzmlGxI5Fb6qXncgscqXxAqPt+lz3sGbL2NoOY
+	 ojNJE6cC7UQDw==
+Date: Tue, 12 May 2026 12:37:26 +0900
+From: "Harry Yoo (Oracle)" <harry@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@gentwo.org>, Hao Li <hao.li@linux.dev>, David Rientjes <rientjes@google.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Alexander Potapenko <glider@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com, 
+	llvm@lists.linux.dev, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Florent Revest <revest@google.com>, Jann Horn <jannh@google.com>, KP Singh <kpsingh@kernel.org>, 
+	Matteo Rizzo <matteorizzo@google.com>, GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH v3 1/2] slab: support for compiler-assisted type-based
+ slab cache partitioning
+Message-ID: <jnfrygcxgl6zbs3fifgsxh6233fr2ou7vyfs7n44xa5cf3dqqt@rhjdx5ifkdur>
+References: <20260424132427.2703076-1-elver@google.com>
+ <6f2bd63a-dc02-4631-a3a5-7ec8e58a4a4e@kernel.org>
+ <afkOMIPu1WNFE9MS@elver.google.com>
+ <CANpmjNM261J5qefMvmUXWZGBVz-KBs7GkbpdNMfTOvNJ-=LiZQ@mail.gmail.com>
+ <afz7pZADZPD4mKJr@MacBook-Air.tail10959e.ts.net>
+ <af3xcFjrZSZFG846@elver.google.com>
+ <rz7dt4wghum6beghfgm6suqje6jeivrensojjalfis5zeuyen7@6bj7kfpqb4q5>
+ <CANpmjNNevjTo0uwo3DJdDc=PpQpyzj301kFT39OBoCNLW0A8VQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260430225309.117557-1-rosenp@gmail.com> <db8119fd-6d40-5df0-68ef-5579290c5bb9@linux.intel.com>
-In-Reply-To: <db8119fd-6d40-5df0-68ef-5579290c5bb9@linux.intel.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Mon, 11 May 2026 20:21:06 -0700
-X-Gm-Features: AVHnY4JZN-SXXU654PMY1RzzMrowggVLGe4oxCAc5hjbYcCbMH4izfBe-B-8Mkw
-Message-ID: <CAKxU2N-L9HMnNpuUhUaWo-doW0cJg1YvuaO9urLreJ3uOzqcBA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86/intel/tpmi/plr: allocate die_info with plr
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNNevjTo0uwo3DJdDc=PpQpyzj301kFT39OBoCNLW0A8VQ@mail.gmail.com>
 
-On Mon, May 11, 2026 at 9:31=E2=80=AFAM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Thu, 30 Apr 2026, Rosen Penev wrote:
->
-> > Simplifies allocations slightly.
+On Mon, May 11, 2026 at 11:34:53AM +0200, Marco Elver wrote:
+> On Mon, 11 May 2026 at 10:31, 'Harry Yoo (Oracle)' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
 > >
-> > Add __counted_by for extra runtime analysis.
+> > On Fri, May 08, 2026 at 04:21:36PM +0200, Marco Elver wrote:
+> > > I think I have a solution for this mess, see below.
+> > >
+> > > I would not send it as 1 series, but only include the slab changes (+
+> > > instruction_pointer.h change to introduce _CODE_LOCATION_) as one
+> > > series, to go through the slab tree. The rest of the patches would go to
+> > > respective arch maintainers.
 > >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > ---
-> >  drivers/platform/x86/intel/plr_tpmi.c | 9 ++-------
-> >  1 file changed, 2 insertions(+), 7 deletions(-)
+> > I'm assuming this will be a follow-up and reviewing patch 1
+> > (and waiting for Jon's thuoghts on patch 2)
+> 
+> I'll be sending v4 shortly.
+
+Thanks!
+
+> > > diff --git a/include/linux/instruction_pointer.h b/include/linux/instruction_pointer.h
+> > > index aa0b3ffea935..dfe73aafddb8 100644
+> > > --- a/include/linux/instruction_pointer.h
+> > > +++ b/include/linux/instruction_pointer.h
+> > > @@ -8,6 +8,30 @@
+> > >
+> > >  #ifndef _THIS_IP_
+> > >  #define _THIS_IP_  ({ __label__ __here; __here: (unsigned long)&&__here; })
+> > > +/*
+> > > + * The current generic definition of _THIS_IP_ is considered broken by GCC [1]
+> > > + * and Clang [2]. In particular, the address of a label is only expected to be
+> > > + * used with a computed goto.
+> > > + *
+> > > + *   [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071
+> > > + *   [2] https://github.com/llvm/llvm-project/issues/138272
+> > > + *
+> > > + * Mark it as broken, so that appropriate fallback options can be implemented
+> > > + * for architectures that do not define their won _THIS_IP_.
+> > > + */
+> > > +#define HAS_BROKEN_THIS_IP
+> > > +#endif
 > >
-> > diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x=
-86/intel/plr_tpmi.c
-> > index 05727169f49c..2fd27e80bc1f 100644
-> > --- a/drivers/platform/x86/intel/plr_tpmi.c
-> > +++ b/drivers/platform/x86/intel/plr_tpmi.c
-> > @@ -57,9 +57,9 @@ struct tpmi_plr_die {
+> > As long as _THIS_IP_ is broken on some arches, it cannot be used anyway
+> > when in a general API that can be used by arbitrary users?
+> 
+> It more or less works today, and for debugging or tracing it's "good
+> enough" in most cases.
+> 
+> The plan would be to phase out the generic _THIS_IP_ once all
+> architectures have a correct _THIS_IP_ implementation.
+
+Ack.
+
+> > Is it something that can be fixed in all arches over time?
+> 
+> Yes, I have patches for that.
+> 
+> > > +/*
+> > > + * _CODE_LOCATION_ provides a unique identifier for the current code location.
+> > > + * When _THIS_IP_ is broken (generic version), we fall back to a static marker
+> > > + * which guarantees uniqueness and resolves to a constant address at link time,
+> > > + * avoiding runtime overhead and compiler optimizations breaking it.
+> > > + */
+> > > +#ifdef HAS_BROKEN_THIS_IP
+> > > +#define _CODE_LOCATION_ ({ static const char __here; (unsigned long)&__here; })
 > >
-> >  struct tpmi_plr {
-> >       struct dentry *dbgfs_dir;
-> > -     struct tpmi_plr_die *die_info;
-> >       int num_dies;
-> >       struct auxiliary_device *auxdev;
-> > +     struct tpmi_plr_die die_info[] __counted_by(num_dies);
-> >  };
+> > Nice!
 > >
-> >  static const char * const plr_coarse_reasons[] =3D {
-> > @@ -278,15 +278,10 @@ static int intel_plr_probe(struct auxiliary_devic=
-e *auxdev, const struct auxilia
-> >       if (!num_resources)
-> >               return -EINVAL;
+> > Yes, we don't really need the exact code location
+> > for partitioning kmalloc caches.
 > >
-> > -     plr =3D devm_kzalloc(&auxdev->dev, sizeof(*plr), GFP_KERNEL);
-> > +     plr =3D devm_kzalloc(&auxdev->dev, struct_size(plr, die_info, num=
-_resources), GFP_KERNEL);
->
-> Is there some particular reason why we don't have devm_kzalloc_flex()
-> other than that nobody has yet bothered to added one.
-I'm not up to date with the hardening people. Anyway when it does,
-this will get transformed by a treewide patch.
->
-> One of the most annoying thing with the various alloc APIs is that devm_*
-> variants seem to never keep up with them. It would be nice if there would
-> be some generic solution that when somebody decides a new alloc api func,
-> the corresponding devm counterpart would be auto-generated for it.
->
-> --
->  i.
->
+> > IIRC lockdep does a similar thing to define lock classes (unique for
+> > each lock init location)
+> >
+> > > +#else
+> > > +#define _CODE_LOCATION_ _THIS_IP_
+> > >  #endif
+> >
+> > Probably we don't need this fallback?
+> 
+> x86-64 is the only arch that has working fast _THIS_IP_, and adding
+> static __here markers to bss is rather wasteful.
+
+Ouch, I see.
+
+> More architectures will be supporting _THIS_IP_ properly once I get to
+> send the patches. The mainstream architectures all have a reasonable
+> and fast way to get the current IP, so we don't need to waste bss
+> space there.
+
+Ack.
+
+-- 
+Cheers,
+Harry / Hyeonggon
