@@ -1,113 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADD743E4AC;
-	Tue, 12 May 2026 06:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B0B33DED5
+	for <linux-hardening@vger.kernel.org>; Tue, 12 May 2026 07:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778566811; cv=none; b=RXtPjXOEzNRUwRwF4K2aZcT78h/gSgiY00ROyEHXFo4H5QFbNH5WszCF4dmK4hpZDOEqSKlKozH7yv7AjHh7NYsc+lixm8FAwl0znnUaU2GUlTYm2xAt1rLWKrr4irPV2pVEPZpLKpCJGAVHsaTeJoJqKIDKjZ/NlC0tDjdUHwI=
+	t=1778572232; cv=none; b=Tg+BcIr6QRA8hD643K+9+xxuQX+x6zglIENHTN7D90PADIsgKHfz1cpWZsFGmXR1pSZHEo0Iz3/11HeUgPq5u0xXIekuAKINq9dT5dMUrCn4EBg5NA+0MRgWLuNMhxmDDE3e4gUjaPq4rlQ4sVQO1gRhgysnH3wpAr72EvY/lNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778566811; c=relaxed/simple;
-	bh=mdePbjeNsfhn1GjWkUJByHSc9WmgU55uX6g5q5krJDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pUoqAm/tbqrndgrq3Ovcm/Phi8MjJtnaZhX7NLcZ0O+Xtb+UfOQE9IVBEuJAnY93snhE99qnK8bPWx0NyI8BKXbxVzWYWQIA17DBPXXNHZLf7awBd/zhBUlNM3effuDE4uPADjqeyFaKx3aVW5uftGccYKz+/bZYDla+D6Lkf68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iv9WhdFQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778572232; c=relaxed/simple;
+	bh=cSLK/AmERqOQkwmxHvV3fWQaVPlJCRrSGe1odDeKqi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kalEzmFv1JTiCwKkqCMKNZP3zcUePaTLJOnbuwnZay3fVYLE6RUTsapts2Wdm7KuZ4NuNnwvtWBtqY8FpXmstS4QmdYVrtRxnJLGdTsQRte4g6c5sgbV6eiMUTmFpibT7rzGJ/xPtnMnyci8wGNuVZSi7pv2FQbWOEQ9tv679S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=u71r1l9v; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iv9WhdFQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7631C2BCB0;
-	Tue, 12 May 2026 06:20:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778566809;
-	bh=mdePbjeNsfhn1GjWkUJByHSc9WmgU55uX6g5q5krJDw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Iv9WhdFQCVyrp77Mkoz9OM2hiDo0iT2RKeHM5iUPqNvrHjEgusLl4WJ54q5apKQkG
-	 MpWPJWW3h0uS8XpPmnQJBPngamllwr36WT/bZpPHbt7xtzoo8PP07Q7ZIasKOP9oaI
-	 3Cs49iy0YeY/XtB7NETpaqm1y9s3mjUMH0Fk8Ebk/HZ6WYGu+mJ1as/5oE2t6eeZN9
-	 SBEWhh0v6LIQurjqDc1xL4qIEDB9bkQohd3X83f7GZ6Jpeo12KrabryqEW7wUUO/BK
-	 kFszctyXhERWNBy4LavKOM3cUsxHDDWENc45PR2OoRYuNdL6hfyqBQfoIR6+HTLdzP
-	 ZVqIjYiXckmKQ==
-Date: Tue, 12 May 2026 08:20:03 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hardening@vger.kernel.org, peter.griffin@linaro.org,
- andre.draszik@linaro.org, willmcvicker@google.com, jyescas@google.com,
- krzk@kernel.org, kernel-team@android.com
-Subject: Re: [PATCH] docs: kernel-doc: python: strip __counted_by_ptr macro
-Message-ID: <20260512082003.4b36bdaf@foz.lan>
-In-Reply-To: <20260506-kdoc-__counted_by_ptr-v1-1-70763486871f@linaro.org>
-References: <20260506-kdoc-__counted_by_ptr-v1-1-70763486871f@linaro.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u71r1l9v"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cZW4QLduKaLBjiIqjgzK1kiw6S7DzybC6JirzE7iAFo=; b=u71r1l9vJmIvIuop427EViNEIW
+	0yQB0VP6BoI2+ng1VRYAwM8LpmA9ki/IqtH413OlxxsQMgp9MgpvtFSacX2F7XLMwIXkyN62XbWZG
+	bLgRp6efqS+HyLZ57ppORy52VGxWEP2tSjywyZPI5wKI9tgK4UcjDpYgzEtrZ/cry8fLpWv/Ml+5v
+	djKOtg6JaWWH/jDSBXQ8ODHGPBdsJgehxMCz4dHOc4VRuQ6B1/XBiSwaku4423XMrnqgIxn06R9/W
+	oqN05AoZhemI7TpDjZtJrU5jIX75B3OmaA8jRn3ormzZXV4ESoseG9RVMcnRYZcYIxidDvzmCMqZn
+	zIVFf/Tg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wMhsa-00000009OKa-2juC;
+	Tue, 12 May 2026 07:50:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5B6993007E1; Tue, 12 May 2026 09:50:11 +0200 (CEST)
+Date: Tue, 12 May 2026 09:50:11 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Andrew Pinski <andrew.pinski@oss.qualcomm.com>,
+	Uros Bizjak <ubizjak@gmail.com>, Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>,
+	Jeff Law <jeffreyalaw@gmail.com>, Andrew Pinski <pinskia@gmail.com>,
+	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
+	Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable, Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v11 0/7] Introduce Kernel Control Flow Integrity ABI
+ [PR107048]
+Message-ID: <20260512075011.GU3126523@noisy.programming.kicks-ass.net>
+References: <20260511194847.faster.180-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260511194847.faster.180-kees@kernel.org>
 
-On Wed, 06 May 2026 11:04:12 +0000
-Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+On Mon, May 11, 2026 at 12:48:44PM -0700, Kees Cook wrote:
+> Hi,
+> 
+> This series implements[1][2] the Linux Kernel Control Flow Integrity
+> ABI, which provides a function prototype based forward edge control flow
+> integrity protection by instrumenting every indirect call to check for
+> a hash value before the target function address. If the hash at the call
+> site and the hash at the target do not match, execution will trap.
+> 
+> I was asked to wait to resend this series until gcc 16 released, which
+> it has now. I'm hoping we can land the front-, middle-, and back-ends
+> for aarch64 and x86_64. I'd really like to get this in a position where
+> more people can test with GCC snapshots, etc. Since I don't have commit
+> access, who is the right person to commit this?
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> Changes since v10[3]:
+> 
+> - Rebase to latest.
+> - Update tests to aarch64 brk instruction immediate printing in hex.
+> 
+> [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=107048
+> [2] https://github.com/KSPP/linux/issues/369
+> [3] https://lore.kernel.org/linux-hardening/20260107200301.better.465-kees@kernel.org/
+> 
+> Kees Cook (7):
+>   typeinfo: Introduce KCFI typeinfo mangling API
+>   kcfi: Add core Kernel Control Flow Integrity infrastructure
+>   kcfi: Add regression test suite
+>   x86: Add x86_64 Kernel Control Flow Integrity implementation
+>   aarch64: Add AArch64 Kernel Control Flow Integrity implementation
+>   arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
+>   riscv: Add RISC-V Kernel Control Flow Integrity implementation
 
-> The `__counted_by_ptr` macro was recently introduced [1] to extend
-> bounds checking semantics to standard dynamically allocated pointers.
-> 
-> However, the new Python implementation of kernel-doc does not currently
-> recognize it as a compiler attribute. When kernel-doc encounters a
-> struct member annotated with this macro, it fails to parse the variable
-> name correctly, resulting in false-positive warnings like:
-> 
->   Warning: ... struct member '__counted_by_ptr(cmdcnt' not described
-> 
-> Add `__counted_by_ptr` to the `struct_xforms` regex list so it gets
-> safely stripped out during the parsing phase, mirroring the existing
-> behavior for `__counted_by`. Update the corresponding unit tests.
-> 
-> Link: https://git.kernel.org/torvalds/c/150a04d817d8 [1]
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-> ---
->  tools/lib/python/kdoc/xforms_lists.py | 1 +
->  tools/unittests/test_cmatch.py        | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
-> index f6ea9efb11ae..118156ea8cd2 100644
-> --- a/tools/lib/python/kdoc/xforms_lists.py
-> +++ b/tools/lib/python/kdoc/xforms_lists.py
-> @@ -29,6 +29,7 @@ class CTransforms:
->          (CMatch("__aligned"), ""),
->          (CMatch("__counted_by"), ""),
->          (CMatch("__counted_by_(le|be)"), ""),
-> +        (CMatch("__counted_by_ptr"), ""),
->          (CMatch("__guarded_by"), ""),
->          (CMatch("__pt_guarded_by"), ""),
->          (CMatch("__packed"), ""),
-> diff --git a/tools/unittests/test_cmatch.py b/tools/unittests/test_cmatch.py
-> index 7b996f83784d..109141cd2ab8 100755
-> --- a/tools/unittests/test_cmatch.py
-> +++ b/tools/unittests/test_cmatch.py
-> @@ -320,6 +320,7 @@ class TestSubWithLocalXforms(TestCaseDiff):
->          (CMatch('__aligned'), ' '),
->          (CMatch('__counted_by'), ' '),
->          (CMatch('__counted_by_(le|be)'), ' '),
-> +        (CMatch('__counted_by_ptr'), ' '),
->          (CMatch('__guarded_by'), ' '),
->          (CMatch('__pt_guarded_by'), ' '),
->  
-> 
-> ---
-> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-> change-id: 20260506-kdoc-__counted_by_ptr-1e206f3f1dc1
-> 
-> Best regards,
-
-
-
-Thanks,
-Mauro
+Thanks for continuing to push this Kees!
