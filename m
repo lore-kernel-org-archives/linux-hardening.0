@@ -1,158 +1,318 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134001A267;
-	Tue, 12 May 2026 12:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F1C2FE071
+	for <linux-hardening@vger.kernel.org>; Tue, 12 May 2026 13:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778590599; cv=none; b=ZoiA0zjihEURHcUGLHJL8kDoPhk+EiiaYWp5i6WbQq/b+Ihsb/Oml6u6L6VH1OEYxqjJ00m6vMxnVoQNmlG+eNghCkwTt9QdvVVTudN+BQVBjAQtBZkuPDoCjOKbLL0Yxzc21UmY1hpik9itVsXPekKfe1PcmWdcZLerkL3ld68=
+	t=1778592687; cv=none; b=OoIcylkTp9sqLLDpXa/zwr5AHhapCuemj+jYtwpUJoI0xs0SBcW5b8CCqSq4xZ5jBpSGfFOnMZc4Dk15WnERxVwVI+8IwyCazRYNM4A2bUKqhD6hrt9MlSj4D71M6I9SiJQOLWDs2CaVeRsQAZJsGzv06mUNc8T2o+KOMC0yAhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778590599; c=relaxed/simple;
-	bh=Wh+lZzPFifVjKQxtwMnmuUW6xrspawFbZuPQ2q0YSpg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=UHzsbnaL0G7upbPeTsZe7W/x7qe+VB0jLUFJsTr2e/1dRGBu1dz4E47rLf1lgjaIzR7q5XiaazEu6Xrggi+wX1o5xe57/OnWIw2wSgpdJ2B0+c6GvqOKj8EyWzBIE1w4pRYTJPk2fTklc0CLtH8YOJuMh7YeD90zlEpDMrpJkJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmKf42NY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778592687; c=relaxed/simple;
+	bh=gHiae8Tm8WEGQomlCcq5bqDjmepoB3EYSnqeCXvxyYQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZtyGkySm6wgdQ7K6gdRFEfEZ9FYgmpB7HKyHLwLgQn7bpXKKZ5co/fdAdN08Wv3dTwi11m/BQFly+4FyGTPSnGMb+gBT7n81UjpcdvWvLkfQkdvY/Fj1pUoiwhWYMCaJXNvhDW2GZ9VbD8s/6QZrVBdHWxGcWXCSkoiqPPTpDII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOj8TgBA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmKf42NY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E623C2BCF5;
-	Tue, 12 May 2026 12:56:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOj8TgBA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A5E4C2BCF6
+	for <linux-hardening@vger.kernel.org>; Tue, 12 May 2026 13:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778590598;
-	bh=Wh+lZzPFifVjKQxtwMnmuUW6xrspawFbZuPQ2q0YSpg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=DmKf42NY0WWRlCkkNzExpTYBmIQ9HR2Doig1JCAiM4ihoFWAuc3Y+jenpQBYH9ouN
-	 CL0jpI7Lnp9A0611CRZs1ZZIT5Vghp2ksNxoDzCBv0nzMfFX7zITspw9YKuNE0TLMY
-	 gk6sU3nlffh4023Q1JioJOXjMlVoSsyxtYFE9Eb7V+9U5Z/EK6yqeyD6Xnk9ydaUaA
-	 yqTCM6RLXromyApfdUkRviOmb+DSeynH8dazyjF6aXYfHYeEd7p49AUIWJmTN86qNc
-	 33LuNGnkfvhy2kDKUU0yPz3OVRwxECsq66+VBx7Q8JOm9vjK3uWKpu1g7z9o3ZDuwz
-	 w2CfjG6Uv46IQ==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 83F93F4007B;
-	Tue, 12 May 2026 08:56:37 -0400 (EDT)
-Received: from phl-imap-14 ([10.202.2.87])
-  by phl-compute-01.internal (MEProxy); Tue, 12 May 2026 08:56:37 -0400
-X-ME-Sender: <xms:hSMDahjr8fBgo0X2A2B8pbiCglvSsihFvMy8aFmE9oRvch_oaIh0mg>
-    <xme:hSMDag1951UAdP4pjap-AlawMUnIDjVlal4tByB7vjVGOV7cJkeYwt8-wXc4lc_JO
-    RNfZDYr-iMFO9ZUB0Ip3zzKeIp63vMsMYZ5dPYKJ3MJn_WRlGxvIA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduvddukeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrugcu
-    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
-    htthgvrhhnpeefvdejhfelgeefffejgfeivdejvddvleevffeuffduhfeivedvudevveet
-    ffejheenucffohhmrghinheprhgvlhdrrhhonecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheprghrugdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqudeijedthedttdejledqfeefvdduieegudehqdgrrhgusgeppehkvghrnh
-    gvlhdrohhrghesfihorhhkohhfrghrugdrtghomhdpnhgspghrtghpthhtohepudejpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhhshhhumhgrnhdrkhhhrghnughurg
-    hlsegrrhhmrdgtohhmpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghr
-    mhdrtghomhdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtghomhdprh
-    gtphhtthhopehrhigrnhdrrhhosggvrhhtshesrghrmhdrtghomhdprhgtphhtthhopegr
-    rhgusgdoghhithesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhgrnhhnhhesghhooh
-    hglhgvrdgtohhmpdhrtghpthhtoheplhhiiihprhhutghkrgesghhoohhglhgvrdgtohhm
-    pdhrtghpthhtohepshgvthhhjhgvnhhkihhnshesghhoohhglhgvrdgtohhmpdhrtghpth
-    htohepuggrvhhiugeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:hSMDasgmoBdlr5QNfHwUEzI8JmBqWi4-fEZBraqA5kxJ3519fRwUDQ>
-    <xmx:hSMDahX96c-lKMxhuUioA8VjgSniJeeFqXTtHKY1vCxuWJ9iBg0Gkg>
-    <xmx:hSMDaltCU_8JA2q7fkHE0P2all3FAwUxdl43M7L2CMlgOMCyq8Ilqg>
-    <xmx:hSMDaqbBOePMI5ZHODv8aZWZyeiCX99S5zw_gaQs9q_LHhkN8TFMAQ>
-    <xmx:hSMDau4zfN_MC61dB4OvUNbnNDrGEzRZ8v3fCbfFfIis_ErU-AQ-YiyI>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5FD6EC4006E; Tue, 12 May 2026 08:56:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1778592687;
+	bh=gHiae8Tm8WEGQomlCcq5bqDjmepoB3EYSnqeCXvxyYQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FOj8TgBALfFcmvigoRC9qlxAbhsn8BprN1mk6KfHOUDiHXAXr0WNgMDyA+Ka6KWSN
+	 7cJYp+heml34psgNB7/cxlVqtHyyZ/ySkxGzmDAg+Zx0s8s6a0Rl2dkkju+YlA8vGT
+	 I/elKTaRJcLXeaxNork9YKmOKD0oFYJZyyP0KWcypoL50J4uln3D7+YI5lSU4ZXVKb
+	 CJatYpeGH7QOIeYntLYJGePmHoEgpTynD4KAqqqA1LcL1/Ir4n4X+0a1wfFsLUPSq7
+	 RynnQE/5ZbGuPOym21dMMr8sPKA2qrptxQvn/JF/2aQAScoJEsH0scIVUxpaCzZrS/
+	 A2ip+14pLhblg==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b936331786dso699324166b.3
+        for <linux-hardening@vger.kernel.org>; Tue, 12 May 2026 06:31:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/Zp63sjhbyGq7APPYjFtDiCzuRXm39DUmVjPve5JZc7u7BlT6IvxIdpH2PkGg7lrMGzPWlduyOuF/H7qgeV98=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8K8q3QIAIxK/TpsaXBtG/H8Go8OLpQ2bYyVvg3IVPclGWQ9vI
+	KpZq5QoVLlhtS4ogF5uEMFj/DVmAb1K9basTDB0bl1c0ACC4gQCAeNmjZkE/P5ojaDwllKTDtjg
+	k1p9HX6vAkuB5iwu2Aaw4m3FmCKeh+w==
+X-Received: by 2002:a17:907:9404:b0:bcb:9366:4cfb with SMTP id
+ a640c23a62f3a-bcc12668f80mr892101966b.15.1778592685818; Tue, 12 May 2026
+ 06:31:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 12 May 2026 14:56:16 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Jann Horn" <jannh@google.com>
-Cc: "Ard Biesheuvel" <ardb+git@google.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "Will Deacon" <will@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>,
- "Mark Rutland" <mark.rutland@arm.com>, "Ryan Roberts" <ryan.roberts@arm.com>,
- "Anshuman Khandual" <anshuman.khandual@arm.com>,
- "Liz Prucka" <lizprucka@google.com>, "Seth Jenkins" <sethjenkins@google.com>,
- "Kees Cook" <kees@kernel.org>, "Mike Rapoport" <rppt@kernel.org>,
- "David Hildenbrand" <david@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-hardening@vger.kernel.org
-Message-Id: <fb5749bb-bc87-4f0b-9ec9-8a1eb7ded3b5@app.fastmail.com>
-In-Reply-To: 
- <CAG48ez2xJwJDgxSH0u2G==9dOQJQxQ7WsQfU14O1H5hEWic1eA@mail.gmail.com>
-References: <20260427153416.2103979-17-ardb+git@google.com>
- <20260427153416.2103979-19-ardb+git@google.com>
- <CAG48ez1DJ88a0pBCE-Q0VXyDuJgng8zdunb38g4b4JPU88exww@mail.gmail.com>
- <31252c1d-a98d-4635-ab61-ce5b649e256f@app.fastmail.com>
- <CAG48ez2xJwJDgxSH0u2G==9dOQJQxQ7WsQfU14O1H5hEWic1eA@mail.gmail.com>
-Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
-Content-Type: text/plain; charset=utf-8
+References: <20260306163658.2741860-2-robh@kernel.org> <CAPsqS2SVm=LruoyAaBUyEBkDuP1Bv1=a4t=Oucx+jwGTk9CCXQ@mail.gmail.com>
+In-Reply-To: <CAPsqS2SVm=LruoyAaBUyEBkDuP1Bv1=a4t=Oucx+jwGTk9CCXQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 12 May 2026 08:31:14 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK4nMVMA+8b3kOFo2_isAYK_ePeXFcmPn2i4mvsuNObqQ@mail.gmail.com>
+X-Gm-Features: AVHnY4J6n_Uz0xU2sTEd2I86rxlmGjt5KV0_ZdfoyFrQrbgaLJrYRwSIJsRk6qg
+Message-ID: <CAL_JsqK4nMVMA+8b3kOFo2_isAYK_ePeXFcmPn2i4mvsuNObqQ@mail.gmail.com>
+Subject: Re: [PATCH] accel: ethosu: Add performance counter support
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Oded Gabbay <ogabbay@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 11 May 2026, at 16:40, Jann Horn wrote:
-> On Mon, May 11, 2026 at 10:59=E2=80=AFAM Ard Biesheuvel <ardb@kernel.o=
-rg> wrote:
->> I think we should simply do something along the lines of the below,
->> considering that the size of a data object tends to correlate with
->> its minimum alignment.
->>
->> I do find it rather puzzling that the compiler emits empty_zero_page
->> *after* zero_page_pfn - ideally, we'd combine the below with
->> -fdata-sections so that the linker sees all individual objects, but
->> I suspect that would create some problems elsewhere.
->>
->>
->> --- a/include/asm-generic/vmlinux.lds.h
->> +++ b/include/asm-generic/vmlinux.lds.h
->> @@ -452,7 +452,7 @@
->>  #define RO_AFTER_INIT_DATA                                   \
->>         . =3D ALIGN(8);                                         \
->>         __start_ro_after_init =3D .;                            \
->> -       *(.data..ro_after_init)                               \
->> +       *(SORT_BY_ALIGNMENT(.data..ro_after_init))            \
+On Tue, May 5, 2026 at 12:45=E2=80=AFPM Tomeu Vizoso <tomeu@tomeuvizoso.net=
+> wrote:
 >
-> Oh, neat, I didn't realize that's possible. That seems like a nicer
-> approach...
+> Hi Rob,
+>
+> On Fri, Mar 6, 2026 at 5:38=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org=
+> wrote:
+> >
+> > The Arm Ethos-U NPUs have a PMU with performance counters. The PMU h/w
+> > supports up to 4 (U65) or 8 (U85) counters which can be programmed for
+> > different events. There is also a dedicated cycle counter.
+> >
+> > The ABI and implementation are copied from the V3D driver. The main
+> > difference in the ABI is there is no query API for the the event list.
+> > The events differ between the U65 and U85, so the events lists are
+> > maintained in userspace along with other differences between the U65 an=
+d
+> > U85.
+> >
+> > The cycle counter is always enabled when the PMU is enabled. When the
+> > user requests N events, reading the counters will return the N events
+> > plus the cycle counter.
+> >
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+>
+> <snip>
+>
+> >
+> >  struct ethosu_file_priv {
+> >         struct ethosu_device *edev;
+> >         struct drm_sched_entity sched_entity;
+> > +
+> > +       struct {
+> > +               struct idr idr;
+> > +               struct mutex lock;
+> > +       } perfmon;
+> > +};
+> > +
+> > +/* Performance monitor object. The perform lifetime is controlled by u=
+serspace
+> > + * using perfmon related ioctls. A perfmon can be attached to a submit=
+_cl
+>
+> I guess submit_cl is more of a v3d thing?
+>
+> > + * request, and when this is the case, HW perf counters will be activa=
+ted just
+> > + * before the submit_cl is submitted to the GPU and disabled when the =
+job is
+> > + * done. This way, only events related to a specific job will be count=
+ed.
+> > + */
+> > +struct ethosu_perfmon {
+> > +       /* Tracks the number of users of the perfmon, when this counter=
+ reaches
+> > +        * zero the perfmon is destroyed.
+> > +        */
+> > +       refcount_t refcnt;
+> > +
+> > +       /* Protects perfmon stop, as it can be invoked from multiple pl=
+aces. */
+> > +       struct mutex lock;
+> > +
+> > +       /* Number of counters activated in this perfmon instance
+> > +        * (should be less than or equal to DRM_ETHOSU_MAX_PERF_COUNTER=
+S).
+> > +        */
+> > +       u8 ncounters;
+> > +
+> > +       /* Events counted by the HW perf counters. */
+> > +       u16 counters[DRM_ETHOSU_MAX_PERF_EVENT_COUNTERS];
+> > +
+> > +       /* Storage for counter values. Counters are incremented by the
+> > +        * HW perf counter values every time the perfmon is attached
+> > +        * to a GPU job.  This way, perfmon users don't have to
+> > +        * retrieve the results after each job if they want to track
+> > +        * events covering several submissions.  Note that counter
+> > +        * values can't be reset, but you can fake a reset by
+> > +        * destroying the perfmon and creating a new one.
+> > +        */
+> > +       u64 values[] __counted_by(ncounters);
+> >  };
+>
+> <snip>
+>
+> > +void ethosu_perfmon_start(struct ethosu_device *ethosu, struct ethosu_=
+perfmon *perfmon)
+> > +{
+> > +       unsigned int i;
+> > +       u8 ncounters;
+> > +       u32 mask;
+> > +
+> > +       if (WARN_ON_ONCE(!perfmon || ethosu->active_perfmon))
+> > +               return;
+> > +
+> > +       writel_relaxed(PMCR_CNT_EN, ethosu->pmu_regs + NPU_REG_PMCR);
+> > +       writel_relaxed(0x000011, ethosu->pmu_regs + NPU_REG_PMCCNTR_CFG=
+);
+>
+> Can we use macros for this value so we have it documented in the source c=
+ode?
+>
+> <snip>
+>
+> > +void ethosu_perfmon_stop(struct ethosu_device *ethosu, struct ethosu_p=
+erfmon *perfmon,
+> > +                     bool capture)
+> > +{
+> > +       unsigned int i;
+> > +       u8 ncounters;
+> > +       u32 mask;
+> > +
+> > +       if (!perfmon || !ethosu->active_perfmon)
+> > +               return;
+> > +
+> > +       mutex_lock(&perfmon->lock);
+> > +       if (perfmon !=3D ethosu->active_perfmon) {
+> > +               mutex_unlock(&perfmon->lock);
+> > +               return;
+> > +       }
+> > +
+> > +       ncounters =3D perfmon->ncounters - 1;
+> > +
+> > +       if (capture) {
+> > +               for (i =3D 0; i < ncounters; i++)
+> > +                       perfmon->values[i] +=3D readl_relaxed(ethosu->p=
+mu_regs + NPU_REG_PMU_EVCNTR(i));
+> > +               perfmon->values[ncounters] +=3D
+> > +                       readl_relaxed(ethosu->pmu_regs + NPU_REG_PMCCNT=
+R_LO) |
+> > +                       (u64)readl_relaxed(ethosu->pmu_regs + NPU_REG_P=
+MCCNTR_HI) << 32;
+> > +       }
+> > +
+> > +       mask =3D 0x80000000;
+> > +       if (ncounters)
+> > +               mask |=3D GENMASK(ncounters - 1, 0);
+> > +       writel_relaxed(mask, ethosu->pmu_regs + NPU_REG_PMCNTENCLR);
+> > +
+> > +       writel_relaxed(0, ethosu->pmu_regs + NPU_REG_PMCR);
+> > +       ethosu->active_perfmon =3D NULL;
+> > +       mutex_unlock(&perfmon->lock);
+>
+> Wonder if the npu-idle counter won't continue to accumulate until we
+> call stop(), and in that case, if we shouldn't stop the counters on
+> the job IRQ. So we can know for how long the NPU was idle during the
+> job, without extra idle time.
 
-Neat but rather ineffective, unfortunately. (I don't see a size
-difference with the arm64 defconfig kernel)
+From what the h/w folks have told me, that is the only idle time. When
+the job starts, the idle time is 0 and active counts every clock cycle
+until we hit the STOP cmd.
 
-Given that empty_zero_page only ever gets its address taken, we
-might just move it into the linker script if that requires tweaking
-anyway. We can just place it at the start of .rodata, which is
-already page aligned on most architectures (and will become page
-aligned unless EMPTY_ZERO_PAGE is #define'd by the arch linker
-script to something else)
+>
+> I think we could freeze the counters in the job_done IRQ, and harvest
+> the values on job cleanup. At freeze time it would be good to also
+> capture a timestamp and return to userspace in get_values, so that
+> userspace doesn't have to take it with considerable delay (for tools
+> such as Perfetto).
 
+Note that perfetto uses the global perfmon which I think we want free
+running and sampled.
 
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -472,6 +472,17 @@
- #endif
- #endif
-=20
-+#ifndef EMPTY_ZERO_PAGE
-+#ifndef __HAVE_COLOR_ZERO_PAGE
-+#define EMPTY_ZERO_PAGE                                        \
-+       . =3D ALIGN(PAGE_SIZE);                                   \
-+       empty_zero_page =3D .;                                    \
-+       . +=3D PAGE_SIZE;
-+#else
-+#define EMPTY_ZERO_PAGE
-+#endif
-+#endif
-+
- /*
-  * Read only Data
-  */
-@@ -479,6 +490,7 @@
-        . =3D ALIGN((align));                                     \
-        .rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {   \
-                __start_rodata =3D .;                             \
-+               EMPTY_ZERO_PAGE                                 \
-                *(.rodata) *(.rodata.*) *(.data.rel.ro*)        \
-                SCHED_DATA                                      \
+Essentially, all the events other than idle and cycle cnt are stopped.
 
+>
+> <snip>
+>
+> > +int ethosu_ioctl_perfmon_create(struct drm_device *dev, void *data,
+> > +                            struct drm_file *file_priv)
+> > +{
+> > +       struct ethosu_file_priv *ethosu_priv =3D file_priv->driver_priv=
+;
+> > +       struct drm_ethosu_perfmon_create *req =3D data;
+> > +       struct ethosu_device *ethosu =3D to_ethosu_device(dev);
+> > +       struct ethosu_perfmon *perfmon;
+> > +       unsigned int i, event_max;
+> > +       int ret;
+> > +
+> > +       /* Number of monitored counters cannot exceed HW limits. */
+> > +       if (req->ncounters > ethosu->npu_info.pmu_counters)
+> > +               return -EINVAL;
+> > +
+> > +       /* Make sure all counters are valid. */
+> > +       event_max =3D ethosu_is_u65(ethosu) ? 433 : 671;
+>
+> Can we have macros for these constants?
+>
+> <snip>
+>
+> > +int ethosu_ioctl_perfmon_get_values(struct drm_device *dev, void *data=
+,
+> > +                                struct drm_file *file_priv)
+> > +{
+> > +       struct ethosu_device *ethosu =3D to_ethosu_device(dev);
+> > +       struct ethosu_file_priv *ethosu_priv =3D file_priv->driver_priv=
+;
+> > +       struct drm_ethosu_perfmon_get_values *req =3D data;
+> > +       struct ethosu_perfmon *perfmon;
+> > +       int ret =3D 0;
+> > +
+> > +       if (req->pad !=3D 0)
+> > +               return -EINVAL;
+> > +
+> > +       perfmon =3D ethosu_perfmon_find(ethosu_priv, req->id);
+> > +       if (!perfmon)
+> > +               return -EINVAL;
+> > +
+> > +       ret =3D pm_runtime_resume_and_get(dev->dev);
+> > +       if (ret)
+>
+> Should we cal put() here?
+
+Err, yes.
+
+>
+> > +               return ret;
+> > +
+> > +       ethosu_perfmon_stop(ethosu, perfmon, true);
+> > +
+> > +       pm_runtime_put_autosuspend(dev->dev);
+> > +
+> > +       if (copy_to_user(u64_to_user_ptr(req->values_ptr), perfmon->val=
+ues,
+> > +                        perfmon->ncounters * sizeof(u64)))
+>
+> And here?
+>
+> > +               ret =3D -EFAULT;
+> > +
+> > +       ethosu_perfmon_put(perfmon);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +int ethosu_ioctl_perfmon_set_global(struct drm_device *dev, void *data=
+,
+> > +                                struct drm_file *file_priv)
+> > +{
+> > +       struct ethosu_file_priv *ethosu_priv =3D file_priv->driver_priv=
+;
+> > +       struct drm_ethosu_perfmon_set_global *req =3D data;
+> > +       struct ethosu_device *ethosu =3D to_ethosu_device(dev);
+> > +       struct ethosu_perfmon *perfmon;
+> > +
+> > +       if (req->flags & ~DRM_ETHOSU_PERFMON_CLEAR_GLOBAL)
+> > +               return -EINVAL;
+> > +
+> > +       perfmon =3D ethosu_perfmon_find(ethosu_priv, req->id);
+>
+> Aren't we leaking this second reference?
+
+No, this function does the get and then userspace calls
+ethosu_ioctl_perfmon_destroy() to do the put. However, I think if
+userspace forgets or crashes, then we need to do a put.
+
+Rob
