@@ -1,112 +1,54 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8701C68F
-	for <linux-hardening@vger.kernel.org>; Wed, 13 May 2026 02:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B6D136358;
+	Wed, 13 May 2026 04:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778638333; cv=none; b=O3SywOqLr2DedPQqq2Qh+hBLExG1YhGcai8aczxlwA8yKaGL3Rg4oeYg8OnQ0G11f1Iwu4GGm168jUCC7On2J/2XM3K1q2kHdfQ4Mi1f0AMl6OCgStBxjxYDjpVMM0+JwExZZhRPrzMfyM5td6ozwE14yZGefGLH6gFPxMR1rx0=
+	t=1778647645; cv=none; b=QFATJReqyptpPmR/SnDb3ldZsM0Jh3fq3ZHItI0hPeXcFOsruIK5g8I3MBT9fEd3RsnJNHhnQJBXYsYWxL/1HiSOftyQ5Q57cAf3WPTK0DY4J26dUNRyu7GmFujFES8+rXpN51rRKAYxYZX4JMuLx2wthw0IsZJ7ouGNNxeOlME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778638333; c=relaxed/simple;
-	bh=cdjJWSLheRQ+3GuD9xg1u/bkib2oHeCrXtM/HsiT9hA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vi2DgQqVLRg3ARUWEfDnYJFXtBh/wa7HkLEmmeixfI19C1Il9rc5kuwE3YRFHMKAEd1nT+XE6E+J06iK9k0Or8l16KdvbiXXm3rrfy4gA/zhy6bHeRGPmYg/GMWq5bKcpVi3HAFbNUU0+oW5wpuOQZIMRYtM1T3UTPBa2OwK3Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FvqK/RE1; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1778647645; c=relaxed/simple;
+	bh=EF73rmMsHNn/rUjZrvZ/O9Lh4cEfj2tKSJODcAPsUuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o8fEZ1P/ij70wMdBc7xszVWtCGdxDrJuHGnhXIBe9o+36TBHCU1wrRUlpuVyUZUsMKPtWvbKWEMjHro/sC6B9D+HeGnBCyX3Yke/KC39UABOu/LqEGErUhK8vP7loDZzMendmJ3JzfjKZn9R6lUcohnIZaYOC8edlQZ6M5JhEcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VzfkfsBT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FvqK/RE1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778638329;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cdjJWSLheRQ+3GuD9xg1u/bkib2oHeCrXtM/HsiT9hA=;
-	b=FvqK/RE1HsPP0f+Olp2dZTiI5rOPjZzpmfjMhV4TCxIgrlljmH7uX3cIBO75/yLdaj1TkK
-	fwZTR2ctao8DGHXSY/4uBJ9orQKkWJgVytD8f91uGBoXacu3/XNJWE62Bp8Gsz7UYuybaH
-	03SZrVpWg5okbuI8VjHVv+E+iz1cRzs=
-From: Lance Yang <lance.yang@linux.dev>
-To: shy828301@gmail.com,
-	jannh@google.com
-Cc: lance.yang@linux.dev,
-	rppt@kernel.org,
-	akpm@linux-foundation.org,
-	arnd@arndb.de,
-	linux-mm@kvack.org,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	ardb@kernel.org,
-	sethjenkins@google.com
-Subject: Re: [PATCH] mm: make zeropage read-only
-Date: Wed, 13 May 2026 10:11:48 +0800
-Message-Id: <20260513021148.17588-1-lance.yang@linux.dev>
-In-Reply-To: <CAHbLzkrXXe7r3n3jXgDKtwZhRqj=jDx9E6dLOULohnhBguvi9A@mail.gmail.com>
-References: <CAHbLzkrXXe7r3n3jXgDKtwZhRqj=jDx9E6dLOULohnhBguvi9A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VzfkfsBT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1574C2BCC9;
+	Wed, 13 May 2026 04:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778647645;
+	bh=EF73rmMsHNn/rUjZrvZ/O9Lh4cEfj2tKSJODcAPsUuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VzfkfsBTW+gxu99znVD11iOYUnhojAJvvR4wyb9dRehrCJ/kbWi3T+hlc7LD/hlXs
+	 yIhOXrUPJjMhmg/Yu6pyWh98aUTjpJJ3xPEf4gUukKXLOQOyTyH+ak08SLYRQQI3Bm
+	 z6AtL1R8Q1Cd4ajsNjeWyujBqmpxuNeOxsYCrj7cbanYbadnx16oExMBBlVu9Ajedi
+	 5AfurjJ2sUk9PGtrWmObf5OCNuhjDttd+87lVZ2ynJiWmnfJ/REuIlDu6ekjFS2YQ0
+	 eaCxrdbGo7fS9rOm9Fljfc/bwzhSqDra3Kwsm4NKVwU76ns05NW9VTg9/GNR/3wyZu
+	 Zis96hKj9wn/A==
+Date: Tue, 12 May 2026 21:47:24 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH][next] stddef: Fix kernel-doc/Sphinx warnings for
+ __TRAILING_OVERLAP()
+Message-ID: <202605122146.99F15142@keescook>
+References: <agOA1PDX2h3PNhl2@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <agOA1PDX2h3PNhl2@kspp>
 
+On Tue, May 12, 2026 at 01:34:44PM -0600, Gustavo A. R. Silva wrote:
+> Fix the following kdoc warnings:
 
-On Tue, May 12, 2026 at 10:14:01AM -0700, Yang Shi wrote:
->On Tue, May 12, 2026 at 6:48 AM Jann Horn <jannh@google.com> wrote:
->>
->> On Tue, May 12, 2026 at 4:31 AM Lance Yang <lance.yang@linux.dev> wrote:
->> > Would it makes sense to apply a similar treatment to huge_zero_folio
->> > as well?
->> >
->> > with CONFIG_PERSISTENT_HUGE_ZERO_FOLIO=y, it is allocated at boot and
->> > never freed, so it should never be written after initialization either :)
->>
->> Oh, neat, I didn't realize that that feature exists.
->>
->> I guess there are two aspects of making the huge zero folio RO that
->> could be problematic:
->>
->> 1. If the huge zero folio comes from the page allocator, making it
->> read-only might require splitting a huge PUD, which could have
->> performance implications.
->> 2. I vaguely remember arm64 has rules about how PUD/PMD entries in the
->> linear mapping can't be split at runtime at all depending on hardware
->> capabilities, meaning the entire linear mapping may need to be mapped
->> without any huge PUD/PMD entries - IDK if thp_shrinker_init() runs
->> early enough to be excepted from that. See can_set_direct_map() and
->> force_pte_mapping() in arch/arm64/.
->
->Yes. First of all, this relies rodata mode. If rodata=on (used to be
->called full), the linear mapping may be mapped by PUD/PMD if the
->hardware can support BBML2_NOABORT, otherwise it is mapped at PTE
->level all the time. But how huge zero folio is mapped in linear
->mapping should not matter, you just need to change the linear mapping
->permission to RO anyway.
->
->If the rodata mode is off or noalias (used to be called on), the
->linear mapping may be mapped by PUD/PMD, but basically changing linear
->mapping permission is not expected by kernel.
+Thanks! I've squashed this into the original commit now.
 
-Ah, right. So for huge_zero_folio the hard part is not just making the
-backing memory read-only, but also whether we can change the linear
-mapping permission for that range. That depends on the arm64 rodata mode
-/ direct-map setup.
-
-Thanks Jann and Yang for the explanations!
-Lance
-
->Thanks,
->Yang
->
->>
->> So making the huge zero folio RO in the linear map would probably
->> require adding a new config flag, connecting that to
->> ARCH_HAS_SET_DIRECT_MAP, and changing one or two places in arm64
->> memory management.
->>
->
+-- 
+Kees Cook
