@@ -1,147 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8C935F16C;
-	Tue, 12 May 2026 19:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8701C68F
+	for <linux-hardening@vger.kernel.org>; Wed, 13 May 2026 02:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778614487; cv=none; b=leORlqfp9tlfYxMoSKSbm+Li/54ApmUskeN9jbYZibXucLDaCPt/0nm7l4bPuXYBvGgFLw7zb7em4vTDoXEZPRyAX2ltczEgrzovvVPIxkbL2t1E4k1iWuaI7UTM4WSQqGZ8efT4WheaMuVm5h/XJqyvPToDAzYvbI1HqgiW7ZE=
+	t=1778638333; cv=none; b=O3SywOqLr2DedPQqq2Qh+hBLExG1YhGcai8aczxlwA8yKaGL3Rg4oeYg8OnQ0G11f1Iwu4GGm168jUCC7On2J/2XM3K1q2kHdfQ4Mi1f0AMl6OCgStBxjxYDjpVMM0+JwExZZhRPrzMfyM5td6ozwE14yZGefGLH6gFPxMR1rx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778614487; c=relaxed/simple;
-	bh=H0PKcI+X1azySWejCpjBgaF8b2QXNjA36BQg8U+kBWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oX/OaL2ysjzTsP68ROPeooGZnFLA577edUZU9kv//guUcsdkbUwDVZqEe521m/cx3ScWZ+CXVQDCjnjksZP2I/9801vKmOmDwt1Bd8xXWnVqLbL5HiX7yMeoUUbtrP+jvvf9TAPDB5L2jOKXwlkRhXboADxpmJqaTxXHP1pEmrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxuzV8ie; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778638333; c=relaxed/simple;
+	bh=cdjJWSLheRQ+3GuD9xg1u/bkib2oHeCrXtM/HsiT9hA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vi2DgQqVLRg3ARUWEfDnYJFXtBh/wa7HkLEmmeixfI19C1Il9rc5kuwE3YRFHMKAEd1nT+XE6E+J06iK9k0Or8l16KdvbiXXm3rrfy4gA/zhy6bHeRGPmYg/GMWq5bKcpVi3HAFbNUU0+oW5wpuOQZIMRYtM1T3UTPBa2OwK3Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FvqK/RE1; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxuzV8ie"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C90FC2BCB0;
-	Tue, 12 May 2026 19:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778614486;
-	bh=H0PKcI+X1azySWejCpjBgaF8b2QXNjA36BQg8U+kBWQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=oxuzV8ierG9it+dELhKJXdyxDsKCBWTzNuKFjuS3zdyoid7MSKwrdDjwNRwO7VjvG
-	 F1Cy9qFzs5ddlYD6coohgZaxCEtFKJjrFIYfNDCRn8x3FqQCVsUFPp73dQfhmIEmO2
-	 i5NhgdHDmxuTouNF6yvAMfnF2Dz5q8ZogKeKue03fabaQZ4kYPKPhHT18ziLUL/8K5
-	 8bk+sOKk8+YAVvAf2FwxHpEkgw1NuddiY8Ac1YtG3L4qFyJv72k5JBfaMRKMduK7+F
-	 rSmqSNZXxFAQbGiPbKob/nVFTTU17fcV5NrdVK+B7H20vLBl3fvvZ2Cs0kdHb0RzNl
-	 J/CyAeWR5CXHw==
-Date: Tue, 12 May 2026 13:34:44 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH][next] stddef: Fix kernel-doc/Sphinx warnings for
- __TRAILING_OVERLAP()
-Message-ID: <agOA1PDX2h3PNhl2@kspp>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FvqK/RE1"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778638329;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cdjJWSLheRQ+3GuD9xg1u/bkib2oHeCrXtM/HsiT9hA=;
+	b=FvqK/RE1HsPP0f+Olp2dZTiI5rOPjZzpmfjMhV4TCxIgrlljmH7uX3cIBO75/yLdaj1TkK
+	fwZTR2ctao8DGHXSY/4uBJ9orQKkWJgVytD8f91uGBoXacu3/XNJWE62Bp8Gsz7UYuybaH
+	03SZrVpWg5okbuI8VjHVv+E+iz1cRzs=
+From: Lance Yang <lance.yang@linux.dev>
+To: shy828301@gmail.com,
+	jannh@google.com
+Cc: lance.yang@linux.dev,
+	rppt@kernel.org,
+	akpm@linux-foundation.org,
+	arnd@arndb.de,
+	linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	ardb@kernel.org,
+	sethjenkins@google.com
+Subject: Re: [PATCH] mm: make zeropage read-only
+Date: Wed, 13 May 2026 10:11:48 +0800
+Message-Id: <20260513021148.17588-1-lance.yang@linux.dev>
+In-Reply-To: <CAHbLzkrXXe7r3n3jXgDKtwZhRqj=jDx9E6dLOULohnhBguvi9A@mail.gmail.com>
+References: <CAHbLzkrXXe7r3n3jXgDKtwZhRqj=jDx9E6dLOULohnhBguvi9A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Fix the following kdoc warnings:
 
-Documentation/driver-api/basics:127: ./include/linux/stddef.h:110: WARNING: Definition list ends without a blank line; unexpected unindent. [docutils]
-Documentation/driver-api/basics:127: ./include/linux/stddef.h:115: ERROR: Unexpected indentation. [docutils]
-Documentation/driver-api/basics:127: ./include/linux/stddef.h:116: WARNING: Block quote ends without a blank line; unexpected unindent. [docutils]
-Documentation/driver-api/basics:127: ./include/linux/stddef.h:117: WARNING: Definition list ends without a blank line; unexpected unindent. [docutils]
-Documentation/driver-api/basics:127: ./include/linux/stddef.h:122: WARNING: Definition list ends without a blank line; unexpected unindent. [docutils]
-Documentation/driver-api/basics:127: ./include/linux/stddef.h:124: WARNING: Definition list ends without a blank line; unexpected unindent. [docutils]
-Documentation/driver-api/basics:127: ./include/linux/stddef.h:139: WARNING: Definition list ends without a blank line; unexpected unindent. [docutils]
-Documentation/driver-api/basics:127: ./include/linux/stddef.h:140: WARNING: Definition list ends without a blank line; unexpected unindent. [docutils]
+On Tue, May 12, 2026 at 10:14:01AM -0700, Yang Shi wrote:
+>On Tue, May 12, 2026 at 6:48 AM Jann Horn <jannh@google.com> wrote:
+>>
+>> On Tue, May 12, 2026 at 4:31 AM Lance Yang <lance.yang@linux.dev> wrote:
+>> > Would it makes sense to apply a similar treatment to huge_zero_folio
+>> > as well?
+>> >
+>> > with CONFIG_PERSISTENT_HUGE_ZERO_FOLIO=y, it is allocated at boot and
+>> > never freed, so it should never be written after initialization either :)
+>>
+>> Oh, neat, I didn't realize that that feature exists.
+>>
+>> I guess there are two aspects of making the huge zero folio RO that
+>> could be problematic:
+>>
+>> 1. If the huge zero folio comes from the page allocator, making it
+>> read-only might require splitting a huge PUD, which could have
+>> performance implications.
+>> 2. I vaguely remember arm64 has rules about how PUD/PMD entries in the
+>> linear mapping can't be split at runtime at all depending on hardware
+>> capabilities, meaning the entire linear mapping may need to be mapped
+>> without any huge PUD/PMD entries - IDK if thp_shrinker_init() runs
+>> early enough to be excepted from that. See can_set_direct_map() and
+>> force_pte_mapping() in arch/arm64/.
+>
+>Yes. First of all, this relies rodata mode. If rodata=on (used to be
+>called full), the linear mapping may be mapped by PUD/PMD if the
+>hardware can support BBML2_NOABORT, otherwise it is mapped at PTE
+>level all the time. But how huge zero folio is mapped in linear
+>mapping should not matter, you just need to change the linear mapping
+>permission to RO anyway.
+>
+>If the rodata mode is off or noalias (used to be called on), the
+>linear mapping may be mapped by PUD/PMD, but basically changing linear
+>mapping permission is not expected by kernel.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202605120507.9iQRMgKR-lkp@intel.com/
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/linux/stddef.h | 48 +++++++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+Ah, right. So for huge_zero_folio the hard part is not just making the
+backing memory read-only, but also whether we can change the linear
+mapping permission for that range. That depends on the arm64 rodata mode
+/ direct-map setup.
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 665d7a68cd98..f666ced2a9e7 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -104,26 +104,26 @@ enum {
-  * union, designated initializers for MEMBERS may overwrite portions
-  * previously initialized through NAME.
-  *
-- * For example:
-- *
-- * struct flex {
-- *	size_t count;
-- *	u8 fam[];
-- * };
-- *
-- * struct composite {
-- *	...
-- *	__TRAILING_OVERLAP(struct flex, flex, fam, __packed,
-- *		u8 data;
-- *	);
-- * } __packed;
-- *
-- * static struct composite comp = {
-- *	.flex = {
-- *		.count = 1,
-- *	},
-- *	.data = 2,
-- * };
-+ * For example::
-+ *
-+ *	struct flex {
-+ *		size_t count;
-+ *		u8 fam[];
-+ *	};
-+ *
-+ *	struct composite {
-+ *		...
-+ *		__TRAILING_OVERLAP(struct flex, flex, fam, __packed,
-+ *			u8 data;
-+ *		);
-+ *	} __packed;
-+ *
-+ *	static struct composite comp = {
-+ *		.flex = {
-+ *			.count = 1,
-+ *		},
-+ *		.data = 2,
-+ *	};
-  *
-  * In the example above, .flex and .data initialize different views of the same
-  * union storage. Since .data is initialized last, it _may_ overwrite portions
-@@ -133,7 +133,7 @@ enum {
-  * A couple of alternatives are shown below.
-  *
-  * a) Initialize only one view of the overlapped storage and assign the rest
-- *    at runtime:
-+ *    at runtime::
-  *
-  *	static struct composite comp = {
-  *		.flex = {
-@@ -147,9 +147,7 @@ enum {
-  *		...
-  *	}
-  *
-- *	(Compiler Explorer test code: https://godbolt.org/z/zz4K1Ejvf)
-- *
-- * b) Alternatively, replace designated initializers with runtime assignments.
-+ * b) Alternatively, replace designated initializers with runtime assignments::
-  *
-  *	static void foo(void)
-  *	{
-@@ -160,6 +158,8 @@ enum {
-  *		...
-  *	}
-  *
-+ * Compiler Explorer test code: https://godbolt.org/z/zz4K1Ejvf
-+ *
-  * For another example of the above see commit 5e54510a9389 ("acpi: nfit:
-  * intel: avoid multiple -Wflex-array-member-not-at-end warnings")
-  *
--- 
-2.51.0
+Thanks Jann and Yang for the explanations!
+Lance
 
+>Thanks,
+>Yang
+>
+>>
+>> So making the huge zero folio RO in the linear map would probably
+>> require adding a new config flag, connecting that to
+>> ARCH_HAS_SET_DIRECT_MAP, and changing one or two places in arm64
+>> memory management.
+>>
+>
