@@ -1,132 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF661862;
-	Wed, 13 May 2026 10:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D2447A0DD
+	for <linux-hardening@vger.kernel.org>; Wed, 13 May 2026 15:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778668141; cv=none; b=GO4+BKuIyZK1ug+cLae7J6GH3Ipyuu+HEBQEAFKJTyHC/z4OyRbwP5/tVpjFekvHmt0Gcw/X5a4tivzkEXKXjwxd7sOhsGOCgv154+hBnKEuLqU1JtUAkvwwe9M+tUy3kD3vSTDOeeHdKw3Gxzzve2qfpVcJcaMD9nniHBl7Qbo=
+	t=1778684974; cv=none; b=H6GD5Dt9yP2pkdVQHGV6MNPmpFSXiNZwhZv1qbLmbv7AFazTMQJaWvEhUq17rruPgZCdU8cPAg+MSeuyqalzS8ZxlNYnhybmHkz5yrU0ermFXNvdOuI8R+LP3MNDSnuyN7Je1LyNvjOJeYBj+up04HQFFCwOc9q9MhxnJHYsfM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778668141; c=relaxed/simple;
-	bh=SMSduI5AnAM9kqchaE8jYdlaOT2npCWPyM5+zGPU3o0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FYDKM1ik/3O9B5HqW/1wmzAKyEiiKg6Jp6SMjNPd1OSzHBFNyBIAXFff9947oJf3aRJHqhs3O208Ds/1HzW/9Nnpyqym0OepZs0e2qviETBITIxt7XY8ksdYpvx04MmEAFjAKJ7mqOmGz2RgnhcZZdytVVPm7z0JoSu2YZcLvXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqTXi24H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778684974; c=relaxed/simple;
+	bh=6xl1OZ39wivS4tq4DwCHKYc6atV3f69XK8Y07bvYulk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B60ZS1eQvr0IwUyxLp6avFp7GBQMLkIkcxWLKJJXcYLR5UXxudOp85XvdnfoGbv2kZvUEjwJ9QXIL2/cHsgYRrGBqUe7Y4HSmMPIuKPJ95XMsa+hfxRThZnBeqvJOgFRX4KAodZ6FyLBQ2JB+JWYOwX4sHGoHg5KdmpmbdBdUA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKTY2ck6; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqTXi24H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F393C2BCB7;
-	Wed, 13 May 2026 10:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778668140;
-	bh=SMSduI5AnAM9kqchaE8jYdlaOT2npCWPyM5+zGPU3o0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oqTXi24HsgBOAFuKC6Vi/Jw3ToZ3ix8HWddmTwJTDN0Un1xAN5BkYQzXEShkWawTo
-	 GbwdlpXAgWvDqvcNS4fj4SamaL21POucJDoSE7gUJ+y6jgqAQeAzM1iOpDyFP3dDYj
-	 RbhQq9r3uXj5eja2m/YDTvPvES31K7BtxsHNPpQukkzx1jXDmNwQs88p5AhLbZkYxo
-	 WYY1U+LSv7W2Mu8THlmQACiifeBWhl6VW8dk+ILwXNmNO/9dTqLE3RnuJo2ptdVwoS
-	 hfHoLk3RKGkwl/5TkgZ09NqeNYyFzaQwl3SN0CdD5rL7XU7NeUhJHKrDEBwv+tCA7/
-	 ezv48qxYD1c9Q==
-Date: Wed, 13 May 2026 13:28:51 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb+git@google.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Liz Prucka <lizprucka@google.com>,
-	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 02/15] mm: Make empty_zero_page __ro_after_init
-Message-ID: <agRSY-VLLdSqeMT5@kernel.org>
-References: <20260427153416.2103979-17-ardb+git@google.com>
- <20260427153416.2103979-19-ardb+git@google.com>
- <CAG48ez1DJ88a0pBCE-Q0VXyDuJgng8zdunb38g4b4JPU88exww@mail.gmail.com>
- <31252c1d-a98d-4635-ab61-ce5b649e256f@app.fastmail.com>
- <CAG48ez2xJwJDgxSH0u2G==9dOQJQxQ7WsQfU14O1H5hEWic1eA@mail.gmail.com>
- <fb5749bb-bc87-4f0b-9ec9-8a1eb7ded3b5@app.fastmail.com>
- <agQ7RMAw51RlNUOj@kernel.org>
- <49d30ffe-b7e1-4b05-89e0-c3fe01348bb6@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKTY2ck6"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-45297094718so5542139f8f.3
+        for <linux-hardening@vger.kernel.org>; Wed, 13 May 2026 08:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778684971; x=1779289771; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=90qdZzTNiTsSE1LEeRcQYoXszr3HSv7vr/Z4t6wMOgk=;
+        b=UKTY2ck6pXR6CIazO9ViC2GBc8u7VlKlZELwDr4XBON+z8O34h4T8RJfuyqqLJkTcE
+         5TGtLNllxjZcgjeg/Pn1/z9l42mWqCjd0iTYJHtkhn6k0QY/TyRvxWlWrBdk8ZgSfDnl
+         Yc5B8aBaQpyRTi1LThoiuOZu47gkgQCrjvNKplqx4M2jFq9wq1H2TcuE9xbejlXqqaRm
+         IIgOSuPdVj1pew/ap8JQ4lM+cVgxfBpDJL/Cn4XpgGkyv13ZLgBN8Y3eYVz/0mlfs6jV
+         Mqv0VXQ1ydsNh6N/NY7QPNojx8WVA1So4nzcZfvk0juT5oVcnJu5JFnHVtRFuRytQwcU
+         hPxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778684971; x=1779289771;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=90qdZzTNiTsSE1LEeRcQYoXszr3HSv7vr/Z4t6wMOgk=;
+        b=UgafSVv+h57Zi1EAl/kYSPjIeqRuDjIb5CWX4whz1uw9pFNW2ZCaHKCaPQ8Khs9gfH
+         HK64BT5W937th4lyPTIuzDnIjvEJwA6OQIPJOVssmrbXqzuscBlNRUoopCFFB7GKfOrr
+         i0Cd5pk5DImTJ1+HL+q9L/iEk4DhEkMQczi1Z9n0o3QOH0nqgDVXzTJBwuttZ+vGeFJs
+         yyVwL6lSnrvRX0efGxND+6cCvHwW117qYFdZjWIWaOf07hopX19VYLOtAx/W0lCdvN/e
+         rdEDtG4yVfOdPuVZRv0FW8qK2r4x1wjP1TX5ABhVFLAje1EaPdz/1URO6axp+Z5sF8O3
+         rIVg==
+X-Forwarded-Encrypted: i=1; AFNElJ+KBFLNtDUgWfeWiagxA5fAY5mYqkmqJFI46CM7rmhTETBr0jcxxvaWsdi6xx1A5NXqnJilq/6qrzNK+gj6R3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuIa8W+jRw3fUtpWKiWA1732wDT30c6zHh3ZHKP2KV1TKimGVw
+	jPcYxn7jJSUZZcwvNMkBfbltHmbO29eRumwC51p5CMDipKTrNSSM0Dor
+X-Gm-Gg: Acq92OFDmM19cQtiqlnc5RWMGO4L0BMPMpfQ0oDON/lcL8Mhfz8ikzfM3D6ZO/0lV4B
+	XPvXcC6Omr9phVaZPGs/3azANIplAwbzIIXPzZUzDtVF0xpFhEcKlU73gjjB4WTtTYXA7UqBNq4
+	OsvSvhmFwLnf8aiK6s9ai9JuohJ7sphKQ3fer/GCBMexlgcojZkSgjHQZnU0eKwJc1IDuFJBUw5
+	APG9mEojwg8R2SGww9kcnFWJxRdobAgdBqmWz3gHaVi/P+i7nVHpvFEc71mzrmK6fYiz1wis/98
+	+A0rOHZdUXWPnVG1nO/ucwA5waVy4dc/dPBtkRroFuqoMbmizsX5zGRmv1CaIcHvjQZzOYc6cl8
+	qCKJcYrOGK63JxvTZQzVE4KvhOzrOaDEe4lWijNfyCID70FV4it1sB5Qx9EqYOen9jZlJV0pfmB
+	ROO+v0BLCo4hNqnyk6ChUhC/+VcwBEeqmjEPI6ghOQJCkG2zvrP1IODnZUJzP1DNJ1nHWTWMpLy
+	ZdEnJAQT3ze1Upcbryzh0xori6sAdp2mIWI44grc/6YWRo6WPykrNKK0gs/
+X-Received: by 2002:adf:e30c:0:b0:45d:4688:2571 with SMTP id ffacd0b85a97d-45d468825c6mr1533975f8f.41.1778684971053;
+        Wed, 13 May 2026 08:09:31 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.131.netskope-rdns.com. [24.206.116.131])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4548e4bb87bsm39821178f8f.2.2026.05.13.08.09.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2026 08:09:30 -0700 (PDT)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
+Date: Wed, 13 May 2026 16:09:24 +0100
+To: Jonathan Cameron <jic23@kernel.org>, 
+	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH RFC v4 01/10] dt-bindings: iio: frequency: add ad9910
+Message-ID: <vklczsi4vk3sqf53zifslhp5pysdmj3gfyhvdgrwo4bg3wdkxj@lnbftaf5jcbf>
+References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+ <20260508-ad9910-iio-driver-v4-1-d26bfd20ee3d@analog.com>
+ <20260512193129.777d62a8@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <49d30ffe-b7e1-4b05-89e0-c3fe01348bb6@app.fastmail.com>
+In-Reply-To: <20260512193129.777d62a8@jic23-huawei>
 
-On Wed, May 13, 2026 at 10:53:08AM +0200, Ard Biesheuvel wrote:
+On 26/05/12 07:31PM, Jonathan Cameron wrote:
+> On Fri, 08 May 2026 18:00:17 +0100
+> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 > 
-> On Wed, 13 May 2026, at 10:50, Mike Rapoport wrote:
-> > On Tue, May 12, 2026 at 02:56:16PM +0200, Ard Biesheuvel wrote:
-> >> On Mon, 11 May 2026, at 16:40, Jann Horn wrote:
-> >> > On Mon, May 11, 2026 at 10:59 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >> >> I think we should simply do something along the lines of the below,
-> >> >> considering that the size of a data object tends to correlate with
-> >> >> its minimum alignment.
-> >> >>
-> >> >> I do find it rather puzzling that the compiler emits empty_zero_page
-> >> >> *after* zero_page_pfn - ideally, we'd combine the below with
-> >> >> -fdata-sections so that the linker sees all individual objects, but
-> >> >> I suspect that would create some problems elsewhere.
-> >> >>
-> >> >>
-> >> >> --- a/include/asm-generic/vmlinux.lds.h
-> >> >> +++ b/include/asm-generic/vmlinux.lds.h
-> >> >> @@ -452,7 +452,7 @@
-> >> >>  #define RO_AFTER_INIT_DATA                                   \
-> >> >>         . = ALIGN(8);                                         \
-> >> >>         __start_ro_after_init = .;                            \
-> >> >> -       *(.data..ro_after_init)                               \
-> >> >> +       *(SORT_BY_ALIGNMENT(.data..ro_after_init))            \
-> >> >
-> >> > Oh, neat, I didn't realize that's possible. That seems like a nicer
-> >> > approach...
-> >> 
-> >> Neat but rather ineffective, unfortunately. (I don't see a size
-> >> difference with the arm64 defconfig kernel)
-> >> 
-> >> Given that empty_zero_page only ever gets its address taken, we
-> >> might just move it into the linker script if that requires tweaking
-> >> anyway. We can just place it at the start of .rodata, which is
-> >> already page aligned on most architectures (and will become page
-> >> aligned unless EMPTY_ZERO_PAGE is #define'd by the arch linker
-> >> script to something else)
-> >> 
-> >> 
-> >> --- a/include/asm-generic/vmlinux.lds.h
-> >> +++ b/include/asm-generic/vmlinux.lds.h
-> >> @@ -472,6 +472,17 @@
-> >>  #endif
-> >>  #endif
-> >>  
-> >> +#ifndef EMPTY_ZERO_PAGE
-> >> +#ifndef __HAVE_COLOR_ZERO_PAGE
-> >
-> > I don't think we want let architectures that don't use colored zero pages
-> > redefine it.
-> > If it will be really required we can add the ability to redefine
-> > EMPTY_ZERO_PAGE later.
-> >
+> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > 
+> > DT-bindings for AD9910, a 1 GSPS DDS with 14-bit DAC. It includes
+> > configurations for clocks, DAC current, reset and basic GPIO control.
 > 
-> I was actually intending to add use this for arm64 in the next patch. It
-> already has a reserved_pg_dir in .rodata which is page-sized (i.e., up
-> to 64k in size) and guaranteed to remain all zeroes, so empty_zero_page
-> could actually be an alias for that. This is what I had in a previous
-> revision, before you turned the empty_zero_page definition into common
-> code:
+> I think this is getting close enough now that for next version you should
+> drop the RFC (which is probably gating DT binding folk giving it
+> a detailed review!)
+> 
+> > 
+> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> 
+> > +
+> > +  adi,dac-output-current-microamp:
+> > +    minimum: 8640
+> > +    maximum: 31590
+> > +    default: 20070
+> > +    description:
+> > +      DAC full-scale output current in microamps.
+> > +
+> Can we use generic dac.yaml defined output-range-microamp? The base will be 0 always but
+> that shouldn't matter.
+>
 
-Works for me if from arm64 perspective that's ok :)
- 
-> https://lore.kernel.org/all/20260320145934.2349881-16-ardb+git@google.com/
+would that be fine even if we do not have those child channel nodes in the device-tree node? 
 
 -- 
-Sincerely yours,
-Mike.
+Kind regards,
+
+Rodrigo Alencar
