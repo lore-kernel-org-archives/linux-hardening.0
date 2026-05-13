@@ -1,84 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8763B19DB;
-	Wed, 13 May 2026 19:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972203A874B
+	for <linux-hardening@vger.kernel.org>; Wed, 13 May 2026 20:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778699331; cv=none; b=FQvhUz+belbVkfdY1fH2PTeLEtt8KZU6KonqScDllKgBPlqWKI1+ARc8KVR4veN1CKAA9KDzgA1cnxrTHko/LqZtWK9OXDGkiFwVju6rOoZqyQlIQf0v3BEBzyBsAtw4lyYVv0bxFcoyb93ZelS75eLPrCagxLkVa7XSJTGdqkw=
+	t=1778703216; cv=none; b=ARlGT1iSpAc/FTu2/fZHcLX3F5RKl85hwisy3ywdzAdOzRp7nrreAtUww1tw1IisLHA+5zlNk5j4CDnEULecNu7kF7M1LB486/aWddrbk6D0/KQtxMro+qwh55uw5bXBZqivqIjHVYhvZPM8ZZSDPITGa5sqkE73CUBvnFGf8Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778699331; c=relaxed/simple;
-	bh=dgOBvMMQqfv+b+OjD1d+8s4GSWXeMPgrOQ4Tfm4YYXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=luxbTzM/Oz2f9RVOmHXfDDg+d+ouy3lPuDK3owO9rqnfxuNgRltch5Rnxpcqm6pHIg3T/+UhI0jGcIOrPTGmiWB8XXlv27UkCv/nqWFlNMfayJbabZ7YMpzSpBf4QXqv6tTtDkuGc4KnYQ4M+liGFHp/TXD1a1VMX1qr/+xUfMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ff8NRavc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778703216; c=relaxed/simple;
+	bh=c/uTj3eUMahseda4ijCDXZHTgGCnC+nQ71EeQCnj+V4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iMc6wU10jMz39c4EsPL49YNzIPcto8hfuGG5ZLDPdA/Y0YWQ/ynsCeKbZrq6QhA9QjEKWlFwJbL4UdXWSLW4E8iTauHwwtB6fRHDdH+k4hiLjZWar2lm36ci33zbLyan0JNUbd23gH1D/e9c0yXYjyFp6sHbNwfDDJNMxJC7Cc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ja6pzugG; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ff8NRavc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91034C2BCC6;
-	Wed, 13 May 2026 19:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778699330;
-	bh=dgOBvMMQqfv+b+OjD1d+8s4GSWXeMPgrOQ4Tfm4YYXE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ff8NRavcuwyUAVyB0+VLJpY36UTBDS2n2CViSllsG8tIvD1Y03HN8GNbmPZyBrusJ
-	 9jhdS3PghDcwAl3tSaPPLKo5J+MbYIlSS870ndSzqhyP97LW5y3pF8bGkAxnVQLIyr
-	 zazKW2uoliKqCtuREmJBmJrSDQBRVSavzeKmb2Kbu2/demw5pvyOccAvzczyt5PrsE
-	 BwMmi3nO9tuPxU5nLsaAWU6qQ206yhEod9Z/6HLlbETJpuXvDiLi+tRKpvMtRm7Uua
-	 DxWlkR4F3Bcpu/0RD9Ml531/hVG+tycd/dE0w+U4Jy+UuTZ+mMVOXNYp7AgPpCqlJ6
-	 f0Czp9tkaQzyA==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ja6pzugG"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-488b0046078so59340895e9.1
+        for <linux-hardening@vger.kernel.org>; Wed, 13 May 2026 13:13:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778703213; x=1779308013; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mcwsrIgXQYyK1SppA08OyTKLgYONdYnS8FYyBfl9uV8=;
+        b=Ja6pzugGGmBBciUf98d3vCdvIm0CZp15cvbqCnIj2NVSWG9Zr2Kvpm7Pa4fljogrWD
+         APSSeiCDb9AQcSbA3vrOv6/BXRcc6uw4jWhpsO/ugwRt8qppFdX4A16V0v5DygNtxUb8
+         Chs6qZo0S3SBE+n4tUayYIAuyBVO0TkCDLHU3hQ0qUhcUFmzspzJv1lE9Q9F93VI2mRx
+         0lVMGUTfpjfOxrQTsXqo4f0+b9LMCja7I7Y9SRBd6o47vXK2qsWDTuWtTpwV5R9spudg
+         pefOz9JsTC+FXOvyiAR+wKBU53/Fg+jklyv6vcjk7aXiu8pyOS1l7sfGQdnmlKt8+1PC
+         6cxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778703213; x=1779308013;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mcwsrIgXQYyK1SppA08OyTKLgYONdYnS8FYyBfl9uV8=;
+        b=hun/ESa6bbe3ZNBDx05A5Ob0oMixcZkYievpIKv1TrGbyVHCIBH7zd6jWUOuM+NC2O
+         Uk0Ho8W6T3SBvTy4G1bTkvU9aIO2Wj9G8SEihJGDuj9O9yH89qDuPDu3HiufF5HQujs9
+         E2709mUuEZGt1xTMZsDOG7mcImT/UgHI5xYsCrjt06OTcxNepY0wqN6ZpSsHNz54fw4w
+         /SMv+ROgqQVsbiRfJ8DMxQOF1T8uwJwZNY4ACr5oxeSbdRazOQyvX1EPmwN0JWw1Yod0
+         rap/dGDzjxJIbPHq/4/RilLexGR+yFXQHnC66f1h07+q655HMQpZNc9QgPlO3x0dSNnA
+         nH3w==
+X-Forwarded-Encrypted: i=1; AFNElJ+2fkMJDOWXgfsmSg94G7hL1wJkOVnMQi17Yaur8srlggU5k58bJATrL8WJxbshPBhYvzoDuPlXOIbyYBwvhhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjsKY3+VhmuEtc7uhfKyaLCTnyTdxwa/4jGnptadIlXkg6c+xO
+	pQCqjoINH7GjSZkgGl9nqzvPuprNelsqEOlwBz5GsO6pPej8oxtqL32C
+X-Gm-Gg: Acq92OEkK+uhWzYlhPHvXOY2IkcIBezLPSbs2PIZxLAoaU4LjIl1kUtjpnmW2f/NqdR
+	tmT209SqqJPrB4/5KlsGi4xhlw7GlfmHdTIz7lFZZw4e9PCOE93C4JmBNZUL8ccUAG6l0V9ZmNF
+	9er1YEe020BVIBMh+6L4Qsj4PWGcyohT9E3i4/aGE4qVUTrRqUO0ocPSeJLgq7VNx2yrfKPIaTi
+	NOZ8ViYLmMm/TxkUst2eRE3xnTPYxGx9P3XYCjs3FaMZulAIgbenhDo6mmf9mC7UPz0swszmKsX
+	A1nLnfTvjfEq4RwtsNb1sZclhvYwClrAc3nUrdCXCDSe/3kh5kO5m9fcLg8ocT3he9QMu9TpvZ9
+	nd+NyeZgkw4fEJewi+YdL4jU7bCgLHNKiTpBhRxRqiF9w7X3ovrpqIrYpnIsfBNEMC7xNTE58IJ
+	uHMBvbKI5co3fWx2vY/yrXQfrdu2z++sxnwOz9zn/PIZ3aGOjK1ETxWMOZfSIMIgV5UpjsxBg+c
+	wLLrTL8uwBqk9M210OxQN8P0WZL8UdwSoheIZhRUiAyrbI8
+X-Received: by 2002:a05:600c:8b56:b0:488:c078:bfda with SMTP id 5b1f17b1804b1-48fc9a4bb0cmr78676015e9.26.1778703212855;
+        Wed, 13 May 2026 13:13:32 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:3e5f:9005:e5d2:460e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fd649ea63sm11927465e9.8.2026.05.13.13.13.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2026 13:13:32 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Ulf Hansson <ulfh@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Francisco Munoz Ruiz <francisco.ruiz@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-mmc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 0/3] Retrieve System Cache Table (SCT) descriptors from a shared memory region.
-Date: Wed, 13 May 2026 14:08:39 -0500
-Message-ID: <177869930353.1496076.4629367562375349504.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260407-external_llcc_changes2set-v2-0-b5017ce2020b@oss.qualcomm.com>
-References: <20260407-external_llcc_changes2set-v2-0-b5017ce2020b@oss.qualcomm.com>
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] mmc: mmc_test: Fix __counted_by handling after kzalloc_flex() conversion
+Date: Wed, 13 May 2026 21:13:15 +0100
+Message-ID: <20260513201315.3186621-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Tue, 07 Apr 2026 14:51:46 -0700, Francisco Munoz Ruiz wrote:
-> On newer Qualcomm platforms, SCT initialization and programming are
-> handled entirely by firmware outside of Linux. The kernel is expected
-> to consume the pre-initialized descriptor data rather than configure
-> the SCT itself. The LLCC driver therefore only needs to locate and
-> parse the descriptor table provided by firmware.
-> 
-> This change implements support for this mechanism in the llcc-qcom
-> driver, enabling SCT consumption on platforms that expose SCT
-> programming through firmware. The existing behavior for SoCs where
-> the kernel programs SCT directly remains unchanged.
-> 
-> [...]
+Fix logic issues introduced by the kzalloc_flex() conversion in
+mmc_test_alloc_mem() due to interaction with the __counted_by
+annotation on the flexible array.
 
-Applied, thanks!
+Bounds-checking sanitizers rely on the counter field reflecting the
+allocated array size before any array access occurs. However, use
+mem->cnt both as the allocation size and as the runtime insertion
+index, causing incorrect indexing and potentially invalid bounds
+tracking.
 
-[1/3] dt-bindings: cache: qcom,llcc: Document Hawi SoC
-      commit: cb4a414bacbfdcb837048146b8979032d87e4961
-[2/3] soc: qcom: llcc-qcom: get SCT descriptors from fw-populated memory
-      commit: ac23106a9b9a0f6ed90002ae3d6fe7c14e97e6bf
-[3/3] soc: qcom: llcc-qcom: Capitalize LLCC/EDAC in comments and diagnostics
-      commit: 06a84c2d3ca4b9b54724e79717c2cfd9a59947d9
+Initialize mem->cnt to the maximum allocated number of segments
+immediately after kzalloc_flex(), then use a separate local index
+variable to track successfully allocated entries. Update mem->cnt to
+the actual number of initialized elements before returning or entering
+the cleanup path.
 
-Best regards,
+Also rewrite mmc_test_free_mem() to use a forward for-loop, improving
+readability and ensuring only initialized entries are freed.
+
+Fixes: c3126dccfd7b ("mmc: mmc_test: use kzalloc_flex")
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/mmc/core/mmc_test.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/mmc/core/mmc_test.c b/drivers/mmc/core/mmc_test.c
+index ab38e4c45a8d..e0e1b5df76dc 100644
+--- a/drivers/mmc/core/mmc_test.c
++++ b/drivers/mmc/core/mmc_test.c
+@@ -316,11 +316,13 @@ static int mmc_test_buffer_transfer(struct mmc_test_card *test,
+ 
+ static void mmc_test_free_mem(struct mmc_test_mem *mem)
+ {
++	unsigned int idx;
++
+ 	if (!mem)
+ 		return;
+-	while (mem->cnt--)
+-		__free_pages(mem->arr[mem->cnt].page,
+-			     mem->arr[mem->cnt].order);
++	for (idx = 0; idx < mem->cnt; idx++)
++		__free_pages(mem->arr[idx].page,
++			     mem->arr[idx].order);
+ 	kfree(mem);
+ }
+ 
+@@ -341,6 +343,7 @@ static struct mmc_test_mem *mmc_test_alloc_mem(unsigned long min_sz,
+ 	unsigned long page_cnt = 0;
+ 	unsigned long limit = nr_free_buffer_pages() >> 4;
+ 	struct mmc_test_mem *mem;
++	unsigned int idx = 0;
+ 
+ 	if (max_page_cnt > limit)
+ 		max_page_cnt = limit;
+@@ -356,6 +359,7 @@ static struct mmc_test_mem *mmc_test_alloc_mem(unsigned long min_sz,
+ 	mem = kzalloc_flex(*mem, arr, max_segs);
+ 	if (!mem)
+ 		return NULL;
++	mem->cnt = max_segs;
+ 
+ 	while (max_page_cnt) {
+ 		struct page *page;
+@@ -375,23 +379,26 @@ static struct mmc_test_mem *mmc_test_alloc_mem(unsigned long min_sz,
+ 				goto out_free;
+ 			break;
+ 		}
+-		mem->arr[mem->cnt].page = page;
+-		mem->arr[mem->cnt].order = order;
+-		mem->cnt += 1;
++		mem->arr[idx].page = page;
++		mem->arr[idx].order = order;
++		idx += 1;
+ 		if (max_page_cnt <= (1UL << order))
+ 			break;
+ 		max_page_cnt -= 1UL << order;
+ 		page_cnt += 1UL << order;
+-		if (mem->cnt >= max_segs) {
++		if (idx >= mem->cnt) {
+ 			if (page_cnt < min_page_cnt)
+ 				goto out_free;
+ 			break;
+ 		}
+ 	}
+ 
++	mem->cnt = idx;
++
+ 	return mem;
+ 
+ out_free:
++	mem->cnt = idx;
+ 	mmc_test_free_mem(mem);
+ 	return NULL;
+ }
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.54.0
+
