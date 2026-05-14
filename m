@@ -1,130 +1,112 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8811EEA3C
-	for <linux-hardening@vger.kernel.org>; Thu, 14 May 2026 02:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64161ACEDF;
+	Thu, 14 May 2026 07:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778725019; cv=none; b=ibW+Ktb1owDtIfmC8KZq7EmgqQqj8vn7MM9fhM24UQ/NTgJsCvYDqU1Adp4qPUq1CYRSx8cGIkouX3b6y0K14nvj6Iokda+tzXv5dkvbqnx03IkY7/w3AYb7tjQKGiyrpVAANgDHbsXNLMmHry91Jd0NgFRc2VzvJjfbpgWodVE=
+	t=1778742648; cv=none; b=iw4Fye6Wm8z3yFAZRxW3M2R0PLO4A+xXVi2eCzJ3aaI+XB7h0ArfpsKpWeAvNlLQZ6E57KBg7NnD4W0GjsyGLp58GCZ3ri+de82Ao1qip/xD1t0GtHUp3XD5JQzd6CeTcYCYR62Pl1qqyT8yNkXrC96NMCv1juJ0FYp16w4iem8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778725019; c=relaxed/simple;
-	bh=+/EqXFH8UBug4+vHiukxscxva32NTqpB0Kx21ItGbt0=;
+	s=arc-20240116; t=1778742648; c=relaxed/simple;
+	bh=Dovb0ZSp5Q9c9EM9Cxe4xd9/THMwZyNDud2+qF48IrM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LzAMGI9bKY+FssbNuLv5T2n0VHmWz9GuUfMosQk44asCJuGIHk7ZuFmNCeKgrjU6xqlgOULgZAClsDHu0ZIverGDo//nvedlH8gnOyRZTJqdvHerGbLO7rr6Fjm0XkaTjAt4hOdkpoPJ+JfVDw0+5OShsk+6TlTUmSITmPWyHCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NiSJMa8A; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=NHaNO73WR9aetFd26V91KnFMeglwjR8aSsWKxJm7f1hyB1DpAQpbnl4d/jg5aqT6psM06qxTb9BeE3iJoDyhOGO19j/PmE6cLxHeFzqeLfo7tXIixBLkEuGxNFLC02XZjquetPRP67Wi1QNC8kBPJAy+lcR0369O3vOHfkY1oXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQVK+8Na; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NiSJMa8A"
-Message-ID: <5478f96d-277c-46c3-b437-1660706fd784@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778725006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sfUkHUvFvN9MUTYLegQqMkS5z5gU7HMTPPWfFS0sDNs=;
-	b=NiSJMa8AZj6pYNg9iccdQZ5+vV7Wlf4xHw5EyItlN4Uzap+ockOpYSTg+rB5FQHFwKLE9q
-	37R8dEt5EQ20J8HrNgu4yVkzNtBvhOyEDYo7mqvXwh6ZTBJIzHPruVplA/f5Z1wtC8L2J1
-	PwbFzmSX20hM2/kLwuIJAb3c0sVQDBQ=
-Date: Thu, 14 May 2026 10:16:19 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQVK+8Na"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4842C2BCB7;
+	Thu, 14 May 2026 07:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778742648;
+	bh=Dovb0ZSp5Q9c9EM9Cxe4xd9/THMwZyNDud2+qF48IrM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VQVK+8NamiDvmyWVPlvIE8KFbcc/zLvTxDHq8r4VS/uKjoZWsZArHZLG9uOnRCM8M
+	 +tbbV30upsQiO+lvzN1Wa3dfumk1WBVMNhOe4t0C8j7+v+u7D0SgLwFggRMnY+Ppv4
+	 j78PP3E0Wi8fN8eDISSNXzxB5NC8dwHs50RV6kThwJQ5FOUjKXNnx8wNGWBgdpuXpF
+	 CphgWuxoVP3uLKepFyEloksmre1TXKynCpqd33tVXorTfKlNqLzLpmT8g/E1obRlT3
+	 YGWVC5cHC+NQXI9ZzE4HWAGtYSevT6+hZ8DH3+yYVkzICVM7Fpkgn2/9bHiXtyXmLc
+	 QG0GlOd2L4C3A==
+Message-ID: <1f68fc67-66d8-4db0-8ddb-44737d7ea37e@kernel.org>
+Date: Thu, 14 May 2026 09:10:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm: make zeropage read-only
-To: Yang Shi <shy828301@gmail.com>
-Cc: jannh@google.com, rppt@kernel.org, akpm@linux-foundation.org,
- arnd@arndb.de, linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- ardb@kernel.org, sethjenkins@google.com
-References: <CAHbLzkrXXe7r3n3jXgDKtwZhRqj=jDx9E6dLOULohnhBguvi9A@mail.gmail.com>
- <20260513021148.17588-1-lance.yang@linux.dev>
- <CAHbLzkpBB2ia4pUG1khZy1w5G_sq6DD+9OnqjrJ6Yu0KxPAe=A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] slab: improve KMALLOC_PARTITION_RANDOM randomness
+To: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Bill Wendling <morbo@google.com>,
+ David Hildenbrand <david@kernel.org>, David Rientjes <rientjes@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>,
+ Justin Stitt <justinstitt@google.com>, KP Singh <kpsingh@kernel.org>,
+ Kees Cook <kees@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Matteo Rizzo <matteorizzo@google.com>, Michal Hocko <mhocko@suse.com>,
+ Mike Rapoport <rppt@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Suren Baghdasaryan <surenb@google.com>, linux-hardening@vger.kernel.org,
+ Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>,
+ "Liam R. Howlett" <liam@infradead.org>,
+ Alexander Potapenko <glider@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, kasan-dev@googlegroups.com, llvm@lists.linux.dev
+References: <20260511200136.3201646-1-elver@google.com>
+ <20260511200136.3201646-2-elver@google.com>
+ <afc2202a-2e0b-43e0-9556-06be2da33c83@kernel.org>
+ <CANpmjNN0-b0TG2=7SsPpRuubwTWYfoAiYgnnM_5-39SoVfv=Pw@mail.gmail.com>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <CAHbLzkpBB2ia4pUG1khZy1w5G_sq6DD+9OnqjrJ6Yu0KxPAe=A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CANpmjNN0-b0TG2=7SsPpRuubwTWYfoAiYgnnM_5-39SoVfv=Pw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 2026/5/14 07:10, Yang Shi wrote:
-> On Tue, May 12, 2026 at 7:12 PM Lance Yang <lance.yang@linux.dev> wrote:
+On 5/12/26 14:54, Marco Elver wrote:
+> On Tue, 12 May 2026 at 12:37, 'Vlastimil Babka (SUSE)' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
+>> On 5/11/26 22:00, Marco Elver wrote:
+>> > When using CONFIG_KMALLOC_PARTITION_RANDOM, _RET_IP_ was previously used
+>> > to identify the allocation site. _RET_IP_, however, evaluates to the
+>> > caller's parent's instruction pointer rather than the actual allocation
+>> > site; this would lead to collisions where a function performs multiple
+>> > allocations.
+>> >
+>> > With the generalization to kmalloc_token_t, we now generate the token at
+>> > the outermost macro, and using _THIS_IP_ would fix this for all cases.
 >>
->>
->> On Tue, May 12, 2026 at 10:14:01AM -0700, Yang Shi wrote:
->>> On Tue, May 12, 2026 at 6:48 AM Jann Horn <jannh@google.com> wrote:
->>>>
->>>> On Tue, May 12, 2026 at 4:31 AM Lance Yang <lance.yang@linux.dev> wrote:
->>>>> Would it makes sense to apply a similar treatment to huge_zero_folio
->>>>> as well?
->>>>>
->>>>> with CONFIG_PERSISTENT_HUGE_ZERO_FOLIO=y, it is allocated at boot and
->>>>> never freed, so it should never be written after initialization either :)
->>>>
->>>> Oh, neat, I didn't realize that that feature exists.
->>>>
->>>> I guess there are two aspects of making the huge zero folio RO that
->>>> could be problematic:
->>>>
->>>> 1. If the huge zero folio comes from the page allocator, making it
->>>> read-only might require splitting a huge PUD, which could have
->>>> performance implications.
->>>> 2. I vaguely remember arm64 has rules about how PUD/PMD entries in the
->>>> linear mapping can't be split at runtime at all depending on hardware
->>>> capabilities, meaning the entire linear mapping may need to be mapped
->>>> without any huge PUD/PMD entries - IDK if thp_shrinker_init() runs
->>>> early enough to be excepted from that. See can_set_direct_map() and
->>>> force_pte_mapping() in arch/arm64/.
->>>
->>> Yes. First of all, this relies rodata mode. If rodata=on (used to be
->>> called full), the linear mapping may be mapped by PUD/PMD if the
->>> hardware can support BBML2_NOABORT, otherwise it is mapped at PTE
->>> level all the time. But how huge zero folio is mapped in linear
->>> mapping should not matter, you just need to change the linear mapping
->>> permission to RO anyway.
->>>
->>> If the rodata mode is off or noalias (used to be called on), the
->>> linear mapping may be mapped by PUD/PMD, but basically changing linear
->>> mapping permission is not expected by kernel.
->>
->> Ah, right. So for huge_zero_folio the hard part is not just making the
->> backing memory read-only, but also whether we can change the linear
->> mapping permission for that range. That depends on the arm64 rodata mode
->> / direct-map setup.
+>> Hm but it means in patch 1 we make things even worse and then fix them
+>> again, and also improve what was suboptimal prior to the series.
+>> Would it be instead possible to reorder patches 1 and 2 so we improve the
+>> current state first, and then introduce typed partitioning without any
+>> changes to the randomized one? (aside from changing the previously correcly
+>> used cases _RET_IP_ to _CODE_LOCATION_).
 > 
-> An alternative is you can allocate huge zero folio in the early stage
-> of boot before linear mapping is set up. Then when setting up linear
-> mapping, you can just make that PMD RO. It should work regardless of
-> rodata mode.
+> It won't work (it could be made to work if _THIS_IP_ wasn't broken).
+> The compiler is supposed to maintain semantics of a static variable in
+> a function, even inline functions, and refer to the same static
+> variable -- and because kmalloc_type is an inline function, if
+> _CODE_LOCATION_ is the non-_THIS_IP_ version, it'd break.
 
-Cool. Good call. That would avoid changing the linear map permissions at
-runtime.
+Oh, I see.
 
-Thanks for pointing that out! I'll take a look when I get a chance :)
-
-Cheers, Lance
-
-> Thanks,
-> Yang
+> Even if _THIS_IP_ wasn't broken, the other complication is introducing
+> the slab.c vs. outside use of kmalloc_type differentiation.
 > 
->>
->> Thanks Jann and Yang for the explanations!
->> Lance
->>
->>> Thanks,
->>> Yang
->>>
->>>>
->>>> So making the huge zero folio RO in the linear map would probably
->>>> require adding a new config flag, connecting that to
->>>> ARCH_HAS_SET_DIRECT_MAP, and changing one or two places in arm64
->>>> memory management.
->>>>
->>>
+> Both these problems go away if we make this patch 2 (using
+> _CODE_LOCATION_ on the outer macro, not in an inline function).
+> 
+> While I understand that maybe we could have considered this as a
+> stable backport, I think it's borderline; the feature isn't broken
+> per-se, just slightly lower randomness than perhaps intended if size
+> is a constant expression. A minimal fix prior to the macro rework
+> currently eludes me.
 
+Fair enough. I wanted to avoid a bisection hazard, but since it's not
+feasible and it shouldn't actually break anything (compilation, run), it's
+acceptable. Thanks.
