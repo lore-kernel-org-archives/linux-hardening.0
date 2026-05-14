@@ -1,211 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F04C32ED5C;
-	Thu, 14 May 2026 16:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD4E3093BB
+	for <linux-hardening@vger.kernel.org>; Thu, 14 May 2026 16:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778775552; cv=none; b=VPsTW8wwMY68Yjc51YgkGkcXK4GVGJ254i1a4t8lVR1MKJdZ0ijkAVkuuZ946YD/HQb0yoGQoZtnNe8EwvLNMZAEX5+I95CQgiCLk9gZgX9s1/nMTBUHx2jT+Hj5CrUdqL5qfL5qwkAUotTHkyeTWJeYYWsU84XWl1yPF8EsQ18=
+	t=1778777799; cv=none; b=M+rIPLASmrLDyQN+Ooj7mMV/Vi4cuBo11UkrPPMEsnBPbSs3wWIqvpmVCV4hWqgkeMJLGHB0EcsC0Bo/AIU3t+aB1s9oGcydjP/FF0BvkmrHoJG4ndrnrN606nuWZw+Zlay0PQ4Qkuq094XV1O6zeXQuxrblPjmu9eO5MVlrQeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778775552; c=relaxed/simple;
-	bh=F5wvXsrQ072xrenn6NhqUcsSK80NMgYOdkf79Wcyit0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VDvXLNGe7kLgTPEfB11ZeIuSfaeOI3+LMEVOvMpVDomDPi41oN+fkiDTrDQioyFhe2CBNjyyuHnCDoy9UkLA43A7W5VCCEI6hA9WJmiGKx24/Ob3eRCiX7akV4SQFa7DGJ0SjvqXAphfYy83AusCp0/+UUK08Vf1fybH/xTZth4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyI7aUt5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778777799; c=relaxed/simple;
+	bh=gzaa5iePAZiz1sg/wFSdpH4cQWwypXIWN8DbImMC8FY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=djO8neL2AL4eYGKM6XpgtgudSjNY7fDIBA6dwM5rRNOC4H3cFhJ2M1uSyjayaUoO1s5fl+l4Ymq2GJ65kRzNlV/vsq6h4KjHF3b0B61+PfcOxzAOyKdggJHV+2BmG3bzVV9WBwauZ03v/mcTMMBsR39HCpE7c625iwjoXL0yyoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X2aSQPsc; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyI7aUt5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D67DC2BCB3;
-	Thu, 14 May 2026 16:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778775552;
-	bh=F5wvXsrQ072xrenn6NhqUcsSK80NMgYOdkf79Wcyit0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DyI7aUt5Odd7cxM308rIqtrnCHzkcvK8kpOQGBf2iNBUalcyubX6bYqabIhQxwMzB
-	 QclfOAr+oIg93PZSuYlXikSzrYk1FfydLDzroPOpFSeKdvE1jnfHQKyNbzpIXLkhdl
-	 ZHCT628QYWZmbRHmUdpUrTxQ3hbRFj2JL7o5SYrBcsXNA6bN6EcG+TB5cPZehfRdvd
-	 VxJ9KytgCshu+2ddvSQLEW5epkaooiLDyxTylDhU4UodHc1jAwawOyzxKSeobMbiGx
-	 mSKo1MF9zTmmrtBUXPzpMHzIcPlDdTadQDA6KTs8hADWt5bLnetDS9Y+Y7auYiBNGl
-	 PoDqL6LpF1Eag==
-Date: Thu, 14 May 2026 09:19:11 -0700
-From: Kees Cook <kees@kernel.org>
-To: Milan Tripkovic <milant2002@gmail.com>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Andy Shevchenko <andy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	Dusan Stojkovic <Dusan.Stojkovic@rt-rk.com>,
-	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 2/2] lib/string_kunit: extend benchmarks and unit test
- to memcmp()
-Message-ID: <202605140916.09FBB1A4@keescook>
-References: <20260514121359.931999-1-milant2002@gmail.com>
- <20260514121359.931999-3-milant2002@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X2aSQPsc"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778777795;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tbv8ak9UNoJIeSwadmarn+te6qWkig7YLGlW6ok+WOk=;
+	b=X2aSQPscD7WDuQpPNwdsEVlJXWx0t1Wfq97MwNMJ96CDCqk9ONFevQHUtj0Snb4SkbWkz4
+	KidNKV9p+WpGnHCFwAUz8iSmZcZXAijIHN2midpnSh2bqw5eg7kAKdHT5P+amEy8PhLAfT
+	LMNcSVBBfx/U7aPqeaqB2YMNTbKfUEY=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] string: use min in sized_strscpy
+Date: Thu, 14 May 2026 18:56:03 +0200
+Message-ID: <20260514165601.527883-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260514121359.931999-3-milant2002@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1128; i=thorsten.blum@linux.dev; h=from:subject; bh=gzaa5iePAZiz1sg/wFSdpH4cQWwypXIWN8DbImMC8FY=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFms/xYuXVEo578x9m7VodZtmYdfKUxndHu4eV8l29337 nXGtlarOkpZGMS4GGTFFFkezPoxw7e0pnKTScROmDmsTCBDGLg4BWAiHtcZGX4fn/ExtHvKzYZt rfK6f+d7puyImaX/fObzF7P9QrznpFgx/I8qqWhL+MTEWqb3o9wkpPfPMXXFkF75tzvats2YevJ hIC8A
+X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 14, 2026 at 02:13:58PM +0200, Milan Tripkovic wrote:
-> From: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
-> 
-> Extend the string benchmarking suite to include memcmp().
-> Extend the string unit test to include memcmp().
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202605140827.Qg1DZpcB-lkp@intel.com/
-> Signed-off-by: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
-> ---
->  lib/tests/string_kunit.c | 106 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 106 insertions(+)
-> 
-> diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-> index 0819ace5b027..d0bad40a719a 100644
-> --- a/lib/tests/string_kunit.c
-> +++ b/lib/tests/string_kunit.c
-> @@ -881,6 +881,110 @@ static void string_bench_strrchr(struct kunit *test)
->  	STRING_BENCH_BUF(test, buf, len, strrchr, buf, '\0');
->  }
->  
-> +static void string_test_memcmp(struct kunit *test)
-> +{
-> +	const int max_offset = 16;
-> +	const int max_len = 32;
-> +	const int buf_size = max_offset + max_len + 32;
-> +	u8 *buf1, *buf2;
-> +	int i, j, len, k;
-> +
-> +	buf1 = kunit_kzalloc(test, buf_size, GFP_KERNEL);
-> +	buf2 = kunit_kzalloc(test, buf_size, GFP_KERNEL);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf1);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf2);
-> +
-> +	for (i = 0; i < max_offset; i++) {
-> +		for (j = 0; j < max_offset; j++) {
-> +			for (len = 0; len <= max_len; len++) {
-> +				memset(buf1, 'A', buf_size);
-> +				memset(buf2, 'A', buf_size);
-> +				KUNIT_EXPECT_EQ_MSG(test, memcmp(buf1 + i, buf2 + j, len), 0,
-> +						    "Should be equal: i:%d j:%d len:%d", i, j, len);
-> +				for (k = 0; k < len; k++) {
-> +					memset(buf1, 'A', buf_size);
-> +					memset(buf2, 'A', buf_size);
-> +					buf2[j + k] = 'B';
-> +					int res = memcmp(buf1 + i, buf2 + j, len);
-> +
-> +					KUNIT_EXPECT_NE_MSG(test, res, 0,
-> +							    "Should detect difference at k:%d (i:%d j:%d len:%d)",
-> +						k, i, j, len);
-> +
-> +					if (buf1[i + k] < buf2[j + k])
-> +						KUNIT_EXPECT_LT(test, res, 0);
-> +					else
-> +						KUNIT_EXPECT_GT(test, res, 0);
-> +				}
-> +			}
-> +		}
-> +	}
-> +}
+Use min() and drop the limit variable to simplify sized_strscpy().
 
-This looks good, thanks!
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ lib/string.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-> +#if IS_ENABLED(CONFIG_STRING_KUNIT_BENCH)
-> +static void string_bench_memcmp(struct kunit *test)
-> +{
-> +	char *buf1, *buf2;
-> +	size_t lengths[] = { 1, 7, 8, 16, 32, 64, 128, 512, 1024, 4096};
-> +	int offsets[] = {0, 1, 3, 7};
-> +	const size_t max_len = 4096 + 64;
-
-I think I'd prefer, instead of a ifdef stub, to do:
-
-        if (!IS_ENABLED(CONFIG_STRING_KUNIT_BENCH))
-	        kunit_skip(test, "CONFIG_STRING_KUNIT_BENCH not enabled")
-
-here.
-
-> +
-> +	buf1 = vmalloc(max_len);
-> +	buf2 = vmalloc(max_len);
-> +
-> +	if (!buf1 || !buf2) {
-> +		vfree(buf1);
-> +		vfree(buf2);
-> +		kunit_err(test, "vmalloc failed\n");
-> +		return;
-> +	}
-> +
-> +	memset(buf1, 'A', max_len);
-> +	memset(buf2, 'A', max_len);
-> +
-> +	for (int i = 0; i < 100000; i++)
-> +		(void)memcmp(buf1, buf2, 4096);
-> +
-> +	for (int o = 0; o < ARRAY_SIZE(offsets); o++) {
-> +		int off = offsets[o];
-> +
-> +		for (int i = 0; i < ARRAY_SIZE(lengths); i++) {
-> +			size_t len = lengths[i];
-> +			char *p1 = buf1;
-> +			char *p2 = buf2 + off;
-> +
-> +			u32 iterations = (len < 512) ? 100000 : 10000;
-> +
-> +			for (u32 j = 0; j < iterations; j++) {
-> +				(void)memcmp(p1, p2, len);
-> +				barrier();
-> +			}
-> +
-> +			u64 elapsed = STRING_BENCH(iterations, memcmp, p1, p2, len);
-> +			u64 ns_per_call = div_u64(elapsed, iterations);
-> +			u64 mbps = len ? div_u64((u64)len * iterations * 1000,
-> +									 elapsed) : 0;
-> +
-> +			if (off == 0) {
-> +				kunit_info(test, "bench_memcmp_aligned: len=%-4zu: %llu MB/s (%llu ns/call)\n",
-> +					   len, mbps, ns_per_call);
-> +			} else {
-> +				kunit_info(test, "bench_memcmp_unaligned(off=%d): len=%-4zu: %llu MB/s (%llu ns/call)\n",
-> +					   off, len, mbps, ns_per_call);
-> +			}
-> +		}
-> +	}
-> +
-> +	vfree(buf1);
-> +	vfree(buf2);
-> +}
-> +#else
-> +static void string_bench_memcmp(struct kunit *test)
-> +{
-> +	kunit_skip(test, "not enabled");
-> +}
-> +#endif
-> +
->  static struct kunit_case string_test_cases[] = {
->  	KUNIT_CASE(string_test_memset16),
->  	KUNIT_CASE(string_test_memset32),
-> @@ -910,6 +1014,8 @@ static struct kunit_case string_test_cases[] = {
->  	KUNIT_CASE(string_bench_strnlen),
->  	KUNIT_CASE(string_bench_strchr),
->  	KUNIT_CASE(string_bench_strrchr),
-> +	KUNIT_CASE(string_test_memcmp),
-> +	KUNIT_CASE_SLOW(string_bench_memcmp),
->  	{}
->  };
->  
-> -- 
-> 2.43.0
-> 
-
--- 
-Kees Cook
+diff --git a/lib/string.c b/lib/string.c
+index b632c71df1a5..1f9297e9776a 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -21,6 +21,7 @@
+ #include <linux/errno.h>
+ #include <linux/limits.h>
+ #include <linux/linkage.h>
++#include <linux/minmax.h>
+ #include <linux/stddef.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+@@ -125,11 +126,8 @@ ssize_t sized_strscpy(char *dest, const char *src, size_t count)
+ 	 * If src is unaligned, don't cross a page boundary,
+ 	 * since we don't know if the next page is mapped.
+ 	 */
+-	if ((long)src & (sizeof(long) - 1)) {
+-		size_t limit = PAGE_SIZE - ((long)src & (PAGE_SIZE - 1));
+-		if (limit < max)
+-			max = limit;
+-	}
++	if ((long)src & (sizeof(long) - 1))
++		max = min(PAGE_SIZE - ((long)src & (PAGE_SIZE - 1)), max);
+ #else
+ 	/* If src or dest is unaligned, don't do word-at-a-time. */
+ 	if (((long) dest | (long) src) & (sizeof(long) - 1))
