@@ -1,63 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CD231A053;
-	Thu, 14 May 2026 01:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8811EEA3C
+	for <linux-hardening@vger.kernel.org>; Thu, 14 May 2026 02:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778722663; cv=none; b=lmEbQXxPUlLeO49IMNfiMSq+z/HqBed/X58GESw5kyVO+MbQEQEItrvEXt+sGJ8k7IpqeZQsEsYyAxGwowppPn3iBCF9nfIgAvIt1griMgMnRGtZFt8Z/bTlllRoJo6KwtTYCy6sPKuK6YIgGjPI+jW6U7OCI7NFvH7so0+w6EY=
+	t=1778725019; cv=none; b=ibW+Ktb1owDtIfmC8KZq7EmgqQqj8vn7MM9fhM24UQ/NTgJsCvYDqU1Adp4qPUq1CYRSx8cGIkouX3b6y0K14nvj6Iokda+tzXv5dkvbqnx03IkY7/w3AYb7tjQKGiyrpVAANgDHbsXNLMmHry91Jd0NgFRc2VzvJjfbpgWodVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778722663; c=relaxed/simple;
-	bh=JAiknqCeMzr1Jm72EO+k4Z4Q0E6NbNXwKVqDC+oNyHw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KCpVv+zEiJZpXkaJwr9wqFngF/6YRk18z8H4vfuQD89kCgHJdKX0iPZ6ul/gFuNcyyrYGyUYWg2f/3Vk/GB6UN0DJhxMVvhHIrJkhZoXsbXuWI3v3B9fuUD1OcJ53fyGfIg4/c1rG8h9qAommZMQP6IweTObiKcF90PdEqcLTJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFPwYKOX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778725019; c=relaxed/simple;
+	bh=+/EqXFH8UBug4+vHiukxscxva32NTqpB0Kx21ItGbt0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LzAMGI9bKY+FssbNuLv5T2n0VHmWz9GuUfMosQk44asCJuGIHk7ZuFmNCeKgrjU6xqlgOULgZAClsDHu0ZIverGDo//nvedlH8gnOyRZTJqdvHerGbLO7rr6Fjm0XkaTjAt4hOdkpoPJ+JfVDw0+5OShsk+6TlTUmSITmPWyHCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NiSJMa8A; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFPwYKOX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D02C19425;
-	Thu, 14 May 2026 01:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778722663;
-	bh=JAiknqCeMzr1Jm72EO+k4Z4Q0E6NbNXwKVqDC+oNyHw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=RFPwYKOXAvHStZDKdPz7MjigMMcpdfevXvFUCv0TBh2askYK/dm4fxlIv5rB6fo0D
-	 2S212xZ+0Y+51KMtBrfY1oV4kfwt07CpKrS0fCMuMPoLJqFTI+uyG0BzYu0IVpty6W
-	 V0JoduGio8XxtwNzU8+NXf5ECc1JSL87DGjBWvm3EsYM9sC2m17cDfIz/J/qoZ9hrZ
-	 Lln80LD7TcgmaBfNMFOKuoQvsNSDr3WFXqstSmo8DO5bUwuYEUC8+B63Kxc4hcVAyX
-	 1TLOdVT01Sgw43XianozG5j1lMF9pUkXnCQdX4e80Y+WLIVOt+TYWbYhaZ+0oQu8fy
-	 QJCzpr2/aF0Jw==
-Date: Wed, 13 May 2026 19:37:41 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-cc: Nicolas Schier <nsc@kernel.org>, Bill Wendling <morbo@google.com>, 
-    Justin Stitt <justinstitt@google.com>, 
-    Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-    linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-    linux-kbuild@vger.kernel.org, Paul Walmsley <pjw@kernel.org>, 
-    Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-    Alexandre Ghiti <alex@ghiti.fr>, Kees Cook <kees@kernel.org>, 
-    linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 08/14] riscv: Remove tautological condition from selection
- of ARCH_SUPPORTS_CFI
-In-Reply-To: <20260428-bump-minimum-supported-llvm-version-to-17-v1-8-81d9b2e8ee75@kernel.org>
-Message-ID: <8a77b39f-1a44-df07-2586-9f568164bad5@kernel.org>
-References: <20260428-bump-minimum-supported-llvm-version-to-17-v1-0-81d9b2e8ee75@kernel.org> <20260428-bump-minimum-supported-llvm-version-to-17-v1-8-81d9b2e8ee75@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NiSJMa8A"
+Message-ID: <5478f96d-277c-46c3-b437-1660706fd784@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778725006;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sfUkHUvFvN9MUTYLegQqMkS5z5gU7HMTPPWfFS0sDNs=;
+	b=NiSJMa8AZj6pYNg9iccdQZ5+vV7Wlf4xHw5EyItlN4Uzap+ockOpYSTg+rB5FQHFwKLE9q
+	37R8dEt5EQ20J8HrNgu4yVkzNtBvhOyEDYo7mqvXwh6ZTBJIzHPruVplA/f5Z1wtC8L2J1
+	PwbFzmSX20hM2/kLwuIJAb3c0sVQDBQ=
+Date: Thu, 14 May 2026 10:16:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH] mm: make zeropage read-only
+To: Yang Shi <shy828301@gmail.com>
+Cc: jannh@google.com, rppt@kernel.org, akpm@linux-foundation.org,
+ arnd@arndb.de, linux-mm@kvack.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ ardb@kernel.org, sethjenkins@google.com
+References: <CAHbLzkrXXe7r3n3jXgDKtwZhRqj=jDx9E6dLOULohnhBguvi9A@mail.gmail.com>
+ <20260513021148.17588-1-lance.yang@linux.dev>
+ <CAHbLzkpBB2ia4pUG1khZy1w5G_sq6DD+9OnqjrJ6Yu0KxPAe=A@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <CAHbLzkpBB2ia4pUG1khZy1w5G_sq6DD+9OnqjrJ6Yu0KxPAe=A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 28 Apr 2026, Nathan Chancellor wrote:
 
-> Now that the minimum supported version of LLVM for building the kernel
-> has been raised to 17.0.1, the condition of the selection of
-> CONFIG_ARCH_SUPPORTS_CFI is always true, so it can be removed.
+
+On 2026/5/14 07:10, Yang Shi wrote:
+> On Tue, May 12, 2026 at 7:12 PM Lance Yang <lance.yang@linux.dev> wrote:
+>>
+>>
+>> On Tue, May 12, 2026 at 10:14:01AM -0700, Yang Shi wrote:
+>>> On Tue, May 12, 2026 at 6:48 AM Jann Horn <jannh@google.com> wrote:
+>>>>
+>>>> On Tue, May 12, 2026 at 4:31 AM Lance Yang <lance.yang@linux.dev> wrote:
+>>>>> Would it makes sense to apply a similar treatment to huge_zero_folio
+>>>>> as well?
+>>>>>
+>>>>> with CONFIG_PERSISTENT_HUGE_ZERO_FOLIO=y, it is allocated at boot and
+>>>>> never freed, so it should never be written after initialization either :)
+>>>>
+>>>> Oh, neat, I didn't realize that that feature exists.
+>>>>
+>>>> I guess there are two aspects of making the huge zero folio RO that
+>>>> could be problematic:
+>>>>
+>>>> 1. If the huge zero folio comes from the page allocator, making it
+>>>> read-only might require splitting a huge PUD, which could have
+>>>> performance implications.
+>>>> 2. I vaguely remember arm64 has rules about how PUD/PMD entries in the
+>>>> linear mapping can't be split at runtime at all depending on hardware
+>>>> capabilities, meaning the entire linear mapping may need to be mapped
+>>>> without any huge PUD/PMD entries - IDK if thp_shrinker_init() runs
+>>>> early enough to be excepted from that. See can_set_direct_map() and
+>>>> force_pte_mapping() in arch/arm64/.
+>>>
+>>> Yes. First of all, this relies rodata mode. If rodata=on (used to be
+>>> called full), the linear mapping may be mapped by PUD/PMD if the
+>>> hardware can support BBML2_NOABORT, otherwise it is mapped at PTE
+>>> level all the time. But how huge zero folio is mapped in linear
+>>> mapping should not matter, you just need to change the linear mapping
+>>> permission to RO anyway.
+>>>
+>>> If the rodata mode is off or noalias (used to be called on), the
+>>> linear mapping may be mapped by PUD/PMD, but basically changing linear
+>>> mapping permission is not expected by kernel.
+>>
+>> Ah, right. So for huge_zero_folio the hard part is not just making the
+>> backing memory read-only, but also whether we can change the linear
+>> mapping permission for that range. That depends on the arm64 rodata mode
+>> / direct-map setup.
 > 
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> An alternative is you can allocate huge zero folio in the early stage
+> of boot before linear mapping is set up. Then when setting up linear
+> mapping, you can just make that PMD RO. It should work regardless of
+> rodata mode.
 
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+Cool. Good call. That would avoid changing the linear map permissions at
+runtime.
 
-- Paul
+Thanks for pointing that out! I'll take a look when I get a chance :)
+
+Cheers, Lance
+
+> Thanks,
+> Yang
+> 
+>>
+>> Thanks Jann and Yang for the explanations!
+>> Lance
+>>
+>>> Thanks,
+>>> Yang
+>>>
+>>>>
+>>>> So making the huge zero folio RO in the linear map would probably
+>>>> require adding a new config flag, connecting that to
+>>>> ARCH_HAS_SET_DIRECT_MAP, and changing one or two places in arm64
+>>>> memory management.
+>>>>
+>>>
+
