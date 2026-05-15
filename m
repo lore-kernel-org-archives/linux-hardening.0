@@ -1,202 +1,130 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3804381AF5
-	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 06:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C39372EE4
+	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 06:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778827043; cv=pass; b=dzhfECylcTBvWK8OztFVywY+652geKqxpQtNsiqOFXKn6ZVRV25HNF7R4pemVSWZy2cMCXEhdVqHGKH4Np3+N/TIFf3/wg610s60aMtcTalPmhSP5ASbiZn4DFkQSHhl+ScnZPjmktHFOEOt50AoFS03y6brLbx1r7clju4q5Ao=
+	t=1778827548; cv=pass; b=HrEa/rS2zDezu3dsLIkj70Pkqlg/QwHGMXhQnslPnp77qfzWOPQpsoy1X0xlszzM9f1DWNCseVT3sSYB/pVminlA/2pverGB0EloHfC/RuNQFtDHnM72wN3IZ17oqLVQ/0RozlYObWI5mSWFkBLtF+TOHivALpFlk6l0H3AGEvc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778827043; c=relaxed/simple;
-	bh=/jqHs8uGFL/YrVYfbB2cdUqcQe4D+MVqyjDguazmLzs=;
+	s=arc-20240116; t=1778827548; c=relaxed/simple;
+	bh=Ws1Gc+VhxkBNnjLUnFz1PzRw+JkD3xhQsLHCA0yvfdc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CVBz5ePj5X2ig5b0TPJ81JB3ozlakAcsQpaUMlfIU9wEZ5Bs1MDk+rrlaVscOat4XDu7jxaX/Ai251+OvOxKbpf6UINWHcV4QMBV98S8UJraZcTfIUEDxn3bIOgNy5xKlBAGbVWJY3ZDKSa/fG/qu/IUjWdA36A6QlYc7ZpAKoQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qYd+jD82; arc=pass smtp.client-ip=209.85.218.43
+	 To:Cc:Content-Type; b=dGK8dQDLBLBImPYROlfRQijeY3Vrnv9zjAaEmD69mKQxDGgSXPPOcK/fYU2szjPD4YdW0JJ0SUt9KJIfLy/7sEHYQ5tgjzTbVADgbxnUPS7gYkVsLzIsRymFM6BUWKQH9qeab3dwAVIKt3KwlVfjqzVuHQmQwaVMTsO715LUNIM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HeBgTAcN; arc=pass smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYd+jD82"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-bd373f83042so554774866b.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 May 2026 23:37:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778827040; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HeBgTAcN"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-bd01481e592so711678666b.2
+        for <linux-hardening@vger.kernel.org>; Thu, 14 May 2026 23:45:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778827545; cv=none;
         d=google.com; s=arc-20240605;
-        b=ftjkUo+LEA4iIyuES+Hf8+a/Ll3c6CblBD/QWEoG5/HfzuNnhvEjTv1cltAi9DzMiS
-         hpxnkoMtOJRVCUHCmTSS3A++tJ9kFqwQoNYwIUakQrXPL4rURhY2F+inkTPrQ/U35okN
-         vCodHNmFHQ2d7lDhG5EoTiGkQll6cv5AOHFGaXhi+3Nk6QtV9TAKjRkOjd4aKAy/1X42
-         X5qrKSYd2eTs9LmxOcYBbXPgUwebn6jDYESFP8RT0OKUlJwkS3rDdWgSliNJ1AdZcVzx
-         r4fcFqmVkvTQffc2AP8wiDuLCVMOBXHzU1DFoWYBgLqkT6S/YuejLQHWBdtNGhRPqq7N
-         Y22A==
+        b=dD/MBjp78s6L/0EvWgWEXohl0ODQZd8Yvft5yu9bWxXXJmivEgmSNcxjTcxrj69Vp5
+         jIhThw+v4iBforUaJLwT7PnpcQvvhCmtdgq8DRFrOnzE90I1kN4TUJT5ox4wFzO8Jauf
+         6NYJT/0QALgX7Mj5yfw2Xm8com9yB7MSUt2ZI5OFUfYRcj5yp1bmxKmMFDtxEJg0nziX
+         GReYHNCTkQVG+uemvh3hdDSEgtMUI+DzTCM/SMxm2ywL4p2lMsrEkYowf2nRh9KuolCr
+         eLDdK96h+I1En/fgAESJeK9jm6NDu7XenJKMqKshRKVLYMkJ/F5TlExVAsMPRhqMThfp
+         6BQw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=4LMCqVFSjOu6qSrwojx1FavaW0eHqSxzlXVygC4r2vs=;
-        fh=RNWZO7O9GxeX+3av/d8fT8xMNFMGzSlnpitH3AMMI/Y=;
-        b=W6+FCyfEJseSbdSKmb7ohZuuBHdIXb2R/REtPp2a7emw9HaZa6/MYsoLMALRk6thky
-         Nj/dUpbawWQ3WGj4Qbm52AH/ThFrufst2bAY9fUfjjtFIOeqpL1MtEw3bJx4e/4WA3Iz
-         y1fpFWckE9mK6So5ARd+JsBGVO5Ftwe1bYI0dx3bIj/fT3FZ/9klSYw7stNwji8OnFD+
-         u4GEaDUM9aTIH4DKJxK+OHKl08OyPIzDnBtyPmGd+JSx3vWo5kaNk9YcG30x79EIwds5
-         bxwXU+nxTPvry1soUebuMZrb+GEqmXrsXJ7Ncm4UkmKE9ElHd0tRBWXIOK+qSYeJ8qPV
-         GENQ==;
+        bh=CTOsRa7RP9KmtOOJHB8Sv6ZLajXrjnlDy47FiLMqYeQ=;
+        fh=jinKPgjxHgT2UxCHCyK7z6aIY0qOM9qRMoH2ReiL6P0=;
+        b=POR2J3reMz6AQ6bAHxpM0b+A8df6O3p4KHmyOdxQrr1zGgC0SP3Cl+mErRb2SGVwGb
+         8Pi6r7aUk7+i+U2ldraVd1RwXU+FMaDAKn3sWaKV+U0yOmk/4iCacPY+Q7L1t4LCuoaf
+         ZIm4Wov2hEZ4ETkkn6vP+I4Fez4ojnEx1DWdqtbpn8IiwOly93rOsSYF1P03OiSty373
+         Nt0TuIJ9Nsyl6AqFxsLogFzt7uXtzInRVz2Vok323JkaGJOKkM1cmqq6Ga4eHXF08ZY/
+         r7Nmjx8Tho/JrxPmZpDKda2MNTvxHQQKwvZSpuLa7c/Ca/GVBqM1nqzQg5agYAiyb4pR
+         k6NA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778827040; x=1779431840; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778827545; x=1779432345; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4LMCqVFSjOu6qSrwojx1FavaW0eHqSxzlXVygC4r2vs=;
-        b=qYd+jD82mDInQWNXnqHgzRJp6nhHlNcpfFuzYBEh53o+5LkdkZcxLP6eIyz2wtbISl
-         z9LpKDlQpg3M8GtV+4NeERHa/Cp6V72A4kOj3GAD5ALysXMpqtgp2ciIDGZb7zbPWYUj
-         UvwRC9Zoq4pQ96c902QpR5X+8LIWMX31KaNWslx3nP2h+EcusZjxuzAsGR5ytv0P+UYE
-         Z8uInxZy86CmbVaXyc8GM9yKn1h/TdcPZZHqRVKhiFCqfhylifXKdCRQJn76AG0j6SWQ
-         Bn8dnlTcZcF5nh+CYnzXo5oh1JgaZOraK1As5FNvUbTjC/V6CDdGqU2bHweEu+uKiaYg
-         +mDw==
+        bh=CTOsRa7RP9KmtOOJHB8Sv6ZLajXrjnlDy47FiLMqYeQ=;
+        b=HeBgTAcNAE1rti1EjdFZyD2gSsH6RLZP/eVTZTS+HkI03aHH1gZA+i1EN/yiB4YPfG
+         8Pj+50ESgCBKGMjCc8X/CNDjFcDO7c0J8orKlTN3Tzbn1YPTM0zzxjqmmY+sH3fNpHIX
+         tlJre9UrfUT1ABRmXlTPaYiuT/GTMoWaf8OvHEDIuIuMPCsPQPrFTFkK2xjnfciatJQn
+         7SK7tnmmnR4KMJUCaNK/AlG5XWEVQP0GA6W9ruNsMWb+2S/UvsJIy6KpsXO2bT17zl54
+         HsMSgo+GqxF8+zNat5JIvJE1BR5POXwpNAgdrA13Ko8hnxMHP3EZRkcCwxtzsOjMqyP2
+         DxgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778827040; x=1779431840;
+        d=1e100.net; s=20251104; t=1778827545; x=1779432345;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=4LMCqVFSjOu6qSrwojx1FavaW0eHqSxzlXVygC4r2vs=;
-        b=PjjpLjbZM9/cNUoU/EgwZ2MKnZ9Vea2nMwC/ImiJogH+QAvOW4SRCEmb/VhO/3fqUo
-         rMbwSaI9TCJPKjhfQrZCc5rKAJngf+OmEjgG4KUT5/hUyMZAR6QKFMKMw/sR/ojsRaCm
-         YUevEAMuOH9SAQNVC0v8mwKXcwuWnmrh83AiCXv0fQx3lDzj05+HDoGc9X74baj6efgA
-         GUd3loCswLWK7gLoOvF2K7j2ST8P9errqXACFmxTDMzx8n8dvKNvsPX8emiTZSn9rkEs
-         HXvtrFY3tZLMKwv/cihygb1/007aMajsXvV0q1uEoXV1Ifu2eqxd4/QMKcPd7PFfOtd9
-         rlsw==
-X-Forwarded-Encrypted: i=1; AFNElJ9DAZu5XLE5pw1FjAVOHtXBagq0+ipZCTZRNq1maFIoo5Bg17mdYRdLamZdksiIeUZmluWWrAeM+uypcmvumwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy57dkSxKfeSdgf3RxjS67VT/DJ4ehwXoBkphlpY6HmEJBhpITf
-	LfIvFaF1R9Oo5Mp4DFLUudPDWFomBO9JZ6zxO2DnFN6ZKXCghdpsdktd64rO/c+LeiETGeuClQ/
-	rpXonP00eNVLRU9YqY8MUqX786iWtI6c=
-X-Gm-Gg: Acq92OGQPUmpiF5SxKZ0ldzI+5lEjqwtcXZ2V/ZPPxqWJtTtnyRQ6AqoT9en3fpVyul
-	osCmg2ky8rUkmLn9riQqX8cQCN9VigCdEzPxjKqFX49eD+jrctOP++ErLVKmo/QGWRTooPzL+Hs
-	ldT40q1yJDndlWlGWydWy4ycZQe99edNIaJwWaEFj+9KRL/RrBvjj58tTgkeG6nsBSAmTaKir5m
-	HyIDHPm4x3bgp4ZhDRXpLKvs4MuN9bgB8z60nTqp+2D+ebz0zhAILaIE4NKGKi7Q0gOl8lbsBdt
-	3RYAJi1lWLLaO14kaid2WSuJtiA0Q+JtjLBsQaPsXWISyWuezYVmJhgbt/azfw9+LXOgKgNakFp
-	4MseWVaE=
-X-Received: by 2002:a17:907:c247:b0:bcd:c899:904e with SMTP id
- a640c23a62f3a-bd5177d9a69mr147258366b.7.1778827039790; Thu, 14 May 2026
- 23:37:19 -0700 (PDT)
+        bh=CTOsRa7RP9KmtOOJHB8Sv6ZLajXrjnlDy47FiLMqYeQ=;
+        b=VTL9fCKSc9++QR5+vFXRxutGVv37Wmyinvp+BCSyNenWxzMgqSkZ706o0ZYRizHc6i
+         I0cclDQ2Xf6FwLcfNOG9Y9XD2uzjRPMotVZf7eikb+mOMKppu7ftN0/zujqKT5M4En33
+         Xrjfuwx8KfU2ymCypuV9I6X+vmx3O5KEoA3JQcASLNkRxq4mTRYLKV7WhWyO9hHOVHwD
+         iIrWgrP3D7JVPPq3Ot/7CJLNNv1hxdu0YYsVB5QL50vtsBNxJZ7Y7dYabNqypE5uIAks
+         y4P5TxUzc35GwBZ84hv+T5AKP7iZoYZ5ZjiOq6/Wc0G+WLJUYhlkXO7p2xwcftgjcjnS
+         TA7Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/hIG64zgdEY7TZI0efbSO8tqECjPJKdX2jxmILefbVlXUKoQhfwsxCcLdJ/Ne9aMObik2dQVtszFaGg0T8RaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4+6E9+r6W21ATdcQZiCr9j7KbfcCOaFboUDEAdeSXwonI9rqp
+	dvmXuyU7E4IvFM+1zYca3Ldk66nfcdPHoh1tMIPWUyJNxwUlL010k9XiUTr+uFhMBF/bhTHE/UA
+	HyZkHprwLv6MVB9scP8hZBeLJpAPzoHg=
+X-Gm-Gg: Acq92OFwjiMcAdzSjckY3oIbfy937tnnKp51uGfzLTpuhtvPiz/Bj6W1RKgF1eJZZrB
+	PAGDumBujGn36Mg8nfPoP0lBpzcjeQ6SrF2c4hWHQgD4++QUvd9WYg8MxEgWtaJ7wpbMOeVv22U
+	k1N27D0UyeErSOUWmSuseBDBO1xvg9GlbNmk7JyX+CceIz1mt/Z8PLkolCoRS/FlhwSxoW3tF3+
+	eseaUFObVPg3K3dYI+JiwuU6SYbz7oQpmDAONSk5BkqWGkll77zJH767eXVbuoIwbbNI3gO8OrE
+	+LlXW4fypwbFBPIG31A63+vp13cdrtngP7Vn4AuPK9GlYsqtjFS2Ty5K6VKP04U55n2XZrSoIsP
+	SBGyNpXo=
+X-Received: by 2002:a17:907:c1e:b0:bd5:de3:263 with SMTP id
+ a640c23a62f3a-bd517ab9963mr145007366b.46.1778827545368; Thu, 14 May 2026
+ 23:45:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260514121359.931999-1-milant2002@gmail.com> <20260514121359.931999-3-milant2002@gmail.com>
- <202605140916.09FBB1A4@keescook>
-In-Reply-To: <202605140916.09FBB1A4@keescook>
+References: <20260514165601.527883-3-thorsten.blum@linux.dev>
+In-Reply-To: <20260514165601.527883-3-thorsten.blum@linux.dev>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 15 May 2026 09:36:43 +0300
-X-Gm-Features: AVHnY4LTtUgH9l_UEKEjClBIDSN7f6fhD3s_31tgGoM3D-Skkze3R3ylHD52Z_s
-Message-ID: <CAHp75Vfb=J6gQ=YbpA8OxTpti-n2CaAGh+Ro1iZJWRxwbGd8eA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] lib/string_kunit: extend benchmarks and unit test
- to memcmp()
-To: Kees Cook <kees@kernel.org>
-Cc: Milan Tripkovic <milant2002@gmail.com>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andy Shevchenko <andy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, Dusan Stojkovic <Dusan.Stojkovic@rt-rk.com>, 
-	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>, kernel test robot <lkp@intel.com>
+Date: Fri, 15 May 2026 09:45:08 +0300
+X-Gm-Features: AVHnY4LokBu9aTHJUiy5qQKecG2hYDOoj_dBs1IOeUr2ER471FQQTYPOQ98P_1U
+Message-ID: <CAHp75VfQNkqEYsO4Uup0c-uiYuVyAWit=tmCz2BsYLp-sjXsZw@mail.gmail.com>
+Subject: Re: [PATCH] string: use min in sized_strscpy
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 14, 2026 at 7:19=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
-> On Thu, May 14, 2026 at 02:13:58PM +0200, Milan Tripkovic wrote:
-> > From: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
-> >
-> > Extend the string benchmarking suite to include memcmp().
-> > Extend the string unit test to include memcmp().
-
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202605140827.Qg1DZpcB-lkp=
-@intel.com/
-
-What does this mean? The absence of the test cases won't ever be
-reported by LKP.
+On Thu, May 14, 2026 at 7:56=E2=80=AFPM Thorsten Blum <thorsten.blum@linux.=
+dev> wrote:
+>
+> Use min() and drop the limit variable to simplify sized_strscpy().
 
 ...
 
-> > +#if IS_ENABLED(CONFIG_STRING_KUNIT_BENCH)
-> > +static void string_bench_memcmp(struct kunit *test)
+> -       if ((long)src & (sizeof(long) - 1)) {
+> -               size_t limit =3D PAGE_SIZE - ((long)src & (PAGE_SIZE - 1)=
+);
+> -               if (limit < max)
+> -                       max =3D limit;
+> -       }
+> +       if ((long)src & (sizeof(long) - 1))
+> +               max =3D min(PAGE_SIZE - ((long)src & (PAGE_SIZE - 1)), ma=
+x);
 
-> I think I'd prefer, instead of a ifdef stub, to do:
->
->         if (!IS_ENABLED(CONFIG_STRING_KUNIT_BENCH))
->                 kunit_skip(test, "CONFIG_STRING_KUNIT_BENCH not enabled")
->
-> here.
+Side note: Isn't simply
+               max =3D min(PAGE_SIZE - offset_in_page(src), max);
 
-What about having two functions?
+? (One will need to include linux/mm.h for this, though.)
 
-static void do_test_string_bench_memcmp() // choose better name
-{
-  ...
-}
+Moreover there are plenty of duplications to count the size in the
+first page and even the similar min() as in
+  fs/iomap/buffered-io.c:869
+  arch/s390/kvm/gaccess.c:976
+and many more...
 
-static void string_bench_memcmp(struct kunit *test)
-{
-        if (IS_ENABLED(CONFIG_STRING_KUNIT_BENCH))
-                do_test_string_bench_memcmp(...);
-        else
-                kunit_skip(test, "CONFIG_STRING_KUNIT_BENCH not enabled");
-}
-
-...
-
-> > +     for (int o =3D 0; o < ARRAY_SIZE(offsets); o++) {
-> > +             int off =3D offsets[o];
-> > +
-> > +             for (int i =3D 0; i < ARRAY_SIZE(lengths); i++) {
-
-unsigned int i
-
-> > +                     size_t len =3D lengths[i];
-> > +                     char *p1 =3D buf1;
-> > +                     char *p2 =3D buf2 + off;
-
-> > +
-
-Redundant blank line
-
-> > +                     u32 iterations =3D (len < 512) ? 100000 : 10000;
-> > +
-> > +                     for (u32 j =3D 0; j < iterations; j++) {
-> > +                             (void)memcmp(p1, p2, len);
-> > +                             barrier();
-> > +                     }
-
-> > +                     u64 elapsed =3D STRING_BENCH(iterations, memcmp, =
-p1, p2, len);
-> > +                     u64 ns_per_call =3D div_u64(elapsed, iterations);
-> > +                     u64 mbps =3D len ? div_u64((u64)len * iterations =
-* 1000,
-
-Instead of casting just make iterations to be u64.
-
-                     mbps =3D len ? div_u64(iterations * 1000 * len,
-
-> > +                                                                      =
-elapsed) : 0;
-
-We don't usually allow the C99 definition initialisers inside the
-code, even for tests.
-
-(With that the last will be a single line.)
-
-> > +                     if (off =3D=3D 0) {
-> > +                             kunit_info(test, "bench_memcmp_aligned: l=
-en=3D%-4zu: %llu MB/s (%llu ns/call)\n",
-> > +                                        len, mbps, ns_per_call);
-> > +                     } else {
-> > +                             kunit_info(test, "bench_memcmp_unaligned(=
-off=3D%d): len=3D%-4zu: %llu MB/s (%llu ns/call)\n",
-> > +                                        off, len, mbps, ns_per_call);
-> > +                     }
-> > +             }
-> > +     }
+Perhaps a new macro with a good (famous last words!) naming?
 
 --=20
 With Best Regards,
