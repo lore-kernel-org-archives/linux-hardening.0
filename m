@@ -1,214 +1,231 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E1B3FF1C5
-	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 15:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE204C6EED
+	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 16:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778860043; cv=none; b=QwESnzHehWd0Z2ux78ikd3qBw0as3EyDTtTtvJkLLctQrJTESAtpzmR+Ag+e6csZZ6d7fQjhq/kxQSY2uy8mKieJxxYdGFY8KcsV68YE8wthw8YMsy76erRSpn2o4DJx9W8E5QxA/LU3RxnRwJkfMSjp5kJE1UJ7eH4gYpPpWaI=
+	t=1778861763; cv=none; b=s5xEb5pM1uWtykcPlXRT7Qb/OwhfFhbw1jJpZZDJxmg4+CV/OHdJEWHzZ3FTotGyw6JSyiPdwcdBulogAyebbQlqWkeJeYO1VPoWIcM6at7pUtJBjqSVGia3N2cu6rOFhTCiRYkPtqD41nRWrNaQkNJduR5FZxidHRtG2/lrWqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778860043; c=relaxed/simple;
-	bh=4x/tYI7wVE/dj5Xs9J1SD3ExCZzdqPFh+Ku4yirTTFs=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TBZAhUPWxYw+CqZ+olyVbwqBy8vrRwdvgp7l2N+NqiV6dYXYDz8SD0l4J3xXWpFgSvUApGbvXk0Wy1q8UJrbHsjgRO1fpXsk4wMDRmdHeoDtEB9QSL36+uhrWXMG35QEWW8wBK22nXrw3gT2W3yxk5eZ8m2FVZZTFXhFDfZt5NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OdROLOAb; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778861763; c=relaxed/simple;
+	bh=543NBwHj1ZRLWIUSfGeF0BXkp4qdeQ7AjjWKYbDYPlY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c3LY4UPEMi0u3V0lwN5yxNfB6ypHyrw/m7r2rUtmTp737oHnt9Z708RIg2pmoY8zvu8122Y7NLKxXni54o9YWT3O7uFJzXttv/V3S85zVsNM1g5/mTYGNMG9xVWvCOL/Mtcpk4sNzwg/xgdWVHCW4YCWl/Tfepi6VZSHu5CQoFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mKRDvpK2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdROLOAb"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488a14c31eeso63176545e9.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 08:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778860040; x=1779464840; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kCmxHgPSnL+/rrs2yz/09fkOkjHEfDbnI1nUCTxT6M4=;
-        b=OdROLOAbhQC1x2aKNagUXyKkcOUaeFt3dh6rfWFk+JhvEXNVfLuXYEB4LmvHKOtIl3
-         wHkiUugoUw6ZZUGVWFafFkgG41nxrXV00APqFBfGlHmfARrR4Ey9Cf0gWXEQ+xJfbAl/
-         PicH9caMxkqNTXpsX6gHnS0qgsp+ggrrgfGw3VZzoTaV3+OTpJOJbqXEDx5SNlQvb9Zl
-         EvNx0rNY3+PPGahRfqQKj3MiPOQFxlm302hupsC0Tn7iNhNtkxiY5TXjNT0CgCll4Czn
-         hpoipp/355oLTdLxUJyTwyniJ5EauGdxPvfga2wUNFGpWWFwZo1PMrCQvNUQaHeJ3UxZ
-         kfMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778860040; x=1779464840;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kCmxHgPSnL+/rrs2yz/09fkOkjHEfDbnI1nUCTxT6M4=;
-        b=dDVbeArhm1y7EJUKwMYaY+y5T7/L1yRe+Hpt9SZooPcWcZeGSOeDJpp9TtXvHfz8n3
-         gfPSBX0uL0XCKBVpGoFigca5X2+UphwwcIGvIfSEIhh62P9LQVjmQD5npf0HjIszFpyN
-         N94ljUTsNYhuasZ2mWViVVS9Zhw7lSDw3KnJGmY+NqJ5niE/0oXs90jeWuokmvNnM4sb
-         CnwtFdcJwPPm0VqY2YrM210cYLBX9qXjGVZ1SLhdep2jI6HDkzYwldzbQLWZOkjZ6Prh
-         fQbpVulCDOHBg58t1PWj8JxnSbUlzmx2Woj/XuNWF+RhWuiV0uVA3zKgojwVXM17vRfQ
-         HY7w==
-X-Forwarded-Encrypted: i=1; AFNElJ/ftFSPekjLDCLRsQ0PMdSsgCfp+Sr6fI96y1hEBXKaezGdho8b4kI2ktuodyCXreS7YP16+8nQMFcAM8GbJCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyOTRRvQf2YecK2EbFlnzUbFpV82xDAIN/OXvP1HheDWWyV10M
-	6Pwhlb+MJfADA9Y/ExG2yOytkiXwELLsZ1fEWkKSIZdu9R2P/IOjatYc
-X-Gm-Gg: Acq92OGOGdAX7c9XPwB+SXHvUs32L2OVxH3CFVmSfazcKwXrP0GcGzBS+enkL0FZoqw
-	aFlHoH5MWULnTBJKNOcZCxTm6bdubILBSyDFXC9byV19RZeGbxvJWrue99dkr4CCH5frZcwKHP3
-	ikOw/BlNCP5Ki02pqrJMvIwP5kjRCYvOl22C/FwF0n+cBJFSLTW7tCUd8RMsfiiZ4OnDi6pUwGI
-	fKQmhxUHP/f5U9i3adNJ8i7SlGaEf/IM6e0E6DUg4Kx+WTyA9oOFGrGaJxtOeGO8kLEjz0LVD38
-	kBzooRh/cdDpvOMz0JntVTYZTCaMz0WdZTC/Ug6o3R/bCLcpEqjhj1NJonglKTfnkXSk2C0jq/J
-	/uaiGQVEkbaesrd7g118HflQosdFCkqV0xgdfNe4RNA98xgYa+g5xdN7f9VniIlN5UOlRkMlB8A
-	ZfCRCh2pc14gCIAb3oD8igWgdvFjBnVwArxtTRlmaNKLlUx7ZjVhypbarJJLSgZozBKdBC3OcPn
-	etpIamwtp68Wsgyct9IPw/2j1ywXIvRFqnyqR61fCSPMIdXrw==
-X-Received: by 2002:a05:600c:3b28:b0:48f:e230:80a0 with SMTP id 5b1f17b1804b1-48fe63267bdmr65802875e9.30.1778860039835;
-        Fri, 15 May 2026 08:47:19 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe57944c1sm80081305e9.7.2026.05.15.08.47.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 08:47:18 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Fri, 15 May 2026 16:47:12 +0100
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>, 
-	David Lechner <dlechner@baylibre.com>, rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mKRDvpK2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0459DC2BCC7;
+	Fri, 15 May 2026 16:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778861763;
+	bh=543NBwHj1ZRLWIUSfGeF0BXkp4qdeQ7AjjWKYbDYPlY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mKRDvpK26ubqBWnRtIE07wEEIecP79YCljjM1Y0IMBk+ufDJYNGaIQ44ahXKrxtiR
+	 8gqWsNUbLDkiE8IOSoZP/x/q50dF6CEQHFIcB99ZjFxRMsW2jj1J3ccVGi9028HE1x
+	 w72wt+eTY/z854yTJE3ekncifvmQsHU3cz1wjYLNQYMp6E6/wNP8B8KAa8P1mbYuC5
+	 ttmG2Y7L3vOgJSxK8E6JKRfJNY3MUeb1OgQE9tUNrDhM8ne5+NlbHwsPH24qkhfZP+
+	 +f8hbkBRGR+gxPQeMrDYL8YGyOSYC1ipaDgX3496w9SE7jHSU2Di1j0mXKtaEysNlz
+	 jnd7w7tecIpvQ==
+From: Kees Cook <kees@kernel.org>
+To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>,
+	Jeff Law <jeffreyalaw@gmail.com>,
+	Andrew Pinski <pinskia@gmail.com>,
+	Jakub Jelinek <jakub@redhat.com>,
+	Martin Uecker <uecker@tugraz.at>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable, Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org,
 	linux-hardening@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH RFC v4 10/10] docs: iio: add documentation for ad9910
- driver
-Message-ID: <csqudninfd5g3vkrzu45mfsbunxygwymlycwijgwvvpfbqhatr@fzib4gvhqc4o>
-References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
- <20260508-ad9910-iio-driver-v4-10-d26bfd20ee3d@analog.com>
- <b8f9a174-f3d0-4cb8-a571-605be79165d6@baylibre.com>
- <zvulxrrvg4sf7m5pjfpfucg7yssgallfu6zi6mcyblu2qy24hn@wdzs7h77vkoz>
- <18c2eab9-c0c7-4e93-b4e8-73b18531e784@baylibre.com>
- <uphcx5zr4lmukuom75g66hp4agurty7yq6mo6ri6otrsscqfek@tn3u5jjszaoy>
- <5bce7868-feca-4c54-a14d-ad4bf4072c29@baylibre.com>
- <wpoiyqezs6lus5o7smlibbxrxqudvijgqh3gwgft2xjpiirwa4@xtdwe3kzleku>
+Subject: [PATCH v12 0/7] Introduce Kernel Control Flow Integrity ABI [PR107048]
+Date: Fri, 15 May 2026 09:15:53 -0700
+Message-Id: <20260515161551.stronger.641-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <wpoiyqezs6lus5o7smlibbxrxqudvijgqh3gwgft2xjpiirwa4@xtdwe3kzleku>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8621; i=kees@kernel.org; h=from:subject:message-id; bh=543NBwHj1ZRLWIUSfGeF0BXkp4qdeQ7AjjWKYbDYPlY=; b=owGbwMvMwCVmps19z/KJym7G02pJDFnsbntW5G8OfJ538rE66/Ofy5eL/53yssBR96b/cctzW pK/79l97ShlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZhIwwFGhm0Kp2cvuLl+C0/3 jBPsdTJ/ZZeu3vby6ybfw3vOlp+61hfI8D/iV9O219tORYZs/LXl3l23z5Z2Bzo/JzYuvidTeDZ RyoEVAA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 26/05/11 05:01PM, Rodrigo Alencar wrote:
-> On 26/05/11 10:23AM, David Lechner wrote:
-> > On 5/11/26 10:02 AM, Rodrigo Alencar wrote:
-> > > On 26/05/11 09:46AM, David Lechner wrote:
-> > >> On 5/10/26 4:30 AM, Rodrigo Alencar wrote:
-> > >>> On 26/05/09 06:42PM, David Lechner wrote:
-> > >>>> On 5/8/26 12:00 PM, Rodrigo Alencar via B4 Relay wrote:
-> > >>>>> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > >>>>>
-> > >>>>> Add documentation for the AD9910 DDS IIO driver, which describes channels,
-> > >>>>> DDS modes, attributes and ABI usage examples.
+Hi,
 
-...
+This series implements[1][2] the Linux Kernel Control Flow Integrity
+ABI, which provides a function prototype based forward edge control flow
+integrity protection by instrumenting every indirect call to check for
+a hash value before the target function address. If the hash at the call
+site and the hash at the target do not match, execution will trap.
 
-> > >>>>> +Digital ramp generator (DRG)
-> > >>>>> +----------------------------
-> > >>>>> +
-> > >>>>> +The DRG produces linear frequency, phase or amplitude sweeps using dedicated
-> > >>>>> +hardware. It is controlled through three channels: a parent control channel
-> > >>>>> +(``digital_ramp_generator``) and two child ramp channels
-> > >>>>> +(``digital_ramp_up``, ``digital_ramp_down``). DRG destination is set when
-> > >>>>> +ramp attributes are written, i.e. writing to ``frequency`` or ``frequency_roc``
-> > >>>>> +sets the destination to frequency.
-> > >>>>
-> > >>>> Would it be better to say that the destination is set when the the
-> > >>>> value is non-zero? Otherwise, how would one change the destination
-> > >>>> once set?
-> > >>>
-> > >>> Destination is only one, so you just need to write phase or phase_roc, if you want
-> > >>> to target phase then. Does that not sound intuitive?
-> > >>
-> > >> I was thinking about if you needed to change the configuration.
-> > >> If you set it to phase, then want to change it to frequency, how
-> > >> could you do that if 0 is a valid value for phase?
-> > >>
-> > >> Also how could you know which is selected by reading back the
-> > >> values if 0 is a valid value?
-> > > 
-> > > This is where Jonathan raised some concerns, so it is a good oportunity for you
-> > > to provide your inputs! Right now, I am returning -EBUSY on read of an attribute
-> > > where its destination is not selected. As pointed out, the destination selection
-> > > is happening when writting to the attribute. In the previous patch, Jonathan
-> > > suggested frequency_active, phase_active and scale_active to track mode priority,
-> > > and It could be leveraged here for DRG destination selection. I havent gone for
-> > > that because I was not willing to add that to all the channels given that it is
-> > > mostly used for debugging, so I added frequency_source, phase_source and
-> > > amplitude_source to debugfs instead.
-> > 
-> > The "last write wins" with the others changing to EBUSY makes more sense to
-> > me now. If the docs said that, I missed it. Otherwise, that would be a helpful
-> > thing to add to the docs here.
-> > 
-> > > 
-> > > Destination selection for RAM mode is firmware based at this point.
-> > 
-> > Seems reasonable.
-> > 
-> > > Destination selection for Parallel mode is still not clear... could use
-> > > those *_active attributes or separate channels.
-> > 
-> > Since there are _offset attributes proposed for parallel input already,
-> > could we just make it the same where you have to write one of those
-> > attributes?
-> 
-> Different from the DRG, both RAM and Parallel mode has this extra polar
-> destination, which targets both amplitude and phase at the same time.
-> 
-> For parallel mode I have the attributes:
-> - frequency_scale: applied when destination is frequency
-> - frequency_offset: applied when destination is frequency
-> - scale_offset: applied when destination is polar
-> - phase_offset: applied when destination is polar
-> 
-> In parallel mode, there aren't knobs like those for amplitude and phase
-> destinations. With the *_active thing or similar, polar can be both
-> phase_active and scale_active enabled at the same time. However, this
-> would not behave the same way Jonathan suggested, i.e. to be used for
-> mode priority indication... it would be used for destination configuration
-> instead.
+I was asked to wait to resend this series until gcc 16 released, which
+it has now. I'm hoping we can land the front-, middle-, and back-ends
+for aarch64 and x86_64. I'd really like to get this in a position where
+more people can test with GCC snapshots, etc. Since I don't have commit
+access, who is the right person to commit this?
 
-I was thinking, and it might be good to define this now because of the
-fact I might need to create other 3 channels for the parallel mode (Maybe
-that is fine and we can create them later if needed).
+Thanks!
 
-One thing to note is that in parallel mode, although the format pins (F0, F1)
-that defines the parallel destination are synchronized with PDCLK (parallel port
-clock), we cannot really send multiple formats in a single session, so we
-cannot interleave destinations. Then, if having separate channels we would need
-to contraint that (only one destination works at a time) with the available
-scan masks.
+-Kees
 
-Now, also related to the IIO backend support but for the DRG channel...
-Anticipating new ABI for the IIO backend, currently I have the following to
-expose ramp control from the FPGA IP:
-- toggle_en: To allow the backend to control DRCTL pin, toggling it in response
-	     to DROVER, according to the configured dwell modes.
-- ramp_delay: the delay between ramp sweeps in seconds
-- burst_count: amount of ramps in a burst of ramps
-- burst_delay: delay between bursts in seconds (valid when burst_count > 0)
+Changes since v11[3]:
 
-Would also be good if I can get a comment on those! Maybe toggle_en can be
-removed as the other ones only make sense when there is dwell and when this
-toggle is enabled. So toggle enabled can be set by default whenever we are
-not in bidirectional continuous, i.e., we are dwelling at either max or min
-limits (or both).
+- Rename new typeinfo helpers with "linux_abi_kcfi" prefix (Andrew)
 
-Just to summarize the motivation for those attributes... the idea to create
-those ramp patterns is to allow a receiver that performs stretch processing
-to assemble a "radar data cube" of data, where FFT applied to each dimension
-gives different insights on the detected object: range, velocity and direction.
-Each ramp would give a row, a burst gives a matrix, and with multiple antennas
-one gets a 3D block of data.
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=107048
+[2] https://github.com/KSPP/linux/issues/369
+[3] https://lore.kernel.org/linux-hardening/20260511194847.faster.180-kees@kernel.org/
 
-...
+
+Kees Cook (7):
+  kcfi: Introduce KCFI typeinfo mangling API
+  kcfi: Add core Kernel Control Flow Integrity infrastructure
+  kcfi: Add regression test suite
+  x86: Add x86_64 Kernel Control Flow Integrity implementation
+  aarch64: Add AArch64 Kernel Control Flow Integrity implementation
+  arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
+  riscv: Add RISC-V Kernel Control Flow Integrity implementation
+
+ gcc/kcfi.h                                    |  59 ++
+ gcc/kcfi.cc                                   | 696 ++++++++++++++
+ gcc/config/aarch64/aarch64-protos.h           |   4 +
+ gcc/config/arm/arm-protos.h                   |   4 +
+ gcc/config/i386/i386-protos.h                 |   2 +-
+ gcc/config/i386/i386.h                        |   3 +-
+ gcc/config/riscv/riscv-protos.h               |   3 +
+ gcc/config/aarch64/aarch64.md                 |  56 ++
+ gcc/config/arm/arm.md                         |  62 ++
+ gcc/config/i386/i386.md                       |  63 +-
+ gcc/config/riscv/riscv.md                     |  76 +-
+ gcc/config/aarch64/aarch64.cc                 |  93 ++
+ gcc/config/arm/arm.cc                         | 170 ++++
+ gcc/config/i386/i386-expand.cc                |  22 +-
+ gcc/config/i386/i386.cc                       | 210 ++++-
+ gcc/config/riscv/riscv.cc                     | 180 ++++
+ gcc/doc/extend.texi                           | 137 +++
+ gcc/doc/invoke.texi                           | 127 +++
+ gcc/doc/tm.texi                               |  32 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi.exp            |  51 ++
+ gcc/testsuite/lib/target-supports.exp         |  14 +
+ .../gcc.dg/builtin-typeinfo-errors.c          |  28 +
+ gcc/testsuite/gcc.dg/builtin-typeinfo.c       | 350 +++++++
+ .../gcc.dg/kcfi/kcfi-aarch64-ilp32.c          |   7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c    | 114 +++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-ip.c |  15 +
+ .../gcc.dg/kcfi/kcfi-arm-fixed-r12.c          |  15 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c       | 149 +++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c |  90 ++
+ .../gcc.dg/kcfi/kcfi-cold-partition.c         | 126 +++
+ .../gcc.dg/kcfi/kcfi-complex-addressing.c     | 203 ++++
+ .../gcc.dg/kcfi/kcfi-complex-addressing.s     |   0
+ .../gcc.dg/kcfi/kcfi-ipa-robustness.c         |  54 ++
+ .../gcc.dg/kcfi/kcfi-move-preservation.c      | 118 +++
+ .../gcc.dg/kcfi/kcfi-no-sanitize-inline.c     | 100 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c  |  39 +
+ .../gcc.dg/kcfi/kcfi-offset-validation.c      |  38 +
+ .../gcc.dg/kcfi/kcfi-patchable-entry-only.c   |  64 ++
+ .../gcc.dg/kcfi/kcfi-patchable-incompatible.c |   7 +
+ .../gcc.dg/kcfi/kcfi-patchable-large.c        |  54 ++
+ .../gcc.dg/kcfi/kcfi-patchable-medium.c       |  60 ++
+ .../gcc.dg/kcfi/kcfi-patchable-prefix-only.c  |  61 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c  |   7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t1.c         |   7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t2.c         |   7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t3.c         |   7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c      | 276 ++++++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c   | 140 +++
+ .../gcc.dg/kcfi/kcfi-trap-encoding.c          |  70 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c |  29 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c    |   7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c    |  93 ++
+ .../gcc.dg/kcfi/kcfi-x86-fixed-r10.c          |   7 +
+ .../gcc.dg/kcfi/kcfi-x86-fixed-r11.c          |   7 +
+ .../gcc.dg/kcfi/kcfi-x86-retpoline-r11.c      |  40 +
+ gcc/Makefile.in                               |   2 +
+ gcc/c-family/c-common.h                       |   1 +
+ gcc/flag-types.h                              |   2 +
+ gcc/gimple.h                                  |  22 +
+ gcc/kcfi-typeinfo.h                           |  32 +
+ gcc/selftest.h                                |   1 +
+ gcc/tree-pass.h                               |   1 +
+ gcc/c-family/c-attribs.cc                     |  17 +-
+ gcc/c-family/c-common.cc                      |   2 +
+ gcc/c/c-parser.cc                             |  72 ++
+ gcc/common.opt                                |   8 +
+ gcc/df-scan.cc                                |   7 +
+ gcc/doc/tm.texi.in                            |  12 +
+ gcc/final.cc                                  |   3 +
+ gcc/kcfi-typeinfo.cc                          | 866 ++++++++++++++++++
+ gcc/opts.cc                                   |   2 +
+ gcc/passes.cc                                 |   1 +
+ gcc/passes.def                                |   1 +
+ gcc/rtl.def                                   |   6 +
+ gcc/rtlanal.cc                                |   5 +
+ gcc/selftest-run-tests.cc                     |   1 +
+ gcc/target.def                                |  39 +
+ gcc/toplev.cc                                 |  12 +
+ gcc/tree-inline.cc                            |  10 +
+ gcc/varasm.cc                                 |  37 +-
+ 80 files changed, 5571 insertions(+), 44 deletions(-)
+ create mode 100644 gcc/kcfi.h
+ create mode 100644 gcc/kcfi.cc
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi.exp
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo-errors.c
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-aarch64-ilp32.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-ip.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-r12.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-cold-partition.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.s
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-ipa-robustness.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-incompatible.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t1.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t2.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t3.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-encoding.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r10.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r11.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-retpoline-r11.c
+ create mode 100644 gcc/kcfi-typeinfo.h
+ create mode 100644 gcc/kcfi-typeinfo.cc
 
 -- 
-Kind regards,
+2.34.1
 
-Rodrigo Alencar
