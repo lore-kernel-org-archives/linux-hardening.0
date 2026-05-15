@@ -1,115 +1,123 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820B4438FED
-	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 09:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1922B43CEFC;
+	Fri, 15 May 2026 09:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778835927; cv=none; b=h5txonSR471qD5w5asOFQS7/VvB2daqWoVHs4xpMD1/atYm948Q2qGM8pVHAdrZopES2jcCu1nXvfiwGCLWg8CCyLGLtO9W1pan/2VYHKpw9Czs1gVSnjbzZV23qDSC6f8HOTHY+q1OypRlcpA6CDqgEphpffmW4M6E31YOSa9M=
+	t=1778836866; cv=none; b=WSpQiJLlwkM47GQnw3kiWCBEB+5wkz+GOaY7APGS+KVeWsQ6p6ZuhhsBS3oACoqkdp099HKpyJb3y0GdUkMyuIZpmbL1Rhe5mCQDBA/OsPknWbw8zYwbsEdGo/ckJp76yreP0kEzBN0nxk26MKyNngm1m07fG3sgPa4PJb0PgjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778835927; c=relaxed/simple;
-	bh=uSw4iLWni+08K3Y2XPPthhXGT8z8eNuujhWRQ0NoO/Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tnsnAZWVU5nQg8i6UW4TgR2Bunk/Ay+tGp8/yI6YVfo74r25HPtWo8GCcJPAWeQvGv69fGLaK4WOqy+qCO9jdLDCEL5vV79A7WaByu/XbsWKxI3s7HQ1qVCZWdUrgisgySavXzvM3HT8smwi6ccHCe9BevmEimS9XmFfd6vNfwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kHyyCsJe; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1778836866; c=relaxed/simple;
+	bh=SxzE0nnibdkJFjlkvbsIyW+y7Yp7ydupQKVnqN+i4Vo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ddx5JwdIRiEffnuCUMza6s+A7AzMdVY1g1N1U7sqnweFoMVPDf0LcoYvxgP45B+N8l1Xu4bJpJUS6aP4Rq2S52P3lEle4dFzqZL4jAzyzQ+na7IeswfQL0qsfvdX6gwuSOfG2w/8MWmhdrLTN4jRDdi4mq9rlHm7UBo6ht8O6lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bmRVv3IB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kHyyCsJe"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a8fbe18b1dso3283303e87.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 02:05:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778835920; x=1779440720; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uSw4iLWni+08K3Y2XPPthhXGT8z8eNuujhWRQ0NoO/Y=;
-        b=kHyyCsJe2muVQQwvt5wzTDwFbOnpO8COGH0q1Pdfoium2jscGMdGqfANjXUVrUE3C9
-         VnMimtm9+Z4/jWxsOwkxKqH06B7crDANToskrImuzZZmyEDQI5LkBfXmHgCnCjeIMt/F
-         vglNcNGR0xahOFJallcd6yaIwYmzRlRgtyLXajTCN7l9vdELtSdSRAJ2M1UTqDHapTjH
-         +Yz4pvf0EtoJ7o8/ZfKeQJmhUTokJQ63FCH4yHaaMdA7oIeG4SlNGyE7tTwahzxeRMxW
-         6zcIjq4E3xbTjJ/O61qgrcXbwE2hBicr9E9UmN9PXmM0RVnfFy4BmejiKV8+3gRLe3n5
-         hg/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778835920; x=1779440720;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uSw4iLWni+08K3Y2XPPthhXGT8z8eNuujhWRQ0NoO/Y=;
-        b=Po677+mZdzcAHVHQhAsGxgmnUNyD+jbDat9EqhiVKfNMyOCN4dIk4lNyIshuPxChlk
-         fQkZhrfVBxHlJ2N738KtnYY1ICjGv5biT0BqHuzOiKUcUvawG3V1RVLj0AQzIEGGRzEH
-         kMAu2KgGgFhRsmgIMhlo3hK679eL9TYXQiMJ6B3rEG6QgqJEnt/pRHfvFtNOrnEG7uY3
-         rB79W98EYbH+G7t/b+9+u5KfQ60qri73cBxaCA83GbvBcqYzYoU2ho2uFF0MGifm+klW
-         P9ydQNgszHFD4z+dEVhauTitjAf5jwKiv+1+dDuuqJaVUGY6B7a33FAv0EfeY9EQl3AB
-         Hujg==
-X-Forwarded-Encrypted: i=1; AFNElJ/YVJ7jtFUDYZjhxaTEnITJ5esPKQf291qPYWa5qTOt/Pv4PEKXLqWQY5Yxaq6hUjnYcnRk5rLxjcSXKZFEBo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXyLfiVWEpmUs0n/bqzXuR/jL0jd8RFDJLKNihwRRzIaRq8NRX
-	MfKM/GRC8FDtYSZUigBolXh6jz50lFoQNZCsY5gyhVQXIGNV642mTMDclH3lrzD0p2g=
-X-Gm-Gg: Acq92OFd0eAuSknVttG8K2oxB2m32rJgfLiHiFCSm2u/gXfqIivj5DTu3CZt6EZcQbL
-	OqAv/6hwB4FDXeM+sZz1heFDXR+xb9mBbJ9hCU+tj05LP9uX6r0G64RfV2gOENZG/a+tmHwKKyw
-	BRphp6U5Q1UNdeV7rXm/chKNm6xEGRNcMqRopzM38aTgajtIq8H1Bqskq3CBknF+tvcPtIIGFic
-	BAmwjp5i4XQcwzp3h/29bOEZasgNUZvgeOqNwUy0Wntxu+WiRjVE/AfeHZTxCbJF+eLMcVjloEW
-	KFUx9wsQLnie1dltk7/cdCfZf5Ttj9CTrkpmWN90U5VzkIaGxF7vram3sKNm36bWs3qlBXZ380x
-	f5grac8nkBekl6Gdr0VY9txLbc4K6Un1yGHygD5K8gjCfe51lkpApcuTAURG3lbvFf2eHqewK1V
-	G36ITMhoXy5tP9hpTfT4AlPs3U/z3nSuEX
-X-Received: by 2002:a05:6512:3ba4:b0:5a8:6cbc:60f3 with SMTP id 2adb3069b0e04-5aa0e769d53mr851416e87.34.1778835919654;
-        Fri, 15 May 2026 02:05:19 -0700 (PDT)
-Received: from [10.11.12.109] ([79.115.63.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45da15a562dsm13447979f8f.33.2026.05.15.02.05.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2026 02:05:19 -0700 (PDT)
-Message-ID: <e91af899-9ff2-456a-a54f-613b859260e7@linaro.org>
-Date: Fri, 15 May 2026 12:05:15 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bmRVv3IB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A35C2BCB8;
+	Fri, 15 May 2026 09:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778836865;
+	bh=SxzE0nnibdkJFjlkvbsIyW+y7Yp7ydupQKVnqN+i4Vo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bmRVv3IBSWvvodL+hDM9uN3idz/usl7CJmPAK3w4fMShzzLFYPzOxNZO6uSUMl2ZM
+	 vk2eKivZ41mVSVx8SHIBme4RAEk7g5y1CuZVuBYdpeTsp0ojXWgOEqv3sf8B7h0X8b
+	 WoRM5LIe4i56CzC1dD640NHCT/iKN40IkeXKaCjdZ1JoCusB6QcxnKffvYrhKwUgMU
+	 lO3vsiv/3U+RhyPmMDMiLLAr4zpnKTiaoPEd5sWPeEM3GgOIcpPFKQsYNTC01t/sHl
+	 d6QqF0raZNvhZ6Fqft0zD+IVU3p14oEQaj7KDJ9HhwC3AT+DJbJXgvyeOVbQ5vZNic
+	 uVFy+9Lkk33iw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-hardening@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	kasan-dev@googlegroups.com,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nick Terrell <terrelln@fb.com>,
+	David Sterba <dsterba@suse.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] [RFC] ubsan: turn off UBSAN_ALIGNMENT on s390
+Date: Fri, 15 May 2026 11:19:54 +0200
+Message-Id: <20260515092057.810542-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/10] firmware: samsung: acpm: Drop redundant _ops
- suffix in acpm_ops members
-To: Lee Jones <lee@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Daniel Lezcano <daniel.lezcano@kernel.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, willmcvicker@google.com, jyescas@google.com,
- shin.son@samsung.com, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-hardening@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20260420-acpm-tmu-v3-0-3dc8e93f0b26@linaro.org>
- <20260420-acpm-tmu-v3-3-3dc8e93f0b26@linaro.org>
- <20260507120003.GG305027@google.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20260507120003.GG305027@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Arnd Bergmann <arnd@arndb.de>
 
+Testing randconfig builds on s390 with gcc-15, I came across a number of
+seemingly unrelated build failures that ended up all being caused
+by the -fsanitize=alignment option:
 
-On 5/7/26 3:00 PM, Lee Jones wrote:
-> Acked-by: Lee Jones <lee@kernel.org>
-Thanks, Lee!
+s390-linux-ld: kernel/sched/build_policy.o: in function `thread_group_cputime':
+include/linux/seqlock.h:1286:(.text+0x1f738): undefined reference to `__scoped_seqlock_bug'
 
-The set evolved [1], but this particular patch was not changed.
-I'm going to carry your Acked-by in the resend I'm going to do.
+lib/tests/overflow_kunit.c: In function 'same_type_test':
+lib/tests/overflow_kunit.c:1008:13: note: variable tracking size limit exceeded with '-fvar-tracking-assignments', retrying without
 
-Cheers,
-ta
+fs/fat/fat_test.c: In function 'fat_clus_to_blknr_test':
+fs/fat/fat_test.c:33:1: error: the frame size of 4736 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+lib/crypto/chacha-block-generic.c: In function 'chacha_permute':
+lib/crypto/chacha-block-generic.c:65:1: error: the frame size of 2000 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+lib/crypto/sha3.c: In function 'sha3_keccakf_generic':
+lib/crypto/sha3.c:175:1: error: the frame size of 2248 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+lib/zstd/decompress/huf_decompress.c: In function 'HUF_decompress4X2_usingDTable_internal_default':
+lib/zstd/decompress/huf_decompress.c:1512:1: error: the frame size of 1352 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
 
-Link: https://lore.kernel.org/linux-samsung-soc/CADrjBPqzKpcd9vuCmNUptCUPyPpPbHcc19-7kN-1c0RpW1e5DQ@mail.gmail.com/T/#mcce154a7e0c6cd1ca6cd5a1e37541ed7a85a84d4 [1]
+What I observe here is a huge increase in generated calls to
+__ubsan_handle_type_mismatch_v1() that ends up thowing off a number of
+compiler optimizations that the kernel relies on.
 
+I have not been able to figure out why this happens on s390 but not arm64,
+arm or x86, if other toolchain versions are affected by the same thing,
+and if this is a problem in gcc or in the kernel itself, e.g. some
+variable being identified as unaligned when it should be aligned.
+
+This clearly needs more investigation to figure out properly what is
+going on, but turning it off is currently required for randconfig testing.
+
+Cc: Kees Cook <kees@kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: kasan-dev@googlegroups.com
+Cc: linux-hardening@vger.kernel.org
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ lib/Kconfig.ubsan | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 1ecaae7064d2..3fc03a6b5af4 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -152,6 +152,7 @@ config UBSAN_ENUM
+ 
+ config UBSAN_ALIGNMENT
+ 	bool "Perform checking for misaligned pointer usage"
++	depends on !S390 || BROKEN
+ 	default !HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	depends on !UBSAN_TRAP && !COMPILE_TEST
+ 	depends on $(cc-option,-fsanitize=alignment)
+-- 
+2.39.5
 
