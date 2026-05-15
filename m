@@ -1,212 +1,260 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A1D2D3725
-	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 12:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778849856; cv=none; b=bUgHMp3JaoUHUIwrNiywNga4oolPuweTW67gcBfqI8bl5o2UFk35giUj54SI4a6VarI6hrwnRq5gJ/9JPAYwP4/QUTz519jK963l2R/qqM7dTnzEnlQTJg118EyPGn9Lwk1K/cnA92NaR7uWLWqQxTHi1PPlgkqeP8w3vxc165c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778849856; c=relaxed/simple;
-	bh=6jZeY3fFm/RWu46vschP8gHQy+Evtx8dFt3HodsRJEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sRshU1jIzk7vejiXfSrjdw03O8jDTSoUrq4ixLUjkgEhOeudzct5yQct9VoA+zctygiLqE+LR+Kt8Z5m9TIujq/2VFvCarOFVHBHb7uE5KRs0BG2nhJxNaMKRb5F/IEwJBDLhAj0MiaPrtTMioaVR2nEygSJiTKN8Ott3QykT0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eZkJLlBl; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=RseFilte; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC56F382F28
+	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 13:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778851499; cv=pass; b=dkU13DvshjO8LD3whdECkzr8oFK+nXdtiiydCySUNgLwKtCkifPVFV8y4csVWh0QD9idS8qG3NT1+OjtEWqtJTGJRPgBXj2JfxkX2HFrXaemQHcOCvSfPMuGbO34r2fwKhP0GCyMnCJzjXB3FvyPXToNq5npBmARrsL8ei0OBa0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778851499; c=relaxed/simple;
+	bh=9S/wyijREW7prxTs0cpddfr7+xTXmq79rJi7zvdyiio=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BmqA7OcqdGBEO1NMbK6k2n9N4kFD7qJNgH3AH1eefrtFDSUQ6KZV/iGZ+Ar6Ty19talOnbB2DBo1m95QwMQlqaN6qwH4a/gxaLN/H75BlPnlbKaOE1pKCFJY/BtjQI/LcfTnF0kMHxVR+cpSf5/kPxevXINXrKS49ghAgB9fkQo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s4kOdYLl; arc=pass smtp.client-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eZkJLlBl";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="RseFilte"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64FAbC9b3512973
-	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 12:57:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PdkIR6RMfY5OxV5lPVO4LlZZZ2NLTbP3dRMQlqgS3FU=; b=eZkJLlBljMbyAyQr
-	TgNgygTHkLS0ix+U9krjIhm/mFnhYTguxqxgyrQYUaEkPRS2woekwR1HkcueC2j3
-	ru4Cb5g/HSqYHEao/G4OqUgZP9zbt3C+qc7SSyhwf9aFHRl19DzniO9OiSH+O9/t
-	I9zsoCWL270oBXW0xi1n77WO6LUBmwNIF9pN00iVSajFd9Hcq5rMmty80ND5iJpd
-	1bEw2A5mxrHSieHNylYINM0M5SU6BfQKFjK/mtAgBymSjC7KLa2M/H7C7j7KDPbz
-	NKXcfUU+FmbYeI1JvyIA73CxX8B5k8GBIfbo4ny6zdfKTsQC7myuPDnv/UygjSWN
-	XqPc5g==
-Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com [209.85.217.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e5m1vba9y-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 12:57:33 +0000 (GMT)
-Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-63142e319f7so517431137.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 05:57:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s4kOdYLl"
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-12c19d23b19so15209758c88.0
+        for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 06:24:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778851494; cv=none;
+        d=google.com; s=arc-20240605;
+        b=LbCipTUcdRZldF9+uC1m/10fEPqtLysc0Rf4NmFjIAT0sIxf7x6oPgQLYeTDrikanH
+         RSuRC29Q9uh+nSmtnSSCWvWVnMAzXBbwb4get6AWXD23k98Rka05wduoB6m56tquXXjP
+         9jCfKqoIKbS3mSrBzAc8kPIGrTaCqgwxEuC/c1gU+eLLjNkQbq5tthl6XU+K4O9jCLnR
+         UxJfXOVK9Xq6C3Ogy8pAMhYVcBZKSX/ye37jQ4arAxPSHQxmADCSsGLBgExall8t0tFL
+         hhy0ue+82R5i+gEwMISkYG/8BZ8mOaKgpi8o6BgqcgWnUOwKMRwuYJ6nX8VVOnEhyg7S
+         oFQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=kJkIJ9MSSyAx7AMR5IamH1iN68B4UTFJP9CxVTr4bw8=;
+        fh=aQM3dD2sx5303Er/gx8pQYIC4ZVq1Arn6kMFnra6SbM=;
+        b=TIeGHtEHRLVHdNezDoPuLtyfWEpiqhP2b4Yv+gIu89xV/SE4mUw4GijKqH6lAnWHpI
+         Gu7FimBANq2WApt7GjAgB88uUK223ibe0LL5br+3k+I+RQ7gpc5durVJOTkn+m1tqPzU
+         1lw+Xqt4xA44h9BN25iI2fdcOX/LXiAHiiClxcTACQNVIj1q2pEnM+TI8KWl6pp6bTsM
+         KvMwehZSNujkSmLqLXC75SrwHUX57ryCu4l9CEsmG+q/KvH9qsXYxzPyQyxm3BHgTfL6
+         vdZQsp1t+9yrtCtDza35UDy8EBEPi+XZbSetrsGVOU70NK7O4OqvxD0xpZ0bTuvQyd2A
+         CMBQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1778849853; x=1779454653; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PdkIR6RMfY5OxV5lPVO4LlZZZ2NLTbP3dRMQlqgS3FU=;
-        b=RseFilteNn+qPff2YG/aUtw81drJSMqs+HSKFGoaf1GskyLuVnZXVsmTyyanQVDN4Q
-         MdN/uAIv8mQEkZpB98Ej34zJuVQb99/fFpVN9Z9BnNLbVgGhSRFnvfRdT4BbQFBWWfL7
-         nc025NMIsg5EBD4R9y0w0pNm0fVDw9ohdZYIjrpYvuGjLmksTz/KGsMottR5Egxgx6Zh
-         T2ING6TTyqxhr/ic/YzfbEvQKBEH7Gb9M22cNN5gsMAVLknecNiYC5MpvrmMJ07MwcH/
-         ELgCpWfOo8hBivm23WSRPa/MQGMITM19fpW4svLG2ZenpebxF9TFKTL5q59Il5unmdol
-         8PhQ==
+        d=google.com; s=20251104; t=1778851494; x=1779456294; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kJkIJ9MSSyAx7AMR5IamH1iN68B4UTFJP9CxVTr4bw8=;
+        b=s4kOdYLl+H/jtAnbqbvOEB+dbYZp7Repr3O/lj/BO58Ty493AoK2/dmP8jzC0OnQhA
+         lknsCDwovXEvLM5NM7I28D7thoVsrpyH3YKXxh78fBybR7DQcs27zq1m/mCLT1m+tJzJ
+         JKOQ2Njjrmv5n2/5l3iMLrOl3+LHxwD4n6ab/ES59MLGWdlRKpAQ4nv9HR+OzE4vGm0s
+         RIWP6tJs63VCihku14pdJ5eAp1zDPxsRxO4DrARLWMQqLUSyAbgKtyrPGd5B+/xu+Eta
+         FW5TyW3w0PfMLVUCb9hu3Tzja86RsBuif4pWoC7p4LDSmyvh6kMTu5+RDJxmcaaXfe/x
+         xexQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778849853; x=1779454653;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PdkIR6RMfY5OxV5lPVO4LlZZZ2NLTbP3dRMQlqgS3FU=;
-        b=l5gZUYQBkz7nbJMg+9fJIzYSi33LZOKPCuwxRbJzz2ePqU5kSjhZkaa6yeS52Sr8Q6
-         nFmpLr5Oymw87ach0k2VKeLGZkNnYBeFkWA4LGBHWuFCcAUizGomps8pOd+eIB2Oir5t
-         tq6JDMmZsO4HrEcsyhFLrv7PzI/39U82zDdM9KQADdTIl/JIYasGHEmCylP2vgtUxeiB
-         NfSnc52X47p9Osod8raXEOsZlKrKhhwUkCYM6l8KPulJd4qKSgsDqe11Vvhlfe4lMyeE
-         U5mK+8IcUL7IKY7HDM5mXi7yCSVWkKucmlfVB95ExO5TlrIZ7nZ3qwWrEhciVlaU6XNg
-         CPbA==
-X-Forwarded-Encrypted: i=1; AFNElJ+W7vZV92NGxjLSqekQf+yoA2LL8FTM3jYX+bR8P4fyX5duxBx+ZmU1oVGGa2tVAIaVPCm92TP2ztt48mX6hm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbtWQaWDWgoYkqAyMJhCHWFUJB07bJw3EFuJFeEiY6WwqsnM5/
-	TI0ndtPcYeqHxnR8YXGtlUnY5jZU7uSwPc8OLhSD7orEaBPTcOjsI/4ORtcN99JsVCkpn7xK9RW
-	c1idxm16QCJnaZuUzaJ7bCBm4LV17i4fSrAW6F9B/ZEhm9XBYH/4X/0MtoRMoCCKxvyj/cdE=
-X-Gm-Gg: Acq92OHdHaBRr6JOUrdANbfYKnyFoPl+u791uctyCZox9yWMm9TAxbm/HnNzZTHoQZP
-	ivpIL/Q+PnpO12KWWvmxGIa2TovGq1eXNRM2H2+w0Zgl6UAipSX+ugzsaWN32Jagd7ehGTfx9Io
-	t1GSALOxTy3Ft/67h/Q/3RatYcjYYrSuKLQcOg0CcDu8psEh4Agod40OI7X7JmnbdCzof+Xko1T
-	oIOl3rk56n1IFEEGPZodVx1+iyG6QuNscWY+Ew/kQRPLUlnYxGNjjHZJxCPv7E3gP3gsVRdI+6D
-	1Sb8NecfiVWrVVbKWlRTy2zRfGKticTIUz8rA/g9FBGmm8HD9fF5zuU8fghVpOZT5zzolQgTagl
-	1EWfzQ1QfVjqJDRX+/EpY2HH4KF3jqZYJWcrzJP/DVv6T0G3+iQ6A/IQ9IoXM8mPY57CbFBDHBX
-	9HKuY=
-X-Received: by 2002:a05:6102:126b:b0:632:5db8:f656 with SMTP id ada2fe7eead31-63c002c3749mr339409137.4.1778849853072;
-        Fri, 15 May 2026 05:57:33 -0700 (PDT)
-X-Received: by 2002:a05:6102:126b:b0:632:5db8:f656 with SMTP id ada2fe7eead31-63c002c3749mr339390137.4.1778849852436;
-        Fri, 15 May 2026 05:57:32 -0700 (PDT)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bd4f4dea93dsm221177266b.38.2026.05.15.05.57.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2026 05:57:31 -0700 (PDT)
-Message-ID: <bd4e93dd-5293-4cbc-bfbe-314b3f348d31@oss.qualcomm.com>
-Date: Fri, 15 May 2026 14:57:29 +0200
+        d=1e100.net; s=20251104; t=1778851494; x=1779456294;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kJkIJ9MSSyAx7AMR5IamH1iN68B4UTFJP9CxVTr4bw8=;
+        b=IO5l37c6n5XB8jySvSFz7arJs/YQtjLPNobpvgWPhXxuWNpGntsaEZkla1uvf34C8R
+         6MlMj4O1iJgkKbkNdfWM5OAG2v2ckpTK1Stsb7o460U77nIi5V4KeuWUJ+fhIe6zr3Ic
+         574CfqSn4IPMYEA0mbs5AD8hipZYw+btl15eXkyx/tMGN6kjC/tuUsLE0h/HQrGTTnV/
+         4V4J9HdRy1LClEOVa6BftDUSCkJLhCZNXcWvns3YwEcbO2BXeEl6m3SDzF1nY7esSA5d
+         7y+ghZsKlIAXVSaA82qw8PWH7wGFj9oeY6Cyf0f46HwWECKfKGkN3dtTt7FHiFNUBlZl
+         eS2w==
+X-Forwarded-Encrypted: i=1; AFNElJ/jSbtOdpTJjSli4DgntxCRtVOc/RHC6QSXamAk5rCL1GAlBdILvNslfI8B73lOfKaGyIMHLbr0jF0gas/m8ns=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfAR+REMNGpdIgVr11uIUf+t7bT3Es2Pa8MVfjc2XhgA+JrhT+
+	RXcc1e5vhIvNCV7vwEXG8P2CO9XQsxLxxpy31UaBRMLGAeIAsx+KqHBE8MJWyOx0iVtMXS/ar6O
+	EDFBWTQRRLGn/nb53jsaxi9SKeinQjuEJtA8RjuY2
+X-Gm-Gg: Acq92OFaVWkCTI/qUu4mKNifGf0pEavaLZ5wcaEFnOFtDxhD3ZlTFUilVpSD1ZbvcN4
+	gfi16HbPr0foNX4F06hcuXlyRmT3Yd8zDYJHjPJTGMnED1J8hl/ftiKpYBe0pgEWCe4jY+hLolB
+	ZQbTTOf15wUl/w2lVht2pTTrfD4Rymaw/YGUZ95mc757UUX0wv8mq1oZQ3ZpXTvmszBjHQIbCSh
+	BZumO1VZ4N63Uo9gf8BymCA6SCNJLszti59uMZMlXrT56G4XeIRl8ZzkfqepN81Rai5pJcCHJ9P
+	y0uKRmAq0+jnz5e5s6T77gTaPwTUY/Ius0Azx7XhFv7KdXMm
+X-Received: by 2002:a05:7022:62aa:b0:12a:72af:83d2 with SMTP id
+ a92af1059eb24-1350441d7ccmr1656610c88.14.1778851492906; Fri, 15 May 2026
+ 06:24:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/14] dt-bindings: media: qcom: Add CAMSS Offline
- Processing Engine (OPE)
-To: Loic Poulain <loic.poulain@oss.qualcomm.com>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bryan O'Donoghue <bod@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
-        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
-References: <20260427-camss-isp-ope-v2-0-f430e7485009@oss.qualcomm.com>
- <20260427-camss-isp-ope-v2-10-f430e7485009@oss.qualcomm.com>
- <aead10a8-45be-4f7a-ac6c-35a99a716b3c@oss.qualcomm.com>
- <CAFEp6-38=hcUOvW1yd+hRZ2nHV8sLxiLeB18uu-au=LgA2bQTw@mail.gmail.com>
- <0c6c9366-a190-4143-a0fb-2aff38ed8804@oss.qualcomm.com>
- <CAFEp6-1uDO7UzYm+5ejRH0fCtnFZSA3z_Xa+4ibDEbXBh38ueA@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CAFEp6-1uDO7UzYm+5ejRH0fCtnFZSA3z_Xa+4ibDEbXBh38ueA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE1MDEzMSBTYWx0ZWRfX62c5mH4uX7G8
- DK92jzC9MTMdMWheBlI/uQrGvHbKwTKputNFk5lb5YvchV/eBoBRjy6jTRtEAPehzkHWZo5ynWP
- fF4UJImAErOafO2qj1udQsIr9aXC+FxSmVmZytHDPVm2BFt3SCyvNnxSAMJfXpxWxqmA9HY8sj2
- 1jTiJD/gozpMO9/Y/yxDnc+3B5VrSNuAxNCMYaoAphQe6DxRi+/LAXmaadHg4asH/maFvjI92EK
- hPqIRxVJEZfVu0NqHMkEaUIW6xKAF4heu4zBGoXMLkwqgF+GOSzCB/CmTWAdp4ZHI2LPs6kUXEk
- YeEAztrsre56/VCVjWMBKo/F15zywmUcOIiNp6DNhPQtf0Y04opShDojNmBiBAy8nR9O2QphrH8
- owi+Q0aU2lw2VbArJ9/QIu2oh2McmUnodrEZql9xDF74icI/5n6DvQJpsiJ1d5g0M9KhKdkIGhh
- cxFQUYQ6MXVx4EeHY9g==
-X-Proofpoint-GUID: AAisA5LF_1BGaBfScUA9t3hfaSkH34Rj
-X-Proofpoint-ORIG-GUID: AAisA5LF_1BGaBfScUA9t3hfaSkH34Rj
-X-Authority-Analysis: v=2.4 cv=BvqtB4X5 c=1 sm=1 tr=0 ts=6a07183d cx=c_pps
- a=P2rfLEam3zuxRRdjJWA2cw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
- a=EUspDBNiAAAA:8 a=MDVsdYFiAoUeNHFhHhoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=ODZdjJIeia2B_SHc_B0f:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-15_03,2026-05-13_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 phishscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 malwarescore=0 bulkscore=0 adultscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605150131
+References: <20260511200136.3201646-1-elver@google.com> <560a84ed-7daf-4a78-a314-b867c73bce22@kernel.org>
+In-Reply-To: <560a84ed-7daf-4a78-a314-b867c73bce22@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Fri, 15 May 2026 15:24:16 +0200
+X-Gm-Features: AVHnY4IK86MdHMyPl5dB4zdZDdnYGN0oaLGQAymJ1xrwo4kBW5Idcq4vVdQ8Oeg
+Message-ID: <CANpmjNNHXvv8ruFGHzvom5V0mwmaoBoBenvt=ZLnEDmEy8dYeA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] slab: support for compiler-assisted type-based
+ slab cache partitioning
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Bill Wendling <morbo@google.com>, 
+	David Hildenbrand <david@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>, 
+	Justin Stitt <justinstitt@google.com>, KP Singh <kpsingh@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, Matteo Rizzo <matteorizzo@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Mike Rapoport <rppt@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Suren Baghdasaryan <surenb@google.com>, linux-hardening@vger.kernel.org, 
+	Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>, 
+	"Liam R. Howlett" <liam@infradead.org>, Alexander Potapenko <glider@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kasan-dev@googlegroups.com, llvm@lists.linux.dev, 
+	GONG Ruiqi <gongruiqi1@huawei.com>, Jonathan Corbet <corbet@lwn.net>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/5/26 3:16 PM, Loic Poulain wrote:
-> On Tue, Apr 28, 2026 at 12:16 PM Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
->>
->> On 4/27/26 10:33 PM, Loic Poulain wrote:
->>> On Mon, Apr 27, 2026 at 4:22 PM Konrad Dybcio
->>> <konrad.dybcio@oss.qualcomm.com> wrote:
->>>>
->>>> On 4/27/26 2:43 PM, Loic Poulain wrote:
->>>>> Add Devicetree binding documentation for the Qualcomm Camera Subsystem
->>>>> Offline Processing Engine (OPE) found on platforms such as Agatti.
->>>>> The OPE is a memory-to-memory image processing block which operates
->>>>> on frames read from and written back to system memory.
->>>>>
->>>>> Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
->>>>> ---
->>>>
->>>> [...]
->>>>
->>>>> +        clocks = <&gcc GCC_CAMSS_OPE_CLK>,
->>>>> +                 <&gcc GCC_CAMSS_OPE_AHB_CLK>,
->>>>> +                 <&gcc GCC_CAMSS_NRT_AXI_CLK>;
->>>>
->>>> Should the two AXI clocks be aggregated by camss-top instead?
->>>>
->>>> Otherwise we run the risk of the OPE driver setting a rate of A
->>>> and another sub-device setting a rate of B
->>>
->>> On qcm2290, OPE appears to be the only consumer of the NRT AXI clock,
->>> while the capture path (VFE/TFE) relies on the RT AXI clock. That
->>> said, this may not always be the case and these clocks (AXI / NRT‑AXI
->>> / RT‑AXI) seem like they could reasonably be managed at the
->>> camss-bus/top level.
->>>
->>> The open question is how the NRT AXI clock should be enabled when
->>> required? enabling them unconditionally (similar to other camss PM
->>> clocks), introducing a dedicated CAMSS top‑level interface for voting,
->>> or leveraging an existing framework to handle this?
->>
->> So, interconnect, or some internal, smaller version of it?
-> 
-> Downstream, there is a CPAS driver that handles these clocks in
-> conjunction with the internal CAMNOC block. Dmitry also mentioned the
-> existing icc_clock mechanism, but we likely need to investigate this
-> further to support proper dynamic scaling of the required clocks.
-> However, I don’t plan to address this as part of the current series,
-> as it would significantly increase its scope.
+On Thu, 14 May 2026 at 11:01, Vlastimil Babka (SUSE) <vbabka@kernel.org> wrote:
 >
-> I believe the current approach is acceptable for now because:
-> - This NRT clock is required by this specific sub-block, but not by
-> all CAMSS sub-blocks (unlike, for example, camss-ahb), so referencing
-> it makes sense here.
-> - At the moment, the OPE only enables this clock without setting its
-> rate (i.e., it uses the default), so this should not conflict with
-> introducing a more complete scaling framework later.
-> 
-> Does this sound good?
+> On 5/11/26 22:00, Marco Elver wrote:
+> > Rework the general infrastructure around RANDOM_KMALLOC_CACHES into more
+> > flexible KMALLOC_PARTITION_CACHES, with the former being a partitioning
+> > mode of the latter.
+> >
+> > Introduce a new mode, KMALLOC_PARTITION_TYPED, which leverages a feature
+> > available in Clang 22 and later, called "allocation tokens" via
+> > __builtin_infer_alloc_token() [1]. Unlike KMALLOC_PARTITION_RANDOM
+> > (formerly RANDOM_KMALLOC_CACHES), this mode deterministically assigns a
+> > slab cache to an allocation of type T, regardless of allocation site.
+> >
+> > The builtin __builtin_infer_alloc_token(<malloc-args>, ...) instructs
+> > the compiler to infer an allocation type from arguments commonly passed
+> > to memory-allocating functions and returns a type-derived token ID. The
+> > implementation passes kmalloc-args to the builtin: the compiler performs
+> > best-effort type inference, and then recognizes common patterns such as
+> > `kmalloc(sizeof(T), ...)`, `kmalloc(sizeof(T) * n, ...)`, but also
+> > `(T *)kmalloc(...)`. Where the compiler fails to infer a type the
+> > fallback token (default: 0) is chosen.
+> >
+> > Note: kmalloc_obj(..) APIs fix the pattern how size and result type are
+> > expressed, and therefore ensures there's not much drift in which
+> > patterns the compiler needs to recognize. Specifically, kmalloc_obj()
+> > and friends expand to `(TYPE *)KMALLOC(__obj_size, GFP)`, which the
+> > compiler recognizes via the cast to TYPE*.
+> >
+> > Clang's default token ID calculation is described as [1]:
+> >
+> >    typehashpointersplit: This mode assigns a token ID based on the hash
+> >    of the allocated type's name, where the top half ID-space is reserved
+> >    for types that contain pointers and the bottom half for types that do
+> >    not contain pointers.
+> >
+> > Separating pointer-containing objects from pointerless objects and data
+> > allocations can help mitigate certain classes of memory corruption
+> > exploits [2]: attackers who gains a buffer overflow on a primitive
+> > buffer cannot use it to directly corrupt pointers or other critical
+> > metadata in an object residing in a different, isolated heap region.
+> >
+> > It is important to note that heap isolation strategies offer a
+> > best-effort approach, and do not provide a 100% security guarantee,
+> > albeit achievable at relatively low performance cost. Note that this
+> > also does not prevent cross-cache attacks: while waiting for future
+> > features like SLAB_VIRTUAL [3] to provide physical page isolation, this
+> > feature should be deployed alongside SHUFFLE_PAGE_ALLOCATOR and
+> > init_on_free=1 to mitigate cross-cache attacks and page-reuse attacks as
+> > much as possible today.
+> >
+> > With all that, my kernel (x86 defconfig) shows me a histogram of slab
+> > cache object distribution per /proc/slabinfo (after boot):
+> >
+> >   <slab cache>      <objs> <hist>
+> >   kmalloc-part-15    1465  ++++++++++++++
+> >   kmalloc-part-14    2988  +++++++++++++++++++++++++++++
+> >   kmalloc-part-13    1656  ++++++++++++++++
+> >   kmalloc-part-12    1045  ++++++++++
+> >   kmalloc-part-11    1697  ++++++++++++++++
+> >   kmalloc-part-10    1489  ++++++++++++++
+> >   kmalloc-part-09     965  +++++++++
+> >   kmalloc-part-08     710  +++++++
+> >   kmalloc-part-07     100  +
+> >   kmalloc-part-06     217  ++
+> >   kmalloc-part-05     105  +
+> >   kmalloc-part-04    4047  ++++++++++++++++++++++++++++++++++++++++
+> >   kmalloc-part-03     183  +
+> >   kmalloc-part-02     283  ++
+> >   kmalloc-part-01     316  +++
+> >   kmalloc            1422  ++++++++++++++
+> >
+> > The above /proc/slabinfo snapshot shows me there are 6673 allocated
+> > objects (slabs 00 - 07) that the compiler claims contain no pointers or
+> > it was unable to infer the type of, and 12015 objects that contain
+> > pointers (slabs 08 - 15). On a whole, this looks relatively sane.
+> >
+> > Additionally, when I compile my kernel with -Rpass=alloc-token, which
+> > provides diagnostics where (after dead-code elimination) type inference
+> > failed, I see 186 allocation sites where the compiler failed to identify
+> > a type (down from 966 when I sent the RFC [4]). Some initial review
+> > confirms these are mostly variable sized buffers, but also include
+> > structs with trailing flexible length arrays.
+> >
+> > Link: https://clang.llvm.org/docs/AllocToken.html [1]
+> > Link: https://blog.dfsec.com/ios/2025/05/30/blasting-past-ios-18/ [2]
+> > Link: https://lwn.net/Articles/944647/ [3]
+> > Link: https://lore.kernel.org/all/20250825154505.1558444-1-elver@google.com/ [4]
+> > Link: https://discourse.llvm.org/t/rfc-a-framework-for-allocator-partitioning-hints/87434
+> > Acked-by: GONG Ruiqi <gongruiqi1@huawei.com>
+> > Co-developed-by: Harry Yoo (Oracle) <harry@kernel.org>
+> > Signed-off-by: Harry Yoo (Oracle) <harry@kernel.org>
+> > Signed-off-by: Marco Elver <elver@google.com>
+>
+> Applied [1] to slab/for-next, thanks. That means including the kernel-doc
+> workarounds in patch 3. I know Jon said someone might hate it, but maybe it
+> will motivate them for creating a proper fix :) It seems better than leaving
+> doc generation broken or not applying this series at all.
 
-Depends how you're going to want to tackle this debt in the future.
-If you go through the icc framework, you'll end up needing to alter
-the DT
+Thanks!
 
-If you bake in something internal to the camss family, say
-camss_foo_bar_request_bandwidth(u32 val), you may get it done
-without that. But I don't know what practical challenges that will
-entail
+> https://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab.git/log/?h=slab/for-7.2/alloc_token
+>
+> I did the following fixup to remove passing an unnecessary NULL argument for
+> __kmalloc_nolock() with buckets enabled. Made bloat-o-meter happier a bit.
 
-Konrad
+Good.
+
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index c232f8a10af6..795455256329 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -894,7 +894,7 @@ unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf);
+>   * with the exception of kunit tests
+>   */
+>
+> -void *__kmalloc_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags)
+> +void *__kmalloc_noprof(DECL_TOKEN_PARAMS(size, token), gfp_t flags)
+>                                 __assume_kmalloc_alignment __alloc_size(1);
+>
+>  void *__kmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags, int node)
+> @@ -981,7 +981,7 @@ static __always_inline __alloc_size(1) void *_kmalloc_noprof(size_t size, gfp_t
+>                                 kmalloc_caches[kmalloc_type(flags, token)][index],
+>                                 flags, size);
+>         }
+> -       return __kmalloc_noprof(PASS_KMALLOC_PARAMS(size, NULL, token), flags);
+> +       return __kmalloc_noprof(PASS_TOKEN_PARAMS(size, token), flags);
+>  }
+>  #define kmalloc_noprof(...)                    _kmalloc_noprof(__VA_ARGS__, __kmalloc_token(__VA_ARGS__))
+>  #define kmalloc(...)                           alloc_hooks(kmalloc_noprof(__VA_ARGS__))
+> diff --git a/mm/slub.c b/mm/slub.c
+> index a6e9015601d6..74652bbdd591 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -5303,10 +5303,10 @@ void *__kmalloc_node_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags, in
+>  }
+>  EXPORT_SYMBOL(__kmalloc_node_noprof);
+>
+> -void *__kmalloc_noprof(DECL_KMALLOC_PARAMS(size, b, token), gfp_t flags)
+> +void *__kmalloc_noprof(DECL_TOKEN_PARAMS(size, token), gfp_t flags)
+>  {
+> -       return __do_kmalloc_node(size, PASS_BUCKET_PARAM(b), flags,
+> -                                NUMA_NO_NODE, _RET_IP_, PASS_TOKEN_PARAM(token));
+> +       return __do_kmalloc_node(size, NULL, flags,  NUMA_NO_NODE, _RET_IP_,
+> +                                PASS_TOKEN_PARAM(token));
+>  }
+>  EXPORT_SYMBOL(__kmalloc_noprof);
+
+Reviewed-by: Marco Elver <elver@google.com>
+
+Thanks!
