@@ -1,82 +1,232 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7643A961B;
-	Fri, 15 May 2026 14:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6133B2FCC
+	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 14:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778854519; cv=none; b=Zz8JRPIYt8jXb8uQZC/+0T0iDf43Tpx0yenChD1HnlQ4d+KHxkxtf7Vhy/7Bxjv9EW34S3tB3J0/D3k9JV3dvaRS218KbcvcsKcxXQUeXdUJTuDbMM9dkp/PAuGobswl0XNH+5rjCQFIHilSOWQhG/SqzCsMs90rWjfOMx5C/go=
+	t=1778855324; cv=none; b=ou+QLHEbMPkjAKs+BeQRbnvZBJwVDk+pVqSUbnFLRXRmEtNLV8WA9M41IVLaZyMJBc5e8Cw49Y/6SCb/pAsD9JgppeTTo7z9h4c2/6S5r4vP7wQ18nHsSJwPJl1Myl/t6cGN9L0cntKmmzOZbao3gZ476vGocGZV7sPJKeZB1b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778854519; c=relaxed/simple;
-	bh=q3ddQQ7Y/h8yP7ksmWTHC7sGDBsS3439/VlNrRezglo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HHgZpXDepViX7b8Pa/L+FNiipFFbvuHlAejhMeq5vrN23YJimwGesD1n6Le4pj6pL5QpU/ZX2kocxWV0bEeqlFU0bOs2GGzVOTNoJFupcOPAzELpZ1yIO2wrcq0hCevgiCrpivigXkB+Up7X2LfDda6fmfHkjek7KiFTd/u2R2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Qmz6vOf3; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1778855324; c=relaxed/simple;
+	bh=nH/jI+92zjNuFwIDGwzq17WxQq65JO0Bhh/i+EOhW9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/2o4aAFqoKv8ZKNRTBWZw/1AAjHzuigfZF8vV/0qXCd/k11J/+5lqClggUOhZnnVwnOL8IRk6sJEAYGH89LNDwCzMskHxfRdvEG4JNoX0GRzDED23LFTO3MQ9lGIJevwrwTbgXLDGxKFubWJG5w+XZrPGVD5gSUTbbWNjLfNEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Sfq8rEKb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c6mZM+Rt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Sfq8rEKb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c6mZM+Rt; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Qmz6vOf3"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 6EB48410B5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1778854517; bh=hhlVW1p0W18gTXBj78aOHGg/y0iUqQRc1l2EOM9d6wg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Qmz6vOf3ByCXNMOoWjskT0XVJP09PKMACMQBlVgMRlCqvYt+BeNbWmF8bE0P4OmSe
-	 dzHj0L+xwXoiy25Es7a196GrHl1pgW19//mJwYoKNKuwUupBKbdf5WF2qpi3eqqdxs
-	 4SKqC6uwPe9dpsTpbI15OoYkVc6r9zMWFTouK2I1rh1TPkqLDmG3rxEWeGmT/NYG0F
-	 Q3Jxu5wp1bsknWKaZjSpapUgD+9ezcT6uBr9Hd2+55PYyqJ5ulcZod2JFg7V6I/Wuy
-	 MZm9MfD9vcxggYJB00+uBt1cc7QIHkgUdB1p/+lnHlfd1i7MQ8s0ywRkfXSouRRusP
-	 KOluXT3GVIhZQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:27b:67c:16ff:fe81:5f9b])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Sfq8rEKb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c6mZM+Rt";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Sfq8rEKb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c6mZM+Rt"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 6EB48410B5;
-	Fri, 15 May 2026 14:15:17 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hardening@vger.kernel.org, peter.griffin@linaro.org,
- andre.draszik@linaro.org, willmcvicker@google.com, jyescas@google.com,
- krzk@kernel.org, kernel-team@android.com, Tudor Ambarus
- <tudor.ambarus@linaro.org>
-Subject: Re: [PATCH] docs: kernel-doc: python: strip __counted_by_ptr macro
-In-Reply-To: <20260506-kdoc-__counted_by_ptr-v1-1-70763486871f@linaro.org>
-References: <20260506-kdoc-__counted_by_ptr-v1-1-70763486871f@linaro.org>
-Date: Fri, 15 May 2026 08:15:16 -0600
-Message-ID: <87qzncrc7f.fsf@trenco.lwn.net>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 02F1D67754;
+	Fri, 15 May 2026 14:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778855321; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BecDRMYedazdGNIjJxC/aBqY4Cn73u55vUJMwukHYmk=;
+	b=Sfq8rEKbU8uUh81sS2hKRj6Oqk8PsCkU0mRUWoSHsaf4dyOVvzixRyjdd+WfDIsKtvrLb3
+	fB8HamDGRnHMgCeStIsHwJ3yzEPYfFssHxTGTG3sGs+eoi+wxDuNyRhGIzDkIwnmG9fAFe
+	K3LYuXXtNO6lleo7aXmTLmAuVNGlTGI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778855321;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BecDRMYedazdGNIjJxC/aBqY4Cn73u55vUJMwukHYmk=;
+	b=c6mZM+RtGYzQEewsUHmxU5pnFA37J9Myd/hL61envlm4ctoeiX6RBBPZepUCjrJZZP5pTw
+	PMtnTgkVEmi9sxCg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Sfq8rEKb;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=c6mZM+Rt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778855321; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BecDRMYedazdGNIjJxC/aBqY4Cn73u55vUJMwukHYmk=;
+	b=Sfq8rEKbU8uUh81sS2hKRj6Oqk8PsCkU0mRUWoSHsaf4dyOVvzixRyjdd+WfDIsKtvrLb3
+	fB8HamDGRnHMgCeStIsHwJ3yzEPYfFssHxTGTG3sGs+eoi+wxDuNyRhGIzDkIwnmG9fAFe
+	K3LYuXXtNO6lleo7aXmTLmAuVNGlTGI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778855321;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BecDRMYedazdGNIjJxC/aBqY4Cn73u55vUJMwukHYmk=;
+	b=c6mZM+RtGYzQEewsUHmxU5pnFA37J9Myd/hL61envlm4ctoeiX6RBBPZepUCjrJZZP5pTw
+	PMtnTgkVEmi9sxCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE5BD593A9;
+	Fri, 15 May 2026 14:28:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id GqkbJ5YtB2ptJgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 15 May 2026 14:28:38 +0000
+Date: Fri, 15 May 2026 15:28:36 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Marco Elver <elver@google.com>
+Cc: Vlastimil Babka <vbabka@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Bill Wendling <morbo@google.com>, David Hildenbrand <david@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>, 
+	Justin Stitt <justinstitt@google.com>, KP Singh <kpsingh@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, Matteo Rizzo <matteorizzo@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Suren Baghdasaryan <surenb@google.com>, 
+	linux-hardening@vger.kernel.org, Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>, 
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>, 
+	Hao Li <hao.li@linux.dev>, "Liam R. Howlett" <liam@infradead.org>, 
+	Alexander Potapenko <glider@google.com>, Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kasan-dev@googlegroups.com, 
+	llvm@lists.linux.dev, GONG Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH v4 1/3] slab: support for compiler-assisted type-based
+ slab cache partitioning
+Message-ID: <agcsMgfKjGTasJ5n@pedro-suse>
+References: <20260511200136.3201646-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260511200136.3201646-1-elver@google.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[38];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	URIBL_BLOCKED(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux-foundation.org,oracle.com,gmail.com,google.com,suse.com,linux.dev,vger.kernel.org,gentwo.org,infradead.org,kvack.org,googlegroups.com,lists.linux.dev,huawei.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	TAGGED_RCPT(0.00)[lkml];
+	R_RATELIMIT(0.00)[to_ip_from(RL1cw6ythuw8wwzfp3h8jrso53)];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 02F1D67754
+X-Spam-Level: 
 
-Tudor Ambarus <tudor.ambarus@linaro.org> writes:
+On Mon, May 11, 2026 at 10:00:48PM +0200, Marco Elver wrote:
+> Rework the general infrastructure around RANDOM_KMALLOC_CACHES into more
+> flexible KMALLOC_PARTITION_CACHES, with the former being a partitioning
+> mode of the latter.
+> 
+> Introduce a new mode, KMALLOC_PARTITION_TYPED, which leverages a feature
+> available in Clang 22 and later, called "allocation tokens" via
+> __builtin_infer_alloc_token() [1]. Unlike KMALLOC_PARTITION_RANDOM
+> (formerly RANDOM_KMALLOC_CACHES), this mode deterministically assigns a
+> slab cache to an allocation of type T, regardless of allocation site.
+> 
+> The builtin __builtin_infer_alloc_token(<malloc-args>, ...) instructs
+> the compiler to infer an allocation type from arguments commonly passed
+> to memory-allocating functions and returns a type-derived token ID. The
+> implementation passes kmalloc-args to the builtin: the compiler performs
+> best-effort type inference, and then recognizes common patterns such as
+> `kmalloc(sizeof(T), ...)`, `kmalloc(sizeof(T) * n, ...)`, but also
+> `(T *)kmalloc(...)`. Where the compiler fails to infer a type the
+> fallback token (default: 0) is chosen.
+> 
+> Note: kmalloc_obj(..) APIs fix the pattern how size and result type are
+> expressed, and therefore ensures there's not much drift in which
+> patterns the compiler needs to recognize. Specifically, kmalloc_obj()
+> and friends expand to `(TYPE *)KMALLOC(__obj_size, GFP)`, which the
+> compiler recognizes via the cast to TYPE*.
+> 
+> Clang's default token ID calculation is described as [1]:
+> 
+>    typehashpointersplit: This mode assigns a token ID based on the hash
+>    of the allocated type's name, where the top half ID-space is reserved
+>    for types that contain pointers and the bottom half for types that do
+>    not contain pointers.
+> 
+> Separating pointer-containing objects from pointerless objects and data
+> allocations can help mitigate certain classes of memory corruption
+> exploits [2]: attackers who gains a buffer overflow on a primitive
+> buffer cannot use it to directly corrupt pointers or other critical
+> metadata in an object residing in a different, isolated heap region.
+> 
+> It is important to note that heap isolation strategies offer a
+> best-effort approach, and do not provide a 100% security guarantee,
+> albeit achievable at relatively low performance cost. Note that this
+> also does not prevent cross-cache attacks: while waiting for future
+> features like SLAB_VIRTUAL [3] to provide physical page isolation, this
+> feature should be deployed alongside SHUFFLE_PAGE_ALLOCATOR and
+> init_on_free=1 to mitigate cross-cache attacks and page-reuse attacks as
+> much as possible today.
+> 
+> With all that, my kernel (x86 defconfig) shows me a histogram of slab
+> cache object distribution per /proc/slabinfo (after boot):
+> 
+>   <slab cache>      <objs> <hist>
+>   kmalloc-part-15    1465  ++++++++++++++
+>   kmalloc-part-14    2988  +++++++++++++++++++++++++++++
+>   kmalloc-part-13    1656  ++++++++++++++++
+>   kmalloc-part-12    1045  ++++++++++
+>   kmalloc-part-11    1697  ++++++++++++++++
+>   kmalloc-part-10    1489  ++++++++++++++
+>   kmalloc-part-09     965  +++++++++
+>   kmalloc-part-08     710  +++++++
+>   kmalloc-part-07     100  +
+>   kmalloc-part-06     217  ++
+>   kmalloc-part-05     105  +
+>   kmalloc-part-04    4047  ++++++++++++++++++++++++++++++++++++++++
+>   kmalloc-part-03     183  +
+>   kmalloc-part-02     283  ++
+>   kmalloc-part-01     316  +++
+>   kmalloc            1422  ++++++++++++++
 
-> The `__counted_by_ptr` macro was recently introduced [1] to extend
-> bounds checking semantics to standard dynamically allocated pointers.
->
-> However, the new Python implementation of kernel-doc does not currently
-> recognize it as a compiler attribute. When kernel-doc encounters a
-> struct member annotated with this macro, it fails to parse the variable
-> name correctly, resulting in false-positive warnings like:
->
->   Warning: ... struct member '__counted_by_ptr(cmdcnt' not described
->
-> Add `__counted_by_ptr` to the `struct_xforms` regex list so it gets
-> safely stripped out during the parsing phase, mirroring the existing
-> behavior for `__counted_by`. Update the corresponding unit tests.
->
-> Link: https://git.kernel.org/torvalds/c/150a04d817d8 [1]
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> ---
->  tools/lib/python/kdoc/xforms_lists.py | 1 +
->  tools/unittests/test_cmatch.py        | 1 +
->  2 files changed, 2 insertions(+)
+Hi,
 
-Applied, thanks.
+A couple of questions (I apologise if this was asked before, I wasn't involved
+in this thread):
 
-jon
+1) What's the object behind kmalloc-part-04? I imagine it's a single type
+getting allocated a lot?
+
+2) The bucketing looks quite skewed. Do you have plans to implement something
+more similar to what's in the original Apple blog post (with the smaller
+granularity and all)? I'm asking because most of our types have pointers in
+some way.
+
+3) Obligatory "how about GCC?" :) I quite like the idea behind this feature,
+and it would be awesome if it could be more broadly deployed!
+
+
+In any case, really cool work!
+
+-- 
+Pedro
