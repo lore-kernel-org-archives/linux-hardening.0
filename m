@@ -1,948 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9462B4C6EED
-	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 16:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2944C6F09;
+	Fri, 15 May 2026 16:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778861763; cv=none; b=ZVPECuCHdixG7jFdsBoq4d6EXrf4fcwOWVWVv15CoBY0vKqvmH0WEUS0LMCGWJdrNqfjl3vuKgTHJb0Nr6dytqPoH6LmYKO4vTCHW9piAQPGRnxGrZ2430NHpoNAxYE3otkiR9mZOip0ynLnHn0XAo0KYFcMcH31P0V05QkNSnU=
+	t=1778864059; cv=none; b=qCgUN+efilbb7JSP0ybPZ3sNqyDvfsgRE0geaSSWn4WO8+SNiEpyoXLWLLEsN9qmpwyewjeD9ttRrKnjJT5eSzN+ykh6d31B+a522ZT19UEF/uc42Dpr6P1gtmZJrmszcsQadfMCA3kfXIpxIRPXA5zf+/NS+2OKEUwnptBi3TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778861763; c=relaxed/simple;
-	bh=/VSFlo/B6//9ASi1FBI89CqxZjpaybkCI5a2lN4xx8U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tO0975cVV9Sa2rUMrobrff6Tm/GIksdnM/T0do8N7azcTW22W4RTz3csiU5reyXi3HekD0Xd3pOrDdh2kxZcNAE6sVgxWa4DpzwsSbjDhsIiB4UP1Le3sY4duV59ZKOHMYGej26EfkILMT2if02+EDeA4sfYPiuw8+1HnY2c1UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swf3AQTI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778864059; c=relaxed/simple;
+	bh=Oq8sA+f5fwEz3Gbhe4/UQdT03Rgd/EdfMErxJReByvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aQfEUrnwxZBVkIkuNV7Tt6KfYTx+DoWK33K4NtVLibMO+LNr1v53hYYl09cSjkhnocV6tHx+4nfe/gJ9aBsJfLZXhqJzM/+ItY/Xl8bq400w8edKYnLZZRjZ/ZUFFAOr+hTkho7PARfbVUtFpaVDuBM7WQ6Kv4w4a8Qj4G7T9qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EZQk/eXo; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swf3AQTI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6B4C2BCFF;
-	Fri, 15 May 2026 16:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778861763;
-	bh=/VSFlo/B6//9ASi1FBI89CqxZjpaybkCI5a2lN4xx8U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=swf3AQTIfPn/oAJNS8jP4o4ZaqgtBwYoExC8fyv/1z8NtY0VD07YM68g+bu8P/f2C
-	 gSFH3yuOFlZIvgbnmcRjZ9wQ2kjslK/OORfx8/VqADvkYetJh/+GNLx7OJt8NDshXJ
-	 U1h/co6vl6S/Kxa+0gFZOWTFPYQkXmCc6/wDIideWKzdHZ/X93OS1qgMXkGB/sQmGn
-	 WExY+lPKtg/ploNZdJgfutHsF65TyGEcPzmo76J2Dmix4HKn1w1lgElr3AV1Wq+g3e
-	 Ma3SH5H91JzNhdgFnsAgBmB7jfrNo7FYYHcDYOHsLPFBY71WVYgbxNMM8tWrY4tKtt
-	 Qs3Sy3VSFnPoA==
-From: Kees Cook <kees@kernel.org>
-To: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Joseph Myers <josmyers@redhat.com>,
-	Richard Biener <rguenther@suse.de>,
-	Jeff Law <jeffreyalaw@gmail.com>,
-	Andrew Pinski <pinskia@gmail.com>,
-	Jakub Jelinek <jakub@redhat.com>,
-	Martin Uecker <uecker@tugraz.at>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
-	"Constable, Scott D" <scott.d.constable@intel.com>,
-	gcc-patches@gcc.gnu.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v12 7/7] riscv: Add RISC-V Kernel Control Flow Integrity implementation
-Date: Fri, 15 May 2026 09:16:00 -0700
-Message-Id: <20260515161602.1548211-7-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260515161551.stronger.641-kees@kernel.org>
-References: <20260515161551.stronger.641-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EZQk/eXo"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64FBSGSR576688;
+	Fri, 15 May 2026 16:54:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=3St4iq7uw2n4Oi89NYsuWxbE42N21e
+	/j3GToZVButWw=; b=EZQk/eXo+BEb0EOqsQAgtBgWWQtdp4Ob9NcF72Kd4QRScJ
+	nO5p7KGmUJ/W1mVxCLJ5fRN4N4TpHHLc58V38m3OpQP0qCqhXpmMt01hovITftJC
+	jNUocNqv25eHPpJoA302c/eXT0tMlf5SXivdfDRIF1ZzAg4KWPALeUTQowygK5WS
+	12fjcwW9/exzMsI3fYFF9fj+061fcp9UCucH8aN1tZjb5xASBquJztlWAv8a/WAx
+	/GICNsPvsD/GsKd2Vd5+AU039rrvfzYAvBOn/YAhJTMs54ZIHaxDjy5SHANJEd6x
+	a5KUlztwf1tp/BWPkZHYNph4okCOksSV/PjJmEeQ==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e5m92m3hj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 May 2026 16:54:04 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64FGd96F026489;
+	Fri, 15 May 2026 16:54:03 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e5kvcmea1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 May 2026 16:54:03 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64FGrxtg13107564
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 May 2026 16:54:00 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C98A120043;
+	Fri, 15 May 2026 16:53:59 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ECAE22004D;
+	Fri, 15 May 2026 16:53:58 +0000 (GMT)
+Received: from osiris (unknown [9.87.152.91])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 15 May 2026 16:53:58 +0000 (GMT)
+Date: Fri, 15 May 2026 18:53:57 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-s390@vger.kernel.org,
+        Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
+        Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stefan Schulze Frielinghaus <stefansf@linux.ibm.com>,
+        Juergen Christ <jchrist@linux.ibm.com>
+Subject: Re: [PATCH] [RFC] ubsan: turn off UBSAN_ALIGNMENT on s390
+Message-ID: <20260515165357.10935D74-hca@linux.ibm.com>
+References: <20260515092057.810542-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=38447; i=kees@kernel.org; h=from:subject; bh=/VSFlo/B6//9ASi1FBI89CqxZjpaybkCI5a2lN4xx8U=; b=owGbwMvMwCVmps19z/KJym7G02pJDFnsbvtVTtya7j2Z3z1GyUmPMaer4/K175vs065/K9pz+ Oq2tKlfO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACbi48bI8Ct8IlPKj6L382Ta OP91TePp1bh7zHbdUZElppK8HPZT9jIy7Joy0aLm3d/1yivXeq52237/1HtNr11OV7R0VRdoHFn 1jhEA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260515092057.810542-1-arnd@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE1MDE3MCBTYWx0ZWRfX0Sdgqd2mbOFw
+ KkwpotWDkb5iMlunsj0AnCKrYChzb8Nxz9zKCYOeVw8wVOHFb7mGA5rcu7GnkjmJnGUqKeiNOT6
+ nxhwTmcZWQ141Iwj3D/OEGSjVkmvfZwzlpzjIqqikeGpqT5brZ/sJ+megDwJVgLmSkZYy9RxDuK
+ xOKcM8sPehgUsrWal/xaadErluJkpX0z+b1lq0P/iXZqGXF2CQFVrjhdyD0lQ22lz4q+EmRycMn
+ d2XVL9awFqwzsZ72v+/8jl+nZDMgjZQ5RGuXlcfdcu2y0xvstUWHQPTDsJcRCErYc3RAXla+ugI
+ m9PrJkp/7QIze9f1LXyVtsutKs+MnF/WG5PnDssxavt1cpXADFQ2oWfOc0u4zSHzCSBwc36/73h
+ I3/RoJTjfNsBKlw0acbJgIr3W1RgdXkXhrVWNkq8nVz7PLOcT5HJPGrrXmZ3KOT8ySBqficZ6mP
+ CkT9ClEpKnO3wm7hRmQ==
+X-Proofpoint-ORIG-GUID: dFUWlXN3yEx0zRZhdfr_E6pX1tSmd4PZ
+X-Authority-Analysis: v=2.4 cv=aNnAb79m c=1 sm=1 tr=0 ts=6a074fac cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=kj9zAlcOel0A:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=yuVE4MsfjvIhWQyEmLAA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: AG3tYxTwIk-uHnozpkweqL_TBK0aOZF8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-15_04,2026-05-15_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 clxscore=1011 adultscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605150170
 
-Implement RISC-V-specific KCFI backend. Nothing is conceptually rv64
-specific, but using an alternative set of instructions for rv32 would be
-needed, and at present the only user of KCFI on riscv is the rv64 build
-of the Linux kernel.
+On Fri, May 15, 2026 at 11:19:54AM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Testing randconfig builds on s390 with gcc-15, I came across a number of
+> seemingly unrelated build failures that ended up all being caused
+> by the -fsanitize=alignment option:
+> 
+> s390-linux-ld: kernel/sched/build_policy.o: in function `thread_group_cputime':
+> include/linux/seqlock.h:1286:(.text+0x1f738): undefined reference to `__scoped_seqlock_bug'
 
-- Scratch register allocation using t1/t2 (x6/x7) following RISC-V
-  procedure call standard for temporary registers (already
-  caller-saved), and t3 (x8) when either t1 or t2 is already the call
-  target register.
+Does this only happen with __scoped_seqlock_bug()?
+I just enabled UBSAN_ALIGNMENT, and with gcc-16 I can see this too.
 
-- Incompatible with -ffixed-t1, -ffixed-t2, or -ffixed-t3.
+> What I observe here is a huge increase in generated calls to
+> __ubsan_handle_type_mismatch_v1() that ends up thowing off a number of
+> compiler optimizations that the kernel relies on.
+> 
+> I have not been able to figure out why this happens on s390 but not arm64,
+> arm or x86, if other toolchain versions are affected by the same thing,
+> and if this is a problem in gcc or in the kernel itself, e.g. some
+> variable being identified as unaligned when it should be aligned.
+> 
+> This clearly needs more investigation to figure out properly what is
+> going on, but turning it off is currently required for randconfig testing.
+...
+> ---
+>  lib/Kconfig.ubsan | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index 1ecaae7064d2..3fc03a6b5af4 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -152,6 +152,7 @@ config UBSAN_ENUM
+>  
+>  config UBSAN_ALIGNMENT
+>  	bool "Perform checking for misaligned pointer usage"
+> +	depends on !S390 || BROKEN
 
-- Integration with .kcfi_traps section for debugger/runtime metadata
-  (like x86_64).
+Wouldn't it be more appropriate to extend the ifdef at __scoped_seqlock_bug()
+which emits an empty function for exactly this reason for some gcc versions
+and kernel configs?
 
-Assembly Code Pattern for RISC-V:
-  lw      t1, -4(target_reg)         ; Load actual type ID from preamble
-  lui     t2, %hi(expected_type)     ; Load expected type (upper 20 bits)
-  addiw   t2, t2, %lo(expected_type) ; Add lower 12 bits (sign-extended)
-  beq     t1, t2, .Lkcfi_call        ; Branch if types match
-  .Lkcfi_trap: ebreak                ; Environment break trap on mismatch
-  .Lkcfi_call: jalr/jr target_reg    ; Execute validated indirect transfer
+That is: add CONFIG_UBSAN_ALIGNMENT to the list (copy-pasted - white space
+damage below)?
 
-Build and run tested with Linux kernel ARCH=riscv.
-
-gcc/ChangeLog:
-
-	config/riscv/riscv-protos.h: Declare KCFI helpers.
-	config/riscv/riscv.cc (riscv_maybe_wrap_call_with_kcfi): New
-	function, to wrap calls.
-	(riscv_maybe_wrap_call_value_with_kcfi): New function, to
-	wrap calls with return values.
-	(riscv_output_kcfi_insn): New function to emit KCFI assembly.
-	config/riscv/riscv.md: Add KCFI RTL patterns and hook expansion.
-	doc/invoke.texi: Document riscv nuances.
-
-gcc/testsuite/ChangeLog:
-
-	* gcc.dg/kcfi/kcfi-adjacency.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-basics.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-call-sharing.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-complex-addressing.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-move-preservation.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-no-sanitize-inline.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-no-sanitize.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-offset-validation.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-patchable-entry-only.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-patchable-large.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-patchable-medium.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-patchable-prefix-only.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-tail-calls.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-trap-section.c: Add riscv patterns.
-	* gcc.dg/kcfi/kcfi-riscv-fixed-t1.c: New test.
-	* gcc.dg/kcfi/kcfi-riscv-fixed-t2.c: New test.
-	* gcc.dg/kcfi/kcfi-riscv-fixed-t3.c: New test.
-
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- gcc/config/riscv/riscv-protos.h               |   3 +
- gcc/config/riscv/riscv.md                     |  76 +++++++-
- gcc/config/riscv/riscv.cc                     | 180 ++++++++++++++++++
- gcc/doc/invoke.texi                           |  17 ++
- gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c    |  17 ++
- gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c       |  21 +-
- gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c |   4 +
- .../gcc.dg/kcfi/kcfi-complex-addressing.c     |  19 ++
- .../gcc.dg/kcfi/kcfi-move-preservation.c      |  20 ++
- .../gcc.dg/kcfi/kcfi-no-sanitize-inline.c     |   5 +
- gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c  |   1 +
- .../gcc.dg/kcfi/kcfi-offset-validation.c      |   3 +
- .../gcc.dg/kcfi/kcfi-patchable-entry-only.c   |   9 +-
- .../gcc.dg/kcfi/kcfi-patchable-large.c        |  10 +-
- .../gcc.dg/kcfi/kcfi-patchable-medium.c       |   9 +-
- .../gcc.dg/kcfi/kcfi-patchable-prefix-only.c  |   9 +-
- gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c  |   7 +
- .../gcc.dg/kcfi/kcfi-riscv-fixed-t1.c         |   7 +
- .../gcc.dg/kcfi/kcfi-riscv-fixed-t2.c         |   7 +
- .../gcc.dg/kcfi/kcfi-riscv-fixed-t3.c         |   7 +
- gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c   |  23 +++
- gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c |   5 +-
- 22 files changed, 445 insertions(+), 14 deletions(-)
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t1.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t2.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t3.c
-
-diff --git a/gcc/config/riscv/riscv-protos.h b/gcc/config/riscv/riscv-protos.h
-index 8b362e323d98..c9ee059d6573 100644
---- a/gcc/config/riscv/riscv-protos.h
-+++ b/gcc/config/riscv/riscv-protos.h
-@@ -126,6 +126,9 @@ extern bool riscv_split_64bit_move_p (rtx, rtx);
- extern void riscv_split_doubleword_move (rtx, rtx);
- extern const char *riscv_output_move (rtx, rtx);
- extern const char *riscv_output_return ();
-+extern rtx riscv_maybe_wrap_call_with_kcfi (rtx, rtx);
-+extern rtx riscv_maybe_wrap_call_value_with_kcfi (rtx, rtx);
-+extern const char *riscv_output_kcfi_insn (rtx_insn *, rtx *);
- extern void riscv_declare_function_name (FILE *, const char *, tree);
- extern void riscv_declare_function_size (FILE *, const char *, tree);
- extern void riscv_asm_output_alias (FILE *, const tree, const tree);
-diff --git a/gcc/config/riscv/riscv.md b/gcc/config/riscv/riscv.md
-index 869061e18ae1..c8d8bd059ebc 100644
---- a/gcc/config/riscv/riscv.md
-+++ b/gcc/config/riscv/riscv.md
-@@ -4106,10 +4106,25 @@
-   ""
- {
-   rtx target = riscv_legitimize_call_address (XEXP (operands[0], 0));
--  emit_call_insn (gen_sibcall_internal (target, operands[1], operands[2]));
-+  rtx pat = gen_sibcall_internal (target, operands[1], operands[2]);
-+  pat = riscv_maybe_wrap_call_with_kcfi (pat, target);
-+  emit_call_insn (pat);
-   DONE;
- })
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 5a40252b8334..18affa4d21a6 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -1259,7 +1259,7 @@ static __always_inline void __scoped_seqlock_cleanup(struct ss_tmp *sst)
  
-+;; KCFI sibling call
-+(define_insn "*kcfi_sibcall_insn"
-+  [(kcfi (call (mem:SI (match_operand:DI 0 "call_insn_operand" "l"))
-+	       (match_operand 1 ""))
-+	 (match_operand 3 "const_int_operand"))
-+   (use (unspec:SI [(match_operand 2 "const_int_operand")] UNSPEC_CALLEE_CC))]
-+  "SIBLING_CALL_P (insn)"
-+{
-+  return riscv_output_kcfi_insn (insn, operands);
-+}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "24")])
-+
- (define_insn "sibcall_internal"
-   [(call (mem:SI (match_operand 0 "call_insn_operand" "j,S,U"))
- 	 (match_operand 1 "" ""))
-@@ -4133,11 +4148,27 @@
-   ""
- {
-   rtx target = riscv_legitimize_call_address (XEXP (operands[1], 0));
--  emit_call_insn (gen_sibcall_value_internal (operands[0], target, operands[2],
--					      operands[3]));
-+  rtx pat = gen_sibcall_value_internal (operands[0], target, operands[2],
-+					operands[3]);
-+  pat = riscv_maybe_wrap_call_value_with_kcfi (pat, target);
-+  emit_call_insn (pat);
-   DONE;
- })
+ extern void __scoped_seqlock_invalid_target(void);
  
-+;; KCFI sibling call with return value
-+(define_insn "*kcfi_sibcall_value_insn"
-+  [(set (match_operand 0 "")
-+	(kcfi (call (mem:SI (match_operand:DI 1 "call_insn_operand" "l"))
-+		    (match_operand 2 ""))
-+	      (match_operand 4 "const_int_operand")))
-+   (use (unspec:SI [(match_operand 3 "const_int_operand")] UNSPEC_CALLEE_CC))]
-+  "SIBLING_CALL_P (insn)"
-+{
-+  return riscv_output_kcfi_insn (insn, &operands[1]);
-+}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "24")])
-+
- (define_insn "sibcall_value_internal"
-   [(set (match_operand 0 "" "")
- 	(call (mem:SI (match_operand 1 "call_insn_operand" "j,S,U"))
-@@ -4161,10 +4192,26 @@
-   ""
- {
-   rtx target = riscv_legitimize_call_address (XEXP (operands[0], 0));
--  emit_call_insn (gen_call_internal (target, operands[1], operands[2]));
-+  rtx pat = gen_call_internal (target, operands[1], operands[2]);
-+  pat = riscv_maybe_wrap_call_with_kcfi (pat, target);
-+  emit_call_insn (pat);
-   DONE;
- })
- 
-+;; KCFI indirect call
-+(define_insn "*kcfi_call_internal"
-+  [(kcfi (call (mem:SI (match_operand:DI 0 "call_insn_operand" "l"))
-+	       (match_operand 1 "" ""))
-+	 (match_operand 3 "const_int_operand"))
-+   (use (unspec:SI [(match_operand 2 "const_int_operand")] UNSPEC_CALLEE_CC))
-+   (clobber (reg:SI RETURN_ADDR_REGNUM))]
-+  "!SIBLING_CALL_P (insn)"
-+{
-+  return riscv_output_kcfi_insn (insn, operands);
-+}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "24")])
-+
- (define_insn "call_internal"
-   [(call (mem:SI (match_operand 0 "call_insn_operand" "l,S,U"))
- 	 (match_operand 1 "" ""))
-@@ -4189,11 +4236,28 @@
-   ""
- {
-   rtx target = riscv_legitimize_call_address (XEXP (operands[1], 0));
--  emit_call_insn (gen_call_value_internal (operands[0], target, operands[2],
--					   operands[3]));
-+  rtx pat = gen_call_value_internal (operands[0], target, operands[2],
-+				     operands[3]);
-+  pat = riscv_maybe_wrap_call_value_with_kcfi (pat, target);
-+  emit_call_insn (pat);
-   DONE;
- })
- 
-+;; KCFI call with return value
-+(define_insn "*kcfi_call_value_insn"
-+  [(set (match_operand 0 "" "")
-+	(kcfi (call (mem:SI (match_operand:DI 1 "call_insn_operand" "l"))
-+		    (match_operand 2 "" ""))
-+	      (match_operand 4 "const_int_operand")))
-+   (use (unspec:SI [(match_operand 3 "const_int_operand")] UNSPEC_CALLEE_CC))
-+   (clobber (reg:SI RETURN_ADDR_REGNUM))]
-+  "!SIBLING_CALL_P (insn)"
-+{
-+  return riscv_output_kcfi_insn (insn, &operands[1]);
-+}
-+  [(set_attr "type" "call")
-+   (set_attr "length" "24")])
-+
- (define_insn "call_value_internal"
-   [(set (match_operand 0 "" "")
- 	(call (mem:SI (match_operand 1 "call_insn_operand" "l,S,U"))
-diff --git a/gcc/config/riscv/riscv.cc b/gcc/config/riscv/riscv.cc
-index 681b816d248e..3546b32cd76b 100644
---- a/gcc/config/riscv/riscv.cc
-+++ b/gcc/config/riscv/riscv.cc
-@@ -81,6 +81,7 @@ along with GCC; see the file COPYING3.  If not see
- #include "cgraph.h"
- #include "langhooks.h"
- #include "gimplify.h"
-+#include "kcfi.h"
- 
- /* This file should be included last.  */
- #include "target-def.h"
-@@ -11660,6 +11661,160 @@ riscv_convert_vector_chunks (struct gcc_options *opts)
-     return 1;
- }
- 
-+/* Apply KCFI wrapping to call pattern if needed.  PAT is the RTL call
-+   pattern to potentially wrap with KCFI instrumentation.  ADDR is the
-+   call target address RTL expression.  Returns the possibly modified
-+   call pattern with KCFI wrapper applied for indirect calls.  */
-+
-+rtx
-+riscv_maybe_wrap_call_with_kcfi (rtx pat, rtx addr)
-+{
-+  /* Only indirect calls need KCFI instrumentation.  */
-+  bool is_direct_call = SYMBOL_REF_P (addr);
-+  if (!is_direct_call)
-+    {
-+      rtx kcfi_type_rtx = kcfi_get_type_id_for_expanding_gimple_call ();
-+      if (kcfi_type_rtx)
-+	{
-+	  /* Extract the CALL from the PARALLEL and wrap it with KCFI.  */
-+	  rtx call_rtx = XVECEXP (pat, 0, 0);
-+	  rtx kcfi_call = gen_rtx_KCFI (VOIDmode, call_rtx, kcfi_type_rtx);
-+
-+	  /* Replace the CALL in the PARALLEL with the KCFI-wrapped call.  */
-+	  XVECEXP (pat, 0, 0) = kcfi_call;
-+	}
-+    }
-+  return pat;
-+}
-+
-+/* Apply KCFI wrapping to call_value pattern if needed.  PAT is the RTL
-+   call_value pattern to potentially wrap with KCFI instrumentation.  ADDR
-+   is the call target address RTL expression.  Returns the possibly modified
-+   call pattern with KCFI wrapper applied for indirect calls.  */
-+
-+rtx
-+riscv_maybe_wrap_call_value_with_kcfi (rtx pat, rtx addr)
-+{
-+  /* Only indirect calls need KCFI instrumentation.  */
-+  bool is_direct_call = SYMBOL_REF_P (addr);
-+  if (!is_direct_call)
-+    {
-+      rtx kcfi_type_rtx = kcfi_get_type_id_for_expanding_gimple_call ();
-+      if (kcfi_type_rtx)
-+	{
-+	  /* Extract the SET from the PARALLEL and wrap its CALL with KCFI.  */
-+	  rtx set_rtx = XVECEXP (pat, 0, 0);
-+	  rtx call_rtx = SET_SRC (set_rtx);
-+	  rtx kcfi_call = gen_rtx_KCFI (VOIDmode, call_rtx, kcfi_type_rtx);
-+
-+	  /* Replace the CALL in the SET with the KCFI-wrapped call.  */
-+	  SET_SRC (set_rtx) = kcfi_call;
-+	}
-+    }
-+  return pat;
-+}
-+
-+/* Output the assembly for a KCFI checked call instruction.  INSN is the
-+   RTL instruction being processed.  OPERANDS is the array of RTL operands
-+   where operands[0] is the call target register, operands[3] is the KCFI
-+   type ID constant.  Returns an empty string as all output is handled by
-+   direct assembly generation.  */
-+
-+const char *
-+riscv_output_kcfi_insn (rtx_insn *insn, rtx *operands)
-+{
-+  /* Target register.  */
-+  rtx target_reg = operands[0];
-+  gcc_assert (REG_P (target_reg));
-+
-+  /* Get KCFI type ID.  */
-+  uint32_t expected_type = UINTVAL (operands[3]);
-+
-+  /* Calculate typeid offset from call target.  */
-+  HOST_WIDE_INT offset = -kcfi_get_typeid_offset ();
-+
-+  /* Choose scratch registers that don't conflict with target.  */
-+  unsigned temp1_regnum = T1_REGNUM;
-+  unsigned temp2_regnum = T2_REGNUM;
-+
-+  if (REGNO (target_reg) == T1_REGNUM)
-+    temp1_regnum = T3_REGNUM;
-+  else if (REGNO (target_reg) == T2_REGNUM)
-+    temp2_regnum = T3_REGNUM;
-+
-+  /* Get unique label number for this KCFI check.  */
-+  int labelno = kcfi_next_labelno ();
-+
-+  /* Generate custom label names.  */
-+  char trap_name[32];
-+  char call_name[32];
-+  ASM_GENERATE_INTERNAL_LABEL (trap_name, "Lkcfi_trap", labelno);
-+  ASM_GENERATE_INTERNAL_LABEL (call_name, "Lkcfi_call", labelno);
-+
-+  /* Split expected_type for RISC-V immediate encoding.
-+     If bit 11 is set, increment upper 20 bits to compensate for sign
-+     extension.  */
-+  int32_t lo12 = ((int32_t)(expected_type << 20)) >> 20;
-+  uint32_t hi20 = ((expected_type >> 12)
-+		    + ((expected_type & 0x800) ? 1 : 0)) & 0xFFFFF;
-+
-+  rtx temp_operands[3];
-+
-+  /* Load actual type from memory at offset.  */
-+  temp_operands[0] = gen_rtx_REG (SImode, temp1_regnum);
-+  temp_operands[1] = gen_rtx_MEM (SImode,
-+				  gen_rtx_PLUS (DImode, target_reg,
-+						GEN_INT (offset)));
-+  output_asm_insn ("lw\t%0, %1", temp_operands);
-+
-+  /* Load expected type using lui + addiw for proper sign extension.  */
-+  temp_operands[0] = gen_rtx_REG (SImode, temp2_regnum);
-+  temp_operands[1] = GEN_INT (hi20);
-+  output_asm_insn ("lui\t%0, %1", temp_operands);
-+
-+  temp_operands[0] = gen_rtx_REG (SImode, temp2_regnum);
-+  temp_operands[1] = gen_rtx_REG (SImode, temp2_regnum);
-+  temp_operands[2] = GEN_INT (lo12);
-+  output_asm_insn ("addiw\t%0, %1, %2", temp_operands);
-+
-+  /* Output conditional branch to call label.  */
-+  fprintf (asm_out_file, "\tbeq\t%s, %s, ",
-+	   reg_names[temp1_regnum], reg_names[temp2_regnum]);
-+  assemble_name (asm_out_file, call_name);
-+  fputc ('\n', asm_out_file);
-+
-+  /* Output trap label and ebreak instruction.  */
-+  ASM_OUTPUT_LABEL (asm_out_file, trap_name);
-+  output_asm_insn ("ebreak", operands);
-+
-+  /* Use common helper for trap section entry.  */
-+  rtx trap_label_sym = gen_rtx_SYMBOL_REF (Pmode, trap_name);
-+  kcfi_emit_traps_section (asm_out_file, trap_label_sym, labelno);
-+
-+  /* Output pass/call label.  */
-+  ASM_OUTPUT_LABEL (asm_out_file, call_name);
-+
-+  /* Execute the indirect call.  */
-+  if (SIBLING_CALL_P (insn))
-+    {
-+      /* Tail call uses x0 (zero register) to avoid saving return address.  */
-+      temp_operands[0] = gen_rtx_REG (DImode, 0);
-+      temp_operands[1] = target_reg;
-+      temp_operands[2] = const0_rtx;
-+      output_asm_insn ("jalr\t%0, %1, %2", temp_operands);
-+    }
-+  else
-+    {
-+      /* Regular call uses x1 (return address register).  */
-+      temp_operands[0] = gen_rtx_REG (DImode, RETURN_ADDR_REGNUM);
-+      temp_operands[1] = target_reg;
-+      temp_operands[2] = const0_rtx;
-+      output_asm_insn ("jalr\t%0, %1, %2", temp_operands);
-+    }
-+
-+  return "";
-+}
-+
- /* 'Unpack' up the internal tuning structs and update the options
-     in OPTS.  The caller must have set up selected_tune and selected_arch
-     as all the other target-specific codegen decisions are
-@@ -11775,6 +11930,7 @@ riscv_override_options_internal (struct gcc_options *opts)
-       opts->x_flag_cf_protection
-       = (cf_protection_level) (opts->x_flag_cf_protection | CF_SET);
-     }
-+
- }
- 
- /* Implement TARGET_OPTION_OVERRIDE.  */
-@@ -16409,6 +16565,30 @@ riscv_memtag_tag_bitsize ()
- #undef TARGET_MEMTAG_TAG_BITSIZE
- #define TARGET_MEMTAG_TAG_BITSIZE riscv_memtag_tag_bitsize
- 
-+/* Return true if the target supports KCFI.
-+   KCFI requires 64-bit mode and the T1, T2, and T3 registers.  */
-+
-+static bool
-+riscv_kcfi_supported_p (void)
-+{
-+  if (!TARGET_64BIT)
-+    {
-+      error ("%<-fsanitize=kcfi%> is not supported for 32-bit RISC-V");
-+      return false;
-+    }
-+  if (fixed_regs[T1_REGNUM] || fixed_regs[T2_REGNUM] || fixed_regs[T3_REGNUM])
-+    {
-+      error ("%<-fsanitize=kcfi%> is not compatible with %<-ffixed-t1%>, "
-+	     "%<-ffixed-t2%>, or %<-ffixed-t3%> as KCFI requires these "
-+	     "registers for type checking");
-+      return false;
-+    }
-+  return true;
-+}
-+
-+#undef TARGET_KCFI_SUPPORTED
-+#define TARGET_KCFI_SUPPORTED riscv_kcfi_supported_p
-+
- #undef TARGET_DOCUMENTATION_NAME
- #define TARGET_DOCUMENTATION_NAME "RISC-V"
- 
-diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index f2c3fafbb428..79c3180d9184 100644
---- a/gcc/doc/invoke.texi
-+++ b/gcc/doc/invoke.texi
-@@ -17474,6 +17474,23 @@ allowing the kernel to identify both the KCFI violation and the involved
- registers for detailed diagnostics (eliminating the need for a separate
- @code{.kcfi_traps} section as used on x86_64).
- 
-+On 64-bit RISC-V, KCFI type identifiers are emitted as a @code{.word ID}
-+directive (a 32-bit constant) before the function entry, similar to AArch64.
-+RISC-V's natural instruction alignment eliminates the need for
-+additional alignment NOPs.  When used with @option{-fpatchable-function-entry},
-+the type identifier is placed before any prefix NOPs.  The runtime check
-+loads the actual type using @code{lw t1, OFFSET(target_reg)}, where the
-+offset accounts for any prefix NOPs, constructs the expected type using
-+@code{lui} and @code{addiw} instructions into @code{t2}, and compares them
-+with @code{beq}.  @code{t3} is used as an alternative when @code{t1} or
-+@code{t2} is the target call register.  Because of the use of these
-+register, they cannot be fixed registers, so KCFI cannot be used with any
-+of @code{-ffixed-t1}, @code{-ffixed-t2}, nor @code{-ffixed-t3}. Type
-+mismatches trigger an @code{ebreak} instruction.  Like x86_64, RISC-V
-+uses a @code{.kcfi_traps} section to map trap locations to their
-+corresponding function entry points for debugging (RISC-V lacks
-+ESR-style trap encoding like used on AArch64).
-+
- KCFI is intended primarily for kernel code and may not be suitable
- for user-space applications that rely on techniques incompatible
- with strict type checking of indirect calls.
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-index 59d057f51c2f..dd7f2fa2135f 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-@@ -94,4 +94,21 @@ __attribute__((noinline)) void test_conditional_call(int flag) {
- ** ...
- */
- 
-+/*
-+** test_complex_args: { target riscv*-*-* }
-+** ...
-+** lw	t1, -4\((a[0-9]+)\)
-+** lui	t2, [0-9]+
-+** addiw	t2, t2, -?[0-9]+
-+** beq	t1, t2, .Lkcfi_call([0-9]+)
-+** .Lkcfi_trap([0-9]+):
-+** ebreak
-+** .section	.kcfi_traps,"ao",@progbits,.text
-+** .Lkcfi_entry([0-9]+):
-+** .4byte	.Lkcfi_trap\3-.Lkcfi_entry\4
-+** .text
-+** .Lkcfi_call\2:
-+** jalr	zero, \1, 0
-+** ...
-+*/
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-index a3bcc11b52f7..2861db1d585c 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-@@ -59,8 +59,8 @@ int main() {
- /* x86_64: Verify type ID in preamble (after NOPs, before function label) */
- /* { dg-final { scan-assembler {__cfi_regular_function:\n\t+nop\n.*\n\t+movl\t+\$0x[0-9a-f]+, %eax} { target x86_64-*-* } } } */
- 
--/* AArch64, ARM32: Verify type ID word in preamble.  */
--/* { dg-final { scan-assembler {__cfi_regular_function:\n\t\.word\t0x[0-9a-f]+} { target aarch64*-*-* arm*-*-* } } } */
-+/* AArch64, ARM32, RISC-V: Verify type ID word in preamble.  */
-+/* { dg-final { scan-assembler {__cfi_regular_function:\n\t\.word\t0x[0-9a-f]+} { target aarch64*-*-* arm*-*-* riscv*-*-* } } } */
- 
+-#if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 90000) || defined(CONFIG_KASAN)
++#if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 90000) || defined(CONFIG_KASAN) || defined(CONFIG_UBSAN_ALIGNMENT)
  /*
- ** static_caller: { target x86_64-*-* }
-@@ -110,6 +110,23 @@ int main() {
- ** ...
- */
- 
-+/*
-+** static_caller: { target riscv*-*-* }
-+** ...
-+** lw	t1, -4\((a[0-9]+)\)
-+** lui	t2, [0-9]+
-+** addiw	t2, t2, -?[0-9]+
-+** beq	t1, t2, .Lkcfi_call([0-9]+)
-+** .Lkcfi_trap([0-9]+):
-+** ebreak
-+** .section	.kcfi_traps,"ao",@progbits,.text
-+** .Lkcfi_entry([0-9]+):
-+** .4byte	.Lkcfi_trap\3-.Lkcfi_entry\4
-+** .text
-+** .Lkcfi_call\2:
-+** jalr	ra, \1, 0
-+** ...
-+*/
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
- 
- /* Extern functions should NOT get KCFI preambles.  */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
-index 094e811319c1..7fc43a0fa577 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
-@@ -67,6 +67,7 @@ int test_kcfi_check_sharing(struct kobject *kobj, const struct attribute_group *
- /* x86: { dg-final { scan-assembler-times {movl\s+\$-?[0-9]+,\s+%r10d} 2 { target i?86-*-* x86_64-*-* } } } */
- /* AArch64: { dg-final { scan-assembler-times {mov\s+w17, #[0-9]+} 2 { target aarch64*-*-* } } } */
- /* ARM 32-bit: { dg-final { scan-assembler-times {ldr\s+ip, \[(?:r[0-9]+|lr), #-4\]} 3 { target arm*-*-* } } } */
-+/* RISC-V: { dg-final { scan-assembler-times {lui\tt2, [0-9]+} 2 { target riscv*-*-* } } } */
- 
- /* Verify the checks use DIFFERENT type IDs (not shared, except arm: see above).
-    We should NOT see the same type ID used twice - that would indicate
-@@ -74,13 +75,16 @@ int test_kcfi_check_sharing(struct kobject *kobj, const struct attribute_group *
- /* x86: { dg-final { scan-assembler-not {movl\s+\$(-?[0-9]+),\s+%r10d.*movl\s+\$\1,\s+%r10d} { target i?86-*-* x86_64-*-* } } } */
- /* AArch64: { dg-final { scan-assembler-not {mov\s+w17, #([0-9]+).*mov\s+w17, #\1} { target aarch64*-*-* } } } */
- /* ARM 32-bit: { dg-final { scan-assembler-not {eor\s+ip, ip, #([0-9]+)\n\teor\s+r3, r3, #([0-9]+)\n\teor\s+r3, r3, #([0-9]+)\n\teors\s+r3, r3, #([0-9]+).*eor\s+r3, r3, #\1\n\teor\s+r3, r3, #[0-9]+\n\teor\s+r3, r3, #[0-9]+\n\teors\s+r3, r3, #[0-9]+.*eor\s+r3, r3, #\1\n\teor\s+r3, r3, #[0-9]+\n\teor\s+r3, r3, #[0-9]+\n\teors\s+r3, r3, #[0-9]+} { target arm*-*-* } } } */
-+/* RISC-V: { dg-final { scan-assembler-not {lui\s+t2, ([0-9]+)\s.*lui\s+t2, \1\s} { target riscv*-*-* } } } */
- 
- /* Verify expected number of traps.  */
- /* x86: { dg-final { scan-assembler-times {ud2} 2 { target i?86-*-* x86_64-*-* } } } */
- /* AArch64: { dg-final { scan-assembler-times {brk\s+#0x[0-9a-f]+} 2 { target aarch64*-*-* } } } */
- /* ARM 32-bit: { dg-final { scan-assembler-times {udf\s+#[0-9]+} 3 { target arm*-*-* } } } */
-+/* RISC-V: { dg-final { scan-assembler-times {ebreak} 2 { target riscv*-*-* } } } */
- 
- /* Verify 2 separate call sites (except arm).  */
- /* x86: { dg-final { scan-assembler-times {jmp\s+\*%[a-z0-9]+} 2 { target i?86-*-* x86_64-*-* } } } */
- /* AArch64: { dg-final { scan-assembler-times {br\tx[0-9]+} 2 { target aarch64*-*-* } } } */
- /* ARM 32-bit: { dg-final { scan-assembler-times {bx\s+(?:r[0-9]+|lr)} 3 { target arm*-*-* } } } */
-+/* RISC-V: { dg-final { scan-assembler-times {jalr\t[a-z0-9]+} 2 { target riscv*-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
-index 9464a89eda48..089926f92786 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
-@@ -181,4 +181,23 @@ int main() {
- ** ...
- */
- 
-+/* Standard KCFI handling.  */
-+/*
-+** test_struct_members: { target riscv*-*-* }
-+** ...
-+** lw	t1, -4\((a[0-9]+)\)
-+** lui	t2, [0-9]+
-+** addiw	t2, t2, -?[0-9]+
-+** beq	t1, t2, .Lkcfi_call([0-9]+)
-+** .Lkcfi_trap([0-9]+):
-+** ebreak
-+** .section	.kcfi_traps,"ao",@progbits,.text
-+** .Lkcfi_entry([0-9]+):
-+** .4byte	.Lkcfi_trap\3-.Lkcfi_entry\4
-+** .text
-+** .Lkcfi_call\2:
-+** jalr	ra, \1, 0
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
-index ed182d4b2e9d..ab6bf85e1259 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
-@@ -92,6 +92,26 @@ int main(void)
- ** ...
- */
- 
-+/*
-+** indirect_call: { target riscv*-*-* }
-+** ...
-+** mv	(a[0-9]+),a0
-+** addi	a0,a4,%lo\(called_count\)
-+** lw	t1, -4\(\1\)
-+** lui	t2, [0-9]+
-+** addiw	t2, t2, -?[0-9]+
-+** beq	t1, t2, .Lkcfi_call([0-9]+)
-+** .Lkcfi_trap([0-9]+):
-+** ebreak
-+** .section	.kcfi_traps,"ao",@progbits,.text
-+** .Lkcfi_entry([0-9]+):
-+** .4byte	.Lkcfi_trap\3-.Lkcfi_entry\4
-+** .text
-+** .Lkcfi_call\2:
-+** jalr	zero, \1, 0
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
- 
- /* AArch64, ARM32 should NOT have trap section (use immediate instructions instead).  */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
-index 279207a85cdc..8bc353ed2d32 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
-@@ -77,6 +77,7 @@ int main(void)
- /* { dg-final { scan-assembler-times {ud2} 2 { target x86_64-*-* } } } */
- /* { dg-final { scan-assembler-times {brk\s+#0x[0-9a-f]+} 2 { target aarch64*-*-* } } } */
- /* { dg-final { scan-assembler-times {udf\s+#[0-9]+} 2 { target arm*-*-* } } } */
-+/* { dg-final { scan-assembler-times {ebreak} 2 { target riscv*-*-* } } } */
- 
- /* Positive controls: these should have KCFI checks.  */
- /* { dg-final { scan-assembler {normal_function:.*ud2.*\.size\s+normal_function} { target x86_64-*-* } } } */
-@@ -85,6 +86,8 @@ int main(void)
- /* { dg-final { scan-assembler {wrap_normal_inline:.*brk\s+#0x[0-9a-f]+.*\.size\s+wrap_normal_inline} { target aarch64*-*-* } } } */
- /* { dg-final { scan-assembler {normal_function:.*udf\t#[0-9]+.*\.size\s+normal_function} { target arm*-*-* } } } */
- /* { dg-final { scan-assembler {wrap_normal_inline:.*udf\t#[0-9]+.*\.size\s+wrap_normal_inline} { target arm*-*-* } } } */
-+/* { dg-final { scan-assembler {normal_function:.*ebreak.*\.size\s+normal_function} { target riscv*-*-* } } } */
-+/* { dg-final { scan-assembler {wrap_normal_inline:.*ebreak.*\.size\s+wrap_normal_inline} { target riscv*-*-* } } } */
- 
- /* Negative controls: these should NOT have KCFI checks.  */
- /* { dg-final { scan-assembler-not {sensitive_non_inline_function:.*ud2.*\.size\s+sensitive_non_inline_function} { target x86_64-*-* } } } */
-@@ -93,3 +96,5 @@ int main(void)
- /* { dg-final { scan-assembler-not {wrap_sensitive_inline:.*brk\s+#0x[0-9a-f]+.*\.size\s+wrap_sensitive_inline} { target aarch64*-*-* } } } */
- /* { dg-final { scan-assembler-not {sensitive_non_inline_function:[^\n]*udf\t#[0-9]+[^\n]*\.size\tsensitive_non_inline_function} { target arm*-*-* } } } */
- /* { dg-final { scan-assembler-not {wrap_sensitive_inline:[^\n]*udf\t#[0-9]+[^\n]*\.size\twrap_sensitive_inline} { target arm*-*-* } } } */
-+/* { dg-final { scan-assembler-not {sensitive_non_inline_function:.*ebreak.*\.size\s+sensitive_non_inline_function} { target riscv*-*-* } } } */
-+/* { dg-final { scan-assembler-not {wrap_sensitive_inline:.*ebreak.*\.size\s+wrap_sensitive_inline} { target riscv*-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
-index 95bb46304493..b315e6f65e00 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
-@@ -36,3 +36,4 @@ int main() {
- /* { dg-final { scan-assembler-times {addl\t-4\(%r[ad]x\), %r1[01]d} 1 { target x86_64-*-* } } } */
- /* { dg-final { scan-assembler-times {ldur\tw16, \[x[0-9]+, #-4\]} 1 { target aarch64-*-* } } } */
- /* { dg-final { scan-assembler-times {ldr\tip, \[r[0-9]+, #-4\]} 1 { target arm*-*-* } } } */
-+/* { dg-final { scan-assembler-times {lw\tt1, -[0-9]+\(} 1 { target riscv*-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
-index 88f0ae64091b..b0dd7b6fc45d 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
-@@ -33,3 +33,6 @@ int main() {
- 
- /* ARM 32-bit: All call sites should use -4 offset with EOR sequence.  */
- /* { dg-final { scan-assembler {ldr\tip, \[r[0-9]+, #-4\]} { target arm*-*-* } } } */
-+
-+/* RISC-V: All call sites should use -4 offset.  */
-+/* { dg-final { scan-assembler {lw\tt1, -4\(} { target riscv*-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
-index 612140a0f509..db2ec8a5b64f 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
-@@ -29,7 +29,7 @@ int main() {
- */
- 
- /*
--** __cfi_test_function: { target aarch64*-*-* arm*-*-* }
-+** __cfi_test_function: { target aarch64*-*-* arm*-*-* riscv*-*-* }
- ** .word	0x[0-9a-f]+
- */
- 
-@@ -54,4 +54,11 @@ int main() {
- ** ...
- */
- 
-+/*
-+** main: { target riscv*-*-* }
-+** ...
-+** lw	t1, -4\(a[0-9]+\)
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
-index da3d8dc41f60..0c026e6d8615 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
-@@ -18,7 +18,7 @@ int main() {
- */
- 
- /*
--** __cfi_test_function: { target aarch64*-*-* arm*-*-* }
-+** __cfi_test_function: { target aarch64*-*-* arm*-*-* riscv*-*-* }
- ** .word	0x[0-9a-f]+
- */
- 
-@@ -43,4 +43,12 @@ int main() {
- ** ...
- */
- 
-+
-+/*
-+** main: { target riscv*-*-* }
-+** ...
-+** lw	t1, -48\(a[0-9]+\)
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
-index d61274e70157..e60c8546ef5c 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
-@@ -25,7 +25,7 @@ int main() {
- */
- 
- /*
--** __cfi_test_function: { target aarch64*-*-* arm*-*-* }
-+** __cfi_test_function: { target aarch64*-*-* arm*-*-* riscv*-*-* }
- ** .word	0x[0-9a-f]+
- */
- 
-@@ -50,4 +50,11 @@ int main() {
- ** ...
- */
- 
-+/*
-+** main: { target riscv*-*-* }
-+** ...
-+** lw	t1, -20\(a[0-9]+\)
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
-index 93df4d7ea5b6..e90979a9b433 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
-@@ -26,7 +26,7 @@ int main() {
- */
- 
- /*
--** __cfi_test_function: { target aarch64*-*-* arm*-*-* }
-+** __cfi_test_function: { target aarch64*-*-* arm*-*-* riscv*-*-* }
- ** .word	0x[0-9a-f]+
- */
- 
-@@ -51,4 +51,11 @@ int main() {
- ** ...
- */
- 
-+/*
-+** main: { target riscv*-*-* }
-+** ...
-+** lw	t1, -16\(a[0-9]+\)
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c
-new file mode 100644
-index 000000000000..8b2dc926c704
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c
-@@ -0,0 +1,7 @@
-+/* Test that KCFI is rejected for 32-bit RISC-V.  */
-+/* { dg-do compile { target riscv*-*-* } } */
-+/* { dg-additional-options "-march=rv32gc -mabi=ilp32d" } */
-+/* { dg-error ".-fsanitize=kcfi. is not supported for 32-bit RISC-V" "" { target *-*-* } 0 } */
-+/* { dg-message "sorry, unimplemented: .-fsanitize=kcfi. not supported" "" { target *-*-* } 0 } */
-+
-+void foo (void) { }
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t1.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t1.c
-new file mode 100644
-index 000000000000..a5ef21092d63
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t1.c
-@@ -0,0 +1,7 @@
-+/* Test that KCFI is incompatible with -ffixed-t1 on RISC-V.  */
-+/* { dg-do compile { target riscv*-*-* } } */
-+/* { dg-additional-options "-ffixed-t1" } */
-+/* { dg-error ".-fsanitize=kcfi. is not compatible with .-ffixed-t1., .-ffixed-t2., or .-ffixed-t3. as KCFI requires these registers for type checking" "" { target *-*-* } 0 } */
-+/* { dg-message "sorry, unimplemented: .-fsanitize=kcfi. not supported" "" { target *-*-* } 0 } */
-+
-+void foo (void) { }
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t2.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t2.c
-new file mode 100644
-index 000000000000..3ead648e7154
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t2.c
-@@ -0,0 +1,7 @@
-+/* Test that KCFI is incompatible with -ffixed-t2 on RISC-V.  */
-+/* { dg-do compile { target riscv*-*-* } } */
-+/* { dg-additional-options "-ffixed-t2" } */
-+/* { dg-error ".-fsanitize=kcfi. is not compatible with .-ffixed-t1., .-ffixed-t2., or .-ffixed-t3. as KCFI requires these registers for type checking" "" { target *-*-* } 0 } */
-+/* { dg-message "sorry, unimplemented: .-fsanitize=kcfi. not supported" "" { target *-*-* } 0 } */
-+
-+void foo (void) { }
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t3.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t3.c
-new file mode 100644
-index 000000000000..98b579867a48
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t3.c
-@@ -0,0 +1,7 @@
-+/* Test that KCFI is incompatible with -ffixed-t3 on RISC-V.  */
-+/* { dg-do compile { target riscv*-*-* } } */
-+/* { dg-additional-options "-ffixed-t3" } */
-+/* { dg-error ".-fsanitize=kcfi. is not compatible with .-ffixed-t1., .-ffixed-t2., or .-ffixed-t3. as KCFI requires these registers for type checking" "" { target *-*-* } 0 } */
-+/* { dg-message "sorry, unimplemented: .-fsanitize=kcfi. not supported" "" { target *-*-* } 0 } */
-+
-+void foo (void) { }
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
-index f5a064f091d0..f94a7460cad3 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
-@@ -67,6 +67,8 @@ int test_non_tail_indirect_call(func_ptr_t handler, int x) {
- /* Should have exactly 4 trap sections and 4 trap instructions.  */
- /* { dg-final { scan-assembler-times "\\.kcfi_traps" 4 { target x86_64-*-* } } } */
- /* { dg-final { scan-assembler-times "ud2" 4 { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler-times "\\.kcfi_traps" 4 { target riscv*-*-* } } } */
-+/* { dg-final { scan-assembler-times "ebreak" 4 { target riscv*-*-* } } } */
- 
- /* Should NOT have unprotected direct jumps to vtable.  */
- /* { dg-final { scan-assembler-not {jmp\t\*vtable\(%rip\)} { target x86_64-*-* } } } */
-@@ -79,6 +81,27 @@ int test_non_tail_indirect_call(func_ptr_t handler, int x) {
- /* Should have exactly 1 regular call (non-tail call case).  */
- /* { dg-final { scan-assembler-times {call\t\*%[a-z0-9]+} 1 { target x86_64-*-* } } } */
- 
-+/* RISC-V: Should have exactly 4 KCFI checks for indirect calls
-+   (comparison instruction).  */
-+/* { dg-final { scan-assembler-times {beq\tt1, t2, \.Lkcfi_call[0-9]+} 4 { target riscv*-*-* } } } */
-+
-+/* RISC-V: Should have exactly 4 KCFI checks for indirect calls as
-+   (load type ID + compare).  */
-+/* { dg-final { scan-assembler-times {lw\tt1, -4\([a-z0-9]+\)} 4 { target riscv*-*-* } } } */
-+/* { dg-final { scan-assembler-times {lui\tt2, [0-9]+} 4 { target riscv*-*-* } } } */
-+
-+/* RISC-V: Should have exactly 3 protected tail calls (jr after
-+   KCFI check - no return address save).  */
-+/* { dg-final { scan-assembler-times {jalr\t(x0|zero), [a-z0-9]+, 0} 3 { target riscv*-*-* } } } */
-+
-+/* RISC-V: Should have exactly 1 regular call (non-tail call case - saves
-+   return address).  */
-+/* { dg-final { scan-assembler-times {jalr\t(x1|ra), [a-z0-9]+, 0} 1 { target riscv*-*-* } } } */
-+
-+/* Type ID loading should use lui + addiw pattern for 32-bit constants.  */
-+/* { dg-final { scan-assembler {lui\tt2, [0-9]+} { target riscv*-*-* } } } */
-+/* { dg-final { scan-assembler {addiw\tt2, t2, -?[0-9]+} { target riscv*-*-* } } } */
-+
- /* Should have exactly 4 KCFI checks for indirect calls (load type ID from
-    -4 offset + compare).  */
- /* { dg-final { scan-assembler-times {ldur\tw16, \[x[0-9]+, #-4\]} 4 { target aarch64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
-index e02a320f2f92..5d1159cfb39b 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
-@@ -20,9 +20,10 @@ int main() {
- /* { dg-final { scan-assembler-times {\.L[^:]+:\n\s*ud2} 2 { target x86_64-*-* } } } */
- /* { dg-final { scan-assembler-times {\.L[^:]+:\n\s*brk} 2 { target aarch64*-*-* } } } */
- /* { dg-final { scan-assembler-times {\.L[^:]+:\n\s*udf} 2 { target arm*-*-* } } } */
-+/* { dg-final { scan-assembler-times {\.L[^:]+:\n\s*ebreak} 2 { target riscv*-*-* } } } */
- 
--/* x86_64 should exactly 2 .kcfi_traps sections.  */
--/* { dg-final { scan-assembler-times {\.section\t\.kcfi_traps,"ao",@progbits,\.text} 2 { target x86_64-*-* } } } */
-+/* x86_64 and RISC-V should exactly 2 .kcfi_traps sections.  */
-+/* { dg-final { scan-assembler-times {\.section\t\.kcfi_traps,"ao",@progbits,\.text} 2 { target x86_64-*-* riscv*-*-* } } } */
- 
- /* AArch64 and ARM 32-bit should NOT have .kcfi_traps section.  */
- /* { dg-final { scan-assembler-not {\.section\t+\.kcfi_traps} { target aarch64*-*-* arm*-*-* } } } */
--- 
-2.34.1
-
+  * For some reason some GCC-8 architectures (nios2, alpha) have trouble
+  * determining that the ss_done state is impossible in __scoped_seqlock_next()
