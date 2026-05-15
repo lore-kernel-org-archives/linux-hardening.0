@@ -1,143 +1,115 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE68E3C2785
-	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 07:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820B4438FED
+	for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 09:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778828788; cv=none; b=BsTPHxldFfOXtLR8ynSon0rkstOwkMrApJS0eGhqAcXExjdry9Ls3ZrO+Yl0kA6PCq5qz7TKntqa54V8Kdt1y+EQpCT+xxa+t+TMdF8jAd7N0D7r6TWHubyrXs8/hY06WqGs5mGIEDLnMBokhNFmlMmzOybUqFfDdBi7EcRKu28=
+	t=1778835927; cv=none; b=h5txonSR471qD5w5asOFQS7/VvB2daqWoVHs4xpMD1/atYm948Q2qGM8pVHAdrZopES2jcCu1nXvfiwGCLWg8CCyLGLtO9W1pan/2VYHKpw9Czs1gVSnjbzZV23qDSC6f8HOTHY+q1OypRlcpA6CDqgEphpffmW4M6E31YOSa9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778828788; c=relaxed/simple;
-	bh=hsBv10U9ASyMD3woSVDQ3ujCzyQ3fqqnQVMDp/Icia4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fT9XOhqL7+xwXv+UOpY25xk7KncKenZHwBF1rllK7ZKKLe1YCJtFpe3PtrEZtmUKQAe2Zkb1H0SU2ezI8rBhw6oYqQqvlFHhEg1gyu7IRXM+I9l836sMuox7LU0ONjxB6Lg0XI0aYzwJLfFpcqaVmNk7wk7DG2lyKTOKm4GgNYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1/+8J9HE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5BOPi6e6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SI+garXG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=j3bxLcS3; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1778835927; c=relaxed/simple;
+	bh=uSw4iLWni+08K3Y2XPPthhXGT8z8eNuujhWRQ0NoO/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tnsnAZWVU5nQg8i6UW4TgR2Bunk/Ay+tGp8/yI6YVfo74r25HPtWo8GCcJPAWeQvGv69fGLaK4WOqy+qCO9jdLDCEL5vV79A7WaByu/XbsWKxI3s7HQ1qVCZWdUrgisgySavXzvM3HT8smwi6ccHCe9BevmEimS9XmFfd6vNfwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kHyyCsJe; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1/+8J9HE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5BOPi6e6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SI+garXG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="j3bxLcS3"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1FA766B64C;
-	Fri, 15 May 2026 07:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1778828785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P/mfJ9R0E7QADeQssJnnzehk4FkMJ3YWVXn3FdbglVA=;
-	b=1/+8J9HEaG24AsgeXlCQrjrnF2F1KE9c4R9J2qQfNAylWDjcTIGfV9nqgJ2DeI+pDQcJt9
-	wi/WOPHdeaqbDfw3nm3kMqfz1FTtWkcEYoDdf3h+ubkyVwbmXpZcMiTPoWV4qMzVBg+CMZ
-	rRglGoWs2+DONOMcPkSQYXr11Qn63Ms=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1778828785;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P/mfJ9R0E7QADeQssJnnzehk4FkMJ3YWVXn3FdbglVA=;
-	b=5BOPi6e6GQRSFKqJUpb6W8EmcOoYJ5jg0/vvePvWK7UhNkn79sj8NcsVrvLXIAy8EWw/ad
-	eMN8J6NeYoJJD1AQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=SI+garXG;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=j3bxLcS3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1778828784; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P/mfJ9R0E7QADeQssJnnzehk4FkMJ3YWVXn3FdbglVA=;
-	b=SI+garXGzhdwBY8S48uHzAkz7m/ucN+1mmuQUyM/ZbIjumJJe6IngmoFAe3WrsoZq3KurG
-	gFG38jkpfqFzsV4zOuo7pfEuf9OOk64Flddxh4EyHNrkgvsynjb113Ko6ljMNVH7jccCbT
-	QkdbdWBhUc5EKUIA584gKsFqxRQmI9M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1778828784;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P/mfJ9R0E7QADeQssJnnzehk4FkMJ3YWVXn3FdbglVA=;
-	b=j3bxLcS33mIjnq8YOYSCxFs0WfO8Cwnp+r21C5JR3GKECYCz3Sf8lJNkbvShL43ND+QG9F
-	FuetMnZhnrIr7PBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DAA59593A9;
-	Fri, 15 May 2026 07:06:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Z/cqNO/FBmppXQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 15 May 2026 07:06:23 +0000
-Date: Fri, 15 May 2026 09:06:23 +0200
-Message-ID: <875x4pup74.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-sound@vger.kernel.org,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas)__counted_by:Keyword:b(_le|_be)?b)
-Subject: Re: [PATCH] ALSA: asihpi: Use flexible array for control cache
-In-Reply-To: <20260511230121.28606-1-rosenp@gmail.com>
-References: <20260511230121.28606-1-rosenp@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kHyyCsJe"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a8fbe18b1dso3283303e87.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 May 2026 02:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1778835920; x=1779440720; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uSw4iLWni+08K3Y2XPPthhXGT8z8eNuujhWRQ0NoO/Y=;
+        b=kHyyCsJe2muVQQwvt5wzTDwFbOnpO8COGH0q1Pdfoium2jscGMdGqfANjXUVrUE3C9
+         VnMimtm9+Z4/jWxsOwkxKqH06B7crDANToskrImuzZZmyEDQI5LkBfXmHgCnCjeIMt/F
+         vglNcNGR0xahOFJallcd6yaIwYmzRlRgtyLXajTCN7l9vdELtSdSRAJ2M1UTqDHapTjH
+         +Yz4pvf0EtoJ7o8/ZfKeQJmhUTokJQ63FCH4yHaaMdA7oIeG4SlNGyE7tTwahzxeRMxW
+         6zcIjq4E3xbTjJ/O61qgrcXbwE2hBicr9E9UmN9PXmM0RVnfFy4BmejiKV8+3gRLe3n5
+         hg/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778835920; x=1779440720;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uSw4iLWni+08K3Y2XPPthhXGT8z8eNuujhWRQ0NoO/Y=;
+        b=Po677+mZdzcAHVHQhAsGxgmnUNyD+jbDat9EqhiVKfNMyOCN4dIk4lNyIshuPxChlk
+         fQkZhrfVBxHlJ2N738KtnYY1ICjGv5biT0BqHuzOiKUcUvawG3V1RVLj0AQzIEGGRzEH
+         kMAu2KgGgFhRsmgIMhlo3hK679eL9TYXQiMJ6B3rEG6QgqJEnt/pRHfvFtNOrnEG7uY3
+         rB79W98EYbH+G7t/b+9+u5KfQ60qri73cBxaCA83GbvBcqYzYoU2ho2uFF0MGifm+klW
+         P9ydQNgszHFD4z+dEVhauTitjAf5jwKiv+1+dDuuqJaVUGY6B7a33FAv0EfeY9EQl3AB
+         Hujg==
+X-Forwarded-Encrypted: i=1; AFNElJ/YVJ7jtFUDYZjhxaTEnITJ5esPKQf291qPYWa5qTOt/Pv4PEKXLqWQY5Yxaq6hUjnYcnRk5rLxjcSXKZFEBo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXyLfiVWEpmUs0n/bqzXuR/jL0jd8RFDJLKNihwRRzIaRq8NRX
+	MfKM/GRC8FDtYSZUigBolXh6jz50lFoQNZCsY5gyhVQXIGNV642mTMDclH3lrzD0p2g=
+X-Gm-Gg: Acq92OFd0eAuSknVttG8K2oxB2m32rJgfLiHiFCSm2u/gXfqIivj5DTu3CZt6EZcQbL
+	OqAv/6hwB4FDXeM+sZz1heFDXR+xb9mBbJ9hCU+tj05LP9uX6r0G64RfV2gOENZG/a+tmHwKKyw
+	BRphp6U5Q1UNdeV7rXm/chKNm6xEGRNcMqRopzM38aTgajtIq8H1Bqskq3CBknF+tvcPtIIGFic
+	BAmwjp5i4XQcwzp3h/29bOEZasgNUZvgeOqNwUy0Wntxu+WiRjVE/AfeHZTxCbJF+eLMcVjloEW
+	KFUx9wsQLnie1dltk7/cdCfZf5Ttj9CTrkpmWN90U5VzkIaGxF7vram3sKNm36bWs3qlBXZ380x
+	f5grac8nkBekl6Gdr0VY9txLbc4K6Un1yGHygD5K8gjCfe51lkpApcuTAURG3lbvFf2eHqewK1V
+	G36ITMhoXy5tP9hpTfT4AlPs3U/z3nSuEX
+X-Received: by 2002:a05:6512:3ba4:b0:5a8:6cbc:60f3 with SMTP id 2adb3069b0e04-5aa0e769d53mr851416e87.34.1778835919654;
+        Fri, 15 May 2026 02:05:19 -0700 (PDT)
+Received: from [10.11.12.109] ([79.115.63.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45da15a562dsm13447979f8f.33.2026.05.15.02.05.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2026 02:05:19 -0700 (PDT)
+Message-ID: <e91af899-9ff2-456a-a54f-613b859260e7@linaro.org>
+Date: Fri, 15 May 2026 12:05:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Queue-Id: 1FA766B64C
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -3.51
-
-On Tue, 12 May 2026 01:01:21 +0200,
-Rosen Penev wrote:
-> 
-> Store the ASIHPI control-cache lookup table in the control-cache
-> allocation instead of allocating it separately.
-> 
-> This keeps the lookup table tied to the cache object lifetime and
-> removes the extra allocation and free path.
-> 
-> Assisted-by: Codex:GPT-5.5
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-
-Thanks, applied to for-next branch.
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/10] firmware: samsung: acpm: Drop redundant _ops
+ suffix in acpm_ops members
+To: Lee Jones <lee@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, willmcvicker@google.com, jyescas@google.com,
+ shin.son@samsung.com, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-hardening@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20260420-acpm-tmu-v3-0-3dc8e93f0b26@linaro.org>
+ <20260420-acpm-tmu-v3-3-3dc8e93f0b26@linaro.org>
+ <20260507120003.GG305027@google.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20260507120003.GG305027@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Takashi
+
+On 5/7/26 3:00 PM, Lee Jones wrote:
+> Acked-by: Lee Jones <lee@kernel.org>
+Thanks, Lee!
+
+The set evolved [1], but this particular patch was not changed.
+I'm going to carry your Acked-by in the resend I'm going to do.
+
+Cheers,
+ta
+
+Link: https://lore.kernel.org/linux-samsung-soc/CADrjBPqzKpcd9vuCmNUptCUPyPpPbHcc19-7kN-1c0RpW1e5DQ@mail.gmail.com/T/#mcce154a7e0c6cd1ca6cd5a1e37541ed7a85a84d4 [1]
+
+
