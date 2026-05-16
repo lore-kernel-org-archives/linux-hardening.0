@@ -1,93 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AC826ED59;
-	Sat, 16 May 2026 04:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E232C3D0C03;
+	Sat, 16 May 2026 10:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778904757; cv=none; b=a7S0ALuLy12GhXbJbWXi2GNrPAqp4fKx4IV6ZqxmGOJLqZAoW+psQNN6SCp77RcFq6tosp6BucBTT9r4yhxciwaMHPLnpNM4auBuCNuCtN16KM7D03olQfni7agXT//ME/8Cu7x4ri4ScYALCAbhKbEJNDn+to3Q8FjGpmHnBMI=
+	t=1778928035; cv=none; b=ee4WaVvQ01lUdzdZSLA/C7oOxdDIcg2iVngAl3HIKherThS10CKC2MxySPUbf20yHf4m4sVawwr+tu4I9wdrRHEkKVYlPNCCbX8x/LfyFctT6ENQfYX61FZ6tJNT5RSnMmfFk5kR/1JUfIRz81LXR3ME4CWD2j2Aa+f8KQoY6qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778904757; c=relaxed/simple;
-	bh=gjtWVLAvEwin8gWA6re5ww9JQc1JjXmSu0dbVplFHks=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oxvfQ6dzfuiqKuAkHMVE4qMUrqZlybpw4R6xqCG6tBXexopKe9/21zOOSYuWGRy9uIUrn6APonQ5SuWfqSqrZvUophfXk6wdcmV1gAT6MejWqelMPe1/haQSXU9vLIzWwrIUR9mef23KH+k79reeyaFL+cKGGAVxOZngFiik+nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFlTOMbT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778928035; c=relaxed/simple;
+	bh=fXmnEYBLoOJ7UNNv2B4c5j0+3yxz9xeHcARFFB09Kqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VZpfEgnAYUyL29APXQB/LeZQCjrVmc3gQbm2csO348BQZLoFTwkTgxW5Cm1GoubjbcHztgOIfCxUUV09gQcCKD2NQGJywBz4WMLCBBKzZCf0eCnJazwau6afxWwXF1ZFyJCej+TcxnyJQZBcDwlnuWg8vMTl1AYQZ8+QtXS7bVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OlDgRiPT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFlTOMbT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9FC5C2BCB7;
-	Sat, 16 May 2026 04:12:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OlDgRiPT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FA58C19425;
+	Sat, 16 May 2026 10:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778904757;
-	bh=gjtWVLAvEwin8gWA6re5ww9JQc1JjXmSu0dbVplFHks=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=JFlTOMbTSQnTd/e+kxPeonpjgxhEAkldtojeu71U8IKMOY61Qo3TORLAvh7M0ZuRt
-	 SY9MzVJBInHHoSCVb+pxgPBjipwvMya2S9QumuzwE/awHd2Q4BJMmK6aLmfNZGcJm3
-	 rjYNk7w4dP8yDn1+ZVF+UEgSvpwyZ2uDXjCM4gta1TH2bJN4pytY5GWOCgjRVyMzb0
-	 +xfqlWaBTjm1v3GNxkc78hFY8xuxY9IUS5a/qRD965Wi21yWn3TyOJmT/4RwzvMDJe
-	 4e2obGHbBthQELOyP5RGtX6KOyrSbsv3oVeYcdyTMoenBxW5kwfFfBknVjyLN7QvPP
-	 GZDhbgwdWyO2g==
-From: Mark Brown <broonie@kernel.org>
-To: linux-sound@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20260511230351.28868-1-rosenp@gmail.com>
-References: <20260511230351.28868-1-rosenp@gmail.com>
-Subject: Re: [PATCH] ASoC: sigmadsp: Use flexible array for control cache
-Message-Id: <177889869075.1174745.4723404470798444170.b4-ty@b4>
-Date: Sat, 16 May 2026 11:31:30 +0900
+	s=k20201202; t=1778928034;
+	bh=fXmnEYBLoOJ7UNNv2B4c5j0+3yxz9xeHcARFFB09Kqs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OlDgRiPTZ/EHN17s3jfhKd0Gd1EStbmTUQtdTnIfJxGt+H4iDVDSkPIwGI1VFRbF/
+	 YkYrWlvPMwvt/UaCU3i/e5W56B8C9cUeoypyB1oIs2vj1wG39pGVCneGEDX9ACLDPW
+	 G5oOqKX+yFHQN+2Kc8ZE2Na/Lq2UxaLDaX1JcKULAouGm0Sa5Gjh2OQmPooFd/46I4
+	 XLUIXDeZgkZhEQDV0xOkIeu9RCegWcy0uOE9hIm8mhMquuooNFqmclAnfLLQuutz5e
+	 OgNlH8Jnjvwe4rKzLuy/zbGlBcUe6vulRvTPLj3V7K2wF78eXvLyY6y3oHUlSXkx9J
+	 kDarKgSqqJe9g==
+Date: Sat, 16 May 2026 11:40:22 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>,
+ rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH RFC v4 01/10] dt-bindings: iio: frequency: add ad9910
+Message-ID: <20260516114022.58949a06@jic23-huawei>
+In-Reply-To: <vklczsi4vk3sqf53zifslhp5pysdmj3gfyhvdgrwo4bg3wdkxj@lnbftaf5jcbf>
+References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+	<20260508-ad9910-iio-driver-v4-1-d26bfd20ee3d@analog.com>
+	<20260512193129.777d62a8@jic23-huawei>
+	<vklczsi4vk3sqf53zifslhp5pysdmj3gfyhvdgrwo4bg3wdkxj@lnbftaf5jcbf>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1121; i=broonie@kernel.org;
- h=from:subject:message-id; bh=gjtWVLAvEwin8gWA6re5ww9JQc1JjXmSu0dbVplFHks=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqB+6wh6BAZCaw6ZFJAOqYc74nMmsss7QwAQiAo
- mTKi9YrRpGJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCagfusAAKCRAk1otyXVSH
- 0HYtB/4yKXGOVDEFhYYccP4d+KAveA1taC9LOVLdhdmtPNg6LDvGGyaSTNg8E0iD/JY6urb1WrI
- ak5MxDncgJujfgybGgY9pNzbblGuS8oVIRbzHHWUZUIOevQbA8yggXEHJrfd/GK7TR093QvLDo4
- zaGEaTDA+dsQAWVyeBjskM41ApsxnQkDjW0kyI83GZ8imw1AEIccMEfDOP5zzFDMJEJUr4FFW5i
- zHcdLODrMbBfIkiwqwjtBjnQ4Svk5ua9BWsPw7t5ghs+HZEx4CuoFVKOGI7841wstruxXi6ZtDh
- Npdf4AM8OvvEoUpKaHXbbjg7/fTXlkjhjXpNicoh5v20bf0o
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Mon, 11 May 2026 16:03:51 -0700, Rosen Penev wrote:
-> ASoC: sigmadsp: Use flexible array for control cache
+On Wed, 13 May 2026 16:09:24 +0100
+Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
 
-Applied to
+> On 26/05/12 07:31PM, Jonathan Cameron wrote:
+> > On Fri, 08 May 2026 18:00:17 +0100
+> > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+> >   
+> > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > > 
+> > > DT-bindings for AD9910, a 1 GSPS DDS with 14-bit DAC. It includes
+> > > configurations for clocks, DAC current, reset and basic GPIO control.  
+> > 
+> > I think this is getting close enough now that for next version you should
+> > drop the RFC (which is probably gating DT binding folk giving it
+> > a detailed review!)
+> >   
+> > > 
+> > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>  
+> >   
+> > > +
+> > > +  adi,dac-output-current-microamp:
+> > > +    minimum: 8640
+> > > +    maximum: 31590
+> > > +    default: 20070
+> > > +    description:
+> > > +      DAC full-scale output current in microamps.
+> > > +  
+> > Can we use generic dac.yaml defined output-range-microamp? The base will be 0 always but
+> > that shouldn't matter.
+> >  
+> 
+> would that be fine even if we do not have those child channel nodes in the device-tree node? 
+> 
+I think I'd rather we generalized to cover the 'one shared value' case rather
+then went with a vendor specific binding.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.2
-
-Thanks!
-
-[1/1] ASoC: sigmadsp: Use flexible array for control cache
-      https://git.kernel.org/broonie/sound/c/e0014849e9af
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Jonathan
 
