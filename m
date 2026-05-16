@@ -1,159 +1,91 @@
-Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F49430C174;
-	Fri, 15 May 2026 20:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E59823C4FA;
+	Sat, 16 May 2026 04:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778878308; cv=none; b=VJDyL/NUT6UafDaYsD/SYXLCR+X9IuOi81gxHCbGeI3v9Dqs6e1dAWISqXM9KV7MEokTHffVrb2fQ6/WIV1fya0SdJ/k2KWVFQmlxfz+uFWgUDofZlrcatKFigaI2lM/l8XdhxfFj2WVZ4ZgoF/iSdVwcDAFCizf+lDpXanJHDI=
+	t=1778904750; cv=none; b=DE7n6PEXZqdJEtqDpPU3ATMeRf1ed+BzfmejDXqF0tdK18TZBgvt94TQ7djASSoJHYR5owuLz8yGY2KaonrXbkcj4JCKGIadt6Xs5ATXF/c5deqjW+RwEBPHlKAb473phdLX1+neDpsptXNaMw+KG58o/uhVJEkHR8Oge6da8a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778878308; c=relaxed/simple;
-	bh=x+vLSkXCJNQ05repT0IHPhoUUAu3mSh4lu7BJ/e4z3U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=aLM3myusKJhROb6zHkhSEAxKv0KcK3/TzWiK4L09FbOahQd0pR/BOSNNIAZFqFxua8tI8y6ErRyOZTyCs/NaKi5OZ0VDonzIAMroYCdmUWCxqtohgee3OmvPZSXHUI8G8rt0KPjXqT4zR006eJ1Zhc5DtwazOnp2zPwyOXnLfpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=K4txOVOG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HBDBV7+w; arc=none smtp.client-ip=202.12.124.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1778904750; c=relaxed/simple;
+	bh=AXhQ+sitrlXgnhgMHpBKBRXSmGjsg3bnCGoy9jg6kOM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Kapj8pEBHxkmi8Yi7OS/cRhYFiKuqs/CHr6I5oki/Rvc1nKzlwZ4xhtFu5ARmSRKgqOoXunObda1kzejl74OMOoKFILXJ6kJOD0KVtGgFcOFf2zbLxmAa0jubavgZkN1L8iIs8J/y0sramiFeo6jxQASDv5GZHqWlcSsZSlDoEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mf44425/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="K4txOVOG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HBDBV7+w"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.stl.internal (Postfix) with ESMTP id D23341300102;
-	Fri, 15 May 2026 16:51:44 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Fri, 15 May 2026 16:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1778878304;
-	 x=1778885504; bh=lX4nJlxbqCT1SqPB0U+wt2alGi7/SuKCjG3lA5xdSKU=; b=
-	K4txOVOGwllZHxeJQ5XBvOTKMUOgEeo8iJQB3FdPNaiYhZwTEb7pI5Yo4+gYlFnR
-	7Y2P6U4N3XWJmJgfjA7j5ZLo9MTA690OhL0aJovQ7bi8y7a+UCBwUOKe8BG4BfGi
-	LDR6GSflXgyTPeOlgo3ebSsSohk3E/Qcs7dTrWPBgjrcMvufrj6DFjHLKhL42T2I
-	1ZJvaLWzrkwQGthjEkbCyoRBAP78dSNODDkBVjeEBfV3fzKGnMVo04wsFCKqaZsM
-	XP4/egwW2K7Z+LZYBihpunmgEr6DwknGqoNWnveBZdBKKHhL82STsUs4gh1AowCL
-	BAEpLBRZfmOpjXWKUIjvuA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1778878304; x=
-	1778885504; bh=lX4nJlxbqCT1SqPB0U+wt2alGi7/SuKCjG3lA5xdSKU=; b=H
-	BDBV7+w0AogogJ+lkEVj1eY4DPq6n7n22XrfpSkOXuBsEyAcQFQPAMvfNk4RTBiW
-	ELBPVjHEYLQwkHGtdkPanKjXsoAs9H5Cj5uAnLBHBLFQUQzAjSRUh+qEWL+JhKt3
-	xDmtwaaccdpLm9uUfPIyOpOwt445rKS61XRUrv7fPooqB6V1gdOzyldJPHC/fbje
-	Z/ShnK15RSdnHM8i4WHswJq7uxI8uvFW0ehkj7m+Cpjq9dP3YcQAxJYRIoL/QxoH
-	OfT4qSzMeJZUnWl7keHe6wW3r5jEHYkx1tG8t1N/ihb9r3e4zrDs8dQ0BWC/2lM2
-	TYNVPTpVJdbF9oluexXKA==
-X-ME-Sender: <xms:X4cHap3e3kVei8rLrMWkej3_Rt85qz0aCb1yqSRV-o3W1Z-gSMq6jg>
-    <xme:X4cHaq6qMDYUVODv_7X3vO8jOdDsdr21zXt3dlANeZSwEcqizttIkluuP5Des2H2K
-    KPFX1J0duS-4TmfE3hTQ2Rqk4M4TSnID8gYrfu-6tmgCocGDuxXcB4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufedugeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvddupdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehtvghrrhgvlhhlnhesfhgsrdgtohhmpdhrtghpthhtoheprghnug
-    hrvgihkhhnvhhlsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhihrggsihhnihhnrdgr
-    rdgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvghlvhgvrhesghhoohhglhgvrdgtoh
-    hmpdhrtghpthhtohepkhgrshgrnhdquggvvhesghhoohhglhgvghhrohhuphhsrdgtohhm
-    pdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoh
-    eprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:X4cHao2MN6fXhrMCYkSEavIZfrt9ZFUcA2536eRVBNRn_lza4zAUzQ>
-    <xmx:X4cHan95OvX8A0sndaxIPTK9W_Q89uuDeD55zv_PCfUF6b0wvCoHXw>
-    <xmx:X4cHauflTW4p9zONdTPPEgORKKQnQ2IeWQk1sqvkdnkvS0ek4QBsnQ>
-    <xmx:X4cHaj49T0OeccffGxfZIss2QMrCpjeXEbAsMsY3YTjNfOzDSbSr7w>
-    <xmx:YIcHaircjx8SAmStb-YZbk6OSA5oY_PzTotvvSqle_gdgPaMlMGM-O_w>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id AB3E6182007A; Fri, 15 May 2026 16:51:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mf44425/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5356C19425;
+	Sat, 16 May 2026 04:12:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778904750;
+	bh=AXhQ+sitrlXgnhgMHpBKBRXSmGjsg3bnCGoy9jg6kOM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Mf44425/yjGPap+Dg7zUdtUXBiFlBX8p+rri7DkuIaEICQ8pGjDYQVlv+ptk3ynnh
+	 rvqqROAKJMbiuIJsAKO5OH3wBAE7s5pP+GW4LqZsd66pXUQZgST+V5ozj1aK+kY7om
+	 u61ZvMMb/wuHbk2swlucU+T3YhzegF89XMDfdFn8nnjHTxproLp60VzMDlWpBYnCQg
+	 /NWHqaHdpgbZ+JVmegUIu3iE8pPAUW1uQGT65BNoCMw4N6ZPZl259S5YQeKoTcmuY+
+	 Ixe9Pbg4hhFKSj/6tToIeVS0tk9jdABP/yxaK3Ux5E8Tg1sTFkhzrBhCqRBJiNE5aw
+	 MlGnyPcXZ+akw==
+From: Mark Brown <broonie@kernel.org>
+To: linux-sound@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20260511231313.31929-1-rosenp@gmail.com>
+References: <20260511231313.31929-1-rosenp@gmail.com>
+Subject: Re: [PATCH] ASoC: pcm6240: Use flexible array for config blocks
+Message-Id: <177889857877.1174745.12518268346134394815.b4-ty@b4>
+Date: Sat, 16 May 2026 11:29:38 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AHLmA04tG45J
-Date: Fri, 15 May 2026 22:51:02 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Heiko Carstens" <hca@linux.ibm.com>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-s390@vger.kernel.org,
- "Kees Cook" <kees@kernel.org>, "Marco Elver" <elver@google.com>,
- "Andrey Konovalov" <andreyknvl@gmail.com>,
- "Andrey Ryabinin" <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com,
- "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Nick Terrell" <terrelln@fb.com>, "David Sterba" <dsterba@suse.com>,
- "Nathan Chancellor" <nathan@kernel.org>, linux-kernel@vger.kernel.org,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Stefan Schulze Frielinghaus" <stefansf@linux.ibm.com>,
- "Juergen Christ" <jchrist@linux.ibm.com>
-Message-Id: <5502d883-a7c4-4e14-8f27-7bffd1f4d35f@app.fastmail.com>
-In-Reply-To: <20260515165357.10935D74-hca@linux.ibm.com>
-References: <20260515092057.810542-1-arnd@kernel.org>
- <20260515165357.10935D74-hca@linux.ibm.com>
-Subject: Re: [PATCH] [RFC] ubsan: turn off UBSAN_ALIGNMENT on s390
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1119; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=AXhQ+sitrlXgnhgMHpBKBRXSmGjsg3bnCGoy9jg6kOM=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqB+6pu4JuSuTU3CR4tL/PbTET4LQMj5e075Glx
+ r4w1MPkiL2JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCagfuqQAKCRAk1otyXVSH
+ 0MjoB/9wHwhloXUXKq/2BdHV+vdrrGH/O6EP+SbyA3E93rWTsID2URYgMVH/3ShGTidA/X0nnP9
+ YzHusJx1kuKpIEbttNXRLx2vxjnu0PqS9tI5x4NhTdctuivzqpAqWqnAJUf5ABvJ/+Cin0M+uuE
+ 51AZwFkUgW5Xz6kmilb7c1TnwSUdcHsW6g9Yc8EtgxpJPTYScXCJRzpo6oo8AkjNP21i2ltrEAC
+ wIND8x7S+8jG3Iy6V5co8Mk8PA9aT/uBjp5bXM7vdniPFExuNRhX75gM4AWXHPfBvPDD3SDqkO7
+ tjsfm7irM5EF/B4bvS/C12xABeukZBtGzkY6xs1sTc1JYxE1
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Fri, May 15, 2026, at 18:53, Heiko Carstens wrote:
-> On Fri, May 15, 2026 at 11:19:54AM +0200, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->> 
->> Testing randconfig builds on s390 with gcc-15, I came across a number of
->> seemingly unrelated build failures that ended up all being caused
->> by the -fsanitize=alignment option:
->> 
->> s390-linux-ld: kernel/sched/build_policy.o: in function `thread_group_cputime':
->> include/linux/seqlock.h:1286:(.text+0x1f738): undefined reference to `__scoped_seqlock_bug'
->
-> Does this only happen with __scoped_seqlock_bug()?
-> I just enabled UBSAN_ALIGNMENT, and with gcc-16 I can see this too.
+On Mon, 11 May 2026 16:13:13 -0700, Rosen Penev wrote:
+> ASoC: pcm6240: Use flexible array for config blocks
 
-Yes, it's specifically this one file that triggers the
-__scoped_seqlock_bug check.
+Applied to
 
->> --- a/lib/Kconfig.ubsan
->> +++ b/lib/Kconfig.ubsan
->> @@ -152,6 +152,7 @@ config UBSAN_ENUM
->>  
->>  config UBSAN_ALIGNMENT
->>  	bool "Perform checking for misaligned pointer usage"
->> +	depends on !S390 || BROKEN
->
-> Wouldn't it be more appropriate to extend the ifdef at __scoped_seqlock_bug()
-> which emits an empty function for exactly this reason for some gcc versions
-> and kernel configs?
->
-> That is: add CONFIG_UBSAN_ALIGNMENT to the list (copy-pasted - white space
-> damage below)?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.2
 
-This would work around the failed check in kernel/sched/build_policy.o
-but not address the underlying issue, or any other the other symptoms.
+Thanks!
 
-After trying to come up with a simplified test case that shows
-a problem on s390 but not arm64, I have now realized what is going
-on: My randconfig build script force-enables 'CONFIG_COMPILE_TEST=y'
-on all architectures, in order to avoid known-broken configurations
-and options that lead to a longer build time but are unlikely
-to find additional bugs. UBSAN_ALIGNMENT in turn depends on
-!COMPILE_TEST as of d0a3ac549f38 ("ubsan: enable for all*config
-builds"). On s390, COMPILE_TEST is unavailable when MMIO is
-disabled, so randconfig builds sometimes run into those broken
-configurations on s390 that I don't see elsewhere.
+[1/1] ASoC: pcm6240: Use flexible array for config blocks
+      https://git.kernel.org/broonie/sound/c/fea3df9eab74
 
-I think your suggestion for __scoped_seqlock_bug makes sense,
-and I've sent a fix for the fs/fat/ issue. I'll see if I can
-also reproduce the other issues across architectures and come
-up with local workarounds for UBSAN_ALIGNMENT.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-       Arnd
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
