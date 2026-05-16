@@ -1,273 +1,342 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9011DE4F1;
-	Sat, 16 May 2026 13:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6D331E85E
+	for <linux-hardening@vger.kernel.org>; Sat, 16 May 2026 18:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778937844; cv=none; b=npNSTpb2WfHvKcRU0qeno1/gCzHT6DXwuvmvTymg9AW/07TMXSXCIT1pM3LQjAxGrhqXYnYbwIFEjoJPa8uDAJtOt3TwEh4M9JRLhtXw716tKlJnt/UmWrgh80gARX7kPSMy+eIgRCyDUgGmk11NchbJxJkS9pecl5DF34RghYo=
+	t=1778955706; cv=none; b=faeW1vlUb1ghararRbb81vZ9igvVV6SG6JFAigmMECyVxCE6GxzTXAY3Y0mzB+jf+MI9jLQWXf6wyAU9wENN+Bi7EoMdi8qB0rQv0McRgJ6I60pONTaXvBggAoTLNtoFjJBWIEBh3vxu+0z7u7D0Qp8UJ6asfoiMpSu9KU1c0nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778937844; c=relaxed/simple;
-	bh=YDQ9C+07hC8te/FLgtmR0rM7E4WUNIwMFVX0aL45wNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nDsJ4iZ0Z8cNeisADG/bFciZR/ESHvqbUvoSH6gOZa6LYQJjmd9CDaO6C+2tplg2lu06D+Ao0bwLiSd31iE6bqnkbTDmu6ud/u1hhIEGkFcGSzkQ+0LRjQI6B84Iy1O8hFCFWHnwSDkzMTbAn8RBFLKua6BTg3AAhFx/YsQL7g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=aUiQgmW+; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1778955706; c=relaxed/simple;
+	bh=Ijmxg5vyoQ1oIfZDFIyfZb/7YUT7Jls5Cc0/UmyMsjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D54nhVT3T3hmdhyNtChH8UDXf47zpzU3vzSSzfOETwRBgxIR8lmrzYJvP1cwFPSe093ZYRV5C3dUAM+Xf2O0JuF9kcM+9uSBXA44nv//cgVbtddnddKa3JLfT2TMXxZSkST2KxwfwUFsx5HdOA0fszz6+3psStoRVDorqnnO4YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Nkt7TPGR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=x4AszcfE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Nkt7TPGR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=x4AszcfE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="aUiQgmW+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hg5koSK88GNTPNtB54sLaSvXDg2Npu+cx3T1iNwNOWI=; b=aUiQgmW+Xaiiwi1wnDepzOmqlF
-	aYI6mvgRCWcxxU7HAJ3ogL4r4/JzqQaSLqXP3KhmlOTacUlBiOxQGgFtbIrftn4tPUR76eTfYZV92
-	q24U9GsHJZoy1AnNzDGL/woRK9Af6/7DRpfJwXXs2nEHe3rWV8kxnmOXQJNDCAg8gb/z1mCdIwUCr
-	vTN6njYqg3rilqtGBNbdEJpQIACUef1kIyH69iO61MnFpIB/sM3p5W9GuIJ2vEvSR3tNVTQ46Y2Pp
-	hmEvwRPodfgb0Hfy8pP8jwiRhnQ5kDMC7/s0kk//Y0cJk3xrsJU+skx9GHO0terpY2QUDxRnrhqY3
-	51Cb/6PQ==;
-Received: from [189.7.87.67] (helo=[192.168.0.5])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1wOEzT-000xR1-57; Sat, 16 May 2026 15:23:39 +0200
-Message-ID: <bb4a9db8-9db1-4f92-8fb3-87415e467df4@igalia.com>
-Date: Sat, 16 May 2026 10:23:31 -0300
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Nkt7TPGR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="x4AszcfE";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Nkt7TPGR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="x4AszcfE"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id F0FC76BA9F;
+	Sat, 16 May 2026 18:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778955703; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=I7quuES2Nnz25cpefFp6n1Jxio6jLh72B38wnS1YO2k=;
+	b=Nkt7TPGRN6tIn6Nuyva09wsTXC4GT/jptwqAEI8rJr/Q436SqJNbBOZipuPAttDtOun2dR
+	KmzRMP8ccoYzYZOh0WXZUPueO7ZgPk34r8d4iWM0CkyZpzcRikdve4jOulny+cesnS5RvQ
+	f+NX+qQOoRDSwj55DSYO7tpQnCBFiLI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778955703;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=I7quuES2Nnz25cpefFp6n1Jxio6jLh72B38wnS1YO2k=;
+	b=x4AszcfETqUNTj/9Bn2v+3bby3bLeyNFM6wgXxqe2J14wQORCx7fxfz97TmR1JgBSTPfva
+	EnIiQ5dfzwfeX3AQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Nkt7TPGR;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=x4AszcfE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778955703; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=I7quuES2Nnz25cpefFp6n1Jxio6jLh72B38wnS1YO2k=;
+	b=Nkt7TPGRN6tIn6Nuyva09wsTXC4GT/jptwqAEI8rJr/Q436SqJNbBOZipuPAttDtOun2dR
+	KmzRMP8ccoYzYZOh0WXZUPueO7ZgPk34r8d4iWM0CkyZpzcRikdve4jOulny+cesnS5RvQ
+	f+NX+qQOoRDSwj55DSYO7tpQnCBFiLI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778955703;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=I7quuES2Nnz25cpefFp6n1Jxio6jLh72B38wnS1YO2k=;
+	b=x4AszcfETqUNTj/9Bn2v+3bby3bLeyNFM6wgXxqe2J14wQORCx7fxfz97TmR1JgBSTPfva
+	EnIiQ5dfzwfeX3AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 385F3593A8;
+	Sat, 16 May 2026 18:21:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id U6jVCba1CGr2YQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Sat, 16 May 2026 18:21:42 +0000
+From: Pedro Falcato <pfalcato@suse.de>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: [RFC PATCH] fs/splice: allow for a way to block splice() with read-only files
+Date: Sat, 16 May 2026 19:21:26 +0100
+Message-ID: <20260516182126.530498-1-pfalcato@suse.de>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] accel: ethosu: Add performance counter support
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Tomeu Vizoso <tomeu@tomeuvizoso.net>, Oded Gabbay <ogabbay@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-hardening@vger.kernel.org
-References: <20260515032625.1880618-1-robh@kernel.org>
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Content-Language: en-US
-Autocrypt: addr=mcanal@igalia.com; keydata=
- xsBNBGcCwywBCADgTji02Sv9zjHo26LXKdCaumcSWglfnJ93rwOCNkHfPIBll85LL9G0J7H8
- /PmEL9y0LPo9/B3fhIpbD8VhSy9Sqz8qVl1oeqSe/rh3M+GceZbFUPpMSk5pNY9wr5raZ63d
- gJc1cs8XBhuj1EzeE8qbP6JAmsL+NMEmtkkNPfjhX14yqzHDVSqmAFEsh4Vmw6oaTMXvwQ40
- SkFjtl3sr20y07cJMDe++tFet2fsfKqQNxwiGBZJsjEMO2T+mW7DuV2pKHr9aifWjABY5EPw
- G7qbrh+hXgfT+njAVg5+BcLz7w9Ju/7iwDMiIY1hx64Ogrpwykj9bXav35GKobicCAwHABEB
- AAHNIE1hw61yYSBDYW5hbCA8bWNhbmFsQGlnYWxpYS5jb20+wsCRBBMBCAA7FiEE+ORdfQEW
- dwcppnfRP/MOinaI+qoFAmcCwywCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ
- P/MOinaI+qoUBQgAqz2gzUP7K3EBI24+a5FwFlruQGtim85GAJZXToBtzsfGLLVUSCL3aF/5
- O335Bh6ViSBgxmowIwVJlS/e+L95CkTGzIIMHgyUZfNefR2L3aZA6cgc9z8cfow62Wu8eXnq
- GM/+WWvrFQb/dBKKuohfBlpThqDWXxhozazCcJYYHradIuOM8zyMtCLDYwPW7Vqmewa+w994
- 7Lo4CgOhUXVI2jJSBq3sgHEPxiUBOGxvOt1YBg7H9C37BeZYZxFmU8vh7fbOsvhx7Aqu5xV7
- FG+1ZMfDkv+PixCuGtR5yPPaqU2XdjDC/9mlRWWQTPzg74RLEw5sz/tIHQPPm6ROCACFls7A
- TQRnAsMsAQgAxTU8dnqzK6vgODTCW2A6SAzcvKztxae4YjRwN1SuGhJR2isJgQHoOH6oCItW
- Xc1CGAWnci6doh1DJvbbB7uvkQlbeNxeIz0OzHSiB+pb1ssuT31Hz6QZFbX4q+crregPIhr+
- 0xeDi6Mtu+paYprI7USGFFjDUvJUf36kK0yuF2XUOBlF0beCQ7Jhc+UoI9Akmvl4sHUrZJzX
- LMeajARnSBXTcig6h6/NFVkr1mi1uuZfIRNCkxCE8QRYebZLSWxBVr3h7dtOUkq2CzL2kRCK
- T2rKkmYrvBJTqSvfK3Ba7QrDg3szEe+fENpL3gHtH6h/XQF92EOulm5S5o0I+ceREwARAQAB
- wsB2BBgBCAAgFiEE+ORdfQEWdwcppnfRP/MOinaI+qoFAmcCwywCGwwACgkQP/MOinaI+qpI
- zQf+NAcNDBXWHGA3lgvYvOU31+ik9bb30xZ7IqK9MIi6TpZqL7cxNwZ+FAK2GbUWhy+/gPkX
- it2gCAJsjo/QEKJi7Zh8IgHN+jfim942QZOkU+p/YEcvqBvXa0zqW0sYfyAxkrf/OZfTnNNE
- Tr+uBKNaQGO2vkn5AX5l8zMl9LCH3/Ieaboni35qEhoD/aM0Kpf93PhCvJGbD4n1DnRhrxm1
- uEdQ6HUjWghEjC+Jh9xUvJco2tUTepw4OwuPxOvtuPTUa1kgixYyG1Jck/67reJzMigeuYFt
- raV3P8t/6cmtawVjurhnCDuURyhUrjpRhgFp+lW8OGr6pepHol/WFIOQEg==
-In-Reply-To: <20260515032625.1880618-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,vger.kernel.org,kvack.org,kernel.org,gmail.com,suse.de];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: F0FC76BA9F
+X-Spam-Level: 
 
-Hi Rob,
+Since the advent of vulns like Dirty Pipe, Dirty Frag, Copy Fail
+and Fragnasia, splicing a read-only file is fundamentally unsafe.
 
-On 15/05/26 00:26, Rob Herring (Arm) wrote:
-> The Arm Ethos-U NPUs have a PMU with performance counters. The PMU h/w
-> supports up to 4 (U65) or 8 (U85) counters which can be programmed for
-> different events. There is also a dedicated cycle counter.
-> 
-> The ABI and implementation are copied from the V3D driver. The main
-> difference in the ABI is there is no query API for the the event list.
-> The events differ between the U65 and U85, so the events lists are
-> maintained in userspace along with other differences between the U65 and
-> U85.
-> 
-> The cycle counter is always enabled when the PMU is enabled. When the
-> user requests N events, reading the counters will return the N events
-> plus the cycle counter.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> v2:
->   - Use XArray instead of idr
->   - Rework locking to use per device spinlock to protect modifying active
->     perfmon. Based on pending V3D changes:
->     https://lore.kernel.org/all/20260508-v3d-perfmon-lifetime-v1-1-f5b5642c085f@igalia.com/
->   - Add missing perfmon puts in ethosu_ioctl_perfmon_set_global() and
->     ethosu_ioctl_perfmon_get_values() error paths.
->   - Fix reading number of counters on U85.
->   - Add defines NPU_REG_PMCCNTR_CFG
-> ---
->   drivers/accel/ethosu/Makefile         |   2 +-
->   drivers/accel/ethosu/ethosu_device.h  |  32 +++
->   drivers/accel/ethosu/ethosu_drv.c     |  21 +-
->   drivers/accel/ethosu/ethosu_drv.h     |  62 +++++-
->   drivers/accel/ethosu/ethosu_job.c     |  41 +++-
->   drivers/accel/ethosu/ethosu_job.h     |   2 +
->   drivers/accel/ethosu/ethosu_perfmon.c | 296 ++++++++++++++++++++++++++
->   include/uapi/drm/ethosu_accel.h       |  59 ++++-
->   8 files changed, 500 insertions(+), 15 deletions(-)
->   create mode 100644 drivers/accel/ethosu/ethosu_perfmon.c
-> 
+As such, as a mitigation, add a way for users to block splice() for
+files they cannot write to. This eliminates this whole class of exploits
+that use splice()+confusion in pipe/net/etc code to gain write-access to
+files they can only read.
 
-[...]
+Users can simply toggle fs.splice_needs_write=1 and suddenly splice() will
+refuse perfectly legal splices() from files it can only read, but not write.
 
-> diff --git a/drivers/accel/ethosu/ethosu_drv.h b/drivers/accel/ethosu/ethosu_drv.h
-> index 9e21dfe94184..8fed43c2a7af 100644
-> --- a/drivers/accel/ethosu/ethosu_drv.h
-> +++ b/drivers/accel/ethosu/ethosu_drv.h
-> @@ -1,15 +1,75 @@
->   /* SPDX-License-Identifier: GPL-2.0-only OR MIT */
-> -/* Copyright 2025 Arm, Ltd. */
-> +/* Copyright 2025-2026 Arm, Ltd. */
->   #ifndef __ETHOSU_DRV_H__
->   #define __ETHOSU_DRV_H__
->   
-> +#include <linux/mutex.h>
-> +#include <linux/xarray.h>
->   #include <drm/gpu_scheduler.h>
->   
->   struct ethosu_device;
-> +struct drm_device;
-> +struct drm_file;
->   
->   struct ethosu_file_priv {
->   	struct ethosu_device *edev;
->   	struct drm_sched_entity sched_entity;
-> +	struct xarray perfmons;
->   };
->   
-> +/* Performance monitor object. The perform lifetime is controlled by userspace
-> + * using perfmon related ioctls. A perfmon can be attached to a submit_cl
+For vmsplice(), make due with the address_space attached to the folio. Care
+is held to make sure the operation isn't too slowed down with locks. The check
+itself isn't entirely equivalent (the mapping's host can be the internal bdev
+inode, etc, and not the one in /dev against which permissions are checked),
+but doing it in a more correct way would require dropping from GUP-fast to
+GUP, and that would be too slow.
 
-submit_cl?
+Signed-off-by: Pedro Falcato <pfalcato@suse.de>
+---
 
-> + * request, and when this is the case, HW perf counters will be activated just
-> + * before the submit_cl is submitted to the GPU and disabled when the job is
+Hello,
 
-Maybe replace the "submit_cl is submitted to the GPU" with NPU related
-wording?
+sending this out as an RFC so I can get better opinions from VFS & security
+folks upstream. I wrote this out as a way to harden against all the page
+cache attacks we've seen lately, that bottom out to splice() from a file
+they cannot write + confusion elsewhere on the net stack/pipes/etc.
 
-> + * done. This way, only events related to a specific job will be counted.
-> + */
-> +struct ethosu_perfmon {
-> +	/* Tracks the number of users of the perfmon, when this counter reaches
-> +	 * zero the perfmon is destroyed.
-> +	 */
-> +	refcount_t refcnt;
-> +
-> +	/* Number of counters activated in this perfmon instance
-> +	 * (should be less than or equal to DRM_ETHOSU_MAX_PERF_COUNTERS).
-> +	 */
-> +	u8 ncounters;
-> +
-> +	/* Events counted by the HW perf counters. */
-> +	u16 counters[DRM_ETHOSU_MAX_PERF_EVENT_COUNTERS];
-> +
-> +	/*
-> +	 * Storage for counter values. Counters are incremented by the HW
-> +	 * perf counter values every time the perfmon is attached to a
-> +	 * NPU job. This way, perfmon users don't have to retrieve the
-> +	 * results after each job if they want to track events covering
-> +	 * several submissions. Note that counter values can't be reset,
-> +	 * but you can fake a reset by destroying the perfmon and
-> +	 * creating a new one.
-> +	 */
-> +	u64 values[] __counted_by(ncounters);
-> +};
-> +
-> +/* ethosu_perfmon.c */
-> +void ethosu_perfmon_init(struct ethosu_device *ethosu);
-> +void ethosu_perfmon_get(struct ethosu_perfmon *perfmon);
-> +void ethosu_perfmon_put(struct ethosu_perfmon *perfmon);
-> +void ethosu_perfmon_start(struct ethosu_device *ethosu,
-> +			  struct ethosu_perfmon *perfmon);
-> +void ethosu_perfmon_stop(struct ethosu_device *ethosu,
-> +			 struct ethosu_perfmon *perfmon, bool capture);
-> +void ethosu_perfmon_stop_locked(struct ethosu_device *ethosu, struct ethosu_perfmon *perfmon,
-> +				bool capture);
-> +struct ethosu_perfmon *ethosu_perfmon_find(struct ethosu_file_priv *ethosu_priv,
-> +					   int id);
-> +void ethosu_perfmon_open_file(struct ethosu_file_priv *ethosu_priv);
-> +void ethosu_perfmon_close_file(struct ethosu_file_priv *ethosu_priv);
-> +int ethosu_ioctl_perfmon_create(struct drm_device *dev, void *data,
-> +				struct drm_file *file_priv);
-> +int ethosu_ioctl_perfmon_destroy(struct drm_device *dev, void *data,
-> +				 struct drm_file *file_priv);
-> +int ethosu_ioctl_perfmon_get_values(struct drm_device *dev, void *data,
-> +				    struct drm_file *file_priv);
-> +int ethosu_ioctl_perfmon_set_global(struct drm_device *dev, void *data,
-> +				    struct drm_file *file_priv);
-> +
->   #endif
-> diff --git a/drivers/accel/ethosu/ethosu_job.c b/drivers/accel/ethosu/ethosu_job.c
-> index e7b07cdbcced..5712848236af 100644
-> --- a/drivers/accel/ethosu/ethosu_job.c
-> +++ b/drivers/accel/ethosu/ethosu_job.c
-> @@ -1,6 +1,6 @@
->   // SPDX-License-Identifier: GPL-2.0-only OR MIT
->   /* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-> -/* Copyright 2025 Arm, Ltd. */
-> +/* Copyright 2025-2026 Arm, Ltd. */
->   
->   #include <linux/bitfield.h>
->   #include <linux/genalloc.h>
-> @@ -147,6 +147,8 @@ static void ethosu_job_err_cleanup(struct ethosu_job *job)
->   {
->   	unsigned int i;
->   
-> +	ethosu_perfmon_put(job->perfmon);
-> +
->   	for (i = 0; i < job->region_cnt; i++)
->   		drm_gem_object_put(job->region_bo[i]);
->   
-> @@ -181,6 +183,26 @@ static void ethosu_job_free(struct drm_sched_job *sched_job)
->   	ethosu_job_put(job);
->   }
->   
-> +static void
-> +ethosu_switch_perfmon(struct ethosu_device *ethosu, struct ethosu_job *job)
-> +{
-> +	struct ethosu_perfmon *perfmon;
-> +
-> +	guard(spinlock)(&ethosu->perfmon_state.lock);
-> +
-> +	perfmon = READ_ONCE(ethosu->global_perfmon);
+This is _obviously_ not perfect and not complete. My first (unsent) version
+straight up returned -EPERM on splice() for these files. This one attempts
+to retain some compatibility by only blocking the page splicing operation,
+but still issuing the operation with normal copies (kindly suggested by Jan).
+vmsplice() is a complicated issue, because gup_fast does not allow us access
+to the VMA's vm_file. I tried hacking around it but it's not perfect (e.g you
+cannot grab the mnt_idmap for the file, since we only have access to the
+address_space + its host).
+I'm also not a fan of having somewhat hairy MM code in the middle of
+fs/splice.c but that's something we can simply hoist elsewhere as this gets
+un-RFC'd. It's also missing the external-facing docs for the sysctl.
 
-Considering that you are under the spinlock, I believe that using
-READ_ONCE is unneeded.
+My big questions are:
+1) Is this a viable way forward?
+2) How hard is it to deploy for users? Could we possibly even default to this?
 
-> +	if (!perfmon)
-> +		perfmon = job->perfmon;
-> +
-> +	if (perfmon == ethosu->perfmon_state.active)
-> +		return;
-> +
-> +	ethosu_perfmon_stop_locked(ethosu, ethosu->perfmon_state.active, true);
-> +
-> +	if (perfmon && ethosu->perfmon_state.active != perfmon)
-> +		ethosu_perfmon_start(ethosu, perfmon);
+Lightly tested using [1], which should see (if the mitigation is enabled):
 
-Also, if you are going to keep ethosu_switch_perfmon(), you don't need
-to use a spinlock. In V3D, I'm only using a spinlock because I'm
-stopping the perfmon in a IRQ context. But considering that you are
-stopping the perfmon in run_job(), you can use a sleeping mutex.
+$ ./a.out
+[   17.283456] splice: task a.out/275 attempted to splice a file it cannot write to.
+This is disabled by the fs.splice_needs_write sysctl. If this is truly required
+then disable the sysctl. Performance may be degraded.
+splice = 32
 
-Moreover, I believe that if (perfmon != NULL) then automatically
-(ethosu->perfmon_state.active != perfmon) as we already checked if
-(perfmon == ethosu->perfmon_state.active).
+[1] https://gist.github.com/heatd/277339eb25df57d1f750d7da757cf7ff
 
-Best regards,
-- Maíra
+ fs/splice.c  | 83 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ fs/sysctls.c | 11 +++++++
+ 2 files changed, 93 insertions(+), 1 deletion(-)
+
+diff --git a/fs/splice.c b/fs/splice.c
+index 9d8f63e2fd1a..624e5cbd42eb 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -39,6 +39,8 @@
+ 
+ #include "internal.h"
+ 
++int sysctl_splice_needs_write;
++
+ /*
+  * Splice doesn't support FMODE_NOWAIT. Since pipes may set this flag to
+  * indicate they support non-blocking reads or writes, we must clear it
+@@ -947,6 +949,36 @@ static void do_splice_eof(struct splice_desc *sd)
+ 		sd->splice_eof(sd);
+ }
+ 
++static bool splice_may_read(struct file *in)
++{
++	if (READ_ONCE(sysctl_splice_needs_write)) {
++		/*
++		 * Disallow splice from files we cannot in any way write to.
++		 * This serves as a trivial mitigation for page cache splice
++		 * attacks, where attackers splice a file they cannot write to,
++		 * but can read (like /etc/passwd, or /bin/su) and, through a
++		 * complex set of logic, manage to write to these page cache
++		 * pages.
++		 * The set of checks is quite simple: if we can already write
++		 * to it, if we could write to it (by reopening), or if we
++		 * could chmod it (owner of the file), then any vulnerability
++		 * coming from this is futile, as you can already write to it
++		 * normally.
++		 */
++		if (!(in->f_mode & FMODE_WRITE) &&
++		    !inode_owner_or_capable(file_mnt_idmap(in), file_inode(in)) &&
++		    file_permission(in, MAY_WRITE)) {
++			pr_warn_once("splice: task %s/%d attempted to splice"
++			" a file it cannot write to. This is disabled by the"
++			" fs.splice_needs_write sysctl. If this is truly required"
++			" then disable the sysctl. Performance may be degraded.\n",
++			current->comm, current->pid);
++			return false;
++		}
++	}
++	return true;
++}
++
+ /*
+  * Callers already called rw_verify_area() on the entire range.
+  * No need to call it for sub ranges.
+@@ -971,11 +1003,13 @@ static ssize_t do_splice_read(struct file *in, loff_t *ppos,
+ 
+ 	if (unlikely(!in->f_op->splice_read))
+ 		return warn_unsupported(in, "read");
++
+ 	/*
+ 	 * O_DIRECT and DAX don't deal with the pagecache, so we allocate a
+ 	 * buffer, copy into it and splice that into the pipe.
+ 	 */
+-	if ((in->f_flags & O_DIRECT) || IS_DAX(in->f_mapping->host))
++	if ((in->f_flags & O_DIRECT) || IS_DAX(in->f_mapping->host) ||
++	    !splice_may_read(in))
+ 		return copy_splice_read(in, ppos, pipe, len, flags);
+ 	return in->f_op->splice_read(in, ppos, pipe, len, flags);
+ }
+@@ -1440,10 +1474,51 @@ static ssize_t __do_splice(struct file *in, loff_t __user *off_in,
+ 	return ret;
+ }
+ 
++static bool may_write_to_page(struct page *page, struct address_space **plast)
++{
++	struct folio *folio = page_folio(page);
++	struct address_space *mapping, *last = *plast;
++	struct inode *inode;
++	bool may = false;
++
++	if (!READ_ONCE(sysctl_splice_needs_write))
++		return true;
++	/*
++	 * Always fine to write to anon folios.
++	 */
++	if (folio_test_anon(folio))
++		return true;
++
++	mapping = READ_ONCE(folio->mapping);
++	WARN_ON((unsigned long) mapping & FOLIO_MAPPING_FLAGS);
++
++	/* If it is the same (locklessly), then LGTM, proceed. */
++	if (mapping == last)
++		return true;
++	/*
++	 * Else we have to recheck with the folio lock held, for mapping
++	 * stability. TODO: killable?
++	 */
++	folio_lock(folio);
++	mapping = folio_mapping(folio);
++	/* May have been truncated, etc */
++	if (!mapping)
++		goto out_lock;
++	inode = mapping->host;
++	may = inode_owner_or_capable(&nop_mnt_idmap, inode) ||
++	      inode_permission(&nop_mnt_idmap, inode, MAY_WRITE) == 0;
++	if (likely(may))
++		*plast = mapping;
++out_lock:
++	folio_unlock(folio);
++	return may;
++}
++
+ static ssize_t iter_to_pipe(struct iov_iter *from,
+ 			    struct pipe_inode_info *pipe,
+ 			    unsigned int flags)
+ {
++	struct address_space *last = NULL;
+ 	struct pipe_buffer buf = {
+ 		.ops = &user_page_pipe_buf_ops,
+ 		.flags = flags
+@@ -1467,6 +1542,12 @@ static ssize_t iter_to_pipe(struct iov_iter *from,
+ 		for (i = 0; i < n; i++) {
+ 			int size = umin(left, PAGE_SIZE - start);
+ 
++			if (!may_write_to_page(pages[i], &last)) {
++				iov_iter_revert(from, left);
++				while (i < n)
++					put_page(pages[i++]);
++				goto out;
++			}
+ 			buf.page = pages[i];
+ 			buf.offset = start;
+ 			buf.len = size;
+diff --git a/fs/sysctls.c b/fs/sysctls.c
+index ad429dffeb4b..1fcd7c9f92d5 100644
+--- a/fs/sysctls.c
++++ b/fs/sysctls.c
+@@ -7,6 +7,8 @@
+ #include <linux/init.h>
+ #include <linux/sysctl.h>
+ 
++extern int sysctl_splice_needs_write;
++
+ static const struct ctl_table fs_shared_sysctls[] = {
+ 	{
+ 		.procname	= "overflowuid",
+@@ -26,6 +28,15 @@ static const struct ctl_table fs_shared_sysctls[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_MAXOLDUID,
+ 	},
++	{
++		.procname	= "splice_needs_write",
++		.data		= &sysctl_splice_needs_write,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
+ };
+ 
+ static int __init init_fs_sysctls(void)
+-- 
+2.54.0
+
