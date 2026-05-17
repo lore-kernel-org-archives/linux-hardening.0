@@ -1,77 +1,52 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9264430DEAC
-	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 14:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710662AEE1;
+	Sun, 17 May 2026 14:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779027289; cv=none; b=eLsMXHfTrmxJyiW0AGo2b9nC+5ioHEJoY1wpR+Kwfk6cQkSotvjoRgmGfoCKfT6eSmjpWdlZzs9yp14ZbnJtjmcxQokVZpO5qZSr6/d9iq0FnbK2nsKqeJMbyw0GkqV5Er76pYq5XJArouF9WesJZa3mWalXlo1tlaYrM66OHtk=
+	t=1779029278; cv=none; b=MG/JIHsfafV6V3NnZCXHnG5lp+38McykI2eYWkEek+4ny+wYd0GYPsvX1OKLiO0kf/wOLPkbaqStkAIwtMSgmb6rJs8Ger1SNJe23yMBSsucSGqK2gSo4Y8L7q2vKldncAWthSv69SWdn/8fEG6azU6E73ibP51kVpfZFhkbzig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779027289; c=relaxed/simple;
-	bh=Mc2GSE058+zYJwzfLUNK+mG60GUfYotma1xSoBMmlf0=;
+	s=arc-20240116; t=1779029278; c=relaxed/simple;
+	bh=xoAgU/R3H9Ait+G/66AosmrNFjJwZKusNf070Da4HxM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SZs/tWCtgbeeAmQ75kqoa9iw6EKFKpRvUaE7GzNW2fPccJQoMP5GSaW03tl5+HOOyHhMkBfhXSmaj8o496JRef0NXem2ROBh6/mzx4oR3D9vUfaK8X4jVm6y1ydYGFIoRVjPJPx82UnSf3NG+NKwOqRPo8zTc7TO0nu1G7Mrz0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPtseJmh; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=A80UdeWKgNeRiaW7Xuy8evfpC//q9bZYfmnqJFr8ssWmKN/Gokj1f48TPcN868ClcYden+y6dHO7BsnRKYXdcIBcDZmuR3xdvmro9wo04xgU19xjWz06oPNLyibu+hHKYu/iu2FccCnAnQRH9h99tWWAZoWN51vFsZvhqiAExFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OaaItkPu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPtseJmh"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488ff90d6c7so9164555e9.2
-        for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 07:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779027287; x=1779632087; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C6Mpp6sTarqgUSSzKlFpcbBtlR8/lyFOiNv4FCUy/RI=;
-        b=CPtseJmhXoSKrw6y4LUvqKPQRQaRGge67aR5N/dzMM/wlSUJ7xu7u33lcfTOcS7Pc0
-         LujNCXW+I2CumJfYVTzjNrAooSfbD1imcxl4yBX2EEAPTZj/buL5m3hVlnXQFXVLK5RP
-         pOEazda46UdGEt9IzpRcPSui+nq/VCI1xj9aOllHLofaGb51Z7UJQNnUaWZDVLGBLQ1+
-         Vs/W4FOiX3fSfhQetqwxIeLxlqQXgydn5/aJ853dMbkp1MlQvVT8g6CiY0FBlhGicDQU
-         epXEbkAJ58bi49ZJHCXnn1IZmjWMyW7PLMBy8RKHhOJjHDymsIfyvKmQ8XP+KtgpYxpO
-         Lo8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779027287; x=1779632087;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=C6Mpp6sTarqgUSSzKlFpcbBtlR8/lyFOiNv4FCUy/RI=;
-        b=sXTMdHuN2DAQ1WKps62tva2onylnV4sagJZuKeA+WOv75EpQxc8Q2wO7UZo5V4pOaT
-         jOsxkq4+mz089hWDp7LPIWAN2vKXvy+MFp2AqYXqAC/9uYUomBouYRIDXdwL++mSAUsk
-         CbqUppTuPOInh0/5kAHhmw4gpL2mkJCbErV7A3P5n3jQ4pNnyrMwt7YbZlmO+hHJTjW0
-         MkreM8PDuRrakmGm0XK4L4u/KHRVEMV7qu4Vj7onnlttNVC4Kahwn77L5VY6iy8ETK/Y
-         e+flMgGZ0MI9NMawht37RqrqGrNyHJ9iQOZ+Lt9cUP+Jo+CJm73hJYcuXbgJSdQ9OeXF
-         Dkwg==
-X-Forwarded-Encrypted: i=1; AFNElJ+X6AnXFwdeIeObDnbfknyTnHqkxftDWNnzySSGjYBw8kYJszqWyngYcLlHWa45mLcM58Hdald9LPdBOJW4Zsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO3xPZm8qsfjRQwyVONwjCjb8sMxZ4ecGYmKDYNULyEDLoGNBO
-	dqFQmqQq+RbFCAS8FulNx2v5fnxYkl9D/jWkczitbBod9GNCseDPW/Er
-X-Gm-Gg: Acq92OGjfOMRQLV47MdiFMvVX5L4nbax07eG1W4jdwewsHFw1enGvgin5xICAaXWbYH
-	iMNMxOs1U/PZh0YbV3OcH7ywuCD56Xw7QZ6HcHSSMs8Y3zhUlsHKdUmIri7UFrFLBvI2BQiUO2+
-	26L0d2PEuo9AlAME/srslqIR2gwgPuyVUQA8lSgP18Ahp7A7ZNCoZxdrvZKqxJiQkKN+xJLPCaK
-	+bs1bwwww+Dw/jsrOrWcp1k1JDkEac+cZO5n7m3q866q4XyETkymzZJxxRROJfPwtoBAeRckyt0
-	LmyDNV6Sg44b1/JXtcpdrSlokEkZ6UE6mn2tmrmtqLuEsfhXtL/GAq0ohFlr3laC4SC6UChP/rw
-	WJVHLC5phCOVxbA8SOw/iJsyyUaZbiYsQ6HoNow/+O4XV4AV3bbCtSVWenSVFiswBjS9g6jldiI
-	/829lvfl4fWzoCvyAnmpIqSmq3n8z2plhVRVYsdII97O1/kKIpQEYY9jJzMY8xAt8q
-X-Received: by 2002:a05:600c:1389:b0:48f:fe2a:107c with SMTP id 5b1f17b1804b1-49001285b87mr50821125e9.6.1779027286837;
-        Sun, 17 May 2026 07:14:46 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe5cab882sm197265945e9.13.2026.05.17.07.14.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 07:14:46 -0700 (PDT)
-Date: Sun, 17 May 2026 15:14:44 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andrew Morton
- <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, Andy Shevchenko
- <andy@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] string: use min in sized_strscpy
-Message-ID: <20260517151444.66dc4afb@pumpkin>
-In-Reply-To: <agc3DrODtyc2rF27@linux.dev>
-References: <20260514165601.527883-3-thorsten.blum@linux.dev>
-	<CAHp75VfQNkqEYsO4Uup0c-uiYuVyAWit=tmCz2BsYLp-sjXsZw@mail.gmail.com>
-	<agc3DrODtyc2rF27@linux.dev>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OaaItkPu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 827A1C2BCB0;
+	Sun, 17 May 2026 14:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779029278;
+	bh=xoAgU/R3H9Ait+G/66AosmrNFjJwZKusNf070Da4HxM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OaaItkPusR4VH3Y1ax6Fa0eVyR0lggawk9obE7TjMKePsT4EMRMOJnpO32pHirgqQ
+	 cytWTtYX9HZI0hZi/uuOpLQ3RH3jnMO85hwkB6wwMsHEYt0BaNDeqQPz2ULTApWJKi
+	 IEoY9QtII6TnB/cFacb8U69Iz0xOGRLJKHiqcVEfSw+Qw48MUhroAv9W4gTXvjHhYi
+	 wwSPsUYVi1/QZTv/BV1AB3uasT7VXz79z90olUG8K6psIZcwM+vX/Zlj/ijY06E7HV
+	 ntROQhaRuH3LJrOlS2TfPop3yEPAIHhV44XXT0vJpQTBbfNJ7MtGQJdgEksCFyVves
+	 EokVepeZ4pGog==
+Date: Sun, 17 May 2026 15:47:45 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH RFC v4 03/10] iio: frequency: ad9910: initial driver
+ implementation
+Message-ID: <20260517154745.5fbfcabf@jic23-huawei>
+In-Reply-To: <20260508-ad9910-iio-driver-v4-3-d26bfd20ee3d@analog.com>
+References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+	<20260508-ad9910-iio-driver-v4-3-d26bfd20ee3d@analog.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -81,20 +56,156 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 15 May 2026 17:09:02 +0200
-Thorsten Blum <thorsten.blum@linux.dev> wrote:
+On Fri, 08 May 2026 18:00:19 +0100
+Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 
-> On Fri, May 15, 2026 at 09:45:08AM +0300, Andy Shevchenko wrote:
-.
-> How about adding
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > 
-> #define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
-> #define bytes_to_page_end(p)	(PAGE_SIZE - offset_in_page(p))
+> Add the core AD9910 DDS driver infrastructure with single tone mode
+> support. This includes SPI register access, profile management via GPIO
+> pins, PLL/DAC configuration from firmware properties, and single tone
+> frequency/phase/amplitude control through IIO attributes.
 > 
-> to a new header, e.g. include/linux/page_helpers.h? There are about 50+
-> direct replacements and possibly more.
-> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Hi Rodrigo
 
-Why not put them in vdso/page.h just after PAGE_MASK.
+A few really minor things from a fresh look through.
 
--- David
+Jonathan
+
+> diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
+> new file mode 100644
+> index 000000000000..c75f2ef178c2
+> --- /dev/null
+> +++ b/drivers/iio/frequency/ad9910.c
+
+> +
+> +static int ad9910_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *chan,
+> +			   int *val, int *val2, long info)
+> +{
+> +	struct ad9910_state *st = iio_priv(indio_dev);
+> +	u64 tmp64;
+> +	u32 tmp32;
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_ENABLE:
+> +		switch (chan->channel) {
+> +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
+> +			if (ad9910_sw_powerdown_get(st)) {
+> +				*val = 0;
+> +			} else {
+> +				tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
+> +				*val = (tmp32 == st->profile);
+> +			}
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_FREQUENCY:
+> +		switch (chan->channel) {
+> +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
+> +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
+> +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_FTW_MSK,
+> +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		tmp64 *= st->data.sysclk_freq_hz;
+> +		*val = tmp64 >> 32;
+> +		*val2 = ((tmp64 & GENMASK_ULL(31, 0)) * MICRO) >> 32;
+
+Why in this particular case have this outside the switch / case whereas in others
+you do the full maths and set inside? I'd put it inside and not worry about slightly
+long lines.
+
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	case IIO_CHAN_INFO_PHASE:
+> +		switch (chan->channel) {
+> +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
+> +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
+> +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_POW_MSK,
+> +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
+> +			tmp32 = (tmp64 * AD9910_MAX_PHASE_MICRORAD) >> 16;
+> +			*val = tmp32 / MICRO;
+> +			*val2 = tmp32 % MICRO;
+> +			return IIO_VAL_INT_PLUS_MICRO;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->channel) {
+> +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
+> +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
+> +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_ASF_MSK,
+> +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
+> +			*val = 0;
+> +			*val2 = tmp64 * MICRO >> 14;
+> +			return IIO_VAL_INT_PLUS_MICRO;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		switch (chan->channel) {
+> +		case AD9910_CHANNEL_PHY:
+> +			*val = st->data.sysclk_freq_hz;
+> +			return IIO_VAL_INT;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+
+
+> +
+> +static int ad9910_setup(struct device *dev, struct ad9910_state *st,
+> +			struct reset_control *dev_rst)
+> +{
+> +	int ret;
+> +
+> +	ret = reset_control_deassert(dev_rst);
+> +	if (ret)
+> +		return ret;
+No need to sleep at all after bringing device out of reset?
+
+Sashiko has reasonably been asking about this in other drivers. If there
+is no period needed or it is so quick as to be irrelevant add a comment here.
+
+> +
+> +	ret = ad9910_reg32_write(st, AD9910_REG_CFR1,
+> +				 AD9910_CFR1_SDIO_INPUT_ONLY_MSK, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(dev, ad9910_sw_powerdown_action, st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ad9910_reg32_write(st, AD9910_REG_CFR2,
+> +				 AD9910_CFR2_AMP_SCALE_SINGLE_TONE_MSK |
+> +				 AD9910_CFR2_SYNC_TIMING_VAL_DISABLE_MSK |
+> +				 AD9910_CFR2_DRG_NO_DWELL_MSK |
+> +				 AD9910_CFR2_DATA_ASM_HOLD_LAST_MSK |
+> +				 AD9910_CFR2_SYNC_CLK_EN_MSK |
+> +				 AD9910_CFR2_PDCLK_ENABLE_MSK, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ad9910_cfg_sysclk(st, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ad9910_set_dac_current(st, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ad9910_io_update(st);
+> +}
+
