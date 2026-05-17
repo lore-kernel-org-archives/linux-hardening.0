@@ -1,56 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E9433FE36;
-	Sun, 17 May 2026 11:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9264430DEAC
+	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 14:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779017303; cv=none; b=D+TQa7NIYrGcKp3LguxFIb5fdeiFfu+HZEAkNsxVhA6X8yrZ3h+9DPtaz9SSVyowYKrkM5azyUFGKrAlC/tE/iRicF9Z24ayKH5KLkRI60ba62c7e9oIvWSvLII3ulbwQ+5SP5hs1qmKjKJtnRqM4wgtizycpY+o+UA65IGsBtE=
+	t=1779027289; cv=none; b=eLsMXHfTrmxJyiW0AGo2b9nC+5ioHEJoY1wpR+Kwfk6cQkSotvjoRgmGfoCKfT6eSmjpWdlZzs9yp14ZbnJtjmcxQokVZpO5qZSr6/d9iq0FnbK2nsKqeJMbyw0GkqV5Er76pYq5XJArouF9WesJZa3mWalXlo1tlaYrM66OHtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779017303; c=relaxed/simple;
-	bh=KcNvT7BcIl8NisKKlV/eyp/qQCTgEFziF510D13FF4c=;
+	s=arc-20240116; t=1779027289; c=relaxed/simple;
+	bh=Mc2GSE058+zYJwzfLUNK+mG60GUfYotma1xSoBMmlf0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=flHyOQUg7BKZOpBRkJEE/yH+S92KrytJxv+VzB7ernV+n2/EdKDtayIKzy7Z2BWD2RqqFrlWEjP14F4s7VZT7gTEiI9A9A4+G1/dVcojRBfnBv8ECgMOHLl5DypPsuVHIkW5e6g8JpkPDS4Hp0GEObJ6vTdBKLXUrWdnu6CTsdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ofui2bo7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=SZs/tWCtgbeeAmQ75kqoa9iw6EKFKpRvUaE7GzNW2fPccJQoMP5GSaW03tl5+HOOyHhMkBfhXSmaj8o496JRef0NXem2ROBh6/mzx4oR3D9vUfaK8X4jVm6y1ydYGFIoRVjPJPx82UnSf3NG+NKwOqRPo8zTc7TO0nu1G7Mrz0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPtseJmh; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ofui2bo7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD7E0C2BCB8;
-	Sun, 17 May 2026 11:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779017303;
-	bh=KcNvT7BcIl8NisKKlV/eyp/qQCTgEFziF510D13FF4c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ofui2bo7j4q0bK7Dir1kRTuLoBbL1+Vgsjluahla4glSPrpBgveRfISD8tSTaw6p6
-	 oiXZzC895nfcpp/huflcZkj2TbodMpOiYcdmRJWkS/EJe6Q1i3r3gu5gBXG6KJllHJ
-	 uwUk40mYzrARXpnWNAhrpTtmPQAPIYwfQAJSfUjPyyKGvwor6pizBS8jHtgHNXSRlc
-	 Gwk5kauYtaMdPFXgC5dqMSEn1coj1mgsWnH2izZadI9auBeTx7u0Jt6IbszFA8CUcD
-	 JrNSsMj/1Mxy4RXV8aljm+IrUtw1ZPXttnZIlCixfCV8tCC0qsXIByb2OnlRuFtQMd
-	 BVgiKMbWU5qjA==
-Date: Sun, 17 May 2026 12:28:15 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: Rodrigo Alencar via B4 Relay
- <devnull+rodrigo.alencar.analog.com@kernel.org>,
- rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
- Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH RFC v4 01/10] dt-bindings: iio: frequency: add ad9910
-Message-ID: <20260517122815.15a64237@jic23-huawei>
-In-Reply-To: <ikhp5dsb4ook2cx665p4xbqg5ykmnoytiaybv2cx5khyn3wngn@j752jkewd36b>
-References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
-	<20260508-ad9910-iio-driver-v4-1-d26bfd20ee3d@analog.com>
-	<20260512193129.777d62a8@jic23-huawei>
-	<vklczsi4vk3sqf53zifslhp5pysdmj3gfyhvdgrwo4bg3wdkxj@lnbftaf5jcbf>
-	<20260516114022.58949a06@jic23-huawei>
-	<ikhp5dsb4ook2cx665p4xbqg5ykmnoytiaybv2cx5khyn3wngn@j752jkewd36b>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPtseJmh"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488ff90d6c7so9164555e9.2
+        for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 07:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779027287; x=1779632087; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C6Mpp6sTarqgUSSzKlFpcbBtlR8/lyFOiNv4FCUy/RI=;
+        b=CPtseJmhXoSKrw6y4LUvqKPQRQaRGge67aR5N/dzMM/wlSUJ7xu7u33lcfTOcS7Pc0
+         LujNCXW+I2CumJfYVTzjNrAooSfbD1imcxl4yBX2EEAPTZj/buL5m3hVlnXQFXVLK5RP
+         pOEazda46UdGEt9IzpRcPSui+nq/VCI1xj9aOllHLofaGb51Z7UJQNnUaWZDVLGBLQ1+
+         Vs/W4FOiX3fSfhQetqwxIeLxlqQXgydn5/aJ853dMbkp1MlQvVT8g6CiY0FBlhGicDQU
+         epXEbkAJ58bi49ZJHCXnn1IZmjWMyW7PLMBy8RKHhOJjHDymsIfyvKmQ8XP+KtgpYxpO
+         Lo8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779027287; x=1779632087;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=C6Mpp6sTarqgUSSzKlFpcbBtlR8/lyFOiNv4FCUy/RI=;
+        b=sXTMdHuN2DAQ1WKps62tva2onylnV4sagJZuKeA+WOv75EpQxc8Q2wO7UZo5V4pOaT
+         jOsxkq4+mz089hWDp7LPIWAN2vKXvy+MFp2AqYXqAC/9uYUomBouYRIDXdwL++mSAUsk
+         CbqUppTuPOInh0/5kAHhmw4gpL2mkJCbErV7A3P5n3jQ4pNnyrMwt7YbZlmO+hHJTjW0
+         MkreM8PDuRrakmGm0XK4L4u/KHRVEMV7qu4Vj7onnlttNVC4Kahwn77L5VY6iy8ETK/Y
+         e+flMgGZ0MI9NMawht37RqrqGrNyHJ9iQOZ+Lt9cUP+Jo+CJm73hJYcuXbgJSdQ9OeXF
+         Dkwg==
+X-Forwarded-Encrypted: i=1; AFNElJ+X6AnXFwdeIeObDnbfknyTnHqkxftDWNnzySSGjYBw8kYJszqWyngYcLlHWa45mLcM58Hdald9LPdBOJW4Zsw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO3xPZm8qsfjRQwyVONwjCjb8sMxZ4ecGYmKDYNULyEDLoGNBO
+	dqFQmqQq+RbFCAS8FulNx2v5fnxYkl9D/jWkczitbBod9GNCseDPW/Er
+X-Gm-Gg: Acq92OGjfOMRQLV47MdiFMvVX5L4nbax07eG1W4jdwewsHFw1enGvgin5xICAaXWbYH
+	iMNMxOs1U/PZh0YbV3OcH7ywuCD56Xw7QZ6HcHSSMs8Y3zhUlsHKdUmIri7UFrFLBvI2BQiUO2+
+	26L0d2PEuo9AlAME/srslqIR2gwgPuyVUQA8lSgP18Ahp7A7ZNCoZxdrvZKqxJiQkKN+xJLPCaK
+	+bs1bwwww+Dw/jsrOrWcp1k1JDkEac+cZO5n7m3q866q4XyETkymzZJxxRROJfPwtoBAeRckyt0
+	LmyDNV6Sg44b1/JXtcpdrSlokEkZ6UE6mn2tmrmtqLuEsfhXtL/GAq0ohFlr3laC4SC6UChP/rw
+	WJVHLC5phCOVxbA8SOw/iJsyyUaZbiYsQ6HoNow/+O4XV4AV3bbCtSVWenSVFiswBjS9g6jldiI
+	/829lvfl4fWzoCvyAnmpIqSmq3n8z2plhVRVYsdII97O1/kKIpQEYY9jJzMY8xAt8q
+X-Received: by 2002:a05:600c:1389:b0:48f:fe2a:107c with SMTP id 5b1f17b1804b1-49001285b87mr50821125e9.6.1779027286837;
+        Sun, 17 May 2026 07:14:46 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe5cab882sm197265945e9.13.2026.05.17.07.14.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2026 07:14:46 -0700 (PDT)
+Date: Sun, 17 May 2026 15:14:44 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, Andy Shevchenko
+ <andy@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] string: use min in sized_strscpy
+Message-ID: <20260517151444.66dc4afb@pumpkin>
+In-Reply-To: <agc3DrODtyc2rF27@linux.dev>
+References: <20260514165601.527883-3-thorsten.blum@linux.dev>
+	<CAHp75VfQNkqEYsO4Uup0c-uiYuVyAWit=tmCz2BsYLp-sjXsZw@mail.gmail.com>
+	<agc3DrODtyc2rF27@linux.dev>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,76 +81,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 17 May 2026 11:12:14 +0100
-Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+On Fri, 15 May 2026 17:09:02 +0200
+Thorsten Blum <thorsten.blum@linux.dev> wrote:
 
-> On 26/05/16 11:40AM, Jonathan Cameron wrote:
-> > On Wed, 13 May 2026 16:09:24 +0100
-> > Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
-> >   
-> > > On 26/05/12 07:31PM, Jonathan Cameron wrote:  
-> > > > On Fri, 08 May 2026 18:00:17 +0100
-> > > > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
-> > > >     
-> > > > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > > > > 
-> > > > > DT-bindings for AD9910, a 1 GSPS DDS with 14-bit DAC. It includes
-> > > > > configurations for clocks, DAC current, reset and basic GPIO control.    
-> > > > 
-> > > > I think this is getting close enough now that for next version you should
-> > > > drop the RFC (which is probably gating DT binding folk giving it
-> > > > a detailed review!)
-> > > >     
-> > > > > 
-> > > > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>    
-> > > >     
-> > > > > +
-> > > > > +  adi,dac-output-current-microamp:
-> > > > > +    minimum: 8640
-> > > > > +    maximum: 31590
-> > > > > +    default: 20070
-> > > > > +    description:
-> > > > > +      DAC full-scale output current in microamps.
-> > > > > +    
-> > > > Can we use generic dac.yaml defined output-range-microamp? The base will be 0 always but
-> > > > that shouldn't matter.
-> > > >    
-> > > 
-> > > would that be fine even if we do not have those child channel nodes in the device-tree node? 
-> > >   
-> > I think I'd rather we generalized to cover the 'one shared value' case rather
-> > then went with a vendor specific binding.  
+> On Fri, May 15, 2026 at 09:45:08AM +0300, Andy Shevchenko wrote:
+.
+> How about adding
 > 
-> I can't reference dac.yaml in node level as it forces the nodename to match a pattern:
+> #define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
+> #define bytes_to_page_end(p)	(PAGE_SIZE - offset_in_page(p))
 > 
-> 	dds@0 (adi,ad9910): $nodename:0: 'dds@0' does not match '^channel(@[0-9a-f]+)?$'
+> to a new header, e.g. include/linux/page_helpers.h? There are about 50+
+> direct replacements and possibly more.
 > 
-> Also, I can't reference the property only, because it ends with *-microamp:
-> 
-> 	  output-range-microamp:
-> 	    $ref: /schemas/iio/dac/dac.yaml#/properties/output-range-microamp
-> 	    items:
-> 	      - const: 0
-> 	      - minimum: 8640
-> 	        maximum: 31590
-> 	        default: 20070
-> 
-> which gets me:
-> 
-> 	properties:output-range-microamp: '$ref' should not be valid under {'const': '$ref'}
-> 
-> so I will adjust it to:
-> 
-> 	  output-range-microamp:
-> 	    description: DAC full-scale output current in microamps.
-> 	    items:
-> 	      - const: 0
-> 	      - minimum: 8640
-> 	        maximum: 31590
-> 	        default: 20070
-> 
-> and not reference dac.yaml at all.
-> 
-That works. Thanks
 
+Why not put them in vdso/page.h just after PAGE_MASK.
 
+-- David
