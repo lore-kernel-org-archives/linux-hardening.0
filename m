@@ -1,88 +1,83 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270303C4B85
-	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 17:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97C63C65E0
+	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 18:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779040483; cv=none; b=Dih1zErr2coTwPGlHlfRaqgd7xbA/prE00ZT27DyAaV7pX5riTLU0mN7bPrmpd3zz5Z2C1ei57t4YWLYHQzelNvAX1LET/FAbG5zvdGuTCmHckqT23Z7+18o8kuAgmbnrTAz36AnfmBYidXbxNJlv1Nan8LgLPLRS8tPhtGo/CY=
+	t=1779041280; cv=none; b=lT0jkRvIHpTrTgDbxUz8WWgegs2UXPThyzlnKt4BAWT9fWvggyQt7FjOBV6juBYkAekUK7gKrDihXlRxDFxMTRh3douOOI039dyj3lApIfFiip8ZI7O774H5somQQ3kC6G25NWz0NxtC+ifD0vjc6/VTALJNdAJ3T5gsLRU9PAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779040483; c=relaxed/simple;
-	bh=HV9+cXihAaH4KwSTsC1gpmYVeE6h/AHKaW49mEWHgB8=;
+	s=arc-20240116; t=1779041280; c=relaxed/simple;
+	bh=AgfMqLVnS6YuQEuhwKQ5hHW609zHtmx345KIezt5J0Y=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dgHyTEBsbmSaiVouOpbGMfdoN87XH9QCyc5hFw69uSQKZLZbP6RFqXDEIjxs1M8sjYGzgCNfnRZnJf47R1qlaYOCYQutTq+8IONomWTJTMB1PRvYgr3W4o2s2DxLTkEQVh72zMzmczW3d95kqnBLzXh7uRDCWVHToeZqMmTg7U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CJDcSzUZ; arc=none smtp.client-ip=209.85.221.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=tu0YTEORlgE59nd/SEeEfXujXxIru03kj7lJk6OhuQMxkG13EMq3Wv3hioXDA0xF/fQxL4VxKABM4lsy1285+SB1UcJPe4/MiHEIyF4T5sU+Pu9AWK1iXetUztdsJr9Hv6ARtqzI8wbh+ntjInkfvVd9xbePnZbq4Mqx6k1W0Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=li7PDmv8; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJDcSzUZ"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-44509921fbcso757873f8f.3
-        for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 10:54:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li7PDmv8"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-48e82c23840so9532565e9.3
+        for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 11:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779040480; x=1779645280; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779041276; x=1779646076; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TnFwmmTG90t0fKQgEeFLZttD4NeL9fxw8K+kX1DEzbA=;
-        b=CJDcSzUZCydm54QBxUNXA+hA8oosDpavNttlf92pe5ylkavdt9zuD/uSVCsi1O9GyY
-         rCpfVm7ROr+J97t7odaTaHJHhsupkmYLyj6OBshs/YaCZrjOJtUCm1lAkcFvNV4R3yto
-         sVk4sUIsxl8FMdw1iQxsFdxtJpUJ8UBEDx9QVyDf4NvaSzm25xYfuVuc7en4tsUPKoNY
-         /Xc1/mAqn+/kQ5oUM4CFnwOfImFl3y/Q/G2mp9sPJFvwc8zWy0rxE2VJzSUQ22Td5jWT
-         kVGS502jHT+mScFwagskCd5FnVeTffQdCd/70mXdUYdo3fTaWLwB5nQBzWCWuEpIgczG
-         b7pQ==
+        bh=+S9zwilvrDZ3FX02ClZfVO+ZKyFuGBJXYxf1fRCPzCo=;
+        b=li7PDmv8FHkRGCK5JWionVWSsCu/eAuom7LVWZy8NjjvGqJUYAFa9Ve4SlEAdC0/y4
+         1jImpBXIaFKfkplHSBlumQFnHeM41uBnNAq1SZHtYqE3rsXLdmXCC/ZeUiNnoVJ4Rxdm
+         1oOnslkuTX/r2AT/3+fUjio0cJowKSNW2voVMOysHqGESysD/Y03YDrxz4kM6dSFdT4Z
+         4Txae3DGDzGWHnSCbdjATNm7nkYb8aJSLkQYTAssZCAOxQzgK6H95x+kllytJEslWR5k
+         SdndN7gaf1aGMF8BAEXqnbBQZSUB2pTfgjCnd82H7bBMwjPHCk5ppTVCsvRZL3TiJdNV
+         DLIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779040480; x=1779645280;
+        d=1e100.net; s=20251104; t=1779041276; x=1779646076;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TnFwmmTG90t0fKQgEeFLZttD4NeL9fxw8K+kX1DEzbA=;
-        b=j7kRCwj/zVYKmBm43XHkKE1SdZhipN2FKjPF93wsAfxzHA7NEYM5nka9oP1rhG+1c2
-         xNiMK1CEozs7WH7QTjmiL4LvxNd02ZJmAqbgFuXBviKk08d5iRL/izvIJE75z61t62BA
-         9wm/nsTuTNvyp77lsK8k6aoe/+SoxT90y7QfeD87+aRCiejAlV+BXl5Egtmbx57ikgGt
-         o5kq07c2i7/Cn7UkvAylKL/Vg0YTduY5B1xP3f0XxPj6qRG8a7rNv8r9+v2Ke3qpDUb8
-         zkdNNsSJsKiEGggyLgyjXTTgK8aQIM1ahX2FRUvOdt5JLT1ui6plGCv2LgdSKQEBMk5E
-         B8WA==
-X-Forwarded-Encrypted: i=1; AFNElJ9J4XGAdihl0TRhN72a+BTrOF+qkbgrLvvo0UX4CZchM0zBx8lIRSfL414Z7PO9YZBxC/d311IXBB9U9MOVaZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq3gSmLM8u68v1eS0JRGqVeL9btVXxpYSY8/ZS/VJbbQGsWY6g
-	hjuXwpARitXMIyZJz0+P2eq+ZXV+YdW8uopPfd7ebSQg6nwFoB3FSjbW
-X-Gm-Gg: Acq92OFY2kJpTbr+ABrJEGdhOh2bee3L7Ft5wVR2l5a9IimdAcgmeDrpUY5ebc65JlN
-	G4krMeQrUOctHZUzQAG7jcNbYn/QP2sm2VCKF/CbCCHANGDWif2+oogS0LSQkfBGhF4nkFSpQ6Z
-	nUsSDkHO7QOYaxJUMfYqZyszj+ijTHT0JcNg6g0QahrzDw6M8DR8Dy+0jHlGCOk9c/u1oe/cf6p
-	H3RSyTzw2GirwRlunmPuf7/ZLHhlYjRvAK/JcN+yDdYc9r+triMi4TEq1A2tVe96DkskYCNMAMl
-	dt8K0rQ4b1ha90uP+k3MZGWyYV9541K0FdD8XyVDQZbeOJrq56yNulDjAmx3DFDUFpG6Q7R/sxU
-	cVp0sjytziClLDdgnUW4QXntFLKTWtnntTMVqoTr589j4f/D4mjYeSvtT+7L9/vEPTswEZU+bRH
-	lUNvy/9kbkM6MetWVf/vcoINbrZVYNJxuMQqLDjM99Z8aBoOWE+dXAgHcgfEkeXdoXTVIwhpOyt
-	jdCv3oOun6LXs6yqD7a1YFcjE6Z21T9QxXg4ECJ0WI/BohYlw==
-X-Received: by 2002:adf:f643:0:b0:45e:73b6:d107 with SMTP id ffacd0b85a97d-45e73b6d124mr3699595f8f.41.1779040480412;
-        Sun, 17 May 2026 10:54:40 -0700 (PDT)
+        bh=+S9zwilvrDZ3FX02ClZfVO+ZKyFuGBJXYxf1fRCPzCo=;
+        b=JKcBIfBG9FarLPe6xPm1+PjKmjZDJY3XHedKuJ18Z47BYDr27rYLPZ5KEjfj8vluyo
+         WtOIXhFsf7U6/sRtAgXnfHVfV9nEVwMtfRZYvwIY0O3LjsCE4A8663iSsKik2bHnvBTd
+         ltcYal6LZjJb4Ateh2auiYsAInjgGTP9f77v0wQ61prrUeIXtOpiLtWfvBjGUZEbVCR7
+         NrAPPyVfY/dXZNrxv0A0e98vx8rSDAhQNKU6IbuuakUl7hvGbSjEFXrrnlNCyhEGx+mB
+         qve8pGANey2y+oA8auTLhQq0zPmrd0Z8Wu4lOUUAIpLHabrMygSzjrgM43Cq9VMnEZ71
+         XxWw==
+X-Forwarded-Encrypted: i=1; AFNElJ+EylzDDRoG1q/L7buXvol7EF7Y8S2GA8ZQ+hO1BRCrq2gLcCf8ri9Lr+5Ye2WTwAmHGJGRVywakQ+XAUn1PzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+A0J1MIPasUhcgqiXU9qzMC7FWwSRkUHjTwa25ub0Uy3nSBcI
+	JotQIj+ZZjeWe6m+Jlzzgt8g4vAPn7VIoVBEbOUMK5psiXWy3ssaiD1u
+X-Gm-Gg: Acq92OETz244tZD3DflxbJR7u6+5YqytPMzUEO4wjvHjCXB5TibtpUL6x8pzMGNvOsJ
+	zy6ucZipyl2QQZUX5HYMokeUz/mE0DvTXsx9XoX1olryHGHbGsJcNNYLlkHuTW58W3KqLRI9piE
+	gqxbaisg1krAcO4TQQHKJQPusyLkydSYbxwbldKm0CzQqWmoze/bEUrtbCQWWGuh2g1smvkhPy1
+	eGLdWhWDpZ8lqXbN3vOyBMZk/3ZVF5ABLtFzjlVaPfJzDuq8EbfwgSf9J3Iz1Vxg94b2gpZJ3X0
+	179Ud6XASSzbbPZpJB8WrRn0CzY8gWSKWNbi/NQ5a/YCW0VSrUKjEa9WSGLb4zvMMmmJ4kPw7wX
+	HHzDRr+2QtBZcOa529qh4XO3kznK2Tf23/cI3UPI/Mk+IRwuyVYf74QUiBfFAEEQtyS0pENRGEU
+	5vLFjh0sNtHjtyz9EMMYofMp5c549k6q2JQ7Dq92OSxtBHcUkuJrr+1CaVajrkYA9XCO2RFXCJ3
+	4eqE5FP65T2zoBpir9vZ0CbYtHSX8uOJ+0iQtYtRGsMOTpz/g==
+X-Received: by 2002:a05:600c:8189:b0:488:ac01:72b6 with SMTP id 5b1f17b1804b1-48fe6323addmr185385535e9.21.1779041275890;
+        Sun, 17 May 2026 11:07:55 -0700 (PDT)
 Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e768bcesm32883396f8f.4.2026.05.17.10.54.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe4862209sm207107125e9.0.2026.05.17.11.07.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 10:54:39 -0700 (PDT)
+        Sun, 17 May 2026 11:07:55 -0700 (PDT)
 From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Sun, 17 May 2026 18:54:34 +0100
+Date: Sun, 17 May 2026 19:07:53 +0100
 To: Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>
-Cc: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>, 
-	rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
 	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
 	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH RFC v4 10/10] docs: iio: add documentation for ad9910
- driver
-Message-ID: <lydcfe6pxgswwysqqnn3mqjwj2b2x3ldcnvwhnbh5tukdummps@f4b3h4kpf7ff>
+Subject: Re: [PATCH RFC v4 03/10] iio: frequency: ad9910: initial driver
+ implementation
+Message-ID: <is4rbxohz5icbaslatmjmzhb5oztnh6ytmntgkn3rssjijppb3@mur2heagprdi>
 References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
- <20260508-ad9910-iio-driver-v4-10-d26bfd20ee3d@analog.com>
- <b8f9a174-f3d0-4cb8-a571-605be79165d6@baylibre.com>
- <zvulxrrvg4sf7m5pjfpfucg7yssgallfu6zi6mcyblu2qy24hn@wdzs7h77vkoz>
- <18c2eab9-c0c7-4e93-b4e8-73b18531e784@baylibre.com>
- <uphcx5zr4lmukuom75g66hp4agurty7yq6mo6ri6otrsscqfek@tn3u5jjszaoy>
- <5bce7868-feca-4c54-a14d-ad4bf4072c29@baylibre.com>
- <20260517164418.37f13914@jic23-huawei>
+ <20260508-ad9910-iio-driver-v4-3-d26bfd20ee3d@analog.com>
+ <20260517154745.5fbfcabf@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -91,168 +86,169 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260517164418.37f13914@jic23-huawei>
+In-Reply-To: <20260517154745.5fbfcabf@jic23-huawei>
 
-On 26/05/17 04:44PM, Jonathan Cameron wrote:
-> On Mon, 11 May 2026 10:23:35 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
+On 26/05/17 03:47PM, Jonathan Cameron wrote:
+> On Fri, 08 May 2026 18:00:19 +0100
+> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 > 
-> > On 5/11/26 10:02 AM, Rodrigo Alencar wrote:
-> > > On 26/05/11 09:46AM, David Lechner wrote:  
-> > >> On 5/10/26 4:30 AM, Rodrigo Alencar wrote:  
-> > >>> On 26/05/09 06:42PM, David Lechner wrote:  
-> > >>>> On 5/8/26 12:00 PM, Rodrigo Alencar via B4 Relay wrote:  
-> > >>>>> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > >>>>>
-> > >>>>> Add documentation for the AD9910 DDS IIO driver, which describes channels,
-> > >>>>> DDS modes, attributes and ABI usage examples.  
-> > >>>
-> > >>> ...
-> > >>>  
-> > >>>>> +       must be a power of 2.
-> > >>>>> +
-> > >>>>> +   * - ``frequency_offset``
-> > >>>>> +     - Hz
-> > >>>>> +     - Base FTW to which scaled parallel data is added. Range :math:`[0, f_{SYSCLK}/2)`.
-> > >>>>> +
-> > >>>>> +   * - ``phase_offset``
-> > >>>>> +     - rad
-> > >>>>> +     - Base phase for polar modulation. Lower 8 bits of POW register.
-> > >>>>> +       Range :math:`[0, 2\pi/256)`.
-> > >>>>> +
-> > >>>>> +   * - ``scale_offset``
-> > >>>>> +     - fractional
-> > >>>>> +     - Base amplitude for polar modulation. Lower 6 bits of ASF register.
-> > >>>>> +       Range :math:`[0, 1/256)`.
-> > >>>>> +  
-> > >>>>
-> > >>>> I guess there was some discussion on these attributes. I see some of these in the
-> > >>>> ad9832 driver in staging, but I'm guessing they are new ABI. It isn't clear to
-> > >>>> me from the documentation here what they actually do though. I guess they are
-> > >>>> just basic transformations on the input signal?  
-> > >>>
-> > >>> Not sure how the ABI is not clear:
-> > >>>
-> > >>> 	For a channel that allows amplitude control through buffers, this
-> > >>> 	represents the value for a base amplitude scale. The actual output
-> > >>> 	amplitude scale is a result with the sum of this value.
-> > >>>
-> > >>> So yes, it is a basic transformation.  
-> > >>
-> > >> I didn't have time to read the ABI docs yet. For scale_offset though,
-> > >> how is that different from the existing offset attribute?  
-> > > 
-> > > I suppose that existing offset ABI is applied to (raw * scale), mostly for
-> > > voltage channels, here the scale_offset is an offset to the scale itself.  
+> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > > 
+> > Add the core AD9910 DDS driver infrastructure with single tone mode
+> > support. This includes SPI register access, profile management via GPIO
+> > pins, PLL/DAC configuration from firmware properties, and single tone
+> > frequency/phase/amplitude control through IIO attributes.
 > > 
-> > Ah, so a very general case would be (raw * (scale + scale_offset)) + offset
-> > 
-> > when the scale can change as a function of time and comes from an external
-> > source.
-> Ah. Similar question to what I was commenting on.  Though maths is currently wrong
-> for normal offset application as it is pre scale.
+> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> Hi Rodrigo
 > 
+> A few really minor things from a fresh look through.
 > 
-> 	(raw + offset) * scale is normal case.
-> This is proposing (I think)
-> 
-> 	(raw + offset) * (scale_offset + scale)
-> 
-> Altvoltages are a little odd though in that we are really always kind of dealing
-> in scales as it's the peak voltage that is the base unit. So they are kind
-> of always about scale - hence for such a single offset would be shifting the
-> mid voltage point which I guess is different form scale_offset.
-
-As mentioned in the previous patch, I'd say we don't handle voltages in altvoltage
-channels because voltage values depends on external circuitry and they vary with
-frequency. Scale control is often achieved with hardware_gain in dB, but the
-dB scale would not be good to achive the 32 bit control of the "raw" values.
-Then, here it is implemented from 0 to 1.0, where 1.0 is the full scale.
-
-> 
-> Hmm. Not sure I can draw this but i'll give it a go...
-> 
-> So with no modulation going on and scale = 2.0, Raw 1000. 
-> (imagine these are sign waves)
-> 
->   _         _       _ 2V
->  / \       / \
-> /___\_____/___\___  _ 0V
->      \   /     \
->       \_/       \__ _ -2V
-> 
-> That is sine wave -2/2V swing.
-> 
-> Now if scale or voltage double it get twice as big.
-> 
-> If offset + 100
-> 
->   _         _       _ 3V
->  / \       / \
-> /   \     /   \   
-> _____\___/_____\___ _ 0v
->       \_/       \__ _ -1V
-> 
-> Scale offset at this point seems straight forward.. Gets more fun when it's modulated.
-> 
-> For now apply a scale offset of -1 and scale becomes 2 - 1 == 1. 
->   _         _       _ 1.5V
->  / \       / \
-> /   \     /   \   
-> _____\___/_____\___ _ 0v
->       \_/       \__ _ -0.5V
-> 
-> So for simple case we could just role it into scale. However the fun here
-> I believe is that _scale is controlled by say a ramp generator.. 
-> 
-> Ok. I can't really draw this.. Lets try with xs
-
-The ramp pattern would be the envelope of the actual varying signal.
-
-> 
-> Initial scale 1, ramping to 2 over a couple 1ish cycles, offset 1.  That is
-> computed sale is going from 2 to 3.
->                    Peak 3
-> ____________________________ 3V
->     Peak 2.33         xx
-> ______x_______________xx____ 2V 
->      xxx             x  x
->    xx   x            x
->  xx      x          x
-> x_________x_________x_______ 0V   
->            x       x 
->             x      x
->              x    x
-> ______________x__x__________ -2V            
-> _______________xx___________ -2.5
->                 Peak 2.67
-> 
-> Key being really where this starts which is scale_offset = 1 rather than starting
-> ramp from scale of 0.
-
-yeah... that makes sense. Note that scale_offset ABI is defined generically, but
-it is proposed for the parallel port mode with polar as destination. That is needed
-because the amplitude is defined by the 6-bit offset (LSB) plus 8-bit input (MSB) that
-would come from the buffer.
-
-> Having drawn these I'm even less clear in my head on whether we can move from
-> expressing that scale_offset and scale_roc in volts  - i.e. not as scales
-> or not.
-
-Yes, I'd say volts is not the right unit to use here. We may have the options:
-- raw values
-- fractional or proportional values from 0 to 1.0 (the one I am using here)
-- dBFS
-
-> Given need for separate control for overall mid point of waveform and the
-> starting point of scaling I think not.  Ah well.  The challenge will be
-> how to makes sure folk looking at the ABI can understand the complex
-> interactions of all these parameters. We may need some extra docs with
-> better diagrams than above.
->               
 > Jonathan
 > 
+> > diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
+> > new file mode 100644
+> > index 000000000000..c75f2ef178c2
+> > --- /dev/null
+> > +++ b/drivers/iio/frequency/ad9910.c
+> 
+> > +
+> > +static int ad9910_read_raw(struct iio_dev *indio_dev,
+> > +			   struct iio_chan_spec const *chan,
+> > +			   int *val, int *val2, long info)
+> > +{
+> > +	struct ad9910_state *st = iio_priv(indio_dev);
+> > +	u64 tmp64;
+> > +	u32 tmp32;
+> > +
+> > +	guard(mutex)(&st->lock);
+> > +
+> > +	switch (info) {
+> > +	case IIO_CHAN_INFO_ENABLE:
+> > +		switch (chan->channel) {
+> > +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
+> > +			if (ad9910_sw_powerdown_get(st)) {
+> > +				*val = 0;
+> > +			} else {
+> > +				tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
+> > +				*val = (tmp32 == st->profile);
+> > +			}
+> > +			break;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +		return IIO_VAL_INT;
+> > +	case IIO_CHAN_INFO_FREQUENCY:
+> > +		switch (chan->channel) {
+> > +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
+> > +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
+> > +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_FTW_MSK,
+> > +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
+> > +			break;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +		tmp64 *= st->data.sysclk_freq_hz;
+> > +		*val = tmp64 >> 32;
+> > +		*val2 = ((tmp64 & GENMASK_ULL(31, 0)) * MICRO) >> 32;
+> 
+> Why in this particular case have this outside the switch / case whereas in others
+> you do the full maths and set inside? I'd put it inside and not worry about slightly
+> long lines.
+
+for frequency, those calculations are going to be common for the other channels that are
+going to be populated by other patches...
+
+DRG up/down and RAM will have tmp64 populated with a FTW value.
+
+> 
+> > +		return IIO_VAL_INT_PLUS_MICRO;
+> > +	case IIO_CHAN_INFO_PHASE:
+> > +		switch (chan->channel) {
+> > +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
+> > +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
+> > +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_POW_MSK,
+> > +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
+> > +			tmp32 = (tmp64 * AD9910_MAX_PHASE_MICRORAD) >> 16;
+> > +			*val = tmp32 / MICRO;
+> > +			*val2 = tmp32 % MICRO;
+> > +			return IIO_VAL_INT_PLUS_MICRO;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	case IIO_CHAN_INFO_SCALE:
+> > +		switch (chan->channel) {
+> > +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
+> > +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
+> > +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_ASF_MSK,
+> > +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
+> > +			*val = 0;
+> > +			*val2 = tmp64 * MICRO >> 14;
+> > +			return IIO_VAL_INT_PLUS_MICRO;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	case IIO_CHAN_INFO_SAMP_FREQ:
+> > +		switch (chan->channel) {
+> > +		case AD9910_CHANNEL_PHY:
+> > +			*val = st->data.sysclk_freq_hz;
+> > +			return IIO_VAL_INT;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> 
+> 
+> 
+> > +
+> > +static int ad9910_setup(struct device *dev, struct ad9910_state *st,
+> > +			struct reset_control *dev_rst)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = reset_control_deassert(dev_rst);
+> > +	if (ret)
+> > +		return ret;
+> No need to sleep at all after bringing device out of reset?
+> 
+> Sashiko has reasonably been asking about this in other drivers. If there
+> is no period needed or it is so quick as to be irrelevant add a comment here.
+
+I do not see any requirement on that in the datasheet.
+
+> > +
+> > +	ret = ad9910_reg32_write(st, AD9910_REG_CFR1,
+> > +				 AD9910_CFR1_SDIO_INPUT_ONLY_MSK, false);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = devm_add_action_or_reset(dev, ad9910_sw_powerdown_action, st);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = ad9910_reg32_write(st, AD9910_REG_CFR2,
+> > +				 AD9910_CFR2_AMP_SCALE_SINGLE_TONE_MSK |
+> > +				 AD9910_CFR2_SYNC_TIMING_VAL_DISABLE_MSK |
+> > +				 AD9910_CFR2_DRG_NO_DWELL_MSK |
+> > +				 AD9910_CFR2_DATA_ASM_HOLD_LAST_MSK |
+> > +				 AD9910_CFR2_SYNC_CLK_EN_MSK |
+> > +				 AD9910_CFR2_PDCLK_ENABLE_MSK, false);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = ad9910_cfg_sysclk(st, false);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = ad9910_set_dac_current(st, false);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return ad9910_io_update(st);
+> > +}
 > 
 
 -- 
