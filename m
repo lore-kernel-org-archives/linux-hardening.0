@@ -1,75 +1,73 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B30981724;
-	Sun, 17 May 2026 22:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC0834107F;
+	Sun, 17 May 2026 23:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779057029; cv=none; b=d8CBTHDiceJwTtym5teDKNGdYSrIBiSbA5TlqXIyU+bHLdrH4tR8H0iw+ZDMoEzo4fXikT9LVX61oHFkElEVomBWWWZ0bxPZwT/XfPVXkb2zKZyQP+oSjCEcVDdfj/A6acTITv+8hKMYMQjfHczC2pcYCagb7rDDvTmTU9PsNuw=
+	t=1779058884; cv=none; b=NWjiBSYBin1EpG3Oi9rugeXbuXTQTBB5PY+/iKTzPPPPpyoJXI+bSk0bhq0Cbm8g6mCmtReIosv3OhNEpR6fqcMNMsdG8dWMlAQglCgORhlCVF/yv5qJkwQfTkdCdu/r+X2TJ4QQE7G3n3egb8+yv9qJQGiVIgih7AUYTR6kmqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779057029; c=relaxed/simple;
-	bh=m2h0LBIOHNh5aa9WxzrmOqSSYlcEBzRHVOWAbr2ntYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I2ueSLdzDeH7o/MDk7Fz8/HInlJtMdhUGJNGMdNq44r9r6B8U20YfO4qKxqohwb0MiMu4PuUGz53fNtvqHxQg1cRNfua+XF2IF2B7plgK4dM0ejSOdtGdUpsRyXh8lhyVLWPA1MY0GS0Ly8L3LxxDQUF4z9YwGtwJyz79J3vlkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j1EPakP1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1779058884; c=relaxed/simple;
+	bh=dJA1zUeT/Ymkkb3Ek4+9tG4u4+LlMfhVN6/pBQeofgg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eYeqrjMxcoziWQ1r8m/ZRjcRBoABoghWOihQj5+sKQ6q2C7+JxiOTDELC44DBZLF/eN+FLzvF0Ns1nclqHisqibUSKnkM6kGW3zAd6LaJX+CA0vQZ2NF6Utf6Xf5WqxOkjMkr/py+V5fMo9R/P4sqhFea0FzVLOPHJhdWNIrmbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqqDz3I7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j1EPakP1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MBu08lIsgmM685ISDCEKZMZU6xFJCxfmHVVSJI5JqnU=; b=j1EPakP1qWP2IxoHgVAwV6M4ql
-	sackarG/GlT0nhdIaXPn2GZW0sblIGscHQUK10dmNNYLg5gPaBYhatjRqOdr4B0rxauH8CM7NKBGj
-	rkLQ3d9+lj5cezLOZVwELqt5r13C0NUKyjdKZXRC8EAPGTAcsecjexigXkyHXMVvAVFd6c6El1Ra5
-	Nl4UyUEoQ01QSibignO00IqNAEr31X9NnybmQi6KfaJ5UIHzCZxw7MXtlluGIcb+1SJ2Pqc4QzHI0
-	az/RfSy9utL3Ctr+nBvooc4GRcuImM5tkNQiFoTTkFRVGqu7pPlZW33/rqJQoV1LcSALWAb7MxuI9
-	eHbOwY+Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wOk08-000000049kn-0K52;
-	Sun, 17 May 2026 22:30:24 +0000
-Date: Sun, 17 May 2026 23:30:23 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
- read-only files
-Message-ID: <agpBf3PUA3fW5Nv5@casper.infradead.org>
-References: <20260516182126.530498-1-pfalcato@suse.de>
- <agj4mXKRVW44ZJ18@casper.infradead.org>
- <agkRpj4oU8TPgmTS@pedro-suse.lan>
- <agkXHu_ON_KyWtvP@casper.infradead.org>
- <agmDiAY-mmlvjX0m@pedro-suse.lan>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqqDz3I7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E872DC2BCB0;
+	Sun, 17 May 2026 23:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779058884;
+	bh=dJA1zUeT/Ymkkb3Ek4+9tG4u4+LlMfhVN6/pBQeofgg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YqqDz3I7cqs+tQ+zoTecL2RGBcKETE2FIck9MwHvl06EhK0AVMSIXwKjpiKB9kBec
+	 u0wIgHVGIH3oHXyJQla52ZuBPAwWrUOW2f33AqAiwfnFCM28ChMgWnfSX01vQFPdEV
+	 VVDW9of+Ke/VQ/4ieaCW1EH7YAs9/6EgoMFSPbMsYfZdWLKKm5+cUa3RG3Zegfdb0F
+	 PsLc8Yc3dG2/MbrOg4vtgpw08NEXMBawe9LQGmCuMMmA30lAEWAkFwJignuxJGLsLa
+	 el4MXTj1RH3jCdYbH3GIq9rI31ihzi/ryt9VjYSk/FTJ8wsvEWw1TcOnlrD1HK9rCa
+	 CReFYpSmHjVHA==
+From: Linus Walleij <linusw@kernel.org>
+Subject: [PATCH 0/2] pinctrl: starfive: Fix some jh7110 issues found in
+ late review
+Date: Mon, 18 May 2026 01:01:18 +0200
+Message-Id: <20260518-jh7110-v1-0-fdb0daae5a4b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <agmDiAY-mmlvjX0m@pedro-suse.lan>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDU0ML3awMc0NDA10zs9Rkk7RE4yTjlCQloOKCotS0zAqwQdGxEH5xaVJ
+ WanIJSLdSbS0AjYXyzGoAAAA=
+X-Change-ID: 20260518-jh7110-66ec4fa3b3db
+To: Emil Renner Berthing <kernel@esmil.dk>, 
+ Hal Feng <hal.feng@starfivetech.com>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rosen Penev <rosenp@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Linus Walleij <linusw@kernel.org>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>
+X-Mailer: b4 0.15.2
 
-On Sun, May 17, 2026 at 10:01:30AM +0100, Pedro Falcato wrote:
-> On Sun, May 17, 2026 at 02:17:18AM +0100, Matthew Wilcox wrote:
-> > If we have a buggy user which
-> > can write to read-only file pages, then it should also be prevented from
-> > writing to KSM pages.
-> 
-> Hmm, I see. Are you suggesting we unshare KSM pages here? Or just straight
-> up reject them?
-> 
-> Rejecting would be relatively sane if only we had access to the VMA here
-> (in normal GUP), testing on folio_test_ksm() is less robust :/
+Found a counted_by() issue and implemented a suggestion from
+Geert.
 
-I think we have to unshare?  As I understand KSM, it's done to a task,
-so it wouldn't be aware that it's done something potentially dangerous
-(unlike mapping a read-only file then splicing from it).  Also, it'll be
-non-deterministic whether any given splice might fail.
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+---
+Linus Walleij (2):
+      pinctrl: starfive: jh7110: Use __counted_by() flexarray
+      pinctrl: starfive: jh7110: Avoid ifdeffery
 
-Bleh.  Maybe just declare KSM to be vulnerable.
+ drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c | 11 +++++------
+ drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h |  3 ++-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+---
+base-commit: 42ec31ec8df4675af621ec686db7410153beebfd
+change-id: 20260518-jh7110-66ec4fa3b3db
+
+Best regards,
+--  
+Linus Walleij <linusw@kernel.org>
+
