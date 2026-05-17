@@ -1,88 +1,85 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76DD16A956
-	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 09:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F706359703
+	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 10:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779008497; cv=none; b=YTDvhYHli6qB7tSgB+utuolUFqevMb2x5K46g7mHEV00fzKnv/k4iOino6SPtBeTuvBjn2Ofk8/cWLRD3JbSUaslk1MBa2UD3Qifu1t2HgP84WQ85r9ekq80wg4u5BvjmwFF6C6iUE8D9xfmRLta3m0eS2HWt7HR6GYwo+Qz+hc=
+	t=1779012746; cv=none; b=Pzd9i+CyZeZu8a7bZAQnLPpzcmlBiBjvitATQrvf7H+pmdkM8NGtNUTXWl3sysF0BoEyOCmCUo0yHZAevQ8pmTGn3wJLBrYFhyioH40V9+qRCf/N/+MVoPlQkMctg7+o4FWfEmq8FkXb63vxz+PgC0NSCzekIGWjz+XFURrC3F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779008497; c=relaxed/simple;
-	bh=orpVrEDVEfcVuBSm8rNitoNr+TVXqnYtkBQ9Yz+ldk8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D65RO1yqqe5eN2X4qaqRHpwFceKRoooiCFdAfB4Ii3m1x3tO5lIly51O0YnbcD+/OlCslJQp+5foU7LdNSwCceyO0lbE8pG8mbGHIkBY8ZJY7KJFtoo6Iza2r0W9xQvKQt8bkuOZ3yPuol25IjInKu7w2cSd9LAamMq48fhIa6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IWuZ9Xp/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=x2ARWsxV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VtCVOWHt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oJ//3b3p; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1779012746; c=relaxed/simple;
+	bh=KD/IuTgzVq18/vpJBrybXULGBqIH1vlZksMS0vB9c2E=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GlBb9iBs8NT946zdTLWtn4Aa5ayb7Q3A8Fbvb+5ZfyROvOedUfFKg+7z2IsSBOX0oIWXJQAiR7JSW9nC2OLf0z6EOFp3+kvcXzPAf5bbI5dtnWCU4lhFMQLO8Zk5OpdT0pJTa/OrwqTbXVh0GumHs7sBMEBtK/iG7ztMVu0PR8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g70Ccik1; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IWuZ9Xp/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="x2ARWsxV";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VtCVOWHt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oJ//3b3p"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 006496A815;
-	Sun, 17 May 2026 09:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1779008494; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W5aby9ZwmKZPtiMHVFEb2wDmgq8fqEOg9pkZ9u1EhJM=;
-	b=IWuZ9Xp/f6xDBn7X9SLDB1EXwr3GdWXxS96ZTPbApZmQE0DYGFEwlMF5fLrHQXrmT6HoQ+
-	QjxOLcjrqKc1Gr9Bzct6/MgZYRnMoplvf4Ilzq5+zFqwBqGorRubfA13kctg2AIM6MuNk2
-	aCrZ+tZWV0OFRJcJkRREMU5xm+5sKds=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1779008494;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W5aby9ZwmKZPtiMHVFEb2wDmgq8fqEOg9pkZ9u1EhJM=;
-	b=x2ARWsxVZy34NTtKOHl7riHkb3hLAoNosfxwL9/MP4BNVQVv7UGtr9vrQ7o17vk/2E8yTr
-	0muntm+tAtIITPDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1779008493; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W5aby9ZwmKZPtiMHVFEb2wDmgq8fqEOg9pkZ9u1EhJM=;
-	b=VtCVOWHtiJCV8cgxqDBVZk5zp5a/qbIuczEeFfaIMyMgD9dVGA5sg3BuoevATGv05ZFneD
-	S64EK0MCGrgTJ8LEW2Xsk3edZSglP/vWwYHGELbzBHGbjzyMCFtQIdutYXsYXoMVcmBSNP
-	RqaQMdEfl37MJHKevkq39BbQKVAC1Fc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1779008493;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W5aby9ZwmKZPtiMHVFEb2wDmgq8fqEOg9pkZ9u1EhJM=;
-	b=oJ//3b3pnchq4Yy/Pg0zF2OPn/W8actU/4Oi+SFQo+qFCiL0oKtjZQgt4tQHfoPB4CjgeD
-	390jW4t3lktHx3DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3A6E9593A8;
-	Sun, 17 May 2026 09:01:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gBn0CeyDCWo/FAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Sun, 17 May 2026 09:01:32 +0000
-Date: Sun, 17 May 2026 10:01:30 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
- read-only files
-Message-ID: <agmDiAY-mmlvjX0m@pedro-suse.lan>
-References: <20260516182126.530498-1-pfalcato@suse.de>
- <agj4mXKRVW44ZJ18@casper.infradead.org>
- <agkRpj4oU8TPgmTS@pedro-suse.lan>
- <agkXHu_ON_KyWtvP@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g70Ccik1"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4891e5b9c1fso8969325e9.2
+        for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 03:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779012743; x=1779617543; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NzQ+XkjFbbvnSSJgYiukqepa3NWBT/tqzId42RKwLNw=;
+        b=g70Ccik1II7afpDiDAjDi8pQvdlf45OLTbHgt6NPjxDHqXylsPDPi/VYbqo+Yr3sCU
+         7LiN6I6w8WYou1Z0z4Zftt67Z5CAohO7Oj9e+vTx8SzAjVfFiNo9MjaodLiGvf22U6jV
+         2T/39KbijVls5KHDwHib14+Yp5K+hCqQjI5CX6MgMCoClcYw2RCibCAmOmke+ja1xZUC
+         v2rjFgI16PlfXf2y+nEvbAwPcoCV1PeYbJOuQ0dzCdkeLwUNZzP0Na1pQARf7eLm8dJq
+         YfMLan7rR9dz1ZL1MwO2Oj0o+QOEKnIgwsQqFZ/Om+uUI6u8AXVZWvIXMrmZJIeGr2qb
+         H4vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779012743; x=1779617543;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NzQ+XkjFbbvnSSJgYiukqepa3NWBT/tqzId42RKwLNw=;
+        b=SmqvagazfvsV7mXuihxZLjJ97gs60IBOxxwHub2azGLX0997ir3O2FlUOYQ+UZ76NC
+         qbEm5jHD089RxRByZJp/0PlXMqAt2WNN1bBeaghLgJXwJYT/+ZW+k3RUKAbSWssyILOp
+         LVeSGYswdvlCNT7Hk5lqtSA6iagERGLOBMXHy/Bqg9aOx6ipp5rScE1kW+umx3gPJmWs
+         bAKoD5v3KErWoe/MAxQ6B5a99SId38VCYleS2f9D9xf5sloDMyHP/S+2qt4SDCjKMji/
+         LWdBgc887OEja8ZOyOcu6pTJXYzNcN4OTdtD+MsheON+dw9n7V1bII8HExvDAzyW4+nB
+         JK3g==
+X-Forwarded-Encrypted: i=1; AFNElJ/Z+LlmhMl6QzDmuFuFipi3a0SrMYuINed7KD0qkmjDvtD5VefmPhNoEA5avdDugimf8nvvw4FK8HiKzC6VM9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSYCV2cll7zVvWm/NyTgwerd1Mo6QyZTx6REMzuuZnPSTB2+Ae
+	wrhD4ApjGENm/vJrHOZrqKSCjsyRLlqoCK/vbn7cJFu45g7qYI4dtXPD
+X-Gm-Gg: Acq92OHrF+M6zyzQ/621xlyBXLTCNRINOClC0wWlNpC6m5gldeBcwTCtm6XEA+vT2Vh
+	P9qAaQSv6d3+hrc/b8M5gHJfnT2LLzaN4tYPPZNvKtnvTsZaWJ3S0MZi4yZa2AFO0FGPk8+0yal
+	Phj4I4mWcH6+ts5DhmdXzf4viNlWXsjMyc/t/Gac3ze9QcKRn1Duiv0u0kzw0+93xZqB0SfPODG
+	sx4/PbaR1HfHx6cI7NF0CklWIYpP0IWaKXyhbu/sA4ThlbHo4lG8gQOEL10QynJwd//yZwbOGsO
+	+huGeGqDKOlPS3Vl1Ciy3gb1uGSAYBC9NM5aSfjCiOMsxwgpN9sqDd+4bW/sS/E/u7J5gO8/dh7
+	sYKMjMuT+svDbawnMPTVKUFoa48n/YHaeGtTyn3lrdrcWCQatpkbrTvmv09b1FD/zpRInhWhsac
+	ofZuMOfLZ3hlvnRDrgPULIBwCfErc+dT2mWpyt3LIF3DbXZ6B089OsbroYyZmvWDfp2QB6c2EdP
+	34PrXU/spwCvKx6EFPPe46nYrkblNpU2HDELtlj95xc1kjCqA==
+X-Received: by 2002:a05:600c:8184:b0:488:ffb1:494c with SMTP id 5b1f17b1804b1-48fe60ed790mr148404075e9.12.1779012742660;
+        Sun, 17 May 2026 03:12:22 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe537ccf5sm181409985e9.14.2026.05.17.03.12.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2026 03:12:19 -0700 (PDT)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
+Date: Sun, 17 May 2026 11:12:14 +0100
+To: Jonathan Cameron <jic23@kernel.org>, 
+	Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: 
+	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>, rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH RFC v4 01/10] dt-bindings: iio: frequency: add ad9910
+Message-ID: <ikhp5dsb4ook2cx665p4xbqg5ykmnoytiaybv2cx5khyn3wngn@j752jkewd36b>
+References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+ <20260508-ad9910-iio-driver-v4-1-d26bfd20ee3d@analog.com>
+ <20260512193129.777d62a8@jic23-huawei>
+ <vklczsi4vk3sqf53zifslhp5pysdmj3gfyhvdgrwo4bg3wdkxj@lnbftaf5jcbf>
+ <20260516114022.58949a06@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -91,67 +88,76 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <agkXHu_ON_KyWtvP@casper.infradead.org>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,vger.kernel.org,kvack.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,pedro-suse.lan:mid]
-X-Spam-Level: 
+In-Reply-To: <20260516114022.58949a06@jic23-huawei>
 
-On Sun, May 17, 2026 at 02:17:18AM +0100, Matthew Wilcox wrote:
-> On Sun, May 17, 2026 at 01:59:41AM +0100, Pedro Falcato wrote:
-> > On Sun, May 17, 2026 at 12:07:05AM +0100, Matthew Wilcox wrote:
-> > > On Sat, May 16, 2026 at 07:21:26PM +0100, Pedro Falcato wrote:
-> > > > +static bool may_write_to_page(struct page *page, struct address_space **plast)
-> > > > +{
-> > > > +	struct folio *folio = page_folio(page);
-> > > > +	struct address_space *mapping, *last = *plast;
-> > > > +	struct inode *inode;
-> > > > +	bool may = false;
-> > > > +
-> > > > +	if (!READ_ONCE(sysctl_splice_needs_write))
-> > > > +		return true;
-> > > > +	/*
-> > > > +	 * Always fine to write to anon folios.
-> > > > +	 */
-> > > > +	if (folio_test_anon(folio))
-> > > > +		return true;
-> > > 
-> > > What about KSM?  It's not something we've seen attacked yet, but it'd be
-> > > pretty nasty to be able to change a KSM page in another process.
-> > 
-> > It's my understanding that only anon pages can be KSM'd, and KSM still keeps
-> > the FOLIO_MAPPING_ANON bit set. So folio_test_anon() should still test true
-> > for those.
+On 26/05/16 11:40AM, Jonathan Cameron wrote:
+> On Wed, 13 May 2026 16:09:24 +0100
+> Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
 > 
-> I think you misunderstood what I meant.  If we have a buggy user which
-> can write to read-only file pages, then it should also be prevented from
-> writing to KSM pages.
+> > On 26/05/12 07:31PM, Jonathan Cameron wrote:
+> > > On Fri, 08 May 2026 18:00:17 +0100
+> > > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+> > >   
+> > > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > > > 
+> > > > DT-bindings for AD9910, a 1 GSPS DDS with 14-bit DAC. It includes
+> > > > configurations for clocks, DAC current, reset and basic GPIO control.  
+> > > 
+> > > I think this is getting close enough now that for next version you should
+> > > drop the RFC (which is probably gating DT binding folk giving it
+> > > a detailed review!)
+> > >   
+> > > > 
+> > > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>  
+> > >   
+> > > > +
+> > > > +  adi,dac-output-current-microamp:
+> > > > +    minimum: 8640
+> > > > +    maximum: 31590
+> > > > +    default: 20070
+> > > > +    description:
+> > > > +      DAC full-scale output current in microamps.
+> > > > +  
+> > > Can we use generic dac.yaml defined output-range-microamp? The base will be 0 always but
+> > > that shouldn't matter.
+> > >  
+> > 
+> > would that be fine even if we do not have those child channel nodes in the device-tree node? 
+> > 
+> I think I'd rather we generalized to cover the 'one shared value' case rather
+> then went with a vendor specific binding.
 
-Hmm, I see. Are you suggesting we unshare KSM pages here? Or just straight
-up reject them?
+I can't reference dac.yaml in node level as it forces the nodename to match a pattern:
 
-Rejecting would be relatively sane if only we had access to the VMA here
-(in normal GUP), testing on folio_test_ksm() is less robust :/
+	dds@0 (adi,ad9910): $nodename:0: 'dds@0' does not match '^channel(@[0-9a-f]+)?$'
+
+Also, I can't reference the property only, because it ends with *-microamp:
+
+	  output-range-microamp:
+	    $ref: /schemas/iio/dac/dac.yaml#/properties/output-range-microamp
+	    items:
+	      - const: 0
+	      - minimum: 8640
+	        maximum: 31590
+	        default: 20070
+
+which gets me:
+
+	properties:output-range-microamp: '$ref' should not be valid under {'const': '$ref'}
+
+so I will adjust it to:
+
+	  output-range-microamp:
+	    description: DAC full-scale output current in microamps.
+	    items:
+	      - const: 0
+	      - minimum: 8640
+	        maximum: 31590
+	        default: 20070
+
+and not reference dac.yaml at all.
 
 -- 
-Pedro
+Kind regards,
+
+Rodrigo Alencar
