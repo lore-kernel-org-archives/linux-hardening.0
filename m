@@ -1,83 +1,88 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5764033121F
-	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 17:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270303C4B85
+	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 17:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779039039; cv=none; b=XST+iAkIgvxBcyxQ6pYVlZYkUzhMBmISJjSNBWdaQ+2TNrsRf1b18efpuXmGkWQEMyGwIRNLIpIX8cNIYB0F8yqJDayDoPreUVdEbIwgEZVnUBLC6cuLzuXi1NCdA4tGbOEjbISjYMc+acOmTcBqeZ0oWUVtvUR/nsPeTOIRIMk=
+	t=1779040483; cv=none; b=Dih1zErr2coTwPGlHlfRaqgd7xbA/prE00ZT27DyAaV7pX5riTLU0mN7bPrmpd3zz5Z2C1ei57t4YWLYHQzelNvAX1LET/FAbG5zvdGuTCmHckqT23Z7+18o8kuAgmbnrTAz36AnfmBYidXbxNJlv1Nan8LgLPLRS8tPhtGo/CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779039039; c=relaxed/simple;
-	bh=ZN+M4Cchoa1lUZGVHkJaXVLB6ZtVvpayoDZ73oWRJAo=;
+	s=arc-20240116; t=1779040483; c=relaxed/simple;
+	bh=HV9+cXihAaH4KwSTsC1gpmYVeE6h/AHKaW49mEWHgB8=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gu60m3lHQrxDHGK9uGn2cqmMEyvesFRG/XN5msu8cK9s/xKo5LajQl+Kk0cgmrUWz1srdbDulY26HFpFmNaVHMN/mBHCV5SOoC7QHkGzLkAJmgrR++30fxTCflWz3vyof0JgHmvmcUlwUzuS1f/I4dACjuBHZiZrBUJbfn/NPBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ILn6PBvA; arc=none smtp.client-ip=209.85.128.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=dgHyTEBsbmSaiVouOpbGMfdoN87XH9QCyc5hFw69uSQKZLZbP6RFqXDEIjxs1M8sjYGzgCNfnRZnJf47R1qlaYOCYQutTq+8IONomWTJTMB1PRvYgr3W4o2s2DxLTkEQVh72zMzmczW3d95kqnBLzXh7uRDCWVHToeZqMmTg7U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CJDcSzUZ; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILn6PBvA"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-48fe26a177cso8605305e9.1
-        for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 10:30:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJDcSzUZ"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-44509921fbcso757873f8f.3
+        for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 10:54:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779039034; x=1779643834; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779040480; x=1779645280; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=biN63ninIqhGSrYMwDyAgi4Qnh2QQxC8g5gMwT2w1jQ=;
-        b=ILn6PBvAE4vEIn/gQKL3g1QZDQM5AH+iyz7FsTSK4GO7ra5i1V6PhR423ZdBEhEgKf
-         ow+u1wM/oWnxJQZODL4IllpQ/PdI4bIBjCyTpAHOteIZcE2+4ndeC1K6dKIwpcswJMYn
-         5Cib4cyH0Eel063IOE3EvRQ9Om1v5TTxs5LzGLQ0w2SzFegUKaiX7HI1BdGF0n1moeLh
-         xNWpiqD5pXS920Li9HSx25DDxqovXuZP+LvueVnSmJlg2g5lSuo0sIbFYNZW81k6sYB6
-         IILR+Bf/x8n67wqCxWmpRJtOnwAtvqiWgvJ0kDHxiqaQYy5feBVsjPhZdf7tqLFWK/by
-         whVg==
+        bh=TnFwmmTG90t0fKQgEeFLZttD4NeL9fxw8K+kX1DEzbA=;
+        b=CJDcSzUZCydm54QBxUNXA+hA8oosDpavNttlf92pe5ylkavdt9zuD/uSVCsi1O9GyY
+         rCpfVm7ROr+J97t7odaTaHJHhsupkmYLyj6OBshs/YaCZrjOJtUCm1lAkcFvNV4R3yto
+         sVk4sUIsxl8FMdw1iQxsFdxtJpUJ8UBEDx9QVyDf4NvaSzm25xYfuVuc7en4tsUPKoNY
+         /Xc1/mAqn+/kQ5oUM4CFnwOfImFl3y/Q/G2mp9sPJFvwc8zWy0rxE2VJzSUQ22Td5jWT
+         kVGS502jHT+mScFwagskCd5FnVeTffQdCd/70mXdUYdo3fTaWLwB5nQBzWCWuEpIgczG
+         b7pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779039034; x=1779643834;
+        d=1e100.net; s=20251104; t=1779040480; x=1779645280;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=biN63ninIqhGSrYMwDyAgi4Qnh2QQxC8g5gMwT2w1jQ=;
-        b=Az6Aeip3Q3z2BwEUrAsOFo/q4o/zLdLRL4/Cwe/y3GdKNHNMoB6J/NcsdXXKxoYTEb
-         3cEnum2y6FigUE02Hs60lcFIGkMIIAyMG4hXB68sMQZe97820HIhF966e3xre7Jq68W/
-         LfHAIg3T84rPmW/a3l9vYQWV70UIMfhURfWHlyKurzMy/PQdheyEmpVglfB4Qtj9XbA1
-         bSu70hoq/Umjlrk+RsSX7+XT4+jFMasE+pf2trZN+rpLgGhgOsfshVlJjN4WT18rsynL
-         vEWa6Hsy3xNQB3Ie6+0pRPVXa78Qm6cjbIzHMyZ9x6MmTQ6goaWyeRb0NBNzLvCbpcNw
-         f6GQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+S2rF0zQEdC6t6E8DkaCLg75kTFBQ4v6jyGzDrMtJjjnpAf1h+Fi1AcPu/InCHg6LfaS6nX+KPZyfa7jWXs8Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0W0rvwJeljM7yKJcaWVEZdc8o2+PjjQ7CjtJest/OFGkobbVF
-	lQzcogkZBTdpDVlsvHOetGHRvfeV+LjebTYWc7vW3hu7/kxGKvUjfydj
-X-Gm-Gg: Acq92OHQ2UGazfjNGIEMG3GM9uDGyjF7qn+h5qCydM36euYM1kMeAKBjr0E8NmFru9B
-	sAmeVT61oTTYZbAzggWjItrY96WXyUw69VGZFiPqd0EetzJ/KWzKlwhWLSvycZEYU11azWOnKdx
-	45gbV1tVNGlq/RcQs6a/Il9xwcIlSmWTGR8ak3ow83iBGNB7NuEIZbCqUAVQB2gNuxNMpt1oV4G
-	Q7JOIAHsin8NvophGYFk/0Wwjxrqk4lAVilxqpyqKrCUH0b6IYId1IVe5t58Rf1wMatH/lfT9DH
-	I0sWjpwPLzBYErdY6NhaiWxsPe742pEgcjbVQVcM2Dbx0y+0RGjjt0k1vpLedFL2ghNWxx/01ML
-	gYlEc9N1ohMagijCuHdHgIaI9ljgMAh0OnFxVR96HDSUS3DhWFw7GRtu3CGMp3/Kqmp2xD+Ii16
-	DoF67s7FWbiSZYRyhYWylM2/5x4xUI/ZOGF0kMk3Vxym/LNWFY+t51ZMALmAyB1Li3ZdHKoE+ay
-	I8eiqczsZFodn8v5LvOt7/edXNF5FPmkKmw/otj+92Iewjdk6Xe8YmE/Q3kuqKX5HgXpC8=
-X-Received: by 2002:a05:600d:8448:b0:48f:fb0d:8d86 with SMTP id 5b1f17b1804b1-48ffb0d8ea0mr83999885e9.32.1779039033987;
-        Sun, 17 May 2026 10:30:33 -0700 (PDT)
+        bh=TnFwmmTG90t0fKQgEeFLZttD4NeL9fxw8K+kX1DEzbA=;
+        b=j7kRCwj/zVYKmBm43XHkKE1SdZhipN2FKjPF93wsAfxzHA7NEYM5nka9oP1rhG+1c2
+         xNiMK1CEozs7WH7QTjmiL4LvxNd02ZJmAqbgFuXBviKk08d5iRL/izvIJE75z61t62BA
+         9wm/nsTuTNvyp77lsK8k6aoe/+SoxT90y7QfeD87+aRCiejAlV+BXl5Egtmbx57ikgGt
+         o5kq07c2i7/Cn7UkvAylKL/Vg0YTduY5B1xP3f0XxPj6qRG8a7rNv8r9+v2Ke3qpDUb8
+         zkdNNsSJsKiEGggyLgyjXTTgK8aQIM1ahX2FRUvOdt5JLT1ui6plGCv2LgdSKQEBMk5E
+         B8WA==
+X-Forwarded-Encrypted: i=1; AFNElJ9J4XGAdihl0TRhN72a+BTrOF+qkbgrLvvo0UX4CZchM0zBx8lIRSfL414Z7PO9YZBxC/d311IXBB9U9MOVaZ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq3gSmLM8u68v1eS0JRGqVeL9btVXxpYSY8/ZS/VJbbQGsWY6g
+	hjuXwpARitXMIyZJz0+P2eq+ZXV+YdW8uopPfd7ebSQg6nwFoB3FSjbW
+X-Gm-Gg: Acq92OFY2kJpTbr+ABrJEGdhOh2bee3L7Ft5wVR2l5a9IimdAcgmeDrpUY5ebc65JlN
+	G4krMeQrUOctHZUzQAG7jcNbYn/QP2sm2VCKF/CbCCHANGDWif2+oogS0LSQkfBGhF4nkFSpQ6Z
+	nUsSDkHO7QOYaxJUMfYqZyszj+ijTHT0JcNg6g0QahrzDw6M8DR8Dy+0jHlGCOk9c/u1oe/cf6p
+	H3RSyTzw2GirwRlunmPuf7/ZLHhlYjRvAK/JcN+yDdYc9r+triMi4TEq1A2tVe96DkskYCNMAMl
+	dt8K0rQ4b1ha90uP+k3MZGWyYV9541K0FdD8XyVDQZbeOJrq56yNulDjAmx3DFDUFpG6Q7R/sxU
+	cVp0sjytziClLDdgnUW4QXntFLKTWtnntTMVqoTr589j4f/D4mjYeSvtT+7L9/vEPTswEZU+bRH
+	lUNvy/9kbkM6MetWVf/vcoINbrZVYNJxuMQqLDjM99Z8aBoOWE+dXAgHcgfEkeXdoXTVIwhpOyt
+	jdCv3oOun6LXs6yqD7a1YFcjE6Z21T9QxXg4ECJ0WI/BohYlw==
+X-Received: by 2002:adf:f643:0:b0:45e:73b6:d107 with SMTP id ffacd0b85a97d-45e73b6d124mr3699595f8f.41.1779040480412;
+        Sun, 17 May 2026 10:54:40 -0700 (PDT)
 Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48ffed68baesm35541065e9.0.2026.05.17.10.30.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e768bcesm32883396f8f.4.2026.05.17.10.54.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 10:30:33 -0700 (PDT)
+        Sun, 17 May 2026 10:54:39 -0700 (PDT)
 From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Sun, 17 May 2026 18:30:27 +0100
+Date: Sun, 17 May 2026 18:54:34 +0100
 To: Jonathan Cameron <jic23@kernel.org>, 
-	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
+	David Lechner <dlechner@baylibre.com>
+Cc: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>, 
+	rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
 	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
 	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH RFC v4 09/10] Documentation: ABI: testing: add docs for
- ad9910 sysfs entries
-Message-ID: <yrabhhhdkzmiuxlqzrrj6a47ftlzwvva7r2korzeszdy4yqrin@xl6obhhnnas4>
+Subject: Re: [PATCH RFC v4 10/10] docs: iio: add documentation for ad9910
+ driver
+Message-ID: <lydcfe6pxgswwysqqnn3mqjwj2b2x3ldcnvwhnbh5tukdummps@f4b3h4kpf7ff>
 References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
- <20260508-ad9910-iio-driver-v4-9-d26bfd20ee3d@analog.com>
- <20260517155843.7f833658@jic23-huawei>
+ <20260508-ad9910-iio-driver-v4-10-d26bfd20ee3d@analog.com>
+ <b8f9a174-f3d0-4cb8-a571-605be79165d6@baylibre.com>
+ <zvulxrrvg4sf7m5pjfpfucg7yssgallfu6zi6mcyblu2qy24hn@wdzs7h77vkoz>
+ <18c2eab9-c0c7-4e93-b4e8-73b18531e784@baylibre.com>
+ <uphcx5zr4lmukuom75g66hp4agurty7yq6mo6ri6otrsscqfek@tn3u5jjszaoy>
+ <5bce7868-feca-4c54-a14d-ad4bf4072c29@baylibre.com>
+ <20260517164418.37f13914@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -86,61 +91,167 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260517155843.7f833658@jic23-huawei>
+In-Reply-To: <20260517164418.37f13914@jic23-huawei>
 
-On 26/05/17 03:58PM, Jonathan Cameron wrote:
-> On Fri, 08 May 2026 18:00:25 +0100
-> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+On 26/05/17 04:44PM, Jonathan Cameron wrote:
+> On Mon, 11 May 2026 10:23:35 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
 > 
-> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > On 5/11/26 10:02 AM, Rodrigo Alencar wrote:
+> > > On 26/05/11 09:46AM, David Lechner wrote:  
+> > >> On 5/10/26 4:30 AM, Rodrigo Alencar wrote:  
+> > >>> On 26/05/09 06:42PM, David Lechner wrote:  
+> > >>>> On 5/8/26 12:00 PM, Rodrigo Alencar via B4 Relay wrote:  
+> > >>>>> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > >>>>>
+> > >>>>> Add documentation for the AD9910 DDS IIO driver, which describes channels,
+> > >>>>> DDS modes, attributes and ABI usage examples.  
+> > >>>
+> > >>> ...
+> > >>>  
+> > >>>>> +       must be a power of 2.
+> > >>>>> +
+> > >>>>> +   * - ``frequency_offset``
+> > >>>>> +     - Hz
+> > >>>>> +     - Base FTW to which scaled parallel data is added. Range :math:`[0, f_{SYSCLK}/2)`.
+> > >>>>> +
+> > >>>>> +   * - ``phase_offset``
+> > >>>>> +     - rad
+> > >>>>> +     - Base phase for polar modulation. Lower 8 bits of POW register.
+> > >>>>> +       Range :math:`[0, 2\pi/256)`.
+> > >>>>> +
+> > >>>>> +   * - ``scale_offset``
+> > >>>>> +     - fractional
+> > >>>>> +     - Base amplitude for polar modulation. Lower 6 bits of ASF register.
+> > >>>>> +       Range :math:`[0, 1/256)`.
+> > >>>>> +  
+> > >>>>
+> > >>>> I guess there was some discussion on these attributes. I see some of these in the
+> > >>>> ad9832 driver in staging, but I'm guessing they are new ABI. It isn't clear to
+> > >>>> me from the documentation here what they actually do though. I guess they are
+> > >>>> just basic transformations on the input signal?  
+> > >>>
+> > >>> Not sure how the ABI is not clear:
+> > >>>
+> > >>> 	For a channel that allows amplitude control through buffers, this
+> > >>> 	represents the value for a base amplitude scale. The actual output
+> > >>> 	amplitude scale is a result with the sum of this value.
+> > >>>
+> > >>> So yes, it is a basic transformation.  
+> > >>
+> > >> I didn't have time to read the ABI docs yet. For scale_offset though,
+> > >> how is that different from the existing offset attribute?  
+> > > 
+> > > I suppose that existing offset ABI is applied to (raw * scale), mostly for
+> > > voltage channels, here the scale_offset is an offset to the scale itself.  
 > > 
-> > Add custom ABI documentation file for the DDS AD9910 with sysfs entries to
-> > control Parallel Port, Digital Ramp Generator and OSK parameters.
 > > 
-> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> I'm fine with phase and frequency as defined, but for the scaling it made me wonder.
-> For outvoltage0 channels the assumption the value is the peak voltage so if
-> we know what input to be modulated by the ramp generator can we express them
-> in volts (well milivolts) rather than as a scaling multiplier?
+> > Ah, so a very general case would be (raw * (scale + scale_offset)) + offset
+> > 
+> > when the scale can change as a function of time and comes from an external
+> > source.
+> Ah. Similar question to what I was commenting on.  Though maths is currently wrong
+> for normal offset application as it is pre scale.
+> 
+> 
+> 	(raw + offset) * scale is normal case.
+> This is proposing (I think)
+> 
+> 	(raw + offset) * (scale_offset + scale)
+> 
+> Altvoltages are a little odd though in that we are really always kind of dealing
+> in scales as it's the peak voltage that is the base unit. So they are kind
+> of always about scale - hence for such a single offset would be shifting the
+> mid voltage point which I guess is different form scale_offset.
 
-The DAC output is current-based and differential. Voltage conversion would happen
-outside the device... using a resistor load or an op-amp transimpedance stage,
-and I am no expert on that, but that often requires impedance matching so voltage
-levels may depend on the frequency. Then, I suppose that voltage is not the right
-unit to use.
-
-The scale here controls the amplitude of the varying signal. Assuming the peak voltage
-(amplitude) is constant means we have a constant envelope, but that should not mean
-we can't control it or it should not mean that the hardware can have other ways to
-control it. That said, scale behaves as a "gain multiplier".
+As mentioned in the previous patch, I'd say we don't handle voltages in altvoltage
+channels because voltage values depends on external circuitry and they vary with
+frequency. Scale control is often achieved with hardware_gain in dB, but the
+dB scale would not be good to achive the 32 bit control of the "raw" values.
+Then, here it is implemented from 0 to 1.0, where 1.0 is the full scale.
 
 > 
-> That seems to me like it fits better with the overall ABI.
+> Hmm. Not sure I can draw this but i'll give it a go...
 > 
-> > +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale_offset
-> > +KernelVersion:
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		For a channel that allows amplitude control through buffers, this
-> > +		represents the value for a base amplitude scale. The actual output
-> > +		amplitude scale is a result with the sum of this value.
-> > +
+> So with no modulation going on and scale = 2.0, Raw 1000. 
+> (imagine these are sign waves)
 > 
-> > +
-> > +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale_roc
+>   _         _       _ 2V
+>  / \       / \
+> /___\_____/___\___  _ 0V
+>      \   /     \
+>       \_/       \__ _ -2V
 > 
-> Silly question perhaps but can work out how this related to millivolts/sec
-> That might make a more intuitive interface than scaling multiplier per sec
-> Perhaps the combination with offset makes this impossible though maybe that
-> could be a expressed as a voltage offset?  Afterall if the amplitude being
-> scaled is 5V then 5 * (offset + scale) = 5 * offset + 5 * scale
->  
-> > +KernelVersion:
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Amplitude scale rate of change in 1/s for channels that ramp
-> > +		amplitude. This value may be influenced by the channel's
-> > +		sampling_frequency setting.
+> That is sine wave -2/2V swing.
+> 
+> Now if scale or voltage double it get twice as big.
+> 
+> If offset + 100
+> 
+>   _         _       _ 3V
+>  / \       / \
+> /   \     /   \   
+> _____\___/_____\___ _ 0v
+>       \_/       \__ _ -1V
+> 
+> Scale offset at this point seems straight forward.. Gets more fun when it's modulated.
+> 
+> For now apply a scale offset of -1 and scale becomes 2 - 1 == 1. 
+>   _         _       _ 1.5V
+>  / \       / \
+> /   \     /   \   
+> _____\___/_____\___ _ 0v
+>       \_/       \__ _ -0.5V
+> 
+> So for simple case we could just role it into scale. However the fun here
+> I believe is that _scale is controlled by say a ramp generator.. 
+> 
+> Ok. I can't really draw this.. Lets try with xs
+
+The ramp pattern would be the envelope of the actual varying signal.
+
+> 
+> Initial scale 1, ramping to 2 over a couple 1ish cycles, offset 1.  That is
+> computed sale is going from 2 to 3.
+>                    Peak 3
+> ____________________________ 3V
+>     Peak 2.33         xx
+> ______x_______________xx____ 2V 
+>      xxx             x  x
+>    xx   x            x
+>  xx      x          x
+> x_________x_________x_______ 0V   
+>            x       x 
+>             x      x
+>              x    x
+> ______________x__x__________ -2V            
+> _______________xx___________ -2.5
+>                 Peak 2.67
+> 
+> Key being really where this starts which is scale_offset = 1 rather than starting
+> ramp from scale of 0.
+
+yeah... that makes sense. Note that scale_offset ABI is defined generically, but
+it is proposed for the parallel port mode with polar as destination. That is needed
+because the amplitude is defined by the 6-bit offset (LSB) plus 8-bit input (MSB) that
+would come from the buffer.
+
+> Having drawn these I'm even less clear in my head on whether we can move from
+> expressing that scale_offset and scale_roc in volts  - i.e. not as scales
+> or not.
+
+Yes, I'd say volts is not the right unit to use here. We may have the options:
+- raw values
+- fractional or proportional values from 0 to 1.0 (the one I am using here)
+- dBFS
+
+> Given need for separate control for overall mid point of waveform and the
+> starting point of scaling I think not.  Ah well.  The challenge will be
+> how to makes sure folk looking at the ABI can understand the complex
+> interactions of all these parameters. We may need some extra docs with
+> better diagrams than above.
+>               
+> Jonathan
 > 
 > 
 
