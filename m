@@ -1,257 +1,201 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97C63C65E0
-	for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 18:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCC23B52E2;
+	Sun, 17 May 2026 18:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779041280; cv=none; b=lT0jkRvIHpTrTgDbxUz8WWgegs2UXPThyzlnKt4BAWT9fWvggyQt7FjOBV6juBYkAekUK7gKrDihXlRxDFxMTRh3douOOI039dyj3lApIfFiip8ZI7O774H5somQQ3kC6G25NWz0NxtC+ifD0vjc6/VTALJNdAJ3T5gsLRU9PAU=
+	t=1779043096; cv=none; b=uBZiWpt2jI849NxzNVxUflTW6Hh9oJ2BmGyz6dsJtOAiZM1WV8u20K4p9dBuuAzXHSmG8KfJFCIWHci/ThqkXWM7YK3i/Rf6aRvzU8zsLn/ENn1J3Np6qhXXBp64GKGfdd+8JPvBwvZjNH6Pbi+Ez279fYuJdlo8w1wyaLzAPU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779041280; c=relaxed/simple;
-	bh=AgfMqLVnS6YuQEuhwKQ5hHW609zHtmx345KIezt5J0Y=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tu0YTEORlgE59nd/SEeEfXujXxIru03kj7lJk6OhuQMxkG13EMq3Wv3hioXDA0xF/fQxL4VxKABM4lsy1285+SB1UcJPe4/MiHEIyF4T5sU+Pu9AWK1iXetUztdsJr9Hv6ARtqzI8wbh+ntjInkfvVd9xbePnZbq4Mqx6k1W0Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=li7PDmv8; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779043096; c=relaxed/simple;
+	bh=jJbvAyYWCaaR4HHbj0wUyPm5hNqowZplYr+B7Rtnmug=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bkoH6czj/URpCuAafKvfm1obrcztXMqSe12RoPTgBKeAZwGwkmV8J8D5LVOTTjMD9wv02LqiXaz1eFJbh3Vi9Jgt1nDIub4XulP3/o1Kh8m7R+AvXXJ4m4pSYgoI2vYjyIIkqXWC6TJIUn/Ot5NleI/F/kbvW1Fj7zA3vNk34hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oY9NYGp/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li7PDmv8"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-48e82c23840so9532565e9.3
-        for <linux-hardening@vger.kernel.org>; Sun, 17 May 2026 11:07:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779041276; x=1779646076; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+S9zwilvrDZ3FX02ClZfVO+ZKyFuGBJXYxf1fRCPzCo=;
-        b=li7PDmv8FHkRGCK5JWionVWSsCu/eAuom7LVWZy8NjjvGqJUYAFa9Ve4SlEAdC0/y4
-         1jImpBXIaFKfkplHSBlumQFnHeM41uBnNAq1SZHtYqE3rsXLdmXCC/ZeUiNnoVJ4Rxdm
-         1oOnslkuTX/r2AT/3+fUjio0cJowKSNW2voVMOysHqGESysD/Y03YDrxz4kM6dSFdT4Z
-         4Txae3DGDzGWHnSCbdjATNm7nkYb8aJSLkQYTAssZCAOxQzgK6H95x+kllytJEslWR5k
-         SdndN7gaf1aGMF8BAEXqnbBQZSUB2pTfgjCnd82H7bBMwjPHCk5ppTVCsvRZL3TiJdNV
-         DLIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779041276; x=1779646076;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+S9zwilvrDZ3FX02ClZfVO+ZKyFuGBJXYxf1fRCPzCo=;
-        b=JKcBIfBG9FarLPe6xPm1+PjKmjZDJY3XHedKuJ18Z47BYDr27rYLPZ5KEjfj8vluyo
-         WtOIXhFsf7U6/sRtAgXnfHVfV9nEVwMtfRZYvwIY0O3LjsCE4A8663iSsKik2bHnvBTd
-         ltcYal6LZjJb4Ateh2auiYsAInjgGTP9f77v0wQ61prrUeIXtOpiLtWfvBjGUZEbVCR7
-         NrAPPyVfY/dXZNrxv0A0e98vx8rSDAhQNKU6IbuuakUl7hvGbSjEFXrrnlNCyhEGx+mB
-         qve8pGANey2y+oA8auTLhQq0zPmrd0Z8Wu4lOUUAIpLHabrMygSzjrgM43Cq9VMnEZ71
-         XxWw==
-X-Forwarded-Encrypted: i=1; AFNElJ+EylzDDRoG1q/L7buXvol7EF7Y8S2GA8ZQ+hO1BRCrq2gLcCf8ri9Lr+5Ye2WTwAmHGJGRVywakQ+XAUn1PzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+A0J1MIPasUhcgqiXU9qzMC7FWwSRkUHjTwa25ub0Uy3nSBcI
-	JotQIj+ZZjeWe6m+Jlzzgt8g4vAPn7VIoVBEbOUMK5psiXWy3ssaiD1u
-X-Gm-Gg: Acq92OETz244tZD3DflxbJR7u6+5YqytPMzUEO4wjvHjCXB5TibtpUL6x8pzMGNvOsJ
-	zy6ucZipyl2QQZUX5HYMokeUz/mE0DvTXsx9XoX1olryHGHbGsJcNNYLlkHuTW58W3KqLRI9piE
-	gqxbaisg1krAcO4TQQHKJQPusyLkydSYbxwbldKm0CzQqWmoze/bEUrtbCQWWGuh2g1smvkhPy1
-	eGLdWhWDpZ8lqXbN3vOyBMZk/3ZVF5ABLtFzjlVaPfJzDuq8EbfwgSf9J3Iz1Vxg94b2gpZJ3X0
-	179Ud6XASSzbbPZpJB8WrRn0CzY8gWSKWNbi/NQ5a/YCW0VSrUKjEa9WSGLb4zvMMmmJ4kPw7wX
-	HHzDRr+2QtBZcOa529qh4XO3kznK2Tf23/cI3UPI/Mk+IRwuyVYf74QUiBfFAEEQtyS0pENRGEU
-	5vLFjh0sNtHjtyz9EMMYofMp5c549k6q2JQ7Dq92OSxtBHcUkuJrr+1CaVajrkYA9XCO2RFXCJ3
-	4eqE5FP65T2zoBpir9vZ0CbYtHSX8uOJ+0iQtYtRGsMOTpz/g==
-X-Received: by 2002:a05:600c:8189:b0:488:ac01:72b6 with SMTP id 5b1f17b1804b1-48fe6323addmr185385535e9.21.1779041275890;
-        Sun, 17 May 2026 11:07:55 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe4862209sm207107125e9.0.2026.05.17.11.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 11:07:55 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Sun, 17 May 2026 19:07:53 +0100
-To: Jonathan Cameron <jic23@kernel.org>, 
-	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH RFC v4 03/10] iio: frequency: ad9910: initial driver
- implementation
-Message-ID: <is4rbxohz5icbaslatmjmzhb5oztnh6ytmntgkn3rssjijppb3@mur2heagprdi>
-References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
- <20260508-ad9910-iio-driver-v4-3-d26bfd20ee3d@analog.com>
- <20260517154745.5fbfcabf@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oY9NYGp/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 14A74C2BCB0;
+	Sun, 17 May 2026 18:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779043096;
+	bh=jJbvAyYWCaaR4HHbj0wUyPm5hNqowZplYr+B7Rtnmug=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=oY9NYGp/5BKDtkj2m5y2CeGVU8bL/W8LB8uCiEfUYx/6eV4FW1642b9+iZ/yNgEDy
+	 GgXgNo9P454NNtzU5cV22fIkzN3vI69S/7iY3glS2PCpvUFMDbGXXEKqDYGp0VDUAi
+	 6hf0i3Tk7minFDp4I/dZ35wHGYdJNqzPEYhKagb4v+zyTsXkmeza0AfMdGeQj/Jh2K
+	 NiUvCh+OuDnHSQr8sD+4QvxlS4UYNCkgUxSwTxupsonqfd2IX32MFlXOjMSDtPg70n
+	 wQVxrTfhN15vUfVLuBjb+KfmWRCNb6QU74mssihh0WX1Eaa1jgCZWtB5v7i1ZaA7D2
+	 bOURCt0pPbnsQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0538ACD4F3D;
+	Sun, 17 May 2026 18:38:16 +0000 (UTC)
+From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Subject: [PATCH v5 00/13] AD9910 Direct Digital Synthesizer
+Date: Sun, 17 May 2026 19:37:44 +0100
+Message-Id: <20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260517154745.5fbfcabf@jic23-huawei>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPgKCmoC/23OTWrDMBAF4KsErauiGck/6qr3CFlI1igZaK0gB
+ 5EQfPcopmCKvXwD8733FBNlpkl8HZ4iU+GJ01hD83EQw8WNZ5IcahaosFUIvXTBWlCSOcmQuVC
+ W1uuAYAZsIIr6d80U+b6Yx1PNF55uKT+WigLv65+GakcrIJXUHlvjnOkdqG83up90/hzSr3hzB
+ VdC7w4qWAnqbLTa0xABNoReCQPdHqErgdZb3QE6xH5DmJVo1O4KU4mArY8BFZEO/4h5nl89A2A
+ 4fAEAAA==
+X-Change-ID: 20260218-ad9910-iio-driver-9b3d214c251f
+To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rodrigo Alencar <rodrigo.alencar@analog.com>, sashiko-bot@kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779043094; l=6582;
+ i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
+ bh=jJbvAyYWCaaR4HHbj0wUyPm5hNqowZplYr+B7Rtnmug=;
+ b=W0WzRUsnHLur9Iqkg5mwdG70w6EP7UsQ/N2zIK2DB9lqcGwwUUDIjV1HlvnIoZDpk++/xXAlh
+ bH/dqujENT6BGWLmbtVwLNhx0I/MXa8NbskWj9H9gRJ/81Orxg28BFX
+X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
+ pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
+X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
+ with auth_id=561
+X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Reply-To: rodrigo.alencar@analog.com
 
-On 26/05/17 03:47PM, Jonathan Cameron wrote:
-> On Fri, 08 May 2026 18:00:19 +0100
-> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
-> 
-> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > 
-> > Add the core AD9910 DDS driver infrastructure with single tone mode
-> > support. This includes SPI register access, profile management via GPIO
-> > pins, PLL/DAC configuration from firmware properties, and single tone
-> > frequency/phase/amplitude control through IIO attributes.
-> > 
-> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> Hi Rodrigo
-> 
-> A few really minor things from a fresh look through.
-> 
-> Jonathan
-> 
-> > diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
-> > new file mode 100644
-> > index 000000000000..c75f2ef178c2
-> > --- /dev/null
-> > +++ b/drivers/iio/frequency/ad9910.c
-> 
-> > +
-> > +static int ad9910_read_raw(struct iio_dev *indio_dev,
-> > +			   struct iio_chan_spec const *chan,
-> > +			   int *val, int *val2, long info)
-> > +{
-> > +	struct ad9910_state *st = iio_priv(indio_dev);
-> > +	u64 tmp64;
-> > +	u32 tmp32;
-> > +
-> > +	guard(mutex)(&st->lock);
-> > +
-> > +	switch (info) {
-> > +	case IIO_CHAN_INFO_ENABLE:
-> > +		switch (chan->channel) {
-> > +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
-> > +			if (ad9910_sw_powerdown_get(st)) {
-> > +				*val = 0;
-> > +			} else {
-> > +				tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
-> > +				*val = (tmp32 == st->profile);
-> > +			}
-> > +			break;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +		return IIO_VAL_INT;
-> > +	case IIO_CHAN_INFO_FREQUENCY:
-> > +		switch (chan->channel) {
-> > +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
-> > +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
-> > +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_FTW_MSK,
-> > +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
-> > +			break;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +		tmp64 *= st->data.sysclk_freq_hz;
-> > +		*val = tmp64 >> 32;
-> > +		*val2 = ((tmp64 & GENMASK_ULL(31, 0)) * MICRO) >> 32;
-> 
-> Why in this particular case have this outside the switch / case whereas in others
-> you do the full maths and set inside? I'd put it inside and not worry about slightly
-> long lines.
+This patch series adds support for the Analog Devices AD9910 DDS.
 
-for frequency, those calculations are going to be common for the other channels that are
-going to be populated by other patches...
+This is a follow-up of the V3/V4 discussion. For V1, we reached into
+this channel composition agreement where physical channels may have
+sub-channels. That adds the flexibility necessary for this design.
+During V2, some feedback indicated that the ABI is too device-specific,
+so DRG/RAM destination and operating modes are configured through
+alternate paths and profile channels are created. In V3, there was
+further discussion on the ABI and on mode priority debug.
 
-DRG up/down and RAM will have tmp64 populated with a FTW value.
+The AD9910 DDS core can be driven through several independent mechanisms:
+single tone profiles, a digital ramp generator, an internal RAM playback
+engine, a parallel data port, and output shift keying. Each of these
+represents a distinct signal path into the DDS accumulator, so the driver
+models them as separate IIO output channels (all IIO_ALTVOLTAGE type).
+This per-channel separation allows userspace to configure each mode
+independently through its own set of sysfs attributes, and to
+enable/disable modes individually via IIO_CHAN_INFO_ENABLE, relying on
+the hardware's own mode selection architecture.
 
-> 
-> > +		return IIO_VAL_INT_PLUS_MICRO;
-> > +	case IIO_CHAN_INFO_PHASE:
-> > +		switch (chan->channel) {
-> > +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
-> > +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
-> > +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_POW_MSK,
-> > +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
-> > +			tmp32 = (tmp64 * AD9910_MAX_PHASE_MICRORAD) >> 16;
-> > +			*val = tmp32 / MICRO;
-> > +			*val2 = tmp32 % MICRO;
-> > +			return IIO_VAL_INT_PLUS_MICRO;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +	case IIO_CHAN_INFO_SCALE:
-> > +		switch (chan->channel) {
-> > +		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
-> > +			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
-> > +			tmp64 = FIELD_GET(AD9910_PROFILE_ST_ASF_MSK,
-> > +					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
-> > +			*val = 0;
-> > +			*val2 = tmp64 * MICRO >> 14;
-> > +			return IIO_VAL_INT_PLUS_MICRO;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +	case IIO_CHAN_INFO_SAMP_FREQ:
-> > +		switch (chan->channel) {
-> > +		case AD9910_CHANNEL_PHY:
-> > +			*val = st->data.sysclk_freq_hz;
-> > +			return IIO_VAL_INT;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +}
-> 
-> 
-> 
-> > +
-> > +static int ad9910_setup(struct device *dev, struct ad9910_state *st,
-> > +			struct reset_control *dev_rst)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = reset_control_deassert(dev_rst);
-> > +	if (ret)
-> > +		return ret;
-> No need to sleep at all after bringing device out of reset?
-> 
-> Sashiko has reasonably been asking about this in other drivers. If there
-> is no period needed or it is so quick as to be irrelevant add a comment here.
+The AD9910 register map is not suited for the regmap framework: register
+widths vary across the map (16, 32, and 64 bits). The driver instead
+implements direct SPI access helpers with a software register cache, using
+type-specific read/write/update functions (ad9910_reg{16,32,64}_{read,
+write,update}) that handle endianness conversion and cache coherency.
 
-I do not see any requirement on that in the datasheet.
+Registers are cached for several reasons. The control/function registers
+(CFR1, CFR2) are frequently queried to determine the current operating
+mode (e.g., checking RAM_ENABLE before every profile register access),
+and caching avoids repeated SPI read transactions for what are
+essentially state checks. The cache also enables efficient
+read-modify-write updates on multi-byte registers: the update functions
+merge new field values with the cached register content without issuing
+a SPI read, and skip the write entirely when the value is unchanged.
+Finally, the profile registers serve dual purposes depending on whether
+RAM mode is active -- they hold single tone parameters (FTW, POW, ASF)
+in normal operation but are repurposed for RAM playback configuration
+(start/end address, step rate, operating mode) when RAM is enabled. A
+shadow register array (reg_profile[]) preserves the inactive mode's
+settings across transitions, so no state is lost when switching between
+single tone and RAM operation.
 
-> > +
-> > +	ret = ad9910_reg32_write(st, AD9910_REG_CFR1,
-> > +				 AD9910_CFR1_SDIO_INPUT_ONLY_MSK, false);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = devm_add_action_or_reset(dev, ad9910_sw_powerdown_action, st);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = ad9910_reg32_write(st, AD9910_REG_CFR2,
-> > +				 AD9910_CFR2_AMP_SCALE_SINGLE_TONE_MSK |
-> > +				 AD9910_CFR2_SYNC_TIMING_VAL_DISABLE_MSK |
-> > +				 AD9910_CFR2_DRG_NO_DWELL_MSK |
-> > +				 AD9910_CFR2_DATA_ASM_HOLD_LAST_MSK |
-> > +				 AD9910_CFR2_SYNC_CLK_EN_MSK |
-> > +				 AD9910_CFR2_PDCLK_ENABLE_MSK, false);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = ad9910_cfg_sysclk(st, false);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = ad9910_set_dac_current(st, false);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return ad9910_io_update(st);
-> > +}
-> 
+RAM data is loaded through firmware upload infrastructure. Userspace
+writes the waveform data as a raw binary buffer (up to 4096 bytes for
+the full 1024x32-bit RAM), and the driver reverses the byte array and
+transfers it to the device in a single SPI transaction. Per-profile
+start/end addresses and playback parameters (operating mode, step rate,
+no-dwell control) are also configured through firmware update, using
+metadata in the header.
 
--- 
+Streaming data to the DDS core through the parallel data port at the
+PD_CLK rate is not covered by this series. That functionality would
+be added in a separate patch series, building on top of the IIO backend
+infrastructure to provide a proper buffered data path.
+
 Kind regards,
 
 Rodrigo Alencar
+
+Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+---
+Changes in v5:
+- Drop RFC tag to the patch series.
+- Address sashiko's comments.
+- Add parent-child relationship between iio channels.
+- List vs Table changes in documentation.
+- Add crc and version check to RAM mode firmware update.
+- Link to v4: https://lore.kernel.org/r/20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com
+
+Changes in v4:
+- Digital Ramp step exposed as a rate of change.
+- Dwell modes of Digital Ramp are controlled with dwell_en attribute. 
+- Disable of active profile behaves as a software powerdown.
+- Expose debugfs attributes to show mode priority.
+- Add 64-bit debugfs reg access support into iio core.
+- Link to v3: https://lore.kernel.org/r/20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com
+
+Changes in v3:
+- RAM custom configs (address range, destination, modes) loaded during firmware write.
+- DRG destination defined when attrs are written.
+- DRG modes broken down into enable attrs for ramp up/down channels.
+- Add separate profile channels, switching done through enable attr
+- Link to v2: https://lore.kernel.org/r/20260318-ad9910-iio-driver-v2-0-e79f93becf11@analog.com
+
+Changes in v2:
+- Device-tree bindings changes.
+- RAM loading to use firmware update interface.
+- Rearrange of channels into a hierarchy.
+- Link to v1: https://lore.kernel.org/r/20260220-ad9910-iio-driver-v1-0-3b264aa48a10@analog.com
+
+---
+Rodrigo Alencar (13):
+      iio: core: validate file offset in iio_debugfs_write_reg()
+      iio: core: support 64-bit register through debugfs
+      iio: core: add hierarchical channel relationships
+      Documentation: ABI: testing: add parent entry for iio channels
+      dt-bindings: iio: frequency: add ad9910
+      iio: frequency: ad9910: initial driver implementation
+      iio: frequency: ad9910: add basic parallel port support
+      iio: frequency: ad9910: add digital ramp generator support
+      iio: frequency: ad9910: add RAM mode support
+      iio: frequency: ad9910: add output shift keying support
+      iio: frequency: ad9910: show channel priority in debugfs
+      Documentation: ABI: testing: add docs for ad9910 sysfs entries
+      docs: iio: add documentation for ad9910 driver
+
+ Documentation/ABI/testing/sysfs-bus-iio            |   13 +
+ .../ABI/testing/sysfs-bus-iio-frequency-ad9910     |   76 +
+ .../bindings/iio/frequency/adi,ad9910.yaml         |  200 ++
+ Documentation/iio/ad9910.rst                       |  666 ++++++
+ Documentation/iio/index.rst                        |    1 +
+ MAINTAINERS                                        |   10 +
+ drivers/iio/frequency/Kconfig                      |   21 +
+ drivers/iio/frequency/Makefile                     |    1 +
+ drivers/iio/frequency/ad9910.c                     | 2413 ++++++++++++++++++++
+ drivers/iio/industrialio-core.c                    |   73 +-
+ include/linux/iio/iio-opaque.h                     |    2 +-
+ include/linux/iio/iio.h                            |    9 +
+ 12 files changed, 3474 insertions(+), 11 deletions(-)
+---
+base-commit: 1548c54e9adc32a719499216f63fba14b2fc07c3
+change-id: 20260218-ad9910-iio-driver-9b3d214c251f
+
+Best regards,
+-- 
+Rodrigo Alencar <rodrigo.alencar@analog.com>
+
+
