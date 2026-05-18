@@ -1,136 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0653254A5;
-	Mon, 18 May 2026 07:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1514C3E3C59;
+	Mon, 18 May 2026 09:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779090767; cv=none; b=asSU3yxVtlR1/V6iHxzmglldY9V0olNXi0K7kqvGVVIgzZFYXX0+vOMyL3zre8nvB7w0MzwdTbEolzGOP0/meDPF9/wKmR2RxtX3+wtoBSlPjrYxXpJZvrGgpB1lb0IMEJxo3Od1snw04sr/i8aPc5O4T5oADmIQfE0R5lMOKtI=
+	t=1779096739; cv=none; b=n5K7EiX+3imEzbBoYIomkyKXWQB9iI9mwA9/BVXmLpiRp0KarTwUlvQQnONr0alMtZwkqzXDTHfUkQZqBV8M9jXVm99U3yxsiNon9McOjumG/HGVX3l2Sicqi+5tYXcmjvq7QHkk4TuYcaf7IaGq421OEZtTSR4GwsLPIADNZvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779090767; c=relaxed/simple;
-	bh=8HjDunrHGVNoAqAd2Ojw7ILFQ5qR9o3ddT3DgEWklq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gq2JO0HPthtQvEljASIAL/OPyI67/usW9l/ijrP2ReFhrm7471vH0HI8AOcIBzHatcsdQywWN8MyhtDSdvsPwTYsyFvM9/6+lVhRRt72SKI0v3Xh7V7pwJwTOTq+MzQHDS5JN5LhlgrMQXuTxPMu+4bYWFJ/WDnnlJ1AEOSVygM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcQns8Lw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779096739; c=relaxed/simple;
+	bh=ypzeTVt77Q2YbxNzeBXoLlB99i/DAfX/BMXiXdWvVGE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=R8CjqA5q1PvxkAKfHKMWOoN1zXwm4hCiDyeNbCgWSlCaTEfAlBngES4jlmOwp7FUAjRyhxfrCwcMLSuo5GKWnaYec27h+FQ8/bfuE4bgvJwBeZ+V/uYaNLpkreranjZlOJ2UT6rXiGfSpBtyA26m/LXd02NZH2XIgHY+B+zz4K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Vt0ThH1r; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=d7Zrs/v1; arc=none smtp.client-ip=202.12.124.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcQns8Lw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B0EC2BCB7;
-	Mon, 18 May 2026 07:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779090765;
-	bh=8HjDunrHGVNoAqAd2Ojw7ILFQ5qR9o3ddT3DgEWklq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IcQns8LwzDfmgwrCFrwiXaiVkINvN5YIe9u9jhDZ2+G/cSH2BGX+/Ct/DPObrliVo
-	 AJUX2x4ufQ/kB/OC26wzW1AqzVegOJCG9acxrL2F7LLwOBYsfF+FsR+wFiBwRf4JSw
-	 LD1nFw9Z6gaCEJKQYmd18J6NuqFpBCkFFnZWrRaXdNpIhPZwQySqGx6cFTM4EZEKiO
-	 sswCdc/TDQKz8GxJDRKAPLzgXseOcvNBpc3zRqtgk16lniwkEz5FSkZTw7xhzmTRXM
-	 4veYWwF2bpKJ+I6KbdFWF5Xabh2PudKMH5eHtIQk7KRBEHu06gR7bi0/I1eL0DTTXp
-	 fC+WitaKgkvYQ==
-Date: Mon, 18 May 2026 09:52:43 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v5 05/13] dt-bindings: iio: frequency: add ad9910
-Message-ID: <20260518-zippy-ingenious-aardwolf-df46a2@quoll>
-References: <20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com>
- <20260517-ad9910-iio-driver-v5-5-31599c88314a@analog.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Vt0ThH1r";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="d7Zrs/v1"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id 91C52130011D;
+	Mon, 18 May 2026 05:32:14 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Mon, 18 May 2026 05:32:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1779096734;
+	 x=1779103934; bh=Q1EsgrhmOtBlhH6lTl5Uo51ZkO0kpI0RkBVnwq5QUz4=; b=
+	Vt0ThH1rLYcI1Ix28b0JP5KyKVSNK7tWRDDAnyloBA5/OwJqvN0ri23ATRKH/uyF
+	y8piX8XfSOJ2Bufr6N0+eUn5rg446FLnMUuwx7hDbKGF/j7vqGhTISTNEbVMBtD3
+	Er3HNGz+7bqwmkQZXphusyxP6gZ5RoN5+grgyIc2fAVd5zF9uz9rWHF2yR2iKE6c
+	j5CWOhjqbuvDbRqe9DRYBaSya//gp1ZPuFln02tSYpandTwCO8xeGVrBKM1uBGsV
+	9p2JckdJcHMQXLay3F89Y+/C/8zpBN5u1/pireYxLZJvV/0ez2Hvrz9lErx9PSRW
+	EsZ3YkVJzigHewFB4l4G1A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779096734; x=
+	1779103934; bh=Q1EsgrhmOtBlhH6lTl5Uo51ZkO0kpI0RkBVnwq5QUz4=; b=d
+	7Zrs/v1i2pD7/PQEYdz7BPzqLdbR898qrLSWf/HozUAsyPe+XrqlKiGdfOVHUinw
+	6Q0TqsEx4aDRD2knrLMZmE8pGW7wNnAsh4iVY1NGQyME8dm34CKZoUYySoSwGt3m
+	WO5a6SL/c0VjK4nrTWAgl+UOgREv8GocunpjwMzoH2o93J9K6JzFGz0Nv/ew5u7v
+	otDT3CesstoEPlNlDbtFawhwJUvW/W1HcemrhTjADJgyRVPcEmoEpY9owJYiw0so
+	hKSiM+D0KAtC7+FYC/VwBnzCVieL8gHr9uBPe1fZUpAoCDiIEatJShmPKAswwKNf
+	PdCn7RLUd8Xkv45idAYWQ==
+X-ME-Sender: <xms:m9wKaiS1nRXcm5q7ZK6FjXk-vPvsJCwaGlPICQR9d8H9UXzQ4G_8uA>
+    <xme:m9wKailMo_Vsg2pUTHY2LO2mRgZMiiYsetrfaJAgSSwVAluO1sPqyU7-v1LlFoahd
+    gD4YhMSwmAQLKH7qOY_UXwDIOVaw4Ju_GOiNEeGM_TfF_ltikUCbgY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeekhedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepgfetleektedtheehheegffdtgfejvddvveeigfehjedvkefguefffedvhfehkeeu
+    necuffhomhgrihhnpehsohhurhgtvgifrghrvgdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhn
+    sggprhgtphhtthhopeehtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhhunh
+    hordhsrgesrghnrghlohhgrdgtohhmpdhrtghpthhtohepughlvggthhhnvghrsegsrgih
+    lhhisghrvgdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvg
+    htpdhrtghpthhtohepughpvghnkhhlvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
+    vghnvghlshhonhhmohhorhgvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepnhhpihhggh
+    hinhesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgv
+    rdgtohhmpdhrtghpthhtohepugiimheludeshhhushhtrdgvughurdgtnhdprhgtphhtth
+    hopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrgh
+X-ME-Proxy: <xmx:m9wKaoXO8csU_OfH3IC96vXBm6hf3_s4i74Aa2ze3_cRkDErTRhnQA>
+    <xmx:m9wKavCYpT9XIqZZ3KxcyxUwagyNayqYTaDfbOM66aYrE-DDmC3CvQ>
+    <xmx:m9wKaqGfXgsGxAHGFR9PVXMFX8vv_m3SQ0OhOrBlqJJ6MAENfFzlyA>
+    <xmx:m9wKameOBxifjWiOCFYmJ24tKTUi0NpUiwxhzkeayVo8Iddh1ByhbA>
+    <xmx:ntwKarDXvcCscqze7RatHo9_OeoAzcLLCvtlqj7thJsDiA792-MymQA7>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5AE44182007E; Mon, 18 May 2026 05:32:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260517-ad9910-iio-driver-v5-5-31599c88314a@analog.com>
+X-ThreadId: AoFiOxpvQUXV
+Date: Mon, 18 May 2026 11:29:48 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ethan Nelson-Moore" <enelsonmoore@gmail.com>, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, workflows@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kbuild@vger.kernel.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>
+Cc: "Jonathan Corbet" <corbet@lwn.net>,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Daniel Lezcano" <daniel.lezcano@kernel.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Alex Shi" <alexs@kernel.org>,
+ "Yanteng Si" <si.yanteng@linux.dev>, "Dongliang Mu" <dzm91@hust.edu.cn>,
+ "Hu Haowen" <2023002089@link.tyut.edu.cn>,
+ "Dinh Nguyen" <dinguyen@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Will Deacon" <will@kernel.org>,
+ "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Vinod Koul" <vkoul@kernel.org>,
+ "Frank Li" <Frank.Li@kernel.org>, "Dave Penkler" <dpenkler@gmail.com>,
+ "Andi Shyti" <andi.shyti@kernel.org>,
+ "Jonathan Cameron" <jic23@kernel.org>,
+ "David Lechner" <dlechner@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ "Andy Shevchenko" <andy@kernel.org>,
+ "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Simon Schuster" <schuster.simon@siemens-energy.com>,
+ "Andreas Oetken" <andreas.oetken@siemens-energy.com>
+Message-Id: <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
+In-Reply-To: <20260518042833.272221-1-enelsonmoore@gmail.com>
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+Subject: Re: [PATCH] nios2: remove the architecture
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 17, 2026 at 07:37:49PM +0100, Rodrigo Alencar wrote:
-> +maintainers:
-> +  - Rodrigo Alencar <rodrigo.alencar@analog.com>
-> +
-> +description:
-> +  The AD9910 is a 1 GSPS direct digital synthesizer (DDS) with an integrated
-> +  14-bit DAC. It features single tone mode with 8 configurable profiles,
-> +  a digital ramp generator, RAM control, OSK, and a parallel data port for
-> +  high-speed streaming.
-> +
-> +  https://www.analog.com/en/products/ad9910.html
-> +
-> +properties:
-> +  compatible:
-> +    const: adi,ad9910
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-max-frequency:
-> +    maximum: 70000000
-> +
-> +  clocks:
-> +    minItems: 1
-> +    items:
-> +      - description: Reference clock (REF_CLK).
-> +      - description: Optional synchronization clock (SYNC_IN).
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items:
-> +          - const: ref_clk
-> +      - items:
-> +          - const: ref_clk
-> +          - const: sync_in
+On Mon, May 18, 2026, at 06:28, Ethan Nelson-Moore wrote:
+> The Nios II architecture is a soft-core architecture developed by
+> Altera (since acquired by Intel) and intended to run on their FPGAs.
+>
+> Licenses for the architecture have not been available for purchase
+> since 2024 [1], and support for it has been removed from GCC 15 [2],
+> Buildroot [3], and QEMU [4].
+>
+> Given all of these factors, it is time to remove Nios II support from
+> the kernel. The maintainer stated in 2024 that they were planning to do
+> so soon [5], but this did not come to pass.
+>
+> Remove Nios II support from the kernel and move the former maintainer
+> to CREDITS. Thank you, Dinh Nguyen, for maintaining Nios II support!
 
-So that's just items with two items and minItems: 1. Like you have in
-"clocks:".
+Hi Ethan,
 
-You got this comment already at v2.
+We last discussed this a year ago when Simon Schuster mentioned[1]
+that Siemens Energy is still using NIOS-2 in production and would
+prefer to have this still included in Linux for at least another
+few years until the obligation for kernel updates ends.
 
+My feeling is that the maintenance burden of keeping nios2 is
+relatively low. On the other hand, maintaining it out of tree
+as a patch set is also something that should not be all that
+hard if it does get removed.
 
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  clock-output-names:
-> +    minItems: 1
-> +    maxItems: 3
-> +    items:
-> +      enum: [ sync_clk, pdclk, sync_out ]
+Simon mentioned that he expected others to also use nios2 with
+new kernels, but I have not heard from anyone else actually
+doing it.
 
-Why are the names fixed? And why is the order random?
+I've added Simon and Andreas to Cc here to let them comment
+more here.
 
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    items:
-> +      - description:
-> +          Signal that indicates that Digital Ramp Generator has reached a limit.
-> +      - description:
-> +          Signal that indicates the end of a RAM Sweep.
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      enum: [ drover, ram_swp_ovr ]
+     Arnd
 
-Your "interrupts:" do not allow flexibility. Are you sure interrupts are
-optional in the hardware?
-
-> +
-> +  dvdd-io33-supply:
-> +    description: 3.3V Digital I/O supply.
-> +
-> +  avdd33-supply:
-> +    description: 3.3V Analog DAC supply.
-
-Best regards,
-Krzysztof
-
+[1] https://sourceware.org/pipermail/binutils/2025-March/140140.html
