@@ -1,136 +1,145 @@
-Received: from mta-64-135.flowmailer.net (mta-64-135.flowmailer.net [185.136.64.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D99538911F
-	for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 18:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.135
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779127507; cv=none; b=n6STI9rae/dzBLijO2qfB0wKhLRJlsD7SbJdsqdyob1H+Ldfjw/+YkWayIXO29lCk1NGXgxuwu8guMY0O9GChaezHRpw9N4SwuULZrSWxOgyzAczVbL8RRzFR4QSU8DpBemsaclgJMmfJTns1WcVi3swzN5FIB8xe8368h/uW3M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779127507; c=relaxed/simple;
-	bh=+rYo9RwlleK8Myvw5KVXSvl5djJdJZXOJbD7irbefyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VBYrkp8Mk4dj4cpX9HxxPWJRkUIhUVVYm6vGfbQ0ro54nUdrnZpnki6v6gU3bFC4PUGYj2JeOhXq66TUso80La7MfiZZEUwbxda1PQe5gtCBfWl2qqA6CFkSaKAvIjEOFccIe9w0yfwxfmeSkN9v/l1rIM05T4YncN4JNoyR0Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com; dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b=oOv4FfQQ; dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b=dI1aE97G; arc=none smtp.client-ip=185.136.64.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472FD38F95A
+	for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 18:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779130795; cv=pass; b=UJcKOURPIwh1SiQzM2zcNYP3HJ680Ju3Bg4mgCumBXLP9eFNZePe7sWs2QIIV+5RbGZeWZqDNzQxnYbaob9azetKxao9rezk3r1vVYb5nKV67XxMrjZ5gLhwrU7FQxhZc9NiOi4enh91qHcH/mlcBeHLgP4KPk/XMLFh8QgJ9BM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779130795; c=relaxed/simple;
+	bh=dyypnGTPAbgYfVefP9g9uTGtAYGNrN6Dgbk9OMbK1Hs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hfN+/RGIBo/kUwmjjpqKK+xYK3X/UITU9mB5jxFsgEGgvve8xV28lqE/hqVsqB5BC5cO/Aw5KfGgQPARJQa+dK4vXlFvJ8600skoCWBoCQq85dK+0fnIukhsRX8rFvbqhT6YjFi6JQDq73Ed8pIBxe/5TN+6aXB54LLP3T2pJ4Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MbXTQR2K; arc=pass smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b="oOv4FfQQ";
-	dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b="dI1aE97G"
-Received: by mta-64-135.flowmailer.net with ESMTPSA id 20260518172446460623f79c0019fd0d
-        for <linux-hardening@vger.kernel.org>;
-        Mon, 18 May 2026 19:24:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=s1;
- d=flowmailer.net;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=/xBoFD2ZNsbMOTky3B3enP8bn+W9UZXo1Hl2aVCLXos=;
- b=oOv4FfQQlHtS5BCboX78gqtA1vOdIzc2Bde3Q6JtaXyf67I3yyl6ut16FqBNN9+Yj9rq9Z
- nyDRk4mSBg/XXlSyTrgBcXgDhCrmwyDzEj+K3hddaJfeuwolNJkOXXJ8o46GUX+ljc6wR96d
- SFujsYOnihqEglQ5vlocmhDkHNiKg=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm3;
- d=siemens-energy.com; i=schuster.simon@siemens-energy.com;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=/xBoFD2ZNsbMOTky3B3enP8bn+W9UZXo1Hl2aVCLXos=;
- b=dI1aE97GXW4w7iNDnE322TQwRLqhXPJ7u7OOtHXqPwbH7I8b7QZPUcsZ5dpM3aKOX+wuYT
- LPsjcYlVTxPExZ5kMJNCcDWODnTNTrGp6pV8qtNcwDcVLy69NW0vpvbVMGwrINlSJJ+x3xuE
- 8IjsHXj0AnDwTdczWEYMyN3ZXAMnYVljNLinrYheZqc9sCRB5uWpiqfkBE0KYz9ZVSj4gXWO
- W3XtjKRwxfg4DG16B+5mpyk1TGNVwWG+Fbcs2a0kj3mxu3xIuWEGyaVHCYP7ptwU5BzA0nrO
- 6VN6z+VVxxOzsIQ5H6Xp7Kj7GVjsxvKu6BvSATf/LyzOGeeNKmSh+lOw==;
-Date: Mon, 18 May 2026 19:24:44 +0200
-From: Simon Schuster <schuster.simon@siemens-energy.com>
-To: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
-	Dinh Nguyen <dinguyen@kernel.org>
-Cc: linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
- workflows@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-iio@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas
- Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>, Yanteng Si
- <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>, Hu Haowen
- <2023002089@link.tyut.edu.cn>, Kees Cook <kees@kernel.org>, Oleg Nesterov
- <oleg@redhat.com>, Will Deacon <will@kernel.org>, "Aneesh Kumar K.V (Arm)"
- <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Nicholas Piggin <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank
- Li <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, =?ISO-8859-1?Q?Nuno_S=E1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
- WilczyDski <kwilczynski@kernel.org>, Andreas Oetken
- <andreas.oetken@siemens-energy.com>
-Subject: Re: [PATCH] nios2: remove the architecture
-Message-ID: <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
- <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MbXTQR2K"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-671588ab0cfso29a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 11:59:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779130793; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EYaNNt0FEiCv835VEA9pejued9R0ATp9b1piN/lvytCpkOLFx1Iru/59MBa8kUo10d
+         LJ+063D9bmpsPymTQwrwWrGnvpRb5I/5vLYsiOqibZe/CFOZ0uM+ARxFrjiISAj8onXJ
+         iWyrIw1C1bs642P++6Luwa9IXCuAWH4VY6LwXeDTeBrxmcHgSjaDXzZs8TuvIOgQ5zEi
+         lcoWWi5YWculuDVwrWbUu4M2OtTdcN9CvZ1uDsu5NKvnYsizGT/qISWSip2y6EFhGAtB
+         oyPa0s8HvHOeezlUfc7KNnJqNFNDgrMbixyjQBypYHI0nwceMB06cioGRNdGHIZwwjU1
+         fatg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=dyypnGTPAbgYfVefP9g9uTGtAYGNrN6Dgbk9OMbK1Hs=;
+        fh=fd1ZWMAb75AVIAvmS1e6EYYWZSCY0MY6MixXqmSyIGM=;
+        b=GXMdgPg3C9p/xK/+JyFp2rPeItr3Ez0xevBlFFfsXIM7k8BC9IkSdYkObGzdWDp/8w
+         j183UVPDGHpDRcIeoGU+8aBUoWKMAJ21WmKBRESHI40/+oepXi9fmdO0bkxq9jp59FIS
+         Yz01mGyfOQgtQh5clZ3F+JGpZZLqPyH5xbHlytdtkLfg/bB40+vB6qsj0BFeZruPUnMn
+         A6CA3xRmsUTPqNhjCMKGmy5h1dMPr9u8o6B+MXFHF6HXz98Ml0jYRrZtHqebYX+A479A
+         ++PCg/IzAWGzfYv3LnlqLxhoHAHzJ9JcrnYD0CNyNixoE/KBx4aSqd4tWug5hMCOwoTV
+         T1KQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779130793; x=1779735593; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dyypnGTPAbgYfVefP9g9uTGtAYGNrN6Dgbk9OMbK1Hs=;
+        b=MbXTQR2Kpf3Xfl5M280xPRbvdgo+gR2vtrEEqA3ydY7IFiteCAJDeO5hlyqv8/4LvR
+         P423+iH0NZUGkmxRGIiqCifqgBhPVH1SjRzky4o1bt5AEkEtlvNb3Kc7IBN/G+TQlcwi
+         GwyjfhjFMqxbwfvhlzzAaz6tQaZLAvgW1u6U+BJE4/IeF90LEtphCNo/D3WY8DluK47m
+         Ny9dPYbMiC067ULGy/9v7LKyEF4brkJJ/Q5Mn5vfNXng51VG91QnOdQzz/f5ffU1naHC
+         6/hM39ScNm8mpMhL3L1tM5QWIca4PYydFdogGQ5foC8vi4A7owMoykGgRq+QczIFMolF
+         vZTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779130793; x=1779735593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dyypnGTPAbgYfVefP9g9uTGtAYGNrN6Dgbk9OMbK1Hs=;
+        b=QKufHoqhrT4HWEJ3y0Pw6q5yx6zQix5Z/dJA+JE6E6l6DzMRv10CTzgVJMCJIbGYdl
+         lwveLDhMtSR+VeolisX5Sbp3y1FJaQTo5vmloAPHRKAbjYycJmKQKgZa2YZ+mY8B7zs5
+         B0y6n+GQpQDGpzuhkpum1tJBV0Mx+Zizowolf8KC5Xu/KnhlkH9WhSjfU8FKSArmDZVW
+         x2gQmbSL2gDMP/TX8zx6A9ZrXObxoNLS4Afbt0WJ33uck9ZtCw0qUZJNEvqFCFY9WVuQ
+         Y4fOaBtD7MG6kcf9kSlqLLQfdL9A7qJ8s4NaroPlwrwij/FdvO1ayj7m8F9o8ZxL/u8M
+         0WeQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/mKXcGSRsp+GwY/uoCin5FMtVwcprtLAsqvM5wASDIa85n4JYknElM9krvBBI4jwgRwwre2Cu6QJI5huWr1Rw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhqB48wDWdwDkPiBUIdVtJX4sXOCgEizvonxxRLNeROtdAUo1E
+	4n/qkipqvN1FFI8tvgL5K676AMYz2TUErpx/dJjl+UZXD+qNccFNdsWfn4fVPhY9Ke5mwl73upC
+	3zzug59ODn5geFtLSoyJIgfWKqUwgXCuHubvcZQwL
+X-Gm-Gg: Acq92OFrkBHPKPheJ3BbPvhwaE+5fDqJEl9XlhmyQp/+xSHUnwLzIuGKf3EH+W0XFNp
+	nhuvCK6SHoVQFMc8rUm5OOKvwh/KZbtsGK0brmEC7XgArxhLGUjh876AnDzpVdNI5HiBw6G49nj
+	vOp6fJOgRvKh2kZb4LazyERpvLKPLmobvFAm5OkMZO2BNkMfcIjtygSwxvx3GmmtVZjIM8gmiVI
+	2/2Ti9YKr2vCABqlanAvKNeMygBbEP40xeleRYSIIjA778VuXCLlZGZ72TEWiJ1NbogNnIo5Xrv
+	ohi6KEyxBqWf36lJkIOwLXoWsZe2LO6sNdEhMi2HAuacPok=
+X-Received: by 2002:a05:6402:a587:20b0:668:c2b6:9fa2 with SMTP id
+ 4fb4d7f45d1cf-684986efb13mr83277a12.7.1779130792215; Mon, 18 May 2026
+ 11:59:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+References: <20260516182126.530498-1-pfalcato@suse.de> <20260518-starten-messdaten-3b8aa670ec85@brauner>
+In-Reply-To: <20260518-starten-messdaten-3b8aa670ec85@brauner>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 18 May 2026 20:59:13 +0200
+X-Gm-Features: AVHnY4LvxvBtU7IvbOZw7RgET8Oa9vmPu-ETaJy_kmEvSdqRrpv4JPgUqfOI0wg
+Message-ID: <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
+Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
+ read-only files
+To: Christian Brauner <brauner@kernel.org>
+Cc: Pedro Falcato <pfalcato@suse.de>, Jens Axboe <axboe@kernel.dk>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	Mateusz Guzik <mjguzik@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ethan, Arnd, Peter and Dinh,
+On Mon, May 18, 2026 at 2:30=E2=80=AFPM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+> On Sat, May 16, 2026 at 07:21:26PM +0100, Pedro Falcato wrote:
+> > Since the advent of vulns like Dirty Pipe, Dirty Frag, Copy Fail
+> > and Fragnasia, splicing a read-only file is fundamentally unsafe.
+> >
+> > As such, as a mitigation, add a way for users to block splice() for
+> > files they cannot write to. This eliminates this whole class of exploit=
+s
+> > that use splice()+confusion in pipe/net/etc code to gain write-access t=
+o
+> > files they can only read.
+> >
+> > Users can simply toggle fs.splice_needs_write=3D1 and suddenly splice()=
+ will
+> > refuse perfectly legal splices() from files it can only read, but not w=
+rite.
+[...]
+> At that point you can also just ENOSYS splice() and vmsplice() via
+> seccomp and force a fallback on non-splice codepaths that userspace has
+> to have anyway as splice() isn't supported unconditionally.
+>
+> It feels like a knee-jerk reaction to an exploit class originating in
+> buggy modules that we have little control over and we would extend an
+> API to users that is really difficult to use.
+>
+> What might make more sense is to add a splice specific security_*() hook
+> into the code so that an LSM can deny usage of splice in whatever way it
+> wants to - bpf lsm or in-tree lsm.
 
-On Mon, May 18, 2026 at 11:29:48AM +0200, Arnd Bergmann wrote:
-> We last discussed this a year ago when Simon Schuster mentioned[1]
-> that Siemens Energy is still using NIOS-2 in production and would
-> prefer to have this still included in Linux for at least another
-> few years until the obligation for kernel updates ends.
+I feel like a sysctl for "disable all the splice-like interfaces and
+zerocopy TX" would be reasonable to have? Either by blocking such
+operations, or better, silently downgrading all such operations to
+normal copies.
 
-First off, thank you, Arnd, for remembering us as this patch series came
-up and also to Dinh for his maintenance of the architecture!
+FWIW, vmsplice() and splice() are also weird in how much memory they
+can implicitly pin - if you call vmsplice() on a single byte in a 2M
+THP page, I believe you'll implicitly pin 2M of memory...
 
-Regarding our status in relation to nios2, Arnd's response already gives
-you the gist:
-
-We are well aware that the architecture was deprecated by Intel and are
-therefore phasing it out in favour of more contemporary hardware.
-I'm also fully aware of the uncertain future of 32-bit architectures as
-a whole [0] and that this fate will come to nios2 sooner or later.
-But as of now, the mainline support is still in very good shape.
-
-On Mon, May 18, 2026 at 12:57:35PM +0200, Peter Zijlstra wrote:
-> Isn't that what we have LTS branches for?
-
-Unfortunately, as we are an infrastructure provider for civil energy
-infrastructure, the refurbishment cycle is a bit slower than for
-traditional consumer systems. This implies that the traditional LTS
-support duration (max. Dec 2028 as of writing [1]) is rather short, and
-we would be glad if we could keep the architecture in mainline for at
-least 5 years and only then "decay" to LTS.
-
-On Mon, May 18, 2026 at 11:29:48AM +0200, Arnd Bergmann wrote:
-> My feeling is that the maintenance burden of keeping nios2 is
-> relatively low. On the other hand, maintaining it out of tree
-> as a patch set is also something that should not be all that
-> hard if it does get removed.
-
-Judging from the architecture's git history, it seems that it's
-currently mainly touched by treewide refactors, which are extremely
-helpful as we therefore do not have to piece these changes together 
-downstream. In other respects, we try to be good citizens and contribute
-bugfixes as well as required cleanups (such as implementing clone3 [2]
-and fixing its flag behaviour on 32-bit architectures) as they come up.
-
-If desired, we also would be happy to intensify our support regarding
-reviews or testing to share the maintnance burden if it helps to keep
-nios2 in mainline a bit longer.
-
-Best regards,
-Simon
- 
-0: https://lwn.net/Articles/1035727/
-1: https://www.kernel.org/category/releases.html
-2: https://lore.kernel.org/lkml/20250821-nios2-implement-clone3-v1-0-1bb24017376a@siemens-energy.com/
+By the way, another bug a few years ago of a similar shape was this
+one - also a bug in networking code that can lead to accidental writes
+into spliced pages:
+https://project-zero.issues.chromium.org/issues/42451650 ("ktls writes
+into spliced readonly pages")
+with fix: https://git.kernel.org/linus/c5a595000e26
