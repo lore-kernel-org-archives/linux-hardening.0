@@ -1,126 +1,136 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A6B346770;
-	Mon, 18 May 2026 07:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0653254A5;
+	Mon, 18 May 2026 07:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779090551; cv=none; b=TZh24yNHaz+TZKDdjA+VsJ9JGoKsiaKbZveZJQEkjLbDNEE5vjm/NSfgLIF2SN2bGoOnPV8j9s9fSA8tmaCBtjPUPXHilSY5EAJuNYSmb40iG8SPBu/iSkzi6gv0NwIv+m9ugvWLNuJENbK970ks0c4jiPvEpRIGOIJcXTL4O4A=
+	t=1779090767; cv=none; b=asSU3yxVtlR1/V6iHxzmglldY9V0olNXi0K7kqvGVVIgzZFYXX0+vOMyL3zre8nvB7w0MzwdTbEolzGOP0/meDPF9/wKmR2RxtX3+wtoBSlPjrYxXpJZvrGgpB1lb0IMEJxo3Od1snw04sr/i8aPc5O4T5oADmIQfE0R5lMOKtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779090551; c=relaxed/simple;
-	bh=ni66H/HXr0umGNjhD/kth7RF0nubzm0rW6EGgyR/pus=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=rRgN/O9D7vbue/GEXKW/cRv/ZJm5kde2Gub9RiA2SzS+O6FMPrds2aOpgzvyAIwXXJPVvvm2duemRZ4k+qA9HFx9t6vwxPmJKFVsQcHEGiQh220cnvZCFZ1TyOC1AaUKGYoguSpqbPE0M8qhkOWm/BRJSblJFsHNrFQOrmY5wLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=DCrjwSSn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XRwCoXAP; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1779090767; c=relaxed/simple;
+	bh=8HjDunrHGVNoAqAd2Ojw7ILFQ5qR9o3ddT3DgEWklq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gq2JO0HPthtQvEljASIAL/OPyI67/usW9l/ijrP2ReFhrm7471vH0HI8AOcIBzHatcsdQywWN8MyhtDSdvsPwTYsyFvM9/6+lVhRRt72SKI0v3Xh7V7pwJwTOTq+MzQHDS5JN5LhlgrMQXuTxPMu+4bYWFJ/WDnnlJ1AEOSVygM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcQns8Lw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="DCrjwSSn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XRwCoXAP"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 5EDC77A007F;
-	Mon, 18 May 2026 03:49:08 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Mon, 18 May 2026 03:49:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1779090548;
-	 x=1779176948; bh=825z3tcv64EKbJtcUvuJYFiBQTsyBbCrWpsHI1IqtBU=; b=
-	DCrjwSSnV0LyndbKDWhyPXEj5Mivi7N+fm/SgL90OShNC8DrdxhfuaYGd4E4N6HJ
-	qnWmCu4M7ymXMA0Dy0D5uo2idXRdaqJf2ime2N+6O6ZpX7CzoPytZhjUpzTFj7Ph
-	uQTXHBhW4cyLx4CBweZGBoYNUlARevP5v3WOPrzoPe1Bty+GCfkmGjiEX/uhHvhx
-	pKYoZLbtVIFFg8bngCKx3pCGLDsQGy8vBe7VtHSVEvNViUbMhpdEfirrWnV2h+8Z
-	APOMgi+H9UlJeXiML+JQRhsvBaLMldlkO+Nu+05YmesPL6IFb+QyNFJ0hyHGeQaT
-	k+8/mOq4USyS84I2QPQSRA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779090548; x=
-	1779176948; bh=825z3tcv64EKbJtcUvuJYFiBQTsyBbCrWpsHI1IqtBU=; b=X
-	RwCoXAPA7CdW4xROBXsUBAdSKLtpuJa/QAAwS+2RuaIMc4RCKP4B9FzQIs7Ynf6V
-	W/+7T4aWGbl8KjRspxqWXNd+bzXizsSdC9CZDPyFLwXwLySha1MDUojZ+m+onfUf
-	oszAOVkWdMmO4tVPTHsxtCSu8JVBkec146Kxpz2f8hZxTvr7pUDoGQLjwa38Sael
-	nZGxajb/8YyBt2FbtqUJAPjonnVgVPaZ54Y/f1xbvLVd5fCqq3rINUzQXYHbl522
-	CWAcuMxjOu7LUDQfrHof7sEvhPrqhbo53BJpO5GtWkhyJdbOcHcz3M7w+HDZ7Tst
-	lANnR43eikw4Wj/tdw6BQ==
-X-ME-Sender: <xms:c8QKaqMAoWxoo8o-9AxCX0Gthh-Au_-TcFcovGPfgjXZSsUlSJWQ_Q>
-    <xme:c8QKajyL8rIQdJ0tPu5nM4Z4Mhz2niL1vIlsI50p_lBQkbHreGsCMbayPfwnrk_Gh
-    D2zNGvzTMeqjIqWbqfmnSqxbpkcJ6G_v9j0zwte-Hpvm1bpklHq6qo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeekfeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepgefgjedujedvieejgeelgfdthfduffeiteefudeghfffkeejfeehtdejfeejteef
-    necuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgt
-    phhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhhitghkrdguvg
-    hsrghulhhnihgvrhhsodhlkhhmlhesghhmrghilhdrtghomhdprhgtphhtthhopehjuhhs
-    thhinhhsthhithhtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehmohhrsghosehgoh
-    hoghhlvgdrtghomhdprhgtphhtthhopehguhhsthgrvhhorghrsheskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnrg
-    hthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhstgeskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpth
-    htoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:c8QKaqBnNO3BoGYxlPneNMwHAA8KmnqJkIydaEJfJQe6CJPzxX2uCg>
-    <xmx:c8QKahMrlGkcZezZwYXAnHw2o5Bu3tjGJ87EQIuf7j8n1x80MnV_kQ>
-    <xmx:c8QKahdMO7xVG5TYUFPFMDxMEiWHFEy-x4j-f0PgFifTtnX0AcVoaA>
-    <xmx:c8QKai4DliDZNhCHAHshyXQOAFymy_1AEJ8kSl4PF0JZXAToeoEk7w>
-    <xmx:dMQKalOg9UkpuTBleAp0GqS41lGgIoeP-3KeLvMAv7dQbBl9w605fHJg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CBEFE182007A; Mon, 18 May 2026 03:49:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcQns8Lw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B0EC2BCB7;
+	Mon, 18 May 2026 07:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779090765;
+	bh=8HjDunrHGVNoAqAd2Ojw7ILFQ5qR9o3ddT3DgEWklq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IcQns8LwzDfmgwrCFrwiXaiVkINvN5YIe9u9jhDZ2+G/cSH2BGX+/Ct/DPObrliVo
+	 AJUX2x4ufQ/kB/OC26wzW1AqzVegOJCG9acxrL2F7LLwOBYsfF+FsR+wFiBwRf4JSw
+	 LD1nFw9Z6gaCEJKQYmd18J6NuqFpBCkFFnZWrRaXdNpIhPZwQySqGx6cFTM4EZEKiO
+	 sswCdc/TDQKz8GxJDRKAPLzgXseOcvNBpc3zRqtgk16lniwkEz5FSkZTw7xhzmTRXM
+	 4veYWwF2bpKJ+I6KbdFWF5Xabh2PudKMH5eHtIQk7KRBEHu06gR7bi0/I1eL0DTTXp
+	 fC+WitaKgkvYQ==
+Date: Mon, 18 May 2026 09:52:43 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v5 05/13] dt-bindings: iio: frequency: add ad9910
+Message-ID: <20260518-zippy-ingenious-aardwolf-df46a2@quoll>
+References: <20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com>
+ <20260517-ad9910-iio-driver-v5-5-31599c88314a@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AEmuO4rsN4-N
-Date: Mon, 18 May 2026 09:48:47 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nsc@kernel.org>, "Bill Wendling" <morbo@google.com>,
- "Justin Stitt" <justinstitt@google.com>,
- "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- linux-kbuild@vger.kernel.org, "Kees Cook" <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org, linux-security-module@vger.kernel.org
-Message-Id: <55186588-0cff-4908-923a-d5611707a3b0@app.fastmail.com>
-In-Reply-To: 
- <20260517-bump-minimum-supported-llvm-version-to-17-v2-2-b3b8cda46bdd@kernel.org>
-References: 
- <20260517-bump-minimum-supported-llvm-version-to-17-v2-0-b3b8cda46bdd@kernel.org>
- <20260517-bump-minimum-supported-llvm-version-to-17-v2-2-b3b8cda46bdd@kernel.org>
-Subject: Re: [PATCH v2 02/16] security/Kconfig.hardening: Remove tautological condition
- from CC_HAS_ZERO_CALL_USED_REGS
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260517-ad9910-iio-driver-v5-5-31599c88314a@analog.com>
 
-On Mon, May 18, 2026, at 01:05, Nathan Chancellor wrote:
-> Now that the minimum supported version of LLVM for building the kernel
-> has been raised to 17.0.1, the '!Clang || Clang > 15.0.6' dependency for
-> CONFIG_CC_HAS_ZERO_CALL_USED_REGS is always true, so it can be removed.
->
-> Reviewed-by: Nicolas Schier <nsc@kernel.org>
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+On Sun, May 17, 2026 at 07:37:49PM +0100, Rodrigo Alencar wrote:
+> +maintainers:
+> +  - Rodrigo Alencar <rodrigo.alencar@analog.com>
+> +
+> +description:
+> +  The AD9910 is a 1 GSPS direct digital synthesizer (DDS) with an integrated
+> +  14-bit DAC. It features single tone mode with 8 configurable profiles,
+> +  a digital ramp generator, RAM control, OSK, and a parallel data port for
+> +  high-speed streaming.
+> +
+> +  https://www.analog.com/en/products/ad9910.html
+> +
+> +properties:
+> +  compatible:
+> +    const: adi,ad9910
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 70000000
+> +
+> +  clocks:
+> +    minItems: 1
+> +    items:
+> +      - description: Reference clock (REF_CLK).
+> +      - description: Optional synchronization clock (SYNC_IN).
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - items:
+> +          - const: ref_clk
+> +      - items:
+> +          - const: ref_clk
+> +          - const: sync_in
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+So that's just items with two items and minItems: 1. Like you have in
+"clocks:".
 
->  config CC_HAS_ZERO_CALL_USED_REGS
->  	def_bool $(cc-option,-fzero-call-used-regs=used-gpr)
-> -	# https://github.com/ClangBuiltLinux/linux/issues/1766
-> -	# https://github.com/llvm/llvm-project/issues/59242
-> -	depends on !CC_IS_CLANG || CLANG_VERSION > 150006
-> 
+You got this comment already at v2.
 
-Maybe add a comment to mention that this now requires gcc-11,
-that way we have it easier to remove the check when that becomes
-the minimum version.
 
-       Arnd
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clock-output-names:
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      enum: [ sync_clk, pdclk, sync_out ]
+
+Why are the names fixed? And why is the order random?
+
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    items:
+> +      - description:
+> +          Signal that indicates that Digital Ramp Generator has reached a limit.
+> +      - description:
+> +          Signal that indicates the end of a RAM Sweep.
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      enum: [ drover, ram_swp_ovr ]
+
+Your "interrupts:" do not allow flexibility. Are you sure interrupts are
+optional in the hardware?
+
+> +
+> +  dvdd-io33-supply:
+> +    description: 3.3V Digital I/O supply.
+> +
+> +  avdd33-supply:
+> +    description: 3.3V Analog DAC supply.
+
+Best regards,
+Krzysztof
+
