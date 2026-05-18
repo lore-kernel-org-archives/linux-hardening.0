@@ -1,80 +1,48 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9D53812F2
-	for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 20:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3178A396573;
+	Mon, 18 May 2026 21:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779137222; cv=none; b=H3TEWiWIRjrvDNncuua8ZRiGK6dLap+NmQj+UOt2aE2RLlzYuHfy1KZt37qFPe4frkUAfNib9NxdMf1Iut9QufUqaefdqkxPtU7oKmSLUgcGIn2PchASb8hI6uDUMI0089RGzAEA5vSkvAOnmOa0wqr6sTxSyLXmBkOtr6Yu45E=
+	t=1779138358; cv=none; b=d3ApOZBGb2GsGX0EIKLaL9ZE5ZguhHT3BRf62n4fzT48/QAsL3C1RMQylWrKhPzi42qSTAc+DNt/EUIGtSqSRAgFUsLBxs4poJqN8+TEXc4KAnbQYav4HK0jk6Rd6gxh4B4CfwnsJTYC1npJA6DSAOeDEXp+ynznB9yrIMP1w5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779137222; c=relaxed/simple;
-	bh=Ju0bBZL4gIhDXt1wxIRcD+B9cM8rwS33tQQtnjcKUwY=;
+	s=arc-20240116; t=1779138358; c=relaxed/simple;
+	bh=KJU4Pz1uSq6DIJ3eWFe2ij4+hMv7Y2WX88sIUB6HKZI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MstEtXG2uWP3gthj6zHN4KBs6BAy2TsxNDERH3FfRddo0U1L3du21jlNE/PKEvz9bAXc6wfnT6hYOzzjMlCHUbxupdi3I4lt+xRgPo+nzyuic+bN9V5zqnhr5NqeXe5vpZ9OCaZctTIK3uEW0Fdira/9Kz5VhIKiPo/eG3yCJeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hIDL4Pci; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MNSPgk0aLzjsMYpDLvKgcIAAdbeN3cDiY/4wHAxfWVTLD+z7NPKvdCD+0L4+YWjWDFLWjGRT1//nSSTwQJ4UkDCjILGphlCH9kED/es7R/dXG7qeRBpjm3XlXs8s8kbyeuOZZ9eSTbLYTjI6THNvWJKUvr+oMcz0iwo8OIuw+p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndd8fkzm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hIDL4Pci"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=L52K
-	0rxWySw3mD5z7jnwvPV6H6bdzA5sgxRy/hQVyAI=; b=hIDL4Pci78/puo7y9yQi
-	i2QwANMnkO9c+JN2J1AuGPGc7VaJw5mv5oB/Zi5V2NpOtmNWm9XOO1R+IJNZFnZR
-	meEUR+IwLqIIqHU3FlF+jDqISV7XhoIBKJj5YhCwfcISYldprr8eaDDjBG3r5TZw
-	mxP8JHNcHv1dzvI+ZmsQ1fBQiFdtCyshmDbAh204tTJkZb0f6TFW0ExyfM/Kk91P
-	wss0BhGJm15JjnmFgKwqDs+m+p0q5M7k+F6MldfbQ6dnZbJ07U0epn56qjQWMMuA
-	laR67xnGRvGP5v3vFrD1q2AD1KEOA7i38hJabnRO/72MrxDt/qCiKctVFaQbZ1ji
-	mA==
-Received: (qmail 5619 invoked from network); 18 May 2026 22:46:55 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 May 2026 22:46:55 +0200
-X-UD-Smtp-Session: l3s3148p1@dIu7qR1SQNMujnuR
-Date: Mon, 18 May 2026 22:46:55 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Simon Schuster <schuster.simon@siemens-energy.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
-	Dinh Nguyen <dinguyen@kernel.org>, linux-doc@vger.kernel.org,
-	devicetree@vger.kernel.org, workflows@vger.kernel.org,
-	Linux-Arch <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
-	Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
-	Hu Haowen <2023002089@link.tyut.edu.cn>,
-	Kees Cook <kees@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nicholas Piggin <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof WilczyDski <kwilczynski@kernel.org>,
-	Andreas Oetken <andreas.oetken@siemens-energy.com>
-Subject: Re: [PATCH] nios2: remove the architecture
-Message-ID: <agt6vy3WtjFy9sfU@shikoro>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
- <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
- <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndd8fkzm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D8BDC2BCB7;
+	Mon, 18 May 2026 21:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779138357;
+	bh=KJU4Pz1uSq6DIJ3eWFe2ij4+hMv7Y2WX88sIUB6HKZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ndd8fkzmyskIs2Qdl3J7CkSceCEQ2VqBLBMLvxj5nl8ByZ0x3kwuVHnI4SMC9Euwp
+	 TwbZVOof4lbBs9lxo9cFGheU5C/eLT0Y0GhsuyXz5JCXZO6eDMa7g9cw0Xl7Aqp9gN
+	 d4XSn+UXio6Aq8TL/URGlRuHd2WICZg5SqrCpv+a1aEUNn58ISdt9OnvTQ+ZrwZU3K
+	 r6qEQDN9RoEYUT1+bvWCgMXx+4RHR/aawtBAeSkvXVKpOhrTrAnBY+QQyys+ukGLP9
+	 9cD3N1Ue9XeCrZlBbwRr74SWZwD/FYF9Usj9vTdIv9jNBnihlp5Y+duL79oD3/eiJf
+	 9tq1HB7zI1ggw==
+Date: Mon, 18 May 2026 14:05:52 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nicolas Schier <nsc@kernel.org>, Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-kbuild@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] security/Kconfig.hardening: Remove tautological
+ condition from CC_HAS_ZERO_CALL_USED_REGS
+Message-ID: <20260518210552.GA3979157@ax162>
+References: <20260517-bump-minimum-supported-llvm-version-to-17-v2-0-b3b8cda46bdd@kernel.org>
+ <20260517-bump-minimum-supported-llvm-version-to-17-v2-2-b3b8cda46bdd@kernel.org>
+ <55186588-0cff-4908-923a-d5611707a3b0@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -83,27 +51,38 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+In-Reply-To: <55186588-0cff-4908-923a-d5611707a3b0@app.fastmail.com>
 
-Hi Simon,
+On Mon, May 18, 2026 at 09:48:47AM +0200, Arnd Bergmann wrote:
+> On Mon, May 18, 2026, at 01:05, Nathan Chancellor wrote:
+> > Now that the minimum supported version of LLVM for building the kernel
+> > has been raised to 17.0.1, the '!Clang || Clang > 15.0.6' dependency for
+> > CONFIG_CC_HAS_ZERO_CALL_USED_REGS is always true, so it can be removed.
+> >
+> > Reviewed-by: Nicolas Schier <nsc@kernel.org>
+> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-> downstream. In other respects, we try to be good citizens and contribute
-> bugfixes as well as required cleanups (such as implementing clone3 [2]
-> and fixing its flag behaviour on 32-bit architectures) as they come up.
+Thanks for taking a look!
 
-Well, this is definitely 'good citizen'...
+> >  config CC_HAS_ZERO_CALL_USED_REGS
+> >  	def_bool $(cc-option,-fzero-call-used-regs=used-gpr)
+> > -	# https://github.com/ClangBuiltLinux/linux/issues/1766
+> > -	# https://github.com/llvm/llvm-project/issues/59242
+> > -	depends on !CC_IS_CLANG || CLANG_VERSION > 150006
+> > 
+> 
+> Maybe add a comment to mention that this now requires gcc-11,
+> that way we have it easier to remove the check when that becomes
+> the minimum version.
 
-> If desired, we also would be happy to intensify our support regarding
-> reviews or testing to share the maintnance burden if it helps to keep
-> nios2 in mainline a bit longer.
+Sure, I can add
 
-... but given this, you might want to get added in MAINTAINERS as
-reviewer (or even maintainer) for nios2? Besides that your efforts are
-already worth it in my book, it would also ensure you get CCed on
-patches like this. Then, you are not depending on people like Arnd
-putting you in the loop manually.
+  # supported by gcc-11 or newer and all supported versions of clang
 
-Happy hacking,
+when I apply it.
 
-   Wolfram
-
+-- 
+Cheers,
+Nathan
