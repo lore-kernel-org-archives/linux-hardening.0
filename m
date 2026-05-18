@@ -1,227 +1,138 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20C848035B
-	for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 13:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B9430EF77
+	for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 13:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779109378; cv=none; b=lbKjXInVbdFmMzIgYa0ca3ybLk2cLfYRSM1Fwf8bdlqzu7CToCg69f7e3jF2l0NuClPcurXVOTE8jgVZx37nF52b+++EDkY4io6I7atK63bt/YU9iRT8w66v9MqA2XTkQVu7WwdH8EOcdLXzpWVNLBj9cT/EWfMDfSZFjGtIQxM=
+	t=1779110085; cv=none; b=VK3+vhg2bqA9WH8VMdBQpmaSnIpDzSpdHLyx96W0ErayIR4LlCo+tZeL0uZ3DDFsiJJxUYgLEfYIzgMhRCtvEdEhytKk1D5wKyw/jf/gY9l1jJduFrp8t540WDZp9tQP6XypDw/c/65iuPWRAB6QB439biIzYzsMYh5tPg5U9z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779109378; c=relaxed/simple;
-	bh=/6nDMfYJlcbmwvZpAUY5wX6zo6LgmRPSXaE3OIrXqWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a2pswNW4BaG/fvClXOKPXsFrAEQMJM4b1I0VFYEEXn0UrEc0UJQsoWgbatBM+b43vURzxDFE/Zs59ezLwWxx3SUFyOrZ8y6qgW2BeYjd90Z6KP6gTmG/LvO2cYVeOk1BZYcRreDjWxPu17qpno7/0VVxWvXKxGTudV/F7xW8Uyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cyNixFHJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=z14FOFUf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XfN8rflu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fOt95REw; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1779110085; c=relaxed/simple;
+	bh=Z14QFUUikHODQ3aoLQOJClldtUmxt3XO+7A+JlcVNO4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=didqBUyIS2XfG7yajHM4G1VRRBpbST37T+XEDh+bm5xM2L68d2+8llfJyqBnqmFerZU/DDHHCriJOASsvM5isXZ3Ke2PJENG7jfXfDXhdPyw+EBH72vg3kuzt2vviTryZhrKlB0uPDHrMBWwjuELXLU7wf9PLegoHYPcgV7Xe50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qJdeiVr4; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cyNixFHJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="z14FOFUf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XfN8rflu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fOt95REw"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CACD0675D6;
-	Mon, 18 May 2026 13:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1779109375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ObkzII2JaqHTZHIokj2Y++4VgvpMZd+Ed7H5/84HqeY=;
-	b=cyNixFHJbSygkE3J3nChbI7q9h6UGTomvN3s32crn3FECQEA19vYfx93NnQjw3MJJy8CJU
-	j1H9t7pOZwQnISe/X3mR8OJuSm04v2UDytMekGxVOuSqffx9yRIHTAH+G0Q91ViIIMxQ8L
-	D9adCFhsnesRiNc7qgPNOmNcA08Vomo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1779109375;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ObkzII2JaqHTZHIokj2Y++4VgvpMZd+Ed7H5/84HqeY=;
-	b=z14FOFUfrLYj0gg03ohaqifKLbQWllfcGIl3zUTCOLSJoKT4YtH7SZJmOJj07jlABIcHUV
-	9h/Ja8u+82a88sAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1779109371; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ObkzII2JaqHTZHIokj2Y++4VgvpMZd+Ed7H5/84HqeY=;
-	b=XfN8rflujBO2Q60Nk5cVmup764r7b5TH1NRrHGGA9d5ApSbuNYHPPwK+bE3UGxj7KHGl+E
-	6Cvaj7qLOzeqnhWM+f+v4J3/IfabpSl7PSdjsAxjXX0jTgloTSQd+Y1gf/ruP3pXMyxQzF
-	gnpuj4CUo+CHjPpBAtFR6C6siqd3oTE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1779109371;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ObkzII2JaqHTZHIokj2Y++4VgvpMZd+Ed7H5/84HqeY=;
-	b=fOt95REwqork6eZ0d5LOYaKuY6VqYaGEPFh+gxqhk16K4OkAbkybXIIIbYP8E6WWZitKGP
-	M8oOL3BedM453ACQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AAB9F593A8;
-	Mon, 18 May 2026 13:02:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id h6srKfsNC2rhNQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Mon, 18 May 2026 13:02:51 +0000
-Date: Mon, 18 May 2026 15:02:42 +0200
-From: Pedro Falcato <pfalcato@suse.de>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
- read-only files
-Message-ID: <agsJyFYLg5sd_34j@pedro-suse>
-References: <20260516182126.530498-1-pfalcato@suse.de>
- <20260518-starten-messdaten-3b8aa670ec85@brauner>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qJdeiVr4"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488a9033b2cso17150885e9.2
+        for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 06:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779110082; x=1779714882; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+2W8Kh26zpmPW+LCobCj4WL6hHrjmrN7QEdZmG2gns4=;
+        b=qJdeiVr4spigxuI8weSe7dZyMnfA6yu/VSFSN8dog2o2Hmd6nMqnTV5fegqq3n8SXI
+         2KpYOAn/8f4ObO92UMoKHziEWE8OuUlulYwC8L9a+4lyXKPiwDxLqRsihPJqPeTbFk4u
+         lizr+GlAQNLUONznvS/PM6ADK/IsQ3GOyaCfiSdn4f9D+u/bDhH4MCjfZ6Rhvy9iRY6R
+         YGL3FEFPUOurCEOkUk2wjuEq9JpHfhevmzFQc2h6fLcVnOR//PJmeennieg4JrDIyirF
+         yEiwjP092tAPPXtldjD6gkI6UB7PEw04b4ltwP9DjaaBTPhh2JmDRfHVLQgYQBc4fo9a
+         NJHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779110082; x=1779714882;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+2W8Kh26zpmPW+LCobCj4WL6hHrjmrN7QEdZmG2gns4=;
+        b=QMCu+xKib/ae0viu8VsQDiZe//72jvc+04qA6ulVkJufOKOvctPEtQX27bcVE2WI1K
+         GToPx866HyKYU096IuQeNWJvnTci0XCdDHo7qZ2nV1cAFEzgbIe4nT+rvvdSCFi7oGsH
+         2a+EUONvs1t/tjJ+oEW3sbB9UWm8SMeaL70er5/nqEeUvgcc46ruv9wdtpe46l9Qwt1A
+         V9uqwd/qimaMn7A3Xc/ZVCqwlo7WJZZtMXYYVM4v/8mnXlJKWWdAK+j2k2lWmUceDXiI
+         jkMHO1TJBwRwfgzBEfrvW4rCY4EmQNxoPpsmGps6/c/3JXawu9aKYiFFW5Ze9SlkyOUo
+         JLOw==
+X-Forwarded-Encrypted: i=1; AFNElJ/8Mtj2UvdmO+V5qRDu5U+6UH7fa7O+bf3AHrBbwCafiW62qzyVR5J9RZn/QzSloMKIWrcNPfonLf8P637nGRY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9bcwLqxrVlkr0U1qnOkCpWMj9OhG4g+OnkKWYpFb75K5CJm+E
+	+L6+WnaIgpXIbyUQl4NEKB6EHlFC9QEmHWmUNLWnE2+yIcz+Y9O+F92X
+X-Gm-Gg: Acq92OGS/fV1DG1fB0oRNpSPIDbxOAgGpGeVrpYr2suWE4BgbBpmRka+AcOwtyZFvwC
+	/M7Pqs1SNPMDM2CUYeHk/ViGnYlWL5Qy+vxobgavu3AP4/eNo49WT2hTM0X0VxsE/cPjV1r6MTg
+	72gfII5dxJthOd7AyAqprpeXDZ++FLCS1iVAwH5IB2jBdmH9cz4qWMk3HkjOYxE2Z0orfsTqOmL
+	CyO0ewT36FJP8I3wdRQJqX25fbdfwEX4z72ow5R3oJ9nMgffd21AObInfZQFdNAq+iLVoPVOHnt
+	NRqR2zi4Xm7BY1vbTNTbLbT8uwhW3gkgUTwys6ROJJ+Bt+J8V6xopk5zysDXNkbWUBnViCPvidC
+	Nc1YleUtT7ivYOLEbgEHygsMeAzW3qQcG2H8r5hqAZ880ogjg59klO7rB5FbiCGEc8cIIruWzK7
+	/INLNenieNJQGVqYVno/judkZUl45S51VR6R0586jx
+X-Received: by 2002:a05:600c:4f8a:b0:489:ad:7b5b with SMTP id 5b1f17b1804b1-48fe62f8c6bmr230536955e9.24.1779110082062;
+        Mon, 18 May 2026 06:14:42 -0700 (PDT)
+Received: from RTRKW671-LIN.domain.local ([95.86.49.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fffb9aac4sm249619265e9.9.2026.05.18.06.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 06:14:41 -0700 (PDT)
+From: Milan Tripkovic <milant2002@gmail.com>
+To: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	kees@kernel.org,
+	andy@kernel.org,
+	linux-hardening@vger.kernel.org,
+	Dusan.Stojkovic@rt-rk.com,
+	Milan Tripkovic <milant2002@gmail.com>,
+	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
+Subject: [PATCH v4 0/2] riscv: lib: add optimized memcmp() and extend KUnit tests
+Date: Mon, 18 May 2026 15:14:05 +0200
+Message-ID: <20260518131407.1026049-1-milant2002@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260518-starten-messdaten-3b8aa670ec85@brauner>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.dk,zeniv.linux.org.uk,suse.cz,vger.kernel.org,kvack.org,kernel.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 18, 2026 at 02:20:30PM +0200, Christian Brauner wrote:
-> On Sat, May 16, 2026 at 07:21:26PM +0100, Pedro Falcato wrote:
-> > Since the advent of vulns like Dirty Pipe, Dirty Frag, Copy Fail
-> > and Fragnasia, splicing a read-only file is fundamentally unsafe.
-> > 
-> > As such, as a mitigation, add a way for users to block splice() for
-> > files they cannot write to. This eliminates this whole class of exploits
-> > that use splice()+confusion in pipe/net/etc code to gain write-access to
-> > files they can only read.
-> > 
-> > Users can simply toggle fs.splice_needs_write=1 and suddenly splice() will
-> > refuse perfectly legal splices() from files it can only read, but not write.
-> > 
-> > For vmsplice(), make due with the address_space attached to the folio. Care
-> > is held to make sure the operation isn't too slowed down with locks. The check
-> > itself isn't entirely equivalent (the mapping's host can be the internal bdev
-> > inode, etc, and not the one in /dev against which permissions are checked),
-> > but doing it in a more correct way would require dropping from GUP-fast to
-> > GUP, and that would be too slow.
-> > 
-> > Signed-off-by: Pedro Falcato <pfalcato@suse.de>
-> > ---
-> > 
-> > Hello,
-> > 
-> > sending this out as an RFC so I can get better opinions from VFS & security
-> > folks upstream. I wrote this out as a way to harden against all the page
-> > cache attacks we've seen lately, that bottom out to splice() from a file
-> > they cannot write + confusion elsewhere on the net stack/pipes/etc.
-> > 
-> > This is _obviously_ not perfect and not complete. My first (unsent) version
-> > straight up returned -EPERM on splice() for these files. This one attempts
-> > to retain some compatibility by only blocking the page splicing operation,
-> > but still issuing the operation with normal copies (kindly suggested by Jan).
-> > vmsplice() is a complicated issue, because gup_fast does not allow us access
-> > to the VMA's vm_file. I tried hacking around it but it's not perfect (e.g you
-> > cannot grab the mnt_idmap for the file, since we only have access to the
-> > address_space + its host).
-> > I'm also not a fan of having somewhat hairy MM code in the middle of
-> > fs/splice.c but that's something we can simply hoist elsewhere as this gets
-> > un-RFC'd. It's also missing the external-facing docs for the sysctl.
-> > 
-> > My big questions are:
-> > 1) Is this a viable way forward?
-> 
-> I think that splice and vmsplice() are pretty wonky apis. Ignoring it's
-> recent prominent role in page cache attacks it suffers from weird issues
-> due to its interactions with pipe_lock().
-> 
-> Bug with splice to a pipe preventing a process exit
-> 20250122020850.2175427-1-kolyshkin@gmail.com
-> Sendfile holding pipe->mutex blocks the peer's pipe_release() from do_exit().
-> 
-> Change in splice() behaviour after 5.10? (LTP splice07)
-> 7F3B484F-9555-486A-B19A-5A8EB6442988@kernel.org
-> 
-> [PATCH v2 00/11] Avoid unprivileged splice(file->)/(->socket) pipe exclusion
-> cover.1703126594.git.nabijaczleweli@nabijaczleweli.xyz
-> Pending splice from tty/socket/FIFO holds pipe->mutex indefinitely, blocking all other FIFO ops incl. read(O_NONBLOCK)
-> 
-> splice: prevent deadlock when splicing a file to itself
-> 20260320130615.1109449-1-kartikey406@gmail.com
-> do_splice_direct_actor() still lacks file_inode(in) == file_inode(out) guard
-> 
-> AF_UNIX/zerocopy/pipe/vmsplice/splice vs FOLL_PIN
-> 2135907.1747061490@warthog.procyon.org.uk
-> vmsplice/splice into AF_UNIX/pipe doesn't FOLL_PIN the source memory
-> 
-> My main gripe with the patch as written is that I find it really hard to
-> figure out who would deploy this. It half-cripples splice() and
-> vmsplice() for some use-cases but leaves it intact for others.
+This v4 series introduces an optimized RISC-V memcmp() implementation 
+and extends the KUnit string tests to cover both functional correctness 
+and benchmarking of memcmp().
 
-Not just splice() and vmsplice(), but sendfile(), copy_file_range() too.
-My bet (perhaps not informed enough) is that there simply aren't that many
-users doing splice-like opeartions from files they do not own in some way.
+The memcmp() implementation incorporates review feedback from earlier 
+versions. It features improved alignment handling, optimized loop 
+structures, efficient use of the Zbb extension, and ensures overall 
+correctness.
 
-(maybe not true for copy_file_range(), I admit)
+The KUnit updates provide comprehensive memcmp() test coverage and a 
+benchmark mode. This v4 specifically fixes a build error regarding an 
+undeclared function call (STRING_BENCH).
 
-> 
-> At that point you can also just ENOSYS splice() and vmsplice() via
-> seccomp and force a fallback on non-splice codepaths that userspace has
-> to have anyway as splice() isn't supported unconditionally.
+Signed-off-by: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
 
-IIRC GNU grep is one simple example where they assume splice() from a pipe
-to /dev/null Just Works(tm) and it exits(1) otherwise.
+---
+v4 changes:
+    - Fixed build error: call to undeclared function 'STRING_BENCH'
+    - Link to v3: https://lore.kernel.org/all/20260515141019.1234037-1-milant2002@gmail.com/
 
-> It feels like a knee-jerk reaction to an exploit class originating in
-> buggy modules that we have little control over and we would extend an
-> API to users that is really difficult to use.
-> 
-> What might make more sense is to add a splice specific security_*() hook
-> into the code so that an LSM can deny usage of splice in whatever way it
-> wants to - bpf lsm or in-tree lsm.
+v3 changes:
+    - Split memcmp benchmark into wrapper (string_bench_memcmp) and worker
+      function (do_string_bench_memcmp).
+    - Removed all C99 mixed declarations; moved all variable declarations
+      to the top of each function.
+    - Converted len, iterations and loop counters in the benchmark to u64
+      to avoid implicit casts.
+    - Cleaned up spacing, indentation and minor style issues.
+    - Added #if defined(CONFIG_RISCV_ISA_ZBB)... in  memcmp.S
+    - Link to v2: https://lore.kernel.org/all/20260514121359.931999-1-milant2002@gmail.com/
 
-I don't dislike that option, but I don't love leaving hardening to LSMs. The
-kernel quite literally gets a new splice-related vulnerability every week now,
-where userspace gets to pass pages it has no business passing to funky
-codepaths that then write on these pages. I feel like natively restricting
-what you can pass is simply a natural way forward.
+v2 changes:
+    - Added alignment checks for buffers to avoid expensive misaligned loads.
+    - Optimized the loop using end-pointers to reduce per-iteration overhead.
+    - Implemented word-aligned tail handling using ZBB shifts.
+    - Removed redundant pointer equality (a0 == a1) check.
+    - Retained BE support via #ifndef; ZBB rev8 is used for the LE fast-path.
+    - Fixed KUnit build failures for Clang and non-benchmark configs.
+    - Link to v1: https://lore.kernel.org/all/20260512141007.1193033-1-milant2002@gmail.com/
 
-> 
-> Then we don't have to have all this gunk in the VFS layer that will be
-> annoying to maintain with little value in the long-term. So I'm not very
-> likely to pick this up as is.
+Milan Tripkovic (2):
+  riscv: lib: add memcmp() implementation
+  lib/string_kunit: extend benchmarks and unit test to memcmp()
 
-Totally. That's what the RFC tag is for :)
+ arch/riscv/include/asm/string.h |   2 +
+ arch/riscv/lib/Makefile         |   1 +
+ arch/riscv/lib/memcmp.S         | 125 ++++++++++++++++++++++++++++++++
+ arch/riscv/purgatory/Makefile   |   5 +-
+ lib/tests/string_kunit.c        | 120 ++++++++++++++++++++++++++++++
+ 5 files changed, 252 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/lib/memcmp.S
 
 -- 
-Pedro
+2.43.0
+
