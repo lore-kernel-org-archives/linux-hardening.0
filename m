@@ -1,116 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136D93C5540;
-	Mon, 18 May 2026 06:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233693DC4DC;
+	Mon, 18 May 2026 07:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779087361; cv=none; b=ERjy8wBKImCuCGxshEPyi259aQUHjCGuGXsjSHOScrg4qwwhrgZ1Hd7UeaKbu+aaJZZwia1xuS//hCT653LVCFroaJ7htaguXxV2vcuVXO2U+uwxu7BlA+v86ywuFg1zcd22V46DPD2C61geR4Kw8TqEEtHCj5XmXXqE0vmbXoA=
+	t=1779090314; cv=none; b=NdEQFeZwe7UD4kyXCzGA7KB0TbrI8UmUwt4sA+9mRoYrUbg8AyJHBNdcqSXle84/UtLbfsx1cZTB2W/HBX+vxef08li1ssx1kZyw2ikrl1LRBOcUDV+HGFp3JClcBKEKewlgD1mApM3bHtkgVz3NZpvhZ2qGX6I/6OtH2jUZi2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779087361; c=relaxed/simple;
-	bh=o7dvWOoDxJoqk2pHywtA9JSXlbLLMaNNcTzFjnfj+Jk=;
+	s=arc-20240116; t=1779090314; c=relaxed/simple;
+	bh=QJqelUl577WCFj/Tzkydza7+d0YsaiPx/vfBgnx0wTg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nzyr2yXrYaogmwid2AOD2OqYSFLcQEOiSc2YPcUkdSBYycIp6RgNJTva6uMujVnhV76pHkQ0S4Lv8i5G3HKhuVcBWC7MOPCm+q4KFk8wzIWTwp+ZRxJJJ1/YHBxuqx8CP2eGrVoZanWYpdVQ7LJGRCRlEbQx/rHyNGis6XWAsJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBEAy425; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LEvJqkp9RJ736y2Jbla6f4iZP3/GflMnETFjCfvWeXGy947FyBg7JymLFDAUwn5zc8sdFHx7WEICbcEKB8lWP5uW7r2KMZvJagVhATvTmRg2tJW3k69WU7LAg6QoMSCkTKwRJT06NsuN67p7zPlUX6VSncLbslOt27LhaTxjThE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aUl0eIP2; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBEAy425"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E94F3C2BCB7;
-	Mon, 18 May 2026 06:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779087360;
-	bh=o7dvWOoDxJoqk2pHywtA9JSXlbLLMaNNcTzFjnfj+Jk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nBEAy425sh60FdXG3PK9Hl5HHmR4JhLGLkssLELCmAl6bLVf2uoZT9DlFjrBdwUOr
-	 iPfrb/zNRGIbEw5MvkdWEHn8q9hpCzXM89p5Eh0zCbZWYKLA5OQFQDbLaGF4DiqNsx
-	 zJKMRlYVC5OMdTqQz0LhOSYUJpWk1ykdqIsnUjH9EeY5aVmMnsIak3HhyAh2Zwj230
-	 XNquFayYEnkmYsxqti+gH/xiwDlCZHDReM+yHYJXq7nqnJbiS2qeiIQytSvEmXNEAw
-	 41STb/iOBY3qwPcjq8FwSnfB1RrgHS3q3+J3DY9cymgBqa5YCBmuBqY6sLXjcMgzsR
-	 3JaQQwY6GZZ2A==
-Date: Mon, 18 May 2026 08:55:58 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Ethan Nelson-Moore <enelsonmoore@gmail.com>
-Cc: linux-doc@vger.kernel.org, devicetree@vger.kernel.org, 
-	workflows@vger.kernel.org, linux-arch@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-csky@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>, 
-	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>, 
-	Hu Haowen <2023002089@link.tyut.edu.cn>, Dinh Nguyen <dinguyen@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	Dave Penkler <dpenkler@gmail.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH] nios2: remove the architecture
-Message-ID: <agq3nMVq5x4SyBAV@monoceros>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aUl0eIP2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9SNy0PSQLDBEdWaWsi8e1WsxaDfOs/5iKk51l3if+ks=; b=aUl0eIP2Xay9XsKzYBAdXd+45c
+	RVnY2Rb8MNw0C3V2PoQXyeCIzwuS/Q5eWsd5Tk6Hu9K0S6tvVMTh8hlNX4RvdwVsmKP+rxrydE8pz
+	XskZEruC7dyvdUHnEq4u7PnKeuN0Psms1EzFOuDsTp3YNjeZquMPV+F8bNqihrokpDwr2tICgYJsL
+	IFPKbYQrEJsBmZ114svVnyI4/qP3dOfkpIg3rXMeLWRskOfauqqVRs1Rw6tdr+KG8sM54EzSru0tm
+	v2tx3ovAvrfuwS7Zj/Qi70gAKhhW2i3IBlkKd+1qpGWp4KHAseEOAYo4M0q8PoghyrsIimwS8lIm+
+	xhN6ngLw==;
+Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wOsew-0000000AERb-3EAT;
+	Mon, 18 May 2026 07:45:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 52B863007A4; Mon, 18 May 2026 09:45:06 +0200 (CEST)
+Date: Mon, 18 May 2026 09:45:06 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Arnd Bergmann <arnd@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-s390@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	kasan-dev@googlegroups.com, Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
+	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	Stefan Schulze Frielinghaus <stefansf@linux.ibm.com>,
+	Juergen Christ <jchrist@linux.ibm.com>
+Subject: Re: [PATCH] [RFC] ubsan: turn off UBSAN_ALIGNMENT on s390
+Message-ID: <20260518074506.GS3102624@noisy.programming.kicks-ass.net>
+References: <20260515092057.810542-1-arnd@kernel.org>
+ <20260515165357.10935D74-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v3mrrmanqdjd4jn4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260518042833.272221-1-enelsonmoore@gmail.com>
+In-Reply-To: <20260515165357.10935D74-hca@linux.ibm.com>
 
-
---v3mrrmanqdjd4jn4
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] nios2: remove the architecture
-MIME-Version: 1.0
-
-Hello,
-
-On Sun, May 17, 2026 at 09:28:33PM -0700, Ethan Nelson-Moore wrote:
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 6f3147518376..d8145f369ec3 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -131,7 +131,7 @@ config PWM_ATMEL_TCB
-> =20
->  config PWM_AXI_PWMGEN
->  	tristate "Analog Devices AXI PWM generator"
-> -	depends on MICROBLAZE || NIOS2 || ARCH_ZYNQ || ARCH_ZYNQMP || ARCH_INTE=
-L_SOCFPGA || COMPILE_TEST
-> +	depends on MICROBLAZE || ARCH_ZYNQ || ARCH_ZYNQMP || ARCH_INTEL_SOCFPGA=
- || COMPILE_TEST
->  	select REGMAP_MMIO
->  	help
->  	  This enables support for the Analog Devices AXI PWM generator.
+On Fri, May 15, 2026 at 06:53:57PM +0200, Heiko Carstens wrote:
+> On Fri, May 15, 2026 at 11:19:54AM +0200, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > Testing randconfig builds on s390 with gcc-15, I came across a number of
+> > seemingly unrelated build failures that ended up all being caused
+> > by the -fsanitize=alignment option:
+> > 
+> > s390-linux-ld: kernel/sched/build_policy.o: in function `thread_group_cputime':
+> > include/linux/seqlock.h:1286:(.text+0x1f738): undefined reference to `__scoped_seqlock_bug'
+> 
+> Does this only happen with __scoped_seqlock_bug()?
+> I just enabled UBSAN_ALIGNMENT, and with gcc-16 I can see this too.
+> 
+> > What I observe here is a huge increase in generated calls to
+> > __ubsan_handle_type_mismatch_v1() that ends up thowing off a number of
+> > compiler optimizations that the kernel relies on.
+> > 
+> > I have not been able to figure out why this happens on s390 but not arm64,
+> > arm or x86, if other toolchain versions are affected by the same thing,
+> > and if this is a problem in gcc or in the kernel itself, e.g. some
+> > variable being identified as unaligned when it should be aligned.
+> > 
+> > This clearly needs more investigation to figure out properly what is
+> > going on, but turning it off is currently required for randconfig testing.
+> ...
+> > ---
+> >  lib/Kconfig.ubsan | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> > index 1ecaae7064d2..3fc03a6b5af4 100644
+> > --- a/lib/Kconfig.ubsan
+> > +++ b/lib/Kconfig.ubsan
+> > @@ -152,6 +152,7 @@ config UBSAN_ENUM
+> >  
+> >  config UBSAN_ALIGNMENT
+> >  	bool "Perform checking for misaligned pointer usage"
+> > +	depends on !S390 || BROKEN
+> 
+> Wouldn't it be more appropriate to extend the ifdef at __scoped_seqlock_bug()
+> which emits an empty function for exactly this reason for some gcc versions
+> and kernel configs?
+> 
+> That is: add CONFIG_UBSAN_ALIGNMENT to the list (copy-pasted - white space
+> damage below)?
+> 
 > diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-> index 5a40252b8334..edc8c96d91b6 100644
+> index 5a40252b8334..18affa4d21a6 100644
+> --- a/include/linux/seqlock.h
+> +++ b/include/linux/seqlock.h
+> @@ -1259,7 +1259,7 @@ static __always_inline void __scoped_seqlock_cleanup(struct ss_tmp *sst)
+>  
+>  extern void __scoped_seqlock_invalid_target(void);
+>  
+> -#if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 90000) || defined(CONFIG_KASAN)
+> +#if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 90000) || defined(CONFIG_KASAN) || defined(CONFIG_UBSAN_ALIGNMENT)
 
-Acked-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org> # for pwm
+Right, so I have a GCC bug and some mail with Kees about all of this.
 
-Best regards
-Uwe
+I wanted to add: CONFIG_UBSAN
 
---v3mrrmanqdjd4jn4
-Content-Type: application/pgp-signature; name="signature.asc"
+But for 'raisins' the whole bounds checking thing is mangled into UBSAN,
+so everybody + dog has UBSAN on in their .config :/
 
------BEGIN PGP SIGNATURE-----
+IIRC Kees was going to look at untangling bounds checking from UBSAN and
+make UBSAN pure debugging stuff (again). But I don't think he's managed
+to find time for this.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoKt+8ACgkQj4D7WH0S
-/k6D+wf/c3PPUzT+ilOfvLDq6xQ9mwqwWCSp0mpgj+sKStF3zLW22/Jxh8uQfgJz
-ZxNzeVpp3RcvofNMMm9NFY7fAJ1PB+bqLcKvHzxUCFe5c6VAocZOm+H+6jrnvcGM
-tKehUuFKbRlgdS1XjOXmRn9CuXP4HU7Jm0kFysqDtNt0Zl8gGYQgubZ2Z34XrBIu
-msmr1l3QT1BMbE7uRR5crgqH4HHvMpZqR0RehrX2/c1VY8HWEujhEkufhcMZMrvx
-Vmuf0f4bdeu4oIwwFMXmijr6ySoxRBKluXwjFOMUa8ZqhyhLFSr6lOhX8pXD+rOr
-+brUNxnEjv3MpJArRnZswn7AfSGXWw==
-=83W7
------END PGP SIGNATURE-----
-
---v3mrrmanqdjd4jn4--
+Anyway, yes, I suppose we can do as proposed.
