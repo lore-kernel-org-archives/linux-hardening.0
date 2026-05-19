@@ -1,138 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF4C480339;
-	Tue, 19 May 2026 10:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779188377; cv=none; b=ZS31UiVovUIR1TuyE/cV4OkiQHgo0q1KX59BOd8x06oG/5utbDFS5VSvXxkrOwlZQ0aewjUZiCHt/W+2Un/nb2jcEZa2pSO3iG7Bmil6fpDzEx9mFz3YdxnVp7rGeouDktyPYDktZLqbK+l1L3ZtOD5Dbe9HojnqBT8BrVUVbCY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779188377; c=relaxed/simple;
-	bh=A/sK4uYKDHlfqofPeTZV72AW44cUa0BDZi7ueukxUkw=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=SQ1PuRstr/BwD2m2tMU+9H4KqiIlrwi7/gHdXwiZI056EBDJbFA81bUOHIOn6DijPaBtHSYQuGcro+t2ao8MHu9v6FbKF5kY06Q0SBHJvSlQN/vtbVMkw+v7A1tkcXFfFpGEkdnHHimltOViFPceTv0J1QzHBgAf/SZpbgPanzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aG5qVDw4; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B6B369D45
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 11:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779188882; cv=pass; b=H7+kyk/s2HwB2uctLplYDc2FoNcPNLQfqoKkai4unQYU6anP3dk2bpKYjsxsiJO02/YbdZaVQxmpoItKQRvIFxxqmltg3CPlKzbaSev5JnHxGIga++GvENmlQ6G699bESYjLWZyjqQ3koQ2PbQNlGzuZxYPt/4lcHfR5IoKVPOk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779188882; c=relaxed/simple;
+	bh=nhTmhA7EtvBhVzOtpkjubbcdCBekT90z9FnlkG56Nt4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJx5MlhHfBSkXLWTKL7ijyMk0UCVz0wXrZhLAdoS5GvW96IM8hwpNRp/yloWdxYYVNxq2ksSQ5daxuGt+MJL5Z2IR5zemuz3IsB6101k31Q39pFxVqT4UJNG91Q+z/fDmxRhMau7OUWxqCDbmtbXL5Z09chLOtDkyhdhoL188P0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NkzOT8mX; arc=pass smtp.client-ip=74.125.82.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aG5qVDw4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B010DC2BCB3;
-	Tue, 19 May 2026 10:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779188376;
-	bh=A/sK4uYKDHlfqofPeTZV72AW44cUa0BDZi7ueukxUkw=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
-	b=aG5qVDw49j2L2f66I6reDbbTDvfsExNp2ERHe47cjeXBviNqvvDR8z1frpZlrBkse
-	 tIlzlu2hXDy8PjKpn0j/EAltvgWotNHLkJ4ekyCZemhrcPrT/gByURBUTWQa1K2wlX
-	 4qz2Dz96oe1ggLnbsHF2LqOPMY4LhwRWzQMZyewA5986IhP7HBSKoO6FWnrcNsOHty
-	 ZX6EYI1V6k+mJONl0TkLkWHyUMV7XvNjaDR5EIUpfaaiptF2RAeWVNHTDRy7H/po3/
-	 QiU1dYvQR4i5schE8YVonPenLPwyprZcoJJ+REeEaNGiNHpKm8MEHPz194awVo6y96
-	 0aIN+NccsREnw==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkzOT8mX"
+Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-2f24905306dso284654eec.2
+        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 04:08:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779188879; cv=none;
+        d=google.com; s=arc-20240605;
+        b=NitfHxsWnRTv7ZgiqbCBv+ms2cmDpKHCosgo5niTKcULwuT6InZH6zcO7UylFntoa5
+         81EvU1JzB2Vw9YJHN3779DEZWkDijtZKJxHChwc6sWOupm593qGX4Fo6+6DSdXPxWsvi
+         o2xtZgy+eTeZi4691UxXQpIz2ON4UH3SvTrzf9e9o6POn2F+jY/WMX39v05v6vb2HAbW
+         ugkDDmtpven7XTO5HIekFcWqM5cUQSp++eeuUxqfFuC6tYhRil+5DCbFyhLLwOlaBRUM
+         sZeqpU7xyQ0TIZ3RpAU9+pEYD4S4btl4kxe7TC+gMlnq1zPeeZ5gq5uRkRPnkOR7ehbj
+         00OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=nhTmhA7EtvBhVzOtpkjubbcdCBekT90z9FnlkG56Nt4=;
+        fh=2qQmkEiFU1jlYB0MEXZ/92zXgbs8KiPcqWQPiGIcgRM=;
+        b=iPK4g8jSj6fWpihIzKaoeYVqD4kSvQJRZi6p8EWX7c2oH/JyJk1l0Nzs1BBGoGs039
+         fIuu1dTEN+alZ/V8FiZlqM7+QpxmnpQE817uiipGoZnqzapAbFUkYweUPgQ0TY/qmmc4
+         nVwfgdL8eDADRTKSdIu/xI2DvBP9V6aqb6G6itbA+scRLNFvvE1TE1HacSe/XeNDwyZS
+         bZgj+yBgRWb8hQHhIfXvM/eTmgdSbsNEUFhE2Mh0GbR3l8PVRQNSktkWstoTMIrC/lBB
+         zjjiVVgJjHWtUJqYLJhy4ZcKT74Wz3qjx6qgMc0IsUYshw8OgofwupQEnHfkOU9SD8ys
+         HsdA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779188879; x=1779793679; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nhTmhA7EtvBhVzOtpkjubbcdCBekT90z9FnlkG56Nt4=;
+        b=NkzOT8mXh6bXhnJvqEtApaE4S4veNhy2u4ev1hghBlqH6x0n92yVBDsJ2dVI/ZJivu
+         9A8hpggl+UV+EG+gZ3coLNVauocffm06kPS6Vsilr4oCfGSd+pU0V/7UWBN7MJ69Qwj4
+         R1O1gypG77mvtOgIEZmtoiOoxIxx/0pznmMVmWyQ4agGZcSLDIFoxyo9RDUI+MxRlN+5
+         IdgW+epOIw+p0gT6dT9gkmNG7DD8Tr7Gq7TAph8w2yFKfIgDr2gJ4ppcyT6UkCIFCNyf
+         8Jw0CWqYMJEIAQUcdMZMca1DkDroniAfLQjNSAqdcZYDK/d8nqv1CAJ1GQZJXX93ZFJ9
+         eCEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779188879; x=1779793679;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nhTmhA7EtvBhVzOtpkjubbcdCBekT90z9FnlkG56Nt4=;
+        b=K5In9oxEtGTDfrLZjTumzqUqLUEUVYNpc8e5F4OUAj+LQOIUjuDmcq7HIs0TYbza74
+         A65iEnC+IxuU24Wgv0o+pDEM3GoBgYX9+mIA+lJ2dstTFznFMVD7ncxlrtEdISc31EIL
+         LYte8HdJVoUtN3OmpUkzoHsWuz7J/RecBdKsB/8TvwvNFU6sXk7FPt9IeBbJyMXX2W06
+         EmYb5Uo1may1mg4l+DoP10N2IBrlVSdlauqHRp2e+fx4gdcAfTaqYCfeTMzbrxqC2InR
+         XXOnTnEoDeLBSDPJwZI+QHCUX+YxFhd1DLTW6J5xXv/Eb6GwzfRnMsMuvRsw0wD8ihKA
+         nlIQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9rs/Nehs+dZ6wGt3ozvtZFziX8n6pDkeF8ETNKgIHRyXJ2cRwRwJc5CNCFQjO7Tm3MjCUCpjbbRDyl/x0R8vs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjlnaQvFyS+91kbowOWnVKz6xSngjprpdQ1FAFx0FfjEVI3pSg
+	15fF0PfyS8sS6s+flbscPouoQ+wL8lMcZx9uaxUnuA6uB4W92rkDEYTjFdRVMzjWIVtF1mJ0lRa
+	tqY4W+1ranyheI5UgrDbxS4Si3oRbtXQ=
+X-Gm-Gg: Acq92OGMxoVVbEHv2psLTE9jGW/b4Bat5p3FWqEG/efny4oiz0t2CuWUjCnMcjVCsYu
+	ac8sxErHUZjUH6EPnE8O0NLCKBznNbrYaDrrWM5w6bKVhlaqLtHByCpAz9l07vV/SaMprwjL9HM
+	J0M6od52V0iUAqBgMpyuaY/GWTfAf5M859KUNdJ0gW+5fh3iQIW9CpdvSomX6EWJBZXGjTT7sUe
+	xfGTbr3VHU5IIhdNZuhgUmQqJyaVvDsNROybBfeQ6GKX4OYIKWX2lPEDe2CIpf0dnfCBW87eDTB
+	OyvZMIR3tsqSGlGUd++F0cHVdtDzEH0X6JJ6NerWrY92WaDggJHKx59pnOeLitPq16CISHCszm8
+	41GO4MMWI8K/8VdpBwh2tRz8=
+X-Received: by 2002:a05:7301:6785:b0:2f3:3835:2010 with SMTP id
+ 5a478bee46e88-3039870650cmr4323491eec.6.1779188879399; Tue, 19 May 2026
+ 04:07:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
- read-only files
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Jens Axboe <axboe@kernel.dk>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
- Kees Cook <kees@kernel.org>
-In-Reply-To: <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
-References: <20260516182126.530498-1-pfalcato@suse.de>
- <20260518-starten-messdaten-3b8aa670ec85@brauner>
- <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
- <177918418452.771415.4371785688744608623.b4-reply@b4>
- <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
-Date: Tue, 19 May 2026 12:59:31 +0200
-Message-Id: <177918837114.804096.3977912252785122973.b4-reply@b4>
-X-Mailer: b4 0.16-dev-d5d98
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3427; i=brauner@kernel.org;
- h=from:subject:message-id; bh=A/sK4uYKDHlfqofPeTZV72AW44cUa0BDZi7ueukxUkw=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTxOE0tNgvv0N2gc3XLoTeeh03teF81p9f8dZ3ub7eBf
- eNjKSOJjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIncj2ZkmHauY9nrwpt7P1y8
- 8+CtbdTPmQee6blN3WazXbCr/MbUDi+G/44M8ww4N7uWHvvyRTt83TcF5kufzkUfO/KL95jUocz
- NwnwA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+ <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com> <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+ <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster> <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+ <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+In-Reply-To: <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 19 May 2026 13:07:46 +0200
+X-Gm-Features: AVHnY4KWOiWEY77zuE66kq3xKsBRyVSkUGj1e6jCXaPb6QA3ygej9CY3aqSmM8c
+Message-ID: <CANiq72=6oYtHf0Q1NaLXZ+25uQyYbej2xnvUhtgpHyvozhP7_Q@mail.gmail.com>
+Subject: Re: [PATCH] nios2: remove the architecture
+To: Simon Schuster <schuster.simon@siemens-energy.com>
+Cc: Ethan Nelson-Moore <enelsonmoore@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@kernel.org>, 
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org, 
+	workflows@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, 
+	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-iio@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
+	linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>, 
+	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>, 
+	Hu Haowen <2023002089@link.tyut.edu.cn>, Kees Cook <kees@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Nicholas Piggin <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Dave Penkler <dpenkler@gmail.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof WilczyDski <kwilczynski@kernel.org>, 
+	Andreas Oetken <andreas.oetken@siemens-energy.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026-05-19 12:51 +0200, Mateusz Guzik wrote:
-> On Tue, May 19, 2026 at 11:49 AM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On 2026-05-18 20:59 +0200, Jann Horn wrote:
-> > > I feel like a sysctl for "disable all the splice-like interfaces and
-> > > zerocopy TX" would be reasonable to have? Either by blocking such
-> > > operations, or better, silently downgrading all such operations to
-> > > normal copies.
-> >
-> [..]
-> > I think blocking isn't going to be useful as it will make it harder for
-> > distros to turn this on. So we should degrade.
-> >
-> [..]
-> > Let's discuss the other aggressive alternative: Can we try and
-> > unconditionally degrade to copy. This would affect sendfile(), splice(),
-> > and vmsplice(). Worst-case we would have to introduce the sysctl
-> > retroactively.
-> >
-> 
-> I know at least nginx uses sendfile, but I never benchmarked how much it buys.
-> 
-> The original patch as proposed filters by rw perms on the file, which
-> I expect to exclude nginx.
-> 
-> While kernel-internal copy is still going to beat a userspace-based
-> read/write loop, this is still going to be a hit and I expect people
-> are going to complain. Afterwards you may end up with tutorials how to
-> re-enable pre-patch behavior, partially defeating the point.
-> 
-> How about denial of splice usage or degradation to copy are still on
-> the table, but based on a different criterion: whether code involved
-> is "known good" for lack of a better description. iow the kernel would
-> maintain a whitelist of "safe" cases. Random-ass AF_NOBODYEVERHEARDOF
-> does not make the cut.
+On Tue, May 19, 2026 at 12:41=E2=80=AFPM Simon Schuster
+<schuster.simon@siemens-energy.com> wrote:
+>
+> Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
+> unsure about the netiquette (can I simply do so by self-proclamation? At
+> least the git history seems to suggest so...).
 
-I had thought about that to but I felt a bit iffy about it. You could
-envision an FOP_* flag for this:
+Up to the existing maintainer, in general.
 
-  /* Module may use splice-like apis */
-  #define FOP_MAY_SPLICE          ((__force fop_flags_t)(1 << 8))
+I would also suggest changing the support level to "Supported",
+instead of "Maintained" -- that would help justify keeping it in
+mainline.
 
-But that doesn't address how fundamentally broken vmsplice() for example
-really is and that probably no one should get to use it in its current
-form.
+I hope that helps a bit...
 
-> Common-case usage would have to be audited of course, but this sounds
-> rather actionable and would provide hardening without much friction.
-
-And that's the usual problem where rando module will just raise the
-flag. Maybe that's fine and we will keep up.
-
-> I can't stress enough that mucking around splice (even if worthwhile)
-> is merely addressing the currently popular attack vector and not the
-> general problem.
-> 
-> The general problem is that the kernel is expected to be able to run
-> with untrusted unprivileged users, while it avoidably exposes a huge
-> attack surface. Of course there is no way around providing a bunch of
-> syscalls to users, so *some* danger will always be there and one has
-> to expect that even core code has bugs which will be discovered by
-> LLMs in the coming months. Even then, there is tons of code which is
-> currently being audited by third parties and which has no use in most
-> setups. Instead it gets autoloaded in response to an exploit wishing
-> to take advantage of its bugs.
-> 
-> The huge attack surface was always a problematic position to be in,
-> but with the advent lf LLMs any unskilled person can drop a 0day and
-> the position is straight up untenable. In the long run there is no way
-> around blocking access to code by default, way beyond the current
-> splice proposal.
-
-I see this is the "let's become goat-farmers" portion of the message.
-
+Cheers,
+Miguel
