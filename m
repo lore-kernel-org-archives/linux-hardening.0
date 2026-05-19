@@ -1,166 +1,179 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB45278F2F
-	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 00:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.195
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779149651; cv=pass; b=aSzPNDbJKTjNZZkvRN6O6Q1lY6Jqu/+FfWj5r0CdZwe6yOCSLAexhxwA4jI20tJSyhQkB7reDmwVbFGVq3WfH/T4QZUdn8DbP2PjPNAI1PpYznJoI+HiWiWukx8LHMeWqCU9JUPdxocDlQM2z3sGs+G37dZZhbp5t4OnaJBK8iI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779149651; c=relaxed/simple;
-	bh=LPwsRaL3/VhQKGJMHLIVfCwqYVCTUXR7opK9047JBWk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TO4rv0ZmDgwtf/X3u+bgNYl8NnGyi2bM9eJNazdUgYTQrcnEFKOd+KIAWYUwEYjO6/FdSd9IuVTOvjLDJEq1GWKM/xXRXrozF8oYTAl/DZ3knFp4X/C1XvCpT3UIrFLyhvmdplXqc22W7Di5rLQVReHwaHZ/ejSnvYhg6W8wGhQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d59lwcl8; arc=pass smtp.client-ip=209.85.160.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690B82F9DA1
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 01:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779155933; cv=none; b=p6r4zw6USiFuAg7YwGZKWjUz3ruQVBDLlPlxTn5Ws+a79XiSc/dFIo872RfCiQc5/Id2jbvTXNwcl9VG+9OVCDszeL1pVggPh+8BnjUEc+mx/BBUOM4wei+MfHpzDp9w0Q52wXf1KOOwwOwbgroN1o2whd0pA2pwLqG0lJKiNP0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779155933; c=relaxed/simple;
+	bh=o9tpwTNBKfUuronh2IiA7Q31eMmatIzAB4cU4aq6YU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nIWYg+QUxqXmWvmQyBg0k2QGxwWOa2pz75GSAG0LsNzPkYuMtq46Tn5ppjuBHyXtGkHh9uva3itVFqY3EUV1uX1scd/WOPGpyhSQiTfH1B0pD9/16x9LrxOz6AKTuotM/bF5dQtdamrMtT5sYxFJP41IQvIljB69s7s/Z7VHO1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GFtwA/JM; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d59lwcl8"
-Received: by mail-qt1-f195.google.com with SMTP id d75a77b69052e-5148cbdea08so25804191cf.2
-        for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 17:14:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779149649; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ZqSqKhyvmfz4t/Y2t4fhMN+dApVqAlFiDEzVSDfoLR9Hmv4C8LuNamsmB2O4DJg0B2
-         YeTIRsn6foTdPpxasBsQNkM11sJmA4I+VK7q35NH3X9jnyaWXijHQ29yhguETg9hWUqQ
-         HQU7vwORiQ0hMGk7hn0O5um5SViY7ck/RtRL5KgAPcU5ei5QdhERSjbOdLHnoS7wUMy+
-         c4syK3X1/aFEBVJBHalZGXHAh+skNWjCiv+NvflaUcnEMFx2Grr+uZrG25r/jfqUgt8D
-         ubHzVGwfKHW953xHXADEmGjYFh16A0AoFYoKLbSy7jPrbPQYZyGyEym1GiLvuLU3pf+N
-         6qeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LPwsRaL3/VhQKGJMHLIVfCwqYVCTUXR7opK9047JBWk=;
-        fh=Z6rEjLzebpUMSHCpYaX5+Ar8HRK8QgY2V2qZMEnYl0Q=;
-        b=S5Xy9N6lSQPtT6IbBHA7gtPqDz6keebKK4RxO0hxe5oPB/UAiSAjVsf5tSk+h5oIZt
-         pTmQjQbi7GPusKcwUVby861/m1vvXN1tGKX2bf0o4hKR61ooZrR7nJGGRim6GoeV8qdn
-         2uydWtz3vNgJQ41U09WKkt3niZicqkgMkMAtZ8mQOQTbOIiV1JcMczrVaIYdmMa3s/j9
-         RVg/xobT3uYQgADfF6dsfYNNf3vf7wvZKVwlLFbmTzEb8gpOoqQfshus40wX17KAAH+2
-         ZYufUuyX/2gxTNJsIi3o+/NvBW8tddKvCqxm8Q50AZWlF4DY92YznvPG+CrBhweLM+Yi
-         wiqg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFtwA/JM"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3698e34a567so2451898a91.2
+        for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 18:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779149649; x=1779754449; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LPwsRaL3/VhQKGJMHLIVfCwqYVCTUXR7opK9047JBWk=;
-        b=d59lwcl8NvuOHlMwJ/jtLfvIVKwSl887jI0zUq+n+MokZhIz5kSNG+Q7m83cRRj++o
-         7S3rzqts7N4yutIkInkFXV9kygWG7yxiMPc0JWryBnFhkU7pGX5375FZhqllLsu46QxD
-         yqRXefPbKqpNqDqlvNkmKy9NH53MH/MzNhs5i0t6EGN/qbHwnG3z9w6y+vTpWbbm4ui8
-         +Y/emkK8/ZzUeQNXSb3F20EcO2qGGKw0KLfo5yfAg9tQxjLb8ir1PQn5DJpL6n74Uv7I
-         Kzy/KgWqFZU9F5z3/y0h3xh8lwac6mtJi6nFuR/ealUBmYZWKM9xgcZKuPtDs3lS0PL6
-         E+cw==
+        d=gmail.com; s=20251104; t=1779155932; x=1779760732; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cJBOwsmVOS7e0w8Q9mvj/KZhpczr6xeaK0EFoTPkDf4=;
+        b=GFtwA/JMJRHL2m89MeRU6sYFKKNU00eqY7jiPwOPGNaBTmqhARmsVHtRRH0o3w0KCr
+         VsrhyMx1OxWfgHgSTHurPIUlyYxtu4TKX5pEx5Z0o7a6mZ0hjmAXCQv5GmZBMx5TBdjN
+         5yOBH8SubWLi/gzQfpOzUM6PwAlx6YCYwmN5QLMIDSE+LHJY2Nz8EmNOM2b3K4t7MNKJ
+         ZwWaEmACh8VyI7dIvC6DWZb74TmZT0UC/Kp8Lbg0/0tUA3qtkShBsrQozX+nNOzf/HZt
+         a//YBa/yBVP1FayFjWcvma8GQSlYtuCGUaYDiwXn+CHwmi8wcxDYfq/refyNseze9LxG
+         PbIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779149649; x=1779754449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LPwsRaL3/VhQKGJMHLIVfCwqYVCTUXR7opK9047JBWk=;
-        b=Y3A091RfsQv6BGp8W6et/zH9PZTucMzkJSouXdXViXVOvXCknMnpszzArSYD4ufys3
-         0w95+wztfEtPcPBh8p9j+6aHteqbKzElHBWnVl7Sm7a6Ds6QSKXpYx2NyfLqVq/ISE58
-         U4nHZKIyIPFS44sU3pCJBiRMJAP3IfBzscTCxS4+eIiU2lDCLW2yCLDfWZm5Av3+Om3E
-         8khZJ4+7Aaf4+PrXTq16mhGCE52Eh7H+qY+mazWZpoSJsQs4IiSQvOrRNeZe1mKJ7ooR
-         c3uvgxt3zLeRlkcrBjGZ/HjX2cqxSYcQrxlcRqHgQ5CXQM/eOVAafT5J2/Jc0en9LFOB
-         G0fw==
-X-Forwarded-Encrypted: i=1; AFNElJ8QZzMRgdaLE87m4aYUvtF6rVT7FBKLKLXPk0fB868nWTlPU7RKIpQCyv2Qbk8hyf4qGNy5M3bgNyqEI/xdkgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7a2K4HlygghpbVaafRZxBadpMj1sc1a0p4Y7GAmMaolOiSuHt
-	yOHS9RR0Vyn7ynj3qNGJP/Ii13+c7sgImnVuZgf+MDalVcgqe/3m+uLiSPQOWF7T1owODTDsAwJ
-	BBjAtYrNswiIk5HMbEqEhJLG10EtXnhQ=
-X-Gm-Gg: Acq92OFZ2cqDldWZYZTsBOdtvEzaPIkm96xv2VKxQrD5eeE7uMv+5FKJRm7wlbU1j0f
-	6bjotmTsg3+tmjox95Q6JcZ/Pwc2TRpywy2O+3k2qFkdEQDCnbbKKgjGv855OAnkcqQwTLsAQS/
-	+Nrhh6Ha7OttvkQ5LytY3to+CaqmZQfLsVrvMnShWzk132Tago8O4t2yXMQtYLwdy6VvPJkmsx3
-	5YZYTyYceDrXJQ5ifeebzLrhbJPWV37MuAt5rxmoe94qQt2a5Hr7nONdomiRRgLZOy1DCPbK/6y
-	kkz4bXcfDHW1IHNfGuHpAxfj8LX0zMb2MmY50/TjnjBPg7E3uS/72GkYSRA0twUjYoeeZ8tucz9
-	Ryys=
-X-Received: by 2002:a05:622a:d0e:b0:516:707a:cf8 with SMTP id
- d75a77b69052e-516707a0e9amr149948671cf.44.1779149648695; Mon, 18 May 2026
- 17:14:08 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1779155932; x=1779760732;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cJBOwsmVOS7e0w8Q9mvj/KZhpczr6xeaK0EFoTPkDf4=;
+        b=gAsIgSq/mhiwMbWMvNGVhRF62aRIp5wKYRqrtLMj4AaD223vcF6PGI+idx/0z370Fa
+         b1vIbaUNJ9TOzxUNaTZJJyz/uzQc34g6lmM79W2da7JzLkzrMLIaYmKmImVwL9F6Ca34
+         YTuypDmg0++bEgUfdt3XYWlqcwN44eJvsqDuphggQ+SmA99tWOweOLGCAljdtlOIFg74
+         J2lVqdXY/yexIpxvAExHDNM5CHZ7yMf9qK//zVJraIo4Bonbgxh5exXwsdY7QJWy4lkR
+         7zjre2DtjlrhS24HtbgIr3erFvzCZuEg12/XgJDQfgYijP3u2o1wWGQd0IY1Q3S2UZ0Q
+         OpXg==
+X-Forwarded-Encrypted: i=1; AFNElJ/McTBDyqRw7Bfcchp1n5EP9bM5paoEzmYJ+3cDczStzMwFzQqdoopNIMft3H2zvmOHSVVQD0qch3qFxP11gLQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd3yvwSoNgALbCKVgZFd/iPDeuZ/RFNRLcgadwAxTXYbyp1dhW
+	UujPHSpN+Bvp816WmRYPIZgDLyzMHXvKlTLSxSubTh4JBgAxb/U9AJhY
+X-Gm-Gg: Acq92OGq6iTQUT90dPhBkzPjeZ/R1Byqf4WY7ZK9F2uvPsvjIq7pwOfPF0W4ZbyFXjo
+	4nGBZ3xf1c0ejHlWiOfoMbWWP2dQknMSvL+RBthVs7BnhDJjveTW9jAdB1B39mW8A29vCSwToVY
+	MuTzBNJ9QuVqvTvLs1RdxQgq1+cb2hOKUpTjmn2vNWDPtKnHfwve1b6Rw6RNntPd9ib6SzkdPqY
+	V/gX6HbGVlw7jHINWgMQd+nFXlYl/mjWXRgsWYXxw4J8AuZx5qzONPYrDRoROnwP8ppaVLxhlYe
+	iEJSQg6eoxZDP3IbYKSHtqIaLTtshYg6O2yu5PEo5z5CHC2TRZpBI0dUuL/PYHFvqBzDSpAhdW+
+	/XLUZPkGboimLsEXJoe3322dSucNM3nzL/5MEX2oSvUiKJpZPiPut948rJ48Nles9Fa2dWubC4i
+	45VA4RANbsfuJoR82zhkFPXwpeTYomiOeWOtoI4NIhveumhRgI7XUeG9/kSsqEIHRjliSQ0U+y2
+	smWKh3Pzp316HQAkTkP0xuGLeOT+OaVE6c=
+X-Received: by 2002:a17:90b:57c7:b0:365:7e4d:bcb8 with SMTP id 98e67ed59e1d1-369519cdb59mr16915705a91.1.1779155931783;
+        Mon, 18 May 2026 18:58:51 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-369513fe6f2sm12016286a91.0.2026.05.18.18.58.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 18:58:51 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Jiri Pirko <jiri@resnulli.us>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list:LIBRARY CODE),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
+Subject: [PATCH] lib: objagg: Use flexible arrays for object storage
+Date: Mon, 18 May 2026 18:58:33 -0700
+Message-ID: <20260519015833.634602-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com> <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
- <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
-In-Reply-To: <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
-From: Ethan Nelson-Moore <enelsonmoore@gmail.com>
-Date: Mon, 18 May 2026 17:13:58 -0700
-X-Gm-Features: AVHnY4ICd7H9-70Xucdx9uJAfA9u6BhUaXyRyteuNE6Jo8mNtePRuTvmeSFjqyQ
-Message-ID: <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
-Subject: Re: [PATCH] nios2: remove the architecture
-To: Simon Schuster <schuster.simon@siemens-energy.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dinh Nguyen <dinguyen@kernel.org>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, 
-	workflows@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, 
-	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-iio@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
-	linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>, 
-	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>, 
-	Hu Haowen <2023002089@link.tyut.edu.cn>, Kees Cook <kees@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nicholas Piggin <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	Dave Penkler <dpenkler@gmail.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof WilczyDski <kwilczynski@kernel.org>, 
-	Andreas Oetken <andreas.oetken@siemens-energy.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Simon,
+Store object payloads and temporary graph nodes in their parent
+allocations instead of open-coding trailing storage or allocating the
+node array separately.
 
-Thank you for notifying us of your continued use of the Nios II architectur=
-e.
+Use byte-sized flexible arrays for object payloads so kzalloc_flex() is
+passed the same byte count as the previous allocation sizes.
 
-On Mon, May 18, 2026 at 10:24=E2=80=AFAM Simon Schuster
-<schuster.simon@siemens-energy.com> wrote:
-> Unfortunately, as we are an infrastructure provider for civil energy
-> infrastructure, the refurbishment cycle is a bit slower than for
-> traditional consumer systems. This implies that the traditional LTS
-> support duration (max. Dec 2028 as of writing [1]) is rather short, and
-> we would be glad if we could keep the architecture in mainline for at
-> least 5 years and only then "decay" to LTS.
+Assisted-by: Codex:GPT-5.5
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ lib/objagg.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-Your reasoning makes complete sense. However, there is an alternative
-to maintaining the architecture in mainline.
+diff --git a/lib/objagg.c b/lib/objagg.c
+index 23c7105a3f9f..995ec67fbc2f 100644
+--- a/lib/objagg.c
++++ b/lib/objagg.c
+@@ -28,7 +28,7 @@ struct objagg_hints_node {
+ 	struct objagg_hints_node *parent;
+ 	unsigned int root_id;
+ 	struct objagg_obj_stats_info stats_info;
+-	unsigned long obj[];
++	u8 obj[];
+ };
+ 
+ static struct objagg_hints_node *
+@@ -66,7 +66,7 @@ struct objagg_obj {
+ 				* including nested objects
+ 				*/
+ 	struct objagg_obj_stats stats;
+-	unsigned long obj[];
++	u8 obj[];
+ };
+ 
+ static unsigned int objagg_obj_ref_inc(struct objagg_obj *objagg_obj)
+@@ -369,8 +369,7 @@ static struct objagg_obj *objagg_obj_create(struct objagg *objagg, void *obj)
+ 	struct objagg_obj *objagg_obj;
+ 	int err;
+ 
+-	objagg_obj = kzalloc(sizeof(*objagg_obj) + objagg->ops->obj_size,
+-			     GFP_KERNEL);
++	objagg_obj = kzalloc_flex(*objagg_obj, obj, objagg->ops->obj_size);
+ 	if (!objagg_obj)
+ 		return ERR_PTR(-ENOMEM);
+ 	objagg_obj_ref_inc(objagg_obj);
+@@ -657,7 +656,7 @@ objagg_hints_node_create(struct objagg_hints *objagg_hints,
+ 	struct objagg_hints_node *hnode;
+ 	int err;
+ 
+-	hnode = kzalloc(sizeof(*hnode) + obj_size, GFP_KERNEL);
++	hnode = kzalloc_flex(*hnode, obj, obj_size);
+ 	if (!hnode)
+ 		return ERR_PTR(-ENOMEM);
+ 	memcpy(hnode->obj, &objagg_obj->obj, obj_size);
+@@ -705,9 +704,9 @@ struct objagg_tmp_node {
+ };
+ 
+ struct objagg_tmp_graph {
+-	struct objagg_tmp_node *nodes;
+ 	unsigned long nodes_count;
+ 	unsigned long *edges;
++	struct objagg_tmp_node nodes[] __counted_by(nodes_count);
+ };
+ 
+ static int objagg_tmp_graph_edge_index(struct objagg_tmp_graph *graph,
+@@ -786,13 +785,10 @@ static struct objagg_tmp_graph *objagg_tmp_graph_create(struct objagg *objagg)
+ 	struct objagg_obj *objagg_obj;
+ 	int i, j;
+ 
+-	graph = kzalloc_obj(*graph);
++	graph = kzalloc_flex(*graph, nodes, nodes_count);
+ 	if (!graph)
+ 		return NULL;
+ 
+-	graph->nodes = kzalloc_objs(*graph->nodes, nodes_count);
+-	if (!graph->nodes)
+-		goto err_nodes_alloc;
+ 	graph->nodes_count = nodes_count;
+ 
+ 	graph->edges = bitmap_zalloc(nodes_count * nodes_count, GFP_KERNEL);
+@@ -825,8 +821,6 @@ static struct objagg_tmp_graph *objagg_tmp_graph_create(struct objagg *objagg)
+ 	return graph;
+ 
+ err_edges_alloc:
+-	kfree(graph->nodes);
+-err_nodes_alloc:
+ 	kfree(graph);
+ 	return NULL;
+ }
+@@ -834,7 +828,6 @@ static struct objagg_tmp_graph *objagg_tmp_graph_create(struct objagg *objagg)
+ static void objagg_tmp_graph_destroy(struct objagg_tmp_graph *graph)
+ {
+ 	bitmap_free(graph->edges);
+-	kfree(graph->nodes);
+ 	kfree(graph);
+ }
+ 
+-- 
+2.54.0
 
-The Civil Infrastructure Platform project maintains super-LTS kernels
-(and a set of base Debian packages) for 10 years. They are intended to
-be used for exactly these kinds of devices.
-See here: https://wiki.linuxfoundation.org/civilinfrastructureplatform/star=
-t#kernel_maintainership
-and here: https://cip-project.org/about/linux-kernel-core-packages
-
-CIP will maintain kernel 6.12 until 2035. Is this long enough for your
-lifecycle? What kernel are you currently using? If it's newer than
-6.12, we can easily wait until the next CIP SLTS release to remove
-Nios II support to avoid a downgrade.
-
-One important thing to note is that the default CIP kernel branches
-are not equivalent to standard LTS branches and include new hardware
-support, which has a higher likelihood of introducing regressions.
-However, the -st branches do not include these changes and follow the
-same patch acceptance rules as standard LTS, so they are likely a
-better fit for your use case.
-
-Also, CIP focuses on architectures used by CIP members - currently I
-think they are x86 (32 and 64-bit), ARM (32 and 64-bit) and RISC-V.
-Since Siemens is already a CIP member, you can simply ask them to add
-Nios II to the list, and you can assist them with testing and directly
-submit patches to them once the standard 6.12 LTS period ends.
-
-I hope this information helps you decide on the best course of action.
-
-Ethan
