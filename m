@@ -1,147 +1,160 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7161F3B3890
-	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 21:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779226957; cv=pass; b=bYxQXAavNRsDuz1VeNce/NAt9qDAxDpDriVVhNglEWdqX+6PeOoAu+Go4/AeoGB53eKHI6PWT/HyoOC+HFMvkVfXSRvdQjCPFVOPcmrZnUV2ChnqwQcDvcRqPa2cRt7eDu/gQnn0leldV8yC93cDfhPEpj35Dox7cltUlsZpoyY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779226957; c=relaxed/simple;
-	bh=agpQDPE0e0tDa6PFtfyC+WslCRjLfXBgwgqDsBVIG9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uuFOtf6bFbZ/1BxZpZO3f9PL3IDpUvSM7enV4S5zDfkpakJEIh/pvaGq6YpfjsDfb76TjxO2BhJLOJ0G+lSHJNm/haL5bp3BvC5ouLTkqWZlg3Supeil6ELucgiZhb3dmuQLnCxq7ikorHdQuVXVd39GB7N4foP2H+EaweX/Gy4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cBBOp9lP; arc=pass smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E527369D4D;
+	Tue, 19 May 2026 23:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779235072; cv=none; b=o4zrK0C7sZizZkL5W/cb21P/4YQ1laVNTSPUddmA+AiMMpGCYlnPCwBpV9f0iISOv6kz+R5pnwRZjJKMYnhN5CRUdpc3QAEcH6EV8AwoE29eiv5lMT9V2+ON/0CdMgX/1lgN0owLnMSJhHiGKH21HyzG3KcYu9N9ipqVCCHb7RQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779235072; c=relaxed/simple;
+	bh=7UTzWNyq8e8HIpKZw64gKTF6fVCOvbLqoh4DSh8fbSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bYKIrV7rrxYGf59Ax3jPAjqLmLFZSIVQ+m8Zfo+ahunX4Cet/zR+npogF2b4cUNeeFSa4BIdVaH7C8egIBQ6Hl69mqvJuSFVOyAjn9/+Zva0OEsuDHUYvaD4Z2CWhqTbP6yk6dc8UiyNxP0rFSFzfVIk7zN4S8HIotnrTfuTaiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+IawRDC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cBBOp9lP"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-67bf769704eso116a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 14:42:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779226954; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UdAmrO7cyIIpaWXGdZbICc64IJYAhsRpZjAbBfTOeqD4bc3CkyCarL8nxdQaAgmY0X
-         /mKbhvMpqw4tzziyrM3d5gMlbc4Ek4/9PDPhOFbuQkDTFIBkaG9uebJHIMfy0sjFu63+
-         RP/5lMyo4rqYw4veXcPP93jvZ1rTZOgtn6RMoN8GAGl85H0cUOeD3Y+9/5XNhveZyShM
-         VTZJjnW9i7+hTiPASvxOfLgbahSsfbKF/OoQ1pAi11hvkxmVXeMgJq/gL7bMkQ3BuMUx
-         EDe1YunkCO9ItFcrjsC5e2/6RwA37ahERxYAUDxJJNOYgtNAY88FrjV+dvKtrySXDTqQ
-         uYHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=agpQDPE0e0tDa6PFtfyC+WslCRjLfXBgwgqDsBVIG9k=;
-        fh=/yZTa/qW3e1fX4FbmORlvF+bd4bkK+NbFVfqgAeVKmE=;
-        b=R3Mn0Bw86iBEkmIkh4Vvw3rwzp6r5zVT3gu3VJEiK/lE0NIey2dcbVgqeuvloiDCTk
-         XZmvFZH9GllZCNyHp3eErGTPaAAZveSuL/xpV9qYAc88gxusqDaA1GZJrHOLJc0CH/b6
-         V2W8PA1K3nJHy26bduCLscS9dJj8NoQvovW5kN8gfxeNtvz54pooHYl677GS0GhUR4PA
-         BnJB5Ce0noRcTiX1qLdfQh0hswQB3PxINN7Xn+FC13IingvXsh6B47FnqLA/TKiPy10V
-         QUfP6D21d12/CzbCsBFbkw/Atrif4Bu4sOLie2C3eKD7UrvzYKrdtLVcHCHtFlLmiaQu
-         rSbQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779226954; x=1779831754; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=agpQDPE0e0tDa6PFtfyC+WslCRjLfXBgwgqDsBVIG9k=;
-        b=cBBOp9lPxsBqzp5DiVVxXZDcRjTE3euWHcLy8b7vbCVmNAJKacI97hsJ3Vh0KDFaXt
-         NXU/Zw17XqHcSHLDvSXAwaJJyllAMtOnzA54IEMDi5toSkc1FhEXHqZzqiln7NYZ4wvW
-         lfDw4ZrKlWmzFMu6D/n8ftMX8TONAUMPAsEN31ppZN2D373vE0vjsNy/4phHOsAWuYNI
-         nF/qzfTTzsfvL29YjAa8hB1+SvxRY6O7eKRjW3auOF834Bo2J3b1uCxJC4HpkvPM5oIs
-         V7wciD7Ct1uavsVVCtQKUXyo51LalxiQasEvoLneaUrOkZFwJnRtJwnYl4KuZY4B5BFn
-         MUcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779226954; x=1779831754;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=agpQDPE0e0tDa6PFtfyC+WslCRjLfXBgwgqDsBVIG9k=;
-        b=qGO9NFDH85zk0xVCDEtF0oJiJ6mUyOT0CAbnh/T138so/3gEPuSqLXdqZ9LBSb0ozp
-         m5KrGt8Fx9PTD+EpUOAxixWOygtBLq8IEONBe1eJTTFt1W1P83G/aQED6iQirq1loEvd
-         rkqkUpw1P4WydbrfwUSinM1eHHjquHEljgGuVxCV88+lfKgzjBazYpl6Yd84KXeeyNo/
-         un6MJX9jbBVMv2ilhj6IEXpdM6YJ9yvobjtbhN3Xc8gJoRrlhxMzeNJyB/NSpuF6HkIm
-         ZMyDjcXxDdQIaq7iAVERQHiUTMmnNZHrEJaD40xo6Kp3nB0W8AQeGcWP3qsZevbGRnP0
-         0KrQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8cHn6leyeauN70rQGttoohB6kbWW0ccovwjo6EbMOHWh+dHaAePUAdH8QC3H9QCXJRnt9Alba8AKZ2/WWP2hw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM8JtXgckln4dAf40fzB9LSRDGu1aAvRJi/2icaUPHV0RYu/V3
-	WwQcmsuFWmc4DOFxkHeT/kMaNDs7KPTrQN5JJ0gXy5Sdp7mTgJdkdlc+7jE+FCAaBR1S7ewJOu7
-	eJAg7WpYVgezY/nwXx0o/Z2jX3w/8Ct5q4fmvSxYX
-X-Gm-Gg: Acq92OFCxB2NeKvp5XuQlQhXi9B8YjoKstuzYUDkwjbTreEOYxRPzfW28PCmBx1H7DJ
-	ilOG3624NG6zNRrzQKnmwgs2DAt2ftulGbCeEaVheTOZf54cPXJqajFu+vbkae5YP11SPYAnYgk
-	BsT+Aj/F4RL8G4z72RsBttK/ohQcQSqXApfvc8GvIwbb6+1WHkCPOs0SECXsDeAL6Geps2Exom2
-	/bEomqcUb8shoeP8dVyTyAMrquwYBRT4/on25LVyzxbtXY6jvN4DMObFzzwMhe57ciYvOlcSqaA
-	ao7gAjhuLub5mF725Hx9isbptG96Bq5Rfp+nHO8jFSBQh0U=
-X-Received: by 2002:a05:6402:20c6:20b0:678:a5c3:4d12 with SMTP id
- 4fb4d7f45d1cf-684985e277fmr173995a12.3.1779226953632; Tue, 19 May 2026
- 14:42:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+IawRDC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 328051F00893;
+	Tue, 19 May 2026 23:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779235071;
+	bh=dbsOAfuN8ml++VqHBD2xHu4Tk0pEHTjebmx81mRjNjQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=j+IawRDC4po5J/sySD3Vspo/j2V6R7CsxVFwZtizeYW8pdH/UsliZI/qQZreqa8ll
+	 +9cK0dwngXE+55CkwGhFbim4x6YdUttO7nM04lyrmgGpKcD3RtBQwuzb1y64Trj6fZ
+	 VVWfqd7g3nHCG/zZRm/8qqKykiislzCZKL89CzHEyWbFGc0fUOcjHiohFpRNELU0AR
+	 ejYF/V59JUUqr7nmzQMRIJBisCdJ9anllfnXNzmrBu2lUTqvJMepXGcCu9AdyWCc36
+	 5Bjrs4QZ8Ac5swPr9Ow3Z/mDI5sHraIw+5YwUah4DOCvHh2DIw53nFgb5ThnZo5I5q
+	 2RyBf6pHU8qAA==
+Message-ID: <d0cea3c8-f1ce-4dfe-a116-8f36d5b4308e@kernel.org>
+Date: Wed, 20 May 2026 08:57:42 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <F78521DA-08DC-424E-BBE1-231BC900CEE0@gmail.com>
- <CAG48ez0KsuR5z4RDgxWPUoS8e_MJzF74RgFDJayohG48A_N0PQ@mail.gmail.com> <CAAmtCfMHqdWbYh-Hc5sGbOhXSM-aCA9G0-s64G8FTM+rGEV5RA@mail.gmail.com>
-In-Reply-To: <CAAmtCfMHqdWbYh-Hc5sGbOhXSM-aCA9G0-s64G8FTM+rGEV5RA@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 19 May 2026 23:41:56 +0200
-X-Gm-Features: AVHnY4KelXMX0Ox3UHP6DtmSDnRxPxmxV49wSNMKd-K67wpQhqz9skVmJZNDODo
-Message-ID: <CAG48ez3u1OCx+zCWEs-_gowDmQ=KLbXO2xZ83LCZ1o1gxRT3Ww@mail.gmail.com>
-Subject: Re: [RFC] TID v2.0: kernel module for cache-line zeroization against
- Flush+Reload (CLFLUSHOPT + LFENCE + REP STOSQ)
-To: Ahmad Hasan <ahmaaaaadbntaaaaa@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kernel-hardening@lists.openwall.com, 
-	linux-crypto@vger.kernel.org, linux-mm@kvack.org, linux-api@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] slab: support for compiler-assisted type-based
+ slab cache partitioning
+To: Marco Elver <elver@google.com>, Pedro Falcato <pfalcato@suse.de>
+Cc: Vlastimil Babka <vbabka@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Bill Wendling <morbo@google.com>,
+ David Hildenbrand <david@kernel.org>, David Rientjes <rientjes@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>,
+ Justin Stitt <justinstitt@google.com>, KP Singh <kpsingh@kernel.org>,
+ Kees Cook <kees@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Matteo Rizzo <matteorizzo@google.com>, Michal Hocko <mhocko@suse.com>,
+ Mike Rapoport <rppt@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Suren Baghdasaryan <surenb@google.com>, linux-hardening@vger.kernel.org,
+ Nicolas Schier <nsc@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Hao Li <hao.li@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
+ Alexander Potapenko <glider@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, kasan-dev@googlegroups.com, llvm@lists.linux.dev,
+ GONG Ruiqi <gongruiqi1@huawei.com>
+References: <20260511200136.3201646-1-elver@google.com>
+ <agcsMgfKjGTasJ5n@pedro-suse>
+ <CANpmjNOYd9RnJARZ7qUDifsftwWOhhakaWSu926PKA6-SepTwQ@mail.gmail.com>
+Content-Language: en-US
+From: Harry Yoo <harry@kernel.org>
+In-Reply-To: <CANpmjNOYd9RnJARZ7qUDifsftwWOhhakaWSu926PKA6-SepTwQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 19, 2026 at 11:31=E2=80=AFPM Ahmad Hasan
-<ahmaaaaadbntaaaaa@gmail.com> wrote:
-> Thank you for your questions. I'll address each one:
->
-> =3D=3D 1. Threat Model =3D=3D
->
-> The target scenario is a same-machine attacker
-> in multi-tenant/cloud environments where two
-> processes share physical L3 cache.
->
-> Example: a cryptographic service and a malicious
-> process running on the same host. The attacker
-> uses Flush+Reload to measure cache access timing
-> after every encryption operation =E2=80=94 no physical
-> access required.
->
-> This is documented with real measurements:
-> - Without TID: 78 cycles (Cache HIT =E2=80=94 key pattern visible)
-> - With TID v2.0: 286 cycles (Cache MISS =E2=80=94 attack defeated)
 
-So you're assuming that the cryptographic code leaks secrets through a
-cache-based side channel? That would be a vulnerability in the crypto
-code.
 
-> =3D=3D 2. Why Kernel Module and not userspace? =3D=3D
->
-> You are correct that CLFLUSHOPT does not require
-> Ring 0. However, userspace execution can be
-> interrupted by a Context Switch, which expands
-> the timing window from 372ns to 36,640ns =E2=80=94
-> making the attack significantly easier.
+On 5/18/26 11:08 PM, Marco Elver wrote:
+> On Fri, 15 May 2026 at 16:28, Pedro Falcato <pfalcato@suse.de> wrote:
+>>
+>> On Mon, May 11, 2026 at 10:00:48PM +0200, Marco Elver wrote:
+>>> Rework the general infrastructure around RANDOM_KMALLOC_CACHES into more
+>>> flexible KMALLOC_PARTITION_CACHES, with the former being a partitioning
+>>> mode of the latter.
+>>>
+>>> Introduce a new mode, KMALLOC_PARTITION_TYPED, which leverages a feature
+>>> available in Clang 22 and later, called "allocation tokens" via
+>>> __builtin_infer_alloc_token() [1]. Unlike KMALLOC_PARTITION_RANDOM
+>>> (formerly RANDOM_KMALLOC_CACHES), this mode deterministically assigns a
+>>> slab cache to an allocation of type T, regardless of allocation site.
+>>>
+>>> The builtin __builtin_infer_alloc_token(<malloc-args>, ...) instructs
+>>> the compiler to infer an allocation type from arguments commonly passed
+>>> to memory-allocating functions and returns a type-derived token ID. The
+>>> implementation passes kmalloc-args to the builtin: the compiler performs
+>>> best-effort type inference, and then recognizes common patterns such as
+>>> `kmalloc(sizeof(T), ...)`, `kmalloc(sizeof(T) * n, ...)`, but also
+>>> `(T *)kmalloc(...)`. Where the compiler fails to infer a type the
+>>> fallback token (default: 0) is chosen.
+>>>
+>>> Note: kmalloc_obj(..) APIs fix the pattern how size and result type are
+>>> expressed, and therefore ensures there's not much drift in which
+>>> patterns the compiler needs to recognize. Specifically, kmalloc_obj()
+>>> and friends expand to `(TYPE *)KMALLOC(__obj_size, GFP)`, which the
+>>> compiler recognizes via the cast to TYPE*.
+>>>
+>>> Clang's default token ID calculation is described as [1]:
+>>>
+>>>     typehashpointersplit: This mode assigns a token ID based on the hash
+>>>     of the allocated type's name, where the top half ID-space is reserved
+>>>     for types that contain pointers and the bottom half for types that do
+>>>     not contain pointers.
+>>>
+>>> Separating pointer-containing objects from pointerless objects and data
+>>> allocations can help mitigate certain classes of memory corruption
+>>> exploits [2]: attackers who gains a buffer overflow on a primitive
+>>> buffer cannot use it to directly corrupt pointers or other critical
+>>> metadata in an object residing in a different, isolated heap region.
+>>>
+>>> It is important to note that heap isolation strategies offer a
+>>> best-effort approach, and do not provide a 100% security guarantee,
+>>> albeit achievable at relatively low performance cost. Note that this
+>>> also does not prevent cross-cache attacks: while waiting for future
+>>> features like SLAB_VIRTUAL [3] to provide physical page isolation, this
+>>> feature should be deployed alongside SHUFFLE_PAGE_ALLOCATOR and
+>>> init_on_free=1 to mitigate cross-cache attacks and page-reuse attacks as
+>>> much as possible today.
+>>>
+>>> With all that, my kernel (x86 defconfig) shows me a histogram of slab
+>>> cache object distribution per /proc/slabinfo (after boot):
+>>>
+>>>    <slab cache>      <objs> <hist>
+>>>    kmalloc-part-15    1465  ++++++++++++++
+>>>    kmalloc-part-14    2988  +++++++++++++++++++++++++++++
+>>>    kmalloc-part-13    1656  ++++++++++++++++
+>>>    kmalloc-part-12    1045  ++++++++++
+>>>    kmalloc-part-11    1697  ++++++++++++++++
+>>>    kmalloc-part-10    1489  ++++++++++++++
+>>>    kmalloc-part-09     965  +++++++++
+>>>    kmalloc-part-08     710  +++++++
+>>>    kmalloc-part-07     100  +
+>>>    kmalloc-part-06     217  ++
+>>>    kmalloc-part-05     105  +
+>>>    kmalloc-part-04    4047  ++++++++++++++++++++++++++++++++++++++++
+>>>    kmalloc-part-03     183  +
+>>>    kmalloc-part-02     283  ++
+>>>    kmalloc-part-01     316  +++
+>>>    kmalloc            1422  ++++++++++++++
+>>
+>> Hi,
+>>
+>> A couple of questions (I apologise if this was asked before, I wasn't involved
+>> in this thread):
+>>
+>> 1) What's the object behind kmalloc-part-04? I imagine it's a single type
+>> getting allocated a lot?
+> 
+> That's from __kmemdup_nul().
 
-Why does it matter how many hundreds of nanoseconds it takes to wipe
-the data from memory? You can also have a context switch directly
-before you enter your cache-wiping syscall, or in the middle of a
-crypto operation.
+__kmemdup_nul() is probably a good fit for SLAB_BUCKETS?
 
-> =3D=3D 3. Why not add this directly to libraries? =3D=3D
->
-> No major security library implements CLFLUSHOPT
-> after wiping =E2=80=94 not OpenSSL, not libsodium, not
-> glibc, not memzero_explicit. This gap has existed
-> since Flush+Reload was published in 2014.
+-- 
+Cheers,
+Harry / Hyeonggon
 
-I don't think that's a gap, because the standard approach to
-mitigating cache-based side channels such as FLUSH+RELOAD is to not
-access memory at secret-dependent indices in the first place.
