@@ -1,175 +1,166 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676F0328610
-	for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 21:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779139127; cv=none; b=XdNIhuoIfDaUls7CI8PM2db+z4NZB0JceK5l/KVsiM+pWwL/dGtRWTROzpyAeUZMrKhTe9TwEH/YET2JlX/kzt02jWFl7HThPNkmUB4Xew+JTEH5NU47j3DSzRTQBVpBdVs65ib3f8B2wzs1MA3aotahR4kzTo7g/jg7jvzvfq8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779139127; c=relaxed/simple;
-	bh=g/xJZ+OYh1mkHmn3+sQ2z7XA33HLjy2TXP/ltrNVdjE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NqIQh0DNAsZ4NKrCX0Ea5Xkh1MmpK4Qro9TkpOBPLJVkLs8pFPJTiZd6jS+ELLEbHRxxG5ZtQxVQ0O17/Nvn+37a/7fLAdD8uVHjklowqudz1i9trvEm7jtQN2sytpj9Sg4pMbHwqfqJ/4jc/Z34MtCH/R7EUyY6r9lyFRLH+SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QTzT0fqj; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB45278F2F
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 00:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.195
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779149651; cv=pass; b=aSzPNDbJKTjNZZkvRN6O6Q1lY6Jqu/+FfWj5r0CdZwe6yOCSLAexhxwA4jI20tJSyhQkB7reDmwVbFGVq3WfH/T4QZUdn8DbP2PjPNAI1PpYznJoI+HiWiWukx8LHMeWqCU9JUPdxocDlQM2z3sGs+G37dZZhbp5t4OnaJBK8iI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779149651; c=relaxed/simple;
+	bh=LPwsRaL3/VhQKGJMHLIVfCwqYVCTUXR7opK9047JBWk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TO4rv0ZmDgwtf/X3u+bgNYl8NnGyi2bM9eJNazdUgYTQrcnEFKOd+KIAWYUwEYjO6/FdSd9IuVTOvjLDJEq1GWKM/xXRXrozF8oYTAl/DZ3knFp4X/C1XvCpT3UIrFLyhvmdplXqc22W7Di5rLQVReHwaHZ/ejSnvYhg6W8wGhQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d59lwcl8; arc=pass smtp.client-ip=209.85.160.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QTzT0fqj"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-36622412e97so2044471a91.2
-        for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 14:18:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d59lwcl8"
+Received: by mail-qt1-f195.google.com with SMTP id d75a77b69052e-5148cbdea08so25804191cf.2
+        for <linux-hardening@vger.kernel.org>; Mon, 18 May 2026 17:14:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779149649; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ZqSqKhyvmfz4t/Y2t4fhMN+dApVqAlFiDEzVSDfoLR9Hmv4C8LuNamsmB2O4DJg0B2
+         YeTIRsn6foTdPpxasBsQNkM11sJmA4I+VK7q35NH3X9jnyaWXijHQ29yhguETg9hWUqQ
+         HQU7vwORiQ0hMGk7hn0O5um5SViY7ck/RtRL5KgAPcU5ei5QdhERSjbOdLHnoS7wUMy+
+         c4syK3X1/aFEBVJBHalZGXHAh+skNWjCiv+NvflaUcnEMFx2Grr+uZrG25r/jfqUgt8D
+         ubHzVGwfKHW953xHXADEmGjYFh16A0AoFYoKLbSy7jPrbPQYZyGyEym1GiLvuLU3pf+N
+         6qeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=LPwsRaL3/VhQKGJMHLIVfCwqYVCTUXR7opK9047JBWk=;
+        fh=Z6rEjLzebpUMSHCpYaX5+Ar8HRK8QgY2V2qZMEnYl0Q=;
+        b=S5Xy9N6lSQPtT6IbBHA7gtPqDz6keebKK4RxO0hxe5oPB/UAiSAjVsf5tSk+h5oIZt
+         pTmQjQbi7GPusKcwUVby861/m1vvXN1tGKX2bf0o4hKR61ooZrR7nJGGRim6GoeV8qdn
+         2uydWtz3vNgJQ41U09WKkt3niZicqkgMkMAtZ8mQOQTbOIiV1JcMczrVaIYdmMa3s/j9
+         RVg/xobT3uYQgADfF6dsfYNNf3vf7wvZKVwlLFbmTzEb8gpOoqQfshus40wX17KAAH+2
+         ZYufUuyX/2gxTNJsIi3o+/NvBW8tddKvCqxm8Q50AZWlF4DY92YznvPG+CrBhweLM+Yi
+         wiqg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779139126; x=1779743926; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DYl12Kfn/OxyVfyG979gVQDEq7mBiScEt37GaLdil1A=;
-        b=QTzT0fqjDQ4fTAyk9w1haDp2lZCCvtTO7OejfYejXr4K0qO4DM/9DdZsgTStecQ33L
-         D+AYq+1pzMi0nWRnAPeoxDxqeJx6aqaCcLtoAOrcUEF+uAStgBwhX7KhYHGSywcnj9vg
-         vxmn0XDQDOsiupxpFGyYnEfxw3Y4W/xB0NnAGmQo6QJcRPDAiNhvCmdZmRLCJ+Uj/1uU
-         iN1p9joGHtNmKqt8D2yM1aVPhGSPbX6acurkcEh68Ow5OYNEqDzDCHtcx+EQ72vjQsoE
-         vqnasDsmBLj6GAFAg+0Jxur20JwRT9GMhb344dAnvHE1aVklxmxPz98md6Ot6HnnzVeB
-         65jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779139126; x=1779743926;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1779149649; x=1779754449; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DYl12Kfn/OxyVfyG979gVQDEq7mBiScEt37GaLdil1A=;
-        b=ATHR60stPy/2l1EvKDMbK2Y9zAfN2VHt3dqPjtda0MO5rH+qFqAwZxCIq6crEHOxJF
-         jMGZpuHA+tBFuEXJLPgni2DsorRxQWQd2Q5ipWYPE5n/CWv4I97Tvk/pLaG3L1q56Has
-         AkrRjeBA3iVkFejPNWJutkpDW/OajtBbk9+sp893RlxCniSghL58e+IhrUs4pdQTz/bv
-         mc0B3NBrzB3eSEXNN8YaE1o+uYoWYfcfeyLjcjNDSFp+ScU2vH5G9VargiAkvfEjVsZo
-         m53j5JrJoI7fQx8ROiD2CSnoKVS3pZs8OzQM4CCZn1eJUwraYj3j3yFTI8ktjCc0GPgv
-         H3ZQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+s10Y9285F0H4tMlGlravhGmqhcuKawvGxTEM/NSvA1ro+4EHzswxj2l1P7XtgN4saQh7yQE49zZuynV5zhf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTOqx/qaTXB9H9Nv5MS0T7PoPScDz2PXx2CwGRWbBBj6lTZXAg
-	VpnQqdwpbFhFpKOzSicodLok1yMTypNdVWAXaJ1dGXHxT0F4uGcq+rnw
-X-Gm-Gg: Acq92OHou0kNPWUhuKDLpP4qbYT4QAQALY2vhIMtlF7Rwp7OPRMpF1GkOFx6KE9qUkZ
-	SZwS+7xHOf7TiiPBvVya7uWkgty/O9fqxLcvUwWGYWbIt958PkBNuLPp+OKd9rs/b8fgVEWQ3ZT
-	dpcQBLRWApE/1J+cUZBW/j5Pj5AWN/arV4PWkeeqVaPtJ0xoOg3yK387B35DtXPFGYEzLOMLtHz
-	qf3e+ACq5PxhXDcoPUgmXSCQ/gO5jFb0AFpknA2OJnQbcvK1azXeYiyu/3W3dxHGaa+UGekhBy0
-	A7cMFor715reFdGZOU70Z4tClqMezAm3yH8hBUy++iOIYEjfvwkvpG/PxosU+M0n6YE97VSsveB
-	1buJ4l03a0Q6vRVUzQAbFt1A/MnJP1vaNyhqxdr4AkzKrx8+IY1GQ+p0+1yF2RLLurPtL4bm6tO
-	Tz78bowSNXxCMefzk/Nx3ytqx7NIbKfqNsdeexzxhu1WaS3zOew4P1fyTum2VueksXZUSx4J9TX
-	FE2wtAYXCnge6GVADJyESkMSCUNdryl9rY=
-X-Received: by 2002:a17:90b:4c50:b0:369:d7c6:450a with SMTP id 98e67ed59e1d1-369d7c64a4bmr4286889a91.0.1779139125662;
-        Mon, 18 May 2026 14:18:45 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3695157d963sm11466999a91.6.2026.05.18.14.18.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2026 14:18:44 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-wireless@vger.kernel.org
-Cc: Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH wireless-next] wifi: mwifiex: Use flexible array for RX reorder table
-Date: Mon, 18 May 2026 14:18:26 -0700
-Message-ID: <20260518211826.11245-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+        bh=LPwsRaL3/VhQKGJMHLIVfCwqYVCTUXR7opK9047JBWk=;
+        b=d59lwcl8NvuOHlMwJ/jtLfvIVKwSl887jI0zUq+n+MokZhIz5kSNG+Q7m83cRRj++o
+         7S3rzqts7N4yutIkInkFXV9kygWG7yxiMPc0JWryBnFhkU7pGX5375FZhqllLsu46QxD
+         yqRXefPbKqpNqDqlvNkmKy9NH53MH/MzNhs5i0t6EGN/qbHwnG3z9w6y+vTpWbbm4ui8
+         +Y/emkK8/ZzUeQNXSb3F20EcO2qGGKw0KLfo5yfAg9tQxjLb8ir1PQn5DJpL6n74Uv7I
+         Kzy/KgWqFZU9F5z3/y0h3xh8lwac6mtJi6nFuR/ealUBmYZWKM9xgcZKuPtDs3lS0PL6
+         E+cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779149649; x=1779754449;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LPwsRaL3/VhQKGJMHLIVfCwqYVCTUXR7opK9047JBWk=;
+        b=Y3A091RfsQv6BGp8W6et/zH9PZTucMzkJSouXdXViXVOvXCknMnpszzArSYD4ufys3
+         0w95+wztfEtPcPBh8p9j+6aHteqbKzElHBWnVl7Sm7a6Ds6QSKXpYx2NyfLqVq/ISE58
+         U4nHZKIyIPFS44sU3pCJBiRMJAP3IfBzscTCxS4+eIiU2lDCLW2yCLDfWZm5Av3+Om3E
+         8khZJ4+7Aaf4+PrXTq16mhGCE52Eh7H+qY+mazWZpoSJsQs4IiSQvOrRNeZe1mKJ7ooR
+         c3uvgxt3zLeRlkcrBjGZ/HjX2cqxSYcQrxlcRqHgQ5CXQM/eOVAafT5J2/Jc0en9LFOB
+         G0fw==
+X-Forwarded-Encrypted: i=1; AFNElJ8QZzMRgdaLE87m4aYUvtF6rVT7FBKLKLXPk0fB868nWTlPU7RKIpQCyv2Qbk8hyf4qGNy5M3bgNyqEI/xdkgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7a2K4HlygghpbVaafRZxBadpMj1sc1a0p4Y7GAmMaolOiSuHt
+	yOHS9RR0Vyn7ynj3qNGJP/Ii13+c7sgImnVuZgf+MDalVcgqe/3m+uLiSPQOWF7T1owODTDsAwJ
+	BBjAtYrNswiIk5HMbEqEhJLG10EtXnhQ=
+X-Gm-Gg: Acq92OFZ2cqDldWZYZTsBOdtvEzaPIkm96xv2VKxQrD5eeE7uMv+5FKJRm7wlbU1j0f
+	6bjotmTsg3+tmjox95Q6JcZ/Pwc2TRpywy2O+3k2qFkdEQDCnbbKKgjGv855OAnkcqQwTLsAQS/
+	+Nrhh6Ha7OttvkQ5LytY3to+CaqmZQfLsVrvMnShWzk132Tago8O4t2yXMQtYLwdy6VvPJkmsx3
+	5YZYTyYceDrXJQ5ifeebzLrhbJPWV37MuAt5rxmoe94qQt2a5Hr7nONdomiRRgLZOy1DCPbK/6y
+	kkz4bXcfDHW1IHNfGuHpAxfj8LX0zMb2MmY50/TjnjBPg7E3uS/72GkYSRA0twUjYoeeZ8tucz9
+	Ryys=
+X-Received: by 2002:a05:622a:d0e:b0:516:707a:cf8 with SMTP id
+ d75a77b69052e-516707a0e9amr149948671cf.44.1779149648695; Mon, 18 May 2026
+ 17:14:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+ <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com> <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+ <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+In-Reply-To: <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+From: Ethan Nelson-Moore <enelsonmoore@gmail.com>
+Date: Mon, 18 May 2026 17:13:58 -0700
+X-Gm-Features: AVHnY4ICd7H9-70Xucdx9uJAfA9u6BhUaXyRyteuNE6Jo8mNtePRuTvmeSFjqyQ
+Message-ID: <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+Subject: Re: [PATCH] nios2: remove the architecture
+To: Simon Schuster <schuster.simon@siemens-energy.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, 
+	workflows@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, 
+	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-iio@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
+	linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>, 
+	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>, 
+	Hu Haowen <2023002089@link.tyut.edu.cn>, Kees Cook <kees@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Nicholas Piggin <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Dave Penkler <dpenkler@gmail.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof WilczyDski <kwilczynski@kernel.org>, 
+	Andreas Oetken <andreas.oetken@siemens-energy.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Embed the RX reorder pointer array in struct mwifiex_rx_reorder_tbl
-instead of allocating it separately.
+Hi, Simon,
 
-This ties the array to the reorder table lifetime and removes a separate
-allocation and cleanup path.
+Thank you for notifying us of your continued use of the Nios II architectur=
+e.
 
-Use kzalloc_flex() for this and move the counting variable assignment to
-after it as it does for GCC >= 15 already.
+On Mon, May 18, 2026 at 10:24=E2=80=AFAM Simon Schuster
+<schuster.simon@siemens-energy.com> wrote:
+> Unfortunately, as we are an infrastructure provider for civil energy
+> infrastructure, the refurbishment cycle is a bit slower than for
+> traditional consumer systems. This implies that the traditional LTS
+> support duration (max. Dec 2028 as of writing [1]) is rather short, and
+> we would be glad if we could keep the architecture in mainline for at
+> least 5 years and only then "decay" to LTS.
 
-Assisted-by: Codex:GPT-5.5
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- .../wireless/marvell/mwifiex/11n_rxreorder.c  | 20 +++----------------
- drivers/net/wireless/marvell/mwifiex/main.h   |  2 +-
- 2 files changed, 4 insertions(+), 18 deletions(-)
+Your reasoning makes complete sense. However, there is an alternative
+to maintaining the architecture in mainline.
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c b/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
-index 610ec8302adf..a266f09cb763 100644
---- a/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
-+++ b/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
-@@ -213,7 +213,6 @@ mwifiex_del_rx_reorder_entry(struct mwifiex_private *priv,
- 	list_del(&tbl->list);
- 	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
+The Civil Infrastructure Platform project maintains super-LTS kernels
+(and a set of base Debian packages) for 10 years. They are intended to
+be used for exactly these kinds of devices.
+See here: https://wiki.linuxfoundation.org/civilinfrastructureplatform/star=
+t#kernel_maintainership
+and here: https://cip-project.org/about/linux-kernel-core-packages
 
--	kfree(tbl->rx_reorder_ptr);
- 	kfree(tbl);
+CIP will maintain kernel 6.12 until 2035. Is this long enough for your
+lifecycle? What kernel are you currently using? If it's newer than
+6.12, we can easily wait until the next CIP SLTS release to remove
+Nios II support to avoid a downgrade.
 
- 	spin_lock_bh(&priv->adapter->rx_proc_lock);
-@@ -329,7 +328,6 @@ static void
- mwifiex_11n_create_rx_reorder_tbl(struct mwifiex_private *priv, u8 *ta,
- 				  int tid, int win_size, int seq_num)
- {
--	int i;
- 	struct mwifiex_rx_reorder_tbl *tbl, *new_node;
- 	u16 last_seq = 0;
- 	struct mwifiex_sta_node *node;
-@@ -344,10 +342,12 @@ mwifiex_11n_create_rx_reorder_tbl(struct mwifiex_private *priv, u8 *ta,
- 		return;
- 	}
- 	/* if !tbl then create one */
--	new_node = kzalloc_obj(struct mwifiex_rx_reorder_tbl);
-+	new_node = kzalloc_flex(*new_node, rx_reorder_ptr, win_size);
- 	if (!new_node)
- 		return;
+One important thing to note is that the default CIP kernel branches
+are not equivalent to standard LTS branches and include new hardware
+support, which has a higher likelihood of introducing regressions.
+However, the -st branches do not include these changes and follow the
+same patch acceptance rules as standard LTS, so they are likely a
+better fit for your use case.
 
-+	new_node->win_size = win_size;
-+
- 	INIT_LIST_HEAD(&new_node->list);
- 	new_node->tid = tid;
- 	memcpy(new_node->ta, ta, ETH_ALEN);
-@@ -381,26 +381,12 @@ mwifiex_11n_create_rx_reorder_tbl(struct mwifiex_private *priv, u8 *ta,
- 		new_node->flags |= RXREOR_INIT_WINDOW_SHIFT;
- 	}
+Also, CIP focuses on architectures used by CIP members - currently I
+think they are x86 (32 and 64-bit), ARM (32 and 64-bit) and RISC-V.
+Since Siemens is already a CIP member, you can simply ask them to add
+Nios II to the list, and you can assist them with testing and directly
+submit patches to them once the standard 6.12 LTS period ends.
 
--	new_node->win_size = win_size;
--
--	new_node->rx_reorder_ptr = kcalloc(win_size, sizeof(void *),
--					   GFP_KERNEL);
--	if (!new_node->rx_reorder_ptr) {
--		kfree(new_node);
--		mwifiex_dbg(priv->adapter, ERROR,
--			    "%s: failed to alloc reorder_ptr\n", __func__);
--		return;
--	}
--
- 	new_node->timer_context.ptr = new_node;
- 	new_node->timer_context.priv = priv;
- 	new_node->timer_context.timer_is_set = false;
+I hope this information helps you decide on the best course of action.
 
- 	timer_setup(&new_node->timer_context.timer, mwifiex_flush_data, 0);
-
--	for (i = 0; i < win_size; ++i)
--		new_node->rx_reorder_ptr[i] = NULL;
--
- 	spin_lock_bh(&priv->rx_reorder_tbl_lock);
- 	list_add_tail(&new_node->list, &priv->rx_reorder_tbl_ptr);
- 	spin_unlock_bh(&priv->rx_reorder_tbl_lock);
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
-index 27559e2ddc31..67da5daa48b4 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -708,10 +708,10 @@ struct mwifiex_rx_reorder_tbl {
- 	int init_win;
- 	int start_win;
- 	int win_size;
--	void **rx_reorder_ptr;
- 	struct reorder_tmr_cnxt timer_context;
- 	u8 amsdu;
- 	u8 flags;
-+	void *rx_reorder_ptr[] __counted_by(win_size);
- };
-
- struct mwifiex_bss_prio_node {
---
-2.54.0
-
+Ethan
