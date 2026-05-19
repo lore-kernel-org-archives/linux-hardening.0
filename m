@@ -1,139 +1,198 @@
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16DD322768
-	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 16:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779209277; cv=pass; b=Mz2mGMFThDAsxcGQHmWNsEgM77AjlUGWLwe4wE1rYB19FeY7/CRH8i5dA0z7+hM7sm9Eeeq3spBbPGrXl972drBj1/1kMxOp3mq8ZJpsoEu/DWnjs/m2K6RmAEWUNDC92PAyegtD3fD8OpeIItv/Bk/lkqXCd9lvfW78bq1FMws=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779209277; c=relaxed/simple;
-	bh=ViKPE/zs4gsJozSFsoDM9rzZ64VredtJAzBJtyzJDD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MJyiLPC7xbGlC40k4ca29zz3awDSYyq4dK8XgzHKtI0zNOCfqWePmHWVRHZ6/wZbfMPbhFNHpkzFiZYArORMmZl/uaY0BNjyKso3q8yr1btyTbE7xYJyPFzqJOz2zvWkwH4GdOLjFqztvijoxxgjITH13dYFLU1daGZYqpJEMtg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qCDj36xB; arc=pass smtp.client-ip=74.125.82.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A7836B042
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 18:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779216272; cv=none; b=gn9Mmh/kU9aUuofgV7YVhakp7/8fzcW6jCNjS+PYVORoi7zDcnz4taB5b4SO/OxLKINZZF+zg2fpHHaPNVIQM+ne2nck+W20bt7Oy6aGym8eqBRkKul0wD848n2Sl3PnaBddNB9aTbddxX5IwnnBItYyr1lyvUu5P/SpJoka26I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779216272; c=relaxed/simple;
+	bh=uz+vemUhmNNro/rp3qqtv3qctKFkHF52DqRroFw7jbM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V/eQNbqyYrcWC8noYyKF5zdsS0bz4l/bSYrHTzCpp6UjAVPex6r0vv0zDU6TrsXo4z7saNYrvIyl5pnC5h/WeT67jZIRc0DZ3qgtaIg2nRmiQ0ZYXJcoTSkq8K8ajqPfLJ7DKQIM4ze2d6Pfvv8ZWwyxQhzENs3Uq+B+F6MuuHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Ur8iPei0; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qCDj36xB"
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-12c8d0945b3so99c88.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 09:47:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779209275; cv=none;
-        d=google.com; s=arc-20240605;
-        b=C26hCapTM7cNsZsM+GVntp6d0YCjzRZ7J8iZWbFvohY37/yhVrB7VlftPQfzMOmbqd
-         /9voj322JPUoY86u8Vg9/LrwMCtqSVssyYqWcYOMqAdYuGBIrcXGH3HjLWmumdndVnk4
-         kn+WIlkCJsoHIU01nYzbnUgJ6RhaRAAW+UIKBqp6/UK3qQlCqdUnXXsorRjmkBGI70Qb
-         9iPWZ4FXdbFNxvCNBwaBTRE6TmPMDMCrvy6rucBKHPPDZyCl/YGXNtr++XJz+7uX0ZxF
-         LUX2XmaPW6sxNaPodZ0rxwQTPLORFTsKheZWnyqqk2kZm3N9ZoNBbwCS+BEqNBKrcrji
-         Lqbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ViKPE/zs4gsJozSFsoDM9rzZ64VredtJAzBJtyzJDD8=;
-        fh=qewiEHBfjqvCnU9kLMlxwtL7YjWY0KHt0k2cH655yTU=;
-        b=Kj0gjyVUR36ofHeEyR9t94/Vn6mhqJE6Fl8/zhOv1FZrUWz8nhrMMZhLSGLvrY4IdQ
-         vL9zbhqEAVvgZ1sQ+rD8BSolLzyILbGHdaZwo4XdQB1Fs6Wc0NtHV5DYK0h5C8DAqcrR
-         jBh9C5GSWZh1dVbrBOfcTq9NHJEigpWq8vXux77ooMQfwyDoHtwhcVt/brxlZubGqKEP
-         v1ort20is/An27gtPFK9/Fno3ZvwetfvyUirBqdIpFbmG81xMP82QSNMtHRFB9j9GjD1
-         CwsonULG8JJx2wAOeUftJeVHR4QKrjbwzP5+4qxlbw+ZU462Kgnh50w8LDCJ3CBGqFlJ
-         31nw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779209275; x=1779814075; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ViKPE/zs4gsJozSFsoDM9rzZ64VredtJAzBJtyzJDD8=;
-        b=qCDj36xB+gWsx5I++4gl23aTy/IsknfkUlDdViRQo5wucJqQ8XdghhD+kLpe7INyJX
-         D5hDNw4zhXmqyvnDQ+SLTsfjy3d+aAzPtHK4Hf/yZvzw4vcTdOfCgbx45BElKmR12hfX
-         pu5c2HaqaT73C2IpAxqMFMcZNTBN0dPwrTcBUBQ9H3m6bZt6mx/YJhlrLDFNw5Cvbfji
-         jvAUMXhEKAap1D9lrGHZsUO74k7gq02nBUlPXXnPBlgSayaJKDgXw3EWOzWfApAElNs6
-         BfzZRPCYgAd0MgV4u2ao7+QnmxOz2O+5xUIt6DXaGaTbjbG45iFgS0OcpDl/H5i84vQ9
-         f0/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779209275; x=1779814075;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ViKPE/zs4gsJozSFsoDM9rzZ64VredtJAzBJtyzJDD8=;
-        b=QCeF0UtR/VzMLYT6maFG1hKJsLII2lPmFz9Px8w2o3j2vY6zdVN0NTioblC/OxQSyo
-         DXiTJP7t3Vyyntqcls0S/gqOpYxffxgaPzlP5/tBoz65nQnf8PcW9Lhby/cyY7KlCnRG
-         oWyXOCCV7x8GLFpz02Sxghx7ynuJfz2xeO1MfRp7bkg8hVp+/CC5iIUj//j/fxcvdYg9
-         MHfbg/qdFTzo+AGInSa9AHa26Eg+uyhrFXFxbevjblx9BMaI4VpXSE2y1a9ub35W27a4
-         6B4guFgyzcp3w/ILjxc5wjek/8ok9j4UjEAeW5N5e1VNWLSnwIxmaCvaZLVu4SlD6nJa
-         xY2g==
-X-Forwarded-Encrypted: i=1; AFNElJ/Qvu/um0KkKP3znnYXf1e+XOoPdRJa5k4um1AIv4NYnv6YN7wkvUX78NptiQvaNnIHbAW7d3Bwx2idPpCsO+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMYAwUIy0z0qgSAxKtUMOlP8J9xT1r6dGttUG99hZTrppG3xX/
-	QxolYBkT+DS8S96m990yNqebGZse8Ni4ybFGBjdHvdFK40vfeFNUBdVYKpK+PwO39rVgZFW/1BK
-	p56bzZ7hSZzjlc/NlmEalxK/mFjIpw/u7z5CyNsTw
-X-Gm-Gg: Acq92OGCp7QHIo5YiKv/U2KZbpe/m3Vrn6kJODb9W9c3SAn/yZgwf4DDmN5TC/JwjT5
-	Q1jIK0F3yZcM7mKTA6BhuRrsQw4qyesqNKpI8+VDPTWm1Si1RIBqobiphmvOaX+cTLfwmzkPkcc
-	iYl1yeiEsInqq+7KyqMpaND6TharPH+NnZ3/zoWR2UyXtzojU+5ai66wCxw+h201mXS+MN28NCG
-	4sXh2Q07RRYgFi2UFtUSWo9faV1PdKkMfyg21lnwoLcwQFiNwGkAfNLBfBKk9eC3B6wXHoe6Osp
-	BBB+934bWznIPhbstQpLOZgAoowrL91AhGaOGG3mJeHe2Knz
-X-Received: by 2002:a05:7022:41a3:b0:12c:2ed4:6314 with SMTP id
- a92af1059eb24-13557dcef85mr326451c88.1.1779209273823; Tue, 19 May 2026
- 09:47:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Ur8iPei0"
+Received: from eig-obgw-6006b.ext.cloudfilter.net ([10.0.30.211])
+	by cmsmtp with ESMTPS
+	id PIBBwYs7r4RkpPPQVwLtj6; Tue, 19 May 2026 18:44:23 +0000
+Received: from gator4166.hostgator.com ([108.167.190.91])
+	by cmsmtp with ESMTPS
+	id PPQTwbxdESUGqPPQTwblYj; Tue, 19 May 2026 18:44:22 +0000
+X-Authority-Analysis: v=2.4 cv=CoK/cm4D c=1 sm=1 tr=0 ts=6a0caf87
+ a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=_Wotqz80AAAA:8 a=tBb2bbeoAAAA:8 a=pGLkceISAAAA:8 a=yC-0_ovQAAAA:8
+ a=XdmyuPCCfbVxxrREcIQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=buJP51TR1BpY-zbLSsyS:22 a=Oj-tNtZlA1e06AYgeCfH:22 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WJd2PSagXT/7Zk3zROcElqGPnYAcaGo0Um1SeTGkppo=; b=Ur8iPei0kv4osbB1//cJPVZD0a
+	vlWslvxBezPVYFTlw0OwRKbNe6KfLO1A7n5D1Mpcx8nuRZHWdD5FinrdA+tZCRm3FlynC/ywWqH+2
+	uAtqZ8WYuOe4w0LUx6IWoRf/x/f5gcJohOJf37G14zkApHSvSgwOw4sFFh9iVOikGqZOvHYLvCyim
+	v88TdbBOfc072zfC/ulTT/uJY0W9pHiwK332xVMVAuER7cwxzharnrrXGQtzkEOePmmetOzRRfaKx
+	v8HkQ3NwrnYsqkJbdAxpGKzb1Fdo1OV0WUDcz4CXcyRblP3OeR+va8zRfY/dmk8FGrH4tkNrQxL8t
+	Yd9HP+jQ==;
+Received: from [177.238.17.117] (port=33822 helo=[192.168.0.11])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.99.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1wPPQR-0000000210K-3gpT;
+	Tue, 19 May 2026 13:44:20 -0500
+Message-ID: <18c41409-e1d1-4877-87a6-1c3156f943aa@embeddedor.com>
+Date: Tue, 19 May 2026 12:44:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <F78521DA-08DC-424E-BBE1-231BC900CEE0@gmail.com>
-In-Reply-To: <F78521DA-08DC-424E-BBE1-231BC900CEE0@gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 19 May 2026 18:47:15 +0200
-X-Gm-Features: AVHnY4LvG4Du5d39_T67NOwKnozMptM-y7xFRUTkKn7VXkYMQfWRo6DTkXiA7Lg
-Message-ID: <CAG48ez0KsuR5z4RDgxWPUoS8e_MJzF74RgFDJayohG48A_N0PQ@mail.gmail.com>
-Subject: Re: [RFC] TID v2.0: kernel module for cache-line zeroization against
- Flush+Reload (CLFLUSHOPT + LFENCE + REP STOSQ)
-To: Ahmed Hassan <ahmaaaaadbntaaaaa@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kernel-hardening@lists.openwall.com, 
-	linux-crypto@vger.kernel.org, linux-mm@kvack.org, linux-api@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mmc: mmc_test: Fix counter tracking in
+ mmc_test_alloc_mem()
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ulf Hansson <ulfh@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20260519133025.618255-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVKOdzThVMOcQ1K9crUkyDutvuZsP2-5v5++SVFHkgtOA@mail.gmail.com>
+ <CA+V-a8sFNjp9euEEfBf3BoscjU8W3isRT_pnzd7J4QsuiN6qfg@mail.gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <CA+V-a8sFNjp9euEEfBf3BoscjU8W3isRT_pnzd7J4QsuiN6qfg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.17.117
+X-Source-L: No
+X-Exim-ID: 1wPPQR-0000000210K-3gpT
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.11]) [177.238.17.117]:33822
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMWVoQkoazh2i3fmTyolWdOHu+9XVKtPnS7C0Vrx9YI4Mk4zqCWFi3kMdq3LX2he2XeEdlWRatkzStA1pL7/LAP+w8IK8Y/oBPgq/XA/hBD/9V9NETJO
+ 5/Qa0GWMK7gb3x+WZ29sUdGG9ZPTE8O9yN/UFLGLB+ZIzjpE9wjeEbwMDaLilb4Txe1iTW7PiV7JWzMKY9Dl1njofNHWl5FcsO+mVaceq07FSJ/25eyNqSPf
 
-On Mon, May 18, 2026 at 11:47=E2=80=AFPM Ahmed Hassan
-<ahmaaaaadbntaaaaa@gmail.com> wrote:
->
-> Hi kernel developers,
->
-> I am sharing TID (The Instant Destroyer) v2.0, a Linux kernel module
-> written in C that addresses a specific gap in existing security
-> libraries: none of them (libsodium, OpenSSL, glibc memzero_explicit)
-> flush CPU cache lines after memory zeroization.
->
->
-> =3D=3D Problem =3D=3D
->
-> Standard zeroization functions (explicit_bzero, sodium_memzero,
-> OPENSSL_cleanse) prevent the compiler from eliding the wipe, but do
-> not evict CPU cache lines (L1/L2/L3). This leaves residual key
-> material measurable via Flush+Reload (Yarom & Falkner, 2014) after
-> data use ends.
 
-The thing you're talking about isn't really related to the
-Flush+Reload side channel attack, right? You're just talking about
-flushing cache lines.
 
-In what threat model would this be an issue? Normally, the goal of
-memory zeroing is to ensure that sensitive data is wiped before an
-attacker has a chance to physically pull out the RAM from a machine
-and plug it into another device that can reveal RAM contents, or
-before an attacker gains physical control of a locked device and can
-connect malicious peripherals to it, or such.
+On 5/19/26 07:44, Lad, Prabhakar wrote:
+> Hi Geert,
+> 
+> Thank you for the review.
+> 
+> On Tue, May 19, 2026 at 2:34 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>
+>> Hi Prabhakar,
+>>
+>> On Tue, 19 May 2026 at 15:30, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+>>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>>
+>>> Fix an counter tracking in mmc_test_alloc_mem() that causes a kernel panic
+>>> during error unwinding.
+>>>
+>>> The `struct mmc_test_mem` uses the `__counted_by(cnt)` annotation on its
+>>> flexible array member `arr`. While kzalloc_flex() initially sets the
+>>> counter field (`cnt`) to `max_segs`, the allocation loop needs to track
+>>> how many elements have actually been populated.
+>>>
+>>> Previously, leaving `mem->cnt` at `max_segs` meant that if the loop failed
+>>> midway (e.g., "Failed to map sg list"), the error unwinding path in
+>>> mmc_test_free_mem() would attempt to clean up uninitialized trailing
+>>> array slots. This resulted in passing NULL pointers to __free_pages(),
+>>> triggering a kernel panic:
+>>>
+>>>    [   66.172845] mmc0: Failed to map sg list
+>>>    [   66.176722] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+>>>    ...
+>>>    [   66.432747] Call trace:
+>>>    [   66.435191]  ___free_pages+0x1c/0xc4 (P)
+>>>    [   66.439119]  __free_pages+0x14/0x20
+>>>    [   66.442608]  mmc_test_area_cleanup+0x58/0x84 [mmc_test]
+>>>
+>>> Fix this by explicitly resetting `mem->cnt` to 0 immediately after
+>>> allocation. Then, move the existing `mem->cnt` increment so that it occurs
+>>> prior to populating each array slot, using `mem->cnt - 1` for the actual
+>>> assignment index. This guarantees that the counter accurately tracks
+>>> initialized entries for safe error cleanup, while dynamically expanding
+>>> the `__counted_by` validation boundary ahead of each flexible array write.
+>>>
+>>> Additionally, rewrite the cleanup loop in mmc_test_free_mem() to use a
+>>> standard forward for-loop. This addresses the unsafe post-decrement logic
+>>> in the original `while (mem->cnt--)` loop which evaluated and decremented
+>>> the counter field before indexing the array, and avoids a potential integer
+>>> underflow/wrap-around of the counter field if the cleanup path is invoked
+>>> when `mem->cnt` is 0.
+>>>
+>>> Fixes: c3126dccfd7b ("mmc: mmc_test: use kzalloc_flex")
+>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>> ---
+>>> v1->v2:
+>>> - Started with cnt = 0 and incremented before assignment to ensure
+>>>    accurate tracking of initialized entries in mmc_test_alloc_mem().
+>>> - In mmc_test_free_mem(), replaced the while loop with a forward for-loop to
+>>>    safely iterate over initialized entries without risking underflow.
+>>> - Updated commit message to clarify the issue and the fix.
+>>
+>> Thanks for your patch!
+>>
+>>> --- a/drivers/mmc/core/mmc_test.c
+>>> +++ b/drivers/mmc/core/mmc_test.c
+>>> @@ -318,9 +318,8 @@ static void mmc_test_free_mem(struct mmc_test_mem *mem)
+>>>   {
+>>>          if (!mem)
+>>>                  return;
+>>> -       while (mem->cnt--)
+>>> -               __free_pages(mem->arr[mem->cnt].page,
+>>> -                            mem->arr[mem->cnt].order);
+>>> +       for (unsigned int i = 0; i < mem->cnt; i++)
+>>> +               __free_pages(mem->arr[i].page, mem->arr[i].order);
+>>>          kfree(mem);
+>>>   }
+>>>
+>>> @@ -356,6 +355,7 @@ static struct mmc_test_mem *mmc_test_alloc_mem(unsigned long min_sz,
+>>>          mem = kzalloc_flex(*mem, arr, max_segs);
+>>>          if (!mem)
+>>>                  return NULL;
+>>> +       mem->cnt = 0;
+>>
+>> This is not needed, as it is set to zero by kzalloc_flex().
+>>
+> Actually, kzalloc_flex() automatically sets mem->cnt to max_segs
+> because cnt is annotated with __counted_by. Because of that implicit
+> initialization, we need this explicit reset to get it back to zero.
 
-So for this to be an actual security problem, the device would have to
-keep running in a sufficiently high power state that data caches are
-not discarded, and at the same time not perform enough memory accesses
-to cause this memory to be discarded...
+An auxiliary variable could be used to avoid having to update the
+counter too early[1][2].
 
-Assuming that this is an actual problem, why are you using a kernel
-module for this? At least on x86, CLFLUSH is unprivileged, so crypto
-libraries should be able to just use that directly. (There is the
-caveat of what happens when the kernel migrates pages or kills a
-process, but that's a larger problem.)
+I think it'll eventually become best practice to defer updating the
+counter until after the flexible array has been fully initialized, or
+after every major update that requires changing its boundaries.
+
+-Gustavo
+
+[1] https://git.kernel.org/linus/ea9e148c803b24eb
+[2] https://embeddedor.com/blog/2024/06/18/how-to-use-the-new-counted_by-attribute-in-c-and-linux/
+(I'm in the process of updating this blogpost with some *alloc_flex() examples and more.)
