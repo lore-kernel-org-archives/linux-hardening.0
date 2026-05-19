@@ -1,121 +1,253 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154E5389444
-	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 09:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779184225; cv=none; b=APbj0YXOBhiUkvM7BPMrHlKTLgWFXQCHwDX06QXAHwf3ADLxJ3ACNPw9ARG4FVAAAClGcdDNeU9nTHwEWRAxZ8y/oCGZ4Ouxte4E0mcw195YvzLwQDpgZDyfIT9r/To/w8RlNA3cDEBdB7qJEmu0Bus+dGxZYscRCNIpLWBid5g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779184225; c=relaxed/simple;
-	bh=VV0WQeCgbPqBTi7yab+uEYQeq6u9LFtTUX4clbsM2Vw=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F14F48122E
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 10:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779185152; cv=pass; b=OQomuOxTNOcMrYvcJehGBJQHJuKdYyGZ09RaeZhwK0m7xNz3W8P8b/85PHxS/D2icGLDrGpw6CyKSwl4H58SZGvJKCE/gebhjDXXq9H+FbklAHvBXUHUcaeJL8P363PbEf1EQbxxT9wcUYisu0L/oU9kJmwVh8oVvEbqB6ExLUk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779185152; c=relaxed/simple;
+	bh=czyUKy/5TRWEYZwJjc6/HYigu7VtwCQiu37oSpPfG88=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j0VopyYg5N9KZthcHj86MQDmItuFIQR4rRIWhTM437YrO1FAx6R3tMj9guy9G5NuSOSBpUja3iuXSVHwBIKxN9YfStTz7nXPHckh8h2cZ7WhZnHkGW7uYWQDVSXE+rV4SNehs/PoErbSKRBIwehPAeGjvfrDrGKR6JUd9pkOzAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=QE7ucmgcyjmAAgNmMj39Vfe1uMMhgt/z+SCsvEBOi9BAjJ63RRXfGHac2EFfDNrRqi2iMo3mv8KRnoDKyaoSA6cH8CU/mMRcbwu7fEfXLAELqbRMsqODmhf4h153tHuZhACsypmM9NqI+U8OoAOaYwQrDgeobQ1Si3/sPQYE4DY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IAMvRBcC; arc=pass smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-7de4a9cb8eeso3365170a34.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 02:50:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779184223; x=1779789023;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAMvRBcC"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-44c350a5b87so1975351f8f.3
+        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 03:05:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779185148; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ajffYklWjPyERJHJigrp8UW4KpaILZWn6i6WUnd7LIp2LYmqIhzO/lJOQ+O383pfdO
+         Gfli3a+7VuH29YIOMBcvcah1HiFUvuOoccX97zD6L+5sWZ6VaVmzEhDWT8mREFxKRfGp
+         JOPk24rM8SIfBx71O/R//SEMpqrjqtEKjCXV6k4L5OisowwsFogPS7800hDFZP/7BpfZ
+         Tch7HJFJS6YoIwQIBjObxqQuULo8pC3th2wrPED5DTk9RZuNay8ij+jVDcfzp0dSNTsk
+         cHZ04GKox2Xiblh0qABu8iFInqwwEBVQZnF/G/Z5PkqOzA4DJVi6UxBWUJTfX0e3SnZy
+         Y0mA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=RiYL6/RjiqiIsp067U9+dXVTX/+7ETKrZ/JSTHkELaY=;
+        fh=6E6qXZ4pp3jkuT88P3+G3poRg130D3r58aDe58DX4Xk=;
+        b=QUqD2uQMft2cBwFkIqqDGWGqxwY+Myz74kqJ7PxOABAG2pSE2EX3rl4BKx1IkFdxVh
+         1FhcC32iwEKYPSupZoJhCPdir69OJmjyBVUezyblxLtDdDgdk+Hkv6zZ4Nm3CVhMVCf3
+         0/NMbk2Cpw3RHfRT7qRtGz+ImCAqITdgJeKtld7FTivAHWuZvIwThMmp5k5seqOouYat
+         TN5o89A0la/VsSbjx4R9XjyI8A+l262KNRH5GJr3LGrAuYsuW11KyGehWTdAx+v4ql6I
+         qL7pCGuFDa5rsOJJz6R3FDC5G6Q07jT4TtY66jEiqrFSl2Umw1mEz0jNamp1CVbtdk1x
+         eGlA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779185148; x=1779789948; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T+2SZGl9spcuw3ZVraVsNeWL62/l5e6HnqNdDh6fCso=;
-        b=Axn0QQBXX61RnQVrbBK/2mOZViBiNK5DaxNZCZCMxm/ZM+7eYaSSVZtJ53CukOHycl
-         8oFCxvDjecxfPtQmt6IsSXkGYZNF5SU7+xMPC7hO+RFxASwT5b9hJc+kpIorOyFODBSI
-         KECmUpbiEmlFgKFqXsWFq5UnVbX7OrNxt25PfV8c37OP7bLjZoQzaBg1m8j0VVdFOeon
-         1lV6fLK3avNkILlRSuiAuslIFy3YU1xelzAUyXm6S13l/h//jtsE9+uQMunyhWU7Kjs3
-         XXk8Rtr6CrzF/tA391wsz9X3lc3BS0oddzCwHOvlpR/IPjPbxnMoBzHHfNEcgsI3DfnN
-         w6pg==
-X-Forwarded-Encrypted: i=1; AFNElJ82kMAcu4WGSzEhIEwxHQ7MxvWZCZTxUsEg6zk/66LDV4hahzb5kodSkAAiOPnQToi1wfLHlwANQbKdEhpGLKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzlWWmAMyDHap+CGXcopgeBrr6aGDIQ6N75SykLXKnszpQzjOH
-	50TgYmrG8HcGG8N9kaMlJikSzLUC3YTpQW6gJfZRACG1AUDSOahDJzMJfZvh0NKD
-X-Gm-Gg: Acq92OF4Fv4wj/7ii1Msd0ZpUBclCI1hAVxtFskfWHyqH4ZFOi7FkN5+b4YdB3UqcZL
-	nIwUiQksPou3vESZ5wpAZ3SlfTarI26/XCqijC344busynqJqC7YHvJuwwL9mzn+JTj8jU/5hIR
-	K7bic04hnY/UwcXzbrsa3M6JExqFTtkYOb61NgHE2LWRpP+EdL+V8qixs7teeScTINpYs5aGPL0
-	cLR0bPpY02O8KztAfqEi+bxpK+zPO9uh/B8qA357FZ7Pxi8NYNzybeonf9MEMzmHRLpsz0WQxBC
-	sbDysGx9zg7Zn8cGuhXy6ATf/gfruRQw2gFN6QsGuW6Rr85BbohdL8S3TbokR5nM+4Kt1nzPvyX
-	OGVqeUPPB4MJZHyLotOD8bMqkYMkQU1H/cCfLHPeTb1eeo5lRR5wNae/jyPwWCZ1sO2IzXNzNNI
-	zX1M5BlmxVQ9aYDOwOTia6RNkyjHF5VigaEvYu7VT7H8tZcGsxPX3a4jqj8NdwHQHF
-X-Received: by 2002:a05:6830:6f8f:b0:7e1:90a:9c81 with SMTP id 46e09a7af769-7e4f2bdab70mr12587074a34.26.1779184222833;
-        Tue, 19 May 2026 02:50:22 -0700 (PDT)
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e55b7cd6c0sm10434447a34.4.2026.05.19.02.50.21
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2026 02:50:22 -0700 (PDT)
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-479fc1fc048so2827096b6e.1
-        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 02:50:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+KzVxTdw0yCfeUYN/TCn8EL80nczD8QpuU+QlycVTKbw5wl66MbHPbS3T7+l8ljVoTWujTtn/o+rQ+FwYamVc=@vger.kernel.org
-X-Received: by 2002:a05:6102:511f:b0:634:d42d:15e2 with SMTP id
- ada2fe7eead31-63a403ac9a2mr7077474137.26.1779183821499; Tue, 19 May 2026
- 02:43:41 -0700 (PDT)
+        bh=RiYL6/RjiqiIsp067U9+dXVTX/+7ETKrZ/JSTHkELaY=;
+        b=IAMvRBcC7KgDVLtKWKI4ISN4eoS0ZjDPL79AexCe/c+r27PAdyN0x4u0I74uCq9seA
+         DSSGiqsjKnspvetARzkTs2IErDsUBGILVDOOYv5XaJteVxLswnn4xC4pYhXNZZiOtrzk
+         qEtSy7fw1V7AAmmrdMhZKUtf0HH1jRaDC2TUnLTJFaNSse1qc7j2UmSTPqpwCf/JRayX
+         +d/EYPH8bZr7TOVnGUaprz0L+5hC017w9wapEVuKd47n/raWnUAXRhFtnh+h+/csOTg4
+         tXvfn3qce/LnONJ/0fY2zKFoIcGtZJPuSEIoggNHq3hw0vRGVnKsKMj7yAn3x8uIZwRt
+         hPOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779185148; x=1779789948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RiYL6/RjiqiIsp067U9+dXVTX/+7ETKrZ/JSTHkELaY=;
+        b=mygi2YtV6BVqgqIcQhb/Lp6VgrNhx6CUCVVsf0lBPuxLQL/arB78U/Uh18vq5qU/ck
+         QhLvesF4tSLrFirwpvzWHZWBoWj76o6x2nYKk5z76FG96vBarSw3G3XVHFLsjVfyhN87
+         K15JvjcB0Cw93wXq/voe4iKI4q94dpfYHJw6fdAbLoLVWBnQ0+s23QzwReyPHDtacDOq
+         pnY21I9MsZiiNDkuGAsVBKcR4yMndg+YAILPjV1DeBOghoX6+TSluoU9Db6CVu5eM+gp
+         Y5zZmU+2y5+tupMP89/nnvAIqnj8yXGQQv9G5yGFmVEtKlUFF7lLWiX/1T8ECZpJge2I
+         biew==
+X-Forwarded-Encrypted: i=1; AFNElJ9aLM74JmMadJEVSV9asSF6PymYCj1SM7zd0mgMSFDHFQXk0ctfkT9OfxHdfZ7cqv9pQpG6sqv9iIfSSPxgko0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypB1pfdGWaOJd4MXap9N05HaLwrI3RDmU9JsYWkl5/dTM3N1v7
+	JR1JldD2MTLpg7SgQ/NMkzj3MNnVmuJF/3b19O+i7KSacwr4yV/JIpkOp2/pJqxZ5Qj04wZ+EOO
+	Wzo+8ToAbUdLdzKwUmHwn3fAxIaSSENE=
+X-Gm-Gg: Acq92OF5B6L2WZtETzehAdM8Bnt9cIbSvw++qGq34N2Jzds3FeyQah4hrFyqPgovpkv
+	VMnld/ot2u+kPdvvTmSHx+eC5b0jw+fbYpFb6uXTeKfF3WjYo3yvHro1uBrbhrZqQQPWemcI+Kd
+	nL/gNm5J8T7dYto4Cnamd8Gq7TTIHgcC3gXKfq6Ow/88tsGu1tufiBVpF9V5yBJPI9vVp2X1789
+	dG+NF5MRd6cCsFlwbcg5QcoMC9sUR8TmEZX59a4ciHHfzamjPxAvSCDhqh/jK65Gzbwl5OjFIu6
+	7ZCEVCGlEFhgm2EE+qc+yT8HOVi1Yul7G367gW2fU1s6u48SlXtRwsZqeUfRZ1lZa2b8hJOHUK+
+	57cs=
+X-Received: by 2002:a05:6000:1787:b0:45b:d5d7:1f59 with SMTP id
+ ffacd0b85a97d-45e5c5e3282mr30988684f8f.24.1779185148172; Tue, 19 May 2026
+ 03:05:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260518042833.272221-1-enelsonmoore@gmail.com> <20260519094820.1f05ab8e@pumpkin>
-In-Reply-To: <20260519094820.1f05ab8e@pumpkin>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 19 May 2026 11:43:30 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVw349EBZUuYZAns3FnTndx0A=PHbznxarYuAQr8nbqDQ@mail.gmail.com>
-X-Gm-Features: AVHnY4Lfn8Mcrjf-CZtgFTL8ilhwbGlXFwz-O3Z8xcIZpla9SRL4d3C994HiNs4
-Message-ID: <CAMuHMdVw349EBZUuYZAns3FnTndx0A=PHbznxarYuAQr8nbqDQ@mail.gmail.com>
-Subject: Re: [PATCH] nios2: remove the architecture
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Ethan Nelson-Moore <enelsonmoore@gmail.com>, linux-doc@vger.kernel.org, 
-	devicetree@vger.kernel.org, workflows@vger.kernel.org, 
-	linux-arch@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-csky@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>, 
-	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>, 
-	Hu Haowen <2023002089@link.tyut.edu.cn>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Vinod Koul <vkoul@kernel.org>, 
-	Frank Li <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+References: <20260513201315.3186621-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdV0BybWdKsPgB5TGg61U+E5u71Fu5KgXpj1sUuq-QcRQA@mail.gmail.com>
+In-Reply-To: <CAMuHMdV0BybWdKsPgB5TGg61U+E5u71Fu5KgXpj1sUuq-QcRQA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 19 May 2026 11:05:22 +0100
+X-Gm-Features: AVHnY4JoB4T1br5m3mLltNKq-ucASMJuVjuTIoj0NffHxkPFdgR_H0jzHgpPrWU
+Message-ID: <CA+V-a8t5NZP5QamrdH2-ViMcShcYh3czLsZ+0kkD_kjUodjTyw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: mmc_test: Fix __counted_by handling after
+ kzalloc_flex() conversion
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ulf Hansson <ulfh@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi David,
+Hi Geert,
 
-On Tue, 19 May 2026 at 10:55, David Laight <david.laight.linux@gmail.com> wrote:
-> The company I used to work for used 4 NIOS II inside an fpga.
-> The instruction timing for one is pretty critical, it has some code that
-> has to complete in 122 clocks (worst case).
-> Our solution was to spend a few man-weeks writing a compatible cpu!
-> I think it came out with fewer pipeline stalls (in particular it 'lost'
-> the one for a (predicted) taken branch).
-> The maximum clock frequency might be lower; but it is ok at 62.5MHz and the
-> higher 125MHz in just impossible for all sorts of reasons.
+Thank you for the review.
+
+On Mon, May 18, 2026 at 12:08=E2=80=AFPM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
-> OTOH I really wouldn't run Linux on it!
+> Hi Prabhakar,
+>
+> On Wed, 13 May 2026 at 22:13, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Fix logic issues introduced by the kzalloc_flex() conversion in
+> > mmc_test_alloc_mem() due to interaction with the __counted_by
+> > annotation on the flexible array.
+> >
+> > Bounds-checking sanitizers rely on the counter field reflecting the
+> > allocated array size before any array access occurs. However, use
+> > mem->cnt both as the allocation size and as the runtime insertion
+> > index, causing incorrect indexing and potentially invalid bounds
+> > tracking.
+> >
+> > Initialize mem->cnt to the maximum allocated number of segments
+> > immediately after kzalloc_flex(), then use a separate local index
+> > variable to track successfully allocated entries. Update mem->cnt to
+> > the actual number of initialized elements before returning or entering
+> > the cleanup path.
+> >
+> > Also rewrite mmc_test_free_mem() to use a forward for-loop, improving
+> > readability and ensuring only initialized entries are freed.
+> >
+> > Fixes: c3126dccfd7b ("mmc: mmc_test: use kzalloc_flex")
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/drivers/mmc/core/mmc_test.c
+> > +++ b/drivers/mmc/core/mmc_test.c
+> > @@ -316,11 +316,13 @@ static int mmc_test_buffer_transfer(struct mmc_te=
+st_card *test,
+> >
+> >  static void mmc_test_free_mem(struct mmc_test_mem *mem)
+> >  {
+> > +       unsigned int idx;
+> > +
+> >         if (!mem)
+> >                 return;
+> > -       while (mem->cnt--)
+> > -               __free_pages(mem->arr[mem->cnt].page,
+> > -                            mem->arr[mem->cnt].order);
+> > +       for (idx =3D 0; idx < mem->cnt; idx++)
+>
+> for (unsigned int i; ...)?
+>
+Ok.
 
-Sounds similar to what CoreSemi is doing with J2 (nommu, also for
-predictable latency), but their products do run Linux.
-See the video from the LPC session at
-https://lpc.events/event/19/contributions/2097/
+> > +               __free_pages(mem->arr[idx].page,
+> > +                            mem->arr[idx].order);
+> >         kfree(mem);
+> >  }
+> >
+> > @@ -341,6 +343,7 @@ static struct mmc_test_mem *mmc_test_alloc_mem(unsi=
+gned long min_sz,
+> >         unsigned long page_cnt =3D 0;
+> >         unsigned long limit =3D nr_free_buffer_pages() >> 4;
+> >         struct mmc_test_mem *mem;
+> > +       unsigned int idx =3D 0;
+> >
+> >         if (max_page_cnt > limit)
+> >                 max_page_cnt =3D limit;
+> > @@ -356,6 +359,7 @@ static struct mmc_test_mem *mmc_test_alloc_mem(unsi=
+gned long min_sz,
+> >         mem =3D kzalloc_flex(*mem, arr, max_segs);
+> >         if (!mem)
+> >                 return NULL;
+> > +       mem->cnt =3D max_segs;
+> >
+> >         while (max_page_cnt) {
+> >                 struct page *page;
+> > @@ -375,23 +379,26 @@ static struct mmc_test_mem *mmc_test_alloc_mem(un=
+signed long min_sz,
+> >                                 goto out_free;
+> >                         break;
+> >                 }
+> > -               mem->arr[mem->cnt].page =3D page;
+> > -               mem->arr[mem->cnt].order =3D order;
+> > -               mem->cnt +=3D 1;
+> > +               mem->arr[idx].page =3D page;
+> > +               mem->arr[idx].order =3D order;
+> > +               idx +=3D 1;
+>
+> While looking rather ugly, I think starting with mem->cnt at zero,
+> and updating it in each step like
+>
+>     mem->cnt++;
+>     mem->arr[mem->cnt - 1].page =3D page;
+>     mem->arr[mem->cnt - 1].order =3D order;
+>
+> would still be better, as it makes the dependency between mem->cnt and
+> the size of mem->arr[] clearer (located closer to each other), and ...
+>
+>
+Ok, I will start with mem->cnt at zero; with this I can drop changes
+in mmc_test_free_mem().
 
-Gr{oetje,eeting}s,
+Cheers,
+Prabhakar
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> >                 if (max_page_cnt <=3D (1UL << order))
+> >                         break;
+> >                 max_page_cnt -=3D 1UL << order;
+> >                 page_cnt +=3D 1UL << order;
+> > -               if (mem->cnt >=3D max_segs) {
+> > +               if (idx >=3D mem->cnt) {
+> >                         if (page_cnt < min_page_cnt)
+> >                                 goto out_free;
+> >                         break;
+> >                 }
+> >         }
+> >
+> > +       mem->cnt =3D idx;
+> > +
+> >         return mem;
+> >
+> >  out_free:
+> > +       mem->cnt =3D idx;
+>
+> ... as having to set mem->cnt twice looks rather fragile to me.
+>
+> >         mmc_test_free_mem(mem);
+> >         return NULL;
+> >  }
+>
+> Regardless, as the patch looks correct to me:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
