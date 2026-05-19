@@ -1,80 +1,85 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A913909AB;
-	Tue, 19 May 2026 06:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5922F5328;
+	Tue, 19 May 2026 06:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779172762; cv=none; b=NEUjmQ1pwrNK9X/mlIMj8D1uJB8wUApupOJLXjx2VGTnFK1W6bHVzhX6l7hhtiCtPQWtK8VPxYfldoPvlXWgOt7iPDojsxvVBBKMZSpoT5oQcU7Lc0pVWZdCX9T6k0TXkbwH/xZKH7K5C9dBR3S0QmsTnGxa4+cBRCnnxz5twp0=
+	t=1779173234; cv=none; b=ZNuUtBoodXXDryzgq5UPERdDBIrZxJ7+qg8xQfXs+hww1JoIDgksI18oED4A3HYlY8jR92r1y2k3/UM7wqeS5/antau1ehNC1TT2nodhEJwjOw898nV7nrs7OZCPmDTz9UaNrPLhooaXsU4Ys9wyLzFykh4+ARjBR5Mqu/FHYKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779172762; c=relaxed/simple;
-	bh=KUZTR+SH0jixxrilW1KEm/IFWAbpQsxHtrVzuRpnmxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BZu+FqDyGa8LPyXAjP8i1LhmQGef86+0dgR9CeGZfxTgFuWl3vRgQzjkPdV1lSzt+GKuofHyCrYH3YC8sYvoXmudPjzxMyLjW0qCLPYu6NzMAdEasXTvGpJ2009TJ9Hn641lDD/eg1xAsxH49K+xAfPy4ZchvJNtGIXEpjm1+oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=1nMUS+u2; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1779173234; c=relaxed/simple;
+	bh=vrj6Fko18jAQ9mc/+I4m/8uPi8+EZnj0viMa3oqdY6k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Bg97qZM0fF25fekMCr1VWiyBm5x2mk2oMEdisNgxM8prUBB94+SChfo/5wPPc0hX0bE/5ZtiiUECKTuDrnilXPzkG7H/ZeDiQRCI1Ikbtb7akbpWlNkJifwg7+SBDvcqna+i5sicUqCXZl6mgG8kfpJ7YKve9FQ8xcMIr0JD/bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=none smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=eumPqLD5; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1nMUS+u2"
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="eumPqLD5"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ekkueEbKjoJ5ZcmBfTn2kbworqdQev5OvGeeGiZpqXc=; b=1nMUS+u2ccmBib9tSNIYywxfu5
-	xRDQK/03CAPPKghXgMhuu2ZeenqK63qusqx2i4Dodb1yqzFXYDdw3lplYIlv/LU97QRefQe6AiM26
-	pgAENic7w8SIDcZYDa13uatQWoVJhaDovVrx950oVoDVibkJCQFD1IlwUKzrNnXYvl9Wu6jvBs9/L
-	Kpe38PL56s/e1ONIVxfP84EU+gVmWV37QIy2JCtg8kZh4tP2Qhi3yCh8/AY63pjWjRLzdW28+9J2w
-	geUqYQE4R8ip3C0kmm4kgNfZjBu7P/TbfnmsnqiD936ohg82DxXcJW2Li2TQazCo22+VNIWwQFfDB
-	0in/EcPg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPE6m-00000000NAl-0lq7;
-	Tue, 19 May 2026 06:39:16 +0000
-Date: Mon, 18 May 2026 23:39:16 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jann Horn <jannh@google.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Pedro Falcato <pfalcato@suse.de>, Jens Axboe <axboe@kernel.dk>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
- read-only files
-Message-ID: <agwFlBKvKytjURDO@infradead.org>
-References: <20260516182126.530498-1-pfalcato@suse.de>
- <20260518-starten-messdaten-3b8aa670ec85@brauner>
- <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=vrj6Fko18jAQ9mc/+I4m/8uPi8+EZnj0viMa3oqdY6k=;
+	t=1779173232; x=1780382832; b=eumPqLD5Jy/0T1IufBtzjsUunIE3dA7C5QGvd0w0NCsk/pJ
+	qNSC/L+MRlrb/SLByTg8HE0PAUAIz1j/Y7TDJWWv1yTqSNYkXmmycKIDkaKjeFe32Nyxdd1MG9DNr
+	hMz3H2tTT9fU7ysxn63R14cspxDL3BMvipcIBIA07V5iCif7uqQ+daa6pNPDNDsNLdVF5m8/gLVd9
+	EYWwc+IMQzqZCMUE9fWLGOz7IkF9yj4PKYrXYR/9dnf9T9qeM6lwWD8jYBQ9jTwRTN7Th9q20zxHt
+	ZC/rx2lGdHlfDBlgDLgLDB1wypkSFxLXPK/9K2+J73LxRQT73HmTFeU5MuZ3qfyQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1wPEEH-00000005hvB-2kEw;
+	Tue, 19 May 2026 08:47:02 +0200
+Message-ID: <1e77da9180ee82bf1b0d122f0ddf137949d4278e.camel@sipsolutions.net>
+Subject: Re: [PATCH wireless-next] wifi: mwifiex: Use flexible array for RX
+ reorder table
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
+Cc: Brian Norris <briannorris@chromium.org>, Francesco Dolcini
+	 <francesco@dolcini.it>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+	 <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, "open
+ list:KERNEL HARDENING (not covered by other 
+ ""areas):Keyword:\\b__counted_by(_le|_be|_ptr)?\\b"
+	 <linux-hardening@vger.kernel.org>
+Date: Tue, 19 May 2026 08:47:00 +0200
+In-Reply-To: <20260518211826.11245-1-rosenp@gmail.com>
+References: <20260518211826.11245-1-rosenp@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-malware-bazaar: not-scanned
 
-On Mon, May 18, 2026 at 08:59:13PM +0200, Jann Horn wrote:
-> I feel like a sysctl for "disable all the splice-like interfaces and
-> zerocopy TX" would be reasonable to have? Either by blocking such
-> operations, or better, silently downgrading all such operations to
-> normal copies.
+Hi Rosen,
 
-Yes.
+On Mon, 2026-05-18 at 14:18 -0700, Rosen Penev wrote:
+> Embed the RX reorder pointer array in struct mwifiex_rx_reorder_tbl
+> instead of allocating it separately.
 
-> FWIW, vmsplice() and splice() are also weird in how much memory they
-> can implicitly pin - if you call vmsplice() on a single byte in a 2M
-> THP page, I believe you'll implicitly pin 2M of memory...
+Others might disagree, but personally, I think you should stop doing
+this. Sure, it *might* (I've been bitten too much by __counted_by) be a
+border-line improvement, but it's not _really_ all that useful,
+especially on these older drivers.
 
-vmsplice is the worst, as it is one of the few remaining places that
-can incorrectly dirty file backed pages without telling the file system
-and cause the other problems fixed by a FOLL_PIN conversion, but it is
-the only one where we do not have any idea yet how we could convert it
-to FOLL_PIN due to the unbounded pin time.
+Did you even test it at all?
 
-Note that we sometimes use splice underneath other operations that do
-not have these issue.  The most important one is sendfile, which has
-very clearly defined semantics avoid all these pinning problems, but
-there also are similar in-kernel users as in nfsd.
+And then especially
 
+> Assisted-by: Codex:GPT-5.5
+
+if you do it this way, you're going to be able to produce such changes
+with way less effort than anyone can possibly review. And since for all
+of the fringe drivers the review falls on me personally, well, I'm just
+not going to keep up.
+
+If you _really_ want to help, please help review changes rather than
+producing more noise. Maybe even take over maintenance of some specific
+driver that you can test.
+
+johannes
