@@ -1,86 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FC2340A57;
-	Tue, 19 May 2026 09:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FAC44D6A1;
+	Tue, 19 May 2026 09:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779182163; cv=none; b=pjLx4lDAA8z2elf8d53sgkyQzRhILSt3MeaQweW9knEv9LJAd0mDF+Uh5dN2NVBayl/xh+cAplYsAsj5OBRKQnugD2QYiU9cHZwN9DAFpSB3n1w7p+8Dfccypsl69HBRGu4LfJqxW3rLooiBv9y/aH1ZFKsV3ATibx6sTetcOWk=
+	t=1779184190; cv=none; b=SAGABCGJLWWSNxAvnJnj+Sxf2c7kMxrcHElsi/q/22yVE3RBuOylQRUHnflk2ERZ5gfDTqtuEDCC2UKW+LryDU2q89RUPcodbdL6Qc9qigz17EEg715gKwohERWHSkLhNvwVv1GxMv9m02slmvJ0hnajaPxGT7FQH4Z1juC/mpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779182163; c=relaxed/simple;
-	bh=KMm8DNAQzAEDU5Xa5RqvnCwhHWRB6xux1RCWiauFkq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f7dl9gBadDeSKhlJrt0MCGuHsy4FxzOOT5T1UsN9qlP2VZUheDarftZYjYWbxiDViykn4Eoxbhi7lr3mhaerSepIrougH+PLwJ8JKNffhLTwpvEdTLPnanYDmbu4vC0eTGV2/1XDGSzCpE9I20daiWRkgh52tirs14wy83OdYC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xp1/BReS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yIp11LYZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1779184190; c=relaxed/simple;
+	bh=rX/Q8oXbMSySRNyC7+NzxKvhA/QggJj+c2IzhXKHseM=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=fMUo7k9EblStcIrXkjfNehRq3YPhJqzJReoG+g1NffGu9Slss8vH7WoVnyldfRf4u8nza8dvPo0jVXKCmKQNb5FkGZ2sHK7XClfEZsF7qyww3jLUfLKZIvi83weofOqVU+CfmYTHK1byyXb2C0taDNthWELUMMzqyL5rLdPKGaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpkY4roh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xp1/BReS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yIp11LYZ"
-Date: Tue, 19 May 2026 11:15:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1779182160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UtwtBFwadYy1vJSe0JaB/O9Syh60kHZInyPQwvy3ZmA=;
-	b=xp1/BReSXshfgEJKm5kPlcSVJkDtgtETCP+0c3Kmn4bIGZnwIg9r1hsCQNc6QVtYcoXi2j
-	bIgllsCksIxNgYbT2+vmCsF835FYaSo48KztWaMrNdFxLZP7gE5RFiFHRSbyv6hpRb3lc/
-	+6P1FbnfcYm/fP4p91ZBieEF8cLtNmn0WW4j+pcGa4IHy3w2D24ml77JVEYY3Ehn3wtqEH
-	+L1dqiKA1Q40+tqnA3U5M8jdcjyVKW7gj588aeYxYNtsksBOFNPM3aalqjxu7l9eMuz2J+
-	7GKN+rxFAvxAee8N1NW7JRxm5m/W2/9/XVAhnlI6LON5TAixIdsrw4tvNiDG3g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1779182160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UtwtBFwadYy1vJSe0JaB/O9Syh60kHZInyPQwvy3ZmA=;
-	b=yIp11LYZiIbEZAcbUGs9WcfFD5GkhFJCvOQRO6X4R3go545uvAhqfRJHe0Kwg0PEe1lUnE
-	0GaYAD3ikOxKlgAw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Gregor Herburger <gregor.herburger@linutronix.de>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
-	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] firmware: raspberrypi: register nvmem driver
-Message-ID: <20260519111442-f1e6d418-9a92-4934-8a9c-c5f7827f853e@linutronix.de>
-References: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
- <20260508-rpi-otp-driver-v4-3-cf8d725d8821@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpkY4roh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE68C2BCB3;
+	Tue, 19 May 2026 09:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779184189;
+	bh=rX/Q8oXbMSySRNyC7+NzxKvhA/QggJj+c2IzhXKHseM=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
+	b=fpkY4roh9gwMJQ/jVJi3hDMML+a3cbnvpqLaF97cSBRKOgbbXy+Y8WSlXZti3vTUB
+	 Fn9CeEIFXwKnFGMEvBdNovTOsBxF7w8nHl5hrqkWxB9yWO3MJevoYnXFESyz1vQfUl
+	 e/w3dIRwjxgFaaHxv7qVv72pXJO1k1rsXKYg2WsN4jh4lRjnjQMT5dLd7FThrViFLJ
+	 b1M+b6UZh439sr1qotZte4TNpe10x6Vb5EsonDNamCXXoTNHqqaTCp0G3ctHQb3+4U
+	 YcGcpn4r/3t1CUNcYq9kUP9R2cQHL1jhRAE66WWaNuHR8qoy3KBkXDj54mpgLkELUe
+	 2pS6uOtblXl8A==
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260508-rpi-otp-driver-v4-3-cf8d725d8821@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
+ read-only files
+From: Christian Brauner <brauner@kernel.org>
+To: Jann Horn <jannh@google.com>
+Cc: Christian Brauner <brauner@kernel.org>, 
+ Pedro Falcato <pfalcato@suse.de>, Jens Axboe <axboe@kernel.dk>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>
+In-Reply-To: <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
+References: <20260516182126.530498-1-pfalcato@suse.de>
+ <20260518-starten-messdaten-3b8aa670ec85@brauner>
+ <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
+Date: Tue, 19 May 2026 11:49:44 +0200
+Message-Id: <177918418452.771415.4371785688744608623.b4-reply@b4>
+X-Mailer: b4 0.16-dev-d5d98
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2611; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=rX/Q8oXbMSySRNyC7+NzxKvhA/QggJj+c2IzhXKHseM=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTxGFklVjj2q5u83cGqNCFNpGeZ+tsoozPNx7sMnYJOu
+ TxQN0/uKGVhEONikBVTZHFoNwmXW85TsdkoUwNmDisTyBAGLk4BmAhvMCPDe7bXOz9ZvjF1ln8x
+ o0FmwZbznJwWxiHl4qlCdTsPG5gaMzL8Pa58f5fkUXHb39d+yP34Ov11fFyW+OTZO8zU7+6VmfO
+ CAwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-On Fri, May 08, 2026 at 04:42:46PM +0200, Gregor Herburger wrote:
-> The Raspberry Pi firmware exposes two regions with otp registers. The
-> first region called "customer otp" is available on all Raspberry Pi
-> models. The second is only available on the Raspberry Pi 5 (bcm2712).
+On 2026-05-18 20:59 +0200, Jann Horn wrote:
+> On Mon, May 18, 2026 at 2:30 PM Christian Brauner <brauner@kernel.org> wrote:
+> > On Sat, May 16, 2026 at 07:21:26PM +0100, Pedro Falcato wrote:
+> > > Since the advent of vulns like Dirty Pipe, Dirty Frag, Copy Fail
+> > > and Fragnasia, splicing a read-only file is fundamentally unsafe.
+> > >
+> > > As such, as a mitigation, add a way for users to block splice() for
+> > > files they cannot write to. This eliminates this whole class of exploits
+> > > that use splice()+confusion in pipe/net/etc code to gain write-access to
+> > > files they can only read.
+> > >
+> > > Users can simply toggle fs.splice_needs_write=1 and suddenly splice() will
+> > > refuse perfectly legal splices() from files it can only read, but not write.
+> [...]
+> > At that point you can also just ENOSYS splice() and vmsplice() via
+> > seccomp and force a fallback on non-splice codepaths that userspace has
+> > to have anyway as splice() isn't supported unconditionally.
+> >
+> > It feels like a knee-jerk reaction to an exploit class originating in
+> > buggy modules that we have little control over and we would extend an
+> > API to users that is really difficult to use.
+> >
+> > What might make more sense is to add a splice specific security_*() hook
+> > into the code so that an LSM can deny usage of splice in whatever way it
+> > wants to - bpf lsm or in-tree lsm.
+> 
+> I feel like a sysctl for "disable all the splice-like interfaces and
+> zerocopy TX" would be reasonable to have? Either by blocking such
+> operations, or better, silently downgrading all such operations to
+> normal copies.
 
-(...)
+I think blocking isn't going to be useful as it will make it harder for
+distros to turn this on. So we should degrade.
 
-> @@ -327,12 +371,25 @@ static void rpi_firmware_remove(struct platform_device *pdev)
->  	rpi_hwmon = NULL;
->  	platform_device_unregister(rpi_clk);
->  	rpi_clk = NULL;
-> +	platform_device_unregister(rpi_otp_customer);
-> +	rpi_otp_customer = NULL;
-> +	if (rpi_otp_private)
+> FWIW, vmsplice() and splice() are also weird in how much memory they
+> can implicitly pin - if you call vmsplice() on a single byte in a 2M
+> THP page, I believe you'll implicitly pin 2M of memory...
 
-This check looks unnecessary.
+You don't have to convince me that it's a problematic api.
 
-> +		platform_device_unregister(rpi_otp_private);
-> +
-> +	rpi_otp_private = NULL;
->  
->  	rpi_firmware_put(fw);
->  }
+Let's discuss the other aggressive alternative: Can we try and
+unconditionally degrade to copy. This would affect sendfile(), splice(),
+and vmsplice(). Worst-case we would have to introduce the sysctl
+retroactively.
+
+Thoughts?
+
+> By the way, another bug a few years ago of a similar shape was this
+> one - also a bug in networking code that can lead to accidental writes
+> into spliced pages:
+> https://project-zero.issues.chromium.org/issues/42451650 ("ktls writes
+> into spliced readonly pages")
+> with fix: https://git.kernel.org/linus/c5a595000e26
+
+
