@@ -1,208 +1,141 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73559369D5D
-	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 13:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18693ED3D0
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 14:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779198925; cv=none; b=av+XfIhcWuDJnkki8YwjbpaRAYGV1xDBa0LWsoiUCfX++SwLULBHYXPqYOLjoqQUJ7sU+c462bwoa9NwgCDsOzxHhQ72jkbjrwcA7FTG7H99kE8ZniC+VR2ctoD/LoZKBLWwPjUlHBUbWM4t6k2BaCYWbRrkavjpOVroYQH8ggg=
+	t=1779199241; cv=none; b=lqNnhemSUSur+fcEKDM4se0S2ldHOKRCw7fMRxA48BoJveffiNSItClyW1KgPw1UdJEYo9ikLRO+swXtN60CwKNibo7Xitfmtqwlv8BEawzfE2QZOOhO2c3PjII7JA9kj0EZWFtVcuZg5mNiJQHBuSy9p/9W0pEOpS8LDs1YBuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779198925; c=relaxed/simple;
-	bh=ropJiXj/HBYvwp5Msa8W8dOE9wVAViMdDjVNcwFpVB0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n3SdlmAGGvRwMIO0vwSUkhVm34dpk0kO9y6VQvKdM39gHlbWrZv604ZlJy7diGhm9T1dI/M+p0XKSGVyVvMGuv+fmdl6ZxKVqLkXGnAXhokvYV30hJi2rMutLh+lcf1gTEX/Dfidgx8Ow5TO94wrCwSXyZlvI9rLnVr8w1WY1XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1779199241; c=relaxed/simple;
+	bh=U6xmmjz5x3bhy/fDsykqsO73fvKnfshFcF/smiZMFhw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D9hXPfw1jCvB5zi6SDS7j6GBy5IKFk1phpzPEH5BU8NWSZGOG+z8BSqTbnVw+AyimmqDSL/L/ZfPBjgAqr+039JtgxabGcreUpG16cOemASMw4+aL06Y8FDPvdcjyjxu3as2e6dfQwav0o3uGuQPtVb6i6yDSDAvTZwez6Gfyb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LAEhga8c; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-6313c800372so2730523137.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 06:55:23 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LAEhga8c"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-448528f4e69so2436924f8f.3
+        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 07:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779199238; x=1779804038; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BK6P9ZRx8illl6oBwVYfN3EvftuNIWvP02Fn1jxek7Q=;
+        b=LAEhga8cUteAIjOWWhdNGE7AaflBsc18Fk61l04A4XDMJs6wBOUVuU/SYkPnC0EXGk
+         zVeHlgYqEvmn6BVw4vcw7b+cdqwi8MG7Y6PO65Dk401b4IuG9QGu3hp7h6TX1jS65rtU
+         RQZXG7WdAcVcY0FJvUi4ZctdZ4iq1tZzScs55aa3faIWmDpRL3kzYEYsOBaRnAVuIO8e
+         ne4KMRDd2IVOmVf723ZsK2g4IEkzy4NOkqeTX5RT2/SJczc4mHm860MtBHeYWD8gSWCo
+         weUznh0LKBfiG2f3g6kY157mq6is8U2Xi9c/tkh3Wr3ZLf+Z5QPH5X3hWX9HTYo11zdR
+         i2zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779198922; x=1779803722;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2hf4+Ek9YRT6fN0h/tFO9bOB6UgGg8JC36KgrKL0v3M=;
-        b=evdBNFUTvHTm2xN5NgMVABPmGuckfHCQOT6MsZJ/QskgJjmjPwa6vqiAYOPJG9b4Fg
-         0+rozadfN1rb/nVB8JkpF3C996jf09a9rzSXJsCaaimtqV/FV7+10WQLO9gilKmYrijv
-         llYTqbhkY+JmfaMQbU2YG89rDBPPIYNJOmf9dUrNBs96nuhvRttICgdEjptEICkBbl5Z
-         XVNNZ6/WTPUqtYVHoirtPdYJexrhsLls3La87/LJUtrdzNKH9/6BNSp9yPslbq0JG28g
-         A81aeEX9I1167w0k6ALm/FEUd0CgpXJTsz1O4yhIckE60PqB/ParxJIU1kADXT3D4Ys4
-         Y2Og==
-X-Forwarded-Encrypted: i=1; AFNElJ+v41Zquyd8LQ3edGylLmtIOzbU1SkiK3LRLZyiTtewr9n75ebFulE/5S/VYlsPfTlBywJ10QFTwSSk0Pts4wo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynO5v++2AyQMim6a1LFihHE7m4KLIFlp/hQkBQqP8XD5NPmXqs
-	KYMqCnREG7Z0NchLvgBAro9bEs2dWzBSKqLI1zL4bd+zrpQJhe0PDzYyYSDHllZu
-X-Gm-Gg: Acq92OFXpcZ2iGUfj+dtN9sO1XoEJMoVqTENz+eyq/upGpq/6iTN22/n705/XIUywNX
-	qZLGc7ztt3Nrl86kVySlzQpl4hJL9JIEVCKfHYrSfsai7eacAMRcxl7IJzkoMlAX40yYD+vYter
-	EB5XqRHoamAFRG2GKj/MoSGw+XA2G4rMOKbJogZ26GesbhLR8IYn85RHOIg3LGRleNnM4cQFxgW
-	ay6THgGfEcE+Tr54JS4NqN0mdKaHY9XJB26OGU4jlKmwN2s7aXm9YD2y+gyefB6fOqW9sln7xky
-	kY/Ct2uAS7lviIFttO9ArBZNlst9mPW1qS+mmbYHcnK47n3mmEVJ2NtIoTV9uFaC6b+yiv2CgrL
-	vAeqxLI6Mi030EcZjlHMtQhFheUkWO0s4J1pMlWbmEy8DZtYJuy/or+K2byKpW0ox5wsAbnq+6A
-	n6dMuAHZDrNasTic9FwzeORuy3SdzcDhLWQG7qRENRbF9NOAIOYIbfJDyCc0pGnra2
-X-Received: by 2002:a67:e105:0:b0:607:95f4:53b5 with SMTP id ada2fe7eead31-63a3cc0dc18mr10991110137.4.1779198922185;
-        Tue, 19 May 2026 06:55:22 -0700 (PDT)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-63ccf18bd92sm6250194137.3.2026.05.19.06.55.19
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2026 06:55:20 -0700 (PDT)
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-575267e3398so2956736e0c.1
-        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 06:55:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8OF2YeiqYMAiPyWpCdsIH5b4JWfbBVxUqo0hLjB7tfUlSbIhiLoJuugNqgT++s/qWVn7GCJ6R4vXzM57HrY1s=@vger.kernel.org
-X-Received: by 2002:a05:6122:4b8c:b0:56c:ca03:b668 with SMTP id
- 71dfb90a1353d-5760bfb8ca9mr10883102e0c.3.1779198919511; Tue, 19 May 2026
- 06:55:19 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1779199238; x=1779804038;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BK6P9ZRx8illl6oBwVYfN3EvftuNIWvP02Fn1jxek7Q=;
+        b=q5lDNq6Wkk3P4saRmU1qeNcTixohIbO50c4ENl2db8TV/zuhX8wrS6Qh74Jsul5q5J
+         +L3utKidr7t/WVHCRu3V+N9hCb5dRtM5EoIzKTBEUMpiiTsjww3hGr3Q0kz79ZfNxMTu
+         xjvp/bm16dPTrVJFk+YAAGvcZavpv2cly9tCCE/u3B7RgkeWexbTu2uOnNf9Ybfw+LsT
+         Nnn5Kh36sFhMhwTfl6MXgsNzjb6rMbQTY4m2tSTAOjt3BWDOHCUss4sAchYwo/FPVUBJ
+         yhfhlsNGjOflv2bB6MmvCMtruF+s8PUc/Bakyrq0eiSwmyOyWLXxEMPyQ1q3/dM7u+dU
+         3A+w==
+X-Forwarded-Encrypted: i=1; AFNElJ9e2yIiJ4hfLTB4949DUDfn90q676W1TUPYOhJ0K2K/ynXkZ9zU5qxeLAgb9LjJFeLKffaPjrMJX0921+lzbx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxQtRDhM8vPqvSxMBS65dHTQ4ogkHzBMhLM4l5ADwOmj3UVGcj
+	7YLFn48UZprdU/tbPEUH9TA8Qk+xRNjumni8oaFcu05uskgB2Tg+16+i
+X-Gm-Gg: Acq92OHwxTYP5K8mld8Qf5VXpl4eJs7ARs0lVQmV/piVOOoMSHINvo51/qQC8XmdWux
+	YMFQkMOz2kLbbSRIeE3e9mjKwdilXbGfuTgKQoaI0GJ/UPAauvvvRviDN0Xs0XBjWlr1S85hFEH
+	B3qDOf8ysQbwVj/8QrM1eah1jMerRZvUCbJ+PlyaSZ2ko2gDSQnHjgCxSY6WLaQx9qUAdWop7HW
+	wjceRbfxbXZXbWY8wpqRqbJPJ26X44diCZF0MEqdby3Rcy2HMHS6eySw2ECj6eYbmiIjlogDgQg
+	eu3rAPLoWtEE4V0KtA21bkLymgJuqwmAXlJfSQhib9kwfs8QpiwWtcas9WBIkbE0OQx0kRGc/nP
+	QjJSkloaiNwz1D4SElv/HX4l0W3syaMCSfcoRgYSBAuyg2GBdKn1mURpStPcBlVpyIIQKQaEUcT
+	t8h1Y7D2kZfHOUz0hz22vgmqspdvLZJa9lJUDsrym+
+X-Received: by 2002:a05:6000:4007:b0:43d:1cec:4766 with SMTP id ffacd0b85a97d-45e5c5bf971mr32297364f8f.23.1779199237965;
+        Tue, 19 May 2026 07:00:37 -0700 (PDT)
+Received: from RTRKW671-LIN.domain.local ([95.86.49.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e767d0bsm44065144f8f.3.2026.05.19.07.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 07:00:37 -0700 (PDT)
+From: Milan Tripkovic <milant2002@gmail.com>
+To: pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	kees@kernel.org
+Cc: alex@ghiti.fr,
+	andy@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Dusan.Stojkovic@rt-rk.com,
+	Milan Tripkovic <milant2002@gmail.com>,
+	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
+Subject: [PATCH v5 0/2] riscv: lib: add optimized memcmp() and extend KUnit tests
+Date: Tue, 19 May 2026 16:00:27 +0200
+Message-ID: <20260519140029.1190381-1-milant2002@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260519133025.618255-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVKOdzThVMOcQ1K9crUkyDutvuZsP2-5v5++SVFHkgtOA@mail.gmail.com> <CA+V-a8sFNjp9euEEfBf3BoscjU8W3isRT_pnzd7J4QsuiN6qfg@mail.gmail.com>
-In-Reply-To: <CA+V-a8sFNjp9euEEfBf3BoscjU8W3isRT_pnzd7J4QsuiN6qfg@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 19 May 2026 15:55:08 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWZGv6BwjGwRhU+x8iE2pXtOSz21RG64bsNoPQQCjTVjg@mail.gmail.com>
-X-Gm-Features: AVHnY4If75BE1VFsoTcZFsczakSSYimGh11UdyDyK4f5gTnPlxJ8oEAkRkMK1OM
-Message-ID: <CAMuHMdWZGv6BwjGwRhU+x8iE2pXtOSz21RG64bsNoPQQCjTVjg@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: mmc_test: Fix counter tracking in mmc_test_alloc_mem()
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Ulf Hansson <ulfh@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+This v5 series provides an optimized RISC-V memcmp() implementation 
+along with extended KUnit tests for functional verification and 
+benchmarking
 
-On Tue, 19 May 2026 at 15:44, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
-rote:
-> On Tue, May 19, 2026 at 2:34=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> > On Tue, 19 May 2026 at 15:30, Prabhakar <prabhakar.csengg@gmail.com> wr=
-ote:
-> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Fix an counter tracking in mmc_test_alloc_mem() that causes a kernel =
-panic
-> > > during error unwinding.
-> > >
-> > > The `struct mmc_test_mem` uses the `__counted_by(cnt)` annotation on =
-its
-> > > flexible array member `arr`. While kzalloc_flex() initially sets the
-> > > counter field (`cnt`) to `max_segs`, the allocation loop needs to tra=
-ck
-> > > how many elements have actually been populated.
-> > >
-> > > Previously, leaving `mem->cnt` at `max_segs` meant that if the loop f=
-ailed
-> > > midway (e.g., "Failed to map sg list"), the error unwinding path in
-> > > mmc_test_free_mem() would attempt to clean up uninitialized trailing
-> > > array slots. This resulted in passing NULL pointers to __free_pages()=
-,
-> > > triggering a kernel panic:
-> > >
-> > >   [   66.172845] mmc0: Failed to map sg list
-> > >   [   66.176722] Unable to handle kernel NULL pointer dereference at =
-virtual address 0000000000000000
-> > >   ...
-> > >   [   66.432747] Call trace:
-> > >   [   66.435191]  ___free_pages+0x1c/0xc4 (P)
-> > >   [   66.439119]  __free_pages+0x14/0x20
-> > >   [   66.442608]  mmc_test_area_cleanup+0x58/0x84 [mmc_test]
-> > >
-> > > Fix this by explicitly resetting `mem->cnt` to 0 immediately after
-> > > allocation. Then, move the existing `mem->cnt` increment so that it o=
-ccurs
-> > > prior to populating each array slot, using `mem->cnt - 1` for the act=
-ual
-> > > assignment index. This guarantees that the counter accurately tracks
-> > > initialized entries for safe error cleanup, while dynamically expandi=
-ng
-> > > the `__counted_by` validation boundary ahead of each flexible array w=
-rite.
-> > >
-> > > Additionally, rewrite the cleanup loop in mmc_test_free_mem() to use =
-a
-> > > standard forward for-loop. This addresses the unsafe post-decrement l=
-ogic
-> > > in the original `while (mem->cnt--)` loop which evaluated and decreme=
-nted
-> > > the counter field before indexing the array, and avoids a potential i=
-nteger
-> > > underflow/wrap-around of the counter field if the cleanup path is inv=
-oked
-> > > when `mem->cnt` is 0.
-> > >
-> > > Fixes: c3126dccfd7b ("mmc: mmc_test: use kzalloc_flex")
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
->
-> > > ---
-> > > v1->v2:
-> > > - Started with cnt =3D 0 and incremented before assignment to ensure
-> > >   accurate tracking of initialized entries in mmc_test_alloc_mem().
-> > > - In mmc_test_free_mem(), replaced the while loop with a forward for-=
-loop to
-> > >   safely iterate over initialized entries without risking underflow.
-> > > - Updated commit message to clarify the issue and the fix.
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/drivers/mmc/core/mmc_test.c
-> > > +++ b/drivers/mmc/core/mmc_test.c
-> > > @@ -318,9 +318,8 @@ static void mmc_test_free_mem(struct mmc_test_mem=
- *mem)
-> > >  {
-> > >         if (!mem)
-> > >                 return;
-> > > -       while (mem->cnt--)
-> > > -               __free_pages(mem->arr[mem->cnt].page,
-> > > -                            mem->arr[mem->cnt].order);
-> > > +       for (unsigned int i =3D 0; i < mem->cnt; i++)
-> > > +               __free_pages(mem->arr[i].page, mem->arr[i].order);
-> > >         kfree(mem);
-> > >  }
-> > >
-> > > @@ -356,6 +355,7 @@ static struct mmc_test_mem *mmc_test_alloc_mem(un=
-signed long min_sz,
-> > >         mem =3D kzalloc_flex(*mem, arr, max_segs);
-> > >         if (!mem)
-> > >                 return NULL;
-> > > +       mem->cnt =3D 0;
-> >
-> > This is not needed, as it is set to zero by kzalloc_flex().
-> >
-> Actually, kzalloc_flex() automatically sets mem->cnt to max_segs
-> because cnt is annotated with __counted_by. Because of that implicit
-> initialization, we need this explicit reset to get it back to zero.
+The memcmp() implementation now uses word-aligned loads for the generic 
+path and leverages Zbb for fast sign resolution on supported hardware. 
+A robust fallback to byte-by-byte comparison is implemented for non-Zbb 
+systems to ensure correctness and stability across different toolchains 
+and hardware revisions.
 
-Only when your compiler supports it[1].
+Signed-off-by: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
 
-OMG...
+---
+v5 changes:
+    - Removed redundant warm-up from test case
+    - Optimized generic memcmp path with word-aligned loads.
+    - Implemented non-ZBB fallback to byte comparison per review.
+    - Link to v4: https://lore.kernel.org/all/20260518131407.1026049-2-milant2002@gmail.com/
 
-When I commented on the LWN.net article[2], I considered only the case
-where the compiler is too old, and the counter stays at zero when the
-user forgets to initialize it explicitly.  Now we have the opposite
-case, where we need the counter to stay at zero :-(
+v4 changes:
+    - Fixed build error: call to undeclared function 'STRING_BENCH'
+    - Link to v3: https://lore.kernel.org/all/20260515141019.1234037-1-milant2002@gmail.com/
 
-[1] https://elixir.bootlin.com/linux/v7.0.9/source/include/linux/compiler_t=
-ypes.h#L549
-[2] https://lwn.net/Articles/1063295/
+v3 changes:
+    - Split memcmp benchmark into wrapper (string_bench_memcmp) and worker
+      function (do_string_bench_memcmp).
+    - Removed all C99 mixed declarations; moved all variable declarations
+      to the top of each function.
+    - Converted len, iterations and loop counters in the benchmark to u64
+      to avoid implicit casts.
+    - Cleaned up spacing, indentation and minor style issues.
+    - Added #if defined(CONFIG_RISCV_ISA_ZBB)... in  memcmp.S
+    - Link to v2: https://lore.kernel.org/all/20260514121359.931999-1-milant2002@gmail.com/
 
-Gr{oetje,eeting}s,
+v2 changes:
+    - Added alignment checks for buffers to avoid expensive misaligned loads.
+    - Optimized the loop using end-pointers to reduce per-iteration overhead.
+    - Implemented word-aligned tail handling using ZBB shifts.
+    - Removed redundant pointer equality (a0 == a1) check.
+    - Retained BE support via #ifndef; ZBB rev8 is used for the LE fast-path.
+    - Fixed KUnit build failures for Clang and non-benchmark configs.
+    - Link to v1: https://lore.kernel.org/all/20260512141007.1193033-1-milant2002@gmail.com/
 
-                        Geert
+Milan Tripkovic (2):
+  riscv: lib: add memcmp() implementation
+  lib/string_kunit: extend benchmarks and unit test to memcmp()
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+ arch/riscv/include/asm/string.h |   2 +
+ arch/riscv/lib/Makefile         |   1 +
+ arch/riscv/lib/memcmp.S         | 106 ++++++++++++++++++++++++++++++
+ arch/riscv/purgatory/Makefile   |   5 +-
+ lib/tests/string_kunit.c        | 110 ++++++++++++++++++++++++++++++++
+ 5 files changed, 223 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/lib/memcmp.S
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+2.43.0
+
