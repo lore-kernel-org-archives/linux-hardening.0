@@ -1,135 +1,147 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAE93DC4DA
-	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 21:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7161F3B3890
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 21:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779224429; cv=pass; b=DuFjRJL/nBg5gNWywwL8fVm64+cMCyeg8pcVszvZvLzngCvA8ZRRvethr1Zo6h5qYqaaIIpOPZdtw1VHpHcN2mYbTy0LKTC5iIcTnEUxcTy4h0FnAvSixOwLuc33TuQQolNTmOOW17CYusaYh8Vf1HFvjSfj1Crkv6VnKrgxBj4=
+	t=1779226957; cv=pass; b=bYxQXAavNRsDuz1VeNce/NAt9qDAxDpDriVVhNglEWdqX+6PeOoAu+Go4/AeoGB53eKHI6PWT/HyoOC+HFMvkVfXSRvdQjCPFVOPcmrZnUV2ChnqwQcDvcRqPa2cRt7eDu/gQnn0leldV8yC93cDfhPEpj35Dox7cltUlsZpoyY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779224429; c=relaxed/simple;
-	bh=l5xX9AzWZwqtZqrp61qy13Pz2Ds+N0iybZrAmj9tWm0=;
+	s=arc-20240116; t=1779226957; c=relaxed/simple;
+	bh=agpQDPE0e0tDa6PFtfyC+WslCRjLfXBgwgqDsBVIG9k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ntQLQ/j0OdNKDH0ZRm2rbP/8sPZDa65B3sNakvQ2LARNrV+A1IKJWnPgAu6SjalqGrq7j8LkEG1Ge3ABOtq7unRNSMQFnXVLddx5c3YVClgf3WGPMEjGONr5k9YWoZY49EcOW7E62gCUdEIFHASOv/yuQKsgfm5Mq7omCB5aJVE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t/T62TYB; arc=pass smtp.client-ip=209.85.208.173
+	 To:Cc:Content-Type; b=uuFOtf6bFbZ/1BxZpZO3f9PL3IDpUvSM7enV4S5zDfkpakJEIh/pvaGq6YpfjsDfb76TjxO2BhJLOJ0G+lSHJNm/haL5bp3BvC5ouLTkqWZlg3Supeil6ELucgiZhb3dmuQLnCxq7ikorHdQuVXVd39GB7N4foP2H+EaweX/Gy4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cBBOp9lP; arc=pass smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t/T62TYB"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-393a44854d2so39805321fa.3
-        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 14:00:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779224426; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cBBOp9lP"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-67bf769704eso116a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 14:42:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779226954; cv=none;
         d=google.com; s=arc-20240605;
-        b=EXWyY73A1RkJicbqSrWEZW9tg4b+3TxMulotARCG8tXMMOcCmk+miCzevgpeibc030
-         Ifk3p1du5DuA+fM4Hi/9cpZbLMKPH6UVF4cLq1W5Rm+UDZt8fZCCBVqO7OTVGJrJwiPd
-         LcrkraJVkPjcRj+ZMGcPAlLkDlLgHpOf9e0JW9XOvgLBCSn0UqZQrWRpfHTEowT6NlCt
-         pVdMHG1x3s683WuVGfGQ+Blye8ywhj7/H1cU3PTWOuKfUkca4LwbX+JMJ75+H+P7pIx4
-         EeiOVRCukELJb7iAnRSpY3GDnYtxS/NBr4/tSzs72Y/t8ErFGSWop2jt3xD+IIyo9R8T
-         2nVQ==
+        b=UdAmrO7cyIIpaWXGdZbICc64IJYAhsRpZjAbBfTOeqD4bc3CkyCarL8nxdQaAgmY0X
+         /mKbhvMpqw4tzziyrM3d5gMlbc4Ek4/9PDPhOFbuQkDTFIBkaG9uebJHIMfy0sjFu63+
+         RP/5lMyo4rqYw4veXcPP93jvZ1rTZOgtn6RMoN8GAGl85H0cUOeD3Y+9/5XNhveZyShM
+         VTZJjnW9i7+hTiPASvxOfLgbahSsfbKF/OoQ1pAi11hvkxmVXeMgJq/gL7bMkQ3BuMUx
+         EDe1YunkCO9ItFcrjsC5e2/6RwA37ahERxYAUDxJJNOYgtNAY88FrjV+dvKtrySXDTqQ
+         uYHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=l5xX9AzWZwqtZqrp61qy13Pz2Ds+N0iybZrAmj9tWm0=;
-        fh=RKxJrKYRXKe+6tucSQ38dIpayFLkCBt/wHoxsivm+aE=;
-        b=eijmW6V2du3RetfFuqtcBdqJ/hssK3Ox8SaiaaoC9njocf0+ikfyQjR6zB1IkKy1hD
-         JJTB1HL22O/grJXFZ849M819OhSf2UeUp3wZFXCgiRm4eer7wXLHbYaE/EAw8rTWHVtA
-         Df/RowBIVnQbvFaFc9+qx3Od/6m0NyfTyPgncp0E9KJ9q9dZ/0cM/xmDV4dwrPzMoIlS
-         p3ugNIfHR6lpb7vUyHnuIH4AjbMZBBIVPAANHLz86+qBU4S5txb3XA5Exy8995yc5Saz
-         4ioYdSh5JXcNZFnZqFr1OLpL3iK53vAb4xao42upb+70VK85R8BfTepBt2E/oh00SYRg
-         Lc5Q==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=agpQDPE0e0tDa6PFtfyC+WslCRjLfXBgwgqDsBVIG9k=;
+        fh=/yZTa/qW3e1fX4FbmORlvF+bd4bkK+NbFVfqgAeVKmE=;
+        b=R3Mn0Bw86iBEkmIkh4Vvw3rwzp6r5zVT3gu3VJEiK/lE0NIey2dcbVgqeuvloiDCTk
+         XZmvFZH9GllZCNyHp3eErGTPaAAZveSuL/xpV9qYAc88gxusqDaA1GZJrHOLJc0CH/b6
+         V2W8PA1K3nJHy26bduCLscS9dJj8NoQvovW5kN8gfxeNtvz54pooHYl677GS0GhUR4PA
+         BnJB5Ce0noRcTiX1qLdfQh0hswQB3PxINN7Xn+FC13IingvXsh6B47FnqLA/TKiPy10V
+         QUfP6D21d12/CzbCsBFbkw/Atrif4Bu4sOLie2C3eKD7UrvzYKrdtLVcHCHtFlLmiaQu
+         rSbQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779224426; x=1779829226; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=l5xX9AzWZwqtZqrp61qy13Pz2Ds+N0iybZrAmj9tWm0=;
-        b=t/T62TYBGVvNW3TnJzguQXz3Fg4JukMXhPWvma4WeEL7hWY7aFRV+0sdeovJbirSqg
-         aPlQirQJqHbPaFoAZUFko8NXgiiGJDerd00786MHwp6y45/CvTffxkU3lWgY6De8DDob
-         DkPB3EfZZAs7OzNaGScZbrdZE9jsTop3AMcUlpPDBlFMY+i3PgBc/CgvQU2mNWrH0Ifq
-         TY86Ml0liixakw20QpFo68doRB2eINQqXIKFF6MyWQjfbCY/J4T/WdroM+Lbph2kUbrZ
-         U4jZmA8ohgxA0E4bXx4HxIRm7s3J4XzfSeoTrPkN6eMU9E5uo5ZhR8tiBc0HWt69zopi
-         yiag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779224426; x=1779829226;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20251104; t=1779226954; x=1779831754; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l5xX9AzWZwqtZqrp61qy13Pz2Ds+N0iybZrAmj9tWm0=;
-        b=EqHd/lwnaSnUnMUQ5XvzVEQNfjF+LB70AcznBDY18De9MIevGGb6NAPbXFiTxgs9ZV
-         E+F6qIOy05ULuN4wqQysqLINt0iaPhe0uMOEa+g7jG+r3TN/+88XqApKNdG0+I580awK
-         kOxdMDOXytyowqfV5D0/yA4cQxN1/ikRubkpM3EnO3DfXqRZh/k3VJbbxKi+wNVnz/pv
-         XwqjBtUcWKgByXG5OPKynk37zRFyJ4AzLqSBXeCbaD9FONdig8izP0k07IuiqYuWFJUt
-         fzwBId6X5HCHpeD6bgA+SLXtWWdpO5SaYI+GfRlGn5i0icO0uDKxIwamjWPIpwEGClic
-         Ozog==
-X-Forwarded-Encrypted: i=1; AFNElJ/GrRsjKDSCdPc34XMKzwQoRh6/JzvNCEBHllhA9yRP074TkTjUepPmyelmyYY9yBlwSCG91L8enqNGNKQzp0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6IwYr3NWCriZi4CFO1plVWoUVzGp7NV+iYXV+EG9VEFdfqiFf
-	IUSHuKu8GfAIxSyNo4fxroj3nc4k3HJ46PBtJb9Veg42A75uUEH/pCNFWArr4bFm9c7LyUVb33j
-	WYfjmn51lF9yX4V93l04o0KqDEv1ignFX+YNKgvXQ
-X-Gm-Gg: Acq92OEoN95ZaxJyKKTx6rMxHwl0+2eubfuYthL0fJi9Pg0tTLzt+gBOrBMyQ16DJqR
-	jjTNUXVTrLyfrxFqmqb5AtF8lIpZpzM3FkezWy8sw5i0yGfeGDvMvwuf2W/bMthDlgXuD4vgdlB
-	8eY6qkh03KxodXhu1YM6/NS60kmU7CqHFfoT+DHRZscU5d/Qb5RVw44njoiiLicm/Tq5woBXqOY
-	wp5tUwG7jnWMyw7Gz8bwV/kkodVG8o24D34ARshxUa4d5B8FNEVajULFd1t/PIOJTUljYEmvG2v
-	m7sizxKR2QHeZx1ChJCHBTRCgWW+7E40osSPAKtI5Hq5GjpROGaz/UxA/+0FpKOR2R0x/A0E1hJ
-	h9FbG
-X-Received: by 2002:a05:651c:1608:b0:38e:7a75:8763 with SMTP id
- 38308e7fff4ca-39561d60079mr66044851fa.18.1779224425970; Tue, 19 May 2026
- 14:00:25 -0700 (PDT)
+        bh=agpQDPE0e0tDa6PFtfyC+WslCRjLfXBgwgqDsBVIG9k=;
+        b=cBBOp9lPxsBqzp5DiVVxXZDcRjTE3euWHcLy8b7vbCVmNAJKacI97hsJ3Vh0KDFaXt
+         NXU/Zw17XqHcSHLDvSXAwaJJyllAMtOnzA54IEMDi5toSkc1FhEXHqZzqiln7NYZ4wvW
+         lfDw4ZrKlWmzFMu6D/n8ftMX8TONAUMPAsEN31ppZN2D373vE0vjsNy/4phHOsAWuYNI
+         nF/qzfTTzsfvL29YjAa8hB1+SvxRY6O7eKRjW3auOF834Bo2J3b1uCxJC4HpkvPM5oIs
+         V7wciD7Ct1uavsVVCtQKUXyo51LalxiQasEvoLneaUrOkZFwJnRtJwnYl4KuZY4B5BFn
+         MUcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779226954; x=1779831754;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=agpQDPE0e0tDa6PFtfyC+WslCRjLfXBgwgqDsBVIG9k=;
+        b=qGO9NFDH85zk0xVCDEtF0oJiJ6mUyOT0CAbnh/T138so/3gEPuSqLXdqZ9LBSb0ozp
+         m5KrGt8Fx9PTD+EpUOAxixWOygtBLq8IEONBe1eJTTFt1W1P83G/aQED6iQirq1loEvd
+         rkqkUpw1P4WydbrfwUSinM1eHHjquHEljgGuVxCV88+lfKgzjBazYpl6Yd84KXeeyNo/
+         un6MJX9jbBVMv2ilhj6IEXpdM6YJ9yvobjtbhN3Xc8gJoRrlhxMzeNJyB/NSpuF6HkIm
+         ZMyDjcXxDdQIaq7iAVERQHiUTMmnNZHrEJaD40xo6Kp3nB0W8AQeGcWP3qsZevbGRnP0
+         0KrQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8cHn6leyeauN70rQGttoohB6kbWW0ccovwjo6EbMOHWh+dHaAePUAdH8QC3H9QCXJRnt9Alba8AKZ2/WWP2hw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM8JtXgckln4dAf40fzB9LSRDGu1aAvRJi/2icaUPHV0RYu/V3
+	WwQcmsuFWmc4DOFxkHeT/kMaNDs7KPTrQN5JJ0gXy5Sdp7mTgJdkdlc+7jE+FCAaBR1S7ewJOu7
+	eJAg7WpYVgezY/nwXx0o/Z2jX3w/8Ct5q4fmvSxYX
+X-Gm-Gg: Acq92OFCxB2NeKvp5XuQlQhXi9B8YjoKstuzYUDkwjbTreEOYxRPzfW28PCmBx1H7DJ
+	ilOG3624NG6zNRrzQKnmwgs2DAt2ftulGbCeEaVheTOZf54cPXJqajFu+vbkae5YP11SPYAnYgk
+	BsT+Aj/F4RL8G4z72RsBttK/ohQcQSqXApfvc8GvIwbb6+1WHkCPOs0SECXsDeAL6Geps2Exom2
+	/bEomqcUb8shoeP8dVyTyAMrquwYBRT4/on25LVyzxbtXY6jvN4DMObFzzwMhe57ciYvOlcSqaA
+	ao7gAjhuLub5mF725Hx9isbptG96Bq5Rfp+nHO8jFSBQh0U=
+X-Received: by 2002:a05:6402:20c6:20b0:678:a5c3:4d12 with SMTP id
+ 4fb4d7f45d1cf-684985e277fmr173995a12.3.1779226953632; Tue, 19 May 2026
+ 14:42:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAG48ez2++gA+Z9GVmNOG5-+NNicjmti3nQ8xhVJuXM042WfwZg@mail.gmail.com>
-In-Reply-To: <CAG48ez2++gA+Z9GVmNOG5-+NNicjmti3nQ8xhVJuXM042WfwZg@mail.gmail.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 19 May 2026 23:00:13 +0200
-X-Gm-Features: AVHnY4JQiCOJUMjfX0rK9mwMWaqqgmFj_5h1OSJG4OrZMSmTfEHnd45kmHmSl9E
-Message-ID: <CACT4Y+bzkW0fjrUcbG+6XfTsw9_0sGfYN+9myHtC72dZT7gvNw@mail.gmail.com>
-Subject: Re: [RFC] hardening/fuzzing project idea: KASAN redzone before skb_shared_info
-To: Jann Horn <jannh@google.com>
-Cc: Network Development <netdev@vger.kernel.org>, linux-hardening@vger.kernel.org, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	kasan-dev <kasan-dev@googlegroups.com>, kernel list <linux-kernel@vger.kernel.org>
+References: <F78521DA-08DC-424E-BBE1-231BC900CEE0@gmail.com>
+ <CAG48ez0KsuR5z4RDgxWPUoS8e_MJzF74RgFDJayohG48A_N0PQ@mail.gmail.com> <CAAmtCfMHqdWbYh-Hc5sGbOhXSM-aCA9G0-s64G8FTM+rGEV5RA@mail.gmail.com>
+In-Reply-To: <CAAmtCfMHqdWbYh-Hc5sGbOhXSM-aCA9G0-s64G8FTM+rGEV5RA@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 19 May 2026 23:41:56 +0200
+X-Gm-Features: AVHnY4KelXMX0Ox3UHP6DtmSDnRxPxmxV49wSNMKd-K67wpQhqz9skVmJZNDODo
+Message-ID: <CAG48ez3u1OCx+zCWEs-_gowDmQ=KLbXO2xZ83LCZ1o1gxRT3Ww@mail.gmail.com>
+Subject: Re: [RFC] TID v2.0: kernel module for cache-line zeroization against
+ Flush+Reload (CLFLUSHOPT + LFENCE + REP STOSQ)
+To: Ahmad Hasan <ahmaaaaadbntaaaaa@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kernel-hardening@lists.openwall.com, 
+	linux-crypto@vger.kernel.org, linux-mm@kvack.org, linux-api@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 19 May 2026 at 21:19, Jann Horn <jannh@google.com> wrote:
+On Tue, May 19, 2026 at 11:31=E2=80=AFPM Ahmad Hasan
+<ahmaaaaadbntaaaaa@gmail.com> wrote:
+> Thank you for your questions. I'll address each one:
 >
-> The following is not something I'm planning to work on in the near
-> future, but I think this would be helpful to allow fuzzers to more
-> easily detect OOB access bugs in the networking subsystem - maybe
-> someone else is interested in working on this?
+> =3D=3D 1. Threat Model =3D=3D
 >
-> As described in https://docs.kernel.org/networking/skbuff.html , in
-> the networking subsystem, SKB head buffers are stored with a "struct
-> skb_shared_info" at the end. This means that out-of-bounds accesses to
-> SKB data in the head buffer can't be detected by KASAN unless they go
-> far enough out of bounds to go beyond the skb_shared_info.
+> The target scenario is a same-machine attacker
+> in multi-tenant/cloud environments where two
+> processes share physical L3 cache.
 >
-> For debugging/fuzzing, it might be useful to have a KASAN redzone
-> somewhere between legitimate data in an SKB and skb_shared_info
-> metadata, accesses into which would cause KASAN splats. Maybe we could
-> split sk_buff::end into two separate members for "end of tailroom" and
-> "start of skb_shared_info" so that a redzone can be placed in between?
-> Or let debug builds store the skb_shared_info in a separate memory
-> allocation?
+> Example: a cryptographic service and a malicious
+> process running on the same host. The attacker
+> uses Flush+Reload to measure cache access timing
+> after every encryption operation =E2=80=94 no physical
+> access required.
 >
-> (We could also try to go further and KASAN-poison the headroom and
-> tailroom until they're actually used, but that might require an
-> annoying amount of refactoring of existing code, so probably not great
-> as an initial goal.)
+> This is documented with real measurements:
+> - Without TID: 78 cycles (Cache HIT =E2=80=94 key pattern visible)
+> - With TID v2.0: 286 cycles (Cache MISS =E2=80=94 attack defeated)
 
-Hi Jann!
+So you're assuming that the cryptographic code leaks secrets through a
+cache-based side channel? That would be a vulnerability in the crypto
+code.
 
-There was a related issue:
-https://bugzilla.kernel.org/show_bug.cgi?id=199055
+> =3D=3D 2. Why Kernel Module and not userspace? =3D=3D
+>
+> You are correct that CLFLUSHOPT does not require
+> Ring 0. However, userspace execution can be
+> interrupted by a Context Switch, which expands
+> the timing window from 372ns to 36,640ns =E2=80=94
+> making the attack significantly easier.
 
-Not sure if it's better to include this into the existing issue, or
-create a new one here:
-https://bugzilla.kernel.org/buglist.cgi?bug_status=__open__&component=Sanitizers&product=Memory%20Management
+Why does it matter how many hundreds of nanoseconds it takes to wipe
+the data from memory? You can also have a context switch directly
+before you enter your cache-wiping syscall, or in the middle of a
+crypto operation.
 
-It's also list of things that nobody is actively working on atm, but
-it's still to have such a list b/c people periodically ask for things
-to work on.
+> =3D=3D 3. Why not add this directly to libraries? =3D=3D
+>
+> No major security library implements CLFLUSHOPT
+> after wiping =E2=80=94 not OpenSSL, not libsodium, not
+> glibc, not memzero_explicit. This gap has existed
+> since Flush+Reload was published in 2014.
+
+I don't think that's a gap, because the standard approach to
+mitigating cache-based side channels such as FLUSH+RELOAD is to not
+access memory at secret-dependent indices in the first place.
