@@ -1,111 +1,138 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DAC369D7F
-	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 10:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF4C480339;
+	Tue, 19 May 2026 10:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779188144; cv=none; b=u8C2xKGvqUtTQRdKRnxcsPbsqydV2Dzy2xu1bC/9Y5hl4OsBm2GkQj5i3K2OOYnb3X5PB78amaT4CNsLnz6n88+dXX0zVwFwDmdGVnIpDdYOZ0qJbwIhBZ4Ex52xSyj0eagBO5MasE3GwDgo3sZsV/kfXd56VXb8ircBM5ZlGPQ=
+	t=1779188377; cv=none; b=ZS31UiVovUIR1TuyE/cV4OkiQHgo0q1KX59BOd8x06oG/5utbDFS5VSvXxkrOwlZQ0aewjUZiCHt/W+2Un/nb2jcEZa2pSO3iG7Bmil6fpDzEx9mFz3YdxnVp7rGeouDktyPYDktZLqbK+l1L3ZtOD5Dbe9HojnqBT8BrVUVbCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779188144; c=relaxed/simple;
-	bh=epm/rDej+X6xivgo3qDkqkpt7/nAmMLgz6CdD6F1VS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HhqefY9yHxJgpc1ihp5Vzks1Y50VrSBLx/aj+SUffo4EbkM7BSrBUZ/FsJrGpNHOWwqaZUZ6MYgb7O2CdXQ2+uNzSQmAGO9MB8g2uiL6nLdHg5BZwCvbdnIhq7tx6IrnPKtpeFbEN2mg3I7FP694eHP8M8JMkoet9K2D1g/MTRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=JZuc7r6s; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1779188377; c=relaxed/simple;
+	bh=A/sK4uYKDHlfqofPeTZV72AW44cUa0BDZi7ueukxUkw=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=SQ1PuRstr/BwD2m2tMU+9H4KqiIlrwi7/gHdXwiZI056EBDJbFA81bUOHIOn6DijPaBtHSYQuGcro+t2ao8MHu9v6FbKF5kY06Q0SBHJvSlQN/vtbVMkw+v7A1tkcXFfFpGEkdnHHimltOViFPceTv0J1QzHBgAf/SZpbgPanzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aG5qVDw4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="JZuc7r6s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=ofMu
-	xF8bxqlikw5Ek2X0UdXIpwNSL1SykTjDOTUnzDg=; b=JZuc7r6sNKpv5+G4eKdZ
-	6LTJGSD96jwpZFGVxfF8Sk94OZAnm4AScbYH1RSQcKFu0SlPL6yD2lMGQ+JlrBAe
-	77wZTXDbpz0y1UQ7Gnkkm1XyX8GcHvPLPIBUMSlKEyfC0Z5rGJa+mfOe1WOFwl/X
-	84A7vrtDhpwegqZo9785QoiyIaGL5VqYDzVrDyHsCgYUqL3bn/aDcI+IIQXlEJZ/
-	tija1Beh0DHaoQ0fumfywDN6WCprvbxEeRlEpI5K3bsTGql/lRi4zDBWTA9wraF/
-	5EkYK/G9nBrL73L6PZIfSR46Wy3kihyHna5iGU30C/9IGOEaglcswGNETSxw+/9E
-	5Q==
-Received: (qmail 233840 invoked from network); 19 May 2026 12:55:38 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 May 2026 12:55:38 +0200
-X-UD-Smtp-Session: l3s3148p1@jaz1hClS+JlUszca
-Date: Tue, 19 May 2026 12:55:37 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Simon Schuster <schuster.simon@siemens-energy.com>
-Cc: Ethan Nelson-Moore <enelsonmoore@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@kernel.org>,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	workflows@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
-	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-	linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
-	Hu Haowen <2023002089@link.tyut.edu.cn>,
-	Kees Cook <kees@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nicholas Piggin <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof WilczyDski <kwilczynski@kernel.org>,
-	Andreas Oetken <andreas.oetken@siemens-energy.com>
-Subject: Re: [PATCH] nios2: remove the architecture
-Message-ID: <agxBqd-ubOL2_i-j@shikoro>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
- <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
- <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
- <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
- <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aG5qVDw4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B010DC2BCB3;
+	Tue, 19 May 2026 10:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779188376;
+	bh=A/sK4uYKDHlfqofPeTZV72AW44cUa0BDZi7ueukxUkw=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
+	b=aG5qVDw49j2L2f66I6reDbbTDvfsExNp2ERHe47cjeXBviNqvvDR8z1frpZlrBkse
+	 tIlzlu2hXDy8PjKpn0j/EAltvgWotNHLkJ4ekyCZemhrcPrT/gByURBUTWQa1K2wlX
+	 4qz2Dz96oe1ggLnbsHF2LqOPMY4LhwRWzQMZyewA5986IhP7HBSKoO6FWnrcNsOHty
+	 ZX6EYI1V6k+mJONl0TkLkWHyUMV7XvNjaDR5EIUpfaaiptF2RAeWVNHTDRy7H/po3/
+	 QiU1dYvQR4i5schE8YVonPenLPwyprZcoJJ+REeEaNGiNHpKm8MEHPz194awVo6y96
+	 0aIN+NccsREnw==
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
+ read-only files
+From: Christian Brauner <brauner@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>, Jann Horn <jannh@google.com>, 
+ Pedro Falcato <pfalcato@suse.de>, Jens Axboe <axboe@kernel.dk>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>
+In-Reply-To: <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
+References: <20260516182126.530498-1-pfalcato@suse.de>
+ <20260518-starten-messdaten-3b8aa670ec85@brauner>
+ <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
+ <177918418452.771415.4371785688744608623.b4-reply@b4>
+ <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
+Date: Tue, 19 May 2026 12:59:31 +0200
+Message-Id: <177918837114.804096.3977912252785122973.b4-reply@b4>
+X-Mailer: b4 0.16-dev-d5d98
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3427; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=A/sK4uYKDHlfqofPeTZV72AW44cUa0BDZi7ueukxUkw=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTxOE0tNgvv0N2gc3XLoTeeh03teF81p9f8dZ3ub7eBf
+ eNjKSOJjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIncj2ZkmHauY9nrwpt7P1y8
+ 8+CtbdTPmQee6blN3WazXbCr/MbUDi+G/44M8ww4N7uWHvvyRTt83TcF5kufzkUfO/KL95jUocz
+ NwnwA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-Hi Simon,
-
-> > ... but given this, you might want to get added in MAINTAINERS as
-> > reviewer (or even maintainer) for nios2? Besides that your efforts are
-> > already worth it in my book, it would also ensure you get CCed on
-> > patches like this. Then, you are not depending on people like Arnd
-> > putting you in the loop manually.
+On 2026-05-19 12:51 +0200, Mateusz Guzik wrote:
+> On Tue, May 19, 2026 at 11:49 AM Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > On 2026-05-18 20:59 +0200, Jann Horn wrote:
+> > > I feel like a sysctl for "disable all the splice-like interfaces and
+> > > zerocopy TX" would be reasonable to have? Either by blocking such
+> > > operations, or better, silently downgrading all such operations to
+> > > normal copies.
+> >
+> [..]
+> > I think blocking isn't going to be useful as it will make it harder for
+> > distros to turn this on. So we should degrade.
+> >
+> [..]
+> > Let's discuss the other aggressive alternative: Can we try and
+> > unconditionally degrade to copy. This would affect sendfile(), splice(),
+> > and vmsplice(). Worst-case we would have to introduce the sysctl
+> > retroactively.
+> >
 > 
-> Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
-> unsure about the netiquette (can I simply do so by self-proclamation? At
-> least the git history seems to suggest so...).
+> I know at least nginx uses sendfile, but I never benchmarked how much it buys.
+> 
+> The original patch as proposed filters by rw perms on the file, which
+> I expect to exclude nginx.
+> 
+> While kernel-internal copy is still going to beat a userspace-based
+> read/write loop, this is still going to be a hit and I expect people
+> are going to complain. Afterwards you may end up with tutorials how to
+> re-enable pre-patch behavior, partially defeating the point.
+> 
+> How about denial of splice usage or degradation to copy are still on
+> the table, but based on a different criterion: whether code involved
+> is "known good" for lack of a better description. iow the kernel would
+> maintain a whitelist of "safe" cases. Random-ass AF_NOBODYEVERHEARDOF
+> does not make the cut.
 
-In your case, you can do so, I'd say. You explained your very reasonable
-interest in the architecture and have already shown efforts to keep it,
-as we can see from the git history. The final call will be done by Dinh
-Nguyen obviously with whom you probably need to sort out details. But I
-can't imagine your offer for help will be rejected, quite the contrary.
+I had thought about that to but I felt a bit iffy about it. You could
+envision an FOP_* flag for this:
 
-Happy hacking,
+  /* Module may use splice-like apis */
+  #define FOP_MAY_SPLICE          ((__force fop_flags_t)(1 << 8))
 
-   Wolfram
+But that doesn't address how fundamentally broken vmsplice() for example
+really is and that probably no one should get to use it in its current
+form.
+
+> Common-case usage would have to be audited of course, but this sounds
+> rather actionable and would provide hardening without much friction.
+
+And that's the usual problem where rando module will just raise the
+flag. Maybe that's fine and we will keep up.
+
+> I can't stress enough that mucking around splice (even if worthwhile)
+> is merely addressing the currently popular attack vector and not the
+> general problem.
+> 
+> The general problem is that the kernel is expected to be able to run
+> with untrusted unprivileged users, while it avoidably exposes a huge
+> attack surface. Of course there is no way around providing a bunch of
+> syscalls to users, so *some* danger will always be there and one has
+> to expect that even core code has bugs which will be discovered by
+> LLMs in the coming months. Even then, there is tons of code which is
+> currently being audited by third parties and which has no use in most
+> setups. Instead it gets autoloaded in response to an exploit wishing
+> to take advantage of its bugs.
+> 
+> The huge attack surface was always a problematic position to be in,
+> but with the advent lf LLMs any unskilled person can drop a 0day and
+> the position is straight up untenable. In the long run there is no way
+> around blocking access to code by default, way beyond the current
+> splice proposal.
+
+I see this is the "let's become goat-farmers" portion of the message.
 
