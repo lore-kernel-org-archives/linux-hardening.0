@@ -1,123 +1,139 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F391440961E
-	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 16:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16DD322768
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 16:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779208139; cv=pass; b=oq0J/sEnkqqV1S91D2Hsl9u7AZV9q4M8fCiQPzA2qD86Mn29cLD0LceFV717/Rilcgi2EKH263fl5DVdd7/KV//gpIECX9f34zyp5bHnIvkM6pifDBk4QeBf8hqXVDo4Bh1med1H9lfJkWqR389J3SOaWFpiXcgAALVZZpEUxGk=
+	t=1779209277; cv=pass; b=Mz2mGMFThDAsxcGQHmWNsEgM77AjlUGWLwe4wE1rYB19FeY7/CRH8i5dA0z7+hM7sm9Eeeq3spBbPGrXl972drBj1/1kMxOp3mq8ZJpsoEu/DWnjs/m2K6RmAEWUNDC92PAyegtD3fD8OpeIItv/Bk/lkqXCd9lvfW78bq1FMws=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779208139; c=relaxed/simple;
-	bh=kgHIUZbE96lJi5/obMLvIptZs8Oy9Rc15UQ301wY7TU=;
+	s=arc-20240116; t=1779209277; c=relaxed/simple;
+	bh=ViKPE/zs4gsJozSFsoDM9rzZ64VredtJAzBJtyzJDD8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k5UAoITihzWUv3wGJZKaXs0xBy1afNIDqWcCRX/9VKgY3nngX8JPpKXNoWX5hNKD+bUPfOyJMo7OViGh6P9sZlYpc6FQoE0ijLICbdUEfFhjNIk2BGnNHxmQXJoDE+I8DdZiUxLj52SIJZaN4++YkxTCjaGxrGjK3bvD55klbtw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YJ6s1aDR; arc=pass smtp.client-ip=209.85.208.44
+	 To:Cc:Content-Type; b=MJyiLPC7xbGlC40k4ca29zz3awDSYyq4dK8XgzHKtI0zNOCfqWePmHWVRHZ6/wZbfMPbhFNHpkzFiZYArORMmZl/uaY0BNjyKso3q8yr1btyTbE7xYJyPFzqJOz2zvWkwH4GdOLjFqztvijoxxgjITH13dYFLU1daGZYqpJEMtg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qCDj36xB; arc=pass smtp.client-ip=74.125.82.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJ6s1aDR"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-67c1eea6b4dso477a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 09:28:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779208136; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qCDj36xB"
+Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-12c8d0945b3so99c88.0
+        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 09:47:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779209275; cv=none;
         d=google.com; s=arc-20240605;
-        b=In5b+jBfLKm2CvDcmpIRrofzeJa6FnOYPn3Sz3zmt1fKjMfVO7oE1KD7ubrhVlvr+v
-         IBnOLwfsVi5FLUKndr/h5jNv/3JZfXaPqVtHh9U+azRud6WMiJSkOxtL/Of1B1AodmE1
-         eYVktl71cse73Mxt0dFEiRomwqIH2JPbLJGGksoKvoUgQfVsWXBpg5Hff4/pArNLc94p
-         pmpI8aMl9yzJh+WFHg/EYMIIWw5brZ056SGVVaPGDuoPH7kJlrvY0ZQOIUEbjaka/nUG
-         3T4paSrJU1UoDI8ZpVeIArcvR1Jneyy7ZN7zfsAsZarGItgIpefe2UrDjA8dWPods6nT
-         5s9A==
+        b=C26hCapTM7cNsZsM+GVntp6d0YCjzRZ7J8iZWbFvohY37/yhVrB7VlftPQfzMOmbqd
+         /9voj322JPUoY86u8Vg9/LrwMCtqSVssyYqWcYOMqAdYuGBIrcXGH3HjLWmumdndVnk4
+         kn+WIlkCJsoHIU01nYzbnUgJ6RhaRAAW+UIKBqp6/UK3qQlCqdUnXXsorRjmkBGI70Qb
+         9iPWZ4FXdbFNxvCNBwaBTRE6TmPMDMCrvy6rucBKHPPDZyCl/YGXNtr++XJz+7uX0ZxF
+         LUX2XmaPW6sxNaPodZ0rxwQTPLORFTsKheZWnyqqk2kZm3N9ZoNBbwCS+BEqNBKrcrji
+         Lqbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=kgHIUZbE96lJi5/obMLvIptZs8Oy9Rc15UQ301wY7TU=;
-        fh=tQfzgkBQmYkaFhiyStHsJGPMS6r0mRkjHyIGUL70hdU=;
-        b=DhnheVv3//3KgcBfGtb4Vghe6PZHru90a0+Rsa/pDe/s8KB+FFcVY3XJwTqIBwCXtv
-         j9JaAJe2shbrD9ZtwtfFfllS257S5v7UakuEdrSztDL7XjTLsUtbOOH7i1GpFhofClLs
-         j7Ds5kvOgKfj6JLdnZvMj11nmhRTK0e4uo/Yef3blTPNd7ymi0eny46R13ZRs0aBeOTI
-         N8nSVd/gbAZFlKWBad5iT6g5mzeaj35hEjoTbJXN4X0+GK6TbWWgYgsFclsNV1Agz9Hf
-         iZd48kII799LRdWTLuVtLyXlAeiMu3nT34e6A+8oVM/mqQ1e2zWYL50LnIClnnKpOxR9
-         t86A==;
+        bh=ViKPE/zs4gsJozSFsoDM9rzZ64VredtJAzBJtyzJDD8=;
+        fh=qewiEHBfjqvCnU9kLMlxwtL7YjWY0KHt0k2cH655yTU=;
+        b=Kj0gjyVUR36ofHeEyR9t94/Vn6mhqJE6Fl8/zhOv1FZrUWz8nhrMMZhLSGLvrY4IdQ
+         vL9zbhqEAVvgZ1sQ+rD8BSolLzyILbGHdaZwo4XdQB1Fs6Wc0NtHV5DYK0h5C8DAqcrR
+         jBh9C5GSWZh1dVbrBOfcTq9NHJEigpWq8vXux77ooMQfwyDoHtwhcVt/brxlZubGqKEP
+         v1ort20is/An27gtPFK9/Fno3ZvwetfvyUirBqdIpFbmG81xMP82QSNMtHRFB9j9GjD1
+         CwsonULG8JJx2wAOeUftJeVHR4QKrjbwzP5+4qxlbw+ZU462Kgnh50w8LDCJ3CBGqFlJ
+         31nw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779208136; x=1779812936; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779209275; x=1779814075; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kgHIUZbE96lJi5/obMLvIptZs8Oy9Rc15UQ301wY7TU=;
-        b=YJ6s1aDRD6a0PChTjnEP5x/EkLSMoTLVNwujSt6rF2+ZhN9h6DRSRai+946Td+GI2G
-         NkeTBhseY5Z9OaFZrgMk+WoaKD1a+t9IiB4vFUkoHaymTeBBA4aTaV39WAC+TWotvT5Y
-         s2Z9ez87T3Q0SzRduyxnCL31WZLhXZprdvI6P/GePNgH8mZlJZKb9B5fkJsxymZkQdb9
-         LOYhbn0WZ0YnUyl4iqE8sDAUP1KVCGNuNKvEQ17D93JL8R92V0AWP/YFF7TCWDcXGwQJ
-         D0oTn71c9Tzh8qtsklcW40tG+qBE5pOPy950ESdz1ibiEQ0NtcZf3UzHCHwXuqbt87O2
-         RUsQ==
+        bh=ViKPE/zs4gsJozSFsoDM9rzZ64VredtJAzBJtyzJDD8=;
+        b=qCDj36xB+gWsx5I++4gl23aTy/IsknfkUlDdViRQo5wucJqQ8XdghhD+kLpe7INyJX
+         D5hDNw4zhXmqyvnDQ+SLTsfjy3d+aAzPtHK4Hf/yZvzw4vcTdOfCgbx45BElKmR12hfX
+         pu5c2HaqaT73C2IpAxqMFMcZNTBN0dPwrTcBUBQ9H3m6bZt6mx/YJhlrLDFNw5Cvbfji
+         jvAUMXhEKAap1D9lrGHZsUO74k7gq02nBUlPXXnPBlgSayaJKDgXw3EWOzWfApAElNs6
+         BfzZRPCYgAd0MgV4u2ao7+QnmxOz2O+5xUIt6DXaGaTbjbG45iFgS0OcpDl/H5i84vQ9
+         f0/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779208136; x=1779812936;
+        d=1e100.net; s=20251104; t=1779209275; x=1779814075;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=kgHIUZbE96lJi5/obMLvIptZs8Oy9Rc15UQ301wY7TU=;
-        b=Ox6yGvAs6CBb2Pfjc6YXcO7lts2qBdolse4a8lch7tEL7W98LgiNRm7sGWgJAFkL/P
-         jW9WeUzP409fso9OqvG9e6dU2IUQ0gDbto3A0Cw+NZaIAl2jHvySUeqTZV4PiCV0R6kV
-         cjH+dPcCdflYNsW4HGTVtEQDkpUixX5boxO5jo4onvrWmJ8Kn9W9SnF0HBjKG+8hxh3p
-         ks/jcWXoZUx2FrOoyPDSxnBuqTUcFheOmh0AyoV0FgcUzjPU9GE/WnYjJJfDjOovEE83
-         /wYnqf4uz9CUMnx0ZpMW9WhVEPj8V8XVKmoQJ45ixVRMTGmiNPK3CWPV9+DkU3lBDFzs
-         1/Mg==
-X-Forwarded-Encrypted: i=1; AFNElJ+OxauoY3LobuWUIorXWTf4VhGKrsti0P5Hcw8afZ2XvkV2ogLVqUF9cxkzKllv8BkawCNtfu4aK1lCuo62VeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDbzVsERz1xAVnwbUcpYwUYzxbE4ZZFroNCUxmQXcJaP32ALYc
-	3BHA/R3bhV9tEBKjRSMn9pkLFXOU1UuJVLOCHCv61YKwiVxP5q6tm0BTfCiUUIVVye9Kd+cLkmw
-	buYOogboYOJ/OoJfH/c21u4SKnmN6JqUF/4VBcyOq
-X-Gm-Gg: Acq92OHPSHFE2hzNyo/TPyRpb6tMp6u76x2vY/A3UiLh2f2eV9RyHqgKohKKvI6mTIR
-	vuTnkQ0Jf9VmJlYWbMoiYXx0ABwjtUyGFQRVH/q3c0SEIwukcCMASv8VU22yMyX0iBwEn0+GLfa
-	4WKaHkB8VQGHPFbRuk2ZnSlSxaNkZugJmfZPYx94xCcPMFisuUx3CVd/Fy+DL3IqLTbt9BZg5We
-	H4eBO1H74dPnvKVv6NP5hZsA17rNW/xrYrR0D+dzf3wcQNVy/QVd8D2mGIrLChs+gleRFEeOC40
-	la+S6TcPiHGNZzkFWkz7Sxw8C1hByb5nX7U9LX6lUvBagu2w
-X-Received: by 2002:a05:6402:a143:b0:67b:8283:6240 with SMTP id
- 4fb4d7f45d1cf-684986edae8mr162870a12.7.1779208135980; Tue, 19 May 2026
- 09:28:55 -0700 (PDT)
+        bh=ViKPE/zs4gsJozSFsoDM9rzZ64VredtJAzBJtyzJDD8=;
+        b=QCeF0UtR/VzMLYT6maFG1hKJsLII2lPmFz9Px8w2o3j2vY6zdVN0NTioblC/OxQSyo
+         DXiTJP7t3Vyyntqcls0S/gqOpYxffxgaPzlP5/tBoz65nQnf8PcW9Lhby/cyY7KlCnRG
+         oWyXOCCV7x8GLFpz02Sxghx7ynuJfz2xeO1MfRp7bkg8hVp+/CC5iIUj//j/fxcvdYg9
+         MHfbg/qdFTzo+AGInSa9AHa26Eg+uyhrFXFxbevjblx9BMaI4VpXSE2y1a9ub35W27a4
+         6B4guFgyzcp3w/ILjxc5wjek/8ok9j4UjEAeW5N5e1VNWLSnwIxmaCvaZLVu4SlD6nJa
+         xY2g==
+X-Forwarded-Encrypted: i=1; AFNElJ/Qvu/um0KkKP3znnYXf1e+XOoPdRJa5k4um1AIv4NYnv6YN7wkvUX78NptiQvaNnIHbAW7d3Bwx2idPpCsO+Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMYAwUIy0z0qgSAxKtUMOlP8J9xT1r6dGttUG99hZTrppG3xX/
+	QxolYBkT+DS8S96m990yNqebGZse8Ni4ybFGBjdHvdFK40vfeFNUBdVYKpK+PwO39rVgZFW/1BK
+	p56bzZ7hSZzjlc/NlmEalxK/mFjIpw/u7z5CyNsTw
+X-Gm-Gg: Acq92OGCp7QHIo5YiKv/U2KZbpe/m3Vrn6kJODb9W9c3SAn/yZgwf4DDmN5TC/JwjT5
+	Q1jIK0F3yZcM7mKTA6BhuRrsQw4qyesqNKpI8+VDPTWm1Si1RIBqobiphmvOaX+cTLfwmzkPkcc
+	iYl1yeiEsInqq+7KyqMpaND6TharPH+NnZ3/zoWR2UyXtzojU+5ai66wCxw+h201mXS+MN28NCG
+	4sXh2Q07RRYgFi2UFtUSWo9faV1PdKkMfyg21lnwoLcwQFiNwGkAfNLBfBKk9eC3B6wXHoe6Osp
+	BBB+934bWznIPhbstQpLOZgAoowrL91AhGaOGG3mJeHe2Knz
+X-Received: by 2002:a05:7022:41a3:b0:12c:2ed4:6314 with SMTP id
+ a92af1059eb24-13557dcef85mr326451c88.1.1779209273823; Tue, 19 May 2026
+ 09:47:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260516182126.530498-1-pfalcato@suse.de> <20260518-starten-messdaten-3b8aa670ec85@brauner>
- <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
- <177918418452.771415.4371785688744608623.b4-reply@b4> <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
-In-Reply-To: <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
+References: <F78521DA-08DC-424E-BBE1-231BC900CEE0@gmail.com>
+In-Reply-To: <F78521DA-08DC-424E-BBE1-231BC900CEE0@gmail.com>
 From: Jann Horn <jannh@google.com>
-Date: Tue, 19 May 2026 18:28:18 +0200
-X-Gm-Features: AVHnY4KItrX90sdPIrOiWL_DdFaddul15rGgYiuLpLDe6wZbCoeUuSPEm4x5pzQ
-Message-ID: <CAG48ez03iWJteZiUvRe6o6_O9N_G4BYwgBBvAXF2QOJvXkKELQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
- read-only files
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Pedro Falcato <pfalcato@suse.de>, Jens Axboe <axboe@kernel.dk>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Date: Tue, 19 May 2026 18:47:15 +0200
+X-Gm-Features: AVHnY4LvG4Du5d39_T67NOwKnozMptM-y7xFRUTkKn7VXkYMQfWRo6DTkXiA7Lg
+Message-ID: <CAG48ez0KsuR5z4RDgxWPUoS8e_MJzF74RgFDJayohG48A_N0PQ@mail.gmail.com>
+Subject: Re: [RFC] TID v2.0: kernel module for cache-line zeroization against
+ Flush+Reload (CLFLUSHOPT + LFENCE + REP STOSQ)
+To: Ahmed Hassan <ahmaaaaadbntaaaaa@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kernel-hardening@lists.openwall.com, 
+	linux-crypto@vger.kernel.org, linux-mm@kvack.org, linux-api@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 19, 2026 at 12:51=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> =
-wrote:
-> I can't stress enough that mucking around splice (even if worthwhile)
-> is merely addressing the currently popular attack vector and not the
-> general problem.
-[...]
-> The huge attack surface was always a problematic position to be in,
-> but with the advent lf LLMs any unskilled person can drop a 0day and
-> the position is straight up untenable. In the long run there is no way
-> around blocking access to code by default, way beyond the current
-> splice proposal.
+On Mon, May 18, 2026 at 11:47=E2=80=AFPM Ahmed Hassan
+<ahmaaaaadbntaaaaa@gmail.com> wrote:
+>
+> Hi kernel developers,
+>
+> I am sharing TID (The Instant Destroyer) v2.0, a Linux kernel module
+> written in C that addresses a specific gap in existing security
+> libraries: none of them (libsodium, OpenSSL, glibc memzero_explicit)
+> flush CPU cache lines after memory zeroization.
+>
+>
+> =3D=3D Problem =3D=3D
+>
+> Standard zeroization functions (explicit_bzero, sodium_memzero,
+> OPENSSL_cleanse) prevent the compiler from eliding the wipe, but do
+> not evict CPU cache lines (L1/L2/L3). This leaves residual key
+> material measurable via Flush+Reload (Yarom & Falkner, 2014) after
+> data use ends.
 
-Sure - but the path to that is putting restrictions on the
-availability of individual kernel features, and this proposal is one
-step toward that.
+The thing you're talking about isn't really related to the
+Flush+Reload side channel attack, right? You're just talking about
+flushing cache lines.
 
-These splice/vmsplice functions have been part of security bugs in the
-past, and have contributed to making other security bugs easier to
-exploit too. I think it's a sufficiently big problem area to warrant a
-disable toggle, especially since this is more or less just a
-performance optimization that we should be able to nerf without
-outright breaking anything.
+In what threat model would this be an issue? Normally, the goal of
+memory zeroing is to ensure that sensitive data is wiped before an
+attacker has a chance to physically pull out the RAM from a machine
+and plug it into another device that can reveal RAM contents, or
+before an attacker gains physical control of a locked device and can
+connect malicious peripherals to it, or such.
+
+So for this to be an actual security problem, the device would have to
+keep running in a sufficiently high power state that data caches are
+not discarded, and at the same time not perform enough memory accesses
+to cause this memory to be discarded...
+
+Assuming that this is an actual problem, why are you using a kernel
+module for this? At least on x86, CLFLUSH is unprivileged, so crypto
+libraries should be able to just use that directly. (There is the
+caveat of what happens when the kernel migrates pages or kills a
+process, but that's a larger problem.)
