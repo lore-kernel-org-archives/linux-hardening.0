@@ -1,127 +1,220 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD274DD6E7;
-	Tue, 19 May 2026 14:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1007A376A18;
+	Tue, 19 May 2026 14:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779201786; cv=none; b=YYFqgBm6TajgO9RTv79uo2vrLcxallZ24k2kzVwxflspF454w3u2R1VTAR2gQlm8USg9XBMWGZgon+FkIy4zgdV1zFPpOQtIRCbXW6NH9GLsLctH4i1vtTw+jERmPDN3xdYwkOy2J3iEr5S81/+k+ynGrMM/hLw76HVuGylxNwg=
+	t=1779202516; cv=none; b=NGettWX6GB5x549xl00zkMf0Gx7ad1yjxKMV9TjxPgl+W8zynBYdOY78yJX4D9WEDB8iYo84gQcoA0kz0+lG5QCyxPzccS++PBZlqkjuU5QIMHJBpyaNkNg07AkovFG/AoRr31l1UOn2fUjRxPm+3Fr+whvuRAgmMY99I9SA4XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779201786; c=relaxed/simple;
-	bh=TWofFx/L7B82ZB0Wmdrz/l3gvZ/qJJHsm2e0U8H+1EI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f5Km8OLBX6Mm0vqgKUWwGIDz9WXv5C4ZaOkjkCAsX0RxhU3zoUOt+9xt1dijp7dJWGa6FqYWGbRnu4TW9JUzOxYAsc684qcWbvuBCiyuJOQXo+VOQuY7AJSP4wplSah2PW7FXB5HzBIJTjF0IKG9YW1HuBvrD9e4E9Iddfj3SL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OH+Qgj+t; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3B2kVHX1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1779202516; c=relaxed/simple;
+	bh=3NVlJUtwfMkx/hSLJA5LtQIHr3Op/o3df0L0eCKc4Cg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cf+bCZv8Sp31OHrhIa3TXnYUCLzlJ4sraCDYnSMY1Gj4aKOl4641uQ7eFhz/5OGZHdtMI3WPq1tDa01VND164z0e6lPYe0TlZ/s2EJFha+Vkc5wVNfc8xlnZWlWnRl+EZwXHFfDihJTpu7KVDsPY4SZh+hBudhiddYRGsycCFfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=lRJp8Wtq; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OH+Qgj+t";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3B2kVHX1"
-Date: Tue, 19 May 2026 16:42:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1779201777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CMGlyrCBop3la0imMgYJeakA2V0whVzG/+pLGAlldu8=;
-	b=OH+Qgj+tzCHqtO+cprnzOIC4l4VI6aeYCO5YXg4tv8XLtgRrzbBKmzIgaxPNqQ67DC2/21
-	IeyERJwhSv4TCCjZHXnd88+eyhmLSnOO3vIOS7GfxIZ3hG4zfmdAJa++f9wqGI+bbxN6pv
-	SB4Z37YA4jUmWwgNHkwr2zmMv9LHTQfwfe29oHnvLZt0M1IqRMqJi07XNMPtpMP72aTKby
-	KYoQ4utgevUG+o03QCXw1uW9MXA02ljj9N4gAF/P7HJ1nQ/X2T+H7vkn9xqztLuB699/JD
-	jIPbNTQnyD1KWSZc682vV9RR2dApXmLWBbezCchY/2QhYQ5YGZCo++c+dPr4ug==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1779201777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CMGlyrCBop3la0imMgYJeakA2V0whVzG/+pLGAlldu8=;
-	b=3B2kVHX1Tw0rd+7jn56ZQDjP9WpyGeprzdwvSyiyokdmGpVza++UDyU4p1CHwUUy1ZP0Gr
-	9uGwBCTd22SA/IAA==
-From: Gregor Herburger <gregor.herburger@linutronix.de>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
-	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] nvmem: Add the Raspberry Pi OTP driver
-Message-ID: <v3trqljork46ao3haew4abeky4q5ghjhf2uvkttpptlqgn46ht@kmgbgv6h7qqj>
-References: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
- <20260508-rpi-otp-driver-v4-2-cf8d725d8821@linutronix.de>
- <20260519110041-2d8d92c2-d265-43d1-848f-bf9231a106c8@linutronix.de>
- <bv4vwmkkjh23lahkrupwclqs7il4vxqeknalgqn52k3wc6ztsg@z5ukn774brtg>
- <20260519123911-0a9ca1dc-7fee-425f-ba0f-e86368596e55@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="lRJp8Wtq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1779202511; x=1779807311; i=wahrenst@gmx.net;
+	bh=UenSn56tHjiovnvCW9LnUxXLUDHjuC4SqEgtGEyoh7A=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=lRJp8Wtq8l3pDwuqefw8UYtNPeDJvQrMdBbLzowtsqtbIzF1UDysk40nZliRnl7s
+	 GNdpspuTacM8WFI6mU0brBav1v7uwTX2B+He1+TRXRFFE+pmtqbMfwvlOwThKla8M
+	 m0UTtludjsxd9XFGcePx9ym1RZGBtLx++9yVEytOkEvXBVT10bWAqnQvfSADYztE1
+	 lRFGq0GE3zwkBaNk9UAwKV0Dvg9AMzNAk7dDJUag7tTJ4h5YnAJj/xSPW9+nFl/Tr
+	 NKK0u44aNPqtwTIW3n563aWDhXBJI+/QHLgzcke3dUCj8Fp5Kv5mH1zJQRi9+DiGq
+	 KaljbqpA1LK3EZhVjw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRmjq-1wnzRl085K-00Vo0O; Tue, 19
+ May 2026 16:55:11 +0200
+Message-ID: <d9e3e10a-c346-4391-b133-4b60fbee5dc3@gmx.net>
+Date: Tue, 19 May 2026 16:55:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260519123911-0a9ca1dc-7fee-425f-ba0f-e86368596e55@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] nvmem: Add Raspberry Pi OTP nvmem driver
+To: Gregor Herburger <gregor.herburger@linutronix.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>,
+ Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OnG+5dD0K7KxSjstX8VfXizzjE7eoOYGJavQEZ0TtkzGymWxZQv
+ SCdtJhV18O1T3Er4NdL9lsXY1X1nEfNWrIip8BH6LijHZ+cZzWAddDEjnG24UlvsJMYRXMD
+ LNZpQrqTRTl1ki9IrJkmcYGeRY/Peu9US1p/rXj2hUFGtJtLRMfC9x2ojbHGzE6vrZ6rlXU
+ WnB8ubPUle9HUZcq7n/Ig==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ytHTOb0poPU=;G4uxAu2MvP1GjJhRRVWuBaP0l0W
+ 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
+ L2vODxmme9fsllNcUwDSzLKHsVo=
 
-On Tue, May 19, 2026 at 12:47:31PM +0200, Thomas Weißschuh wrote:
-> On Tue, May 19, 2026 at 12:20:14PM +0200, Gregor Herburger wrote:
-> > On Tue, May 19, 2026 at 11:14:28AM +0200, Thomas Weißschuh wrote:
-> > > On Fri, May 08, 2026 at 04:42:45PM +0200, Gregor Herburger wrote:
-> > > > +config NVMEM_RASPBERRYPI_OTP
-> > > > +	tristate "Raspberry Pi OTP support"
-> > > > +	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
-> > > 
-> > > The '&& !RASPBERRYPI_FIRMWARE' clause looks weird, is it really necessary?
-> > 
-> > Yes it does looks weird but I think it is necessary. Without this it would be
-> > possible to build RASPBERRYPI_FIRMWARE=m and NVMEM_RASPBERRYPI_OTP=y which
-> > results in linker errors.
-> 
-> Fair enough. I would prefer the solution below, though.
-> It would cleanly solve the issues also for other (future) drivers.
-> 
-> diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-> index 17595a96e90b..0efd479ffced 100644
-> --- a/include/soc/bcm2835/raspberrypi-firmware.h
-> +++ b/include/soc/bcm2835/raspberrypi-firmware.h
-> @@ -188,7 +188,7 @@ struct rpi_otp_driver_data {
->         int size;
->  };
->  
-> -#if IS_ENABLED(CONFIG_RASPBERRYPI_FIRMWARE)
-> +#if IS_REACHABLE(CONFIG_RASPBERRYPI_FIRMWARE)
->  int rpi_firmware_property(struct rpi_firmware *fw,
->                           u32 tag, void *data, size_t len);
->  int rpi_firmware_property_list(struct rpi_firmware *fw,
-> 
-> (...)
-> 
-Yes this should work. Will change it in the next version.
+Hi Gregor,
 
-> > > > +static int rpi_otp_read(void *context, unsigned int offset, void *buf, size_t bytes)
-> > > > +{
-> > > > +	struct rpi_otp_priv *priv = context;
-> > > > +	struct rpi_otp_header *fwbuf;
-> > > > +	u32 count;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!IS_ALIGNED(offset, 4) || !IS_ALIGNED(bytes, 4))
-> > > > +		return -EINVAL;
-> > > 
-> > > Isn't this already enforced by the nvmem core?
-> > 
-> > Only for sysfs access through bin_attr_nvmem_read/bin_attr_nvmem_write. But
-> > there is an in-kernel API nvmem_device_read/nvmem_device_write which does not
-> > have alignment checks. So I added the check to be more defensive here.
-> 
-> The other drivers don't seem to check this explicitly. It looks like an
-> accident waiting to happen.
+Am 08.05.26 um 16:42 schrieb Gregor Herburger:
+> Hi,
+>
+> This series adds support for the Raspberry Pis OTP registers. The
+> Raspberry Pi has one or more OTP regions. These registers are accessible
+> through the firmware. Add a driver for it and add updates the devicetree
+> for the Raspberry Pi 5.
+>
+> ---
+> Changes in v4:
+> - Additional patch to drop unnecessary select schema
+> - fix dt-bindings
+> - use __counted_by_le
+> - additional alignment check in read/write callbacks
+> - Link to v3: https://patch.msgid.link/20260506-rpi-otp-driver-v3-0-2946=
+02663695@linutronix.de
+>
+> Changes in v3:
+> - dts: add "raspberrypi,bcm2835-firmware" as fallback and fix dt-binding=
+s
+> - Fix Kconfig depends
+> - Changed firmware data fields to __le32
+> - Add MODULE_ALIAS
+> - Link to v2: https://patch.msgid.link/20260505-rpi-otp-driver-v2-0-e917=
+6ec72837@linutronix.de
+>
+> Changes in v2:
+> - register nvmem driver from firmware driver and drop firmware sub nodes
+> - Use struct_size and __counted_by for dynamic array
+> - Drop unneeded comment in Kconfig
+> - Use NVMEM_DEVID_NONE
+> - Use kzalloc
+> - Update module description
+> - Link to v1: https://patch.msgid.link/20260408-rpi-otp-driver-v1-0-e02d=
+1dbe6008@linutronix.de
+>
+> ---
+> Gregor Herburger (5):
+>        dt-bindings: raspberrypi,bcm2835-firmware: Add bcm2712-firmware c=
+ompatible
+>        nvmem: Add the Raspberry Pi OTP driver
+>        firmware: raspberrypi: register nvmem driver
+>        arm64: dts: broadcom: bcm2712: add raspberrypi,bcm2712-firmware c=
+ompatible
+>        dt-bindings: raspberrypi,bcm2835-firmware: Drop unnecessary selec=
+t
+>
+>   .../arm/bcm/raspberrypi,bcm2835-firmware.yaml      |  20 ++--
+>   .../boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi    |   4 +-
+>   drivers/firmware/raspberrypi.c                     |  59 +++++++++-
+>   drivers/nvmem/Kconfig                              |  10 ++
+>   drivers/nvmem/Makefile                             |   1 +
+>   drivers/nvmem/raspberrypi-otp.c                    | 130 +++++++++++++=
+++++++++
+>   include/soc/bcm2835/raspberrypi-firmware.h         |  14 +++
+>   7 files changed, 224 insertions(+), 14 deletions(-)
+since you plan to submit a V5 of this series, could you please append=20
+another patch to enable the driver as module for arm64/defconfig?
 
-Indeed, I will have a look at nvmem core and see if I can find a proper solution
-for this.
-
-Gregor
+Thanks
