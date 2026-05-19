@@ -1,123 +1,159 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC7E369D4C;
-	Tue, 19 May 2026 10:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779187655; cv=none; b=OC3MNTVy2OVAPo0HWHfDxHoYUJH6px5xTGHlrazrp9dmVjJDvPTHZmslXDogzRgB7914YnZALg0RxttoPtAxNm/Y4BSoryvQXEKLTzx+qdwffJIYR6I1jQogEiBsudlVqjITlQP3u/nUEv3ECO7EkdyZX2Au2HQbWSAtt4Nnxiw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779187655; c=relaxed/simple;
-	bh=bHuCXdXGKvP3ESmHoK7oobj/L5KctrrlFKOD+MgU75o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=up0rO6SlTFWIoO/xn0qUSzycNQyCMCSz0IFRFuJUB8V6rIgiOzNlXjLUApp+nMOaBatDhOk7JQldnn05XYcsaikIAc9WRZUUMJFwyq1fJfIdC+FZwZbFA17OPR2fIl85WQzSQNCAT6VY1RTHNxOqGjfzXI147nDdlEdcomqv2Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m6AO7vZZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pkxjd7DE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51651369D48
+	for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 10:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779187903; cv=pass; b=dQyo5XBCb80AxsIo+0vT7dzJJ0oVkWjvL5fQ+D/LYtbCs/PnTsybiYGtH5V4a6mP71dURq2MUFsekwF4PdEUNA1FKm45menYwHN7VLgTVbSeW9ewn/7l4w0E0GfEh9SPSrVSWJQMkcpP4any6qwWDOvsE7ntm4OsAJfuOP8wcFQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779187903; c=relaxed/simple;
+	bh=D09mIwXGgfWvJMWKI8G3+s17RZoSvUCDdrOthBfqo6s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t37no7IWdB23bA0ou8Qyei8QCNklAr6TrbOOYGtB3TWipYVlAq1Bq37J5ZIZEiblOoYP2fXiEWf+ZSeOdpPzjQR3HCCy16fD8sw0lFFLtiyOOlqNwZFlTwPEwQStIxd3yeaq1bwOPyrj5rmsaVYHnfnzbT/D+SoFaKCkddSOjRw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rNfQG1Cf; arc=pass smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m6AO7vZZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pkxjd7DE"
-Date: Tue, 19 May 2026 12:47:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1779187652;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Q60EfCLUFk1gJm09+b3WgWO/cMVpTuRFJqZCCOqpfo=;
-	b=m6AO7vZZtNrhhMS7oB+nSYNhvnRo4YGUzkvcYZBFvgQSWM4GZAkjOlhyuJTuQfpc8Zb0h3
-	W3Ntgv6nrQ7Use4om4pl1x+hUD+ie/3ebBQ0HMmLPLlV/3hMaO9bKcEkHk7JC0WsXyknzR
-	rwQC2CnwuJ4tMthsfhZqbuYuIWQHNTuT0u4PH9WE18ZWIFx7U+J2wUfLeQxeEFyQrDDoRH
-	QMZwBuTxDUjPqFAYPt2hYMS9CKrFcGcs56d7nK1Q3ecZKJMadapfyk2KdaOqhi9e311mBt
-	R4oBQSaV2L+YMS12WQ69JNb1nDz5tlZu4/S9MAMQWVgLGqIvrtpkn6QgUk0fTQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1779187652;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Q60EfCLUFk1gJm09+b3WgWO/cMVpTuRFJqZCCOqpfo=;
-	b=pkxjd7DEZvG2Mj5JYHckMljpwLSQC7PwA+bYyrymWtkO3HY8YI66M9viu2Axqy7lauHjNh
-	4zvQIwkGikLNqEDA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Gregor Herburger <gregor.herburger@linutronix.de>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
-	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] nvmem: Add the Raspberry Pi OTP driver
-Message-ID: <20260519123911-0a9ca1dc-7fee-425f-ba0f-e86368596e55@linutronix.de>
-References: <20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de>
- <20260508-rpi-otp-driver-v4-2-cf8d725d8821@linutronix.de>
- <20260519110041-2d8d92c2-d265-43d1-848f-bf9231a106c8@linutronix.de>
- <bv4vwmkkjh23lahkrupwclqs7il4vxqeknalgqn52k3wc6ztsg@z5ukn774brtg>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rNfQG1Cf"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-678a16429c6so6217223a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 19 May 2026 03:51:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779187894; cv=none;
+        d=google.com; s=arc-20240605;
+        b=G/T7baoePunxR4MACTbsZ9wkvfRboaMhqs7X/IFJQbV741yvDxbYpxtRnFh6hvGAbT
+         Vm/cdH3BcxZpkXHuiuEHr+2sSvRGP8hyZd1d5TlkWw8TSaJmfISfgorsg+iAXhVKmYUq
+         69qrdCmVUZSEsv8Q5c1BCr3jjhw6AkVKAs+QKef8bmSRFwIyI91eSwmPGwy9Z87NVhQr
+         dthsp/+vWFfzhblb7++fWqlncAaMG3Gs9quwchU9GT8PmOoEd0voUIDLhMmazvS4Uc1G
+         cyTJTndqyieKSOIq8P/EPWnrCgEtRY6punhTUc/p+Xezkkn47xmMpDojagF1TlUe7e92
+         pL2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=D09mIwXGgfWvJMWKI8G3+s17RZoSvUCDdrOthBfqo6s=;
+        fh=m9VKN9SJLtJqh9ROaVprSBu0CxBmijIXbGXrE0CRhUo=;
+        b=J18LIx1tp4SaEJgHK5axQfhXoojtZhDm8HZU5oKEGkAlmruy5FfIMpSVluS57L5YuT
+         LRzu7QTfV1b06E3o8nS7lBnaWUq/wfjkm0bRobTq19CBmO8KVuVi+GsWBuBJbDAUDsON
+         cpEPDBQphpmmJvJHi3pwA+KTfki3/dMwIg72PJeIctnSAx1TkJroXDUQpXtyrhbBXiMF
+         rHf9GuxQxfY5wk6giAA5xC2BK/PbM0QZ892QzZktzJ3MXGBZl1uUZ7x1yE2eeBADFXII
+         gytIxrbuC/K3vjU7NmQ1tmu/WRcOYtdh5Oj/4TR3iPMLCCTKKNhx3zkFoSQ7uxlE7BJG
+         Em0Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779187894; x=1779792694; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D09mIwXGgfWvJMWKI8G3+s17RZoSvUCDdrOthBfqo6s=;
+        b=rNfQG1CfgT5ban+PDibQ/+W7/d6mR2Om21tfqvBf3dm44wDQcKOr7K+QaqoqcDjdBY
+         e9j3qEg2ZqJaK6PhuC8CE6+n6UhKkLRgjtJ4On8iAoEFa84vpggEAY758ReZDD1v6+Gp
+         JSwCMepiaeIXEZtekUiVZEyMRyj/ad15gWuZRcr/ZM0w+53R7Vf9K3B7S3fS8AvzxNA1
+         3ihd7DkiAx6GBRasJU4xyDkbyZx/07aZxowePOC3bfEW3tiT5jFZ8gUU5XnhQvD3agrS
+         dcWsVbkxooeKuC8rjufMu+RfVaQBNistzUqQnm5h/7uRermXsVvPpc0+2c38gLfwlWbv
+         0O/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779187894; x=1779792694;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=D09mIwXGgfWvJMWKI8G3+s17RZoSvUCDdrOthBfqo6s=;
+        b=DHDVu1ozwoQupgC0ZJtqbl1zkNB4u726zR3UpM0GvedbqnOQp3n2cqHzOpkVCBcgLu
+         8vSXl+HoKkY3mjzhhp38JNXGBQc16jYx7HdR8EozV4pJhIdebFHiT3/DvZym6hQnjRKS
+         /URi9OJDiAHbYFxGOCf7FyHLFbsxkCmNQDQ3PLMpP2cX4AQWTfkLgtmAOH6iwPxzjbk0
+         FVh/Q6aQUSFS0TZdbtR3M2oJc6F+I4ALzDqriGy+h0oZLpW2cbUphPOAutPCW/suEnb1
+         nNL920xgyYTxfb+Sw7UbVxekdeKX3mPfX0arMn9GkmrOTfTseoh9nuA66IMZcjE+DHvl
+         bP8g==
+X-Forwarded-Encrypted: i=1; AFNElJ8mhr0bz9bX8s2C8vbSw45uCQhsGmTt78k05lNx4unByWdtPrBW7hVTVnSjl6O+kbGok8zZ3eL6W7cn060BeU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEOZHip/ZS/fll7d6RKrQAhD38zchgXVDZKdM3PlModyIk8xp3
+	lWIim9r4tQxtqcexlZuSp8SjLqjbjHRp/HQE/m/eEwMSg6+JKLpI9gF7C56Umt2dO/Vy/cev/by
+	/q+rUGwlfegffsVaEPMyxLNfCa9FMncY=
+X-Gm-Gg: Acq92OHhUASCYu8LcRHfRMALYIFIbF3SoIJDnJR7CpYbPNBEemMqFyhQoD/KXNtjVj2
+	FIpvVIp+NJe30NPmxy8ni7KQtT6zprX0N5xCIZpxTBG1u2Lafs63U1pKTuyy0mD/iwxJxTER1Zv
+	Pzb3Q/G8VYYeWzhn7Ml37HS8nIwxoiGTlZgAdpDwnEvdA3A/z/MWXgwYBdRmE7JeMbIB+bzpVhz
+	Ec5tIWtvK2TIGgJfoqz7br2xHKhKjD+bi3ujjfPg7B+HEXXpk6yF9vC9Bedoc1FwpvyscUhBN4g
+	siSnDsSmzq2IfMRcweNSmr6T2ZkY9jk+k1DDBg8=
+X-Received: by 2002:a05:6402:22e5:b0:67c:1c12:3ee6 with SMTP id
+ 4fb4d7f45d1cf-6830abcc48fmr7158004a12.5.1779187894290; Tue, 19 May 2026
+ 03:51:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bv4vwmkkjh23lahkrupwclqs7il4vxqeknalgqn52k3wc6ztsg@z5ukn774brtg>
+References: <20260516182126.530498-1-pfalcato@suse.de> <20260518-starten-messdaten-3b8aa670ec85@brauner>
+ <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com> <177918418452.771415.4371785688744608623.b4-reply@b4>
+In-Reply-To: <177918418452.771415.4371785688744608623.b4-reply@b4>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Tue, 19 May 2026 12:51:22 +0200
+X-Gm-Features: AVHnY4KxwAsZR24cEVgsWChCgk4fjPFWjAc3-R7St5PMsRGg6TL6NPpS0u-UI6M
+Message-ID: <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
+Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
+ read-only files
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, Jens Axboe <axboe@kernel.dk>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 19, 2026 at 12:20:14PM +0200, Gregor Herburger wrote:
-> On Tue, May 19, 2026 at 11:14:28AM +0200, Thomas Weißschuh wrote:
-> > On Fri, May 08, 2026 at 04:42:45PM +0200, Gregor Herburger wrote:
-> > > +config NVMEM_RASPBERRYPI_OTP
-> > > +	tristate "Raspberry Pi OTP support"
-> > > +	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
-> > 
-> > The '&& !RASPBERRYPI_FIRMWARE' clause looks weird, is it really necessary?
-> 
-> Yes it does looks weird but I think it is necessary. Without this it would be
-> possible to build RASPBERRYPI_FIRMWARE=m and NVMEM_RASPBERRYPI_OTP=y which
-> results in linker errors.
+On Tue, May 19, 2026 at 11:49=E2=80=AFAM Christian Brauner <brauner@kernel.=
+org> wrote:
+>
+> On 2026-05-18 20:59 +0200, Jann Horn wrote:
+> > I feel like a sysctl for "disable all the splice-like interfaces and
+> > zerocopy TX" would be reasonable to have? Either by blocking such
+> > operations, or better, silently downgrading all such operations to
+> > normal copies.
+>
+[..]
+> I think blocking isn't going to be useful as it will make it harder for
+> distros to turn this on. So we should degrade.
+>
+[..]
+> Let's discuss the other aggressive alternative: Can we try and
+> unconditionally degrade to copy. This would affect sendfile(), splice(),
+> and vmsplice(). Worst-case we would have to introduce the sysctl
+> retroactively.
+>
 
-Fair enough. I would prefer the solution below, though.
-It would cleanly solve the issues also for other (future) drivers.
+I know at least nginx uses sendfile, but I never benchmarked how much it bu=
+ys.
 
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index 17595a96e90b..0efd479ffced 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -188,7 +188,7 @@ struct rpi_otp_driver_data {
-        int size;
- };
- 
--#if IS_ENABLED(CONFIG_RASPBERRYPI_FIRMWARE)
-+#if IS_REACHABLE(CONFIG_RASPBERRYPI_FIRMWARE)
- int rpi_firmware_property(struct rpi_firmware *fw,
-                          u32 tag, void *data, size_t len);
- int rpi_firmware_property_list(struct rpi_firmware *fw,
+The original patch as proposed filters by rw perms on the file, which
+I expect to exclude nginx.
 
-(...)
+While kernel-internal copy is still going to beat a userspace-based
+read/write loop, this is still going to be a hit and I expect people
+are going to complain. Afterwards you may end up with tutorials how to
+re-enable pre-patch behavior, partially defeating the point.
 
-> > > +static int rpi_otp_read(void *context, unsigned int offset, void *buf, size_t bytes)
-> > > +{
-> > > +	struct rpi_otp_priv *priv = context;
-> > > +	struct rpi_otp_header *fwbuf;
-> > > +	u32 count;
-> > > +	int ret;
-> > > +
-> > > +	if (!IS_ALIGNED(offset, 4) || !IS_ALIGNED(bytes, 4))
-> > > +		return -EINVAL;
-> > 
-> > Isn't this already enforced by the nvmem core?
-> 
-> Only for sysfs access through bin_attr_nvmem_read/bin_attr_nvmem_write. But
-> there is an in-kernel API nvmem_device_read/nvmem_device_write which does not
-> have alignment checks. So I added the check to be more defensive here.
+How about denial of splice usage or degradation to copy are still on
+the table, but based on a different criterion: whether code involved
+is "known good" for lack of a better description. iow the kernel would
+maintain a whitelist of "safe" cases. Random-ass AF_NOBODYEVERHEARDOF
+does not make the cut.
 
-The other drivers don't seem to check this explicitly. It looks like an
-accident waiting to happen.
+Common-case usage would have to be audited of course, but this sounds
+rather actionable and would provide hardening without much friction.
 
-(...)
+I can't stress enough that mucking around splice (even if worthwhile)
+is merely addressing the currently popular attack vector and not the
+general problem.
 
+The general problem is that the kernel is expected to be able to run
+with untrusted unprivileged users, while it avoidably exposes a huge
+attack surface. Of course there is no way around providing a bunch of
+syscalls to users, so *some* danger will always be there and one has
+to expect that even core code has bugs which will be discovered by
+LLMs in the coming months. Even then, there is tons of code which is
+currently being audited by third parties and which has no use in most
+setups. Instead it gets autoloaded in response to an exploit wishing
+to take advantage of its bugs.
 
-Thomas
+The huge attack surface was always a problematic position to be in,
+but with the advent lf LLMs any unskilled person can drop a 0day and
+the position is straight up untenable. In the long run there is no way
+around blocking access to code by default, way beyond the current
+splice proposal.
