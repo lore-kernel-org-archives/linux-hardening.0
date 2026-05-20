@@ -1,176 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A2D23BCE3;
-	Wed, 20 May 2026 00:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4244E34F48F;
+	Wed, 20 May 2026 07:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779237932; cv=none; b=eGPNzv++LCuwFKE3SGKBhN/h7gzAyOptUJDJAJLGKY2Wf+Ia7VpLzNeXkzTlVaA67W9g3ssG7L4Bqsu4SfVGqAtWCBPaceonsHAU4KORaTx8oreEwc8oySArmnWxq6O7dc5N97lqMvT2MsJReB4xfmbheyxmSbPmGVpHzZgneDU=
+	t=1779260838; cv=none; b=TIlg7HfUyxC/70SZ9cp9lQyxmA0dtk43pfGLApyJL14loTKSHMfDIJJIw0zKrElg6WhmUwVB8BO07lAbGutoPVFPphUk5Q9WPWWdp7FrFLaSDxy35Nbr5RBOr/Ys6kVs4KSzTvvenfOA0+HideBAW7cV5iz//0a6RrIHSna+mLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779237932; c=relaxed/simple;
-	bh=4PsJnTUON22Goo6tlt1Y6Ak2MmT6eI/0fKJ8ErFBhuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ALKactPKufS0/sr8wMH+dOjbRS1kH18to0ydUTIRAdYVAJVZ4n92ySKA/cDLEkZmWmZpIElRmOD+peomwqBJiftNrFFbSAJ7NGn6PaxqarpOorEH7qHSwCA/ck/4qvlMPL5/qilWZrRKlHkzWk+rWxEonFHx7cm+go31+Cu8tH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SxLH695X; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779260838; c=relaxed/simple;
+	bh=4UmG7P11W8AQAGwVtiZgMyYozzVFcf+K+iTyto2DY7Y=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=sNicx4et+RJK5dvWIppul5rrp4JpCXvKPpOQS/eMRzU4WDlrTpRAje3//EBe2D9pe4IDHOhbeihbboNjO4SXBjqR8KIa/Ap2meps7Uj/CzjTj9HF5p6ujYyXZAzOpUmWk3kpGw9x2piBnRQPouNAEm9Rar5SGztdC5YvJjcQU14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=B653PIVe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GnYd28z8; arc=none smtp.client-ip=103.168.172.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SxLH695X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779237931; x=1810773931;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4PsJnTUON22Goo6tlt1Y6Ak2MmT6eI/0fKJ8ErFBhuE=;
-  b=SxLH695XLI1USN5MWy8tt1LeRDAAZ6bt8upBXl6KjgGI87hjNXMbUfK6
-   sxpZkHZYkjI17LjG4N7XaFewbWCw4Lq412UHeA2bjsiK9nZOszR2VnjMS
-   PVuVMRx0DhDD4z4JdvRyrlSGIYxwr/OWOqnFlq2QLIOihT4mMAPca4pM2
-   RxMjeSkjFawGiJJC0x5g1cV6BzqtTVqoDYBUwI/E6myA7s7P2cz33ARRa
-   /33qgaX+d9J5D7DcVlLGDhVWuIGNPtUrat13qJHL185ttbLm6rewbrELT
-   80pyFfZje7jBWd5FXkrDlwCMHnff75u3cBA0xYKM4LROxs6n40tDld2WH
-   A==;
-X-CSE-ConnectionGUID: OPUZNeoHTtSoVRa1fPSxaw==
-X-CSE-MsgGUID: jBtirn4aTt63muuQ0xSHIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="79979200"
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="79979200"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 17:45:29 -0700
-X-CSE-ConnectionGUID: ru2WZgRgTHWJ/t+PIDF9fQ==
-X-CSE-MsgGUID: xBgstxrHRcuEgw8AFD+H3A==
-X-ExtLoop1: 1
-Received: from igk-lkp-server01.igk.intel.com (HELO bdf09bfdbd5f) ([10.211.93.152])
-  by fmviesa003.fm.intel.com with ESMTP; 19 May 2026 17:45:27 -0700
-Received: from kbuild by bdf09bfdbd5f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wPV3s-00000000AOD-2r4h;
-	Wed, 20 May 2026 00:45:24 +0000
-Date: Wed, 20 May 2026 02:45:02 +0200
-From: kernel test robot <lkp@intel.com>
-To: Milan Tripkovic <milant2002@gmail.com>, pjw@kernel.org,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, kees@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, alex@ghiti.fr, andy@kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Dusan.Stojkovic@rt-rk.com,
-	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
-Subject: Re: [PATCH v5 2/2] lib/string_kunit: extend benchmarks and unit test
- to memcmp()
-Message-ID: <202605200211.1iDJR97h-lkp@intel.com>
-References: <20260519140029.1190381-3-milant2002@gmail.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="B653PIVe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GnYd28z8"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.phl.internal (Postfix) with ESMTP id 45A361380030;
+	Wed, 20 May 2026 03:07:16 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Wed, 20 May 2026 03:07:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1779260836;
+	 x=1779268036; bh=Yc0JG1Xn3Wha37rB1V4lbZPt4g1XIowSANBWVbYnYYg=; b=
+	B653PIVeT6uaYy3t2lF/YnNdWPHqubwh3EDKNnOtFGEz+Fddi3+jLGVO7gIb6ZUN
+	hPyzpzE00vzBB4FUos8RIMr4sCwlZQpGssPQnPh+6czAOoLwAftWa5e1FK7RpDEN
+	rS1WcM+Dv1v71YncQWjBS35nP08DYu5Ci394FOzWskEmJ1U37vNqd1lTu+CTCQg/
+	2t+eqXZfsHVisrfl284hE1uvTVn8jJCt8YJ/NiT8bobdKukP2Rvu2stuc7BJj4dU
+	+e7h4wtogZIit97VsX07EyugTest4kUhBIiLUt7JGVFixgka05hqGjMuy1DkLN43
+	JC41BZdEsZ0FWLTi7N1XUw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779260836; x=
+	1779268036; bh=Yc0JG1Xn3Wha37rB1V4lbZPt4g1XIowSANBWVbYnYYg=; b=G
+	nYd28z87pqNi+9PdJzaxXZwhv0d9XOb673uhc0dQ12SOzgua/kwGuDzdJ3P/KXA7
+	3wKhVpJEAcXpNHTMZjPSz28yz7/3VQlDPOAQEm8pe7MlfINyfzK1hcoKLwbdpURI
+	Hk6It8Ms0Ab1wLvCqX/Z2v+VOAMREM55Dx6cyIGrz1qDwQxY6oJnQ0TQmVLsz6a7
+	x18qidBeC6dQgG9AvzVdYaWz5fGH40LJZ6ICpW87Lz8JV+55ZXVQG7ntZsHwiC8V
+	BjtLpJkbmlL+6zqwsHrCwc+QHrWJR7sdcp/88nuk4YWvM1bzHvuomb2vkFPiWzjW
+	LpQlE35CMXRAm71I7taXw==
+X-ME-Sender: <xms:oV0NahcvhCqxyShf_GQCxcWNLGoQg7kHPo8XsyEnOyzCH8smWX_kgw>
+    <xme:oV0NaqCKWROXJfx0jBWTTTa4aw69uXBky8ZqSpccGHX2CA4W7mw9j4kFLNIqCjeZm
+    zj3xBZN6UG3wcMx_NUU-6KlVXgXHDLkNGayRxRAMjlYL0TbkACmeo0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddugeefleelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepkedvheeghfehlefhvdehfffggfdukeekkeehleeuvdeijeeuteevgeejvdefueet
+    necuffhomhgrihhnpedujedrrghsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    hedtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnuhhnohdrshgrsegrnhgrlh
+    hoghdrtghomhdprhgtphhtthhopegulhgvtghhnhgvrhessggrhihlihgsrhgvrdgtohhm
+    pdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhope
+    guphgvnhhklhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopegvnhgvlhhsohhnmhho
+    ohhrvgesghhmrghilhdrtghomhdprhgtphhtthhopehnphhighhgihhnsehgmhgrihhlrd
+    gtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphht
+    thhopeguiihmledusehhuhhsthdrvgguuhdrtghnpdhrtghpthhtohepphgvthgvrhiise
+    hinhhfrhgruggvrggurdhorhhg
+X-ME-Proxy: <xmx:ol0Nah2ii_y-TksNBCT-MowRFapYyZydyI7H4QxxQH4g9XTtz8bobg>
+    <xmx:ol0NarIfG5ugU7JqBORV9sTbHmRBn4g4EaMGJ4YY0AclQPdkv_bZmw>
+    <xmx:ol0Nav-OOvCx4WVvnznx03vUOOFvzfTjft2gLXlcAKL364cJsd6-WA>
+    <xmx:ol0NaiQ9xIABZU_YgIC_PxsPzaYvVcygjExJvggA16DtUstR3GpVrg>
+    <xmx:pF0NagQ9B6Q70cBKcBExfrRFa4A-4wY7ab5nhbQQey_V9mP7bRvenXP2>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id DE0EA182007A; Wed, 20 May 2026 03:07:13 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260519140029.1190381-3-milant2002@gmail.com>
+X-ThreadId: AoFiOxpvQUXV
+Date: Wed, 20 May 2026 09:06:33 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
+ "Ethan Nelson-Moore" <enelsonmoore@gmail.com>,
+ "Wolfram Sang" <wsa+renesas@sang-engineering.com>
+Cc: "Peter Zijlstra" <peterz@infradead.org>,
+ "Dinh Nguyen" <dinguyen@kernel.org>, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, workflows@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kbuild@vger.kernel.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Daniel Lezcano" <daniel.lezcano@kernel.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Alex Shi" <alexs@kernel.org>,
+ "Yanteng Si" <si.yanteng@linux.dev>, "Dongliang Mu" <dzm91@hust.edu.cn>,
+ "Hu Haowen" <2023002089@link.tyut.edu.cn>, "Kees Cook" <kees@kernel.org>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Will Deacon" <will@kernel.org>,
+ "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Nicholas Piggin" <npiggin@gmail.com>, "Vinod Koul" <vkoul@kernel.org>,
+ "Frank Li" <Frank.Li@kernel.org>, "Dave Penkler" <dpenkler@gmail.com>,
+ "Andi Shyti" <andi.shyti@kernel.org>,
+ "Jonathan Cameron" <jic23@kernel.org>,
+ "David Lechner" <dlechner@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ "Andy Shevchenko" <andy@kernel.org>,
+ "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Andreas Oetken" <andreas.oetken@siemens-energy.com>
+Message-Id: <76af64fa-7820-4d92-8aa9-826c3bd812a1@app.fastmail.com>
+In-Reply-To: <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+ <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
+ <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+ <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+ <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+ <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+Subject: Re: [PATCH] nios2: remove the architecture
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Milan,
+On Tue, May 19, 2026, at 12:30, Simon Schuster wrote:
+> On Mon, May 18, 2026 at 05:13:58PM -0700, Ethan Nelson-Moore wrote:
+>
+> 2035 is still a rather tight timeframe for our typical support/phase-out
+> period (we would hope to get close to 2040 with the SLTS extensions),
+> which is also the reason for our targeted 'lifetime extension' for the
+> nios2 architecture for approximately 5 years, or more precisely ~2-3
+> SLTS kernels assuming the usual cadence of 2 years between SLTS versions
+> (+ some safety margin).
 
-kernel test robot noticed the following build errors:
+I think that is a reasonable target. We have a bunch of embedded
+architectures that have a similarly small user base and I expect
+that we will want to remove most of them at some point, as we did
+for seven architectures in linux-4.17.
 
-[auto build test ERROR on kees/for-next/hardening]
-[also build test ERROR on next-20260519]
-[cannot apply to linus/master v6.16-rc1]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+As long as there is a maintainer for nios2 and it's not actively
+getting in the way of a specific treewide change, I don't see any
+reason to remove this any earlier than the other ones.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Milan-Tripkovic/riscv-lib-add-memcmp-implementation/20260519-221028
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
-patch link:    https://lore.kernel.org/r/20260519140029.1190381-3-milant2002%40gmail.com
-patch subject: [PATCH v5 2/2] lib/string_kunit: extend benchmarks and unit test to memcmp()
-config: riscv-allnoconfig-bpf (https://download.01.org/0day-ci/archive/20260520/202605200211.1iDJR97h-lkp@intel.com/config)
-compiler: riscv64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260520/202605200211.1iDJR97h-lkp@intel.com/reproduce)
+Obviously at some point nios2 will have to get removed because
+of the limit to gcc-14 or older, but that should not be a problem
+for the next few LTS releases.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605200211.1iDJR97h-lkp@intel.com/
+> Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
+> unsure about the netiquette (can I simply do so by self-proclamation? At
+> least the git history seems to suggest so...).
 
-All errors (new ones prefixed by >>):
+Dinh already replied that he welcomes the help, and I also suggested
+the same thing a year ago. As the only known user that has contributed
+patches in a long time, you are obviously qualified.
 
-   arch/riscv/lib/memcmp.S: Assembler messages:
->> arch/riscv/lib/memcmp.S:58: Error: unrecognized opcode `rev8 t1,t1', extension `zbb' or `zbkb' required
->> arch/riscv/lib/memcmp.S:59: Error: unrecognized opcode `rev8 t2,t2', extension `zbb' or `zbkb' required
-   arch/riscv/lib/memcmp.S:85: Error: unrecognized opcode `rev8 t1,t1', extension `zbb' or `zbkb' required
-   arch/riscv/lib/memcmp.S:86: Error: unrecognized opcode `rev8 t2,t2', extension `zbb' or `zbkb' required
+Sending a patch for the MAINTAINERS file to Dinh is the first step,
+once he has sent that upstream, you can (optionally) apply for
+kernel.org account that would let you host a git tree on kernel.org
+or have a tree that you both have access to.
 
-
-vim +58 arch/riscv/lib/memcmp.S
-
-    12	
-    13	/* int memcmp(const void *cs, const void *ct, size_t n) */
-    14	SYM_FUNC_START(memcmp)
-    15	/*
-    16	 * Parameters
-    17	 *	a0 - Pointer to first memory block (cs), also return value
-    18	 *	a1 - Pointer to second memory block (ct)
-    19	 *	a2 - Number of bytes to compare (n), decremented during loop
-    20	 *
-    21	 * Returns
-    22	 *	a0 - 0 if equal, positive if cs > ct, negative if cs < ct
-    23	 *
-    24	 * Clobbers
-    25	 *	t0, t1, t2, t3, t4
-    26	 */
-    27		add	t3, a0, a2
-    28		or	t0, a0, a1
-    29		andi	t0, t0, (SZREG - 1)
-    30		bnez	t0, 5f
-    31	
-    32		addi	t4, t3, -SZREG
-    33		bltu	t4, a0, 7f
-    34	
-    35	1:
-    36		REG_L	t1, 0(a0)
-    37		REG_L	t2, 0(a1)
-    38		bne	t1, t2, 2f
-    39		addi	a0, a0, SZREG
-    40		addi	a1, a1, SZREG
-    41		bleu	a0, t4, 1b
-    42	
-    43	#if defined(CONFIG_TOOLCHAIN_HAS_ZBB)
-    44	7:
-    45		__ALTERNATIVE_CFG("j 5f", "nop", 0, RISCV_ISA_EXT_ZBB,
-    46				  IS_ENABLED(CONFIG_RISCV_ISA_ZBB))
-    47	
-    48		beq	a0, t3, 4f
-    49		REG_L	t1, 0(a0)
-    50		REG_L	t2, 0(a1)
-    51	
-    52		sub	t0, t3, a0
-    53		li	t4, SZREG
-    54		sub	t0, t4, t0
-    55		slli	t0, t0, 3
-    56	
-    57	#ifndef CONFIG_CPU_BIG_ENDIAN
-  > 58		rev8	t1, t1
-  > 59		rev8	t2, t2
-    60	#endif
-    61		srl	t1, t1, t0
-    62		srl	t2, t2, t0
-    63	
-    64		bne	t1, t2, 8f
-    65		li	a0, 0
-    66		ret
-    67	#else
-    68		j	5f
-    69	#endif
-    70	5:
-    71		beq	a0, t3, 4f
-    72	6:
-    73		lbu	t1, 0(a0)
-    74		lbu	t2, 0(a1)
-    75		bne	t1, t2, 3f
-    76		addi	a0, a0, 1
-    77		addi	a1, a1, 1
-    78		bne	a0, t3, 6b
-    79	
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+     Arnd
