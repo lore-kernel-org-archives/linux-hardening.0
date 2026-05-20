@@ -1,250 +1,268 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0540D3DF001
-	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 12:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5462E30CDB6
+	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 12:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779280809; cv=none; b=V66+VPQpRwJO/TL9duczeetOMoEJ2YbZyF+RjZJhZTldKsMzevB1so7MKNTYLQC/Grk/SnH6KHQ3rZaggjH6sv3XlkTP3vq38fkBB8oGtBby0dacGVbOC3JsyJ6SD8Cd7Q5gtO/Vepctmfec+Ah9sIvf12vSqauyQR2WKQlJIPk=
+	t=1779281934; cv=none; b=kcK8GmmA2I9P2HqREBdW0/iDHiR+XGFd/n7Goq6bYUqQ8swL9YoGfRdocvKskpJh8skC8thkQrLJyp80CS9H+YS7hPw1nkAuHkEy1QBfARLbh+lwTpUjYki9GiNYciVdIATaFhqgw9mLTAHdkgRz+cyM1kudL7RSAkVElmhoAYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779280809; c=relaxed/simple;
-	bh=riO1ZNMnJ54rVBK8RID6oN0pWaUmns533VE2TlxnP8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ndIp/92M9+gCLrG0d5M1oXHRDdu5aTFaJGqlmlalcT/xIZuryKmKivdZNNTQX6bpO3lU3ZsYo7bF5YbqSy/7vbNwALeoh/wSf4uBGNfReQ2CF83cX2N56YTUa4cccUOAeFRsIK2iGvgk3waU7vq8aV4Mramg2xWcdCm6oAxkGH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XlWI1n9f; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1779281934; c=relaxed/simple;
+	bh=dpkJh4eWo0NNOQOst2hZvRoTlNGuJSATaj2LFfZj978=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lwoCdQ5AO5oMwEIQViE0b7lv15ofBSnnNS+QvhpYrKgGuLjImFySHBpS5YL5D8H2Y2qydsXH3vHdw1JAX5ItIr+dsgCD5yWpyycV6WrXiAsM4JtgTqaOpVqjNDj0xFv7fEK0f6PxxJfJanjQm+PicttZW7Lhhk0S+vsoM8/cjFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h1G/xUwA; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlWI1n9f"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43eb05b1875so2667613f8f.3
-        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 05:40:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1G/xUwA"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-449de065cb3so4474521f8f.2
+        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 05:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779280806; x=1779885606; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779281931; x=1779886731; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZF9TELI0fOJNnQQ0E3LX4ebM27p0Qx0XyBTx0DYfCok=;
-        b=XlWI1n9fatfZ3M0GiBap5c0WoV8VQsjet5Hb0ozB6cMB7oE2HrlB/q0XDi29KtUc3t
-         QBnoajYpvcCGw4OTTKwECLBRFIikmNtMGEhBbXjjCW1RHUXu5NzRKI65a3Plzw5MaxCy
-         VtLoXg5ORiYT0rm7byYx6E1vIM5/M1zSnm40ff5CV2lrsFcmx2r2p8Q/oi+oKXlJjMos
-         XJH7wRE6KGBC5AoQQ9oofRS+5zpFySwSXi9farG9Rv7iImIZZJyAwfxgTzrlCOKxnspT
-         8IYpWKJCHfLZv1/M3E/w+uJoXfdorjKrKS53JSa40aj3Lwvm3dlWiqtoj4lT/eZcNZS/
-         zddA==
+        bh=qGggALgHzCoPtLdgY/KCVV2cuvNqQvvmKNTA2nt3QnI=;
+        b=h1G/xUwAcQTGBt8lP9jW8tA8x0OE1cDdYxD9SBo3EqroOQeFA7ojwHg0oVzbktvs4c
+         MB88sodmdKj2Wh8llBPsr6ngoauGCSEznrwDEiFHZJhY8m61E09zYX9NHjLJ7jb+D+bT
+         +1YElgY/cNzyVBq7DnKBotcQkoAlvUZC/rYSfzGLlsfIV6Il6ErfQPloMOr2IPKjQaM6
+         vw0HOr1C6LtItLUyAp4c66OxCtJz0W6c2BdANGWBOHUnkwKLEkcifGRMLPfYtki0ZXzf
+         N/jYeFq1anmoWsdHfqesVqnSH67q+fXJlWPyn4oo7O3wQuzV+nWQDr3KcNLbQgIKuaJ4
+         ESAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779280806; x=1779885606;
+        d=1e100.net; s=20251104; t=1779281931; x=1779886731;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ZF9TELI0fOJNnQQ0E3LX4ebM27p0Qx0XyBTx0DYfCok=;
-        b=VxAWaQmenpo/fAw6+MsFWDFZR+WAvbxejF9Fiiuex2XwMoOeyWa1HWpj27o4616gQo
-         W4nWOXuG8aZVdYL6AaIbNQJriiBUv5u+DYAmT0orUHS3JNw7voNsmtIM3bTAOJ6zXG3t
-         7jnAEwFLrVYRbPWFrXaShmPv0tBMXeavn/8C11A967gzADyCL6KHTZ/BuouX53CO3MmO
-         Reqq5ff8pbVKKWZYXsk6iq6u0fyVOYU/Ex5N3uM+q1u6vH0ln1qPrxhIuu6qXnUJeOnW
-         LtkUrRk/LXsw+2nCSo4kVFCxfn6nedQMjmCRhxX1VVVHHfJbFNqSY9I35lBcYl6Ji6i8
-         VEwQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+LZu1snOmBHVfJMVzycNo059GbtHrtohxXrPI3rUCa6O6YK6JT/t9G3CU/l4s+olTdso6yf0ZzyGqiT81u6X0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDpLQntPyxxAXbocsy9yvn6FtDL2aFW1hOWk4meXMZW7d0H9pm
-	0dkn0P5P/C+Q7gp6Opts/T+WOL9hFD24CsQjczTubTA7dFxQzpX30Za1
-X-Gm-Gg: Acq92OHnNBlZvpXQdpsF0WqJdbmqbli6xvCB9LHGUUragoHgWH2onuG4nf0DvK477fS
-	VuKiUUnFwSO82y3tJ2yEQEdTu4VXfLEjMxdvQAc8Mrp+tSGnkxjzl9IjHju2RDaBAqegHKbx5vc
-	oJzDbMeKGQUaa1FsI9k9NtMNYZsKRXeyX5uZkZNQTuzkOzqGe7W1U7BjujhXfN+5wjqM0P++fok
-	FKLbG9XMpFOjYjn/pa1e9KCdy2FyE7rURr9URt79Dc4w+qAsMvzzJZRiniVDh1oe+yfuC+KotDW
-	GFt3C6Eg2BZ63rp6haHoz1n3IMRgS2Z8G/uKicxgH+zyHDmSgQmPNQEXkYR5ExZIUwMeRBJuPDb
-	x9nXNpRDlt/0rP6qPAPcbHuNGjUccaWXfljixt3bDA7qNji6sLl9Yy5zFB0z0BQ5MygfbjBbZUb
-	Pwvel/L3Y2yzT/xn771rsqEN5F6Pj13bYMXdfKi99DI7DbIafXjexM
-X-Received: by 2002:a05:6000:4007:b0:456:ba09:3e64 with SMTP id ffacd0b85a97d-45e5c5b3669mr37757602f8f.1.1779280806221;
-        Wed, 20 May 2026 05:40:06 -0700 (PDT)
-Received: from RTRKW671-LIN.domain.local ([89.216.37.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ec3acf7sm54460252f8f.12.2026.05.20.05.40.05
+        bh=qGggALgHzCoPtLdgY/KCVV2cuvNqQvvmKNTA2nt3QnI=;
+        b=F8KUkBWYHmjL9PJ5T2SpkpQD1SoaCOx+fp9nwiOX9SldY+zET1w3KVVqY+ycEXonEY
+         R85j6aVVdkshmxroQHsqU6KbkeA56HICmyzPLwOW66pFLl4AuEXbYf3qxjrMYp8sqXDL
+         VQTirdRCIV9Sy+ee9l9w7aIDK+wLtbUmKPZi9wxjSIyFgRFGQp2p/8lnVYZ9DvR8G6qB
+         xL2JlAoC3nK8S3Z1zrqibq2JSiSC0TCp6VNBI7Ll9mWrSr4L/BIy+PSuc6v8RzW+DWQV
+         WTdL60MCyExjn2OhYa9w5YudP552zdArL5slAMuOxNH6LR1/BrcHtpN8/Ua8D4siYjra
+         H4AA==
+X-Forwarded-Encrypted: i=1; AFNElJ/wauvs4FJppQSzL9UaZYPyWd6VTNN686Ns8HWdULSp+ScaYqFLQxVC8qL7mkFBfpgPgzGHes66cW4nL7Noebg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuEx95XubPDdIJ0lxc+G4BGwwxh2H9PHUNvuM34n9lrfnyW6I2
+	BLsqWsBqigbf15I9jhXgibkoG7DN0gCvKDbnvlbIRbRIbo90yYq/Ctuv
+X-Gm-Gg: Acq92OFkvgQdwyMPvOVaWkHqFyGulgjfX5BKrAFqDT3XYQRlLaMb91yYgUCTv81v4sF
+	h30yMPP/PCZqOFxKsbAu/GTuOPZasS5NSbFY5WG/rw+dR+5wwG56et125Xl+VYBC2dOv3fmQQPP
+	uxL/YJv45H/J3HiRoT4yyqpZvy4Ms2kb0y7eOZ62rDTErtHVo812ilcz45tdf8viRkBnDqPf9+K
+	TeWstkgvpEd5BGjGnLM4j+WJkkn/SIAY+6DH1gWBg74vUDLH9NTv6Lo0LC+Z6QAWTt+cUpgKudr
+	fG+wPMlEj0MC2L5kwfn4jZNBPYeIc2BIYceIFgZem+wdlTS3DpfzrfW0DpBeUXCWiKJ3rR4LIR4
+	4ksCvRLAleEo847O3epArWdi+KHbzlBXR8t+aiZ2932br0mAfqLmz4fEsud66SilTptXWEXu8F5
+	Q6+CzpvJO7xmiOxkwcyuSdBuu+M1yeqjzTCdWEk5g05PdmaVlRjGA2X4C/vp31p8Dp
+X-Received: by 2002:a05:6000:4011:b0:45d:41e0:467b with SMTP id ffacd0b85a97d-45e5c57d3b5mr38701966f8f.3.1779281930642;
+        Wed, 20 May 2026 05:58:50 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ec39ff1sm58513115f8f.10.2026.05.20.05.58.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 05:40:05 -0700 (PDT)
-From: Milan Tripkovic <milant2002@gmail.com>
-To: pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	kees@kernel.org
-Cc: alex@ghiti.fr,
-	andy@kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Dusan.Stojkovic@rt-rk.com,
-	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
-Subject: [PATCH v6 2/2] lib/string_kunit: extend benchmarks and unit test to memcmp()
-Date: Wed, 20 May 2026 14:39:54 +0200
-Message-ID: <20260520123954.379630-3-milant2002@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260520123954.379630-1-milant2002@gmail.com>
-References: <20260520123954.379630-1-milant2002@gmail.com>
+        Wed, 20 May 2026 05:58:50 -0700 (PDT)
+Date: Wed, 20 May 2026 13:58:48 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Michael Bommarito <michael.bommarito@gmail.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>, Nilesh Javali
+ <njavali@marvell.com>, Himanshu Madhani <himanshu.madhani@oracle.com>,
+ Shyam Sundar <ssundar@marvell.com>, James Smart <james.smart@broadcom.com>,
+ Hannes Reinecke <hare@kernel.org>, John Meneghini <jmeneghi@redhat.com>,
+ Bryan Gurney <bgurney@redhat.com>, Justin Tee <justin.tee@broadcom.com>,
+ Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, Kees Cook
+ <kees@kernel.org>, linux-scsi@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3] scsi: scsi_transport_fc: widen FPIN pname walker
+ counter to u32
+Message-ID: <20260520135848.6df9f7d2@pumpkin>
+In-Reply-To: <20260519190615.2761667-1-michael.bommarito@gmail.com>
+References: <20260518143706.2808177-1-michael.bommarito@gmail.com>
+	<20260519190615.2761667-1-michael.bommarito@gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
+On Tue, 19 May 2026 15:06:15 -0400
+Michael Bommarito <michael.bommarito@gmail.com> wrote:
 
-Extend the string benchmarking suite to include memcmp().
-Extend the string unit test to include memcmp().
+> An adjacent Fibre Channel fabric actor that can deliver an FPIN ELS
+> frame to an lpfc or qla2xxx Linux initiator can trigger a non-return
+> in the generic FC transport. This is not a local userspace or IP
+> network path; the attacker must be able to inject fabric traffic, for
+> example as a compromised switch or fabric controller, or as a same-zone
+> N_Port on a fabric that permits source spoofing.
+> 
+> The Link-Integrity and Peer-Congestion FPIN walkers used a u8 loop
+> counter against the 32-bit on-wire pname_count field, and did not bound
+> pname_count by the descriptor body already validated by the TLV walker.
+> A pname_count of 256 therefore wraps the counter and keeps the loop
+> condition true indefinitely.
+> 
+> Factor the shared pname_list[] walk into one helper, widen the counter
+> to u32, and clamp pname_count against the entries that fit in the
+> descriptor body before iterating.
+> 
+> Fixes: 3dcfe0de5a97 ("scsi: fc: Parse FPIN packets and update statistics")
+> Cc: stable@vger.kernel.org
+> Assisted-by: Claude:claude-opus-4-7
+> Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
+> ---
+> Changes in v3:
+> - State the fabric-adjacent threat model explicitly in the commit
+>   message and clarify that this is not local userspace or IP-network
+>   reachable.
+> - Use min_t(u32, ...) for the pname_count clamp, as Christoph suggested.
+> - Use FC_TLV_DESC_LENGTH_FROM_SZ() instead of open-coding the descriptor
+>   body length calculation.
+> - Factor the duplicate LI and peer-congestion pname walker into a common
+>   helper while preserving the LI-only host-stat update.
+> 
+> Changes in v2:
+> - Drop the redundant cover letter shipped with v1.  A single-patch send
+>   does not need one, and the v1 cover carried stale draft markers.
+> 
+>  drivers/scsi/scsi_transport_fc.c | 77 +++++++++++++++++---------------
+>  1 file changed, 41 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/scsi/scsi_transport_fc.c b/drivers/scsi/scsi_transport_fc.c
+> index dce95e361daf0..0684d8c69c3c6 100644
+> --- a/drivers/scsi/scsi_transport_fc.c
+> +++ b/drivers/scsi/scsi_transport_fc.c
+> @@ -737,6 +737,37 @@ fc_cn_stats_update(u16 event_type, struct fc_fpin_stats *stats)
+>  	}
+>  }
+>  
+> +static void
+> +fc_fpin_pname_stats_update(struct Scsi_Host *shost,
+> +			   struct fc_rport *attach_rport, u16 event_type,
+> +			   u32 desc_len, u32 fixed_len, u32 pname_count,
+> +			   __be64 *pname_list,
+> +			   void (*stats_update)(u16 event_type,
+> +						struct fc_fpin_stats *stats))
+> +{
+> +	u32 i, max_count;
+> +	struct fc_rport *rport;
+> +	u64 wwpn;
+> +
+> +	if (desc_len < fixed_len)
+> +		max_count = 0;
+> +	else
+> +		max_count = (desc_len - fixed_len) / sizeof(pname_list[0]);
+> +	pname_count = min_t(u32, pname_count, max_count);
 
-Signed-off-by: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
----
-v6 changes:
-    - Fixed build errors kernel test robot noticed. 
-    - Link to v5: https://lore.kernel.org/all/20260519140029.1190381-1-milant2002@gmail.com/
-    
-v5 changes:
-    - Removed redundant warm-up from test case
-    - Link to v4: https://lore.kernel.org/all/20260518131407.1026049-2-milant2002@gmail.com/
+No min_t() please, everything is unsigned so min() in fine.
+The above might even more readable without the extra variable:
+	if (desc_len < fixed_len)
+		pname_count = min(pname_count, (desc_len - fixed_len) / sizeof(pname_list[0]));
 
-v4 changes:
-    - Fixed build error: call to undeclared function 'STRING_BENCH'
-    - Link to v3: https://lore.kernel.org/all/20260515141019.1234037-1-milant2002@gmail.com/
+If you think the line is too long s/pname_count/count/g
 
-v3 changes:
-    - Split memcmp benchmark into wrapper (string_bench_memcmp) and worker
-      function (do_string_bench_memcmp).
-    - Removed all C99 mixed declarations; moved all variable declarations
-      to the top of each function.
-    - Converted len, iterations and loop counters in the benchmark to u64
-      to avoid implicit casts.
-    - Cleaned up spacing, indentation and minor style issues.
-    - Added #if defined(CONFIG_RISCV_ISA_ZBB)... in  memcmp.S
-    - Link to v2: https://lore.kernel.org/all/20260514121359.931999-1-milant2002@gmail.com/
+-- David
 
-v2 changes:
-    - Fixed KUnit build failures for Clang and non-benchmark configs.
-    - Link to v1: https://lore.kernel.org/all/20260512141007.1193033-1-milant2002@gmail.com/
-    
- lib/tests/string_kunit.c | 106 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 106 insertions(+)
-
-diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 0819ace5b..d395627f7 100644
---- a/lib/tests/string_kunit.c
-+++ b/lib/tests/string_kunit.c
-@@ -881,6 +881,110 @@ static void string_bench_strrchr(struct kunit *test)
- 	STRING_BENCH_BUF(test, buf, len, strrchr, buf, '\0');
- }
- 
-+static void string_test_memcmp(struct kunit *test)
-+{
-+	const unsigned int max_offset = 16;
-+	const unsigned int max_len = 32;
-+	const unsigned int buf_size = max_offset + max_len + 32;
-+	u8 *buf1, *buf2;
-+	unsigned int i, j, len, k;
-+	int res;
-+
-+	buf1 = kunit_kzalloc(test, buf_size, GFP_KERNEL);
-+	buf2 = kunit_kzalloc(test, buf_size, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf1);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf2);
-+
-+	for (i = 0; i < max_offset; i++) {
-+		for (j = 0; j < max_offset; j++) {
-+			for (len = 0; len <= max_len; len++) {
-+				memset(buf1, 'A', buf_size);
-+				memset(buf2, 'A', buf_size);
-+				KUNIT_EXPECT_EQ_MSG(test, memcmp(buf1 + i, buf2 + j, len), 0,
-+						    "Should be equal: i:%u j:%u len:%u", i, j, len);
-+				for (k = 0; k < len; k++) {
-+					memset(buf1, 'A', buf_size);
-+					memset(buf2, 'A', buf_size);
-+					buf2[j + k] = 'B';
-+					res = memcmp(buf1 + i, buf2 + j, len);
-+					KUNIT_EXPECT_NE_MSG(test, res, 0,
-+							    "Should detect difference at k:%u (i:%u j:%u len:%u)",
-+						k, i, j, len);
-+					if (buf1[i + k] < buf2[j + k])
-+						KUNIT_EXPECT_LT(test, res, 0);
-+					else
-+						KUNIT_EXPECT_GT(test, res, 0);
-+				}
-+			}
-+		}
-+	}
-+}
-+
-+#ifndef STRING_BENCH
-+#define STRING_BENCH(...) 0
-+#endif
-+
-+static void do_string_bench_memcmp(struct kunit *test)
-+{
-+	char *buf1 = NULL;
-+	char *buf2 = NULL;
-+	const u64 lengths[] = { 1, 7, 8, 16, 32, 64, 128, 512, 1024, 4096};
-+	const int offsets[] = { 0, 1, 3, 7};
-+	const u64 max_len = 4096 + 64;
-+	unsigned int o, i;
-+	unsigned int off;
-+	u64 len;
-+	u64 iterations;
-+	u64 elapsed;
-+	u64 ns_per_call;
-+	u64 mbps;
-+
-+	buf1 = vmalloc(max_len);
-+	buf2 = vmalloc(max_len);
-+
-+	if (!buf1 || !buf2) {
-+		vfree(buf1);
-+		vfree(buf2);
-+		kunit_err(test, "vmalloc failed\n");
-+		return;
-+	}
-+
-+	memset(buf1, 'A', max_len);
-+	memset(buf2, 'A', max_len);
-+
-+	for (o = 0; o < ARRAY_SIZE(offsets); o++) {
-+		off = offsets[o];
-+
-+		for (i = 0; i < ARRAY_SIZE(lengths); i++) {
-+			len = lengths[i];
-+			iterations = (len < 512) ? 100000ULL : 10000ULL;
-+			elapsed = STRING_BENCH(iterations, memcmp, buf1, buf2 + off, len);
-+			ns_per_call = div_u64(elapsed, iterations);
-+			mbps = len ? div_u64(iterations * len * (NSEC_PER_SEC / MEGA), elapsed) : 0;
-+
-+			if (off == 0) {
-+				kunit_info(test, "bench_memcmp_aligned: len=%-4llu: %llu MB/s (%llu ns/call)\n",
-+					   len, mbps, ns_per_call);
-+			} else {
-+				kunit_info(test, "bench_memcmp_unaligned(off=%u): len=%-4llu: %llu MB/s (%llu ns/call)\n",
-+					   off, len, mbps, ns_per_call);
-+			}
-+		}
-+	}
-+
-+	vfree(buf1);
-+	vfree(buf2);
-+}
-+
-+static void string_bench_memcmp(struct kunit *test)
-+{
-+	if (!IS_ENABLED(CONFIG_STRING_KUNIT_BENCH)) {
-+		kunit_skip(test, "CONFIG_STRING_KUNIT_BENCH not enabled");
-+		return;
-+	}
-+	do_string_bench_memcmp(test);
-+}
-+
- static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_test_memset16),
- 	KUNIT_CASE(string_test_memset32),
-@@ -910,6 +1014,8 @@ static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_bench_strnlen),
- 	KUNIT_CASE(string_bench_strchr),
- 	KUNIT_CASE(string_bench_strrchr),
-+	KUNIT_CASE(string_test_memcmp),
-+	KUNIT_CASE_SLOW(string_bench_memcmp),
- 	{}
- };
- 
--- 
-2.43.0
+> +
+> +	for (i = 0; i < pname_count; i++) {
+> +		wwpn = be64_to_cpu(pname_list[i]);
+> +		rport = fc_find_rport_by_wwpn(shost, wwpn);
+> +		if (rport &&
+> +		    (rport->roles & FC_PORT_ROLE_FCP_TARGET ||
+> +		     rport->roles & FC_PORT_ROLE_NVME_TARGET)) {
+> +			if (rport == attach_rport)
+> +				continue;
+> +			stats_update(event_type, &rport->fpin_stats);
+> +		}
+> +	}
+> +}
+> +
+>  /*
+>   * fc_fpin_li_stats_update - routine to update Link Integrity
+>   * event statistics.
+> @@ -747,13 +778,11 @@ fc_cn_stats_update(u16 event_type, struct fc_fpin_stats *stats)
+>  static void
+>  fc_fpin_li_stats_update(struct Scsi_Host *shost, struct fc_tlv_desc *tlv)
+>  {
+> -	u8 i;
+>  	struct fc_rport *rport = NULL;
+>  	struct fc_rport *attach_rport = NULL;
+>  	struct fc_host_attrs *fc_host = shost_to_fc_host(shost);
+>  	struct fc_fn_li_desc *li_desc = (struct fc_fn_li_desc *)tlv;
+>  	u16 event_type = be16_to_cpu(li_desc->event_type);
+> -	u64 wwpn;
+>  
+>  	rport = fc_find_rport_by_wwpn(shost,
+>  				      be64_to_cpu(li_desc->attached_wwpn));
+> @@ -764,22 +793,11 @@ fc_fpin_li_stats_update(struct Scsi_Host *shost, struct fc_tlv_desc *tlv)
+>  		fc_li_stats_update(event_type, &attach_rport->fpin_stats);
+>  	}
+>  
+> -	if (be32_to_cpu(li_desc->pname_count) > 0) {
+> -		for (i = 0;
+> -		    i < be32_to_cpu(li_desc->pname_count);
+> -		    i++) {
+> -			wwpn = be64_to_cpu(li_desc->pname_list[i]);
+> -			rport = fc_find_rport_by_wwpn(shost, wwpn);
+> -			if (rport &&
+> -			    (rport->roles & FC_PORT_ROLE_FCP_TARGET ||
+> -			    rport->roles & FC_PORT_ROLE_NVME_TARGET)) {
+> -				if (rport == attach_rport)
+> -					continue;
+> -				fc_li_stats_update(event_type,
+> -						   &rport->fpin_stats);
+> -			}
+> -		}
+> -	}
+> +	fc_fpin_pname_stats_update(shost, attach_rport, event_type,
+> +				   be32_to_cpu(li_desc->desc_len),
+> +				   FC_TLV_DESC_LENGTH_FROM_SZ(*li_desc),
+> +				   be32_to_cpu(li_desc->pname_count),
+> +				   li_desc->pname_list, fc_li_stats_update);
+>  
+>  	if (fc_host->port_name == be64_to_cpu(li_desc->attached_wwpn))
+>  		fc_li_stats_update(event_type, &fc_host->fpin_stats);
+> @@ -827,13 +845,11 @@ static void
+>  fc_fpin_peer_congn_stats_update(struct Scsi_Host *shost,
+>  				struct fc_tlv_desc *tlv)
+>  {
+> -	u8 i;
+>  	struct fc_rport *rport = NULL;
+>  	struct fc_rport *attach_rport = NULL;
+>  	struct fc_fn_peer_congn_desc *pc_desc =
+>  	    (struct fc_fn_peer_congn_desc *)tlv;
+>  	u16 event_type = be16_to_cpu(pc_desc->event_type);
+> -	u64 wwpn;
+>  
+>  	rport = fc_find_rport_by_wwpn(shost,
+>  				      be64_to_cpu(pc_desc->attached_wwpn));
+> @@ -844,22 +860,11 @@ fc_fpin_peer_congn_stats_update(struct Scsi_Host *shost,
+>  		fc_cn_stats_update(event_type, &attach_rport->fpin_stats);
+>  	}
+>  
+> -	if (be32_to_cpu(pc_desc->pname_count) > 0) {
+> -		for (i = 0;
+> -		    i < be32_to_cpu(pc_desc->pname_count);
+> -		    i++) {
+> -			wwpn = be64_to_cpu(pc_desc->pname_list[i]);
+> -			rport = fc_find_rport_by_wwpn(shost, wwpn);
+> -			if (rport &&
+> -			    (rport->roles & FC_PORT_ROLE_FCP_TARGET ||
+> -			     rport->roles & FC_PORT_ROLE_NVME_TARGET)) {
+> -				if (rport == attach_rport)
+> -					continue;
+> -				fc_cn_stats_update(event_type,
+> -						   &rport->fpin_stats);
+> -			}
+> -		}
+> -	}
+> +	fc_fpin_pname_stats_update(shost, attach_rport, event_type,
+> +				   be32_to_cpu(pc_desc->desc_len),
+> +				   FC_TLV_DESC_LENGTH_FROM_SZ(*pc_desc),
+> +				   be32_to_cpu(pc_desc->pname_count),
+> +				   pc_desc->pname_list, fc_cn_stats_update);
+>  }
+>  
+>  /*
 
