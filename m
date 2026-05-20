@@ -1,172 +1,228 @@
-Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4244E34F48F;
-	Wed, 20 May 2026 07:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492A530F934
+	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 07:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779260838; cv=none; b=TIlg7HfUyxC/70SZ9cp9lQyxmA0dtk43pfGLApyJL14loTKSHMfDIJJIw0zKrElg6WhmUwVB8BO07lAbGutoPVFPphUk5Q9WPWWdp7FrFLaSDxy35Nbr5RBOr/Ys6kVs4KSzTvvenfOA0+HideBAW7cV5iz//0a6RrIHSna+mLk=
+	t=1779262887; cv=none; b=Qy2UJ+PusF33LnaOoKH2DlqwhJIsMs9v9FjefqbgCm6plewl35HCNo4VcgwDos4XsHlBSWE/dPAnPnksZ6p6S5c3pvTo7aLhspg6m67KW5uZlq6IZnEDusE6+K4Qa/rZSBENdOXVK7Q8v/UFMqunMpAg3qrVk/MrtadiGLjhD90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779260838; c=relaxed/simple;
-	bh=4UmG7P11W8AQAGwVtiZgMyYozzVFcf+K+iTyto2DY7Y=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=sNicx4et+RJK5dvWIppul5rrp4JpCXvKPpOQS/eMRzU4WDlrTpRAje3//EBe2D9pe4IDHOhbeihbboNjO4SXBjqR8KIa/Ap2meps7Uj/CzjTj9HF5p6ujYyXZAzOpUmWk3kpGw9x2piBnRQPouNAEm9Rar5SGztdC5YvJjcQU14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=B653PIVe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GnYd28z8; arc=none smtp.client-ip=103.168.172.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="B653PIVe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GnYd28z8"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.phl.internal (Postfix) with ESMTP id 45A361380030;
-	Wed, 20 May 2026 03:07:16 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Wed, 20 May 2026 03:07:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1779260836;
-	 x=1779268036; bh=Yc0JG1Xn3Wha37rB1V4lbZPt4g1XIowSANBWVbYnYYg=; b=
-	B653PIVeT6uaYy3t2lF/YnNdWPHqubwh3EDKNnOtFGEz+Fddi3+jLGVO7gIb6ZUN
-	hPyzpzE00vzBB4FUos8RIMr4sCwlZQpGssPQnPh+6czAOoLwAftWa5e1FK7RpDEN
-	rS1WcM+Dv1v71YncQWjBS35nP08DYu5Ci394FOzWskEmJ1U37vNqd1lTu+CTCQg/
-	2t+eqXZfsHVisrfl284hE1uvTVn8jJCt8YJ/NiT8bobdKukP2Rvu2stuc7BJj4dU
-	+e7h4wtogZIit97VsX07EyugTest4kUhBIiLUt7JGVFixgka05hqGjMuy1DkLN43
-	JC41BZdEsZ0FWLTi7N1XUw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779260836; x=
-	1779268036; bh=Yc0JG1Xn3Wha37rB1V4lbZPt4g1XIowSANBWVbYnYYg=; b=G
-	nYd28z87pqNi+9PdJzaxXZwhv0d9XOb673uhc0dQ12SOzgua/kwGuDzdJ3P/KXA7
-	3wKhVpJEAcXpNHTMZjPSz28yz7/3VQlDPOAQEm8pe7MlfINyfzK1hcoKLwbdpURI
-	Hk6It8Ms0Ab1wLvCqX/Z2v+VOAMREM55Dx6cyIGrz1qDwQxY6oJnQ0TQmVLsz6a7
-	x18qidBeC6dQgG9AvzVdYaWz5fGH40LJZ6ICpW87Lz8JV+55ZXVQG7ntZsHwiC8V
-	BjtLpJkbmlL+6zqwsHrCwc+QHrWJR7sdcp/88nuk4YWvM1bzHvuomb2vkFPiWzjW
-	LpQlE35CMXRAm71I7taXw==
-X-ME-Sender: <xms:oV0NahcvhCqxyShf_GQCxcWNLGoQg7kHPo8XsyEnOyzCH8smWX_kgw>
-    <xme:oV0NaqCKWROXJfx0jBWTTTa4aw69uXBky8ZqSpccGHX2CA4W7mw9j4kFLNIqCjeZm
-    zj3xBZN6UG3wcMx_NUU-6KlVXgXHDLkNGayRxRAMjlYL0TbkACmeo0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddugeefleelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepkedvheeghfehlefhvdehfffggfdukeekkeehleeuvdeijeeuteevgeejvdefueet
-    necuffhomhgrihhnpedujedrrghsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    hedtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnuhhnohdrshgrsegrnhgrlh
-    hoghdrtghomhdprhgtphhtthhopegulhgvtghhnhgvrhessggrhihlihgsrhgvrdgtohhm
-    pdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhope
-    guphgvnhhklhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopegvnhgvlhhsohhnmhho
-    ohhrvgesghhmrghilhdrtghomhdprhgtphhtthhopehnphhighhgihhnsehgmhgrihhlrd
-    gtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphht
-    thhopeguiihmledusehhuhhsthdrvgguuhdrtghnpdhrtghpthhtohepphgvthgvrhiise
-    hinhhfrhgruggvrggurdhorhhg
-X-ME-Proxy: <xmx:ol0Nah2ii_y-TksNBCT-MowRFapYyZydyI7H4QxxQH4g9XTtz8bobg>
-    <xmx:ol0NarIfG5ugU7JqBORV9sTbHmRBn4g4EaMGJ4YY0AclQPdkv_bZmw>
-    <xmx:ol0Nav-OOvCx4WVvnznx03vUOOFvzfTjft2gLXlcAKL364cJsd6-WA>
-    <xmx:ol0NaiQ9xIABZU_YgIC_PxsPzaYvVcygjExJvggA16DtUstR3GpVrg>
-    <xmx:pF0NagQ9B6Q70cBKcBExfrRFa4A-4wY7ab5nhbQQey_V9mP7bRvenXP2>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DE0EA182007A; Wed, 20 May 2026 03:07:13 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1779262887; c=relaxed/simple;
+	bh=GGC3bFBP/3ByVZ/MY3UquCkN0tW0C4a1P7AtWMjyi9A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CNnKg+6mvtjCYtyBdcci08iulUl//gg6yJuk3sp2l8oSaBLOTCdM2HMO0E2DpX1OzGgKnAMUUEMXmZjfuZWNHhe/FF6fBWzq7MzAu8I/Z3nMXcXSBh5OvvyLTe9XI7UBofuDvsAotGDVmFD/n/Dufx/rQaRHBv1vl86vgyiPzco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-95cd9a5f24cso1094761241.2
+        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 00:41:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779262884; x=1779867684;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UZhaROgHXzu5fMLFg999WSqpULkYuqJChVRCQj6qLHE=;
+        b=kxSPIMz/0CS7cI3lngO72PB1BfknBKMJhP+7s/u+dhAqhuUlQSadk140pVUDUYWCmY
+         HXTznY29r4vCMfjo7mGSMx+NgVLF+vkcBY5vOD2W381DQAigdJpLEQJEkALJGwZVej8L
+         kXZoxuKwmWjK3VRvs33/AsMHRrpD/f7cYTcxzj6NbRK7eaMbglidMaAUbS0MB2uWb/p9
+         ZFeawN4hXJO1d5HF+aX9upN9tsnPZ2dnZZLH9J2hSBZNeku5SUK2Jv7aPCPyEDMe8653
+         ff0qA5fonXyXKCp6+cZx/VOsg8nSyfQIKGOzNtfCkkk0pv8hl/oUObvCoZ8Zx8mbscYn
+         7/Vg==
+X-Forwarded-Encrypted: i=1; AFNElJ9YUbbSNrY6GJWiwTcF4uSANIYxavVpryA6QWrgwSsb9ELTPWkYcxNy5+zu85EqpneqoBWkQxBOjiZH1g3R5Jg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGuoGzOLaG27lJjC88ujbC9X1soFd2yQMDYNM9DOYu7iLrWmTv
+	EbCOgHNO5bbpZCRBCjXkWYhmllcaQ8veNBpR14E0XHKeVWEezdb8VAntZmKOso8j11s=
+X-Gm-Gg: Acq92OHfHamx8eucQu8B7Z5kEkd64/sMXCqOpD+87Nn39+QMF5sBcThvjlUJ2z5WEk+
+	fjhsbRYc/c5NG/SPAQfnnHLQXcDfuRiysIxcNplu9V2OKo+OI5eo0oY9bjBjzUwyreQIaU7omhd
+	2BHdQzyo7uBmsPZNAF9oUX+gWu2WRlJm0va7FXI5ZfQ0k4jiUm0F+ds/ZTuLsLexeRT0lCKwPvt
+	Eo/fg1OMvqA3ysQ4QdN9RfARxd0puboYN3nWujTFpChJSytPRvP/ZvvGi70rYpowS477FlZ4x4R
+	LhlhUifs74dDL1iYvF7fDxiHQZdolKUVmvY6XHNS1CGRo6TQ/XKxhRGBddOeaCKDO+BWpLglhxC
+	7SX7F4OL5cP99KGsok6HipaF41wCIvMYz4g8HsEUmC2NzJjjNRu2xjsGryAYc8S5dWUzv8VjsX1
+	jIQuy10CfOUnr2PusdHWojrO9BcZZ4cDSgF4chZe9q65F9aPnvbgauvHtafqgX
+X-Received: by 2002:a05:6102:956:b0:612:21f8:5afd with SMTP id ada2fe7eead31-63a3d94e0ebmr11108013137.12.1779262884183;
+        Wed, 20 May 2026 00:41:24 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-95fc2d324a6sm7738562241.7.2026.05.20.00.41.23
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2026 00:41:24 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-95d0476492eso1093856241.3
+        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 00:41:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8ZX4jb6N212SSwzQcyRT79POR1Z4rbNqIUizZI8G/EttfTiu9XbS/KRqZ0b36YnsGjEEPTq41k6JMMmGcsOUw=@vger.kernel.org
+X-Received: by 2002:a05:6102:f85:b0:631:4d87:ba5f with SMTP id
+ ada2fe7eead31-63a3d0182e9mr12079127137.3.1779262883651; Wed, 20 May 2026
+ 00:41:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AoFiOxpvQUXV
-Date: Wed, 20 May 2026 09:06:33 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
- "Ethan Nelson-Moore" <enelsonmoore@gmail.com>,
- "Wolfram Sang" <wsa+renesas@sang-engineering.com>
-Cc: "Peter Zijlstra" <peterz@infradead.org>,
- "Dinh Nguyen" <dinguyen@kernel.org>, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, workflows@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
- Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kbuild@vger.kernel.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- "Jonathan Corbet" <corbet@lwn.net>,
- "Shuah Khan" <skhan@linuxfoundation.org>,
- "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Daniel Lezcano" <daniel.lezcano@kernel.org>,
- "Thomas Gleixner" <tglx@kernel.org>, "Alex Shi" <alexs@kernel.org>,
- "Yanteng Si" <si.yanteng@linux.dev>, "Dongliang Mu" <dzm91@hust.edu.cn>,
- "Hu Haowen" <2023002089@link.tyut.edu.cn>, "Kees Cook" <kees@kernel.org>,
- "Oleg Nesterov" <oleg@redhat.com>, "Will Deacon" <will@kernel.org>,
- "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Nicholas Piggin" <npiggin@gmail.com>, "Vinod Koul" <vkoul@kernel.org>,
- "Frank Li" <Frank.Li@kernel.org>, "Dave Penkler" <dpenkler@gmail.com>,
- "Andi Shyti" <andi.shyti@kernel.org>,
- "Jonathan Cameron" <jic23@kernel.org>,
- "David Lechner" <dlechner@baylibre.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- "Andy Shevchenko" <andy@kernel.org>,
- "Andrew Lunn" <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- "Andreas Oetken" <andreas.oetken@siemens-energy.com>
-Message-Id: <76af64fa-7820-4d92-8aa9-826c3bd812a1@app.fastmail.com>
-In-Reply-To: <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
- <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
- <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
- <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
- <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
-Subject: Re: [PATCH] nios2: remove the architecture
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20260519133025.618255-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVKOdzThVMOcQ1K9crUkyDutvuZsP2-5v5++SVFHkgtOA@mail.gmail.com>
+ <CA+V-a8sFNjp9euEEfBf3BoscjU8W3isRT_pnzd7J4QsuiN6qfg@mail.gmail.com> <18c41409-e1d1-4877-87a6-1c3156f943aa@embeddedor.com>
+In-Reply-To: <18c41409-e1d1-4877-87a6-1c3156f943aa@embeddedor.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 20 May 2026 09:41:11 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVznvSLr+ap3QwawZdu8fc4dZjpkWi7wgUA815KRfCgEQ@mail.gmail.com>
+X-Gm-Features: AVHnY4IbN4gvBXfEdCbvoV1Bz24wCmRs3C2Yr4J_UWX62ZxMsTA07ZYlhMORYx0
+Message-ID: <CAMuHMdVznvSLr+ap3QwawZdu8fc4dZjpkWi7wgUA815KRfCgEQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: mmc_test: Fix counter tracking in mmc_test_alloc_mem()
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Ulf Hansson <ulfh@kernel.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 19, 2026, at 12:30, Simon Schuster wrote:
-> On Mon, May 18, 2026 at 05:13:58PM -0700, Ethan Nelson-Moore wrote:
+Hi Gustavo,
+
+On Tue, 19 May 2026 at 20:44, Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+> On 5/19/26 07:44, Lad, Prabhakar wrote:
+> > On Tue, May 19, 2026 at 2:34=E2=80=AFPM Geert Uytterhoeven <geert@linux=
+-m68k.org> wrote:
+> >> On Tue, 19 May 2026 at 15:30, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> >>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >>>
+> >>> Fix an counter tracking in mmc_test_alloc_mem() that causes a kernel =
+panic
+> >>> during error unwinding.
+> >>>
+> >>> The `struct mmc_test_mem` uses the `__counted_by(cnt)` annotation on =
+its
+> >>> flexible array member `arr`. While kzalloc_flex() initially sets the
+> >>> counter field (`cnt`) to `max_segs`, the allocation loop needs to tra=
+ck
+> >>> how many elements have actually been populated.
+> >>>
+> >>> Previously, leaving `mem->cnt` at `max_segs` meant that if the loop f=
+ailed
+> >>> midway (e.g., "Failed to map sg list"), the error unwinding path in
+> >>> mmc_test_free_mem() would attempt to clean up uninitialized trailing
+> >>> array slots. This resulted in passing NULL pointers to __free_pages()=
+,
+> >>> triggering a kernel panic:
+> >>>
+> >>>    [   66.172845] mmc0: Failed to map sg list
+> >>>    [   66.176722] Unable to handle kernel NULL pointer dereference at=
+ virtual address 0000000000000000
+> >>>    ...
+> >>>    [   66.432747] Call trace:
+> >>>    [   66.435191]  ___free_pages+0x1c/0xc4 (P)
+> >>>    [   66.439119]  __free_pages+0x14/0x20
+> >>>    [   66.442608]  mmc_test_area_cleanup+0x58/0x84 [mmc_test]
+> >>>
+> >>> Fix this by explicitly resetting `mem->cnt` to 0 immediately after
+> >>> allocation. Then, move the existing `mem->cnt` increment so that it o=
+ccurs
+> >>> prior to populating each array slot, using `mem->cnt - 1` for the act=
+ual
+> >>> assignment index. This guarantees that the counter accurately tracks
+> >>> initialized entries for safe error cleanup, while dynamically expandi=
+ng
+> >>> the `__counted_by` validation boundary ahead of each flexible array w=
+rite.
+> >>>
+> >>> Additionally, rewrite the cleanup loop in mmc_test_free_mem() to use =
+a
+> >>> standard forward for-loop. This addresses the unsafe post-decrement l=
+ogic
+> >>> in the original `while (mem->cnt--)` loop which evaluated and decreme=
+nted
+> >>> the counter field before indexing the array, and avoids a potential i=
+nteger
+> >>> underflow/wrap-around of the counter field if the cleanup path is inv=
+oked
+> >>> when `mem->cnt` is 0.
+> >>>
+> >>> Fixes: c3126dccfd7b ("mmc: mmc_test: use kzalloc_flex")
+> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
 >
-> 2035 is still a rather tight timeframe for our typical support/phase-out
-> period (we would hope to get close to 2040 with the SLTS extensions),
-> which is also the reason for our targeted 'lifetime extension' for the
-> nios2 architecture for approximately 5 years, or more precisely ~2-3
-> SLTS kernels assuming the usual cadence of 2 years between SLTS versions
-> (+ some safety margin).
+> >>> ---
+> >>> v1->v2:
+> >>> - Started with cnt =3D 0 and incremented before assignment to ensure
+> >>>    accurate tracking of initialized entries in mmc_test_alloc_mem().
+> >>> - In mmc_test_free_mem(), replaced the while loop with a forward for-=
+loop to
+> >>>    safely iterate over initialized entries without risking underflow.
+> >>> - Updated commit message to clarify the issue and the fix.
+> >>
+> >> Thanks for your patch!
+> >>
+> >>> --- a/drivers/mmc/core/mmc_test.c
+> >>> +++ b/drivers/mmc/core/mmc_test.c
+> >>> @@ -318,9 +318,8 @@ static void mmc_test_free_mem(struct mmc_test_mem=
+ *mem)
+> >>>   {
+> >>>          if (!mem)
+> >>>                  return;
+> >>> -       while (mem->cnt--)
+> >>> -               __free_pages(mem->arr[mem->cnt].page,
+> >>> -                            mem->arr[mem->cnt].order);
+> >>> +       for (unsigned int i =3D 0; i < mem->cnt; i++)
+> >>> +               __free_pages(mem->arr[i].page, mem->arr[i].order);
+> >>>          kfree(mem);
+> >>>   }
+> >>>
+> >>> @@ -356,6 +355,7 @@ static struct mmc_test_mem *mmc_test_alloc_mem(un=
+signed long min_sz,
+> >>>          mem =3D kzalloc_flex(*mem, arr, max_segs);
+> >>>          if (!mem)
+> >>>                  return NULL;
+> >>> +       mem->cnt =3D 0;
+> >>
+> >> This is not needed, as it is set to zero by kzalloc_flex().
+> >>
+> > Actually, kzalloc_flex() automatically sets mem->cnt to max_segs
+> > because cnt is annotated with __counted_by. Because of that implicit
+> > initialization, we need this explicit reset to get it back to zero.
+>
+> An auxiliary variable could be used to avoid having to update the
+> counter too early[1][2].
 
-I think that is a reasonable target. We have a bunch of embedded
-architectures that have a similarly small user base and I expect
-that we will want to remove most of them at some point, as we did
-for seven architectures in linux-4.17.
+Thank you!
+In light of this, Prabhakar's v1[3] is the better solution.
+But perhaps that the addition of "mem->cnt =3D max_segs;" after the
+kzalloc_flex() should be dropped, as it is done automatically by
+compilers that support __counted_by, but is irrelevant for compilers
+that do not support it (the correct value is set at the end anyway).
 
-As long as there is a maintainer for nios2 and it's not actively
-getting in the way of a specific treewide change, I don't see any
-reason to remove this any earlier than the other ones.
+Gustavo, what do you think?
 
-Obviously at some point nios2 will have to get removed because
-of the limit to gcc-14 or older, but that should not be a problem
-for the next few LTS releases.
+> I think it'll eventually become best practice to defer updating the
+> counter until after the flexible array has been fully initialized, or
+> after every major update that requires changing its boundaries.
 
-> Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
-> unsure about the netiquette (can I simply do so by self-proclamation? At
-> least the git history seems to suggest so...).
+In case the update is a _decrease_.
+If the update is an _increase_, it must be done first?
 
-Dinh already replied that he welcomes the help, and I also suggested
-the same thing a year ago. As the only known user that has contributed
-patches in a long time, you are obviously qualified.
+> [1] https://git.kernel.org/linus/ea9e148c803b24eb
+> [2] https://embeddedor.com/blog/2024/06/18/how-to-use-the-new-counted_by-=
+attribute-in-c-and-linux/
+> (I'm in the process of updating this blogpost with some *alloc_flex() exa=
+mples and more.)
 
-Sending a patch for the MAINTAINERS file to Dinh is the first step,
-once he has sent that upstream, you can (optionally) apply for
-kernel.org account that would let you host a git tree on kernel.org
-or have a tree that you both have access to.
+[3] "[PATCH] mmc: mmc_test: Fix __counted_by handling after
+kzalloc_flex() conversion"
+    https://lore.kernel.org/20260513201315.3186621-1-prabhakar.mahadev-lad.=
+rj@bp.renesas.com
 
-     Arnd
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
