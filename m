@@ -1,109 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5993ED10F;
-	Wed, 20 May 2026 14:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779287291; cv=none; b=U2iG2qvj6/9lloFjRnCProdcW4jFBiC59OLlsrYNnAYxTeC0MANa2HVxgoscWsJtw4MpfQW9GJDIegZXIfi40mBAsYQVJjYlEaYl48QPOK5FvZVHMluosYwCDxLu5s/v8co3lUdwR5Fs8uJ+u/S/XfdDeC/HXis28/ynUCcn70g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779287291; c=relaxed/simple;
-	bh=dbam25rkEbN6V1TXAKuie6Ogixkx8DZyxneAOo0kOp4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Q/aD7ifJsR+HMACh2EtfqyZQkJYqWuLSLH7g472T/A27io+4u08V4nKuNJcoSFeisz29s6IZWe4yEz6LWpLui9t5T/y6TO4yymm6uer0AP3IP+hO3KNAiYXAlT9U7y2w3k9n/8I6idFWHv83aDrIBKfO5d5EDPNZtuncj29F+J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MWr+SSIf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w+VZkkti; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313213EA961
+	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 14:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779287874; cv=pass; b=oBXF5IEsZjl3tvV2YG9evSMXH4oyPhbF3gqsrWqWJ4gpgxAXf20bsfJLQevnIyjfsXRY/pIKECr+PcoupwvckWuFbQ1p/KdrsigbhWivfGAaIc7HxDAO/7Zj3Yoc8wld0ELmcElu3if+GXiZuciqD9xh3hpT8R2vtcHHWdBz478=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779287874; c=relaxed/simple;
+	bh=vMCFs1zvjoG3b53dxoyMBBFtJo9eaP34eiwKbZPLgFs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DMVHkXm6J52SqZ3ZKb9Db0Xso2o9n+8vVcXmu8zk/UrZMfTZTvp/dgOOULX1VYu6FQ76D59cmsOAi1eilEGah7scFG+rLuEynYvXO8MvHQpNnrYtIcgBFE8A/FJXaqNOjJkH6SdwlnO9Kw07EfBBdjQ/nn9IyHqeqo1B7iS/eFo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IYHsmFQi; arc=pass smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MWr+SSIf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w+VZkkti"
-From: Gregor Herburger <gregor.herburger@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1779287280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tfKfhvP2du3rzKmOjT1cyHP3hfhMUxY9/nQXytvqksg=;
-	b=MWr+SSIfl/GFmT/lyU/BzH2ad/u65ERrep5CT3oMVi6HwjWJKZs4XNzxj4JH75HkpTb6xs
-	xSlrAkTqzh23twmFC5NGENIUut62qfYavrlLXRgm1p5Gh8//QFEYt05YeR5cIrQ5+Jmuaq
-	bA9x1KkfFGAFLgJ0hpl3xgZrNsd9vtF/n7AsWfALn4U8jbXfs6Qys/qP+2vAPdEhyU4zRZ
-	JOGH/H7bNDQwnJPmLqhQ0S5WptG1BNwTyHwam6bEYlAFpT6aVJOfbQzTq4gpSRcMWkjsUp
-	h9VpOx2VPlxQ5xyCJeRgKWlU7dZ8ltt7hXBRrMUh+7JbXzoqjt94+qFqpFvzwA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1779287280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tfKfhvP2du3rzKmOjT1cyHP3hfhMUxY9/nQXytvqksg=;
-	b=w+VZkktiOKTRQjuN5XIhcQOoyQ3PrV0gSyaOq1hUm8ttDeACSBUC8YwtqYtCkr6V3YjrI2
-	UqA2LTUvnICiS2AQ==
-Date: Wed, 20 May 2026 16:27:58 +0200
-Subject: [PATCH v5 6/8] arm64: dts: broadcom: bcm2712: add
- raspberrypi,bcm2712-firmware compatible
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IYHsmFQi"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-67c1eea6b4dso222a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 07:37:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779287871; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Illy0SeJEDYLJJiif81f/oWj+qcunOMM+3eJwpIUa5izvuZoprm1/iberdfm5LQ0ju
+         69XaFSO7RpGcVKRTWaTOEfFeNgfzqk+tfZ749tjcluMDyFhu1P0JpPOMKCJ91eYB0JK0
+         5ITiia6jQeAsE7xOhkIscU3OFEeVoJL+JCuwSH5f1F2oLUTqAkFwxdp3UMlOQkBGey/h
+         kZHvLmY887yJovCdGDnNkh4cJ/7b+mxxhTph5BoFEiGwkv6tcMSJvHg7s5TcnhJxVB5J
+         po+XbrN5zaXD6DZADxq6IIW662mpmzd0BkhxcwanDbVuTmdbgA+udw738FQXhhE1mY/g
+         Q1/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=vMCFs1zvjoG3b53dxoyMBBFtJo9eaP34eiwKbZPLgFs=;
+        fh=pguzChJl9WH5Xds5cD5VjO/pc+QL9Z3BAtsj/ZJk8Bo=;
+        b=dmRUH4uRLSc/F7GJs8nd9mCYMfiGk9eZt+xwJDc4cV5PZABeRD48fbXIgFeyQpvVuu
+         E47Sc0d5N61wF/38PFyx/r5a9T5hq112o6hhbdOZaolkaJemb2HSfvwn0V0GXVOOMr6l
+         WPCJdjfLXrsqDB2rDveTPk/m0sX7xYJZwyMptJVUGYZiwDZ44yaXv6taOvHwrKpUYNX8
+         bgTQvjNSRggXp6Xf+5KN9G6QCreiXr+d2HTx2PdsBeo89fc6Z0HIYhtFNsEV2ObqnrI7
+         9CQh7+Rus2JhIS1BeRg8ksWzmFplUEvCHGmzA1FZgAQArJHmuaA95KBWusIbspV6biDf
+         ufDw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779287871; x=1779892671; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vMCFs1zvjoG3b53dxoyMBBFtJo9eaP34eiwKbZPLgFs=;
+        b=IYHsmFQia1CXlsJhUuho/oXanT9EhHfvA2aIRz6gKg5Ls1Nrxs2+g8EiyQIjxw+55n
+         O10VnD6rKYrXPIOcnsgqKXnk586VqhfWZJWbCasC9wRduIffZUDCUR8/fZbsgwQ3t0+D
+         xISrV5tx7Zjf3Di8wN0Kmv6SjzrgQgHHqiOqjfHt7WOFvdlrUp6CcNUul9VwyZLG3oVf
+         qB5faAAZdq7xxlgUFG49et2SWbiHTPncOrl46rrlvoCFhuSND4aCFDCv3K3zeErUoVfL
+         U9Z8xMpVIAjhpa1pw4ZR5ah10egMnj2e7xKJ1NndlWi7Q+KGEuLdgEKrHJ4a5Wk8+jTY
+         ayfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779287871; x=1779892671;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vMCFs1zvjoG3b53dxoyMBBFtJo9eaP34eiwKbZPLgFs=;
+        b=ChnxBeDYBVxDQspY5rYHjai96A/wR5A4HNePHjnv0/5/Jng2dQsLksja8E3ItuRP14
+         IVxLLMeb7cE1hue6EdYxR/CvlXVYBjxFGx73fo1uNTSWnmN9p1k//223rZJ6aUpqt8/p
+         ftYdGyCN4f5zzy+O5gj4Ll7QXZaU1FK5TO+7bUeZCTbs6vsmKVdq7PVRUYGJ1rpe7S3K
+         Htur/lPQwIi4YlzxPZ4SEeh52ByIG3L+QwvRIsmGez3Gu4KffUtcB83hZ1a8zSB3XHJO
+         r7g9P/nmAS2Y/Pwt7/iqierr3V0nnNN+wpO17ZLjc8r6j+6RlYeZhGFNVJVsmu8nkBDb
+         Qv1Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/iFCGvGUM1ILcDI5d99ZJCOJTgBWxslaHZa3KAr1EsTRLVLxdaH0HZD+RHvImeBY8jz0b3I6MG+YiL04ciPnI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2H9DLE6vlfstGQ8PmgtvCoTNDKDP1KlkOp79Ai311F0/yUj3R
+	d8OlEglrJ1uw/zLaIUxu/DCbGP/mS6NtRNjL4/a1g+Eo43sjyLrnqDJ7+xWw7lSbEqbTwZT5YEZ
+	JNM33OgVMadcwiKPdd85HQwNrz/xF3KT02IOYh+jS
+X-Gm-Gg: Acq92OG7fwNPPJVbnoucwQ3byEzBn2F+bStqBOmnI8pBHcmPmi20/soCJLv27sLRAb3
+	9vSX9zIAM+tWYq9Gy04x9jF9bfZPUfVr93PNlmJ8S3+0PYFaCtSA7j4TKLU2PHWloGnzjdyYnDL
+	xCr3o3X8B0g1H1u+vTxUeRmyKFEtsZo6Lv433nQ/OVsqVZ/AYr42fb/NNwEAii9qRCmBKO5HV3s
+	v+H7bcKVoLIi5UY4NpYwkORNUjIBadLe/930pvnlIsDkLO9aDcO2iUkWMWQUhTa/0u8uOUX20CG
+	8/U72pSwGg2E56Rw7b4KbPTfK7UaUc+gcp4x8mw2OvqSrtR3/p+lGcYQDMQ=
+X-Received: by 2002:a05:6402:d0:b0:67b:7d05:60b8 with SMTP id
+ 4fb4d7f45d1cf-6848ae091c3mr263359a12.10.1779287870810; Wed, 20 May 2026
+ 07:37:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260520-rpi-otp-driver-v5-6-b26e5908eeac@linutronix.de>
-References: <20260520-rpi-otp-driver-v5-0-b26e5908eeac@linutronix.de>
-In-Reply-To: <20260520-rpi-otp-driver-v5-0-b26e5908eeac@linutronix.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
- Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Gregor Herburger <gregor.herburger@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779287277; l=1201;
- i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
- bh=dbam25rkEbN6V1TXAKuie6Ogixkx8DZyxneAOo0kOp4=;
- b=wPR9/E5m55Q974JVz5+kmMCFpyfF14YKJSH08maRZ27KgCVFliDimNROL8st52w1b4IsJ3nig
- SuIEpiJ6heoD1OIEWL1NRxqdlRD324f/mQUcp1U2wrLEt6srKqFvNOT
-X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
- pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
+References: <CAG48ez2++gA+Z9GVmNOG5-+NNicjmti3nQ8xhVJuXM042WfwZg@mail.gmail.com>
+ <CACT4Y+bzkW0fjrUcbG+6XfTsw9_0sGfYN+9myHtC72dZT7gvNw@mail.gmail.com>
+In-Reply-To: <CACT4Y+bzkW0fjrUcbG+6XfTsw9_0sGfYN+9myHtC72dZT7gvNw@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Wed, 20 May 2026 16:37:14 +0200
+X-Gm-Features: AVHnY4JdoSHTr01XEaHyQuaQze9A_sGnydtK3RAXhZIwV8GUqbo1qEqHkb2In6M
+Message-ID: <CAG48ez2KxGKH69m1TG2DwQkm5mZXQdxTkLL0_wqOgo3S7cTNOg@mail.gmail.com>
+Subject: Re: [RFC] hardening/fuzzing project idea: KASAN redzone before skb_shared_info
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Network Development <netdev@vger.kernel.org>, linux-hardening@vger.kernel.org, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	kasan-dev <kasan-dev@googlegroups.com>, kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Raspberry Pi 5 (BCM2712) firmware exposes additional features such
-as the additional OTP register region called 'private OTP'.
+On Tue, May 19, 2026 at 11:00=E2=80=AFPM Dmitry Vyukov <dvyukov@google.com>=
+ wrote:
+> On Tue, 19 May 2026 at 21:19, Jann Horn <jannh@google.com> wrote:
+> > For debugging/fuzzing, it might be useful to have a KASAN redzone
+> > somewhere between legitimate data in an SKB and skb_shared_info
+> > metadata, accesses into which would cause KASAN splats. Maybe we could
+> > split sk_buff::end into two separate members for "end of tailroom" and
+> > "start of skb_shared_info" so that a redzone can be placed in between?
+> > Or let debug builds store the skb_shared_info in a separate memory
+> > allocation?
+[...]
+> Hi Jann!
+>
+> There was a related issue:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D199055
+>
+> Not sure if it's better to include this into the existing issue, or
+> create a new one here:
+> https://bugzilla.kernel.org/buglist.cgi?bug_status=3D__open__&component=
+=3DSanitizers&product=3DMemory%20Management
 
-Add the raspberrypi,bcm2712-firmware compatible to allow drivers to
-distinguish this hardware variant while keeping
-raspberrypi,bcm2835-firmware as a fallback for backward compatibility
-with existing drivers.
-
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
----
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
-index b7a6bc34ae1ab..4aa8ec7601b84 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi
-@@ -46,7 +46,9 @@ power_button: power-button {
- 
- 	firmware {
- 		firmware: rpi-firmware {
--			compatible = "raspberrypi,bcm2835-firmware", "simple-mfd";
-+			compatible = "raspberrypi,bcm2712-firmware",
-+				     "raspberrypi,bcm2835-firmware",
-+				     "simple-mfd";
- 
- 			mboxes = <&mailbox>;
- 
-
--- 
-2.47.3
-
+Ah, thanks for the pointer. I have now filed this as
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221554 .
