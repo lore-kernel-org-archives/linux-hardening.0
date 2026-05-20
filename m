@@ -1,266 +1,146 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201AA1531E8
-	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 13:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACB93E95B8;
+	Wed, 20 May 2026 14:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779283835; cv=none; b=d3WxgXcjkd6breExIOOAmPEU5c7GOIYmwddjcSQNdJpCpL2nQKbxoHoEyHc5w4BxkereIZHr1tg9VHKtyl6Z+5XW9PwGwP2TM4E78T3WeYjqtN1eoyjEEGI07OxuIRhWKINaqbxschC6bBJ23wTTg8soKWU38FkO0gmXYhxNX70=
+	t=1779287284; cv=none; b=mgwFhs75qAaEfA9L/o/LlcyHlGdrwtb1dw5gyNKqsNya8kD8FFRtbcEzRTCXng3R/0pmzVdj2biTksAkhe708Tr3a8yhEYYKFcEzw/k3p0xD8If+ES1Q7fxt16UECVhM7yc2OUVIqNsam+Q7bN2kNV+3nBUm95Lkc11S6nHWP2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779283835; c=relaxed/simple;
-	bh=81dImCBjpgJ9s4r5i5sIJwiSPnwM1ab60Dzuzfby04c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mXksFFAEPPUCqCxjdvb8m7PyiQcJApCq0dpIL+io7YnuyZMa2dgColoDIGa87OWWLDQ893Cw2QemKopQYw/fs+vVzVNrtL6dBPvmCWgy0Jmz//6bLApq6cK08vQnZuDZQUOsFmMB41w6li5Ul/8e2GhM3ur+mLOcXQNlehp08yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FOpYCRup; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779287284; c=relaxed/simple;
+	bh=riALNKO6Dm+ln9p2xSUt46UpPG2FzEMcnDP1s+JcVxQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bt4+1a6O/9tf/JVdYhWC4NfAKg3EgqvZxsBfNbQLUVW+oIp7KSxrYf8RvhlYDJCfrOSyA0mWAjNoDh9T/6E2AbthRW6snf90/VHzSE6EsTqfsLqbo0M0L9/yD9+VA6Pc8tV7865QrIXwNrQNFNfukQwSCmNEwaSiVFPh78NL1wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4K7RhcJu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RUGa+T9D; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FOpYCRup"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-8bb4e8a5240so64357926d6.1
-        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 06:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779283831; x=1779888631; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RfxhCV7FuEx6FN3Ph695dMdjOoXCIAnanxO/gTjt8nU=;
-        b=FOpYCRuprODo33/HyCjs8joQnos+gJQaUW6l4A7Ej35E9OtHm5kCkFjzHchy4Clsta
-         dYPQkWUwruc2TgKdD4VOpwFmpHm9RpelzTCb11FPS0WAKR8J7B9QMz0VnP+5dsRCBJri
-         Gew4AknisCfYMmrKEIctDlRcPz6o/K5W1vzNNq00PYg3aUd3xj49Pty9wq2OtY/h30cU
-         I1yTYGpzJnA/XzMka68sCqlYZkqE0uFYi7gxejMr38vL4RMMATou0iAphOLlZfVDoijQ
-         luWBEQQnPVa5bHr4X9xDxU4mMyEIPoBXmrKu0tGKEVc8KZV4N8gVM4Ub69YDqr09dj0c
-         WygQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779283831; x=1779888631;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RfxhCV7FuEx6FN3Ph695dMdjOoXCIAnanxO/gTjt8nU=;
-        b=ZHIuryVxuHAaDj6rRA2KXpZ9Dq3Mw6DX5ggnbXUgJ1A/bayNObaBFWziPelCoJl2ja
-         poJvzZhOPD3mnLQEU4EkEgfP7zhZ0lwR0dujiZieqvIc/rNyRVTaIFbBK8P555ckY3+d
-         sqaS7Tdh9AIAQKmojfPP8C5AkUVn3S/8WMEiRlMMB//S1T2aoww82UNTbTcexDyOY2ca
-         DLwRH5Nx9TLFoUuOlt7WrOg55KAMOLM2Wv8k2NQHxrDJFedjIvS2v+vZYmv6xliyvpoK
-         f/eQApdIpGDkTMEoM8ubb5r5IK23pgTEntmUjg1abLcNwtq9QAh9iH8+8gVwp40pNT4W
-         vx0g==
-X-Forwarded-Encrypted: i=1; AFNElJ+hJw7SyBswK3kemde8y1dhHkFoVFkl9JvMdXAebowOy4wBm2lIHrKjfRg3l10r4PRymv2Vb+ebKdBfOzrBbZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ3VMzDgSEmNRscEI0zRDEHnX0CZ1Y5+zyyCb/7cMaNXrobQ9g
-	eho0niqCB/SI5uIcQGnZM3tCRaA+D6Jp4fxXsbptgIjfRgfwqy0uSzMG
-X-Gm-Gg: Acq92OGcgwjm1suCmOc1QXlLIMQ/7d6EE1GeI9dPbpvAGRhbTikgdMEMwq2uJNv2l6M
-	7GWiFxzIARtFFsAhNDusq5Nd8WgDv0oH70dkZazSRjTVr/xAPUJA/eONl/h/syb701wJPPfdqhk
-	Bl/UU6uxmMtiremB3/btYqcFCOHv7x1gd1+rVXKMo0NMVnr/3Mk0FqVwdcVvllBzipE4YZ5qhPR
-	kC9D8se+JC6wVMj+gEVA4Ggd1CUg/m1SPNeOEpQLY1eOfZ/v71NqtxMm1gLXd7pjPj85DcudIdd
-	Ro8th/dITToEhEFJWfx5+VTLj6zm9+svpj6BtL1D42VAbP3ivtLGElNs0fKcmiDJEYFyAky3usB
-	/AnE2ACAzyLREK5oeU/4UXKGgeKc+Q+jX2ftl0wXFXqjU+pPGyEYz8p3826Oxk+qsmcjVs3dwC3
-	948HZGEEn0NRvM8T0H707IvRt2od4WYdIqCd7B4ayYOKLooPrFODamF+h8W1wYaaBv+rj9bmOTT
-	klKCfsc1PbgKat/aN0Y
-X-Received: by 2002:a05:6214:5548:b0:8ac:a546:7753 with SMTP id 6a1803df08f44-8ca0f601c85mr373645396d6.8.1779283831333;
-        Wed, 20 May 2026 06:30:31 -0700 (PDT)
-Received: from server0 (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ca36190497sm121635816d6.29.2026.05.20.06.30.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 06:30:30 -0700 (PDT)
-From: Michael Bommarito <michael.bommarito@gmail.com>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Nilesh Javali <njavali@marvell.com>,
-	Himanshu Madhani <himanshu.madhani@oracle.com>,
-	Shyam Sundar <ssundar@marvell.com>,
-	James Smart <james.smart@broadcom.com>,
-	Hannes Reinecke <hare@kernel.org>,
-	John Meneghini <jmeneghi@redhat.com>,
-	Bryan Gurney <bgurney@redhat.com>,
-	Justin Tee <justin.tee@broadcom.com>,
-	Christoph Hellwig <hch@lst.de>,
-	David Laight <david.laight.linux@gmail.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	linux-scsi@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v4] scsi: scsi_transport_fc: widen FPIN pname walker counter to u32
-Date: Wed, 20 May 2026 09:30:15 -0400
-Message-ID: <20260520133015.1018937-1-michael.bommarito@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260519190615.2761667-1-michael.bommarito@gmail.com>
-References: <20260519190615.2761667-1-michael.bommarito@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4K7RhcJu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RUGa+T9D"
+From: Gregor Herburger <gregor.herburger@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1779287278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JTA86PWU30dw1Y+YYODGvyGhuhipY2bt5WDbm8wDJX8=;
+	b=4K7RhcJu1hgMu/EFItTBWNKLBVa0wPocp+3B8rq+Sg4gnfBQnLNDYqdr0xOCqKqO6H+1Yu
+	CsNyEiMf11WRVH91vgZ+b/GxEc12fVVZNEf/RLl3EfLhFF1uaVnmmlj9edb1GI4XTN/pk3
+	M0TcbGHMDiuptKrwSNVC7gJXR+xllbE2YDplznNoEhFNZhsu+QKZfwmOT9A73MgcEggZe/
+	J0izHMsWdbGS98areng/0HBK0WeHhORoqL4LTzMs2ZRrUEYe/kicl9y6xTLG6jaZM/2goV
+	AZodCML3IW+N5xEtcUTjobo5rMWZEHbWs9Y+71pqyln89TQw26edVFLBb26Xxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1779287278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JTA86PWU30dw1Y+YYODGvyGhuhipY2bt5WDbm8wDJX8=;
+	b=RUGa+T9DOY8XHMZ5afGmeIFgJTQ4jMUHyB6MaLtIOdxup/pffdaWMbS1jk1ASeAPmR56EC
+	DqN65oNQJ7zv+fDg==
+Subject: [PATCH v5 0/8] nvmem: Add Raspberry Pi OTP nvmem driver
+Date: Wed, 20 May 2026 16:27:52 +0200
+Message-Id: <20260520-rpi-otp-driver-v5-0-b26e5908eeac@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOnEDWoC/3XPz07DMAwG8FeZciYocZs/5cR7IA5b7DAj1FZJF
+ 22a+u4k48BEx/GTP/8sX0WmxJTFy+4qEhXOPI01mKedCMf9+EGSsWYBCqzqlZdpZjkts8TEhZJ
+ 0JgbSGGJ0KOrSnCjy+Qa+vf/kfDp8Ulia0hpHzsuULreLRbfev3jRUklSgBoPZJXyr188npY0j
+ Xx+RhLtQIFfwiizIaARg3aWggPfuUdEd0/YDdFVAobe1rnt7GAeEf09sX2kr0SIHh0Y9B70X2J
+ d128790V8iwEAAA==
+X-Change-ID: 20260408-rpi-otp-driver-75fce1dcff7d
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
+ Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Gregor Herburger <gregor.herburger@linutronix.de>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779287277; l=2899;
+ i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
+ bh=riALNKO6Dm+ln9p2xSUt46UpPG2FzEMcnDP1s+JcVxQ=;
+ b=KCF1Fi+B+Xvl/0Uk28rfGpuoqyre8w+Ygqx9kc9WwxrJmdfIcN8lpLPbB/oVAQB4mKwUxb7Bt
+ qInFKPeZ1UPDrVsO79L4mT+3CJ6psy4029RJGU5sb3XhwoDn71iKMX0
+X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
+ pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
 
-An adjacent Fibre Channel fabric actor that can deliver an FPIN ELS
-frame to an lpfc or qla2xxx Linux initiator can trigger a non-return
-in the generic FC transport. This is not a local userspace or IP
-network path; the attacker must be able to inject fabric traffic, for
-example as a compromised switch or fabric controller, or as a same-zone
-N_Port on a fabric that permits source spoofing.
+Hi,
 
-The Link-Integrity and Peer-Congestion FPIN walkers used a u8 loop
-counter against the 32-bit on-wire pname_count field, and did not bound
-pname_count by the descriptor body already validated by the TLV walker.
-A pname_count of 256 therefore wraps the counter and keeps the loop
-condition true indefinitely.
+This series adds support for the Raspberry Pis OTP registers. The
+Raspberry Pi has one or more OTP regions. These registers are accessible
+through the firmware. Add a driver for it and add updates the devicetree
+for the Raspberry Pi 5.
 
-Factor the shared pname_list[] walk into one helper, widen the counter
-to u32, and clamp pname_count against the entries that fit in the
-descriptor body before iterating.
-
-Fixes: 3dcfe0de5a97 ("scsi: fc: Parse FPIN packets and update statistics")
-Cc: stable@vger.kernel.org
-Assisted-by: Claude:claude-opus-4-7
-Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
 ---
+Changes in v5:
+- Move alignment check to nvmem core
+- Use IS_REACHABLE to simplify Kconfig
+- use root_only for private driver
+- Add driver as module to arch64 defconfig
+- Use MODULE_DEVICE_TABLE
+- Remove some unused attributes, fix typos, minor fixups
+- Link to v4: https://patch.msgid.link/20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de
+
 Changes in v4:
-- Use min() rather than min_t(u32, ...) for the pname_count clamp and
-  fold away the temporary max_count variable, as David Laight suggested.
+- Additional patch to drop unnecessary select schema
+- fix dt-bindings
+- use __counted_by_le
+- additional alignment check in read/write callbacks
+- Link to v3: https://patch.msgid.link/20260506-rpi-otp-driver-v3-0-294602663695@linutronix.de
 
 Changes in v3:
-- State the fabric-adjacent threat model explicitly in the commit
-  message and clarify that this is not local userspace or IP-network
-  reachable.
-- Use min_t(u32, ...) for the pname_count clamp, as Christoph suggested.
-- Use FC_TLV_DESC_LENGTH_FROM_SZ() instead of open-coding the descriptor
-  body length calculation.
-- Factor the duplicate LI and peer-congestion pname walker into a common
-  helper while preserving the LI-only host-stat update.
+- dts: add "raspberrypi,bcm2835-firmware" as fallback and fix dt-bindings
+- Fix Kconfig depends
+- Changed firmware data fields to __le32
+- Add MODULE_ALIAS
+- Link to v2: https://patch.msgid.link/20260505-rpi-otp-driver-v2-0-e9176ec72837@linutronix.de
 
 Changes in v2:
-- Drop the redundant cover letter shipped with v1.  A single-patch send
-  does not need one, and the v1 cover carried stale draft markers.
+- register nvmem driver from firmware driver and drop firmware sub nodes
+- Use struct_size and __counted_by for dynamic array
+- Drop unneeded comment in Kconfig
+- Use NVMEM_DEVID_NONE
+- Use kzalloc
+- Update module description
+- Link to v1: https://patch.msgid.link/20260408-rpi-otp-driver-v1-0-e02d1dbe6008@linutronix.de
 
- drivers/scsi/scsi_transport_fc.c | 77 +++++++++++++++++---------------
- 1 file changed, 41 insertions(+), 36 deletions(-)
+---
+Gregor Herburger (8):
+      soc: bcm2835: Use IS_REACHABLE for function declaration
+      nvmem: core: Enforce stride and alignment checks for nvmem_device functions
+      dt-bindings: raspberrypi,bcm2835-firmware: Add bcm2712-firmware compatible
+      nvmem: Add the Raspberry Pi OTP driver
+      firmware: raspberrypi: register nvmem driver
+      arm64: dts: broadcom: bcm2712: add raspberrypi,bcm2712-firmware compatible
+      dt-bindings: raspberrypi,bcm2835-firmware: Drop unnecessary select
+      arm64: defconfig: Enable the raspberrypi otp driver as module
 
-diff --git a/drivers/scsi/scsi_transport_fc.c b/drivers/scsi/scsi_transport_fc.c
-index dce95e361daf0..173ed6373f04b 100644
---- a/drivers/scsi/scsi_transport_fc.c
-+++ b/drivers/scsi/scsi_transport_fc.c
-@@ -737,6 +737,37 @@ fc_cn_stats_update(u16 event_type, struct fc_fpin_stats *stats)
- 	}
- }
- 
-+static void
-+fc_fpin_pname_stats_update(struct Scsi_Host *shost,
-+			   struct fc_rport *attach_rport, u16 event_type,
-+			   u32 desc_len, u32 fixed_len, u32 pname_count,
-+			   __be64 *pname_list,
-+			   void (*stats_update)(u16 event_type,
-+						struct fc_fpin_stats *stats))
-+{
-+	u32 i;
-+	struct fc_rport *rport;
-+	u64 wwpn;
-+
-+	if (desc_len < fixed_len)
-+		pname_count = 0;
-+	else
-+		pname_count = min(pname_count, (desc_len - fixed_len) /
-+				   sizeof(pname_list[0]));
-+
-+	for (i = 0; i < pname_count; i++) {
-+		wwpn = be64_to_cpu(pname_list[i]);
-+		rport = fc_find_rport_by_wwpn(shost, wwpn);
-+		if (rport &&
-+		    (rport->roles & FC_PORT_ROLE_FCP_TARGET ||
-+		     rport->roles & FC_PORT_ROLE_NVME_TARGET)) {
-+			if (rport == attach_rport)
-+				continue;
-+			stats_update(event_type, &rport->fpin_stats);
-+		}
-+	}
-+}
-+
- /*
-  * fc_fpin_li_stats_update - routine to update Link Integrity
-  * event statistics.
-@@ -747,13 +778,11 @@ fc_cn_stats_update(u16 event_type, struct fc_fpin_stats *stats)
- static void
- fc_fpin_li_stats_update(struct Scsi_Host *shost, struct fc_tlv_desc *tlv)
- {
--	u8 i;
- 	struct fc_rport *rport = NULL;
- 	struct fc_rport *attach_rport = NULL;
- 	struct fc_host_attrs *fc_host = shost_to_fc_host(shost);
- 	struct fc_fn_li_desc *li_desc = (struct fc_fn_li_desc *)tlv;
- 	u16 event_type = be16_to_cpu(li_desc->event_type);
--	u64 wwpn;
- 
- 	rport = fc_find_rport_by_wwpn(shost,
- 				      be64_to_cpu(li_desc->attached_wwpn));
-@@ -764,22 +793,11 @@ fc_fpin_li_stats_update(struct Scsi_Host *shost, struct fc_tlv_desc *tlv)
- 		fc_li_stats_update(event_type, &attach_rport->fpin_stats);
- 	}
- 
--	if (be32_to_cpu(li_desc->pname_count) > 0) {
--		for (i = 0;
--		    i < be32_to_cpu(li_desc->pname_count);
--		    i++) {
--			wwpn = be64_to_cpu(li_desc->pname_list[i]);
--			rport = fc_find_rport_by_wwpn(shost, wwpn);
--			if (rport &&
--			    (rport->roles & FC_PORT_ROLE_FCP_TARGET ||
--			    rport->roles & FC_PORT_ROLE_NVME_TARGET)) {
--				if (rport == attach_rport)
--					continue;
--				fc_li_stats_update(event_type,
--						   &rport->fpin_stats);
--			}
--		}
--	}
-+	fc_fpin_pname_stats_update(shost, attach_rport, event_type,
-+				   be32_to_cpu(li_desc->desc_len),
-+				   FC_TLV_DESC_LENGTH_FROM_SZ(*li_desc),
-+				   be32_to_cpu(li_desc->pname_count),
-+				   li_desc->pname_list, fc_li_stats_update);
- 
- 	if (fc_host->port_name == be64_to_cpu(li_desc->attached_wwpn))
- 		fc_li_stats_update(event_type, &fc_host->fpin_stats);
-@@ -827,13 +845,11 @@ static void
- fc_fpin_peer_congn_stats_update(struct Scsi_Host *shost,
- 				struct fc_tlv_desc *tlv)
- {
--	u8 i;
- 	struct fc_rport *rport = NULL;
- 	struct fc_rport *attach_rport = NULL;
- 	struct fc_fn_peer_congn_desc *pc_desc =
- 	    (struct fc_fn_peer_congn_desc *)tlv;
- 	u16 event_type = be16_to_cpu(pc_desc->event_type);
--	u64 wwpn;
- 
- 	rport = fc_find_rport_by_wwpn(shost,
- 				      be64_to_cpu(pc_desc->attached_wwpn));
-@@ -844,22 +860,11 @@ fc_fpin_peer_congn_stats_update(struct Scsi_Host *shost,
- 		fc_cn_stats_update(event_type, &attach_rport->fpin_stats);
- 	}
- 
--	if (be32_to_cpu(pc_desc->pname_count) > 0) {
--		for (i = 0;
--		    i < be32_to_cpu(pc_desc->pname_count);
--		    i++) {
--			wwpn = be64_to_cpu(pc_desc->pname_list[i]);
--			rport = fc_find_rport_by_wwpn(shost, wwpn);
--			if (rport &&
--			    (rport->roles & FC_PORT_ROLE_FCP_TARGET ||
--			     rport->roles & FC_PORT_ROLE_NVME_TARGET)) {
--				if (rport == attach_rport)
--					continue;
--				fc_cn_stats_update(event_type,
--						   &rport->fpin_stats);
--			}
--		}
--	}
-+	fc_fpin_pname_stats_update(shost, attach_rport, event_type,
-+				   be32_to_cpu(pc_desc->desc_len),
-+				   FC_TLV_DESC_LENGTH_FROM_SZ(*pc_desc),
-+				   be32_to_cpu(pc_desc->pname_count),
-+				   pc_desc->pname_list, fc_cn_stats_update);
- }
- 
- /*
--- 
-2.53.0
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml      |  20 ++--
+ .../boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi    |   4 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/firmware/raspberrypi.c                     |  59 +++++++++-
+ drivers/nvmem/Kconfig                              |  11 ++
+ drivers/nvmem/Makefile                             |   1 +
+ drivers/nvmem/core.c                               |  12 ++
+ drivers/nvmem/raspberrypi-otp.c                    | 130 +++++++++++++++++++++
+ include/soc/bcm2835/raspberrypi-firmware.h         |  17 ++-
+ 9 files changed, 240 insertions(+), 15 deletions(-)
+---
+base-commit: f3e6330d7fe42b204af05a2dbc68b379e0ad179e
+change-id: 20260408-rpi-otp-driver-75fce1dcff7d
+
+Best regards,
+--  
+Gregor Herburger <gregor.herburger@linutronix.de>
+
