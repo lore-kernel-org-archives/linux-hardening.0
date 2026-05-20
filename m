@@ -1,135 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2F3371063;
-	Wed, 20 May 2026 11:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B0F3DA5A5
+	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 12:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779276701; cv=none; b=oBrw2OKNQPwva8ZwIKw9SOh07FVUHXlOnhMjSLn9hiC8zCg0Nse+NC+B85XOcKwQhQtBSLS/98OvL1y9Mu7EXlGXZdSimg5AIDWtP/zsxytbIGeRf1a89+zwPvQMAI8QrdIIccCXHsWU27piIEI6V84Vb/Ukkv0uHYSWTkuDkW8=
+	t=1779280806; cv=none; b=keNhKDYzIKWCbWXciKkMtrImvjCj+yM9gD6qN4b95Te4pLymgrAXRIplLe/KRbsVuUWqOTABIFqkYbExgKUBv2ifKPl3n6ACECUzGMOBdlDgZ+nUZeSExaBhn71lu4w4Ylsg+uInLC9l1EBciWTIETnWrbHsk7/n3wqzP6IaAok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779276701; c=relaxed/simple;
-	bh=EvB6gGfDNvT2Ao7Q0FP2fZ1gLkK/2Q87kWN9XljFsPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qabz18aTI7bn5utyG3BmFe+dvnV1auT2HJCbodRNYtAkgiPAWGwkS1QMB9OD/RSd4HH6/INocMCBegtj/MwW1/7Ds5H0MnL209z2bvPi488jjTbQsv5OhbWYjfxzyCYfJV0g2mx4oB37jaAAbDjJCRGvdn41zHV0WZ5uwGuR1fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/cEav5e; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779280806; c=relaxed/simple;
+	bh=j5Dhu/C427Mc96rLjuNTCKrByvq16NPlOapdfKSW+wc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TfFt9x1OaRR6yT7xs6gFd4bnBLsPfwGluAIuKOreG523QSmSY7ESzhUJfDJDZ/4KidknHf6mD6L7njXYCtU212Y437k+F+OyrgsBxg5u/5IS+MXjel6qDUyB6cNZjhquzw00lqFrxq8haz5W2gsj+179akZ/2KONGtT9WQhXPEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q9BRWlOK; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/cEav5e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA8F1F000E9;
-	Wed, 20 May 2026 11:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779276700;
-	bh=jU4RY1MXfxstue/GxrrGI/R6d88bgt3L79phjkKZMvI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=F/cEav5et0J4vrESdmHTeG45bNaj43c7+k/MXOyikkKJEEhvjM/IZSHvoxmnLhSzM
-	 ptgBzeYEmC46Z50IhKctJfFjfWeGuttKfRDXXXrEMRyajEwztAMhN5y7Rl4R0wKC8l
-	 +aivf+hPl7MioHsgJtduZQkTTGlZcy1bCCL9acQn+FTuUW0L7/1CfqyIhneSEn6w2G
-	 WIlPgRFU2JjwWHo1cYqVnSgKh7xRH10hcHI8mOV+WU67fsveipexcHqholyxbaKmsl
-	 /6kGZlyjHj2rlitQ4glHypCgLAG08R21QMXesVr1k3MFe5IOgDSp4wEfC6Y0SsXuUe
-	 3ToKllqW9lgwQ==
-Date: Wed, 20 May 2026 12:31:29 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
- Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v5 02/13] iio: core: support 64-bit register through
- debugfs
-Message-ID: <20260520123129.1696f2e3@jic23-huawei>
-In-Reply-To: <unsohuo2hfsa7zzhprfpvtbatmu3guew6jpal7k2wvirpzwxfn@rjb4uz3k5dp3>
-References: <20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com>
-	<20260517-ad9910-iio-driver-v5-2-31599c88314a@analog.com>
-	<unsohuo2hfsa7zzhprfpvtbatmu3guew6jpal7k2wvirpzwxfn@rjb4uz3k5dp3>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9BRWlOK"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso36035245e9.2
+        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 05:40:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779280803; x=1779885603; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SuH6Fo8n73X094Nx+BXIM9AYUCXKRRgGdAspq57tSsc=;
+        b=Q9BRWlOKCkueTp/KKpAP5EVIQlrJtUpDmlpX/AGIsrhV+wyAlRhpvCTn0Oqakb3GHP
+         KMylu5mqW8dAcJ3VQ4LnthaCbzUOa0DKDFAmkllnDCnVhosBKJ1EVnQsSnrsrdDpIqQ8
+         XYbYKWtRZ6bz/DWtOZhc/t/DALeidl4wn7HRKdmd9LG3efVqQa8snuiv5hsaDlZe4Dro
+         UlctsM9J0qFaJWrD9PyjtMJenwvuw/KWZMeedGlQwBmccuUMXT/R3I+ZqlMsVYMBcJuu
+         hZ8wJ9b2BCoIzJ+90f01jUXhRBhYIUyiam1Ui1pKtqwwALkuF+JHHYNeD8MEmNQC6oxT
+         +TAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779280803; x=1779885603;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SuH6Fo8n73X094Nx+BXIM9AYUCXKRRgGdAspq57tSsc=;
+        b=WZJCAS1C82B1C6/RCPGpiznKRelFd/NRmbCP0BFuueeQmtS+Vqzaxtp6VE+oMHQUDc
+         k4kDQQW61m12tHRTidFRGwNyo8gEx1CsWrqUhL0s5tWsMD1d/T2o4SHUefq9VBq0tCqu
+         wlEArGmYXJN8OBBEjMhC5EGSJAJh3OyW0n2S/iR2vydHx5St0YlVB5wMNKG2gM9m9+cL
+         dEW0Z9DzQmNqhBlXRR1/SfBoaWlOBnNtahAcyK1NJWtoGE7jBm0hhFz85/7joUZmkg3a
+         JqOon9s/K5r9DrjuEZbphUqWWmc6moo+e8lBzNBButyxu/q+4RwCvQ54ycTesa0yc+j/
+         q4Yw==
+X-Forwarded-Encrypted: i=1; AFNElJ9IXoiTLclH6BG/3THL4EIWGX0js/59U9J3SwKzG7pES6bDu+BiLCk59ygBBQ50Lji5jTy4WWV/9b68e4V590s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzreVttJb1USgz1YbQaH9pmsyo061FZ+CArOfQP9XvlLc/qen7o
+	pzIPmcEWX4ncwu1QxXopjzzMT2Bv5DSdpSt5vF3dmavWVIisUaYWp3Xm
+X-Gm-Gg: Acq92OGzK7B8/lM4WuHfMLDGpECNnuIoWCQy2NxynHM4fWGlrsn8IWlflOdI06mzNDH
+	YtwxvTEFoRjCvN0fjAUUEkCBiru60ezkHjJKhG08I0SP0P1Ab2N+KZuV3RbRumWxWtAoylfx/DY
+	FoPwDXeY+3nxHuCr4ajV2ELsbroqk6VApUkt4wCnr8jiH85I4ktuI2sMhaiLWKtYgPWXjiTJ96Q
+	79QEKDDBO8RapAS1FdSrIkx+VYCl7CICdnamWcxxnORwC59goD6ETbAg3+oKZVNPO2adhfTeKVN
+	C862CTz06o8SNtbPtSuNpxNb/xR+KZ0d788TE6DZOyRztfk/mlnl9LAHW2NEQ+dTQWAyrFFfz8s
+	nPFIBre3dQaWl31NQsqL+adPrTgva0TlgsO2LJdYl4bi5hrZqZNE7iUb7RZLsMXFTENGND026sB
+	9jPWzXpYJ55sNbocm0nGCN6LMGMDlrJo4kEkjv4PCjPQ==
+X-Received: by 2002:a05:600c:1d0d:b0:48f:da34:ec4e with SMTP id 5b1f17b1804b1-48fe632343dmr344264205e9.19.1779280803275;
+        Wed, 20 May 2026 05:40:03 -0700 (PDT)
+Received: from RTRKW671-LIN.domain.local ([89.216.37.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ec3acf7sm54460252f8f.12.2026.05.20.05.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2026 05:40:02 -0700 (PDT)
+From: Milan Tripkovic <milant2002@gmail.com>
+To: pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	kees@kernel.org
+Cc: alex@ghiti.fr,
+	andy@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Dusan.Stojkovic@rt-rk.com,
+	Milan Tripkovic <milant2002@gmail.com>,
+	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
+Subject: [PATCH v6 0/2] riscv: lib: add optimized memcmp() and extend KUnit tests
+Date: Wed, 20 May 2026 14:39:52 +0200
+Message-ID: <20260520123954.379630-1-milant2002@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 18 May 2026 14:56:06 +0100
-Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+This v6 series provides an optimized RISC-V memcmp() implementation 
+along with extended KUnit tests for functional verification and 
+benchmarking
 
-> On 26/05/17 06:56PM, sashiko-bot@kernel.org wrote:
-> > Thank you for your contribution! Sashiko AI review found 1 potential is=
-sue(s) to consider:
-> > - [Medium] Silent truncation of 64-bit values when written to a 32-bit =
-register access function.
-> > --
-> >=20
-> > commit 64785a0c1416e2cf718b558aa7a2cc9ac39b2d81
-> > Author: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> >=20
-> > iio: core: support 64-bit register through debugfs
-> >=20
-> > This commit introduces a debugfs_reg64_access function pointer to iio_i=
-nfo
-> > to allow 64-bit register reads and writes through debugfs. The file ope=
-ration
-> > callbacks are modified to prefer the 64-bit variant when available.
-> >  =20
-> > > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrial=
-io-core.c
-> > > index e587aca79b8e7..5c8404efd0a56 100644
-> > > --- a/drivers/iio/industrialio-core.c
-> > > +++ b/drivers/iio/industrialio-core.c =20
-> >=20
-> > [ ... ]
-> >  =20
-> > > @@ -429,7 +439,7 @@ static ssize_t iio_debugfs_write_reg(struct file =
-*file,
-> > > =20
-> > >  	buf[ret] =3D '\0';
-> > > =20
-> > > -	ret =3D sscanf(buf, "%i %i", &reg, &val);
-> > > +	ret =3D sscanf(buf, "%i %lli", &reg, &val64);
-> > > =20
-> > >  	switch (ret) {
-> > >  	case 1:
-> > > @@ -437,8 +447,12 @@ static ssize_t iio_debugfs_write_reg(struct file=
- *file,
-> > >  		break;
-> > >  	case 2:
-> > >  		iio_dev_opaque->cached_reg_addr =3D reg;
-> > > -		ret =3D indio_dev->info->debugfs_reg_access(indio_dev, reg,
-> > > -							  val, NULL);
-> > > +		if (indio_dev->info->debugfs_reg64_access)
-> > > +			ret =3D indio_dev->info->debugfs_reg64_access(indio_dev, reg,
-> > > +								    val64, NULL);
-> > > +		else
-> > > +			ret =3D indio_dev->info->debugfs_reg_access(indio_dev, reg,
-> > > +								  val64, NULL); =20
-> >=20
-> > Could this introduce a regression where values are silently truncated i=
-f the
-> > provided input exceeds 32 bits?
-> >=20
-> > Since the input is now unconditionally parsed as a 64-bit integer, fall=
-ing
-> > back to debugfs_reg_access (which takes an unsigned int for writeval) w=
-ill
-> > implicitly cast val64. If a user provides a value larger than UINT_MAX =
-to a
-> > driver that only provides the 32-bit callback, it appears the value wil=
-l be
-> > truncated rather than rejected with an error like -EINVAL. =20
->=20
-> Maybe -EINVAL can be returned for that case indeed. For a debug interface=
- I
-> did not see that as a problem.
-Agreed - I don't see this as important either way.
-> =20
-> > --=20
-> > Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260517-ad9910=
--iio-driver-v5-0-31599c88314a@analog.com?part=3D2 =20
->=20
+The memcmp() implementation now uses word-aligned loads for the generic 
+path and leverages Zbb for fast sign resolution on supported hardware. 
+A robust fallback to byte-by-byte comparison is implemented for non-Zbb 
+systems to ensure correctness and stability across different toolchains 
+and hardware revisions.
+
+Signed-off-by: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
+
+---
+v6 changes:
+    - Fixed build errors kernel test robot noticed. 
+    - Link to v5: https://lore.kernel.org/all/20260519140029.1190381-1-milant2002@gmail.com/
+    
+v5 changes:
+    - Removed redundant warm-up from test case
+    - Optimized generic memcmp path with word-aligned loads.
+    - Implemented non-ZBB fallback to byte comparison per review.
+    - Link to v4: https://lore.kernel.org/all/20260518131407.1026049-2-milant2002@gmail.com/
+
+v4 changes:
+    - Fixed build error: call to undeclared function 'STRING_BENCH'
+    - Link to v3: https://lore.kernel.org/all/20260515141019.1234037-1-milant2002@gmail.com/
+
+v3 changes:
+    - Split memcmp benchmark into wrapper (string_bench_memcmp) and worker
+      function (do_string_bench_memcmp).
+    - Removed all C99 mixed declarations; moved all variable declarations
+      to the top of each function.
+    - Converted len, iterations and loop counters in the benchmark to u64
+      to avoid implicit casts.
+    - Cleaned up spacing, indentation and minor style issues.
+    - Added #if defined(CONFIG_RISCV_ISA_ZBB)... in  memcmp.S
+    - Link to v2: https://lore.kernel.org/all/20260514121359.931999-1-milant2002@gmail.com/
+
+v2 changes:
+    - Added alignment checks for buffers to avoid expensive misaligned loads.
+    - Optimized the loop using end-pointers to reduce per-iteration overhead.
+    - Implemented word-aligned tail handling using ZBB shifts.
+    - Removed redundant pointer equality (a0 == a1) check.
+    - Retained BE support via #ifndef; ZBB rev8 is used for the LE fast-path.
+    - Fixed KUnit build failures for Clang and non-benchmark configs.
+    - Link to v1: https://lore.kernel.org/all/20260512141007.1193033-1-milant2002@gmail.com/
+
+Milan Tripkovic (2):
+  riscv: lib: add memcmp() implementation
+  lib/string_kunit: extend benchmarks and unit test to memcmp()
+
+ arch/riscv/include/asm/string.h |   2 +
+ arch/riscv/lib/Makefile         |   1 +
+ arch/riscv/lib/memcmp.S         | 107 ++++++++++++++++++++++++++++++++
+ arch/riscv/purgatory/Makefile   |   5 +-
+ lib/tests/string_kunit.c        | 106 +++++++++++++++++++++++++++++++
+ 5 files changed, 220 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/lib/memcmp.S
+
+-- 
+2.43.0
 
