@@ -1,228 +1,225 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492A530F934
-	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 07:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A6E3D091B;
+	Wed, 20 May 2026 09:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779262887; cv=none; b=Qy2UJ+PusF33LnaOoKH2DlqwhJIsMs9v9FjefqbgCm6plewl35HCNo4VcgwDos4XsHlBSWE/dPAnPnksZ6p6S5c3pvTo7aLhspg6m67KW5uZlq6IZnEDusE6+K4Qa/rZSBENdOXVK7Q8v/UFMqunMpAg3qrVk/MrtadiGLjhD90=
+	t=1779270905; cv=none; b=kDcSiq2ZLYP7XvksrljRQo+a6WQB0iD8ts48vWuS2EQx4IGaYSrZ8+21A950mG2bEqXZpVqD/3x8PuVIrAGYC37vtw3jISKV1exRdh8rlEJUCb1KqdhyFJIqdP+zE5cHWrJmgKH4I3rSJ7SAwLSkEWuF3BXNSEBBPH6kB5zDI1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779262887; c=relaxed/simple;
-	bh=GGC3bFBP/3ByVZ/MY3UquCkN0tW0C4a1P7AtWMjyi9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CNnKg+6mvtjCYtyBdcci08iulUl//gg6yJuk3sp2l8oSaBLOTCdM2HMO0E2DpX1OzGgKnAMUUEMXmZjfuZWNHhe/FF6fBWzq7MzAu8I/Z3nMXcXSBh5OvvyLTe9XI7UBofuDvsAotGDVmFD/n/Dufx/rQaRHBv1vl86vgyiPzco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-95cd9a5f24cso1094761241.2
-        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 00:41:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779262884; x=1779867684;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UZhaROgHXzu5fMLFg999WSqpULkYuqJChVRCQj6qLHE=;
-        b=kxSPIMz/0CS7cI3lngO72PB1BfknBKMJhP+7s/u+dhAqhuUlQSadk140pVUDUYWCmY
-         HXTznY29r4vCMfjo7mGSMx+NgVLF+vkcBY5vOD2W381DQAigdJpLEQJEkALJGwZVej8L
-         kXZoxuKwmWjK3VRvs33/AsMHRrpD/f7cYTcxzj6NbRK7eaMbglidMaAUbS0MB2uWb/p9
-         ZFeawN4hXJO1d5HF+aX9upN9tsnPZ2dnZZLH9J2hSBZNeku5SUK2Jv7aPCPyEDMe8653
-         ff0qA5fonXyXKCp6+cZx/VOsg8nSyfQIKGOzNtfCkkk0pv8hl/oUObvCoZ8Zx8mbscYn
-         7/Vg==
-X-Forwarded-Encrypted: i=1; AFNElJ9YUbbSNrY6GJWiwTcF4uSANIYxavVpryA6QWrgwSsb9ELTPWkYcxNy5+zu85EqpneqoBWkQxBOjiZH1g3R5Jg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGuoGzOLaG27lJjC88ujbC9X1soFd2yQMDYNM9DOYu7iLrWmTv
-	EbCOgHNO5bbpZCRBCjXkWYhmllcaQ8veNBpR14E0XHKeVWEezdb8VAntZmKOso8j11s=
-X-Gm-Gg: Acq92OHfHamx8eucQu8B7Z5kEkd64/sMXCqOpD+87Nn39+QMF5sBcThvjlUJ2z5WEk+
-	fjhsbRYc/c5NG/SPAQfnnHLQXcDfuRiysIxcNplu9V2OKo+OI5eo0oY9bjBjzUwyreQIaU7omhd
-	2BHdQzyo7uBmsPZNAF9oUX+gWu2WRlJm0va7FXI5ZfQ0k4jiUm0F+ds/ZTuLsLexeRT0lCKwPvt
-	Eo/fg1OMvqA3ysQ4QdN9RfARxd0puboYN3nWujTFpChJSytPRvP/ZvvGi70rYpowS477FlZ4x4R
-	LhlhUifs74dDL1iYvF7fDxiHQZdolKUVmvY6XHNS1CGRo6TQ/XKxhRGBddOeaCKDO+BWpLglhxC
-	7SX7F4OL5cP99KGsok6HipaF41wCIvMYz4g8HsEUmC2NzJjjNRu2xjsGryAYc8S5dWUzv8VjsX1
-	jIQuy10CfOUnr2PusdHWojrO9BcZZ4cDSgF4chZe9q65F9aPnvbgauvHtafqgX
-X-Received: by 2002:a05:6102:956:b0:612:21f8:5afd with SMTP id ada2fe7eead31-63a3d94e0ebmr11108013137.12.1779262884183;
-        Wed, 20 May 2026 00:41:24 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-95fc2d324a6sm7738562241.7.2026.05.20.00.41.23
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2026 00:41:24 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-95d0476492eso1093856241.3
-        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 00:41:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8ZX4jb6N212SSwzQcyRT79POR1Z4rbNqIUizZI8G/EttfTiu9XbS/KRqZ0b36YnsGjEEPTq41k6JMMmGcsOUw=@vger.kernel.org
-X-Received: by 2002:a05:6102:f85:b0:631:4d87:ba5f with SMTP id
- ada2fe7eead31-63a3d0182e9mr12079127137.3.1779262883651; Wed, 20 May 2026
- 00:41:23 -0700 (PDT)
+	s=arc-20240116; t=1779270905; c=relaxed/simple;
+	bh=W/ETVLQPiLWnEVzKK7qPp+AucWqlm4vH3u/jl9ung40=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m1F9ZmgLEuR9lZ35rDeQRCyMM02aM+8ThBLgf3jUsH/N/CIOpizzxrye4jWHrF4nSg1ZP35vDviMWp865M+TWv+gYAm4rZbu8fTTpn6xF/5OL8/kUlA8U1WbJwB/tSEntl43touSjZsgjs4XGyL7r1CMDX8B1GdJl6VAQC+/Rp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kubQ3jql; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kubQ3jql"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BEB21F000E9;
+	Wed, 20 May 2026 09:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779270903;
+	bh=1rR11SLMve5z99TMpOCckaXfI3pjGLYjtT01yolVcVA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=kubQ3jqlcjIHtJBWJBC/to3LSIkAaMm0l7XhtMWuGGmjExiV5CkoCbKTUfd3BvVhj
+	 eoS3nNKCqeYOwtIRPbX9yNtLX5Q0aMkyU0vxOdFjrnWPWo+D9A27XF+2A/bF71fC2/
+	 qMKLiG3fY/sZZZLYyNuL/nsSrYJQz/eEtNKr1beBxg4CPz4j4HqGkkmPj8jXYWGYUi
+	 +2s+wVVk70cgtJFgWGgQ9kcnhHkp+x97sWJ41S6cdb8sO5WKyo8D0cP2Cgy3VdKM9d
+	 6eeeQIeBT3FHMyWMXtOcnlKqyxJmAtteMMhXQe0T3nJRFXcERFCpdBcykGgGXJ07Zv
+	 k2yiMhfy9ywyQ==
+Date: Wed, 20 May 2026 10:54:50 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>,
+ rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH RFC v4 09/10] Documentation: ABI: testing: add docs for
+ ad9910 sysfs entries
+Message-ID: <20260520105450.7fae5de1@jic23-huawei>
+In-Reply-To: <pkx5v4od3wkyyzxomfrjf4ei7leboadzth262xnl55fvu76pf3@yqrezmo6gtq7>
+References: <20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com>
+	<20260508-ad9910-iio-driver-v4-9-d26bfd20ee3d@analog.com>
+	<20260517155843.7f833658@jic23-huawei>
+	<yrabhhhdkzmiuxlqzrrj6a47ftlzwvva7r2korzeszdy4yqrin@xl6obhhnnas4>
+	<20260518144537.7c998308@jic23-huawei>
+	<pkx5v4od3wkyyzxomfrjf4ei7leboadzth262xnl55fvu76pf3@yqrezmo6gtq7>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260519133025.618255-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVKOdzThVMOcQ1K9crUkyDutvuZsP2-5v5++SVFHkgtOA@mail.gmail.com>
- <CA+V-a8sFNjp9euEEfBf3BoscjU8W3isRT_pnzd7J4QsuiN6qfg@mail.gmail.com> <18c41409-e1d1-4877-87a6-1c3156f943aa@embeddedor.com>
-In-Reply-To: <18c41409-e1d1-4877-87a6-1c3156f943aa@embeddedor.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 20 May 2026 09:41:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVznvSLr+ap3QwawZdu8fc4dZjpkWi7wgUA815KRfCgEQ@mail.gmail.com>
-X-Gm-Features: AVHnY4IbN4gvBXfEdCbvoV1Bz24wCmRs3C2Yr4J_UWX62ZxMsTA07ZYlhMORYx0
-Message-ID: <CAMuHMdVznvSLr+ap3QwawZdu8fc4dZjpkWi7wgUA815KRfCgEQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: mmc_test: Fix counter tracking in mmc_test_alloc_mem()
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Ulf Hansson <ulfh@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Gustavo,
+On Mon, 18 May 2026 16:27:23 +0100
+Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
 
-On Tue, 19 May 2026 at 20:44, Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
-> On 5/19/26 07:44, Lad, Prabhakar wrote:
-> > On Tue, May 19, 2026 at 2:34=E2=80=AFPM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> >> On Tue, 19 May 2026 at 15:30, Prabhakar <prabhakar.csengg@gmail.com> w=
-rote:
-> >>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >>>
-> >>> Fix an counter tracking in mmc_test_alloc_mem() that causes a kernel =
-panic
-> >>> during error unwinding.
-> >>>
-> >>> The `struct mmc_test_mem` uses the `__counted_by(cnt)` annotation on =
-its
-> >>> flexible array member `arr`. While kzalloc_flex() initially sets the
-> >>> counter field (`cnt`) to `max_segs`, the allocation loop needs to tra=
-ck
-> >>> how many elements have actually been populated.
-> >>>
-> >>> Previously, leaving `mem->cnt` at `max_segs` meant that if the loop f=
-ailed
-> >>> midway (e.g., "Failed to map sg list"), the error unwinding path in
-> >>> mmc_test_free_mem() would attempt to clean up uninitialized trailing
-> >>> array slots. This resulted in passing NULL pointers to __free_pages()=
-,
-> >>> triggering a kernel panic:
-> >>>
-> >>>    [   66.172845] mmc0: Failed to map sg list
-> >>>    [   66.176722] Unable to handle kernel NULL pointer dereference at=
- virtual address 0000000000000000
-> >>>    ...
-> >>>    [   66.432747] Call trace:
-> >>>    [   66.435191]  ___free_pages+0x1c/0xc4 (P)
-> >>>    [   66.439119]  __free_pages+0x14/0x20
-> >>>    [   66.442608]  mmc_test_area_cleanup+0x58/0x84 [mmc_test]
-> >>>
-> >>> Fix this by explicitly resetting `mem->cnt` to 0 immediately after
-> >>> allocation. Then, move the existing `mem->cnt` increment so that it o=
-ccurs
-> >>> prior to populating each array slot, using `mem->cnt - 1` for the act=
-ual
-> >>> assignment index. This guarantees that the counter accurately tracks
-> >>> initialized entries for safe error cleanup, while dynamically expandi=
-ng
-> >>> the `__counted_by` validation boundary ahead of each flexible array w=
-rite.
-> >>>
-> >>> Additionally, rewrite the cleanup loop in mmc_test_free_mem() to use =
-a
-> >>> standard forward for-loop. This addresses the unsafe post-decrement l=
-ogic
-> >>> in the original `while (mem->cnt--)` loop which evaluated and decreme=
-nted
-> >>> the counter field before indexing the array, and avoids a potential i=
-nteger
-> >>> underflow/wrap-around of the counter field if the cleanup path is inv=
-oked
-> >>> when `mem->cnt` is 0.
-> >>>
-> >>> Fixes: c3126dccfd7b ("mmc: mmc_test: use kzalloc_flex")
-> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
->
-> >>> ---
-> >>> v1->v2:
-> >>> - Started with cnt =3D 0 and incremented before assignment to ensure
-> >>>    accurate tracking of initialized entries in mmc_test_alloc_mem().
-> >>> - In mmc_test_free_mem(), replaced the while loop with a forward for-=
-loop to
-> >>>    safely iterate over initialized entries without risking underflow.
-> >>> - Updated commit message to clarify the issue and the fix.
-> >>
-> >> Thanks for your patch!
-> >>
-> >>> --- a/drivers/mmc/core/mmc_test.c
-> >>> +++ b/drivers/mmc/core/mmc_test.c
-> >>> @@ -318,9 +318,8 @@ static void mmc_test_free_mem(struct mmc_test_mem=
- *mem)
-> >>>   {
-> >>>          if (!mem)
-> >>>                  return;
-> >>> -       while (mem->cnt--)
-> >>> -               __free_pages(mem->arr[mem->cnt].page,
-> >>> -                            mem->arr[mem->cnt].order);
-> >>> +       for (unsigned int i =3D 0; i < mem->cnt; i++)
-> >>> +               __free_pages(mem->arr[i].page, mem->arr[i].order);
-> >>>          kfree(mem);
-> >>>   }
-> >>>
-> >>> @@ -356,6 +355,7 @@ static struct mmc_test_mem *mmc_test_alloc_mem(un=
-signed long min_sz,
-> >>>          mem =3D kzalloc_flex(*mem, arr, max_segs);
-> >>>          if (!mem)
-> >>>                  return NULL;
-> >>> +       mem->cnt =3D 0;
-> >>
-> >> This is not needed, as it is set to zero by kzalloc_flex().
-> >>
-> > Actually, kzalloc_flex() automatically sets mem->cnt to max_segs
-> > because cnt is annotated with __counted_by. Because of that implicit
-> > initialization, we need this explicit reset to get it back to zero.
->
-> An auxiliary variable could be used to avoid having to update the
-> counter too early[1][2].
+> On 26/05/18 02:45PM, Jonathan Cameron wrote:
+> > On Sun, 17 May 2026 18:30:27 +0100
+> > Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+> >   
+> > > On 26/05/17 03:58PM, Jonathan Cameron wrote:  
+> > > > On Fri, 08 May 2026 18:00:25 +0100
+> > > > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+> > > >     
+> > > > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > > > > 
+> > > > > Add custom ABI documentation file for the DDS AD9910 with sysfs entries to
+> > > > > control Parallel Port, Digital Ramp Generator and OSK parameters.
+> > > > > 
+> > > > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>    
+> > > > I'm fine with phase and frequency as defined, but for the scaling it made me wonder.
+> > > > For outvoltage0 channels the assumption the value is the peak voltage so if
+> > > > we know what input to be modulated by the ramp generator can we express them
+> > > > in volts (well milivolts) rather than as a scaling multiplier?    
+> > > 
+> > > The DAC output is current-based and differential. Voltage conversion would happen
+> > > outside the device...  
+> > 
+> > Why aren't we representing this as out_altcurrentX-Y_xxxx?  
+> 
+> Good point! altcurrent makes more sense than altvoltage if we want to use raw to
+> control the output level rather than scale, which would be a constant to convert
+> raw into current units (what is the one that is used in the sysfs ABI? Ampere, mA or uA?)
 
-Thank you!
-In light of this, Prabhakar's v1[3] is the better solution.
-But perhaps that the addition of "mem->cnt =3D max_segs;" after the
-kzalloc_flex() should be dropped, as it is done automatically by
-compilers that support __counted_by, but is irrelevant for compilers
-that do not support it (the correct value is set at the end anyway).
+Same as non alternating version so mA (which is a historical design error we have
+long been stuck with :()  The altvoltageY_raw docs don't give a unit either.
+If you don't mind, please send a patch adding that whilst you are here.
+Same mid to peak - hopefully that is what any users not modifying to RMS have
+been doing!
 
-Gustavo, what do you think?
+Seems we either never had one or that particular bit of ABI doc is missing.
+Please add an entry for altcurrentX_raw
 
-> I think it'll eventually become best practice to defer updating the
-> counter until after the flexible array has been fully initialized, or
-> after every major update that requires changing its boundaries.
+> 
+> Not sure about the benefits on setting "differential" in channel spec.. the name would
+> become out_altcurrentX-altcurrentY_xxxxx...
 
-In case the update is a _decrease_.
-If the update is an _increase_, it must be done first?
+Becomes a question of whether it is useful to represent that - maybe not
+in this particular case.
 
-> [1] https://git.kernel.org/linus/ea9e148c803b24eb
-> [2] https://embeddedor.com/blog/2024/06/18/how-to-use-the-new-counted_by-=
-attribute-in-c-and-linux/
-> (I'm in the process of updating this blogpost with some *alloc_flex() exa=
-mples and more.)
+> 
+> Is there any modifier for amplitude/peak/envelope? I see IIO_MOD_RMS, which could be used
+> if adding a 1/sqrt(2) factor to the fixed scale.
 
-[3] "[PATCH] mmc: mmc_test: Fix __counted_by handling after
-kzalloc_flex() conversion"
-    https://lore.kernel.org/20260513201315.3186621-1-prabhakar.mahadev-lad.=
-rj@bp.renesas.com
+For altcurrent / altvoltage assumption is it's mid to peak.  Unless the modifier switches
+it to RMS as you've noted.
 
-Gr{oetje,eeting}s,
+> 
+> Then, I would consider something like out_altcurrent_rms_xxxx as a good alternative.
+> 
+> "scale" would be a constant in the top-level phy channel
+> 
+> single tone profile channels would have:
+> - frequency
+> - phase
+> - raw
+> 
+> drg ramp up/down channels:
+> - frequency and frequency_roc
+> - phase and phase_roc
+> - raw and raw_roc
+> 
+> parallel port channel(s):
+> - frequency_scale and frequency_offset (frequency destination)
+> - phase_offset (polar destination)
+> - offset (polar destination)
+> 
+> osk channel:
+> - raw
+> - raw_roc
+> 
+> raw_roc could be just roc, but that sounds like it carries the scale and refers to
+> a current value? and maybe that breaks consistency with other destination attributes?
+> I am fine with just roc if that refers to the raw value, not (raw * scale).
 
-                        Geert
+This is a good question.  We ran into ambiguity with events where we have to derive
+if it is _raw or _processed for the thresholds based on whether the main attribute
+is _raw or _processed.  Nice to avoid doing that again.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+I'd be interesting in others views on this but to me raw_roc seems fine.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> 
+> With all the above, still using altvoltage is not incorrect, just a matter on how
+> we want to express the units.
+
+Agreed - but to get to directly useable values we'd need to provide info on the
+external circuit - and given we are dealing with AC signals that is tricky to do
+in a compact way.
+
+
+> Note that using raw instead of scale to control the
+> amplitude is just another option to tackle the problem. I suppose that the
+> important thing here is being technically corrent and consistent in terms of
+> usage. Maybe out_altcurrent_rms_* is more clear in terms of amplitude level.
+
+Agreed.  It is always (?) possible to switch between scale and raw.
+For an ADC the distinction is clear as we can't control _raw. For a DAC it all gets
+rather value as we can logically control both and for an AC type of DAC / DDS it
+all gets less intuitive.  As you say, consistency is key.
+
+I'd like us to at least be consistent across DDS devices. Perhaps we need some
+general documentation on whatever the outcome of this discussion is to record
+some of the logic behind those decisions.
+
+> 
+> > 
+> >   
+> > > using a resistor load or an op-amp transimpedance stage,
+> > > and I am no expert on that, but that often requires impedance matching so voltage
+> > > levels may depend on the frequency. Then, I suppose that voltage is not the right
+> > > unit to use.  
+> > 
+> > Understood that it can get complex!  
+> > > 
+> > > The scale here controls the amplitude of the varying signal. Assuming the peak voltage
+> > > (amplitude) is constant means we have a constant envelope, but that should not mean
+> > > we can't control it or it should not mean that the hardware can have other ways to
+> > > control it. That said, scale behaves as a "gain multiplier".  
+> > Understood. Given it's the envelope then if scale happened to be 1 always it would
+> > be presented as _processed. So this is consistent with other channel types.
+> >   
+> > >   
+> > > > 
+> > > > That seems to me like it fits better with the overall ABI.
+> > > >     
+> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale_offset
+> > > > > +KernelVersion:
+> > > > > +Contact:	linux-iio@vger.kernel.org
+> > > > > +Description:
+> > > > > +		For a channel that allows amplitude control through buffers, this
+> > > > > +		represents the value for a base amplitude scale. The actual output
+> > > > > +		amplitude scale is a result with the sum of this value.
+> > > > > +    
+> > > >     
+> > > > > +
+> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale_roc    
+> > > > 
+> > > > Silly question perhaps but can work out how this related to millivolts/sec
+> > > > That might make a more intuitive interface than scaling multiplier per sec
+> > > > Perhaps the combination with offset makes this impossible though maybe that
+> > > > could be a expressed as a voltage offset?  Afterall if the amplitude being
+> > > > scaled is 5V then 5 * (offset + scale) = 5 * offset + 5 * scale
+> > > >      
+> > > > > +KernelVersion:
+> > > > > +Contact:	linux-iio@vger.kernel.org
+> > > > > +Description:
+> > > > > +		Amplitude scale rate of change in 1/s for channels that ramp
+> > > > > +		amplitude. This value may be influenced by the channel's
+> > > > > +		sampling_frequency setting.    
+> > > > 
+> > > >     
+> > >   
+> >   
+> 
+
