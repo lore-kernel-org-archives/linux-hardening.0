@@ -1,63 +1,63 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC04C3DCD8F
-	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 12:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0540D3DF001
+	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 12:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779280808; cv=none; b=tx2nvGUV2igDjfvD4oBta3FsyWb/0tu0dC8mNmJyleQYlTkQxoyWuSgtioPGZPlw8I718tr9+3tdZmk+mJh3v91GzT0ABEvd3Y0mw/TZyGbR0cGXbBUmxhYpWeOrYcKjflKLaJacKlnE4VT6mwGEfEnVprK/A5qVHFcwzz8Ru4A=
+	t=1779280809; cv=none; b=V66+VPQpRwJO/TL9duczeetOMoEJ2YbZyF+RjZJhZTldKsMzevB1so7MKNTYLQC/Grk/SnH6KHQ3rZaggjH6sv3XlkTP3vq38fkBB8oGtBby0dacGVbOC3JsyJ6SD8Cd7Q5gtO/Vepctmfec+Ah9sIvf12vSqauyQR2WKQlJIPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779280808; c=relaxed/simple;
-	bh=K7L6/XB0yyn6ybRoO/c5hHdoNUlLw642jyc1eKLVk90=;
+	s=arc-20240116; t=1779280809; c=relaxed/simple;
+	bh=riO1ZNMnJ54rVBK8RID6oN0pWaUmns533VE2TlxnP8Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PSIDdmD9hYMUiZI1EfFQMnUGdnujntELVRflo2hdRCQIlwt/drlE552ATS/GrUQS1YbyB0oKd3ns7S94YupDMSijUHuCFyRyZZq2zmeoNRftLIuf4yvyTym614C6RjjjJPJN8TYoGhsx9tOWxg7unLH9UNEIgEW7mAeqwQkPLqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rgCk/1FQ; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version; b=ndIp/92M9+gCLrG0d5M1oXHRDdu5aTFaJGqlmlalcT/xIZuryKmKivdZNNTQX6bpO3lU3ZsYo7bF5YbqSy/7vbNwALeoh/wSf4uBGNfReQ2CF83cX2N56YTUa4cccUOAeFRsIK2iGvgk3waU7vq8aV4Mramg2xWcdCm6oAxkGH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XlWI1n9f; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgCk/1FQ"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-444826c16ffso4307603f8f.1
-        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 05:40:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlWI1n9f"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43eb05b1875so2667613f8f.3
+        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 05:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779280805; x=1779885605; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779280806; x=1779885606; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0vz7ySB1n7hiRbxQUx3+c5jByhWmQvmCG7QHugS1JFY=;
-        b=rgCk/1FQk8j0wXw/14HfpslWx0wgaY1M27wQ671n1g0XxOk4E+poy69mgX2kO2X3Zh
-         mAi6qHVyXyGEiav9Rv9jH2bJvPdbyyanGhb76Wd+zLivn4jQQgbix74cNGcupOZJ1/eI
-         aoVc76rAHwzn/odiaTUfYVvDXALC226zHt78RRwDfLjDOhE5PTCLDcp8Xsrsq1Q0/aae
-         1e8ERrNr7YN6ozDddyOcg+F3+GiR25zaVZX6YYIAFXZCGm4VmXBOtIcmano+mM72YE7L
-         b9vOtSJ8EIkfM7lUyWslFsoYDRlPktDQhcU6ecxec/u1a0WDmXRZ0nQgES/puCxAEOWe
-         0zpg==
+        bh=ZF9TELI0fOJNnQQ0E3LX4ebM27p0Qx0XyBTx0DYfCok=;
+        b=XlWI1n9fatfZ3M0GiBap5c0WoV8VQsjet5Hb0ozB6cMB7oE2HrlB/q0XDi29KtUc3t
+         QBnoajYpvcCGw4OTTKwECLBRFIikmNtMGEhBbXjjCW1RHUXu5NzRKI65a3Plzw5MaxCy
+         VtLoXg5ORiYT0rm7byYx6E1vIM5/M1zSnm40ff5CV2lrsFcmx2r2p8Q/oi+oKXlJjMos
+         XJH7wRE6KGBC5AoQQ9oofRS+5zpFySwSXi9farG9Rv7iImIZZJyAwfxgTzrlCOKxnspT
+         8IYpWKJCHfLZv1/M3E/w+uJoXfdorjKrKS53JSa40aj3Lwvm3dlWiqtoj4lT/eZcNZS/
+         zddA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779280805; x=1779885605;
+        d=1e100.net; s=20251104; t=1779280806; x=1779885606;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=0vz7ySB1n7hiRbxQUx3+c5jByhWmQvmCG7QHugS1JFY=;
-        b=lDjxGHjaG9s45Ix8a+SMSm4T1ioW08sfQLfPxALwAD9vSkyCjf3VhtDtmXV2jqt/z/
-         LDOBd1g4JG0axhhaCqIWd8Yj5/htZeE5l1jmVkzAiPAXlIZdC8XQQITlSsQPCXU0Zm1G
-         HgFW6eSHSFQMzNPHbmMHSh8FyE+Uw7iXvRUvW987pndcm/m+VWOp1MSe5IQjhfQG4mB2
-         fmro7H9ur7uKfLfgfvFXLhKqgubqcVzP1xFCuwmP6VzWmMbace+i6BGCUWNNP6UDdPk8
-         ccxwLkDv9WSa9anJeeNeTieF3oDt22BxI4kq0Eut/LcMM3DXszEQYvuR0oFFpPyeqR7R
-         QJjg==
-X-Forwarded-Encrypted: i=1; AFNElJ/ObE3as4/RR6P6r06vPtr7JM9tFm61o4tw1jFMOYTnIyBXgnKNpJ/XsroTb3KfknLRoV6pvi88HbFSTeGIK50=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPoI37nysl39oQL1OKW7F2NmXkE2eUEih3jz/yTtoVp9qAQso/
-	qwDk8Sau2Xr+m89Ksq2ls5+wkAfn8zawIQCWFPf2Got7R5IGmuPDXH0W
-X-Gm-Gg: Acq92OH3woXlmSyRGQp/tEXwDUtHme5XGDKNnIPHm6VPomJ7hsL5jt7dxFnnIqYKwyE
-	HZE4K5FMHWOQRJSL2gJDPM34dA3eDuMEHM5dxd1CAgew2AgxiY/0jtdbLecJcUWH1rH+WSBqxPh
-	+hZuZcT2c5cNABALtx7hyLon3uFuFHBHNlMrz4cX6uVDGgeo+Ovel5+8V3g2/5c/K8abETkjME4
-	r7m+iRp7aRQ7w4hhyvpY23KpPWhoVXM7ufmdMYeLjYBHRzSESImE7L4YYnAN7AqyfhkCRbDRQed
-	OgEpj4HN6vjHsnu6wq69987ez4gBMI36FTc0zvgTSt5M1cy49GYyju1gm/TPoVHmbMjUn3Bueal
-	F9/Qvv4s7X0dPy+7PCGFWPQ5+CJ5Vm/i3aOBJ0ggcOYhae74wBTEl/ontj5SCBGWD9EJW5T6CqY
-	E8IFLYfhoQEphTUF2/4DLk3BgQOn4qzUQRxi7fLeWo9Q==
-X-Received: by 2002:a05:6000:1a8e:b0:43e:a70d:7622 with SMTP id ffacd0b85a97d-45e5c58d96amr36524506f8f.22.1779280804903;
-        Wed, 20 May 2026 05:40:04 -0700 (PDT)
+        bh=ZF9TELI0fOJNnQQ0E3LX4ebM27p0Qx0XyBTx0DYfCok=;
+        b=VxAWaQmenpo/fAw6+MsFWDFZR+WAvbxejF9Fiiuex2XwMoOeyWa1HWpj27o4616gQo
+         W4nWOXuG8aZVdYL6AaIbNQJriiBUv5u+DYAmT0orUHS3JNw7voNsmtIM3bTAOJ6zXG3t
+         7jnAEwFLrVYRbPWFrXaShmPv0tBMXeavn/8C11A967gzADyCL6KHTZ/BuouX53CO3MmO
+         Reqq5ff8pbVKKWZYXsk6iq6u0fyVOYU/Ex5N3uM+q1u6vH0ln1qPrxhIuu6qXnUJeOnW
+         LtkUrRk/LXsw+2nCSo4kVFCxfn6nedQMjmCRhxX1VVVHHfJbFNqSY9I35lBcYl6Ji6i8
+         VEwQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+LZu1snOmBHVfJMVzycNo059GbtHrtohxXrPI3rUCa6O6YK6JT/t9G3CU/l4s+olTdso6yf0ZzyGqiT81u6X0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDpLQntPyxxAXbocsy9yvn6FtDL2aFW1hOWk4meXMZW7d0H9pm
+	0dkn0P5P/C+Q7gp6Opts/T+WOL9hFD24CsQjczTubTA7dFxQzpX30Za1
+X-Gm-Gg: Acq92OHnNBlZvpXQdpsF0WqJdbmqbli6xvCB9LHGUUragoHgWH2onuG4nf0DvK477fS
+	VuKiUUnFwSO82y3tJ2yEQEdTu4VXfLEjMxdvQAc8Mrp+tSGnkxjzl9IjHju2RDaBAqegHKbx5vc
+	oJzDbMeKGQUaa1FsI9k9NtMNYZsKRXeyX5uZkZNQTuzkOzqGe7W1U7BjujhXfN+5wjqM0P++fok
+	FKLbG9XMpFOjYjn/pa1e9KCdy2FyE7rURr9URt79Dc4w+qAsMvzzJZRiniVDh1oe+yfuC+KotDW
+	GFt3C6Eg2BZ63rp6haHoz1n3IMRgS2Z8G/uKicxgH+zyHDmSgQmPNQEXkYR5ExZIUwMeRBJuPDb
+	x9nXNpRDlt/0rP6qPAPcbHuNGjUccaWXfljixt3bDA7qNji6sLl9Yy5zFB0z0BQ5MygfbjBbZUb
+	Pwvel/L3Y2yzT/xn771rsqEN5F6Pj13bYMXdfKi99DI7DbIafXjexM
+X-Received: by 2002:a05:6000:4007:b0:456:ba09:3e64 with SMTP id ffacd0b85a97d-45e5c5b3669mr37757602f8f.1.1779280806221;
+        Wed, 20 May 2026 05:40:06 -0700 (PDT)
 Received: from RTRKW671-LIN.domain.local ([89.216.37.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ec3acf7sm54460252f8f.12.2026.05.20.05.40.03
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ec3acf7sm54460252f8f.12.2026.05.20.05.40.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 05:40:04 -0700 (PDT)
+        Wed, 20 May 2026 05:40:05 -0700 (PDT)
 From: Milan Tripkovic <milant2002@gmail.com>
 To: pjw@kernel.org,
 	palmer@dabbelt.com,
@@ -70,9 +70,9 @@ Cc: alex@ghiti.fr,
 	linux-hardening@vger.kernel.org,
 	Dusan.Stojkovic@rt-rk.com,
 	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
-Subject: [PATCH v6 1/2] riscv: lib: add memcmp() implementation
-Date: Wed, 20 May 2026 14:39:53 +0200
-Message-ID: <20260520123954.379630-2-milant2002@gmail.com>
+Subject: [PATCH v6 2/2] lib/string_kunit: extend benchmarks and unit test to memcmp()
+Date: Wed, 20 May 2026 14:39:54 +0200
+Message-ID: <20260520123954.379630-3-milant2002@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260520123954.379630-1-milant2002@gmail.com>
 References: <20260520123954.379630-1-milant2002@gmail.com>
@@ -86,24 +86,8 @@ Content-Transfer-Encoding: 8bit
 
 From: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
 
-Add an assembly implementation of memcmp() for RISC-V. The implementation
-uses word-aligned loads for the generic path and the ZBB extension for
-optimized sign resolution, with an assembly fallback for non-ZBB systems.
-
-Benchmark results (QEMU TCG, rv64):
-
- Len   | Default |NoALIGN | ALIGN  | %NoALIGN | %ALIGN
- ------|---------|--------|--------|----------|--------
- 1 B   | 20.3    | 21.5   | 20.9   | +5.9%    | +3.0%
- 7 B   | 88.9    | 96.9   | 155.7  | +9.0%    | +75.1%
- 8 B   | 89.6    | 110.5  | 176.2  | +23.3%   | +96.7%
- 16 B  | 134.4   | 172.8  | 334.8  | +28.6%   | +149.1%
- 31 B  | 163.5   | 211.9  | 606.2  | +29.6%   | +270.8%
- 64 B  | 203.8   | 240.3  | 968.6  | +17.9%   | +375.3%
- 127 B | 224.6   | 269.0  | 1362.8 | +19.8%   | +506.8%
- 512 B | 235.7   | 269.9  | 1913.7 | +14.5%   | +711.9%
- 1024 B| 256.8   | 283.5  | 2123.6 | +10.4%   | +726.9%
- 4096 B| 263.8   | 299.7  | 2290.4 | +13.6%   | +768.2%
+Extend the string benchmarking suite to include memcmp().
+Extend the string unit test to include memcmp().
 
 Signed-off-by: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
 ---
@@ -112,185 +96,155 @@ v6 changes:
     - Link to v5: https://lore.kernel.org/all/20260519140029.1190381-1-milant2002@gmail.com/
     
 v5 changes:
-    - Optimized generic memcmp path with word-aligned loads.
-    - Implemented non-ZBB fallback to byte comparison per review.
+    - Removed redundant warm-up from test case
     - Link to v4: https://lore.kernel.org/all/20260518131407.1026049-2-milant2002@gmail.com/
 
+v4 changes:
+    - Fixed build error: call to undeclared function 'STRING_BENCH'
+    - Link to v3: https://lore.kernel.org/all/20260515141019.1234037-1-milant2002@gmail.com/
+
+v3 changes:
+    - Split memcmp benchmark into wrapper (string_bench_memcmp) and worker
+      function (do_string_bench_memcmp).
+    - Removed all C99 mixed declarations; moved all variable declarations
+      to the top of each function.
+    - Converted len, iterations and loop counters in the benchmark to u64
+      to avoid implicit casts.
+    - Cleaned up spacing, indentation and minor style issues.
+    - Added #if defined(CONFIG_RISCV_ISA_ZBB)... in  memcmp.S
+    - Link to v2: https://lore.kernel.org/all/20260514121359.931999-1-milant2002@gmail.com/
+
 v2 changes:
-    - Added alignment checks for buffers to avoid expensive misaligned loads.
-    - Optimized the loop using end-pointers to reduce per-iteration overhead.
-    - Implemented word-aligned tail handling using ZBB shifts.
-    - Removed redundant pointer equality (a0 == a1) check.
-    - Retained BE support via #ifndef; ZBB rev8 is used for the LE fast-path.
+    - Fixed KUnit build failures for Clang and non-benchmark configs.
     - Link to v1: https://lore.kernel.org/all/20260512141007.1193033-1-milant2002@gmail.com/
+    
+ lib/tests/string_kunit.c | 106 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
 
- arch/riscv/include/asm/string.h |   2 +
- arch/riscv/lib/Makefile         |   1 +
- arch/riscv/lib/memcmp.S         | 107 ++++++++++++++++++++++++++++++++
- arch/riscv/purgatory/Makefile   |   5 +-
- 4 files changed, 114 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/lib/memcmp.S
-
-diff --git a/arch/riscv/include/asm/string.h b/arch/riscv/include/asm/string.h
-index 764ffe8f6..5c5299678 100644
---- a/arch/riscv/include/asm/string.h
-+++ b/arch/riscv/include/asm/string.h
-@@ -18,6 +18,8 @@ extern asmlinkage void *__memcpy(void *, const void *, size_t);
- #define __HAVE_ARCH_MEMMOVE
- extern asmlinkage void *memmove(void *, const void *, size_t);
- extern asmlinkage void *__memmove(void *, const void *, size_t);
-+#define __HAVE_ARCH_MEMCMP
-+extern asmlinkage int memcmp(const void *, const void *, size_t);
+diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+index 0819ace5b..d395627f7 100644
+--- a/lib/tests/string_kunit.c
++++ b/lib/tests/string_kunit.c
+@@ -881,6 +881,110 @@ static void string_bench_strrchr(struct kunit *test)
+ 	STRING_BENCH_BUF(test, buf, len, strrchr, buf, '\0');
+ }
  
- #if !(defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS))
- #define __HAVE_ARCH_STRCMP
-diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
-index 6f767b2a3..b529e1be1 100644
---- a/arch/riscv/lib/Makefile
-+++ b/arch/riscv/lib/Makefile
-@@ -3,6 +3,7 @@ lib-y			+= delay.o
- lib-y			+= memcpy.o
- lib-y			+= memset.o
- lib-y			+= memmove.o
-+lib-y			+= memcmp.o
- ifeq ($(CONFIG_KASAN_GENERIC)$(CONFIG_KASAN_SW_TAGS),)
- lib-y			+= strcmp.o
- lib-y			+= strlen.o
-diff --git a/arch/riscv/lib/memcmp.S b/arch/riscv/lib/memcmp.S
-new file mode 100644
-index 000000000..bdb92941d
---- /dev/null
-+++ b/arch/riscv/lib/memcmp.S
-@@ -0,0 +1,107 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++static void string_test_memcmp(struct kunit *test)
++{
++	const unsigned int max_offset = 16;
++	const unsigned int max_len = 32;
++	const unsigned int buf_size = max_offset + max_len + 32;
++	u8 *buf1, *buf2;
++	unsigned int i, j, len, k;
++	int res;
 +
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+#include <asm/alternative-macros.h>
-+#include <asm/hwcap.h>
++	buf1 = kunit_kzalloc(test, buf_size, GFP_KERNEL);
++	buf2 = kunit_kzalloc(test, buf_size, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf1);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf2);
 +
-+#if defined(CONFIG_RISCV_ISA_ZBB) && defined(CONFIG_TOOLCHAIN_HAS_ZBB)
-+.option push
-+.option arch,+zbb
++	for (i = 0; i < max_offset; i++) {
++		for (j = 0; j < max_offset; j++) {
++			for (len = 0; len <= max_len; len++) {
++				memset(buf1, 'A', buf_size);
++				memset(buf2, 'A', buf_size);
++				KUNIT_EXPECT_EQ_MSG(test, memcmp(buf1 + i, buf2 + j, len), 0,
++						    "Should be equal: i:%u j:%u len:%u", i, j, len);
++				for (k = 0; k < len; k++) {
++					memset(buf1, 'A', buf_size);
++					memset(buf2, 'A', buf_size);
++					buf2[j + k] = 'B';
++					res = memcmp(buf1 + i, buf2 + j, len);
++					KUNIT_EXPECT_NE_MSG(test, res, 0,
++							    "Should detect difference at k:%u (i:%u j:%u len:%u)",
++						k, i, j, len);
++					if (buf1[i + k] < buf2[j + k])
++						KUNIT_EXPECT_LT(test, res, 0);
++					else
++						KUNIT_EXPECT_GT(test, res, 0);
++				}
++			}
++		}
++	}
++}
++
++#ifndef STRING_BENCH
++#define STRING_BENCH(...) 0
 +#endif
 +
-+/* int memcmp(const void *cs, const void *ct, size_t n) */
-+SYM_FUNC_START(memcmp)
-+/*
-+ * Parameters
-+ *	a0 - Pointer to first memory block (cs), also return value
-+ *	a1 - Pointer to second memory block (ct)
-+ *	a2 - Number of bytes to compare (n), decremented during loop
-+ *
-+ * Returns
-+ *	a0 - 0 if equal, positive if cs > ct, negative if cs < ct
-+ *
-+ * Clobbers
-+ *	t0, t1, t2, t3, t4
-+ */
-+	add	t3, a0, a2
-+	or	t0, a0, a1
-+	andi	t0, t0, (SZREG - 1)
-+	bnez	t0, 5f
++static void do_string_bench_memcmp(struct kunit *test)
++{
++	char *buf1 = NULL;
++	char *buf2 = NULL;
++	const u64 lengths[] = { 1, 7, 8, 16, 32, 64, 128, 512, 1024, 4096};
++	const int offsets[] = { 0, 1, 3, 7};
++	const u64 max_len = 4096 + 64;
++	unsigned int o, i;
++	unsigned int off;
++	u64 len;
++	u64 iterations;
++	u64 elapsed;
++	u64 ns_per_call;
++	u64 mbps;
 +
-+	addi	t4, t3, -SZREG
-+	bltu	t4, a0, 7f
++	buf1 = vmalloc(max_len);
++	buf2 = vmalloc(max_len);
 +
-+1:
-+	REG_L	t1, 0(a0)
-+	REG_L	t2, 0(a1)
-+	bne	t1, t2, 2f
-+	addi	a0, a0, SZREG
-+	addi	a1, a1, SZREG
-+	bleu	a0, t4, 1b
++	if (!buf1 || !buf2) {
++		vfree(buf1);
++		vfree(buf2);
++		kunit_err(test, "vmalloc failed\n");
++		return;
++	}
 +
-+7:
-+#if defined(CONFIG_RISCV_ISA_ZBB) && defined(CONFIG_TOOLCHAIN_HAS_ZBB)
-+	__ALTERNATIVE_CFG("j 5f", "nop", 0, RISCV_ISA_EXT_ZBB,
-+			  IS_ENABLED(CONFIG_RISCV_ISA_ZBB))
++	memset(buf1, 'A', max_len);
++	memset(buf2, 'A', max_len);
 +
-+	beq	a0, t3, 4f
-+	REG_L	t1, 0(a0)
-+	REG_L	t2, 0(a1)
++	for (o = 0; o < ARRAY_SIZE(offsets); o++) {
++		off = offsets[o];
 +
-+	sub	t0, t3, a0
-+	li	t4, SZREG
-+	sub	t0, t4, t0
-+	slli	t0, t0, 3
++		for (i = 0; i < ARRAY_SIZE(lengths); i++) {
++			len = lengths[i];
++			iterations = (len < 512) ? 100000ULL : 10000ULL;
++			elapsed = STRING_BENCH(iterations, memcmp, buf1, buf2 + off, len);
++			ns_per_call = div_u64(elapsed, iterations);
++			mbps = len ? div_u64(iterations * len * (NSEC_PER_SEC / MEGA), elapsed) : 0;
 +
-+#ifndef CONFIG_CPU_BIG_ENDIAN
-+	rev8	t1, t1
-+	rev8	t2, t2
-+#endif
-+	srl	t1, t1, t0
-+	srl	t2, t2, t0
++			if (off == 0) {
++				kunit_info(test, "bench_memcmp_aligned: len=%-4llu: %llu MB/s (%llu ns/call)\n",
++					   len, mbps, ns_per_call);
++			} else {
++				kunit_info(test, "bench_memcmp_unaligned(off=%u): len=%-4llu: %llu MB/s (%llu ns/call)\n",
++					   off, len, mbps, ns_per_call);
++			}
++		}
++	}
 +
-+	bne	t1, t2, 8f
-+	li	a0, 0
-+	ret
-+#else
-+	j	5f
-+#endif
-+5:
-+	beq	a0, t3, 4f
-+6:
-+	lbu	t1, 0(a0)
-+	lbu	t2, 0(a1)
-+	bne	t1, t2, 3f
-+	addi	a0, a0, 1
-+	addi	a1, a1, 1
-+	bne	a0, t3, 6b
++	vfree(buf1);
++	vfree(buf2);
++}
 +
-+4:	li	a0, 0
-+	ret
-+2:
-+#if !defined(CONFIG_CPU_BIG_ENDIAN) && \
-+	defined(CONFIG_TOOLCHAIN_HAS_ZBB) && defined(CONFIG_RISCV_ISA_ZBB)
-+	__ALTERNATIVE_CFG("j 5b", "nop", 0, RISCV_ISA_EXT_ZBB, IS_ENABLED(CONFIG_RISCV_ISA_ZBB))
-+	rev8	t1, t1
-+	rev8	t2, t2
-+#elif !defined(CONFIG_CPU_BIG_ENDIAN)
-+	j	5b
-+#endif
-+8:
-+	sltu	a0, t2, t1
-+	sltu	t0, t1, t2
-+	sub	a0, a0, t0
-+	ret
++static void string_bench_memcmp(struct kunit *test)
++{
++	if (!IS_ENABLED(CONFIG_STRING_KUNIT_BENCH)) {
++		kunit_skip(test, "CONFIG_STRING_KUNIT_BENCH not enabled");
++		return;
++	}
++	do_string_bench_memcmp(test);
++}
 +
-+3:
-+	sub	a0, t1, t2
-+	ret
-+
-+SYM_FUNC_END(memcmp)
-+SYM_FUNC_ALIAS(__pi_memcmp, memcmp)
-+EXPORT_SYMBOL(memcmp)
-+
-+#if defined(CONFIG_RISCV_ISA_ZBB) && defined(CONFIG_TOOLCHAIN_HAS_ZBB)
-+.option pop
-+#endif
-diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
-index b0358a78f..456929971 100644
---- a/arch/riscv/purgatory/Makefile
-+++ b/arch/riscv/purgatory/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
+ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(string_test_memset16),
+ 	KUNIT_CASE(string_test_memset32),
+@@ -910,6 +1014,8 @@ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(string_bench_strnlen),
+ 	KUNIT_CASE(string_bench_strchr),
+ 	KUNIT_CASE(string_bench_strrchr),
++	KUNIT_CASE(string_test_memcmp),
++	KUNIT_CASE_SLOW(string_bench_memcmp),
+ 	{}
+ };
  
--purgatory-y := purgatory.o sha256.o entry.o string.o ctype.o memcpy.o memset.o
-+purgatory-y := purgatory.o sha256.o entry.o string.o ctype.o memcpy.o memset.o memcmp.o
- ifeq ($(CONFIG_KASAN_GENERIC)$(CONFIG_KASAN_SW_TAGS),)
- purgatory-y += strcmp.o strlen.o strncmp.o strnlen.o strchr.o strrchr.o
- endif
-@@ -41,6 +41,9 @@ $(obj)/strchr.o: $(srctree)/arch/riscv/lib/strchr.S FORCE
- $(obj)/strrchr.o: $(srctree)/arch/riscv/lib/strrchr.S FORCE
- 	$(call if_changed_rule,as_o_S)
- 
-+$(obj)/memcmp.o: $(srctree)/arch/riscv/lib/memcmp.S FORCE
-+	$(call if_changed_rule,as_o_S)
-+
- CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
- CFLAGS_string.o := -D__DISABLE_EXPORTS
- CFLAGS_ctype.o := -D__DISABLE_EXPORTS
 -- 
 2.43.0
 
