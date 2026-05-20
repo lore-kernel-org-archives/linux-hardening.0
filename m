@@ -1,170 +1,188 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2AF348C55
-	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 15:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFDC400E0E
+	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 18:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779292573; cv=none; b=fj8S8TF8UyvsW8SQkiNlV8qN+kUHylZGPYPnadmPPC18AT9U1v2alAXMCHY2a5CEyqkJwe9bKKNk81Rxt2wsuoXryNr8joiz4DIpEIAC9NJusgKekoHTfVJH0t6qb+SL8m6YMIRWD3FGinau7pCd7apGShB3e4PSpIkLoahhW9s=
+	t=1779302855; cv=none; b=f7pd6AlAQjNbPY0YNR6R7AlFFJjzNMw21z+9H+B3wINUD4YcClg0NhR+oOg67vr5DCK5MffQxVukFxm++wybkkbO7JphCyyjYTY93+8meq0WDa40TRVAwRDsiGfscXs5dvbzVpTeqOtPEagBqTX6nmtYiidU5su0TwCyuJfglRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779292573; c=relaxed/simple;
-	bh=52pIhwO1sx/8MqjYI640DB/wIvQ/icsM6v73JsrwAmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L7tGRIyVUwKDeJ6yesBflyhBrnc2gv9m27PfiU/tnNDzWVe4g9a9v4J8cL0owdvXQddOEhc0TgRKj4HfxxJshnshcQGe/DE9OJlAWijP0acVrbBdrESp+N1USOXecWQVwZsOCB4qjf4WtZ51fB28oZJ6PYkD4sm6nXBzy6xl1f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n62vpcue; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1779302855; c=relaxed/simple;
+	bh=GtWAvNoa8liocTFIE29GV3PrLzqRKVIbyQdAYPsgXsg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gPb1VHBcOFLNqm63FIV8xNvi+4FpZN49s/ni0MuB6+Lx80enHAV7e64dGYRq9Pua1sabcu43EWdLfF3Inq/LqQG5iHUO01mQG+5yvbwFvPz6KF38pGfPxiilt0hrGHNEqQDUnsg2rWdOZG5XOlwk9OTPE+Ygm50+5cI5nv3N/rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EQAVt12I; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n62vpcue"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-488a88aeec9so59904855e9.2
-        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 08:56:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQAVt12I"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-459bf19e87bso3192313f8f.1
+        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 11:47:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779292570; x=1779897370; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1T2Qb9RrZsz7qcSCkhnlZDPbWojGSBsbannTJKJ4R7U=;
-        b=n62vpcueUnZXvic5IH+FPs2AYL0o4gqVtOYJdpv81YI40bWQ/nKOy3pht2AWFV3sfH
-         R9TUniAydlqEI03aEOF9RrBTJX4qqAQmaYy+iesbYmnYRX+fJaepPPPXepBtK8B5cyVE
-         oPMfLMn5OLt9ZqcborixaJEkPof8Q3sh68VQYyQrr9YRYowh5cH+r3Tv1BEOSzk5Uf+t
-         K4kZYXEYtV6TfodqsE19OBDxq3y4aQ+OYjn7wLAiZuRrkqn8GzQWfQuL4o9JEd3T6mhg
-         M6dofZaaXxfwze6foLho/oYHOi3QLPNj+wog3tBvCdvH4CQu3dopvD7eB5ecwf3174gy
-         2MCg==
+        d=gmail.com; s=20251104; t=1779302852; x=1779907652; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/hEwaR6TEFLYShpta6veHoxTDP0ik8niJki4wmQa0RY=;
+        b=EQAVt12IbPCrpc2rNHDrbX2HJWDPnRSLUJ3LwZMumBGjkgVcHLhN2JE9sX26byQqM1
+         fJtY9osxEJydypLMFZKL9mJiMD4ffHzmJ34EkXWh/5fEUCH/OBA8ez7e01BHYSddZz05
+         rzwzhq0tbdwbyM1J3Q8Mpmsx0og6xco2+KF65emtihqCh0DSxwvTZ65KsbJEurlYeIYz
+         kmA7J7vdlWQvKbGaDCTNlxlDS8bu1/HnSRkBIjvPPwK/jM+L3dOfcvz2tryfa8/pFCHf
+         n1w0lZxOVFwootJB/FmqRSLNDJKg6seXTr4UN3V3c+1SbJVyqm7q42tHtdzqkOGRlzVR
+         s96A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779292570; x=1779897370;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1T2Qb9RrZsz7qcSCkhnlZDPbWojGSBsbannTJKJ4R7U=;
-        b=TQX4GzXe2ZdSMHJwAIbT0feaHe/wrUtSetAqcclhg3yljXVTeKI51h+m0AodxJG0Ko
-         tmvj9OY2iaKgDMFHA8QuArhZ46asLvJoHZwFslePoUI1rnk6j/avwECr7mPVyQcou0fl
-         lQMYAJq2mHEyNznjjls7TwrzLRWtUcrl31R7zMLMidMUnySLeMP+Yngc6tfE0fqGStJn
-         duAijVSAbgbv+6lpP1oIIxh341XmdKC0AjFj85kbgYSLFbEX2ZUDzVFyRiCNz24ETlUB
-         Wv1vuYdkuLRRo9z3vq7QpqTFOawGiU0QcNh0ev1oGNOSPOO0FFsgmJQ9TMIOWqjLfOsE
-         Hv5A==
-X-Forwarded-Encrypted: i=1; AFNElJ/tKcbG2Bi8nSjmiNnOj3+h+jJr/z3BMW1hk1Nm8YItiNNeqvkZeOtoEu3d9QpQ2okMvbz0oHlHnvPobo9rGSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcZfVaYCbikZZ5/yIRHDUsulVEQLCa6ftg95U24pZlc5LIKf7H
-	e4oxdXOd7ZdscRQ8U5BtnF12up/WLU3dT7BYzhDP+lKlQn+qUejlmLhE
-X-Gm-Gg: Acq92OHelFhh/+Ch/SLrFiKvnSVKiMRE8rMWylRnUqxXLS92r9PNtVZv8f1Qs7tCGEg
-	Tpm+O/RwZVne0UZ89xvkQ378QZ00DxXQWoAUb7RJDOFb8YZnxOMyDxg0vEYPV4kQaZwuNli70YG
-	PuHWTszX7GWd//Zleq/yychSHU6fCmj9eUIhogz1bzEXgN79qCI9CnQ1PpWnjqrGtz/r/efTE6+
-	/KjF3Ws/TfrwIXcty9vN+uXGVSqE1e1rhiHUUP8OI4494XBOOhgCCWtPthAKTaMS+/3Nykuowqr
-	4AbCRgunRHQeWYGtiRxob1kO5cllDpmFXsmmH9nbEj8v2IZWj6ttJvmaD68ASqCkJM8Q0OOrxDF
-	Z2cH4Rk6GyBqMhqmvrs2z/QgoO/71MxaNy5wIx+lzjJcnITMFxU+UZHDy0rYegt0uobEOKE2G1R
-	L5yh4j6qHcyWd6soe6oIuHutZUVggEIxetaunFjrKHLg==
-X-Received: by 2002:a05:600c:470e:b0:489:1c32:210d with SMTP id 5b1f17b1804b1-48fe60f195amr364284635e9.15.1779292570096;
-        Wed, 20 May 2026 08:56:10 -0700 (PDT)
-Received: from RTRKW671-LIN.domain.local ([89.216.37.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48feab290e1sm215565025e9.2.2026.05.20.08.56.09
+        d=1e100.net; s=20251104; t=1779302852; x=1779907652;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/hEwaR6TEFLYShpta6veHoxTDP0ik8niJki4wmQa0RY=;
+        b=s9ZAr0bwP0P2EwBkleW7H/hEc9TPCwxZs2WVhTMtZ0wn3kOjQyUS2FS6ixfYDviS17
+         PcCjZIhe2EAWTn8O5FZNtWR89VSayIAp3GRz6o8DJnu9EFb0rPtQPY5fr95h836N+qIj
+         SGUkbgAuP5OLGpHC4cZIKHc9T5tR425xa0fgCONmGwZSZGnCRFquRpb9AnQT1wPdrUBo
+         1mWnaL50jlpCziSf7M8FW2H3IVZQdvdTT18r7Mz/r/8kMNXG66kzw8hvje1OLd4CsKXT
+         0449jKhx97xhKkaGZyfyVyE2wLpEFXQFbbwrmLDpXWJEghqvZVh8wEPnun4fBhd1zSdW
+         GhTg==
+X-Forwarded-Encrypted: i=1; AFNElJ+73qDcdvtCW8C2yisysG1ohPEFmULGwJWaGfkiVEkG1NGy48wlgdsbOxFvroHIamFRlR330C4GspWwxDXoE8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3B/BN16CPGzylzAaMAWHmTyqI4MHX/QTkINfgovvAkomdiZa9
+	tPstzdnjksIw/kItYJZFTR23HlExTx5QQA0d5dli8EmK9lNtLvym+7m5
+X-Gm-Gg: Acq92OE0ARor/3eOz91TZa/TCwFPWpZOPUNjSymZ4lrHCyG9+GCdEuyYbdZghH8RKKf
+	dYDxVuKvyywJm+G4FEAO7IHPBgB7DORH39k4HM0AhH/n+Im/ibACrhwBNp0fSGuW28C86bjJDVv
+	Y9XhvH/tZ8GVvX85UAc4YuISgf3SjLdY5J3dxoVEl4E07qFDV0z+lFNmzT1tIt8QDbm+tV8dl39
+	hii0v0ufiDvY2WlY8PNp9cehkuhdAMgXAIaSagLJcOn9S9nYA1ae+ETZhRPlZcfztIIxJpVSxHz
+	+wfXYJTFOEf+ngILqxcH29ylezgtHSGmfjYmyveApLIdl9Z9ypSoqcGYza9MakjkPqxgR6rw4wh
+	LVhKjzb97r3GWjD/XRUi1QONNWsPmdsqFD7uVvnbne9vGj8tnVYvH2UQTfQErezXnbuL6uq/oa3
+	Ma61KbmV3sO+WPBwtmHHLT/2K1NMP6cjCMqFlGdbj1FtdOOBA0FCW1UsGgwDnnGFm3sLldESxUJ
+	dk4me3Xe1oyTwk4RHvR0D7eIerjTblX97ZW7X+YLt8esCRN4qjUdR7jWC/k
+X-Received: by 2002:a05:6000:2401:b0:43d:7275:c1eb with SMTP id ffacd0b85a97d-45e5c5dadeamr41206197f8f.39.1779302851879;
+        Wed, 20 May 2026 11:47:31 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ec3acf7sm56929827f8f.12.2026.05.20.11.47.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 08:56:09 -0700 (PDT)
-From: Milan Tripkovic <milant2002@gmail.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Kees Cook <kees@kernel.org>
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Dusan Stojkovic <Dusan.Stojkovic@rt-rk.com>,
-	Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
-Subject: [PATCH 2/2] lib/string_kunit: extend benchmarks and unit test to memchr()
-Date: Wed, 20 May 2026 17:55:31 +0200
-Message-ID: <20260520155532.1139471-3-milant2002@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260520155532.1139471-1-milant2002@gmail.com>
-References: <20260520155532.1139471-1-milant2002@gmail.com>
+        Wed, 20 May 2026 11:47:31 -0700 (PDT)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
+Date: Wed, 20 May 2026 19:47:25 +0100
+To: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v5 12/13] Documentation: ABI: testing: add docs for
+ ad9910 sysfs entries
+Message-ID: <vqqvn2cgs3fbp5mq6xfac7iyosaqfrvgngqur4x355a3at7slo@ylrtd6fhi33a>
+References: <20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com>
+ <20260517-ad9910-iio-driver-v5-12-31599c88314a@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260517-ad9910-iio-driver-v5-12-31599c88314a@analog.com>
 
-From: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
+On 26/05/17 07:37PM, Rodrigo Alencar via B4 Relay wrote:
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> 
+> Add custom ABI documentation file for the DDS AD9910 with sysfs entries to
+> control Parallel Port, Digital Ramp Generator and OSK parameters.
 
-Extend the string benchmarking suite to include memchr().
-Extend the string unit test to include memchr()
+...
 
-Signed-off-by: Milan Tripkovic <Milan.Tripkovic@rt-rk.com>
----
- lib/tests/string_kunit.c | 53 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+> +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency_offset
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		For a channel that allows frequency control through buffers, this
+> +		represents the base frequency value in Hz. The actual output frequency
+> +		is derived from this offset combined with the processed buffer sample
+> +		value.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency_scale
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		For a channel that allows frequency control through buffers, this
+> +		represents the frequency modulation gain. This value multiplies the
+> +		buffer input sample value before it is added to a frequency offset.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_phase_offset
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		For a channel that allows phase control through buffers, this
+> +		represents the base phase value in radians. The actual output phase	is
+> +		derived from this offset combined with the processed buffer sample
+> +		value.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale_offset
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		For a channel that allows amplitude control through buffers, this
+> +		represents the value for a base amplitude scale. The actual output
+> +		amplitude scale is derived from this offset combined with the processed
+> +		buffer sample value.
+> +
 
-diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 0819ace5b027..3a7d96e292da 100644
---- a/lib/tests/string_kunit.c
-+++ b/lib/tests/string_kunit.c
-@@ -881,6 +881,57 @@ static void string_bench_strrchr(struct kunit *test)
- 	STRING_BENCH_BUF(test, buf, len, strrchr, buf, '\0');
- }
- 
-+static void string_test_memchr(struct kunit *test)
-+{
-+	char *buf;
-+	size_t max_len = 128;
-+	size_t off, len, match_pos;
-+	char *res;
-+	char target = 0x88;
-+
-+	buf = kunit_kzalloc(test, max_len + 64, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf);
-+
-+	memset(buf, 'A', max_len + 64);
-+
-+	for (off = 0; off < 16; off++) {
-+		for (len = 1; len < max_len; len++) {
-+			match_pos = len / 2;
-+			buf[off + match_pos] = target;
-+
-+			res = memchr(buf + off, target, len);
-+			KUNIT_EXPECT_PTR_EQ_MSG(test, res, buf + off + match_pos,
-+						"Failed at:%zu len:%zu pos:%zu", off, len,
-+						 match_pos);
-+
-+			buf[off + match_pos] = 'A';
-+		}
-+	}
-+
-+	memset(buf, 'A', max_len);
-+	buf[10] = 'B';
-+	buf[20] = 'B';
-+	res = memchr(buf, 'B', max_len);
-+	KUNIT_EXPECT_PTR_EQ(test, res, &buf[10]);
-+
-+	buf[50] = (char)0xFF;
-+	res = memchr(buf, 0xFF, max_len);
-+	KUNIT_EXPECT_PTR_EQ(test, res, &buf[50]);
-+
-+	buf[60] = '\0';
-+	res = memchr(buf, '\0', max_len);
-+	KUNIT_EXPECT_PTR_EQ(test, res, &buf[60]);
-+
-+	buf[max_len - 1] = 'Z';
-+	res = memchr(buf, 'Z', max_len);
-+	KUNIT_EXPECT_PTR_EQ(test, res, &buf[max_len - 1]);
-+}
-+
-+static void string_bench_memchr(struct kunit *test)
-+{
-+	STRING_BENCH_BUF(test, buf, len, memchr, buf, '\0', len);
-+}
-+
- static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_test_memset16),
- 	KUNIT_CASE(string_test_memset32),
-@@ -910,6 +961,8 @@ static struct kunit_case string_test_cases[] = {
- 	KUNIT_CASE(string_bench_strnlen),
- 	KUNIT_CASE(string_bench_strchr),
- 	KUNIT_CASE(string_bench_strrchr),
-+	KUNIT_CASE(string_test_memchr),
-+	KUNIT_CASE(string_bench_memchr),
- 	{}
- };
- 
+This will become just offset with altcurrent channels. I noticed we have a IIO_PHASE
+iio_chan_type, could we have a IIO_FREQUENCY too? Parallel port needs actual raw
+frequency values in that case to be written to the dma buffer.
+
+Then we may have buffer capable channels for the parallel port:
+
+out_altcurrent120
+	offset
+out_phase120
+	offset
+out_frequency120
+	scale
+	offset
+
+Problem is that the math for the actual frequency output is:
+
+	f_OUT = f_FTW + (f_RAW * FM)
+
+where f_FTW is a base frequency (already scaled), FM is a
+modulation gain and f_RAW is the contribution from the parallel
+port, which is the already scaled:
+
+	f_RAW = RAW * f_SYSCLK / 2^32
+	f_FTW = FTW * f_SYSCLK / 2^32
+
+so the above becomes:
+
+	f_OUT = (FTW * f_SYSCLK / 2^32) + (RAW * f_SYSCLK / 2^32) * FM
+	f_OUT = (FTW/FM + RAW) * f_SYSCLK * FM / 2^32
+
+if I make:
+
+	SCALE = f_SYSCLK * FM / 2^32
+	OFFSET = FTW/FM
+	f_OUT = (OFFSET + RAW) * SCALE
+
+That would work for a IIO_FREQUENCY channel type, problem is that both
+scale and offset would depend on the modulation gain (FM)... I suppose
+scale should be setting that and offset assumes it is constant to act
+only on FTW.
+
+I suppose we can keep altcurrent for other modes as phase and frequency
+can be attributes (knobs) for them. However, in parallel mode we are effectively
+pushing frequency, phase or amplitude values into the buffer.
+
+The polar destination is a corner case, but can be solved when both
+phase and altcurrent channels are enabled. When that happens we can
+change the scan_type with has_ext_scan_type = 1, so the 16-bit data
+bus is split between the two.
+
+With the above, all of those *_offset and *_scale custom ABI can be dropped. 
+
 -- 
-2.43.0
+Kind regards,
 
+Rodrigo Alencar
