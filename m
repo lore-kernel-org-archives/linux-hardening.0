@@ -1,253 +1,113 @@
-Received: from sg-3-115.ptr.tlmpb.com (sg-3-115.ptr.tlmpb.com [101.45.255.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDF42BDC13
-	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 04:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.45.255.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808361F3BAC;
+	Thu, 21 May 2026 07:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779336351; cv=none; b=fC4krzYB3y5LpRGKwhE3xGRJefEB0h8kc/uLx8ik57C5hON/tqjbhd8FStFXD0ERGZZwGXIy3ZCI9Mm1cwXZIHTbzUgovw6cHhNPHhwUt0ynM+jY3dWazEiMKaB8Y2j5f9VN/YyI7rWV/St7Ob+sEihxnew8X9bV9kJsXolXbIE=
+	t=1779347352; cv=none; b=cnox6DlzaH4Z+Kf/l0Ls/wsRtvuYEEEO+e/ED8PFsdrXYXiVFPsvp95fexd41rj8DSeCbR6MuNfhzIHIYZFX34afOi8sSm+6tn330lq3nvQ5LceFHXEdfTQBBMm5ZBrB6MRiqHLhyC0j6yNnY9tnGHIoyc0wpNj9iXnTFhnY/Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779336351; c=relaxed/simple;
-	bh=pUB7L16CREF3X4+TChJSGa3hJsWqMaPT0mHLMKAQY2E=;
-	h=Subject:References:In-Reply-To:To:Cc:Date:Message-Id:From:
-	 Mime-Version:Content-Type; b=aZyvqP2DDmlC/VDi1kQdGejUinMzphQCsKT1mORxz/hRgV83pWveP9LHQ647KgND0Ny1WP5Lsq8B8LjltGhHv8/3u145jywXrka39U7SNpQis8/CIZRUa+WBLAoZ9u3fID7IucqhtswDqCujH+Cf5v2LwULz5B2nt7q/l0O3UR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=H9E+oWZM; arc=none smtp.client-ip=101.45.255.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1779347352; c=relaxed/simple;
+	bh=06DlYLMzDEsjxgRLDFP9ecsf0TUvM6TZuHNU93oyPH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=haK1u5DSnKUDYc/VXvqIKwW8PCojYNjWz0OYtfM0QCDTE3hMDYptxbTiGZbZ9zUvIpfS/orPFO2daOfk0/B6k/CEi5dTdQuPt9E6tYnyqzr26wvc9gjaZMycUknFJJtkW1isR1WOPwr8I+ftT6SRv4SrEgIK5JO1BikVE1rHErU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqE3gO14; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="H9E+oWZM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1779336325; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=6yOkcnsUQzUvHuhs1BUNozB1nWiAB67h4IULUSq8t6Y=;
- b=H9E+oWZMTtJppFi69MCqfOZ6fwGQY695lXdiU3sEfw9V5MUkc0G9mcrlmYaTTLo7wEGqNF
- 3ND1r4t0yQBSJpYt+CdgnoWsn0TN8LoQpsRAjNUfhy/8p/nZJUZHbroMbTJtxk/qirrGqv
- AdFjo1JmOncufKuCK9a430Hat3W4LNYESlN4sbp8CV0zaVzRoMj17VjI3popdg4LJihLpw
- KUJfu+eAADYp0Cx8xF1Eu591NUtQFwyMO/VwxaAefS7GsxviTUE7uRlfuiJgYsfYJh+241
- eMg0QRTdxg8O++6K17wTh2xHDKX07zjmDhwND+2WjiFWOnH8kbMVqgpWBklYiw==
-Subject: [PATCH v2 7/7] mm: use memcpy_streaming() in zone-device template copies
-References: <20260521040124.10608-1-lizhe.67@bytedance.com>
-In-Reply-To: <20260521040124.10608-1-lizhe.67@bytedance.com>
-To: <apopple@nvidia.com>, <akpm@linux-foundation.org>, <arnd@arndb.de>, 
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
-	<mingo@redhat.com>, <rppt@kernel.org>, <tglx@kernel.org>, 
-	<kees@kernel.org>
-X-Lms-Return-Path: <lba+26a0e8483+9eb660+vger.kernel.org+lizhe.67@bytedance.com>
-Cc: <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-mm@kvack.org>, <lizhe.67@bytedance.com>, <x86@kernel.org>, 
-	<linux-hardening@vger.kernel.org>
-Date: Thu, 21 May 2026 12:01:24 +0800
-Message-Id: <20260521040124.10608-8-lizhe.67@bytedance.com>
-Content-Transfer-Encoding: 7bit
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-From: "Li Zhe" <lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqE3gO14"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA0311F000E9;
+	Thu, 21 May 2026 07:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779347351;
+	bh=06DlYLMzDEsjxgRLDFP9ecsf0TUvM6TZuHNU93oyPH0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=GqE3gO14ik0QN6Ey0d5TDclenZhFs1yxXQ5+zJMLtCv6ELME+HAT4W449fnjLjUJx
+	 8hKCw7e/t9SYZ6Cxgn87sTinZqK16R40p9+J8EjGFyUAWTAke1wF1Ge9uz6xwEpKbH
+	 9TksEcUqYnapq/A14cS51ELoTEjQ34Q+vZEfPw4bVmhTWKTfB6dsTiJ7LaQbhqROzl
+	 F8B/zXrUpIV/U9W/8WxTGFQqGXPRFAGJpNQ5BMs7Z+3m4AokoCk6LgKUbpGyml3QqH
+	 FHXx6oFLMoS2eZ97UzwyJMHMlyYY9/q86uZW/nzAjpiZs3zFUgJAXDQSsFtEP91gLU
+	 LmJob/u7WCXBg==
+Message-ID: <1556aa8a-0ffa-466f-9565-530dea7b9235@kernel.org>
+Date: Thu, 21 May 2026 09:09:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 8/8] arm64: defconfig: Enable the raspberrypi otp
+ driver as module
+To: Gregor Herburger <gregor.herburger@linutronix.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>,
+ Stefan Wahren <wahrenst@gmx.net>, Srinivas Kandagatla <srini@kernel.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260520-rpi-otp-driver-v5-0-b26e5908eeac@linutronix.de>
+ <20260520-rpi-otp-driver-v5-8-b26e5908eeac@linutronix.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20260520-rpi-otp-driver-v5-8-b26e5908eeac@linutronix.de>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The template fast path still leaves the actual copy sequence up to the
-compiler. Use the streaming-copy helpers introduced in the previous
-patches for the ZONE_DEVICE template-copy path so common mm code can
-request a write-once copy primitive without embedding arch-specific
-store layout in the generic layer.
+On 20/05/2026 16:28, Gregor Herburger wrote:
+> Enable the newly add Raspberry Pi OTP driver as module to allow access
+> to the otp registers.
 
-ZONE_DEVICE memmap initialization is a write-once path: each struct page
-is populated once and is not expected to be reused from cache
-immediately afterwards. A regular cached copy can therefore incur
-write-allocate traffic and pollute the cache without much benefit.
-Using memcpy_streaming() lets this path use an architecture-optimized
-streaming copy where available, while still degrading to memcpy() on
-architectures that do not provide a specialized implementation.
+... on foo bar board?
 
-Update the PFN-dependent section bits and page->virtual state in the
-reusable template before each copy instead of patching the destination
-page afterwards. This keeps the hot path as a single streaming copy for
-the common case and avoids post-copy normal stores to cachelines that
-were just written through the streaming path. Keep pageblock-aligned PFNs
-on memcpy() so pageblock initialization can immediately read back page
-metadata without introducing a read-after-streaming dependency.
+Otherwise, why do we want it in upstream?
 
-When the streaming backend uses non-temporal stores, order them before
-entering memmap_init_compound(), before prep_compound_head() updates the
-overlapping compound metadata, and before returning from
-memmap_init_zone_device().
-
-Keep sanitized builds on the slow path so KASAN/KMSAN retain their
-instrumented stores.
-
-Tested in a VM with a 100 GB fsdax namespace device configured with
-map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
-server.
-
-Test procedure:
-Rebind the nd_pmem and dax_pmem driver 30 times and collect the memmap
-initialization time from the pr_debug() output of
-memmap_init_zone_device().
-
-Base(v7.1-rc3):
-  First binding for nd_pmem driver: 1486 ms
-  Average of subsequent rebinds: 273.52 ms
-
-  First binding for dax_pmem driver: 1515 ms
-  Average of subsequent rebinds: 313.45 ms
-
-With this series:
-  First binding for nd_pmem driver: 1389 ms
-  Average of subsequent rebinds: 111.08 ms
-
-  First binding for dax_pmem driver: 1294 ms
-  Average of subsequent rebinds: 110.24 ms
-
-This reduces the average rebind time by about 59.4% for nd_pmem and
-64.8% for dax_pmem.
-
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
----
- mm/mm_init.c | 83 +++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 60 insertions(+), 23 deletions(-)
-
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 17a84d4cda01..08feb24795b8 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1075,13 +1075,15 @@ static void __ref zone_device_page_init_slow(struct page *page,
- static inline bool zone_device_page_init_optimization_enabled(void)
- {
- 	/*
--	 * The template fast path copies a preinitialized struct page as an
--	 * array of u64 words. Skip it when the page_ref_set tracepoint is
--	 * enabled, and fall back to the slow path if struct page is not an
--	 * integral number of u64 words.
-+	 * The template fast path copies a preinitialized struct page from
-+	 * a reusable template. Keep sanitized builds on the slow path so
-+	 * their instrumented stores remain intact, skip the fast path when
-+	 * the page_ref_set tracepoint is enabled, and fall back if
-+	 * struct page is not an integral number of u64 words.
- 	 */
--	return !page_ref_tracepoint_active(page_ref_set) &&
--		IS_ALIGNED(sizeof(struct page), sizeof(u64));
-+	return !IS_ENABLED(CONFIG_KASAN) && !IS_ENABLED(CONFIG_KMSAN) &&
-+	       !page_ref_tracepoint_active(page_ref_set) &&
-+	       IS_ALIGNED(sizeof(struct page), sizeof(u64));
- }
- 
- static inline void zone_device_template_head_page_init(struct page *template,
-@@ -1104,30 +1106,42 @@ static inline void zone_device_template_tail_page_init(struct page *template,
- }
- 
- /*
-- * The copied template already provides the PFN-invariant portion of a
-- * ZONE_DEVICE struct page. Fix up the fields that still depend on @pfn
-- * after the copy, namely the section bits and page->virtual when present.
-+ * 'template' is a reusable page prototype rather than a strictly immutable
-+ * object. Most ZONE_DEVICE fields stay constant across the pages covered by
-+ * the current template, but section bits and page->virtual may still depend
-+ * on the PFN. Refresh those PFN-dependent fields in the template before
-+ * copying it into @page.
-  */
--static inline void zone_device_page_init_finish(struct page *page,
--							unsigned long pfn)
-+static inline void zone_device_page_update_template(struct page *template,
-+						    unsigned long pfn)
- {
--	set_page_section_from_pfn(page, pfn);
-+	set_page_section_from_pfn(template, pfn);
- #ifdef WANT_PAGE_VIRTUAL
- 	if (!is_highmem_idx(ZONE_DEVICE))
--		set_page_address(page, __va(pfn << PAGE_SHIFT));
-+		set_page_address(template, __va(pfn << PAGE_SHIFT));
- #endif
- }
- 
- static void zone_device_page_init_from_template(struct page *page,
--		unsigned long pfn, const struct page *template)
-+		unsigned long pfn, struct page *template)
- {
--	const u64 *src = (const u64 *)template;
--	u64 *dst = (u64 *)page;
--	unsigned int i;
-+	/*
-+	 * 'template' carries the invariant portion of a ZONE_DEVICE struct
-+	 * page. Update the PFN-dependent fields in place before copying it
-+	 * to the destination page.
-+	 *
-+	 * pageblock-aligned pages immediately feed
-+	 * init_pageblock_migratetype(), which reads back page metadata via
-+	 * helpers like page_zone(page). Avoid a read-after-streaming
-+	 * dependency for these rare pages by using regular cached stores
-+	 * instead of non-temporal ones.
-+	 */
-+	zone_device_page_update_template(template, pfn);
-+	if (unlikely(pageblock_aligned(pfn)))
-+		memcpy(page, template, sizeof(*page));
-+	else
-+		memcpy_streaming(page, template, sizeof(*page));
- 
--	for (i = 0; i < sizeof(struct page) / sizeof(u64); i++)
--		dst[i] = src[i];
--	zone_device_page_init_finish(page, pfn);
- 	zone_device_page_init_pageblock(page, pfn);
- }
- 
-@@ -1168,9 +1182,10 @@ static void __ref memmap_init_compound(struct page *head,
- 	__SetPageHead(head);
- 
- 	/*
--	 * A tail template can be reused for all tail pages in the same compound page
--	 * because shared state for compound tails is pre-set by prep_compound_tail().
--	 * The per-page page->virtual and section in flags are fixed up after copying.
-+	 * All tails of the same compound page share the state established by
-+	 * prep_compound_tail(). Reuse one tail template for the whole range
-+	 * and refresh only the PFN-dependent fields in that template before
-+	 * each copy.
- 	 */
- 	if (use_template)
- 		zone_device_template_tail_page_init(&template, head_pfn + 1,
-@@ -1189,6 +1204,15 @@ static void __ref memmap_init_compound(struct page *head,
- 			set_page_count(page, 0);
- 		}
- 	}
-+
-+	/*
-+	 * prep_compound_head() updates compound metadata in struct folio fields
-+	 * that alias the first tail-page descriptors. When the tail pages above
-+	 * were populated with non-temporal stores, order those writes before the
-+	 * overlapping metadata updates below.
-+	 */
-+	if (use_template)
-+		memcpy_streaming_drain();
- 	prep_compound_head(head, order);
- }
- 
-@@ -1237,10 +1261,23 @@ void __ref memmap_init_zone_device(struct zone *zone,
- 		if (pfns_per_compound == 1)
- 			continue;
- 
-+		/*
-+		 * Compound-head setup immediately updates head->flags, so make
-+		 * the streaming template copy visible before entering
-+		 * memmap_init_compound().
-+		 */
-+		if (use_template)
-+			memcpy_streaming_drain();
-+
- 		memmap_init_compound(page, pfn, zone_idx, nid, pgmap,
- 				     compound_nr_pages(altmap, pgmap),
- 				     use_template);
- 	}
-+	/*
-+	 * Drain any remaining non-temporal stores before returning.
-+	 */
-+	if (use_template)
-+		memcpy_streaming_drain();
- 
- 	pr_debug("%s initialised %lu pages in %ums\n", __func__,
- 		nr_pages, jiffies_to_msecs(jiffies - start));
--- 
-2.20.1
+Best regards,
+Krzysztof
