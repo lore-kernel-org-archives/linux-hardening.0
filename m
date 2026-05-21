@@ -1,74 +1,73 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF1A3A6F06
-	for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 21:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130D93101B6
+	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 01:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779314320; cv=none; b=GR5g/2R6xo1UEg/dTiY25iXZ+xVX3AKFX/sFWLoGZkxZ4vWvrRvanz9XNKeexA8PnGx9r4oiLSORvbPy7N5ZVsg/vW8/LJPHhdBJTXAO3lhOvnE9JyLJcfN60s3p08+DMSaxPgHLUdjQoBylL/jtPtlLNDkeaSE1R2p9dmJ0fVM=
+	t=1779327996; cv=none; b=CHGE9rsR/6LhAQLCGZ1LmkNGUcchH12MsXd7FLpMnd6v9oOj4lBRv4DO9YZLb07OZF/taYT31CyrYxx+Pn2G2QEnwt1PPqFLkYJrME06ySohnBCDy0rnvcEChblx/iiUbuq1jO2s0U84ilNU9ouo2xXnIN0O1dN4AjdgLLuQVyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779314320; c=relaxed/simple;
-	bh=39Gt8rB1JCMWARzBhN7sjVwIsshPckmW2W55n9ARnbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sxDGCwkWcwGM7vgYH03qRA2C0N2cVjycp3NJRlzbQD2H0Yj6rK4L6TmaT+NAhoCwnwh56emCeJn3rbxF4J7TibouLh/iOWtS196sxJVScw78CazBI10IRbpuXI5VMjMWWDmo6eqpa5FKonM2KnjLTm95vCuffUCnYFwNFZz3t1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=snaad4Tl; arc=none smtp.client-ip=209.85.216.46
+	s=arc-20240116; t=1779327996; c=relaxed/simple;
+	bh=K1oLwk3RTb4DmrtSS1Kd+fkh9y8M6HVo8S/ImeLc6e8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G0/J+1cSbDLTVPuQBpSFJkVfUajYHmaGs+GMPoyzO+u2Mo3tu5ChCW0Z/q+ew7JCujtzBC/lWFg8+m7DwV7AARJgBrHcnBHsm6Mlmp8XN6E7kfoCTSyOSb1g/Gb63ATQgkJibfe7TOBMn2fi45dKswfJEU0OcgadftsQPuagS4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kpy5/Zed; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="snaad4Tl"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-365d8e43759so2888087a91.0
-        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 14:58:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpy5/Zed"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7cfc382d896so20936477b3.3
+        for <linux-hardening@vger.kernel.org>; Wed, 20 May 2026 18:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779314315; x=1779919115; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779327987; x=1779932787; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jDSnjm/dJwUnHCR5eUkgy/BeIvqG46BmxLZ8ZhFb2Wg=;
-        b=snaad4TlCj+vJ0n8+bEkwQL9e2BOGqxR76JIc+Cps6/Qxc4zwSy34r1wLMjPHpVzOx
-         KJHxZ4tm5o/zk+iiBK+1haShY7IzaJyV7IfZCNK3hT994G6QfEOkR+nNjzwKZjPsxCJ9
-         qtmhd8ym03Rdk1GtxmC8khktS9Xf9qKujH8gPdsaRp0bNQZ2RSNlp1cZ6y6G3PIUnp5q
-         +WIxnlXXXwzInAZFadpj7Tphhr2NGWSV4grNF2dqHm6TIQ6KpsraM4w1zZESOos+x547
-         oge0NpdJB5luckjfnsm8GYFk8lXWMKFOu4OiSeYg361h8UCXqtVXVz145XsseflYPcs7
-         vUpg==
+        bh=JSOZPwggBd/tZaFmjqTfCM6sLL5sYIwg3J4tTfp4kIg=;
+        b=kpy5/ZedTgdZuR3lB0USPng3wrpgkfLdCCC4EJMoFzaBrs3ZFhdezS8jMXR57qa912
+         azZG9wFMOGxzKWsmVaJXK7BrqJwYCTAEM3jHnLaM2I1wyCdQ2tw2MBRhylzK7HWiC8kP
+         Zk6npQiX15570gVgpbRYLnaCbd9wx0soeAQvWI32XkIZcvoB62EBpWCuJuM6GGxkdG8w
+         UdA/A9ZTE33z2FtAS5X9QfT25VUCGVwbkGzvB0gjq08yuyvTtr4AOETOaHD0uFrduaZ3
+         QTTsr1xoPQ3PTqAyeRnNLPGcOwdLKbPNeoGHwVXEMQ9Th0P2AwPKO6Lxnvk5gN0NNqHR
+         wRZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779314315; x=1779919115;
+        d=1e100.net; s=20251104; t=1779327987; x=1779932787;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jDSnjm/dJwUnHCR5eUkgy/BeIvqG46BmxLZ8ZhFb2Wg=;
-        b=Qn0eXEeXAkh4ff0UNbEFX09ffvVZpJQf4YtlLMlCHTxHlU5iYjrlblyyrwouRNtQVo
-         vqoHX3hTTZV13eg4fiB53CxE6bNJYufLvdEFV7ql2XTk919ezDR+sMAs86OMnJ6E9fFS
-         /KdyykdOScvgxzd3KPUHiUIwgdbcYNhrr7+sDWsuCXli1RC1xngvdakE948OuTuUvAX5
-         WMy4vafxE1Q+ewS/1sHqZVHAhgGK7oM6+rBCI/AlPxohnYowtswfTHkHjXQvrl0DQ6nx
-         rPkMGWFA0ePNs5PgX4YDRhi1Qlq8BgksOOgYBZPUu5bXuOl/iUY3QvIawT1kYFjSUAle
-         MYuw==
-X-Forwarded-Encrypted: i=1; AFNElJ91esIiYNxwyXh1Yc95BcdljR4NEEGYAmdr/94vAj7ivwtHc1Jm3rZ2cVzw6Nu+NOwnUlG1DWHxOGjMXF879us=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW9jpVl4WCdssZotiLUv3WH02uOdO6/qFRxcJQFoeiFk8QYv1R
-	1KRTK+zCCbCwWVzGsIGJh7BJyZPsCntvyj2YioIBhl3thueKRsAN430JUEzLxNyx
-X-Gm-Gg: Acq92OFl4iRzr03WxZnmFmoZZvc0Y4OSSlYYcH59Q4aqwbZKp1AI5qsjs/K40RHmYP+
-	lr8bzODa8cvVcqyZdq3442UhIC0ah2SOTcx4JCNcyu2qDUZGbyIhwG3cQjFONDQy9gUl7IzPLgu
-	trizQNx1hTOY+Sj7SN2mJW6q2gFOXLbs0cd/UdiW+Vl1A5nhkDhvD/HYZQy27An4htDw6+mCWa1
-	PmYUL+QKA8LvHI1ljPNoH39pKPGVPi2hRIjqXVx7624EuUrbM7b4mVngPH1Z4AOj7RH5udhlBO4
-	YHHIdtMlvh0RQQy/XnjtPprDhe9CsbVJblAJh8Zp4RPHgrOmF6jmywo8YCZ0zNoKBguDWiH4jZ7
-	QTUt/VMjVZ0Eqm5p9OYJftpKZJz7zYFzrvh6AATLicI76aK7QuopvLRSgar4EHQV9cD7trpchYf
-	mJW9SqY6ZmL/XziDG9GpgaF4JaZd4admoR6eAKi3uXPfzp8KDi1cIdLYt3G5smsHVZ+14475dof
-	e2C0PGYYtstg2fS+qIkPZ0g8ODGurQOvVc=
-X-Received: by 2002:a17:90b:3942:b0:35f:b9f1:fded with SMTP id 98e67ed59e1d1-36a491ad00emr104057a91.12.1779314315554;
-        Wed, 20 May 2026 14:58:35 -0700 (PDT)
+        bh=JSOZPwggBd/tZaFmjqTfCM6sLL5sYIwg3J4tTfp4kIg=;
+        b=W3KoauFtDzSreEO8O3FcMXvjkHvoW+Q6RoWuT+8U21lzwbN3JJLQ25Wbcle8h+DCIV
+         n9EgNJctCCAfXZbrULT23IOQ+NVxTOAubFmWJlg4lmZjXTa8L9M8qsqB4HWIz5Eyiai5
+         8S5DHrl/Z5U5xxkwG3sXCH0+HeSnAvY85izwxrRacmxHrAzWFez8z8IvtchsfA2YrBYo
+         X9pTsWlIlZGLIsxI+JVf6ZgrfhY1oK+iwGP53utjyfvSVTHu44xaMOOOwZRIz0bQ4sYk
+         tL9HIeaKDGMt2Qrmi6mkGa0FiyE+gp7gKEOi3rYZq0+1LgKPxX2Kwsjt0Q369xfBp0rk
+         PYrA==
+X-Forwarded-Encrypted: i=1; AFNElJ8yD5FiIrezFaxAMOC+MtR7JzaPmch9DsPpa9S2rH/O9N3m3CVcwpmCFIUhdS7heiJvmCAsRRvLxQSWJgYP9yU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNLHTobfZ/NDH4nJ/NQQL+tKe4ztU+h2zKGssWoREQ+hNtZo3q
+	ynbi/x9Q2skh2Tmz1h5xekryas4pGAdv5RdbipB0guGJw68jgvS5NAO9
+X-Gm-Gg: Acq92OE/TilEZSuyh3H4fFsunP1rUagvsImAZNv4kP2CLN4y8tOyLi8Sq3C6JSfpLZN
+	y773f1A6ngAbLjNSyO1G0mFIJFG6+G6CeEQZUnhMghPpVEMUeQXkI1CuqAL6FeDMWoqMSb/o7ZH
+	0X8FNI3p6yOz1RxOBhriFea7k2glUOaNdlxcZNyg9jQuqU1YAMIASrFGogoaaDD+JMZcu1ukQ+l
+	lQ1Gnoax2D6ochEH6SM9zPsZRai42UK8J+RADfXoGmGgFjYG73Y1oSLWHJW3Y5g8g88pnnDMkut
+	KG7Ix+pqiZE8ZzaHk+5Lkrk1VBDmnuiaH4y27o1glqwSPrjpbq9mb1RPcXUYTaX1YoiRi+kF7Vl
+	EL//vpi40TTcDRr3m+tJdCdj9agv/anpVPJlOMe//69w0p2QAkEVrgV86lI2MkPBeilcvgKKQTa
+	OuVoxnU2HRpVpGl7Vnb4n1my9YUmOH2bTPiTKaWJ5Wy7gfe4+/40Ricazh6a4ElSs5tTxPANWGt
+	TciHPu+zeHLOHc1ehN/RtrX9E4LZWqX3iw=
+X-Received: by 2002:a05:690c:4b0c:b0:7bf:ff7:ea72 with SMTP id 00721157ae682-7d20d020f3dmr10604927b3.34.1779327986944;
+        Wed, 20 May 2026 18:46:26 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36a3cc5643dsm646368a91.7.2026.05.20.14.58.34
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7cd0bfdc094sm56652417b3.32.2026.05.20.18.46.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 14:58:35 -0700 (PDT)
+        Wed, 20 May 2026 18:46:26 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:TRACING),
+	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH] tracing: Use flexible array for entry fetch code
-Date: Wed, 20 May 2026 14:58:17 -0700
-Message-ID: <20260520215817.16560-1-rosenp@gmail.com>
+Subject: [PATCHv2] platform/x86/intel/tpmi/plr: allocate die_info with plr
+Date: Wed, 20 May 2026 18:46:08 -0700
+Message-ID: <20260521014608.1356671-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -78,63 +77,64 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Store probe entry fetch instructions in the probe_entry_arg
-allocation instead of allocating a separate instruction array.
+Simplifies allocations slightly.
 
-This keeps the entry fetch code tied to the entry argument lifetime while
-leaving regular probe_arg instruction arrays separately allocated and
-freed.
+Add __counted_by for extra runtime analysis.
 
-Assisted-by: Codex:GPT-5.5
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- kernel/trace/trace_probe.c | 8 +-------
- kernel/trace/trace_probe.h | 2 +-
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ v2: Rebase.
+ drivers/platform/x86/intel/plr_tpmi.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index e0d3a0da26af..39f040c863e8 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -838,15 +838,10 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
- 	int i, offset, last_offset = 0;
+diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
+index 8faecc311038..66220fadf670 100644
+--- a/drivers/platform/x86/intel/plr_tpmi.c
++++ b/drivers/platform/x86/intel/plr_tpmi.c
+@@ -58,11 +58,11 @@ struct tpmi_plr_die {
  
- 	if (!earg) {
--		earg = kzalloc_obj(*tp->entry_arg);
-+		earg = kzalloc_flex(*earg, code, 2 * tp->nr_args + 1);
- 		if (!earg)
- 			return -ENOMEM;
- 		earg->size = 2 * tp->nr_args + 1;
--		earg->code = kzalloc_objs(struct fetch_insn, earg->size);
--		if (!earg->code) {
--			kfree(earg);
--			return -ENOMEM;
--		}
- 		/* Fill the code buffer with 'end' to simplify it */
- 		for (i = 0; i < earg->size; i++)
- 			earg->code[i].op = FETCH_OP_END;
-@@ -2051,7 +2046,6 @@ void trace_probe_cleanup(struct trace_probe *tp)
- 		traceprobe_free_probe_arg(&tp->args[i]);
- 
- 	if (tp->entry_arg) {
--		kfree(tp->entry_arg->code);
- 		kfree(tp->entry_arg);
- 		tp->entry_arg = NULL;
- 	}
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 262d8707a3df..1076f1df347b 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -238,8 +238,8 @@ struct probe_arg {
+ struct tpmi_plr {
+ 	struct dentry *dbgfs_dir;
+-	struct tpmi_plr_die *die_info;
+ 	int num_dies;
+ 	struct auxiliary_device *auxdev;
+ 	struct notifier_block nb;
+ 	struct mutex lock;	/* Protect access to dbgfs_dir */
++	struct tpmi_plr_die die_info[] __counted_by(num_dies);
  };
  
- struct probe_entry_arg {
--	struct fetch_insn	*code;
- 	unsigned int		size;	/* The entry data size */
-+	struct fetch_insn	code[] __counted_by(size);
- };
+ static const char * const plr_coarse_reasons[] = {
+@@ -305,7 +305,7 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
+ 	if (!num_resources)
+ 		return -EINVAL;
  
- struct trace_uprobe_filter {
+-	plr = devm_kzalloc(&auxdev->dev, sizeof(*plr), GFP_KERNEL);
++	plr = devm_kzalloc(&auxdev->dev, struct_size(plr, die_info, num_resources), GFP_KERNEL);
+ 	if (!plr)
+ 		return -ENOMEM;
+ 
+@@ -315,13 +315,6 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
+ 
+ 	intel_plr_register_notifier(&plr->nb);
+ 
+-	plr->die_info = devm_kcalloc(&auxdev->dev, num_resources, sizeof(*plr->die_info),
+-				     GFP_KERNEL);
+-	if (!plr->die_info) {
+-		err = -ENOMEM;
+-		goto err_notify;
+-	}
+-
+ 	plr->num_dies = num_resources;
+ 	plr->dbgfs_dir = debugfs_create_dir("plr", dentry);
+ 	plr->auxdev = auxdev;
+@@ -361,7 +354,6 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
+ 
+ err:
+ 	debugfs_remove_recursive(plr->dbgfs_dir);
+-err_notify:
+ 	intel_plr_unregister_notifier(&plr->nb);
+ 
+ 	return err;
 -- 
 2.54.0
 
