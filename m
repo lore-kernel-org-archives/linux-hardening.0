@@ -1,122 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-112.ptr.blmpb.com (va-2-112.ptr.blmpb.com [209.127.231.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3F833C1B7;
-	Thu, 21 May 2026 03:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88EA384CF5
+	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 04:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779332993; cv=none; b=Xy1W7+08ejc3hHMlFg/TgBK0yTRUrGQHChewlSkhrxY5LeHWbE+b6df2fqGPcIVGwLkAIXKUUFfycDmsHc8IFJMXc1SfYEfJG7lU0W9d0giv18N/Mc0WMHt9Rj0NBmHz0outVrvIZWOakYKeSbMVMyEX9Un2Ixwu3xp9rRQjnjo=
+	t=1779336174; cv=none; b=bzEa89fQIbKutCyFYAIYpkL2JygfsoAIY0SOteVCxSf2IaGhoK83lAdORP0UjTUbZEwohyKvQMO6Wx4tR/6h9JHyZWy8ChpgpLdjbgSbWsKF1/AjwUNoqOLqDVyTa1zDqY45DrXh8sKFmob7u/byuPEChL99V1AAFKIMq0icrtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779332993; c=relaxed/simple;
-	bh=PyCogTZLqe1oYQBon/CXpNsZwPGKbaLmRJUHRCcKoAc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DIVIYqBYgmv6CWz8ZqiD6xkM2/kqkrz3KCPR5Hsig6WkY+SAPP2gah85xkHjb3nC+AoFAqxgRXuOwVSH3nR0jxQ95u/8P0MIGxQSdCXkDJTBKq5TGL0ckqxT4UkuJytU32QEHR/WMpRuzBuSVOUt+atkCSmYuOrhT/4KwzGEb0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXpky9JN; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779336174; c=relaxed/simple;
+	bh=93eQjehzU2EibGhHV9TxOLIj3O6xTS5nE7G8tkgGzCY=;
+	h=Subject:Message-Id:Content-Type:To:Cc:Mime-Version:From:Date; b=SD9SpyLS/hv3UHIKPM6wX8y5sQBNnpX0PFesLvl93jQmasp3TLAZV1mVPgr2PmgKZXKxGkS3KcpgbYh1EJT8loQ1FF8EPu5L8AYYwT1QZW29Qo0V3nrJ0Uu2lnK1/DJCXNO3jV0krz0+7x8FD/9G86d6UhSBRMiVSSpy40lXi8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=qWuU1V7e; arc=none smtp.client-ip=209.127.231.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXpky9JN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB2B1F000E9;
-	Thu, 21 May 2026 03:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779332991;
-	bh=lw7Y3cTnSkm8o3kNd4EremV9Sd2MHFAezFWfaNvBFXs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ZXpky9JNK9TTmZzhp7qSFzG7Pv1bOBmChhxIBkv5x8LjiSVubNtyTFIR3M3UjRizt
-	 dTQttGJP2LUd9WpMmiaE3DozQmSfexj4FzcOKgVTYL7F68zjy8vKRnfj1giQnKq8EJ
-	 AJNpUQ1kH22XOrEGquCoAhw5Uu+kExjF3mrfOUMUx0ZxzYr+OEuTwzQre22pQ+7mUZ
-	 9RHpv1T0ZYXNT/Uwh0JaskklPWR8Ciq1aDdx08sBwoTp+x1vUipE5IV6Ov5EE790js
-	 a5UpCE14KCMxN6CGEUS5VbkcgcNvOuLfP4ujrU6cn3945cvO+wp+zYeP/HjgmRC2Mo
-	 Mrdj44ERfWPSg==
-Date: Thu, 21 May 2026 12:09:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org
- (open list:TRACING), linux-hardening@vger.kernel.org (open list:KERNEL
- HARDENING (not covered by other
- areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: Re: [PATCH] tracing: Use flexible array for entry fetch code
-Message-Id: <20260521120947.08f00bd4d7445bc6abc98ce0@kernel.org>
-In-Reply-To: <20260520215817.16560-1-rosenp@gmail.com>
-References: <20260520215817.16560-1-rosenp@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="qWuU1V7e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1779336159; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=E/YNDgmqShx3e3fJDptG/XMLbuSaoABmDYTKAIO9WS4=;
+ b=qWuU1V7eGqYe+PSwZYr8euYxqeppmmOmuP2GarcEh7cX/W1oKz4rJGdrF0EzkpIOOyzo+W
+ gDRsbfGonbKBOMlOxSReGi9Ry+NMOLjKwqMkrNik5tDJmiSMlYO6kTkmFmfSkcsjIMk+VS
+ +EAa6FrbKgsONzmeOlLg5kYlNDJHDWn3L8INDgdpZ7NKpUvC0hjQnrJh21BtWqh9f7YY/2
+ ELjZDtDnkvlI1ZT2Tb/bzSpssPjIvsf1pTBeIq4CkqwUvTqJCgupODDJQEGSoB3splZ41l
+ 41uUeFsxY9QmXExEffNKizNpuUDzAFrSrSSJ5ISWtVAE0omFk6UeBiaYdDM0oQ==
+X-Mailer: git-send-email 2.45.2
+Subject: [PATCH v2 0/7] mm: speed up ZONE_DEVICE memmap initialization
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+Message-Id: <20260521040124.10608-1-lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+To: <apopple@nvidia.com>, <akpm@linux-foundation.org>, <arnd@arndb.de>, 
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
+	<mingo@redhat.com>, <rppt@kernel.org>, <tglx@kernel.org>, 
+	<kees@kernel.org>
+Cc: <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-mm@kvack.org>, <lizhe.67@bytedance.com>, <x86@kernel.org>, 
+	<linux-hardening@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Lms-Return-Path: <lba+26a0e83dd+44a45e+vger.kernel.org+lizhe.67@bytedance.com>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Date: Thu, 21 May 2026 12:01:17 +0800
 
-On Wed, 20 May 2026 14:58:17 -0700
-Rosen Penev <rosenp@gmail.com> wrote:
+memmap_init_zone_device() can spend a substantial amount of time
+initializing large ZONE_DEVICE ranges because it repeats nearly
+identical struct page setup for every PFN.
 
-> Store probe entry fetch instructions in the probe_entry_arg
-> allocation instead of allocating a separate instruction array.
-> 
-> This keeps the entry fetch code tied to the entry argument lifetime while
-> leaving regular probe_arg instruction arrays separately allocated and
-> freed.
-> 
+This series reduces that overhead in seven steps.
 
-Thanks, this looks good to me.
+The first patch factors the reusable pieces out of
+__init_zone_device_page() so later patches can share the same logic
+without changing the existing slow path.
 
-> Assisted-by: Codex:GPT-5.5
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  kernel/trace/trace_probe.c | 8 +-------
->  kernel/trace/trace_probe.h | 2 +-
->  2 files changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index e0d3a0da26af..39f040c863e8 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -838,15 +838,10 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
->  	int i, offset, last_offset = 0;
->  
->  	if (!earg) {
-> -		earg = kzalloc_obj(*tp->entry_arg);
-> +		earg = kzalloc_flex(*earg, code, 2 * tp->nr_args + 1);
->  		if (!earg)
->  			return -ENOMEM;
->  		earg->size = 2 * tp->nr_args + 1;
-> -		earg->code = kzalloc_objs(struct fetch_insn, earg->size);
-> -		if (!earg->code) {
-> -			kfree(earg);
-> -			return -ENOMEM;
-> -		}
->  		/* Fill the code buffer with 'end' to simplify it */
->  		for (i = 0; i < earg->size; i++)
->  			earg->code[i].op = FETCH_OP_END;
-> @@ -2051,7 +2046,6 @@ void trace_probe_cleanup(struct trace_probe *tp)
->  		traceprobe_free_probe_arg(&tp->args[i]);
->  
->  	if (tp->entry_arg) {
-> -		kfree(tp->entry_arg->code);
->  		kfree(tp->entry_arg);
->  		tp->entry_arg = NULL;
->  	}
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 262d8707a3df..1076f1df347b 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -238,8 +238,8 @@ struct probe_arg {
->  };
->  
->  struct probe_entry_arg {
-> -	struct fetch_insn	*code;
->  	unsigned int		size;	/* The entry data size */
-> +	struct fetch_insn	code[] __counted_by(size);
->  };
->  
->  struct trace_uprobe_filter {
-> -- 
-> 2.54.0
-> 
+The second patch adds set_page_section_from_pfn(), so generic callers
+can update section bits from a PFN without open-coding
+SECTION_IN_PAGE_FLAGS checks.
 
+The third patch adds a template-based fast path for ZONE_DEVICE head
+pages. Instead of rebuilding the same struct page state for every PFN,
+it prepares a reusable page template once and copies it to each
+destination page.
+
+The fourth patch extends the same template-based approach to compound
+tails, so pfns_per_compound > 1 can also benefit from the fast path.
+
+The fifth patch introduces memcpy_streaming() and
+memcpy_streaming_drain() as a generic interface for write-once
+streaming copies, with a memcpy() fallback for architectures that do
+not provide a specialized backend.
+
+The sixth patch extends x86 memcpy_flushcache() small fixed-size
+fastpaths so struct-page-sized streaming copies can stay on the inline
+path.
+
+The last patch switches the zone-device template-copy path over to
+memcpy_streaming(). It refreshes PFN-dependent fields in the reusable
+template before each copy, keeps pageblock-aligned PFNs on regular
+memcpy(), and drains streaming stores before later normal stores update
+overlapping or dependent metadata.
+
+The optimized path is disabled when the page_ref_set tracepoint is
+enabled, sanitized builds remain on the slow path so their
+instrumented stores are preserved, and the fast path falls back to the
+existing slow path if sizeof(struct page) is not an integral number of
+u64 words.
+
+Testing
+=======
+
+Tests were run in a VM on an Intel Ice Lake server.
+
+Two PMEM configurations were used:
+  - a 100 GB fsdax namespace configured with map=dev, which exercises
+    the nd_pmem rebind path (pfns_per_compound == 1)
+  - a 100 GB devdax namespace configured with align=2097152, which
+    exercises the dax_pmem rebind path (pfns_per_compound > 1)
+
+For each configuration, the corresponding driver was unbound and
+rebound 30 times. Memmap initialization latency was collected from the
+pr_debug() output of memmap_init_zone_device().
+
+The first bind is reported separately, and the average of subsequent
+rebinds is used as the steady-state result.
+
+Performance
+===========
+
+nd_pmem rebind, 100 GB fsdax namespace, map=dev
+  Base(v7.1-rc3):
+    First binding: 1486 ms
+    Average of subsequent rebinds: 273.52 ms
+  With patches 1-3 applied:
+    First binding: 1422 ms
+    Average of subsequent rebinds: 245.73 ms
+  Full series:
+    First binding: 1389 ms
+    Average of subsequent rebinds: 111.08 ms
+
+dax_pmem rebind, 100 GB devdax namespace, align=2097152
+  Base(v7.1-rc3):
+    First binding: 1515 ms
+    Average of subsequent rebinds: 313.45 ms
+  With patches 1-4 applied:
+    First binding: 1422 ms
+    Average of subsequent rebinds: 256.56 ms
+  Full series:
+    First binding: 1294 ms
+    Average of subsequent rebinds: 110.24 ms
+
+Li Zhe (7):
+  mm: factor zone-device page init helpers out of
+    __init_zone_device_page
+  mm: add a set_page_section_from_pfn() helper
+  mm: add a template-based fast path for zone-device page init
+  mm: extend the template fast path to zone-device compound tails
+  string: introduce memcpy_streaming() helpers
+  x86/string: extend memcpy_flushcache() fixed-size fastpaths
+  mm: use memcpy_streaming() in zone-device template copies
+
+ arch/x86/include/asm/string_64.h | 100 +++++++++++++---
+ include/linux/mm.h               |  19 ++-
+ include/linux/string.h           |  18 +++
+ mm/mm_init.c                     | 198 +++++++++++++++++++++++++++----
+ 4 files changed, 294 insertions(+), 41 deletions(-)
+
+---
+v1: https://lore.kernel.org/all/20260515082045.63029-1-lizhe.67@bytedance.com/
+
+Changelogs:
+
+v1->v2:
+- Move the pageblock-helper split into patch 1, and add a dedicated
+  set_page_section_from_pfn() helper so generic callers no longer
+  open-code SECTION_IN_PAGE_FLAGS handling. Suggested by Mike Rapoport.
+- Drop the v1 32-bit gating and document instead that CONFIG_ZONE_DEVICE
+  is 64-bit only because it depends on MEMORY_HOTPLUG. Suggested by
+  Mike Rapoport.
+- Replace the v1 BUILD_BUG_ON() struct page layout checks with a runtime
+  fast-path eligibility check that falls back to the slow path when the
+  layout is unsuitable. Suggested by Mike Rapoport.
+- Rename the template fast-path helpers to zone_device_* names for
+  clarity. Suggested by Mike Rapoport.
+- Replace the v1 open-coded arch_optimize_store_u64()/drain() approach
+  with a generic memcpy_streaming()/memcpy_streaming_drain() interface,
+  and move the x86 optimization under memcpy_flushcache(). Suggested by
+  Alistair Popple.
+- Split the old v1 streaming-copy patch into three patches: introduce
+  the generic helper, extend the x86 backend, and then switch mm over
+  to the new interface. This is part of the memcpy-based rework
+  suggested by Alistair Popple.
+- Refresh the performance section and report whole-series results as
+  series-level numbers.
+- Fix a missing memcpy_streaming_drain() in the compound-page
+  initialization path, following review feedback from Andrew Morton.
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.20.1
