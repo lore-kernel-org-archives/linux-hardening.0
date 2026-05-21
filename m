@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC36335BA8;
-	Thu, 21 May 2026 02:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3F833C1B7;
+	Thu, 21 May 2026 03:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779332124; cv=none; b=elPs/MiNFhqhCE726PsTs3c2Pno0x8T4fa8YKm5OfWSdyASKmTAkor+NvGuyejK1ElkUKeQGgIPyWEqOzmaT0l9+sOhAf6APLHM02Un5ahYTJUYf5LChIvOBkCDjGCi/sv7nYR6E1WqnJ+bLWqsV6aOOmpBhW/W+8fViSk5u9C4=
+	t=1779332993; cv=none; b=Xy1W7+08ejc3hHMlFg/TgBK0yTRUrGQHChewlSkhrxY5LeHWbE+b6df2fqGPcIVGwLkAIXKUUFfycDmsHc8IFJMXc1SfYEfJG7lU0W9d0giv18N/Mc0WMHt9Rj0NBmHz0outVrvIZWOakYKeSbMVMyEX9Un2Ixwu3xp9rRQjnjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779332124; c=relaxed/simple;
-	bh=EAb2wauDN5Uk13UBhGSaw/6WwwVNGBTjZ+pm+MbJFys=;
+	s=arc-20240116; t=1779332993; c=relaxed/simple;
+	bh=PyCogTZLqe1oYQBon/CXpNsZwPGKbaLmRJUHRCcKoAc=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=booyGBxA7ydtrPzncz2MqwlWWv1n10Uv22YKTumz777WIE6hpPXiDBPyk4ipWuXmyFH/+AK4/Ml0bkcPYIGVdmsdY3H7u4ljjCw7OvHzAl2EhEvoVAWJVEUU0yxtxgNZc3Olwki0EjJVJEt91LqSVjRUks1KYTLHvKq+n/z7HYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZ/p8Puq; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=DIVIYqBYgmv6CWz8ZqiD6xkM2/kqkrz3KCPR5Hsig6WkY+SAPP2gah85xkHjb3nC+AoFAqxgRXuOwVSH3nR0jxQ95u/8P0MIGxQSdCXkDJTBKq5TGL0ckqxT4UkuJytU32QEHR/WMpRuzBuSVOUt+atkCSmYuOrhT/4KwzGEb0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXpky9JN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZ/p8Puq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81001F000E9;
-	Thu, 21 May 2026 02:55:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXpky9JN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB2B1F000E9;
+	Thu, 21 May 2026 03:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779332123;
-	bh=rlm0Exl5iGU4kQ1kfFL4x6/T2KSgeQbhxz8/3ekD80w=;
+	s=k20260515; t=1779332991;
+	bh=lw7Y3cTnSkm8o3kNd4EremV9Sd2MHFAezFWfaNvBFXs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=VZ/p8Puqc2Bz/7kRowZrYkL3WqfYmB5uLkTf7WAsIFCGGyfdJElpUcZPwZ3s/6HW2
-	 /BKytVIop6ygLJDNXBb2QUXx2vuNMrosFIPk/fK0cFdMmsusfpoxubqWcuEJdX7drp
-	 lF3tv7feXc1Q/R9GsIR3NtbVOB7XUSuW6aWwCXWSLI6DiX59aKsStXMo4Ue4n6urdz
-	 J4yGbGTjcLwVbl9uYE/Ih0TQyzNNio5Z0/ppYM0iWPOeMre6SYVa4QoLTBBVaE4us0
-	 GM+DEJkPNYcdXsZaILa91SkZRFyID1nbqUkRDbaseOjrCpX4U/9kenS1IqHe8wLlFV
-	 lvkY7r1dTX3QA==
-Date: Thu, 21 May 2026 11:55:18 +0900
+	b=ZXpky9JNK9TTmZzhp7qSFzG7Pv1bOBmChhxIBkv5x8LjiSVubNtyTFIR3M3UjRizt
+	 dTQttGJP2LUd9WpMmiaE3DozQmSfexj4FzcOKgVTYL7F68zjy8vKRnfj1giQnKq8EJ
+	 AJNpUQ1kH22XOrEGquCoAhw5Uu+kExjF3mrfOUMUx0ZxzYr+OEuTwzQre22pQ+7mUZ
+	 9RHpv1T0ZYXNT/Uwh0JaskklPWR8Ciq1aDdx08sBwoTp+x1vUipE5IV6Ov5EE790js
+	 a5UpCE14KCMxN6CGEUS5VbkcgcNvOuLfP4ujrU6cn3945cvO+wp+zYeP/HjgmRC2Mo
+	 Mrdj44ERfWPSg==
+Date: Thu, 21 May 2026 12:09:47 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Rosen Penev <rosenp@gmail.com>
 Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
@@ -36,10 +36,10 @@ Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
  (open list:TRACING), linux-hardening@vger.kernel.org (open list:KERNEL
  HARDENING (not covered by other
  areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: Re: [PATCHv2] tracing: simplify pages allocation
-Message-Id: <20260521115518.b3b5264ebf6ba2a29b4c5410@kernel.org>
-In-Reply-To: <20260520215006.12008-1-rosenp@gmail.com>
-References: <20260520215006.12008-1-rosenp@gmail.com>
+Subject: Re: [PATCH] tracing: Use flexible array for entry fetch code
+Message-Id: <20260521120947.08f00bd4d7445bc6abc98ce0@kernel.org>
+In-Reply-To: <20260520215817.16560-1-rosenp@gmail.com>
+References: <20260520215817.16560-1-rosenp@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -50,113 +50,70 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 20 May 2026 14:50:06 -0700
+On Wed, 20 May 2026 14:58:17 -0700
 Rosen Penev <rosenp@gmail.com> wrote:
 
-> Change to a flexible array member to allocate together with the array
-> struct.
+> Store probe entry fetch instructions in the probe_entry_arg
+> allocation instead of allocating a separate instruction array.
 > 
-> Simplifies code slightly by removing no longer correct null checks for
-> pages and removing kfrees.
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
+> This keeps the entry fetch code tied to the entry argument lifetime while
+> leaving regular probe_arg instruction arrays separately allocated and
+> freed.
 > 
+
+Thanks, this looks good to me.
+
+> Assisted-by: Codex:GPT-5.5
 > Signed-off-by: Rosen Penev <rosenp@gmail.com>
 > ---
->  v2: add back kfree(a). Accidentally removed.
->  kernel/trace/tracing_map.c | 30 +++++++++++-------------------
->  kernel/trace/tracing_map.h |  2 +-
->  2 files changed, 12 insertions(+), 20 deletions(-)
+>  kernel/trace/trace_probe.c | 8 +-------
+>  kernel/trace/trace_probe.h | 2 +-
+>  2 files changed, 2 insertions(+), 8 deletions(-)
 > 
-> diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
-> index c59326ad7a84..97f7e3cde262 100644
-> --- a/kernel/trace/tracing_map.c
-> +++ b/kernel/trace/tracing_map.c
-> @@ -288,9 +288,6 @@ static void tracing_map_array_clear(struct tracing_map_array *a)
->  {
->  	unsigned int i;
-> 
-> -	if (!a->pages)
-> -		return;
-> -
->  	for (i = 0; i < a->n_pages; i++)
->  		memset(a->pages[i], 0, PAGE_SIZE);
->  }
-> @@ -302,9 +299,6 @@ static void tracing_map_array_free(struct tracing_map_array *a)
->  	if (!a)
->  		return;
-> 
-> -	if (!a->pages)
-> -		goto free;
-> -
->  	for (i = 0; i < a->n_pages; i++) {
->  		if (!a->pages[i])
->  			break;
-> @@ -312,9 +306,6 @@ static void tracing_map_array_free(struct tracing_map_array *a)
->  		free_page((unsigned long)a->pages[i]);
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index e0d3a0da26af..39f040c863e8 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -838,15 +838,10 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
+>  	int i, offset, last_offset = 0;
+>  
+>  	if (!earg) {
+> -		earg = kzalloc_obj(*tp->entry_arg);
+> +		earg = kzalloc_flex(*earg, code, 2 * tp->nr_args + 1);
+>  		if (!earg)
+>  			return -ENOMEM;
+>  		earg->size = 2 * tp->nr_args + 1;
+> -		earg->code = kzalloc_objs(struct fetch_insn, earg->size);
+> -		if (!earg->code) {
+> -			kfree(earg);
+> -			return -ENOMEM;
+> -		}
+>  		/* Fill the code buffer with 'end' to simplify it */
+>  		for (i = 0; i < earg->size; i++)
+>  			earg->code[i].op = FETCH_OP_END;
+> @@ -2051,7 +2046,6 @@ void trace_probe_cleanup(struct trace_probe *tp)
+>  		traceprobe_free_probe_arg(&tp->args[i]);
+>  
+>  	if (tp->entry_arg) {
+> -		kfree(tp->entry_arg->code);
+>  		kfree(tp->entry_arg);
+>  		tp->entry_arg = NULL;
 >  	}
-> 
-> -	kfree(a->pages);
-> -
-> - free:
->  	kfree(a);
->  }
-> 
-> @@ -322,24 +313,25 @@ static struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
->  						  unsigned int entry_size)
->  {
->  	struct tracing_map_array *a;
-> +	unsigned int entry_size_shift;
-> +	unsigned int entries_per_page;
-> +	unsigned int n_pages;
->  	unsigned int i;
-> 
-> -	a = kzalloc_obj(*a);
-> +	entry_size_shift = fls(roundup_pow_of_two(entry_size) - 1);
-> +	entries_per_page = PAGE_SIZE / (1 << entry_size_shift);
-> +	n_pages = max(1, n_elts / entries_per_page);
-> +
-> +	a = kzalloc_flex(*a, pages, n_pages);
->  	if (!a)
->  		return NULL;
-> 
-> -	a->entry_size_shift = fls(roundup_pow_of_two(entry_size) - 1);
-> -	a->entries_per_page = PAGE_SIZE / (1 << a->entry_size_shift);
-> -	a->n_pages = n_elts / a->entries_per_page;
-> -	if (!a->n_pages)
-> -		a->n_pages = 1;
-> +	a->entry_size_shift = entry_size_shift;
-> +	a->entries_per_page = entries_per_page;
-> +	a->n_pages = n_pages;
->  	a->entry_shift = fls(a->entries_per_page) - 1;
->  	a->entry_mask = (1 << a->entry_shift) - 1;
-> 
-> -	a->pages = kcalloc(a->n_pages, sizeof(void *), GFP_KERNEL);
-> -	if (!a->pages)
-> -		goto free;
-> -
->  	for (i = 0; i < a->n_pages; i++) {
->  		a->pages[i] = (void *)get_zeroed_page(GFP_KERNEL);
->  		if (!a->pages[i])
-> diff --git a/kernel/trace/tracing_map.h b/kernel/trace/tracing_map.h
-> index ed64136782d8..90a7fde5dd02 100644
-> --- a/kernel/trace/tracing_map.h
-> +++ b/kernel/trace/tracing_map.h
-> @@ -167,7 +167,7 @@ struct tracing_map_array {
->  	unsigned int entry_shift;
->  	unsigned int entry_mask;
->  	unsigned int n_pages;
-> -	void **pages;
-> +	void *pages[] __counted_by(n_pages);
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 262d8707a3df..1076f1df347b 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -238,8 +238,8 @@ struct probe_arg {
 >  };
-> 
->  #define TRACING_MAP_ARRAY_ELT(array, idx)				\
-> --
+>  
+>  struct probe_entry_arg {
+> -	struct fetch_insn	*code;
+>  	unsigned int		size;	/* The entry data size */
+> +	struct fetch_insn	code[] __counted_by(size);
+>  };
+>  
+>  struct trace_uprobe_filter {
+> -- 
 > 2.54.0
 > 
 
