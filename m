@@ -1,229 +1,132 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D13F3D8125
-	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 13:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AB43BA233
+	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 13:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779371320; cv=none; b=nK+sRWA0aVvPgzzC2kz1IM0+OycGy/RNnc0xAChDudqeIWM2pqKqkQBJ8ZOpA+d7Cih1tMbQ2T4by9m0iiMcZDMSwGtVtrYMjiveqAQ2LyRwYlgCFJrqSNTNW1xdmz1ln+izugybyHhGVy3hL9A30njCEKawG0b+SzRuiMTFwjE=
+	t=1779371978; cv=none; b=IMceeDozDKU/qE4zek7XpRrjhS4oAjGVlbKtE1yjlowIzkjuFnN6ls0nPVN82XfOyxA3ot7GpR/Ol0X+4r00gRFsHta78GrhigPgxHjFfWtCfSlPAdnNf/U/AbSPQjEUrcga5LLZJTPOTCGbrQV+ieXViTgPqBcfE5sYyG7wEB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779371320; c=relaxed/simple;
-	bh=XeEOKxqcNhrXKitEzKsGvJcSYxxb2/NE5qqflkYV41o=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eYKgw0dBVJSduBtAHjpOqheIuTPKeZ5e7u/YFFkzrIWALjdmky8CqPFNKjLKe7Pe1wZtYYAJeezB2PPp7ji3Fhmchz5btHYNPTa5sSte7ZQjCN1YQFMQDE5PPrZEGl6QavvWf44inuF/mzUCI70CkuLVeF3QeFfJiySAiKi0Zik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jdz5zDEu; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779371978; c=relaxed/simple;
+	bh=h+4NVJo3wpAjspHwkhwsyzZn+zEl2CEEOehXzRGNdBY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EoxfIGRzz36W2jApkK06MMxYSNbnEQzDLGpPHFCS438yPnrljADBHpIcBMDT0Nnvh++rKIWmMtkSX2JoIW1Tu0jEyC0z5YHyfaMGRtxXF8Tlju6lYbXFHBe/c1QM8vgRO8AlaZHuc4fOu2QfubS6Tmw0NNa29hAe+HlJlv+mk5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jodHEZLM; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jdz5zDEu"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-48a563e4ef7so48874885e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 06:48:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jodHEZLM"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c8279604464so9098291a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 06:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779371316; x=1779976116; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=52jcbEZbjO5t07+/FFl717hGmuxoIXJoziT8EaSDvxo=;
-        b=jdz5zDEunt/aeUwJJTeTTDNu9dUz/LoYm3xPBMhX5qmJDtfsnbdGZaUf8T7e+oH8QI
-         x1c/0th6WyOanLc736Quou3nAPCHy7T4lPaYdkPkneeMuPaU8KbGCPHYDPc3LCqljZO3
-         aLMP8lglEB2DjefJl+TBdmdZdtCKyOo5YiV3XDVkrlLHs1dYmxx3H6ASe85OfC9vejF/
-         pWVTc+Z8yppFPz5Uyr2+Dw2irUiguj8j7OQnV72xFRc4khUnLNumJzEa6i//ZFCQCZwD
-         cAZfCg48mUjFY2UR6keKGhjzx/3tOOAF/VcZ15gzRuEs/B5Pig06/2A0xcNiwuHhoXja
-         frUg==
+        d=google.com; s=20251104; t=1779371975; x=1779976775; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tqeEG6FXEKElqAGUt/Z2qfbIbuB++N7b4Fh1Zt6D5dk=;
+        b=jodHEZLMnrXvcr0U+8aiQ3+8HMthO764B3RtgzEf+7ztkCNfkmkIlQBTfUmc0CO1Gm
+         znKHCX5+9bAECaG80vh/IPP806tKIqZE2l7HZLe1YU0HCE1c+TVzdByotFkWkoU+YEws
+         qLgdufxQuD2gsyG2s9NK2v18HBYBS1w+SMsS+Qi6jr0LEmhA4R7O7tZpYus8VaPMyFeG
+         15VYXBj+eYi7/OswJ5AioWab2qhZVYFRjyf4SpApvc+UkSyiNxbsaWg55EmuzRTPh+T9
+         X183BhHSUrQrVCzdTIOykwkJ84D445JXsSdEAvmO37Cr/WfIjw3mclOhGc8OX4c80G1x
+         Di8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779371316; x=1779976116;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=52jcbEZbjO5t07+/FFl717hGmuxoIXJoziT8EaSDvxo=;
-        b=m8jh4Hmi2Ru6gSHbTntlXSslhOZx8nIW/bgMW4VOsZtO9N+zkj9GZGmRPzUNOwTfn3
-         fpECBBME3cfHMA5D/DpPt7QSCx52XPPLPFhi0bjG3Ifdq2yND7lON/R1zw7mgajc2Pco
-         USgxWvrp1BECYQlE+B56NvjUwmBJlerhbSMOrC27bwJyKt9DBYStdnqVpO0E2rDd8zim
-         FQFtZA1lbU+kQVasAG6mFI2QTHdKhAXnsRiiK9bEHRHt8YxEvD73EgOTKUUBTmkBZ0kQ
-         +wdl3d6Gku4/riSB0fJfKbDBVkq4bnxex45jcIkOqzk7o35c0LNqo4fjqv2kp6I2wh7K
-         BKvg==
-X-Forwarded-Encrypted: i=1; AFNElJ/Hbj5OlAXqafzyDMk5dC1cLvrQG8d+GnPXuXtpUDbpBY/bAeH36rMMI4gFtm9o4sZH9Ob+g7FtLrle4s+0s4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtRbu9/GQpXNRATRXb82NofaQc+hdxeqcwTAugxmhLajEJkxcY
-	MWa2pKu9iYJceFSL1WDSOUY0kYUOEnuaKponjREJvq4B4Oglm4AeTdP5
-X-Gm-Gg: Acq92OEk3OtHkILz929KBoDEGQM4GN/PmcI6kJuIGUwl6gea3rXjB77VYGRv4Qh1GQ3
-	bIDgxGLOz9fI0j0wAXTLPTuncMxzqEX8xuqFNNrYuA0COWcuOpjr5pkYvqZHI6z7OG60xt2M/r9
-	pfKlFvGrQgW+Op172WeScVkVfnLnuNtVGbeKE4LbtJKSpAwaWS3JWeIJ0nfOXaQL6Liyq/QWn8+
-	Yaup+BxPl6/VyVgxhUbgYXF3gw/UO3utFVzMMWi56x4YEsuyV5m30avWas6GMdcVKsHn2XKvL8a
-	GTeCELGCma0VmIjyaCmVT77Ihhd4puSAW6mVaUAfDCUtDQsYDoK2BRpHSvitE8gbW+/zkgNHbYb
-	ZYCV8pHxfqHGOJDfkOLdmUqE7VP8sHHbHPSNGumyoYk6P5ojNH+DK7dAR3275h0QP7Wy/wvXv43
-	mJwbyC/c7+34OSMUlX8isU5SlbffWo5WJq8yqymZFqrBNm3iXjpArFnHAtpD2/gaPm2TpxHG74Z
-	/MJ+UDi/tAN2tnIMy30RFZtNu6FHehvsvz4tsXxEYTMQ70+2rm4lLwGSlkB
-X-Received: by 2002:a05:600c:5298:b0:48a:563c:c8c0 with SMTP id 5b1f17b1804b1-49036034241mr45116035e9.7.1779371316202;
-        Thu, 21 May 2026 06:48:36 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49035c22d97sm16292635e9.1.2026.05.21.06.48.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 06:48:35 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Thu, 21 May 2026 14:48:30 +0100
-To: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v5 03/13] iio: core: add hierarchical channel
- relationships
-Message-ID: <hjv4uuudhkueaotpyuzj3u3jg2rkr73jmrx2vxi37w3po5xk5x@3fhfebj6a3wt>
-References: <20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com>
- <20260517-ad9910-iio-driver-v5-3-31599c88314a@analog.com>
+        d=1e100.net; s=20251104; t=1779371975; x=1779976775;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tqeEG6FXEKElqAGUt/Z2qfbIbuB++N7b4Fh1Zt6D5dk=;
+        b=cwYXsClw5cHkaJN5QcLYkFjuuMJenh1QGiK5jdCX6TbuamDJY2wqDCyy9HVOFFzRTz
+         Q1xWQkmWHm7F1Va9gucxKxAfUdf0DuFXCw8fKW8ZGje00r8b4BndqnHS3h/V6ppbl6HV
+         Yl3zSfj4PAdtxIsSDglrnbWgcwmSUcSaD9wcScC1VKQJCI/f08cTqLl5qKyOyxWqmfLB
+         SdHdDAoEv4yYbjvz6Ej3lEGLoA7wUlRGTZEtuD/1hOlP5mXB9xmWhyjemlQvVGNqVvak
+         BJ2S44PjfM8vt8UWdWgAhWgCKrwXUb2tfL2PiQekiwn0sgFC3SSQZyEmAnEGNP9Nnf9O
+         pQ8Q==
+X-Forwarded-Encrypted: i=1; AFNElJ+vZFPjq7+JCmDR3t8fxUG0dtVoz6MT8qbEjOrWfNgeAI2GbRoAP0Selr5+dfrHHIwXaTPgvGuYOCHkVClx+LE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwC4bK7aZWyVVUK5kOJslYqi+J0mpkd7bvVwpo760TgjpLhvwd
+	p8kg32EnbslrI6u/LrzmxwhaOFVfeWmWeLwmfEMoi/LvQsisA1lQ9TbIPoNtIp/jCxEhkPbOcbR
+	83dcMzw==
+X-Received: from pge1.prod.google.com ([2002:a05:6a02:2d01:b0:c79:83b3:cdf8])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:431a:b0:39c:a78e:dba9
+ with SMTP id adf61e73a8af0-3b308ac1b14mr3725831637.40.1779371973881; Thu, 21
+ May 2026 06:59:33 -0700 (PDT)
+Date: Thu, 21 May 2026 06:59:33 -0700
+In-Reply-To: <20260521133326.2465264-4-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260517-ad9910-iio-driver-v5-3-31599c88314a@analog.com>
+Mime-Version: 1.0
+References: <20260521133315.work.845-kees@kernel.org> <20260521133326.2465264-4-kees@kernel.org>
+Message-ID: <ag8PxTTi5NxT51EW@google.com>
+Subject: Re: [PATCH 04/11] treewide: Convert struct kernel_param_ops
+ initializers to DEFINE_KERNEL_PARAM_OPS
+From: Sean Christopherson <seanjc@google.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Pengpeng Hou <pengpeng@iscas.ac.cn>, 
+	Petr Pavlu <petr.pavlu@suse.com>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>, 
+	Gabriel Somlo <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Bart Van Assche <bvanassche@acm.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	"Eugenio =?utf-8?B?UMOpcmV6?=" <eperezma@redhat.com>, Jason Baron <jbaron@akamai.com>, 
+	Jim Cromie <jim.cromie@gmail.com>, Tiwei Bie <tiwei.btw@antgroup.com>, 
+	Benjamin Berg <benjamin.berg@intel.com>, 
+	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, 
+	"David E. Box" <david.e.box@linux.intel.com>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Aaron Tomlin <atomlin@atomlin.com>, Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-modules@vger.kernel.org, 
+	kasan-dev@googlegroups.com, linux-mm@kvack.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, 
+	linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	qemu-devel@nongnu.org, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org, 
+	linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On 26/05/18 03:26PM, Rodrigo Alencar wrote:
-> On 26/05/17 06:56PM, sashiko-bot@kernel.org wrote:
-> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> > - [Medium] Exposing the hierarchical relationship via channel labels creates an ambiguous UAPI for userspace.
-> > --
-> > 
-> > commit 64c6f961f1d7645c58f732e4bd4c11200b999e93
-> > Author: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > 
-> > iio: core: add hierarchical channel relationships
-> > 
-> > This commit introduces a parent-child relationship between IIO channels.
-> > It adds a parent pointer to the iio_chan_spec struct and exposes this
-> > relationship to userspace through a new "parent" sysfs attribute that
-> > returns the parent channel's label.
-> > 
-> > > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> > > index 5c8404efd0a56..348ac7a597385 100644
-> > > --- a/drivers/iio/industrialio-core.c
-> > > +++ b/drivers/iio/industrialio-core.c
-> > 
-> > [ ... ]
-> > 
-> > > @@ -1263,6 +1271,31 @@ static int iio_device_add_channel_label(struct iio_dev *indio_dev,
-> > >  	return 1;
-> > >  }
-> > >  
-> > > +static int iio_device_add_channel_parent(struct iio_dev *indio_dev,
-> > > +					 struct iio_chan_spec const *chan)
-> > > +{
-> > > +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> > > +	int ret;
-> > > +
-> > > +	if (!chan->parent || (!indio_dev->info->read_label &&
-> > > +			      !chan->parent->extend_name))
-> > > +		return 0;
-> > 
-> > Is relying on channel labels robust enough for programmatic parent resolution?
-> > 
-> > IIO channel labels are optional, human-readable descriptors and are not
-> > guaranteed by the core to be unique. If multiple channels within a device
-> > share the same label, how can userspace definitively resolve which specific
-> > channel is the parent?
-> > 
-> > Also, if a driver establishes a hierarchy where chan->parent is set, but the
-> > parent channel lacks a label, this attribute is silently omitted, hiding the
-> > relationship entirely.
-> > 
-> > Would it be more reliable to expose a definitive, unique identifier (such as
-> > the parent channel's sysfs prefix or index) rather than relying on an optional
-> > descriptive string?
+On Thu, May 21, 2026, Kees Cook wrote:
+> Using Coccinelle, rewrite every struct kernel_param_ops initializer that
+> sets .get into a DEFINE_KERNEL_PARAM_OPS-family macro invocation,
+> for example:
 > 
-> A bit impressive that sashiko can comment on that architecture level.
-> 
-> Those are all good points. I suppose I went for this because otherwise it would
-> require refactoring core code to get the needed parts from __iio_device_attr_init()
-> that gets you the channel name without the attribute part.
-> 
-> Maybe we should have a function that outputs a channel name into a buffer based on
-> __iio_device_attr_init() behavior, and that could be reused.
+> @@
+> declarer name DEFINE_KERNEL_PARAM_OPS;
+> identifier OPS;
+> expression SET, GET;
+> @@
+> - const struct kernel_param_ops OPS = {
+> -       .set = SET,
+> -       .get = GET,
+> - };
+> + DEFINE_KERNEL_PARAM_OPS(OPS, SET, GET);
 
-This is the function with behavior extracted from __iio_device_attr_init():
-
-	static int __iio_chan_prefix_emit(const struct iio_chan_spec *chan,
-					  enum iio_shared_by shared_by,
-					  char *buf, size_t len)
-	{
-		const char *dir = iio_direction[chan->output];
-		const char *type = iio_chan_type_name_spec[chan->type];
-		int n = 0;
-
-		switch (shared_by) {
-		case IIO_SHARED_BY_ALL:
-			break;
-		case IIO_SHARED_BY_DIR:
-			n = scnprintf(buf, len, "%s", dir);
-			break;
-		case IIO_SHARED_BY_TYPE:
-			n = scnprintf(buf, len, "%s_%s", dir, type);
-			if (chan->differential)
-				n += scnprintf(buf + n, len - n, "-%s", type);
-			break;
-		case IIO_SEPARATE:
-			if (chan->indexed) {
-				n = scnprintf(buf, len, "%s_%s%d", dir, type,
-					      chan->channel);
-				if (chan->differential)
-					n += scnprintf(buf + n, len - n, "-%s%d", type,
-						       chan->channel2);
-			} else {
-				if (chan->differential) {
-					WARN(1, "Differential channels must be indexed\n");
-					return -EINVAL;
-				}
-				n = scnprintf(buf, len, "%s_%s", dir, type);
-			}
-
-			if (chan->modified) {
-				if (chan->differential) {
-					WARN(1, "Differential channels can not have modifier\n");
-					return -EINVAL;
-				}
-				n += scnprintf(buf + n, len - n, "_%s",
-					       iio_modifier_names[chan->channel2]);
-			}
-
-			if (chan->extend_name)
-				n += scnprintf(buf + n, len - n, "_%s", chan->extend_name);
-			break;
-		}
-
-		return n;
-	}
-
-I think it is clear and reusable.
-
-> > > +
-> > > +	ret = __iio_add_chan_devattr("parent",
-> > > +				     chan,
-> > > +				     &iio_read_channel_parent,
-> > > +				     NULL,
-> > > +				     0,
-> > > +				     IIO_SEPARATE,
-> > > +				     &indio_dev->dev,
-> > > +				     NULL,
-> > > +				     &iio_dev_opaque->channel_attr_list);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> > > +	return 1;
-> > > +}
-> > 
-> > -- 
-> > Sashiko AI review · https://sashiko.dev/#/patchset/20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com?part=3
-
--- 
-Kind regards,
-
-Rodrigo Alencar
+IMO, "OPS, GET, SET" is more intuitive, especially since that's the order used
+by DEFINE_SIMPLE_ATTRIBUTE and DEFINE_DEBUGFS_ATTRIBUTE.
