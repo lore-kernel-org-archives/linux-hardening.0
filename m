@@ -1,141 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE18383329;
-	Thu, 21 May 2026 10:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985B6225775;
+	Thu, 21 May 2026 12:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779359595; cv=none; b=ayKHgucZjzHQ3NIngPcL83glZgeFRbhtlsg1P/9Jrd2iyYoPtV/QpDyv9LZkRE2sjOr/b3rPUSRvOG0+94kBF6jb8j9xjjTCuqTcyPHFw0DN5CFD/Nyvbn04wyaFXJg7FuiZ/8PZSJMZmL7hhyn8cNb+oq5y4GOEj1eL8Ln5r38=
+	t=1779367234; cv=none; b=km1JqxMg+YaKsj9t7tscw/3o6R3Tf4eoEGqmpyeGB0jdnQLb1szeTr0lHFR1CkPusZqST7mTj82zdWprcXYc9ZSE11YrQwvzQNcJZvhQaJvBVc3FvpR2TJTrRDIn+xnUIBXb99LlUTWVS6wVQmWI1jFxY1hQpYCgsKyaIDtFbWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779359595; c=relaxed/simple;
-	bh=4MaM1ztAmX1Krx7c0Ys9D3dOLXAsYTR9aeqOgCBvbSc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=czV7memyojV1+KWvVLYCEkeXqsXEgCo/u+YH3jeu3+jjJenMl24dky2Pf478UJixGNChYfrdXAqjLQWbPa3y0xruSQNAbn4e5QR8Ppoq8y7M/3qFep3DlIjw+VLTSJULmibivMWC+rlz50t7Eg5bGltZWoywsAZ4Acl5o6zSvbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JHkvToox; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779367234; c=relaxed/simple;
+	bh=9Y0y7pZycGbEOeO9/OyccNveQ4PnpxVbx1Oaw+ivBqg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MCE8QuqxIlhm9BpgvvH+30ox6f/1wC5yqgeDBUx9sv+qrzHX5GGGVzXAcMN9IOXHcCAudoA/w3A5NgHjVgsImwxRi7f6X+c1Uyt5yAaH5MFpe5JrJETUzwFofd+caLVVA8O0kPCP0EvZ3IawNrUAReDXwdTSGtNUuZBdKcj9Tfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScCUhpbr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JHkvToox"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779359593; x=1810895593;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=4MaM1ztAmX1Krx7c0Ys9D3dOLXAsYTR9aeqOgCBvbSc=;
-  b=JHkvTooxD0ZyrUahdijg0qagq6bqJx1yztm7F+Ng2Q+o9OY3w9pof4N1
-   3yXXii+RlMssuXu4FhR3BypF5ipMmktORx6drqCFJ3rBwcJD5GeEWi1tE
-   zXM6HEA9qmBxQX6O6zU2eVSjf3ksskGr3jns9CrUc0PTpWbLfQSL6vAhl
-   ydo0X0enYMeh5NWvNQRqr5GNuvIg7exxNRcEb5D5mzUXkAJujBwXohd3H
-   8nK0dv3vxLPq1N3A2d/FEIB3d9JwKJdFElqJungmAQOf64YshI9cFpAFj
-   ZCals32pR5U7QOUXOXxevzfGYVutuphO3MDCTbiQk1chTvrIcVPz/EcuZ
-   A==;
-X-CSE-ConnectionGUID: 3779UNkQQxKtnnFn5H47BA==
-X-CSE-MsgGUID: dg5R+1qmSJuXLbDdkl93vQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11792"; a="97702640"
-X-IronPort-AV: E=Sophos;i="6.23,246,1770624000"; 
-   d="scan'208";a="97702640"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 03:33:12 -0700
-X-CSE-ConnectionGUID: HbTAJfcKSgeDszRUwAeyRg==
-X-CSE-MsgGUID: 7f1CkquOSzKR04L5Lx1BoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,246,1770624000"; 
-   d="scan'208";a="240520044"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.98])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 03:33:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 21 May 2026 13:33:05 +0300 (EEST)
-To: Rosen Penev <rosenp@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCHv2] platform/x86/intel/tpmi/plr: allocate die_info with
- plr
-In-Reply-To: <20260521014608.1356671-1-rosenp@gmail.com>
-Message-ID: <d8ae7a61-c7ef-6b23-7d9d-e5dd35c86dcf@linux.intel.com>
-References: <20260521014608.1356671-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScCUhpbr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 799B61F00A3B;
+	Thu, 21 May 2026 12:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779367233;
+	bh=RlAOM2lZrtJhhmPATuaev+PMTZ0nLmMQGqFD18Zj8Ds=;
+	h=From:To:Cc:Subject:Date;
+	b=ScCUhpbrSDupPtmSqPFnD2k7W1tWR9KtDOK5Y3502t0qCdePjhyX8i6FD+cUrBnvk
+	 jOGqEBPGtfJK8orGqwNjFAaEd8DODy6YdBziASiWTyG6ggnwyOWf+78tLE3hm34VCO
+	 /1zI0ITJk7wbl5qEiodt4YWfeZPdlHv8pKg0hGpw/1un+H5PIsHy6HjmqzhAr93Jeu
+	 yl11Ag+TH+h5q6wsvQGUiywv8YrfCk+p4D5XE7YMz3RE7maDOLULM4n/ROGNtzwROX
+	 fowwmTXqfqxaFS0ovfspUzfjVwhP+2m69rok4NKkmqaArlBTZ+Yrfoh30+RtoWeFpD
+	 MVkHsuBTWlaxg==
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Harry Yoo <harry@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] mm/util: Use kmalloc buckets for kmemdup_nul()
+Date: Thu, 21 May 2026 05:40:31 -0700
+Message-Id: <20260521124026.work.036-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2565; i=kees@kernel.org; h=from:subject:message-id; bh=9Y0y7pZycGbEOeO9/OyccNveQ4PnpxVbx1Oaw+ivBqg=; b=owGbwMvMwCVmps19z/KJym7G02pJDFl8f+32OLZtm9+yYp/5+n/7u5sdGhyWrzBdbSjiFbGH1 /jDPT/FjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgInsPcLwP2FP3cldJ4++OZrD X3XtsFzmfenFry5KfeBe2N7J6x3y8j/Df+eeuVaqsVErn/Q4FESk1jbetZKVtnjPIvhd+/HDTeK 3GAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, 20 May 2026, Rosen Penev wrote:
+The use of the kmemdup_nul()-family of allocations are explicitly for
+allocating NUL terminated strings, so these would be best separated from
+typed allocations, as they are their own set of arbitrarily sized
+allocations. They are not as risky as userspace controlled allocations,
+but these would be good to separate as well.
 
-> Simplifies allocations slightly.
-> 
-> Add __counted_by for extra runtime analysis.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  v2: Rebase.
->  drivers/platform/x86/intel/plr_tpmi.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
-> index 8faecc311038..66220fadf670 100644
-> --- a/drivers/platform/x86/intel/plr_tpmi.c
-> +++ b/drivers/platform/x86/intel/plr_tpmi.c
-> @@ -58,11 +58,11 @@ struct tpmi_plr_die {
->  
->  struct tpmi_plr {
->  	struct dentry *dbgfs_dir;
-> -	struct tpmi_plr_die *die_info;
->  	int num_dies;
->  	struct auxiliary_device *auxdev;
->  	struct notifier_block nb;
->  	struct mutex lock;	/* Protect access to dbgfs_dir */
-> +	struct tpmi_plr_die die_info[] __counted_by(num_dies);
->  };
->  
->  static const char * const plr_coarse_reasons[] = {
-> @@ -305,7 +305,7 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
->  	if (!num_resources)
->  		return -EINVAL;
->  
-> -	plr = devm_kzalloc(&auxdev->dev, sizeof(*plr), GFP_KERNEL);
-> +	plr = devm_kzalloc(&auxdev->dev, struct_size(plr, die_info, num_resources), GFP_KERNEL);
+  # grep memdup_nul /proc/slabinfo | cut -c-25
+  memdup_nul-8k          0
+  memdup_nul-4k          0
+  memdup_nul-2k          0
+  memdup_nul-1k          0
+  memdup_nul-512        28
+  memdup_nul-256         0
+  memdup_nul-192        60
+  memdup_nul-128        60
+  memdup_nul-96         60
+  memdup_nul-64        180
+  memdup_nul-32        960
+  memdup_nul-16       1860
+  memdup_nul-8        1980
 
-Hi,
+Suggested-by: Harry Yoo <harry@kernel.org>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Vlastimil Babka <vbabka@kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@kernel.org>
+Cc: Lorenzo Stoakes <ljs@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: <linux-mm@kvack.org>
+---
+ mm/util.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-I'd prefer to have devm_kzalloc_flex() be added before continuing with 
-changes like this. Last time I mentioned it, you washed your hands about 
-adding it and moved the responsability to linux-hardening folks. (In case 
-you didn't know, devm_kzalloc_flex() could be added even by you!)
-
-Alternatively, I might accept a good explanation why that cannot be done 
-or is not a good idea to have consistent interface for non-devm vs devm?
-
->  	if (!plr)
->  		return -ENOMEM;
->  
-> @@ -315,13 +315,6 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
->  
->  	intel_plr_register_notifier(&plr->nb);
->  
-> -	plr->die_info = devm_kcalloc(&auxdev->dev, num_resources, sizeof(*plr->die_info),
-> -				     GFP_KERNEL);
-> -	if (!plr->die_info) {
-> -		err = -ENOMEM;
-> -		goto err_notify;
-> -	}
-> -
->  	plr->num_dies = num_resources;
->  	plr->dbgfs_dir = debugfs_create_dir("plr", dentry);
->  	plr->auxdev = auxdev;
-> @@ -361,7 +354,6 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
->  
->  err:
->  	debugfs_remove_recursive(plr->dbgfs_dir);
-> -err_notify:
->  	intel_plr_unregister_notifier(&plr->nb);
->  
->  	return err;
-> 
-
+diff --git a/mm/util.c b/mm/util.c
+index 3cc949a0b7ed..419269bb53da 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -34,6 +34,9 @@
+ #include "internal.h"
+ #include "swap.h"
+ 
++static kmem_buckets *user_buckets __ro_after_init;
++static kmem_buckets *nul_buckets __ro_after_init;
++
+ /**
+  * kfree_const - conditionally free memory
+  * @x: pointer to the memory
+@@ -61,7 +64,7 @@ static __always_inline char *__kmemdup_nul(const char *s, size_t len, gfp_t gfp)
+ 	char *buf;
+ 
+ 	/* '+1' for the NUL terminator */
+-	buf = kmalloc_track_caller(len + 1, gfp);
++	buf = kmem_buckets_alloc_track_caller(nul_buckets, len + 1, gfp);
+ 	if (!buf)
+ 		return NULL;
+ 
+@@ -195,15 +198,14 @@ char *kmemdup_nul(const char *s, size_t len, gfp_t gfp)
+ }
+ EXPORT_SYMBOL(kmemdup_nul);
+ 
+-static kmem_buckets *user_buckets __ro_after_init;
+-
+-static int __init init_user_buckets(void)
++static int __init init_buckets(void)
+ {
+ 	user_buckets = kmem_buckets_create("memdup_user", 0, 0, INT_MAX, NULL);
++	nul_buckets = kmem_buckets_create("memdup_nul", 0, 0, INT_MAX, NULL);
+ 
+ 	return 0;
+ }
+-subsys_initcall(init_user_buckets);
++subsys_initcall(init_buckets);
+ 
+ /**
+  * memdup_user - duplicate memory region from user space
 -- 
- i.
+2.34.1
 
