@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808361F3BAC;
-	Thu, 21 May 2026 07:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360EA397B1C;
+	Thu, 21 May 2026 07:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779347352; cv=none; b=cnox6DlzaH4Z+Kf/l0Ls/wsRtvuYEEEO+e/ED8PFsdrXYXiVFPsvp95fexd41rj8DSeCbR6MuNfhzIHIYZFX34afOi8sSm+6tn330lq3nvQ5LceFHXEdfTQBBMm5ZBrB6MRiqHLhyC0j6yNnY9tnGHIoyc0wpNj9iXnTFhnY/Mc=
+	t=1779347517; cv=none; b=enxnmNIEUHYYKwwFJ20ZmMVDnx/yqyjMKtiTDEX4Y/2gv7+eVXGgkZB2RPltit0mMP+aGByyagxe5Ep7apcvnBXhZ2ATK0HVxiAEQHvBNtTyg+Qak2aQ8IJzM46xmtz4GLcd8N3p24r2zj/Juw/2lCn3Y/Ci9WgpVuTuDgAbGug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779347352; c=relaxed/simple;
-	bh=06DlYLMzDEsjxgRLDFP9ecsf0TUvM6TZuHNU93oyPH0=;
+	s=arc-20240116; t=1779347517; c=relaxed/simple;
+	bh=hRBptVK4N3Fvsr5GwzX7e1R9Geu69NsLiG/QhvHLUck=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=haK1u5DSnKUDYc/VXvqIKwW8PCojYNjWz0OYtfM0QCDTE3hMDYptxbTiGZbZ9zUvIpfS/orPFO2daOfk0/B6k/CEi5dTdQuPt9E6tYnyqzr26wvc9gjaZMycUknFJJtkW1isR1WOPwr8I+ftT6SRv4SrEgIK5JO1BikVE1rHErU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqE3gO14; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=UnE6neo/TWX+pADJJxpkpKhXkRlX99e/YT7Of2j2++tUvTT1EyqnIscdxuJLw//n1TbFW+W1wACgy/QBkQTirepQ94F8wZHPlK7HkXPAUuM56LX2wfqg1KUc0mdf1BtQoYkp5IzgkC3frxx7H+3YLVMbl/juXyhTbkaOSF0g9R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGOZfAr8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqE3gO14"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA0311F000E9;
-	Thu, 21 May 2026 07:09:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGOZfAr8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296051F000E9;
+	Thu, 21 May 2026 07:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779347351;
-	bh=06DlYLMzDEsjxgRLDFP9ecsf0TUvM6TZuHNU93oyPH0=;
+	s=k20260515; t=1779347514;
+	bh=08nYU04nwfmpYlYminOuyIMtkIuYwETpU0Ql3Rvr2TI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GqE3gO14ik0QN6Ey0d5TDclenZhFs1yxXQ5+zJMLtCv6ELME+HAT4W449fnjLjUJx
-	 8hKCw7e/t9SYZ6Cxgn87sTinZqK16R40p9+J8EjGFyUAWTAke1wF1Ge9uz6xwEpKbH
-	 9TksEcUqYnapq/A14cS51ELoTEjQ34Q+vZEfPw4bVmhTWKTfB6dsTiJ7LaQbhqROzl
-	 F8B/zXrUpIV/U9W/8WxTGFQqGXPRFAGJpNQ5BMs7Z+3m4AokoCk6LgKUbpGyml3QqH
-	 FHXx6oFLMoS2eZ97UzwyJMHMlyYY9/q86uZW/nzAjpiZs3zFUgJAXDQSsFtEP91gLU
-	 LmJob/u7WCXBg==
-Message-ID: <1556aa8a-0ffa-466f-9565-530dea7b9235@kernel.org>
-Date: Thu, 21 May 2026 09:09:03 +0200
+	b=YGOZfAr8nUN54KESZnb1D1LLzyOQKY+kcFvmqzEaZPGuCJeEl9th/PMKpDta6HWw9
+	 o/uo8LpsC/zrgAIOTVBA3LsJj7STNRLyeI2RBEe8ElkqGvFef/MrI3jpgiEJTjoKvC
+	 poy+40FsmKCtcRkcJAu0wDqe09kbnldhoVt34Y8E/IffFLSL+vdbPfmJJaYUv5b46z
+	 N8FdM2BV0esUz/PDiSV/WIzEaXZIVKFOpkbb8c9gdqZI9DX6INBT3be3Dcx9bO9Te/
+	 z9FxbL6GU68t1XUntxRzMTBpfRYOWmrXSveX8vs6H/qp+ZSR/hF3n21A/nkQHhUFwv
+	 D3ntkws+PCpTA==
+Message-ID: <8454c168-97e2-4cd1-8279-a92916a6471d@kernel.org>
+Date: Thu, 21 May 2026 09:11:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 8/8] arm64: defconfig: Enable the raspberrypi otp
- driver as module
+Subject: Re: [PATCH v5 7/8] dt-bindings: raspberrypi,bcm2835-firmware: Drop
+ unnecessary select
 To: Gregor Herburger <gregor.herburger@linutronix.de>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>,
@@ -49,9 +49,9 @@ To: Gregor Herburger <gregor.herburger@linutronix.de>,
  =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+ linux-hardening@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
 References: <20260520-rpi-otp-driver-v5-0-b26e5908eeac@linutronix.de>
- <20260520-rpi-otp-driver-v5-8-b26e5908eeac@linutronix.de>
+ <20260520-rpi-otp-driver-v5-7-b26e5908eeac@linutronix.de>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -97,17 +97,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260520-rpi-otp-driver-v5-8-b26e5908eeac@linutronix.de>
+In-Reply-To: <20260520-rpi-otp-driver-v5-7-b26e5908eeac@linutronix.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/05/2026 16:28, Gregor Herburger wrote:
-> Enable the newly add Raspberry Pi OTP driver as module to allow access
-> to the otp registers.
+On 20/05/2026 16:27, Gregor Herburger wrote:
+> The select schema is not necessary because the
+> raspberrypi,bcm2835-firmware compatible is already matched by the
+> compatible string values. 
 
-... on foo bar board?
+This is wrong. The select was not because of that. Select was needed
+because of simple-mfd, but dtschema was changed, so please rephrase:
 
-Otherwise, why do we want it in upstream?
+The "select" in schema is not necessary anymore since dtschema drops
+simple-mfd when constructing the select/filter query for schemas with
+compatibles.
 
 Best regards,
 Krzysztof
