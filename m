@@ -1,36 +1,41 @@
-Received: from va-2-112.ptr.blmpb.com (va-2-112.ptr.blmpb.com [209.127.231.112])
+Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88EA384CF5
-	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 04:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92BB384CE8
+	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 04:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779336174; cv=none; b=bzEa89fQIbKutCyFYAIYpkL2JygfsoAIY0SOteVCxSf2IaGhoK83lAdORP0UjTUbZEwohyKvQMO6Wx4tR/6h9JHyZWy8ChpgpLdjbgSbWsKF1/AjwUNoqOLqDVyTa1zDqY45DrXh8sKFmob7u/byuPEChL99V1AAFKIMq0icrtc=
+	t=1779336194; cv=none; b=NIGwhJDg9RskE4LF6WZsFbQls5vRSoc+mlcoiXWXgQPbehJ3KXqsPyKXaRu60yPMIa9VrclHgcidi14h7LeOjysGUyrRmigAsryyDd2pGkQS7ne9FNsl0Pyd7LDI4LtkIETT+blY+K0Ai6wdecfymelH91EM0yVK50d716l6tr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779336174; c=relaxed/simple;
-	bh=93eQjehzU2EibGhHV9TxOLIj3O6xTS5nE7G8tkgGzCY=;
-	h=Subject:Message-Id:Content-Type:To:Cc:Mime-Version:From:Date; b=SD9SpyLS/hv3UHIKPM6wX8y5sQBNnpX0PFesLvl93jQmasp3TLAZV1mVPgr2PmgKZXKxGkS3KcpgbYh1EJT8loQ1FF8EPu5L8AYYwT1QZW29Qo0V3nrJ0Uu2lnK1/DJCXNO3jV0krz0+7x8FD/9G86d6UhSBRMiVSSpy40lXi8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=qWuU1V7e; arc=none smtp.client-ip=209.127.231.112
+	s=arc-20240116; t=1779336194; c=relaxed/simple;
+	bh=GWyeI+m+rFWI8ArYKyE1ilMxvNLhqzxY8+cdQAg4Wjg=;
+	h=Subject:Content-Type:Message-Id:References:Date:In-Reply-To:To:Cc:
+	 From:Mime-Version; b=aNItIM90HPw2DgkMFz1fBnJE8tHnD5pCCMc73uDvideLvjcXiJCLutNRdiijkoGO3EzZT11cCeG4lF0itwYHgBeVlWpnK+JGbqzVM65o+3pN2joIEvD+qoF3cSllKmJjQ2LGbRNnBYTGXAUiu9MMwjf42vGLS2Cq0//Jl5NQp2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=nN5kh5pf; arc=none smtp.client-ip=209.127.230.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="qWuU1V7e"
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="nN5kh5pf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1779336159; h=from:subject:
+ s=2212171451; d=bytedance.com; t=1779336182; h=from:subject:
  mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
  mime-version:in-reply-to:message-id;
- bh=E/YNDgmqShx3e3fJDptG/XMLbuSaoABmDYTKAIO9WS4=;
- b=qWuU1V7eGqYe+PSwZYr8euYxqeppmmOmuP2GarcEh7cX/W1oKz4rJGdrF0EzkpIOOyzo+W
- gDRsbfGonbKBOMlOxSReGi9Ry+NMOLjKwqMkrNik5tDJmiSMlYO6kTkmFmfSkcsjIMk+VS
- +EAa6FrbKgsONzmeOlLg5kYlNDJHDWn3L8INDgdpZ7NKpUvC0hjQnrJh21BtWqh9f7YY/2
- ELjZDtDnkvlI1ZT2Tb/bzSpssPjIvsf1pTBeIq4CkqwUvTqJCgupODDJQEGSoB3splZ41l
- 41uUeFsxY9QmXExEffNKizNpuUDzAFrSrSSJ5ISWtVAE0omFk6UeBiaYdDM0oQ==
-X-Mailer: git-send-email 2.45.2
-Subject: [PATCH v2 0/7] mm: speed up ZONE_DEVICE memmap initialization
+ bh=r8qhTx7yx3vMMJAHefyPo3ETAaMxzAsg7BKGCu+RwJg=;
+ b=nN5kh5pfL9Zv5Rs68RqL8v/tzSR9cbPc9Ahep90oEPq2WAuLw3HRCUIOczDU7zuo2HXn4Q
+ gW5eEyG+XzrZ+S/AwwjMzJayY4LHpZ9ueORqRbF94qX6jtKsOjTF9YUSOFtKzMGkk9Ikvh
+ KCLrJ9h6nXSV60UxS90tqJmH6ARyqmniszXZe8fm9vsV5hu6004uy1jrj49i4BGs5GQsbp
+ fpjvPTKEzYVeoNDeQtDxDBfLQhEkhHKdXZNd+hVOrqC9E+fmt9coGOOBWHpoC3cPbxxKTj
+ frlC7hknG0Yrxy8HxyfKl4cKCfHKTu3q8ZVzSojPLIO5Km3KSHBM7BYvXHtr5w==
+Subject: [PATCH v2 1/7] mm: factor zone-device page init helpers out of __init_zone_device_page
 X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-Message-Id: <20260521040124.10608-1-lizhe.67@bytedance.com>
-Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset=UTF-8
+Message-Id: <20260521040124.10608-2-lizhe.67@bytedance.com>
+References: <20260521040124.10608-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+Date: Thu, 21 May 2026 12:01:18 +0800
+In-Reply-To: <20260521040124.10608-1-lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 7bit
+X-Lms-Return-Path: <lba+26a0e83f4+7c6c72+vger.kernel.org+lizhe.67@bytedance.com>
 To: <apopple@nvidia.com>, <akpm@linux-foundation.org>, <arnd@arndb.de>, 
 	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
 	<mingo@redhat.com>, <rppt@kernel.org>, <tglx@kernel.org>, 
@@ -38,147 +43,141 @@ To: <apopple@nvidia.com>, <akpm@linux-foundation.org>, <arnd@arndb.de>,
 Cc: <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
 	<linux-mm@kvack.org>, <lizhe.67@bytedance.com>, <x86@kernel.org>, 
 	<linux-hardening@vger.kernel.org>
+From: "Li Zhe" <lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Lms-Return-Path: <lba+26a0e83dd+44a45e+vger.kernel.org+lizhe.67@bytedance.com>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Date: Thu, 21 May 2026 12:01:17 +0800
 
-memmap_init_zone_device() can spend a substantial amount of time
-initializing large ZONE_DEVICE ranges because it repeats nearly
-identical struct page setup for every PFN.
+memmap_init_zone_device() currently mixes refcount policy, core
+ZONE_DEVICE page setup, and pageblock metadata handling in a single
+helper.
 
-This series reduces that overhead in seven steps.
+Factor the refcount policy into zone_device_page_init_refcount(), move
+the common page initialization into __zone_device_page_init(), split
+pageblock handling into zone_device_page_init_pageblock(), and wrap the
+existing slow path in zone_device_page_init_slow().
 
-The first patch factors the reusable pieces out of
-__init_zone_device_page() so later patches can share the same logic
-without changing the existing slow path.
+This keeps the slow-path behaviour unchanged and gives later patches
+reusable helper boundaries.
 
-The second patch adds set_page_section_from_pfn(), so generic callers
-can update section bits from a PFN without open-coding
-SECTION_IN_PAGE_FLAGS checks.
+No functional change intended.
 
-The third patch adds a template-based fast path for ZONE_DEVICE head
-pages. Instead of rebuilding the same struct page state for every PFN,
-it prepares a reusable page template once and copies it to each
-destination page.
-
-The fourth patch extends the same template-based approach to compound
-tails, so pfns_per_compound > 1 can also benefit from the fast path.
-
-The fifth patch introduces memcpy_streaming() and
-memcpy_streaming_drain() as a generic interface for write-once
-streaming copies, with a memcpy() fallback for architectures that do
-not provide a specialized backend.
-
-The sixth patch extends x86 memcpy_flushcache() small fixed-size
-fastpaths so struct-page-sized streaming copies can stay on the inline
-path.
-
-The last patch switches the zone-device template-copy path over to
-memcpy_streaming(). It refreshes PFN-dependent fields in the reusable
-template before each copy, keeps pageblock-aligned PFNs on regular
-memcpy(), and drains streaming stores before later normal stores update
-overlapping or dependent metadata.
-
-The optimized path is disabled when the page_ref_set tracepoint is
-enabled, sanitized builds remain on the slow path so their
-instrumented stores are preserved, and the fast path falls back to the
-existing slow path if sizeof(struct page) is not an integral number of
-u64 words.
-
-Testing
-=======
-
-Tests were run in a VM on an Intel Ice Lake server.
-
-Two PMEM configurations were used:
-  - a 100 GB fsdax namespace configured with map=dev, which exercises
-    the nd_pmem rebind path (pfns_per_compound == 1)
-  - a 100 GB devdax namespace configured with align=2097152, which
-    exercises the dax_pmem rebind path (pfns_per_compound > 1)
-
-For each configuration, the corresponding driver was unbound and
-rebound 30 times. Memmap initialization latency was collected from the
-pr_debug() output of memmap_init_zone_device().
-
-The first bind is reported separately, and the average of subsequent
-rebinds is used as the steady-state result.
-
-Performance
-===========
-
-nd_pmem rebind, 100 GB fsdax namespace, map=dev
-  Base(v7.1-rc3):
-    First binding: 1486 ms
-    Average of subsequent rebinds: 273.52 ms
-  With patches 1-3 applied:
-    First binding: 1422 ms
-    Average of subsequent rebinds: 245.73 ms
-  Full series:
-    First binding: 1389 ms
-    Average of subsequent rebinds: 111.08 ms
-
-dax_pmem rebind, 100 GB devdax namespace, align=2097152
-  Base(v7.1-rc3):
-    First binding: 1515 ms
-    Average of subsequent rebinds: 313.45 ms
-  With patches 1-4 applied:
-    First binding: 1422 ms
-    Average of subsequent rebinds: 256.56 ms
-  Full series:
-    First binding: 1294 ms
-    Average of subsequent rebinds: 110.24 ms
-
-Li Zhe (7):
-  mm: factor zone-device page init helpers out of
-    __init_zone_device_page
-  mm: add a set_page_section_from_pfn() helper
-  mm: add a template-based fast path for zone-device page init
-  mm: extend the template fast path to zone-device compound tails
-  string: introduce memcpy_streaming() helpers
-  x86/string: extend memcpy_flushcache() fixed-size fastpaths
-  mm: use memcpy_streaming() in zone-device template copies
-
- arch/x86/include/asm/string_64.h | 100 +++++++++++++---
- include/linux/mm.h               |  19 ++-
- include/linux/string.h           |  18 +++
- mm/mm_init.c                     | 198 +++++++++++++++++++++++++++----
- 4 files changed, 294 insertions(+), 41 deletions(-)
-
+Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
 ---
-v1: https://lore.kernel.org/all/20260515082045.63029-1-lizhe.67@bytedance.com/
+ mm/mm_init.c | 64 +++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 41 insertions(+), 23 deletions(-)
 
-Changelogs:
-
-v1->v2:
-- Move the pageblock-helper split into patch 1, and add a dedicated
-  set_page_section_from_pfn() helper so generic callers no longer
-  open-code SECTION_IN_PAGE_FLAGS handling. Suggested by Mike Rapoport.
-- Drop the v1 32-bit gating and document instead that CONFIG_ZONE_DEVICE
-  is 64-bit only because it depends on MEMORY_HOTPLUG. Suggested by
-  Mike Rapoport.
-- Replace the v1 BUILD_BUG_ON() struct page layout checks with a runtime
-  fast-path eligibility check that falls back to the slow path when the
-  layout is unsuitable. Suggested by Mike Rapoport.
-- Rename the template fast-path helpers to zone_device_* names for
-  clarity. Suggested by Mike Rapoport.
-- Replace the v1 open-coded arch_optimize_store_u64()/drain() approach
-  with a generic memcpy_streaming()/memcpy_streaming_drain() interface,
-  and move the x86 optimization under memcpy_flushcache(). Suggested by
-  Alistair Popple.
-- Split the old v1 streaming-copy patch into three patches: introduce
-  the generic helper, extend the x86 backend, and then switch mm over
-  to the new interface. This is part of the memcpy-based rework
-  suggested by Alistair Popple.
-- Refresh the performance section and report whole-series results as
-  series-level numbers.
-- Fix a missing memcpy_streaming_drain() in the compound-page
-  initialization path, following review feedback from Andrew Morton.
-
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index f9f8e1af921c..4ba506df93bc 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -987,11 +987,36 @@ static void __init memmap_init(void)
+ }
+ 
+ #ifdef CONFIG_ZONE_DEVICE
+-static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
++static inline int zone_device_page_init_refcount(
++		const struct dev_pagemap *pgmap)
++{
++	/*
++	 * ZONE_DEVICE pages other than MEMORY_TYPE_GENERIC are released
++	 * directly to the driver page allocator which will set the page count
++	 * to 1 when allocating the page.
++	 *
++	 * MEMORY_TYPE_GENERIC and MEMORY_TYPE_FS_DAX pages automatically have
++	 * their refcount reset to one whenever they are freed (ie. after
++	 * their refcount drops to 0).
++	 */
++	switch (pgmap->type) {
++	case MEMORY_DEVICE_FS_DAX:
++	case MEMORY_DEVICE_PRIVATE:
++	case MEMORY_DEVICE_COHERENT:
++	case MEMORY_DEVICE_PCI_P2PDMA:
++		return 0;
++	case MEMORY_DEVICE_GENERIC:
++		return 1;
++	default:
++		WARN_ONCE(1, "Unknown memory type!");
++		return 1;
++	}
++}
++
++static void __ref __zone_device_page_init(struct page *page, unsigned long pfn,
+ 					  unsigned long zone_idx, int nid,
+ 					  struct dev_pagemap *pgmap)
+ {
+-
+ 	__init_single_page(page, pfn, zone_idx, nid);
+ 
+ 	/*
+@@ -1010,7 +1035,11 @@ static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
+ 	 */
+ 	page_folio(page)->pgmap = pgmap;
+ 	page->zone_device_data = NULL;
++}
+ 
++static void __ref zone_device_page_init_pageblock(struct page *page,
++						  unsigned long pfn)
++{
+ 	/*
+ 	 * Mark the block movable so that blocks are reserved for
+ 	 * movable at startup. This will force kernel allocations
+@@ -1025,27 +1054,16 @@ static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
+ 		init_pageblock_migratetype(page, MIGRATE_MOVABLE, false);
+ 		cond_resched();
+ 	}
++}
+ 
+-	/*
+-	 * ZONE_DEVICE pages other than MEMORY_TYPE_GENERIC are released
+-	 * directly to the driver page allocator which will set the page count
+-	 * to 1 when allocating the page.
+-	 *
+-	 * MEMORY_TYPE_GENERIC and MEMORY_TYPE_FS_DAX pages automatically have
+-	 * their refcount reset to one whenever they are freed (ie. after
+-	 * their refcount drops to 0).
+-	 */
+-	switch (pgmap->type) {
+-	case MEMORY_DEVICE_FS_DAX:
+-	case MEMORY_DEVICE_PRIVATE:
+-	case MEMORY_DEVICE_COHERENT:
+-	case MEMORY_DEVICE_PCI_P2PDMA:
++static void __ref zone_device_page_init_slow(struct page *page,
++		unsigned long pfn, unsigned long zone_idx, int nid,
++		struct dev_pagemap *pgmap)
++{
++	__zone_device_page_init(page, pfn, zone_idx, nid, pgmap);
++	if (!zone_device_page_init_refcount(pgmap))
+ 		set_page_count(page, 0);
+-		break;
+-
+-	case MEMORY_DEVICE_GENERIC:
+-		break;
+-	}
++	zone_device_page_init_pageblock(page, pfn);
+ }
+ 
+ /*
+@@ -1084,7 +1102,7 @@ static void __ref memmap_init_compound(struct page *head,
+ 	for (pfn = head_pfn + 1; pfn < end_pfn; pfn++) {
+ 		struct page *page = pfn_to_page(pfn);
+ 
+-		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
++		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
+ 		prep_compound_tail(page, head, order);
+ 		set_page_count(page, 0);
+ 	}
+@@ -1120,7 +1138,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ 	for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
+ 		struct page *page = pfn_to_page(pfn);
+ 
+-		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
++		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
+ 
+ 		if (pfns_per_compound == 1)
+ 			continue;
 -- 
 2.20.1
