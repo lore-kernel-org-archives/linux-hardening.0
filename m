@@ -1,185 +1,216 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8C23E277B
-	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 12:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779367629; cv=pass; b=NwChN3Fc5S4cUBH4NoXEZKJ+t3sUXKqLltr74P4Ly/7KtTLlGTXkWrQaWKG0vQfiLgtamxz2B+/DBKCB1NaRH/NAAaHttjLd2LSWaNgXFc70SoQu7FR3cVKHzChrFBlGM/L+pZ2Yfcpn4VduBbBeDdaVxFhsTAxYun26X7T+ddc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779367629; c=relaxed/simple;
-	bh=dkW6i0lPC1xs4pyupGvRdPXCA8v/Dbo9IGMvyg0RV0U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JZ2MyK7T1Gs0Y1NZvgnUqahTL6MQvMH9HU18d6/dtZb+zg5cbgeSI3ikbWPXxSyPvVytdEjCyP6gEhvjfDJ2aWNDDDDnJPlCp4aHBw/gRqLQXUsQUS1yao3CVPZ2IlWmi8Yzs4JOOW3v0ogvVnyhMs1duPIm5fNcpCso2pMqM9M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pqO1wQTA; arc=pass smtp.client-ip=74.125.82.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3773D7D80;
+	Thu, 21 May 2026 13:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779370408; cv=none; b=hKW9kln1PLK9mSTd0Ce7XrTssVlcSMyJCXs6/9mt9jzIiFvGUCdN49g9onMb9QgkjHqLgWd4AUcqIIjNQdb5fO1mJWX6ZPf9VkJiaQFkNsx+TZ8/QPqUcGZ0txesFbL+TqH3POBRYF+dEoOzvQeytL6IWm/rKyF4MetdB1W1ii0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779370408; c=relaxed/simple;
+	bh=5uv+CTbn8AcIcVue/GiaGr9BSc0U2Of/hQLri15LfLg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j0thK6dLeDJ7ZgeB1y2FqTzEs33VjwJL8PzvLZBZQjdECQNPRI5QxRhmQn6yzv7Jk6LuoYKoPPiaTTiJvlpGprjysEn7NmDNZATRN19IbexzGsrVvaIv9J81CfQkvvm/5wcX9MDldl5wKCgscIIW9hkAyvmvP+M/jEqCKJfKJJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4CDviTd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pqO1wQTA"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-132d1b2519eso13418485c88.0
-        for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 05:47:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779367626; cv=none;
-        d=google.com; s=arc-20240605;
-        b=MvsvFvZFdfnkawO3NbUGh0vA1LbzWmOBhDQDIohSXF8+R2kV4BGbakSikPo+qM3Qf6
-         MkT8vb3JcPVGh374J9+2DONYPmLXwI92EItixuldZwdrjSgAptl/NxsC7+LNWCimY9AD
-         ShFay/zyiTGkycyRtAEw7usdmui4vGK7wW2N1Sq2fOmf+2aKwsnyxTCZv2p2YSo01Bux
-         FF+4MfmiiDug9EBrVjv5fD6a4lllTDN+dJkWREiw2efpn5mi1fJy82hOvGZv6SoC2G5T
-         elz8o1HMxswGdyR0MD5Z+tfgje70e9kxMWEDu0LdeDQDrf6AM3KT4qrKXdcHHBhffW3h
-         6btA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=bfHkA0nrfTMBedFezUAOt262MiL/f21Ttj4Z491TkXA=;
-        fh=ckSD9V0qjouUtpesJ+2qdrg2kxcayongW/3RGeESLBY=;
-        b=ATWZ0HloJXllnjbAl9+gUr7tzfd5wH94D7IttmV2rwyB5+3IVscKXqYU4K5Byaohlh
-         uKbpLnOIEGgO/KTJawXKfGGQn2nsdl2kxZ+rPsFoG3jE5YZ07Nl9EdozoCOuH9GIdJex
-         kr3wTsju01wm4htLfOWp6mjWPu9NTEKdTT3OESocyuzr1HqPabMDjtcDqi6kC9MAseK5
-         8P0bBM6pSKSEaFUpvld3S8RPfMAv7owPeDyFGN402Em6qrY8bnL7yzmnZNXwPZBVbI5g
-         guvkHK9nJlduQ3RsBDjbB3R0CHwSnZeyfUlxcocWAClZmENhcx+ZiI+xBsxh5dOyHxV2
-         Ed6g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779367626; x=1779972426; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bfHkA0nrfTMBedFezUAOt262MiL/f21Ttj4Z491TkXA=;
-        b=pqO1wQTAhhMdjPEbskBLH8lhyTpJu1f+9nec/y1YDxrnufRzWE94nwCuuwokT4Tbhk
-         9v1iL22b59XytWXtFQOmqeTs7ontyrEfJAKBQG9zOYuE+mss4rim3AMlBN3zk0iMA+Lc
-         ZMDZQtykH88nRPsjfmqt2RnaQyIQoApUNe8ezITZt+Pp+NlnvqIJTqB19bviVu5gZxei
-         Z04OssLatmcoF0GRdHwZPtIGDDY4doZXDRDEUzDxX+mWdfe21FGsMkb/Mi/eT3tL1gfl
-         zyGp7NlKaySca/NY7JZ6M26CZhLPv16D9deZZGYc1Wu3mcgGkGQ2Va+gfeUA9CYOiBpk
-         ykCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779367626; x=1779972426;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bfHkA0nrfTMBedFezUAOt262MiL/f21Ttj4Z491TkXA=;
-        b=P0WcZCB5CcLq9NLIEmE8uhdPnnaPeEFguC1ocCI6YmPUVf2jWXitxaQg8j4IXGeXaH
-         uJB1CdzNo+7v/bx1aLcmKWcgCJUKhygy+1R9wc43Q3TD4EaN3C20qxTxrD8wwJT01ys9
-         2db56/5wlJOSr+KqvQjHmQZ2h/TTQPMRSUUjjSkT0HWDNWPE8bdewC4YW+G25O7r6l1/
-         dHNQETAG7PdTyigr9AGA8qQStv+6quF29POQrOWdMECu2TTNkV9Zwdd1Lill24ethSyj
-         CKBnqjaMGBGH/jDrIZWs/ZrodHd0gycqtGheNBROxDA3BsaX4az8D56Bz9ThvSFzSTPn
-         /mwQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/J8kyCXjIZu50khjcZj+IexxCWo0dCwdMl26FgfjeBk529ufzJ0pCBYRoO3Nc09id6j4t8z8Q4am//EJyN4vw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrGVI9qICMx9/QSt0f9UHcrihHYB2HLpuChevNsGNsW4XMtoHK
-	toKj+WdU91BFngX3LF7+1KZfX409Ybt5zCWaxwwEoCVnWtOtCqNF+TaIGvJasUMW3MNFY2k8+26
-	XbWynf+v26P1tlh06wdIZKovz+7jObUglrZjIpxUw
-X-Gm-Gg: Acq92OGllqZq3Ce2ffhxabOTRjX+Dxcc+zHBIxSpmb0c/GXpmV+zW/kQRmzKoGqjaDn
-	9/HGzgwoltYejWwZLDLbRbSQXUF/f+qo46HF+FDZumvdB/LQGQ1B8rQEVdAFZFD8e1Hc1Z7ag3r
-	hahktLJS62lxqfSVJxIJw/F5rSZ/q7iqZJzbpCGbGk4RYbsYBRL0jMDcvu70XaNqaLXnOE/ER/u
-	Xj7EGjxCqjRyt/2dZNaZonjGtIQ7YZ1hXRXm0yc/PsOvdx8S7o0nofvrNTeBrBc+pxQbd8NswJm
-	rukReHTf98wvvTlEL5UfnzEFi0rBLl0kEa6Nbtxv5h3Spocf
-X-Received: by 2002:a05:701b:271a:b0:133:54fb:f563 with SMTP id
- a92af1059eb24-13632d47501mr902318c88.23.1779367625531; Thu, 21 May 2026
- 05:47:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4CDviTd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664AA1F00A3C;
+	Thu, 21 May 2026 13:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779370406;
+	bh=ezV5ICAM2va0jVjd8iAniGdLxBSb69xxnF1gv2JwpSY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=j4CDviTd6M6LDTj5r6sQRqgJ6ESa9aWMu37zRV8mtOcXrJiE1zLL6x/OVHUw7taNB
+	 jl6ETIYiu8JAkRBqc4Wuv2aB534ln8Hu69MX1fb2GFClu2Mmurr/zb532bCHmICyRT
+	 bW4gGDuRH21kbO4Mt3QzAC1BgrPy+si2Rjb35ZfN4nboZAY9y9toARiousj3e/bp3M
+	 OhVS9wgD8OvUpe6jIOQ+pq818okRHEEM5Lah2/H+GkNEe7+pCkBUV/HEs3jXEYS4f4
+	 MtCRjjIGdmkPubfqUsmmCsve0nsahQ5jfKPmPGh0P3LHoWU280OP0E1I4NEEZgAN1h
+	 MDV3MyE2qhaxQ==
+From: Kees Cook <kees@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>,
+	stable@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Corey Minyard <corey@minyard.net>,
+	Gabriel Somlo <somlo@cmu.edu>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Hannes Reinecke <hare@suse.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Jim Cromie <jim.cromie@gmail.com>,
+	Tiwei Bie <tiwei.btw@antgroup.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Georgia Garcia <georgia.garcia@canonical.com>,
+	kvm@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	qemu-devel@nongnu.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-rdma@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 01/11] params: bound array element output to the caller's page buffer
+Date: Thu, 21 May 2026 06:33:14 -0700
+Message-Id: <20260521133326.2465264-1-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260521133315.work.845-kees@kernel.org>
+References: <20260521133315.work.845-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260521124026.work.036-kees@kernel.org>
-In-Reply-To: <20260521124026.work.036-kees@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Thu, 21 May 2026 14:46:28 +0200
-X-Gm-Features: AVHnY4L3IHnERTLKoV3YcNfiEp2Dd5pISRDPTRx2YrQ-J231SBVM-n7vqCXkjZ8
-Message-ID: <CANpmjNNPXZmabX+A=38JhTb6_rPWTvE9RfJGs3KiA3X6dthbzA@mail.gmail.com>
-Subject: Re: [PATCH] mm/util: Use kmalloc buckets for kmemdup_nul()
-To: Kees Cook <kees@kernel.org>
-Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2143; i=kees@kernel.org; h=from:subject; bh=3eO38ZdE0rbljlF5l/QfEOapKDQ3GxlJmKbxHXugskI=; b=owGbwMvMwCVmps19z/KJym7G02pJDFn8nAtqmS7cf3B//69jZ5rrq6va9p3fNOGM7h2Jd74Pn JTCV6u3dZSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEzEYiojw//ne8uu9YZ9+sWp mJ7czDyrP2Afv+2f21+/99yL9Jp+OI2RYVNeQ9witS6BzPe55aerW/eveRmS81ixc8XMVftPpj7 OZQAA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, 21 May 2026 at 14:40, Kees Cook <kees@kernel.org> wrote:
->
-> The use of the kmemdup_nul()-family of allocations are explicitly for
-> allocating NUL terminated strings, so these would be best separated from
-> typed allocations, as they are their own set of arbitrarily sized
-> allocations. They are not as risky as userspace controlled allocations,
-> but these would be good to separate as well.
->
->   # grep memdup_nul /proc/slabinfo | cut -c-25
->   memdup_nul-8k          0
->   memdup_nul-4k          0
->   memdup_nul-2k          0
->   memdup_nul-1k          0
->   memdup_nul-512        28
->   memdup_nul-256         0
->   memdup_nul-192        60
->   memdup_nul-128        60
->   memdup_nul-96         60
->   memdup_nul-64        180
->   memdup_nul-32        960
->   memdup_nul-16       1860
->   memdup_nul-8        1980
->
-> Suggested-by: Harry Yoo <harry@kernel.org>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Vlastimil Babka <vbabka@kernel.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@kernel.org>
-> Cc: Lorenzo Stoakes <ljs@kernel.org>
-> Cc: "Liam R. Howlett" <liam@infradead.org>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: <linux-mm@kvack.org>
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
 
-Acked-by: Marco Elver <elver@google.com>
+param_array_get() appends each element's string representation into the
+shared sysfs page buffer by passing buffer + off to the element getter.
 
-> ---
->  mm/util.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/mm/util.c b/mm/util.c
-> index 3cc949a0b7ed..419269bb53da 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -34,6 +34,9 @@
->  #include "internal.h"
->  #include "swap.h"
->
-> +static kmem_buckets *user_buckets __ro_after_init;
-> +static kmem_buckets *nul_buckets __ro_after_init;
-> +
->  /**
->   * kfree_const - conditionally free memory
->   * @x: pointer to the memory
-> @@ -61,7 +64,7 @@ static __always_inline char *__kmemdup_nul(const char *s, size_t len, gfp_t gfp)
->         char *buf;
->
->         /* '+1' for the NUL terminator */
-> -       buf = kmalloc_track_caller(len + 1, gfp);
-> +       buf = kmem_buckets_alloc_track_caller(nul_buckets, len + 1, gfp);
->         if (!buf)
->                 return NULL;
->
-> @@ -195,15 +198,14 @@ char *kmemdup_nul(const char *s, size_t len, gfp_t gfp)
->  }
->  EXPORT_SYMBOL(kmemdup_nul);
->
-> -static kmem_buckets *user_buckets __ro_after_init;
-> -
-> -static int __init init_user_buckets(void)
-> +static int __init init_buckets(void)
->  {
->         user_buckets = kmem_buckets_create("memdup_user", 0, 0, INT_MAX, NULL);
-> +       nul_buckets = kmem_buckets_create("memdup_nul", 0, 0, INT_MAX, NULL);
->
->         return 0;
->  }
-> -subsys_initcall(init_user_buckets);
-> +subsys_initcall(init_buckets);
->
->  /**
->   * memdup_user - duplicate memory region from user space
-> --
-> 2.34.1
->
+That works for getters that only write a small bounded string, but
+param_get_charp() and similar helpers format against PAGE_SIZE from the
+pointer they receive. Once off is non-zero, an element getter can
+therefore write past the end of the original sysfs page buffer.
+
+Collect each element into a temporary PAGE_SIZE buffer first and then
+copy only the remaining space into the caller's page buffer.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ kernel/params.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/params.c b/kernel/params.c
+index 74d620bc2521..752721922a15 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -475,22 +475,36 @@ static int param_array_set(const char *val, const struct kernel_param *kp)
+ static int param_array_get(char *buffer, const struct kernel_param *kp)
+ {
+ 	int i, off, ret;
++	char *elem_buf;
+ 	const struct kparam_array *arr = kp->arr;
+ 	struct kernel_param p = *kp;
+ 
++	elem_buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
++	if (!elem_buf)
++		return -ENOMEM;
++
+ 	for (i = off = 0; i < (arr->num ? *arr->num : arr->max); i++) {
+-		/* Replace \n with comma */
+-		if (i)
+-			buffer[off - 1] = ',';
+ 		p.arg = arr->elem + arr->elemsize * i;
+ 		check_kparam_locked(p.mod);
+-		ret = arr->ops->get(buffer + off, &p);
++		ret = arr->ops->get(elem_buf, &p);
+ 		if (ret < 0)
+-			return ret;
++			goto out;
++		ret = min(ret, (int)(PAGE_SIZE - 1 - off));
++		if (!ret)
++			break;
++		/* Replace the previous element's trailing newline with a comma. */
++		if (i)
++			buffer[off - 1] = ',';
++		memcpy(buffer + off, elem_buf, ret);
+ 		off += ret;
++		if (off == PAGE_SIZE - 1)
++			break;
+ 	}
+ 	buffer[off] = '\0';
+-	return off;
++	ret = off;
++out:
++	kfree(elem_buf);
++	return ret;
+ }
+ 
+ static void param_array_free(void *arg)
+-- 
+2.34.1
+
