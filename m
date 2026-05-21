@@ -1,132 +1,89 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AB43BA233
-	for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 13:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186913F2116;
+	Thu, 21 May 2026 14:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779371978; cv=none; b=IMceeDozDKU/qE4zek7XpRrjhS4oAjGVlbKtE1yjlowIzkjuFnN6ls0nPVN82XfOyxA3ot7GpR/Ol0X+4r00gRFsHta78GrhigPgxHjFfWtCfSlPAdnNf/U/AbSPQjEUrcga5LLZJTPOTCGbrQV+ieXViTgPqBcfE5sYyG7wEB0=
+	t=1779373939; cv=none; b=Ae8+08LKfmXKOjae1l3GczQOiVmikSNBUyTHKnYn/hKlNVfuKBYlWIztxt2hdZ3pVHWqK2EMKqbQz0CUbvS+XVw4mt8kSXqg1i6B6sifseJpvDccULaOWvIYBs+Tq5oEUmHdoC1uDAGfFqwSmQnY7BpIW6htK8fYy51FCOqvJek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779371978; c=relaxed/simple;
-	bh=h+4NVJo3wpAjspHwkhwsyzZn+zEl2CEEOehXzRGNdBY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EoxfIGRzz36W2jApkK06MMxYSNbnEQzDLGpPHFCS438yPnrljADBHpIcBMDT0Nnvh++rKIWmMtkSX2JoIW1Tu0jEyC0z5YHyfaMGRtxXF8Tlju6lYbXFHBe/c1QM8vgRO8AlaZHuc4fOu2QfubS6Tmw0NNa29hAe+HlJlv+mk5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jodHEZLM; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1779373939; c=relaxed/simple;
+	bh=ryhB4k4KAlNY3S8c/7wdxuWk85d93gm4uAyYmd85oPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SPk55g+l7mJjZOmE1cswLmyWt9BaVYZDRXEKNKZ5973tJuAGB93Sa7sMl1/AjFOlKPsQvGiULZXzyemrbjhEdemJwTudv2WupF2UxNyPB8EMnxMbwAq7Ab8JaaJSHeRKoTQNA5UWgD1lDlZaOvShIwIjOTlj1LgiZCZB/BNE760=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KhQWixjb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CCJ0tBjj; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jodHEZLM"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c8279604464so9098291a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 21 May 2026 06:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779371975; x=1779976775; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tqeEG6FXEKElqAGUt/Z2qfbIbuB++N7b4Fh1Zt6D5dk=;
-        b=jodHEZLMnrXvcr0U+8aiQ3+8HMthO764B3RtgzEf+7ztkCNfkmkIlQBTfUmc0CO1Gm
-         znKHCX5+9bAECaG80vh/IPP806tKIqZE2l7HZLe1YU0HCE1c+TVzdByotFkWkoU+YEws
-         qLgdufxQuD2gsyG2s9NK2v18HBYBS1w+SMsS+Qi6jr0LEmhA4R7O7tZpYus8VaPMyFeG
-         15VYXBj+eYi7/OswJ5AioWab2qhZVYFRjyf4SpApvc+UkSyiNxbsaWg55EmuzRTPh+T9
-         X183BhHSUrQrVCzdTIOykwkJ84D445JXsSdEAvmO37Cr/WfIjw3mclOhGc8OX4c80G1x
-         Di8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779371975; x=1779976775;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tqeEG6FXEKElqAGUt/Z2qfbIbuB++N7b4Fh1Zt6D5dk=;
-        b=cwYXsClw5cHkaJN5QcLYkFjuuMJenh1QGiK5jdCX6TbuamDJY2wqDCyy9HVOFFzRTz
-         Q1xWQkmWHm7F1Va9gucxKxAfUdf0DuFXCw8fKW8ZGje00r8b4BndqnHS3h/V6ppbl6HV
-         Yl3zSfj4PAdtxIsSDglrnbWgcwmSUcSaD9wcScC1VKQJCI/f08cTqLl5qKyOyxWqmfLB
-         SdHdDAoEv4yYbjvz6Ej3lEGLoA7wUlRGTZEtuD/1hOlP5mXB9xmWhyjemlQvVGNqVvak
-         BJ2S44PjfM8vt8UWdWgAhWgCKrwXUb2tfL2PiQekiwn0sgFC3SSQZyEmAnEGNP9Nnf9O
-         pQ8Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+vZFPjq7+JCmDR3t8fxUG0dtVoz6MT8qbEjOrWfNgeAI2GbRoAP0Selr5+dfrHHIwXaTPgvGuYOCHkVClx+LE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwC4bK7aZWyVVUK5kOJslYqi+J0mpkd7bvVwpo760TgjpLhvwd
-	p8kg32EnbslrI6u/LrzmxwhaOFVfeWmWeLwmfEMoi/LvQsisA1lQ9TbIPoNtIp/jCxEhkPbOcbR
-	83dcMzw==
-X-Received: from pge1.prod.google.com ([2002:a05:6a02:2d01:b0:c79:83b3:cdf8])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:431a:b0:39c:a78e:dba9
- with SMTP id adf61e73a8af0-3b308ac1b14mr3725831637.40.1779371973881; Thu, 21
- May 2026 06:59:33 -0700 (PDT)
-Date: Thu, 21 May 2026 06:59:33 -0700
-In-Reply-To: <20260521133326.2465264-4-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KhQWixjb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CCJ0tBjj"
+Date: Thu, 21 May 2026 16:32:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1779373936;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rDLY933PN2EBuLR1r8PdU5Fwy1ql5S35WUEgFUMoOsI=;
+	b=KhQWixjbyY2ShxL9WlbXHBdJ7WHF+ugTNis+GXU9J1N08E7I86+Wdv7CflXrZxKlzyoh9O
+	a9+K5D3LrEtkmk/wAG6iTWtV41NkkH9bcyc9C6kkyDGuE5iXHDqd+LnO+E35fcBYEAQEMr
+	spIyR0APkZlUbJYJxwwBtrAyIgDveX9hHbXzqOGTD8i9FdwGS/aZgTzSXty1b4Po5vFoXg
+	Hm8gjzwW/PVry0Ig8RqddkRejk9A3b9/SmVhfZ6iEg/Jm1hnSAgho2HEZdWkECLi8+hGUH
+	4pUK2wd9DzYZ9A5a8rZEN+g0Ng1irlP+DTILxemqR3IFy4LeH3p9osgCIuw6Kg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1779373936;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rDLY933PN2EBuLR1r8PdU5Fwy1ql5S35WUEgFUMoOsI=;
+	b=CCJ0tBjjgldKioatLTsKpYYgsMCkOEpPtyoYvjSFInZzfumqyvk/E2HeOWC+Jgo4Maafh2
+	AN0w7dxy9OsvXSAg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Gregor Herburger <gregor.herburger@linutronix.de>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
+	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 1/8] soc: bcm2835: Use IS_REACHABLE for function
+ declaration
+Message-ID: <20260521163126-47047e2d-8f24-4f72-98c1-7c5081ea9871@linutronix.de>
+References: <20260520-rpi-otp-driver-v5-0-b26e5908eeac@linutronix.de>
+ <20260520-rpi-otp-driver-v5-1-b26e5908eeac@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260521133315.work.845-kees@kernel.org> <20260521133326.2465264-4-kees@kernel.org>
-Message-ID: <ag8PxTTi5NxT51EW@google.com>
-Subject: Re: [PATCH 04/11] treewide: Convert struct kernel_param_ops
- initializers to DEFINE_KERNEL_PARAM_OPS
-From: Sean Christopherson <seanjc@google.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Pengpeng Hou <pengpeng@iscas.ac.cn>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>, 
-	Gabriel Somlo <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Bart Van Assche <bvanassche@acm.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	"Eugenio =?utf-8?B?UMOpcmV6?=" <eperezma@redhat.com>, Jason Baron <jbaron@akamai.com>, 
-	Jim Cromie <jim.cromie@gmail.com>, Tiwei Bie <tiwei.btw@antgroup.com>, 
-	Benjamin Berg <benjamin.berg@intel.com>, 
-	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, 
-	"David E. Box" <david.e.box@linux.intel.com>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Aaron Tomlin <atomlin@atomlin.com>, Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-modules@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-mm@kvack.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, 
-	linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	qemu-devel@nongnu.org, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org, 
-	linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260520-rpi-otp-driver-v5-1-b26e5908eeac@linutronix.de>
 
-On Thu, May 21, 2026, Kees Cook wrote:
-> Using Coccinelle, rewrite every struct kernel_param_ops initializer that
-> sets .get into a DEFINE_KERNEL_PARAM_OPS-family macro invocation,
-> for example:
+On Wed, May 20, 2026 at 04:27:53PM +0200, Gregor Herburger wrote:
+> The drivers that depend on the RASPBERRYPI_FIRMWARE use
 > 
-> @@
-> declarer name DEFINE_KERNEL_PARAM_OPS;
-> identifier OPS;
-> expression SET, GET;
-> @@
-> - const struct kernel_param_ops OPS = {
-> -       .set = SET,
-> -       .get = GET,
-> - };
-> + DEFINE_KERNEL_PARAM_OPS(OPS, SET, GET);
+> 	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
+> 
+> This should ensure that the driver is not compiled in when
+> RASPBERRYPI_FIRMWARE is 'm' on COMPILE_TEST which leads to linker
+> errors.
+> 
+> The same can be achieved by using IS_REACHABLE in the
+> raspberrypi-firmware header. This evaluates to false when invoked from
+> built-in code. This way the Kconfig can be written as
+> 
+> 	depends on RASPBERRYPI_FIRMWARE || COMPILE_TEST
+> 
+> Which is a more readable variant.
+> 
+> Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
 
-IMO, "OPS, GET, SET" is more intuitive, especially since that's the order used
-by DEFINE_SIMPLE_ATTRIBUTE and DEFINE_DEBUGFS_ATTRIBUTE.
+Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+
+(...)
