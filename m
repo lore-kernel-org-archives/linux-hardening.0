@@ -1,102 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B121639AD41;
-	Fri, 22 May 2026 13:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7196441030;
+	Fri, 22 May 2026 15:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779455478; cv=none; b=Uuq2nwwHT5qGUpA77j602sVIK78zgQ0BWPkKgNiqNja8+/k1KBI3ETVkSVu99syb9VsHuWQ9IMoNnMi/IBr+X3ljulWdCTsAQOcHHGfILmUJ+vpX0Uz/iRljEvgb3PFa+JWmt4XDt21zsyCp2qCarKimt629BVG0TskcEGrRvpQ=
+	t=1779464414; cv=none; b=jckVVUAiRJKq2U59ZyTEwJBrJA2jAsqGtS0x32jpFlqYgkKqLMcYjC9cfhmNEEzL9I8rUh+DgiWBuWMBS1Dr6+jSMlgIN1Xj4pjxscI9cvY/hgqHMfG1x7BmVXV/Qfdq2GspxbHblcHCEci29uSR4HU+w4mRJkB+/LC2lxiyQ78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779455478; c=relaxed/simple;
-	bh=g4tiLej6yCZ2ZNHOanffuTAJlssE9yYgA4axNTP0NW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ecmNCh7sEszE+Sg6f6q11Z4FAZErOuuZQMbH+f6s1yWlp5fNFCsGUBXEzIU1F5NfiZI4wA3YLBRETfgQnusgbtpsUyafI3rZCy87k13SYJOTwVCMuq67FnYIZfWZRne+QL82hmO2E/NHg03XfcxLO4d4cXsR82Q2+8bF8HtJhI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnn6LREn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779464414; c=relaxed/simple;
+	bh=WczONd7mpNhYLChVMriFZs2nu8WLmfya+omRfON8/Hs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=slKM08LApQysJglglWpyIejKooRJd5WvH+Iu6VcZDJtenLyVmXbrCnuxAkS2KHJnXbWGqFI8pvowU7PGpiENw71/RXUUrXA55yVFIZEQuAKhDwPzKvQHQTD2srOKlpt2QeKLTg4kWzqsiQQPn3P10HqXaSRCcmKEphCFKiX2BhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qlOiQD70; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EivLgcIZ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnn6LREn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD09D1F000E9;
-	Fri, 22 May 2026 13:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779455476;
-	bh=Nrj1M7t7JdiUm31R6wOAJFhKfFY3UAipdy+ym3Mbjk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nnn6LREn6/bKi8ue8FsN6NzABofKHHhWhj0eDDZKPN0gZAbnxKO41Zk0931LtkEuD
-	 RTWoM6MjferN2trIWxeogd1ghjN35n8EzjCXzlDz5D2mfPH5P8XuwjuJZ2YjaV50E7
-	 mBq6MenX93+6+aK72iVdc88QS2g8AHCBPNcSBWhxYEQWPtK8UwpvSIF4f++U0b1D2I
-	 NMKbhQ2nm5JA/UTW/+yQB/qBq5Rvu9eMq4zNSZTRe+rwJtpLjK3qZUU9yTHSgeXcEH
-	 Bh6yQjx5ePW4RHVFMs1YZKqkwBwtjKvoG9F+urOozEDp34XlUnWGaz4XMEkEpHaqrQ
-	 SFwWMpRBQcWhw==
-Date: Fri, 22 May 2026 15:11:11 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Jens Axboe <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
- read-only files
-Message-ID: <20260522-haltestelle-laufpass-volltreffer-3c69a6d84fc4@brauner>
-References: <20260516182126.530498-1-pfalcato@suse.de>
- <20260518-starten-messdaten-3b8aa670ec85@brauner>
- <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
- <177918418452.771415.4371785688744608623.b4-reply@b4>
- <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
- <177918837114.804096.3977912252785122973.b4-reply@b4>
- <CAGudoHGSZOEzbXHOAGqrdp6D06JQQ5Af759TQ+HiQx7=ruQa-Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qlOiQD70";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EivLgcIZ"
+From: Gregor Herburger <gregor.herburger@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1779464407;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RZ1imeqZ1Bc/uc24aV3TZVpElQegMgVauvFloOACEZY=;
+	b=qlOiQD70p6dU0RLcBrElMcfW2H5mzLQ3W92/VVpUjQPb/L3owihhNdqksRYBRui6m/fqXR
+	JhUckeI/iYFLnoOPoQxdu51BRNUr3iSC2cooTolNQETob/nof7aNXg5beT6wV9rpVDp2fQ
+	6eSOcU9MDC1MnW4Tqgo53ZhcHRx9hvJqVmUiaess5WxeybEUv51JxF0PDVHWatU5trRjtZ
+	W+RLi2MR7RQM4oJfyVb/9Y9cO7w510UljI/N6iYqMh3uKizzQzBdWdo3rTzLUdEKnPE6zg
+	QmTzeh6tsK/q7gRxAmyan6kNl3WIJBlEzGKG+lzzEyg2CYLLAZYyDnvncUoiUg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1779464407;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RZ1imeqZ1Bc/uc24aV3TZVpElQegMgVauvFloOACEZY=;
+	b=EivLgcIZaB61jGRfbmekMSnr/ofrR5PHxGemnfBaH1yWf1sGhkzdByH1egtAwPOUMYEtLe
+	IdM4JmgFSa4VbMBQ==
+Subject: [PATCH v6 00/10] nvmem: Add Raspberry Pi OTP nvmem driver
+Date: Fri, 22 May 2026 17:40:00 +0200
+Message-Id: <20260522-rpi-otp-driver-v6-0-b0eac97d1428@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHGSZOEzbXHOAGqrdp6D06JQQ5Af759TQ+HiQx7=ruQa-Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANB4EGoC/3XPTW7DIBAF4KtErEs1jM2Ps+o9qixiGBqqyrbAQ
+ Yki372QLmrV7vJp3nyjebBEMVBix8ODRcohhXEoQb0cmL2chw/iwZXMEFBBC4bHKfBxnriLIVP
+ kWnpLwlnvtWNlaYrkw+0Jvp9+crr2n2TnqtTGJaR5jPfnxSxq7188Cw6cAJ1wPSkA8/YVhuscx
+ yHcXh2xeiDjLyFBbgisRCe0IqvRNHqPaNaE2hBNIbBrVZmrRnVyj2jXxPaRthDWG6dROmNQ7BF
+ yRSBsCFmIHhXJDgzR2f4llmX5BrU1p3bOAQAA
+X-Change-ID: 20260408-rpi-otp-driver-75fce1dcff7d
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
+ Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Gregor Herburger <gregor.herburger@linutronix.de>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779464406; l=3446;
+ i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
+ bh=WczONd7mpNhYLChVMriFZs2nu8WLmfya+omRfON8/Hs=;
+ b=uP/teUmc9q7IhXxzEBLrPJerSrL1/0mL5ImZRRSTOut1b0MmrXh8G3cCjujugKlCCJ5Lz/Ko6
+ bUXGLLi7q3ZC9VadrP7F8aoX2HCXUOL/1d857zNUrsZg/lUAeteGDtp
+X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
+ pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
 
-On Tue, May 19, 2026 at 01:56:42PM +0200, Mateusz Guzik wrote:
-> On Tue, May 19, 2026 at 12:59 PM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On 2026-05-19 12:51 +0200, Mateusz Guzik wrote:
-> > > How about denial of splice usage or degradation to copy are still on
-> > > the table, but based on a different criterion: whether code involved
-> > > is "known good" for lack of a better description. iow the kernel would
-> > > maintain a whitelist of "safe" cases. Random-ass AF_NOBODYEVERHEARDOF
-> > > does not make the cut.
-> >
-> > I had thought about that to but I felt a bit iffy about it. You could
-> > envision an FOP_* flag for this:
-> >
-> >   /* Module may use splice-like apis */
-> >   #define FOP_MAY_SPLICE          ((__force fop_flags_t)(1 << 8))
-> >
-> > But that doesn't address how fundamentally broken vmsplice() for example
-> > really is and that probably no one should get to use it in its current
-> > form.
-> 
-> I never looked into the area on Linux, I am willing to take claims of
-> breakage on face value.
-> 
-> In this context I'm saying the functionality is used in the real world
-> for performance reasons and just whacking imo does not cut it.
-> 
-> >
-> > > Common-case usage would have to be audited of course, but this sounds
-> > > rather actionable and would provide hardening without much friction.
-> >
-> > And that's the usual problem where rando module will just raise the
-> > flag. Maybe that's fine and we will keep up.
-> >
-> 
-> If this is a genuine worry the whitelist can still be introduced and
-> managed by one person (Linus?) very easily. The implementation is only
-> mildly cumbersome to get going and trivial to spread afterwards.
-> 
-> You could have something like this:
-> struct file_operations funky_ops = {
-> ....
-> };
-> VFS_FILE_OPS_REGISTER(funky_ops);
+Hi,
 
-Unless someone is going to do that work a sysctl to force degrade all
-the APIs into copies should be ok.
+This series adds support for the Raspberry Pis OTP registers. The
+Raspberry Pi has one or more OTP regions. These registers are accessible
+through the firmware. Add a driver for it and add updates the devicetree
+for the Raspberry Pi 5.
+
+---
+Changes in v6:
+- Use %pe in dev_err
+- Include <linux/slab.h> to fix build on arm
+- Add arm defconfigs: multi_v7_defconfig and bcm2835_defconfig
+- Reword commit messages
+- Link to v5: https://patch.msgid.link/20260520-rpi-otp-driver-v5-0-b26e5908eeac@linutronix.de
+
+Changes in v5:
+- Move alignment check to nvmem core
+- Use IS_REACHABLE to simplify Kconfig
+- use root_only for private driver
+- Add driver as module to arch64 defconfig
+- Use MODULE_DEVICE_TABLE
+- Remove some unused attributes, fix typos, minor fixups
+- Link to v4: https://patch.msgid.link/20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de
+
+Changes in v4:
+- Additional patch to drop unnecessary select schema
+- fix dt-bindings
+- use __counted_by_le
+- additional alignment check in read/write callbacks
+- Link to v3: https://patch.msgid.link/20260506-rpi-otp-driver-v3-0-294602663695@linutronix.de
+
+Changes in v3:
+- dts: add "raspberrypi,bcm2835-firmware" as fallback and fix dt-bindings
+- Fix Kconfig depends
+- Changed firmware data fields to __le32
+- Add MODULE_ALIAS
+- Link to v2: https://patch.msgid.link/20260505-rpi-otp-driver-v2-0-e9176ec72837@linutronix.de
+
+Changes in v2:
+- register nvmem driver from firmware driver and drop firmware sub nodes
+- Use struct_size and __counted_by for dynamic array
+- Drop unneeded comment in Kconfig
+- Use NVMEM_DEVID_NONE
+- Use kzalloc
+- Update module description
+- Link to v1: https://patch.msgid.link/20260408-rpi-otp-driver-v1-0-e02d1dbe6008@linutronix.de
+
+---
+Gregor Herburger (10):
+      soc: bcm2835: Use IS_REACHABLE for function declaration
+      nvmem: core: Enforce stride and alignment checks for nvmem_device functions
+      dt-bindings: raspberrypi,bcm2835-firmware: Add bcm2712-firmware compatible
+      nvmem: Add the Raspberry Pi OTP driver
+      firmware: raspberrypi: register nvmem driver
+      arm64: dts: broadcom: bcm2712: add raspberrypi,bcm2712-firmware compatible
+      dt-bindings: raspberrypi,bcm2835-firmware: Drop unnecessary select
+      arm64: defconfig: Enable the raspberrypi otp driver as module
+      ARM: bcm2835_defconfig: Enable the raspberrypi otp driver as module
+      ARM: multi_v7_defconfig: Enable the raspberrypi otp driver as module
+
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml      |  20 ++--
+ arch/arm/configs/bcm2835_defconfig                 |   2 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ .../boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi    |   4 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/firmware/raspberrypi.c                     |  59 +++++++++-
+ drivers/nvmem/Kconfig                              |  11 ++
+ drivers/nvmem/Makefile                             |   1 +
+ drivers/nvmem/core.c                               |  12 ++
+ drivers/nvmem/raspberrypi-otp.c                    | 131 +++++++++++++++++++++
+ include/soc/bcm2835/raspberrypi-firmware.h         |  17 ++-
+ 11 files changed, 244 insertions(+), 15 deletions(-)
+---
+base-commit: f3e6330d7fe42b204af05a2dbc68b379e0ad179e
+change-id: 20260408-rpi-otp-driver-75fce1dcff7d
+
+Best regards,
+--  
+Gregor Herburger <gregor.herburger@linutronix.de>
+
