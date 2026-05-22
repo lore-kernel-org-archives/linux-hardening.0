@@ -1,192 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB8C370D7C;
-	Fri, 22 May 2026 18:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4892638C2D8
+	for <linux-hardening@vger.kernel.org>; Fri, 22 May 2026 21:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779474054; cv=none; b=ovuN6ooKtcihkjgHbVnelFXJzD7WJikp1ZnfHXfbrt+Lbbtj9Kn7cjsyWs67abMifQfGjBR+rQBQcd/fQ2PyYtEhRceHXyOw+rB6nBd7HqBdE4EegqzcNboSpL2PzgIc9C/my6Q31MMOpgttClWVCGfGwPM+skNyJ5Q4nfQLVjk=
+	t=1779486267; cv=none; b=ofhKbH1Ef6juK8D6RDf0vwDtEoOEuUWk2vel3BTciIfJsoGyyauF92+RBjqLALNtXLtZdTAMzG0aEsj8i7IMcbskdTmA15oyI611X1DTEAo24hp2QxWWz/8Mq5VfCVLewtL7aGQUa2AdAI/qCNjr6LsujR5MGWShjYJHu6garjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779474054; c=relaxed/simple;
-	bh=jffPhdDnLRAwzi8PUjK5KYDleGde9jnD2WMvaN6VDPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MrxFL/EKgLMO60yEpBMUYghaTscj5lXLqs0j8OUPZHlK46f3SMFyy/x/A7tZ6UNk+A6HOUfj2C0WKV5sklp98btwmqlOmX5t7S+ib9zrxII/54t/0vOcFWmqgOLKMR4eUla0c6nw3+HjdeXHLhLPk04BUTvmFQaitz0SxNi6ZW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOeLa3/+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779486267; c=relaxed/simple;
+	bh=p0D0SvAiOiNPeriwNwY4FWBYY3sdeg5voF6KW2g27tE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YBq+fQgCY6VX2Rd0Fgeg5LNFsnmanKNChzzToV4dD163OStR0Q6gbIJQtslDGmKGMw90KE46xqHStxjcbKWL7b6ui2/gP6dSnZsgHbzmI91q6w6PHG4aPZ5zbygcwTEfyLpqgvOhJBF+8HDPixTQ/S6SUKdb7n+kheHlRw/48TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DwLpEvTL; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOeLa3/+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41DED1F000E9;
-	Fri, 22 May 2026 18:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779474052;
-	bh=hSU9cBpoTFF2chOzFBP0yrEVoRs+PB2zWOHHQAxyuJs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=WOeLa3/+6uhtOB39yRrjL3yn8Whs13tqxJsoEVyKGuTnHRnG2kWK3NXWGxD9uYsbz
-	 ZbnRXI6sx4dlK6X3OaUDESQXaZCC1zSgK9IkIt/mEivWgEQ0tZcOv8fSinLK2LhrSx
-	 xc8sImMQvA7nClnv252vdOgIBGzi7LnWTpvQ0pU+cWDdGjr/1Hsod5hd0P+Gp0DbIE
-	 JGYdrW3EinsLNF4ldrvxC9bUVdolk/H2mHGhwLsnqWTY6N8bZCLKJh3tMQAv5JP5j+
-	 07K0pC+38GgiwV/pRkhpBIfaLCLuVHPAAKOebzgeI0ABI91a+DZRjwnbcgNBTj8tzH
-	 1IEFmZRv5gV9A==
-Date: Fri, 22 May 2026 19:20:40 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
- Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v5 12/13] Documentation: ABI: testing: add docs for
- ad9910 sysfs entries
-Message-ID: <20260522192040.4e6b11eb@jic23-huawei>
-In-Reply-To: <vqqvn2cgs3fbp5mq6xfac7iyosaqfrvgngqur4x355a3at7slo@ylrtd6fhi33a>
-References: <20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com>
-	<20260517-ad9910-iio-driver-v5-12-31599c88314a@analog.com>
-	<vqqvn2cgs3fbp5mq6xfac7iyosaqfrvgngqur4x355a3at7slo@ylrtd6fhi33a>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwLpEvTL"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3698e34a567so6979358a91.2
+        for <linux-hardening@vger.kernel.org>; Fri, 22 May 2026 14:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779486265; x=1780091065; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0a6+9FSkd4CAvkhrb+PFN6/wUARChFwi4N+F/39VGM0=;
+        b=DwLpEvTLoqJjuEz0UqBazmZVWL6k9IHJGqD280ZZJlRAV7r7jZpNsz+h2DQa4c51Ul
+         2QJo1U3f609RCjKSCCbjTaj4sedh4m6hZ64yMXxa2AuqgZ16m6vtUneKlobACEPppVux
+         S6fj9yfhzN07m5HunFd3E4wU78jBdxjQbPceHhL2WRLjhWGB709J4uNckMHWPThU3TdS
+         pBYgWBqk69m33dydg3um6gZX54EOdy3KQqHjZBf/h6deEYd3JHV9cpV2H7STzgkdze+I
+         8O92bIvyJI5Y9YV9kqTASMeyMGcHQa1XSRwbMWVJOQ2VgyOKVQm173HtCI4ie9kUDtX0
+         VEdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779486265; x=1780091065;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0a6+9FSkd4CAvkhrb+PFN6/wUARChFwi4N+F/39VGM0=;
+        b=HDROpnuQHwW011Evsp/UTdxV+xkQUrOPM/FUH3eh3YBAQuR0REvckVdxCTNTRLaQaW
+         rCa3+4exbbXMcThbI7XQMcbC8XMIXXAwr4oBkoteBaOmeaETDIkpw/+OMWi1Mf6RbZ9O
+         0ofcXF539KB+KySTsRofs9rmunH9Qz+iNBh6wFnT0WTIPYeK9MGfrF1XVuldcfSzHV8U
+         vv2tsKEIOQxSQz9Vymp3OqsmXrdSwSzdH5bhisTHp5Tl8yQrWHtVau3yapnWTosxCLBd
+         A1TwdgS8B+WlYknA2pfShw8mkRMi0pT5XcnotWs4pd5TrEHmblmq7471hCBWrcZr1xQ7
+         YpfA==
+X-Forwarded-Encrypted: i=1; AFNElJ+D2P32gZ6P3dPIurPgUORTrFpuWJn2WD38b4Q5kFhR4fR/6WjhZgLZvLXgLW9WCX8+gW2bhIogKZAKwWE/M94=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWLmj6mYgqiwOmj7zRFfLLZ7XYrCzuClYLIIupTUb9T4Z1MPjO
+	qBx/z5TJjbsd6Ws9hnACYCBuyUwqIYfiTb0bb/1MHOi5suSzvds6J/W9
+X-Gm-Gg: Acq92OGdbpuHDck7PnZi2TBVlXPecVcRdeACP52tSv7hzucn9z6UJ0E3gbhWPP3TLTb
+	oPvk3ihiaQUGRJgDHI/Wkg9OGWE1IvqgAhQaSl/KqFq8kqix1jcVMG2lYdLLYyfiNxGy2B0koWh
+	fsfYl5oURkQ/kMhwn2UgBz66zEDu3KSip8EnAtI9iyNDsqHJiAZu9kygHcV5KTk5DY99Ih5y7Ut
+	nPmMezgrpiRCFfIHoXK73WWKe24kDPi2Ozn7MzGLzooxVuRgK2ySBplaULRVriVFLEWCk91cX2K
+	h/om0t807Pc9oa07TvqbhRGQojqCDzcDK/yvh7Zoh7hempyq9bbPeRuzvnci+2PtXDnE2wSgJ/M
+	kTdUkBOrRnIr+rHyXt8USmlxGz0N18g5nV7/2EOTAPozB28RWAfLRtl+EglC+dazyiTE3eoRA29
+	wNn2zKzt97ELh8UmZ2T12WWg0z7ETWefuhtbbCgFZzBDflqp9QXKuHAkIWgbylQ8sW71cUomO8E
+	nUPnowyTMt416sq3H9XxVRGBKD7WyOveZpShjVEePeGzg==
+X-Received: by 2002:a17:90b:3cd0:b0:369:a962:8cca with SMTP id 98e67ed59e1d1-36a6771bd1cmr5194148a91.11.1779486265449;
+        Fri, 22 May 2026 14:44:25 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36a721c858csm2812300a91.11.2026.05.22.14.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2026 14:44:24 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list:TRACING),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
+Subject: [PATCH] trace: turn hist_elt_data field_var_str into a flexible array
+Date: Fri, 22 May 2026 14:44:07 -0700
+Message-ID: <20260522214407.18120-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 20 May 2026 19:47:25 +0100
-Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+The field_var_str array was allocated separately via kcalloc() with its
+length already known at elt_data allocation time.  Convert it to a
+flexible array member and fold the two allocations into a single
+kzalloc_flex(), reordering hist_trigger_elt_data_alloc() so n_str is
+computed and bounds-checked before the struct allocation.
 
-> On 26/05/17 07:37PM, Rodrigo Alencar via B4 Relay wrote:
-> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > 
-> > Add custom ABI documentation file for the DDS AD9910 with sysfs entries to
-> > control Parallel Port, Digital Ramp Generator and OSK parameters.  
-> 
-> ...
-> 
-> > +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency_offset
-> > +KernelVersion:
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		For a channel that allows frequency control through buffers, this
-> > +		represents the base frequency value in Hz. The actual output frequency
-> > +		is derived from this offset combined with the processed buffer sample
-> > +		value.
-> > +
-> > +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency_scale
-> > +KernelVersion:
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		For a channel that allows frequency control through buffers, this
-> > +		represents the frequency modulation gain. This value multiplies the
-> > +		buffer input sample value before it is added to a frequency offset.
-> > +
-> > +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_phase_offset
-> > +KernelVersion:
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		For a channel that allows phase control through buffers, this
-> > +		represents the base phase value in radians. The actual output phase	is
-> > +		derived from this offset combined with the processed buffer sample
-> > +		value.
-> > +
-> > +What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale_offset
-> > +KernelVersion:
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		For a channel that allows amplitude control through buffers, this
-> > +		represents the value for a base amplitude scale. The actual output
-> > +		amplitude scale is derived from this offset combined with the processed
-> > +		buffer sample value.
-> > +  
-> 
-> This will become just offset with altcurrent channels. I noticed we have a IIO_PHASE
-> iio_chan_type, could we have a IIO_FREQUENCY too? Parallel port needs actual raw
-> frequency values in that case to be written to the dma buffer.
-> 
-Sure to IIO_FREQUENCY.  I thought we already did but seems not!
-The Phase one is a bit special given it's use in resolvers and distance sensors
-but perhaps it is the right solution here.
+hist_elt_data is only reached through tracing_map_elt::private_data
+(a void *), never embedded, so adding a FAM imposes no tail-position
+constraint on any enclosing struct.
 
+Added __counted_by for extra runtime analysis.
 
-> Then we may have buffer capable channels for the parallel port:
-> 
-> out_altcurrent120
-> 	offset
+Assisted-by: Claude:Opus-4.7
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ kernel/trace/trace_events_hist.c | 31 +++++++++++--------------------
+ 1 file changed, 11 insertions(+), 20 deletions(-)
 
-So that's the amplitude envelope control.
-
-> out_phase120
-> 	offset
-
-So this is the phase adjustment being controlled. 
-
-> out_frequency120
-
-And this is the frequency being controlled.
-
-> 	scale
-> 	offset
-
-> 
-> Problem is that the math for the actual frequency output is:
-> 
-> 	f_OUT = f_FTW + (f_RAW * FM)
-> 
-> where f_FTW is a base frequency (already scaled), FM is a
-> modulation gain and f_RAW is the contribution from the parallel
-> port, which is the already scaled:
-> 
-> 	f_RAW = RAW * f_SYSCLK / 2^32
-> 	f_FTW = FTW * f_SYSCLK / 2^32
-> 
-> so the above becomes:
-> 
-> 	f_OUT = (FTW * f_SYSCLK / 2^32) + (RAW * f_SYSCLK / 2^32) * FM
-> 	f_OUT = (FTW/FM + RAW) * f_SYSCLK * FM / 2^32
-> 
-> if I make:
-> 
-> 	SCALE = f_SYSCLK * FM / 2^32
-> 	OFFSET = FTW/FM
-> 	f_OUT = (OFFSET + RAW) * SCALE
-> 
-> That would work for a IIO_FREQUENCY channel type, problem is that both
-> scale and offset would depend on the modulation gain (FM)... I suppose
-> scale should be setting that and offset assumes it is constant to act
-> only on FTW.
-
-I'm not that concerned about the coupling - it's a bit of a useability 
-issue I guess as not obvious which should be the fixed one.  Can we do
-cache written values and try and compensate to get a pair that is nearest
-to whatever we try to drive (in either order of setting them?)
-> 
-> I suppose we can keep altcurrent for other modes as phase and frequency
-> can be attributes (knobs) for them. However, in parallel mode we are effectively
-> pushing frequency, phase or amplitude values into the buffer.
-
-Given that's the thing we are controlling. My Friday evening tired brain agrees
-that it makes sense to use channel types rather than adjustments on something else.
-
-I'll think some more on this.  We've never had continuous (well digital
-so near continous) control of either phase or frequency before - it's just
-be symbol stuff with a couple of points to set.
-
-
-> 
-> The polar destination is a corner case, but can be solved when both
-> phase and altcurrent channels are enabled. When that happens we can
-> change the scan_type with has_ext_scan_type = 1, so the 16-bit data
-> bus is split between the two.
-> 
-For now I'll just nod at that!
-
-> With the above, all of those *_offset and *_scale custom ABI can be dropped.
-That is definitely attractive :)
-
-Jonathan 
-> 
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index a64c76f6905f..1fd0899c606c 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -683,8 +683,8 @@ struct track_data {
+ struct hist_elt_data {
+ 	char *comm;
+ 	u64 *var_ref_vals;
+-	char **field_var_str;
+ 	int n_field_var_str;
++	char *field_var_str[] __counted_by(n_field_var_str);
+ };
+ 
+ struct snapshot_context {
+@@ -1629,8 +1629,6 @@ static void hist_elt_data_free(struct hist_elt_data *elt_data)
+ 	for (i = 0; i < elt_data->n_field_var_str; i++)
+ 		kfree(elt_data->field_var_str[i]);
+ 
+-	kfree(elt_data->field_var_str);
+-
+ 	kfree(elt_data->comm);
+ 	kfree(elt_data);
+ }
+@@ -1650,10 +1648,19 @@ static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
+ 	struct hist_field *hist_field;
+ 	unsigned int i, n_str;
+ 
+-	elt_data = kzalloc_obj(*elt_data);
++	BUILD_BUG_ON(STR_VAR_LEN_MAX & (sizeof(u64) - 1));
++
++	n_str = hist_data->n_field_var_str + hist_data->n_save_var_str +
++		hist_data->n_var_str;
++	if (n_str > SYNTH_FIELDS_MAX)
++		return -EINVAL;
++
++	elt_data = kzalloc_flex(*elt_data, field_var_str, n_str);
+ 	if (!elt_data)
+ 		return -ENOMEM;
+ 
++	elt_data->n_field_var_str = n_str;
++
+ 	for_each_hist_field(i, hist_data) {
+ 		hist_field = hist_data->fields[i];
+ 
+@@ -1667,24 +1674,8 @@ static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
+ 		}
+ 	}
+ 
+-	n_str = hist_data->n_field_var_str + hist_data->n_save_var_str +
+-		hist_data->n_var_str;
+-	if (n_str > SYNTH_FIELDS_MAX) {
+-		hist_elt_data_free(elt_data);
+-		return -EINVAL;
+-	}
+-
+-	BUILD_BUG_ON(STR_VAR_LEN_MAX & (sizeof(u64) - 1));
+-
+ 	size = STR_VAR_LEN_MAX;
+ 
+-	elt_data->field_var_str = kcalloc(n_str, sizeof(char *), GFP_KERNEL);
+-	if (!elt_data->field_var_str) {
+-		hist_elt_data_free(elt_data);
+-		return -EINVAL;
+-	}
+-	elt_data->n_field_var_str = n_str;
+-
+ 	for (i = 0; i < n_str; i++) {
+ 		elt_data->field_var_str[i] = kzalloc(size, GFP_KERNEL);
+ 		if (!elt_data->field_var_str[i]) {
+-- 
+2.54.0
 
