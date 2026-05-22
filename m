@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1699B375AC6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2006314B6E;
 	Fri, 22 May 2026 15:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779464417; cv=none; b=d27/uKRUpVPM/YYU8MkpS6y4yyxqbcNNjck7L+/eStM8Xj9loBNatp+FuBitErpSY7wdddwbpH5jEgw5zwrLARKiSAElRKwQleaUeiz4R8esYhLbf4WveTN4k2bublSYjohKZNSpplZ61p0P4qgLVnRS16nDb39/CJFW0pwzT0U=
+	t=1779464418; cv=none; b=JaPLaQNI0xi41wIcPipjfXw5BhxFnySZqt9y00B5XR3UJ2tolH6h4W6eJ2ecgAbcPaACVKVmPD2eWf1Y8Qsckz7L0GMS8fX9wz5/kE4mL7LJG+iq8shaPokjmn+MIGkJKDnmlomKyZKl3B6HIQ3sSQe8rFmZie0F4DoJEj5wqbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779464417; c=relaxed/simple;
-	bh=uNzLFiHaQjBoO92j1LwBdFQkIT/GTTSZLU95vkaKCJc=;
+	s=arc-20240116; t=1779464418; c=relaxed/simple;
+	bh=nkY5azp+A+UWoeeL2t0qgGKBeLRleS7Kpqh3++oUvvk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nYCx6X6dNU2rnfLe5s93sUivAUTs4Vk85/Gk9sXT4TSIuGb/COEVYvEtsRdDgQ12VwhMgqAXeHVyeOHfbZZ+b4eTUHkaii/3Q3Qu/4im6sft7uALOzvllQTXpqFwxA1gkb4LhvophsgycqKaRkTF00TJL9YbnuOF7YgrsAl4lZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=km971cT8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HskcJAtt; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=Y2Hyj2+/PfDaMC0LpJ1vRcBCAP78bzrEHgXD9mbWeMPNDoAWXKrLetUyRtCW6h95rklVOZvgBfwudIYVo9j2ulz5nwrnjkCahifwPCXTeOBPng2ZKPMtiSYAEQQkLwjr1BEnsjvSllOvM/fRR5V5E2hiGiEG3POnmeE3yj+DiDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N3RN5lZL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VGIyAPTw; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="km971cT8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HskcJAtt"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N3RN5lZL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VGIyAPTw"
 From: Gregor Herburger <gregor.herburger@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1779464409;
+	s=2020; t=1779464408;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BkaDeaUAZedVzDQUaWbP9657qVgRtzIoXSwoIsOhWDs=;
-	b=km971cT8FBE+hzbpR0W8Nq238hiRkL1IMWSFK8sl1tKCWg/dg/DGLyQZlgcEtL6pQw+SU9
-	D/Gb0ReWvXIwp/ERebv3qkkUv2ZfgNpBGdGmuzqrCdsAZXxk8sbghmFcdIHayNVDPQvUoL
-	BFrFtCvU7sj/aGeggwEnbXejM0FsHvh7vGjjPR7M7pUyv0BNL/qJo73acK3+nYE8Bqlyl9
-	GTj3YxIOtXPW2GAwHeEyS/+4OOptf5poFmmQpZ/iqfKIHNOQCi3nK/dpOsRDrUrZjzP4RW
-	ZDErEu4IFC4Iwu10IH2aE5phvrxoGvigMSSiYzoPFzk4leeihL7LE8cwXJoeZQ==
+	bh=fjBziMqP+PJLTJDATutLEWUFDXldiskQHavpB7dOOeQ=;
+	b=N3RN5lZL4aOD6r+AFVYsY8Y3zHjc/I3HSKZNqV2+9ib4Mm8RrffjnCLwB3KccUzHyDGuEO
+	kIUcpo6hY9H2+pkI0pjw0pQG47MHWmoJJeVseiXdbDaOFouZbVJ/uzqHB1ArUqwClpjkWD
+	rwBupJH4iImSJmRkVi/2MRf99Yr59cfwCa3nrzH1E7di6cjNL5uoWDZcIw4b351fthZ3K0
+	5VHorA7cX4jMFq/7FOxthPxFuUUBQZ4HvfEd0fJxShh//q7tMxuXmGNE9jWWpvBaHBKGOz
+	E41HP1Re26Zn7lWyUsp9OCUOhonZR2z3P4TBBEYCm+oH9B38l0P8xbIC50t2ew==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1779464409;
+	s=2020e; t=1779464408;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BkaDeaUAZedVzDQUaWbP9657qVgRtzIoXSwoIsOhWDs=;
-	b=HskcJAttYlxkV+PSqpPdnTojpz4piHG4AvGSVtfas/gRwuUAWcaAZCsX7CQmSU9rog/i3R
-	+R8hcvn5ozbTrrBQ==
-Date: Fri, 22 May 2026 17:40:04 +0200
-Subject: [PATCH v6 04/10] nvmem: Add the Raspberry Pi OTP driver
+	bh=fjBziMqP+PJLTJDATutLEWUFDXldiskQHavpB7dOOeQ=;
+	b=VGIyAPTwMD+z+zuGsqkqk7L9GAVBvmOdg3uEu0IvwB57uRBaNe9T8P0zri+YAec7bRvBvU
+	r3XgrIE0utb302Aw==
+Date: Fri, 22 May 2026 17:40:02 +0200
+Subject: [PATCH v6 02/10] nvmem: core: Enforce stride and alignment checks
+ for nvmem_device functions
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,8 +49,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260522-rpi-otp-driver-v6-4-b0eac97d1428@linutronix.de>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260522-rpi-otp-driver-v6-2-b0eac97d1428@linutronix.de>
 References: <20260522-rpi-otp-driver-v6-0-b0eac97d1428@linutronix.de>
 In-Reply-To: <20260522-rpi-otp-driver-v6-0-b0eac97d1428@linutronix.de>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -66,220 +67,59 @@ Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  linux-hardening@vger.kernel.org, 
  Gregor Herburger <gregor.herburger@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779464406; l=6341;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779464406; l=1407;
  i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
- bh=uNzLFiHaQjBoO92j1LwBdFQkIT/GTTSZLU95vkaKCJc=;
- b=L4ITpuvFZpneUid4ud77tPUswUttEKzG9NZQbxgoLqpoy7loL6xrUbGAzIsDjprh+de9gBtfs
- s9VFGJ9bR8HAPC9SFoRYFcr0+DMnJvvtYwIoiY4QSMDKHlH6DuJd+DK
+ bh=nkY5azp+A+UWoeeL2t0qgGKBeLRleS7Kpqh3++oUvvk=;
+ b=zkG55RPzfHGtmzKdBRW2aruMJWmpMYQRk47PUpceDJC9Tttp25pqOXFnTWLO+5hhrWm9OJiD5
+ ipba3TZfLHIDy4v14VDjidG+qdHikHZ7FpB6KigcQ5AccrT6CSVezhU
 X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
  pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
 
-Raspberry Pis have OTP registers which can be accessed through the
-videocore firmware. Add a nvmem driver to support these OTP registers.
+The stride and word_size attributes in the nvmem_config struct are
+currently only used when reading/writing through sysfs functions
+bin_attr_nvmem_read/bin_attr_nvmem_write and in the nvmem_cell api.
+Reads and writes with nvmem_device_write/nvmem_device_read still allow
+unaligned access.
 
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+Add a check to these functions to enforce word_size and stride_length
+aligned reads and writes.
+
+Reviewed-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
 ---
- drivers/nvmem/Kconfig                      |  11 +++
- drivers/nvmem/Makefile                     |   1 +
- drivers/nvmem/raspberrypi-otp.c            | 131 +++++++++++++++++++++++++++++
- include/soc/bcm2835/raspberrypi-firmware.h |  10 +++
- 4 files changed, 153 insertions(+)
+ drivers/nvmem/core.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 74ddbd0f79b0e..a1922b48d0c2e 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -483,4 +483,15 @@ config NVMEM_QORIQ_EFUSE
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem_qoriq_efuse.
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 311cb2e5a5c02..6b313f63d07ef 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -2068,6 +2068,12 @@ int nvmem_device_read(struct nvmem_device *nvmem,
+ 	if (!nvmem)
+ 		return -EINVAL;
  
-+config NVMEM_RASPBERRYPI_OTP
-+	tristate "Raspberry Pi OTP support"
-+	depends on RASPBERRYPI_FIRMWARE || COMPILE_TEST
-+	help
-+	  This driver provides access to the Raspberry Pi OTP memory via the
-+	  nvmem subsystem. The driver supports the customer OTP as well as the
-+	  device specific private key OTP (BCM2712 only).
++	if (!IS_ALIGNED(offset, nvmem->stride))
++		return -EINVAL;
 +
-+	  This driver can also be built as a module. If so, the module
-+	  will be called raspberrypi-otp.
++	if (!IS_ALIGNED(bytes, nvmem->word_size))
++		return -EINVAL;
 +
- endif
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index 7252b8ec88d46..8ca2095e068f3 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -95,3 +95,4 @@ obj-$(CONFIG_NVMEM_ZYNQMP)		+= nvmem_zynqmp_nvmem.o
- nvmem_zynqmp_nvmem-y			:= zynqmp_nvmem.o
- obj-$(CONFIG_NVMEM_QORIQ_EFUSE)		+= nvmem-qoriq-efuse.o
- nvmem-qoriq-efuse-y			:= qoriq-efuse.o
-+obj-$(CONFIG_NVMEM_RASPBERRYPI_OTP)	+= raspberrypi-otp.o
-diff --git a/drivers/nvmem/raspberrypi-otp.c b/drivers/nvmem/raspberrypi-otp.c
-new file mode 100644
-index 0000000000000..2e2537ee6793b
---- /dev/null
-+++ b/drivers/nvmem/raspberrypi-otp.c
-@@ -0,0 +1,131 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
-+struct rpi_otp_priv {
-+	struct rpi_firmware *fw;
-+	u32 read_tag;
-+	u32 write_tag;
-+};
-+
-+struct rpi_otp_header {
-+	__le32 start;
-+	__le32 count;
-+	__le32 data[] __counted_by_le(count);
-+};
-+
-+static int rpi_otp_read(void *context, unsigned int offset, void *buf, size_t bytes)
-+{
-+	struct rpi_otp_priv *priv = context;
-+	struct rpi_otp_header *fwbuf;
-+	u32 count;
-+	int ret;
-+
-+	count = bytes / 4;
-+
-+	fwbuf = kzalloc(struct_size(fwbuf, data, count), GFP_KERNEL);
-+	if (!fwbuf)
-+		return -ENOMEM;
-+
-+	fwbuf->start = cpu_to_le32(offset / 4);
-+	fwbuf->count = cpu_to_le32(count);
-+
-+	ret = rpi_firmware_property(priv->fw, priv->read_tag, fwbuf,
-+				    sizeof(struct rpi_otp_header) + bytes);
-+	if (ret)
-+		goto out;
-+
-+	memcpy(buf, fwbuf->data, bytes);
-+
-+out:
-+	kfree(fwbuf);
-+	return ret;
-+}
-+
-+static int rpi_otp_write(void *context, unsigned int offset, void *val, size_t bytes)
-+{
-+	struct rpi_otp_priv *priv = context;
-+	struct rpi_otp_header *fwbuf;
-+	u32 count;
-+	int ret;
-+
-+	count = bytes / 4;
-+
-+	fwbuf = kzalloc(struct_size(fwbuf, data, count), GFP_KERNEL);
-+	if (!fwbuf)
-+		return -ENOMEM;
-+
-+	fwbuf->start = cpu_to_le32(offset / 4);
-+	fwbuf->count = cpu_to_le32(count);
-+	memcpy(fwbuf->data, val, bytes);
-+
-+	ret = rpi_firmware_property(priv->fw, priv->write_tag, fwbuf,
-+				    sizeof(struct rpi_otp_header) + bytes);
-+
-+	kfree(fwbuf);
-+	return ret;
-+}
-+
-+static int rpi_otp_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct nvmem_device *nvmem;
-+	struct rpi_otp_priv *priv;
-+	const struct rpi_otp_driver_data *data;
-+	struct nvmem_config config = {
-+		.read_only = false,
-+		.word_size = 4,
-+		.stride = 4,
-+		.reg_read = rpi_otp_read,
-+		.reg_write = rpi_otp_write,
-+		.id = NVMEM_DEVID_NONE,
-+	};
-+
-+	data = dev_get_platdata(dev);
-+	if (!data)
-+		return -ENODEV;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->fw = dev_get_drvdata(dev->parent);
-+	priv->read_tag = data->read_tag;
-+	priv->write_tag = data->write_tag;
-+	config.dev = dev;
-+	config.priv = priv;
-+	config.name = data->name;
-+	config.size = data->size;
-+	config.root_only = data->root_only;
-+
-+	nvmem = devm_nvmem_register(dev, &config);
-+	if (IS_ERR(nvmem))
-+		return dev_err_probe(dev, PTR_ERR(nvmem), "error registering nvmem config\n");
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id raspberrypi_otp_id[] = {
-+	{ "raspberrypi-otp" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(platform, raspberrypi_otp_id);
-+
-+static struct platform_driver raspberrypi_otp_driver = {
-+	.probe	= rpi_otp_probe,
-+	.driver = {
-+		.name	= "raspberrypi-otp",
-+	},
-+	.id_table = raspberrypi_otp_id,
-+};
-+module_platform_driver(raspberrypi_otp_driver);
-+
-+MODULE_AUTHOR("Gregor Herburger <gregor.herburger@linutronix.de>");
-+MODULE_DESCRIPTION("Raspberry Pi OTP driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index eb33838e0cd10..1e5e5f7e378d0 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -92,6 +92,8 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_SET_POE_HAT_VAL =                        0x00030050,
- 	RPI_FIRMWARE_NOTIFY_XHCI_RESET =                      0x00030058,
- 	RPI_FIRMWARE_NOTIFY_DISPLAY_DONE =                    0x00030066,
-+	RPI_FIRMWARE_GET_PRIVATE_OTP =                        0x00030081,
-+	RPI_FIRMWARE_SET_PRIVATE_OTP =                        0x00038081,
+ 	rc = nvmem_reg_read(nvmem, offset, buf, bytes);
  
- 	/* Dispmanx TAGS */
- 	RPI_FIRMWARE_FRAMEBUFFER_ALLOCATE =                   0x00040001,
-@@ -174,6 +176,14 @@ struct rpi_firmware_clk_rate_request {
- 		.id = cpu_to_le32(_id),		\
- 	}
+ 	if (rc)
+@@ -2096,6 +2102,12 @@ int nvmem_device_write(struct nvmem_device *nvmem,
+ 	if (!nvmem)
+ 		return -EINVAL;
  
-+struct rpi_otp_driver_data {
-+	const char *name;
-+	u32 read_tag;
-+	u32 write_tag;
-+	int size;
-+	bool root_only;
-+};
++	if (!IS_ALIGNED(offset, nvmem->stride))
++		return -EINVAL;
 +
- #if IS_REACHABLE(CONFIG_RASPBERRYPI_FIRMWARE)
- int rpi_firmware_property(struct rpi_firmware *fw,
- 			  u32 tag, void *data, size_t len);
++	if (!IS_ALIGNED(bytes, nvmem->word_size))
++		return -EINVAL;
++
+ 	rc = nvmem_reg_write(nvmem, offset, buf, bytes);
+ 
+ 	if (rc)
 
 -- 
 2.47.3
