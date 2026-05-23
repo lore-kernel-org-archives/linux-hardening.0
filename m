@@ -1,75 +1,138 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4892638C2D8
-	for <linux-hardening@vger.kernel.org>; Fri, 22 May 2026 21:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B0DFC0A;
+	Sat, 23 May 2026 00:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779486267; cv=none; b=ofhKbH1Ef6juK8D6RDf0vwDtEoOEuUWk2vel3BTciIfJsoGyyauF92+RBjqLALNtXLtZdTAMzG0aEsj8i7IMcbskdTmA15oyI611X1DTEAo24hp2QxWWz/8Mq5VfCVLewtL7aGQUa2AdAI/qCNjr6LsujR5MGWShjYJHu6garjE=
+	t=1779496689; cv=none; b=IQaTe+gCPBiaxl9+p3IJ+Q2Dnx8XI+G+pTfJVka1+ANrXw66sfyQdzcpuLaHEvymnKjBn4j8AgF7NkyhUJA3G8LQBrUOAEOrft/w5Uk+2yxOqunFajPet5mztBeQyJJmebCAyRUdnTttV2eezOlU7cYtWqfHllQ9ue2Vu82L7Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779486267; c=relaxed/simple;
-	bh=p0D0SvAiOiNPeriwNwY4FWBYY3sdeg5voF6KW2g27tE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YBq+fQgCY6VX2Rd0Fgeg5LNFsnmanKNChzzToV4dD163OStR0Q6gbIJQtslDGmKGMw90KE46xqHStxjcbKWL7b6ui2/gP6dSnZsgHbzmI91q6w6PHG4aPZ5zbygcwTEfyLpqgvOhJBF+8HDPixTQ/S6SUKdb7n+kheHlRw/48TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DwLpEvTL; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779496689; c=relaxed/simple;
+	bh=5mcnBS5MtgC9UfAOoDlmY0BQO+Ao/SdQLXT9dBQtNkk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rNlIIwOGjatOkritxjJNEUAlz2vwjWZJ9JMwAJxKdCkcyRKjimih0PPF61skI2pMDAiLsTReITEBhwjWSn7QL5XDnPnSbMfHBgGBXEpi6C3SGDhBlbluVCZk9doqKgOCp8tV3xZgEeRSgcBIPobl/b95etFlgHkeUg3y6JsD5d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/qwAMS1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwLpEvTL"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3698e34a567so6979358a91.2
-        for <linux-hardening@vger.kernel.org>; Fri, 22 May 2026 14:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779486265; x=1780091065; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0a6+9FSkd4CAvkhrb+PFN6/wUARChFwi4N+F/39VGM0=;
-        b=DwLpEvTLoqJjuEz0UqBazmZVWL6k9IHJGqD280ZZJlRAV7r7jZpNsz+h2DQa4c51Ul
-         2QJo1U3f609RCjKSCCbjTaj4sedh4m6hZ64yMXxa2AuqgZ16m6vtUneKlobACEPppVux
-         S6fj9yfhzN07m5HunFd3E4wU78jBdxjQbPceHhL2WRLjhWGB709J4uNckMHWPThU3TdS
-         pBYgWBqk69m33dydg3um6gZX54EOdy3KQqHjZBf/h6deEYd3JHV9cpV2H7STzgkdze+I
-         8O92bIvyJI5Y9YV9kqTASMeyMGcHQa1XSRwbMWVJOQ2VgyOKVQm173HtCI4ie9kUDtX0
-         VEdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779486265; x=1780091065;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0a6+9FSkd4CAvkhrb+PFN6/wUARChFwi4N+F/39VGM0=;
-        b=HDROpnuQHwW011Evsp/UTdxV+xkQUrOPM/FUH3eh3YBAQuR0REvckVdxCTNTRLaQaW
-         rCa3+4exbbXMcThbI7XQMcbC8XMIXXAwr4oBkoteBaOmeaETDIkpw/+OMWi1Mf6RbZ9O
-         0ofcXF539KB+KySTsRofs9rmunH9Qz+iNBh6wFnT0WTIPYeK9MGfrF1XVuldcfSzHV8U
-         vv2tsKEIOQxSQz9Vymp3OqsmXrdSwSzdH5bhisTHp5Tl8yQrWHtVau3yapnWTosxCLBd
-         A1TwdgS8B+WlYknA2pfShw8mkRMi0pT5XcnotWs4pd5TrEHmblmq7471hCBWrcZr1xQ7
-         YpfA==
-X-Forwarded-Encrypted: i=1; AFNElJ+D2P32gZ6P3dPIurPgUORTrFpuWJn2WD38b4Q5kFhR4fR/6WjhZgLZvLXgLW9WCX8+gW2bhIogKZAKwWE/M94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWLmj6mYgqiwOmj7zRFfLLZ7XYrCzuClYLIIupTUb9T4Z1MPjO
-	qBx/z5TJjbsd6Ws9hnACYCBuyUwqIYfiTb0bb/1MHOi5suSzvds6J/W9
-X-Gm-Gg: Acq92OGdbpuHDck7PnZi2TBVlXPecVcRdeACP52tSv7hzucn9z6UJ0E3gbhWPP3TLTb
-	oPvk3ihiaQUGRJgDHI/Wkg9OGWE1IvqgAhQaSl/KqFq8kqix1jcVMG2lYdLLYyfiNxGy2B0koWh
-	fsfYl5oURkQ/kMhwn2UgBz66zEDu3KSip8EnAtI9iyNDsqHJiAZu9kygHcV5KTk5DY99Ih5y7Ut
-	nPmMezgrpiRCFfIHoXK73WWKe24kDPi2Ozn7MzGLzooxVuRgK2ySBplaULRVriVFLEWCk91cX2K
-	h/om0t807Pc9oa07TvqbhRGQojqCDzcDK/yvh7Zoh7hempyq9bbPeRuzvnci+2PtXDnE2wSgJ/M
-	kTdUkBOrRnIr+rHyXt8USmlxGz0N18g5nV7/2EOTAPozB28RWAfLRtl+EglC+dazyiTE3eoRA29
-	wNn2zKzt97ELh8UmZ2T12WWg0z7ETWefuhtbbCgFZzBDflqp9QXKuHAkIWgbylQ8sW71cUomO8E
-	nUPnowyTMt416sq3H9XxVRGBKD7WyOveZpShjVEePeGzg==
-X-Received: by 2002:a17:90b:3cd0:b0:369:a962:8cca with SMTP id 98e67ed59e1d1-36a6771bd1cmr5194148a91.11.1779486265449;
-        Fri, 22 May 2026 14:44:25 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36a721c858csm2812300a91.11.2026.05.22.14.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2026 14:44:24 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:TRACING),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH] trace: turn hist_elt_data field_var_str into a flexible array
-Date: Fri, 22 May 2026 14:44:07 -0700
-Message-ID: <20260522214407.18120-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/qwAMS1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDCE81F000E9;
+	Sat, 23 May 2026 00:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779496688;
+	bh=ke0QgGP72oU1/KHDzVSs1lh/gkg7Mw8fFDTolKbzoHA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=W/qwAMS1ok+56HAwvYiYz0R5wmKsD0RscuUhy5BVEzThMnr+wQxbKIW0Yk+lqtg0R
+	 dxN4FM+nLAHenqFi1JvSelOt20CYFnYpdSX3hvz5/mvzq/JXO7gcBTjSStG/A5FM8j
+	 0Dk4RFZ90/nX0Xzby8V+5D3uQDTYP8o1bo3XSKlx4rKPB6vCO/Oui18woqanoP+n4U
+	 enXhw+/EJeP6Kw2ZiII29eiMOdyHFC3VD0U1T97Mm+aD6rZa6A+hyeA7zcgLPdsptw
+	 8LWGxoojes1mewesgkVxxy+dLIhtJlwu3XyRYodcKxBzIRSnWjQs++a/owD5p2CmBM
+	 RNz3sazG7iMhQ==
+From: SeongJae Park <sj@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Corey Minyard <corey@minyard.net>,
+	Gabriel Somlo <somlo@cmu.edu>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Hannes Reinecke <hare@suse.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Jim Cromie <jim.cromie@gmail.com>,
+	Tiwei Bie <tiwei.btw@antgroup.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Georgia Garcia <georgia.garcia@canonical.com>,
+	kvm@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	qemu-devel@nongnu.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-rdma@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 04/11] treewide: Convert struct kernel_param_ops initializers to DEFINE_KERNEL_PARAM_OPS
+Date: Fri, 22 May 2026 17:38:01 -0700
+Message-ID: <20260523003801.86344-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260521133326.2465264-4-kees@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,93 +141,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The field_var_str array was allocated separately via kcalloc() with its
-length already known at elt_data allocation time.  Convert it to a
-flexible array member and fold the two allocations into a single
-kzalloc_flex(), reordering hist_trigger_elt_data_alloc() so n_str is
-computed and bounds-checked before the struct allocation.
+On Thu, 21 May 2026 06:33:17 -0700 Kees Cook <kees@kernel.org> wrote:
 
-hist_elt_data is only reached through tracing_map_elt::private_data
-(a void *), never embedded, so adding a FAM imposes no tail-position
-constraint on any enclosing struct.
+> Using Coccinelle, rewrite every struct kernel_param_ops initializer that
+> sets .get into a DEFINE_KERNEL_PARAM_OPS-family macro invocation,
+> for example:
+> 
+> @@
+> declarer name DEFINE_KERNEL_PARAM_OPS;
+> identifier OPS;
+> expression SET, GET;
+> @@
+> - const struct kernel_param_ops OPS = {
+> -       .set = SET,
+> -       .get = GET,
+> - };
+> + DEFINE_KERNEL_PARAM_OPS(OPS, SET, GET);
+> 
+> Using the macro for initialization means future changes can manipulate
+> the struct layout and callback prototypes without having to change every
+> initializer.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+[...]
+>  mm/damon/lru_sort.c                           | 19 ++---
+>  mm/damon/reclaim.c                            | 19 ++---
+>  mm/damon/stat.c                               |  6 +-
+[...]
+>  samples/damon/mtier.c                         |  6 +-
+>  samples/damon/prcl.c                          |  6 +-
+>  samples/damon/wsse.c                          |  6 +-
 
-Added __counted_by for extra runtime analysis.
+For the above DAMON part changes,
 
-Assisted-by: Claude:Opus-4.7
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- kernel/trace/trace_events_hist.c | 31 +++++++++++--------------------
- 1 file changed, 11 insertions(+), 20 deletions(-)
+Reviewed-by: SeongJae Park <sj@kernel.org>
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index a64c76f6905f..1fd0899c606c 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -683,8 +683,8 @@ struct track_data {
- struct hist_elt_data {
- 	char *comm;
- 	u64 *var_ref_vals;
--	char **field_var_str;
- 	int n_field_var_str;
-+	char *field_var_str[] __counted_by(n_field_var_str);
- };
- 
- struct snapshot_context {
-@@ -1629,8 +1629,6 @@ static void hist_elt_data_free(struct hist_elt_data *elt_data)
- 	for (i = 0; i < elt_data->n_field_var_str; i++)
- 		kfree(elt_data->field_var_str[i]);
- 
--	kfree(elt_data->field_var_str);
--
- 	kfree(elt_data->comm);
- 	kfree(elt_data);
- }
-@@ -1650,10 +1648,19 @@ static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
- 	struct hist_field *hist_field;
- 	unsigned int i, n_str;
- 
--	elt_data = kzalloc_obj(*elt_data);
-+	BUILD_BUG_ON(STR_VAR_LEN_MAX & (sizeof(u64) - 1));
-+
-+	n_str = hist_data->n_field_var_str + hist_data->n_save_var_str +
-+		hist_data->n_var_str;
-+	if (n_str > SYNTH_FIELDS_MAX)
-+		return -EINVAL;
-+
-+	elt_data = kzalloc_flex(*elt_data, field_var_str, n_str);
- 	if (!elt_data)
- 		return -ENOMEM;
- 
-+	elt_data->n_field_var_str = n_str;
-+
- 	for_each_hist_field(i, hist_data) {
- 		hist_field = hist_data->fields[i];
- 
-@@ -1667,24 +1674,8 @@ static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
- 		}
- 	}
- 
--	n_str = hist_data->n_field_var_str + hist_data->n_save_var_str +
--		hist_data->n_var_str;
--	if (n_str > SYNTH_FIELDS_MAX) {
--		hist_elt_data_free(elt_data);
--		return -EINVAL;
--	}
--
--	BUILD_BUG_ON(STR_VAR_LEN_MAX & (sizeof(u64) - 1));
--
- 	size = STR_VAR_LEN_MAX;
- 
--	elt_data->field_var_str = kcalloc(n_str, sizeof(char *), GFP_KERNEL);
--	if (!elt_data->field_var_str) {
--		hist_elt_data_free(elt_data);
--		return -EINVAL;
--	}
--	elt_data->n_field_var_str = n_str;
--
- 	for (i = 0; i < n_str; i++) {
- 		elt_data->field_var_str[i] = kzalloc(size, GFP_KERNEL);
- 		if (!elt_data->field_var_str[i]) {
--- 
-2.54.0
 
+Thanks,
+SJ
+
+[...]
