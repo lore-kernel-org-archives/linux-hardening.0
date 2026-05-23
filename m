@@ -1,106 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8502D1F44;
-	Sat, 23 May 2026 12:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03652D73A1
+	for <linux-hardening@vger.kernel.org>; Sat, 23 May 2026 20:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779538279; cv=none; b=JndobLYDj+X4PBZuteDH+XlGV94YDVgIiVX22IFiJc1c59Kv/h1qiMowF2Re8nV48uoeFnrWpbOCtzsfDT/GkzR3YqGB+Bb8CEov/SRGD8eOBHZ74s22DDC3pvTjUEOMT7aLETfO3WNM78/vb9ZMrtBoY2Zeth/Xga6L6wRDWyw=
+	t=1779568902; cv=none; b=ZJxKNLK8k6ByVyaIa4KNbR0tU9U6TL9Q3OnMevxTEMjakJof0rtQOQslXe+g7wjzGBKcC04eXb6aGI/f9ph2fh1qrx9eYhglstZoreOQi0/Co1/D9gWTxxygkUr6UP777+SS8ioTFFedNJnqxhfSnMIxxMrHlVrA8ysvWkZA0GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779538279; c=relaxed/simple;
-	bh=8IOPiHphKS24MbMajYiZHejjFvd+vyIWFrEoHb4rllQ=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=Mo5Cder3++3vZjCBJGrJJ08i8obD7NUdeAOX9dnKgBZYHnMMe0U6BNVT1cwFpkO/3iHwRGz6tzZOVHE3tx+yyvYtEhsTt3EZ4E7oP7D+OWZ5aPywUnDrs2o+/pw2uy3SIUAThJu8yYqd6kCh9BIYqxN1+Cn25Bh1KlYb8ADVje0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emz2jnqj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779568902; c=relaxed/simple;
+	bh=ZDowhp0fPqZxjLyKA6nsScPxx0UPG3aBQPVBz7pM13k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e/rLOfBftlS8S97oTGuUem1tVh8dRclN3oSkojuOF/QSgFAl03qVpT7zTe6g/Lia/KtzW3ZvkS0dhLIcCVPqmdNwCtNpNfF0pfEyfkdubhnYIgCcU8/uRn57XNtQVdg2sBsm6h5TkOU4AeRl2a7kj8u6OSjUGMmfoNYNAdZ1jCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cEey0zje; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emz2jnqj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A08F1F000E9;
-	Sat, 23 May 2026 12:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779538277;
-	bh=b1wgwA+Vq+cgG6DenLipxbTjkVMrwQwE1EoJ9iSs0eY=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=emz2jnqjttKsnlrghDgcd5WlZbWZQl5vO8MV7m6QcVNWYJJsetTutVKdxOYDr1RNf
-	 SOxsVBZvg1JRLSLhY98fdzCocFAq7kA0pP4ZAmJHofZbmW6W4gLUv18kQBzh0IWpmP
-	 nwDjDGNhkMqDNkK+GtUUS0ODdO8IhwwIYbs7zIGEU78Cq+vCLvr5I50O9+dm9xRNhy
-	 s1vcZqpdtOP9poWeMhc/KKy7najXxo1cTBiCzRGqPeYIY7SCK8+jHh6hL/beB8Y989
-	 ufbDFxWBjnOAj4waGSwuWbo2F93+N+HYYkmJyDOjKVNp/W507T6OuMJflP/ntvBDXR
-	 dlSzNw/LPsk8Q==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEey0zje"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4903cbfad68so19001315e9.0
+        for <linux-hardening@vger.kernel.org>; Sat, 23 May 2026 13:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779568899; x=1780173699; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bNf7CFkgwF1rfbyNmnV/eQce4TyQWDhVxKWrw1dKd7E=;
+        b=cEey0zjeHiEJzJmAYhGDpVwRE5q4kPPUsLVkgR+gb5HIAY7YTDnR8EOfdfWjWIMtUQ
+         FhY5jOJK1L3/mnitQ3IzLdA7RvX5+17Zlx/kHH3xtynr5ML9IbvuleVjeI6joM98bCOC
+         yWhKdy1XqWQDU/7zrBZ3nSm6LPNplC4VgU4eMGfi5OBmQpP1dXzvkIMg6qmJHijSIg+F
+         qkWWbs9bg6YpAicPmjuntX6Aewg5mO6vVT/wmB2JlUxOS/ARIKG1zK71BWq17es4DkUZ
+         nTQ5MOErJYtHq4o2s7U1eDedJkREZfiZJLDg9BiRMD+ecA6urwu8c7t9HSyx5t64c2Lo
+         2FNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779568899; x=1780173699;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=bNf7CFkgwF1rfbyNmnV/eQce4TyQWDhVxKWrw1dKd7E=;
+        b=iD358Eu12eAvy4Q1NPKAADjvUdQDeZLV9NlPAZ6jCtM8sX90SHLETSF5uT1Sy4GNzF
+         MoFNq3aN2WXCxNLKR6hAP9b+AocbY/SGBFTO1IQutJMK8LwKM8NguVxiVC/wcRAXmJ2/
+         GgCJRMnwus7a7W++d/SxmnMiM/TuJem7oDbvdTMa2ndgjg+1Kymank5K9ggn47yTkzbU
+         s+P5WylH4jfG0t5inEgfyzOdBXYizH4IyXR+04GLd10sD7ReeAVz5j5Cp8ZaVchj6SVz
+         Lsi3U/4sbi5LTcNmQI9LESOOKVdKsKSGPloYww8J50664HZbSaButEx35LOtIbpvxc+K
+         /PwA==
+X-Forwarded-Encrypted: i=1; AFNElJ+K6v+j2wFPIU2GRmkYdEnUYEcL7gYwFKuVfsE2uHYvG1EZ18NDLqyP7TawukAXolvHWvDQIx2dld32rfVnL1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUESFB3xx9XSKCgtZeZstxn7fIbqraQc/RCf4pzKxVTpa7UlfD
+	pPLV64mxXZB1fWneguHcbNY4blwy+YdQbsgKFAXucMzkjg8fvnYCEw8d
+X-Gm-Gg: Acq92OG88bYWAqx+rpm9MyR577A4QaRixAETuX4TEA6+dPbl0C1mjOD0fUB2oQtBNnR
+	izQ2jgkiAplnGDLzzzwMZOZi3M4bm6T7MTHLxHiTBqgaIpRtKIFXpAicskMtGeh9U0dRaRhI4L+
+	152sy8adX+DeE8JNriI0Pmb0rK0wVWfTZoQ8sDfyo9BuWpAHo4NON65MrIrYgS4TtRwRAupgYj5
+	K3eMad4Wf+fQuvNHWrOXCxZt/ojUVL8kr7SrCITWOpWxTs/EvWubjP5XUdzLz1Et5n0yrGlXyU9
+	cWm9AyUCvj5hS3/GCvAsxdsTXkssclds3EnO7tB2kRqAozATt2ran9gDnqOzA0MR1J1wCSmT2ne
+	TDRH3VVHtg+VpdoKRIkSND5/w3BE0sLBev1duXk78dsL24RtYU0SsXmL2gW46+oDbaMwjfcn/T9
+	R7/RomNg+GaPdyDzHjU5Uaw05x12eLm/gc/5e2JGU6
+X-Received: by 2002:a05:600c:4746:b0:490:3d48:6cb9 with SMTP id 5b1f17b1804b1-4904225f7efmr126899095e9.3.1779568898911;
+        Sat, 23 May 2026 13:41:38 -0700 (PDT)
+Received: from localhost ([212.73.77.104])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-49059fb42dasm16015385e9.7.2026.05.23.13.41.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 May 2026 13:41:38 -0700 (PDT)
+From: Askar Safin <safinaskar@gmail.com>
+To: brauner@kernel.org
+Cc: axboe@kernel.dk,
+	jack@suse.cz,
+	jannh@google.com,
+	kees@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	mjguzik@gmail.com,
+	pfalcato@suse.de,
+	viro@zeniv.linux.org.uk,
+	David Howells <dhowells@redhat.com>
+Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with read-only files
+Date: Sat, 23 May 2026 23:41:00 +0300
+Message-ID: <20260523204100.553125-1-safinaskar@gmail.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <177918418452.771415.4371785688744608623.b4-reply@b4>
+References: <177918418452.771415.4371785688744608623.b4-reply@b4>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 7/7] mm: use memcpy_streaming() in zone-device
- template copies
-From: Mike Rapoport <rppt@kernel.org>
-To: Li Zhe <lizhe.67@bytedance.com>
-Cc: apopple@nvidia.com, akpm@linux-foundation.org, arnd@arndb.de, 
- bp@alien8.de, dave.hansen@linux.intel.com, david@kernel.org, 
- mingo@redhat.com, rppt@kernel.org, tglx@kernel.org, kees@kernel.org, 
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mm@kvack.org, x86@kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20260521040124.10608-8-lizhe.67@bytedance.com>
-References: <20260521040124.10608-1-lizhe.67@bytedance.com>
- <20260521040124.10608-8-lizhe.67@bytedance.com>
-Date: Sat, 23 May 2026 15:10:52 +0300
-Message-Id: <177953825222.3959652.3741865801916579097.b4-review@b4>
-X-Mailer: b4 0.15.2
+Content-Transfer-Encoding: 8bit
 
-On Thu, 21 May 2026 12:01:24 +0800, Li Zhe <lizhe.67@bytedance.com> wrote:
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index 17a84d4cda01..08feb24795b8 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -1075,13 +1075,15 @@ static void __ref zone_device_page_init_slow(struct page *page,
-> [ ... skip 12 lines ... ]
->  	 */
-> -	return !page_ref_tracepoint_active(page_ref_set) &&
-> -		IS_ALIGNED(sizeof(struct page), sizeof(u64));
-> +	return !IS_ENABLED(CONFIG_KASAN) && !IS_ENABLED(CONFIG_KMSAN) &&
-> +	       !page_ref_tracepoint_active(page_ref_set) &&
-> +	       IS_ALIGNED(sizeof(struct page), sizeof(u64));
+Christian Brauner <brauner@kernel.org>:
+> Let's discuss the other aggressive alternative: Can we try and
+> unconditionally degrade to copy. This would affect sendfile(), splice(),
+> and vmsplice(). Worst-case we would have to introduce the sysctl
+> retroactively.
+> 
+> Thoughts?
 
-Oh, can we rewrite it as a sequence of
+I think as a first step we should make vmsplice unconditionally equivalent
+to readv/writev.
 
-	if (cond)
-		return false;
-	...
+vmsplice already was problematic from security point of view long time
+ago. I mean CVE-2020-29374 (see https://lwn.net/Articles/849638/ ).
 
-	return true;
+David Howells also doesn't like vmsplice:
+https://lore.kernel.org/all/1763225.1769180226@warthog.procyon.org.uk/
 
-I believe the compilers would generate the same code.
+Linus said in 2023:
+> So I'd personally be perfectly ok with just making vmsplice() be
+> exactly the same as write, and turn all of vmsplice() into just "it's
+> a read() if the pipe is open for read, and a write if it's open for
+> writing".
+https://lore.kernel.org/all/CAHk-=wgG_2cmHgZwKjydi7=iimyHyN8aessnbM9XQ9ufbaUz9g@mail.gmail.com/
 
-> @@ -1104,30 +1106,42 @@ static inline void zone_device_template_tail_page_init(struct page *template,
-> [ ... skip 10 lines ... ]
-> + * copying it into @page.
->   */
-> -static inline void zone_device_page_init_finish(struct page *page,
-> -							unsigned long pfn)
-> +static inline void zone_device_page_update_template(struct page *template,
-> +						    unsigned long pfn)
-
-Two tabs for indentation here from the first patch this function
-appears please.
-
-Why do we need the intermediate step of _init_finish() if we later
-change it to _update_template()?
-
-> [ ... skip 30 lines ... ]
-> +		memcpy(page, template, sizeof(*page));
-> +	else
-> +		memcpy_streaming(page, template, sizeof(*page));
->  
-> -	for (i = 0; i < sizeof(struct page) / sizeof(u64); i++)
-> -		dst[i] = src[i];
-
-If you replace this with memcpy, what's the point for doing the loop in
-intermediate patches?
+Even experts get vmsplice wrong, as can be seen in this thread:
+https://lore.kernel.org/all/CAAUqJDvFuvms55Td1c=XKv6epfRnnP78438nZQ-JKyuCptGBiQ@mail.gmail.com/T/#u
+As you can see in that thread, it is very hard to understand what vmsplice
+man page supposed to mean. And you can also see that vmsplice is very
+fragile.
 
 -- 
-Sincerely yours,
-Mike.
-
+Askar Safin
