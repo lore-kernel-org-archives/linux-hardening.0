@@ -1,117 +1,83 @@
-Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390FB30C147
-	for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 05:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B2C3DC4D0
+	for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 08:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779685202; cv=none; b=s7HjOc44k0F6C7HRANrEXH43h4TsLnQg/+IFu++hDHFGah2zwFKJrjpqdEFUQtOViZu8cdjtivalfyVGABHuZlCGJeyeFDsz4uyPhI32Tt80UkemQXgRLzKahbMPKVQWtHGJCdmjc/T51V6/Dx/bBFuzgQz7NPsGQj3ZFmSFKu0=
+	t=1779696621; cv=none; b=Id5Y8pfb27f/ZpjcodHWBv5I4y6BO7QkRZAWtjYUCK7ExHufFN7x5yFRlqCqqoRgp7sGCxpm5CDGCL0Ihf/Qq8Y1BxL6ryqOoPQ2InOIAICaP97cDvap0E499u+z/UR5Kbqh7vaMg+T/e/zmous48K31iBcC62KzNrJ+lNiE694=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779685202; c=relaxed/simple;
-	bh=Y/KRuWmr52QZra+zuzKwy1pl8FQJn4MBJDAFpv31GDU=;
-	h=From:Date:Message-Id:Subject:In-Reply-To:Content-Type:To:Cc:
-	 Mime-Version:References; b=AJYsYFVwvivMT4sROS06YdByev86esmFsRIwH2KYVt6S6d8IcAoacprGkL8fTOufXSftxwXLQr1Ufryazp9dFhLNiV5L8kixhz5zBgfZW/m7wCVWR/tHsk6aCMwwRA74YzQ9wDVyfZnO8bDxaGSL/A5uhw+hoSqdEH324OZMCug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=qsQl+1KM; arc=none smtp.client-ip=209.127.230.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1779696621; c=relaxed/simple;
+	bh=kppKC02SPWGevMCIBIKVt+x2mcxmdbvbJlks0CtpFXw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YeeJCjEwPyPMQkjr9YazJk6JGugyVDrEBPBvULGrWBjRcEOUhmVlHXUgv3r4CbKs87Em0ELSJxIWoizEpqYrhT2zP7ryK4/8rwbXbNQZzLL0Zl4tugr6HP0jtaCZMNbgw3nJzJ6AzS3Y83KT0C8puQ4s2BY8qt7E+UFOvSiReaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0a6IpFf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="qsQl+1KM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1779685195; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=hf73DpoVazSmVVzicHvdltR9UMe1NtyFFuAe3Bn9cLc=;
- b=qsQl+1KMJoCKvoHgULNd0FPNSyCPVLALfCroyoEjf3bovCC0wKiZSeRmk/992w91QKHQRV
- B4VjUA7V9qzwwQsziDbF+IUxmXCTAXSyEKSfe87g4YeXQ3qOrzQLYKMZ9TWsuLU/6tXhmx
- LPZlvAlSbv3V1C3h5ZWsMBfn40fYUgZP/Bg8vQ0tLal+t3MSBvMGQwoeKH2cm47qhuzUr3
- glf36gzQoswA5E/WcNOb3QuKRYdhT9jpSMVZsyp6ND3DaxXAG0qemgCyqF5U7jed9daE/y
- oP3KhC2ffg7lb6g7PrpvBbNSAEjzMGTkqiwVQt1mMlqMXmHX8V6pHnvhVmjL1w==
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Date: Mon, 25 May 2026 12:59:31 +0800
-Message-Id: <20260525045931.2136-1-lizhe.67@bytedance.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 7/7] mm: use memcpy_streaming() in zone-device template copies
-In-Reply-To: <177953825222.3959652.3741865801916579097.b4-review@b4>
-X-Mailer: git-send-email 2.45.2
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-To: <rppt@kernel.org>
-Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
-	<kees@kernel.org>, <linux-arch@vger.kernel.org>, 
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-mm@kvack.org>, <lizhe.67@bytedance.com>, <mingo@redhat.com>, 
-	<tglx@kernel.org>, <x86@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0a6IpFf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62DC1F00A3A
+	for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 08:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779696617;
+	bh=kppKC02SPWGevMCIBIKVt+x2mcxmdbvbJlks0CtpFXw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=o0a6IpFfh+9K7uPekwzkGW3kZ8NOcX485sQJ5+Q0LkPJv73atNadBbvjUTzQJhCYT
+	 6OxdlhdM7nJ4rkdCyfO3OCBn1nP4NI7qXlyllKVRiOhS2fVPuMAW0ty08y0HPEHz70
+	 GK1DyDkzrmKsYGOoUufkpcbA6nvAO4HUqea8Mw9pT9wETR7mRZ4oJXQyaa7tzpSxi0
+	 PBsh1Mv926/sBd6xK11Py3clytTeQ4TNiyGcR1n93hoXirS1UMgvTIjh8e6cOoLkr6
+	 nz6djIFKuwDf6gmVqsCKpuKdDzHsJ2Qr1rMtEG98gCCdgwNEh9l99XVdIr4hySJgUW
+	 /MDDT/7VzAYrA==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a8e33556c0so11323255e87.0
+        for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 01:10:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ81cBeN441NoMSn8Ls9yCiwyiTM1lRjYZjsAoUkFjp9N5EuePOm7ENXCK2ZP9hVEWcqWgzwg/dPBDuhWXCGzSg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtrAMMTOrq0mHfsd9ca9eUwMxM4dcVsg4RQ5ab/wmtQ92Qfkl6
+	aK9JjA3iPYaW7XFBhVdHcKAVgginGuDV7qr6BOH6wC6mFprqavWWl8sFf8ZNF54p1HtdxUOsWSq
+	Zr/C7gE1/cQo/AkuM3Nw6EHUm/pekoOQ=
+X-Received: by 2002:a05:6512:6486:b0:5a3:ff:cf83 with SMTP id
+ 2adb3069b0e04-5aa2ba69220mr4159280e87.7.1779696616626; Mon, 25 May 2026
+ 01:10:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <177953825222.3959652.3741865801916579097.b4-review@b4>
-X-Lms-Return-Path: <lba+26a13d749+bafd18+vger.kernel.org+lizhe.67@bytedance.com>
+MIME-Version: 1.0
+References: <20260516105737.45174-1-len.bao@gmx.us>
+In-Reply-To: <20260516105737.45174-1-len.bao@gmx.us>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 25 May 2026 10:10:02 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=5W56YAgJ8o7XXZRJQ_LJxW87SPc_C0VEYW0EccxpJ5Q@mail.gmail.com>
+X-Gm-Features: AVHnY4L4wsU4sQ0-5AxCn0tp1JcG0jEo8KLQSs8UJdS_b33DPk9WQZ0hZbchbQQ
+Message-ID: <CAD++jL=5W56YAgJ8o7XXZRJQ_LJxW87SPc_C0VEYW0EccxpJ5Q@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Mark gpio_devt, gpiolib_initialized and
+ gpio_stub_drv as __ro_after_init
+To: Len Bao <len.bao@gmx.us>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 23 May 2026 15:10:52 +0300, rppt@kernel.org wrote:
+Hi Len,
 
-> On Thu, 21 May 2026 12:01:24 +0800, Li Zhe <lizhe.67@bytedance.com> wrote:
-> > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > index 17a84d4cda01..08feb24795b8 100644
-> > --- a/mm/mm_init.c
-> > +++ b/mm/mm_init.c
-> > @@ -1075,13 +1075,15 @@ static void __ref zone_device_page_init_slow(struct page *page,
-> > [ ... skip 12 lines ... ]
-> >  	 */
-> > -	return !page_ref_tracepoint_active(page_ref_set) &&
-> > -		IS_ALIGNED(sizeof(struct page), sizeof(u64));
-> > +	return !IS_ENABLED(CONFIG_KASAN) && !IS_ENABLED(CONFIG_KMSAN) &&
-> > +	       !page_ref_tracepoint_active(page_ref_set) &&
-> > +	       IS_ALIGNED(sizeof(struct page), sizeof(u64));
-> 
-> Oh, can we rewrite it as a sequence of
-> 
-> 	if (cond)
-> 		return false;
-> 	...
-> 
-> 	return true;
-> 
-> I believe the compilers would generate the same code.
+thanks for your patch!
 
-Thanks for the review. I will fix this in the next revision.
+On Sat, May 16, 2026 at 12:58=E2=80=AFPM Len Bao <len.bao@gmx.us> wrote:
 
-> > @@ -1104,30 +1106,42 @@ static inline void zone_device_template_tail_page_init(struct page *template,
-> > [ ... skip 10 lines ... ]
-> > + * copying it into @page.
-> >   */
-> > -static inline void zone_device_page_init_finish(struct page *page,
-> > -							unsigned long pfn)
-> > +static inline void zone_device_page_update_template(struct page *template,
-> > +						    unsigned long pfn)
-> 
-> Two tabs for indentation here from the first patch this function
-> appears please.
+> The 'gpio_devt' and 'gpiolib_initialized' variables are initialized only
+> during the init phase in the 'gpiolib_dev_init' function and never
+> changed. So, mark these as __ro_after_init.
+>
+> The 'gpio_stub_drv' variable is initialized only in the declaration and
+> never changed. So, this variable could be 'const', but using the
+> 'driver_register' and 'driver_unregister' functions discards the 'const'
+> qualifier. Therefore, as an alternative, mark it as a __ro_after_init.
+>
+> Signed-off-by: Len Bao <len.bao@gmx.us>
 
-Thanks for the review. I will fix this in the next revision.
+Patches like this should be CC to linux-hardening.
 
-> Why do we need the intermediate step of _init_finish() if we later
-> change it to _update_template()?
+Anyways it looks good to me!
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-Instead of introducing an intermediate _init_finish() and renaming it
-later, I will simply use zone_device_page_update_template() directly
-from the beginning in the patch series.
-
-> > [ ... skip 30 lines ... ]
-> > +		memcpy(page, template, sizeof(*page));
-> > +	else
-> > +		memcpy_streaming(page, template, sizeof(*page));
-> >
-> > -	for (i = 0; i < sizeof(struct page) / sizeof(u64); i++)
-> > -		dst[i] = src[i];
-> 
-> If you replace this with memcpy, what's the point for doing the loop in
-> intermediate patches?
-
-Thanks for the review. I will fix this in the next revision.
-
-Thanks,
-Zhe
+Yours,
+Linus Walleij
