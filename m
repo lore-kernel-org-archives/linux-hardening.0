@@ -1,83 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B2C3DC4D0
-	for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 08:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B604C3D6469
+	for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 08:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779696621; cv=none; b=Id5Y8pfb27f/ZpjcodHWBv5I4y6BO7QkRZAWtjYUCK7ExHufFN7x5yFRlqCqqoRgp7sGCxpm5CDGCL0Ihf/Qq8Y1BxL6ryqOoPQ2InOIAICaP97cDvap0E499u+z/UR5Kbqh7vaMg+T/e/zmous48K31iBcC62KzNrJ+lNiE694=
+	t=1779696800; cv=none; b=NPXdwl1q8bwNH3vGXIXI8Cc9+zotiBpiBbD92HE04O44h2Z7Oj1LZcLFFW3jE3d25DwG4jpcxwwa0aZtW0cD5NsDEdq50B0ueHik1GZQB4H6dLenXzB3edj7NARgX7dryq1o+UPqhcY2t2eg+bjD/RGMl5PEhOEaHrB7vPb4hAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779696621; c=relaxed/simple;
-	bh=kppKC02SPWGevMCIBIKVt+x2mcxmdbvbJlks0CtpFXw=;
+	s=arc-20240116; t=1779696800; c=relaxed/simple;
+	bh=4X8VfEgtynQvkRUQ78d4BHm3Hijx2XsryIkyquHe10w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YeeJCjEwPyPMQkjr9YazJk6JGugyVDrEBPBvULGrWBjRcEOUhmVlHXUgv3r4CbKs87Em0ELSJxIWoizEpqYrhT2zP7ryK4/8rwbXbNQZzLL0Zl4tugr6HP0jtaCZMNbgw3nJzJ6AzS3Y83KT0C8puQ4s2BY8qt7E+UFOvSiReaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0a6IpFf; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=pZnJQInf40tWhraP8A/HNk1n54cZa4qf17Wsae7fPHpJrX5xxsaCRrDaunjZ30EhcZxEP7gPeMjp61WnTiVQQmonBUkBVsWIeW8pdJ+Usk3EgUA99KH6VewKiffiej08PWaoMZVeEJ5OAOm7lFj17Zs1CnG8HIDlD2FAE7oTkl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWiBFVJt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0a6IpFf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62DC1F00A3A
-	for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 08:10:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWiBFVJt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE7AC1F00A3F
+	for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 08:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779696617;
-	bh=kppKC02SPWGevMCIBIKVt+x2mcxmdbvbJlks0CtpFXw=;
+	s=k20260515; t=1779696796;
+	bh=djik/NyBClnw3R4F4UGKM2JB/KJ8BBucJTMUN+ykxwU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=o0a6IpFfh+9K7uPekwzkGW3kZ8NOcX485sQJ5+Q0LkPJv73atNadBbvjUTzQJhCYT
-	 6OxdlhdM7nJ4rkdCyfO3OCBn1nP4NI7qXlyllKVRiOhS2fVPuMAW0ty08y0HPEHz70
-	 GK1DyDkzrmKsYGOoUufkpcbA6nvAO4HUqea8Mw9pT9wETR7mRZ4oJXQyaa7tzpSxi0
-	 PBsh1Mv926/sBd6xK11Py3clytTeQ4TNiyGcR1n93hoXirS1UMgvTIjh8e6cOoLkr6
-	 nz6djIFKuwDf6gmVqsCKpuKdDzHsJ2Qr1rMtEG98gCCdgwNEh9l99XVdIr4hySJgUW
-	 /MDDT/7VzAYrA==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a8e33556c0so11323255e87.0
-        for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 01:10:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ81cBeN441NoMSn8Ls9yCiwyiTM1lRjYZjsAoUkFjp9N5EuePOm7ENXCK2ZP9hVEWcqWgzwg/dPBDuhWXCGzSg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtrAMMTOrq0mHfsd9ca9eUwMxM4dcVsg4RQ5ab/wmtQ92Qfkl6
-	aK9JjA3iPYaW7XFBhVdHcKAVgginGuDV7qr6BOH6wC6mFprqavWWl8sFf8ZNF54p1HtdxUOsWSq
-	Zr/C7gE1/cQo/AkuM3Nw6EHUm/pekoOQ=
-X-Received: by 2002:a05:6512:6486:b0:5a3:ff:cf83 with SMTP id
- 2adb3069b0e04-5aa2ba69220mr4159280e87.7.1779696616626; Mon, 25 May 2026
- 01:10:16 -0700 (PDT)
+	b=NWiBFVJtOpi8kLKWTj2nPyM5zzicJL2YLTjfqbqQJRlW7j3ExmOkXK5dhKMCgSdDO
+	 BDcIsebDB+QdKdAloPf6z357mMwakV37+duOhOxuy2eUR6VEcHH5Wc0NDzJ06rzbVK
+	 fUk++MygEGvwfY55IYUnFanvW6CuxI7/dXvp9s5jsmGn3GLvdBfKVzFwj3ugvEFT3C
+	 pbTdduOPQU3MWA64cCNNOwJtlYFPR52coEonYA5HURUij6G91EioUnpPy8X8STYlK2
+	 AqM3JkqAj/GZOWVlvYaosu6B8lTuhmtbzDrtfubkHM+bXyCuZJrffhkn+Gg4mMW211
+	 yCCChaHSQ8FPw==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a884815606so10183351e87.0
+        for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 01:13:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8iN//HM+NstcAtSBNjV3+xyy4Pax1rQY8yDhsMNA2lr0PMNYVLFjA+Eeg+ZPZQSJ81QtPMqnbL9SP+Xjn/cj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAksP1zG0efGkRM9Qy/ixadXxcmJLncqCirT5on8QmW+JJpEHC
+	C5TrrYhj6lYqtP/LSZ/5yiSYfs7Jvdb6gBLan/QNYvO7GIhRZJtCLBPvIaViwuxcsFTD8wgaQmg
+	POwNGPO9KjbpG4vFM9BmeVsWSngMjHP4=
+X-Received: by 2002:a05:6512:31c2:b0:5a2:874e:8a1e with SMTP id
+ 2adb3069b0e04-5aa323c56bbmr4080347e87.26.1779696795660; Mon, 25 May 2026
+ 01:13:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260516105737.45174-1-len.bao@gmx.us>
-In-Reply-To: <20260516105737.45174-1-len.bao@gmx.us>
+References: <20260518-jh7110-v1-0-fdb0daae5a4b@kernel.org> <20260518-jh7110-v1-2-fdb0daae5a4b@kernel.org>
+ <CAKxU2N9jD5Mj+ZeQbtQV+hJ5zknEbVOiniGUdJysFOSLTzMKEw@mail.gmail.com>
+In-Reply-To: <CAKxU2N9jD5Mj+ZeQbtQV+hJ5zknEbVOiniGUdJysFOSLTzMKEw@mail.gmail.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 25 May 2026 10:10:02 +0200
-X-Gmail-Original-Message-ID: <CAD++jL=5W56YAgJ8o7XXZRJQ_LJxW87SPc_C0VEYW0EccxpJ5Q@mail.gmail.com>
-X-Gm-Features: AVHnY4L4wsU4sQ0-5AxCn0tp1JcG0jEo8KLQSs8UJdS_b33DPk9WQZ0hZbchbQQ
-Message-ID: <CAD++jL=5W56YAgJ8o7XXZRJQ_LJxW87SPc_C0VEYW0EccxpJ5Q@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Mark gpio_devt, gpiolib_initialized and
- gpio_stub_drv as __ro_after_init
-To: Len Bao <len.bao@gmx.us>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>, Kees Cook <kees@kernel.org>
+Date: Mon, 25 May 2026 10:13:03 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=n34pTH01v_wPukRfGJ_gBCgK-SMMyRMvzPrh5UrAtrw@mail.gmail.com>
+X-Gm-Features: AVHnY4IFRPE3qmOHetw4UlfepyIDwS5QEDWWNGUZV8mpVdGPJ6G3XVgslclmt-g
+Message-ID: <CAD++jL=n34pTH01v_wPukRfGJ_gBCgK-SMMyRMvzPrh5UrAtrw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: starfive: jh7110: Avoid ifdeffery
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Hal Feng <hal.feng@starfivetech.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Len,
+On Mon, May 18, 2026 at 4:39=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrot=
+e:
 
-thanks for your patch!
+> > -       sfp->num_saved_regs =3D info->nsaved_regs;
+> > +       sfp->num_saved_regs =3D num_saved_regs;
 
-On Sat, May 16, 2026 at 12:58=E2=80=AFPM Len Bao <len.bao@gmx.us> wrote:
-
-> The 'gpio_devt' and 'gpiolib_initialized' variables are initialized only
-> during the init phase in the 'gpiolib_dev_init' function and never
-> changed. So, mark these as __ro_after_init.
+> yeah and this is used absolutely nowhere. Both for loops are of the form
 >
-> The 'gpio_stub_drv' variable is initialized only in the declaration and
-> never changed. So, this variable could be 'const', but using the
-> 'driver_register' and 'driver_unregister' functions discards the 'const'
-> qualifier. Therefore, as an alternative, mark it as a __ro_after_init.
+> for (i =3D 0 ; i < sfp->info->nsaved_regs ; i++)
 >
-> Signed-off-by: Len Bao <len.bao@gmx.us>
+> I really don't think __counted_by is worth it here.
 
-Patches like this should be CC to linux-hardening.
+__counted_by() is used by compiler instrumentation, i.e. by hardening
+code that is not visible directly in the driver.
 
-Anyways it looks good to me!
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+During compilation, code will be inserted that checks boundaries of the
+array at runtime.
 
 Yours,
 Linus Walleij
