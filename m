@@ -1,171 +1,171 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6335228643C
-	for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 22:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2049F3C4163
+	for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 06:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779746809; cv=none; b=J3tlx2wLA1HOW73dSPoMEQIvh+roVaufFFSEUG2YNVyKt6bfv5yuq+Xeyquhiak+zVabyoHPiwJT32vuE+S7fsgVmBguNmeL+g59fcsaYImCtkzJ0mqUdsMM2bXm+Y3eUi2tR2nnR/VZO/SgQUxM4zbJE4qVgkATtcpwq2kaNQE=
+	t=1779778394; cv=none; b=Z47Tc9fLezz3C+HikDjtkHCSw1JTn25yqRXZZ9tra6WClX6/h1d2UrzlCVJpPPiR5BMTaQBxEIHnx/B5pa0ojDnGTCYR/NSfTB2bCZBgujC3GS8SCEEyzPc0s27b9qu3JUU6e7ryuPMzyKehy7UiINLw4V1ebjp8gXsS+ipwkpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779746809; c=relaxed/simple;
-	bh=YtQ/yTW46aJTgBS2RYdCC7Mi93eGRCfeb8vPr+OmWWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hexhAJPVRwJp+Y4ewvxHQ7vZoQ2CZVIvAYU0LCVqkxi/dW1FXpRYm2Tlfm/qn5ECTo6NeJpI4QCsnOYpk7Q/pMUlDjKIoHwcrICwELLCx1HzxR5XocEfZ1KmyxAP8mh0lYpDkcOAUxVLnmP+0mT1yTBh+Ywsn+SoWLQHLxlE/yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oFdiDtQn; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779778394; c=relaxed/simple;
+	bh=lI94k3K5Kcc20pekEfGAOaAomJ1QgkYtP6G74MUe9gk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QlMMXgdXAIflrYZOpk0qlh13zPfPAx9zc/J0435IU5r3QSS6GNw82craNubKQNa7dBcIiI12eVgj/1JGk2quup+W+m3aTDDcjTtMCIb6o7jzuXb7HWtQl6edBkVQ7n+znZrSTSZEQKuTEYE+Eo34l+h60yHtwM2RJ0YfQrVkBrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TR/s+dSF; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oFdiDtQn"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-36ad15213fbso810939a91.0
-        for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 15:06:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TR/s+dSF"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-44e1860558fso6501834f8f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 25 May 2026 23:53:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779746807; x=1780351607; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cb+vYhTU8Eum/FCo/941Nl+1j7gWIUnZrBBYNxLzj3g=;
-        b=oFdiDtQn0tVfBDlXvhUu0Eo9QrgA3bS9hbhqW3010U3IIOE7IMV0YrRfk92dmRSJa1
-         iX0LFjpTSlhzWVzERDah3+WxC6SMZkIczMKpNSITXPa6JAHrZea+LsaYhQvGV0j5wh5q
-         3N/tmuJTWUOIWnjfIFueD8JJK1UaaZmhGhdMYCpV09B2iJQQTph6DKLNZMsUULh+pM8a
-         apLIjYtCeKylNQJ/okpYsrNMYZNWVkbGX7eClIqN2mKkqmghLne7F9obxgTHOyb1EA6W
-         hm7jlbDArxCsxRjzhU1xKOob5cxwaB/fnFCzicpaadMiqIfxExp/MAABFoPj0lLumiIL
-         6fAg==
+        d=suse.com; s=google; t=1779778389; x=1780383189; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yXWASYjT/jE4WzpKhE8nVhHkzGwmPlTITkkcMF0D8BI=;
+        b=TR/s+dSFI2Vk05JY9oKvhTkUPLyGjERphtpAPMGuiQxvuv3fbFSbN1th4lK+bttysm
+         cFb/iWCpkNb08kRUbTcn9WjfJUaB3xcjwa8CXEuHNu8ztYYWGwWQbD8loHo0HuyuciOC
+         0TwcL+CxgU01vXU93n3aCg4f5dmgC1/3cis8o9d493p1B0tb+ArlTCB5LaW6RVOHuZSe
+         xFgNBY2Ddet/gPdHUxjFVULwbZSkZetwjzSKlyv7KFRavsith7RHUAc5uHnKUJqDu/G4
+         H3+i6q7GH893mbCE8FjnHXqiv6/6t+5ocWoYo60XT6575r8A+rywJ8KG4tumaLrCo8Ff
+         W8Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779746807; x=1780351607;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cb+vYhTU8Eum/FCo/941Nl+1j7gWIUnZrBBYNxLzj3g=;
-        b=IT4a+HNW++AoPXuAzmgcXFiIcI8JuWO604fjkCDdHdVj16EuVtrI7dLrbOdxzAmdeq
-         RffdpH0Zk/YHQJ/9PpdEuKTJK9ql4su0fRoO6h3JY0hPqfA0gOtzKceVy2uPh0CmRrXy
-         HqbUVYJ6XbjcX496cvFwLITfMVrVkn98UvyJml3q7FwZsjd220lcq3CNoZYfI3RHDaIc
-         6BcZGvwbfT3ldtynuoHpV9jmzLCpZVU/v6bdpErV0owr/O7D7uf0lTD7AVpbiyAhKwFE
-         NbM4wEgaa+GXw6PDhAMBJcMr61+rRbXH/FEfHW7U7H+pVIGJHlrAy/UDImeWqxZyTGzP
-         nYVw==
-X-Forwarded-Encrypted: i=1; AFNElJ8RPhvNape3sNfjEv6zOFJmL447Fzrfft9a1TfEDO3eIILYAoG/TIyDL+ZSrrIb94L50T3o3Zeevqa9CIWdKNI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2iluELV0BC4l3jmhr0hv+iDPYyeMEvl5ft6U/6SsmtyAzU+Hl
-	TEKrlUxz7hiztgj9sGIzCf+WIReytE5tfGho1B1QkB7wgZ2wDjEu5uYO
-X-Gm-Gg: Acq92OHStF2ok/jCypQWdOjDTGk81+IdJzB/OQokzOSRbtpdZTqC0qpj5MHJd3NxW6r
-	CItDU0V+R7jvvXrXGcLUb97xgPp+xK+sRVeXiyLWZnqnQALmwNKG1ZJnL0L7Ws56naFUELy2sir
-	PPebKAu9wLK39Oo47gHsrxWKEOx/HR1UQYK/Ga6dl/YiOxLICIEm57Z9PexSAzZlUS1ettfe1Dz
-	0ywajYLVXAJPbKwwr2tjNChq5wUOMBl+7n67EN7LUm9W4OROIAgLyhGFXQpvOSyfZ/mytra7J2u
-	OKmfWWDYlKrdOZy3xWeV0oAkn3DYPjPEYc7CRS/pqxu9BGECnUzLgh4XlByQjOmTaNTaXtiZcZi
-	Tidh/3vzCO6YoNUWFPuk67LZmDSYn13x2nBJ7O8J9BzktdeodVOAeUj9WIF5j2aw358TLxQyNe1
-	J9sSVRAPCU5lELp67W7lcuSniGyn6VpQ8z1H2ELLX46v3GibQYARCZpK2N934sUv4G4CJvuFTx1
-	OtEpiacx/ApKjW8Irrindkahok9LH/XWoQ=
-X-Received: by 2002:a17:90b:5343:b0:368:a27f:9083 with SMTP id 98e67ed59e1d1-36a67761c51mr13108866a91.7.1779746806663;
-        Mon, 25 May 2026 15:06:46 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36adc0a6e94sm4713224a91.4.2026.05.25.15.06.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2026 15:06:46 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: iommu@lists.linux.dev
-Cc: Barry Song <baohua@kernel.org>,
-	linusw@kernel.org,
-	Qinxin Xia <xiaqinxin@huawei.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH] dma: map_benchmark: turn dma_sg_map_param buf into a flexible array
-Date: Mon, 25 May 2026 15:06:28 -0700
-Message-ID: <20260525220628.94833-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+        d=1e100.net; s=20251104; t=1779778389; x=1780383189;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yXWASYjT/jE4WzpKhE8nVhHkzGwmPlTITkkcMF0D8BI=;
+        b=pk50rva3PwgbiVKte4vrdUMIL/LqlNjzZnZDHikku5fOjz5SGbD8uI9JS+jIsrrV14
+         DOiJJkz4+R0jUnSDp569KKybet3A9jS/HW8n7bI9ukCPVox9fBgiIqLYM97n2WijJ7Ab
+         Pf23hRbR0PY2IXawdYOv3uFFpM8LfjoWtVu0zuqRv2Yf1I3ltJNrtWQGWBpSEnomklB/
+         p5xs9ckVfgAN33Ol59+rWvqqT1HMNsc9Vb8ieNZfTlaagz5mrzmLgiB9DZcUwkFO3n35
+         FIT7W5aDzV8zM83howCnMHcCnyuS4mPF0cvr9Q9C/xQoXpJ8usyOZ6kN4DW5eaDRm+hh
+         15Ug==
+X-Forwarded-Encrypted: i=1; AFNElJ+U47V/Yxpvb9fIm2wcAsJsnoANZNf1sG8xNrpkZp+MLPCXYCk00nioaOlVg/w5VsQVSYlUWir/gIzJREhdidQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt4nX/RNKt9B+ojsUSw7m2uQYicsY+9tMKDBbwFYv2sTOjTzsF
+	Hq7plXkvptrpsg2K++wE4lCWYzGGo1M112KWonUYolTJd8cyDXzsKQ32C0dDsiW5Bk8=
+X-Gm-Gg: Acq92OHBtnB0VmrnKX3hMM5zeS7TSY/WUpqQbz9td3MwwPxAYpEgQ0tpPsHIyeA/L0P
+	PGA9jjmX86RhYdq+tEo2xTSDFqtZ5Ryw+vHPYwian/NEyr3U/P+lTM9gVieu00uxccrDfxiE12o
+	TB4nwD/HxGk26HFXsNTRqyhNdSzQtb7WCa9TfJCgp70uFymfAF/ZWhiFtuj72+i7nVK0Y4lFIHw
+	1IHy1HKEpwRJkkh6d+2gW4hXU3V+94wmQltzhyIntNWO4IB3RZ78j5nusiiKnoU6XdYEw2AGqym
+	tavjLneGvqjALGplQm02TI4aWOPmXxT5Ihkd1FmmUheQQM33+ohFCF4T2WljqeJjDI52Nlooa0P
+	3rMwGYlNCtEe2BMrGMgpHGcH5y21ypCiLE3VWD2CYduV/1FJ5pfg4sBtpon2xUP8qijdikJlHjl
+	mbWFRU0QU8JbR4ByhBhsPea/EqUPPYY61TouDefz5wsBOF56H5n3DrDDlt6NTBFkis8MV4V7X0s
+	VUk3bs1wyRVyZZnz85adyLc2z3Du/WxTu+BCIM+sMMtPNAGKgX22PL0bEN3Sx9gAK4Ajm0R+s7h
+	0u84
+X-Received: by 2002:a05:6000:2003:b0:43b:4136:1e6f with SMTP id ffacd0b85a97d-45eb38e4b46mr29516257f8f.38.1779778389230;
+        Mon, 25 May 2026 23:53:09 -0700 (PDT)
+Received: from ?IPV6:2a00:1028:838d:271e:8e3b:4aff:fe4c:a100? (dynamic-2a00-1028-838d-271e-8e3b-4aff-fe4c-a100.ipv6.o2.cz. [2a00:1028:838d:271e:8e3b:4aff:fe4c:a100])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eb6c9ba2esm33848641f8f.8.2026.05.25.23.53.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2026 23:53:08 -0700 (PDT)
+Message-ID: <88c5ca1d-eeda-4023-bc7a-397b92780db9@suse.com>
+Date: Tue, 26 May 2026 08:53:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/11] Convert moduleparams to seq_buf
+To: Kees Cook <kees@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Pengpeng Hou
+ <pengpeng@iscas.ac.cn>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Corey Minyard <corey@minyard.net>, Gabriel Somlo <somlo@cmu.edu>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Bart Van Assche <bvanassche@acm.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Hannes Reinecke <hare@suse.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Alan Stern <stern@rowland.harvard.edu>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
+ Tiwei Bie <tiwei.btw@antgroup.com>, Benjamin Berg <benjamin.berg@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "David E. Box" <david.e.box@linux.intel.com>,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>,
+ Frank Li <Frank.Li@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>,
+ Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Andrew Morton
+ <akpm@linux-foundation.org>, John Johansen <john.johansen@canonical.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-modules@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-mm@kvack.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+ qemu-devel@nongnu.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
+ linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260521133315.work.845-kees@kernel.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20260521133315.work.845-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The buf pointer was kmalloc_array()'d immediately after the parent
-struct allocation, with the count (granule, validated to 1..1024 by
-the ioctl) trivially available beforehand.  Move buf to the struct
-tail as a flexible array member and fold the two allocations into a
-single kzalloc_flex(), dropping the kfree(params->buf) in both the
-prepare error path and unprepare.
+On 5/21/26 3:33 PM, Kees Cook wrote:
+> Hi,
+> 
+> I tried to trim the CC list here, but it's still pretty huge...
+> 
+> We've had a long-standing issue with "write to a string pointer" callbacks
+> that don't bounds check the destination (and for which the bounds is
+> also not part of the callback prototype, even if it is "known" to be
+> PAGE_SIZE, which sysfs_emit() depends on). Both moduleparams and sysfs
+> use this pattern. As a first step, and to test the migration method,
+> migrate moduleparams first.
+> 
+> There are 2 "mechanical" treewide patches that are handled by Coccinelle:
+> - treewide: Convert struct kernel_param_ops initializers to DEFINE_KERNEL_PARAM_OPS
+> - treewide: Convert custom kernel_param_ops .get callbacks to seq_buf via cocci
+> 
+> The last treewide patch is manual, and may need to be broken up into
+> per-subsystem patches, though I'd prefer to avoid this, as it would
+> extend the migration from 1 relase to at least 2 releases. (1 to
+> release the migration infrastructure, then 1 release to collect all the
+> subsystem changes, and possibly 1 more release to remove the migration
+> infrastructure.)
+> 
+> Thoughts, questions?
 
-Add __counted_by for extra runtime analysis.
+This looks reasonable to me. I added a few minor comments on the patches
+but they already look solid.
 
-Assisted-by: Claude:Opus-4.7
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- kernel/dma/map_benchmark.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-index 29eeb5fdf199..a65da5c7710c 100644
---- a/kernel/dma/map_benchmark.c
-+++ b/kernel/dma/map_benchmark.c
-@@ -121,35 +121,35 @@ static struct map_benchmark_ops dma_single_map_benchmark_ops = {
- struct dma_sg_map_param {
- 	struct sg_table sgt;
- 	struct device *dev;
--	void **buf;
- 	u32 npages;
- 	u32 dma_dir;
-+	void *buf[] __counted_by(npages);
- };
- 
- static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data *map)
- {
-+	struct dma_sg_map_param *params;
- 	struct scatterlist *sg;
-+	u32 npages;
- 	int i;
- 
--	struct dma_sg_map_param *params = kzalloc(sizeof(*params), GFP_KERNEL);
--
--	if (!params)
--		return NULL;
- 	/*
- 	 * Set the number of scatterlist entries based on the granule.
- 	 * In SG mode, 'granule' represents the number of scatterlist entries.
- 	 * Each scatterlist entry corresponds to a single page.
- 	 */
--	params->npages = map->bparam.granule;
-+	npages = map->bparam.granule;
-+
-+	params = kzalloc_flex(*params, buf, npages);
-+	if (!params)
-+		return NULL;
-+
-+	params->npages = npages;
- 	params->dma_dir = map->bparam.dma_dir;
- 	params->dev = map->dev;
--	params->buf = kmalloc_array(params->npages, sizeof(*params->buf),
--				    GFP_KERNEL);
--	if (!params->buf)
--		goto out;
- 
--	if (sg_alloc_table(&params->sgt, params->npages, GFP_KERNEL))
--		goto free_buf;
-+	if (sg_alloc_table(&params->sgt, npages, GFP_KERNEL))
-+		goto free_params;
- 
- 	for_each_sgtable_sg(&params->sgt, sg, i) {
- 		params->buf[i] = (void *)__get_free_page(GFP_KERNEL);
-@@ -166,9 +166,7 @@ static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data *map)
- 		free_page((unsigned long)params->buf[i]);
- 
- 	sg_free_table(&params->sgt);
--free_buf:
--	kfree(params->buf);
--out:
-+free_params:
- 	kfree(params);
- 	return NULL;
- }
-@@ -183,7 +181,6 @@ static void dma_sg_map_benchmark_unprepare(void *mparam)
- 
- 	sg_free_table(&params->sgt);
- 
--	kfree(params->buf);
- 	kfree(params);
- }
- 
 -- 
-2.54.0
-
+Thanks,
+Petr
