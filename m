@@ -1,221 +1,199 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBC73C76B9
-	for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 17:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86E83B777B
+	for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 17:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779815317; cv=none; b=HcEMVxmk32YQhaT92HC1bb7JGR2L9mcpSrrwH/hH4nm+nfvZlshNIdWd79KT2klzFShWoYSI4jOYb9EECleyc+bi0e9gwyKOBQeY9VIGSPVo3e5h+TD4NFEgZ1OuB2hKbUJVoN/CmGbS4dn0CQikldtpKXS5jqCUc0GIOEPMb6c=
+	t=1779818363; cv=none; b=qLRYHs746d09CeFpZRkVHiNMq03RDPPHOcvVEhAnKnc0HfgnC3HeXcJxdLl3xXTnX3Xt3BM0coosePyV3uJRj69ViUDnIbCc5TYthFNVOEjt196R+KHOwFhkNa8hUhoq1g79/KQ8ZiDDnW0WiNUdiMQrNyM6tpsJdvqMQfQwbKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779815317; c=relaxed/simple;
-	bh=NA27NN5p6I8UVFw/S+uheebpnwu8UHqFyN0ql1ewMQ0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aKRjS5W9y4FjuCERuSt/wj9Eoq9vcU4e+V2eXa55YxbgJ/fMEdXz6ZeyUfEFhfBz73M5U3brzrOhIsRe4EEqwDAXQ+mdsDAtR478mFrqJUlHmjgtmCwQqmSoNg5+9IVtf5y2NKrNZkw/Xe9v3UEiT9tro9Ea3RiUMa8g1JuVS7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWfXZnOd; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779818363; c=relaxed/simple;
+	bh=b10fy8VHjPYf1Gmq3LBWP4fHcyKTtOP6xQReBkpFN+Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aXg7YV494dZ3hKgoFdxnWBT+zkzgtHmSMOnJbsggSBG/VapEMuIklFJQvgs9crxGgE3yfKhj7S1rPilnUCTXU/m1gCSTDn2nuomtifOcLDFZ1PxwXU7GQyMYQ4Aicwv2bl48r62GpReIJdwexq9JkM86b/gPeBEUocXhWIvrtWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tdJi/Hbw; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWfXZnOd"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-516d61baff3so51602561cf.0
-        for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 10:08:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tdJi/Hbw"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-49047e9ca88so35876655e9.3
+        for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 10:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779815315; x=1780420115; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hqQXdsbWsKeHXeHKrmCU/WFpGzKvYZdLxIaZX6nvsjQ=;
-        b=YWfXZnOdYjaEcYcg6vbpApiL2SCc0x6gh2tPaOSRmFr9sPMJiewhqe2WWm8lXvkF7p
-         TWKMNVURRZ2Wh50qL6D7hnqYBE0itBgs057Y4S/fZgVqjcANnk55LZZub3KqXMm7o5AE
-         SfW7VlrobGR7UbPS9asYnHQA6g16ppgoSaEl3AIMNn4sj3dHtngklmd0FBJLsDAxSQji
-         6jVsO/pLyLoW+uluW+dcnlbOsajkxa/tteXqbZ6mzY58ikNjFTyDwFwbCKe0ASB12bDs
-         qMAc8MzySFZMkNxPVB15gETScxfAR0OhRsMW9rMmsqbk3A4xtCkJp7OggrnCXZxbXUBS
-         EycA==
+        d=google.com; s=20251104; t=1779818360; x=1780423160; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=n0vWMvJYNWuq9BUtLKfBugHf8I5ifX5auG02Ilaszzw=;
+        b=tdJi/Hbw0nUyM7/tatgnCffhOgQ3vI34vXawTfxg6SEWjUdsc2omEBeyNg01NehDux
+         G/a3vmhlSuDbQJ7pD18Uutk0b8iDKuOC8Rh7XQPDfsJI9ez+giNGLn3OX3g+bpjRdlFd
+         TPoarbPv/qltD5niIQ041rAG099cJwL0JQAiVkfKH+WWG/rwvmEjeUtJGnlfUOrRtbkG
+         RvLWKZsen8sBmBW6EpFYp5Jqk9ZtWWSuXKCwKnU/R2DjsTZ355HFdUc8UBpONgCIejCH
+         RKqZy5LjccwfJ1GUFb4w6twrSHWYhm1feIzbxJtsga1gRCjqTfufxdvvTZZiE5Zu5y5s
+         swvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779815315; x=1780420115;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hqQXdsbWsKeHXeHKrmCU/WFpGzKvYZdLxIaZX6nvsjQ=;
-        b=bsZKQ5Q80S4kS1z2Rrip/swl4vzagQQ4EbzYlKfYikBeKerPTurJi+8DsvlgxdhvZN
-         R6DzwZ5gMlFKsyAUoIbXRd55Ke9p9uG+Y/1+cIYaaVp2n6W/PPP4wWaeJA8s1VYxFvOU
-         5DQ6Vt2JOsQPRD4sR0vrA0+B5DacYh25w+DmeJV5Z838jhEcZPc3f9XJSN8lhBt/QCyb
-         gXizFSTchL2INvT4YjJfA2wxVsOXBq78La5poZ9/sIF9i0BXws2Fqu1TREedQ3yqIavJ
-         6VlFx2D5wlDAdd3+GBsrOaAWhzpoCy2toyz03uTla9wWvbrRZ7CkNIiXd346jYNx1w7W
-         HZdA==
-X-Forwarded-Encrypted: i=1; AFNElJ/u6t3gNFUe6A84xYk/cGBCyRDFyGJc3GR+XhFhRLHsM3u6d7ktKhOlmTDwzBvRYpfYXvyAzGwtXowvepfr2N0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoMWD08S6MJswEUAGGLPC8ewv8GWJMwAGHowofmHvrqMdfH+W9
-	au3pqo0SLJHRJnUnpidg/SPchfmH23pOBwvh05GC0KbGuwndwwa/lIRJ
-X-Gm-Gg: Acq92OHVY+RaGwkOgb4PC/32mRhU0a0wYwVaoNfvhSH235sFILTJfWmYpgo8nd0eQc0
-	CP7Yar2p2QIAOPAxkIYDZZAodOxr67f0E8Lxjw8q7BMX16+mB1Ofvljj1Yejit9cbOhsmCqySDJ
-	BKm+le8Aqyzawv3dU0Rsk7QNa7uXEBIbjOP4nDzVkV/R/wQt/tt2jQleoSFLrNYLdN2/idmIC++
-	Bp4R1f4/FkSEBGwYHbgQgOCTpfKm0Yc65LRRmf7LjNVaGsQJdt4lxj93hwCZUAzD9BhBtpCA2+x
-	j5zQ8FO5PEnNXHEkEgvWO9HGEBn7nYJokzWcAMU+bvBQUgdPntlYCGQj+9dhV4rt10msTiviO+Q
-	BDfSTKEsUSDnELQ6oiXZNb4nGsDje10i+Dj7rQitQbEcaIi3N6pZn/JpPcaWT1H+Rqcx2Vn5n2I
-	OIP09C+Bjah/IF/Gzt7YyiOXmz66jLIyIYWSXue/EGRGdsrw7c4XBg0g5Kqwo3o+LYLhe08GBjG
-	mY8qRu78mAYn51ho/DtB16+eVtKm8HT4pkRqOOFGCGy0D0J6A==
-X-Received: by 2002:a05:622a:2445:b0:516:dfc9:8449 with SMTP id d75a77b69052e-516dfc99abamr233404601cf.59.1779815314663;
-        Tue, 26 May 2026 10:08:34 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517069f2d2fsm26751821cf.3.2026.05.26.10.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 10:08:33 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Tue, 26 May 2026 18:08:26 +0100
-To: Jonathan Cameron <jic23@kernel.org>, 
-	Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v5 12/13] Documentation: ABI: testing: add docs for
- ad9910 sysfs entries
-Message-ID: <tdhw4z6gsuwdgg4olw5tipgqip7rtdzrl72divxvnwkc2mmpfo@7r4aceyvjvqm>
-References: <20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com>
- <20260517-ad9910-iio-driver-v5-12-31599c88314a@analog.com>
- <vqqvn2cgs3fbp5mq6xfac7iyosaqfrvgngqur4x355a3at7slo@ylrtd6fhi33a>
- <20260522192040.4e6b11eb@jic23-huawei>
+        d=1e100.net; s=20251104; t=1779818360; x=1780423160;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n0vWMvJYNWuq9BUtLKfBugHf8I5ifX5auG02Ilaszzw=;
+        b=Y3ubiENiGeAJL6n+/fYrBVMBQ4trMAntxe8JBYpD77qgOaanf2+Xjy9L/kK9Qn5QIU
+         iSd2p5pH3sUXwCY+I7O2p1/04WL9+GH4J9uju1O0I88VsXUZuOqQNPBnqF4rxsJOBXyp
+         rH21RsKFSMQi5Hj+9qs7BzbF5UyHYQdDk2xgKHyBLMsBswg5I9KUgvqbRNhsAKaptrHf
+         qKLvfg92xxfu7NEbtXJNMG5D9u2pdmjSEv/vPsuAbjeBBYL9JbK1DICxpbcmh1ldJ2om
+         5B4tV4aN/6KPzuUUD9wQmJLaaiBPXivS0+yACS4c076YIyuDJNzbhIATyuH1r/wUB3Mn
+         UseQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/XWpmgyWj6JdyouPEu56cpeJr2v9N1WY5UV5qTLxTUtMaIUEZFace+/lY1QGHaxouUX7h2txsGszFN6+QoNQo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFA+DWTEj0AHrB1+aMSGne+fOaB0KJSOmnW5OgblA6DcdDkr2M
+	rJcAPdnsmvCcJONNHv/2zSugJdLJKGtbKJj9QCv7V4QIkzfaJOd7mFYEvmUbIOPYis9YehorAw=
+	=
+X-Received: from wmbfj10.prod.google.com ([2002:a05:600c:c8a:b0:489:1f67:5a81])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3581:b0:490:482c:4391
+ with SMTP id 5b1f17b1804b1-490482c4586mr347539725e9.23.1779818360071; Tue, 26
+ May 2026 10:59:20 -0700 (PDT)
+Date: Tue, 26 May 2026 19:58:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260522192040.4e6b11eb@jic23-huawei>
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5484; i=ardb@kernel.org;
+ h=from:subject; bh=U8803ZhDPt8GJ8Atx6VTFHHmARjJ+nX3UDhXHVYH9xo=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIUv0frj6sbw7T/xOHgou4E0vMGDKO3VgAmdWo+XnCVG6T
+ 1oEOto7SlkYxLgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwERU7jL8L1Z3r3IPnBwlZzZh
+ j9LEyREPWzJrNh55n6V8I1KW299LiZHhyvMT6w/KRn2cG6r8u+luO6dv1+6fH92Tg3pK51buVHT gBAA=
+X-Mailer: git-send-email 2.54.0.794.g4f17f83d09-goog
+Message-ID: <20260526175846.2694125-17-ardb+git@google.com>
+Subject: [PATCH v6 00/15] arm64: Unmap linear alias of kernel data/bss
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, 
+	mark.rutland@arm.com, Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Liz Prucka <lizprucka@google.com>, 
+	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-sh@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 26/05/22 07:20PM, Jonathan Cameron wrote:
-> On Wed, 20 May 2026 19:47:25 +0100
-> Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
-> 
-> > On 26/05/17 07:37PM, Rodrigo Alencar via B4 Relay wrote:
-> > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > > 
-> > > Add custom ABI documentation file for the DDS AD9910 with sysfs entries to
-> > > control Parallel Port, Digital Ramp Generator and OSK parameters.  
-> > 
-> > ...
+From: Ard Biesheuvel <ardb@kernel.org>
 
-> > This will become just offset with altcurrent channels. I noticed we have a IIO_PHASE
-> > iio_chan_type, could we have a IIO_FREQUENCY too? Parallel port needs actual raw
-> > frequency values in that case to be written to the dma buffer.
-> > 
-> Sure to IIO_FREQUENCY.  I thought we already did but seems not!
-> The Phase one is a bit special given it's use in resolvers and distance sensors
-> but perhaps it is the right solution here.
-> 
-> 
-> > Then we may have buffer capable channels for the parallel port:
-> > 
-> > out_altcurrent120
-> > 	offset
-> 
-> So that's the amplitude envelope control.
-> 
-> > out_phase120
-> > 	offset
-> 
-> So this is the phase adjustment being controlled. 
-> 
-> > out_frequency120
-> 
-> And this is the frequency being controlled.
-> 
-> > 	scale
-> > 	offset
-> 
-> > 
-> > Problem is that the math for the actual frequency output is:
-> > 
-> > 	f_OUT = f_FTW + (f_RAW * FM)
-> > 
-> > where f_FTW is a base frequency (already scaled), FM is a
-> > modulation gain and f_RAW is the contribution from the parallel
-> > port, which is the already scaled:
-> > 
-> > 	f_RAW = RAW * f_SYSCLK / 2^32
-> > 	f_FTW = FTW * f_SYSCLK / 2^32
-> > 
-> > so the above becomes:
-> > 
-> > 	f_OUT = (FTW * f_SYSCLK / 2^32) + (RAW * f_SYSCLK / 2^32) * FM
-> > 	f_OUT = (FTW/FM + RAW) * f_SYSCLK * FM / 2^32
-> > 
-> > if I make:
-> > 
-> > 	SCALE = f_SYSCLK * FM / 2^32
-> > 	OFFSET = FTW/FM
-> > 	f_OUT = (OFFSET + RAW) * SCALE
-> > 
-> > That would work for a IIO_FREQUENCY channel type, problem is that both
-> > scale and offset would depend on the modulation gain (FM)... I suppose
-> > scale should be setting that and offset assumes it is constant to act
-> > only on FTW.
-> 
-> I'm not that concerned about the coupling - it's a bit of a useability 
-> issue I guess as not obvious which should be the fixed one.  Can we do
-> cache written values and try and compensate to get a pair that is nearest
-> to whatever we try to drive (in either order of setting them?)
+One of the reasons the lack of randomization of the linear map on arm64
+is considered problematic is the fact that bootloaders adhering to the
+original arm64 boot protocol (i.e., a substantial fraction of all
+Android phones) may place the kernel at the base of DRAM, and therefore
+at the base of the non-randomized linear map. This puts a writable alias
+of the kernel's data and bss regions at a predictable location, removing
+the need for an attacker to guess where KASLR mapped the kernel.
 
-Yeah.. or just document a proper sequence to write things, and indicate that
-writing has side effects and one may read the other attributes to assert
-the desired configuration. See that f_SYSCLK is also another configurable
-variable. Maybe it is not really practical to cache all user choices and derive
-all the other configurations as one changes.
+Let's unmap this linear, writable alias entirely, so that knowing the
+location of the linear alias does not give write access to the kernel's
+data and bss regions.
 
-> > 
-> > I suppose we can keep altcurrent for other modes as phase and frequency
-> > can be attributes (knobs) for them. However, in parallel mode we are effectively
-> > pushing frequency, phase or amplitude values into the buffer.
-> 
-> Given that's the thing we are controlling. My Friday evening tired brain agrees
-> that it makes sense to use channel types rather than adjustments on something else.
-> 
-> I'll think some more on this.  We've never had continuous (well digital
-> so near continous) control of either phase or frequency before - it's just
-> be symbol stuff with a couple of points to set.
-> 
-> 
-> > 
-> > The polar destination is a corner case, but can be solved when both
-> > phase and altcurrent channels are enabled. When that happens we can
-> > change the scan_type with has_ext_scan_type = 1, so the 16-bit data
-> > bus is split between the two.
-> > 
-> For now I'll just nod at that!
+Changes since v5:
+- Reorder series in ascending order of impact, so that the first few can
+  be merged earlier if desired. This also makes the patch that remaps
+  the data/bss linear alias as tagged redundant, which is therefore
+  dropped.
+- Add patch #3 to address an existing issue spotted by Sashiko
+- Fix thinko in contiguous region check (#5), where the whole region
+  needs to be considered and not only the first entry (dropped Rb as
+  well) - this addresses the kfence issue Sashiko reported on v5 [0]
+- Update commit log on #6 to clarify that changing permission bits on
+  PTE_CONT entries is safe as long as PTE_CONT itself does not change
+- Likewise, drop hunk that adds the PTE_CONT bit to the 'permitted' mask
+  in pgattr_change_is_safe(), as changing it is not safe. (#8)
+- Move kasan's additional page table to pgdir BSS as well
+- Use (NOLOAD) on the .pgdir.bss section so it does not get emitted into
+  vmlinux
+- Add powerpc and SuperH patches to deal with empty_zero_page[] being
+  made const
 
-I took a look at get_current_scan_type() and I faced the issue:
+Changes since v4:
+- Update the correct [early] mapping in patch #1
+- Make empty_zero_page[] const instead of __ro_after_init
+- Drop patches that remap the fixmap page tables r/o for now
+- Don't force page mappings for the data/bss linear alias, as it is no
+  longer needed for set_memory_valid()
+- Add acks
 
-	user checks the scan format type before enabling the buffers
+Changes since v3:
+- Drop bogus patch adding hierarchical PXN to the fixmap mapping, which
+  breaks the KPTI trampoline (thanks to Sashiko)
+- Add generic patch to move the empty_zero_page to __ro_after_init, as
+  it now lives in generic code.
+- Add patches to remap the linear aliases of the fixmap page tables
+  read-only too - these live at an a priori known offset in the linear
+  map if physical KASLR was omitted, and control a priori known
+  addresses in the virtual kernel space.
+- Rebase onto v7.1-rc1
 
-In this case I have a scan type that changes with the scan mask:
+Changes since v2:
+- Keep bm_pte[] in the region that is remapped r/o or unmapped, as it is
+  only manipulated via its kernel alias
+- Drop check that prohibits any manipulation of descriptors with the
+  CONT bit set
+- Add Ryan's ack to a couple of patches
+- Rebase onto v7.0-rc4
 
-	altcurrent and phase both selected for buffer transmission would
-	have the scan type changed so that the 16-bit data bus is split
-	between 2 8-bit chunks.
+Changes since v1:
+- Put zero page patch at the start of the series
+- Tweak __map_memblock() API to respect existing table and contiguous
+  mappings, so that the logic to map the kernel alias can be simplified
+- Stop abusing the MEMBLOCK_NOMAP flag to initially omit the kernel
+  linear alias from the linear map
+- Some additional cleanup patches
+- Use proper API [set_memory_valid()] to (un)map the linear alias of
+  data/bss.
 
-That may also get confusing values for offset and scale. Then I decided
-to have 5 parallel port channels with fixed scan_type:
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc; Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: Liz Prucka <lizprucka@google.com>
+Cc: Seth Jenkins <sethjenkins@google.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: David Hildenbrand <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: linux-mm@kvack.org
+Cc: linux-hardening@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-sh@vger.kernel.org
 
-	0. out_altcurrent120 - amplitude destination (16-bits)
-	1. out_phase120 - phase destination (16-bits)
-	2. out_frequency120 - frequency destination (16-bits)
-	3. out_altcurrent121 - polar destination (8-bits)
-	4. out_phase121 - polar destination (8-bits)
+[0] https://sashiko.dev/#/patchset/20260519151616.2557018-15-ardb%2Bgit%40google.com
 
-with the possible scan masks:
+Ard Biesheuvel (15):
+  arm64: mm: Remove bogus stop condition from map_mem() loop
+  arm64: mm: Drop redundant pgd_t* argument from map_mem()
+  arm64: mm: Check for pud_/pmd_set_huge() failures on kernel mappings
+  arm64: mm: Preserve existing table mappings when mapping DRAM
+  arm64: mm: Preserve non-contiguous descriptors when mapping DRAM
+  arm64: mm: Permit contiguous descriptors to be manipulated
+  arm64: kfence: Avoid NOMAP tricks when mapping the early pool
+  arm64: mm: Permit contiguous attribute for preliminary mappings
+  arm64: Move fixmap and kasan page tables to end of kernel image
+  arm64: mm: Don't abuse memblock NOMAP to check for overlaps
+  arm64: mm: Map the kernel data/bss read-only in the linear map
+  powerpc/code-patching: Avoid r/w mapping of the zero page
+  sh: cast away constness from the zero page when flushing it from the
+    cache
+  mm: Make empty_zero_page[] const
+  arm64: mm: Unmap kernel data/bss entirely from the linear map
 
-	0x01: amplitude
-	0x02: phase
-	0x04: frequency
-	0x18: polar
+ arch/arm64/include/asm/mmu.h     |   2 +
+ arch/arm64/include/asm/pgtable.h |   4 +
+ arch/arm64/kernel/vmlinux.lds.S  |   8 +-
+ arch/arm64/mm/fixmap.c           |   6 +-
+ arch/arm64/mm/kasan_init.c       |   2 +-
+ arch/arm64/mm/mmu.c              | 153 ++++++++++++--------
+ arch/powerpc/lib/code-patching.c |  52 +------
+ arch/sh/mm/init.c                |   2 +-
+ include/linux/pgtable.h          |   2 +-
+ mm/mm_init.c                     |   2 +-
+ 10 files changed, 111 insertions(+), 122 deletions(-)
 
+
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 -- 
-Kind regards,
+2.54.0.794.g4f17f83d09-goog
 
-Rodrigo Alencar
