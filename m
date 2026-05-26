@@ -1,97 +1,68 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE5C30F92D;
-	Tue, 26 May 2026 08:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CAA3D8101;
+	Tue, 26 May 2026 09:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779785976; cv=none; b=JlGTdKNbyoljgZSmlevaG+/NN5l82zlBsa0UaI0OGsoLK5jWuk/I+bnEPd1CziX6LOrNpgLN6A+aaEfG20EmhtriR0ZDCOuMdbkbKAYCTFQw9bin4id0Qj47HLiWUg0uyeoumMkNw+QNQqXiiDg9Oo3ctt9fG5hc5uKvFWMLQkA=
+	t=1779788558; cv=none; b=OpcxWce+uDoz7Cs5cYKMJDp6jg6t8rGEJu0XUDxTPr1aKpftzNT1fPLCfY/rankn+D1q4zO505K8IgieMABjzLYu3ML/MBxytcoQu558Jaax7TOfRfByczVE4dfqC6kCQbiiRZAd43PNP3yebWF8PFmdxLJh4la2Zg9B983xBgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779785976; c=relaxed/simple;
-	bh=4cxEhkLd8u4stkPjeP7mPhVuIW/w/WfIYpRNi1Ucy1Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QfMt+6uCXW6FDLFtzsJG0X6+LJ+yZR1vk2IRrDJLRYbV6hYz9MZ69PvANzUKLM0YD6m7P4D9WTnnpXIhYKFmUNmBEB5z75vSZekumjP2U6FWixtSEuFhqVa5LPmAgzTZoVV3zbEFGB8bTrR5fuFI/QvzKiFlaIWMANu4c/85Q5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ZpyhNCWe; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1779788558; c=relaxed/simple;
+	bh=rKNgA79MMeQk+bwc28f395YxJbYOZxdMNnULJfDhld4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TK6aegtlMXOVfF2+oSKsUqXfrZKR9m5udFELQ8vlIvBbPD9kp1U4CksGmf337TY/v1HBrnt6VhzSN67L2Gkao2MuFarw0eDGivI4WliM0XIPx9uQl1CJGa1CVDaM7j1AYiAoID0CxB2aYl/OD8O2lgMZTtXwgUPW0CI6fnF+R5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6yin3Kx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZpyhNCWe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=x3
-	UPn9YkcVWJ6PGBUxyppQ/FxyqlN1wj6SwTbCyClWA=; b=ZpyhNCWeIOk3uZZWQi
-	3wLoY+O0257QZhyMyM/XopSYu+S8hVUj3D6saWz5gAK0SguxctPRrVCIHoP6YY+t
-	CZvtppFpfmKXlt1hl7o5wWbwiJTfcAH9+myLBYNi/NPXSj1ODUrr1IN60AQGPxmt
-	sb2Ogpf/dPa6YOJQ3HkIRDmmc=
-Received: from thinkpadx13gen2i.. (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wA3c4HkYBVqxP6NDQ--.20557S2;
-	Tue, 26 May 2026 16:59:17 +0800 (CST)
-From: Zongmin Zhou <min_halo@163.com>
-To: kees@kernel.org,
-	andy@kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zongmin Zhou <zhouzongmin@kylinos.cn>,
-	Feng Jiang <jiangfeng@kylinos.cn>
-Subject: [PATCH] lib/string_kunit: add strnlen() tests for strings without NUL terminator
-Date: Tue, 26 May 2026 16:59:13 +0800
-Message-Id: <20260526085913.429049-1-min_halo@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6yin3Kx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A75D1F000E9;
+	Tue, 26 May 2026 09:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779788557;
+	bh=69ANfIB+mPawv6oMTVRw25TJh4t4UGQi6U/dIsBgm28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=f6yin3KxVaJ1jBemQnvmFo5AGKVub33e0kYifkfPT5EaW9nitTxB49akxonXsG8xR
+	 PNe1OnsbXuGzS81XpSTVuYv0RK6twW7ryXfLJ+yAQ6stTyUfGrzXMPt5rq+PRY/QTX
+	 0G3Af0VrE//lZh5p6pK20KeUN4qA3EaDNJCEHy2N9jfALuc7dB+uExNnL5KN8DfT1f
+	 yhAtRTsh3W9THd1vqjwo6XYR58cbStkIAwXWO6SkfUMejByHUpM+jvAcXtKnbK5uFE
+	 qvxyXLCfbmdgbE6hGJNuJnzQJJU8h1YLd6cr8eNo+/OB5F843RFOsV4H3CJDQ7eS3h
+	 dG0gXfnRmzHyQ==
+Date: Tue, 26 May 2026 11:42:34 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	=?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, jyescas@google.com, 
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 5/5] arm64: defconfig: enable Exynos ACPM thermal
+ support
+Message-ID: <20260526-laughing-hissing-starling-7e088e@quoll>
+References: <20260525-acpm-tmu-v5-0-85fde739752e@linaro.org>
+ <20260525-acpm-tmu-v5-5-85fde739752e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wA3c4HkYBVqxP6NDQ--.20557S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw43Ary7Wr4kXF4UXF4UXFb_yoW8XF4UpF
-	92vay0kr15Xrn7tws3Wr43XrykWw4Skr4fArZrGw4fX39YqFnxZrsIgr40vasxXrWxua9Y
-	vr98XFy5GasxGF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jn9N3UUUUU=
-X-CM-SenderInfo: pplqsxxdorqiywtou0bp/xtbC0gUx3GoVYOWvTwAA3g
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260525-acpm-tmu-v5-5-85fde739752e@linaro.org>
 
-From: Zongmin Zhou <zhouzongmin@kylinos.cn>
+On Mon, May 25, 2026 at 12:50:25PM +0000, Tudor Ambarus wrote:
+> Enable the Exynos ACPM thermal driver (CONFIG_EXYNOS_ACPM_THERMAL)
+> to allow temperature monitoring and thermal management on Samsung
+> Exynos SoCs 
 
-The existing strnlen() tests only cover strings with a NUL terminator.
-Add test cases for strings without a NUL terminator to verify that
-strnlen() correctly returns the maximum length when no NUL is found
-within the given bound.
+"on Samsung Exynos foobar SoCs" or "on Samsung Exynos SoCs (like
+Google GS101)", used on "faz baz boards".
 
-Co-developed-by: Feng Jiang <jiangfeng@kylinos.cn>
-Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
-Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
----
- lib/tests/string_kunit.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 0819ace5b027..b0d5626a79c8 100644
---- a/lib/tests/string_kunit.c
-+++ b/lib/tests/string_kunit.c
-@@ -155,6 +155,16 @@ static void string_test_strnlen(struct kunit *test)
- 
- 	for (size_t offset = 0; offset < STRING_TEST_MAX_OFFSET; offset++) {
- 		for (size_t len = 0; len <= STRING_TEST_MAX_LEN; len++) {
-+			/* Test strings without NUL terminator */
-+			s = buf + buf_size - offset - len;
-+			if (len > 0)
-+				KUNIT_EXPECT_EQ(test, strnlen(s, len - 1), len - 1);
-+			if (len > 1)
-+				KUNIT_EXPECT_EQ(test, strnlen(s, len - 2), len - 2);
-+
-+			KUNIT_EXPECT_EQ(test, strnlen(s, len), len);
-+
-+			/* Test strings with NUL terminator */
- 			s = buf + buf_size - 1 - offset - len;
- 			s[len] = '\0';
- 
-@@ -169,6 +179,7 @@ static void string_test_strnlen(struct kunit *test)
- 			KUNIT_EXPECT_EQ(test, strnlen(s, len + 2), len);
- 			KUNIT_EXPECT_EQ(test, strnlen(s, len + 10), len);
- 
-+			/* Restore buffer */
- 			s[len] = 'A';
- 		}
- 	}
--- 
-2.34.1
+Best regards,
+Krzysztof
 
