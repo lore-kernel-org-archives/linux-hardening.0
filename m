@@ -1,68 +1,72 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86E83B777B
-	for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 17:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1E83B83FE
+	for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 17:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779818363; cv=none; b=qLRYHs746d09CeFpZRkVHiNMq03RDPPHOcvVEhAnKnc0HfgnC3HeXcJxdLl3xXTnX3Xt3BM0coosePyV3uJRj69ViUDnIbCc5TYthFNVOEjt196R+KHOwFhkNa8hUhoq1g79/KQ8ZiDDnW0WiNUdiMQrNyM6tpsJdvqMQfQwbKQ=
+	t=1779818364; cv=none; b=AeL2yG3owWxQfGxP3S8pvb7CWYrCQSS1wwhS6nciR5z93r47bKHZ6hXmxKrgu0iapEeo8daALglwl0FsshBwcV9Mf+krjWZajjnZTadzuYSoBcGQxzt1QR+ZXCZY6qcaQ28e11rzwZiP3/7t5p9ww+rXIlWlM3uJ1xIwXBAIPo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779818363; c=relaxed/simple;
-	bh=b10fy8VHjPYf1Gmq3LBWP4fHcyKTtOP6xQReBkpFN+Y=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aXg7YV494dZ3hKgoFdxnWBT+zkzgtHmSMOnJbsggSBG/VapEMuIklFJQvgs9crxGgE3yfKhj7S1rPilnUCTXU/m1gCSTDn2nuomtifOcLDFZ1PxwXU7GQyMYQ4Aicwv2bl48r62GpReIJdwexq9JkM86b/gPeBEUocXhWIvrtWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tdJi/Hbw; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1779818364; c=relaxed/simple;
+	bh=FcYdFUFDbYIAdFyZlCTNmSVC8QDMBmfYYdOjNopJ730=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lJOgX2rBLYGH1WTmNiUsktOwTqf9rFfMY3Ga/pCGmen9STHwOAOeM1cwNoklFbKQhZ5Rt65+EW9ae9UVVIWQ13aH0Vgc+XLDNYivyK6Dnw2mrlFwL+VE2tFyZYG8SVmOV931C3Q5M7hCGfT0shDy7ojxZb+sd1dKmjjtQ2m8Vc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ek+RZk/S; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tdJi/Hbw"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-49047e9ca88so35876655e9.3
-        for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 10:59:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ek+RZk/S"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-490402ae2c1so46918265e9.0
+        for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 10:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779818360; x=1780423160; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=n0vWMvJYNWuq9BUtLKfBugHf8I5ifX5auG02Ilaszzw=;
-        b=tdJi/Hbw0nUyM7/tatgnCffhOgQ3vI34vXawTfxg6SEWjUdsc2omEBeyNg01NehDux
-         G/a3vmhlSuDbQJ7pD18Uutk0b8iDKuOC8Rh7XQPDfsJI9ez+giNGLn3OX3g+bpjRdlFd
-         TPoarbPv/qltD5niIQ041rAG099cJwL0JQAiVkfKH+WWG/rwvmEjeUtJGnlfUOrRtbkG
-         RvLWKZsen8sBmBW6EpFYp5Jqk9ZtWWSuXKCwKnU/R2DjsTZ355HFdUc8UBpONgCIejCH
-         RKqZy5LjccwfJ1GUFb4w6twrSHWYhm1feIzbxJtsga1gRCjqTfufxdvvTZZiE5Zu5y5s
-         swvA==
+        d=google.com; s=20251104; t=1779818361; x=1780423161; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+RFflol+bsWEcr4KlK98zfj4SqOIgycSAYTOMgzlgw0=;
+        b=ek+RZk/SvuyLoWh2fNp249lo3CeBqrG6tOgGVPX9BuzLKKLnkuDxAsEWZr0SLGKklb
+         XJ21kUwz24VbHPEZIi1haVholViaa3Xwa7am1knB2UqPwTsJ97bdZJP2sTM7uQQ/ljvF
+         70qBdqbYnI2fcHhUdD070oCjtKIgrGpFYGU5s7R0qg1SRCuv/O/iWfU4heeZepJx9VNn
+         MTxWpyGahRE5tQoMv8emS5xukNc74UIb0mtZhonqQZPo70ifGA6vQz9EG4kEeuvp0fiO
+         NLol9Dw4Unt3hBoODHQNxIQwqMgMi8qzm6uo0jZijDodwFahDSjTYIBkK3aCuIP/3Vyb
+         gDyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779818360; x=1780423160;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n0vWMvJYNWuq9BUtLKfBugHf8I5ifX5auG02Ilaszzw=;
-        b=Y3ubiENiGeAJL6n+/fYrBVMBQ4trMAntxe8JBYpD77qgOaanf2+Xjy9L/kK9Qn5QIU
-         iSd2p5pH3sUXwCY+I7O2p1/04WL9+GH4J9uju1O0I88VsXUZuOqQNPBnqF4rxsJOBXyp
-         rH21RsKFSMQi5Hj+9qs7BzbF5UyHYQdDk2xgKHyBLMsBswg5I9KUgvqbRNhsAKaptrHf
-         qKLvfg92xxfu7NEbtXJNMG5D9u2pdmjSEv/vPsuAbjeBBYL9JbK1DICxpbcmh1ldJ2om
-         5B4tV4aN/6KPzuUUD9wQmJLaaiBPXivS0+yACS4c076YIyuDJNzbhIATyuH1r/wUB3Mn
-         UseQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/XWpmgyWj6JdyouPEu56cpeJr2v9N1WY5UV5qTLxTUtMaIUEZFace+/lY1QGHaxouUX7h2txsGszFN6+QoNQo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFA+DWTEj0AHrB1+aMSGne+fOaB0KJSOmnW5OgblA6DcdDkr2M
-	rJcAPdnsmvCcJONNHv/2zSugJdLJKGtbKJj9QCv7V4QIkzfaJOd7mFYEvmUbIOPYis9YehorAw=
+        d=1e100.net; s=20251104; t=1779818361; x=1780423161;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+RFflol+bsWEcr4KlK98zfj4SqOIgycSAYTOMgzlgw0=;
+        b=U9U9NjTg5YvOz/73846txdoBoDxtiQySczy4klV8kO23EkAUneUVvwQ8g3dFVFyT9r
+         EPNwjUbY+pduwEOh+xzYX2lCq9gsL2/Q3E687eLORCotl8gl1GAlyGELaJVKrU1/jLgL
+         WWru4u2yyF0vWcIwE3n2sTImLNeoYlHkgAAHEtlcd9HLMF7ABNGAKEineJV9pv+gxE1V
+         kDVbSUhN7uJ0oxScXlmkBKfzaL2qGSUhDxBYnnNTsXOYw73bS5h/z7tIjzb9006GabBR
+         UpdoJVrAV3N/49mWdJxJ4++ysQBOC5j3xbafhy3N323k8Z/XvAM8597lIpR4+FyVKA4x
+         Srdw==
+X-Forwarded-Encrypted: i=1; AFNElJ9QcrURRwQWJTOlZOHiTLKEBRkDGV5ZTzpEowdk/DPwapYKcci81DfPgZnw7LdazB9DFYzRi2VDPf4xm3PXsrk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv+u91cNmshVgwdiexNsi1ICXrAcNh3Xr13WHJ/PHICRn8lGtr
+	7qeQuxN8baLBAhEJKmAJYd0gLu3jmdE/lSZWCVNsYJeptkz6d5JX2zCaSw/IwkRSaZpkCWCQ2g=
 	=
-X-Received: from wmbfj10.prod.google.com ([2002:a05:600c:c8a:b0:489:1f67:5a81])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3581:b0:490:482c:4391
- with SMTP id 5b1f17b1804b1-490482c4586mr347539725e9.23.1779818360071; Tue, 26
- May 2026 10:59:20 -0700 (PDT)
-Date: Tue, 26 May 2026 19:58:47 +0200
+X-Received: from wmgb20.prod.google.com ([2002:a05:600c:1514:b0:48f:de5b:469b])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:8599:b0:48f:e230:29f4
+ with SMTP id 5b1f17b1804b1-490426ade02mr205371775e9.15.1779818361151; Tue, 26
+ May 2026 10:59:21 -0700 (PDT)
+Date: Tue, 26 May 2026 19:58:48 +0200
+In-Reply-To: <20260526175846.2694125-17-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20260526175846.2694125-17-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5484; i=ardb@kernel.org;
- h=from:subject; bh=U8803ZhDPt8GJ8Atx6VTFHHmARjJ+nX3UDhXHVYH9xo=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIUv0frj6sbw7T/xOHgou4E0vMGDKO3VgAmdWo+XnCVG6T
- 1oEOto7SlkYxLgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwERU7jL8L1Z3r3IPnBwlZzZh
- j9LEyREPWzJrNh55n6V8I1KW299LiZHhyvMT6w/KRn2cG6r8u+luO6dv1+6fH92Tg3pK51buVHT gBAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1021; i=ardb@kernel.org;
+ h=from:subject; bh=Kh7cxWXkNrSTDvznUsNThby14Lf6cpInZSVAIOoSUVU=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIUv0fsQvk8viPq9V2vx6dMWennJ+dkQqIjT+cV/VLZF1b
+ R7nhSZ2lLIwiHExyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgImsLWZk2HK0ii1yonQZe7ZV
+ +ApXXrWOD0eLlqwV53zN/y7vkpHmYUaGZx8+meyLTM/2WSaWZW95P1zc+UOGxrXah+2Pw7MWVjW xAgA=
 X-Mailer: git-send-email 2.54.0.794.g4f17f83d09-goog
-Message-ID: <20260526175846.2694125-17-ardb+git@google.com>
-Subject: [PATCH v6 00/15] arm64: Unmap linear alias of kernel data/bss
+Message-ID: <20260526175846.2694125-18-ardb+git@google.com>
+Subject: [PATCH v6 01/15] arm64: mm: Remove bogus stop condition from
+ map_mem() loop
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, 
@@ -72,128 +76,38 @@ Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
 	Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@kernel.org>, 
 	Andrew Morton <akpm@linux-foundation.org>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
 	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-sh@vger.kernel.org
+	linux-sh@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-One of the reasons the lack of randomization of the linear map on arm64
-is considered problematic is the fact that bootloaders adhering to the
-original arm64 boot protocol (i.e., a substantial fraction of all
-Android phones) may place the kernel at the base of DRAM, and therefore
-at the base of the non-randomized linear map. This puts a writable alias
-of the kernel's data and bss regions at a predictable location, removing
-the need for an attacker to guess where KASLR mapped the kernel.
+The memblock API guarantees that start is not greater than or equal to
+end, so there is no need to test it. And if it were, it is doubtful that
+breaking out of the loop would be a reasonable course of action here
+(rather than attempting to map the remaining regions)
 
-Let's unmap this linear, writable alias entirely, so that knowing the
-location of the linear alias does not give write access to the kernel's
-data and bss regions.
+So let's drop this check.
 
-Changes since v5:
-- Reorder series in ascending order of impact, so that the first few can
-  be merged earlier if desired. This also makes the patch that remaps
-  the data/bss linear alias as tagged redundant, which is therefore
-  dropped.
-- Add patch #3 to address an existing issue spotted by Sashiko
-- Fix thinko in contiguous region check (#5), where the whole region
-  needs to be considered and not only the first entry (dropped Rb as
-  well) - this addresses the kfence issue Sashiko reported on v5 [0]
-- Update commit log on #6 to clarify that changing permission bits on
-  PTE_CONT entries is safe as long as PTE_CONT itself does not change
-- Likewise, drop hunk that adds the PTE_CONT bit to the 'permitted' mask
-  in pgattr_change_is_safe(), as changing it is not safe. (#8)
-- Move kasan's additional page table to pgdir BSS as well
-- Use (NOLOAD) on the .pgdir.bss section so it does not get emitted into
-  vmlinux
-- Add powerpc and SuperH patches to deal with empty_zero_page[] being
-  made const
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/arm64/mm/mmu.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Changes since v4:
-- Update the correct [early] mapping in patch #1
-- Make empty_zero_page[] const instead of __ro_after_init
-- Drop patches that remap the fixmap page tables r/o for now
-- Don't force page mappings for the data/bss linear alias, as it is no
-  longer needed for set_memory_valid()
-- Add acks
-
-Changes since v3:
-- Drop bogus patch adding hierarchical PXN to the fixmap mapping, which
-  breaks the KPTI trampoline (thanks to Sashiko)
-- Add generic patch to move the empty_zero_page to __ro_after_init, as
-  it now lives in generic code.
-- Add patches to remap the linear aliases of the fixmap page tables
-  read-only too - these live at an a priori known offset in the linear
-  map if physical KASLR was omitted, and control a priori known
-  addresses in the virtual kernel space.
-- Rebase onto v7.1-rc1
-
-Changes since v2:
-- Keep bm_pte[] in the region that is remapped r/o or unmapped, as it is
-  only manipulated via its kernel alias
-- Drop check that prohibits any manipulation of descriptors with the
-  CONT bit set
-- Add Ryan's ack to a couple of patches
-- Rebase onto v7.0-rc4
-
-Changes since v1:
-- Put zero page patch at the start of the series
-- Tweak __map_memblock() API to respect existing table and contiguous
-  mappings, so that the logic to map the kernel alias can be simplified
-- Stop abusing the MEMBLOCK_NOMAP flag to initially omit the kernel
-  linear alias from the linear map
-- Some additional cleanup patches
-- Use proper API [set_memory_valid()] to (un)map the linear alias of
-  data/bss.
-
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc; Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: Liz Prucka <lizprucka@google.com>
-Cc: Seth Jenkins <sethjenkins@google.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: linux-mm@kvack.org
-Cc: linux-hardening@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-sh@vger.kernel.org
-
-[0] https://sashiko.dev/#/patchset/20260519151616.2557018-15-ardb%2Bgit%40google.com
-
-Ard Biesheuvel (15):
-  arm64: mm: Remove bogus stop condition from map_mem() loop
-  arm64: mm: Drop redundant pgd_t* argument from map_mem()
-  arm64: mm: Check for pud_/pmd_set_huge() failures on kernel mappings
-  arm64: mm: Preserve existing table mappings when mapping DRAM
-  arm64: mm: Preserve non-contiguous descriptors when mapping DRAM
-  arm64: mm: Permit contiguous descriptors to be manipulated
-  arm64: kfence: Avoid NOMAP tricks when mapping the early pool
-  arm64: mm: Permit contiguous attribute for preliminary mappings
-  arm64: Move fixmap and kasan page tables to end of kernel image
-  arm64: mm: Don't abuse memblock NOMAP to check for overlaps
-  arm64: mm: Map the kernel data/bss read-only in the linear map
-  powerpc/code-patching: Avoid r/w mapping of the zero page
-  sh: cast away constness from the zero page when flushing it from the
-    cache
-  mm: Make empty_zero_page[] const
-  arm64: mm: Unmap kernel data/bss entirely from the linear map
-
- arch/arm64/include/asm/mmu.h     |   2 +
- arch/arm64/include/asm/pgtable.h |   4 +
- arch/arm64/kernel/vmlinux.lds.S  |   8 +-
- arch/arm64/mm/fixmap.c           |   6 +-
- arch/arm64/mm/kasan_init.c       |   2 +-
- arch/arm64/mm/mmu.c              | 153 ++++++++++++--------
- arch/powerpc/lib/code-patching.c |  52 +------
- arch/sh/mm/init.c                |   2 +-
- include/linux/pgtable.h          |   2 +-
- mm/mm_init.c                     |   2 +-
- 10 files changed, 111 insertions(+), 122 deletions(-)
-
-
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index dd85e093ffdb..112fa4a3b0eb 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -1173,8 +1173,6 @@ static void __init map_mem(pgd_t *pgdp)
+ 
+ 	/* map all the memory banks */
+ 	for_each_mem_range(i, &start, &end) {
+-		if (start >= end)
+-			break;
+ 		/*
+ 		 * The linear map must allow allocation tags reading/writing
+ 		 * if MTE is present. Otherwise, it has the same attributes as
 -- 
 2.54.0.794.g4f17f83d09-goog
 
