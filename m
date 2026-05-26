@@ -1,34 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 748483DEAE0
-	for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 11:17:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A69253DF006
+	for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 11:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779794256; cv=none; b=oC1ASn0aOdclp2WrpE0hm+TyTYxuNKdqcyzWoo7WGD3XpOl8/vms9LnmB7ZSaM0M6yp+gUVihqFNtw5e9djLFBJXz7pFDUjcbq+Um5OU/4Y7zJXsRQKRB4g1k8SCLEkT3qZmo67HxN1WdOVSJHpXUUhQ/4uxlml8ucvNl7rR688=
+	t=1779794261; cv=none; b=Bggp974VbpXYkILUhtaQFXYkYC3F2WBBQYsB2/a6k3UfqcV3AeAabbxlAvuy7koq32C8+1j94COXByahMdVWFzpBU0BLI5prbgVCGib3Yhj+ByaZWai1Sy6VXQw1PPS6AVSjmGQ/GZa73J1kGrJSv/auQDfaJb0x+6JRtZTh5Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779794256; c=relaxed/simple;
-	bh=b49mJW7u7F/HnBBk9bL+wnyupZMH+GfasgCyDZuFBY0=;
+	s=arc-20240116; t=1779794261; c=relaxed/simple;
+	bh=g5SIlfhNFVkGHqg4H9aglJHNTgTJdaH8G/qaojIJDnE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ynde1dWRJwCj9tiykTc7KxAA8M7zNp7fnxdocvAZD3udziLsOcFkbWyx6al14AsaSoTIF9p5lx2+kZul8q5XxZkR7T47i4ZpCLod1QpwyIGn0ycUVAIsDWMo27rzKVYftv6Hl0PvKDV3hTOJ5oHSGnF0xW5s3pFp01cKvhxBTW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ps5oUmrv; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=Wljo5NLNFKxBCKUJeKISmxQqr7gWq9wB4TocGSQdxv1jweJcHsO5/n5eGCCrKeHJJdM/Y546gsTB18F14NOVE24d/Z31lmCIipFXQ5IkJOoLHGBAbPeQONoRCJOZ6RMHqGSR4XkEEJjsIy4dUzZdfgRN/GBazVJGYwd0fyCDGFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fi+UYaEU; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ps5oUmrv"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fi+UYaEU"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5228169C;
-	Tue, 26 May 2026 04:17:28 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24AD8169C;
+	Tue, 26 May 2026 04:17:34 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 252543F7D8;
-	Tue, 26 May 2026 04:17:29 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56D133F7D8;
+	Tue, 26 May 2026 04:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1779794254; bh=b49mJW7u7F/HnBBk9bL+wnyupZMH+GfasgCyDZuFBY0=;
+	t=1779794259; bh=g5SIlfhNFVkGHqg4H9aglJHNTgTJdaH8G/qaojIJDnE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ps5oUmrv81CFHgOsUzGKaQPpaJZ1QR9lLYefa/2fcSTDSKhxGBm4ZxEcboZxVnQ5K
-	 ewD5DwjAjkAc456GR+tlcHlRxXMJXGFXKjVXzge5VKu2EkD7NT4UHwTTMNB34CTb55
-	 WTpYFcpG77lC5j6S4yUwbqhMWbuwPVwEMRC0V5+M=
+	b=fi+UYaEUI3ApllTrH+WrLvAM4f0KPGB9ULkC7CRHLYRvBGxLjCI3am8deLBrDJnoI
+	 psOMxzYECWd5moN7XVrVApszsdb2OyHG/qOWJeiRdhZqeY7fLZYcOap+VENpMo8ai0
+	 AlfXf1zM7i+XN0JkdtLCFK7q/9miEXIIWfMQxfys=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 26 May 2026 12:15:56 +0100
-Subject: [PATCH RFC v8 07/24] arm64: Context-switch POR_EL1
+Date: Tue, 26 May 2026 12:15:57 +0100
+Subject: [PATCH RFC v8 08/24] arm64: Initialize POR_EL1 register on
+ cpu_resume()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260526-kpkeys-v8-7-eaaacdacc67c@arm.com>
+Message-Id: <20260526-kpkeys-v8-8-eaaacdacc67c@arm.com>
 References: <20260526-kpkeys-v8-0-eaaacdacc67c@arm.com>
 In-Reply-To: <20260526-kpkeys-v8-0-eaaacdacc67c@arm.com>
 To: linux-hardening@vger.kernel.org
@@ -63,75 +64,56 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  linux-mm@kvack.org, x86@kernel.org, Lorenzo Stoakes <ljs@kernel.org>, 
  Thomas Gleixner <tglx@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779794212; l=2038;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779794212; l=1238;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=b49mJW7u7F/HnBBk9bL+wnyupZMH+GfasgCyDZuFBY0=;
- b=DH+kk3MeFz5TjvUobbUd/xpzAlXHhmItVUn0DiI8T2JBC1c4czfPVlzjEESsGu4H7Nu7SaW3p
- bOsARiQKnNtAhgg6iYTdPiPvAgtwc5bdcCxdocAyjBp4HuYt1uVEWSM
+ bh=X72DCdJX2SxlqX4hafcg68D9WxF9xj/CvQA2EQYYzDc=;
+ b=xTqK9y0/jfN6rkxWDlafJT2Opd2CvHu41k45n5VTUfNU5mVSqsubT5frcWIwDYbLHbHAM1udS
+ SU7qCdKiicNC9JxB02tTDLd6gkulMR5AFGVMO5fVIu4p1YIXdwXjz6H
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 
-POR_EL1 is about to be used by the kpkeys framework, modifying it
-for (typically small) sections of code. If an exception occurs
-during that window and scheduling occurs, we must ensure that
-POR_EL1 is context-switched as needed (saving the old value and
-restoring the new one). An ISB is needed to ensure the write takes
-effect, so we skip it if the new value is the same as the old, like
-for POR_EL0.
+From: Yeoreum Yun <yeoreum.yun@arm.com>
 
+The POR_EL1 register is reset to an unknown value after cpu_suspend().
+Since POR_EL1 always holds POR_EL1_INIT when entering cpu_suspend(),
+initialize POR_EL1 with POR_EL1_INIT before cpu_do_resume().
+
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/include/asm/processor.h |  1 +
- arch/arm64/kernel/process.c        | 10 ++++++++++
- 2 files changed, 11 insertions(+)
+ arch/arm64/kernel/sleep.S | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index e30c4c8e3a7a..6095322343fc 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -192,6 +192,7 @@ struct thread_struct {
- 	u64			svcr;
- 	u64			tpidr2_el0;
- 	u64			por_el0;
-+	u64			por_el1;
- #ifdef CONFIG_ARM64_GCS
- 	unsigned int		gcs_el0_mode;
- 	unsigned int		gcs_el0_locked;
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 033643cd4e5e..e5a9c210fbde 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -51,6 +51,7 @@
- #include <asm/exec.h>
- #include <asm/fpsimd.h>
- #include <asm/gcs.h>
+diff --git a/arch/arm64/kernel/sleep.S b/arch/arm64/kernel/sleep.S
+index f093cdf71be1..e0a6ad85cd24 100644
+--- a/arch/arm64/kernel/sleep.S
++++ b/arch/arm64/kernel/sleep.S
+@@ -3,6 +3,7 @@
+ #include <linux/linkage.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/assembler.h>
 +#include <asm/kpkeys.h>
- #include <asm/mmu_context.h>
- #include <asm/mpam.h>
- #include <asm/mte.h>
-@@ -466,6 +467,9 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ #include <asm/smp.h>
  
- 	ptrauth_thread_init_kernel(p);
- 
-+	if (system_supports_poe())
-+		p->thread.por_el1 = POR_EL1_INIT;
+ 	.text
+@@ -134,6 +135,17 @@ SYM_FUNC_START(_cpu_resume)
+ 	/* load sp from context */
+ 	ldr	x2, [x0, #CPU_CTX_SP]
+ 	mov	sp, x2
 +
- 	if (likely(!args->fn)) {
- 		*childregs = *current_pt_regs();
- 		childregs->regs[0] = 0;
-@@ -716,6 +720,12 @@ static void permission_overlay_switch(struct task_struct *next)
- 		 * of POR_EL0.
- 		 */
- 	}
++#ifdef CONFIG_ARM64_POE
++alternative_if_not ARM64_HAS_S1POE
++	b	.Lskip_por_set
++alternative_else_nop_endif
++	mov_q	x2, POR_EL1_INIT
++	msr_s	SYS_POR_EL1, x2
++	/* isb can be skipped since cpu_do_resume() will do it. */
++.Lskip_por_set:
++#endif /* CONFIG_ARM64_POE */
 +
-+	current->thread.por_el1 = read_sysreg_s(SYS_POR_EL1);
-+	if (current->thread.por_el1 != next->thread.por_el1) {
-+		write_sysreg_s(next->thread.por_el1, SYS_POR_EL1);
-+		isb();
-+	}
- }
- 
- /*
+ 	/*
+ 	 * cpu_do_resume expects x0 to contain context address pointer
+ 	 */
 
 -- 
 2.51.2
