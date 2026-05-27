@@ -1,235 +1,216 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from va-2-112.ptr.blmpb.com (va-2-112.ptr.blmpb.com [209.127.231.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382ED3AB27F
-	for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 20:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5DD2D7DDD
+	for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 03:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779826427; cv=none; b=g8sql0Cr7PTwJ+Yvt4B1dTkyqMcCNnKGjg2hOFyl6xfJcyL9Fk7XI5e5eLizCvCigfv5PjTPJUxpsvlEircLTDTeS+nA/ccyncYwRJZspV/s04yjzQ0y7zI28yLnskD6K33WnpqUAaSBAkJZMIqtoumYXf6q04sUMLlUOVMWsFw=
+	t=1779853091; cv=none; b=E59emU9nRIRc2V8vP9ps6xXFDSe9NWcd7qwrznQQHzUHRWcXSxmVRt4H0Ec0D47MKLuR3yPylU2Qfvn3WPUaWPoD+CdVe+L7kzps5j8DfkW+wONWVl1RrD3RR1pi4UJxGGeLw+8SFq3Z49En06xLAUMJZjp/EmI6wIClf/Zj0nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779826427; c=relaxed/simple;
-	bh=0yozOr3YMMLvIJ7Pg2i20S4dujIxpKQywfb9wu2kFuU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aYuMTcX5LyukJ7KbTQSIgVN5mBIHBWSdKs4gDKjyKTGRTZOdis4nzJe7rZ41xOcqJj7QAv1LdGmEAC1SH+1uTWSmRlTqpe1sWEgD8DUnGoERZv6B+e/IhfDV4VDdJbUfyIG130jqs5D21gH8yKpIsjwppOz53aRwWscU++RD8/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I6IncZVV; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779853091; c=relaxed/simple;
+	bh=oBHrxFElCzNutCNMmENjLg+wOg2FchLkYvGXhTz/KKo=;
+	h=Message-Id:Mime-Version:From:Subject:Date:Content-Type:Cc:To; b=Plr83D5vAsOQpVlkfEedMKu1U+nP1T1bwmAldaS+/sGuIdCHkTdv1j3uNMpkKjIrv/6Q5IYMpCnXMvdtG1E5slmh6/wSX7LjoAChwll7LuZpC0wd4qpXFLHRpJSn07aVneK8k+8ZH9jil+Xa6+WvLGQMx8Vp0X2kzckFAAOG9gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=iBMN3MJx; arc=none smtp.client-ip=209.127.231.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6IncZVV"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-516d634956fso53708061cf.2
-        for <linux-hardening@vger.kernel.org>; Tue, 26 May 2026 13:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779826425; x=1780431225; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AWd93ZUjTZ6c+vkNq74krCnjTZmGTPFD0wYAFgGdBDk=;
-        b=I6IncZVVMPbK8qkIkNla8FiG+HVGxUDKYhD/3gr+T7fKtXtHqBgxfzrBr3RkjeT6D1
-         kgxgMqV90GhpkpY/vvjttREv3OugL5UxQ+hvZH64Jbvm5XOHlBx+JyTk5aPEunU9S7t3
-         4pD2gImFalLPVS6BS05diuIGsSQ9geMdTygFxlVC7+a084oc+HXZ0AOUo4qRfySFGk2f
-         WPKSr3m+BJhnlMbfOzrub4qomWk0zskIOJjiNpTThGNLE+V8RY+h/TKYmM69hQDaCCHg
-         mBLRp3N17Bey7sbnIh5u//YFMBDYh3VLyADerV6UnkmsjgeDDp6J4yeqD+aLoOln0KcL
-         MeKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779826425; x=1780431225;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AWd93ZUjTZ6c+vkNq74krCnjTZmGTPFD0wYAFgGdBDk=;
-        b=m8QJrh5ZO5UpDLSzw4O1Os3FYxz1RxOtCd/i/FHySM0+lAAu89inqga7bGpYBkfhwL
-         tFTEp+a8zOFLTPDPaZkMCCw+HiRp5hGiMWlSYVD9/U//3tI75ZVK5dE5RtDrjLdcAXPa
-         R4ZHtV1QXUFYB8BuaK5iP+ZIX68o+ybH2GRK+G7ajJ8f1kLUw4NF6NhAF2fRS/iIf54S
-         0pB8anJMFgRFrfhd45e/rqxlU54OBokFpXyrv1zCU5rRtC1jRTXAZY4L52XLF/TmY1im
-         77QqaNJMMPSEg/u7RAEqzHJ5BiqMFGifGZlmhFRFiyJfhzZLp25Hi8tQFE8EmLHESN15
-         Pl0g==
-X-Forwarded-Encrypted: i=1; AFNElJ/5hoitjLTSSi2ZUain+veOwbuHniOWc93uGb9E6GAcJ2j5PkgBzVx5lBkWFCde7Rb2sJojU6CHalgxaGFHESg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3Khcw8KG5i7zSHrTsAAycknSG/L5agdIvF431UruuGDX/CGYN
-	miOK5lInFWFudNWsYx0Er7inDI3tKyU6jp9GnY4FNW/UpA6kok17J/nO
-X-Gm-Gg: Acq92OE2NoR/2VOGFVtgaczgtBOyoZXWgT462dRMBbI5NZF+iI8oTAvUTH031gystQh
-	ChcxyXELMPw1o9mPnJ3x+Jc7ub2GHHeu2f0YsZ64F/yjUssWor9ZcUnmk9VjwBQXOFcjqkAQhot
-	9TpzZQ3yhhRVSWdx89LXMKjYYKYUJDFXlYqzZQ5kJAXi6DCQwPkC/O6BfpZ2DfwV0A9JocGOYzb
-	X3HvX/kgG75KcqQZfUltB3jM6nHHyls/7r7LX0I1AmqADK1K4YSo0Vjm9v0Rec5Q3iOieiyHQaF
-	A+cLd6PfCM9Q/kVTjtrMWqVQ2zpNr5cRRj+zLMxIcbWSLdP+2/+CaMw/yN+BRlgSeqe0e8mf7/3
-	NzDqJnhF2HBvVfGlEnSpsmhHT5tu3oZs3yIF3iikhRxuT0/rNKYk0CVEWVnY6t4Csh8xqP0q/oB
-	xrS24/t9w5rZWZ1Ic0LgJVyytD5ZPJZCX056qz7pfT/nKk8F/F8efEMsHxn+9/QlMLi+hDmgBa1
-	fSL+lUsTzTGwylqmxRaic0rT0fc5PTK/gA=
-X-Received: by 2002:a05:622a:8597:b0:50e:601a:2183 with SMTP id d75a77b69052e-516d440a362mr225416341cf.41.1779826424957;
-        Tue, 26 May 2026 13:13:44 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5170b691d15sm15563071cf.11.2026.05.26.13.13.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 13:13:44 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	linusw@kernel.org,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCHv2] dmaengine: ti: omap-dma: turn lch_map into a flexible array
-Date: Tue, 26 May 2026 13:13:27 -0700
-Message-ID: <20260526201327.13225-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="iBMN3MJx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1779853077; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=/qdLUAhg4q/WASG3TkbS7LjyH1II/YAwBuKSGkt3vIY=;
+ b=iBMN3MJxkfS8l74oUA/EbdOyXWaLolQcHzhvXGOoh8cPrbyXCFZF0Njz3j5sF7yeiv/ADU
+ uPrjmvIBgh/SvgOB8E6eIoMKhzh7reMadrja2wSx+kRdhdfLsCR073+MR2mH//0UEzFywj
+ NpvcAgG1nMPsfvig9K08zPy2k1hfRqWXv4oLeAnSqkehA3WZM4j2CV+jehx7uIAffLGmLm
+ f0n8bUp27usINwiYpgdDWfqyY7JIXiGs8H5ZI04raTGozepz2TrLkLfEZmWEvBGFZV49vO
+ pWJJEiOut4zGAaFjDNhq5o1No38CZK3wrrKIV0+GlRY8fUUFn5FPpQovWbB9uQ==
+Message-Id: <20260527033636.28231-1-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Subject: [PATCH v3 0/8] mm: speed up ZONE_DEVICE memmap initialization
+Date: Wed, 27 May 2026 11:36:28 +0800
+X-Mailer: git-send-email 2.45.2
+Content-Type: text/plain; charset=UTF-8
+Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
+	"Li Zhe" <lizhe.67@bytedance.com>
+X-Lms-Return-Path: <lba+26a166713+4b5efd+vger.kernel.org+lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 7bit
+To: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
+	<kees@kernel.org>, <mingo@redhat.com>, <rppt@kernel.org>, 
+	<tglx@kernel.org>
 
-Convert the separately-allocated lch_map pointer array to a C99
-flexible array member at the end of struct omap_dmadev and annotate it
-with __counted_by(lch_count). The probe is reordered so platform_data
-lookup and the lch_count determination happen before the parent
-allocation, letting struct_size() size the FAM and the dedicated
-devm_kcalloc() for lch_map go away.
+This series reduces latency in paths which create or recreate
+ZONE_DEVICE memmaps. Pmem hotplug is a concrete example.
 
-Two allocations collapse into one and the runtime bounds checks from
-__counted_by now apply to every lch_map[] access.
+memmap_init_zone_device() can spend a substantial amount of time
+initializing large ZONE_DEVICE ranges because it repeats nearly
+identical struct page setup for every PFN.
 
-Assisted-by: Claude:Opus-4.7
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+The series addresses that overhead in eight patches.
+
+The first patch updates a stale comment in __init_zone_device_page() so
+it matches the current ZONE_DEVICE refcount rules.
+
+The second patch factors the reusable pieces out of
+__init_zone_device_page() so later patches can share the same logic
+without changing the existing slow path.
+
+The third patch adds set_page_section_from_pfn(), so generic callers
+can update section bits from a PFN without open-coding
+SECTION_IN_PAGE_FLAGS handling.
+
+The fourth patch adds a template-based fast path for ZONE_DEVICE head
+pages. Instead of rebuilding the same struct page state for every PFN,
+it prepares one reusable head-page template through the existing slow
+path, refreshes the PFN-dependent fields before each copy, and then
+copies that template into the destination page.
+
+The fifth patch extends the same template-based approach to compound
+tails, so pfns_per_compound > 1 can also benefit from the fast path.
+
+The sixth patch introduces memcpy_streaming() and
+memcpy_streaming_drain() as a generic interface for write-once copies,
+with a memcpy() fallback for architectures that do not provide a
+specialized backend, or for transfers which an architecture-specific
+backend cannot safely handle with non-temporal stores.
+
+The seventh patch extends x86 memcpy_flushcache() small fixed-size
+fastpaths for naturally aligned copies, so common struct-page-sized
+streaming copies can stay on the inline movnti path while preserving
+forward store order.
+
+The last patch switches the zone-device template-copy path over to
+memcpy_streaming(). It keeps pageblock-aligned PFNs on regular memcpy()
+so pageblock setup can immediately read page metadata back through the
+usual helpers, and it drains streaming stores before later normal
+stores update overlapping or dependent compound-page metadata.
+
+The optimized path is disabled when the page_ref_set tracepoint is
+enabled, and sanitized builds remain on the slow path so their
+instrumented stores are preserved.
+
+Testing
+=======
+
+Tests were run in a VM on an Intel Ice Lake server.
+
+Two PMEM configurations were used:
+  - a 100 GB fsdax namespace configured with map=dev, which exercises
+    the nd_pmem rebind path (pfns_per_compound == 1)
+  - a 100 GB devdax namespace configured with align=2097152, which
+    exercises the dax_pmem rebind path (pfns_per_compound > 1)
+
+For each configuration, the corresponding driver was unbound and
+rebound 30 times. Memmap initialization latency was collected from the
+pr_debug() output of memmap_init_zone_device().
+
+The first bind is reported separately, and the average of subsequent
+rebinds is used as the repeat-run result.
+
+Performance
+===========
+
+nd_pmem rebind, 100 GB fsdax namespace, map=dev
+  Base(v7.1-rc3):
+    First binding: 1486 ms
+    Average of subsequent rebinds: 273.52 ms
+  With patches 1-4 applied:
+    First binding: 1422 ms
+    Average of subsequent rebinds: 246.65 ms
+  Full series:
+    First binding: 1285 ms
+    Average of subsequent rebinds: 114.31 ms
+
+dax_pmem rebind, 100 GB devdax namespace, align=2097152
+  Base(v7.1-rc3):
+    First binding: 1515 ms
+    Average of subsequent rebinds: 313.45 ms
+  With patches 1-5 applied:
+    First binding: 1422 ms
+    Average of subsequent rebinds: 240.42 ms
+  Full series:
+    First binding: 1331 ms
+    Average of subsequent rebinds: 99.37 ms
+
+Li Zhe (8):
+  mm: fix stale ZONE_DEVICE refcount comment
+  mm: factor zone-device page init helpers out of
+    __init_zone_device_page
+  mm: add a set_page_section_from_pfn() helper
+  mm: add a template-based fast path for zone-device page init
+  mm: extend the template fast path to zone-device compound tails
+  string: introduce memcpy_streaming() helpers
+  x86/string: extend memcpy_flushcache() fixed-size fastpaths
+  mm: use memcpy_streaming() in zone-device template copies
+
+ arch/x86/include/asm/string_64.h | 157 ++++++++++++++++++++++---
+ include/linux/mm.h               |  19 ++-
+ include/linux/string.h           |  20 ++++
+ mm/mm_init.c                     | 195 +++++++++++++++++++++++++++----
+ 4 files changed, 352 insertions(+), 39 deletions(-)
+
 ---
- v2: fix sashiko warnings
- drivers/dma/ti/omap-dma.c | 73 ++++++++++++++++++++-------------------
- 1 file changed, 37 insertions(+), 36 deletions(-)
+v2: https://lore.kernel.org/all/20260521040124.10608-1-lizhe.67@bytedance.com/
+v1: https://lore.kernel.org/all/20260515082045.63029-1-lizhe.67@bytedance.com/
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 55ece7fd0d99..0cccd6663628 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -57,7 +57,7 @@ struct omap_dmadev {
- 	unsigned dma_requests;
- 	spinlock_t irq_lock;
- 	uint32_t irq_enable_mask;
--	struct omap_chan **lch_map;
-+	struct omap_chan *lch_map[] __counted_by(lch_count);
- };
- 
- struct omap_chan {
-@@ -1656,36 +1656,55 @@ static const struct omap_dma_config default_cfg;
- static int omap_dma_probe(struct platform_device *pdev)
- {
- 	const struct omap_dma_config *conf;
-+	struct omap_system_dma_plat_info *plat;
- 	struct omap_dmadev *od;
-+	int lch_count;
- 	int rc, i, irq;
- 	u32 val;
- 
--	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
--	if (!od)
--		return -ENOMEM;
--
--	od->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(od->base))
--		return PTR_ERR(od->base);
--
- 	conf = of_device_get_match_data(&pdev->dev);
- 	if (conf) {
--		od->cfg = conf;
--		od->plat = dev_get_platdata(&pdev->dev);
--		if (!od->plat) {
-+		plat = dev_get_platdata(&pdev->dev);
-+		if (!plat) {
- 			dev_err(&pdev->dev, "omap_system_dma_plat_info is missing");
- 			return -ENODEV;
- 		}
- 	} else if (IS_ENABLED(CONFIG_ARCH_OMAP1)) {
--		od->cfg = &default_cfg;
--
--		od->plat = omap_get_plat_info();
--		if (!od->plat)
-+		plat = omap_get_plat_info();
-+		if (!plat)
- 			return -EPROBE_DEFER;
- 	} else {
- 		return -ENODEV;
- 	}
- 
-+	/* Number of available logical channels */
-+	if (!pdev->dev.of_node) {
-+		lch_count = plat->dma_attr->lch_count;
-+		if (unlikely(!lch_count))
-+			lch_count = OMAP_SDMA_CHANNELS;
-+	} else if (of_property_read_u32(pdev->dev.of_node, "dma-channels", &lch_count)) {
-+		dev_info(&pdev->dev, "Missing dma-channels property, using %u.\n",
-+			 OMAP_SDMA_CHANNELS);
-+		lch_count = OMAP_SDMA_CHANNELS;
-+	}
-+
-+	if (lch_count > OMAP_SDMA_CHANNELS) {
-+		dev_err(&pdev->dev, "invalid dma-channels value %u\n", lch_count);
-+		return -EINVAL;
-+	}
-+
-+	od = devm_kzalloc(&pdev->dev, struct_size(od, lch_map, lch_count), GFP_KERNEL);
-+	if (!od)
-+		return -ENOMEM;
-+
-+	od->lch_count = lch_count;
-+	od->plat = plat;
-+	od->cfg = conf ? conf : &default_cfg;
-+
-+	od->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(od->base))
-+		return PTR_ERR(od->base);
-+
- 	od->reg_map = od->plat->reg_map;
- 
- 	dma_cap_set(DMA_SLAVE, od->ddev.cap_mask);
-@@ -1730,19 +1749,6 @@ static int omap_dma_probe(struct platform_device *pdev)
- 			 OMAP_SDMA_REQUESTS);
- 	}
- 
--	/* Number of available logical channels */
--	if (!pdev->dev.of_node) {
--		od->lch_count = od->plat->dma_attr->lch_count;
--		if (unlikely(!od->lch_count))
--			od->lch_count = OMAP_SDMA_CHANNELS;
--	} else if (of_property_read_u32(pdev->dev.of_node, "dma-channels",
--					&od->lch_count)) {
--		dev_info(&pdev->dev,
--			 "Missing dma-channels property, using %u.\n",
--			 OMAP_SDMA_CHANNELS);
--		od->lch_count = OMAP_SDMA_CHANNELS;
--	}
--
- 	/* Mask of allowed logical channels */
- 	if (pdev->dev.of_node && !of_property_read_u32(pdev->dev.of_node,
- 						       "dma-channel-mask",
-@@ -1754,12 +1760,6 @@ static int omap_dma_probe(struct platform_device *pdev)
- 	if (od->plat->dma_attr->dev_caps & HS_CHANNELS_RESERVED)
- 		bitmap_set(od->lch_bitmap, 0, 2);
- 
--	od->lch_map = devm_kcalloc(&pdev->dev, od->lch_count,
--				   sizeof(*od->lch_map),
--				   GFP_KERNEL);
--	if (!od->lch_map)
--		return -ENOMEM;
--
- 	for (i = 0; i < od->dma_requests; i++) {
- 		rc = omap_dma_chan_init(od);
- 		if (rc) {
-@@ -1828,6 +1828,7 @@ static int omap_dma_probe(struct platform_device *pdev)
- 			if (od->ll123_supported)
- 				dma_pool_destroy(od->desc_pool);
- 			omap_dma_free(od);
-+			return rc;
- 		}
- 	}
- 
-@@ -1852,7 +1853,7 @@ static void omap_dma_remove(struct platform_device *pdev)
- 	struct omap_dmadev *od = platform_get_drvdata(pdev);
- 	int irq;
- 
--	if (od->cfg->may_lose_context)
-+	if (od->cfg->needs_busy_check || od->cfg->may_lose_context)
- 		cpu_pm_unregister_notifier(&od->nb);
- 
- 	if (pdev->dev.of_node)
+Changelogs:
+
+v2->v3:
+- Add a leading comment-only cleanup patch to fix the stale ZONE_DEVICE
+  refcount comment, so later refactoring patches no longer carry that
+  stale wording forward.
+- Rename the refcount-policy helper to pagemap_resets_refcount() and
+  make it a bool predicate. Suggested by Mike Rapoport.
+- Update the reusable template in place from the first template
+  fast-path patch onward, so later patches only change the copy
+  primitive instead of introducing an intermediate post-copy fixup
+  step. Suggested by Mike Rapoport.
+- Clean up helper indentation and use early continue in the
+  compound-tail loop. Suggested by Mike Rapoport.
+- Narrow the x86 memcpy_streaming() backend to transfers that can stay
+  entirely on the non-temporal store path, keeping zero-length and
+  unaligned cases on memcpy(). Suggested by Andrew Morton.
+- Restrict the x86 memcpy_flushcache() small-copy fastpath to naturally
+  aligned cases, add volatile/memory clobbers, and preserve forward
+  movnti store order. Suggested by Andrew Morton.
+- Drop the obsolete struct page size/alignment eligibility check from
+  the template fast path now that the intermediate patches use
+  memcpy() and the streaming backend has a safe fallback.
+- Refresh the benchmark results.
+
+v1->v2:
+- Move the pageblock-helper split into patch 1, and add a dedicated
+  set_page_section_from_pfn() helper so generic callers no longer
+  open-code SECTION_IN_PAGE_FLAGS handling. Suggested by Mike Rapoport.
+- Drop the v1 32-bit gating and document instead that CONFIG_ZONE_DEVICE
+  is 64-bit only because it depends on MEMORY_HOTPLUG. Suggested by
+  Mike Rapoport.
+- Replace the v1 BUILD_BUG_ON() struct page layout checks with a runtime
+  fast-path eligibility check that falls back to the slow path when the
+  layout is unsuitable. Suggested by Mike Rapoport.
+- Rename the template fast-path helpers to zone_device_* names for
+  clarity. Suggested by Mike Rapoport.
+- Replace the v1 open-coded arch_optimize_store_u64()/drain() approach
+  with a generic memcpy_streaming()/memcpy_streaming_drain() interface,
+  and move the x86 optimization under memcpy_flushcache(). Suggested by
+  Alistair Popple.
+- Split the old v1 streaming-copy patch into three patches: introduce
+  the generic helper, extend the x86 backend, and then switch mm over
+  to the new interface. This is part of the memcpy-based rework
+  suggested by Alistair Popple.
+- Refresh the performance section and report whole-series results as
+  series-level numbers.
+- Fix a missing memcpy_streaming_drain() in the compound-page
+  initialization path, following review feedback from Andrew Morton.
+
 -- 
-2.54.0
-
+2.20.1
