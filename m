@@ -1,176 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8739F3D668E
-	for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 08:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E546F3563DD
+	for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 09:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779870264; cv=none; b=t0uZfaCadNxR/YA9eR6uRysgBBPIehej6eGLxx4Xvuzx+JMVasWZBW9XdLVHav7GjOLGApal3XXV5hDafuc2QICApU8KBPv+YEJGrSkRhFVCuodHly/40JpLJkDxlUmaORREFChPB4qrrhkmbOhWDvUuN93/REDxW2WXsm+WXqU=
+	t=1779874291; cv=none; b=GSq4WmQc8ndsu77cd6HBRD/S3OteI8ZqsUAIZnyshczw5vWfSLoueFUlvLideR0CXSZIRMJeuQRODjeULrnbbBLLPEJQcHuNs5PriISbWSrkPvDb5guP0Jqt8HGkNkrP+E2gZUCxYDxAvk4T8cf14b6VhHgZfzted+jsvPmYORk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779870264; c=relaxed/simple;
-	bh=bL0SGvpJMA0jKAYtYfSGI2V/YyddodRJo0fhchnToSo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qblg1CO6GsBktSJeNGqqRyBgfGb2/R4VKKZtyzXmT88y3s7b1lJ2sGYrCdGdhUPUOXMjulYcTjXaCEVf6HUkOkjne84mc7ZE7VfepYrhcekBTo+WV2XW373DkXNLZpdWas+HEZRfDgEcajvSr9j6iI8WxwfY5G8K15YvxuKOn5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=kfnU3J83; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="kfnU3J83"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBA6B2880;
-	Wed, 27 May 2026 01:24:16 -0700 (PDT)
-Received: from [10.57.93.47] (unknown [10.57.93.47])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EE113F7D8;
-	Wed, 27 May 2026 01:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1779870261; bh=bL0SGvpJMA0jKAYtYfSGI2V/YyddodRJo0fhchnToSo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kfnU3J8365dlkSur+Ghyy3KcliIFgbIFf/gzBx99N+i08GclVyKtMVVzUswqs3S9H
-	 BbFy3b02pCkmlZFcMYymisrIST9qibyRe//b/zxYjemYcHtRq1ZAzuRlvchaO3WnEr
-	 CFON8PFlu+HITiEmjXFYRSAySy6bNgRNL0wPH9wg=
-Message-ID: <b4eb4ea8-f4d6-4be2-81b1-4a8a46abe94e@arm.com>
-Date: Wed, 27 May 2026 10:24:02 +0200
+	s=arc-20240116; t=1779874291; c=relaxed/simple;
+	bh=MIwNRIQhmMvHp1RJPcezhJTrNh/CER1g8LrsudZZBhg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xkq5FavzaQlE60OW7XL+Q3CcdWYqkNzHIKss4JE0LIWb5fIsepuCEoDH1S2whlHsa62QAkjOM5QZQ0TwEQVYrJchLDD5XBJjhFHNdL/FK2I+qp0OekzjPCvCQWbXtNTiracKUDZYR9XoQaHUr0rk1ygqXwGBZdfkImlCb5FXxx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5774680983dso4018700e0c.0
+        for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 02:31:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779874289; x=1780479089;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1jh4B5AC2q6XDT+EhwYr9A0M1dYuh/w8VgN+zze6pNI=;
+        b=VPyo4uytHV1VVN90j+6mxbT7Ux5dm1iTZe7Hs2AliM1F9/tQ0lq7I5565VqMisDO9y
+         nsQRj80Qh/244kinxwwf2WO/shA2YAdPUF296WVsaZgQPWJkesZbEh9sPnMrlF8nSSoi
+         CMHovR3IhrNy7toHwTCoNZt/6JWU1sBcVtGcnW+vx1VTZgu3mk2PSD1oDbyW4FHMI4we
+         FPM6Zf+yed7Rxa+M/vEmXbIrQnMSusqZgvR8wcy6FfZI5FnJfmRgjIhqEjvW3ao+T+4W
+         moZYfHnV6Z85MNhQl2oj7yAB1LmxMtJiu4NBiRtmoGxsvmZrDNu38F6sWYekAzd6PH70
+         BahA==
+X-Forwarded-Encrypted: i=1; AFNElJ/brWoFWEP6CxAIi3nWW3Ji/TpzAsCWGrXWJPgvKZJPtxCnbgkkk9RkbtrgSJJoZH1XrZlUHNiM/yCgBdAsMQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFZAKUlrrGRHmucp/yJWG3s7fathEAq7CbqGrtFBYEP5MvTHjy
+	/RTB0IbWkEey6lfqdSo6DGhKIAxsLitRwJYnnING5gk23/4TLy8J589LhdDUNZKyxQo=
+X-Gm-Gg: Acq92OEskuvOO88FtP8lbjeVdoa2WQbJKklv1AovKe+B4yuti3QgYdwKP0jUfd5mylg
+	zBXDm0etTTaiRw5AftsIt8ATb3uOmK64pxgZl25hDDI/dFlOtibYFvuidGoYJNGZCnSvbHCe0Oy
+	QDdA61YKEBVbMB1daEv5H7KDb0bKIBs9mXWaawY3DmGbEZ6p1F4x8bh59g1C5MCeLZnfXBfuL7w
+	oQFfHXUykAmY+axYrtRsZ7TzaxL5RS8LOw3gp2w7VIgTlftrBsNT01WcjaiFtyclgVP+oBWqSQ6
+	OLUUisPAXkP8iYhH8cdwY6G+XH01Oya0MPyM8Wm4+kCxBtFnBrWyF83NobPO+IDgx38T0InbA5k
+	6YDdoy3E6gpmqTtPcY66+SFwHlcexfLGTwO+fBXTCvG57svc5BqURA1ZD/RUHutGbkwr6ysHEuC
+	XMT8kqVBUvCVD1rXe5PTpgtuCOYQUtmckc6zWmGq2W6QJgJqn2RZX5qDDNREBYSCF+/O+bpWs=
+X-Received: by 2002:a05:6122:488b:b0:56d:9e98:4676 with SMTP id 71dfb90a1353d-5866357db32mr13048625e0c.13.1779874288841;
+        Wed, 27 May 2026 02:31:28 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-586f25d708bsm20660501e0c.1.2026.05.27.02.31.27
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2026 02:31:28 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-63133de7abcso3682973137.1
+        for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 02:31:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+QgxRoMb9mpNmZ4MFwYRYERYwgio1WI9H50Y6IweVW1vGAZky6daXRqlqQ8lDqpxSULj3efGuQ4tZHgi05E1I=@vger.kernel.org
+X-Received: by 2002:a05:6102:54aa:b0:633:75d3:3545 with SMTP id
+ ada2fe7eead31-67c84ad8af0mr10485506137.30.1779874287601; Wed, 27 May 2026
+ 02:31:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v8 01/24] mm: Introduce kpkeys
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Andrew Morton
- <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "David Hildenbrand (Arm)" <david@kernel.org>, Ira Weiny
- <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Marc Zyngier <maz@kernel.org>,
- Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
- Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-mm@kvack.org, x86@kernel.org, Lorenzo Stoakes <ljs@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>
-References: <20260526-kpkeys-v8-0-eaaacdacc67c@arm.com>
- <20260526-kpkeys-v8-1-eaaacdacc67c@arm.com>
- <CAD++jLnURXzgAgkWCcYX0dLOLqHQw+gn96V1dzDa_0Aoi3430Q@mail.gmail.com>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAD++jLnURXzgAgkWCcYX0dLOLqHQw+gn96V1dzDa_0Aoi3430Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260526175846.2694125-17-ardb+git@google.com> <20260526175846.2694125-30-ardb+git@google.com>
+In-Reply-To: <20260526175846.2694125-30-ardb+git@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 27 May 2026 11:31:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWBcpw8NTg+EVBmwiRWY1001EN94J9XstHG9o_hyUg8yA@mail.gmail.com>
+X-Gm-Features: AVHnY4LA7PW8Q0XMk7lUiX1q-1VC5_AKr651tENC3X6CCFiZsD9Tq-B3NK3PBjs
+Message-ID: <CAMuHMdWBcpw8NTg+EVBmwiRWY1001EN94J9XstHG9o_hyUg8yA@mail.gmail.com>
+Subject: Re: [PATCH v6 13/15] sh: cast away constness from the zero page when
+ flushing it from the cache
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, 
+	Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Liz Prucka <lizprucka@google.com>, 
+	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-sh@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On 26/05/2026 15:17, Linus Walleij wrote:
-> Hi Kevin,
+On Tue, 26 May 2026 at 20:05, Ard Biesheuvel <ardb+git@google.com> wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
 >
-> here is just a few drive-by review comments pertaining to the
-> API which will be used for all architectures wanting to use
-> pkeys.
+> SH performs cache maintenance on the zero page during boot, presumably
+> to ensure that any clearing of BSS that has occurred at startup is
+> visible to other CPUs and DMA devices.
+>
+> The __flush_wback_region() function takes a void* argument, which is
+> conceptually sound, but given that empty_zero_page[] must never be
+> modified, it is being repainted as const, making it incompatible with a
+> void* formal parameter.
+>
+> Given the above, and the fact that __flush_wback_region() is in fact a
+> function pointer variable with multiple implementations, take the easy
+> way out, and cast away the constness in this particular invocation.
+>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Appreciated, thanks!
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> [...]
->
->> Because each architecture implementing pkeys uses a different
->> representation for the pkey register, and may reserve certain pkeys
->> for specific uses, support for kpkeys must be explicitly indicated
->> by selecting ARCH_HAS_KPKEYS and defining the following functions in
->> <asm/kpkeys.h>, in addition to the macros provided in
->> <asm-generic/kpkeys.h>:
->>
->> - arch_kpkeys_set_context()
->> - arch_kpkeys_restore_pkey_reg()
->> - arch_supports_kpkeys()
->>
->> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> I'm following so far.
->
-> Is there no need for something like
->
-> ctx = arch_kpkeys_request_context(KEY_TYPE) ?
->
-> I'm just thinking of the scenario that e.g. two architectures want
-> to request the same type of key for some generic resource, but
-> the underlying implementation is vastly different for the two
-> architectures, so relying on hard-coded arch-specific constants
-> may not work. I'm also thinking about archs supporting different
-> versions/types of kpkeys in a multi-platform executable kernel
-> that may execute on several different silicon with the same ISA.
+Gr{oetje,eeting}s,
 
-I'm not sure I understand what potential limitations this is trying to
-address. The only thing that is imposed by the framework is the value of
-KPKEYS_CTX_*, which is purely symbolic. Everything else is up to the
-architecture, including the value of each key (which could be determined
-at runtime if needed) and the permissions associated to each context.
+                        Geert
 
-Conceptually a context is a set of permission overlays for all existing
-keys, it doesn't have to be tied to just one key.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> Maybe this is too much upfront design, I understand it needs to
-> be kept simple.
->
->> +#ifndef KPKEYS_PKEY_DEFAULT
->> +#define KPKEYS_PKEY_DEFAULT    0
->> +#endif
-> (...)
->> +#define KPKEYS_CTX_DEFAULT     0
->> +
->> +#define KPKEYS_CTX_MIN         KPKEYS_CTX_DEFAULT
->> +#define KPKEYS_CTX_MAX         KPKEYS_CTX_DEFAULT
-> I was thinking an enum:
->
-> enum kpkey_type {
->     KPKEY_DEFAULT = 0,
->     KPKEY_MMU_TABLE = 1,
->    ....
-> };
->
-> since this is what is used later.
->
->> +/**
->> + * kpkeys_set_context() - switch kpkeys context
->> + * @ctx: the context to switch to
->> + *
->> + * Switches to specified kpkeys context. @ctx must be a compile-time
->> + * constant. The arch-specific pkey register will be updated accordingly, and
->> + * the original value returned.
->> + *
->> + * Return: the original pkey register value if the register was written to, or
->> + *         KPKEYS_PKEY_REG_INVAL otherwise (no write to the register was
->> + *         required).
->> + */
->> +static __always_inline u64 kpkeys_set_context(int ctx)
-> Should ctx be unsigned here? I'm nor sure what a negativ context
-> would mean.
-> kpkeys_set_context(unsigned int ctx)
-
-That's a good point, now that we say "context" and not "level" an enum
-would be a better representation. I would directly use:
-
-    u64 kpkeys_set_context(enum kpkeys_ctx ctx);
-
-... unless we really need another layer of abstraction.
-
-- Kevin
-
-> And then I was thinking:
->
-> unsigned int kpkeys_request_context(enum kpkey_type type) {}...
->
-> + arch_ -prefixed version of the same.
->
-> unsigned int ctx;
-> ctx = kpkeys_request_context(KPKEY_MMU_TABLE);
-> (...)
->
-> Constant sinking in the compiler will optimize the arch
-> function to a constant in the object code so it will still
-> be fast just a bit more talkative in source form.
->
-> Yours,
-> Linus Walleij
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
