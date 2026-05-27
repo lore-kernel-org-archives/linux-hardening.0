@@ -1,139 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DF5428462;
-	Wed, 27 May 2026 14:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22903D7D75
+	for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 16:32:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779893906; cv=none; b=NGfrfdgZm2oUhiYoaHPfa+bjXfNZVX+wdUktN53j+6QXhI1U36ufrDR38qHXL1wDM5SP21uGaC63UqSM4auuysmE9t9HpnyBTlJHBtRn/bjpBXZpxtwI2OyFMeJPbOCS8IgakOTEE61oF0aTVPnlBZtq9hWq4hksL9u/e1qCi3M=
+	t=1779899534; cv=none; b=VtsNA2KInbmKVciMBGOFpC7EsB4g++k/dJOaK3njjiWoDWlzqlk3wzJfnZCAYfHSlb4VBoceMDUkc6yTglLNfmARFyyiLuEh3eCYYo/dvELrQ+x/SdnVB3CADmOI6S4CZREnp3zOgrqLm6/LPrXoWewXel7OtvLKbcg22b+y3UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779893906; c=relaxed/simple;
-	bh=MRLICiZ+rjJsed3vguC9Zgv35Sc8atS94GZHY7uBqqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jqwwd+6vq7yT9uKrzXylHDpXEvIX+PaBnWFz5se3S25AtJ/Hg5q488VNARqv/yNpnd3Qhb2rssJ5nB8RYVYXbnaPu59AA3g4i4eUFlyaJ5H6N6QCveokXPJiKNzErIxs1Cxgxz5UNZIGSpCVdAwOXplDrfnU8RvThZVHoJ4b9yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=av2//UI8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779899534; c=relaxed/simple;
+	bh=IZNU5enikFosUUD+8KFzVBk4h4q4Snn/zms4hSu3trY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NUwTI56HPPwDyZv6riCOpP+UtgEKDAlXAUglbMZpzokwhiz6rGfJgBini20HWuPeIWuqBCAk7jcCDbwDtW63hMx0os+GJ++J+x601ICyeaLHvw70zYnvkFDZuGcPNGdXBmEotZ8FNV74WMyvqYts3bDmsI2mcGV1TPug7IHz6Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGphHJR1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="av2//UI8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72AF81F000E9;
-	Wed, 27 May 2026 14:58:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGphHJR1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E541F00ACF
+	for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 16:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779893904;
-	bh=DHo3mmxyjC2BUGhmNPlIkKerVXLTLbx5FTRg7KoVcyk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=av2//UI8EGTCsbZTUGHUlnE0Z/GwLivyUm0f8dAiq5HnFkRLuFoWMEwX36j6CLIm4
-	 rL00g5qKGdf6zTfLg42uSKXet6AAvDhD1PXtocJqBR8Us6EyZCncdQC3ZvkvIDvbbC
-	 O/7rpY4GDCIbqpvPgRlmWTH9Q0vX7QgiZXYxs/hXBmZaPJRiM0/nERMbAJY+YKxGle
-	 j7hYyyBz89zB9IGadqSvaLiYMgq0zQK2J++nJPJ7BLgEbj5h5vsQEwJ/epyrmna86B
-	 HgrO0feq7RMiBDWDBz+SOAgrYwQsCPTZSSNEnlkPCTapeCvw6SSo5MvP0wUA3p2Uje
-	 Ylx4IiftvnZEw==
-Date: Wed, 27 May 2026 15:58:20 +0100
-From: Conor Dooley <conor@kernel.org>
-To: CL Wang <cl634@andestech.com>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, kees@kernel.org,
-	gustavoars@kernel.org, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, tim609@andestech.com
-Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: Add support for
- ATCDMAC300 DMA engine
-Message-ID: <20260527-lazy-rimless-eb6e8f159aa9@spud>
-References: <20260527132815.1211195-1-cl634@andestech.com>
- <20260527132815.1211195-2-cl634@andestech.com>
+	s=k20260515; t=1779899532;
+	bh=M1zzhCjZOtsEXfcviTV2bXM7KM8VdwloR+Jo7p0MZmk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=fGphHJR15hqLAXNil3f6C2mI7cdP7dQlFE6wvmA+1CMv1gnnM3MdGLUewFOih0Ugn
+	 OOQ1nBRC1S+NA0yeUbQnXF8X/ta7Slju+qyk0rkyattZ5EUhTh2EC35OO6i5hRkvX+
+	 pYQo6JZqM7+FK392ndumgRTfvwYyH+8oIi1psgqCaE6c4G4bX3PeKGNDheWOXRrDPa
+	 rMcPQDF90ym6+EqQXmsslkr+mew2Ocf6o37t4pZG71+1fjDGkaO/N2AXeHyyKoQ2b6
+	 4s1ejhT4y8Ad2abnVE5nIIHyC6iPwMSwDbxn8H+Ft0UP1EB28zFhIvdN+Z7ybemBa5
+	 FEiSJ9n1FaG3Q==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5a85b30dd54so12787032e87.2
+        for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 09:32:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/HtydZxDaC3WxXLiAW6v/ccyoBiWdfo4z64PQY4Gng/AqrPkY2jMYX5wATIZq0Eq6pnYNMpdW3NqX6bgHbJl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypA2QTbmfl7yeumQXok7jujAu3BazGbzSrGGyQ26BM02ySGQjn
+	COSPnbJXka5tqrgz0oDGre2sqVLvdWNl1NOgT3oTQQwNkdH4PLRohjNB7w5skN232L07F1ssoVy
+	s0j5fJQPcmeMzsxxAlb7CJXuGuKPtRPM=
+X-Received: by 2002:ac2:4213:0:b0:5a8:88d5:a502 with SMTP id
+ 2adb3069b0e04-5aa3238b54bmr5492784e87.39.1779899531348; Wed, 27 May 2026
+ 09:32:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="XtUveJaYn/QeRoGU"
-Content-Disposition: inline
-In-Reply-To: <20260527132815.1211195-2-cl634@andestech.com>
-
-
---XtUveJaYn/QeRoGU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20260525220126.93990-1-rosenp@gmail.com>
+In-Reply-To: <20260525220126.93990-1-rosenp@gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Wed, 27 May 2026 18:31:59 +0200
+X-Gmail-Original-Message-ID: <CAD++jLn4ccMwsnuegwqopmNkNpWs-UBe8FZUjZr_ibP2GMfuug@mail.gmail.com>
+X-Gm-Features: AVHnY4LELlVLdsq-uvMYVt7h458Lgq1OVUsLjfEvHdLcuAgWFO5uTQA3ji-lXFc
+Message-ID: <CAD++jLn4ccMwsnuegwqopmNkNpWs-UBe8FZUjZr_ibP2GMfuug@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rza2: embed pins in the priv struct
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"open list:PIN CONTROLLER - RENESAS" <linux-renesas-soc@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 27, 2026 at 09:28:13PM +0800, CL Wang wrote:
-> Document devicetree bindings for Andes ATCDMAC300 DMA engine
->=20
-> ATCDMAC300 is the IP name, which is embedded in AndesCore-based
-> platforms or SoCs such as AE350 and Qilai.
->=20
-> Signed-off-by: CL Wang <cl634@andestech.com>
->=20
-> ---
->   Changes for v3:
->     - Rename DT binding file from andestech,qilai-dma.yaml to
->       andestech,ae350-dma.yaml
->     - Deprecate IP-core-based compatible usage and align with
->       SoC/platform-based
->     - Dropped Acked-by tag from Conor Dooley due to the above change.
-> ---
->  .../bindings/dma/andestech,ae350-dma.yaml     | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/andestech,ae350=
--dma.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/andestech,ae350-dma.ya=
-ml b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
-> new file mode 100644
-> index 000000000000..0f5ffdf1d160
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/andestech,ae350-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Andes ATCDMAC300 DMA Controller
-> +
-> +maintainers:
-> +  - CL Wang <cl634@andestech.com>
-> +
-> +allOf:
-> +  - $ref: dma-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - andestech,qilai-dma
-> +          - const: andestech,ae350-dma
-> +      - const: andestech,ae350-dma
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description:
-> +      First entry is the DMA controller register range (required).
-> +      Second entry is the cache control in IOCP controller (optional).
+On Tue, May 26, 2026 at 12:01=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wro=
+te:
 
-This can be an items list FYI. Syntax is
-reg:
-  minItems: 1
-  items:
-    - description: foo
-    - description: bar
+> Turn the separately allocated pinctrl_pin_desc array into a flexible
+> array member of struct rza2_pinctrl_priv, annotated with
+> __counted_by(npins). The pin count is now computed before allocation so
+> struct_size() can size the combined object, collapsing two allocations
+> into one.
+>
+> Assisted-by: Claude:Opus-4.7
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
-Fix that and you can re-add my ack
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-pw-bot: changes-requested
+Overall this looks interesting!
 
---XtUveJaYn/QeRoGU
-Content-Type: application/pgp-signature; name="signature.asc"
+>         struct rza2_pinctrl_priv *priv;
+> +       int npins;
 
------BEGIN PGP SIGNATURE-----
+unsigned int npins
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCahcGjAAKCRB4tDGHoIJi
-0sIbAQC97jy6WNEB4GXyd9hiuJ2x13THdVio1JcQ5/ZcvUN/OAD/Z69K8zj2+32t
-ZFKkk2MhZP/biASRh38BsVR0Adl/mAA=
-=9boa
------END PGP SIGNATURE-----
+Fix the variable in the struct too if it's just an int.
 
---XtUveJaYn/QeRoGU--
+>         int ret;
+>
+> -       priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +       npins =3D (int)(uintptr_t)of_device_get_match_data(&pdev->dev) *
+> +                     RZA2_PINS_PER_PORT;
+
+Uh a double cast, why? Just cast to (unsigned int).
+
+I know this was in the code before, but take this opportunity to fix it.
+
+Yours,
+Linus Walleij
