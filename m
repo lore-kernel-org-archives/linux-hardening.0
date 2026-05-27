@@ -1,204 +1,188 @@
-Received: from va-2-114.ptr.blmpb.com (va-2-114.ptr.blmpb.com [209.127.231.114])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200AD383C95
-	for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 03:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CA83B8127
+	for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 07:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779853267; cv=none; b=CDfMmw0MXZzH/XF6B7beDCPhOf1jvCK2Aolmr7oBMoGqqgbFe2trCcgLDAMwcll/WFJFmPZqSAnygYl6836zygIj01M7n7O7ozOmVBUNa5xxMEwThX2m3LDJjWZiKp4/WtVQpBhzVkmusIy/Vih/YFlQLfLC2J/hgN6TtAKudEM=
+	t=1779866054; cv=none; b=b1pQFDs9BTCigKCs6Ij3LtiSuV5uaEQAw2HTxxH8mh1u1ZOnXgRSLr0399zO8WIEgoS4DTjF46zNdh1eBzvx742kYEflF8J5cj2eTNSg4znp/+1EzHRCq0+IMBrlmde40agAh79FechYq7OdsqH89fTpiBvJwjaxGASy+EbZLvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779853267; c=relaxed/simple;
-	bh=5VhLv2LjLV5L+tN7bDrC78lxsMFkMu3odqF+TAzBMb4=;
-	h=To:Mime-Version:References:Date:Content-Type:Cc:Subject:
-	 In-Reply-To:From:Message-Id; b=lcwdeTNxrgl+vf/pJ2MfBwop3A+iqvcsM2iw4bCMQBnyDvHxOZ0pir9TEOmhJp9y2/yw02IF0RWdM7bpWBWF9VUkcPGC4EZAtpQPJgYbatfnhzuKseZme98JMaudK2boF97Vum/5vgUavfbNYHkI+2X/QRhzCAp3FRHrWp+1GUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=jxGxZUs3; arc=none smtp.client-ip=209.127.231.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1779866054; c=relaxed/simple;
+	bh=qvcDS+0ZZcUcSmH0EXhiL87qB3apltPD6B520dTxjpE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r3t76QLfrsSbyZLxFI9cnGZ0nW5InxTelLNMo1Rx1BBwVg9hxHQG1c+UcCbL6QxAVwXfb9rH+0WzqmC1lRQwGKqcCmP8I7dpGtN3O4R4pmOE9tMyt59AF9Yauw2VgF7dTzH1+7Jdh7Q5fNIvwXR3MI8Dc59y1a6DQbgRaG3Ke2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fmzXCo0B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tG/GQzcf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fmzXCo0B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tG/GQzcf; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="jxGxZUs3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1779853253; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=/2RvXz8oWe2/xVcoRxII+0kZXLSgfUTV6Cn2seMf/Rg=;
- b=jxGxZUs3u2P4WcI+TbLrf1iJPbfO2E927/UO7AbjPGoyrqScQm+seFYm/WaaloWm9c5OhG
- CaiCfhVRWd7E4dyhdPw7AcSzVAMF0FoQcu4RrI6QjbIqq/lcLvCaCmNvpCn8c1VXkp9NR1
- R8ltVzJBXD93p17b9n5T8bgR3Ui70rmuQRxIB2ioFZfSoEhtRiE7YQNg5qdDFQUJF/uM2q
- qsH8PvlckD2t5q2i6MwQeT12yQmqNTf9CNJkRhSm+TkKksxSI8C/T4UPetnnp7DDkarKaD
- RIpPZh0E21NPr4Cao6omM2bP2e0b1XmS0bv31+ZiTpgH4UZeBl0FWnle0319ZQ==
-X-Mailer: git-send-email 2.45.2
-To: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
-	<kees@kernel.org>, <mingo@redhat.com>, <rppt@kernel.org>, 
-	<tglx@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fmzXCo0B";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tG/GQzcf";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fmzXCo0B";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tG/GQzcf"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 16D0F6B2A5;
+	Wed, 27 May 2026 07:14:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779866050; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rlc0D+brFLEZzu9MUAeu/fVFuNp+Tp+vKmpJdrfg+pQ=;
+	b=fmzXCo0Byt9IYnknQYcioyUGk1BXp2/s7S62MysYY8D6xo0ytDCeNhkL/81vPUgUas+XHh
+	9oIN79KgO6h/Iw0mfeDcot4ZyS/8lSoXfHKkaB/OfMgzYtBBzAIs0BU4VHnHXxALyEz051
+	C8LZEwoB/ZGF1urKBjaAyoXaJzU2kX4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779866050;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rlc0D+brFLEZzu9MUAeu/fVFuNp+Tp+vKmpJdrfg+pQ=;
+	b=tG/GQzcfuWV0zmNUkGp3xBlUaosMjh/vMv+3eTJ/uOoPAsF70MwqmeHiSfgxtaZqdsFcFk
+	ncHjipb0Tcxt2pCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779866050; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rlc0D+brFLEZzu9MUAeu/fVFuNp+Tp+vKmpJdrfg+pQ=;
+	b=fmzXCo0Byt9IYnknQYcioyUGk1BXp2/s7S62MysYY8D6xo0ytDCeNhkL/81vPUgUas+XHh
+	9oIN79KgO6h/Iw0mfeDcot4ZyS/8lSoXfHKkaB/OfMgzYtBBzAIs0BU4VHnHXxALyEz051
+	C8LZEwoB/ZGF1urKBjaAyoXaJzU2kX4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779866050;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rlc0D+brFLEZzu9MUAeu/fVFuNp+Tp+vKmpJdrfg+pQ=;
+	b=tG/GQzcfuWV0zmNUkGp3xBlUaosMjh/vMv+3eTJ/uOoPAsF70MwqmeHiSfgxtaZqdsFcFk
+	ncHjipb0Tcxt2pCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 939FA5A6E3;
+	Wed, 27 May 2026 07:14:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id I37bIsGZFmpVJwAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 27 May 2026 07:14:09 +0000
+Message-ID: <7878d133-9324-452d-88f1-c9adaf9364b5@suse.de>
+Date: Wed, 27 May 2026 09:14:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260527033636.28231-1-lizhe.67@bytedance.com>
-Date: Wed, 27 May 2026 11:36:36 +0800
-X-Lms-Return-Path: <lba+26a1667c3+f86a1d+vger.kernel.org+lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
-	"Li Zhe" <lizhe.67@bytedance.com>
-Subject: [PATCH v3 8/8] mm: use memcpy_streaming() in zone-device template copies
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-In-Reply-To: <20260527033636.28231-1-lizhe.67@bytedance.com>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Message-Id: <20260527033636.28231-9-lizhe.67@bytedance.com>
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] scsi: scsi_transport_fc: widen FPIN pname walker
+ counter to u32
+To: Michael Bommarito <michael.bommarito@gmail.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Nilesh Javali <njavali@marvell.com>,
+ Himanshu Madhani <himanshu.madhani@oracle.com>,
+ Shyam Sundar <ssundar@marvell.com>, James Smart <james.smart@broadcom.com>,
+ Hannes Reinecke <hare@kernel.org>, John Meneghini <jmeneghi@redhat.com>,
+ Bryan Gurney <bgurney@redhat.com>, Justin Tee <justin.tee@broadcom.com>,
+ Christoph Hellwig <hch@lst.de>, David Laight <david.laight.linux@gmail.com>,
+ Keith Busch <kbusch@kernel.org>, Kees Cook <kees@kernel.org>,
+ linux-scsi@vger.kernel.org, linux-nvme@lists.infradead.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260519190615.2761667-1-michael.bommarito@gmail.com>
+ <20260520133015.1018937-1-michael.bommarito@gmail.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20260520133015.1018937-1-michael.bommarito@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com,oracle.com,HansenPartnership.com];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[marvell.com,oracle.com,broadcom.com,kernel.org,redhat.com,lst.de,gmail.com,vger.kernel.org,lists.infradead.org];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TAGGED_RCPT(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
 
-The template fast path still leaves the actual copy sequence up to the
-compiler. Use the streaming-copy helpers introduced in the previous
-patches for the ZONE_DEVICE template-copy path so common mm code can
-request a write-once copy primitive without embedding arch-specific
-store layout in the generic layer.
+On 5/20/26 15:30, Michael Bommarito wrote:
+> An adjacent Fibre Channel fabric actor that can deliver an FPIN ELS
+> frame to an lpfc or qla2xxx Linux initiator can trigger a non-return
+> in the generic FC transport. This is not a local userspace or IP
+> network path; the attacker must be able to inject fabric traffic, for
+> example as a compromised switch or fabric controller, or as a same-zone
+> N_Port on a fabric that permits source spoofing.
+> 
+> The Link-Integrity and Peer-Congestion FPIN walkers used a u8 loop
+> counter against the 32-bit on-wire pname_count field, and did not bound
+> pname_count by the descriptor body already validated by the TLV walker.
+> A pname_count of 256 therefore wraps the counter and keeps the loop
+> condition true indefinitely.
+> 
+> Factor the shared pname_list[] walk into one helper, widen the counter
+> to u32, and clamp pname_count against the entries that fit in the
+> descriptor body before iterating.
+> 
+> Fixes: 3dcfe0de5a97 ("scsi: fc: Parse FPIN packets and update statistics")
+> Cc: stable@vger.kernel.org
+> Assisted-by: Claude:claude-opus-4-7
+> Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
+> ---
+> Changes in v4:
+> - Use min() rather than min_t(u32, ...) for the pname_count clamp and
+>    fold away the temporary max_count variable, as David Laight suggested.
+> 
+> Changes in v3:
+> - State the fabric-adjacent threat model explicitly in the commit
+>    message and clarify that this is not local userspace or IP-network
+>    reachable.
+> - Use min_t(u32, ...) for the pname_count clamp, as Christoph suggested.
+> - Use FC_TLV_DESC_LENGTH_FROM_SZ() instead of open-coding the descriptor
+>    body length calculation.
+> - Factor the duplicate LI and peer-congestion pname walker into a common
+>    helper while preserving the LI-only host-stat update.
+> 
+> Changes in v2:
+> - Drop the redundant cover letter shipped with v1.  A single-patch send
+>    does not need one, and the v1 cover carried stale draft markers.
+> 
+>   drivers/scsi/scsi_transport_fc.c | 77 +++++++++++++++++---------------
+>   1 file changed, 41 insertions(+), 36 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-ZONE_DEVICE memmap initialization is a write-once path: each struct page
-is populated once and is not expected to be reused from cache
-immediately afterwards. A regular cached copy can therefore incur
-write-allocate traffic and pollute the cache without much benefit.
-Using memcpy_streaming() lets this path use an architecture-optimized
-streaming copy where available, while still degrading to memcpy() on
-architectures that do not provide a specialized implementation.
+Cheers,
 
-Keep pageblock-aligned PFNs on memcpy() so pageblock initialization can
-immediately read back page metadata without introducing a
-read-after-streaming dependency. For the remaining PFNs, use
-memcpy_streaming() so the hot path can avoid write-allocate traffic
-while still leaving unsupported or unsuitable cases to the fallback
-implementation.
-
-When the streaming backend uses non-temporal stores, order them before
-entering memmap_init_compound(), before prep_compound_head() updates the
-overlapping compound metadata, and before returning from
-memmap_init_zone_device().
-
-Keep sanitized builds on the slow path so KASAN/KMSAN retain their
-instrumented stores.
-
-Tested in a VM with a 100 GB fsdax namespace device configured with
-map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
-server.
-
-Test procedure:
-Rebind the nd_pmem and dax_pmem driver 30 times and collect the memmap
-initialization time from the pr_debug() output of
-memmap_init_zone_device().
-
-Base(v7.1-rc3):
-  First binding for nd_pmem driver: 1486 ms
-  Average of subsequent rebinds: 273.52 ms
-
-  First binding for dax_pmem driver: 1515 ms
-  Average of subsequent rebinds: 313.45 ms
-
-With this series:
-  First binding for nd_pmem driver: 1285 ms
-  Average of subsequent rebinds: 114.31 ms
-
-  First binding for dax_pmem driver: 1331 ms
-  Average of subsequent rebinds: 99.37 ms
-
-This reduces the average rebind time by about 58.2% for nd_pmem and
-68.3% for dax_pmem.
-
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
----
- mm/mm_init.c | 47 +++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 2 deletions(-)
-
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index d5ccb49a048f..1f56765b92e1 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1070,11 +1070,21 @@ static void __ref zone_device_page_init_slow(struct page *page,
- 
- static inline bool zone_device_page_init_optimization_enabled(void)
- {
-+	/*
-+	 * Keep sanitized builds on the slow path so their stores stay
-+	 * instrumented.
-+	 */
-+	if (IS_ENABLED(CONFIG_KASAN) || IS_ENABLED(CONFIG_KMSAN))
-+		return false;
-+
- 	/*
- 	 * The template fast path copies a preinitialized struct page image.
- 	 * Skip it when the page_ref_set tracepoint is enabled.
- 	 */
--	return !page_ref_tracepoint_active(page_ref_set);
-+	if (page_ref_tracepoint_active(page_ref_set))
-+		return false;
-+
-+	return true;
- }
- 
- static inline void zone_device_template_head_page_init(struct page *template,
-@@ -1120,9 +1130,19 @@ static void zone_device_page_init_from_template(struct page *page,
- 	 * 'template' carries the invariant portion of a ZONE_DEVICE struct
- 	 * page. Update the PFN-dependent fields in place before copying it
- 	 * to the destination page.
-+	 *
-+	 * pageblock-aligned pages immediately feed
-+	 * init_pageblock_migratetype(), which reads back page metadata via
-+	 * helpers like page_zone(page). Avoid a read-after-streaming
-+	 * dependency for these rare pages by using regular cached stores
-+	 * instead of non-temporal ones.
- 	 */
- 	zone_device_page_update_template(template, pfn);
--	memcpy(page, template, sizeof(*page));
-+	if (unlikely(pageblock_aligned(pfn)))
-+		memcpy(page, template, sizeof(*page));
-+	else
-+		memcpy_streaming(page, template, sizeof(*page));
-+
- 	zone_device_page_init_pageblock(page, pfn);
- }
- 
-@@ -1184,6 +1204,15 @@ static void __ref memmap_init_compound(struct page *head,
- 		prep_compound_tail(page, head, order);
- 		set_page_count(page, 0);
- 	}
-+
-+	/*
-+	 * prep_compound_head() updates compound metadata in struct folio fields
-+	 * that alias the first tail-page descriptors. When the tail pages above
-+	 * were populated with non-temporal stores, order those writes before the
-+	 * overlapping metadata updates below.
-+	 */
-+	if (use_template)
-+		memcpy_streaming_drain();
- 	prep_compound_head(head, order);
- }
- 
-@@ -1232,10 +1261,24 @@ void __ref memmap_init_zone_device(struct zone *zone,
- 		if (pfns_per_compound == 1)
- 			continue;
- 
-+		/*
-+		 * memmap_init_compound() immediately updates compound-head
-+		 * metadata. If the head-page template copy above used
-+		 * non-temporal stores, order them before entering the
-+		 * compound setup path.
-+		 */
-+		if (use_template)
-+			memcpy_streaming_drain();
-+
- 		memmap_init_compound(page, pfn, zone_idx, nid, pgmap,
- 				     compound_nr_pages(altmap, pgmap),
- 				     use_template);
- 	}
-+	/*
-+	 * Drain any remaining non-temporal stores before returning.
-+	 */
-+	if (use_template)
-+		memcpy_streaming_drain();
- 
- 	pr_debug("%s initialised %lu pages in %ums\n", __func__,
- 		nr_pages, jiffies_to_msecs(jiffies - start));
+Hannes
 -- 
-2.20.1
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
