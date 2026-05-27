@@ -1,114 +1,92 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Atcsqr.andestech.com (exmail.andestech.com [60.248.187.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E546F3563DD
-	for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 09:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B95332EAE;
+	Wed, 27 May 2026 13:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.187.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779874291; cv=none; b=GSq4WmQc8ndsu77cd6HBRD/S3OteI8ZqsUAIZnyshczw5vWfSLoueFUlvLideR0CXSZIRMJeuQRODjeULrnbbBLLPEJQcHuNs5PriISbWSrkPvDb5guP0Jqt8HGkNkrP+E2gZUCxYDxAvk4T8cf14b6VhHgZfzted+jsvPmYORk=
+	t=1779888532; cv=none; b=PojQCuuR9S/4rLQEXMk1kZA/4T2VhfOsYQbFUgaoasPGNMPtVFIIQEoZHuoMEy7e6WD4uWAHsLo4qJ8+ug0aHp2u5u20XMBLsV0inbhr6vzjh47k7LXGvEJrbfPOruC45GI99i3uOR7XRuixcmVPcJgSlZ7ZZZFiiHu6POZOEx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779874291; c=relaxed/simple;
-	bh=MIwNRIQhmMvHp1RJPcezhJTrNh/CER1g8LrsudZZBhg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xkq5FavzaQlE60OW7XL+Q3CcdWYqkNzHIKss4JE0LIWb5fIsepuCEoDH1S2whlHsa62QAkjOM5QZQ0TwEQVYrJchLDD5XBJjhFHNdL/FK2I+qp0OekzjPCvCQWbXtNTiracKUDZYR9XoQaHUr0rk1ygqXwGBZdfkImlCb5FXxx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5774680983dso4018700e0c.0
-        for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 02:31:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779874289; x=1780479089;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1jh4B5AC2q6XDT+EhwYr9A0M1dYuh/w8VgN+zze6pNI=;
-        b=VPyo4uytHV1VVN90j+6mxbT7Ux5dm1iTZe7Hs2AliM1F9/tQ0lq7I5565VqMisDO9y
-         nsQRj80Qh/244kinxwwf2WO/shA2YAdPUF296WVsaZgQPWJkesZbEh9sPnMrlF8nSSoi
-         CMHovR3IhrNy7toHwTCoNZt/6JWU1sBcVtGcnW+vx1VTZgu3mk2PSD1oDbyW4FHMI4we
-         FPM6Zf+yed7Rxa+M/vEmXbIrQnMSusqZgvR8wcy6FfZI5FnJfmRgjIhqEjvW3ao+T+4W
-         moZYfHnV6Z85MNhQl2oj7yAB1LmxMtJiu4NBiRtmoGxsvmZrDNu38F6sWYekAzd6PH70
-         BahA==
-X-Forwarded-Encrypted: i=1; AFNElJ/brWoFWEP6CxAIi3nWW3Ji/TpzAsCWGrXWJPgvKZJPtxCnbgkkk9RkbtrgSJJoZH1XrZlUHNiM/yCgBdAsMQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFZAKUlrrGRHmucp/yJWG3s7fathEAq7CbqGrtFBYEP5MvTHjy
-	/RTB0IbWkEey6lfqdSo6DGhKIAxsLitRwJYnnING5gk23/4TLy8J589LhdDUNZKyxQo=
-X-Gm-Gg: Acq92OEskuvOO88FtP8lbjeVdoa2WQbJKklv1AovKe+B4yuti3QgYdwKP0jUfd5mylg
-	zBXDm0etTTaiRw5AftsIt8ATb3uOmK64pxgZl25hDDI/dFlOtibYFvuidGoYJNGZCnSvbHCe0Oy
-	QDdA61YKEBVbMB1daEv5H7KDb0bKIBs9mXWaawY3DmGbEZ6p1F4x8bh59g1C5MCeLZnfXBfuL7w
-	oQFfHXUykAmY+axYrtRsZ7TzaxL5RS8LOw3gp2w7VIgTlftrBsNT01WcjaiFtyclgVP+oBWqSQ6
-	OLUUisPAXkP8iYhH8cdwY6G+XH01Oya0MPyM8Wm4+kCxBtFnBrWyF83NobPO+IDgx38T0InbA5k
-	6YDdoy3E6gpmqTtPcY66+SFwHlcexfLGTwO+fBXTCvG57svc5BqURA1ZD/RUHutGbkwr6ysHEuC
-	XMT8kqVBUvCVD1rXe5PTpgtuCOYQUtmckc6zWmGq2W6QJgJqn2RZX5qDDNREBYSCF+/O+bpWs=
-X-Received: by 2002:a05:6122:488b:b0:56d:9e98:4676 with SMTP id 71dfb90a1353d-5866357db32mr13048625e0c.13.1779874288841;
-        Wed, 27 May 2026 02:31:28 -0700 (PDT)
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-586f25d708bsm20660501e0c.1.2026.05.27.02.31.27
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2026 02:31:28 -0700 (PDT)
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-63133de7abcso3682973137.1
-        for <linux-hardening@vger.kernel.org>; Wed, 27 May 2026 02:31:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+QgxRoMb9mpNmZ4MFwYRYERYwgio1WI9H50Y6IweVW1vGAZky6daXRqlqQ8lDqpxSULj3efGuQ4tZHgi05E1I=@vger.kernel.org
-X-Received: by 2002:a05:6102:54aa:b0:633:75d3:3545 with SMTP id
- ada2fe7eead31-67c84ad8af0mr10485506137.30.1779874287601; Wed, 27 May 2026
- 02:31:27 -0700 (PDT)
+	s=arc-20240116; t=1779888532; c=relaxed/simple;
+	bh=i3ueMIiht6vtEnDeWTQlI+Ed5qdjYFMLh7I9aXdJ+cc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=p3V7zj1nC/4O8KEXi9uwJJwXhTfMwu8/u2gvbpTFgsDJgDdd8od+80veDILZ3VMUZ6f5QOztBF6icGHFcdTUUAj+VZyJg0EHt7tlSedX7bHvPLar8GMy6bFz0YRnnJrpMmN6dZE849MN4uMoxGSORQF4/9KqSB8Gis3j+EjlrxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.187.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
+	by Atcsqr.andestech.com with ESMTPS id 64RDSO8s095410
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Wed, 27 May 2026 21:28:24 +0800 (+08)
+	(envelope-from cl634@andestech.com)
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS34.andestech.com
+ (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 27 May
+ 2026 21:28:24 +0800
+From: CL Wang <cl634@andestech.com>
+To: <vkoul@kernel.org>
+CC: <Frank.Li@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <kees@kernel.org>, <gustavoars@kernel.org>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <cl634@andestech.com>, <tim609@andestech.com>
+Subject: [PATCH v3 0/3] dmaengine: atcdmac300: Add Andes ATCDMAC300 DMA driver
+Date: Wed, 27 May 2026 21:28:12 +0800
+Message-ID: <20260527132815.1211195-1-cl634@andestech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260526175846.2694125-17-ardb+git@google.com> <20260526175846.2694125-30-ardb+git@google.com>
-In-Reply-To: <20260526175846.2694125-30-ardb+git@google.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 27 May 2026 11:31:16 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWBcpw8NTg+EVBmwiRWY1001EN94J9XstHG9o_hyUg8yA@mail.gmail.com>
-X-Gm-Features: AVHnY4LA7PW8Q0XMk7lUiX1q-1VC5_AKr651tENC3X6CCFiZsD9Tq-B3NK3PBjs
-Message-ID: <CAMuHMdWBcpw8NTg+EVBmwiRWY1001EN94J9XstHG9o_hyUg8yA@mail.gmail.com>
-Subject: Re: [PATCH v6 13/15] sh: cast away constness from the zero page when
- flushing it from the cache
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, 
-	Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Liz Prucka <lizprucka@google.com>, 
-	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-sh@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
+ ATCPCS34.andestech.com (10.0.1.134)
+X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 64RDSO8s095410
 
-On Tue, 26 May 2026 at 20:05, Ard Biesheuvel <ardb+git@google.com> wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> SH performs cache maintenance on the zero page during boot, presumably
-> to ensure that any clearing of BSS that has occurred at startup is
-> visible to other CPUs and DMA devices.
->
-> The __flush_wback_region() function takes a void* argument, which is
-> conceptually sound, but given that empty_zero_page[] must never be
-> modified, it is being repainted as const, making it incompatible with a
-> void* formal parameter.
->
-> Given the above, and the fact that __flush_wback_region() is in fact a
-> function pointer variable with multiple implementations, take the easy
-> way out, and cast away the constness in this particular invocation.
->
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+This patch series adds support for the Andes ATCDMAC300 DMA controller,
+a memory-to-memory and peripheral DMA controller that provides
+scatter-gather, cyclic, and slave transfer capabilities.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The ATCDMAC300 IP is embedded in AndesCore-based platforms or SoCs
+such as AE350 and Qilai.
 
-Gr{oetje,eeting}s,
+Changes in v3:
+  - Rename DT binding file from andestech,qilai-dma.yaml to
+    andestech,ae350-dma.yaml
+  - Deprecate IP-core-based compatible and align with SoC/platform-based
+    compatible strings
+  - Dropped Acked-by from Conor Dooley due to the above binding change
+  - Remove "andestech,atcdmac300" from of_device_id table
+  - Replace deprecated tasklet with threaded IRQ using
+    devm_request_threaded_irq() and IRQF_ONESHOT
+  - Update locking from spin_lock_bh() to spin_lock_irqsave()
+  - Use builtin_platform_driver() instead of module_platform_driver()
+  - Remove "select DMATEST" from Kconfig
+  - Add separate MAINTAINERS patch (patch 3/3)
 
-                        Geert
+Please kindly review.
+
+CL Wang (3):
+  dt-bindings: dmaengine: Add support for ATCDMAC300 DMA engine
+  dmaengine: atcdmac300: Add driver for Andes ATCDMAC300 DMA controller
+  MAINTAINERS: Add entry for Andes ATCDMAC300
+
+ .../bindings/dma/andestech,ae350-dma.yaml     |   68 +
+ MAINTAINERS                                   |    6 +
+ drivers/dma/Kconfig                           |   11 +
+ drivers/dma/Makefile                          |    1 +
+ drivers/dma/atcdmac300.c                      | 1505 +++++++++++++++++
+ drivers/dma/atcdmac300.h                      |  296 ++++
+ 6 files changed, 1887 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
+ create mode 100644 drivers/dma/atcdmac300.c
+ create mode 100644 drivers/dma/atcdmac300.h
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
