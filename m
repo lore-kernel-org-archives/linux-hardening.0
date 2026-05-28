@@ -1,352 +1,211 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E1B3E51D5
-	for <linux-hardening@vger.kernel.org>; Thu, 28 May 2026 11:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DDB3EFFCC
+	for <linux-hardening@vger.kernel.org>; Thu, 28 May 2026 13:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779968189; cv=none; b=lye2SS5TeoLzV+HXAIdeYPYJsJNRUGheTu2RV1jvPOX26d+tTp7mNxCImF/6C6F9W+Z428yUmUtvWSH6BMKs7SJsHy3jzZv073queJsXFl+UpcAc0dKd7RVDlbQreN9Gj2wObAmPmo0zC2yzpso9bnvGYNbnTBktuB1l69U5ahE=
+	t=1779973204; cv=none; b=QnwTZZ08gIfehFNkG3kqIazZSJjGZ2bXy2FVxYavPxum5G1v8dvIw5ob4R39Qm1U53FB3k53V3aex0hteVasWfijd3KxQA5pUlWdsqZbatVwK/vV2Iezw/wCaeg7vRiFLXYLZGa+II0/FRo3hzqpJ9FMfHRNh1PTnuDc0Ci5BI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779968189; c=relaxed/simple;
-	bh=aW8MRzxlrtqMcgmlagejlVwxQvsAP/LKSxlocnHfymw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HWfkHbr0RGc261KbU/WU+HXnjV8esFPqmISyjlXZkWhQx/TbxFfL7tyWI24xksioDG4GWoxEFBX0j+VaqBhSfFduBp1M04Pp+S5+lVKF1RvARwahhnx02CE6/ohhWTJAMs5OVQNMNZEjqNmTMpuf40OxoTwaXiOjWwCR2yyyK4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZJhzjZHP; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1779973204; c=relaxed/simple;
+	bh=Djenmp2baETm7xD1hTtXkNHUzCURlH+sM71QUH5p0RQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LijJGu1X07MUjaCHR5n00aV1PQjVuuGVgXSQrDITz9Q4MObozzhaJPpdel/ELR0vJYMlTASFlUcWhd+cHbpj4cjktfE51T908m8XOrgfLoGjZU6amWhC5HAOTdZPn65Ii+D5H4IKnEijpzJxnhbVF5xD3szpZrPABilPSk6tTQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T0UXoAWO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8YD1IAhW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T0UXoAWO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8YD1IAhW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZJhzjZHP"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-490686877a1so30439035e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 28 May 2026 04:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1779968183; x=1780572983; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zdeV8V9Ljv//xjqgiKACO7GJKqkjM3XcI5AvSVUQXQ0=;
-        b=ZJhzjZHPjIXLjkSUbBW0NKQZ7ecieS24kztYP3ahLIv8lsSVXB8xnrxD0xbzhOYp5B
-         x572qezxqFEehwdHVgxbcPiOq07VpXjFZoAEXDD/SS58UVE5Vl5yRaANxoViiUQyjVEg
-         vK8eqNHRgDquwaz6PhpywxBH7RbPGdD/lbE5tiwEZtzuKi/4nSsCcEfPN4yHaeZnrF8k
-         7xZbd01a4aRhDXiW+KOhrSt3Y70ViBSj+3o4aCBs3t8PETEFx14iUFCWpMXL9N5qA9XN
-         zix4JkAwEQPAx2tkG0d9WlWXs90X5IpvFQaat3FBF4ADJ+qbjnex/lERVXJJ+lHXB06I
-         Rneg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779968183; x=1780572983;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zdeV8V9Ljv//xjqgiKACO7GJKqkjM3XcI5AvSVUQXQ0=;
-        b=YaBK5ZR/WP3qGCBE6xD/ZieQQa0Zua1mJRG0coGIV1rVvxetUg+SdPgYKP+wrnq68H
-         LRcXh4hlC8XbG0VX+vetXEuluElJ8rublz2sbpMe06cmY3H+EotaZ/6TQsExjRN+oygl
-         tXHvSyAMWJvv4S+Z1IIWpLiwS+pNhIzFTdJwoJCvjMNxod13oph1RoT+oXUtF+Veon1B
-         Glib0gA6KbgZXYvlzqXzGj2yd5QVdjByM/YjSS9jVGda1F1B4Z5EOG7VMXdrjtS5aIjP
-         yDW5dGjpiVd8o2UwcEwpvVO78kH8pPl2J9BqI1zR2S216ZcmVJ+u9Ij1FadY4IipjJZS
-         knxA==
-X-Forwarded-Encrypted: i=1; AFNElJ//kdq2QB6OVDZqz7VI07uw4Hb5WK3E6YX0GEuCBdl/MuijQ0kTl/5l0h3PAYlRKT7kXRBjHZpUvxvJD/apSmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxahhBIEPhAUiGJa2AdLUzq8vr7GKLkJn9QGPcPM7SG/kfVTkkB
-	V3nz+dm3dyE7kPAm4t+pcMBPhQF2ATtjaHoOB6Ujvf342AH2C1MY8AU0mTirq45SliU=
-X-Gm-Gg: Acq92OGOsbWvCv2epqDr79q2xoc9zebfGkQkYiC3jYxaBzbQ/MOseZ3M9MSCSLDAlfb
-	qrIp9MJRG4fOCANVimXKhU1e5OIMWFcBI6leClMoJ3QjH1sm0/o1zTm4Cur5jghP5znVWXP0WXa
-	bBzT7Zl2Ljl1TKNF1yqEs3Ikpev8N9bR7WzVu3hiQapDyqj7CLaAwO6fVD4SKBphJrXU+15AGc6
-	vPTg0v34N/2eKN0cVUE+E+eB0eH9yP09GknG7wJstDT3XEPyXT5kdsB93L5IuSFxOneaG2qmkTE
-	W4nN7QvCdLibAcsIojV57K+Pd4vDzaXx1vTlq6XTt7fC/r1RlNskmguQ/+tINYMbFIjoJYAImMs
-	PZ87Oe800j3Rp7wQFxGTMxab+4dcNxAUoQbbYclmyUx+BZW4dMKnLNFkrYv1fZhU1kU4+9iGXhx
-	oqMqtyAa3WS+oHNln7lPXnTFNLG03wLQLrgcv6yrN0mjyD5rsBO7m1Rn02BA/5/jAEtGfMmujSb
-	1Uj/kH6Cg/jLY5xt+9mAgUcCK4r
-X-Received: by 2002:a05:600c:8214:b0:490:5000:917 with SMTP id 5b1f17b1804b1-490947855eamr19309345e9.1.1779968182928;
-        Thu, 28 May 2026 04:36:22 -0700 (PDT)
-Received: from ta2.c.googlers.com (231.141.38.34.bc.googleusercontent.com. [34.38.141.231])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49092a902bfsm60385715e9.12.2026.05.28.04.36.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 04:36:22 -0700 (PDT)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Thu, 28 May 2026 11:36:17 +0000
-Subject: [PATCH v6 4/5] arm64: dts: exynos: gs101: Add thermal management
- unit
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T0UXoAWO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8YD1IAhW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T0UXoAWO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8YD1IAhW"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 94C5166EA7;
+	Thu, 28 May 2026 13:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779973201; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7uWMGPiFFEoPtLga1o3umCg9y3n8wcDkGSWAPBBrAqM=;
+	b=T0UXoAWOAywx9BISEdCcf3/WXeg24b+fopA/2687OMPvMq+T1L4bkOsmXPed8/tXyo/+sz
+	v14D2A/Y4OX0cmjC3cmozYCBbTM1hwYxs2ZFZ9h4QA1DEChaz8Nn/D/7JWr+WGa9f3Q3JK
+	vlEMTKMVzlyhyYc021FRvFc4vf+gUhE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779973201;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7uWMGPiFFEoPtLga1o3umCg9y3n8wcDkGSWAPBBrAqM=;
+	b=8YD1IAhW6s0t9pNmshA3Oj+MGZpmq6wrPMUl6znMwW5j8uImZUj0oPHgoqx/TK99KjMzrv
+	EJioN7D2hL59MWDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=T0UXoAWO;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=8YD1IAhW
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779973201; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7uWMGPiFFEoPtLga1o3umCg9y3n8wcDkGSWAPBBrAqM=;
+	b=T0UXoAWOAywx9BISEdCcf3/WXeg24b+fopA/2687OMPvMq+T1L4bkOsmXPed8/tXyo/+sz
+	v14D2A/Y4OX0cmjC3cmozYCBbTM1hwYxs2ZFZ9h4QA1DEChaz8Nn/D/7JWr+WGa9f3Q3JK
+	vlEMTKMVzlyhyYc021FRvFc4vf+gUhE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779973201;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7uWMGPiFFEoPtLga1o3umCg9y3n8wcDkGSWAPBBrAqM=;
+	b=8YD1IAhW6s0t9pNmshA3Oj+MGZpmq6wrPMUl6znMwW5j8uImZUj0oPHgoqx/TK99KjMzrv
+	EJioN7D2hL59MWDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D16D85ADCB;
+	Thu, 28 May 2026 13:00:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /lXmL1A8GGqwIAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 28 May 2026 13:00:00 +0000
+Date: Thu, 28 May 2026 13:59:58 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Christian Brauner <brauner@kernel.org>, 
+	Mateusz Guzik <mjguzik@gmail.com>
+Cc: Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>
+Subject: Re: [RFC PATCH] fs/splice: allow for a way to block splice() with
+ read-only files
+Message-ID: <ahg6JgO0wUkJKjRb@pedro-suse>
+References: <20260516182126.530498-1-pfalcato@suse.de>
+ <20260518-starten-messdaten-3b8aa670ec85@brauner>
+ <CAG48ez0jbSUgT3ZxPKZP7Eu=K7ce2cX7k2NzHCHNMOxQjOGT9w@mail.gmail.com>
+ <177918418452.771415.4371785688744608623.b4-reply@b4>
+ <CAGudoHFtecdkcYpFrtM5RAAPSU11eL_ALPGp_jhtHW=WxyHE4Q@mail.gmail.com>
+ <177918837114.804096.3977912252785122973.b4-reply@b4>
+ <CAGudoHGSZOEzbXHOAGqrdp6D06JQQ5Af759TQ+HiQx7=ruQa-Q@mail.gmail.com>
+ <20260522-haltestelle-laufpass-volltreffer-3c69a6d84fc4@brauner>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260528-acpm-tmu-v6-4-b4d7ce57594b@linaro.org>
-References: <20260528-acpm-tmu-v6-0-b4d7ce57594b@linaro.org>
-In-Reply-To: <20260528-acpm-tmu-v6-0-b4d7ce57594b@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Peter Griffin <peter.griffin@linaro.org>, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: jyescas@google.com, linux-kernel@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779968180; l=7065;
- i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=aW8MRzxlrtqMcgmlagejlVwxQvsAP/LKSxlocnHfymw=;
- b=sw9kx9pHSRNxRvNEoRgNMsk+qdRknCW/qGodqhzNuLSyjpJDUfVlZWGYFYvEz4EdhIHfV7N40
- Ui1sKduQ+RUBVyMBv0BadzeCtkOdFDBID7s1kcVTN2NBX6NmRtI5x1M
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
- pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260522-haltestelle-laufpass-volltreffer-3c69a6d84fc4@brauner>
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 94C5166EA7
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
 
-Add the Thermal Management Unit (TMU) support for the Google GS101 SoC.
+Hello,
 
-Describe the TMU using a consolidated SoC node that includes memory
-resources for interrupt identification and a phandle to the ACPM IPC
-interface for functional control.
+Apologies for the delay (laziness^Wconferences, travel and the sort),
 
-Define thermal zones for the little, mid, and big CPU clusters, including
-associated trip points and cooling-device maps to enable thermal
-mitigation.
+On Fri, May 22, 2026 at 03:11:11PM +0200, Christian Brauner wrote:
+> On Tue, May 19, 2026 at 01:56:42PM +0200, Mateusz Guzik wrote:
+> > On Tue, May 19, 2026 at 12:59 PM Christian Brauner <brauner@kernel.org> wrote:
+> > >
+> > > On 2026-05-19 12:51 +0200, Mateusz Guzik wrote:
+> > > > How about denial of splice usage or degradation to copy are still on
+> > > > the table, but based on a different criterion: whether code involved
+> > > > is "known good" for lack of a better description. iow the kernel would
+> > > > maintain a whitelist of "safe" cases. Random-ass AF_NOBODYEVERHEARDOF
+> > > > does not make the cut.
+> > >
+> > > I had thought about that to but I felt a bit iffy about it. You could
+> > > envision an FOP_* flag for this:
+> > >
+> > >   /* Module may use splice-like apis */
+> > >   #define FOP_MAY_SPLICE          ((__force fop_flags_t)(1 << 8))
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- arch/arm64/boot/dts/exynos/google/gs101-tmu.dtsi | 136 +++++++++++++++++++++++
- arch/arm64/boot/dts/exynos/google/gs101.dtsi     |  18 +++
- 2 files changed, 154 insertions(+)
+FWIW, I don't think this works. Sockets expose the same file_operations struct
+for every socket. So while it could work for other dodgy fd's around the kernel, I
+would hope there isn't many of them... (or at least many of them using splice,
+etc).
 
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101-tmu.dtsi b/arch/arm64/boot/dts/exynos/google/gs101-tmu.dtsi
-new file mode 100644
-index 000000000000..b27d1a539ec2
---- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/google/gs101-tmu.dtsi
-@@ -0,0 +1,136 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Google GS101 TMU configurations device tree source
-+ *
-+ * Copyright 2020 Samsung Electronics Co., Ltd.
-+ * Copyright 2020 Google LLC.
-+ * Copyright 2026 Linaro Ltd.
-+ */
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+/ {
-+	thermal-zones {
-+		cpucl2-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tmu_top 0>;
-+
-+			trips {
-+				big_switch_on: big-switch-on {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				big_mitigate: big-mitigate {
-+					temperature = <90000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+
-+				big_hot: big-hot {
-+					temperature = <100000>;
-+					hysteresis = <5000>;
-+					type = "hot";
-+				};
-+
-+				big_critical: big-critical {
-+					temperature = <105000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&big_mitigate>;
-+					cooling-device = <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		cpucl1-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tmu_top 1>;
-+
-+			trips {
-+				mid_switch_on: mid-switch-on {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				mid_mitigate: mid-mitigate {
-+					temperature = <90000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+
-+				mid_hot: mid-hot {
-+					temperature = <100000>;
-+					hysteresis = <5000>;
-+					type = "hot";
-+				};
-+
-+				mid_critical: mid-critical {
-+					temperature = <105000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+				     trip = <&mid_mitigate>;
-+					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			       };
-+			};
-+		};
-+
-+		cpucl0-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tmu_top 2>;
-+
-+			trips {
-+				little_switch_on: little-switch-on {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				little_mitigate: little-mitigate {
-+					temperature = <90000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+
-+				little_hot: little-hot {
-+					temperature = <100000>;
-+					hysteresis = <5000>;
-+					type = "hot";
-+				};
-+
-+				little_critical: little-critical {
-+					temperature = <105000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&little_mitigate>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-index 86933f22647b..b6866ef99fb3 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-+++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-@@ -74,6 +74,7 @@ cpu0: cpu@0 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x0000>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL0>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&ananke_cpu_sleep>;
- 			capacity-dmips-mhz = <250>;
-@@ -86,6 +87,7 @@ cpu1: cpu@100 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x0100>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL0>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&ananke_cpu_sleep>;
- 			capacity-dmips-mhz = <250>;
-@@ -98,6 +100,7 @@ cpu2: cpu@200 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x0200>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL0>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&ananke_cpu_sleep>;
- 			capacity-dmips-mhz = <250>;
-@@ -110,6 +113,7 @@ cpu3: cpu@300 {
- 			compatible = "arm,cortex-a55";
- 			reg = <0x0300>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL0>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&ananke_cpu_sleep>;
- 			capacity-dmips-mhz = <250>;
-@@ -122,6 +126,7 @@ cpu4: cpu@400 {
- 			compatible = "arm,cortex-a76";
- 			reg = <0x0400>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL1>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&enyo_cpu_sleep>;
- 			capacity-dmips-mhz = <620>;
-@@ -134,6 +139,7 @@ cpu5: cpu@500 {
- 			compatible = "arm,cortex-a76";
- 			reg = <0x0500>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL1>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&enyo_cpu_sleep>;
- 			capacity-dmips-mhz = <620>;
-@@ -146,6 +152,7 @@ cpu6: cpu@600 {
- 			compatible = "arm,cortex-x1";
- 			reg = <0x0600>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL2>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&hera_cpu_sleep>;
- 			capacity-dmips-mhz = <1024>;
-@@ -158,6 +165,7 @@ cpu7: cpu@700 {
- 			compatible = "arm,cortex-x1";
- 			reg = <0x0700>;
- 			clocks = <&acpm_ipc GS101_CLK_ACPM_DVFS_CPUCL2>;
-+			#cooling-cells = <2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&hera_cpu_sleep>;
- 			capacity-dmips-mhz = <1024>;
-@@ -639,6 +647,15 @@ watchdog_cl1: watchdog@10070000 {
- 			status = "disabled";
- 		};
- 
-+		tmu_top: thermal-sensor@100a0000 {
-+			compatible = "google,gs101-tmu-top";
-+			reg = <0x100a0000 0x800>;
-+			clocks = <&cmu_misc CLK_GOUT_MISC_TMU_TOP_PCLK>;
-+			interrupts = <GIC_SPI 769 IRQ_TYPE_LEVEL_HIGH 0>;
-+			samsung,acpm-ipc = <&acpm_ipc>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		trng: rng@10141400 {
- 			compatible = "google,gs101-trng",
- 				     "samsung,exynos850-trng";
-@@ -1862,3 +1879,4 @@ timer {
- };
- 
- #include "gs101-pinctrl.dtsi"
-+#include "gs101-tmu.dtsi"
+> > >
+> > > But that doesn't address how fundamentally broken vmsplice() for example
+> > > really is and that probably no one should get to use it in its current
+> > > form.
+
+Right.
+
+> > 
+> > I never looked into the area on Linux, I am willing to take claims of
+> > breakage on face value.
+> > 
+> > In this context I'm saying the functionality is used in the real world
+> > for performance reasons and just whacking imo does not cut it.
+
+Which is why I wanted to introduce the (admittedly, rather adhoc) approach
+of limiting it to files that could already be written to. So hopefully it
+could actually be deployed. I'm afraid many users out there will not deploy
+a "go slower, safer" flag.
+
+> > 
+> > >
+> > > > Common-case usage would have to be audited of course, but this sounds
+> > > > rather actionable and would provide hardening without much friction.
+> > >
+> > > And that's the usual problem where rando module will just raise the
+> > > flag. Maybe that's fine and we will keep up.
+> > >
+> > 
+> > If this is a genuine worry the whitelist can still be introduced and
+> > managed by one person (Linus?) very easily. The implementation is only
+> > mildly cumbersome to get going and trivial to spread afterwards.
+> > 
+> > You could have something like this:
+> > struct file_operations funky_ops = {
+> > ....
+> > };
+> > VFS_FILE_OPS_REGISTER(funky_ops);
+> 
+> Unless someone is going to do that work a sysctl to force degrade all
+> the APIs into copies should be ok.
+
+Ok. It seems that the general consensus is KISS and just degrade everything
+with the sysctl? I can do that for v2.
 
 -- 
-2.54.0.794.g4f17f83d09-goog
-
+Pedro
