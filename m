@@ -1,106 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-111.ptr.blmpb.com (va-1-111.ptr.blmpb.com [209.127.230.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC71632C937
-	for <linux-hardening@vger.kernel.org>; Thu, 28 May 2026 06:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D6A33F8C1
+	for <linux-hardening@vger.kernel.org>; Thu, 28 May 2026 07:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779948913; cv=none; b=S9/5cD8OBi/Djp65N9G3XLF5NMcNBy80mE+Yb0MA4jGMHoFmV8lkg3UiJHAdy4s6ERNrjW7C9qUAoEHoJ9FHvBFQAG9Ix+lYETHdZLkdk9XwWzybxmI411TCnuTzEwOEfSHAmybaSVljQneIRjDXGi3ThclWnpU3J/6EI7Xh44c=
+	t=1779952003; cv=none; b=UWnvzDRocqhOiMiyWBnEzhGxjs/lj4ZpkeJmRmtZ/wEMrcsSC1cTHvXcMqDZcxpRo4CgyjTMpJXyGham2xWmPAPWxJ6glhSTbtGIo1po/yU8ngQ5bVizSDUZFbYv7Aq8BwPny/jajanjt2OitMoEqK3ufhPasSvBdQZimFR3lIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779948913; c=relaxed/simple;
-	bh=RR6GEdH7P1865Opff4zo+adcY1veMNkXdid8t0FaQUQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=C4cWLmkabCIEJ1cWL6HAadR1/HAig3+5Wl1bnZGwzwG4ZADuATVR28XGRW5bO1bZ5SMMkVcNpZLlv5vj6hYNSopeTpapxEi7iXBavwGuTLAkz0Z4sCn0Jf3AMRCJwFxZyYWs+36/F6w+/U0Vtc7BbB1osQbA2IUTenLVDd+ep88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1PiQ5PN; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779952003; c=relaxed/simple;
+	bh=Alp6pz18Ku5DV5YJ6h+f3xmg8R271lx67qyOfBSkLFk=;
+	h=Cc:To:From:Subject:Message-Id:References:Content-Type:Date:
+	 Mime-Version:In-Reply-To; b=AKidHmMENMVh/uGl1aoLaP3bgzsUVdriAnm2z9fmqpfWOH584p6UaR5ThnP7OWgUbNJ3B5aYKzbIwzYoqi2n5issEKHqQuQ9i8Zk6CKEY+I10D2QN47b20A0De956+HwhacBP8UTrGTsYphvfXm0kMsWbmvpDt+JD2K43xVvNf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fCfhyOZJ; arc=none smtp.client-ip=209.127.230.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1PiQ5PN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 295221F00A3C;
-	Thu, 28 May 2026 06:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779948912;
-	bh=sRKrhgIJK76DvhKc8lDcKP3ib2MuR8el2Ira7SHuRmM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=a1PiQ5PNbkQnWnC30lpTKTrwQYadp2w2p0U8B2MzUZ5lWlCEg0QyM8AMQpzycZygv
-	 FvaONnp6/lnAoptcCj+C4fhPqVxWAHoPwlT2PsIAhUY7XxdXfxfB7r0gxJ/EkklHqh
-	 U5ndV9vAuvynZvJxFqWjKIjjunTWrj5iQNfFfCbCVeDwjPS+jZvG6up2mqiawURVp1
-	 10h8wkyHeYvVGogUukL9e+Tvhycvo9j0HJvcM0FO4shNmUGfNCdJHV4IA//H0sJ6Ur
-	 z6ppWdUCbsjcN346iIBfcyHHa989xSLwor4KttyXLXjlad1+MJkD93DFKd1s+u05h5
-	 GEt+TdRSegiSA==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 16194F40079;
-	Thu, 28 May 2026 02:15:11 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-01.internal (MEProxy); Thu, 28 May 2026 02:15:11 -0400
-X-ME-Sender: <xms:bt0XajrytHanjxs_yj4VHOwSDlHzRL5SxpDAUSIT9g1uf-cLrEA6lw>
-    <xme:bt0XaocSspHV73k8Rh0IljsG_YTbMQa0gYuD9E_9_B8B1jrErRuGPwms96rNTuWq8
-    _f0Da94NGpalCFrHr12MT4ht7GSnQ07fFTPsZ4uPU-sNIzBCSjiEK4>
-X-ME-Proxy-Cause: dmFkZTFYpebslvMFokJoFBZEvhS0RRgsf2rUv7/D81FLAhtEAxXQxJWExaQNrYQvlunXOY
-    BzXZlDOzIwICfsvp+wnolkeo3xWaLn/+d/N1LoUHlWUfIIXpugElRdYZZhTKKZLx2NpaJJ
-    PyWtUJneOFaEFjJXOZDovXcM+hcpCMkINXksgmiCh7FrU123DTD0mHWjBUvKOYhD8/JeTN
-    TgPCJc7dtiYEtEx5zWv39oFWvBCiqMAXb7+6RwUz8fhWr3X8lIaHUIuBBnsPFiQvXo+j77
-    IGXF3FavQsXan91HQUIjAEhEyd81hdiEOEQ6SWdmeeaV3xzlrbmsV5pyW87rxFO1TjRYav
-    e5AhKyOc6w3NP2RJAbo6/Tvbd2Rovf/EbsfYc68imA924zqCOVWKi2MaPL5udgbalieRsA
-    M/2Nqck6HrqAjYKDfE8dPO+thC/pusJd1m1kFl1hUMvXnbBzG6J0BR34+LSR0y1Tvrl2+B
-    uxLxG3/KyN+eD08+3YAizm1p6ZaI8JM/3kES/5hVqTZUNaQnVyEpq1aF8mkaWJh0yN0R+O
-    gF5o6cRko4vpi2DVE4lbi6sZ7pZSVT/Uil+xYbx06cpSUDfB9YPcSHustlMlrkIsF06PpB
-    /0BqrViHB5NhSI7arFBkuGzWRFGbbY6KrbjEkCFwH78CDaDP+qSFu/R6R54g
-X-ME-Proxy: <xmx:b90Xajr8S2ObbLDSohOd1_NPqRrPN5O1PNGuPqEpeC6IyTrIIQBCew>
-    <xmx:b90Xaih0v199Mz6FRRhghaPgNUlTmWrXGttHjyt7rYw7bBsx7Hd0sg>
-    <xmx:b90Xatx17OOg_OzLbvS1_aiB5T4_yiHY60aHTVCuxr28PCooE6xK3g>
-    <xmx:b90Xao-mBPm8n5JsUbMvYRNM9JTvpVNBmiqte0PcOEG4yaJ8VeEiJw>
-    <xmx:b90XaiC-u174RWXUQ5rTVkL4hh4sjD_5HdRLN_Xj-bbWaR1FoLJbAAXi>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E26E4182007A; Thu, 28 May 2026 02:15:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fCfhyOZJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1779951994; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=my2xvfOIM0CS3HYizu8JqBpZyrW0PkSKxr4c77D1g00=;
+ b=fCfhyOZJmhPOLqzOWpDdiPGbbl0JGQuurLOziqmhfRKrt3ELQzZhRPuGnJpU5EIeTJL5OY
+ XlyisbSFtnKO4Qw0T+wL5lcyLeJntfVWXMnOBzWL964v9li/PBxvMwpUG5va0hZEEJhWSi
+ a3jqtjH5kxomcovZvmIqcEJndzJAYvGITcd9SjnsyNZbW95dn0ZoyDED3KPSnvg8xFOLzI
+ xGs67MSSia9MXOFIn83ODGEauYxfG18XcDOgTqUUEqt2FjG9v78XNjKJlrux/Nei2nDdmH
+ aPK868hz/vCxuQsHAj/KUooz3FMeiGzinszQ3JjrbnrUmoiF43kLQhPr4qZkAg==
+Cc: <apopple@nvidia.com>, <arnd@arndb.de>, <bp@alien8.de>, 
+	<dave.hansen@linux.intel.com>, <david@kernel.org>, <kees@kernel.org>, 
+	<linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
+	<lizhe.67@bytedance.com>, <mingo@redhat.com>, <rppt@kernel.org>, 
+	<tglx@kernel.org>, <x86@kernel.org>
+X-Lms-Return-Path: <lba+26a17e978+296eb2+vger.kernel.org+lizhe.67@bytedance.com>
+To: <akpm@linux-foundation.org>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Subject: Re: [PATCH v3 0/8] mm: speed up ZONE_DEVICE memmap initialization
+Message-Id: <20260528070611.85255-1-lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.45.2
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+References: <20260527134637.29621cc94aba22eb02f3a544@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 28 May 2026 15:06:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Date: Thu, 28 May 2026 08:14:50 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Mike Rapoport" <rppt@kernel.org>, "Ard Biesheuvel" <ardb+git@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "Will Deacon" <will@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>,
- "Mark Rutland" <mark.rutland@arm.com>, "Ryan Roberts" <ryan.roberts@arm.com>,
- "Anshuman Khandual" <anshuman.khandual@arm.com>,
- "Liz Prucka" <lizprucka@google.com>, "Seth Jenkins" <sethjenkins@google.com>,
- "Kees Cook" <kees@kernel.org>, "David Hildenbrand" <david@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, "Jann Horn" <jannh@google.com>,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
- "Yoshinori Sato" <ysato@users.sourceforge.jp>,
- "Rich Felker" <dalias@libc.org>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>
-Message-Id: <87fbe311-5657-4e36-8a33-7404980a9df6@app.fastmail.com>
-In-Reply-To: <ahfWnLIwZXJvbvNg@kernel.org>
-References: <20260526175846.2694125-17-ardb+git@google.com>
- <20260526175846.2694125-30-ardb+git@google.com> <ahfWnLIwZXJvbvNg@kernel.org>
-Subject: Re: [PATCH v6 13/15] sh: cast away constness from the zero page when flushing
- it from the cache
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+In-Reply-To: <20260527134637.29621cc94aba22eb02f3a544@linux-foundation.org>
 
-Hi Mike,
+On Wed, 27 May 2026 13:46:37 -0700, akpm@linux-foundation.org wrote:
 
-On Thu, 28 May 2026, at 07:46, Mike Rapoport wrote:
-> On Tue, May 26, 2026 at 07:59:00PM +0200, Ard Biesheuvel wrote:
->> From: Ard Biesheuvel <ardb@kernel.org>
->> 
->> SH performs cache maintenance on the zero page during boot, presumably
->> to ensure that any clearing of BSS that has occurred at startup is
->> visible to other CPUs and DMA devices.
->
-> It flushes the cache there because before 6215d9f4470f ("arch, mm:
-> consolidate empty_zero_page") empty_zero_page used was for boot parameters
-> at the very early boot.
->
-> I removed memset(empty_zero_page, 0, PAGE_SIZE) that was a line above but
-> missed the cache flush. 
->
-> This whole "clear zero-page" can be removed IMO.
-> 
+> AI review had a number of things to say:
+> 	https://sashiko.dev/#/patchset/20260527033636.28231-1-lizhe.67@bytedance.com
 
-Good point.
+Thanks for the review. All four points are valid.
+
+  1. The head-page template setup should not run page initialization and
+     refcount helpers on a stack-resident struct page.
+  2. The compound-tail template path has the same issue and should avoid
+     running compound-tail/refcount setup on a stack object.
+  3. The x86 memcpy_streaming() eligibility check is too permissive, so some
+     transfers that cannot stay entirely on the non-temporal path may still
+     go through memcpy_flushcache().
+  4. memcpy_flushcache_small() should reject unsupported sizes before issuing
+     any store, otherwise fallback can observe partial writes.
+
+I have prepared corresponding fixups on top of v3.
+
+Thanks,
+Zhe
