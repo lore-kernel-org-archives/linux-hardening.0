@@ -1,33 +1,33 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38150346AED;
-	Fri, 29 May 2026 07:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 353F92DEA89;
+	Fri, 29 May 2026 08:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780039500; cv=none; b=O8u27qeQluxbh8BShDuR57begRTsW4hqaFQ136oAcxhCHOzGvQYqwUFujSRKjal+iNyGawhk21b+/tHk7s8ndqNDJE6zttCOXey5oGYZKKVcaqygWLWf0pBdZBMxAoOs1KU9Vywn8k5vsvG5OcPwHzxtIP2Q3bF0bsAS3slHLaQ=
+	t=1780043120; cv=none; b=lfJkWgpQS6sCgF6O8Qj61O1XikBu3TT8Nkeeyvkp94G/fAam/FwPSk1O4QvP0ixvTW2l1Ws6rBosrvDsDQotedACWzKEQB3NQqIr//t09VvkgQMOAuXYl38jtRPKcb95DVPyzj2ieFDFJxYqrhDjsqOx8vNPjPy522lQs4j+ou4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780039500; c=relaxed/simple;
-	bh=2R5oHGU5OdKZY1fD25B4PhKEE4T7fbngpgZK5vskLTA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qK014oMERfEkkQM5CmzBw+maYJYaBNrbrvY2Is4I/HC5OhRq99pQElqh/G708A7LA9eao1S8mDHptMGNrtB4uTg6de8lt8mLYCylVfWgUGoc+kykV1nPC9YpLPFydr6jnQD7I7Q6HzKUmwcJCe5Efxnz1kQJZkEtY3dr5Y1vBtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1pmhqHk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780043120; c=relaxed/simple;
+	bh=fE3yUIKV893yO/tU1IRXNu65M0GI1yHd4oHW0SZSKMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BEGLieASfZ32xdbrWodKAptCLFadvAUApxfNgexBMgVk0Qqt4MPQw5V2reBVnCa/PRj4R/bajYQD9vLPUx+J2XQLgxXHRPXGNyZOD01Ppi9nGcKk/5hdu0vSjwmDktTYG1udggWf5hwzDBSwriEzngj6m5j0QrWg9I3nNLz0w0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YgZNzICf; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1pmhqHk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0531F00893;
-	Fri, 29 May 2026 07:24:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780039498;
-	bh=jR+xvQdEmfj6RfdjxBg9oj+w5NnlUyFOZVS8ITNSMgU=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=O1pmhqHkAOn+lEzZWZokVLkWzIXavWRolKOwQlXIBVZfFRs2WZVjOXCII+NMfKvOB
-	 A9KPGFCqlthc4o8nWnfwS6lzIbNy0QCJITp7CnoKqVP8sRBnG9eaxNzOqX3/abQbuj
-	 JeV8mwAlsbOO+ImszvIwy81ZaSwqMtDjytAm98OzDLxU8+M1fX9SEHP9Oid1yKfa/a
-	 JMOvi1QUewsOGDZDI69cdu2Wx+cZ0hiuM8aNOPRJh105xnZs889zAmb7AHCju/zz+G
-	 HlpWIjKW2JiOWhzwubTdIiF79MDjp7VqR7fDaD4Ce6jQWjRkBigiqFeBA6304bQbvI
-	 kQsSdqqxUT2QA==
-Message-ID: <79e9e913-0fb1-4110-804b-c3b5d0edafe4@kernel.org>
-Date: Fri, 29 May 2026 09:24:55 +0200
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="YgZNzICf"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22C0E202C;
+	Fri, 29 May 2026 01:25:13 -0700 (PDT)
+Received: from [10.57.91.162] (unknown [10.57.91.162])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E033B3F632;
+	Fri, 29 May 2026 01:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780043118; bh=fE3yUIKV893yO/tU1IRXNu65M0GI1yHd4oHW0SZSKMQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YgZNzICfhAaEewMLd5sYOiMJ/3HYuhCaubt55GtmzGsIIRiS2/eSAIgolKHy6Ujas
+	 R1Xu42Al/6MwTK6QYWiT9p5q5f4DsYTTmioLV5ywaNJQ05OfFjqw8JRvuf3tckys1N
+	 E28dqI6faiZItNHpvu6iRQgocCCB1jlpG25489Os=
+Message-ID: <23aaeb97-104c-4010-9525-d80922c434c0@arm.com>
+Date: Fri, 29 May 2026 10:25:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,169 +35,123 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPICA: Replace strncpy() with strscpy_pad() in
- acpi_ut_safe_strncpy()
-From: Jiri Slaby <jirislaby@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Kees Cook <kees@kernel.org>
-Cc: Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- acpica-devel@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20260323172451.work.079-kees@kernel.org>
- <CAJZ5v0hOS7j2f-wkmvarULCS-1+Zio2hOz2ExMvFXN61OPv_tQ@mail.gmail.com>
- <405e97ae-72a1-4086-bef3-cf462619f661@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <405e97ae-72a1-4086-bef3-cf462619f661@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v6 07/15] arm64: kfence: Avoid NOMAP tricks when mapping
+ the early pool
+To: Ard Biesheuvel <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
+ mark.rutland@arm.com, Ard Biesheuvel <ardb@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ David Hildenbrand <david@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Jann Horn <jannh@google.com>,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org
+References: <20260526175846.2694125-17-ardb+git@google.com>
+ <20260526175846.2694125-24-ardb+git@google.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260526175846.2694125-24-ardb+git@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 29. 05. 26, 9:20, Jiri Slaby wrote:
-> On 23. 03. 26, 18:31, Rafael J. Wysocki wrote:
->> On Mon, Mar 23, 2026 at 6:24 PM Kees Cook <kees@kernel.org> wrote:
->>>
->>> Replace the deprecated[1] strncpy() with strscpy_pad() in
->>> acpi_ut_safe_strncpy().
->>>
->>> The function is a "safe strncpy" wrapper that does
->>> strncpy(dest, source, dest_size) followed by manual NUL-termination
->>> at dest[dest_size - 1]. strscpy_pad() is a direct replacement: it
->>> NUL-terminates, zero-pads the remainder, and the manual termination
->>> is no longer needed.
->>>
->>> All callers pass NUL-terminated source strings (C string literals,
->>> __FILE__ via ACPI_MODULE_NAME, or user-provided filenames that have
->>> already been validated). The destinations are fixed-size char arrays
->>> in ACPICA internal structures (allocation->module, aml_op_name,
->>> acpi_gbl_db_debug_filename), all consumed as C strings.
->>>
->>> No behavioral change: strscpy_pad() produces identical output to
->>> strncpy() + manual NUL-termination for NUL-terminated sources that
->>> are shorter than dest_size. For sources longer than dest_size,
->>> strncpy() wrote dest_size non-NUL bytes then the manual termination
->>> overwrote the last byte with NUL; strscpy_pad() writes dest_size-1
->>> bytes plus NUL: same result.
->>>
->>> Link: https://github.com/KSPP/linux/issues/90 [1]
->>> Signed-off-by: Kees Cook <kees@kernel.org>
->>> ---
->>> This touches the ACPICA component shared with the upstream ACPICA
->>> project (https://github.com/acpica/acpica), where the function
->>> is named AcpiUtSafeStrncpy(). The upstream codebase uses its own
->>> platform abstraction layer (acenv.h/acgcc.h) where I've mapped various
->>> kernel APIs before like ACPI_FLEX_ARRAY and similar helpers. However,
->>> acpi_ut_safe_strncpy() is an explicit function implementation rather
->>> than a macro mapping, so the approach for upstreaming this change to
->>> ACPICA is not clear. What's the best way to land this?
->>
->> I can apply this directly, it shouldn't be a major problem for porting
->> patches from the upstream.
-> 
-> As I reported in https://github.com/acpica/acpica/issues/1158 (but got 
-> no reply), this patch breaks build of acpica against 7.1-rc*:
->  > ../../../../../drivers/acpi/acpica/utnonansi.c:171:9: error: implicit 
-> declaration of function ‘strscpy_pad’ [-Wimplicit-function-declaration]
-> 
-> Is strscpy_pad() supposed to be emulated in acpica?
+On 26/05/2026 19:58, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> Now that the map_mem() routines respect existing page mappings and
+> contiguous granule sized blocks with the contiguous bit cleared, there
+> is no longer a reason to play tricks with the memblock NOMAP attribute.
+>
+> Instead, the kfence pool can be allocated and mapped with page
+> granularity first, and this granularity will be respected when the rest
+> of DRAM is mapped later, even if block and contiguous mappings are
+> allowed for the remainder of those mappings.
+>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-No, I misread the log, it's the in-kernel acpidump failing to build:
+Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
 
-~/linux/tools/power/acpi/tools/acpidump> make
-   MKDIR    include
-   CP       include
-   CC       tools/acpidump/apdump.o
-   CC       tools/acpidump/apfiles.o
-   CC       tools/acpidump/apmain.o
-   CC       tools/acpidump/osunixdir.o
-   CC       tools/acpidump/osunixmap.o
-   CC       tools/acpidump/osunixxf.o
-   CC       tools/acpidump/tbprint.o
-   CC       tools/acpidump/tbxfroot.o
-   CC       tools/acpidump/utascii.o
-   CC       tools/acpidump/utbuffer.o
-   CC       tools/acpidump/utcksum.o
-   CC       tools/acpidump/utdebug.o
-   CC       tools/acpidump/utexcep.o
-   CC       tools/acpidump/utglobal.o
-   CC       tools/acpidump/uthex.o
-   CC       tools/acpidump/utmath.o
-   CC       tools/acpidump/utnonansi.o
-../../../../../drivers/acpi/acpica/utnonansi.c: In function 
-‘acpi_ut_safe_strncpy’:
-../../../../../drivers/acpi/acpica/utnonansi.c:171:9: error: implicit 
-declaration of function ‘strscpy_pad’ [-Wimplicit-function-declaration]
-   171 |         strscpy_pad(dest, source, dest_size);
-       |         ^~~~~~~~~~~
-make: *** [../../Makefile.rules:25: 
-/home/xslaby/linux/tools/power/acpi/tools/acpidump/utnonansi.o] Chyba 1
-
->>> (This is one of the last users of strncpy in the kernel.)
->>> ---
->>>   drivers/acpi/acpica/utnonansi.c | 3 +--
->>>   1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/acpi/acpica/utnonansi.c b/drivers/acpi/acpica/ 
->>> utnonansi.c
->>> index ff0802ace19b..3a7952be6545 100644
->>> --- a/drivers/acpi/acpica/utnonansi.c
->>> +++ b/drivers/acpi/acpica/utnonansi.c
->>> @@ -168,8 +168,7 @@ void acpi_ut_safe_strncpy(char *dest, char 
->>> *source, acpi_size dest_size)
->>>   {
->>>          /* Always terminate destination string */
->>>
->>> -       strncpy(dest, source, dest_size);
->>> -       dest[dest_size - 1] = 0;
->>> +       strscpy_pad(dest, source, dest_size);
->>>   }
->>>
->>>   #endif
->>> -- 
->>
-> 
-> thanks,
-
--- 
-js
-suse labs
-
+> ---
+>  arch/arm64/mm/mmu.c | 25 ++++----------------
+>  1 file changed, 5 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index d7a6991e1844..55bb40348a47 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1083,36 +1083,24 @@ static int __init parse_kfence_early_init(char *arg)
+>  }
+>  early_param("kfence.sample_interval", parse_kfence_early_init);
+>  
+> -static phys_addr_t __init arm64_kfence_alloc_pool(void)
+> +static void __init arm64_kfence_map_pool(void)
+>  {
+>  	phys_addr_t kfence_pool;
+>  
+>  	if (!kfence_early_init)
+> -		return 0;
+> +		return;
+>  
+>  	kfence_pool = memblock_phys_alloc(KFENCE_POOL_SIZE, PAGE_SIZE);
+>  	if (!kfence_pool) {
+>  		pr_err("failed to allocate kfence pool\n");
+>  		kfence_early_init = false;
+> -		return 0;
+> -	}
+> -
+> -	/* Temporarily mark as NOMAP. */
+> -	memblock_mark_nomap(kfence_pool, KFENCE_POOL_SIZE);
+> -
+> -	return kfence_pool;
+> -}
+> -
+> -static void __init arm64_kfence_map_pool(phys_addr_t kfence_pool)
+> -{
+> -	if (!kfence_pool)
+>  		return;
+> +	}
+>  
+>  	/* KFENCE pool needs page-level mapping. */
+>  	__map_memblock(kfence_pool, kfence_pool + KFENCE_POOL_SIZE,
+>  			pgprot_tagged(PAGE_KERNEL),
+>  			NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
+> -	memblock_clear_nomap(kfence_pool, KFENCE_POOL_SIZE);
+>  	__kfence_pool = phys_to_virt(kfence_pool);
+>  }
+>  
+> @@ -1144,8 +1132,7 @@ bool arch_kfence_init_pool(void)
+>  }
+>  #else /* CONFIG_KFENCE */
+>  
+> -static inline phys_addr_t arm64_kfence_alloc_pool(void) { return 0; }
+> -static inline void arm64_kfence_map_pool(phys_addr_t kfence_pool) { }
+> +static inline void arm64_kfence_map_pool(void) { }
+>  
+>  #endif /* CONFIG_KFENCE */
+>  
+> @@ -1155,7 +1142,6 @@ static void __init map_mem(void)
+>  	phys_addr_t kernel_start = __pa_symbol(_text);
+>  	phys_addr_t kernel_end = __pa_symbol(__init_begin);
+>  	phys_addr_t start, end;
+> -	phys_addr_t early_kfence_pool;
+>  	int flags = NO_EXEC_MAPPINGS;
+>  	u64 i;
+>  
+> @@ -1172,7 +1158,7 @@ static void __init map_mem(void)
+>  	BUILD_BUG_ON(pgd_index(direct_map_end - 1) == pgd_index(direct_map_end) &&
+>  		     pgd_index(_PAGE_OFFSET(VA_BITS_MIN)) != PTRS_PER_PGD - 1);
+>  
+> -	early_kfence_pool = arm64_kfence_alloc_pool();
+> +	arm64_kfence_map_pool();
+>  
+>  	linear_map_requires_bbml2 = !force_pte_mapping() && can_set_direct_map();
+>  
+> @@ -1210,7 +1196,6 @@ static void __init map_mem(void)
+>  	 */
+>  	__map_memblock(kernel_start, kernel_end, PAGE_KERNEL, NO_CONT_MAPPINGS);
+>  	memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
+> -	arm64_kfence_map_pool(early_kfence_pool);
+>  }
+>  
+>  void mark_rodata_ro(void)
