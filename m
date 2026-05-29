@@ -1,261 +1,167 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03B11DBB3A
-	for <linux-hardening@vger.kernel.org>; Thu, 28 May 2026 23:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC35332628;
+	Fri, 29 May 2026 07:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780011328; cv=none; b=I9astZ/QJ4mLKokK4yh9S4lAYS7KBL3hkqg+Qx+xtkdaGaw4FNuXLOvvicfoKZG+oEATROWKtx5PSlDaRRukrhNHmUJTACJmkdmRbjcEDPME31DgWQdP1WLvYIik0MsFqraLZuhSpUFsXR0hvYu4r6rojuQe+xV4LsiXmf2iYzE=
+	t=1780039258; cv=none; b=Xgc9pjS9zg6VtHLqiFhLcyxpgkLnEQ7M6NzBxhPzhqZ95tkBy9ZrQczbQrSvSPhh2c4CQPvsVIeuiq6J2zlbIB6ULJ1romK3pox6lbI3Sv+wuXUl30aO7bKMlZSdd4v7P1kx5klXc3PaRUfxPhNcZcwotl1vnshAZe6mR9ksixk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780011328; c=relaxed/simple;
-	bh=9pKtI2QgcaBOz0lUGXwCQ1mn7dz+nAgtsXGXTfTDCd8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sg6Hcg7Geq+0Gu2DtEtKiAHDHoP8ikLQDB9+TcenV30pnbUqGEiGLYoNqaOaMtsVlWLgQuSKQaG/7Mnc8bQfiWDE70WbErAyiijDwAkzU0ozMGfGR7WOjAUbYmZ4C9ekKoN4+x/e+j6bGa2OxlaKz2hYe7kjZs2sdrtcrZR2SCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iJF0fj93; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780039258; c=relaxed/simple;
+	bh=MrkEv9oGgPOTopvm1MDPEEeE60MC9cJMiwLFsfcHArc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CFEknEnf4nRrHgmnHrW5BXJo6H/QfMzG7Unjj0ciZ+xMu/i6Nt4zSdXeoU3zV6M/G3CZZl+Nykn7E6CI+Iz4LIFSrTuDiCyI+AjBQ0kd3iizYdcBoGDk6E4XXL70aVPSb/aNFZzxNXzqDpm3FqjqtspzohHMYe0eyHX7oWk8Rn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmcmORvh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJF0fj93"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8354461da74so6244560b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 28 May 2026 16:35:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780011326; x=1780616126; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sFFR7mhAlYa32tib5Eg4h8cRwr9DtOLR8Gu0te51xXw=;
-        b=iJF0fj93JQdIWKig46zgk0DlR+moi4NdSiMH7RYglu3x083jYtE0QtOQePRAW0nNSg
-         stwdGQqHF3pPPswjQBcxX0SpJS1HU+FYBBo84yNmkCRfgxJntHHmspaNVQYLbURvl8Gq
-         KlKV+XywHc6SEXGsgEC/zSiUNVxY+YryR33pdQrDAAMIk4X5nklf6dNycLkftPE1zl+m
-         dPHlzoarq4k6r6vgzOblapUkxuziG3gisOVWcqGaR9KoGOo4hPB8hKSMbj+yY4/XxUuA
-         h8DZ6kCi7bXeO2Jwo+/UHd/K1txIAwsJX0QhkcMQMlHdP1jqZ+bvk9sfKfvu0LTNlsDb
-         BZ+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780011326; x=1780616126;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sFFR7mhAlYa32tib5Eg4h8cRwr9DtOLR8Gu0te51xXw=;
-        b=VL3NmCFaTE+HE5jUE5NJZToxmmxFhIntd3CxDsRCz/ucRviDZDBSK4g0OHWqyHFm2P
-         Vy4ULnVi+595e6bT/BarnvyHjFP+5qEHjZ6hvm0/RYbKhZiXDxYZHyw9Tor7N156H3vh
-         N95oHiW6wF/4GcOa8FoIH2yustKEnzyZG4IApMY9J///BwqIk77lpOhk6hmDV/C6jDms
-         m0fG+8bulX7ol1uu8QJnL1gbiWap5XKOXEn/nbkZDIdaEhhtskANRFaFEGikw9sualwu
-         tFy8sfjvhvfll94Tt7/tArgD/iDRGDrOldtazVIebXRfskVcdWPLyR+Ly8n3rXIhjeI0
-         //Hw==
-X-Forwarded-Encrypted: i=1; AFNElJ8/8ns7GnAeahe7YU6zDCrw+FTMCXmGRIVHANaJ0M1Hw+GiqDhQZqdjlVUA2C2EEXl2bzvwpY/E7WnuZzy0npo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0j8gT80Jsm4kpJIVq/WpRkQCQiRHJtDzzWjUqbjK3qoY0frBU
-	7vhow1PtjOkW3Hx/DTxGeNzN2WuG0EM7Wi9VeMMwRsRaUbBh+ekL2K7z
-X-Gm-Gg: Acq92OG+rd6MxqxqkFkM4ZCnmW+OYgPmOfp3vwYniVLXlwJaASP9Zo+nOj5gv01kxDS
-	TM3HCFPp1EjkqlipUleEvXDYIsUXorrT+9bnG+dLPLSJmgUUyKidLDXYvaS3iA3qRcR88hXNMq9
-	fIhpG8oojMsP2s0sgQwtPEO1NgsuU0jHMXZB0Ck09D7EjSI6hrEfPXTZ4KtQk/S711D9tfB9Ws9
-	X4jEYEgx2uu4HrwifmwhnK2SvGmoVpDdVnV8ci8e8JBJVM5b2x2a0AgGGOlctxg7I5jdMInhN0E
-	XtXOvO9EvQ3LQXThE3mKbMDryguB5uY45lvHYKDQL2/l6tRbYUkn2EvPiWSYJTRhOywG1KMYJUu
-	L/el63HOBU8rsEqKwaip955XXIlpci3DP/05heSPIQwny9Hi3wzQmrRss0ENqIbygrhBDmX2oe0
-	ODIviCqsoV28Zk43A5xJQ5YrdSjT+rs/nb4zr0itVmZDBdYih7fRCsCdZEn3xAoUCF9P10n3E9h
-	6hwbek6dGs33p+6FscHfwCG+HHfyTS22kzefRPRdNuEXw==
-X-Received: by 2002:a05:6a00:1906:b0:829:809e:8977 with SMTP id d2e1a72fcca58-84212dab758mr285424b3a.49.1780011325851;
-        Thu, 28 May 2026 16:35:25 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8421310d01dsm78111b3a.15.2026.05.28.16.35.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 16:35:25 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCHv3] dmaengine: ti: omap-dma: turn lch_map into a flexible array
-Date: Thu, 28 May 2026 16:35:07 -0700
-Message-ID: <20260528233507.305178-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmcmORvh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B93B1F00893;
+	Fri, 29 May 2026 07:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780039256;
+	bh=qOHmKFTXw2FsM+mZsbVdA3Sg5+qsZZkc2PbmdG0maa8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=kmcmORvhLRh8u6t6mtYBJcufHVzzJGbix+rX++Im+8TDMMf64rB9neDYXPtSFT4zF
+	 YnyeqhRU1XZZ+Z/xij0T1D0/SwZ4TzU61AvP3U9GcwvzEKaV0vxscgQFB0OmDl07Pn
+	 3+OE2Hef7CVAMuJfLEV8DF/JPXFTw4W8rzGEqhUr39eEvq+hWpRGPFBHN7qyUlPSvM
+	 N7yL7evYZUZzW/new6TuZKj4uPA/VPznt/Mtu2++w58kRssnBg3HpyMD4/j24UASo4
+	 7FcUvwKj9O+F8DUYuZdT8vbtfp/z3XE+E46ewEpAPsQ6ROSfofMrawcDtBG7d6aBKY
+	 epMde6x2ERtRw==
+Message-ID: <405e97ae-72a1-4086-bef3-cf462619f661@kernel.org>
+Date: Fri, 29 May 2026 09:20:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ACPICA: Replace strncpy() with strscpy_pad() in
+ acpi_ut_safe_strncpy()
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20260323172451.work.079-kees@kernel.org>
+ <CAJZ5v0hOS7j2f-wkmvarULCS-1+Zio2hOz2ExMvFXN61OPv_tQ@mail.gmail.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <CAJZ5v0hOS7j2f-wkmvarULCS-1+Zio2hOz2ExMvFXN61OPv_tQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Convert the separately-allocated lch_map pointer array to a C99
-flexible array member at the end of struct omap_dmadev and annotate it
-with __counted_by(lch_count). The probe is reordered so platform_data
-lookup and the lch_count determination happen before the parent
-allocation, letting struct_size() size the FAM and the dedicated
-devm_kcalloc() for lch_map go away.
+On 23. 03. 26, 18:31, Rafael J. Wysocki wrote:
+> On Mon, Mar 23, 2026 at 6:24 PM Kees Cook <kees@kernel.org> wrote:
+>>
+>> Replace the deprecated[1] strncpy() with strscpy_pad() in
+>> acpi_ut_safe_strncpy().
+>>
+>> The function is a "safe strncpy" wrapper that does
+>> strncpy(dest, source, dest_size) followed by manual NUL-termination
+>> at dest[dest_size - 1]. strscpy_pad() is a direct replacement: it
+>> NUL-terminates, zero-pads the remainder, and the manual termination
+>> is no longer needed.
+>>
+>> All callers pass NUL-terminated source strings (C string literals,
+>> __FILE__ via ACPI_MODULE_NAME, or user-provided filenames that have
+>> already been validated). The destinations are fixed-size char arrays
+>> in ACPICA internal structures (allocation->module, aml_op_name,
+>> acpi_gbl_db_debug_filename), all consumed as C strings.
+>>
+>> No behavioral change: strscpy_pad() produces identical output to
+>> strncpy() + manual NUL-termination for NUL-terminated sources that
+>> are shorter than dest_size. For sources longer than dest_size,
+>> strncpy() wrote dest_size non-NUL bytes then the manual termination
+>> overwrote the last byte with NUL; strscpy_pad() writes dest_size-1
+>> bytes plus NUL: same result.
+>>
+>> Link: https://github.com/KSPP/linux/issues/90 [1]
+>> Signed-off-by: Kees Cook <kees@kernel.org>
+>> ---
+>> This touches the ACPICA component shared with the upstream ACPICA
+>> project (https://github.com/acpica/acpica), where the function
+>> is named AcpiUtSafeStrncpy(). The upstream codebase uses its own
+>> platform abstraction layer (acenv.h/acgcc.h) where I've mapped various
+>> kernel APIs before like ACPI_FLEX_ARRAY and similar helpers. However,
+>> acpi_ut_safe_strncpy() is an explicit function implementation rather
+>> than a macro mapping, so the approach for upstreaming this change to
+>> ACPICA is not clear. What's the best way to land this?
+> 
+> I can apply this directly, it shouldn't be a major problem for porting
+> patches from the upstream.
 
-Two allocations collapse into one and the runtime bounds checks from
-__counted_by now apply to every lch_map[] access.
+As I reported in https://github.com/acpica/acpica/issues/1158 (but got 
+no reply), this patch breaks build of acpica against 7.1-rc*:
+ > ../../../../../drivers/acpi/acpica/utnonansi.c:171:9: error: implicit 
+declaration of function ‘strscpy_pad’ [-Wimplicit-function-declaration]
 
-Add some fixes reported by Sashiko. Missing return and missing check for
-needs_busy_check. Also a free_irq ordering issue.
+Is strscpy_pad() supposed to be emulated in acpica?
 
-Assisted-by: Claude:Opus-4.7
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- v3: fix sashiko warnings again
- v2: fix sashiko warnings
- drivers/dma/ti/omap-dma.c | 82 ++++++++++++++++++++-------------------
- 1 file changed, 42 insertions(+), 40 deletions(-)
+>> (This is one of the last users of strncpy in the kernel.)
+>> ---
+>>   drivers/acpi/acpica/utnonansi.c | 3 +--
+>>   1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/acpi/acpica/utnonansi.c b/drivers/acpi/acpica/utnonansi.c
+>> index ff0802ace19b..3a7952be6545 100644
+>> --- a/drivers/acpi/acpica/utnonansi.c
+>> +++ b/drivers/acpi/acpica/utnonansi.c
+>> @@ -168,8 +168,7 @@ void acpi_ut_safe_strncpy(char *dest, char *source, acpi_size dest_size)
+>>   {
+>>          /* Always terminate destination string */
+>>
+>> -       strncpy(dest, source, dest_size);
+>> -       dest[dest_size - 1] = 0;
+>> +       strscpy_pad(dest, source, dest_size);
+>>   }
+>>
+>>   #endif
+>> --
+> 
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 55ece7fd0d99..7c46be2755be 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -48,7 +48,7 @@ struct omap_dmadev {
- 	const struct omap_dma_config *cfg;
- 	struct notifier_block nb;
- 	struct omap_dma_context context;
--	int lch_count;
-+	u32 lch_count;
- 	DECLARE_BITMAP(lch_bitmap, OMAP_SDMA_CHANNELS);
- 	struct mutex lch_lock;		/* for assigning logical channels */
- 	bool legacy;
-@@ -57,7 +57,7 @@ struct omap_dmadev {
- 	unsigned dma_requests;
- 	spinlock_t irq_lock;
- 	uint32_t irq_enable_mask;
--	struct omap_chan **lch_map;
-+	struct omap_chan *lch_map[] __counted_by(lch_count);
- };
-
- struct omap_chan {
-@@ -1656,36 +1656,55 @@ static const struct omap_dma_config default_cfg;
- static int omap_dma_probe(struct platform_device *pdev)
- {
- 	const struct omap_dma_config *conf;
-+	struct omap_system_dma_plat_info *plat;
- 	struct omap_dmadev *od;
-+	u32 lch_count;
- 	int rc, i, irq;
- 	u32 val;
-
--	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
--	if (!od)
--		return -ENOMEM;
--
--	od->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(od->base))
--		return PTR_ERR(od->base);
--
- 	conf = of_device_get_match_data(&pdev->dev);
- 	if (conf) {
--		od->cfg = conf;
--		od->plat = dev_get_platdata(&pdev->dev);
--		if (!od->plat) {
-+		plat = dev_get_platdata(&pdev->dev);
-+		if (!plat) {
- 			dev_err(&pdev->dev, "omap_system_dma_plat_info is missing");
- 			return -ENODEV;
- 		}
- 	} else if (IS_ENABLED(CONFIG_ARCH_OMAP1)) {
--		od->cfg = &default_cfg;
--
--		od->plat = omap_get_plat_info();
--		if (!od->plat)
-+		plat = omap_get_plat_info();
-+		if (!plat)
- 			return -EPROBE_DEFER;
- 	} else {
- 		return -ENODEV;
- 	}
-
-+	/* Number of available logical channels */
-+	if (!pdev->dev.of_node) {
-+		lch_count = plat->dma_attr->lch_count;
-+		if (unlikely(!lch_count))
-+			lch_count = OMAP_SDMA_CHANNELS;
-+	} else if (of_property_read_u32(pdev->dev.of_node, "dma-channels", &lch_count)) {
-+		dev_info(&pdev->dev, "Missing dma-channels property, using %u.\n",
-+			 OMAP_SDMA_CHANNELS);
-+		lch_count = OMAP_SDMA_CHANNELS;
-+	}
-+
-+	if (lch_count > OMAP_SDMA_CHANNELS) {
-+		dev_err(&pdev->dev, "invalid dma-channels value %u\n", lch_count);
-+		return -EINVAL;
-+	}
-+
-+	od = devm_kzalloc(&pdev->dev, struct_size(od, lch_map, lch_count), GFP_KERNEL);
-+	if (!od)
-+		return -ENOMEM;
-+
-+	od->lch_count = lch_count;
-+	od->plat = plat;
-+	od->cfg = conf ? conf : &default_cfg;
-+
-+	od->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(od->base))
-+		return PTR_ERR(od->base);
-+
- 	od->reg_map = od->plat->reg_map;
-
- 	dma_cap_set(DMA_SLAVE, od->ddev.cap_mask);
-@@ -1730,19 +1749,6 @@ static int omap_dma_probe(struct platform_device *pdev)
- 			 OMAP_SDMA_REQUESTS);
- 	}
-
--	/* Number of available logical channels */
--	if (!pdev->dev.of_node) {
--		od->lch_count = od->plat->dma_attr->lch_count;
--		if (unlikely(!od->lch_count))
--			od->lch_count = OMAP_SDMA_CHANNELS;
--	} else if (of_property_read_u32(pdev->dev.of_node, "dma-channels",
--					&od->lch_count)) {
--		dev_info(&pdev->dev,
--			 "Missing dma-channels property, using %u.\n",
--			 OMAP_SDMA_CHANNELS);
--		od->lch_count = OMAP_SDMA_CHANNELS;
--	}
--
- 	/* Mask of allowed logical channels */
- 	if (pdev->dev.of_node && !of_property_read_u32(pdev->dev.of_node,
- 						       "dma-channel-mask",
-@@ -1754,12 +1760,6 @@ static int omap_dma_probe(struct platform_device *pdev)
- 	if (od->plat->dma_attr->dev_caps & HS_CHANNELS_RESERVED)
- 		bitmap_set(od->lch_bitmap, 0, 2);
-
--	od->lch_map = devm_kcalloc(&pdev->dev, od->lch_count,
--				   sizeof(*od->lch_map),
--				   GFP_KERNEL);
--	if (!od->lch_map)
--		return -ENOMEM;
--
- 	for (i = 0; i < od->dma_requests; i++) {
- 		rc = omap_dma_chan_init(od);
- 		if (rc) {
-@@ -1828,6 +1828,7 @@ static int omap_dma_probe(struct platform_device *pdev)
- 			if (od->ll123_supported)
- 				dma_pool_destroy(od->desc_pool);
- 			omap_dma_free(od);
-+			return rc;
- 		}
- 	}
-
-@@ -1852,17 +1853,18 @@ static void omap_dma_remove(struct platform_device *pdev)
- 	struct omap_dmadev *od = platform_get_drvdata(pdev);
- 	int irq;
-
--	if (od->cfg->may_lose_context)
-+	if (od->cfg->needs_busy_check || od->cfg->may_lose_context)
- 		cpu_pm_unregister_notifier(&od->nb);
-
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
-
--	irq = platform_get_irq(pdev, 1);
--	devm_free_irq(&pdev->dev, irq, od);
--
- 	dma_async_device_unregister(&od->ddev);
-
-+	irq = platform_get_irq(pdev, 1);
-+	if (irq > 0)
-+		devm_free_irq(&pdev->dev, irq, od);
-+
- 	if (!omap_dma_legacy(od)) {
- 		/* Disable all interrupts */
- 		omap_dma_glbl_write(od, IRQENABLE_L0, 0);
---
-2.54.0
+thanks,
+-- 
+js
+suse labs
 
