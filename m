@@ -1,54 +1,54 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C6D3E5EFE
-	for <linux-hardening@vger.kernel.org>; Fri, 29 May 2026 15:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875943FC5D3
+	for <linux-hardening@vger.kernel.org>; Fri, 29 May 2026 15:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780066955; cv=none; b=IPmY6IYurxCU+7DgI0ekmEjEZ4syf9E0IKjlW75xeXXrisaylZHrKHftH9vxnPy+7PmkBaB399y2vj4/8df/GW6N3uEQg2M+DX9vVsi2LwzQa2N5EEzmDKnuJIVdtoS7UXjFQzZ31cdxfMbEMlWE7cfcPafqD01MqCoRejY3JPo=
+	t=1780066956; cv=none; b=LAIJwhb39GsboueiOgqX6x+wM6j8PcQX3pE3LqtWq2n4zll0jDckE3EmXAEBFiBGR+Ec6vvjSj/oHqswL9ntpi3rxoRbsJugzDqpZB8/77KnJTGJu/xwadgXEolsW1hosHyT1JeTgnDTbosxNOh3sbe3FGtBENxUeeUqxdzMIDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780066955; c=relaxed/simple;
-	bh=rxjhw6NCkFydv9twVpR1AtWCBWmKfNC1CK4SdAjRO3M=;
+	s=arc-20240116; t=1780066956; c=relaxed/simple;
+	bh=0W8cmWeo/elCcQMUWDRnf0TD4aZw8wpUlwnXz0G5xws=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kR0zXx1EW6ksvSztH/HJbJHDnA1Kl0qyZ+hg1uINFACAhPA6PkzBNldb1frhCHevQAJavwi7YX82eN6W91JNRxOBsOlZKPGDrSkn06DHQe+uNGW/yZAQjZhq9jJrQjqP0Tedx1PLFkjjPvBJc2Yw/YU5dpwws4aCbrN2I1YLNqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gcvzzoxT; arc=none smtp.client-ip=209.85.208.74
+	 To:Cc:Content-Type; b=QGGKtzEm2THaNUZiv2q0n+42dfuNqTz7AGiRa/aWxCUXMeVPOcO0f30JAXb1uM0np/EgkIbp9iVBdEZXXzw8W1Qd9Fe8/yKMVc7nHeH6+yDZ5cq48cV/Lt/ie/FkWpWA+8ZiWJS5A3A7a+AlNCYbMwn4GT7OtLZdSycL1G+JKXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k1Je0QWo; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gcvzzoxT"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-68bd951b4bfso1150358a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 29 May 2026 08:02:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k1Je0QWo"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-44696b11265so16673816f8f.0
+        for <linux-hardening@vger.kernel.org>; Fri, 29 May 2026 08:02:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780066952; x=1780671752; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780066954; x=1780671754; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1EyPAfNS2y6WG0YPoe21sR6PBixrZIgpxdj99NPdSN8=;
-        b=gcvzzoxTqNj0MXV1QzrW+8aNH1yEBUNQlYt7HvtO5+L6VFv3/aFeUcJlknWQ5TlYai
-         FlHjs+JxpxLbrW+4QoA8Rc3TtpDNkzNDFu2f0YDHcqhK8x8zNwgbOfGKyedOTlzCfuXg
-         doIp0sQtGxCfaEIiBuDRrNtrTtyWcJrBRNk8lYePgS4prrwUWiXHvLaJQ3Ed6DKjB7M5
-         w0diBAD5UvLNfWxSNEKSnvnjDAU8zmZzrIEhkduh8KIyTRgQMNgoF9i+NsLxg8Hhn3nq
-         nRgpLRUUbttayuEBbfQ2wxo+08P1NWG92p8HzX3FaH8Ajgwdt02eJ6sqfwNqQFK+WvUb
-         gYWw==
+        bh=kuldBekegH9n0W4LLX2RtMOFJe4Z/6YrXjIgxtYQaL8=;
+        b=k1Je0QWoyo2afIXfsSLAnPowe4ak+9hm77V84lf5tr3MPCTzPOnZGY6fNl/y7OHnb4
+         MIru8IP38NIashBQc4jwa1EcyIjuTAaNqoYWYoGie9qWOB4z0AuvnxQzzqKZO3h0OfB0
+         Iu5H0ZTkhgyE+OU0ygmw8aiwkOmI5r0/9OrnuzqZCGcMfq7cjH9jazq9XSTznUHnrihK
+         BLI5ivIPLPGhCYfr1rWSnNVlCQW34w3Zilcj2azAeWvMFKrQfldI+ulX2vd+HETWkRMK
+         IHR2No/BgDH3mHSs8cQYHqqOYwGRD5as++2nymrZBFkDawfCByzDlNtxgq7Yva/kzaKy
+         /h4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780066952; x=1780671752;
+        d=1e100.net; s=20251104; t=1780066954; x=1780671754;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1EyPAfNS2y6WG0YPoe21sR6PBixrZIgpxdj99NPdSN8=;
-        b=OAvr8Imieykzt4iD7f0pEqUXKcgO2U7AqO6OtHOZRe0z48b2wbk60UnCAjP6NcP0GK
-         n7gPPrJNNgX1PPwqLdYT0yFhDLYBrL75bwc4imOMXPoc05zPCQd1Gyd9pYcmnNq5e9+0
-         wwiYGKab2Tgg/+DKjIFokSjp7FvyDSuzfa+zUnyCF3y/D2ZVB9DafO6CYdkF57Xsw3CB
-         bNEg8oFBvtJbw+/JmMjfJVXksznPmDHsPoM3A8nkVpKoeYGgQBKUKA/v1DDWodzJIP8V
-         HQkCyJonLQUQjzNpeOqFFIxPXAO24tJy2TC6n325q2dUVdAk/AdVJGDMcTh4X2HJbSFT
-         aJOw==
-X-Forwarded-Encrypted: i=1; AFNElJ+QPkjp0d089jo7DaPNMNmyy+FChEchUfohnUXusDMISsR6gOG/zscEcX2n2V8qofTmyfbvyodAVHU1fUPK67A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvv3HLaH7E9nsaUroJ+20+lyZ4pSUS0OUX87gR0neXH+CjH33Z
-	64091IizaIYcu8TVFdo8IPfbozlfvaPCiL8ZJ/uf0aGU1VlOrM6hnU9eSD99knfzUDWKuK31uw=
+        bh=kuldBekegH9n0W4LLX2RtMOFJe4Z/6YrXjIgxtYQaL8=;
+        b=IrQpvCPDhSTAzPNPSQLEsvg2dVRr+4KUK3dhIQhYlm0sqaN9JI8YpXNLiyh39jz6pU
+         Ti0XTxLoHxrSJS0+Ej0ERCmbkRlzqx5hm2rxmI8uQZhOSthVn2++N/kSiFNSbH7paKqu
+         kod/YsjiuAKkzgbShLYKzvutjl54atXfq3jm+44wjNCugGwDLiU20v0t15NYWfE+b0kF
+         vpcgsHH1urRdr31baLrDer9pqIiJhsa7zKdaibrd+bQW66I8w4WRUenyz0WiMp1n8JTX
+         rK0RUdzbX9WonyWMV6eO0ldaIPbxYHIcgfQj2ZcKJ6dgkQc8REHYFGdr4Qs2a90PHAb/
+         zSRA==
+X-Forwarded-Encrypted: i=1; AFNElJ8qZXewWxGsS8i31lWsYo4W/IZl145X5xznv59WaTceyQT743g6bRQ2PU5pwh6d0RhctkzyP8PCBRdTePYX0DQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNf96V0OzZ1469IQAevePYdzAwkX/jFWDuiwk5vVeVQNU/VLks
+	UmNqbjWhcXWyYRvdLN+J2qa17fr/1KX6lR7ZVJTU/erd7tsS6LaGVfAnNlSXmQb3DBRe05vnHA=
 	=
-X-Received: from edpg3.prod.google.com ([2002:aa7:d1c3:0:b0:68b:f715:5345])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:a29b:10b0:683:be46:c20c
- with SMTP id 4fb4d7f45d1cf-68c8a65763dmr15813a12.16.1780066952419; Fri, 29
- May 2026 08:02:32 -0700 (PDT)
-Date: Fri, 29 May 2026 17:02:03 +0200
+X-Received: from wmbds9.prod.google.com ([2002:a05:600c:6289:b0:488:c686:2b56])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3552:b0:490:58f4:ba23
+ with SMTP id 5b1f17b1804b1-4909c0ea669mr54166795e9.30.1780066953743; Fri, 29
+ May 2026 08:02:33 -0700 (PDT)
+Date: Fri, 29 May 2026 17:02:04 +0200
 In-Reply-To: <20260529150150.1670604-17-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,14 +58,14 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260529150150.1670604-17-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1322; i=ardb@kernel.org;
- h=from:subject; bh=4saoJOhT3cEc7dpWXJZksxFCf7gWJDz5CDZcsy0RHE0=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIUtyVe4Vpn2a3EuL7z5c9yPshq/FTf8NSmKzXz68s33ZB
- ld1mYh7HaUsDGJcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAibDIM/2u5Yv7kFfP5v2Ww
- OfqOx3NBpOKey7t5vhR6LI5Y9SY78z3D/5SO1Jh354yPPvIQfsjEWFAfIL3vxawn2VI8ya8XJ21 dxwwA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1898; i=ardb@kernel.org;
+ h=from:subject; bh=dIgftrvtjy9n7J++AHRmcZhewFAl9rYaD0F4euqeHS8=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIUtyVd47S5EVE1yUzEILxG4o87+S6v8hxD9hp5NyQ8ruu
+ 0eqhL90lLIwiHExyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIkcVGP4X3vEZYrpXP0XPhoq
+ LB8n7Xn7w1MyccZGAxbjdtX1WbwLNjL89511yu9VgsV9/ZkbXeb/7X59yD7RKOaQzExH3lUBFrd CeQA=
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260529150150.1670604-29-ardb+git@google.com>
-Subject: [PATCH v7 12/15] sh: Drop cache flush of the zero page at boot
+Message-ID: <20260529150150.1670604-30-ardb+git@google.com>
+Subject: [PATCH v7 13/15] mm: Make empty_zero_page[] const
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, 
@@ -75,49 +75,58 @@ Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com,
 	Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@kernel.org>, 
 	Andrew Morton <akpm@linux-foundation.org>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
 	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-sh@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>
+	linux-sh@vger.kernel.org, Feng Tang <feng.tang@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-SuperH performs cache maintenance on the zero page during boot,
-presumably because before commit
+The empty zero page is used to back any kernel or user space mapping
+that is supposed to remain cleared, and so the page itself is never
+supposed to be modified.
 
-  6215d9f4470f ("arch, mm: consolidate empty_zero_page")
+So mark it as const, which moves it into .rodata rather than .bss: on
+most architectures, this ensures that both the kernel's mapping of it
+and any aliases that are accessible via the kernel direct (linear) map
+are mapped read-only, and cannot be used (inadvertently or maliciously)
+to corrupt the contents of the zero page.
 
-the zero page did double duty as a boot params region, and was cleared
-separately, as it was not part of BSS. The memset() in question was
-dropped by that commit, but the __flush_wback_region() call remained.
-
-As empty_zero_page[] has been moved to BSS, it can be treated as any
-other BSS memory, and so the cache flush can be dropped.
-
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Reviewed-by: Jann Horn <jannh@google.com>
+Reviewed-by: Feng Tang <feng.tang@linux.alibaba.com>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/sh/mm/init.c | 3 ---
- 1 file changed, 3 deletions(-)
+ include/linux/pgtable.h | 2 +-
+ mm/mm_init.c            | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index 4e40d5e96be9..110308bdef01 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -331,9 +331,6 @@ void __init mem_init(void)
- 	/* Set this up early, so we can take care of the zero page */
- 	cpu_cache_init();
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index cdd68ed3ae1a..67aa23814010 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -1993,7 +1993,7 @@ static inline unsigned long zero_pfn(unsigned long addr)
+ 	return zero_page_pfn;
+ }
  
--	/* clear the zero-page */
--	__flush_wback_region(empty_zero_page, PAGE_SIZE);
--
- 	vsyscall_init();
+-extern uint8_t empty_zero_page[PAGE_SIZE];
++extern const uint8_t empty_zero_page[PAGE_SIZE];
+ extern struct page *__zero_page;
  
- 	pr_info("virtual kernel memory layout:\n"
+ static inline struct page *_zero_page(unsigned long addr)
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index f9f8e1af921c..46cf001238c5 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -57,7 +57,7 @@ unsigned long zero_page_pfn __ro_after_init;
+ EXPORT_SYMBOL(zero_page_pfn);
+ 
+ #ifndef __HAVE_COLOR_ZERO_PAGE
+-uint8_t empty_zero_page[PAGE_SIZE] __page_aligned_bss;
++const uint8_t empty_zero_page[PAGE_SIZE] __aligned(PAGE_SIZE);
+ EXPORT_SYMBOL(empty_zero_page);
+ 
+ struct page *__zero_page __ro_after_init;
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
