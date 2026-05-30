@@ -1,187 +1,177 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232593FF8AA
-	for <linux-hardening@vger.kernel.org>; Fri, 29 May 2026 15:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA94243964;
+	Sat, 30 May 2026 10:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780066959; cv=none; b=pPCu5AmTRvCUX1VLjFqfrO2kYT7oxRYZyYqHAsjqkyagnFC2VMIse8ngUuR4baV8OtaGKUFQ4Gjh33WInibCJ6sMyoauqY+Ohe6Nx635Y3WbUaCiXfNdOpxc+s0kxCJk6LLQJZf2c+VtkV9FF3Ui59WKAvoo45g71g4K0Ea72pQ=
+	t=1780135719; cv=none; b=g+Zk4tO84RA2coVPqsF31Pj3yxVcmgi0KTAGiiLiHSj5wrL/+GI7bq25OgvUey5G3UyFqPIbxl7HQSoxJAqFLjuNB/Db1yAInm2BQJj7tsMybyp2wcBY58bR0auB9MSTn+rV+MToPNrOhdofPCSci3Kn4UTE76GLwJQuIlTlN4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780066959; c=relaxed/simple;
-	bh=wk/GXhyQgaR0CIaJVu8tmQnleFEAH/nc1GEBzpfXZ3k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=u7sDGdTFLicUzp0ix94OSsbJWV/ORibeDexZtw9sG+Tq1l03w9KdlIo/y4HEOZcspUbWn2xrZ8MEpnmxApeMIlGWUIu3nyfV1Jo8H9ZCaDiAKnMzaAMutuKRG0MqMepaq/KR+ZuHbZlUfld67b8GGDC3wUtmfiTQ1JUVa0qNQ74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gU4m+XxN; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1780135719; c=relaxed/simple;
+	bh=TOe7mEHFlLQvPkoj0NtPWF/Jz6i3tLW07ecXKhcAtWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=DA/f3QsIZuhpFE/yeK4kWrAZiPoihKK36egxx+kx8cXgNrW7WuQYIup669HTBD1Bk8q5PXw/B1d4fJ4YTTTfHWi+GEDyc3WgDuvBnKJA4ZkINalKY8Nw8hHkaK1/0SjIRFdTROuzSC02Wmd7iSP0nSyAJhA4xMReiEkjLBN86Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.us; spf=pass smtp.mailfrom=gmx.us; dkim=pass (2048-bit key) header.d=gmx.us header.i=len.bao@gmx.us header.b=dWD/P41z; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gU4m+XxN"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4904ee02e72so60809545e9.1
-        for <linux-hardening@vger.kernel.org>; Fri, 29 May 2026 08:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780066956; x=1780671756; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XQKx64xQcW6ZDY2ZWUkqEvIbYSGgY2Fsos5YN6YfoOU=;
-        b=gU4m+XxNynAKLwkB+53YrtWiImthrECP9W2VAJTeQV42+ip7ww8TMgZloFXFdqJHGF
-         iBbfs2gMGoHC4XEuba8QN0qLLzi9E2KUAi80dhGGZsxbbRFSY+VxvXAVbYO/wv70a8Cx
-         R58nSzLDIZn/XSgHygaZNuOLbsGlGCkprRZ+k4MZsSRZOrKyxgqpDs+iTn/z4v0ab0R6
-         S3aOi3GMRRJbvYFMHyvfOuax06jJDrLFFnNFNLMT8CeBFzp73iB8uazV53OtKuKB6xqk
-         cDErSkOSfpCeEvyP3yz/iAHwQm8QtmYsG4OP1KPPG7iy+Pwk/PQujWMmWU4I5RoaUPcH
-         O0bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780066956; x=1780671756;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XQKx64xQcW6ZDY2ZWUkqEvIbYSGgY2Fsos5YN6YfoOU=;
-        b=A1qsA50GvEo4FRvMEaLITBz/yNULuVIztMHcVmFahyNXCYTbxNXz1c+AT/E9fnCwu6
-         yPV+2P0CoGmAgTjRrRbBPt+1JLHsymGw/fT0612a7VLKHT3AkNi4i2c/eWfWKlORtjke
-         xwNcQ2RigDA6YqiB61xnilAMK9Iaf54if7z/JGCqTAW3Cyc8IPXDTTclEZY2BtigYmPP
-         EjXOvmqpWFR269jxmmuTVfzYTpA+qsoJkrKvJZWT60EyYNeWfS5Fvh1v2wNfQc9bgG3R
-         VNSXxgf5Az7GznulgIHkiqhs28VDEwLiEXDrOec3YdZvWuOk7IrYusF66cUZ7CgQCFyk
-         AwPg==
-X-Forwarded-Encrypted: i=1; AFNElJ8si8EzCvPrLBNoj3P8sALz3JUthuiWY/PshWxZmJjZGCc4MGZFUOOYrsbAKHrboI72fR+s+tocftpLBGX6GzM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRODD7UHUmRXDuO0NJIAHDAUDYpUr+n/IUDUtE7+gx7SqQk0/6
-	K17hqyTJY6nZWLk/9OreBhvMG+zc1388rjESNf/BZjd0hEhx+W5cMh5ZUwL3Tiubb5+zdxAOVg=
-	=
-X-Received: from wmbez9.prod.google.com ([2002:a05:600c:83c9:b0:48f:e3fc:d858])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4fd6:b0:490:5655:8d3f
- with SMTP id 5b1f17b1804b1-4909c0ed167mr56446625e9.28.1780066956218; Fri, 29
- May 2026 08:02:36 -0700 (PDT)
-Date: Fri, 29 May 2026 17:02:06 +0200
-In-Reply-To: <20260529150150.1670604-17-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=gmx.us header.i=len.bao@gmx.us header.b="dWD/P41z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.us;
+	s=s31663417; t=1780135710; x=1780740510; i=len.bao@gmx.us;
+	bh=TOe7mEHFlLQvPkoj0NtPWF/Jz6i3tLW07ecXKhcAtWk=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=dWD/P41zna4xZZNTklSVvs5TK1vN+gdULHm0RP/rf691Sw6ruYhw5acHwflqIDvm
+	 fH4bRAeeYYB+/aMT4ctJH00Aq4SnHsnScb8MEUkZrr0pPePIvXxCZNuXNPjzjBSSH
+	 pNkCMcY4VdiYTlZPHfLsAJU+RlYoioT8ZNfocK78TNLYTQywYDWbF3HI8t2zLtRtw
+	 i3uo1TZqblcLwuUvgdbHzpddTK6A2YhXsTF5xzscJW8u3zh/+IhmchmLco+YiMlXI
+	 3wMIL/qAkVAUJ5hhSic5pt1V2yNEkjbYLsX87kr+ik8VDRC0jHQ/Gzmlo4X5cjNrs
+	 VNVXLtxBDxtbTryVVw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MZTmY-1wppJS2J9C-00MIyc; Sat, 30
+ May 2026 12:08:29 +0200
+Date: Sat, 30 May 2026 10:08:07 +0000
+From: Len Bao <len.bao@gmx.us>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Len Bao <len.bao@gmx.us>, Bartosz Golaszewski <brgl@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH] gpiolib: Mark gpio_devt, gpiolib_initialized and
+ gpio_stub_drv as __ro_after_init
+Message-ID: <ahq3BxvtVcF0Zife@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260529150150.1670604-17-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3406; i=ardb@kernel.org;
- h=from:subject; bh=XSavLFKj4RYiFTOsx9dpbIASgaMnJejevEPNl4lZqhM=;
- b=kA0DAAoWMG4JVi59LVwByyZiAGoZqnCghcJA5fPW2Z72X9X37eu+fqYYMOTvKUc5VemCkE+q7
- oh1BAAWCgAdFiEEEJv97rnLkRp9Q5odMG4JVi59LVwFAmoZqnAACgkQMG4JVi59LVy8pQEA6HlB
- 3WUW3N8HA9+DidOWBYQI1frKFGwVYEQ7O27c8DUBAJEH2JVQ9ldiz63/YvZsdSlPfdvNDLvL7Jf SNW10NGsD
-X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260529150150.1670604-32-ardb+git@google.com>
-Subject: [PATCH v7 15/15] arm64: mm: Unmap kernel data/bss entirely from the
- linear map
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, 
-	mark.rutland@arm.com, Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, 
-	Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>, 
-	Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-sh@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD++jL=5W56YAgJ8o7XXZRJQ_LJxW87SPc_C0VEYW0EccxpJ5Q@mail.gmail.com>
+X-Provags-ID: V03:K1:YVhw7+H5pYBzouGiKCzTVplqLibUBf/k3AQcGUZH1ob7rKrKEU6
+ BvLxRrwPCJ064Wy/oOdOmwfTU9pLOSjd3eK2BY/izMvu0g/P0Ac0WqLRHxa1vPGlX8yzrfh
+ ErJxD/gkM7jwt/cWLTENVfDgcl1N3AKyff3Bs6K1NU9jlNIKsNrII6OrQIoAI2Q60AUghHb
+ GDLQg9tlm7AXCjBly7Zkg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:N9gjyWy0KUY=;OlBxoP34Eh3KZnQgV7nl7/c9fFy
+ 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
+ 4+gCBDi0uIkZxKsH3c=
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Hi Linus,
 
-The linear aliases of the kernel text and rodata are also mapped
-read-only in the linear map. Given that the contents of these regions
-are mostly identical to the version in the loadable image, mapping them
-read-only and leaving their contents visible is a reasonable hardening
-measure.
+On Mon, May 25, 2026 at 10:10:02AM +0200, Linus Walleij wrote:
+> Hi Len,
+>=20
+> thanks for your patch!
+>=20
+> On Sat, May 16, 2026 at 12:58=E2=80=AFPM Len Bao <len.bao@gmx.us> wrote:
+>=20
+> > The 'gpio_devt' and 'gpiolib_initialized' variables are initialized on=
+ly
+> > during the init phase in the 'gpiolib_dev_init' function and never
+> > changed. So, mark these as __ro_after_init.
+> >
+> > The 'gpio_stub_drv' variable is initialized only in the declaration an=
+d
+> > never changed. So, this variable could be 'const', but using the
+> > 'driver_register' and 'driver_unregister' functions discards the 'cons=
+t'
+> > qualifier. Therefore, as an alternative, mark it as a __ro_after_init.
+> >
+> > Signed-off-by: Len Bao <len.bao@gmx.us>
+>=20
+> Patches like this should be CC to linux-hardening.
 
-Data and bss, however, are now also mapped read-only but the contents of
-these regions are more likely to contain data that we'd rather not leak.
-So let's unmap these entirely in the linear map when the kernel is
-running normally.
+Ok, next time I will CC to linux-hardening. Thanks for the guidance.
 
-When going into hibernation or waking up from it, these regions need to
-be mapped, so map the region initially, and toggle the valid bit so
-map/unmap the region as needed.
+> Anyways it looks good to me!
+> Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-Doing so is required because pages covering the kernel image are marked
-as PageReserved, and therefore disregarded for snapshotting by the
-hibernate logic unless they are mapped.
+Thanks for your time to look at this.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/arm64/mm/mmu.c | 45 ++++++++++++++++++--
- 1 file changed, 41 insertions(+), 4 deletions(-)
+Regards,
+Len Bao
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 7b18dc2f1721..07a6fa210171 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -24,6 +24,7 @@
- #include <linux/mm.h>
- #include <linux/vmalloc.h>
- #include <linux/set_memory.h>
-+#include <linux/suspend.h>
- #include <linux/kfence.h>
- #include <linux/pkeys.h>
- #include <linux/mm_inline.h>
-@@ -1056,6 +1057,29 @@ static void __init __map_memblock(phys_addr_t start, phys_addr_t end,
- 				 end - start, prot, early_pgtable_alloc, flags);
- }
- 
-+static void mark_linear_data_alias_valid(bool valid)
-+{
-+	set_memory_valid((unsigned long)lm_alias(__init_end),
-+			 (unsigned long)(__bss_stop - __init_end) / PAGE_SIZE,
-+			 valid);
-+}
-+
-+static int arm64_hibernate_pm_notify(struct notifier_block *nb,
-+				     unsigned long mode, void *unused)
-+{
-+	switch (mode) {
-+	default:
-+		break;
-+	case PM_POST_HIBERNATION:
-+		mark_linear_data_alias_valid(false);
-+		break;
-+	case PM_HIBERNATION_PREPARE:
-+		mark_linear_data_alias_valid(true);
-+		break;
-+	}
-+	return 0;
-+}
-+
- void __init mark_linear_text_alias_ro(void)
- {
- 	/*
-@@ -1064,6 +1088,21 @@ void __init mark_linear_text_alias_ro(void)
- 	update_mapping_prot(__pa_symbol(_text), (unsigned long)lm_alias(_text),
- 			    (unsigned long)__init_begin - (unsigned long)_text,
- 			    PAGE_KERNEL_RO);
-+
-+	/*
-+	 * Register a PM notifier to remap the linear alias of data/bss as
-+	 * valid read-only before hibernation. This is needed because the
-+	 * snapshot logic disregards PageReserved pages (such as the ones
-+	 * covering the kernel image) unless they are mapped in the linear
-+	 * map.
-+	 */
-+	if (IS_ENABLED(CONFIG_HIBERNATION)) {
-+		static struct notifier_block nb = {
-+			.notifier_call = arm64_hibernate_pm_notify
-+		};
-+
-+		register_pm_notifier(&nb);
-+	}
- }
- 
- #ifdef CONFIG_KFENCE
-@@ -1193,10 +1232,8 @@ static void __init map_mem(void)
- 			       flags);
- 	}
- 
--	/* Map the kernel data/bss read-only in the linear map */
--	__map_memblock(init_end, kernel_end, PAGE_KERNEL_RO, flags);
--	flush_tlb_kernel_range((unsigned long)lm_alias(__init_end),
--			       (unsigned long)lm_alias(__bss_stop));
-+	/* Map the kernel data/bss as invalid in the linear map */
-+	mark_linear_data_alias_valid(false);
- }
- 
- void mark_rodata_ro(void)
--- 
-2.54.0.823.g6e5bcc1fc9-goog
-
+> Yours,
+> Linus Walleij
