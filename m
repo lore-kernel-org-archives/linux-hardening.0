@@ -1,93 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3883093A6;
-	Sat, 30 May 2026 16:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798DD27A477;
+	Sat, 30 May 2026 17:44:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780157989; cv=none; b=Aicyo9OojNaheMpa3a2a7z12hRXIKQPagy0i4XoSdZkp6vaFHv6bRDAGUua/rQsz8Pxo1UepVycUKQIqOdAfOtBldAbAxdCKEJf8Jcf4XSs4NbOgYJN9gXgiZG71hND/+nvqr4m5lVuLrYZ0clsR3BtBjVS6E3h9ApPgLRWlk+s=
+	t=1780163063; cv=none; b=FLloXxoMOgZEir0hksMVUx4VN9gTnWpE69pFu5SDViQRfpHgWRqYDFRz3duqlORQZjVGiOu8tAmoVYktkR7RhZrzFTrN4q7dthS6yfgUZj1RMAOwxQIq6JaSz8/RvFZO3ykv8f9zwaJLfzqTznzTy7dfxrB+m2a6Uf7iicfpV5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780157989; c=relaxed/simple;
-	bh=3ZBflBeNYm+c/oTiCGoL+2HSsJ8/5ZXdqbhea4+si1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uW3vWjGffCE7W6DiQjT2zKRpaE70FjFViu9vAzB9b2QKblpLkU1fF/A45cQJQRizCHUcORP7EktO9eWwPIRcs1CcQYu4hN0ea8oSMmqtyqzzceAc2f3r4ZexCzEOl4dD7du9RfI4+KPSGJXtUpt8ZQ3V26ibPIbSP7sBgszMJYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZl0+4I9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780163063; c=relaxed/simple;
+	bh=RAUgQy0akPH+YgQtXI1FHiLsCDHvu0EgGOAQVYFbQNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DtTeqN7HqMh+rQ+ZcnUO0vX7YuRc6a0kffcTHKYlRwe5n/lPlN9+s5sHnVqNP+djtBhG8e1ySWXFMHdD5vSN40agZ+WZhfiOgPDxt8DPXdSgI5+isgLksYd7A0YYdypspLuDeZUN9sBWxiE4TptPWt7/YsW7JfYM0iiMYdbOyTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uwQg8/EF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZl0+4I9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD33E1F00893;
-	Sat, 30 May 2026 16:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780157987;
-	bh=WxYmQxwwBxgWs6asR9XSCI+irQfqn2faBEqKE1hn53E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WZl0+4I9eq0OPPyxyDBdqCGRR+y0CoJpx7P9J1ZNHafWZGZX1fuK9HT7HOCSp1FVU
-	 9ddWJ9lDITFjq9eKGfZ8XgcPI1Gceue8QxkZpOu0JwKjN75XEWJg4tA2a8UNAkWZvu
-	 d2ASsHkW3EY1IZ3rOpPzq31XPfEMQM756K5+/fSW612wkX78yv2eAZ66ejeZV4LlfY
-	 gAu+RNJYW42KKsssq+PHsl1z2ZSd/eOK+QZCgtAc5FgOD8sjUj3miMaJcP2gtaD17q
-	 8U+HAlTtH77+9KCSbzDnS36KQEJCJesVoZVR5wfQkL3btqSLgCjvtjIMAmDS1I+rUb
-	 wf48OWQ3Lcqyg==
-Date: Sat, 30 May 2026 19:19:36 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Liz Prucka <lizprucka@google.com>,
-	Seth Jenkins <sethjenkins@google.com>, Kees Cook <kees@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jann Horn <jannh@google.com>, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-sh@vger.kernel.org,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v7 12/15] sh: Drop cache flush of the zero page at boot
-Message-ID: <ahsOGMc7ys3H_oAt@kernel.org>
-References: <20260529150150.1670604-17-ardb+git@google.com>
- <20260529150150.1670604-29-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uwQg8/EF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB351F00893;
+	Sat, 30 May 2026 17:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1780163062;
+	bh=pnJ8AQExv4rnuA5SunVrfERB2WIBbwpQm5JOUdq+4oc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=uwQg8/EFxScfU3DPqZoXDkhqy1N8gbn5YqzA55uFCAfpEp+U+XTfF3hV6tTMPd0zg
+	 x3skYr0U/JoHPmlnfCR/lcPyusehG565Zza8ef/TcGl/0y4xDsbxriOWoHlUDWOzkn
+	 k5ccvn5zpkkKeg9bKTOrhgWhZ/0BOLlKDCKVyJbo=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org,
+	"stable@vger.kernel.org, Kees Cook" <keescook@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Tony Luck <tony.luck@intel.com>,
+	linux-hardening@vger.kernel.org,
+	Robert Garcia <rob_garcia@163.com>
+Subject: [PATCH 5.15 144/776] pstore: inode: Only d_invalidate() is needed
+Date: Sat, 30 May 2026 17:57:38 +0200
+Message-ID: <20260530160244.141751549@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260530160240.228940103@linuxfoundation.org>
+References: <20260530160240.228940103@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260529150150.1670604-29-ardb+git@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 29, 2026 at 05:02:03PM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> SuperH performs cache maintenance on the zero page during boot,
-> presumably because before commit
-> 
->   6215d9f4470f ("arch, mm: consolidate empty_zero_page")
-> 
-> the zero page did double duty as a boot params region, and was cleared
-> separately, as it was not part of BSS. The memset() in question was
-> dropped by that commit, but the __flush_wback_region() call remained.
-> 
-> As empty_zero_page[] has been moved to BSS, it can be treated as any
-> other BSS memory, and so the cache flush can be dropped.
-> 
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+5.15-stable review patch.  If anyone has any objections, please let me know.
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+------------------
 
-> ---
->  arch/sh/mm/init.c | 3 ---
->  1 file changed, 3 deletions(-)
+From: Kees Cook <keescook@chromium.org>
 
--- 
-Sincerely yours,
-Mike.
+[ Upstream commit a43e0fc5e9134a46515de2f2f8d4100b74e50de3 ]
+
+Unloading a modular pstore backend with records in pstorefs would
+trigger the dput() double-drop warning:
+
+  WARNING: CPU: 0 PID: 2569 at fs/dcache.c:762 dput.part.0+0x3f3/0x410
+
+Using the combo of d_drop()/dput() (as mentioned in
+Documentation/filesystems/vfs.rst) isn't the right approach here, and
+leads to the reference counting problem seen above. Use d_invalidate()
+and update the code to not bother checking for error codes that can
+never happen.
+
+Suggested-by: Alexander Viro <viro@zeniv.linux.org.uk>
+Fixes: 609e28bb139e ("pstore: Remove filesystem records when backend is unregistered")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-hardening@vger.kernel.org
+[ Minor context change fixed. ]
+Signed-off-by: Robert Garcia <rob_garcia@163.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ fs/pstore/inode.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -312,7 +312,6 @@ int pstore_put_backend_records(struct ps
+ {
+ 	struct pstore_private *pos, *tmp;
+ 	struct dentry *root;
+-	int rc = 0;
+ 
+ 	root = psinfo_lock_root();
+ 	if (!root)
+@@ -322,11 +321,8 @@ int pstore_put_backend_records(struct ps
+ 	list_for_each_entry_safe(pos, tmp, &records_list, list) {
+ 		if (pos->record->psi == psi) {
+ 			list_del_init(&pos->list);
+-			rc = simple_unlink(d_inode(root), pos->dentry);
+-			if (WARN_ON(rc))
+-				break;
+-			d_drop(pos->dentry);
+-			dput(pos->dentry);
++			d_invalidate(pos->dentry);
++			simple_unlink(d_inode(root), pos->dentry);
+ 			pos->dentry = NULL;
+ 		}
+ 	}
+@@ -334,7 +330,7 @@ int pstore_put_backend_records(struct ps
+ 
+ 	inode_unlock(d_inode(root));
+ 
+-	return rc;
++	return 0;
+ }
+ 
+ /*
+
+
