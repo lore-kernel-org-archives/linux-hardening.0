@@ -1,178 +1,149 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB7C2DFA4A
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Jun 2026 12:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680B03D648A
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Jun 2026 12:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780403629; cv=none; b=qrPNhaSwD+wQ7CHWenypheLfPNrc//+ESC6Ek+lt011pvpb+N7CzyCRYhGv7NuHN4R8yWb6LZJfgJ57A34+HmbMkbXZt1FXtxncg2Oqu3rqxqdSjS8djCRvEr9yJ6oVKieERNu1PQyT9KuY9HZy04xKt0czteMvAKmNFAoElx+Y=
+	t=1780404866; cv=none; b=rTIf8z3RpBgqU5Gk/rpslEB2FgUYMGFYIzpYs7suOu80KsroI0xIlGx2eXMKsuTl3WXbNY9H+tj+C2iRRM7+4Rz9Zkj7fZD3JIOgOQS0kVuWt85hBLL+tw/WyTNQk0yRK92Ic4Wbe0W/sYqAapvZ2WC6DD9au0oWPw8AWbkb93c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780403629; c=relaxed/simple;
-	bh=Dt7ynl7RjMDm10IwkFbV7yaqQ3XCHkv1Jhl7dMLZbl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WH4MJl8VhXz7pY4lZZVcsfzjkEetCUmdElbsBDhgLjvoV15Xk7aEQ3OxUwlEzSqDc5PGDNpfSm+1xrnyKCHmDDgdJVraCaPosWgB2a30XfPpIlPrZQSi7MJRHvHCsLcHypyIbzTWAll1bikWOdX74qmgsF8wNii0uZmZDCljzfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Mjg0KMTz; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Mjg0KMTz"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-5175b6c4e19so15977691cf.0
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Jun 2026 05:33:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1780403626; x=1781008426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3fuMy8ZTlB4sZmM4SRNfS45Rtpr0e2y/Uhs3uZMD108=;
-        b=Mjg0KMTzNzeCi7FV4Cglipctnd4qTRNJBs44FcFTysdYrVy+WlGmP/0GDFu0J+wJ7m
-         R/AuPEohevy1QNUE+WUDGubmJcDZZnffsV7i/Zze94JkqRPhbPdy15Qk6yh0s9q2hu1/
-         bI7dm1G26H7om23e5xJModDeVrIOi0meO3NUWse+J5lk5WegiPpkj76Qz79IXx4wghAH
-         J1I3OvFvwHvZLYWvaUMDTJFwu8CeiZpFpTAa6VbXuL1p2SxsoyL2H/fX/865+UB4pvvq
-         PhJR1KIiS2V1O2Xw5dcvwmRIXL5LbfWF9nRanp+5gjV4eMn6+GEiDs6cHaCPjs+09FpH
-         tsZw==
+	s=arc-20240116; t=1780404866; c=relaxed/simple;
+	bh=Sn677f1avDZkCsXDJK9ax5cLUEJm/EVUXZTw1JXjsYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jsWihxWRkFfUqtAaCQX4HpPhwXfCtcqkvifS0r4FaHSHQuD4fiK2hYlD1/+K7Q5tTIPtZSy/7FJh7STmLGsORXNMUbzc/UBlpnQSAIXONwbxXkNHQfS7+TGGsBxmhBwyow4OF0WVN4aN7yyXf5brrt3pPXoS2rGq+4c93j8CnUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-59be89d310aso2446996e0c.0
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Jun 2026 05:54:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780403626; x=1781008426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3fuMy8ZTlB4sZmM4SRNfS45Rtpr0e2y/Uhs3uZMD108=;
-        b=e7L8jU1U5MRgp/cEHuHVtK9QBB2ScItTxGg/f4Wq//aAaIFBFheozNAYJxUB33yuKH
-         fObVvAXveFQKtNZG2jGpqH0Z/C8UmgfHFQrAMUGdFloSP0N2zNoVupTMMm7kkh03+v/r
-         rGXq0KYxO69qJ8M2KWkn6AYSchrnyXqtj/H0aL/WWQ5kj7KncpHAmHnIfhhZR3ZX/+75
-         4f0f9wHrbZkW2a1KmptwK05P1wG2t3tyjZO9xRGLl+xrahw3It9hWMh7z6p19zhBgtyb
-         jjLoKoD+6Hd7M3hxi+Vu4NTdBRYrxTtbJ4OkKeKFacejO6Ao1H0YvetVU8r+7PYhOpKp
-         xicg==
-X-Forwarded-Encrypted: i=1; AFNElJ+2K+0QPrL05l2mJ4WV1HrkG5jZfHVA78nRQywk8n9tkdB2U4DKS2A1rWezc6lgg8mdUWrGhtXNectOFelzZMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9srPE8aDXoe9pd7D7runSk2SKzanIhHmk6hJquW3IYy/Wl8jU
-	7CNMNf1uPRHSbClkwAeMaIbzlixJFv58H8fbvC4IhmQQymTfD68MvNGrMYxPlsM2pV8=
-X-Gm-Gg: Acq92OGn9K+msVEmFac1uP5m/G02sOX4A0Hv57G5y7JAkvXSWNq8uyLgBMu5RpHxWkH
-	DFSj0fITVjdJEkpWCWR/IQlr/v6e2CoBFxWmNjcqgA7eN9hKaD22duTHZ4uRs61FgOlYdO2LL27
-	HfvcJRu4xNx3RaW1SygJUV4GFmE6hSo0gIKBST1BWZKdz61gfWP5eueeRHWwCltBjN8meGecJOR
-	3tS0K24OVYlJPgLI4wFO+h/w8643uFZSRicSLJAU7EERPyx6+U/ki+coaHXuD3lcMoHTGpfUKB9
-	zOVOjMbxIZvx9fphgH3NWa4jbRhuo6iVeJF9VdOeVuqQ6IkbYSsceslbiCYycrtDH1Lp2zpRgKu
-	VivaDHAYRqadnibRk2yADbZtyC6EAAJBSMFwq2xo0vCq1l/+jhzlsR+J01AGuAjXHuKoC6HLcNG
-	UV7e1FUs5Rcj65Yr5QheoMSEnK5DbaY1vRpzQdsIM4/v3ltVqTmxihPk/p2T8xIU+P40Gfoym6W
-	juHj1sWLWFdxhjG
-X-Received: by 2002:a05:622a:190a:b0:509:2527:d789 with SMTP id d75a77b69052e-5173a5c05ecmr228232631cf.6.1780403625864;
-        Tue, 02 Jun 2026 05:33:45 -0700 (PDT)
-Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51741d6a240sm78686221cf.18.2026.06.02.05.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 05:33:45 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1wUOJU-00000003m5x-3DKO;
-	Tue, 02 Jun 2026 09:33:44 -0300
-Date: Tue, 2 Jun 2026 09:33:44 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
-	Pengpeng Hou <pengpeng@iscas.ac.cn>, stable@vger.kernel.org,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>,
-	Gabriel Somlo <somlo@cmu.edu>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
-	Tiwei Bie <tiwei.btw@antgroup.com>,
-	Benjamin Berg <benjamin.berg@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-modules@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-mm@kvack.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, qemu-devel@nongnu.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-	usb-storage@lists.one-eyed-alien.net,
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, netdev@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 01/11] params: bound array element output to the caller's
- page buffer
-Message-ID: <20260602123344.GG2487554@ziepe.ca>
-References: <20260521133315.work.845-kees@kernel.org>
- <20260521133326.2465264-1-kees@kernel.org>
- <ah699hwLxIIOZ0-7@ashevche-desk.local>
+        d=1e100.net; s=20251104; t=1780404864; x=1781009664;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wi8lw9em5f2a38ue4BrDD+pK8F7cdkfj8OF9muR3yps=;
+        b=i81uZ5Eo83cvYlhABh+4OaIrvpDQ62kuWZICeo+0wZFbjIFoj0j+WqvOVle8ldfL0m
+         xnM63qm19zCr5qC03bfiGUf6HafL7/XDvWuL8KOYgkBZE0NLInE3dMjwlLEADbGiQLl3
+         nunEW78NKx5qZ+rBuHKk94GejATZ1ba4wpPtDYefqpMoAtqh8ODk4KJzh+vfVUMnmtsU
+         MUQDMvAzWt9/aQu1y5RZ12qDwrc12GEYkyKJVzzrJE2fqoPdTXvFcKcWeOB1eV5ck3b0
+         SnqFLjRBap07X0KXblJEEMfU8PGMe6ZqA0XUQyezsXRc31PpLngLJQEHLvYOmW/rf7Vf
+         CzOQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/45HRfQJwMdOEKPazPj4MqAjABd1WBa221ZUOyH3xc+lpGB602v4WAwT2bMJHmj535BnUmwPYaS33s487fXCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzXOROCHsa+ygnoJ5sol+L5XFxX1dB/mxGNsS+nVVUvCJuO7yH
+	g6pOcItb8jDS0HeAhZcD9LaHErdDjupAlqvkf7stMQykXvHtqvfHttl7qPtlY6Klxzs=
+X-Gm-Gg: Acq92OG5RHEXFAY6eepek6MyT1dUP/mwKawA0P2qVk4eHj4SK4HNM0ajZhVub/TCJqv
+	1oxMPtDgVOOJYlhq7BEKxyr+SVsCBF03z/0SbSjpZg3ZvD8K0wVKG4Xtxas50s+NtRKBAKEo6Li
+	WCfhddlwXvNcCS4L2bjZvdOgmO7LlXbBljdzXDq2sMrj+g5j+cr4KJ+SaS2cvF8dd6OvNi8EisG
+	iPdKewS6ajbn4InmQO5iPPoKhvwlhbssbgCvVCCv5DtkXuxKNFhuO1SocGPMzaETyhEqozv9Lth
+	82bes4C6dM2ij3Tegl+kxcwBJSMrXVZOw1mCJrRiI3UU/kk1kCSnSEIqNZmaQVY2juXyalGZ765
+	4sZvjKtOaMOeFUjJf0r0KP4g7Jr5IHah6LvCHwDs1flYaWutVZo4UoJthaNh7rDivAZYn7TaIbZ
+	he1jqryTpkJ/tV9diEwR5JjXlPmToZEWZ25HoVpnV76phX1j1+XhhxcAuzWHMmrXouDOGNJw0=
+X-Received: by 2002:a05:6122:4b1a:b0:575:fa0b:bc23 with SMTP id 71dfb90a1353d-5a3fb625037mr1740181e0c.2.1780404864436;
+        Tue, 02 Jun 2026 05:54:24 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5a3a9818c89sm3559008e0c.10.2026.06.02.05.54.22
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2026 05:54:23 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-6c67361fa3bso2216188137.1
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Jun 2026 05:54:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+mdlD9QkuKEG952a0lvAPgUOfo1FNd4Q4tcnpEBusrQm0K6H92K51LVOuB7UX+dfUe7e/x8KqlA55pTDbA6yg=@vger.kernel.org
+X-Received: by 2002:a05:6102:604a:b0:643:80f1:350f with SMTP id
+ ada2fe7eead31-6e1841a6973mr1450406137.21.1780404862675; Tue, 02 Jun 2026
+ 05:54:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ah699hwLxIIOZ0-7@ashevche-desk.local>
+References: <20260527202317.5347-1-rosenp@gmail.com>
+In-Reply-To: <20260527202317.5347-1-rosenp@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 2 Jun 2026 14:54:11 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUcqeaPmDPUDa-rWJjxQAsY6jfaQfMTtJJ3bUK-Z_32cQ@mail.gmail.com>
+X-Gm-Features: AVHnY4KDMTL0q4heTM07BlcY3ivbV4ExX8CD9RluKc_4RyO9BG5F3XDi0rlWYyw
+Message-ID: <CAMuHMdUcqeaPmDPUDa-rWJjxQAsY6jfaQfMTtJJ3bUK-Z_32cQ@mail.gmail.com>
+Subject: Re: [PATCHv2] pinctrl: rza2: embed pins in the priv struct
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"open list:PIN CONTROLLER - RENESAS" <linux-renesas-soc@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 02, 2026 at 02:26:46PM +0300, Andy Shevchenko wrote:
-> On Thu, May 21, 2026 at 06:33:14AM -0700, Kees Cook wrote:
-> > 
-> > param_array_get() appends each element's string representation into the
-> > shared sysfs page buffer by passing buffer + off to the element getter.
-> > 
-> > That works for getters that only write a small bounded string, but
-> > param_get_charp() and similar helpers format against PAGE_SIZE from the
-> > pointer they receive. Once off is non-zero, an element getter can
-> > therefore write past the end of the original sysfs page buffer.
-> > 
-> > Collect each element into a temporary PAGE_SIZE buffer first and then
-> > copy only the remaining space into the caller's page buffer.
-> 
-> ...
-> 
-> > +	elem_buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-> 
-> get_free_page() (or how it is called)?
+Hi Rosen,
 
-I thought modern mm guidance was to use kmalloc whenever possible and
-not use get_free_page() unless you intend to use the struct page bits?
+On Wed, 27 May 2026 at 22:23, Rosen Penev <rosenp@gmail.com> wrote:
+> Turn the separately allocated pinctrl_pin_desc array into a flexible
+> array member of struct rza2_pinctrl_priv, annotated with
+> __counted_by(npins). The pin count is now computed before allocation so
+> struct_size() can size the combined object, collapsing two allocations
+> into one.
+>
+> Change npins to unsigned int to avoid potential overflow/underflow
+> errors.
+>
+> Assisted-by: Claude:Opus-4.7
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  v2: use unsigned inr
 
-Jason
+Thanks for your patch!
+
+> --- a/drivers/pinctrl/renesas/pinctrl-rza2.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rza2.c
+
+> @@ -289,21 +289,17 @@ static int rza2_gpio_register(struct rza2_pinctrl_priv *priv)
+>
+>  static int rza2_pinctrl_register(struct rza2_pinctrl_priv *priv)
+>  {
+> -       struct pinctrl_pin_desc *pins;
+> +       struct pinctrl_pin_desc *pin;
+
+I will drop pin...
+
+>         unsigned int i;
+>         int ret;
+>
+> -       pins = devm_kcalloc(priv->dev, priv->npins, sizeof(*pins), GFP_KERNEL);
+> -       if (!pins)
+> -               return -ENOMEM;
+> -
+> -       priv->pins = pins;
+> -       priv->desc.pins = pins;
+> +       priv->desc.pins = priv->pins;
+>         priv->desc.npins = priv->npins;
+>
+>         for (i = 0; i < priv->npins; i++) {
+> -               pins[i].number = i;
+> -               pins[i].name = rza2_gpio_names[i];
+> +               pin = &priv->pins[i];
+> +               pin->number = i;
+> +               pin->name = rza2_gpio_names[i];
+
+... and simplify this to
+
+    priv->pins[i].number = i;
+    priv->pins[i].name = rza2_gpio_names[i];
+
+while applying.
+
+>         }
+>
+>         ret = devm_pinctrl_register_and_init(priv->dev, &priv->desc, priv,
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v7.3, with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
