@@ -1,133 +1,118 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EBE396B73
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Jun 2026 18:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90DD396B9A;
+	Tue,  2 Jun 2026 19:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780425111; cv=none; b=lAUADEfEEkCAI5RDXLlcdztUhhgkt0777zMDPxWTkiYE9n9Rsf89rRTgEhuASAbZ1Mrd7DGJe4xvHMdVbJfn4oLtmISuL5bFSdaFyTxdkjxFdtPdMx7IseGV5kDR3BO2vF5uyjUUnZfgJ/8qMqAWLVRY8DEYBp0WjnpyuwtF3Wo=
+	t=1780426968; cv=none; b=HAkrkCiF+7AKC1b4vAVEfk3s3LWti/xVTcy1yga3yMVaCWZbwzyw0kpEbWSuvpAV2NNa/lrZtZGyPhoRyNC5Oykfrq7eTewRnEaJ8NBIkm2OfPvlxwR0ZM/urQUz0nTt5m+dg+CKNNV3BrtYgXWgM9OsN9gpLEVu0txN189lCMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780425111; c=relaxed/simple;
-	bh=chQg/NkEyt4Mdb9IkUxVPMwXtdBmoW3fBYnP9aDTCsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XFxIQQuxIl8/vqI7QLF3fcVL7m73JUGZ+5cRpMxbzNezOST4U4NiG99ZO4nECOMfVjYxNWwZb+eTz+HSoGbG2+YbdlG0WyFEwkIHkFhTM0zLcEWmujTM2voydhBJbRQgJ662xiL7PPCPXjDNfETVq5xSTZtSdLeLo6rAZGnRJJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2687A6AF1B;
-	Tue,  2 Jun 2026 18:31:44 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D666B779A7;
-	Tue,  2 Jun 2026 18:31:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4KvUMI4hH2owXQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 02 Jun 2026 18:31:42 +0000
-From: Pedro Falcato <pfalcato@suse.de>
-To: Vlastimil Babka <vbabka@kernel.org>,
-	Harry Yoo <harry@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hao Li <hao.li@linux.dev>,
-	Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Simon Horman <horms@kernel.org>,
-	Jason Xing <kerneljasonxing@gmail.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: [PATCH 2/2] net: skb: isolate skb data area allocations into a separate bucket
-Date: Tue,  2 Jun 2026 19:31:22 +0100
-Message-ID: <20260602183122.747759-3-pfalcato@suse.de>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260602183122.747759-1-pfalcato@suse.de>
-References: <20260602183122.747759-1-pfalcato@suse.de>
+	s=arc-20240116; t=1780426968; c=relaxed/simple;
+	bh=/u1xXNGlVpEJUvCd6E2pa3ofnqfvGpTtYoYhyqQ+eWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=drYHWJHUCyg5Tv8MyBYTYyAmaNsk0Hqw8K+OQ0Z/G3OxtMJO9KkxhQL3tv24fU9cbArULdPOvGq4QrTrn1uhdjlLyOhTMj0WA0TNvK/RfFMQmw4E9W0RbmO1Fbxo77MxDMwCN7ICGj6rSzYZJY3+oHIfqVkFyv21EWdvg+AMS78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B1hnLdFg; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B1hnLdFg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780426966; x=1811962966;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/u1xXNGlVpEJUvCd6E2pa3ofnqfvGpTtYoYhyqQ+eWE=;
+  b=B1hnLdFgypGxed3bwN0Uy1ko3Im1shCAEsviyXnzXTe1BCViqjfMGjVc
+   vk0zgNxgPFPQJHhwwk6tOFTlAdNktV4TaeaztbIA/aivBYK6ck18kHH8c
+   XRHhdHiTOEWcCD5sV+0BRZsXYeajLusFd03wPGalGiFBF0cWQOTT+qGGf
+   bgwwMKTbEhdheYlG67UUbsg6QFilo/TCEUMzs0VCoY6da+ZJx3jl1ZxX/
+   ZPOWf/VayKEI9oE9gKVvVPXx22MhbcRtKBvXnDHgEMvCorEI0otQ7d6DF
+   ES+at4XDnaXCQKXLBQFXqjYxQDIUllCg0gg2eQ3jhIkzjbvADUbevsHJo
+   Q==;
+X-CSE-ConnectionGUID: hcNyYqVLSZ2veQ05qF3A2g==
+X-CSE-MsgGUID: jFx8dJgqQUWORQ29mtPiag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="92604261"
+X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
+   d="scan'208";a="92604261"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 12:02:45 -0700
+X-CSE-ConnectionGUID: fEA8PSRYRTyo2m39nk+amw==
+X-CSE-MsgGUID: mBgqNq96RlWugG4ZhGL6Tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
+   d="scan'208";a="245804668"
+Received: from mkosciow-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 12:02:41 -0700
+Date: Tue, 2 Jun 2026 22:02:39 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: rodrigo.alencar@analog.com
+Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH 05/12] iio: dac: ad5686: add support for missing power
+ supplies
+Message-ID: <ah8oz29R8mem6H5X@ashevche-desk.local>
+References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
+ <20260602-ad5686-new-features-v1-5-691e01883d27@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Queue-Id: 2687A6AF1B
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260602-ad5686-new-features-v1-5-691e01883d27@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-SKB data area allocations (as done from alloc_skb()) use kmalloc().
-These allocations can be variably sized and their contents can be more
-or less controlled from userspace, which makes them useful for attackers
-that want to overwrite a use-after-free'd object from the same kmalloc slab
-(which often just requires the sizes to roughly match into the same kmalloc
-bucket). [0] is an easy example of an exploit that uses netlink skb
-allocation to target another similarly-sized accidentally freed object.
+On Tue, Jun 02, 2026 at 05:33:52PM +0100, Rodrigo Alencar via B4 Relay wrote:
+> 
+> Get and enable regulators for vdd, vlogic and vref input power pins. Vdd
+> is the input power supply, while vlogic powers the digital side. vref is
+> replacing vcc, which is being deprecated, but still supported. The value
+> of vref_mv is checked so that a device without internal voltage reference
+> cannot proceed without an explicit supply. For correct operation, vdd and
+> vlogic are required, then devm_regulator_get_enable() is used so the
+> driver can still work without them by using the stub/dummy regulators.
+> Error report uses dev_err_probe(), which helps debugging an init issue.
 
-While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these are
-probabilistic. Use the existing kmem buckets API to further isolate these
-allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=y.
+...
 
-Link: https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2023-4207_lts_cos_mitigation_2/docs/exploit.md [0]
-Signed-off-by: Pedro Falcato <pfalcato@suse.de>
----
- net/core/skbuff.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> +	ret = devm_regulator_get_enable_read_voltage(dev, "vref");
+> +	if (ret == -ENODEV) /* vcc-supply is deprecated, but supported still */
+> +		ret = devm_regulator_get_enable_read_voltage(dev, "vcc");
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 44a7f8401468..1f6c6b531ece 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -594,6 +594,8 @@ static void *kmalloc_pfmemalloc(size_t obj_size, gfp_t flags, int node)
- 	return kmalloc_node_track_caller(obj_size, flags, node);
- }
- 
-+static kmem_buckets *skb_data_buckets __ro_after_init;
-+
- /*
-  * kmalloc_reserve is a wrapper around kmalloc_node_track_caller that tells
-  * the caller if emergency pfmemalloc reserves are being used. If it is and
-@@ -632,7 +634,7 @@ static void *kmalloc_reserve(unsigned int *size, gfp_t flags, int node,
- 	 * Try a regular allocation, when that fails and we're not entitled
- 	 * to the reserves, fail.
- 	 */
--	obj = kmalloc_node_track_caller(obj_size,
-+	obj = kmem_buckets_alloc_node_track_caller(skb_data_buckets, obj_size,
- 					flags | __GFP_NOMEMALLOC | __GFP_NOWARN,
- 					node);
- 	if (likely(obj))
-@@ -5213,6 +5215,7 @@ void __init skb_init(void)
- 						0,
- 						SKB_SMALL_HEAD_HEADROOM,
- 						NULL);
-+	skb_data_buckets = kmem_buckets_create("skb_data", SLAB_PANIC, 0, INT_MAX, NULL);
- 	skb_extensions_init();
- }
- 
+>  	if (ret < 0 && ret != -ENODEV)
+
+It can be deduplicated now with
+
+	else if (ret < 0)
+
+> -		return ret;
+> +		return dev_err_probe(dev, ret, "failed to read vref voltage\n");
+>  
+>  	st->use_internal_vref = ret == -ENODEV;
+>  	st->vref_mv = st->use_internal_vref ? st->chip_info->int_vref_mv : ret / 1000;
+
+>  
+
+Drop this blank line as the assignment and check are coupled.
+
+> +	if (!st->vref_mv)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "invalid or not provided vref voltage\n");
+
 -- 
-2.54.0
+With Best Regards,
+Andy Shevchenko
+
 
