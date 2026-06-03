@@ -1,64 +1,64 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D8E3E5A2C
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 03:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452753E4C87
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 03:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780456098; cv=none; b=L6s0uqMItlyyc0Y6yDRFOeG1o/Snr/i8Um3/7SgzrgKpQTKWycIUt0V3taqi06rXeCY6n7NwxmIupWsY5nyieCx00NQNfb4SMeyrx2ymOkF0p055KPMb+wY1B4ayFe8UO627YfWs5ZC1hHNPu+BHato95oZiNvMPZT0fFcAAaSM=
+	t=1780456100; cv=none; b=KVWYR26I9lRfq2o3kZObzzFZjh8uxUHSM3DCgGVH2CTH39jegiPCYcJM2uL4PoKIdnTVuRuQCoUH74Txvy0abp+hrptrpYuWrbasba734Ny3Y1fm9ZAVjQ0cOHbDa5vFmGgTJBCxFpNu0abcy2R5coZ/wBSGQpwhOp+0IN5faMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780456098; c=relaxed/simple;
-	bh=+PVqljYAEuaHeLfyyM+CGl4qW0A24vMOocrK+WLBCf8=;
+	s=arc-20240116; t=1780456100; c=relaxed/simple;
+	bh=QpqYfGjnjza1yDhq9iuXBzv4lug+a++X1dRARkJ9T9o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c0XkJdCp12u57cJAqarJjAjdHgU1/5JSMmUtwb47aXrMRR11Aw6DDHKKqJTWauFyVyjZqvFouW59d1po/EpQUVSuDppxhX8HfF0ofeJgOoNLgYP6UzyNWzsfcnEOIeVuXk09qfXgz+8VFNtnG38fSxNHVAN4vnJIizCxnE5HY/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cu5++uHB; arc=none smtp.client-ip=209.85.216.51
+	 MIME-Version; b=WMHDcTQgMIP6fuN9PyXlHmbsI4SJjtlx4pSQSxSZKfFm/LZVKtC7ZpXZqrkwsVJGcdUtIefOmpfqeA1dvb/rOyykxZtzEiF0N6zyJxv8UVD+UGk2AIK72BI2BcEdwYKYZSOQIUk1xIml4jzrENL56P/oNJsAJnxv2/N81uJUvl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pjB9hu8u; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cu5++uHB"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-36d98b68d68so2179299a91.2
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Jun 2026 20:08:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjB9hu8u"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-36d98c9b596so2174700a91.3
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Jun 2026 20:08:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780456096; x=1781060896; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780456097; x=1781060897; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RD449MAq8gcYE5XoSdNvMg3UoSZBswuYPEgYBJrnJS4=;
-        b=cu5++uHBq0jeWVyVb5uLRQIxJI22DX6gA36+TJXNqFi2FczCD80J0dE0ZmfMYmhfR7
-         Ez+2G3OwqrbOVLrlpIdbHR1ujPWbYA91i6OyWpBb+IpTq2JLEyihcehsZyl4TAB0XsG+
-         81jK0kCOBS8NyG2qEYcTjxHDRwvvkRsEpA90FLI6jN98g+i0BDpxDFgfp3zudnYs04IF
-         uPbQkQRkDMLVrgFDqnOP6BY9UpZki/UsfeY4fpZmnSGpPF236zUfD7FvLUYOOmH/hyfs
-         7+W0WiPHtXywTQL8ef+1eV7Lvw3u5gJwCduel5YJdD4bbYmpMHS8NU4zUv8Xa07iSjGA
-         B5sw==
+        bh=t6nTg19H1aEF2hCty9Ml54+E9Am0ueL/QSUT9WJYjuQ=;
+        b=pjB9hu8uA/4mTOy16n/+MSPwNBCtkXckDHZ1HqIK+TDFY8pTEQPQjaTFK5RfQsK8qz
+         qMavdKp+oVGGe35AWEWgeJgCwd1sQ9aUvv0cGaBGpzI8e7vThAf+z7vcd9hliPkEL/33
+         Vs597EMyOsJsBFm8/gQKz2/5Z1F/jK9C4jL8NZdTRU87yKdSysB9MMzzKgqoLPccfvGS
+         JppTEdV03ad7nucVoW9lmbJhfOGgLosayLwKwd3gwAYmMN3MjdsEOJQVtxnSbpCAvtXF
+         bOi+j++kD80tStJ5VWGpjRoSsS0IPaW52DvIDsU58lDTRWdQd07rxqHo0CMPaFQ9cG/b
+         6Ljw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780456096; x=1781060896;
+        d=1e100.net; s=20251104; t=1780456097; x=1781060897;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=RD449MAq8gcYE5XoSdNvMg3UoSZBswuYPEgYBJrnJS4=;
-        b=hHsNQNqtRysvOJDibZQVRUddIW3F9ljaIKffZnKLO5oBFUAULrK+kdfwtkxNH0S5BR
-         3EhLOHHJOUNAch8viPhBkK74BHTX/IYl3/3sHGfa4QfqmJa9ZbYWjGsh7slBW7ZM+cCV
-         fYS1HEIIBpToaR3YkiMoK5UwwupqgBXSdascgZ+k/PzIPRGUUb1GrxBPoxpRiCLyHvL/
-         b7eAZY2khgOQtD2nRZFWWpnl/6obVPlcKtVD2gT1Q9oTrzaZ+/2oR24vCzU4zc9WNevg
-         qDu8KpADYeaTX7EyiV0kllJr3eviPGioVrAuxksjIAZPxvBuH/tNfi99nm20QUxOY1M3
-         oeNA==
-X-Forwarded-Encrypted: i=1; AFNElJ/eL0hwqlL6nl9Q862TD9Qs9t3w79+w1xAe7QfMvLWpT5eWLjU5w4GUmOreO24TODJFgMj8OSUlrVXLl45R1gY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzG1Els1aXubcemCSuKfKR67vCHwwF6a4xZ4uzfpNW3Aa710EL
-	CSJtjnrDhotrEYUzqmQysGxaGH/aajxGK1lX3leKROYXd7JBPhyvEtrf
-X-Gm-Gg: Acq92OFWs3BV8vE8EfJhoW+x/gklbH+5pr+e3PMkQQxE5jdyxaxkvrVVH63j7dkHYC8
-	qHhQJDgg40T9O/3VSqg0sCS4jC62K7zz4mhBcGUB2hVhv7MhOkz2inOD1jaAj930CnBAnKN8+Uh
-	+a9FnbYr7IBicDToVrcEq9RYiweizNAWFEISHF5Z3cgcf1CbDmQeUjBhpvuoqJdApNCJ6O5ZRuQ
-	y5NH9CriH/0L/lnF0xJ3NSBLpGeEIefyTDS/vRDrJjogXRmufbuA+x5kLWXy3JJZS95halQ3llJ
-	I7dCCa5VsVzP1My+8FAfdhpmBOQV8Gf5cCsiyO7dTEV00iY8+std0HeE6FSgdZNV0S8kqyMbZP+
-	SpGP9vtHQRZ9mIDQBk+3wupbVhS7IjMuvZp7r5UM5suFRHljGDpM6aSShrZkdEdx9dDXNKqWxA+
-	GWMXAkJUdTejhZvBSo/AxyDM69vxJCKNpmAzInAYNLm5WOS9KwsqydMcsn81QFUVc32vgDSbwFy
-	a29SU+qx9zVLB2mqUL4KZTY/R6NTzxnPxjH2rXcnp8jAA==
-X-Received: by 2002:a17:90b:1fc7:b0:36d:8f51:fe29 with SMTP id 98e67ed59e1d1-36e32285958mr1450616a91.17.1780456096056;
-        Tue, 02 Jun 2026 20:08:16 -0700 (PDT)
+        bh=t6nTg19H1aEF2hCty9Ml54+E9Am0ueL/QSUT9WJYjuQ=;
+        b=M1hkWmCtSKdZJtlFGuhGGUk27cEry2mVYdXomsYxLZZWKEU/JjCX8/KzRuUGTD//is
+         obnl7I3iHl87u8SLMq8hQLR6tk7M1b4rYssie8SiE4ZEm9rbTR1X3ABEiDydtooCewOy
+         NO+ska+JXaZ/trGYZo8U8VuZbTqp74UWVX5aGtSj5TLZlfzPDDX2y2G0jBBy71yEK6V4
+         9MA2WFF2aMPsugTvmkZRL9lrwwAMWX/SUnywdwO+6h8seVoz7GBAXtNfyAlJtKz0t2tJ
+         pQeb7VjljysLq4cA4/bPAzuzEDtBN2VV8QnRt3MEwaYl7lYa1iUKqocYCsFp3ABdzVR3
+         0Dmw==
+X-Forwarded-Encrypted: i=1; AFNElJ+QynZsl8Mztz0OSUKgWa6Njju7uOsj32vDfB8bwbVkOOHno7NCkVD2gyc+sYqZ3FPwc9OvbbbYvLDlIjvUjM8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCukoH0GHdV3Q/FsAdgTryaeEMNnWtAwUExWseCsbD4oLViBVw
+	ESvlCrFIQwCNwhYE8EiS6WsHtwB8TMosA47JezwFMwB7R7tF5RuR7X+1
+X-Gm-Gg: Acq92OFJT7NUhGCBqT9rmQTI+ALRGjHuawWQ3z5ka5vf3IGgNnFTtIIqaUPfcvOf6Cm
+	cBMaeYEDYEVMjaROOMAz93AwzSAjBI16HylM/51JwpXz6dNdFXIXOw7+ZJwMt+piELDyW7bEuvx
+	VM/8mohk84RIqul92zLjubbNCZ6XLkYak+0L2S4nmuw7cQaOPgYeWDMWCGHIcdjE5A4cSqthllV
+	uHSWJwIJBUJaAzgwieAdtLFZNFx+JwuXeOSbKVD389PVucixoyb0emZT74DsB1MjF3e4TsWetlp
+	ArtEEJMSBuw0/PqG1WARO2gF7y+/WnxdmMuAT1Y6s2d+y5uK1jg6qvi/eD0K8WhHDRJnwBjS5qV
+	gO94ZRPZuu8jP08UWl+CeafQOXmoQ+zEYqqDztQxf1V/S48IhHxon6wu3EMFkNQAEH+iFa3Da6C
+	t/3dCddjZ6YN9O51bY+Wza4ceF/e2uC4B8PZy+nBbXTOc5525ugeFB9cnnNml7kpzos3Ys5dHWZ
+	Ybj5HW/E9cFKvcSdpnv0Rjd+Egivl6c2eygF+pFkGE9/A==
+X-Received: by 2002:a17:90a:e706:b0:368:ed92:6f6 with SMTP id 98e67ed59e1d1-36e2eede4acmr1636874a91.1.1780456097562;
+        Tue, 02 Jun 2026 20:08:17 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36e0a186741sm1247102a91.8.2026.06.02.20.08.14
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36e0a186741sm1247102a91.8.2026.06.02.20.08.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 20:08:15 -0700 (PDT)
+        Tue, 02 Jun 2026 20:08:16 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: dmaengine@vger.kernel.org
 Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
@@ -71,9 +71,9 @@ Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
 	Russell King <rmk+kernel@arm.linux.org.uk>,
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCHv3 2/8] dmaengine: ti: omap-dma: synchronize CPU PM notifier removal
-Date: Tue,  2 Jun 2026 20:07:48 -0700
-Message-ID: <20260603030754.288757-3-rosenp@gmail.com>
+Subject: [PATCHv3 3/8] dmaengine: ti: omap-dma: fix CPU PM notifier leak
+Date: Tue,  2 Jun 2026 20:07:49 -0700
+Message-ID: <20260603030754.288757-4-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260603030754.288757-1-rosenp@gmail.com>
 References: <20260603030754.288757-1-rosenp@gmail.com>
@@ -85,46 +85,34 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cpu_pm_notify() walks the raw notifier chain under rcu_read_lock(),
-while cpu_pm_unregister_notifier() only unlinks the notifier block.
+The CPU PM notifier may be registered for needs_busy_check on omap2
+rather than may_lose_context on omap3. The remove path only checked
+may_lose_context, leaving the omap2 notifier registered during driver
+removal.
 
-The controller is devres allocated and can be freed shortly after
-remove returns. Wait for an RCU grace period after unregistering the
-CPU PM notifier so concurrent CPU PM readers cannot dereference a
-freed notifier block.
+Check both configuration flags before unregistering the notifier.
 
-Fixes: 4c74ecf79227 ("dmaengine: ti: omap-dma: Add device tree match data and use it for cpu_pm")
+Fixes: f4cfa36dab67 ("dmaengine: ti: omap-dma: Use cpu notifier to block idle for omap2")
 Cc: stable@vger.kernel.org
 Assisted-by: Codex:GPT-5
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/dma/ti/omap-dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/ti/omap-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 0f6dd6b0a301..15be3c90440a 100644
+index 15be3c90440a..0ad8da8b35f8 100644
 --- a/drivers/dma/ti/omap-dma.c
 +++ b/drivers/dma/ti/omap-dma.c
-@@ -14,6 +14,7 @@
- #include <linux/module.h>
- #include <linux/omap-dma.h>
- #include <linux/platform_device.h>
-+#include <linux/rcupdate.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/of.h>
-@@ -1853,8 +1854,10 @@ static void omap_dma_remove(struct platform_device *pdev)
+@@ -1854,7 +1854,7 @@ static void omap_dma_remove(struct platform_device *pdev)
  	struct omap_dmadev *od = platform_get_drvdata(pdev);
  	int irq;
  
--	if (od->cfg->may_lose_context)
-+	if (od->cfg->may_lose_context) {
+-	if (od->cfg->may_lose_context) {
++	if (od->cfg->needs_busy_check || od->cfg->may_lose_context) {
  		cpu_pm_unregister_notifier(&od->nb);
-+		synchronize_rcu();
-+	}
- 
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
+ 		synchronize_rcu();
+ 	}
 -- 
 2.54.0
 
