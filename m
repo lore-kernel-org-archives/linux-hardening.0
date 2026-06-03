@@ -1,111 +1,124 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801CB3D6467
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 12:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B354147CC85
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 12:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780489608; cv=none; b=Vh+uadc/n1JHpXxIDouJPjo2ifl35chZdHMzsngmkE9jZIzoAdRwnb5m5Dhq55sPIRF7z9PJAw4j39EP88wg1KW8BwMgtFfb3ZZkeOHGsBpO0M1MMcEmw9K/BV1v4Hp0E6O45GnkGyABsx9tV56G5Fgl+3w2EYVJKlBY3rKZWC0=
+	t=1780489825; cv=none; b=gukcFrmvcrIf8SPBYl+kuDVNPLCCFwq3n4RWvPafltwg6OLbTR3BLPbdT8NzuuT98AD7hM8tO07uggRuhBDSwhMDkoxBTjCqV/di4Bhm06eDDKKl87viamaaCT68CJyBwX5bgU7wNuAqaQ0ZhM/b0fJ00hIwSPW0kmn8WCQAagg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780489608; c=relaxed/simple;
-	bh=3jIsHOEB2pBvR4m/btDNC659kkrYQVQgt5gTAuhCyB4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W6hSqVAv4CF5C2eGgoB8BfKqGXdhqye3gKGKeb3KXdecBBXm6EItmY5yqeDASuXEhKtswlY7ApdIB3AyGd2xIncJ0ecplVdqpq1boKJk+OSJIokD+wI9gu32jeDjn0bYbAWN0nPXn9ivUHFb2KHxeUowl8u2ulGFXm/nPwV2Th4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AOf1qL4F; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780489825; c=relaxed/simple;
+	bh=u/943ESl3Qb8WcpZzq4y655CzqzRBOo9awoactxwkTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U+Z8lZ7+R5SHijDnQbN2U07a2lhVrMfIwcGj5SiuXkoy5LiNdjBSP0Yzc1WET9IIVDceiCsWLIC0O5DPAMPvcSoYJVYCWOAZMEYAUeLsmsBccS4/fg7kfAWN4f7MPGhEgFjJGo+61H5AweUrBdw8g0ro8HNNQ+mE/S5R+SEOJQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aOAZPz2+; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOf1qL4F"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-bebac79fff8so421904766b.0
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Jun 2026 05:26:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aOAZPz2+"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-4600ddc4017so3080888f8f.0
+        for <linux-hardening@vger.kernel.org>; Wed, 03 Jun 2026 05:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780489606; x=1781094406; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s4aVZcTl8U1FLvESvygfBSaJHvnQyZU6dW/R+A9ZYVI=;
-        b=AOf1qL4F14i/C+CIj8WK6zCxoJSA0DaWD7pTV+j0sYGso7YWdF0peZHioGyOEFdMDD
-         z2X9bQzjaIpJcHvKHiddDzqye28tytsXsGw9Nq/pTgZ4EYmaAutHENR5/71+apibeg1x
-         TLLRyd5A7PPqjocY/Uow2GxkwQXkeOa14v9zKAgYAYH+wvnC0lTJTFaCvGh1cGiFdD8C
-         /in5lYM8aRX0YppJCYLQipNlua/eiGZbvZppoPqmF7iik34ZkEYVF63u4W9ki9w6RUGS
-         /5VGK7Rvmk6rwkfQ3gOzJuUjBxcyLDCnayPwZzOni3FJE6LRIMorDB6bi9EH4ONYdMz/
-         kljA==
+        d=linaro.org; s=google; t=1780489822; x=1781094622; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ty/mxLD4L9LpaeVN+O8zS/3tkJV3r5YXuKG/N6BCA60=;
+        b=aOAZPz2+SBP17ZbHpudAwFbZkbE+6sFtQdTHk1Gu9YJu359/+yJZpPXQ1zYY0JsDfF
+         R6V7yaOSPsZDOuF/cOo2CTp58VmgW6oFmL4d8wAB8F/Z2rU2cNXO0vh5M+feuB9BdzJ/
+         NfXIBfg8xVHBJz+C1OsfKGMsSAgIVscoZy4Qp3oz6RyYsoEp/gBpH7Pl/nDjwGILwpDt
+         gLO8s1/wzh3pZBSo8SyhkCRtQQSWf268/HMbht5R7Uq8hD+VL+2BfaOLN3B18ALiGqMu
+         gOw5eXJcAN9qlEQUlS1R7zYNVHEa2zI+mAt4OUTNi6VatDW1Y0EWlRoz1QzPH1HdCtf7
+         /lzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780489606; x=1781094406;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s4aVZcTl8U1FLvESvygfBSaJHvnQyZU6dW/R+A9ZYVI=;
-        b=jVK55r6q1Lghd73akfvEJvuwKqxNmBdlebyHJxwnaJQOn7HPrxieh034KjOwGbzwFU
-         oMZ3GpMECSsdmoRPgEFTiFnrK7InTs8b/MrP5kGQPmdKTWcBvN3oJ9dBxIWk9w9nHfTr
-         A5e48eTA2N75veCsI9qcj0tRA5fVhZoQYRXW21lPPey3vyTJVLCDGQXgS/QauJXGwq+c
-         cLcuUy9B1OYt+s0GQYdmDX39LZfNKJt41asjMYW3sP1SGfqLMMS3O0O38iTqbqUgICRO
-         HVw+o6hPX48higKPdz5GHXQdovtAJXQ4YIEfN/2iYF7LdVJevPsRM6D6lMkXiBc81nxJ
-         ofbg==
-X-Forwarded-Encrypted: i=1; AFNElJ+WdBNWSUWkWON2ds7kDhHmyzQ1JEBdySL43NfgHMeRh7FqDgergNZN2Y5NFHgU9Ss+6baQEapevOcvYptutKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfO0FIS38xIkNUePUIio4n8WpgKF/Io8hacKeu4hnXbyo8ibVI
-	yMHBQwnbYOchjR/iMz83Y7uYP6W2gvEIWB6KKDWr8S/gLAoALD4LePwTRiwHxwiO
-X-Gm-Gg: Acq92OEsa61GQY9K5OcQa15AP/q0znCtoRuyOuIgIPph2c/Op/7u1JG3KkVxCaepqP7
-	0mlEJaaGIgPbQEJWgj+Frtzved8iRIaQX5yUCkHK3/RiBn7s/b4gaE0jw0qsFsEbtsdZmxkqM48
-	0ThKULq9AotEYKiXeDXn6BeTVW+iam/SOFy0CB33Sq8TtfoduCbReVZUw77XGUq5Wcdy79r7+Ux
-	XM3XROHmxzvfp8ooJZAblcIIyqp44xhRxHAtpZQ7+pxGRF4oHHIBk2rxFErgF3jr8kTU88K2RFC
-	honYgWaWPXNB04x+bhufTntz9M3nGUVsLWQMJr+uqu3vxbgnB7N/pKQUKWcuYdIYWKlyC5G9/M/
-	TrbYWrf6YN6SPcVsF4ukuUv45djGOYzhejT5V0Fn+MWgscxwEXAPcHIOAV4SW59iJMC/+VpBt3z
-	QEKPa41B0GcWLNd0eANvpBUX/42qCqa1ysWeMVhK9qj+TFsgvZ21gWPiZFkgr1QTyYSK10CiOQa
-	KQkPo1cOrWEVyh050TOJd6eQOn585uST0S6lc2OyGOqorrjhA==
-X-Received: by 2002:a17:907:1998:b0:beb:b53d:4839 with SMTP id a640c23a62f3a-bf0aea0a6femr173937066b.33.1780489605837;
-        Wed, 03 Jun 2026 05:26:45 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.131.netskope-rdns.com. [24.206.116.131])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf04e9e3847sm149542666b.0.2026.06.03.05.26.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 05:26:45 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Wed, 3 Jun 2026 13:26:43 +0100
-To: Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	rodrigo.alencar@analog.com
-Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH 09/12] iio: dac: ad5686: implement new sync() op for the
- spi bus
-Message-ID: <ylp2jf3wbojbwoozhow433vcvnz24ahvqlr35hhdoctm42rqqn@irrv3f76gr7k>
-References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
- <20260602-ad5686-new-features-v1-9-691e01883d27@analog.com>
- <ah8roqGqZ_VhAPaa@ashevche-desk.local>
+        d=1e100.net; s=20251104; t=1780489822; x=1781094622;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ty/mxLD4L9LpaeVN+O8zS/3tkJV3r5YXuKG/N6BCA60=;
+        b=I02mfMjHGYn1N9H88eEuBaWPVy24a9SX2CyVbfqDWgwRHqSdsNq1ou3wByxgQlwynl
+         c7YN0yD63P9P8WZ9m+Z5ngI5TPp0b8NkesWpNwYYKf3meUNX9faE2bB/TOhGJU9uODMe
+         dguUnab96HcRwts879AP2F9HtFcccr3PEONVEDqq27U+ySSjXAbdc9S3RuhnWBSvZdMs
+         P3ud5XqeGh4CpKCjjLQoEv56J98HuVH8MezL7VQKTEsT4mvni3zH4Z1kYHIB5pcyqDX5
+         qUYE/pAQAeWJlUN27bsHcuuD7DHLlyrvSAoHw4dpNF/8OxBQR/xVRCEtrwlt4UFbbxEj
+         cNyQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9QQSYxJ39itzkM7GvOa+AlqhPxgE96YwAD64ngdesp10umJp9cTUeWG9Y7RnYGj6eolDgHrDly1QldcKcaDEo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysdl8eBSUR4+2Eddf9QSbtFqlPz7D0mSqY3/rcXLSBjJEcCxtF
+	J0739OVK7CpH9Qx9tfsOsgWJmUEmn6WalJJw8kuJ0oAlXj14B1JCh7XJp640Nbo6M4s=
+X-Gm-Gg: Acq92OHQOZBnKC4kge7YbdanE/TyFDz5yfxhLfToO9PWe9YY1ycZCKMLYittmgVPPHv
+	uQZUvxeugaSdj+XXDi+dvZvpicj5SLwmS2+McVMtNQB43HQIa7mp9DTjS6XES0LMG2w0gaexUT5
+	bmH/3X+QDNPyozbxyaH14OQdrs56ak36i9+TcX+qpfrR/vSC1lYqqr0QHOoBilt0oNfyL2l5YnY
+	XddP/tQW6PeJ0Z0HhVFdSUomSe2XhlEEIEbRCsZ3IpWlSdAS6eGx+FMLgsxW+YOm/SczeFy8GB6
+	Xlt19UiWXD+n8hOCAuyOJqXfqdgSYOYIwmKHc1k7mBhoOS+w4R+TFmNptrmcWLg7OLlqiGTsD3O
+	xGpj5IgytKPkGpEJONV1C7fVKolMvIF/GYJhY+hM0PH1SDB6IboXIVyJmLyqVVWkQDYvLJf3Wf4
+	D4skCQF+UIeHZ/eT4hOPSO/O/+wOKmMU1eCITc/4mlNA==
+X-Received: by 2002:a05:6000:46da:b0:45e:f381:cd7b with SMTP id ffacd0b85a97d-46021782644mr3373955f8f.8.1780489822108;
+        Wed, 03 Jun 2026 05:30:22 -0700 (PDT)
+Received: from [10.11.12.110] ([82.76.215.73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2dc294sm11268422f8f.7.2026.06.03.05.30.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2026 05:30:21 -0700 (PDT)
+Message-ID: <6fb8c47b-696c-4dfd-b571-abb613bea493@linaro.org>
+Date: Wed, 3 Jun 2026 15:30:18 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ah8roqGqZ_VhAPaa@ashevche-desk.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/5] thermal: samsung: Add Exynos ACPM TMU driver GS101
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: jyescas@google.com, linux-kernel@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+References: <20260602-acpm-tmu-v7-0-8047dd54b0e9@linaro.org>
+ <20260602-acpm-tmu-v7-2-8047dd54b0e9@linaro.org>
+ <DIYTOGU8I2DV.1GKZ59F7AJWTE@linaro.org>
+ <c76c8f9b-bdd1-4006-aa28-735254f0409a@linaro.org>
+ <DIZCLBAOV4ZM.9SJGGMZONFB7@linaro.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <DIZCLBAOV4ZM.9SJGGMZONFB7@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 26/06/02 10:14PM, Andy Shevchenko wrote:
-> On Tue, Jun 02, 2026 at 05:33:56PM +0100, Rodrigo Alencar via B4 Relay wrote:
+
+
+On 6/3/26 1:38 PM, Alexey Klimov wrote:
+> On Wed Jun 3, 2026 at 10:26 AM BST, Tudor Ambarus wrote:
+>>
+>>
+>> On 6/2/26 10:49 PM, Alexey Klimov wrote:
+>>> On Tue Jun 2, 2026 at 6:00 PM BST, Tudor Ambarus wrote:
+>>>> Add driver for the Thermal Management Unit (TMU) managed via the Alive
+>>>> Clock and Power Manager (ACPM), found on Samsung Exynos SoCs such as
+>>>> Google GS101 (and Exynos850, autov920, etc.).
+
+I'll drop the `(and Exynos850, autov920, etc.)` too.
+
+>>>> The TMU on utilizes a hybrid management model shared between the
 > 
-> > Use of local SPI bus data to manage a collection of SPI transfers and
-> > flush them to the SPI platform driver with the sync() operation. This
-> > allows for faster handling of multiple channel DAC writes, avoiding kernel
-> > overhead per spi_sync() call, which will be helpful when enabling
-> > triggered buffer support.
+> You might also want to correct this "The TMU on utilizes..". On
+> gs101-based I guess?
 > 
-> Why spi_message_alloc() can't be used instead of manual handling?
-> (Seems no current users, so you even can modify it for your needs.)
 
-I need to manually call spi_message_add_tail() to append messages.
-I suppose that such function is a bit weird and no wonder why it
-is not being used. struct spi_message_with_transfers might need
-to be properly declared so that users can populate the transfer
-array without manually moving pointers or having to redefine the type.
- 
--- 
-Kind regards,
+Okay. I'll submit v8 shortly where I address the rewording, the Kconfig
+dependency on ACPM  and the other sashiko reports. Maybe this still has
+a chance to get in (we're at -rc6).
 
-Rodrigo Alencar
+Cheers,
+ta
