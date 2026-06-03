@@ -1,141 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DA83C76B8
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 11:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1063B3891;
+	Wed,  3 Jun 2026 12:08:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780485918; cv=none; b=bx5tq85MFLMfGHcY40VvQdqCWCT5+CKyOdGThfmxAw4yUAgU3iHl/SO+l4wiBGwpI4iDrm3gL3ADqdasVYXozLeqDJy/z2gMGdFJ2pLGGy5twrH9CUx23/D2y3vXWbsGAteeZRTXaKXRrCBkfBXUQ9ODAcL17QO0KN/DIK1dHKY=
+	t=1780488526; cv=none; b=eaB6VwZH0nmXCqAp13JcnFsb3sAHURwegFjYgVtXu8GdEVeVu4Py0d+eBeKNBQdUJa4mHOTfEC7cNTe+8nWPOxtyhjnTjW1WDSz8pEXYboRyuToSjLUDxtxQpYOJPE1rh3F4CKXLS5RNS0Hyu5bweZg8r5SbrWboq0xlF4R2rZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780485918; c=relaxed/simple;
-	bh=mQwxmxG3zUsGZ9nDWKhGbrFJTe9Hn6qRBaAUPAl9JNo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=o5sBmUsMMv8pBGHOcB4IIqXwOwodah64qaEzz7cSyMtM8klCvorTYH985m0CiQ7ucJ0QSxEaEuad2l0TeL+7PhzjHiSdYmM/qbPmhvnbAYS1KiVPwexZPYjxSNjd7t6FIMyTMW1q62GIwheDeSA+ft8mR41pKSXouzBEP0i8h7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exw4XYzJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780488526; c=relaxed/simple;
+	bh=+Z3LJbqMdB1/pubFkCbyOzArzx4j7FsU+htL71UYJTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i1TFg5TS7jPq+zYh1aO5nKxqn9GerReAGgemZ5nMS1X1E/oVA+4nSOB3PN52SlaG8d2E1n6ZPuor8e1Svl9xv+3ve3zKDxHdJBfIm6pQ9e7ZuSmHBV8mkcu7AsGzirr/otcWNP39gR65qDqQ5GFXVqvuvpcZdMN57ZdVnh7VxgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YuFv3aeo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exw4XYzJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEB01F00893;
-	Wed,  3 Jun 2026 11:25:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YuFv3aeo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1A0C1F00893;
+	Wed,  3 Jun 2026 12:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780485916;
-	bh=Ej/A4bAeP3GRRv4aBL4VdTQbInf6PAP5PBV1hqxuGeU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=exw4XYzJHNx8NPTpD1SzdOEOLUIA0xbYO2jphTnpVII8b31Q/9zoA+W2Rvg/yhsRJ
-	 rEc/sWlhy60ka7H0KxygsKKzTfK2eoV1T3KYgDO6PTRuKF9q3CHlxXeAxdewT+ecHQ
-	 NBSd91h0blVNopV1S8MSD25RQBFS7xz5PlvkBpwHruhFkJ3FpKkcFYAWPIuu7rzfF6
-	 x+OGEki1CCoDqkOh1nrN5UKDwOjNctAtNOzcuXJvxl7TfG6lbZBxvDoShpMpgqqsJm
-	 3gltOvlx5FPE7bceYtY1n+j09Xo/ig1esnSx7M+rmwf6cTja4OnJ8sQgCh4Xrx7MK9
-	 Q3cwykG/gR1EA==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 35B68F40070;
-	Wed,  3 Jun 2026 07:25:15 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-01.internal (MEProxy); Wed, 03 Jun 2026 07:25:15 -0400
-X-ME-Sender: <xms:Gw8ganjrXz0JQ4a20pZ2keYgLL966sZB7ggcBghyxiZjOST0pbGkzg>
-    <xme:Gw8gau3lk00GKn5Y2in9l7RFhymSP38WEHp3EMZII2yHEoKx7m9e2_O1ItUdjYSaY
-    4mktIanZvMpp4BxKaVX3h41Qzq6CxeF-i3QeDrzyNPiZLrjovwMNSo>
-X-ME-Proxy-Cause: dmFkZTGk07hpe1NCwTVIzfP2HgIVR+mhM9tsG3G5fFNmt40ZyD0SKBCj9VlPFNEJ/mKYg+
-    yn9XCnk7DMqqvKhYAonBnb+EiK7yyt6XwsAKFP1NRUIxeRopUJbCzFAEtgdZwZ2syq6mLt
-    hIc8ns+tGdiT78GcOIddkRPvwXakkAXz6AaOGjfod1A73n2hhP0S+irMK6MY6pmOGSphLV
-    9LSrur6d22T4VrRb0o5gM+dJx+HdoAtQGS5mxYoTkKVSFjuFyOM+kuaRmHmk5SGbsP2X5U
-    zTfs5UQKk93YP1gI0iWsago6o9Zae+QmHbKuHZObMf4rdXX8pu80r92+oAHgcVeIlkcQDt
-    0QoJr48G7g3k7Axy3vrUiaTuSSNl5Y+BBkBWhf7/BIuAoakZ1dJtZrM+QYGf6QD0T7M/C0
-    ueKDXo5EQVNDoS+0A/91fYorYH01AUmS/P8O4XOQS5akirZ4o6R39OVDG5ahWkb2lF336H
-    YbIyD0BajwqJNC5uYkvP7UDCRsQcdeI+orDmIIjHhBz6YSpbphRyIkD91JJ5F8fMl9IFqF
-    a0YT3rtTfzLsSqiNI66DGkElA3Hc8cBk3YfeNWCCudJjd2gSSl3qVSUppja1jEfUb97L0h
-    hPAd/USZemqekfo8KMLkrAbpwvAtpzbyCrEKM6liYSn40sbEKKE762X7+RKw
-X-ME-Proxy: <xmx:Gw8gakVtaCK4ce7TGaafgWSRTK9aFbX2O3RU4WUOTM8sVh_nx1Wfeg>
-    <xmx:Gw8gaqOLByCdyD78lmI0iP9F3j-yUw1MG1v484Rm7MAoLd2u5zohIQ>
-    <xmx:Gw8gasfLsOXv2iWZ1GY4UgCbbbl1MSvSRNMh5lEG4-5iDY27pvISJw>
-    <xmx:Gw8gapw04dbEZ-YaSVuDJ6MnkCD0rEgcBTKMEm-QTUsw0wXutnCBoA>
-    <xmx:Gw8gatgq8miMnJmGvsy1x2eDW6BAFtzhVAqxtdrb0sGgeFGbLROK63AZ>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0E8AE182007E; Wed,  3 Jun 2026 07:25:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20260515; t=1780488524;
+	bh=B96vpYrwUCDd8STmPrmAJlLy99SdCRv4DLQWSqvzipU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=YuFv3aeonbCNwOXlRwKdtmsQrCDOWKwvMEJ1EH/vxR12FEYIMnot2aHb1FW6y97gX
+	 0QIUpIPrBIfXvg1e4uNy5kX15Gm2gPuvdG2nBxt0QWAvL2OjL2b+esaI21O1kpMGdH
+	 b2jCN5YBVvVXMinKOlhCaKbEXB5JbTe0k+9rCvAvCcBi8ufE7kqmnOYK4fXHsiSkXz
+	 UJBquLz7rZOrLjbPhs4+O3/dEgKeUqLoPu1FNCfyr5jGf8Zz3HJBsdP0zgSADBu1eU
+	 kBhsYkrl0R40SQ1WPIqyMttixJcQWbcI5F9tRzsa/6mCBQhYft+uYjrAtXyLpNgZoc
+	 KC8b580OgSOaQ==
+Date: Wed, 3 Jun 2026 13:08:33 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
+ linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Michael
+ Hennerich <Michael.Hennerich@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH 06/12] iio: dac: ad5686: consume optional reset signal
+Message-ID: <20260603130833.007c1526@jic23-huawei>
+In-Reply-To: <ah_k9A9535Vz6PCw@nsa>
+References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
+	<20260602-ad5686-new-features-v1-6-691e01883d27@analog.com>
+	<ah_k9A9535Vz6PCw@nsa>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 03 Jun 2026 13:24:53 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Will Deacon" <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- "Ard Biesheuvel" <ardb+git@google.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, "Mark Rutland" <mark.rutland@arm.com>,
- "Ryan Roberts" <ryan.roberts@arm.com>,
- "Anshuman Khandual" <anshuman.khandual@arm.com>,
- "Kevin Brodsky" <kevin.brodsky@arm.com>, "Liz Prucka" <lizprucka@google.com>,
- "Seth Jenkins" <sethjenkins@google.com>, "Kees Cook" <kees@kernel.org>,
- "Mike Rapoport" <rppt@kernel.org>, "David Hildenbrand" <david@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, "Jann Horn" <jannh@google.com>,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, maz@kernel.org
-Message-Id: <d5186071-55dc-42b4-9e5a-b279a6ca1384@app.fastmail.com>
-In-Reply-To: <aiAOaYwPlGEG6FML@willie-the-truck>
-References: <20260529150150.1670604-17-ardb+git@google.com>
- <178041415770.4024555.11336437584927054639.b4-ty@kernel.org>
- <2c7929d4-6622-475d-af1b-bcd0cd997cd3@app.fastmail.com>
- <aiAOaYwPlGEG6FML@willie-the-truck>
-Subject: Re: [PATCH v7 00/15] arm64: Unmap linear alias of kernel data/bss
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 3 Jun 2026 09:28:26 +0100
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+
+> On Tue, Jun 02, 2026 at 05:33:53PM +0100, Rodrigo Alencar via B4 Relay wr=
+ote:
+> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> >=20
+> > Add RESET pin GPIO support through an optional reset control, which is
+> > local to the probe function. Also, include delays for power-up time and
+> > reset pulse width.
+> >=20
+> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > ---
+> >  drivers/iio/dac/ad5686.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >=20
+> > diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+> > index 4a8c587ff116..345ca2436332 100644
+> > --- a/drivers/iio/dac/ad5686.c
+> > +++ b/drivers/iio/dac/ad5686.c
+> > @@ -8,12 +8,14 @@
+> >  #include <linux/array_size.h>
+> >  #include <linux/bitfield.h>
+> >  #include <linux/bitops.h>
+> > +#include <linux/delay.h>
+> >  #include <linux/dev_printk.h>
+> >  #include <linux/errno.h>
+> >  #include <linux/export.h>
+> >  #include <linux/kstrtox.h>
+> >  #include <linux/module.h>
+> >  #include <linux/regulator/consumer.h>
+> > +#include <linux/reset.h>
+> >  #include <linux/sysfs.h>
+> >  #include <linux/wordpart.h>
+> > =20
+> > @@ -471,6 +473,7 @@ int ad5686_probe(struct device *dev,
+> >  		 const struct ad5686_chip_info *chip_info,
+> >  		 const char *name, const struct ad5686_bus_ops *ops)
+> >  {
+> > +	struct reset_control *rstc;
+> >  	struct ad5686_state *st;
+> >  	struct iio_dev *indio_dev;
+> >  	int ret, i;
+> > @@ -506,6 +509,16 @@ int ad5686_probe(struct device *dev,
+> >  		return dev_err_probe(dev, -EINVAL,
+> >  				     "invalid or not provided vref voltage\n");
+> > =20
+> > +	rstc =3D devm_reset_control_get_optional_exclusive(dev, NULL);
+> > +	if (IS_ERR(rstc))
+> > +		return dev_err_probe(dev, PTR_ERR(rstc),
+> > +				     "Failed to get reset control\n"); =20
+>=20
+> On top of what Andy stated, I'm fairly sure
+> devm_reset_control_get_optional_exclusive() returns with the GPIO
+> asserted.
+
+We've been getting reports on that not being the case from Sashiko
+and when I last looked into one of those it definitely isn't documented
+as doing so and I got the impression it is a reset controller specific
+thing.  Do we are fine here because the gpio reset controller reset_gpio_pr=
+obe()
+includes:
+	priv->reset =3D devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+	if (IS_ERR(priv->reset))
+		return dev_err_probe(dev, PTR_ERR(priv->reset),
+				     "Could not get reset gpios\n");
+Which I guess puts it in to reset?
+
+So do we assume gpio reset or not for this sort of driver that specifies
+in the binding reset-gpios. Now if the following is implying we need
+a deasserted to asserted transition (maybe?) then we'd need to force
+a deassert first.
+
+Btw I used claude to explore this and it hallucinated the reverse polarity
+providing otherwise correct code for what was in reset_gpio_probe() but
+oddly editing that one line.  I was being lazy and using the web UI rather
+than a version with access to my git tree so maybe it scraped some
+buggy code from a downstream tree.  Anyhow watch out for subtle garbage!
+It also took a few requests to get it to figure out the logical nature
+of the GPIO signals rather than assuming they were controlling whether
+the line was high or low directly.
+
+Jonathan
 
 
+>=20
+> > +
+> > +	udelay(5); /* power-up time */
+> > +	reset_control_assert(rstc);
+> > +	udelay(1); /* reset pulse: comfortably bigger than the spec */
+> > +	reset_control_deassert(rstc);
+> > +
+> >  	/* Initialize masks to all ones */
+> >  	st->pwr_down_mask =3D ~0;
+> >  	st->pwr_down_mode =3D ~0;
+> >=20
+> > --=20
+> > 2.43.0
+> >=20
+> >  =20
 
-On Wed, 3 Jun 2026, at 13:22, Will Deacon wrote:
-> On Wed, Jun 03, 2026 at 10:57:49AM +0200, Ard Biesheuvel wrote:
->> (cc Marc)
->> 
->> On Tue, 2 Jun 2026, at 22:34, Will Deacon wrote:
->> > On Fri, 29 May 2026 17:01:51 +0200, Ard Biesheuvel wrote:
->> >> One of the reasons the lack of randomization of the linear map on arm64
->> >> is considered problematic is the fact that bootloaders adhering to the
->> >> original arm64 boot protocol (i.e., a substantial fraction of all
->> >> Android phones) may place the kernel at the base of DRAM, and therefore
->> >> at the base of the non-randomized linear map. This puts a writable alias
->> >> of the kernel's data and bss regions at a predictable location, removing
->> >> the need for an attacker to guess where KASLR mapped the kernel.
->> >> 
->> >> [...]
->> >
->> > It would've been nice to hear from the ppc folks on patch 11, but I've
->> > picked it up on the assumption that they'll love the negative diff stat.
->> > Worst case, we can drop/revert stuff if they have late objections.
->> >
->> 
->> Thanks.
->> 
->> There is a de facto ack from Michael Ellerman in the Link:, which is why
->> I included it.
->> 
->> Note that Sashiko found an issue with KVM+MTE, where a read-only mapping
->> of the zero page in the linear map may result in issues:
->> 
->> """
->> Does moving the zero page to .rodata (or unmapping/read-only mapping its
->> linear alias) expose a guest-to-host denial of service with KVM and MTE?
->> When an MTE-enabled KVM guest reads an unmapped memory address, KVM handles
->> the stage-2 fault by mapping the host's shared zero page. KVM will then
->> call sanitise_mte_tags() in arch/arm64/kvm/mmu.c.
->> Since the PG_mte_tagged flag is never set on the zero page, KVM's
->> try_page_mte_tagging() succeeds, and it calls mte_clear_page_tags().
->> This executes the STGM instruction using the zero page's linear map alias.
->> If this alias is read-only or unmapped, won't the STGM instruction trigger
->> a synchronous permission fault or translation fault in EL1, causing a host
->> kernel panic?
->> """
->> 
->> Marc seems to think it is legit, so I came up with the following (I'll send
->> it out separately with another pair of tweaks):
->
-> Thanks, it also looks like we're getting some early WARN_ON()s firing in
-> CI from split_kernel_leaf_mapping() after applying your changes:
->
-> https://s3.amazonaws.com/arr-cki-prod-trusted-artifacts/trusted-artifacts/2571596185/test_aarch64/14662134813/artifacts/jobwatch/logs/recipes/21399931/tasks/219104268/results/1007729692/logs/journalctl.log
->
-
-OK I'll investigate
