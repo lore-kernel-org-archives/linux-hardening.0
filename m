@@ -1,150 +1,158 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6558941B346
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 08:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF5B4279F9;
+	Wed,  3 Jun 2026 08:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780475251; cv=none; b=mOq0L0fc7Fo6/IsebU4ymB3kXb61u/WXPwU4eKCyh2YgwsAXiYUs3w1QHQs5zFObZ6gteN76f27LZdz35UXYK8nidKh846IotPqKBneq4CW5Okd51zLckAsXEgkyQsmdwZKePTlJKXEOntn3VG+OcqXUOm/DSLfUexGcG/1rpM0=
+	t=1780477094; cv=none; b=WJ+1Cs5dsCLtrVW6muDIAiwM6tRiDSnoT7GHGDNJkgPE3IC3qiyCoK4+4IDNACKku2fZsf0wLvqWfXg+zhqmAM3NFt5udsMlzjlJwMKN2TAQRDUC8OlkqQFxnWMAyJWa1uhb7oCFltZFE4696uwwbweXJmjWChU+iTE6oY8QweI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780475251; c=relaxed/simple;
-	bh=LumPu9r+mU+AnVH6fxprfAR9qbofx4edE4J4MDl1xdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LdhUgihoQeVgIdmWDKxTzZCRjS56Iz+BV6HBiq0Oy2ZQyeDQ3e51z5wI59AFFoofEn7RZZTcUv9h90y+r/jwwdCrL3jqWwHAqnwBjB8ZQCpP0Y7+A+wJNpU8pEA4YThCkiX7dBMl1uoBgDRTtxRYOv3GXoZB5RejJAFtd/X0BAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PZq4RFbW; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780477094; c=relaxed/simple;
+	bh=ZgP+z6Sm5HaVy1gtU4bmWwACEJFnmhgDSmJ1X6LKtmc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Z6XfyTR+hYm8I86bK4/wrrcHgMmGC5Sz+Olo8hc1KlLoGBrjftDT+62XXnAsHtMOGiVPsqB0QEUx2onneWgLtrq+v8YnjjDsDpanPXdyKyGEIx7lDDJamF/5R7pJcycN2BOLWUghBBnoNCn/wnGHhT/1BijbqwthyctHcQaJ0+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnPkKyEg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZq4RFbW"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-49041fb8c23so93302325e9.0
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Jun 2026 01:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780475249; x=1781080049; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FgsYYdbc7FC5Ra24DrI1H09WIybYU7rqzf3pPkcoQ7k=;
-        b=PZq4RFbWUQV0XeD+9B8dsXzJJ7eSaOUTEi4U5+HrnW7DrF7/TTNO4MnnSgvmmxdkI7
-         eqxPuDi8VR+M2QguQmh1+MYDiiWf/ttsurwgCEBP9kN6El0bc1K2dfdvfniv8IAIgoat
-         DJLLPC9l2RtTbhYImHQLbq9nQImSobpNQDRPQEiBgCixxxgwgM5AZphXjq0qF/wM3MS3
-         RiZsdZOx6aLkUon9q32yetH4Dok3QNOdiXkSi48Rh9He18p8S7fcmDdiZhu6ABKW+7NW
-         /gkD4lb9aKH5LdPe2ca0gmen+wJB0Yj5Y8oKys2A4pXKZoX+VOOir5BPS5vF8QQlsdUE
-         BD2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780475249; x=1781080049;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FgsYYdbc7FC5Ra24DrI1H09WIybYU7rqzf3pPkcoQ7k=;
-        b=Yk1OizxHgrvuniU+tyoylX63TDe7mQ8npyXxDlY5I78dhUbnnjwC8+swKMEP9p7jMw
-         01os0eL8dUL8rPI8T0Em/obF4cYD8ModMPdkgXIqyVMyrL9upyPv20CsK25au0i1wziW
-         1eZ7o2XVMbSqbOInNcUBXh2GK6cVwUWTMfn/pzkTYRZCT44b1RekU5MTOGVsHFsDrWeE
-         AaE27x7I7GsZvuWCc3KmmBvAugLngOxZsGn0no9Z6mV/bOln9zPhmTOgZPedgAKGMv1H
-         5uXBYVOWuJvgnfxpDt9IthxXFLkzG5NlpUiygXjQlKzuZDzmFn06YO+yKCL0no5ruydg
-         XWsw==
-X-Forwarded-Encrypted: i=1; AFNElJ9JqKpnC+PnoRcslLWHNlHqXHZ23f6wVxMSuoOTs66OT0ByLi9hr+Ze31+EnV3I6m7Aa8dPjkScxC5CAlQoZkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc5xBWUUx0lQxIr0szrzKJT8FmaGPZxtwxbKzJH9bnkZvnEO81
-	T1DQWcSYBjNJ0HLWUpbqpCzT+JjRV8PW2quxNOMger9w+VnDJTt+JpBd
-X-Gm-Gg: Acq92OHxKfS2IHpngkTYuWY3tjGaLMPvTH4hj6cThEiakeJsnKHW3GS3bY6eso/eW8v
-	ghzxre91PFQHPpC8U9MdJKAxr2lNDtaxKee6Nlc3eUh0y+sKCaT4yosymatlZXoT+/71ut1/7D9
-	bRY04tlEXj5tlp+f4J5erYMvLtDypoK80DJ3emuZgVRemSI3iXV8HgCGeIzKI0iQcPq7ah1spsF
-	7EXjFd5KWdJahNQDWhsN93Kl49YWJj4fKeHzeUh7cURQrFcdTPcCl1cb8S6bj8GB74sdlLH6xRP
-	iqACxWaQt20QOD3/UvkKzf3rFniLdIFif768Z2jNfbzX7q2XOo0rps+LI+7m9TKla5UytKHlGgy
-	ldZrC2P+TeA1PpglOMMoFgZv9VMFXkNVzOgsqAJ/ONmiicWuzHRh9VOnCBLdnckY7fo+U6+NEqh
-	pY11cfjyq5LXXYVYqLfzaDs5PQ6Q==
-X-Received: by 2002:a05:600c:6748:b0:490:9df1:f0d5 with SMTP id 5b1f17b1804b1-490b5fe64d9mr38872955e9.28.1780475248655;
-        Wed, 03 Jun 2026 01:27:28 -0700 (PDT)
-Received: from nsa ([148.63.225.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2e4004sm5814991f8f.9.2026.06.03.01.27.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 01:27:28 -0700 (PDT)
-Date: Wed, 3 Jun 2026 09:28:26 +0100
-From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-To: rodrigo.alencar@analog.com
-Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH 06/12] iio: dac: ad5686: consume optional reset signal
-Message-ID: <ah_k9A9535Vz6PCw@nsa>
-References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
- <20260602-ad5686-new-features-v1-6-691e01883d27@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnPkKyEg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924931F00899;
+	Wed,  3 Jun 2026 08:58:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780477092;
+	bh=HNO5aQb0rtRKtux/wu+5AcytYSH9RtOlt3U0qrUIzPI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=mnPkKyEgBAoJhHyCjKocF+n+JqkHcWSmPH184p/CrskKjSd4JLPoFSBGrYLKU9Mar
+	 B1hI8HW9H+53ks3lghDx4U+J6rNa6f8KquouzDq0+DM7/4ZBRzC0AuXQVPvI5bKqkY
+	 NglLbcu+ZBDleA+IgNkKfEKOPcXRhxVfSNk8lTpECqvKoBh+iHSyU2ZFRwFPFE4daX
+	 kw0WCczgVzTNS8Nry/XjBs//vr21nJLOAmz9iMERtpe8gUl3WYdzTVYvcHDMtqVnlJ
+	 wu/GIoZWa0/6+fA9X2Sm0u6y0MnNMo3tVdcswt4ZtD+mHXcn/QmWy2xNCp5hUrCygR
+	 dCBoxrKjfQI+w==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9E4CDF40075;
+	Wed,  3 Jun 2026 04:58:10 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-01.internal (MEProxy); Wed, 03 Jun 2026 04:58:10 -0400
+X-ME-Sender: <xms:ouwfaqCSomCUHn2Pcxt39NzT6QrYDOwoUaHjVutpQNUu0GYFMZl_Ig>
+    <xme:ouwfavUBA_wa0-Kl0rwIin5phZ0Xk0GMcV5YCAKgwCXtZX9t6zPJc0f21igxmxdFZ
+    el9mEG9Na6KsRXZeOce-ahEOIXmRVtrBYvtLtWGWDsGbs4lRkjjK10>
+X-ME-Proxy-Cause: dmFkZTGr2weDGKBa0sUCUcj036iLL5Y1yiuWXtlNLmEI4O4KffGEG7mKCI4rtXP1Kjy/sC
+    Vn4JLRDUw3n/LlH/P7ldcJy2f2NLMW7zEwQdl58eFGDw13Gd7uBwZtBFefeubqM57vT7KW
+    gxI5DHTPlMa9V7t7GBAVKnyC4disspoUcyOJuYcuXeoXUDa8M5AS9XNNfwK+hXW4k6RRKP
+    P+HnepDfV9Ly2SCGeboQtn62xJxY4OofV3op27GBS756vLSUraZsZIubTiRwHvbO7GWFg8
+    TN89ZhNEjfm9JCDm1LdV/dDNhv9gsSNYWX/LbCMQhfYJTNEbDdYGKUoqZbehxmbuTXbkFU
+    XnaKhsn2lQq7XiJ+YTNPtHlw97iNDWbeNZirflpUY26TpW4YlC0yGx1F2Pdjov4xxyaUZd
+    nGZuSrO0ofec6SMf5X9bTikzbc7jU39nUFa8+EDOEs+sLMDgAb7Jfbkdo1r3Pi14q8HECl
+    WOyAkHMSoapVwjPlMra4gfnE/Sq1KO70VhXXH61epQ6Rh+aRLmPHQfsv+x4lMOk7iiwpsY
+    2Ln1UDislceGN/Gw4GkBXiCXnvOln8phYiq7SJoKkYgBG145jAMq3GJUgudNXhcY+kY+fP
+    qpGcyL1cKdvM1YoB3pTqsi5xKVO8SJQEPQQW/+ABFCEXztbk2H+BY/x90g+g
+X-ME-Proxy: <xmx:ouwfam3-PZsrAVqqiP-EfVs-0jTgxsPILW5ya_Lkxs4FNvUMV00I3A>
+    <xmx:ouwfaqtJQPQRdRGCSDlzv7oyJj2hWevC-qAmYiniqjt8Bubu_25WPg>
+    <xmx:ouwfai_l9FuzR3F73C0xJHJLI6BrnbgCXaJCGZTs31csy6qmGWmmEQ>
+    <xmx:ouwfauR1k_z1hiMDOUWOdTJsWToATwu--U1XlEgRSm3i3JLjPhl_jg>
+    <xmx:ouwfaoCm3jrQTsvC8JSjjw2cVnzpsLJPRFYPY4I2sfuqg_7otMeSlp9g>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 77D33182007A; Wed,  3 Jun 2026 04:58:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260602-ad5686-new-features-v1-6-691e01883d27@analog.com>
+Date: Wed, 03 Jun 2026 10:57:49 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Will Deacon" <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ "Ard Biesheuvel" <ardb+git@google.com>
+Cc: "Catalin Marinas" <catalin.marinas@arm.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, "Mark Rutland" <mark.rutland@arm.com>,
+ "Ryan Roberts" <ryan.roberts@arm.com>,
+ "Anshuman Khandual" <anshuman.khandual@arm.com>,
+ "Kevin Brodsky" <kevin.brodsky@arm.com>, "Liz Prucka" <lizprucka@google.com>,
+ "Seth Jenkins" <sethjenkins@google.com>, "Kees Cook" <kees@kernel.org>,
+ "Mike Rapoport" <rppt@kernel.org>, "David Hildenbrand" <david@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>, "Jann Horn" <jannh@google.com>,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, maz@kernel.org
+Message-Id: <2c7929d4-6622-475d-af1b-bcd0cd997cd3@app.fastmail.com>
+In-Reply-To: <178041415770.4024555.11336437584927054639.b4-ty@kernel.org>
+References: <20260529150150.1670604-17-ardb+git@google.com>
+ <178041415770.4024555.11336437584927054639.b4-ty@kernel.org>
+Subject: Re: [PATCH v7 00/15] arm64: Unmap linear alias of kernel data/bss
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 02, 2026 at 05:33:53PM +0100, Rodrigo Alencar via B4 Relay wrote:
-> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> 
-> Add RESET pin GPIO support through an optional reset control, which is
-> local to the probe function. Also, include delays for power-up time and
-> reset pulse width.
-> 
-> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> ---
->  drivers/iio/dac/ad5686.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
-> index 4a8c587ff116..345ca2436332 100644
-> --- a/drivers/iio/dac/ad5686.c
-> +++ b/drivers/iio/dac/ad5686.c
-> @@ -8,12 +8,14 @@
->  #include <linux/array_size.h>
->  #include <linux/bitfield.h>
->  #include <linux/bitops.h>
-> +#include <linux/delay.h>
->  #include <linux/dev_printk.h>
->  #include <linux/errno.h>
->  #include <linux/export.h>
->  #include <linux/kstrtox.h>
->  #include <linux/module.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
->  #include <linux/sysfs.h>
->  #include <linux/wordpart.h>
->  
-> @@ -471,6 +473,7 @@ int ad5686_probe(struct device *dev,
->  		 const struct ad5686_chip_info *chip_info,
->  		 const char *name, const struct ad5686_bus_ops *ops)
->  {
-> +	struct reset_control *rstc;
->  	struct ad5686_state *st;
->  	struct iio_dev *indio_dev;
->  	int ret, i;
-> @@ -506,6 +509,16 @@ int ad5686_probe(struct device *dev,
->  		return dev_err_probe(dev, -EINVAL,
->  				     "invalid or not provided vref voltage\n");
->  
-> +	rstc = devm_reset_control_get_optional_exclusive(dev, NULL);
-> +	if (IS_ERR(rstc))
-> +		return dev_err_probe(dev, PTR_ERR(rstc),
-> +				     "Failed to get reset control\n");
+(cc Marc)
 
-On top of what Andy stated, I'm fairly sure
-devm_reset_control_get_optional_exclusive() returns with the GPIO
-asserted.
+On Tue, 2 Jun 2026, at 22:34, Will Deacon wrote:
+> On Fri, 29 May 2026 17:01:51 +0200, Ard Biesheuvel wrote:
+>> One of the reasons the lack of randomization of the linear map on arm64
+>> is considered problematic is the fact that bootloaders adhering to the
+>> original arm64 boot protocol (i.e., a substantial fraction of all
+>> Android phones) may place the kernel at the base of DRAM, and therefore
+>> at the base of the non-randomized linear map. This puts a writable alias
+>> of the kernel's data and bss regions at a predictable location, removing
+>> the need for an attacker to guess where KASLR mapped the kernel.
+>> 
+>> [...]
+>
+> It would've been nice to hear from the ppc folks on patch 11, but I've
+> picked it up on the assumption that they'll love the negative diff stat.
+> Worst case, we can drop/revert stuff if they have late objections.
+>
 
-> +
-> +	udelay(5); /* power-up time */
-> +	reset_control_assert(rstc);
-> +	udelay(1); /* reset pulse: comfortably bigger than the spec */
-> +	reset_control_deassert(rstc);
-> +
->  	/* Initialize masks to all ones */
->  	st->pwr_down_mask = ~0;
->  	st->pwr_down_mode = ~0;
-> 
-> -- 
-> 2.43.0
-> 
-> 
+Thanks.
+
+There is a de facto ack from Michael Ellerman in the Link:, which is why
+I included it.
+
+Note that Sashiko found an issue with KVM+MTE, where a read-only mapping
+of the zero page in the linear map may result in issues:
+
+"""
+Does moving the zero page to .rodata (or unmapping/read-only mapping its
+linear alias) expose a guest-to-host denial of service with KVM and MTE?
+When an MTE-enabled KVM guest reads an unmapped memory address, KVM handles
+the stage-2 fault by mapping the host's shared zero page. KVM will then
+call sanitise_mte_tags() in arch/arm64/kvm/mmu.c.
+Since the PG_mte_tagged flag is never set on the zero page, KVM's
+try_page_mte_tagging() succeeds, and it calls mte_clear_page_tags().
+This executes the STGM instruction using the zero page's linear map alias.
+If this alias is read-only or unmapped, won't the STGM instruction trigger
+a synchronous permission fault or translation fault in EL1, causing a host
+kernel panic?
+"""
+
+Marc seems to think it is legit, so I came up with the following (I'll send
+it out separately with another pair of tweaks):
+
+-------8<------------
+From: Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH] arm64: mte: Disregard the zero page explicitly for
+ manipulating tags
+
+The zero page is conceptually immutable, and will be moved into .rodata
+to prevent inadvertent corruption.
+
+Prepare the MTE code for this, by ensuring that the zero page is never
+taken into account for tag manipulation, given that those actions will
+no longer be permitted on the read-only alias of .rodata in the linear
+map.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+
+diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
+index 7f7b97e09996..093b34944aee 100644
+--- a/arch/arm64/include/asm/mte.h
++++ b/arch/arm64/include/asm/mte.h
+@@ -80,6 +80,11 @@ static inline bool page_mte_tagged(struct page *page)
+  */
+ static inline bool try_page_mte_tagging(struct page *page)
+ {
++       extern struct page *__zero_page;
++
++       if (page == __zero_page)
++               return false;
++
+        VM_WARN_ON_ONCE(folio_test_hugetlb(page_folio(page)));
+ 
+        if (!test_and_set_bit(PG_mte_lock, &page->flags.f))
