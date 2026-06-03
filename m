@@ -1,102 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-112.ptr.blmpb.com (va-2-112.ptr.blmpb.com [209.127.231.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DE53769F9;
-	Wed,  3 Jun 2026 07:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6488408024
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 08:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780472597; cv=none; b=u9i3dtFxf16SfCnbGwAO2L3ZhihtK+thPQ593CP9ixmMHoYblcjFMWLZleGx7ji6fSSIuhEx5h9AY7XvdflRdzIm3htFlPhtMc+VpeW//G4o6AQj1FqVY0syQSkl8sa4q28S5r6P5xLgHM6gi+xnitw/xgb2RC1ollpQwtam7H0=
+	t=1780473804; cv=none; b=XOdWzC+ahNPXDRjOhs/yf3/P2MTQd6sT865LQMCUXxbwI+XxxRDe8apIuGUrKh3p4GB+YHJLasFm9coGiZDZtEjtLz3nImykXKWRYoSAcS82KHjz8T8GIyfVX/vb37JXHNCy097D+Vl1VrWRTyNNOV6gi2+qtI+rw4sF7Oxt+v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780472597; c=relaxed/simple;
-	bh=6h3lH+5ByUAkFiammymSyFzWThp9nOcipBln8oHRkzI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ADlZskTiBO3f6JovS8vYOzOykkP+6wyv8HYwNWbo2h6CUkA6GWW1lAVftqym+v1HDAjtUsporh/YFpiPfYNFu8poLQKgaSLUD+7qajsQNXOoGi/fTDLa7s5OuAVlTjRENxhG5wIGTma9dkAxOJV+RiFPzG4IP1CGQuAaFNoy80o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D6KsQFqL; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780473804; c=relaxed/simple;
+	bh=zY9uSA9mh2VIN/I3X32zfuPMh2mwuFkmFTC7yRagVjY=;
+	h=Subject:Date:Cc:From:Content-Type:To:Message-Id:Mime-Version; b=O4DtBUHVn2A6ZldHEGoicgC/RrdrEGYMuvR7Nrb93agLI7uTBMBRQON9+b0d7hny87WI8jQurqmJdaL9BRXg0pAzBKIpTPON8BRR61R9CHmb/+D2jvZZXCdOccGeThon93e9c+yXFTRY7WV3bN6ObFTfmFGmcr5hdcLXp4qWiz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=XhyhxQVt; arc=none smtp.client-ip=209.127.231.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D6KsQFqL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780472595; x=1812008595;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6h3lH+5ByUAkFiammymSyFzWThp9nOcipBln8oHRkzI=;
-  b=D6KsQFqLoDYgKnuzYOcFwB7p2gbtSPndEF46tlqrlDgDYjBJbKe08uzQ
-   ME5CaMNYlPwM2lMCXJmV4eLbX/wb6B7dHp48ybwqkelc/upsKYLkMzFZi
-   /2aZ7zzsFO4+QQX6V9Z94s4HhEDYT5WoD4S0JAsVKfTnwL/MO9uvElcUr
-   d7wHZ8QuZ2MJxJW8oKvPVfg8c+RV9Ve13h96LYeMDAML3qa/hMlgjcRXS
-   LaM7z9kIf3deoAhukHUZzcpkMNYfLbWY/tJB9qPAkIomjw1mbWUfWawly
-   kZHRb6jjJ674YIBvddasTugYAPyu9uTzR/So0f+OLMzkvRjTvGBRvFfSX
-   Q==;
-X-CSE-ConnectionGUID: vKtE9iumSSmYRuf+XPYElw==
-X-CSE-MsgGUID: mjtRZG0ASLysRMbZfju6Iw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="106721710"
-X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
-   d="scan'208";a="106721710"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 00:43:15 -0700
-X-CSE-ConnectionGUID: yMsbg1W4Swu0S5/AeY+Wdg==
-X-CSE-MsgGUID: zVB+PfDTRR6bDkYFmfZ/uw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
-   d="scan'208";a="248464462"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 00:43:13 -0700
-Date: Wed, 3 Jun 2026 10:43:10 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/1] string: Add missing Return sections
-Message-ID: <ah_bDg7tr6iDpDWA@ashevche-desk.local>
-References: <20260603071648.106679-2-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="XhyhxQVt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1780473785; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=mlIIN622rLr22plKnXfWrvgdqL032Wr8kiqR08LjPLw=;
+ b=XhyhxQVtwdu7YbtdnzYMUC3AbW7fd3Fk7Kr6/21Dx9zAadCBWoz2E9PbnH4ma1yhudSGD2
+ IrrqyI9TK8j83Bsk4eqOYyYWzgddEpiFsAPz+Jl4YsydWx2zDs9j8Expvc69QMmG2qesvI
+ zfof/RMcR8Qr9NKceU8ApJ7JA4Z5fq2cjM5BHdc+EhksGOSoaoETqQCz+QNEj4EA3JJq2t
+ NkDJGByIHw7LE9TEVjSkHDjeCy/kKujZvBQLUQH6ocrKCJB6PnuJZeunvbeGc9IreKdnzm
+ mX90p4eYnF5SS7Mf/AGvpm5J3cVuw2I33X0TBqYuI3rUznY/U3Pp912tlONBBw==
+Subject: [PATCH v4 0/8] mm: speed up ZONE_DEVICE memmap initialization
+Date: Wed,  3 Jun 2026 16:01:44 +0800
+Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
+	<lizhe.67@bytedance.com>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+To: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
+	<kees@kernel.org>, <mingo@redhat.com>, <rppt@kernel.org>, 
+	<tglx@kernel.org>
+X-Mailer: git-send-email 2.45.2
+Message-Id: <20260603080152.64728-1-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260603071648.106679-2-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Mime-Version: 1.0
+X-Lms-Return-Path: <lba+26a1fdfb7+d48ee0+vger.kernel.org+lizhe.67@bytedance.com>
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
 
-On Wed, Jun 03, 2026 at 09:15:52AM +0200, Andy Shevchenko wrote:
-> The kernel-doc unfortunately can't catch some corner cases. Hence
-> the commit 645b9ad2dc6b ("string: Add missing kernel-doc return descriptions")
-> missed that. On top there is no consistency in use of Return/Returns.
-> Address both problems here. Choose Returns over Return as it will be
-> less invasive change.
-> 
-> Fixes: 645b9ad2dc6b ("string: Add missing kernel-doc return descriptions")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> Cc'ed to the Documentation and kernel-doc people to point out on this
-> kernel-doc corner cases. It didn't complain on the macros that return
-> a value. Also it would be nice to have file level consistency on
-> the naming of the same type of sections, e.g., Returns vs. Return.
-> 
-> Kees, feel free to drop Fixes whilst applying in case you think it not
-> worth it. The commit message still has a pointer.
+memmap_init_zone_device() can spend a substantial amount of time
+initializing large ZONE_DEVICE ranges because it repeats nearly
+identical struct page setup for every PFN.
 
-...
+This series reduces that overhead in eight steps.
 
->   * Helper for __sysfs_match_string(). Calculates the size of @a automatically.
+The first patch fixes a stale comment in __init_zone_device_page() so
+the documented refcount policy matches the current ZONE_DEVICE code.
 
-Oh, and it should spell @_a in the above... (however it's not quite related it
-seems okay to address while at it). Kees, can you also fix that? Or would you
-like to see a v2 or a separate change for that?
+The second patch factors the reusable pieces out of
+__init_zone_device_page() so later patches can share the same logic
+without changing the existing slow path.
 
-> + * Returns:
-> + * The index of the matching string in the array or negative error code
-> + * otherwise.
+The third patch adds set_page_section_from_pfn(), so callers that want
+to refresh section bits from a PFN no longer need to open-code
+SECTION_IN_PAGE_FLAGS handling.
+
+The fourth patch adds a template-based fast path for ZONE_DEVICE head
+pages. Instead of rebuilding the same struct page state for every PFN,
+it prepares one reusable template through the existing slow path,
+refreshes the PFN-dependent fields in that template, and copies it to
+each destination page.
+
+The fifth patch extends the same template-based approach to compound
+tails, so pfns_per_compound > 1 can also benefit from the fast path.
+
+The sixth patch introduces memcpy_streaming() and
+memcpy_streaming_drain() as a generic interface for write-once copies.
+Architectures that do not provide a specialized backend, or cases that
+cannot safely use one, fall back to memcpy().
+
+The seventh patch extends x86 memcpy_flushcache() small fixed-size
+fastpaths so struct-page-sized streaming copies can stay on the inline
+path when alignment permits.
+
+The last patch switches the ZONE_DEVICE template-copy path over to
+memcpy_streaming(). It keeps pageblock-aligned PFNs on regular memcpy(),
+uses memcpy_streaming() for the remaining write-once copies, and drains
+streaming stores before later metadata updates that may depend on them.
+
+This is not intended as a steady-state data-path optimization. Its
+benefit is in pmem bring-up paths where memmap_init_zone_device()
+dominates device online / rebind latency, such as:
+  - fsdax or devdax namespace creation and reconfiguration
+  - nd_pmem / dax_pmem driver bind or rebind
+
+In those paths, the kernel initializes a large vmemmap range once and
+does not immediately benefit from keeping the copied struct page state
+hot in cache. Reducing write-allocate traffic in that one-time setup
+path can therefore reduce end-to-end device bring-up latency.
+
+The optimized path is disabled when the page_ref_set tracepoint is
+enabled, and sanitized builds remain on the slow path so their
+instrumented stores are preserved.
+
+Testing
+=======
+
+Tests were run in a VM on an Intel Ice Lake server.
+
+Two PMEM configurations were used:
+  - a 100 GB fsdax namespace configured with map=dev, which exercises
+    the nd_pmem rebind path (pfns_per_compound == 1)
+  - a 100 GB devdax namespace configured with align=2097152, which
+    exercises the dax_pmem rebind path (pfns_per_compound > 1)
+
+For each configuration, the corresponding driver was unbound and
+rebound 30 times. Memmap initialization latency was collected from the
+pr_debug() output of memmap_init_zone_device().
+
+The first bind is reported separately, and the average of subsequent
+rebinds is used as the steady-state result.
+
+Performance
+===========
+
+nd_pmem rebind, 100 GB fsdax namespace, map=dev
+  Base(v7.1-rc6):
+    First binding: 1466 ms
+    Average of subsequent rebinds: 262.12 ms
+  Full series:
+    First binding: 1359 ms
+    Average of subsequent rebinds: 108.36 ms
+
+dax_pmem rebind, 100 GB devdax namespace, align=2097152
+  Base(v7.1-rc6):
+    First binding: 1430 ms
+    Average of subsequent rebinds: 229.12 ms
+  Full series:
+    First binding: 1273 ms
+    Average of subsequent rebinds: 100.17 ms
+
+Li Zhe (8):
+  mm: fix stale ZONE_DEVICE refcount comment
+  mm: factor zone-device page init helpers out of
+    __init_zone_device_page
+  mm: add a set_page_section_from_pfn() helper
+  mm: add a template-based fast path for zone-device page init
+  mm: extend the template fast path to zone-device compound tails
+  string: introduce memcpy_streaming() helpers
+  x86/string: extend memcpy_flushcache() fixed-size fastpaths
+  mm: use memcpy_streaming() in zone-device template copies
+
+ arch/x86/include/asm/string_64.h | 140 ++++++++++++++++++--
+ include/linux/mm.h               |  19 ++-
+ include/linux/string.h           |  20 +++
+ mm/mm_init.c                     | 221 +++++++++++++++++++++++++++----
+ 4 files changed, 360 insertions(+), 40 deletions(-)
+
+---
+v3: https://lore.kernel.org/all/20260527033636.28231-1-lizhe.67@bytedance.com/
+v2: https://lore.kernel.org/all/20260521040124.10608-1-lizhe.67@bytedance.com/
+v1: https://lore.kernel.org/all/20260515082045.63029-1-lizhe.67@bytedance.com/
+
+Changelogs:
+
+v3->v4:
+- Rebase the series from v7.1-rc3 to v7.1-rc6.
+- Rework patch 4 so the reusable head-page template is seeded from the
+  first real struct page, rather than being initialized directly on a
+  stack-resident template object. Also add an explicit !nr_pages early
+  return. Suggested by Andrew Morton.
+- Rework patch 5 similarly for compound tails: seed the reusable
+  tail-page template from the first real tail page, thread
+  use_template through compound-page initialization, and reuse that
+  prepared tail-page image for the remaining tails. Suggested by Andrew
+  Morton.
+- Tighten patch 6 so memcpy_streaming() maps to memcpy_flushcache() only
+  when the destination alignment and size allow the transfer to stay
+  entirely on the non-temporal path; other cases fall back to memcpy().
+  Suggested by Andrew Morton.
+- Rework patch 7 so the existing 4/8/16-byte cases remain handled
+  directly in memcpy_flushcache(), while the new aligned fixed-size
+  fastpaths cover only the larger 32/48/64/80/96-byte cases. Suggested
+  by Andrew Morton.
+
+For changelogs of earlier revisions, please refer to the v3 cover letter:
+https://lore.kernel.org/all/20260527033636.28231-1-lizhe.67@bytedance.com/
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+2.20.1
