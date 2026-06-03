@@ -1,64 +1,64 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452753E4C87
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 03:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5E63E5A0E
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 03:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780456100; cv=none; b=KVWYR26I9lRfq2o3kZObzzFZjh8uxUHSM3DCgGVH2CTH39jegiPCYcJM2uL4PoKIdnTVuRuQCoUH74Txvy0abp+hrptrpYuWrbasba734Ny3Y1fm9ZAVjQ0cOHbDa5vFmGgTJBCxFpNu0abcy2R5coZ/wBSGQpwhOp+0IN5faMU=
+	t=1780456101; cv=none; b=CnBmb2+mURgi9Xa1i3FzEX9SaHEJW3FiAWw0/I4V7yKp6uqmzR4GCU6DuTwWtjuO411FjLHQqv0h4i04WNTzPaGO5OMI+rKpUvDFVg4RDyfgvHNWpbMQOFZDIe6r6tklSKPq55TIwI+f+ZgZpmgsPetDBa9LE6d4WORjzzLk6Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780456100; c=relaxed/simple;
-	bh=QpqYfGjnjza1yDhq9iuXBzv4lug+a++X1dRARkJ9T9o=;
+	s=arc-20240116; t=1780456101; c=relaxed/simple;
+	bh=xkKW8ssF61j3wciQU5I5OgNSDBxKhZtUrbfTMBdFQsE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WMHDcTQgMIP6fuN9PyXlHmbsI4SJjtlx4pSQSxSZKfFm/LZVKtC7ZpXZqrkwsVJGcdUtIefOmpfqeA1dvb/rOyykxZtzEiF0N6zyJxv8UVD+UGk2AIK72BI2BcEdwYKYZSOQIUk1xIml4jzrENL56P/oNJsAJnxv2/N81uJUvl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pjB9hu8u; arc=none smtp.client-ip=209.85.216.46
+	 MIME-Version; b=uDynhfdOtCD7SPN9dLHdyJdta8wlHYP9WzhSJ9kc4s9gyCbW7Cko58M0kJrukBOrBf2IiH4wI8V2FOBNjzPrBVYX7XGB6WD7y5ioDtMCAjyKPLKkugx0vXM5sBLjdolr5+S+iGkA4D86RayYdPZhYQc6X4PMSosUlwlo8nrM1xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JBVBkwcU; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjB9hu8u"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-36d98c9b596so2174700a91.3
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Jun 2026 20:08:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBVBkwcU"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-36baec934b6so109810a91.0
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Jun 2026 20:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780456097; x=1781060897; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780456099; x=1781060899; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=t6nTg19H1aEF2hCty9Ml54+E9Am0ueL/QSUT9WJYjuQ=;
-        b=pjB9hu8uA/4mTOy16n/+MSPwNBCtkXckDHZ1HqIK+TDFY8pTEQPQjaTFK5RfQsK8qz
-         qMavdKp+oVGGe35AWEWgeJgCwd1sQ9aUvv0cGaBGpzI8e7vThAf+z7vcd9hliPkEL/33
-         Vs597EMyOsJsBFm8/gQKz2/5Z1F/jK9C4jL8NZdTRU87yKdSysB9MMzzKgqoLPccfvGS
-         JppTEdV03ad7nucVoW9lmbJhfOGgLosayLwKwd3gwAYmMN3MjdsEOJQVtxnSbpCAvtXF
-         bOi+j++kD80tStJ5VWGpjRoSsS0IPaW52DvIDsU58lDTRWdQd07rxqHo0CMPaFQ9cG/b
-         6Ljw==
+        bh=QzSNw5MqtTwHbrXr4I82ADeuVf15/M6YUefhoKAdT3o=;
+        b=JBVBkwcU1sDDCJ6T7Gxl5OcOCO7ZiWgLQfnKaCbbSIwaGOZaF9MM/zNzeRmWiBmwpa
+         s1dP6fpaZC4OO+DBM+w5LgCoQm82MjqYpqUDLWaWwp2u9Qk8wDDf3M9194NN8+RRYkgQ
+         TVeTwcAOjC3/45DBxO8/bsTDqbX84tBpxy8/AmAR5D/xopR6yCUknSnIZicycnASy6TF
+         NBwwOhJB6VfCIc08KtDJrpBZ/IX9nbiOBF/DADvUg5OxJGvYzke+MANA5OyajQiOdqnu
+         Cxj61UDr16hYeV0FOaR2tn7FUY5N78Q2vS6Ycl5HxRbwvdDHVtfZJrbrby+TnsjIkS+S
+         48EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780456097; x=1781060897;
+        d=1e100.net; s=20251104; t=1780456099; x=1781060899;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=t6nTg19H1aEF2hCty9Ml54+E9Am0ueL/QSUT9WJYjuQ=;
-        b=M1hkWmCtSKdZJtlFGuhGGUk27cEry2mVYdXomsYxLZZWKEU/JjCX8/KzRuUGTD//is
-         obnl7I3iHl87u8SLMq8hQLR6tk7M1b4rYssie8SiE4ZEm9rbTR1X3ABEiDydtooCewOy
-         NO+ska+JXaZ/trGYZo8U8VuZbTqp74UWVX5aGtSj5TLZlfzPDDX2y2G0jBBy71yEK6V4
-         9MA2WFF2aMPsugTvmkZRL9lrwwAMWX/SUnywdwO+6h8seVoz7GBAXtNfyAlJtKz0t2tJ
-         pQeb7VjljysLq4cA4/bPAzuzEDtBN2VV8QnRt3MEwaYl7lYa1iUKqocYCsFp3ABdzVR3
-         0Dmw==
-X-Forwarded-Encrypted: i=1; AFNElJ+QynZsl8Mztz0OSUKgWa6Njju7uOsj32vDfB8bwbVkOOHno7NCkVD2gyc+sYqZ3FPwc9OvbbbYvLDlIjvUjM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCukoH0GHdV3Q/FsAdgTryaeEMNnWtAwUExWseCsbD4oLViBVw
-	ESvlCrFIQwCNwhYE8EiS6WsHtwB8TMosA47JezwFMwB7R7tF5RuR7X+1
-X-Gm-Gg: Acq92OFJT7NUhGCBqT9rmQTI+ALRGjHuawWQ3z5ka5vf3IGgNnFTtIIqaUPfcvOf6Cm
-	cBMaeYEDYEVMjaROOMAz93AwzSAjBI16HylM/51JwpXz6dNdFXIXOw7+ZJwMt+piELDyW7bEuvx
-	VM/8mohk84RIqul92zLjubbNCZ6XLkYak+0L2S4nmuw7cQaOPgYeWDMWCGHIcdjE5A4cSqthllV
-	uHSWJwIJBUJaAzgwieAdtLFZNFx+JwuXeOSbKVD389PVucixoyb0emZT74DsB1MjF3e4TsWetlp
-	ArtEEJMSBuw0/PqG1WARO2gF7y+/WnxdmMuAT1Y6s2d+y5uK1jg6qvi/eD0K8WhHDRJnwBjS5qV
-	gO94ZRPZuu8jP08UWl+CeafQOXmoQ+zEYqqDztQxf1V/S48IhHxon6wu3EMFkNQAEH+iFa3Da6C
-	t/3dCddjZ6YN9O51bY+Wza4ceF/e2uC4B8PZy+nBbXTOc5525ugeFB9cnnNml7kpzos3Ys5dHWZ
-	Ybj5HW/E9cFKvcSdpnv0Rjd+Egivl6c2eygF+pFkGE9/A==
-X-Received: by 2002:a17:90a:e706:b0:368:ed92:6f6 with SMTP id 98e67ed59e1d1-36e2eede4acmr1636874a91.1.1780456097562;
-        Tue, 02 Jun 2026 20:08:17 -0700 (PDT)
+        bh=QzSNw5MqtTwHbrXr4I82ADeuVf15/M6YUefhoKAdT3o=;
+        b=PGh8unswQEt7VJe/+pwWyM/sA68rXtHOsQWg1G7oKpWCCAQsMyT5Zbod/nzMkBaGrj
+         dV86k89LkXKlU+bofQV2QbwG4ysWEgHtUer3U++rDkDCvyxrPdhZ9+EA+T5xORzt/aa8
+         6usz8+3Et+IhQft1uEMN0thp4VWwL6TPTX8U0LtFf1ZIL/8r/s2VilCgTQTKyHng89JP
+         vollXUPKWQ4LOlDXTjbFAFQnOoqN3oiu4MDzsrcKAz0x1iM5+c6ulkJ7akdMUSo0E2S6
+         b9Ovt8GXDoDN3pNfMv/lqCjnMlTtI2jYMHNDzoffYQK6uiAJBWri9DT+RI2IkKdQqOOY
+         PKBg==
+X-Forwarded-Encrypted: i=1; AFNElJ9+biStTFhngnuzSkRv65reNxjSdYwrr/1CS4YvGelPzPqFUQek2vrAccsArP9CYCOjgmLYrYOfU3gn6/51fHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkqFLQN6YsToptod3UzQEKlh0YxN+wM0bp96GgeiKx3LSm5zgd
+	hrL4ACYPInU2XKUZ5jP2bZkKpVuKG4wQEA5m/of9+NtDyqsvIaGnXY6e
+X-Gm-Gg: Acq92OESi3C9yksDnt0KpbnLIfw9jMq/fvfTpJlusxOwl+0cTpPsrBQCtVkeWsMRPfg
+	1RvLvOAZVVqyAFuGHNluL/MK/DP32yyM+zlswNc8pK7HG8cYrIxPo2AVlJIvlV2o4uVM3KRxgcc
+	icLBiUiHZ7SZWPeYH3CQdSCZo7V032vXBysxaWX0Ei2w3JsJuD4jyPI0oTMiIGfGsgtBtWFQHyP
+	rja2huWaM89EqAPEXpI9PAjaLRvgKZPXvE9CXBidsiOJ7FApL6HVJ17ndn6GxA3iTEOGZXPMYAC
+	eoqiBIWtyjoZGGrKnDRkwxd0XpIxp2rO01fCdmpl/oJq5MIC73Wf9pBgpm4eY2Taeeqziqm8wI9
+	PzmTXDw8Zmwo9QnKeroDnh6CnmtNRh19N1qaEkqtuYKndslV12xa4GxNUIs+4tuPQh54aNmR9KB
+	GEiNybAOek/DYZiaLCQVhR88nrmPKlXbU7fndFmJFUVET+7sWTFH4AjZXDOB9NaSWBH4LRI5xKa
+	DaI/0VsZ/n6m9AaBGBDH+WsxgqLR7p8snc9/3qup/1hBw==
+X-Received: by 2002:a17:90b:3d44:b0:36d:630a:c4e4 with SMTP id 98e67ed59e1d1-36e385786f9mr967492a91.3.1780456099427;
+        Tue, 02 Jun 2026 20:08:19 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36e0a186741sm1247102a91.8.2026.06.02.20.08.16
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36e0a186741sm1247102a91.8.2026.06.02.20.08.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 20:08:16 -0700 (PDT)
+        Tue, 02 Jun 2026 20:08:18 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: dmaengine@vger.kernel.org
 Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
@@ -71,9 +71,9 @@ Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
 	Russell King <rmk+kernel@arm.linux.org.uk>,
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCHv3 3/8] dmaengine: ti: omap-dma: fix CPU PM notifier leak
-Date: Tue,  2 Jun 2026 20:07:49 -0700
-Message-ID: <20260603030754.288757-4-rosenp@gmail.com>
+Subject: [PATCHv3 4/8] dmaengine: ti: omap-dma: stop channels during teardown
+Date: Tue,  2 Jun 2026 20:07:50 -0700
+Message-ID: <20260603030754.288757-5-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260603030754.288757-1-rosenp@gmail.com>
 References: <20260603030754.288757-1-rosenp@gmail.com>
@@ -85,34 +85,38 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The CPU PM notifier may be registered for needs_busy_check on omap2
-rather than may_lose_context on omap3. The remove path only checked
-may_lose_context, leaving the omap2 notifier registered during driver
-removal.
+omap_dma_free() removes channels and frees their storage without
+first stopping an active transfer. A channel may have moved the
+active descriptor out of the virt-dma lists into c->desc, so freeing
+only the list state can leave hardware running against descriptor
+memory that is about to disappear.
 
-Check both configuration flags before unregistering the notifier.
+Terminate each channel before removing it, then drain the virt-dma
+resource lists before freeing the channel structure.
 
-Fixes: f4cfa36dab67 ("dmaengine: ti: omap-dma: Use cpu notifier to block idle for omap2")
+Fixes: 7bedaa553760 ("dmaengine: add OMAP DMA engine driver")
 Cc: stable@vger.kernel.org
 Assisted-by: Codex:GPT-5
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/dma/ti/omap-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ti/omap-dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 15be3c90440a..0ad8da8b35f8 100644
+index 0ad8da8b35f8..cef4e3a38b04 100644
 --- a/drivers/dma/ti/omap-dma.c
 +++ b/drivers/dma/ti/omap-dma.c
-@@ -1854,7 +1854,7 @@ static void omap_dma_remove(struct platform_device *pdev)
- 	struct omap_dmadev *od = platform_get_drvdata(pdev);
- 	int irq;
+@@ -1521,8 +1521,10 @@ static void omap_dma_free(struct omap_dmadev *od)
+ 		struct omap_chan *c = list_first_entry(&od->ddev.channels,
+ 			struct omap_chan, vc.chan.device_node);
  
--	if (od->cfg->may_lose_context) {
-+	if (od->cfg->needs_busy_check || od->cfg->may_lose_context) {
- 		cpu_pm_unregister_notifier(&od->nb);
- 		synchronize_rcu();
++		omap_dma_terminate_all(&c->vc.chan);
+ 		list_del(&c->vc.chan.device_node);
+ 		tasklet_kill(&c->vc.task);
++		vchan_free_chan_resources(&c->vc);
+ 		kfree(c);
  	}
+ }
 -- 
 2.54.0
 
