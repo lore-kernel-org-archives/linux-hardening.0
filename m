@@ -1,124 +1,204 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B354147CC85
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 12:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1FA30FF08;
+	Wed,  3 Jun 2026 12:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780489825; cv=none; b=gukcFrmvcrIf8SPBYl+kuDVNPLCCFwq3n4RWvPafltwg6OLbTR3BLPbdT8NzuuT98AD7hM8tO07uggRuhBDSwhMDkoxBTjCqV/di4Bhm06eDDKKl87viamaaCT68CJyBwX5bgU7wNuAqaQ0ZhM/b0fJ00hIwSPW0kmn8WCQAagg=
+	t=1780490524; cv=none; b=JFVFAehOYow5nNdLtDsw1Pa3s6X3bpAwiD39rm2usW86S3wadFnWKK0rWM9lPpse8q8GE4He28e1zmYpdAV5rN3gnXWuA5/pPeJuOxgSyqPe7+S9UKBnmuGDJEqKUy8h58C4XkHbPbH+OvchrAeD0eIa/pAO+C7AIRwsp6+TLTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780489825; c=relaxed/simple;
-	bh=u/943ESl3Qb8WcpZzq4y655CzqzRBOo9awoactxwkTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U+Z8lZ7+R5SHijDnQbN2U07a2lhVrMfIwcGj5SiuXkoy5LiNdjBSP0Yzc1WET9IIVDceiCsWLIC0O5DPAMPvcSoYJVYCWOAZMEYAUeLsmsBccS4/fg7kfAWN4f7MPGhEgFjJGo+61H5AweUrBdw8g0ro8HNNQ+mE/S5R+SEOJQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aOAZPz2+; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1780490524; c=relaxed/simple;
+	bh=dWwGk9rQfTnjchtezlSWjb+t1YEjffClPqKEsjmAgZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sADotwpGLPubRdtJujTSNp/zMdo6jABwmG5kcq3v5pkjED/TkK2tmfb8ukhNeqRJcVdkMTcNa8hNxIZ5+QJvmFM/J2U/rPAlVuYJ+mJQMilMSDLlHytm080sq5kkbzQO/g/G8NMciwW7ogbHydc6ppALLGZZdy7jJSEpO7kcDPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aeil1ksO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aOAZPz2+"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-4600ddc4017so3080888f8f.0
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Jun 2026 05:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780489822; x=1781094622; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ty/mxLD4L9LpaeVN+O8zS/3tkJV3r5YXuKG/N6BCA60=;
-        b=aOAZPz2+SBP17ZbHpudAwFbZkbE+6sFtQdTHk1Gu9YJu359/+yJZpPXQ1zYY0JsDfF
-         R6V7yaOSPsZDOuF/cOo2CTp58VmgW6oFmL4d8wAB8F/Z2rU2cNXO0vh5M+feuB9BdzJ/
-         NfXIBfg8xVHBJz+C1OsfKGMsSAgIVscoZy4Qp3oz6RyYsoEp/gBpH7Pl/nDjwGILwpDt
-         gLO8s1/wzh3pZBSo8SyhkCRtQQSWf268/HMbht5R7Uq8hD+VL+2BfaOLN3B18ALiGqMu
-         gOw5eXJcAN9qlEQUlS1R7zYNVHEa2zI+mAt4OUTNi6VatDW1Y0EWlRoz1QzPH1HdCtf7
-         /lzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780489822; x=1781094622;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ty/mxLD4L9LpaeVN+O8zS/3tkJV3r5YXuKG/N6BCA60=;
-        b=I02mfMjHGYn1N9H88eEuBaWPVy24a9SX2CyVbfqDWgwRHqSdsNq1ou3wByxgQlwynl
-         c7YN0yD63P9P8WZ9m+Z5ngI5TPp0b8NkesWpNwYYKf3meUNX9faE2bB/TOhGJU9uODMe
-         dguUnab96HcRwts879AP2F9HtFcccr3PEONVEDqq27U+ySSjXAbdc9S3RuhnWBSvZdMs
-         P3ud5XqeGh4CpKCjjLQoEv56J98HuVH8MezL7VQKTEsT4mvni3zH4Z1kYHIB5pcyqDX5
-         qUYE/pAQAeWJlUN27bsHcuuD7DHLlyrvSAoHw4dpNF/8OxBQR/xVRCEtrwlt4UFbbxEj
-         cNyQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9QQSYxJ39itzkM7GvOa+AlqhPxgE96YwAD64ngdesp10umJp9cTUeWG9Y7RnYGj6eolDgHrDly1QldcKcaDEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysdl8eBSUR4+2Eddf9QSbtFqlPz7D0mSqY3/rcXLSBjJEcCxtF
-	J0739OVK7CpH9Qx9tfsOsgWJmUEmn6WalJJw8kuJ0oAlXj14B1JCh7XJp640Nbo6M4s=
-X-Gm-Gg: Acq92OHQOZBnKC4kge7YbdanE/TyFDz5yfxhLfToO9PWe9YY1ycZCKMLYittmgVPPHv
-	uQZUvxeugaSdj+XXDi+dvZvpicj5SLwmS2+McVMtNQB43HQIa7mp9DTjS6XES0LMG2w0gaexUT5
-	bmH/3X+QDNPyozbxyaH14OQdrs56ak36i9+TcX+qpfrR/vSC1lYqqr0QHOoBilt0oNfyL2l5YnY
-	XddP/tQW6PeJ0Z0HhVFdSUomSe2XhlEEIEbRCsZ3IpWlSdAS6eGx+FMLgsxW+YOm/SczeFy8GB6
-	Xlt19UiWXD+n8hOCAuyOJqXfqdgSYOYIwmKHc1k7mBhoOS+w4R+TFmNptrmcWLg7OLlqiGTsD3O
-	xGpj5IgytKPkGpEJONV1C7fVKolMvIF/GYJhY+hM0PH1SDB6IboXIVyJmLyqVVWkQDYvLJf3Wf4
-	D4skCQF+UIeHZ/eT4hOPSO/O/+wOKmMU1eCITc/4mlNA==
-X-Received: by 2002:a05:6000:46da:b0:45e:f381:cd7b with SMTP id ffacd0b85a97d-46021782644mr3373955f8f.8.1780489822108;
-        Wed, 03 Jun 2026 05:30:22 -0700 (PDT)
-Received: from [10.11.12.110] ([82.76.215.73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2dc294sm11268422f8f.7.2026.06.03.05.30.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2026 05:30:21 -0700 (PDT)
-Message-ID: <6fb8c47b-696c-4dfd-b571-abb613bea493@linaro.org>
-Date: Wed, 3 Jun 2026 15:30:18 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aeil1ksO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C021F00893;
+	Wed,  3 Jun 2026 12:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780490523;
+	bh=G8yheY5+6eUkXr3fPaoHOlmsKDT+Lz00pXPX5Sex3X8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Aeil1ksOTAsuqE72xZUS5FbFWWbX8seUrg32UHwTUpr1sOm+iTHTUJt1W/RFlPcEv
+	 uBv4MTbQa/YaGHCWajre1k4IPvhmyRsCr7pUuY+0q2Iab4Mowuc7iA4JBF2DsJSAk+
+	 3Vwr3WdH41x9hNdBEJjr2gAEmZrKpZQHig9tI4Ck/X/rJnmPH8OJCpxZSV35KwE1vK
+	 fNyqiQCegm0CcrxgMUJZzzigpFV5dV8Ia5PYWfIZPcfCi53w+9rn/mcBGhWbuYp30Y
+	 ScFPsqr8JCw0UkziI7XxEP2WYAbaTOZ3AUrsTYCdJP5sZ1m1m8/P2eFzHTEb9CJJo1
+	 YVTkNEJ5hXtiA==
+Date: Wed, 3 Jun 2026 13:41:51 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
+ linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Michael
+ Hennerich <Michael.Hennerich@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH 10/12] iio: dac: ad5686: add triggered buffer support
+Message-ID: <20260603134151.7cf1654b@jic23-huawei>
+In-Reply-To: <20260602-ad5686-new-features-v1-10-691e01883d27@analog.com>
+References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
+	<20260602-ad5686-new-features-v1-10-691e01883d27@analog.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/5] thermal: samsung: Add Exynos ACPM TMU driver GS101
-To: Alexey Klimov <alexey.klimov@linaro.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: jyescas@google.com, linux-kernel@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-References: <20260602-acpm-tmu-v7-0-8047dd54b0e9@linaro.org>
- <20260602-acpm-tmu-v7-2-8047dd54b0e9@linaro.org>
- <DIYTOGU8I2DV.1GKZ59F7AJWTE@linaro.org>
- <c76c8f9b-bdd1-4006-aa28-735254f0409a@linaro.org>
- <DIZCLBAOV4ZM.9SJGGMZONFB7@linaro.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <DIZCLBAOV4ZM.9SJGGMZONFB7@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Tue, 02 Jun 2026 17:33:57 +0100
+Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 
-
-On 6/3/26 1:38 PM, Alexey Klimov wrote:
-> On Wed Jun 3, 2026 at 10:26 AM BST, Tudor Ambarus wrote:
->>
->>
->> On 6/2/26 10:49 PM, Alexey Klimov wrote:
->>> On Tue Jun 2, 2026 at 6:00 PM BST, Tudor Ambarus wrote:
->>>> Add driver for the Thermal Management Unit (TMU) managed via the Alive
->>>> Clock and Power Manager (ACPM), found on Samsung Exynos SoCs such as
->>>> Google GS101 (and Exynos850, autov920, etc.).
-
-I'll drop the `(and Exynos850, autov920, etc.)` too.
-
->>>> The TMU on utilizes a hybrid management model shared between the
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > 
-> You might also want to correct this "The TMU on utilizes..". On
-> gs101-based I guess?
+> Implement trigger handler by leveraging the LDAC gpio to update all DAC
+> channels at once when it is available. Also, the multiple channel writes
+> can be flushed at once with the sync() operation.
+> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+One passing comment inline. + some musings... I'd love to avoid
+the need for lots of drivers to call iio_trigger_notify_done() manually
+as it always results in ugly code paths.  
+> ---
+>  drivers/iio/dac/Kconfig  |  2 ++
+>  drivers/iio/dac/ad5686.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 61 insertions(+)
+> 
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index 657c68e75542..5f14fcd780e2 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -240,6 +240,8 @@ config LTC2688
+>  
+>  config AD5686
+>  	tristate
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+>  
+>  config AD5686_SPI
+>  	tristate "Analog Devices AD5686 and similar multi-channel DACs (SPI)"
+> diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+> index a4cc0f86ea54..5052df44ab1c 100644
+> --- a/drivers/iio/dac/ad5686.c
+> +++ b/drivers/iio/dac/ad5686.c
+> @@ -19,7 +19,11 @@
+>  #include <linux/sysfs.h>
+>  #include <linux/wordpart.h>
+>  
+> +#include <linux/iio/buffer.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+>  
+>  #include "ad5686.h"
+>  
+> @@ -245,6 +249,7 @@ static const struct iio_chan_spec_ext_info ad5686_ext_info[] = {
+>  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
+>  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),\
+>  		.address = addr,				\
+> +		.scan_index = chan,				\
+>  		.scan_type = {					\
+>  			.sign = 'u',				\
+>  			.realbits = (bits),			\
+> @@ -469,6 +474,53 @@ const struct ad5686_chip_info ad5679r_chip_info = {
+>  };
+>  EXPORT_SYMBOL_NS_GPL(ad5679r_chip_info, "IIO_AD5686");
+>  
+> +static irqreturn_t ad5686_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct iio_buffer *buffer = indio_dev->buffer;
+> +	struct ad5686_state *st = iio_priv(indio_dev);
+> +	u16 val[AD5686_MAX_CHANNELS] = { };
+> +	int ret, ch, i = 0;
+> +	bool async_update;
+> +	u8 cmd;
+> +
+> +	ret = iio_pop_from_buffer(buffer, val);
+> +	if (ret)
+> +		goto out;
+> +
+> +	mutex_lock(&st->lock);
+> +
+> +	async_update = st->ldac_gpio && bitmap_weight(indio_dev->active_scan_mask,
+> +						      iio_get_masklength(indio_dev)) > 1;
+> +	if (async_update) {
+> +		/* use ldac to update all channels simultaneously */
+> +		cmd = AD5686_CMD_WRITE_INPUT_N;
+> +		gpiod_set_value_cansleep(st->ldac_gpio, 0);
+> +	} else {
+> +		cmd = AD5686_CMD_WRITE_INPUT_N_UPDATE_N;
+> +	}
+> +
+> +	iio_for_each_active_channel(indio_dev, ch) {
+> +		ret = st->ops->write(st, cmd, indio_dev->channels[ch].address, val[i++]);
+> +		if (ret)
+> +			goto cleanup;
+> +	}
+> +
+> +	if (st->ops->sync)
+> +		ret = st->ops->sync(st); /* flush all pending transfers */
+> +
+> +cleanup:
+> +	if (async_update)
+
+Error paths are always fun.  Do we care about setting ldac_gpio to 1 if
+we failed to write the channel values?  That will set any that did successfully
+update, but not all of them.  Note I'm not sure on the right answer for this.
+There may not be one!
+
+
+> +		gpiod_set_value_cansleep(st->ldac_gpio, 1);
+> +
+> +	mutex_unlock(&st->lock);
+> +out:
+> +	iio_trigger_notify_done(indio_dev->trig);
+We get this pattern so often (though not always).  Feels like maybe
+we should put some effort into a generic opt in solution for this.
+
+A job for another day but options that come to mind.
+1) (hideous) a flag
+2) Maybe an alternative callback. thread_always_complete or
+   something like that.  Pain to wire through all the calls though
+   and injecting the necessary wrapper isn't great either.
+   Implementation wise would be a case of popping in a wrapper function
+   in iio_trigger_attach_poll() call to request_threaded_irq().
+3) Maybe a helper macro?  Bit ugly as we'd need one to generate
+   the wrapper function and another to use the same name for
+   the registration function.
+
+Hmm. Those are all ugly (maybe 2 is ok ish).  Suggestions welcome!
+
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  int ad5686_probe(struct device *dev,
+>  		 const struct ad5686_chip_info *chip_info,
+>  		 const char *name, const struct ad5686_bus_ops *ops,
+> @@ -569,6 +621,13 @@ int ad5686_probe(struct device *dev,
+>  		return -EINVAL;
+>  	}
+>  
+> +	ret = devm_iio_triggered_buffer_setup_ext(dev, indio_dev, NULL,
+> +						  &ad5686_trigger_handler,
+> +						  IIO_BUFFER_DIRECTION_OUT,
+> +						  NULL, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(ad5686_probe, "IIO_AD5686");
 > 
 
-Okay. I'll submit v8 shortly where I address the rewording, the Kconfig
-dependency on ACPM  and the other sashiko reports. Maybe this still has
-a chance to get in (we're at -rc6).
-
-Cheers,
-ta
