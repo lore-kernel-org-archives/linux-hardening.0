@@ -1,206 +1,150 @@
-Received: from va-2-113.ptr.blmpb.com (va-2-113.ptr.blmpb.com [209.127.231.113])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229F4407CC0
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 08:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6558941B346
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 08:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780474094; cv=none; b=DPOI8gdhGLSGrTAORp0hYvFHJLe86+uFGuTS01iyJjjWD5wbrK5CfWkv8xLYtDJZnMSIhcM0pogyqeytbwmoOrZZ9di9C0F7Gvf8NHrlRPVfdGrig455iF/Ze5+28xEZjULwPQDbkIVRGWMAO+ORRyIrnpx/ryUHv9GX0r8jIgE=
+	t=1780475251; cv=none; b=mOq0L0fc7Fo6/IsebU4ymB3kXb61u/WXPwU4eKCyh2YgwsAXiYUs3w1QHQs5zFObZ6gteN76f27LZdz35UXYK8nidKh846IotPqKBneq4CW5Okd51zLckAsXEgkyQsmdwZKePTlJKXEOntn3VG+OcqXUOm/DSLfUexGcG/1rpM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780474094; c=relaxed/simple;
-	bh=NDZ6qErnQG6w0k+nmX3Ucp0GetTk9yJWwLhq6duuSSU=;
-	h=In-Reply-To:Content-Type:To:From:Subject:Date:Message-Id:
-	 References:Cc:Mime-Version; b=bRH3iYpgTv5521wK6EfkVx1s+0i/6/fLDI4XR1dLNuuNhziwf0SfBPE3mTpe67QoByzy9kEVBY6m4J7VF5MoiP3+rcYR5bg5nY3GgoGZpKWnkdY8fACIKk2x7CM0/BZWOo39wNkQqvI/73usjebvbzka7ChfKwRgxX9ev/fU4yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=pB4S8BwY; arc=none smtp.client-ip=209.127.231.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1780475251; c=relaxed/simple;
+	bh=LumPu9r+mU+AnVH6fxprfAR9qbofx4edE4J4MDl1xdM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LdhUgihoQeVgIdmWDKxTzZCRjS56Iz+BV6HBiq0Oy2ZQyeDQ3e51z5wI59AFFoofEn7RZZTcUv9h90y+r/jwwdCrL3jqWwHAqnwBjB8ZQCpP0Y7+A+wJNpU8pEA4YThCkiX7dBMl1uoBgDRTtxRYOv3GXoZB5RejJAFtd/X0BAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PZq4RFbW; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="pB4S8BwY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1780474088; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=A5euipl6qc7ONaSWy009BEQvfxAQyFAQV+XgcOVI8kM=;
- b=pB4S8BwYAbNJ4NDAhr3y0o+XUY71E7wUogqlxhMSeC7adJ4B9e3UXJVbAjlOyy39srx9NF
- M6nBZgYHNkTxAxfQUI1EyJlHPBPk73tFzQqtarfY3fIDbYoKSx6wK05noC+cr7UjhqoJvf
- OnLbv6p13Dzpaeh/LC8msfhWHWaPViH4UO3Lk2/d9RueXY7+bnnVebgJP91lvv+So7GqdQ
- VHaJoMHp7BKTyxgdcPFmkVWL5QsIeNOBiQjVHgnbIht7lUfcjcCJOqHN7t06t1a/6vL5l6
- kDZBlBjOLpTdY4UZ8Mk1bFearc1ysjWCtxe0ttTdZqnrqW/xi0oudyu8UhQkdA==
-X-Lms-Return-Path: <lba+26a1fe0e6+93eeaf+vger.kernel.org+lizhe.67@bytedance.com>
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20260603080152.64728-1-lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-To: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
-	<kees@kernel.org>, <mingo@redhat.com>, <rppt@kernel.org>, 
-	<tglx@kernel.org>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-Subject: [PATCH v4 8/8] mm: use memcpy_streaming() in zone-device template copies
-Date: Wed,  3 Jun 2026 16:01:52 +0800
-Message-Id: <20260603080152.64728-9-lizhe.67@bytedance.com>
-References: <20260603080152.64728-1-lizhe.67@bytedance.com>
-Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
-	<lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZq4RFbW"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-49041fb8c23so93302325e9.0
+        for <linux-hardening@vger.kernel.org>; Wed, 03 Jun 2026 01:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780475249; x=1781080049; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FgsYYdbc7FC5Ra24DrI1H09WIybYU7rqzf3pPkcoQ7k=;
+        b=PZq4RFbWUQV0XeD+9B8dsXzJJ7eSaOUTEi4U5+HrnW7DrF7/TTNO4MnnSgvmmxdkI7
+         eqxPuDi8VR+M2QguQmh1+MYDiiWf/ttsurwgCEBP9kN6El0bc1K2dfdvfniv8IAIgoat
+         DJLLPC9l2RtTbhYImHQLbq9nQImSobpNQDRPQEiBgCixxxgwgM5AZphXjq0qF/wM3MS3
+         RiZsdZOx6aLkUon9q32yetH4Dok3QNOdiXkSi48Rh9He18p8S7fcmDdiZhu6ABKW+7NW
+         /gkD4lb9aKH5LdPe2ca0gmen+wJB0Yj5Y8oKys2A4pXKZoX+VOOir5BPS5vF8QQlsdUE
+         BD2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780475249; x=1781080049;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FgsYYdbc7FC5Ra24DrI1H09WIybYU7rqzf3pPkcoQ7k=;
+        b=Yk1OizxHgrvuniU+tyoylX63TDe7mQ8npyXxDlY5I78dhUbnnjwC8+swKMEP9p7jMw
+         01os0eL8dUL8rPI8T0Em/obF4cYD8ModMPdkgXIqyVMyrL9upyPv20CsK25au0i1wziW
+         1eZ7o2XVMbSqbOInNcUBXh2GK6cVwUWTMfn/pzkTYRZCT44b1RekU5MTOGVsHFsDrWeE
+         AaE27x7I7GsZvuWCc3KmmBvAugLngOxZsGn0no9Z6mV/bOln9zPhmTOgZPedgAKGMv1H
+         5uXBYVOWuJvgnfxpDt9IthxXFLkzG5NlpUiygXjQlKzuZDzmFn06YO+yKCL0no5ruydg
+         XWsw==
+X-Forwarded-Encrypted: i=1; AFNElJ9JqKpnC+PnoRcslLWHNlHqXHZ23f6wVxMSuoOTs66OT0ByLi9hr+Ze31+EnV3I6m7Aa8dPjkScxC5CAlQoZkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc5xBWUUx0lQxIr0szrzKJT8FmaGPZxtwxbKzJH9bnkZvnEO81
+	T1DQWcSYBjNJ0HLWUpbqpCzT+JjRV8PW2quxNOMger9w+VnDJTt+JpBd
+X-Gm-Gg: Acq92OHxKfS2IHpngkTYuWY3tjGaLMPvTH4hj6cThEiakeJsnKHW3GS3bY6eso/eW8v
+	ghzxre91PFQHPpC8U9MdJKAxr2lNDtaxKee6Nlc3eUh0y+sKCaT4yosymatlZXoT+/71ut1/7D9
+	bRY04tlEXj5tlp+f4J5erYMvLtDypoK80DJ3emuZgVRemSI3iXV8HgCGeIzKI0iQcPq7ah1spsF
+	7EXjFd5KWdJahNQDWhsN93Kl49YWJj4fKeHzeUh7cURQrFcdTPcCl1cb8S6bj8GB74sdlLH6xRP
+	iqACxWaQt20QOD3/UvkKzf3rFniLdIFif768Z2jNfbzX7q2XOo0rps+LI+7m9TKla5UytKHlGgy
+	ldZrC2P+TeA1PpglOMMoFgZv9VMFXkNVzOgsqAJ/ONmiicWuzHRh9VOnCBLdnckY7fo+U6+NEqh
+	pY11cfjyq5LXXYVYqLfzaDs5PQ6Q==
+X-Received: by 2002:a05:600c:6748:b0:490:9df1:f0d5 with SMTP id 5b1f17b1804b1-490b5fe64d9mr38872955e9.28.1780475248655;
+        Wed, 03 Jun 2026 01:27:28 -0700 (PDT)
+Received: from nsa ([148.63.225.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2e4004sm5814991f8f.9.2026.06.03.01.27.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2026 01:27:28 -0700 (PDT)
+Date: Wed, 3 Jun 2026 09:28:26 +0100
+From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+To: rodrigo.alencar@analog.com
+Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH 06/12] iio: dac: ad5686: consume optional reset signal
+Message-ID: <ah_k9A9535Vz6PCw@nsa>
+References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
+ <20260602-ad5686-new-features-v1-6-691e01883d27@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260602-ad5686-new-features-v1-6-691e01883d27@analog.com>
 
-The template fast path still leaves the actual copy sequence up to the
-compiler. Use the streaming-copy helpers introduced in the previous
-patches for the ZONE_DEVICE template-copy path so common mm code can
-request a write-once copy primitive without embedding arch-specific
-store layout in the generic layer.
+On Tue, Jun 02, 2026 at 05:33:53PM +0100, Rodrigo Alencar via B4 Relay wrote:
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> 
+> Add RESET pin GPIO support through an optional reset control, which is
+> local to the probe function. Also, include delays for power-up time and
+> reset pulse width.
+> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> ---
+>  drivers/iio/dac/ad5686.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+> index 4a8c587ff116..345ca2436332 100644
+> --- a/drivers/iio/dac/ad5686.c
+> +++ b/drivers/iio/dac/ad5686.c
+> @@ -8,12 +8,14 @@
+>  #include <linux/array_size.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+> +#include <linux/delay.h>
+>  #include <linux/dev_printk.h>
+>  #include <linux/errno.h>
+>  #include <linux/export.h>
+>  #include <linux/kstrtox.h>
+>  #include <linux/module.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/wordpart.h>
+>  
+> @@ -471,6 +473,7 @@ int ad5686_probe(struct device *dev,
+>  		 const struct ad5686_chip_info *chip_info,
+>  		 const char *name, const struct ad5686_bus_ops *ops)
+>  {
+> +	struct reset_control *rstc;
+>  	struct ad5686_state *st;
+>  	struct iio_dev *indio_dev;
+>  	int ret, i;
+> @@ -506,6 +509,16 @@ int ad5686_probe(struct device *dev,
+>  		return dev_err_probe(dev, -EINVAL,
+>  				     "invalid or not provided vref voltage\n");
+>  
+> +	rstc = devm_reset_control_get_optional_exclusive(dev, NULL);
+> +	if (IS_ERR(rstc))
+> +		return dev_err_probe(dev, PTR_ERR(rstc),
+> +				     "Failed to get reset control\n");
 
-ZONE_DEVICE memmap initialization is a write-once path: each struct page
-is populated once and is not expected to be reused from cache
-immediately afterwards. A regular cached copy can therefore incur
-write-allocate traffic and pollute the cache without much benefit.
-Using memcpy_streaming() lets this path use an architecture-optimized
-streaming copy where available, while still degrading to memcpy() on
-architectures that do not provide a specialized implementation.
+On top of what Andy stated, I'm fairly sure
+devm_reset_control_get_optional_exclusive() returns with the GPIO
+asserted.
 
-Keep pageblock-aligned PFNs on memcpy() so pageblock initialization can
-immediately read back page metadata without introducing a
-read-after-streaming dependency. For the remaining PFNs, use
-memcpy_streaming() so the hot path can avoid write-allocate traffic
-while still leaving unsupported or unsuitable cases to the fallback
-implementation.
-
-When the streaming backend uses non-temporal stores, order them before
-entering memmap_init_compound(), before prep_compound_head() updates the
-overlapping compound metadata, and before returning from
-memmap_init_zone_device().
-
-Keep sanitized builds on the slow path so KASAN/KMSAN retain their
-instrumented stores.
-
-Tested in a VM with a 100 GB fsdax namespace device configured with
-map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
-server.
-
-Test procedure:
-Rebind the nd_pmem and dax_pmem driver 30 times and collect the memmap
-initialization time from the pr_debug() output of
-memmap_init_zone_device().
-
-Base(v7.1-rc6):
-  First binding for nd_pmem driver: 1466 ms
-  Average of subsequent rebinds: 262.12 ms
-
-  First binding for dax_pmem driver: 1430 ms
-  Average of subsequent rebinds: 229.12 ms
-
-With this series:
-  First binding for nd_pmem driver: 1359 ms
-  Average of subsequent rebinds: 108.36 ms
-
-  First binding for dax_pmem driver: 1273 ms
-  Average of subsequent rebinds: 100.17 ms
-
-This reduces the average rebind time by about 58.6% for nd_pmem and
-56.3% for dax_pmem.
-
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
----
- mm/mm_init.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
-
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index ad078ee354fb..fbc873284fb8 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1070,11 +1070,21 @@ static void __ref zone_device_page_init_slow(struct page *page,
- 
- static inline bool zone_device_page_init_optimization_enabled(void)
- {
-+	/*
-+	 * Keep sanitized builds on the slow path so their stores stay
-+	 * instrumented.
-+	 */
-+	if (IS_ENABLED(CONFIG_KASAN) || IS_ENABLED(CONFIG_KMSAN))
-+		return false;
-+
- 	/*
- 	 * The template fast path copies a preinitialized struct page image.
- 	 * Skip it when the page_ref_set tracepoint is enabled.
- 	 */
--	return !page_ref_tracepoint_active(page_ref_set);
-+	if (page_ref_tracepoint_active(page_ref_set))
-+		return false;
-+
-+	return true;
- }
- 
- static inline void zone_device_template_page_init(struct page *template,
-@@ -1117,9 +1127,19 @@ static void zone_device_page_init_from_template(struct page *page,
- 	 * 'template' carries the invariant portion of a ZONE_DEVICE struct
- 	 * page. Update the PFN-dependent fields in place before copying it
- 	 * to the destination page.
-+	 *
-+	 * pageblock-aligned pages immediately feed
-+	 * init_pageblock_migratetype(), which reads back page metadata via
-+	 * helpers like page_zone(page). Avoid a read-after-streaming
-+	 * dependency for these rare pages by using regular cached stores
-+	 * instead of non-temporal ones.
- 	 */
- 	zone_device_page_update_template(template, pfn);
--	memcpy(page, template, sizeof(*page));
-+	if (unlikely(pageblock_aligned(pfn)))
-+		memcpy(page, template, sizeof(*page));
-+	else
-+		memcpy_streaming(page, template, sizeof(*page));
-+
- 	zone_device_page_init_pageblock(page, pfn);
- }
- 
-@@ -1184,6 +1204,15 @@ static void __ref memmap_init_compound(struct page *head,
- 			zone_device_tail_page_init(page, pfn, zone_idx, nid,
- 						   pgmap, head, order);
- 	}
-+
-+	/*
-+	 * When the template path is enabled, order the preceding tail-page copies
-+	 * before prep_compound_head() updates the overlapping compound metadata
-+	 * in the first tail-page descriptors. If memcpy_streaming() fell back to
-+	 * regular cached stores, memcpy_streaming_drain() may be a no-op.
-+	 */
-+	if (use_template)
-+		memcpy_streaming_drain();
- 	prep_compound_head(head, order);
- }
- 
-@@ -1248,10 +1277,26 @@ void __ref memmap_init_zone_device(struct zone *zone,
- 		if (pfns_per_compound == 1)
- 			continue;
- 
-+		/*
-+		 * When the template path is enabled, order the preceding head-page copy
-+		 * before memmap_init_compound(), which immediately updates compound-head
-+		 * metadata. If memcpy_streaming() fell back to regular cached stores,
-+		 * memcpy_streaming_drain() may be a no-op.
-+		 */
-+		if (use_template)
-+			memcpy_streaming_drain();
-+
- 		memmap_init_compound(page, pfn, zone_idx, nid, pgmap,
- 				     compound_nr_pages(altmap, pgmap),
- 				     use_template);
- 	}
-+	/*
-+	 * Ensure any prior template copies are ordered before returning.
-+	 * On architectures where memcpy_streaming() used regular cached stores,
-+	 * memcpy_streaming_drain() may be a no-op.
-+	 */
-+	if (use_template)
-+		memcpy_streaming_drain();
- 
- 	pr_debug("%s initialised %lu pages in %ums\n", __func__,
- 		nr_pages, jiffies_to_msecs(jiffies - start));
--- 
-2.20.1
+> +
+> +	udelay(5); /* power-up time */
+> +	reset_control_assert(rstc);
+> +	udelay(1); /* reset pulse: comfortably bigger than the spec */
+> +	reset_control_deassert(rstc);
+> +
+>  	/* Initialize masks to all ones */
+>  	st->pwr_down_mask = ~0;
+>  	st->pwr_down_mode = ~0;
+> 
+> -- 
+> 2.43.0
+> 
+> 
