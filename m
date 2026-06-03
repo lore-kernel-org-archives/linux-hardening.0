@@ -1,158 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF5B4279F9;
-	Wed,  3 Jun 2026 08:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FD9391E59
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 09:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780477094; cv=none; b=WJ+1Cs5dsCLtrVW6muDIAiwM6tRiDSnoT7GHGDNJkgPE3IC3qiyCoK4+4IDNACKku2fZsf0wLvqWfXg+zhqmAM3NFt5udsMlzjlJwMKN2TAQRDUC8OlkqQFxnWMAyJWa1uhb7oCFltZFE4696uwwbweXJmjWChU+iTE6oY8QweI=
+	t=1780478776; cv=none; b=n8yK+mR0P8ZIvWrQK+bAnPG9bplNDTP9n5zqE0JqOTc7igNUCWLkf2eKLSVcovSJFO7WmypNNCw2DVRQNK2ALyI3T0sdBI+mPL56n540oL3/gvGdTqzfnQQgziEKhpCsJvgEaC6p6rzwHYrJgwqvrGa3pF9mlTS7A4XKNXixX/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780477094; c=relaxed/simple;
-	bh=ZgP+z6Sm5HaVy1gtU4bmWwACEJFnmhgDSmJ1X6LKtmc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Z6XfyTR+hYm8I86bK4/wrrcHgMmGC5Sz+Olo8hc1KlLoGBrjftDT+62XXnAsHtMOGiVPsqB0QEUx2onneWgLtrq+v8YnjjDsDpanPXdyKyGEIx7lDDJamF/5R7pJcycN2BOLWUghBBnoNCn/wnGHhT/1BijbqwthyctHcQaJ0+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnPkKyEg; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780478776; c=relaxed/simple;
+	bh=IRixWQMwizXFdhkvvgBqMpo7g1d2nL7BH7+e0C+a08c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T3YOl/Xb/9FDUkWsDKLENbhJHLN3fFNztShsljU5TU5bbVyIApyF7GyYKBbWWLnos2hHCIgjhMdOpRamMmmQ6zEruThWKTUbeHc8hREp+4F1XIQTJc70Pe2uSsZUjkGoGKoeZ0Js0S7TSjSxG0cQrmd126L+MMKS73YR2nJDZZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lTFed7pm; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnPkKyEg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924931F00899;
-	Wed,  3 Jun 2026 08:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780477092;
-	bh=HNO5aQb0rtRKtux/wu+5AcytYSH9RtOlt3U0qrUIzPI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=mnPkKyEgBAoJhHyCjKocF+n+JqkHcWSmPH184p/CrskKjSd4JLPoFSBGrYLKU9Mar
-	 B1hI8HW9H+53ks3lghDx4U+J6rNa6f8KquouzDq0+DM7/4ZBRzC0AuXQVPvI5bKqkY
-	 NglLbcu+ZBDleA+IgNkKfEKOPcXRhxVfSNk8lTpECqvKoBh+iHSyU2ZFRwFPFE4daX
-	 kw0WCczgVzTNS8Nry/XjBs//vr21nJLOAmz9iMERtpe8gUl3WYdzTVYvcHDMtqVnlJ
-	 wu/GIoZWa0/6+fA9X2Sm0u6y0MnNMo3tVdcswt4ZtD+mHXcn/QmWy2xNCp5hUrCygR
-	 dCBoxrKjfQI+w==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9E4CDF40075;
-	Wed,  3 Jun 2026 04:58:10 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-01.internal (MEProxy); Wed, 03 Jun 2026 04:58:10 -0400
-X-ME-Sender: <xms:ouwfaqCSomCUHn2Pcxt39NzT6QrYDOwoUaHjVutpQNUu0GYFMZl_Ig>
-    <xme:ouwfavUBA_wa0-Kl0rwIin5phZ0Xk0GMcV5YCAKgwCXtZX9t6zPJc0f21igxmxdFZ
-    el9mEG9Na6KsRXZeOce-ahEOIXmRVtrBYvtLtWGWDsGbs4lRkjjK10>
-X-ME-Proxy-Cause: dmFkZTGr2weDGKBa0sUCUcj036iLL5Y1yiuWXtlNLmEI4O4KffGEG7mKCI4rtXP1Kjy/sC
-    Vn4JLRDUw3n/LlH/P7ldcJy2f2NLMW7zEwQdl58eFGDw13Gd7uBwZtBFefeubqM57vT7KW
-    gxI5DHTPlMa9V7t7GBAVKnyC4disspoUcyOJuYcuXeoXUDa8M5AS9XNNfwK+hXW4k6RRKP
-    P+HnepDfV9Ly2SCGeboQtn62xJxY4OofV3op27GBS756vLSUraZsZIubTiRwHvbO7GWFg8
-    TN89ZhNEjfm9JCDm1LdV/dDNhv9gsSNYWX/LbCMQhfYJTNEbDdYGKUoqZbehxmbuTXbkFU
-    XnaKhsn2lQq7XiJ+YTNPtHlw97iNDWbeNZirflpUY26TpW4YlC0yGx1F2Pdjov4xxyaUZd
-    nGZuSrO0ofec6SMf5X9bTikzbc7jU39nUFa8+EDOEs+sLMDgAb7Jfbkdo1r3Pi14q8HECl
-    WOyAkHMSoapVwjPlMra4gfnE/Sq1KO70VhXXH61epQ6Rh+aRLmPHQfsv+x4lMOk7iiwpsY
-    2Ln1UDislceGN/Gw4GkBXiCXnvOln8phYiq7SJoKkYgBG145jAMq3GJUgudNXhcY+kY+fP
-    qpGcyL1cKdvM1YoB3pTqsi5xKVO8SJQEPQQW/+ABFCEXztbk2H+BY/x90g+g
-X-ME-Proxy: <xmx:ouwfam3-PZsrAVqqiP-EfVs-0jTgxsPILW5ya_Lkxs4FNvUMV00I3A>
-    <xmx:ouwfaqtJQPQRdRGCSDlzv7oyJj2hWevC-qAmYiniqjt8Bubu_25WPg>
-    <xmx:ouwfai_l9FuzR3F73C0xJHJLI6BrnbgCXaJCGZTs31csy6qmGWmmEQ>
-    <xmx:ouwfauR1k_z1hiMDOUWOdTJsWToATwu--U1XlEgRSm3i3JLjPhl_jg>
-    <xmx:ouwfaoCm3jrQTsvC8JSjjw2cVnzpsLJPRFYPY4I2sfuqg_7otMeSlp9g>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 77D33182007A; Wed,  3 Jun 2026 04:58:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lTFed7pm"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-490b2b037d2so14233425e9.3
+        for <linux-hardening@vger.kernel.org>; Wed, 03 Jun 2026 02:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1780478773; x=1781083573; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LVv22gZyTmtymIxhoGte2pKFNDZ9dT7qVuNtoXNbMUA=;
+        b=lTFed7pmMZ9uNCoZyARWr5g75M74ezYc785BMdLbnW3+GprgZFXL2z7BiQMkkClVQy
+         kE0iWjhW/CCeFhJORITaU0rp7nqJo0uF1x1xyeg8komFjBHumA6y+wjMuuktiw0u2dHt
+         hjotIolEewzWLC1X+8uvAK4/jrwTQNrqL6SHEIACpfNQwJCKKTcp8hW4gxN2HcbGWzuL
+         gCs35UAASBnHOSmjRoJ9uWtApnrrnUpTc4kpGKnghjOSml/WecpQWqkTSbV8BpyA780j
+         jOQuE2YvFApmYQJl7O1Gk5sfcvkcx/a/kBC9Qm1cdkAiPYIMzVqCWlRX2g+ee/kS+G8i
+         SQmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780478773; x=1781083573;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LVv22gZyTmtymIxhoGte2pKFNDZ9dT7qVuNtoXNbMUA=;
+        b=tYeCOK1Ej7nPsBrCNKBSKlX/SomN3DDdq6gRSGXMS9zj2h98oUSSHOEWh+3v0janms
+         G+4UHnLnMzqFuMQzAY6rW5PITusbsJqdW5rsSS0nhmyq/4wMCIJluCaq70l9gXm1Dq6q
+         hAW73OFmQ9yuRhHU7wBIZSfTCRW8bIOr3hQ+HPBpFTxIQYpmInyGNYAzt2YCrdIDKXkd
+         xgiAOPRs8J8UMIqv2pSH0lzmCWHTXHpxnask9Ec/Fo2y9zpMRQRgOeSOH0ohtYeeTvRj
+         FHC/Dg6PBOP/wgd5ZPRPu5K09p5DaVjP3B3oXJNAbMEFW+PxnIHEhr6N0qUrPAf6qgIK
+         tR/w==
+X-Forwarded-Encrypted: i=1; AFNElJ/8C3cvB+EFitP0PhxKoNUq0lp/o2d7YGpqSe/aATEjguMV0GSelcZVeut2q9B+8ZV+5frFg9WBIXUraG2u7QI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkF/lZAGKjSSxENDZtrWdT6hOiAcc2IaDpzZVk3MeefYhxu3Uc
+	3DyZazQ16EesKY5GRcXy5TfmRLNFZyraqa7VM49yNQIU2tpjhdm7JbplhvK0s12GUeM=
+X-Gm-Gg: Acq92OHx5vxu2cIR76789auqGge7cjXveVvmGb9MCYN2DCIQiuFlqSOCIaEu7IMbDWD
+	mq8Q+30ifdi0IgLWaaip3fC6Q0OeM5FT50+C6Zu733alZ3qUo+a/9zPQIEfR3jXl+ARYwH/fwDg
+	wHeAWzE73zRmkSmL4k6b7Dj2yRiK2vGwMSrrSVRSgF5928t5IsQTPE04iZLnrlntkQZh9MmXrHz
+	sTRRb+E53JxaBmco+y1Awi7ZV7mUqmURIV7yFWNTSHzSRE1geN91PlMTIg6zfOOndBG1Zx8har0
+	OUlnJySlhwICv51dqfef9Lt3Xin/SK3JDmH2PkJ2630jGkQp+AC/K9W8AwFiF0qMQrOVho28tkt
+	DBysc8Y1UTmyknnRcbON8UwVfQOAdZBExBB9EKv9LebfGxjwgDWOOU07LCufN7Dfrgah4aFy8xi
+	DQd16N/m1Edj0/XW9MDTK+CCJL2BF1DD/aBKQhTHpoNA==
+X-Received: by 2002:a05:600c:45d4:b0:490:5074:651e with SMTP id 5b1f17b1804b1-490b60ef350mr41726765e9.25.1780478773360;
+        Wed, 03 Jun 2026 02:26:13 -0700 (PDT)
+Received: from [10.11.12.110] ([82.76.215.73])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b79d64e8sm35451535e9.0.2026.06.03.02.26.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2026 02:26:12 -0700 (PDT)
+Message-ID: <c76c8f9b-bdd1-4006-aa28-735254f0409a@linaro.org>
+Date: Wed, 3 Jun 2026 12:26:08 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 03 Jun 2026 10:57:49 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Will Deacon" <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
- "Ard Biesheuvel" <ardb+git@google.com>
-Cc: "Catalin Marinas" <catalin.marinas@arm.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, "Mark Rutland" <mark.rutland@arm.com>,
- "Ryan Roberts" <ryan.roberts@arm.com>,
- "Anshuman Khandual" <anshuman.khandual@arm.com>,
- "Kevin Brodsky" <kevin.brodsky@arm.com>, "Liz Prucka" <lizprucka@google.com>,
- "Seth Jenkins" <sethjenkins@google.com>, "Kees Cook" <kees@kernel.org>,
- "Mike Rapoport" <rppt@kernel.org>, "David Hildenbrand" <david@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, "Jann Horn" <jannh@google.com>,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, maz@kernel.org
-Message-Id: <2c7929d4-6622-475d-af1b-bcd0cd997cd3@app.fastmail.com>
-In-Reply-To: <178041415770.4024555.11336437584927054639.b4-ty@kernel.org>
-References: <20260529150150.1670604-17-ardb+git@google.com>
- <178041415770.4024555.11336437584927054639.b4-ty@kernel.org>
-Subject: Re: [PATCH v7 00/15] arm64: Unmap linear alias of kernel data/bss
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/5] thermal: samsung: Add Exynos ACPM TMU driver GS101
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: jyescas@google.com, linux-kernel@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+References: <20260602-acpm-tmu-v7-0-8047dd54b0e9@linaro.org>
+ <20260602-acpm-tmu-v7-2-8047dd54b0e9@linaro.org>
+ <DIYTOGU8I2DV.1GKZ59F7AJWTE@linaro.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <DIYTOGU8I2DV.1GKZ59F7AJWTE@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-(cc Marc)
 
-On Tue, 2 Jun 2026, at 22:34, Will Deacon wrote:
-> On Fri, 29 May 2026 17:01:51 +0200, Ard Biesheuvel wrote:
->> One of the reasons the lack of randomization of the linear map on arm64
->> is considered problematic is the fact that bootloaders adhering to the
->> original arm64 boot protocol (i.e., a substantial fraction of all
->> Android phones) may place the kernel at the base of DRAM, and therefore
->> at the base of the non-randomized linear map. This puts a writable alias
->> of the kernel's data and bss regions at a predictable location, removing
->> the need for an attacker to guess where KASLR mapped the kernel.
->> 
->> [...]
->
-> It would've been nice to hear from the ppc folks on patch 11, but I've
-> picked it up on the assumption that they'll love the negative diff stat.
-> Worst case, we can drop/revert stuff if they have late objections.
->
 
-Thanks.
+On 6/2/26 10:49 PM, Alexey Klimov wrote:
+> On Tue Jun 2, 2026 at 6:00 PM BST, Tudor Ambarus wrote:
+>> Add driver for the Thermal Management Unit (TMU) managed via the Alive
+>> Clock and Power Manager (ACPM), found on Samsung Exynos SoCs such as
+>> Google GS101 (and Exynos850, autov920, etc.).
+>>
+>> The TMU on utilizes a hybrid management model shared between the
+>> Application Processor (AP) and the ACPM firmware. The driver maintains
+>> direct memory-mapped access to the TMU interrupt pending registers to
+>> identify thermal events, while delegating functional tasks - such as
+>> sensor initialization, threshold configuration, and temperature
+>> acquisition - to the ACPM firmware via the ACPM IPC protocol.
+>>
+>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+>> ---
+>>  drivers/thermal/samsung/Kconfig    |  19 ++
+>>  drivers/thermal/samsung/Makefile   |   2 +
+>>  drivers/thermal/samsung/acpm-tmu.c | 618 +++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 639 insertions(+)
+>>
+>> diff --git a/drivers/thermal/samsung/Kconfig b/drivers/thermal/samsung/Kconfig
+>> index f4eff5a41a84..383ae3f56cbb 100644
+>> --- a/drivers/thermal/samsung/Kconfig
+>> +++ b/drivers/thermal/samsung/Kconfig
+>> @@ -9,3 +9,22 @@ config EXYNOS_THERMAL
+>>  	  the TMU, reports temperature and handles cooling action if defined.
+>>  	  This driver uses the Exynos core thermal APIs and TMU configuration
+>>  	  data from the supported SoCs.
+>> +
+>> +config EXYNOS_ACPM_THERMAL
+>> +	tristate "Exynos ACPM thermal management unit driver"
+>> +	depends on THERMAL_OF
+>> +	depends on HAS_IOMEM
+>> +	depends on EXYNOS_ACPM_PROTOCOL || (COMPILE_TEST && !EXYNOS_ACPM_PROTOCOL)
 
-There is a de facto ack from Michael Ellerman in the Link:, which is why
-I included it.
+I forgot to drop "|| (COMPILE_TEST && !EXYNOS_ACPM_PROTOCOL)", ACPM is NOT
+optional for this driver. I will comply this way with Arnd's solution from:
 
-Note that Sashiko found an issue with KVM+MTE, where a read-only mapping
-of the zero page in the linear map may result in issues:
+https://lore.kernel.org/linux-samsung-soc/178006367096.55906.16678510397337205828.b4-ty@b4/T/#t
 
-"""
-Does moving the zero page to .rodata (or unmapping/read-only mapping its
-linear alias) expose a guest-to-host denial of service with KVM and MTE?
-When an MTE-enabled KVM guest reads an unmapped memory address, KVM handles
-the stage-2 fault by mapping the host's shared zero page. KVM will then
-call sanitise_mte_tags() in arch/arm64/kvm/mmu.c.
-Since the PG_mte_tagged flag is never set on the zero page, KVM's
-try_page_mte_tagging() succeeds, and it calls mte_clear_page_tags().
-This executes the STGM instruction using the zero page's linear map alias.
-If this alias is read-only or unmapped, won't the STGM instruction trigger
-a synchronous permission fault or translation fault in EL1, causing a host
-kernel panic?
-"""
+>> +	default ARCH_EXYNOS
+>> +	help
+>> +	  Support for the Thermal Management Unit (TMU) on Samsung Exynos SoCs
+>> +	  (such as Google GS101 and Exynos850).
+> 
+> This driver doesn't support Exynos850. There is no initialisation sequence
+> and etc, moreover the next section is also not entirely correct for Exynos850.
+> Not sure why it is mentioned here in such way.
+> (Not even mentioning that ACPM TMU part is not aligned for Exynos850)
+> 
 
-Marc seems to think it is legit, so I came up with the following (I'll send
-it out separately with another pair of tweaks):
+Okay, I'll drop the reference to e850.
 
--------8<------------
-From: Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] arm64: mte: Disregard the zero page explicitly for
- manipulating tags
-
-The zero page is conceptually immutable, and will be moved into .rodata
-to prevent inadvertent corruption.
-
-Prepare the MTE code for this, by ensuring that the zero page is never
-taken into account for tag manipulation, given that those actions will
-no longer be permitted on the read-only alias of .rodata in the linear
-map.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-
-diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
-index 7f7b97e09996..093b34944aee 100644
---- a/arch/arm64/include/asm/mte.h
-+++ b/arch/arm64/include/asm/mte.h
-@@ -80,6 +80,11 @@ static inline bool page_mte_tagged(struct page *page)
-  */
- static inline bool try_page_mte_tagging(struct page *page)
- {
-+       extern struct page *__zero_page;
-+
-+       if (page == __zero_page)
-+               return false;
-+
-        VM_WARN_ON_ONCE(folio_test_hugetlb(page_folio(page)));
- 
-        if (!test_and_set_bit(PG_mte_lock, &page->flags.f))
+Cheers,
+ta
