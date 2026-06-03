@@ -1,166 +1,142 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77ED4331A7B
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 06:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F9339023B;
+	Wed,  3 Jun 2026 07:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780467687; cv=none; b=KOxhH5yY11bYJz4eWHWdWrU/hYSDxguNlk2j61mLEQn2t4LGOXFoMM5iiKeDpMmoss4DBV2OF1QZ2aw3S6pT9x9jZextp4GYpu2/c7ewEKroqlH9xB/eOQITT1RnayY6d2nV7i5z8P+NUd9p0UkxWQTIOAQnjLwH3JVU2BBd2gM=
+	t=1780471169; cv=none; b=tuhuOJJfJKa1VI4//f9JlwUMSGOY3wZ3NR3JDbll1QBKZ79qp9+5w7nPV2yoH9aN/fO3OVk/J1960bVe2lwstsC5frTfmr3o9yTXjlVKkkkWUhHE5INJqqZrk3jPub91QaQX5nDCSkz9x7q8EaZSStJqNNemOONQYlvaqxdH5GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780467687; c=relaxed/simple;
-	bh=5VJ6Khi8jmUgeyzIr1tFCau/Jrd+cLfxO8pMX4vhNPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=EQIqdfvvzY1LqBOADsBLtLwLIGPD+eZUV9a9ryzgHvIrFgIcbnnNIReeaRvcgmONzLjyN3cwBBNmsTGzpeYl5hRsMroYrhnzDjlCEgeZWR2xRiXRinycOqXOVYUoTZCoWLYb9FA69v7ksUp30rtijVOPJceZzMgAwzaBD45bd+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QDBPOacv; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1780471169; c=relaxed/simple;
+	bh=x0LhgwABGSDUEu8vMddJXLrg1h/k0CcY0OYz4YFruSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sFYbSGHSKaMCaF81w+7ASIhnICs6U5G9k5v2mGssMpXqHpQ8Ny5ai+vYRE18UAhogykZzHW8dGI6bwldn92nNqwy4k8YOeYB+uoM4YNyaPLd7f7Srv2gzrgUEcaPXo2bDGFQktz+rbjoiHE05gA0E3ZDtalZ2idqqkreQa+fPjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpvDDaia; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QDBPOacv"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20260603062116euoutp023851b9cf0f189e736aa858e2b72874b4~1fesvDZ2B0766207662euoutp02V
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Jun 2026 06:21:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20260603062116euoutp023851b9cf0f189e736aa858e2b72874b4~1fesvDZ2B0766207662euoutp02V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1780467676;
-	bh=r4JAF/oGqqFivlMzuB/hWWVWZUT8LM53+f6ybQNbl9I=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=QDBPOacvtjOdBepRISsCGUG3J4LZ73kGHnZZ5oUWwbbwYSQuDqU8H0qsgUEGM4SlN
-	 5moQ23wz37iDKnoQ/RKdAIat6HMkGpcRtlMC1oMGzhP56D7rQf22YyPAGdtRKuol9F
-	 ffZWletH8wvvzX3mO+lfgP2PsztjzZoSlvqZp1WU=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260603062116eucas1p230019365fe95968f0ebbb8ce336677c8~1fesXgLuf0291302913eucas1p2E;
-	Wed,  3 Jun 2026 06:21:16 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260603062115eusmtip20fc38d45d9f8514c9ec7df14dd3ac4dc~1ferzQi2Q2813928139eusmtip2P;
-	Wed,  3 Jun 2026 06:21:15 +0000 (GMT)
-Message-ID: <1dffa3ef-ffb1-43e2-8042-be7b52bb1fb3@samsung.com>
-Date: Wed, 3 Jun 2026 08:21:14 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpvDDaia"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780471167; x=1812007167;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=x0LhgwABGSDUEu8vMddJXLrg1h/k0CcY0OYz4YFruSw=;
+  b=mpvDDaiaRk3dVZnNOOp3K80UcSipKGXKM3YZHokLMXq6TH350l2iDk5I
+   QSq1aVKsLlJ91ttSZD0aSLc8ouVXdvZq+XtI5TOWbEV9/3qBwIQkF5EKz
+   EUJUt7DlUKqJDah7JXpiO3yGPk3XlPy1aNrC9Zd+oyPEJYS/YYJScUb+U
+   5VMoQOVLwo8tmssXVtv5xifqP+8Hz5n3Q/Enhx7X6oRjc9tB6KlDh7xE6
+   ZOYLPtpYVu0pTRwBmTC1rWEKSPT1GPCngyfpx+GKYK4JMdCNoijynAoKW
+   YxAtOCETeRPwF62JhayJUD5/kkkqisr5fkHRpKMq2oD5eUe5gJlbdEcij
+   w==;
+X-CSE-ConnectionGUID: g0C0IdFLRkOzAIakIwaRyA==
+X-CSE-MsgGUID: W6in6bZ4RdmjtI2O7/JS6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="83849916"
+X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
+   d="scan'208";a="83849916"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 00:19:11 -0700
+X-CSE-ConnectionGUID: RQdfRwQ9QxC2Bs/gQA7Y/A==
+X-CSE-MsgGUID: /s8uEVlVSyG50aKNL90DCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
+   d="scan'208";a="248457151"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa004.jf.intel.com with ESMTP; 03 Jun 2026 00:19:09 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 2D26295; Wed, 03 Jun 2026 09:19:08 +0200 (CEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH v1 1/1] string: Add missing Return sections
+Date: Wed,  3 Jun 2026 09:15:52 +0200
+Message-ID: <20260603071648.106679-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCHv2] dma: map_benchmark: turn dma_sg_map_param buf into a
- flexible array
-To: Rosen Penev <rosenp@gmail.com>, iommu@lists.linux.dev
-Cc: Barry Song <baohua@kernel.org>, Qinxin Xia <xiaqinxin@huawei.com>, Robin
-	Murphy <robin.murphy@arm.com>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>,
-	open "list:KERNEL" HARDENING "(not" covered by other
-	"areas):Keyword:b__counted_by(_le|_be|_ptr)?b"
-	<linux-hardening@vger.kernel.org>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20260603031758.290538-1-rosenp@gmail.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20260603062116eucas1p230019365fe95968f0ebbb8ce336677c8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260603031819eucas1p1fdc46c3987c9e47bc236286042ba8f29
-X-EPHeader: CA
-X-CMS-RootMailID: 20260603031819eucas1p1fdc46c3987c9e47bc236286042ba8f29
-References: <CGME20260603031819eucas1p1fdc46c3987c9e47bc236286042ba8f29@eucas1p1.samsung.com>
-	<20260603031758.290538-1-rosenp@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 03.06.2026 05:17, Rosen Penev wrote:
-> The buf pointer was kmalloc_array()'d immediately after the parent
-> struct allocation, with the count (granule, validated to 1..1024 by
-> the ioctl) trivially available beforehand.  Move buf to the struct
-> tail as a flexible array member and fold the two allocations into a
-> single kzalloc_flex(), dropping the kfree(params->buf) in both the
-> prepare error path and unprepare.
->
-> Add __counted_by for extra runtime analysis.
->
-> Assisted-by: Claude:Opus-4.7
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> Reviewed-by: Qinxin Xia <xiaqinxin@huawei.com>
+The kernel-doc unfortunately can't catch some corner cases. Hence
+the commit 645b9ad2dc6b ("string: Add missing kernel-doc return descriptions")
+missed that. On top there is no consistency in use of Return/Returns.
+Address both problems here. Choose Returns over Return as it will be
+less invasive change.
 
-Applied to dma-mapping-for-next, thanks!
+Fixes: 645b9ad2dc6b ("string: Add missing kernel-doc return descriptions")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
+Cc'ed to the Documentation and kernel-doc people to point out on this
+kernel-doc corner cases. It didn't complain on the macros that return
+a value. Also it would be nice to have file level consistency on
+the naming of the same type of sections, e.g., Returns vs. Return.
 
-> ---
->  v2: use params->npages in sg_alloc_table
->  kernel/dma/map_benchmark.c | 27 ++++++++++++---------------
->  1 file changed, 12 insertions(+), 15 deletions(-)
->
-> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-> index 29eeb5fdf199..fdc070f419f6 100644
-> --- a/kernel/dma/map_benchmark.c
-> +++ b/kernel/dma/map_benchmark.c
-> @@ -121,35 +121,35 @@ static struct map_benchmark_ops dma_single_map_benchmark_ops = {
->  struct dma_sg_map_param {
->  	struct sg_table sgt;
->  	struct device *dev;
-> -	void **buf;
->  	u32 npages;
->  	u32 dma_dir;
-> +	void *buf[] __counted_by(npages);
->  };
->  
->  static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data *map)
->  {
-> +	struct dma_sg_map_param *params;
->  	struct scatterlist *sg;
-> +	u32 npages;
->  	int i;
->  
-> -	struct dma_sg_map_param *params = kzalloc(sizeof(*params), GFP_KERNEL);
-> -
-> -	if (!params)
-> -		return NULL;
->  	/*
->  	 * Set the number of scatterlist entries based on the granule.
->  	 * In SG mode, 'granule' represents the number of scatterlist entries.
->  	 * Each scatterlist entry corresponds to a single page.
->  	 */
-> -	params->npages = map->bparam.granule;
-> +	npages = map->bparam.granule;
-> +
-> +	params = kzalloc_flex(*params, buf, npages);
-> +	if (!params)
-> +		return NULL;
-> +
-> +	params->npages = npages;
->  	params->dma_dir = map->bparam.dma_dir;
->  	params->dev = map->dev;
-> -	params->buf = kmalloc_array(params->npages, sizeof(*params->buf),
-> -				    GFP_KERNEL);
-> -	if (!params->buf)
-> -		goto out;
->  
->  	if (sg_alloc_table(&params->sgt, params->npages, GFP_KERNEL))
-> -		goto free_buf;
-> +		goto free_params;
->  
->  	for_each_sgtable_sg(&params->sgt, sg, i) {
->  		params->buf[i] = (void *)__get_free_page(GFP_KERNEL);
-> @@ -166,9 +166,7 @@ static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data *map)
->  		free_page((unsigned long)params->buf[i]);
->  
->  	sg_free_table(&params->sgt);
-> -free_buf:
-> -	kfree(params->buf);
-> -out:
-> +free_params:
->  	kfree(params);
->  	return NULL;
->  }
-> @@ -183,7 +181,6 @@ static void dma_sg_map_benchmark_unprepare(void *mparam)
->  
->  	sg_free_table(&params->sgt);
->  
-> -	kfree(params->buf);
->  	kfree(params);
->  }
->  
+Kees, feel free to drop Fixes whilst applying in case you think it not
+worth it. The commit message still has a pointer.
 
-Best regards
+ include/linux/string.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/string.h b/include/linux/string.h
+index b850bd91b3d8..549f327e33fb 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -25,7 +25,7 @@ extern void *memdup_user_nul(const void __user *, size_t);
+  * @n: number of array members to copy
+  * @size: size of one array member
+  *
+- * Return: an ERR_PTR() on failure. Result is physically
++ * Returns: an ERR_PTR() on failure. Result is physically
+  * contiguous, to be freed by kfree().
+  */
+ static inline __realloc_size(2, 3)
+@@ -45,7 +45,7 @@ void *memdup_array_user(const void __user *src, size_t n, size_t size)
+  * @n: number of array members to copy
+  * @size: size of one array member
+  *
+- * Return: an ERR_PTR() on failure. Result may be not
++ * Returns: an ERR_PTR() on failure. Result may be not
+  * physically contiguous. Use kvfree() to free.
+  */
+ static inline __realloc_size(2, 3)
+@@ -106,7 +106,8 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+  * doesn't unnecessarily force the tail of the destination buffer to be
+  * zero padded. If padding is desired please use strscpy_pad().
+  *
+- * Returns the number of characters copied in @dst (not including the
++ * Returns:
++ * The number of characters copied in @dst (not including the
+  * trailing %NUL) or -E2BIG if @size is 0 or the copy from @src was
+  * truncated.
+  */
+@@ -289,7 +290,7 @@ char *strreplace(char *str, char old, char new);
+  * @s: The memory area
+  * @n: The size of the area
+  *
+- * Return: True if the area of memory is all 0's.
++ * Returns: True if the area of memory is all 0's.
+  */
+ static inline bool mem_is_zero(const void *s, size_t n)
+ {
+@@ -332,6 +333,10 @@ int __sysfs_match_string(const char * const *array, size_t n, const char *s);
+  * @_s: string to match with
+  *
+  * Helper for __sysfs_match_string(). Calculates the size of @a automatically.
++ *
++ * Returns:
++ * The index of the matching string in the array or negative error code
++ * otherwise.
+  */
+ #define sysfs_match_string(_a, _s) __sysfs_match_string(_a, ARRAY_SIZE(_a), _s)
+ 
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.50.1
 
