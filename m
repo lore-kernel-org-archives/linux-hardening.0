@@ -1,132 +1,108 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3920647CC6D
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 12:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F89E477E4B
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 13:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780577445; cv=none; b=SnnfW8WSka1k485c3kTjaRvUqlLXwiTDLggy/C74gUi1tiC5Jp0cM+VX3f6wva/VjsGiiCm5wBbJGPMO/jv/Axejv6msPcuOtaRSf5BoV1X6EfmEqeL8p9cwgbUsu6o1mXkoPOyOg6KNa72RjaaTFOc6ClOjshdkl8RnYL6fUcU=
+	t=1780579157; cv=none; b=Liopp1hDFHyKQbNfCh5OiaAAKQ++N0OgQMsVWlDnnvDQ4NBVhsN4nKxC8L251yTYyepKAJgBOabIeEPz5tNpE4S+T8Z6IYvaG5O7diX73dK9CP+NxnQHufaeBzTQlchPYcaUQeMsEpv3Lji+LG7x0/xSLTfZ3sjM6kRMa2EmegI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780577445; c=relaxed/simple;
-	bh=lbWaJXCgqnU/VgUH+gDEW7qnj7gIAwhY6UiysV4cJx8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wo01chvmwdksZOD/cJoJk4UYJFUPed8ITAFeSxlWX6XQYckDcX+s2nOXYz1lkqudJGtth1td0JVQULV9UT32NEwdmjF7gGprFNH9v4aWcGR6QhGZhyCCtfhkforL9j2cbB1CvzKiQYTSG8+/P2c7q6JBiHRG3eQmF8r8wN7+BDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hSt/cjYD; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780579157; c=relaxed/simple;
+	bh=RbWuypist+88Gm8+XX/0JfPKQ08Vgq4ntejnMJhib4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m0CAAJsJJuFXJcf4/kIFKB67Zy/sZ/RXqS0hCjARqQ72WNPxrgU5NhXG5PcExERkRDaIIBWGr3U/fvjFAlFl2OhBjcIku4Mxeen0NGYTJnPpHUR4EF0MrgEv0P92/pFMvyLfT6+EeSZnjvj2K7IrF7P3dHG8/z7yRPdE7lpCwfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qkOqwoE8; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSt/cjYD"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-490afc47455so3416615e9.2
-        for <linux-hardening@vger.kernel.org>; Thu, 04 Jun 2026 05:50:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780577439; x=1781182239; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yJUnjTUV8BBZlgR8+Wodn126IIs4cN704iHM3h+CNdk=;
-        b=hSt/cjYDrt0VUY0x8IFugiSHQesyJJpVAl1T18S5ylZRJj3qjV5UU9oRYfBFxBvX+3
-         Qog0d8Ft6nXAh5nPnUf9515yyNySi3ZJOE6AJx7/ko8KZH7DzP2FsqX6Dlu9EJ0mGx+Y
-         1qeQk/vB/0C0mtIXx2uorWG9q6Bfuc/1rkKzzVzC4I8RESGqfqUNYj1v/e5Zsqn2q0fB
-         B2iN9qcR00JS0iSAuRsk/kpn6Sp8C9aBP/HwLyzdhXePrB/bYYZAtT4JLpRza7C8KiEz
-         TdKPwfuxg1bimXLoBmibiksQegVNLLEVgAwXb97rOcYK7N2C9ycRlNacOhBtZG6DVQrw
-         n/9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780577439; x=1781182239;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yJUnjTUV8BBZlgR8+Wodn126IIs4cN704iHM3h+CNdk=;
-        b=LX1w2wZ9HNjRBtnd3wAvU6s0vyiqNANT5SXeErA4BkMdU+xGzlCIX3wmQ1+ojSI/4g
-         dO/5hRS3gbp3zYyeEQSyZvmuNP2Sk8apRNOJVbJJX9F/mtHHtcfTviMRqEPdl0jlavuq
-         kaToREnAqh+6naxM58Om/i8amp7/EdD40ZT9DPCnD9TV3O14lPTfESVHdwxZogfjFC9D
-         lpkQfGnHuItZs4icD9Y01L+xBzL7rD5qbMkBZAbSW46SHQZVJRu4l2XCzetANlxco7QM
-         EAyddWWN3sv/3H0WUaIcHElz4gcLTV8LMoPRmqiwWgHSVDD3l1XXjFyMJFefNeT+6XpB
-         hp6Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8FP8neLpKQ7R8g2qFAqbJODLFlRcBXJuLwPPj343fsR62WmkJz7U3c886lbGKxitT+voFGZW6E9Ic+Yf7CFhY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyWRmEofKjR8tHrQQBrqn7197+BmjsdMxO24UESpyyno88ltMA
-	4OTiUBXhtHySM1fQdnKsH2jF2RK/BcfvWumNmA/vwCYsm5W0DwLqVf5aIbhsIS0=
-X-Gm-Gg: Acq92OHpkl+WDYi1nTLGg377g/7roAClJ/iILfJkzoNW10rJr+1h66klpkJGWqJ3j8j
-	8XNZPPBWloU88i1XCFbNrE8tT79AB62tRqjYa3L1L4xk7VI/nmiSh/qI6hHbIbM1JE2do+KSgym
-	LiCGZE9oXncvgkFkeLhD7LlpjLPDPVEOq6OWigiIGVvDqOzbvLv3M5fwSCVCLENYZL1Qme254f0
-	VLKcR8abmyffL+AiatcUWEIsJ0mMbVXkbaKcT3iv56jYRegF2TeedW6Z7tXLrbVYKxjIrSUdyVi
-	1uRAa6HE3IVzkHOrjZD1YFdlwqWQhQFKnFDjf07DD2GuAVMm/qwlKEZep+HOsy+1k4ePXk+2HWv
-	Ik+fDazmEknOVlSwRdI629/aSG8uvCkoYoXX5guYtgeh2A0AXk3tIUTbQ9M5+7LC1PnKvaU6Qul
-	UWIOh5FzKLSyFNv9Vjoynt0ayx93Yu9Dn7lZILWpnwBFbAortlP6xKxMAQFFHP3848rnINvS4Dz
-	rZJXK5g+7zrvhJ1XZMgGbur09Txq5uc1hz3bYqoKA==
-X-Received: by 2002:a05:600c:3487:b0:490:b6a4:9f43 with SMTP id 5b1f17b1804b1-490b6a4a040mr116278425e9.7.1780577439015;
-        Thu, 04 Jun 2026 05:50:39 -0700 (PDT)
-Received: from hp-ubuntu.. ([196.119.187.57])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3b59f0sm79430055e9.2.2026.06.04.05.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2026 05:50:38 -0700 (PDT)
-From: Mohammed EL Kadiri <med08elkadiri@gmail.com>
-To: David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Kees Cook <kees@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qkOqwoE8"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780579143;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=us3y2v5MIFW+xn+uaJOmyFg+OkwA5K0IadmA3HJ/f/4=;
+	b=qkOqwoE8LjDRLqXwGYtUlHL2bxoEmZAPCDWm7EDRRbffuJOWkh1tiqJlL1h2aiH1tViUdi
+	VjGUPdMX7iNnFg/w2A6Zt4TSZwyMB6HbUovjKA+y4SVN5GVJO33KtN8hx+EL6RapsDZ4aW
+	8EnnTZw553PFhNCKvNLrZs9jEOXLYyQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jiri Bohac <jbohac@suse.cz>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mohammed EL Kadiri <med08elkadiri@gmail.com>
-Subject: [PATCH] keys: prevent slab cache merging for key_jar
-Date: Thu,  4 Jun 2026 13:50:34 +0100
-Message-ID: <20260604125034.13757-1-med08elkadiri@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Ingo Molnar <mingo@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/setup: replace strlcat() with snprintf() in setup_arch()
+Date: Thu,  4 Jun 2026 15:17:53 +0200
+Message-ID: <20260604131752.1327556-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1675; i=thorsten.blum@linux.dev; h=from:subject; bh=RbWuypist+88Gm8+XX/0JfPKQ08Vgq4ntejnMJhib4M=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFmK1QyWU4Kulz24KhTVm7tzr31WM2NtwIXvb6+9i4i/p v78RNCsjlIWBjEuBlkxRZYHs37M8C2tqdxkErETZg4rE8gQBi5OAZhI3lVGhisR/44tLr54NmKq Ao9y8e4lDitfn3iuPuc0y83Vk/UEnvcxMrSuczmS/OGFzN7W1v9FwXofLr/Y/WjXobeRge073/0 tuMgLAA==
+X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The key_jar slab cache holds struct key objects containing cryptographic
-keys, authentication tokens, and keyring linkage. This cache currently
-lacks merge prevention, allowing the SLUB allocator to merge it with
-other similarly-sized caches.
+In preparation to remove strlcat() from the kernel [1], replace two
+strlcat() calls with one snprintf() call in setup_arch().
 
-On a default Ubuntu 6.17.0-23-generic system, key_jar has 5 aliases,
-meaning 5 unrelated object types share its slab pages. struct key is
-224 bytes, placed in 256-byte slabs alongside biovec-16, maple_node,
-ip6_dst_cache, task_delay_info, and kmalloc-256 users.
+Also drop the explicit size argument of strscpy() to further simplify
+the code since strscpy() can determine the size automatically when the
+destination buffer has a fixed length.
 
-Cross-cache heap exploitation is a well-documented attack class
-(CVE-2022-29582, CVE-2022-2588, CVE-2021-22555) where slab cache
-merging enables type confusion between unrelated kernel objects. A
-use-after-free in any subsystem sharing slab pages with key_jar could
-allow an attacker to reclaim a freed slot as a struct key, or corrupt
-an existing key through a dangling pointer to a different type.
+[1] https://github.com/KSPP/linux/issues/370
 
-Add SLAB_NO_MERGE to ensure key_jar receives dedicated slab pages,
-eliminating cross-cache attacks targeting struct key. The memory
-overhead is minimal: with 32 objects per slab page and typical key
-usage bounded by system keyring size, the cost of dedicated pages is
-negligible. There is zero performance impact on the allocation hot
-path.
-
-This follows the precedent set by skbuff_head_cache (net/core/skbuff.c)
-which uses SLAB_NO_MERGE for similar isolation requirements.
-
-Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- security/keys/key.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/setup.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 3bbdde778631..592b65cf8539 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -1275,7 +1275,7 @@ void __init key_init(void)
- {
- 	/* allocate a slab in which we can store keys */
- 	key_jar = kmem_cache_create("key_jar", sizeof(struct key),
--			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC, NULL);
-+			0, SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_NO_MERGE, NULL);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 46882ce79c3a..b11b0ce31a27 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -21,6 +21,7 @@
+ #include <linux/pci.h>
+ #include <linux/random.h>
+ #include <linux/root_dev.h>
++#include <linux/sprintf.h>
+ #include <linux/static_call.h>
+ #include <linux/sysfb.h>
+ #include <linux/swiotlb.h>
+@@ -915,16 +916,18 @@ void __init setup_arch(char **cmdline_p)
+ 	strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+ #else
+ 	if (builtin_cmdline[0]) {
++		size_t len = strnlen(builtin_cmdline, COMMAND_LINE_SIZE);
++
+ 		/* append boot loader cmdline to builtin */
+-		strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
+-		strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
++		snprintf(builtin_cmdline + len, COMMAND_LINE_SIZE - len, " %s",
++			 boot_command_line);
+ 		strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+ 	}
+ #endif
+ 	builtin_cmdline_added = true;
+ #endif
  
- 	/* add the special key types */
- 	list_add_tail(&key_type_keyring.link, &key_types_list);
--- 
-2.43.0
-
+-	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
++	strscpy(command_line, boot_command_line);
+ 	*cmdline_p = command_line;
+ 
+ 	/*
