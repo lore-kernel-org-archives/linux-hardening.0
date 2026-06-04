@@ -1,108 +1,122 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F89E477E4B
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 13:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463BB47ECF4
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 13:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780579157; cv=none; b=Liopp1hDFHyKQbNfCh5OiaAAKQ++N0OgQMsVWlDnnvDQ4NBVhsN4nKxC8L251yTYyepKAJgBOabIeEPz5tNpE4S+T8Z6IYvaG5O7diX73dK9CP+NxnQHufaeBzTQlchPYcaUQeMsEpv3Lji+LG7x0/xSLTfZ3sjM6kRMa2EmegI=
+	t=1780581143; cv=none; b=FT2MMixih99e0eSHiTNLe2cV3B2y6Y3CFxoh4ZXn5n0aoyf5LNnjwK3n6dpbybpIAVsA9aR3jKk50nJRGx0CIFVa/61b4N13mpFGXB9tRxO9vsK3bopYQ66b9YchgZNizdZeRG20FXMMXbcM3OUxg4sQcCHlROQPPwSdx3YvcP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780579157; c=relaxed/simple;
-	bh=RbWuypist+88Gm8+XX/0JfPKQ08Vgq4ntejnMJhib4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m0CAAJsJJuFXJcf4/kIFKB67Zy/sZ/RXqS0hCjARqQ72WNPxrgU5NhXG5PcExERkRDaIIBWGr3U/fvjFAlFl2OhBjcIku4Mxeen0NGYTJnPpHUR4EF0MrgEv0P92/pFMvyLfT6+EeSZnjvj2K7IrF7P3dHG8/z7yRPdE7lpCwfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qkOqwoE8; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780581143; c=relaxed/simple;
+	bh=ZaY5vFxG9aYZCmRrkh4G6IJ/GRp154Miry9zwaOYwzM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=dBUGiwzME1HoL7HPB1oSYSIHkXfZQnTUDeS2eWX+R0/DWGykC5P24bgf5rEEsHan4Ub/qVs0x41HiWVqzB0voqLgOukKJIz/6NEbfBVCuozPqV74Et5OTWzDGeTVT6w1S5SaYnJoPzSjTFl8AKnC32nOt+XiS5HHIdYrA6An2bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q9mp3cGz; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qkOqwoE8"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780579143;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=us3y2v5MIFW+xn+uaJOmyFg+OkwA5K0IadmA3HJ/f/4=;
-	b=qkOqwoE8LjDRLqXwGYtUlHL2bxoEmZAPCDWm7EDRRbffuJOWkh1tiqJlL1h2aiH1tViUdi
-	VjGUPdMX7iNnFg/w2A6Zt4TSZwyMB6HbUovjKA+y4SVN5GVJO33KtN8hx+EL6RapsDZ4aW
-	8EnnTZw553PFhNCKvNLrZs9jEOXLYyQ=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jiri Bohac <jbohac@suse.cz>,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-hardening@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Ingo Molnar <mingo@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/setup: replace strlcat() with snprintf() in setup_arch()
-Date: Thu,  4 Jun 2026 15:17:53 +0200
-Message-ID: <20260604131752.1327556-3-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q9mp3cGz"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-45ef6565cfdso436539f8f.0
+        for <linux-hardening@vger.kernel.org>; Thu, 04 Jun 2026 06:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1780581141; x=1781185941; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tr8tJV7XonRe9aqon2KQXf6etaodi+ES5SfBfdU6e68=;
+        b=q9mp3cGzn3h2MhRK6XrbG8QMIeXE841LVChyHfXx/v/cDtiOssHcUex4ij4no+uRjD
+         vddVlYmG1cGOuUAPBPAAeEF7trsMjG71cu3014VC6TONpgcIj1tfJxm+IdvBzCIOTh05
+         M3n0i60J28z1Ii7Y3YtDSm5BTi5YGXjyJv6FzBUPCcPbLeOPPlZ5kWC1qstA4yjSUd7S
+         Ix+TjKzndwrHsTgVOoV4H3gD/CKW6WTGMfofWnUiiizqAwpyJwfybW5wO42UJWRMqLhZ
+         sb0s8gZAEPhxeUmOfnXRW+dYbPpJ8rbeKjc5knoo4qBC1CJRnHtGd4yJim9yf/MWcxhM
+         SyCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780581141; x=1781185941;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tr8tJV7XonRe9aqon2KQXf6etaodi+ES5SfBfdU6e68=;
+        b=GP0nyGnjlwF3evjqlusGT6ZoudTNeb8sg4+60CAhMDDUio883QUCtqC4AJDDaNKbls
+         iYkabRDGKaCZKkAB7TrAcsp803EsXVKQFg3/bm+t4j4APhpZigQits4Ok0P4NbNjOl7i
+         B/aB22e/TjwiVQEyL8IkgnqWumaKYOXgJxQGwbTJMGaTyowL1/oaYsHP94+a5tSWknbF
+         b8ORi+e9Nyc6LWS1t35Lc4JayVk4tP8bo1Q3/IO0lC3NVr2aRz+0imikyrAvsnkytyso
+         2DzG/OVg6UDNYnPWBGRD2PAwjQHmOQvU+mV9vLfdxl0lq4YP6hDEGhH9Hsx80MH617qx
+         MOLA==
+X-Forwarded-Encrypted: i=1; AFNElJ9PchWqCp732Dbs52ZPqaX8SnUmed6WEOdgBGEYoK0E0sby6g4HCqAFfSW7TF4DZM/KSoYGQnuH88NMYfLgCmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcm2nlZtiSdxGpndZxThxgKTUBgP+mfCDX4+ROaLPrlw/2S8s5
+	Y+JjdjnBc+oQv5F23ULXaKwxsGSqC10kPGJ6CWoi70yajv/Vc7knlSVwlKojI3dvaxA=
+X-Gm-Gg: Acq92OF0wHQoW6rJ4f6lqZUgEN8MChnMYe8p261zr0g2rivvmlqQlD4WkLmdu0a/OLk
+	eJKSR+QeCZtDNNYcInyMEXLazx4yxsHCKHM4jyorpvU4J88QygniYGpVv2USMP2al7fNDPo91/q
+	Au41mZzb2dKikO44QcUBwKRYKUmIBxxF5pFR96Mh+BCrRTfEkMwJ5zgDBkMCBNBZBkijeSduMe0
+	12En5NiUT2s0wj56YfqFrasUpjLYVoqq2Iumb1ddWpMHd4/PN7pSKJczBpZj4IclleRw+2ekTz7
+	H3x1WxHFPzjRIrTavZPrhrYodO+E+NP+0mPD/2fR9Ofcg5nJCdHZLpqpNSfVRMOJ0lMYBkhkvFw
+	gd/88s8OdSMaV9Cw4lvJj5wXx2l7lTXuavhihrL2Dej0LQxMVTSLvK/x/UqBAJlWmUaWJ3h5zUo
+	+dox4L9ZS3jX0mB3rzK+GpHkzhBow80JpQ4bnVc3GA5um+CA8tTLlX6XCtKRxdfrGPr/kEPxgpz
+	jMzeJmRhpQKlZ1Saa1DyExX
+X-Received: by 2002:a05:600c:3596:b0:490:44eb:c1ea with SMTP id 5b1f17b1804b1-490b5edd71amr146656455e9.24.1780581140625;
+        Thu, 04 Jun 2026 06:52:20 -0700 (PDT)
+Received: from localhost ([94.4.195.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351ac0sm27268044f8f.27.2026.06.04.06.52.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2026 06:52:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1675; i=thorsten.blum@linux.dev; h=from:subject; bh=RbWuypist+88Gm8+XX/0JfPKQ08Vgq4ntejnMJhib4M=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFmK1QyWU4Kulz24KhTVm7tzr31WM2NtwIXvb6+9i4i/p v78RNCsjlIWBjEuBlkxRZYHs37M8C2tqdxkErETZg4rE8gQBi5OAZhI3lVGhisR/44tLr54NmKq Ao9y8e4lDitfn3iuPuc0y83Vk/UEnvcxMrSuczmS/OGFzN7W1v9FwXofLr/Y/WjXobeRge073/0 tuMgLAA==
-X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 04 Jun 2026 14:52:19 +0100
+Message-Id: <DJ0BC2X0G04D.18CIJDSEP0PVP@linaro.org>
+Cc: <jyescas@google.com>, <linux-kernel@vger.kernel.org>,
+ <linux-samsung-soc@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@oss.qualcomm.com>
+Subject: Re: [PATCH v8 2/5] thermal: samsung: Add Exynos ACPM TMU driver
+ GS101
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Daniel Lezcano" <daniel.lezcano@kernel.org>, "Zhang
+ Rui" <rui.zhang@intel.com>, "Lukasz Luba" <lukasz.luba@arm.com>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Bartlomiej Zolnierkiewicz"
+ <bzolnier@gmail.com>, "Krzysztof Kozlowski" <krzk@kernel.org>, "Kees Cook"
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, "Peter
+ Griffin" <peter.griffin@linaro.org>, =?utf-8?q?Andr=C3=A9_Draszik?=
+ <andre.draszik@linaro.org>, "Alim Akhtar" <alim.akhtar@samsung.com>
+X-Mailer: aerc 0.21.0
+References: <20260603-acpm-tmu-v8-0-0f1810a356e6@linaro.org>
+ <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
+In-Reply-To: <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
 
-In preparation to remove strlcat() from the kernel [1], replace two
-strlcat() calls with one snprintf() call in setup_arch().
+On Wed Jun 3, 2026 at 2:00 PM BST, Tudor Ambarus wrote:
+> Add driver for the Thermal Management Unit (TMU) managed via the Alive
+> Clock and Power Manager (ACPM), found on Samsung Exynos SoCs such as
+> the Google GS101.
+>
+> The TMU on the GS101 utilizes a hybrid management model shared between
+> the Application Processor (AP) and the ACPM firmware. The driver
+> maintains direct memory-mapped access to the TMU interrupt pending
+> registers to identify thermal events, while delegating functional
+> tasks - such as sensor initialization, threshold configuration, and
+> temperature acquisition, to the ACPM firmware via the ACPM IPC
+> protocol.
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
-Also drop the explicit size argument of strscpy() to further simplify
-the code since strscpy() can determine the size automatically when the
-destination buffer has a fixed length.
+Reviewed-by: Alexey Klimov <alexey.klimov@linaro.org>
 
-[1] https://github.com/KSPP/linux/issues/370
+> ---
+>  drivers/thermal/samsung/Kconfig    |  19 ++
+>  drivers/thermal/samsung/Makefile   |   2 +
+>  drivers/thermal/samsung/acpm-tmu.c | 651 +++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 672 insertions(+)
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/x86/kernel/setup.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+[...]
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 46882ce79c3a..b11b0ce31a27 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -21,6 +21,7 @@
- #include <linux/pci.h>
- #include <linux/random.h>
- #include <linux/root_dev.h>
-+#include <linux/sprintf.h>
- #include <linux/static_call.h>
- #include <linux/sysfb.h>
- #include <linux/swiotlb.h>
-@@ -915,16 +916,18 @@ void __init setup_arch(char **cmdline_p)
- 	strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
- #else
- 	if (builtin_cmdline[0]) {
-+		size_t len = strnlen(builtin_cmdline, COMMAND_LINE_SIZE);
-+
- 		/* append boot loader cmdline to builtin */
--		strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
--		strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-+		snprintf(builtin_cmdline + len, COMMAND_LINE_SIZE - len, " %s",
-+			 boot_command_line);
- 		strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
- 	}
- #endif
- 	builtin_cmdline_added = true;
- #endif
- 
--	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
-+	strscpy(command_line, boot_command_line);
- 	*cmdline_p = command_line;
- 
- 	/*
+Best regards,
+Alexey
