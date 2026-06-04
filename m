@@ -1,173 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A62D380FE7;
-	Thu,  4 Jun 2026 05:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696233D1711;
+	Thu,  4 Jun 2026 05:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780551043; cv=none; b=EIuus+mM5s7Uh0HkGLXlCZtCUZ/7+Y7tX87kVmOaHFJHg+tXwBuUAIA6ddkdtH+uO6857DaAenF7Zmjf63P0gmaYz3G8LNQx6x6DV4xQuxWIYsz6Ey/UTGBj/I1YvnUQPu90Wo53UlMQuOjahYKvqVFn1Tz7aJxda/LW75yGhC0=
+	t=1780552308; cv=none; b=FJE7c/+Xs+9ZmFDvVoIT2MdXGZwKOqSEp6E+f0sNJcXCczShJSCdzy6gTN9k2qWlNk9I2qzXlBB74Bt9SVhMQDFAB3bVP9/bmfe/gvthh5C+lUmiVh7wmd5/Sll8yfklEhcLzmNNxJBhHwssS7wrTvPbpU2+7SsbbD4zhvBm3+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780551043; c=relaxed/simple;
-	bh=BJ9KRQdOnppoMtg8qeSesxs+aJ6hpEZZg8Nol96NPcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h/WV9liU+s1jgNN9ghoNgUnECs2y0cD+gWltBnyMdjwv1xO2WvxnDvhgpx57Q6I9pqGaWSn4BR7Hpf/ImY6S1ARNedGVA0gcCiZWTLZV9zuLyiIaLaA7f0OMm9GkWm9MEW+UBYHD6/u1xh0cnQ+77gZ6hD1Hklclj2Uyn6D01AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BRneAZeV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780552308; c=relaxed/simple;
+	bh=StrjWbO7JkBLpCjpx66U+DeF2jDXM7FSmXwXo91gAZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U21NQEtQO+JXANHzQQRoYSxRJzC5ysDjJ6lvN4CofWdRQx5kEGIqaX5TsO4hy1F22169mf5Xovp28msBjf4u41v8qehYTxHUY38+Rujoibxejey0+lAOOv7xR17h2wY3hsdR9HnjFIZDzwAN/i03cZZ2svrRHPNFwIX/xhrCYD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KqD7b+lf; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRneAZeV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 524671F00893;
-	Thu,  4 Jun 2026 05:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780551042;
-	bh=8sJyfXerJU9iiEPT8ZT0fAwQWe3UJ8yZ+Wj6Yp6I/XM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=BRneAZeVwpgn7kmaxaAgWt7ghltBXKLdOIt48MhO+V2jMeTdvfrbhJUJaUF30tK3c
-	 jfyYncISAoFB740uCW92U5qld8AJZvXgOOySRWQIox3dti/zyfIAqizY5mCkUsV+ui
-	 ueVmRxQG1X07meMyw+x7VDyfrM6ejNPDPOwvivSRqpRaMIgPfr8NN0x0JdSOXEyGAY
-	 XfSCCnJ3TO7zdpxt3oWh0EfLbD7zS0mz7np/Gn8DdB5/np4m/zqWkcxjjeZSbtQHrl
-	 hbWLrF9rIzOtikYYZGlIi8p9zF13KWyZtdPIGN/tUkjZRxj3QaV6rYdulbPytI6oUI
-	 VrmZLIUr+3gIA==
-Message-ID: <6d70757a-a849-4828-89e7-f3d51bf8c9f8@kernel.org>
-Date: Thu, 4 Jun 2026 14:30:34 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KqD7b+lf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780552302; x=1812088302;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=StrjWbO7JkBLpCjpx66U+DeF2jDXM7FSmXwXo91gAZI=;
+  b=KqD7b+lfwrTYgIL/l4ZxnWuF5WS5HjuNYd4ZbzCkwqocBiV3sh91zMj2
+   MlsuZAINZhcVkukZNUcNsL2cugS6JNW2dz3QDoi5drrXKql4d7eN11wNh
+   7MF7ei09PYfEUcrgNyJuyW/4MtUsby+u9MxHMf4fAlkEgrXpN9JD3r6Nu
+   HGX33dNyY3QhbE/71chQ21dPySybh0dVpzV6zW08yHYKgkvtkoh6lN1B5
+   BAdVhlnwdOPqoKXsc8tKpZzP+dlvIkamojhiqj+ojtoRkCIemLvptER+E
+   RIM2CEznIfl4Cvx5nZymhRJs6Jtz6YXEYxnZ/b1gywiJrP5xKfGX99fg4
+   w==;
+X-CSE-ConnectionGUID: xmo8KvLPRhaLQwd6ljlIzg==
+X-CSE-MsgGUID: NJ2xZbP8Q0+ci4prefS4gQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="92857602"
+X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
+   d="scan'208";a="92857602"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 22:51:41 -0700
+X-CSE-ConnectionGUID: 4waxMAB+T8KRdArTOwvSxQ==
+X-CSE-MsgGUID: KAv13reYQneW8TJSV0HJ1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
+   d="scan'208";a="243379753"
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 22:51:36 -0700
+Date: Thu, 4 Jun 2026 08:51:33 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
+	linux@analog.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH 05/12] iio: dac: ad5686: add support for missing power
+ supplies
+Message-ID: <aiESZaVcbh7ctlPh@ashevche-desk.local>
+References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
+ <20260602-ad5686-new-features-v1-5-691e01883d27@analog.com>
+ <ah8oz29R8mem6H5X@ashevche-desk.local>
+ <p3ydzrkizeysxlzc355xzgeboipihgo45w34uwn7a4lb63jgek@kr5r5hgjh354>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] net: skb: isolate skb data area allocations into a
- separate bucket
-To: Pedro Falcato <pfalcato@suse.de>, Vlastimil Babka <vbabka@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
- David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Simon Horman <horms@kernel.org>,
- Jason Xing <kerneljasonxing@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>
-References: <20260602183122.747759-1-pfalcato@suse.de>
- <20260602183122.747759-3-pfalcato@suse.de>
-Content-Language: en-US
-From: Harry Yoo <harry@kernel.org>
-In-Reply-To: <20260602183122.747759-3-pfalcato@suse.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------58iuvSQkp47XgPodjS4574QO"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <p3ydzrkizeysxlzc355xzgeboipihgo45w34uwn7a4lb63jgek@kr5r5hgjh354>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------58iuvSQkp47XgPodjS4574QO
-Content-Type: multipart/mixed; boundary="------------axTL8uth9J2LpeygQTj3by2S";
- protected-headers="v1"
-From: Harry Yoo <harry@kernel.org>
-To: Pedro Falcato <pfalcato@suse.de>, Vlastimil Babka <vbabka@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
- David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Simon Horman <horms@kernel.org>,
- Jason Xing <kerneljasonxing@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>
-Message-ID: <6d70757a-a849-4828-89e7-f3d51bf8c9f8@kernel.org>
-Subject: Re: [PATCH 2/2] net: skb: isolate skb data area allocations into a
- separate bucket
-References: <20260602183122.747759-1-pfalcato@suse.de>
- <20260602183122.747759-3-pfalcato@suse.de>
-In-Reply-To: <20260602183122.747759-3-pfalcato@suse.de>
+On Wed, Jun 03, 2026 at 01:17:25PM +0100, Rodrigo Alencar wrote:
+> On 26/06/02 10:02PM, Andy Shevchenko wrote:
+> > On Tue, Jun 02, 2026 at 05:33:52PM +0100, Rodrigo Alencar via B4 Relay wrote:
 
---------------axTL8uth9J2LpeygQTj3by2S
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+...
+
+> > > +	ret = devm_regulator_get_enable_read_voltage(dev, "vref");
+> > > +	if (ret == -ENODEV) /* vcc-supply is deprecated, but supported still */
+> > > +		ret = devm_regulator_get_enable_read_voltage(dev, "vcc");
+> > 
+> > >  	if (ret < 0 && ret != -ENODEV)
+> > 
+> > It can be deduplicated now with
+> > 
+> > 	else if (ret < 0)
+> 
+> Not really, because ret is overwritten with
+> 
+> 	ret = devm_regulator_get_enable_read_voltage(dev, "vcc")
+> 
+> so the check for if (ret < 0 && ret != -ENODEV) is intentional
+
+Indeed, thanks for pointing this out.
+
+> > > -		return ret;
+> > > +		return dev_err_probe(dev, ret, "failed to read vref voltage\n");
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-
-On 6/3/26 3:31 AM, Pedro Falcato wrote:
-> SKB data area allocations (as done from alloc_skb()) use kmalloc().
-> These allocations can be variably sized and their contents can be more
-> or less controlled from userspace, which makes them useful for attacker=
-s
-> that want to overwrite a use-after-free'd object from the same kmalloc =
-slab
-> (which often just requires the sizes to roughly match into the same kma=
-lloc
-> bucket). [0] is an easy example of an exploit that uses netlink skb
-> allocation to target another similarly-sized accidentally freed object.=
-
->=20
-> While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these =
-are
-> probabilistic. Use the existing kmem buckets API to further isolate the=
-se
-> allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=3Dy.
->=20
-> Link: https://github.com/google/security-research/blob/master/pocs/linu=
-x/kernelctf/CVE-2023-4207_lts_cos_mitigation_2/docs/exploit.md [0]
-> Signed-off-by: Pedro Falcato <pfalcato@suse.de>
-> ---
->  net/core/skbuff.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 44a7f8401468..1f6c6b531ece 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -594,6 +594,8 @@ static void *kmalloc_pfmemalloc(size_t obj_size, gf=
-p_t flags, int node)
->  	return kmalloc_node_track_caller(obj_size, flags, node);
->  }
-> =20
-> +static kmem_buckets *skb_data_buckets __ro_after_init;
-> +
->  /*
->   * kmalloc_reserve is a wrapper around kmalloc_node_track_caller that =
-tells
->   * the caller if emergency pfmemalloc reserves are being used. If it i=
-s and
-> @@ -632,7 +634,7 @@ static void *kmalloc_reserve(unsigned int *size, gf=
-p_t flags, int node,
->  	 * Try a regular allocation, when that fails and we're not entitled
->  	 * to the reserves, fail.
->  	 */
-> -	obj =3D kmalloc_node_track_caller(obj_size,
-> +	obj =3D kmem_buckets_alloc_node_track_caller(skb_data_buckets, obj_si=
-ze,
->  					flags | __GFP_NOMEMALLOC | __GFP_NOWARN,
->  					node);
->  	if (likely(obj))
-
-What about kmalloc_pfmemalloc()?
-
-> @@ -5213,6 +5215,7 @@ void __init skb_init(void)
->  						0,
->  						SKB_SMALL_HEAD_HEADROOM,
->  						NULL);
-> +	skb_data_buckets =3D kmem_buckets_create("skb_data", SLAB_PANIC, 0, I=
-NT_MAX, NULL);
->  	skb_extensions_init();
->  }
-> =20
-
---=20
-Cheers,
-Harry / Hyeonggon
-
-
---------------axTL8uth9J2LpeygQTj3by2S--
-
---------------58iuvSQkp47XgPodjS4574QO
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQQQ1ub6gR5ogjaKRmOGXBN6rc5S1gUCaiENegAKCRCGXBN6rc5S
-1iLnAQCiHXHsoLVAPzu2eqLSBL/0qUnsHH8Rl1w8PYVRFrUQZAEAjAmcp39Ue/7d
-KAD/ZxX4pGdrNWb8HUTS2rQYIoNNkg8=
-=NWSc
------END PGP SIGNATURE-----
-
---------------58iuvSQkp47XgPodjS4574QO--
