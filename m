@@ -1,121 +1,194 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CF33B2FC2
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 16:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780590674; cv=pass; b=uaQQxhP75J/0pXdo6HVKnBc1hxP88d6761++fUT1Yh5bSkkQ77jV2VLWNTvsVEppj4CJ4CGThxHZA2vRpLQc/vlRNmbNuCg9RwOoKjizl3ZN78XP9kTp8X2dIZkyjV5RzOinpV9iyE2NlKGQzfc+9tAcs1AQtBzz24mVrJwHkh4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780590674; c=relaxed/simple;
-	bh=bYQz5WGjsDPNgjJtpHPvb9PJr7MMreR1r3TlgYR8Xgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f5lq7jmVWjaFgBSy9RaLL+7rO6Ou1ubCfWxKoMEWk6OwuEHfy5cj9BFXmfKqK+9NVBHtUc4B1X/hVK5aUCZpMADxgSJYMo3Lqx2ML9Ww8uSPEGGRqzcCfgidj8VExq0/bm1nPsEW1yYvZvT+GPQbejNUz0v4yRJINhsibPRiDUU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LYizWBKw; arc=pass smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5886814883F
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 19:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780600331; cv=none; b=CetQerIhVnNY7N3zxzTDkhAZe/gRcRKOCaIFDV7+E/yHJfOLD/4QXLkIHFOCSozVlDj9qS5iHPr92st+M2AGqtZ7wl4LEY5b/BwHlaLd5J8hAAl7tOU8bQwS5kD2i4l5OiubPBXpklmPE1152mDwCUBZQ2BDWGDFYMwhxW6V3sk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780600331; c=relaxed/simple;
+	bh=ykembX4DnSNgKL3XfltodtBr2NEGN0VjjMVEs45i9AM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zj769Jgkgt/P1HzppVkLUKs29xC/o5itHW2zYOPu1cGn7osdMmNABW0iSYmXoPkvBf5yg8REgYqcegNIWJxwtK1x+5UXt7vxqi94MeP4ZhFT3NDjNoRuMpTZtG9oNwYWa7/0g+whk4OYVLMA4STjIGsj051ZE+RzJEjxMpJ7lEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=du+BNIwg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MIZ1n7v5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=du+BNIwg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MIZ1n7v5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LYizWBKw"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-68c32f3c6d6so989676a12.3
-        for <linux-hardening@vger.kernel.org>; Thu, 04 Jun 2026 09:31:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780590671; cv=none;
-        d=google.com; s=arc-20240605;
-        b=MtP48/mY1zue+hlJncHQSt/cLazzluwjMLUtpXeqUBQn9lwKlLhHcT5NJqv/gCsW4X
-         GtkvL/tbBYKNweMoaFdtgO3hfzA/20c3gV4Mz62ww0GwUFAg7AfhDz2WTKcE4NUA5HCW
-         MAPEwjex5AygNxBfx8wOrkzeAF6MWokAZjbbbwc5NwHwQkTTFRD6+cActEOD/mts5AUQ
-         60UJcFd9gzd/2N+DGTfoqObrJINh7AVF7VXZ+lXx3wF2aHkSVJHAeEM0U4dWcXdKdZ12
-         jndMcCF+RpoDQTD1Hucuq3mtLF4rmBKHvo/KGdMQ8/UdTbcbYZrJv0WnQIR8RU7vUcEF
-         nBBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=bYQz5WGjsDPNgjJtpHPvb9PJr7MMreR1r3TlgYR8Xgc=;
-        fh=rXuuDq/fPV86IewdJ1hk03hn0WjMqv2vdZ0iWTvzcT4=;
-        b=IWBDyO8aA88D7HQzG2qUFyQxAD8SlnALF8lAbDdAvKXYLJSe+KIkb87aTsyET7Vv2b
-         aKJXRdagtxVWfJBF5tavBnx6Rt72tBbYjctAfKd33mZKEDshsUe23rzwejG6eZqwvBhR
-         byJjF0CgvbWXFy+F+YKvlVoLluUEVLyhDD/1IAOMfs88Ulz4q/8aPdNPuhtULnzO3BWA
-         470RK56CkpdGvrHBH56Gt3vMWGoMmahhZwpJ8PccSTikmtgOGkHgKFUDbvok/8pUdmNM
-         1rsYfDv5mk0wMqE4g0dogDJaPgcYTJPDw1luvTjUqki2fh3rsNu7XXYQIz0bfQqHCDGp
-         qQQQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780590671; x=1781195471; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bYQz5WGjsDPNgjJtpHPvb9PJr7MMreR1r3TlgYR8Xgc=;
-        b=LYizWBKwjoen9RbPlZkKqVX9HO4ohwNYKnGU+2Q+9RjwmmNdoOktu4fQ5uxRDDajqB
-         JqvjdzC53gLKc+JjhUzLqrcRERtB4d1WOkPgm/YeY18fypdqw8x4vfGp30qDadQFg+mz
-         3menY9qVtgPdGY3X5rl6F639jENH31rWDQQcJzfsLyqg8cD+EtYv7kKJliuvNEbdZqhS
-         aqdvEPZY13QDBE3KtMnin02ngDuXdHXs4Aj/y7mBKBgixCgVmSKkgsEs9z/tSMDYdAN5
-         PZspOYoGtFfvUL9v1bvQSMq9dXRTaon4BybuK0CmCpAfUFbHN5URmAZ835d3n0w9JhWf
-         3i6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780590671; x=1781195471;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bYQz5WGjsDPNgjJtpHPvb9PJr7MMreR1r3TlgYR8Xgc=;
-        b=A9ql/iV7k8L9YGky1+kuhdjAvQ6G4tAw7L+22SpF0TV10yxExrT+tjjUwj6yB0wWX0
-         o96lF7U6d6XmWwGG7iZcwEO4kuu+ReSC6u0tjAi4sC8FvaJvmJilfLFiGN3AL+JN/lEV
-         /NekQVbiJEewpS4+A6vhxDmldbIq/i6860tnDswDPUy2PNwqj1cE6Wh7MG4Mbh7wEINW
-         rWszwLgBtEvBNG8bFfzxuI/dbYOxRL2pblRvd5I70U1HOzPtN27O+aWnD63F5ht/keea
-         kVrZizaZW6Er7UkkG8dSnGcodddIOQfJzW5MjEGCvTbY8+D7VJd3pK7+RV9wx4gZbOy6
-         vA6Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8LfMUK5J4Z8hhlKZa9F7iRRdeRrtle1j2mR80nc9hcrH9ovCzLDlwqxEzbnVD3NZQ6+KJPU2szasubX8nZvsA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxcw7xA8oBQkLcujOJ4n8MRm+QE9bfQczYUj4bZdFIe78UlUbuU
-	g+iFEOOVeMykoLgtIYEnwCF35MIq7P4GlnLZWiKQqFI2KBqs+XJx+Lw9JjrkJ+Xdug7o0BE8dpj
-	/PP3omv6mai4STbp6Wswu0/L9WX3QzxXDBeGSh3mjrA==
-X-Gm-Gg: Acq92OHo1i5Uvs8IlXvl4b8mEtDSMgKmufHtUwP7ZqJ65ixrfkNr7jsWt2kI4+vonOE
-	VVuMuqqzf5PbpBdk60lXJVtofbRp4+UeLIuCdCD7EEmK79AjQsnI5I43fq5mCfr+dPzbI5Xa3wQ
-	RlggzSfqQMFG3gOduwmu8/N4YVpsRDBcgWv2XbGlkg0E7eBgfCccZTPy8KxNjP9yCqdshQI/8QC
-	TyvmLfwv6AzRd3ogcvDMRqVUMndcMZYJk34r2aUegtb/ZSwdUS3gLZK2C3CpmQ+L6JGP7Z1oklA
-	F8Nis4nf4Z+J7YAHJ5uoevWPFG8sTE2fwo+7gC0O5dgh0odX
-X-Received: by 2002:a05:6402:3215:b0:68b:539c:d269 with SMTP id
- 4fb4d7f45d1cf-68e710ebc51mr4808114a12.12.1780590670971; Thu, 04 Jun 2026
- 09:31:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="du+BNIwg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MIZ1n7v5";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="du+BNIwg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MIZ1n7v5"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 71F816B029;
+	Thu,  4 Jun 2026 19:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1780600327; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9L7i2swvOC+jyqEqBi6J71Dz7ZL2TF4c4yN/go0BL5o=;
+	b=du+BNIwgZkPrCHvZZp6Z5pgYTtbhQg6LVpneHU5VcpuZUPHfCuNNJJxDn08F6cRF8XjfEg
+	kpwU2X5A5fBjRAkEaQx2ZvKzsCBjTktKKMF8uRkANugAs8Lr+LvgrAVxAreIEihf045E0z
+	+B447SxeQm16FMgnEJ7FVzy/TqQ7cW0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1780600327;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9L7i2swvOC+jyqEqBi6J71Dz7ZL2TF4c4yN/go0BL5o=;
+	b=MIZ1n7v5OoSUdcDUgR1RvEt12w6lYFbzx5nExRtHBJkzaCfLmp/gyJmNpZoCjbgRfzoaIy
+	SLLWM/u6shUkS6BQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=du+BNIwg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=MIZ1n7v5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1780600327; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9L7i2swvOC+jyqEqBi6J71Dz7ZL2TF4c4yN/go0BL5o=;
+	b=du+BNIwgZkPrCHvZZp6Z5pgYTtbhQg6LVpneHU5VcpuZUPHfCuNNJJxDn08F6cRF8XjfEg
+	kpwU2X5A5fBjRAkEaQx2ZvKzsCBjTktKKMF8uRkANugAs8Lr+LvgrAVxAreIEihf045E0z
+	+B447SxeQm16FMgnEJ7FVzy/TqQ7cW0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1780600327;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9L7i2swvOC+jyqEqBi6J71Dz7ZL2TF4c4yN/go0BL5o=;
+	b=MIZ1n7v5OoSUdcDUgR1RvEt12w6lYFbzx5nExRtHBJkzaCfLmp/gyJmNpZoCjbgRfzoaIy
+	SLLWM/u6shUkS6BQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CFEFC779A8;
+	Thu,  4 Jun 2026 19:12:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id F7e4LQXOIWr4fQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 04 Jun 2026 19:12:05 +0000
+Date: Thu, 4 Jun 2026 20:12:03 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Harry Yoo <harry@kernel.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Hao Li <hao.li@linux.dev>, 
+	Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Simon Horman <horms@kernel.org>, 
+	Jason Xing <kerneljasonxing@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>
+Subject: Re: [PATCH 2/2] net: skb: isolate skb data area allocations into a
+ separate bucket
+Message-ID: <aiHIQ4ZxnMSifhmi@pedro-suse>
+References: <20260602183122.747759-1-pfalcato@suse.de>
+ <20260602183122.747759-3-pfalcato@suse.de>
+ <6d70757a-a849-4828-89e7-f3d51bf8c9f8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260603-acpm-tmu-v8-0-0f1810a356e6@linaro.org> <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
-In-Reply-To: <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Thu, 4 Jun 2026 17:30:59 +0100
-X-Gm-Features: AVHnY4Jq-Cm1FpMQ9NjMzo61aJ4t188OLXQIR-HELOPptilenf70Fcb7QJeV21c
-Message-ID: <CADrjBPoHXi5hp9T=z97k4LKNKQUEnJdN4sSz5g+NgKAGC6jguQ@mail.gmail.com>
-Subject: Re: [PATCH v8 2/5] thermal: samsung: Add Exynos ACPM TMU driver GS101
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, jyescas@google.com, linux-kernel@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d70757a-a849-4828-89e7-f3d51bf8c9f8@kernel.org>
+X-Spam-Flag: NO
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,linux-foundation.org,davemloft.net,google.com,redhat.com,vger.kernel.org,kvack.org,linux.dev,gentwo.org,gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 71F816B029
+X-Spam-Score: -4.01
 
-On Wed, 3 Jun 2026 at 14:00, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->
-> Add driver for the Thermal Management Unit (TMU) managed via the Alive
-> Clock and Power Manager (ACPM), found on Samsung Exynos SoCs such as
-> the Google GS101.
->
-> The TMU on the GS101 utilizes a hybrid management model shared between
-> the Application Processor (AP) and the ACPM firmware. The driver
-> maintains direct memory-mapped access to the TMU interrupt pending
-> registers to identify thermal events, while delegating functional
-> tasks - such as sensor initialization, threshold configuration, and
-> temperature acquisition, to the ACPM firmware via the ACPM IPC
-> protocol.
->
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> ---
+On Thu, Jun 04, 2026 at 02:30:34PM +0900, Harry Yoo wrote:
+> 
+> 
+> On 6/3/26 3:31 AM, Pedro Falcato wrote:
+> > SKB data area allocations (as done from alloc_skb()) use kmalloc().
+> > These allocations can be variably sized and their contents can be more
+> > or less controlled from userspace, which makes them useful for attackers
+> > that want to overwrite a use-after-free'd object from the same kmalloc slab
+> > (which often just requires the sizes to roughly match into the same kmalloc
+> > bucket). [0] is an easy example of an exploit that uses netlink skb
+> > allocation to target another similarly-sized accidentally freed object.
+> > 
+> > While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these are
+> > probabilistic. Use the existing kmem buckets API to further isolate these
+> > allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=y.
+> > 
+> > Link: https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2023-4207_lts_cos_mitigation_2/docs/exploit.md [0]
+> > Signed-off-by: Pedro Falcato <pfalcato@suse.de>
+> > ---
+> >  net/core/skbuff.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> > index 44a7f8401468..1f6c6b531ece 100644
+> > --- a/net/core/skbuff.c
+> > +++ b/net/core/skbuff.c
+> > @@ -594,6 +594,8 @@ static void *kmalloc_pfmemalloc(size_t obj_size, gfp_t flags, int node)
+> >  	return kmalloc_node_track_caller(obj_size, flags, node);
+> >  }
+> >  
+> > +static kmem_buckets *skb_data_buckets __ro_after_init;
+> > +
+> >  /*
+> >   * kmalloc_reserve is a wrapper around kmalloc_node_track_caller that tells
+> >   * the caller if emergency pfmemalloc reserves are being used. If it is and
+> > @@ -632,7 +634,7 @@ static void *kmalloc_reserve(unsigned int *size, gfp_t flags, int node,
+> >  	 * Try a regular allocation, when that fails and we're not entitled
+> >  	 * to the reserves, fail.
+> >  	 */
+> > -	obj = kmalloc_node_track_caller(obj_size,
+> > +	obj = kmem_buckets_alloc_node_track_caller(skb_data_buckets, obj_size,
+> >  					flags | __GFP_NOMEMALLOC | __GFP_NOWARN,
+> >  					node);
+> >  	if (likely(obj))
+> 
+> What about kmalloc_pfmemalloc()?
 
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
+Good point, that looks free as well.
+
+Sidenote: isolating kmem_cache_alloc for possibly-aliasing caches could also
+be useful. skb allocation has net_hotdata.skb_small_head_cache. It doesn't merge
+with anything for $raisins (odd size, plus I don't think usercopy caches are
+getting merged?) but it feels too... accidental?
+
+Maybe passing something like SLAB_NO_MERGE and making the size
+standard-looking would be nice. I have a size of 704 bytes per object, and
+this probably causes some weird wastage for each slab.
+
+
+-- 
+Pedro
