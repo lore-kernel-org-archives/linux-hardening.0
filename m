@@ -1,131 +1,132 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D48C44D6AC
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 12:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780575940; cv=pass; b=DkEGb+en7MhTXJZYPZ4WrgqjxIQLDuB6HSWrhskmV/nzmdzVA2RaUKc2h49eTXXZL6ZVCA+uokgDVNto2Jh5yd3TA9OhSc5TerTCHDEEHHB58+vR2PXKo5965inCN+r0xD2rUZC6wvBEF8Bkv0M+LHqIvgo2DGzvQ8UYI1x6gLE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780575940; c=relaxed/simple;
-	bh=QXg9S3LANuU2Vu2CwL7ml9RG3pg9mmdQqBn/HO6HYQM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ng5X6ejTF2t5AcHdg6HT2z2v1UyEz7GLWy2YGeY/NUhXWZnGCCK3D9F22y2BA664XM4XK/MEM44PfNso6QrSBNHlqD4SLvBPKO9kEVu7NgsFGDxE+0y6OmMH6yhVDHr1dHe/VMhKg6nvGMV9SBgblVzbR8P7HbXHqx+9ziLnhPg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VNrKS+F5; arc=pass smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3920647CC6D
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 12:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780577445; cv=none; b=SnnfW8WSka1k485c3kTjaRvUqlLXwiTDLggy/C74gUi1tiC5Jp0cM+VX3f6wva/VjsGiiCm5wBbJGPMO/jv/Axejv6msPcuOtaRSf5BoV1X6EfmEqeL8p9cwgbUsu6o1mXkoPOyOg6KNa72RjaaTFOc6ClOjshdkl8RnYL6fUcU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780577445; c=relaxed/simple;
+	bh=lbWaJXCgqnU/VgUH+gDEW7qnj7gIAwhY6UiysV4cJx8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wo01chvmwdksZOD/cJoJk4UYJFUPed8ITAFeSxlWX6XQYckDcX+s2nOXYz1lkqudJGtth1td0JVQULV9UT32NEwdmjF7gGprFNH9v4aWcGR6QhGZhyCCtfhkforL9j2cbB1CvzKiQYTSG8+/P2c7q6JBiHRG3eQmF8r8wN7+BDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hSt/cjYD; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VNrKS+F5"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6870ad8072eso724546a12.0
-        for <linux-hardening@vger.kernel.org>; Thu, 04 Jun 2026 05:25:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780575936; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Ps7TKpHPu5QUXvfmSsHeA32GP7JdMUQFWRtY/ncQZq/uWd2Njv3SDS5wrNegEZOiwT
-         XJtjU8Uf79QezshuenmLvrmYYM82ZEYjmEVbs0pxLskeGDkH0EqvLTbo9BA0YJL3j5zC
-         iPpiKjG1cPqKI2pW6QfWtQWApi+12TwjUcx02s1c1WuHf/Yzn6S+YHlvT9okVuNezuuW
-         4CJ8Sbck3F82THYW/9ZIDcICTeopyrfxDEV9/8E2dMbsxxQZMCZAeAWZ6QNPDJVzdQaL
-         0CI+wT6a+7GluAnKJmUVf/6Zmz14pyg+N09lg8mLhRbwyLe0EM6NKrifXZ33r1xX78pR
-         LOsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=knW0aQIBp4ONXOIx4MTZpzmtpQjVdTKmzR82B1HLZdY=;
-        fh=yAFFnbBZ+oBid/uOFlv53R5X1va46WBI8cOGDbCci5s=;
-        b=AkbRop8bk2unasBS1Xo9XlqeKLAlsfR4o67lZnP8AXZdhoCmLgysVGSD+ZxziLq05Z
-         EZ7c/7OPtsVL+RuZla+qcDGi2zz2kMymOwJya5MbnnXDY0dGBoGgqhkSnhkhhsucBA6z
-         U4OiqTGZbwd4VZO1nzqCrxRQiW5HbcT8GOL/M0Wc9ovaJUgTRZZ501EdWAUV8bDc3lcJ
-         6P7F4Dgy/6k2zTpl/myVaHzrNvTlQWdr4JELmxZ8Y6D+bZ+/UXgVkuZ780VPFNNYswyu
-         YLZUIW2K6RnBmt+lPbJ/iBOwYct7gofArJMkBV6kdSxYBOxKjzOeiSKKyE/81998SJhb
-         6eSg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSt/cjYD"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-490afc47455so3416615e9.2
+        for <linux-hardening@vger.kernel.org>; Thu, 04 Jun 2026 05:50:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780575936; x=1781180736; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=knW0aQIBp4ONXOIx4MTZpzmtpQjVdTKmzR82B1HLZdY=;
-        b=VNrKS+F5Q/MjcXlX0j/M0qvcolEc5C8XWATfjY3gaaCFWwg2vK2Evo3JIiAMObMPdY
-         5inFXiO8SfKHFAuzsDNFOwybZV2xkgMrXpJxBzRgKvXINWORM0AVzr3LNLKefIB1xR9M
-         OJDyeItVdF+aMiCL+PBnBbP+qS+Ao3Sc7SGxbFnLCN7HlYT1KYxSA3Cxdc3+2AAQwbG7
-         IFXA5OCQXcSr+mDSwVxdUirtrs+ESNJlBPb4G9ZWZcPWdB6hv9I5hJYIBfgORf0zzKjb
-         QU2tBJh+3O2/RFVFsJFDgFNowFbj7Dgn0ZL0eWjfHtZTiSyst1DLTalXaF/vlr8xDgyf
-         0B4A==
+        d=gmail.com; s=20251104; t=1780577439; x=1781182239; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yJUnjTUV8BBZlgR8+Wodn126IIs4cN704iHM3h+CNdk=;
+        b=hSt/cjYDrt0VUY0x8IFugiSHQesyJJpVAl1T18S5ylZRJj3qjV5UU9oRYfBFxBvX+3
+         Qog0d8Ft6nXAh5nPnUf9515yyNySi3ZJOE6AJx7/ko8KZH7DzP2FsqX6Dlu9EJ0mGx+Y
+         1qeQk/vB/0C0mtIXx2uorWG9q6Bfuc/1rkKzzVzC4I8RESGqfqUNYj1v/e5Zsqn2q0fB
+         B2iN9qcR00JS0iSAuRsk/kpn6Sp8C9aBP/HwLyzdhXePrB/bYYZAtT4JLpRza7C8KiEz
+         TdKPwfuxg1bimXLoBmibiksQegVNLLEVgAwXb97rOcYK7N2C9ycRlNacOhBtZG6DVQrw
+         n/9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780575936; x=1781180736;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1780577439; x=1781182239;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=knW0aQIBp4ONXOIx4MTZpzmtpQjVdTKmzR82B1HLZdY=;
-        b=raW+JnzTn830uscUrKVGbrO2h1JA7z0n53MtSeKmvNd8+dFXFRHHbEzw5GiJS0pSB4
-         whYbQWpnPRK4Dy1zMp1igCV3EvvSuH0jRsOYkxCChSOCKgw5XSV/TfAs1CG5DGU+M7jV
-         HZREuiMPZwZERSKU0nzuSap5srsOV4YwOrrh4hC+jeJ3RDlmcc6et3AABnjZY4CIpI44
-         uUBSrfUJ/b7ZUE6cR6tmtW2uPwaLo78/naTRiQH2FRSUKKmYy0Z/QEuKJL89tmiQIl1o
-         tIu6bzWdPGI6T/PpmHBZKNb6xilZ4M2VNRr6xVvrslX8tt7RHUw1DU8lSHjHbYJnT76r
-         9L6w==
-X-Forwarded-Encrypted: i=1; AFNElJ/pxc5FuFUCuxSOwtVphzED3+VZ4RK6Zv2L7IC1gSKE/beiI7KU9dwhlFqC0kiIFxUq5vaxRnYBTUje36ZeB4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvTXBlRMYQSLJn9l8iEnFjpD0FaH3yNdvJ78+YVF7gbFHlRwpG
-	Ept/wCXFFWkCwGXn78M+Q6uPaAo4vu+BlzvkK47VfoQ4+xR5EDSZhl9H+1O2dzOZilTuiEDdS1x
-	QKgOWLuHlO8+EuY++t0PigrdcmQL7w+itFxPg8EjP+Q==
-X-Gm-Gg: Acq92OFGaT/WFhkFlpMAGTsMrm6cwVVE0Hij9bZ5iKwsSzbxajq+Rlv3n0++hTYzNSO
-	IIW8q+IgbmxthgwzvR/yrMWBRuCMPqSZIG9vyJg2M+ILYAYHFAb3ybprK/IvDucHyniXmVbjCy9
-	lzjtK/9ryvd6t4s2zRCUcKiuIm26zjEiO5J1AnQlRyOewXU8ePuu4kjk+hPRoaLnsRa6SOvcqPF
-	dGRZpP/NExeeRlRr0aF8JL/d63Cgp17ognTr278qOFSKzedNekj40DrBRsaVS+8Qr6ZyoNSWMRc
-	83rUEvT3fVWiK1wSW9cNgrJHHz4jdrQaB55WxOpqA3/cKqHl
-X-Received: by 2002:aa7:c3d8:0:b0:68c:3439:945f with SMTP id
- 4fb4d7f45d1cf-68f0f3ef6c9mr1109192a12.12.1780575936462; Thu, 04 Jun 2026
- 05:25:36 -0700 (PDT)
+        bh=yJUnjTUV8BBZlgR8+Wodn126IIs4cN704iHM3h+CNdk=;
+        b=LX1w2wZ9HNjRBtnd3wAvU6s0vyiqNANT5SXeErA4BkMdU+xGzlCIX3wmQ1+ojSI/4g
+         dO/5hRS3gbp3zYyeEQSyZvmuNP2Sk8apRNOJVbJJX9F/mtHHtcfTviMRqEPdl0jlavuq
+         kaToREnAqh+6naxM58Om/i8amp7/EdD40ZT9DPCnD9TV3O14lPTfESVHdwxZogfjFC9D
+         lpkQfGnHuItZs4icD9Y01L+xBzL7rD5qbMkBZAbSW46SHQZVJRu4l2XCzetANlxco7QM
+         EAyddWWN3sv/3H0WUaIcHElz4gcLTV8LMoPRmqiwWgHSVDD3l1XXjFyMJFefNeT+6XpB
+         hp6Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8FP8neLpKQ7R8g2qFAqbJODLFlRcBXJuLwPPj343fsR62WmkJz7U3c886lbGKxitT+voFGZW6E9Ic+Yf7CFhY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyWRmEofKjR8tHrQQBrqn7197+BmjsdMxO24UESpyyno88ltMA
+	4OTiUBXhtHySM1fQdnKsH2jF2RK/BcfvWumNmA/vwCYsm5W0DwLqVf5aIbhsIS0=
+X-Gm-Gg: Acq92OHpkl+WDYi1nTLGg377g/7roAClJ/iILfJkzoNW10rJr+1h66klpkJGWqJ3j8j
+	8XNZPPBWloU88i1XCFbNrE8tT79AB62tRqjYa3L1L4xk7VI/nmiSh/qI6hHbIbM1JE2do+KSgym
+	LiCGZE9oXncvgkFkeLhD7LlpjLPDPVEOq6OWigiIGVvDqOzbvLv3M5fwSCVCLENYZL1Qme254f0
+	VLKcR8abmyffL+AiatcUWEIsJ0mMbVXkbaKcT3iv56jYRegF2TeedW6Z7tXLrbVYKxjIrSUdyVi
+	1uRAa6HE3IVzkHOrjZD1YFdlwqWQhQFKnFDjf07DD2GuAVMm/qwlKEZep+HOsy+1k4ePXk+2HWv
+	Ik+fDazmEknOVlSwRdI629/aSG8uvCkoYoXX5guYtgeh2A0AXk3tIUTbQ9M5+7LC1PnKvaU6Qul
+	UWIOh5FzKLSyFNv9Vjoynt0ayx93Yu9Dn7lZILWpnwBFbAortlP6xKxMAQFFHP3848rnINvS4Dz
+	rZJXK5g+7zrvhJ1XZMgGbur09Txq5uc1hz3bYqoKA==
+X-Received: by 2002:a05:600c:3487:b0:490:b6a4:9f43 with SMTP id 5b1f17b1804b1-490b6a4a040mr116278425e9.7.1780577439015;
+        Thu, 04 Jun 2026 05:50:39 -0700 (PDT)
+Received: from hp-ubuntu.. ([196.119.187.57])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3b59f0sm79430055e9.2.2026.06.04.05.50.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2026 05:50:38 -0700 (PDT)
+From: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+To: David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Kees Cook <kees@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mohammed EL Kadiri <med08elkadiri@gmail.com>
+Subject: [PATCH] keys: prevent slab cache merging for key_jar
+Date: Thu,  4 Jun 2026 13:50:34 +0100
+Message-ID: <20260604125034.13757-1-med08elkadiri@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260603-acpm-tmu-v8-0-0f1810a356e6@linaro.org> <20260603-acpm-tmu-v8-5-0f1810a356e6@linaro.org>
-In-Reply-To: <20260603-acpm-tmu-v8-5-0f1810a356e6@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Thu, 4 Jun 2026 13:25:23 +0100
-X-Gm-Features: AVHnY4J8PoxEVn9YHkIV62f2JcL-eq6_poQLFyumkGxMP4pQHp8fyUwqwpP8j1s
-Message-ID: <CADrjBPqXnv97XX2y-_YKi4=NCJw5CcaBd5b9ibQEHLZ5N6ZYkQ@mail.gmail.com>
-Subject: Re: [PATCH v8 5/5] arm64: defconfig: enable Exynos ACPM thermal support
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, jyescas@google.com, linux-kernel@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 3 Jun 2026 at 14:00, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->
-> Enable the Exynos ACPM thermal driver (CONFIG_EXYNOS_ACPM_THERMAL)
-> to allow temperature monitoring and thermal management on Samsung
-> Exynos SoCs (like Google GS101), used on pixel phones.
->
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> ---
+The key_jar slab cache holds struct key objects containing cryptographic
+keys, authentication tokens, and keyring linkage. This cache currently
+lacks merge prevention, allowing the SLUB allocator to merge it with
+other similarly-sized caches.
 
-Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+On a default Ubuntu 6.17.0-23-generic system, key_jar has 5 aliases,
+meaning 5 unrelated object types share its slab pages. struct key is
+224 bytes, placed in 256-byte slabs alongside biovec-16, maple_node,
+ip6_dst_cache, task_delay_info, and kmalloc-256 users.
 
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index d905a0777f93..3fe76a4c2633 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -793,6 +793,7 @@ CONFIG_BCM2711_THERMAL=m
->  CONFIG_BCM2835_THERMAL=m
->  CONFIG_BRCMSTB_THERMAL=m
->  CONFIG_EXYNOS_THERMAL=y
-> +CONFIG_EXYNOS_ACPM_THERMAL=m
->  CONFIG_TEGRA_SOCTHERM=m
->  CONFIG_TEGRA_BPMP_THERMAL=m
->  CONFIG_GENERIC_ADC_THERMAL=m
->
-> --
-> 2.54.0.1013.g208068f2d8-goog
->
+Cross-cache heap exploitation is a well-documented attack class
+(CVE-2022-29582, CVE-2022-2588, CVE-2021-22555) where slab cache
+merging enables type confusion between unrelated kernel objects. A
+use-after-free in any subsystem sharing slab pages with key_jar could
+allow an attacker to reclaim a freed slot as a struct key, or corrupt
+an existing key through a dangling pointer to a different type.
+
+Add SLAB_NO_MERGE to ensure key_jar receives dedicated slab pages,
+eliminating cross-cache attacks targeting struct key. The memory
+overhead is minimal: with 32 objects per slab page and typical key
+usage bounded by system keyring size, the cost of dedicated pages is
+negligible. There is zero performance impact on the allocation hot
+path.
+
+This follows the precedent set by skbuff_head_cache (net/core/skbuff.c)
+which uses SLAB_NO_MERGE for similar isolation requirements.
+
+Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+---
+ security/keys/key.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 3bbdde778631..592b65cf8539 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -1275,7 +1275,7 @@ void __init key_init(void)
+ {
+ 	/* allocate a slab in which we can store keys */
+ 	key_jar = kmem_cache_create("key_jar", sizeof(struct key),
+-			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC, NULL);
++			0, SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_NO_MERGE, NULL);
+ 
+ 	/* add the special key types */
+ 	list_add_tail(&key_type_keyring.link, &key_types_list);
+-- 
+2.43.0
+
