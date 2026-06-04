@@ -1,97 +1,107 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463BB47ECF4
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 13:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780581143; cv=none; b=FT2MMixih99e0eSHiTNLe2cV3B2y6Y3CFxoh4ZXn5n0aoyf5LNnjwK3n6dpbybpIAVsA9aR3jKk50nJRGx0CIFVa/61b4N13mpFGXB9tRxO9vsK3bopYQ66b9YchgZNizdZeRG20FXMMXbcM3OUxg4sQcCHlROQPPwSdx3YvcP4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780581143; c=relaxed/simple;
-	bh=ZaY5vFxG9aYZCmRrkh4G6IJ/GRp154Miry9zwaOYwzM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=dBUGiwzME1HoL7HPB1oSYSIHkXfZQnTUDeS2eWX+R0/DWGykC5P24bgf5rEEsHan4Ub/qVs0x41HiWVqzB0voqLgOukKJIz/6NEbfBVCuozPqV74Et5OTWzDGeTVT6w1S5SaYnJoPzSjTFl8AKnC32nOt+XiS5HHIdYrA6An2bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q9mp3cGz; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CF33B2FC2
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Jun 2026 16:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780590674; cv=pass; b=uaQQxhP75J/0pXdo6HVKnBc1hxP88d6761++fUT1Yh5bSkkQ77jV2VLWNTvsVEppj4CJ4CGThxHZA2vRpLQc/vlRNmbNuCg9RwOoKjizl3ZN78XP9kTp8X2dIZkyjV5RzOinpV9iyE2NlKGQzfc+9tAcs1AQtBzz24mVrJwHkh4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780590674; c=relaxed/simple;
+	bh=bYQz5WGjsDPNgjJtpHPvb9PJr7MMreR1r3TlgYR8Xgc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f5lq7jmVWjaFgBSy9RaLL+7rO6Ou1ubCfWxKoMEWk6OwuEHfy5cj9BFXmfKqK+9NVBHtUc4B1X/hVK5aUCZpMADxgSJYMo3Lqx2ML9Ww8uSPEGGRqzcCfgidj8VExq0/bm1nPsEW1yYvZvT+GPQbejNUz0v4yRJINhsibPRiDUU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LYizWBKw; arc=pass smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q9mp3cGz"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-45ef6565cfdso436539f8f.0
-        for <linux-hardening@vger.kernel.org>; Thu, 04 Jun 2026 06:52:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LYizWBKw"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-68c32f3c6d6so989676a12.3
+        for <linux-hardening@vger.kernel.org>; Thu, 04 Jun 2026 09:31:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780590671; cv=none;
+        d=google.com; s=arc-20240605;
+        b=MtP48/mY1zue+hlJncHQSt/cLazzluwjMLUtpXeqUBQn9lwKlLhHcT5NJqv/gCsW4X
+         GtkvL/tbBYKNweMoaFdtgO3hfzA/20c3gV4Mz62ww0GwUFAg7AfhDz2WTKcE4NUA5HCW
+         MAPEwjex5AygNxBfx8wOrkzeAF6MWokAZjbbbwc5NwHwQkTTFRD6+cActEOD/mts5AUQ
+         60UJcFd9gzd/2N+DGTfoqObrJINh7AVF7VXZ+lXx3wF2aHkSVJHAeEM0U4dWcXdKdZ12
+         jndMcCF+RpoDQTD1Hucuq3mtLF4rmBKHvo/KGdMQ8/UdTbcbYZrJv0WnQIR8RU7vUcEF
+         nBBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=bYQz5WGjsDPNgjJtpHPvb9PJr7MMreR1r3TlgYR8Xgc=;
+        fh=rXuuDq/fPV86IewdJ1hk03hn0WjMqv2vdZ0iWTvzcT4=;
+        b=IWBDyO8aA88D7HQzG2qUFyQxAD8SlnALF8lAbDdAvKXYLJSe+KIkb87aTsyET7Vv2b
+         aKJXRdagtxVWfJBF5tavBnx6Rt72tBbYjctAfKd33mZKEDshsUe23rzwejG6eZqwvBhR
+         byJjF0CgvbWXFy+F+YKvlVoLluUEVLyhDD/1IAOMfs88Ulz4q/8aPdNPuhtULnzO3BWA
+         470RK56CkpdGvrHBH56Gt3vMWGoMmahhZwpJ8PccSTikmtgOGkHgKFUDbvok/8pUdmNM
+         1rsYfDv5mk0wMqE4g0dogDJaPgcYTJPDw1luvTjUqki2fh3rsNu7XXYQIz0bfQqHCDGp
+         qQQQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780581141; x=1781185941; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tr8tJV7XonRe9aqon2KQXf6etaodi+ES5SfBfdU6e68=;
-        b=q9mp3cGzn3h2MhRK6XrbG8QMIeXE841LVChyHfXx/v/cDtiOssHcUex4ij4no+uRjD
-         vddVlYmG1cGOuUAPBPAAeEF7trsMjG71cu3014VC6TONpgcIj1tfJxm+IdvBzCIOTh05
-         M3n0i60J28z1Ii7Y3YtDSm5BTi5YGXjyJv6FzBUPCcPbLeOPPlZ5kWC1qstA4yjSUd7S
-         Ix+TjKzndwrHsTgVOoV4H3gD/CKW6WTGMfofWnUiiizqAwpyJwfybW5wO42UJWRMqLhZ
-         sb0s8gZAEPhxeUmOfnXRW+dYbPpJ8rbeKjc5knoo4qBC1CJRnHtGd4yJim9yf/MWcxhM
-         SyCA==
+        d=linaro.org; s=google; t=1780590671; x=1781195471; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bYQz5WGjsDPNgjJtpHPvb9PJr7MMreR1r3TlgYR8Xgc=;
+        b=LYizWBKwjoen9RbPlZkKqVX9HO4ohwNYKnGU+2Q+9RjwmmNdoOktu4fQ5uxRDDajqB
+         JqvjdzC53gLKc+JjhUzLqrcRERtB4d1WOkPgm/YeY18fypdqw8x4vfGp30qDadQFg+mz
+         3menY9qVtgPdGY3X5rl6F639jENH31rWDQQcJzfsLyqg8cD+EtYv7kKJliuvNEbdZqhS
+         aqdvEPZY13QDBE3KtMnin02ngDuXdHXs4Aj/y7mBKBgixCgVmSKkgsEs9z/tSMDYdAN5
+         PZspOYoGtFfvUL9v1bvQSMq9dXRTaon4BybuK0CmCpAfUFbHN5URmAZ835d3n0w9JhWf
+         3i6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780581141; x=1781185941;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tr8tJV7XonRe9aqon2KQXf6etaodi+ES5SfBfdU6e68=;
-        b=GP0nyGnjlwF3evjqlusGT6ZoudTNeb8sg4+60CAhMDDUio883QUCtqC4AJDDaNKbls
-         iYkabRDGKaCZKkAB7TrAcsp803EsXVKQFg3/bm+t4j4APhpZigQits4Ok0P4NbNjOl7i
-         B/aB22e/TjwiVQEyL8IkgnqWumaKYOXgJxQGwbTJMGaTyowL1/oaYsHP94+a5tSWknbF
-         b8ORi+e9Nyc6LWS1t35Lc4JayVk4tP8bo1Q3/IO0lC3NVr2aRz+0imikyrAvsnkytyso
-         2DzG/OVg6UDNYnPWBGRD2PAwjQHmOQvU+mV9vLfdxl0lq4YP6hDEGhH9Hsx80MH617qx
-         MOLA==
-X-Forwarded-Encrypted: i=1; AFNElJ9PchWqCp732Dbs52ZPqaX8SnUmed6WEOdgBGEYoK0E0sby6g4HCqAFfSW7TF4DZM/KSoYGQnuH88NMYfLgCmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcm2nlZtiSdxGpndZxThxgKTUBgP+mfCDX4+ROaLPrlw/2S8s5
-	Y+JjdjnBc+oQv5F23ULXaKwxsGSqC10kPGJ6CWoi70yajv/Vc7knlSVwlKojI3dvaxA=
-X-Gm-Gg: Acq92OF0wHQoW6rJ4f6lqZUgEN8MChnMYe8p261zr0g2rivvmlqQlD4WkLmdu0a/OLk
-	eJKSR+QeCZtDNNYcInyMEXLazx4yxsHCKHM4jyorpvU4J88QygniYGpVv2USMP2al7fNDPo91/q
-	Au41mZzb2dKikO44QcUBwKRYKUmIBxxF5pFR96Mh+BCrRTfEkMwJ5zgDBkMCBNBZBkijeSduMe0
-	12En5NiUT2s0wj56YfqFrasUpjLYVoqq2Iumb1ddWpMHd4/PN7pSKJczBpZj4IclleRw+2ekTz7
-	H3x1WxHFPzjRIrTavZPrhrYodO+E+NP+0mPD/2fR9Ofcg5nJCdHZLpqpNSfVRMOJ0lMYBkhkvFw
-	gd/88s8OdSMaV9Cw4lvJj5wXx2l7lTXuavhihrL2Dej0LQxMVTSLvK/x/UqBAJlWmUaWJ3h5zUo
-	+dox4L9ZS3jX0mB3rzK+GpHkzhBow80JpQ4bnVc3GA5um+CA8tTLlX6XCtKRxdfrGPr/kEPxgpz
-	jMzeJmRhpQKlZ1Saa1DyExX
-X-Received: by 2002:a05:600c:3596:b0:490:44eb:c1ea with SMTP id 5b1f17b1804b1-490b5edd71amr146656455e9.24.1780581140625;
-        Thu, 04 Jun 2026 06:52:20 -0700 (PDT)
-Received: from localhost ([94.4.195.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351ac0sm27268044f8f.27.2026.06.04.06.52.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2026 06:52:20 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1780590671; x=1781195471;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bYQz5WGjsDPNgjJtpHPvb9PJr7MMreR1r3TlgYR8Xgc=;
+        b=A9ql/iV7k8L9YGky1+kuhdjAvQ6G4tAw7L+22SpF0TV10yxExrT+tjjUwj6yB0wWX0
+         o96lF7U6d6XmWwGG7iZcwEO4kuu+ReSC6u0tjAi4sC8FvaJvmJilfLFiGN3AL+JN/lEV
+         /NekQVbiJEewpS4+A6vhxDmldbIq/i6860tnDswDPUy2PNwqj1cE6Wh7MG4Mbh7wEINW
+         rWszwLgBtEvBNG8bFfzxuI/dbYOxRL2pblRvd5I70U1HOzPtN27O+aWnD63F5ht/keea
+         kVrZizaZW6Er7UkkG8dSnGcodddIOQfJzW5MjEGCvTbY8+D7VJd3pK7+RV9wx4gZbOy6
+         vA6Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8LfMUK5J4Z8hhlKZa9F7iRRdeRrtle1j2mR80nc9hcrH9ovCzLDlwqxEzbnVD3NZQ6+KJPU2szasubX8nZvsA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxcw7xA8oBQkLcujOJ4n8MRm+QE9bfQczYUj4bZdFIe78UlUbuU
+	g+iFEOOVeMykoLgtIYEnwCF35MIq7P4GlnLZWiKQqFI2KBqs+XJx+Lw9JjrkJ+Xdug7o0BE8dpj
+	/PP3omv6mai4STbp6Wswu0/L9WX3QzxXDBeGSh3mjrA==
+X-Gm-Gg: Acq92OHo1i5Uvs8IlXvl4b8mEtDSMgKmufHtUwP7ZqJ65ixrfkNr7jsWt2kI4+vonOE
+	VVuMuqqzf5PbpBdk60lXJVtofbRp4+UeLIuCdCD7EEmK79AjQsnI5I43fq5mCfr+dPzbI5Xa3wQ
+	RlggzSfqQMFG3gOduwmu8/N4YVpsRDBcgWv2XbGlkg0E7eBgfCccZTPy8KxNjP9yCqdshQI/8QC
+	TyvmLfwv6AzRd3ogcvDMRqVUMndcMZYJk34r2aUegtb/ZSwdUS3gLZK2C3CpmQ+L6JGP7Z1oklA
+	F8Nis4nf4Z+J7YAHJ5uoevWPFG8sTE2fwo+7gC0O5dgh0odX
+X-Received: by 2002:a05:6402:3215:b0:68b:539c:d269 with SMTP id
+ 4fb4d7f45d1cf-68e710ebc51mr4808114a12.12.1780590670971; Thu, 04 Jun 2026
+ 09:31:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 04 Jun 2026 14:52:19 +0100
-Message-Id: <DJ0BC2X0G04D.18CIJDSEP0PVP@linaro.org>
-Cc: <jyescas@google.com>, <linux-kernel@vger.kernel.org>,
- <linux-samsung-soc@vger.kernel.org>, <linux-pm@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: Re: [PATCH v8 2/5] thermal: samsung: Add Exynos ACPM TMU driver
- GS101
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Daniel Lezcano" <daniel.lezcano@kernel.org>, "Zhang
- Rui" <rui.zhang@intel.com>, "Lukasz Luba" <lukasz.luba@arm.com>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Bartlomiej Zolnierkiewicz"
- <bzolnier@gmail.com>, "Krzysztof Kozlowski" <krzk@kernel.org>, "Kees Cook"
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, "Peter
- Griffin" <peter.griffin@linaro.org>, =?utf-8?q?Andr=C3=A9_Draszik?=
- <andre.draszik@linaro.org>, "Alim Akhtar" <alim.akhtar@samsung.com>
-X-Mailer: aerc 0.21.0
-References: <20260603-acpm-tmu-v8-0-0f1810a356e6@linaro.org>
- <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
+MIME-Version: 1.0
+References: <20260603-acpm-tmu-v8-0-0f1810a356e6@linaro.org> <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
 In-Reply-To: <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Thu, 4 Jun 2026 17:30:59 +0100
+X-Gm-Features: AVHnY4Jq-Cm1FpMQ9NjMzo61aJ4t188OLXQIR-HELOPptilenf70Fcb7QJeV21c
+Message-ID: <CADrjBPoHXi5hp9T=z97k4LKNKQUEnJdN4sSz5g+NgKAGC6jguQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/5] thermal: samsung: Add Exynos ACPM TMU driver GS101
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, jyescas@google.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed Jun 3, 2026 at 2:00 PM BST, Tudor Ambarus wrote:
+On Wed, 3 Jun 2026 at 14:00, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+>
 > Add driver for the Thermal Management Unit (TMU) managed via the Alive
 > Clock and Power Manager (ACPM), found on Samsung Exynos SoCs such as
 > the Google GS101.
@@ -106,17 +116,6 @@ On Wed Jun 3, 2026 at 2:00 PM BST, Tudor Ambarus wrote:
 >
 > Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-
-Reviewed-by: Alexey Klimov <alexey.klimov@linaro.org>
-
 > ---
->  drivers/thermal/samsung/Kconfig    |  19 ++
->  drivers/thermal/samsung/Makefile   |   2 +
->  drivers/thermal/samsung/acpm-tmu.c | 651 +++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 672 insertions(+)
 
-[...]
-
-Best regards,
-Alexey
+Acked-by: Peter Griffin <peter.griffin@linaro.org>
