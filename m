@@ -1,71 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409B2253F13;
-	Fri,  5 Jun 2026 01:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA648F7D;
+	Fri,  5 Jun 2026 04:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780624350; cv=none; b=AoYdADyexM1rmX0VwO0HZUMwLlxGdevOA7nQq1278vxdHMXXIITGB1dMM2Claq/R6VJH7BoOloitAMiSdSA5yXpWK8Y4/Cj5we1vFSEMa/ew7FleS+QcE+tkUBU07u8NauM1DAyhGPOx2XY2kj88l5L9H+OPOzx8usyx0oKuPE4=
+	t=1780634482; cv=none; b=tMZvBSRiGZ2ku/kJxXTCe4MKJhfweeLigWDWUnrNVsr/BXgJdM0bFC7mfctzw6McNk6XYGfZbFPx/j3zLA1N6Pcccw34u9XTP6pLdEvzDO642aNNOuQV04HPykLEwf8PP4nwV4A8Uwzcd91ejl1ADLHKmKcaRdhD4PZs0hi3fU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780624350; c=relaxed/simple;
-	bh=XdNGHLzzmLPQLk5Np/UxW7RO8EfDraHy3LUeRDy4IFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XK0C6GADWLhF5NqCuC37OAflOE02qu54Lt5K3qmueu/jJFvxtcLRKKYBP2iRD+8RNa9Puv+ywobxDMAPnLaygIcNG6hG+XTVoPJSN/rc7JtaxIs/I5p2SitV1YIJWHmlmat2DtFqT2JEj86uc1cL7R6TitMvqGJN7/knvdJ7rIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RMI9oC9W; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780634482; c=relaxed/simple;
+	bh=1AFrwY/BSimsB97s7u0GmuZBm0KhXdAB1m6+EDusagc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GFW0c0wvLIjJAHLJ38XbIe6Mw/R3NpYhZ4OJxHURnuXvotV+9kSB/z90LqxWL5YtOCpXxNWgsN8WHf5wxgrAWGEUQmx/xvsJ/TavV4CeBMY4K4FU8r4QEBjAVaP9ZscbcrfThdSRteX4mpcUpqsqlo+yC+kDHnQx5yKw5cNqEyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EGuA7Jjd; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RMI9oC9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB1D1F00893;
-	Fri,  5 Jun 2026 01:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780624344;
-	bh=zYZKQzJ7zPWE8IzZN6QipGkw8psLqfyPxmzoQEcOgD0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=RMI9oC9WkY4Vd3JhcbLzodR4vkSfN1AOUPQ1Y1xPvQEhB9E0f7J2IhtI+dPwwxfUo
-	 HPM1Mb4t0fCtCW6FzTJJ0Fn9JMD7zInl5p12tWQSu90hxDg2/6xBaULX42qVRpxruP
-	 WyDyV8+2PT3n1U7TdbjJzHZ034mzIdT52x7lF6QG7N/JnnujDaETGwgfZTVNu87fEL
-	 h9Wm0AYmBmBAws+3CIsW8yaPKsvrqpShR1J4e9GU6uKV9VlLCVwGqWI7VNFyqPW48L
-	 3mMt4S+taTAlIfip+xmT1Me+n/Pw8WGthEsx+RnzWa5yB00vwoamZCsMM9QvhqeX9B
-	 sJlHBeCQg34Zg==
-Date: Thu, 4 Jun 2026 18:52:22 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Hao Li
- <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, David Rientjes
- <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, Simon
- Horman <horms@kernel.org>, Jason Xing <kerneljasonxing@gmail.com>, Kuniyuki
- Iwashima <kuniyu@google.com>
-Subject: Re: [PATCH 2/2] net: skb: isolate skb data area allocations into a
- separate bucket
-Message-ID: <20260604185222.794ea329@kernel.org>
-In-Reply-To: <20260602183122.747759-3-pfalcato@suse.de>
-References: <20260602183122.747759-1-pfalcato@suse.de>
-	<20260602183122.747759-3-pfalcato@suse.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EGuA7Jjd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780634478; x=1812170478;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1AFrwY/BSimsB97s7u0GmuZBm0KhXdAB1m6+EDusagc=;
+  b=EGuA7JjdaRXDFQiUvf00a9ka+ICCcd+rxQ4K83bI2kgUc2G2kcUJqarZ
+   VcU6E1sNsWJ5cb3fiEU0CrPqdIqlA5Mqw1Bbh991q1fYUTFGqZBbQVJmE
+   O7oAAqBouLs986Fy27SQdbkMvPDHDIJnQJgKFR5xEzZZRIAxDJUBNKlMH
+   JkGnTSaGexLa1nXpCPwu5wn15rka9PzONBj+uiUk/cARcGI8nkLrNbExw
+   JXGA4SQw7wZBanZ97uhxc7CU2feSvuKIx+QaUg2KL4+GkOJHflb0paS/w
+   iloOSDS0MkEWvDR1s2gG9KzEEAJXjZ13TgsnOGU+OIYQRV/5fQR4GKo6R
+   A==;
+X-CSE-ConnectionGUID: gYn0dpc/RiCJZXrXcN36fA==
+X-CSE-MsgGUID: hvS7+3fZR+edqwY9xywmrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="81447936"
+X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
+   d="scan'208";a="81447936"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 21:41:17 -0700
+X-CSE-ConnectionGUID: bxWrAD5MTmmC4kpDWxNKSA==
+X-CSE-MsgGUID: kXdC4nTnR1+aBAI0D7XcZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
+   d="scan'208";a="240279339"
+Received: from ettammin-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.178])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 21:41:13 -0700
+Date: Fri, 5 Jun 2026 07:41:11 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Arnd Bergmann <arnd@arndb.de>, Jiri Bohac <jbohac@suse.cz>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	linux-hardening@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/setup: replace strlcat() with snprintf() in
+ setup_arch()
+Message-ID: <aiJTZ9P7_bvRWlqw@ashevche-desk.local>
+References: <20260604131752.1327556-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260604131752.1327556-3-thorsten.blum@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue,  2 Jun 2026 19:31:22 +0100 Pedro Falcato wrote:
-> SKB data area allocations (as done from alloc_skb()) use kmalloc().
-> These allocations can be variably sized and their contents can be more
-> or less controlled from userspace, which makes them useful for attackers
-> that want to overwrite a use-after-free'd object from the same kmalloc slab
-> (which often just requires the sizes to roughly match into the same kmalloc
-> bucket). [0] is an easy example of an exploit that uses netlink skb
-> allocation to target another similarly-sized accidentally freed object.
+On Thu, Jun 04, 2026 at 03:17:53PM +0200, Thorsten Blum wrote:
+> In preparation to remove strlcat() from the kernel [1], replace two
+> strlcat() calls with one snprintf() call in setup_arch().
 > 
-> While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these are
-> probabilistic. Use the existing kmem buckets API to further isolate these
-> allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=y.
+> Also drop the explicit size argument of strscpy() to further simplify
+> the code since strscpy() can determine the size automatically when the
+> destination buffer has a fixed length.
 
-No idea on the merits but from networking point of view:
+> [1] https://github.com/KSPP/linux/issues/370
 
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+Make it Link tag?
+
+...
+
+>  	strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+
+This also has third argument fixed. Don't you want to change that?
+
+>  #else
+>  	if (builtin_cmdline[0]) {
+> +		size_t len = strnlen(builtin_cmdline, COMMAND_LINE_SIZE);
+> +
+>  		/* append boot loader cmdline to builtin */
+> -		strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
+> -		strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+> +		snprintf(builtin_cmdline + len, COMMAND_LINE_SIZE - len, " %s",
+> +			 boot_command_line);
+
+Hmm... Wouldn't GCC complain on this? (Build with `make W=1`.)
+
+>  		strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+
+And this has also third argument.
+
+>  	}
+>  #endif
+>  	builtin_cmdline_added = true;
+>  #endif
+>  
+> -	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+> +	strscpy(command_line, boot_command_line);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
