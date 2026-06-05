@@ -1,141 +1,197 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039C62B9BA;
-	Fri,  5 Jun 2026 12:16:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B6740E8E2;
+	Fri,  5 Jun 2026 14:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780661765; cv=none; b=g3yfzxKpMnZY21WHrLk3/1/O70/oSEF1JQ3HDr8244hQP5rRR5UG25E1xzqszageJd4WRq3oX7iDfHVoV+COh6+6/JKH8F880EOf2iqO0vaNR5MMoBvYC+lO1+FrnZj7bFO/Lru8TUFEctibmcOhNvG6xGLTqbpwqI2cbrQLDvY=
+	t=1780668604; cv=none; b=GxV0VsRmwU8+Q67F91N77LrmeHgNFHfPHgVLDS9ZE1LStnW27+hhr36NIEhAVMI9h0ffWvrx31A31p7A2n3uQPaV9erR8A6ABj+XDgDHt1wkCALUAfw0BI9wVpDYRfAacaPB+Q3EwC028Glj6iegqC7idMd8Lg00jlrz4kODVoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780661765; c=relaxed/simple;
-	bh=M1RLUPjQMkUazGK5E9j4rCdECXoPVJZ/G4Z0NlllhDM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D68y2l5FxOmTOOt72J+CLkV/7CM8iz+jEvOaEm0B1vJe1gyQJiLDcmXJC5cHnWbaRWMPUiNDca6J8lkk9jvbSggheysmxSfExr3K6hyJLnhVX8cKaZt5ND5EWuGphqCJfgvJfzfI12sR6XjkOHsZxABDOEH1ZCM7Imu7LdVOitE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBTzWS6l; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780668604; c=relaxed/simple;
+	bh=xB1Mo0ZL1kEYBMQPeShV1xsBEhsJmlbe5Pi6nQWqLvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I5ohYcwrdEr00c2CU/q02sYu2+s2trJcSuOndLyXraahuLQ8hyMuqsK60lMaYac/ntXJsI2cyjV3kBQyV4f8SchXx0hJnhruEnrPIUViUr2tdWbXbSJvPc3ZQhwJ67RUkhPDmq4evOLrE7pntbNE4l07/20X4QokKELP9jyZc+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7CiFcEB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBTzWS6l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AFF81F00893;
-	Fri,  5 Jun 2026 12:16:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7CiFcEB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A5D21F00893;
+	Fri,  5 Jun 2026 14:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780661763;
-	bh=beptNeEzJHYQ+94+I0PQKTOh5JgCPrdUPqAq2RLiN3U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=TBTzWS6lRNEwNkUDoBT0wNjbMt5k+ani9mSxO7Ld9Djhx/+L5Cl5oShp9gA69YFWq
-	 JN8qr7qbtXCQeGPG8paeMz7NQ4wsiFgMjqcuXY5wW4fgvXCO4237v3aUXQRRHxVcAU
-	 AwBUpeFyCHlWJJs1/RYRCVK1AaSOz0O7ymqLEDBYW0oom309b3UCNjdCJLHZ/i+biP
-	 egVR7v4mXRTTKxXq/uvndoxK7FaUnqm+Z4mAAUzA1TAnD5QSTVdV1T6ymKqcwIj7kz
-	 fhFIWe5/x6U3kaQ4i5+u10Eevk3Wg/hIuQM8AGskZhKATFSqeIlYgvimchxzrQ/eWs
-	 f/mM/FESXe1XA==
-Message-ID: <19fb9d38-fe02-4653-bbad-58806e55ca84@kernel.org>
-Date: Fri, 5 Jun 2026 14:16:00 +0200
+	s=k20260515; t=1780668602;
+	bh=Xv79vCkfi3tsuNiev9znO8IdUX1iN7cx6A7mjZ930sI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=E7CiFcEB2KsHHpwXRUL2YxFR6HNto+hVjb6eODvSQQUh6Qey0Fd+fV0xM52TEciwy
+	 ocf4RGW/tmnTQjVmuBuRWMpdnzlALgWvAa9yxHVZgcTSIuKPkzSZb1AlHXHV/Xxq5/
+	 vpvc/bOG3jbNNtnIyIbRFuz0uop0EM+NkbzFQWjkLUo19oioaacbU9xsRvFt51U+SG
+	 9Q/2bKmSapdi8nYT6RxgKp88/kvwbsDeW7aQNGOJCt4QiRWp/LS2s3FuXbuMKxNctI
+	 xNNC2Sg3eo20m3Z6ipcCs27JgZRj7uKGGSI4elZc7zVpMaU3cQUfp1wTjoQ1OISYox
+	 24dnf1TmunpwA==
+Date: Fri, 5 Jun 2026 15:09:51 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>,
+ rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
+ linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Michael
+ Hennerich <Michael.Hennerich@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH 10/12] iio: dac: ad5686: add triggered buffer support
+Message-ID: <20260605150951.1c793b76@jic23-huawei>
+In-Reply-To: <i3wvatdosla3cszhhtizgoetcbknl56be3mpipzdxqx2jzvch2@l4hzeer5zoa7>
+References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
+	<20260602-ad5686-new-features-v1-10-691e01883d27@analog.com>
+	<20260603134151.7cf1654b@jic23-huawei>
+	<i3wvatdosla3cszhhtizgoetcbknl56be3mpipzdxqx2jzvch2@l4hzeer5zoa7>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] keys: prevent slab cache merging for key_jar
-Content-Language: en-US
-To: Mohammed EL Kadiri <med08elkadiri@gmail.com>,
- David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- "Serge E . Hallyn" <serge@hallyn.com>, Kees Cook <kees@kernel.org>,
- Vlastimil Babka <vbabka@suse.cz>, keyrings@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260604125034.13757-1-med08elkadiri@gmail.com>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <20260604125034.13757-1-med08elkadiri@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 6/4/26 14:50, Mohammed EL Kadiri wrote:
-> The key_jar slab cache holds struct key objects containing cryptographic
-> keys, authentication tokens, and keyring linkage. This cache currently
-> lacks merge prevention, allowing the SLUB allocator to merge it with
-> other similarly-sized caches.
-> 
-> On a default Ubuntu 6.17.0-23-generic system, key_jar has 5 aliases,
-> meaning 5 unrelated object types share its slab pages. struct key is
-> 224 bytes, placed in 256-byte slabs alongside biovec-16, maple_node,
-> ip6_dst_cache, task_delay_info, and kmalloc-256 users.
-> 
-> Cross-cache heap exploitation is a well-documented attack class
-> (CVE-2022-29582, CVE-2022-2588, CVE-2021-22555) where slab cache
-> merging enables type confusion between unrelated kernel objects. A
-> use-after-free in any subsystem sharing slab pages with key_jar could
-> allow an attacker to reclaim a freed slot as a struct key, or corrupt
-> an existing key through a dangling pointer to a different type.
-> 
-> Add SLAB_NO_MERGE to ensure key_jar receives dedicated slab pages,
-> eliminating cross-cache attacks targeting struct key. The memory
-> overhead is minimal: with 32 objects per slab page and typical key
-> usage bounded by system keyring size, the cost of dedicated pages is
-> negligible. There is zero performance impact on the allocation hot
-> path.
-> 
-> This follows the precedent set by skbuff_head_cache (net/core/skbuff.c)
-> which uses SLAB_NO_MERGE for similar isolation requirements.
-> 
-> Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+On Fri, 5 Jun 2026 12:34:31 +0100
+Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
 
-Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-
-> ---
->  security/keys/key.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 26/06/03 01:41PM, Jonathan Cameron wrote:
+> > On Tue, 02 Jun 2026 17:33:57 +0100
+> > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+> >   
+> > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > > 
+> > > Implement trigger handler by leveraging the LDAC gpio to update all DAC
+> > > channels at once when it is available. Also, the multiple channel writes
+> > > can be flushed at once with the sync() operation.  
 > 
-> diff --git a/security/keys/key.c b/security/keys/key.c
-> index 3bbdde778631..592b65cf8539 100644
-> --- a/security/keys/key.c
-> +++ b/security/keys/key.c
-> @@ -1275,7 +1275,7 @@ void __init key_init(void)
->  {
->  	/* allocate a slab in which we can store keys */
->  	key_jar = kmem_cache_create("key_jar", sizeof(struct key),
-> -			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC, NULL);
-> +			0, SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_NO_MERGE, NULL);
->  
->  	/* add the special key types */
->  	list_add_tail(&key_type_keyring.link, &key_types_list);
+> ...
+> 
+> > > +static irqreturn_t ad5686_trigger_handler(int irq, void *p)
+> > > +{
+> > > +	struct iio_poll_func *pf = p;
+> > > +	struct iio_dev *indio_dev = pf->indio_dev;
+> > > +	struct iio_buffer *buffer = indio_dev->buffer;
+> > > +	struct ad5686_state *st = iio_priv(indio_dev);
+> > > +	u16 val[AD5686_MAX_CHANNELS] = { };
+> > > +	int ret, ch, i = 0;
+> > > +	bool async_update;
+> > > +	u8 cmd;
+> > > +
+> > > +	ret = iio_pop_from_buffer(buffer, val);
+> > > +	if (ret)
+> > > +		goto out;
+> > > +
+> > > +	mutex_lock(&st->lock);
+> > > +
+> > > +	async_update = st->ldac_gpio && bitmap_weight(indio_dev->active_scan_mask,
+> > > +						      iio_get_masklength(indio_dev)) > 1;
+> > > +	if (async_update) {
+> > > +		/* use ldac to update all channels simultaneously */
+> > > +		cmd = AD5686_CMD_WRITE_INPUT_N;
+> > > +		gpiod_set_value_cansleep(st->ldac_gpio, 0);
+> > > +	} else {
+> > > +		cmd = AD5686_CMD_WRITE_INPUT_N_UPDATE_N;
+> > > +	}
+> > > +
+> > > +	iio_for_each_active_channel(indio_dev, ch) {
+> > > +		ret = st->ops->write(st, cmd, indio_dev->channels[ch].address, val[i++]);
+> > > +		if (ret)
+> > > +			goto cleanup;
+> > > +	}
+> > > +
+> > > +	if (st->ops->sync)
+> > > +		ret = st->ops->sync(st); /* flush all pending transfers */
+> > > +
+> > > +cleanup:  
+> 
+> It turns out that this label is not really needed. When sync() op is available
+> it must be called regardless of write failure, so the bus data can reset its
+> state. Then moving "cleanup" up would just make it useless.
+> 
+> > > +	if (async_update)  
+> > 
+> > Error paths are always fun.  Do we care about setting ldac_gpio to 1 if
+> > we failed to write the channel values?  That will set any that did successfully
+> > update, but not all of them.  Note I'm not sure on the right answer for this.
+> > There may not be one!  
+> 
+> I would not see a problem with that, as there is no much we can do with errors
+> in a interrupt handler.
+> 
+> >   
+> > > +		gpiod_set_value_cansleep(st->ldac_gpio, 1);
+> > > +
+> > > +	mutex_unlock(&st->lock);
+> > > +out:
+> > > +	iio_trigger_notify_done(indio_dev->trig);  
+> > We get this pattern so often (though not always).  Feels like maybe
+> > we should put some effort into a generic opt in solution for this.
+> > 
+> > A job for another day but options that come to mind.
+> > 1) (hideous) a flag
+> > 2) Maybe an alternative callback. thread_always_complete or
+> >    something like that.  Pain to wire through all the calls though
+> >    and injecting the necessary wrapper isn't great either.
+> >    Implementation wise would be a case of popping in a wrapper function
+> >    in iio_trigger_attach_poll() call to request_threaded_irq().
+> > 3) Maybe a helper macro?  Bit ugly as we'd need one to generate
+> >    the wrapper function and another to use the same name for
+> >    the registration function.
+> > 
+> > Hmm. Those are all ugly (maybe 2 is ok ish).  Suggestions welcome!  
+> 
+> using a cleanup.h? with something like:
+> 
+> 	static inline void iio_trigger_always_done(struct iio_poll_func **ppf)
+> 	{
+> 		iio_trigger_notify_done((*ppf)->indio_dev->trig);
+> 	}
+> 
+> 	static irqreturn_t ad5686_trigger_handler(int irq, void *p)
+> 	{
+> 		struct iio_poll_func *pf __cleanup(iio_trigger_always_done) = p;
+
+That's not a nice pattern given the lack of any local constructing. The ownership
+transfer isn't obvious as both p and pf are really same type (it's slightly
+hidden by the void * nature of p) - ideally we'd want p to be unusable after
+that transfer.  Could do something hideous like 
+		struct iio_poll_func *pf __cleanup(iio_trigger_always_done) =
+			__get_and_null(p, NULL);
+where p is set NULL so it becomes dead but that is ugly and not what that
+is for so I doubt it would be popular and so we'd end up with yet another
+weird macro.  There is some precedence with take_fd() but the use of that
+is complex and I think it is only used to grab ownership from a local CLASS()
+defined cleanup.
+
+So it would work, but I've actively argued against this style elsewhere
+in the kernel so don't really want it in IIO either!
+
+Key disadvantage is that it is yet another weird bit of cleanup.h stuff for
+people to learn and we have enough of those already.
+
+So indeed an option but I'm not really liking it.
+
+Jonathan
+
+> 		/* ... */
+> 
+> 		ret = iio_pop_from_buffer(buffer, val);
+> 		if (ret)
+> 			return IRQ_HANDLED;
+> 
+> 		/* ... */
+> 
+> 		return IRQ_HANDLED;
+> 	}
+> 
+> >   
+> > > +
+> > > +	return IRQ_HANDLED;
+> > > +}  
+> 
 
