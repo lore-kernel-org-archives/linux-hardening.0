@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC05219D07A;
-	Fri,  5 Jun 2026 11:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039C62B9BA;
+	Fri,  5 Jun 2026 12:16:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780660765; cv=none; b=QKLwNoKkAlwv5dKM+IGF37SBr0ielQZA8+Y++rMDpsKWwGeX1FtHtyxFZj2dkO+/2I1x6WoXv7WCcpgh8Bxy0CL8IYGUrRMGbmi5uhyBUucrEDII8lCreJmhF6P34hDadVZHEBO3vtQ2Y0ofUD4X67b+itvO/SWLQORbcuNIlV0=
+	t=1780661765; cv=none; b=g3yfzxKpMnZY21WHrLk3/1/O70/oSEF1JQ3HDr8244hQP5rRR5UG25E1xzqszageJd4WRq3oX7iDfHVoV+COh6+6/JKH8F880EOf2iqO0vaNR5MMoBvYC+lO1+FrnZj7bFO/Lru8TUFEctibmcOhNvG6xGLTqbpwqI2cbrQLDvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780660765; c=relaxed/simple;
-	bh=DM/bL3+ANjMSxQ6LXVlL3mcKvklgRPJSGe5tGajzUbc=;
+	s=arc-20240116; t=1780661765; c=relaxed/simple;
+	bh=M1RLUPjQMkUazGK5E9j4rCdECXoPVJZ/G4Z0NlllhDM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pjo2v3QD29CD0WM3q0GTr99aKHjGO8akKo4wK2HHMJ/PtDwdEr7tD0BrR0lZbEgyBDqt4zE7TK+M6LTYmtEL/yU9l/wc0dY4fqQ5AV3Q/wHnNP6XKEZAb526zrZz6ILOvuElu+cLxj35IHjHruloyiShrOxmHo+lFbBHFK8ReGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zl2REIDg; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=D68y2l5FxOmTOOt72J+CLkV/7CM8iz+jEvOaEm0B1vJe1gyQJiLDcmXJC5cHnWbaRWMPUiNDca6J8lkk9jvbSggheysmxSfExr3K6hyJLnhVX8cKaZt5ND5EWuGphqCJfgvJfzfI12sR6XjkOHsZxABDOEH1ZCM7Imu7LdVOitE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBTzWS6l; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zl2REIDg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 221391F00893;
-	Fri,  5 Jun 2026 11:59:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBTzWS6l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AFF81F00893;
+	Fri,  5 Jun 2026 12:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780660764;
-	bh=wiOY95bbms3ph6ntuxqrCRd7im8fwXbJxnhcBs8rZm0=;
+	s=k20260515; t=1780661763;
+	bh=beptNeEzJHYQ+94+I0PQKTOh5JgCPrdUPqAq2RLiN3U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Zl2REIDgG5ZqGgghwyl7YWWUvU1WXXbSFjB0mqOW1AxnfPowAFppenxyPu5QZ8WQC
-	 YLvFTcIaZ69LfBP38RP3NJsmOFKSwlJRwfO0axy8wEOcHPdtC1r1y/bZxAzR5wOD9n
-	 FHwz+UDCB22ler3P5uVPVZ4UYD6QJ2XKQh6RazBWNDqsaKryrgSPXnB8qD5AYUksJQ
-	 PCkklFXpZIQd6RpTwocpvtgO7gpYJQPf26guJ/eqc6/kj0zyHONXlKOsG6GwOEwqKk
-	 A8IcgxbQKDfxJ8lL3KuYJAgI3mnbNT84sX6g6AW4CGpdvZD6lSvgiG6rHX7aVED1bd
-	 9b9YM7gR1ifVQ==
-Message-ID: <63ecf4a2-13a2-42d2-8990-e53e50ae9a65@kernel.org>
-Date: Fri, 5 Jun 2026 13:59:19 +0200
+	b=TBTzWS6lRNEwNkUDoBT0wNjbMt5k+ani9mSxO7Ld9Djhx/+L5Cl5oShp9gA69YFWq
+	 JN8qr7qbtXCQeGPG8paeMz7NQ4wsiFgMjqcuXY5wW4fgvXCO4237v3aUXQRRHxVcAU
+	 AwBUpeFyCHlWJJs1/RYRCVK1AaSOz0O7ymqLEDBYW0oom309b3UCNjdCJLHZ/i+biP
+	 egVR7v4mXRTTKxXq/uvndoxK7FaUnqm+Z4mAAUzA1TAnD5QSTVdV1T6ymKqcwIj7kz
+	 fhFIWe5/x6U3kaQ4i5+u10Eevk3Wg/hIuQM8AGskZhKATFSqeIlYgvimchxzrQ/eWs
+	 f/mM/FESXe1XA==
+Message-ID: <19fb9d38-fe02-4653-bbad-58806e55ca84@kernel.org>
+Date: Fri, 5 Jun 2026 14:16:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,21 +35,16 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm/slab: add a node-track-caller variant for kmem
- buckets allocation
+Subject: Re: [PATCH] keys: prevent slab cache merging for key_jar
 Content-Language: en-US
-To: Pedro Falcato <pfalcato@suse.de>, Harry Yoo <harry@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
- David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Simon Horman <horms@kernel.org>,
- Jason Xing <kerneljasonxing@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>
-References: <20260602183122.747759-1-pfalcato@suse.de>
- <20260602183122.747759-2-pfalcato@suse.de>
+To: Mohammed EL Kadiri <med08elkadiri@gmail.com>,
+ David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E . Hallyn" <serge@hallyn.com>, Kees Cook <kees@kernel.org>,
+ Vlastimil Babka <vbabka@suse.cz>, keyrings@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260604125034.13757-1-med08elkadiri@gmail.com>
 From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
 Autocrypt: addr=vbabka@kernel.org; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -90,40 +85,57 @@ Autocrypt: addr=vbabka@kernel.org; keydata=
  NcaZ+c6J4H+nEJGi2SkHAUJz5oBzuThvPudLvPA/SK8sKoM01IRxSihev/S/5WLazXB1PGem
  OCbvzC1IjWJJraxiDJ5IygokapUa2RP7+WBR22skQ3SSl6G107QgWKSyTOGWEaRmV53vxQLV
  jXuCmzSSasTL60zq5yGrT4/DYQVSNEUiUbG4pYekxJujNeEDkUlky0Y=
-In-Reply-To: <20260602183122.747759-2-pfalcato@suse.de>
+In-Reply-To: <20260604125034.13757-1-med08elkadiri@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/2/26 20:31, Pedro Falcato wrote:
-> This is required by users that want to use kmem buckets, but still
-> desire specifying the NUMA node.
+On 6/4/26 14:50, Mohammed EL Kadiri wrote:
+> The key_jar slab cache holds struct key objects containing cryptographic
+> keys, authentication tokens, and keyring linkage. This cache currently
+> lacks merge prevention, allowing the SLUB allocator to merge it with
+> other similarly-sized caches.
 > 
-> Signed-off-by: Pedro Falcato <pfalcato@suse.de>
+> On a default Ubuntu 6.17.0-23-generic system, key_jar has 5 aliases,
+> meaning 5 unrelated object types share its slab pages. struct key is
+> 224 bytes, placed in 256-byte slabs alongside biovec-16, maple_node,
+> ip6_dst_cache, task_delay_info, and kmalloc-256 users.
+> 
+> Cross-cache heap exploitation is a well-documented attack class
+> (CVE-2022-29582, CVE-2022-2588, CVE-2021-22555) where slab cache
+> merging enables type confusion between unrelated kernel objects. A
+> use-after-free in any subsystem sharing slab pages with key_jar could
+> allow an attacker to reclaim a freed slot as a struct key, or corrupt
+> an existing key through a dangling pointer to a different type.
+> 
+> Add SLAB_NO_MERGE to ensure key_jar receives dedicated slab pages,
+> eliminating cross-cache attacks targeting struct key. The memory
+> overhead is minimal: with 32 objects per slab page and typical key
+> usage bounded by system keyring size, the cost of dedicated pages is
+> negligible. There is zero performance impact on the allocation hot
+> path.
+> 
+> This follows the precedent set by skbuff_head_cache (net/core/skbuff.c)
+> which uses SLAB_NO_MERGE for similar isolation requirements.
+> 
+> Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
 
 Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-As the main change is in net code, probably should go in the net tree?
-
 > ---
->  include/linux/slab.h | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  security/keys/key.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 7b46fa499b08..685a87d8f0c5 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -1153,8 +1153,11 @@ void *kmalloc_nolock(size_t size, gfp_t gfp_flags, int node);
->  #define kmem_buckets_alloc(_b, _size, _flags)	\
->  	alloc_hooks(__kmalloc_node_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), _flags, NUMA_NO_NODE))
->  
-> -#define kmem_buckets_alloc_track_caller(_b, _size, _flags)	\
-> -	alloc_hooks(__kmalloc_node_track_caller_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), _flags, NUMA_NO_NODE, _RET_IP_))
-> +#define kmem_buckets_alloc_node_track_caller(_b, _size, _flags, _node)	\
-> +	alloc_hooks(__kmalloc_node_track_caller_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), _flags, _node, _RET_IP_))
-> +
-> +#define kmem_buckets_alloc_track_caller(_b, _size, _flags) \
-> +	kmem_buckets_alloc_node_track_caller(_b, _size, _flags, NUMA_NO_NODE)
->  
->  static __always_inline __alloc_size(1) void *_kmalloc_node_noprof(size_t size, gfp_t flags, int node, kmalloc_token_t token)
+> diff --git a/security/keys/key.c b/security/keys/key.c
+> index 3bbdde778631..592b65cf8539 100644
+> --- a/security/keys/key.c
+> +++ b/security/keys/key.c
+> @@ -1275,7 +1275,7 @@ void __init key_init(void)
 >  {
+>  	/* allocate a slab in which we can store keys */
+>  	key_jar = kmem_cache_create("key_jar", sizeof(struct key),
+> -			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC, NULL);
+> +			0, SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_NO_MERGE, NULL);
+>  
+>  	/* add the special key types */
+>  	list_add_tail(&key_type_keyring.link, &key_types_list);
 
