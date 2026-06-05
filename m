@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E9C28725B;
-	Fri,  5 Jun 2026 18:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EDE38399B;
+	Fri,  5 Jun 2026 18:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780682927; cv=none; b=hGXlqCTq/NK0h0dJT5UYtWXEQJiEm74txjztwRrY0IsRbzogUTn8G5MjfYYrzI22303wdxi9P+dwJG2UCT3nd/dTErxLctZmrgXX2fmPKLCsAgw9prSOwo4B9dg/2qkCYoxtgjiR4288clM6tPZrkKJCyPuzoMTtoNm2y2nh/lA=
+	t=1780682969; cv=none; b=iWU0m5SHNpOMHhwB+AAiRLhNeH4WMcmDG6rAuy+PShNtT4sA9y2yHzRrRjhu2koYSPOO1SdDdjrNNlGb4miB0uKHNn/LexzQ3AW0XjEUty6Vbgt4PavfTr0ifWqnwAB20WrTPOabN1J4jJUu7QuZ8p8iM77nWhYsVJQMjLmGCGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780682927; c=relaxed/simple;
-	bh=YV2uNbPaJBcjv8noE1gM8kONADTyRIz8xeumYPfVdU0=;
+	s=arc-20240116; t=1780682969; c=relaxed/simple;
+	bh=fDsw0B4F0OBl4TLpyrNPvCykfVhuQi1Gj+rbHjJVWtQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FnLBip8QrAqu0BUrNwl6KMKmd0u0AJujUiS6yBqYvch+vPAMzWOoW1S7+/m8+znUZ+Td5LSuJeU3qCyclvwJqaJc9qJTMKnW/qeHFKY2EjFVUnxCKK6loteIV4evO00MRkWGUJ0QMWtPgKhC1K1pdi8LZgeuD5XrB8S6btyYxD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4F8rhaE; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=MEFen0GO8rrTZLlXC202dVZM6Ipxh4vBhPmfaSH5+SK/iY8eivEwIZWM3JXTPynfrGsTvMdL9JBJAi7Dv4O7qdqxlM9F+bgmKRiBT5CzkUKNKPPIJTDO3dRJzDrELmzQ1otJ40ZQHoTsVQHp40AE93ZDNROJrwAzm53Uvvoc0ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwmqoBT+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4F8rhaE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16BF41F00893;
-	Fri,  5 Jun 2026 18:08:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwmqoBT+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10EFB1F00893;
+	Fri,  5 Jun 2026 18:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780682926;
-	bh=9s3sWRVpgxchzDG7N1rvybpE1WGp1wCd44hSTHObGaU=;
+	s=k20260515; t=1780682968;
+	bh=8okm4VUMmFJ4/uejS+xBY+U1Zy2pD+88GtZ8JFsDLIM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=m4F8rhaEt+GK+VL7x3SnX9q2vkfvFX7ejGOsBF/4rIekkYBgP1rOzktFiKFJZnigX
-	 RIV0a/pXmJJU/UWYsJX3BnonHa3WREq6pPkyxjLinD8A1jAb4yOOUKdWCe/lTsBghX
-	 SYBdZEDDRER8q6UIV2kcQWkd5Ih9tVj3QkFBdzNY1t1jBPIZM4+BPMuPPNxoj0neSM
-	 bZve4QQfFADDZ3UDYc9VmFqUpFDqy2z+ufwlsmUeaPqVx4I8wzQhhO2o5sTQ7HcEJW
-	 Cyg9EaTRUxVBQlLY9HXHX1VsQPbIYgS9lOM8NLNTGFxdxRphEAydbSTBXYoXQiUjZP
-	 98bKuTIEgcbLg==
-Date: Fri, 5 Jun 2026 11:08:45 -0700
+	b=MwmqoBT+H6jm/37A2qDJ0pEvRL2HUAWJWBAOtUi8ZhWYcsigeKif7D+soGUArDr1C
+	 cguRomnrcHgH8MS6NkWAdpaw4YL3J0DwUe+7N5eFgkGmrEZ/OYCT0l2tOWSThcJQiq
+	 kKwQYZRbaXI0k91YV3ZTa0Dx2V/6Tf5Hu7br6LAK9pmupKtKa2/nLiQjHaCDrtBCMj
+	 auFVPz1zVR5Csbvus1K029GUxFmfsvP01zQLtYkAonNOkyfOU+vG04tKBKTAU6cEqV
+	 BlKWB2y0+WhmZrVriKbyvcwQtaoGlc/xQMaJ72gzFJzON58dyJ09yaTxRMGlvIOF0f
+	 I3rhRblEHkIww==
+Date: Fri, 5 Jun 2026 11:09:27 -0700
 From: Kees Cook <kees@kernel.org>
 To: Pedro Falcato <pfalcato@suse.de>
 Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
@@ -42,11 +42,11 @@ Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
 	Simon Horman <horms@kernel.org>,
 	Jason Xing <kerneljasonxing@gmail.com>,
 	Kuniyuki Iwashima <kuniyu@google.com>
-Subject: Re: [PATCH 1/2] mm/slab: add a node-track-caller variant for kmem
- buckets allocation
-Message-ID: <202606051108.380FB49@keescook>
+Subject: Re: [PATCH 2/2] net: skb: isolate skb data area allocations into a
+ separate bucket
+Message-ID: <202606051109.C96C81E3C@keescook>
 References: <20260602183122.747759-1-pfalcato@suse.de>
- <20260602183122.747759-2-pfalcato@suse.de>
+ <20260602183122.747759-3-pfalcato@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,19 +55,27 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260602183122.747759-2-pfalcato@suse.de>
+In-Reply-To: <20260602183122.747759-3-pfalcato@suse.de>
 
-On Tue, Jun 02, 2026 at 07:31:21PM +0100, Pedro Falcato wrote:
-> This is required by users that want to use kmem buckets, but still
-> desire specifying the NUMA node.
+On Tue, Jun 02, 2026 at 07:31:22PM +0100, Pedro Falcato wrote:
+> SKB data area allocations (as done from alloc_skb()) use kmalloc().
+> These allocations can be variably sized and their contents can be more
+> or less controlled from userspace, which makes them useful for attackers
+> that want to overwrite a use-after-free'd object from the same kmalloc slab
+> (which often just requires the sizes to roughly match into the same kmalloc
+> bucket). [0] is an easy example of an exploit that uses netlink skb
+> allocation to target another similarly-sized accidentally freed object.
 > 
+> While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these are
+> probabilistic. Use the existing kmem buckets API to further isolate these
+> allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=y.
+> 
+> Link: https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2023-4207_lts_cos_mitigation_2/docs/exploit.md [0]
 > Signed-off-by: Pedro Falcato <pfalcato@suse.de>
 
-Nice!
+Great! This is exactly what the bucket API was made for. :)
 
 Reviewed-by: Kees Cook <kees@kernel.org>
-
--Kees
 
 -- 
 Kees Cook
