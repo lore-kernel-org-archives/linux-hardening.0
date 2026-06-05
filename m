@@ -1,84 +1,51 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81904287510
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Jun 2026 14:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572563CC30F
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Jun 2026 15:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780670417; cv=none; b=LgOlQSlAaFPkBpSOR5ws2zldrPbjOgPI2pKHB8oYcfnMbu1aMrworvvT0fkv08MbG7dGNAz9U97xNgBvYKGaLqD177qXoMNhGdDwC0khoJlesqDTl554QfCjo/ln0coqj7K/4HfMgQtAwZq9CXjCBVQnGFXQr/MIMz2FjH9pHnk=
+	t=1780674181; cv=none; b=c0Pxfl7UgCE6k6Uvo/8M/tf9lkWjWGC208Tt2Wu0sgR0u3UKnYr6vQKHwcwhfS9yYQvnSJbvd5BtmM0L8gRkZ/iPofiSAEfKDbZVMFPaiq7P/foTuJ6K6Pz+aDh64IZGyBrBHjTkpnkKdD6mQKyMIL7LehYrrzizBdhWrTrbFo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780670417; c=relaxed/simple;
-	bh=uTFaLbD94g6l9PwItMr3jHF0S+U5kEzaUis22iok9Uo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ff4+ma9HEwSq/WvS30ApNga0V9Ba1RMSHuiyFMh2VdnUar4icNHCxCqggMbiDhuSIIiqpKTDAcvbbIg2Km5KYtyPnucKzBr3L+n8SXitf56HrUyhoguhwgSxwQKSxCP6LZE8pdSVsWbJ+n9E3IQAIXO8zBupUsQ+IsbvHKLS2e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JN3Xt2SO; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780674181; c=relaxed/simple;
+	bh=W0T1PdxEeazJB39myKEC6Gyv+Q03z/ZE2lWQYDf0YsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L+Vr9o7Mxa7kdZtSMpiGdrMr9nSV53AOVXtb2U0sk/ETNOAIwap8Tobt4yAwbbwRgIMgVYVHRt/VOSI+JRzbcPCkq817oCsND+IzZB4FvAa036aJtccDlK6hzYvEsS2O/TGL37rX1i0dTTsFeb7cAZCA3yMqLAtqSD7N26C70Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C1ItKQyo; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JN3Xt2SO"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-45eeea039ebso1079771f8f.1
-        for <linux-hardening@vger.kernel.org>; Fri, 05 Jun 2026 07:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780670414; x=1781275214; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DdmpuPgPA38VeTeuKDOnpEQv9HAVop+/PGKrT2luQtY=;
-        b=JN3Xt2SO9jCUtIjXlJW8DinsQlv1HcNo64WgtU3+Q/k7NsjlQ5lRUKkAS0+7+AlBQL
-         b9WG7OKFBMV22WyKXDBYiYsjwzWM92JJCXcYtZQ8q5G+o7IayCqKn1h6GkEpGxMVA84R
-         CTv1j7Jy7brRFKx/06CyQcFbxCTtN9nPoAvwApUS5CmhOc3WBH9zL3SV2Br4cFmHCiFS
-         b9H+yyCbTpHSRTQhWKlB85jC0AKPCxRnqoTGjg0KP5UfIkCO1zK42YzSnSnv5NFgmRE3
-         UQXypTqlOawtMv8GTOzu7sN1w1uiCRKgwnkgnmDYXwzwf/ZGTfHpRL/+PM+P8X3CgzKN
-         LdLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780670414; x=1781275214;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DdmpuPgPA38VeTeuKDOnpEQv9HAVop+/PGKrT2luQtY=;
-        b=IReSDrKIA3KZufW1GqA7nosFSI3SYHwfr1NnK7QsXZJYoSsqkrKLztVvMDACP6X+kV
-         piaNo8SrWLYsFD3SXQZ67EP9khnTZIPnPMOaCI2PAa2OW8boJp37++tX05RvwBzQAtiX
-         7a3lJQKpgD+Y/vlFy9reakr2x4uyIDogGqBNma3sh+1jPHZ/3v7TRflRM2Nt4KL46cKj
-         jx6c3DQTNLqyQvMAfjyjH6HrkMST1xyeu33soFB0HRpVU6P8KNeFe/VCd0shksNCf8Ok
-         Gx6Dvvv46+ATT/RqYhCw0BFhWd5uDiVs7Gt4F2rERZk5L4pqt1VAnK8Qbi0I2HmBetO8
-         S5fQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8c/r3xPjkkhS7Ywu+yDTc3AT7dAgqJXpyPpmE176hNi2BNALpc/jiWctsVe57BDrHQIzzoLgxPQU1E2tJMXKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz6eBt+JDo7cqOZUHMZLgTtyToNZKRm8R9Fwu/BWGJ1xc+jzML
-	24uzQZzBJ9E9ruxY63SPedFSM0L3oEvrXw/yP5MEENs7O6sL1MuJ4miP1q9eFr6g
-X-Gm-Gg: Acq92OFpT1B9PkBtwAWA/G/q7vv7dA6BckdwazIKrXpr9TeWNRhzi16ZmyEpKXKh81m
-	ZYsgeto6aUTMhm9Tvc42RbG334Lu6tMaHgvFmfzMxf9TcgOjXlFzxnpwe3k18SvaWECzZ41IAqK
-	9GsC/YUzI5nUooyvlOGkvjxNplf/QGTLdmrSeGRALUYolkUoDu0JGg0pmffb93TAeDH9ioA931O
-	rERr0gZOS6G/I7QzGrWhLQQ6kTlSyBwzBKYb+85vnS9TR1jFUwtk8vEiOFAfY7ZixdbkXFWzGfL
-	jRR8VaafYY8SQ6A88ZaWqcRSOJlIf2u6OUyFUlIBXjmB+NTlAycXDQV412OBlnwkCR4TWlBbCCO
-	MGxxKefqVjwPD2Dh9NM7vFfQEg5ePsyerLHQ+cwKwx3w2n3HlqdbAJ44nxQaXkqzsVgGAG5F7vb
-	qkXuE+Ge5I+O5E6GR8g2VEFsqUKAy7p1Rnc5Bdd/oS0836Glf+cqHPxwsMHm9Ah2A7EYYTopdU9
-	gbfB+AGEI/6RThQKJUt2cgbziq2fGqTN1/W0u45Oe7qh5yXQA==
-X-Received: by 2002:a5d:5e08:0:b0:45a:dd7a:e33c with SMTP id ffacd0b85a97d-4603062afc1mr7290618f8f.33.1780670413795;
-        Fri, 05 Jun 2026 07:40:13 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f344541sm24350549f8f.22.2026.06.05.07.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2026 07:40:13 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Fri, 5 Jun 2026 15:40:08 +0100
-To: Jonathan Cameron <jic23@kernel.org>, 
-	Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: 
-	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>, rodrigo.alencar@analog.com, 
-	Michael Auchter <michael.auchter@ni.com>, linux@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH 10/12] iio: dac: ad5686: add triggered buffer support
-Message-ID: <httw7hnumjs5cmtpjntci24ufmjts7rhqyjawnxhh5gd74sg3d@wpg5ecnyms53>
-References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
- <20260602-ad5686-new-features-v1-10-691e01883d27@analog.com>
- <20260603134151.7cf1654b@jic23-huawei>
- <i3wvatdosla3cszhhtizgoetcbknl56be3mpipzdxqx2jzvch2@l4hzeer5zoa7>
- <20260605150951.1c793b76@jic23-huawei>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C1ItKQyo"
+Date: Fri, 5 Jun 2026 17:42:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780674177;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xQgVyWp04mcZVdhb3g8zIcRkJh1GFKcwmd+VtYZJv70=;
+	b=C1ItKQyo8NUnZtDAlfGP2fSAq+fw9/aXPmD8aCXBY0SBnOSLuPvsQQoTXGwr1m8I9+r0A6
+	rfosn1KNlE8qVqNSU/121xEw+G1LV+qKFBaWk0N75xpThiG/QONUexZ6vymt5hQ3tuQg7T
+	tZkfK0O+tRD8TIQBrPoHn8uWRcoIQAg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Arnd Bergmann <arnd@arndb.de>, Jiri Bohac <jbohac@suse.cz>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	linux-hardening@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/setup: replace strlcat() with snprintf() in
+ setup_arch()
+Message-ID: <aiLueGQiArrWeUJv@linux.dev>
+References: <20260604131752.1327556-3-thorsten.blum@linux.dev>
+ <aiJTZ9P7_bvRWlqw@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -87,136 +54,50 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260605150951.1c793b76@jic23-huawei>
+In-Reply-To: <aiJTZ9P7_bvRWlqw@ashevche-desk.local>
+X-Migadu-Flow: FLOW_OUT
 
-On 26/06/05 03:09PM, Jonathan Cameron wrote:
-> On Fri, 5 Jun 2026 12:34:31 +0100
-> Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+On Fri, Jun 05, 2026 at 07:41:11AM +0300, Andy Shevchenko wrote:
+> On Thu, Jun 04, 2026 at 03:17:53PM +0200, Thorsten Blum wrote:
+> > In preparation to remove strlcat() from the kernel [1], replace two
+> > strlcat() calls with one snprintf() call in setup_arch().
+> > 
+> > Also drop the explicit size argument of strscpy() to further simplify
+> > the code since strscpy() can determine the size automatically when the
+> > destination buffer has a fixed length.
 > 
-> > On 26/06/03 01:41PM, Jonathan Cameron wrote:
-> > > On Tue, 02 Jun 2026 17:33:57 +0100
-> > > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
-> > >   
-> > > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > > > 
-> > > > Implement trigger handler by leveraging the LDAC gpio to update all DAC
-> > > > channels at once when it is available. Also, the multiple channel writes
-> > > > can be flushed at once with the sync() operation.  
-> > 
-> > ...
-> > 
-> > > > +static irqreturn_t ad5686_trigger_handler(int irq, void *p)
-> > > > +{
-> > > > +	struct iio_poll_func *pf = p;
-> > > > +	struct iio_dev *indio_dev = pf->indio_dev;
-> > > > +	struct iio_buffer *buffer = indio_dev->buffer;
-> > > > +	struct ad5686_state *st = iio_priv(indio_dev);
-> > > > +	u16 val[AD5686_MAX_CHANNELS] = { };
-> > > > +	int ret, ch, i = 0;
-> > > > +	bool async_update;
-> > > > +	u8 cmd;
-> > > > +
-> > > > +	ret = iio_pop_from_buffer(buffer, val);
-> > > > +	if (ret)
-> > > > +		goto out;
-> > > > +
-> > > > +	mutex_lock(&st->lock);
-> > > > +
-> > > > +	async_update = st->ldac_gpio && bitmap_weight(indio_dev->active_scan_mask,
-> > > > +						      iio_get_masklength(indio_dev)) > 1;
-> > > > +	if (async_update) {
-> > > > +		/* use ldac to update all channels simultaneously */
-> > > > +		cmd = AD5686_CMD_WRITE_INPUT_N;
-> > > > +		gpiod_set_value_cansleep(st->ldac_gpio, 0);
-> > > > +	} else {
-> > > > +		cmd = AD5686_CMD_WRITE_INPUT_N_UPDATE_N;
-> > > > +	}
-> > > > +
-> > > > +	iio_for_each_active_channel(indio_dev, ch) {
-> > > > +		ret = st->ops->write(st, cmd, indio_dev->channels[ch].address, val[i++]);
-> > > > +		if (ret)
-> > > > +			goto cleanup;
-> > > > +	}
-> > > > +
-> > > > +	if (st->ops->sync)
-> > > > +		ret = st->ops->sync(st); /* flush all pending transfers */
-> > > > +
-> > > > +cleanup:  
-> > 
-> > It turns out that this label is not really needed. When sync() op is available
-> > it must be called regardless of write failure, so the bus data can reset its
-> > state. Then moving "cleanup" up would just make it useless.
-> > 
-> > > > +	if (async_update)  
-> > > 
-> > > Error paths are always fun.  Do we care about setting ldac_gpio to 1 if
-> > > we failed to write the channel values?  That will set any that did successfully
-> > > update, but not all of them.  Note I'm not sure on the right answer for this.
-> > > There may not be one!  
-> > 
-> > I would not see a problem with that, as there is no much we can do with errors
-> > in a interrupt handler.
-> > 
-> > >   
-> > > > +		gpiod_set_value_cansleep(st->ldac_gpio, 1);
-> > > > +
-> > > > +	mutex_unlock(&st->lock);
-> > > > +out:
-> > > > +	iio_trigger_notify_done(indio_dev->trig);  
-> > > We get this pattern so often (though not always).  Feels like maybe
-> > > we should put some effort into a generic opt in solution for this.
-> > > 
-> > > A job for another day but options that come to mind.
-> > > 1) (hideous) a flag
-> > > 2) Maybe an alternative callback. thread_always_complete or
-> > >    something like that.  Pain to wire through all the calls though
-> > >    and injecting the necessary wrapper isn't great either.
-> > >    Implementation wise would be a case of popping in a wrapper function
-> > >    in iio_trigger_attach_poll() call to request_threaded_irq().
-> > > 3) Maybe a helper macro?  Bit ugly as we'd need one to generate
-> > >    the wrapper function and another to use the same name for
-> > >    the registration function.
-> > > 
-> > > Hmm. Those are all ugly (maybe 2 is ok ish).  Suggestions welcome!  
-> > 
-> > using a cleanup.h? with something like:
-> > 
-> > 	static inline void iio_trigger_always_done(struct iio_poll_func **ppf)
-> > 	{
-> > 		iio_trigger_notify_done((*ppf)->indio_dev->trig);
-> > 	}
-> > 
-> > 	static irqreturn_t ad5686_trigger_handler(int irq, void *p)
-> > 	{
-> > 		struct iio_poll_func *pf __cleanup(iio_trigger_always_done) = p;
+> > [1] https://github.com/KSPP/linux/issues/370
 > 
-> That's not a nice pattern given the lack of any local constructing. The ownership
-> transfer isn't obvious as both p and pf are really same type (it's slightly
-> hidden by the void * nature of p) - ideally we'd want p to be unusable after
-> that transfer.  Could do something hideous like 
-> 		struct iio_poll_func *pf __cleanup(iio_trigger_always_done) =
-> 			__get_and_null(p, NULL);
-> where p is set NULL so it becomes dead but that is ugly and not what that
-> is for so I doubt it would be popular and so we'd end up with yet another
-> weird macro.  There is some precedence with take_fd() but the use of that
-> is complex and I think it is only used to grab ownership from a local CLASS()
-> defined cleanup.
+> Make it Link tag?
 > 
-> So it would work, but I've actively argued against this style elsewhere
-> in the kernel so don't really want it in IIO either!
+> ...
 > 
-> Key disadvantage is that it is yet another weird bit of cleanup.h stuff for
-> people to learn and we have enough of those already.
+> >  	strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
 > 
-> So indeed an option but I'm not really liking it.
+> This also has third argument fixed. Don't you want to change that?
 
-That makes sense, I understand the concern. I didn't take __cleanup()
-as ownership transfer. I thought it was just to register actions to variables
-when they go out of scope or something. In that case the pointer itself is
-being "cleaned up" (with **ppf in the cleanup action) not the memory that it
-points to.
+That doesn't work because boot_command_line, at least the declaration in
+linux/init.h, doesn't have a fixed size.
 
--- 
-Kind regards,
+> >  #else
+> >  	if (builtin_cmdline[0]) {
+> > +		size_t len = strnlen(builtin_cmdline, COMMAND_LINE_SIZE);
+> > +
+> >  		/* append boot loader cmdline to builtin */
+> > -		strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
+> > -		strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+> > +		snprintf(builtin_cmdline + len, COMMAND_LINE_SIZE - len, " %s",
+> > +			 boot_command_line);
+> 
+> Hmm... Wouldn't GCC complain on this? (Build with `make W=1`.)
 
-Rodrigo Alencar
+No warnings with W=1. Why would GCC warn here?
+
+> >  		strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+> 
+> And this has also third argument.
+
+Same reason as above.
+
+Thanks,
+Thorsten
