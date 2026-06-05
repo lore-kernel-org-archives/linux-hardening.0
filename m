@@ -1,71 +1,71 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C86D2F7EF2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7703E1216
 	for <linux-hardening@vger.kernel.org>; Fri,  5 Jun 2026 20:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780691120; cv=none; b=NncJtWo2Xmmr+tpUA384v/4JlXGl9lnEYsARyH4VgPNRZlD+oHd02RXQXZxOTFKoYpH9l1fjsUM0UVhFlaMxbrVZzWm5JwGJQK7ynPJ6DY8l4Oz9VrROqYlqM9FKwWJk9udPZOTYFjZ5J17TCL95ZlexFmhh9uZp4iYiUEeKfnk=
+	t=1780691121; cv=none; b=CqdfPpkpDUakC1omaDJ29Bw/sbxF0Wx5DSkZwmsrQUeGYqxMBxvcMoNpmUt5cWoe4/IGmRe5bRLk4xJtoygdBYFzs/DD7NEWxio4RSaB+gksXMTzwFmYOfPXBDDSu0D1WMOGUepUJVR63uHPaiRikZip++Db8PVuuz8q+gKSE28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780691120; c=relaxed/simple;
-	bh=MlVewEa8g7qvd7k6RgUiNDdqII++vE0Qn6ZRNJ2lRmk=;
+	s=arc-20240116; t=1780691121; c=relaxed/simple;
+	bh=QfHsASPh+oovD81FJs6/3emtWIT4NSODWgRlxbiDsuM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j9YMVXOpeYVYpNQk2ieTxxcuK2RQ+Q0TCcXGkQnOkBhjlkNTEMeENamd2LU2tCIeJDOltfnT/qaZhW+aHGyqqysj5oBpGPLQKxjXBB4NOaz0s5LbM2RzA/3+clhVkI0b9phtqTNa5TzzJZnIHpRApbE6xNItkdbqnVB5ruCX/n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com; spf=none smtp.mailfrom=yjn-systems.com; dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b=qFoWRuoA; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=Ni2vxAGRfAx7dGz1poMa16Zm9Xth28OW6+ZQVAvDOHdbI6JuIkak2BCR57pxgdc0WgdqRKXJ+i68lsvcaS4SVB3gfJ9O1dUt6bvljB0pjnsvjkLlqXbWUpr1u1ku0pislo6yNKv53VwTehFUbVFzF9ygP33YTn0IQ56P7tAwpfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com; spf=none smtp.mailfrom=yjn-systems.com; dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b=LkndyO5n; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yjn-systems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b="qFoWRuoA"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490af320e2aso26874145e9.2
+	dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b="LkndyO5n"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-490b8a97b11so25422615e9.0
         for <linux-hardening@vger.kernel.org>; Fri, 05 Jun 2026 13:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=yjn-systems.com; s=google; t=1780691117; x=1781295917; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=quCYK+2YFNvWgr7luvOpyg+asN2D6kwCMjWknQnQ5k0=;
-        b=qFoWRuoAU60QmA/3GUzsnLP8J9ZGFoZrD3xQhuCns/LZ2kcR7t1XZyC/qxMvpHAtcA
-         HoZwfXxVyo6Yr76/e6iVKfa9X7i9DSYrlQSpXEbYL0XyWH5qm6gDm5mNIE31PVRyFvUi
-         oiDXiFeazps136Q24rHVg8642HUW3N/O7IEqOb8wcdrWAX2VGsuoMWpGfQh7jNXRZgVH
-         S7Yjmb6xZHlwRSxDedEkTEWgThs71StvQ/PjjRGnBtaUOIWx8gEyfHFktYZBWqXIm/Xv
-         KZDJHdJpeaUh4LK3xRIfS+tEGxBmgXjUN9e0+xrzs5beZ8QCatHefwRPZverqv6Vt7mx
-         3vZQ==
+        bh=1kp9foTKxxVbxhnS1Knkf9GQbg/aPlRxDw6WHV+hk1s=;
+        b=LkndyO5n/FpAij1pOpG+3mCeCeMcqMpUmT719IGGI48NLCKF76XfnHdBjtvNtfKvgm
+         JiL8ERvdH9h+SDbf2O6JYsUYmXRLx3aafHmASq60iXhraQ7kbWMpbRHKIfwLzFDqbfH0
+         j7RMKs9AtdpMhIuRa2CVtgpYyFcIgg4ALbPOUOU1ZZrONNW+R3x/pfvTU9KK3ExvkjWJ
+         4F9b5ES/wN1MFn5lhVskwncrp9mSLBebtIboHYX8J9KIkW7n7OICTznovY20EdO0ECsr
+         fGlif7i9+BL1cxeiZ/3hT8qGYnPnbNLQn38dnvjBFHU/52UxAaT/rUGmC+q+LsBV/UFH
+         X7KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1780691117; x=1781295917;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=quCYK+2YFNvWgr7luvOpyg+asN2D6kwCMjWknQnQ5k0=;
-        b=NMvlG9wPu9R1aXC62SqxkmisV0Co7TCWcI5iB4/3QUCwhB2aDEoML9wtftSRMkPkrR
-         V/xIM4Ig+VNo0C/qoqA5DDTs8bBHmLffYINSOKp53RwtxzEIUOw7LznsWL3HdO86bzpd
-         KhYfBe1JZNU8vUWDNI2qQXGCijclwLqAdutKAKylOjLFTmCvzkfFyveBsagqdtS0s69Q
-         f7lJgpwO4kwZOEPy5cnZ14CQh5tvIVc7HNsct/c5lXqbpY3uQcij4u9hfkXLWbMbHnxk
-         mnJd4GtUZqbGcko5lVz93mcnO8Oh1y60gLaKFVI8rT5Vm/rk6qrPp16hLkAcMI7dGyiX
-         nfKQ==
-X-Gm-Message-State: AOJu0Yy7U/y7blod0AP23/g7dYnGmzaSNYoVnlsNEuD3zeVCidZzgumC
-	2SfFNOT/9YwFg18uxLQ0G7WJc39jAD+e5U5kS0rDh68jXUVq4v03w80cNcB7lzpgF7f5E6lmeCp
-	1FAycMm12
-X-Gm-Gg: Acq92OGZT4qiWwDJNM13HjH03VWUWyt3VYFnPYZMUszeFkDPF5GoKqLC13VbWPnkr80
-	ifukV7mC2BUqmARLaorqLeTslFhLNu5YyQv1f0+AVymMqeA/eb5sJnlvOXdc7JhXigi5qh+tjCI
-	8NSxJRlx6aksyDH2pf5fj+YBPZLLJqs5TVgYHWRQZzmUJkwMrDghf/fNQGCtC2GFCBWMnGx3BCV
-	5RMBg1mx8PgCl1aurXm8AFNiD7a82mDurhEaxfoAlfWNHDD8Saeg52IN2YWLV3kOIpCaxVy877y
-	vBCzE55OBk/xQ+0TWnANYyBsF3mvz0cMiU3Ov5SCv7K6/MAaOHOWX0Wtud3l5MuBaNRbKWk5666
-	nrov+YmYU+3r84vZ+b3/ig231dYVznTnfVnjVBjkEGaDI2CHkXPyUSKxxErOdEz8FsDEGuQriQO
-	JeR+vtISZC6RnQAAGZ2hpzwnZkfGz/cth5uX204SFaydZ4/HDsGJAlsuQpU4bMwIq1ngtz9TqWm
-	3Vw+XqcmzZD/US2L3T25PWlTYsUwXOmoKS4LSYGBct3tA/p9A==
-X-Received: by 2002:a05:600c:35d4:b0:490:b8d3:5dcc with SMTP id 5b1f17b1804b1-490c25e4634mr91131915e9.19.1780691116615;
-        Fri, 05 Jun 2026 13:25:16 -0700 (PDT)
+        bh=1kp9foTKxxVbxhnS1Knkf9GQbg/aPlRxDw6WHV+hk1s=;
+        b=KFCf0atJk2ydYyE1KHabnNvbWtN3VCgPv45nEYBFkRjhb/pE6uCnEEaQYpAtxPyCPN
+         FEljOvDLEkqqkckAdN+y2AOgKrxHIthXyqVc/Up4kbAYrBAuKYkhkQ41DOGGN+S2rgNL
+         /QFP3vj6Gb5W6Pp5X+8TxKb7CUAA9LEl+EGs2dpTh9Fkgn6or6O2V42iTrYEO8UrNo6s
+         ZnUQSXhGXqYhjkCMKEl02vb6xLMVbc1Qvmp/UhT1ZuLzdkx/ZAtnt0scLkJ/G4IlGXHw
+         CMtFbI78RrVkcSPXX4LypyVIUuCImw6A4rnGxIwZnrOB0PJ1Rt8Q/0bAlUYb3KgU9olW
+         04AQ==
+X-Gm-Message-State: AOJu0YxULs0rPC+abBNWzkI+kOPrFtB1IqXNfZnhOyWryXIg+dAi2NcZ
+	2mloeM7KwBIytMsg44/b2R9yR7RUJepaqmnrE5Xwe4l8n1sdNoD3UeoTx1XPJuAeAVK2qCu0+iJ
+	r8Pkgpup0
+X-Gm-Gg: Acq92OGf/IaR2uen1AsZabCGMU2FEi4BEIE7WcBow2oP+H4l4QE9Q5yk6QRVzuYpmFf
+	bsVdpZw8tCS4pzOSHqcvx0WHSyZApxnqFemjl8uvTHC7PrvIFkPueac0yjSLJal7jjKOwVl2CmO
+	zIT8agLf4sh9FUNie2V87ZmT0BCH6qfx4t0hNSqpcHw4LbiYxgmOaMwUz3NAMFWECxMIm5AXdQF
+	yTPGbuhLIZfNHWqivOtxQFlyRZ3ckR10i+mTgPWm35T/UbUlQWbS+5liKD3lAmlYqkHoyOCEXLM
+	HMRVUcfLfJ8VVYDn5wB2HAboz3VqDRCS+kY279sFCnVq6N7kwyztPmDm4sGI1F2vEtyRXtKHfJB
+	3ClPsfYenDLfYjjmDbwJgeJCvtyusbRzuqO5VfldTRNW+Jd9CxOu3XyRstt9BWyy16j5GToVrO/
+	uwiyNmRSgQwfm2tbA6PyLs8igqnaangkCzYSONWWiaj/mb81ptA2tIRCT024pBBcuA8FPcTueAf
+	4cKCIDR/cyBxDdlEfFA3maJjLOfmsdUGl6phV/uIllsjWGi/Q==
+X-Received: by 2002:a05:600c:1d2a:b0:490:bbc1:d508 with SMTP id 5b1f17b1804b1-490c258f3femr85443055e9.1.1780691117398;
+        Fri, 05 Jun 2026 13:25:17 -0700 (PDT)
 Received: from yjn-Zenbook-UX3404VA-UX3404VA.. (p200300dcbf13e6006c589ea22c400ee8.dip0.t-ipconnect.de. [2003:dc:bf13:e600:6c58:9ea2:2c40:ee8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3a87dasm168442995e9.7.2026.06.05.13.25.15
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3a87dasm168442995e9.7.2026.06.05.13.25.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 05 Jun 2026 13:25:16 -0700 (PDT)
 From: York Jasper Niebuhr <yjn@yjn-systems.com>
 To: linux-hardening@vger.kernel.org
 Cc: kees@kernel.org,
 	franzen@sec.in.tum.de
-Subject: [RFC 4/7] SPSLR selfpatch
-Date: Fri,  5 Jun 2026 22:25:08 +0200
-Message-ID: <20260605202511.79272-5-yjn@yjn-systems.com>
+Subject: [RFC 5/7] BPSLR task_struct integration
+Date: Fri,  5 Jun 2026 22:25:09 +0200
+Message-ID: <20260605202511.79272-6-yjn@yjn-systems.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260605202511.79272-1-yjn@yjn-systems.com>
 References: <20260605202511.79272-1-yjn@yjn-systems.com>
@@ -79,1022 +79,767 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: York Jasper Niebuhr <yjn@yjn-systems.com>
 ---
- include/linux/spslr.h           |  48 ++++
- kernel/Makefile                 |   2 +
- kernel/spslr/Makefile           |   5 +
- kernel/spslr/spslr.c            | 267 ++++++++++++++++++++++
- kernel/spslr/spslr_env.c        |  74 +++++++
- kernel/spslr/spslr_env.h        |  42 ++++
- kernel/spslr/spslr_list.h       |  63 ++++++
- kernel/spslr/spslr_list_link.h  |  21 ++
- kernel/spslr/spslr_randomizer.c | 382 ++++++++++++++++++++++++++++++++
- kernel/spslr/spslr_randomizer.h |  26 +++
- 10 files changed, 930 insertions(+)
- create mode 100644 include/linux/spslr.h
- create mode 100644 kernel/spslr/Makefile
- create mode 100644 kernel/spslr/spslr.c
- create mode 100644 kernel/spslr/spslr_env.c
- create mode 100644 kernel/spslr/spslr_env.h
- create mode 100644 kernel/spslr/spslr_list.h
- create mode 100644 kernel/spslr/spslr_list_link.h
- create mode 100644 kernel/spslr/spslr_randomizer.c
- create mode 100644 kernel/spslr/spslr_randomizer.h
+ Makefile                              | 131 ++++++++++++++++++++++++++
+ arch/x86/boot/compressed/Makefile     |   2 +
+ arch/x86/kernel/vmlinux.lds.S         |   8 ++
+ drivers/firmware/efi/libstub/Makefile |   2 +
+ include/linux/compiler_types.h        |  12 +++
+ include/linux/sched.h                 |  50 +++++-----
+ init/Kconfig                          |   7 ++
+ init/main.c                           |  15 +++
+ kernel/module/main.c                  |  62 ++++++++++++
+ scripts/Makefile.build                |   9 +-
+ scripts/Makefile.modfinal             | 131 +++++++++++++++++++++++++-
+ scripts/Makefile.vmlinux              |   4 +
+ scripts/Makefile.vmlinux_o            |   1 +
+ scripts/link-vmlinux.sh               |   5 +
+ 14 files changed, 413 insertions(+), 26 deletions(-)
 
-diff --git a/include/linux/spslr.h b/include/linux/spslr.h
-new file mode 100644
-index 000000000000..2609bd06aae4
---- /dev/null
-+++ b/include/linux/spslr.h
-@@ -0,0 +1,48 @@
-+#ifndef SPSLR_SELFPATCH_H
-+#define SPSLR_SELFPATCH_H
-+
-+#define SPSLR_MODULE_SYM_IPIN_CNT "spslr_ipin_cnt"
-+#define SPSLR_MODULE_SYM_IPINS "spslr_ipins"
-+#define SPSLR_MODULE_SYM_IPIN_OP_CNT "spslr_ipin_op_cnt"
-+#define SPSLR_MODULE_SYM_IPIN_OPS "spslr_ipin_ops"
-+#define SPSLR_MODULE_SYM_DPIN_CNT "spslr_dpin_cnt"
-+#define SPSLR_MODULE_SYM_DPINS "spslr_dpins"
-+
-+enum spslr_viability {
-+	SPSLR_VIABLE,
-+	SPSLR_NONVIABLE
-+};
-+
-+enum spslr_error {
-+	SPSLR_OK,
-+	SPSLR_ERROR_RANDOMIZER_INIT,
-+	SPSLR_ERROR_INITIAL_TARGET_LAYOUT,
-+	SPSLR_ERROR_RANDOMIZED_TARGET_LAYOUT,
-+	SPSLR_ERROR_RANDOMIZE,
-+	SPSLR_ERROR_REORDER_BUFFER,
-+	SPSLR_ERROR_UNINITIALIZED,
-+	SPSLR_ERROR_ALREADY_PATCHED,
-+	SPSLR_ERROR_PATCH_DPINS,
-+	SPSLR_ERROR_PATCH_IPINS,
-+	SPSLR_ERROR_META_INCOMPLETE
-+};
-+
-+struct spslr_status {
-+	enum spslr_viability viability;
-+	enum spslr_error error;
-+};
-+
-+struct spslr_module {
-+	const void* ipin_cnt;
-+	const void* ipins;
-+	const void* ipin_op_cnt;
-+	const void* ipin_ops;
-+	const void* dpin_cnt;
-+	const void* dpins;
-+};
-+
-+struct spslr_status spslr_init(void);
-+struct spslr_status spslr_selfpatch(void);
-+struct spslr_status spslr_patch_module(const struct spslr_module* m);
-+
-+#endif
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 87866b037fbe..9014e9573c31 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -132,6 +132,8 @@ obj-$(CONFIG_WATCH_QUEUE) += watch_queue.o
- obj-$(CONFIG_RESOURCE_KUNIT_TEST) += resource_kunit.o
- obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+diff --git a/Makefile b/Makefile
+index 68a8faff2543..d491db3db2e8 100644
+--- a/Makefile
++++ b/Makefile
+@@ -796,6 +796,39 @@ include/config/auto.conf:
+ endif # may-sync-config
+ endif # need-config
  
-+obj-$(CONFIG_SPSLR) += spslr/
++# Outside config for make clean
++SPSLR_METADIR := $(objtree)/.spslr-meta
++SPSLR_VMLINUX_TARGET_MAP := $(objtree)/.vmlinux-spslr-targets
 +
- CFLAGS_stackleak.o += $(DISABLE_STACKLEAK_PLUGIN)
- obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
- KASAN_SANITIZE_stackleak.o := n
-diff --git a/kernel/spslr/Makefile b/kernel/spslr/Makefile
-new file mode 100644
-index 000000000000..c67c7b1295ca
---- /dev/null
-+++ b/kernel/spslr/Makefile
-@@ -0,0 +1,5 @@
-+obj-$(CONFIG_SPSLR) += spslr.o spslr_env.o spslr_randomizer.o
++ifdef CONFIG_SPSLR
 +
-+CFLAGS_REMOVE_spslr.o += $(SPSLR_PLUGIN_FLAGS)
-+CFLAGS_REMOVE_spslr_env.o += $(SPSLR_PLUGIN_FLAGS)
-+CFLAGS_REMOVE_spslr_randomizer.o += $(SPSLR_PLUGIN_FLAGS)
-diff --git a/kernel/spslr/spslr.c b/kernel/spslr/spslr.c
-new file mode 100644
-index 000000000000..89c3c79f3aa1
---- /dev/null
-+++ b/kernel/spslr/spslr.c
-@@ -0,0 +1,267 @@
++export SPSLR_METADIR
++export SPSLR_VMLINUX_TARGET_MAP
++export SPSLR_TOOL_PINPOINT := $(srctree)/tools/spslr/pinpoint.so
++export SPSLR_TOOL_PATCHCOMPILE := $(srctree)/tools/spslr/patchcompile
++
++# Use pinpoint plugin for kernel objects
++
++SPSLR_PLUGIN      := -fplugin=$(SPSLR_TOOL_PINPOINT)
++SPSLR_PLUGIN_META := -fplugin-arg-pinpoint-metadir=$(SPSLR_METADIR)
++SPSLR_PLUGIN_SRC  := -fplugin-arg-pinpoint-srcroot=$(srctree)
++export SPSLR_PLUGIN_FLAGS := -D__SPSLR__ $(SPSLR_PLUGIN) $(SPSLR_PLUGIN_META) $(SPSLR_PLUGIN_SRC)
++
++KBUILD_CFLAGS += $(SPSLR_PLUGIN_FLAGS)
++
++endif
++
++# Supress warnings generated by newer gcc-16
++
++KBUILD_CFLAGS += -Wno-address-of-packed-member
++KBUILD_CFLAGS += -Wno-format-truncation
++KBUILD_CFLAGS += -Wno-unused-but-set-variable
++KBUILD_CFLAGS += -Wno-dangling-pointer
++KBUILD_CFLAGS += -Wno-unterminated-string-initialization
++KBUILD_CFLAGS += -Wno-format-overflow
++KBUILD_CFLAGS += -Wno-stringop-truncation
++KBUILD_CFLAGS += -Wno-stringop-overread
++
+ KBUILD_CFLAGS	+= -fno-delete-null-pointer-checks
+ 
+ ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+@@ -1142,6 +1175,104 @@ targets += vmlinux.a
+ vmlinux.a: $(KBUILD_VMLINUX_OBJS) scripts/head-object-list.txt FORCE
+ 	$(call if_changed,ar_vmlinux.a)
+ 
++# Outside config for make clean
++SPSLR_VMLINUX_SPSLR_SECTION_ASM := $(objtree)/spslr_section.S
++SPSLR_VMLINUX_SPSLR_SECTION_OBJ := $(objtree)/spslr_section.o
++SPSLR_VMLINUX_SPSLR_LIST := $(objtree)/.vmlinux-spslr-files
++SPSLR_VMLINUX_PATCHCOMPILE_STAMP := $(objtree)/.vmlinux-spslr-patchcompile
++
++ifdef CONFIG_SPSLR
++
++targets += $(SPSLR_VMLINUX_SPSLR_SECTION_ASM) $(SPSLR_VMLINUX_SPSLR_SECTION_OBJ) $(SPSLR_VMLINUX_SPSLR_LIST) $(SPSLR_VMLINUX_TARGET_MAP) $(SPSLR_VMLINUX_PATCHCOMPILE_STAMP)
++
++SPSLR_VMLINUX_LINK_INPUTS := vmlinux.a $(KBUILD_VMLINUX_LIBS)
++
++export SPSLR_VMLINUX_SPSLR_SECTION_OBJ
++
++quiet_cmd_gen_spslr_list = SPSLRLST $@
++      cmd_gen_spslr_list = set -e; \
++	tmp=$@.tmp; \
++	rm -f $$tmp; \
++	for in_f in $(SPSLR_VMLINUX_LINK_INPUTS); do \
++		printf 'SPSLR input: %s\n' "$$in_f" >&2; \
++		case "$$in_f" in \
++		*.a) \
++			$(AR) t "$$in_f" ;; \
++		*.o) \
++			printf '%s\n' "$$in_f" ;; \
++		esac; \
++	done | awk '!seen[$$0]++' | while read -r obj; do \
++		spslr="$(SPSLR_METADIR)/$${obj%.o}.c.spslr"; \
++		printf 'SPSLR map: obj=%s spslr=%s\n' "$$obj" "$$spslr" >&2; \
++		if [ -f "$$spslr" ]; then \
++			printf 'SPSLR found: %s\n' "$$spslr" >&2; \
++			printf '%s\n' "$$spslr"; \
++		else \
++			printf 'SPSLR missing: obj=%s expected=%s\n' "$$obj" "$$spslr" >&2; \
++		fi; \
++	done > $$tmp; \
++	printf 'SPSLR wrote manifest: %s\n' "$$tmp" >&2; \
++	if [ -s "$$tmp" ]; then \
++		printf 'SPSLR manifest entries: %s\n' "$$(wc -l < "$$tmp")" >&2; \
++	else \
++		printf 'SPSLR manifest is empty: %s\n' "$$tmp" >&2; \
++	fi; \
++	mv -f $$tmp $@; \
++	printf 'SPSLR final manifest: %s\n' "$@" >&2
++
++$(SPSLR_VMLINUX_SPSLR_LIST): $(SPSLR_VMLINUX_LINK_INPUTS) FORCE
++	$(call if_changed,gen_spslr_list)
++
++quiet_cmd_spslr_patchcompile_vmlinux = SPSLR   $@
++      cmd_spslr_patchcompile_vmlinux = set -e; \
++	if [ ! -s $(SPSLR_VMLINUX_SPSLR_LIST) ]; then \
++		echo "No .spslr files found for vmlinux link inputs" >&2; \
++		exit 1; \
++	fi; \
++	targets_tmp="$(SPSLR_VMLINUX_TARGET_MAP).tmp"; \
++	trap 'rm -f "$$targets_tmp"' EXIT; \
++	$(SPSLR_TOOL_PATCHCOMPILE) \
++		--out $(SPSLR_VMLINUX_SPSLR_SECTION_ASM) \
++		--dump-targets "$$targets_tmp" \
++		--verbose \
++		$$(cat $(SPSLR_VMLINUX_SPSLR_LIST)); \
++	if ! cmp -s "$$targets_tmp" "$(SPSLR_VMLINUX_TARGET_MAP)"; then \
++		mv -f "$$targets_tmp" "$(SPSLR_VMLINUX_TARGET_MAP)"; \
++	else \
++		rm -f "$$targets_tmp"; \
++	fi
++
++quiet_cmd_spslr_as = AS      $@
++      cmd_spslr_as = $(CC) $(KBUILD_AFLAGS) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) -c -o $@ $<
++
++$(SPSLR_VMLINUX_PATCHCOMPILE_STAMP): $(SPSLR_VMLINUX_SPSLR_LIST) $(SPSLR_TOOL_PATCHCOMPILE) FORCE
++	$(call if_changed,spslr_patchcompile_vmlinux)
++	@touch $@
++
++$(SPSLR_VMLINUX_SPSLR_SECTION_ASM): $(SPSLR_VMLINUX_PATCHCOMPILE_STAMP)
++	@:
++
++$(SPSLR_VMLINUX_TARGET_MAP): $(SPSLR_VMLINUX_PATCHCOMPILE_STAMP)
++	@:
++
++$(SPSLR_VMLINUX_SPSLR_SECTION_OBJ): $(SPSLR_VMLINUX_SPSLR_SECTION_ASM) FORCE
++	$(call if_changed,spslr_as)
++
++vmlinux_o: $(SPSLR_VMLINUX_SPSLR_SECTION_OBJ)
++
++modules: $(SPSLR_VMLINUX_TARGET_MAP)
++
++endif
++
++CLEAN_FILES += $(SPSLR_METADIR) \
++	       $(SPSLR_VMLINUX_SPSLR_SECTION_ASM) \
++	       $(SPSLR_VMLINUX_SPSLR_SECTION_OBJ) \
++	       $(SPSLR_VMLINUX_SPSLR_LIST) \
++	       $(SPSLR_VMLINUX_TARGET_MAP) \
++	       $(SPSLR_VMLINUX_PATCHCOMPILE_STAMP)
++
++clean: tools/spslr_clean
++
+ PHONY += vmlinux_o
+ vmlinux_o: vmlinux.a $(KBUILD_VMLINUX_LIBS)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vmlinux_o
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index f2051644de94..bd0685bb1ef3 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -44,6 +44,8 @@ KBUILD_CFLAGS += -D__DISABLE_EXPORTS
+ KBUILD_CFLAGS += $(call cc-option,-Wa$(comma)-mrelax-relocations=no)
+ KBUILD_CFLAGS += -include $(srctree)/include/linux/hidden.h
+ 
++KBUILD_CFLAGS += -std=gnu11
++
+ # sev.c indirectly includes inat-table.h which is generated during
+ # compilation and stored in $(objtree). Add the directory to the includes so
+ # that the compiler finds it even with out-of-tree builds (make O=/some/path).
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index feb8102a9ca7..b5e5cfc1d9db 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -185,6 +185,14 @@ SECTIONS
+ 		/* rarely changed data like cpu maps */
+ 		READ_MOSTLY_DATA(INTERNODE_CACHE_BYTES)
+ 
++#ifdef CONFIG_SPSLR
++		. = ALIGN(8);
++		__spslr_start = .;
++		KEEP(*(.spslr))
++		KEEP(*(.spslr.*))
++		__spslr_end = .;
++#endif
++
+ 		/* End of data section */
+ 		_edata = .;
+ 	} :data
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index ed4e8ddbe76a..cfc99d5a0e80 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -20,6 +20,8 @@ cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ \
+ 				   -fno-asynchronous-unwind-tables \
+ 				   $(CLANG_FLAGS)
+ 
++cflags-$(CONFIG_X86_64) += -std=gnu11 -Wno-address-of-packed-member
++
+ # arm64 uses the full KBUILD_CFLAGS so it's necessary to explicitly
+ # disable the stackleak plugin
+ cflags-$(CONFIG_ARM64)		+= -fpie $(DISABLE_STACKLEAK_PLUGIN) \
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 1a957ea2f4fe..167c106574e0 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -374,6 +374,18 @@ struct ftrace_likely_data {
+ # define __latent_entropy
+ #endif
+ 
++#if defined(__SPSLR__)
++# define __spslr __attribute__((spslr))
++# define __spslr_field_fixed __attribute__((spslr_field_fixed))
++# define spslr_struct_fields_start struct {
++# define spslr_struct_fields_end   } __spslr;
++#else
++# define __spslr
++# define __spslr_field_fixed
++# define spslr_struct_fields_start
++# define spslr_struct_fields_end
++#endif
++
+ #if defined(RANDSTRUCT) && !defined(__CHECKER__)
+ # define __randomize_layout __designated_init __attribute__((randomize_layout))
+ # define __no_randomize_layout __attribute__((no_randomize_layout))
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index bb343136ddd0..427de1e2a787 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -793,6 +793,7 @@ struct task_struct {
+ 	 * scheduling-critical items should be added above here.
+ 	 */
+ 	randomized_struct_fields_start
++	spslr_struct_fields_start
+ 
+ 	void				*stack;
+ 	refcount_t			usage;
+@@ -828,12 +829,12 @@ struct task_struct {
+ 	int				normal_prio;
+ 	unsigned int			rt_priority;
+ 
+-	struct sched_entity		se;
+-	struct sched_rt_entity		rt;
++	struct sched_entity		se __spslr_field_fixed;
++	struct sched_rt_entity		rt __spslr_field_fixed;
+ 	struct sched_dl_entity		dl;
+ 	struct sched_dl_entity		*dl_server;
+ #ifdef CONFIG_SCHED_CLASS_EXT
+-	struct sched_ext_entity		scx;
++	struct sched_ext_entity		scx __spslr_field_fixed;
+ #endif
+ 	const struct sched_class	*sched_class;
+ 
+@@ -865,7 +866,7 @@ struct task_struct {
+ 
+ #ifdef CONFIG_PREEMPT_NOTIFIERS
+ 	/* List of struct preempt_notifier: */
+-	struct hlist_head		preempt_notifiers;
++	struct hlist_head		preempt_notifiers __spslr_field_fixed;
+ #endif
+ 
+ #ifdef CONFIG_BLK_DEV_IO_TRACE
+@@ -877,7 +878,7 @@ struct task_struct {
+ 	int				nr_cpus_allowed;
+ 	const cpumask_t			*cpus_ptr;
+ 	cpumask_t			*user_cpus_ptr;
+-	cpumask_t			cpus_mask;
++	cpumask_t			cpus_mask __spslr_field_fixed;
+ 	void				*migration_pending;
+ #ifdef CONFIG_SMP
+ 	unsigned short			migration_disabled;
+@@ -887,7 +888,7 @@ struct task_struct {
+ #ifdef CONFIG_PREEMPT_RCU
+ 	int				rcu_read_lock_nesting;
+ 	union rcu_special		rcu_read_unlock_special;
+-	struct list_head		rcu_node_entry;
++	struct list_head		rcu_node_entry __spslr_field_fixed;
+ 	struct rcu_node			*rcu_blocked_node;
+ #endif /* #ifdef CONFIG_PREEMPT_RCU */
+ 
+@@ -896,25 +897,25 @@ struct task_struct {
+ 	u8				rcu_tasks_holdout;
+ 	u8				rcu_tasks_idx;
+ 	int				rcu_tasks_idle_cpu;
+-	struct list_head		rcu_tasks_holdout_list;
++	struct list_head		rcu_tasks_holdout_list __spslr_field_fixed;
+ 	int				rcu_tasks_exit_cpu;
+-	struct list_head		rcu_tasks_exit_list;
++	struct list_head		rcu_tasks_exit_list __spslr_field_fixed;
+ #endif /* #ifdef CONFIG_TASKS_RCU */
+ 
+ #ifdef CONFIG_TASKS_TRACE_RCU
+ 	int				trc_reader_nesting;
+ 	int				trc_ipi_to_cpu;
+ 	union rcu_special		trc_reader_special;
+-	struct list_head		trc_holdout_list;
+-	struct list_head		trc_blkd_node;
++	struct list_head		trc_holdout_list __spslr_field_fixed;
++	struct list_head		trc_blkd_node __spslr_field_fixed;
+ 	int				trc_blkd_cpu;
+ #endif /* #ifdef CONFIG_TASKS_TRACE_RCU */
+ 
+ 	struct sched_info		sched_info;
+ 
+-	struct list_head		tasks;
++	struct list_head		tasks __spslr_field_fixed;
+ #ifdef CONFIG_SMP
+-	struct plist_node		pushable_tasks;
++	struct plist_node		pushable_tasks __spslr_field_fixed;
+ 	struct rb_node			pushable_dl_tasks;
+ #endif
+ 
+@@ -1019,8 +1020,12 @@ struct task_struct {
+ 	pid_t				tgid;
+ 
+ #ifdef CONFIG_STACKPROTECTOR
++	/* Canary can not be randomized because of arch/x86/kernel/asm-offsets.c
++	 * Pinpoint plugin could recognize context of instrumented accesses
++	 * and e.g. hijack asm instructions that want to use them as constants.
++	 */
+ 	/* Canary value for the -fstack-protector GCC feature: */
+-	unsigned long			stack_canary;
++	unsigned long				stack_canary __spslr_field_fixed;
+ #endif
+ 	/*
+ 	 * Pointers to the (original) parent process, youngest child, younger sibling,
+@@ -1037,8 +1042,8 @@ struct task_struct {
+ 	/*
+ 	 * Children/sibling form the list of natural children:
+ 	 */
+-	struct list_head		children;
+-	struct list_head		sibling;
++	struct list_head		children __spslr_field_fixed;
++	struct list_head		sibling __spslr_field_fixed;
+ 	struct task_struct		*group_leader;
+ 
+ 	/*
+@@ -1047,13 +1052,13 @@ struct task_struct {
+ 	 * This includes both natural children and PTRACE_ATTACH targets.
+ 	 * 'ptrace_entry' is this task's link on the p->parent->ptraced list.
+ 	 */
+-	struct list_head		ptraced;
+-	struct list_head		ptrace_entry;
++	struct list_head		ptraced __spslr_field_fixed;
++	struct list_head		ptrace_entry __spslr_field_fixed;
+ 
+ 	/* PID/PID hash table linkage. */
+ 	struct pid			*thread_pid;
+ 	struct hlist_node		pid_links[PIDTYPE_MAX];
+-	struct list_head		thread_node;
++	struct list_head		thread_node __spslr_field_fixed;
+ 
+ 	struct completion		*vfork_done;
+ 
+@@ -1157,7 +1162,7 @@ struct task_struct {
+ 	sigset_t			real_blocked;
+ 	/* Restored if set_restore_sigmask() was used: */
+ 	sigset_t			saved_sigmask;
+-	struct sigpending		pending;
++	struct sigpending		pending __spslr_field_fixed;
+ 	unsigned long			sas_ss_sp;
+ 	size_t				sas_ss_size;
+ 	unsigned int			sas_ss_flags;
+@@ -1273,7 +1278,7 @@ struct task_struct {
+ 	/* Control Group info protected by css_set_lock: */
+ 	struct css_set __rcu		*cgroups;
+ 	/* cg_list protected by css_set_lock and tsk->alloc_lock: */
+-	struct list_head		cg_list;
++	struct list_head		cg_list __spslr_field_fixed;
+ #endif
+ #ifdef CONFIG_X86_CPU_RESCTRL
+ 	u32				closid;
+@@ -1292,8 +1297,8 @@ struct task_struct {
+ #ifdef CONFIG_PERF_EVENTS
+ 	u8				perf_recursion[PERF_NR_CONTEXTS];
+ 	struct perf_event_context	*perf_event_ctxp;
+-	struct mutex			perf_event_mutex;
+-	struct list_head		perf_event_list;
++	struct mutex			perf_event_mutex __spslr_field_fixed;
++	struct list_head		perf_event_list __spslr_field_fixed;
+ #endif
+ #ifdef CONFIG_DEBUG_PREEMPT
+ 	unsigned long			preempt_disable_ip;
+@@ -1596,6 +1601,7 @@ struct task_struct {
+ 	 * New fields for task_struct should be added above here, so that
+ 	 * they are included in the randomized portion of task_struct.
+ 	 */
++	spslr_struct_fields_end
+ 	randomized_struct_fields_end
+ 
+ 	/* CPU-specific state of this task: */
+diff --git a/init/Kconfig b/init/Kconfig
+index c521e1421ad4..c0cf7fa7a491 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -2052,3 +2052,10 @@ config ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
+ # <asm/syscall_wrapper.h>.
+ config ARCH_HAS_SYSCALL_WRAPPER
+ 	def_bool n
++
++config SPSLR
++	bool "Selfpatch SLR prototype"
++	depends on X86_64
++	depends on CC_IS_GCC
++	help
++	  Experimental structure layout randomization prototype.
+diff --git a/init/main.c b/init/main.c
+index c4778edae797..f2c4e606fa8a 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -114,6 +114,8 @@
+ 
+ #include <kunit/test.h>
+ 
 +#include <linux/spslr.h>
 +
-+#include "spslr_randomizer.h"
-+#include "spslr_env.h"
-+#include "spslr_list_link.h"
+ static int kernel_init(void *);
+ 
+ /*
+@@ -953,6 +955,19 @@ void start_kernel(void)
+ 	/* Architectural and non-timekeeping rng init, before allocator init */
+ 	random_init_early(command_line);
+ 
++#ifdef CONFIG_SPSLR
++	/* Randomize structure layouts */
++	struct spslr_status spslr_init_status = spslr_init();
++	if (spslr_init_status.error != SPSLR_OK)
++		panic("SPSLR initialization failed");
 +
-+#define SPSLR_SANITY_CHECK
++	struct spslr_status spslr_selfpatch_status = spslr_selfpatch();
++	if (spslr_selfpatch_status.error != SPSLR_OK)
++		panic("SPSLR selfpatch failed");
 +
-+static int spslr_patch_dpins(const struct spslr_dpin* dpins, spslr_u32 cnt);
-+static int spslr_patch_dpin(void* addr, spslr_u32 target);
-+static int spslr_patch_ipins(const struct spslr_ipin* ipins, spslr_u32 cnt,
-+	const struct spslr_ipin_op* ipin_ops, spslr_u32 op_cnt);
-+
-+static int reorder_object(void* dst, const void* src, spslr_u32 target);
-+static int spslr_calculate_ipin_value(const struct spslr_ipin_op* ipin_ops, spslr_u32 op_cnt, spslr_u32 start, spslr_s64* res);
-+
-+static void* reorder_buffer = NULL;
-+
-+static int allocate_reorder_buffer(void);
-+
-+static int initialized = 0, patched = 0;
-+static enum spslr_viability viable = SPSLR_VIABLE;
-+
-+struct spslr_status __init spslr_init(void) {
-+	if (initialized)
-+		return (struct spslr_status) { .viability = viable, .error = SPSLR_OK };
-+
-+	if (spslr_randomizer_init() < 0)
-+		return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_RANDOMIZER_INIT };
-+
-+#ifdef SPSLR_SANITY_CHECK
-+	for (spslr_u32 tidx = 0; tidx < spslr_target_cnt; tidx++) {
-+		if (spslr_randomizer_validate_target(tidx) < 0)
-+			return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_INITIAL_TARGET_LAYOUT };
-+	}
++	pr_notice("Successfully applied SPSLR\n");
 +#endif
 +
-+	if (spslr_randomize() < 0)
-+		return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_RANDOMIZE };
+ 	/*
+ 	 * These use large bootmem allocations and must precede
+ 	 * initalization of page allocator
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 49b9bca9de12..209030881b8a 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -65,6 +65,8 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/module.h>
+ 
++#include <linux/spslr.h>
 +
-+#ifdef SPSLR_SANITY_CHECK
-+	for (spslr_u32 tidx = 0; tidx < spslr_target_cnt; tidx++) {
-+		if (spslr_randomizer_validate_target(tidx) < 0)
-+			return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_RANDOMIZED_TARGET_LAYOUT };
-+	}
-+#endif
-+
-+	if (allocate_reorder_buffer() < 0)
-+		return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_REORDER_BUFFER };
-+
-+	initialized = 1;
-+	return (struct spslr_status) { .viability = viable, .error = SPSLR_OK };
-+}
-+
-+struct spslr_status __init spslr_selfpatch(void) {
-+	if (patched)
-+		return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_ALREADY_PATCHED };
-+
-+	if (!initialized)
-+		return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_UNINITIALIZED };
-+
-+	viable = SPSLR_NONVIABLE;
-+
-+	if (spslr_patch_dpins(spslr_dpins, spslr_dpin_cnt) < 0)
-+		return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_PATCH_DPINS };
-+
-+	if (spslr_patch_ipins(spslr_ipins, spslr_ipin_cnt, spslr_ipin_ops, spslr_ipin_op_cnt) < 0)
-+		return (struct spslr_status) { .viability = viable, .error = SPSLR_ERROR_PATCH_IPINS };
-+
-+	viable = SPSLR_VIABLE;
-+
-+	patched = 1;
-+	return (struct spslr_status) { .viability = viable, .error = SPSLR_OK };
-+}
-+
-+struct spslr_status spslr_patch_module(const struct spslr_module* m) {
-+	if (!initialized)
-+		return (struct spslr_status) { .viability = SPSLR_VIABLE, .error = SPSLR_ERROR_UNINITIALIZED };
-+
-+	if (!m || !m->ipin_cnt || !m->ipins || !m->ipin_op_cnt || !m->ipin_ops || !m->dpin_cnt || !m->dpins)
-+		return (struct spslr_status) { .viability = SPSLR_VIABLE, .error = SPSLR_ERROR_META_INCOMPLETE };
-+
-+	spslr_u32 module_ipin_cnt = *(const spslr_u32*)m->ipin_cnt;
-+	const struct spslr_ipin* module_ipins = (const struct spslr_ipin*)m->ipins;
-+	spslr_u32 module_ipin_op_cnt = *(const spslr_u32*)m->ipin_op_cnt;
-+	const struct spslr_ipin_op* module_ipin_ops = (const struct spslr_ipin_op*)m->ipin_ops;
-+	spslr_u32 module_dpin_cnt = *(const spslr_u32*)m->dpin_cnt;
-+	const struct spslr_dpin* module_dpins = (const struct spslr_dpin*)m->dpins;
-+
-+	if (spslr_patch_dpins(module_dpins, module_dpin_cnt) < 0)
-+		return (struct spslr_status) { .viability = SPSLR_NONVIABLE, .error = SPSLR_ERROR_PATCH_DPINS };
-+
-+	if (spslr_patch_ipins(module_ipins, module_ipin_cnt, module_ipin_ops, module_ipin_op_cnt) < 0)
-+		return (struct spslr_status) { .viability = SPSLR_NONVIABLE, .error = SPSLR_ERROR_PATCH_IPINS };
-+
-+	return (struct spslr_status) { .viability = SPSLR_VIABLE, .error = SPSLR_OK };
-+}
-+
-+static int __init allocate_reorder_buffer(void) {
-+	if (reorder_buffer)
-+		return 0;
-+
-+	spslr_u32 max_target_size = 0;
-+	for (spslr_u32 i = 0; i < spslr_target_cnt; i++) {
-+		if (spslr_targets[i].size > max_target_size)
-+			max_target_size = spslr_targets[i].size;
-+	}
-+
-+	reorder_buffer = spslr_env_malloc(max_target_size);
-+	if (!reorder_buffer)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static int spslr_patch_dpins(const struct spslr_dpin* dpins, spslr_u32 cnt) {
-+	for (spslr_u32 dpidx = 0; dpidx < cnt; dpidx++)  {
-+		const struct spslr_dpin* dp = &dpins[dpidx];
-+		if (spslr_patch_dpin((void*)dp->addr, dp->target) < 0)
-+			return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int reorder_object(void* dst, const void* src, spslr_u32 target) {
-+	spslr_u32 field_count;
-+	if (spslr_randomizer_get_target(target, NULL, &field_count))
-+		return -1;
-+
-+	const spslr_u8* src_countable = (const spslr_u8*)src;
-+	spslr_u8* dst_countable = (spslr_u8*)dst;
-+
-+	for (spslr_u32 i = 0; i < field_count; i++) {
-+		struct spslr_randomizer_field_info finfo;
-+		if (spslr_randomizer_get_field(target, i, SPSLR_RANDOMIZER_FIELD_IDX_MODE_FINAL, &finfo))
-+			return -1;
-+
-+		spslr_env_memcpy(dst_countable + finfo.offset, src_countable + finfo.initial_offset, finfo.size);
-+	}
-+
-+	return 0;
-+}
-+
-+static int spslr_patch_dpin(void* addr, spslr_u32 target) {
-+	if (target >= spslr_target_cnt)
-+		return -1;
-+
-+	const struct spslr_target* t = &spslr_targets[target];
-+
-+	spslr_env_memset(reorder_buffer, 0, t->size);
-+
-+	if (reorder_object(reorder_buffer, addr, target) < 0)
-+		return -1;
-+
-+	if (spslr_env_poke_data(addr, reorder_buffer, t->size) < 0)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static int spslr_patch_ipins(const struct spslr_ipin* ipins, spslr_u32 cnt,
-+		const struct spslr_ipin_op* ipin_ops, spslr_u32 op_cnt) {
-+	for (spslr_u32 ipidx = 0; ipidx < cnt; ipidx++) {
-+		const struct spslr_ipin* ip = &ipins[ipidx];
-+
-+		spslr_s64 value;
-+		if (spslr_calculate_ipin_value(ipin_ops, op_cnt, ip->program, &value) < 0)
-+			return -1;
-+
-+		switch (ip->size) {
-+			case 1:
-+				if (spslr_env_poke_text_8((void*)ip->addr, (spslr_u8)value) < 0)
-+					return -1;
-+				break;
-+			case 2:
-+				if (spslr_env_poke_text_16((void*)ip->addr, (spslr_u16)value) < 0)
-+					return -1;
-+				break;
-+			case 4:
-+				if (spslr_env_poke_text_32((void*)ip->addr, (spslr_u32)value) < 0)
-+					return -1;
-+				break;
-+			case 8:
-+				if (spslr_env_poke_text_64((void*)ip->addr, (spslr_u64)value) < 0)
-+					return -1;
-+				break;
-+			default:
-+				return -1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int spslr_calculate_ipin_value(const struct spslr_ipin_op* ipin_ops, spslr_u32 op_cnt, spslr_u32 start, spslr_s64* res) {
-+	if (!res)
-+		return -1;
-+
-+	*res = 0;
-+
-+	spslr_u32 pc = start;
-+	while (1) {
-+		if (pc >= op_cnt)
-+			return -1;
-+
-+		int end_flag = 0;
-+
-+		const struct spslr_ipin_op* op = &ipin_ops[pc++];
-+		switch (op->code) {
-+			case SPSLR_IPIN_OP_PATCH:
-+				end_flag = 1;
-+				break;
-+			case SPSLR_IPIN_OP_ADD_INITIAL_OFFSET:
-+				{
-+					struct spslr_randomizer_field_info finfo;
-+					if (spslr_randomizer_get_field(op->op0.add_initial_offset_target,
-+							op->op1.add_initial_offset_field, SPSLR_RANDOMIZER_FIELD_IDX_MODE_ORIGINAL, &finfo))
-+						return -1;
-+
-+					*res += finfo.initial_offset;
-+				}
-+				break;
-+			case SPSLR_IPIN_OP_ADD_OFFSET:
-+				{
-+					struct spslr_randomizer_field_info finfo;
-+					if (spslr_randomizer_get_field(op->op0.add_offset_target,
-+							op->op1.add_offset_field, SPSLR_RANDOMIZER_FIELD_IDX_MODE_ORIGINAL, &finfo))
-+						return -1;
-+
-+					*res += finfo.offset;
-+				}
-+				break;
-+			case SPSLR_IPIN_OP_SUB_INITIAL_OFFSET:
-+				{
-+					struct spslr_randomizer_field_info finfo;
-+					if (spslr_randomizer_get_field(op->op0.sub_initial_offset_target,
-+							op->op1.sub_initial_offset_field, SPSLR_RANDOMIZER_FIELD_IDX_MODE_ORIGINAL, &finfo))
-+						return -1;
-+
-+					*res -= finfo.initial_offset;
-+				}
-+				break;
-+			case SPSLR_IPIN_OP_SUB_OFFSET:
-+				{
-+					struct spslr_randomizer_field_info finfo;
-+					if (spslr_randomizer_get_field(op->op0.sub_offset_target,
-+							op->op1.sub_offset_field, SPSLR_RANDOMIZER_FIELD_IDX_MODE_ORIGINAL, &finfo))
-+						return -1;
-+
-+					*res -= finfo.offset;
-+				}
-+				break;
-+			case SPSLR_IPIN_OP_ADD_CONST:
-+				*res += op->op0.add_const_value;
-+				break;
-+			default:
-+				return -1;
-+		}
-+
-+		if (end_flag)
-+			break;
-+	}
-+
-+	return 0;
-+}
-+
-diff --git a/kernel/spslr/spslr_env.c b/kernel/spslr/spslr_env.c
-new file mode 100644
-index 000000000000..d4a79d532c06
---- /dev/null
-+++ b/kernel/spslr/spslr_env.c
-@@ -0,0 +1,74 @@
-+#include "spslr_env.h"
-+
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <linux/random.h>
-+#include <linux/memblock.h>
-+
-+#ifdef CONFIG_X86
-+
-+#include <asm/text-patching.h>
-+
-+static __always_inline int spslr_env_poke_text(void *dst, const void *src, size_t n)
+ /*
+  * Mutex protects:
+  * 1) List of modules (also safely readable with preempt_disable),
+@@ -2847,6 +2849,59 @@ static int early_mod_check(struct load_info *info, int flags)
+ 	return err;
+ }
+ 
++/* Find spslr symbol in module without kallsym */
++static unsigned long spslr_find_module_symbol(const struct load_info *info,
++					      const char *name)
 +{
-+	text_poke_early(dst, src, n);
-+	return 0;
-+}
++	Elf_Shdr *symsec = &info->sechdrs[info->index.sym];
++	Elf_Sym *sym = (void *)symsec->sh_addr;
++	unsigned int i, n = symsec->sh_size / sizeof(*sym);
 +
-+#endif
++	for (i = 1; i < n; i++) {
++		const char *symname = info->strtab + sym[i].st_name;
 +
-+int spslr_env_poke_text_8(void *dst, u8 value)
-+{
-+	return spslr_env_poke_text(dst, &value, sizeof(value));
-+}
-+
-+int spslr_env_poke_text_16(void *dst, u16 value)
-+{
-+	return spslr_env_poke_text(dst, &value, sizeof(value));
-+}
-+
-+int spslr_env_poke_text_32(void *dst, u32 value)
-+{
-+	return spslr_env_poke_text(dst, &value, sizeof(value));
-+}
-+
-+int spslr_env_poke_text_64(void *dst, u64 value)
-+{
-+	return spslr_env_poke_text(dst, &value, sizeof(value));
-+}
-+
-+void* __init spslr_env_malloc(spslr_u32 n) {
-+	if (!n)
-+		n = 1;
-+
-+	/*
-+	 * Hook runs before slab allocators are available.
-+	 * memblock_alloc() is the correct early-boot allocator.
-+	 * Reserve the memory to ensure it is not freed when handed to later allocator.
-+	 */
-+	void* res = memblock_alloc(n, SMP_CACHE_BYTES);
-+
-+	if (!res)
-+		return res;
-+
-+	memblock_reserve(__pa(res), n);
-+	return res;
-+}
-+
-+int spslr_env_poke_data(void* dst, const void* src, spslr_u32 n) {
-+	memcpy(dst, src, n);
-+	return 0;
-+}
-+
-+void spslr_env_memset(void* dst, int v, spslr_u32 n) {
-+	memset(dst, v, n);
-+}
-+
-+void spslr_env_memcpy(void* dst, const void* src, spslr_u32 n) {
-+	memcpy(dst, src, n);
-+}
-+
-+spslr_u32 __init spslr_env_random_u32(void) {
-+	return get_random_u32(); // Hook runs after random_init_early() 
-+}
-+
-diff --git a/kernel/spslr/spslr_env.h b/kernel/spslr/spslr_env.h
-new file mode 100644
-index 000000000000..09260dcb2192
---- /dev/null
-+++ b/kernel/spslr/spslr_env.h
-@@ -0,0 +1,42 @@
-+#ifndef SPSLR_ENV_H
-+#define SPSLR_ENV_H
-+
-+#include <linux/types.h>
-+#include <linux/stddef.h>
-+#include <linux/init.h>
-+
-+#ifndef __packed
-+#define __packed __attribute__((packed))
-+#endif
-+
-+#ifndef __init
-+#define __init /* only required in kernel */
-+#endif
-+
-+#ifndef __printf
-+#define __printf(fmt_pos, arg_pos) __attribute__((format(printf, fmt_pos, arg_pos)))
-+#endif
-+
-+#ifndef NULL
-+#define NULL ((void*)0)
-+#endif
-+
-+typedef uint8_t spslr_u8;
-+typedef uint16_t spslr_u16;
-+typedef uint32_t spslr_u32;
-+typedef uint64_t spslr_u64;
-+typedef int32_t spslr_s32;
-+typedef int64_t spslr_s64;
-+typedef uintptr_t spslr_uintptr;
-+
-+int spslr_env_poke_text_8(void* dst, spslr_u8 value);
-+int spslr_env_poke_text_16(void* dst, spslr_u16 value);
-+int spslr_env_poke_text_32(void* dst, spslr_u32 value);
-+int spslr_env_poke_text_64(void* dst, spslr_u64 value);
-+int spslr_env_poke_data(void* dst, const void* src, spslr_u32 n);
-+void* spslr_env_malloc(spslr_u32 n);
-+void spslr_env_memset(void* dst, int v, spslr_u32 n);
-+void spslr_env_memcpy(void* dst, const void* src, spslr_u32 n);
-+spslr_u32 spslr_env_random_u32(void);
-+
-+#endif
-diff --git a/kernel/spslr/spslr_list.h b/kernel/spslr/spslr_list.h
-new file mode 100644
-index 000000000000..baf713e8e893
---- /dev/null
-+++ b/kernel/spslr/spslr_list.h
-@@ -0,0 +1,63 @@
-+#ifndef SPSLR_LIST_H
-+#define SPSLR_LIST_H
-+
-+#include "spslr_env.h"
-+
-+#define SPSLR_IPIN_OP_PATCH 1
-+#define SPSLR_IPIN_OP_ADD_INITIAL_OFFSET 2
-+#define SPSLR_IPIN_OP_SUB_INITIAL_OFFSET 3
-+#define SPSLR_IPIN_OP_ADD_OFFSET 4
-+#define SPSLR_IPIN_OP_SUB_OFFSET 5
-+#define SPSLR_IPIN_OP_ADD_CONST 6
-+
-+#define SPSLR_FLAG_FIELD_FIXED 1
-+
-+struct spslr_target {
-+	spslr_u32 size;
-+	spslr_u32 fieldcnt;
-+	spslr_u32 fieldoff; // Offset into spslr_target_field array
-+} __packed;
-+
-+struct spslr_target_field {
-+	spslr_u32 offset;
-+	spslr_u32 size;
-+	spslr_u32 alignment;
-+	spslr_u32 flags;
-+} __packed;
-+
-+struct spslr_ipin {
-+	spslr_u64 addr;
-+	spslr_u32 size;
-+	spslr_u32 program; // Index in spslr_ipin_op array
-+} __packed;
-+
-+struct spslr_ipin_op {
-+	spslr_u32 code;
-+
-+	union {
-+		spslr_u32 patch_unused;
-+		spslr_u32 add_initial_offset_target;
-+		spslr_u32 sub_initial_offset_target;
-+		spslr_u32 add_offset_target;
-+		spslr_u32 sub_offset_target;
-+		spslr_s32 add_const_value;
-+	} op0;
-+
-+	union {
-+		spslr_u32 patch_unused;
-+		spslr_u32 add_initial_offset_field;
-+		spslr_u32 sub_initial_offset_field;
-+		spslr_u32 add_offset_field;
-+		spslr_u32 sub_offset_field;
-+		spslr_u32 add_const_unused;
-+	} op1;
-+} __packed;
-+
-+struct spslr_dpin {
-+	spslr_u64 addr;
-+	spslr_u32 target; // Index in spslr_target array
-+} __packed;
-+
-+#undef __packed
-+
-+#endif
-diff --git a/kernel/spslr/spslr_list_link.h b/kernel/spslr/spslr_list_link.h
-new file mode 100644
-index 000000000000..91a4e12f52b4
---- /dev/null
-+++ b/kernel/spslr/spslr_list_link.h
-@@ -0,0 +1,21 @@
-+#ifndef SPSLR_LIST_LINK_H
-+#define SPSLR_LIST_LINK_H
-+
-+#include "spslr_list.h"
-+
-+extern const spslr_u32 spslr_target_cnt;
-+extern const struct spslr_target spslr_targets[];
-+
-+extern const spslr_u32 spslr_target_field_cnt;
-+extern const struct spslr_target_field spslr_target_fields[];
-+
-+extern const spslr_u32 spslr_ipin_cnt;
-+extern const struct spslr_ipin spslr_ipins[];
-+
-+extern const spslr_u32 spslr_ipin_op_cnt;
-+extern const struct spslr_ipin_op spslr_ipin_ops[];
-+
-+extern const spslr_u32 spslr_dpin_cnt;
-+extern const struct spslr_dpin spslr_dpins[];
-+
-+#endif
-diff --git a/kernel/spslr/spslr_randomizer.c b/kernel/spslr/spslr_randomizer.c
-new file mode 100644
-index 000000000000..44dd94102656
---- /dev/null
-+++ b/kernel/spslr/spslr_randomizer.c
-@@ -0,0 +1,382 @@
-+#include "spslr_randomizer.h"
-+
-+#include "spslr_list_link.h"
-+#include "spslr_env.h"
-+
-+struct Field {
-+	spslr_u32 offset; /* Final field offset -> fields[i].offset = offset of field i in final layout */
-+	spslr_u32 oidx; /* Original field idx -> fields[i].oidx = original position of field i in final layout */
-+	spslr_u32 fidx; /* Final field idx -> fields[i].fidx = randomized/final position of original field i */
-+};
-+
-+static struct Field* fields;
-+
-+int __init spslr_randomizer_init(void) {
-+	fields = (struct Field*)spslr_env_malloc(sizeof(struct Field) * spslr_target_field_cnt);
-+	if (!fields)
-+		return -1;
-+
-+	for (spslr_u32 tidx = 0; tidx < spslr_target_cnt; tidx++) {
-+		const struct spslr_target* t = &spslr_targets[tidx];
-+
-+		for (spslr_u32 fidx = 0; fidx < t->fieldcnt; fidx++) {
-+			spslr_u32 gfidx = t->fieldoff + fidx;
-+
-+			const struct spslr_target_field* srcf = &spslr_target_fields[gfidx];
-+			struct Field* dstf = &fields[gfidx];
-+
-+			dstf->offset = srcf->offset;
-+			dstf->oidx = fidx;
-+			dstf->fidx = fidx;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+int spslr_randomizer_get_target(spslr_u32 target, spslr_u32* size, spslr_u32* fieldcnt) {
-+	if (target >= spslr_target_cnt)
-+		return -1;
-+
-+	const struct spslr_target* t = &spslr_targets[target];
-+
-+	if (size)
-+		*size = t->size;
-+
-+	if (fieldcnt)
-+		*fieldcnt = t->fieldcnt;
-+
-+	return 0;
-+}
-+
-+int spslr_randomizer_get_field(spslr_u32 target, spslr_u32 field, int field_idx_mode,
-+		struct spslr_randomizer_field_info* info) {
-+	if (target >= spslr_target_cnt)
-+		return -1;
-+
-+	if (!info)
-+		return 0;
-+
-+	const struct spslr_target* t = &spslr_targets[target];
-+
-+	if (field >= t->fieldcnt)
-+		return -1;
-+
-+	const struct spslr_target_field* of = NULL;
-+	const struct Field* rf = NULL;
-+
-+	switch (field_idx_mode) {
-+		case SPSLR_RANDOMIZER_FIELD_IDX_MODE_ORIGINAL:
-+			of = &spslr_target_fields[t->fieldoff + field];
-+			rf = &fields[t->fieldoff + fields[t->fieldoff + field].fidx];
-+			break;
-+		case SPSLR_RANDOMIZER_FIELD_IDX_MODE_FINAL:
-+			of = &spslr_target_fields[t->fieldoff + fields[t->fieldoff + field].oidx];
-+			rf = &fields[t->fieldoff + field];
-+			break;
-+		default:
-+			return -1;
-+	}
-+
-+	info->size = of->size;
-+	info->offset = rf->offset;
-+	info->initial_offset = of->offset;
-+	info->alignment = of->alignment;
-+	info->flags = of->flags;
-+
-+	return 0;
-+}
-+
-+int __init spslr_randomizer_validate_target(spslr_u32 target) {
-+	spslr_u32 tsize, fieldcnt;
-+
-+	if (spslr_randomizer_get_target(target, &tsize, &fieldcnt) < 0)
-+		return -1;
-+
-+	spslr_u32 cur_end = 0; 
-+    
-+	for (spslr_u32 i = 0; i < fieldcnt; i++) {
-+		struct spslr_randomizer_field_info finfo;
-+		if (spslr_randomizer_get_field(target, i, SPSLR_RANDOMIZER_FIELD_IDX_MODE_FINAL, &finfo) < 0)
-+			return -1;
-+
-+		if (finfo.offset < cur_end)
-+			return -1;
-+
-+		if (finfo.offset % finfo.alignment != 0)
-+			return -1;
-+
-+		if ((finfo.flags & SPSLR_FLAG_FIELD_FIXED) && finfo.offset != finfo.initial_offset)
-+			return -1;
-+
-+		if (finfo.offset + finfo.size > tsize)
-+			return -1;
-+
-+		cur_end = finfo.offset + finfo.size;
-+	}
-+
-+	return 0;
-+}
-+
-+// RANDOMIZATION CODE
-+
-+struct ShuffleRegion {
-+	spslr_u32 begin; 
-+	spslr_u32 end;
-+	spslr_u32 fill_begin;
-+	spslr_u32 fill_end;
-+};
-+
-+static spslr_u32 rand_u32(void);
-+static struct Field* get_rfield(spslr_u32 target, spslr_u32 final_idx);
-+static const struct spslr_target_field* get_ofield(spslr_u32 target, spslr_u32 orig_idx);
-+static void get_origin_region(spslr_u32 target, spslr_u32 final_idx, struct ShuffleRegion* region);
-+static int pick_shuffle_option(spslr_u32 target, spslr_u32 origin_final_idx,
-+	const struct ShuffleRegion* origin, spslr_u32 alignment, spslr_u32* selected);
-+static void do_swap(spslr_u32 target, spslr_u32 origin_final_idx,
-+	const struct ShuffleRegion* origin_region, spslr_u32 new_offset);
-+static void shuffle_one_target(spslr_u32 target);
-+static void shuffle_target(spslr_u32 target);
-+
-+static spslr_u32 rand_u32(void) {
-+	return spslr_env_random_u32();
-+}
-+
-+static struct Field* __init get_rfield(spslr_u32 target, spslr_u32 final_idx) {
-+	const struct spslr_target* t = &spslr_targets[target];
-+	return &fields[t->fieldoff + final_idx];
-+}
-+
-+static const struct spslr_target_field* __init get_ofield(spslr_u32 target, spslr_u32 orig_idx) {
-+	const struct spslr_target* t = &spslr_targets[target];
-+	return &spslr_target_fields[t->fieldoff + orig_idx];
-+}
-+
-+static void __init get_origin_region(spslr_u32 target, spslr_u32 final_idx, struct ShuffleRegion* region) {
-+	const struct spslr_target* t = &spslr_targets[target];
-+	const struct Field* rf = get_rfield(target, final_idx);
-+	const struct spslr_target_field* of = get_ofield(target, rf->oidx);
-+
-+	region->fill_begin = rf->offset;
-+	region->fill_end = region->fill_begin + of->size;
-+
-+	if (final_idx == 0) {
-+		region->begin = 0;
-+	} else {
-+		const struct Field* pred_rf = get_rfield(target, final_idx - 1);
-+		const struct spslr_target_field* pred_of = get_ofield(target, pred_rf->oidx);
-+		region->begin = pred_rf->offset + pred_of->size;
-+	}
-+
-+	if (final_idx + 1 >= t->fieldcnt) {
-+		region->end = t->size;
-+	} else {
-+		const struct Field* succ_rf = get_rfield(target, final_idx + 1);
-+		region->end = succ_rf->offset;
-+	}
-+}
-+
-+static int __init option_is_valid(spslr_u32 target, spslr_u32 origin_final_idx, const struct ShuffleRegion* origin, spslr_u32 offset) {
-+	const struct spslr_target* t = &spslr_targets[target];
-+	const struct spslr_target_field* origin_of =
-+		get_ofield(target, get_rfield(target, origin_final_idx)->oidx);
-+
-+	// When placed at offset, field will occupy [offset, option_would_end)
-+	spslr_u32 option_would_end = offset + origin_of->size;
-+	if (option_would_end > t->size)
-+		return 0;
-+
-+	// Field may overlap with origin region. Moving field to offset truly frees:
-+	// [true_origin_region_begin, true_origin_region_end)
-+	spslr_u32 true_origin_region_begin = origin->begin;
-+	spslr_u32 true_origin_region_end = origin->end;
-+
-+	if (offset <= origin->fill_begin && option_would_end > true_origin_region_begin)
-+		true_origin_region_begin = option_would_end;
-+
-+	if (offset >= origin->fill_begin && offset < true_origin_region_end)
-+		true_origin_region_end = offset;
-+
-+	// Iterate over fields in target region [offset, option_would_end] and see if they fit into true origin region
-+	spslr_u32 origin_region_ptr = true_origin_region_begin;
-+	for (spslr_u32 it = 0; it < t->fieldcnt; it++) {
-+		const struct Field* rf = get_rfield(target, it);
-+		const struct spslr_target_field* of = get_ofield(target, rf->oidx);
-+
-+		// The field being moved does not need to go into origin region
-+		if (it == origin_final_idx)
++		if (strcmp(symname, name) != 0)
 +			continue;
 +
-+		// Field ends before target region -> must not be moved to origin region
-+		if (rf->offset + of->size <= offset)
-+			continue;
-+
-+		// Field starts after target region -> must not be moved to origin region
-+		if (rf->offset >= option_would_end)
-+			break;
-+
-+		// Fixed fields in target region unconditionally deny option
-+		if (of->flags & SPSLR_FLAG_FIELD_FIXED)
++		/* Ignore undefined symbols just in case. */
++		if (sym[i].st_shndx == SHN_UNDEF)
 +			return 0;
 +
-+		// Field from target region must be moved to aligned position in origin region
-+		if (origin_region_ptr % of->alignment != 0)
-+			origin_region_ptr += of->alignment - (origin_region_ptr % of->alignment);
-+
-+		origin_region_ptr += of->size;
-+
-+		// Field does not fit into origin region -> option not possible
-+		if (origin_region_ptr > true_origin_region_end)
-+			return 0;
++		return (unsigned long)sym[i].st_value;
 +	}
-+
-+	return 1;
-+}
-+
-+static int __init pick_shuffle_option(spslr_u32 target, spslr_u32 origin_final_idx, const struct ShuffleRegion* origin,
-+		spslr_u32 alignment, spslr_u32* selected) {
-+	const struct spslr_target* t = &spslr_targets[target];
-+	spslr_u32 seen = 0;
-+
-+	/*
-+	Note: Instead of looping over entire field array for each option, loops can be merged into one.
-+	*/
-+
-+	for (spslr_u32 offset = 0; offset < t->size; offset += alignment) {
-+		if (!option_is_valid(target, origin_final_idx, origin, offset))
-+			continue;
-+
-+		// Reservoir sampling -> uniform distribution with O(1) memory consumption
-+		seen++;
-+		if ((rand_u32() % seen) == 0)
-+			*selected = offset;
-+	}
-+
-+	return seen ? 0 : -1;
-+}
-+
-+static void __init do_swap(spslr_u32 target, spslr_u32 origin_idx,
-+		const struct ShuffleRegion* origin_region, spslr_u32 new_offset) {
-+	const struct spslr_target* t = &spslr_targets[target];
-+	int pulled = 0;
-+
-+	spslr_u32 option_fill_end = new_offset + (origin_region->fill_end - origin_region->fill_begin);
-+
-+	spslr_u32 true_origin_region_begin = origin_region->begin;
-+	if (new_offset <= origin_region->fill_begin && option_fill_end > true_origin_region_begin)
-+		true_origin_region_begin = option_fill_end;
-+
-+	spslr_u32 origin_oidx = get_rfield(target, origin_idx)->oidx;
-+
-+	spslr_u32 origin_region_ptr = true_origin_region_begin;
-+	for (spslr_u32 it = 0; it < t->fieldcnt; it++) {
-+		struct Field* itf = get_rfield(target, it);
-+
-+		if (itf->oidx == origin_oidx)
-+			continue;
-+
-+		const struct spslr_target_field* itof = get_ofield(target, itf->oidx);
-+
-+		if (itf->offset + itof->size <= new_offset)
-+			continue;
-+
-+		if (itf->offset >= option_fill_end)
-+			break;
-+
-+		spslr_u32 falign = itof->alignment;
-+		if (origin_region_ptr % falign != 0)
-+			origin_region_ptr += falign - (origin_region_ptr % falign);
-+
-+		if (!pulled) {
-+			pulled = 1;
-+
-+			struct Field tmp = *get_rfield(target, it);
-+			*get_rfield(target, it) = *get_rfield(target, origin_idx);
-+			*get_rfield(target, origin_idx) = tmp;
-+
-+			get_rfield(target, it)->offset = new_offset;
-+
-+			get_rfield(target, origin_idx)->offset = origin_region_ptr;
-+			origin_region_ptr += get_ofield(target, get_rfield(target, origin_idx)->oidx)->size;
-+			continue;
-+		}
-+
-+		{
-+			struct Field tmp = *get_rfield(target, it);
-+
-+			if (origin_idx >= it) {
-+				for (spslr_u32 pull_it = it + 1; pull_it <= origin_idx; pull_it++)
-+					*get_rfield(target, pull_it - 1) = *get_rfield(target, pull_it);
-+
-+				*get_rfield(target, origin_idx) = tmp;
-+				get_rfield(target, origin_idx)->offset = origin_region_ptr;
-+				origin_region_ptr += get_ofield(target, get_rfield(target, origin_idx)->oidx)->size;
-+
-+				it--; // Must still look at the element now at it
-+			} else {
-+				for (spslr_u32 pull_it = it; pull_it > origin_idx + (spslr_u32)pulled; pull_it--)
-+					*get_rfield(target, pull_it) = *get_rfield(target, pull_it - 1);
-+
-+				*get_rfield(target, origin_idx + (spslr_u32)pulled) = tmp;
-+				get_rfield(target, origin_idx + (spslr_u32)pulled)->offset = origin_region_ptr;
-+				origin_region_ptr += get_ofield(target, get_rfield(target, origin_idx + (spslr_u32)pulled)->oidx)->size;
-+			}
-+		}
-+
-+		pulled++;
-+	}
-+
-+	/*
-+	 * Rebuild original->final mapping for this target.
-+	 */
-+	for (spslr_u32 final_idx = 0; final_idx < t->fieldcnt; final_idx++) {
-+		struct Field* rf = get_rfield(target, final_idx);
-+		fields[t->fieldoff + rf->oidx].fidx = final_idx;
-+	}
-+}
-+
-+/*
-+Note: final version should not shuffle random fields but try to shuffle each original field idx once
-+*/
-+static void __init shuffle_one_target(spslr_u32 target) {
-+	const struct spslr_target* t = &spslr_targets[target];
-+	if (t->fieldcnt == 0)
-+		return;
-+
-+	spslr_u32 origin_final_idx = rand_u32() % t->fieldcnt;
-+	struct Field* origin_rf = get_rfield(target, origin_final_idx);
-+	const struct spslr_target_field* origin_of = get_ofield(target, origin_rf->oidx);
-+
-+	if (origin_of->flags & SPSLR_FLAG_FIELD_FIXED)
-+		return;
-+
-+	struct ShuffleRegion origin_region;
-+	spslr_u32 selected_option;
-+
-+	get_origin_region(target, origin_final_idx, &origin_region);
-+
-+	if (pick_shuffle_option(target, origin_final_idx, &origin_region,
-+			origin_of->alignment, &selected_option) < 0)
-+		return;
-+
-+	do_swap(target, origin_final_idx, &origin_region, selected_option);
-+}
-+
-+static void __init shuffle_target(spslr_u32 target) {
-+	const struct spslr_target* t = &spslr_targets[target];
-+	spslr_u32 shuffle_count = t->fieldcnt * 2;
-+
-+	for (spslr_u32 i = 0; i < shuffle_count; i++)
-+		shuffle_one_target(target);
-+}
-+
-+int __init spslr_randomize(void) {
-+	if (!fields)
-+		return -1;
-+
-+	for (spslr_u32 tidx = 0; tidx < spslr_target_cnt; tidx++)
-+		shuffle_target(tidx);
 +
 +	return 0;
 +}
 +
-diff --git a/kernel/spslr/spslr_randomizer.h b/kernel/spslr/spslr_randomizer.h
-new file mode 100644
-index 000000000000..b240257d28b6
---- /dev/null
-+++ b/kernel/spslr/spslr_randomizer.h
-@@ -0,0 +1,26 @@
-+#ifndef SPSLR_RANDOMIZER_H
-+#define SPSLR_RANDOMIZER_H
++/* Apply structure layout randomization to module */
++static int __maybe_unused spslr_prepare_module(struct module *mod, const struct load_info *info)
++{
++	struct spslr_module sm = { };
++	struct spslr_status st;
 +
-+#include "spslr_env.h"
++	sm.ipin_cnt = (const void *)spslr_find_module_symbol(info, SPSLR_MODULE_SYM_IPIN_CNT);
++	sm.ipins = (const void *)spslr_find_module_symbol(info, SPSLR_MODULE_SYM_IPINS);
++	sm.ipin_op_cnt = (const void *)spslr_find_module_symbol(info, SPSLR_MODULE_SYM_IPIN_OP_CNT);
++	sm.ipin_ops = (const void *)spslr_find_module_symbol(info, SPSLR_MODULE_SYM_IPIN_OPS);
++	sm.dpin_cnt = (const void *)spslr_find_module_symbol(info, SPSLR_MODULE_SYM_DPIN_CNT);
++	sm.dpins = (const void *)spslr_find_module_symbol(info, SPSLR_MODULE_SYM_DPINS);
 +
-+#define SPSLR_RANDOMIZER_FIELD_IDX_MODE_ORIGINAL 1
-+#define SPSLR_RANDOMIZER_FIELD_IDX_MODE_FINAL 2
++	if (!sm.ipin_cnt || !sm.ipins || !sm.ipin_op_cnt ||
++	    !sm.ipin_ops || !sm.dpin_cnt || !sm.dpins) {
++		pr_err("%s: SPSLR metadata incomplete\n", mod->name);
++		return -ENOEXEC;
++	}
 +
-+struct spslr_randomizer_field_info {
-+	spslr_u32 size;
-+	spslr_u32 offset;
-+	spslr_u32 initial_offset;
-+	spslr_u32 alignment;
-+	spslr_u32 flags;
-+};
++	st = spslr_patch_module(&sm);
++	if (st.viability != SPSLR_VIABLE || st.error != SPSLR_OK) {
++		pr_err("%s: SPSLR patch failed: viability=%d error=%d\n",
++		       mod->name, st.viability, st.error);
++		return -ENOEXEC;
++	}
 +
-+int spslr_randomizer_init(void);
-+int spslr_randomize(void);
++	return 0;
++}
 +
-+int spslr_randomizer_get_target(spslr_u32 target, spslr_u32* size, spslr_u32* fieldcnt);
-+int spslr_randomizer_get_field(spslr_u32 target, spslr_u32 field, int field_idx_mode,
-+	struct spslr_randomizer_field_info* info);
-+
-+int spslr_randomizer_validate_target(spslr_u32 target);
-+
+ /*
+  * Allocate and load the module: note that size of section 0 is always
+  * zero, and we rely on this for optional sections.
+@@ -2950,6 +3005,13 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 	if (err < 0)
+ 		goto free_modinfo;
+ 
++#ifdef CONFIG_SPSLR
++	/* SPSLR must happen after relocation and icache should be flushed afterwards */
++	err = spslr_prepare_module(mod, info);
++	if (err < 0)
++		goto free_modinfo;
 +#endif
++
+ 	flush_module_icache(mod);
+ 
+ 	/* Now copy in args */
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 8f423a1faf50..59fc7489d9eb 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -95,10 +95,15 @@ endif
+ # Compile C sources (.c)
+ # ---------------------------------------------------------------------------
+ 
++ifdef SPSLR_TOOL_PINPOINT
++$(SPSLR_TOOL_PINPOINT):
++	$(Q)$(MAKE) -f $(srctree)/Makefile $(SPSLR_TOOL_PINPOINT)
++endif
++
+ quiet_cmd_cc_s_c = CC $(quiet_modtag)  $@
+       cmd_cc_s_c = $(CC) $(filter-out $(DEBUG_CFLAGS) $(CC_FLAGS_LTO), $(c_flags)) -fverbose-asm -S -o $@ $<
+ 
+-$(obj)/%.s: $(obj)/%.c FORCE
++$(obj)/%.s: $(obj)/%.c $(if $(CONFIG_SPSLR),$(SPSLR_TOOL_PINPOINT)) FORCE
+ 	$(call if_changed_dep,cc_s_c)
+ 
+ quiet_cmd_cpp_i_c = CPP $(quiet_modtag) $@
+@@ -225,7 +230,7 @@ define rule_as_o_S
+ endef
+ 
+ # Built-in and composite module parts
+-$(obj)/%.o: $(obj)/%.c $(recordmcount_source) FORCE
++$(obj)/%.o: $(obj)/%.c $(recordmcount_source) $(if $(CONFIG_SPSLR),$(SPSLR_TOOL_PINPOINT)) FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 	$(call cmd,force_checksrc)
+ 
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index 1482884ec3ca..5e5f203b1d6d 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -33,6 +33,128 @@ quiet_cmd_cc_o_c = CC [M]  $@
+ $(extmod_prefix).module-common.o: $(srctree)/scripts/module-common.c FORCE
+ 	$(call if_changed_dep,cc_o_c)
+ 
++ifdef CONFIG_SPSLR
++
++quiet_cmd_gen_spslr_mod_list = SPSLRLST [M] $@
++      cmd_gen_spslr_mod_list = set -e; \
++	mod_o=$(@:.spslr-files=.o); \
++	modfile=$(@:.spslr-files=.mod); \
++	tmp=$@.tmp; \
++	found=0; \
++	rm -f "$$tmp"; \
++	add_src() { \
++		src="$$1"; \
++		objctx="$$2"; \
++		case "$$src" in \
++			*.c) \
++				spslr="$(SPSLR_METADIR)/$$src.spslr"; \
++				if [ -f "$$spslr" ]; then \
++					printf '%s\n' "$$spslr" >> "$$tmp"; \
++					found=1; \
++				else \
++					echo "Missing SPSLR sidecar for $$objctx from $$src: $$spslr" >&2; \
++					exit 1; \
++				fi; \
++				;; \
++			*.S) \
++				: ;; \
++			*) \
++				echo "Unsupported source for $$objctx: $$src" >&2; \
++				exit 1; \
++				;; \
++		esac; \
++	}; \
++	add_obj_from_cmd() { \
++		obj="$$1"; \
++		cmdfile="$$(dirname "$$obj")/.$$(basename "$$obj").cmd"; \
++		if [ -f "$$cmdfile" ]; then \
++			src="$$(sed -n 's/^source_.* := //p' "$$cmdfile" | head -n 1)"; \
++			if [ -n "$$src" ]; then \
++				add_src "$$src" "$$obj"; \
++				return 0; \
++			fi; \
++		fi; \
++		return 1; \
++	}; \
++	add_obj_direct() { \
++		obj="$$1"; \
++		src_c="$${obj%.o}.c"; \
++		src_S="$${obj%.o}.S"; \
++		if [ -f "$$src_c" ]; then \
++			add_src "$$src_c" "$$obj"; \
++		elif [ -f "$$src_S" ]; then \
++			: ; \
++		else \
++			echo "Could not determine SPSLR input for $$obj: no .cmd source entry, no $$src_c, and no $$src_S" >&2; \
++			exit 1; \
++		fi; \
++	}; \
++	if add_obj_from_cmd "$$mod_o"; then \
++		: ; \
++	elif [ -f "$$modfile" ]; then \
++		while read tok; do \
++			case "$$tok" in \
++				"" ) \
++					continue ;; \
++				*.mod.o|*.spslr_module.o) \
++					continue ;; \
++				*.o) \
++					if add_obj_from_cmd "$$tok"; then \
++						: ; \
++					else \
++						add_obj_direct "$$tok"; \
++					fi; \
++					;; \
++				*) \
++					echo "Unexpected entry in $$modfile: $$tok" >&2; \
++					exit 1; \
++					;; \
++			esac; \
++		done < "$$modfile"; \
++	else \
++		add_obj_direct "$$mod_o"; \
++	fi; \
++	if [ "$$found" = 1 ]; then \
++		awk '!seen[$$0]++' "$$tmp" > $@; \
++		rm -f "$$tmp"; \
++	else \
++		rm -f "$$tmp"; \
++		: > $@; \
++		echo "WARNING: no .spslr files found for module $$mod_o" >&2; \
++	fi
++
++quiet_cmd_spslr_patchcompile_mod = SPSLR   [M] $@
++      cmd_spslr_patchcompile_mod = set -e; \
++	if [ ! -s $(SPSLR_VMLINUX_TARGET_MAP) ]; then \
++		echo "Missing SPSLR target map: $(SPSLR_VMLINUX_TARGET_MAP)" >&2; \
++		exit 1; \
++	fi; \
++	if [ ! -s $< ]; then \
++		echo "Empty module SPSLR manifest: $<" >&2; \
++		exit 1; \
++	fi; \
++	$(SPSLR_TOOL_PATCHCOMPILE) \
++		--module \
++		--no-new-targets \
++		--load-targets $(SPSLR_VMLINUX_TARGET_MAP) \
++		--verbose \
++		--out $@ \
++		$$(cat $<)
++
++quiet_cmd_spslr_as_mod = AS      [M] $@
++      cmd_spslr_as_mod = $(CC) $(KBUILD_AFLAGS) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) -DMODULE -c -o $@ $<
++
++%.spslr-files: %.o FORCE
++	$(call if_changed,gen_spslr_mod_list)
++
++%.spslr_module.S: %.spslr-files $(SPSLR_VMLINUX_TARGET_MAP) FORCE
++	$(call if_changed,spslr_patchcompile_mod)
++
++%.spslr_module.o: %.spslr_module.S FORCE
++	$(call if_changed,spslr_as_mod)
++
++endif
++
+ quiet_cmd_ld_ko_o = LD [M]  $@
+       cmd_ld_ko_o =							\
+ 	$(LD) -r $(KBUILD_LDFLAGS)					\
+@@ -57,13 +179,18 @@ if_changed_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),      \
+ 	printf '%s\n' 'savedcmd_$@ := $(make-cmd)' > $(dot-target).cmd, @:)
+ 
+ # Re-generate module BTFs if either module's .ko or vmlinux changed
+-%.ko: %.o %.mod.o $(extmod_prefix).module-common.o scripts/module.lds $(and $(CONFIG_DEBUG_INFO_BTF_MODULES),$(KBUILD_BUILTIN),vmlinux) FORCE
++%.ko: %.o %.mod.o $(extmod_prefix).module-common.o $(if $(CONFIG_SPSLR),%.spslr_module.o) scripts/module.lds $(and $(CONFIG_DEBUG_INFO_BTF_MODULES),$(KBUILD_BUILTIN),vmlinux) FORCE
+ 	+$(call if_changed_except,ld_ko_o,vmlinux)
+ ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+ 	+$(if $(newer-prereqs),$(call cmd,btf_ko))
+ endif
+ 
+-targets += $(modules:%.o=%.ko) $(modules:%.o=%.mod.o) $(extmod_prefix).module-common.o
++targets += $(modules:%.o=%.ko) \
++	   $(modules:%.o=%.mod.o) \
++	   $(modules:%.o=%.spslr-files) \
++	   $(modules:%.o=%.spslr_module.S) \
++	   $(modules:%.o=%.spslr_module.o) \
++	   $(extmod_prefix).module-common.o
+ 
+ # Add FORCE to the prerequisites of a target to force it to be always rebuilt.
+ # ---------------------------------------------------------------------------
+diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
+index 1284f05555b9..afb723954150 100644
+--- a/scripts/Makefile.vmlinux
++++ b/scripts/Makefile.vmlinux
+@@ -24,6 +24,10 @@ endif
+ 
+ ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
+ 
++ifdef CONFIG_SPSLR
++vmlinux: $(SPSLR_VMLINUX_SPSLR_SECTION_OBJ)
++endif
++
+ # Final link of vmlinux with optional arch pass after final link
+ cmd_link_vmlinux =							\
+ 	$< "$(LD)" "$(KBUILD_LDFLAGS)" "$(LDFLAGS_vmlinux)";		\
+diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
+index 0b6e2ebf60dc..fd1483f5b793 100644
+--- a/scripts/Makefile.vmlinux_o
++++ b/scripts/Makefile.vmlinux_o
+@@ -54,6 +54,7 @@ quiet_cmd_ld_vmlinux.o = LD      $@
+ 	$(addprefix -T , $(initcalls-lds)) \
+ 	--whole-archive vmlinux.a --no-whole-archive \
+ 	--start-group $(KBUILD_VMLINUX_LIBS) --end-group \
++	$(SPSLR_VMLINUX_SPSLR_SECTION_OBJ) \
+ 	$(cmd_objtool)
+ 
+ define rule_ld_vmlinux.o
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index a9b3f34a78d2..603a90811257 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -66,6 +66,11 @@ vmlinux_link()
+ 	else
+ 		objs=vmlinux.a
+ 		libs="${KBUILD_VMLINUX_LIBS}"
++
++		# Only add it here because the spslr section is already contained in vmlinux.o
++		if is_enabled CONFIG_SPSLR; then
++			objs="${objs} ${SPSLR_VMLINUX_SPSLR_SECTION_OBJ}"
++		fi
+ 	fi
+ 
+ 	if is_enabled CONFIG_MODULES; then
 -- 
 2.43.0
 
