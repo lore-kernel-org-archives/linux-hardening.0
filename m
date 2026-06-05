@@ -1,204 +1,129 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACF21F4176
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Jun 2026 11:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC05219D07A;
+	Fri,  5 Jun 2026 11:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780659280; cv=none; b=cL+GeUmsKndxXDDw5JJwKowz59pQp/DT7pzWpPenVcmyGrH5u3eBe72oal5jhdiJxgsYn4BkkNzbAhur3fw5fQxMqpnd6WWmrkmEhxGGNsl9g3Kmo5jXSm5LwFNL/Vn0pHonWuuiKYg77zYnkPdstNyMl8wBSuNt5sgktqhIhVU=
+	t=1780660765; cv=none; b=QKLwNoKkAlwv5dKM+IGF37SBr0ielQZA8+Y++rMDpsKWwGeX1FtHtyxFZj2dkO+/2I1x6WoXv7WCcpgh8Bxy0CL8IYGUrRMGbmi5uhyBUucrEDII8lCreJmhF6P34hDadVZHEBO3vtQ2Y0ofUD4X67b+itvO/SWLQORbcuNIlV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780659280; c=relaxed/simple;
-	bh=RTjhxEGvOy+F+VQ/siDtUUts+dyofnFoSYDC7g4FuG4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cFVW1lRWl8CFzfNC3f4HCmBezKeLNQ1IcF/f3Ei47qMcCGQFCLHBJjnelSKeShaUge4zwDEgv7xkDWGVf1VLI2fwGjWlFQRVuSWU88OvnMrvBu8DzyXy6lJsGVU36oJJdkKMbLTfFYXnDGVyhDhVWOh0kD34sJfZna8V+RE+4mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wmq3kPUV; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780660765; c=relaxed/simple;
+	bh=DM/bL3+ANjMSxQ6LXVlL3mcKvklgRPJSGe5tGajzUbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pjo2v3QD29CD0WM3q0GTr99aKHjGO8akKo4wK2HHMJ/PtDwdEr7tD0BrR0lZbEgyBDqt4zE7TK+M6LTYmtEL/yU9l/wc0dY4fqQ5AV3Q/wHnNP6XKEZAb526zrZz6ILOvuElu+cLxj35IHjHruloyiShrOxmHo+lFbBHFK8ReGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zl2REIDg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wmq3kPUV"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-45ef5146b56so1868999f8f.0
-        for <linux-hardening@vger.kernel.org>; Fri, 05 Jun 2026 04:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780659277; x=1781264077; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hJRmfaxPaWcnCvs7QB4gUgP5UAYanEHUPfa/m1ombOs=;
-        b=Wmq3kPUV9UQPwUwMfcEXS9nkcfIrne1+VxRzzjUKdhZSQLt92iAY6nYOEznZG/ER34
-         DI+Ud3o2CrPMIs80JfWzrStGQL2ggC+z8+t/N0Z9zJtlWanXANkgmfUTohUzM0ZeWDtu
-         GlweRSmz9jODSRyF7mOAblmcPhpdIfjohDSeviSD+UKuZ2V1LPE2w7QjwBhhowwetEB0
-         LqDEmOuK7vAJdyDpzNLW4ZjT6MX+Ffq5dqimPRyIZQW61NZ0z06mJK/GcMfaDN5mpcJO
-         mWKElBxtngM5oQCC8uS34uksuJNFEZ7I6AIRQZnOUN+L2qyOZaeFzBx0bx3cqYg8tiIR
-         vkDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780659277; x=1781264077;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hJRmfaxPaWcnCvs7QB4gUgP5UAYanEHUPfa/m1ombOs=;
-        b=dikWI50RTojTHCUQumRYI5Kiu4usylg+KKFmM/nhmENwO0xbMJ9nQVcNFiFEqQqIhM
-         BbwiX81I6VrjQTDtzqWEGM1c5w3vtqjAGZ2srqlg2HEQ9kw8RPKP2yDBvX71W3Xnl50O
-         NAKEz1KeRu7MTTqNJso2roD7aRbf9KQCL5XtnEfygSWDoxYWGUJMB3WFVeYcc+xVCqRn
-         rz6j06RcrlO9MNM7zGJJfuH2ypqNaJqBBTn2Mf+qPLZRfYwQ1RGsvbgOIPi31Q46Tq9e
-         LoaKs8JabvCd+PkwwpYwknRr8PDNwt10rkpY6wW/83AJL4V9+0ESqPpBLpHSdYloMNJv
-         7PNQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/dFk6/5+S9yS2YXiBPVabPbrEzzgNIohscaQztA2R3kq2GEfYb9j9a8ygD2ZYmd592puoACdJJ8IDZndXkOhY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQoreDkwr0a4OiWwmDWT0As5EIrXGYmJk4iICnw8qhl9qWqAnj
-	fy1RQQJ0h0UU4g7adn5J7K/L6u5c8UWgRMiz5nxYzHNC3azW4H25vNrv
-X-Gm-Gg: Acq92OFuiSEyQ2O22OcQiAcmsMaz7XiAmdKLQE6SGnoxFUcN4xviOavkWc4cVmstbjT
-	7/qwMJQtNdIBTAOAaK3rmZHwEE7AcRHquWmMMaDgdmDfGPuYJYLp8Mta9nzTPbUorJs/gknTGsu
-	mMi43G25aHljrW7frTa7RPIVqD+0CWpUWTjU5LuLcCPik3M2gCjv6t47br0xN2OXZQ92s6l7lq2
-	bBoiqNDTikb08ThNSYpMLc3XsAF9SIqwOio4eCZBxEQWwAWppH6ausPs4gyJI7amLv6pXh3fclT
-	aSHCOSIC2mSuwKB9fPevKStT1xKW4oyV+xHGH19HxklBIwA33fqy2ycJXE+u+tIRIK7roZso2gI
-	yZCMUYqFDXxyfFWkf1CF/0zLeZh5mcInLCwFxxZkYszLf2lbxQ8Oa4/eoRnYX2449FdknxC4IQK
-	fX+HrPueerRWdG3JJQ52oALlN90GsXzILiBH7ALLdiyfNFmS3WVDOcOU8MRIPqMD3TVyDjk3N8B
-	wCt1j0KfO+bmkTbnbUa5acIhHW6a/GgzlWZBgTKojgc2iEEx7J3UKOdtETp
-X-Received: by 2002:a05:6000:491a:b0:45e:dc0a:bcb with SMTP id ffacd0b85a97d-46032db42fcmr3878302f8f.22.1780659277189;
-        Fri, 05 Jun 2026 04:34:37 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.131.netskope-rdns.com. [24.206.116.131])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46028a6dce6sm17068219f8f.30.2026.06.05.04.34.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2026 04:34:36 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Fri, 5 Jun 2026 12:34:31 +0100
-To: Jonathan Cameron <jic23@kernel.org>, 
-	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>, 
-	linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH 10/12] iio: dac: ad5686: add triggered buffer support
-Message-ID: <i3wvatdosla3cszhhtizgoetcbknl56be3mpipzdxqx2jzvch2@l4hzeer5zoa7>
-References: <20260602-ad5686-new-features-v1-0-691e01883d27@analog.com>
- <20260602-ad5686-new-features-v1-10-691e01883d27@analog.com>
- <20260603134151.7cf1654b@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zl2REIDg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 221391F00893;
+	Fri,  5 Jun 2026 11:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780660764;
+	bh=wiOY95bbms3ph6ntuxqrCRd7im8fwXbJxnhcBs8rZm0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Zl2REIDgG5ZqGgghwyl7YWWUvU1WXXbSFjB0mqOW1AxnfPowAFppenxyPu5QZ8WQC
+	 YLvFTcIaZ69LfBP38RP3NJsmOFKSwlJRwfO0axy8wEOcHPdtC1r1y/bZxAzR5wOD9n
+	 FHwz+UDCB22ler3P5uVPVZ4UYD6QJ2XKQh6RazBWNDqsaKryrgSPXnB8qD5AYUksJQ
+	 PCkklFXpZIQd6RpTwocpvtgO7gpYJQPf26guJ/eqc6/kj0zyHONXlKOsG6GwOEwqKk
+	 A8IcgxbQKDfxJ8lL3KuYJAgI3mnbNT84sX6g6AW4CGpdvZD6lSvgiG6rHX7aVED1bd
+	 9b9YM7gR1ifVQ==
+Message-ID: <63ecf4a2-13a2-42d2-8990-e53e50ae9a65@kernel.org>
+Date: Fri, 5 Jun 2026 13:59:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260603134151.7cf1654b@jic23-huawei>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/slab: add a node-track-caller variant for kmem
+ buckets allocation
+Content-Language: en-US
+To: Pedro Falcato <pfalcato@suse.de>, Harry Yoo <harry@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
+ David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Simon Horman <horms@kernel.org>,
+ Jason Xing <kerneljasonxing@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>
+References: <20260602183122.747759-1-pfalcato@suse.de>
+ <20260602183122.747759-2-pfalcato@suse.de>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Autocrypt: addr=vbabka@kernel.org; keydata=
+ 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
+In-Reply-To: <20260602183122.747759-2-pfalcato@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 26/06/03 01:41PM, Jonathan Cameron wrote:
-> On Tue, 02 Jun 2026 17:33:57 +0100
-> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+On 6/2/26 20:31, Pedro Falcato wrote:
+> This is required by users that want to use kmem buckets, but still
+> desire specifying the NUMA node.
 > 
-> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > 
-> > Implement trigger handler by leveraging the LDAC gpio to update all DAC
-> > channels at once when it is available. Also, the multiple channel writes
-> > can be flushed at once with the sync() operation.
+> Signed-off-by: Pedro Falcato <pfalcato@suse.de>
 
-...
+Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-> > +static irqreturn_t ad5686_trigger_handler(int irq, void *p)
-> > +{
-> > +	struct iio_poll_func *pf = p;
-> > +	struct iio_dev *indio_dev = pf->indio_dev;
-> > +	struct iio_buffer *buffer = indio_dev->buffer;
-> > +	struct ad5686_state *st = iio_priv(indio_dev);
-> > +	u16 val[AD5686_MAX_CHANNELS] = { };
-> > +	int ret, ch, i = 0;
-> > +	bool async_update;
-> > +	u8 cmd;
-> > +
-> > +	ret = iio_pop_from_buffer(buffer, val);
-> > +	if (ret)
-> > +		goto out;
-> > +
-> > +	mutex_lock(&st->lock);
-> > +
-> > +	async_update = st->ldac_gpio && bitmap_weight(indio_dev->active_scan_mask,
-> > +						      iio_get_masklength(indio_dev)) > 1;
-> > +	if (async_update) {
-> > +		/* use ldac to update all channels simultaneously */
-> > +		cmd = AD5686_CMD_WRITE_INPUT_N;
-> > +		gpiod_set_value_cansleep(st->ldac_gpio, 0);
-> > +	} else {
-> > +		cmd = AD5686_CMD_WRITE_INPUT_N_UPDATE_N;
-> > +	}
-> > +
-> > +	iio_for_each_active_channel(indio_dev, ch) {
-> > +		ret = st->ops->write(st, cmd, indio_dev->channels[ch].address, val[i++]);
-> > +		if (ret)
-> > +			goto cleanup;
-> > +	}
-> > +
-> > +	if (st->ops->sync)
-> > +		ret = st->ops->sync(st); /* flush all pending transfers */
-> > +
-> > +cleanup:
+As the main change is in net code, probably should go in the net tree?
 
-It turns out that this label is not really needed. When sync() op is available
-it must be called regardless of write failure, so the bus data can reset its
-state. Then moving "cleanup" up would just make it useless.
-
-> > +	if (async_update)
+> ---
+>  include/linux/slab.h | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> Error paths are always fun.  Do we care about setting ldac_gpio to 1 if
-> we failed to write the channel values?  That will set any that did successfully
-> update, but not all of them.  Note I'm not sure on the right answer for this.
-> There may not be one!
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 7b46fa499b08..685a87d8f0c5 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -1153,8 +1153,11 @@ void *kmalloc_nolock(size_t size, gfp_t gfp_flags, int node);
+>  #define kmem_buckets_alloc(_b, _size, _flags)	\
+>  	alloc_hooks(__kmalloc_node_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), _flags, NUMA_NO_NODE))
+>  
+> -#define kmem_buckets_alloc_track_caller(_b, _size, _flags)	\
+> -	alloc_hooks(__kmalloc_node_track_caller_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), _flags, NUMA_NO_NODE, _RET_IP_))
+> +#define kmem_buckets_alloc_node_track_caller(_b, _size, _flags, _node)	\
+> +	alloc_hooks(__kmalloc_node_track_caller_noprof(PASS_KMALLOC_PARAMS(_size, _b, __kmalloc_token(_size)), _flags, _node, _RET_IP_))
+> +
+> +#define kmem_buckets_alloc_track_caller(_b, _size, _flags) \
+> +	kmem_buckets_alloc_node_track_caller(_b, _size, _flags, NUMA_NO_NODE)
+>  
+>  static __always_inline __alloc_size(1) void *_kmalloc_node_noprof(size_t size, gfp_t flags, int node, kmalloc_token_t token)
+>  {
 
-I would not see a problem with that, as there is no much we can do with errors
-in a interrupt handler.
-
-> 
-> > +		gpiod_set_value_cansleep(st->ldac_gpio, 1);
-> > +
-> > +	mutex_unlock(&st->lock);
-> > +out:
-> > +	iio_trigger_notify_done(indio_dev->trig);
-> We get this pattern so often (though not always).  Feels like maybe
-> we should put some effort into a generic opt in solution for this.
-> 
-> A job for another day but options that come to mind.
-> 1) (hideous) a flag
-> 2) Maybe an alternative callback. thread_always_complete or
->    something like that.  Pain to wire through all the calls though
->    and injecting the necessary wrapper isn't great either.
->    Implementation wise would be a case of popping in a wrapper function
->    in iio_trigger_attach_poll() call to request_threaded_irq().
-> 3) Maybe a helper macro?  Bit ugly as we'd need one to generate
->    the wrapper function and another to use the same name for
->    the registration function.
-> 
-> Hmm. Those are all ugly (maybe 2 is ok ish).  Suggestions welcome!
-
-using a cleanup.h? with something like:
-
-	static inline void iio_trigger_always_done(struct iio_poll_func **ppf)
-	{
-		iio_trigger_notify_done((*ppf)->indio_dev->trig);
-	}
-
-	static irqreturn_t ad5686_trigger_handler(int irq, void *p)
-	{
-		struct iio_poll_func *pf __cleanup(iio_trigger_always_done) = p;
-		/* ... */
-
-		ret = iio_pop_from_buffer(buffer, val);
-		if (ret)
-			return IRQ_HANDLED;
-
-		/* ... */
-
-		return IRQ_HANDLED;
-	}
-
-> 
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-
--- 
-Kind regards,
-
-Rodrigo Alencar
