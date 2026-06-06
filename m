@@ -1,59 +1,56 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AEB3C5528
-	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05DA3C0601;
+	Sat,  6 Jun 2026 20:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777646; cv=none; b=TwIIRLAsucsj2xd3kNvtpdl8lYOKtCy6kS/hJqt8luaJjOxJUhkJahtvOAWmdIuGWEKt8xCa8Ygm9LnnMu3btMZlzPhgWONlh7HfMt8zizvcrfKonhds9A/3XHf67hBbsTQdcHPOOLdPSSpik/ptemALEf+JpWr7EygZAnO0peo=
+	t=1780777646; cv=none; b=BLR/egh4XmgnyPphTRKahx09EgmbEM6RWnhpJIVEO51bnMLFvx4mi2cBOYI1ozObwhURXwlyTlBgmf7Mk50mqMgRm+po7eA7m/o42CGiU+SUXM7fui5fVwmxkTVCfbaILwsoDLTcHtWR9mVJTWib67+sPE/+0tFlKUoXDfdxifY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780777646; c=relaxed/simple;
-	bh=tHQEQrPxlubWISHX02zXpkKqs7TtIMm13+hU8WYJMOk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N8Im7psRFFWsXDt6YxoD9pNV5y3vRRMMstyNXcfVzkw+gaVfCIcukPEmhPyoo4kEdHKqHR8wuwY4Z2Cl0UmUACVgePLSA0myt95QipS1ctTaDtHUVyadDTT+ylCfrGueCrfMAZnrfpwY+6Zvk860C8QZwaSvkO8iU3z6oECOrig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=tpzfK8sl; arc=none smtp.client-ip=185.226.149.37
+	bh=YCwmdKe9zBDHIe8pFrWTPxrgd4M/HJQefntqkfhtnSA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b4p5HednHM4A+ANa5gD3+dSteQdCq3sjIZEwc6vw/XzYd6tRKF0PKq2pZ7lSxh7kPOYjM3kiri0cIbMmOrdX7uTzafppsn987WEjEqKOLh+gFNj642HL0Ii2W4VIIPsiq1fRCXoXVEoXx7IQKcViWes7Pyq5JxTvyySJKi/5IGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=UIq6fZeo; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="tpzfK8sl"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="UIq6fZeo"
 Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbw-007NRr-1N; Sat, 06 Jun 2026 22:27:16 +0200
+	id 1wVxbr-007cFj-AM; Sat, 06 Jun 2026 22:27:11 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=9gIdnzM+dAgG4gvnmdxAjdZuQXK+gY/bR0bwUb0i+Fc=; b=tpzfK8
-	slwFwN9KZk7UmXtXiSkmIv/ImS8D6SQXxDgt9/6Wmym7Zt76I+in+meuBEeJPsScpvXWdkhASAVqG
-	ZYidEm1mIIrpCeKlrlqmFj5gJjw8h6cunogj2/C8mi3QzfkUbu2HJhaEWBiuFgWd0KXXucKLcLTe8
-	l/BHby6tvnWXvCZHMJ/7kNR7h6KYG1yvcqX6M1uQOcjHvPHtnRHrc3Nppd8hk8Pt8wHyVSMML4b4f
-	fOYqA2bAb6/ZvMHSNUJS/8GYDP/mRHvnrgmvQ6nCfYr2ydGEQLGYLqoVBIgfirHjC9RXCaehW3lbg
-	If2eIrPkM/YmfMW7ik2DlQ5TlQBg==;
+	Subject:Cc:To:From; bh=4pWp8S0rBZBAXNgYdQYMTOum2xiqondSMGkfre6z5fw=; b=UIq6fZ
+	eodnklewWCRvYBt0Z9wyicfjFIobKNRGxMqBQlLlMHLLtXFdAn4JuA+AFuDW91I5tIdwm7WJvdDIf
+	V3RSI39WKsiHeMuWGSiuMfAdNsc/vPMkagOS7011b9yENpQb3BJsdBthrtGXe++S55qXQLNZm6U0z
+	HRcpJUfUElrqJK8FC2+/HBsN5f+47TGe+jgvCP5UaBsTJpXt9ETBMhaO52EsV5nxBn3etjplKybKp
+	+GWuadIZPX3SF7LEudc/ur7qwXryaUp+IZzPJZOW9kJxjdYetGQjSqvltkY8E66DAMprP/cytig1E
+	IRs9+UE+L42PuUl6AZ/gTsguyPUA==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
 	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbt-0005Ct-SW; Sat, 06 Jun 2026 22:27:14 +0200
+	id 1wVxbq-0005CD-KE; Sat, 06 Jun 2026 22:27:10 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbl-006V18-4d;
-	Sat, 06 Jun 2026 22:27:05 +0200
+	id 1wVxbo-006V18-08;
+	Sat, 06 Jun 2026 22:27:08 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: David Ahern <dsahern@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: David Airlie <airlied@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH net-next] net/ipv6/ip6_vti: Use strscpy() to copy device name
-Date: Sat,  6 Jun 2026 21:26:23 +0100
-Message-Id: <20260606202633.5018-29-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/gpu/drm/tests/drm_dp_mst_helper_test: Use strscpy() to copy the test description
+Date: Sat,  6 Jun 2026 21:26:30 +0100
+Message-Id: <20260606202633.5018-36-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -64,6 +61,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
+
+The buffer length is known to be KUNIT_PARAM_DESC_SIZE
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -89,31 +88,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- net/ipv6/ip6_vti.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tests/drm_dp_mst_helper_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/ip6_vti.c b/net/ipv6/ip6_vti.c
-index ad5290be4dd6..c6cb756a1091 100644
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -186,7 +186,7 @@ static int vti6_tnl_create2(struct net_device *dev)
- 	if (err < 0)
- 		goto out;
+diff --git a/drivers/gpu/drm/tests/drm_dp_mst_helper_test.c b/drivers/gpu/drm/tests/drm_dp_mst_helper_test.c
+index 9e0e2fb65944..6d2be903d17e 100644
+--- a/drivers/gpu/drm/tests/drm_dp_mst_helper_test.c
++++ b/drivers/gpu/drm/tests/drm_dp_mst_helper_test.c
+@@ -552,7 +552,7 @@ static void drm_test_dp_mst_sideband_msg_req_decode(struct kunit *test)
+ static void
+ drm_dp_mst_sideband_msg_req_desc(const struct drm_dp_mst_sideband_msg_req_test *t, char *desc)
+ {
+-	strcpy(desc, t->desc);
++	strscpy(desc, t->desc, KUNIT_PARAM_DESC_SIZE);
+ }
  
--	strcpy(t->parms.name, dev->name);
-+	strscpy(t->parms.name, dev->name);
- 
- 	vti6_tnl_link(ip6n, t);
- 
-@@ -1161,7 +1161,7 @@ static int __net_init vti6_init_net(struct net *net)
- 
- 	t = netdev_priv(ip6n->fb_tnl_dev);
- 
--	strcpy(t->parms.name, ip6n->fb_tnl_dev->name);
-+	strscpy(t->parms.name, ip6n->fb_tnl_dev->name);
- 	return 0;
- 
- err_register:
+ KUNIT_ARRAY_PARAM(drm_dp_mst_sideband_msg_req, drm_dp_mst_sideband_msg_req_cases,
 -- 
 2.39.5
 
