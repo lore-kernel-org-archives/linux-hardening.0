@@ -1,54 +1,57 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBDB3BF68D;
-	Sat,  6 Jun 2026 20:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9043C1F57;
+	Sat,  6 Jun 2026 20:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777647; cv=none; b=IA/HvpvSzHdwMtIociQIUreu1NDcrqLu9L7/bpx/pMTxLAyh1CIn5X1f+Gu4kRW7vn0Qgp7BO/IxqdNWcxAXJW3KG3DB6bUbJLyfrtpY8NezEX3e7VwERdqquwZG6i0lTy4hvncYzSyHHLxm0BzH737LoDdq6tsqOnVjem7na8U=
+	t=1780777647; cv=none; b=CBq9wQ5dN+z7rHGj8oEb+jMQjVuVh0VAQFMcjgS488eBrL36knnbKRTayyo6KLAZOqZOE8DSVKoMUJfnIJLqWORZV8QUv67PHfPaevdEfn8tqD2ggkCXm8H2e36noyszq7MOkdzGyTjcMB7AWDgBKcvVZSh2d3RI5oKzWiIW9F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780777647; c=relaxed/simple;
-	bh=ckkvTfERwHzMxh6ptV7qX5VqAfXAwWj4TTSRPvdIa8w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NL/kIPMLppVwaw6LqTeliCjK+2BPMOShEMoV/gWiKbxwPWiSjss7Rp7yJ10tWf9casodkhBV/paz4Yixzvi9nGlbqAJPTQ0rqSUaaKMYFSmXX6HqOSITmcDw9iNd7qKYh9hccGMadL9xTKHEVtMxyDOQHlr2Fx4pUftbA9fGOT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=G+5Ad/Rb; arc=none smtp.client-ip=185.226.149.38
+	bh=2fsk2za3j7BCpxRkGcfmii50BuoW7tHDyeFyfkxhoZc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OBCyU7GpZHPJIr85wf/8Mpliw3Sr5BTpSbg3S/0AkGX7LzY+5C8vpZmcLDQ87f6AVt4SgtO78zDtlnmuxG7g6zxkJUB4dyyhMrrsYeTazg5JKI/IRDoEWBsLq6TBhMUA5Cku3TeUeTyTiMsPzr/8LQ1UaAOMsxI1vI8/3gCfUCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=mchOOM7A; arc=none smtp.client-ip=185.226.149.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="G+5Ad/Rb"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="mchOOM7A"
 Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbr-007cFk-AS; Sat, 06 Jun 2026 22:27:11 +0200
+	id 1wVxbu-007NR3-57; Sat, 06 Jun 2026 22:27:14 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=52nPAU5BuYLsnCWku9EMCSnlzqXrTtwWlol8CDwVW6A=; b=G+5Ad/
-	RbzXCZD6FU0iWn8B0kwmJtKySu9D0VSRuUEcP97GNH7HB8At+f0pxnbOns5atQncafcfAboIqSd88
-	dJhijefRc2YpgdhZFop+9ANNDe98TajYQsgb1wU0ZCGsoeWXCLJQPbzfGf7V0QSpjbmIPL7dgLoUJ
-	tHuyYsbHjvsKZz7xMBO6fi+PMZWtoQbRwMMWY7VKrOrwA6+h8TctKGHsITaJF2+ecVRykY6Cwdzyp
-	pQjbUVmZHvNSAVysvc0ae+Ff76Zp9ETtTR4I3a9HniYVzjINBuUsxAHw1G9TJbRCW4s6EglCgkkbi
-	xFCPHeMSzjuPdkLatwso5E6xmCsQ==;
+	Subject:Cc:To:From; bh=meVKVuvbuLoiOIYokwUI0qVk2UW2KhPhUL6Bj3liMXY=; b=mchOOM
+	7APt0CN9usyw4WmW8r9ArRfmvdvijSFMtcL5qw9/4bsgHSeNeC8BzAWcO5dPtHYWtiXTF/UBpt5hO
+	A+zMaDqMG/LMKoQS74tTm2NirMW6KxyHdPS37gEi62GdKbBAeJjSxHyPbA1dww2XYSmaazRpFO84+
+	VBt6rqhTBPZNglFdSpt5nvMvnJmVJJsLEFmENBiUNPBCWEpXsIjmy+wmXJhS7ieSyVG9eJsEvfZct
+	bLtnQdzFOqBwX6mYImLPN4jtEsDYPCEFiUOZVQ5uduatVVIrJXFb8T5R9qBW4gA0L+rkzSggnjNZ5
+	0wqk6XGac6xuP23XPoJIB13l50nw==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
 	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbq-0000tE-QN; Sat, 06 Jun 2026 22:27:10 +0200
+	id 1wVxbt-0000tm-9a; Sat, 06 Jun 2026 22:27:13 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbi-006V18-LJ;
-	Sat, 06 Jun 2026 22:27:02 +0200
+	id 1wVxbe-006V18-LF;
+	Sat, 06 Jun 2026 22:26:58 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Helge Deller <deller@gmx.de>,
-	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jay Vosburgh <jv@jvosburgh.net>,
+	Paolo Abeni <pabeni@redhat.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/video/fbdev/cyber2000fb: Use strscpy() to copy device name
-Date: Sat,  6 Jun 2026 21:26:17 +0100
-Message-Id: <20260606202633.5018-23-david.laight.linux@gmail.com>
+Subject: [PATCH net-next] drivers/net/bonding: User strscpy() to copy device name
+Date: Sat,  6 Jun 2026 21:26:08 +0100
+Message-Id: <20260606202633.5018-14-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -84,22 +87,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/video/fbdev/cyber2000fb.c | 2 +-
+ drivers/net/bonding/bond_options.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/cyber2000fb.c b/drivers/video/fbdev/cyber2000fb.c
-index 2d12f8e96c7e..8fb26e85270e 100644
---- a/drivers/video/fbdev/cyber2000fb.c
-+++ b/drivers/video/fbdev/cyber2000fb.c
-@@ -1384,7 +1384,7 @@ static struct cfb_info *cyberpro_alloc_fb_info(unsigned int id, char *name)
- 	else
- 		cfb->divisors[3] = 6;
- 
--	strcpy(cfb->fb.fix.id, name);
-+	strscpy(cfb->fb.fix.id, name);
- 
- 	cfb->fb.fix.type	= FB_TYPE_PACKED_PIXELS;
- 	cfb->fb.fix.type_aux	= 0;
+diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
+index 7380cc4ee75a..c57b7d6af043 100644
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1525,7 +1525,7 @@ static int bond_option_primary_set(struct bonding *bond,
+ 		if (strncmp(slave->dev->name, primary, IFNAMSIZ) == 0) {
+ 			slave_dbg(bond->dev, slave->dev, "Setting as primary slave\n");
+ 			rcu_assign_pointer(bond->primary_slave, slave);
+-			strcpy(bond->params.primary, slave->dev->name);
++			strscpy(bond->params.primary, slave->dev->name);
+ 			bond->force_primary = true;
+ 			bond_select_active_slave(bond);
+ 			goto out;
 -- 
 2.39.5
 
