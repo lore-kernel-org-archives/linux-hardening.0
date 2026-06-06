@@ -1,168 +1,153 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2821517B425;
-	Sat,  6 Jun 2026 20:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195FC30D404;
+	Sat,  6 Jun 2026 20:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777156; cv=none; b=UdKLa1rBVghJcdRBbNqOrzdh+l516FOMgYaTP0G425HBrWoDH2lPapJbVnFTaV96pZuOyQXEOVqTAxug6K47TfA+Xh3VNDSUAAwnUGLfDKUgzFksJYWivSwq05Cfmu8dFkTM1cr8SWn6vXG3NA00eSJj6+HHQEaHzdvmEBTpkA8=
+	t=1780777635; cv=none; b=Yg6H2yQRKfPmKSUncmB9hDvNalY5qiP5nwz9yOwt4t47OzVTNMV08K6NagVgpsPspTlsC5D8mMjuqWFbmWu7MGOYi2NiEw1dxNc3nMLLwXs+b4CSijNSsODusmdFg45+kzxgJqR2oCHJUaMLjIRrtXsO47W3xnN3pBetPVZBVXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777156; c=relaxed/simple;
-	bh=6FrevDetvkb60F0vwZ8cvbynNZOisu9LM8VFn5Kv0jU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rYBJubh1GE29LmxJV+ELwCa6ZTfR9Q2ActEEDKB8QOeoJOh8pZ7fAUp1FJ1PpYddRpGffZ+fYmHPZPuz5m2YuFQmZwTxjrmXf/YWQ7CLvp9uhQmUrrGp2zobGr1KMUMjHIWggXSdaBM6WKOlJbFLPpi59rHdYO2gSRsejqoiRNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LKiw7YU7; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1780777635; c=relaxed/simple;
+	bh=ThlmTVRTpgls/zpqbs2baMrvVYXlWA2xSjetlZkTQcw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NXWMU8CEpHwISOD4cobnKVxPGyGyB/0cb3qquU73JCIn1p0fHz454aueCLjy8A8O9vvc1aS7BFJqsliTRL8wnyMxBWNyIlHHOKJvrCjLszL5rVeXhN3T69pHrbRjayzUQ0jPhJ48VJMP6u5AjgFGxmi53DSSf0QrrYz33lFdWF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=tPUypTBY; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LKiw7YU7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qn/GwpLQrIFJP6RrB5tk+eCxp+XsTc6Qi46I9/Pk/bg=; b=LKiw7YU7YB5iPci7joQBn8opCX
-	QPc4PL+SnIhhQ3mi23T/jG60gOhikMnbAGJW6eqbnMZKNGy2ei/X/uRgLrWL7puLUSdZUwsgu/6EJ
-	ktBNNPXlQR8OYKMHom7a1UajkkvcgYUAzx2ONDX5DCPBeYJFltj3ogCxfH15i0cdA2+Ewk//R70ya
-	Qy+Bkid7+kqgOrOUEZ++1Lk91q3rLOHxw0jpFf690VV6h3Prb8ZNRldrGiSwY1DnboVUtGXfdP+F7
-	iVWhHot6bDPX3Aej+0kdQue9LTn6F43cxhWGwUG9oJayhPCgyI1Hepdr/X7XIGquTs9XzwyuScixg
-	xHD6eaoQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVxU0-0000000ApOr-3385;
-	Sat, 06 Jun 2026 20:19:04 +0000
-Date: Sat, 6 Jun 2026 21:19:04 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Mohammed EL Kadiri <med08elkadiri@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs/mm: document slab cache isolation with SLAB_NO_MERGE
-Message-ID: <aiSAuP-qEhH_RoCn@casper.infradead.org>
-References: <20260606155856.15548-1-med08elkadiri@gmail.com>
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="tPUypTBY"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1wVxbq-007cFI-BI; Sat, 06 Jun 2026 22:27:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
+	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
+	Subject:Cc:To:From; bh=NYS7xLlj/dRRWDxwAJtYqK18NJ/VeWpGZ8STxTEVQ6Y=; b=tPUypT
+	BY/567oJBTwgA65lUkDyAJ/FMERj8WJbTTYn+O11+Ufrz7CbAQSVXEsNinbxseplfpjzyfuv4C1eZ
+	KEFgTlIbjpPiwo2EltE8j4QoP1MMyj5inXxeVtBpOurEc4yRMzRTFtXBFyE6EFg4JpcDALMqY7mUn
+	k3is9/+PV1Vt+CJZq4krTxBoQs4cgrQaz3uRt9wXo8vkn7jWulesKoe06f32IZz7i0SBj+eYjxvpU
+	frqc+UlDA0lvvnknOKvWNKgsJtsWrn2sryz64+VP6PqkYktl3AA1YYdRYu1AGkuZB2JW1a8nqJwJA
+	jX84bbYpFYfTYBYSQVQm5Q0GtEhw==;
+Received: from [10.9.9.72] (helo=submission01.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1wVxbp-0000su-Tt; Sat, 06 Jun 2026 22:27:10 +0200
+Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.95)
+	id 1wVxba-006V18-2S;
+	Sat, 06 Jun 2026 22:26:54 +0200
+From: david.laight.linux@gmail.com
+To: Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>,
+	linux-kernel@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>,
+	David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH next] driver core: Replace strcpy() with memcpy()
+Date: Sat,  6 Jun 2026 21:25:56 +0100
+Message-Id: <20260606202633.5018-2-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260606155856.15548-1-med08elkadiri@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 06, 2026 at 04:58:55PM +0100, Mohammed EL Kadiri wrote:
-> +The SLUB allocator merges slab caches with compatible size, alignment, and
+From: David Laight <david.laight.linux@gmail.com>
 
-More of a question for Vlastimil ... do we want to continue to
-distinguish between slab (the API) and SLUB (the implementation)?
-I don't think we ever want to go back to a situation where we have
-multiple competing implementations of the slab API in the kernel.
-So shouldn't we deprecate uses of SLUB, particularly in the
-documentation?
+The length of the string is calculated in order to allocate the correct
+sized memory block, use the same length to copy the string.
 
-> +flags to reduce memory fragmentation. While this improves memory efficiency,
-> +it allows objects of different types to share the same slab pages. This
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
+---
+This is one of a group of patches that remove potentially unbounded
+strcpy() calls.
 
-s/ pages//
+They are mostly replaced by strscpy() or, when strlen() has just been
+called, with memcpy() (usually including the '\0').
 
-> +enables cross-cache heap exploitation, where a use-after-free in one object
-> +type can be leveraged to corrupt an unrelated type.
-> +
-> +The `SLAB_NO_MERGE` flag prevents a cache from being merged, ensuring it
-> +receives dedicated slab pages.
+Calls with copy string literals into arrays are left unchanged.
+They are safe and easily detected as such.
 
-s/slab pages/a dedicated slab/
+The changes were made by getting the compiler to detect the calls and
+then fixing the code by hand.
 
-> +2. *Actually mergeable*: The cache must not already be unmergeable.
-> +   A cache is already unmergeable if any of the following is true:
-> +
-> +   - It has a constructor (`ctor` argument is non-NULL).
-> +   - It has a non-zero `usersize` (with `CONFIG_HARDENED_USERCOPY`).
-> +   - It already has `SLAB_NO_MERGE` or another `SLAB_NEVER_MERGE` flag.
+Note that all the changes are only compile tested.
 
-I don't know if this is good advice for users of the API.  It's true
-that the slab will already be unmergable for these other reasons, but
-it's harmless to specify SLAB_NO_MERGE in that case.  And it
-communicates intent.  And in case somebody removes the ctor in the
-future, or we decide to change which flags are in SLAB_NEVER_MERGE,
-the slab will still be unmergable.
+Some Makefiles were changed to allow files to contain strcpy().
+As well as 'difficult to fix' files, this included 'show' functions
+as they really need to use sysfs_emit() or seq_printf().
 
-> +3. *Bounded allocation volume*: The cache has a predictable number of
-> +   active objects, so the memory cost of dedicated slab pages is
-> +   acceptable.
+All the patches are being sent individually to avoid very long cc lists.
+Apologies for the terse commit messages and likely unexpected tags.
+(There are about 100 patches in total.)
 
-I don't understand why this is a criteria.
+ drivers/firmware/dmi_scan.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-> +How merging works
-> +=================
-> +
-> +When `kmem_cache_create()` is called:
-> +
-> +1. If `usersize` is non-zero, the merge path is skipped entirely.
-> +
-> +2. Otherwise, `find_mergeable()` in `mm/slab_common.c` searches for a
-> +   compatible existing cache. A merge is prevented if:
-> +
-> +   - The `slab_nomerge` boot parameter is set
-> +   - The new cache has a constructor
-> +   - The new cache's flags include `SLAB_NO_MERGE`
-> +   - No existing cache has compatible size and flags
-> +
-> +3. If a compatible cache is found, the new cache becomes an alias. Both
-> +   share the same slab pages.
+diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+index a3f7dabd4955..870767142b53 100644
+--- a/drivers/firmware/dmi_scan.c
++++ b/drivers/firmware/dmi_scan.c
+@@ -80,7 +80,7 @@ static const char * __init dmi_string(const struct dmi_header *dm, u8 s)
+ 	len = strlen(bp) + 1;
+ 	str = dmi_alloc(len);
+ 	if (str != NULL)
+-		strcpy(str, bp);
++		memcpy(str, bp, len);
+ 
+ 	return str;
+ }
+@@ -290,17 +290,19 @@ static void __init dmi_save_type(const struct dmi_header *dm, int slot,
+ static void __init dmi_save_one_device(int type, const char *name)
+ {
+ 	struct dmi_device *dev;
++	size_t len;
+ 
+ 	/* No duplicate device */
+ 	if (dmi_find_device(type, name, NULL))
+ 		return;
+ 
+-	dev = dmi_alloc(sizeof(*dev) + strlen(name) + 1);
++	len = strlen(name) + 1;
++	dev = dmi_alloc(sizeof(*dev) + len);
+ 	if (!dev)
+ 		return;
+ 
+ 	dev->type = type;
+-	strcpy((char *)(dev + 1), name);
++	memcpy((char *)(dev + 1), name, len);
+ 	dev->name = (char *)(dev + 1);
+ 	dev->device_data = NULL;
+ 	list_add(&dev->list, &dmi_devices);
+@@ -374,13 +376,15 @@ static void __init dmi_save_dev_pciaddr(int instance, int segment, int bus,
+ 					int devfn, const char *name, int type)
+ {
+ 	struct dmi_dev_onboard *dev;
++	size_t len;
+ 
+ 	/* Ignore invalid values */
+ 	if (type == DMI_DEV_TYPE_DEV_SLOT &&
+ 	    segment == 0xFFFF && bus == 0xFF && devfn == 0xFF)
+ 		return;
+ 
+-	dev = dmi_alloc(sizeof(*dev) + strlen(name) + 1);
++	len = strlen(name) + 1;
++	dev = dmi_alloc(sizeof(*dev) + len);
+ 	if (!dev)
+ 		return;
+ 
+@@ -389,7 +393,7 @@ static void __init dmi_save_dev_pciaddr(int instance, int segment, int bus,
+ 	dev->bus = bus;
+ 	dev->devfn = devfn;
+ 
+-	strcpy((char *)&dev[1], name);
++	memcpy((char *)&dev[1], name, len);
+ 	dev->dev.type = type;
+ 	dev->dev.name = (char *)&dev[1];
+ 	dev->dev.device_data = dev;
+-- 
+2.39.5
 
-This feels like documenting internals rather than documenting how to use
-the flag.  I'd drop it entirely.
-
-> +The cross-cache attack class
-> +=============================
-> +
-> +Cross-cache attacks exploit slab merging to achieve type confusion:
-> +
-> +1. Attacker triggers a use-after-free in object type A.
-> +2. Type A's cache is merged with type B (they share slab pages).
-> +3. The freed type A slot is reallocated as type B.
-> +4. Attacker uses the dangling pointer to corrupt type B.
-> +5. Privilege escalation.
-> +
-> +CVE-2022-29582 demonstrates this technique: an io_uring use-after-free is
-> +exploited via cross-cache page-level reallocation to achieve root.
-> +
-> +`SLAB_NO_MERGE` prevents step 2: dedicated pages mean a freed slot of
-> +one type cannot be reallocated as a different type.
-
-Not sure this section adds anything to what was already described.
-
-> +Tradeoffs
-> +=========
-> +
-> +*Memory*: Isolated caches may have partially-filled slab pages that
-> +cannot be used by other types. For caches with bounded allocation counts,
-> +this is typically a few extra pages.
-> +
-> +*Performance*: Zero impact on `kmem_cache_alloc()` and
-> +`kmem_cache_free()`. The only effect is at boot when the cache is
-> +created.
-> +
-> +Relationship to other mitigations
-> +==================================
-> +
-> +`CONFIG_RANDOM_KMALLOC_CACHES`
-> +    Creates 16 copies of each `kmalloc` size class and randomly assigns
-> +    allocations among them. Only affects `kmalloc()` users. Does not
-> +    affect named caches created with `kmem_cache_create()`.
-> +
-> +`SLAB_TYPESAFE_BY_RCU`
-> +    Delays freeing the slab page by an RCU grace period. Does not delay
-> +    object slot reuse. Does not prevent cross-cache merging. Solves a
-> +    different problem: safe lockless access to freed-and-reallocated
-> +    objects of the same type.
-> +
-> +`slab_nomerge` boot parameter
-> +    Disables merging for all caches globally. `SLAB_NO_MERGE` provides
-> +    the same protection selectively for individual caches without the
-> +    global memory cost.
-
-These two sections also feel unnecessary.
