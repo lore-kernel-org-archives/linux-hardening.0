@@ -1,53 +1,54 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F318F3C13E3;
-	Sat,  6 Jun 2026 20:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3313C1966
+	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777640; cv=none; b=d5aLSgA8AwKEqha6d0x/iI42E9CJSEEK3ZqogAE2cK+iWXFeg+yyK/lhKY2ZFeLlksD8vIitxeJkETOxJSLBwXH3f+iA5/fWGMAY1Rf0wf+4qTDNgcoeJGDxcFot5jwxiED1NVLbL2wOPF9MoW817zsUApSff1TsfY+Hg/Y2rtM=
+	t=1780777640; cv=none; b=EYxU5q4eA+AawmqNgkopvAX3+RVXPHOq2iUEGF/PJrNWhmX6mDZKqtezTNCRRB6xjXWrmlKCgJ9Zr296jgYTafpVtVIyvB7uhXw7zgSjtF43H8bsY3mztTymvrecRDVrBk11VB4/v1Q4Lig4GoH3f8ev2mMEYjA3SEgmit72iyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780777640; c=relaxed/simple;
-	bh=AsZxzbtwY1uS8bwGg5TrklhBtJkdF4iE4u1EWdqdsio=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EvPtSjoWcZxRd38D1+0OqqtotkG2W4KONu6vXIpezW1NPWq/AKz7WYx8UID0ODtBsdIzxg4Ls1iMckMlAxymubfsdF7ETpfz9GexzzBIDDp2hByia6hlXIgq1Xcneea4UE4PZNxrwo5bm4hFJ6hyvofIIeNbLiUxZo9NXtZGj5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=mrTNlGfL; arc=none smtp.client-ip=185.226.149.38
+	bh=0I5zgAujTsEXonukzwo9QMCuSWWpWL/vQtUNYm4Kjac=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=majQH/T/s/h7XaLz7i9pthLeFb7O8eB2o58P7+FDlkruTGwSIGsBzhTcx1LsRBrAm3Hzgv+3mpXHAQ2KwVwRgpPVX5e2Bi2Ky1QhANTWdo5B+zP9YtPPuRoGNHyTLLRvLVRfZBnALRKCrLXwwt+sJGc0LKkP1LgUDGlRcc+ztng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=FHEAYTlK; arc=none smtp.client-ip=185.226.149.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="mrTNlGfL"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="FHEAYTlK"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbt-007cGL-0S; Sat, 06 Jun 2026 22:27:13 +0200
+	id 1wVxbt-007NQp-7c
+	for linux-hardening@vger.kernel.org; Sat, 06 Jun 2026 22:27:13 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=sCegYZy4ZaeEUp5KE/t7AmuTsTUVBj9+y2Qhwzm3Wqg=; b=mrTNlG
-	fLKxo3wrjLQp1ru9RZpugd5dFQ/1HSwGTzwEpQsxy69X3rSaWjWJyCS1d2puM8rDpyF4fAnwk+rQZ
-	m9VVNLkfdUbzWkNoV96Lxqj7WFWtLXTod/5HGFUUNy6WNyxCMUhKUqsJ/s4hZ9h04PwATiqPLJ6Bx
-	CPQ2i5fURx8Lqcq+wmD9QvA6JrsX6hlBlyMfDTJPhCKSluAY9iC6qQmtsVFIV0+bZpXL5eqQloz59
-	f/cNk4c4ODaeKWY/vj6qNhT8HjXcM70WDrCoj35bzeJdISoPt11vRc5St1Ci4PKDp/4lG66r01cay
-	s3HP0M5zp5eNNSIiSZNpyw4B9kUw==;
+	Subject:Cc:To:From; bh=zqF4TpCmiyOuQ/B6wO1RNposM4bibPGIMU5UN/VCRz0=; b=FHEAYT
+	lK0onjr1lLXpORO2UXaW0qlb2iGAFSGKHKQ6fbjoibcwa86VSFyH8DVg09v0Zuf9LDtRqhQzdJOKb
+	bYK1qD04SzmFVXiL2yJD7xdsXWkwcUNV4O2HJzWuAqAUNCVOKwflB7/mVGYewPZxYwuxIsOQTOLBY
+	88GUH5UQ66SHAU3CURRD2e76C09EFXJUr54p8YbtpPUVVTnUDLhcVVJ+E5JCGr7ChqoLKRO8X6ee4
+	7WnlaqK3y5XWxxYUHAy14VMrZFGpJxgkaVmMJ4mM5FB1/RwHMDjs+pWhYRDYyE8BHnclvmQZYoHOD
+	fzMtT5y/P2/ymxq+zY6Jb4k6SQZg==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbs-0000tY-CV; Sat, 06 Jun 2026 22:27:12 +0200
+	id 1wVxbs-0005Cd-Pv; Sat, 06 Jun 2026 22:27:12 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbn-006V18-79;
-	Sat, 06 Jun 2026 22:27:07 +0200
+	id 1wVxbb-006V18-DO;
+	Sat, 06 Jun 2026 22:26:55 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tejun Heo <tj@kernel.org>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] kernel/trace/trace_printk: Use kstrdup() instead of kmalloc() and strcpy()
-Date: Sat,  6 Jun 2026 21:26:28 +0100
-Message-Id: <20260606202633.5018-34-david.laight.linux@gmail.com>
+Subject: [PATCH next] kernfs: Replace strcpy(s, "../") with memcpy(s, "../", 4)
+Date: Sat,  6 Jun 2026 21:26:00 +0100
+Message-Id: <20260606202633.5018-6-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,6 +59,9 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
+
+The code has already checked there is enough room.
+Use memcpy() to avoid compiler warnings from possibly unbounded strcpy().
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -83,25 +87,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- kernel/trace/trace_printk.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/kernfs/symlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index 3ea17af60169..98171a2398e4 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -71,10 +71,9 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
- 		fmt = NULL;
- 		tb_fmt = kmalloc_obj(*tb_fmt);
- 		if (tb_fmt) {
--			fmt = kmalloc(strlen(*iter) + 1, GFP_KERNEL);
-+			fmt = kstrdup(*iter, GFP_KERNEL);
- 			if (fmt) {
- 				list_add_tail(&tb_fmt->list, &trace_bprintk_fmt_list);
--				strcpy(fmt, *iter);
- 				tb_fmt->fmt = fmt;
- 			} else
- 				kfree(tb_fmt);
+diff --git a/fs/kernfs/symlink.c b/fs/kernfs/symlink.c
+index 0bd8a2143723..90e2b3221b83 100644
+--- a/fs/kernfs/symlink.c
++++ b/fs/kernfs/symlink.c
+@@ -73,7 +73,7 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 		if ((s - path) + 3 >= PATH_MAX)
+ 			return -ENAMETOOLONG;
+ 
+-		strcpy(s, "../");
++		memcpy(s, "../", 4);
+ 		s += 3;
+ 		base = kernfs_parent(base);
+ 	}
 -- 
 2.39.5
 
