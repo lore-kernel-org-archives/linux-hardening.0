@@ -1,54 +1,57 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8920827A462;
-	Sat,  6 Jun 2026 20:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40593C3C0E;
+	Sat,  6 Jun 2026 20:27:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777645; cv=none; b=JXw2aDPGk11yvFXU89WgyB+P/L7UpZL4uqDBvllhOp3jgKnbzSoEga77TmgksGHF4FAgoSaVMiDTBUxF4qB4xdiBGJ9R9AdRz0elFmkiR2ibDM/9eXE2oH/ZZRGA1NCDnw9Fg5KlX8JEYgXTBP2MmM8y/bq6c8DTjJYBntZerew=
+	t=1780777646; cv=none; b=gGPKkaucu25Lq0fdNWKRsWdxJ5y5VAQghaHj28cmyR/Mp35yJ/ST7PUuSUTTPLvIW1FXxHL59gARNmUy8AHsQIfYH35uY38HLr83GuM9OtsNrW8mWLihYkGjo/Ph7CNymuWGl6GQB6Nj51mWOoWLJhbgUfY5JLBiQ1C/0hyqavU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777645; c=relaxed/simple;
-	bh=IVTRybyENP9ZvsALHEwGvITCPJ14NH1hbJUa0q2kvWo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=avEfuNfMg5aY0TCJ0QzBIjO1klcDP3IGtwEKapuoPmvdWc8Y6OMqgPqg+SIM5mo4HptTlSsI0Z5Dn0VeoiFIhK7dkdTZOcTyUoNeXIFoQ1GtOTGEuq/piU9ZVLU6idO7Zx10hVzs4rNzgbiswwLJlyURhCaWlkAE2T3CehbBPRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=FuZuCFy4; arc=none smtp.client-ip=185.226.149.38
+	s=arc-20240116; t=1780777646; c=relaxed/simple;
+	bh=1mFrbojz0PWOhUZtx3IzxM5Cw9QosOrwnDFFT7UZSQE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GA9IfGLd0qjx8+1L3rGEfLjfmkMZj+UXXGzFx05YsRluy4eemuW0iAzIMj7IgELFiCfTc9UcRmfHU1WgHrEn8T66CVFdV5YqOuGxYilG8y3mGTRCVtPhVh0aA9RzVVIxxMiWpeNMabVe745KFI6N74b8yfJrNp71Vv5o14x5bZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=wijZ8IB/; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="FuZuCFy4"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="wijZ8IB/"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbx-007cIS-Ca; Sat, 06 Jun 2026 22:27:17 +0200
+	id 1wVxc1-007cKJ-2i; Sat, 06 Jun 2026 22:27:21 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=jj4dGsDS5UDEhU/D7d8KdsG7GvNWgOpV73kbpJQir3I=; b=FuZuCF
-	y4U64VXKIaVg6y4WFBp0CkWxEF0WqDEmIWAzGs2jJlUzpgWCJFLsoWl/adQY4M3lrliIVjgejIMxC
-	g/KO3c4ysC0pgFKNhNNpFRCRLfoRvcnRawOxV4Mvsdij6zT9QPbLc4nUp/MZfCjIdZ15hEF04iyqc
-	oproj8JVWUOC54gzFi7RetqU6nD3qy0/ig7x9JF4X8rasBTdP5b8wzZDOLDSf9zBJ9v0cFhEhxLID
-	PWdmo+kqAygiUOsJaaXxt+eBK7B1dcL/Yt2ScJIp7Pp0XntQmz4gMFXHSjUum7fbyyAJJR3fLXvgP
-	y2yhVHtfkZje/6rf1gs6LAw+LSvQ==;
+	Subject:Cc:To:From; bh=KhMKaOFxgwuQkIs6RKratwnTu2UWxE6iXhf6LBrZbME=; b=wijZ8I
+	B/QKevvdt5kIs4TVg4CKUyWlfIY6hFuZoGTbwyBcRGJefE8nJXSzDZQnMHDT22na81QMzQdYStjzK
+	++VhngaY9Y6RiQBpuxY5YSguSYB/Vsb5Cg35GjG00PPy/yxfQSDZ7uaRmK3mt5CGWxh585FcF5QyF
+	j3eDufEe6oBZAdYJLmQzQSBof+PJiUvhteccBci/F1/MUAxF+IueUqX3LXMR53NyOG6pXpx1nyZht
+	X7TXKgdYB28krBnMMlOGJHdw2dSNYM4bjfaQ+I3c2EPKSFpKBOTotX1Wgv5u8YrsKoOTIyKkeVLXy
+	tNxywe0G8/cTyOuI0mNxbqsCkAwA==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbw-0000uY-Pd; Sat, 06 Jun 2026 22:27:16 +0200
+	id 1wVxbv-0005DL-J6; Sat, 06 Jun 2026 22:27:15 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbm-006V18-RJ;
-	Sat, 06 Jun 2026 22:27:06 +0200
+	id 1wVxbk-006V18-65;
+	Sat, 06 Jun 2026 22:27:04 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org
-Cc: Hannes Reinecke <hare@suse.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	netdev@vger.kernel.org
+Cc: David Ahern <dsahern@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/scsi/aic7xxx/aic7xxx_osm: Use kstrdup() instead of kmalloc() and strcpy()
-Date: Sat,  6 Jun 2026 21:26:27 +0100
-Message-Id: <20260606202633.5018-33-david.laight.linux@gmail.com>
+Subject: [PATCH net-next] net/ipv4/ipconfig: Use strscpy() to copy device name
+Date: Sat,  6 Jun 2026 21:26:21 +0100
+Message-Id: <20260606202633.5018-27-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -84,29 +87,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/scsi/aic7xxx/aic7xxx_osm.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ net/ipv4/ipconfig.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-index d93b522695eb..d6237aa5beac 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-@@ -1101,12 +1101,10 @@ ahc_linux_register_host(struct ahc_softc *ahc, struct scsi_host_template *templa
- 	ahc_lock(ahc, &s);
- 	ahc_set_unit(ahc, ahc_linux_unit++);
- 	ahc_unlock(ahc, &s);
--	sprintf(buf, "scsi%d", host->host_no);
--	new_name = kmalloc(strlen(buf) + 1, GFP_ATOMIC);
--	if (new_name != NULL) {
--		strcpy(new_name, buf);
-+	snprintf(buf, sizeof (buf), "scsi%d", host->host_no);
-+	new_name = kstrdup(buf, GFP_ATOMIC);
-+	if (new_name != NULL)
- 		ahc_set_name(ahc, new_name);
--	}
- 	host->unique_id = ahc->unit;
- 	ahc_linux_initialize_scsi_bus(ahc);
- 	ahc_intr_enable(ahc, TRUE);
+diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
+index a35ffedacc7c..ec60e201ebe7 100644
+--- a/net/ipv4/ipconfig.c
++++ b/net/ipv4/ipconfig.c
+@@ -371,7 +371,7 @@ static int __init ic_setup_if(void)
+ 	int err;
+ 
+ 	memset(&ir, 0, sizeof(ir));
+-	strcpy(ir.ifr_ifrn.ifrn_name, ic_dev->dev->name);
++	strscpy(ir.ifr_ifrn.ifrn_name, ic_dev->dev->name);
+ 	set_sockaddr(sin, ic_myaddr, 0);
+ 	if ((err = devinet_ioctl(&init_net, SIOCSIFADDR, &ir)) < 0) {
+ 		pr_err("IP-Config: Unable to set interface address (%d)\n",
 -- 
 2.39.5
 
