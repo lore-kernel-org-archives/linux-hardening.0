@@ -1,52 +1,54 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344FE3A1A35
-	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB283BBFB0
+	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777636; cv=none; b=hbOixynBvBdLB7r0t6PpnCGQdZU70nI+RhW/zz+4BVRldWlPvWQdU6v/kuSVKT+3BBzvLlp+FroSz4cCvuGOsj4sir6S4nylVXKjD7O7aZVLSgRc9dUVIalo18NPm2LJg9O0I0W3ep84RAmnylzr/S04tkoqLX3xJYaByBLBh2c=
+	t=1780777637; cv=none; b=moGYU1yT8aVcceFllAW0k2mCTG3YxvufurceTtL98kFcdJ1t8fNGJUoTVyfj1VMRSS4rMZ4WPXuQAOgvCT0FX9u3hfH44ErzOD0znSN8xxIaLROg3IOykKkw9d9M0kwR3YY3GvCaZt1MTitKSdsaV4wu61vIiSaJXa+Vj4lwiQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777636; c=relaxed/simple;
-	bh=R3H4Nm5GY6hOViTdz1W2dueMBBuEo57Z0FQZ8yTbK1s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Aqmy2iG957Ucuu/90u8l3gQpIi31VxwazXy44AJfmtmQm6sWRkG4UGHzD24E/i1JqyRtG63a8byR1pFFnsJCASmlPAMQ3BPtM7isIpjrn3+QnLPeozngRKvVOlElDrwXpYqBeNaWhay6f1ZvndvRuptxVpOlwfzQPiJ5NzaBlfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=OsavbeHr; arc=none smtp.client-ip=185.226.149.38
+	s=arc-20240116; t=1780777637; c=relaxed/simple;
+	bh=/obGCQ4u8raCYCPae1B0gXZbWF6zDXsp3DFcxfmptzc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BJXBmsNPofcLLLdPoSd0cXtNejF8cyBZ/47pBXPNeyc7y287mYhF7gK4SKSjdqMaPOexRVsNfKngJkM19012mrwB07IlRbnBJudAFfHvVj//r2jVWUkqLnbZixZaGzN2NwFPz4UKQ3GDa+Brxb1VDYM1+xb/Bb5p/9+qOYIxFyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=EYyX6Exf; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="OsavbeHr"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="EYyX6Exf"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbq-007cFX-Jc; Sat, 06 Jun 2026 22:27:10 +0200
+	id 1wVxbr-007cFs-MU; Sat, 06 Jun 2026 22:27:11 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=VB6LGWBOBKZK7RdnDMyNXA0acdHX2HSe+usGRca51YI=; b=Osavbe
-	HrnlFBrRqHuE+5Ofn+svghz5Lk0pLKOd9Xb57T9+9qPg6lpcq9L0PCHi7Th/FEyCfDYRTTPMIniqM
-	ltsUn3cPZFacieJ2R6M8dZERbhqtP1hkZ4BXbzxSH2uclbdDylOLGqM6l8IllSeyddURDE8HleZm+
-	ABhCXZ5zyGtEGugB6lx6GDRj8y5/clEZxlhG3AFck0/dRX2r6+qxhG4EfZZTCts+3yv1iYn/U/R9P
-	Lzijg9M5Rzq6SqhBqj0IqlvT2bDluBpD1NtWtXRVjmrd2e2M+2EkTxFUoObm2BvS+3/7eUC5hXdwo
-	4ojLJ47CE483QkeVTUr90+AQBnyA==;
+	Subject:Cc:To:From; bh=Bq1xhh7PjUom9z8+i43NNOjTalhx1SZFLg0nAvj3jLg=; b=EYyX6E
+	xf8oq1VVUdQGCcKTuaRuELInd3fkWIuPvhbz/MFHNUClONED4J6xm4P6d1wyaJnbpCv79F/9x1rTY
+	F4VpxPlUgz/KR7PTeEVvLQ2fbtj6H0S3MbYKdWruRgXZhm8HKSsTTFW6W0/gT0QeyeQDJ1hZ+K0hT
+	Q2+Dlw3tSUv0vWoS+RxCDDKAZFEy5RI7CvjRiS9KnSMnOt5rGqpM5eQZsXzhdQkJl2q2fh/LDlvJi
+	w0uvMQ+7NzoZ9AMBlFzsvlh6iOH6iwztrnySiAHp8C/elSyiuaydG2Xw4l2Kv6oALH0qmQGWZ2NSz
+	dyWN7xhyHkak9R2KCK/zZgEsL/sg==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbq-0000t0-6n; Sat, 06 Jun 2026 22:27:10 +0200
+	id 1wVxbr-0005CH-6I; Sat, 06 Jun 2026 22:27:11 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbo-006V18-LQ;
-	Sat, 06 Jun 2026 22:27:08 +0200
+	id 1wVxbj-006V18-Ch;
+	Sat, 06 Jun 2026 22:27:03 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-block@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
+Cc: Antonino Daplas <adaplas@gmail.com>,
+	Helge Deller <deller@gmx.de>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] block/early-lookup: Replace strlen() strcpy() pair with strscpy()
-Date: Sat,  6 Jun 2026 21:26:32 +0100
-Message-Id: <20260606202633.5018-38-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/video/fbdev/riva: Use strscpy() to copy device name
+Date: Sat,  6 Jun 2026 21:26:19 +0100
+Message-Id: <20260606202633.5018-25-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -57,8 +59,6 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
-
-Use the result of strscpy() for the overflow check.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -84,24 +84,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- block/early-lookup.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/video/fbdev/riva/rivafb-i2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/early-lookup.c b/block/early-lookup.c
-index 3fb57f7d2b12..18ab4a2da676 100644
---- a/block/early-lookup.c
-+++ b/block/early-lookup.c
-@@ -156,9 +156,8 @@ static int __init devt_from_devname(const char *name, dev_t *devt)
- 	char s[32];
- 	char *p;
+diff --git a/drivers/video/fbdev/riva/rivafb-i2c.c b/drivers/video/fbdev/riva/rivafb-i2c.c
+index 6a183375ced1..5ee59be01850 100644
+--- a/drivers/video/fbdev/riva/rivafb-i2c.c
++++ b/drivers/video/fbdev/riva/rivafb-i2c.c
+@@ -91,7 +91,7 @@ static int riva_setup_i2c_bus(struct riva_i2c_chan *chan, const char *name,
+ {
+ 	int rc;
  
--	if (strlen(name) > 31)
-+	if (strscpy(s, name) < 0)
- 		return -EINVAL;
--	strcpy(s, name);
- 	for (p = s; *p; p++) {
- 		if (*p == '/')
- 			*p = '!';
+-	strcpy(chan->adapter.name, name);
++	strscpy(chan->adapter.name, name);
+ 	chan->adapter.owner		= THIS_MODULE;
+ 	chan->adapter.class		= i2c_class;
+ 	chan->adapter.algo_data		= &chan->algo;
 -- 
 2.39.5
 
