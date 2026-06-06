@@ -1,58 +1,55 @@
 Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F583C3787;
-	Sat,  6 Jun 2026 20:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322CA3C4573
+	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777646; cv=none; b=bcXv2H1DysGGdnOJs2fo1zwpFQMsCuhxSD4AtTlo4i/DH4y9ZoAkg3MA0SG6ZVHpIqm7l7hl2FjJ/T+dS0XUxtMCT9jtgpWcF7MAkVFc+1phDSwvmenn2IthZvYkoz4In6xhhef+9dk2yAN5zqwThxFzzPJkWlf4euPYb63NaAs=
+	t=1780777646; cv=none; b=k7ktDwYWmH0oRgtg8xEbbLqpBzeBW7Jfe5onKpPC+AoGM695o+ShxK6R9B+f2kz3fO3CAD1fG0yyrcJPZHTZw1MiTX4p/DnvWq7v6f4a30QlyTsWYYxf0/XYyEDaug6TzXhcad3mtlyXmo2NjsWNho0XhmNDEWCAHMrw3gtCozI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780777646; c=relaxed/simple;
-	bh=67V5ijnjRJ3lxxwIA60f5TJywKUV13PourCP2H5oSxE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CRugCaneIbHPIK3YOQdJiFwK9EDfq0MRGIzVxdWj6JvZ7BQT5umsndFTnihtKSKjsgAx6U/cVfhaUOTLCdAk9JGAFod+DkRSCFitCpuJ9dCHRhro16loO6A68RCd0xdsTYjKkEgIwTWba7EQPTJ7H3EuVmjGdfKaQvD94Zts+QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=MSRHak75; arc=none smtp.client-ip=185.226.149.37
+	bh=KwpYQR2QSZiEsaf9ZSQ81tnllE2+9uTsvaoY+bEkKbM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uw+mLbZHqIxEf02XUv8AXVcBcT+lcimmxgckxdgIxAWOX/uwqmP4+E/3RItDhEAYPrQkuhQDLYsMRJT0kSG464v/jwxkZ/Od42xa2Rym3cWT1liax8v3vn8ZUztpM3WYQvJqL24mv68uXuMsh2TiNmFwmwwvTiBMsxjUo27k4qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=C5nqByvC; arc=none smtp.client-ip=185.226.149.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="MSRHak75"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="C5nqByvC"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
 	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbv-007NRZ-Aw; Sat, 06 Jun 2026 22:27:15 +0200
+	id 1wVxc0-007NTZ-PW; Sat, 06 Jun 2026 22:27:20 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=V/S9cU6XmU1GBmWzRJOxuVRdqyanm3UqQ9caimRIc2E=; b=MSRHak
-	7592Xha25bcKFHrrOdDKGvBEmrnsrAeLUuucA+hD3dtuhaaca27JpxntN/KWYFgMYcldL0pEShgkR
-	Xh1bNwujQjESMOc79wbk9LBP5iVMt5zSc/HpTPnoXa0+gR0iv4QRk5O3xfDUIWeVr0+SHJeZzMCkp
-	0cIzqtNHWj3PDE5/W2x32bK808FTiEsZDm9ImyJQHWT5jGjlVVqelP9vFkC+HiSjtix9CxWPwH4j4
-	4unE3+YHw5aI33cXMeJP5S05j4NFtkCS1WjkvdXnXjlNS8Yld/ILPRCC9Ynz2tCt7TsG1d8WGGlnM
-	8tUkfaPXehUhTV3GvBvLStZV4vdQ==;
+	Subject:Cc:To:From; bh=d/9GTztrEzzPXewpLi5FMtWP2P8vhwjGmFMrZobrZ+E=; b=C5nqBy
+	vCdtOKXayjTSILT/KY8/J23khkIaz9jxUa7FaZqqJg8Rehuzlk73faTUqByLiB4pMBNu3ruYxJC6K
+	zVAjgVTWmYF1W3CRfVx5Q5JeYlvCtxrMs845MPpOS4bQt+kCBF7P+vXLzIH/MSiAnICKPjLiPUpS3
+	RrZTBf/yM1QcfXWGw+zz0hKh7Dkcu6KXOvSlv3MsyjXhwxbQEBYae9YlShitvN5mGeKq8FY4SMAbz
+	jKX6eeOlbeoUNq+yqSzKgQbUNnE04v28ubZCFy2B0v1NwxcV890chn1287/S2mxCSum4v6mPag0n3
+	RLIjzHCZ+JqwA+tt2aVZSac4ns3g==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbu-0005DB-PI; Sat, 06 Jun 2026 22:27:14 +0200
+	id 1wVxbv-0000u8-6n; Sat, 06 Jun 2026 22:27:15 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbf-006V18-GI;
-	Sat, 06 Jun 2026 22:26:59 +0200
+	id 1wVxbp-006V18-2Y;
+	Sat, 06 Jun 2026 22:27:09 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	GR-Linux-NIC-Dev@marvell.com,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rasesh Mody <rmody@marvell.com>,
+	linux-mtd@lists.infradead.org
+Cc: Joern Engel <joern@lazybastard.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH net-next] drivers/net/ethernet/broadcom/bnx2: User strscpy() to copy device name
-Date: Sat,  6 Jun 2026 21:26:10 +0100
-Message-Id: <20260606202633.5018-16-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/mtd/devices/block2mtd: Replace strnlen() strcpy() pair with strscpy()
+Date: Sat,  6 Jun 2026 21:26:33 +0100
+Message-Id: <20260606202633.5018-39-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -63,6 +60,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
+
+Use the result of strscpy() for the overflow check.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -88,22 +87,27 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/net/ethernet/broadcom/bnx2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/devices/block2mtd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2.c b/drivers/net/ethernet/broadcom/bnx2.c
-index f5722e929833..796851abf470 100644
---- a/drivers/net/ethernet/broadcom/bnx2.c
-+++ b/drivers/net/ethernet/broadcom/bnx2.c
-@@ -6306,7 +6306,7 @@ bnx2_setup_int_mode(struct bnx2 *bp, int dis_msi)
- 	msix_vecs = min(msix_vecs, RX_MAX_RINGS);
+diff --git a/drivers/mtd/devices/block2mtd.c b/drivers/mtd/devices/block2mtd.c
+index 03e80b2c4f5a..466a061fa9bd 100644
+--- a/drivers/mtd/devices/block2mtd.c
++++ b/drivers/mtd/devices/block2mtd.c
+@@ -415,12 +415,11 @@ static int block2mtd_setup2(const char *val)
+ 	unsigned long timeout = MTD_DEFAULT_TIMEOUT;
+ 	int i, ret;
  
- 	bp->irq_tbl[0].handler = bnx2_interrupt;
--	strcpy(bp->irq_tbl[0].name, bp->dev->name);
-+	strscpy(bp->irq_tbl[0].name, bp->dev->name);
- 	bp->irq_nvecs = 1;
- 	bp->irq_tbl[0].vector = bp->pdev->irq;
+-	if (strnlen(val, sizeof(buf)) >= sizeof(buf)) {
++	if (strscpy(buf, val) < 0) {
+ 		pr_err("parameter too long\n");
+ 		return 0;
+ 	}
  
+-	strcpy(str, val);
+ 	kill_final_newline(str);
+ 
+ 	for (i = 0; i < BLOCK2MTD_PARAM_MAX_COUNT; i++)
 -- 
 2.39.5
 
