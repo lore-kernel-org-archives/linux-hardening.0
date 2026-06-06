@@ -1,53 +1,55 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806A13C3440;
-	Sat,  6 Jun 2026 20:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436483AA507;
+	Sat,  6 Jun 2026 20:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777649; cv=none; b=fPODYk6zBsVuQ31eF8pEv/jgYjiwQxfEqakGDUaav5qUNth1S1+vB0XU3NVorLcuDuRvAQDXFt43LS0nnBKHLyxw9d9iL1h0RwZh9cqoJcmf3QU6g6agoPx5DXhrjq7oMwn7MPTbOIdmH6bdn3PuXGvE+7DE+Snd9vN48g5d8XU=
+	t=1780777680; cv=none; b=Sp6/fuE1D5LVNWMmf7ZKCz7scvjfWxRUh4pnoQJWANVxnt3EyIKipqLbZBRI09UXVtniDTIvRZz6xEyPH8TpQv5OS96FKqb00qzNjPvTJXO1VjjWdZBp1SOCm+YQ7zYST3Ldl9MS1Uam1/2TK8obyfkwnv4aex7t0UuLN3/2+Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777649; c=relaxed/simple;
-	bh=q+CPTHnNRluM6JmL18/hFwBIHgbfmG6AK4nOvyo4Ako=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g4Sa8SjjZOULGHktraJ4OqOH0rvrMpc21eLHpfGNJsRxbqej3Ame/6puZwn5pGmy2y9N7vAYXcM4r3Y4viqN2nHUSJI9f6j7tzLnSyXwZeBLHJq5rBTwjUfOclbmAqsgD8VbETWxUkq9NkK+jrvzVPWC3aghHeoF4LpqhOGcD9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=wGa7iYpd; arc=none smtp.client-ip=185.226.149.37
+	s=arc-20240116; t=1780777680; c=relaxed/simple;
+	bh=UXuzxxCgyQ4c2natex5UqmAAgmQr+NKyxj/QCADg3Dg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nKu1E+owbx5vvSaIWJZs5r1IENFrki2DiRi+sNMGYbK5Fx17JZAoVvi7L7DnyygN4LgrvmWBmdHxkN09yqCHUSqhJRmD1E/PpW01//lU/e1qYWt1pxsmicYrWckra6NoQ+XQYBurZtnlGDB34pM43djoyINTVelKbfMAw8+SfUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=IjHIrlXn; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="wGa7iYpd"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="IjHIrlXn"
 Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbv-007NRc-FN; Sat, 06 Jun 2026 22:27:15 +0200
+	id 1wVxcb-007cN3-F6; Sat, 06 Jun 2026 22:27:57 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=xz6dZeUw+W1CFcduZ9YDgcFJQaxSfhJatXsg8jKwQvI=; b=wGa7iY
-	pdiX6O5Nee/DvGLC+FrGQOqxoUgQEk692R4JEzF8iumIhDFrF8XYm1oDXQ4OrgoxRQeXqCCRW6VbN
-	aTtD1ppSjhws/5isFCCqgPpbtFo3UxA/j9kXfZPGzfxnIfwx5sTYhJf9N+xu8HVLY59ys+FgOiU+g
-	XvOKIrTQCOCk+H9ZghUPYNlngj9EkKswLaKS/5aVu2QWs3oo/8ZK5QGugfaTqN2h0Icw4ctf7m3H1
-	tnacCjVRQjR1duSIDotzOkH6n/gBNBeOX6KQfR4lrA0g6jrzmJRrgM+LjISBt+X9qvus6yLthEhZR
-	qIbVbXsMKtB2sToY4bfBaeqM40Kg==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
+	Subject:Cc:To:From; bh=BqSj6sMMJtBKls1RZgnD1Em19FvNQq+nxXs2VMR7HV8=; b=IjHIrl
+	XnoRoXcw9sXk0XizwbMyE0ZQeMZv4ohY60FUYhp5VkSFcJ+kD1V7GLPpviM+ss4nH0tjXD2M/My9H
+	9xLEhY6Jp7VXULNQOyOTvn1r6pPRMQWJAz8gFiFnaagrtcplEMyoOQnhvM+Jmg6YJpH8reSgLY1C3
+	9iECS6azYsDtQ7HQx30M1nDbqhU0E7EaneSdGeTfP4nTgkvnAn/6tmbzMg5xGX2YS/sIBlfjxzXvv
+	1mdf+tLr+GJyqSN63DMYsJDVDAYkmnZirhv4JOfZJ3ir32mQqMqtBhMTrP6sEYU+2I5hyzOfVZMCi
+	xaOvpnWsogZ386o2R4v2KQ76xShA==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
 	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbv-0000u4-1D; Sat, 06 Jun 2026 22:27:15 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	id 1wVxca-0000vl-W5; Sat, 06 Jun 2026 22:27:57 +0200
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbf-006V18-08;
-	Sat, 06 Jun 2026 22:26:59 +0200
+	id 1wVxcU-006elj-1q;
+	Sat, 06 Jun 2026 22:27:50 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-can@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>,
-	Vincent Mailhol <mailhol@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Cc: Joern Engel <joern@lazybastard.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH net-next] drivers/net/can/usb/kvaser_usb: User strscpy() to copy device name
-Date: Sat,  6 Jun 2026 21:26:09 +0100
-Message-Id: <20260606202633.5018-15-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/mtd/devices/phram: Replace strnlen() strcpy() pair with strscpy()
+Date: Sat,  6 Jun 2026 21:27:40 +0100
+Message-Id: <20260606202744.5113-1-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,6 +60,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
+
+Use the result of strscpy() for the overflow check.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -83,22 +87,25 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/devices/phram.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c b/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-index e09d663e362f..2cd58e825e0e 100644
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-@@ -746,7 +746,7 @@ static int kvaser_usb_hydra_map_channel(struct kvaser_usb *dev, u16 transid,
- 	if (!cmd)
- 		return -ENOMEM;
+diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
+index b42cadcd76b1..7025d9bf5929 100644
+--- a/drivers/mtd/devices/phram.c
++++ b/drivers/mtd/devices/phram.c
+@@ -268,10 +268,8 @@ static int phram_setup(const char *val)
+ 	uint32_t rem;
+ 	int i, ret;
  
--	strcpy(cmd->map_ch_req.name, name);
-+	strscpy(cmd->map_ch_req.name, name);
- 	cmd->header.cmd_no = CMD_MAP_CHANNEL_REQ;
- 	kvaser_usb_hydra_set_cmd_dest_he
- 				(cmd, KVASER_USB_HYDRA_HE_ADDRESS_ROUTER);
+-	if (strnlen(val, sizeof(buf)) >= sizeof(buf))
++	if (strscpy(buf, val) < 0)
+ 		parse_err("parameter too long\n");
+-
+-	strcpy(str, val);
+ 	kill_final_newline(str);
+ 
+ 	for (i = 0; i < 4; i++)
 -- 
 2.39.5
 
