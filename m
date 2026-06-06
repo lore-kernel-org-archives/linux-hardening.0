@@ -1,55 +1,54 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174BD3C4B64
-	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3543B18A;
+	Sat,  6 Jun 2026 20:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777688; cv=none; b=YOOxz6JxLgGUCDx4drJhKF294l8hb2KE61SPnxxHnZqeFnas3mLAIy9eWDQV9048u6ltG9CsxCTZ8E2PoMaHsfi8aqx5lMMLkCUztqhce3UQJm1bNll1BOPdvAyPGvkvqzMU2Rc4cIimBt14GMt6dtudGQko05wll+GwtDIk968=
+	t=1780778810; cv=none; b=ANK0w1RgBsyr2RFb+PDNH/y2mzR+ycL389xHTUFmjg0CtlCkweqyYDRAAUmJCb9/Y5AG7bk9boboD4v7hsvbqxbrhUVQFD0ElycI9a0pbB3Np3WDT6Sqeawn7FpX9T7MH5QcDnE9u25CRFmH1sXD/B7jZRohxJxWBNhgUtF5TVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777688; c=relaxed/simple;
-	bh=Uh/xHzZOnziz/jG3mIaHilZ0prkRGz8/pYegnAm0RVQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hW0x2dbznjqBbh7FcRuxGeOx0oaFkhlfq0zGs5aZkL9QTxzpL/PMheDa8g3AEdSbaTtVOeNv10AaKpWl61PdijHKpZr5Mkryqg3aGP8vpyjN89+1cdbQcPT+tVLX1dy/cvevluU5A9i0EeMPpbZmJaZtGxR+Fr8Q8XEovg05+8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=N2iayLhi; arc=none smtp.client-ip=185.226.149.38
+	s=arc-20240116; t=1780778810; c=relaxed/simple;
+	bh=/OcoZiJiWCr4pvTzofGANdRUxEA1k0LfbIXSeQvtSqo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dMex1GMfQQma2jpnR3gN4kiyHxE9P8DiR+o/en7gFpCNggJ9NpaQaMbDGK8p13TwucbxXE+E7O6aHfBVbfgY/NU+m/c0ccPdKEGQ13NOjLMakoFMtIYPZWf4PjOpr8StUTG/xiIRYXjshgkZm5z7iSUatfAcpQALVSVVCP+9yJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=B2VldlYr; arc=none smtp.client-ip=185.226.149.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="N2iayLhi"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="B2VldlYr"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxcc-007cNI-Av; Sat, 06 Jun 2026 22:27:58 +0200
+	id 1wVxbV-007NJX-O0; Sat, 06 Jun 2026 22:26:49 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=Iw4HQYVrUBqe51ZVWEMZ2tnQ0UrxLulemejkj27UPRE=; b=N2iayL
-	hikJ5QTM7epCVp/Rd/rS2zIem2fdnAhNttoEuTaKIDqC4aOworeWkNfy9FInL5DJ8MKUl1/zzmF5P
-	Ruqp54WmKQha5FzWwLul0dopx+rNcsmNhp6necYWbueDiRTZvPQpxe+PUCo3//OhY1c9QW+z/fIk4
-	8ZffpkLiVWACp80bxHn6AIdvAevRy0KaADYZk2XdxcDpEON17SeRQ67eR+ieY1i6MlEncSf6RjdUm
-	AxfwSECnyzl6mkFTDWehpIOaj/Kfsui9z1GyvxpN0XUPX6K1uJgISNI/sDIOd3jdojbDJ8yKxOMi1
-	M+nvfluVQdZTtUxdP0N3bqOQuB7A==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	Subject:Cc:To:From; bh=OMfZOaaOtzLptKPrhdF2twX7AMe5ZC+9HNX6YGyz4D0=; b=B2Vldl
+	Yrgonnw6FkliXLXtjQTlHzymlzTMNVwdqlB2zPnVj4Tdf8NrN2MTs/ZzqeWGBCk/XXKBEYVPqeNfL
+	Fi5P4k62lJ8ULW/Nanm5eyR5I/+z/RhWxqM7FBuDLww6wrx1iPcYQzecfhmLJ7rNRr9133gEJW2HD
+	o2Geth95QJTUIZbjOp0HNy4T/FUA9ZsEv2tv/JnXl4VJ6IJNuSM/akPswR+abVtMnXzE4a2msvawY
+	BACiReOUosvxY0u3xhHFVjH9Adl4ifpmn/Xi6frxY7sCOYEdWWHHEparA1gRlhyH+t36Wk4oCK6HZ
+	KGPKfpVODK1kp2gqKUJin1jxcmzg==;
+Received: from [10.9.9.72] (helo=submission01.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxcb-0005FM-FT; Sat, 06 Jun 2026 22:27:57 +0200
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	id 1wVxbV-0000sY-Bn; Sat, 06 Jun 2026 22:26:49 +0200
+Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxcV-006elj-7Y;
-	Sat, 06 Jun 2026 22:27:51 +0200
+	id 1wVxbT-006V18-9S;
+	Sat, 06 Jun 2026 22:26:47 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	kgdb-bugreport@lists.sourceforge.net,
+	driver-core@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Daniel Thompson <danielt@kernel.org>,
+Cc: Danilo Krummrich <dakr@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/misc/kgdbts: Replace strlen() strcpy() pair with strscpy()
-Date: Sat,  6 Jun 2026 21:27:43 +0100
-Message-Id: <20260606202744.5113-4-david.laight.linux@gmail.com>
+Subject: [PATCH next] driver core: Replace strcpy() with memcpy()
+Date: Sat,  6 Jun 2026 21:25:55 +0100
+Message-Id: <20260606202633.5018-1-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,8 +60,8 @@ Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
 
-Use the result of strscpy() for the options overflow check.
-Use two argument strscpy(config, kmessage) to ensure no overflow.
+The length of the string is calculated in order to allocate the correct
+sized memory block, use the same length to copy in the string.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -88,45 +87,27 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/misc/kgdbts.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/base/platform.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index 9d3218330f0a..2c8f10b8ac74 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -1069,11 +1069,10 @@ static void kgdbts_run_tests(void)
- 
- static int __init kgdbts_option_setup(char *opt)
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 75b4698d0e58..63fdfffe1a8c 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -617,10 +617,11 @@ static void platform_device_release(struct device *dev)
+ struct platform_device *platform_device_alloc(const char *name, int id)
  {
--	if (strlen(opt) >= MAX_CONFIG_LEN) {
-+	if (strscpy(config, opt) < 0) {
-+		config[0] = 0;
- 		printk(KERN_ERR "kgdbts: config string too long\n");
--		return 1;
- 	}
--	strcpy(config, opt);
- 	return 1;
- }
+ 	struct platform_object *pa;
++	size_t len = strlen(name);
  
-@@ -1144,7 +1143,7 @@ static int param_set_kgdbts_var(const char *kmessage,
- 
- 	/* Only copy in the string if the init function has not run yet */
- 	if (configured < 0) {
--		strcpy(config, kmessage);
-+		strscpy(config, kmessage);
- 		return 0;
- 	}
- 
-@@ -1153,7 +1152,7 @@ static int param_set_kgdbts_var(const char *kmessage,
- 		return -EBUSY;
- 	}
- 
--	strcpy(config, kmessage);
-+	strscpy(config, kmessage);
- 	/* Chop out \n char as a result of echo */
- 	if (len && config[len - 1] == '\n')
- 		config[len - 1] = '\0';
+-	pa = kzalloc(sizeof(*pa) + strlen(name) + 1, GFP_KERNEL);
++	pa = kzalloc(sizeof(*pa) + len + 1, GFP_KERNEL);
+ 	if (pa) {
+-		strcpy(pa->name, name);
++		memcpy(pa->name, name, len);
+ 		pa->pdev.name = pa->name;
+ 		pa->pdev.id = id;
+ 		device_initialize(&pa->pdev.dev);
 -- 
 2.39.5
 
