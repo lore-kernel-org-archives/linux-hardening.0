@@ -1,51 +1,52 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195FC30D404;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF133AEF3A;
 	Sat,  6 Jun 2026 20:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777635; cv=none; b=Yg6H2yQRKfPmKSUncmB9hDvNalY5qiP5nwz9yOwt4t47OzVTNMV08K6NagVgpsPspTlsC5D8mMjuqWFbmWu7MGOYi2NiEw1dxNc3nMLLwXs+b4CSijNSsODusmdFg45+kzxgJqR2oCHJUaMLjIRrtXsO47W3xnN3pBetPVZBVXw=
+	t=1780777636; cv=none; b=rl5C+e35N+lrazzUIoF1QfRgwn0+BvRLIaebEv+qAFF19ksQr4wvS+WiM5TMlszheRKw778EIO0AUo9XtUOoswmEmwekBRMQCzwyGM2XFmo2KKiqssgRzRDEHqPaUIhVbncvQ1/PMTjX+Owuh9TgMTTu5bS/60GGknR8GEIjMSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777635; c=relaxed/simple;
-	bh=ThlmTVRTpgls/zpqbs2baMrvVYXlWA2xSjetlZkTQcw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NXWMU8CEpHwISOD4cobnKVxPGyGyB/0cb3qquU73JCIn1p0fHz454aueCLjy8A8O9vvc1aS7BFJqsliTRL8wnyMxBWNyIlHHOKJvrCjLszL5rVeXhN3T69pHrbRjayzUQ0jPhJ48VJMP6u5AjgFGxmi53DSSf0QrrYz33lFdWF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=tPUypTBY; arc=none smtp.client-ip=185.226.149.38
+	s=arc-20240116; t=1780777636; c=relaxed/simple;
+	bh=eglQ29KjcUyUoliSnqiToaYBZpFLE5z4uWFZFX36uNo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LDvXG5y+aGZ3KrUfIVXOyJeMNg5uhHcRKhNJ+ksmtcvpjxtvLZJ0UxUg+uytgsBNdN+1u5x2Rni6R/88SCRkV8hqsf8GASfx4+U+EhPr3zJqCYOh9hiMsjU/HI4S8haAk399rrWYX0PFhtbzbsFCOJpVMH/gDBbUMEco2y2Vf6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=br9IzOQ7; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="tPUypTBY"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="br9IzOQ7"
 Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbq-007cFI-BI; Sat, 06 Jun 2026 22:27:10 +0200
+	id 1wVxbq-007cFd-Na; Sat, 06 Jun 2026 22:27:10 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=NYS7xLlj/dRRWDxwAJtYqK18NJ/VeWpGZ8STxTEVQ6Y=; b=tPUypT
-	BY/567oJBTwgA65lUkDyAJ/FMERj8WJbTTYn+O11+Ufrz7CbAQSVXEsNinbxseplfpjzyfuv4C1eZ
-	KEFgTlIbjpPiwo2EltE8j4QoP1MMyj5inXxeVtBpOurEc4yRMzRTFtXBFyE6EFg4JpcDALMqY7mUn
-	k3is9/+PV1Vt+CJZq4krTxBoQs4cgrQaz3uRt9wXo8vkn7jWulesKoe06f32IZz7i0SBj+eYjxvpU
-	frqc+UlDA0lvvnknOKvWNKgsJtsWrn2sryz64+VP6PqkYktl3AA1YYdRYu1AGkuZB2JW1a8nqJwJA
-	jX84bbYpFYfTYBYSQVQm5Q0GtEhw==;
+	Subject:Cc:To:From; bh=VzDFyAWA7ipw3/Qre8CPNMhpRDVhgAkhx4KXGyrUHmo=; b=br9IzO
+	Q7si0GGllE+m+9fp5xvFu5MjQusZyQ0BbqBMmOJJhf9h1lxwMniqTZlKPKr76oOUf4OfPq8PYNXiP
+	35WrQCLVGvjhxcvgNUI2gMy9GoNehqQdapYTmGVo6BDVMtJLndhISRcmBxY1SI2GlFmfn0y4tT5xn
+	HtaGGyAjejgMXwlXplH1GTuIxO5m0/QO65AOOBb6KI+J8WZdXXUPjd52aesnOMvt/c3BCJSbvGpxz
+	1G9VKV47y5dQShJTC7ngH74HohfODvlHR5In4kMwfvV6bxgbZt3gr+lwKvq63M3IKlBK6/99kz4tK
+	NCE8RdR0OP8RWHpsMgT3/C0HySpA==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
 	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbp-0000su-Tt; Sat, 06 Jun 2026 22:27:10 +0200
+	id 1wVxbq-0000t6-FT; Sat, 06 Jun 2026 22:27:10 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxba-006V18-2S;
-	Sat, 06 Jun 2026 22:26:54 +0200
+	id 1wVxbo-006V18-AX;
+	Sat, 06 Jun 2026 22:27:08 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
+	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Jean Delvare <jdelvare@suse.com>,
+Cc: Jonathan Cameron <jic23@kernel.org>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] driver core: Replace strcpy() with memcpy()
-Date: Sat,  6 Jun 2026 21:25:56 +0100
-Message-Id: <20260606202633.5018-2-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/iio/test: Use strscpy() to copy the test description
+Date: Sat,  6 Jun 2026 21:26:31 +0100
+Message-Id: <20260606202633.5018-37-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -57,8 +58,7 @@ Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
 
-The length of the string is calculated in order to allocate the correct
-sized memory block, use the same length to copy the string.
+The buffer length is known to be KUNIT_PARAM_DESC_SIZE
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -84,70 +84,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/firmware/dmi_scan.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ drivers/iio/test/iio-test-rescale.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-index a3f7dabd4955..870767142b53 100644
---- a/drivers/firmware/dmi_scan.c
-+++ b/drivers/firmware/dmi_scan.c
-@@ -80,7 +80,7 @@ static const char * __init dmi_string(const struct dmi_header *dm, u8 s)
- 	len = strlen(bp) + 1;
- 	str = dmi_alloc(len);
- 	if (str != NULL)
--		strcpy(str, bp);
-+		memcpy(str, bp, len);
+diff --git a/drivers/iio/test/iio-test-rescale.c b/drivers/iio/test/iio-test-rescale.c
+index ac6942cf1e44..bcd4a607be19 100644
+--- a/drivers/iio/test/iio-test-rescale.c
++++ b/drivers/iio/test/iio-test-rescale.c
+@@ -575,7 +575,7 @@ static const struct rescale_tc_data offset_cases[] = {
  
- 	return str;
+ static void case_to_desc(const struct rescale_tc_data *t, char *desc)
+ {
+-	strcpy(desc, t->name);
++	strscpy(desc, t->name, KUNIT_PARAM_DESC_SIZE);
  }
-@@ -290,17 +290,19 @@ static void __init dmi_save_type(const struct dmi_header *dm, int slot,
- static void __init dmi_save_one_device(int type, const char *name)
- {
- 	struct dmi_device *dev;
-+	size_t len;
  
- 	/* No duplicate device */
- 	if (dmi_find_device(type, name, NULL))
- 		return;
- 
--	dev = dmi_alloc(sizeof(*dev) + strlen(name) + 1);
-+	len = strlen(name) + 1;
-+	dev = dmi_alloc(sizeof(*dev) + len);
- 	if (!dev)
- 		return;
- 
- 	dev->type = type;
--	strcpy((char *)(dev + 1), name);
-+	memcpy((char *)(dev + 1), name, len);
- 	dev->name = (char *)(dev + 1);
- 	dev->device_data = NULL;
- 	list_add(&dev->list, &dmi_devices);
-@@ -374,13 +376,15 @@ static void __init dmi_save_dev_pciaddr(int instance, int segment, int bus,
- 					int devfn, const char *name, int type)
- {
- 	struct dmi_dev_onboard *dev;
-+	size_t len;
- 
- 	/* Ignore invalid values */
- 	if (type == DMI_DEV_TYPE_DEV_SLOT &&
- 	    segment == 0xFFFF && bus == 0xFF && devfn == 0xFF)
- 		return;
- 
--	dev = dmi_alloc(sizeof(*dev) + strlen(name) + 1);
-+	len = strlen(name) + 1;
-+	dev = dmi_alloc(sizeof(*dev) + len);
- 	if (!dev)
- 		return;
- 
-@@ -389,7 +393,7 @@ static void __init dmi_save_dev_pciaddr(int instance, int segment, int bus,
- 	dev->bus = bus;
- 	dev->devfn = devfn;
- 
--	strcpy((char *)&dev[1], name);
-+	memcpy((char *)&dev[1], name, len);
- 	dev->dev.type = type;
- 	dev->dev.name = (char *)&dev[1];
- 	dev->dev.device_data = dev;
+ KUNIT_ARRAY_PARAM(iio_rescale_scale, scale_cases, case_to_desc);
 -- 
 2.39.5
 
