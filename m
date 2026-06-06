@@ -1,54 +1,53 @@
 Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3313C1966
-	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1F23C0A10;
+	Sat,  6 Jun 2026 20:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777640; cv=none; b=EYxU5q4eA+AawmqNgkopvAX3+RVXPHOq2iUEGF/PJrNWhmX6mDZKqtezTNCRRB6xjXWrmlKCgJ9Zr296jgYTafpVtVIyvB7uhXw7zgSjtF43H8bsY3mztTymvrecRDVrBk11VB4/v1Q4Lig4GoH3f8ev2mMEYjA3SEgmit72iyk=
+	t=1780777640; cv=none; b=KAES1SxImsi5anyL9/Tc5G8DrXw7iW94MNDGAamfyscmqvhaEoDIDVYSjABnV50fio30pcs6fAJ0hDql1d2K+MvKzlWypFPdfr7KJdRTGSN8X+xFxQzK1pMK+jsL2QJmLCOhSkPy2CD+veVMPQyJIoHFAFCSg1mB/RTAm+I56zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780777640; c=relaxed/simple;
-	bh=0I5zgAujTsEXonukzwo9QMCuSWWpWL/vQtUNYm4Kjac=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=majQH/T/s/h7XaLz7i9pthLeFb7O8eB2o58P7+FDlkruTGwSIGsBzhTcx1LsRBrAm3Hzgv+3mpXHAQ2KwVwRgpPVX5e2Bi2Ky1QhANTWdo5B+zP9YtPPuRoGNHyTLLRvLVRfZBnALRKCrLXwwt+sJGc0LKkP1LgUDGlRcc+ztng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=FHEAYTlK; arc=none smtp.client-ip=185.226.149.37
+	bh=Ahd31xY5ymJjl3UAeH1o+QxntrbVmiOeEzXV6TM+M28=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YdzBjDlMPfQwtjBWvObIP0BolG70AtulEt6cmBo2byt30R6Y1tdds/81d1cqnACiTL4ej9cWPDu524pFmNFsP+/ZKk5WRXRz7tKdh2MZRKQLaY05cn3p6WZmZnO8RrqnsfsaRDWpNbj7GHPyQVojzv9osBe0FUIYFtXkE8BRTek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=io3GcHnn; arc=none smtp.client-ip=185.226.149.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="FHEAYTlK"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="io3GcHnn"
 Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
 	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbt-007NQp-7c
-	for linux-hardening@vger.kernel.org; Sat, 06 Jun 2026 22:27:13 +0200
+	id 1wVxbs-007NQU-DU; Sat, 06 Jun 2026 22:27:12 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=zqF4TpCmiyOuQ/B6wO1RNposM4bibPGIMU5UN/VCRz0=; b=FHEAYT
-	lK0onjr1lLXpORO2UXaW0qlb2iGAFSGKHKQ6fbjoibcwa86VSFyH8DVg09v0Zuf9LDtRqhQzdJOKb
-	bYK1qD04SzmFVXiL2yJD7xdsXWkwcUNV4O2HJzWuAqAUNCVOKwflB7/mVGYewPZxYwuxIsOQTOLBY
-	88GUH5UQ66SHAU3CURRD2e76C09EFXJUr54p8YbtpPUVVTnUDLhcVVJ+E5JCGr7ChqoLKRO8X6ee4
-	7WnlaqK3y5XWxxYUHAy14VMrZFGpJxgkaVmMJ4mM5FB1/RwHMDjs+pWhYRDYyE8BHnclvmQZYoHOD
-	fzMtT5y/P2/ymxq+zY6Jb4k6SQZg==;
+	Subject:Cc:To:From; bh=IcP4rIqU/LjSRgmys3X68snLpaIdeX/fy4NhLf5nqkA=; b=io3GcH
+	nn+Hk4zDBHTTLrSjiDB8NYGldDOEbqtpEp3CanE4nNn7Y8I7kc1D343E0ZJ1Hf8whzAwsSSV2+Y4f
+	GGcpZNHoKmXA2iFBT5BxRmyREcCgEym07uBZRixjHA29JQaGKdxohARs+67Uojd5TGYYD0hrNJYUj
+	nepcV+tHm7AZKxd8PUZzhkyjrtwLcFvxTtFoXBHvp7vzIVYPn9NVBKZ5WiW48XpkHgj7ucD3RY/+3
+	qKnKT5LI+iphikFAd+yrwhJv1qaI0nj/MmwJaaQaDJ+3PJ5LmZyaaDXCvGbJA4yBs/6SEmD59O0IS
+	p2JWTaej39jTWoVyWeAYE1Xzybng==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
 	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbs-0005Cd-Pv; Sat, 06 Jun 2026 22:27:12 +0200
+	id 1wVxbr-0005CT-Qq; Sat, 06 Jun 2026 22:27:12 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbb-006V18-DO;
-	Sat, 06 Jun 2026 22:26:55 +0200
+	id 1wVxbj-006V18-Nu;
+	Sat, 06 Jun 2026 22:27:03 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	driver-core@lists.linux.dev,
+	linux-bluetooth@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tejun Heo <tj@kernel.org>,
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] kernfs: Replace strcpy(s, "../") with memcpy(s, "../", 4)
-Date: Sat,  6 Jun 2026 21:26:00 +0100
-Message-Id: <20260606202633.5018-6-david.laight.linux@gmail.com>
+Subject: [PATCH net-next] net/bluetooth/bnep: Use strscpy() to copy device name
+Date: Sat,  6 Jun 2026 21:26:20 +0100
+Message-Id: <20260606202633.5018-26-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,9 +58,6 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
-
-The code has already checked there is enough room.
-Use memcpy() to avoid compiler warnings from possibly unbounded strcpy().
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -87,22 +83,31 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- fs/kernfs/symlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/bnep/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/kernfs/symlink.c b/fs/kernfs/symlink.c
-index 0bd8a2143723..90e2b3221b83 100644
---- a/fs/kernfs/symlink.c
-+++ b/fs/kernfs/symlink.c
-@@ -73,7 +73,7 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
- 		if ((s - path) + 3 >= PATH_MAX)
- 			return -ENAMETOOLONG;
- 
--		strcpy(s, "../");
-+		memcpy(s, "../", 4);
- 		s += 3;
- 		base = kernfs_parent(base);
+diff --git a/net/bluetooth/bnep/core.c b/net/bluetooth/bnep/core.c
+index d44987d4515c..1e14fa1e886a 100644
+--- a/net/bluetooth/bnep/core.c
++++ b/net/bluetooth/bnep/core.c
+@@ -639,7 +639,7 @@ int bnep_add_connection(struct bnep_connadd_req *req, struct socket *sock)
  	}
+ 
+ 	up_write(&bnep_session_sem);
+-	strcpy(req->device, dev->name);
++	strscpy(req->device, dev->name);
+ 	return 0;
+ 
+ failed:
+@@ -678,7 +678,7 @@ static void __bnep_copy_ci(struct bnep_conninfo *ci, struct bnep_session *s)
+ 
+ 	memset(ci, 0, sizeof(*ci));
+ 	memcpy(ci->dst, s->eh.h_source, ETH_ALEN);
+-	strcpy(ci->device, s->dev->name);
++	strscpy(ci->device, s->dev->name);
+ 	ci->flags = s->flags & valid_flags;
+ 	ci->state = s->state;
+ 	ci->role  = s->role;
 -- 
 2.39.5
 
