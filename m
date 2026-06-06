@@ -1,53 +1,57 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024E130C155;
-	Sat,  6 Jun 2026 20:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F863B42C9;
+	Sat,  6 Jun 2026 20:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777640; cv=none; b=VANwxK5EuZi4XQYCY0oyCAmEy6w8YcKNySCV0ChnPuvXYyiAw21EJxTEYATfU4Tfjdz1/cWOi/L2wh1DdWOFHkCkh7iSrDkYWofOxQypGfVBHV3qkqGcIsDguOeWN/V8ojI5oiyOgfB37LV9O3sbTrykVTvH+S67BtqXNS7xr1M=
+	t=1780777639; cv=none; b=mtzSjYeBJEqSe5mJq3RPkxC57VCGNxSJ8tzculTxd/JG7IzWYv2QgyQWdY1zdHEqwjjHiPVdC6GmLEDOohL+eoLohljcp59feaIf80u9Zt9Jlwuqezb9uNoVOicaOrcm0PQ2+JA/jTpgkrZ4a8CilTMHxA6RChTKUvyW5G228ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777640; c=relaxed/simple;
-	bh=A0NgpOATKymoukHHH3+8FLdZqkQJ6onsWelYuJLP3do=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bqPw9O9Wl+N18B6K+fIt/BpbZQ6Rrjd3Mx94vvDuGr28CWlGuUfCMb7P/4mZblT/w1uOCKpp+LEDDwQIX8YZiZfLQOHWM9aeqfilyJObZwHEgiFhdKe9l5CLaQXwMOJRj4F0O0hIiY2fYfZawo2/Nhy0ssuw4vn8mUeNS/mwcdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=JbInsyYk; arc=none smtp.client-ip=185.226.149.38
+	s=arc-20240116; t=1780777639; c=relaxed/simple;
+	bh=0twlcszx7ogrNsWsnN02kbWG9yvakgO2k234lQOOZLA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aodT40zRW3Z0WHnehkR6gGGlo8SkyJEpOKYVT1CyGBtYIEWwImDZcNRn9m4uu8+8bCq9dmgMt8PPR7FKG26IKzt3kzXcreSGYa5cAkd54CLQ40htHSbGDTlgPavGQlVAdtJtpgknnsitbp1cXson7ABNvZRkR4SyMo2VO5av0C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=ZrlJpXYD; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="JbInsyYk"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="ZrlJpXYD"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbq-007cEv-2w; Sat, 06 Jun 2026 22:27:10 +0200
+	id 1wVxbu-007cGj-38; Sat, 06 Jun 2026 22:27:14 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=SawyyI2hbMh/2wpRXF1d4IAsNJm5CGVO6r3bflxzvJg=; b=JbInsy
-	Yk7+1NPBwVn78XQ1iOh1JZbF7nSBVPqIICCEDJCt6L8DldhULeh+Gn3OC1qrGi1DkOlYfuwpjp7cJ
-	cWdw93MTIR5qVUI3OHKdSs8sUt4Clbr+uhL6RFI6lEaRLCCxxBHrbS4LAQRTWoH1/UKtsGt8FQq6k
-	vb3fmMIvGcnXhY4Oarw4/mchu6+UsNmqGxO9OPZYzwzDbCbw7mJrP8F0PrgCvwj6jKBXnotSf3qDJ
-	f2WCPzAbU6w5O0z+K9on2A+m8J8gQD6oktvo0L72pxU6hyYqgovGNpkeIaPzLNX/VxdKR8+foy2Ip
-	yh+L8K2cBAi/GinfYd2ZnPF3DmJw==;
+	Subject:Cc:To:From; bh=KF1A9NgBM6yZdUL823mcD9+1iNU7rUmfqew4EMb2Ag0=; b=ZrlJpX
+	YD2CDK+HeGVrsrhkqsn0i63v7w11AJv2i/8lQ67iYGvL9JaFMcZ3utITN79Y5jzOuBdEV2TCBwWIk
+	3o6WMJVoAlun609PykG/M6MNKdTk/4vfra8aicCbm8HqRwUY0ZtWNHXTWuMeDfPFNZtzvhIUIXsWC
+	MUs+7CFs5rCd7M2Sm2xHeRGj2wWxjZqrayD1UJauNIh/ECAepY9vn7aUH+/aY+6nc88UPfjmZoAP+
+	uTx11mx0JihCQTv5uqqeBOGQYFydx0mGmCcLRJ9T8cHNdRETCJ5nfkshtvmJ0P+KjmPfxv+nm7cTg
+	yuCpCI0CmzkVzFE3svbrLH6kHSaQ==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbp-0000sq-O7; Sat, 06 Jun 2026 22:27:09 +0200
+	id 1wVxbt-0005Cp-Ea; Sat, 06 Jun 2026 22:27:13 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxba-006V18-E4;
-	Sat, 06 Jun 2026 22:26:54 +0200
+	id 1wVxbe-006V18-6l;
+	Sat, 06 Jun 2026 22:26:58 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jay Vosburgh <jv@jvosburgh.net>,
+	Paolo Abeni <pabeni@redhat.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] gpiolib: Replace strcpy() with memcpy()
-Date: Sat,  6 Jun 2026 21:25:57 +0100
-Message-Id: <20260606202633.5018-3-david.laight.linux@gmail.com>
+Subject: [PATCH net-next] drivers/net/bonding: User strscpy() to copy device name
+Date: Sat,  6 Jun 2026 21:26:07 +0100
+Message-Id: <20260606202633.5018-13-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,9 +62,6 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
-
-The length of the string is calculated in order to allocate the correct
-sized memory block, use the same length to copy the string.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -86,31 +87,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/gpio/gpiolib.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/bonding/bond_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 1e6dce430dca..74d55978e2b4 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -143,13 +143,15 @@ static void desc_free_label(struct rcu_head *rh)
- static int desc_set_label(struct gpio_desc *desc, const char *label)
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index af82a3df2c5d..76ca61cad875 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1792,7 +1792,7 @@ static void bond_fill_ifbond(struct bonding *bond, struct ifbond *info)
+ 
+ static void bond_fill_ifslave(struct slave *slave, struct ifslave *info)
  {
- 	struct gpio_desc_label *new = NULL, *old;
-+	size_t len;
- 
- 	if (label) {
--		new = kzalloc_flex(*new, str, strlen(label) + 1);
-+		len = strlen(label);
-+		new = kzalloc_flex(*new, str, len + 1);
- 		if (!new)
- 			return -ENOMEM;
- 
--		strcpy(new->str, label);
-+		memcpy(new->str, label, len);
- 	}
- 
- 	old = rcu_replace_pointer(desc->label, new, 1);
+-	strcpy(info->slave_name, slave->dev->name);
++	strscpy(info->slave_name, slave->dev->name);
+ 	info->link = slave->link;
+ 	info->state = bond_slave_state(slave);
+ 	info->link_failure_count = slave->link_failure_count;
 -- 
 2.39.5
 
