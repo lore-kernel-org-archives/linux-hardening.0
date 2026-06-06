@@ -1,53 +1,53 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1F23C0A10;
-	Sat,  6 Jun 2026 20:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024E130C155;
+	Sat,  6 Jun 2026 20:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777640; cv=none; b=KAES1SxImsi5anyL9/Tc5G8DrXw7iW94MNDGAamfyscmqvhaEoDIDVYSjABnV50fio30pcs6fAJ0hDql1d2K+MvKzlWypFPdfr7KJdRTGSN8X+xFxQzK1pMK+jsL2QJmLCOhSkPy2CD+veVMPQyJIoHFAFCSg1mB/RTAm+I56zk=
+	t=1780777640; cv=none; b=VANwxK5EuZi4XQYCY0oyCAmEy6w8YcKNySCV0ChnPuvXYyiAw21EJxTEYATfU4Tfjdz1/cWOi/L2wh1DdWOFHkCkh7iSrDkYWofOxQypGfVBHV3qkqGcIsDguOeWN/V8ojI5oiyOgfB37LV9O3sbTrykVTvH+S67BtqXNS7xr1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780777640; c=relaxed/simple;
-	bh=Ahd31xY5ymJjl3UAeH1o+QxntrbVmiOeEzXV6TM+M28=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YdzBjDlMPfQwtjBWvObIP0BolG70AtulEt6cmBo2byt30R6Y1tdds/81d1cqnACiTL4ej9cWPDu524pFmNFsP+/ZKk5WRXRz7tKdh2MZRKQLaY05cn3p6WZmZnO8RrqnsfsaRDWpNbj7GHPyQVojzv9osBe0FUIYFtXkE8BRTek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=io3GcHnn; arc=none smtp.client-ip=185.226.149.37
+	bh=A0NgpOATKymoukHHH3+8FLdZqkQJ6onsWelYuJLP3do=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bqPw9O9Wl+N18B6K+fIt/BpbZQ6Rrjd3Mx94vvDuGr28CWlGuUfCMb7P/4mZblT/w1uOCKpp+LEDDwQIX8YZiZfLQOHWM9aeqfilyJObZwHEgiFhdKe9l5CLaQXwMOJRj4F0O0hIiY2fYfZawo2/Nhy0ssuw4vn8mUeNS/mwcdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=JbInsyYk; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="io3GcHnn"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="JbInsyYk"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbs-007NQU-DU; Sat, 06 Jun 2026 22:27:12 +0200
+	id 1wVxbq-007cEv-2w; Sat, 06 Jun 2026 22:27:10 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=IcP4rIqU/LjSRgmys3X68snLpaIdeX/fy4NhLf5nqkA=; b=io3GcH
-	nn+Hk4zDBHTTLrSjiDB8NYGldDOEbqtpEp3CanE4nNn7Y8I7kc1D343E0ZJ1Hf8whzAwsSSV2+Y4f
-	GGcpZNHoKmXA2iFBT5BxRmyREcCgEym07uBZRixjHA29JQaGKdxohARs+67Uojd5TGYYD0hrNJYUj
-	nepcV+tHm7AZKxd8PUZzhkyjrtwLcFvxTtFoXBHvp7vzIVYPn9NVBKZ5WiW48XpkHgj7ucD3RY/+3
-	qKnKT5LI+iphikFAd+yrwhJv1qaI0nj/MmwJaaQaDJ+3PJ5LmZyaaDXCvGbJA4yBs/6SEmD59O0IS
-	p2JWTaej39jTWoVyWeAYE1Xzybng==;
+	Subject:Cc:To:From; bh=SawyyI2hbMh/2wpRXF1d4IAsNJm5CGVO6r3bflxzvJg=; b=JbInsy
+	Yk7+1NPBwVn78XQ1iOh1JZbF7nSBVPqIICCEDJCt6L8DldhULeh+Gn3OC1qrGi1DkOlYfuwpjp7cJ
+	cWdw93MTIR5qVUI3OHKdSs8sUt4Clbr+uhL6RFI6lEaRLCCxxBHrbS4LAQRTWoH1/UKtsGt8FQq6k
+	vb3fmMIvGcnXhY4Oarw4/mchu6+UsNmqGxO9OPZYzwzDbCbw7mJrP8F0PrgCvwj6jKBXnotSf3qDJ
+	f2WCPzAbU6w5O0z+K9on2A+m8J8gQD6oktvo0L72pxU6hyYqgovGNpkeIaPzLNX/VxdKR8+foy2Ip
+	yh+L8K2cBAi/GinfYd2ZnPF3DmJw==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbr-0005CT-Qq; Sat, 06 Jun 2026 22:27:12 +0200
+	id 1wVxbp-0000sq-O7; Sat, 06 Jun 2026 22:27:09 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbj-006V18-Nu;
-	Sat, 06 Jun 2026 22:27:03 +0200
+	id 1wVxba-006V18-E4;
+	Sat, 06 Jun 2026 22:26:54 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-bluetooth@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH net-next] net/bluetooth/bnep: Use strscpy() to copy device name
-Date: Sat,  6 Jun 2026 21:26:20 +0100
-Message-Id: <20260606202633.5018-26-david.laight.linux@gmail.com>
+Subject: [PATCH next] gpiolib: Replace strcpy() with memcpy()
+Date: Sat,  6 Jun 2026 21:25:57 +0100
+Message-Id: <20260606202633.5018-3-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,6 +58,9 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
+
+The length of the string is calculated in order to allocate the correct
+sized memory block, use the same length to copy the string.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -83,31 +86,31 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- net/bluetooth/bnep/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpio/gpiolib.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/bluetooth/bnep/core.c b/net/bluetooth/bnep/core.c
-index d44987d4515c..1e14fa1e886a 100644
---- a/net/bluetooth/bnep/core.c
-+++ b/net/bluetooth/bnep/core.c
-@@ -639,7 +639,7 @@ int bnep_add_connection(struct bnep_connadd_req *req, struct socket *sock)
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 1e6dce430dca..74d55978e2b4 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -143,13 +143,15 @@ static void desc_free_label(struct rcu_head *rh)
+ static int desc_set_label(struct gpio_desc *desc, const char *label)
+ {
+ 	struct gpio_desc_label *new = NULL, *old;
++	size_t len;
+ 
+ 	if (label) {
+-		new = kzalloc_flex(*new, str, strlen(label) + 1);
++		len = strlen(label);
++		new = kzalloc_flex(*new, str, len + 1);
+ 		if (!new)
+ 			return -ENOMEM;
+ 
+-		strcpy(new->str, label);
++		memcpy(new->str, label, len);
  	}
  
- 	up_write(&bnep_session_sem);
--	strcpy(req->device, dev->name);
-+	strscpy(req->device, dev->name);
- 	return 0;
- 
- failed:
-@@ -678,7 +678,7 @@ static void __bnep_copy_ci(struct bnep_conninfo *ci, struct bnep_session *s)
- 
- 	memset(ci, 0, sizeof(*ci));
- 	memcpy(ci->dst, s->eh.h_source, ETH_ALEN);
--	strcpy(ci->device, s->dev->name);
-+	strscpy(ci->device, s->dev->name);
- 	ci->flags = s->flags & valid_flags;
- 	ci->state = s->state;
- 	ci->role  = s->role;
+ 	old = rcu_replace_pointer(desc->label, new, 1);
 -- 
 2.39.5
 
