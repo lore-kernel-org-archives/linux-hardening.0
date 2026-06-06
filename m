@@ -1,58 +1,51 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11373C553B
-	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD023BBFB0;
+	Sat,  6 Jun 2026 20:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777645; cv=none; b=HB+vekEsKBLkMYLKWp806gL4zmZMkBo1r2sxCZNtSI9MWrNexVaCnW/UvLmv6S9i1QDVOTx60IeGaf89YhBOJ4w0h82Gk4BIugizMUYgxT16D98oVrCHqRP/hEeWRVx7UZcOlEsMO8Efa5dbNPfFVC8QJglVaaHG1g25LpSlY8M=
+	t=1780777642; cv=none; b=HBjwlCd4faMx/BPBmol8x+SFsIvAFkF8XTHufQ0GrghRIHYt/e8G2LxNWeFIjm3WkiDy5FI22Xizuqw6EWtXWjInUOlsYTEPgboq0mxoXr/4jhPgw/Dk8OI6f+4nbAV1IwFMA80dHa2GY74HiIvfof1pEmn6qEciIzgOtA65JUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777645; c=relaxed/simple;
-	bh=bim886/OhiVSIxZy9+PFrFcewNlK854TqMdxiaNehuQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Kg4aHbNtTxGeK2BJKmXiPSxAqfHEjgTw0kpOGtnBPEsfjODbGvKySwrrcMlBzLOQfXZ560Cdl+yWAU47bhGs5OwdlZdTiiLFULII3j1TmeFTKO0+5lo9GQa/5Wd3O8U+XeHP9e/RuQ1gFcs15NqxrePZj6yT8YwfFtsbprlEibw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=X5fDqLbr; arc=none smtp.client-ip=185.226.149.37
+	s=arc-20240116; t=1780777642; c=relaxed/simple;
+	bh=2lhj5uM0KW4nqskZlNGldFlLJvvQSvpMeEDAXEyAZkA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HSNC/SlRAoG51s6ifgjsEPzElB2m+R0ZdV3ill318SC4QcRgBaXzMSv4KnEuFoO4L2cbibxtRbFNajfaH4dz4xFCjWIwJFzGzExEikxMXj+wP07VbCfvqKhEu1inVFaQiooXYanhdHPU8eNKb2h4CrlgD2aL0AdFURzHv+R7ygM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=OkNPSnU/; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="X5fDqLbr"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="OkNPSnU/"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxby-007NSu-5R; Sat, 06 Jun 2026 22:27:18 +0200
+	id 1wVxbx-007cIm-Mj; Sat, 06 Jun 2026 22:27:17 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=1tmG7KQ+QBPSKVniy68SW2e0oX740RfjrVvq/1+fBk8=; b=X5fDqL
-	brptfHUFId9vfpXlWF6bAKGf8rM2PF4uxOt6jaaIADqMdQMHZZty3B6GMJCvcH5O5rKdFiFBZIUb7
-	LsMrcC49qC43SqmyHFRkIgCXZ1/4VXN9RWPv4G9FnaJeevqxT0LTzZSvUaekv/mghRrg0YZwM7wiZ
-	JUshngULxnJoWOfnZ6eLR6IUo184GMpYnfM8moTe2USZyJLWrwnb2MzLFykOF+WN7OFzlHUnq8Qmh
-	PWJG1KxMVe3g4UWUeLygB50Jul8W7q5sNGif1llUMUlrWSNnzJ1pnQQJ+dYEp08h/LwtoGHZjytgx
-	R2zbyoRtwaiX9Cp3dZ96woDSCQ4w==;
+	Subject:Cc:To:From; bh=yyP8NAoYAttd3SQNxO8atzKfruOiB151NPRC2c56daA=; b=OkNPSn
+	U/cYCt9K9SaJ86wPixlltHKtQYrSHXTC1klis+3pIXr5x0n91gkEswsY/CPGZ5jVyLECltYp1khx9
+	b9U9nOKWVZNyZizj0uILJdR+ZAjy8Ry2kyNqYZDV6IVAXmnrSj4OCoZYPHPLJrboo2a0gTkRHM9bL
+	0/2YKgtiLy3jWcQRoVjNJAZoBgEpbG1yXzGH92UkqJQw8xa1fbUY5Ak4MCdNJjw+9lyAX3/O8kkEX
+	sQixnpkTLm3fbBqZTN9yiU0Or/hbpVFkVsrpH3TXFxMHIb8MXguB9Va4IEK4G+3vEWN17HZUuF3Yc
+	ilsrMhGaVz7Nm7YlvDZV+IyOdnAA==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbx-0000ue-QC; Sat, 06 Jun 2026 22:27:17 +0200
+	id 1wVxbx-0005Dg-6L; Sat, 06 Jun 2026 22:27:17 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbh-006V18-Fb;
-	Sat, 06 Jun 2026 22:27:01 +0200
+	id 1wVxbm-006V18-1m;
+	Sat, 06 Jun 2026 22:27:06 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-net-drivers@amd.com,
-	netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org
+Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH net-next] drivers/net/ethernet/sfc/siena/efx: Use strscpy() to copy device name
-Date: Sat,  6 Jun 2026 21:26:14 +0100
-Message-Id: <20260606202633.5018-20-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/parport/probe: Use kstrdup() instead of kmalloc() and strcpy()
+Date: Sat,  6 Jun 2026 21:26:25 +0100
+Message-Id: <20260606202633.5018-31-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -88,22 +81,30 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/net/ethernet/sfc/siena/efx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/parport/probe.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/sfc/siena/efx.c b/drivers/net/ethernet/sfc/siena/efx.c
-index 59d3a6043379..05672d9c0f5e 100644
---- a/drivers/net/ethernet/sfc/siena/efx.c
-+++ b/drivers/net/ethernet/sfc/siena/efx.c
-@@ -677,7 +677,7 @@ static int efx_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **xdpfs,
+diff --git a/drivers/parport/probe.c b/drivers/parport/probe.c
+index 5d1b9aacb130..bf9d81c0abaf 100644
+--- a/drivers/parport/probe.c
++++ b/drivers/parport/probe.c
+@@ -52,7 +52,7 @@ static void pretty_print(struct parport *port, int device)
  
- static void efx_update_name(struct efx_nic *efx)
+ static void parse_data(struct parport *port, int device, char *str)
  {
--	strcpy(efx->name, efx->net_dev->name);
-+	strscpy(efx->name, efx->net_dev->name);
- 	efx_siena_mtd_rename(efx);
- 	efx_siena_set_channel_names(efx);
- }
+-	char *txt = kmalloc(strlen(str)+1, GFP_KERNEL);
++	char *txt = kstrdup(str, GFP_KERNEL);
+ 	char *p = txt, *q;
+ 	int guessed_class = PARPORT_CLASS_UNSPEC;
+ 	struct parport_device_info *info = &port->probe_info[device + 1];
+@@ -61,7 +61,6 @@ static void parse_data(struct parport *port, int device, char *str)
+ 		pr_warn("%s probe: memory squeeze\n", port->name);
+ 		return;
+ 	}
+-	strcpy(txt, str);
+ 	while (p) {
+ 		char *sep;
+ 		q = strchr(p, ';');
 -- 
 2.39.5
 
