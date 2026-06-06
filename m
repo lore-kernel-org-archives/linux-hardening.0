@@ -1,33 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD704071E4;
-	Sat,  6 Jun 2026 21:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2129E218ADD;
+	Sat,  6 Jun 2026 21:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780780612; cv=none; b=OIormdUqgDKL6WBPtfZNYtoBX/C/gRoQHgQEg6onIcbZgiP7g0DWPRDdG3mVjNPQ/cFoNGAohogueuSAiTe5tGGj62WTAQpaXH/qa5IsIeypYuMto1ohylB+chrQEI+fOgADDAMftbwwyyTTII3CacfNo8DUWXGzm27rLGxXPGE=
+	t=1780781922; cv=none; b=fgXZo9A4gNdK7YMFL2vjWhqGd8I8bqn2AzqU/7xvOhi8SZoKhAm2f4MLKN9fOpybRizGsxm8Lz5zLyjvf7GLNhe9WE9F08v3gCY0JEMkha+0EFRx6XhaNeRdbKi9r2bQ8Kba0Z3M4ndiLFBIH/nQGDRKvkwtvcBSi1I5W/iuLws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780780612; c=relaxed/simple;
-	bh=VID5ekI296zxiGIC/MVdrPWsADdvn+rHypBqIyDAdBk=;
+	s=arc-20240116; t=1780781922; c=relaxed/simple;
+	bh=th2anrzf31Q9eYbbC/St/bnu1dqbxVyP7dAolWSpaNc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cVtsuX9dx86gWModV7WVRCV5Bsk/A4Gg72wa8ZbLVYLMu1PEkwOCy7JV9EOZ9SW5c10cZSIGk3osPUcBp3qFnrwVo69XgD+jdSjLDDpPy1JmC8eMOJeMa+zlGHF+ZiHaY8tWiZ+nFkF5LAk4I63k2+EtxCxdfFgm9omssRPYNok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCXB/xM8; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=VLgNjaKM5AUgyGHbr+ieMPoGqEdlo+R4fhpe9ZMBanmKK0xKJYtKvQ6Ey4v3Ze3SLw9u1d74LE+3t0EYEu0GKbpEbL4/kX7QI8UyiM7BqKdglRBfQQEGRd6cR8dDe1JTh75YnG+kjB56nFw4KLGB8GBaLGi2cDT1IQSEhQRJ06E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=kb3ZpW1D; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCXB/xM8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E530E1F00893;
-	Sat,  6 Jun 2026 21:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780780611;
-	bh=RUSqkmy+o6mOZHEkCNUgqgA/PKBCd1l9wehkyDHFxYs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FCXB/xM8gLRq/ahMdTqGZ0Rgze4rK4KyWpz4lS4/8XETBywpMDnazxH2ZNqasuOzn
-	 m0CDtN5+RKBcKyEC/eqFRTDrJnTpA42J6OdEHKsXOGpOtlRtR0sJ5KaUanbwTX+ewV
-	 0IvCu8USejv/OW//ZO3EhZoAvPIlKIkYxAUp/qjJP+B9Yf7J1xbga0SpF8NonDXj2Y
-	 GpB5drVfe/zBz+EyHYtLW8gq9hmWkQr3Pmcq42zsnadyOOFZtkU5NJgbqKtAqoTk7C
-	 wXJovAUVP5ZGluiTYC75bOT3p/5unyrGHDt+u/H9YPwYnzvpWYBVVfZ6mzUyHfm2A0
-	 1DDl56PX95kow==
-Message-ID: <f8848570-8793-4f5f-a2a4-ab212dcaebcd@kernel.org>
-Date: Sat, 6 Jun 2026 23:16:47 +0200
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="kb3ZpW1D"
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPSA
+	id VyiqwzoTNPtxAVyiqwYEMg; Sat, 06 Jun 2026 23:38:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1780781911;
+	bh=fRopwsI+LtIK+AcPNDztTFYPATnMaepA05vHYWcn6T0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=kb3ZpW1DJJe6PT6TxLDpSYXTddYxmjIJTffbwn/g+A85wCMcOuprOJJ0HvhXSHM86
+	 +VC5zWV2XnFUqBXWQwzWYEdABrjn1+BT9g+rFB09F86UyaX69kYPiOoXicLWQBR2Fv
+	 Wj+T0FamAUzPMftTgOvp0/ahiStHNZ/mjQbQKQA6fKM0/MZj40PmyDqS9mc3XPysdV
+	 vs0WMpjHDZYrZvwlUDZFVqtaEor3/h+XJylUFbE4o9EzQHZfA5QfgUTZrXHOC9d0Im
+	 wB9tcM/wob/6WxhwsRGw2AJTukUCb3IfUsHLDIwCSGeBYufZajEoHTo3MoVTv5gWYT
+	 ARIDt6Go3heSg==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 06 Jun 2026 23:38:31 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <1b1d419d-5974-4d15-8f5e-58050a83ce2e@wanadoo.fr>
+Date: Sat, 6 Jun 2026 23:38:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,33 +43,22 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] drivers/net/can/usb/kvaser_usb: User strscpy()
- to copy device name
+Subject: Re: [PATCH next] drivers/scsi/aic7xxx/aic7xxx_osm: Use kstrdup()
+ instead of kmalloc() and strcpy()
 To: david.laight.linux@gmail.com, Kees Cook <kees@kernel.org>,
  linux-hardening@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
- linux-can@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-References: <20260606202633.5018-15-david.laight.linux@gmail.com>
-From: Vincent Mailhol <mailhol@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=mailhol@kernel.org; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
- fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
- F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
- 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
- YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
- dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
- zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20260606202633.5018-15-david.laight.linux@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc: Hannes Reinecke <hare@suse.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+References: <20260606202633.5018-33-david.laight.linux@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20260606202633.5018-33-david.laight.linux@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Subject [PATCH net-next] drivers/net/can/usb/kvaser_usb: User strscpy() to copy device name
-                                                         ^^^^
-Use?
-
-On 06/06/2026 at 22:26, david.laight.linux@gmail.com wrote:
+Le 06/06/2026 à 22:26, david.laight.linux@gmail.com a écrit :
 > From: David Laight <david.laight.linux@gmail.com>
 > 
 > Signed-off-by: David Laight <david.laight.linux@gmail.com>
@@ -87,33 +84,33 @@ On 06/06/2026 at 22:26, david.laight.linux@gmail.com wrote:
 > All the patches are being sent individually to avoid very long cc lists.
 > Apologies for the terse commit messages and likely unexpected tags.
 > (There are about 100 patches in total.)
-
-Indeed, this is terse. The commit body is empty (all your comments are
-below the --- cutter) and the subject line contains a typo.
-
-I don't see why the fact that you are sending many fixes clears you
-from writing a proper commit message. And I would expect at least a
-small effort to customize the message: only explain the Makefile stuff
-for the patches which are touching a Makefile.
-
->  drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c b/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-> index e09d663e362f..2cd58e825e0e 100644
-> --- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-> +++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-> @@ -746,7 +746,7 @@ static int kvaser_usb_hydra_map_channel(struct kvaser_usb *dev, u16 transid,
->  	if (!cmd)
->  		return -ENOMEM;
->  
-> -	strcpy(cmd->map_ch_req.name, name);
-> +	strscpy(cmd->map_ch_req.name, name);
->  	cmd->header.cmd_no = CMD_MAP_CHANNEL_REQ;
->  	kvaser_usb_hydra_set_cmd_dest_he
->  				(cmd, KVASER_USB_HYDRA_HE_ADDRESS_ROUTER);
+>   drivers/scsi/aic7xxx/aic7xxx_osm.c | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+> index d93b522695eb..d6237aa5beac 100644
+> --- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
+> +++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+> @@ -1101,12 +1101,10 @@ ahc_linux_register_host(struct ahc_softc *ahc, struct scsi_host_template *templa
+>   	ahc_lock(ahc, &s);
+>   	ahc_set_unit(ahc, ahc_linux_unit++);
+>   	ahc_unlock(ahc, &s);
+> -	sprintf(buf, "scsi%d", host->host_no);
+> -	new_name = kmalloc(strlen(buf) + 1, GFP_ATOMIC);
+> -	if (new_name != NULL) {
+> -		strcpy(new_name, buf);
+> +	snprintf(buf, sizeof (buf), "scsi%d", host->host_no);
+> +	new_name = kstrdup(buf, GFP_ATOMIC);
 
+I think that kasprintf() would simplify code and do the same.
 
-Yours sincerely,
-Vincent Mailhol
+CJ
+
+> +	if (new_name != NULL)
+>   		ahc_set_name(ahc, new_name);
+> -	}
+>   	host->unique_id = ahc->unit;
+>   	ahc_linux_initialize_scsi_bus(ahc);
+>   	ahc_intr_enable(ahc, TRUE);
 
