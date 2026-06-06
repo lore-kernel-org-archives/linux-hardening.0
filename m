@@ -1,52 +1,52 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF133AEF3A;
-	Sat,  6 Jun 2026 20:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344FE3A1A35
+	for <linux-hardening@vger.kernel.org>; Sat,  6 Jun 2026 20:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777636; cv=none; b=rl5C+e35N+lrazzUIoF1QfRgwn0+BvRLIaebEv+qAFF19ksQr4wvS+WiM5TMlszheRKw778EIO0AUo9XtUOoswmEmwekBRMQCzwyGM2XFmo2KKiqssgRzRDEHqPaUIhVbncvQ1/PMTjX+Owuh9TgMTTu5bS/60GGknR8GEIjMSM=
+	t=1780777636; cv=none; b=hbOixynBvBdLB7r0t6PpnCGQdZU70nI+RhW/zz+4BVRldWlPvWQdU6v/kuSVKT+3BBzvLlp+FroSz4cCvuGOsj4sir6S4nylVXKjD7O7aZVLSgRc9dUVIalo18NPm2LJg9O0I0W3ep84RAmnylzr/S04tkoqLX3xJYaByBLBh2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780777636; c=relaxed/simple;
-	bh=eglQ29KjcUyUoliSnqiToaYBZpFLE5z4uWFZFX36uNo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LDvXG5y+aGZ3KrUfIVXOyJeMNg5uhHcRKhNJ+ksmtcvpjxtvLZJ0UxUg+uytgsBNdN+1u5x2Rni6R/88SCRkV8hqsf8GASfx4+U+EhPr3zJqCYOh9hiMsjU/HI4S8haAk399rrWYX0PFhtbzbsFCOJpVMH/gDBbUMEco2y2Vf6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=br9IzOQ7; arc=none smtp.client-ip=185.226.149.38
+	bh=R3H4Nm5GY6hOViTdz1W2dueMBBuEo57Z0FQZ8yTbK1s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Aqmy2iG957Ucuu/90u8l3gQpIi31VxwazXy44AJfmtmQm6sWRkG4UGHzD24E/i1JqyRtG63a8byR1pFFnsJCASmlPAMQ3BPtM7isIpjrn3+QnLPeozngRKvVOlElDrwXpYqBeNaWhay6f1ZvndvRuptxVpOlwfzQPiJ5NzaBlfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=OsavbeHr; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="br9IzOQ7"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="OsavbeHr"
 Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbq-007cFd-Na; Sat, 06 Jun 2026 22:27:10 +0200
+	id 1wVxbq-007cFX-Jc; Sat, 06 Jun 2026 22:27:10 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=VzDFyAWA7ipw3/Qre8CPNMhpRDVhgAkhx4KXGyrUHmo=; b=br9IzO
-	Q7si0GGllE+m+9fp5xvFu5MjQusZyQ0BbqBMmOJJhf9h1lxwMniqTZlKPKr76oOUf4OfPq8PYNXiP
-	35WrQCLVGvjhxcvgNUI2gMy9GoNehqQdapYTmGVo6BDVMtJLndhISRcmBxY1SI2GlFmfn0y4tT5xn
-	HtaGGyAjejgMXwlXplH1GTuIxO5m0/QO65AOOBb6KI+J8WZdXXUPjd52aesnOMvt/c3BCJSbvGpxz
-	1G9VKV47y5dQShJTC7ngH74HohfODvlHR5In4kMwfvV6bxgbZt3gr+lwKvq63M3IKlBK6/99kz4tK
-	NCE8RdR0OP8RWHpsMgT3/C0HySpA==;
+	Subject:Cc:To:From; bh=VB6LGWBOBKZK7RdnDMyNXA0acdHX2HSe+usGRca51YI=; b=Osavbe
+	HrnlFBrRqHuE+5Ofn+svghz5Lk0pLKOd9Xb57T9+9qPg6lpcq9L0PCHi7Th/FEyCfDYRTTPMIniqM
+	ltsUn3cPZFacieJ2R6M8dZERbhqtP1hkZ4BXbzxSH2uclbdDylOLGqM6l8IllSeyddURDE8HleZm+
+	ABhCXZ5zyGtEGugB6lx6GDRj8y5/clEZxlhG3AFck0/dRX2r6+qxhG4EfZZTCts+3yv1iYn/U/R9P
+	Lzijg9M5Rzq6SqhBqj0IqlvT2bDluBpD1NtWtXRVjmrd2e2M+2EkTxFUoObm2BvS+3/7eUC5hXdwo
+	4ojLJ47CE483QkeVTUr90+AQBnyA==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
 	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbq-0000t6-FT; Sat, 06 Jun 2026 22:27:10 +0200
+	id 1wVxbq-0000t0-6n; Sat, 06 Jun 2026 22:27:10 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbo-006V18-AX;
+	id 1wVxbo-006V18-LQ;
 	Sat, 06 Jun 2026 22:27:08 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-iio@vger.kernel.org,
+	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>,
+Cc: Jens Axboe <axboe@kernel.dk>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/iio/test: Use strscpy() to copy the test description
-Date: Sat,  6 Jun 2026 21:26:31 +0100
-Message-Id: <20260606202633.5018-37-david.laight.linux@gmail.com>
+Subject: [PATCH next] block/early-lookup: Replace strlen() strcpy() pair with strscpy()
+Date: Sat,  6 Jun 2026 21:26:32 +0100
+Message-Id: <20260606202633.5018-38-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,7 +58,7 @@ Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
 
-The buffer length is known to be KUNIT_PARAM_DESC_SIZE
+Use the result of strscpy() for the overflow check.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -84,22 +84,24 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/iio/test/iio-test-rescale.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/early-lookup.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/iio/test/iio-test-rescale.c b/drivers/iio/test/iio-test-rescale.c
-index ac6942cf1e44..bcd4a607be19 100644
---- a/drivers/iio/test/iio-test-rescale.c
-+++ b/drivers/iio/test/iio-test-rescale.c
-@@ -575,7 +575,7 @@ static const struct rescale_tc_data offset_cases[] = {
+diff --git a/block/early-lookup.c b/block/early-lookup.c
+index 3fb57f7d2b12..18ab4a2da676 100644
+--- a/block/early-lookup.c
++++ b/block/early-lookup.c
+@@ -156,9 +156,8 @@ static int __init devt_from_devname(const char *name, dev_t *devt)
+ 	char s[32];
+ 	char *p;
  
- static void case_to_desc(const struct rescale_tc_data *t, char *desc)
- {
--	strcpy(desc, t->name);
-+	strscpy(desc, t->name, KUNIT_PARAM_DESC_SIZE);
- }
- 
- KUNIT_ARRAY_PARAM(iio_rescale_scale, scale_cases, case_to_desc);
+-	if (strlen(name) > 31)
++	if (strscpy(s, name) < 0)
+ 		return -EINVAL;
+-	strcpy(s, name);
+ 	for (p = s; *p; p++) {
+ 		if (*p == '/')
+ 			*p = '!';
 -- 
 2.39.5
 
