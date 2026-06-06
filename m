@@ -1,51 +1,54 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD023BBFB0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8920827A462;
 	Sat,  6 Jun 2026 20:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777642; cv=none; b=HBjwlCd4faMx/BPBmol8x+SFsIvAFkF8XTHufQ0GrghRIHYt/e8G2LxNWeFIjm3WkiDy5FI22Xizuqw6EWtXWjInUOlsYTEPgboq0mxoXr/4jhPgw/Dk8OI6f+4nbAV1IwFMA80dHa2GY74HiIvfof1pEmn6qEciIzgOtA65JUg=
+	t=1780777645; cv=none; b=JXw2aDPGk11yvFXU89WgyB+P/L7UpZL4uqDBvllhOp3jgKnbzSoEga77TmgksGHF4FAgoSaVMiDTBUxF4qB4xdiBGJ9R9AdRz0elFmkiR2ibDM/9eXE2oH/ZZRGA1NCDnw9Fg5KlX8JEYgXTBP2MmM8y/bq6c8DTjJYBntZerew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777642; c=relaxed/simple;
-	bh=2lhj5uM0KW4nqskZlNGldFlLJvvQSvpMeEDAXEyAZkA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HSNC/SlRAoG51s6ifgjsEPzElB2m+R0ZdV3ill318SC4QcRgBaXzMSv4KnEuFoO4L2cbibxtRbFNajfaH4dz4xFCjWIwJFzGzExEikxMXj+wP07VbCfvqKhEu1inVFaQiooXYanhdHPU8eNKb2h4CrlgD2aL0AdFURzHv+R7ygM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=OkNPSnU/; arc=none smtp.client-ip=185.226.149.38
+	s=arc-20240116; t=1780777645; c=relaxed/simple;
+	bh=IVTRybyENP9ZvsALHEwGvITCPJ14NH1hbJUa0q2kvWo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=avEfuNfMg5aY0TCJ0QzBIjO1klcDP3IGtwEKapuoPmvdWc8Y6OMqgPqg+SIM5mo4HptTlSsI0Z5Dn0VeoiFIhK7dkdTZOcTyUoNeXIFoQ1GtOTGEuq/piU9ZVLU6idO7Zx10hVzs4rNzgbiswwLJlyURhCaWlkAE2T3CehbBPRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=FuZuCFy4; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="OkNPSnU/"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="FuZuCFy4"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbx-007cIm-Mj; Sat, 06 Jun 2026 22:27:17 +0200
+	id 1wVxbx-007cIS-Ca; Sat, 06 Jun 2026 22:27:17 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=yyP8NAoYAttd3SQNxO8atzKfruOiB151NPRC2c56daA=; b=OkNPSn
-	U/cYCt9K9SaJ86wPixlltHKtQYrSHXTC1klis+3pIXr5x0n91gkEswsY/CPGZ5jVyLECltYp1khx9
-	b9U9nOKWVZNyZizj0uILJdR+ZAjy8Ry2kyNqYZDV6IVAXmnrSj4OCoZYPHPLJrboo2a0gTkRHM9bL
-	0/2YKgtiLy3jWcQRoVjNJAZoBgEpbG1yXzGH92UkqJQw8xa1fbUY5Ak4MCdNJjw+9lyAX3/O8kkEX
-	sQixnpkTLm3fbBqZTN9yiU0Or/hbpVFkVsrpH3TXFxMHIb8MXguB9Va4IEK4G+3vEWN17HZUuF3Yc
-	ilsrMhGaVz7Nm7YlvDZV+IyOdnAA==;
+	Subject:Cc:To:From; bh=jj4dGsDS5UDEhU/D7d8KdsG7GvNWgOpV73kbpJQir3I=; b=FuZuCF
+	y4U64VXKIaVg6y4WFBp0CkWxEF0WqDEmIWAzGs2jJlUzpgWCJFLsoWl/adQY4M3lrliIVjgejIMxC
+	g/KO3c4ysC0pgFKNhNNpFRCRLfoRvcnRawOxV4Mvsdij6zT9QPbLc4nUp/MZfCjIdZ15hEF04iyqc
+	oproj8JVWUOC54gzFi7RetqU6nD3qy0/ig7x9JF4X8rasBTdP5b8wzZDOLDSf9zBJ9v0cFhEhxLID
+	PWdmo+kqAygiUOsJaaXxt+eBK7B1dcL/Yt2ScJIp7Pp0XntQmz4gMFXHSjUum7fbyyAJJR3fLXvgP
+	y2yhVHtfkZje/6rf1gs6LAw+LSvQ==;
 Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wVxbx-0005Dg-6L; Sat, 06 Jun 2026 22:27:17 +0200
+	id 1wVxbw-0000uY-Pd; Sat, 06 Jun 2026 22:27:16 +0200
 Received: by submission01.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wVxbm-006V18-1m;
+	id 1wVxbm-006V18-RJ;
 	Sat, 06 Jun 2026 22:27:06 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Arnd Bergmann <arnd@kernel.org>,
-	linux-kernel@vger.kernel.org
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org
+Cc: Hannes Reinecke <hare@suse.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/parport/probe: Use kstrdup() instead of kmalloc() and strcpy()
-Date: Sat,  6 Jun 2026 21:26:25 +0100
-Message-Id: <20260606202633.5018-31-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/scsi/aic7xxx/aic7xxx_osm: Use kstrdup() instead of kmalloc() and strcpy()
+Date: Sat,  6 Jun 2026 21:26:27 +0100
+Message-Id: <20260606202633.5018-33-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -81,30 +84,29 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/parport/probe.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/aic7xxx/aic7xxx_osm.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/parport/probe.c b/drivers/parport/probe.c
-index 5d1b9aacb130..bf9d81c0abaf 100644
---- a/drivers/parport/probe.c
-+++ b/drivers/parport/probe.c
-@@ -52,7 +52,7 @@ static void pretty_print(struct parport *port, int device)
- 
- static void parse_data(struct parport *port, int device, char *str)
- {
--	char *txt = kmalloc(strlen(str)+1, GFP_KERNEL);
-+	char *txt = kstrdup(str, GFP_KERNEL);
- 	char *p = txt, *q;
- 	int guessed_class = PARPORT_CLASS_UNSPEC;
- 	struct parport_device_info *info = &port->probe_info[device + 1];
-@@ -61,7 +61,6 @@ static void parse_data(struct parport *port, int device, char *str)
- 		pr_warn("%s probe: memory squeeze\n", port->name);
- 		return;
- 	}
--	strcpy(txt, str);
- 	while (p) {
- 		char *sep;
- 		q = strchr(p, ';');
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+index d93b522695eb..d6237aa5beac 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+@@ -1101,12 +1101,10 @@ ahc_linux_register_host(struct ahc_softc *ahc, struct scsi_host_template *templa
+ 	ahc_lock(ahc, &s);
+ 	ahc_set_unit(ahc, ahc_linux_unit++);
+ 	ahc_unlock(ahc, &s);
+-	sprintf(buf, "scsi%d", host->host_no);
+-	new_name = kmalloc(strlen(buf) + 1, GFP_ATOMIC);
+-	if (new_name != NULL) {
+-		strcpy(new_name, buf);
++	snprintf(buf, sizeof (buf), "scsi%d", host->host_no);
++	new_name = kstrdup(buf, GFP_ATOMIC);
++	if (new_name != NULL)
+ 		ahc_set_name(ahc, new_name);
+-	}
+ 	host->unique_id = ahc->unit;
+ 	ahc_linux_initialize_scsi_bus(ahc);
+ 	ahc_intr_enable(ahc, TRUE);
 -- 
 2.39.5
 
