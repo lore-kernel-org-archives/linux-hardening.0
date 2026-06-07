@@ -1,103 +1,165 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EBE288C08
-	for <linux-hardening@vger.kernel.org>; Sun,  7 Jun 2026 17:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE9E2EAB6F;
+	Sun,  7 Jun 2026 19:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780852765; cv=none; b=aSsJsOqIX5W4udmYsTLCbC8r208MTDGQFIloGH7OjemX+PmrsX88YzJhp2h2YXiIwDWpuNQyAEohCKB7oHBhXsjlRQeTHDXcU34kZAVzlZTQ20eSwLXVnLzRhbZFYEEYbXOsUJ7PUWDXCzwbJ3WLO54WJftgaMlHTDsQRXFB064=
+	t=1780859326; cv=none; b=jxuiTfXtP7154HR0ZUOFVtREI4HqVdbxxJquC3cUAYqhJlWcKqXB10icX4zyOY/5h/3vvRBwRf3qUi0xppRmrirleBulduubwZ4+J6alG0IAp0/97roSiI+VEQBj4QTrsAkBxXgQtRVpNtlcfKDHYE2vbW1IGmlJPfmHE0g6g9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780852765; c=relaxed/simple;
-	bh=ykpEPE1mEDQLHsSg8yjADb1LOr1H6XrIljux40fRo4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YClZ/afTOyrlz4xVCOC/L6e3NyIETDr0t4O0eItc1uQp2DzVvxoRVcH7XIxkq5qFOH343p5wfIU322S0k2cXbhzL+V9YGnLwk+g+ip6nWXF14x8fbIMivo0SDu2JmufsSOdtGnkJJeTECgTFYuD70Y9KrsDuaIx6D+wd2y4NWXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S1NZFFJ5; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780859326; c=relaxed/simple;
+	bh=KSHR9qcrfCr8Ul9JRUnIOS0ajfBpdMO9FGKQirQthoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=to2B4ZJitPaeYRmxPxMWqxgiXthabzjLb/Y9u+HquIj+A7UgBJ+wn3DpIfwPSLaWcaiwVM3JqLA1lmN3FHk1oeLt2H09307K/4Qd8M3r0z1gh2qmOuP4PKtVP2vtYM8XgMzhoWpPAUTUQlC5O9D972FHNejltii1MqeJbuCwKrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hIB2Juxo; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1NZFFJ5"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490b915ded5so29614105e9.3
-        for <linux-hardening@vger.kernel.org>; Sun, 07 Jun 2026 10:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780852762; x=1781457562; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tmgHB6tze2Xss/dF/g3O35dG4S4EFs7DvnlvIwWXTEc=;
-        b=S1NZFFJ5hOGDqRnpeLuZUMiTntyz3USV8ri9FOJypJeSQvU7sZZu84FyLCE2WD6gzI
-         fhBVv8BDMlIeyr6+/E5eDKcjpOoIiMsIAoEiUrbUPPV10Z/kN78gnp6G6So72FVSsZZ9
-         qkUagMetQQGCMElDNGcxfznJ34MzcrC5775wVG+SjLX8o/2e1SQ862dqLNpA5KwnwR+F
-         xqVtgQ62gsbLRjhS4te5lnbr4j6ZUK3L91hnWwcyywntVZSyTOotZ5Pe+rM3Py358Ytp
-         4tfmbxBb8+TB2TQy2Rq9wq0b9CdCLCLpuUgaeg5mmzjjuV9deLmlBuwO79BzbxA6+D1e
-         /uYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780852762; x=1781457562;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tmgHB6tze2Xss/dF/g3O35dG4S4EFs7DvnlvIwWXTEc=;
-        b=mcTBmYWiEaVFC9QFzZCePjJU0aXrWkH11cbXuMFhi/IeQspCgbWVKYIjTlq1BZM/+V
-         abeOmVF1Kqm8T0QYwl7Te3UDPW73jEDfxD+uDQNBV8JO2eoxWB/Pq6AJS/KKHBEz9N1X
-         6TZOc7PM2vS7eSKlIMTP/noTK2+7ME2RNfkSLYXbIh3wOfPG+tcPWB+f2Z1oofxG6AtV
-         YLwY7Zogp7bk2Tch7tVtGIzNeCnUZtQ/0+xqy6ITm1PF28sZ13AeUExh6XOgw/Wod/5r
-         eBefu6cpGZqRbGhsRRckpRMbzxe8WZhLyIrK18084EotS3ylnoAi2EzbCppNt7N3lOCg
-         t/gQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9t7uk8Nh7yTsUhPYIpYEbQtUhoxURKALBjLSse85IcuO9ozXXsyIVfT906Fvi+XCTNPYNAopLCHww3ldax7IY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR1ENXKlyBGmILne7VnYBdSzb6ZnKuCKrlarv7Ih2ANzKRE0qw
-	16XVsyuxQaFWEE/YGM1v8dJv3nZiM6X3fJrq8dfqI/RMCRgLZhQSZKHn
-X-Gm-Gg: Acq92OHODqeTjGbre9kJr7oky7mmieOzgqLH52YLcTesaNO0pMtDePNqjIPzHJC9zmT
-	LST+xOIgR4suU/L6YKTAUF/W/wk2NBI5QeAu2sut75/8TFnsdxtElKfk0/DxpPhuAAQj/CZsSko
-	f50eWi5s85XZi+N3pudd8af0g891nzFfQMnvDzVFYZRn117lshnOUZuoAha5VG4nqBtqUU0+zRN
-	oYkATjg04qkXuq4UygdThQ3vSAtw5pi+iLO6ATxHRsb0vlcGm1CABiAEOfvvod1f+jR9ygDq/Su
-	Bah6vjJBTVXZ77y7v2tqUa78xN5ZPYBe6q1jp1Da4RDM/fD3e1iD1HOb0R7VLfkBReiOgxMzQuS
-	1EnL69VE0lImL3HT6QJRwvw5D0vo+85YLVVcNJ/QRlI9xMSjiQkpgIF5Oxp9pdLdG/XqJYSL1PL
-	rueKETHrn+bTl9mVy7Iyh6K0iH+MgJ4iXNTjVs/QmdLiW4P4n1AYlRwORHunc6eX1OGGL7gwQ=
-X-Received: by 2002:a05:600c:1c1e:b0:490:bccf:2bd6 with SMTP id 5b1f17b1804b1-490c25f1143mr218800505e9.15.1780852761462;
-        Sun, 07 Jun 2026 10:19:21 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490c2cbb4cbsm162470085e9.0.2026.06.07.10.19.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2026 10:19:21 -0700 (PDT)
-Date: Sun, 7 Jun 2026 18:19:19 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Helge Deller <deller@gmx.de>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
- Bergmann <arnd@kernel.org>, dri-devel@lists.freedesktop.org,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next] drivers/video/fbdev/sis: Replace strlen() strcpy()
- pair with strscpy()
-Message-ID: <20260607181919.2b916ddf@pumpkin>
-In-Reply-To: <a2ed1741-f49c-4a16-8d4c-e6698bd3dd8b@gmx.de>
-References: <20260606202744.5113-2-david.laight.linux@gmail.com>
-	<a2ed1741-f49c-4a16-8d4c-e6698bd3dd8b@gmx.de>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hIB2Juxo"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C062540E015D;
+	Sun,  7 Jun 2026 19:08:34 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QAl3fNcanhlf; Sun,  7 Jun 2026 19:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1780859304; bh=okDVFSTv4fCBjivazCm7I0myKhLAMvL8UQn0109STco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hIB2Juxoi41C2nak1bGnPQhU7XE0vXEQwAAdlVdQl6oQC2nQpTxiq41pc/H3MEudq
+	 QYYtfBSnXLtHzb/dHDTUOKEg7iGTimpxsLk1xXo+kwOg32DpNY/FT061/sNBoPBVBL
+	 cjKZBA7wT1A1Tml9E7znkNjiw77/0TN3nDQORozxFEZtU485QGNTJXSGp4MfSPCahi
+	 fg86YTgH44T3eMOPorP/J/ozHp2iU0lPrVqxWGldTSu3iIUyur7ygGd3twJrSf0ji5
+	 LDNWYI0LLHyHdi0aXerenDTEIlWbIaFImylW4HpA4dZdpPHmHP0ij1NSIbkQxA1Pdr
+	 xjcfWpTc/mMuZ/wbYs8KtHM5FiT7s5bgK5vqyl6ST5orNLZi4ayT5gahAMViGlEQ//
+	 7r3iiYFMKGQNOhbgfzYwFp1qbsRrVrQeiW6wYbJvB3iCSZM4tzrJOBcVjsoPP0LPrH
+	 Nawz8/Aj3W2Z36cIfYNasDgBLnq5b2T7cBPPev3Lmd6U7/whVUMoKdwzTJjUIz1vvp
+	 b1rJQw21Q1syJVlgPuEdFRQYaGoxYlM7pvWtL94i8JWxHHzRGhXmwrnN1bh1RPRBsh
+	 v5trxIa/WyUaoUuAHOsoZmHIXpAUe0+MFryTvGDyRq5/kS96++KAsilyB4y1eYze2e
+	 vhRusUz3/6YDNd6PjNAxM2Ns=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5307B40E0031;
+	Sun,  7 Jun 2026 19:08:08 +0000 (UTC)
+Date: Sun, 7 Jun 2026 12:08:04 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Li Zhe <lizhe.67@bytedance.com>
+Cc: akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
+	dave.hansen@linux.intel.com, david@kernel.org, kees@kernel.org,
+	mingo@redhat.com, rppt@kernel.org, tglx@kernel.org,
+	linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v4 6/8] string: introduce memcpy_streaming() helpers
+Message-ID: <20260607190804.GAaiXBlGO2eRcfs1oB@fat_crate.local>
+References: <20260603080152.64728-1-lizhe.67@bytedance.com>
+ <20260603080152.64728-7-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260603080152.64728-7-lizhe.67@bytedance.com>
 
-On Sun, 7 Jun 2026 17:50:00 +0200
-Helge Deller <deller@gmx.de> wrote:
-
-> On 6/6/26 22:27, david.laight.linux@gmail.com wrote:
-> > From: David Laight <david.laight.linux@gmail.com>
-> > 
-> > Use the result of strscpy() for the overflow check.
-> > 
-> > Signed-off-by: David Laight <david.laight.linux@gmail.com>  
+On Wed, Jun 03, 2026 at 04:01:50PM +0800, Li Zhe wrote:
+> Introduce a generic memcpy_streaming() interface for write-once copy
+> sites that can fall back to memcpy() when no architecture-specific
+> optimization is available, or when an architecture-specific backend
+> cannot safely handle a given transfer.
 > 
-> Hi David,
-> 
-> I've applied your 5 patches to the fbdev git tree.
-> 
-> Thanks!
-> Helge
+> Add memcpy_streaming_drain() alongside it so callers can separate the
+> copy primitive from any required ordering point. On x86, use
+> memcpy_flushcache() and sfence only for aligned transfers that can stay
+> entirely on the non-temporal store path; otherwise fall back to memcpy()
 
-Thanks, that'll be 5 that don't come around when I try the same test
-in a couple of months time :-)
+So you throwing "streaming", "non-temporal" and "flush-cache" wildly around
+here and this is adding unnecessary confusion where it shouldn't. I'd suggest
+you stick to "non-temporal" which you can abbreviate short'n'sweet to "nt" and
+that's it. Keep it simple.
 
-David
+> so the generic API does not expose flushcache semantics on cached
+> head/tail fragments.
+> 
+> Callers are responsible for invoking memcpy_streaming_drain() before
+> later normal stores that must be ordered after the streaming copy.
+> 
+> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> ---
+>  arch/x86/include/asm/string_64.h | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/string.h           | 20 ++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+> index 4635616863f5..aee63108577f 100644
+> --- a/arch/x86/include/asm/string_64.h
+> +++ b/arch/x86/include/asm/string_64.h
+
+There's arch/x86/include/asm/string.h. Why are those here, in the _64 variant?
+
+> @@ -4,6 +4,7 @@
+>  
+>  #ifdef __KERNEL__
+>  #include <linux/jump_label.h>
+> +#include <linux/align.h>
+>  
+>  /* Written 2002 by Andi Kleen */
+>  
+> @@ -100,6 +101,37 @@ static __always_inline void memcpy_flushcache(void *dst, const void *src, size_t
+>  	}
+>  	__memcpy_flushcache(dst, src, cnt);
+>  }
+> +
+> +/*
+> + * Only map memcpy_streaming() to memcpy_flushcache() when the destination
+> + * is already 8-byte aligned and the size can be handled without cached
+> + * head/tail fragments in __memcpy_flushcache().
+> + */
+> +static __always_inline bool memcpy_flushcache_nt_safe(const void *dst,
+> +						      size_t cnt)
+
+This is checking alignment. Then call it that.
+
+> +{
+> +	unsigned long d = (unsigned long)dst;
+
+Useless.
+
+> +
+> +	return cnt && IS_ALIGNED(d, 8) && IS_ALIGNED(cnt, 4);
+> +}
+
+AFAICT, this helper is used only once. Zap it completely.
+
+> +
+> +#define __HAVE_ARCH_MEMCPY_STREAMING 1
+> +static __always_inline void memcpy_streaming(void *dst, const void *src,
+
+memcpy_nt()
+
+> +					     size_t cnt)
+> +{
+> +	if (!cnt)
+> +		return;
+> +
+> +	if (memcpy_flushcache_nt_safe(dst, cnt))
+
+That branch can cost. Why is that alignment checking so necessary? Why can't
+you simply DTRT by handling the misaligned parts like __memcpy_flushcache().
+
+What does this bring you? None of that is explained in the commit message so
+why do I want this patch at all?
+
+The commit message is basically telling me what the patch does but I can kinda
+read that from the diff itself. What it is not telling me is *why* it exists.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
