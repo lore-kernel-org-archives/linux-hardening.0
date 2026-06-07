@@ -1,188 +1,163 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7E428371
-	for <linux-hardening@vger.kernel.org>; Sun,  7 Jun 2026 07:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E2C27057D
+	for <linux-hardening@vger.kernel.org>; Sun,  7 Jun 2026 08:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780816015; cv=none; b=RSmbr8veC7Y0dylkb4FLB+xnzv6qSNcjiK/BPY/tFTLq36m6L0/dBl9J39WSDIR9aGsKniLQh8RNBz9frR561l3XmAsD65qD3yiuHYXhY7XDRel24Cew3ceJFSDfH7Yto+Ar928AHrD/bKp3J6FB8DibBfCk0e+zYgvo/Rfs+tU=
+	t=1780821635; cv=none; b=XPUoV0w5Qp0LRTVUkxpCr28OEKbkIDG82mLpLM+SIfLfvcrdH6cLqMb+ttJqaqvX8tQAAmIxiqxFCslVEipxCOe6mGFN6ojabakJK0gG7+l9QkZmMZ+IODWCD4NlIAFwjuH8PrOi46IEvqtvHCW6QAMFayQa7z2BAODYHEl7hwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780816015; c=relaxed/simple;
-	bh=heTeMpu75d0octllsLN2T80w2EU3DkJ/ZmCHQiUIajE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e95dZf0ajhVuJq4NCtz4X98mrQP03T9lEXXcf09mNSUgd+0epmRDaI5K/oTsSsGUFsKxIezGb2tElR7wYN0OnpgMzKMqQ5i37k6KWIaONow9IlUlIMT6u35RIkhkYyPkbY4moivpcnoojjjFINyHnuwbC+HVuSC6TF1fCmkTlC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TKrV7Q8k; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1780821635; c=relaxed/simple;
+	bh=z4rfpECDUd4+fp5V8mPcIWgEOMMN5fJNP5S4vnw9JZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GlzId6iCntu0IFCKky7AUMe845mxzOAhm/RHcC3gRAeeH++TlG0y7uk+7p1BktTRWh5zuq06gCDTgfXL1C2bAr6Pn3mQXToqA2xKQSatlultxFGJ1++HLFrNb9xOE47nY7nn3kg3NGz36cAXFkUYlMqkOoigyw5hs3Q+LE7ANJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pmejJxmj; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKrV7Q8k"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490b7866869so38403255e9.2
-        for <linux-hardening@vger.kernel.org>; Sun, 07 Jun 2026 00:06:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pmejJxmj"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-4602e2a0372so2215925f8f.3
+        for <linux-hardening@vger.kernel.org>; Sun, 07 Jun 2026 01:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780816011; x=1781420811; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780821632; x=1781426432; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EjFCfZnGIYF5PioRnZOk1Y+cKLSfcfAJ9sx8UaHZ3lQ=;
-        b=TKrV7Q8kNugCnqjStbMJi03g34l9fS0MBsTXyHuUozxqlz0jZo9eOBzC9sA55/4kYB
-         12xfxBDa7nPUb/CCy+BGVvGtRsbdKGQJatr6LOSsjkAEZzqQ+qKXMsnuSPghimGigeta
-         gOvUl7kBTP4CzMxGEovI7b6B7dXdk6hjHPw6caZr1JORDUlRIX3TlVZj7F8Btv3EoAYY
-         XrnIa/V7JrLrNWw+EEpr9OUPBnZ+k17i1oAKvucU4pICEzR9X/84MIJmyc5xDFhIDlfz
-         3qAg1nHW4ySAA7MzoHTjL5UjtjIqDrU/HKMod4GatGMZ69zWeKtYYfKHltKQ5WGkxLHS
-         gwnw==
+        bh=vw1xVuhJOQHbfyU6Yw8EFKK1j/gn1/vNa/UVGcPSkm0=;
+        b=pmejJxmjJQVSWjPE32PPEmG9rBGizJfyA7rkEx+krkJnmAEfuCfGKZR2+Iwrx/K7z8
+         fs7XNrZL+QVL0rGQ70IpR/rH5/dFFth3mTf5C7J2kPGxsYc8AIJ+0PX+USVJIVcF9XYz
+         LhACWI+SQIOSgqndAMsy6RJSs8rc7MfOnONJt33b9eubWRUMa6er40QOpq5Q9URtzRjD
+         NZYjfxWMoIcI9utncep3/EC55vTjYfSRB/D5rfolOw0W7WhyjydH2AqWy5lcU2sIaQ3s
+         afpVThSoLAplzbZQRSDQmVSzYlXkCPHSNVSZZuGhCydGGiAalUO/Xckvdlc+uqqVJOxt
+         Rdvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780816011; x=1781420811;
+        d=1e100.net; s=20251104; t=1780821632; x=1781426432;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=EjFCfZnGIYF5PioRnZOk1Y+cKLSfcfAJ9sx8UaHZ3lQ=;
-        b=A7rHAvkSS9Blla/NDWc3azF6F0R5OkGMWkle/p67FU8EUfe38OT/ZnaCPmgfMV45Rf
-         kbS3ucfMiUOtTKLb867Udn1WHAyVYjlU/UuVeVnd5ifa6RMlqakY5OE5jKYjrfSQXmRh
-         XhRnuPb1e50MWTJltWmbJ8PS8RKKwVHzY8FrCaLV72gMMavYwsnlMZJjitYNjD4B5q7I
-         JmdPCwfBiTFJySj6QzDLT7FU9/2XVBKKRxrgbQOLsG7c6AfsooZJS3YsnsDjbVs7mlCa
-         drQKKHNdHzPzHy2vjUPkBhJQWefPnropLudK53WYczGRz1hKR68OqHrDQkXRtonXs8PO
-         4hfQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8dtg0LFSv9Us/SdRYt2mKvoWw/jIIGSUSn/QvEY12I/jiE6nmryVBIZGQ4Yb/3SFajLQoLrw/CLlrMHdDpjVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ2CZ2snej04kDUxYVpxB3Xrz4tfMSMZSoVYuuzbNBldWS3n+i
-	C44Ks7bCNxRBfyMdapXDzQcZTHuC9/8NVqgquCBNGXCddD4dDu8x3iw63tJGdqw=
-X-Gm-Gg: Acq92OHbfemq6J3YLJc81RSAJlV8xpExJwTgbyJqGOLUk0U1pMntazA3FEzp8osnwpS
-	ok2fspIaZz9ubwRIWcfE4ppkgvgrk/mWlLYeoGL3ROq0L1qQfzxSsuuWlHvs594sahoXUqj2ARS
-	jc94wN7V+6y/bNfOYH7ePEuG4yxPZLjQMxbiYGSeBzXkbEz2vL0LALSMUrAf6aK1GEGvNgyjt2G
-	HO203MRRSF6tI2NizGlvZp0S/MaooaNhQZk7y9eDXEq6/EWBGmJId7VeYqWPEVwHh2C7kzzvw/G
-	zNo0ARrGqG0T6TTf7haxPoyOdZWUjPVueMpvKdruFzKJurJlr7xbAOenyir4BIy9e5ImYE1eWGr
-	WSDNRAjignNyIzZ3lLbkodXtBIYcZtkhONrdPDvFWNLcG3MUWors4z0S9QSnfsYBu22YJTnqPyX
-	gTQWkwBtl1GBloIVVOrimPguwPnUjIE9AVD1ZLqZLT1XM60zP5DA+49cjPLrtjX4dap9gJpyrvD
-	4tck98y9MlGvWtXz7hm5hNNPcUnddBpi5V4cknpgw==
-X-Received: by 2002:a05:600c:34c9:b0:490:688b:f10d with SMTP id 5b1f17b1804b1-490c25b3549mr184516635e9.7.1780816011186;
-        Sun, 07 Jun 2026 00:06:51 -0700 (PDT)
-Received: from hp-ubuntu.. ([41.248.186.206])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f344762sm44225082f8f.23.2026.06.07.00.06.49
+        bh=vw1xVuhJOQHbfyU6Yw8EFKK1j/gn1/vNa/UVGcPSkm0=;
+        b=VboglTALQmpOxvabWrKsLCEH5IfTGPlwi68ammgCkM8fNe/MlJuBwZWebqVKwSfZY1
+         W0puGFEMS4BqGUWdDjFyOInalYGLLNlTCbarqpy1RXjJwnq2rbJAOaU7XRjVyn/TCbBz
+         KwWQcE2WJ5Cq8gWQ+ZoepRv33bhLBPdDAKRiRakmrmNpQqTzC21R3XbYGgo3bWmd4aIJ
+         PsTyc/+ttHi8GghVdeUd12G+0EvFooHZJrhCsAxDm7xEBR4vOdu1aNuddJIt3OhHFP+0
+         twrL/19BGn3H8Q0aZkZIcZZrS0bmER4IMA48nHnfutqJvHmDHwizZGi/R2oQIqkuTpDN
+         AeTg==
+X-Forwarded-Encrypted: i=1; AFNElJ9pLv74zDPL6UGW2aDL7WK9A/jcbkHIINYVVzPM/QNIzCayMCsRJV71bfKpst/pbfruiy/aBHAVB9f/dsIJWUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd/GEWcISKYwWS7yvfFDoGzZBAU2q7wLz78stErX6/z6PSwaqG
+	s9+l36CSJvLHfRH/EYBvuBKTPBoQHHE6gQ3LwE0lWwDzxOUVHomTHAry
+X-Gm-Gg: Acq92OGZdjdSBYAPotdU11R62pSoC7F4uSaYRAh3SjuF25kpzdrhTzQNK/R35hm169V
+	obymBYMDJxtg1gUJ1/Es+Gg7m9muu7XZYuaeFy6xRK2/rob39yksEMcFpDJTfyizz2fGTGcDlYv
+	u37JYZ38KBJqeulOHZ2amabZovJ4yiqpNacKUqKrEG1ti0EpShHo60yxV5ffrIIJChlVuY5mI3e
+	XUWWtLRQf0xpmYHHIuir1FbIEhPsxRgdwm1goBtmP12qt7n6PqF7FTFLbotzhchEnQpYuWCgTm2
+	dU/opxNuEBn5VMUJxqP2WU5coCTtMfXKDuhyVYnXeAVkTmdXZlADFqyMa8/Tjpx1vyDju1HirEd
+	B74F/745smV68V7Eh3P3pGeb4SMrkkJDxarYJp9Rccl3DX0rzUnEg2ETjpWuObdTa6YYZ2pFm8M
+	AcyhU2ZdXR1wxiHl8J71yvWxiINuWeWtGWd0naPQ4SxEg9Hiu9MTLECOwN3rCgbb73FsytEmI1g
+	JvMyCa6nA==
+X-Received: by 2002:adf:f911:0:b0:439:c18f:5aaf with SMTP id ffacd0b85a97d-460307625cbmr11917197f8f.34.1780821631657;
+        Sun, 07 Jun 2026 01:40:31 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2eadefsm42644235f8f.11.2026.06.07.01.40.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2026 00:06:50 -0700 (PDT)
-From: Mohammed EL Kadiri <med08elkadiri@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Kees Cook <kees@kernel.org>,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mohammed EL Kadiri <med08elkadiri@gmail.com>
-Subject: [PATCH v2] docs/mm/slab: document cache isolation with SLAB_NO_MERGE
-Date: Sun,  7 Jun 2026 08:06:45 +0100
-Message-ID: <20260607070645.9559-1-med08elkadiri@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260606155856.15548-1-med08elkadiri@gmail.com>
-References: <20260606155856.15548-1-med08elkadiri@gmail.com>
+        Sun, 07 Jun 2026 01:40:31 -0700 (PDT)
+Date: Sun, 7 Jun 2026 09:40:29 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Vincent Mailhol <mailhol@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
+ Bergmann <arnd@kernel.org>, linux-can@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH net-next] drivers/net/can/usb/kvaser_usb: User strscpy()
+ to copy device name
+Message-ID: <20260607094029.6ffd4eb0@pumpkin>
+In-Reply-To: <f8848570-8793-4f5f-a2a4-ab212dcaebcd@kernel.org>
+References: <20260606202633.5018-15-david.laight.linux@gmail.com>
+	<f8848570-8793-4f5f-a2a4-ab212dcaebcd@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add documentation to slab.rst explaining when and how to use
-SLAB_NO_MERGE to protect security-critical slab caches from
-cross-cache heap exploitation.
+On Sat, 6 Jun 2026 23:16:47 +0200
+Vincent Mailhol <mailhol@kernel.org> wrote:
 
-The document covers:
-- When to use SLAB_NO_MERGE and what it communicates
-- How to verify merge status on a running system
-- Tradeoffs (memory cost vs performance)
-- Relationship to CONFIG_RANDOM_KMALLOC_CACHES, SLAB_TYPESAFE_BY_RCU,
-  and the slab_nomerge boot parameter
+> Subject [PATCH net-next] drivers/net/can/usb/kvaser_usb: User strscpy() to copy device name
+>                                                          ^^^^
+> Use?
 
-Assisted-by: Claude:claude-opus-4.6
-Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
----
-Changes in v2 (per Jonathan Corbet and Matthew Wilcox feedback):
-- Add content to existing slab.rst instead of creating new file
-- Fix markup: use plain function() without additional formatting
-- Use slab terminology consistently, not SLUB
-- Remove How merging works section (implementation internals)
-- Remove cross-cache attack class section (redundant)
-- Remove Bounded allocation volume criteria
-- Rephrase unmergeability guidance per Matthew Wilcox suggestion
-- Add Assisted-by tag per coding-assistants.rst
- Documentation/mm/slab.rst | 60 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+I'd forgotten I needed to fix that typo before sending the emails.
+git makes it hard to change the commit text itself.
 
-diff --git a/Documentation/mm/slab.rst b/Documentation/mm/slab.rst
-index 2bcc58ada302..c485bd257c44 100644
---- a/Documentation/mm/slab.rst
-+++ b/Documentation/mm/slab.rst
-@@ -4,6 +4,66 @@
- Slab Allocation
- ===============
- 
-+Cache isolation with SLAB_NO_MERGE
-+===================================
-+
-+The slab allocator merges caches with compatible size, alignment, and flags
-+to reduce memory fragmentation. While this improves memory efficiency, it
-+allows objects of different types to share the same slab. This enables
-+cross-cache heap exploitation, where a use-after-free in one object type can
-+be leveraged to corrupt an unrelated type.
-+
-+SLAB_NO_MERGE prevents a cache from being merged, ensuring it receives a
-+dedicated slab. A freed slot in an isolated cache can only be reallocated as
-+the same object type.
-+
-+When to use SLAB_NO_MERGE
-+--------------------------
-+
-+SLAB_NO_MERGE should be considered for caches holding security-critical
-+objects whose corruption leads directly to privilege escalation, such as
-+credentials, cryptographic keys, or capability sets.
-+
-+It is harmless to specify SLAB_NO_MERGE even if the cache is already
-+unmergeable for other reasons (e.g., it has a constructor or a non-zero
-+usersize). The flag communicates intent and ensures the cache remains
-+isolated if those other properties change in the future.
-+
-+Verifying merge status
-+-----------------------
-+
-+To check whether a cache is merged on a running system::
-+
-+    # Check how many other caches share its slab
-+    cat /sys/kernel/slab/<cache_name>/aliases
-+
-+    # aliases > 0 means other types share this cache's slab
-+
-+Tradeoffs
-+----------
-+
-+**Memory**: Isolated caches may have partially-filled slabs that cannot be
-+used by other types. The overhead is typically a few extra pages.
-+
-+**Performance**: Zero impact on kmem_cache_alloc() and kmem_cache_free().
-+The only effect is at boot when the cache is created.
-+
-+Relationship to other mitigations
-+----------------------------------
-+
-+CONFIG_RANDOM_KMALLOC_CACHES creates multiple copies of each kmalloc size
-+class and randomly assigns allocations among them. It only affects kmalloc()
-+users and does not affect named caches created with kmem_cache_create().
-+
-+SLAB_TYPESAFE_BY_RCU delays freeing the slab by an RCU grace period. It
-+does not delay object slot reuse and does not prevent cross-cache merging.
-+It solves a different problem: safe lockless access to freed-and-reallocated
-+objects of the same type.
-+
-+The slab_nomerge boot parameter disables merging for all caches globally.
-+SLAB_NO_MERGE provides the same protection selectively for individual caches
-+without the global memory cost.
-+
- Functions and structures
- ========================
- 
--- 
-2.43.0
+> 
+> On 06/06/2026 at 22:26, david.laight.linux@gmail.com wrote:
+> > From: David Laight <david.laight.linux@gmail.com>
+> > 
+> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> > ---
+> > This is one of a group of patches that remove potentially unbounded
+> > strcpy() calls.
+> > 
+> > They are mostly replaced by strscpy() or, when strlen() has just been
+> > called, with memcpy() (usually including the '\0').
+> > 
+> > Calls with copy string literals into arrays are left unchanged.
+> > They are safe and easily detected as such.
+> > 
+> > The changes were made by getting the compiler to detect the calls and
+> > then fixing the code by hand.
+> > 
+> > Note that all the changes are only compile tested.
+> > 
+> > Some Makefiles were changed to allow files to contain strcpy().
+> > As well as 'difficult to fix' files, this included 'show' functions
+> > as they really need to use sysfs_emit() or seq_printf().
+> > 
+> > All the patches are being sent individually to avoid very long cc lists.
+> > Apologies for the terse commit messages and likely unexpected tags.
+> > (There are about 100 patches in total.)  
+> 
+> Indeed, this is terse. The commit body is empty (all your comments are
+> below the --- cutter) and the subject line contains a typo.
+> 
+> I don't see why the fact that you are sending many fixes clears you
+> from writing a proper commit message. And I would expect at least a
+> small effort to customize the message: only explain the Makefile stuff
+> for the patches which are touching a Makefile.
+
+Try it!
+I changed about 150 files to get allmodconfig to build.
+I only send patches for 45 of them (otherwise I hit a 500 email/day limit).
+The next 45 are 'pending' and some of the uncommited changes are less trivial.
+Spend 10 minutes sorting out each commit message and it is another 16 hours.
+
+A few (like this one) are very terse - then I realised I can send slightly
+longer commit messages by typing a multi-line argument to -m.
+
+-- David
+
+> 
+> >  drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c b/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
+> > index e09d663e362f..2cd58e825e0e 100644
+> > --- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
+> > +++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
+> > @@ -746,7 +746,7 @@ static int kvaser_usb_hydra_map_channel(struct kvaser_usb *dev, u16 transid,
+> >  	if (!cmd)
+> >  		return -ENOMEM;
+> >  
+> > -	strcpy(cmd->map_ch_req.name, name);
+> > +	strscpy(cmd->map_ch_req.name, name);
+> >  	cmd->header.cmd_no = CMD_MAP_CHANNEL_REQ;
+> >  	kvaser_usb_hydra_set_cmd_dest_he
+> >  				(cmd, KVASER_USB_HYDRA_HE_ADDRESS_ROUTER);  
+> 
+> 
+> Yours sincerely,
+> Vincent Mailhol
+> 
 
