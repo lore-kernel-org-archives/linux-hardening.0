@@ -1,56 +1,53 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B123B9601
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 09:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4087F3B7B8E;
+	Mon,  8 Jun 2026 09:55:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780912550; cv=none; b=u9ZaFDhQfLfm/Wuj7BxSZPAssLNcgBYklEWvYucQ5eLA+xhumbdY7s6ZMR+VSKu/0zOoUZMxoVtFkw9AsklQwPvpOPkcP2E5co29BS7PO4b0EoitDvv5N68jYIuPQ1B5HUCRHKz7TRo+2i9fnCaPif3SnZCPLumtg5w4xxEeZ0Y=
+	t=1780912550; cv=none; b=IeFLc7XCX/7Zk6hp6wGMGGZxU4E9pqZJC2GAKCMAmJ9bCc/0cyMT1ZaprM50XU/f8spCV/f1b1gyoV9AGePgXQqUBRPLWI45nrNFGqzYfFrcGtX5D4i7Z1eYdyY4/IFvcZKeO3qsMiQKnJRyvnmqENHj78IS8hCHv2H/PFyJw9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780912550; c=relaxed/simple;
-	bh=JBgBo18FOOVmxza4LLM2LjkvjKmcz6u9eYbUcIUglvU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Gke0PmU0eIjsg6Ay7Sxcxg1XdZeu6mbZ+For6TxkbmDWBqVUn5uzqyrwb8aC1p7kgMRZkdjUnfOzTfUjTQ+Ar7oLZNw0/mHe4e1mjoeqvDlNgyh5uNUPVGyy78RXK4RH7S/3tmKOM/dNHOkFE2PJwOFCOICk4F1O4ZB1BxdN9uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=g0guGNRS; arc=none smtp.client-ip=185.226.149.38
+	bh=lG+l0nz/ofB6PBeznJSwBYG0oHFN3QzTOtQ++iVjL58=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kxpcCB2lIraPJAIRiPI0JbXX2w8DGbwJPou+m3Y/Q6bCvxwNMbjnJqycDUufnhKw0kUs0mxuAj/vyowjtAsz0iDMVReI2WsbDDFYsNBMnjtVPaO+rHOMCedSD9uU5uFuuqVv5qxlOhCjMCzXDdgBem9KUMrGRz8nvIfa9yQRFLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=ss2jFuUo; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="g0guGNRS"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="ss2jFuUo"
 Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWhr-00BrCq-9n; Mon, 08 Jun 2026 11:55:43 +0200
+	id 1wWWhn-00Br8N-7P; Mon, 08 Jun 2026 11:55:39 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=oeFxy8T5rznwD5j83Z0IyKAb1mHuGRQFCq+QufcT7ww=; b=g0guGN
-	RS7AepJOwOTc5K8Lpp446J38QnJEYfFLwI1sHhnUWJq8kO21ZyVcxB7vh0APUhHHctTwY/vg54yVm
-	aGtmZypEYKrpfvOKyt8p+mSEBqjTzPg8J8PN/1y8hIyrDDzKwlwYlqDPZhjQNKxiVDoHXN7x6P4ph
-	BIScc2V8nIh3Ylrlz/lYGahawwFDwVRwwPmWZnwsXd464/LfA6gllNKKQBht2xcecOJGjM8Ig8oh8
-	HRuiIg/TxSUOJX5PyeO3gls3E9HjkqT/6ld0K97L36hTJUvdzdIA3zoz1j4EiyCPFabaxBmQy9XMv
-	a1yv1g/4XDlxjG172cE0LYYjeUDA==;
+	Subject:Cc:To:From; bh=xVqIb0lvImaOng2149ntOf4c24J0oVttsRUjwn998OA=; b=ss2jFu
+	UoSPCSfsvNjOtKrKuBsaSmNNXpZzPLZ1OPg3SSZn90OQzIZHR1k6Ho5AYn895gXTd37Wvao53SUTT
+	1eSo+QKS8hk1QzJs6ZfLPrudDBjavGd8aiRLyYOe23MtifvfbiV0IMXimPno8HsfSIq93c9Y4+bJ/
+	lnjaudWvPqENSfYuMShPZxJ6WdW5xV4bbhIuDq0StU0O8bLnEDlT6DYyjRJNoF9NhnMVUA6UDKApe
+	ym6cQige3cy9e1tMqlUO3aYRv29xx2YG7iPCqaOrE0CuxuLpsZb/HCcYp8Nfid18FDMthzqRliaR2
+	QBdKueAJOD4HfFOZvuRePAzxWDJA==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
 	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWhq-0000H7-OK; Mon, 08 Jun 2026 11:55:42 +0200
+	id 1wWWhm-0000Cn-HZ; Mon, 08 Jun 2026 11:55:38 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wWWho-00Ag6G-5V;
-	Mon, 08 Jun 2026 11:55:40 +0200
+	id 1wWWhd-00Ag6G-RJ;
+	Mon, 08 Jun 2026 11:55:29 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Cc: Arnd Bergmann <arnd@kernel.org>,
-	Chas Williams <3chas3@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Matthieu CASTET <castet.matthieu@free.fr>,
-	Stanislaw Gruszka <stf_xl@wp.pl>,
+	Helge Deller <deller@gmx.de>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/usb/atm: Replace strcpy() + strlcat() with snprintf()
-Date: Mon,  8 Jun 2026 10:55:20 +0100
-Message-Id: <20260608095523.2606-36-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/video/fbdev/s3fb: Use strscpy() to copy strings into arrays
+Date: Mon,  8 Jun 2026 10:54:55 +0100
+Message-Id: <20260608095523.2606-11-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -62,7 +59,8 @@ Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
 
-Avoid string function that are due to be deprecated.
+Replacing strcpy() with strscpy() ensures that overflow of the target
+buffer cannot happen.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -88,25 +86,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/usb/atm/ueagle-atm.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/video/fbdev/s3fb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/atm/ueagle-atm.c b/drivers/usb/atm/ueagle-atm.c
-index f3ae72feb5bf..df4477668296 100644
---- a/drivers/usb/atm/ueagle-atm.c
-+++ b/drivers/usb/atm/ueagle-atm.c
-@@ -1572,10 +1572,7 @@ static void cmvs_file_name(struct uea_softc *sc, char *const cmv_name, int ver)
- 	} else
- 		file = cmv_file[sc->modem_index];
+diff --git a/drivers/video/fbdev/s3fb.c b/drivers/video/fbdev/s3fb.c
+index ba30e5568cab..b679ccdb38e2 100644
+--- a/drivers/video/fbdev/s3fb.c
++++ b/drivers/video/fbdev/s3fb.c
+@@ -1333,7 +1333,7 @@ static int s3_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	vga_wcrt(par->state.vgabase, 0x38, cr38);
+ 	vga_wcrt(par->state.vgabase, 0x39, cr39);
  
--	strcpy(cmv_name, FW_DIR);
--	strlcat(cmv_name, file, UEA_FW_NAME_MAX);
--	if (ver == 2)
--		strlcat(cmv_name, ".v2", UEA_FW_NAME_MAX);
-+	snprintf(cmv_name, UEA_FW_NAME_MAX, FW_DIR "%s%s", file, ver == 2 ? ".v2" : "");
- 	kernel_param_unlock(THIS_MODULE);
- }
- 
+-	strcpy(info->fix.id, s3_names [par->chip]);
++	strscpy(info->fix.id, s3_names[par->chip]);
+ 	info->fix.mmio_start = 0;
+ 	info->fix.mmio_len = 0;
+ 	info->fix.type = FB_TYPE_PACKED_PIXELS;
 -- 
 2.39.5
 
