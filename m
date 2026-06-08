@@ -1,73 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140AB3FFD;
-	Mon,  8 Jun 2026 21:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EAB26AE5;
+	Mon,  8 Jun 2026 21:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780953505; cv=none; b=jBjRNiekDJI2Yxf8xHRStlCaR6mpWfC8F12QPmAky8tccRPFVr+cAtIrGTdWqw56HWb+9dtf9fjRb6AadlC79b0mBvfkQMz5sNboJ4sZZtoo3eoe9F2U9ytDK6a1kDpveVBvLUpZOQhi+TCvGDKCAGrLz7Eync4X40E6FPAtkDw=
+	t=1780954267; cv=none; b=Kvr5QEXuNvDrAR07Srj/kQUhqLsjbh5WHIT/tbDRoDnfXQwXMnlnWBZSfrPb05wV5Kv14Ro0FEcoUnXMqNWvTwiVrREKXySihxEiO/SdU50o7ya8TXaAT6hZapIUvf+UwK/MrC9qssfI6ewTcZEPnWfebhpqFr/lxPtAAPhyOvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780953505; c=relaxed/simple;
-	bh=CZjoD4QvDN7W36wtYhp7UlURyWnZwVeuTmGnAX24PCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C/yQGvaGglVnjdPDg3jM4vZsysdEoq2jgUjYqaCNHtiaYIoHozQbbtWtBvGz4cChzWbZriXJkilYEQBwoB78pa7ZZE2teft4MQbiUUKwDLsfMYcql+qzQh3u2KjzDU0GvqW/Di+/T4PUutxlqq+KZk0l0Zl6GvP7+ruxssmWuNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkZJmE9A; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780954267; c=relaxed/simple;
+	bh=X9OSzZe8q9NDMLj+Me6B8O65fYIfYSYHSQjZUs1Itzs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oQblDrktsG/93DkQmH1i7xO4SFPVVv0D1jSXmAvCD/u1BEkAo9v3Xjmk8EFI8VsHfjx9QQOsiHkE3hU8ebpgfxmhX1sb0LqL+qTZBgfx4yvL0mrlYVffqJQW4ioHltVe/dKt2V35fWjJHWV2ZLQMquNITRRgN0jggtirqQgmUa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=n0/DAp8B; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkZJmE9A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A891F00893;
-	Mon,  8 Jun 2026 21:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780953504;
-	bh=q9KITn8LY97lVyq/2NQ6V2vh7bnTXO5W7Y55FYYzJX8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=mkZJmE9Ai4YMmUro3blrF9H76to56BVEp05lyC04thonNjs6CkIDP4+bKahnUSmjQ
-	 BMRYtsjsR3W7VbAdiqrzxl65F+Lt+H0sNbhAwnlELm/s0OGAlQyQxHF8x9OBr2xWYe
-	 bPSii+QZGlmWeUu1v0hKgV8ASfRR0AOGEIuFbfrUwtp9eowm97FSLXNEVHuufNuIlE
-	 eE2oazZTJqaxeHLy5xfYVBcY+KZ70MvalKgBNEXHN4kRZtJA/bYifLoZKI38lHh/dm
-	 FP4PKwUAuRnkqcRPwIGhVidL0VZM2+cQAz9bpK4KJkqcEzy0mKENz2w/FtjNRPXQYz
-	 MqqFgv61Z6EDA==
-Date: Mon, 8 Jun 2026 14:18:22 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
- Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jay
- Vosburgh <jv@jvosburgh.net>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH net-next] drivers/net/bonding: User strscpy() to copy
- device name
-Message-ID: <20260608141822.780fb5c5@kernel.org>
-In-Reply-To: <20260608220710.7499931d@pumpkin>
-References: <20260606202633.5018-13-david.laight.linux@gmail.com>
-	<20260608132311.0fb69fed@kernel.org>
-	<20260608220710.7499931d@pumpkin>
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="n0/DAp8B"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1wWhYi-00DJ52-1p; Mon, 08 Jun 2026 23:31:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
+	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
+	Subject:Cc:To:From; bh=NmiKciKHXv4C9xD9HOuVDqRWiEHYVQXSczgOsSWg0yc=; b=n0/DAp
+	8BDzh/OSrSSdhdRhuKkl+RzAHJ2wZedQgiod1Z/alKM50Rsie8euceqCEUFSNHEqNT0C3FXJqfhLH
+	Q2SRwEq7hoUvMcq/vMH+7T4eMRSUb0b5Zsp8qJymAZgikrohXS5ZbB5ghIBG4SSAKyDHjLu8Nigl6
+	RAzHmDvVLYRw4TLPNVU3f4n3QDWxlyWFB8g50Jn/dlIB2/qgFKVU2yjt2uOM+d5lKamVcS4OMz0vp
+	oAw73Y8U7WlXW6EvC5TXbVstywJZROLOUHPDg/DJNl2oLRi9WYmz6jfQG1eq1k5Im6D7HAATiULVs
+	w57AwER9k6glU5t98AxvU6BbRrVg==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1wWhYh-0001RU-Hh; Mon, 08 Jun 2026 23:30:59 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.95)
+	id 1wWhYW-00BuhU-Bn;
+	Mon, 08 Jun 2026 23:30:48 +0200
+From: David Laight <david.laight.linux@gmail.com>
+To: Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Arnd Bergmann <arnd@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jay Vosburgh <jv@jvosburgh.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH v2 net-next] drivers/net/bonding: User strscpy() to copy device name
+Date: Mon,  8 Jun 2026 22:30:42 +0100
+Message-Id: <20260608213042.25563-1-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 8 Jun 2026 22:07:10 +0100 David Laight wrote:
-> On Mon, 8 Jun 2026 13:23:11 -0700
-> Jakub Kicinski <kuba@kernel.org> wrote:
-> 
-> > On Sat,  6 Jun 2026 21:26:07 +0100 david.laight.linux@gmail.com wrote:  
-> > > From: David Laight <david.laight.linux@gmail.com>    
-> > 
-> > Could you be so very kind to read the automated message you received
-> > when you posted this?  
-> 
-> Looks like I managed to send two patches for files in the same directory
-> that contained equivalent fixes.
-> 
-> I think I should be able to merge the patch emails into one and send
-> as a single V2 patch that contains both changes.
+Replace the potentially unbounded strcpy() with the safer strscpy().
 
-Not what I asked you.
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
+---
 
-You seem to be following the ML yet you excreted a bunch of incorrectly
-formatted and likely useless patches. Read the email. Start with one
-or two submissions at a time.
+v2: Merge the patches for bond_main.c and bond_options together.
+
+This is one of a group of patches that remove potentially unbounded
+strcpy() calls.
+
+They are mostly replaced by strscpy() or, when strlen() has just been
+called, with memcpy() (usually including the '\0').
+
+Calls with copy string literals into arrays are left unchanged.
+They are safe and easily detected as such.
+
+The changes were made by getting the compiler to detect the calls and
+then fixing the code by hand.
+
+Note that all the changes are only compile tested.
+
+Some Makefiles were changed to allow files to contain strcpy().
+As well as 'difficult to fix' files, this included 'show' functions
+as they really need to use sysfs_emit() or seq_printf().
+
+All the patches are being sent individually to avoid very long cc lists.
+Apologies for the terse commit messages and likely unexpected tags.
+(There are about 100 patches in total.)
+
+ drivers/net/bonding/bond_main.c    | 2 +-
+ drivers/net/bonding/bond_options.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletion.(-)
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index af82a3df2c5d..76ca61cad875 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1792,7 +1792,7 @@ static void bond_fill_ifbond(struct bonding *bond, struct ifbond *info)
+ 
+ static void bond_fill_ifslave(struct slave *slave, struct ifslave *info)
+ {
+-	strcpy(info->slave_name, slave->dev->name);
++	strscpy(info->slave_name, slave->dev->name);
+ 	info->link = slave->link;
+ 	info->state = bond_slave_state(slave);
+ 	info->link_failure_count = slave->link_failure_count;
+diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
+index 7380cc4ee75a..c57b7d6af043 100644
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1525,7 +1525,7 @@ static int bond_option_primary_set(struct bonding *bond,
+                if (strncmp(slave->dev->name, primary, IFNAMSIZ) == 0) {
+                        slave_dbg(bond->dev, slave->dev, "Setting as primary slave\n");
+                        rcu_assign_pointer(bond->primary_slave, slave);
+-                       strcpy(bond->params.primary, slave->dev->name);
++                       strscpy(bond->params.primary, slave->dev->name);
+                        bond->force_primary = true;
+                        bond_select_active_slave(bond);
+                        goto out;
+--
+2.39.5
+
