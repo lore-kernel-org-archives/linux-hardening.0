@@ -1,144 +1,172 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7373134DB72
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 06:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476A9378D9F;
+	Mon,  8 Jun 2026 07:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780900615; cv=none; b=mZnnnsHPdR9FoHFIVrOLZvPd1gM4zL1e3OGg4RQ1urq5SDEAxkzV7hpkUfDY7JX6agGc6H9VBIUUd6++q+iYqNK2IrP2hnemyq8QKmzx+F22kpZdF6ySmx7QaA6iXkZGdnO4OFjlJa6oQJsH33jLrsS0Co8Byrrlv0WeCjDJtrg=
+	t=1780903245; cv=none; b=J3XYQj1Ainx06bGmNn9hEQtMjjAbiG4yRPww6uyKtOPs5EbLS4+AVlNBgYxNfh9zQpEgO73d32vRx6AjyqN7ofaKh0+P9vfe4xiFgtwDC11HDUSmexq+3Ywe3SIrlpepax3rcZ1QPsOqG5bl5keUZ7zjXn/op8Bq8xw+9z/vrHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780900615; c=relaxed/simple;
-	bh=3GnuM4Wj29EhJDY4B2tW89H800XohRGeS5DitbRQfJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bq1MFb9csgljsTAJ1kXL9f/U8eD7YKxp4mwUjvsEEoWbT2hG49pBzg5AbzPU2H1DPYq2PGdk2rd+3NE63fE9iXQ4JK/pdKs0jdmmEhBwf+Ye5+ot1yElUpyQGxkUwgp949tGOCbH5SrRwRoYC1sOfA/gI8W5L63UQavO4m4AP1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QX9eyfRb; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=GFlra47f; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1780903245; c=relaxed/simple;
+	bh=j0n8JRFGmrgBwxUYBf2PtTFHpDFBICuuKnDivLtANPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G2rinCnRlv4sXCpz0zF6DZbiflBTqEraIJ3q8166emFQR04rQ9cghyx8fwiHB+rODdNE4SG88fDdX4kjA+ZxVpke38idrWGO7tyOmgY7qruN5cjS3r1KUpqx60thvOZ3JxLE1DytVXzHar3tR5vjhMNmxMQGeIDAArvQ2h4WWtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I//PKWiC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QX9eyfRb";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="GFlra47f"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6586PUtF2808226
-	for <linux-hardening@vger.kernel.org>; Mon, 8 Jun 2026 06:36:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=u2b9AHBd7MZE3H2QcKXdMJY1
-	Vv76xd7PoGCmj92nygs=; b=QX9eyfRbNc5PQT98U326cfPrdhG4wYFr/ivXOjfG
-	xmeFlA+KjW/ggrnKj52q8VHbeiJJX/yEkHYjeaTKpGTfjCmLsTOeKkT2Hnxj9V8J
-	lezk/zBcJ0ppNr6/D5DsDJ1nQHWa74ZNWrae+nzeVLGfabClTy4bVj/wkr4llsZ8
-	OKKV0r+bgkbrAlRD0Uw72qyZRc+qefp9ZaYlnpci0aEk2gvRYTBicA5Y1/O76CEy
-	Rkr3bjVB4ikPDNcaiCnmfYfwK6Q1eG94ERUaufZ5o7ydZwwoSLBTB42Vvu0ejj4K
-	UYPHGwgdGo+SEvn24CWtWDjgcuo/qvfFLTBqw0mLCTlBJg==
-Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com [209.85.222.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4emb4w6bhq-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 08 Jun 2026 06:36:50 +0000 (GMT)
-Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-96391e58e62so5375381241.0
-        for <linux-hardening@vger.kernel.org>; Sun, 07 Jun 2026 23:36:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1780900609; x=1781505409; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u2b9AHBd7MZE3H2QcKXdMJY1Vv76xd7PoGCmj92nygs=;
-        b=GFlra47fkmV/AYcSXluENCvK0AEJ/l2fgw0VW9akGtYym7m0dUrce+bxifHx98+yvI
-         4uHrwCM7Uac/CtyjdP5L04ot0Zh7Y7UL3VgfpcVaKo2mVDERfdmH68hoggV9i4AcU53Z
-         yOxx5BzStob/H/Rm0qZhqcfQUMlKOyhGKLl4mnWfB3vgDRSwxBSjOgqp+F7lChMkiljG
-         K2I8+QdKhTDkU3eleZS7VeCXI1mwsW/G9E1BC5CRorS0AJEZXcX+cPDIZq88lOgLje5H
-         pwTyxQ3Komu6yyrpIQFbdKnfX+QeWE5LohLHX/jq+ocDTgL/izisvaXqJyXuJP3s5jIJ
-         zPUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780900609; x=1781505409;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u2b9AHBd7MZE3H2QcKXdMJY1Vv76xd7PoGCmj92nygs=;
-        b=oe+ULEiJ6tyyPWgEBJsm9pT9G9vgnxgyTwh9UBllEwDtG5UrzXoUDZv5K+SMWRCJaC
-         dmn3pSI5cnyAk3jBglZVb+5T4NiCxb6lSxQf6nlkCFCfytL4Age0DOkdZEfq36nePB0o
-         RKgYd65jhTiuS0m01dLblRpjDVwTnK/A/QVTNIkHRDOMpowiyfXs9UEPnG5meldSHO3P
-         zvJLRku70xbR3fQJUzxpv/X5wd8lSrmBFX62oqWWsO2cBHDleZmHes2QMdk99yKsBNAy
-         UwRfa4mfF7/HLuk1JLbvTw3xctIh+vLNxE4lGJSqM69WEzmEOc2EIII9Qayw6CFPPNzq
-         K/oQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/hOh+GEdAVeA64ykGYCBtepwcDi/ORNxMUG6ZVQTdAIzuQ00unzgzzzZcZ9h+Sdl49zB/9GpRI3KoI71TIIpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2fSDCwbjwpF+nTTGGLCzQra8kjLlEaK68YelsL1c2zi3Ojru1
-	8O1ZO1kvX6xYyC53MAsiE2sbOnrYu9sUFWzChxjlPkhy85lL4mQAJ3Hq4Q6MywEANOXa6ZXTGZA
-	Cc7UzsnmXlCFeFuBHxkS4uOd306pHMWmm9P4b6rY9VK42FkfOElzgudFsZkppVC/EAp9vtks=
-X-Gm-Gg: Acq92OGDJRvrYtshDqa6uC4c9yQziBjPfNqcNR3aRr9Zh9qMMsDq5KNIcGxOwdZnK+d
-	m0VhxBfaZAxguVS9E04HIYB75O1M/MPMKBW9iyBitUJlqIKA2ZNiRNDoiy2Ah4Z6qrcb7Jeqs5n
-	AcFNf+3pqtMqmQWDkAg//QG+qmoK1gT3NG61Iqew1iMjtNgLucxtxub5+OGqZ/f5ZVOacvgo3UL
-	G+ughCmQVQMXeXLJQOZVnmoX6cNv2L3PdJCBJ3u8OlJn8UjmztJD7CKSlD5SMexXlbfcw8GfzQG
-	2qIsLH86CFN8cBQnaTmeiOX5ruVIDu4GIFF0MldkTBWdmxlo/efZhaN5LodH+vg1mKu8FWQpc5u
-	8qYcHuwVYT6AiS+OytKhFZDH7DDD8ku+sijcqVSI9UW79HFZbWi4hZ7Nm6/lYK2lCxKiQKCq6ol
-	Uvm0o/5oCbE4Nvlza3Hqu/bH+yATqH/sf0z1t2AGrGPVbVNw==
-X-Received: by 2002:a05:6102:40ca:20b0:6cd:b43f:72fd with SMTP id ada2fe7eead31-70039aaf3bemr3147980137.22.1780900609613;
-        Sun, 07 Jun 2026 23:36:49 -0700 (PDT)
-X-Received: by 2002:a05:6102:40ca:20b0:6cd:b43f:72fd with SMTP id ada2fe7eead31-70039aaf3bemr3147978137.22.1780900609184;
-        Sun, 07 Jun 2026 23:36:49 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aa7b8880basm3565026e87.0.2026.06.07.23.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2026 23:36:47 -0700 (PDT)
-Date: Mon, 8 Jun 2026 09:36:45 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-pm@vger.kernel.org, Georgi Djakov <djakov@kernel.org>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "open list:ARM/QUALCOMM MAILING LIST" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] interconnect: qcom: simplify allocation
-Message-ID: <czjwf4bstyhgekmilv6tgyzwrk3tkbglbjthzjf63t7uqbg47i@xxztth3jhiy5>
-References: <20260608050429.5990-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I//PKWiC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A553A1F00893;
+	Mon,  8 Jun 2026 07:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780903243;
+	bh=AgP533YwYUweKVolJCO08aTvc0kuMhlkUMDGQVhwWPk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=I//PKWiCXWYKDolSTUHKj359oOZUNT962zKjpBzM04sNTBJ7hRzzjjtPayh5Tnbf0
+	 NV1dj3XYzivGCTgnbYXuYgQ3giUKLpPAqDYBt6ZNNMQvn1qnVyjQkWk3Y6C6dPqu53
+	 2xjpLNMM+Z+NdgPFStj1oyGAJKkifVuZ9sfFE9ntBAfY32L930JS28RewnnVBJOVlg
+	 Q42XDapliqjBu9t5sKzj+hrxleE+54s7uVSz7j42tbAlzdFhI1okcHvB0rfYnMNQg+
+	 F0ER0CWZeIP3ffZfdlKiw266luHoo2rmvEL4vB0jY7QnU5bkR4UomaFkdA1dLlGJIa
+	 zjfe/v1mULsug==
+Message-ID: <85a686a6-7fcc-4a1d-8574-0fc7c2f84bc8@kernel.org>
+Date: Mon, 8 Jun 2026 09:20:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260608050429.5990-1-rosenp@gmail.com>
-X-Proofpoint-ORIG-GUID: ulKU_jYP3yBRBdx5UlOAIODJgvJBnm9d
-X-Proofpoint-GUID: ulKU_jYP3yBRBdx5UlOAIODJgvJBnm9d
-X-Authority-Analysis: v=2.4 cv=YIWvDxGx c=1 sm=1 tr=0 ts=6a266302 cx=c_pps
- a=ULNsgckmlI/WJG3HAyAuOQ==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=pGLkceISAAAA:8
- a=EUspDBNiAAAA:8 a=7l3-gkCRI4JLb9_0IUsA:9 a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10
- a=1WsBpfsz9X-RYQiigVTh:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDA1OCBTYWx0ZWRfXxtf5n/W0NhcL
- rsdEC8wCKiJDhLtQGvoYCm+l3SBpvfjSAP6U58v9O+/XOJqL87r/14Fo3A5CPc97DOyEx6T69T3
- IPx7LIFqmKI0LHaaKXaSjFU0jALhYS/8x9ckW+feoTd5B/6pg61Y3i6pGq3VSl04nyGQ+lhnC0r
- GQidcQvecxhXvcWtDUdaqBJRppnQJY78SSf+e4TVWFvdZGhls0sh71zZTvBQpLOG3gDlNkAZu4N
- oLvvIaLEAWk2lfhinFfHl/jxhw0j+ifbINKivM7clwGF5eCY5TXzW9QkUqU0XtR5ih9gqA+FXi1
- It08DW3Ym75fwTuv060rwv11F4xjZDmLl269zb7KjSAwwFC+3TWQiFR/2pp3VVGYy3ZCZfdRSlv
- lZ6NXH9VspQ/qP5mGjfUoASvx/mG5eLctVRTGGAWf+DYpOD7pRqX/3uNXqv/P3K94yyEYKLrrxP
- jyVrw7cAEL941mTLHaw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-08_02,2026-06-05_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
- spamscore=0 phishscore=0 clxscore=1011 priorityscore=1501 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606080058
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] keys: prevent slab cache merging for key_jar
+Content-Language: en-US
+To: Jarkko Sakkinen <jarkko@kernel.org>,
+ Mohammed EL Kadiri <med08elkadiri@gmail.com>
+Cc: David Howells <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E . Hallyn" <serge@hallyn.com>,
+ Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260604125034.13757-1-med08elkadiri@gmail.com>
+ <aiZDlSTqaQTcvLBl@kernel.org>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Autocrypt: addr=vbabka@kernel.org; keydata=
+ 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
+In-Reply-To: <aiZDlSTqaQTcvLBl@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 07, 2026 at 10:04:29PM -0700, Rosen Penev wrote:
-> Use a flexible array member to reduce allocation by 1.
+On 6/8/26 06:22, Jarkko Sakkinen wrote:
+> On Thu, Jun 04, 2026 at 01:50:34PM +0100, Mohammed EL Kadiri wrote:
+>> The key_jar slab cache holds struct key objects containing cryptographic
+>> keys, authentication tokens, and keyring linkage. This cache currently
+>> lacks merge prevention, allowing the SLUB allocator to merge it with
+>> other similarly-sized caches.
+>> 
+>> On a default Ubuntu 6.17.0-23-generic system, key_jar has 5 aliases,
+>> meaning 5 unrelated object types share its slab pages. struct key is
+>> 224 bytes, placed in 256-byte slabs alongside biovec-16, maple_node,
+>> ip6_dst_cache, task_delay_info, and kmalloc-256 users.
+>> 
+>> Cross-cache heap exploitation is a well-documented attack class
+>> (CVE-2022-29582, CVE-2022-2588, CVE-2021-22555) where slab cache
+>> merging enables type confusion between unrelated kernel objects. A
+>> use-after-free in any subsystem sharing slab pages with key_jar could
+>> allow an attacker to reclaim a freed slot as a struct key, or corrupt
+>> an existing key through a dangling pointer to a different type.
+>> 
+>> Add SLAB_NO_MERGE to ensure key_jar receives dedicated slab pages,
+>> eliminating cross-cache attacks targeting struct key. The memory
+>> overhead is minimal: with 32 objects per slab page and typical key
+>> usage bounded by system keyring size, the cost of dedicated pages is
+>> negligible. There is zero performance impact on the allocation hot
+>> path.
+>> 
+>> This follows the precedent set by skbuff_head_cache (net/core/skbuff.c)
+>> which uses SLAB_NO_MERGE for similar isolation requirements.
+
+I just realized this part is somewhat misleading, because it's done there
+for performance reasons, so I wouldn't say "similar".
+
 > 
-> Add __counted_by for extra runtime analysis. Move counting variable
-> assignment after allocation before any array access,
+> ~/work/kernel.org/jarkko/linux-tpmdd master*
+> ❯ git log --oneline -1 d0bf7d5759c1d89fb013aa41cca5832e00b9632a
+> d0bf7d5759c1 mm/slab: introduce kmem_cache flag SLAB_NO_MERGE
 > 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  drivers/interconnect/qcom/icc-rpm.c | 7 ++-----
->  drivers/interconnect/qcom/icc-rpm.h | 2 +-
->  2 files changed, 3 insertions(+), 6 deletions(-)
+> ~/work/kernel.org/jarkko/linux-tpmdd master*
+> ❯ git describe --contains d0bf7d5759c1d89fb013aa41cca5832e00b9632a
+> v6.5-rc1~137^2^3~1
 > 
+> So we could probably forward to stable's starting from v6.6+ if that
+> is necessary / makes sense?
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+It won't hurt, but I doubt it's "necessary" per stable rules. But stable
+maintainers ignore those themselves anyway, so whatever.
 
+> It's not a bug fix but kind of still I think would be a change that
+> stable kernels are better off with it than without it.
+> 
+> What do you think?
 
--- 
-With best wishes
-Dmitry
+Won't object.
+
+>> Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+>> ---
+>>  security/keys/key.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/security/keys/key.c b/security/keys/key.c
+>> index 3bbdde778631..592b65cf8539 100644
+>> --- a/security/keys/key.c
+>> +++ b/security/keys/key.c
+>> @@ -1275,7 +1275,7 @@ void __init key_init(void)
+>>  {
+>>  	/* allocate a slab in which we can store keys */
+>>  	key_jar = kmem_cache_create("key_jar", sizeof(struct key),
+>> -			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC, NULL);
+>> +			0, SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_NO_MERGE, NULL);
+>>  
+>>  	/* add the special key types */
+>>  	list_add_tail(&key_type_keyring.link, &key_types_list);
+>> -- 
+>> 2.43.0
+>> 
+> 
+> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> 
+> BR, Jarkko
+
