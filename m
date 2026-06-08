@@ -1,74 +1,74 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202EC2E62AC
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 05:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B46355F42
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 05:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780895267; cv=none; b=ZdHFrXQWJvQ8aj1nKHZdlPOvYMjET5VSoIJh/TQ6CaavKNJ0nYPrFKuMcOKHx9We6Ris+VS0NiL2PXPzwe+GXnv6VJkfEtSblcFO4OTemqWm4Xn5/WvYeRkyKINOtqOPXOfboETZhiNetOFnJBzt0n210eROr9VgV+QKPWA09C8=
+	t=1780895483; cv=none; b=So4OQ8+XF8DZRSCRFB53Gc1nD9p01A5BpD8uGKthc0YvLxa7jI4vog0nK6HufjuLKNgZW+8rYoFPnB45dbTzb6rLMvsx4+3t12DD8aa8t/f712ImnJg9IFFWK5PmzXGOAlSJA5+8/xadSr17nSQx9MPMIq6DbL8yMjYLgK1kpug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780895267; c=relaxed/simple;
-	bh=lF68z8SNLZcBGhYrMebJCDeUa4Ic3V094gG6WdMXo4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oIEvyFuDn6hyDYAFtJSM4qoId7ibuVGSA7dddY9IMdWTtsBwpdjUjf2ZhsRNKGX3rFW0ZRfI3LEDwHQjMKKoh+lUcvPOefxIFMDMecg7FJhQS375CvyKm2eStyE33Y+LIPi194khG0O0+P7ArC7U5Z43MJCjvmLtB7f81OilQm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZNgRQ7QZ; arc=none smtp.client-ip=209.85.128.173
+	s=arc-20240116; t=1780895483; c=relaxed/simple;
+	bh=3yHplyP6cPTk7dA8Fbu6IQ+wvbJ9YuU8YxRM56PGb9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dWH4MTb0lmH9iagujGp1Cvsm6uZkJHuKC69qtfkoaNZgVwlZPbRqXv6AJ0vyLGOL24aSxH3BWmSWgCQi3yfaQ+bNiqUknQ+IsByeFkflLRdpvXGJZt91l25IOcKt/1qysUYoJCIMtypoD8aZjffbFgypynkCJzbYaYrWXK/jU3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JDMiNEAe; arc=none smtp.client-ip=74.125.224.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNgRQ7QZ"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-7dc2b658544so33360707b3.2
-        for <linux-hardening@vger.kernel.org>; Sun, 07 Jun 2026 22:07:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDMiNEAe"
+Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-66061993121so3486994d50.0
+        for <linux-hardening@vger.kernel.org>; Sun, 07 Jun 2026 22:11:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780895264; x=1781500064; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780895481; x=1781500281; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2/Cp0a9gP5wzO7K0gKJb8DvCw3TdIDmmKCsdwU1/y3w=;
-        b=ZNgRQ7QZAfWGbpcI9RK4HvnqQgz3sSNN2npUwUJfr5spl/OGGuaT40bCmfqSYgetBj
-         ApvZTyaciElvFb049qq14wG3h2RSMNAfYhtn1WePgYShTw1rFzJBlxJXczARrb1n5T73
-         5bn/cqlMyIPBMsgYj+lTOoUErRVsIK9xG4WW5DR3PTSyW3KcaPBIa7zwHKGpCCas5VhK
-         vOgo4sQ7PqQG/8SetDjrajB6mLe9bXe0GiM+O6BVjov8zxaxcfIZ6nhy6wTCqtw6hBlV
-         rz2h4XFCb90qQ4vgQxbR3xLkRCctjAzbTeFZBjAI3m8+kaTNdABvOyyjHNx7AIL8qrjr
-         ghDg==
+        bh=Zcd8e+vHsZv7J6v8xRkTQl7Dt+2KjrNT33WGd/GWDII=;
+        b=JDMiNEAe8x2xRxepjM3f7GUcJNFlSa59APcZdMmgwLVIrWhtKo36JLSCXkRN+XOd+p
+         lVx+pun7EPjWJXTUjmdTksqHeOABlGeuTomiaeM4ijiUegL+YswHtZV4i6crOsojiMf4
+         HcOUGh2RGU9kAXBeGk+1n5YYJtVCoPl5nBVet4v/xG5BdouJ4KrjXIXgw3XOZU+tqTSR
+         U5qP6MLr0+edpAo6BxX0G9MbHPFlpucNsVuCM0JTbjp5MzY/F85wbyu8pPUAOvS061tf
+         MTVXOMe1e+HEGBIa59rG9o3V56aTPe1nWFxPu5yiO7nqqx5cqNRbc1r68C3gx2TmImgq
+         ER0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780895264; x=1781500064;
+        d=1e100.net; s=20251104; t=1780895481; x=1781500281;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2/Cp0a9gP5wzO7K0gKJb8DvCw3TdIDmmKCsdwU1/y3w=;
-        b=tNuaJX9/wkXoKyRxUQF+c0mfSOZukTlUDVq1iiZd33MF3E7Sy4G7Mv7++btbqt3HEZ
-         ors8poe6VDKs8xA1heBs9pKMs4xbeWSuHieiUA+3HZwykGlmRtzdxnZoyA2IdCmp5AP0
-         OAm+xvL/KEHYo+/m6x3GboJQD1+XJdEWIygfHGlAPlEfxBKd6EuLSvjmHqLfUuPAaKwW
-         bE4Z2aVR4yQkhojb7TxmV8i8XH3We6PV38IkMmxOnZgN4ASuYCGJUyuGA6NUQ/aLztxQ
-         gAv/cFRL7ZKBLkF9axTkj7zb+DYPtl4fRe+WU5/qyxjiW7ogfKyK2bAJSku3CCwu79II
-         LeDA==
-X-Forwarded-Encrypted: i=1; AFNElJ/E2Wf0P7GyelWPZby0W4YJHduUOHdR5eXLfkQuWfZLdikMWjb/tZ3xqtXal59WcWufk42GSsV719y/ZNzX3xQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1gn0F3BHxZG3cwSIy3AKccbuECDAqUbfc7DGL/bAL0xF4kA+3
-	YInXhh53M7MP4g6gyrCNNRqlrW48YCA6ngdTiZ4/DkfyL67H1/TdBXOZ
-X-Gm-Gg: Acq92OH/w9w6PniNNsRY38xHvS7qsFsENtokE9dZP/u8Y2UesPDC/8zl+WGmqfmaTJh
-	BsX9CtFzGoIXvm4FF3OiC8lguPxsMeKHc7Be3dGI9hTRPUB3Z8TgWVa40rpS8kQ+NGolXn6R/2I
-	vnzkVBNkyvItNYded04+MbQx9gtHwmgYk073KjcgN59ae4NuERgkfFCWLKBk/p2tGKiW+Wzw0mU
-	SKdvLk3zS3pomiN4ts4B1u8pn9TEcUZ5j3pnLG2xYYkFz4op9TlPsk+iTngYc3+MTIqA8ITiefw
-	LLe8FZ2+5MYY09XadSD4TPS2cO7wjpRWij19HkmScO4wE8yr8jiSIAjUAuACd1roQWOFC+4wkWm
-	EuAAoNCjYySeLx3KdDQZbrAGOQPUH1HMq9qvRWExiEGff3piiYInc/rUwvo96gljnv43HdOJsYR
-	qiSS4IEGcZmjY9yltmBep/I+o+h5bKN8aeZ3DB7hKxeQXin1m5amGyu/qJAz7pNAqveX3Flc1RP
-	o0ID7w1x2jMOtN1htzbMkNclI5OTopjIJYMULq2CVXgRA==
-X-Received: by 2002:a05:690c:6181:b0:7bd:73f3:7a70 with SMTP id 00721157ae682-7ed109c657bmr130266297b3.32.1780895264088;
-        Sun, 07 Jun 2026 22:07:44 -0700 (PDT)
+        bh=Zcd8e+vHsZv7J6v8xRkTQl7Dt+2KjrNT33WGd/GWDII=;
+        b=AHL6fh3UIOMsxeHS6zmypC/h25KEejXzTZVZXbSPe24H31cES95Cugj8OemtI1g8Gw
+         Bs+xf5fLeY5SaBt6i2GON78mRkka0q4rgRjzH4boJEF6oXc1MB8eW7lF3aJSb3HjQq72
+         knfSwb7T0oKCmoKiwfpcG8nJl+W7NU1tadW7zAzUIyupCvF88wIIvBnnX4HTrXtfX4P6
+         lflMqt+Ow5MFmN+xwhU2i0ncl0niZKYlYuCbWTPeT2RDLNl4hnBJmkL+6oL3um858HAa
+         UNF8RZpDbs6KHhtszT7qq263MalU+EDelTY2OAG6nXQpAYAyud07S+NygHgrSiKCuB5H
+         uYNA==
+X-Forwarded-Encrypted: i=1; AFNElJ+QG4nO4cbs4T5bNBerIvlJBk6JfPXD2NwqYgfFQg6tsbCnuSaGq56r9SoLlqdDynjCKoq/0awrtNgUEC0LadM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaBPwLyqyVYyYl539+vbDjzhU3+Uz53Lz88rXZzA2xClQzdI6I
+	wjhVp08adFRvhFmSOL/8RtEthYMBdYoSCMAqaugQKkk86MRYXon226EA
+X-Gm-Gg: Acq92OGhKKrsVRkt8PRJhowf+KoTdmhe80B6zDnJAhwZHnjA6ox34PDPkoaRC23C1Pw
+	SY/krk5nyqagvnv6ztEHIxuXanxpks6CgPJ7a0hi6cK8Qfxl6FIT7LzN9X7DuULSMBKonGYqMBc
+	pJbn9oayMSPVWsmlaAe+OsCxL/V4GEZvTCLISfg+oCs6qwd+befW5HhkxS65omIPo8zEIGdnTEw
+	4pqYa94JvdETwerdDcommbmzPP54VAp/hvPBLusCkzcy0qvkGCDudlqQUQgDIbIvbYhNOaDJBVR
+	shf9GRDXFHbNjXh//KbWVsIPjNb9owWorPrVr6iJ4355z/cuvwuy/OT+JfajzTNDeKb2eTgiHiE
+	tE32HtBm9RmQ6YfRfJu6EqC0litzkTkKTKhxdjGslbsC5oX/FEBcuZunzrzi7LZhYpLEfB0l4BI
+	Uoqm8Pw6QWhMqXJm/vJ54o7cC0dGZ68ivr0HTPnP2gSHX6614aZa0eTPBXXig8KpTPBkHwnjn7m
+	7OGpN6yDk8MrIW7A1W/l7aj0fkIhcAkyLdn6pApoVDb3A==
+X-Received: by 2002:a53:d016:0:b0:65e:41a4:54c8 with SMTP id 956f58d0204a3-66106f8de50mr11106352d50.56.1780895481549;
+        Sun, 07 Jun 2026 22:11:21 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7ea20ea8179sm80663187b3.2.2026.06.07.22.07.41
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-660d5f883e2sm8853478d50.6.2026.06.07.22.11.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2026 22:07:42 -0700 (PDT)
+        Sun, 07 Jun 2026 22:11:20 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
-To: arm-scmi@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@kernel.org>,
-	Cristian Marussi <cristian.marussi@arm.com>,
+To: linux-wireless@vger.kernel.org
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:SYSTEM CONTROL & POWER/MANAGEMENT INTERFACE (SC...),
+	brcm80211@lists.linux.dev (open list:BROADCOM BRCM80211 IEEE802.11 WIRELESS DRIVERS),
+	brcm80211-dev-list.pdl@broadcom.com (open list:BROADCOM BRCM80211 IEEE802.11 WIRELESS DRIVERS),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH] firmware: arm_scmi: simplify some allocations
-Date: Sun,  7 Jun 2026 22:07:24 -0700
-Message-ID: <20260608050724.6358-1-rosenp@gmail.com>
+Subject: [PATCH wireless-next] wifi: brcmfmac: flowring: simplify flow allocation
+Date: Sun,  7 Jun 2026 22:11:02 -0700
+Message-ID: <20260608051102.6698-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -78,152 +78,70 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use flexible array members to combine allocations and remove kcalloc
-usage.
+Use a flexible array member and kzalloc_flex to combine allocations.
+Simplifies code slightly.
 
-Add __counted_by where appropriate for extra runtime analysis. Move
-counting variable assignment after allocation before any potential array
-access.
+Add __counted_by for extra runtime analysis.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/firmware/arm_scmi/notify.c | 42 ++++++++++++------------------
- 1 file changed, 16 insertions(+), 26 deletions(-)
+ .../wireless/broadcom/brcm80211/brcmfmac/flowring.c    | 10 ++--------
+ .../wireless/broadcom/brcm80211/brcmfmac/flowring.h    |  2 +-
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-index 40ec184eedae..45cbb3d2d684 100644
---- a/drivers/firmware/arm_scmi/notify.c
-+++ b/drivers/firmware/arm_scmi/notify.c
-@@ -209,11 +209,11 @@ struct scmi_registered_events_desc;
-  * @init_work: A work item to perform final initializations of pending handlers
-  * @notify_wq: A reference to the allocated Kernel cmwq
-  * @pending_mtx: A mutex to protect @pending_events_handlers
-+ * @pending_events_handlers: An hashtable containing all pending events'
-+ *			     handlers descriptors
-  * @registered_protocols: A statically allocated array containing pointers to
-  *			  all the registered protocol-level specific information
-  *			  related to events' handling
-- * @pending_events_handlers: An hashtable containing all pending events'
-- *			     handlers descriptors
-  *
-  * Each platform instance, represented by a handle, has its own instance of
-  * the notification subsystem represented by this structure.
-@@ -225,8 +225,8 @@ struct scmi_notify_instance {
- 	struct workqueue_struct	*notify_wq;
- 	/* lock to protect pending_events_handlers */
- 	struct mutex		pending_mtx;
--	struct scmi_registered_events_desc	**registered_protocols;
- 	DECLARE_HASHTABLE(pending_events_handlers, SCMI_PENDING_HASH_SZ);
-+	struct scmi_registered_events_desc	*registered_protocols[];
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/flowring.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/flowring.c
+index df7e3bee19f2..35cbcea0abc9 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/flowring.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/flowring.c
+@@ -360,20 +360,15 @@ struct brcmf_flowring *brcmf_flowring_attach(struct device *dev, u16 nrofrings)
+ 	struct brcmf_flowring *flow;
+ 	u32 i;
+
+-	flow = kzalloc_obj(*flow);
++	flow = kzalloc_flex(*flow, rings, nrofrings);
+ 	if (flow) {
+-		flow->dev = dev;
+ 		flow->nrofrings = nrofrings;
++		flow->dev = dev;
+ 		spin_lock_init(&flow->block_lock);
+ 		for (i = 0; i < ARRAY_SIZE(flow->addr_mode); i++)
+ 			flow->addr_mode[i] = ADDR_INDIRECT;
+ 		for (i = 0; i < ARRAY_SIZE(flow->hash); i++)
+ 			flow->hash[i].ifidx = BRCMF_FLOWRING_INVALID_IFIDX;
+-		flow->rings = kzalloc_objs(*flow->rings, nrofrings);
+-		if (!flow->rings) {
+-			kfree(flow);
+-			flow = NULL;
+-		}
+ 	}
+
+ 	return flow;
+@@ -399,7 +394,6 @@ void brcmf_flowring_detach(struct brcmf_flowring *flow)
+ 		search = search->next;
+ 		kfree(remove);
+ 	}
+-	kfree(flow->rings);
+ 	kfree(flow);
+ }
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/flowring.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/flowring.h
+index 818882b0fd01..f3d511f9a3c9 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/flowring.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/flowring.h
+@@ -38,12 +38,12 @@ struct brcmf_flowring_tdls_entry {
+ struct brcmf_flowring {
+ 	struct device *dev;
+ 	struct brcmf_flowring_hash hash[BRCMF_FLOWRING_HASHSIZE];
+-	struct brcmf_flowring_ring **rings;
+ 	spinlock_t block_lock;
+ 	enum proto_addr_mode addr_mode[BRCMF_MAX_IFS];
+ 	u16 nrofrings;
+ 	bool tdls_active;
+ 	struct brcmf_flowring_tdls_entry *tdls_entry;
++	struct brcmf_flowring_ring *rings[] __counted_by(nrofrings);
  };
 
- /**
-@@ -276,13 +276,13 @@ struct scmi_registered_event;
-  * @eh_sz: Size of the pre-allocated buffer @eh
-  * @in_flight: A reference to an in flight &struct scmi_registered_event
-  * @num_events: Number of events in @registered_events
-- * @registered_events: A dynamically allocated array holding all the registered
-- *		       events' descriptors, whose fixed-size is determined at
-- *		       compile time.
-  * @registered_mtx: A mutex to protect @registered_events_handlers
-  * @ph: SCMI protocol handle reference
-  * @registered_events_handlers: An hashtable containing all events' handlers
-  *				descriptors registered for this protocol
-+ * @registered_events: A dynamically allocated array holding all the registered
-+ *		       events' descriptors, whose fixed-size is determined at
-+ *		       compile time.
-  *
-  * All protocols that register at least one event have their protocol-specific
-  * information stored here, together with the embedded allocated events_queue.
-@@ -302,11 +302,11 @@ struct scmi_registered_events_desc {
- 	size_t				eh_sz;
- 	void				*in_flight;
- 	int				num_events;
--	struct scmi_registered_event	**registered_events;
- 	/* mutex to protect registered_events_handlers */
- 	struct mutex			registered_mtx;
- 	const struct scmi_protocol_handle	*ph;
- 	DECLARE_HASHTABLE(registered_events_handlers, SCMI_REGISTERED_HASH_SZ);
-+	struct scmi_registered_event	*registered_events[] __counted_by(num_events);
- };
 
- /**
-@@ -338,9 +338,9 @@ struct scmi_registered_event {
- 	void		*report;
- 	u32		num_sources;
- 	bool		not_supported_by_platform;
--	refcount_t	*sources;
- 	/* locking to serialize the access to sources */
- 	struct mutex	sources_mtx;
-+	refcount_t	sources[] __counted_by(num_sources);
- };
-
- /**
-@@ -706,9 +706,12 @@ scmi_allocate_registered_events_desc(struct scmi_notify_instance *ni,
- 	if (WARN_ON(ni->registered_protocols[proto_id]))
- 		return ERR_PTR(-EINVAL);
-
--	pd = devm_kzalloc(ni->handle->dev, sizeof(*pd), GFP_KERNEL);
-+	pd = devm_kzalloc(ni->handle->dev, struct_size(pd, registered_events, num_events),
-+			GFP_KERNEL);
- 	if (!pd)
- 		return ERR_PTR(-ENOMEM);
-+
-+	pd->num_events = num_events;
- 	pd->id = proto_id;
- 	pd->ops = ops;
- 	pd->ni = ni;
-@@ -722,12 +725,6 @@ scmi_allocate_registered_events_desc(struct scmi_notify_instance *ni,
- 		return ERR_PTR(-ENOMEM);
- 	pd->eh_sz = eh_sz;
-
--	pd->registered_events = devm_kcalloc(ni->handle->dev, num_events,
--					     sizeof(char *), GFP_KERNEL);
--	if (!pd->registered_events)
--		return ERR_PTR(-ENOMEM);
--	pd->num_events = num_events;
--
- 	/* Initialize per protocol handlers table */
- 	mutex_init(&pd->registered_mtx);
- 	hash_init(pd->registered_events_handlers);
-@@ -800,14 +797,11 @@ int scmi_register_protocol_events(const struct scmi_handle *handle, u8 proto_id,
- 				     GFP_KERNEL);
- 		if (!r_evt)
- 			return -ENOMEM;
-+
-+		r_evt->num_sources = num_sources;
- 		r_evt->proto = pd;
- 		r_evt->evt = evt;
-
--		r_evt->sources = devm_kcalloc(ni->handle->dev, num_sources,
--					      sizeof(refcount_t), GFP_KERNEL);
--		if (!r_evt->sources)
--			return -ENOMEM;
--		r_evt->num_sources = num_sources;
- 		mutex_init(&r_evt->sources_mtx);
-
- 		r_evt->report = devm_kzalloc(ni->handle->dev,
-@@ -1666,18 +1660,14 @@ int scmi_notification_init(struct scmi_handle *handle)
- 	if (!gid)
- 		return -ENOMEM;
-
--	ni = devm_kzalloc(handle->dev, sizeof(*ni), GFP_KERNEL);
-+	ni = devm_kzalloc(handle->dev, struct_size(ni, registered_protocols, SCMI_MAX_PROTO),
-+			GFP_KERNEL);
- 	if (!ni)
- 		goto err;
-
- 	ni->gid = gid;
- 	ni->handle = handle;
-
--	ni->registered_protocols = devm_kcalloc(handle->dev, SCMI_MAX_PROTO,
--						sizeof(char *), GFP_KERNEL);
--	if (!ni->registered_protocols)
--		goto err;
--
- 	ni->notify_wq = alloc_workqueue(dev_name(handle->dev),
- 					WQ_UNBOUND | WQ_FREEZABLE | WQ_SYSFS,
- 					0);
 --
 2.54.0
 
