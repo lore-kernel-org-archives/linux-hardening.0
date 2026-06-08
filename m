@@ -1,125 +1,102 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA2E3A1695
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 21:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6212935F5F7;
+	Mon,  8 Jun 2026 22:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780954824; cv=none; b=o3KUnKCTZ3q0JrMKZS/w+DlUl/xDlq0HLefC150lgju1uhCzYtWY+nrenEo3wUWKbfygXe13ZslrzLahbRQtnD9hF45kqOSmfAGpGn600Qv80LyMLkIwcLFkYOB9ebOx9hCaSJqI41SYXmD4rSc0KizQt8sEW8CQcfG+CAAc0x4=
+	t=1780957271; cv=none; b=qTWMfhndqXYu0Qpgeh3nQHI6Y+SMVmkyDJO33BFo3Vl5rWYkmLpCTo009fLrjnb4PxDZF4pmHlBUglG3c2Oq8O2yVKpi27Fb1N2rDFizumZjuY+0zzcq7S/Un07NMbPURe7SIzOgPm1DiheysgSYMDW9jKO4IbMWD/CuNoBMCzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780954824; c=relaxed/simple;
-	bh=Lg9ZwlOcOfhAbvTch0Cv1dTb9CKT+F4yPbV9CbfRLb0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ye4+oB4XqLOBtRFMtJxapgne6C1OR63+AaAouV2qV1CCeR/P1ipHC0u3Vuk4Nvpdd3qaLpYmGJvRC4YVJZ5hb4fHV8tpZol+egzn8O0XIxFhTyD7A6WHVHQcXM2QodeScsN0mGFxJ6XiqoniObn8diCQjTAA8rYfRhN/1RBrOjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jcTvx/1M; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780957271; c=relaxed/simple;
+	bh=nOrvp/K0XgNlq7j+UTPcdpo4z07+p3UJ7MV7HzxAmi8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UbqVkMp6kP5aji2TyrWg1kfPAg8ykrC6sKbCgYFo5ElWbfCFGiR6jGIosOUS1FQEI8fCw/HohKAvcGuKdJv25g8nQ+BUFkTY6i0KAuOV4CdCAMOo5OIda88lqY/QDB3/mufJgYqWkq6SyJ7Q1KG0KhliNGvUdJkaVmomoNfyyxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Id3YSbXt; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcTvx/1M"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-490b4e1ade7so52863455e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 08 Jun 2026 14:40:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780954822; x=1781559622; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jvsRWfpYyHjr9YubPvj8KeAz5AQDd/usJgEm/sviL6k=;
-        b=jcTvx/1MgQk0j6Luz/zNpyiOs5Z1qaIuKgDStRzwnYO//0OKCPMvv0+vMZE4npeCAb
-         +5zL8iFWve2esBYSF5pifZjrhjkIe4Pv7Tr1uBjYfI/tr+D0JsuP8HYpAWbL4+xZJF5l
-         K6UiZHZ0VUpdDcZ+63KlhQ2gU9Gtt/v7LO7odRuCSYQVMy+ehohditiGMUXphaMERx1I
-         s7GZvvYzgMeRowAhSf2TwCPuFzo3RH46gg2KNxhF1umF9OGL3LJzeUB2jPPY/mQOF5cL
-         mIAeJDGbWG5xSCLBp+UBr1Fk0Tri9OTJ1leJMAkbeFkRfvFpnwq5QFzxxTmink8UwfNR
-         oziA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780954822; x=1781559622;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jvsRWfpYyHjr9YubPvj8KeAz5AQDd/usJgEm/sviL6k=;
-        b=eQnrhsNFjeKJf61brKKibQ1NcU9vskOV2kFbDwNBeex5ansrE4WDGoeSQxBaHvXKi2
-         /QcWArlgoTzj/GgaLgjyAWJuGjIyOhR4PT0ZoQc3ZRYj0sdwMASPFXmwv18ZDHvcz/4s
-         N9AfBHyOlpef2NXQOJPWxCTLKA5gGjkuaafxGxG/pYIdA/bGeqZY7wrrt5Hh8UoMRNK1
-         5MoF+Q2AMJRrhDZtJTPlD7g7YrboEfdE5wCXI1lDBpknhLb4fWXBXIuTE7jrmmS9wEAQ
-         YAuqZ6Q3otRMk2/xUJAf5Qvf/KVDWz/KZbfgRg3G/L9J/Dtsxds+zpHuZQXr35vsVPHT
-         +2SA==
-X-Forwarded-Encrypted: i=1; AFNElJ8OQHymSUfaukcZ1TjJWgorKj2exfGoO/Twbo7FZspzzhhWF5xcrHyniayEwPaZV/k+QEXmqqZendf/CM9MZS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH+1hr/LRFd8Ql5V6oDOOH5iFRIxjx4PEiNEviaFgmUEhJRCMX
-	1xMHqCmGT3c1nZhZ2ZNT+SP3gpks8NCnK34gOslRK2EAncCaHkghIlTP
-X-Gm-Gg: Acq92OGv8Wcdo+ZWOY1f+AL6uXMq19pVjAnPem6N8hJ+S7xfdORIuaEX3dVE7FuVf0Y
-	4mEWDaxAvRK8/REduSnm3DKcGQSgAXjdEIV1+4+mU1+aJ9e4c6RE5H2GLby3sZnrLOsrhmK7v7o
-	T1+SVWUkk9u/HE0hQh4tdL+qbgSXQ7hySGJHmIGYpXmWfDZLgxQqbuYDmF24TCa/Td9Dqx6kV+C
-	aHClkckytyhhBaZe+xS8DfiqiyKRvqTnNzuWVODMPYRG8fL5CT3mNiNEDL9QtqgnJlsqI8ODJTU
-	42ZTFsejYfULBRKe0oM4Y3aVw+l+l57wFZC5tb9A5DDJ0/cKtBakjHEkDc20z7x0WXLBpSMqCHh
-	NklrKS4WL+AO58ZQ7LXOal1ESEWGqknKt9wPHTF4l6QaaDrzWTdU01Mc+pttrHUMn198F24/rRW
-	jkXCr0VPCq2cjJzwPmJYHN4iXbu/+AS6kvv0Pl9m6mB0cknAaepYWvYj4NRUw89Ht2JgX72xc=
-X-Received: by 2002:a05:600c:529b:b0:48f:e230:1d12 with SMTP id 5b1f17b1804b1-490c2625f9bmr257945945e9.31.1780954821893;
-        Mon, 08 Jun 2026 14:40:21 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46028a6dce6sm48816172f8f.30.2026.06.08.14.40.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2026 14:40:21 -0700 (PDT)
-Date: Mon, 8 Jun 2026 22:40:20 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
- Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jay
- Vosburgh <jv@jvosburgh.net>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH net-next] drivers/net/bonding: User strscpy() to copy
- device name
-Message-ID: <20260608224020.6a9bcb53@pumpkin>
-In-Reply-To: <20260608141822.780fb5c5@kernel.org>
-References: <20260606202633.5018-13-david.laight.linux@gmail.com>
-	<20260608132311.0fb69fed@kernel.org>
-	<20260608220710.7499931d@pumpkin>
-	<20260608141822.780fb5c5@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Id3YSbXt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780957270; x=1812493270;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nOrvp/K0XgNlq7j+UTPcdpo4z07+p3UJ7MV7HzxAmi8=;
+  b=Id3YSbXtSVNJoeiihWgmWeCthu1WD5NjbkWzDDkg4iJqfmVWXPbDVG6f
+   Z2A1czMTT621uRdn890CTOzUanXlwaBFms7+xLwnvwJU0ZA6FcBO7VI6s
+   JM1ZebXFgRg+EPDw69RpESFrPM/Exxxm5XJV7CKE9ZAoFHTpNjgoNiUH5
+   0ww4oHwTfTQTNmurxFOvN0vY/FH8qKfn04zxI4QVXQQfwmbmVV2n397w/
+   xsV2yTRE+PG2sMx8Z/cA7biK5ipclYwkVPO8zT5V/9+jtccF2706HN7Nu
+   T4wt3B2P93N7MHKHajGNZNI8rSsuE6dnsWToILZeudyPyzk/R6mM8jg1F
+   g==;
+X-CSE-ConnectionGUID: v5Y5e7mvQ6qT/jrOxXswfg==
+X-CSE-MsgGUID: 38cx/MmeT6KXzLiIL3009w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="92383238"
+X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
+   d="scan'208";a="92383238"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 15:21:10 -0700
+X-CSE-ConnectionGUID: lJZjgeBlTN6jGd0GB9fJdQ==
+X-CSE-MsgGUID: AFyYNntiSUuy9R2WgvdGkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
+   d="scan'208";a="245774920"
+Received: from igk-lkp-server01.igk.intel.com (HELO 892db79562d4) ([10.211.93.152])
+  by orviesa007.jf.intel.com with ESMTP; 08 Jun 2026 15:21:07 -0700
+Received: from kbuild by 892db79562d4 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wWiLA-000000003KT-1yBL;
+	Mon, 08 Jun 2026 22:21:04 +0000
+Date: Tue, 9 Jun 2026 00:20:52 +0200
+From: kernel test robot <lkp@intel.com>
+To: david.laight.linux@gmail.com, Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Arnd Bergmann <arnd@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>, Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Zack Rusin <zack.rusin@broadcom.com>,
+	David Laight <david.laight.linux@gmail.com>
+Subject: Re: [PATCH next] drivers/gpu/drm/vmwgfx/vmwgfx_msg: Use strscpy() to
+ copy mks-guest-stat names
+Message-ID: <202606090046.Gb27Aell-lkp@intel.com>
+References: <20260608095523.2606-25-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260608095523.2606-25-david.laight.linux@gmail.com>
 
-On Mon, 8 Jun 2026 14:18:22 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+Hi,
 
-> On Mon, 8 Jun 2026 22:07:10 +0100 David Laight wrote:
-> > On Mon, 8 Jun 2026 13:23:11 -0700
-> > Jakub Kicinski <kuba@kernel.org> wrote:
-> >   
-> > > On Sat,  6 Jun 2026 21:26:07 +0100 david.laight.linux@gmail.com wrote:    
-> > > > From: David Laight <david.laight.linux@gmail.com>      
-> > > 
-> > > Could you be so very kind to read the automated message you received
-> > > when you posted this?    
-> > 
-> > Looks like I managed to send two patches for files in the same directory
-> > that contained equivalent fixes.
-> > 
-> > I think I should be able to merge the patch emails into one and send
-> > as a single V2 patch that contains both changes.  
-> 
-> Not what I asked you.
-> 
-> You seem to be following the ML yet you excreted a bunch of incorrectly
-> formatted and likely useless patches. Read the email. Start with one
-> or two submissions at a time.
+kernel test robot noticed the following build warnings:
 
-I got an email containing:
+[auto build test WARNING on next-20260605]
 
-	It looks like you reposted this series less than 24 hours after
-	the previous version. Please allow at least 24 hours between
-	versions so that reviewers across all time zones have a chance
-	to look at the previous version.
+url:    https://github.com/intel-lab-lkp/linux/commits/david-laight-linux-gmail-com/drivers-gpu-drm-vmwgfx-vmwgfx_msg-Use-strscpy-to-copy-mks-guest-stat-names/20260608-175822
+base:   next-20260605
+patch link:    https://lore.kernel.org/r/20260608095523.2606-25-david.laight.linux%40gmail.com
+patch subject: [PATCH next] drivers/gpu/drm/vmwgfx/vmwgfx_msg: Use strscpy() to copy mks-guest-stat names
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260609/202606090046.Gb27Aell-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260609/202606090046.Gb27Aell-lkp@intel.com/reproduce)
 
-That happened because patches 0013 and 0014 (of 0089) ended up with the
-same subject line when I generated one patch for each affected file.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202606090046.Gb27Aell-lkp@intel.com/
 
-Pretty much all the patches replace strcpy() with either strscpy()
-or (when strlen() has already been done) memcpy().
+All warnings (new ones prefixed by >>):
 
--- David
+>> Warning: drivers/gpu/drm/vmwgfx/vmwgfx_msg.c:666 function parameter 'lim' not described in 'mksstat_init_record_time'
+>> Warning: drivers/gpu/drm/vmwgfx/vmwgfx_msg.c:666 function parameter 'lim' not described in 'mksstat_init_record_time'
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
