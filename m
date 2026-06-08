@@ -1,55 +1,53 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68123BB123;
-	Mon,  8 Jun 2026 09:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CC63BB9EF
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 09:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780912553; cv=none; b=LdpAdSjf+2zfW8brW7BhJnkeKm/iYsmUECED72RkZkNx6APpkGA+Zidm+TBu1Np/gyQmZjPbO8A73Q8lp8SxlCHPoAHdCYfHQ8hJUWeS+Rxtxu2aIQ3+2pB8C62+GcOJSBg01jh6Jen05AYaj4gnxDiMu9/XnrhTcLXzhM1AmOw=
+	t=1780912553; cv=none; b=OvkmzHM+rMLGOrob32PmHLA1gcL5YLcRayDzIHMdiHgUQIsg+MxG7KMw1ocuZbz4aTM8RCkMsYbgpJMbVSiKfsJzDy99KQJOl5U7H21wd3d59xlLRJ+zH5xOkLwcr1eyEiEbQ/Z8lRu7LNG2HY9ri/utP7v7Hv1e18JqYvzRasY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780912553; c=relaxed/simple;
-	bh=J+26cwnycjBB/+xh7/FyFiKHOw3YslMNo64DfLl50os=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oYmXy1R/WymbtmhbSue/dp0rfx1cpMwKvAageYAi8QVdPev8ikAoZA2w6voDfBB3Q59Noz1ynL9t32guaGshEsEsDfic9P53qrj/Vq7/Nbetm2NeF44XWIDELIZ6qpHnHQYqfWkN09YNxFk2PUZ1FlD8fi7KjgVlFx2qQ4CFzoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=VWOmjHfF; arc=none smtp.client-ip=185.226.149.38
+	bh=KxPNcO8WRmEs8BuXXWxnncdnBhxwODwk8znXxeuMves=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eMm+or/vIUsK9VqymQnDcpEbbBPEgCkDdZ2f0n5LRQITexT/ecfdYPyMWuoqDdcn1eu+OW+gfiGolJiV6hlNUkiSvlFSYPxdazIS0JzyEs7IJY5LwoSuL6SwsugrQdIa/meEU/qJa/Wfz8k4Eor3oyjWHq5s193UxOO+XFBHCmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=hunvNFQ7; arc=none smtp.client-ip=185.226.149.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="VWOmjHfF"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="hunvNFQ7"
 Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWht-00BrEA-GJ; Mon, 08 Jun 2026 11:55:45 +0200
+	id 1wWWhu-00BS3I-BO; Mon, 08 Jun 2026 11:55:46 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=6CXp94Ene1B/CC0Gj4fXjI3BrDySgYfWPJXaj6vUF1M=; b=VWOmjH
-	fFkgjVU6aeSlnvbQ3JKbCiUSxRqWnCeG3OuPU26wEW5oaM2Bg5qarFyDId+vQezJrfaMBHzcv/FLG
-	ob2bzMSaQ6F2mH20V1iQ8MOIyO2yZUVtAAnTtrqTbfmKct7BmuEiYf+XYCeN98PK88XSu31qeLJbf
-	0OCg51Hrdlz4f331b3zyfGYYFfJEuWs7LS6y34v1E/lcpCluM8mGrxjE5z15in08ZHDYraKZD69Ci
-	5cT9g1XzBidcGPmhLdinnfOgMNP3H5W+kv4DPur+Eu9BlnXH7hJZPHSeoe6+qhhp6HEozDjQSJ3T/
-	YToYuAb0yj9hg+SoRxQQS06Qg3PA==;
+	Subject:Cc:To:From; bh=B1BeOIM4uXGD6GiA0pEKXq5UZVRP7MPwiY3AoYdOTbw=; b=hunvNF
+	Q7yfOkxG3DKupAm47EQUszVkGzcmfjADhyjLyUdxsCl2TgE8YTlDE2h8ETxzbE0wpfIW3zDKqvyzh
+	RwRV9fliVRCJd5t220BOYz1Rvp7PfpGAqF5Z3R4wEe+uq3lnvlhttX3LYli5a0adULjSiAmnnxGgt
+	mtL+868Ic0bgsSwDrEgKME6jf4Ov3yhO4n6DDImVDntyWYblxkUpjf3gFFqbi3oms2mNLhUYg+xTe
+	3VEgK18PMksP9dzvRFCWYmFY09JGTEPNAYI5aIvS34n71Ah1uD4LQh25ajqB4zdPljlt6K7vtGvXs
+	uKVghmn0i6kv0AvBh+V5903IDENQ==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
 	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWht-0000Jw-6x; Mon, 08 Jun 2026 11:55:45 +0200
+	id 1wWWht-0000K0-BW; Mon, 08 Jun 2026 11:55:45 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wWWhb-00Ag6G-E3;
-	Mon, 08 Jun 2026 11:55:27 +0200
+	id 1wWWhm-00Ag6G-Bw;
+	Mon, 08 Jun 2026 11:55:38 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Cc: Arnd Bergmann <arnd@kernel.org>,
-	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/scsi/bfa/bfad_attr: Use strscpy() to copy strings into arrays
-Date: Mon,  8 Jun 2026 10:54:49 +0100
-Message-Id: <20260608095523.2606-5-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/of/overlay: Use memcpy() to copy known length strings
+Date: Mon,  8 Jun 2026 10:55:16 +0100
+Message-Id: <20260608095523.2606-32-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,8 +59,7 @@ Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
 
-Replacing strcpy() with strscpy() ensures that overflow of the target
-buffer cannot happen.
+The lengths have been used for the kzalloc(), use the same ones for the copy.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -88,24 +85,24 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/scsi/bfa/bfad_attr.c | 4 ++--
+ drivers/of/overlay.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/bfa/bfad_attr.c b/drivers/scsi/bfa/bfad_attr.c
-index 9751beff817d..c1fa5c38f596 100644
---- a/drivers/scsi/bfa/bfad_attr.c
-+++ b/drivers/scsi/bfa/bfad_attr.c
-@@ -364,8 +364,8 @@ bfad_im_vport_create(struct fc_vport *fc_vport, bool disable)
- 	memset(&port_cfg, 0, sizeof(port_cfg));
- 	u64_to_wwn(fc_vport->node_name, (u8 *)&port_cfg.nwwn);
- 	u64_to_wwn(fc_vport->port_name, (u8 *)&port_cfg.pwwn);
--	if (strlen(vname) > 0)
--		strcpy((char *)&port_cfg.sym_name, vname);
-+	if (vname[0])
-+		strscpy(port_cfg.sym_name.symname, vname);
- 	port_cfg.roles = BFA_LPORT_ROLE_FCP_IM;
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index c1c5686fc7b1..656867009514 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -258,8 +258,8 @@ static struct property *dup_and_fixup_symbol_prop(
+ 	if (!new_prop->name || !new_prop->value)
+ 		goto err_free_new_prop;
  
- 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+-	strcpy(new_prop->value, target_path);
+-	strcpy(new_prop->value + target_path_len, path_tail);
++	memcpy(new_prop->value, target_path, target_path_len);
++	memcpy(new_prop->value + target_path_len, path_tail, path_tail_len);
+ 
+ 	of_property_set_flag(new_prop, OF_DYNAMIC);
+ 
 -- 
 2.39.5
 
