@@ -1,102 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6212935F5F7;
-	Mon,  8 Jun 2026 22:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF306326942;
+	Mon,  8 Jun 2026 23:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780957271; cv=none; b=qTWMfhndqXYu0Qpgeh3nQHI6Y+SMVmkyDJO33BFo3Vl5rWYkmLpCTo009fLrjnb4PxDZF4pmHlBUglG3c2Oq8O2yVKpi27Fb1N2rDFizumZjuY+0zzcq7S/Un07NMbPURe7SIzOgPm1DiheysgSYMDW9jKO4IbMWD/CuNoBMCzc=
+	t=1780959879; cv=none; b=MFr0n3v+8/HLpKSj8M1jV72qWRp85pGBymPTfBwDL+v2xABz8N+dUeXlAc85TlYoMOimy8KXuzCzP2DKrWCHxw3N3gBRQuqPO0zroY8IOUZubIRfVsnyyBuFv0N+iwqkWEE5JyLZ3TNJOAx7+pgXb49YA4FwYTnRZTeBVQcL0eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780957271; c=relaxed/simple;
-	bh=nOrvp/K0XgNlq7j+UTPcdpo4z07+p3UJ7MV7HzxAmi8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UbqVkMp6kP5aji2TyrWg1kfPAg8ykrC6sKbCgYFo5ElWbfCFGiR6jGIosOUS1FQEI8fCw/HohKAvcGuKdJv25g8nQ+BUFkTY6i0KAuOV4CdCAMOo5OIda88lqY/QDB3/mufJgYqWkq6SyJ7Q1KG0KhliNGvUdJkaVmomoNfyyxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Id3YSbXt; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1780959879; c=relaxed/simple;
+	bh=A7NQMwa8A5mndopGSKOon03gdnAzOvi/KsGAaeecZ/A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VATp1b5O8ENjXrU3QpVlIL5P+3yhqRPNdclJDgi3J4kxnUnqZs85xu8roJs6sa2UZDQ7HGWSwuqr43/umCUUhYBTTlXxqdU+LlZuEGaol/3o24f8ZDDpaiEY+Sjmuh8pooDmgSF4LnKSIC90rrJKQCannfN73obL8hEO8Zus2Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=Q7fSPhfI; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Id3YSbXt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780957270; x=1812493270;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nOrvp/K0XgNlq7j+UTPcdpo4z07+p3UJ7MV7HzxAmi8=;
-  b=Id3YSbXtSVNJoeiihWgmWeCthu1WD5NjbkWzDDkg4iJqfmVWXPbDVG6f
-   Z2A1czMTT621uRdn890CTOzUanXlwaBFms7+xLwnvwJU0ZA6FcBO7VI6s
-   JM1ZebXFgRg+EPDw69RpESFrPM/Exxxm5XJV7CKE9ZAoFHTpNjgoNiUH5
-   0ww4oHwTfTQTNmurxFOvN0vY/FH8qKfn04zxI4QVXQQfwmbmVV2n397w/
-   xsV2yTRE+PG2sMx8Z/cA7biK5ipclYwkVPO8zT5V/9+jtccF2706HN7Nu
-   T4wt3B2P93N7MHKHajGNZNI8rSsuE6dnsWToILZeudyPyzk/R6mM8jg1F
-   g==;
-X-CSE-ConnectionGUID: v5Y5e7mvQ6qT/jrOxXswfg==
-X-CSE-MsgGUID: 38cx/MmeT6KXzLiIL3009w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="92383238"
-X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="92383238"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 15:21:10 -0700
-X-CSE-ConnectionGUID: lJZjgeBlTN6jGd0GB9fJdQ==
-X-CSE-MsgGUID: AFyYNntiSUuy9R2WgvdGkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="245774920"
-Received: from igk-lkp-server01.igk.intel.com (HELO 892db79562d4) ([10.211.93.152])
-  by orviesa007.jf.intel.com with ESMTP; 08 Jun 2026 15:21:07 -0700
-Received: from kbuild by 892db79562d4 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wWiLA-000000003KT-1yBL;
-	Mon, 08 Jun 2026 22:21:04 +0000
-Date: Tue, 9 Jun 2026 00:20:52 +0200
-From: kernel test robot <lkp@intel.com>
-To: david.laight.linux@gmail.com, Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Arnd Bergmann <arnd@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>, Simona Vetter <simona@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Zack Rusin <zack.rusin@broadcom.com>,
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="Q7fSPhfI"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1wWj1C-00D0NR-Mj; Tue, 09 Jun 2026 01:04:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
+	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
+	Subject:Cc:To:From; bh=7gP6YkVyya3OXS3MmDOjeyd3Nhn3Cm5Wz08yFaXZ8o0=; b=Q7fSPh
+	fIAO5CRENhF0lbF2JKzFAPdK9KuzYsiOzhT927Ey4JS4vsj+Fx6evumyv/GLg8+/5Qd1f91kQU8QE
+	NXC8NI41AH3IbnDZvceWlfEROpkgsl+KgozNIKsr6vRFoS1wvyHLitdcc3AHhbCiK2pvAqjOFkjKE
+	hNFM7qGcdwTlre2vkYuA/3pJ1MRmFCdiSkkH+NvWTDA1H3/rbElBf5QC6nR6ecP2lHs8+RjkL2fef
+	GxR+m9lxoiBeK4dUww3Vkg5GtdWXOR29klkKHSGjYL9hhZXhhGwjcIFV4U/4RWNpWdDnFyhOYjd0+
+	OSU3sW8MbarQLwVsFwhPXRnCV9Xg==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <david.laight.linux_spam@runbox.com>)
+	id 1wWj1B-0002Tv-LA; Tue, 09 Jun 2026 01:04:30 +0200
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.95)
+	id 1wWj0s-00C6zU-U4;
+	Tue, 09 Jun 2026 01:04:11 +0200
+From: David Laight <david.laight.linux@gmail.com>
+To: Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	MPT-FusionLinux.pdl@broadcom.com
+Cc: Arnd Bergmann <arnd@kernel.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Ranjan Kumar <ranjan.kumar@broadcom.com>,
+	Sathya Prakash <sathya.prakash@broadcom.com>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: Re: [PATCH next] drivers/gpu/drm/vmwgfx/vmwgfx_msg: Use strscpy() to
- copy mks-guest-stat names
-Message-ID: <202606090046.Gb27Aell-lkp@intel.com>
-References: <20260608095523.2606-25-david.laight.linux@gmail.com>
+Subject: [PATCH next v2] drivers/scsi/mpt3sas: Replace strcpy() + strcat() with snprintf()
+Date: Tue,  9 Jun 2026 00:03:57 +0100
+Message-Id: <20260608230357.25889-1-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260608095523.2606-25-david.laight.linux@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Avoids unbounded string functions returning the version string.
+Allow 16 characters for the driver name (actually 7 chars) to stop
+gcc complaining about possible truncation.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
+---
 
-[auto build test WARNING on next-20260605]
+v2: The build test bot reported that the snprintf() can truncate.
+(I thought that was the entire point of snprintf.)
+In this case ioc->driver_name is either "mpt2sas" or "mpt3sas" and
+the version string is like "20.102.00.00".
+Keep it all happy by using "%.16s.%s" instead of "%s-%s"
 
-url:    https://github.com/intel-lab-lkp/linux/commits/david-laight-linux-gmail-com/drivers-gpu-drm-vmwgfx-vmwgfx_msg-Use-strscpy-to-copy-mks-guest-stat-names/20260608-175822
-base:   next-20260605
-patch link:    https://lore.kernel.org/r/20260608095523.2606-25-david.laight.linux%40gmail.com
-patch subject: [PATCH next] drivers/gpu/drm/vmwgfx/vmwgfx_msg: Use strscpy() to copy mks-guest-stat names
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260609/202606090046.Gb27Aell-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260609/202606090046.Gb27Aell-lkp@intel.com/reproduce)
+Note that there are a lot of sprintf() related to these strings.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202606090046.Gb27Aell-lkp@intel.com/
+This is one of a group of patches that remove potentially unbounded
+strcpy() calls.
 
-All warnings (new ones prefixed by >>):
+They are mostly replaced by strscpy() or, when strlen() has just been
+called, with memcpy() (usually including the '\0').
 
->> Warning: drivers/gpu/drm/vmwgfx/vmwgfx_msg.c:666 function parameter 'lim' not described in 'mksstat_init_record_time'
->> Warning: drivers/gpu/drm/vmwgfx/vmwgfx_msg.c:666 function parameter 'lim' not described in 'mksstat_init_record_time'
+Calls with copy string literals into arrays are left unchanged.
+They are safe and easily detected as such.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The changes were made by getting the compiler to detect the calls and
+then fixing the code by hand.
+
+Note that all the changes are only compile tested.
+
+Some Makefiles were changed to allow files to contain strcpy().
+As well as 'difficult to fix' files, this included 'show' functions
+as they really need to use sysfs_emit() or seq_printf().
+
+All the patches are being sent individually to avoid very long cc lists.
+Apologies for the terse commit messages and likely unexpected tags.
+(There are about 100 patches in total.)
+
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index 8bb947004885..3488446d38a3 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -1225,6 +1225,7 @@ static long
+ _ctl_getiocinfo(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
+ {
+ 	struct mpt3_ioctl_iocinfo karg;
++	const char *ver = "";
+ 
+ 	dctlprintk(ioc, ioc_info(ioc, "%s: enter\n",
+ 				 __func__));
+@@ -1241,15 +1242,13 @@ _ctl_getiocinfo(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
+ 	karg.pci_information.u.bits.function = PCI_FUNC(ioc->pdev->devfn);
+ 	karg.pci_information.segment_id = pci_domain_nr(ioc->pdev->bus);
+ 	karg.firmware_version = ioc->facts.FWVersion.Word;
+-	strcpy(karg.driver_version, ioc->driver_name);
+-	strcat(karg.driver_version, "-");
+ 	switch  (ioc->hba_mpi_version_belonged) {
+ 	case MPI2_VERSION:
+ 		if (ioc->is_warpdrive)
+ 			karg.adapter_type = MPT2_IOCTL_INTERFACE_SAS2_SSS6200;
+ 		else
+ 			karg.adapter_type = MPT2_IOCTL_INTERFACE_SAS2;
+-		strcat(karg.driver_version, MPT2SAS_DRIVER_VERSION);
++		ver = MPT2SAS_DRIVER_VERSION;
+ 		break;
+ 	case MPI25_VERSION:
+ 	case MPI26_VERSION:
+@@ -1257,9 +1256,11 @@ _ctl_getiocinfo(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
+ 			karg.adapter_type = MPT3_IOCTL_INTERFACE_SAS35;
+ 		else
+ 			karg.adapter_type = MPT3_IOCTL_INTERFACE_SAS3;
+-		strcat(karg.driver_version, MPT3SAS_DRIVER_VERSION);
++		ver = MPT3SAS_DRIVER_VERSION;
+ 		break;
+ 	}
++	snprintf(karg.driver_version, sizeof (karg.driver_version), "%.16s-%s",
++		 ioc->driver_name, ver);
+ 	karg.bios_version = le32_to_cpu(ioc->bios_pg3.BiosVersion);
+ 
+ 	karg.driver_capability |= MPT3_IOCTL_IOCINFO_DRIVER_CAP_MCTP_PASSTHRU;
+-- 
+2.39.5
+
