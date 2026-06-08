@@ -1,112 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878CD2771B;
-	Mon,  8 Jun 2026 04:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A60034D3B9
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 05:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780894024; cv=none; b=AtjzLU4onZWAn4la7f+zVbotcTVcEfdyL1XjsbVrschvB3EEgAeyYC//bFJLH6oKSM4wQmFWg4hO5Cf92RvAtPd5k1+v+Q3iVzfLOiI0GtoN/TekkOZ5+i/H7fLh4wilaf4iUCnD7NpezIBjlODUSqmp0p2S+rUMSaFNE8Y0J0g=
+	t=1780895090; cv=none; b=uPwNuWkZLIOWBsLZxJYca7kNCqAzkCJYLHm5KfKy1Akqv3Q3b6Q0iZy61oUgqCTFBF9lQVpFwpAy22IWbsCYHD+Njz+Ab9K3fMwDYUuFYmbhpLX5/7wUtl4KE/cLRNeL1Ms5tN6AiAzA5T3ZnX9ONQa/LP+AwWXyBVya1e4G/qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780894024; c=relaxed/simple;
-	bh=HzhYmRX2nopKAccHM1GYw7/eum7CLQA7DD37+lke6xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OobJh1b5KS1Ivlj3o7faP6dQrJM2LzYJH5Oso8P0dnfwQZZ0YbFFn+L8Fk2desfqw5++yT/9rCVbWVmyx4C/6isX/vvDIIdx/J3xlmtFXd5Bf59ul1dxtQsFJm6gZhDJikZhIbgdwFDnxSrzFlclAyHhjxVqYToGlodDkkEzn8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IS6uXbf2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780895090; c=relaxed/simple;
+	bh=asqAK3SoXu8/htKWhVGXzuock8mQJTHGvtneCHlq64k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U12T9FStk/eZLYP3VMBkhGGVsvGxdzhWKxdh6YKqOCgnN+6BIJIpzBzs2ekZsftwN4U1FIKxtngZkDK2Rjw8Qz9Tjk6URCWAC713Lrbe2eBXcGpMrfwjBkLLPLTZO/nafCSSWt8mWKxg+SqyQk8VB5Dy1VVz8vwMP2Ky3nPrAAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dYBVQ3Ar; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IS6uXbf2"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id D703E1F00893;
-	Mon,  8 Jun 2026 04:47:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780894023;
-	bh=AiC6IPztEYJ/u86CgpttLslDsUBS7Wl8BsHG5skCcSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IS6uXbf2oJsprQtKgtX7Mkv4xqoLTi9uAQBokpcM8YDBfmVAdwSPBn1qW6bYu6G1o
-	 V4SEyxju5kl593oG5Fg8/kHWjrn129nU7rlcuzV1zo1FCDn1h2Rzu8lwGy+ljYOjB3
-	 5DKfrcdJT+j5UUUtys7Jk0AbxN4gfTqrD/FQlzLZEEd3LpZytGt4neBwDmJNHeHJGv
-	 saR6bQA13dda+ZJVTrmwLaAp+Dc4OGf6P7kQrXffx6Q+Ig8XYMgGqSG8lDCBvCKvgV
-	 TnxGPkQtNu/MxVJN0BTAUMIbaG6IRZ1XJ25zg9E2nu54/HbU/X8nDQVoHnjmtBcvPl
-	 SKy+299c4THmw==
-Date: Mon, 8 Jun 2026 07:46:59 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: david.laight.linux@gmail.com
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>, keyrings@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	James Morris <jmorris@namei.org>, Mimi Zohar <zohar@linux.ibm.com>,
-	Paul Moore <paul@paul-moore.com>,
-	"Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH next] keys: Replace strcpy(derived_buf, "AUTH_KEY") with
- strscpy(..., HASH_SIZE)
-Message-ID: <aiZJQ71se4x4d9Bh@kernel.org>
-References: <20260606202633.5018-9-david.laight.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYBVQ3Ar"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-84237c55ef9so1724916b3a.0
+        for <linux-hardening@vger.kernel.org>; Sun, 07 Jun 2026 22:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780895087; x=1781499887; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Msw1JwiAso6BYV3Ybo65LRpP2frOXynj3tYTZ5sNuE=;
+        b=dYBVQ3ArTyGLFiKery8a0XcppHqj1Ij3kdCiHdCOHd63haKOcwjo4LXJGo93FDNDRz
+         yX3wMCQXy8T7AG6qVd7Z80TQcHfHhkanVGFVN+T2ODN6MCrY/Icm2lZHY3mBidfult+n
+         jpBo7MFcFf85NfejhzhgYffUc+fNkbG0PJuS36NGjPOQxff9mxg0tY97ywmNv1NFyP70
+         I2a4Je29W6SjNxS6CTh1bkHl8G8A3EzvsriEU+fSXkaDLkxqPn8MArMRJpYFqd7xzfPg
+         QQuEZS6Lp9zNVDyRMF/hOlzAH2EGv67ZKajq9/k8RHbqhH17rZz/ceLuyKmJ+9pqWusQ
+         +3ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780895087; x=1781499887;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Msw1JwiAso6BYV3Ybo65LRpP2frOXynj3tYTZ5sNuE=;
+        b=gmwbKiFWsCA2dRcYuiZQaXJBvDYe2cFAmqy5coEoDCmbPqkqhyk2CTPWpXx2JE6noc
+         iLQZCADXjGgOHAT1SMotwekddQfJSSH7MqxBsv3wdsRQ+22HGG1NY1+ajysy0XwJJh0e
+         uj0Zrmq3K8nzX4TPbaTc8t2JsCYny9X9KG5UaRU/69uHDjNPRbPxIFqD34MJB/06Ta8H
+         +fT31937Ah74q6rGVhqFPutZq8OtQE0GOpYzVS3xdDYneUQUGEJd/O2iuuHVZSnhU4S0
+         HDo/y+OJcxQJhOliFoqtkR29fgE/OXOurqrA7pdzWLEsxEcDI6EAmL63auvaWAw9QMvR
+         I89A==
+X-Forwarded-Encrypted: i=1; AFNElJ/y3NTz/+qyKXAVTuJWX5aURwcg6wDY4SxvxAgaeaMm8FwdOhPqvtii3rySLm6WVB5OJck+y4hW0nEBs8ySW98=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk6/rkHuSFqKInWWqt1BGlULDimHyfrdJMZKoImWlMSSSYZrEe
+	mhSv9mKYqiwSSU7HHFRwVPDh80KfPMyLYOqaSdxI4qvvJcza4UAySjfP
+X-Gm-Gg: Acq92OEsUxUbPCsuVuaUSoSjwLT65834z/lGDILrNEKAH/uTvWrMZ79hTT/b9qkh0p5
+	CTvEJ+rYu8HAKCCfih2JWm+inDO93EqM4IuynO05D2ZauD7zdtJcZJyZysxq/64S8XNqoUUWgrI
+	3me/T3jVCfgJ6P0ruqco6WsWjMzhKOQgKOoKiGkIIGFgLmku34ZJ7y6d/jH3MYzImQsiEnazL5T
+	VcNJ9tWytrcFHq4IGflHfr0ZEzGXs0O8U3iSNEdCtm+1lcaiyLodIYqnjkisUvFmTN4wf3PHApH
+	y0pE5D+3Ao/aNVKsh22+ebKViWf+omaFkep2G+th+mNgQY8G08ebSOC+K1Rme9LKxCs5QGe/GtW
+	RN9ieGKlN7Fn+k2LzQX3NP6lx95/goE+csT2fG4mf+rqVZgkJUlS5qOrT5IQWVlY0ulboVQLgZY
+	MSQBv2r8wsRjNkGEhJOH40qBb5IEAp8DzimtQ9u2PCASc10EgA6DSaF9qKKU/cy/o1nkR3KTsX7
+	jXx0fllknBWRPPFfQCUyqPyvV6ZSTEZLVF8AFF85uCEoQ==
+X-Received: by 2002:a05:6a00:1d89:b0:842:4f49:6bfd with SMTP id d2e1a72fcca58-842b10677admr13727414b3a.26.1780895087366;
+        Sun, 07 Jun 2026 22:04:47 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-842828d6bd1sm19997835b3a.44.2026.06.07.22.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2026 22:04:46 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-pm@vger.kernel.org
+Cc: Georgi Djakov <djakov@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM MAILING LIST),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
+Subject: [PATCH] interconnect: qcom: simplify allocation
+Date: Sun,  7 Jun 2026 22:04:29 -0700
+Message-ID: <20260608050429.5990-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260606202633.5018-9-david.laight.linux@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 06, 2026 at 09:26:03PM +0100, david.laight.linux@gmail.com wrote:
-> From: David Laight <david.laight.linux@gmail.com>
-> 
-> derived_buf is guaranteed to be HASH_SIZE - and it is more than enough.
-> The strscpy() degenerates into an memcpy() (as did the strcpy()).
-> Do the same for the associated "ENC_KEY" copy.
-> 
-> Removes a possibly unbounded strcpy().
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> ---
-> This is one of a group of patches that remove potentially unbounded
-> strcpy() calls.
-> 
-> They are mostly replaced by strscpy() or, when strlen() has just been
-> called, with memcpy() (usually including the '\0').
-> 
-> Calls with copy string literals into arrays are left unchanged.
-> They are safe and easily detected as such.
-> 
-> The changes were made by getting the compiler to detect the calls and
-> then fixing the code by hand.
-> 
-> Note that all the changes are only compile tested.
-> 
-> Some Makefiles were changed to allow files to contain strcpy().
-> As well as 'difficult to fix' files, this included 'show' functions
-> as they really need to use sysfs_emit() or seq_printf().
-> 
-> All the patches are being sent individually to avoid very long cc lists.
-> Apologies for the terse commit messages and likely unexpected tags.
-> (There are about 100 patches in total.)
-> 
->  security/keys/encrypted-keys/encrypted.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/security/keys/encrypted-keys/encrypted.c b/security/keys/encrypted-keys/encrypted.c
-> index 56b531587a1e..59cb77b237b3 100644
-> --- a/security/keys/encrypted-keys/encrypted.c
-> +++ b/security/keys/encrypted-keys/encrypted.c
-> @@ -343,9 +343,9 @@ static int get_derived_key(u8 *derived_key, enum derived_key_type key_type,
->  		return -ENOMEM;
->  
->  	if (key_type)
-> -		strcpy(derived_buf, "AUTH_KEY");
-> +		strscpy(derived_buf, "AUTH_KEY", HASH_SIZE);
->  	else
-> -		strcpy(derived_buf, "ENC_KEY");
-> +		strscpy(derived_buf, "ENC_KEY", HASH_SIZE);
->  
->  	memcpy(derived_buf + strlen(derived_buf) + 1, master_key,
->  	       master_keylen);
-> -- 
-> 2.39.5
-> 
+Use a flexible array member to reduce allocation by 1.
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Add __counted_by for extra runtime analysis. Move counting variable
+assignment after allocation before any array access,
 
-BR, Jarkko
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/interconnect/qcom/icc-rpm.c | 7 ++-----
+ drivers/interconnect/qcom/icc-rpm.h | 2 +-
+ 2 files changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/interconnect/qcom/icc-rpm.c b/drivers/interconnect/qcom/icc-rpm.c
+index 23a1d116e79a..ca4c8a944755 100644
+--- a/drivers/interconnect/qcom/icc-rpm.c
++++ b/drivers/interconnect/qcom/icc-rpm.c
+@@ -479,13 +479,11 @@ int qnoc_probe(struct platform_device *pdev)
+ 		cd_num = 0;
+ 	}
+
+-	qp = devm_kzalloc(dev, sizeof(*qp), GFP_KERNEL);
++	qp = devm_kzalloc(dev, struct_size(qp, intf_clks, cd_num), GFP_KERNEL);
+ 	if (!qp)
+ 		return -ENOMEM;
+
+-	qp->intf_clks = devm_kcalloc(dev, cd_num, sizeof(*qp->intf_clks), GFP_KERNEL);
+-	if (!qp->intf_clks)
+-		return -ENOMEM;
++	qp->num_intf_clks = cd_num;
+
+ 	if (desc->bus_clk_desc) {
+ 		qp->bus_clk_desc = devm_kzalloc(dev, sizeof(*qp->bus_clk_desc),
+@@ -507,7 +505,6 @@ int qnoc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	data->num_nodes = num_nodes;
+
+-	qp->num_intf_clks = cd_num;
+ 	for (i = 0; i < cd_num; i++)
+ 		qp->intf_clks[i].id = cds[i];
+
+diff --git a/drivers/interconnect/qcom/icc-rpm.h b/drivers/interconnect/qcom/icc-rpm.h
+index 7d1cb2efa9ee..b08821c2ef74 100644
+--- a/drivers/interconnect/qcom/icc-rpm.h
++++ b/drivers/interconnect/qcom/icc-rpm.h
+@@ -64,9 +64,9 @@ struct qcom_icc_provider {
+ 	u32 bus_clk_rate[QCOM_SMD_RPM_STATE_NUM];
+ 	const struct rpm_clk_resource *bus_clk_desc;
+ 	struct clk *bus_clk;
+-	struct clk_bulk_data *intf_clks;
+ 	bool keep_alive;
+ 	bool ignore_enxio;
++	struct clk_bulk_data intf_clks[] __counted_by(num_intf_clks);
+ };
+
+ /**
+--
+2.54.0
+
