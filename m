@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F443358DA;
-	Mon,  8 Jun 2026 07:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE1B3839A3;
+	Mon,  8 Jun 2026 07:39:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780903786; cv=none; b=UWTxRO1LBER2CFYpvp4PHJBRZAMVRgTJZwwmHRBnvzW21yJ3mIjQPDT+RAvE+b1mj/Ooeogkf87K0+qjZXAKDVMLEswk2BIxS+3wBGqPTCr17IrHK249FumAKaJKXS0UTaCwo2+enUsYonhWqop/LcZyNj9T2NQi7IQQScNPBuI=
+	t=1780904394; cv=none; b=c4ssPonwpnOrS4tIZ+MZhOv4Xyg6xiATTJLhiUZYcpQUreFKl9NuIhEfutZzdY3F8U1cxoPgCdiYHNzcSgqA/1iNwmrGg0yQhaGT5uuTnpDsMZ1C9z83DUzvBHnerF/QUWJQsay38n6nq1iZu/6S+ZFLad/Q3SYeIFFs8d4mWHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780903786; c=relaxed/simple;
-	bh=/bfH0TPZGxm/8vE3q8ekiOvB5tCVXHW1AH3iE72Mheo=;
+	s=arc-20240116; t=1780904394; c=relaxed/simple;
+	bh=+BOKFQV0KT8sz9ClxbiHowEXEsGD4Xg2I3Yh/kqc88I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OU49Ob8ZB+iBQrWH53PlxmIkN6J/lp0ARd9DgyDADY9GZ84xArTT4kRkmD7W5cUFx+cjbd1uzDbuP1qk8RH4ZXvfB7eCATxTeeOFe5mpyluOtxhYw4oE2KrmHEDA1KPuAv7Cg6PjTGVzxqOBvMRjMfZCRYqTiD9Jrnl1B3eBysI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWU1n/1v; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Crx1wY7kYVokApxLueYumh1Fh9pUCo0Iq9Vsll5MyOHhJyTKsL1PL3Uu3YF+3U8HnA6eipZlsQPY29pUGidDID+huU5Zz/T0glfKH3XX0mLil81uOSiqqmvT3Pnjc3p4Pb6HN1ji9Y0FR7qtHhaBpA5bQ/j6skO63rwiymPbJkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CKVxHHpk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWU1n/1v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD191F00893;
-	Mon,  8 Jun 2026 07:29:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CKVxHHpk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD2471F00893;
+	Mon,  8 Jun 2026 07:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780903784;
-	bh=ix+o2luyIJ8fd3BbrUCJ3EpMfGnVYFgPUPESUwRjcmc=;
+	s=k20260515; t=1780904393;
+	bh=oFXj61iq7NVS/Dg2bghSDW8PukDo+it9Sj1z6NSrpwk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iWU1n/1vrRmqh0JmZv+whbB9usIHKqW+/tkhtI8O4Vvcky4fbEdPce/pVD4COljJ9
-	 UlhJkcklaMEAZyZ/qSw1yU4urpML0ZbGz7pNJPzqLMQiVklbQfgFhNsRkDu7cNuPYo
-	 OVj44jVRxTIU5XSN7WmLPpsFCZ+q6yYtLPPUwkE0WFiGTTlxepAboKhUxARrhe39PP
-	 DAVtlWRaArnowXpIGKwUS3rtDhijwbluhFNHry2Lc1XqE46KeWUlb01DoBTsS0PxCw
-	 77J+lo7gPWbX7RT0uT5LqpJ918wMDRiDoUmMG96gPNyu9CJwY5nqm94nbxMsGeT+s7
-	 pgjc3j/AlqGOg==
-Message-ID: <31ba1950-8d08-44b3-8183-58f1e179f0e1@kernel.org>
-Date: Mon, 8 Jun 2026 09:29:41 +0200
+	b=CKVxHHpk8X3NtAd+6WoAvNfNyINzICT8pCwrYI2TVmm050HhSwfks93/zAutElxza
+	 4tPWhLQ6K1hw4KWdO1wOeyHmbfV936RKqj13Jv0Xi5q35H7AtaxWIT7+1O76wI7gy5
+	 P2IXuwD5Lt7fFADxxf4LO/kAyazaTWluWn1EoucDP6hl3yf68+/GAn8Bcjur1jyXlQ
+	 OwU68dwWG3EqtZDNqw/MH/7N9Nu9jEHmK9cXMfib/jwb0NnQReogXh97T6mtcScsAJ
+	 L64TFd2h/+Ic6T0Hn0/CaiHYsBkPfDN8dzLMJNb5RYcrbEtQtf0tycscG4oWIfdeQ7
+	 cWXJbEYjCouUQ==
+Message-ID: <7906bad7-4e64-40c0-a724-f55ac44e12ab@kernel.org>
+Date: Mon, 8 Jun 2026 09:39:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,18 +35,18 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs/mm: document slab cache isolation with SLAB_NO_MERGE
+Subject: Re: [PATCH v2] docs/mm/slab: document cache isolation with
+ SLAB_NO_MERGE
 Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>,
- Mohammed EL Kadiri <med08elkadiri@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Vlastimil Babka <vbabka@suse.cz>, David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+To: Mohammed EL Kadiri <med08elkadiri@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Kees Cook <kees@kernel.org>,
  linux-mm@kvack.org, linux-doc@vger.kernel.org,
  linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260606155856.15548-1-med08elkadiri@gmail.com>
- <aiSAuP-qEhH_RoCn@casper.infradead.org>
+ <20260607070645.9559-1-med08elkadiri@gmail.com>
 From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
 Autocrypt: addr=vbabka@kernel.org; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -87,133 +87,119 @@ Autocrypt: addr=vbabka@kernel.org; keydata=
  NcaZ+c6J4H+nEJGi2SkHAUJz5oBzuThvPudLvPA/SK8sKoM01IRxSihev/S/5WLazXB1PGem
  OCbvzC1IjWJJraxiDJ5IygokapUa2RP7+WBR22skQ3SSl6G107QgWKSyTOGWEaRmV53vxQLV
  jXuCmzSSasTL60zq5yGrT4/DYQVSNEUiUbG4pYekxJujNeEDkUlky0Y=
-In-Reply-To: <aiSAuP-qEhH_RoCn@casper.infradead.org>
+In-Reply-To: <20260607070645.9559-1-med08elkadiri@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/6/26 22:19, Matthew Wilcox wrote:
-> On Sat, Jun 06, 2026 at 04:58:55PM +0100, Mohammed EL Kadiri wrote:
->> +The SLUB allocator merges slab caches with compatible size, alignment, and
+On 6/7/26 09:06, Mohammed EL Kadiri wrote:
+> Add documentation to slab.rst explaining when and how to use
+> SLAB_NO_MERGE to protect security-critical slab caches from
+> cross-cache heap exploitation.
 > 
-> More of a question for Vlastimil ... do we want to continue to
-> distinguish between slab (the API) and SLUB (the implementation)?
-> I don't think we ever want to go back to a situation where we have
-> multiple competing implementations of the slab API in the kernel.
-> So shouldn't we deprecate uses of SLUB, particularly in the
-> documentation?
+> The document covers:
+> - When to use SLAB_NO_MERGE and what it communicates
+> - How to verify merge status on a running system
+> - Tradeoffs (memory cost vs performance)
+> - Relationship to CONFIG_RANDOM_KMALLOC_CACHES, SLAB_TYPESAFE_BY_RCU,
+>   and the slab_nomerge boot parameter
+> 
+> Assisted-by: Claude:claude-opus-4.6
+> Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+> ---
+> Changes in v2 (per Jonathan Corbet and Matthew Wilcox feedback):
+> - Add content to existing slab.rst instead of creating new file
+> - Fix markup: use plain function() without additional formatting
+> - Use slab terminology consistently, not SLUB
+> - Remove How merging works section (implementation internals)
+> - Remove cross-cache attack class section (redundant)
+> - Remove Bounded allocation volume criteria
+> - Rephrase unmergeability guidance per Matthew Wilcox suggestion
+> - Add Assisted-by tag per coding-assistants.rst
+>  Documentation/mm/slab.rst | 60 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/Documentation/mm/slab.rst b/Documentation/mm/slab.rst
+> index 2bcc58ada302..c485bd257c44 100644
+> --- a/Documentation/mm/slab.rst
+> +++ b/Documentation/mm/slab.rst
+> @@ -4,6 +4,66 @@
+>  Slab Allocation
+>  ===============
+>  
+> +Cache isolation with SLAB_NO_MERGE
+> +===================================
+> +
+> +The slab allocator merges caches with compatible size, alignment, and flags
+> +to reduce memory fragmentation. While this improves memory efficiency, it
+> +allows objects of different types to share the same slab. This enables
+> +cross-cache heap exploitation, where a use-after-free in one object type can
+> +be leveraged to corrupt an unrelated type.
+> +
+> +SLAB_NO_MERGE prevents a cache from being merged, ensuring it receives a
+> +dedicated slab. A freed slot in an isolated cache can only be reallocated as
+> +the same object type.
+> +
+> +When to use SLAB_NO_MERGE
+> +--------------------------
+> +
+> +SLAB_NO_MERGE should be considered for caches holding security-critical
+> +objects whose corruption leads directly to privilege escalation, such as
+> +credentials, cryptographic keys, or capability sets.
+> +
+> +It is harmless to specify SLAB_NO_MERGE even if the cache is already
+> +unmergeable for other reasons (e.g., it has a constructor or a non-zero
+> +usersize). The flag communicates intent and ensures the cache remains
+> +isolated if those other properties change in the future.
+> +
+> +Verifying merge status
+> +-----------------------
+> +
+> +To check whether a cache is merged on a running system::
+> +
+> +    # Check how many other caches share its slab
+> +    cat /sys/kernel/slab/<cache_name>/aliases
+> +
+> +    # aliases > 0 means other types share this cache's slab
+> +
+> +Tradeoffs
+> +----------
+> +
+> +**Memory**: Isolated caches may have partially-filled slabs that cannot be
+> +used by other types. The overhead is typically a few extra pages.
+> +
+> +**Performance**: Zero impact on kmem_cache_alloc() and kmem_cache_free().
+> +The only effect is at boot when the cache is created.
+> +
+> +Relationship to other mitigations
+> +----------------------------------
+> +
+> +CONFIG_RANDOM_KMALLOC_CACHES creates multiple copies of each kmalloc size
+> +class and randomly assigns allocations among them. It only affects kmalloc()
+> +users and does not affect named caches created with kmem_cache_create().
+> +
+> +SLAB_TYPESAFE_BY_RCU delays freeing the slab by an RCU grace period. It
+> +does not delay object slot reuse and does not prevent cross-cache merging.
+> +It solves a different problem: safe lockless access to freed-and-reallocated
+> +objects of the same type.
+> +
+> +The slab_nomerge boot parameter disables merging for all caches globally.
+> +SLAB_NO_MERGE provides the same protection selectively for individual caches
+> +without the global memory cost.
 
-Indeed, any new stuff should talk about the slab allocator, with old stuff
-can be converted if touched for other reasons.
+Matthew already pointed out in v1 that these last 2 are unnecessary.
 
->> +flags to reduce memory fragmentation. While this improves memory efficiency,
->> +it allows objects of different types to share the same slab pages. This
-> 
-> s/ pages//
-> 
->> +enables cross-cache heap exploitation, where a use-after-free in one object
->> +type can be leveraged to corrupt an unrelated type.
->> +
->> +The `SLAB_NO_MERGE` flag prevents a cache from being merged, ensuring it
->> +receives dedicated slab pages.
-> 
-> s/slab pages/a dedicated slab/
-> 
->> +2. *Actually mergeable*: The cache must not already be unmergeable.
->> +   A cache is already unmergeable if any of the following is true:
->> +
->> +   - It has a constructor (`ctor` argument is non-NULL).
->> +   - It has a non-zero `usersize` (with `CONFIG_HARDENED_USERCOPY`).
->> +   - It already has `SLAB_NO_MERGE` or another `SLAB_NEVER_MERGE` flag.
-> 
-> I don't know if this is good advice for users of the API.  It's true
-> that the slab will already be unmergable for these other reasons, but
-> it's harmless to specify SLAB_NO_MERGE in that case.  And it
-> communicates intent.  And in case somebody removes the ctor in the
-> future, or we decide to change which flags are in SLAB_NEVER_MERGE,
-> the slab will still be unmergable.
+I think this is approach unproductive, sorry. IIUC a newcomer to the
+community, with help of a LLM (I however appreciate the openness about it,
+with Assisted-by: tag), but multiple senior people have to provide input to
+hopefully make it into an acceptable shape. This SLAB_NO_MERGE flag isn't
+that crucial to go through all of this. We could just add a comment about
+security use cases to the comment above #define SLAB_NO_MERGE and that's it.
 
-Agreed.
+So please considers other ways of getting involved in the community (which
+is otherwise welcome), as this is not a great one. Thanks.
 
->> +3. *Bounded allocation volume*: The cache has a predictable number of
->> +   active objects, so the memory cost of dedicated slab pages is
->> +   acceptable.
-> 
-> I don't understand why this is a criteria.
+> +
+>  Functions and structures
+>  ========================
+>  
 
-+1
-
->> +How merging works
->> +=================
->> +
->> +When `kmem_cache_create()` is called:
->> +
->> +1. If `usersize` is non-zero, the merge path is skipped entirely.
->> +
->> +2. Otherwise, `find_mergeable()` in `mm/slab_common.c` searches for a
->> +   compatible existing cache. A merge is prevented if:
->> +
->> +   - The `slab_nomerge` boot parameter is set
->> +   - The new cache has a constructor
->> +   - The new cache's flags include `SLAB_NO_MERGE`
->> +   - No existing cache has compatible size and flags
->> +
->> +3. If a compatible cache is found, the new cache becomes an alias. Both
->> +   share the same slab pages.
-> 
-> This feels like documenting internals rather than documenting how to use
-> the flag.  I'd drop it entirely.
-
-+1
-
->> +The cross-cache attack class
->> +=============================
->> +
->> +Cross-cache attacks exploit slab merging to achieve type confusion:
->> +
->> +1. Attacker triggers a use-after-free in object type A.
->> +2. Type A's cache is merged with type B (they share slab pages).
->> +3. The freed type A slot is reallocated as type B.
->> +4. Attacker uses the dangling pointer to corrupt type B.
->> +5. Privilege escalation.
->> +
->> +CVE-2022-29582 demonstrates this technique: an io_uring use-after-free is
->> +exploited via cross-cache page-level reallocation to achieve root.
->> +
->> +`SLAB_NO_MERGE` prevents step 2: dedicated pages mean a freed slot of
->> +one type cannot be reallocated as a different type.
-> 
-> Not sure this section adds anything to what was already described.
-> 
->> +Tradeoffs
->> +=========
->> +
->> +*Memory*: Isolated caches may have partially-filled slab pages that
->> +cannot be used by other types. For caches with bounded allocation counts,
->> +this is typically a few extra pages.
->> +
->> +*Performance*: Zero impact on `kmem_cache_alloc()` and
->> +`kmem_cache_free()`. The only effect is at boot when the cache is
->> +created.
->> +
->> +Relationship to other mitigations
->> +==================================
->> +
->> +`CONFIG_RANDOM_KMALLOC_CACHES`
->> +    Creates 16 copies of each `kmalloc` size class and randomly assigns
->> +    allocations among them. Only affects `kmalloc()` users. Does not
->> +    affect named caches created with `kmem_cache_create()`.
->> +
->> +`SLAB_TYPESAFE_BY_RCU`
->> +    Delays freeing the slab page by an RCU grace period. Does not delay
->> +    object slot reuse. Does not prevent cross-cache merging. Solves a
->> +    different problem: safe lockless access to freed-and-reallocated
->> +    objects of the same type.
->> +
->> +`slab_nomerge` boot parameter
->> +    Disables merging for all caches globally. `SLAB_NO_MERGE` provides
->> +    the same protection selectively for individual caches without the
->> +    global memory cost.
-> 
-> These two sections also feel unnecessary.
-
-Many "product of LLM" hallmarks, sigh.
