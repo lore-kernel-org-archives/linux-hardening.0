@@ -1,53 +1,59 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF94E3921D6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DCC3B95E3
 	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 09:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780912550; cv=none; b=ouMwvNK1cxukP0psR71TxisSp9XWUm44lPe8aiXSdtqAvLJzqUMC5kQOaMWEYuNNH/dklFt/nVEREBFgjG3px76B8jYGaLx5VSJWVPi+OTVx7jaD/PxVXDYvB7+EYrwmaeMTaJw0UpGOpIadPwZ/uM8mf9cmwg01unuq5252j2U=
+	t=1780912550; cv=none; b=uZAUNec96uqwYLj9IXYI4KeRX4CV6N+Eg3fGKOElcI2zoozO1woFn63q+ROLoq3VsCiOR/T2N8++LFRDPDwSiQZv5oJv60rmgpw1mEyT6j1+5ssEz503/woU9AYq6sQe8uzkHc8t2elwhYx1SmT5d5SA6NZpWgiEk+fKHVYAZrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780912550; c=relaxed/simple;
-	bh=S0ZqpIOf/0geJXcSvOroE5JwOeLeVPGHx2YTwd7yYYM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e5eHZbBKRypsG1EYajjVZ8XNp/puc/grjR0/Nv4+fTKfJgNAFngFq11pXfgBzSnEFL5xhVNGI36BmU2sP1n56OkooI3sT572d9yacIzfm+rElWybVAjjdNEuoL8/F2eTwBUY/kOX+p1aJbt1KRVvUIXX/LfzKzpdlQ4mOw8U4HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=DxDywrKb; arc=none smtp.client-ip=185.226.149.38
+	bh=g2a+0peurYc++lj+MTJ+qK/QF5LhOp9QgWJzFwBQQ60=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QZy/PBmZ8IgIUEryjtzVSNM5YORLg+DlCm59Bvb7/56o3EOO5TKF0YNV+fm51nx/z+d+FRrbLeQ6a0thhEq6wKBnLhcnXLpI9HEh1PrKLKp8eCR6mw849GsyHddulBpZBC9ItyEPvxbTZBWBiVAJ0ylRPdlthWeWYZS4iJ2jnrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=icsD6XZk; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="DxDywrKb"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="icsD6XZk"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWhr-00BrCt-Dj; Mon, 08 Jun 2026 11:55:43 +0200
+	id 1wWWhq-00BrCQ-CR; Mon, 08 Jun 2026 11:55:42 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=I+NXORxswwyj4S6K4ECxTOvj3mkCctUpHmAmT3OuuLI=; b=DxDywr
-	Kb9j86DrswUAGzk5pZ2zzZEFmBeT8A0k9MezePbI/kft2OAiCrYXknLV6fdyjU7hu5iOSjqTWoSKA
-	KDRucjfOPqH6C2T6qMsvIHMoTmU4Dse1s3CihFuukoSkORfhacomsRPoUukP7DkD57E6U1Cr+7Zzm
-	jQvc21ODDGG9Z/aW+HcJhGGENpJ3RkyXwexH9rW1KPM3iuN3WJ9vP1qdXFpfWFFPTwLR114BCB7Gq
-	q5Ya9A26zUSnhKXraHw3pvDfjfsw1XEsjujR5Ko8LJ87AKco7a732aZRgFIo9Xo9DD/ggS4Dq9Wbw
-	5PTMZonx9xeHLvUXcBsTlNI3xl7w==;
+	Subject:Cc:To:From; bh=hOyVQeN0Zn21ZxnkGr2+7/wIdoUqTpMPv9PBDwl37z8=; b=icsD6X
+	ZkBw0g9gkjA2bR0nerz7qipgEDZlx622c1sGNma5VNqMwp8twyiTzSNQN40T/brnpdSc/dZy3sHAl
+	ypKCCU0BNqgnJ6Ka7eBqltikYiGzd6LkrGkSpes2MK0ARnItbFL98wY+Mq9nYQQhd57Ay0LxqzgGb
+	PROGritLv9BwBXjgQRex+JVm7fGTBpIPB6jpAtJmrvWmj0vS1OOnkWYI1U5W/DUrhEmk3CdeBIBEi
+	BltFpMCCL8ATz+zGqNJYjLUDs7j5CCZH0LsptJK4qSacOz3th9Bv0xZ8IAfKR5/kfAOUvZ8h4Rq8p
+	Ae39CjVBliW0lGuOw6AtovHnaVHA==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWhq-0000HM-Tn; Mon, 08 Jun 2026 11:55:43 +0200
+	id 1wWWhp-0003ed-HD; Mon, 08 Jun 2026 11:55:41 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wWWho-00Ag6G-TM;
-	Mon, 08 Jun 2026 11:55:41 +0200
+	id 1wWWhf-00Ag6G-K8;
+	Mon, 08 Jun 2026 11:55:31 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
-	linux-afs@lists.infradead.org,
-	linux-kernel@vger.kernel.org
+	coreteam@netfilter.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	netfilter-devel@vger.kernel.org
 Cc: Arnd Bergmann <arnd@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Westphal <fw@strlen.de>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] afs_lookup_atsys(): Use memcpy() instead of strcpy()
-Date: Mon,  8 Jun 2026 10:55:22 +0100
-Message-Id: <20260608095523.2606-38-david.laight.linux@gmail.com>
+Subject: [PATCH net-next] net/netfilter/nfnetlink_cttimeout: Use strscpy() to copy strings into arrays
+Date: Mon,  8 Jun 2026 10:54:59 +0100
+Message-Id: <20260608095523.2606-15-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,8 +65,8 @@ Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
 
-strlen() has been called to validate the length, use the same length
-to copy the string.
+Replacing strcpy() with strscpy() ensures that overflow of the target
+buffer cannot happen.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -86,39 +92,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- fs/afs/dir.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/netfilter/nfnetlink_cttimeout.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index aaaa55878ffd..41aa6a4b0987 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -914,7 +914,7 @@ static struct dentry *afs_lookup_atsys(struct inode *dir, struct dentry *dentry)
- 	struct afs_net *net = afs_i2net(dir);
- 	struct dentry *ret;
- 	char *buf, *p, *name;
--	int len, i;
-+	int name_len, len, i;
+diff --git a/net/netfilter/nfnetlink_cttimeout.c b/net/netfilter/nfnetlink_cttimeout.c
+index dca6826af7de..7ed14accff22 100644
+--- a/net/netfilter/nfnetlink_cttimeout.c
++++ b/net/netfilter/nfnetlink_cttimeout.c
+@@ -165,7 +165,7 @@ static int cttimeout_new_timeout(struct sk_buff *skb,
+ 	if (ret < 0)
+ 		goto err;
  
- 	_enter("");
- 
-@@ -935,13 +935,14 @@ static struct dentry *afs_lookup_atsys(struct inode *dir, struct dentry *dentry)
- 
- 	for (i = 0; i < subs->nr; i++) {
- 		name = subs->subs[i];
--		len = dentry->d_name.len - 4 + strlen(name);
-+		name_len = strlen(name);
-+		len = dentry->d_name.len - 4 + name_len;
- 		if (len >= AFSNAMEMAX) {
- 			ret = ERR_PTR(-ENAMETOOLONG);
- 			goto out_s;
- 		}
- 
--		strcpy(p, name);
-+		memcpy(p, name, name_len + 1);
- 		ret = lookup_noperm(&QSTR(buf), dentry->d_parent);
- 		if (IS_ERR(ret) || d_is_positive(ret))
- 			goto out_s;
+-	strcpy(timeout->name, nla_data(cda[CTA_TIMEOUT_NAME]));
++	strscpy(timeout->name, nla_data(cda[CTA_TIMEOUT_NAME]));
+ 	timeout->timeout.l3num = l3num;
+ 	timeout->timeout.l4proto = l4proto;
+ 	refcount_set(&timeout->refcnt, 1);
 -- 
 2.39.5
 
