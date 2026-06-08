@@ -1,122 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069E02F39B4
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 14:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C14A33F374
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 14:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780928378; cv=none; b=sq4Jm0OSoLyHewTln+h9akHV4bHDbNGzdRIHiIYZ62T3QMsCpNnMPBPcd3mCJv7/rlYdJcxloCxskJGoL/r3pnyybShCFZekTqiKS+13d97S3CVqXOz/H5bwSe7HVetmpYSrHeK6p2RcvwzBEFesNFmxvpzbtugbsRLviTv7+BA=
+	t=1780929270; cv=none; b=liRvfiELZvcdlGWNhFKzL7BsXMKxvT8ZEnu/eTK1zUw7qLQSBvIPdfvJ2SiHj4lwO/lovvc//sT03EnZjQwkFziGMYojpsiLEmmsIL154WYILbqFLOVpBoGj4gq0UUtKwYQhWX91q0vV7HliKoKfDCQLJkvoBbSMLQHd4IPmT5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780928378; c=relaxed/simple;
-	bh=kBM6a5CZrIynDhrFKjkLJC3Au98q/nKeVE0HR49B+MQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZgedPB5l2Rjg2e+zGN90LimA1h8Tq0mzK8iqZRf4e+v3uUKRDPSWQB9eXJR/UYZO4IHIMv/l/4+2yvhCBOfbZlHhUMrDid+R3CwumvyoM5jCMZC5fg2Lpcy6+WdxmNftb5iJg2d6j/F06U0NeCbG11SUkD2zPHTtVLG1A/DW2wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CACFbpT2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780929270; c=relaxed/simple;
+	bh=2DiM6PFrPZzoOX3Txr45CahtPR9yAKKQFjvEf1Rg/0o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=EWikDhB7iZ/ZGdG2l+OqWlUfOnO+PAipU/ZwSc9b97Co1WPeTMc86ZaKjEvDDEtQ3LqKPtVu+Xm0doSpmmq2F4JVLHS31HEq045qXGOf5F7HAKBWbZYWfrro8F/mDuwVJDKxbqrw6VGpxGw9Zfk0yLYLAgOFQZVROxxHAW3MRWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b=l/HTe1ie; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CACFbpT2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780928376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ksEVz7zu8cddZveGMzSFRyDbw79gGlzSMPra+8QpguA=;
-	b=CACFbpT2HnRBLEICL9FTwf4/C/ibwIvuhC1jynQDhdyPbod60e+rbeU2Bew2NgGwS6v12r
-	WJFOezZ+SE1Pu6jHOXNVYreNdKllIaWpIl07H8Lz83BOjQXVlWoHoMctAE70eD8b7zqUeQ
-	S828P3cq75H981JjeEbmIu0dD+3r7Gc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-sZu16Q8vOYK7rKPF-TgC_g-1; Mon,
- 08 Jun 2026 10:19:32 -0400
-X-MC-Unique: sZu16Q8vOYK7rKPF-TgC_g-1
-X-Mimecast-MFC-AGG-ID: sZu16Q8vOYK7rKPF-TgC_g_1780928371
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 365B218011E6;
-	Mon,  8 Jun 2026 14:19:31 +0000 (UTC)
-Received: from [10.44.50.170] (unknown [10.44.50.170])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AE77E1800367;
-	Mon,  8 Jun 2026 14:19:28 +0000 (UTC)
-Date: Mon, 8 Jun 2026 16:19:25 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
-    Arnd Bergmann <arnd@kernel.org>, dm-devel@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>, 
-    Benjamin Marzinski <bmarzins@redhat.com>, 
-    Mike Snitzer <snitzer@kernel.org>
-Subject: Re: [PATCH next] drivers/md/dm-zoned-metadata: User strscpy() to
- copy device name
-In-Reply-To: <20260606202633.5018-12-david.laight.linux@gmail.com>
-Message-ID: <4773c74f-5425-76fa-dc3a-5a5cf59f4e62@redhat.com>
-References: <20260606202633.5018-12-david.laight.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b="l/HTe1ie"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-69e66e11386so1393014eaf.3
+        for <linux-hardening@vger.kernel.org>; Mon, 08 Jun 2026 07:34:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1780929268; x=1781534068; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A/M/vbl7ihKt4hB2QPk1iXol4u8SiMgbyxK1Z7CwC08=;
+        b=l/HTe1ie4YJiYPZOuEE26ccKoBxrF8bdcepOCEQo4CE1xjTujvlVGJUf+BzxJ9XoDl
+         YHGQLFzgOvkitqdfccA1jDm5ypp6ahRXT7yOXavHPPLp6CrN0HaM03vA9ezuLc8wMTv7
+         9lqfHgbl7qpupJhLfuCHpQRAlaeqt9zCOfsxo79n3hcNvGA+28PDuY3DY790IZ6Qjgok
+         Uz5zeZXPCFGBYxMylz0eQkkwW8ds/7gwX0V3iSrvzmyWXPUW8eGvl97sSzootlyQ1AQE
+         9gAiODy8ptUUEU4tb1XENh6IHWCWAXEqPx8KiD8/d3zOxyfUz5Q/q1M6cGL/webkFbJ1
+         HD5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780929268; x=1781534068;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=A/M/vbl7ihKt4hB2QPk1iXol4u8SiMgbyxK1Z7CwC08=;
+        b=Bx0hJ64FA5EmwUSvhn8OCnIraou2b6LNQdFNDd4LO5DemQWHBumO53RBhQgBMvG5F9
+         f25fOxHK7GcW5yNabS02sX1C4BvsgT+k5anAgkAGMapfcjHGkFJ0FSZvwXe4CcNQWnpz
+         xmO0eImqjFRbaXcCabTNKlcze5h3rrDnaOQLUj0Z0R5VzGmM/KjXyGXA6kr8nit+6fFC
+         JYY19UmEBuZCFBODw7+cM6QhfWD+x+xkEK/3OtpkL/+NhdxiepAZhKNo36/9Fmvt7yM2
+         Zsl3/mQtcI+NMm+Dv07tqOKCom0Rs+m6BBZWfoXSDyPxoqIWTP3Qhiiz5nJRp3nCE5hc
+         c8NQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/BiJKo9IITh2WZT4d/fq432jQRtabAp6xduvC0kkx6ykyZYfNF8G7436sNMG9COg03XCilg22ICWSxCwEVtmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK9uSw/dTnyZaItVzw7MwYtUkgiliTrreVHSoweC00h+lKfj1+
+	RYC0VR6gb/lJYgar6Um5gJScBgfiw3X+oTtSvPeyaHg+opj/Pp/gUph+GiIpANOwP6Q=
+X-Gm-Gg: Acq92OFxCgvygyYxStSx0Q1cKaiUs2xx/FXy4zx+Gfyc3L3tkhk6euEUjsIb6HJrMEJ
+	orHKi2dxNXQtBivcjJLyMGCHY4hCoVzjzYWJiwGSeF0X+urNqURqYq47McjhJYAE1FEPI18PTAp
+	ISkpv469aHc58Z/dNEBcLVgYGDhbfFI9hGD24ZF8zdYoWEAUJjUqpsOHEeQMfQIpLINL+aXbZY2
+	lW9yz2USIS33QTP+v0HoV5WQ0tViFGv6ue08PcAsuN/E0Fy3iIaDLVT2nqSbIKEW87sRN/rPlgH
+	6vHG9k0yv4TKQWQRrMKG+jkQowjtDLcgHulBD1AFAGFwxiJzb+8T9fp9WwKTfbeKFTtmuLLHzpV
+	Cy5QdsWF1WQSKfDHRjOFuMLBzj1e3TRNdDWlwX02O5Jwg7JzDzdDOVmWFnShhMd437SFl24AnOQ
+	ma6MRIFYakThLBOijPxJdL9oghpY3dOn3HSaHsRFWBi08RY2iE2u4ergSKDQZ89YW3HfukV4h5H
+	fydTULJx5AyZ4Q=
+X-Received: by 2002:a05:6820:4b8a:b0:69d:521d:a4fc with SMTP id 006d021491bc7-69e68b1b38dmr7672050eaf.8.1780929267965;
+        Mon, 08 Jun 2026 07:34:27 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-69e464050fasm9622409eaf.9.2026.06.08.07.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2026 07:34:26 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
+ Arnd Bergmann <arnd@kernel.org>, ceph-devel@vger.kernel.org, 
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ david.laight.linux@gmail.com
+Cc: Ilya Dryomov <idryomov@gmail.com>
+In-Reply-To: <20260606202744.5113-5-david.laight.linux@gmail.com>
+References: <20260606202744.5113-5-david.laight.linux@gmail.com>
+Subject: Re: [PATCH next] drivers/block/rbd: Use strscpy() to copy strings
+ into arrays
+Message-Id: <178092926613.1038952.2298978254798273245.b4-ty@b4>
+Date: Mon, 08 Jun 2026 08:34:26 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: vPkvw_Fdz2Ce7ybXCD48zeSgWtg7E4bj1WnC_fHtYTM_1780928371
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-
-Hi
-
-I accepted the patch.
-
-Mikulas
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
 
-On Sat, 6 Jun 2026, david.laight.linux@gmail.com wrote:
+On Sat, 06 Jun 2026 21:27:44 +0100, david.laight.linux@gmail.com wrote:
+> Replacing strcpy() with strscpy() ensures than overflow of the target
+> buffer cannot happen.
 
-> From: David Laight <david.laight.linux@gmail.com>
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> ---
-> This is one of a group of patches that remove potentially unbounded
-> strcpy() calls.
-> 
-> They are mostly replaced by strscpy() or, when strlen() has just been
-> called, with memcpy() (usually including the '\0').
-> 
-> Calls with copy string literals into arrays are left unchanged.
-> They are safe and easily detected as such.
-> 
-> The changes were made by getting the compiler to detect the calls and
-> then fixing the code by hand.
-> 
-> Note that all the changes are only compile tested.
-> 
-> Some Makefiles were changed to allow files to contain strcpy().
-> As well as 'difficult to fix' files, this included 'show' functions
-> as they really need to use sysfs_emit() or seq_printf().
-> 
-> All the patches are being sent individually to avoid very long cc lists.
-> Apologies for the terse commit messages and likely unexpected tags.
-> (There are about 100 patches in total.)
-> 
->  drivers/md/dm-zoned-metadata.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
-> index ec605acddd88..f4f81c79a080 100644
-> --- a/drivers/md/dm-zoned-metadata.c
-> +++ b/drivers/md/dm-zoned-metadata.c
-> @@ -2871,7 +2871,7 @@ int dmz_ctr_metadata(struct dmz_dev *dev, int num_dev,
->  	if (!zmd)
->  		return -ENOMEM;
->  
-> -	strcpy(zmd->devname, devname);
-> +	strscpy(zmd->devname, devname);
->  	zmd->dev = dev;
->  	zmd->nr_devs = num_dev;
->  	zmd->mblk_rbtree = RB_ROOT;
-> -- 
-> 2.39.5
-> 
+Applied, thanks!
+
+[1/1] drivers/block/rbd: Use strscpy() to copy strings into arrays
+      commit: 5ef1b0194b382fafe5023b5b014e4db3b948ee15
+
+Best regards,
+-- 
+Jens Axboe
+
+
 
