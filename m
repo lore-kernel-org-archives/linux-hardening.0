@@ -1,54 +1,55 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBDD3B8BB9;
-	Mon,  8 Jun 2026 09:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE1A3BB12D;
+	Mon,  8 Jun 2026 09:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780912551; cv=none; b=ibfXmMPK8zJDMbqa1FI5RzLdZ1QaELlcmW8V7Z2hZy7W17scAZMaJULFP+Khf9OaDIxAkdkFTzyQo0PNJPqJ0QYeYfDb/tIBJ+vn240hLCGNI4aiteczTSZl8q0UDHT/eiTbx7SmE28M9140nUcttum0+uPUwM79HZm7raJU0bM=
+	t=1780912552; cv=none; b=cmukb0gWuwlRe8eB1PijJY2ugQiQuNosK7D1ghyx3SzV0r1pQRaoH7QhaMV8wZpJlNAZ6T86+s2jtuO06mTUA46EHO4FQ3hfLova9gHHdh5x30lT+dU9G6oyc1705sj6114SygE0XVyscIHDwpGrSQnMFNRduMfV3Eo6gNgAhkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780912551; c=relaxed/simple;
-	bh=Tk5KdqZhOv3D5nSna7itNU2kqJZQX5A5kJSFzhxGYO4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eXOY8gagSwC3+P71evoTUFNAkO9jHWpzY3NGAEOWoin/SmPjzKzp5sqhcP5CdKeS2hXe22DCrfWpv+QYBU2f+SldLpF84zVmUIeqpZLDEGdO5ngfQfCCzLTIMvTYrwPQ3BLB31Zinax6jbW/usmLmTbrjsVKbQCqcK7UcPrcmA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=mzwNQcpm; arc=none smtp.client-ip=185.226.149.38
+	s=arc-20240116; t=1780912552; c=relaxed/simple;
+	bh=n4LIM2C9vgIqUuS7+5mN7lYtMCoBPZG1RqZJ1TbbNZY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nukhGdFe0HCqTUinxy7nSOHZ4XDQfhQe4se/bOHUoa7nva9YQRXwDb7dd8nDm9cJLUz3aAOyMcHY5vM2xqoqvMOrN9U+MyxKCCS/KVRLx3aIG7NDe9IWwWNI22uNEQWEZIIFqv1p6e5KJryj2KfF9Xbj5PwwGadaeAvoNBq2dWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=LVm8oYDg; arc=none smtp.client-ip=185.226.149.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="mzwNQcpm"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="LVm8oYDg"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWhq-00BrCR-JR; Mon, 08 Jun 2026 11:55:42 +0200
+	id 1wWWht-00BS2X-FQ; Mon, 08 Jun 2026 11:55:45 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=W+yU8trTCS2ysnxcAjmBSgusy/BoMx22FcIeM28Wuc0=; b=mzwNQc
-	pmRu7sNwWZKLmlabv3eCEsKsj28PEwTYVAgbmxU8WuxSlvJ2JHOFiuUnqLQtSIM7svHv+aSmbwe2g
-	q/QLJoMJeKOkwQpCO8xICGWS/9ndod9XYJx3MPCXFLY24UW59iyyMk/Cd163saubfjwrdvly+Q/Y9
-	FcIFmPEWM16YncIkVk+Cz68K6rygpaOaa8b0lZRJPBNd6trvQxWrGixndC/J3I7t5fZTn/ORmzqqY
-	3rnnc14tGc1bINlHKUZ4SHD58ej6ZpYpFauw1wT3SlYdHurSmb1IZprBu9DqYA/2EEC2cYhWZR/MJ
-	0lSOz3yiAeTn9Qm0IfERQh7Wgg+A==;
+	Subject:Cc:To:From; bh=usYY0fbAaxH4l0RSJSLe8L2lBIO3kdrjP5tiLhHTKK0=; b=LVm8oY
+	Dg6iHWQ4zY/zfxN+EOF/TvKRwrHSmHYYHn0PkADyogBsIYgPXcuQbB+3UM/l4s3Tpn/65fv2hatzu
+	Yn+dIT3LAXe1OhqQOjvT5Ae0/FsCLm+AaL+uq5WvafQSpdyGGoQmP7E8rXPRme4CkqJUtJwQ2Arjh
+	HQP6V2FFtF9mMZXfU+ISK9EkSGCWvmOVpr57qn2LPmcPKnYbhK+B3J+WK9cU9T14yfxUmrHBHikoN
+	q24VczA3RuXseM+bri02kdul7X/CqeG0q2hADIK24RcwZAS/uKZp1Un1fOSX+7hBqi5c3SipcJ9Yk
+	ooB5Pat2hdesPM2efFd/OZXU5k4w==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWhk-0003b8-U2; Mon, 08 Jun 2026 11:55:37 +0200
+	id 1wWWhs-0000Jm-Ly; Mon, 08 Jun 2026 11:55:44 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wWWhh-00Ag6G-KJ;
-	Mon, 08 Jun 2026 11:55:33 +0200
+	id 1wWWhb-00Ag6G-Qi;
+	Mon, 08 Jun 2026 11:55:27 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org
+	linux-scsi@vger.kernel.org
 Cc: Arnd Bergmann <arnd@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/mtd/parsers: Replace strcpy() into kmalloc()ed buffer
-Date: Mon,  8 Jun 2026 10:55:04 +0100
-Message-Id: <20260608095523.2606-20-david.laight.linux@gmail.com>
+Subject: [PATCH next] drivers/scsi/bfa/bfad_bsg: Use strscpy() to copy strings into arrays
+Date: Mon,  8 Jun 2026 10:54:50 +0100
+Message-Id: <20260608095523.2606-6-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -60,10 +61,8 @@ Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
 
-The length of nullname is known (and used for the kmalloc) so use
-memcpy() instead of strcpy() to copy it into place.
-
-Use strscpy() and the length it returns to copy over the names.
+Replacing strcpy() with strscpy() ensures that overflow of the target
+buffer cannot happen.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -89,47 +88,59 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/mtd/parsers/redboot.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/scsi/bfa/bfad_bsg.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/mtd/parsers/redboot.c b/drivers/mtd/parsers/redboot.c
-index bf162c44eafe..e1e280b5fa40 100644
---- a/drivers/mtd/parsers/redboot.c
-+++ b/drivers/mtd/parsers/redboot.c
-@@ -249,7 +249,7 @@ static int parse_redboot_partitions(struct mtd_info *master,
- 	nullname = (char *)&parts[nrparts];
- #ifdef CONFIG_MTD_REDBOOT_PARTS_UNALLOCATED
- 	if (nulllen > 0)
--		strcpy(nullname, nullstring);
-+		memcpy(nullname, nullstring, nulllen);
- #endif
- 	names = nullname + nulllen;
+diff --git a/drivers/scsi/bfa/bfad_bsg.c b/drivers/scsi/bfa/bfad_bsg.c
+index 292bc9aa43f1..e15bac14cf0f 100644
+--- a/drivers/scsi/bfa/bfad_bsg.c
++++ b/drivers/scsi/bfa/bfad_bsg.c
+@@ -92,12 +92,12 @@ bfad_iocmd_ioc_get_info(struct bfad_s *bfad, void *cmd)
+ 	iocmd->host = im_port->shost->host_no;
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
  
-@@ -264,11 +264,13 @@ static int parse_redboot_partitions(struct mtd_info *master,
- 	}
- #endif
- 	for ( ; i < nrparts; i++) {
-+		int len;
- 		parts[i].size = fl->img->size;
- 		parts[i].offset = fl->img->flash_base;
- 		parts[i].name = names;
+-	strcpy(iocmd->name, bfad->adapter_name);
+-	strcpy(iocmd->port_name, bfad->port_name);
+-	strcpy(iocmd->hwpath, bfad->pci_name);
++	strscpy(iocmd->name, bfad->adapter_name);
++	strscpy(iocmd->port_name, bfad->port_name);
++	strscpy(iocmd->hwpath, bfad->pci_name);
  
--		strcpy(names, fl->img->name);
-+		len = strscpy(names, fl->img->name, namelen);
-+		BUG_ON(len < 0);
- #ifdef CONFIG_MTD_REDBOOT_PARTS_READONLY
- 		if (!strcmp(names, "RedBoot") ||
- 		    !strcmp(names, "RedBoot config") ||
-@@ -276,7 +278,8 @@ static int parse_redboot_partitions(struct mtd_info *master,
- 			parts[i].mask_flags = MTD_WRITEABLE;
- 		}
- #endif
--		names += strlen(names) + 1;
-+		names += len + 1;
-+		namelen -= len + 1;
+ 	/* set adapter hw path */
+-	strcpy(iocmd->adapter_hwpath, bfad->pci_name);
++	strscpy(iocmd->adapter_hwpath, bfad->pci_name);
+ 	for (i = 0; iocmd->adapter_hwpath[i] != ':' && i < BFA_STRING_32; i++)
+ 		;
+ 	for (; iocmd->adapter_hwpath[++i] != ':' && i < BFA_STRING_32; )
+@@ -118,12 +118,11 @@ bfad_iocmd_ioc_get_attr(struct bfad_s *bfad, void *cmd)
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
  
- #ifdef CONFIG_MTD_REDBOOT_PARTS_UNALLOCATED
- 		if (fl->next && fl->img->flash_base + fl->img->size + master->erasesize <= fl->next->img->flash_base) {
+ 	/* fill in driver attr info */
+-	strcpy(iocmd->ioc_attr.driver_attr.driver, BFAD_DRIVER_NAME);
+-	strscpy(iocmd->ioc_attr.driver_attr.driver_ver,
+-		BFAD_DRIVER_VERSION, BFA_VERSION_LEN);
+-	strcpy(iocmd->ioc_attr.driver_attr.fw_ver,
++	strscpy(iocmd->ioc_attr.driver_attr.driver, BFAD_DRIVER_NAME);
++	strscpy(iocmd->ioc_attr.driver_attr.driver_ver, BFAD_DRIVER_VERSION);
++	strscpy(iocmd->ioc_attr.driver_attr.fw_ver,
+ 		iocmd->ioc_attr.adapter_attr.fw_ver);
+-	strcpy(iocmd->ioc_attr.driver_attr.bios_ver,
++	strscpy(iocmd->ioc_attr.driver_attr.bios_ver,
+ 		iocmd->ioc_attr.adapter_attr.optrom_ver);
+ 
+ 	/* copy chip rev info first otherwise it will be overwritten */
+@@ -200,9 +199,9 @@ bfad_iocmd_ioc_set_name(struct bfad_s *bfad, void *cmd, unsigned int v_cmd)
+ 	struct bfa_bsg_ioc_name_s *iocmd = (struct bfa_bsg_ioc_name_s *) cmd;
+ 
+ 	if (v_cmd == IOCMD_IOC_SET_ADAPTER_NAME)
+-		strcpy(bfad->adapter_name, iocmd->name);
++		strscpy(bfad->adapter_name, iocmd->name);
+ 	else if (v_cmd == IOCMD_IOC_SET_PORT_NAME)
+-		strcpy(bfad->port_name, iocmd->name);
++		strscpy(bfad->port_name, iocmd->name);
+ 
+ 	iocmd->status = BFA_STATUS_OK;
+ 	return 0;
 -- 
 2.39.5
 
