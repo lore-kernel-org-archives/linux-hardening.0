@@ -1,55 +1,57 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C612C3BB9FC
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 09:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E7E3D301D
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 09:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780912554; cv=none; b=f0rnkx6onQLWOwt8ENn43c3lBurknYnIar2qVkyp0IFhnRKmkGg8HF75wp+krM23trpylBo5gqigZZkg5c1tZmfDtrXlitfPnW5kiJYUiiccTy/6sCB0wnYeHP1jqc8sOnZudV3vWZSb6nnHfMFP2/3lgOoBpUjETG8Eho6clnI=
+	t=1780912560; cv=none; b=HrhXqvXLcQqHJtLSs5/wsr8pjwMUqADRNeD+69cioM+ZQZGpcxc51ofBYrM8gMnkDEV/ZB1uds8sitdV5r0vNo1yqCYJNIm4xLMkst6/qOr6+EoZ3Nl4J9+H0VhTKThHuSuZ43ksozJiZy7DUiUuUssNPVK+Av2GOEdjJ3LRGZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780912554; c=relaxed/simple;
-	bh=g6wSEvqw7XZMJ/p+06xBpO8PfFIh9dA9lwYu8bmhdTA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KFTb9YXMrt5iv5uEEqJCAIkspB61lP8Y6mKxBOrToj8uU8CQlJtFelNLnxphKRUDrU8GglNxmfnYYtFjyJRPnuMS7XLgkmEDacKHj3wfWLbcyL01v79zSmFU8ZrYWy0XyvceK2WC33uWdKlQUknsfFYgjZispybwyZ+S8/e6mrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=O48dDjz3; arc=none smtp.client-ip=185.226.149.37
+	s=arc-20240116; t=1780912560; c=relaxed/simple;
+	bh=rRMG2vuq12hFBjsTJqEu7ppDeFJeqY/J0McyArkok+s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OmnRpvWVJvQdn0bYTquSPkG+nj4xIa9ZwyU3fWz/GY5ZYvYvWOPMEQmkWcglH+O2lx7+ERPWq+BSsDN47MuCARAcvgDXvaVoDxdzHJXaf35pLWmE1anXq+1woX4lecDxeSXfV5nFaobckGg3JxHbkRS+JqFwYMW/9vmaV8mExaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=XJEdA+6B; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="O48dDjz3"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="XJEdA+6B"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWhu-00BS3B-9t; Mon, 08 Jun 2026 11:55:46 +0200
+	id 1wWWi4-00BrHj-9q; Mon, 08 Jun 2026 11:55:56 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From; bh=FBan7cpFo4fTNH0k/59lx/WnOxklojwuWy7DsoNcmuc=; b=O48dDj
-	z3/8asOyQ4y9tIqI69gSphRs/7AKLa8SbGw1vGIxBTa4R53j03L6iN8KKG7RJNudwfgczs6KqomUx
-	9SyUnwvDsf9I3WIdnS/XxTXNqImrFk5zODoEQN7PKCV4QKNyjEIF3Tns/sq0TjhhArkfhP8aPjAIC
-	WcOtelieaOJqv9rkv4jUybxuv3y8eC0ikHDNBASq5sAC6jQ0HT3YhcvBVfGXTS3VFZaftwwc9igMX
-	YDZ9FI4xxsL6O12tJnsEqoLfpgMSxXRY5vJAj+LUC8Z3zFZrg0KvNDMochYF35C3oyNSc9SpZxJo6
-	xBhL7h1tGV8unGVE0iHm/QFvxPBQ==;
+	Subject:Cc:To:From; bh=OQIEcgVq7NOd4JbQ00khnJw1hkKI1O/HpLwNwh7rtvM=; b=XJEdA+
+	6BTl+Rv46D1xxPAR4/IVtdeWdl4DyeOoBiIQPraGm74ifHPlcrt7uCWYbnSG2gi9u0CdMgLLkJan7
+	4qSlrtiixwRQo5qUeeIxf7XvcuHojxIBTDzRUnwvGaVwl72bjHjbXKow567NrVs3un5CTXpMP5Jxb
+	IYxI+J0F5JxPJOP3zw2Kx09quCIbRZyxufwNW14i8DoSvYH1zNhQbgInd7wkME6yUMcT2kAHeAeKv
+	p+Zn1CbvKP7U9A8PdiaqnummDad4aOeyd8vxucZpp1r+/JjawDHixGDvmXuzfaHqZd7CV1Ts3XWDU
+	F+i1MBF/n0LvZRCyqdNVkEAHUKNg==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1wWWhs-0003hM-R0; Mon, 08 Jun 2026 11:55:45 +0200
+	id 1wWWi4-0000L2-1u; Mon, 08 Jun 2026 11:55:56 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.95)
-	id 1wWWhb-00Ag6G-1a;
-	Mon, 08 Jun 2026 11:55:27 +0200
+	id 1wWWhl-00Ag6G-JZ;
+	Mon, 08 Jun 2026 11:55:37 +0200
 From: david.laight.linux@gmail.com
 To: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org
+	netdev@vger.kernel.org
 Cc: Arnd Bergmann <arnd@kernel.org>,
-	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Timur Tabi <timur@kernel.org>,
 	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH next] drivers/scsi/bfa/bfa_fcs_lport: Use strscpy() to copy strings into arrays
-Date: Mon,  8 Jun 2026 10:54:48 +0100
-Message-Id: <20260608095523.2606-4-david.laight.linux@gmail.com>
+Subject: [PATCH net-next] drivers/net/ethernet/qualcomm/emac: Use strscpy() to copy the ethtool strings
+Date: Mon,  8 Jun 2026 10:55:14 +0100
+Message-Id: <20260608095523.2606-30-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,8 +63,9 @@ Content-Transfer-Encoding: 8bit
 
 From: David Laight <david.laight.linux@gmail.com>
 
-Replacing strcpy() with strscpy() ensures that overflow of the target
-buffer cannot happen.
+While the string is short it is still best to use strscpy()
+with length ETH_GSTRING_LEN.
+Should still get optimised to a memcpy().
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
@@ -88,22 +91,22 @@ All the patches are being sent individually to avoid very long cc lists.
 Apologies for the terse commit messages and likely unexpected tags.
 (There are about 100 patches in total.)
 
- drivers/scsi/bfa/bfa_fcs_lport.c | 2 +-
+ drivers/net/ethernet/qualcomm/emac/emac-ethtool.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/bfa/bfa_fcs_lport.c b/drivers/scsi/bfa/bfa_fcs_lport.c
-index 2df399c537c1..d8a73cc531c7 100644
---- a/drivers/scsi/bfa/bfa_fcs_lport.c
-+++ b/drivers/scsi/bfa/bfa_fcs_lport.c
-@@ -1086,7 +1086,7 @@ void
- bfa_fcs_lport_set_symname(struct bfa_fcs_lport_s *port,
- 				char *symname)
- {
--	strcpy(port->port_cfg.sym_name.symname, symname);
-+	strscpy(port->port_cfg.sym_name.symname, symname);
+diff --git a/drivers/net/ethernet/qualcomm/emac/emac-ethtool.c b/drivers/net/ethernet/qualcomm/emac/emac-ethtool.c
+index f502db9cdea9..ffc300641aac 100644
+--- a/drivers/net/ethernet/qualcomm/emac/emac-ethtool.c
++++ b/drivers/net/ethernet/qualcomm/emac/emac-ethtool.c
+@@ -95,7 +95,7 @@ static void emac_get_strings(struct net_device *netdev, u32 stringset, u8 *data)
  
- 	if (bfa_sm_cmp_state(port, bfa_fcs_lport_sm_online))
- 		bfa_fcs_lport_ns_util_send_rspn_id(
+ 	switch (stringset) {
+ 	case ETH_SS_PRIV_FLAGS:
+-		strcpy(data, "single-pause-mode");
++		strscpy(data, "single-pause-mode", ETH_GSTRING_LEN);
+ 		break;
+ 
+ 	case ETH_SS_STATS:
 -- 
 2.39.5
 
