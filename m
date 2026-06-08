@@ -1,66 +1,34 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD08390223
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jun 2026 21:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140AB3FFD;
+	Mon,  8 Jun 2026 21:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780952834; cv=none; b=q4mOjh6Yiuddv8uZuobEFm3X4+JLSvkD3q0ofG5iB9S7gR6Td9fpf1PFC5Q0bbFypomQWC7XMJAKhdEpWBaVh+vVgvvYPxciak12u1zdd4pMk+GeuVI7u8O+okaffcD59qP77oknLmPglcfnZJLeHxDD5LtM5iJS+2YW7NarF2w=
+	t=1780953505; cv=none; b=jBjRNiekDJI2Yxf8xHRStlCaR6mpWfC8F12QPmAky8tccRPFVr+cAtIrGTdWqw56HWb+9dtf9fjRb6AadlC79b0mBvfkQMz5sNboJ4sZZtoo3eoe9F2U9ytDK6a1kDpveVBvLUpZOQhi+TCvGDKCAGrLz7Eync4X40E6FPAtkDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780952834; c=relaxed/simple;
-	bh=AkJ4Onjq6hRT+x3T2G96bEDlFlW6AzfGwTZ56r0g0r4=;
+	s=arc-20240116; t=1780953505; c=relaxed/simple;
+	bh=CZjoD4QvDN7W36wtYhp7UlURyWnZwVeuTmGnAX24PCo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WF8kOORQVcBRr21bctOiC2nUqkzJJ7rb8ABEuaXLKDKzcmjhORr2pTHP+VcFWn6bkI7W5SqMXx8Tllt1JGoEUK3WKsxfSlLFlIv73jhxdKLATkk7rXi53bNef+3NaPz+16pR333TssiL7xNGDmWFuUSxTxHRvuG4s61mdvIApz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ggieVirV; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=C/yQGvaGglVnjdPDg3jM4vZsysdEoq2jgUjYqaCNHtiaYIoHozQbbtWtBvGz4cChzWbZriXJkilYEQBwoB78pa7ZZE2teft4MQbiUUKwDLsfMYcql+qzQh3u2KjzDU0GvqW/Di+/T4PUutxlqq+KZk0l0Zl6GvP7+ruxssmWuNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkZJmE9A; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ggieVirV"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-45eedc94d37so2404106f8f.3
-        for <linux-hardening@vger.kernel.org>; Mon, 08 Jun 2026 14:07:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780952832; x=1781557632; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3sHjwoJ5ZnUIbl6Kzmw0eDuutU3fVA4THUQ3Mz9TeEk=;
-        b=ggieVirVWHqyof8Uy+u8MkDm3EBe+KpUNRopO7IO34rJ4n5BO8M7EhNCOuDcPz+3LC
-         h3uR8nkACCtY0ray2Mio528zObd6swx5fpUOzJcwxzwvwDwDavfp4wvqpEeD39hsjY75
-         lywV6qES1wTsUDhbQPYcPa/OUczaRgWKEsZwKreayX9xsisq2g7OtanE5VqW+/lbucLN
-         3osluvkuWdUUPWYCCAPRHOMBIMuV2Y5ZeQggfcqC/OmC4yYE0iGu8DiInzb47tqjXlW4
-         ZUEy0H0N1yZvprLqoeM57lEZaTqyxistYyJDwg9yPpSMbhw4eQ5XbpPKXodn06gAmNtV
-         U+iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780952832; x=1781557632;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3sHjwoJ5ZnUIbl6Kzmw0eDuutU3fVA4THUQ3Mz9TeEk=;
-        b=qFdS9otlrquRCLaceOjExLWIt1DRRw6/j4Y9bwCoAeIGRTCcws2LJW4r/QQTAIebhd
-         V9CCQyZozZ1IZLiGmJz2vwAOqUHSPI038YUxE0zyoOGSKPZQKMxrJoJwsuBnh2Ax+6aU
-         XP0foCaKYSnUvBzWdcDFB+PEqS5wmmGZOYJM5h3R54ZKdt94Pj7E/lU/9L/Ky4BaLQ2g
-         CCPf57tTJ4gjSpXWFpZ7HmCY63U2egqKOJes65VmQD05eUmRiSsMoldIl/Cp8yqv/pxY
-         C02Vpqe4O7cQxYi4tWaJER81dwUT8d3g4ogu7f08bwDlRqItKEjvgySBaCyvu5RujpiM
-         k0uQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/M6jXmy8DJeqxTlSGsGYszEn926YMARMHZ9wn5NQyasOgpr1yj/H7Qaw/4Ujd/UAwXKahOiy3htuhFckmLXXc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8rdHxHcDXqSn2LQ4R05uQslXNfZdehHMLge1/IdpIYQ40UQLr
-	2/mMTjI6n/XZzxwsh4vIkfhMCe0l253oUgkwW3+DeCzIWQw3EPzgbcsh
-X-Gm-Gg: Acq92OH9vSsn8uOlDMQShz0ertRqeevdMXqqOmNrSPzhoPzQNt3ZWVlZYyxapWUJ2+j
-	RNg3X9V+Jt9lLPIou5qX4WOXbQHE2YmeeLAfC6vyN1aOnFSASY4V3eZ0zyEuYYWZCxAJVnKD9uv
-	dfDBHso/vKAqUNDtC00zhlnNxdv4Lpyt3HB+xdX5Ju5m+IzEUojeMCVo2W/USNhvHspmEpqYR17
-	x/o81Cm+pp2tXOXWABCZqDS9o6C1WIqj5wgzoJVu0VC0ikqc0jyD9QWgBtCcOub7wZRrzOQwGkb
-	SEQ6LVPOPORqbd3MObyvJBg1QXBdIoweLewJhcB7Pbe2jTv6TjOvSCDrEjZ2QBEAGI/Y37F6G0w
-	IFDNoNtJwxUUw3RTMEqUFmDtJreB607c/NEii1DCYSGD9u7e5kI0kXVdYF1WhTLQFtRvISnKIfS
-	M40TA4urBqPo/PqTUhyPItE3qy5WJXHizPwUp+mgvkmeNjpcMnU8rDzGJJ9ZOHy/oDg15qklo=
-X-Received: by 2002:adf:f847:0:b0:45e:779a:302c with SMTP id ffacd0b85a97d-4603065b681mr18894313f8f.29.1780952831514;
-        Mon, 08 Jun 2026 14:07:11 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4602cda363bsm43293865f8f.31.2026.06.08.14.07.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2026 14:07:11 -0700 (PDT)
-Date: Mon, 8 Jun 2026 22:07:10 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkZJmE9A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A891F00893;
+	Mon,  8 Jun 2026 21:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780953504;
+	bh=q9KITn8LY97lVyq/2NQ6V2vh7bnTXO5W7Y55FYYzJX8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=mkZJmE9Ai4YMmUro3blrF9H76to56BVEp05lyC04thonNjs6CkIDP4+bKahnUSmjQ
+	 BMRYtsjsR3W7VbAdiqrzxl65F+Lt+H0sNbhAwnlELm/s0OGAlQyQxHF8x9OBr2xWYe
+	 bPSii+QZGlmWeUu1v0hKgV8ASfRR0AOGEIuFbfrUwtp9eowm97FSLXNEVHuufNuIlE
+	 eE2oazZTJqaxeHLy5xfYVBcY+KZ70MvalKgBNEXHN4kRZtJA/bYifLoZKI38lHh/dm
+	 FP4PKwUAuRnkqcRPwIGhVidL0VZM2+cQAz9bpK4KJkqcEzy0mKENz2w/FtjNRPXQYz
+	 MqqFgv61Z6EDA==
+Date: Mon, 8 Jun 2026 14:18:22 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
 Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
  Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
  netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
@@ -68,11 +36,11 @@ Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
  Vosburgh <jv@jvosburgh.net>, Paolo Abeni <pabeni@redhat.com>
 Subject: Re: [PATCH net-next] drivers/net/bonding: User strscpy() to copy
  device name
-Message-ID: <20260608220710.7499931d@pumpkin>
-In-Reply-To: <20260608132311.0fb69fed@kernel.org>
+Message-ID: <20260608141822.780fb5c5@kernel.org>
+In-Reply-To: <20260608220710.7499931d@pumpkin>
 References: <20260606202633.5018-13-david.laight.linux@gmail.com>
 	<20260608132311.0fb69fed@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	<20260608220710.7499931d@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -82,19 +50,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 8 Jun 2026 13:23:11 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
-
-> On Sat,  6 Jun 2026 21:26:07 +0100 david.laight.linux@gmail.com wrote:
-> > From: David Laight <david.laight.linux@gmail.com>  
+On Mon, 8 Jun 2026 22:07:10 +0100 David Laight wrote:
+> On Mon, 8 Jun 2026 13:23:11 -0700
+> Jakub Kicinski <kuba@kernel.org> wrote:
 > 
-> Could you be so very kind to read the automated message you received
-> when you posted this?
+> > On Sat,  6 Jun 2026 21:26:07 +0100 david.laight.linux@gmail.com wrote:  
+> > > From: David Laight <david.laight.linux@gmail.com>    
+> > 
+> > Could you be so very kind to read the automated message you received
+> > when you posted this?  
+> 
+> Looks like I managed to send two patches for files in the same directory
+> that contained equivalent fixes.
+> 
+> I think I should be able to merge the patch emails into one and send
+> as a single V2 patch that contains both changes.
 
-Looks like I managed to send two patches for files in the same directory
-that contained equivalent fixes.
+Not what I asked you.
 
-I think I should be able to merge the patch emails into one and send
-as a single V2 patch that contains both changes.
-
-	David
+You seem to be following the ML yet you excreted a bunch of incorrectly
+formatted and likely useless patches. Read the email. Start with one
+or two submissions at a time.
