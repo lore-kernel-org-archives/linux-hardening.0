@@ -1,127 +1,163 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A9637D133
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 22:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B58315D49
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 22:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781043483; cv=none; b=rShquBu17Pub6vpJrDEoh0h9LIr41GUvHeCyqp6LC9f6AGeyppAiA0wxkyltiFi0SXk1FS3SMcKSwMUz9w5fQTY8lDD4/xpvj/iJfmutOQdDwH3QforaIAX2NY6GrlE+ThyWpJ5umKVnBZCin9P9EgWihyOt+lz7WtyOstL7k2g=
+	t=1781043913; cv=none; b=jQXWBpHUq562OlWXenY0i4iuKQol9qVyx/mm04mejV+/FaZfVJsMnKRrpOQoPWP2R8L6rRP3ilglv1keHGb74ERmzU/4CpwibG4YxEXM4FJaJaYShA82FvfpkC17og99o6fyx79j5cUEfMtcNz3FFVufQjeNSTxMHVf7yYlw1gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781043483; c=relaxed/simple;
-	bh=bp9vN6jZ1qqJXo57oXyDMe2yeBIZWtXZAexmNXD2P/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eAbScSs+r4vlvhrPHwgwquVfx0EaHIHPhbPoNlD5AJ6CIPVRWQapw6C+D2D/1ZKqlkP5OLmiSIzkEPBRN7gVeUecS253WXBlfhGIQf2nx7yamWa3QpmaO/JirfJB6yBX5pz5fE1f7mzOvnHF7y9Iuk11hKlfpP8Tezsk+q4R/d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZyR1GQUN; arc=none smtp.client-ip=209.85.167.179
+	s=arc-20240116; t=1781043913; c=relaxed/simple;
+	bh=25uPJG35jMpSwWwmNLycgRCZaGsl+PNdPy3/92HsGh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VglK9nb629JYP769GPAzgaNO9gJmTO6vRLNEtvGABrEHQDJGC0IOpI66bpRZxyCa+WYqUIsU092Hoc1cYGGY4iT5x0X9Df4hnO2zeYNz1B6t1Fd3rbD+7q/K6wPhyjhSkcyCcIzzRUD5PXRZUocNacqlxT0F/DNZJzncUVExd2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p2c6qQAi; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZyR1GQUN"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-48657fc84a3so5515902b6e.3
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 15:18:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p2c6qQAi"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2c0c2c7d45eso54832055ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 15:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781043482; x=1781648282; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iPAKqbhj+nb7blUntMtn89PVQtI2/C9ilf8/hnaPy4w=;
-        b=ZyR1GQUNLbFPjXGNhgB7g5qHx9yztNjCUjWZScN1XU/RBw3DiSA3sq6RA8bRe3TC3V
-         IvELDWIEMh9KjXA1n/uw6PkzB7hOzDZWWp6vp8mxaPKdlwFh93eIQXHbMv0ao2emwguU
-         ySnwoNNzLN0CDZiFTpA3BE414plH4sE6O0EJB2EC8ACbTjlCdu/qiZ43n2CjVj8ZPvGH
-         fccDuWbjxLAfS16cuO7/kPRL+DW0wUM1G5zDcvUYgazMHxLefqIoJTtirNYT9hYM8bNN
-         zxccNn8AQH7Vf0HzCpvZXGbDBdx/wIMiOLc8V8pki3haI1t/ccAO6gLMx/7OENJz3BF6
-         gQ3g==
+        d=gmail.com; s=20251104; t=1781043911; x=1781648711; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZNnl0xTEZP45RQ7ZoZEn+pJMzeJwUx2jPnwEWCmckDk=;
+        b=p2c6qQAivpFaly95C2ObAfJFEZrHVoSFSSKCbDc4rwKU2xZQQ/GvZOwsLGGDLDv0lf
+         EKN3PT7w6uk2vWeZuXFnJsZXO2XgSalmY0C9Q6+XXCwQY3hqUBUrQnr3Wn0HPnSCkkZf
+         /XTKK9u/zccX+VoGc18I2V9HiNGQhWmgKQ0iRcACN8AmFWf6mOGS4kBU0sC4050N8aE4
+         ldklq/nZ/oyLoZHN+s043dIDDZ/0L5jtAurXRyvCdGquqDTFuxhBnPY69SFLoYSN4ihI
+         X7O5zsYG/2rw/lFbg5dioqJWvzKAUubv8tuXo866Jo4pmmieCDCYwegXgmDeUhxllS8t
+         85Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781043482; x=1781648282;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=iPAKqbhj+nb7blUntMtn89PVQtI2/C9ilf8/hnaPy4w=;
-        b=TdePfpMXRJH3/r7tKJi/Vmybgw+Vf4u3OxSTV6oqM5m7xNS7ZM1cR4I/JENFT0xJOJ
-         fVo1y4kZSGSn4nIkCPIwPWdsSj1BCsrxqu0shTX/ObG+iVifzuZ1oVy5Dn4tMOBcxrHN
-         2YyoJBUA8rUh10rFe97+Vk0yiJOYiu9oJdHeuSloBYlqYWwQFqP0KSb+rwQDZfOieQN0
-         G/va+3whRVqI35/nMJEAEPT9v+T4k1N47l/oB7OY1Ae+C2+TS+KV6Abh1Op9ZRrTe2MC
-         k9/j57IjccMKKPEP7O4108w+tveDNdfZCd17+3LSGzDWzrgJ9iX1Hfy6wT13saEBnAyt
-         Ts2w==
-X-Forwarded-Encrypted: i=1; AFNElJ8zoCrI4F9qyhyTvGD3S2PCaUjXbdntN92NumtzQjJxJOhIxNwyLpiz/2qLF19tmUCDQ7CkIDYZhTwzh0dyROQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEEpuQS7+NXv1xlGb9CO+E7g7HJKSInO4TiZ0xUH4ys2Du4X1W
-	TmECVNHZ96jptR5KaAE4v1kIfSk9c7yO6a1dpBmJVl+L0Fg+6QdVNWIA
-X-Gm-Gg: Acq92OFiARDiD6g5j2rVXjzHBqFG3crPx81RgNKMPDzf0IJnqlY4XXb5uALgcfFqR7W
-	dxI3Kc3LCnaAr8ovG+Gwqxp+iyIrExKtqRKdYSGsjPEUzgiDxJpJ70+6ORjdHf+vWUAVekaszTq
-	zfwXH486V5bP0GcmvY/TJ7W6lfrbzh2fQVhU7rypxvs1NRv6mkVfHxjo6Uig1b47SzlSIJ0/qva
-	WUlGFT4epZSCaagmSCnNptEvKqteEZLitW5UrG590wH/HSzF5m/EeuYYQzR4IQAUi49HqoO/xWw
-	LeWF7JmdJvM4Jrif5c905GfgZyZm4JtUXKBbcJC9FvOcm5QUpcGwWIYbOibWAX9Ln7K1ttsXtBF
-	U9TJS5Q7UUHDkZIhdyZ3ui9S8NPZdmHnteQtJ6ubLCaENsNHsj5ee6FYHrUKSfLD+xMaDQMnjOZ
-	gzXblpEsGK98ojUpZVLj0KNDz9RWf33Pbr3U6yYydrVtNrRGdT4JWpGLYXoUHSvVKVHaw6fnQH/
-	Q==
-X-Received: by 2002:a05:6808:3510:b0:479:da60:7dcc with SMTP id 5614622812f47-486f0230e20mr3210573b6e.35.1781043481754;
-        Tue, 09 Jun 2026 15:18:01 -0700 (PDT)
-Received: from linuxescape (23-88-128-2.fttp.usinternet.com. [23.88.128.2])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4865ba20b68sm17401625b6e.18.2026.06.09.15.18.00
+        d=1e100.net; s=20251104; t=1781043911; x=1781648711;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZNnl0xTEZP45RQ7ZoZEn+pJMzeJwUx2jPnwEWCmckDk=;
+        b=CFrUR4bXrgcmw4g/OintB24tpKHmR6u5lz1FwU7JgeoHbkMkxdA+6VzipFzKlpXSl/
+         zZYHdW5hqKCKDgiAvHa8cMWgOG9AlNTYibjWyKEla1xxZIlvpf1esd84u6mGVIUhHUCz
+         ZqoSGvLZdEBkyeOSNWqNHmGZe7GeszQ5Qsd0Xb1B+7NrdbLzof4r+PvvBNkvBQspQCNV
+         b1jaUufAi2DfPSOOOuijMgIYak9DRGIfPsrJ7aXzVavJsaW+tqH4CZ8zWFCFTZ3Jq07/
+         lUtbp+3o2hin7hb/M0RuujifPfVTWVVmNmjnDau1ninhNMtXx7EHaxaAn0wG16rmHlDw
+         vCug==
+X-Forwarded-Encrypted: i=1; AFNElJ+KGc1KFGrxiZ/jIpkj1LhV2Qtj6vF3D9K1q+HElk6qm33yv3Q0QYmVe2/MHa5zdlgoSKFM15pGOdfivA7lRtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybzE9X5Ayke6iRYrlmo7VXAPAnL0Y0bkOe5pgARYAFigxG3vkS
+	H/yIM6cjPKBFdcFpmVHf73Q3PVsmdGeg3YGJ0QjA+i1voGPCpv2zuOCU
+X-Gm-Gg: Acq92OF+bfNPloqoXtfRhvEoxXmlrpHwt+2+y2TD4HIMxyia05LLRK3NjvGYnVl1ydD
+	bQzIXMimx0SLAlrbNe9oHlguHDUov3C/JHQHMqytjPQh825nM+axiXICl6YhRumvqUVoSdN3ZAE
+	67k8xqX7bcFsni554s2wHO8NwOL9KjpuI3MyvLBSAuoKUqtvxV5yyHG4SMb6o2fRfJlS9Pz9LRL
+	/1hRkqowokHDRGI2kilXZSk4+bhF0u/SUE+b4nxmNY9aK1wqrcjv7QLjygy5NsElUeoVBoGNkX7
+	bguIYHfaD+OSL4+HIp8op9yPDAub18Iq35/7zKK/UuXmLKZK3d/ksq5TP1pFf9uD4flweS2x6Pb
+	vszyLehV02DVo9vJVAWd92qrJhkZ2Nw8MhYnf3HhmYrNtVE3P0hop4CE22D7TogAS44QnFKb67b
+	Ilql8pWcZ9hNoUhdqcIqxwOkdrUhpYSIZ3d3hdu/airYUN3Qs4iBEIO6J+oTpcM8cd7+VJgvt7d
+	wm9GwBA7dkz6odW5TQk+aPy+DWTAbWYcUhoXaLWxt+Zlg==
+X-Received: by 2002:a17:902:cccd:b0:2bf:82c:6322 with SMTP id d9443c01a7336-2c1e80e41ebmr241260645ad.3.1781043911561;
+        Tue, 09 Jun 2026 15:25:11 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c16609e627sm228817565ad.52.2026.06.09.15.25.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 15:18:01 -0700 (PDT)
-Date: Tue, 9 Jun 2026 17:17:58 -0500
-From: Maxwell Doose <m32285159@gmail.com>
-To: Rodrigo Alencar via B4 Relay
- <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
- linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Michael
- Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
- <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, Andy Shevchenko
- <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v2 11/12] iio: dac: ad5686: write_raw: use
- guard(mutex)()
-Message-ID: <20260609171758.2077ebd5@linuxescape>
-In-Reply-To: <20260609171302.5764edb2@linuxescape>
-References: <20260609-ad5686-new-features-v2-0-70b423f5c76d@analog.com>
-	<20260609-ad5686-new-features-v2-11-70b423f5c76d@analog.com>
-	<20260609171302.5764edb2@linuxescape>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+        Tue, 09 Jun 2026 15:25:11 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-pm@vger.kernel.org
+Cc: Georgi Djakov <djakov@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM MAILING LIST),
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
+Subject: [PATCHv2] interconnect: qcom: simplify allocation
+Date: Tue,  9 Jun 2026 15:24:54 -0700
+Message-ID: <20260609222454.37352-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 9 Jun 2026 17:13:02 -0500
-Maxwell Doose <m32285159@gmail.com> wrote:
+Use a flexible array member to reduce allocation by 1.
 
-> On Tue, 09 Jun 2026 11:13:06 +0100
-> Rodrigo Alencar via B4 Relay
-> <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
-> 
-> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > 
-> > Use guarded mutex lock to facilitate code review when adding new
-> > attributes. This will allow for early returns, avoiding error-prone
-> > locking and unlocking in error paths. Gain-control support will add
-> > the scale attribute.
-> > 
-> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > ---
-> >  drivers/iio/dac/ad5686.c | 14 +++++---------
-> >  1 file changed, 5 insertions(+), 9 deletions(-)
-> >   
-> 
-> I agree with Joshua on this, linux/cleanup.h should definitely be
-> included. However I don't think sending a v3 is worth the trouble
-> (Jonathan may tweak while applying but I wouldn't count on it), so with
-> or without:
-> 
-> Reviewed-by: Maxwell Doose <m32285159@gmail.com>
-> 
+Add __counted_by for extra runtime analysis. Move counting variable
+assignment after allocation before any array access.
 
-Although I will note that it appears that you haven't converted all of
-the locks to guard(mutex)(). While its only in two spots you should
-probably convert all of them. Either way, patch is obviously correct
-(besides IWYU), so I still stand by my rb.
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ v2: fix kerneldoc
+ drivers/interconnect/qcom/icc-rpm.c | 7 ++-----
+ drivers/interconnect/qcom/icc-rpm.h | 8 ++++----
+ 2 files changed, 6 insertions(+), 9 deletions(-)
 
--- 
-best regards,
-max
+diff --git a/drivers/interconnect/qcom/icc-rpm.c b/drivers/interconnect/qcom/icc-rpm.c
+index 23a1d116e79a..ca4c8a944755 100644
+--- a/drivers/interconnect/qcom/icc-rpm.c
++++ b/drivers/interconnect/qcom/icc-rpm.c
+@@ -479,13 +479,11 @@ int qnoc_probe(struct platform_device *pdev)
+ 		cd_num = 0;
+ 	}
+
+-	qp = devm_kzalloc(dev, sizeof(*qp), GFP_KERNEL);
++	qp = devm_kzalloc(dev, struct_size(qp, intf_clks, cd_num), GFP_KERNEL);
+ 	if (!qp)
+ 		return -ENOMEM;
+
+-	qp->intf_clks = devm_kcalloc(dev, cd_num, sizeof(*qp->intf_clks), GFP_KERNEL);
+-	if (!qp->intf_clks)
+-		return -ENOMEM;
++	qp->num_intf_clks = cd_num;
+
+ 	if (desc->bus_clk_desc) {
+ 		qp->bus_clk_desc = devm_kzalloc(dev, sizeof(*qp->bus_clk_desc),
+@@ -507,7 +505,6 @@ int qnoc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	data->num_nodes = num_nodes;
+
+-	qp->num_intf_clks = cd_num;
+ 	for (i = 0; i < cd_num; i++)
+ 		qp->intf_clks[i].id = cds[i];
+
+diff --git a/drivers/interconnect/qcom/icc-rpm.h b/drivers/interconnect/qcom/icc-rpm.h
+index 7d1cb2efa9ee..cdd5f444b152 100644
+--- a/drivers/interconnect/qcom/icc-rpm.h
++++ b/drivers/interconnect/qcom/icc-rpm.h
+@@ -40,7 +40,6 @@ struct rpm_clk_resource {
+ /**
+  * struct qcom_icc_provider - Qualcomm specific interconnect provider
+  * @provider: generic interconnect provider
+- * @num_intf_clks: the total number of intf_clks clk_bulk_data entries
+  * @type: the ICC provider type
+  * @regmap: regmap for QoS registers read/write access
+  * @qos_offset: offset to QoS registers
+@@ -49,13 +48,13 @@ struct rpm_clk_resource {
+  * @bus_clk_rate: bus clock rate in Hz
+  * @bus_clk_desc: a pointer to a rpm_clk_resource description of bus clocks
+  * @bus_clk: a pointer to a HLOS-owned bus clock
+- * @intf_clks: a clk_bulk_data array of interface clocks
+  * @keep_alive: whether to always keep a minimum vote on the bus clocks
+  * @ignore_enxio: whether to ignore ENXIO errors (for MSM8974)
++ * @num_intf_clks: the total number of intf_clks clk_bulk_data entries
++ * @intf_clks: a clk_bulk_data array of interface clocks
+  */
+ struct qcom_icc_provider {
+ 	struct icc_provider provider;
+-	int num_intf_clks;
+ 	enum qcom_icc_type type;
+ 	struct regmap *regmap;
+ 	unsigned int qos_offset;
+@@ -64,9 +63,10 @@ struct qcom_icc_provider {
+ 	u32 bus_clk_rate[QCOM_SMD_RPM_STATE_NUM];
+ 	const struct rpm_clk_resource *bus_clk_desc;
+ 	struct clk *bus_clk;
+-	struct clk_bulk_data *intf_clks;
+ 	bool keep_alive;
+ 	bool ignore_enxio;
++	int num_intf_clks;
++	struct clk_bulk_data intf_clks[] __counted_by(num_intf_clks);
+ };
+
+ /**
+--
+2.54.0
+
