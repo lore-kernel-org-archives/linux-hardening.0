@@ -1,155 +1,183 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from va-1-111.ptr.blmpb.com (va-1-111.ptr.blmpb.com [209.127.230.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9D74028DE
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 11:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E589640BCB7
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 12:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781005927; cv=none; b=KAbcvrXNxeduPWjUY+zbktiYiPKpPQEazfrsk+/VqPUVAwct+OSD8tZ3YXMM8qRg7tGB7hEn2qkpyhRNl39QhwNejw6ZVvYgrITM9DjmoVnD9qf8y89+RcTz+8PY/yq/C1nmfXUOyP3ZO950JP1CNHwnHtUux4GzUjRt1yJE8eU=
+	t=1781006529; cv=none; b=ftPnh96sTXsFpy+k0g+pvB+J2BHWOr6fHFkFUoVAAbdjdn9RMFB/VKlaPOh1Uz15ZlijbjYlVmjyTfy4CMranR2w0RG0CpsTw3x7tTiFm1rz/SnfZ5iSlDtRpwp0n+oEoLcGYatD7tS3AxCV6yTsEB4PhQKf+9R34cT2iEXCes4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781005927; c=relaxed/simple;
-	bh=V0cxqAubJ6QT3mDQJiG+LniCIaTw7Cb6nFwnYjJCgPM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FJjtFLlb8miLvIsTv2MGxNPnnFfE33zekOijdNdZM+7Pe9nW1bn4PsWIStsDcYA1z2BSP3aPDIjAKFFz81OeG3F6YRgXsLAMh2dsfLR8A2zKiByT0I2KMbJKy3JdjRHFCclmIz/x3xwKF+PfyF6oz+eJ4REzWW+ogRzsEcykI4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FOH+VyT9; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1781006529; c=relaxed/simple;
+	bh=G7EVk2DIInWxvU8yG0p32IQGdK4y1Qo29hxVBO64A/s=;
+	h=To:Subject:Date:Mime-Version:In-Reply-To:Content-Type:Cc:From:
+	 Message-Id:References; b=uYh5a0hapRnuHhKBV0Sa7YWki+mc4FIyb2uX9HePhruCay7RTa/RPl+VC9Ie7weGQbAhjiv2meRQebXWAyQ/SWGZHZ8h4e3YNE4mVUbJiYZQznm2eEb2zd9UB7WfYP5/xYZyJVxJP2ByBk6XaGSW8RRsk7WcP7QOOMlKrpkG0a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Gt3J+Ts+; arc=none smtp.client-ip=209.127.230.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FOH+VyT9"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-befd83e0521so1158016466b.1
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 04:51:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781005911; x=1781610711; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Qh57ithdNaKLyKzJTn+bCZN9e6uxSJT+tkkVV1Puba8=;
-        b=FOH+VyT9xEKbu6IWxcRRWvbBOc4pUiHnCvLgH+0Okbl4v9UNhkwko8KaN72jvaPDnZ
-         ldDUMpvgJ8SCFf/VD9CgPO/T1+Thx/B2ABb8k+BtSLVMDSbK+4/AhF2mznW7tVZ1W8ZD
-         gW2st3hsaJOBGJuExbYJRNFHPtParGC7GnW7YwpbGaEXbgULUoJkPVpgvaP8dy4h8hJZ
-         5XKqZ+o4D8GHE31wlg24NSu1EU1eW0tmW0zn0pt672Aqv+bsaGREB7qihnBNyYhVBQVE
-         +6D7+jxJ8cn6WQSn2hdarhOZmMAozy0o9OauH5XopxPKZJSloSBa7xIsMZbmky3UKgCD
-         yZrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781005911; x=1781610711;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qh57ithdNaKLyKzJTn+bCZN9e6uxSJT+tkkVV1Puba8=;
-        b=ZcD6PYKNyoh+b9Q2wc/Tf/ZORZVNT3b1QxnrDpCodcn6g6BRCQ69tiIA9GWHYMCnuj
-         62Ad4nLd4QFSxsynj77FQKCMNvDg8OQ5dn3AWNh6v99GHJwyZ/AaIjcQ9K/uJAnuDaIG
-         8aPWi8VD9Tk1sQvyIkNGacwWCBz4kRcfveuLd0l91NvuAwTOkGwUU4CUo/QsIsVn2WLR
-         FtSVnYQN0B6oFlLCNMjaeooP6Ai9Lv6mplB+bQg8hwahyBR9ucv0fgrYorZjw23zSpil
-         1qFDaQ3xSwVNPOpYaPEWCiyPGMvZkG0xk6v9iPKG4z0uExlCNfRB6ofbHZMEESEwlstx
-         O6Cw==
-X-Forwarded-Encrypted: i=1; AFNElJ949cLuSs4ucnR3RyVRvopTAJkmuWVD8KWOo5InBTDb1bBhG/tBSprXsly4UO52To5wgrl6X3uIiupK2HzTzUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu7b9/zVUHxVWgLmkvGtIV5rI4KEl7O7rIJ/mgVz/RsMESDXX4
-	BU3+QCjy2RomOXQCi9xDROOmiS+KcMHiHRpvj9s4X4M9IlKaIkKzzV3ySk7y4UL/gaY=
-X-Gm-Gg: Acq92OFhDXQgp43WMs63T52rXpWMjBlrTgeQiVvqpnpAMA7i6+vcuWkIDCPuLpLoJrd
-	Xamfrmzx5htzCC9hvM0iF6LSPe3c4qlsmSFV7UrUhAx/hOXTv5hmiSE4SnqJlyZVdRTTfAQ4YxP
-	jwsOh2iq4mYrcg5HNBGHRi4I4eMHdsTH66xuqnRGN92Tq5xp3+I4tydCH1AOy0JThGI9ryBlsmd
-	6HhbJVRuduw5CyzoM6eL35wmjumiA2l0tNiqZGfSd9WhQtpPitAFXyvSamlkkSKbI0aDAN0DY/X
-	MENBv933V7w9zJEr+RaVduB/Bz+PjEWwqBU28wuh+HAmC9TJcHHEJFZBubz7h74PmgvHHJ8u5Ks
-	j0KxnAeL90EUoAv0CTwZcty0MdfvsT7uX7iumVtM+f7lQWl9In+hS5sdoxNSmFhopU4MPlDtAbH
-	Fhn+1+azkaZLaRUY+Sh+AyoJKJkDHycMRMLDXxQ6VE8/tS
-X-Received: by 2002:a17:906:5a69:b0:bc5:2352:555c with SMTP id a640c23a62f3a-bf3a841c5c1mr624677366b.14.1781005910578;
-        Tue, 09 Jun 2026 04:51:50 -0700 (PDT)
-Received: from [192.168.107.26] ([80.233.69.159])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf0553fd86csm1037260966b.46.2026.06.09.04.51.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 04:51:50 -0700 (PDT)
-Message-ID: <5d6f1195a7ba54d41063b44d3907b7a22f620ae5.camel@linaro.org>
-Subject: Re: [PATCH v8 2/5] thermal: samsung: Add Exynos ACPM TMU driver
- GS101
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, "Rafael J. Wysocki"	
- <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui	
- <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, 
- Krzysztof Kozlowski	 <krzk@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva"	 <gustavoars@kernel.org>, Peter Griffin
- <peter.griffin@linaro.org>, Alim Akhtar	 <alim.akhtar@samsung.com>
-Cc: jyescas@google.com, linux-kernel@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Krzysztof Kozlowski
-	 <krzysztof.kozlowski@oss.qualcomm.com>
-Date: Tue, 09 Jun 2026 12:51:47 +0100
-In-Reply-To: <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
-References: <20260603-acpm-tmu-v8-0-0f1810a356e6@linaro.org>
-	 <20260603-acpm-tmu-v8-2-0f1810a356e6@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-8+build1 
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Gt3J+Ts+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1781006516; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=VtIvpKTvFtvgcG9xuXHskUbv+ygenMEnXGmAq+TVMPs=;
+ b=Gt3J+Ts+V6FIDn3wjdp0RMkSYeGrbVVwdytN1sfQ7Vd2PKmwiQ9NEmX3X0rsUOCNkQCR6u
+ Z0VwmiLnLLphpkdEfLGHAkiBhXeEJmSy6Nm64tE5sG9LB/W7oHHaHdPvcOr4SLYHBgBSLV
+ lEg3k5NTBNW0YAUcCTGUAoWZW3nAiRrZ9GtbKfpy8Dc4bunHiezQ++sVy9J+XyMU/iyPhM
+ 4wWSbyLrXLlT8oi1HcheIAYUHobBsnXb4ZtKzQvZXrslAHLmhfGlR2iiPe6JFhFkyAnAA4
+ VMh5xWSqKpnqe4TYXtefZ3p1ZgMje8QHWLmvTR+mzXtq/lb3OIXPviNS9BRMsQ==
+To: <bp@alien8.de>
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+Subject: Re: [PATCH v4 6/8] string: introduce memcpy_streaming() helpers
+Date: Tue,  9 Jun 2026 20:01:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+In-Reply-To: <20260607190804.GAaiXBlGO2eRcfs1oB@fat_crate.local>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<dave.hansen@linux.intel.com>, <david@kernel.org>, <kees@kernel.org>, 
+	<linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
+	<lizhe.67@bytedance.com>, <mingo@redhat.com>, <rppt@kernel.org>, 
+	<tglx@kernel.org>, <x86@kernel.org>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Message-Id: <20260609120132.84323-1-lizhe.67@bytedance.com>
+References: <20260607190804.GAaiXBlGO2eRcfs1oB@fat_crate.local>
+X-Lms-Return-Path: <lba+26a2800b2+03b1cc+vger.kernel.org+lizhe.67@bytedance.com>
 
-On Wed, 2026-06-03 at 13:00 +0000, Tudor Ambarus wrote:
-> Add driver for the Thermal Management Unit (TMU) managed via the Alive
-> Clock and Power Manager (ACPM), found on Samsung Exynos SoCs such as
-> the Google GS101.
->=20
-> The TMU on the GS101 utilizes a hybrid management model shared between
-> the Application Processor (AP) and the ACPM firmware. The driver
-> maintains direct memory-mapped access to the TMU interrupt pending
-> registers to identify thermal events, while delegating functional
-> tasks - such as sensor initialization, threshold configuration, and
-> temperature acquisition, to the ACPM firmware via the ACPM IPC
-> protocol.
->=20
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> ---
-> =C2=A0drivers/thermal/samsung/Kconfig=C2=A0=C2=A0=C2=A0 |=C2=A0 19 ++
-> =C2=A0drivers/thermal/samsung/Makefile=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
-> =C2=A0drivers/thermal/samsung/acpm-tmu.c | 651 ++++++++++++++++++++++++++=
-+++++++++++
-> =C2=A03 files changed, 672 insertions(+)
->=20
-> diff --git a/drivers/thermal/samsung/Kconfig b/drivers/thermal/samsung/Kc=
-onfig
-> index f4eff5a41a84..bf9fb52e848e 100644
-> --- a/drivers/thermal/samsung/Kconfig
-> +++ b/drivers/thermal/samsung/Kconfig
-> @@ -9,3 +9,22 @@ config EXYNOS_THERMAL
-> =C2=A0	=C2=A0 the TMU, reports temperature and handles cooling action if =
-defined.
-> =C2=A0	=C2=A0 This driver uses the Exynos core thermal APIs and TMU confi=
-guration
-> =C2=A0	=C2=A0 data from the supported SoCs.
-> +
-> +config EXYNOS_ACPM_THERMAL
-> +	tristate "Exynos ACPM thermal management unit driver"
-> +	depends on THERMAL_OF
-> +	depends on HAS_IOMEM
-> +	depends on EXYNOS_ACPM_PROTOCOL
-> +	default ARCH_EXYNOS
-> +	help
-> +	=C2=A0 Support for the Thermal Management Unit (TMU) on Samsung Exynos =
-SoCs
-> +	=C2=A0 utilizing the ACPM IPC protocol, such as the Google GS101.
-> +
-> +	=C2=A0 The TMU on these platforms is managed through a hybrid architect=
-ure.
-> +	=C2=A0 This driver handles direct register access for thermal interrupt=
- status
-> +	=C2=A0 monitoring and communicates with the Alive Clock and Power Manag=
-er
-> +	=C2=A0 (ACPM) firmware via the ACPM IPC protocol for functional sensor =
-control
-> +	=C2=A0 and configuration.
-> +
-> +	=C2=A0 Select this if you want to monitor device temperature and enable
-> +	=C2=A0 thermal mitigation on Samsung Exynos ACPM based devices.
+On Sun, 7 Jun 2026 12:08:04 -0700, bp@alien8.de wrote:
 
-If you're sending a new version, it might make sense to add a brief
-clarification to the existing CONFIG_EXYNOS_THERMAL in that it only
-supports (the older?) non-ACPM designs.
+> On Wed, Jun 03, 2026 at 04:01:50PM +0800, Li Zhe wrote:
+> > Introduce a generic memcpy_streaming() interface for write-once copy
+> > sites that can fall back to memcpy() when no architecture-specific
+> > optimization is available, or when an architecture-specific backend
+> > cannot safely handle a given transfer.
+> >
+> > Add memcpy_streaming_drain() alongside it so callers can separate the
+> > copy primitive from any required ordering point. On x86, use
+> > memcpy_flushcache() and sfence only for aligned transfers that can stay
+> > entirely on the non-temporal store path; otherwise fall back to memcpy()
+> 
+> So you throwing "streaming", "non-temporal" and "flush-cache" wildly around
+> here and this is adding unnecessary confusion where it shouldn't. I'd suggest
+> you stick to "non-temporal" which you can abbreviate short'n'sweet to "nt" and
+> that's it. Keep it simple.
 
-In any case:
-Reviewed-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+Thanks for the review. Will switch to nt-based naming in next revision.
+
+> > so the generic API does not expose flushcache semantics on cached
+> > head/tail fragments.
+> >
+> > Callers are responsible for invoking memcpy_streaming_drain() before
+> > later normal stores that must be ordered after the streaming copy.
+> >
+> > Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> > ---
+> >  arch/x86/include/asm/string_64.h | 32 ++++++++++++++++++++++++++++++++
+> >  include/linux/string.h           | 20 ++++++++++++++++++++
+> >  2 files changed, 52 insertions(+)
+> >
+> > diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+> > index 4635616863f5..aee63108577f 100644
+> > --- a/arch/x86/include/asm/string_64.h
+> > +++ b/arch/x86/include/asm/string_64.h
+> 
+> There's arch/x86/include/asm/string.h. Why are those here, in the _64 variant?
+
+The current placement was meant to reflect that the x86 implementation
+here is really just a thin wrapper around the existing
+memcpy_flushcache() backend, and that backend is x86_64-only today.
+
+On x86, CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE is selected only for X86_64,
+so a 32-bit build would still need to fall back to the generic
+memcpy()-based implementation anyway. Keeping it in string_64.h made
+that backend dependency explicit.
+
+That said, I see your layering point. If arch/x86/include/asm/string.h
+is the preferred place for the arch-visible wrapper, I can move the
+wrapper there in the next revision while keeping the x86_64-specific
+implementation details in string_64.h.
+
+> > @@ -4,6 +4,7 @@
+> >
+> >  #ifdef __KERNEL__
+> >  #include <linux/jump_label.h>
+> > +#include <linux/align.h>
+> >
+> >  /* Written 2002 by Andi Kleen */
+> >
+> > @@ -100,6 +101,37 @@ static __always_inline void memcpy_flushcache(void *dst, const void *src, size_t
+> >  	}
+> >  	__memcpy_flushcache(dst, src, cnt);
+> >  }
+> > +
+> > +/*
+> > + * Only map memcpy_streaming() to memcpy_flushcache() when the destination
+> > + * is already 8-byte aligned and the size can be handled without cached
+> > + * head/tail fragments in __memcpy_flushcache().
+> > + */
+> > +static __always_inline bool memcpy_flushcache_nt_safe(const void *dst,
+> > +						      size_t cnt)
+> 
+> This is checking alignment. Then call it that.
+> 
+> > +{
+> > +	unsigned long d = (unsigned long)dst;
+> 
+> Useless.
+> 
+> > +
+> > +	return cnt && IS_ALIGNED(d, 8) && IS_ALIGNED(cnt, 4);
+> > +}
+> 
+> AFAICT, this helper is used only once. Zap it completely.
+
+Agreed. That helper is over-factored in its current form.
+
+I'll fold the alignment test into the callsite and drop the temporary
+variable in the next revision.
+
+> > +
+> > +#define __HAVE_ARCH_MEMCPY_STREAMING 1
+> > +static __always_inline void memcpy_streaming(void *dst, const void *src,
+> 
+> memcpy_nt()
+> 
+> > +					     size_t cnt)
+> > +{
+> > +	if (!cnt)
+> > +		return;
+> > +
+> > +	if (memcpy_flushcache_nt_safe(dst, cnt))
+> 
+> That branch can cost. Why is that alignment checking so necessary? Why can't
+> you simply DTRT by handling the misaligned parts like __memcpy_flushcache().
+> 
+> What does this bring you? None of that is explained in the commit message so
+> why do I want this patch at all?
+> 
+> The commit message is basically telling me what the patch does but I can kinda
+> read that from the diff itself. What it is not telling me is *why* it exists.
+
+The extra alignment gating was meant to keep this helper narrower than
+__memcpy_flushcache(), so patch 8 would not inherit the mixed cached
+head/tail handling from that implementation.
+
+Thinking about it more, I agree that this is hard to justify for a
+generic helper. For this series, what really matters is that the
+struct page copies in patch 8 can use the existing x86
+memcpy_flushcache() fastpaths where that is beneficial; I do not need
+patch 6 to impose extra selection policy on unrelated callers.
+
+I'll simplify and rework this part in the next revision, rewrite the
+changelog to explain the actual motivation more clearly, and respin
+patches 6-8 accordingly.
+
+Thanks,
+Zhe
