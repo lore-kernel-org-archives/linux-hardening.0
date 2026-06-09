@@ -1,118 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61F81E260C;
-	Tue,  9 Jun 2026 22:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DED370ACE;
+	Tue,  9 Jun 2026 23:40:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781045355; cv=none; b=Ninyi/IEaR7I8MJMyR7ZvP1WODUmoDW//ZH5RhOWsr4CaLKmJ2G0p/0mJzoC+kAOT8QWB3bOds/Drgp+swcKGBuGYbBhhXSy5/quOZlDxkshy9KpQZqSbZjyysP8rDqlEtbKbdPDsm0vsDqSOfmPD6hZq7/FYg/N6eSD6BG0kQw=
+	t=1781048437; cv=none; b=NePIdc0MdxMw343bAj+Y4AIG9RBmG845L1EYdNQ9Jtp8UKYQeK5XkYqOIoadUbi5lHytupleCBBcK8P/gwt/PJjazs33/l2ap2OFl3vxjGb5fkt6lbf7pENA3kmC3/Qc4X4v8FUAmwTmCMkfa6GdWg1kS2PJySsklFRXzCU/54Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781045355; c=relaxed/simple;
-	bh=ojXzxsaCG78mcw2mJT229q38WBPOtM9Oe8aaTMvfv4Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=P4DvQnDL+58WaraEow4q4+JjVg4alPhmtGgyLYvqGPD7HKS3FEclC+q8DNb6oCJ63pJlmk/v87/ylnakYZk1OrZgxlx4iOFV74Y0cDonwtCpIVGGeuNtLtNx9FPZ2rKFQOxwleC2yV7oEIcnv7SSac5vNflKb5Tr71rjOAWMvvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Is4/S0AR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781048437; c=relaxed/simple;
+	bh=cUPl6GbgtHpFAbSkmB2tZ0f6uqr9N/6A5bxVPT1xDF4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=u3zNgUr72HnmdkhuXa2wnfsG4Dc5VA4d+0Jt8EsgUBPY3wwGtrY5H4xRcTP8DGyxm+BJICIJOINbXvSJwV4/Gya+/7dTLVffbkDk30N5dJ9YIiRhgqFTGvJFLTglAcpQhDobMYAdrMyE2h3w5vSbN5dUk5rCZSVaDbbQvEoC3T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jo25DLt8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Is4/S0AR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F07D1F00893;
-	Tue,  9 Jun 2026 22:49:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jo25DLt8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF901F00893;
+	Tue,  9 Jun 2026 23:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781045354;
-	bh=DJM2TyoOZmu2GPCwNTCKg139MBSlphMJcq7NebEk6w0=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To;
-	b=Is4/S0ARKSAxgiP9YoHJqd6S+6crV7CHsEhibu1biFeOTpsQse6Gy1qx3gNCdCHXm
-	 0goGlszamCs7myxYUrS/w/p3C7hW1suVUkG3WU7VMWHx4W+aDsix1ODy36pIzZezbF
-	 4BB7EAEC1XxMSP+1IghOnugPtyMEHiz3YIbBQxR1qX9w5caulL86mWJLncAbO3jOYx
-	 3DUn283r938gsl4XSfCIbd36Ct9C2810HRJPT6XgcH2iYOMbmJ9dALSD8Hw2jDcSBo
-	 0jNsXzcYNPteDpxaSZpk+1rfC8sMKNP7dOUpOeYniiqHcUDsMoGYAlkbh+1V0spKd5
-	 chOHLKdr491gA==
+	s=k20260515; t=1781048436;
+	bh=zWbtTasqHYZ22NTZEvHP2JSPQq6kl25q5C50kDsT+E4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=Jo25DLt8y/eYZGx0wVxq7hpF3pDLq+GnWrC0/AO0oUfdJjL9ndIfdKOcT4FBZx/5P
+	 Z2tWoUIJPdOyfiKe2Kg9bTRRL6aK7ryLKnaJ69A4M6216UkUP7pvN7lvgDUq50MRYg
+	 /1rzeVP2M62oMtjXZsIH7cm+nmEUuuULWhh4AZTGg/0csLMisbFoowh0pI2hVqexIp
+	 jGwKY11YAMv8chHr6RmC/+12KP6fKFd3HoyD7Uweg9aQ7z/OzimqiStVy4QfII5CYq
+	 6sDd/+XD1sjXTmpeaGzC33yqbz35gRFaIsn2o12RwX3kaQInYNdLtUevamI2Mhtb4B
+	 oaOF3cMYwPJpg==
+From: Nathan Chancellor <nathan@kernel.org>
+To: Nicolas Schier <nsc@kernel.org>, Bill Wendling <morbo@google.com>, 
+ Justin Stitt <justinstitt@google.com>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Nathan Chancellor <nathan@kernel.org>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+ linux-kbuild@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+ Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ linux-hardening@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ Rong Xu <xur@google.com>, Han Shen <shenhan@google.com>, 
+ Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
+ linux-arm-kernel@lists.infradead.org, Paul Walmsley <pjw@kernel.org>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Ard Biesheuvel <ardb@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+In-Reply-To: <20260517-bump-minimum-supported-llvm-version-to-17-v2-0-b3b8cda46bdd@kernel.org>
+References: <20260517-bump-minimum-supported-llvm-version-to-17-v2-0-b3b8cda46bdd@kernel.org>
+Subject: Re: [PATCH v2 00/16] Bump minimum version of LLVM for building the
+ kernel to 17.0.1
+Message-Id: <178104773630.2704789.17858317658280322569.b4-ty@b4>
+Date: Tue, 09 Jun 2026 16:28:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 10 Jun 2026 00:49:10 +0200
-Message-Id: <DJ4VVUTU8GK2.22DI9BDCKGEUW@kernel.org>
-To: "David Laight" <david.laight.linux@gmail.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH next] driver core: Replace strcpy() with memcpy()
-Cc: "Kees Cook" <kees@kernel.org>, <linux-hardening@vger.kernel.org>, "Arnd
- Bergmann" <arnd@kernel.org>, <driver-core@lists.linux.dev>,
- <linux-kernel@vger.kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20260606202633.5018-1-david.laight.linux@gmail.com>
- <DJ4KTIFM6YN7.3E07VW7CCJ19U@kernel.org> <20260609162258.5228eda2@pumpkin>
-In-Reply-To: <20260609162258.5228eda2@pumpkin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3318; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=cUPl6GbgtHpFAbSkmB2tZ0f6uqr9N/6A5bxVPT1xDF4=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDFkaS3IPsivujN14IlVvd5DxTcUlU/e9+jdRk8kvq+dbf
+ cHdx/90O0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBEdr5mZNiTt59J7VTM/K2v
+ O/fyv5M5fzHhZbORdoB/UO3ffVtuSXszMvwzu30mYUfBRMtKrwu9x/rrlisuX/pr+9lt+mEBEj8
+ MOVkB
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue Jun 9, 2026 at 5:22 PM CEST, David Laight wrote:
-> On Tue, 09 Jun 2026 16:08:55 +0200
-> "Danilo Krummrich" <dakr@kernel.org> wrote:
->
->> On Sat Jun 6, 2026 at 10:25 PM CEST, david.laight.linux wrote:
->> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
->> > index 75b4698d0e58..63fdfffe1a8c 100644
->> > --- a/drivers/base/platform.c
->> > +++ b/drivers/base/platform.c
->> > @@ -617,10 +617,11 @@ static void platform_device_release(struct devic=
-e *dev)
->> >  struct platform_device *platform_device_alloc(const char *name, int i=
-d)
->> >  {
->> >  	struct platform_object *pa;
->> > +	size_t len =3D strlen(name); =20
->>=20
->> This could be strlen(name) + 1 right away, which would also avoid the me=
-mcpy()
->> to implicitly rely on kzalloc() zeroing the memory, where strcpy() was
->> self-contained before.
->
-> I tried not to do that 'optimisation'.
-> Here the kzalloc() is almost certainly needed for other reasons.
+On Sun, 17 May 2026 13:05:03 -1000, Nathan Chancellor wrote:
+> Bump minimum version of LLVM for building the kernel to 17.0.1
+> 
+> The current minimum version of LLVM for building the kernel is 15.0.0.
+> However, there are two deficiencies compared to GCC that were fixed in
+> LLVM 17 that are starting to become more noticeable.
+> 
+> The first was a bug in LLVM's scope checker [1], where all labels in a
+> function were validated as potential targets of an asm goto statement,
+> even if they were not listed in the asm goto statement as targets. This
+> becomes particularly problematic when the cleanup attribute is used, as
+> 
+> [...]
 
-This is true, it is needed for other reasons anyway. My point is that curre=
-ntly
-it is self-contained and it doesn't matter if the preconditions ever change=
-, so
-I'd rather we have strlen(name) + 1 right away.
+Applied to
 
-> There is also the issue that, in principle (but probably not in practise)=
-,
-> the input string might change between the strlen() and the copy.
+  https://git.kernel.org/pub/scm/linux/kernel/git/kbuild/linux.git kbuild-next
 
-This is not a concern for this function, but let's assume it was, then your
-proposed patch wouldn't prevent anything bad either.
+Thanks!
 
-For instance, if the string would change to be shorter than what strlen()
-measured, the memcpy() becomes invalid either way.
+[01/16] kbuild: Bump minimum version of LLVM for building the kernel to 17.0.1
+        https://git.kernel.org/kbuild/c/ce3267a39a92b
+[02/16] security/Kconfig.hardening: Remove tautological condition from CC_HAS_ZERO_CALL_USED_REGS
+        https://git.kernel.org/kbuild/c/813fe686e90b4
+[03/16] security/Kconfig.hardening: Remove tautological condition from FORTIFY_SOURCE
+        https://git.kernel.org/kbuild/c/8ad2017578c99
+[04/16] security/Kconfig.hardening: Remove tautological condition from CC_HAS_RANDSTRUCT
+        https://git.kernel.org/kbuild/c/9331258bc129a
+[05/16] arch/Kconfig: Remove tautological conditions from HAS_LTO_CLANG
+        https://git.kernel.org/kbuild/c/2189cb1a80f06
+[06/16] arch/Kconfig: Remove tautological condition from AUTOFDO_CLANG
+        https://git.kernel.org/kbuild/c/de0bf1e138fcd
+[07/16] ARM: Drop tautological ld.lld conditions from ARCH_MULTI_V4{,T}
+        https://git.kernel.org/kbuild/c/48d229b6a48ae
+[08/16] riscv: Remove tautological condition from selection of ARCH_SUPPORTS_CFI
+        https://git.kernel.org/kbuild/c/62c4af8689511
+[09/16] riscv: Drop tautological condition from TOOLCHAIN_NEEDS_OLD_ISA_SPEC
+        https://git.kernel.org/kbuild/c/7e279976cf2a2
+[10/16] scripts/Makefile.warn: Drop -Wformat handling for clang < 16
+        https://git.kernel.org/kbuild/c/2a35c63c6bc42
+[11/16] x86/build: Drop unnecessary '-ffreestanding' addition to KBUILD_CFLAGS
+        https://git.kernel.org/kbuild/c/7b3281fcb43c5
+[12/16] x86/module: Revert "Deal with GOT based stack cookie load on Clang < 17"
+        https://git.kernel.org/kbuild/c/12b7bf92bddd4
+[13/16] x86/entry/vdso32: Remove conditional omission of '.cfi_offset eflags'
+        https://git.kernel.org/kbuild/c/4e7af20d0d104
+[14/16] kbuild: Remove check for broken scoping with clang < 17 in CC_HAS_ASM_GOTO_OUTPUT
+        https://git.kernel.org/kbuild/c/f3de78cb19d12
+[15/16] compiler-clang.h: Remove __cleanup -Wunused-variable workaround
+        https://git.kernel.org/kbuild/c/c69eaa687667e
+[16/16] compiler-clang.h: Drop explicit version number from "all" diagnostic macro
+        https://git.kernel.org/kbuild/c/c919893eabb43
 
-Also, in that case the strcpy() would be more robust and vice versa with a
-longer one. But again, this is not a realistic scenario anyway.
+Please look out for regression or issue reports or other follow up
+comments, as they may result in the patch/series getting dropped or
+reverted. Patches applied to an "unstable" branch are accepted pending
+wider testing in -next and any post-commit review; they will generally
+be moved to the main branch in a week if no issues are found.
 
-> So it is probably best practise to not rely on the '\0' still being
-> there when the copy is done.
->
->>=20
->> > =20
->> > -	pa =3D kzalloc(sizeof(*pa) + strlen(name) + 1, GFP_KERNEL);
->> > +	pa =3D kzalloc(sizeof(*pa) + len + 1, GFP_KERNEL);
->> >  	if (pa) {
->> > -		strcpy(pa->name, name);
->> > +		memcpy(pa->name, name, len); =20
->>=20
->> But in general, what's the improvement? strlen() still operates on a pot=
-entially
->> unbounded string?
->>=20
->> It removes the redundant strlen() calculation that is implied by the cur=
-rent
->> code, though this may be eliminated by CSE optimization.
->
-> CSE won't eliminate it.
+Best regards,
+-- 
+Cheers,
+Nathan
 
-Ok, but in the context of platform_device_alloc() not a huge benefit either=
-.
 
-Is there any other reason for this change? Am I missing something?
