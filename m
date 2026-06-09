@@ -1,144 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012054.outbound.protection.outlook.com [52.101.53.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C4B33C1B4;
-	Tue,  9 Jun 2026 18:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781028932; cv=none; b=qBDLHuSU+EAKj4GWNCSm+hDCSkl9wtrSqfmj8NLFwXA6Ki8Aeexp21YJMv3o9LrhfUHstySwpGrSjrCZvJP0SbM8/7HQJwxZNln0h/eNHSm9UNpcCYRviTnCB1pbDoZz07vRmPh1O0+O/7sYTsOhwLmWQw9MYwFTFS8DmrZl5aw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781028932; c=relaxed/simple;
-	bh=j0UdTejC7lDY6owPw/rHcM5IerPjB3ei0m6x7ygaqeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=btbl47VtPHb0ff0iG8+gu2i1zr6srYngsyhVKzmleBch0INQ2PMtsItDzLYuBG2OkUk7kxjL/t1IaO+Uscq1ayPc/ylfSfI6wlhKT2C+HkJvmkBVDqbKaB6uWsQofogJSaro/QWD7ksYZ3JHZ47ZmYGWC9sUBlDC3OzTeM3ap8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5l27M27; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D56340298;
+	Tue,  9 Jun 2026 19:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781031647; cv=fail; b=aOUCJdWfMkCSrC7I1IcFYIXxmrsleilXOfJCmn6hcpNLnnu2rS342KB3+qfCK2x6e+0t0p5Ok+QSKRQT7vvTgZw3mGFGSsB0wskA0O2KPOfJWGtomKJqQpba6HMphHXV9iQyEeb68O8mGHb1NOAHOnf6glQz05OZyZXDGexKI58=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781031647; c=relaxed/simple;
+	bh=wc6NNcpiiymHcC2Omr1GrrQA2iduhR2A8cwwMqFOXQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ISy5A2unqT4c9xG+fUHJyqKS+2JCnYEJvGZ8vtZVD6+WObXAPk3VzLNgxfDBQJZdGitPJEqxE2w02pSJuyYhztVZybxeB+Fx4ywWYabGSk/7bohEtyNk/lBae2QIYz9nVFbjdwtX5b1FTTygYE4vdOe/UPnQQC/MxPblxqJ0EKs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Cl4ho44K; arc=fail smtp.client-ip=52.101.53.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5l27M27"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781028931; x=1812564931;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=j0UdTejC7lDY6owPw/rHcM5IerPjB3ei0m6x7ygaqeo=;
-  b=I5l27M27KISj/ih++qrKuaE5HIKMqIOK6uhWyriSms+NWd1DKqnw5ALs
-   gmnH7mv9AyQFg5abykO+OEhpIRv44p8HhQG6G07eq/Th6/7smm6+D6iM1
-   Xq16HRrJtwOo5MgXFhdroJjSCFza8hmzqaVao2rkKcQM4Rni7/NHJZJtu
-   IKjGnVsX4xYBUJg9Y7a8EmF2ezi33/EukI2f24O2/CWEigbxyuRhgGirO
-   TtkRb8vg298gu7m0tgdWF5F1dRUSuh2p9IisdvkHkcSIKTLTcKhe4yqkI
-   +3KsD7/uU/HQ0PAq96j+dtp6DqLKtmPhV2Ox7ZbSfXuY6kmmldulFC8Oa
-   Q==;
-X-CSE-ConnectionGUID: qmFGsM+0Sm6GoKPssamscg==
-X-CSE-MsgGUID: iCAI51w3QuqlUH4TEK1+CA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="81809195"
-X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="81809195"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 11:15:30 -0700
-X-CSE-ConnectionGUID: 9kniI4o8RyKcX0xGasrMTA==
-X-CSE-MsgGUID: pMo0qlBaQIOaUKcLim9kUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="245791285"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.162])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 11:15:26 -0700
-Date: Tue, 9 Jun 2026 21:15:23 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: rodrigo.alencar@analog.com
-Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v2 12/12] iio: dac: ad5686: add gain control support
-Message-ID: <aihYO_X9YEqabaFi@ashevche-desk.local>
-References: <20260609-ad5686-new-features-v2-0-70b423f5c76d@analog.com>
- <20260609-ad5686-new-features-v2-12-70b423f5c76d@analog.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Cl4ho44K"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q5AR2OCgijHnj8YLB6iJw4Q7fJed5RlzcW8WU1cJEA1XvA2zi6V3yb4yZxt+O6agvnf7lX6MzPA0dgsGqNLKGMD3F2+5WX2aQKabCcILoGHjRrxxYu3GHZ4pe0ScYY1sMFymXZVp3U5xcrkmsIJCdlM7J1tWBSN6LdOoP2BUM2d+MlV89O0lG/7k2ZRIpCPyL5rUC2vtBH379jUfJpV9JSt/PX48XnVfx6APF2CoKip4dVpYRzemrA4Obfr5+6sb3KU8Oec/kv5zk4zQOxTZrHOCqzJu5X4W00e9WC0LZc2nRwG91m9dT9Wl7FZW/XK/EkV7uzWgvSDMGVWJWiGSdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xz22y3I770EZP3J/GSfxDMWl9RrsYYEDeQIg3WnfhR8=;
+ b=UQa0PUUXzjBkNddnp7oVbT/vDi1PW1NnjoFI/ruh32P0ufaRnugtVnlwo4FPdKvYgIhTAOeYRl+nbQK4ix8MlKpCbF7juwXCi6elX7RKnaCaRYWPmBSPewaOtRJMgtCnmbsBTGwg9UYUiFlQIWnjdRFsyaPfFm1OdRsFoOjOFAH5aOfD9+KJn2cN9FVFrBu3DkyaeWKl6ccSVrme5YbojPLeDwjNjUW8aXGMtoYVko8Vt/8CMoeJzPN/Fjsvp0h60pgB1cI+uXms4cP16lff/khevLSC/G3lfPGgXR6tjSR2SE4eMIcP5Tkbr1Ib2DDlfbwtMqlJ7d9LKUr5cIruOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xz22y3I770EZP3J/GSfxDMWl9RrsYYEDeQIg3WnfhR8=;
+ b=Cl4ho44KRVUEOnmxHQPRDaGYPeuB9gWRi1wyj4As07u0sEyjuUNk9e/MiiAIziDp/XwQOUwGlvGZM7SVYur0vHYKIbyvbEDxKdn2L7PFaHWXZ8htKz5dHMrMD1wpahXQgTjVNZmOxMMV0CNHNt963qZpYzAT6oLz4z3/DNCKkP2u9px4ldmQKWIN2Veg/iMM0UXYm5AWyXXn88BBt4ogKdRfwhlfMx2ESudzBtpu4R0/CKwxKzOM4EW58aH9TDHKARPUaWsKEtmOz9jTNNTU67Rr0kxqWKqIJO6BK6QOZX2hXtaO+g/BJWNq+r7CrRaqOCViKGjzPnoo6s79eLwwOA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by SJ5PPFFA661D690.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9ab) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.12; Tue, 9 Jun 2026
+ 19:00:41 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0113.011; Tue, 9 Jun 2026
+ 19:00:41 +0000
+Date: Tue, 9 Jun 2026 16:00:40 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: david.laight.linux@gmail.com
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH next] drivers/infiniband/core/iwcm: User strscpy() to
+ copy device name
+Message-ID: <20260609190040.GB584729@nvidia.com>
+References: <20260606202633.5018-10-david.laight.linux@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260606202633.5018-10-david.laight.linux@gmail.com>
+X-ClientProxiedBy: YT4PR01CA0420.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10b::17) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260609-ad5686-new-features-v2-12-70b423f5c76d@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|SJ5PPFFA661D690:EE_
+X-MS-Office365-Filtering-Correlation-Id: 417a079e-4604-466e-6da7-08dec6596707
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|11063799006|56012099006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	sqeayHqnEL6RCJWaNlS2Tn1ArwMDNL6D+8gK96APAyBlBavetvQiMTOFF4m/9RRAf6oyNPvlqaPd7QLWEvsHuhEnrxU2YsaHS5FWXTiiigN5fw+h9x/eektYoCVlNFLqgw4FdSiczd4KKEL27YrT2vw3xIhbjv/qWjYzyLZKnbRPGUk0zm3l9IUHMm5qAGrPcaWt0CzOsJ7CJOPAPRAzVFgkhtS0v3CWPppBu/Wy9vcJMfrMw3vSc1Bkil6hg1L21C/bgpbu7EEkhjz4GSfah5tVG8zz7omjusnaXoufq7ZBAQHPTXVAINvftlpiLs8QBMJG43fadhi7h3OjsOcwW7kLCKx685YgkItvz0AYBLzkSVSoE9O60mxr2ZQZBCQLIyOOGdKNwe5NzPbTV1xx6GouFekfsU+0AKwDVM45YtMR3Dzqz65ICYItFYNSqL4rEauaTsp6r8MSZZXk8rJzKhBp+RUcHlVKNCtApUoOZ4XLZ5O/BnYOOIE4AHr80ZwG9VGnfXrm5jw4EoSSsCYZTVEOEJcuTeh9IZbwsETj4WzYNbd7/tWgkbzzw8H5l7iZd0wQViO4xzRhuG2aYeEtH1plcWzD7Mga7scHTgZx59I/1qqz0qhOpSWdzY4dYIZ/8LxIWPwOrNlfgonCJdsYO4ejIqJDMdMTQMLvzQu/QHZFKgbmSGHEgnlWi/EAJPKH
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?A6xfTQRu5fVQFLzq4lAjezC9HP9EHdX3u8x6/zNqDHpGJkCjTVe4nwqxpkjD?=
+ =?us-ascii?Q?A1XJSosyRbP4OHdb8Qf63rfnele/MbYXRXi6v+b0stOvOKMzQI4oZBqxco8Y?=
+ =?us-ascii?Q?CrBX73to/IteRInONy8ARf17seSip3K6tFzhIyln69w+BL5E7WQoNfxFF4IB?=
+ =?us-ascii?Q?lTEVtMliKobeHbD609ZRK765EyKxiGaezuQXrKL+9C6cmB+s8Q2VzOZYDbda?=
+ =?us-ascii?Q?gMyQ0k80ZaLHfd3pdX1t1gEiZsbUJ8LCgXWDc/ZXZ6kOF1r9tw9yF67rgcM6?=
+ =?us-ascii?Q?BDrN4LZLPY+bN2/Q7Xj57wavhjwRAvJtGs2SufpvqBzvYJ38DA53TOzCBdts?=
+ =?us-ascii?Q?gPk8mwlFJeY3qbduOD6vxmIoyv0auzCD4xZ6wR0IoJVs76z/QTfm/uaNFOCB?=
+ =?us-ascii?Q?obi1IwVri1hvpZQV7baZ/I4ZS2Pb8YVb0KQOoB64g2oha95HrqV6tlCh7owe?=
+ =?us-ascii?Q?lsNxGLSR8mi0J88+mSuvfeqx0XMvq6wTKy2b6YuYai0MqFzIML8soEfLi1+o?=
+ =?us-ascii?Q?hocxJrF8RTnOlhMMf1v8MJtCYcz2+aYhANOibafKyckvWbWl6gOzvEYk0tKM?=
+ =?us-ascii?Q?kNuVZME8r4IxU+ZFB/8rpk+hIiUGVbbb792puLwAeoh6hMhPf7YDb1z8jiEO?=
+ =?us-ascii?Q?zGiaUMZyWjEGjpEEHMMweLvV2szX359cLX0hZ7REQuri8ZbHl0lDrsM4tASZ?=
+ =?us-ascii?Q?HKh4NUwp1HHfzokj40+E/9f9m3ZlkT2yDoQQqGUTWm3SYGHOXgdEfPDMqQJi?=
+ =?us-ascii?Q?VqKbK94RxOHrHt+rDZjxA8A50kfdaAaBh2zD88vpRbYKreVGIhZTdqLq5UkS?=
+ =?us-ascii?Q?FWnWsUjFTKSrqHBw9wAVWdXdE9xdqIul9mVnskzBEN0Y0eSokujZ9S0r3LEp?=
+ =?us-ascii?Q?qX1gt8Aa9Pu3sMAkxCwEVDlWWziBnnUmTLSilc/rlbiwCjMvsgcImIIKztcx?=
+ =?us-ascii?Q?wWfRvp7W9qc1SKLg/b7HMRIUzOxUA5iy43bOHYILG0zlxh0REWQI1A8oN2Vg?=
+ =?us-ascii?Q?Co7A8ICEDJM/Iz09GIvZ+lN010wpSdS1nVlbQjdsFNvgn56kiNxlgtImTFMV?=
+ =?us-ascii?Q?GARwvhG0lyEOTcMB0TUETBQZssvo8AWpPxDwtVajH86kJ2jyqJNb4SDu14ni?=
+ =?us-ascii?Q?NP8VmJBr+s0NhoUaYp8Mhp255OWdBA9QlfpTQWkZZYU15gW/na910UhkpoWB?=
+ =?us-ascii?Q?nYsJqTjWBbmx+K1KK7hzoF+ZXw0faos+Ynpra5UW9bd7gt114JX+7U8hb6D0?=
+ =?us-ascii?Q?Z2ygI4Oa8D46qIUR0xWa+Z751L7MMk4Hlp3URQkXZD5GsenMoCujeWuPVyLh?=
+ =?us-ascii?Q?OqlWNrCkHli6eGebNh/Ct5UGdiXfW42D/L6KpTcHsTX6Ttx810utodjFrZGj?=
+ =?us-ascii?Q?jUxIP/H0yVGHfAbGMqP6rHUARf5MKXJNn9w3oxC3XDRBAgxYOO5WpcQhb6Gi?=
+ =?us-ascii?Q?EuMVLVZKm0HvIKx75KZ4i9kk2CRwm0lBom0UTv5H8zmmLpJ4+xp+Jwr8Xtvp?=
+ =?us-ascii?Q?uHKMvADpP9us+hRFSKAC7Qlk3XAFlub810bFiNto2YKj16xgmjJssNXeE0od?=
+ =?us-ascii?Q?OZIUhQzF4/T7JSNwwTCcTTJJoDVxMr7YdKomamI3V90Ml5QLWncYlF56d8WX?=
+ =?us-ascii?Q?C6k8oBE6b5fBwwdNKUIGQuRTjWy1hOoWXI8LAvXbT6sOKiroM7cOMaWKoJTm?=
+ =?us-ascii?Q?wuFNdhB0WTL+1TxZvevHQlQG6ALAqSqZsJEl8v86Fgvubs2l?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 417a079e-4604-466e-6da7-08dec6596707
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 19:00:41.7697
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m77CYSyfHtlBnbG/j7uuLW/v+0cF8rh9Q1p8u2Jl+cigagK1OaZBGb5Dx204mfZP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFFA661D690
 
-On Tue, Jun 09, 2026 at 11:13:07AM +0100, Rodrigo Alencar via B4 Relay wrote:
+On Sat, Jun 06, 2026 at 09:26:04PM +0100, david.laight.linux@gmail.com wrote:
+> From: David Laight <david.laight.linux@gmail.com>
+> 
+> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> ---
+>  drivers/infiniband/core/iwcm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Most of the supported devices rely on a GAIN pin to control a 2x
-> multiplier applied to the output voltage. Other devices, e.g. the
-> single-channel ones, provides a gain control through a bit field in the
-> control register. Some designs might have the GAIN pin hardwired to
-> VDD/VLOGIC or GND, which would still be fine for this patch, that allows
-> the scale property to be configurable with two available options.
-> vref_mv field is moved down in the ad5686_state struct, so that
+Applied to for-next
 
-Slightly better to use same terminology as in C and documentation, id est
-
-"...the struct ad5686_state, ..."
-
-> overall size increase is reduced.
-
-...
-
-> +	case IIO_CHAN_INFO_SCALE:
-> +		if (val == st->scale_avail[0] && val2 == st->scale_avail[1])
-> +			st->double_scale = false;
-> +		else if (val == st->scale_avail[2] && val2 == st->scale_avail[3])
-> +			st->double_scale = true;
-> +		else
-> +			return -EINVAL;
-> +
-> +		switch (st->chip_info->regmap_type) {
-> +		case AD5310_REGMAP:
-> +			return ad5310_control_sync(st);
-> +		case AD5683_REGMAP:
-> +			return ad5683_control_sync(st);
-> +		case AD5686_REGMAP:
-> +			/*
-> +			 * Even if the gain pin is hardwired on the board, the
-> +			 * user is able to control the scale such that it
-> +			 * matches the actual gain setting.
-
-Rebalance the line lengths to
-
-			 * Even if the gain pin is hardwired on the board,
-			 * the user is able to control the scale such that
-			 * it matches the actual gain setting.
-
-makes it more consistent.
-
-> +			 */
-> +			gpiod_set_value_cansleep(st->gain_gpio,
-> +						 st->double_scale ? 1 : 0);
-> +			return 0;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-...
-
-> +	unsigned short			vref_mv;
-
-_mV
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Jason
