@@ -1,129 +1,74 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB44352C35
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 15:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A2743C042;
+	Tue,  9 Jun 2026 15:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781018584; cv=none; b=qiVQFIQ/9OMZQNi96AHOrtwgNWtOrd2LziflkbZyGnvbF4N5yA+9Yy+xshkdtCQBen/qkNeAgB24csRJgxe1g7Ueb4KH47cmjtOAAsWxtOYTfkZAc3B8CN4JmhVAWg9SukAkCM2s+yRJv+Rpu9rkoGJ3nQxwRGSzoxGPWcYxc+8=
+	t=1781019389; cv=none; b=ad+KU9H4ugxnoFsp3L20Tb8s4mgI0cPfI21VH70gLpsAWOdUbHUAUxgSDtn78qPyC0c9VMXG6BFgTc2XlrRQYxFmALVEuiL68EPQsHLQBdCgWc26eGcxlOcykyabt0F9JWT+DhKLjtVrNVs1hQmimstScL1y5HQALYcohdXgBng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781018584; c=relaxed/simple;
-	bh=kuIHPRKQTH2/4GUOzUX9fYHsOqljjnSwteHizxDZwoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mTZS3W+JlyBh89Oa5OzNNqabZ6MQmLpZQA9w/j3X3u8/JJbmfeFjX6X/Og/R8pXq8KQH309MYrJeLBbt9EAyjoBEVIAgIWZcYmMttGe+ud0tKHwCPUGFox7qxjnRKtsTMvsuF7udQHpCpi+4qtZB5NTU8h8yOWpjfimffcAneb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EmEgUkYs; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781019389; c=relaxed/simple;
+	bh=sJLT7ust3eK4AjVBgfXuvxIp6XDZDoZw45IAwW/NcBw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SCgaCoRWglqZ2CYYQIv2+Z3EqzaIqrxziA2bXXWRQC5dKSz/A+WymHWvu818b3Pv9A782L8l3W0RC6f5G5JaKmrLN2DF3o1FhfoagPw84/TCYFLGnSGhdUt40T81JQrgC80uaDp71WIAvsTdepbHqJMOyFwj8gGLq9nMHTiaEbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dME7mYGq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmEgUkYs"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-490b2b037d2so49941485e9.3
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 08:23:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781018580; x=1781623380; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y9e8wekR8dwGp203+UO+bawrLa7V5VSovtR0ieIMnb0=;
-        b=EmEgUkYsqMXt3PcL2oDNtf4s31q2zIbcBJv/dN84jh8FsfWBK6bQgpP48p9P2tDD/1
-         dC2PzE8lCP94utuoolSC3mrZmT5deLI7gAsHVNVxnKBUNJldj6ztV6L5jc8BLzPe1ZFw
-         laN0EYv2YwD4Id02DUnA/aEtlKE7lfFKGVbiNBtGBk26cqsiGXz0PU1060nPlJij50kb
-         CedZQ5Z9kyJW6JNhqkEOq/SFUuZEKYRerPMbLyw7JEJOqGV7VJxtXJHA79f8qj/xusS4
-         8SOaprgxETdCFvrtBp4kJ7WPgIaIDew3eLOWiIEUWYESOQcYeCp+vREh/qFl95ARSnFZ
-         KLdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781018580; x=1781623380;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Y9e8wekR8dwGp203+UO+bawrLa7V5VSovtR0ieIMnb0=;
-        b=C10jOZ5f1nRidHJJXu3JmqTglgpmzl5w9KZY3ZOKzaVhctmeZdUFkKiimoFXdNTH7P
-         UNBr7IpywrVYMV30jopjMkfV7FugjOFRwBtp6k8qyOnfMHgznpB2BlvWtvv4ncNJdx+b
-         fWYiRcFcffcQTuMPmHdytRfzmqhaGd3YeIxlYkWl1BNGGlyzCCB3VkhsTaPMO9DiG0MP
-         F7ronaKvmXnijvqb4mqDPnL1tGlt9UNeNbWueqCA/i0CsBwY+IeftrIXDmxEvpaZZIFB
-         WZGjuxWCIaxUnYn316M7HsA7/x4KzplDhrr8r0J8j6ODwT1s7bsJSL/b6UcDXs4fq0AF
-         X/HA==
-X-Forwarded-Encrypted: i=1; AFNElJ/uytdu8WF0/v5O0au8Up1eVbAXuWeodozyU7KXyaDi2HkJYoD6IqrcF1mNty+acgSsL1waCN4FTHgHJn1Gd0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPx0VDDcOSfjkPNQY2aKcmhXqWgfbaRZV0+8IYbZrWnfhChGQx
-	PZDc8VsMhKae2QHRL2Yt/QwYHRcSUgcLpu9QgxCKkYqbePrgDK6GfWrB
-X-Gm-Gg: Acq92OHN4GYV7zaq5RvRvGJ1TKQCWEvfLosH1FnNCApCfv9/zEA/wHR8+zeGleAyoZJ
-	28Gw+WiUE/rTtVbU01weSWrRCVfSrUDfDb0WP7Hp2BNUtMciEg+sdxgu8Ir+JTB/CshjfCQBQqJ
-	tEq1UwvYSn07JUTp4FgAJGOLSM2JP+4JFn5js9HbL3HompJnF+qfUmRAoN9ErUPK2n0ANBiTC2h
-	Hcf/0KsV1j2ig0kUXgX90pxUvM0gYTvy/c19vrGfXFGnp9WbWyzbsNhpC7sN32781Mt1KWhQG8X
-	GDfRmvmuzKx6xlGV/P+Ypj+d2+6m+CR5Tm2g0y6URS77vr3Ho8chE64k99frTlPEsMXGw/6Uq82
-	yKTVc1WLdeJSfOqWmDWRJgdBmBXBoj7YeOM6fQauGctBt7oVbeLSt88eiEdl1HZMMP9wykCQRvz
-	L36yQrhbLA6g7RB5ItqduUJdUcSmwTGjkd1b8GVPs6tb2O+CRBU2t5bj3RedlPCMQC5ccgwDY=
-X-Received: by 2002:a05:600c:3e87:b0:490:bcf6:469f with SMTP id 5b1f17b1804b1-490c251d8e4mr357536025e9.0.1781018580077;
-        Tue, 09 Jun 2026 08:23:00 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3e5a00sm484287205e9.15.2026.06.09.08.22.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 08:22:59 -0700 (PDT)
-Date: Tue, 9 Jun 2026 16:22:58 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Kees Cook" <kees@kernel.org>, <linux-hardening@vger.kernel.org>, "Arnd
- Bergmann" <arnd@kernel.org>, <driver-core@lists.linux.dev>,
- <linux-kernel@vger.kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH next] driver core: Replace strcpy() with memcpy()
-Message-ID: <20260609162258.5228eda2@pumpkin>
-In-Reply-To: <DJ4KTIFM6YN7.3E07VW7CCJ19U@kernel.org>
-References: <20260606202633.5018-1-david.laight.linux@gmail.com>
-	<DJ4KTIFM6YN7.3E07VW7CCJ19U@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dME7mYGq"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 13F1E1F00898;
+	Tue,  9 Jun 2026 15:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781019388;
+	bh=Nq8WKrHgXt/YJ0v8QZq81z24VZXvt5LJCSs6FdxTvo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=dME7mYGqdLjLB1wWxGFX6iHI2AmC9SaMB6lgiX2D9DebYTrcg3hTkM08ysAht/f0z
+	 MaA7NZ4FYYlASU/E9QDcHTfKA7k50QvnYqY/bfA3MclPfwsBwwGHY2w6YXy3d9Enp2
+	 jk+F6fMW0aTzsBiJVydSbepDr5G5bNfLlUoEcsRa8XXEIoeT11xNfzAm0KBhZ32itX
+	 cfgTKnOYqE3a9KZgf1CPLRRs/b8A++rnh/1FRzIx/pg0XEILbaegrOLKFt24bCd0jL
+	 eMFkPg8R061t1n1e0iAAfPAJArdwKveVNpXz5u4X1dQvWUK0hRivNMKz8aGpiRtRKW
+	 xVxPxmBrrK4sw==
+Date: Tue, 9 Jun 2026 18:36:24 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E . Hallyn" <serge@hallyn.com>, Kees Cook <kees@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] keys: prevent slab cache merging for key_jar
+Message-ID: <aigy-NpXyLrESpv-@kernel.org>
+References: <20260604125034.13757-1-med08elkadiri@gmail.com>
+ <aiZDlSTqaQTcvLBl@kernel.org>
+ <85a686a6-7fcc-4a1d-8574-0fc7c2f84bc8@kernel.org>
+ <aigoZeoqygyBYCbR@kernel.org>
+ <CAAMeuQTue5bkbhjYLjsRCnB9=KBifsPNQ=ZRVp+wCh2TiXE7Uw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAMeuQTue5bkbhjYLjsRCnB9=KBifsPNQ=ZRVp+wCh2TiXE7Uw@mail.gmail.com>
 
-On Tue, 09 Jun 2026 16:08:55 +0200
-"Danilo Krummrich" <dakr@kernel.org> wrote:
-
-> On Sat Jun 6, 2026 at 10:25 PM CEST, david.laight.linux wrote:
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index 75b4698d0e58..63fdfffe1a8c 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -617,10 +617,11 @@ static void platform_device_release(struct device *dev)
-> >  struct platform_device *platform_device_alloc(const char *name, int id)
-> >  {
-> >  	struct platform_object *pa;
-> > +	size_t len = strlen(name);  
+On Tue, Jun 09, 2026 at 04:15:18PM +0100, Mohammed EL Kadiri wrote:
+> Hi Jarkko, Vlastimil,
 > 
-> This could be strlen(name) + 1 right away, which would also avoid the memcpy()
-> to implicitly rely on kzalloc() zeroing the memory, where strcpy() was
-> self-contained before.
+> I will send a v2 this evening with the commit message reworked. I will
+> remove CVE references and frame it as hardening rather than an active
+> vulnerability. I'll also drop the inaccurate skbuff_head_cache
+> comparison that Vlastimil flagged.
+> 
+> No need to strip it yourself, I'll have it out today.
 
-I tried not to do that 'optimisation'.
-Here the kzalloc() is almost certainly needed for other reasons.
-There is also the issue that, in principle (but probably not in practise),
-the input string might change between the strlen() and the copy.
-So it is probably best practise to not rely on the '\0' still being
-there when the copy is done.
+Take your time :-) And thanks Vlastimil for the remark!
+
+If I get the patch within this week, all is fine.
 
 > 
-> >  
-> > -	pa = kzalloc(sizeof(*pa) + strlen(name) + 1, GFP_KERNEL);
-> > +	pa = kzalloc(sizeof(*pa) + len + 1, GFP_KERNEL);
-> >  	if (pa) {
-> > -		strcpy(pa->name, name);
-> > +		memcpy(pa->name, name, len);  
-> 
-> But in general, what's the improvement? strlen() still operates on a potentially
-> unbounded string?
-> 
-> It removes the redundant strlen() calculation that is implied by the current
-> code, though this may be eliminated by CSE optimization.
+> Thanks,
+> Mohammed
 
-CSE won't eliminate it.
-It probably wouldn't eliminate a second strlen(name) either.
-
-I'm not trying to remove strlen(), just strcpy().
-
-But not just changing them all the strscpy().
-
-	David
+BR, Jarkko
