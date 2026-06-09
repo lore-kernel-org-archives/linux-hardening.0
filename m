@@ -1,170 +1,122 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5904014A1
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 11:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516183B14BF
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 11:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781005220; cv=none; b=dtRp9LNjCrsA1E1GvKpxilQARje2jQszl5b/yX+dMIjyFOig+N9cKHcHN/pyGOKpSB0wmryh5yPMB+Ht20EWHvNJMmuYJhGYPyuK2BcF9b+U2gBlfjZN+W65l2Y4DtLfYuvNUbDmQ6WLsPNIbFi544HxOs1Hag+FD5onAxod8l8=
+	t=1781005493; cv=none; b=LA8s6Zt+fxqkBkG43YtjSJ5uLPNuxIj0JMtpNyXgOhGO9y4CzUxp+K0UEhx5YRspku5xE4+rl2Rw2ZC5oYCHQdvTA4anlhTapB/ulYmNUKDzjHa3MHVoqaMJFJIohFPaj2p/+vHucIV/dxi+aALl1BXmZErrI348RCHYzvBclVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781005220; c=relaxed/simple;
-	bh=1q73HXxmLv+Z/5esi306UTJN6Xbe0kiLh1L8CCyZ3BY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NgN8atf6BDZvNY4xecKbi+NORA6Ud/4kpAqkYli7shStV8CXDPXbcJr1jduQW6DZ871yOpVqNc+8JYR83JEOszthDsiRD29t8HqlA3UsTSYmoBQZB0XHHRzp36PfuiT/TvnMXhJu7+nak2Qe8OiYrjjlbL2Q5jcvxKYsJMNI3Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZyC2IbQM; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781005493; c=relaxed/simple;
+	bh=YygPCiAmXiWrvewKwYWtyCzbkJfaFZJYqrm32SMOdfc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bDoZWWzMuLZXXd17bGDUiaTWFTlaMBpFx+CZXXtsSOm10m0ge5rTssr67pWBQ0HE87JAivfu3rFH9YuEzjxuy6vFfocOxvkHmoPgj/gIolW8SP5GR8o0yDB24mITfY/J22thctWFUohtUu1914WJFnu8HXmibE4wLhiVf3sJNfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MtG26ii1; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZyC2IbQM"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-bec43ee8ff0so774893966b.1
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 04:40:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MtG26ii1"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6870ad8072eso165052a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 04:44:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781005215; x=1781610015; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BBwsJrPe4U8Zso/P0DDbySIpgby0iNkXrmQsF5vCebU=;
-        b=ZyC2IbQMQ6d2O/ONHSvUmy3cm6hrzeu2VEE8R+L++dRYrVWtvFh1xUMVq6MBXkV0LE
-         m992zGAwrL91EGGLE86Vr3z2ets9xUFdOG6X8aY16YtQPiA39yiaLudEyMXsG2zMaFxB
-         IgzQBUBhF323XXyjaloNB+f6o8lWW2H99IRUUYszZ/kLUydlY7sgWIV9IRQFPgsqeqai
-         yq8zU5S/bt73EfY7wJOUApWcVdaVXlIbPhnqf4IMzQLZJmf8d7HxqO6Mq5Rf8Bq0ewpH
-         BSBaqQPOKHT1Y4CvyKtfgsK+G5Zb0lIxKoprogPHyKX0fXlQq/1poDMwfxC2m34bhVWf
-         QGrg==
+        d=linaro.org; s=google; t=1781005491; x=1781610291; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jVtKsScmZpYoItkBLWZrzYfhywAVGgLQpel9i66ubjc=;
+        b=MtG26ii12BO+NUu9y/zgI2ET6cVwpxJJsjdg8MLjQwNSQzb8ec8s3U2O4zcikD/mbz
+         VYAvyW5NWnIf500OmAHtNokBj8DT4vSyAV2qlnAHPRDY/VZ4ZiI6Q0qqw/t9BCx+91zR
+         1ITZQHkekqPktZufU1PXlje0xF3aYwQ0AbmweRCvgLJBei7S6Q4WpIIpsYcXfn79ajqk
+         mWTo4Z8pTAoDAT24ViMaZnDnGwFQhMLc4XR1Uf+x9MQIdeMzyQAtPgpUplTDGBPYE91M
+         XrbkOHhhom7sLE8D2i7Fbw4n/PMy3o/08mtIxiNk41ZRkb6Iu9AqZ6UNoWnwsP7fRoau
+         yTUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781005215; x=1781610015;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
+        d=1e100.net; s=20251104; t=1781005491; x=1781610291;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BBwsJrPe4U8Zso/P0DDbySIpgby0iNkXrmQsF5vCebU=;
-        b=rs73YUH+kRKItK/0xIqCbx/nR5AtzFosb/A3TzV9pcNdNoeV62fRPr6xIAWwfnTO84
-         jRBZ9w1J7eJZgZTPct9gShIU6SDy/R5cncKOF5Mi8yrZYe+7mxsH+3fl2M1mjS4tpmPZ
-         G/y7rztqWQuNiZ1UfpdDpN6zocOLMmLlTX7phw9lZWpke4e+bz5MIXDYky88M5ZQ63FB
-         2h7jzgmwevCEXUESdjkPjcNQNTvyqp3d3sZI0XldaUn2Ovra+9HohUok+rTqUrqnxIlu
-         NzAQnOJY6o+Nxa9xm0ov80NcwWHI6Z79Wj5PEdSe57BEzExqNzffy5NwPiw2nbV3YaLI
-         IluA==
-X-Forwarded-Encrypted: i=1; AFNElJ+rlM6LUuHqOFrXzHiZ/ZQddwec47Y7YhB7N5hD2EBJXC57q8WS8CMSRlCy0OKoVcEBYdN2xBFI4pWyi20gFQo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRo5oGBonMG4wG28a/E1KQMd0ukrzeZkgc8hEv4dvRu7cyMadO
-	80wmkRIBdJYMvQrPoRX3j0jFxzT+SkVr/KgyC/lC2xkkk62lK2Qx1qNZ
-X-Gm-Gg: Acq92OEBQya5j6usI6lxqniYvb8cdbXPxRtKjU/p7o2V1zGzPacDMkrSdV68ZIUZ6FS
-	EU8YC5pQPpRiq5K69wLwTL/gd7kx8TG3O2NYPV/AFm+sIohgQn2qpkLcVao7Oc60L0f5heb2LoT
-	noAfBXieG2TXyJTDVgXB5Eg7J5nXJyBZFu1wZovvF/oB9oPd9pnQ+PpW1AdQBzYTdjoPBKAAHpb
-	Gjc9XFcU8wR3ujtjawFt/Xs+nzrouBcI13sOAnP35QsFu1SYIPYKsu+7tvmgqn8EvIgb5B68uHu
-	QCBUKjxloXiPXL1WrjgiJigKHsrRMc9DYou/7OMLmAFygjc2q2PpKeXtP8QcEZ+iyBjdilJxu5/
-	4y5ALTvGHqGnHob08E/M6jJrdX39kfKX6NkgBNwsbx81REL6vJHsm+nKWzZAJ18ekZKv/MuNeoP
-	NDX8mSDPxbjjunxs94KdJFx+x3u0icp5CjLU8eNDEKfHelr9da8N+7z2kpXafT8UlxbryXV90er
-	XyjmSSR0Xau5T0JRl0DB6uAYIcedQhnYxH6uKMoUrRj5HVgiA==
-X-Received: by 2002:a17:907:7212:b0:bec:1632:ece8 with SMTP id a640c23a62f3a-bf3a840d953mr913763766b.15.1781005214911;
-        Tue, 09 Jun 2026 04:40:14 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf054e051cfsm1032495566b.38.2026.06.09.04.40.12
+        bh=jVtKsScmZpYoItkBLWZrzYfhywAVGgLQpel9i66ubjc=;
+        b=lFzJSDebnCqJhdNN+0iYCO8wJO48HCdMOLUWkhpfnzRAMnqam6fnz9E199pmPUX/3l
+         jU3DGl/Qn9y62e75iAZvSWq7SG9C1hg3nOeIMuO168l5FHhjuDQOh/rBlQ9F6JGL4XqP
+         OCXosZIvAHBqglRr/8mqiLDHCxkgfgKI2R92YHR/HM5thtLCl79WRrkJCebw1UK1exp/
+         Lp2/AfuoOABiQeLgbK48LO3hvCb0QObAlJUwnW83KD/3oD4hAaGtytwY6LC76zeb71QI
+         oNsy3Lp1cRphDAnv4XXL2t7Ixzd9mst6sQ+RFd6N+ef/2kTbEFwa7V2omORBh4s1a4LH
+         qPaA==
+X-Forwarded-Encrypted: i=1; AFNElJ8ihSEg80oBDqjlJiRIm9f3MbPZCombAdWmAP0vD+yRp/JLZZ1MlNwlK4IkoQx061F4Ki7kkC8fgVyvu6kt0d4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtCbowAEif5aeIpurz50k9VqEQmVROrekVOmEEW3RSPKTyhCOJ
+	uhPjaHko+Xg9gIghGJZkB3jnrIVLOy8xFih3jYoNl4WY0qzYQLDFO5MUdQb5SAakEmM=
+X-Gm-Gg: Acq92OGbRmk+Rbj0cfNDse5cm6BCKLkNsRT+bBbiSroLSsgcll/xymY10oQwjUq5D1z
+	sPaFf3j4dJisSp3V744kDz0RH/l3WqYdz9omeSXt3gxErr0yXyXXD+SMSPNRw/I+4gp6nY+Lcm7
+	FnR/b6ADWUXaPXylbr2iIHzR8Mro6PA05ISJ7XYidKVhJdjPtnTbFEOF/No+favKp4VOTXpyE8F
+	CT4OO7xeDTggb5fg0rUJ5L/4CR9mtkkYkhPFTWlQpX+utnOjLvl4RKfxcHEC4RIztWeoVlmz0c9
+	BvwdnDIhBwrgj/z/9YOjNtSzWDqWs3eeDqm4Ikix7wtknFdfluQFzuH13Gj3lDD74Tn/Evscnhg
+	oI2MtJ9KfTQUtmCKfc7+Ro+3yUuIAcohPtoWHglytpVfpopZzPUEq2riBf3sn8Opn+R1/3dDMwO
+	ytFZ0OLN+boo3C4FUGXSPgISG7aZ2GkEfoKJzaW6MNVqX7sa7G8CmSHuc=
+X-Received: by 2002:a05:6402:4250:10b0:68c:3439:945f with SMTP id 4fb4d7f45d1cf-68ff217a53dmr5586490a12.12.1781005490656;
+        Tue, 09 Jun 2026 04:44:50 -0700 (PDT)
+Received: from [192.168.107.26] ([80.233.69.159])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6914f3b583bsm4516495a12.29.2026.06.09.04.44.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 04:40:13 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
-Date: Tue, 9 Jun 2026 12:40:08 +0100
-To: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>, 
-	linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v2 02/12] dt-bindings: iio: dac: ad5696: rework on power
- supplies
-Message-ID: <eduvmlupbcxlskscx6xphd7ipbwug3kqxjqtcewk6n6f2eqzo4@2avqjjrdem2v>
-References: <20260609-ad5686-new-features-v2-0-70b423f5c76d@analog.com>
- <20260609-ad5686-new-features-v2-2-70b423f5c76d@analog.com>
+        Tue, 09 Jun 2026 04:44:49 -0700 (PDT)
+Message-ID: <08d7299968e14e5fc07fa4791479abd9a2b11c2d.camel@linaro.org>
+Subject: Re: [PATCH v8 4/5] arm64: dts: exynos: gs101: Add thermal
+ management unit
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, "Rafael J. Wysocki"	
+ <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui	
+ <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring	
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
+ <conor+dt@kernel.org>, Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, 
+ Krzysztof Kozlowski	 <krzk@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva"	 <gustavoars@kernel.org>, Peter Griffin
+ <peter.griffin@linaro.org>, Alim Akhtar	 <alim.akhtar@samsung.com>
+Cc: jyescas@google.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Date: Tue, 09 Jun 2026 12:44:47 +0100
+In-Reply-To: <20260603-acpm-tmu-v8-4-0f1810a356e6@linaro.org>
+References: <20260603-acpm-tmu-v8-0-0f1810a356e6@linaro.org>
+	 <20260603-acpm-tmu-v8-4-0f1810a356e6@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-8+build1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260609-ad5686-new-features-v2-2-70b423f5c76d@analog.com>
 
-On 09/06/26 10:28, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [High] Adding `vdd-supply`, `vlogic-supply`, and unconditionally requiring `vref-supply` breaks backward compatibility for existing device trees.
-> - [Medium] Making `vlogic-supply` unconditionally required forces device trees to document a non-existent hardware connection for single-channel devices.
-> --
-> 
-> commit 8357cd3efa5f819678f24f0cbf0a39208f4078bc
-> Author: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> Subject: dt-bindings: iio: dac: ad5696: rework on power supplies
-> 
-> This commit reworks the power supply bindings for the ad5696 DAC series. It
-> adds vdd-supply, vlogic-supply, and vref-supply, deprecates vcc-supply, and
-> updates the required properties.
-> 
-> > diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5696.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5696.yaml
-> > index 2dcc049f30e91..e5fbaec4adf71 100644
-> > --- a/Documentation/devicetree/bindings/iio/dac/adi,ad5696.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5696.yaml
-> 
-> [ ... ]
-> 
-> > @@ -55,8 +65,21 @@ properties:
-> >  required:
-> >    - compatible
-> >    - reg
-> > +  - vdd-supply
-> > +  - vlogic-supply
-> 
-> [Severity: High]
-> Does adding vdd-supply and vlogic-supply to the global required list break
-> backward compatibility for existing device trees? Older device trees that
-> omitted these will now fail dtbs_check.
+Hi Tudor,
 
-Yes, for correctness, it breaks the dtbs_check. In the driver side
-we would rely on the dummy/stub regulator in case those are not declared.
+On Wed, 2026-06-03 at 13:00 +0000, Tudor Ambarus wrote:
 
-> [Severity: Medium]
-> Does making vlogic-supply unconditionally required force device trees to
-> document a non-existent hardware connection? Single-channel devices in this
-> family (such as adi,ad5693, adi,ad5693r, and adi,ad5311r) physically do not
-> have a dedicated VLOGIC pin.
+>=20
+> [...]
+>=20
+> diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/bo=
+ot/dts/exynos/google/gs101.dtsi
+> index 86933f22647b..b6866ef99fb3 100644
+> --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+>=20
+> [...]
+>=20
+> @@ -639,6 +647,15 @@ watchdog_cl1: watchdog@10070000 {
+> =C2=A0			status =3D "disabled";
+> =C2=A0		};
+> =C2=A0
+> +		tmu_top: thermal-sensor@100a0000 {
+> +			compatible =3D "google,gs101-tmu-top";
+> +			reg =3D <0x100a0000 0x800>;
+> +			clocks =3D <&cmu_misc CLK_GOUT_MISC_TMU_TOP_PCLK>;
+> +			interrupts =3D <GIC_SPI 769 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			samsung,acpm-ipc =3D <&acpm_ipc>;
+> +			#thermal-sensor-cells =3D <1>;
 
-VLOGIC does exist for those parts. However, as mentioned before, for some
-tiny packages it is internally connected to VDD:
+Vendor-specific properties should always come after generic ones
+(samsung,... to move to end here).
 
-- 10-Lead MSOP package for AD5693R/AD5691R exposes the VLOGIC pin
-- 8-Lead LFCSP package for AD5693R/AD5692R/AD5691R/AD5693 does NOT expose the VLOGIC pin
-
-I think we agreed to make it required and user can just repeat the vdd-supply
-value or not have it at all. Driver would rely on the dummy/stub regulator.
- 
-> >  
-> >  allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            anyOf:
-> > +              - const: adi,ad5693
-> > +              - const: adi,ad5694
-> > +              - const: adi,ad5696
-> > +    then:
-> > +      required:
-> > +        - vref-supply
-> 
-> [Severity: High]
-> Does unconditionally requiring vref-supply break older device trees that
-> correctly utilized the formerly valid vcc-supply?
-> 
-> To preserve DT ABI compatibility, should the schema allow either vcc-supply or
-> vref-supply to satisfy the reference voltage requirement?
-
-Same here. For correctness, it breaks DT ABI.
-
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260609-ad5686-new-features-v2-0-70b423f5c76d@analog.com?part=2
-
--- 
-Kind regards,
-
-Rodrigo Alencar
+Cheers,
+Andre'
