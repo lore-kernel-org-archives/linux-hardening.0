@@ -1,122 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48163570C8;
-	Tue,  9 Jun 2026 14:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3629B37B011
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 15:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781016768; cv=none; b=H2SXaE876CeO9fC3DKU6G0FjonIOcQRRO2D4f0LXq/1k135bPj4N50RodxmUaOAmdIgmndqeVnZE+db8lJz3jwZqYgJAd8dTbj6pvCm/bNQhPTdbJgUSlmTEWB+z20Xes0YymNQf0328WVuQQ/skIEW69pH038J+PkkKT3dgtYs=
+	t=1781017768; cv=none; b=QM9LLYjG+5tGxH94HvzVXc5GpvoOr/QLymIZksjY+TRm/NT6GhGf1aOvXBcSN0eTUfd1QBuOmS6y7lqFqNJvwZkWPCJ9dKbwCqMp2JYnSio2BVzBeUNVhxsRdwlRDHQge7TDZzyWQ5ynMSAZhUNSz4ANmmXCKUUyycKz+3/VP/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781016768; c=relaxed/simple;
-	bh=kg6lTBBcz0J0AeRp6/oenGKb2pjka0fVQojVriKu+JY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I634JdmexPsTDY9iqc0iaDL5bKs5t5MTcsMYeM9qCjUd2bP/AkRpUd/Ksfj1TosSQnoJ/xdfuhCyfL9di4gubEpYaK9lq7HfmLQwJqDstEMNkso4EsPJDLZIxREK6ZRleh8gNw7TMHjW7fOCnZDxgBdVa2vVtZLPIfexJtHAung=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tenw/uDr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781017768; c=relaxed/simple;
+	bh=NgOku+kOtZFMwP+N1pCTFHMki0MWqL+yi3KZd7s2JhI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lvz9+Djl/Ipx1nQd6POrTv2m9UU70MJ0JZrQD851WkW2RGk30ZKVAOg0bpQA3XalRiFL16ruDIliOfBrgwuyOV1vCzQDrlAyDbJLR3H0DJiTL5Oei8TrcQzltuV+ZIJZ6x+qVnMMnU0bY/oKxwgGViHDKz4m5D6r5aD+dAIUQSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTOMjXxp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tenw/uDr"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id F03BC1F00899;
-	Tue,  9 Jun 2026 14:52:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTOMjXxp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F211F008A1
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 15:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781016767;
-	bh=+anADvK5mgnjZez4qo9D0EoExS+gbDwofiWW81SIumU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Tenw/uDrjCQBq4hTcbXFdasirqCMUa6+f7tYyBupvnaS1w9WNO5l9XokILMEktmS/
-	 YI90nq5pkjEaSi1sllJHZkyjPB+eB/YqOgMMuOZhDKGLVtHxUZj9j4dovEIOgUgV5a
-	 YH2wBvB2a7SPWTams0PuZDjdFRIRKyBKk2hVpq4OA6xCKjzt7adzDHa59bo+SCVYpC
-	 rK4ht+WXnja43SxwYo2lc+gEb9H1VRRUlCnlquxDkMwEitrvbHtrL92gGNXpzHXre9
-	 Oy7hIslPisO+pAhWCjGWVV9AM6MKqCuWZkaEQtqPVmm6kuF2q8Uncw/Wlq0jYVW7ty
-	 fJI8HlHGcB4sQ==
-Date: Tue, 9 Jun 2026 17:52:43 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Mohammed EL Kadiri <med08elkadiri@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E . Hallyn" <serge@hallyn.com>, Kees Cook <kees@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] keys: prevent slab cache merging for key_jar
-Message-ID: <aigoZeoqygyBYCbR@kernel.org>
-References: <20260604125034.13757-1-med08elkadiri@gmail.com>
- <aiZDlSTqaQTcvLBl@kernel.org>
- <85a686a6-7fcc-4a1d-8574-0fc7c2f84bc8@kernel.org>
+	s=k20260515; t=1781017767;
+	bh=m6GRnCt3iEzDR+1BDeOhhAllED/qkyhg1ytTSiyIFoY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=lTOMjXxpbmKXFsZbgtvXQJxoIjRcuUkbzFsuYX2SrGUCcfuvTAkN91pQbh7tNBUZB
+	 M46edlG7P6T6lZwjLFyQAttXgykSUTTX7uJqoVemjAwZWwRSaU0MvLVJl03PaC9hCG
+	 fbjexMY0WPovJSy6lLPbif12i6wm7f6plI/JzjcBOCbEZp9vPuAx5SAfhqNzWTVer+
+	 i8Y1AgQE6ERkvNhJjB2HSm7w58Vyj5dr82Vix4s0IkJtpln3L8APzqVQWGy0fPVrf8
+	 H37a/dlVsLL3pZ3ZPPHK5VN1Eg+prftyuC1xbBaD+CLOA/R6cBfYxnogV8P96sE7mt
+	 qevmKug/ybhKA==
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-66077c46c5cso5119424d50.1
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 08:09:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+fEx/KM3vB2skEWhA/NVSqrXmqC6dN6YK3j1yLMzj+jLRI4StEATNjvIlfik4Wxo6jO1EH24zs48QuWixUTMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVyRIJtDktIFhlTiwsECE5N7QNapdSfEHfkKR6ZtkvLzaLtGq9
+	35AUwB7uyteHbGRkbdq6bBFAy2RcNP5uYG+AzkW9ggqrskHQkBQ+dksBNLRncgfq/oCZVKMVgKU
+	F6R3rrvU0qz35gQUZ16DthvDiKcn/d6k=
+X-Received: by 2002:a53:c3c3:0:b0:660:580f:69f with SMTP id
+ 956f58d0204a3-66106f3ff76mr15067067d50.40.1781017766129; Tue, 09 Jun 2026
+ 08:09:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <85a686a6-7fcc-4a1d-8574-0fc7c2f84bc8@kernel.org>
+References: <20260608095523.2606-30-david.laight.linux@gmail.com>
+In-Reply-To: <20260608095523.2606-30-david.laight.linux@gmail.com>
+From: Timur Tabi <timur@kernel.org>
+Date: Tue, 9 Jun 2026 10:08:49 -0500
+X-Gmail-Original-Message-ID: <CAOZdJXV=SwYFaavxpoxG=BPxpQAaEarHicaNG0osKDVeQCWGpA@mail.gmail.com>
+X-Gm-Features: AVVi8CezcShmV8w3vG8YvNt5rtMRYufLSGPSIMO6Dnp0q70W64s1zDjdmwyhCoM
+Message-ID: <CAOZdJXV=SwYFaavxpoxG=BPxpQAaEarHicaNG0osKDVeQCWGpA@mail.gmail.com>
+Subject: Re: [PATCH net-next] drivers/net/ethernet/qualcomm/emac: Use
+ strscpy() to copy the ethtool strings
+To: david.laight.linux@gmail.com
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Arnd Bergmann <arnd@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Timur Tabi <timur@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 08, 2026 at 09:20:39AM +0200, Vlastimil Babka (SUSE) wrote:
-> On 6/8/26 06:22, Jarkko Sakkinen wrote:
-> > On Thu, Jun 04, 2026 at 01:50:34PM +0100, Mohammed EL Kadiri wrote:
-> >> The key_jar slab cache holds struct key objects containing cryptographic
-> >> keys, authentication tokens, and keyring linkage. This cache currently
-> >> lacks merge prevention, allowing the SLUB allocator to merge it with
-> >> other similarly-sized caches.
-> >> 
-> >> On a default Ubuntu 6.17.0-23-generic system, key_jar has 5 aliases,
-> >> meaning 5 unrelated object types share its slab pages. struct key is
-> >> 224 bytes, placed in 256-byte slabs alongside biovec-16, maple_node,
-> >> ip6_dst_cache, task_delay_info, and kmalloc-256 users.
-> >> 
-> >> Cross-cache heap exploitation is a well-documented attack class
-> >> (CVE-2022-29582, CVE-2022-2588, CVE-2021-22555) where slab cache
-> >> merging enables type confusion between unrelated kernel objects. A
-> >> use-after-free in any subsystem sharing slab pages with key_jar could
-> >> allow an attacker to reclaim a freed slot as a struct key, or corrupt
-> >> an existing key through a dangling pointer to a different type.
-> >> 
-> >> Add SLAB_NO_MERGE to ensure key_jar receives dedicated slab pages,
-> >> eliminating cross-cache attacks targeting struct key. The memory
-> >> overhead is minimal: with 32 objects per slab page and typical key
-> >> usage bounded by system keyring size, the cost of dedicated pages is
-> >> negligible. There is zero performance impact on the allocation hot
-> >> path.
-> >> 
-> >> This follows the precedent set by skbuff_head_cache (net/core/skbuff.c)
-> >> which uses SLAB_NO_MERGE for similar isolation requirements.
-> 
-> I just realized this part is somewhat misleading, because it's done there
-> for performance reasons, so I wouldn't say "similar".
+On Mon, Jun 8, 2026 at 4:55=E2=80=AFAM <david.laight.linux@gmail.com> wrote=
+:
+>
+> diff --git a/drivers/net/ethernet/qualcomm/emac/emac-ethtool.c b/drivers/=
+net/ethernet/qualcomm/emac/emac-ethtool.c
+> index f502db9cdea9..ffc300641aac 100644
+> --- a/drivers/net/ethernet/qualcomm/emac/emac-ethtool.c
+> +++ b/drivers/net/ethernet/qualcomm/emac/emac-ethtool.c
+> @@ -95,7 +95,7 @@ static void emac_get_strings(struct net_device *netdev,=
+ u32 stringset, u8 *data)
+>
+>         switch (stringset) {
+>         case ETH_SS_PRIV_FLAGS:
+> -               strcpy(data, "single-pause-mode");
+> +               strscpy(data, "single-pause-mode", ETH_GSTRING_LEN);
+>                 break;
 
-Mohammed, could you at least send v2, which does not emphasize on
-CVEs? It's better the use no_merge for sake of hardnening but some
-risk is not same as vulnerability.
+It would be better to replace this with a call to ethtool_sprintf(),
+which already takes ETH_GSTRING_LEN into account.  And may as well
+update the ETH_SS_STATS case underneath it.
 
-I'll replace the patch in my tree with updated once I get it.
-
-Or I can strip off the parts myself, whatever goes...
-
-> 
-> > 
-> > ~/work/kernel.org/jarkko/linux-tpmdd master*
-> > ❯ git log --oneline -1 d0bf7d5759c1d89fb013aa41cca5832e00b9632a
-> > d0bf7d5759c1 mm/slab: introduce kmem_cache flag SLAB_NO_MERGE
-> > 
-> > ~/work/kernel.org/jarkko/linux-tpmdd master*
-> > ❯ git describe --contains d0bf7d5759c1d89fb013aa41cca5832e00b9632a
-> > v6.5-rc1~137^2^3~1
-> > 
-> > So we could probably forward to stable's starting from v6.6+ if that
-> > is necessary / makes sense?
-> 
-> It won't hurt, but I doubt it's "necessary" per stable rules. But stable
-> maintainers ignore those themselves anyway, so whatever.
-> 
-> > It's not a bug fix but kind of still I think would be a change that
-> > stable kernels are better off with it than without it.
-> > 
-> > What do you think?
-> 
-> Won't object.
-
-Yeah, I agree, and yeah I think commit message goes over the top, while
-the change is for better.
-
-BR, Jarkko
+>         case ETH_SS_STATS:
+> --
+> 2.39.5
+>
