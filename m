@@ -1,183 +1,176 @@
-Received: from va-1-111.ptr.blmpb.com (va-1-111.ptr.blmpb.com [209.127.230.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E589640BCB7
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 12:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4BA40BCD0
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jun 2026 12:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781006529; cv=none; b=ftPnh96sTXsFpy+k0g+pvB+J2BHWOr6fHFkFUoVAAbdjdn9RMFB/VKlaPOh1Uz15ZlijbjYlVmjyTfy4CMranR2w0RG0CpsTw3x7tTiFm1rz/SnfZ5iSlDtRpwp0n+oEoLcGYatD7tS3AxCV6yTsEB4PhQKf+9R34cT2iEXCes4=
+	t=1781006624; cv=none; b=t6epMK89PuFCW8OoVgoBMJSPq7ykh+i0N5SwRq8QkSf2s8pneEb8Syzec+MV4XO4LSwfPa9upMOBWWhfZcPk4H/u5GCiZedMoev6A6gVeilsGfC4bMp20T3AhlRuvwqMABkFFqEOzPciAs+1zX/UYPKcPI5fi3zRi1ga/lxcliM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781006529; c=relaxed/simple;
-	bh=G7EVk2DIInWxvU8yG0p32IQGdK4y1Qo29hxVBO64A/s=;
-	h=To:Subject:Date:Mime-Version:In-Reply-To:Content-Type:Cc:From:
-	 Message-Id:References; b=uYh5a0hapRnuHhKBV0Sa7YWki+mc4FIyb2uX9HePhruCay7RTa/RPl+VC9Ie7weGQbAhjiv2meRQebXWAyQ/SWGZHZ8h4e3YNE4mVUbJiYZQznm2eEb2zd9UB7WfYP5/xYZyJVxJP2ByBk6XaGSW8RRsk7WcP7QOOMlKrpkG0a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Gt3J+Ts+; arc=none smtp.client-ip=209.127.230.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1781006624; c=relaxed/simple;
+	bh=HfvR5gvfgsOcrHJ3L3OGl/zGy5KibbcsIuOZax3I7w4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S43YzvrX5VTNbdavPq4/9kc++vJH7DLzHg05szw0BHFVuAX7ciiKldiLww2wdS6mPP78L48dFJB0eS6ZRGeP2gHtSaJgjdIiZmJoTMxFgE04a8ekJLtQF378u0aG39xvv0G0KauFtTbGjbT7uu+WRkuOvhalz1RqjFOeW191uSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BxoC9Ezl; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=g5t44r2Y; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Gt3J+Ts+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1781006516; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=VtIvpKTvFtvgcG9xuXHskUbv+ygenMEnXGmAq+TVMPs=;
- b=Gt3J+Ts+V6FIDn3wjdp0RMkSYeGrbVVwdytN1sfQ7Vd2PKmwiQ9NEmX3X0rsUOCNkQCR6u
- Z0VwmiLnLLphpkdEfLGHAkiBhXeEJmSy6Nm64tE5sG9LB/W7oHHaHdPvcOr4SLYHBgBSLV
- lEg3k5NTBNW0YAUcCTGUAoWZW3nAiRrZ9GtbKfpy8Dc4bunHiezQ++sVy9J+XyMU/iyPhM
- 4wWSbyLrXLlT8oi1HcheIAYUHobBsnXb4ZtKzQvZXrslAHLmhfGlR2iiPe6JFhFkyAnAA4
- VMh5xWSqKpnqe4TYXtefZ3p1ZgMje8QHWLmvTR+mzXtq/lb3OIXPviNS9BRMsQ==
-To: <bp@alien8.de>
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-Subject: Re: [PATCH v4 6/8] string: introduce memcpy_streaming() helpers
-Date: Tue,  9 Jun 2026 20:01:32 +0800
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BxoC9Ezl";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="g5t44r2Y"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 659BnST32574360
+	for <linux-hardening@vger.kernel.org>; Tue, 9 Jun 2026 12:03:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	t2yOM2NAjtAyFgfFhbJW5TqogRr+sQYkIoqann+cFi4=; b=BxoC9Ezl00y3ZCc9
+	V6RNTeDCYrLxnHn5u7ZXXjKT4JnD0EgVuhlR4G00zRngdGw33S2w9srfMOuBkcaG
+	WRpFzJWsFNLyTNKiyxW0Dha0ail5foTmmkZ0CC8U6BiWF/nYWr2F0hIKANz8T7kM
+	jJgtD+3gVE1y2W/4LEVIs188XujqZt+98a+NohmZMUfmBe33rJIOdv803v3qisB+
+	UaICFliMjPL/7Wo8iU9rf/jK4EynXDGN3mggxMvd3Yn3tDKMM76/wQ9ibsJRno7y
+	TAmCiGjXOMho3NgIuuEcmCqNPu+UqYBWoVfsiVY+63RxMxRJF9yuPYgCglJ59+al
+	vOs2QQ==
+Received: from mail-vk1-f200.google.com (mail-vk1-f200.google.com [209.85.221.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4epfdt0u8w-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 12:03:40 +0000 (GMT)
+Received: by mail-vk1-f200.google.com with SMTP id 71dfb90a1353d-59c5efbe57bso336147e0c.2
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jun 2026 05:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1781006620; x=1781611420; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t2yOM2NAjtAyFgfFhbJW5TqogRr+sQYkIoqann+cFi4=;
+        b=g5t44r2Yxp3ABwCqoK4hyF91HHK26M+5ziG9iRld25cqucLaEWOZlbRILWSqM9SBNC
+         jCDBS55rgycn7ZzCUAcQ6MaT/inK9SefCkuVTleosEZe6bjxvOcjJBFiOiUgKsjhEruM
+         z7AEoOn6oVOvE6+sxVJXazmGUrAR5PQk1CYF/h1s/NfvcjwK9sTZWs8VFP2PXBW6HyxO
+         DyzJFBJkXphPGMxXQfu37lVA4xOWL8I/2xm0mwVd+Vw5zzMPq9pMBSYhHBCptvbcywCI
+         NstuT282qr2zdxPdTOMFyzqDKLL9lfJ2WfieS5P2IL3iCiPMhr57Rd2u7Addm45ZdlVw
+         55+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781006620; x=1781611420;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t2yOM2NAjtAyFgfFhbJW5TqogRr+sQYkIoqann+cFi4=;
+        b=SII9MPVKiDamy5tT4mUv1+vugCCdSFsPotT6q8p+mDbZkXMvTCiWDp/sXoGD23ML3J
+         Ecqb5OHdoikKGyWw+Ix0gUnknL8fLnr1YVFRGhsRr7xomfhQ27LOYAIaRC0dXZ7w86gx
+         LHtjDuYy1Vg9bUg6Y2a+rgSuYQKnuXp+lNqZuLPc1AMQS7dpxLLL/6j95je5qIzz8aTZ
+         ChAm3uz4otSJlwMONZ5Wad/nGaQwu1l975hf9TeKB8785npv84k0M8m38NHYygSJLtWp
+         368e//Hek1/chDq0JbpdRadXywvs0FNo4ppAvtX3U3QRlSAxrm4MHmWQxZK/VBGQzszp
+         XGdg==
+X-Forwarded-Encrypted: i=1; AFNElJ/cS6WBVLXiyIlXy+Edx1yovse2OgYsOaU93/CQ4nXXkG2aOWkZ8LwbZ/49m2oOHO14evGtTYxe3bQLHofLVew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZGLOnfyh6VdJjgXY6s3bMDAZVxtof9G97lC0M8ShN/6LeL8cK
+	z+AkvCdvHEGDnIzlxiFrtMrNSSF80+hmGu3UEg31pFOl+/jMcuYQ5xAHYnGzMO83dizQ2M64t1I
+	F179brdCQhE9xP6vn17NLpHEsYMF71NZ6fcMx5AVbVH/rosmlaWdylWMr+1RGYauyu/laQVk=
+X-Gm-Gg: Acq92OFmYyCX+UrrKFvSIeDWhn1zbA/k5PvIb8aQ9DnimRCX0Uv4Ogded0t2dm9oRST
+	QAli0yxJeVeW3JiLutNaWH6JDVbaAZXxLOZR3wLmTgxsbLg5TWlFNItJ+kTx5qAq9qquvvpneRS
+	KUItPJf1WMCXgkkp7C7XgRfbLybjg0B9i9mprCWIn6uu6ClO4zEVYc8UK8mkGyGuEYtCMjPMgR1
+	haDGV7dTELCrcVX/OUMS90Rd+DfxA39LWm4hyhFloJJ1Wc9lcRVvyqcGIMEs5fBrUtVchoQTR9a
+	kA1Fby82182uZ2yecG1+9cZRu7dtZL3bn5hCaB0pcbxgUFSJPialRAasoHFbsJB/mBGPrVW085y
+	Y3YWMa1oEfRChJ+vX5E3bFE3dkArEXzUFpv6Q6xpFpp2qYLnVIVvInRot
+X-Received: by 2002:a05:6102:5a92:b0:631:b312:a2a6 with SMTP id ada2fe7eead31-71913522647mr343112137.0.1781006619617;
+        Tue, 09 Jun 2026 05:03:39 -0700 (PDT)
+X-Received: by 2002:a05:6102:5a92:b0:631:b312:a2a6 with SMTP id ada2fe7eead31-71913522647mr343091137.0.1781006619215;
+        Tue, 09 Jun 2026 05:03:39 -0700 (PDT)
+Received: from [192.168.120.170] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68e64e29c0esm8716512a12.7.2026.06.09.05.03.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2026 05:03:38 -0700 (PDT)
+Message-ID: <e9573827-81b5-4c75-9d1a-d59a4809300c@oss.qualcomm.com>
+Date: Tue, 9 Jun 2026 14:03:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-In-Reply-To: <20260607190804.GAaiXBlGO2eRcfs1oB@fat_crate.local>
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/8] remoteproc: qcom: pas: register TMD thermal
+ cooling devices
+To: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
+        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
+References: <20260609-qmi-tmd-v3-0-291a2ff4c634@oss.qualcomm.com>
+ <20260609-qmi-tmd-v3-3-291a2ff4c634@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260609-qmi-tmd-v3-3-291a2ff4c634@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
-Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<dave.hansen@linux.intel.com>, <david@kernel.org>, <kees@kernel.org>, 
-	<linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
-	<lizhe.67@bytedance.com>, <mingo@redhat.com>, <rppt@kernel.org>, 
-	<tglx@kernel.org>, <x86@kernel.org>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Message-Id: <20260609120132.84323-1-lizhe.67@bytedance.com>
-References: <20260607190804.GAaiXBlGO2eRcfs1oB@fat_crate.local>
-X-Lms-Return-Path: <lba+26a2800b2+03b1cc+vger.kernel.org+lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 16GSq3G7i0GYIhTquVawoove8dZvpFsb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDExNCBTYWx0ZWRfX4uqxacnHBGGb
+ Qvt63zVaaA0Mhx1EKakRNHQ0qtVKZo1lpmHtt2d0H4I/VAEHnxNbPfNdseuDUeWqt+ak7P+1NK2
+ Puz25xX1L7JPd98mxNs9J8/d0zFETQEtCz5Zhc1gP2eAqFLKekNhIrbUIfNzQYzMDFecicSnaht
+ 3C0lbQCshDR0C0dzJU+s6OC1u5g9ONPGOyl6XaD2MdjlKlbPmAAD6lazP9S0V8LrvMxrPU7B4HG
+ vV0g7YvCTy6LC8UdYAEeOnbC7qqyS5JIghzlvr79VOs0bR5Gd/o72yGuTIbIBHrkzE2GtHBIsQc
+ 6wGXWPkvlhW7NEfegvjNKBlMe5F7z88D+HetAJpDeQNpc4CS6Swb9SnI9nwvoLM4xibkWy7SGOI
+ yhz5PuEMiFkNKh5sGvvwTcB6wYjyx9Ee2IOBbTkEPR/QMdDNL9MwMKVsF61/3jtWB2xMr4I1XCS
+ LU2sA/FDC0azgPWUH9g==
+X-Proofpoint-GUID: 16GSq3G7i0GYIhTquVawoove8dZvpFsb
+X-Authority-Analysis: v=2.4 cv=doTrzVg4 c=1 sm=1 tr=0 ts=6a28011c cx=c_pps
+ a=wuOIiItHwq1biOnFUQQHKA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22
+ a=EUspDBNiAAAA:8 a=x89XBY5VHgNHtdzuPNgA:9 a=QEXdDO2ut3YA:10
+ a=XD7yVLdPMpWraOa8Un9W:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-09_02,2026-06-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 phishscore=0 clxscore=1015 malwarescore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606090114
 
-On Sun, 7 Jun 2026 12:08:04 -0700, bp@alien8.de wrote:
-
-> On Wed, Jun 03, 2026 at 04:01:50PM +0800, Li Zhe wrote:
-> > Introduce a generic memcpy_streaming() interface for write-once copy
-> > sites that can fall back to memcpy() when no architecture-specific
-> > optimization is available, or when an architecture-specific backend
-> > cannot safely handle a given transfer.
-> >
-> > Add memcpy_streaming_drain() alongside it so callers can separate the
-> > copy primitive from any required ordering point. On x86, use
-> > memcpy_flushcache() and sfence only for aligned transfers that can stay
-> > entirely on the non-temporal store path; otherwise fall back to memcpy()
+On 6/9/26 12:22 PM, Gaurav Kohli wrote:
+> Add support for Thermal Mitigation Devices (TMDs) to enable
+> thermal throttling of remote processors through QMI.
 > 
-> So you throwing "streaming", "non-temporal" and "flush-cache" wildly around
-> here and this is adding unnecessary confusion where it shouldn't. I'd suggest
-> you stick to "non-temporal" which you can abbreviate short'n'sweet to "nt" and
-> that's it. Keep it simple.
-
-Thanks for the review. Will switch to nt-based naming in next revision.
-
-> > so the generic API does not expose flushcache semantics on cached
-> > head/tail fragments.
-> >
-> > Callers are responsible for invoking memcpy_streaming_drain() before
-> > later normal stores that must be ordered after the streaming copy.
-> >
-> > Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> > ---
-> >  arch/x86/include/asm/string_64.h | 32 ++++++++++++++++++++++++++++++++
-> >  include/linux/string.h           | 20 ++++++++++++++++++++
-> >  2 files changed, 52 insertions(+)
-> >
-> > diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
-> > index 4635616863f5..aee63108577f 100644
-> > --- a/arch/x86/include/asm/string_64.h
-> > +++ b/arch/x86/include/asm/string_64.h
+> This enables the thermal framework to request mitigation when remote
+> subsystems (modem, CDSP) contribute to thermal issues.
 > 
-> There's arch/x86/include/asm/string.h. Why are those here, in the _64 variant?
+> Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
 
-The current placement was meant to reflect that the x86 implementation
-here is really just a thin wrapper around the existing
-memcpy_flushcache() backend, and that backend is x86_64-only today.
+There's no other signs of Daniel in this patch, please fix the
+tags chain
 
-On x86, CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE is selected only for X86_64,
-so a 32-bit build would still need to fall back to the generic
-memcpy()-based implementation anyway. Keeping it in string_64.h made
-that backend dependency explicit.
+[...]
 
-That said, I see your layering point. If arch/x86/include/asm/string.h
-is the preferred place for the arch-visible wrapper, I can move the
-wrapper there in the next revision while keeping the x86_64-specific
-implementation details in string_64.h.
+> +static int qcom_pas_setup_tmd(struct qcom_pas *pas)
+> +{
+> +	struct device *dev = pas->dev;
+> +	struct device_node *np = dev->of_node;
+> +	const char **tmd_names;
+> +	int num_tmds, ret, i;
+> +
+> +	if (!of_find_property(np, "tmd-names", NULL))
 
-> > @@ -4,6 +4,7 @@
-> >
-> >  #ifdef __KERNEL__
-> >  #include <linux/jump_label.h>
-> > +#include <linux/align.h>
-> >
-> >  /* Written 2002 by Andi Kleen */
-> >
-> > @@ -100,6 +101,37 @@ static __always_inline void memcpy_flushcache(void *dst, const void *src, size_t
-> >  	}
-> >  	__memcpy_flushcache(dst, src, cnt);
-> >  }
-> > +
-> > +/*
-> > + * Only map memcpy_streaming() to memcpy_flushcache() when the destination
-> > + * is already 8-byte aligned and the size can be handled without cached
-> > + * head/tail fragments in __memcpy_flushcache().
-> > + */
-> > +static __always_inline bool memcpy_flushcache_nt_safe(const void *dst,
-> > +						      size_t cnt)
-> 
-> This is checking alignment. Then call it that.
-> 
-> > +{
-> > +	unsigned long d = (unsigned long)dst;
-> 
-> Useless.
-> 
-> > +
-> > +	return cnt && IS_ALIGNED(d, 8) && IS_ALIGNED(cnt, 4);
-> > +}
-> 
-> AFAICT, this helper is used only once. Zap it completely.
+Let's use device_property_present() instead
 
-Agreed. That helper is over-factored in its current form.
+> +		return 0;
+> +
+> +	/* Get the TMD names array */
+> +	num_tmds = of_property_count_strings(np, "tmd-names");
 
-I'll fold the alignment test into the callsite and drop the temporary
-variable in the next revision.
+Is this something we can stuff into platform_data for a given rproc on a
+given SoC (for which we already store *some* data in the PAS driver)?
 
-> > +
-> > +#define __HAVE_ARCH_MEMCPY_STREAMING 1
-> > +static __always_inline void memcpy_streaming(void *dst, const void *src,
-> 
-> memcpy_nt()
-> 
-> > +					     size_t cnt)
-> > +{
-> > +	if (!cnt)
-> > +		return;
-> > +
-> > +	if (memcpy_flushcache_nt_safe(dst, cnt))
-> 
-> That branch can cost. Why is that alignment checking so necessary? Why can't
-> you simply DTRT by handling the misaligned parts like __memcpy_flushcache().
-> 
-> What does this bring you? None of that is explained in the commit message so
-> why do I want this patch at all?
-> 
-> The commit message is basically telling me what the patch does but I can kinda
-> read that from the diff itself. What it is not telling me is *why* it exists.
-
-The extra alignment gating was meant to keep this helper narrower than
-__memcpy_flushcache(), so patch 8 would not inherit the mixed cached
-head/tail handling from that implementation.
-
-Thinking about it more, I agree that this is hard to justify for a
-generic helper. For this series, what really matters is that the
-struct page copies in patch 8 can use the existing x86
-memcpy_flushcache() fastpaths where that is beneficial; I do not need
-patch 6 to impose extra selection policy on unrelated callers.
-
-I'll simplify and rework this part in the next revision, rewrite the
-changelog to explain the actual motivation more clearly, and respin
-patches 6-8 accordingly.
-
-Thanks,
-Zhe
+Konrad
