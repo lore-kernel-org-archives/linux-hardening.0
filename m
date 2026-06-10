@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3AF21CA02;
-	Wed, 10 Jun 2026 01:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A741C5D59;
+	Wed, 10 Jun 2026 01:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781053205; cv=none; b=hozShO+rrH/duMs4fcSEkQiUwJ8FWr4ONxxdUHttqTKOWmPZ+C0U7HRA0KO/rwpc+mBRhV4ZMCGeokOln2JI1T2rRD2wAVZrT+Xa9na7g6+P8n9ffwynDn0C5VDKn661Wv9yH/yoE5BL8PMePYrlVq0tRxGwIgdUKlW6RAAGdmM=
+	t=1781053427; cv=none; b=rIV/bM/4G2KR5XeOea/tFSSeXDce7qHTcR1VSohDlc2ENXdwbCM2Lx+2CDNtMctGDN5euOzLeivVsmcyVDBZp+0R7zy+nYWBJDsAQsdx+LfXCfHMPmoFBzwLX9FBeNgNIQ4BXXKnYY+07Zn+M281S/zdfmWb1Qhy5XZIVyoCJ3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781053205; c=relaxed/simple;
-	bh=NY79jDaWT1YxXpLnGOEwpu5chz+h3gqwpbGSNXUahRA=;
+	s=arc-20240116; t=1781053427; c=relaxed/simple;
+	bh=fZBEKuDVT12AWDpvKEuztfeKBJqN88ZgmqcJ2ftIf3k=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NSFlWqwNTtJ6/JCD9OEzOpMJdCZ6ppPVx0jRrrgne3rKJx07x/Q6+8Uj3GzmhxdXVI+ZYMqcy0LWY/JncYABfYGIvc4Ce40qq1gqAvZjip8mIFWettQBPCVqPouAXxOHmXMq3OzMbEb0Nuicn5kwXk60N26yTgANtjrg+Qxc2fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CiOdeOtX; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=KJBD9WlV1+MqjAFWJiWGeKlc/iKmEyUbaJZclZj4xDXlRUC1x0WagYNFFJvayG8pckomt4ORAOLBMMI5MpBUyuuSb/mwTDA9hquW6NVRbg320ZPHaE1pOrTjFjU1U22kp9CBYCUEo11uIJ6y1QGTdH4OHtpvgFM92f0kWjSi+7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6eie08k; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CiOdeOtX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04D0E1F00893;
-	Wed, 10 Jun 2026 01:00:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6eie08k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66511F00893;
+	Wed, 10 Jun 2026 01:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781053204;
-	bh=dPkJYjzY5JPEmIZXonT3vNfcky0zjFEpdKWA2TGjF34=;
+	s=k20260515; t=1781053426;
+	bh=Mz4zABv2K+JZzneh/w8kTCcXsSuy5cWoOaYAkzYhTK0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=CiOdeOtXG/6zAlje9jVifaIYaoEePDRHvEZOF4mUquIi/dng7Fq+KTmEvAFQp6rGp
-	 nHF5Py4OFrzi/jmziWozozsxv0D3I0NMH1P5BpGAYJ23rQfGsqatBsSlXPNXsOWCRx
-	 KU2HaaW6edJzRIFXDkiWLPxLg4qNcnRcjTdSPbShWRBJyfMLk9cvux7Nse3zbDhMvM
-	 q/BlM7HxXEI6L+0YEOwT0vo6LscT0ySO+FTqBrkODlpCv4A3nCPsYI3a8zkrZJ9t0V
-	 bXXg6nQypuQ56BWvfifTDg9prMkYKBC7VWTQLe1yrhP9DAY7e4BW1a64AmxuYxFQfQ
-	 OXJUIQ/fqIsFA==
-Date: Tue, 9 Jun 2026 18:00:03 -0700
+	b=I6eie08kCH3ikrsn57Lm0Xmk5XYoLSXCRCVrAW+KhlcZTUViDdqSdwDUV/qBTUeH6
+	 O31N5zNlgURhRCx18ceHy4cMCdQ+qgHkhXa0aiUALKEOYQDmbkHFQPkedN0/OOuY5S
+	 rmN54C15JN8B7YQ5mFFG6gRe7apIj54MfqyWE5p9QuGCpw2YaeytC3bPuxwnykZF99
+	 4+jblE8T2oYrbN6hk0J9SNnUKSdeVoxkTGtxIOAZSiLFfQt0cRjXggoIZcYXNBWsGe
+	 Dey9LkzQGAvBtY1YEB4mRakKAfTMreULlJrYCcxwOah/ZtQgNvmLeYYzPj15lVnLQf
+	 vd0Smwv9+0HUA==
+Date: Tue, 9 Jun 2026 18:03:45 -0700
 From: Jakub Kicinski <kuba@kernel.org>
 To: david.laight.linux@gmail.com
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
- Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, David Ahern <dsahern@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, Ido Schimmel <idosch@nvidia.com>, Paolo
- Abeni <pabeni@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>
-Subject: Re: [PATCH net-next] net/ipv6/ip6_vti: Use strscpy() to copy device
- name
-Message-ID: <20260609180003.31cf7ab0@kernel.org>
-In-Reply-To: <20260606202633.5018-29-david.laight.linux@gmail.com>
-References: <20260606202633.5018-29-david.laight.linux@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-net-drivers@amd.com,
+ netdev@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Edward
+ Cree <ecree.xilinx@gmail.com>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net-next] drivers/net/ethernet/sfc/falcon/ethtool: Use
+ strscpy() to copy strings into arrays
+Message-ID: <20260609180345.6650f2b4@kernel.org>
+In-Reply-To: <20260608095523.2606-1-david.laight.linux@gmail.com>
+References: <20260608095523.2606-1-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,9 +49,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat,  6 Jun 2026 21:26:23 +0100 david.laight.linux@gmail.com wrote:
-> Subject: [PATCH net-next] net/ipv6/ip6_vti: Use strscpy() to copy device name
+On Mon,  8 Jun 2026 10:54:45 +0100 david.laight.linux@gmail.com wrote:
+> From: David Laight <david.laight.linux@gmail.com>
+> 
+> Replacing strcpy() with strscpy() ensures that overflow of the target
+> buffer cannot happen.
 
-Same comment as on the bonding patch goes for all the patches which
-copy from dev->name. If dev->name is not properly terminated we have
-more serious problems that this copy
+all unit_formats are (obviously) compile time constants here
+-- 
+pw-bot: reject
