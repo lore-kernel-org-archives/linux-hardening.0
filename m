@@ -1,87 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2566232B105;
-	Wed, 10 Jun 2026 18:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BD736C9C2;
+	Wed, 10 Jun 2026 19:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781117324; cv=none; b=nVFHRJDbjMx3/KSTTE8qMwcSy9i154Fp+jr3GHY1mFrRX3gxqbjLY+ly7iuD5oXkQDHDRPTQd1U7UBJghmDGBhLs5FXn2honHnR6vf5LlXUvAtiMUR6Evd+4+fablz1Q3wjobK+CIfBLytQ1p/2POTymmWlOMp912tpEaLcRdpI=
+	t=1781119193; cv=none; b=YZNsCubW6+/4uH0BbiDk7jMLN8oqQXaAJuO0BP6gPEJD8rXdKgd7Tybgy9XbY6GfvvEYWKa3kxkbDGnPsUY10nIggAyq0Oj+c0y7CVlRy7PUlnJrV8dcO5STGyoG+PKdPFAcx4hiqqV/Gh4KJahnMJDEKFzIGA9OhNmMyfDvShI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781117324; c=relaxed/simple;
-	bh=e7juAKMdbJE8c41ddoVMN0a+q6SHhmeQ5SmeOwcgzYU=;
+	s=arc-20240116; t=1781119193; c=relaxed/simple;
+	bh=5J0IeNThya3UT08dAWzEzDsB32UrFOWKtcPSoW1ZZkQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=biQCYEN1kGBwvurB/8FRha5+L0UVn3OpSjbPqq0BqTE/NLfXAib7bRbc4MjVTqHF6p2UpiPF6Xbj03LpFB3IASsYYpSx0KTUmFgVK+Rikwc6Lv668oLTDC/z2VDJx9PEF4C2I0cNAwuSYQArfH5cTvCU6gTRAzDydtp9WE5HCrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5N58tyF; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=fi24o85fIV6ZlBc3AnGS01KIw2wzPlwE2cVW1IabFQfcxFp8B0VCxoqdJbhtYwDfi97lZuF2qFC0pl9pnWyeyQJaW9uw7OKRUUa5uEKNeKa0GPBN6FFoEXorUDBrKKZ3iE1QCjOdbv/L7X+ts4JP7StAiT+drH9fTDsNRuhqsLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JceC9ePc; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5N58tyF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DB71F00893;
-	Wed, 10 Jun 2026 18:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781117322;
-	bh=IeaOgv8VGi8NiS/EDinHm2Q+9rwa2YqYo89AIX6kVBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Z5N58tyF9roa6CWq4gbKB7l16zKv7j1T52ICIRV+2JEGOByBessKPyUmNLtpng/n5
-	 01It/aEyXBYdFM1JUBWjN2Gl1w11fM4CfxXePTanpUfDPY8m8TOquE5dih4a7XPlgg
-	 btBlortY85j/zu8nYrc2DaUFvL/EFLsl3Xw//gKj/OKOnegGnJ3DuGlfoIp82T9kdN
-	 +LeNPNctygUsNJydo8PzVwS54vo/JQP2aFu7ZBQ4ue9Ra7gi/BwVyIT/oKRXJpC5Nw
-	 SfPYoqrejZxl/5hYBuvFWtJR+cpsHk3syvcyCIXUMdFTuPxg1ih8UEmJjb5oemikYV
-	 cFj/czkl27sVA==
-Date: Wed, 10 Jun 2026 13:48:41 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Saravana Kannan <saravanak@kernel.org>, devicetree@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH next v2] drivers/of/overlay: Use memcpy() to copy known
- length strings
-Message-ID: <178111732108.625216.12806954968096989058.robh@kernel.org>
-References: <20260608185121.22331-1-david.laight.linux@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JceC9ePc"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4EBA340E0177;
+	Wed, 10 Jun 2026 19:19:49 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 8nyn0l_YIkCi; Wed, 10 Jun 2026 19:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1781119179; bh=JysIXdHqb/AfYm9Wq38SegXh3xO5K+ZoKmjZT9fhfWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JceC9ePcoFi7qjCMH22o5S3xFxLlydWzyZvW2u2eZHiksbHKuXbdnlx1p7ujPkotk
+	 C6U9Up8ZdzWzvfl5udJAHcg3aUuEpkPEqQfE/CGCSQffYtmKnBguQ6WTj5WY4FQprz
+	 kV+FpnxtiSQ0ivUNwWCVSZrJM1Hy1HoYuBh5r9Cco8R3hbMChgQrInyAdK+XhUy9PF
+	 /UEj+kTvgroGGKCaoG7SwdwvyR/7DzCwqSW9d+iCodMCRxW8+psphgPVDq8ixaGDUB
+	 E7T1v4mLvFr95/m3DqW6qxBPbxQuEOdb1hY3zfA1sZqitymqRXE4UrpkZB64mDuekD
+	 Raqrr+fQ7MKy/jG8tQouQ3bqfof37zTlEZaeFNO78nEdLhQi+NgaPIFK12z5+lVNvr
+	 3Ir2xmbh9mVSmV6m6buYFSw7v/EEWbJ0FXuqxR7+OOluS37N8Elk9L3NTDm7ODGKCA
+	 NM9tHMpX6PhuDnI7dgOlgYafrusn2O2UbFI6Ap/ZApb1UeyiMQoi9oocL+K23R+k0Y
+	 pIU3bYEMMK0Nqewco6E5Rv7TDUn0Ks7hioOYxvBhnx6sghZga+WLbk9gz1uL4KIBfC
+	 NRqlI903GpRy75JLK1l+nska7lWTSoonARyvpSViO6PgrALz9sGL0dRvmL03edO1sc
+	 IkpYbKVJMDMp8u/PzvVKuJoE=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8F43D40E01B5;
+	Wed, 10 Jun 2026 19:19:23 +0000 (UTC)
+Date: Wed, 10 Jun 2026 12:19:20 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Li Zhe <lizhe.67@bytedance.com>
+Cc: akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
+	dave.hansen@linux.intel.com, david@kernel.org, kees@kernel.org,
+	linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mingo@redhat.com,
+	rppt@kernel.org, tglx@kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 6/8] string: introduce memcpy_streaming() helpers
+Message-ID: <20260610191920.GBaim4uMX3z6OqJwHr@fat_crate.local>
+References: <20260607190804.GAaiXBlGO2eRcfs1oB@fat_crate.local>
+ <20260609120132.84323-1-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260608185121.22331-1-david.laight.linux@gmail.com>
+In-Reply-To: <20260609120132.84323-1-lizhe.67@bytedance.com>
 
+On Tue, Jun 09, 2026 at 08:01:32PM +0800, Li Zhe wrote:
+> That said, I see your layering point. If arch/x86/include/asm/string.h
+> is the preferred place for the arch-visible wrapper, I can move the
+> wrapper there in the next revision while keeping the x86_64-specific
+> implementation details in string_64.h.
 
-On Mon, 08 Jun 2026 19:51:21 +0100, David Laight wrote:
-> Avoid calls to strcpy().
-> The lengths of the strings have been used for the kzalloc(), replace
-> the strcpy() calls with memcpy() using the known lengths.
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> ---
-> 
-> v2: Improve commit message
-> 
-> This is one of a group of patches that remove potentially unbounded
-> strcpy() calls.
-> 
-> They are mostly replaced by strscpy() or, when strlen() has just been
-> called, with memcpy() (usually including the '\0').
-> 
-> Calls with copy string literals into arrays are left unchanged.
-> They are safe and easily detected as such.
-> 
-> The changes were made by getting the compiler to detect the calls and
-> then fixing the code by hand.
-> 
-> Note that all the changes are only compile tested.
-> 
-> Some Makefiles were changed to allow files to contain strcpy().
-> As well as 'difficult to fix' files, this included 'show' functions
-> as they really need to use sysfs_emit() or seq_printf().
-> 
-> All the patches are being sent individually to avoid very long cc lists.
-> Apologies for the terse commit messages and likely unexpected tags.
-> (There are about 100 patches in total.)
-> 
->  drivers/of/overlay.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+No, 64-bit only's fine. We don't put any new features into 32-bit already
+anyway but that wasn't clear from the commit message what your goal is.
 
-Applied, thanks!
+> Thinking about it more, I agree that this is hard to justify for a
+> generic helper. For this series, what really matters is that the
+> struct page copies in patch 8 can use the existing x86
+> memcpy_flushcache() fastpaths where that is beneficial; I do not need
+> patch 6 to impose extra selection policy on unrelated callers.
 
+What I am asking is, you need to show numbers why those helpers exist.
+
+Your 0th message is talking about measuring this in VMs. If this workload is
+not VM-specific, then those numbers don't matter. They're just handwaving.
+
+So I'd need a good justification why we need the changes before we go any
+further.
+
+HTH.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
