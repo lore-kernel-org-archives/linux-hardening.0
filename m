@@ -1,147 +1,121 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831B73ACEF4
-	for <linux-hardening@vger.kernel.org>; Wed, 10 Jun 2026 21:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781125660; cv=pass; b=f+bFJNcp1av29vQ/UOCd8aNkKvXs1JrJ4epsxuM3BaZNz+BH6ugd4HhA5uHkYnjvmAdhEdjDzARVQbbZ3ZDEgJxCa21rup0J1uQIzRrLIy9gjgqAIdyEbAoPEED0DdhJE27Xs/8iiRudkAZ81c2pYGjUrd1s/iBOh4JDLIp/vis=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781125660; c=relaxed/simple;
-	bh=73eVXxvMzyJNjHQHUZC9yuQ3YHZKXsjI8C8I0R1boWI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ghVN/3TT0w+Tsh7w3uBCjKazwufzuWxgYSvPUZlDSbM3TjcerioLysOMHYVEbw6uRRezQiJ/nP9bjUzGW8UAEdc9TRz4ewTK7Lx7m9NTkEoES3exPFB/nnhz0/g3gjnM0a79Ck3uI0JQL3Tk+zPvu52pZ1jVNDKDGHMaKR/U3S4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+lg862M; arc=pass smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650D9352006;
+	Wed, 10 Jun 2026 21:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781126066; cv=none; b=l+nWcKcnFj/BZUMctQsQ7h20o3nhW4Os8UiWAQgnEEg8S7VrYMb9DxgfvuI0NsbO6E/Rgp/d+nqNLDToeiG5D4zvoBCEaudqRrVBWU94mvG78oL0UfP9OaNTK5Bd8zTInBrIhh9O6imHcd6ww6X01GeMoHd20O/2aDH+WGHrfXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781126066; c=relaxed/simple;
+	bh=kcCMHdyrkQwBLN6mFPKLshNLPrl7OiWk3AXp7aNCZ6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qHEGVDwvROZodgOHv8sBlbCqvCj/18TH55hyYFVwm+vp6zzJmPpDqEFLJsXFA2kkixnW9IgxO7WQq3mmYLUDCWA5+98XGLqnf4jhY7RHKMXdixHS/EKBhUuYpVgyl6R0nHeBODf0/f39/IQ1SA+1lnIWBXtynL3cl3qHW/gVyLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTmBc4uT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+lg862M"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-bec3f69d343so1101849366b.0
-        for <linux-hardening@vger.kernel.org>; Wed, 10 Jun 2026 14:07:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781125657; cv=none;
-        d=google.com; s=arc-20240605;
-        b=f2+Ec53wNkqPOufBNugve6sujYfP4oZcJgCvQWCm/hecyq2VrjT1Kdo5z5g9K/m3EB
-         PF0fnpFMU+t0Q+2GWGXu5yvEFCG2c6jRwxlYBkIKrO9gQFz7FcIpGxuUgJZ9VqCb8G/b
-         +TKXw3gB+yCRJOSNHLRY1fpRMOFlSEYmBiw/AH4r/bqHe1+bch7IccuOjzxAI69PbTnv
-         Y/GJhsZuRDJT3Yym7vebRBBXC6gNBS0BibTEhppceRmZNfdhQmz3/1bVvQ3c2SO+GWNM
-         M6e/HPf60j0a4XG4kDrpk/biGsA4mTA50KPflKpAGEL9CWaYnlSvsaD2EtJvTYYFAvtV
-         q46w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=73eVXxvMzyJNjHQHUZC9yuQ3YHZKXsjI8C8I0R1boWI=;
-        fh=NXoCqp00LFIKbMf9m3v0pScQxL7V70g/M+Gid0rdCs8=;
-        b=g7T7XKxe+Z+K3f5llv4KKF07CdmWaHFKwCYHLIOGrUPoj3rNEiuaVeQeBQgvy88ZAE
-         IB/hd+akMNDpVK83Mobs6HbY2nmXUyiCRYHwdWwsWgwxSGz3FvJs/5tJE+MGegZKsZDZ
-         HtJS3U1vSIuviN1ThUnaqrvUW1exb+osGsU3qU89ZtJXukQYROaVc7LDBWETkcZgosud
-         1YZp6VDz87aaOx8OO5R88PqqK46j+KCvrEyTnknGMiIN6Y5s6MMnAO2CwuxbJbCmZoPA
-         x5ozv1VKtj4q2DQe34lI0gyAKnmy6ajvlHh4sKQVk81yeckV8lKYzLt+p9e19bWnVdaS
-         YMKQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781125657; x=1781730457; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=73eVXxvMzyJNjHQHUZC9yuQ3YHZKXsjI8C8I0R1boWI=;
-        b=S+lg862MLGLRUnxuNN1YE2H6+AG87TCJiBkG0EKCPCOEzQ6PgRWGYFaEsQZz33fF1F
-         MHG0cCbifm+kSG85kNkS27sOSZ7Er/Sq+uHbScP8rJQvYVarAnZaO0DRCqLNgqiaQSfG
-         7gMdIKEcfM633FtgupZbB2I5dyraYzSNx2/J7yg5uQ1fgYAV+D3FCcLZ++mJKT3UcU88
-         y4RNqFRYRFAZleZHvehZMTupSzkr0hbJLcqF4Nx17B5VKQs48L5R/sOjHyuIEaNah12t
-         2hYfJi7jpvvLzTUPaycx9GSai/RB8Rn5fwU+wunZkK+NPw4JEtV8FVkjoCADNbXHIQSM
-         kaCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781125657; x=1781730457;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=73eVXxvMzyJNjHQHUZC9yuQ3YHZKXsjI8C8I0R1boWI=;
-        b=F1R1spsxghMZQ0Fk/lren6d0RAehj+ie4un/R8Hg6V5FaMoKqZFzcWGNCof6x58/3T
-         cYvIo7bYOvQFKJCI6hX1JQdpuTP4wHuWtipCAh4xb0PJb4YuIMTsa+1FhzrkqI8KXulp
-         4+qvNStiZDFRkbqSFMl1L8+F5vwVeTANBl0HPA6gQzJ8QID83g9NGHQ++YtMFYvitPHQ
-         QY0SCddju4yB65Q2/5vJANiRCvtw4ZSSFFvq9/twR98iGHxH9Xk/B/v22B58sWNaeD0C
-         c8So7go98qWOOz4MWzMMYg1VthcLfVJ0VywVH0NK4bTSsS6o9a49KuPeYf801nAixGAD
-         t8zg==
-X-Forwarded-Encrypted: i=1; AFNElJ87XkjBIpNgirMx+XxUyML+Rn4EdRIGsUqsajOvspMTef3KllxgVzwZ7GIVhTjB8qjWAYY6mIkJu+0fT4wQrSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV3e6O6BL3+PACqszHGRgxtU+y3J4dWP6+ZnYJgZjLrbFiTXfe
-	MdIjzlHJTpryev5PgUSdaJMjHD5dJiqYNnwcGRZbRzbabfbs+Se+a9Jev2aBcPrwTciI0fijWFr
-	41PQKLqgcZa2eiUtvLmOnIELDotdYSg==
-X-Gm-Gg: Acq92OHexyu6QmVz8vpKcjq5oDTrMY08KG7Q3qfCLgbWALuDXrkRcC10xZ2IQkDmUOd
-	hzuNYUgYFMsbgQqWeAwQk0FKRNSBAYbtIBOQ6hHJIw3X45M9D3mZIQ7SFgWmuPj6ullAZS9zrf5
-	pI6xgIePRYJb/QRjomE7V2ZcTpcEX8w6yz3TsD4l+bIRzap3LoRT4QaStV70WA240HY9tA/YGn6
-	2uo11v+cIGjuHtJBWNvcQy09l3BonPTte3t+5dm4bXV2KG7Vzd0ZgTj2fQIve01VPIZwTO7eLMi
-	3b8q+wR/6cf0hMzHWCFDMCJGDJn1UopJ2HM2bAJF1yi9dqBZcFehYfqmcVzR4QZ9mDDI6nIGXSL
-	KA/H7n6pT/lHYr8A/hVdNV7hmt49H
-X-Received: by 2002:a17:907:2d0d:b0:bce:a1fc:6877 with SMTP id
- a640c23a62f3a-bf37234ac00mr1411412666b.24.1781125656562; Wed, 10 Jun 2026
- 14:07:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTmBc4uT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218EE1F00893;
+	Wed, 10 Jun 2026 21:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781126065;
+	bh=tX9c4IBtxmqpNWyTX19jGFou1ivW/Xvjn151g5nluKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=aTmBc4uTEFvbTMWmm33jECSvNIr1TxD3HKmve7j1VseblnFT5EjXu1MZkSZ3jAXq/
+	 +HkiCZrDVLJvCHr8sVquTGbnWcj25jkJomN7htZqa7ReAjL3TIfiXIMOrZZXdDLT6w
+	 8ZEnD3Qb8Osm3m2SYmWJLM6X8yvRf58MIwgLW6MTgr8HFOo46gbQgj7AIAoqEZEmxN
+	 42AW6ZpmuzJfBXKif6joatK5KysPYRi9M9VejDkviWrLjKidIee4ka7Vz8vgw2YeVG
+	 dQpFbRXN+xP+JqifZ+sdu2ZsXdjEU9BpihCfAIFrZckOl6uUkHEn9T3aIRLjwc1vg3
+	 bOVTVO9T58ZYQ==
+Date: Wed, 10 Jun 2026 14:14:24 -0700
+From: Kees Cook <kees@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>
+Subject: Re: [PATCH net-next] net/devlink: Use strscpy() to copy strings into
+ arrays
+Message-ID: <202606101412.D1AD83829A@keescook>
+References: <20260608095523.2606-13-david.laight.linux@gmail.com>
+ <c6eb816c-3f2d-4705-82ea-8c2c0ad70ded@redhat.com>
+ <20260609161338.2222ff26@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260606142558.13809-1-med08elkadiri@gmail.com> <202606101345.D1BDA8BBE2@keescook>
-In-Reply-To: <202606101345.D1BDA8BBE2@keescook>
-From: Mohammed EL Kadiri <med08elkadiri@gmail.com>
-Date: Wed, 10 Jun 2026 22:07:24 +0100
-X-Gm-Features: AVVi8CexcpNUkSZoUjoSlVmZRkJORhumHl_-Zdg3yMbOvv_FzO0i0GVcjft9kEM
-Message-ID: <CAAMeuQSZdNiCaAMYOnQE3q-Y9325PAbwVsJmTmKSS9a=NG7wcQ@mail.gmail.com>
-Subject: Re: [PATCH] cred: prevent slab cache merging for cred_jar
-To: Kees Cook <kees@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>, Serge Hallyn <sergeh@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, linux-security-module@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260609161338.2222ff26@pumpkin>
 
-Hi Kees,
+On Tue, Jun 09, 2026 at 04:13:38PM +0100, David Laight wrote:
+> My aim is to get to the point where the calling strcpy() is invalid
+> unless it is used to copy a string literal into an array.
+> If/when all the .c files are changed the .h file change can be committed
+> to stop any new potential unbounded copies being added.
 
-Thanks for the review!
-Following Vlastimil and Jarkko's feedback on the key_jar patch, should
-I send a v2 here as well with similar commit message modification:
-removing CVE references, dropping the skbuff comparison, and framing
-it as hardening?
+Here's what I did a while ago in a test tree of mine, but for strlcat:
 
-Thanks,
-Mohammed
+---
+From d09759b1e51dbf784b503c9b9f5136b81b58560c Mon Sep 17 00:00:00 2001
+From: Kees Cook <keescook@chromium.org>
+Date: Fri, 5 Apr 2024 11:08:41 -0700
+Subject: [PATCH] fortify: Refuse to use strcat() on dynamically sized strings
 
-On Wed, Jun 10, 2026 at 9:45=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On Sat, Jun 06, 2026 at 03:25:58PM +0100, Mohammed EL Kadiri wrote:
-> > The cred_jar slab cache holds struct cred objects, which contain
-> > process credentials: uid, gid, euid, egid, and capability sets.
-> > Overwriting any of these fields is sufficient for privilege escalation.
-> >
-> > On a default Ubuntu 6.17.0-23-generic system, cred_jar (named "cred"
-> > in sysfs) has 2 aliases, meaning 2 unrelated object types share its
-> > slab pages (object_size=3D184, objs_per_slab=3D42).
-> >
-> > Cross-cache heap exploitation relies on slab cache merging to achieve
-> > type confusion between unrelated kernel objects. CVE-2022-29582
-> > demonstrates this technique: an io_uring use-after-free is leveraged
-> > across cache boundaries through page-level reallocation, ultimately
-> > achieving root. struct cred is a primary target in this class of
-> > attacks due to the direct privilege escalation that results from
-> > corrupting any of its identity or capability fields.
-> >
-> > Add SLAB_NO_MERGE to ensure cred_jar receives dedicated slab pages,
-> > so that freed credential slots can only be reallocated as struct cred
-> > objects. The memory overhead is minimal: one struct cred exists per
-> > task, and with 42 objects per slab page, the cost of dedicated pages
-> > is negligible. There is zero performance impact on the allocation
-> > hot path.
-> >
-> > This follows the precedent set by skbuff_head_cache (net/core/skbuff.c)
-> > and key_jar (security/keys/key.c) which use SLAB_NO_MERGE for similar
-> > isolation requirements.
-> >
-> > Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
->
-> Yes please. :)
->
-> Reviewed-by: Kees Cook <kees@kernel.org>
->
-> --
-> Kees Cook
+Limit the use of strcat() to things we can determine at compile time to
+be safe.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/fortify-string.h | 6 ++++++
+ lib/string_helpers.c           | 2 ++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 171982e53c9a..8797c06b46e1 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -57,6 +57,7 @@ void __read_overflow2(void) __compiletime_error("detected read beyond size of ob
+ void __read_overflow2_field(size_t avail, size_t wanted) __compiletime_warning("detected read beyond size of field (2nd parameter); maybe use struct_group()?");
+ void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
+ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("detected write beyond size of field (1st parameter); maybe use struct_group()?");
++void __fortify_refuse_strcat(void) __compiletime_warning("Do not use strcat() on dynamically sized destination or source strings");
+ 
+ #define __compiletime_strlen(p)					\
+ ({								\
+@@ -411,8 +412,13 @@ __FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
+ char *strcat(char * const POS p, const char *q)
+ {
+ 	const size_t p_size = __member_size(p);
++	const size_t q_size = __member_size(q);
+ 	const size_t wanted = strlcat(p, q, p_size);
+ 
++	if (!__builtin_constant_p(p_size) || !__builtin_constant_p(q_size) ||
++	    p_size == SIZE_MAX || q_size == SIZE_MAX)
++		__fortify_refuse_strcat();
++
+ 	if (p_size <= wanted)
+ 		fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE, p_size, wanted + 1, p);
+ 	return p;
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index 169eaf583494..27b9d97c60c5 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -1019,6 +1019,8 @@ void __read_overflow2_field(size_t avail, size_t wanted) { }
+ EXPORT_SYMBOL(__read_overflow2_field);
+ void __write_overflow_field(size_t avail, size_t wanted) { }
+ EXPORT_SYMBOL(__write_overflow_field);
++void __fortify_refuse_strcat(void) { }
++EXPORT_SYMBOL(__fortify_refuse_strcat);
+ 
+ static const char * const fortify_func_name[] = {
+ #define MAKE_FORTIFY_FUNC_NAME(func)	[MAKE_FORTIFY_FUNC(func)] = #func
+-- 
+2.34.1
+
+
+-- 
+Kees Cook
