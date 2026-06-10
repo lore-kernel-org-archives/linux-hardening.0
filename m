@@ -1,40 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE49351C06
-	for <linux-hardening@vger.kernel.org>; Wed, 10 Jun 2026 20:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAD731D759;
+	Wed, 10 Jun 2026 20:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781122374; cv=none; b=UhXzeLTNQrJx28l0LE7nUr3tesEZRMJAwj8pxOX7HF4M6dGdfXqqfJzFqaisxBQRGwPYeZ/ZECRK3PXRW2BACZrIquVgB3AMhGr6AmH7R/nSyuzwH0jm8dcy7McdEOKI3I1abuZKeRWAv7qXp/WDIgnmST1E+tOss7mplHxChvo=
+	t=1781123841; cv=none; b=h05e4KwHhXSIdPiwO+L3zBtuuJ4SXKX90MrAADXkXM6Q1gzSkZspyEq1RAFqBByJq5wzYMspRWBsreut18+Fl1fHa/nyVqx9aFaMD5UdhOnKAYEVIIySnI+hJLKoJogRJ5lp0bhl7yHoXBQaDU89baVuvxOI52/t13lrk/POJuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781122374; c=relaxed/simple;
-	bh=hAAGMOTzTjw3mbvVoMS7j/10d17Sf8q4MAcdbZ5V6T8=;
+	s=arc-20240116; t=1781123841; c=relaxed/simple;
+	bh=I0CuHam3k6p138EbJhw0Ap3auK//qiMALgW7F81Qygs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sBjym2pXSMeLvjVVnxk2pxZgzimLQykw7gfvaSi8bPedSRWBtsuEFqihcKLL3pna+nr8pqXsqMUd4V618eHBrkWCYwolUfuq63ndy6oUTZO8jOtcgNz61SF4y06tSNGdF/+J/bNcF4CqYGbtAI0I6E9Dnu1jEqWhkOImd2Fv5QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azomE42A; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZisYtLLzZsAqpl8tCCqXXUxQLvrgAFRLTPlXbovGLLn4qfPRsEqQ+MNz92gG+2NQ+Bqgqu+avJ+NQKHJoOl9FR++4C3kVNiZ8TuZEZLyn1nF96Zx5BEZOjv2EUY6o+KGpSBtyHhfvZ0RWIdzTtiiVl3Gp6PRYkWcRVxovIThvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmQetrxY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azomE42A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 457441F00893;
-	Wed, 10 Jun 2026 20:12:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmQetrxY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2A0D1F00893;
+	Wed, 10 Jun 2026 20:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781122370;
-	bh=NPcPUl/bhtnsLwm/RNkedD8BRig/8nnruCSmDRj7j5o=;
+	s=k20260515; t=1781123840;
+	bh=WNLuc4BrQv6uydgtObei4m+qke5JuIFLlxLDNItDAoU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=azomE42Aw/ypMbXUpo2lTENlRXg0cMrqUu0bM0hM+Xj4MqZ7rZtkcO+s/iu5ZI/dx
-	 ECTnpTeqCn+1BxDk3nhtfcv/pqimDk7TEuxKaBo8UW72X8IFEjF0FA435qgWNRmR2m
-	 wfyGOHi8P03hpuYoAbRRsUTqCtWp8i6SnnPf3sgN9pnUAf7mMNjheAxziDGOqQeYU7
-	 CZAPgId957iA0lMvD9Y2EA0Wvwq/NUKE+8fJA6xTfPnPmScr8GZjhi3kMfjvPbapaR
-	 ME1W4qNZvroO2R7iQbGXjHNoJKpR1BwBHDkONL7kYjUZYaApZz8FOe/xaiwSoRS5M1
-	 ZNajdC1D+dCxA==
-Date: Wed, 10 Jun 2026 13:12:50 -0700
+	b=jmQetrxY6LJMWtAd8dggq2GE/vTXJHlpVNtxRbF0WlyDt0fFrcwgoSaIjrIPIa0kl
+	 yGzxn+rI4d/6xXjy4x8k9IAYy5pEAZgdixC7TiJ4parQPep8k4I3o0h4u6JWLU8IOK
+	 gy+GI3O/wJqewSp71eVbPupPcy5roga5NMGL49cyJbcm7Uf5iRmWDwltaZlQ/wTSoD
+	 8SYwtb1eKUBQIvXy0Abxn8oihKJbSwVVoAHDbhe9bQs72ttI8sK6ujMG0grsxPJKbf
+	 aRefretYk78oRvReVGQ6vhJHfM8WDlKrHScxnr+79o8fHd6CAw7GEjAJ0LXqYT+dkv
+	 WQoxn4If3YinQ==
+Date: Wed, 10 Jun 2026 13:37:19 -0700
 From: Kees Cook <kees@kernel.org>
-To: York Jasper Niebuhr <yjn@yjn-systems.com>
-Cc: linux-hardening@vger.kernel.org, franzen@sec.in.tum.de,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [RFC 0/7] Bootpatch-SLR: Randomizing Linux Kernel Structure
- Layouts at Boot
-Message-ID: <202606101302.B3C79CFA86@keescook>
-References: <20260605202511.79272-1-yjn@yjn-systems.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] hardening: Default randstruct off with rust for better
+ allmodconfig support
+Message-ID: <202606101335.648C6993@keescook>
+References: <20260605-rust-reverse-randstruct-dep-v1-1-45ce9ee8d0d1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,74 +53,55 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260605202511.79272-1-yjn@yjn-systems.com>
+In-Reply-To: <20260605-rust-reverse-randstruct-dep-v1-1-45ce9ee8d0d1@kernel.org>
 
-On Fri, Jun 05, 2026 at 10:25:04PM +0200, York Jasper Niebuhr wrote:
-> my name is York Jasper Niebuhr. I am a Master's student in Informatics
-> at the Technical University of Munich.
+On Fri, Jun 05, 2026 at 05:01:46PM +0100, Mark Brown wrote:
+> Currently randstruct does not support rust so we have Kconfig dependencies
+> which prevent rust being enabled when randstruct is. Unfortunately this
+> prevents rust being enabled in allmodconfig, our standard coverage build.
+> randstruct gets turned on by default, then the dependency on !RANDSTRUCT
+> causes rust to get disabled.
 > 
-> For a while now, I have been developing Selfpatch-SLR (SPSLR), a system
-> to apply Structure Layout Randomization at runtime, and its Linux kernel
-> implementation, Bootpatch-SLR (BPSLR), as an independent research
-> project in my spare time. I am now beginning my Master's thesis, which
-> will build upon and further evaluate this work. This patch series
-> contains the current state of Bootpatch-SLR.
+> Work around this by disabling randstruct by default if we have a usable
+> rust toolchain, circular dependencies prevent us directly depending on
+> !RUST. This means we might end up with a configuration that disables both
+> rust and randstruct but hopefully it's more likely go give the expected
+> result.
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-Thanks for working on this! I asked the Sashiko folks to give this
-series a review, just so you have some more immediate feedback:
-https://sashiko.dev/#/patchset/20260605202511.79272-1-yjn%40yjn-systems.com
-
-I'd love to get Ard's feedback on this series too; he's done a lot of
-poking around at layouts, annotation sections, etc.
-
-As was mentioned at the KSPP meeting (thank you for attending!) one
-aspect for further down the road will be getting this implemented
-directly in GCC and Clang (since no new GCC plugins will be accepted in
-Linux). But in the meantime, I think it would be best to move the plugin
-into the existing GCC plugin infrastructure in the kernel (see
-scripts/gcc-plugins/), as that should better control when it gets built,
-make dependencies, and when it gets enabled for various build stages.
-
-> The design goal of SPSLR is to eliminate the need for runtime lookup
-> tables or similar indirection mechanisms. Structure access instructions
-> are patched directly to reflect the randomized field offsets before
-> normal kernel execution begins.
-
-The implementation looks very similar to relocation fixups; is it
-possible to create a new relocation type for this so it more naturally
-fits into the ELF image? The .data/.rodata annotations likely need to
-remain a separate section, similar to how existing things like fault
-instrumentation works (i.e. from the sanitizers for things like KCFI,
-UBSAN, etc).
-
->  * Patch 7 ignores BPSLR-generated files.
-
-You can just fold this into the patches that add the build outputs.
-
-> I have also attempted to port BPSLR to v6.18 and later releases. While I
-> got the system to build, occasional runtime failures currently prevent
-> successful operation.
-
-I do wonder if getting the plugin merged into Linux's gcc plugin
-infrastructure would solve this (i.e. it would get run/not run at the
-right times, etc). I suppose it's possible it won't help, of course.
-
-> In particular, I would be interested in pointers to areas that are
-> likely to require special handling, as well as assumptions made by the
-> kernel that may not be obvious to someone approaching the problem from
-> outside the subsystem in question.
-
-Targeting task_struct is quite a challenge! I wonder if you might want
-to start with a different subset of the __randomize_layout-marked
-structs? I know there are a bunch of filesystem and network structs that
-maybe aren't quite as sensitive to early boot like I imagine task_struct
-is.
-
-What did you need to make exceptions for in the task_struct? I suspect
-that may also be a hint as to why getting this ported to the latest
-kernel isn't easy?
+Can we instead just allow it? This has been ready to go for a while,
+IIUC:
+https://lore.kernel.org/all/CANiq72n=hgH4bqJjp8MsMHAaxaAo75GSBcHGTvFT3NTSaVPGWg@mail.gmail.com/
 
 -Kees
+
+> ---
+>  security/Kconfig.hardening | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> index 86f8768c63d4..1677c4f9637b 100644
+> --- a/security/Kconfig.hardening
+> +++ b/security/Kconfig.hardening
+> @@ -285,7 +285,7 @@ config CC_HAS_RANDSTRUCT
+>  
+>  choice
+>  	prompt "Randomize layout of sensitive kernel structures"
+> -	default RANDSTRUCT_FULL if COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
+> +	default RANDSTRUCT_FULL if !RUST_IS_AVAILABLE && COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
+>  	default RANDSTRUCT_NONE
+>  	help
+>  	  If you enable this, the layouts of structures that are entirely
+> 
+> ---
+> base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
+> change-id: 20260605-rust-reverse-randstruct-dep-5a504c861128
+> 
+> Best regards,
+> --  
+> Mark Brown <broonie@kernel.org>
+> 
 
 -- 
 Kees Cook
