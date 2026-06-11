@@ -1,194 +1,112 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3559C2E7623
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 04:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F07341068
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 07:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781153142; cv=none; b=lljER4MY4QsTmPfN5Fh6jCCWfBcaC8grolXmhbOFPrUCZS2p+Ow7/n3RydaSbMryjySBVDqR164UpdeZCZWXEXPJd+Er/31kKm4lYq+i/tz6pyXDsasWC6TkeUSMMMvu5ofB9fzQ1F9HWmaVxDWfeDZSHT2P04elaxE6OUrZL1g=
+	t=1781161371; cv=none; b=cOXHTgL5QjhdChJV7vx9bAcDlXRcNJF95pYiKpxyiI8DX8aoK8C5aabNJDUJyw2k56lXUlBJtvWyNogA6ujWVstKCM7L5PnnAWsWGeHxodpvSCXTWgWxP+QeTT96B9qf42JHC+duMj93ykXaxKwcD9XI9QGV1MFwDZwto44JSv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781153142; c=relaxed/simple;
-	bh=wDZgTVz/oZs6fHMeDkBQJjN738mapPf0RtpZObfLSGo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YqgNRwvt6vVY9gbfSJoG5Zb3w70GxW7bHW1Vxi064hdCYeQqA9RFLlUl7afHI9zuYuXFmOmbd5YiMKux7aBGtA8R0OW+MfT7PU9b8D4SwRnZruky/Ysysszx7JC+divDx6dl4NoHqBsQRHGQ8AgmYOgyFs0Cwh7EHLRi71Qd+qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eUCmfE5X; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=G8QPs6Ma; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1781161371; c=relaxed/simple;
+	bh=yiDYo3uXjyQYEP8qg92do+PKxEnqD4etbAOSczuXrvU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DEjuYWDV5pOy8WIY19ZlcRMgaDq9uqTE4uqUS4Jovro8Hg0np7QYgPe7WhB+lwI6RyJw6m0HzhiQOQmbKntWjHlvVo+M1YJQzhBST7sBy7oUGZCLMEy0Cb/fBOuf4rs6jNTud7xuhmGGJMlxArhDOuyTPXNaR5WF6LmSLzFoYis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GccVdRT+; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eUCmfE5X";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="G8QPs6Ma"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65B0O2KN3184686
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 04:45:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8ks7xcs4CcsvhpxQlRnY7mYEmf/7lZqBcXTDU2LX0qM=; b=eUCmfE5XNyddAO+D
-	0dw0SQBchcu20RPqbpJtWlc+F9af0uhK8DgWGreLf/IcuIAHWstGYcvZE1wBjWrP
-	pOk3mE3TS7UAxtT2EbgtxlrfPWeHICyUpm/5ME2ncJCLlfHIEkDFMKo87wiJVxO9
-	xTRl7wT+haxpU2/pecsGphJf0QdP8yTcuqM4gLs+mnNA/qOkCCwHBtEa4p3C2t/a
-	269c2KgniB28cCu/RNw0PeGLnEqdXZ44WFMg8+cnx3oaU84JBeBc7z2zZvjNgkcL
-	iJo0IJ4q4XAnWtTK5FJhCjIk5z/Zc8YSJ+yDMcDVAAVw5i6mMneD3B0oA02EzWKe
-	yJjCVw==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eqe6usme1-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 04:45:39 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-842208d5b0eso5578219b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 10 Jun 2026 21:45:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GccVdRT+"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-45ef29c5561so4056676f8f.0
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 00:02:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1781153139; x=1781757939; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8ks7xcs4CcsvhpxQlRnY7mYEmf/7lZqBcXTDU2LX0qM=;
-        b=G8QPs6MaIde05IkbfG0Ekp9B3NYDtG+Wikvx63NT4Z3ZspkYV3dy4uEl8bzfL11in6
-         MLrStFDGJVnFYS7e3PchvWDQELTzfFWBcKPMEcT0uJmIW6/2cA5gVXWBiuarZPMHIOv6
-         DH4FbNHrI0Kzt4mlea1EjE5uzodvXYHLFnyWTepjmVGo6dxe0zzm9bNhzJNxc7snDicz
-         O+jUMC/PFR7No/YfTxFjLT7KTnCxl9XXLTtob0AmixFFU4+P4OKHozQ9/KP0mA40d3ae
-         ZXKat/xJchAJ7PuNas9iqqq1gewWuWipGGxLiKW/NBP7NyV3B+R61qq8gTSPNyLU86zl
-         ATng==
+        d=gmail.com; s=20251104; t=1781161369; x=1781766169; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ktJHYJQkk8yoVHrYe038VfAc/S/hFzjEvTGu3j4TfPs=;
+        b=GccVdRT+kCgaCnYjV/i/sQPp+svexE3XaAS7FYOA+n0Tgn73UnvEPY9wqGxyy19Hkt
+         Mc6ITjeHBvXV4f5k034xzaNyuN/JMycnQmRtLNqVhUBsabMi0stma0BYkChK9RsfHFfj
+         C209z5u3/BNhyV6JBQo/rQhc9SglenhM9HIldtjtR196E7pp9Ip0jJ89JW2H7CA+YvHf
+         04ktPE3D0acu5YGIUf1C3cnrplirpQBH0w/ehcyvj2If0VS5X492N9j82hKZwDWP9cdM
+         Zg0roPbvmduY0UygJcJkiO1Yhrs7/vMZET2io0O8dbQvGy9lSD0nHGd6Hag+qkQzVz1M
+         d+OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781153139; x=1781757939;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8ks7xcs4CcsvhpxQlRnY7mYEmf/7lZqBcXTDU2LX0qM=;
-        b=ReoBLl6fUAUww8TGSkaUIqeqo0C2xfwz+q7ofWxErIJvyu+WiPw8CWZHBKfLibhOZN
-         T9fcxfvym7Z4BLbuAvRvtueOzWE9dgpEhODAS37akCpTmIuOrls83nHFqeTcFp6hv7Mt
-         PWfiTtA/4E3F5xegvUJ2P9QXQJhyBzg5qeadujtCGj8V077Z09CqQ98zEi4/oiHgGm4T
-         Dc0zHDYNmNI7N/400m3TIM+M8fqWxQ+QWGCu+nLF3G8t1Emn5lZNWMmknX0GknTqvE4M
-         DTMQ8O4XMNYAMZjNEhPbfed1Fa+SgM/R+yfAT4CgBtvp48IJPaiX1/bCMHAOv/xUlp4n
-         zYeQ==
-X-Forwarded-Encrypted: i=1; AFNElJ97wsBeccKlav0oeIKGfhP8dbZTFH5M/I1WpqCGDeHzrPGjOpAYu7srlrHchwrHDz+38x5loi0KmmZb2FVSIAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd2MVF5mmNFEktuivjqupj3s9z9RpGBQk+wNQ0yFDGPSpuizGR
-	MDNw7kEI6LyFkQsNMfqQ1wLOCM0/aAkB+D970yMutcxEGIPD4MGNdktPAvgUtwzigE0S3qN0CBO
-	dtDv6VtlK/0J2tHYiC5isAszIBFbSIv6RLSJuH20yb2tREgqlUwjPGY69Lu0JhG51PK/zJrM=
-X-Gm-Gg: Acq92OHQVtu4xxZQ7KBW+TTErhPxFl9dhnEaPOaUYjNalmQCSnXxt5HrIYW+Bo5NA2W
-	UMGKK3n3qvRVPng11FwBuvEtg47nRpfGSIlSL5DznlC4Y4/WCg33mLk7k4c/xVc6yYG/4Yt28tF
-	bAaRCbwu42fqwS236eTUnI6pG57T2YB1euxSQe3YMfadt/GYX+QvkwCgGxuU0bORQ4EOdnSjdzi
-	aetyItAyYJWTQI5ujtPQWHxmG12Va3RomugFKGeE6qEjqNyK7v3M4LJV/k9BCWFMGJ39m1UdbA8
-	U3cMB/ktbDPeoAC7aHCm6bQgE5qAXs+aDt6XsJx0Gfp58ZN9UHkWD/elKumgAfCoetsOy/biHwU
-	PWXKQLos/Jc750Z0zultbO57nQdZ2DLoe/y9Yt2e94Pi3+o6NGetDralCBK9XqN0=
-X-Received: by 2002:a05:6a00:bd89:b0:842:5ea5:5fdd with SMTP id d2e1a72fcca58-84336bc6f14mr1290375b3a.40.1781153138780;
-        Wed, 10 Jun 2026 21:45:38 -0700 (PDT)
-X-Received: by 2002:a05:6a00:bd89:b0:842:5ea5:5fdd with SMTP id d2e1a72fcca58-84336bc6f14mr1290333b3a.40.1781153138304;
-        Wed, 10 Jun 2026 21:45:38 -0700 (PDT)
-Received: from [10.217.199.117] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-843383197e5sm467576b3a.52.2026.06.10.21.45.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2026 21:45:37 -0700 (PDT)
-Message-ID: <cb244225-5375-4925-8d20-232cae9da672@oss.qualcomm.com>
-Date: Thu, 11 Jun 2026 10:15:30 +0530
+        d=1e100.net; s=20251104; t=1781161369; x=1781766169;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ktJHYJQkk8yoVHrYe038VfAc/S/hFzjEvTGu3j4TfPs=;
+        b=fKVpwTc4v/jB+eChZwzwCKEzTLzh7y1kbS1r9urR1iKNnKCwBVsuGXh/3GfOaDouP0
+         WLFUu+FeEg6vsNfhNCua5SzCfcRZoO/cfLtzP0oB/l0ysG/jnBTrQPNrkEiRvzX0S2AD
+         w0igpQu5TzKLQx8io7cE8pjvfCcT6dHu0UDho6XIsU5RrprhgdDaRI8YBt1iqzZAHuDO
+         qUq3ijPofZLVVkggnsoMgPgSGKIDuGR1QWfQZoyUYiaGCmY3QwbCESssF5ruqqlQdB5X
+         qlhXXtEpYaVhSdJVd/mkPbJTnoGkVcDceie28IFQF35sXIRLmDlkt6kUqgnDGtQno1W9
+         p8qQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/rwafLIXxYkd5JidnRxyMTC3dSy4adBgb5UZkwL87bKin9JG5jDB1ep08P7yn0THv17W7GMu7+IQ/5i9xrVLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnyEYPz5Q/yyeAShciV2BKsRbV+sUdKTzmT/TuVeFp1lrkjvnZ
+	GFtUwPCtwhR0htCY8Gm2RaUFoGqZH/lPpqDa9ebfc1ZlW7Zwfmbs+L8=
+X-Gm-Gg: Acq92OGtrbDIJVBooUuIPRlLSslelQPfPI6v/wiuKXZeQ83RW+GIHBka7PM1VilE1I0
+	s3hNW6KCHyvFTtNRKzfy4hVREc7w56ZKoylCYSwfrQ4N8AzPosnpuPvP+Cjt0wy91v2RcymOEka
+	Tdpy5GMxx2X72JaXBS8XiYpeR22m7qLIilDmyoDUP+Fksm+DAk0FO0sJwEFsn4xJhdHgazI2D04
+	VK0Ezw3XlZdvzb/rwCvaGEwI3DcPxdy+ZAtfnKaBxjGk9i2/GddFaYgbdlTdO5y0pafzPsMQf3c
+	H9U5pe5EXy7+WQN+DX5pChitkeNfJrmtPx0M/mHoGSEJI8MZIwL6ucMDsL1s7j9cvLDOAOPbnLW
+	sP5t8Ga0yzxNAbg68JNE4sUdQ1B4qxP++CJaSfcbYXB9400yCjrWBscqDF7tmttbVPczKEPMHJR
+	Kn6HXAaqe19skMN4e2JpSnzUaLJY9u3V5BxuGwwwSl5NVPhdICctzsOglEq5/fJtllw8WmGVzaM
+	R4wmwACFBILXKOKidkwIFV8UyoNohEWSCj3gHNE
+X-Received: by 2002:a05:6000:1842:b0:45e:f3b1:52d1 with SMTP id ffacd0b85a97d-46067576bfemr1862316f8f.9.1781161261836;
+        Thu, 11 Jun 2026 00:01:01 -0700 (PDT)
+Received: from hp-ubuntu.. ([41.249.138.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2f5612sm76550344f8f.15.2026.06.11.00.01.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 00:01:01 -0700 (PDT)
+From: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Serge Hallyn <serge@hallyn.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	linux-security-module@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mohammed EL Kadiri <med08elkadiri@gmail.com>
+Subject: [PATCH v2] cred: prevent slab cache merging for cred_jar
+Date: Thu, 11 Jun 2026 08:00:54 +0100
+Message-ID: <20260611070054.6550-1-med08elkadiri@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/8] remoteproc: qcom: pas: register TMD thermal
- cooling devices
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
-        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-References: <20260609-qmi-tmd-v3-0-291a2ff4c634@oss.qualcomm.com>
- <20260609-qmi-tmd-v3-3-291a2ff4c634@oss.qualcomm.com>
- <e9573827-81b5-4c75-9d1a-d59a4809300c@oss.qualcomm.com>
-Content-Language: en-US
-From: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-In-Reply-To: <e9573827-81b5-4c75-9d1a-d59a4809300c@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=FJ8rAeos c=1 sm=1 tr=0 ts=6a2a3d73 cx=c_pps
- a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
- a=EUspDBNiAAAA:8 a=cgKxsijKBzv_CCWCEVYA:9 a=QEXdDO2ut3YA:10
- a=OpyuDcXvxspvyRM73sMx:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjExMDA0MyBTYWx0ZWRfXx77DH9QCU+xe
- 0F4iJfDnmeK5dVzjnVxMRJ0lr4PZjKL+INhY5l+XFUm5L0BAnzQp8hmuMCJtOZPaMof0yQ9XzR0
- ON/0QRtBZoKOv+DHAaDH3T+XfzTzwKQ=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjExMDA0MyBTYWx0ZWRfX/3v3vfXBAEZ+
- XYhNeKXzG6F2rPsKRUZFdBrqUd9l9XQqfSkPzIUtK+hLtCcElDhnDP9fPLNSnsLGASC2JDDqEb0
- To+V3tRAO5dmD9wLPNmJeLU1VnMMJhQP5i5m6SRnUh90ErgkXo3QiJisU1VewPPdk6fqDpI8i9J
- tFSIxVg5vb4KVSRHRdxfXubbbc6EVUbwubBSFMINyz8H9axNXF+RBsGpOd4mGf7OeXnC+kIR7VN
- Cz6dS6/I5FYVgd2S2s+FZKaETzG2ZwnG/ujExHIQRna6Wtj1t7b4KoSkM3HtKMfVspEQGSmZegf
- 8ArtojFlzmM2ZQehzBHJVXnGidi4ny86Vs2Q1NZVqpSk8nL8R0T5DDT3JY3WIvK261NBMtNti3B
- 6tGb6AMsext5shG2LdMe6kZrv+eztdMHmToHwI6ttKl1hFkrRxLGYf5DmUDNVpuH9cx79cRR53W
- nHJr90be7mvp1aHRF4A==
-X-Proofpoint-GUID: TQlszPs8NgqD646ENx_YvfkjF6-VouuE
-X-Proofpoint-ORIG-GUID: TQlszPs8NgqD646ENx_YvfkjF6-VouuE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-11_01,2026-06-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 adultscore=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606110043
+Content-Transfer-Encoding: 8bit
 
+Add SLAB_NO_MERGE to cred_jar to ensure struct cred objects get
+dedicated slab pages, preventing the allocator from merging this
+cache with other similarly-sized caches. This is a hardening measure
+to provide type isolation for credential objects.
 
+Reviewed-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
+---
 
-On 6/9/2026 5:33 PM, Konrad Dybcio wrote:
-> On 6/9/26 12:22 PM, Gaurav Kohli wrote:
->> Add support for Thermal Mitigation Devices (TMDs) to enable
->> thermal throttling of remote processors through QMI.
->>
->> This enables the thermal framework to request mitigation when remote
->> subsystems (modem, CDSP) contribute to thermal issues.
->>
->> Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-> 
-> There's no other signs of Daniel in this patch, please fix the
-> tags chain
-> 
-> [...]
-> 
+Changes in v2:
+  - Collected Reviewed-by tag from Kees Cook.
+  - No code changes from v1.
 
-Thanks Konrad for review, will fix this.
+ kernel/cred.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> +static int qcom_pas_setup_tmd(struct qcom_pas *pas)
->> +{
->> +	struct device *dev = pas->dev;
->> +	struct device_node *np = dev->of_node;
->> +	const char **tmd_names;
->> +	int num_tmds, ret, i;
->> +
->> +	if (!of_find_property(np, "tmd-names", NULL))
-> 
-> Let's use device_property_present() instead
-> 
-
-Ack.
-
->> +		return 0;
->> +
->> +	/* Get the TMD names array */
->> +	num_tmds = of_property_count_strings(np, "tmd-names");
-> 
-> Is this something we can stuff into platform_data for a given rproc on a
-> given SoC (for which we already store *some* data in the PAS driver)?
-> 
-
-Without tmd-names in DT, it is unclear which index corresponds to which 
-binding. With #cooling-cells, tmd-names in DT provides an explicit 
-name-to-index mapping. Please suggest.
-> Konrad
+diff --git a/kernel/cred.c b/kernel/cred.c
+index 9676965c0981..0e4ee60a5acd 100644
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -557,7 +557,7 @@ void __init cred_init(void)
+ {
+ 	/* allocate a slab in which we can store credentials */
+ 	cred_jar = KMEM_CACHE(cred,
+-			      SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
++			      SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT | SLAB_NO_MERGE);
+ }
+ 
+ /**
+-- 
+2.43.0
 
