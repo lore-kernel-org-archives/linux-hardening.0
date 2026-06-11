@@ -1,222 +1,96 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2110835839E
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 08:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D563D2FD681;
+	Thu, 11 Jun 2026 09:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781165918; cv=none; b=L72VBlomdctU/jM9yfFOl2RqNAOUWGa3PyMevonumpaxoDpuq6nkOnsdxoZSb335Bt17fw3GeUQIpkzJPewUQc5DUL5MlImfUXwPa/p9fCtyBsT+1qm+Ah9Y0y3ObdXqTVaJ2CEReClHgOvEhvLhVqH9ml4ddOQ5OAXwvEwjnB4=
+	t=1781169828; cv=none; b=bBqSKcSQABUjhNHRoZsgZyrj1A5/9rwX8b3jEx/i9SiG8T7Y3ixWIMbuSnz3HZc8qu6DznneTFu5xhNUqX4JwPfqHBfXk8TGDNCfgqlZMplJEtYypKc4NkrLK5K157N38hp+r/H4xI3/6iRyTPnhyQHW4+mdySjrCGGQPfslbYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781165918; c=relaxed/simple;
-	bh=6+ksKy5zPk4CILJZnwTvpNz73zdQB5qY3mEJNmKTBpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VBYBr0iWDQksy5UrvvS9UPGpRpDx4Ujsn0mtRezo0/MB2vlh461BQkNUKZEGmUOEyVJwR65qaoVhOh6tzbrrXLNZFQ85hzcPpO/2J/XfcrC9OVPhNpWhJpxGFVVF4vlLcLJrkhXRNiOXCz6BqFLQNBpdWJvyOw0sOcamkUOWwZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mz2KnAAi; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781169828; c=relaxed/simple;
+	bh=n4QyMGbFQbeSogIxTyg8g3splgIaIsH26BzlrHn773A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvURTLBsrM8KpKxyf9Dcag9Z+YFLByf9ltiO4/mOby8PlIL/TLbt/hzCVIzptqYG9CD9uBaC6IPxK8Fg/LfhX/fxPd4hjdT/xHhSYIMz4Cra5oaQ+PIed7+dGNnwSXAL70R+fBRODZ1SUAV2bmbmUNhk6CX7Ra+Bm/xK7Z2b/f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZOu5gQL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mz2KnAAi"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490cf322ed0so35794105e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 01:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781165915; x=1781770715; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gsqcA8bl0x+k9KH1B+UP0lOaoLno/FKA+FsmWqRpnNQ=;
-        b=Mz2KnAAikjbyAVmnpWJGSctjWHZXXOLOqnlMBjmlRG2HHNQ2VYPv8S/UO2YOovTck6
-         2fK3yc3HyPEiqCp7aCSLqneLJJNFuAqV+KT8mlzpGe+AvonD7dZJcE9Frm4ETGxSoZfp
-         rEoGbxqn0UKOJTPpGioX2nvir+2X7MaQiCcM1AfGpb3brs3nhr0NeykkOrC4ct58//Lt
-         lA0Ada1qm6wNancovnQ0N3L+KIsA/blAkCQB/Vr0teAl9ASvN64+UkKnbY4ys777AafR
-         qnots8pWtAki/iyQWMDfd6bsSEf+7HBtXzitvty1SvQaAlysrd90zEppFVOBSiXzspno
-         Lz6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781165915; x=1781770715;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gsqcA8bl0x+k9KH1B+UP0lOaoLno/FKA+FsmWqRpnNQ=;
-        b=HX4OaH+hw7rD5sY+t0p3y4h8LPTdN7bVSuheG63cp68rnYTeaDMs6v7pelSVvD2/Va
-         w9i6ZMJ56FLhfGWpGhbOOFjS6JoVg9KS2PJQVMOAk3INcwJhRXvKfG6bdAxOubHWNrrq
-         OjUb5ge9jNv99X3jalVY6QaSot58AHjDxCy2V2Srd0AAv7fAWr/tLY1KpH4MCMM/74hW
-         dANyN3N4IkVOHeBi8MtEeedGv9U7fDmGjuRB0sZ/sPvq2Qrhv70/d73Iq2ksfYyOrxid
-         Ztmd9V6qlxFpegiJoExj6YiMSqzYlX+oa1R7zZD4GSdlbwD2jzJXXNrAnF2VEWs6mE9E
-         f5vA==
-X-Forwarded-Encrypted: i=1; AFNElJ+RqFVK0IfaYYX2NutQW9puEaipioT6R0OgaUGpqBIcT3el4kQb8I0YVRELPTX3FsawC2Z/i5g+fDtOi8vYkbk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbFSpjqDSkxDccbCml2F9Q5Mf94OMDJLoIslOz4oTynXl0i7mr
-	dpi1ZG3Bp37BtRRyKaVhlgL1NrN82EaAQj1gLcWJ6VMn0zV75eqdPssY
-X-Gm-Gg: Acq92OFbT2zJk2SQx9PbI7q4MDztlfn2gKbiIROg/n5ZkM4M1Phv6TWGh6gOMkbj7Yi
-	Ff15PAD9xTwtCogsw+hJO3TlItbQDzO7wg2JmqEWEGEM548LNmw+9yYCtgvJ7e41T8aHZu/hHCM
-	1Q8ZPWk4s66Vf2kXZxB4cJ7IJ4szV2JCXtt5kZENRnRDskBtVdhKyJN5XqS7Jh9QgwyQEMPdYNK
-	DUpBg17avEd4EHzHstDXhn9fiatxD8ZppjrdCAeer0fyktqnHV2svXgoSAqIott6dvlmV94y/rt
-	JHEje1KLC2+sg94cX0kcIwWa3E7z3kuD9vdoRgytSlHYe06ClZuB61oOmWuPYmtc3x1mJWXhvsp
-	cNrgyybOueOzUMMhhSEilu0iY+icqMe43bKkyHuh4gNNXIC67c5m6fLC8MIq7ZOfOqzuYfBNYIn
-	cLQblyRCT6wTpcx7ueJY9bAbu/dCHisHi2QUZaHFL07MI35qicLMYByi+3O1u3NnvR80pzGNI=
-X-Received: by 2002:a05:600c:4452:b0:490:e18f:d112 with SMTP id 5b1f17b1804b1-490e56043e2mr20472375e9.21.1781165915470;
-        Thu, 11 Jun 2026 01:18:35 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490e52b3970sm29913375e9.8.2026.06.11.01.18.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 01:18:34 -0700 (PDT)
-Date: Thu, 11 Jun 2026 09:18:33 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Viacheslav Dubeyko <slava@dubeyko.com>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
- <arnd@kernel.org>, John Paul Adrian Glaubitz 
- <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>
-Subject: Re: [PATCH next] fs/hfsplus/xattr: Use memcpy() and strscpy() to
- build xattr_name
-Message-ID: <20260611091833.02ac2b6d@pumpkin>
-In-Reply-To: <2543b22369ec19dae397963fbdf2e7181c7419a8.camel@dubeyko.com>
-References: <20260608095523.2606-39-david.laight.linux@gmail.com>
-	<2543b22369ec19dae397963fbdf2e7181c7419a8.camel@dubeyko.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZOu5gQL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 550271F00898;
+	Thu, 11 Jun 2026 09:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781169827;
+	bh=SLJxYuWn1JgaTUqmkYqvt9u1o2uLPDb56mE2MLV5Y8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=JZOu5gQLyWUjcPodEFU369f++53aZ7WVUSj3nBTCo4m50DID9bK6QSwQEunjMzqbh
+	 IcZI7EzXcc1ulbDg73BaXe58hx0fNo9EhIT0NEFpffu2NNd9369h5sfQEqRnp8SnyE
+	 s1Gi62pU8yqneYYzZh+QRdq3ro6pt7Y22N3DWoPgiJL4QwDKbRZ1ZWWVy98OEGvV0H
+	 +rKnux9Cn681B+NieJsRKF34cv3Zc04zJhaAv6Bzi268J1iERVubctNW1fKCvcbeMz
+	 75FB6KPEPWCIWUUS2CL06vszvJmZryK2z7mSJogxHGILGmy4FZVpmQsyDIW9mJLata
+	 2tYb8Gwp18OOQ==
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+	id F0D4D1AC56C6; Thu, 11 Jun 2026 10:23:44 +0100 (BST)
+Date: Thu, 11 Jun 2026 10:23:44 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2] hardening: Default randstruct off with rust for
+ better allmodconfig support
+Message-ID: <aip-oMvL_8zxRssJ@sirena.co.uk>
+References: <20260605-rust-reverse-randstruct-dep-v2-1-93d38023b6f9@kernel.org>
+ <CANiq72mmzfBg0_y+TMTsUUuO0cJFE0=n60-ttwOynai06_y=zg@mail.gmail.com>
+ <202606101339.66BFE3AA67@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="8Pab7+dFsmnpIdTp"
+Content-Disposition: inline
+In-Reply-To: <202606101339.66BFE3AA67@keescook>
+X-Cookie: Leave no stone unturned.
 
-On Wed, 10 Jun 2026 20:50:33 -0700
-Viacheslav Dubeyko <slava@dubeyko.com> wrote:
 
-> On Mon, 2026-06-08 at 10:55 +0100, david.laight.linux@gmail.com wrote:
-> > From: David Laight <david.laight.linux@gmail.com>
-> >=20
-> > xattr_name is kmalloc()ed at the (assumed) maximal size and then the
-> > prefix
-> > and name concatenated together.
-> > Use memcpy() for the prefix - its length is passed and strscpy() for
-> > the
-> > name to ensure it really doesnt overflow.
-> >=20
-> > Prior to bf29e886b242c the buffers were smaller and on-stack.
-> > (But I cant see the copy in the old code.)
-> > I am also not sure why the buffer isnt created "just long enough".
-> >=20
-> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> > ---
-> > This is one of a group of patches that remove potentially unbounded
-> > strcpy() calls.
-> >=20
-> > They are mostly replaced by strscpy() or, when strlen() has just been
-> > called, with memcpy() (usually including the '\0').
-> >=20
-> > Calls with copy string literals into arrays are left unchanged.
-> > They are safe and easily detected as such.
-> >=20
-> > The changes were made by getting the compiler to detect the calls and
-> > then fixing the code by hand.
-> >=20
-> > Note that all the changes are only compile tested.
-> >=20
-> > Some Makefiles were changed to allow files to contain strcpy().
-> > As well as 'difficult to fix' files, this included 'show' functions
-> > as they really need to use sysfs_emit() or seq_printf().
-> >=20
-> > All the patches are being sent individually to avoid very long cc
-> > lists.
-> > Apologies for the terse commit messages and likely unexpected tags.
-> > (There are about 100 patches in total.)
-> >=20
-> > =C2=A0fs/hfsplus/xattr.c | 12 ++++++------
-> > =C2=A01 file changed, 6 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
-> > index 452a1f9becb2..0b3dd48c28c9 100644
-> > --- a/fs/hfsplus/xattr.c
-> > +++ b/fs/hfsplus/xattr.c
-> > @@ -550,8 +550,8 @@ int hfsplus_setxattr(struct inode *inode, const
-> > char *name,
-> > =C2=A0	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL);
-> > =C2=A0	if (!xattr_name)
-> > =C2=A0		return -ENOMEM;
-> > -	strcpy(xattr_name, prefix);
-> > -	strcpy(xattr_name + prefixlen, name);
-> > +	memcpy(xattr_name, prefix, prefixlen); =20
->=20
-> What's the point to mix memcpy and str*() family of methods? What's
-> wrong with str*() method here? Otherwise, if it is wrong to use str*()
-> family of methods, then why is it correct to use for second operation?
+--8Pab7+dFsmnpIdTp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-They all just copy memory...
-memcpy() copies a number of bytes,
-strcpy() copies up to (and including) a zero byte.
-strscpy() copies up to a zero byte, but no more than the specified length
-	and always zero terminates the written data.
+On Wed, Jun 10, 2026 at 01:41:19PM -0700, Kees Cook wrote:
 
-memcpy() is always going to be faster because it doesn't need to
-look at the data being copied.
+> For the linux-next testing, are you doing GCC + llvm rustc builds? IIUC,
+> then the support patch mentioned, I think, doesn't actually solve the
+> problem?
 
->=20
-> > +	strscpy(xattr_name + prefixlen, name, xattr_name_len -
-> > prefixlen); =20
->=20
-> Why strscpy() is better than strncpy()? What is the main argument here?
+No, the allmodconfig builds are currently using LLVM - there's other
+issues with rust+GCC, right now KASAN IIRC, and it generally seems like
+it'll be more reliable to use LLVM to get the coverage.  Both compilers
+need to work anyway.
 
-strncpy() is completely broken (but not as badly as strncat).
+--8Pab7+dFsmnpIdTp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And, replying to the next email.
-You really don't want to use kasprintf(), especially just to concatenate
-two strings.
+-----BEGIN PGP SIGNATURE-----
 
->=20
-> > =C2=A0	res =3D __hfsplus_setxattr(inode, xattr_name, value, size,
-> > flags);
-> > =C2=A0	kfree(xattr_name);
-> > =C2=A0
-> > @@ -698,6 +698,7 @@ ssize_t hfsplus_getxattr(struct inode *inode,
-> > const char *name,
-> > =C2=A0			 void *value, size_t size,
-> > =C2=A0			 const char *prefix, size_t prefixlen)
-> > =C2=A0{
-> > +	size_t xattr_name_len =3D NLS_MAX_CHARSET_SIZE *
-> > HFSPLUS_ATTR_MAX_STRLEN + 1; =20
->=20
-> Frankly speaking, it looks like a constant that should be declared in
-> hfs_common.h. Even if we would like to declare it here, then it should
-> be const size_t, from my point of view.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmoqfqAACgkQJNaLcl1U
+h9AxcAf9E/oP1ZL3Gu06qhTqh4nYLlsl2eB2tx/jFQdSn1OKhVsmDjbjczaKsgZy
+LHqGmINsqxdstTNwEx+dR+afTJbZApGKGddu2tiEsfvP0bptDaymDHebd1lVt5bG
+g/Hr00vkEXyGOMK+M3BuIkZyiooP+5q02FZK/MbBRMN7yPTpJa6ldkeYxQXN4PWR
+z0ValSlPt8JYhmZ7R2sHu62S7q962NfPx41a/6B4wk3vbcboSupITED6RKbjaBUO
+wGUwmj+NFXHC5ZSy/JAFwI+JEM7eglgRC+L/aKUFfDLmVC4nGRuSflrf7RBGU5D4
+XmLT0VzVKwbCySWEyK+zoLmP9sQK8w==
+=fG0k
+-----END PGP SIGNATURE-----
 
-There is little point marking variables as 'const'.
-
->=20
-> > =C2=A0	int res;
-> > =C2=A0	char *xattr_name;
-> > =C2=A0
-> > @@ -705,13 +706,12 @@ ssize_t hfsplus_getxattr(struct inode *inode,
-> > const char *name,
-> > =C2=A0		inode->i_ino, name ? name : NULL,
-> > =C2=A0		prefix ? prefix : NULL);
-> > =C2=A0
-> > -	xattr_name =3D kmalloc(NLS_MAX_CHARSET_SIZE *
-> > HFSPLUS_ATTR_MAX_STRLEN + 1,
-> > -			=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
-> > +	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL); =20
->=20
-> Finally, I think kzalloc() should be much better for both cases.
-
-No point taking the cost of zeroing large amounts of memory you
-aren't going to access.
-
-	David
-
->=20
-> Thanks,
-> Slava.
->=20
-> > =C2=A0	if (!xattr_name)
-> > =C2=A0		return -ENOMEM;
-> > =C2=A0
-> > -	strcpy(xattr_name, prefix);
-> > -	strcpy(xattr_name + prefixlen, name);
-> > +	memcpy(xattr_name, prefix, prefixlen);
-> > +	strscpy(xattr_name + prefixlen, name, xattr_name_len -
-> > prefixlen);
-> > =C2=A0
-> > =C2=A0	res =3D __hfsplus_getxattr(inode, xattr_name, value, size);
-> > =C2=A0	kfree(xattr_name); =20
-
+--8Pab7+dFsmnpIdTp--
