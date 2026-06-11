@@ -1,64 +1,78 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140DE3FA5C7
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 12:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFCE279DAF
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 18:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781182021; cv=none; b=nixyiaLAtn+fhYacurgMj/EOsSDe+dSJpa0zKzFAaymaNuDgz0j2LPNVsIYQIfpGVXOurJRWhK0mfqDX9zLZ5QHPfIJkT30oZ8LUPxAyX1WPV3l3BhkAtvssOrN9wR1QshJE18c0/DFO9nQSBHLETuYN/Dxls+Ek+IRN7L95FMc=
+	t=1781201335; cv=none; b=gzWj3t6jQwaS5ZVsMagFsDRcTw4lbdFWOEA3FC+EQLYZznpvcyqg1lu9iRa0CHqZgeecY5owhbcyeU6vkCufXQgPQXLGR65DDrIeNuWCoHN2ZC9bwJSum+a0M/eFnFxpZLb0I9T0ZGHrnz5OBK/15TSDAsB0fLla3hx7UBvkohc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781182021; c=relaxed/simple;
-	bh=4OW1ZmOmzZSY8IEoVO285dyW44fXn4PmU1vr1T08E2g=;
+	s=arc-20240116; t=1781201335; c=relaxed/simple;
+	bh=pajLU4q8bCN5YoHUmk+hCyhoUL3rH3RIe6W8LPCHUfg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B4plPO/uqL5hAbJtYRPBrXqatcryKe62I+5wljkh1DQvB9+GRBbFVJsLZX3QgpGQooGZ5PDKkROUhfp69MnxQA7xZptsT7keMZsciRPIdp/dJAH8RjK3rCC56wIMCEpCpU3Udbcg0j0yAOAt+KuB+CQiOtV3Bpss6zOu0t+XyA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1F1606AF07;
-	Thu, 11 Jun 2026 12:46:49 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB34E779A7;
-	Thu, 11 Jun 2026 12:46:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id SF0TLjeuKmpaagAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Thu, 11 Jun 2026 12:46:47 +0000
-From: Pedro Falcato <pfalcato@suse.de>
-To: Vlastimil Babka <vbabka@kernel.org>,
-	Harry Yoo <harry@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hao Li <hao.li@linux.dev>,
-	Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Simon Horman <horms@kernel.org>,
-	Jason Xing <kerneljasonxing@gmail.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
+	 MIME-Version; b=OrIAcHF7SGWyAd/YEvj/eHVQ7OEYTno4C3t/jlAkWnq1MnOvlgt4vJfXXKUzOdPcUl6yWHeWP93xJx3vCQCe+xw/qRsKSvNBYhLsF7UgK9JmXeZc/v96jKq9epm2y43DunsnnqrOC/nbz10ylxisjvPVZ/Bi1GEChRVOEAM4QaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=r8OvVRTP; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8OvVRTP"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-36b900f350fso245338a91.0
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 11:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781201334; x=1781806134; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pajLU4q8bCN5YoHUmk+hCyhoUL3rH3RIe6W8LPCHUfg=;
+        b=r8OvVRTPNbr4tVV/rZcu/rt5KYCj0JmIse2oRfn5eu4sLqmqMEYd99p02KyDDVJ5ny
+         32NSZWylDOfXBajJS5v9pzmYaso3CjT1BsQZOIH+Ptd0Y4brDfaP7YJudgmHCmJStkaZ
+         FfVcPv5s+6SBBUVzlSbf2gogavph3FYc5lanD/zuqwXFIj5zhWC02TYLp0DeynDqDdc0
+         Swf7rPdlwjqjMuHManUtGymaamIvg3IOh3cS3nl+0da1OKG/9KLHA3M/McFWq/qgmtgh
+         LF5pg8lVmRobGAJOyrL5nHG3FjsYpH1Z0ihlsDh+EFR6dl8a/usteWYhzx6ixPmcJLBE
+         hm1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781201334; x=1781806134;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pajLU4q8bCN5YoHUmk+hCyhoUL3rH3RIe6W8LPCHUfg=;
+        b=pNuLC+hpBWVXS072Mj+BFXd3GGTkDHB4FYgdWEXfpbpCMmf8nlWCptG1nUlV96lT8f
+         I/6uUjEzfTiXJHaIEX8KrwWK4kubiFqcZEtHvYWv6sDQwUMbh72DmA/iUksAGFDRseuk
+         L6Ir05TwIPLwteoNoknkp/+rQSKJngnJMAqRuczPfA4pish1E4XiyRSh2QQHSARkavjx
+         Sh1ZjBSKXzVx85zre8f5MC38aEjksDAvlcuMSCIOwifCFkWJ/mu91h5RJAiEiZ9Rw3Oj
+         wNY3DRfQVaxTktn9GECf77CtQSJyhjjrAQQoJIr/0uBCniapGPZ/KP+eHAwQ0De7JyA+
+         1ZfA==
+X-Forwarded-Encrypted: i=1; AFNElJ8/WH2NoAeUYqNL31VFP6zR8kJJiZAuzXszPOWtJqImbH39qeqmXMU74ogOq0hFq4vbbMu2SChdS5ZUjmCsJpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoZRZ+JYGo12lCIg5lj/h6O1bGX5vtMemM9lIeUt77DzrjORgF
+	I2cgFUwhBC67UDeslI8Ic1D/kpXu7LfjtvzpETQgbhAVG4q3xX/egVLr
+X-Gm-Gg: Acq92OHqbtSLGUjYe3zFEn0/eWqW8I5owg69fprUB4TwhjSoyTXySR9CBUO86X5bY2a
+	zR6S0fOqH5/ipSO21xy12avXekvZxjEv7v2xZQBGCtHVArmELdb1jltvJuIkl3tz2148o9yv0kZ
+	JZ+cjxgfRhyTxxT4cfUU07QaMDboDhCGK2XNDlE7KRyqDWbEKmFNlGOdBfPvUlI2g4B4BeaXy5e
+	ovtoVD8/lFjq1E9qTREE6ba/wCFU77VMqbsnkCr2xMGW5gMozDbxLQnUG7paobzPG9U99vphENT
+	E67WcHBmn0+B0j2touAr3xyEh2CPdDoQJZ/UOJTepH7QcDq/vmrMdRzOEX/5dqJvSeWEUrmKJ9N
+	4+10J+dr8kgF82U5brhp98RJOGgfvG6DcXGcFBbejQ26jI7Ko+F+5DPLbGw16GDi+E7yQQIBZQu
+	NVVWNC/R/tgpAeFvvl2NI8T3yvlFhVhG4nJedNuFuWstFhQ3MbiGPLTr8P
+X-Received: by 2002:a17:90b:2dc8:b0:366:10f1:3d86 with SMTP id 98e67ed59e1d1-377aa799f69mr5239736a91.22.1781201334232;
+        Thu, 11 Jun 2026 11:08:54 -0700 (PDT)
+Received: from LAPTOP-97G9G880.domain.name ([106.222.202.137])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37752d59ff8sm3256230a91.8.2026.06.11.11.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 11:08:53 -0700 (PDT)
+From: Karthikeyan KS <karthiproffesional@gmail.com>
+To: andrew@codeconstruct.com.au
+Cc: joel@jms.id.au,
+	andrew@aj.id.au,
 	Kees Cook <kees@kernel.org>,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: [PATCH net-next v2 2/2] net: skb: isolate skb data area allocations into a separate bucket
-Date: Thu, 11 Jun 2026 13:46:42 +0100
-Message-ID: <20260611124642.345400-3-pfalcato@suse.de>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260611124642.345400-1-pfalcato@suse.de>
-References: <20260611124642.345400-1-pfalcato@suse.de>
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5] soc: aspeed: lpc-snoop: Fix usercopy overflow in snoop_file_read
+Date: Thu, 11 Jun 2026 18:08:45 +0000
+Message-ID: <20260611180845.6556-1-karthiproffesional@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
+References: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,81 +80,11 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: 1F1606AF07
-X-Rspamd-Action: no action
 
-SKB data area allocations (as done from alloc_skb()) use kmalloc().
-These allocations can be variably sized and their contents can be more
-or less controlled from userspace, which makes them useful for attackers
-that want to overwrite a use-after-free'd object from the same kmalloc slab
-(which often just requires the sizes to roughly match into the same kmalloc
-bucket). [0] is an easy example of an exploit that uses netlink skb
-allocation to target another similarly-sized accidentally freed object.
+Hi Andrew,
 
-While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these are
-probabilistic. Use the existing kmem buckets API to further isolate these
-allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=y.
+Thanks Andrew. The __guarded_by annotation and context analysis integration look good, I wasn't aware of that infrastructure.
+Thanks for applying the fix-up on top.
 
-Link: https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2023-4207_lts_cos_mitigation_2/docs/exploit.md [0]
-Reviewed-by: Kees Cook <kees@kernel.org>
-Acked-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Pedro Falcato <pfalcato@suse.de>
----
- net/core/skbuff.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 44a7f8401468..ac9fed7461ba 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -584,6 +584,8 @@ struct sk_buff *napi_build_skb(void *data, unsigned int frag_size)
- }
- EXPORT_SYMBOL(napi_build_skb);
- 
-+static kmem_buckets *skb_data_buckets __ro_after_init;
-+
- static void *kmalloc_pfmemalloc(size_t obj_size, gfp_t flags, int node)
- {
- 	if (!gfp_pfmemalloc_allowed(flags))
-@@ -591,7 +593,8 @@ static void *kmalloc_pfmemalloc(size_t obj_size, gfp_t flags, int node)
- 	if (!obj_size)
- 		return kmem_cache_alloc_node(net_hotdata.skb_small_head_cache,
- 					     flags, node);
--	return kmalloc_node_track_caller(obj_size, flags, node);
-+	return kmem_buckets_alloc_node_track_caller(skb_data_buckets, obj_size,
-+						    flags, node);
- }
- 
- /*
-@@ -632,7 +635,7 @@ static void *kmalloc_reserve(unsigned int *size, gfp_t flags, int node,
- 	 * Try a regular allocation, when that fails and we're not entitled
- 	 * to the reserves, fail.
- 	 */
--	obj = kmalloc_node_track_caller(obj_size,
-+	obj = kmem_buckets_alloc_node_track_caller(skb_data_buckets, obj_size,
- 					flags | __GFP_NOMEMALLOC | __GFP_NOWARN,
- 					node);
- 	if (likely(obj))
-@@ -5213,6 +5216,7 @@ void __init skb_init(void)
- 						0,
- 						SKB_SMALL_HEAD_HEADROOM,
- 						NULL);
-+	skb_data_buckets = kmem_buckets_create("skb_data", SLAB_PANIC, 0, INT_MAX, NULL);
- 	skb_extensions_init();
- }
- 
--- 
-2.54.0
-
+Thanks,
+Karthikeyan
