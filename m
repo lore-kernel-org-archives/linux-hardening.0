@@ -1,78 +1,76 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323B536F8E3
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 08:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2110835839E
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 08:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781165375; cv=none; b=JBDvTAxfIQYFanMfs+K8cV0W1CRfaW3XWjhJt1xwltotlxY892+CAUeKhrtC8C7V5TJWjul2Hzxih0Cg95SwAui5BdiBwiZedBAA+wE+uzIL85SyDwgHGrSEsOTuRdHtQ083Wj2FTtI265tRjhGDsa2XPzFfMXPl+vWdZwW/NWg=
+	t=1781165918; cv=none; b=L72VBlomdctU/jM9yfFOl2RqNAOUWGa3PyMevonumpaxoDpuq6nkOnsdxoZSb335Bt17fw3GeUQIpkzJPewUQc5DUL5MlImfUXwPa/p9fCtyBsT+1qm+Ah9Y0y3ObdXqTVaJ2CEReClHgOvEhvLhVqH9ml4ddOQ5OAXwvEwjnB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781165375; c=relaxed/simple;
-	bh=1kW/xWEptVfATiB2XmKzFMAy8WM64oMqHIU0xJ0s0oE=;
+	s=arc-20240116; t=1781165918; c=relaxed/simple;
+	bh=6+ksKy5zPk4CILJZnwTvpNz73zdQB5qY3mEJNmKTBpk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E3DcqVffZLohZUVbbDF6hoptaJ5eMuAmRWmI+SOHEuatxDiOf2rivExGf2nZoC4h4drdCX79TACIgZNLfZpIkTwRAi5ZolM5+2AQV+03heGhLGjH9UZGMhMh39G0D1MWXYAR6sPfMVGuaPq2zG/OqnW1juIIPSBYz74jwHGCim8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=InrpmwD/; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version:Content-Type; b=VBYBr0iWDQksy5UrvvS9UPGpRpDx4Ujsn0mtRezo0/MB2vlh461BQkNUKZEGmUOEyVJwR65qaoVhOh6tzbrrXLNZFQ85hzcPpO/2J/XfcrC9OVPhNpWhJpxGFVVF4vlLcLJrkhXRNiOXCz6BqFLQNBpdWJvyOw0sOcamkUOWwZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mz2KnAAi; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InrpmwD/"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso88235875e9.2
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 01:09:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mz2KnAAi"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490cf322ed0so35794105e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 01:18:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781165372; x=1781770172; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781165915; x=1781770715; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XgMWdBgyNc0sJULa5C8yyGeEC63/vUI2ECNgTDQKOWM=;
-        b=InrpmwD/yfuB7C3pgiwJWKCsUPpJkhGGe6hrPQmClaEX5RXP2dJ74mH9MWCKbuMraP
-         Re2+rPg0/QfqtF8wBNqGTAOF7tYQIWzCUtMSlGCCLL3eZDgLLxjgFUkbYodqNPbtgyqV
-         Eqz/DmR5d+1dE+mGczvvumy5FZzLmVHuv7Vg0pez73Vyf8C1sREXPsq9tUxkd4JVTHgZ
-         WSEOI5tBg5qTZfdvtSYxzfsYDM13B4RYF7T7DOyEpucEtzTXZN4LVbDay8Fhist9Xcvl
-         FM4A0hCxKhk3AYK1Geyqyo0YaIh69X/v178YzzYXDR8bIz/g+wMsIZKA9LWRZ+NiVjqo
-         K3sw==
+        bh=gsqcA8bl0x+k9KH1B+UP0lOaoLno/FKA+FsmWqRpnNQ=;
+        b=Mz2KnAAikjbyAVmnpWJGSctjWHZXXOLOqnlMBjmlRG2HHNQ2VYPv8S/UO2YOovTck6
+         2fK3yc3HyPEiqCp7aCSLqneLJJNFuAqV+KT8mlzpGe+AvonD7dZJcE9Frm4ETGxSoZfp
+         rEoGbxqn0UKOJTPpGioX2nvir+2X7MaQiCcM1AfGpb3brs3nhr0NeykkOrC4ct58//Lt
+         lA0Ada1qm6wNancovnQ0N3L+KIsA/blAkCQB/Vr0teAl9ASvN64+UkKnbY4ys777AafR
+         qnots8pWtAki/iyQWMDfd6bsSEf+7HBtXzitvty1SvQaAlysrd90zEppFVOBSiXzspno
+         Lz6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781165372; x=1781770172;
+        d=1e100.net; s=20251104; t=1781165915; x=1781770715;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=XgMWdBgyNc0sJULa5C8yyGeEC63/vUI2ECNgTDQKOWM=;
-        b=Z4KiMk/1zltL6rlq+6sG3tDMW7tcGMQPB4l1D2+Ay6OCTG0MuoXkFYa0S8evWJruur
-         zzKca/2ReCgPkzgwT0VSBnCQTIN8mL5FSOMTtp+jOd0RFSZ/aBNQsyL4V/6Ef91F83mH
-         KZDzN4E0CmPoyvWbozZqsDQAPYRsPWfJKodL82LI0b02ZHGIwtIIL/Nl1Y3XFqFKaGGn
-         Ce2WyPVdTLn337dbP3hcjzMYOqfoOTRRtNu+i1YL+zi3muQA9y6sbBT00duQqWLGka/F
-         gik3w5H4CF8COOIIqENpE3NNKcHyz8pXDEiXrzybvYak6xS7oeY8JDSfam/nyDhuQY65
-         Pv9Q==
-X-Forwarded-Encrypted: i=1; AFNElJ//5LvnTsgVRkRm+iyyov7loJUFcTkLGMinI6eK8qmblV7nlrFRP2Blc+VmGxWhg+Gr6p7iXp7mfuGhx7SxIys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZNi2cpJCWuOirlzPV2xOlbcZCuiu2YIiunvMkOTiOfhsUaRxH
-	Vmd0OJrTLVnbFTFYmhI4p2V8IPJLXCBxrAe5bvFikFcHaad2DoApbH2Q
-X-Gm-Gg: Acq92OEulE8VXWXuBBIUZQ801CbvySK8pgxHUm9+/xNhSa6ZGvi22FC3aslQBBDozm3
-	sPonxTIltCpMgf/UKihdVEvIwNKdp2bFs1K7g+NSlf9PWnV82/pgWt118v8gUlIyWLvQVv+XMEA
-	8QGoMCFjrVkCtzGpybJDwEh48/PEODJVUIAahNFFOp7fSb+6LQpFygeB5e3xXOkhlv/NwbGXEwB
-	MxpssAzyjrDZ4Y+jcBMQkwfiTtD1HJlAMTE5ajwzNcJFGu1ezkzedN9eSws0NoDg1LxKlB47Bmd
-	Q01BxrX4r3p0pMlRpcTptExRcsqBpPOyhpug0eCQ20y0iPFOoSfo+yhhP2l3Ymt5GmbOh/3RQ/Q
-	yginScJXiJ7unPc+6W2LyqMlEQymaXeAcTF5olUqpYikrbovF/9np9vzh4UXYEddqVT2PiEr7ND
-	jnL/jJ2SNaxHe9iqDOsFRWQ/re6F4fryS0FVokDhi22xOCo4p0Gii1dKX5iJp9yPWjB5FDZbA=
-X-Received: by 2002:a05:600c:a013:b0:490:bd66:e526 with SMTP id 5b1f17b1804b1-490e5645531mr18974935e9.32.1781165372456;
-        Thu, 11 Jun 2026 01:09:32 -0700 (PDT)
+        bh=gsqcA8bl0x+k9KH1B+UP0lOaoLno/FKA+FsmWqRpnNQ=;
+        b=HX4OaH+hw7rD5sY+t0p3y4h8LPTdN7bVSuheG63cp68rnYTeaDMs6v7pelSVvD2/Va
+         w9i6ZMJ56FLhfGWpGhbOOFjS6JoVg9KS2PJQVMOAk3INcwJhRXvKfG6bdAxOubHWNrrq
+         OjUb5ge9jNv99X3jalVY6QaSot58AHjDxCy2V2Srd0AAv7fAWr/tLY1KpH4MCMM/74hW
+         dANyN3N4IkVOHeBi8MtEeedGv9U7fDmGjuRB0sZ/sPvq2Qrhv70/d73Iq2ksfYyOrxid
+         Ztmd9V6qlxFpegiJoExj6YiMSqzYlX+oa1R7zZD4GSdlbwD2jzJXXNrAnF2VEWs6mE9E
+         f5vA==
+X-Forwarded-Encrypted: i=1; AFNElJ+RqFVK0IfaYYX2NutQW9puEaipioT6R0OgaUGpqBIcT3el4kQb8I0YVRELPTX3FsawC2Z/i5g+fDtOi8vYkbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbFSpjqDSkxDccbCml2F9Q5Mf94OMDJLoIslOz4oTynXl0i7mr
+	dpi1ZG3Bp37BtRRyKaVhlgL1NrN82EaAQj1gLcWJ6VMn0zV75eqdPssY
+X-Gm-Gg: Acq92OFbT2zJk2SQx9PbI7q4MDztlfn2gKbiIROg/n5ZkM4M1Phv6TWGh6gOMkbj7Yi
+	Ff15PAD9xTwtCogsw+hJO3TlItbQDzO7wg2JmqEWEGEM548LNmw+9yYCtgvJ7e41T8aHZu/hHCM
+	1Q8ZPWk4s66Vf2kXZxB4cJ7IJ4szV2JCXtt5kZENRnRDskBtVdhKyJN5XqS7Jh9QgwyQEMPdYNK
+	DUpBg17avEd4EHzHstDXhn9fiatxD8ZppjrdCAeer0fyktqnHV2svXgoSAqIott6dvlmV94y/rt
+	JHEje1KLC2+sg94cX0kcIwWa3E7z3kuD9vdoRgytSlHYe06ClZuB61oOmWuPYmtc3x1mJWXhvsp
+	cNrgyybOueOzUMMhhSEilu0iY+icqMe43bKkyHuh4gNNXIC67c5m6fLC8MIq7ZOfOqzuYfBNYIn
+	cLQblyRCT6wTpcx7ueJY9bAbu/dCHisHi2QUZaHFL07MI35qicLMYByi+3O1u3NnvR80pzGNI=
+X-Received: by 2002:a05:600c:4452:b0:490:e18f:d112 with SMTP id 5b1f17b1804b1-490e56043e2mr20472375e9.21.1781165915470;
+        Thu, 11 Jun 2026 01:18:35 -0700 (PDT)
 Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2e4b18sm62424552f8f.10.2026.06.11.01.09.31
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490e52b3970sm29913375e9.8.2026.06.11.01.18.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 01:09:31 -0700 (PDT)
-Date: Thu, 11 Jun 2026 09:09:29 +0100
+        Thu, 11 Jun 2026 01:18:34 -0700 (PDT)
+Date: Thu, 11 Jun 2026 09:18:33 +0100
 From: David Laight <david.laight.linux@gmail.com>
 To: Viacheslav Dubeyko <slava@dubeyko.com>
 Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
-  <arnd@kernel.org>, John Paul Adrian Glaubitz
+ <arnd@kernel.org>, John Paul Adrian Glaubitz 
  <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>
 Subject: Re: [PATCH next] fs/hfsplus/xattr: Use memcpy() and strscpy() to
  build xattr_name
-Message-ID: <20260611090929.54e388c5@pumpkin>
-In-Reply-To: <5572678c0db875297d80a1401ed2567326bf50ad.camel@dubeyko.com>
+Message-ID: <20260611091833.02ac2b6d@pumpkin>
+In-Reply-To: <2543b22369ec19dae397963fbdf2e7181c7419a8.camel@dubeyko.com>
 References: <20260608095523.2606-39-david.laight.linux@gmail.com>
-	<45e421ab38cfdbddbc0d34970a2db94902ad634b.camel@dubeyko.com>
-	<20260610100944.3c5a5771@pumpkin>
-	<5572678c0db875297d80a1401ed2567326bf50ad.camel@dubeyko.com>
+	<2543b22369ec19dae397963fbdf2e7181c7419a8.camel@dubeyko.com>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -83,112 +81,126 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 10 Jun 2026 18:05:02 -0700
+On Wed, 10 Jun 2026 20:50:33 -0700
 Viacheslav Dubeyko <slava@dubeyko.com> wrote:
 
-> On Wed, 2026-06-10 at 10:09 +0100, David Laight wrote:
-> > On Tue, 09 Jun 2026 18:04:46 -0700
-> > Viacheslav Dubeyko <slava@dubeyko.com> wrote:
-> >  =20
-> > > On Mon, 2026-06-08 at 10:55 +0100,
-> > > david.laight.linux@gmail.com=C2=A0wrote: =20
-> > > > From: David Laight <david.laight.linux@gmail.com>
-> > > >=20
-> > > > xattr_name is kmalloc()ed at the (assumed) maximal size and then
-> > > > the
-> > > > prefix
-> > > > and name concatenated together.
-> > > > Use memcpy() for the prefix - its length is passed and strscpy()
-> > > > for
-> > > > the
-> > > > name to ensure it really doesnt overflow.
-> > > >=20
-> > > > Prior to bf29e886b242c the buffers were smaller and on-stack.
-> > > > (But I cant see the copy in the old code.)
-> > > > I am also not sure why the buffer isnt created "just long
-> > > > enough".=C2=A0  =20
-> > >=20
-> > > What do you mean by "the buffer isn't created just long enough"?
-> > > And
-> > > what is your vision of correct implementation of the logic? =20
+> On Mon, 2026-06-08 at 10:55 +0100, david.laight.linux@gmail.com wrote:
+> > From: David Laight <david.laight.linux@gmail.com>
 > >=20
-> > The old code is: =20
-> > > =C2=A0	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL);
-> > > =C2=A0	if (!xattr_name)
-> > > =C2=A0		return -ENOMEM;
-> > > 	strcpy(xattr_name, prefix);
-> > > 	strcpy(xattr_name + prefixlen, name); =20
-> >=20
-> > It would be more usual to do:
-> > 	size_t name_len =3D strlen(name) + 1;
-> > 	xattr_name =3D kmalloc(prefixlen + name_len);
-> > 	memcpy(xattr_name, prefix, prefixlen)
-> > 	memcpy(xattr_name + prefixlen, name, name_len);
-> > So that the buffer is allocated the correct size for the strings.
-> >=20
-> > (Not that it really makes much difference whether you do kmalloc(32)
-> > or
-> > kmalloc(1024) for a temporary buffer - both come of a per-cpu list.) =20
->=20
-> The xattr name cannot contain more than 127 symbols [1]. So, the buffer
-> of fixed size is allocated to keep any potential string inside of this
-> limit no matter of size of the prefix and name. This is because we must
-> have string that not longer that 127 symbols. If it is longer than
-> that, then something is going wrong. Following to your logic, there is
-> no big difference to allocate the buffer for 127 symbols or for precise
-> length of the name. So, your suggestion doesn't make sense to me.
-
-This code has no idea of the number of symbols.
-Assuming that the callers haven't passed something that is overlong
-is just asking for trouble - especially since it doesn't matter to
-this code.
-The caller is unlikely to know the length of the prefix - so may be
-passing in a 'name' that is nearly 127 symbols long.
-So adding the prefix can generate something longer than 127 symbols.
-The called code has to handle/detect that.
-
->=20
-> >=20
-> > What I couldn't decide, but seems to be inferred from some of fixes,
-> > was whether a double-terminator was needed.
-> > (That might just be the attribute value.)
-> > One of the related functions got fixed to zero fill a buffer in a
-> > loop
-> > because (AFICT) something was reading beyond a '\0' terminator. =20
->=20
-> The rest is dedicated to Unicode peculiarities, as far as I can see.
-
-Eh? a UTF-8 encoded buffer is terminated by a single '\0'.
-The changes that stopped 'old values' being used on a later loop
-iteration seems to be fixed by zeroing after the '\0', but neither
-the code change nor commit message makes it clear what was fixed.
-
->=20
-> >=20
-> > This code does seem strange though.
-> > It seems to add a text prefix here and then the called function does
-> > string compares to find out which prefix has added and than act
-> > differently based on the prefix.
-> > I didn't try to follow things any further. =20
->=20
-> There is no strange thing here. Different prefixes are processed by
-> different logic.
-
-So why do string compares for the prefixes?
-
->=20
-> >=20
-> > I also don't know if 'name' itself can be 127 wide characters (before
+> > xattr_name is kmalloc()ed at the (assumed) maximal size and then the
+> > prefix
+> > and name concatenated together.
+> > Use memcpy() for the prefix - its length is passed and strscpy() for
 > > the
-> > prefix is added)?
-> > The fixed length buffer isn't long enough if all 127 characters
-> > require
-> > 6 bytes to encode. =20
+> > name to ensure it really doesnt overflow.
+> >=20
+> > Prior to bf29e886b242c the buffers were smaller and on-stack.
+> > (But I cant see the copy in the old code.)
+> > I am also not sure why the buffer isnt created "just long enough".
+> >=20
+> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> > ---
+> > This is one of a group of patches that remove potentially unbounded
+> > strcpy() calls.
+> >=20
+> > They are mostly replaced by strscpy() or, when strlen() has just been
+> > called, with memcpy() (usually including the '\0').
+> >=20
+> > Calls with copy string literals into arrays are left unchanged.
+> > They are safe and easily detected as such.
+> >=20
+> > The changes were made by getting the compiler to detect the calls and
+> > then fixing the code by hand.
+> >=20
+> > Note that all the changes are only compile tested.
+> >=20
+> > Some Makefiles were changed to allow files to contain strcpy().
+> > As well as 'difficult to fix' files, this included 'show' functions
+> > as they really need to use sysfs_emit() or seq_printf().
+> >=20
+> > All the patches are being sent individually to avoid very long cc
+> > lists.
+> > Apologies for the terse commit messages and likely unexpected tags.
+> > (There are about 100 patches in total.)
+> >=20
+> > =C2=A0fs/hfsplus/xattr.c | 12 ++++++------
+> > =C2=A01 file changed, 6 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+> > index 452a1f9becb2..0b3dd48c28c9 100644
+> > --- a/fs/hfsplus/xattr.c
+> > +++ b/fs/hfsplus/xattr.c
+> > @@ -550,8 +550,8 @@ int hfsplus_setxattr(struct inode *inode, const
+> > char *name,
+> > =C2=A0	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL);
+> > =C2=A0	if (!xattr_name)
+> > =C2=A0		return -ENOMEM;
+> > -	strcpy(xattr_name, prefix);
+> > -	strcpy(xattr_name + prefixlen, name);
+> > +	memcpy(xattr_name, prefix, prefixlen); =20
 >=20
-> The whole string cannot be bigger than 127 symbols.
+> What's the point to mix memcpy and str*() family of methods? What's
+> wrong with str*() method here? Otherwise, if it is wrong to use str*()
+> family of methods, then why is it correct to use for second operation?
 
-'cannot' or 'must not'?
-As I said above where is the actual guarantee that the limit isn't exceeded.
+They all just copy memory...
+memcpy() copies a number of bytes,
+strcpy() copies up to (and including) a zero byte.
+strscpy() copies up to a zero byte, but no more than the specified length
+	and always zero terminates the written data.
+
+memcpy() is always going to be faster because it doesn't need to
+look at the data being copied.
+
+>=20
+> > +	strscpy(xattr_name + prefixlen, name, xattr_name_len -
+> > prefixlen); =20
+>=20
+> Why strscpy() is better than strncpy()? What is the main argument here?
+
+strncpy() is completely broken (but not as badly as strncat).
+
+And, replying to the next email.
+You really don't want to use kasprintf(), especially just to concatenate
+two strings.
+
+>=20
+> > =C2=A0	res =3D __hfsplus_setxattr(inode, xattr_name, value, size,
+> > flags);
+> > =C2=A0	kfree(xattr_name);
+> > =C2=A0
+> > @@ -698,6 +698,7 @@ ssize_t hfsplus_getxattr(struct inode *inode,
+> > const char *name,
+> > =C2=A0			 void *value, size_t size,
+> > =C2=A0			 const char *prefix, size_t prefixlen)
+> > =C2=A0{
+> > +	size_t xattr_name_len =3D NLS_MAX_CHARSET_SIZE *
+> > HFSPLUS_ATTR_MAX_STRLEN + 1; =20
+>=20
+> Frankly speaking, it looks like a constant that should be declared in
+> hfs_common.h. Even if we would like to declare it here, then it should
+> be const size_t, from my point of view.
+
+There is little point marking variables as 'const'.
+
+>=20
+> > =C2=A0	int res;
+> > =C2=A0	char *xattr_name;
+> > =C2=A0
+> > @@ -705,13 +706,12 @@ ssize_t hfsplus_getxattr(struct inode *inode,
+> > const char *name,
+> > =C2=A0		inode->i_ino, name ? name : NULL,
+> > =C2=A0		prefix ? prefix : NULL);
+> > =C2=A0
+> > -	xattr_name =3D kmalloc(NLS_MAX_CHARSET_SIZE *
+> > HFSPLUS_ATTR_MAX_STRLEN + 1,
+> > -			=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
+> > +	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL); =20
+>=20
+> Finally, I think kzalloc() should be much better for both cases.
+
+No point taking the cost of zeroing large amounts of memory you
+aren't going to access.
 
 	David
 
@@ -196,6 +208,15 @@ As I said above where is the actual guarantee that the limit isn't exceeded.
 > Thanks,
 > Slava.
 >=20
-> [1]=C2=A0https://elixir.bootlin.com/linux/v7.1-rc6/source/include/linux/h=
-fs_common.h#L78
+> > =C2=A0	if (!xattr_name)
+> > =C2=A0		return -ENOMEM;
+> > =C2=A0
+> > -	strcpy(xattr_name, prefix);
+> > -	strcpy(xattr_name + prefixlen, name);
+> > +	memcpy(xattr_name, prefix, prefixlen);
+> > +	strscpy(xattr_name + prefixlen, name, xattr_name_len -
+> > prefixlen);
+> > =C2=A0
+> > =C2=A0	res =3D __hfsplus_getxattr(inode, xattr_name, value, size);
+> > =C2=A0	kfree(xattr_name); =20
 
