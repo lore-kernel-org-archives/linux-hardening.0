@@ -1,51 +1,79 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48411A9F83;
-	Thu, 11 Jun 2026 02:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465E1306746
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 03:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781146262; cv=none; b=Ph1Lk5BUXkVTf1g9UtxyqIqd2a9cqf2Iq6/gE2HB70bb/ng8ok7Q/m1k7UnIuRDw2SwesJxaV3zfBYTe1fxOAvpaw2MTf7XgAbSzsq6SHOzBQtWko9zCeazYG9W5p4a8zUHcPHrQUMA4hN4lcIbeJpN7PYgcdZzEOGXeRxDirs0=
+	t=1781149837; cv=none; b=WgbQn9pjWWKkqAhQ/F6QstxQ7cL3ITlGyDowvpnwJTO+OKAhgnlp1JfjnqZM1mGuxxrsKleEtg3ZcZhp1wxcTI5IDVFJyJciDVzpKoKFOinp9AuVapdoBjUY/JFwCTTo8XnvnpfQCR6hpTOus8MMY7hV2RU9/5aoLbNY316/Q7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781146262; c=relaxed/simple;
-	bh=C3YTxhG6yw9+1kzmS/holNzq9WZBoZgPlwMhdmYMrfw=;
+	s=arc-20240116; t=1781149837; c=relaxed/simple;
+	bh=gz/msjdtOunMEex2BqTVGDc/ZG31euGpU4mAhP/QZRc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IOa7h+uxtPRgbrCRhFn1uFlzfPxWoxAZxPxadUJ7XxypkOUgyGDLslWFcspkpy1QJaFewQclsY2AfEKuOrEe7mrIgAM4ceKQGqxa+GhoI/qBK6jlwTQ/yfCXdxGFTVXm4Re4ghC3E31l5DjOZZ3oyR8/3mtbsB7VsNAkuXycMXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=SYVLyqrQ; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	 Content-Type:MIME-Version; b=s4ECiziWGjydsaOp24x46JK1NFKafbOVH2H4/r0QcwmzhJp1UcN28/4r0RxVw8ile5v7R9Bs3nAZHpURnAdtMYBvo6MNk4oAQyH7S0kje5LAs+RfcTa6mUGkbG3Xpx6oJZhtMnfa80XELkrBq8mOaaUmlglrlp/RXmxkOYmm33g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20251104.gappssmtp.com header.i=@dubeyko-com.20251104.gappssmtp.com header.b=Eg91DVsc; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="SYVLyqrQ"
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20251104.gappssmtp.com header.i=@dubeyko-com.20251104.gappssmtp.com header.b="Eg91DVsc"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5aa5f11deb2so8550598e87.3
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Jun 2026 20:50:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1781146253;
-	bh=jC17BLRupxjFh4QurP21wywIDB1dwNBEJxTReffswGw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=SYVLyqrQiN1Offva8UPZ/gcqnw2zJNMdKsotwp/JLCuPsS3QbUUTWLgd3VSMGSx4r
-	 5lNrAFl0iQ3VyHQIhNRslyvUoQegK1YJJyYIAmSLlcH7SQ295Iurh6pvD2LRT0tS+2
-	 Vy7YqlcusxaPBLVl7Qr8IDkViYYromvKsx1lbSv2soYjuVT2VMp/P5xdFe3MAkHBbc
-	 TQxiaY/7wvy1R/wqtie29/p7FPHVYpvL0c+u/zRts/P49RXY/SZGPdtIdqtW8GiU10
-	 r9MpCEybw18qEdiOALgdqtormaeygxfVlaMpcKEFkh2Rx077FgY1Q7uEdgLXbpMoCc
-	 GaFVW+6bDAG4A==
-Received: from [192.168.68.117] (unknown [180.150.112.11])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 6573D60A0C;
-	Thu, 11 Jun 2026 10:50:51 +0800 (AWST)
-Message-ID: <64f8d88bf4cd72d8120baaa304dfe34bb66cbe0b.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v5] soc: aspeed: lpc-snoop: Fix usercopy overflow in
- snoop_file_read
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Karthikeyan KS <karthiproffesional@gmail.com>
-Cc: joel@jms.id.au, andrew@aj.id.au, Kees Cook <kees@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	stable@vger.kernel.org
-Date: Thu, 11 Jun 2026 12:20:50 +0930
-In-Reply-To: <20260610172310.163321-1-karthiproffesional@gmail.com>
-References: 
-	<033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
-	 <20260610172310.163321-1-karthiproffesional@gmail.com>
+        d=dubeyko-com.20251104.gappssmtp.com; s=20251104; t=1781149834; x=1781754634; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FVrzkqwtVWnUjAk0pQWrCKuHIZWdAIMxGLk/tntdOl4=;
+        b=Eg91DVscJNYnZU9JOPFYnyXIxVJc52iQBBSVwinl7VUijWvWXslkckyw5+vOoB+j79
+         P3eGDZizn4/ZiPFZ5M1GgvLKJNJxeuQtDDRhEYB/U9MqpdpVmThzEEg5i23RGJdav3/u
+         CIGo4INay1vUzQuTxbLObLxF8ohOQtt1hoNkmgNN/EGq0qEGJhENJ52Y5XcMc/Jn/9nr
+         eqlT7t201aI0mqrDC20H1cqrBk8fVDtkBAOncqs7u2L25J7+doCigq9iwm1F7LeeykT2
+         rNBOyOA/mZZQxIsOg/Oj2YonN32T5UyHjP74FCGM0VGcnrUuLaofM1splyLvLD7GYp+3
+         zcJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781149834; x=1781754634;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FVrzkqwtVWnUjAk0pQWrCKuHIZWdAIMxGLk/tntdOl4=;
+        b=syz74Lss9/WLAhyPtrsqTr7glmbQgFZD0XUtcJK6b1CPJTwPINUdCxixOTKxFYeuXV
+         RNhKWLbyouOGXe2hCnFCWiUuZm2niqhY1G5gQD8BWclAtsftpPlSA3yTXaquMj18fVEd
+         YN8mUHLTxkBkNHU/ZVdUJ6pff7sRv2kDcuBjggTUdF9hpQNizsxd1dN4SnN56LcpvSW4
+         nmF6NqbFdiLCJdfWk2HEbrQWpwV7e0ijxvYvtIUVSD9mgN6P5XyCtgsIl45rAHxUhbhK
+         7dVBOzDTsgkRR0JRN9rkFJ3Vs9QjgyCzC5u0xcphkPagaM3oE+TlkAW4mFgKBWURxcMp
+         f2rw==
+X-Forwarded-Encrypted: i=1; AFNElJ8nk4nkFuBgcnqqV6PIUJs17I8/6kvcDFY+AEIowDvc8yzav5sI4UcILhTibHKndKkiW55rV524n29TLzYdL/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzyuctbv14+eurpB08jV6pAoFkbCaHJtu1ApBhi1en2NeXeaqOC
+	tchQGYmgO94+RzNgDXXdaSWSt7xOanj4KnYZToskgvmQ/MPI/hYIjqyvsE3DYR5T/4g=
+X-Gm-Gg: Acq92OGozd1i9V5QCQgQov3Jdr/03zkLlyCa9XPIEiyYWSr/4PqMVnPHUIA/99Ni7EA
+	tUcBAkf2wJi2Oaw3Gwz11Mm2n4spk4Dx69iKJEZBrO2Seo8EsvZOutOuOxhi0VwNt6oADfJsO5X
+	y2Ve4LzCDG37Rv0s6PU4b+UMqlD4iMQxFfh63L0i9mvejI1wnfuGk2u01eTnFWm2tqo9BQ0LpV/
+	Vi6Tqsss1r1nlwEBa9sxUpkk5T8KE1aCgRi/mIZh9fqyJb3ACZ+NvGpSO/s4NT/GBX10alvmRCP
+	KiQ7ieVgrlSGZvgVGRwsdoL7xkkkZCTkCi7dvXSLZ2WrkPnT6NIDsddXM04NvjlMjY+qeJolT0J
+	a0f7VCWGh7w+Nfm+6JxBnbB7wjSdvxAk0UaaclRhG29K5rX6sbXUkYbEN49/soZSZORJLRtxm4d
+	Si3za3Epx8Ndf/2+dOaHrTvQk/exNX3b9KIjeakiWTCfUmTs1muhowwA+9hfgwnHtshowuu8IB2
+	IIliTfsj40R2T83/4OvlllzReSNgTaxPyMhHTJXGUg91RVdAB3Ymr0CCpKBJ50Pswg=
+X-Received: by 2002:ac2:51cd:0:b0:5aa:77b2:fec8 with SMTP id 2adb3069b0e04-5ad27fb70bfmr251340e87.27.1781149834211;
+        Wed, 10 Jun 2026 20:50:34 -0700 (PDT)
+Received: from [192.168.1.246] (broadband-95-84-186-252.ip.moscow.rt.ru. [95.84.186.252])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aa7b8fc8d9sm5921278e87.28.2026.06.10.20.50.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2026 20:50:33 -0700 (PDT)
+Message-ID: <2543b22369ec19dae397963fbdf2e7181c7419a8.camel@dubeyko.com>
+Subject: Re: [PATCH next] fs/hfsplus/xattr: Use memcpy() and strscpy() to
+ build xattr_name
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+To: david.laight.linux@gmail.com, Kees Cook <kees@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@kernel.org>, John Paul Adrian Glaubitz
+	 <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>
+Date: Wed, 10 Jun 2026 20:50:33 -0700
+In-Reply-To: <20260608095523.2606-39-david.laight.linux@gmail.com>
+References: <20260608095523.2606-39-david.laight.linux@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-0+deb13u1 
+User-Agent: Evolution 3.60.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,227 +81,112 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Hi Karthikeyan,
-
-On Wed, 2026-06-10 at 17:23 +0000, Karthikeyan KS wrote:
-> put_fifo_with_discard() acts as both producer and consumer on the kfifo:
-> it calls kfifo_skip() (advances out) and kfifo_put() (advances in) from
-> the IRQ handler without synchronizing with snoop_file_read(), which also
-> consumes via kfifo_to_user(). On SMP systems this concurrent access can
-> leave (in - out) larger than the ring buffer, so __kfifo_to_user()'s clam=
-p
-> to (in - out) is ineffective and kfifo_copy_to_user() can attempt a
-> copy_to_user() past the kmalloc-2k backing store:
+On Mon, 2026-06-08 at 10:55 +0100, david.laight.linux@gmail.com wrote:
+> From: David Laight <david.laight.linux@gmail.com>
 >=20
-> =C2=A0 usercopy: Kernel memory exposure attempt detected from SLUB object
-> =C2=A0 'kmalloc-2k' (offset 0, size 2049)!
-> =C2=A0 kernel BUG at mm/usercopy.c!
-> =C2=A0 Call trace:
-> =C2=A0=C2=A0 usercopy_abort
-> =C2=A0=C2=A0 __check_heap_object
-> =C2=A0=C2=A0 __check_object_size
-> =C2=A0=C2=A0 kfifo_copy_to_user
-> =C2=A0=C2=A0 __kfifo_to_user
-> =C2=A0=C2=A0 snoop_file_read
-> =C2=A0=C2=A0 vfs_read
+> xattr_name is kmalloc()ed at the (assumed) maximal size and then the
+> prefix
+> and name concatenated together.
+> Use memcpy() for the prefix - its length is passed and strscpy() for
+> the
+> name to ensure it really doesnt overflow.
 >=20
-> Serialize kfifo access with a per-channel spinlock. The reader drains
-> into a bounce buffer under the lock with kfifo_out_spinlocked() and then
-> copies to userspace after dropping it, since copy_to_user() may sleep on
-> a page fault.
+> Prior to bf29e886b242c the buffers were smaller and on-stack.
+> (But I cant see the copy in the old code.)
+> I am also not sure why the buffer isnt created "just long enough".
 >=20
-> Fixes: 3772e5da4454 ("drivers/misc: Aspeed LPC snoop output using misc ch=
-ardev")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Karthikeyan KS <karthiproffesional@gmail.com>
+> Signed-off-by: David Laight <david.laight.linux@gmail.com>
 > ---
-> Andrew,
+> This is one of a group of patches that remove potentially unbounded
+> strcpy() calls.
 >=20
-> Thanks for the review.
+> They are mostly replaced by strscpy() or, when strlen() has just been
+> called, with memcpy() (usually including the '\0').
 >=20
-> Changes since v4:
-> - Use __free(kfree) for automatic cleanup
-> - Allocate clamped count instead of full SNOOP_FIFO_SIZE
-> - Use kfifo_out_spinlocked() in snoop_file_read
-> - Use scoped_guard(spinlock) in put_fifo_with_discard
+> Calls with copy string literals into arrays are left unchanged.
+> They are safe and easily detected as such.
 >=20
-> =C2=A0drivers/soc/aspeed/aspeed-lpc-snoop.c | 25 +++++++++++++++++++-----=
--
-> =C2=A01 file changed, 19 insertions(+), 6 deletions(-)
+> The changes were made by getting the compiler to detect the calls and
+> then fixing the code by hand.
 >=20
-> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/a=
-speed-lpc-snoop.c
-> index b03310c0830d..c9c87a794228 100644
-> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> @@ -11,6 +11,7 @@
-> =C2=A0 */
+> Note that all the changes are only compile tested.
+>=20
+> Some Makefiles were changed to allow files to contain strcpy().
+> As well as 'difficult to fix' files, this included 'show' functions
+> as they really need to use sysfs_emit() or seq_printf().
+>=20
+> All the patches are being sent individually to avoid very long cc
+> lists.
+> Apologies for the terse commit messages and likely unexpected tags.
+> (There are about 100 patches in total.)
+>=20
+> =C2=A0fs/hfsplus/xattr.c | 12 ++++++------
+> =C2=A01 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+> index 452a1f9becb2..0b3dd48c28c9 100644
+> --- a/fs/hfsplus/xattr.c
+> +++ b/fs/hfsplus/xattr.c
+> @@ -550,8 +550,8 @@ int hfsplus_setxattr(struct inode *inode, const
+> char *name,
+> =C2=A0	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL);
+> =C2=A0	if (!xattr_name)
+> =C2=A0		return -ENOMEM;
+> -	strcpy(xattr_name, prefix);
+> -	strcpy(xattr_name + prefixlen, name);
+> +	memcpy(xattr_name, prefix, prefixlen);
+
+What's the point to mix memcpy and str*() family of methods? What's
+wrong with str*() method here? Otherwise, if it is wrong to use str*()
+family of methods, then why is it correct to use for second operation?
+
+> +	strscpy(xattr_name + prefixlen, name, xattr_name_len -
+> prefixlen);
+
+Why strscpy() is better than strncpy()? What is the main argument here?
+
+> =C2=A0	res =3D __hfsplus_setxattr(inode, xattr_name, value, size,
+> flags);
+> =C2=A0	kfree(xattr_name);
 > =C2=A0
-> =C2=A0#include <linux/bitops.h>
-> +#include <linux/cleanup.h>
-> =C2=A0#include <linux/clk.h>
-> =C2=A0#include <linux/dev_printk.h>
-> =C2=A0#include <linux/interrupt.h>
-> @@ -74,6 +75,7 @@ struct aspeed_lpc_snoop_channel_cfg {
-> =C2=A0struct aspeed_lpc_snoop_channel {
-> =C2=A0	const struct aspeed_lpc_snoop_channel_cfg *cfg;
-> =C2=A0	bool enabled;
-> +	spinlock_t		lock;=C2=A0=C2=A0=C2=A0 /* serialises @fifo: irq producer v=
-s reader */
-
-I'd prefer we avoid trailing comments, which it seems you've added this
-time around. Since you did that ...
-
-> =C2=A0	struct kfifo		fifo;
-
-... in this specific case we can improve on the comment, with:
-
-   struct kfifo fifo __guarded_by(&lock);
-
-More details here:
-
-   https://docs.kernel.org/dev-tools/context-analysis.html
-
-Adding a change along these lines currently produces:
-
-   ../drivers/soc/aspeed/aspeed-lpc-snoop.c:164:32: warning: reading variab=
-le 'fifo' requires holding spinlock '&aspeed_lpc_snoop_channel::lock' [-Wth=
-read-safety-analysis]
-     164 |         if (!kfifo_initialized(&chan->fifo))
-         |                                       ^
-
-I ended up applying this on top of your patch:
-
-   diff --git a/drivers/soc/aspeed/Makefile b/drivers/soc/aspeed/Makefile
-   index b35d74592964..9cba7be8c395 100644
-   --- a/drivers/soc/aspeed/Makefile
-   +++ b/drivers/soc/aspeed/Makefile
-   @@ -4,3 +4,5 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)          +=3D aspeed-lpc-=
-snoop.o
-    obj-$(CONFIG_ASPEED_UART_ROUTING)      +=3D aspeed-uart-routing.o
-    obj-$(CONFIG_ASPEED_P2A_CTRL)          +=3D aspeed-p2a-ctrl.o
-    obj-$(CONFIG_ASPEED_SOCINFO)           +=3D aspeed-socinfo.o
-   +
-   +CONTEXT_ANALYSIS_aspeed-lpc-snoop.o    :=3D y
-   diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/=
-aspeed-lpc-snoop.c
-   index 9165a543a250..7fa1a345acac 100644
-   --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
-   +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-   @@ -75,8 +75,8 @@ struct aspeed_lpc_snoop_channel_cfg {
-    struct aspeed_lpc_snoop_channel {
-           const struct aspeed_lpc_snoop_channel_cfg *cfg;
-           bool enabled;
-   -       spinlock_t              lock;    /* serialises @fifo: irq produc=
-er vs reader */
-   -       struct kfifo            fifo;
-   +       spinlock_t              lock;
-   +       struct kfifo            fifo __guarded_by(&lock);
-           wait_queue_head_t       wq;
-           struct miscdevice       miscdev;
-    };
-   @@ -161,9 +161,9 @@ static const struct file_operations snoop_fops =3D {
-    /* Save a byte to a FIFO and discard the oldest byte if FIFO is full */
-    static void put_fifo_with_discard(struct aspeed_lpc_snoop_channel *chan=
-, u8 val)
-    {
-   -       if (!kfifo_initialized(&chan->fifo))
-   -               return;
-           scoped_guard(spinlock, &chan->lock) {
-   +               if (!kfifo_initialized(&chan->fifo))
-   +                       return;
-                   if (kfifo_is_full(&chan->fifo))
-                           kfifo_skip(&chan->fifo);
-                   kfifo_put(&chan->fifo, val);
-   @@ -240,7 +240,6 @@ static int aspeed_lpc_enable_snoop(struct device *de=
-v,
-                   return -EBUSY;
-   =20
-           init_waitqueue_head(&channel->wq);
-   -       spin_lock_init(&channel->lock);
-   =20
-           channel->cfg =3D cfg;
-           channel->miscdev.minor =3D MISC_DYNAMIC_MINOR;
-   @@ -252,9 +251,11 @@ static int aspeed_lpc_enable_snoop(struct device *d=
-ev,
-           if (!channel->miscdev.name)
-                   return -ENOMEM;
-   =20
-   -       rc =3D kfifo_alloc(&channel->fifo, SNOOP_FIFO_SIZE, GFP_KERNEL);
-   -       if (rc)
-   -               return rc;
-   +       scoped_guard(spinlock_init, &channel->lock) {
-   +               rc =3D kfifo_alloc(&channel->fifo, SNOOP_FIFO_SIZE, GFP_=
-KERNEL);
-   +               if (rc)
-   +                       return rc;
-   +       }
-   =20
-           rc =3D misc_register(&channel->miscdev);
-           if (rc)
-  =20
-I prefer that we add the annotation as the compiler analysis provides
-some comfort in contrast to the comment.
-
-Otherwise, the rest of the fix seems okay to me.
-
-Andrew
-
-> =C2=A0	wait_queue_head_t	wq;
-> =C2=A0	struct miscdevice	miscdev;
-> @@ -114,6 +116,7 @@ static ssize_t snoop_file_read(struct file *file, cha=
-r __user *buffer,
-> =C2=A0				size_t count, loff_t *ppos)
+> @@ -698,6 +698,7 @@ ssize_t hfsplus_getxattr(struct inode *inode,
+> const char *name,
+> =C2=A0			 void *value, size_t size,
+> =C2=A0			 const char *prefix, size_t prefixlen)
 > =C2=A0{
-> =C2=A0	struct aspeed_lpc_snoop_channel *chan =3D snoop_file_to_chan(file)=
-;
-> +	u8 *buf __free(kfree) =3D NULL;
-> =C2=A0	unsigned int copied;
-> =C2=A0	int ret =3D 0;
+> +	size_t xattr_name_len =3D NLS_MAX_CHARSET_SIZE *
+> HFSPLUS_ATTR_MAX_STRLEN + 1;
+
+Frankly speaking, it looks like a constant that should be declared in
+hfs_common.h. Even if we would like to declare it here, then it should
+be const size_t, from my point of view.
+
+> =C2=A0	int res;
+> =C2=A0	char *xattr_name;
 > =C2=A0
-> @@ -125,9 +128,16 @@ static ssize_t snoop_file_read(struct file *file, ch=
-ar __user *buffer,
-> =C2=A0		if (ret =3D=3D -ERESTARTSYS)
-> =C2=A0			return -EINTR;
-> =C2=A0	}
-> -	ret =3D kfifo_to_user(&chan->fifo, buffer, count, &copied);
-> -	if (ret)
-> -		return ret;
-> +
-> +	count =3D min_t(size_t, count, SNOOP_FIFO_SIZE);
-> +
-> +	buf =3D kmalloc(count, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	copied =3D kfifo_out_spinlocked(&chan->fifo, buf, count, &chan->lock);
-> +	if (copied && copy_to_user(buffer, buf, copied))
-> +		return -EFAULT;
+> @@ -705,13 +706,12 @@ ssize_t hfsplus_getxattr(struct inode *inode,
+> const char *name,
+> =C2=A0		inode->i_ino, name ? name : NULL,
+> =C2=A0		prefix ? prefix : NULL);
 > =C2=A0
-> =C2=A0	return copied;
-> =C2=A0}
-> @@ -153,9 +163,11 @@ static void put_fifo_with_discard(struct aspeed_lpc_=
-snoop_channel *chan, u8 val)
-> =C2=A0{
-> =C2=A0	if (!kfifo_initialized(&chan->fifo))
-> =C2=A0		return;
-> -	if (kfifo_is_full(&chan->fifo))
-> -		kfifo_skip(&chan->fifo);
-> -	kfifo_put(&chan->fifo, val);
-> +	scoped_guard(spinlock, &chan->lock) {
-> +		if (kfifo_is_full(&chan->fifo))
-> +			kfifo_skip(&chan->fifo);
-> +		kfifo_put(&chan->fifo, val);
-> +	}
-> =C2=A0	wake_up_interruptible(&chan->wq);
-> =C2=A0}
+> -	xattr_name =3D kmalloc(NLS_MAX_CHARSET_SIZE *
+> HFSPLUS_ATTR_MAX_STRLEN + 1,
+> -			=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
+> +	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL);
+
+Finally, I think kzalloc() should be much better for both cases.
+
+Thanks,
+Slava.
+
+> =C2=A0	if (!xattr_name)
+> =C2=A0		return -ENOMEM;
 > =C2=A0
-> @@ -228,6 +240,7 @@ static int aspeed_lpc_enable_snoop(struct device *dev=
-,
-> =C2=A0		return -EBUSY;
+> -	strcpy(xattr_name, prefix);
+> -	strcpy(xattr_name + prefixlen, name);
+> +	memcpy(xattr_name, prefix, prefixlen);
+> +	strscpy(xattr_name + prefixlen, name, xattr_name_len -
+> prefixlen);
 > =C2=A0
-> =C2=A0	init_waitqueue_head(&channel->wq);
-> +	spin_lock_init(&channel->lock);
-> =C2=A0
-> =C2=A0	channel->cfg =3D cfg;
-> =C2=A0	channel->miscdev.minor =3D MISC_DYNAMIC_MINOR;
+> =C2=A0	res =3D __hfsplus_getxattr(inode, xattr_name, value, size);
+> =C2=A0	kfree(xattr_name);
