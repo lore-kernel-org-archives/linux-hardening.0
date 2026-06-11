@@ -1,130 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EE131197C;
-	Thu, 11 Jun 2026 12:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107603F660F
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jun 2026 12:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781180625; cv=none; b=sJmVmTTBqeNIqv/OD1zsvEaezTHbNIG8E7EZws9GDED14JfAUdKj3Krpi7qEajW3G8DLYAy2Yw1g86/oZlOvAdprMoQeMJFlmXZh9HNIt1EDCmGnNJMHU4+jNOn+5khzvJQog/zNjyekYFZJ0W71fg45ft8xQ9HngaImpZ3qNLc=
+	t=1781182009; cv=none; b=WcXGmyNoCZeyI3ZvVsVDRHl4bAa5M9clivgVHy4lPsjd/qyyAAJWEX8XwsG7kj8suRUAHNOS+Jurho9BZaWo7MW1QNn00KnQnrlT5gLa6O2azPrczafOuPp4fn80oa1vikPqrSpZg734L0TNoz2xqsHnBewI9NSrr3zwlBZezi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781180625; c=relaxed/simple;
-	bh=4lbSdoFTOaZXpKR2einrEErJx+yxV+xV0/fdZzLrFJQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IaVfcwafDfn14w0aAQLTQOj+aNNX3zivgMj5Q2iD4wtx/Hda0nXDSx5X4tZ5YHlgMv/H/V1F/fyfrvIwnOYdybcQUpadPgYf61D50ORB+OHPMmWER34Zgs1qgeXs97Xie3BTbvxhi9hFXwK1G/TFb+6TCovVbiOY5KmcaJ5ZqlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGQDM3sa; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781182009; c=relaxed/simple;
+	bh=RqWrQDNNzlxmYpymw1eMIq1WnpqD4vPONq76D4VOzD4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hm4FzivxuShxzsRfi3nRTdAO7+KRwEiBMncEKd8pBLfCJ7lrlBmnDQo4TVHk4FZ4bZxsaVZqjq2abn0EGNlIZpECupVQGKtfK4SZs8mQgnAkdsxoKgbmgSXo6DxwORhqu8xCyHB66Bv3dkCow7r72vTS0UCVIq61B2WZuSRDz8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Szc1lnZ4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X2XdxoRs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Szc1lnZ4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X2XdxoRs; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGQDM3sa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E72B1F00893;
-	Thu, 11 Jun 2026 12:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781180624;
-	bh=QVCQD106udDWHycnJP8Mto0GsT4vXeGJ2ioaKMW4hdo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=CGQDM3saVT+/zvD8OXDJMKEdC+DtM9BVP+xjWWl+FTsHr9ilCIJXLx/r1EgrLe7z1
-	 WipYQNCEC4t/HLntUaoE3BB+JXZnQuPT/hDz7pjaz6daaJ85tCIx8Rc0sJXyywaysQ
-	 4fvCQJpMO3U9pG5MOcB2Csd7t/S0F/ZWZE/HoU1hA8LlUpHBF5rAzC3CZLDgEscIHg
-	 gQPZEG7m+erXeUnferTM7aENuKkswGnqQoDFrktraNtC9kavkV8wNLjLerFTwnOhfA
-	 guPMJOEmG7ax9WZa8hAX5GAe+xtypuVSHtk8TBvJ2Fyil86QKsrif4aPyZGckbuMZt
-	 07FGc+RWQt03g==
-Message-ID: <d81bc78e-2c1d-45fd-90c9-f7ec462183a0@kernel.org>
-Date: Thu, 11 Jun 2026 14:23:37 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Szc1lnZ4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X2XdxoRs";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Szc1lnZ4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X2XdxoRs"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 532386AEFC;
+	Thu, 11 Jun 2026 12:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1781182006; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=BzpYKtYTsb/gy7p/heSdZJScKkGH73POZ6a+foWyPDg=;
+	b=Szc1lnZ4SQUwGPUKFxZyZJTGKDopj3R9crYXAQ6sKzeeT8VLXz8e2JUzAhEiCU26xCjbw+
+	qzJ25jY+tTl+/mvE32QF48RNv1Gfkq1vLSB52BMp2RBsX9gjXT0lAhahGs1uD9Wcr3rQkE
+	Wz+RUAwDHrxOuF4BxY2nqC+YvbEkK6c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1781182006;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=BzpYKtYTsb/gy7p/heSdZJScKkGH73POZ6a+foWyPDg=;
+	b=X2XdxoRs/JYyDeXVoPNav8S8Oh92s0IHIC2KyyK1wQS6a1EBUJi06fZkywP2dXQ2PNkDIc
+	ErxyAys9qbFLw+DQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1781182006; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=BzpYKtYTsb/gy7p/heSdZJScKkGH73POZ6a+foWyPDg=;
+	b=Szc1lnZ4SQUwGPUKFxZyZJTGKDopj3R9crYXAQ6sKzeeT8VLXz8e2JUzAhEiCU26xCjbw+
+	qzJ25jY+tTl+/mvE32QF48RNv1Gfkq1vLSB52BMp2RBsX9gjXT0lAhahGs1uD9Wcr3rQkE
+	Wz+RUAwDHrxOuF4BxY2nqC+YvbEkK6c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1781182006;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=BzpYKtYTsb/gy7p/heSdZJScKkGH73POZ6a+foWyPDg=;
+	b=X2XdxoRs/JYyDeXVoPNav8S8Oh92s0IHIC2KyyK1wQS6a1EBUJi06fZkywP2dXQ2PNkDIc
+	ErxyAys9qbFLw+DQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 032A0779A7;
+	Thu, 11 Jun 2026 12:46:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7Db6ODSuKmpaagAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 11 Jun 2026 12:46:44 +0000
+From: Pedro Falcato <pfalcato@suse.de>
+To: Vlastimil Babka <vbabka@kernel.org>,
+	Harry Yoo <harry@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hao Li <hao.li@linux.dev>,
+	Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Simon Horman <horms@kernel.org>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: [PATCH net-next v2 0/2] net: isolate SKB data area allocations
+Date: Thu, 11 Jun 2026 13:46:40 +0100
+Message-ID: <20260611124642.345400-1-pfalcato@suse.de>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] dt-bindings: remoteproc: qcom,pas: add thermal
- mitigation properties
-To: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
- Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-References: <20260609-qmi-tmd-v3-0-291a2ff4c634@oss.qualcomm.com>
- <20260609-qmi-tmd-v3-1-291a2ff4c634@oss.qualcomm.com>
- <20260610-ocelot-of-stimulating-excellence-bcb0fe@quoll>
- <03d863ee-2caa-41f2-94b5-7332fc930b42@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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
-In-Reply-To: <03d863ee-2caa-41f2-94b5-7332fc930b42@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,linux.dev,gentwo.org,google.com,kernel.org,gmail.com,suse.de];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Level: 
 
-On 11/06/2026 13:12, Gaurav Kohli wrote:
->> Why? And where is this generic property defined? You cannot just
->> sprinkle generic properties in random bindings.
->>
-> 
-> Ack, will add why part.
-> These names are matched with the thermal mitigation device identifiers
-> populated by remote firmware over QMI and define mitigation devices are 
-> exposed as cooling devices.
+This is a rather simple series that attempts to address a possible
+exploitation avenue - the allocation of skbs around the network stack, which
+frequently get user-controlled contents. Found while doing some amateur
+exploitation analysis for some other issue, elsewhere.
 
-No, -names correspond to values passed via DT, not some remote firmware.
-The remote firmware should give you interface which is explicit and does
-not need such properties.
+Patch 0 is a precursor patch that adds a slab allocation helper, patch 1
+does the actual bucketing.
 
-> 
-> Without tmd-names in DT, it is unclear which index corresponds to which
-> binding. With #cooling-cells, tmd-names in DT provides an explicit
-> name-to-index mapping. Please suggest.
+v2:
+ - Pick up A-b, R-b tags (thanks everyone!)
+ - Cover kmalloc_pfmemalloc as well (Harry)
 
-I don't get what is the index here. Index of what?
+Pedro Falcato (2):
+  mm/slab: add a node-track-caller variant for kmem buckets allocation
+  net: skb: isolate skb data area allocations into a separate bucket
 
+ include/linux/slab.h | 7 +++++--
+ net/core/skbuff.c    | 8 ++++++--
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-Best regards,
-Krzysztof
+-- 
+2.54.0
+
