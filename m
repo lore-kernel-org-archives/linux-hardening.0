@@ -1,204 +1,238 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C4A320A34
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Jun 2026 13:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4563384258
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Jun 2026 19:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781272385; cv=none; b=MdsbIv9r/+xyWtcJi/s7CUnlyDbT9+klxVMINveuS/Y4y+Jzxjzs5hzW/6oyC6ZUhF4XH5T5kA0ePmoiii04J45lU8ddAQCogTrUJraRqFqYiY0FiDMpj5GRzOmkG76jrUGVbxdufjBc9KsyZ+tPwzopG3/JPaW1H8FAOfucRXA=
+	t=1781291281; cv=none; b=NlKXLeBzLCn0MMN3ovPWJVPWm8IW0G8eO+oi4q8CtMgf5+0/a9zpTWe6kB+Csh4AV1gjLWzFdXsKVN/+IqGTFXVwB0d+AeUEH8/62KMDD/+7+68azdJS7e7IFL5U/+4TwfOXjRUKIHLU5oMZl76JLgs/Nxt4w9I4lj7VKI3+WsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781272385; c=relaxed/simple;
-	bh=rXCM27CI+q3bTwAWRJkzblUZ2cY/BDik2t113jUneK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GWhzg+L6WX3GMa+bmagHV4yXMvgOEISRbH/luequ9o+h5VREzIG994nUCnyWnYCrI0QVXDGCUgrka40/hahMovrmGU0tnUBj23OBKm6bocmILLcFZLIu3a4zikuVY5AYy+4aJAjOnPGHcYvImlJtC+NKtoMaIyydqgHG/NdkT1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QkYtDQQw; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=K/M5Br+P; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1781291281; c=relaxed/simple;
+	bh=PZspnF4rv+mQ+37X7tsOKHxRSFAFBUvdCHtCbApEfQs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ct+5hJRa/qjVPmoV7iCpc42Y876wo+6ytOrUO2WAKwKTTrw6dbXbplqaHVw7fZlr5WOxGhSr78+k1lDZDO9ZFhFG4a20Jg6pAZnk3XYEPjdfsv+8HxaG3zH3w1JJ+ZRm9csoopMiAbYcWs8o1KERVeUH/0NoHvsoEE+Lylu0c6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=apCJP6X3; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QkYtDQQw";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="K/M5Br+P"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65CCjH0r3631067
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Jun 2026 13:53:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xTnfVI4gotUQ2bkxP6pmXcdIqm6lxSQhArEpxlHE3ZI=; b=QkYtDQQw/ZsdVWqT
-	HYHVx7VdGUQKUBiI6+HBXseYRkL7tJXUPoHCYhGUDJC6RFYsokkh8F+TCMzNYSN1
-	kXFu58eDSMCL6mILiFp1jQ2+hzZ0fP2Jh3H0Tl/QDoeDpjvC0ZM7ewPlF7P429Fp
-	G7t2Z+lyDbJHPLf12tH42slt2ijXFFuc/mEkB3G9FhnSzKOjx/yWNijTvqxbRr9Z
-	sEOtP7Jtwa6Ot9LJMpqhGARPg/6kkloYY/ODKRKtJ+Q0cka2hvTiNPWdcYmwcnrp
-	Dac9R8Pju8OL2nMyyK0A15fX6y1pRMMjpqY0mBHmP/IMZ27LnI6S+pnakTkTf+x5
-	l5U0LA==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4er165bjed-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Jun 2026 13:53:02 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2c40358e114so10877955ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 12 Jun 2026 06:53:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apCJP6X3"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-36c68964315so813594a91.2
+        for <linux-hardening@vger.kernel.org>; Fri, 12 Jun 2026 12:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1781272382; x=1781877182; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xTnfVI4gotUQ2bkxP6pmXcdIqm6lxSQhArEpxlHE3ZI=;
-        b=K/M5Br+PbxxDAQeSR2ELdnqVdHLnevS34SufeQTDpB1rB5c28E+iXbQ2WO7NwdVTwA
-         2rEla8Wjk4GnXILyaUFz3O/e2GrwV7itcZjBXOcqd64tU4jVwEFFVoah1EcA8tp3lIjS
-         asL9cr0rxASsjZnpx9um/Lzp4hGDAryV5Z6DGQ3Amwk+IVgDD/XctyW87CNaW+65AY7W
-         BYbSCgX6/yR22Jk2MVD20dWt+SDYSrlvSREPBRVtwEe6i9J7oELCBqaDTlqzY5tivAib
-         m1gnB+GxyJkQsq4ULASXOVZqeHrd+Lh5w8/x63tSgPaxPhqEehnNFhVIz+RMWsMUxLVP
-         qf7A==
+        d=gmail.com; s=20251104; t=1781291278; x=1781896078; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UwTEg4XBjlq2gqrpSaNYbmX8jrkzkowNm264wvHp61I=;
+        b=apCJP6X3IVEwpHQEWQC44x7bZzeR3GHFTOxj6fqypBd0THk01lo3/SkDhy/2K52Bjx
+         Rt+49R4i1mCh1xKFrvAJOmJa78GC1dW6PKhchJR20mv+Pcl8uVPJmGqe+jpiz1wwh3n+
+         zvIQjHokhjUZK44l/pAFHFBkytZo/3vmqyl+Tv/hlsJ2SZHxjtTIFlC+fpG7e4w3lmfk
+         6QN9fln720dgIQQ6ic+BCWs5QncgpQgusLHybd+BWKKJRlpiGbKvPETHN04VfX3V330p
+         TASUn79hz5vA5cR3ldWNN7meAlDgp1oBC2/0oF0xn/50ctDJHH4n+WAtlHkJzD3Sei3A
+         cfHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781272382; x=1781877182;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xTnfVI4gotUQ2bkxP6pmXcdIqm6lxSQhArEpxlHE3ZI=;
-        b=YD5iRV5s+RwsEkgf/+BAP4VKGHjMcyKTXx2RGP4UPJtbYzEr23ZBZUm6k1jiE+POor
-         3ROKqW9Bs4KtRDHsUSL+4gVnsS538nn9XLcdxxAw1nUryiqCLpayqXimKKc2ZKVHZHt7
-         QV+BIAXxv49zjNuvOLXqvqfKaOYHOemEp2n9ZI4NfILZWkHXGjoWndCaakDopZ1JY7QS
-         /M4UGYY3PlyqAwv7UzOOIgSk1kBym1fnoxfCxHI94EgrVkbOXTWsCVEQggfEjoxDFLTn
-         gmIHxVLTHuzQh6B8W54wye/L+nroBwv+38Gjoo/c+UCgjAaq3inidLjH1qHpOaO4gJMA
-         WRWg==
-X-Forwarded-Encrypted: i=1; AFNElJ/3ghkyYz8nP/O8DCB0nrm5g9ChruZV8+VL/n85780qPf6skJzjTLiEjmti2JxYHqVpmqxVZ5rZm243y39zVZ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3Ob/2f/cBYsnh3avs5v1oc7qTbJPN8la9zJ8t+XIinti6WRAa
-	aal3R646uxNJFfHIqemudbXmB6J87A/kxKXwXDmT8I4R4o4cOADKJXCdEXrX3DsEljLbqIzRRDH
-	kyV8AeXGM7N1B+/ZQzXIiwKXb/rL2ev8N8SyreUNvgxlTS46OY7yN47uUBKiEfrNJ1yEt0cs=
-X-Gm-Gg: Acq92OFcJ9uIt5FVK4Bw7DBSmwa/6N5LC1jSsQQwUjMUwY/HA5Gt+G1NmGf0HdY3xVG
-	veulNzWzyAq8hq1lb9uIFQmMqAncf82CfbmT8FY+lQJVDLKlsB5fkQI3RhkEXIBTREM5t/TCBDp
-	Jzzr8zzuYz4EUZjtwhlMbXjhMpzGJI/FMzowijuvkK0d1mxPPh4T7EQeMK1g8/gvX8w/BINYugu
-	M1AMszRi3CSJVXT6zekOihYfoW5lwYHzAz8ujgPh5JbohL5wsCqkmecfhOHRghBJNbD0g/qKCVX
-	OVOZR/xzlOryTsYu6XrSnOUFx7UUNR6PfU9qzhTNY48jthUTDBCoVmpCpRrnMAUGHjTK0F0I5JR
-	C8hO+E9ggSF7cyMtr+eFZPEcYGqkQmPDtRylR4UOiG1bSBzutCykq
-X-Received: by 2002:a17:902:fc8e:b0:2c2:be43:39bc with SMTP id d9443c01a7336-2c41198107bmr34271355ad.22.1781272382179;
-        Fri, 12 Jun 2026 06:53:02 -0700 (PDT)
-X-Received: by 2002:a17:902:fc8e:b0:2c2:be43:39bc with SMTP id d9443c01a7336-2c41198107bmr34270905ad.22.1781272381504;
-        Fri, 12 Jun 2026 06:53:01 -0700 (PDT)
-Received: from [192.168.1.13] ([106.222.231.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c42fbb4134sm19641415ad.30.2026.06.12.06.52.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2026 06:53:00 -0700 (PDT)
-Message-ID: <7f1e46fb-15e3-4638-9930-8abc1dd5a778@oss.qualcomm.com>
-Date: Fri, 12 Jun 2026 19:22:53 +0530
+        d=1e100.net; s=20251104; t=1781291278; x=1781896078;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UwTEg4XBjlq2gqrpSaNYbmX8jrkzkowNm264wvHp61I=;
+        b=Vih+V1vrBSGcw8eGIMZoC1fEeTw/Xm4QQ/CChE+6kivJUQivA8bNk5ZkD8AkblXmww
+         HPOmBGVbf5LWWPaPG73QztmlkAUhDACVQztYWsZ10n1MeLRRHFw1/EjD3EDa1IB2AQev
+         QhE6xJRXJDiIr59w+8kQ4iVMZX3atTeTfSZdG0/oIzaz/9l2zn02+BlmlznRDa1exmzp
+         TQm/mExU7YFKGSn4mhnbTK1kbPwC809GHSLZnV5W+61JI2jidOBiarKfVUmEhnL0Zc6Y
+         H2/WE8QBVwD2mABITcOMCVDgjhq2utWPqBeWS/FPjDs5l9LRQ1goAQJTwwGcn3XB856f
+         dtiQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9IpJXgW99FIuEl3YnYM6Xz5JaJxzId3LRRTN0b7jUnuQtcyE49j66jP1sd5qZOauu8UCFYNtjavFm4/NtfMWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy25NvDT18sjZmhbPRJP7ntgwnDabRONRGlvkGVup/lHefOW/pJ
+	mPaAkrKc+gmEbt7J6i3OZX9KSS2X9UoYRtN/KniyvOZfsnogtG3wTtVt
+X-Gm-Gg: Acq92OH1C21k7klptOemhLgliMBB2r8/RmK1E0OjgmXh8TYwCq1H0uU0HHUkT6XeJv5
+	M8PiHnTYotMTFULemISp/gOzbOv3u/WVLOvT9jBKTvEh4XNUmOHagClMu/MtrZZpfX/k5S1/FRP
+	OD27PPWpN8//4DMT7NRC7lz86M9671OY4tBk8NNvITTk0Rlv0rxGLzU8Hc/1XeqGs26sjwgnGdb
+	zlquaOiXZa3XOT396AS3gPHXd01Xg0mrHrXbusSh9JqlzRoR6Hnm4XkFX1ByiUkT1YTSc4pzjGg
+	5FBWs3uCbNIPIhJkLx9Kxz0m0URI/DfC8hHFSbvOMJrsgseiDvfaArSAgftgLxppXPxKHfP2SsS
+	82HsSehJ5b10mhSjxU1HkgZbGZ+U+E5Dqglgj5bQCSbIH3dWqTIc7kz+WIMQUVmJr+Av98cGczc
+	Ri9mAfSj6jigeUFC51zGrDUFFRdZEhzD9/Zq8u1ihpvxgcYZkmnOarsw==
+X-Received: by 2002:a17:90b:28cd:b0:36a:95c:7613 with SMTP id 98e67ed59e1d1-37a0202ece8mr4596847a91.10.1781291277427;
+        Fri, 12 Jun 2026 12:07:57 -0700 (PDT)
+Received: from LAPTOP-97G9G880.localdomain ([106.206.15.12])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37a1eba8e9asm2748485a91.2.2026.06.12.12.07.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2026 12:07:56 -0700 (PDT)
+From: Karthikeyan KS <karthiproffesional@gmail.com>
+To: andrew@codeconstruct.com.au
+Cc: joel@jms.id.au,
+	andrew@aj.id.au,
+	Kees Cook <kees@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Karthikeyan KS <karthiproffesional@gmail.com>
+Subject: [PATCH v6] soc: aspeed: lpc-snoop: Fix usercopy overflow in snoop_file_read
+Date: Fri, 12 Jun 2026 19:07:43 +0000
+Message-ID: <20260612190744.172638-1-karthiproffesional@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
+References: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] dt-bindings: remoteproc: qcom,pas: add thermal
- mitigation properties
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
-        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-References: <20260609-qmi-tmd-v3-0-291a2ff4c634@oss.qualcomm.com>
- <20260609-qmi-tmd-v3-1-291a2ff4c634@oss.qualcomm.com>
- <20260610-ocelot-of-stimulating-excellence-bcb0fe@quoll>
- <03d863ee-2caa-41f2-94b5-7332fc930b42@oss.qualcomm.com>
- <d81bc78e-2c1d-45fd-90c9-f7ec462183a0@kernel.org>
-Content-Language: en-US
-From: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-In-Reply-To: <d81bc78e-2c1d-45fd-90c9-f7ec462183a0@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjEyMDEyNyBTYWx0ZWRfX09gy+7CzWqAe
- eeAoCbIcXvYyVgDZ8duMGwkGGjbKXLusC24j5P6+480UKpfa2AmVwjAx/kiSrwkZ6A2/F3WRhl2
- hvXTrqnKCsAYRfRmqv2y8gt4haFOrgcpt0Nc0RHBXcs6EqnZr9H1FaRuHuYLpfvAOF9Ie3QuKh4
- sPAJK6rHDodFNP085mUl/hNctOXRDFJOZsrDePp3WdhjbYOqZ+vlwa6+LXl5OM+Qw6Bk6+Xyfm5
- hxrUer0UW9RxOZHEdMh2R8smFcOdgnHL3eAd3sT2YxjTSfzU5KM8Sf64HMDelAtjluuNIIGNcJS
- wMd4kEMCjI673+3UUZpP+8oKQNXVg2xJir0lKEOETw7I5L2aFl/Ha0AJwrp4BKD8qzRynK+EX+G
- TRIrBijNqUCpxxx6FIKI8M9L3r1dG7I+meNcvLNgLCmu8JaiuGJRTv6q/VVFRbf9RZ3RgxdXmVe
- 3QCnfQAGde99PBwkX3g==
-X-Authority-Analysis: v=2.4 cv=LNpWhpW9 c=1 sm=1 tr=0 ts=6a2c0f3e cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=JaHktJlP2QtFIg7UHuVw+g==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=mCNVnkFJZU-R2xYHr1YA:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-ORIG-GUID: QOZEfsSzO57obpEh2HdVdhu_uXyu-QEK
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjEyMDEyNyBTYWx0ZWRfX7+dNstMpp1uN
- Cuo3RwpYxpxRgV1uZBoKYxU24hcRFbr5nsZz7hSJmOwcD0ckjn+O+HCrn7utm35J0J8I34vWiAK
- hLlmIqtjfMSYFnckIeDvyXb83ML2Z8Y=
-X-Proofpoint-GUID: QOZEfsSzO57obpEh2HdVdhu_uXyu-QEK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-12_01,2026-06-12_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 adultscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 spamscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606120127
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+put_fifo_with_discard() acts as both producer and consumer on the kfifo:
+it calls kfifo_skip() (advances out) and kfifo_put() (advances in) from
+the IRQ handler without synchronizing with snoop_file_read(), which also
+consumes via kfifo_to_user(). On SMP systems this concurrent access can
+leave (in - out) larger than the ring buffer, so __kfifo_to_user()'s clamp
+to (in - out) is ineffective and kfifo_copy_to_user() can attempt a
+copy_to_user() past the kmalloc-2k backing store:
 
+  usercopy: Kernel memory exposure attempt detected from SLUB object
+  'kmalloc-2k' (offset 0, size 2049)!
+  kernel BUG at mm/usercopy.c!
+  Call trace:
+   usercopy_abort
+   __check_heap_object
+   __check_object_size
+   kfifo_copy_to_user
+   __kfifo_to_user
+   snoop_file_read
+   vfs_read
 
-On 6/11/2026 5:53 PM, Krzysztof Kozlowski wrote:
-> On 11/06/2026 13:12, Gaurav Kohli wrote:
->>> Why? And where is this generic property defined? You cannot just
->>> sprinkle generic properties in random bindings.
->>>
->>
->> Ack, will add why part.
->> These names are matched with the thermal mitigation device identifiers
->> populated by remote firmware over QMI and define mitigation devices are
->> exposed as cooling devices.
-> 
-> No, -names correspond to values passed via DT, not some remote firmware.
-> The remote firmware should give you interface which is explicit and does
-> not need such properties.
+Serialize kfifo access with a per-channel spinlock shared between the
+IRQ handler (producer) and the file reader (consumer).  Annotate @fifo
+with __guarded_by(&lock) and opt the driver into context analysis so the
+compiler enforces that all fifo access holds the lock.
 
-thanks Krzysztof for review, We need tmd-names because of following reasons:
+Fixes: 3772e5da4454 ("drivers/misc: Aspeed LPC snoop output using misc chardev")
+Signed-off-by: Karthikeyan KS <karthiproffesional@gmail.com>
+---
+ drivers/soc/aspeed/Makefile           |  1 +
+ drivers/soc/aspeed/aspeed-lpc-snoop.c | 38 ++++++++++++++++++---------
+ 2 files changed, 27 insertions(+), 12 deletions(-)
 
-Following Daniel's series [1], the thermal framework supports
-mapping multiple cooling devices per remoteproc/device via indexed 
-cooling-cells.
+Andrew,
 
-1) The thermal framework's cooling-maps reference
-cooling devices by index (for #cooling-cells = <3>). Without tmd-names,
-there's no way to know which index corresponds to which TMD, as firmware 
-may return tmd-names in any order.
+Thanks for the review.
 
-below are the changes post new thermal mapping changes:
-DT: tmd-names = "cdsp_sw", "xyz";
-Firmware: ["cdsp_sw", "xyz1", "xyz2",]
-Driver registers: Only "cdsp_sw" (index 0) and "xyz" (index 1)
+Changes since v5:
+- Annotate @fifo with __guarded_by(&lock) instead of a comment
+- Move kfifo_initialized() check inside scoped_guard(spinlock, &chan->lock)
+  in put_fifo_with_discard()
+- Replace spin_lock_init() with scoped_guard(spinlock_init, &channel->lock)
+  around kfifo_alloc() in aspeed_lpc_enable_snoop()
+- Enable CONTEXT_ANALYSIS for this driver in drivers/soc/aspeed/Makefile
 
-This allows cooling-maps like below:
-cooling-device = <&remoteproc 0 ...>  // "cdsp_sw"
-cooling-device = <&remoteproc 1 ...>  // "xyz"
+Dropped Cc: stable — the fix uses cleanup.h/context-analysis idioms absent
+from LTS; I'll send adapted backports to stable@ once this is in mainline.
 
-2) Not all firmware-provided TMDs should be
-exposed as cooling devices. The tmd-names property acts as a filter,
-allowing board-specific DT to select only the relevant TMDs for that
-platform.
+Tested on ast2600-evb (QEMU): clang-22 with CONFIG_WARN_CONTEXT_ANALYSIS=y
+shows no context-analysis warnings; PROVE_LOCKING, DEBUG_ATOMIC_SLEEP and
+HARDENED_USERCOPY show no splats. Overflow reproduced via a fault-injection
+module forcing the post-race (in - out) state (QEMU doesn't model the ARM
+ordering that triggers it in the field): unpatched panics, patched returns
+cleanly.
 
-[1] 
-https://lore.kernel.org/all/20260526140802.1059293-12-daniel.lezcano@oss.qualcomm.com/
+Thanks,
+Karthikeyan
 
-> 
->>
->> Without tmd-names in DT, it is unclear which index corresponds to which
->> binding. With #cooling-cells, tmd-names in DT provides an explicit
->> name-to-index mapping. Please suggest.
-> 
-> I don't get what is the index here. Index of what?
-> 
-> 
-> Best regards,
-> Krzysztof
+diff --git a/drivers/soc/aspeed/Makefile b/drivers/soc/aspeed/Makefile
+index b35d74592964..b5188dcde37a 100644
+--- a/drivers/soc/aspeed/Makefile
++++ b/drivers/soc/aspeed/Makefile
+@@ -4,3 +4,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)		+= aspeed-lpc-snoop.o
+ obj-$(CONFIG_ASPEED_UART_ROUTING)	+= aspeed-uart-routing.o
+ obj-$(CONFIG_ASPEED_P2A_CTRL)		+= aspeed-p2a-ctrl.o
+ obj-$(CONFIG_ASPEED_SOCINFO)		+= aspeed-socinfo.o
++CONTEXT_ANALYSIS_aspeed-lpc-snoop.o	:= y
+diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+index b03310c0830d..7fa1a345acac 100644
+--- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
++++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+@@ -11,6 +11,7 @@
+  */
+ 
+ #include <linux/bitops.h>
++#include <linux/cleanup.h>
+ #include <linux/clk.h>
+ #include <linux/dev_printk.h>
+ #include <linux/interrupt.h>
+@@ -74,7 +75,8 @@ struct aspeed_lpc_snoop_channel_cfg {
+ struct aspeed_lpc_snoop_channel {
+ 	const struct aspeed_lpc_snoop_channel_cfg *cfg;
+ 	bool enabled;
+-	struct kfifo		fifo;
++	spinlock_t		lock;
++	struct kfifo		fifo __guarded_by(&lock);
+ 	wait_queue_head_t	wq;
+ 	struct miscdevice	miscdev;
+ };
+@@ -114,6 +116,7 @@ static ssize_t snoop_file_read(struct file *file, char __user *buffer,
+ 				size_t count, loff_t *ppos)
+ {
+ 	struct aspeed_lpc_snoop_channel *chan = snoop_file_to_chan(file);
++	u8 *buf __free(kfree) = NULL;
+ 	unsigned int copied;
+ 	int ret = 0;
+ 
+@@ -125,9 +128,16 @@ static ssize_t snoop_file_read(struct file *file, char __user *buffer,
+ 		if (ret == -ERESTARTSYS)
+ 			return -EINTR;
+ 	}
+-	ret = kfifo_to_user(&chan->fifo, buffer, count, &copied);
+-	if (ret)
+-		return ret;
++
++	count = min_t(size_t, count, SNOOP_FIFO_SIZE);
++
++	buf = kmalloc(count, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	copied = kfifo_out_spinlocked(&chan->fifo, buf, count, &chan->lock);
++	if (copied && copy_to_user(buffer, buf, copied))
++		return -EFAULT;
+ 
+ 	return copied;
+ }
+@@ -151,11 +161,13 @@ static const struct file_operations snoop_fops = {
+ /* Save a byte to a FIFO and discard the oldest byte if FIFO is full */
+ static void put_fifo_with_discard(struct aspeed_lpc_snoop_channel *chan, u8 val)
+ {
+-	if (!kfifo_initialized(&chan->fifo))
+-		return;
+-	if (kfifo_is_full(&chan->fifo))
+-		kfifo_skip(&chan->fifo);
+-	kfifo_put(&chan->fifo, val);
++	scoped_guard(spinlock, &chan->lock) {
++		if (!kfifo_initialized(&chan->fifo))
++			return;
++		if (kfifo_is_full(&chan->fifo))
++			kfifo_skip(&chan->fifo);
++		kfifo_put(&chan->fifo, val);
++	}
+ 	wake_up_interruptible(&chan->wq);
+ }
+ 
+@@ -239,9 +251,11 @@ static int aspeed_lpc_enable_snoop(struct device *dev,
+ 	if (!channel->miscdev.name)
+ 		return -ENOMEM;
+ 
+-	rc = kfifo_alloc(&channel->fifo, SNOOP_FIFO_SIZE, GFP_KERNEL);
+-	if (rc)
+-		return rc;
++	scoped_guard(spinlock_init, &channel->lock) {
++		rc = kfifo_alloc(&channel->fifo, SNOOP_FIFO_SIZE, GFP_KERNEL);
++		if (rc)
++			return rc;
++	}
+ 
+ 	rc = misc_register(&channel->miscdev);
+ 	if (rc)
+--
+2.43.0
 
