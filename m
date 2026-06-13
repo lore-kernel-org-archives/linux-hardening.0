@@ -1,64 +1,64 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A733E638E
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Jun 2026 13:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2973E717A
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Jun 2026 13:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781355871; cv=none; b=J0ZnJbzH7EJDXX6SLLQMNOs0re77XJtOlkuSRS+lSrNM/oMNwPpjEh3QqOsTk1SfRDHR2Nm4dOgRCYPQhugtneInVsE1EJhFpKDlPI/OpD5fbhxhs1JPV087wriuTNDjsOGehMLw30z86yn54sSAAyVXqjhNDdhexL9wuNfFHXQ=
+	t=1781355875; cv=none; b=rBS5DxbTjorpRX2uUas1D/Pv41XF7+f47P5cVWuGzSPUOXhC3Yhrzj7VAbPvSTnEwJxnM8M/iiTsh606oWLFMBK7iH6f5+ZxUMzb/Nymzct58rhD7oAev36uVrZg5S/6tX8j5C05EYHcZodhf2RJ3zLEBhWrHwyVPlbZEWF1w0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781355871; c=relaxed/simple;
-	bh=8rdVy967/KIekFumWZJodjNYinOgWN/JZjf+3u7FmjE=;
+	s=arc-20240116; t=1781355875; c=relaxed/simple;
+	bh=3vvntg+S2X+Ax/eMsRRgfXIb9auW/tXA/R5dpCGI/5g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IJUabCr+ZRLw6xcuqjDh78PnUKpY0hhvEzwUwK0GUhp9zW8S90O/nHN7wQC2wJ35FMZkQGDR8TsdCtcyMPafHR/Btli8pSfQGG99UxjshSAIe6m+kzmp4+kiem2YybXqvpPTCHjY5CApIkLr8bfsaXgjMtZQVrVH8++MEBJYCXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n8ID2Prw; arc=none smtp.client-ip=209.85.128.41
+	 MIME-Version; b=PuOf45X84ImgBSQd0b8AfGbqbfDvw8z3Ct5aQAX4dPqU190AlaObCIDdXIv6Sl4xdDQooHAlN+Mv5qX+SFJIH/6s81oNcloR4y3jhkxcRVOCCV3/l8baE15xdz730jrIvmsBcHAAupeGgPhT1tKoVjtuapbmIOxgQExCyUiQOaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EtSeXVka; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8ID2Prw"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-490aebf33e9so8365675e9.3
-        for <linux-hardening@vger.kernel.org>; Sat, 13 Jun 2026 06:04:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtSeXVka"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-45ee5cdbd28so1757910f8f.1
+        for <linux-hardening@vger.kernel.org>; Sat, 13 Jun 2026 06:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781355868; x=1781960668; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781355872; x=1781960672; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MNHff3ZA1wnEWNCHL45Ie5KO3LOfvKjTR8zIU+k8sA0=;
-        b=n8ID2PrwDMHD33lC0HfluqTgB3sNLcduK66hgkPgk4lz3G1OV3utNhHABA4/xzHoNg
-         /Eju2lWceIX5YLnpV2IcDjvw0zlEFSUu8LLick6NRa2htEDsdTTREC/j1PsNGr87Cfu9
-         JjBoskdoWPdv6jcu2TSMHmDHd0eLCzCqgX5drNOWuD3CgZRjDF0FsJQT7cAmv8nIsIDU
-         6KHCDGrPry4mXvXlUKtp9bsXE7JTDSQjSeg5Y3jSasWoKwuRvt+JiXIihqFrNkmG9M/K
-         mzBgeE0sBFZI5FXrA/v/s5urL3BOjqXlZ8Uqh2maEBPIpZbC7qt4rGEr/0d2DtaijB0Q
-         mvIg==
+        bh=bNuTD3YpkBdUsN3SNTli4o0UK637uh750gxlUeSrfmY=;
+        b=EtSeXVkaWCF9Qw3BXu3nd38sotcl/2lSC2GWMZjEUdfJaAoMI9/JZIsftYuRdB+6Z9
+         waqpnD5fcdQpgeuQHG2XM28IeIoYtBi9Uss5YhGMs1CqMJI2eJg2VrjJw0VltPG3Y5zb
+         EYXWN+WKjXR6s7NqhhDtDOWtC7Jd+WfufqzcuksH8xffZzVv3DqI2gAjrI6qjcs92sl4
+         l4uWNEjNjgMVYFZTy7ICKgVOXR29AYr2j2STolTsn2Hgq/YQ32gYGIL4hZAA4HOTd76u
+         J0hkhoLfAxC5cDd/bT7ipSoFtPAqQbw9FFXdpHFJ4UbxHpl3XxOYbsG9DQMzYgCaUPgX
+         zVMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781355868; x=1781960668;
+        d=1e100.net; s=20251104; t=1781355872; x=1781960672;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=MNHff3ZA1wnEWNCHL45Ie5KO3LOfvKjTR8zIU+k8sA0=;
-        b=HIU9+g7l0g5DFP9Mq+5mS4Z0xIeJZn0Mq2Ux/aa+ONlZxUJsBKAmSwr/RBj/kCSECT
-         K2VSOA947OIV0V/6+KvQ6DJ7L+4RTpoom2H4i/RXWL7BwYF5x6uVZHhBAGdMydYcUVVA
-         LU8jVjlWyloJajZ8/UgJ9XzInvJCuJPkV6yWItxWzj0USfxXeYVBmzDjZQLGPFd9C1Uz
-         6d/oTNjul2zMJu6GWq+6rCrJ41F/vF9ssm7YtO7GzcbJ48HKljCeMCBRvCa3xBV2HrnG
-         tiZ0ZePfMFktJkJECQ3IpaojMkElhHNWUQjhMjmca5hBpTWbV4qR8YEVbPhIs5fzNN7R
-         pSPg==
-X-Forwarded-Encrypted: i=1; AFNElJ9HVKwPM8ZQkmMaLY+hice5jYf0DjcPXlcvqwDAIVUOV5GMOLnjEj4pMLfH/S1bc5AqHU1i0UGsbRlqDL5qM3A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8TiQlTxkZlIm+KxhpQZPIqn/ICPMghi1RQf0+iBgXMjqIweGQ
-	tUOyHwpJVs7cRfc5COsBId9zg15cFFQolRbyiDv7atHTYGk9PQMQClQ=
-X-Gm-Gg: Acq92OEmqGexQ3lhZe/jHs2CCVudUbc8lG19CCjdK/QgabFglkMab41dQArUSfFjwIM
-	PZ++wqKsBoiKBYt4AmNT8ePFAxUEbur/q8ZRZREWdw+XdqSY438TC0lRVp9Qv0m86xL+KrslG5E
-	JO05VrDzbI5ALHBeYyX/3lYjJGOIV6w1H6cMksDwx5aTxy0ZemvrTQHP31pV1WtlQzE78cxeBnT
-	EnksBt5jPOjbTShdBWQlRxgnHGVpW3R9hFOJ55t+NTIJ6hq2pBgLoWW+8VEmEoGS9WTbruyZjmP
-	yC67qEeJTKubnTtOxjB5GuBz/d2EzU4ccMN4FFnOy12fbP2mKeELdX8GYIb7sLOTMEAbrMTVQCa
-	ZycnTTlc2DOdEHfDx3rwQVlY8MEKGAmSLnWvNaaurptejDYnUaQijgLrwK7OY4qnjOCPElQqM9A
-	OolJoFNQareKnmnY7f2WiJySrQBC4QONmYqfnM0lF0purcM6wcX6aKKl19PZehGgZw/LIe//KCi
-	k+BvKkFhdxG4EVanA2kdNGAgqEzvg==
-X-Received: by 2002:a05:600d:8489:20b0:490:b724:507d with SMTP id 5b1f17b1804b1-490ec4cec11mr64189855e9.11.1781355867847;
-        Sat, 13 Jun 2026 06:04:27 -0700 (PDT)
+        bh=bNuTD3YpkBdUsN3SNTli4o0UK637uh750gxlUeSrfmY=;
+        b=PYAOLDHEYeoSasGJTtYojqrFI4WqITxXJcC2lUsz4Rkx7Lmkyau49ZJ64kqXGRjyHA
+         v8Engmof5AkW42ahJinR8gcD/HDIi6Uzsc4t199eReA7CFK+MjzPBZXXTWhvgIntTskD
+         4Fov/u5vU6xuFdQz5QOIjH9bz3WLstDMFzSjDFU21M8Z8Z2xvq8OhDfzUVgFes2Pca0Q
+         OzAv+WMSM9I42+WE9eeHGfg6CcMHXiV/Gwp5rWmgNMcsb/zCi2G6wqjbmi2bJBlLKag0
+         Fgte+1O9UApMYNLa2erK73YU28h3bJFDig3PePdaPfxfHkLVxHb7EGcwHnYPxgOQHtC4
+         zElg==
+X-Forwarded-Encrypted: i=1; AFNElJ+pB+DB/3TzvugLYZu5KHYHaajl1RpAQrbNvoR27qsVcGhC/fpoROV3L9NbNy2EeDPVTJUeaZQKy2rt+WJwrTY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwArVNYPhSufNnZ/Zzufu91/rEimgSujLbUWXLZnOpUI9z+DUIw
+	kZlgxQ2sRXd9dEHph27q0M5JodFQLuaC0KfiV/9uc0UVMC10k8FNIbI=
+X-Gm-Gg: Acq92OFSKEukyABW7Lm45DVG1jgtDhwVxAmb+GHl6ssuY42fk3MyxO94ggajYctutnM
+	Ti4NQyFP4bFdyLstAuKl76Wjh4CLSJh5K1Crgbxw2hJKMzs5YaHQ4XEACc91OL4VvGe1DpIHFQC
+	kSRmlbOfN7gxM+Ms6QMF4Noee1gI1QikI0rQPl1Ie8ebK9P7b93n9KaIuuu9Oot+P5NGjfLOmHa
+	ojDPyTLfIG1iCVSD4gFvrND095f7ts+RcXqyQKQGfFer+wSfgakCcAdIX8CRxdJomSdP4TVe73G
+	vrLfTDEY83JhT8Q6oHoK2FmvoL/X+DvmAqXvJCqhvuzyqM0ITcJRX3hr6y8mw2+fs9MzCzTczID
+	7EqBn7+YlcxpMY4kzJ3PzhICKA2JxYFbwYMAdFnCZiPxb2K9RG8iWb3j1kbjoYo+NulQYZsAC0s
+	vr+nmaUJqZGlJVTN7KMnQjKr25lsooEWNVz5qWVIw5FWWOqG5qH+WXGNKxcsd04/ycn2m6d190J
+	P3LCymPtjTZrGIpKCSLD/3qdOBFsuwbtrBzNj7e
+X-Received: by 2002:a05:600c:8b5b:b0:490:7df7:9190 with SMTP id 5b1f17b1804b1-490ec49f2bemr76562845e9.8.1781355871908;
+        Sat, 13 Jun 2026 06:04:31 -0700 (PDT)
 Received: from hp-ubuntu.. ([41.140.217.91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-492203c0801sm66259515e9.10.2026.06.13.06.04.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-492203c0801sm66259515e9.10.2026.06.13.06.04.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2026 06:04:27 -0700 (PDT)
+        Sat, 13 Jun 2026 06:04:31 -0700 (PDT)
 From: Mohammed EL Kadiri <med08elkadiri@gmail.com>
 To: jarkko@kernel.org,
 	dhowells@redhat.com
@@ -71,9 +71,9 @@ Cc: paul@paul-moore.com,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	Mohammed EL Kadiri <med08elkadiri@gmail.com>
-Subject: [PATCH 1/2] keys: request_key: replace BUG with return -EINVAL
-Date: Sat, 13 Jun 2026 14:04:07 +0100
-Message-ID: <20260613130408.13709-2-med08elkadiri@gmail.com>
+Subject: [PATCH 2/2] keys: keyctl_pkey: replace BUG with return -EOPNOTSUPP
+Date: Sat, 13 Jun 2026 14:04:08 +0100
+Message-ID: <20260613130408.13709-3-med08elkadiri@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260613130408.13709-1-med08elkadiri@gmail.com>
 References: <20260613130408.13709-1-med08elkadiri@gmail.com>
@@ -85,28 +85,38 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace BUG() in construct_get_dest_keyring() default case
-with return -EINVAL to handle the unimplemented group keyring
-destination gracefully.
+Replace two BUG() calls in keyctl_pkey_params_get_2() and
+keyctl_pkey_e_d_s() default cases with -EOPNOTSUPP, matching
+the error style already used in these functions.
 
 Signed-off-by: Mohammed EL Kadiri <med08elkadiri@gmail.com>
 ---
- security/keys/request_key.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/keys/keyctl_pkey.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/security/keys/request_key.c b/security/keys/request_key.c
-index a7673ad86d18..fa2bb9f2f538 100644
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -332,7 +332,7 @@ static int construct_get_dest_keyring(struct key **_dest_keyring)
+diff --git a/security/keys/keyctl_pkey.c b/security/keys/keyctl_pkey.c
+index 97bc27bbf079..6b2821ffeb6c 100644
+--- a/security/keys/keyctl_pkey.c
++++ b/security/keys/keyctl_pkey.c
+@@ -155,7 +155,7 @@ static int keyctl_pkey_params_get_2(const struct keyctl_pkey_params __user *_par
+ 			return -EINVAL;
+ 		break;
+ 	default:
+-		BUG();
++		return -EOPNOTSUPP;
+ 	}
  
- 		case KEY_REQKEY_DEFL_GROUP_KEYRING:
- 		default:
--			BUG();
-+			return -EINVAL;
- 		}
+ 	params->in_len  = uparams.in_len;
+@@ -238,7 +238,8 @@ long keyctl_pkey_e_d_s(int op,
+ 		params.op = kernel_pkey_sign;
+ 		break;
+ 	default:
+-		BUG();
++		ret = -EOPNOTSUPP;
++		goto error_params;
+ 	}
  
- 		/*
+ 	in = memdup_user(_in, params.in_len);
 -- 
 2.43.0
 
