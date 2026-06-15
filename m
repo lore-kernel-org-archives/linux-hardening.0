@@ -1,84 +1,171 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B8479CD;
-	Mon, 15 Jun 2026 22:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEDC27FD51;
+	Mon, 15 Jun 2026 23:38:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781563684; cv=none; b=uSPtXSnynLFhCVchw8hZxvfYxJDUBGkuOXDWgAVlTHZZwxED3nAfeKMNdNXGP9r4wOCan/HQmwT2Wt45B/v4Lg0IO37XLa9rx/Dxc3OdvZXJrWbWs0jYkpsc2RYrQX90RihBJFnhwsTizy3Oa9sLhoVJfLM6I8tNeXqtYC4H7rM=
+	t=1781566728; cv=none; b=K+mykRM+u0mhzG3Bss2r/bSXinxbmBIbQGQF6ot021yWz3UAC/m7Q9YF63GdIOLdyQrEg8RF7ATsSQdFgiC9D1t1g2BFOiBDxiIPjPdE5Jn6oVdjhLEsMhNO3tAHKx4elXAfOWVyZBKlR7H8PZYJgpScjsnJTCpmzK1e4exCOCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781563684; c=relaxed/simple;
-	bh=CqpDulu3Uclnc4tI7DX6e5r2qCyKXkorUrUszaTc7X8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dDzOALIxiqG875BbGBXU8AR9O0nbu/jXjUpjz/P29wYz0cBnp1xk74IjwN8BY2A/g1BIPnTLtylfSrTAKXGbj/hdBqgJxipmHneQjwxOenIkfEOO7Odzw/mBCkZ362uhKTc3bruZsWuZqksZem7wfKQavftSWeBh5IetoYxQB6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BHSE3ZKG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781566728; c=relaxed/simple;
+	bh=EHkcbtlSNZKJhIiEYkEZCMaufKHX5RySd5AcRkTzRSU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kHO1Um9Ci9YsslFRFA/VSkp87fVM4ngXBtOPUP48oOoBiIuoyiJ+oIJU0FLO8lR4h2N28NWUzQJ3dZp4XF0ipuaSbusAzKZ0a3gq3f0adCjOYm7Wf0PEQIXeQ7vjVJ6V9Mear7jIa6ExPjhBayeXOi9SlCiyg2E3QZWGEhyNovQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2dYIl0T; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BHSE3ZKG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 347071F000E9;
-	Mon, 15 Jun 2026 22:48:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2dYIl0T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65DB81F000E9;
+	Mon, 15 Jun 2026 23:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781563683;
-	bh=Zs8KpH+uagfCKB2jn26tTEhh3LE6JVismookwgsfOjA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=BHSE3ZKGn9vS2hG6yEsEpDp+9fUGDwaM0QlmAA2tM07RZP50NM5n+N6KK9VWPcrPP
-	 1AJR8dWI2X/GXtcn5lyyVz9MhgsEW8+CXNl/tSIU1BDPTlJ2Ou5gY3sJNpfP4baUvr
-	 TR+Ri0ngWIpxdJMO3OiyOzINzmVZ/da3ItGzm0hSpEB7VeNa4covlAJCHY/DmKhpCI
-	 vCR2sOMrN/hu/NkTcc9AJnMk1dDOqIbB8FCoEni3dCxcFu8MqhuPFupwo4Ox5yggUG
-	 aXDghIv9aELmmLWD4TDYOxcoUT668/zno593CgiTe8prKjxCjabWnIc3aRDvQUaqE2
-	 WDrtlnJhenpOA==
-Date: Mon, 15 Jun 2026 15:48:02 -0700
-From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Dan Carpenter <error27@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stefano Zacchiroli <zack@upsilon.cc>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Laura Abbott <labbott@kernel.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Wenwen Wang <wenwen@cs.uga.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Dawei Feng <dawei.feng@seu.edu.cn>
-Subject: Re: [PATCH v3] Documentation/process: Add Researcher Guidelines
-Message-ID: <202606151547.DB4095584@keescook>
-References: <20220304181418.1692016-1-keescook@chromium.org>
- <ahgaOigklcDCYvRp@stanley.mountain>
- <ajACprp9UJp2JSJM@black.igk.intel.com>
+	s=k20260515; t=1781566727;
+	bh=Xu16QBgKPLOAs6tIPzhjEHQSe0fKVo2Y4Yk32qsOGwk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=V2dYIl0TZzMlxBl0H6oMbIesaC94xib3XFsWF0LzgMugdVTgX7yRSGzcl6/fvgvPS
+	 TptwAomeLEF8/AtTuvGwGl5yG3tM76OUpkq32Fdt2AjgtHSXvR+uKb0MtFjdS/Uu1z
+	 bIyxkdja+DpLU0BvsigVKHrjVc4SRxOy1JfEl4ms5KKIkQp9NMzmOe2ili9CdxvF+L
+	 Qdqg6TF59AX8Y/2BoRTrP4Vep0RXBSoaSSv2VKoC/0unGupbDyUWN/MX8uUaJj1VQP
+	 uLtbVqfMyRTZ4EBLXazOF8HXSQ9WWwQGmC5FI3MUArK5/WUnF5dUquuxvnr4B9+QYv
+	 8unWO4UYAHjoA==
+From: Jakub Kicinski <kuba@kernel.org>
+To: jensemil.schulzostergaard@microchip.com
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	horatiu.vultur@microchip.com,
+	UNGLinuxDriver@microchip.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	daniel.machon@microchip.com,
+	Steen.Hegelund@microchip.com,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next 1/9] net: microchip: vcap: fix rule move for rules of coprime size
+Date: Mon, 15 Jun 2026 16:38:45 -0700
+Message-ID: <20260615233845.1042219-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260612-sparx5_l3_routing-v1-1-fc3c10160f49@microchip.com>
+References: <20260612-sparx5_l3_routing-v1-1-fc3c10160f49@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ajACprp9UJp2JSJM@black.igk.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 15, 2026 at 03:48:22PM +0200, Andy Shevchenko wrote:
-> On Thu, May 28, 2026 at 01:34:34PM +0300, Dan Carpenter wrote:
-> > On Fri, Mar 04, 2022 at 10:14:18AM -0800, Kees Cook wrote:
-> 
-> ...
-> 
-> > > +  x86_64 and arm64 defconfig builds with CONFIG_FOO_BAR=y using GCC
-> > > +  11.2 show no new warnings, and LeakMagic no longer warns about this
-> > > +  code path. As we don't have a FooBar device to test with, no runtime
-> > > +  testing was able to be performed.
-> > 
-> > People have started sending commit messages in this exact template and
-> > normally I would ask them resend with the meta commentary from this
-> > paragraph below the --- cut off line.
-> > 
-> > Do we really want this "Compile tested only" stuff in the permanent git
-> > log?
-> 
-> +1 here, can we rather avoid flooding commit messages with the meta, that
-> anyways is available in lore.kernel.org archives?
+This is an AI-generated review of your patch. The human sending this
+email has considered the AI review valid, or at least plausible.
+---
+Subject: net: microchip: vcap: fix rule move for rules of coprime size
 
-Hm, I have gotten a lot of push-back from maintainers (reasonablly)
-wanting to know the specific level of testing patches get. In the case
-of lacking hardware, this seems like useful information still.
+This patch addresses a discrepancy in how software and hardware move rule
+addresses on insert and delete for the LPM VCAP. It introduces a uniform
+offset computation aligned to the least common multiple of all rule sizes
+in a block. This ensures that hardware and software representations remain
+synchronized and all rules land on correctly aligned addresses.
 
+> diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api.c b/drivers/net/ethernet/microchip/vcap/vcap_api.c
+> index 0fdb5e363badc..6946fd7384581 100644
+> --- a/drivers/net/ethernet/microchip/vcap/vcap_api.c
+> +++ b/drivers/net/ethernet/microchip/vcap/vcap_api.c
+
+[ ... ]
+
+> @@ -2275,8 +2336,7 @@ int vcap_add_rule(struct vcap_rule *rule)
+>  		       __func__, __LINE__, ret);
+>  		goto out;
+>  	}
+> -	if (move.count > 0)
+> -		vcap_move_rules(ri, &move);
+> +	vcap_move_rules(ri, &move);
+>  
+>  	/* Set the counter to zero */
+>  	ret = vcap_write_counter(ri, &ctr);
+
+[Severity: High]
+This is a pre-existing issue, but does vcap_add_rule() leak the newly
+duplicated rule if operations like vcap_write_counter() or
+vcap_write_rule() fail later on?
+
+If a failure occurs, the code takes the goto out path:
+
+vcap_add_rule() {
+    ...
+    ret = vcap_write_rule(ri);
+    if (ret) {
+        pr_err("%s:%d: rule write error: %d\n", __func__, __LINE__, ret);
+        goto out;
+    }
+out:
+    mutex_unlock(&ri->admin->lock);
+    return ret;
+}
+
+This seems to exit without reverting the earlier list insertions and
+hardware moves.
+
+Could this leave the software and hardware states permanently inconsistent
+and leak the newly duplicated rule?
+
+[ ... ]
+
+> @@ -2488,59 +2548,52 @@ int vcap_mod_rule(struct vcap_rule *rule)
+>  }
+>  EXPORT_SYMBOL_GPL(vcap_mod_rule);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does vcap_mod_rule() discard
+the active software rule pointer and overwrite hardware with stale addresses?
+
+Looking at vcap_mod_rule(), the function validates the rule using
+vcap_get_locked_rule() but ignores the returned pointer:
+
+vcap_mod_rule(struct vcap_rule *rule) {
+    struct vcap_rule_internal *ri = to_intrule(rule);
+    ...
+    if (!vcap_get_locked_rule(ri->vctrl, ri->data.id))
+        return -ENOENT;
+    ...
+    err = vcap_encode_rule(ri);
+    if (err)
+        goto out;
+
+    err = vcap_write_rule(ri);
+}
+
+Because the function continues to use the caller provided copy ri, it
+doesn't see updates to the real rule in the admin->rules list.
+
+If the real rule's hardware address was previously shifted due to insertions
+or deletions, could writing to the stale address in ri->addr corrupt other
+rules in the hardware VCAP?
+
+[ ... ]
+
+One other pre-existing issue noticed while reviewing this subsystem:
+
+[Severity: High]
+This is a pre-existing issue, but is it safe to iterate over the admin->rules
+list across different VCAP instances without acquiring admin->lock for
+each instance?
+
+In vcap_rule_exists():
+
+static bool vcap_rule_exists(struct vcap_control *vctrl, u32 id) {
+    ...
+    list_for_each_entry(admin, &vctrl->list, list)
+        list_for_each_entry(ri, &admin->rules, list)
+            if (ri->data.id == id)
+                return true;
+    return false;
+}
+
+If another thread is concurrently inserting or deleting a rule on another
+VCAP instance while holding that instance's lock, could this unprotected
+concurrent access encounter a data race and dereference a poisoned pointer?
 -- 
-Kees Cook
+pw-bot: cr
