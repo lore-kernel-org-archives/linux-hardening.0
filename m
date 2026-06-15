@@ -1,163 +1,218 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E013DA7F5
-	for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 10:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAED30AACB
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 10:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781518058; cv=none; b=FMzXsyaj4ZQnZHdGvoTZB/PJzZQNk4kMI4gjc8coaSBk2JbZIEaTs5TnkFP0F6OARcSkXMdPk3OhB00tcOt2a6wKQit2bh01QNdpDGGxQE4kx8ZrNOhb+rcaxVxUkQTHnUf0uZA53kBvo1Y5EdKoIy1NirpQBYbyiy8gh2mRmS8=
+	t=1781519701; cv=none; b=IcxqyMaxzObZvuJH4VP8DFTz3RsjVgP/ftsaJ0GYLV2HUTpPYJhrK6nJU0gl5/tmmR2VM6v4aaITCeTdmPEsZ3wCb3EJjVGo1mvajS4FoAZbSgK1aqy6y2m5MjeKaohtznybYmeCvV2YjneK6gd5RRlDPd1KGVeBSomQkrbPP3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781518058; c=relaxed/simple;
-	bh=j9X6Hjl1sRhGXewzKI16SQPqKyAERgQ7g9NdkcyEkZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fo9ozh0OptuE1qZGzWaH4Tdda1kqpomCGZEqGuAcVfe/uocqAUQcg7vQJWLRnb5HnWU+L0C2gkhGb/dC2REBa4e3UElI4GezHf8BRh6P2wOV/FwXdV4kk3VfB95tIzczmFOAUzXvEaeQY/6zcGpfOTpL3Nj5Tp3n6eYk3hEYD8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lIWfMw4+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t7GE2tcE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lIWfMw4+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t7GE2tcE; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1781519701; c=relaxed/simple;
+	bh=ypBctaFL7zGGiToTo8r9a8VYheJSEu0MfATFvA99hvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gn7GXvk/lyN5QTF4WoVwg37HOxa/OD0oObfYIZraxc6x13cyF8hiqxR3jQZ4NGsSJ/RSnx0+jf1wjSf5WxYWyEOH4vD0RqCANvbukwlxGuF7BHKShI5VzBt7Q6IsikfDNMz+l4LMVAL4lXxRaw1V7TtPvN545AzueY45YDYg8Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=n3TC/Ii7; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=hcisMqyn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lIWfMw4+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t7GE2tcE";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lIWfMw4+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t7GE2tcE"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 05D8F75938;
-	Mon, 15 Jun 2026 10:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1781518055; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bcwcuid5G9Jv1yAJ2BEQE/cLseUTL/2R5NAEuMMhL8s=;
-	b=lIWfMw4+rNTJWFvjKaMg19WvN7uXYaEL/vc9yYUWlX3NTQiwVXNqsO4Yag5WnpDkDGWN1u
-	FCNRj/ypXIisZylFFLwG4qDxMD9EZSd9+vBmHD5XQhE3yx6oTR2bhoM+1WC8bLrpiLLELc
-	nqLtRgTBmJmPn73fZ8TQ7ii60F9oxTM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1781518055;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bcwcuid5G9Jv1yAJ2BEQE/cLseUTL/2R5NAEuMMhL8s=;
-	b=t7GE2tcEHcCkbYQInDvZT+SaB70th4oyF0Wlm6kqpMdYvUz/tgyXUOBnNKnZR3Pxrjy2HY
-	DOwTWKUzN0fOs+CA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lIWfMw4+;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=t7GE2tcE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1781518055; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bcwcuid5G9Jv1yAJ2BEQE/cLseUTL/2R5NAEuMMhL8s=;
-	b=lIWfMw4+rNTJWFvjKaMg19WvN7uXYaEL/vc9yYUWlX3NTQiwVXNqsO4Yag5WnpDkDGWN1u
-	FCNRj/ypXIisZylFFLwG4qDxMD9EZSd9+vBmHD5XQhE3yx6oTR2bhoM+1WC8bLrpiLLELc
-	nqLtRgTBmJmPn73fZ8TQ7ii60F9oxTM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1781518055;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bcwcuid5G9Jv1yAJ2BEQE/cLseUTL/2R5NAEuMMhL8s=;
-	b=t7GE2tcEHcCkbYQInDvZT+SaB70th4oyF0Wlm6kqpMdYvUz/tgyXUOBnNKnZR3Pxrjy2HY
-	DOwTWKUzN0fOs+CA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BB0E0779A7;
-	Mon, 15 Jun 2026 10:07:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id hHJGKuXOL2qLZgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Mon, 15 Jun 2026 10:07:33 +0000
-Date: Mon, 15 Jun 2026 11:07:31 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>
-Cc: Harry Yoo <harry@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Simon Horman <horms@kernel.org>, Jason Xing <kerneljasonxing@gmail.com>, 
-	Kuniyuki Iwashima <kuniyu@google.com>, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH net-next v2 0/2] net: isolate SKB data area allocations
-Message-ID: <ai_ObgbjlahfXs37@pedro-suse>
-References: <20260611124642.345400-1-pfalcato@suse.de>
- <20260613113303.7562bc59@kernel.org>
- <ad862f5c-34e4-48d6-8d8b-f02bdc02d7d6@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="n3TC/Ii7";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="hcisMqyn"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FAIeLf3885486
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 10:35:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hVyefM75Zw370S/eMkrghTpPTfewflO0/F6QE0G56A0=; b=n3TC/Ii7lkQow8q3
+	/MnBEYSCoIk5ZB8W7nj47y9dD2AqiGDhaoGGnYMzvGAgDAclQAc8Ks6B1TqIxoXQ
+	4WbYSH9gqlVST0nsnPVWsQ29Kdpw0Hm9ZBsmJ1UDqUN/kSQW6hyaMoY9lZzTs5fZ
+	dz3+2uiyQd4iPoQR6Lm/5ahnl274jejy5LdduoJv2RgfwHQzrFG8+d6DzAXmbAkV
+	pyp52ZCO0w1WsYk9Sboh3lF3Dl12xNNKahwYOcnmaDkCeih5NVzfnP6wbF+ftTca
+	UysG6XKo+rVLcl6YludvRrDi1BxP9jTTWXJ3J2iqsBEzT7L6o81gblS3HJ9KodSB
+	D6q9ZA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eter008st-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 10:35:00 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-91565f8c589so572649285a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 03:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1781519699; x=1782124499; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hVyefM75Zw370S/eMkrghTpPTfewflO0/F6QE0G56A0=;
+        b=hcisMqynZRxwMHGUXMEjWxdlXr5d0I/hWK92VUipHqexp4gbZ5TfZQYVTwrBWKTwPV
+         RVf9EB7lQ/eNjYFfNUdSQHr/S7pplLRElb8wYusamonAQvSwNdvy0pCVCDEVZ+E70HFz
+         y+Q+aUQ1+GmQLhOWQmI1f0qE+jWHguwLSCe1NqBxHrgKr+k6ZLVlmcrOz/1DTO3HCqWR
+         7i92S57ukNWrCwLP1YUc7Y4UhMLxpLDRBHGHqty64TXX9FR8ZZuLhGKGEsGBDEy2aC7M
+         zM4sj1sqTrwSNnkvNsBg11bFtNmb1iKc1rpE5t6pX6QZ0oru9XSYOlIyShJUcHEkkxJt
+         eDww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781519699; x=1782124499;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hVyefM75Zw370S/eMkrghTpPTfewflO0/F6QE0G56A0=;
+        b=m7givYNfQB7C3vwkncq+/EzRLTwqLNpBhcp2PIc1gWIIDdpWAC+F1CiRZJdHifk2fz
+         6phDfat5/Gap+WxlaG88E9ViZsfa+bVhYHifALXtf/oz63nqAoCiUpegVM+iONoo/0nd
+         HyDj2ZgjOnv8izd3JcjwbcRnEDNd4YdkXgGfU1ABQ2x7D0QUHgJZutXM9KIxuexhXD8t
+         Zd27pfyOKWaq9/gf7wHeI4LIuR4wh2T5VFc5hp1Mukb7rPfy9QOmRvug+NLIU8bF+B3a
+         jrhpS4CgGUh1kxUGDJ3WmKByFz2beiCcyq8ufxxC5ugmfG19CFQpv+enl+/YUzEFJ3vw
+         HEgg==
+X-Forwarded-Encrypted: i=1; AFNElJ9FItyCNh2/zp+mzDEtqEqnWRYzwE9N9YGeXTK401jj6Zb2Lc+v1Exh067gbvVrDJSrK1lisC2XUq11eQ8fm1c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYAT4h8086Og2RYUZeL/QBDctHi4BZVPCItcWCfgH98181+1xX
+	TVqoUMN4/1hMZmVZQpQatLIqEiQKv2bEK9P4UX6rMuzBMGRZDwm/GyyBu5lEy00V+go1cD0+7Yd
+	PndPbHlPdYk8fnPPWZqYbx4fow0MZFj48Oen2UWOVT+DOcs/YcfAOKTEAvNWo3JiY9PPjWRE=
+X-Gm-Gg: Acq92OHRBpvW/FPD7zkAOyc38lCT5YWA3puvImPn/qRjt9TURAClxmWRMaccSk0R+Q/
+	PQMnzCghTTWGXRotXtzRPu36zAncwBIYtGDjhlNFz20H2+7D4DRmbN5pHFkGfwqPbGpOiSAtWkr
+	OUjF2qbDhYxggvzrWF+nvSiydp4Y/U6+Qe2gOy2YaK+jK15XkjTMbAgoZyUponJss9zspT8CbO3
+	ys6mnYc0UnDlDvXkH5QQoqqfBTK5jvwsUObOuMA1jd31IDgLkeyopADgieQeBSor9PQNeD9SQsR
+	HMCAulGjUU/UfeHFS2SdAGH/ZlQY746+3hn2MRO7ZoUFeObe36Vya5D3rYuKHqT2RieH2/a6rr7
+	7O85Wh2MHOXLM7aSRq6JqER+QAIYYOJLLF30VijRrqrT7vyIyYbbdPXFX2LJzdIs/F1CMjZvP2l
+	4SClE+rOw1
+X-Received: by 2002:a05:620a:2894:b0:914:bdfa:c782 with SMTP id af79cd13be357-91619f2bf0dmr1784333685a.29.1781519699028;
+        Mon, 15 Jun 2026 03:34:59 -0700 (PDT)
+X-Received: by 2002:a05:620a:2894:b0:914:bdfa:c782 with SMTP id af79cd13be357-91619f2bf0dmr1784331785a.29.1781519698620;
+        Mon, 15 Jun 2026 03:34:58 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:766f:2395:dbef:b08d? ([2a05:6e02:1041:c10:766f:2395:dbef:b08d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f263923sm33671703f8f.2.2026.06.15.03.34.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2026 03:34:57 -0700 (PDT)
+Message-ID: <3cbcaf8c-357e-42d2-91c1-9d1a32c55ed0@oss.qualcomm.com>
+Date: Mon, 15 Jun 2026 12:34:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad862f5c-34e4-48d6-8d8b-f02bdc02d7d6@kernel.org>
-X-Spam-Flag: NO
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	URIBL_BLOCKED(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[kernel.org,linux-foundation.org,davemloft.net,google.com,redhat.com,vger.kernel.org,kvack.org,linux.dev,gentwo.org,gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 05D8F75938
-X-Spam-Score: -4.01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/8] dt-bindings: remoteproc: qcom,pas: add thermal
+ mitigation properties
+To: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
+References: <20260609-qmi-tmd-v3-0-291a2ff4c634@oss.qualcomm.com>
+ <20260609-qmi-tmd-v3-1-291a2ff4c634@oss.qualcomm.com>
+ <20260610-ocelot-of-stimulating-excellence-bcb0fe@quoll>
+ <03d863ee-2caa-41f2-94b5-7332fc930b42@oss.qualcomm.com>
+ <d81bc78e-2c1d-45fd-90c9-f7ec462183a0@kernel.org>
+ <7f1e46fb-15e3-4638-9930-8abc1dd5a778@oss.qualcomm.com>
+ <fcf93e0f-a2f0-4070-86ec-8a34e9344b76@kernel.org>
+ <ec65893d-873a-4a62-b0e2-5008b2130545@oss.qualcomm.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+In-Reply-To: <ec65893d-873a-4a62-b0e2-5008b2130545@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: QIaGi01DtI9Zw3jWu74KTRPRQ1RbCRpg
+X-Proofpoint-GUID: QIaGi01DtI9Zw3jWu74KTRPRQ1RbCRpg
+X-Authority-Analysis: v=2.4 cv=UPzt2ify c=1 sm=1 tr=0 ts=6a2fd554 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=zPFEeeBhd_1xptEjU_4A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDExMSBTYWx0ZWRfXyDDFqr8tyiRL
+ X43/tc3L/E8d798SkVtGhlPkMSec+Y1tAzqcgy4B6yZVT382RE0BwOCjQnNVvSF77ZiDuR/1xQD
+ OLSpy5Bw/B+7rqqmOIQ3rELzXEZnNcNSE9FqSi074mKLplQ/msyHB9oINiL56GVf4ZfSf89eI7I
+ 4N2gUEoPBm1YGT0WS0HxKDXH03fTjUJeDjaZXp/UmkNDDWbXklwxJFX8iwrD3XgtI9NvD1d3Lea
+ G+psVY9RnBZ3uHZHOsjpucgoM+4t/Kfj1CFZU3jeiAfABt87kFU4LzuWbybas/bV/8K7h/8VWBD
+ caiGseTcbDkPpw6fST61Nr/NeywMl16mdVBZrEZNTtbxh50rt1iQkIw6/JBIdK9STNG84/nSbiC
+ QpGTtRGRCmKbnbxbC2DPBIhPtRyZt6tVdWl8dDmzfFcCLFczmUxus2fmcp3S9a74DB1+u3vqINH
+ MMwP70piqmq8E8D3rYQ==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDExMSBTYWx0ZWRfXyUxHYrTV9Rxd
+ 0eXBU0k9TBrAx4wO0E+kjnPmogTq79K01fB6qv9NnHB27+gqPeB9beRu6TH+uo85hf6ZjK1Npof
+ aS1LoR7p7zEv9JF0QfIl2GIC6crSkLc=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-15_02,2026-06-15_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606150111
 
-On Mon, Jun 15, 2026 at 09:28:39AM +0200, Vlastimil Babka (SUSE) wrote:
-> On 6/13/26 20:33, Jakub Kicinski wrote:
-> > On Thu, 11 Jun 2026 13:46:40 +0100 Pedro Falcato wrote:
-> >> Subject: [PATCH net-next v2 0/2] net: isolate SKB data area allocations
-> > 
-> > This doesn't apply to net-next, does patch 2 not apply to mm?
-
-Ugh, annoying - really should have rebased on net-next precisely
-(vs just linux-next).
-
-> > If neither tree can take both - maybe MM can take the first patch by
+On 6/13/26 13:05, Gaurav Kohli wrote:
 > 
-> OK I'll take the first patch through the slab tree in the planned second
-> next week's PR.
-
-Thanks!
-
 > 
-> > itself and we will queue patch 2 after the changes propagate during 
-> > the merge window?
+> On 6/13/2026 1:11 PM, Krzysztof Kozlowski wrote:
+>> On 12/06/2026 15:52, Gaurav Kohli wrote:
+>>>
+>>>
+>>> On 6/11/2026 5:53 PM, Krzysztof Kozlowski wrote:
+>>>> On 11/06/2026 13:12, Gaurav Kohli wrote:
+>>>>>> Why? And where is this generic property defined? You cannot just
+>>>>>> sprinkle generic properties in random bindings.
+>>>>>>
+>>>>>
+>>>>> Ack, will add why part.
+>>>>> These names are matched with the thermal mitigation device identifiers
+>>>>> populated by remote firmware over QMI and define mitigation devices 
+>>>>> are
+>>>>> exposed as cooling devices.
+>>>>
+>>>> No, -names correspond to values passed via DT, not some remote 
+>>>> firmware.
+>>>> The remote firmware should give you interface which is explicit and 
+>>>> does
+>>>> not need such properties.
+>>>
+>>> thanks Krzysztof for review, We need tmd-names because of following 
+>>> reasons:
+>>>
+>>> Following Daniel's series [1], the thermal framework supports
+>>> mapping multiple cooling devices per remoteproc/device via indexed
+>>> cooling-cells.
+>>>
+>>> 1) The thermal framework's cooling-maps reference
+>>> cooling devices by index (for #cooling-cells = <3>). Without tmd-names,
+>>> there's no way to know which index corresponds to which TMD, as firmware
+>>> may return tmd-names in any order.
+>>>
+>>> below are the changes post new thermal mapping changes:
+>>> DT: tmd-names = "cdsp_sw", "xyz";
+>>> Firmware: ["cdsp_sw", "xyz1", "xyz2",]
+>>> Driver registers: Only "cdsp_sw" (index 0) and "xyz" (index 1)
+>>
+>> names property are not to instruct drivers to register or not to
+>> register something.
+>>
+>> I don't understand the problem and explanation in the binding is
+>> basically non-existing.
+>>
+>> Remember that all lists and indices ARE FIXED, so driver knows exactly
+>> which index means what.
+>>
 > 
+> thanks for review, shall i use driver data, which is basically pas data 
+> structure like below:
+> 
+> static const struct qcom_pas_data {
+>      .crash_reason_smem = 601,
+>      .firmware_name = "cdsp.mdt",
+>      .tmd_names = (const char *[]){"xyz", NULL},
+>      .num_tmds = 1,
+> 
+> Is something like above acceptable? and this will also help to filter 
+> tmd names as well?
 
-It's all the same to me, I'll have to resubmit the patches when the merge
-window closes. So whatever is easier on the maintainers side sounds good to
-me :)
 
--- 
-Pedro
+How the thermal framework will bind the thermal zone with the TMD ? 
+(node pointer, id) ?
+
