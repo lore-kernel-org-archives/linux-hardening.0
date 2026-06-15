@@ -1,101 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3043F5BF9;
-	Mon, 15 Jun 2026 13:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3781E3F65FB
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 14:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781531310; cv=none; b=ZIPBR11V6h6TpYBN1m5t8F7Cp+v1qj+5dctzPjcOco7W/mAoKY6qTQ2TAa81m7BAkCWll2iOU8J7HYMRYA3zGxJtnPCkEWa7Rw/BcY0sfANgUQWNsAUMPThl1VxYCcV0t3gUrI7PRCez7oQoboKMK5Rxa5/b3ryvTzuViimK6mU=
+	t=1781532694; cv=none; b=tgxgq08JE1dSC7BLD5wzh3q0uAeunIYwGADIj16J6OPU9TnIAbllPulUIRJa5OsJqVlc8bFEnr9qYVnqpH1AlrN0obbKif4ih0Og+eOIyAdA+VTFEkWdpnLBhInJZMWmxtTb81sYG+2d4FUwcppblWnVaRJ1kXv+xF2nzpZ0dXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781531310; c=relaxed/simple;
-	bh=inx8KrsbS4vy/PkUHx9LLJha1RMq1uYeun2BM1UGKW8=;
+	s=arc-20240116; t=1781532694; c=relaxed/simple;
+	bh=skvGd6YlvxaIuF4YmVpLO7yCWWrcpj4DtUxM11rryI0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ohy1VxDXpSYnpNCg0L/d+RaXofgFMz+6L2lbdp53U/1WqN3WA/wZj5zPLhBEhjQe+dlCjXt1Nj+wsWtyCbXGTk+U0xcup4+AHNsTgn6+W8AtEtTUAmUX4EJYu3U0Sbrwy1fJrauEyWZiRfP797wS/z5TvpBmGTql13pcjkmv4U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CLH5h3hn; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aR5SaVL7GRlLxJn8cBUH9n+gMMT1+MCJJrktteKk6eqpsiGu8oLKzoPVrPFSa65iL2FECGhi8YLp+TwuxxyYrNNiCv3wLj7LJkKIZ48Riim9ucigT9xMn8AP93oHyREBvWZmR8BH5JBMtVSP+HrFpa41uyFKtc1dz/2cWP+qCvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=n13Wqe40; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ICQnQbKw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CLH5h3hn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781531308; x=1813067308;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=inx8KrsbS4vy/PkUHx9LLJha1RMq1uYeun2BM1UGKW8=;
-  b=CLH5h3hnwaLI6zgqcdTQ+V0fdfC9T6CQChkspXtOTU/bN9Mh5YHqcIHp
-   Hd2wC5EsJdlF6lF2525ApNI01Dk3/u8JbdKtp4JmHd5zLB6+ClmMrXaJy
-   EnJwZbtp7eGGu0xFEhWI0NhvDrRwshvoItW2nj68i9Ntry8XUDJmqkMPu
-   5W98q/UlaEzJdLPBs7l1yMy2q1QxzyuKzIwfCKckhGAcBEuZ3fFFV9g1I
-   Bh8047SNDty50Br9F4iqVwDO/T3tXjqian3JMqVCwzNlAgRB1WOHQsNS7
-   0UWIxGGiKkEV6jr4EQbM7kfSNAp5H+1xIjL1bunsvbGAdwcPs7hTgBWAa
-   w==;
-X-CSE-ConnectionGUID: IuVy3KfqSlukzvNkeFP6YA==
-X-CSE-MsgGUID: PGku37lNRTGt2/Z1El3DrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="84835607"
-X-IronPort-AV: E=Sophos;i="6.24,206,1774335600"; 
-   d="scan'208";a="84835607"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 06:48:27 -0700
-X-CSE-ConnectionGUID: 2IMCQWYHQWOwZ3MoS8fvGg==
-X-CSE-MsgGUID: 1xiKOP3KQWKcsralxbv5SQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,206,1774335600"; 
-   d="scan'208";a="271176304"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa002.fm.intel.com with ESMTP; 15 Jun 2026 06:48:23 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id CA93C95; Mon, 15 Jun 2026 15:48:22 +0200 (CEST)
-Date: Mon, 15 Jun 2026 15:48:22 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dan Carpenter <error27@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stefano Zacchiroli <zack@upsilon.cc>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Laura Abbott <labbott@kernel.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Wenwen Wang <wenwen@cs.uga.edu>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Dawei Feng <dawei.feng@seu.edu.cn>
-Subject: Re: [PATCH v3] Documentation/process: Add Researcher Guidelines
-Message-ID: <ajACprp9UJp2JSJM@black.igk.intel.com>
-References: <20220304181418.1692016-1-keescook@chromium.org>
- <ahgaOigklcDCYvRp@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="n13Wqe40";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ICQnQbKw"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FCZnEt529552
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 14:11:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	c9Ck0QD4Q7uF2y8iLxRHBejsWgQqF6dlYb0G+SA4o3w=; b=n13Wqe40NpJaY/ak
+	DTxNJZqoge5BrEQkmweaAdchXrI4wNUyx0n80JFGavfuM8wYbx0dCQC2chxiaP0B
+	fTUw7WhF7akYhF5wvtrt5a/pBoQoOHJFGaeF8MY7HvT7lKxb7g0vpCHdCq7T801E
+	dt1ELbfU/P5dZhrlwZ3pak4ZvdmaP2VeYGUwvvzrYfkNyuiKJliXUG4nwiAYUlW1
+	/q0LGfQMTyLWUPq4YitnF1WtQRz4C9KDS8ZuxiQ7njRp/yqHqBSwV5IGLPPEadr2
+	3gYS7lci11+thh4+nzIwUI9stmeptYrvEIgUPMUYNH06wfRavxQrO8lpEGv9OHM9
+	OjHpSg==
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eter213wn-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 14:11:32 +0000 (GMT)
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-69da719e003so4743324eaf.2
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Jun 2026 07:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1781532691; x=1782137491; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=c9Ck0QD4Q7uF2y8iLxRHBejsWgQqF6dlYb0G+SA4o3w=;
+        b=ICQnQbKwCJVn7YFpVZYwasylS/81A/SZ4hIqgzsuQxZ929ap4SzQAWTiztaG5/lNlL
+         LyvcjbyVSSf6Us+OI2IlbDnqnc/yUlAGxVgP9bnROT/OtCluwgSPJSnmN/ASGugN6wn0
+         Yg3eb+stpFIn7V4jPWttfhbQmQDsZjImu5EUxBwlhBWxN7XED4SFxkMpXCpq+04E6LZh
+         H0VpFu/QrwH9PSdVrI/x4z/YSMe5FFNRDin5x82R5rUB/YVFt582bde6YZmmLw0Gpzw0
+         A039z5qgPkgjkfCGkOeolgSjnf1PC74aJzhtWzFTmX7Hjptq1/tkgqpAer+yvTUmz2jx
+         MqSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781532691; x=1782137491;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c9Ck0QD4Q7uF2y8iLxRHBejsWgQqF6dlYb0G+SA4o3w=;
+        b=JqOipeBG170LVPti2+qomwq8+3iLctmS4v4Zx68vZCX7cnAk/5ASB2LKoS7gi9YKIR
+         iE2tQrfuLwzJRf594d6ozMpqzzEr7IWyT2GVev+hQewnRsjjb1qVEUliQ6w4SsdpQNoS
+         XH9II15u1ezizolQ32Stplq6ZKLGWOw/tUY6axDg9anGUmcBSbfsOgXLl/DoO1xXeQwW
+         +csOYMbKF7NCKWOGi9b7/CZPrY003z0LxO7OQeSvXUun2qrguiE4QQdWT09wes4QtZ9q
+         GyImGmUv9fuUMPI6NBm2WAluA3Cuqq/DmvvC5Wt2lg59Km8B9i2GHifudouSOuhiHjk4
+         95JQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+NVaubqE6/NJb5unL4j20YEppE1pkSDSB+OTanc7UMNpkzjkbduaJjK84988PW3eQqH2g1R8IfTyHx7bYBbUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlll2mQmML6iEBkBTUqbyqvCgp0rRAktG8d9kkYtmsi51AH5br
+	FcOux9iEG7vZ/FayD7yXeGCcgVrNhTPAbM5EjW1YomiGN6fjVkz8xj2FEFc9ac5PbnNmgvFfC7n
+	vN18KBRgrk/2dOe7LVEQyLsHtOc/+HZQx8IgoUlpGUTZVnHgPxF3peadnzTwUWpxzlbz9qXg=
+X-Gm-Gg: Acq92OHO9a8P2JushMNEO3MuL5yURthxKnzOlMMGhnbTrQIYWNxR5PzS+UmtdzjrZ6w
+	vfUCNJbUPwRgfypSt3JA6OjsLkDDow0TBo5eMpye+2k1FcHFicNV7rQRA8BscV8qeT2qI9A/f8L
+	0xWRv5xzuKm3gaDPjBpVEDP/z86KJopBnCQtPGXgc/BxxlC5RnCXX4+mjHY94G66Sz6mPUM4X39
+	yKioSLy4wRPUXwtVCD58+3xtJBqdzh9/l4URdcpG3sKQ44A3GTrhgwMIYbJL+pgZ0YTvRpL6z2c
+	Zi4WTGX+2XK9VaBiG0KF3dglSsnvP0iOQGCBxPnNuO0bNo1HwfwuRtIDP/VFUtFEVBrqi7ZzI3L
+	fa1F1u5VX+za96Hcvcwy7Zca6IluBbijfe8v8CDM4HlixYhoMlh9x/J3Lipgkz4igeTO9EecP7w
+	iwPAkWXpI8m5Rmi1ZQ7tZRuFH9Dp51pwgSfLY=
+X-Received: by 2002:a05:6820:f021:b0:69e:3d6d:3757 with SMTP id 006d021491bc7-69eec9b0ecbmr6711432eaf.55.1781532691483;
+        Mon, 15 Jun 2026 07:11:31 -0700 (PDT)
+X-Received: by 2002:a05:6820:f021:b0:69e:3d6d:3757 with SMTP id 006d021491bc7-69eec9b0ecbmr6711408eaf.55.1781532691009;
+        Mon, 15 Jun 2026 07:11:31 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5ad2e1bb12csm2806235e87.84.2026.06.15.07.11.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2026 07:11:28 -0700 (PDT)
+Date: Mon, 15 Jun 2026 17:11:27 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+Cc: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
+Subject: Re: [PATCH v3 1/8] dt-bindings: remoteproc: qcom,pas: add thermal
+ mitigation properties
+Message-ID: <hebyboondtxyyetwuwggoiysurz335xzn7asf6yit3qrexap3x@kngk2m5xum3x>
+References: <20260609-qmi-tmd-v3-1-291a2ff4c634@oss.qualcomm.com>
+ <20260610-ocelot-of-stimulating-excellence-bcb0fe@quoll>
+ <03d863ee-2caa-41f2-94b5-7332fc930b42@oss.qualcomm.com>
+ <d81bc78e-2c1d-45fd-90c9-f7ec462183a0@kernel.org>
+ <7f1e46fb-15e3-4638-9930-8abc1dd5a778@oss.qualcomm.com>
+ <fcf93e0f-a2f0-4070-86ec-8a34e9344b76@kernel.org>
+ <ec65893d-873a-4a62-b0e2-5008b2130545@oss.qualcomm.com>
+ <3cbcaf8c-357e-42d2-91c1-9d1a32c55ed0@oss.qualcomm.com>
+ <ae43a691-4879-4bfa-8c7c-1be16945480c@oss.qualcomm.com>
+ <9a31bb29-75d7-42fa-b8a8-4155cf85cadf@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ahgaOigklcDCYvRp@stanley.mountain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9a31bb29-75d7-42fa-b8a8-4155cf85cadf@oss.qualcomm.com>
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDE0OSBTYWx0ZWRfX+DnFTos6C0uZ
+ e7m2M4brXOZHt1XoR/09RnavG//BkQjt4xUwGIQS3XYqQWS2TWcIVvqeS68lipWO+jCZ1Ir0UxW
+ bekqnyCGC/58h0RxR2b7dumVuvUf2+8=
+X-Proofpoint-GUID: ONiwB2KTENJZOYvXYy2PzH8P_geRttfI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDE0OSBTYWx0ZWRfX0vPQxyzDlVIO
+ uBIPE16bKNnIIGoozmd4r17Sk9STMKMunmhl+zOLV5ADN+BoZGi3H/3kEV2dNVoW1/lUXdxkzQg
+ ReaH2lcJhxdh3TIhQ7BhnGVUvLB1zzZq4TYKq5WDtk3Rnt0Lx7AvaG8JM3Ccfu5Abzxf0gJZgL2
+ MgUqJkGcWnHN1or/kdcAsFFDziZjg5CbTy8pSbjewEOJe/cgGBjtrzc3TCHGfi+cUiHu7gTI86Y
+ 9f/ZNgePgaLeqsd2PPxbRWDjhqy587bpVNHorG5ZzUL+UeP2+/5qHskiEjuN6pkuF8fTOxGpXgV
+ I0oVn1ltL1NuULAqEIRCxXRRCN8QHGrlcIOqp44dgqsfO6Oph1iWbWQMAEZFbowfQUCsrGaGSK2
+ ndUzFP9FZKgghDnRE4ruTIvDb8w4e6gfQK2l0xr/81NDrJGPQS5gMxwlZczWrTA+d9II9p7b3L3
+ veM6CdHmINfEZcPztKA==
+X-Authority-Analysis: v=2.4 cv=F4tnsKhN c=1 sm=1 tr=0 ts=6a300814 cx=c_pps
+ a=lkkFf9KBb43tY3aOjL++dA==:117 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
+ a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22 a=f6XOEFucdkFPB0-045EA:9
+ a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10 a=k4UEASGLJojhI9HsvVT1:22
+X-Proofpoint-ORIG-GUID: ONiwB2KTENJZOYvXYy2PzH8P_geRttfI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-15_03,2026-06-15_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0 spamscore=0
+ adultscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606040000
+ definitions=main-2606150149
 
-On Thu, May 28, 2026 at 01:34:34PM +0300, Dan Carpenter wrote:
-> On Fri, Mar 04, 2022 at 10:14:18AM -0800, Kees Cook wrote:
-
-...
-
-> > +  x86_64 and arm64 defconfig builds with CONFIG_FOO_BAR=y using GCC
-> > +  11.2 show no new warnings, and LeakMagic no longer warns about this
-> > +  code path. As we don't have a FooBar device to test with, no runtime
-> > +  testing was able to be performed.
+On Mon, Jun 15, 2026 at 02:30:49PM +0200, Daniel Lezcano wrote:
+> Hi Gaurav,
 > 
-> People have started sending commit messages in this exact template and
-> normally I would ask them resend with the meta commentary from this
-> paragraph below the --- cut off line.
+> Le 15/06/2026 à 14:12, Gaurav Kohli a écrit :
+> > 
+> > 
+> > On 6/15/2026 4:04 PM, Daniel Lezcano wrote:
+> > > On 6/13/26 13:05, Gaurav Kohli wrote:
+> > > > 
+> > > > 
+> > > > On 6/13/2026 1:11 PM, Krzysztof Kozlowski wrote:
+> > > > > On 12/06/2026 15:52, Gaurav Kohli wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > On 6/11/2026 5:53 PM, Krzysztof Kozlowski wrote:
+> > > > > > > On 11/06/2026 13:12, Gaurav Kohli wrote:
+> > > > > > > > > Why? And where is this generic property defined? You cannot just
+> > > > > > > > > sprinkle generic properties in random bindings.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > Ack, will add why part.
+> > > > > > > > These names are matched with the thermal
+> > > > > > > > mitigation device identifiers
+> > > > > > > > populated by remote firmware over QMI and define
+> > > > > > > > mitigation devices are
+> > > > > > > > exposed as cooling devices.
+> > > > > > > 
+> > > > > > > No, -names correspond to values passed via DT, not
+> > > > > > > some remote firmware.
+> > > > > > > The remote firmware should give you interface which
+> > > > > > > is explicit and does
+> > > > > > > not need such properties.
+> > > > > > 
+> > > > > > thanks Krzysztof for review, We need tmd-names because
+> > > > > > of following reasons:
+> > > > > > 
+> > > > > > Following Daniel's series [1], the thermal framework supports
+> > > > > > mapping multiple cooling devices per remoteproc/device via indexed
+> > > > > > cooling-cells.
+> > > > > > 
+> > > > > > 1) The thermal framework's cooling-maps reference
+> > > > > > cooling devices by index (for #cooling-cells = <3>).
+> > > > > > Without tmd- names,
+> > > > > > there's no way to know which index corresponds to which
+> > > > > > TMD, as firmware
+> > > > > > may return tmd-names in any order.
+> > > > > > 
+> > > > > > below are the changes post new thermal mapping changes:
+> > > > > > DT: tmd-names = "cdsp_sw", "xyz";
+> > > > > > Firmware: ["cdsp_sw", "xyz1", "xyz2",]
+> > > > > > Driver registers: Only "cdsp_sw" (index 0) and "xyz" (index 1)
+> > > > > 
+> > > > > names property are not to instruct drivers to register or not to
+> > > > > register something.
+> > > > > 
+> > > > > I don't understand the problem and explanation in the binding is
+> > > > > basically non-existing.
+> > > > > 
+> > > > > Remember that all lists and indices ARE FIXED, so driver knows exactly
+> > > > > which index means what.
+> > > > > 
+> > > > 
+> > > > thanks for review, shall i use driver data, which is basically
+> > > > pas data structure like below:
+> > > > 
+> > > > static const struct qcom_pas_data {
+> > > >      .crash_reason_smem = 601,
+> > > >      .firmware_name = "cdsp.mdt",
+> > > >      .tmd_names = (const char *[]){"xyz", NULL},
+> > > >      .num_tmds = 1,
+> > > > 
+> > > > Is something like above acceptable? and this will also help to
+> > > > filter tmd names as well?
+> > > 
+> > > 
+> > > How the thermal framework will bind the thermal zone with the TMD ?
+> > > (node pointer, id) ?
+> > > 
+> > 
+> > Hi Daniel,
+> > 
+> > thanks for review.
+> > 
+> > With id only, in this case instead of taking tmd names from device tree,
+> > qmi_tmd will take tmd name from pas_data(driver) and register with the
+> > cooling framework with id only. Please let us know if this looks fine.
+> May be I'm missing something but:
 > 
-> Do we really want this "Compile tested only" stuff in the permanent git
-> log?
+>  - The QMI TMD returns a list of names, not ids
+>  - The QMI TMD may return the list in different order than assumed
+>  - The cooling map index points to the name of the TMD in the DT
+>  - This name is used to match the name in the aformentionned list
+>  - The index in the list and the id in the DT can differ
 
-+1 here, can we rather avoid flooding commit messages with the meta, that
-anyways is available in lore.kernel.org archives?
+Would it be better if we define standard indices for the standard names?
+This way we decouple the actual firmware strings from the DT.
+
+> Krzysztof , I don't get why having the TMD names as properties is wrong,
+> they describes the existing TMDs on the system and the cooling maps index
+> points to the one to be connected with thermal zone.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+With best wishes
+Dmitry
