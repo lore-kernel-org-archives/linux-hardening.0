@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E9644103A
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Jun 2026 15:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FF343E486
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Jun 2026 15:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781623171; cv=none; b=sRvMF+LWpO2J6bjHaQ7IX541Rq15TYiRaXas36MsUkWTEWKGYRBII/5CnCBUTwHcmhZkxURJRsvKPmRDGyH3kipVdI5F3MgX+3m/WUeHsGdaOpPqMorapGtwUeqXeJn3LhzDGQ2tHZKLUSZevRC6lnLxswoQjgMKiTOYDXFLRdk=
+	t=1781623951; cv=none; b=YSWzHdaArM1duEExjtERGYFvVyek/VdfpYTjEX2qLlYhiUXnUHqOFrsWIf69PkGUJDxF45TSKUQME989HMaxTqBRUkOWkvPJzHcEfZKAOXdNSi74OQwec2gcwBMxEfIrQHNalwKYuCgxhSjLRTovwvDMQlCvC2p4DDUNQwZp2oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781623171; c=relaxed/simple;
-	bh=EtYGsRUkFNhb0Y0oOSVrLFk4xDKaf401bKvWgjPx3GQ=;
+	s=arc-20240116; t=1781623951; c=relaxed/simple;
+	bh=zINyCZMdcj3kCy5Uvk+asa1vmUJbFu6qhLQ0I5PyoB8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sZ60E0VqKErCtRjXddp63XkBR4yYFLZTBDhRyqYQ+hnE2o7cE9WFc31on/zNSDaXPYloa9YTvtCyDtzHRAXjpfHSWVn8rPML/TMiYFTr+prXzAiYSfyJle24/oNiTs/m4eoN9jyAEpvRbH7BJ3ZpKkFU+s75EMp7CeFtwo3pd3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ck1DRL22; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=D1tTqYxGSyZfvR3aYMPVb9MPz7vv17viuLs6n9Z7IrR98vAfFprrX1y7Wh08cJxnkrFIz5Er3nHQQox3MM/E80un9byeLPDci3Q4C6QCkn2WX5aY9YDeiH+gzW9P2eSYweTrdXAYi9VYmj9V1qZljjkzT/bcBYznYfB6E6XFyEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQl9OuSl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ck1DRL22"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C961F00A3A;
-	Tue, 16 Jun 2026 15:19:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQl9OuSl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395E41F000E9;
+	Tue, 16 Jun 2026 15:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781623169;
-	bh=r4HeNsdpZXcuGDpdJwc1l324i0d9msH0jiY923pAvrc=;
+	s=k20260515; t=1781623950;
+	bh=AGo8r3BkY6DeVzxrtsmPgLNvPJ5SlKgHNyOuJikhf2Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Ck1DRL22ljLe93iK/7HgtsYxeBKDxBCFPWNpfgWDBiVxkCWICUXwCIPlsaTKuJuhs
-	 biK6K8nc9I2zI8He0La3nV8IU8ak0Atra2CONHCbod28hTjnrKvyEfkj4VfeW53F1f
-	 GHQ3vk6KZDZD3RaqEf1baP32aHjSwcsvZMgaYvKICu+3us71lDvpfucBjbXqNpMP3t
-	 /QHtweoSA0bIaoRc6cbNqeqGC2oiiptTvR0x2HTdG2GRYQWsjg3jaaiy2CrPP2v0Sn
-	 hMxk+u60vSWW3+yjH/D02PCNUyXJ2gH95+b58HXM4lHcsFY1TOkWbafCI2y4I75VyO
-	 1xBe5AlPkpqTw==
-Message-ID: <70f4dcdf-c45f-47d3-91df-a7897bd86ff4@kernel.org>
-Date: Tue, 16 Jun 2026 17:19:22 +0200
+	b=XQl9OuSlMrEyGtDl5pvUamOsvh7LxrccFQL0/Izk51u+XHUACGSl9ChFXQN5itm4f
+	 u4LzXxoHK+QJABYkNwLCqNte5IyaMQquY6lUI3rUtkI/Ji6JORnPc9563nfwMG1NSU
+	 6+vkkDjRKOqa1BO9csiO1lGchrr/xa65SHx/WEA+T8IlYnsT7vlUrKI8AkD/mfrsAF
+	 exIv408tFBtdUeejymGFIuqcoOteL3psU95EgvUUo+4ZrtWJwgHpTdbu2kR6iOKveB
+	 sRH5PRFvezCZoVW/cPO7It5tM6xtAOOQy6i4Y+gL6fhSTU2WCGOMSDoSeq8GTgAkOl
+	 wUDR4SmYrLRkQ==
+Message-ID: <a56cd054-acb7-4386-9f22-816f82e55e82@kernel.org>
+Date: Tue, 16 Jun 2026 17:32:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -36,13 +36,13 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH RFC v8 01/24] mm: Introduce kpkeys
-To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Linus Walleij <linusw@kernel.org>,
+To: Kevin Brodsky <kevin.brodsky@arm.com>, Linus Walleij <linusw@kernel.org>
+Cc: linux-hardening@vger.kernel.org, Andrew Morton
+ <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
+ Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
  Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
  Matthew Wilcox <willy@infradead.org>, Maxwell Bland <mbland@motorola.com>,
  "Mike Rapoport (IBM)" <rppt@kernel.org>,
@@ -57,6 +57,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Thomas Gleixner <tglx@kernel.org>
 References: <20260526-kpkeys-v8-0-eaaacdacc67c@arm.com>
  <20260526-kpkeys-v8-1-eaaacdacc67c@arm.com>
+ <CAD++jLnURXzgAgkWCcYX0dLOLqHQw+gn96V1dzDa_0Aoi3430Q@mail.gmail.com>
+ <b4eb4ea8-f4d6-4be2-81b1-4a8a46abe94e@arm.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -103,233 +105,31 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260526-kpkeys-v8-1-eaaacdacc67c@arm.com>
+In-Reply-To: <b4eb4ea8-f4d6-4be2-81b1-4a8a46abe94e@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/26/26 13:15, Kevin Brodsky wrote:
-> kpkeys is a simple framework to enable the use of protection keys
-> (pkeys) to harden the kernel itself. This patch introduces the basic
-> API in <linux/kpkeys.h>: a couple of functions to set and restore
-> the pkey register and macros to define guard objects.
+>>> +static __always_inline u64 kpkeys_set_context(int ctx)
+>> Should ctx be unsigned here? I'm nor sure what a negativ context
+>> would mean.
+>> kpkeys_set_context(unsigned int ctx)
 > 
-> kpkeys introduces a new concept on top of pkeys: the kpkeys context.
-> Each context is associated to a set of permissions for the pkeys
-> managed by the kpkeys framework. kpkeys_set_context(ctx) sets those
-> permissions according to ctx, and returns the original pkey
-> register, to be later restored by kpkeys_restore_pkey_reg(). To
-> start with, only KPKEYS_CTX_DEFAULT is available, which is meant to
-> grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since this
-> is the only available pkey for now).
+> That's a good point, now that we say "context" and not "level" an enum
+> would be a better representation. I would directly use:
 > 
-> Because each architecture implementing pkeys uses a different
-> representation for the pkey register, and may reserve certain pkeys
-> for specific uses, support for kpkeys must be explicitly indicated
-> by selecting ARCH_HAS_KPKEYS and defining the following functions in
-> <asm/kpkeys.h>, in addition to the macros provided in
-> <asm-generic/kpkeys.h>:
+>     u64 kpkeys_set_context(enum kpkeys_ctx ctx);
 > 
-> - arch_kpkeys_set_context()
-> - arch_kpkeys_restore_pkey_reg()
+> ... unless we really need another layer of abstraction.
 
-Looking at this, and wondering about "why do we get registers involved in this
-API" I would probably have an interface like:
+Using an enum will also make it easier to just automatically update MIN and MAX
+values. Although, arguably, you can just assume that MIN will always be 0.
 
-	arch_kpkeys_enter_context()
-	arch_kpkeys_leave_context()
-
-Whereby you return a "struct kpkeys_state" or sth like that.
-
-You could either let the architecture define what's in the state, or
-alternatively store some generic data in there as well.
-
-struct kpkeys_state {
-	bool entered_context;
-	struct arch_pkey_state arch;
+enum kpkey_ctx {
+    KPKEY_CTX_DEFAULT = 0,
+    KPKEY_CTX_COUNT,
 };
 
-Maybe the "entered_context" or however you would want to call it could avoid the
-KPKEYS_PKEY_REG_INVAL (which confuses me ;) )?
-
-But the KPKEYS_PKEY_REG_INVAL usage confuses me. I understand the
-KPKEYS_GUARD_COND + kpkeys_restore_pkey_reg() one, but not the one where
-arch_kpkeys_set_context() would return that value.
-
-
-> 
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> ---
->  include/asm-generic/kpkeys.h |  17 ++++++
->  include/linux/kpkeys.h       | 122 +++++++++++++++++++++++++++++++++++++++++++
->  mm/Kconfig                   |   2 +
->  3 files changed, 141 insertions(+)
-> 
-> diff --git a/include/asm-generic/kpkeys.h b/include/asm-generic/kpkeys.h
-> new file mode 100644
-> index 000000000000..ab819f157d6a
-> --- /dev/null
-> +++ b/include/asm-generic/kpkeys.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef __ASM_GENERIC_KPKEYS_H
-> +#define __ASM_GENERIC_KPKEYS_H
-> +
-> +#ifndef KPKEYS_PKEY_DEFAULT
-> +#define KPKEYS_PKEY_DEFAULT	0
-> +#endif
-
-Do we currently expect an architecture to overwrite this? How does this interact
-with KPKEYS_CTX_DEFAULT?
-
-Nobody in this patch uses it, so maybe it should be added where actually needed.
-
-> +
-> +/*
-> + * Represents a pkey register value that cannot be used, typically disabling
-> + * access to all keys.
-> + */
-> +#ifndef KPKEYS_PKEY_REG_INVAL
-> +#define KPKEYS_PKEY_REG_INVAL	0
-> +#endif
-> +
-> +#endif	/* __ASM_GENERIC_KPKEYS_H */
-> diff --git a/include/linux/kpkeys.h b/include/linux/kpkeys.h
-> new file mode 100644
-> index 000000000000..0ce0db80b4ee
-> --- /dev/null
-> +++ b/include/linux/kpkeys.h
-> @@ -0,0 +1,122 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef _LINUX_KPKEYS_H
-> +#define _LINUX_KPKEYS_H
-> +
-> +#include <linux/bug.h>
-> +#include <linux/cleanup.h>
-> +
-> +#define KPKEYS_CTX_DEFAULT	0
-
-
-Agreed with enum.
-
-
-> +
-> +#define KPKEYS_CTX_MIN		KPKEYS_CTX_DEFAULT
-> +#define KPKEYS_CTX_MAX		KPKEYS_CTX_DEFAULT
-> +
-> +/*
-> + * ... is used to discard extra arguments - this allows users of this macro
-> + * to have set_arg default to void.
-> + */
-> +#define __KPKEYS_GUARD(name, set_context, restore_pkey_reg, set_arg, ...) \
-> +	__DEFINE_CLASS_IS_CONDITIONAL(name, false);			\
-> +	DEFINE_CLASS(name, u64,						\
-> +		     restore_pkey_reg, set_context, set_arg);		\
-> +	static inline void *class_##name##_lock_ptr(u64 *_T)		\
-> +	{ return _T; }
-> +
-> +/**
-> + * KPKEYS_GUARD_NOOP() - define a guard type that does nothing
-> + * @name: the name of the guard type
-> + * @cond_arg: an argument specification (optional)
-> + *
-> + * Define a guard type that does nothing, useful to match a real guard type
-> + * that is defined under an #ifdef. @cond_arg may optionally be passed to match
-> + * a guard defined using KPKEYS_GUARD_COND().
-> + */
-> +#define KPKEYS_GUARD_NOOP(name, ...)					\
-> +	__KPKEYS_GUARD(name, 0, (void)_T, ##__VA_ARGS__, void)
-> +
-> +#ifdef CONFIG_ARCH_HAS_KPKEYS
-> +
-> +#include <asm/kpkeys.h>
-> +
-> +/**
-> + * KPKEYS_GUARD_COND() - define a guard type that conditionally switches to
-> + *                       a given kpkeys context
-> + * @name: the name of the guard type
-> + * @ctx: the kpkeys context to switch to
-> + * @cond: an expression that is evaluated as condition
-> + * @cond_arg: an argument specification for the condition (optional)
-> + *
-> + * Define a guard type that switches to @ctx if @cond evaluates to true,
-> + * and does nothing otherwise. @cond_arg may be specified to give access to a
-> + * caller-defined argument to @cond.
-> + */
-> +#define KPKEYS_GUARD_COND(name, ctx, cond, ...)				\
-> +	__KPKEYS_GUARD(name,						\
-> +		       (cond) ? kpkeys_set_context(ctx)			\
-> +			      : KPKEYS_PKEY_REG_INVAL,			\
-> +		       kpkeys_restore_pkey_reg(_T),			\
-> +		       ##__VA_ARGS__, void)
-> +
-> +/**
-> + * KPKEYS_GUARD() - define a guard type that switches to a given kpkeys context
-> + *                  if kpkeys are enabled
-> + * @name: the name of the guard type
-> + * @ctx: the kpkeys context to switch to
-> + *
-> + * Define a guard type that switches to @ctx if the system supports kpkeys.
-> + */
-> +#define KPKEYS_GUARD(name, ctx)						\
-> +	KPKEYS_GUARD_COND(name, ctx, kpkeys_enabled())
-> +
-> +/**
-> + * kpkeys_set_context() - switch kpkeys context
-> + * @ctx: the context to switch to
-> + *
-> + * Switches to specified kpkeys context. @ctx must be a compile-time
-> + * constant. The arch-specific pkey register will be updated accordingly, and
-> + * the original value returned.
-
-Are these arch details and registers relevant? Ideally, we'd keep it very simple
-here ...
-
-> + *
-> + * Return: the original pkey register value if the register was written to, or
-> + *         KPKEYS_PKEY_REG_INVAL otherwise (no write to the register was
-> + *         required).
-
-... and here. Not sure if any caller cares about these details. Again, with some
-abstract state we could maybe handle that internally.
-
-"Return: the pkey state to pass to kpkeys_restore_pkey_reg" (or however that
-function will be called)
-
-> + */
-> +static __always_inline u64 kpkeys_set_context(int ctx)
-> +{
-> +	BUILD_BUG_ON_MSG(!__builtin_constant_p(ctx),
-> +			 "kpkeys_set_context() only takes constant values");
-> +	BUILD_BUG_ON_MSG(ctx < KPKEYS_CTX_MIN || ctx > KPKEYS_CTX_MAX,
-> +			 "Invalid value passed to kpkeys_set_context()");
-> +
-> +	return arch_kpkeys_set_context(ctx);
-> +}
-> +
-> +/**
-> + * kpkeys_restore_pkey_reg() - restores a pkey register value
-> + * @pkey_reg: the pkey register value to restore
-> + *
-> + * This function is meant to be passed the value returned by
-> + * kpkeys_set_context(), in order to restore the pkey register to its original
-> + * value (thus restoring the original kpkeys context).
-> + */
-> +static __always_inline void kpkeys_restore_pkey_reg(u64 pkey_reg)
-> +{
-> +	if (pkey_reg != KPKEYS_PKEY_REG_INVAL)
-> +		arch_kpkeys_restore_pkey_reg(pkey_reg);
-> +}
-> +
-> +static inline bool kpkeys_enabled(void)
-
-Is the enabled vs. supported intentional?
-
-> +{
-> +	return arch_supports_kpkeys();
-> +}
-> +
-
-
+Then, just reject anything < 0 or >= KPKEY_CTX_COUNT.
 
 -- 
 Cheers,
