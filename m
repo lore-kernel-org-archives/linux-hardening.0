@@ -1,49 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133FE41C314;
-	Tue, 16 Jun 2026 10:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C41230D40E;
+	Tue, 16 Jun 2026 10:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781605857; cv=none; b=LSblAqpcutiqjBWphQ3ZsK+Ro8aSU38BGZrr1WwFVR96vMQ7Z9zCS9yyXtzqzhKyufPeL5H6D+fqjtYfFQ11JgVOHWRMMG+DAWv4jWoW+7/hV6SFKBd9pghznJN/KSdXZYUgI9zd07/nUnPHeC/TpEjj9Y02C++qvL4UoOXpjXA=
+	t=1781605952; cv=none; b=UHC0s0dAeT+Qa0DmC3WuDHwbD92Yudk95aIcRmKrznDEMb+WsC52BrBQEJ8irn5ikHrf2UM41ebEE9W8dVurtT+88tJF0BuPqNC59ENNNw9YWuTqDIAIUiwS60on95PHf1kQab36oMn5tzXsk0z4rGlENKK4V6c6qQCi/42QhzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781605857; c=relaxed/simple;
-	bh=B7ujG2wAtwBoI8EMEA7TCT+Lnm2XPa8/9lhYLUhPF+o=;
+	s=arc-20240116; t=1781605952; c=relaxed/simple;
+	bh=QS7264d7E5K3+fnqdbxWEuO3uKgrIUv5mU32zMC2+gA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mh0488y3g3qht+Gfye6GuP5VViw+XJb+hi/N+0jToeUqwPuAv8U2saYzpku+k6gMTOdp95gSN06IKyISTFFGWgP6kJhUap0jDlI5Kmk0sCyajfNVXE2waENulzucxzuA2YhqrdlyQ1GdKpBFuWGy8TZ8pBV/Gdxcftx9LBv7K/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EvBe1hqa; arc=none smtp.client-ip=192.198.163.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=b8WzPY/ugFjVuP+VPAJ8J0OVNmnAxKC9DMOrQLZmMkEqEPuzebBf0yXIMaHt/I+it4P1/b0GqdQsKoCBGzuNUQ5CwJsjQ0CHgae/z5LmPlxS+NpZy7Drc3o03A4/H1M5cJNkSzC/pgcZquEaNSWBMWku9QtGhQTwoHFH1zlh+8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZqQKVA7n; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EvBe1hqa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZqQKVA7n"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781605856; x=1813141856;
+  t=1781605951; x=1813141951;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=B7ujG2wAtwBoI8EMEA7TCT+Lnm2XPa8/9lhYLUhPF+o=;
-  b=EvBe1hqa0d0IsCFD6yJ/5K+yIDwoiJ3hHfLdSNoCbJmMVYaHiGdV7sZD
-   bxreC0jsUefhYRujPu9E5n1Dpg/6PhN9YpPwsX4vbnQHTKKZfpEyQvoe3
-   e4UmXJM1AWySnrTJVfbBEkpEcIxSHCDbXQndg174Akf9cQ0gVTxJipZvd
-   oLEqj68YAlLPPvdsUd9Eryqd2aHGquu5Iummnb2r6RxuoCSjQBNEKjGwX
-   wZAWvbCkKaozL2iG6koYUaXbrzAsyUPMKVBrHLPdanRzzjcgaiEQklZW8
-   GWLAZJ2wkxicnI50aErkxnNbsrXSlhAknqd2SECzHjKlSvd9EO+3KMMdr
-   A==;
-X-CSE-ConnectionGUID: hBD60iRQT4qbavnwhzUHZw==
-X-CSE-MsgGUID: VcUkJXOSS1S2FiZKGd9NTQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="93038765"
+  bh=QS7264d7E5K3+fnqdbxWEuO3uKgrIUv5mU32zMC2+gA=;
+  b=ZqQKVA7nc1WtAOF0oRrsVkfSlAD4lsavTpZKpn2OAJ+JAY9auPy+5Xa4
+   gsb4/bPfKcmkQ5A3ybiOqaKN0v0HZfC4Gn253j3jVI3KXNd6UZ+xwr44h
+   zkSR0O7JCKQAv9A81Qt0uOpwt+4d/n/Cxw4DR6zeFzbu9kH0YEJREjpHa
+   jlVypMAtCGsMkCPN9xxPdLfqKYp2yjwonhESDYyNoR6twfBL15ZAdrxkV
+   CsScEjqLETf5vm4YkAzcBdo42fk5QzNFWEImNvd9Zj2BfvNh0GHOlKpEk
+   SJfkW94+N0TsQ55w9Y1JzYXw/ZeMBcALAjUpHqpLZPTinZSyOR14HGA4o
+   Q==;
+X-CSE-ConnectionGUID: lZpY9g+eS9eYiXU+T1kMGw==
+X-CSE-MsgGUID: cVrCkXR6QluqHKccNSgiPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="99939566"
 X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
-   d="scan'208";a="93038765"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 03:30:55 -0700
-X-CSE-ConnectionGUID: AM4MX+q9TFW+IWr7nIj58w==
-X-CSE-MsgGUID: 8xN9SZuxRaGYSzVvxbmmLA==
+   d="scan'208";a="99939566"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 03:32:30 -0700
+X-CSE-ConnectionGUID: TikQX9rpQA+Zk8GOrIVCzQ==
+X-CSE-MsgGUID: 3yzAtVzZTZ6KDPCd32AlNg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
-   d="scan'208";a="252038246"
+   d="scan'208";a="246854830"
 Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.153])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 03:30:52 -0700
-Date: Tue, 16 Jun 2026 13:30:49 +0300
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 03:32:27 -0700
+Date: Tue, 16 Jun 2026 13:32:24 +0300
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: rodrigo.alencar@analog.com
 Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com,
@@ -57,10 +57,10 @@ Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com,
 	Conor Dooley <conor+dt@kernel.org>,
 	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v3 06/12] iio: dac: ad5686: consume optional reset signal
-Message-ID: <ajEl2ZHlLixttNoN@ashevche-desk.local>
+Subject: Re: [PATCH v3 07/12] iio: dac: ad5686: add ldac gpio
+Message-ID: <ajEmOCh8hdmfTHKW@ashevche-desk.local>
 References: <20260616-ad5686-new-features-v3-0-f829fb7e9262@analog.com>
- <20260616-ad5686-new-features-v3-6-f829fb7e9262@analog.com>
+ <20260616-ad5686-new-features-v3-7-f829fb7e9262@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,21 +69,23 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260616-ad5686-new-features-v3-6-f829fb7e9262@analog.com>
+In-Reply-To: <20260616-ad5686-new-features-v3-7-f829fb7e9262@analog.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Jun 16, 2026 at 09:21:12AM +0100, Rodrigo Alencar via B4 Relay wrote:
+On Tue, Jun 16, 2026 at 09:21:13AM +0100, Rodrigo Alencar via B4 Relay wrote:
 
-> Add RESET pin GPIO support through an optional reset control, which is
-> local to the probe function. A reset pulse is manually generated after
-> the device is powered up.
+> If wired LDAC, should be held low when unused (pin is active-low), which
+> allows for synchronous DAC updates. This will be used to update all the
+> channels at the same time when adding buffer support.
 
 ...
 
-> +	fsleep(1); /* reset pulse: comfortably bigger than the spec */
+> +struct gpio_desc;
 
-What spec? Same comment basically, extend with the reference to the datasheet.
++ blank line to decouple generic declarations from local ones?
+
+>  struct ad5686_state;
 
 -- 
 With Best Regards,
