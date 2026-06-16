@@ -1,135 +1,108 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC0A413D99
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Jun 2026 10:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4D1425CEE;
+	Tue, 16 Jun 2026 10:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781604221; cv=none; b=HjnLjj86L/sfmVLJOurK+BcyZhjJidMIXRkPGguIULSHXEdzgJ+CAWvAo8LtLSPWaodjL3WqzmGbngAEsiqcXHKsVuSMVr5zfmaOBOuzrvyOLNYAv72iGgg++G1yzazfIREMUMeLPyXm7RLSyezdJPM9jMiXGZqBt/EKNBeQ7/E=
+	t=1781605771; cv=none; b=igwNhG+NNkd+G5W1xPeug2mDJ0qvua0Aw4M8jjNPKsyvr/t7Jn9tgLpaXLJzFOQfLC1X7y3t31qMF02iJ6JlL36MyQx9vHNOzpm1EAYYej5R6XTFR4nnMKOoJu413B/gTf/iuyYTZjqYkXyUYQyaZxymm6OCzGB9xKQHLdyLsKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781604221; c=relaxed/simple;
-	bh=cHY9Abcv4JeQfjc0VTlYZepQDXj06t3VGMBSC/q49yI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J/Rf1cSJ+ZKzI/6uw8k4iWF58mLte/Ll7jS6xPNBT8pXY+1IjC4kAZ5xGfeb/8hRLXyqUajmaHlQ76FV08us6gz14ZiAYpWz/SMYrtwPeXiWkVxKzLhS0xu5ZNtg7DawbPETkBrmtvTkpW7FFpwjwqDFccG/Ov5IFwjFMfhOvlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-45ef4223be7so2473516f8f.2
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Jun 2026 03:03:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781604217; x=1782209017;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G3J3dF/rleitNHrIVaZmT+xGJuXa5FDx3AO/xzdX7Ng=;
-        b=SadY0bRXtI/bvoXX70wNGILDOBaTDLSVxW+Z137n9O6zY68I9zlKQMw7Jqe1ycMmEm
-         ElMuKhx9aHOcU5uPhbA4aSYQyM5RJbQUxqIQCxFM0YAYonvFQsd07rtjeODhaNV4B6et
-         MKmxo3h6Nxi7/or9aeVFEpQfIgZpAzcLxN14HNbwO6tlnDCrWL3/8An8iZVuyPcextLl
-         r/zSUq/c8V2KszAUMdCkDqjnucxPLmYrOXPDbmHsyydBSfR+IOz+sW6p7u1r4WIYhMGc
-         YHMkbjQkxh4fU4+J7PRPjJVa5I8YCASB/NObZdKmTPDPdVAqAlRvg1twqzJ/XBln8kl9
-         pz2w==
-X-Forwarded-Encrypted: i=1; AFNElJ9IIzfyiUb4kKlSlnAeyRBIbEWf5wu/MiBMt4wWfGsHRtnnHgLxtvg2yIlsrIgIgjd8t3tdRgHmEXc5Q7jU3bE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzYfUszWZYOfs4hB+SwjAT37drPLDcWbBcl7hhoflXYPip0p7s
-	rCoSsxgEdt4bfSkpwaCIkcY2SQXT37XtEj5glaR0qM5PRUC1NlYcHXGp
-X-Gm-Gg: Acq92OEUTuEGpX90jWEfEs+A3YyClBmd/KQRYuqldmeodkPgaHUgPBvOzYz/0i/RCAF
-	2JvNrxAin6ZD2LC/XmZBnB8iRsiFIOQK2i0LD3SR9Sf+pzi+8fgI8pH5bLSJO6rMSXDpGS6zUFi
-	WrfEiL2iHwuda5r+YyHNIKbTT5E19civy+0IWoNe1ctI2tUcpJOts1Y8o8aBuZBVAgTfK1TrapY
-	BrBXLwGoH2QG17csL2o8s1EmXEFSwfLvcmr1V+41E0RpWAL1ef4Yvt1StrnY4DWrCCWSQsuEyCq
-	S56LBBVJTwSYejYT5s564FHJhnWAXgvfb9yJkByBTm98ID49WXk8fl1e5Kay6zoXpKZwxR4QFbF
-	hxGV+xNUHOi4Y83vkvVjELZ6snvnckR2YH72jHRqur+ncvV5ypIo4jALJO2htGRzAGv0t7Qj8xR
-	Q0IGEaMZ6FKdM4J7W63lQuj3DLGKl0aRZd3cUjVbdfK3IhS0GHdT2uV/K3Tnm/6H95s0msUQ==
-X-Received: by 2002:a5d:5906:0:b0:460:3233:beed with SMTP id ffacd0b85a97d-4619f31b6ddmr3918817f8f.41.1781604216985;
-        Tue, 16 Jun 2026 03:03:36 -0700 (PDT)
-Received: from im-t490s.redhat.com (89-24-35-102.nat.epc.tmcz.cz. [89.24.35.102])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2b0d4fsm46870652f8f.24.2026.06.16.03.03.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2026 03:03:36 -0700 (PDT)
-From: Ilya Maximets <i.maximets@ovn.org>
-To: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Ilya Maximets <i.maximets@ovn.org>,
-	Johan Thomsen <write@ownrisk.dk>
-Subject: [PATCH net] net: dst_metadata: fix false-positive memcpy overflow in tun_dst_unclone
-Date: Tue, 16 Jun 2026 12:03:29 +0200
-Message-ID: <20260616100332.1308294-1-i.maximets@ovn.org>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1781605771; c=relaxed/simple;
+	bh=ia2P2OC7AAQYxqoOSkKtV7D7+hDtxPaa3ogxt3k4Cw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gdFlQf2j8eDshOH3HVUQ2LWzlCEAvdq7FSaina05kBeQTC9DExxGZOCgZkMJpi2o6/iyzigcxUHYVVeddYOw/rVs1+hwDo+cWiTbCxo/Swg0MSSmIZznErHaSYlUSMi+In8aZQ30NyyV9lx/dHaaVGxiGoCSqrVn7Gls5oV2MVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AwEKyzpr; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AwEKyzpr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781605770; x=1813141770;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ia2P2OC7AAQYxqoOSkKtV7D7+hDtxPaa3ogxt3k4Cw0=;
+  b=AwEKyzprUkjnTmqNRD2bfQ1eaitR3NgmrL+voj/BCMlHbrTO0lIKTQzp
+   AkJSupO7g2m59pi4QRKRb3/4/drBWZdkN2J5LnDvQI60uUTW878zloX11
+   VuboZJQqDKQI2T2dk85MMGmtrrFPWbWRBk1rYOnITQFJRZ6tDchps27uF
+   0CwWckbq6Urgy1YmVpAigB4k/REXvxq05kqoIZ0A0JA+RAMwhrDrjYBvO
+   tggxOA5DSkzUn/kVnTHluJ+ENre6YApe0NofMEhLxl6w5RbMZpIBLWop4
+   SyfyjJo7GezlStjUzG9xNcDYFOMvEXjCwwDqqubV3JcvwGEcyvAb2t5Lk
+   w==;
+X-CSE-ConnectionGUID: aP77m4PNTTS99UaZ6+llMA==
+X-CSE-MsgGUID: QEUxiVB5THmNgpsOESBURQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="93748019"
+X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
+   d="scan'208";a="93748019"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 03:29:29 -0700
+X-CSE-ConnectionGUID: DNuA6ZG3R6GJzvcMdgVfGQ==
+X-CSE-MsgGUID: cbyy/BpcS/ubSimPBa6nCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
+   d="scan'208";a="247798375"
+Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.153])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 03:29:25 -0700
+Date: Tue, 16 Jun 2026 13:29:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Joshua Crofts <joshua.crofts1@gmail.com>
+Cc: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>,
+	rodrigo.alencar@analog.com,
+	Michael Auchter <michael.auchter@ni.com>, linux@analog.com,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v3 05/12] iio: dac: ad5686: add support for missing power
+ supplies
+Message-ID: <ajElghg9rnqm5ukt@ashevche-desk.local>
+References: <20260616-ad5686-new-features-v3-0-f829fb7e9262@analog.com>
+ <20260616-ad5686-new-features-v3-5-f829fb7e9262@analog.com>
+ <20260616113322.00005273@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260616113322.00005273@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-kmalloc_flex() in metadata_dst_alloc() sets __counted_by for the
-structure to the options_len, which is then initialized to zero.
-Later, we're initializing the structure by copying the tunnel info
-together with the options, and this triggers a warning for a potential
-memcpy overflow, since the compiler estimates that the options can't
-fit into the structure, even though the memory for them is actually
-allocated.
+On Tue, Jun 16, 2026 at 11:33:22AM +0200, Joshua Crofts wrote:
+> On Tue, 16 Jun 2026 09:21:11 +0100
+> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 
- memcpy: detected buffer overflow: 104 byte write of buffer size 96
- WARNING: CPU: X PID: Y at lib/string_helpers.c:1036 __fortify_report
-  skb_tunnel_info_unclone+0x179/0x190
-  geneve_xmit+0x7fe/0xe00
+...
 
-The issue is triggered when built with clang and source fortification.
+> >  	st->use_internal_vref = ret == -ENODEV;
+> >  	st->vref_mv = st->use_internal_vref ? st->chip_info->int_vref_mv : ret / 1000;
 
-Fix that by doing the copy in two stages: first - the main data with
-the options_len, then the options.  This way the correct length should
-be known at the time of the copy.
+> I'd use a macro from <linux/units.h> instead of just doing / 1000.
 
-It would be better if the options_len never changed after allocation,
-but the allocation code is a little separate from the initialization
-and it would be awkward and potentially dangerous to return a struct
-with options_len set to a non-zero value from the metadata_dst_alloc().
+In this case we use (MICRO / MILLI) as we don't have (yet?) the
+MILLIVOLTS_PER_VOLT and so on. Feeling like you want to add those?
 
-Another option would be to use ip_tunnel_info_opts_set(), but it is
-doing too many unnecessary operations for the use case here.
+...
 
-Fixes: 69050f8d6d07 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
-Reported-by: Johan Thomsen <write@ownrisk.dk>
-Closes: https://lore.kernel.org/netdev/CAKv6aAM8_EWgXScnKmKYm_4SwGDVBK++dzfP+Y6msUXbp99QUw@mail.gmail.com/
-Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
----
+> > +	fsleep(5); /* power-up time */
+> 
+> I'd recommend using a macro to define the sleep time, removing
+> the need for a comment.
 
-Johan, if you can test this one in your setup as well, that would
-be great.  Thanks.
+OTOH macro might hide the actual value. The comment is fine, but I would extend
+it with a reference to a data sheet page, table, section, et cetera.
 
- include/net/dst_metadata.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/include/net/dst_metadata.h b/include/net/dst_metadata.h
-index 1fc2fb03ce3f..f45d1e3163f0 100644
---- a/include/net/dst_metadata.h
-+++ b/include/net/dst_metadata.h
-@@ -164,8 +164,11 @@ static inline struct metadata_dst *tun_dst_unclone(struct sk_buff *skb)
- 	if (!new_md)
- 		return ERR_PTR(-ENOMEM);
- 
--	memcpy(&new_md->u.tun_info, &md_dst->u.tun_info,
--	       sizeof(struct ip_tunnel_info) + md_size);
-+	/* Copy in two stages to keep the __counted_by happy. */
-+	new_md->u.tun_info = md_dst->u.tun_info;
-+	memcpy(ip_tunnel_info_opts(&new_md->u.tun_info),
-+	       ip_tunnel_info_opts(&md_dst->u.tun_info), md_size);
-+
- #ifdef CONFIG_DST_CACHE
- 	/* Unclone the dst cache if there is one */
- 	if (new_md->u.tun_info.dst_cache.cache) {
 -- 
-2.54.0
+With Best Regards,
+Andy Shevchenko
+
 
