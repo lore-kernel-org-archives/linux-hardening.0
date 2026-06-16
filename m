@@ -1,46 +1,47 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010034.outbound.protection.outlook.com [52.101.61.34])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010007.outbound.protection.outlook.com [52.101.56.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF65D199FAC;
-	Tue, 16 Jun 2026 03:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4FD3C4572;
+	Tue, 16 Jun 2026 03:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.7
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781581469; cv=fail; b=GJHbh0WiiG29jUC5CRJt4SorFG7waiQsoK7SVh2x0TlQK1eSUbFWs+D62pcfMYmBAivKVZaxy3BvwOYU242M0qu9+v/rvWgYwLwXDi8xsavY2H6R63+8W4VMM9NnPM6bOrjKvfQRAyXmO7IceyQzo0oLCje7VACAxQRoNNA7uMY=
+	t=1781581477; cv=fail; b=L78ivxyUkdzQP/yvW7j5P6d/VxfBLbUC03bMfoTGbCOwxUzuqWH1TlqKuhenyn8bcpAcQVTN5Mx2ubfKKSrS9YOrqfEJLvsjeToC97nuxqJ8kN3R2V3AsrRGXri/2hwflhfGEVMOVodYBrGu3TdnLuS+Qma4/n5gpEVjsUeevYA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781581469; c=relaxed/simple;
-	bh=7SCOcROPC47x27c321P/jzELbQE82+1GLqXpixFDi6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fdATaf/3/8Gi24YiRYLVHl6T7IfxPvfhX/tsWyzg1agBPm2kFil4MAxlRmgAELXHbSqLnJ5y3RJ/nYCZmk26c3j8X0VHrwAJN5s3gnf17ONl2KCcO9LQadxGgw7jhN20iqFPkhCXEg6pZroRclNWqEc+A1BaTq38uYoUB+/Bueo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=T+v3jqOW; arc=fail smtp.client-ip=52.101.61.34
+	s=arc-20240116; t=1781581477; c=relaxed/simple;
+	bh=fYziD2JCA71chJ8csAOhdFgevIk163Kz/4mktR4obh4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tM64IIhm6YdgTJXrKXOpiqPDp15esr9dMv0wiInUZP9QO6SxfuhPOCaieXLBtQ0y8EqAbLBMeVFrgsp/RjjDlBiXHqJi8QsEAHdOCo6zm8lmCEzI08XECl88ruGqTiWJ2coP8LwEHjkmPJKVgurm1mzRIXvXTVLomEY/sEiyeyY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EFU3TVyl; arc=fail smtp.client-ip=52.101.56.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="T+v3jqOW"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EFU3TVyl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Dmw0ru8Dwd/Pf+s88V4d2JtSFg0f2W3P2oQzj92SE3NHiDeN7EWvGFug78HIFto09U8NtzMjlqRwRF1tAuojzfq0bRjwLlAcoGRayP2pJqvlc4m3warPQixRAWAmOvrzUn2YcrnEBYo5HzmK0ffE6cRcLj9KjjjfpbebPI+8mefpo3SEIv7AfgnOdPnocweUgwkd2qJ4/CG9T8KKP4GiNecE3YitD5L7Z/fITd7zahx+h9sUMBvOOLGT+y99GxntpuvX3AfSZaI2Goh9iB0MQCH8nXFJTuJsltr17Oh0+61lZVgR/qyUH2fU4U8x7PbvwZmkAH40x1pQbFHEu/qeAA==
+ b=OJxvoqz/x/HvdF6EK/bq0MkFc7fNwOUSzKWoJGcBPKDLiywpUr2OvMUdYmDXwi7utzWfQKdgp86pRURhFZeeL1OP39nOMatZaRqvlmibABDGY4ItNEKaUJej2HI6OAsmoWLXdzyt/Tc+owmOnzG3M9/Q+YfgXPiUSydUIdTeyz1r6jMJ5xjABhaIFNOGoDeiehgYFzNVo5vveK8SLWYbv0MpJAR4jTgArAzzTlcB0ahI4XAWatUq36UvSWh9FWMgXpYer9sL4ug8lIF+ijA+LxT1kTk9JhTTmgx5eEjdauTVxN2NsYOXWGlj7v6hcSgD+O36l1MLu0wfFiK9D7z96w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3qFjOW59QsRdd4uKat6dlqTNSb0rc35YXM0B/s1vU0c=;
- b=kIlr/4wYvcUWctsXLZY8t62qVWZOX9Cr4Gc38wRNfII/yw29SBAxBmBH5JliHMYsb2Y3C7GfxDTtvHqWl6oGE6VnOIbnHEYhBLpzSfxl5jeMnw4zoX8S0KFGkgCYBSWkdlp3xHRiK13ewR3yPM8MVjRl7p3iNfGulNe7/ZRV2IVrbSlDrAll8Ipvov4bYW7PVsIhVLL8sX56MNctcBpD+cVt+jNGWd57qWjo7COKdFbSwceSa4SgD/Mo6flR4ueMlQj2GIcXqtoTguaBzeLy1OeyvGxMOnjer2HQUh/GkDD37yrbAhggptKkoVftWrsmiymxNyfEdTvWZcibC1N3nA==
+ bh=kcZbxPGcYXYz7Wi5eDAG1pb2JFEUFfarDZN6c+PbE+s=;
+ b=l7DU409o6FWeOBC+BgRAYazu9LYssANTQGLsNfQ+7TmVWDqylA4gpVHGPidli+8XaD55tDmDvyacy2J/CxPW7zgYNowp2rxHbh/q27B4T/bC3bQp/eqE1e3sW2pjDk3Za1tNkAPwQILaqZ5dbCKyVAchv/vurKj86V/0kMLb2nRW6imTMhDs2J0L652bMDJO+he3ry7X5yrF+A53B/GhjZ7/Ry3/aHpWbsiqjplZxakW0BEZe9dUqA5N8mnVN+5voA07ku8rV6BZUjwdChidH/KRADP9vQBIcHkADmaAYRlbAgx58+GsGIK+MGIjChPokW4GsARy9PAWWBCvDoAu1g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3qFjOW59QsRdd4uKat6dlqTNSb0rc35YXM0B/s1vU0c=;
- b=T+v3jqOWs3dZoBBRXbKBA7XsWZeRMWy7tRpcJBPE8Qtnl6AIJX4OI0qVY+7IPC9ZeWUOphVfU3BwUYOJ/yv6uYovm13yAdbp4FvM4RAcocpz8wUGEbit847UGINiu16s2miT+YsfZYtsbifjK0G+W/El7zdp+M6RuMNw2sMWhVZ4HPTHwWIFQPdvJniFPrDFx0xxBbF/YluxV0Luk2gD2Z6WLh516B1qBvKyYDZi1Ttt/T8le0jrvG+Q4jupZc5gMe64EirjD8wQnyG7RjfRPwUN7ZvAY+zoVgcHDJJrw1fqRXMCwS3gB+PzTSvnLzXSWaEztB3sk6RKAfhS/KfPAg==
+ bh=kcZbxPGcYXYz7Wi5eDAG1pb2JFEUFfarDZN6c+PbE+s=;
+ b=EFU3TVyljpvAsoBoq2+Aa1thvOlo20arRZZYifjSBmoMYhpBN350E4WFjRJRxt68YHNG/XHmGaqQkOpDKIKpO7HTArvAAf/RCV+px07XtiZwviC3ddZ1SOU+O+02mK5ZVygBZZHPJgGGOfNlxururxj8xm4doQdKnFbIfaSMq2ZkBjkQQtDr3lJ3xX1tmX/0Lbs0PcEYUMkjjPQTtYbiB71lyjxOw7JesE1OvqXCcTrNOhzDaPZQM2iQ/SZh2JU3iYI9CVWngMXbiL950fuBD1Yhm8WW5EIjBczFeROdMPL/jFWh9s8NbJB7F1uvQjUrPpdbWaNqOVFO5Oia/gW3OA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from SJ0PR12MB6733.namprd12.prod.outlook.com (2603:10b6:a03:477::9)
- by DS0PR12MB6535.namprd12.prod.outlook.com (2603:10b6:8:c0::16) with
+ by DM4PR12MB6063.namprd12.prod.outlook.com (2603:10b6:8:b1::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Tue, 16 Jun
- 2026 03:44:23 +0000
+ 2026 03:44:28 +0000
 Received: from SJ0PR12MB6733.namprd12.prod.outlook.com
  ([fe80::f00d:2f6b:6f9b:8f97]) by SJ0PR12MB6733.namprd12.prod.outlook.com
  ([fe80::f00d:2f6b:6f9b:8f97%6]) with mapi id 15.21.0113.015; Tue, 16 Jun 2026
- 03:44:23 +0000
+ 03:44:28 +0000
 From: Kai-Heng Feng <kaihengf@nvidia.com>
 To: rafael@kernel.org,
 	shuah@kernel.org,
@@ -53,15 +54,16 @@ Cc: julianbraha@gmail.com,
 	csoto@nvidia.com,
 	mochs@nvidia.com,
 	Kai-Heng Feng <kaihengf@nvidia.com>
-Subject: [PATCH v2 0/4] ACPI: APEI: GHES: Add NVIDIA Vera CPER decoder and tests
-Date: Tue, 16 Jun 2026 11:44:06 +0800
-Message-ID: <20260616034410.70675-1-kaihengf@nvidia.com>
+Subject: [PATCH v2 1/4] ACPI: APEI: GHES: Refactor Grace decoder helpers
+Date: Tue, 16 Jun 2026 11:44:07 +0800
+Message-ID: <20260616034410.70675-2-kaihengf@nvidia.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260616034410.70675-1-kaihengf@nvidia.com>
+References: <20260616034410.70675-1-kaihengf@nvidia.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI2P153CA0024.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:190::13) To SJ0PR12MB6733.namprd12.prod.outlook.com
- (2603:10b6:a03:477::9)
+X-ClientProxiedBy: SG2P153CA0003.APCP153.PROD.OUTLOOK.COM (2603:1096::13) To
+ SJ0PR12MB6733.namprd12.prod.outlook.com (2603:10b6:a03:477::9)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,97 +71,315 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB6733:EE_|DS0PR12MB6535:EE_
-X-MS-Office365-Filtering-Correlation-Id: fe2bedd5-8e26-4eaa-a2d5-08decb598e00
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB6733:EE_|DM4PR12MB6063:EE_
+X-MS-Office365-Filtering-Correlation-Id: 687a47fd-00f6-4ba2-9f69-08decb599148
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|23010399003|18002099003|6133799003|56012099006|11063799006;
+	BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|18002099003|22082099003|11063799006|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	XEojVsDMjryw9K5kKQjT4zYh7zldNwtzi7ZEF6cQKeQtNGlo1MAalVUadRpv4nQIOE8L18FiuKzVtUy/D6vE9zI1WSkaw4leYx43I7RSM1Mm0TQlXuBX2tj9hdso8oeN2XRvZ8QcU7HBRaUBDm64oJuhjH5hG3ym1yRTmb9G7FqdYdMyuAwEHASo3k22kb2RweY7LMvzyR2YDhr4NxWqO/W0w5GYPw/xZM4NWx7bvwcYf1chxF10rXf2AHoG1fKNYi6HMUm7hhdMnX1XDO1D9PT0v//nM1Gschy1ZHFJGEUmP7n8kkyC0KKsd5iSxa/Eq+ZPLLdY39fk/fYd7Gyo+IE+Eum2hzxqx0xIF0zC17VIT2kFtP5GMfn/5BKw/iA+l6FonVmPMI0/HoNY0QWuoVoVpVakTowbJKWLvqHvOYyTXfElA7qwFegWgqYp0qzvuPhy14xbptlfhVsOyUEhCjZprHTW5GvsQQyEwCVFDyK+EI+j/Q9qq03eKBs0Yv2yKuTyS+G/BHyanro7OJG+CBzPGgfGbkis4+amPn0+y6xHvdVwt67VKLlQClPdlOHIMcbY5c4T0mnFqpwrpaEfEjTuHp6ziZdAJ5mMCwHT0bMDFjaBwVc2GRT8Pb1+l77g42vKhP6hRvK1DQKv7SHfNi5DrKSstljGA3OeSsB60n7JNzS0cQGLz+Wnt5ydJoYc
+	iXg8GBP5V7uUdSe4vo6herlUEYDW5TxoJiW3UJ1/hGry3MIgxg5NgvGXHmsXjyDqyJwCl/2Ar1ql2cCJA2zLTNLkgxrjS2sePR+YGxFOlzNE7KrspMNk6dCFqesOMK71SABWJ8rn3Gpw4DxJ2qGDuxZq6mzsfDshYbj71CLe0qgsMQpkADMGN2cH2xgFmMhnX6bEscZhx9Q+uy/tUvTCGNyy8+SOHG7Ah3d3kAFTAr6pbISoUFzXgqSQT9qOEGYhwh9lOJKREK/oeuIIxsLZ7tPtdBLmM8DCSjGIerFEXKPpjxO2xhWtRiVih2hbjuzUbM5WOFbIlVsICUc7ynDLoZwuNLs5N3ZhuMPF17+GQqpK6VewLTi8Cf420lePQyCLoM3ZCEHrpGgeCq1Leljykal4UzOJkt8kdmlFPs8wAZt0tzFnEEXxJD4vso/9U7JxT4/a/RnOcguTCwpIcU688K1dZK2cU1wqeT05q9NY2jLYpKedniTUImnfTYnHC38nkea/810HrSaOPBg8fyjuRGTB2ADV2/HaE66Nz2+FNQo/0d/hUKnF1nJ+WkW0csN1pl7lTVf9srh2FlBZu8hxvuNvTv28kla2fxgdzFpXLUOWNGmxLVayqJ8X6j42uow60SFTCCxMEedvXjY1DXRz+2eKQEun5HDW+0INTkwcHdqvHeOdWItDNGa59BGTteAY
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB6733.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(23010399003)(18002099003)(6133799003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB6733.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(18002099003)(22082099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qubjsoLTIqEECgKniLVrlNuzYX1R26qh5ei5SN6SBltAQidpnJYQWQDeFBKz?=
- =?us-ascii?Q?TZWQPjfc/m5NNxsZe//BNswCqr66L3wBVOaER5bgLUL5H/iu3BnG9lj4bxk+?=
- =?us-ascii?Q?4tXCINzZM1HPN21yJmXaK4eo9arQzgkkbuT47Q9lGMXbhzSHKlsqBIyNYDup?=
- =?us-ascii?Q?xi3qRXWCMEXIwTXeTQDvUdbtf7yZqyEGuEEhGyfejBVEH9ijWimHW/sirzvk?=
- =?us-ascii?Q?EA0pIfwHS/+ELVRA/GZhnr9kEfHIS/CEcOwvT2jpJCfRV9tkM7Cn0LIGjI9t?=
- =?us-ascii?Q?pjfKRovgBsykBYLWt/bGMfE5lVpOrVrzcZjkmQ3Mv2bxNQSi260qHJ60bojA?=
- =?us-ascii?Q?fNKHmVy5Gd7ryIXJwDmt7Smf/AFuiehVALZOuK/MAs0vPg7dL4w6tUlGTfbk?=
- =?us-ascii?Q?QGhurxqQKiL8NYxbW4RTEmBST4hGtrVfRyKpmx3C7Uy2G1gz9HZmOH6sw+N1?=
- =?us-ascii?Q?MqezLVyf0vRJ+p0CkSe9s1dFcN0NWIIaiTCMNwi4FD94pU6LGLkeyn3zXpww?=
- =?us-ascii?Q?QwDlqx9QsvEJUwcHvaZUPrKCbSoWqCl1+lVQ/dgReGAKk/xS0E4e8G9xuxYa?=
- =?us-ascii?Q?O0aL98Nu86QJ7YjJtkLKSFzQRSXHQHmWwPOqwlq6c3h/xHjwaBip2kn+CprY?=
- =?us-ascii?Q?D1Ggwk2OaYML1MEojeMWkua+zL48vR093aTk9U4sjy4621WxwbCbFsxdlyU9?=
- =?us-ascii?Q?Dyiy452/MOPc8EYnhm4YdxHPTnac13T5KDK+sVIblFPfBEM0o5aqr8mma3Y6?=
- =?us-ascii?Q?OxfRYqYYM1ZeI2UKAPFOuPVXJTJld43eUnJNASFef6dHnvSdrVFxzYm2gkXz?=
- =?us-ascii?Q?q65Nu56r/ItKtBNmXxVheHQdI4SsPF2K+MnA74NuF44EletxexW8pt3mb3WK?=
- =?us-ascii?Q?m5holFmweX6+bgRTsG4Rdx1zX9QmMVMqLmYtOu74be5w9OVWnk4aP0gJl9Pd?=
- =?us-ascii?Q?xdlgwUXXckie4cc4loZcrYk8QiPeumxDo8Bieyj6/gpUVZE//xHNMyeQjFmr?=
- =?us-ascii?Q?UgUxQZSakni5BGzg0z91CpnkNodPyIjxBEVEqXYXyo13cOEbClsD+UTNJUGU?=
- =?us-ascii?Q?j7Y6ioDV/vosqYi06VDAw040QvNYgv93+Dm4I+KKdLWweAyfUy7GCqe7EgdI?=
- =?us-ascii?Q?z7+eGlsTd1GryYy9Gu+qmCGpzZeqLGsJSqP4cn3U12ES7AZDhXszBuwlXkMz?=
- =?us-ascii?Q?eS3klCeCvKE620f/HgvFrKAqUMPFqBH9Ez5nsBL2iE7k641Xxmn2Jr27jhDa?=
- =?us-ascii?Q?dXfOD5PePUc17olP2gxw3kuCjnhxgHK/qDoixF+I87YmQH110hroJL+Vo+mr?=
- =?us-ascii?Q?DSIoiFEdgUCQUqicNcJSmDMEANq3ESjJHaGtX2LOCt9k0/WbSPYxcZzNmebc?=
- =?us-ascii?Q?DqMe4UK+ilnzbZFao1VqiqEt1veRw0uc0zbjZTK8x4c/f1nLNPJOTUTmi9Zf?=
- =?us-ascii?Q?D2srTgl3zd698EZi5ujxXUZCGciB0Zylxqrv80vaHf5JUNaHy5ZVxeS86O2z?=
- =?us-ascii?Q?iu5lf2WziLMNuZqyOhy1qkfmV7q2WYwJM0tCnlZlt1/EcfAA1h8AD728FTfV?=
- =?us-ascii?Q?jf+OZIQmroKPUaohIxqJZhFkM2Sa+BFMn3hI52VdTMtHwpWpTnTPaYWp1zuE?=
- =?us-ascii?Q?3u7MeVcjygG7pjyE7agMZitEp6kSuct3HIYqiew/rPtRSRxSK6d/V9f9mYSs?=
- =?us-ascii?Q?ByLefCUYYc753t6h/rZ73U12Sd5xOkgtQK2d4zkXXgMx/bpA/9FSllNE4JTH?=
- =?us-ascii?Q?D/6MyK5luw=3D=3D?=
+	=?us-ascii?Q?u5WIi2NGD18edWtqFDWYN+06Pp+GhlLhAfcUvWJr55J/wgCq6s6oMjeLyEBG?=
+ =?us-ascii?Q?p8RuDWLB+hTfPJHd3IVBddLDFp5fXtNwGjuscRtooy5MxRi8RsGbXc4AgIe2?=
+ =?us-ascii?Q?OVpJXzYUfywAOh5M5AYFdo9D89RAFPX60/HuY1m/0thzLVB3+X3W8Lt+Hp65?=
+ =?us-ascii?Q?3yXGKCKdB3irjj2Y5DFVoMnvX8Twfnws1ekXmWOdeb0g9VRlJNhQiWahdDjd?=
+ =?us-ascii?Q?j1uTtufBdq/zRBpm2tPozgclr/GMZzODSwu0GBb1XRQWnyMltEcPP+TfCM0l?=
+ =?us-ascii?Q?TW/DZUStfx8rcqKFvpEug3ebVdC7qXZfF59HMjGqZlu3s6sN2CFjBOL8iIbg?=
+ =?us-ascii?Q?0ma60MviYK17rPTg9Cubiz/D7vbtOxYj6XGD2UDR/GXCll1EvtXV44iQDi9o?=
+ =?us-ascii?Q?ApVaDJzUqmcCDewEKysfTTmSMJNIDCa4jcccmEzTZvB00wMy7aE53MHFkUhV?=
+ =?us-ascii?Q?Qzx1H66O2BzRTBlcdGCJks65Sl8jD8AQvdLq9eS3j21YUAysqNWW40NZtVLT?=
+ =?us-ascii?Q?nS2Hb4a31QPzVC+UN5N7j/Bh+/LmuhP1S3A5cG3s52jVzRTXXexiWX/pg9on?=
+ =?us-ascii?Q?z4Zcnef+hTiwCQxvtACE7rK+OjZc/hoU07EZGtL82/yGP5S96u3ueBgUek+p?=
+ =?us-ascii?Q?yQNqHAEuaLy9AjcfMznqS45d8c6/lnHvMBHkVuBMVNYfukevI12rokiHcPKT?=
+ =?us-ascii?Q?PUSSiErj4S0CAeGYJbHKx4F3hhSRf6sPIDQMs2qAHbX+O8SEzBcu90Tz55Wn?=
+ =?us-ascii?Q?R0QR5iDBhLtsgK8A4l46mve40GVWQu3zqNt3JW8EaC/kUyCyxE+UZxwADVwm?=
+ =?us-ascii?Q?1H+ey5fX5NmDPs4vxr2shvLGO+1o3hkC8n13kJPfmiLOLo/QR052GADgwBvE?=
+ =?us-ascii?Q?FDz5uJ3ZAy8S4ppTkNllv9Me2Et4hgey99qGV+il2mVsHMYSvyp7jcGuGvQd?=
+ =?us-ascii?Q?RAJOW2vbZjNxhu+jQRJfLhIoRLV4gcQQX9roi7mwEhTkvYuOuX+ZXLEAPVeM?=
+ =?us-ascii?Q?YLXNzrTjAEpoaOT8VjxErk+V7Rd7S3LImb6aAgMOElXBq3KVTqeRRsyGVhWw?=
+ =?us-ascii?Q?kTQvzBRzaqRB4GU6JoERBZbVOiIdsKx817zb83yV25fYy57LrsI7Eq+PMUfR?=
+ =?us-ascii?Q?iDs7hThxkbEjq7Jukx0IyoFLqT2gcYRnW1827mjhzWSeLQstR3sjdC9SbEnp?=
+ =?us-ascii?Q?L67xVtvK268MN0l/bTMoJa7gC+5BN0Y/tb5p98h6RG719EclRpiiuTBnhdg+?=
+ =?us-ascii?Q?UcwgrFZNIl+Xa978uyp6MnDxvbv5JeOqqw9lPu0Z67AYbEfP/LKGN9wtB/1t?=
+ =?us-ascii?Q?hoh18VnoBvbdxAmf3wZZZAATBS++qVn1q+k8cgffSmNhurnuUwDFpqnog+Fc?=
+ =?us-ascii?Q?Y1Aw2eoAM/M6i7s+BFaEC+dZTTrrGvikV3J7hiAiHwNWNecNhySOD4VLXaLA?=
+ =?us-ascii?Q?kU4wopOYHJMs26IJTbi46tjDjhVnUkh+4DTulKKbwjBsYMbfjVKPIsr8IPUU?=
+ =?us-ascii?Q?DBPPej/OcM8Z6mPVibSgfAlDE8KVMh6uSAbuFWxqL1wifLg5iGcDid9Z72q2?=
+ =?us-ascii?Q?yCYVtIIxYamJ8lKKHpDe2DVO8E8ee1PIYe4IrfkNJmK+ZaHTwdszU5RyDQDo?=
+ =?us-ascii?Q?ubyXHCzMp082j8Y24Q151pIkp3uCPKuyms4sLAF9AE/Dlwu7vQWudImXQL64?=
+ =?us-ascii?Q?DYcUgIz5r3+wIOG7r052gwwtLrGdBZe+9eXhN8+wrR98AsgVIDt8Xca2lQs4?=
+ =?us-ascii?Q?MSSbq5KQyQ=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe2bedd5-8e26-4eaa-a2d5-08decb598e00
+X-MS-Exchange-CrossTenant-Network-Message-Id: 687a47fd-00f6-4ba2-9f69-08decb599148
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB6733.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2026 03:44:23.0899
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2026 03:44:28.5555
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OgXN1YYuQzs3g7eQJGIX9OowLw4j0wN0rwY2dnvQBpC+aTcD4K7Ed4x5xiXBJX7YpxXc932y7cFMM+BDYmxqhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6535
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ni4fZcO0+SlvfVaFCmZ60B87D9KoFsW8pFgE185v176x6FRRf8klLEOZRzlKoUVqelNq9oAI1ss7UH2WCCziuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6063
 
-Vera is NVIDIA's next-generation server SoC. It reports hardware
-errors via ACPI GHES using a CPER section format distinct from the
-existing Grace section. Without this series, firmware-reported errors
-on Vera platforms are received but not decoded.
+Split the Grace CPER processing into a separate decode step and a
+print step so the parser can be exercised by KUnit without a live
+ACPI device. Introduce ghes-nvidia.h to hold shared types that the
+Vera decoder added in the next commit will also reference.
 
-Patch 1 refactors the Grace decoder to separate parsing from logging,
-preparing it for testability and for sharing types with the new Vera
-decoder.
+Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
+---
+v2:
+ - No change.
 
-Patches 2-4 add the Vera decoder, KUnit coverage for both decoders,
-and an EINJ-based kselftest for end-to-end validation on real hardware.
-
-Kai-Heng Feng (4):
-  ACPI: APEI: GHES: Refactor Grace decoder helpers
-  ACPI: APEI: GHES: Add NVIDIA Vera decoder
-  ACPI: APEI: GHES: Add Grace and Vera KUnit coverage
-  selftests: firmware: Add NVIDIA GHES EINJ selftest
-
- drivers/acpi/apei/Kconfig                     |  17 +-
- drivers/acpi/apei/Makefile                    |   1 +
- drivers/acpi/apei/ghes-nvidia-test-fixtures.h | 233 ++++++
- drivers/acpi/apei/ghes-nvidia-test.c          | 704 ++++++++++++++++++
- drivers/acpi/apei/ghes-nvidia.c               | 480 ++++++++++--
- drivers/acpi/apei/ghes-nvidia.h               |  63 ++
- tools/testing/selftests/firmware/Makefile     |   4 +-
- tools/testing/selftests/firmware/config       |   5 +
- tools/testing/selftests/firmware/einj_lib.sh  | 189 +++++
- .../selftests/firmware/ghes_nvidia_einj.sh    | 144 ++++
- .../firmware/ghes_nvidia_einj_profiles.sh     |  46 ++
- 11 files changed, 1838 insertions(+), 48 deletions(-)
- create mode 100644 drivers/acpi/apei/ghes-nvidia-test-fixtures.h
- create mode 100644 drivers/acpi/apei/ghes-nvidia-test.c
+ drivers/acpi/apei/ghes-nvidia.c | 148 +++++++++++++++++++++-----------
+ drivers/acpi/apei/ghes-nvidia.h |  38 ++++++++
+ 2 files changed, 137 insertions(+), 49 deletions(-)
  create mode 100644 drivers/acpi/apei/ghes-nvidia.h
- create mode 100644 tools/testing/selftests/firmware/einj_lib.sh
- create mode 100755 tools/testing/selftests/firmware/ghes_nvidia_einj.sh
- create mode 100755 tools/testing/selftests/firmware/ghes_nvidia_einj_profiles.sh
 
+diff --git a/drivers/acpi/apei/ghes-nvidia.c b/drivers/acpi/apei/ghes-nvidia.c
+index 597275d81de8..af445152def0 100644
+--- a/drivers/acpi/apei/ghes-nvidia.c
++++ b/drivers/acpi/apei/ghes-nvidia.c
+@@ -12,7 +12,10 @@
+ #include <linux/uuid.h>
+ #include <acpi/ghes.h>
+ 
+-static const guid_t nvidia_sec_guid =
++#include <kunit/visibility.h>
++#include "ghes-nvidia.h"
++
++static const guid_t nvidia_grace_sec_guid =
+ 	GUID_INIT(0x6d5244f2, 0x2712, 0x11ec,
+ 		  0xbe, 0xa7, 0xcb, 0x3f, 0xdb, 0x95, 0xc7, 0x86);
+ 
+@@ -25,10 +28,7 @@ struct cper_sec_nvidia {
+ 	u8	number_regs;
+ 	u8	reserved;
+ 	__le64	instance_base;
+-	struct {
+-		__le64	addr;
+-		__le64	val;
+-	} regs[] __counted_by(number_regs);
++	struct nvidia_ghes_grace_reg regs[] __counted_by(number_regs);
+ };
+ 
+ struct nvidia_ghes_private {
+@@ -36,73 +36,123 @@ struct nvidia_ghes_private {
+ 	struct device		*dev;
+ };
+ 
+-static void nvidia_ghes_print_error(struct device *dev,
+-				    const struct cper_sec_nvidia *nvidia_err,
+-				    size_t error_data_length, bool fatal)
++VISIBLE_IF_KUNIT
++int nvidia_ghes_decode_grace(struct device *dev, const void *buf,
++			     size_t len,
++			     struct nvidia_ghes_decoded *decoded)
+ {
+-	const char *level = fatal ? KERN_ERR : KERN_INFO;
++	const struct cper_sec_nvidia *nvidia_err = buf;
+ 	size_t min_size;
+ 
+-	dev_printk(level, dev, "signature: %.16s\n", nvidia_err->signature);
+-	dev_printk(level, dev, "error_type: %u\n", le16_to_cpu(nvidia_err->error_type));
+-	dev_printk(level, dev, "error_instance: %u\n", le16_to_cpu(nvidia_err->error_instance));
+-	dev_printk(level, dev, "severity: %u\n", nvidia_err->severity);
+-	dev_printk(level, dev, "socket: %u\n", nvidia_err->socket);
+-	dev_printk(level, dev, "number_regs: %u\n", nvidia_err->number_regs);
+-	dev_printk(level, dev, "instance_base: 0x%016llx\n",
+-		   le64_to_cpu(nvidia_err->instance_base));
+-
+-	if (nvidia_err->number_regs == 0)
+-		return;
+-
+-	/*
+-	 * Validate that all registers fit within error_data_length.
+-	 * Each register pair is two little-endian u64s.
+-	 */
++	if (!buf || !decoded)
++		return -EINVAL;
++	if (len < sizeof(*nvidia_err)) {
++		if (dev)
++			dev_err(dev, "Section too small (%zu < %zu)\n",
++				len, sizeof(*nvidia_err));
++		return -ENODATA;
++	}
++
+ 	min_size = struct_size(nvidia_err, regs, nvidia_err->number_regs);
+-	if (error_data_length < min_size) {
+-		dev_err(dev, "Invalid number_regs %u (section size %zu, need %zu)\n",
+-			nvidia_err->number_regs, error_data_length, min_size);
+-		return;
++	if (len < min_size) {
++		if (dev)
++			dev_err(dev,
++				"Invalid number_regs %u (section size %zu, need %zu)\n",
++				nvidia_err->number_regs, len, min_size);
++		return -ENODATA;
+ 	}
+ 
+-	for (int i = 0; i < nvidia_err->number_regs; i++)
++	memset(decoded, 0, sizeof(*decoded));
++	decoded->format = NVIDIA_GHES_FORMAT_GRACE;
++	memcpy(decoded->signature, nvidia_err->signature, sizeof(nvidia_err->signature));
++	decoded->signature[sizeof(nvidia_err->signature)] = '\0';
++	decoded->error_type = le16_to_cpu(nvidia_err->error_type);
++	decoded->error_instance = le16_to_cpu(nvidia_err->error_instance);
++	decoded->severity = nvidia_err->severity;
++	decoded->socket = nvidia_err->socket;
++	decoded->number_regs = nvidia_err->number_regs;
++	decoded->instance_base = le64_to_cpu(nvidia_err->instance_base);
++	if (nvidia_err->number_regs)
++		decoded->grace_regs = nvidia_err->regs;
++
++	return 0;
++}
++EXPORT_SYMBOL_IF_KUNIT(nvidia_ghes_decode_grace);
++
++VISIBLE_IF_KUNIT
++int nvidia_ghes_grace_reg_pair(const struct nvidia_ghes_decoded *decoded,
++				      unsigned int index, u64 *addr, u64 *val)
++{
++	const struct nvidia_ghes_grace_reg *regs;
++
++	if (!decoded || decoded->format != NVIDIA_GHES_FORMAT_GRACE || !addr || !val)
++		return -EINVAL;
++	if (index >= decoded->number_regs)
++		return -ERANGE;
++
++	regs = decoded->grace_regs;
++	*addr = le64_to_cpu(regs[index].addr);
++	*val = le64_to_cpu(regs[index].val);
++
++	return 0;
++}
++EXPORT_SYMBOL_IF_KUNIT(nvidia_ghes_grace_reg_pair);
++
++static void nvidia_ghes_print_grace(struct device *dev,
++				    const struct nvidia_ghes_decoded *decoded,
++				    bool fatal)
++{
++	const char *level = fatal ? KERN_ERR : KERN_INFO;
++	u64 addr, val;
++
++	dev_printk(level, dev, "signature: %s\n", decoded->signature);
++	dev_printk(level, dev, "error_type: %u\n", decoded->error_type);
++	dev_printk(level, dev, "error_instance: %u\n", decoded->error_instance);
++	dev_printk(level, dev, "severity: %u\n", decoded->severity);
++	dev_printk(level, dev, "socket: %u\n", decoded->socket);
++	dev_printk(level, dev, "number_regs: %u\n", decoded->number_regs);
++	dev_printk(level, dev, "instance_base: 0x%016llx\n", decoded->instance_base);
++
++	for (int i = 0; i < decoded->number_regs; i++) {
++		if (nvidia_ghes_grace_reg_pair(decoded, i, &addr, &val))
++			break;
+ 		dev_printk(level, dev, "register[%d]: address=0x%016llx value=0x%016llx\n",
+-			   i, le64_to_cpu(nvidia_err->regs[i].addr),
+-			   le64_to_cpu(nvidia_err->regs[i].val));
++			   i, addr, val);
++	}
+ }
+ 
+ static int nvidia_ghes_notify(struct notifier_block *nb,
+ 			      unsigned long event, void *data)
+ {
+ 	struct acpi_hest_generic_data *gdata = data;
++	struct nvidia_ghes_decoded decoded;
+ 	struct nvidia_ghes_private *priv;
+-	const struct cper_sec_nvidia *nvidia_err;
++	const void *payload;
+ 	guid_t sec_guid;
++	u32 len;
++	int ret;
++	bool fatal;
+ 
+ 	import_guid(&sec_guid, gdata->section_type);
+-	if (!guid_equal(&sec_guid, &nvidia_sec_guid))
++	if (!guid_equal(&sec_guid, &nvidia_grace_sec_guid))
+ 		return NOTIFY_DONE;
+ 
+ 	priv = container_of(nb, struct nvidia_ghes_private, nb);
+-
+-	if (acpi_hest_get_error_length(gdata) < sizeof(*nvidia_err)) {
+-		dev_err(priv->dev, "Section too small (%d < %zu)\n",
+-			acpi_hest_get_error_length(gdata), sizeof(*nvidia_err));
++	len = acpi_hest_get_error_length(gdata);
++	payload = acpi_hest_get_payload(gdata);
++	fatal = event >= GHES_SEV_RECOVERABLE;
++
++	ret = nvidia_ghes_decode_grace(priv->dev, payload, len, &decoded);
++	if (ret) {
++		dev_err(priv->dev,
++			"Malformed NVIDIA CPER section, error_data_length: %u, ret: %d\n",
++			len, ret);
+ 		return NOTIFY_OK;
+ 	}
+ 
+-	nvidia_err = acpi_hest_get_payload(gdata);
+-
+-	if (event >= GHES_SEV_RECOVERABLE)
+-		dev_err(priv->dev, "NVIDIA CPER section, error_data_length: %u\n",
+-			acpi_hest_get_error_length(gdata));
+-	else
+-		dev_info(priv->dev, "NVIDIA CPER section, error_data_length: %u\n",
+-			 acpi_hest_get_error_length(gdata));
+-
+-	nvidia_ghes_print_error(priv->dev, nvidia_err, acpi_hest_get_error_length(gdata),
+-				event >= GHES_SEV_RECOVERABLE);
++	dev_printk(fatal ? KERN_ERR : KERN_INFO, priv->dev,
++		   "NVIDIA CPER section, error_data_length: %u\n", len);
++	nvidia_ghes_print_grace(priv->dev, &decoded, fatal);
+ 
+ 	return NOTIFY_OK;
+ }
+diff --git a/drivers/acpi/apei/ghes-nvidia.h b/drivers/acpi/apei/ghes-nvidia.h
+new file mode 100644
+index 000000000000..f0592fa41abf
+--- /dev/null
++++ b/drivers/acpi/apei/ghes-nvidia.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef GHES_NVIDIA_H
++#define GHES_NVIDIA_H
++
++#include <linux/types.h>
++#include <kunit/visibility.h>
++
++struct device;
++
++enum nvidia_ghes_format {
++	NVIDIA_GHES_FORMAT_UNKNOWN,
++	NVIDIA_GHES_FORMAT_GRACE,
++};
++
++struct nvidia_ghes_grace_reg {
++	__le64 addr;
++	__le64 val;
++};
++
++struct nvidia_ghes_decoded {
++	enum nvidia_ghes_format format;
++	char signature[17];
++	u16 error_type;
++	u16 error_instance;
++	u8 severity;
++	u8 socket;
++	u8 number_regs;
++	u64 instance_base;
++	const struct nvidia_ghes_grace_reg *grace_regs;
++};
++
++VISIBLE_IF_KUNIT int nvidia_ghes_decode_grace(struct device *dev, const void *buf,
++					      size_t len,
++					      struct nvidia_ghes_decoded *decoded);
++VISIBLE_IF_KUNIT int nvidia_ghes_grace_reg_pair(const struct nvidia_ghes_decoded *decoded,
++						unsigned int index, u64 *addr, u64 *val);
++
++#endif
 -- 
 2.50.1 (Apple Git-155)
 
