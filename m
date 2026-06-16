@@ -1,39 +1,70 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4894183C9
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Jun 2026 10:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC0A413D99
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Jun 2026 10:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781604155; cv=none; b=ap9FefhNU87knxTWPMON/HBsweF+g63wIS8Pxm3lM4KK6nBgWSmfsytYm4Hp07DuJv7zMGf/gqfasp8F+5Bv7nSgOcJUHJbDEr7gr8FEDkjz5JBsvuqkf6XJLMAUkecKq8bKXwUJWPY2vgFdfA4f4I/RhTCB7st10fgsqMN5Fb4=
+	t=1781604221; cv=none; b=HjnLjj86L/sfmVLJOurK+BcyZhjJidMIXRkPGguIULSHXEdzgJ+CAWvAo8LtLSPWaodjL3WqzmGbngAEsiqcXHKsVuSMVr5zfmaOBOuzrvyOLNYAv72iGgg++G1yzazfIREMUMeLPyXm7RLSyezdJPM9jMiXGZqBt/EKNBeQ7/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781604155; c=relaxed/simple;
-	bh=SvVYExW/Q/Hjd30SnIuldyN+ZO8S41XSiJz0Wzrg+oQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CvFO/fPid6IjndzAldBPBnFNpQeyQQZjNBwUYFGLVKNcyaSnvELbhYHL6U7QB+Udnhdp/caf/4f3+2U1au8FvsL0oHBYpGbuya4K8uIjpihYYs0KgrVZ9ILgqs1RJCgJdM9n4jpHqbVgrkF1uq6o9oY5jix4hLkgVPTF1lsrkts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QpUVcH6F; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QpUVcH6F"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781604142;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9Qu7CbrKux96cswFy7p5Q7ZYOG3xsyjx9q5YsEYvsXY=;
-	b=QpUVcH6F/ST0TrvmnC6KU2K+o0UC2+qyJCidJFScRPBHFT/j/paZws9On0er7VrKfakUSS
-	grBhbYRCFXApI3TuFNtTZVAanzsjAADhxGZXYtCu+F74qNeYf972poLx1nFaqw5LwxGnCW
-	cSZXNROPaN0/IzU/nRt4coLxYzrd4po=
-From: Enlin Mu <enlin.mu@linux.dev>
-To: tglx@kernel.org,
+	s=arc-20240116; t=1781604221; c=relaxed/simple;
+	bh=cHY9Abcv4JeQfjc0VTlYZepQDXj06t3VGMBSC/q49yI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J/Rf1cSJ+ZKzI/6uw8k4iWF58mLte/Ll7jS6xPNBT8pXY+1IjC4kAZ5xGfeb/8hRLXyqUajmaHlQ76FV08us6gz14ZiAYpWz/SMYrtwPeXiWkVxKzLhS0xu5ZNtg7DawbPETkBrmtvTkpW7FFpwjwqDFccG/Ov5IFwjFMfhOvlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-45ef4223be7so2473516f8f.2
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Jun 2026 03:03:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781604217; x=1782209017;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G3J3dF/rleitNHrIVaZmT+xGJuXa5FDx3AO/xzdX7Ng=;
+        b=SadY0bRXtI/bvoXX70wNGILDOBaTDLSVxW+Z137n9O6zY68I9zlKQMw7Jqe1ycMmEm
+         ElMuKhx9aHOcU5uPhbA4aSYQyM5RJbQUxqIQCxFM0YAYonvFQsd07rtjeODhaNV4B6et
+         MKmxo3h6Nxi7/or9aeVFEpQfIgZpAzcLxN14HNbwO6tlnDCrWL3/8An8iZVuyPcextLl
+         r/zSUq/c8V2KszAUMdCkDqjnucxPLmYrOXPDbmHsyydBSfR+IOz+sW6p7u1r4WIYhMGc
+         YHMkbjQkxh4fU4+J7PRPjJVa5I8YCASB/NObZdKmTPDPdVAqAlRvg1twqzJ/XBln8kl9
+         pz2w==
+X-Forwarded-Encrypted: i=1; AFNElJ9IIzfyiUb4kKlSlnAeyRBIbEWf5wu/MiBMt4wWfGsHRtnnHgLxtvg2yIlsrIgIgjd8t3tdRgHmEXc5Q7jU3bE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzYfUszWZYOfs4hB+SwjAT37drPLDcWbBcl7hhoflXYPip0p7s
+	rCoSsxgEdt4bfSkpwaCIkcY2SQXT37XtEj5glaR0qM5PRUC1NlYcHXGp
+X-Gm-Gg: Acq92OEUTuEGpX90jWEfEs+A3YyClBmd/KQRYuqldmeodkPgaHUgPBvOzYz/0i/RCAF
+	2JvNrxAin6ZD2LC/XmZBnB8iRsiFIOQK2i0LD3SR9Sf+pzi+8fgI8pH5bLSJO6rMSXDpGS6zUFi
+	WrfEiL2iHwuda5r+YyHNIKbTT5E19civy+0IWoNe1ctI2tUcpJOts1Y8o8aBuZBVAgTfK1TrapY
+	BrBXLwGoH2QG17csL2o8s1EmXEFSwfLvcmr1V+41E0RpWAL1ef4Yvt1StrnY4DWrCCWSQsuEyCq
+	S56LBBVJTwSYejYT5s564FHJhnWAXgvfb9yJkByBTm98ID49WXk8fl1e5Kay6zoXpKZwxR4QFbF
+	hxGV+xNUHOi4Y83vkvVjELZ6snvnckR2YH72jHRqur+ncvV5ypIo4jALJO2htGRzAGv0t7Qj8xR
+	Q0IGEaMZ6FKdM4J7W63lQuj3DLGKl0aRZd3cUjVbdfK3IhS0GHdT2uV/K3Tnm/6H95s0msUQ==
+X-Received: by 2002:a5d:5906:0:b0:460:3233:beed with SMTP id ffacd0b85a97d-4619f31b6ddmr3918817f8f.41.1781604216985;
+        Tue, 16 Jun 2026 03:03:36 -0700 (PDT)
+Received: from im-t490s.redhat.com (89-24-35-102.nat.epc.tmcz.cz. [89.24.35.102])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2b0d4fsm46870652f8f.24.2026.06.16.03.03.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2026 03:03:36 -0700 (PDT)
+From: Ilya Maximets <i.maximets@ovn.org>
+To: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org,
-	enlin.mu@unisoc.com,
-	enlin.mu@linux.dev
-Cc: linux-hardening@vger.kernel.org
-Subject: [PATCH v2] genirq: Add the entropy pool function to the PPI interrupt handler
-Date: Tue, 16 Jun 2026 18:02:11 +0800
-Message-Id: <20260616100211.3068-1-enlin.mu@linux.dev>
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Ilya Maximets <i.maximets@ovn.org>,
+	Johan Thomsen <write@ownrisk.dk>
+Subject: [PATCH net] net: dst_metadata: fix false-positive memcpy overflow in tun_dst_unclone
+Date: Tue, 16 Jun 2026 12:03:29 +0200
+Message-ID: <20260616100332.1308294-1-i.maximets@ovn.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,32 +72,64 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Accelerate the entropy pool initialization process.
-The function handle_irq_event_percpu adds entropy pool
-initialization, but this logic is missing in the PPI interrupt handler.
-I think this was simply an accidental omission.
+kmalloc_flex() in metadata_dst_alloc() sets __counted_by for the
+structure to the options_len, which is then initialized to zero.
+Later, we're initializing the structure by copying the tunnel info
+together with the options, and this triggers a warning for a potential
+memcpy overflow, since the compiler estimates that the options can't
+fit into the structure, even though the memory for them is actually
+allocated.
 
-Signed-off-by: Enlin Mu <enlin.mu@linux.dev>
+ memcpy: detected buffer overflow: 104 byte write of buffer size 96
+ WARNING: CPU: X PID: Y at lib/string_helpers.c:1036 __fortify_report
+  skb_tunnel_info_unclone+0x179/0x190
+  geneve_xmit+0x7fe/0xe00
+
+The issue is triggered when built with clang and source fortification.
+
+Fix that by doing the copy in two stages: first - the main data with
+the options_len, then the options.  This way the correct length should
+be known at the time of the copy.
+
+It would be better if the options_len never changed after allocation,
+but the allocation code is a little separate from the initialization
+and it would be awkward and potentially dangerous to return a struct
+with options_len set to a non-zero value from the metadata_dst_alloc().
+
+Another option would be to use ip_tunnel_info_opts_set(), but it is
+doing too many unnecessary operations for the use case here.
+
+Fixes: 69050f8d6d07 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
+Reported-by: Johan Thomsen <write@ownrisk.dk>
+Closes: https://lore.kernel.org/netdev/CAKv6aAM8_EWgXScnKmKYm_4SwGDVBK++dzfP+Y6msUXbp99QUw@mail.gmail.com/
+Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
 ---
-v2:updated the commit message
----
- kernel/irq/chip.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index de754db414d1..cbbd7e7d1156 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -926,6 +926,7 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
- 		trace_irq_handler_entry(irq, action);
- 		res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
- 		trace_irq_handler_exit(irq, action, res);
-+		add_interrupt_randomness(irq);
- 	} else {
- 		bool enabled = cpumask_test_cpu(cpu, desc->percpu_enabled);
+Johan, if you can test this one in your setup as well, that would
+be great.  Thanks.
+
+ include/net/dst_metadata.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/include/net/dst_metadata.h b/include/net/dst_metadata.h
+index 1fc2fb03ce3f..f45d1e3163f0 100644
+--- a/include/net/dst_metadata.h
++++ b/include/net/dst_metadata.h
+@@ -164,8 +164,11 @@ static inline struct metadata_dst *tun_dst_unclone(struct sk_buff *skb)
+ 	if (!new_md)
+ 		return ERR_PTR(-ENOMEM);
  
+-	memcpy(&new_md->u.tun_info, &md_dst->u.tun_info,
+-	       sizeof(struct ip_tunnel_info) + md_size);
++	/* Copy in two stages to keep the __counted_by happy. */
++	new_md->u.tun_info = md_dst->u.tun_info;
++	memcpy(ip_tunnel_info_opts(&new_md->u.tun_info),
++	       ip_tunnel_info_opts(&md_dst->u.tun_info), md_size);
++
+ #ifdef CONFIG_DST_CACHE
+ 	/* Unclone the dst cache if there is one */
+ 	if (new_md->u.tun_info.dst_cache.cache) {
 -- 
-2.39.5
+2.54.0
 
