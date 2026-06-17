@@ -1,139 +1,195 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A383BCD31
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Jun 2026 13:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4A72D2385
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Jun 2026 14:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781701824; cv=none; b=I8Xdn+ur6AGuUPrf0ebT5y0PlngIW0EGJLG5NOdwDzr18ElVTO63O2bBf1jX3L/Lye7HAUy0aCaw8DZFpc6P284klCSFtwyID/rCemOqyj/hSLCh4XN8vbsxH05lrtForFX5MgxVGkGiflzGwETBVgKx5/pZkPR2cB5dAu+lcfM=
+	t=1781708062; cv=none; b=kZTYj++PS/cMeKrg1+4WHivZk/GC6/gWNMcAdeejLh5Q3L0a+cvWj99hvl4Clc4GwAfhSG73VkH0BpSFFb9YxA7kA2ouoUfqn+dQ8TDscSd+d77LxLbDjnUTCQpFWvKdVcZ5CmR9sG31B+5SQX8DOelrm02TAmBe2554QobWlOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781701824; c=relaxed/simple;
-	bh=CHpjOmj0nzXlN9T3ZA7w5cTCGyZautFsyUzA50goyeg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=epRpYpvC/kHrIXjrZ8aqAjwUAArMcf65YkuWlp+hwKM+mWZeFVQY4k73qzOTBOAlw4/mb5McxnJBSBOYmtMrDyJiHD8WWiK5f5mzYlE01i+kBYgJKAEFDtt8UjDrIqUVTGUBJ7D6HwFm/NwYOGcNMm76uzsJiIOiBpRF6Pmo1x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9lCT4w3; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781708062; c=relaxed/simple;
+	bh=JYvlfimKSqygNvWjrm0SJL/OntXTf5oSDKuVqv/4Qgc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gNhHg3HDcAjXNDBvyRCX3ZNk8+FWEccGeWTp6coqqW0hehxKGCbNZnsXVLYdWC92F+cNLgbkMhWNtj901HeaAeIDdGSmQa1QoDgZxmBcTfQhteSv+gApB5eLx/7WMNu2NxjpF1hMoLp5/lA/hsKUsrVoynxSnsiHYVXsYFAyi2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b=D9poun7u; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9lCT4w3"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-8419ab3a297so2564391b3a.2
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jun 2026 06:10:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b="D9poun7u"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-43bfe209e45so3580840fac.0
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Jun 2026 07:54:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781701822; x=1782306622; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t59PWFHJyhJPrhG4yxJtzulsV5BlqsFtV0EzJW4vR/E=;
-        b=E9lCT4w3b/hmRcacDv/+vSKEjE11WQWIjjfVDc7rX+Hci+wNXu0FjWkJExiZroQo7z
-         JZEPvXd/HMJGfNpL86m4kttR12v2mOteTnvaklrXafu9YNqaJqU2RWvZLpsyohm8uUho
-         GpUIBDxbz9S+mbYeVxnOrm+dwhxnbVpgYTtQHSygJ958WpPUpTeJuyesideqYF/dv0jp
-         oTF0W91cIa1a5PzXwBZOTSmBF8hLzaiHJXZ3VGh9KIkpCl7XBNNoldYy1pje7UZzE3fV
-         RlvrS3Mm4RcPfFIOloUgeKB+b2kneakbP97nTlSJX59eFzQ8Th0+idHwyeBNFe+Bkk1y
-         eAoQ==
+        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1781708058; x=1782312858; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K8Wv7VCkyaLN0s61xd4QXGQ88sPTQ0XGFCHSINh9F+E=;
+        b=D9poun7u32mr2DCGJwc6cMYl7qlGIpMo1ilH8qatgFINlnGlNBsz9S0NxGOKmqnXKR
+         TZ1NYE8YGdPgPZMDRLU0jGicSav6uH7X9ML7lqwkohB2vhHQMdsko66hgHZ12efGtifk
+         8o5dx6sx5DU5Jf1wu4PqUHOL7km3rwARuWZXz847r6RNsOZxtSiEzUx6QCLyKX1JPcfN
+         I5w2pk5ZcP9QQfIy+DS+OGz16gF6hEnAtdeCsUOyu+cMBliRJg8mcFyIMhVKZ0DeIRMA
+         ZiuUf6/ljytzwY+4g1u+IeOax7aiA7yygB59215WNzVdhMNEEg2fdnx8Qjo5EgRRFRCp
+         74HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781701822; x=1782306622;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=t59PWFHJyhJPrhG4yxJtzulsV5BlqsFtV0EzJW4vR/E=;
-        b=MHKNBjmDOjFz/+S34bvQ6+NEkaPgP7v2weIfoJBumVIGkJsrHOabXt5kv1sRgkp4OX
-         RIigVC3fgmsBYyPeLiNsdDF6R+1JTVP6a84bTrfWbPuk/PB8IlZ89rjck3ZHLerFqldE
-         e6ZCoVHUtUunJwsnbEddrlvtRrREvkjCbxBEbXPk+FSDvvaAdh6YDd0tbwpHHTpOhdaF
-         fiLOMtCjt+SeH6ky2rrSDDwm8o36eFdaX6Wwh7OFYrC8e9RwngxFEgM4tPzr9mneP+pw
-         zwGixG+xIPjke4aff0A7TuuudV3Uu2+7kB/B9KfojnHFz33ETwLywcn0NK8yZIeU/qbt
-         OzFw==
-X-Forwarded-Encrypted: i=1; AFNElJ+UcIWi10znJqcw79V4fH4vEK4z8Z13dtV/WQ8yXLnfbLM0ceLj3ZfYVdJYMLe9sLT9IwIRw8/wQ1Vnzg2dhOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yybms/+2kzqM+66IKXuZpFPIyp+5asTlqHASGnm5byDcWC0F1NA
-	a+UUEU/7qNxTPNwWM9Qbzmhag776gDFruQYnVgPlUVO01PHJv0aamgPZ
-X-Gm-Gg: Acq92OH5TmGphTnir0JEkegQkYd6bB/+9w9qMWoPl7yczzBU21GfVIG2TCWSP3dRgV6
-	yOKQYt2TsgedQdrwfgl4q3LgmnP31MKefwmKKba/pxqCyPvQwxBgVCMBlsmOvOvqeYrWSig+0Yy
-	FnbMOkSTkIpYxEbVanA0pOVxj/lDa0uwgKf88O9Z4WkSyf3TeUmv4sBBVELf/vYh284bhl/9UgY
-	E8rv20M16U0BQUkpcxIcj7Xw6nGYUTRQ7RaGrB2yNyMGU33/fvuCWpkAis8xdkIY2lTsP3ts6db
-	HafbAczQDDB+6VK6HCwPhlJOSIyAgk6Rh413Ls7HbmF4M351IShWz+/G8iwRFsdodJ3cjyktC1i
-	Kjr7GMbjyKmj2OJfyN0fCCyNVRII03xKwSjChQvnaWoCRa57cQgv4S71s21GJHB1uMJM9lt+xn+
-	0ZuT3YdwHwU0T/DbqZ7f3V18GKMlTi4ZX1q0u7pr4=
-X-Received: by 2002:a05:6a21:a81:b0:3b4:bdd5:2f8 with SMTP id adf61e73a8af0-3b8b7cd6681mr4444974637.38.1781701822431;
-        Wed, 17 Jun 2026 06:10:22 -0700 (PDT)
-Received: from LAPTOP-97G9G880.bbrouter ([106.51.148.76])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c8893894debsm1085376a12.7.2026.06.17.06.10.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2026 06:10:21 -0700 (PDT)
-From: Karthikeyan KS <karthiproffesional@gmail.com>
-To: andrew@codeconstruct.com.au
-Cc: joel@jms.id.au,
-	andrew@aj.id.au,
-	Kees Cook <kees@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6] soc: aspeed: lpc-snoop: Fix usercopy overflow in snoop_file_read
-Date: Wed, 17 Jun 2026 13:10:13 +0000
-Message-ID: <20260617131013.64188-1-karthiproffesional@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
-References: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
+        d=1e100.net; s=20251104; t=1781708058; x=1782312858;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K8Wv7VCkyaLN0s61xd4QXGQ88sPTQ0XGFCHSINh9F+E=;
+        b=c5tVREdubUOS7LTcZiYiZPbTOgwZLkG14/F88I7Gcjh0QFCUGTWigo53GTf3fjB+IA
+         7vKzS9izdZwOA03LuZc9b5TnTJqK1+oHbElp4qD3SohBWOxM0mxiIeOyvIW7Ra4rGGgG
+         2i896Mw0NOXhfhWxNUJCglI6z2EFUNQ1H2cCLofLJjHDrKu827CUE8RsIXi8pH9/eyz+
+         IBPYpEjUx6FAk1RLFr07IOZ7ssTrnFVaeeYaKpX6doC0+icSHhSEC5yWEtkRExLyN0nc
+         o5OVQBFEgYLTn06UlyUdMK/Z5vq2/1JnipMXCWhzSyXttg9VKY4WmgW2zFAMX7FFiCzN
+         cuBA==
+X-Forwarded-Encrypted: i=1; AFNElJ/FlLqIO4wQqOrSFeqnSgDkYWem0lVpZi3LkGA4UIJCJrekLJTvPqdkqcwB2IbY2ubqnseDzIhJMA7lsJiR5w4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsvQueHp88AvO5t6Z6XGry03eegM9bqj46sxUE+yd0VvqD+5i4
+	rWe+ZllljF0WHg/PFuWxJxIPm7ji7slax7mW7XBKanQrEpiVz+5LmkXTBWf44TVBc/8=
+X-Gm-Gg: AfdE7cnm1aKxfmYCQj2TIOP1ilbyrMMYGVaLjsxUEkjja04Dt3SygBmUEl+MORke+Ag
+	pA+SFM9F/kQJ3lA9/sMu9V/mC7e3+ElJ6J3fn+6NVUrBpVVNXDtCQa4ecKyUzHZCGQ25MEDt1xz
+	HxRfsJlzjyfZ3gJXF/oUFznp77+UNXG3JK1/gU3A0Gnl1A8bVrPTkHtRTx0i8pmh0rImysBbq9a
+	31zvO8pnyZBabEK1WBdirEqTMT2+DfBN9+iewkOjv2pU2w2E01yHfzqNsOguFAmC9XFbWLlBg6n
+	PkYoKAgENHemz8FtZqBMYFkHPUgbVXGDUNm3dC8QvcHlDP0Vp8HcwcmzM+M2MuLV1Zlw/hpRUpr
+	/tlw0Ki+A5geo7YQqDIF2Zk6wh8jFGU/5geMT9D4nVqc9XVRXrSzxagTjZUEwPF35iqWAM6IAp9
+	ETR2SS6BqwQCERERag+9VrPpg4EZe8CaW/RZu8JQc=
+X-Received: by 2002:a05:6870:819d:b0:43c:3ae7:5e83 with SMTP id 586e51a60fabf-44690549596mr2920062fac.31.1781708058411;
+        Wed, 17 Jun 2026 07:54:18 -0700 (PDT)
+Received: from [172.19.0.220] ([99.196.128.98])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4430900e368sm4484893fac.16.2026.06.17.07.54.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2026 07:54:17 -0700 (PDT)
+Message-ID: <2d35e4d2-72ec-4ae8-90ba-8c9b1e53c58f@kernel.dk>
+Date: Wed, 17 Jun 2026 08:54:04 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] [PATCH v2] io_uring/register: add
+ IORING_REGISTER_CLONE_FILES opcode
+To: harshal24-chavan <harshal24.chavan@gmail.com>, kees@kernel.org
+Cc: gustavoars@kernel.org, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260617081622.32823-1-harshal24.chavan@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20260617081622.32823-1-harshal24.chavan@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This looks like a lot of heavily LLM-assisted effort. Please review the
-relevant documentation, starting here:
-   https://docs.kernel.org/process/submitting-patches.html#using-assisted-by
+On 6/17/26 2:16 AM, harshal24-chavan wrote:
+> diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
+> index 650303626be6..1e4e114ca5a5 100644
+> --- a/io_uring/rsrc.c
+> +++ b/io_uring/rsrc.c
+> @@ -1303,6 +1303,166 @@ int io_register_clone_buffers(struct io_ring_ctx *ctx, void __user *arg)
+>  	return ret;
+>  }
+>  
+> +
+> +static int io_clone_files(struct io_ring_ctx *ctx, struct io_ring_ctx *src_ctx,
+> +			  struct io_uring_clone_files *arg)
+> +{
+> +	struct io_file_table new_file_table;
+> +	int i, off, nr;
+> +	unsigned int src_nr;
+> +
+> +	lockdep_assert_held(&ctx->uring_lock);
+> +	lockdep_assert_held(&src_ctx->uring_lock);
+> +
+> +	/* if offsets are given, must have nr specified too */
+> +	if (!arg->nr && (arg->dst_off || arg->src_off))
+> +		return -EINVAL;
 
-==> I partly agree. The code and bug analysis are done manually.
-LLM use was the out of tree test harness and lightly polishing
-the commit message. None of the submitted code is generated.
-If you'd prefer, I can reword the changelog in my own words or
-add an Assisted-by tag ?
+Not sure the offsets and partial copies are going to be worth it, but
+I'm willing to have my mind changed. But that's a minor thing really.
 
-V1         was a simple clamp
-v2/V3      was a simple locking mechanism which is pretty straight forward.
-V4         bounce buffer, modelled on gpiolib-cdev (acknowledged in patch)
-V5 and V6  entirely your review comments (__free, scoped_guard,
-           kfifo_out_spinlocked, __guarded_by, context analysis)
+> +	/* not allowed unless REPLACE is set */
+> +	if (ctx->file_table.data.nr &&
+> +	    !(arg->flags & IORING_REGISTER_DST_REPLACE))
+> +		return -EBUSY;
+> +
+> +	src_nr = src_ctx->file_table.data.nr;
+> +	if (!src_nr)
+> +		return -ENXIO;
+> +	if (!arg->nr)
+> +		arg->nr = src_nr;
+> +	else if (arg->nr > src_nr)
+> +		return -EINVAL;
+> +	else if (arg->nr > IORING_MAX_FIXED_FILES)
+> +		return -EINVAL;
+> +	if (check_add_overflow(arg->nr, arg->src_off, &off) || off > src_nr)
+> +		return -EOVERFLOW;
+> +	if (check_add_overflow(arg->nr, arg->dst_off, &src_nr))
+> +		return -EOVERFLOW;
+> +	if (src_nr > IORING_MAX_FIXED_FILES)
+> +		return -EINVAL;
+> +	/* Allocate file tables memory {data + bitmap} into new_file_table */
+> +	memset(&new_file_table, 0, sizeof(new_file_table));
+> +	if (!io_alloc_file_tables(ctx, &new_file_table,
+> +				  max(src_nr, ctx->file_table.data.nr)))
+> +		return -ENOMEM;
+
+Also a question whether the destination should've already allocated a
+sparse table. This kind of bundles the two into one. In general, as
+mention on the GH link, I do think this should work exactly like cloning
+buffers. It'd be somewhat confusing if they don't match up, as it's
+essentially the same operation, just on a different node type.
 
 
-I feel the testing strategy is pretty questionable. Any invariant
-violation is possible with that type of meddling.
+> +	/* Copy original dst nodes from before the cloned range */
+> +	for (i = 0; i < min(arg->dst_off, ctx->file_table.data.nr); i++) {
+> +		struct io_rsrc_node *node = ctx->file_table.data.nodes[i];
+> +
+> +		if (node) {
+> +			new_file_table.data.nodes[i] = node;
+> +			node->refs++;
+> +			io_file_bitmap_set(&new_file_table, i);
+> +		}
+> +	}
 
-==> The underlying bug is a kfifo SPSC contract violation. My intent with the
-test wasn't to simulate the race itself, but to reconstruct the post race state
-specifically where (in - out) exceeds the buffer size and show it causes a
-usercopy overflow in the unpatched code, handled safely after the fix.
+This definitely won't work - I also mentioned in the GH link that nodes
+cannot be shared, you have to allocate new nodes on the destination
+side.
 
-==> I take your point that forcing that state can itself produce violations that
-wouldn't occur naturally. Since the bug is provable from the source but hard to
-trigger on demand, I'd rather ask what validation you'd accept here?
+> +	while (nr--) {
+> +		struct io_rsrc_node *dst_node, *src_node;
+> +
+> +		src_node = io_rsrc_node_lookup(&src_ctx->file_table.data, i);
+> +		if (!src_node) {
+> +			dst_node = NULL;
+> +		} else {
+> +			dst_node = io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
+> +			if (!dst_node) {
+> +				io_free_file_tables(ctx, &new_file_table);
+> +				return -ENOMEM;
+> +			}
+> +
+> +			struct file *file = io_slot_file(src_node);
+> +
+> +			get_file(file);
+> +			io_fixed_file_set(dst_node, file);
+> +		}
+> +		new_file_table.data.nodes[off] = dst_node;
+> +		if (dst_node)
+> +			io_file_bitmap_set(&new_file_table, off);
+> +
+> +		i++;
+> +		off++;
+> +	}
 
-I was interested in whether you drove the interrupt sequence via
-emulated hardware. I asked because upstream qemu doesn't currently
-support the snoop device.
+Same here, it needs a new node that's private to the destination. Hence
+you'd need to _always_ allocate one, assign the file, and get a
+reference to it.
 
-==> My apologies for the confusion, I mixed up things. I have not driven the
-interrupt sequence in emulation; as you noted, upstream QEMU doesn't model the
-snoop device. I've described the actual hardware context below.
+The file nodes rely on non-atomic refs when being used, which is
+protected by the ctx->uring_lock as that's always held for the fast path
+issue. If you just assign the node by reference, now you have two
+different rings manipulating the same node in memory, but they don't
+agree on synchronization.
 
-In v3 you said:
-   The issue was observed on physical AST2600 (dual-core Cortex-A7)
-   in production under heavy POST code traffic during concurrent
-   userspace reads.
-   https://lore.kernel.org/all/20260527175939.2939714-1-karthiproffesional@gmail.com/
-Is this true? What platform did you test with?
-
-==> Yes, the underlying failure is real. It was observed on an AST2600-based
-production BMC running a vendor BSP kernel under continuous host reboot
-cycles. Because that platform can't currently be brought up on pure
-mainline without substantial out-of-tree board support, I have not run
-this exact mainline patch on the physical silicon, observed under the
-BSP kernel, not yet verified as the mainline patch. I should have made
-that distinction clear earlier in the thread.
-
-==> If there's a way you'd consider valid for validating a fix like this
-without a full mainline bring up on the SoC, such as a targeted kfifo unit
-test, or something else you'd accept.I'd appreciate the pointer and I'll
-do that.
+-- 
+Jens Axboe
