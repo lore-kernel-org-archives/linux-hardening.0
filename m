@@ -1,50 +1,84 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCC7284B3B;
-	Wed, 17 Jun 2026 00:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3875134A791
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Jun 2026 05:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781657103; cv=none; b=GISck0tE5US/kkFiFBYsTyefFbr/FemqKnf6TvDcnPMzEkHNkKdhO7Dy4VBT5xRgMcv1/1Y40vFOpt/+Up5BGv8nyhwwQwtSnQ6jiEOu2jruXuFrExk+hMxdiS62ATFIdfL4d5xcYc1oa5oGpj0o8TMMWQtc0Y0PoiW8Vx8mjK0=
+	t=1781674398; cv=none; b=NCkowdNzzJKhkRvzRUvhlcL+udxaLEXYAgDzcwAeJg+U814oTnB2s+OQAhz2j8fLeNji8+O9JANJPzg7zJXRxSGWyaB7H8re524GsnigbEC3ujXPXS8ojhPgDwo8OAyXfB2MdJiJjvD+0ZokNzTMHFQhEB36QfrBZoxrHvoDa2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781657103; c=relaxed/simple;
-	bh=ujNOBZ2z5FskbAtT7vVX8+tki15O3MQSuqBHC0N/3OU=;
+	s=arc-20240116; t=1781674398; c=relaxed/simple;
+	bh=5PzlQx3yfApJix2sagB+OXJ+jY8auSlY1Asj/vh/CEs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QSjVOlhyd0tfB8BHazqh6CfrDezNairXZxzTBgJXCzPUZG0q51PyvJdn95QszJFwpfBBBaZXHZH2wz9BwEpx10WGdtI36WQSxoHwrS1CzCG/2iE+zP9oXwhmWYDXKQl+DMlXC2NSeOD8UZaQn9gysbpk8It/YybAGrmJ3W+tkBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=ZL2rTl7Z; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	 Content-Type:MIME-Version; b=qFeX49TSlVkMhoOxR7jtxsABo9jSZQYVPdKB0mWPCndvWXH2V6tUoz/a2uouJn+U81YOI8bcslYm2JBLQOtzSIF+0kFbztx3mp69YP3i10+v6zWQ0FcRKlAhOzYsnTY9HNvjczID6d38ktba/sU9L8NEQX7Vjea9VUz+XWsR/Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20251104.gappssmtp.com header.i=@dubeyko-com.20251104.gappssmtp.com header.b=EPi8Klyh; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="ZL2rTl7Z"
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20251104.gappssmtp.com header.i=@dubeyko-com.20251104.gappssmtp.com header.b="EPi8Klyh"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5aa68d7d757so4633744e87.0
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Jun 2026 22:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1781657086;
-	bh=oW3NBxoz0h1ByrSqH5tPVmY3lr7CHCdPxDnqXMlrypY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=ZL2rTl7ZbPOIJdHwOxroNvNWUC/kgtRAbAsWGXCKonHXLRrmL/CwWU+Z7+Gkh+iwA
-	 rkleWiff1R18xZXbDHV+V6vMusxH4YNZC0aGcNbfh4HOuA7mznwR5ltcHkR4fT3sDm
-	 x/mZEoOJHLzPyiLd/vEHJeeIGlfhNiMfAETpc0G+CkSpDn7tzt4F4t1En5OBL/lM76
-	 LzFyNucIhKKmtxaZyCp/u1GAB7I+Mr7Ul1tYOBMQ6EbabGD4O1M8frojJ/D/NRwiPU
-	 Iu+YKrclcxY0vsp14NBVCDcBduvG3TjzN8iwbtZkI6ijucd3m8yoAvkqE898hdaM/q
-	 MxOsQal375ETw==
-Received: from [192.168.68.117] (unknown [180.150.112.11])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 0A1D7659B9;
-	Wed, 17 Jun 2026 08:44:45 +0800 (AWST)
-Message-ID: <b50b84b169b632200ca348971451baca83357c7b.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v6] soc: aspeed: lpc-snoop: Fix usercopy overflow in
- snoop_file_read
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Karthikeyan KS <karthiproffesional@gmail.com>
-Cc: joel@jms.id.au, andrew@aj.id.au, Kees Cook <kees@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date: Wed, 17 Jun 2026 10:14:44 +0930
-In-Reply-To: <20260616073053.1144730-1-karthiproffesional@gmail.com>
-References: 
-	<033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
-	 <20260616073053.1144730-1-karthiproffesional@gmail.com>
+        d=dubeyko-com.20251104.gappssmtp.com; s=20251104; t=1781674394; x=1782279194; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9AFZZEAKAWxA2/laIN39x0I+j9qz2p8uDCCx96O9W2M=;
+        b=EPi8KlyhA0FXeDOD/dVFZmBvxzMRaxNln4qtAP9yblOEqw/J4tiUG2gSiFoJEhbZRr
+         XUF2oY4fIDK8brO65xCqwK61G9ssxMr1HUasGmaioNkbj5/pUBtf4FHVHkPM+T8V6fZw
+         dxpGQwWkLmTl1mq47/131351bE06QO5Z2R3K0e6mEE/4E8IpOdN53KBTVyXoY5jH0Rlw
+         B3c4UCw0hRrjXqpBaOm4JjA0bdqJxkQEbLBMcn28kYBXiba+pU3KJoXW/aOVLUvlxSpU
+         zZZ+1GT1bCd3Btko9r6dQODw5ra1uyD44vN2bOeW/jc1fJXrWeZdoX2yRGWfezRDjvb7
+         bMcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781674394; x=1782279194;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9AFZZEAKAWxA2/laIN39x0I+j9qz2p8uDCCx96O9W2M=;
+        b=hgGd9Yg/i0WcC9PYPESJ1whSE6P1y6edg+7WbxRxbRUHfSYEqrzQ9jXm9MGL20GCw4
+         RjHcTXET/bXfy6NH1hvKJsxcwkDk4P1zOHBnRykdgJP43r3tQkDN32VwwRQ8IQlfEgrQ
+         0ukRIqMxNgCiM+lJscY2diRHwoDR1mJRPUTyXXu3wsXH13moV0RyYpbPEKBdGFBdQ/pU
+         aky4s64Yt/yHJoEomjGlWRgIGsSSb8tY9bF9KdfntZPrZ9x3vIhhNohsnRAa/kGYthsF
+         lxoVmlcg/iUe2uk5somV45NEyNr4i+xuVWaO2HguNSQfXjUFlfTCqlBVOnPvgzy+nCOF
+         XLgg==
+X-Forwarded-Encrypted: i=1; AFNElJ+o8FDBwwyv7BU4hGM+1i9viSBnUr2uLvZiEN7q3rxT3YE3eSG7psmw8XjT50zRvqHJQaEiLLQIMh817VBQ+OQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyNVQONsmoxzVEzFraong/8UrC3NGzP0CpIpQ45bWGPcYtZqAC
+	Z/t1/VFtYyKXVsOpVToMWoV/8vn4JrPMhIgyprqp6pT3PMu/GqeBJeeaZ4k2mQRa/v4=
+X-Gm-Gg: Acq92OGwYuj09F5m3T7R9+9Lr2NMIb1O8S76uafr4w+Waq9AbwrrofYpFC7uff2PbjO
+	X4Y/oTcZVYHrgVg2RqiRPvhsPuujeDT8f634a6YIq+PRJNnpRVU7GGE9j5WAquExOcYtTeO/w9f
+	9JnTZ42UB6hNlwmqR5ddbRLmXOF/81o1+Ea2Y0x7qyyk3lkzvUw4nrVHE8T5Ymt3oIGDc5FtN73
+	plzKL4fBaPqQTSvgw7WhWj/oQx/h0pVPKUznekwghNnFPm8i/OuWjGIQd8LjCsN6HqSETtIL7qC
+	Hab6sL2sHbHXyp8D7rGFvbpOj3/Ts3P3FHtnSlM/32ODxrJcmI7ZPUVA1Cyb8qVSboI5ewTaTC1
+	m1z/U86nwqWrAgp0cJOjSjzxzrw+JEgEQw6OpnRkIO763vDNQIgxmJvjzKLpS6ULSUZ8WjN3YcD
+	nNVeYlLX14/7bUkAsCLn8q+wUACEEksuWRPzKIoHpIPZWpVbrTkJTCwI/KxOPoSVwXt4TphAF3/
+	VtkCssxA/2aASufViSaCDQ2StPkde4=
+X-Received: by 2002:a05:6512:15a3:b0:5aa:8824:156a with SMTP id 2adb3069b0e04-5ad4703682amr586748e87.46.1781674394010;
+        Tue, 16 Jun 2026 22:33:14 -0700 (PDT)
+Received: from [192.168.3.148] ([31.23.24.48])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5ad2e161f2fsm4177496e87.11.2026.06.16.22.33.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2026 22:33:13 -0700 (PDT)
+Message-ID: <44e2383c0859200e4752f8a782fc75c4240c2a1f.camel@dubeyko.com>
+Subject: Re: [PATCH next] fs/hfsplus/xattr: Use memcpy() and strscpy() to
+ build xattr_name
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Kees Cook <kees@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>, John Paul
+ Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li
+ <frank.li@vivo.com>
+Date: Tue, 16 Jun 2026 22:33:11 -0700
+In-Reply-To: <20260616085127.3b11d855@pumpkin>
+References: <20260608095523.2606-39-david.laight.linux@gmail.com>
+		<2543b22369ec19dae397963fbdf2e7181c7419a8.camel@dubeyko.com>
+		<20260611041845.GC6060@frogsfrogsfrogs>
+		<ba59fcb77c31c1848d4a7f52e87829711b747567.camel@dubeyko.com>
+	 <20260616085127.3b11d855@pumpkin>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-0+deb13u1 
+User-Agent: Evolution 3.60.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,38 +86,166 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2026-06-16 at 07:30 +0000, Karthikeyan KS wrote:
-> Hi Andrew,
+On Tue, 2026-06-16 at 08:51 +0100, David Laight wrote:
+> On Mon, 15 Jun 2026 23:33:09 -0700
+> Viacheslav Dubeyko <slava@dubeyko.com> wrote:
 >=20
-> Happy to. Short version: ast2600-evb can't hit the SMP timing window,
-> so I reproduce each missing piece deliberately. The driver code under
-> test is unmodified -- only the stimulus and the post-race state are
-> injected. Stock qemu-system-arm (Debian 8.2.2), no QEMU changes.
+> > On Wed, 2026-06-10 at 21:18 -0700, Darrick J. Wong wrote:
+> > > On Wed, Jun 10, 2026 at 08:50:33PM -0700, Viacheslav Dubeyko
+> > > wrote:=C2=A0=20
+> > > > On Mon, 2026-06-08 at 10:55 +0100,
+> > > > david.laight.linux@gmail.com=C2=A0wrote:=C2=A0=20
+> > > > > From: David Laight <david.laight.linux@gmail.com>
+> > > > >=20
+> > > > > xattr_name is kmalloc()ed at the (assumed) maximal size and
+> > > > > then
+> > > > > the
+> > > > > prefix
+> > > > > and name concatenated together.
+> > > > > Use memcpy() for the prefix - its length is passed and
+> > > > > strscpy()
+> > > > > for
+> > > > > the
+> > > > > name to ensure it really doesnt overflow.
+> > > > >=20
+> > > > > Prior to bf29e886b242c the buffers were smaller and on-stack.
+> > > > > (But I cant see the copy in the old code.)
+> > > > > I am also not sure why the buffer isnt created "just long
+> > > > > enough".
+> > > > >=20
+> > > > > Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> > > > > ---
+> > > > > This is one of a group of patches that remove potentially
+> > > > > unbounded
+> > > > > strcpy() calls.
+> > > > >=20
+> > > > > They are mostly replaced by strscpy() or, when strlen() has
+> > > > > just
+> > > > > been
+> > > > > called, with memcpy() (usually including the '\0').
+> > > > >=20
+> > > > > Calls with copy string literals into arrays are left
+> > > > > unchanged.
+> > > > > They are safe and easily detected as such.
+> > > > >=20
+> > > > > The changes were made by getting the compiler to detect the
+> > > > > calls
+> > > > > and
+> > > > > then fixing the code by hand.
+> > > > >=20
+> > > > > Note that all the changes are only compile tested.
+> > > > >=20
+> > > > > Some Makefiles were changed to allow files to contain
+> > > > > strcpy().
+> > > > > As well as 'difficult to fix' files, this included 'show'
+> > > > > functions
+> > > > > as they really need to use sysfs_emit() or seq_printf().
+> > > > >=20
+> > > > > All the patches are being sent individually to avoid very
+> > > > > long cc
+> > > > > lists.
+> > > > > Apologies for the terse commit messages and likely unexpected
+> > > > > tags.
+> > > > > (There are about 100 patches in total.)
+> > > > >=20
+> > > > > =C2=A0fs/hfsplus/xattr.c | 12 ++++++------
+> > > > > =C2=A01 file changed, 6 insertions(+), 6 deletions(-)
+> > > > >=20
+> > > > > diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+> > > > > index 452a1f9becb2..0b3dd48c28c9 100644
+> > > > > --- a/fs/hfsplus/xattr.c
+> > > > > +++ b/fs/hfsplus/xattr.c
+> > > > > @@ -550,8 +550,8 @@ int hfsplus_setxattr(struct inode *inode,
+> > > > > const
+> > > > > char *name,
+> > > > > =C2=A0	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL);
+> > > > > =C2=A0	if (!xattr_name)
+> > > > > =C2=A0		return -ENOMEM;
+> > > > > -	strcpy(xattr_name, prefix);
+> > > > > -	strcpy(xattr_name + prefixlen, name);
+> > > > > +	memcpy(xattr_name, prefix, prefixlen);=C2=A0=20
+> > > >=20
+> > > > What's the point to mix memcpy and str*() family of methods?
+> > > > What's
+> > > > wrong with str*() method here? Otherwise, if it is wrong to use
+> > > > str*()
+> > > > family of methods, then why is it correct to use for second
+> > > > operation?
+> > > > =C2=A0=20
+> > > > > +	strscpy(xattr_name + prefixlen, name, xattr_name_len
+> > > > > -
+> > > > > prefixlen);=C2=A0=20
+> > > >=20
+> > > > Why strscpy() is better than strncpy()? What is the main
+> > > > argument
+> > > > here?
+> > > > =C2=A0=20
+> > > > > =C2=A0	res =3D __hfsplus_setxattr(inode, xattr_name, value,
+> > > > > size,
+> > > > > flags);
+> > > > > =C2=A0	kfree(xattr_name);
+> > > > > =C2=A0
+> > > > > @@ -698,6 +698,7 @@ ssize_t hfsplus_getxattr(struct inode
+> > > > > *inode,
+> > > > > const char *name,
+> > > > > =C2=A0			 void *value, size_t size,
+> > > > > =C2=A0			 const char *prefix, size_t
+> > > > > prefixlen)
+> > > > > =C2=A0{
+> > > > > +	size_t xattr_name_len =3D NLS_MAX_CHARSET_SIZE *
+> > > > > HFSPLUS_ATTR_MAX_STRLEN + 1;=C2=A0=20
+> > > >=20
+> > > > Frankly speaking, it looks like a constant that should be
+> > > > declared
+> > > > in
+> > > > hfs_common.h. Even if we would like to declare it here, then it
+> > > > should
+> > > > be const size_t, from my point of view.
+> > > > =C2=A0=20
+> > > > > =C2=A0	int res;
+> > > > > =C2=A0	char *xattr_name;
+> > > > > =C2=A0
+> > > > > @@ -705,13 +706,12 @@ ssize_t hfsplus_getxattr(struct inode
+> > > > > *inode,
+> > > > > const char *name,
+> > > > > =C2=A0		inode->i_ino, name ? name : NULL,
+> > > > > =C2=A0		prefix ? prefix : NULL);
+> > > > > =C2=A0
+> > > > > -	xattr_name =3D kmalloc(NLS_MAX_CHARSET_SIZE *
+> > > > > HFSPLUS_ATTR_MAX_STRLEN + 1,
+> > > > > -			=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
+> > > > > +	xattr_name =3D kmalloc(xattr_name_len, GFP_KERNEL);=C2=A0=20
+> > > >=20
+> > > > Finally, I think kzalloc() should be much better for both
+> > > > cases.=C2=A0=20
+> > >=20
+> > > kasprintf()?=C2=A0=20
+> > > > =C2=A0=20
+> >=20
+> > It sounds much better than suggested fix.
 >=20
-> Three obstacles, and what I did about each:
+> If performance matters here it will be a lot slower.
+> The snprintf() code itself is slow and kasprintf() has to do it
+> twice.
+> (As well as looking at the strings twice.)
+>=20
+> It also only allocates a buffer that is big enough for a single
+> terminating '\0' - and (at least some versions) of this code zero
+> the rest of the buffer (possibly to avoid a bug).
+>=20
+> One option would be something like kstrdup() that concatenates two
+> strings.
+>=20
+>=20
 
-This looks like a lot of heavily LLM-assisted effort. Please review the
-relevant documentation, starting here:
+We are talking about xattr operations that is not very frequent ones.
+Also, xattr names usually are not very long. So, it means that we need
+to manage small memory/string blobs.
 
-   https://docs.kernel.org/process/submitting-patches.html#using-assisted-b=
-y
+From my point of view, the benefit of kasprintf() that we can combine
+the whole operation into one line of code. It sounds like nice cleanup
+to me. I don't think that kasprintf() can introduce a significant
+performance degradation for HFS+ xattr functionality support.
 
-I feel the testing strategy is pretty questionable. Any invariant
-violation is possible with that type of meddling.
-
-I was interested in whether you drove the interrupt sequence via
-emulated hardware. I asked because upstream qemu doesn't currently
-support the snoop device.
-
-In v3 you said:
-
-   The issue was observed on physical AST2600 (dual-core Cortex-A7)
-   in production under heavy POST code traffic during concurrent
-   userspace reads.
-
-   https://lore.kernel.org/all/20260527175939.2939714-1-karthiproffesional@=
-gmail.com/
-
-Is this true? What platform did you test with?
-
-Andrew
+Thanks,
+Slava.
