@@ -1,236 +1,338 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2154B2EEE74
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Jun 2026 22:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C4039183A
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Jun 2026 22:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781733722; cv=none; b=jbqKPdl6jo0N5N8mckNSZjoGi6gEVpy0dIZYOAHh80iXuP/v7P7Hyubd52NOI9+lofOscgfS37+BNKSHtqeYJyE9yQxQd+yHRHNwnXP0OKJVKaHBZf2fUTq14eFUXYWokzJZoUnbtLi8fMYTMi0eIAemdTC8kPIZ3UOxng0pSMM=
+	t=1781735649; cv=none; b=IolqRTm/DEN2dQbTZZktXr5r1GQQsZiFIHAkzhjyDbcVNTMBRHydMLkz5a8B+gpsP8rmLNbq219FAlXtmLlbelpdjUHzlpJAVjIMGb7cwuo1bnPINQ3yT65CRm+hg0PzFkFgFrDtScSwT+Y1Nu+07d6NHo8ktJRLj57UGPG3U+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781733722; c=relaxed/simple;
-	bh=AZW4Zex5B5rzcFJ3548d/dIMzBeTRvEo20EnNSGIn5U=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kMWkDbHZaQNlwXC+R5Defd6eYDepOOUJueuQD7kpvzjRypKvqjpkhXIyti7bx4214Ohli8BLUltRBUVAZExFd9Z4HTyF7s2pnbO3DNkktEDRfYqLsvISnKlESPI/p7rjvO/7WIf9wP/vw3wAfBtBdd3zwN5CI+BLkBPHLrHLFkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-490aaeabdb4so1179375e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jun 2026 15:01:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781733718; x=1782338518;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:cc:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XZ3/dHnx3DT4Q8bHqR+qZOvGURqTgiTK7OuDW6YlKYo=;
-        b=V2P3LzAPLB2iKBS/sBV5kMqKvUllTTUKFA6SOtvudOHJresL9TTbkK/ts5RdHfbz8X
-         kb+fehFAtEbbptqGaOAu1mOaMZWHbmkdagYANR9dVSkb42nZR/1p8Jlg1/vfswN/2CUh
-         tR7xHVG/w039kU9wdIbvoC7OBSq+kSKrflJYmx1KFc7dMz5NCmE/6QbaOV0PU4Z1Nbbs
-         8hc8ds6uNY2jKssthB67Q79RP0YiL/0853o00fse+4p4mgKG78fOU5gbL6Qr8x5XkbKn
-         +YquWjlEi1nO4t1ZUCWFxMpZ83HmAuGK6T6ZuUgFfrd+Ok5WeBlkCM7JzU3ruB4Ye1xd
-         q9Rw==
-X-Forwarded-Encrypted: i=1; AFNElJ+nEJOjDEmx0BAsO2cfYBjKw+ikCC5cp6dh8vkRFWEuXxgA9eeHnOPq550wDIYQVIiUNcLCPHRxt0ta5hOPiyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFNe6nTUbd/jGxYNGhBz8XnLU4cKUu+Qc8TU+Ja5bLDw6RoabK
-	8ZK6YwfZ37+qDzj2Obcilshdom7yqUC+RjfMlh2ACDXGd4SEpi99KspO
-X-Gm-Gg: Acq92OG4/BSTqRdyMcnxQg7HTwYvHK+CLC09ZfMhU1J5vEBbMpYP4qkOEH1D5w+iJRQ
-	vs+rvvXHJMrUEgPwmoD0FnpSnIXqIyPcFw+DZpXBm3rWK1upbRm57ESz5COlobnf0yqdzoRgOQB
-	9nD625PcbO8W1wmMrDAhjllHsv7ateYY2LGwi+8MpJs0txf2LEQjTJ66d8vjw2sqZTnScUnxqjT
-	hnbzzj5PYGT/koetDN5VdZDBoyes2TG8oiYIeLwaHA2eMsTB6W9bl9LsxmWlcFYJf416nyPyF0+
-	1nMaunvgg3rk6JDnvHHg8UqhfORmI9CYzah7JRss1l4Im+/Xtb7EDgq2paZxwy3KbrWxMmBf8ME
-	AYgIgTBnmA7JSmfFwCmrsf5HNoxYCAjTEJ58OJj3+97iXtTtKQoQ8E0mNG0f97hz+NOg6lqhkPd
-	yM9MEStpjoH1bNViBDpovLpl1w0eSjVWqMT8nFbxOGo+Vg
-X-Received: by 2002:a05:600c:6748:b0:490:3fa2:1b93 with SMTP id 5b1f17b1804b1-492381f132cmr16831865e9.13.1781733718507;
-        Wed, 17 Jun 2026 15:01:58 -0700 (PDT)
-Received: from [192.168.88.241] (89-24-35-102.nat.epc.tmcz.cz. [89.24.35.102])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-461eaa0d275sm13995468f8f.2.2026.06.17.15.01.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2026 15:01:58 -0700 (PDT)
-Message-ID: <b16e8bac-e149-4052-b1cb-8fd3e1137f9c@ovn.org>
-Date: Thu, 18 Jun 2026 00:01:56 +0200
+	s=arc-20240116; t=1781735649; c=relaxed/simple;
+	bh=7dP1HhxjtxeWYjAtcKXQmUA5VLNKmnsS+ydxepXRlfY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=q38iEWoVSVB7XpIg869pbULHBZtCpbVKVwmlI1jk4cSHRkYwUuHoXvEh/9itiANkVzQS+Szs3/DNHhpsugnzI1si1w9Z+Oycpti+5PBygqG+ggVKWgLgMr+0IooJOwvV7ZgOLl6QKT1xbtWrUSFhVzh90n6VPDE2JfVE8os7qy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 214BF6C132;
+	Wed, 17 Jun 2026 22:34:06 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C528B779A8;
+	Wed, 17 Jun 2026 22:34:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OtHhI90gM2qnegAAD6G6ig
+	(envelope-from <krisman@kernel.org>); Wed, 17 Jun 2026 22:34:05 +0000
+From: Gabriel Krisman Bertazi <krisman@kernel.org>
+To: harshal24-chavan <harshal24.chavan@gmail.com>, axboe@kernel.dk,
+ kees@kernel.org
+Cc: gustavoars@kernel.org, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ harshal24-chavan <harshal24.chavan@gmail.com>
+Subject: Re: [PATCH v2] [PATCH v2] io_uring/register: add
+ IORING_REGISTER_CLONE_FILES opcode
+In-Reply-To: <20260617081622.32823-1-harshal24.chavan@gmail.com>
+References: <20260617081622.32823-1-harshal24.chavan@gmail.com>
+Date: Wed, 17 Jun 2026 18:33:59 -0400
+Message-ID: <87a4ssyey0.fsf@mailhost.krisman.be>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: i.maximets@ovn.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev, Johan Thomsen <write@ownrisk.dk>
-Subject: Re: [PATCH net] net: dst_metadata: fix false-positive memcpy overflow
- in tun_dst_unclone
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, netdev@vger.kernel.org
-References: <20260616100332.1308294-1-i.maximets@ovn.org>
- <9e941b82-23d4-44e6-a240-b7949ace76ab@embeddedor.com>
-Content-Language: en-US
-From: Ilya Maximets <i.maximets@ovn.org>
-Autocrypt: addr=i.maximets@ovn.org; keydata=
- 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
-In-Reply-To: <9e941b82-23d4-44e6-a240-b7949ace76ab@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.dk,kernel.org];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On 6/17/26 10:08 PM, Gustavo A. R. Silva wrote:
-> Hi,
-> 
-> On 6/16/26 04:03, Ilya Maximets wrote:
->> kmalloc_flex() in metadata_dst_alloc() sets __counted_by for the
->> structure to the options_len, which is then initialized to zero.
->> Later, we're initializing the structure by copying the tunnel info
->> together with the options, and this triggers a warning for a potential
->> memcpy overflow, since the compiler estimates that the options can't
->> fit into the structure, even though the memory for them is actually
->> allocated.
->>
->>   memcpy: detected buffer overflow: 104 byte write of buffer size 96
->>   WARNING: CPU: X PID: Y at lib/string_helpers.c:1036 __fortify_report
->>    skb_tunnel_info_unclone+0x179/0x190
->>    geneve_xmit+0x7fe/0xe00
-> 
-> This warning has nothing to do with counted_by. See below for more
-> comments.
-> 
->>
->> The issue is triggered when built with clang and source fortification.
->>
->> Fix that by doing the copy in two stages: first - the main data with
->> the options_len, then the options.  This way the correct length should
->> be known at the time of the copy.
->>
->> It would be better if the options_len never changed after allocation,
->> but the allocation code is a little separate from the initialization
->> and it would be awkward and potentially dangerous to return a struct
->> with options_len set to a non-zero value from the metadata_dst_alloc().
->>
->> Another option would be to use ip_tunnel_info_opts_set(), but it is
->> doing too many unnecessary operations for the use case here.
->>
->> Fixes: 69050f8d6d07 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
->> Reported-by: Johan Thomsen <write@ownrisk.dk>
->> Closes: https://lore.kernel.org/netdev/CAKv6aAM8_EWgXScnKmKYm_4SwGDVBK++dzfP+Y6msUXbp99QUw@mail.gmail.com/
->> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
->> ---
->>
->> Johan, if you can test this one in your setup as well, that would
->> be great.  Thanks.
->>
->>   include/net/dst_metadata.h | 7 +++++--
->>   1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/net/dst_metadata.h b/include/net/dst_metadata.h
->> index 1fc2fb03ce3f..f45d1e3163f0 100644
->> --- a/include/net/dst_metadata.h
->> +++ b/include/net/dst_metadata.h
->> @@ -164,8 +164,11 @@ static inline struct metadata_dst *tun_dst_unclone(struct sk_buff *skb)
->>   	if (!new_md)
->>   		return ERR_PTR(-ENOMEM);
->>   
->> -	memcpy(&new_md->u.tun_info, &md_dst->u.tun_info,
->> -	       sizeof(struct ip_tunnel_info) + md_size);
-> 
-> What's going on here is that, internally, fortified memcpy() retrieves
-> the destination size via __builtin_dynamic_object_size() in mode 1.
-> 
-> That is:
-> 
-> __builtin_dynamic_object_size(&new_md->u.tun_info, 1)
-> 
-> For the above case, Clang returns sizeof(new_md->u.tun_info) == 96.
-> 
-> So the warning is reporting that 104 bytes don't fit in an object of
-> size 96 bytes, regardless of any counted_by annotation or allocation.
+harshal24-chavan <harshal24.chavan@gmail.com> writes:
 
-Hmm.  Does __builtin_dynamic_object_size(&new_md->u.tun_info, 1) return
-104 when the options_len is 8?  If so, isn't that because it is counted
-by that field?  Asking because the fortification doesn't complain if we
-keep the full 104-byte copy as-is, but set the options_len beforehand,
-as tested by Johan.
+> Currently, if an application wants to duplicate registered file descriptors
+> from one io_uring instance to another, it must manually unregister and
+> re-register them, incurring unnecessary overhead.
+>
+> Add IORING_REGISTER_CLONE_FILES to allow direct cloning of the file table
+> from a source ring to a destination ring. This includes support for
+> partial offsets and the IORING_REGISTER_DST_REPLACE flag.
+>
+> Signed-off-by: harshal24-chavan <harshal24.chavan@gmail.com>
+>
+> ---
+> v2: Dropped unrelated whitespace formatting changes from v1
+> ---
+>  include/uapi/linux/io_uring.h |  12 +++
+>  io_uring/register.c           |   6 ++
+>  io_uring/rsrc.c               | 160 ++++++++++++++++++++++++++++++++++
+>  io_uring/rsrc.h               |   1 +
+>  4 files changed, 179 insertions(+)
+>
+> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> index 909fb7aea638..0727602ce12f 100644
+> --- a/include/uapi/linux/io_uring.h
+> +++ b/include/uapi/linux/io_uring.h
+> @@ -723,6 +723,9 @@ enum io_uring_register_op {
+>  	/* register bpf filtering programs */
+>  	IORING_REGISTER_BPF_FILTER		= 37,
+>  
+> +	/* clone file descriptors from another ring*/
+> +	IORING_REGISTER_CLONE_FILES		= 38,
+> +
+>  	/* this goes last */
+>  	IORING_REGISTER_LAST,
+>  
+> @@ -854,6 +857,15 @@ struct io_uring_clone_buffers {
+>  	__u32	pad[3];
+>  };
+>  
+> +struct io_uring_clone_files {
+> +	__u32 src_fd;
+> +	__u32 flags;
+> +	__u32 src_off;
+> +	__u32 dst_off;
+> +	__u32 nr;
+> +	__u32 pad[3];
+> +};
+> +
+>  struct io_uring_buf {
+>  	__u64	addr;
+>  	__u32	len;
+> diff --git a/io_uring/register.c b/io_uring/register.c
+> index dce5e2f9cf77..bbc8c506ea2d 100644
+> --- a/io_uring/register.c
+> +++ b/io_uring/register.c
+> @@ -924,6 +924,12 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
+>  			break;
+>  		ret = io_register_clone_buffers(ctx, arg);
+>  		break;
+> +	case IORING_REGISTER_CLONE_FILES:
+> +		ret = -EINVAL;
+> +		if (!arg || nr_args != 1)
+> +			break;
+> +		ret = io_register_clone_files(ctx, arg);
+> +		break;
+>  	case IORING_REGISTER_ZCRX_IFQ:
+>  		ret = -EINVAL;
+>  		if (!arg || nr_args != 1)
+> diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
+> index 650303626be6..1e4e114ca5a5 100644
+> --- a/io_uring/rsrc.c
+> +++ b/io_uring/rsrc.c
+> @@ -1303,6 +1303,166 @@ int io_register_clone_buffers(struct io_ring_ctx *ctx, void __user *arg)
+>  	return ret;
+>  }
+>  
+> +
+> +static int io_clone_files(struct io_ring_ctx *ctx, struct io_ring_ctx *src_ctx,
+> +			  struct io_uring_clone_files *arg)
+> +{
+> +	struct io_file_table new_file_table;
+> +	int i, off, nr;
+> +	unsigned int src_nr;
+> +
+> +	lockdep_assert_held(&ctx->uring_lock);
+> +	lockdep_assert_held(&src_ctx->uring_lock);
+> +
+> +	/* if offsets are given, must have nr specified too */
+> +	if (!arg->nr && (arg->dst_off || arg->src_off))
+> +		return -EINVAL;
+> +	/* not allowed unless REPLACE is set */
+> +	if (ctx->file_table.data.nr &&
+> +	    !(arg->flags & IORING_REGISTER_DST_REPLACE))
+> +		return -EBUSY;
+> +
+> +	src_nr = src_ctx->file_table.data.nr;
+> +	if (!src_nr)
+> +		return -ENXIO;
+> +	if (!arg->nr)
+> +		arg->nr = src_nr;
+> +	else if (arg->nr > src_nr)
+> +		return -EINVAL;
+> +	else if (arg->nr > IORING_MAX_FIXED_FILES)
+> +		return -EINVAL;
+> +	if (check_add_overflow(arg->nr, arg->src_off, &off) || off > src_nr)
+> +		return -EOVERFLOW;
+> +	if (check_add_overflow(arg->nr, arg->dst_off, &src_nr))
+> +		return -EOVERFLOW;
+> +	if (src_nr > IORING_MAX_FIXED_FILES)
+> +		return -EINVAL;
+> +	/* Allocate file tables memory {data + bitmap} into new_file_table */
+> +	memset(&new_file_table, 0, sizeof(new_file_table));
+> +	if (!io_alloc_file_tables(ctx, &new_file_table,
+> +				  max(src_nr, ctx->file_table.data.nr)))
+> +		return -ENOMEM;
+> +
+> +	/* Copy original dst nodes from before the cloned range */
+> +	for (i = 0; i < min(arg->dst_off, ctx->file_table.data.nr); i++) {
+> +		struct io_rsrc_node *node = ctx->file_table.data.nodes[i];
+> +
+> +		if (node) {
+> +			new_file_table.data.nodes[i] = node;
+> +			node->refs++;
+> +			io_file_bitmap_set(&new_file_table, i);
+> +		}
+> +	}
+> +
+> +	off = arg->dst_off;
+> +	i = arg->src_off;
+> +	nr = arg->nr;
+> +	while (nr--) {
+> +		struct io_rsrc_node *dst_node, *src_node;
+> +
+> +		src_node = io_rsrc_node_lookup(&src_ctx->file_table.data, i);
+> +		if (!src_node) {
+> +			dst_node = NULL;
+> +		} else {
+> +			dst_node = io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
+> +			if (!dst_node) {
+> +				io_free_file_tables(ctx, &new_file_table);
+> +				return -ENOMEM;
+> +			}
+> +
+> +			struct file *file = io_slot_file(src_node);
+> +
+> +			get_file(file);
+> +			io_fixed_file_set(dst_node, file);
+> +		}
+> +		new_file_table.data.nodes[off] = dst_node;
+> +		if (dst_node)
+> +			io_file_bitmap_set(&new_file_table, off);
+> +
+> +		i++;
+> +		off++;
+> +	}
+> +
+> +	/* Copy original dst nodes from after the cloned range */
+> +	for (i = src_nr; i < ctx->file_table.data.nr; i++) {
+> +		struct io_rsrc_node *node = ctx->file_table.data.nodes[i];
+> +
+> +		if (node) {
+> +			new_file_table.data.nodes[i] = node;
+> +			node->refs++;
+> +			io_file_bitmap_set(&new_file_table, i);
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * If asked for replace, put the old table. new_file_table.data->nodes[] holds both
+> +	 * old and new nodes at this point.
+> +	 */
+> +	if (arg->flags & IORING_REGISTER_DST_REPLACE)
+> +		io_free_file_tables(ctx, &ctx->file_table);
 
-> 
-> Of course, in this case, the write of 104 bytes into new_md->u.tun_info
-> is intentional and controlled, but what if it weren't?
-> 
-> On the other hand, for this same case, GCC currently returns SIZE_MAX,
-> which translates to -1 inside fortified memcpy(). Thus, bounds-checking
-> is bypassed, which is why this warning doesn't show up with GCC.
-> 
-> However, this is a bug in GCC. We're already looking into that.
-> 
-> I think we've had just a handful of cases like this across the whole
-> kernel tree. We can deal with them as you did here (by directly copying
-> the composite structure first, and then using memcpy() to copy into the
-> flexible-array member). If these cases ever become more common, we
-> could create some kind of helper to do both things at once. :)
-> 
->> +	/* Copy in two stages to keep the __counted_by happy. */
-> 
-> So based on my comments above, this code comment is not correct.
+IIUC, the IORING_REGISTER_DST_REPLACE exists for backward compatibility,
+since originally the buffer cloning would fail if existing elements were
+already there.  It is kind of superflous in a new operation but I suppose
+it is here to mirror the semantics of io_clone_buffers, which is ok, but
+then...
 
-I feel like some comment is still needed, do you have some suggestions
-for what would be a better wording?
+This free should at least be gated on ctx->file_table->data.nr.  We are
+always replacing the ->file_table if it was initialized, so it is a bit
+more logical to check the table directly.
 
-> 
->> +	new_md->u.tun_info = md_dst->u.tun_info;
-> 
-> This is fine.
-> 
->> +	memcpy(ip_tunnel_info_opts(&new_md->u.tun_info),
->> +	       ip_tunnel_info_opts(&md_dst->u.tun_info), md_size);
-> 
-> Is ip_tunnel_info_opts() really needed here?
-> 
-> Probably this works just fine:
-> 
-> memcpy(new_md->u.tun_info.options, md_dst->u.tun_info.options, md_size);
+> +
+> +	/*
+> +	 * ctx->file_table must be empty now - either the contents are being
+> +	 * replaced and we just freed the table, or the contents are being
+> +	 * copied to a ring that does not have buffers yet (checked at function
+> +	 * entry).
+> +	 */
+> +	WARN_ON_ONCE(ctx->file_table.data.nr);
+> +	ctx->file_table = new_file_table;
+> +	io_file_table_set_alloc_range(ctx, 0, ctx->file_table.data.nr);
+> +	return 0;
+> +}
+> +
+> +int io_register_clone_files(struct io_ring_ctx *ctx, void __user *arg)
+> +{
+> +	struct io_uring_clone_files clone_arg;
+> +	struct io_ring_ctx *src_ctx;
+> +	bool registered_src;
+> +	struct file *file;
+> +	int ret;
+> +
+> +	if (copy_from_user(&clone_arg, arg, sizeof(clone_arg)))
+> +		return -EFAULT;
+> +	if (clone_arg.flags &
+> +	    ~(IORING_REGISTER_SRC_REGISTERED | IORING_REGISTER_DST_REPLACE))
+> +		return -EINVAL;
+> +	/* not allowed unless REPLACE is set */
+> +	if (!(clone_arg.flags & IORING_REGISTER_DST_REPLACE) &&
+> +	    ctx->file_table.data.nr)
+> +		return -EBUSY;
 
-The logic here is: we have the access function, therefore we should use it.
-It gives a bad example if we don't.
+This check is duplicated in io_clone_files.
 
-Best regards, Ilya Maximets.
+> +	if (memchr_inv(clone_arg.pad, 0, sizeof(clone_arg.pad)))
+> +		return -EINVAL;
+> +
+> +	registered_src = (clone_arg.flags & IORING_REGISTER_SRC_REGISTERED) !=
+> +			 0;
+> +	file = io_uring_ctx_get_file(clone_arg.src_fd, registered_src);
+> +	if (IS_ERR(file))
+> +		return PTR_ERR(file);
+> +
+> +	src_ctx = file->private_data;
+> +	if (src_ctx != ctx) {
+
+Shouldn't we just fail if ctx == src_ctx ?
+
+> +		mutex_unlock(&ctx->uring_lock);
+> +		lock_two_rings(ctx, src_ctx);
+> +
+> +		/* Prevent cross-process hijacking */
+> +		if (src_ctx->submitter_task &&
+> +		    src_ctx->submitter_task != current) {
+> +			ret = -EEXIST;
+> +			goto out;
+
+Is limiting the feature to the submitter_task necessary to safely copy
+the table even if the lock is held?  The use-case for this feature would
+be setting up a single ring with its file table and then replicating it
+on other threads, on the common model of one-ring per thread. This check
+limits it.
+
+There's no cross-process hijacking, IIUC, because io_uring_ctx_get_file
+sees rings belonging to the process.  But a thread could make use of
+this feature to clone the process_table of another thread which is
+useful.
+
+>+ 
+>+ out:
+>+        if (src_ctx != ctx)
+>+                mutex_unlock(&src_ctx->uring_lock);
+
+-- 
+Gabriel Krisman Bertazi
