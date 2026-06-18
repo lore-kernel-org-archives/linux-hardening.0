@@ -1,210 +1,150 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A8D2D5432
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 04:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0F037DEAA
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 05:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781755483; cv=none; b=JIsShAjLlOeOr0k2fdR6tM4soGxkffEBwxf7XLQVxqjisYdgQ5Whe7ra1K0pIZX7o06J/MEALBepiBV4A4Hqmig6g9d/XlmiQ4sRT+gfnBaA/b4mAH6uysg0QixHu2MEMzV7TmuxHhkQQoTDPlQfPQp4G1UPGBftwB5//iUM/PA=
+	t=1781759576; cv=none; b=elFP7iR3/SHw/zlAgHms/S+2V/dt406ILKKgJ8gMyZnyRw76RLTddiB0iY7BrGZsoWolU910XDnjHL1lH+AdDzU/PcTsyE6exKDQZpYIiD4dHSSDJeM1+8oBmLlOX9w/4fFspJvbgeOk1EuDuRpbK/561EDKCLnKV5vWAxzQl9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781755483; c=relaxed/simple;
-	bh=bg/F99K/tPnZmAZ6Ws47Ut6GiqHMzrr8TP4QNB143nk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Au5VrduBMaOsYNDJcmknwTESp4myD5R31yfwySIu61Oy9ioAokzNqIVFPlLhoRCd5PAHf16i/MLouyorva/EmYW5tu5akhHh0ak+1x4+Wu6TxrIwv5bn+ehghZb1HrsZ4RrKai/Vs/5uRMu0swLRt0StAEe6uF2zWdSxYRySet0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=amXzJHxV; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1781759576; c=relaxed/simple;
+	bh=ARmXfzfmk3LT7n9bbeg9IGAGgbAhu0IwTEMKbxCVmCM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lxPQPu50Cwh+OxUtEGJiIYqg9K28ps7arUJteklaINVlfpSS+GHLwmdxE/QV8lcHowl3wdiOasCekuVzohJyPUlbsy3XcGXwZJvig/7MQ3cViSw42GnWmkecIXAIA2vW4bP1FPRtCg657yML2xJ64H0v+dRfJYk3AYQxts+6klk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sm9DrOkQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="amXzJHxV"
-Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
-	by cmsmtp with ESMTPS
-	id a1APwxalHVGUKa3y6wkuKX; Thu, 18 Jun 2026 04:03:06 +0000
-Received: from gator4166.hostgator.com ([108.167.190.91])
-	by cmsmtp with ESMTPS
-	id a3y5wzQTUDvkea3y5w89p0; Thu, 18 Jun 2026 04:03:06 +0000
-X-Authority-Analysis: v=2.4 cv=RaOQC0tv c=1 sm=1 tr=0 ts=6a336dfa
- a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=pGLkceISAAAA:8 a=P8mRVJMrAAAA:8 a=zzpufJ8321dq2p5ObpoA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=Vc1QvrjMcIoGonisw6Ob:22 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DKdOLa8mXEQxy2aKDLRsGejsQejVOXVATZTBnELL7Ao=; b=amXzJHxV9XMN9ytNNwUyG2AKPF
-	oumqvuAvQjaLetX40l9IkrgtTUJ4F2tlBYZkyHcHi9JEQJHnh5Pb8DpBmnKZ8ZlvN1rXrsCRJmqWH
-	tfGDsBKnUrOQQCIrmRaoVy1e91w4E9gaD2NBNP17qfOvmpArQykbNCRbsVmJC+APc+hargKeNKQOI
-	zALdAcjxhlFnNlgM6yMx/P7K1+f0xdyU3ZQdAsNG/AvKw8xNrC17iZZ7EVOiIzK0yL5bK9WrJMdfL
-	Bs9sO8rJb4DeUaCrI/4//RBjD6KKuIu0ICw6tmYdzXofqDceFBL3nZTAWTLNCXs50SdqlqhNIybLc
-	4F3h+73A==;
-Received: from [177.238.16.65] (port=43238 helo=[192.168.0.37])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.99.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1wa3xx-000000045GJ-4BvT;
-	Wed, 17 Jun 2026 23:02:58 -0500
-Message-ID: <13b922ce-8450-48fd-adf7-5377989fb6e4@embeddedor.com>
-Date: Wed, 17 Jun 2026 22:02:38 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sm9DrOkQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C2431F000E9;
+	Thu, 18 Jun 2026 05:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781759575;
+	bh=bz8rcJEvW+UYdjiZC8i4NMtHtvVIsO82vzYqLQfHPok=;
+	h=From:To:Cc:Subject:Date;
+	b=Sm9DrOkQTvyuC0AqtzBB/KQawv7JeaFfGx8YbTCrYAU5cm3XSQAv3YxPJ8BqK/fj0
+	 DH8dtqQNXFsgDc7p1FjWSBBVP/IUfQdSGdc8n4GpwsmJ0ZZt1nd8jwPoCsUD0wYckl
+	 HH1ja0+M4iK7b8P4xMCfMqGQh4jZxy2nGsY2nMOYSk/wb/NikCaqEnUeaEMtokjNHu
+	 /00U6vsAa68ZJjo92/wJE1TblyZFawQ/OgAA+0gfam4eqewBHFEJQDTZtgOYM/S2f8
+	 QFWAXyrjTJAUUg+OEI23Fot5YoxhrOtkIGlGaf2wKwnlHIlx8XitOspgca9Bs3GYBp
+	 7/pWOkqJlbGbg==
+From: Kees Cook <kees@kernel.org>
+To: Martin Uecker <uecker@tugraz.at>
+Cc: Kees Cook <kees@kernel.org>,
+	Richard Biener <rguenther@suse.de>,
+	gcc-patches@gcc.gnu.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] c: handle .ACCESS_WITH_SIZE in build_unary_op for !/+/- [PR123569]
+Date: Wed, 17 Jun 2026 22:12:51 -0700
+Message-Id: <20260618051246.work.269-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: dst_metadata: fix false-positive memcpy overflow
- in tun_dst_unclone
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Ilya Maximets <i.maximets@ovn.org>, netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev, Johan Thomsen <write@ownrisk.dk>
-References: <20260616100332.1308294-1-i.maximets@ovn.org>
- <9e941b82-23d4-44e6-a240-b7949ace76ab@embeddedor.com>
- <b16e8bac-e149-4052-b1cb-8fd3e1137f9c@ovn.org>
- <a95aabe9-6294-42ed-8327-b7d74bb4a8c8@embeddedor.com>
-Content-Language: en-US
-In-Reply-To: <a95aabe9-6294-42ed-8327-b7d74bb4a8c8@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4010; i=kees@kernel.org; h=from:subject:message-id; bh=ARmXfzfmk3LT7n9bbeg9IGAGgbAhu0IwTEMKbxCVmCM=; b=owGbwMvMwCVmps19z/KJym7G02pJDFnGdcFvVu+7svcqQ1IJ96mKxEkal8/eW72Apfkvq/anx A/LvMMEO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACYSI8PI0MThox31SpP98uG6 pnjRqN/FE/5+3sgWyCydZCjVPHO7IcM/xatxC9kvnXo2ZbraVxuec96p7PfnPrE6x5A4Pa7H60o RDwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.16.65
-X-Source-L: No
-X-Exim-ID: 1wa3xx-000000045GJ-4BvT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.37]) [177.238.16.65]:43238
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHWBVjck3dxbLJtjUVIKYX033T+m7Fug/Eic1Bw9Ql3ojJ9zNm8ZWd3ktv1OiUSlxMx0DZQ7Hm8q3u9OaOYmA/crbsD7dIozC0NXTQg4AfgiKtudWk0x
- 6twPZDD6NPGUf6ST/pJWmmAnhox2na71OvFvJ1wFoXhsee7tffKbHD5QBhsPfxI+tiNQSduHjOq+WsRuho9fXlOa3310tK1s77EEHPbZpoo4j3X9ZfQtqLzS
 
+PR123569 fixed wrong code with the counted_by attribute on a pointer
+member by suppressing creation of the .ACCESS_WITH_SIZE wrapper in the
+parser's pre/post-increment paths, and added a checking assertion in
+build_unary_op to ensure no .ACCESS_WITH_SIZE call reaches it.
 
+The other rvalue-consuming unary operators (!, -, +) still
+rvalue-convert their operand via convert_lvalue_to_rvalue, which
+produces the .ACCESS_WITH_SIZE wrapper as before.  They then reach
+parser_build_unary_op then build_unary_op carrying the wrapper and
+trip the assertion.  A minimal reproducer:
 
-On 6/17/26 16:59, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 6/17/26 16:01, Ilya Maximets wrote:
->> On 6/17/26 10:08 PM, Gustavo A. R. Silva wrote:
->>> Hi,
->>>
->>> On 6/16/26 04:03, Ilya Maximets wrote:
->>>> kmalloc_flex() in metadata_dst_alloc() sets __counted_by for the
->>>> structure to the options_len, which is then initialized to zero.
->>>> Later, we're initializing the structure by copying the tunnel info
->>>> together with the options, and this triggers a warning for a potential
->>>> memcpy overflow, since the compiler estimates that the options can't
->>>> fit into the structure, even though the memory for them is actually
->>>> allocated.
->>>>
->>>>    memcpy: detected buffer overflow: 104 byte write of buffer size 96
->>>>    WARNING: CPU: X PID: Y at lib/string_helpers.c:1036 __fortify_report
->>>>     skb_tunnel_info_unclone+0x179/0x190
->>>>     geneve_xmit+0x7fe/0xe00
->>>
->>> This warning has nothing to do with counted_by. See below for more
->>> comments.
->>>
->>>>
->>>> The issue is triggered when built with clang and source fortification.
->>>>
->>>> Fix that by doing the copy in two stages: first - the main data with
->>>> the options_len, then the options.  This way the correct length should
->>>> be known at the time of the copy.
->>>>
->>>> It would be better if the options_len never changed after allocation,
->>>> but the allocation code is a little separate from the initialization
->>>> and it would be awkward and potentially dangerous to return a struct
->>>> with options_len set to a non-zero value from the metadata_dst_alloc().
->>>>
->>>> Another option would be to use ip_tunnel_info_opts_set(), but it is
->>>> doing too many unnecessary operations for the use case here.
->>>>
->>>> Fixes: 69050f8d6d07 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
->>>> Reported-by: Johan Thomsen <write@ownrisk.dk>
->>>> Closes: https://lore.kernel.org/netdev/CAKv6aAM8_EWgXScnKmKYm_4SwGDVBK++dzfP+Y6msUXbp99QUw@mail.gmail.com/
->>>> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
->>>> ---
->>>>
->>>> Johan, if you can test this one in your setup as well, that would
->>>> be great.  Thanks.
->>>>
->>>>    include/net/dst_metadata.h | 7 +++++--
->>>>    1 file changed, 5 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/include/net/dst_metadata.h b/include/net/dst_metadata.h
->>>> index 1fc2fb03ce3f..f45d1e3163f0 100644
->>>> --- a/include/net/dst_metadata.h
->>>> +++ b/include/net/dst_metadata.h
->>>> @@ -164,8 +164,11 @@ static inline struct metadata_dst *tun_dst_unclone(struct sk_buff *skb)
->>>>        if (!new_md)
->>>>            return ERR_PTR(-ENOMEM);
->>>> -    memcpy(&new_md->u.tun_info, &md_dst->u.tun_info,
->>>> -           sizeof(struct ip_tunnel_info) + md_size);
->>>
->>> What's going on here is that, internally, fortified memcpy() retrieves
->>> the destination size via __builtin_dynamic_object_size() in mode 1.
->>>
->>> That is:
->>>
->>> __builtin_dynamic_object_size(&new_md->u.tun_info, 1)
->>>
->>> For the above case, Clang returns sizeof(new_md->u.tun_info) == 96.
->>>
->>> So the warning is reporting that 104 bytes don't fit in an object of
->>> size 96 bytes, regardless of any counted_by annotation or allocation.
->>
->> Hmm.  Does __builtin_dynamic_object_size(&new_md->u.tun_info, 1) return
->> 104 when the options_len is 8?  If so, isn't that because it is counted
->> by that field?  Asking because the fortification doesn't complain if we
->> keep the full 104-byte copy as-is, but set the options_len beforehand,
->> as tested by Johan.
-> 
-> I see. If that is the case, then, internally, fortified memcpy() ends up
-> using mode 0 instead of mode 1. Something like this:
-> 
-> __builtin_dynamic_object_size(&new_md->u.tun_info, 0)
-> 
-> The above will effectively consider the allocation and counted_by because
-> it will interpret new_md->u.tun_info as an open-ended object due to the
-> flexible-array member (in struct ip_tunnel_info) whose size is determined
-> by counted_by.
+  struct s {
+    int n;
+    char *p __attribute__((__counted_by__(n)));
+  };
+  int f (struct s *o) { return !o->p; }
 
-Indeed. The execution stops here:
+Unwrap the .ACCESS_WITH_SIZE call at the top of build_unary_op via
+get_ref_from_access_with_size.  These unary operators consume the
+pointer rvalue rather than the pointed-to data, so the bounds-checking
+wrapper is not useful here.  The assertion is retained: after the unwrap
+it documents the post-condition the rest of the function relies on.
 
-fortify_memcpy_chk():
-588         /*
-589          * Always stop accesses beyond the struct that contains the
-590          * field, when the buffer's remaining size is known.
-591          * (The SIZE_MAX test is to optimize away checks where the buffer
-592          * lengths are unknown.)
-593          */
-594         if (p_size != SIZE_MAX && p_size < size)
-595                 fortify_panic(func, FORTIFY_WRITE, p_size, size, true);
+	PR c/123569
 
-with p_size = __builtin_dynamic_object_size(&new_md->u.tun_info, 0)
+gcc/c/ChangeLog:
 
-The code never reaches the part where p_size_field (__bdos(&new_md->u.tun_info, 1))
-is checked at runtime because there is no need for that.
+	* c-typeck.cc (build_unary_op): Unwrap .ACCESS_WITH_SIZE
+	from the operand before further processing.
 
-So yep, this patch is okay as-is.
+gcc/testsuite/ChangeLog:
 
-Thanks
--Gustavo
+	* gcc.dg/counted-by-unary.c: New test.
+---
+ gcc/testsuite/gcc.dg/counted-by-unary.c | 32 +++++++++++++++++++++++++
+ gcc/c/c-typeck.cc                       | 12 ++++++++++
+ 2 files changed, 44 insertions(+)
+ create mode 100644 gcc/testsuite/gcc.dg/counted-by-unary.c
+
+diff --git a/gcc/testsuite/gcc.dg/counted-by-unary.c b/gcc/testsuite/gcc.dg/counted-by-unary.c
+new file mode 100644
+index 000000000000..b16b819d63b6
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/counted-by-unary.c
+@@ -0,0 +1,32 @@
++/* Verify that unary operators that rvalue-convert a counted_by-annotated
++   pointer access do not ICE.  The original PR123569 fix suppressed the
++   .ACCESS_WITH_SIZE wrapper creation for ++/-- (which keep an lvalue);
++   the rvalue-consuming ops (!, -, +) still receive the wrapper and must
++   strip it in build_unary_op.  */
++/* { dg-do run } */
++/* { dg-options "-std=c99" } */
++
++struct s {
++    int n;
++    char *p __attribute__((__counted_by__(n)));
++};
++
++int test_not (struct s *o)    { return !o->p; }
++long test_neg (struct s *o)   { return -(long)o->p; }
++long test_plus (struct s *o)  { return +(long)o->p; }
++
++extern void abort (void);
++
++int main (void) {
++    char buf[4] = { 0 };
++    struct s s = { .n = 4, .p = buf };
++    if (test_not (&s) != 0)  abort ();    /* p is non-null */
++
++    struct s e = { .n = 0, .p = (void*)0 };
++    if (test_not (&e) != 1)  abort ();    /* p is null */
++
++    /* test_neg / test_plus must just compile and run without ICE.  */
++    (void) test_neg (&s);
++    (void) test_plus (&s);
++    return 0;
++}
+diff --git a/gcc/c/c-typeck.cc b/gcc/c/c-typeck.cc
+index 6bce8c427543..0f96de200743 100644
+--- a/gcc/c/c-typeck.cc
++++ b/gcc/c/c-typeck.cc
+@@ -5779,6 +5779,18 @@ build_unary_op (location_t location, enum tree_code code, tree xarg,
+   tree eptype = NULL_TREE;
+   const char *invalid_op_diag;
+ 
++  /* If ARG is wrapped in a call to .ACCESS_WITH_SIZE (created when the
++     C parser rvalue-converts a counted_by-annotated member access, see
++     PR123569) unwrap it here.  Unary operators that consume an rvalue
++     (!, -, +) read the value itself rather than dereferencing into the
++     pointed-to data, so the bounds-checking wrapper is unnecessary and
++     would otherwise reach build_unary_op while it is not equipped to
++     handle the wrapped form.  PR123569 fixed the ++/-- side of this by
++     suppressing wrapper creation in the parser; the rvalue-consuming
++     ops still receive the wrapper and need to strip it here.  */
++  if (is_access_with_size_p (arg))
++    xarg = arg = get_ref_from_access_with_size (arg);
++
+   gcc_checking_assert (!is_access_with_size_p (arg));
+ 
+   bool int_operands = EXPR_INT_CONST_OPERANDS (xarg);
+-- 
+2.34.1
+
