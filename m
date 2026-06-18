@@ -1,113 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D7D39AD3A
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 11:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08AA3905E0
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 13:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781783693; cv=none; b=HABR1y8TDtcvjjvq2bbUtFG0Yw2tX0ZeaPXFt9cs6tVb6K8YlI7JQoZMWIFxUfRY+BWp/Zsl9SJpxHYwnDlnQMcCEAFzOM54woIjTTO6TT0NTwk6zkadHHXJeiswStoGSy7o6pBRyL7Lj/iTR78wWLnUCxf4kgj6NCEVdjYf9zs=
+	t=1781788993; cv=none; b=cvmfxfa0Hk2SGH2Yxp/Kob+k2Qtkd+bD69ivfNah3tw6TW5HFyC7l4wRFi7VQ8kEljvUOA/hyQfKxxdTc+uQSWwHlpeYbs5BaNxkELOC5bcBtLVN9l7lmxK4MKiLCHqFC63TP4IGcwuImdyqoVk+6IrjakrLCzS8zRafoIORcrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781783693; c=relaxed/simple;
-	bh=JpwncGscV+/yJCtWhTqMjbxBNZe/rTh+V5vycEaL3AI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mskSyxzcxWcmgYIR85zF+Q6yODXFqcdzdGLCFyms9GKYpX/rosHtPUGHLJKKZ7Ilkhf7ihBgcDJ00RP1JTsiycwU40LmgbCr+iyshnD7D7TCSYztbjoN/QxFICjPO5FYCfWw3Rw0rTAClhTzAIGx6vt3f4mlhZmH2GVlDtC110E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WIHfxS5l; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1781788993; c=relaxed/simple;
+	bh=kzNB+bRm0uooJBN5KrY3HjTN4jZj1AGxBSYK7+XKHSc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o7COX0Dz0okR/JYJdg1qqZVsEEz+4ZW8P7h5Q2LE0n6bPci1S9n23NUJNRnrADkDeptBslI7qJ1TrdK29UMjhscWSI/RL/PS//ORZ1ZBBhvLj+yVFy2eBs6YauFMO3Z12nwY9oukjI8JVMxcS2hWfmfSoaxZJaMShD/MwBMVzPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVaQzpYi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WIHfxS5l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781783691;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=87sV1KJdzQRdpcATxiJd4dyqW0NfL5oL/U+Vih8k7+k=;
-	b=WIHfxS5lvKEy8493YBgZdPCmhbOb+S02gDGu+tgJcv/SNkfFXMKpgKqpHEDId7ipNg4ymD
-	nMVNQ7qLOJwiB7x8xfO0zPpxUdzJXM/T5WJ4WukbeRFFfEQSLwxIUhfnRlZOai3B2HQKMd
-	fv6qm8KlGveGsTnEZUfC7G/mlrrLiHA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-499-svL4jqegMPiGeHtqDx_rFg-1; Thu, 18 Jun 2026 07:54:50 -0400
-X-MC-Unique: svL4jqegMPiGeHtqDx_rFg-1
-X-Mimecast-MFC-AGG-ID: svL4jqegMPiGeHtqDx_rFg_1781783689
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-490ab3f6e55so4680805e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 04:54:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781783688; x=1782388488;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=87sV1KJdzQRdpcATxiJd4dyqW0NfL5oL/U+Vih8k7+k=;
-        b=MTunWEvqZSQxdV1TNy1iYvF6C63MTG5Ky70ybGkXfOZbCH/k4uGs45vxUz5lMUL1K9
-         L6WjYyYtW2b07ec1O/EK3n5Kbfl/v2tjIGD2yIkaUUN7FqZec7zA3Y4HGUiaejIrQ98Z
-         Dxrk94yQo/YwoHIJ8Z4D/jLfufMnEUy+j4zINFA9McIlS7r6cGrzV47uLvd8Humm6o57
-         j8KA4hdmmyy/bW4g+5eBbZyqQVnUlm3yekJYLfMfcLj3+lZzw5tgrrj4KcckdipSXsmh
-         LBiNZCF5CQu8cQC+w0qfqqBMD8yxN10YqJ85mMLRJCk8ok6Lw/2sMHemwEfCy4nShtE1
-         diHA==
-X-Forwarded-Encrypted: i=1; AFNElJ+JFTDVUFzGE2qwc5RHR6jOcQO890YF1YxGF5jQrc8y9mNeTaJKCpEFjSO0Q769lpPnUeNqJEP4K9/betd+Vm8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyh3H9WUjAci4z0xvZzfDPsFlAmcNkEJRxebO6aLhscktKuTyL1
-	fXNnpySWXyvqu03CXKVZWRyNMGo65+cWbV1xO8lJF5cVjg5Q5EQ9o2eHFY9t0AlTQdO7foGXSgA
-	nnWUB446pPxCTFYWceRO7kJyKUrSINzAV0h6tQr8rW1i8swg5U69WEX4nzm7VPBZWPqNbaA==
-X-Gm-Gg: Acq92OFQeambG3Pogs3wEsyH+C4PQStk/qX2s41PWf22nyhchQrU6W9c+qOxWwAJktc
-	OArvpQgVY+HhJCZekO7BQ0sZBJLGFMKS3iv8ACoWjYAvDtpgBRq8vFZ8GNEszRy/AghjaKJYp2p
-	z8xR+CFo2vGe3qPRnKeygy6/GGJihxHpsssdjm0loUgpqlNKXyvV7gKialP7Ln+h4NAyGTIhN8J
-	2pVpKq6xsn4nMO1Yhn7NTF4ygeNmck7wjvWSNHzf/mUr/XxWU/JGaPaS+krSNtreBd8KxX9NaSN
-	eET2aJkcPF2mFa/+ei/ZK/0mDqYAIjpVAhcXtJ5XMS6mhdrmmYuvxO1tJo2RTP3NI1PiD1g5g2Y
-	YV7A9eTfMAS0WjxxlUnR2EjlLR304gMYnrBJ0/MNrHw==
-X-Received: by 2002:a05:600c:8b85:b0:492:3773:a230 with SMTP id 5b1f17b1804b1-4923773a3e4mr70735065e9.27.1781783688656;
-        Thu, 18 Jun 2026 04:54:48 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b85:b0:492:3773:a230 with SMTP id 5b1f17b1804b1-4923773a3e4mr70734675e9.27.1781783688312;
-        Thu, 18 Jun 2026 04:54:48 -0700 (PDT)
-Received: from digraph.polyomino.org.uk (digraph.polyomino.org.uk. [2001:8b0:bf73:93f7::51bb:e332])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4922fa3abd0sm270014815e9.1.2026.06.18.04.54.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2026 04:54:47 -0700 (PDT)
-Received: from jsm28 (helo=localhost)
-	by digraph.polyomino.org.uk with local-esmtp (Exim 4.98.2)
-	(envelope-from <josmyers@redhat.com>)
-	id 1waBKY-00000004HGz-3gcc;
-	Thu, 18 Jun 2026 11:54:46 +0000
-Date: Thu, 18 Jun 2026 11:54:46 +0000 (UTC)
-From: Joseph Myers <josmyers@redhat.com>
-To: Martin Uecker <uecker@tugraz.at>
-cc: Kees Cook <kees@kernel.org>, Richard Biener <rguenther@suse.de>, 
-    gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] c: handle .ACCESS_WITH_SIZE in build_unary_op for !/+/-
- [PR123569]
-In-Reply-To: <91666e2ff131490d75cf758182d9c47f723e2ec8.camel@tugraz.at>
-Message-ID: <498111f0-c7d7-3952-2719-901a44586cc6@redhat.com>
-References: <20260618051246.work.269-kees@kernel.org> <a54bcd41c5fc4f4550df157c00dab43939669b25.camel@tugraz.at> <91666e2ff131490d75cf758182d9c47f723e2ec8.camel@tugraz.at>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVaQzpYi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4FB51F00ADB
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 13:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781788992;
+	bh=+Hao5re1+cPlNlzNJBZ4sf1w820eCIPHa6P9dbVUFmE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=EVaQzpYiRqYK5hksirc5nS24Y0fzb4urTSaV/jtRdTqQooIUUArTy1+HgkpKtFwim
+	 1+4WlmhNJEAkxfk/lfl5HQjq/Y957Ghxvj8izXGw/06pRWDQPP+ruSGUZgnocnwips
+	 nbOIxMtH4SiWbCBweUzm8EhaTU1i0hc0tbBr2uihXX5GFXhUhRfgxP9GVbhs5rMYWN
+	 UNGGSkpKbvRFL+6yTa8AVdYBjxBLZUvVNeRIn9og2bs/QNiJX0VZzDE8FhqrkAKrLo
+	 Qg38vSG6ryiNQ1C1rfo8rjZkYxReWCmpGf8+iB5xzZqjutTJZyoifdtv8K9wn/4odD
+	 sAtImPZz7u1lg==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5ad522bddceso477511e87.0
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 06:23:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+53qQGZNklEggirz2A+CUnzY1jS9nMeq5hu0lA7UyXUM3hlgbaS44rnyqzwjxtEOhh1v1+XcrT2zVUsutSBrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywXzfux/jQfYEHJIw76DKlxEvPG+qVldRbcdbhgk+UBa1zvWEX
+	wxywbR5Ba8TQJ7LYIS4Nm2fcDwBZQOmyuzpZFhnQAq22w6DTySCecJ5a562ZVyaxVoPSyMP3I6P
+	LJBkgpuTI7x5VVV0+1TZLiwfrB5JctdY=
+X-Received: by 2002:a05:6512:6487:b0:5aa:6289:e0b5 with SMTP id
+ 2adb3069b0e04-5ad50ec7bfbmr700610e87.35.1781788991504; Thu, 18 Jun 2026
+ 06:23:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: tNbuzjbkai9mgnLLcfEmRdsiPhcxKT61qzwJk6RvpiQ_1781783689
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+References: <20260526-kpkeys-v8-0-eaaacdacc67c@arm.com> <20260526-kpkeys-v8-1-eaaacdacc67c@arm.com>
+ <70f4dcdf-c45f-47d3-91df-a7897bd86ff4@kernel.org>
+In-Reply-To: <70f4dcdf-c45f-47d3-91df-a7897bd86ff4@kernel.org>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 18 Jun 2026 15:22:58 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=km9hqTuTMFUhyx_QPuMEwWqmnUVQtPtMXnp8paHH1_A@mail.gmail.com>
+X-Gm-Features: AVVi8CdVd_MSXkJ8x_FXRhl-ZhQK3-a6vu0Q8TQoQCS7OolDkuqw-biJhYguwBU
+Message-ID: <CAD++jL=km9hqTuTMFUhyx_QPuMEwWqmnUVQtPtMXnp8paHH1_A@mail.gmail.com>
+Subject: Re: [PATCH RFC v8 01/24] mm: Introduce kpkeys
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>, 
+	Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Pierre Langlois <pierre.langlois@arm.com>, 
+	Quentin Perret <qperret@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>, 
+	Yang Shi <yang@os.amperecomputing.com>, Yeoreum Yun <yeoreum.yun@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org, 
+	Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 18 Jun 2026, Martin Uecker wrote:
+On Tue, Jun 16, 2026 at 5:19=E2=80=AFPM David Hildenbrand (Arm)
+<david@kernel.org> wrote:
 
-> It should reference PR125604 though.
-> 
-> Am Donnerstag, dem 18.06.2026 um 07:21 +0200 schrieb Martin Uecker:
-> > I was about to fix this but did not have time yet, so thank you!
-> > 
-> > To me the patch looks fine. I add Joseph (C FE maintainer)
-> > for review.
+> Looking at this, and wondering about "why do we get registers involved in=
+ this
+> API" I would probably have an interface like:
+>
+>         arch_kpkeys_enter_context()
+>         arch_kpkeys_leave_context()
+>
+> Whereby you return a "struct kpkeys_state" or sth like that.
 
-The patch is OK with that bug reference, and with a portability fix in the 
-testcase:
+This is close to what I was looking for as well.
 
-> > > +long test_neg (struct s *o)   { return -(long)o->p; }
-> > > +long test_plus (struct s *o)  { return +(long)o->p; }
+enter/leave makes the code look more like generic entry.
 
-Should use __INTPTR_TYPE__ instead of long here.
+Passing some kind of state cookie around is inevitable in
+this design and IIUC Kevin argued that it would be inefficient
+(another level of abstraction) as opposed to just hammering
+in the context we want, where we want it.
 
--- 
-Joseph S. Myers
-josmyers@redhat.com
+But I think the compiler will optimize that out by constant
+propagation if the backing architecture implementation is
+simple.
 
+Yours,
+Linus Walleij
