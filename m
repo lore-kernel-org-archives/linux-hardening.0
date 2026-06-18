@@ -1,132 +1,113 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519283DA7E2
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 11:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781783009; cv=pass; b=Q7DN43br+HBHqno7SpjpIR8RPaJWVWrr3fORI/rzMxYCeQL0YfoRU9kL/i3WMryZBLNekr3iXKbQx9U/DvF2cMquXtvoxNh33Qy3kt9GwvoDsB7+A7lHDQmGgQaZs0S4mx/2APMUu/EOxth1BheqXucOvU9lDm8PXUtM+YYWH9Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781783009; c=relaxed/simple;
-	bh=aiBMmDxUbkczn/Vb9JP5UZM5Zl61RSgtXrA/0C46Sgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=skyjwmIebmef5hjpIu7GWKFCbxsRPD9Ylij6tyaKv/y4R4QtU+yQQAhiZNUoeFatcuEnXVXJu+d5dyd4G8GvRLhJg4i4Qb8YK3PtQWG/s7QFXeOv/wrETLVFmSuU6CBQUlFn3/ytYUYbXBb9vh0YrV5Fb1Ohlx0kZqAzKAOQ/CE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ownrisk.dk; spf=none smtp.mailfrom=ownrisk.dk; dkim=pass (2048-bit key) header.d=ownrisk-dk.20251104.gappssmtp.com header.i=@ownrisk-dk.20251104.gappssmtp.com header.b=GD6oKj5U; arc=pass smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ownrisk.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ownrisk.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D7D39AD3A
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 11:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781783693; cv=none; b=HABR1y8TDtcvjjvq2bbUtFG0Yw2tX0ZeaPXFt9cs6tVb6K8YlI7JQoZMWIFxUfRY+BWp/Zsl9SJpxHYwnDlnQMcCEAFzOM54woIjTTO6TT0NTwk6zkadHHXJeiswStoGSy7o6pBRyL7Lj/iTR78wWLnUCxf4kgj6NCEVdjYf9zs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781783693; c=relaxed/simple;
+	bh=JpwncGscV+/yJCtWhTqMjbxBNZe/rTh+V5vycEaL3AI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=mskSyxzcxWcmgYIR85zF+Q6yODXFqcdzdGLCFyms9GKYpX/rosHtPUGHLJKKZ7Ilkhf7ihBgcDJ00RP1JTsiycwU40LmgbCr+iyshnD7D7TCSYztbjoN/QxFICjPO5FYCfWw3Rw0rTAClhTzAIGx6vt3f4mlhZmH2GVlDtC110E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WIHfxS5l; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownrisk-dk.20251104.gappssmtp.com header.i=@ownrisk-dk.20251104.gappssmtp.com header.b="GD6oKj5U"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8d18de80b29so9428086d6.1
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 04:43:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781783006; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jsvK+PrAYM3a54NRpERS8m2a6xz2TXFiEDam4+lJ/DgdMeytygEd2Em8S8LiK/rwKp
-         fLovBxEKDPaepmsSjn/BsMgf1mIGh2CyX7fepi3aOQlEJ5Jr/BaJZM9tmQvDP/D1R7fD
-         mdFvoykFF1IDULCCmzV0YQju6eGq8NiKYeAEJCWhUPw/5BpDkAATCMeDQNhzEW/5Jo+8
-         3WoElW7zJtlJdjqJNJ8llVRAkM/5pNfTK5g36GGNQcmtrdyS5gFrUpEloQcVSyjeJ1DK
-         QL/yioQdlocIbEXnC88b5RuVhBu8hLgTk3jPdfukI5wkvcqSeyGK3rcoLr/HbDVgVIrm
-         9b8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=fGm6AcqnI1+bNBW3QZHl+Bh51II3lcjM0XYTu8SKeS0=;
-        fh=KldsxIrLta+JXN30gjVaBaoaP+SEYhkLRSQ5LiCZCaY=;
-        b=T484VJYQ/K4bHvZbKJqFEIt24MrX9noHpfd4h0nDfdvWSqG010sEGSOhjfb6PMhTdH
-         DvIR6+DXCw2hOhHamEEIJONCVxZQcrR3JfBjinw1PY3tP5cL14MMVc5Xy6UXhpAlHXny
-         3IzCS0NntzN1q2qNvUYzOmCERVu4CyDTzu0GelTL98YaGccADAl1zzypO2MuhCGeFzsn
-         9JhTqG3EowCRE2U79/7xxfuCCL1R7qpctJa/G4TIYXRo8+NNtvJicHsL1Rq6mOTjUaKd
-         YNczecvblMBD+OgQipyxYO8KQsn/zYy7u9vrt3FvavJdrvqCAyFkrbCySl/HlMj3woIx
-         3B7Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ownrisk-dk.20251104.gappssmtp.com; s=20251104; t=1781783006; x=1782387806; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fGm6AcqnI1+bNBW3QZHl+Bh51II3lcjM0XYTu8SKeS0=;
-        b=GD6oKj5UGQz0/vISJW4N8ZfulM+f/VNtIgZ04kem/D58fVFCTUAbD2XUG0ffd5ly2O
-         +9U7KhtOyXohKD/6zYtmzyeciC/I0B8HXsjxEM0TBzDEIj4cS99M7f6NFeBW7uxdzfSg
-         DBo4HLCBwg4KyHWjTgyZ5OrH7/NcMGebHnbUdGC0biu9vxID0Xh9xkWYL/yq/ujyvfkN
-         rQIG4MTMt9bk4M3x9AHuRPEmPsJoHqiPhECcVVgc46GW7zayf1o4Q+060Jfb2EagClrh
-         tXdVZxQGGjGTQZ0dh51lXWJYkx7e1zlVutNuWT1vLmT14WYKLvVF7g+MEbSISeWB7mdf
-         BgXg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WIHfxS5l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781783691;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=87sV1KJdzQRdpcATxiJd4dyqW0NfL5oL/U+Vih8k7+k=;
+	b=WIHfxS5lvKEy8493YBgZdPCmhbOb+S02gDGu+tgJcv/SNkfFXMKpgKqpHEDId7ipNg4ymD
+	nMVNQ7qLOJwiB7x8xfO0zPpxUdzJXM/T5WJ4WukbeRFFfEQSLwxIUhfnRlZOai3B2HQKMd
+	fv6qm8KlGveGsTnEZUfC7G/mlrrLiHA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-499-svL4jqegMPiGeHtqDx_rFg-1; Thu, 18 Jun 2026 07:54:50 -0400
+X-MC-Unique: svL4jqegMPiGeHtqDx_rFg-1
+X-Mimecast-MFC-AGG-ID: svL4jqegMPiGeHtqDx_rFg_1781783689
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-490ab3f6e55so4680805e9.0
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 04:54:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781783006; x=1782387806;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fGm6AcqnI1+bNBW3QZHl+Bh51II3lcjM0XYTu8SKeS0=;
-        b=VJDTEVf4EvsBpG28bJ7AY/sSOj9AmILbQaJvKzNdvidFUyjBbC9rhQv5UWiLN3+4Mz
-         mZmAGUUP1azFJDa1T3+LS7VmbQf3afszaIrSOl3PpSeh8Nr0Ri19O+zyQJN3rhPqIDFY
-         sOSXSEpr3oQ713+Tb5RczmimVzokdZexXI2yiuudpEkid2Ncgy7hmrV4rykg2GJ1xVqJ
-         qpOwiPgX14Y4nzXurwhukjiWUZsqcgdtKC2u3epTaz6BJse+DZioABMDN3duGAE6KeVC
-         xGl7Q5DMP9EJpXNjtUaxY4zv1SE/I/BbWe9wooQEBjYT42TJyPLCk0GdCb4xydJT8qTu
-         GggA==
-X-Forwarded-Encrypted: i=1; AFNElJ/zGyuhygy6i4KxZoe6YG7iHDeBIZgYIDON0ZufMCTMYhszGQzMGSqKl8DptYpMNSmgsPxpj/Jxv22+Z2IEJSE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzaZV8K5w1jFqbTAfL97wrHSUqs2Fh+dNMHCwG/fpYJyJ2U76F
-	aTpIu5e7/8WovIgSmmiCrElV/uHUpmtu5DSrVA6hWZKLBvVwk3j0CfwtLtd8fOg/Hk+3CdxFvq9
-	SbQWG1PT7BTi21OLPzD87IVhKi6iQb/JeY0iH3hhOSg==
-X-Gm-Gg: AfdE7cleMHguqaW+zmY+xyDfYpeVFvwQWscxdoePpwZr0qgDd3CoF8wHqirtl9gM+gE
-	ItfN/jMyyfRMwxzTzgjVR9dlS6tKGrhVsjP4OFak/yNLAkkHAWEX2x/UzPDwfd3iX3Mp3U55JQr
-	DkqDIzy1WbTqsFe36EjI29ntyPxV7OrK/F/79/RBeSJhiJCvsyKpkhxnjUbENJ7MZzADn57apcU
-	n6ivHqbOsp+iGmhOqYXnmliwgbNBqZlnp1W3El4DM9UWBS7q2uQCKSz4ha0edT0oy+01sfcb4cb
-	dO0Yyn87XDPK3FxmcUKwLDo8QbxF
-X-Received: by 2002:a05:6214:4801:b0:8db:6d7d:b587 with SMTP id
- 6a1803df08f44-8dccc14dac9mr52050636d6.11.1781783005874; Thu, 18 Jun 2026
- 04:43:25 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1781783688; x=1782388488;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=87sV1KJdzQRdpcATxiJd4dyqW0NfL5oL/U+Vih8k7+k=;
+        b=MTunWEvqZSQxdV1TNy1iYvF6C63MTG5Ky70ybGkXfOZbCH/k4uGs45vxUz5lMUL1K9
+         L6WjYyYtW2b07ec1O/EK3n5Kbfl/v2tjIGD2yIkaUUN7FqZec7zA3Y4HGUiaejIrQ98Z
+         Dxrk94yQo/YwoHIJ8Z4D/jLfufMnEUy+j4zINFA9McIlS7r6cGrzV47uLvd8Humm6o57
+         j8KA4hdmmyy/bW4g+5eBbZyqQVnUlm3yekJYLfMfcLj3+lZzw5tgrrj4KcckdipSXsmh
+         LBiNZCF5CQu8cQC+w0qfqqBMD8yxN10YqJ85mMLRJCk8ok6Lw/2sMHemwEfCy4nShtE1
+         diHA==
+X-Forwarded-Encrypted: i=1; AFNElJ+JFTDVUFzGE2qwc5RHR6jOcQO890YF1YxGF5jQrc8y9mNeTaJKCpEFjSO0Q769lpPnUeNqJEP4K9/betd+Vm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh3H9WUjAci4z0xvZzfDPsFlAmcNkEJRxebO6aLhscktKuTyL1
+	fXNnpySWXyvqu03CXKVZWRyNMGo65+cWbV1xO8lJF5cVjg5Q5EQ9o2eHFY9t0AlTQdO7foGXSgA
+	nnWUB446pPxCTFYWceRO7kJyKUrSINzAV0h6tQr8rW1i8swg5U69WEX4nzm7VPBZWPqNbaA==
+X-Gm-Gg: Acq92OFQeambG3Pogs3wEsyH+C4PQStk/qX2s41PWf22nyhchQrU6W9c+qOxWwAJktc
+	OArvpQgVY+HhJCZekO7BQ0sZBJLGFMKS3iv8ACoWjYAvDtpgBRq8vFZ8GNEszRy/AghjaKJYp2p
+	z8xR+CFo2vGe3qPRnKeygy6/GGJihxHpsssdjm0loUgpqlNKXyvV7gKialP7Ln+h4NAyGTIhN8J
+	2pVpKq6xsn4nMO1Yhn7NTF4ygeNmck7wjvWSNHzf/mUr/XxWU/JGaPaS+krSNtreBd8KxX9NaSN
+	eET2aJkcPF2mFa/+ei/ZK/0mDqYAIjpVAhcXtJ5XMS6mhdrmmYuvxO1tJo2RTP3NI1PiD1g5g2Y
+	YV7A9eTfMAS0WjxxlUnR2EjlLR304gMYnrBJ0/MNrHw==
+X-Received: by 2002:a05:600c:8b85:b0:492:3773:a230 with SMTP id 5b1f17b1804b1-4923773a3e4mr70735065e9.27.1781783688656;
+        Thu, 18 Jun 2026 04:54:48 -0700 (PDT)
+X-Received: by 2002:a05:600c:8b85:b0:492:3773:a230 with SMTP id 5b1f17b1804b1-4923773a3e4mr70734675e9.27.1781783688312;
+        Thu, 18 Jun 2026 04:54:48 -0700 (PDT)
+Received: from digraph.polyomino.org.uk (digraph.polyomino.org.uk. [2001:8b0:bf73:93f7::51bb:e332])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4922fa3abd0sm270014815e9.1.2026.06.18.04.54.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2026 04:54:47 -0700 (PDT)
+Received: from jsm28 (helo=localhost)
+	by digraph.polyomino.org.uk with local-esmtp (Exim 4.98.2)
+	(envelope-from <josmyers@redhat.com>)
+	id 1waBKY-00000004HGz-3gcc;
+	Thu, 18 Jun 2026 11:54:46 +0000
+Date: Thu, 18 Jun 2026 11:54:46 +0000 (UTC)
+From: Joseph Myers <josmyers@redhat.com>
+To: Martin Uecker <uecker@tugraz.at>
+cc: Kees Cook <kees@kernel.org>, Richard Biener <rguenther@suse.de>, 
+    gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] c: handle .ACCESS_WITH_SIZE in build_unary_op for !/+/-
+ [PR123569]
+In-Reply-To: <91666e2ff131490d75cf758182d9c47f723e2ec8.camel@tugraz.at>
+Message-ID: <498111f0-c7d7-3952-2719-901a44586cc6@redhat.com>
+References: <20260618051246.work.269-kees@kernel.org> <a54bcd41c5fc4f4550df157c00dab43939669b25.camel@tugraz.at> <91666e2ff131490d75cf758182d9c47f723e2ec8.camel@tugraz.at>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260616100332.1308294-1-i.maximets@ovn.org>
-In-Reply-To: <20260616100332.1308294-1-i.maximets@ovn.org>
-From: Johan Thomsen <write@ownrisk.dk>
-Date: Thu, 18 Jun 2026 13:43:14 +0200
-X-Gm-Features: AVVi8Cf3XOkaQmP6GH0ARFvC4rsKf-fMT6mtyJYcQfTm0vSkjjtCI2heDspnweI
-Message-ID: <CAKv6aAMTqSo0qSng2Kv4=i6BSvJuUy9KSfeFRYx5JsYuo9=kqQ@mail.gmail.com>
-Subject: Re: [PATCH net] net: dst_metadata: fix false-positive memcpy overflow
- in tun_dst_unclone
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: tNbuzjbkai9mgnLLcfEmRdsiPhcxKT61qzwJk6RvpiQ_1781783689
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=US-ASCII
 
-> Johan, if you can test this one in your setup as well, that would
-> be great.  Thanks.
->
->  include/net/dst_metadata.h | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/include/net/dst_metadata.h b/include/net/dst_metadata.h
-> index 1fc2fb03ce3f..f45d1e3163f0 100644
-> --- a/include/net/dst_metadata.h
-> +++ b/include/net/dst_metadata.h
-> @@ -164,8 +164,11 @@ static inline struct metadata_dst *tun_dst_unclone(struct sk_buff *skb)
->         if (!new_md)
->                 return ERR_PTR(-ENOMEM);
->
-> -       memcpy(&new_md->u.tun_info, &md_dst->u.tun_info,
-> -              sizeof(struct ip_tunnel_info) + md_size);
-> +       /* Copy in two stages to keep the __counted_by happy. */
-> +       new_md->u.tun_info = md_dst->u.tun_info;
-> +       memcpy(ip_tunnel_info_opts(&new_md->u.tun_info),
-> +              ip_tunnel_info_opts(&md_dst->u.tun_info), md_size);
-> +
->  #ifdef CONFIG_DST_CACHE
->         /* Unclone the dst cache if there is one */
->         if (new_md->u.tun_info.dst_cache.cache) {
+On Thu, 18 Jun 2026, Martin Uecker wrote:
 
-Hi Ilya,
+> It should reference PR125604 though.
+> 
+> Am Donnerstag, dem 18.06.2026 um 07:21 +0200 schrieb Martin Uecker:
+> > I was about to fix this but did not have time yet, so thank you!
+> > 
+> > To me the patch looks fine. I add Joseph (C FE maintainer)
+> > for review.
 
-Sure. Just stressed it for 24 hours and - I cannot trigger the bug
-with this patch applied.
+The patch is OK with that bug reference, and with a portability fix in the 
+testcase:
 
-BR
-Johan
+> > > +long test_neg (struct s *o)   { return -(long)o->p; }
+> > > +long test_plus (struct s *o)  { return +(long)o->p; }
+
+Should use __INTPTR_TYPE__ instead of long here.
+
+-- 
+Joseph S. Myers
+josmyers@redhat.com
+
