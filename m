@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6A01DDC1B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7631940B0
 	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 20:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781815542; cv=none; b=lD8StBdyfVz8wWHooocWvqgvtj+JkMbofQYNRIP31hwWEAMxGkdH92pAwO5VyQFCowOaBoAgjajh+DSHKb/e4pXNbFWfOUg/JUwQMkYNdvVdrRF+3sDdtlSGIUPSe1zaz5M+UQfsr7tOVgpeanJAI34h8XqKlTsi5W0jteVpGRg=
+	t=1781815543; cv=none; b=HHum2XHZNxjm78ONzV8P0iH7/k2MKRQV0RrZ03WxkVFF7qzb57d+den4IbRJ8gG6tQz77FPlHuO4lAkMTc1zQwJeSsC3lAD/hcEugv3paENuvYHhXji6TCSK54AbeYvPkfasaJtV6bTVAsaPgiQwV25su81sKYiY7VITP7CD6tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781815542; c=relaxed/simple;
-	bh=gaFMIUG/8ssYo+3R6lz+JQU4Qk/FdWzwR5SNVx/AzGo=;
+	s=arc-20240116; t=1781815543; c=relaxed/simple;
+	bh=27yGFPcG8t+ZbPo5Re+S4Rr4AwttMqhXkUa2D8K0Fi0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AT+zR8Z+sXVVy7vyi21DiGBLjPKOP/MB1dQl9bp3qS9vKJXQoe6UpAcpKWsQmqv64TJeB1Wa9R0MCLyzpSveVEU48Km6m2i9FbOpp5f1BP4GdC7d+iE7VZfkBMiLhnpbsawXGgrnik40BVDlBbR8aPHVOYZd3YM8lkVxwRTX+No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0vAZdJf; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=saorzoMxI2iRV41RZAG8E3Z7QAEn52vXKaeWMvr+vF276NJdjU4CvwiVB5Wlntvd5j4dNOCvTpM49Mbn7EbAM3HJB8OajrisBx0YQ2CPVL7W8/sso/tm5gMK6LKfTILyl80vErRxUGXNZUcnQcPKHAqUY/bPKZfUCd5cMi9ADhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3JT2lZy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V0vAZdJf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7AEC1F0155A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3JT2lZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9942F1F00A3D;
 	Thu, 18 Jun 2026 20:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1781815539;
-	bh=ErRB1JyjpBz6yUE86mssKOiVhw+L38VqJ2Euqie44ms=;
+	bh=YT3q2WiRSxCVjqn22A65WsydaSY9U1UpW0ipsPZKZ20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=V0vAZdJfQ646Z3/kSEcc5100mi/ek41s+6/RERkRfeR1EdZ+1kubW99sAGLZyzKMC
-	 Z9DeeQLtc5JVHsyuloditahYoTYpeAbkRDfGdsHE9m8Ulasld2xi1utVCbqUsQQ2jG
-	 SAg5REK8cXTxsEy4pO+7Q7katZzoxFzLs3B0g2YNAAlsMSa1DnjLvLfeh8fzhraz+n
-	 CatMFUaHy7V4QIZp4r0OUP+xyx9rIIVJC5dBUN+w5Oc2hfpSRIxuNbBqHF967zD3bq
-	 hLqjYOq8Tg9Je7cWVPfJTpSLfz1SjWRmiaT+OxeKFF7qPFld9qa+f3jk9FLWQlVU8m
-	 0RCw5Kq2iyEJg==
+	b=D3JT2lZy1w7rzA29gIgsqfKZAyalXQQdN53N0OfFh1vQclVeovQqRtt7BoY8NodD4
+	 3v0TlBVWf0Jk/b5xmN3GQSmL/SMvVEQ/3E+VSuBvKHHE+RNMLJHqUjp4pjVPXtj7xv
+	 +zbx5PCtCgeNlyCYcT132nvHKP9XMLxBPyFYIocw/rnkkg5Dux+4kUPtpgrT4YbfvU
+	 HL68iPPXmDLb2Sv58Y83xxcSnXWvAfjRCxhRNvyNmTvffG/UMURfFuvleZc3Q0M97q
+	 DvXSgw45rpUP1pOYq7CW06Ipc6GZy9II+3sK5Ws751RULcf8FSEG6g0SiUXE6PWuOl
+	 tgcW0D+4iBcZA==
 From: Kees Cook <kees@kernel.org>
 To: Jeffrey Law <jefflaw@qti.qualcomm.com>
 Cc: Kees Cook <kees@kernel.org>,
@@ -57,9 +57,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	"Constable, Scott D" <scott.d.constable@intel.com>,
 	gcc-patches@gcc.gnu.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v13 4/7] x86: Add x86_64 Kernel Control Flow Integrity implementation
-Date: Thu, 18 Jun 2026 13:45:34 -0700
-Message-Id: <20260618204539.824446-4-kees@kernel.org>
+Subject: [PATCH v13 2/7] kcfi: Add core Kernel Control Flow Integrity infrastructure
+Date: Thu, 18 Jun 2026 13:45:32 -0700
+Message-Id: <20260618204539.824446-2-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260618204530.work.910-kees@kernel.org>
 References: <20260618204530.work.910-kees@kernel.org>
@@ -69,1299 +69,1441 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=52692; i=kees@kernel.org; h=from:subject; bh=gaFMIUG/8ssYo+3R6lz+JQU4Qk/FdWzwR5SNVx/AzGo=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkmER+SH++U9d7BxeDGFbJrUROT0gFh5W7NMxsuFR/Ij H7ycOr9jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlMKmL4Z79y6u43ESul7ldN 42T+0vyydsa6e7eDmb+1C/ypYlruU8/wV/QKp87CHkP3mS9OfTr0Tuil++wbX5MWKz9fmm0lanE tggkA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=55502; i=kees@kernel.org; h=from:subject; bh=27yGFPcG8t+ZbPo5Re+S4Rr4AwttMqhXkUa2D8K0Fi0=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkmEe+fpsRZlM7cwrp8krrny/Sn/67dWyP3QT3rfJLEp 197t78o6ShlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjInW8M/5Ntrv49c/vBagGr s8myq75eTef9ks7xMlM60/2WYH5z2DSG/6mXxAxO31vWyidn/nRlBvdB5RmMtzZ9a795rM9J2vF 9DD8A
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Implement x86_64-specific KCFI backend:
+Implements the Linux Kernel Control Flow Integrity ABI, which provides a
+function prototype based forward edge control flow integrity protection
+by instrumenting every indirect call to check for a hash value before
+the target function address. If the hash at the call site and the hash
+at the target do not match, execution will trap.
 
-- Implies -mindirect-branch-register since KCFI needs call target in
-  a register for typeid hash loading.
-
-- Function preamble generation with type IDs positioned at -(4+prefix_nops)
-  offset from function entry point.
-
-- Function-aligned KCFI preambles using calculated alignment padding NOPs:
-  aligned(prefix_nops + 5, $func_align) to maintain ability to call the
-  __cfi_ preamble directly in the case of Linux's FineIBT alternative
-  CFI sequences (live patched into place).
-
-- Type-id hash avoids generating ENDBR instruction in type IDs
-  (0xfa1e0ff3/0xfb1e0ff3 are incremented by 1 to prevent execution).
-
-- On-demand scratch register allocation strategy (r11 as needed), with
-  the clobbers added when KCFI is used.
-
-- Incompatible with -ffixed-r10 or -ffixed-r11.
-
-- Uses the .kcfi_traps section for debugger/runtime metadata.
-
-- Introduces -fsanitize-kcfi-arity to enable function arg count to be
-  represented in the kcfi hash preamble for FineIBT.
-
-Assembly Code Pattern layout required by Linux kernel:
-  movl $inverse_type_id, %r10d   ; Load expected type (0 - hash)
-  addl offset(%target), %r10d    ; Add stored type ID from preamble
-  je .Lkcfi_call                 ; Branch if types match (sum == 0)
-  .Lkcfi_trap: ud2               ; Undefined instruction trap on mismatch
-  .Lkcfi_call: call/jmp *%target ; Execute validated indirect transfer
-
-Build and run tested on x86_64 Linux kernel with various CPU errata
-handling alternatives, with and without FineIBT patching.
+See the start of kcfi.cc for design details.
 
 gcc/ChangeLog:
 
-	config/i386/i386.h: KCFI enables TARGET_INDIRECT_BRANCH_REGISTER.
-	config/i386/i386-protos.h: Update ix86_output_call_insn.
-	config/i386/i386-expand.cc (ix86_expand_call): Expand indirect
-	calls into KCFI RTL.
-	config/i386/i386.cc (ix86_kcfi_mask_type_id): New function.
-	(ix86_output_call_insn): Emit KCFI assembly.
-	config/i386/i386.md: Add KCFI RTL substitution patterns.
-	doc/invoke.texi: Document x86 nuances.
+	* kcfi.h: New file with KCFI public interface declarations.
+	* kcfi.cc: New file implementing Kernel Control Flow Integrity
+	infrastructure.
+	* Makefile.in (OBJS): Add kcfi.o.
+	* flag-types.h (enum sanitize_code): Add SANITIZE_KCFI.
+	* gimple.h (enum gf_mask): Add GF_CALL_INLINED_FROM_KCFI_NOSANTIZE.
+	(gimple_call_set_inlined_from_kcfi_nosantize): New function.
+	(gimple_call_inlined_from_kcfi_nosantize_p): New function.
+	* tree-pass.h Add kcfi passes.
+	* df-scan.cc (df_uses_record): Add KCFI case to handle KCFI RTL
+	patterns and process wrapped RTL.
+        * doc/extend.texi: Update nocf_check for kcfi.
+	* doc/invoke.texi (fsanitize=kcfi): Add documentation for KCFI
+	sanitizer option.
+	* doc/tm.texi.in: Add Kernel Control Flow Integrity section with
+	TARGET_KCFI_SUPPORTED, TARGET_KCFI_MASK_TYPE_ID,
+	TARGET_KCFI_EMIT_TYPE_ID hooks.
+	* doc/tm.texi: Regenerate.
+	* final.cc (call_from_call_insn): Add KCFI case to handle
+	KCFI-wrapped calls.
+	* opts.cc (sanitizer_opts): Add kcfi entry.
+	* passes.cc: Include kcfi.h.
+	* passes.def: Add KCFI IPA pass.
+	* rtl.def (KCFI): Add new RTL code for KCFI instrumentation.
+        * rtlanal.cc (reg_referenced_p): Add KCFI case.
+	* target.def: Add KCFI target hooks.
+	* toplev.cc (process_options): Add KCFI option processing.
+	* tree-inline.cc: Include kcfi.h and asan.h.
+	(copy_bb): Handle KCFI no_sanitize attribute propagation during
+	inlining.
+	* varasm.cc (assemble_start_function): Emit KCFI preambles.
+	(assemble_external_real): Emit KCFI typeid symbols.
+	(default_elf_asm_named_section): Handle .kcfi_traps using
+	SECTION_LINK_ORDER flag.
 
-gcc/testsuite/ChangeLog:
+gcc/c-family/ChangeLog:
 
-	* gcc.dg/kcfi/kcfi-adjacency.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-basics.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-call-sharing.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-complex-addressing.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-direct-call-shapes.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-move-preservation.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-no-sanitize-inline.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-no-sanitize.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-offset-validation.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-patchable-entry-only.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-patchable-large.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-patchable-medium.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-patchable-prefix-only.c: Add x86 patterns.
-	* gcc.dg/kcfi/kcfi-tail-calls.c: Add x86 tail-call patterns.
-	* gcc.dg/kcfi/kcfi-trap-section.c: Add x86 trap patterns.
-	* gcc.dg/kcfi/kcfi-x86-arity.c: New test.
-	* gcc.dg/kcfi/kcfi-x86-fixed-r10.c: New test.
-	* gcc.dg/kcfi/kcfi-x86-fixed-r11.c: New test.
-	* gcc.dg/kcfi/kcfi-x86-retpoline-r11.c: New test.
+	* c-attribs.cc: Include asan.h.
+        (handle_nocf_check_attribute): Enable nocf_check under kcfi.
+	(handle_patchable_function_entry_attribute): Add error for using
+	patchable_function_entry attribute with -fsanitize=kcfi.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- gcc/config/i386/i386-protos.h                 |   2 +-
- gcc/config/i386/i386.h                        |   3 +-
- gcc/config/i386/i386.md                       |  63 ++++--
- gcc/config/i386/i386-expand.cc                |  28 ++-
- gcc/config/i386/i386.cc                       | 210 +++++++++++++++++-
- gcc/doc/invoke.texi                           |  46 ++++
- gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c    |  17 ++
- gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c       |  21 ++
- gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c |  15 ++
- .../gcc.dg/kcfi/kcfi-complex-addressing.c     |  18 ++
- .../gcc.dg/kcfi/kcfi-direct-call-shapes.c     |   1 +
- .../gcc.dg/kcfi/kcfi-move-preservation.c      |  19 ++
- .../gcc.dg/kcfi/kcfi-no-sanitize-inline.c     |  11 +
- gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c  |   5 +
- .../gcc.dg/kcfi/kcfi-offset-validation.c      |   5 +
- .../gcc.dg/kcfi/kcfi-patchable-entry-only.c   |  24 ++
- .../gcc.dg/kcfi/kcfi-patchable-large.c        |  13 ++
- .../gcc.dg/kcfi/kcfi-patchable-medium.c       |  20 ++
- .../gcc.dg/kcfi/kcfi-patchable-prefix-only.c  |  21 ++
- gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c   |  20 ++
- gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c |   6 +
- gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c    |   7 +
- gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c    |  93 ++++++++
- .../gcc.dg/kcfi/kcfi-x86-fixed-r10.c          |   7 +
- .../gcc.dg/kcfi/kcfi-x86-fixed-r11.c          |   7 +
- .../gcc.dg/kcfi/kcfi-x86-retpoline-r11.c      |  40 ++++
- gcc/common.opt                                |   8 +
- gcc/opts.cc                                   |   1 +
- 28 files changed, 704 insertions(+), 27 deletions(-)
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r10.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r11.c
- create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-retpoline-r11.c
+ gcc/kcfi.h                |  59 ++++
+ gcc/kcfi.cc               | 696 ++++++++++++++++++++++++++++++++++++++
+ gcc/doc/extend.texi       |  42 +++
+ gcc/doc/invoke.texi       |  33 ++
+ gcc/doc/tm.texi           |  32 ++
+ gcc/Makefile.in           |   1 +
+ gcc/flag-types.h          |   2 +
+ gcc/gimple.h              |  22 ++
+ gcc/tree-pass.h           |   1 +
+ gcc/c-family/c-attribs.cc |  17 +-
+ gcc/df-scan.cc            |   7 +
+ gcc/doc/tm.texi.in        |  12 +
+ gcc/final.cc              |   3 +
+ gcc/opts.cc               |   4 +-
+ gcc/passes.cc             |   1 +
+ gcc/passes.def            |   1 +
+ gcc/rtl.def               |   6 +
+ gcc/rtlanal.cc            |   5 +
+ gcc/target.def            |  39 +++
+ gcc/toplev.cc             |  12 +
+ gcc/tree-inline.cc        |  10 +
+ gcc/varasm.cc             |  37 +-
+ 22 files changed, 1030 insertions(+), 12 deletions(-)
+ create mode 100644 gcc/kcfi.h
+ create mode 100644 gcc/kcfi.cc
 
-diff --git a/gcc/config/i386/i386-protos.h b/gcc/config/i386/i386-protos.h
-index 106a79dd41ee..22607c950378 100644
---- a/gcc/config/i386/i386-protos.h
-+++ b/gcc/config/i386/i386-protos.h
-@@ -378,7 +378,7 @@ extern enum attr_cpu ix86_schedule;
- #endif
- 
- extern bool ix86_nopic_noplt_attribute_p (rtx call_op);
--extern const char * ix86_output_call_insn (rtx_insn *insn, rtx call_op);
-+extern const char * ix86_output_call_insn (rtx_insn *insn, rtx *operands);
- extern const char * ix86_output_indirect_jmp (rtx call_op);
- extern const char * ix86_output_function_return (bool long_p);
- extern const char * ix86_output_indirect_function_return (rtx ret_op);
-diff --git a/gcc/config/i386/i386.h b/gcc/config/i386/i386.h
-index 375ba82f5ff7..eea70ddafd37 100644
---- a/gcc/config/i386/i386.h
-+++ b/gcc/config/i386/i386.h
-@@ -3094,7 +3094,8 @@ extern void debug_dispatch_window (int);
- 
- #define TARGET_INDIRECT_BRANCH_REGISTER \
-   (ix86_indirect_branch_register \
--   || cfun->machine->indirect_branch_type != indirect_branch_keep)
-+   || cfun->machine->indirect_branch_type != indirect_branch_keep \
-+   || (flag_sanitize & SANITIZE_KCFI))
- 
- #define IX86_HLE_ACQUIRE (1 << 16)
- #define IX86_HLE_RELEASE (1 << 17)
-diff --git a/gcc/config/i386/i386.md b/gcc/config/i386/i386.md
-index 8db5d3b01526..12f621c6cf74 100644
---- a/gcc/config/i386/i386.md
-+++ b/gcc/config/i386/i386.md
-@@ -21068,11 +21068,19 @@
-   DONE;
- })
- 
--(define_insn "*call"
-+(define_subst_attr "kcfi" "kcfi_subst" "" "_kcfi")
+diff --git a/gcc/kcfi.h b/gcc/kcfi.h
+new file mode 100644
+index 000000000000..ea7e7881040f
+--- /dev/null
++++ b/gcc/kcfi.h
+@@ -0,0 +1,59 @@
++/* Kernel Control Flow Integrity (KCFI) support for GCC.
++   Copyright (C) 2025 Free Software Foundation, Inc.
 +
-+(define_subst "kcfi_subst"
-+  [(match_operand 0)]
-+  ""
-+  [(kcfi (match_dup 0)
-+	 (match_operand 2 "const_int_operand"))])
++This file is part of GCC.
 +
-+(define_insn "*call<kcfi>"
-   [(call (mem:QI (match_operand:W 0 "call_insn_operand" "<c>BwBz"))
- 	 (match_operand 1))]
-   "!SIBLING_CALL_P (insn)"
--  "* return ix86_output_call_insn (insn, operands[0]);"
-+  "* return ix86_output_call_insn (insn, operands);"
-   [(set_attr "type" "call")])
- 
- ;; This covers both call and sibcall since only GOT slot is allowed.
-@@ -21083,7 +21091,8 @@
-   "TARGET_X32 && !TARGET_INDIRECT_BRANCH_REGISTER"
- {
-   rtx fnaddr = gen_const_mem (DImode, XEXP (operands[0], 0));
--  return ix86_output_call_insn (insn, fnaddr);
-+  rtx fn_operands[] = { fnaddr };
-+  return ix86_output_call_insn (insn, fn_operands);
- }
-   [(set_attr "type" "call")])
- 
-@@ -21101,15 +21110,17 @@
- {
-   rtx fnaddr = gen_rtx_PLUS (SImode, operands[0], operands[1]);
-   fnaddr = gen_const_mem (SImode, fnaddr);
--  return ix86_output_call_insn (insn, fnaddr);
-+  rtx fn_operands[] = { fnaddr };
-+  return ix86_output_call_insn (insn, fn_operands);
- }
-   [(set_attr "type" "call")])
- 
--(define_insn "*sibcall"
-+;; KCFI sibling call
-+(define_insn "*sibcall<kcfi>"
-   [(call (mem:QI (match_operand:W 0 "sibcall_insn_operand" "UBsBz"))
- 	 (match_operand 1))]
-   "SIBLING_CALL_P (insn)"
--  "* return ix86_output_call_insn (insn, operands[0]);"
-+  "* return ix86_output_call_insn (insn, operands);"
-   [(set_attr "type" "call")])
- 
- (define_insn "*sibcall_memory"
-@@ -21117,7 +21128,7 @@
- 	 (match_operand 1))
-    (unspec [(const_int 0)] UNSPEC_PEEPSIB)]
-   "!TARGET_X32 && !TARGET_INDIRECT_BRANCH_REGISTER"
--  "* return ix86_output_call_insn (insn, operands[0]);"
-+  "* return ix86_output_call_insn (insn, operands);"
-   [(set_attr "type" "call")])
- 
- (define_peephole2
-@@ -21168,7 +21179,7 @@
- 	(plus:SI (reg:SI SP_REG)
- 		 (match_operand:SI 2 "immediate_operand" "i")))]
-   "!TARGET_64BIT && !SIBLING_CALL_P (insn)"
--  "* return ix86_output_call_insn (insn, operands[0]);"
-+  "* return ix86_output_call_insn (insn, operands);"
-   [(set_attr "type" "call")])
- 
- (define_insn "*sibcall_pop"
-@@ -21178,7 +21189,7 @@
- 	(plus:SI (reg:SI SP_REG)
- 		 (match_operand:SI 2 "immediate_operand" "i")))]
-   "!TARGET_64BIT && SIBLING_CALL_P (insn)"
--  "* return ix86_output_call_insn (insn, operands[0]);"
-+  "* return ix86_output_call_insn (insn, operands);"
-   [(set_attr "type" "call")])
- 
- (define_insn "*sibcall_pop_memory"
-@@ -21189,7 +21200,7 @@
- 		 (match_operand:SI 2 "immediate_operand" "i")))
-    (unspec [(const_int 0)] UNSPEC_PEEPSIB)]
-   "!TARGET_64BIT && !TARGET_INDIRECT_BRANCH_REGISTER"
--  "* return ix86_output_call_insn (insn, operands[0]);"
-+  "* return ix86_output_call_insn (insn, operands);"
-   [(set_attr "type" "call")])
- 
- (define_peephole2
-@@ -21266,12 +21277,22 @@
-   DONE;
- })
- 
--(define_insn "*call_value"
-+(define_subst_attr "kcfiv" "kcfiv_subst" "" "_kcfi")
++GCC is free software; you can redistribute it and/or modify it under
++the terms of the GNU General Public License as published by the Free
++Software Foundation; either version 3, or (at your option) any later
++version.
 +
-+(define_subst "kcfiv_subst"
-+  [(set (match_operand 0)
-+	(match_operand 1))]
-+  ""
-+  [(set (match_dup 0)
-+	(kcfi (match_dup 1)
-+	      (match_operand 3 "const_int_operand")))])
++GCC is distributed in the hope that it will be useful, but WITHOUT ANY
++WARRANTY; without even the implied warranty of MERCHANTABILITY or
++FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++for more details.
 +
-+(define_insn "*call_value<kcfiv>"
-   [(set (match_operand 0)
- 	(call (mem:QI (match_operand:W 1 "call_insn_operand" "<c>BwBz"))
- 	      (match_operand 2)))]
-   "!SIBLING_CALL_P (insn)"
--  "* return ix86_output_call_insn (insn, operands[1]);"
-+  "* return ix86_output_call_insn (insn, &operands[1]);"
-   [(set_attr "type" "callv")])
- 
- ;; This covers both call and sibcall since only GOT slot is allowed.
-@@ -21284,7 +21305,8 @@
-   "TARGET_X32 && !TARGET_INDIRECT_BRANCH_REGISTER"
- {
-   rtx fnaddr = gen_const_mem (DImode, XEXP (operands[1], 0));
--  return ix86_output_call_insn (insn, fnaddr);
-+  rtx fn_operands[] = { fnaddr };
-+  return ix86_output_call_insn (insn, fn_operands);
- }
-   [(set_attr "type" "callv")])
- 
-@@ -21303,16 +21325,17 @@
- {
-   rtx fnaddr = gen_rtx_PLUS (SImode, operands[1], operands[2]);
-   fnaddr = gen_const_mem (SImode, fnaddr);
--  return ix86_output_call_insn (insn, fnaddr);
-+  rtx fn_operands[] = { fnaddr };
-+  return ix86_output_call_insn (insn, fn_operands);
- }
-   [(set_attr "type" "callv")])
- 
--(define_insn "*sibcall_value"
-+(define_insn "*sibcall_value<kcfiv>"
-   [(set (match_operand 0)
- 	(call (mem:QI (match_operand:W 1 "sibcall_insn_operand" "UBsBz"))
- 	      (match_operand 2)))]
-   "SIBLING_CALL_P (insn)"
--  "* return ix86_output_call_insn (insn, operands[1]);"
-+  "* return ix86_output_call_insn (insn, &operands[1]);"
-   [(set_attr "type" "callv")])
- 
- (define_insn "*sibcall_value_memory"
-@@ -21321,7 +21344,7 @@
- 	      (match_operand 2)))
-    (unspec [(const_int 0)] UNSPEC_PEEPSIB)]
-   "!TARGET_X32 && !TARGET_INDIRECT_BRANCH_REGISTER"
--  "* return ix86_output_call_insn (insn, operands[1]);"
-+  "* return ix86_output_call_insn (insn, &operands[1]);"
-   [(set_attr "type" "callv")])
- 
- (define_peephole2
-@@ -21378,7 +21401,7 @@
- 	(plus:SI (reg:SI SP_REG)
- 		 (match_operand:SI 3 "immediate_operand" "i")))]
-   "!TARGET_64BIT && !SIBLING_CALL_P (insn)"
--  "* return ix86_output_call_insn (insn, operands[1]);"
-+  "* return ix86_output_call_insn (insn, &operands[1]);"
-   [(set_attr "type" "callv")])
- 
- (define_insn "*sibcall_value_pop"
-@@ -21389,7 +21412,7 @@
- 	(plus:SI (reg:SI SP_REG)
- 		 (match_operand:SI 3 "immediate_operand" "i")))]
-   "!TARGET_64BIT && SIBLING_CALL_P (insn)"
--  "* return ix86_output_call_insn (insn, operands[1]);"
-+  "* return ix86_output_call_insn (insn, &operands[1]);"
-   [(set_attr "type" "callv")])
- 
- (define_insn "*sibcall_value_pop_memory"
-@@ -21401,7 +21424,7 @@
- 		 (match_operand:SI 3 "immediate_operand" "i")))
-    (unspec [(const_int 0)] UNSPEC_PEEPSIB)]
-   "!TARGET_64BIT && !TARGET_INDIRECT_BRANCH_REGISTER"
--  "* return ix86_output_call_insn (insn, operands[1]);"
-+  "* return ix86_output_call_insn (insn, &operands[1]);"
-   [(set_attr "type" "callv")])
- 
- (define_peephole2
-diff --git a/gcc/config/i386/i386-expand.cc b/gcc/config/i386/i386-expand.cc
-index f422f65fbc5a..7b22b152dd96 100644
---- a/gcc/config/i386/i386-expand.cc
-+++ b/gcc/config/i386/i386-expand.cc
-@@ -94,6 +94,7 @@ along with GCC; see the file COPYING3.  If not see
- #include "i386-builtins.h"
- #include "i386-expand.h"
- #include "asan.h"
-+#include "kcfi.h"
- 
- /* Split one or more double-mode RTL references into pairs of half-mode
-    references.  The RTL can be REG, offsettable MEM, integer constant, or
-@@ -11115,8 +11116,9 @@ ix86_expand_call (rtx retval, rtx fnaddr, rtx callarg1,
-   unsigned int vec_len = 0;
-   tree fndecl;
-   bool call_no_callee_saved_registers = false;
-+  bool is_direct_call = SYMBOL_REF_P (XEXP (fnaddr, 0));
- 
--  if (SYMBOL_REF_P (XEXP (fnaddr, 0)))
-+  if (is_direct_call)
-     {
-       fndecl = SYMBOL_REF_DECL (XEXP (fnaddr, 0));
-       if (fndecl)
-@@ -11153,7 +11155,7 @@ ix86_expand_call (rtx retval, rtx fnaddr, rtx callarg1,
-   if (TARGET_MACHO && !TARGET_64BIT)
-     {
- #if TARGET_MACHO
--      if (flag_pic && SYMBOL_REF_P (XEXP (fnaddr, 0)))
-+      if (flag_pic && is_direct_call)
- 	fnaddr = machopic_indirect_call_target (fnaddr);
- #endif
-     }
-@@ -11237,7 +11239,7 @@ ix86_expand_call (rtx retval, rtx fnaddr, rtx callarg1,
-   if (ix86_cmodel == CM_LARGE_PIC
-       && !TARGET_PECOFF
-       && MEM_P (fnaddr)
--      && SYMBOL_REF_P (XEXP (fnaddr, 0))
-+      && is_direct_call
-       && !local_symbolic_operand (XEXP (fnaddr, 0), VOIDmode))
-     fnaddr = gen_rtx_MEM (QImode, construct_plt_address (XEXP (fnaddr, 0)));
-   /* Since x32 GOT slot is 64 bit with zero upper 32 bits, indirect
-@@ -11269,6 +11271,26 @@ ix86_expand_call (rtx retval, rtx fnaddr, rtx callarg1,
- 
-   call = gen_rtx_CALL (VOIDmode, fnaddr, callarg1);
- 
-+  /* Only indirect calls need KCFI instrumentation.  After address
-+     legitimization an indirect target is a REG; every symbolic form
-+     (SYMBOL_REF, LABEL_REF, CONST) is a direct call.  Use a strict
-+     REG_P check here rather than the broader is_direct_call (which is
-+     SYMBOL_REF_P and is shared with PIC/PLT logic) so that non-
-+     SYMBOL_REF direct calls are not wrongly wrapped.  */
-+  rtx kcfi_type_rtx = REG_P (XEXP (fnaddr, 0))
-+    ? kcfi_get_type_id_for_expanding_gimple_call ()
-+    : NULL_RTX;
-+  if (kcfi_type_rtx)
-+    {
-+      /* Wrap call with KCFI.  */
-+      call = gen_rtx_KCFI (VOIDmode, call, kcfi_type_rtx);
++You should have received a copy of the GNU General Public License
++along with GCC; see the file COPYING3.  If not see
++<http://www.gnu.org/licenses/>.  */
 +
-+      /* Add KCFI clobbers for the insn sequence.  */
-+      clobber_reg (&use, gen_rtx_REG (DImode, R10_REG));
-+      clobber_reg (&use, gen_rtx_REG (DImode, R11_REG));
-+      clobber_reg (&use, gen_rtx_REG (CCmode, FLAGS_REG));
-+    }
++#ifndef GCC_KCFI_H
++#define GCC_KCFI_H
 +
-   if (retval)
-     call = gen_rtx_SET (retval, call);
-   vec[vec_len++] = call;
-diff --git a/gcc/config/i386/i386.cc b/gcc/config/i386/i386.cc
-index b1fd86c2b320..c218cce1b40b 100644
---- a/gcc/config/i386/i386.cc
-+++ b/gcc/config/i386/i386.cc
-@@ -98,6 +98,7 @@ along with GCC; see the file COPYING3.  If not see
- #include "i386-builtins.h"
- #include "i386-expand.h"
- #include "i386-features.h"
-+#include "kcfi.h"
- #include "function-abi.h"
- #include "rtl-error.h"
- #include "gimple-pretty-print.h"
-@@ -323,6 +324,26 @@ unsigned int const svr4_debugger_register_map[FIRST_PSEUDO_REGISTER] =
-   93, 94, 95, 96, 97, 98, 99, 100
- };
- 
-+/* KCFI arity (how many parameters a function has) is encoded in the
-+   preamble's immediate register.  The encoding is as follows:
++#include "config.h"
++#include "system.h"
++#include "coretypes.h"
++#include "rtl.h"
 +
-+   Arity represented by
-+       0 by %eax (gcc regno = 0)
-+       1 by %ecx (gcc regno = 2)
-+       2 by %edx (gcc regno = 1)
-+       3 by %ebx (gcc regno = 3)
-+       4 by %esp (gcc regno = 7)
-+       5 by %ebp (gcc regno = 6)
-+       6 by %esi (gcc regno = 4)
-+       7 by %edi (gcc regno = 5)
-+*/
-+#define KCFI_ARITY_MAX_INDICATOR 7
-+unsigned int const kcfi_arity_register_map[KCFI_ARITY_MAX_INDICATOR + 1] =
++/* Common helper for RTL patterns to emit .kcfi_traps section entry.
++   Call after emitting trap label and instruction with the trap symbol
++   reference.  */
++extern void kcfi_emit_traps_section (FILE *file, rtx trap_label_sym,
++				      int labelno);
++
++/* Extract KCFI type ID from current GIMPLE statement.  */
++extern rtx internal_kcfi_get_type_id_for_expanding_gimple_call (void);
++
++/* Convenience wrapper to check for SANITIZE_KCFI.  */
++static inline rtx
++kcfi_get_type_id_for_expanding_gimple_call (void)
 +{
-+  /* eax to edi, as above.  */
-+  0, 2, 1, 3, 7, 6, 4, 5
-+};
++  if (!(flag_sanitize & SANITIZE_KCFI))
++    return NULL_RTX;
++  return internal_kcfi_get_type_id_for_expanding_gimple_call ();
++}
 +
- /* Define parameter passing and return registers.  */
- 
- static int const x86_64_int_parameter_registers[6] =
-@@ -17733,11 +17754,89 @@ ix86_output_indirect_function_return (rtx ret_op)
-   return "";
- }
- 
--/* Output the assembly for a call instruction.  */
-+/* Output the assembly for a call instruction.  INSN is the RTL instruction
-+   being processed.  OPERANDS is the array of RTL operands where operands[0]
-+   is the call target, operands[1] is the call operand (unused on x86), and
-+   operands[2] is the KCFI type ID constant (for KCFI-instrumented calls).  */
- 
- const char *
--ix86_output_call_insn (rtx_insn *insn, rtx call_op)
-+ix86_output_call_insn (rtx_insn *insn, rtx *operands)
- {
-+  rtx call_op = operands[0];
-+  rtx pat = PATTERN (insn);
++/* Emit KCFI type ID symbol for external address-taken functions.  */
++extern void kcfi_emit_typeid_symbol (FILE *asm_file, tree fndecl);
 +
-+  /* If KCFI, emit the check sequence first.  */
-+  if (GET_CODE (pat) == KCFI
-+      || (GET_CODE (pat) == SET && GET_CODE (XEXP (pat, 1)) == KCFI))
-+    {
-+      /* Target is guaranteed to be in a register due to
-+	 TARGET_INDIRECT_BRANCH_REGISTER.  */
-+      gcc_assert (REG_P (call_op));
++/* Emit KCFI preamble for potential indirect call targets.  */
++extern void kcfi_emit_preamble (FILE *asm_file, tree fndecl,
++				const char *actual_fname);
 +
-+      /* In thunk-extern mode, the register must be R11 for FineIBT
-+	 compatibility.  */
-+      if (cfun->machine->indirect_branch_type == indirect_branch_thunk_extern)
-+	{
-+	  if (REGNO (call_op) != R11_REG)
-+	    {
-+	      /* Emit move from current target to R11.  */
-+	      call_op = gen_rtx_REG (DImode, R11_REG);
-+	      rtx r11_operands[2] = { operands[0], call_op };
-+	      output_asm_insn ("movq\t%0, %1", r11_operands);
-+	    }
-+	}
++/* Get next KCFI label number for trap/call/entry label numbering.  */
++extern int kcfi_next_labelno (void);
 +
-+      /* Get unique label number for this KCFI check.  */
-+      int labelno = kcfi_next_labelno ();
++/* Get the KCFI typeid offset for calculating callsite typeid offset.  */
++extern HOST_WIDE_INT kcfi_get_typeid_offset (void);
 +
-+      /* Generate custom label names.  */
-+      char trap_name[32];
-+      char call_name[32];
-+      ASM_GENERATE_INTERNAL_LABEL (trap_name, "Lkcfi_trap", labelno);
-+      ASM_GENERATE_INTERNAL_LABEL (call_name, "Lkcfi_call", labelno);
++#endif /* GCC_KCFI_H */
+diff --git a/gcc/kcfi.cc b/gcc/kcfi.cc
+new file mode 100644
+index 000000000000..6f5f36906225
+--- /dev/null
++++ b/gcc/kcfi.cc
+@@ -0,0 +1,696 @@
++/* Kernel Control Flow Integrity (KCFI) support for GCC.
++   Copyright (C) 2025 Free Software Foundation, Inc.
 +
-+      /* Choose scratch register: r10 by default, r11 if r10 is the target.  */
-+      bool target_is_r10 = (REGNO (call_op) == R10_REG);
-+      rtx scratch_reg = gen_rtx_REG (SImode, target_is_r10 ? R11_REG : R10_REG);
++This file is part of GCC.
 +
-+      /* Get KCFI type ID from operand 2.  */
-+      uint32_t type_id = UINTVAL (operands[2]);
++GCC is free software; you can redistribute it and/or modify it under
++the terms of the GNU General Public License as published by the Free
++Software Foundation; either version 3, or (at your option) any later
++version.
 +
-+      /* Convert to inverse for the check (0 - hash).  */
-+      uint32_t inverse_type_id = (uint32_t)(0 - type_id);
++GCC is distributed in the hope that it will be useful, but WITHOUT ANY
++WARRANTY; without even the implied warranty of MERCHANTABILITY or
++FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++for more details.
 +
-+      /* Calculate offset to typeid from target address.  */
-+      HOST_WIDE_INT offset = -kcfi_get_typeid_offset ();
++You should have received a copy of the GNU General Public License
++along with GCC; see the file COPYING3.  If not see
++<http://www.gnu.org/licenses/>.  */
 +
-+      /* Output complete KCFI check sequence.  */
-+      rtx inverse_type_id_rtx = gen_int_mode (inverse_type_id, SImode);
-+      rtx mov_operands[2] = { inverse_type_id_rtx, scratch_reg };
-+      output_asm_insn ("movl\t$%c0, %1", mov_operands);
++/* KCFI ABI Design:
 +
-+      /* Create memory operand for the addl instruction.  */
-+      rtx offset_rtx = gen_int_mode (offset, DImode);
-+      rtx mem_op = gen_rtx_MEM (SImode,
-+				gen_rtx_PLUS (DImode, call_op, offset_rtx));
-+      rtx add_operands[2] = { mem_op, scratch_reg };
-+      output_asm_insn ("addl\t%0, %1", add_operands);
++The Linux Kernel Control Flow Integrity ABI provides a function prototype
++based forward edge control flow integrity protection by instrumenting
++every indirect call to check for a hash value before the target function
++address.  If the hash at the call site and the hash at the target do not
++match, execution will trap.
 +
-+      /* Output conditional jump to call label.  */
-+      fputs ("\tje\t", asm_out_file);
-+      assemble_name (asm_out_file, call_name);
-+      fputc ('\n', asm_out_file);
++The general CFI ideas are discussed here, but focuses more on a CFG
++analysis to construct valid call destinations, which tends to require LTO:
++https://users.soe.ucsc.edu/~abadi/Papers/cfi-tissec-revised.pdf
 +
-+      /* Output trap label and instruction.  */
-+      ASM_OUTPUT_LABEL (asm_out_file, trap_name);
-+      output_asm_insn ("ud2", operands);
++Later refinement for using jump tables (constructed via CFG analysis
++during LTO) was proposed here:
++https://www.usenix.org/system/files/conference/usenixsecurity14/sec14-paper-tice.pdf
 +
-+      /* Use common helper for trap section entry.  */
-+      rtx trap_label_sym = gen_rtx_SYMBOL_REF (Pmode, trap_name);
-+      kcfi_emit_traps_section (asm_out_file, trap_label_sym, labelno);
++Linux used the above implementation from 2018 to 2022:
++https://android-developers.googleblog.com/2018/10/control-flow-integrity-in-android-kernel.html
++but the corner cases for target addresses not being the actual functions
++(i.e. pointing into the jump table) was a continual source of problems,
++and generating the jump tables required full LTO, which had its own set
++of problems.
 +
-+      /* Output pass/call label.  */
-+      ASM_OUTPUT_LABEL (asm_out_file, call_name);
-+    }
++Looking at function prototypes as the source of call validity was
++presented here, though still relied on LTO:
++https://www.blackhat.com/docs/asia-17/materials/asia-17-Moreira-Drop-The-Rop-Fine-Grained-Control-Flow-Integrity-For-The-Linux-Kernel-wp.pdf
 +
-   bool direct_p = constant_call_address_operand (call_op, VOIDmode);
-   bool output_indirect_p
-     = (!TARGET_SEH
-@@ -29156,6 +29255,113 @@ ix86_set_handled_components (sbitmap components)
-       }
- }
- 
-+/* Apply x86-64 specific masking to KCFI type ID.  TYPE_ID is the 32-bit
-+   KCFI type identifier to potentially mask.  Returns the type ID with
-+   x86-64 specific adjustments to avoid embedding ENDBR instruction
-+   sequences in the type identifier values.  */
++The KCFI approach built on the function-prototype idea, but avoided
++needing LTO, and could be further updated to deal with CPU errata
++(retpolines, etc):
++https://lpc.events/event/16/contributions/1315/
++
++KCFI has a number of specific constraints.  Some are tied to the
++backend architecture, which are covered in arch-specific code.
++The constraints are:
++
++- The KCFI scheme generates a unique 32-bit hash ("typeid") for each
++  unique function prototype, allowing for indirect call sites to verify
++  that they are calling into a matching _type_ of function pointer.
++  This changes the semantics of some optimization logic because now
++  indirect calls to different types cannot be merged.  For example:
++
++    if (p->func_type_1)
++	return p->func_type_1 ();
++    if (p->func_type_2)
++	return p->func_type_2 ();
++
++  In final asm, the optimizer may collapse the second indirect call
++  into a jump to the first indirect call once it has loaded the function
++  pointer.  KCFI must block cross-type merging otherwise there will be a
++  single KCFI check happening for only 1 type but being used by 2 target
++  types.  The distinguishing characteristic for call merging becomes the
++  type, not the address/register usage.
++
++- The check-call instruction sequence must be treated as a single unit: it
++  cannot be rearranged or split or optimized.  The pattern is that
++  indirect calls, "call *%target", get converted into:
++
++    mov $target_expression, %target ; only present if the expression was
++				    ; not already in %target register
++    load -$offset(%target), %tmp    ; load typeid hash from target preamble
++    cmp $typeid, %tmp		    ; compare expected typeid with loaded
++    je .Lkcfi_call$N		    ; success: jump to the indirect call
++  .Lkcfi_trap$N:		    ; label of trap insn
++    trap			    ; trap on failure, but arranged so
++				    ; "permissive mode" falls through
++  .Lkcfi_call$N:		    ; label of call insn
++    call *%target		    ; actual indirect call
++
++  This pattern of call immediately after trap provides for the
++  "permissive" checking mode automatically: the trap gets handled,
++  a warning emitted, and then execution continues after the trap to
++  the call.
++
++- KCFI check-call instrumentation must survive tail call optimization.
++  If an indirect call is turned into an indirect jump, KCFI checking
++  must still happen (but it will use a jmp rather than a call).
++
++- Functions that may be called indirectly have a preamble added,
++  __cfi_$original_func_name, which contains the $typeid value:
++
++    __cfi_target_func:
++      .word $typeid
++    target_func:
++       [regular function entry...]
++
++- The preamble needs to interact with patchable function entry so that
++  the typeid appears further away from the actual start of the function
++  (leaving the prefix NOPs of the patchable function entry unchanged).
++  This means only _globally defined_ patchable function entry is supported
++  with KCFI (indrect call sites must know in advance what the offset is,
++  which may not be possible with extern functions that use a function
++  attribute to change their patchable function entry characteristics).
++  For example, a "4,4" patchable function entry would end up like:
++
++    __cfi_target_func:
++      .data $typeid
++      nop nop nop nop
++    target_func:
++       [regular function entry...]
++
++  Architectures may need to add alignment nops prior to the typeid to keep
++  __cfi_target_func aligned for function call conventions.
++
++- An external function that is address-taken but does not have a definition has
++  a weak __kcfi_typeid_$func symbol added at the declaration site.  This weak
++  symbol has the typeid value available so that the typeid can be referenced
++  from assembly linkages, etc, where the typeid values cannot be calculated
++  (i.e where C type information is missing):
++
++    .weak   __kcfi_typeid_$func
++    .set    __kcfi_typeid_$func, $typeid
++
++- On architectures that do not have a good way to encode additional
++  details in their trap insn (e.g. x86_64 and riscv64), the trap location
++  is identified as a KCFI trap via a relative address offset entry
++  emitted into the .kcfi_traps section for each indirect call site's
++  trap instruction.  The previous check-call example's insn sequence would
++  then have section changes inserted between the trap and call:
++
++  ...
++  .Lkcfi_trap$N:
++    trap
++  .section	.kcfi_traps,"ao",@progbits,.text
++  .Lkcfi_entry$N:
++    .long	.Lkcfi_trap$N - .Lkcfi_entry$N
++  .text
++  .Lkcfi_call$N:
++    call *%target
++
++  It is up to such architectures to decode instructions prior to the
++  trap to locate the typeid that the callsite was expecting.
++
++  For architectures that can encode immediates in their trap function
++  (e.g. aarch64 and arm32), this isn't needed: they just use immediate
++  codes that indicate a KCFI trap.
++
++- The no_sanitize("kcfi") function attribute means that the marked
++  function must not produce KCFI checking for indirect calls, and this
++  attribute must survive inlining.  This is used rarely by Linux, but
++  is required to make BPF JIT trampolines work on older Linux kernel
++  versions.
++
++- The "nocf_check" function attribute can be used to supress the
++  KCFI preamble for a function, making that function unavailable
++  for indirect calls.
++
++As a result of these constraints, there are some behavioral aspects
++that need to be preserved across the middle-end and back-end.
++
++For indirect call sites:
++
++- Make sure KCFI expansion is skipped for inline functions that
++  are marked with no_sanitize("kcfi") by marking these calls
++  during GIMPLE inlining with a new flag which is checked during
++  expansion.
++
++- All function types have their associated typeid attached as an
++  attribute during an IPA pass.
++
++- Keep typeid information available through to the RTL expansion
++  phase via a new KCFI insn RTL pattern that wraps the CALL
++  and the typeid as expressions.  Since per-arch RTL call logic
++  can be very complex, we don't want to replace the "define_expand"
++  patterns, but rather hook the tail end of expansion.  This is
++  where kcfi_get_type_id_for_expanding_gimple_call gets used, which
++  uses currently_expanding_gimple_stmt internally, as done in
++  other cases where GIMPLE needs to be examined during expansion.
++
++- Keep indirect calls from being merged (see earlier example)
++  naturally by having typeid be the second argument of the KCFI insn
++  RTL pattern, so jump2 pass's use of rtx_equal_p see differing
++  typeids in the RTL.
++
++- Update register liveness analysis to look inside the new KCFI
++  RTL to find the CALL RTL and examine the registers in use there
++  so the allocator can track register usage correctly.
++
++- KCFI insn emission interacts with patchable function entry to
++  load the typeid from the target preamble, offset by prefix NOPs.
++
++For indirect call targets:
++
++- kcfi_emit_preamble interacts with patchable function entry to add
++  any needed alignment padding prior to emitting the typeid.
++
++- assemble_external_real calls kcfi_emit_typeid_symbol to add the
++  __kcfi_typeid_$func symbols.
++
++*/
++
++#include "config.h"
++#include "system.h"
++#include "coretypes.h"
++#include "target.h"
++#include "function.h"
++#include "tree.h"
++#include "tree-pass.h"
++#include "dumpfile.h"
++#include "basic-block.h"
++#include "gimple.h"
++#include "gimple-iterator.h"
++#include "cgraph.h"
++#include "kcfi.h"
++#include "stringpool.h"
++#include "attribs.h"
++#include "rtl.h"
++#include "cfg.h"
++#include "cfgrtl.h"
++#include "asan.h"
++#include "diagnostic-core.h"
++#include "memmodel.h"
++#include "print-tree.h"
++#include "emit-rtl.h"
++#include "output.h"
++#include "builtins.h"
++#include "varasm.h"
++#include "opts.h"
++#include "target.h"
++#include "flags.h"
++#include "kcfi-typeinfo.h"
++#include "insn-config.h"
++#include "recog.h"
++
++/* KCFI label counter, incremented by KCFI insn emission.  */
++static int kcfi_labelno = 0;
++
++/* Get next KCFI label number.  Returns the current KCFI label number
++   and increments the internal counter for the next call.  The label is
++   used to provide a unique number for each indirect callsite of the
++   current module of the compilation.  */
++
++int
++kcfi_next_labelno (void)
++{
++  return kcfi_labelno++;
++}
++
++/* Callsite typeid loading offset.  */
++static HOST_WIDE_INT kcfi_typeid_offset = 0;
++
++/* Get the KCFI typeid offset.  Returns the offset in bytes from the
++   function entry point where the KCFI type ID is stored.  */
++
++HOST_WIDE_INT
++kcfi_get_typeid_offset (void)
++{
++  return kcfi_typeid_offset;
++}
++/* Count of needed __cfi_... preamble alignment padding NOPs.  */
++static HOST_WIDE_INT kcfi_alignment_padding_nops = 0;
++/* NOP insn template.  */
++static const char *kcfi_nop = NULL;
++
++/* Common helper for RTL patterns to emit .kcfi_traps section entry.
++   FILE is the output assembly file stream.  TRAP_LABEL_SYM is the RTX
++   symbol reference for the trap instruction label.  LABELNO is the KCFI
++   label number to use for the entry label.  */
++
++void
++kcfi_emit_traps_section (FILE *file, rtx trap_label_sym, int labelno)
++{
++  /* Generate entry label name with custom prefix.  */
++  char entry_name[32];
++  ASM_GENERATE_INTERNAL_LABEL (entry_name, "Lkcfi_entry", labelno);
++
++  /* Save current section to restore later.  */
++  section *saved_section = in_section;
++
++  /* Use varasm infrastructure for section handling:
++     .section	.kcfi_traps,"ao",@progbits,.text  */
++  section *kcfi_traps_section = get_section (".kcfi_traps",
++					     SECTION_LINK_ORDER, NULL);
++  switch_to_section (kcfi_traps_section);
++
++  /* Emit entry label for relative offset:
++     .Lkcfi_entry$N:  */
++  ASM_OUTPUT_LABEL (file, entry_name);
++
++  /* Generate address difference using RTL infrastructure.  */
++  rtx entry_label_sym = gen_rtx_SYMBOL_REF (Pmode, entry_name);
++  rtx addr_diff = gen_rtx_MINUS (Pmode, trap_label_sym, entry_label_sym);
++
++  /* Emit the address difference as a 4-byte value:
++    .long	.Lkcfi_trap$N - .Lkcfi_entry$N  */
++  assemble_integer (addr_diff, 4, BITS_PER_UNIT, 1);
++
++  /* Restore the previous section:
++     .text  */
++  switch_to_section (saved_section);
++}
++
++/* Compute KCFI type ID for a function type.  FNTYPE is the function
++   type tree node to compute the type ID for.  Returns the 32-bit KCFI
++   type identifier hash.  */
 +
 +static uint32_t
-+ix86_kcfi_mask_type_id (uint32_t type_id)
++compute_kcfi_type_id (tree fntype)
 +{
-+  /* Avoid embedding ENDBR instructions in KCFI type IDs.
-+     ENDBR64: 0xfa1e0ff3, ENDBR32: 0xfb1e0ff3
-+     If the type ID matches either instruction encoding, increment by 1.  */
-+  if (type_id == 0xfa1e0ff3U || type_id == 0xfb1e0ff3U)
-+    return type_id + 1;
++  gcc_assert (fntype);
++  gcc_assert (TREE_CODE (fntype) == FUNCTION_TYPE);
++
++  uint32_t type_id = kcfi_typeinfo_get_hash (fntype);
++
++  /* Apply target-specific masking if supported.  */
++  if (targetm.kcfi.mask_type_id)
++    type_id = targetm.kcfi.mask_type_id (type_id);
++
++  /* Output to dump file if enabled.  */
++  if (dump_file && (dump_flags & TDF_DETAILS))
++    {
++      std::string mangled_name = kcfi_typeinfo_get_name (fntype);
++      fprintf (dump_file, "KCFI type ID: mangled='%s' typeid=0x%08x\n",
++	       mangled_name.c_str (), type_id);
++    }
 +
 +  return type_id;
 +}
 +
-+/* Return x86-64 specific function arity (number of integer register
-+   arguments) of the given FNDECL.  */
++/* Function attribute to store KCFI type ID.  */
++static tree kcfi_type_id_attr = NULL_TREE;
 +
-+static uint8_t
-+ix86_kcfi_compute_type_arity (tree fndecl)
++/* Get KCFI type ID for a function type.  Set it if missing.  FN_TYPE
++   is the function type tree node.  Returns the cached or newly computed
++   32-bit KCFI type identifier, storing it as a type attribute.  */
++
++static uint32_t
++kcfi_get_type_id (tree fn_type)
 +{
-+  tree args;
-+  uint8_t arity = 0;
++  uint32_t type_id;
 +
-+  /* Only count arity if requested.  */
-+  if (!flag_sanitize_kcfi_arity)
-+    return 0;
++  /* Cache the attribute identifier for build_tree_list usage.  */
++  if (!kcfi_type_id_attr)
++    kcfi_type_id_attr = get_identifier ("kcfi_type_id");
 +
-+  /* If fndecl is NULL, we can't determine arity - return 0.  */
-+  if (!fndecl)
-+    return 0;
++  tree attr = lookup_attribute ("kcfi_type_id", TYPE_ATTRIBUTES (fn_type));
++  if (attr)
++    {
++      tree value = TREE_VALUE (attr);
++      gcc_assert (value && TREE_CODE (value) == INTEGER_CST);
++      type_id = (uint32_t) TREE_INT_CST_LOW (value);
++    }
++  else
++    {
++      type_id = compute_kcfi_type_id (fn_type);
 +
-+  /* Count the number of registers used, disregard SSE registers.  */
-+  for (args = DECL_ARGUMENTS (fndecl); args; args = TREE_CHAIN (args))
++      tree type_id_tree = build_int_cst (unsigned_type_node, type_id);
++      tree attr = build_tree_list (kcfi_type_id_attr, type_id_tree);
++
++      TYPE_ATTRIBUTES (fn_type) = chainon (TYPE_ATTRIBUTES (fn_type), attr);
++    }
++
++  return type_id;
++}
++
++/* Prepare the global KCFI alignment NOPs calculation.  Called once
++   during IPA pass to set global variables including kcfi_typeid_offset
++   and kcfi_alignment_padding_nops based on patchable function entry
++   settings and function alignment requirements.  */
++
++static void
++kcfi_prepare_alignment_nops (void)
++{
++  /* Calculate where callsites load the 32-bit typeid from, based
++     on the target function address.  Under default circumstances,
++     the typeid is located 4 bytes before the function entry, in
++     the __cfi_... preamble:
++
++     __cfi_func:
++       [typeid]		// -4 from func
++     func:
++       [function body]
++
++   */
++  kcfi_typeid_offset = sizeof (uint32_t);
++
++  /* When Patchable Function Entry (PFE) is enabled, there may be NOP
++     instructions between the typeid and the function entry point.
++     Since KCFI callsites have no way to see PFE function attributes,
++     it can only base the calculations on the global
++     -fpatchable-function-entry=TOTAL[,PREFIX] flag.  */
++  HOST_WIDE_INT prefix_nops = 0;
++  if (flag_patchable_function_entry)
++    {
++      HOST_WIDE_INT total_nops;
++      parse_and_check_patch_area (flag_patchable_function_entry, false,
++				  &total_nops, &prefix_nops);
++    }
++
++  /* However, PFE is measured in NOP instruction counts, not bytes.  So
++     we need to find out how many bytes they are, and we may need to
++     emit NOPs for alignment padding later.  Prepare the NOP template.  */
++  rtx_insn *nop_insn = make_insn_raw (gen_nop ());
++  int code_num = recog_memoized (nop_insn);
++  kcfi_nop = get_insn_template (code_num, nop_insn);
++  int nop_insn_bytes = get_attr_length (nop_insn);
++
++  /* Adjust the offset by how many NOP bytes may be between the typeid
++     and the function entry point.
++
++     __cfi_func:
++       [typeid]		// -(4 + (prefix nop count * nop size)) from func
++       [prefix nops]	// added when -fpatchable-function-entry is set
++     func:
++       [entry nops]	// added when -fpatchable-function-entry is set
++       [function body]
++
++     At this point, kcfi_typeid_offset is ready and callsites can now
++     correctly find the typeid.
++
++   */
++  int prefix_nop_bytes = prefix_nops * nop_insn_bytes;
++  kcfi_typeid_offset += prefix_nop_bytes;
++
++  /* In the case where the KCFI preamble (and potentially the prefix NOPs)
++     are being used for alternative CFI implementations via live-patching,
++     the __cfi_... label itself needs to be usable as a callable function
++     target, so alignment NOPs may need to be added between the preamble
++     label and the typeid during KCFI preamble emission:
++
++     __cfi_func:		// may need to be function entry aligned
++       [alignment padding nops] // may be needed when -falign-functions set
++       [typeid]
++       [prefix nops]
++     func:
++       [entry nops]
++       [function body]
++
++     But we only calculate alignment padding NOPs when -falign-functions
++     has been explicitly set.
++   */
++  if (align_functions.levels[0].log <= 0)
++    return;
++  int function_entry_alignment = align_functions.levels[0].get_value ();
++
++  /* Some architectures may be using an instruction for the typeid (though
++     this requires that the typeid is a trailing immediate value), but the
++     instruction will have a size greater than 4, which must be part of the
++     resulting alignment padding calculation.  */
++  int typeid_insn_bytes = targetm.kcfi.emit_type_id
++			  ? targetm.kcfi.emit_type_id (NULL, 0, NULL)
++			  : sizeof (uint32_t);
++
++  /* Calculate needed architecture-specific alignment padding bytes.  */
++  int needed_alignment_bytes = (function_entry_alignment
++				- ((prefix_nop_bytes + typeid_insn_bytes)
++				   % function_entry_alignment))
++			       % function_entry_alignment;
++
++  /* Calculate number of NOP instructions needed for alignment padding.  */
++  if (needed_alignment_bytes % nop_insn_bytes != 0)
++    sorry ("KCFI function entry alignment padding bytes (%d) are not "
++	   "a multiple of architecture NOP instruction size (%d)",
++	   needed_alignment_bytes, nop_insn_bytes);
++  kcfi_alignment_padding_nops = needed_alignment_bytes / nop_insn_bytes;
++}
++
++/* Extract KCFI type ID from indirect call GIMPLE statement.  Uses the
++   currently expanding GIMPLE statement to determine if KCFI instrumentation
++   is needed.  Returns RTX constant with type ID, or NULL_RTX if no KCFI
++   instrumentation is required.  */
++
++rtx
++internal_kcfi_get_type_id_for_expanding_gimple_call (void)
++{
++  gcc_assert (currently_expanding_gimple_stmt);
++  gcc_assert (is_gimple_call (currently_expanding_gimple_stmt));
++
++  /* Internally checks for no_sanitize("kcfi") with current_function_decl.  */
++  if (!sanitize_flags_p (SANITIZE_KCFI))
++    return NULL_RTX;
++
++  gcall *call_stmt = as_a <gcall *> (currently_expanding_gimple_stmt);
++
++  /* Only indirect calls need KCFI instrumentation.  */
++  if (gimple_call_fndecl (call_stmt))
++    return NULL_RTX;
++
++  /* Skip calls originating from inlined no_sanitize("kcfi") functions.  */
++  if (gimple_call_inlined_from_kcfi_nosantize_p (call_stmt))
++    return NULL_RTX;
++
++  /* Get function type of call.  */
++  tree fn_type = gimple_call_fntype (call_stmt);
++  gcc_assert (fn_type);
++
++  /* Return the type_id.  */
++  return GEN_INT (kcfi_get_type_id (fn_type));
++}
++
++/* Emit KCFI type ID symbol for an address-taken external function.
++   ASM_FILE is the output assembly file stream.  FNDECL is the external
++   function declaration tree node.  Emits weak symbol definitions for
++   external functions that are address-taken.  */
++
++void
++kcfi_emit_typeid_symbol (FILE *asm_file, tree fndecl)
++{
++  /* Only emit for external function declarations.  */
++  if (TREE_CODE (fndecl) != FUNCTION_DECL || DECL_INITIAL (fndecl))
++    return;
++
++  /* Only emit for functions that are address-taken.  */
++  struct cgraph_node *node = cgraph_node::get (fndecl);
++  if (!node || !node->address_taken)
++    return;
++
++  /* Get symbol name from RTL and strip encoding prefixes.  */
++  rtx rtl = DECL_RTL (fndecl);
++  const char *name = XSTR (XEXP (rtl, 0), 0);
++  name = targetm.strip_name_encoding (name);
++
++  /* .weak __kcfi_typeid_{name} */
++  std::string symbol_name = std::string ("__kcfi_typeid_") + name;
++  ASM_WEAKEN_LABEL (asm_file, symbol_name.c_str ());
++
++  /* .set __kcfi_typeid_{name}, 0x{type_id} */
++  char val[16];
++  snprintf (val, sizeof (val), "0x%08x",
++	    kcfi_get_type_id (TREE_TYPE (fndecl)));
++  ASM_OUTPUT_DEF (asm_file, symbol_name.c_str (), val);
++}
++
++/* Emit KCFI preamble before the function label.  ASM_FILE is the output
++   assembly file stream.  FNDECL is the function declaration tree node.
++   ACTUAL_FNAME is the actual function name to use, or NULL to use the
++   function's assembler name.  Functions get preambles when -fsanitize=kcfi
++   is enabled, regardless of no_sanitize("kcfi") attribute.  */
++
++void
++kcfi_emit_preamble (FILE *asm_file, tree fndecl, const char *actual_fname)
++{
++  /* Skip functions with nocf_check attribute.  */
++  if (lookup_attribute ("nocf_check", TYPE_ATTRIBUTES (TREE_TYPE (fndecl))))
++    return;
++
++  struct cgraph_node *node = cgraph_node::get (fndecl);
++
++  /* Ignore cold partition functions: not reached via indirect call.  */
++  if (node && node->split_part)
++    return;
++
++  /* Ignore cold partition sections: cold partitions are never indirect call
++     targets.  Only skip preambles for cold partitions (has_bb_partition = true)
++     not for entire cold-attributed functions (has_bb_partition = false).  */
++  if (in_cold_section_p && crtl && crtl->has_bb_partition)
++    return;
++
++  /* Check if function is truly address-taken using cgraph node analysis.  */
++  bool addr_taken = (node && node->address_taken);
++
++  /* Only instrument functions that can be targets of indirect calls:
++     - Public functions (can be called externally)
++     - External declarations (from other modules)
++     - Functions with true address-taken status from cgraph analysis.  */
++  if (!(TREE_PUBLIC (fndecl) || DECL_EXTERNAL (fndecl) || addr_taken))
++    return;
++
++  /* Use actual function name if provided, otherwise fall back to
++     DECL_ASSEMBLER_NAME.  */
++  const char *fname = actual_fname
++			? actual_fname
++			: IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (fndecl));
++
++  /* Create symbol name for reuse.  */
++  std::string cfi_symbol_name = std::string ("__cfi_") + fname;
++
++  /* Emit __cfi_ symbol with proper visibility.  */
++  if (TREE_PUBLIC (fndecl))
++    {
++      if (DECL_WEAK (fndecl))
++	ASM_WEAKEN_LABEL (asm_file, cfi_symbol_name.c_str ());
++      else
++	targetm.asm_out.globalize_label (asm_file, cfi_symbol_name.c_str ());
++    }
++
++  /* Emit .type directive.  */
++  ASM_OUTPUT_TYPE_DIRECTIVE (asm_file, cfi_symbol_name.c_str (), "function");
++  ASM_OUTPUT_LABEL (asm_file, cfi_symbol_name.c_str ());
++
++  /* Emit any needed alignment padding NOPs using target's NOP template.  */
++  for (int i = 0; i < kcfi_alignment_padding_nops; i++)
++    output_asm_insn (kcfi_nop, NULL);
++
++  /* Emit type ID bytes.  */
++  uint32_t type_id = kcfi_get_type_id (TREE_TYPE (fndecl));
++  if (targetm.kcfi.emit_type_id)
++    targetm.kcfi.emit_type_id (asm_file, type_id, fndecl);
++  else
++    fprintf (asm_file, "\t.word\t0x%08x\n", type_id);
++
++  /* Mark end of __cfi_ symbol and emit size directive.  */
++  std::string cfi_end_label = std::string (".Lcfi_func_end_") + fname;
++  ASM_OUTPUT_LABEL (asm_file, cfi_end_label.c_str ());
++
++  ASM_OUTPUT_MEASURED_SIZE (asm_file, cfi_symbol_name.c_str ());
++}
++
++namespace {
++
++/* IPA pass for KCFI type ID setting - runs once per compilation unit.  */
++
++const pass_data pass_data_ipa_kcfi =
++{
++  SIMPLE_IPA_PASS, /* type */
++  "ipa_kcfi", /* name */
++  OPTGROUP_NONE, /* optinfo_flags */
++  TV_IPA_OPT, /* tv_id */
++  0, /* properties_required */
++  0, /* properties_provided */
++  0, /* properties_destroyed */
++  0, /* todo_flags_start */
++  0, /* todo_flags_finish */
++};
++
++/* Set KCFI type_ids for all usable function types in compilation unit.
++   Processes all functions in the current compilation unit and caches their
++   KCFI type identifiers.  Returns 0 on completion.  */
++
++static unsigned int
++ipa_kcfi_execute (void)
++{
++  struct cgraph_node *node;
++
++  /* Prepare global KCFI alignment NOPs calculation once for all functions.  */
++  kcfi_prepare_alignment_nops ();
++
++  /* Process all functions - both local and external.  */
++  FOR_EACH_FUNCTION (node)
++    {
++      tree fndecl = node->decl;
++
++      /* Skip all non-NORMAL builtins (MD, FRONTEND) entirely.
++	 For NORMAL builtins, skip those that lack an implicit
++	 implementation (closest way to distinguishing DEF_LIB_BUILTIN
++	 from others).  E.g. we need to have typeids for memset().  */
++      if (fndecl_built_in_p (fndecl))
++	{
++	  if (DECL_BUILT_IN_CLASS (fndecl) != BUILT_IN_NORMAL)
++	    continue;
++	  if (!builtin_decl_implicit_p (DECL_FUNCTION_CODE (fndecl)))
++	    continue;
++	}
++
++      /* Cache the type_id in the function type.  */
++      kcfi_get_type_id (TREE_TYPE (fndecl));
++    }
++
++  return 0;
++}
++
++class pass_ipa_kcfi : public simple_ipa_opt_pass
++{
++public:
++  pass_ipa_kcfi (gcc::context *ctxt)
++    : simple_ipa_opt_pass (pass_data_ipa_kcfi, ctxt)
++  {}
++
++  bool gate (function *) final override
 +  {
-+    int int_nregs, sse_nregs;
-+    bool args_on_stack = false;
-+    machine_mode mode = TYPE_MODE (TREE_TYPE (args));
-+
-+    args_on_stack = examine_argument (mode, TREE_TYPE (args), 0, &int_nregs,
-+				      &sse_nregs);
-+    /* If we place arguments on the stack, return highest arity indicator.  */
-+    if (args_on_stack)
-+       return KCFI_ARITY_MAX_INDICATOR;
-+    arity += int_nregs;
++    return sanitize_flags_p (SANITIZE_KCFI);
 +  }
 +
-+  /* Return KCFI_ARITY_MAX_INDICATOR if we have counted more than
-+     KCFI_ARITY_MAX_INDICATOR arguments.  */
-+  return arity > KCFI_ARITY_MAX_INDICATOR ? KCFI_ARITY_MAX_INDICATOR : arity;
-+}
++  unsigned int execute (function *) final override
++  {
++    return ipa_kcfi_execute ();
++  }
 +
-+/* Emit x86_64-specific type ID instruction and return instruction size.
-+   FILE is the output assembly file stream, or NULL for size calculation only.
-+   TYPE_ID is the 32-bit KCFI type identifier to emit.  FNDECL is the function
-+   declaration, used to compute arity if needed.  Returns the number
-+   of bytes the instruction occupies (5 bytes for x86_64 movl instruction).  */
++}; /* class pass_ipa_kcfi */
 +
-+static int
-+ix86_kcfi_emit_type_id (FILE *file, uint32_t type_id, tree fndecl)
++} /* anon namespace */
++
++simple_ipa_opt_pass *
++make_pass_ipa_kcfi (gcc::context *ctxt)
 +{
-+  /* Compute function arity.  */
-+  uint8_t arity = ix86_kcfi_compute_type_arity (fndecl);
-+
-+  /* Choose register for movl instruction.  */
-+  gcc_assert (arity <= KCFI_ARITY_MAX_INDICATOR);
-+  uint32_t regno = kcfi_arity_register_map[arity];
-+
-+  if (file)
-+    fprintf (file, "\tmovl\t$0x%08x, %%e%s\n", type_id, reg_names[regno]);
-+
-+  /* x86_64 uses 5-byte movl instruction for type ID.  */
-+  return 5;
++  return new pass_ipa_kcfi (ctxt);
 +}
+diff --git a/gcc/doc/extend.texi b/gcc/doc/extend.texi
+index 2e7b7e4aed89..dbac01cfc8c9 100644
+--- a/gcc/doc/extend.texi
++++ b/gcc/doc/extend.texi
+@@ -3684,6 +3684,44 @@ void __attribute__ ((no_sanitize ("alignment,object-size")))
+ g () @{ /* @r{Do something.} */; @}
+ @end smallexample
+ 
++When @code{no_sanitize ("kcfi")} is applied to a function, it disables
++the generation of Kernel Control Flow Integrity (KCFI) instrumentation
++for indirect function calls within that function.  This means that
++indirect calls in the marked function will not be checked against the
++target function's type signature.
 +
-+/* Return true if the target supports KCFI.
-+   KCFI requires 64-bit mode (not x32) and the R10/R11 registers.  */
++However, the function itself will still receive a KCFI preamble (type
++identifier) when compiled with @option{-fsanitize=kcfi}, allowing it to
++be safely called indirectly from other functions that do perform KCFI
++checks.  In other words, @code{no_sanitize ("kcfi")} affects outgoing
++calls from the function, not incoming calls to the function.
 +
-+static bool
-+ix86_kcfi_supported_p (void)
-+{
-+  if (!TARGET_64BIT || TARGET_X32)
-+    {
-+      error ("%<-fsanitize=kcfi%> is not supported for 32-bit x86 or x32 mode");
-+      return false;
-+    }
-+  if (fixed_regs[R10_REG] || fixed_regs[R11_REG])
-+    {
-+      error ("%<-fsanitize=kcfi%> is not compatible with "
-+	     "%<-ffixed-r10%> or %<-ffixed-r11%> as KCFI requires these "
-+	     "registers for type checking");
-+      return false;
-+    }
-+  return true;
-+}
++@smallexample
++void __attribute__ ((no_sanitize ("kcfi")))
++trusted_function(void (*callback)(int))
++@{
++  /* This indirect call will NOT be instrumented with KCFI checks.  */
++  callback (42);
++@}
 +
-+#undef TARGET_KCFI_SUPPORTED
-+#define TARGET_KCFI_SUPPORTED ix86_kcfi_supported_p
++void regular_function(void (*callback)(int))
++@{
++  /* This indirect call WILL be instrumented with KCFI checks.  */
++  callback (42);
++@}
++@end smallexample
 +
-+#undef TARGET_KCFI_MASK_TYPE_ID
-+#define TARGET_KCFI_MASK_TYPE_ID ix86_kcfi_mask_type_id
++This attribute is primarily used in kernel code for special contexts such
++as BPF JIT trampolines or other low-level code where KCFI instrumentation
++might interfere with the intended operation.  The attribute survives
++inlining to ensure that @code{no_sanitize("kcfi")} functions do not generate
++KCFI checks even when inlined into a function that otherwise performs KCFI
++checks.
 +
-+#undef TARGET_KCFI_EMIT_TYPE_ID
-+#define TARGET_KCFI_EMIT_TYPE_ID ix86_kcfi_emit_type_id
++Note: To disable KCFI preamble generation for functions so that they may
++explicitly not be called indirectly, use the @code{nocf_check} function
++attribute instead.
 +
- #undef TARGET_SHRINK_WRAP_GET_SEPARATE_COMPONENTS
- #define TARGET_SHRINK_WRAP_GET_SEPARATE_COMPONENTS ix86_get_separate_components
- #undef TARGET_SHRINK_WRAP_COMPONENTS_FOR_BB
+ @atindex @code{no_sanitize_address}
+ @cindex functions that should not be sanitized
+ @item no_sanitize_address
+@@ -4286,6 +4324,10 @@ script to place the sections with the @code{.persistent} prefix in the
+ right location.  Specifically, some type of non-volatile, writable
+ memory is required.
+ 
++This attribute cannot be used with @option{-fsanitize=kcfi} because KCFI
++callsites cannot know about function-specific patchable entry settings on
++a preamble in a different translation unit.
++
+ @atindex @code{pure}
+ @cindex functions that have no side effects
+ @item pure
 diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index 372ea7d5f069..32161707ae16 100644
+index 24d0420ca381..372ea7d5f069 100644
 --- a/gcc/doc/invoke.texi
 +++ b/gcc/doc/invoke.texi
-@@ -17465,6 +17465,52 @@ The type identifier is placed before the function entry point,
- allowing runtime verification without additional metadata structures,
- and without changing the entry points of the target functions.
+@@ -17445,6 +17445,39 @@ the available options are shown at startup of the instrumented program.
+ The option cannot be combined with @option{-fsanitize=thread} or
+ @option{-fsanitize=address}, and is currently only available on AArch64.
  
-+Platform-specific implementation details:
++@opindex fsanitize=kcfi
++@item -fsanitize=kcfi
++Enable Kernel Control Flow Integrity (KCFI), a lightweight control
++flow integrity mechanism designed for operating system kernels.
++KCFI instruments indirect function calls to verify that the target
++function has the expected type signature at runtime.  Each function
++receives a unique type identifier computed from a hash of its function
++prototype (including parameter types and return type).  Before each
++indirect call, the implementation inserts a check to verify that the
++target function's type identifier matches the expected identifier
++for the call site, issuing a trap instruction if a mismatch is detected.
++This provides forward-edge control flow protection against attacks that
++attempt to redirect indirect calls to unintended targets.
 +
-+On x86_64, KCFI type identifiers are emitted as a @code{movl $ID, %eax}
-+instruction before the function entry.  The implementation ensures that
-+type IDs never collide with ENDBR instruction encodings.  When used
-+with @option{-fpatchable-function-entry}, the type identifier is
-+placed before any patchable NOPs, with appropriate alignment to maintain
-+the alignment specified by @code{-falign-functions}.  KCFI automatically
-+implies @option{-mindirect-branch-register}, forcing all indirect calls
-+and jumps to use registers instead of memory operands.  The runtime
-+check loads the type ID from the target function into @code{%r10d} and
-+uses an @code{addl} instruction to add the negative expected type ID,
-+effectively zeroing the register if the types match.  A conditional
-+jump follows to either continue execution or trap on mismatch.  The
-+check sequence uses @code{%r10d} and @code{%r11d} as scratch registers.
-+Trap locations are recorded in a special @code{.kcfi_traps} section
-+that maps trap sites to their corresponding function entry points,
-+enabling debuggers and crash handlers to identify KCFI violations.
-+The exact instruction sequences for both the KCFI preamble and the
-+check-call bundle are considered ABI, as the Linux kernel may
-+optionally rewrite these areas at boot time to mitigate detected CPU
-+errata.
++The implementation adds minimal runtime overhead and does not require
++runtime library support, making it suitable for kernel environments.
++The type identifier is placed before the function entry point,
++allowing runtime verification without additional metadata structures,
++and without changing the entry points of the target functions.
 +
-+The @code{-fsanitize-kcfi-arity} option encodes the function arity
-+(i.e., the number of arguments) into the @code{movl $ID, $REG} instruction,
-+where the @code{$REG} encodes the function arity.  This allows users, such
-+as FineIBT to generate code in the kernel that is aware of how many register
-+arguments a function takes.  The encoding is as follows:
++KCFI is intended primarily for kernel code and may not be suitable
++for user-space applications that rely on techniques incompatible
++with strict type checking of indirect calls.
 +
-+@multitable @columnfractions 0.10 0.50 0.40
-+@headitem Arity @tab Description @tab Register
-+@item 0 @tab 0 parameters @tab @code{EAX}
-+@item 1 @tab 1 parameter in RDI @tab @code{ECX}
-+@item 2 @tab 2 parameters in RDI and RSI @tab @code{EDX}
-+@item 3 @tab 3 parameters in RDI, RSI, and RDX @tab @code{EBX}
-+@item 4 @tab 4 parameters in RDI, RSI, RDX, and RCX @tab @code{ESP}
-+@item 5 @tab 5 parameters in RDI, RSI, RDX, RCX, and R8 @tab @code{EBP}
-+@item 6 @tab 6 parameters in RDI, RSI, RDX, RCX, R8, and R9 @tab @code{ESI}
-+@item 7 @tab At least one parameter may be passed on the stack @tab @code{EDI}
-+@end multitable
++Note that KCFI is incompatible with function-specific
++@code{patchable_function_entry} attributes because KCFI call sites
++cannot know about function-specific patchable entry settings in different
++translation units.  Only the global @option{-fpatchable-function-entry}
++command-line option is supported with KCFI.
 +
-+For example, if a function `foo` takes 3 register arguments, the KCFI
-+header MOVri instruction would become something like this:
++Use @option{-fdump-ipa-kcfi-details} to examine the computed type identifier
++hashes and their corresponding mangled type strings during compilation.
 +
-+@code{movl    $199571451, %ebx	# hash of foo's type = 0xBE537FB}
+ @opindex fsanitize=kernel-hwaddress
+ @item -fsanitize=kernel-hwaddress
+ Enable Hardware-assisted AddressSanitizer for compilation of the Linux kernel.
+diff --git a/gcc/doc/tm.texi b/gcc/doc/tm.texi
+index ba037b880534..3c766e59fa62 100644
+--- a/gcc/doc/tm.texi
++++ b/gcc/doc/tm.texi
+@@ -3181,6 +3181,7 @@ This describes the stack layout and calling conventions.
+ * Tail Calls::
+ * Shrink-wrapping separate components::
+ * Stack Smashing Protection::
++* Kernel Control Flow Integrity::
+ * Miscellaneous Register Hooks::
+ @end menu
+ 
+@@ -5455,6 +5456,37 @@ should be allocated from heap memory and consumers should release them.
+ The result will be pruned to cases with PREFIX if not NULL.
+ @end deftypefn
+ 
++@node Kernel Control Flow Integrity
++@subsection Kernel Control Flow Integrity
++@cindex kernel control flow integrity
++@cindex KCFI
 +
- KCFI is intended primarily for kernel code and may not be suitable
- for user-space applications that rely on techniques incompatible
- with strict type checking of indirect calls.
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-index 7c1cff986c01..7c59921e630c 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
-@@ -46,4 +46,21 @@ __attribute__((noinline)) void test_conditional_call(int flag) {
++@deftypefn {Target Hook} bool TARGET_KCFI_SUPPORTED (void)
++Return true if the target supports Kernel Control Flow Integrity (KCFI).
++This hook indicates whether the target has implemented the necessary RTL
++patterns and infrastructure to support KCFI instrumentation.  The default
++implementation returns false.
++@end deftypefn
++
++@deftypefn {Target Hook} uint32_t TARGET_KCFI_MASK_TYPE_ID (uint32_t @var{type_id})
++Apply architecture-specific masking to KCFI type ID.  This hook allows
++targets to apply bit masks or other transformations to the computed KCFI
++type identifier to match the target's specific requirements.  The default
++implementation returns the type ID unchanged.
++@end deftypefn
++
++@deftypefn {Target Hook} int TARGET_KCFI_EMIT_TYPE_ID (FILE *@var{file}, uint32_t @var{type_id}, tree @var{fndecl})
++Emit architecture-specific type ID instruction for KCFI preambles
++and return the size of the instruction in bytes.
++@var{file} is the assembly output stream and @var{type_id} is the KCFI
++type identifier to emit.  If @var{file} is NULL, skip emission and only
++return the size.  If not overridden, the default fallback emits a
++@code{.word} directive with the type ID and returns 4 bytes.  Targets can
++override this to emit different instruction sequences and return their
++corresponding sizes.  @var{fndecl} is the function declaration, which
++targets can use to compute architecture-specific arity or other properties.
++@end deftypefn
++
+ @node Miscellaneous Register Hooks
+ @subsection Miscellaneous register hooks
+ @cindex miscellaneous register hooks
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index b7572535e205..f8b606a4632c 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -1614,6 +1614,7 @@ OBJS = \
+ 	ira-lives.o \
+ 	jump.o \
+ 	kcfi-typeinfo.o \
++	kcfi.o \
+ 	langhooks.o \
+ 	late-combine.o \
+ 	lcm.o \
+diff --git a/gcc/flag-types.h b/gcc/flag-types.h
+index 3d182785c824..7f75f5e04314 100644
+--- a/gcc/flag-types.h
++++ b/gcc/flag-types.h
+@@ -342,6 +342,8 @@ enum sanitize_code {
+   SANITIZE_MEMTAG_STACK = 1ULL << 32,
+   /* Memory Tagging.  */
+   SANITIZE_MEMTAG = SANITIZE_MEMTAG_STACK,
++  /* KCFI (Kernel Control Flow Integrity) */
++  SANITIZE_KCFI = 1ULL << 33,
+   SANITIZE_SHIFT = SANITIZE_SHIFT_BASE | SANITIZE_SHIFT_EXPONENT,
+   SANITIZE_UNDEFINED = SANITIZE_SHIFT | SANITIZE_DIVIDE | SANITIZE_UNREACHABLE
+ 		       | SANITIZE_VLA | SANITIZE_NULL | SANITIZE_RETURN
+diff --git a/gcc/gimple.h b/gcc/gimple.h
+index 0b7589e656f4..b948492b90a7 100644
+--- a/gcc/gimple.h
++++ b/gcc/gimple.h
+@@ -145,6 +145,7 @@ enum gf_mask {
+     GF_CALL_ALLOCA_FOR_VAR	= 1 << 5,
+     GF_CALL_INTERNAL		= 1 << 6,
+     GF_CALL_CTRL_ALTERING       = 1 << 7,
++    GF_CALL_INLINED_FROM_KCFI_NOSANTIZE = 1 << 8,
+     GF_CALL_MUST_TAIL_CALL	= 1 << 9,
+     GF_CALL_BY_DESCRIPTOR	= 1 << 10,
+     GF_CALL_NOCF_CHECK		= 1 << 11,
+@@ -3499,6 +3500,27 @@ gimple_call_from_thunk_p (gcall *s)
+   return (s->subcode & GF_CALL_FROM_THUNK) != 0;
+ }
+ 
++/* If INLINED_FROM_KCFI_NOSANTIZE_P is true, mark GIMPLE_CALL S as being
++   inlined from a function with no_sanitize("kcfi").  */
++
++inline void
++gimple_call_set_inlined_from_kcfi_nosantize (gcall *s,
++					     bool inlined_from_kcfi_nosantize_p)
++{
++  if (inlined_from_kcfi_nosantize_p)
++    s->subcode |= GF_CALL_INLINED_FROM_KCFI_NOSANTIZE;
++  else
++    s->subcode &= ~GF_CALL_INLINED_FROM_KCFI_NOSANTIZE;
++}
++
++/* Return true if GIMPLE_CALL S was inlined from a function with
++   no_sanitize("kcfi").  */
++
++inline bool
++gimple_call_inlined_from_kcfi_nosantize_p (const gcall *s)
++{
++  return (s->subcode & GF_CALL_INLINED_FROM_KCFI_NOSANTIZE) != 0;
++}
+ 
+ /* If FROM_NEW_OR_DELETE_P is true, mark GIMPLE_CALL S as being a call
+    to operator new or delete created from a new or delete expression.  */
+diff --git a/gcc/tree-pass.h b/gcc/tree-pass.h
+index b3c97658a8fe..67f93b9a8759 100644
+--- a/gcc/tree-pass.h
++++ b/gcc/tree-pass.h
+@@ -545,6 +545,7 @@ extern ipa_opt_pass_d *make_pass_ipa_odr (gcc::context *ctxt);
+ extern ipa_opt_pass_d *make_pass_ipa_reference (gcc::context *ctxt);
+ extern ipa_opt_pass_d *make_pass_ipa_pure_const (gcc::context *ctxt);
+ extern simple_ipa_opt_pass *make_pass_ipa_pta (gcc::context *ctxt);
++extern simple_ipa_opt_pass *make_pass_ipa_kcfi (gcc::context *ctxt);
+ extern simple_ipa_opt_pass *make_pass_ipa_tm (gcc::context *ctxt);
+ extern simple_ipa_opt_pass *make_pass_target_clone (gcc::context *ctxt);
+ extern simple_ipa_opt_pass *make_pass_dispatcher_calls (gcc::context *ctxt);
+diff --git a/gcc/c-family/c-attribs.cc b/gcc/c-family/c-attribs.cc
+index 88293c37e4ee..39ac1059e775 100644
+--- a/gcc/c-family/c-attribs.cc
++++ b/gcc/c-family/c-attribs.cc
+@@ -48,6 +48,7 @@ along with GCC; see the file COPYING3.  If not see
+ #include "gimplify.h"
+ #include "tree-pretty-print.h"
+ #include "gcc-rich-location.h"
++#include "asan.h"
+ #include "gcc-urlifier.h"
+ #include "attr-callback.h"
+ 
+@@ -1774,8 +1775,11 @@ handle_nocf_check_attribute (tree *node, tree name,
+       warning (OPT_Wattributes, "%qE attribute ignored", name);
+       *no_add_attrs = true;
      }
- }
+-  else if (!(flag_cf_protection & CF_BRANCH))
++  else if (!(flag_cf_protection & CF_BRANCH)
++	   && !(flag_sanitize & SANITIZE_KCFI))
+     {
++      /* Allow it with -fsanitize=kcfi, but leave this warning alone
++	 to avoid confusion over this weird corner case.  */
+       warning (OPT_Wattributes, "%qE attribute ignored. Use "
+ 				"%<-fcf-protection%> option to enable it",
+ 				name);
+@@ -6668,6 +6672,17 @@ static tree
+ handle_patchable_function_entry_attribute (tree *, tree name, tree args,
+ 					   int, bool *no_add_attrs)
+ {
++  /* Function-specific patchable_function_entry attribute is incompatible
++     with KCFI because KCFI callsites cannot know about function-specific
++     patchable entry settings on a preamble in a different translation
++     unit.  */
++  if (sanitize_flags_p (SANITIZE_KCFI))
++    {
++      error ("%qE attribute cannot be used with %<-fsanitize=kcfi%>", name);
++      *no_add_attrs = true;
++      return NULL_TREE;
++    }
++
+   for (; args; args = TREE_CHAIN (args))
+     {
+       tree val = TREE_VALUE (args);
+diff --git a/gcc/df-scan.cc b/gcc/df-scan.cc
+index c6a5053ddbb6..e7ac751ca78f 100644
+--- a/gcc/df-scan.cc
++++ b/gcc/df-scan.cc
+@@ -2851,6 +2851,13 @@ df_uses_record (class df_collection_rec *collection_rec,
+       /* If we're clobbering a REG then we have a def so ignore.  */
+       return;
  
-+/*
-+** test_complex_args: { target x86_64-*-* }
-+** ...
-+** movl	\$-?[0-9]+, %r10d
-+** addl	-4\((%r[a-z0-9]+)\), %r10d
-+** je	.Lkcfi_call([0-9]+)
-+** .Lkcfi_trap([0-9]+):
-+** ud2
-+** .section	.kcfi_traps,"ao",@progbits,.text
-+** .Lkcfi_entry([0-9]+):
-+** .long	.Lkcfi_trap\3-.Lkcfi_entry\4
-+** .text
-+** .Lkcfi_call\2:
-+** jmp	\*\1
-+** ...
-+*/
++    case KCFI:
++      /* KCFI wraps other RTL - process the wrapped RTL.  */
++      df_uses_record (collection_rec, &XEXP (x, 0), ref_type, bb, insn_info,
++		      flags);
++      /* The type ID operand (XEXP (x, 1)) doesn't contain register uses.  */
++      return;
 +
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-index ca833fed2971..fe0a21d26df9 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
-@@ -1,5 +1,6 @@
- /* Test basic KCFI functionality - preamble generation.  */
- /* { dg-do compile } */
-+/* { dg-additional-options "-falign-functions=16" { target x86_64-*-* } } */
+     case MEM:
+       df_uses_record (collection_rec,
+ 		      &XEXP (x, 0), DF_REF_REG_MEM_LOAD,
+diff --git a/gcc/doc/tm.texi.in b/gcc/doc/tm.texi.in
+index 0944563c9cba..f2477d874511 100644
+--- a/gcc/doc/tm.texi.in
++++ b/gcc/doc/tm.texi.in
+@@ -2457,6 +2457,7 @@ This describes the stack layout and calling conventions.
+ * Tail Calls::
+ * Shrink-wrapping separate components::
+ * Stack Smashing Protection::
++* Kernel Control Flow Integrity::
+ * Miscellaneous Register Hooks::
+ @end menu
  
- /* Extern function declarations - should NOT get KCFI preambles.  */
- extern void external_func(void);
-@@ -55,6 +56,26 @@ int main() {
- /* Function with nocf_check attribute should NOT have preamble.  */
- /* { dg-final { scan-assembler-not {__cfi_nocf_check_function:} } } */
+@@ -3833,6 +3834,17 @@ generic code.
  
-+/* x86_64: Verify type ID in preamble (after NOPs, before function label) */
-+/* { dg-final { scan-assembler {__cfi_regular_function:\n\t+nop\n.*\n\t+movl\t+\$0x[0-9a-f]+, %eax} { target x86_64-*-* } } } */
-+
-+/*
-+** static_caller: { target x86_64-*-* }
-+** ...
-+** movl	\$-?[0-9]+, %r10d
-+** addl	-4\((%r[a-z0-9]+)\), %r10d
-+** je	.Lkcfi_call([0-9]+)
-+** .Lkcfi_trap([0-9]+):
-+** ud2
-+** .section	.kcfi_traps,"ao",@progbits,.text
-+** .Lkcfi_entry([0-9]+):
-+** .long	.Lkcfi_trap\3-.Lkcfi_entry\4
-+** .text
-+** .Lkcfi_call\2:
-+** call	\*\1
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
+ @hook TARGET_GET_VALID_OPTION_VALUES
  
- /* Extern functions should NOT get KCFI preambles.  */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
-index f72344f77124..05165f0e2851 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
-@@ -59,3 +59,18 @@ int test_kcfi_check_sharing(struct kobject *kobj, const struct attribute_group *
-    Should see:
-    1. KCFI check for is_visible call with is_visible type ID A.
-    2. KCFI check for is_bin_visible and is_bin_visible_again call with type ID B.  */
++@node Kernel Control Flow Integrity
++@subsection Kernel Control Flow Integrity
++@cindex kernel control flow integrity
++@cindex KCFI
 +
-+/* Verify we have TWO different KCFI check sequences.  */
-+/* Each check should have different type ID constants.  */
-+/* x86: { dg-final { scan-assembler-times {movl\s+\$-?[0-9]+,\s+%r10d} 2 { target i?86-*-* x86_64-*-* } } } */
++@hook TARGET_KCFI_SUPPORTED
 +
-+/* Verify the checks use DIFFERENT type IDs (not shared).
-+   We should NOT see the same type ID used twice - that would indicate
-+   unmerged sharing.  */
-+/* x86: { dg-final { scan-assembler-not {movl\s+\$(-?[0-9]+),\s+%r10d.*movl\s+\$\1,\s+%r10d} { target i?86-*-* x86_64-*-* } } } */
++@hook TARGET_KCFI_MASK_TYPE_ID
 +
-+/* Verify expected number of traps.  */
-+/* x86: { dg-final { scan-assembler-times {ud2} 2 { target i?86-*-* x86_64-*-* } } } */
++@hook TARGET_KCFI_EMIT_TYPE_ID
 +
-+/* Verify 2 separate call sites.  */
-+/* x86: { dg-final { scan-assembler-times {jmp\s+\*%[a-z0-9]+} 2 { target i?86-*-* x86_64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
-index c48b8d7ad552..ed415033c5c9 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
-@@ -128,4 +128,22 @@ int main() {
-     return result;
- }
- 
-+/* Standard KCFI handling.  */
-+/*
-+** test_struct_members: { target x86_64-*-* }
-+** ...
-+** movl	\$-?[0-9]+, %r10d
-+** addl	-4\((%r[a-z0-9]+)\), %r10d
-+** je	.Lkcfi_call([0-9]+)
-+** .Lkcfi_trap([0-9]+):
-+** ud2
-+** .section	.kcfi_traps,"ao",@progbits,.text
-+** .Lkcfi_entry([0-9]+):
-+** .long	.Lkcfi_trap\3-.Lkcfi_entry\4
-+** .text
-+** .Lkcfi_call\2:
-+** call	\*\1
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-direct-call-shapes.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-direct-call-shapes.c
-index 4fce0771a55d..cda9bf6c82b8 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-direct-call-shapes.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-direct-call-shapes.c
-@@ -26,3 +26,4 @@ void caller(int sel, void (*ip)(int), int x) {
- 
- /* Per-arch dg-final patterns are added by each arch's KCFI implementation
-    commit; the invariant is "exactly one typeid load = one indirect call".  */
-+/* { dg-final { scan-assembler-times {addl\t-4\(%r[a-z0-9]+\), %r10d} 1 { target x86_64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
-index 7d58fef3f920..5553ff47174b 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
-@@ -38,4 +38,23 @@ int main(void)
-     return 0;
- }
- 
-+/*
-+** indirect_call: { target x86_64-*-* }
-+** ...
-+** movq	%rdi, (%rax)
-+** movl	\$called_count, %edi
-+** movl	\$-?[0-9]+, %r10d
-+** addl	-4\(\1\), %r10d
-+** je	.Lkcfi_call([0-9]+)
-+** .Lkcfi_trap([0-9]+):
-+** ud2
-+** .section	.kcfi_traps,"ao",@progbits,.text
-+** .Lkcfi_entry([0-9]+):
-+** .long	.Lkcfi_trap\3-.Lkcfi_entry\4
-+** .text
-+** .Lkcfi_call\2:
-+** jmp	\*\1
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.L.*|\.section|\.text} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
-index 4a90390d1934..9ed7e21fe8eb 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
-@@ -72,3 +72,14 @@ int main(void)
- 
-     return 0;
- }
-+
-+/* Verify correct number of KCFI checks: exactly 2 */
-+/* { dg-final { scan-assembler-times {ud2} 2 { target x86_64-*-* } } } */
-+
-+/* Positive controls: these should have KCFI checks.  */
-+/* { dg-final { scan-assembler {normal_function:.*ud2.*\.size\s+normal_function} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {wrap_normal_inline:.*ud2.*\.size\s+wrap_normal_inline} { target x86_64-*-* } } } */
-+
-+/* Negative controls: these should NOT have KCFI checks.  */
-+/* { dg-final { scan-assembler-not {sensitive_non_inline_function:.*ud2.*\.size\s+sensitive_non_inline_function} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler-not {wrap_sensitive_inline:.*ud2.*\.size\s+wrap_sensitive_inline} { target x86_64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
-index 124d26488635..95a8e8419e00 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
-@@ -29,3 +29,8 @@ int main() {
- /* { dg-final { scan-assembler "__cfi_caller_with_checks:" } } */
- /* { dg-final { scan-assembler "__cfi_caller_no_checks:" } } */
- /* { dg-final { scan-assembler "__cfi_main:" } } */
-+
-+/* caller_with_checks() should generate KCFI check.
-+   caller_no_checks() should NOT generate KCFI check (no_sanitize).
-+   So a total of exactly 1 KCFI check in the entire program.  */
-+/* { dg-final { scan-assembler-times {addl\t-4\(%r[ad]x\), %r1[01]d} 1 { target x86_64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
-index 213a1a2892a5..97d964feebd3 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
-@@ -1,5 +1,6 @@
- /* Test KCFI call-site offset validation across architectures.  */
- /* { dg-do compile } */
-+/* { dg-additional-options "-falign-functions=16" { target x86_64-*-* } } */
- 
- void target_func_a(void) { }
- void target_func_b(int x) { }
-@@ -22,3 +23,7 @@ int main() {
- /* { dg-final { scan-assembler "__cfi_target_func_a:" } } */
- /* { dg-final { scan-assembler "__cfi_target_func_b:" } } */
- /* { dg-final { scan-assembler "__cfi_target_func_c:" } } */
-+
-+/* x86_64: All call sites should use -4 offset for KCFI type ID loads, even
-+   with -falign-functions=16 (we're not using patchable entries here).  */
-+/* { dg-final { scan-assembler {movl\t\$-?[0-9]+, %r10d\n\taddl\t-4\(%r[a-z0-9]+\), %r10d} { target x86_64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
-index a6a2f4816fef..379356385a16 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
-@@ -1,6 +1,7 @@
- /* Test KCFI with patchable function entries - entry NOPs only.  */
- /* { dg-do compile } */
- /* { dg-additional-options "-fpatchable-function-entry=4,0" } */
-+/* { dg-additional-options "-falign-functions=16" { target x86_64-*-* } } */
- 
- void test_function(void) {
- }
-@@ -11,4 +12,27 @@ int main() {
-     return 0;
- }
- 
-+/*
-+** __cfi_test_function: { target x86_64-*-* }
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** movl	\$0x[0-9a-f]+, %eax
-+*/
-+
-+/*
-+** main: { target x86_64-*-* }
-+** ...
-+** addl	-4\(%r[a-z0-9]+\), %r10d
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
-index 8c4ec30cecc5..06df3495bb23 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
-@@ -1,6 +1,7 @@
- /* Test KCFI with large patchable function entries.  */
- /* { dg-do compile } */
- /* { dg-additional-options "-fpatchable-function-entry=11,11" } */
-+/* { dg-additional-options "-falign-functions=16" { target x86_64-*-* } } */
- 
- void test_function(void) {
- }
-@@ -11,4 +12,16 @@ int main() {
-     return 0;
- }
- 
-+/*
-+** __cfi_test_function: { target x86_64-*-* }
-+** movl	\$0x[0-9a-f]+, %eax
-+*/
-+
-+/*
-+** main: { target x86_64-*-* }
-+** ...
-+** addl	-15\(%r[a-z0-9]+\), %r10d
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
-index 78a834ef2a97..ef87b135934b 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
-@@ -1,6 +1,7 @@
- /* Test KCFI with medium patchable function entries.  */
- /* { dg-do compile } */
- /* { dg-additional-options "-fpatchable-function-entry=8,4" } */
-+/* { dg-additional-options "-falign-functions=16" { target x86_64-*-* } } */
- 
- void test_function(void) {
- }
-@@ -11,4 +12,23 @@ int main() {
-     return 0;
- }
- 
-+/*
-+** __cfi_test_function: { target x86_64-*-* }
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** movl	\$0x[0-9a-f]+, %eax
-+*/
-+
-+/*
-+** main: { target x86_64-*-* }
-+** ...
-+** addl	-8\(%r[a-z0-9]+\), %r10d
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
-index 1a4d8269ed56..872814aa4171 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
-@@ -1,6 +1,7 @@
- /* Test KCFI with patchable function entries - prefix NOPs only.  */
- /* { dg-do compile } */
- /* { dg-additional-options "-fpatchable-function-entry=3,3" } */
-+/* { dg-additional-options "-falign-functions=16" { target x86_64-*-* } } */
- 
- void test_function(void) {
- }
-@@ -11,4 +12,24 @@ int main() {
-     return 0;
- }
- 
-+/*
-+** __cfi_test_function: { target x86_64-*-* }
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** nop
-+** movl	\$0x[0-9a-f]+, %eax
-+*/
-+
-+/*
-+** main: { target x86_64-*-* }
-+** ...
-+** addl	-7\(%r[a-z0-9]+\), %r10d
-+** ...
-+*/
-+
- /* { dg-final { check-function-bodies "**" "" "" { target *-*-* } {\.word} } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
-index 9ddf178aa2b1..04a9eb1fd206 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
-@@ -58,3 +58,23 @@ int test_non_tail_indirect_call(func_ptr_t handler, int x) {
- /* { dg-final { scan-assembler-times "__cfi_test_param_indirect_call:" 1 } } */
- /* { dg-final { scan-assembler-times "__cfi_test_void_indirect_call:" 1 } } */
- /* { dg-final { scan-assembler-times "__cfi_test_non_tail_indirect_call:" 1 } } */
-+
-+/* Should have exactly 4 KCFI checks for indirect calls as
-+   (load type ID + compare).  */
-+/* { dg-final { scan-assembler-times {movl\t\$-?[0-9]+, %r10d} 4 { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler-times {addl\t-4\(%r[a-z0-9]+\), %r10d} 4 { target x86_64-*-* } } } */
-+
-+/* Should have exactly 4 trap sections and 4 trap instructions.  */
-+/* { dg-final { scan-assembler-times "\\.kcfi_traps" 4 { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler-times "ud2" 4 { target x86_64-*-* } } } */
-+
-+/* Should NOT have unprotected direct jumps to vtable.  */
-+/* { dg-final { scan-assembler-not {jmp\t\*vtable\(%rip\)} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler-not {jmp\t\*vtable\+8\(%rip\)} { target x86_64-*-* } } } */
-+
-+/* Should have exactly 3 protected tail calls (jmp through register after
-+   KCFI check).  */
-+/* { dg-final { scan-assembler-times {jmp\t\*%[a-z0-9]+} 3 { target x86_64-*-* } } } */
-+
-+/* Should have exactly 1 regular call (non-tail call case).  */
-+/* { dg-final { scan-assembler-times {call\t\*%[a-z0-9]+} 1 { target x86_64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
-index 6d34ad6e1a0c..55c0829ccd7b 100644
---- a/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
-@@ -15,3 +15,9 @@ int main() {
- 
- /* Should have KCFI preamble.  */
- /* { dg-final { scan-assembler "__cfi_target_function:" } } */
-+
-+/* Should have exactly 2 trap labels in code.  */
-+/* { dg-final { scan-assembler-times {\.L[^:]+:\n\s*ud2} 2 { target x86_64-*-* } } } */
-+
-+/* x86_64 should exactly 2 .kcfi_traps sections.  */
-+/* { dg-final { scan-assembler-times {\.section\t\.kcfi_traps,"ao",@progbits,\.text} 2 { target x86_64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c
-new file mode 100644
-index 000000000000..3bbceb2925c5
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c
-@@ -0,0 +1,7 @@
-+/* Test that KCFI is rejected for 32-bit x86.  */
-+/* { dg-do compile { target i?86-*-* x86_64-*-* } } */
-+/* { dg-additional-options "-m32" } */
-+/* { dg-error ".-fsanitize=kcfi. is not supported for 32-bit x86 or x32 mode" "" { target *-*-* } 0 } */
-+/* { dg-message "sorry, unimplemented: .-fsanitize=kcfi. not supported" "" { target *-*-* } 0 } */
-+
-+void foo (void) { }
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c
-new file mode 100644
-index 000000000000..5c1d1ffcc619
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c
-@@ -0,0 +1,93 @@
-+/* Test KCFI -fsanitize-kcfi-arity - preamble generation */
-+/* { dg-do compile { target x86_64-*-* } } */
-+/* { dg-additional-options "-O2 -fsanitize-kcfi-arity" } */
-+
-+void regular_function(int x) {
-+    /* This should get KCFI preamble */
-+}
-+
-+/* These functions should get a KCFI arity corresponing to the number of
-+   parameter.
-+
-+   On x86-64, the mov instruction in the preamble encodes the arity in the
-+   used immediate register, as follows:
-+
-+	Arity	Description			Encoding in reg field
-+	0	0 parameters			EAX
-+	1	1 parameter in RDI		ECX
-+	2	2 parameters in RDI 		EDX
-+		  and RSI
-+	3	3 parameters in RDI, 		EBX
-+		  RSI, and RDX
-+	4	4 parameters in RDI,		ESP
-+		  RSI, RDX, and RCX
-+	5	5 parameters in RDI,		EBP
-+		  RSI, RDX, RCX, and R8
-+	6	6 parameters in RDI, 		ESI
-+		  RSI, RDX, RCX, R8, and R9
-+	7	At least one parameter		EDI
-+		  may be passed on the stack	
-+*/
-+void ind_fn_00(void) {}
-+void ind_fn_01(int) {}
-+void ind_fn_02(int, int) {}
-+void ind_fn_03(int, int, int) {}
-+void ind_fn_04(int, int, int, int) {}
-+void ind_fn_05(int, int, int, int, int) {}
-+void ind_fn_06(int, int, int, int, int, int) {}
-+/* Arguments on stack arity from here on should be 7.  */
-+void ind_fn_07(int, int, int, int, int, int, int) {}
-+void ind_fn_08(int, int, int, int, int, int, int, int) {}
-+
-+void ind_fn_float_01(int, float) {}
-+void ind_fn_float_03(int, int, float, float, float) {}
-+
-+void (*func_ptr_00)(void) = ind_fn_00;
-+void (*func_ptr_01)(int) = ind_fn_01;
-+void (*func_ptr_02)(int, int) = ind_fn_02;
-+void (*func_ptr_03)(int, int, int) = ind_fn_03;
-+void (*func_ptr_04)(int, int, int, int) = ind_fn_04;
-+void (*func_ptr_05)(int, int, int, int, int) = ind_fn_05;
-+void (*func_ptr_06)(int, int, int, int, int, int) = ind_fn_06;
-+void (*func_ptr_07)(int, int, int, int, int, int, int) = ind_fn_07;
-+void (*func_ptr_08)(int, int, int, int, int, int, int, int) = ind_fn_08;
-+
-+
-+void (*func_ptr_float_01)(int, float) = ind_fn_float_01;
-+void (*func_ptr_float_03)(int, int, float, float, float) = ind_fn_float_03;
-+
-+int main() {
-+    /* Function arity tests.  */
-+    func_ptr_00();
-+    func_ptr_01(1);
-+    func_ptr_02(1, 1);
-+    func_ptr_03(1, 1, 1);
-+    func_ptr_04(1, 1, 1, 1);
-+    func_ptr_05(1, 1, 1, 1, 1);
-+    func_ptr_06(1, 1, 1, 1, 1, 1);
-+
-+    /* Both of these put arguments on the stack so both get arity 7.  */
-+    func_ptr_07(1, 1, 1, 1, 1, 1, 1);
-+    func_ptr_08(1, 1, 1, 1, 1, 1, 1, 1);
-+
-+    /* Float parameters should not be counted for arity.  */
-+    func_ptr_float_01(1, 1.0);
-+    func_ptr_float_03(1, 1, 0.5, 0.5, 0.5);
-+
-+    return 0;
-+}
-+
-+/* x86_64: Verify arity immediate register encoding in preamble.  */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_00:.*\n\tmovl\t+\$0x[0-9a-f]+, %eax\n.*\nind_fn_00:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_01:.*\n\tmovl\t+\$0x[0-9a-f]+, %ecx\n.*\nind_fn_01:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_02:.*\n\tmovl\t+\$0x[0-9a-f]+, %edx\n.*\nind_fn_02:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_03:.*\n\tmovl\t+\$0x[0-9a-f]+, %ebx\n.*\nind_fn_03:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_04:.*\n\tmovl\t+\$0x[0-9a-f]+, %esp\n.*\nind_fn_04:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_05:.*\n\tmovl\t+\$0x[0-9a-f]+, %ebp\n.*\nind_fn_05:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_06:.*\n\tmovl\t+\$0x[0-9a-f]+, %esi\n.*\nind_fn_06:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_07:.*\n\tmovl\t+\$0x[0-9a-f]+, %edi\n.*\nind_fn_07:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_08:.*\n\tmovl\t+\$0x[0-9a-f]+, %edi\n.*\nind_fn_08:} { target x86_64-*-* } } } */
-+
-+/* x86_64: Verify arity is not affected by SSE registers.  */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_float_01:.*\n\tmovl\t+\$0x[0-9a-f]+, %ecx\n.*\nind_fn_float_01:} { target x86_64-*-* } } } */
-+/* { dg-final { scan-assembler {__cfi_ind_fn_float_03:.*\n\tmovl\t+\$0x[0-9a-f]+, %edx\n.*\nind_fn_float_03:} { target x86_64-*-* } } } */
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r10.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r10.c
-new file mode 100644
-index 000000000000..d0879d161599
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r10.c
-@@ -0,0 +1,7 @@
-+/* Test that KCFI is incompatible with -ffixed-r10 on x86_64.  */
-+/* { dg-do compile { target x86_64-*-* } } */
-+/* { dg-additional-options "-ffixed-r10" } */
-+/* { dg-error ".-fsanitize=kcfi. is not compatible with .-ffixed-r10. or .-ffixed-r11. as KCFI requires these registers for type checking" "" { target *-*-* } 0 } */
-+/* { dg-message "sorry, unimplemented: .-fsanitize=kcfi. not supported" "" { target *-*-* } 0 } */
-+
-+void foo (void) { }
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r11.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r11.c
-new file mode 100644
-index 000000000000..465f2cad6285
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r11.c
-@@ -0,0 +1,7 @@
-+/* Test that KCFI is incompatible with -ffixed-r11 on x86_64.  */
-+/* { dg-do compile { target x86_64-*-* } } */
-+/* { dg-additional-options "-ffixed-r11" } */
-+/* { dg-error ".-fsanitize=kcfi. is not compatible with .-ffixed-r10. or .-ffixed-r11. as KCFI requires these registers for type checking" "" { target *-*-* } 0 } */
-+/* { dg-message "sorry, unimplemented: .-fsanitize=kcfi. not supported" "" { target *-*-* } 0 } */
-+
-+void foo (void) { }
-diff --git a/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-retpoline-r11.c b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-retpoline-r11.c
-new file mode 100644
-index 000000000000..056068b4f197
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/kcfi/kcfi-x86-retpoline-r11.c
-@@ -0,0 +1,40 @@
-+/* Test KCFI with retpoline thunk-extern flag forces r11 usage.  */
-+/* { dg-do compile { target x86_64-*-* } } */
-+/* { dg-additional-options "-O2 -mindirect-branch=thunk-extern" } */
-+
-+extern int external_target(void);
-+
-+/* Test regular call (not tail call) */
-+__attribute__((noinline))
-+int call_test(int (*func_ptr)(void)) {
-+    /* This indirect call should use r11 when both KCFI and
-+       -mindirect-branch=thunk-extern are enabled.  */
-+    int result = func_ptr();  /* Function parameter prevents direct optimization.  */
-+    return result + 1;  /* Prevent tail call optimization.  */
-+}
-+
-+/* Reference external_target to generate the required symbol.  */
-+int (*external_func_ptr)(void) = external_target;
-+
-+/* Test function for sibcalls (tail calls) */
-+__attribute__((noinline))
-+void sibcall_test(int (**func_ptr)(void)) {
-+    /* This sibcall should use r11 when both KCFI and
-+       -mindirect-branch=thunk-extern are enabled.  */
-+    (*func_ptr)();  /* Tail call - should be optimized to sibcall.  */
-+}
-+
-+/* Should have weak symbol for external function.  */
-+/* { dg-final { scan-assembler "__kcfi_typeid_external_target" } } */
-+
-+/* When both KCFI and -mindirect-branch=thunk-extern are enabled,
-+   indirect calls should always use r11 register and convert to extern thunks.  */
-+/* { dg-final { scan-assembler-times {call\s+} 1 } } */
-+/* { dg-final { scan-assembler-times {call\s+__x86_indirect_thunk_r11} 1 } } */
-+
-+/* Sibcalls should also use r11 register and convert to extern thunks.  */
-+/* { dg-final { scan-assembler-times {jmp\s+} 1 } } */
-+/* { dg-final { scan-assembler-times {jmp\s+__x86_indirect_thunk_r11} 1 } } */
-+
-+/* Should have exactly 2 KCFI traps (one per function) */
-+/* { dg-final { scan-assembler-times {ud2} 2 } } */
-diff --git a/gcc/common.opt b/gcc/common.opt
-index 218dddf5dfe9..6ce73be7d0ae 100644
---- a/gcc/common.opt
-+++ b/gcc/common.opt
-@@ -1166,6 +1166,14 @@ Enum(sanitize_coverage) String(trace-pc) Value(SANITIZE_COV_TRACE_PC)
- EnumValue
- Enum(sanitize_coverage) String(trace-cmp) Value(SANITIZE_COV_TRACE_CMP)
- 
-+fsanitize-kcfi-arity
-+Common Driver Var(flag_sanitize_kcfi_arity)
-+For supported targets, this feature extends kCFI by telling the compiler
-+to record information about each indirect-callable function’s
-+arity (i.e., the number of arguments passed in registers) into the
-+binary.  Some kernel CFI techniques, such as FineIBT, may be able to use
-+this information to provide enhanced security.
-+
- fasan-shadow-offset=
- Common Joined RejectNegative Var(common_deferred_options) Defer
- -fasan-shadow-offset=<number>	Use custom shadow memory offset.
+ @node Miscellaneous Register Hooks
+ @subsection Miscellaneous register hooks
+ @cindex miscellaneous register hooks
+diff --git a/gcc/final.cc b/gcc/final.cc
+index 0152be59fc85..d2906fb07431 100644
+--- a/gcc/final.cc
++++ b/gcc/final.cc
+@@ -2094,6 +2094,9 @@ call_from_call_insn (const rtx_call_insn *insn)
+ 	case SET:
+ 	  x = XEXP (x, 1);
+ 	  break;
++	case KCFI:
++	  x = XEXP (x, 0);
++	  break;
+ 	}
+     }
+   return x;
 diff --git a/gcc/opts.cc b/gcc/opts.cc
-index a524c66f5976..41e25455420e 100644
+index 342517528e8e..a524c66f5976 100644
 --- a/gcc/opts.cc
 +++ b/gcc/opts.cc
-@@ -2850,6 +2850,7 @@ common_handle_option (struct gcc_options *opts,
- 	  SET_OPTION_IF_UNSET (opts, opts_set, param_asan_stack, 0);
- 	  SET_OPTION_IF_UNSET (opts, opts_set, param_asan_protect_allocas, 0);
- 	  SET_OPTION_IF_UNSET (opts, opts_set, param_asan_use_after_return, 0);
-+	  SET_OPTION_IF_UNSET (opts, opts_set, flag_sanitize_kcfi_arity, 0);
+@@ -2224,6 +2224,7 @@ const struct sanitizer_opts_s sanitizer_opts[] =
+   SANITIZER_OPT (builtin, SANITIZE_BUILTIN, true, true),
+   SANITIZER_OPT (shadow-call-stack, SANITIZE_SHADOW_CALL_STACK, false, false),
+   SANITIZER_OPT (memtag-stack, SANITIZE_MEMTAG_STACK, false, false),
++  SANITIZER_OPT (kcfi, SANITIZE_KCFI, false, true),
+   SANITIZER_OPT (all, ~sanitize_code_type (0), true, true),
+ #undef SANITIZER_OPT
+   { NULL, sanitize_code_type (0), 0UL, false, false }
+@@ -2363,7 +2364,8 @@ parse_sanitizer_options (const char *p, location_t loc, int scode,
+ 		  flags |= ~(SANITIZE_THREAD | SANITIZE_LEAK
+ 			     | SANITIZE_UNREACHABLE | SANITIZE_RETURN
+ 			     | SANITIZE_SHADOW_CALL_STACK
+-			     | SANITIZE_MEMTAG_STACK);
++			     | SANITIZE_MEMTAG_STACK
++			     | SANITIZE_KCFI);
+ 		else /* if (code == OPT_fsanitize_trap_) */
+ 		  flags |= (SANITIZE_UNDEFINED
+ 			    | SANITIZE_UNDEFINED_NONDEFAULT);
+diff --git a/gcc/passes.cc b/gcc/passes.cc
+index 96c2456fe32d..78445b470140 100644
+--- a/gcc/passes.cc
++++ b/gcc/passes.cc
+@@ -66,6 +66,7 @@ along with GCC; see the file COPYING3.  If not see
+ #include "attribs.h"
+ #include "topics/pass-events.h"
+ #include "channels.h"
++#include "kcfi.h"
+ 
+ /* Reserved TODOs */
+ #define TODO_verify_il			(1u << 31)
+diff --git a/gcc/passes.def b/gcc/passes.def
+index 1fc867fae517..2affee7269c4 100644
+--- a/gcc/passes.def
++++ b/gcc/passes.def
+@@ -52,6 +52,7 @@ along with GCC; see the file COPYING3.  If not see
+   NEXT_PASS (pass_ipa_auto_profile_offline);
+   NEXT_PASS (pass_ipa_free_lang_data);
+   NEXT_PASS (pass_ipa_function_and_variable_visibility);
++  NEXT_PASS (pass_ipa_kcfi);
+   NEXT_PASS (pass_ipa_strub_mode);
+   NEXT_PASS (pass_build_ssa_passes);
+   PUSH_INSERT_PASSES_WITHIN (pass_build_ssa_passes)
+diff --git a/gcc/rtl.def b/gcc/rtl.def
+index e83d6554c808..a4baffa1e88c 100644
+--- a/gcc/rtl.def
++++ b/gcc/rtl.def
+@@ -318,6 +318,12 @@ DEF_RTL_EXPR(CLOBBER, "clobber", "e", RTX_EXTRA)
+ 
+ DEF_RTL_EXPR(CALL, "call", "ee", RTX_EXTRA)
+ 
++/* KCFI wrapper for call expressions.
++   Operand 0 is the call expression.
++   Operand 1 is the KCFI type ID (const_int).  */
++
++DEF_RTL_EXPR(KCFI, "kcfi", "ee", RTX_EXTRA)
++
+ /* Return from a subroutine.  */
+ 
+ DEF_RTL_EXPR(RETURN, "return", "", RTX_EXTRA)
+diff --git a/gcc/rtlanal.cc b/gcc/rtlanal.cc
+index 5274a5c59cf1..14b9c87ed7e9 100644
+--- a/gcc/rtlanal.cc
++++ b/gcc/rtlanal.cc
+@@ -1177,6 +1177,11 @@ reg_referenced_p (const_rtx x, const_rtx body)
+     case IF_THEN_ELSE:
+       return reg_overlap_mentioned_p (x, body);
+ 
++    case KCFI:
++      /* For KCFI wrapper, only check the wrapped call.  The type ID
++	 (XEXP (body, 1)) is always a const_int.  */
++      return reg_overlap_mentioned_p (x, XEXP (body, 0));
++
+     case TRAP_IF:
+       return reg_overlap_mentioned_p (x, TRAP_CONDITION (body));
+ 
+diff --git a/gcc/target.def b/gcc/target.def
+index 89788a26986c..2c5780147e09 100644
+--- a/gcc/target.def
++++ b/gcc/target.def
+@@ -7677,6 +7677,45 @@ DEFHOOKPOD
+ The default value is NULL.",
+  const char *, NULL)
+ 
++/* Kernel Control Flow Integrity (KCFI) hooks.  */
++#undef HOOK_PREFIX
++#define HOOK_PREFIX "TARGET_KCFI_"
++HOOK_VECTOR (TARGET_KCFI, kcfi)
++
++DEFHOOK
++(supported,
++ "Return true if the target supports Kernel Control Flow Integrity (KCFI).\n\
++This hook indicates whether the target has implemented the necessary RTL\n\
++patterns and infrastructure to support KCFI instrumentation.  The default\n\
++implementation returns false.",
++ bool, (void),
++ hook_bool_void_false)
++
++DEFHOOK
++(mask_type_id,
++ "Apply architecture-specific masking to KCFI type ID.  This hook allows\n\
++targets to apply bit masks or other transformations to the computed KCFI\n\
++type identifier to match the target's specific requirements.  The default\n\
++implementation returns the type ID unchanged.",
++ uint32_t, (uint32_t type_id),
++ NULL)
++
++DEFHOOK
++(emit_type_id,
++ "Emit architecture-specific type ID instruction for KCFI preambles\n\
++and return the size of the instruction in bytes.\n\
++@var{file} is the assembly output stream and @var{type_id} is the KCFI\n\
++type identifier to emit.  If @var{file} is NULL, skip emission and only\n\
++return the size.  If not overridden, the default fallback emits a\n\
++@code{.word} directive with the type ID and returns 4 bytes.  Targets can\n\
++override this to emit different instruction sequences and return their\n\
++corresponding sizes.  @var{fndecl} is the function declaration, which\n\
++targets can use to compute architecture-specific arity or other properties.",
++ int, (FILE *file, uint32_t type_id, tree fndecl),
++ NULL)
++
++HOOK_VECTOR_END (kcfi)
++
+ /* Close the 'struct gcc_target' definition.  */
+ HOOK_VECTOR_END (C90_EMPTY_HACK)
+ 
+diff --git a/gcc/toplev.cc b/gcc/toplev.cc
+index 30f5a3d00639..55ae40e9589a 100644
+--- a/gcc/toplev.cc
++++ b/gcc/toplev.cc
+@@ -68,6 +68,7 @@ along with GCC; see the file COPYING3.  If not see
+ #include "attribs.h"
+ #include "asan.h"
+ #include "tsan.h"
++#include "kcfi.h"
+ #include "plugin.h"
+ #include "context.h"
+ #include "pass_manager.h"
+@@ -1745,6 +1746,17 @@ process_options ()
+ 		  "requires %<-fno-exceptions%>");
+     }
+ 
++  if (flag_sanitize & SANITIZE_KCFI)
++    {
++      if (!targetm.kcfi.supported ())
++	sorry ("%<-fsanitize=kcfi%> not supported by this target");
++
++      /* Compiling with -flto results in frontend language of GNU GIMPLE.
++	 Allow it since the original source was C.  */
++      if (!lang_GNU_C () && !startswith (lang_hooks.name, "GNU GIMPLE"))
++	sorry ("%<-fsanitize=kcfi%> is only supported for C");
++    }
++
+   HOST_WIDE_INT patch_area_size, patch_area_start;
+   parse_and_check_patch_area (flag_patchable_function_entry, false,
+ 			      &patch_area_size, &patch_area_start);
+diff --git a/gcc/tree-inline.cc b/gcc/tree-inline.cc
+index 302ab8d6b7c8..9db50655fbe1 100644
+--- a/gcc/tree-inline.cc
++++ b/gcc/tree-inline.cc
+@@ -2110,6 +2110,16 @@ copy_bb (copy_body_data *id, basic_block bb,
+ 	  /* Advance iterator now before stmt is moved to seq_gsi.  */
+ 	  gsi_next (&stmts_gsi);
+ 
++	  /* If inlining from a function with no_sanitize("kcfi"), mark any
++	     call statements in the inlined body with the flag so they skip
++	     KCFI instrumentation.  */
++	  if (is_gimple_call (stmt)
++	      && !sanitize_flags_p (SANITIZE_KCFI, id->src_fn))
++	    {
++	      gcall *call = as_a <gcall *> (stmt);
++	      gimple_call_set_inlined_from_kcfi_nosantize (call, true);
++	    }
++
+ 	  if (gimple_nop_p (stmt))
+ 	      continue;
+ 
+diff --git a/gcc/varasm.cc b/gcc/varasm.cc
+index 0dbc35d926a3..ce6d217c8967 100644
+--- a/gcc/varasm.cc
++++ b/gcc/varasm.cc
+@@ -57,6 +57,7 @@ along with GCC; see the file COPYING3.  If not see
+ #include "attribs.h"
+ #include "asan.h"
+ #include "rtl-iter.h"
++#include "kcfi.h"
+ #include "file-prefix-map.h" /* remap_debug_filename()  */
+ #include "alloc-pool.h"
+ #include "toplev.h"
+@@ -2199,6 +2200,10 @@ assemble_start_function (tree decl, const char *fnname)
+   unsigned short patch_area_size = crtl->patch_area_size;
+   unsigned short patch_area_entry = crtl->patch_area_entry;
+ 
++  /* Emit KCFI preamble before any patchable areas.  */
++  if (flag_sanitize & SANITIZE_KCFI)
++    kcfi_emit_preamble (asm_out_file, decl, fnname);
++
+   /* Emit the patching area before the entry label, if any.  */
+   if (patch_area_entry > 0)
+     targetm.asm_out.print_patchable_function_entry (asm_out_file,
+@@ -2767,6 +2772,9 @@ assemble_external_real (tree decl)
+       /* Some systems do require some output.  */
+       SYMBOL_REF_USED (XEXP (rtl, 0)) = 1;
+       ASM_OUTPUT_EXTERNAL (asm_out_file, decl, XSTR (XEXP (rtl, 0), 0));
++
++      if (flag_sanitize & SANITIZE_KCFI)
++	kcfi_emit_typeid_symbol (asm_out_file, decl);
+     }
+ }
+ #endif
+@@ -7287,16 +7295,25 @@ default_elf_asm_named_section (const char *name, unsigned int flags,
+ 	fprintf (asm_out_file, ",%d", flags & SECTION_ENTSIZE);
+       if (flags & SECTION_LINK_ORDER)
+ 	{
+-	  /* For now, only section "__patchable_function_entries"
+-	     adopts flag SECTION_LINK_ORDER, internal label LPFE*
+-	     was emitted in default_print_patchable_function_entry,
+-	     just place it here for linked_to section.  */
+-	  gcc_assert (!strcmp (name, "__patchable_function_entries"));
+-	  fprintf (asm_out_file, ",");
+-	  char buf[256];
+-	  ASM_GENERATE_INTERNAL_LABEL (buf, "LPFE",
+-				       current_function_funcdef_no);
+-	  assemble_name_raw (asm_out_file, buf);
++	  if (!strcmp (name, "__patchable_function_entries"))
++	    {
++	      /* For patchable function entries, internal label LPFE*
++		 was emitted in default_print_patchable_function_entry,
++		 just place it here for linked_to section.  */
++	      fprintf (asm_out_file, ",");
++	      char buf[256];
++	      ASM_GENERATE_INTERNAL_LABEL (buf, "LPFE",
++					   current_function_funcdef_no);
++	      assemble_name_raw (asm_out_file, buf);
++	    }
++	  else if (!strcmp (name, ".kcfi_traps"))
++	    {
++	      /* KCFI traps section links to .text section.  */
++	      fprintf (asm_out_file, ",.text");
++	    }
++	  else
++	    internal_error ("unexpected use of %<SECTION_LINK_ORDER%> by "
++			    "section %qs", name);
  	}
-       if (opts->x_flag_sanitize & SANITIZE_KERNEL_HWADDRESS)
+       if (HAVE_COMDAT_GROUP && (flags & SECTION_LINKONCE))
  	{
 -- 
 2.34.1
