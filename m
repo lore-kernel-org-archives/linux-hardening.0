@@ -1,115 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9ED2BEFFF;
-	Thu, 18 Jun 2026 18:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C7B3C3C12;
+	Thu, 18 Jun 2026 18:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781806455; cv=none; b=qJIVFUSeXX7cya27ENg4r8dsdJ7xS//O7yCwhNKX4SssD6vf8tgbZZelqeJTvZYJBQaF0Nc4apvpBhnzm1kmdzAOJg+7xFs/+Dk4Gtx/rxUK9H3ViMQqKQBdUZR2zGXHyW7/IvM0XdddMBm/YPY5jJwrKSF08uyau9JJoDPx7Jw=
+	t=1781808831; cv=none; b=tGHh3cv10OH8CUySZTMRH0fZBQnHDuOjlSI2JaDv+Z0r7mu09K9Y+gJ6CRF2B4yK5Zdo3qiPXpxCVUohC4sO+jB+pgdJI0RcQ0vjyflMoZnnz3f85YxNgU+IEgQi8P7bhNi8ipZ+y91ukz1IB+qVqbcwRvQLT1QkHRUlwUhn25g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781806455; c=relaxed/simple;
-	bh=3RvBOXRU63UpW/H4b39LYurMKFBvGSJTVWUULE93Bx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cIPiRJByDqTdjobb+Gpax6PApym9isljVn+be53WLfSQtKxMPJkVk7wfMsYA5SDYipO+ESYjOIVAKfkwlrPGSRJIy9rg6/6qkyk/+VnxxRPkaNVGD3to2lPbYDyB4etM4maQXMzvOzKZQO+zQss4rV6KMc5iRAe+05LAGlCrhcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CZ7UqX0c; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1781808831; c=relaxed/simple;
+	bh=hkGXZObuvBdwjYuZ33YV8Gu3IfIIBL/PXAMdfSBQCf8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qMGHPqt9Usx0YdbrNUPg3j2AhCnWKQuC4cVwvT17toxUPGKy91W7UTZt2cs93MJkabGHZ/vpWRwHvf+6HOG7eY0TfhDueL9ThJAIsq5P8mAmMffaxQtIyAnDvJvfJrdSbChk/7bAkOLUluKjpz0Ed9W1tYZ9Fsr0kIU3dbbSo2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=none smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=pqaXhDUB; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CZ7UqX0c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781806454; x=1813342454;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=3RvBOXRU63UpW/H4b39LYurMKFBvGSJTVWUULE93Bx8=;
-  b=CZ7UqX0chX/VoixWARZvPEA0LxdtRQFLoMwW/+MD4QToN79G8QoY8DBL
-   CvdUpgDSPCpipKFs7HtMnAkK5x0fRjyx0vsFM4196naxjOPJ6o5Y9NkwT
-   pxGcT0xCJmgPbPu2GRo4WSLVKd0iEk8wPAVKefMUEvFHEKqVhn4cPlwDn
-   yDLTEVV+DodSVzBPveR9sZwUqqLM9+oHxjRdUj2nOcCpFD2Db6+fIEtOP
-   tTnDx+0+JpdB2YwiaLQAiDbZlzFGVI/D5xBPe1U5rlLsFdSr1+hNSFfCC
-   k9hiaNxvxfbeI4yYClMMfDKbST5iEBE2X45zSKNyg2Z3ShJ1HIq/tOLPD
-   A==;
-X-CSE-ConnectionGUID: iDvMfDc1RSuWr43JOo5mMg==
-X-CSE-MsgGUID: M7LNx2FgTpmP55ztL9Z7YA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11821"; a="82427923"
-X-IronPort-AV: E=Sophos;i="6.24,211,1774335600"; 
-   d="scan'208";a="82427923"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2026 11:14:13 -0700
-X-CSE-ConnectionGUID: JQIlwvKqSU233DTG5fhlmg==
-X-CSE-MsgGUID: WV26cfLWSqSdVdLPo5/zKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,211,1774335600"; 
-   d="scan'208";a="272500066"
-Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.10])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2026 11:14:08 -0700
-Date: Thu, 18 Jun 2026 21:14:05 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-	rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v6 06/16] iio: core: create local
- __iio_chan_prefix_emit() for reuse
-Message-ID: <ajQ1bZSNHQ96pyJx@ashevche-desk.local>
-References: <20260618-ad9910-iio-driver-v6-0-79125ffbe430@analog.com>
- <20260618-ad9910-iio-driver-v6-6-79125ffbe430@analog.com>
- <ajQGTQ1_qcOwfzne@nsa>
- <x3aijvc4buo7aqbchikuoyyrgiq3afidtkla37h2rg4tvfdbc3@h42qp3estg2s>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="pqaXhDUB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=Jx3GZ4a5Dt8zZS/PeOiLVa+tRgvqf4hUK+IjWziV8Wk=;
+	t=1781808829; x=1783018429; b=pqaXhDUBQu5J1cCZTLFSIv6zHWiC32ZE1aD6GZTaq3arY08
+	pBn5KnWZfT4gUhz5Mdal8HSFsJchG8DSf2AX3vqCa0kl9wZG4LHeAMz1KHAAnNDvXwGwKDk4lMNJA
+	jHHyKoNp9n7fwwO/7sHP9PNqBhs2P1ZuFrWF8Yq5/2digDUpXtVlqF4gIk/0MIB5YCS+WdcZhJ78H
+	iIy2xqD6jXnReyso1R/ca0tPJeN+WBEt2sGBNp4nO2SHGuwSpoBj0gXXu/kiCoQDG61EfjEXoSdIC
+	yXVV6+zJbY/3dll2xSYAtJPaE2Wl4He3DIQrk/dYiTemnLQDsL289LWxkXIZhV9A==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__ECDSA_SECP256R1_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1waHrv-00000005dPs-1FbU;
+	Thu, 18 Jun 2026 20:53:39 +0200
+Message-ID: <37fcf7c0b1a330a40005fc5ddbe075267b93851e.camel@sipsolutions.net>
+Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Laight
+	 <david.laight.linux@gmail.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, Kees Cook <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>
+Date: Thu, 18 Jun 2026 20:53:37 +0200
+In-Reply-To: <ajOSqWpYUhFTVqP-@ashevche-desk.local>
+References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
+	 <20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
+	 <1e656f5798a9f2f36daa00aba60d2196b2456335.camel@sipsolutions.net>
+	 <20260617223056.754bfcb8@pumpkin> <ajOSqWpYUhFTVqP-@ashevche-desk.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <x3aijvc4buo7aqbchikuoyyrgiq3afidtkla37h2rg4tvfdbc3@h42qp3estg2s>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-malware-bazaar: not-scanned
 
-On Thu, Jun 18, 2026 at 05:14:19PM +0100, Rodrigo Alencar wrote:
-> On 18/06/26 16:06, Nuno Sá wrote:
-> > On Thu, Jun 18, 2026 at 02:27:22PM +0100, Rodrigo Alencar via B4 Relay wrote:
+(hah, just found this window open from this morning ...)
 
-...
+On Thu, 2026-06-18 at 09:39 +0300, Andy Shevchenko wrote:
+> On Wed, Jun 17, 2026 at 10:30:56PM +0100, David Laight wrote:
+> > On Wed, 17 Jun 2026 14:56:09 +0200
+> > Johannes Berg <johannes@sipsolutions.net> wrote:
+> > > On Wed, 2026-06-17 at 13:12 +0200, Andy Shevchenko wrote:
+> > > > Convert size_add() to take variadic argument, so we can simplify us=
+ers
+> > > > with using a macro only once. =20
+> > >=20
+> > > > +#define __size_add3(addend1, addend2, addend3, addend4, ...)			\
+> > > > +	__size_add(__size_add2(addend1,  addend2, addend3), addend4)
+> > > > +#define __size_add4(addend1, addend2, addend3, addend4, addend5, .=
+..)		\
+> > > > +	__size_add(__size_add3(addend1,  addend2, addend3, addend4), adde=
+nd5) =20
+> > >=20
+> > > I guess it's not going to really matter, but it would generate fewer
+> > > calls to have something more like
+> > >=20
+> > > #define __size_add3(a1, a2, a3, a4) \
+> > > 	size_add(size_add(a1, a2), size_add(a3, a4))
+> > > #define __size_add4(a1, a2, a3, a4, a5) \
+> > > 	size_add(size_add(a1, a2), size_add(a3, a4, a5))
+> > >=20
+> > > as a binary tree, rather than only cutting one off every time. Not su=
+re
+> > > that results in hugely different code though - maybe fewer overflow
+> > > checks?
+>=20
+> Good question. I'm also thinking that one-by-one may expand in too much o=
+f
+> preprocessor code (haven't checked myself).
 
-> > > +	dev_attr->attr.name = kasprintf(GFP_KERNEL, "%s%s", prefix, postfix);
-> > > +	if (!dev_attr->attr.name)
-> > >  		return -ENOMEM;
-> > 
-> > I don't oppose the change. Looks like a nice cleanup.
+No. I was confused, and managed to confuse you too perhaps, sorry!
 
-May I oppose it? I found use scnprintf() is harder to follow in comparison to
-nice kasprintf() that takes care for the dynamically allocated buffer.
+We have to have the same number of operations (__size_add calls)
+regardless, since you have to add it all up: 1 + 2 + 3 + 4 + 5 has a
+fixed number of + signs regardless of how you parenthesise it.
 
-Also there is a chance to get a name silently cut due to insufficient space.
-Besides that this function can't be used (again due to 'c') in kasprintf()-like
-wrapper. I do not consider this as a good approach. Have you looked at seq_buf
-instead?
+I guess actual CPU execution would have a better data dependency tree if
+we balance it, but ... if our hotpath depends on size_add() we've lost
+already.
 
-> > But bear in mind this very sensible as any subtle mistake means ABI breakage.
-
-Which immediately raises a question of test coverage. Do we have one? If not,
-this code must be accompanied with one.
-
-> Yes! I tried to be careful... this is dangerous stuff!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+johannes
