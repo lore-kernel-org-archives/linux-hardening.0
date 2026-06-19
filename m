@@ -1,160 +1,246 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011037.outbound.protection.outlook.com [52.101.70.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8150822FE0E
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 13:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781876083; cv=none; b=FWbYn7yf14/a97AOEV1LHa6UXFPyXD+xm/jl8wa2BgPmR6r1GBYZmwIjURby9peqULmRcQOC93TM0LhqWdSphhyPgEaJ0HjF4EktFfT2bdqfIKa64rgM8MHZ81iphJZn3HFoJjObcI55Z8OpdA9Rvhlir0m9vYUKnJIbkFeW8zk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781876083; c=relaxed/simple;
-	bh=dbBz2QieHmEToMmtKT7zB1JATLkArtfoHDVG6WZmdCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tuOYLobEcKXUhXUsGz5qYdWNs3GecmAcZeRpNSnYF3c5bawl/7axsZ85jff23q+yrqBD2FgGCAJYeF6VDubmVg4GwzS3bXrWDXBj66SgWSZl/gv8NXtzMygzXkyNDBZFx4GZklZivN7rdBRzf4SiPConDs0wP4IMoSViKlZPv1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s7G1+kbd; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11033B27FB;
+	Fri, 19 Jun 2026 15:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781883685; cv=fail; b=GnTHwKW6772WpTYmabuk1xXkHgNfORrcMONISC57bs4L6QLxYqWHBF2FQHWD9tRG1tTsiWgaeX3mVj/9HOIFfIWkaDAOPi8T/IzS3+1QH7JALytp5FBQ3GhORwn0VFPrk7la5CRd4dt9ioVMAjYKh761EhIiAv3hNIMXDfbtk5M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781883685; c=relaxed/simple;
+	bh=niBM/b6MzXcCC9rb3Vc9QoKu6antCXoFNtrcCraXi0U=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=CvZcEHXs00d5MItPSfK0hF+ntHy8m/uHGTkXa5QnIlobMUuo1PXqPk3ppA9T1zR9e28L1NPSbtGYzEjPcKzgfL3iMeMSI1LVVZi8IQgiYh5gG7z49JCgxHAq8/pQYpYsXtg2PtRI8u9mEQXR+VB1zdsAXKeEqkyOhBwFkTH1EFA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=vDG6jG2m; arc=fail smtp.client-ip=52.101.70.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s7G1+kbd"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-490b9318997so14863905e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 06:34:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781876080; x=1782480880; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qR4uagHJu24Y9sOS9k5mT4IkwyewV3rykHLez0Jnrds=;
-        b=s7G1+kbd4dhFGzPyuiOo5JtUHGfsDcAiOBgYYFYBQppT0dAPtmClEZi5rKEAePVKsG
-         D2bpbJ3WuFbWBv0rVPljsIHcCz1V0RxtB1L4bQMLDEqWII/adjL8Gq2HLlYWFD1gE5DV
-         bthYLuuL3n4VYjr8RJk2Gjk54LorRQH0eWqt0EtPs3oc2eLknic6Ukk3fKfofGqQJkiW
-         RGzeYyeTU9xX2Q/0MybNmBYOX7cLJMkbbtnTHAbLkK0GLdvBQgzptl2mMUkRQnct5oqe
-         tN9kAGP6DkzV0EdYNrrq7lTs0c99o/vFWLm5fy7ltXtQumbCYyYdWA2zivMl1/cwJIZr
-         B4KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781876080; x=1782480880;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qR4uagHJu24Y9sOS9k5mT4IkwyewV3rykHLez0Jnrds=;
-        b=mePhjApvXTNDzFZjGwH1lyg+3TYrYeeYdnwS+82U6MFrFPlYZOPqhUWY1GAbUT2217
-         0zed28Tr9djdTCpQxsCDGqDSICIZGv1+pnSSOhci2SKqNkP0ADkYXeCJ6+rqF1FL7TnQ
-         rCYGpqFpVjX32CHikNXgAW8dfLiB8divJs7296oSqzSsYaQaODei2KvYXH+p+7rTKh9i
-         C5BiiSPTqE1wTrwsBL/Ds78SwFXwAfN96+GvlDfjS1L2z8AhAirvTOZNfI5e5PHiMcyz
-         t4IuVivxlspG97qiHv9KzE+dGhUCGRFNmN7fV/Fqt+S5zi60l2yu1b+UJapKq6x6c5Nj
-         WgCw==
-X-Forwarded-Encrypted: i=1; AFNElJ9fM80FZYrYEvr4SRLJFbGfkxIUwh+A9AH08vKZU1YSNRBkriX+NloT8zbGg3YmKsbtZOsOSn8mIeFal+NnTxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0EKNTfb0GA8DdsxR/liSm1J6r9X6N/VOwy1m9MjE7NZ4wfjse
-	FjAX4JrqicsEC9e/bHpfnsps7BeOfKNmg0TBxDU8u//5f8dVygw52gZa
-X-Gm-Gg: AfdE7ckHcG0imnCJAxGjvW3qT0MmFwzcIM2CcJ+5DKxFB53sl0LG2pSfvCtv/Rb/Q/b
-	7yY14IZgZEp7ykItN1FuPrrxMp7FKkNMAXPKDTTm7+cQmHUfmrCw71J8VPlKURpnKMdc7k6yfnG
-	+6gkQF3tGG02mrjb2fAdlnsGkkndmE/l+evuERQ/ZKNr33pJ+0XP5y6sIf7vTIrpdD9Ef97XPd3
-	YyjN39ImCyn1wlGWhJpiI3zBqO990LVdy6cuL2sB2+uSAsst7FLsqDmEfTio4CO/vFYpJqtLk/M
-	KUw+JajPfbV+SG3n+w3E2Dk1xjWz0cpPDobpY3zVKEPULS+x/ZWZSZFeylnPULXQHxU5gp+Fxok
-	pp9sI/eFV1HnOevhHEN7VigZ/ol03MCIfUuobYE/C78BUU07pZoF6tK4A+KMKcPgWdPbSGH3Rhy
-	dt4d4MIkzo4naLwgmSLOo7sOOfS0JauEG0FGN/pSH+SlGI6PtQRw==
-X-Received: by 2002:a05:600c:5286:b0:492:454c:347c with SMTP id 5b1f17b1804b1-492454c37aemr28611295e9.7.1781876079542;
-        Fri, 19 Jun 2026 06:34:39 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923fd01fecsm63720865e9.8.2026.06.19.06.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2026 06:34:39 -0700 (PDT)
-Date: Fri, 19 Jun 2026 14:34:38 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
- Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org, Breno Leitao
- <leitao@debian.org>
-Subject: Re: [PATCH next] fs: Replace strcpy(s, "../") with memcpy(s, "../",
- 4)
-Message-ID: <20260619143438.495c1780@pumpkin>
-In-Reply-To: <874iiyg5kj.fsf@t14s.mail-host-address-is-not-set>
-References: <CnPdNyUGjsYpAP8JdysfUf4wkBkm2a923cQ1hE4-mg0sUnJIm4Uj-cAkdVHswEsuZ3d6vhmX5eil2zLmrkfl3A==@protonmail.internalid>
-	<20260606202633.5018-5-david.laight.linux@gmail.com>
-	<874iiyg5kj.fsf@t14s.mail-host-address-is-not-set>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="vDG6jG2m"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Qz1EPCMEC62a5AogpGvBb4LGdhzUNdUGDzcmz1B/zJVWV0S9FFnAIC6Iz0umBEj/L5IjCu3jnQOejebjMAr1IgdLzdV5zb+XzjAU+tfNTHYn8oAA6UGjA8Lg0AdWHI+/y2CVtRNizV1BxDB81po0YOBVj7khC+/cCdB8vv9zFHXOroJFfDecX3tAP3/0+6/7O0bJyfSYXl2CZ22ukNUzSVoYjYcyPR0JiIlVS7vgDSJjO0xAVDB/Rvc3sQY1KFDlaWl3C0/yGom/CdKf6zoyBvUBG2sd7qQfc02aUM0EV6sf3iTiYuRY0O8Tr21p3cScZJ3tZfUwuvi7Te1w9/eUGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ilbHr1lGO9j/58JqrowiSOskTablvvYVRbPsw93jPzA=;
+ b=XWtQi2rpBoUkhVLbHvc7MB3kvvuLk5nb62/YBsxMBA5dZqFEgA9CPxKivRXV2Tl8DCangvZuJk2Ks0dG6MfOQ91ZM4QyHrp9I1p15oag13+FDGwV1tUg45NiDA4OGU3LQnLFVf+/vulVPcLjcn1Y76eZaQkDbMIQwpFzQaeCkTASJI5bNaW+9ZyHWX9VhqtESJXve6twRDTBCD/MhqHex6gz5tRt7X5PooNpZn7oLJRn9MxJpwbqNqwmjk2aCwtV7wFAPGLRHihOxF4xcULnzAtkjzCZQLrSXJlYTdLlLo+3YgaKcZusTa8LUH+LRKsmZPTr3eRDG3JX2oeaXnOauA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ilbHr1lGO9j/58JqrowiSOskTablvvYVRbPsw93jPzA=;
+ b=vDG6jG2mvyJwvtS9Pw6wb2ahlXhsEqHcRsnTZs2pSBAUOVdE/ijA+eOnFqQSt9lHAyLFsW+by/V3P1LZN7hFjM+j33I/IxDb9hrgCkxpwMU4fb7Rjneum+uk5GijZgDt+JFcEn/ZbCF2iYO+4/LVofC1ZTmdW6Ynf2Wt0linpPfku8TVPwSoEWw9vT1Gb/ZxSUS3//K9LDFLp+/Ws5RJ7+W72shuz3pCbH9En87fIW+UlQaMeIVYzyejzek0dPKTXwF45KjoRXZDaTSDRWv35WChVZFfdX/2i+A0mu22a8g4ufvq+PQE0JL7ul5G2GG4j4tUVDbTCGsw61OfQDgvWQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
+ by PAWPR04MB11550.eurprd04.prod.outlook.com (2603:10a6:102:50b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.13; Fri, 19 Jun
+ 2026 15:41:20 +0000
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0113.015; Fri, 19 Jun 2026
+ 15:41:20 +0000
+From: Frank.Li@oss.nxp.com
+Subject: [PATCH 00/11] ARM: NXP: Drop NOMMU platform support
+Date: Fri, 19 Jun 2026 11:40:57 -0400
+Message-Id: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAljNWoC/yXMWwrCMBBG4a2UeTbQC/TiVkTCmPzqiE3LTCtC6
+ d6N+vg9nLORQQVGx2IjxUtMppRRHQoKd043OInZVJd1W7ZV7+JiPjzBaZ096+jHMCkcOgxNE7k
+ beqbczoqrvH/f0/lvWy8PhOU7o33/AGYPz7R5AAAA
+X-Change-ID: 20260618-dts_cleanup_arm_mcore-e7e933da798a
+To: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Stefan Agner <stefan@agner.ch>, Fabio Estevam <festevam@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+ Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Brian Masney <bmasney@redhat.com>, 
+ Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, 
+ NXP S32 Linux Team <s32@nxp.com>, Linus Walleij <linusw@kernel.org>, 
+ Vladimir Zapolskiy <vz@mleia.com>, 
+ Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781883675; l=5122;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=niBM/b6MzXcCC9rb3Vc9QoKu6antCXoFNtrcCraXi0U=;
+ b=T7m8qnxdpcwc1H6erHQ0rgLnV+uZgSFOEo58G6BNDS3kluzYUaNx6bJsF9DjfT+4iRIXoPMY9
+ zIFwW0XeDupDXaD77x3hAm56TGusJNjR42z0BUJzFBV9TrlLvJev5/f
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SN7P220CA0018.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:806:123::23) To GV2PR04MB11799.eurprd04.prod.outlook.com
+ (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PAWPR04MB11550:EE_
+X-MS-Office365-Filtering-Correlation-Id: 813898f6-133b-446f-b1f9-08dece193596
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|23010399003|7416014|376014|366016|19092799006|11063799006|56012099006|18002099003|921020;
+X-Microsoft-Antispam-Message-Info:
+	/8SOAH5jpSPBni6a3VH/ooyfh4amhBciN7T+4PACNDW2r9QC0WK/QtLiBH72XuCgiLGb9nyamr5fdlpsRi7hLyUNr6Bq87RfwQbK6bFDCvY0XMKNd892ArIrx+vUqxlkWcjL8ilvQyqjFeOYSwrSX13KyrMDAAAeBYpJ1Is9fbYc6QdWbLN/QIjbfJN2jLJWU01KeHngkrcluywiv6iLg2vfJ+Z/NFvsBYWsC746tMmxsPXsoPdk6jZi0GbJyb631+jYL4cH/bb4Imuy2moaGyICvjLUjPS8EJXWGyn1ztpBaH0fbRcQNXmB6F4AyeWSQxOnVKlEOD0Qgekyu5svrCcU7Y6olRnuZzRysd/PJ4P3p933NCiAWkloI9Q0tTTW2ScFX989V8RNwsYaTU0g25EvKVnC59qzVbHk4RIslsUm4x3//EuYUkatXr49A7Dte1osloF27KycndXpm1hTtBmJMCpIcDIi4ONv0LmsUxpKteg6yh/QTPXGRybpxSsgfcTJrhpxAiY1rtl3MFylKzQE5LgbyIk+HbRcnAQoqx6w/sKiJbhZu6km0ZUF5v+pbTidENmX8kWtO7GX4gVDZI/XMF/0KlHlSfpE8P7/RGSHJdB0WI6hPXAbtJC2s9NAbr7yQ2rxNi101t44F3HJtpDm49qXFnhduUuZ242JVb8skUft0M9pYDRzrggA2S2r9w7pSUa0uGJCeEcdLnS3jg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(7416014)(376014)(366016)(19092799006)(11063799006)(56012099006)(18002099003)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S3oxWERoNUg2aThqTnNFYzNKTUZKNnYyZCt1V29tWFhxLzdSVFdBRUswUkJH?=
+ =?utf-8?B?eVhPSkgzeUszVytoMnBEd3BVVHNIbW1iUGIyTk1COUJmWkhMUjVvV2NCbjMr?=
+ =?utf-8?B?Z3dCbUlWWFdIb2U0ZkJHQWkwRi9hWnh5bmNLckNSaVBndHBqYkVsVlVSN3pk?=
+ =?utf-8?B?OS9FK2FPTEhrMk9OTEFxZkFFeUEyWXVWOGU2UG5LMk12NnZmajFkMHFPaVRh?=
+ =?utf-8?B?eTdBOUxxUUdDVlVsNGUrKzhKcDFHMjdpSE5WQlAyMkNQV3REY1k0ZWxIemtn?=
+ =?utf-8?B?dkVoQ1Z4QmhNekdUeitYdk5ieEtyY0lORE9CT2JXVXlKYUxMUjd5bU51aTZW?=
+ =?utf-8?B?ekJFalpNTzFpRGpDSWNXcWorb1dybm5ZcElqcDloRmJjZlJ5N3pJY1hWaHdZ?=
+ =?utf-8?B?Ri9qOTNwN1o1ODFaRlI0Mjh3cDVuUmRERXNyQzJic09GY1dBVVFUZXRnVnIv?=
+ =?utf-8?B?RHRZK1plY3pScmNobGppTHd3TjljSENuTHU4Rnd1NnZHNW42d0hwQjEzODF6?=
+ =?utf-8?B?NDR4MzVUeXJwTFFYRUxSbTFEMmJaOUFxdGxxV3puQ2xzTkRoRWxibmlCTmFR?=
+ =?utf-8?B?RDloZFpKM3FyWGNQUEpKaXJIaEpkNmxIZFJXU2tCSG8rQ3RTRjFJZnNWTDFq?=
+ =?utf-8?B?NGNBZG5PR0VJcnJjMkVCaDV5RFRpSXJTcDRsQUZRVURMei8yb005VHZSdHFM?=
+ =?utf-8?B?Rk1uSWJNcFhsZ0w3Y3R0V1FVOHJjUndTdmowZFpQaEJiWE1TQXlPOWxROUNR?=
+ =?utf-8?B?MS9CenhpSWlzTGJwQUo5TlNoa2tDY3NXODF5WmNDWHFuaHZQdFZ0eVF3ODVE?=
+ =?utf-8?B?Szg4dXJNK2JPNUtPaFFLeUM4U0p3ZUFlTVQrUStOMEdOZWFiVzF5bWM2ZXlM?=
+ =?utf-8?B?ay9DMHlHWENnanRmb0x0cE91RDhnOGQ2NDJ6amVVdjZnOWpXSC9pa0padlVt?=
+ =?utf-8?B?cFF0MXNoVzNqdFkydGRDcEg4MHZKanBlS1lUQ3VtOElMa1FRU3QvN3NKa0cr?=
+ =?utf-8?B?LzVTSG9sS3UwK1QvSGF0L0prRWptTk1QNElhK3Z0dE5MZkVKWTlhZlU2Sm9O?=
+ =?utf-8?B?VVhJaHA1MHQxVFJYY1YzZnR0dTBMYnYvR2Y0RnU5RlErMCtVL3R5QjJpaE1R?=
+ =?utf-8?B?QndzMEZZS3RMaVpIZ0ZFc25COTZjWjU0U0R0WHh6QlJFT2Fjc0Q3dXpsSVdP?=
+ =?utf-8?B?VVE3UnViYktFWWNxTVRBbTBZQTlsLzUra1A1Rkhhdm10RCtVSG9RSDhyQ0pW?=
+ =?utf-8?B?bmFsSmgvQ3FZd1YvajhjUTc2QVdWVGJJNnpBaVRVbjJJL2tFRzc1RmxlUWpr?=
+ =?utf-8?B?cThkbXh5QjNCZkJ5Vk9QM3E1ekNEeWsyYjZvNXRWMUZHU2NPYURvZ0NldnYr?=
+ =?utf-8?B?cjd1NWFBWWNTVlJ3WXIrNmtOeXpkRjdGZkJCL3ZRM3JyUVBEQWtLc0FObWFu?=
+ =?utf-8?B?Y2V3MzdnSzFEV1FOK0xzdVFRZnBRd2ZPK0liNk02REtxOFdBdTlNN1lWT2tC?=
+ =?utf-8?B?NzB6Q1VlSlA3Z1pnSVJLN3pIT0dSVHN2bmNCTHRrQ2xqQzJVNXdab05OR1Ar?=
+ =?utf-8?B?VmJMWmkreHF1bEJ1Z0prcWlpYVlEVjVRN1dRbGkxVElPVUtQRjc5NDBGUi96?=
+ =?utf-8?B?d2NwMEMyQkJsYjVJS2dTTnd3Q2thNHd4Z0ltbTRpSkVheEpiLzlhL2puWjAr?=
+ =?utf-8?B?WXVhaUZqc3RnaDVzV1gzWUVSeEFVYzE0WlM1TTdHa2RyR05PWEloc2FzeEpw?=
+ =?utf-8?B?cTh3alBGbVlkaGtpNFoyRnZuampzQXczeDB2MzVWbkt3NXhvUVBPK01pUjRJ?=
+ =?utf-8?B?Tmx1Zk1aVW82czVUeGhDTGR4NXZrREVVZmxUaVJ3REpMNEtxbXI4a3JFUFVx?=
+ =?utf-8?B?MWlSbWNsNnptOWNQL0hZVWRjaWQ3aDBDY2xEcXFQRU8xUUFNaTJFYytTYm51?=
+ =?utf-8?B?N1ZyWStlaVlEQmw5bE9wMW5EaXFXT1dKQTFVVUtLOUFxWFdDRzJla2oxMmJ1?=
+ =?utf-8?B?U2hXWW8vZjZkaFVjNUpjMjN3T0IvMnhFRHBtMU45cXMvWVEwWitzYnhWRWs3?=
+ =?utf-8?B?ZGZGT1hYVlZOZHg5cjhxL2t4MXlENWpudXl6andrbU9vVWQ0alVScHJnc0R0?=
+ =?utf-8?B?anJ2VmcxK2N1ZnV5R0xZdElqbXlkVmhkclE4aGlDcmpMY1JHR1dLa0c2eWFt?=
+ =?utf-8?B?OTViZ3V2dGYzQjNyU25oamU5V2kvSHFJamNLaFdoclRNc0N2L2FSZ0I4Zk5M?=
+ =?utf-8?B?ekpTam52c0tLcm42Rm54eklWSEs1TWFRajN0NDZmZlYvc2puS0pQTnFGNlU0?=
+ =?utf-8?B?S0h0Z0hxOVNIS0lWTnBMb0VpRExTcHBkb2tZT21qUDhTOEJiclpKNXRoZXZW?=
+ =?utf-8?Q?yFshvkvELmEdgaOJ8+LSZJmfT6uVjU5E31ugy?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 813898f6-133b-446f-b1f9-08dece193596
+X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 15:41:20.3940
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B0dWtwrTxG8ISc0hOM+9mu153YY8yVBNNC7RYk4hpIOCCmQGyBJR5dOIEbXAjVTMxqwOw4kdbAxitcMQd2TvpFKa1TMzRoRCdfVr2T5BZCFjlmV8wlAWfvWzf3dlYgXA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB11550
 
-On Fri, 19 Jun 2026 12:58:20 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
+Commercial users and hardware vendors migrated to Zephyr or other RTOS
+solutions years ago, leaving the NOMMU platform support effectively
+unused and unmaintained.
 
-> <david.laight.linux@gmail.com> writes:
-> 
-> > From: David Laight <david.laight.linux@gmail.com>
-> >
-> > The code has already checked there is enough room.
-> > Use memcpy() to avoid compiler warnings from possibly unbounded strcpy().
-> >
-> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> > ---
-> > This is one of a group of patches that remove potentially unbounded
-> > strcpy() calls.
-> >
-> > They are mostly replaced by strscpy() or, when strlen() has just been
-> > called, with memcpy() (usually including the '\0').
-> >
-> > Calls with copy string literals into arrays are left unchanged.
-> > They are safe and easily detected as such.
-> >
-> > The changes were made by getting the compiler to detect the calls and
-> > then fixing the code by hand.
-> >
-> > Note that all the changes are only compile tested.
-> >
-> > Some Makefiles were changed to allow files to contain strcpy().
-> > As well as 'difficult to fix' files, this included 'show' functions
-> > as they really need to use sysfs_emit() or seq_printf().
-> >
-> > All the patches are being sent individually to avoid very long cc lists.
-> > Apologies for the terse commit messages and likely unexpected tags.
-> > (There are about 100 patches in total.)
-> >
-> >  fs/configfs/symlink.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/configfs/symlink.c b/fs/configfs/symlink.c
-> > index f3f79c67add5..9f36699e5922 100644
-> > --- a/fs/configfs/symlink.c
-> > +++ b/fs/configfs/symlink.c
-> > @@ -67,7 +67,7 @@ static int configfs_get_target_path(struct config_item *item,
-> >  	pr_debug("%s: depth = %d, size = %d\n", __func__, depth, size);
-> >
-> >  	for (s = path; depth--; s += 3)
-> > -		strcpy(s,"../");
-> > +		memcpy(s, "../", 4);  
-> 
-> I don't think this transform makes sense when copying string literals.
-> The post transform code has one more foot gun than the original code.
+Remove the obsolete support to reduce maintenance burden and simplify the
+Freescale/nxp platform code.
 
-They are actually identical, the compiler converts the former to the latter.
+Some driver code still be kept and may clean up later since it is possible
+reused by other SoC.
 
-I was trying to remove all the strcpy() where the target isn't an array.
-The initial check also only allowed string literals - but I relaxed that
-a bit to reduce the number of false positives.
-Were a similar check for calls to strcpy() be committed this code would
-need changing, but you want something that ends up being a (misaligned)
-32bit write of a constant on most architectures.  
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Frank Li (11):
+      ARM: dts: vf610m4: Remove NOMMU platform support
+      ARM: dts: imxrt1050: Remove NOMMU platform support
+      ARM: imx: Remove NOMMU platform support
+      clk: imx: imxrt1050: Remove NOMMU platform support
+      pinctrl: freescale: IMXRT: Remove NOMMU platform support
+      ARM: imxrt_defconfig: Remove NOMMU platform support
+      ARM: dts: lpc: Remove NOMMU platform support
+      ARM: mach-lpc: Remove NOMMU platform support
+      ARM: configs: lpc*: Remove NOMMU platform support
+      clk: nxp: lpc: Remove NOMMU platform support
+      pinctrl: nxp: lpc: Remove NOMMU platform support
 
-I just looked at the code again, the final '- 1' on the 'size = ...'
-line looks very odd.
+ .../devicetree/bindings/pinctrl/fsl,imxrt1050.yaml |   79 -
+ .../devicetree/bindings/pinctrl/fsl,imxrt1170.yaml |   77 -
+ arch/arm/Kconfig                                   |   12 -
+ arch/arm/Makefile                                  |    2 -
+ arch/arm/boot/dts/nxp/Makefile                     |    1 -
+ arch/arm/boot/dts/nxp/imx/Makefile                 |    2 -
+ arch/arm/boot/dts/nxp/imx/imxrt1050-evk.dts        |   72 -
+ arch/arm/boot/dts/nxp/imx/imxrt1050-pinfunc.h      |  993 ------------
+ arch/arm/boot/dts/nxp/imx/imxrt1050.dtsi           |  160 --
+ arch/arm/boot/dts/nxp/imx/imxrt1170-pinfunc.h      | 1561 -------------------
+ arch/arm/boot/dts/nxp/lpc/Makefile                 |    9 -
+ arch/arm/boot/dts/nxp/lpc/lpc18xx.dtsi             |  543 -------
+ arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dts       |  273 ----
+ arch/arm/boot/dts/nxp/lpc/lpc3250-phy3250.dts      |  236 ---
+ arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi             |  540 -------
+ arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dts         |  221 ---
+ arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts   |  485 ------
+ arch/arm/boot/dts/nxp/lpc/lpc4350.dtsi             |   48 -
+ .../arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts |  624 --------
+ arch/arm/boot/dts/nxp/lpc/lpc4357-myd-lpc4357.dts  |  621 --------
+ arch/arm/boot/dts/nxp/lpc/lpc4357.dtsi             |   52 -
+ arch/arm/boot/dts/nxp/vf/Makefile                  |    2 -
+ arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dts       |   61 -
+ arch/arm/boot/dts/nxp/vf/vf610m4-cosmic.dts        |   88 --
+ arch/arm/boot/dts/nxp/vf/vf610m4.dtsi              |   61 -
+ arch/arm/configs/imxrt_defconfig                   |   35 -
+ arch/arm/configs/lpc18xx_defconfig                 |  158 --
+ arch/arm/configs/lpc32xx_defconfig                 |  192 ---
+ arch/arm/mach-imx/Kconfig                          |    7 -
+ arch/arm/mach-imx/Makefile                         |    2 -
+ arch/arm/mach-imx/mach-imxrt.c                     |   19 -
+ arch/arm/mach-lpc18xx/Makefile                     |    2 -
+ arch/arm/mach-lpc18xx/board-dt.c                   |   19 -
+ arch/arm/mach-lpc32xx/Kconfig                      |   13 -
+ arch/arm/mach-lpc32xx/Makefile                     |    8 -
+ arch/arm/mach-lpc32xx/common.c                     |  125 --
+ arch/arm/mach-lpc32xx/common.h                     |   32 -
+ arch/arm/mach-lpc32xx/lpc32xx.h                    |  717 ---------
+ arch/arm/mach-lpc32xx/phy3250.c                    |   92 --
+ arch/arm/mach-lpc32xx/pm.c                         |  135 --
+ arch/arm/mach-lpc32xx/serial.c                     |  148 --
+ arch/arm/mach-lpc32xx/suspend.S                    |  148 --
+ drivers/clk/Kconfig                                |    7 -
+ drivers/clk/Makefile                               |    1 -
+ drivers/clk/imx/Kconfig                            |    6 -
+ drivers/clk/imx/Makefile                           |    1 -
+ drivers/clk/imx/clk-imxrt1050.c                    |  182 ---
+ drivers/clk/nxp/Makefile                           |    5 -
+ drivers/clk/nxp/clk-lpc18xx-ccu.c                  |  301 ----
+ drivers/clk/nxp/clk-lpc18xx-cgu.c                  |  668 --------
+ drivers/clk/nxp/clk-lpc18xx-creg.c                 |  225 ---
+ drivers/clk/nxp/clk-lpc32xx.c                      | 1591 --------------------
+ drivers/pinctrl/Kconfig                            |    9 -
+ drivers/pinctrl/Makefile                           |    1 -
+ drivers/pinctrl/freescale/Kconfig                  |   16 -
+ drivers/pinctrl/freescale/Makefile                 |    2 -
+ drivers/pinctrl/freescale/pinctrl-imxrt1050.c      |  309 ----
+ drivers/pinctrl/freescale/pinctrl-imxrt1170.c      |  349 -----
+ drivers/pinctrl/pinctrl-lpc18xx.c                  | 1382 -----------------
+ include/dt-bindings/clock/imxrt1050-clock.h        |   72 -
+ 60 files changed, 13802 deletions(-)
+---
+base-commit: 598c7067dd8b65b93f3ccada47e9014a13137f1b
+change-id: 20260618-dts_cleanup_arm_mcore-e7e933da798a
 
-I wonder if it would be simpler to merge all three functions into
-something with a single loop that builds the name/name part backwards
-from the end of the buffer while adding "../" on the front and then
-calling memmove() to put the two together.
-
-	David
-
-> 
-> Best regards,
-> Andreas Hindborg
-> 
-> 
-> 
+Best regards,
+--  
+Frank Li <Frank.Li@nxp.com>
 
