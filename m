@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D066740D582;
-	Fri, 19 Jun 2026 03:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1177A3F9FB;
+	Fri, 19 Jun 2026 03:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781840855; cv=none; b=aEdz8mZZi7a7zqNqaHzFo078gBW92xsSG6H6+Z61VRi0aCBFN4h3mD86Seb9+YHZ/sT/ect9HvwHotc+6TmlNcsI+e6bsE9NeK64iiVQDu6epAQ+9onO6JVaSuCrhW1RJK4n5t2068/pZak9sfzAg6k8lpFDPEdKQrdP7vKg2Eo=
+	t=1781841311; cv=none; b=JWHTkIe98wvQ2OrNNKX5fz4+xhozzzw+7iXf+iun/ZyeD0x+xOG2u99rC8dT8Q0mD75vLzuhvVvBitItOXqZfHGOo/wv5y9+Hm4BuGPrkT5JzJkksFW/TnYZuWAPRikhoibMeD2ex7rZRdJkfmKvncASi9VL4okGtLLRTbJTb7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781840855; c=relaxed/simple;
-	bh=hY/2SvBcZ1vs8jx0Msph3zmlY2len1DrpJsHuxQsAkU=;
+	s=arc-20240116; t=1781841311; c=relaxed/simple;
+	bh=uvOqysg7g6JFLVWw6F4QCPhukzjY0iW99Eafs66OsuY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LIgfeQAaRVMNSfv4TxN6I9sZDVq0Kr6DjvbZHcEtORwaJ+QrebL7LMBUtOZcJyhz7BUDu/GiDZiK1XPuXR0A8kOrTbKU8juQdmoTMNKSdoEAjlSlQO5z44MynTmxH+9ezXpJYbiUS8pCaWs8ccHX0q5ZRCNQNZAt+BtrYKokLFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YF88M5K+; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=OlaFUXnabFtSe4vrry42uLReLGfAwdcGII0T7hxrObcuq95qKOWj6NMBKHUJVFbKQHkaj6N/YPz3G6suzr0iQ98Z/5pQ0oEYMuWMRbgoQHbBv+lMamgdPnxQJe7cP2NhNP+F9U/UeeT8EZlrN17Kqtb9gxQSbXyZrpUZANRsDXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iy3w1Pua; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YF88M5K+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6211F000E9;
-	Fri, 19 Jun 2026 03:47:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iy3w1Pua"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 885DA1F000E9;
+	Fri, 19 Jun 2026 03:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781840854;
-	bh=R3DrRhoR8Ti+ERqtRZvXOI1bFkrS1/hJ7ok7Od4tPRA=;
+	s=k20260515; t=1781841309;
+	bh=ZovNZPfZZp9D3VOEN4ZPHQ9dgkBawa/CynQwV6Ap3A4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YF88M5K+XyXQOPl8sybnvffgxm9/PEIjB2SzrSfp6II/R1M6Ul+nY9qrr1Ds2dnvB
-	 6hUMeIraVY7irbs11TeAg0wfr+i7nmUDZalPZlDfbFCK1rySjyFSEoflLQhPWOj+XK
-	 pozrDAITVVJBWKsAZUFAYCUzmYEOu1NonZPxXW5JYn6+PJbvHEL4fcbKxCfMc1dpfZ
-	 Gh52EnwKO6a9BKnVcjzMuiqZf3nUYvI0xadJducAaQQbNJRcFJXPEo/U8OKZdBEHPr
-	 cqdXtgWEUrtLL3+gqXl0e6e1C2z6DyzfYVe8TA5HlRreQjcC8kkt//CkQhgV8u2DTG
-	 3iVyrOJuXXYtA==
-Date: Thu, 18 Jun 2026 20:47:34 -0700
+	b=iy3w1PuaXFgV4WT8LMcQBgx1C3tlmmsNAIk4NK1MVAqGbwRyEfzY9Efj+jeCBYGnB
+	 Zh9FhCswGQOFKDmjEk5S648ip1SECr6OfP1rvypKLlgq+q9Q8uNFH6exSj280XCgou
+	 AZG4cs30QXFdWrUp/zyeezYFTC2vlWgcyjiRd6DQ1Ff///ftt9vRWmDjs2fhyvSHV/
+	 G/4ceAvYqaD7eGl+IzMgvntQqAW46CZCtheiTbh958v2sMYnvfWYl1C8PRG53RrUQG
+	 QM77zD3v53OaXtEbcAy3mxnp119jw9NgUsW6fZTceQGu0akwBenPeOfTO4yxHzXgY+
+	 TYcbjrSgkHF3A==
+Date: Thu, 18 Jun 2026 20:55:09 -0700
 From: Kees Cook <kees@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Alexander Potapenko <glider@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
-Message-ID: <202606182046.AE5F6A241@keescook>
-References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
- <20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
+	David Laight <david.laight.linux@gmail.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KMSAN: fix memset() when using fortify-source, again
+Message-ID: <202606182054.A55B6CEE@keescook>
+References: <20260618142951.1739694-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,71 +46,40 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20260618142951.1739694-1-arnd@kernel.org>
 
-On Wed, Jun 17, 2026 at 01:12:36PM +0200, Andy Shevchenko wrote:
-> Convert size_add() to take variadic argument, so we can simplify users
-> with using a macro only once.
+On Thu, Jun 18, 2026 at 04:29:43PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Both kmsan and fortify-source replace the memset function. When both
+> are enabled at the same time, the kmsan version gets used, which triggers
+> a warning about fortify-source being nonfunctional:
+> 
+> warning: unsafe memset() usage lacked '__write_overflow' symbol in /home/arnd/arm-soc/lib/test_fortify/write_overflow-memset.c
+> warning: unsafe memset() usage lacked '__write_overflow_field' symbol in /home/arnd/arm-soc/lib/test_fortify/write_overflow_field-memset.c
+> 
+> Commit 78a498c3a227 already tried to address this, but this seems
+> to only have worked for memcpy() and memmove() but not memset(),
+> which is still lacking the macro definition when KMSAN is enabled.
+> 
+> Remove the incorrect #ifndef check around the memset() macro.
 
-Oh, this is fun. I like it. :)
+Ah, nice find.
 
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Fixes: ff901d80fff6 ("x86: kmsan: use __msan_ string functions where possible.")
+> Fixes: 78a498c3a227 ("x86: fortify: kmsan: fix KMSAN fortify builds")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  include/linux/overflow.h | 37 ++++++++++++++++++++++++++-----------
->  1 file changed, 26 insertions(+), 11 deletions(-)
-> 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index a8cb6319b4fb..a8b0325e73f3 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -2,9 +2,10 @@
->  #ifndef __LINUX_OVERFLOW_H
->  #define __LINUX_OVERFLOW_H
->  
-> +#include <linux/args.h>
->  #include <linux/compiler.h>
-> -#include <linux/limits.h>
->  #include <linux/const.h>
-> +#include <linux/limits.h>
->  
->  /*
->   * We need to compute the minimum and maximum values representable in a given
-> @@ -337,16 +338,7 @@ static __always_inline size_t __must_check size_mul(size_t factor1, size_t facto
->  	return bytes;
->  }
->  
-> -/**
-> - * size_add() - Calculate size_t addition with saturation at SIZE_MAX
-> - * @addend1: first addend
-> - * @addend2: second addend
-> - *
-> - * Returns: calculate @addend1 + @addend2, both promoted to size_t,
-> - * with any overflow causing the return value to be SIZE_MAX. The
-> - * lvalue must be size_t to avoid implicit type conversion.
-> - */
-> -static __always_inline size_t __must_check size_add(size_t addend1, size_t addend2)
-> +static __always_inline size_t __must_check __size_add(size_t addend1, size_t addend2)
->  {
->  	size_t bytes;
->  
-> @@ -356,6 +348,29 @@ static __always_inline size_t __must_check size_add(size_t addend1, size_t adden
->  	return bytes;
->  }
->  
-> +#define __size_add0(addend1, ...)						\
-> +	__size_add(addend1, 0)
-> +#define __size_add1(addend1, addend2, ...)					\
-> +	__size_add(addend1,  addend2)
-> +#define __size_add2(addend1, addend2, addend3, ...)				\
-> +	__size_add(__size_add(addend1,  addend2), addend3)
-> +#define __size_add3(addend1, addend2, addend3, addend4, ...)			\
-> +	__size_add(__size_add2(addend1,  addend2, addend3), addend4)
-> +#define __size_add4(addend1, addend2, addend3, addend4, addend5, ...)		\
-> +	__size_add(__size_add3(addend1,  addend2, addend3, addend4), addend5)
+> The patch passes randconfig builds on x86/arm/arm64/s390 for me,
+> but please double-check all the corner cases, as it's still
+> possible that the #ifndef is required to work around a runtime
+> issue that I did not test.
 
-Is 4 the max seen in practice?
+How about I drop this into -next right after -rc2 and we can see what
+falls out of it?
 
+-Kees
 
 -- 
 Kees Cook
