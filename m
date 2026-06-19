@@ -1,115 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E6B3947B8;
-	Fri, 19 Jun 2026 16:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA023B95E3
+	for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 16:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781885332; cv=none; b=qJUe4NsPwVUq56uCOfUB49aGAByWWDZc+Qd9eunlYTzxV0DqjaOsnJWHma0H76wnst1A7kL1jgNKSUtKZX6jsjYwnwYYd9AX0n4j4JeaVbBSV6L01UQmBXqaA3rbEWmF/JSBqR1l8cWQg1vTwN+1jsYzFt0P+u8DZkkeFTQVUpg=
+	t=1781885869; cv=none; b=FedLLgYm2tSDLT3aaZkFDU+m6QvaWpc5q6OOf4jPYeL8QrU81wSIH2st7Mgn+XUutCGzo5OZKst3RGRY1zP9zgBX2yzo88Q6BJDc13NM7e4MRdYVDNZz3iaKJmuFi/VpmDt4pwF2CDpnB6pZiqQRuoFRbHvjTeP7kE0+o39wNbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781885332; c=relaxed/simple;
-	bh=IZBZZMg5/MujLTP47UFAq9wwXBvXEvulfL2I98ygXPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=InkAwFO8d/IepOav+zCW6S/5VCb2yJ/43XzD8lWogoFOrEtvBOlvX95iKkjobrnsCPaJTVmxNsGqS6pDjlEGtQcDN4+jvqeXMzQiRcdCn5zFcNe6AKL2p7GnmMhiCFZvUV0ieARN1ZKIuM8puKmhk/B6cKcJ7fipe9DpaAi+8+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiigFRnM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781885869; c=relaxed/simple;
+	bh=juKFP4M3ulZMZvtYnJO+EyGKkoHe95cLoiQ9GeTdJzw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kdzgr68vgFCtqUntKfwPZm2IuSejC5QG/wuWOeKrGYkQhX5LTzp88iG2GcrhqIDKv8O8PFstobfiUxgue75XnAFxYyD79RaDzSO9r8P/gSp+mV8ssqsKTidOK7UKWsNLS33+dUwkMlrpK2TlXvSPugLDHUAKrvkmbD6YZFAvG4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKx0kjzu; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiigFRnM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19B361F000E9;
-	Fri, 19 Jun 2026 16:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781885331;
-	bh=g3rjYwyXp9LVnLG0ToWc25PWAKwvGflge9Yq+toMptA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=PiigFRnMAgWqZbRw8JbcDuSyWN/DDDNft2XfAW1edDrOHtPgypB6APfPuGmIhLHu1
-	 xidrGAjPub7xmEhPpv1ekZfWyczoaWbpqZTAK/KzcOr0E4KfwB2DcrpD3CdyY0owFy
-	 /j5YhXdsrBRlZBxASaxKu1Z3s2+GqIRNdq34COVmnlFLHKIdtSDbXOmMFdKsM6xc++
-	 05I6mBEafF6I9VrpOgGSAkdHdO7/yaqfEkuYXGHivIExGArF4ucv3FWG+vGvVlhFLA
-	 zc5Iznd/AAZlF+q/kau+VlvD6cfyfYH5y2fpPQTcAHNfaYM6SxZNmplUeHGccTBJJv
-	 ME0pKRKGCXJ1Q==
-Message-ID: <7d946861-c3cb-4512-9d5f-9f4cb9b7ee8a@kernel.org>
-Date: Fri, 19 Jun 2026 19:07:59 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKx0kjzu"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-4627adcf4d6so1526936f8f.3
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 09:17:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781885864; x=1782490664; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NHhY6r7tYGyh00foyp4fyhhHDc2Zg99GnNa/YDtNxNU=;
+        b=JKx0kjzuaL5MgQCNxoqYE+gI3UeRXYeWKa7Y9C1Fih8uARcV1fyU17AnN4MVGkDryu
+         d27V19+qTwpY0pMFWBgFPq3u9xtqFIdl+6WtsnUL68ELEpcyPXoP8+4Izdg1hbC1TpiR
+         qRUvkNK+VHWDx/eei9sruZw2eJ0NMkQ2Hi80wFreEDd493iW5SsRjvOLAMdB4sJTxC6d
+         E1I8Ty2GHIB7aOqMoxMngskkTYv5yvFP2ld5elA3GzYh7dsK32W0jajVVau4JQDlz+bh
+         /f++z4iUNqBR8h5SRMBLAiBEtbwlSDolkA87DIHsUko6otg+itAIywwX0TQemzskcdBA
+         TfSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781885864; x=1782490664;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NHhY6r7tYGyh00foyp4fyhhHDc2Zg99GnNa/YDtNxNU=;
+        b=PuSs9dvEKREecxDaugsw6H5Dm/vX3lYjWqJ2oS77ukjCucC4h0JHAJeBuK+pMc16s8
+         UF4q2tiQ9j1Pl9QsN7tW78o509VrxM5xvAw9NgzCKplpJCpkjsJocGLLeP6lXdw+gLqj
+         Fz3R7xuujlX3DiFCf4H3x5TibO6CumcJoiqdej7bV5Ux/U83cdDTkVgsORRvd3PUdl1d
+         E0UyPrYlhZbDjHSJCuLOWWuk1OQTS1vzvIZAgJ/PRtG9AYFyboqpgQhjSSJdeiJ6rU33
+         UTpNCTfA31hWADtfOkfwCN7n4t8WTM89sNDW7XpecCkRpvGSxjrrdz1VFnE+b2AjWvwi
+         CdJg==
+X-Forwarded-Encrypted: i=1; AFNElJ/qWiTepVqXJTzTXzIs+RM4VorkQP6RZn0TyLK7uZ0WPw8/qmf/MzXQm7MEbVwFaVKUlrr47TaF2RW6fdB8HzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWlHQAm4nOc+XZHoC0GA2lbkGwykyhXjZCTsvs4XfJDwfmryII
+	b6MxiUO3VR2or+A1XQ60Vzu+6lR7unOGI726eEZ22GpMaIQxthFOIQzI
+X-Gm-Gg: AfdE7clpAYZauHV8PYFwoQQXgOW3hVwHoH2DnH6tPE64UdfnGOWrUAgnViQcdgWyB76
+	8aSGJy38S9gzx74icE+BhIuF+UJMQ74uiTOoJRY1Mj2VCU1FlRnZ04ezH/yBnF79Li0r3leGYcW
+	qSvKNo54bGHmOC6UzKr9WCX98I2v/eKeLwrtkMMW/ZqLgxOoap39ywezowtBvSmwch/JU1ZGV19
+	B+TohUnysjQHpqOO77Sqx8InpIA+k5vDuB+gwiD+yFeCQkxCCDPn/ZCWzRamg7JZBFXkUJAXf8+
+	/zETKGh4tGG+oiDeCyCXrgWu3Zddi0M5jLIZhiw0pM2/bhHwMrLcsSLZ/86Dg3MOBDcTNvTfX7T
+	CURh9lgYX0jAmpBvg7GUBnJG+aqF2DZ0thWpLvldoLr2HiF/lNoAnJc2YJ1kq4QV053FlnIQ0//
+	HGomMoKd4eEvHUknLbcK66YMqZ5WcHablXAqqdwv/LmhW0vFo7/ddMj8sbrPV2gspK2qTp2O5fa
+	YkB3b5IBGA0RDBah5J0dZjg/1R3
+X-Received: by 2002:a05:600c:1f92:b0:492:3670:85a7 with SMTP id 5b1f17b1804b1-49240eb1347mr71855945e9.35.1781885864196;
+        Fri, 19 Jun 2026 09:17:44 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46666c57b8asm131866f8f.26.2026.06.19.09.17.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2026 09:17:43 -0700 (PDT)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rdealenc@rdealenc-l01.ad.analog.com>
+Date: Fri, 19 Jun 2026 17:17:37 +0100
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	rodrigo.alencar@analog.com
+Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v3 12/12] iio: dac: ad5686: add gain control support
+Message-ID: <jcn5gqsjezxrnk74hrsujp56e2iqlr2iw3nwvtwd26zvexri5p@a25egmpppagh>
+References: <20260616-ad5686-new-features-v3-0-f829fb7e9262@analog.com>
+ <20260616-ad5686-new-features-v3-12-f829fb7e9262@analog.com>
+ <ajEppnu-AWSbbihS@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/11] ARM: NXP: Drop NOMMU platform support
-To: Frank.Li@oss.nxp.com, Arnd Bergmann <arnd@arndb.de>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Stefan Agner <stefan@agner.ch>, Fabio Estevam <festevam@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Brian Masney <bmasney@redhat.com>,
- Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
- NXP S32 Linux Team <s32@nxp.com>, Linus Walleij <linusw@kernel.org>,
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-hardening@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-References: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
-From: Vladimir Zapolskiy <vz@kernel.org>
-In-Reply-To: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ajEppnu-AWSbbihS@ashevche-desk.local>
 
-Hello Frank.
-
-On 6/19/26 18:40, Frank.Li@oss.nxp.com wrote:
-> Commercial users and hardware vendors migrated to Zephyr or other RTOS
-> solutions years ago, leaving the NOMMU platform support effectively
-> unused and unmaintained.
+On 16/06/26 13:47, Andy Shevchenko wrote:
+> On Tue, Jun 16, 2026 at 09:21:18AM +0100, Rodrigo Alencar via B4 Relay wrote:
 > 
-> Remove the obsolete support to reduce maintenance burden and simplify the
-> Freescale/nxp platform code.
+> > Most of the supported devices rely on a GAIN pin to control a 2x
+> > multiplier applied to the output voltage. Other devices, e.g. the
+> > single-channel ones, provides a gain control through a bit field in
+> > the control register. Some designs might have the GAIN pin hardwired
+> > to VDD/VLOGIC or GND, which would have no "gain-gpios" device property,
+> > being able to set "adi,range-double" if it is hardwired to VDD. The
+> > vref_mv field is moved down in the struct ad5686_state, so that the
+> > overall size increase is reduced.
 > 
-> Some driver code still be kept and may clean up later since it is possible
-> reused by other SoC.
+> ...
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-This change is a bit too early to happen, I prefer to get it orchestrated
-by Arnd. So, as for today I NAK the change for its NXP LPC part.
-
-> ---
-> Frank Li (11):
->        ARM: dts: vf610m4: Remove NOMMU platform support
->        ARM: dts: imxrt1050: Remove NOMMU platform support
->        ARM: imx: Remove NOMMU platform support
->        clk: imx: imxrt1050: Remove NOMMU platform support
->        pinctrl: freescale: IMXRT: Remove NOMMU platform support
->        ARM: imxrt_defconfig: Remove NOMMU platform support
->        ARM: dts: lpc: Remove NOMMU platform support
->        ARM: mach-lpc: Remove NOMMU platform support
->        ARM: configs: lpc*: Remove NOMMU platform support
->        clk: nxp: lpc: Remove NOMMU platform support
->        pinctrl: nxp: lpc: Remove NOMMU platform support
+> > +static void ad5686_init_scale_avail(struct ad5686_state *st)
+> > +{
+> > +	int realbits = st->chip_info->channels[0].scan_type.realbits;
+> > +	s64 tmp = 2ULL * st->vref_mv * NANO >> realbits;
 > 
->   .../devicetree/bindings/pinctrl/fsl,imxrt1050.yaml |   79 -
->   .../devicetree/bindings/pinctrl/fsl,imxrt1170.yaml |   77 -
->   arch/arm/Kconfig                                   |   12 -
->   arch/arm/Makefile                                  |    2 -
->   arch/arm/boot/dts/nxp/Makefile                     |    1 -
->   arch/arm/boot/dts/nxp/imx/Makefile                 |    2 -
->   arch/arm/boot/dts/nxp/imx/imxrt1050-evk.dts        |   72 -
->   arch/arm/boot/dts/nxp/imx/imxrt1050-pinfunc.h      |  993 ------------
->   arch/arm/boot/dts/nxp/imx/imxrt1050.dtsi           |  160 --
->   arch/arm/boot/dts/nxp/imx/imxrt1170-pinfunc.h      | 1561 -------------------
->   arch/arm/boot/dts/nxp/lpc/Makefile                 |    9 -
->   arch/arm/boot/dts/nxp/lpc/lpc18xx.dtsi             |  543 -------
->   arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dts       |  273 ----
->   arch/arm/boot/dts/nxp/lpc/lpc3250-phy3250.dts      |  236 ---
->   arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi             |  540 -------
+> As Nuno noticed in other patch review, this can probably use mul_u64_u32_shr().
 
-NXP LPC32xx is ARMv5 and it has MMU, hence it's plainly out of scope of
-the proposed "dropping NOMMU platform support".
+This would be need in case the multiplication overflows, which is not the case
+here.
+ 
+> > +	st->scale_avail[2] = div_s64_rem(tmp, NANO, &st->scale_avail[3]);
+> > +	st->scale_avail[0] = div_s64_rem(tmp >> 1, NANO, &st->scale_avail[1]);
+> > +}
 
 -- 
-Best wishes,
-Vladimir
+Kind regards,
+
+Rodrigo Alencar
