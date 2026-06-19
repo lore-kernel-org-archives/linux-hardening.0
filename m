@@ -1,94 +1,236 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425003655C4
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 08:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27A433F8D6
+	for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 09:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781858254; cv=none; b=WAAglDNPzA2wRsnUJA5nKv3Y+dMXnF1Zrx1L1vBMN+euCA3XNhN5BaP4iULuqT5/VZMccbZ6Z3jjljsTvVyfyNIynws+NXtPxUFlLi/VMKoD/2Dg7fYtjT7iTx3jzmLcKyjTS5CtTR6FfDARbfsyFiHPmxJd+lantELy6lX3S3I=
+	t=1781860534; cv=none; b=d3sDXmSAPJN4csDkhKLl4hk4AV64W7H8+gCRpbckL7fTqrFrAnZqb02FbROIRG3JHcINfa6tZToi953mG0ccvY2ARGJon98evpfhoGfrRr/o08zB+fiMLLK5r1ha6i2f2TmQeYhUEPnivO5zq+/5DLh3yqi7OpLVBDRbYw21srA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781858254; c=relaxed/simple;
-	bh=0ty+Q6y2K4AOlKlFOiFT8i7899skXamuEaYYI+wd4D0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i6SrKqxf8NCTufYjJwjCR1UYZsO1Hll2LcEoGSNzXBmUeaPobLxrYHJfuOYAyKtqrLHQY0Pa6PuNzoLYm8H1+snbQN2YihRjaaNLFMKlNCVfIBqDHX0Cv+qhTJhVqiKzi9pvKAEBALTbuFDGQqyL5Z8DcU/eoR8HUTjp6fqXG18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oTIPckd0; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1781860534; c=relaxed/simple;
+	bh=ToYjuqrLUN40Tdb6VL9Do4hGOmu/TUx1TU/0PRrGPcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T94zepLthH/tjJUeOQJK2Gzn0ouBlYZHgq6ETwEJ6u1pgWRvKKCGRQIuJXNbKB7+0nElIi1geXOeBb8FmZSctGMZvom+9uNnE/RFMSWddsdkIlHnXkzK/m4AaxpWYLoOBBa4uDM1tun1+Qn8CYFRvBJjTH7lGSPI34+tT/qkL68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=azX3E7vx; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oTIPckd0"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2c132ac5ec2so21279995ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 01:37:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azX3E7vx"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-46019edc13dso1046155f8f.1
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 02:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781858252; x=1782463052; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+7oBvsxwpB7sjLLEIxbyXWYTpyIVbexYFG53kv8U23U=;
-        b=oTIPckd06QtlRvkH4OBVCEpTJmHWvMRUduzVMxxKKdCIzlyGDZJLbWsy/mPV110tqG
-         IRLBWC34Yq+E3JiqNxXvQqXpEKg8g8HoCgdgtaPiqM+byWiMTGUbRqQyI+Clu+qsfXHh
-         ZPv2tEPSaa9iujD0a+AfhRVh3xawxOMzdiqwUnyKC6rCAFr5fZsAp+32rdOtpir/B3dQ
-         N7GkiHyYL9b86dpwmn/MDx3aR4jbuTUf5X+2YGlbQQP76v/Upxx9fBiYvv+HGgueh44q
-         WziYtki7sy+vZBUF+mtlAoH3tcC8PWqDNOffE+9hmPk9+0zTM1uvzkyOd5+hs2SuJ+VC
-         qgJw==
+        d=gmail.com; s=20251104; t=1781860530; x=1782465330; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=redxzYQzLRKG52vJq98WS9ectvhmVOA5UgA7NvGPOFo=;
+        b=azX3E7vxPgvinqhnJ9TQ8WHMkfJG4OpMnr8/v35JKnWuUBbj/ZjLaTKoGMmrT1SOdd
+         A2X2Npe4X1mIL31Qz0kaKCYqlMgf2sTMqEkhUDHkV1C7pXMmyMqtSTB4xoJZ3QdeIg7Q
+         tvKXGOc4fwNuO2mAmbSM5Ng8XpsjZvjsr6mmdE5B4pebi/BUjOCB1hbytW95o3rH0pa5
+         FKxNKfnQaMBK65biiCRyZWN5Gy9QK9E8uZDFrM4N49dtqxLDUXmQrvcXvSHGDqgDfXbq
+         1iL1mOcRB9/pblLXfJAoBKMespZ90CkqrwNlfqUCXwsuzSjX7UHJ2SgDlix/Xw30r9G7
+         3FYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781858252; x=1782463052;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+7oBvsxwpB7sjLLEIxbyXWYTpyIVbexYFG53kv8U23U=;
-        b=rnytxbep7UwOfRq4hLIQLldgwquUtV/BVbzG0IKqDUdwjWCm7lzvMZ1B0aqJr5PH9i
-         PvzD5E+M3JCYTLv96lsJ8ZJgLsxvB/MMCpM2i/jTPIjd1zacISvheRGevXYQEPljYYQe
-         XTu9Ruw8vu13oUoM26CIyCyNkao+De7pkJvMNcLGvpE57KSQE5EywveIFo11+KQASlKk
-         h3xPApkXCOtAt4WPx3J82iZaVSiUKeENONNwWMBQ1TgOBDUNnOQKEHl8KFzinkDqNbLx
-         AAvq7mwWrsU4s7mpHrT3v4+r7DrHknHxcVX7gcwpVAQ0iuMqTiR4gEZLe5JbjbC2wlnS
-         jFJQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+kUWJp39iCp0XpSMq2wNNjw7wcfn/ZQOKOAQT4Qz/gTNmDve/1vIe+WofeDIP+sTTOIBo07/e/kohS+2xlHzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7wo/l8diaihdqNehXncgIJWB6+LkhrmOKvwBRR3aR1+Zn/s1t
-	KfXPj/u4z2rBpL7DwPXlkCaph5JVgKAkhGKLpctyBPd73CDuR4tQkT/t
-X-Gm-Gg: AfdE7ckSrMNYxf6XcUkrya6ErdrrXbOl4y7EGt/untKJpowAhPwGXWgxD1zBL3Jg7w1
-	eIJbBXcfozFrMxrTMiQmBPfUeLaJ9RdpadDJhQ6o0TtlTNfDt2iCNNPz5TDs/9QK1UURCm0fQ74
-	T2o5JRae57eun6zvPMjNlil99tI4RZ4+gfdh07UUc+kD96b1p3YOOEHtRcQiAUiQCcWpKI7nNj3
-	MarG2Tmp2G8mVuyvaZAGsEJOAzUZV/noVHkPzFUUFvbd973Xl0XvhzV9vG92dHONKgL5NsAZ0E8
-	PnFA6GboM4JG62SI40cbbXK+DYr6Ouyuz8u5+8V0ejWwzYZd0vRV+FfQ643A/6jR92o7DwGCG0M
-	geZ51wEfCnjZCI1m6MGqoN5P3DmNHa4nZ57Klj4Ww22oFpo8L/RFg9pp5YPQHgaufa3/b4izcuZ
-	Ve9w/aPvrfCCssEqRh4o9LQO6rbC+wht/HrBx/PGNFwaoWAw==
-X-Received: by 2002:a17:903:1d0:b0:2c0:d8ee:7d66 with SMTP id d9443c01a7336-2c718f6ac02mr31636825ad.36.1781858252636;
-        Fri, 19 Jun 2026 01:37:32 -0700 (PDT)
-Received: from Athena ([58.146.97.175])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c7208d67cbsm16498145ad.26.2026.06.19.01.37.29
+        d=1e100.net; s=20251104; t=1781860530; x=1782465330;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=redxzYQzLRKG52vJq98WS9ectvhmVOA5UgA7NvGPOFo=;
+        b=AlJb5JgEt8yPLsivqJAO0u926653Q/6UCFLoCM/gIehiJ/oWRt089We1TaroDc20p/
+         jFn2/9TmOJOKQYFmXBvYk1NM2ao5glupTQDIjZus7oPnlkE8nCLprNU+0K1AJTAwjcCr
+         Iy+NOY8m6U53g/pmFt8trsVsGMFUkR9VD/AsXVZUFflyvEGmrdr50NCkr0plKd5/gIdB
+         goy3LlJ6iYGENvlxlEf4AzavO5bxdo9uC/XhajfhPSqId0+49AahzYSzkH8OzASAgyCR
+         1gluIVGlcu0B6HqbUUFeYldFgOFQmXjLf8+w077jpVdjNAjiBJuClW+gsNoCB5mDmODS
+         Yz1g==
+X-Forwarded-Encrypted: i=1; AFNElJ+yG4YEhsHmBk5b5jmDlPMJM7yV9aKzyyrq0BCR3VEvyCU7GbcS4qLpJ54yeX6ZQVLAfOCBSg/MLNo4qVv2pmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGvWTOBLLORJ7KPRRo/urvxRtLlV/9dIuhvw6O4YTxk+/UbA9r
+	NvUOBLKMTp6aMYHrYr6Qat1Fi0XqoSKzwghUXeBmuYxe/ee7GWz7CTFL
+X-Gm-Gg: AfdE7cnkerloIQVimzG0AvWnMNrKYex7ERYA7MT1EmM9MpSb5aDdUiUa07Z4m2hXCTR
+	5NdXYL0na2ZrRXE6WUs7oEkxDxtLvbG09Tle97+d5dv43sRI35DbPD/ByJjHrm0dzmiaVEgwpo3
+	a3vJvQFlL6PiY4qTEKHLiV627TgMlyk0isSMf0hdFsQ3AqZhO7stGEVtvb23/VfzkbqbO+aK5tr
+	Q/1oKADMhKX0rc6g90U6pE8TmoxifAzSaalOXXx+9wLjI9qf6xAbtFvkRg3X4CwFQqGKFlZi6xM
+	dajDXFFkP2uw/YrJBL2oY3gJeT/w2XkuNyCYfLcP2QomqOB7I/XmqcZHJ+uYkbpDeeHMf6Xq88Q
+	wgtXKQ9Pu7VzsD/EJNC5q0jyE3i6zo1pm3TjCN/ZLchcUDmT0iIzwRdiG6AaxNKqVU7RPgVyC4u
+	8uXHd3
+X-Received: by 2002:a05:6000:605:b0:45e:ec27:b4b0 with SMTP id ffacd0b85a97d-4656c792222mr2571640f8f.18.1781860530015;
+        Fri, 19 Jun 2026 02:15:30 -0700 (PDT)
+Received: from nsa ([148.63.225.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46508a04c15sm6484050f8f.3.2026.06.19.02.15.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2026 01:37:32 -0700 (PDT)
-From: Harshal Chavan <harshal24.chavan@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: axboe@kernel.dk,
-	gustavoars@kernel.org,
-	harshal24.chavan@gmail.com,
-	io-uring@vger.kernel.org,
-	kees@kernel.org,
-	krisman@kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] io_uring/register: add IORING_REGISTER_CLONE_FILES opcode
-Date: Fri, 19 Jun 2026 14:07:16 +0530
-Message-ID: <20260619083716.18776-1-harshal24.chavan@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <2026061902-clerk-common-4c84@gregkh>
-References: <2026061902-clerk-common-4c84@gregkh>
+        Fri, 19 Jun 2026 02:15:29 -0700 (PDT)
+Date: Fri, 19 Jun 2026 10:16:31 +0100
+From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v6 06/16] iio: core: create local
+ __iio_chan_prefix_emit() for reuse
+Message-ID: <ajUIRHZZOKgdyGu4@nsa>
+References: <20260618-ad9910-iio-driver-v6-0-79125ffbe430@analog.com>
+ <20260618-ad9910-iio-driver-v6-6-79125ffbe430@analog.com>
+ <ajQGTQ1_qcOwfzne@nsa>
+ <x3aijvc4buo7aqbchikuoyyrgiq3afidtkla37h2rg4tvfdbc3@h42qp3estg2s>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <x3aijvc4buo7aqbchikuoyyrgiq3afidtkla37h2rg4tvfdbc3@h42qp3estg2s>
 
-On 2026-06-19  7:54, Greg Kroah-Hartman wrote:
-> Needs to be a name, not an email alias, and above the --- line.
->
-> thanks,
->
-> greg k-h
+On Thu, Jun 18, 2026 at 05:14:19PM +0100, Rodrigo Alencar wrote:
+> On 18/06/26 16:06, Nuno Sá wrote:
+> > On Thu, Jun 18, 2026 at 02:27:22PM +0100, Rodrigo Alencar via B4 Relay wrote:
+> > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > > 
+> > > Move logic to create a channel prefix for naming attribute files into a
+> > > separate __iio_chan_prefix_emit() function for reuse.
+> 
+> ...
+> 
+> > > +static int __iio_chan_prefix_emit(const struct iio_chan_spec *chan,
+> > > +				  enum iio_shared_by shared_by,
+> > > +				  char *buf, size_t len)
+> > > +{
+> > > +	const char *dir = iio_direction[chan->output];
+> > > +	const char *type = iio_chan_type_name_spec[chan->type];
+> > > +	int n = 0;
+> > > +
+> > > +	switch (shared_by) {
+> > > +	case IIO_SHARED_BY_ALL:
+> > > +		buf[0] = '\0'; /* empty channel prefix */
+> > > +		break;
+> > > +	case IIO_SHARED_BY_DIR:
+> > > +		n = scnprintf(buf, len, "%s", dir);
+> > > +		break;
+> > > +	case IIO_SHARED_BY_TYPE:
+> > > +		n = scnprintf(buf, len, "%s_%s", dir, type);
+> > > +		if (chan->differential)
+> > > +			n += scnprintf(buf + n, len - n, "-%s", type);
+> > > +		break;
+> > > +	case IIO_SEPARATE:
+> > > +		if (chan->indexed) {
+> > > +			n = scnprintf(buf, len, "%s_%s%d", dir, type,
+> > > +				      chan->channel);
+> > > +			if (chan->differential)
+> > > +				n += scnprintf(buf + n, len - n, "-%s%d", type,
+> > > +					       chan->channel2);
+> > > +		} else {
+> > > +			if (chan->differential) {
+> > > +				WARN(1, "Differential channels must be indexed\n");
+> > > +				return -EINVAL;
+> > > +			}
+> > > +			n = scnprintf(buf, len, "%s_%s", dir, type);
+> > > +		}
+> > > +
+> > > +		if (chan->modified) {
+> > > +			if (chan->differential) {
+> > > +				WARN(1, "Differential channels can not have modifier\n");
+> > > +				return -EINVAL;
+> > 
+> > WARN() looks too much to me. dev_error() as we're treating it as such. I
+> > guess you don't want to pass struct device but not really an issue IMHO.
+> 
+> __iio_device_attr_init() also used WARN(), probably because it didnt have
+> access to a dev pointer. It would not be a problem to add an extra param.
 
-Thank you for catching this. I have updated my git config to use my real 
-name and ensured the Signed-off-by is part of the actual commit message 
-above the `---` line. I'll send out v4 shortly.
+Hmm, fair enough. Maybe a chance to change it. Not sure how others feel
+about it.
+
+>  
+> > 
+> > > +			}
+> > > +			n += scnprintf(buf + n, len - n, "_%s",
+> > > +				       iio_modifier_names[chan->channel2]);
+> > > +		}
+> > > +
+> > > +		if (chan->extend_name)
+> > > +			n += scnprintf(buf + n, len - n, "_%s", chan->extend_name);
+> > > +		break;
+> > > +	}
+> > > +
+> > > +	if (n > 0 && n < len - 1) { /* prefix termination if not empty */
+> > > +		buf[n++] = '_';
+> > > +		buf[n] = '\0';
+> > > +	}
+> > > +
+> > 
+> > Can't we handle the above in the caller on kasprintf()? Then we could
+> > simplify and return in place.
+> 
+> I felt like doing this here would get a cleaner logic in the caller, which
+> would have to add the '_' conditionally.
+> 
+
+I think it makes things more clear in the caller given we return n
+anyways but I don't feel strong about it.
+
+- Nuno Sá
+
+> > 
+> > > +	return n;
+> > > +}
+> > > +
+> > >  /**
+> > >   * iio_device_id() - query the unique ID for the device
+> > >   * @indio_dev:		Device structure whose ID is being queried
+> > > @@ -1100,106 +1159,19 @@ int __iio_device_attr_init(struct device_attribute *dev_attr,
+> > >  						size_t len),
+> > >  			   enum iio_shared_by shared_by)
+> > >  {
+> > > -	int ret = 0;
+> > > -	char *name = NULL;
+> > > -	char *full_postfix;
+> > > +	char prefix[NAME_MAX + 1];
+> > > +	int ret;
+> > >  
+> > >  	sysfs_attr_init(&dev_attr->attr);
+> > >  
+> > > -	/* Build up postfix of <extend_name>_<modifier>_postfix */
+> > > -	if (chan->modified && (shared_by == IIO_SEPARATE)) {
+> > > -		if (chan->extend_name)
+> > > -			full_postfix = kasprintf(GFP_KERNEL, "%s_%s_%s",
+> > > -						 iio_modifier_names[chan->channel2],
+> > > -						 chan->extend_name,
+> > > -						 postfix);
+> > > -		else
+> > > -			full_postfix = kasprintf(GFP_KERNEL, "%s_%s",
+> > > -						 iio_modifier_names[chan->channel2],
+> > > -						 postfix);
+> > > -	} else {
+> > > -		if (chan->extend_name == NULL || shared_by != IIO_SEPARATE)
+> > > -			full_postfix = kstrdup(postfix, GFP_KERNEL);
+> > > -		else
+> > > -			full_postfix = kasprintf(GFP_KERNEL,
+> > > -						 "%s_%s",
+> > > -						 chan->extend_name,
+> > > -						 postfix);
+> > > -	}
+> > > -	if (full_postfix == NULL)
+> > > +	ret = __iio_chan_prefix_emit(chan, shared_by, prefix, sizeof(prefix));
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	dev_attr->attr.name = kasprintf(GFP_KERNEL, "%s%s", prefix, postfix);
+> > > +	if (!dev_attr->attr.name)
+> > >  		return -ENOMEM;
+> > 
+> > I don't oppose the change. Looks like a nice cleanup. But bear in mind
+> > this very sensible as any subtle mistake means ABI breakage.
+> 
+> Yes! I tried to be careful... this is dangerous stuff!
+> 
+> -- 
+> Kind regards,
+> 
+> Rodrigo Alencar
