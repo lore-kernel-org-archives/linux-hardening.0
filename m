@@ -1,154 +1,116 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473582475E3
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 21:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D066740D582;
+	Fri, 19 Jun 2026 03:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781818618; cv=none; b=leLuErcCJS1aBpHw9AgLS4T9qZ+DZ9WNlJuVQHwNPQwl16PC1lLGxxaMgEJmrdaL9VxAE6NQhdPS48dhGfVhqmXQZl6qRgzCKhMn20HoH2czdyVureRKYZm5jtmj4oxGG0z22OZdZUzOpunrXTjK7LWQ+8SF2SqR4/Wym1tnbAI=
+	t=1781840855; cv=none; b=aEdz8mZZi7a7zqNqaHzFo078gBW92xsSG6H6+Z61VRi0aCBFN4h3mD86Seb9+YHZ/sT/ect9HvwHotc+6TmlNcsI+e6bsE9NeK64iiVQDu6epAQ+9onO6JVaSuCrhW1RJK4n5t2068/pZak9sfzAg6k8lpFDPEdKQrdP7vKg2Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781818618; c=relaxed/simple;
-	bh=EYjP31/qXaZiOklDzkuCs/LFZj34JkJlNtH9t3PgL5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H/MQM3dd2P3g3BHDRMXxOY+gMI8L/XeD3sLi9GvXYR4LBx9qCepcIPGHuSplFrtd1YuQ7zLEruVxxXTrKScfUc5ITzPp49NBCK9jok/04lWSRSeEMFCWJ36o9cJS9szHQlXIgDlVGrisZ2XSFVrrwxfrtBQlZuxzSD6QXFzyHJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rhOEY0O7; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781840855; c=relaxed/simple;
+	bh=hY/2SvBcZ1vs8jx0Msph3zmlY2len1DrpJsHuxQsAkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LIgfeQAaRVMNSfv4TxN6I9sZDVq0Kr6DjvbZHcEtORwaJ+QrebL7LMBUtOZcJyhz7BUDu/GiDZiK1XPuXR0A8kOrTbKU8juQdmoTMNKSdoEAjlSlQO5z44MynTmxH+9ezXpJYbiUS8pCaWs8ccHX0q5ZRCNQNZAt+BtrYKokLFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YF88M5K+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rhOEY0O7"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-49241a577d8so122055e9.3
-        for <linux-hardening@vger.kernel.org>; Thu, 18 Jun 2026 14:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781818616; x=1782423416; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xs7gyRJwRJkVNYolc+dgF0gvaFLP3C9o7IgJDu8x6hg=;
-        b=rhOEY0O7aheml7HozBSg9yy6AQNFKvSAu4DFD6pIRRNk5PWvBuFMoaQWKfOH/uKsoF
-         7konBO08nCgY6T6bYl3x/Hxmel/iCZ5DtWpdPuITX+MY8gUWDrPsaGj6i+15SokRSnUA
-         Z4VazPgZj8FOO1aoZE309d8P3/zbLEoJvY5D3OluzLG2RNWX14qUvmDlpHnkUcMXSIiF
-         N76LOAb+51Za4f+pwvLqxDBZs/B5N7TM6eG2kv4IRpUQXkgeBtdwf9LixVQof/ndFLbE
-         OXc+CIkCquv7grahBxk9UQ5pBLHa0+P8OLyRFBEb85jn4zs3prd58MpxJEmCA7kjB9Dg
-         EIiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781818616; x=1782423416;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Xs7gyRJwRJkVNYolc+dgF0gvaFLP3C9o7IgJDu8x6hg=;
-        b=G2LaOIgQ03Wp8slKepUY3BEsPNu9AyM8z4AsfARJok9qMt763r9QDVEDta4ZkXvlNJ
-         k8SSFZpsrpDjwHi4P9oXIWcQo+mICm9mnwUqQtRrrman+SmBWO73Yax4qXrQv9cC5lyE
-         lXea7ODadccVc8jtcp9GrTQH/4XEXltlDGGxfEEYp/PWHkKoNw5OKFU/o8sO7gFEr1NL
-         AGAp9qdJzIiJ0wOv0IeZZqghAy5OWnX++lPZDwuziwfJgiplHcEY2uccZtDWK2knX+Ks
-         6SYd5fj0NgO9A6/tMkP/VPScwX9t3hOC/lcCQui7TyCQBLEgX5njeuoEefGwpoeT2Tgd
-         LlmQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8rga8wqisEmIIhOZzzosFoky/pL4iOIr6crvojxbCJvrX9OWDpeoivo1M3/lm+PDm3PeQU8RRXn00QaiQBBtw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ9Sga6NJ+NRN7tH2mQXTK19F0Z8coFJZhVCf+H0df1AyH/2RQ
-	wwFT+f0xxS0p42APNmOuY/JyzbTwk8L9e7Qb7TlaTDn26dkBAr1a269D
-X-Gm-Gg: AfdE7cmBaqqV2b/zzr8IAesZ4BwD1KwRqZl81wl7BACdhc21T7n9yAKWc9t+lqPGU/E
-	Bkl09CLZCO+FgmzwdxuOqu7DbBSIwJnLpmqzwJL1ukqfma5R4SHPvtFDN6v0HxVu1qZhZD7meAZ
-	Zsl0ZsqPKb2x1VQSIsJw/zxPhGpw4J3wS5m2jj1Kdw7aOyvjka/tFJDhMr+bRrIJRc1JYzgNqKD
-	wWkX9bY3V28HvgAKJbjovm1lRZe39Sk3aI+jIYC6nYi+WLjDveqZ7IMZkXtFT3MegpNkMYbXeeX
-	vStaggDJw/RH5K5oZjyMPXKSVcgGGseYdTAkitC/MhYZoLGNmjlWtwrO7lVdEz7nfE64R0z05sz
-	zm7k7fJOk7m7VBSMsV/uF85bZrjoL+cAKRU41Fc7oVsnXVdLlu1nyctLMyc/9Kb0UBa/zj3q2m+
-	7Vcwy4oX0YxVzcvyKxXgZMNMtjJwxRLeHB0evvJJqiWnsSEUmXZ3hCODej0g+o
-X-Received: by 2002:a05:600c:d4:b0:488:ac01:72de with SMTP id 5b1f17b1804b1-49240e20de0mr9055505e9.5.1781818615679;
-        Thu, 18 Jun 2026 14:36:55 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4650c114e22sm1701307f8f.34.2026.06.18.14.36.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2026 14:36:55 -0700 (PDT)
-Date: Thu, 18 Jun 2026 22:36:53 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, Kees Cook <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YF88M5K+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6211F000E9;
+	Fri, 19 Jun 2026 03:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781840854;
+	bh=R3DrRhoR8Ti+ERqtRZvXOI1bFkrS1/hJ7ok7Od4tPRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YF88M5K+XyXQOPl8sybnvffgxm9/PEIjB2SzrSfp6II/R1M6Ul+nY9qrr1Ds2dnvB
+	 6hUMeIraVY7irbs11TeAg0wfr+i7nmUDZalPZlDfbFCK1rySjyFSEoflLQhPWOj+XK
+	 pozrDAITVVJBWKsAZUFAYCUzmYEOu1NonZPxXW5JYn6+PJbvHEL4fcbKxCfMc1dpfZ
+	 Gh52EnwKO6a9BKnVcjzMuiqZf3nUYvI0xadJducAaQQbNJRcFJXPEo/U8OKZdBEHPr
+	 cqdXtgWEUrtLL3+gqXl0e6e1C2z6DyzfYVe8TA5HlRreQjcC8kkt//CkQhgV8u2DTG
+	 3iVyrOJuXXYtA==
+Date: Thu, 18 Jun 2026 20:47:34 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Johannes Berg <johannes@sipsolutions.net>
 Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
-Message-ID: <20260618223653.01b42b38@pumpkin>
-In-Reply-To: <37fcf7c0b1a330a40005fc5ddbe075267b93851e.camel@sipsolutions.net>
+Message-ID: <202606182046.AE5F6A241@keescook>
 References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
-	<20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
-	<1e656f5798a9f2f36daa00aba60d2196b2456335.camel@sipsolutions.net>
-	<20260617223056.754bfcb8@pumpkin>
-	<ajOSqWpYUhFTVqP-@ashevche-desk.local>
-	<37fcf7c0b1a330a40005fc5ddbe075267b93851e.camel@sipsolutions.net>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+ <20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
 
-On Thu, 18 Jun 2026 20:53:37 +0200
-Johannes Berg <johannes@sipsolutions.net> wrote:
+On Wed, Jun 17, 2026 at 01:12:36PM +0200, Andy Shevchenko wrote:
+> Convert size_add() to take variadic argument, so we can simplify users
+> with using a macro only once.
 
-> (hah, just found this window open from this morning ...)
-> 
-> On Thu, 2026-06-18 at 09:39 +0300, Andy Shevchenko wrote:
-> > On Wed, Jun 17, 2026 at 10:30:56PM +0100, David Laight wrote:  
-> > > On Wed, 17 Jun 2026 14:56:09 +0200
-> > > Johannes Berg <johannes@sipsolutions.net> wrote:  
-> > > > On Wed, 2026-06-17 at 13:12 +0200, Andy Shevchenko wrote:  
-> > > > > Convert size_add() to take variadic argument, so we can simplify users
-> > > > > with using a macro only once.    
-> > > >   
-> > > > > +#define __size_add3(addend1, addend2, addend3, addend4, ...)			\
-> > > > > +	__size_add(__size_add2(addend1,  addend2, addend3), addend4)
-> > > > > +#define __size_add4(addend1, addend2, addend3, addend4, addend5, ...)		\
-> > > > > +	__size_add(__size_add3(addend1,  addend2, addend3, addend4), addend5)    
-> > > > 
-> > > > I guess it's not going to really matter, but it would generate fewer
-> > > > calls to have something more like
-> > > > 
-> > > > #define __size_add3(a1, a2, a3, a4) \
-> > > > 	size_add(size_add(a1, a2), size_add(a3, a4))
-> > > > #define __size_add4(a1, a2, a3, a4, a5) \
-> > > > 	size_add(size_add(a1, a2), size_add(a3, a4, a5))
-> > > > 
-> > > > as a binary tree, rather than only cutting one off every time. Not sure
-> > > > that results in hugely different code though - maybe fewer overflow
-> > > > checks?  
-> > 
-> > Good question. I'm also thinking that one-by-one may expand in too much of
-> > preprocessor code (haven't checked myself).  
-> 
-> No. I was confused, and managed to confuse you too perhaps, sorry!
-> 
-> We have to have the same number of operations (__size_add calls)
-> regardless, since you have to add it all up: 1 + 2 + 3 + 4 + 5 has a
-> fixed number of + signs regardless of how you parenthesise it.
-> 
-> I guess actual CPU execution would have a better data dependency tree if
-> we balance it,
-
-Absolutely.
-Intel Haswell onwards and zen1-4 can execute 4 independent add/sub/and/or
-(etc) every clock. 
-
-zen5 wins with 6 arithmetic ops or 4 cmov (and 2 alu) per clock.
-
-> but ... if our hotpath depends on size_add() we've lost already.
-
-I've no idea what the compiler generates, but a cmovc to copy in ~0
-when the add sets carry stands a good chance of being pretty near the best.
-What you don't want is a conditional jump.
-The add, cmov pair will take two clocks, but the pairs are independent of
-each other (the carry flag isn't a limitation).
-The cpu should be able to execute two add and two cmov every clock.
-So with 4 values the 'tree' version is 4 clocks
-The other problem with ((a + b) + c) + d is that execution can't start
-until both a and b are available; with (a + b) + (c + d) it is much
-more likely that one of the adds can be executed early.
-
-Trying to guess the performance of modern cpu is non-trivial.
-
-	David
+Oh, this is fun. I like it. :)
 
 > 
-> johannes
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/overflow.h | 37 ++++++++++++++++++++++++++-----------
+>  1 file changed, 26 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index a8cb6319b4fb..a8b0325e73f3 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -2,9 +2,10 @@
+>  #ifndef __LINUX_OVERFLOW_H
+>  #define __LINUX_OVERFLOW_H
+>  
+> +#include <linux/args.h>
+>  #include <linux/compiler.h>
+> -#include <linux/limits.h>
+>  #include <linux/const.h>
+> +#include <linux/limits.h>
+>  
+>  /*
+>   * We need to compute the minimum and maximum values representable in a given
+> @@ -337,16 +338,7 @@ static __always_inline size_t __must_check size_mul(size_t factor1, size_t facto
+>  	return bytes;
+>  }
+>  
+> -/**
+> - * size_add() - Calculate size_t addition with saturation at SIZE_MAX
+> - * @addend1: first addend
+> - * @addend2: second addend
+> - *
+> - * Returns: calculate @addend1 + @addend2, both promoted to size_t,
+> - * with any overflow causing the return value to be SIZE_MAX. The
+> - * lvalue must be size_t to avoid implicit type conversion.
+> - */
+> -static __always_inline size_t __must_check size_add(size_t addend1, size_t addend2)
+> +static __always_inline size_t __must_check __size_add(size_t addend1, size_t addend2)
+>  {
+>  	size_t bytes;
+>  
+> @@ -356,6 +348,29 @@ static __always_inline size_t __must_check size_add(size_t addend1, size_t adden
+>  	return bytes;
+>  }
+>  
+> +#define __size_add0(addend1, ...)						\
+> +	__size_add(addend1, 0)
+> +#define __size_add1(addend1, addend2, ...)					\
+> +	__size_add(addend1,  addend2)
+> +#define __size_add2(addend1, addend2, addend3, ...)				\
+> +	__size_add(__size_add(addend1,  addend2), addend3)
+> +#define __size_add3(addend1, addend2, addend3, addend4, ...)			\
+> +	__size_add(__size_add2(addend1,  addend2, addend3), addend4)
+> +#define __size_add4(addend1, addend2, addend3, addend4, addend5, ...)		\
+> +	__size_add(__size_add3(addend1,  addend2, addend3, addend4), addend5)
 
+Is 4 the max seen in practice?
+
+
+-- 
+Kees Cook
