@@ -1,162 +1,163 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9230F3BBFDF
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 16:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E16732A3D7;
+	Fri, 19 Jun 2026 19:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781886098; cv=none; b=F6YPPxDEdEA2VHIv91SVrVDc6XYsFVRrgCFTqvKvWp27HGDLjtxOvClNL1Jd14RRMLQPULIuesU6EvBpNEtCFzzmweUgiMsevzqHmDuUXrJUqIQ4ZbNxDtwLqRf4m4ux3aGkGyg6A+OW9em7nbkdj+M1BmJ0A+dNYb2KQtBglR4=
+	t=1781896734; cv=none; b=s8HR3s2KhkrQO5ebR1zEUDQEsU00EihKHUfN53PaDWBGht9okiy9Tg7mNPoOWXSH5Sv2kUs3zeFKFK5rMsrMONFpZxEnY8GMpeQV4nVVyJ/1u/RObQ8RUq5UmCHfwEfD9qJWUMHpOMjyPj9B97U6AjjZTVLJVDkOVQjvkkURKrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781886098; c=relaxed/simple;
-	bh=U2WAIKvThUojolYwSCVcMGa5Kcqxc1gTXqpQ6Egod3Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NxGuYQqgLYiZODNo6aay2w1PJ6MrK0XDXyf9Cyi0xIKKxSuFWVd394MIC/zMCAJ9hBvpt2geXQAX5nhaZSxcYIUJJdYoY9b+9ZGe3Y+S4mbhUwZet7o4dZWO0punzh5ROah4QUg7PLuQSbJW7pFJoDehSPmyIVL2H5Kr1IsP5W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SXFEPkAg; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781896734; c=relaxed/simple;
+	bh=hN0ePi8N+Z7F/p9FDSPQHQnzENbJwFsntwUrrMsv3WE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=SgYSzdI3tqYmlFIfGbcWZXREWxt07lF/Txvey/9w++Ihp4n/Rjg3vslDTLTjIx6pOUlm1ezXQuLmaTAJQvdbcB5mbqy0GenHER9FZPnRdziF1V0ePKTMpvMWCsaSYr8oCYpHuCgzSsVdt+a3EyjxEWBkmVV93db/F10l88PjI20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=MGWyBY0b; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aAUb1mLn; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SXFEPkAg"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-490bc6a7958so25631645e9.1
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Jun 2026 09:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781886091; x=1782490891; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3JLehku4Fkdexd+dqxNctEZTCkpHEg/7niz9TvmxWYQ=;
-        b=SXFEPkAgL+w6QXLFYJRXSAfTLpiwJl/fXVYe72cyILXgVM+J9fZGCwHvQbaML5yyl9
-         whqAc/znKi4dh5fAWVwHQOXFNjKjYrwYZptK5+gqQgPWdpYRwP/GQ/HIcb+ZMPiKjBsk
-         FFkNMcNgVosSKMRYHbWEHUsU0QyITGM9wEZgTQZm484zjEyAC8dyJGw5agOFQcOz3mf6
-         GrPEMlkvp/VRxHPaC50ZMnKC04Le/NpAgA1hPhT5+rvLyFBt325fmGyBPDN7Y4sl3+Jv
-         rpbVKWdnwaqhpUwkWqLni8qXItmPps1IZC4pPGNpUAJWI3f//e+vYKgjyRD67HQ3aEWu
-         OxQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781886091; x=1782490891;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3JLehku4Fkdexd+dqxNctEZTCkpHEg/7niz9TvmxWYQ=;
-        b=bwE8SAl9HdYWhey5I1tDC5Y8WLY1l1PF8QcqsN5lIp84Iq/bQTYpZot0vLSKq6ASvr
-         p0uiIJeJ2NYSYSMPSQkIaYGR7sP0OXeqz8ACUWoNPAELXHNcvRpdPJRvauDKDeWXYT3X
-         g76bSzV0sOL6TOQu2BGGiwJXnqehUfX4e9ml310RYJf33IgxS+t9qv4XevsvLn6s0esS
-         t/RN6Ex+g2G3Ctlur5UdlMUiWG9npnf4MCJ4/tBZJ0i4QV1O7Ud+RegUgmFyjlY4rB7t
-         pfPuUjTmjtV+fNpnUC4XoCkifBjyT/1xm5NsDvrRgT3LCiks9LXd4ToWZgqzS1UryLWi
-         xUjQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8dJWvBB5fbBMuTh4tfTL2Z3PCpQBbouXENvrblVLh6uaxm6mZEQMxhHtPMJeLZrTak2Xly+y2cQ2YW8FsUJSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylrgkmmjCCX5RRLpzTRP0nMC3ySzUoX7iMC3ZzA5JpFEcvSd3l
-	PV1RfiWoOI7UYRHj1IxhibPkjRpQkHgnZh9qs7cSetkSc7LjhzC8P+QZ
-X-Gm-Gg: AfdE7cmbNXtwNNGNO079MzjYKnwDAZlhgMG2NChbsPFazcFp2d/GbGr1/xXkvZpIl0T
-	lKpbUhD9un4xY2UaKSmIJ+IYs2Jr0W7S4ylwbOvZoN5wbPHM5/+7SbArLR1SSykBJH3SOr4V5nk
-	ySt11TI7FkiIh30Nm+0z6wNd9BmGdwwCmBwKXVvgbcCMdnKiIcwuVcHnlyp3OKSEpZYVCTf2Oh4
-	LToRZXdKKuh1LOvj2mdzYYSwNPuM8c7IdxG49sydIY9Y2OimpeI6H/pVedOvjK34LlmrcCFdLMI
-	/LeOGYCclfA8Wq+OlW3fPtcgJuycelgqzQhDq3fFkeNT+bNh8vY0kM0jjM1W7WBQI5lt8Yx6fhr
-	CeRoibO2SxhZ4MvcYPT0O0W85lQ9TASd6/iiWZQrDLC012so2vjq5JANB7aeFZSlap4QZuMsqa4
-	/VyvW7ZLG7O5GtqxL44qbl8wj6LvX9gmcTvFXMSZuFwxvWLghiSnQpDNcCCA7XjP78k5rBHCrJV
-	sdSQ9CpD/OV3UWAmg==
-X-Received: by 2002:a05:600c:5010:b0:490:e19b:9632 with SMTP id 5b1f17b1804b1-49240a59ademr57329915e9.17.1781886090506;
-        Fri, 19 Jun 2026 09:21:30 -0700 (PDT)
-Received: from workstation.speedport.ip (p200300d507395ed9440fa268944f0f11.dip0.t-ipconnect.de. [2003:d5:739:5ed9:440f:a268:944f:f11])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923fd30078sm80399585e9.7.2026.06.19.09.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2026 09:21:30 -0700 (PDT)
-From: Mert Seftali <mertsftl@gmail.com>
-To: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-leds@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mert Seftali <mertsftl@gmail.com>
-Subject: [PATCH] leds: pwm: Annotate leds[] with __counted_by()
-Date: Fri, 19 Jun 2026 18:21:13 +0200
-Message-ID: <20260619162113.416864-1-mertsftl@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="MGWyBY0b";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aAUb1mLn"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.stl.internal (Postfix) with ESMTP id 802641D000D2;
+	Fri, 19 Jun 2026 15:18:50 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Fri, 19 Jun 2026 15:18:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1781896730;
+	 x=1781983130; bh=WMmaYqcpj5qFPBbHXMKSxFB7Wq+hKotmwq9lR4Zk+sg=; b=
+	MGWyBY0b2Vpa5SbeOoCaHd7LeP1XXkLZl2I0hco03NvQpBHKRGMqk9uaJu29E4ES
+	ZSptCouPNO3K1BbIITyL7tl81AVtIHMJOHBQbuCPgecXCKmv/yEnV/CS6HQ2PpCB
+	N3uXtZIgil16ogc+o/IpOKRjbWSuYXdxWecPR3BYMv+2s+fqQk6qveFmqFJvw2rD
+	EG6YLk2RCgOEcsVRV/MYGWmxzY2TnX439brV300W6EV3Udrc7fYgwAZcFnD4p4dX
+	k7ufO75RVLll3ql5jo9bfVm0BTgLYx7iCwFl4RJzdmegIOldoA+bpe4HUK7ljS2w
+	VSOUseCetYaNb6CdlnHn+Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1781896730; x=
+	1781983130; bh=WMmaYqcpj5qFPBbHXMKSxFB7Wq+hKotmwq9lR4Zk+sg=; b=a
+	AUb1mLnG3NRW+BTlcQ6gE7agaiElxEsjlSsOEFQv7TmStYThsonUub+Y9wmhq/UX
+	w5FQXavNfgOPLGScgIedj0P4L7cHMmK5U7dj7nZeHAF2Vch9ATME9FaUqt1rLzoG
+	BzpenwWYNt0HhJ7ClUQ5lS/QCD+6IViNV1GshFNAG/UFMRbcqTeygT2/PzEMxH35
+	75S5ahevfnRo+ANx4csygvKhYQcWly2+gJ9Q4gHTcNO8QpzQKs3QxhR7IoCDzV1u
+	TpwULVn0KQ+/bVlv11QAWjP1y9QKLFX74/Y9sqzzre5F6lnSdLj9mA7LNxedYlRV
+	RVy5Cr6YxHy9vEo8HIxKA==
+X-ME-Sender: <xms:GJY1ail0oQF4zqflss_nqWzFvweWbFuhrTHF-nZRwd7hhkaJBbkE-w>
+    <xme:GJY1akofdj9rdg4BYOVAoYiljcFLCywCTd-7p4hyKIyunbHUzvS-btKZVKRFAHNfM
+    Kdt1xksGs3OwM9ML3pflo65LyLAggQHqXFFT6QONswTfHcI_Ah9kJc>
+X-ME-Proxy-Cause: dmFkZTFxwm0eoO/ubQ6vEXwkN7gu9uih52cTPfdC2KKT/YbaCqdV74DUlwbxDlQ1eX/AJb
+    LKb64YTQgPoISp+PTWQdWzNil+OmtwAWnWyYjnoOczuy+3cPAlZux6RZHQSXuI/Lp4KgjK
+    vUGwLuxoK1IU5E412htHREbsHNYpd18q6ckMVLTC0jYuOf7BdKrn8fqXTW2QSUhnN0FoHN
+    vFues5Pfb92i6pWuaydZ/Uo/4AQp6Rq/0sAI5c02HEfElIpkJL80Of7lf9BTo3h4exQOxC
+    UjmlHkR5kc48/ma9mjCkyCStVFntqnJK+EKBJLZ5D0y9EiaAnIyl1w7s9xoryHn6uTXFhQ
+    TxDoRPTd4rLyrL1T2oMFZ5b4W4Iefc6tzVZtsT2VU/wqmt5WZin87Ho7gR+ktYrDsYAgmF
+    9/i9UaRN3uKxf3V4HhnlKsoOHyGA7QUii5kQGXVjcLwErJHdHDTgD6+4gTHPX9C9V9PCcv
+    Flr8I0ITlQWAMeH55hIqIfjDzHlE5pyLPDsZpmlKny3BojEHwDhdgt/iLyT7JnflRTGFlF
+    4Ee10aS1Viq8noR1nzW+Cs9T2IPvdmaRoeD0idLVGnvgIVi8JclG8MRxJ9ClSZdQtekUnq
+    W4lE2Q7q1ZSPjwDdxAzVyt/Tzo7IO5huzk//IKNJgVyUQyLK7ftY1V2pw8hg
+X-ME-Proxy: <xmx:GJY1apQVZQn0fUcUg_pMom8vHeGZJkSGXDUKzHwMPbGLRnxlHdz0bg>
+    <xmx:GJY1ascKauvynt-2QyEb_BVfCFip285HKqf535gjQf5J_sdu57LFwQ>
+    <xmx:GJY1auKhqgL-MEwStOIXYdL9FMrRYQXXXUSRus05CsUPS2CJIzZ37Q>
+    <xmx:GJY1apEXcbi2cM1z-xp4ZZYMsbvr2qayLkPROzh-xwsRcf1Cznogkg>
+    <xmx:GpY1auf-tP02Dc0COI_6I8-4aasP8pZuMJc-VIkKF2q0n_Vmi11zrxjR>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CD722182007E; Fri, 19 Jun 2026 15:18:48 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: A7dmd8TY8zEF
+Date: Fri, 19 Jun 2026 21:17:58 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Vladimir Zapolskiy" <vz@kernel.org>, "Frank Li" <Frank.Li@oss.nxp.com>,
+ "Sascha Hauer" <s.hauer@pengutronix.de>,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+ "Stefan Agner" <stefan@agner.ch>, "Fabio Estevam" <festevam@gmail.com>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Russell King" <linux@armlinux.org.uk>,
+ "Abel Vesa" <abelvesa@kernel.org>, "Peng Fan" <peng.fan@nxp.com>,
+ "Michael Turquette" <mturquette@baylibre.com>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Brian Masney" <bmasney@redhat.com>,
+ "Aisheng Dong" <aisheng.dong@nxp.com>, "Jacky Bai" <ping.bai@nxp.com>,
+ "NXP S32 Linux Team" <s32@nxp.com>, "Linus Walleij" <linusw@kernel.org>,
+ "Piotr Wojtaszczyk" <piotr.wojtaszczyk@timesys.com>,
+ "Kees Cook" <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, "Frank Li" <Frank.Li@nxp.com>
+Message-Id: <06498d0e-662a-4c09-b1b0-2a70b6168acb@app.fastmail.com>
+In-Reply-To: <7d946861-c3cb-4512-9d5f-9f4cb9b7ee8a@kernel.org>
+References: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
+ <7d946861-c3cb-4512-9d5f-9f4cb9b7ee8a@kernel.org>
+Subject: Re: [PATCH 00/11] ARM: NXP: Drop NOMMU platform support
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Add the __counted_by() attribute to the flexible array member leds[] in
-struct led_pwm_priv so the compiler and runtime (e.g. FORTIFY_SOURCE,
-UBSAN_BOUNDS) can bounds-check accesses against num_leds.
+On Fri, Jun 19, 2026, at 18:07, Vladimir Zapolskiy wrote:
+> On 6/19/26 18:40, Frank.Li@oss.nxp.com wrote:
+>> Commercial users and hardware vendors migrated to Zephyr or other RTOS
+>> solutions years ago, leaving the NOMMU platform support effectively
+>> unused and unmaintained.
+>> 
+>> Remove the obsolete support to reduce maintenance burden and simplify the
+>> Freescale/nxp platform code.
+>> 
+>> Some driver code still be kept and may clean up later since it is possible
+>> reused by other SoC.
 
-For the annotation to be correct, num_leds must reflect the number of
-allocated elements before leds[] is accessed. The driver already
-allocates space for device_get_child_node_count() elements up front, so
-set num_leds to that count right after allocation and fill the array by
-explicit index, instead of incrementing num_leds as each LED is added.
+Thanks a lot for going through these already!
+ 
+>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+>
+> This change is a bit too early to happen, I prefer to get it orchestrated
+> by Arnd. So, as for today I NAK the change for its NXP LPC part.
 
-No functional change intended.
+I am planning to post a series of deprecation notices for platforms
+that I would like to remove for one reason or another. Since it's only
+one more merge before the next (S)LTS kernel, my idea was to post
+the series once v7.2-rc1 is out, merge it into 7.3-LTS and remove
+the deprecated code early next year once the LTS release is announced.
 
-Signed-off-by: Mert Seftali <mertsftl@gmail.com>
----
-Build-tested only (also with FORTIFY_SOURCE and UBSAN_BOUNDS enabled).
+I have rebased uploaded my current draft to
+https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=rfc-arm-deprecation-7.2
 
- drivers/leds/leds-pwm.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+None of those are finalized of course, and we can do any part
+of it earlier or later (or not at all) if there is a good reason.
 
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 6c1f2f50ff85..4c99a07da576 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -36,7 +36,7 @@ struct led_pwm_data {
- 
- struct led_pwm_priv {
- 	int num_leds;
--	struct led_pwm_data leds[];
-+	struct led_pwm_data leds[] __counted_by(num_leds);
- };
- 
- static int led_pwm_set(struct led_classdev *led_cdev,
-@@ -82,9 +82,10 @@ static int led_pwm_default_brightness_get(struct fwnode_handle *fwnode,
- 
- __attribute__((nonnull))
- static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
--		       struct led_pwm *led, struct fwnode_handle *fwnode)
-+		       int idx, struct led_pwm *led,
-+		       struct fwnode_handle *fwnode)
- {
--	struct led_pwm_data *led_data = &priv->leds[priv->num_leds];
-+	struct led_pwm_data *led_data = &priv->leds[idx];
- 	struct led_init_data init_data = { .fwnode = fwnode };
- 	int ret;
- 
-@@ -167,14 +168,13 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
- 		}
- 	}
- 
--	priv->num_leds++;
- 	return 0;
- }
- 
- static int led_pwm_create_fwnode(struct device *dev, struct led_pwm_priv *priv)
- {
- 	struct led_pwm led;
--	int ret;
-+	int ret, i = 0;
- 
- 	device_for_each_child_node_scoped(dev, fwnode) {
- 		memset(&led, 0, sizeof(led));
-@@ -193,7 +193,7 @@ static int led_pwm_create_fwnode(struct device *dev, struct led_pwm_priv *priv)
- 
- 		led.default_state = led_init_default_state_get(fwnode);
- 
--		ret = led_pwm_add(dev, priv, &led, fwnode);
-+		ret = led_pwm_add(dev, priv, i++, &led, fwnode);
- 		if (ret)
- 			return ret;
- 	}
-@@ -217,6 +217,8 @@ static int led_pwm_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->num_leds = count;
-+
- 	ret = led_pwm_create_fwnode(&pdev->dev, priv);
- 
- 	if (ret)
--- 
-2.54.0
+If you to remove the vf610m4/imx7d-cm4/lpc43xx/lpc18xx portions
+earlier, that is definitely fine with me. For imxrt1050, there a
+slightly higher chance that this is still used, so I would
+prefer to wait for the LTS kernel on that one.
 
+>> Frank Li (11):
+>>        ARM: dts: vf610m4: Remove NOMMU platform support
+>>        ARM: dts: imxrt1050: Remove NOMMU platform support
+>>        ARM: imx: Remove NOMMU platform support
+>>        clk: imx: imxrt1050: Remove NOMMU platform support
+>>        pinctrl: freescale: IMXRT: Remove NOMMU platform support
+>>        ARM: imxrt_defconfig: Remove NOMMU platform support
+>>        ARM: dts: lpc: Remove NOMMU platform support
+>>        ARM: mach-lpc: Remove NOMMU platform support
+>>        ARM: configs: lpc*: Remove NOMMU platform support
+>>        clk: nxp: lpc: Remove NOMMU platform support
+>>        pinctrl: nxp: lpc: Remove NOMMU platform support
+
+>
+> NXP LPC32xx is ARMv5 and it has MMU, hence it's plainly out of scope of
+> the proposed "dropping NOMMU platform support".
+
+Agreed. There are a few more platforms with MMU that I would like
+to drop because they were never converted to devicetree support,
+but there is nothing wrong with lpc32xx. 
+
+      Arnd
