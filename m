@@ -1,108 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA7E1FF7C8;
-	Sat, 20 Jun 2026 06:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB74033F582
+	for <linux-hardening@vger.kernel.org>; Sat, 20 Jun 2026 13:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781938573; cv=none; b=tI9lOx4XMGpW5BT/ILoJTbqtiAPV4b3iCNGtCvUvEq68tr4Vx6UslIbl96L1SbCy0Nlf/ZNRl8W0LMdbJpcFhmReYQhaoY/q2XUOhxp1bBoqfEfP3hwjjlpu7FBER+FxJcOJJ1xM0BKFJhIjdhEOv0S0RzOWLPOaDK8N66TUo/c=
+	t=1781961119; cv=none; b=gAn6kNeaaHMNr3bY8dxLlI0WGqwzMR+rTSTEPZhr++JYAEUEp4Mv/dOuqY4phaFcnc4UfYCXDgYa9J4r+gzqC8J7JGLweUTABVCQgxXS8Ij8txMEG8yRBYiS6i7dMWzj5nKpUfmuX2Fa18+wgDCPJz1WMaYv7KNR3Xz0SNALEjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781938573; c=relaxed/simple;
-	bh=I0g8DG5LApiabPB1bpcrHSa3Tizh/Pl3lI63mk5LL0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NpMFrpa6bfIsI1CyxOPgcHK/VROiaDRb789fkrqeoxUziPowlB/JzWupJ/MMXbHGEPONHRJlBVLJujtVWyzEUGS3qvx+fNpm0lMQ7G7tCdpMTT9w7huMWBnVdHHBruKb8QbLBSv5M+3t7ozaaF6+xn7v0Dx+k30hEHkoVEpm/l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RclVktE3; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781961119; c=relaxed/simple;
+	bh=f1gzIf8fgHb7Ze/dJb/40ZOzqNvNSD6l3yJqC/XWnEI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=usZD0t0ZSqS3h6rj0o+5yMzvOf4WjZQ43jITHEOyAZp2aAuf61NBy0AryGl1nx/YWrM+NryAZOIypYcTz1lQPR+g1p4/Plx7aqFGJB6n8g0p2Gd3A/ODmtYGhgwotRxEY4/s1afRiz4PjzVlD5eS2qNKvfBzvZNPzNjrdFcnRT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CLU2/wXM; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RclVktE3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781938572; x=1813474572;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I0g8DG5LApiabPB1bpcrHSa3Tizh/Pl3lI63mk5LL0I=;
-  b=RclVktE3Z7NT7tHhAVg/cupPEzjVR1zy36mFc6IRCZvAADCmHwx0XsKZ
-   ILveYQYv7/DrODh48HYeRk6SCchTKuLOSBr//c9GU3Up+qzbwhp/VfM0b
-   gNu6kXFJEeVikK1mvifBqiLawydnR+GTAYAzLIYvLNw+imaZRmjynW9qm
-   jV+nnf/xzdjEcoLFuP5CZ6NFp+O3VI29z1qPOMf6KQ/8DQu8bCETAKHY+
-   emawRSvkRjUE4eISeJrZJyS9m8sWBgpYM1Je6urJ0itP1zJtoe1kg2K6+
-   /2xn/LRKaFv+wTXUV531zluch71ZsD3RrXovsk+0Qm9WsS2b/3frNDdyh
-   g==;
-X-CSE-ConnectionGUID: gYfC/+fOTAGmAry0G7QLFQ==
-X-CSE-MsgGUID: MMlcnvSsTuy8YdKEtX4e3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11822"; a="94260297"
-X-IronPort-AV: E=Sophos;i="6.24,214,1774335600"; 
-   d="scan'208";a="94260297"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2026 23:56:11 -0700
-X-CSE-ConnectionGUID: jUFjyjp8SHWqMBY+01kGFw==
-X-CSE-MsgGUID: +CLgWOGPSaOSUMaauzxsTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,214,1774335600"; 
-   d="scan'208";a="272476596"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.0])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2026 23:56:08 -0700
-Date: Sat, 20 Jun 2026 09:56:06 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
-Message-ID: <ajY5hg0f34C-iV3R@ashevche-desk.local>
-References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
- <20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
- <202606182046.AE5F6A241@keescook>
- <ajTlfuOFHXlA7xdu@ashevche-desk.local>
- <202606192025.CF68F2E@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLU2/wXM"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2c40397e3caso28156875ad.2
+        for <linux-hardening@vger.kernel.org>; Sat, 20 Jun 2026 06:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781961118; x=1782565918; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f1gzIf8fgHb7Ze/dJb/40ZOzqNvNSD6l3yJqC/XWnEI=;
+        b=CLU2/wXM/iKR7t0YuhbsVrCH4fVYBuFu5zFU1VqIX5DZbYMFJIPP/luE/WwidmEeDW
+         mAqygthNtElmv8yGYZbvlC3U78wdi0nqceJw7mc0HKGzgh1xYIIxikqkXVYDc/XkcYMc
+         WAoQsAyd354/trflzm0QPNolZe5gtQAbaKw5WB0noskndRdVfwZlJotYuKBETfof6DTl
+         5DV7Ihj00JKGgZR8X/K0BEoROSBasX6LerAWRn1/3PizZoswcafbh1sKwFJVYO9Rs+o/
+         NFL4N5mwgbJjNainBgKk3//YxlJnRxWbON/QAiG5FQgNFCBaW1B4aQ4tenHL3ueJrFiI
+         rP4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781961118; x=1782565918;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=f1gzIf8fgHb7Ze/dJb/40ZOzqNvNSD6l3yJqC/XWnEI=;
+        b=CkiJAps//3668HducO04q5p4+xuoFn0BbgYLg/OtAZmIFMOTQIpMkAiB9Lko/oB/4Y
+         UlhX3GVoV0ns0FnVnjBCicgZLeCJ5/xeahqr4JLq/l2s7FMcUGRxJqHH9DiqmO5kxYJI
+         O7UI1dV+VY/hIJWB3lD1DhMAi3JmUty1C7x4VXv57qaGB6fAdZjJ2uhMltKFnsgq1bRV
+         n7kErHPFcc0inbNL95n1qdV//MJkV4XlGt1kQ0t+JJk5GMt1K1R0GMISckCRDvXHOSnP
+         Jc7XIHeowiZrtgbCv69CTRxr3F1S+HVzpypTU6SxcRRGdSaE5hGSTysjZmiD/JDb7jHz
+         mOKg==
+X-Forwarded-Encrypted: i=1; AFNElJ9mJFDFwCILE5ChAdrobhL15jFhTAg8u0VCty6K3y5jskoQugaLz/LIxX80mcCxGoLGugN3E1zogy2vGN3YfEg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1YcR7+RloilNqGZc5SkOQNaZGIcYtQyvC4VbQlojRaWqhcOm9
+	sW7WunWr2Tv+ikCoq9a7JCFApfW0nDwuoD67TY0P2IvVdLvXEXXdgGia
+X-Gm-Gg: AfdE7ckDl+cPcD63ObAPZNe2AhNfDlTtfZpswrRIteQpwsni9AF/oYAj7zoDURatns5
+	IgXlP0/tNBuhr26nk/RF1wQiZVqRZzaNqqBls5U1balQLuPl3QKKEGPczcLP4d4eyycrQZhz1sV
+	tRXKd4aOk/qV96MwEuI99g6gDw1DEpXjIjBTKREJlrVNhxGxwdmDPlbowsVa882aAJ4ztzngXOW
+	pdxqDCKX0qhpkU+7aSZy4V4UESWh5/oDIK94rYIh4OwNed/tdMLRVeXHB+Qq+oXZImlnC44JjjH
+	WB+zi4IOb9wlLtket3e44li215FbBGzjFgczrw29FWVLM0+V6Lqduf8SSghWfedzSYfg0Yw+ipB
+	6a23Z1OFQR56lkmuF6FBLhvTHpDScD0llvaEzwtE+IV9OGNrtkgy5dpT8KFfPE7brU6kt3ZmCSs
+	7W7ZCuEWURn4xaoJr1f4KqvpdhTlUH2/CK+/Y/S+q2bcB5fQ==
+X-Received: by 2002:a17:903:234c:b0:2bf:356f:4e0c with SMTP id d9443c01a7336-2c725ba685amr74009065ad.1.1781961118146;
+        Sat, 20 Jun 2026 06:11:58 -0700 (PDT)
+Received: from LAPTOP-97G9G880.domain.name ([106.222.202.139])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c743bfea46sm23206645ad.69.2026.06.20.06.11.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2026 06:11:57 -0700 (PDT)
+From: Karthikeyan KS <karthiproffesional@gmail.com>
+To: andrew@codeconstruct.com.au
+Cc: joel@jms.id.au,
+	andrew@aj.id.au,
+	Kees Cook <kees@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6] soc: aspeed: lpc-snoop: Fix usercopy overflow in snoop_file_read
+Date: Sat, 20 Jun 2026 13:11:50 +0000
+Message-ID: <20260620131150.184838-1-karthiproffesional@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
+References: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202606192025.CF68F2E@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 19, 2026 at 08:27:33PM -0700, Kees Cook wrote:
-> On Fri, Jun 19, 2026 at 09:45:18AM +0300, Andy Shevchenko wrote:
-> > On Thu, Jun 18, 2026 at 08:47:34PM -0700, Kees Cook wrote:
-> > > On Wed, Jun 17, 2026 at 01:12:36PM +0200, Andy Shevchenko wrote:
+On Wed, 2026-06-17 at 13:10 +0000, Andrew Jeffery wrote:
+> Can you confirm you have tested on hardware a backport of this
+> patch to your BSP kernel?
 
-...
+Not until yesterday, done now. Backported the fix to
+the BSP kernel (5.4.x) on the AST2600 BMC where the original failure
+was observed. Tested under continuous host reboot cycles with concurrent
+userspace reads on /dev/aspeed-lpc-snoop0. no panic, no usercopy
+splat. Same workload on the unpatched BSP reproduced reliably.
 
-> > > > +#define __size_add4(addend1, addend2, addend3, addend4, addend5, ...)		\
-> > > > +	__size_add(__size_add3(addend1,  addend2, addend3, addend4), addend5)
-> > > 
-> > > Is 4 the max seen in practice?
-> > 
-> > In patch 2 there are 5! In cover letter I also mentioned a new user
-> > (there are actually three). And I remember seeing 3 somewhere else.
-> 
-> I feel like we should allow size_mul() to work this way too, though I
-> don't find any users that would need it, so I guess just size_add()?
-
-For now, yes. The array_size() can be modified as we have already two of them,
-but I don't remember seeing more than 3, so it might look like an unneeded
-churn.
-
-> I'm fine for this to go via whatever tree is first to use it:
-> 
-> Acked-by: Kees Cook <kees@kernel.org>
-
-Thanks!
-
-Johannes, are you okay to take a new version (I assume the wish is to have
-the balanced additions)? If so, I will prepare one.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Karthikeyan
