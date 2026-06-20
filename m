@@ -1,135 +1,95 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b1-smtp.messagingengine.com (flow-b1-smtp.messagingengine.com [202.12.124.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555C9367282
-	for <linux-hardening@vger.kernel.org>; Sat, 20 Jun 2026 13:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE01522A80D
+	for <linux-hardening@vger.kernel.org>; Sat, 20 Jun 2026 16:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781962761; cv=none; b=pxfLBuQcczRJTGLeksk1WfY3rSaM9DCmvU7xCyxCUGxFno2Oimh28zMePwVUrXGbHqW3H7s+hyiZL6Udwy/yXASbTS2RTJKSUQ2trhHMV2K1Tg6PSh4GQkwZGuOjRx2MxM46Ya4Y/iEOsbqNXTpo/O5YYXFsVF7uf1f6Aw5bwEA=
+	t=1781971239; cv=none; b=FYwz1OC+asuc89E4MayEaV2jTElHIOpepNepFcuT9t2+UqEcg/Ng5xyKs7vPchksZfPiB23CEhkIX8QAwf+LfB0XFgiklAfB52Bujr75li7eoLBL6etaXF7Soa7licQiTAgEKMUM2b0RWcqKmKWiadQCgspJLSy3TC38rPMxvKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781962761; c=relaxed/simple;
-	bh=kKZ+f4357Y1BPzXQJi6nxVkBPThH/47/OZvK6zgvyw4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZsORXyPOniKTerHa1ZRJjtXNCtOqX5NnZJw7fjgCN/0H4dD9zr8yX4EpuvBhkNj15e0TJMOKb/i3aEfzsVoEcKTBCxGf8cj0L2Zw4edd4bgi8lgL8B3pCNUyrcE06e3FUkcCTwWJNLcC8ACfonmWvIK5eQg44vuh5Lw5ymxWMI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com; spf=none smtp.mailfrom=yjn-systems.com; dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b=V2ALHtCQ; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yjn-systems.com
+	s=arc-20240116; t=1781971239; c=relaxed/simple;
+	bh=IiiqUF0WOz+MO2sQ0NAMrx75B0CKTr1/C/khxFKR7H4=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=e5aXD8+tRHUxBr4+mE0P/Y16uHV40/rF4trNWQxEnhMwEkOKUgE9IeUEsoe7hbC7bRUDeEQiJD7LumaH+yMQ7sqTwQmIEFYtw3eDNyo4BT8G3UQY2aNTbDUKs0RSI+PitOAn5ytM927UqWOgn8jzvGKipxgdp7LiSeyZbfSkqqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=VgqC8d79; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NIG6iwim; arc=none smtp.client-ip=202.12.124.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b="V2ALHtCQ"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4924593f45dso12339175e9.1
-        for <linux-hardening@vger.kernel.org>; Sat, 20 Jun 2026 06:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=yjn-systems.com; s=google; t=1781962759; x=1782567559; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iGZqVsgClsg/gwAhFsRzhxT4x26EOSiWFsPamnF3cGs=;
-        b=V2ALHtCQExaJkOm88K4eRZNtWO4BowDz6p/+kxDKUDBPWgVIu9Gr1yy6GXF+4br3D3
-         urk4y5xEBEmu1w4ord9GnqfegchGeSHcZ9+dXWo6nNqSv5Mh++Z8uq/bSQeXyrSxmwIz
-         cc7RY3++UpeZAEX8cJKZUK3OnQjRaPRmxx/r9/edqnEkzw8BI9G9+mGfVHL5h0e15lVu
-         IQ11pf6iON2GaKSO2J8SoT5oHOa4zguI5LLflB/sQSrpuxSRlJl3JHoftO7+lf9hD9T1
-         fFSCMUvt1FrADdmwKF6Z+kOn5nfCmhYqhehLNSsEUt0EpEgy0Lg4w/bVmF1aM+LgaA8H
-         Yl6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781962759; x=1782567559;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=iGZqVsgClsg/gwAhFsRzhxT4x26EOSiWFsPamnF3cGs=;
-        b=n5uWQM2OSk68Tyqi4jL6jh7bgHVYlrnk0GNHCnhAy8kPy2MPhRBA9CdBRNTfym725R
-         fNH+qXphKqFlJO8auIqdeXYVYE6f/sHd/gU4XPHzzcx/d8KHd/X57TUVVlgN5AG2w4Ae
-         wA3AdOwOcUd11pFBKpFIOMrJveyDQSTB2L1WBK/kNI3Ug8wAjYxdCNWtwd8njzFqjmxJ
-         TQWeItNkJyey4aMXsNdMLDukIZII2eBp33a8a7KvuTx0wWh+F3iNjoiKAIuK7kU+llmg
-         aUtE7HwZMj1YefC1yvayi6QTKcL0GB4JJzArLfsu8A6VFCYfe1ZEaASW/Ythhd6Fl1dJ
-         m6dQ==
-X-Gm-Message-State: AOJu0Yw3un98IUMnZpckw3AIfcopoCk6yNGV3C7C0cCbmRGbTlpxIlBl
-	etqAwczC7s0s+QvGae3qvcx7L4+3X3HyO5ZdnkqWlbDSM/RLPqWUeaJ64qJ/wnIDxvqNI5FWA4N
-	NMtB3zw==
-X-Gm-Gg: AfdE7ckMgx7sryNHujbGzr0wcNmK6A0z2xdUAjprlwPO2JfgI/i1dYOCH9z9ZMffZ+e
-	ha8WkKQ+pbd+WiY+iUC7v4xXaVbVbN81ZzMLlTsCa+U+ZoDxx61RmE6xpDqDUPfRtimCUmq7OLn
-	qlh5nhvdTDEZcPjDcwck8OsX5XeX11yeHphv+EGyhTGA/LIEcVUjY/NCSq+pKMDivlPA3Qngxst
-	/d2My27Vhe5vp7YueW2k93b7BYE4fbEgAsELhGS4CFO9fhYyKIKubQZPTgn4zoZzX9OZjauicc4
-	3KpzU2gvPDduanys4UIzyQCxBi9hd4G7cEfpYeCtoicPK5UQG1agcpkOrKRUr3LSccrHZVDUqxx
-	/Sm1fbVfXLxhmzUbQl+P2/Ni4Wddfsyl6pQL5mpNoPrFlokt+VqlhpTHPp9zvcTyYAldCE6YUa7
-	zsU+/XozY+dhPbmauH+D9IuoOeZAbAUukZcAdW5WcFpSFJix/j4uSSUvSVKDpuSlgUxQuWV+hKy
-	AC7Exhy9C8QlN4N6gmwc+RqUZh4
-X-Received: by 2002:a05:600d:8453:b0:492:37b7:6090 with SMTP id 5b1f17b1804b1-4923ef51a7fmr137626515e9.5.1781962758930;
-        Sat, 20 Jun 2026 06:39:18 -0700 (PDT)
-Received: from yjn-Zenbook-UX3404VA-UX3404VA.. (p200300dcbf448c00ab2024b6c6d10e76.dip0.t-ipconnect.de. [2003:dc:bf44:8c00:ab20:24b6:c6d1:e76])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-492492338dasm63525505e9.1.2026.06.20.06.39.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2026 06:39:18 -0700 (PDT)
-From: York Jasper Niebuhr <yjn@yjn-systems.com>
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="VgqC8d79";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NIG6iwim"
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailflow.stl.internal (Postfix) with ESMTP id 3D93D13002BA
+	for <linux-hardening@vger.kernel.org>; Sat, 20 Jun 2026 12:00:37 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Sat, 20 Jun 2026 12:00:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm1;
+	 t=1781971237; x=1781974837; bh=IiiqUF0WOz+MO2sQ0NAMrx75B0CKTr1/
+	C/khxFKR7H4=; b=VgqC8d79U0e3Q4xw7E2t9cGqDDUD34Mw+s85LW/o07CqnYBw
+	MNnzW/Lj6k7n1BW/+7Ou4CqEzq5mxp2R4POYYsx1MnaIJhU+KerhhCRBSeAnwVQ0
+	t1X6bdiaejtSJgDG+mhQ9zI0Qt8juifFNqcgyzgv55odxS5X2+P3C+xeyq4ZDfOe
+	gPyBblvVFBOYejcCe5lUTSnCSinRApSFlwQ+ANa6053M9HjwWTuxsQNyosw9ElLv
+	tiR8BCmua4sUpJJwGJcabMKTk0XG7MBTn31mhRNsGbLev4rS+zds0zKyWOy+5dp4
+	O5n9pPhMMBzQ0SpJgzDrBk7v0VyeyhX3JBKu+Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1781971237; x=
+	1781974837; bh=IiiqUF0WOz+MO2sQ0NAMrx75B0CKTr1/C/khxFKR7H4=; b=N
+	IG6iwimttFlOox30nb9bJnkdpU5j+DvZUrb1SemoauVTIk/IV4vnEUAl9OvHcedJ
+	xI34pRbAY1BQBy+lZMQgjIQssGfciOFpc1tbIqTC2y6SvTUPoefauFKfzRBDQ18J
+	kopor3hU9L1neTfPKxYQ12tVNoE+rRsUanVlJSN8b9RFhNt6+NEhOJHOSWGk39uo
+	RTx5bZSMa1kauxyZevlU39EadB6NiNcxvn58aIUcweGK1YXcYH2C9HOKXwbxlxq4
+	9kzO+LsXS9u+XlRnNG92oXDGCAnESXtWD7/A47ZKwhno1mH8b1x65dLEwbjhtK20
+	XaglCI1RqkWK1mi0SFeCg==
+X-ME-Sender: <xms:JLk2asIlR9NBzW1A1Yja2s7xnQmD6nndv2i8OJnOe9Guj252ssZyRw>
+    <xme:JLk2ajF0r5IZHGSHWKsXFV74qjm4NbMep3C3UijzU1OW_bNceCP2JM0YdT8IjW8uj
+    xSbxr3wQ65NqgWk4547x3oAwxmDbKepWSkIYt1DHmz_62lczt6kcC21>
+X-ME-Received: <xmr:JLk2aiXqZi7NXURwHZ5UAfwMsfTD1Wo0ifUPTotmu1zAoim5r9d7qHfj4-A>
+X-ME-Proxy-Cause: dmFkZTE5Xqcncgc7X9ONcKhOlnpFHwEadfku3h+mQk4ML4XAi7444w3luGactfxRhx92El
+    6ebsu4UBrLjZAoVQBm4SvxO2cDpDWqVAAgFnOGsnUkHsV2Gj3lmPJAUkvQWjD5vdMJwEPj
+    LrJwwJRktfZ53JYKiP0aD5tCFXNPQUWil72/DSbYAR4znr0b5JhtyeaebanqlMAG4SB/xL
+    4wwybL32kM8fjayYX34lZeKTCqyGtjpGaJyrsbIBv3f/SJJ/dYSHnntnRbS95bh9Vwg5zK
+    r4/ENAlkEzKnbnMCqjiLJmwW0oqGSbI7cM0BHfRFDJNirb+HEIF4EaJ0dJBBvbMNTn/4PZ
+    iaVCkyxZXUiLt6PCHtN3SxvQTAqWERNxuA+EOodyA9r7SVaOxd3lW15sUwTko2mOPrznM2
+    u/ziDKJfWSybRhZHHOZfTbXotsj6pSzV1V/cU1GVWlHLxv3AoqHX8GgqsmbhuFQ+Hiorf6
+    z97IAqVZViVxVMb0cjdQgAgexQQak2nC6k08gStFKow7Q7FuluevGQpHlv/L6kFZzyEPLC
+    ESA5q9NMZ4Ga8uNOKj6mB2u3g1h27zjwV8GECO0Iw3YzOB0sgaSn1DJvVFDDXbpksMADuv
+    +5rjC/1Tf4HlRLhYy3l++kvn7VpzU2SdzdmW7JdADApk4lAMMAtfZXeM4xfw
+X-ME-Proxy: <xmx:JLk2auhwwJDO1efUwLCPDiKT6AZ0uM3BWixhsw3q5XBNNl95x0Y61w>
+    <xmx:JLk2ajR4ZW48WAo4tGUWoB-1gzvdK2ukh51o8gn_NpEJYbYXxfV0pg>
+    <xmx:JLk2ahHTzdT4sHOTtYRFSQd5Wh4KHoN8lWXE0anXPWXUNCmSANcqXg>
+    <xmx:JLk2arkt7-fog66x1mc5vQJyOKnL1XWrfoA1VbVuw-stA8UJ9SPHQA>
+    <xmx:Jbk2agJ2sOkxZFbWJTA4PLJWhD645jkK-f90ogaD-r7-Z8ufTdRO_Be2>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA for
+ <linux-hardening@vger.kernel.org>; Sat,
+ 20 Jun 2026 12:00:36 -0400 (EDT)
+Date: Sat, 20 Jun 2026 11:00:34 -0500
+From: Ian Bridges <icb@fastmail.org>
 To: linux-hardening@vger.kernel.org
-Cc: kees@kernel.org,
-	franzen@sec.in.tum.de,
-	ardb@kernel.org
-Subject: Re: [RFC v2 0/5] Bootpatch-SLR: Randomizing Linux Kernel Structure Layouts at Boot
-Date: Sat, 20 Jun 2026 15:39:17 +0200
-Message-ID: <20260620133917.95361-1-yjn@yjn-systems.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260620133222.94647-1-yjn@yjn-systems.com>
-References: <20260620133222.94647-1-yjn@yjn-systems.com>
+Subject: Introduction
+Message-ID: <aja5Iqqs2_VfwBNe@dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+Hi everyone,
 
-as mentioned in the cover letter, I would like to provide some
-additional background on the two open questions regarding validation and
-instruction labeling.
+My name is Ian and I'd like to get involved with the linux kernel
+hardening work. My professional background is in computer security and
+I've got some graduate school experience with compiler-based hardening
+(specifically with the FreeBSD kernel, though). I've submitted a few
+patches to fix syzbot-identified bugs in the past few weeks and really
+enjoyed the process, which brought me to this group. I'm looking forward
+to jumping into one of the "good first issue" entries in the public
+issue tracker (maybe #370).
 
-While successful boot and userspace tests demonstrate that SPSLR works
-in practice, correctness remains difficult to validate and failures can
-be challenging to debug. If pinpoint misses a special-case structure
-access, for example through inline assembly, the resulting field offset
-mismatch may corrupt another field's memory and lead to crashes or
-unexpected behaviour far away from the original fault.
-
-To address this, I have started investigating a QEMU TCG plugin that
-traces memory accesses at runtime. The idea is to identify accesses to
-randomized structures and verify that the corresponding machine
-instruction has been instrumented by pinpoint. For executed code paths,
-this would provide a definitive correctness check rather than merely
-increasing confidence. Any access to a randomized structure from a
-non-instrumented instruction would be detected immediately.
-
-I would be interested in feedback on whether this appears to be a
-reasonable validation strategy or whether existing tooling could be
-adapted for this purpose.
-
-The other area I am currently focusing on is the instruction immediate
-labeling mechanism. At the moment, pinpoint contains a small assembler
-component that emits easily patchable instructions and places labels
-directly on immediate operands representing structure field offsets.
-
-Longer term, I would prefer to move this functionality into existing
-assembler or linker infrastructure, where it conceptually belongs.
-
-One possibility would be to introduce a dedicated relocation type. This
-would likely require relatively modest changes to assembler and linker
-implementations and would integrate naturally with existing relocation
-machinery.
-
-Another possibility would be to add assembler support for attaching
-labels directly to immediate operands. For example:
-
-    mov $spslr(1234, .Lspslr0), %eax
-
-could be used to place a label ".Lspslr0" at the immediate operand
-bytes. This could be a direct replacement for what the gadget emission
-in pinpoint currently produces. It would not require changes to the
-linker at all.
-
-I would appreciate suggestions on which direction seems more
-appropriate, or whether there are alternative approaches that I should
-investigate.
-
-Thanks,
-Jasper
-
+Ian
