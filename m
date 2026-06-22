@@ -1,197 +1,526 @@
-Received: from flow-b7-smtp.messagingengine.com (flow-b7-smtp.messagingengine.com [202.12.124.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD4129D27D;
-	Mon, 22 Jun 2026 20:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B75372060;
+	Mon, 22 Jun 2026 23:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782158680; cv=none; b=RT2mAjOiTKDTVOWnkzhvKFbIGa0hpzjLTdDAxRysOme5DR/xMG5dedENg0OBUSdpNF+JXxda1O1D961Yy5Rgo+14tdvDwEgXj3J5h2bYJPERP6eFlWI7HPefHlNKA8+GPvk7o+owHfFhjOKgaC5lIyazcJykflCBZM/wGCyzX5A=
+	t=1782172171; cv=none; b=F6H7nBu8aVlV9JTAF2BInVbx8fpq3qvL4Bn5+P9kXHQmFRSwzf5DIlFJHh4clZ6YTCexIJ09IvbIZx55tF25PSynBar8CIt0YOdmCSH+wjdbWJwuyZWDVKm/KoyZFYOxD1guguss6m5eEmom6n4GG85ehHBqVmsdBkxtG3izKcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782158680; c=relaxed/simple;
-	bh=SR5EuA1zBcJJr9W/iJyISJDR9as7fMAGczvZ3+4ezpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T6d62vEpg6kjNEbn4AFfQWIAeuh88cXrXpbfUEGf7av2AlQ35JFC2P1X3g+90jfwDIZdfvahy8kS6zlusWTkQ6BwCVk7788EC/OI9cq+YuN0oGuwEPl05EQTbX1/lDvAIhozhwD164j1OeRqx2IlouVBGPXPken8gjTQWJnPi2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=DUWNz4fL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jQ9LNRuq; arc=none smtp.client-ip=202.12.124.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
+	s=arc-20240116; t=1782172171; c=relaxed/simple;
+	bh=wd0gTLpR8RKsLIpM3mnVB2HRTMXrkaQhXX/lCgl23vU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PUiqMJ1vINC3+oohD/NnLiUi6pqVjALqkOumGbvoFvAvVblyhiH59iudLdhHKvBDtmiwP8kSLqrYSK/DPzadJujoS04TOu7aDNLDYI/Dn25UfkFo/R6x2PtCRFve/n5GNIXaNgCor1mDyetowAtGETMfWdox9JmcpCnhHPlNBRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2b+5zzA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="DUWNz4fL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jQ9LNRuq"
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailflow.stl.internal (Postfix) with ESMTP id 444C713000D0;
-	Mon, 22 Jun 2026 16:04:37 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Mon, 22 Jun 2026 16:04:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1782158677; x=1782162277; bh=h7eSJNUI1a
-	7V+JqbPIMJcwRRHejJ3fmeySBUpEQRG38=; b=DUWNz4fLQFhbDufLQ+cCtGVGtb
-	W+fem9j2OZ9rk740o7+HYbgI2ZFTqRk3DQbcDXMsc0Ha1qRyGgQlfTlJRZ0vKeft
-	gG/hVrjfhsAHhIPd1tej8OjHgO4uvUNhsL7fGG4sQZa4pOf+FBnUVCPnRXHT7WaS
-	liBwhHK/H2md5ZmKr7Wr+3AVOzwaH0N8EgD8929xWA3Q5MiKaECDNchDR5B3zWc5
-	gT9ap/0SnXX8plDJZGzgy0CdpqC1Tb7IiS7sRR9JmS+tH0RRGrcgDwTc5BQH9xoe
-	s5+5STq1v6nt8FpT+A/mHrg5qLniNRU7BqhVtv7CvTNpuUJzNDT+ptcGoA2w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1782158677; x=1782162277; bh=h7eSJNUI1a7V+JqbPIMJcwRRHejJ3fmeySB
-	UpEQRG38=; b=jQ9LNRuqQo6EXAlvcGf1zYjHXSTwsS2LgAEUoIaJaC1pnx02Z6K
-	NONloVAMpujo+H4AhPxosxSJfX04LDUNZ/N/UmgCoEEE6Q08Zg7tczMp+NPo/C2S
-	xSTOEMs6G7EZpwJWFt/AulV19nYRwPWDpdBuTy9/1/kzPC5U377NLzxUPVIhBd3S
-	aOKz5NDYLDP4oflzco0luVFiWL4hslVyQy29Q2ziZUCBlaOGe8RLkTc63melVCBE
-	HkWgBhGqGrBLUjSQP2NlocXAERUBu5DIwDvE6HXSDGDgYCdu++KrvkYySO2RXYfd
-	5J4/maGJ4VnRgk5jMEPbvU7AObZ1vl+OZDg==
-X-ME-Sender: <xms:VJU5avRlqmXSZMU1OpHSMv2zGbdS4JmxoYidXQYyYCgyZ_8SmI29JA>
-    <xme:VJU5aq0AZEgZzebLi-97QCapToqR7OR6AHt18d7vFFmYn6LvTnxiE8vKJ_w7krdwv
-    78tqlRmBBabNpQ3YrhGN6EaIOdfJmax4xhH7Waz7t8sRrlWpOBT07mM>
-X-ME-Received: <xmr:VJU5aksThsSYZi3FWr0cb3CcSIaDZaGSqbiCERJiL5EQ7u2jagk7QkSnzng>
-X-ME-Proxy-Cause: dmFkZTGUhilqtGs0gVYFQOpks+BScZpbL2RYQShCvXjFQPT0Nq5yx4jPVvKc3nGqjZuWzM
-    VDJRehrZ/0Hno4EulEex/GTxDQRNgpuS/pYWYzCEOlqY+HdndiOMTanbcCgQLrlWWluJE7
-    wPXVBStU0h1hr/7uFygWJeQFYOcyOfbA69i+ikMySpZxahXnpl/fN1j/rq8iie0EnZMQgr
-    yMUAZTEFJ8cKr+f/ZT9iyfvdLF7F0pDYA/8+aFlQTYyf9/iPjla3KoCEan8JyJquzCwAOj
-    6NUBXoFXvnRUkKY5mdLKe6Z613WnodLW/xBVw7dnpMxOrl8nkLru5npgkMdKQ7pA6L7qfJ
-    P06FHw3sGdmkocihTonKwKHhfp1fevbTBjE3gDUIaSZH0fNlLoxSSqPbJcRr8is9jmkhqe
-    wcF+3CHrJ49wcacZG+CuNFGiWTO9LNlL6a0qNNTlSaggwuVdNM9cyqVQJQ/E6W7D5yKgMo
-    XUs0qx9bzhXX5MXuCPnGk2hULPaY9y2l3iDzijlwRQ882Xhm5dRoxwXtjvBY9mU2rXfdzM
-    6+Xn6pJ7c87NZpDrM9PGMnAoc52IFdDxVvsk9ZkodyyoHiD9+iSx/Zd2wwaS4cqlwuyap8
-    sX/dh4H8ita2qZbRyLNaRvpn2ZKp/CHFXU0tf8Lm7ejHUx5Av0PWWUKmoRUQ
-X-ME-Proxy: <xmx:VJU5agiU-IMzRorXy5u88GboSx4DoB65lJ-r_fPPTU5qFFlPRmNPdw>
-    <xmx:VJU5al_1woCx2Wfz5EI7Rg5ES8EaNfuxotxphCjTX6DsjCTfkgks4Q>
-    <xmx:VJU5ajvx8gW-iRuFzY4XYQeN2AZ2HKbnTqmdVPdHeRiFEXNcRWcC6g>
-    <xmx:VJU5appGzoE18s58Xor-iJD0gqAxtmktBolnX8tMkBNglbvxXa8WtA>
-    <xmx:VJU5ai74fciEdMos7jOByUzo8aKdd_tKMrxIDLEG3m03oYLQUMpEA_B_>
-Feedback-ID: ib53e4b78:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 22 Jun 2026 16:04:36 -0400 (EDT)
-Date: Mon, 22 Jun 2026 15:04:34 -0500
-From: Ian Bridges <icb@fastmail.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Paul Moore <paul@paul-moore.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] selinux: replace strlcat() with seq_buf in
- selinux_ima_collect_state()
-Message-ID: <ajmVUvURpXKLjYLo@dev>
-References: <ajlN94VO7BYNUTAy@dev>
- <20260622175301.6a36756b@pumpkin>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2b+5zzA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E2C61F000E9;
+	Mon, 22 Jun 2026 23:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782172169;
+	bh=GnZLvcRVW7DH0YWGgniiJVL49Hc0ztZntmG9UfEVV3U=;
+	h=From:To:Cc:Subject:Date;
+	b=D2b+5zzAAcoJ8fp/vIfzdieTrZimtoHDeMeE9CvCIt/q+9LdtsUXTeFHuhnuLTTYj
+	 PYbFcRjIQcjqSvpXRmIL8B/Q/VmUe/34Am/iWGBVrVRwml9HUF1Wa1y1EdTsmGJpfb
+	 lvMbBA5dlQuZK37ORC3CVfEZrI5H3pJGt3Bgu/vWO3+QO59WsPwhIvrik/1LQ/sjKn
+	 VpwLUYmpbWsfuO6zisM0V1Av3BA8G9T8NgnvN60AG5Sr7IQyGQSFFSY/Pn/CxEK68y
+	 rsMqYPILQVBgMnrhAGphHIBmqdQeFvxPjH9L0qVpnXNsRu9/uI8o+Dw+wU9SRQlbxv
+	 ZQPT+zmLrAIAQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org,
+	iwd@lists.linux.dev,
+	linux-hardening@vger.kernel.org,
+	Milan Broz <gmazyland@gmail.com>,
+	Demi Marie Obenour <demiobenour@gmail.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH] crypto: af_alg - Add af_alg_restrict sysctl, defaulting to 1
+Date: Mon, 22 Jun 2026 16:48:03 -0700
+Message-ID: <20260622234803.6982-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260622175301.6a36756b@pumpkin>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 22, 2026 at 05:53:01PM +0100, David Laight wrote:
-> On Mon, 22 Jun 2026 10:00:07 -0500
-> Ian Bridges <icb@fastmail.org> wrote:
-> 
-> > In preparation for removing the deprecated strlcat() API[1], replace the
-> > strscpy()/strlcat() chain in selinux_ima_collect_state() with a struct
-> > seq_buf, which tracks the write position and remaining space internally.
-> > 
-> > The seven open-coded WARN_ON(rc >= buf_len) truncation checks become a
-> > single seq_buf_has_overflowed() check after the string is built. The
-> > kzalloc() and its exact-size computation are unchanged, so the
-> > measurement string passed to IMA is unchanged.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/370 [1]
-> > Signed-off-by: Ian Bridges <icb@fastmail.org>
-> > ---
-> >  security/selinux/ima.c | 35 ++++++++++++++---------------------
-> >  1 file changed, 14 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/security/selinux/ima.c b/security/selinux/ima.c
-> > index aa34da9b0aeb..3d81093d16aa 100644
-> > --- a/security/selinux/ima.c
-> > +++ b/security/selinux/ima.c
-> > @@ -9,6 +9,7 @@
-> >   */
-> >  #include <linux/vmalloc.h>
-> >  #include <linux/ima.h>
-> > +#include <linux/seq_buf.h>
-> >  #include "security.h"
-> >  #include "ima.h"
-> >  
-> > @@ -21,8 +22,9 @@
-> >  static char *selinux_ima_collect_state(void)
-> >  {
-> >  	const char *on = "=1;", *off = "=0;";
-> > +	struct seq_buf s;
-> >  	char *buf;
-> > -	int buf_len, len, i, rc;
-> > +	int buf_len, len, i;
-> >  
-> >  	buf_len = strlen("initialized=0;enforcing=0;checkreqprot=0;") + 1;
-> >  
-> > @@ -34,33 +36,24 @@ static char *selinux_ima_collect_state(void)
-> >  	if (!buf)
-> >  		return NULL;
-> >  
-> > -	rc = strscpy(buf, "initialized", buf_len);
-> > -	WARN_ON(rc < 0);
-> > +	seq_buf_init(&s, buf, buf_len);
-> 
-> That is silly, you need the length of the buffer not the length of a string
-> that is the expected length of the output.
->
+AF_ALG is a frequent source of vulnerabilities and a maintenance
+nightmare.  It exposes far more functionality to userspace than ever
+should have been exposed, especially to unprivileged processes.  Recent
+exploits have targeted kernel internal implementation details like
+"authencesn" that have zero use case for userspace access.
 
-Is buf_len not the correct value to use here? buf_len is passed as the size
-argument to the earlier kzalloc() call (not shown in the patch diff) that
-allocates buf.
+Fortunately, AF_ALG is rarely used in practice, as userspace crypto
+libraries exist.  And when it is used, only some functionality is known
+to be used, and many users are known to hold capabilities already.
+iwd for example requires CAP_NET_ADMIN and has a known algorithm list
+(https://lore.kernel.org/linux-crypto/bcbbef00-5881-421b-8892-7be6c04b832d@gmail.com/).
 
-> >  
-> > -	rc = strlcat(buf, selinux_initialized() ? on : off, buf_len);
-> > -	WARN_ON(rc >= buf_len);
-> > +	seq_buf_puts(&s, "initialized");
-> > +	seq_buf_puts(&s, selinux_initialized() ? on : off);
-> >  
-> > -	rc = strlcat(buf, "enforcing", buf_len);
-> > -	WARN_ON(rc >= buf_len);
-> > +	seq_buf_puts(&s, "enforcing");
-> > +	seq_buf_puts(&s, enforcing_enabled() ? on : off);
-> >  
-> > -	rc = strlcat(buf, enforcing_enabled() ? on : off, buf_len);
-> > -	WARN_ON(rc >= buf_len);
-> > -
-> > -	rc = strlcat(buf, "checkreqprot", buf_len);
-> > -	WARN_ON(rc >= buf_len);
-> > -
-> > -	rc = strlcat(buf, checkreqprot_get() ? on : off, buf_len);
-> > -	WARN_ON(rc >= buf_len);
-> > +	seq_buf_puts(&s, "checkreqprot");
-> > +	seq_buf_puts(&s, checkreqprot_get() ? on : off);
-> 
-> That lot would be easier to read as a seq_printf() - with %d and
-> kill 'on' and 'off'.
+Thus, let's restrict the set of allowed algorithms by default, depending
+on the capabilities held.
 
-This is a good suggestion, I'll use this approach in the v2.
+Add a sysctl /proc/sys/crypto/af_alg_restrict with meaning:
 
-> Why does 'security' code so often look like c**p.
-> 
-> 	David
-> 
-> >  
-> >  	for (i = 0; i < __POLICYDB_CAP_MAX; i++) {
-> > -		rc = strlcat(buf, selinux_policycap_names[i], buf_len);
-> > -		WARN_ON(rc >= buf_len);
-> > -
-> > -		rc = strlcat(buf, selinux_state.policycap[i] ? on : off,
-> > -			buf_len);
-> > -		WARN_ON(rc >= buf_len);
-> > +		seq_buf_puts(&s, selinux_policycap_names[i]);
-> > +		seq_buf_puts(&s, selinux_state.policycap[i] ? on : off);
-> >  	}
-> >  
-> > +	WARN_ON(seq_buf_has_overflowed(&s));
-> > +
-> >  	return buf;
-> >  }
-> >  
-> 
+    0: unrestricted
+    1: limited functionality
+    2: completely disabled
+
+Set the default value to 1, which enables an algorithm allowlist for
+unprivileged processes and a slightly longer allowlist for privileged
+processes.
+
+Note that the list may be tweaked in the future.  However, the common
+use cases such as iwd and bluez are taken into account already.  I've
+tested that iwd still works with the default value of 1.
+
+Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+---
+ Documentation/admin-guide/sysctl/crypto.rst | 36 +++++++++++
+ Documentation/crypto/userspace-if.rst       | 13 +++-
+ crypto/af_alg.c                             | 72 +++++++++++++++++++--
+ crypto/algif_aead.c                         | 11 ++++
+ crypto/algif_hash.c                         | 24 +++++++
+ crypto/algif_rng.c                          |  9 +++
+ crypto/algif_skcipher.c                     | 20 ++++++
+ include/crypto/if_alg.h                     |  8 +++
+ 8 files changed, 184 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/admin-guide/sysctl/crypto.rst b/Documentation/admin-guide/sysctl/crypto.rst
+index b707bd314a64..9a1bd53287f4 100644
+--- a/Documentation/admin-guide/sysctl/crypto.rst
++++ b/Documentation/admin-guide/sysctl/crypto.rst
+@@ -5,10 +5,46 @@
+ These files show up in ``/proc/sys/crypto/``, depending on the
+ kernel configuration:
+ 
+ .. contents:: :local:
+ 
++.. _af_alg_restrict:
++
++af_alg_restrict
++===============
++
++Controls the level of restriction of AF_ALG.
++
++AF_ALG is a deprecated and rarely-used userspace interface that is a
++frequent source of vulnerabilities. It also unnecessarily exposes a
++large number of kernel implementation details. For more information
++about AF_ALG, see :ref:`Documentation/crypto/userspace-if.rst
++<crypto_userspace_interface>`.
++
++Starting in Linux v7.3, AF_ALG supports only a limited set of
++algorithms by default. This sysctl allows the system administrator to
++remove this restriction when needed for compatibility reasons, or to
++go further and disable AF_ALG entirely. The default value is 1.
++
++===  ==================================================================
++0    AF_ALG is unrestricted.
++
++1    AF_ALG is supported with a limited list of algorithms. The list
++     is designed for compatibility with known users such as iwd and
++     bluez that haven't yet been fixed to use userspace crypto code.
++
++     Specifically, there is an allowlist for unprivileged processes
++     and a somewhat longer allowlist for processes that hold
++     CAP_SYS_ADMIN or CAP_NET_ADMIN in the initial user namespace.
++
++     Attempts to bind() an AF_ALG socket with a disallowed algorithm
++     fail with ENOENT.
++
++2    AF_ALG is completely disabled. Attempts to create an AF_ALG
++     socket fail with EAFNOSUPPORT.
++===  ==================================================================
++
+ fips_enabled
+ ============
+ 
+ Read-only flag that indicates whether FIPS mode is enabled.
+ 
+diff --git a/Documentation/crypto/userspace-if.rst b/Documentation/crypto/userspace-if.rst
+index ab93300c8e04..d6194346e366 100644
+--- a/Documentation/crypto/userspace-if.rst
++++ b/Documentation/crypto/userspace-if.rst
+@@ -1,5 +1,7 @@
++.. _crypto_userspace_interface:
++
+ User Space Interface
+ ====================
+ 
+ Introduction
+ ------------
+@@ -10,13 +12,18 @@ code.
+ 
+ AF_ALG is insecure and is deprecated. Originally added to the kernel in 2010,
+ most kernel developers now consider it to be a mistake. Support for hardware
+ accelerators, which was the original purpose of AF_ALG, has been removed.
+ 
+-AF_ALG continues to be supported only for backwards compatibility. On systems
+-where no programs using AF_ALG remain, the support for it should be disabled by
+-disabling ``CONFIG_CRYPTO_USER_API_*``.
++AF_ALG continues to be supported only for backwards compatibility.
++
++Starting in Linux v7.3, the set of algorithms supported by AF_ALG is limited by
++default. See :ref:`/proc/sys/crypto/af_alg_restrict <af_alg_restrict>`.
++
++On systems where no programs using AF_ALG remain, the support for it should be
++disabled entirely by setting ``/proc/sys/crypto/af_alg_restrict`` to 2 or by
++disabling ``CONFIG_CRYPTO_USER_API_*`` in the kernel configuration.
+ 
+ Deprecation
+ -----------
+ 
+ AF_ALG was originally intended to provide userspace programs access to crypto
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index cce000e8590e..34b801568fba 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -6,10 +6,11 @@
+  *
+  * Copyright (c) 2010 Herbert Xu <herbert@gondor.apana.org.au>
+  */
+ 
+ #include <linux/atomic.h>
++#include <linux/capability.h>
+ #include <crypto/if_alg.h>
+ #include <linux/crypto.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/key.h>
+@@ -20,14 +21,32 @@
+ #include <linux/rwsem.h>
+ #include <linux/sched.h>
+ #include <linux/sched/signal.h>
+ #include <linux/security.h>
+ #include <linux/string.h>
++#include <linux/sysctl.h>
++#include <linux/user_namespace.h>
+ #include <keys/user-type.h>
+ #include <keys/trusted-type.h>
+ #include <keys/encrypted-type.h>
+ 
++static int af_alg_restrict = 1;
++
++static const struct ctl_table af_alg_table[] = {
++	{
++		.procname       = "af_alg_restrict",
++		.data           = &af_alg_restrict,
++		.maxlen         = sizeof(int),
++		.mode           = 0644,
++		.proc_handler   = proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_TWO,
++	},
++};
++
++static struct ctl_table_header *af_alg_header;
++
+ struct alg_type_list {
+ 	const struct af_alg_type *type;
+ 	struct list_head list;
+ };
+ 
+@@ -108,10 +127,43 @@ int af_alg_unregister_type(const struct af_alg_type *type)
+ 
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(af_alg_unregister_type);
+ 
++static bool af_alg_capable(void)
++{
++	return ns_capable_noaudit(&init_user_ns, CAP_NET_ADMIN) ||
++	       capable(CAP_SYS_ADMIN);
++}
++
++int af_alg_check_restriction(const char *name,
++			     const struct af_alg_allowlist_entry allowlist[])
++{
++	int level = READ_ONCE(af_alg_restrict);
++
++	if (level == 0)
++		return 0;
++	if (level == 1) {
++		for (const struct af_alg_allowlist_entry *ent = allowlist;
++		     ent->name; ent++) {
++			if (strcmp(name, ent->name) == 0 &&
++			    (!ent->privileged || af_alg_capable()))
++				return 0;
++		}
++	}
++	/*
++	 * Use -ENOENT (the error code for "algorithm not found") instead of
++	 * -EACCES or -EPERM, for the highest chance of correctly triggering
++	 * fallback code paths in userspace programs.
++	 *
++	 * Don't log a warning, since it would be noisy.  iwd tries to bind a
++	 * bunch of algorithms that it never uses.
++	 */
++	return -ENOENT;
++}
++EXPORT_SYMBOL_GPL(af_alg_check_restriction);
++
+ static void alg_do_release(const struct af_alg_type *type, void *private)
+ {
+ 	if (!type)
+ 		return;
+ 
+@@ -504,10 +556,13 @@ static int alg_create(struct net *net, struct socket *sock, int protocol,
+ 		      int kern)
+ {
+ 	struct sock *sk;
+ 	int err;
+ 
++	if (READ_ONCE(af_alg_restrict) == 2)
++		return -EAFNOSUPPORT;
++
+ 	if (sock->type != SOCK_SEQPACKET)
+ 		return -ESOCKTNOSUPPORT;
+ 	if (protocol != 0)
+ 		return -EPROTONOSUPPORT;
+ 
+@@ -1220,31 +1275,36 @@ int af_alg_get_rsgl(struct sock *sk, struct msghdr *msg, int flags,
+ }
+ EXPORT_SYMBOL_GPL(af_alg_get_rsgl);
+ 
+ static int __init af_alg_init(void)
+ {
+-	int err = proto_register(&alg_proto, 0);
++	int err;
++
++	af_alg_header = register_sysctl("crypto", af_alg_table);
+ 
++	err = proto_register(&alg_proto, 0);
+ 	if (err)
+-		goto out;
++		goto out_unregister_sysctl;
+ 
+ 	err = sock_register(&alg_family);
+-	if (err != 0)
++	if (err)
+ 		goto out_unregister_proto;
+ 
+-out:
+-	return err;
++	return 0;
+ 
+ out_unregister_proto:
+ 	proto_unregister(&alg_proto);
+-	goto out;
++out_unregister_sysctl:
++	unregister_sysctl_table(af_alg_header);
++	return err;
+ }
+ 
+ static void __exit af_alg_exit(void)
+ {
+ 	sock_unregister(PF_ALG);
+ 	proto_unregister(&alg_proto);
++	unregister_sysctl_table(af_alg_header);
+ }
+ 
+ module_init(af_alg_init);
+ module_exit(af_alg_exit);
+ MODULE_DESCRIPTION("Crypto userspace interface");
+diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+index 787aac8aeb24..b9217f9086aa 100644
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -32,10 +32,15 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/net.h>
+ #include <net/sock.h>
+ 
++static const struct af_alg_allowlist_entry aead_allowlist[] = {
++	{ "ccm(aes)", true }, /* bluez */
++	{},
++};
++
+ static inline bool aead_sufficient_data(struct sock *sk)
+ {
+ 	struct alg_sock *ask = alg_sk(sk);
+ 	struct sock *psk = ask->parent;
+ 	struct alg_sock *pask = alg_sk(psk);
+@@ -342,10 +347,16 @@ static struct proto_ops algif_aead_ops_nokey = {
+ 	.poll		=	af_alg_poll,
+ };
+ 
+ static void *aead_bind(const char *name)
+ {
++	int err;
++
++	err = af_alg_check_restriction(name, aead_allowlist);
++	if (err)
++		return ERR_PTR(err);
++
+ 	return crypto_alloc_aead(name, 0, AF_ALG_CRYPTOAPI_MASK);
+ }
+ 
+ static void aead_release(void *private)
+ {
+diff --git a/crypto/algif_hash.c b/crypto/algif_hash.c
+index 5452ad6c1506..a8d958d51ece 100644
+--- a/crypto/algif_hash.c
++++ b/crypto/algif_hash.c
+@@ -14,10 +14,28 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/net.h>
+ #include <net/sock.h>
+ 
++static const struct af_alg_allowlist_entry hash_allowlist[] = {
++	{ "cmac(aes)", true }, /* iwd, bluez */
++	{ "hmac(md5)", true }, /* iwd */
++	{ "hmac(sha1)", true }, /* iwd */
++	{ "hmac(sha224)", true }, /* iwd */
++	{ "hmac(sha256)", true }, /* iwd */
++	{ "hmac(sha384)", true }, /* iwd */
++	{ "hmac(sha512)", true }, /* iwd, sha512hmac */
++	{ "md4", true }, /* iwd */
++	{ "md5", true }, /* iwd */
++	{ "sha1", false }, /* iwd, iproute2 < 7.0 */
++	{ "sha224", true }, /* iwd */
++	{ "sha256", true }, /* iwd */
++	{ "sha384", true }, /* iwd */
++	{ "sha512", true }, /* iwd */
++	{},
++};
++
+ struct hash_ctx {
+ 	struct af_alg_sgl sgl;
+ 
+ 	u8 *result;
+ 
+@@ -380,10 +398,16 @@ static struct proto_ops algif_hash_ops_nokey = {
+ 	.accept		=	hash_accept_nokey,
+ };
+ 
+ static void *hash_bind(const char *name)
+ {
++	int err;
++
++	err = af_alg_check_restriction(name, hash_allowlist);
++	if (err)
++		return ERR_PTR(err);
++
+ 	return crypto_alloc_ahash(name, 0, AF_ALG_CRYPTOAPI_MASK);
+ }
+ 
+ static void hash_release(void *private)
+ {
+diff --git a/crypto/algif_rng.c b/crypto/algif_rng.c
+index 4dfe7899f8fa..bd522915d56d 100644
+--- a/crypto/algif_rng.c
++++ b/crypto/algif_rng.c
+@@ -48,10 +48,14 @@
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Stephan Mueller <smueller@chronox.de>");
+ MODULE_DESCRIPTION("User-space interface for random number generators");
+ 
++static const struct af_alg_allowlist_entry rng_allowlist[] = {
++	{},
++};
++
+ struct rng_ctx {
+ #define MAXSIZE 128
+ 	unsigned int len;
+ 	struct crypto_rng *drng;
+ 	u8 *addtl;
+@@ -199,10 +203,15 @@ static struct proto_ops __maybe_unused algif_rng_test_ops = {
+ 
+ static void *rng_bind(const char *name)
+ {
+ 	struct rng_parent_ctx *pctx;
+ 	struct crypto_rng *rng;
++	int err;
++
++	err = af_alg_check_restriction(name, rng_allowlist);
++	if (err)
++		return ERR_PTR(err);
+ 
+ 	pctx = kzalloc_obj(*pctx);
+ 	if (!pctx)
+ 		return ERR_PTR(-ENOMEM);
+ 
+diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
+index df20bdfe1f1f..2b8069667974 100644
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -32,10 +32,24 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/net.h>
+ #include <net/sock.h>
+ 
++static const struct af_alg_allowlist_entry skcipher_allowlist[] = {
++	{ "adiantum(xchacha12,aes)", false }, /* cryptsetup */
++	{ "adiantum(xchacha20,aes)", false }, /* cryptsetup */
++	{ "cbc(aes)", true }, /* iwd */
++	{ "cbc(des)", true }, /* iwd */
++	{ "cbc(des3_ede)", true }, /* iwd */
++	{ "ctr(aes)", true }, /* iwd */
++	{ "ecb(aes)", true }, /* iwd, bluez */
++	{ "ecb(des)", true }, /* iwd */
++	{ "hctr2(aes)", false }, /* cryptsetup */
++	{ "xts(aes)", false }, /* cryptsetup benchmark */
++	{},
++};
++
+ static int skcipher_sendmsg(struct socket *sock, struct msghdr *msg,
+ 			    size_t size)
+ {
+ 	struct sock *sk = sock->sk;
+ 	struct alg_sock *ask = alg_sk(sk);
+@@ -307,10 +321,16 @@ static struct proto_ops algif_skcipher_ops_nokey = {
+ 	.poll		=	af_alg_poll,
+ };
+ 
+ static void *skcipher_bind(const char *name)
+ {
++	int err;
++
++	err = af_alg_check_restriction(name, skcipher_allowlist);
++	if (err)
++		return ERR_PTR(err);
++
+ 	return crypto_alloc_skcipher(name, 0, AF_ALG_CRYPTOAPI_MASK);
+ }
+ 
+ static void skcipher_release(void *private)
+ {
+diff --git a/include/crypto/if_alg.h b/include/crypto/if_alg.h
+index 7643ba954125..4e9ed8e73403 100644
+--- a/include/crypto/if_alg.h
++++ b/include/crypto/if_alg.h
+@@ -159,13 +159,21 @@ struct af_alg_ctx {
+ 	unsigned int len;
+ 
+ 	unsigned int inflight;
+ };
+ 
++struct af_alg_allowlist_entry {
++	const char *name;
++	bool privileged;
++};
++
+ int af_alg_register_type(const struct af_alg_type *type);
+ int af_alg_unregister_type(const struct af_alg_type *type);
+ 
++int af_alg_check_restriction(const char *name,
++			     const struct af_alg_allowlist_entry allowlist[]);
++
+ int af_alg_release(struct socket *sock);
+ void af_alg_release_parent(struct sock *sk);
+ int af_alg_accept(struct sock *sk, struct socket *newsock,
+ 		  struct proto_accept_arg *arg);
+ 
+
+base-commit: 1dc18801be29bc54709aa355b8acd80e183b03cd
+-- 
+2.54.0
+
