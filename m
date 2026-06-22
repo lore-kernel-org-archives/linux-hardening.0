@@ -1,275 +1,173 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED473B2FC6
-	for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 13:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F88C3161A3;
+	Mon, 22 Jun 2026 15:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782136506; cv=none; b=NuW4hNBjT32GnAbTdlcFc/1TYETzBfqb51CUnr8e8huChU+0vNyvLLeZ4/zUzvgMDAtYGhXV4bMeZdOwrTqf4dHvi5YMLnt+vc2nBDU+i3ZZitJ91IjnAriaHLujzS48VnHsv//sjHBaZes7L986v67ptb44kddFIgHqYDrrDF0=
+	t=1782140414; cv=none; b=IbCDpo4r+sQ09Xm6FnU+itIh/iJuEuvFKHTGAAa2beV+5mzlt3+f5nGpX3SsQlVoFYm+ZitxslLR4CY7cHVUFWjeETS3m+LbfaKpNtSJ6yF3Ql/pmWrdec5uqw1pJ1AIi/dBG3thaxuPuCk/xmyg3wsqsEzGWYwCuF58Rc6Kfg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782136506; c=relaxed/simple;
-	bh=F7XgWmGDL57uyYW5zg/J1Ylcjm2e0uV/J9jDi+p/POY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lDHDV1gXH+5tmFCaLEmnSGV0pCw3IbE6kbC7heIKrb+bhQGk58MneMX/kGU2IX4Leu/TSy8d4DLXcy+4KlVhzdRWh3epMS54EySbnH6sVBTTsD2buSnGHx+GldAg6vB2xcVvF55YjN5JUCVU3woW+3tQsSlr3K6alFVEBOhhZp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=hvpyWzC0; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1782140414; c=relaxed/simple;
+	bh=VEbitypmM0KPiOmV2k048fs3HPPQBOI9tvjTU42Em9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XKM4htY/baJPjkMv0RfF0TkQwUb9MjCmNmHsIMBooROaxjfgVq/0GBwlIgmNB42lvA8qTfq55urJu8rZ31e6j4XUeq6hLDJEXfmLdsmoF0HBWJNTTSfrVJckL1dX4AbJpxr3Kh4n0qxEcA4pc4X5OzzqnGDKe218jnVUcN9P3E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=Rmn0G0pu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ViC4vNUM; arc=none smtp.client-ip=202.12.124.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="hvpyWzC0"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7e943356247so1963514a34.2
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 06:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1782136503; x=1782741303; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t6eEeMJPQKAtcX5MedkvnuksL17XF4JZiVXUHwmPZMc=;
-        b=hvpyWzC0DRo/o95xtWQBJMmsAt2M3ls8Rf198nqZqThac9euigfbSD16wE44vNgyCM
-         ZypKUZtUDYCmejZ8WKLu3rcUr35ifN1jfy9oZeovEH3g35KSn0646RxvDT5kq/ufVzsG
-         yrQ6UgLJKbUToM36aWvHeAJiJIzlVn7w5USvsFdWD5w3SwrZri+0U95hJK8FPRrNxzPo
-         Pii5X3b0RsIKktqvInaUx09LvXsuUswIx6uwN4n3Fp8bha9YhbjFrfJ9XKgMfWfdZ5nZ
-         1OGnc1njslYOchJ3OIWlSGCXseT7cYDh+fV17/D2mvExo+znRfPoJum6IixCnYEuPHkj
-         d7jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782136503; x=1782741303;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t6eEeMJPQKAtcX5MedkvnuksL17XF4JZiVXUHwmPZMc=;
-        b=d85M/W1CjBaRFF+s2ly7MHkyAvJhCSu7T1XyYmydBJNLbRIGS9Dh27x7+zYfH61KHp
-         uqRvvH3aOlLxhZARztcgYFt9DkRvX/1gCoPRXI/QrMx69DRu8HFwZcWq20JkpH7gOHEI
-         Ku7tjyoYTFN9r/0WRZ6jX0Fz//tQmQhsW5FjDv4iWOEbDr/rDt+BUCnBpXDOqP+SZU6h
-         k9qTQsMknaxfHU9hrVZuU1rU+y7aGdDBGZYjoznREJwE0LjfkzWGRdcCOkt1EkTC/JTX
-         LfwzwmLPJPj3tas0XJmZnIc0JgoJR4sa3zMu4mpAWoKpxQal5C95UCtlLYRJqU162oHJ
-         b7sQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+jvmTZP/kAew72pzkNoakmz1PQThqYBoIbCGWpRtX7xSGdopnvQTF2a4lOj9o0Tb+cz2/3/8xZXdxTlj2Y99g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPjr/2jHKkVfCBVx2Wr3HcU5xRI1c9C5+rAo5wrvYyi+kufpuT
-	rPap7uVOyhz5kfu6/nN+2n3rh8Ey5Zq7F3WXkE8fY/t3KYTnmH/42j9VK4PWdZfescQ=
-X-Gm-Gg: AfdE7cmaW8IAsZxOMI6T2j/9OhGmYF0/Np5B2DYSUtrstVaBxf25Uo1C4jIZx6QdiW4
-	MiDoRwDnGZ1BiQ6t2pQ//qnak1C58nU1ofrHmXXLpv/rBWJZGs/W7Pfyz++8+NEGPZRsi9ZKtvK
-	SmPg92z5SELYHDKM5l75rr8VYuwkjhxBuGmWRFaIZ9icYKnIaWxAGoAk52izg22tCx+A2r4hoqU
-	pGp9cVQG2O5/AU08q7bBVWLfKpuAUFZjqMuRtmMmI72oyhAgZAwfO1VghVKdr/qT/2Ol/OpE2ln
-	/HuhQM3m9fN33uv0iaEJd/vxWbQdjlCQ+nogWBd4ijDrtTXKKCUrZGKIdQpvKb2QBDySyfGKgz8
-	8WME5kD8Pz/YRqh9rGb0ZNfC4tjaOIcfVS8xmWODuYOnSm+N8d5/pYvUHSReDCXISck6apL6W77
-	sCih59xQ2CpjmvPaaZ6m6ZGtuFasIXDaryt9DwCKj/WC/pvxVFQmtZrBvoeVUEcF8=
-X-Received: by 2002:a05:6808:1183:b0:48b:4218:9326 with SMTP id 5614622812f47-48b42189df5mr7464007b6e.34.1782136502396;
-        Mon, 22 Jun 2026 06:55:02 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:500:b69c:5a77:b8fb:a5cf? ([2600:8803:e7e4:500:b69c:5a77:b8fb:a5cf])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e944296d7asm6353944a34.19.2026.06.22.06.55.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2026 06:55:01 -0700 (PDT)
-Message-ID: <c7478348-452b-4659-a2f2-a8a2700c29dd@baylibre.com>
-Date: Mon, 22 Jun 2026 08:55:01 -0500
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="Rmn0G0pu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ViC4vNUM"
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailflow.stl.internal (Postfix) with ESMTP id B91991300475;
+	Mon, 22 Jun 2026 11:00:11 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Mon, 22 Jun 2026 11:00:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm1;
+	 t=1782140411; x=1782144011; bh=JeT6ZI1VJv4VcgJcw1HZwtPrn5lf+WHS
+	XQl+O8OjyPc=; b=Rmn0G0puBBDFnPGt/rUad+cXJ/D+92FQioqKxseeM+raI5aJ
+	d6ZiRr3ru3IXnqD6Ea++tUIaBbvq+eaSd5k0bBS/wERpVin0/cImHCJNqZcWooX6
+	KfoSGB1OGKde9q1mPCG100aEAyudcATJ04y/lXINaiCT3Cazb+rNo/Dxy5PYlym7
+	rSZNpVqJH49noV3PcoX2Usetz3nxcdNEB0Hgcd1keW8TiTbVkxL0uqcDLsSNVlZ1
+	ZaInKBSbgIeTmSqKbnDSULNeOdlPbnry/6wvqQBK0y0VJyFeQ9xBV7dfwncPaK5N
+	ZUiU9XMzy7VinSHaG+fI1mcqfCo/dnD2ycSoBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782140411; x=
+	1782144011; bh=JeT6ZI1VJv4VcgJcw1HZwtPrn5lf+WHSXQl+O8OjyPc=; b=V
+	iC4vNUMv5cXyt7pw66LUgGo6ywbFq89T3xCbWfh9jr6XU8OoVdp2wiXPCMeFx+8b
+	5g29/fYRKx5mvKpJTat72RcmL19NRrHJ8Tm+6IwXDbOd7vWop3dLRML4LrYUrHRF
+	jqy2Z36of8FyzE5PiffeFOf80dirarZRqscP00o8e+2+BHTumqYn7MzeywJFYKPU
+	wpdv3SbBa0Mln85W2jVbtyfenjfN9z59FNMcwYStF+uBlVKet4axIZP2C3D0NsKy
+	S8D5CBCWSnfrbLvJegnZumYvLQpDKrAhGXRzTyqEu1FDaKrfAwcDMeQJ7VHAsdiq
+	Ll2rbyOdZcpB8n7JnD0xw==
+X-ME-Sender: <xms:-k05au-yjYAp8drRic1tuJ681hE43_hwu8X8RpFHOn7lZKyne8GHqQ>
+    <xme:-k05apoInNBOjqYemoX3jRw3aEz5Buznspd-cpOivOEs9LoyI3k7_SxCB9Uz3AOFu
+    5rrqmu-c0Ud8AnJWC65sZTCoIeQD5GcU_us4cx-JCQ6J3nhrfeTOuI>
+X-ME-Received: <xmr:-k05ajB8Kooo0xp6GDMRv1T9djxAJjzRsN4ZygjUzhdJ8sjYbTs8mQDu1HQ>
+X-ME-Proxy-Cause: dmFkZTFFvahTI8O3H44ePGhZp6eGlFn3MPUZbeALJwUvRUA0820Hdfud9NKk3JZ0t5rmcW
+    BWgSmLuBc8uyH2X2St6OIgD7PrSogduPJcCrq/rkx2IhIixdcHf/JMkaKplpm4bcqk4wPF
+    hFIN4xFhkyFen3PKI0DkaI96XCa9huRKQzVHwAIIMNryCV07ytmYhi2C4PJKOay1T8s7TF
+    SLbcvxdKMy1zPs+Stc3TQwrTqkRe2d3W/RTn7OC/6CHirKdLfEqB/argGy5y5OJjRC5OHa
+    36HHsSX0+6Tm+6U97ZhQMYl6Q0K2apaZIl1qGMKM0+7JVJ/65VSaUtGpmDCRGRa0wOxhGB
+    +mcFjIl7c1zoIu0rv+dChIdAYpex5ZiVBYeEUAcuNyh8ej/79mn242vVxBUa6AZDnzsYOM
+    /gjjhTiTjDh+XubPdh7S97HEONgsyCV4fZNRPNWLtdKt39qNOABwjdLlTSue36bRa8FyTy
+    fahn7xGM5HN2OLQBOH3g84kl7dQOXGFB2xPYbPheRHM9qbD/6ROE1CdFxCxxUwc5fo/2oc
+    Y/dDgzgXT4fY7AFbLyaxC02FRO+och1quH22mMyV508qrHc2C6xVHbGCjzyi05IaI2tMbd
+    OmZ+d9rno+QUDoyh1A8XBJTuXUwKm2njo3PBzHuUZQ0uc7WIYC5drEBnVsoQ
+X-ME-Proxy: <xmx:-k05arwEuBp9-x3F5LpvykvEYfBMpt3dD5YNUolcldWpD_JsNtwR5w>
+    <xmx:-k05ag3ILgU6IkZ3NsQ-xliuxXx4dbOMO-LHE0y9FPpjEPMZRam3Jw>
+    <xmx:-k05arxJUn2fgD5O6ZItMLjNWgBG6Gc_P8PqnauAryzSZv8i40_Omw>
+    <xmx:-k05anEhTZMJym5XxzGySK5XHWun-YfE376YsINlWNbBOorSgOnxog>
+    <xmx:-005aghlmGOGEXyGBBkknguI8K-94vtABrLDI8zJ2RP9FB0q7_DLHZKt>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 22 Jun 2026 11:00:10 -0400 (EDT)
+Date: Mon, 22 Jun 2026 10:00:07 -0500
+From: Ian Bridges <icb@fastmail.org>
+To: Paul Moore <paul@paul-moore.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Subject: [PATCH] selinux: replace strlcat() with seq_buf in
+ selinux_ima_collect_state()
+Message-ID: <ajlN94VO7BYNUTAy@dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/12] iio: dac: ad5686: implement new sync() op for
- the spi bus
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>,
- rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
- linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-References: <20260616-ad5686-new-features-v3-0-f829fb7e9262@analog.com>
- <20260616-ad5686-new-features-v3-9-f829fb7e9262@analog.com>
- <50a7e765-ba20-45c0-8a13-5e672413b600@baylibre.com>
- <3i3fdq6qjd2h4o4wwicl4zlpzyggzb7gljm2acwz33k75ds57k@7mdevoavx3ao>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <3i3fdq6qjd2h4o4wwicl4zlpzyggzb7gljm2acwz33k75ds57k@7mdevoavx3ao>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/22/26 3:50 AM, Rodrigo Alencar wrote:
-> On 20/06/26 11:33, David Lechner wrote:
->> On 6/16/26 3:21 AM, Rodrigo Alencar via B4 Relay wrote:
->>> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
->>>
->>> Use of local SPI bus data to manage a collection of SPI transfers and
->>> flush them to the SPI platform driver with the sync() operation. This
->>> allows for faster handling of multiple channel DAC writes, avoiding kernel
->>> overhead per spi_sync() call, which will be helpful when enabling
->>> triggered buffer support.
-> 
-> ...
-> 
->>> +/**
->>> + * struct ad5686_spi_data - SPI bus specific data
->>> + * @msg: SPI message used for transfers
->>> + * @size: number of transfers currently in the message
->>> + * @capacity: maximum number of transfers that can be added to the message
->>> + * @xfers: array of SPI transfers, allocated with the provided capacity
->>> + */
->>> +struct ad5686_spi_data {
->>> +	struct spi_message msg;
->>> +	unsigned int size;
->>> +	unsigned int capacity;
->>> +	struct spi_transfer xfers[] __counted_by(capacity);
->>> +};
->>> +
->>>  static int ad5686_spi_write(struct ad5686_state *st,
->>>  			    u8 cmd, u8 addr, u16 val)
->>>  {
->>> -	struct spi_device *spi = to_spi_device(st->dev);
->>> -	u8 tx_len, *buf;
->>> +	struct ad5686_spi_data *bus_data = st->bus_data;
->>> +	struct spi_transfer *xfer;
->>>  
->>> +	if (bus_data->size >= bus_data->capacity)
->>> +		return -E2BIG;
->>> +
->>> +	if (bus_data->size)
->>> +		bus_data->xfers[bus_data->size - 1].cs_change = 1;
->>> +	else
->>> +		spi_message_init(&bus_data->msg);
->>
->> Seems odd that spi_message_init() is called conditionally. What
->> prevents spi_message_add_tail() from growing the message unbounded
->> on repeated calls?
-> 
-> The "size >= capacity" check right above this.
+In preparation for removing the deprecated strlcat() API[1], replace the
+strscpy()/strlcat() chain in selinux_ima_collect_state() with a struct
+seq_buf, which tracks the write position and remaining space internally.
 
-OK, but it could still grow to capacity, adding one xfer each
-time this function is called with bus_data->size > 0, right?
+The seven open-coded WARN_ON(rc >= buf_len) truncation checks become a
+single seq_buf_has_overflowed() check after the string is built. The
+kzalloc() and its exact-size computation are unchanged, so the
+measurement string passed to IMA is unchanged.
 
-> 
->>
->>> +
->>> +	xfer = &bus_data->xfers[bus_data->size];
->>>  	switch (st->chip_info->regmap_type) {
->>>  	case AD5310_REGMAP:
->>> -		st->data[0].d16 = cpu_to_be16(AD5310_CMD(cmd) |
->>> -					      val);
->>> -		buf = &st->data[0].d8[0];
->>> -		tx_len = 2;
->>> +		st->data[bus_data->size].d16 =
->>> +			cpu_to_be16(AD5310_CMD(cmd) | val);
->>> +		*xfer = (struct spi_transfer) {
->>> +			.tx_buf = &st->data[bus_data->size].d16,
->>> +			.len = sizeof(st->data[bus_data->size].d16),
->>> +		};
->>>  		break;
->>>  	case AD5683_REGMAP:
->>> -		st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
->>> -					      AD5683_DATA(val));
->>> -		buf = &st->data[0].d8[1];
->>> -		tx_len = 3;
->>> +		st->data[bus_data->size].d32 =
->>> +			cpu_to_be32(AD5686_CMD(cmd) | AD5683_DATA(val));
->>> +		*xfer = (struct spi_transfer) {
->>> +			.tx_buf = &st->data[bus_data->size].d8[1],
->>> +			.len = sizeof(st->data[bus_data->size].d32) - 1,
->>> +		};
->>>  		break;
->>>  	case AD5686_REGMAP:
->>> -		st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
->>> -					      AD5686_ADDR(addr) |
->>> -					      val);
->>> -		buf = &st->data[0].d8[1];
->>> -		tx_len = 3;
->>> +		st->data[bus_data->size].d32 =
->>> +			cpu_to_be32(AD5686_CMD(cmd) | AD5686_ADDR(addr) | val);
->>> +		*xfer = (struct spi_transfer) {
->>> +			.tx_buf = &st->data[bus_data->size].d8[1],
->>> +			.len = sizeof(st->data[bus_data->size].d32) - 1,
->>> +		};
->>>  		break;
->>>  	default:
->>>  		return -EINVAL;
->>>  	}
->>>  
->>> -	return spi_write(spi, buf, tx_len);
->>
->> If this function no longer writes, should we change the name of
->> the function to something like ad5686_spi_write_prepare_msg()?
->>
->>> +	spi_message_add_tail(xfer, &bus_data->msg);
->>> +	bus_data->size++;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int ad5686_spi_sync(struct ad5686_state *st)
->>> +{
->>> +	struct spi_device *spi = to_spi_device(st->dev);
->>> +	struct ad5686_spi_data *bus_data = st->bus_data;
->>> +
->>> +	bus_data->size = 0; /* always reset, even on sync failure */
->>> +	return spi_sync(spi, &bus_data->msg);
->>>  }
->>>  
->>>  static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
->>>  {
->>> -	struct spi_transfer t[] = {
->>> -		{
->>> -			.tx_buf = &st->data[0].d8[1],
->>> -			.len = 3,
->>> -			.cs_change = 1,
->>> -		}, {
->>> -			.tx_buf = &st->data[1].d8[1],
->>> -			.rx_buf = &st->data[2].d8[1],
->>> -			.len = 3,
->>> -		},
->>> -	};
->>>  	struct spi_device *spi = to_spi_device(st->dev);
->>> +	struct ad5686_spi_data *bus_data = st->bus_data;
->>> +	struct spi_transfer *xfer = &bus_data->xfers[0];
->>>  	u8 cmd = 0;
->>>  	int ret;
->>>  
->>> @@ -85,8 +117,21 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
->>>  				      AD5686_ADDR(addr));
->>>  	st->data[1].d32 = cpu_to_be32(AD5686_CMD(AD5686_CMD_NOOP));
->>>  
->>> -	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
->>> -	if (ret < 0)
->>> +	xfer[0] = (struct spi_transfer) {
->>> +		.tx_buf = &st->data[0].d8[1],
->>> +		.len = sizeof(st->data[0].d32) - 1,
->>
->> Would make more sense to say `sizeof(st->data[0].d8) - 1` since
->> the buffer is  &st->data[0].d8[1].
-> 
-> the buffer is d8[1], d8[2] and d8[3], skipping d8[0], for a len = 3.
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Signed-off-by: Ian Bridges <icb@fastmail.org>
+---
+ security/selinux/ima.c | 35 ++++++++++++++---------------------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
-Yes, I see that. This is why I suggested that it should be based on
-sizeof(...d8) - 1 rather than sizeof(...d32) - 1. It makes more sense
-to use the same field for both the size and the buffer pointer.
-
-> 
->>> +		.cs_change = 1,
->>> +	};
->>> +	xfer[1] = (struct spi_transfer) {
->>> +		.tx_buf = &st->data[1].d8[1],
->>> +		.rx_buf = &st->data[2].d8[1],
->>> +		.len = sizeof(st->data[1].d32) - 1,
->>
->> And here.
->>
->>> +	};
->>> +
->>> +	spi_message_init_with_transfers(&bus_data->msg, xfer, 2);
->>> +
->>> +	ret = spi_sync(spi, &bus_data->msg);
->>> +	if (ret)
->>>  		return ret;
->>>  
->>>  	return be32_to_cpu(st->data[2].d32);
->>> @@ -95,12 +140,26 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
->>>  static const struct ad5686_bus_ops ad5686_spi_ops = {
->>>  	.write = ad5686_spi_write,
->>>  	.read = ad5686_spi_read,
->>> +	.sync = ad5686_spi_sync,
->>>  };
->>>  
-> 
+diff --git a/security/selinux/ima.c b/security/selinux/ima.c
+index aa34da9b0aeb..3d81093d16aa 100644
+--- a/security/selinux/ima.c
++++ b/security/selinux/ima.c
+@@ -9,6 +9,7 @@
+  */
+ #include <linux/vmalloc.h>
+ #include <linux/ima.h>
++#include <linux/seq_buf.h>
+ #include "security.h"
+ #include "ima.h"
+ 
+@@ -21,8 +22,9 @@
+ static char *selinux_ima_collect_state(void)
+ {
+ 	const char *on = "=1;", *off = "=0;";
++	struct seq_buf s;
+ 	char *buf;
+-	int buf_len, len, i, rc;
++	int buf_len, len, i;
+ 
+ 	buf_len = strlen("initialized=0;enforcing=0;checkreqprot=0;") + 1;
+ 
+@@ -34,33 +36,24 @@ static char *selinux_ima_collect_state(void)
+ 	if (!buf)
+ 		return NULL;
+ 
+-	rc = strscpy(buf, "initialized", buf_len);
+-	WARN_ON(rc < 0);
++	seq_buf_init(&s, buf, buf_len);
+ 
+-	rc = strlcat(buf, selinux_initialized() ? on : off, buf_len);
+-	WARN_ON(rc >= buf_len);
++	seq_buf_puts(&s, "initialized");
++	seq_buf_puts(&s, selinux_initialized() ? on : off);
+ 
+-	rc = strlcat(buf, "enforcing", buf_len);
+-	WARN_ON(rc >= buf_len);
++	seq_buf_puts(&s, "enforcing");
++	seq_buf_puts(&s, enforcing_enabled() ? on : off);
+ 
+-	rc = strlcat(buf, enforcing_enabled() ? on : off, buf_len);
+-	WARN_ON(rc >= buf_len);
+-
+-	rc = strlcat(buf, "checkreqprot", buf_len);
+-	WARN_ON(rc >= buf_len);
+-
+-	rc = strlcat(buf, checkreqprot_get() ? on : off, buf_len);
+-	WARN_ON(rc >= buf_len);
++	seq_buf_puts(&s, "checkreqprot");
++	seq_buf_puts(&s, checkreqprot_get() ? on : off);
+ 
+ 	for (i = 0; i < __POLICYDB_CAP_MAX; i++) {
+-		rc = strlcat(buf, selinux_policycap_names[i], buf_len);
+-		WARN_ON(rc >= buf_len);
+-
+-		rc = strlcat(buf, selinux_state.policycap[i] ? on : off,
+-			buf_len);
+-		WARN_ON(rc >= buf_len);
++		seq_buf_puts(&s, selinux_policycap_names[i]);
++		seq_buf_puts(&s, selinux_state.policycap[i] ? on : off);
+ 	}
+ 
++	WARN_ON(seq_buf_has_overflowed(&s));
++
+ 	return buf;
+ }
+ 
+-- 
+2.47.3
 
