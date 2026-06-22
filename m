@@ -1,86 +1,66 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9170525B0B2
-	for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 13:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED473B2FC6
+	for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 13:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782135435; cv=none; b=KgIlUPgxAQYK0qW6qTRa7QCQVFLs7jBgYBWmViJFBfM062+OcY3SkXzrQdP1pDDztXrQNyIGp7CPvKDV63J1W/zFW3XNqPMU3qnvo1ZbNjuYO55ysoQM7BevZ2VRvw83RZFlhPDxdJnXAGovBx8bsRhlrqzKBQA51wLcD6IOSWc=
+	t=1782136506; cv=none; b=NuW4hNBjT32GnAbTdlcFc/1TYETzBfqb51CUnr8e8huChU+0vNyvLLeZ4/zUzvgMDAtYGhXV4bMeZdOwrTqf4dHvi5YMLnt+vc2nBDU+i3ZZitJ91IjnAriaHLujzS48VnHsv//sjHBaZes7L986v67ptb44kddFIgHqYDrrDF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782135435; c=relaxed/simple;
-	bh=qNePZ2yyw2RzjTYGbgoDf2Xu+Qhz3jY2FpDHTgb+nEc=;
+	s=arc-20240116; t=1782136506; c=relaxed/simple;
+	bh=F7XgWmGDL57uyYW5zg/J1Ylcjm2e0uV/J9jDi+p/POY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ukel8W22PIg560s8t5fVYQOJwB/YEsgA4BTNfmm4iZAiOLFlWv7YY36e/A83GJuOWKkXlJoeV/oSqh4dGM8J0TF8lxAEjWWrQUsuLUJMcW486MBlLnmxHWMhDQH9c0vSMw0W7C+hquZ27rie4enS4pK5HaQMdvT59Ufpg36y4RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lQUjJQxK; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=BrX6uklc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=lDHDV1gXH+5tmFCaLEmnSGV0pCw3IbE6kbC7heIKrb+bhQGk58MneMX/kGU2IX4Leu/TSy8d4DLXcy+4KlVhzdRWh3epMS54EySbnH6sVBTTsD2buSnGHx+GldAg6vB2xcVvF55YjN5JUCVU3woW+3tQsSlr3K6alFVEBOhhZp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=hvpyWzC0; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lQUjJQxK";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="BrX6uklc"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65MDGIAW3536797
-	for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 13:37:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BGAZiXTQHTlA7pjXyOhWPFIXo4iYevKMCgx+Q3SEXJY=; b=lQUjJQxKC+bFHWxv
-	rAlHPzsQscxFtSrNAlS3ZcAwDN/0EKB5/3UR3nQ4oXmGnuRPLNbCuoF38KHanWJ8
-	Y6U4w0H9TTz85j+ctaH0dK+nSlYU44L7k2uTUGkfZB2KjUf09XsCPXxfEIBjiD++
-	Id+2eoMS5XlPYYy95uD26flgckVjR60Pm9IIYRFUD6nTd48X1hgqd18Dm+lA2W/e
-	c2nKd6q7C4GR6dve+9v/gjF4cCIkd4+rfbKM7/VVKTQDOh88Md+4sCx5lhdlLnr/
-	cuG+y97AVrUVljrPmfZ5zfosYly6EMz4pXIqtg4jFfPZMWvs4fYd9yrkHHP3582e
-	dMxUiA==
-Received: from mail-vk1-f200.google.com (mail-vk1-f200.google.com [209.85.221.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ey2yhrpbt-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 13:37:13 +0000 (GMT)
-Received: by mail-vk1-f200.google.com with SMTP id 71dfb90a1353d-59c5efbe57bso215669e0c.2
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 06:37:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="hvpyWzC0"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7e943356247so1963514a34.2
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 06:55:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782135433; x=1782740233; darn=vger.kernel.org;
+        d=baylibre.com; s=google; t=1782136503; x=1782741303; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=BGAZiXTQHTlA7pjXyOhWPFIXo4iYevKMCgx+Q3SEXJY=;
-        b=BrX6uklcTbRpEW6kguNo+0m93aOPyK1MiTPAH8uaudpr4V24O6g3ZLV5M7YsB0JDEa
-         uFys2OhLsO8SdyQfEPS4PSe48mpsNaMRtAMiPciaBLEr2Kdop66PbYuxDaQ8HivX0rQL
-         PfatB5mBaI3yod4upKVVvpLS5J73ujHpsW7C2Wh9rWlsswskfEniPbxrENSZ4ylmOznW
-         4xMnH6q9kQn37Bh0zsbFSO3908H6cUII9JU8s9XcU5oKIaIZl1ybaGfCUE7vdDLaMbfQ
-         IyiLBHN8sOwcpSAUegsCrpagnY756XtTVhysy1S+zCduGb2BdIdKeQg2led4ZIBcI5zO
-         cEbA==
+        bh=t6eEeMJPQKAtcX5MedkvnuksL17XF4JZiVXUHwmPZMc=;
+        b=hvpyWzC0DRo/o95xtWQBJMmsAt2M3ls8Rf198nqZqThac9euigfbSD16wE44vNgyCM
+         ZypKUZtUDYCmejZ8WKLu3rcUr35ifN1jfy9oZeovEH3g35KSn0646RxvDT5kq/ufVzsG
+         yrQ6UgLJKbUToM36aWvHeAJiJIzlVn7w5USvsFdWD5w3SwrZri+0U95hJK8FPRrNxzPo
+         Pii5X3b0RsIKktqvInaUx09LvXsuUswIx6uwN4n3Fp8bha9YhbjFrfJ9XKgMfWfdZ5nZ
+         1OGnc1njslYOchJ3OIWlSGCXseT7cYDh+fV17/D2mvExo+znRfPoJum6IixCnYEuPHkj
+         d7jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782135433; x=1782740233;
+        d=1e100.net; s=20251104; t=1782136503; x=1782741303;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BGAZiXTQHTlA7pjXyOhWPFIXo4iYevKMCgx+Q3SEXJY=;
-        b=AdQj5ZEPXc3b6c0gwURbPIAi9RIMiHMMXF0uc4aUzhkHnQtP7+ZetZoR1C2Y6/4Q/T
-         B/wVaTHvQojDM6kOOJHsNHYRisDVGvh+qaDE7n8dbCFXnn0RyOykta42hJaZbZu1eKTQ
-         HMPDDKDhBNjPXxs/l6gMzxpBL387SfzqN27hVpYvYFOG3Cc1L7XWzdI5PzlZ2Xi6DlLu
-         vxbpfanzZZQ6uyU9BuPZsnqLZA/F+AVS54QJDIE/LApYsbWG5HHfOaTFDuvGx44JwmzU
-         jCDK0LeFrQGbFpMcAGg6t6y9ZQcbeGFHgGxEyEPvSDSg+hdWrpcxlzusovARC+eoeyle
-         Tlmg==
-X-Forwarded-Encrypted: i=1; AFNElJ+fEIFUq5bpU6+tBNqZw/eVebODDLTCs7+zXElgU81pOdkJygLvKMOs6p/Li5iWIzVOWAazvajrATqOQdReYqA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaOffQuB/8uQd3KUsKiRUfp4sNB8PT+2t7uF7FmIXuww0+zg/e
-	ld4KzmFmL7POH9y2SCMFZrNEcWe5Zp7xJp8pX1UaIArqOFyC+FDfEmnVBvqSEnfVPTkb0L56VQ6
-	degVGByHSdVaz+rsLppkhHRG1g0VpFNJoHsCsuHTIBx9w3WEjwH0dS4yPuLBr1VSJUNGeYIk=
-X-Gm-Gg: AfdE7cmV0jDkiBU0shZyy8GGOf1w5BYpDb0kMEYEz4i5BcvTKceIW1kkOG9tukQxDae
-	KOj+4Yk1cSyo+Wk9/IkxWdXx/W5zgq9CdHgNY8CIKq3KqgERxUnl9odavwDY5iRHVepIMLhzolh
-	lzowj9ajvswJMekPWFgiY+D5tOJUJoC7KHlrN6GegAtZAF0CblbnheXBAAMjkZRrBTGUzbbxqAO
-	98R5n1I7dzw4WWyv1Q78oG7JPoHqzYV77DjFMJqg6jbkxH9brxubpJIudTJPEITa5HZVqqfnqIG
-	68RJAxArnmXIvfFWwiKuw3FzVAP0evalNWGwWsLp9ZklAyQHOErdebPylnJXwtn6aiioQIsF0M6
-	ZW4ivFTLRWmihwBBE1RXIVGqwXkapDKlEOY4=
-X-Received: by 2002:a05:6102:3e2a:b0:633:3bf6:977c with SMTP id ada2fe7eead31-72b1402325fmr2041704137.1.1782135432904;
-        Mon, 22 Jun 2026 06:37:12 -0700 (PDT)
-X-Received: by 2002:a05:6102:3e2a:b0:633:3bf6:977c with SMTP id ada2fe7eead31-72b1402325fmr2041691137.1.1782135432502;
-        Mon, 22 Jun 2026 06:37:12 -0700 (PDT)
-Received: from [192.168.120.170] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c0c610e12f6sm376327566b.47.2026.06.22.06.37.10
+        bh=t6eEeMJPQKAtcX5MedkvnuksL17XF4JZiVXUHwmPZMc=;
+        b=d85M/W1CjBaRFF+s2ly7MHkyAvJhCSu7T1XyYmydBJNLbRIGS9Dh27x7+zYfH61KHp
+         uqRvvH3aOlLxhZARztcgYFt9DkRvX/1gCoPRXI/QrMx69DRu8HFwZcWq20JkpH7gOHEI
+         Ku7tjyoYTFN9r/0WRZ6jX0Fz//tQmQhsW5FjDv4iWOEbDr/rDt+BUCnBpXDOqP+SZU6h
+         k9qTQsMknaxfHU9hrVZuU1rU+y7aGdDBGZYjoznREJwE0LjfkzWGRdcCOkt1EkTC/JTX
+         LfwzwmLPJPj3tas0XJmZnIc0JgoJR4sa3zMu4mpAWoKpxQal5C95UCtlLYRJqU162oHJ
+         b7sQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+jvmTZP/kAew72pzkNoakmz1PQThqYBoIbCGWpRtX7xSGdopnvQTF2a4lOj9o0Tb+cz2/3/8xZXdxTlj2Y99g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPjr/2jHKkVfCBVx2Wr3HcU5xRI1c9C5+rAo5wrvYyi+kufpuT
+	rPap7uVOyhz5kfu6/nN+2n3rh8Ey5Zq7F3WXkE8fY/t3KYTnmH/42j9VK4PWdZfescQ=
+X-Gm-Gg: AfdE7cmaW8IAsZxOMI6T2j/9OhGmYF0/Np5B2DYSUtrstVaBxf25Uo1C4jIZx6QdiW4
+	MiDoRwDnGZ1BiQ6t2pQ//qnak1C58nU1ofrHmXXLpv/rBWJZGs/W7Pfyz++8+NEGPZRsi9ZKtvK
+	SmPg92z5SELYHDKM5l75rr8VYuwkjhxBuGmWRFaIZ9icYKnIaWxAGoAk52izg22tCx+A2r4hoqU
+	pGp9cVQG2O5/AU08q7bBVWLfKpuAUFZjqMuRtmMmI72oyhAgZAwfO1VghVKdr/qT/2Ol/OpE2ln
+	/HuhQM3m9fN33uv0iaEJd/vxWbQdjlCQ+nogWBd4ijDrtTXKKCUrZGKIdQpvKb2QBDySyfGKgz8
+	8WME5kD8Pz/YRqh9rGb0ZNfC4tjaOIcfVS8xmWODuYOnSm+N8d5/pYvUHSReDCXISck6apL6W77
+	sCih59xQ2CpjmvPaaZ6m6ZGtuFasIXDaryt9DwCKj/WC/pvxVFQmtZrBvoeVUEcF8=
+X-Received: by 2002:a05:6808:1183:b0:48b:4218:9326 with SMTP id 5614622812f47-48b42189df5mr7464007b6e.34.1782136502396;
+        Mon, 22 Jun 2026 06:55:02 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:500:b69c:5a77:b8fb:a5cf? ([2600:8803:e7e4:500:b69c:5a77:b8fb:a5cf])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e944296d7asm6353944a34.19.2026.06.22.06.55.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2026 06:37:11 -0700 (PDT)
-Message-ID: <d786b2bb-42da-458e-a952-5d80b97d8a58@oss.qualcomm.com>
-Date: Mon, 22 Jun 2026 15:37:09 +0200
+        Mon, 22 Jun 2026 06:55:01 -0700 (PDT)
+Message-ID: <c7478348-452b-4659-a2f2-a8a2700c29dd@baylibre.com>
+Date: Mon, 22 Jun 2026 08:55:01 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -88,103 +68,208 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] drivers/rpmsg: Fix copy of channel->name into open
- request
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <20260608095523.2606-33-david.laight.linux@gmail.com>
- <79c1dda2-153e-4b7a-ad18-c72db1cf4a00@oss.qualcomm.com>
- <20260618155939.6cdbdbac@pumpkin>
+Subject: Re: [PATCH v3 09/12] iio: dac: ad5686: implement new sync() op for
+ the spi bus
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>,
+ rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
+ linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20260616-ad5686-new-features-v3-0-f829fb7e9262@analog.com>
+ <20260616-ad5686-new-features-v3-9-f829fb7e9262@analog.com>
+ <50a7e765-ba20-45c0-8a13-5e672413b600@baylibre.com>
+ <3i3fdq6qjd2h4o4wwicl4zlpzyggzb7gljm2acwz33k75ds57k@7mdevoavx3ao>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260618155939.6cdbdbac@pumpkin>
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <3i3fdq6qjd2h4o4wwicl4zlpzyggzb7gljm2acwz33k75ds57k@7mdevoavx3ao>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIyMDEzNCBTYWx0ZWRfX2mBoOpJzQtEi
- Dou+J/RnDfkzyTlEe/Yh9dj5mxQiMcYh3xdaBNst9BKMjIXd0uUkbA937D1F4BYQC5VZsYtNXhJ
- DIuomm3FN8JhgNB5OBc/myZfVPIcNkA=
-X-Proofpoint-ORIG-GUID: kgzhB7CSbb3M-2NUjrJJNNefm0i9qQBs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIyMDEzNCBTYWx0ZWRfXxdzJYzpR6YpG
- t8gzYO9CHN5SjN4f0zIP11E3eNnjytDv3lmXaDZHv249DcaPKWnTOwZ5uR5W5chuLtEVjXKqi0k
- Z4B5ZI54Dm07QU9hRmwznY3OKkwyhIYqnrh5LhUT1xjTnbx3O0gMx4FlpoSsa/4+0bYJOtMxYRv
- qg/4O6ZFe+QRqrqKiLr0A0L49+eDChv/0CccbQ8A72TIXwkIVm8pl0REmXgV797ehPw6DvkagvU
- APBnlAkpjaeZWTw5CNDSUyMoPt5ssL3wjw/kQbcSe3/HXvdT0tJmsy7+YDf6id2c2YHyjpi3vN/
- y9LA7MyNE+0tkv+JihNkdaAelVErwLByQ7l7Jk34C/VQj8DnSkT4hdo1HGrlvCEh7pQkCkASods
- WYRvBlg4UfM4sjuzPYArKxF2uv/tGwvlih7aYYiIR5CMBVXKUNULnTtMOd7sGRs0Fp9x1EWzQsY
- eNFFkyjbEh/oUMrESfw==
-X-Proofpoint-GUID: kgzhB7CSbb3M-2NUjrJJNNefm0i9qQBs
-X-Authority-Analysis: v=2.4 cv=cKbQdFeN c=1 sm=1 tr=0 ts=6a393a89 cx=c_pps
- a=wuOIiItHwq1biOnFUQQHKA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
- a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=UhM6YWHzZrMyvu7RIJkA:9 a=QEXdDO2ut3YA:10
- a=XD7yVLdPMpWraOa8Un9W:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-22_02,2026-06-22_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 impostorscore=0 suspectscore=0
- clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2606220134
 
-On 6/18/26 4:59 PM, David Laight wrote:
-> On Thu, 18 Jun 2026 15:24:17 +0200
-> Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
-> 
->> On 6/8/26 11:55 AM, david.laight.linux@gmail.com wrote:
->>> From: David Laight <david.laight.linux@gmail.com>
+On 6/22/26 3:50 AM, Rodrigo Alencar wrote:
+> On 20/06/26 11:33, David Lechner wrote:
+>> On 6/16/26 3:21 AM, Rodrigo Alencar via B4 Relay wrote:
+>>> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 >>>
->>> Nothing obvious ensures that the name is less than GLINK_CMD_OPEN (32)  
->> 						     ^ GLINK_NAME_SIZE
+>>> Use of local SPI bus data to manage a collection of SPI transfers and
+>>> flush them to the SPI platform driver with the sync() operation. This
+>>> allows for faster handling of multiple channel DAC writes, avoiding kernel
+>>> overhead per spi_sync() call, which will be helpful when enabling
+>>> triggered buffer support.
 > 
-> I was writing a lot of commit messages, most with -m 'text'.
+> ...
 > 
->> [...]
->>
->>> @@ -481,8 +481,7 @@ static int qcom_glink_send_open_req(struct qcom_glink *glink,
->>>  				    struct glink_channel *channel)
+>>> +/**
+>>> + * struct ad5686_spi_data - SPI bus specific data
+>>> + * @msg: SPI message used for transfers
+>>> + * @size: number of transfers currently in the message
+>>> + * @capacity: maximum number of transfers that can be added to the message
+>>> + * @xfers: array of SPI transfers, allocated with the provided capacity
+>>> + */
+>>> +struct ad5686_spi_data {
+>>> +	struct spi_message msg;
+>>> +	unsigned int size;
+>>> +	unsigned int capacity;
+>>> +	struct spi_transfer xfers[] __counted_by(capacity);
+>>> +};
+>>> +
+>>>  static int ad5686_spi_write(struct ad5686_state *st,
+>>>  			    u8 cmd, u8 addr, u16 val)
 >>>  {
->>>  	DEFINE_RAW_FLEX(struct glink_msg, req, data, GLINK_NAME_SIZE);
->>> -	int name_len = strlen(channel->name) + 1;
->>> -	int req_len = ALIGN(sizeof(*req) + name_len, 8);
->>> +	int name_len, req_len;
->>>  	int ret;
->>>  	unsigned long flags;
+>>> -	struct spi_device *spi = to_spi_device(st->dev);
+>>> -	u8 tx_len, *buf;
+>>> +	struct ad5686_spi_data *bus_data = st->bus_data;
+>>> +	struct spi_transfer *xfer;
 >>>  
->>> @@ -498,14 +497,20 @@ static int qcom_glink_send_open_req(struct qcom_glink *glink,
->>>  
->>>  	channel->lcid = ret;
->>>  
->>> +	name_len = strscpy_pad(req->data, channel->name, GLINK_NAME_SIZE);
->>> +	if (name_len < 0)
->>> +		name_len = GLINK_NAME_SIZE;
+>>> +	if (bus_data->size >= bus_data->capacity)
+>>> +		return -E2BIG;
+>>> +
+>>> +	if (bus_data->size)
+>>> +		bus_data->xfers[bus_data->size - 1].cs_change = 1;
 >>> +	else
->>> +		name_len++;  
+>>> +		spi_message_init(&bus_data->msg);
 >>
->> Should we perhaps do something along the lines of:
->>
->> WARN_ON(strlen(name) > GLINK_NAME_SIZE)
->>
->> to prevent silent clipping?
+>> Seems odd that spi_message_init() is called conditionally. What
+>> prevents spi_message_add_tail() from growing the message unbounded
+>> on repeated calls?
 > 
-> strscpy() tells you whether the copy got truncated.
-> No point calling strlen() again.
+> The "size >= capacity" check right above this.
 
-Right.
+OK, but it could still grow to capacity, adding one xfer each
+time this function is called with bus_data->size > 0, right?
 
-> But I'm not really sure it is worth it.
-> Any length check of user-supplied names should be much earlier,
-> this is just ensuring this code doesn't overwrite its own stack.
-> (and ensuring stale stack doesn't get sent as padding).
+> 
+>>
+>>> +
+>>> +	xfer = &bus_data->xfers[bus_data->size];
+>>>  	switch (st->chip_info->regmap_type) {
+>>>  	case AD5310_REGMAP:
+>>> -		st->data[0].d16 = cpu_to_be16(AD5310_CMD(cmd) |
+>>> -					      val);
+>>> -		buf = &st->data[0].d8[0];
+>>> -		tx_len = 2;
+>>> +		st->data[bus_data->size].d16 =
+>>> +			cpu_to_be16(AD5310_CMD(cmd) | val);
+>>> +		*xfer = (struct spi_transfer) {
+>>> +			.tx_buf = &st->data[bus_data->size].d16,
+>>> +			.len = sizeof(st->data[bus_data->size].d16),
+>>> +		};
+>>>  		break;
+>>>  	case AD5683_REGMAP:
+>>> -		st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
+>>> -					      AD5683_DATA(val));
+>>> -		buf = &st->data[0].d8[1];
+>>> -		tx_len = 3;
+>>> +		st->data[bus_data->size].d32 =
+>>> +			cpu_to_be32(AD5686_CMD(cmd) | AD5683_DATA(val));
+>>> +		*xfer = (struct spi_transfer) {
+>>> +			.tx_buf = &st->data[bus_data->size].d8[1],
+>>> +			.len = sizeof(st->data[bus_data->size].d32) - 1,
+>>> +		};
+>>>  		break;
+>>>  	case AD5686_REGMAP:
+>>> -		st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
+>>> -					      AD5686_ADDR(addr) |
+>>> -					      val);
+>>> -		buf = &st->data[0].d8[1];
+>>> -		tx_len = 3;
+>>> +		st->data[bus_data->size].d32 =
+>>> +			cpu_to_be32(AD5686_CMD(cmd) | AD5686_ADDR(addr) | val);
+>>> +		*xfer = (struct spi_transfer) {
+>>> +			.tx_buf = &st->data[bus_data->size].d8[1],
+>>> +			.len = sizeof(st->data[bus_data->size].d32) - 1,
+>>> +		};
+>>>  		break;
+>>>  	default:
+>>>  		return -EINVAL;
+>>>  	}
+>>>  
+>>> -	return spi_write(spi, buf, tx_len);
+>>
+>> If this function no longer writes, should we change the name of
+>> the function to something like ad5686_spi_write_prepare_msg()?
+>>
+>>> +	spi_message_add_tail(xfer, &bus_data->msg);
+>>> +	bus_data->size++;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int ad5686_spi_sync(struct ad5686_state *st)
+>>> +{
+>>> +	struct spi_device *spi = to_spi_device(st->dev);
+>>> +	struct ad5686_spi_data *bus_data = st->bus_data;
+>>> +
+>>> +	bus_data->size = 0; /* always reset, even on sync failure */
+>>> +	return spi_sync(spi, &bus_data->msg);
+>>>  }
+>>>  
+>>>  static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+>>>  {
+>>> -	struct spi_transfer t[] = {
+>>> -		{
+>>> -			.tx_buf = &st->data[0].d8[1],
+>>> -			.len = 3,
+>>> -			.cs_change = 1,
+>>> -		}, {
+>>> -			.tx_buf = &st->data[1].d8[1],
+>>> -			.rx_buf = &st->data[2].d8[1],
+>>> -			.len = 3,
+>>> -		},
+>>> -	};
+>>>  	struct spi_device *spi = to_spi_device(st->dev);
+>>> +	struct ad5686_spi_data *bus_data = st->bus_data;
+>>> +	struct spi_transfer *xfer = &bus_data->xfers[0];
+>>>  	u8 cmd = 0;
+>>>  	int ret;
+>>>  
+>>> @@ -85,8 +117,21 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+>>>  				      AD5686_ADDR(addr));
+>>>  	st->data[1].d32 = cpu_to_be32(AD5686_CMD(AD5686_CMD_NOOP));
+>>>  
+>>> -	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
+>>> -	if (ret < 0)
+>>> +	xfer[0] = (struct spi_transfer) {
+>>> +		.tx_buf = &st->data[0].d8[1],
+>>> +		.len = sizeof(st->data[0].d32) - 1,
+>>
+>> Would make more sense to say `sizeof(st->data[0].d8) - 1` since
+>> the buffer is  &st->data[0].d8[1].
+> 
+> the buffer is d8[1], d8[2] and d8[3], skipping d8[0], for a len = 3.
 
-Fair. I'll check that out separately.
+Yes, I see that. This is why I suggested that it should be based on
+sizeof(...d8) - 1 rather than sizeof(...d32) - 1. It makes more sense
+to use the same field for both the size and the buffer pointer.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+>>> +		.cs_change = 1,
+>>> +	};
+>>> +	xfer[1] = (struct spi_transfer) {
+>>> +		.tx_buf = &st->data[1].d8[1],
+>>> +		.rx_buf = &st->data[2].d8[1],
+>>> +		.len = sizeof(st->data[1].d32) - 1,
+>>
+>> And here.
+>>
+>>> +	};
+>>> +
+>>> +	spi_message_init_with_transfers(&bus_data->msg, xfer, 2);
+>>> +
+>>> +	ret = spi_sync(spi, &bus_data->msg);
+>>> +	if (ret)
+>>>  		return ret;
+>>>  
+>>>  	return be32_to_cpu(st->data[2].d32);
+>>> @@ -95,12 +140,26 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+>>>  static const struct ad5686_bus_ops ad5686_spi_ops = {
+>>>  	.write = ad5686_spi_write,
+>>>  	.read = ad5686_spi_read,
+>>> +	.sync = ad5686_spi_sync,
+>>>  };
+>>>  
+> 
 
-Konrad
