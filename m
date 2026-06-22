@@ -1,134 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2204940D596;
-	Mon, 22 Jun 2026 08:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A947036B043
+	for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 09:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782118650; cv=none; b=EJYS4SPC62ddK/cOutiy01K24KPT6uBbWCFlrsGBBDNiBgDFTz0au+D8kq1O2dHKOn9jCAcGjmGHzoO8QRU80XC2hMG5/Z1WtVd6d9HGI5Z1lNFmZCC60Z3OBGMOXKj8HhvmCxMvpz8tSdZzqqwFKk5XahCrVM/6w3kZ0humrEU=
+	t=1782121839; cv=none; b=M8uQcUXuHt21Xdq3MGDkT6zcybLIgaHH1BGDfhzyBbjwdSlQnlAoW2EAI5UiWn+Ila2c7CXRTT5FK4C7ku5zfr5zdgVY3vbAwprXvQxL6aYp2NlEVbvOsXyGHVg9aPUC6uc7vREG1BpRLTgfxlnMtEz3ZegU0gATXJxVg0HloZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782118650; c=relaxed/simple;
-	bh=+3p4Rv3wZ6gDtsmjkRmmRXH93vJESrZv4HBL4LL670U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hb0PJAa16CxcSUvpDaydTWXYkQczRehV7ecYyRn1nm8U49pU/f+y2B9cQbHAZUsG6jHR5FyfDt9Od01nPsISvLuk1B5xdKVri0s0AViROYOe5U13iSFODzNZPvZQNN40dcb4lHTSUeoN1lmnxYznNDNSAO/301IPfYuVLYwe5co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdR1yVmA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782121839; c=relaxed/simple;
+	bh=LcXFBjy0Musq3rs9odypp8XIbScOuRnpbQGZpnLXeYw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aCW1OQGiPbRWO6E64a2XKcPiIOBPcSyVzaEeM3SKALiFcrCIW8rgd+Zp/hEB3mIC9eeMSubUOm1TQlYdf4dNzqAla/BrQZTEXJKQ0y1COMT+URgTeKCcGbtqXUe9oVxbMexU3oCgU09cV9qiBCQ3kDbyvnDYfn/npNSVUURIiYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fqRwRKql; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TdR1yVmA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD201F000E9;
-	Mon, 22 Jun 2026 08:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782118648;
-	bh=wv/i0r1bxlNBcrsh4HnjmajShtpfnDagJ19dN4X4hIY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=TdR1yVmAnuLvWKNb1r6naEiUmdm1tE6T1TkkwqQ/uHPzmY7ET5woNWqZdr94VQbzR
-	 mQIZhOzLoPhWZ5xjmpzXithUmUS8PmC1A6Ps1+Ygc9LGAequmzBLZkLtVnZdgD3z7W
-	 U+6vvkHFhKL+YuiV9ZSJ9aM6rKugf8Wqyi3kso+Vh+OVZgMPruz+dLdPdmugF7xlcV
-	 6HCN67DiZ21LkATZqdjZSsJGQu50cEuts5U85RMOpBiDdJehLSB5eqQMgJkPqEbNEP
-	 HQSNd03+6LTcv4HkMQq4T5B7/b01UpB6AWUYzp7FeazQkKakxUpSH5QOrdRSBL/yyB
-	 OGK4Fb2lMQIsA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, Arnd
- Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org, Breno Leitao
- <leitao@debian.org>
-Subject: Re: [PATCH next] fs: Replace strcpy(s, "../") with memcpy(s, "../", 4)
-In-Reply-To: <20260619143438.495c1780@pumpkin>
-References: <CnPdNyUGjsYpAP8JdysfUf4wkBkm2a923cQ1hE4-mg0sUnJIm4Uj-cAkdVHswEsuZ3d6vhmX5eil2zLmrkfl3A==@protonmail.internalid>
- <20260606202633.5018-5-david.laight.linux@gmail.com>
- <874iiyg5kj.fsf@t14s.mail-host-address-is-not-set>
- <20260619143438.495c1780@pumpkin>
-Date: Mon, 22 Jun 2026 10:57:21 +0200
-Message-ID: <87se6fdkb2.fsf@t14s.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqRwRKql"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-37c6cd1ac98so3635626a91.0
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jun 2026 02:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782121837; x=1782726637; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=htWvtKaxua89M7k0hTBaygLPKjJzXT76M5Ou0Pu7mmM=;
+        b=fqRwRKqlggMNIlAU9JzxhpkDirMtuWxLMKbSwfcFUIb80suyJ/nyFJ3i5f+S9V+9Ok
+         79q5LfFap707ctQ0+4o8XTzuUTaQHTCcel/0UwnfMtjBsrHXak/8g648Vi5DVT3az4L3
+         VjaCpJY2eCLcF3wn3RL6bmpXTi6J+zdzBnXadtTFMwIzJbyNQyx6IWsY9UnbgI3/p15A
+         URKQa23MGy/QuqNN7nxVEuqjMMcjnQzjzez4lAxWfYgMrjefCnFgBds1iP1mllPYLOBB
+         AUWhrq7PKYqqkFDSMUliytInLkDyhaBipaOEtOO6tomsmOQRiTctLRbdXJBBEhK6LcmC
+         KFIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782121837; x=1782726637;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=htWvtKaxua89M7k0hTBaygLPKjJzXT76M5Ou0Pu7mmM=;
+        b=o1BQoM67fqiJSUtiddiqTi5pGb8K2XgbhKILdWYiujG6srTUxdqnu07ndT1tT906zg
+         IOlAo6YAAknwC9Z8x+sh9ZdHPcrof0TK6Aoh+sbSxJ1ASEfEGTlW3mdEklNn6EowUnuN
+         t8k4xYpC+Caj6yg7cQPpze9C+MOurhs2sc538SRWJJ8oxsznsFGSBq6ijpufrWs0TIwO
+         xAMEQ9pxs4Peq8L10v38ZFQ3jdqn3t2LGCB6VNFdguuqPxW/HMtVY7TNhRHLFw9ja+ym
+         NS/51Vm8GFFtgkCLhu0EBAdEDy7KfX4DQyzZJOX21bOFoymaltwT2pVFyAHKatD0zCcf
+         jGVQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rr/wbRnUuGlQvgROQXIa00BA2QmosIJ9j7bOhgquK4R0ud6phZesGswfaZ1ybB6FGDIj+tYRZRyQvlyBwEhTxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydqnzcWvEcuRlCM1+NCECHJ9z+PjtchtCpDQnSASsbR3Hn6rV+
+	FIEN0Y/n4Uf0vuMnmZKoYRIsrNhCc6O6B/EWk/JZsWgGzEOom7nXu/dQ
+X-Gm-Gg: AfdE7clCcsTkg+M6BpOLD4EYM6eFq5XbWVIm+htrlAffAeqE6gGVYwY3nwJMjt//aEr
+	S8nFML8vIuEopR9k/08yeNBFbgmKaO7M773TG3SYEkx3HgeyVSDlllW77/y9ywBfJia7rZNU9G5
+	S/9B902V+GJnzfvx9S2RgJFXtSs7ZBX0mdNOymqq4yUEpqPu4kCB69eB1wekZEcFELOTdzVhQjx
+	l5VdLzngrra2VHE2e7sM7F+inE4dxeK+Lxqu81RPJcMNKnvP1OBx9QFtKSeiaNHs3wsYQ41n6Ju
+	EgBHqhy/SU/GbUNGgEbCNnkarvrAxX8leiG+cPPKPz1aUlAFNVoW/s24hjFrzGqLEWTxtHKJaUO
+	7VF+41SoAW4v52p0gJfYQWPcOmu3sbWirrDkywK8tcTegBnnVWUOxoDhADlwLoaYbZp9RRlQU2T
+	VOi9RKPuk2KAHaV722IV6ecAxrlRg=
+X-Received: by 2002:a17:90b:1806:b0:36b:8873:d96d with SMTP id 98e67ed59e1d1-37d1e86f26bmr12687817a91.11.1782121836852;
+        Mon, 22 Jun 2026 02:50:36 -0700 (PDT)
+Received: from mo-Inspiron-5559.. ([2001:fb1:d9:863a:ce08:349e:af46:efee])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37d4eede23esm6512438a91.2.2026.06.22.02.50.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2026 02:50:36 -0700 (PDT)
+From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	skhan@linuxfoundation.org,
+	me@brighamcampbell.com,
+	jkoolstra@xs4all.nl,
+	woradorn.laon@gmail.com
+Subject: [PATCH v2] tracing: Use seq_buf for string concatenation
+Date: Mon, 22 Jun 2026 16:46:23 +0700
+Message-ID: <20260622094623.18469-1-woradorn.laon@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-David Laight <david.laight.linux@gmail.com> writes:
+In preparation for removing the strlcat API[1],
+replace the string concatenation logic with a struct seq_buf,
+which tracks the current position and the remaining space internally.
 
-> On Fri, 19 Jun 2026 12:58:20 +0200
-> Andreas Hindborg <a.hindborg@kernel.org> wrote:
->
->> <david.laight.linux@gmail.com> writes:
->> 
->> > From: David Laight <david.laight.linux@gmail.com>
->> >
->> > The code has already checked there is enough room.
->> > Use memcpy() to avoid compiler warnings from possibly unbounded strcpy().
->> >
->> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
->> > ---
->> > This is one of a group of patches that remove potentially unbounded
->> > strcpy() calls.
->> >
->> > They are mostly replaced by strscpy() or, when strlen() has just been
->> > called, with memcpy() (usually including the '\0').
->> >
->> > Calls with copy string literals into arrays are left unchanged.
->> > They are safe and easily detected as such.
->> >
->> > The changes were made by getting the compiler to detect the calls and
->> > then fixing the code by hand.
->> >
->> > Note that all the changes are only compile tested.
->> >
->> > Some Makefiles were changed to allow files to contain strcpy().
->> > As well as 'difficult to fix' files, this included 'show' functions
->> > as they really need to use sysfs_emit() or seq_printf().
->> >
->> > All the patches are being sent individually to avoid very long cc lists.
->> > Apologies for the terse commit messages and likely unexpected tags.
->> > (There are about 100 patches in total.)
->> >
->> >  fs/configfs/symlink.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/fs/configfs/symlink.c b/fs/configfs/symlink.c
->> > index f3f79c67add5..9f36699e5922 100644
->> > --- a/fs/configfs/symlink.c
->> > +++ b/fs/configfs/symlink.c
->> > @@ -67,7 +67,7 @@ static int configfs_get_target_path(struct config_item *item,
->> >  	pr_debug("%s: depth = %d, size = %d\n", __func__, depth, size);
->> >
->> >  	for (s = path; depth--; s += 3)
->> > -		strcpy(s,"../");
->> > +		memcpy(s, "../", 4);  
->> 
->> I don't think this transform makes sense when copying string literals.
->> The post transform code has one more foot gun than the original code.
->
-> They are actually identical, the compiler converts the former to the latter.
+Use seq_buf_str() to NUL-terminate before passing to early_enable_events().
 
-The original one is resilient to changes in the string literal. The
-transformed one has a risk of reading beyond the string if the string is
-shortened without the length being updated. Or it can create a string
-that is not null terminated if the string literal is made longer without
-the constant changing.
+Link: https://github.com/KSPP/linux/issues/370 [1]
 
-> I was trying to remove all the strcpy() where the target isn't an array.
-> The initial check also only allowed string literals - but I relaxed that
-> a bit to reduce the number of false positives.
-> Were a similar check for calls to strcpy() be committed this code would
-> need changing, but you want something that ends up being a (misaligned)
-> 32bit write of a constant on most architectures.  
->
-> I just looked at the code again, the final '- 1' on the 'size = ...'
-> line looks very odd.
+Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+---
+v1 -> v2: Fixed WARN_ON when booting with empty trace_event.
 
-It's to leave space for a null char at the end. `fill_item_path` writes
-the path from the last segment to the first.
+v1: https://lore.kernel.org/all/20260620175441.223342-1-woradorn.laon@gmail.com
 
-> I wonder if it would be simpler to merge all three functions into
-> something with a single loop that builds the name/name part backwards
-> from the end of the buffer while adding "../" on the front and then
-> calling memmove() to put the two together.
+ kernel/trace/trace_events.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-The current implementation is difficult to read for sure. It would be
-nice if we can make it more simple to parse.
-
-Best regards,
-Andreas Hindborg
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..1be62a46e49a 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -22,6 +22,7 @@
+ #include <linux/sort.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/seq_buf.h>
+ 
+ #include <trace/events/sched.h>
+ #include <trace/syscall.h>
+@@ -4500,14 +4501,20 @@ static void __add_event_to_tracers(struct trace_event_call *call)
+ extern struct trace_event_call *__start_ftrace_events[];
+ extern struct trace_event_call *__stop_ftrace_events[];
+ 
+-static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
++static struct seq_buf bootup_event_buf __initdata = {
++	.buffer = (char[COMMAND_LINE_SIZE]) {},
++	.size = COMMAND_LINE_SIZE,
++};
+ 
+ static __init int setup_trace_event(char *str)
+ {
+-	if (bootup_event_buf[0] != '\0')
+-		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
++	if (seq_buf_used(&bootup_event_buf) > 0)
++		seq_buf_puts(&bootup_event_buf, ",");
++
++	seq_buf_puts(&bootup_event_buf, str);
+ 
+-	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
++	if (seq_buf_has_overflowed(&bootup_event_buf))
++		return -ENOMEM;
+ 
+ 	trace_set_ring_buffer_expanded(NULL);
+ 	disable_tracing_selftest("running event tracing");
+@@ -4766,7 +4773,7 @@ static __init int event_trace_enable(void)
+ 	 */
+ 	__trace_early_add_events(tr);
+ 
+-	early_enable_events(tr, bootup_event_buf, false);
++	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_buf), false);
+ 
+ 	trace_printk_start_comm();
+ 
+@@ -4794,7 +4801,7 @@ static __init int event_trace_enable_again(void)
+ 	if (!tr)
+ 		return -ENODEV;
+ 
+-	early_enable_events(tr, bootup_event_buf, true);
++	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_buf), true);
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
 
