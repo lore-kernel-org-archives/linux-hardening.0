@@ -1,334 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011009.outbound.protection.outlook.com [52.101.57.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E873D4123;
-	Tue, 23 Jun 2026 10:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782212160; cv=none; b=TNCnAl8ONwUc1KJxNrMDB9ynUcggKceNsqlqTe/ENyYzXf2LlZw43PZr6tQEEb0Ap/AOXvBn+b4Crqygoc3nMB2U6k1vZto3dWxlULZBzn2wFc0lnLS8qUrqw2nT1//TPo8ogqtvPdAbQfkvsk0W8Mes9U9sFA8YZOYFCN5dYwM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782212160; c=relaxed/simple;
-	bh=FMYiWlntRf+4p3ElnlLto5sa6XCSyH75HjPpKORhfP4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KEyWfql7/803kLVzjHUdL4DBUcm0Lo51xh5wSHYbiHx20j0DKgfcALlNS0PTkEBo4QyhB4EEDH9XaGpQ5kkiG/oyOmkpjKzgW+fIChFZ7s447YXQSiGWD1OL9KSm30ZjcaZ7Ig7fBo8wTSlN3sOiqYie9V8h21N0OsR2MIartyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H44SHkqN; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0FC3D412C;
+	Tue, 23 Jun 2026 11:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782215088; cv=fail; b=L+u7/jJo0s28EQn/lHPoDB70PxmhW3rWz+px1b8/rCzaCW3jzjSkT0pPIumiG8HoUR8Vn91BhaFoFI7345hXu469mRQiDiYv+MBvAsj6wt7CfAK/WDO4WYzrV3DMrikhvhCHcnkkJpPP/xrRFlbgZ97ackjXsWbexpDxNzeoQDY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782215088; c=relaxed/simple;
+	bh=h6kPcXhGdw5VE0Z8dlkx4l6TUWQa1XGZXf5euEkm2EE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KYSKnABlxRMn64cBveR9q8GG81tKSbYgoRIHiRZQ3Pe8XQtDvqhC+Qkd7FbyDQ0WarrJe2nd3v8xLKnT3qWAVfZMSwleiyYttvbon4HEaNUdmtPzCa4UOKit+Zsu2bY10jxtghZ7JH4fJasoPmIIJplutLaskgsIRS4mtSmAfRo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gA9cmxxY; arc=fail smtp.client-ip=52.101.57.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H44SHkqN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 79925C4AF13;
-	Tue, 23 Jun 2026 10:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1782212160;
-	bh=FMYiWlntRf+4p3ElnlLto5sa6XCSyH75HjPpKORhfP4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=H44SHkqN4EP85rPtz4JIIU0IQAO8XFhmeKY3V6SE7RhKoILFEeTYL4r/PCSxrOXY6
-	 6kqwo7XXW8dNFR5MLNxAZegjtZDX92Pc+ap7pof45le0YhdUDt+RJNLmbZUwvwJSYF
-	 B69VPACgRkx/ko0h24ApKDOZaoki98m/Aj/4Iqo1URPlVqz6d20KB3G/ICsp0Yp+3z
-	 DJnRg+QIFXSc4ZHb8ptnBvMGxC0xk5TpkIpr03/YczJRul0XfOJeY8bFgIW8hHyS0l
-	 4Gpy+/mMlj17lcI4hz3kjkE0me7+ze54ZsPEtP2p56OPvSHvYBtobvACQO/aTbEXWM
-	 VC+azvAytc99Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E06DCDE000;
-	Tue, 23 Jun 2026 10:56:00 +0000 (UTC)
-From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Tue, 23 Jun 2026 11:55:52 +0100
-Subject: [PATCH v4 12/12] iio: dac: ad5686: add gain control support
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gA9cmxxY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V85AgKTVGCvjbMc5Z64JaFHXuD4YlYDl/eT9bMxiA7Mdzw+MrkUiACmtIJRqqLvf2ogMTgJsQXFIfDaUvbMeacaYyU9OZ6HqJAf4uxSGSPfN4OKD9gwVEnYY7U0yY2qrMtrDOhoN7eV6I/Py+xk0A2B0jxDNHO3vwiEjpVBd5zWI7I79zKWn+x56jQ+4Osd5I4Ml5YamqT/2EDWENeY6N9O8uCG1HP5ck+KkEh+m6M49IF8+WTl4ofUps6sVcDl+Fa3h6d4iXJ3Uo8Iz8JTdeEwRa21uEqDbVVmsK4rjFVMA0//Rt1vomi5NopF9NtNa5DeQuUATwNh9HIMAyOOwpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tSqHpaC3N5h1QLHJR/8jhQv2KN6Dj380ECJeIv6IFJw=;
+ b=an5hDhKL9EwqMSt8/Kew/suKVICl5SGlFZGLVzmFy5Vx3kYZ7WzAnotFL3tN5D5wsS6KV3y/Iv696nlAaK8HBpHkbNIxHpBhFDbyw26D9pAJcLwTg4qTh8AsI4KuRxyo4+BLzbFnxLoZzREemvEYzVarWQG+6/GTMMqDu0JjF5zP8AWM+Uqvx69pH31vbf2mXLNMt/eD7aObS4XITX87uyaBwuAI23oI4GpyQCllP8ciU/VUF7CtZPxX7q32nvDsMEUkF32Royiox6JuJEv4tx8nNwyK1Db0XyUdSdDLqOCEMdvE/EiBmyhSFP2detwUoGxRPU9zjGrWHTljGlRYIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tSqHpaC3N5h1QLHJR/8jhQv2KN6Dj380ECJeIv6IFJw=;
+ b=gA9cmxxYpikJEH6f28MMwzxFsfBDPzFv8SnZNWY/EJDEfKTc3uGyA+jSxtIj9smLKa9PNqzuBHGO/oOrEQaJyTs9qzW/mVmy/MwNe8YW8nUG05OKINxBw+JXv/P91Aho69A3eMskhVoMywtX4FVl117ET2VM6Smz18qXpNYxK30=
+Received: from MW4PR02CA0002.namprd02.prod.outlook.com (2603:10b6:303:16d::10)
+ by BL3PR12MB6451.namprd12.prod.outlook.com (2603:10b6:208:3ba::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.20; Tue, 23 Jun
+ 2026 11:44:39 +0000
+Received: from CO1PEPF000066EC.namprd05.prod.outlook.com
+ (2603:10b6:303:16d:cafe::62) by MW4PR02CA0002.outlook.office365.com
+ (2603:10b6:303:16d::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.16 via Frontend Transport; Tue,
+ 23 Jun 2026 11:44:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CO1PEPF000066EC.mail.protection.outlook.com (10.167.249.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.159.10 via Frontend Transport; Tue, 23 Jun 2026 11:44:38 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 23 Jun
+ 2026 06:44:37 -0500
+Received: from xhdshubhraj40.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Tue, 23 Jun 2026 06:44:31 -0500
+From: Shubham Patil <shubhamsanjay.patil@amd.com>
+To: <git@amd.com>, <michal.simek@amd.com>, <alexandre.belloni@bootlin.com>,
+	<Frank.Li@nxp.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <pgaj@cadence.com>,
+	<wsa+renesas@sang-engineering.com>, <tommaso.merciai.xr@bp.renesas.com>,
+	<arnd@arndb.de>, <quic_msavaliy@quicinc.com>, <Shyam-sundar.S-k@amd.com>,
+	<sakari.ailus@linux.intel.com>, <billy_tsai@aspeedtech.com>,
+	<kees@kernel.org>, <gustavoars@kernel.org>, <jarkko.nikula@linux.intel.com>,
+	<jorge.marques@analog.com>, <linux-i3c@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+CC: <radhey.shyam.pandey@amd.com>, <srinivas.goud@amd.com>,
+	<shubhrajyoti.datta@amd.com>, <shubhamsanjay.patil@amd.com>
+Subject: [PATCH v9 0/2] Add AMD I3C master controller driver and bindings
+Date: Tue, 23 Jun 2026 17:14:14 +0530
+Message-ID: <20260623114417.2578189-1-shubhamsanjay.patil@amd.com>
+X-Mailer: git-send-email 2.49.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260623-ad5686-new-features-v4-12-28962a57db0f@analog.com>
-References: <20260623-ad5686-new-features-v4-0-28962a57db0f@analog.com>
-In-Reply-To: <20260623-ad5686-new-features-v4-0-28962a57db0f@analog.com>
-To: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rodrigo Alencar <rodrigo.alencar@analog.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1782212158; l=8874;
- i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=+nJNDNZ0in3T3bA/lO3EbfAdJrgJ6562WucwwDCya5Y=;
- b=P4l8QakBgWyWTQXohNs08A8+Uv7XEoR5Ldp3xxuurnJOkIid0GyqjTxKCPKg9S1YAcn/HI61U
- Wmpt5dM9OqGDw/jWGxeCJtMHnIuHvltdsaMUTUAjWpgpk6ts32A9B6Z
-X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
- pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
-X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
- with auth_id=561
-X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Reply-To: rodrigo.alencar@analog.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066EC:EE_|BL3PR12MB6451:EE_
+X-MS-Office365-Filtering-Correlation-Id: aa113acc-12a6-4e94-141a-08ded11ccec2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|36860700016|376014|7416014|82310400026|1800799024|6133799003|56012099006|921020|18002099003|11063799006|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	CMd7FJNxlbkMpn8moiQ9taLKi/oPsz5PB6kpBMdYLt8HneHzmGipa8AQGAP9/4GXGgciYO8GrY8h+ddNi7wjFt9Sps+O58EtVoAXob8jOGZkQ80kE0kYaL4ZY21KQffskF2ClR296D8xUUVGoOCvJOTJ4QZ4GqUq8KGx0zFtBWpu5pdSqYqjvvC3hfqhQySc75BdHqqa4Q4nhXD2ox+o/VsQvDcC3cXVQswgvoVIiySC2ntkkh1rNIJLWH+BwTs/e/A8EUpLryi1MH2UIWKstNxgokZJ3Ra4SUzm+uJGWgCpfYf7pHepiLueAr8NM64ABpF9Q7fZPuAfnBakzIr6XKxlNQAotWQtgJY6ojyXYQxZJF4iSvaRl1vsjrCr7PhFdVlgkMP5r7HzifUTRBMnAtBELiwEcOyD9O558dCF7Wmu5ghdYm6BgAwuPLUbsw5QXabN/NxGL0sjCzjny6yjB/i9pCrVFbmxeDK5ZpAfjPXUTjYLtdmTNxZHVlv04kD6UmdzZDfNiK/68ih1QtuOV1fQmOt5ApoXBuTycimuL0AqYvuXXbZhP1wxuQcCWtUHON+eidpCS5YchNIqhzeu3HIsiL0Q0BXYPQDZ9Pit3pOWMWPXPZngr4ESuRTe0l3W6ohzXQG0t+eNt5MWbarKEXtsGCxFLWL3BY+w07zofCKOZflgqzrUzX2paIcCmTYTXoygwJoNOQ+uP+GEF89aj6o59dhMP1xRYjBzbxrGgs9WwRDselXMJgryrxXR1bhT
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(376014)(7416014)(82310400026)(1800799024)(6133799003)(56012099006)(921020)(18002099003)(11063799006)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	wQOinEGNlWHzuyMFDQ7ilFo4ise7umvpoXRyFv7+wFviD3bKHXXBbWvrq/zDyjhD6Bl2GBuJ5XMPTLWdaMRxAsJl7Js8HTh7CrHMO/PfHwjJKKzc2+jU0EPiqCk/BnraHIGnCtKbeOk1VSnNaJl2m9AQMQlfq8PDL3BhnLMT8lerSPMEQPw0fEHB9NyUAEOOLi+JuVbtC/NTGhoB49Wff9Br89GK9aW3SeKikDR2slXqBB8MslpUFu+t8Wdf2hhOi7/7cuU7mYB3dKHMTYhPgDC76Mo6czPAgTLc8M6EhlUpGtaosOTDnPvckAOlqd/hIt0FFdkXZpP71qAgn4ap3k4M3kGRx0LHQUodtOb1teDpu3qEMEjFnHnX/zdT3j9OAjIcG/bcfw5S5WtNlYLiF/BebUzgNUjk51X1LWscePU0REslnImTT4JpqkHBgLAC
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2026 11:44:38.9966
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa113acc-12a6-4e94-141a-08ded11ccec2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066EC.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6451
 
-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+This patch series introduces support for the AMD I3C master controller,
+including the device tree binding and driver implementation.
 
-Most of the supported devices rely on a GAIN pin to control a 2x
-multiplier applied to the output voltage. Other devices, e.g. the
-single-channel ones, provides a gain control through a bit field in
-the control register. Some designs might have the GAIN pin hardwired
-to VDD/VLOGIC or GND, which would have no "gain-gpios" device property,
-being able to set "adi,range-double" if it is hardwired to VDD. The
-vref_mv field is moved down in the struct ad5686_state, so that the
-overall size increase is reduced.
+Compared to v8, the big-endian MMIO accessor and i3c FIFO-endianness
+patches have been dropped; the driver now handles big-endian FIFO
+accesses internally.
 
-Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Note: There was an extended gap since v8 due to the transfer of ownership
+of this series from Manikanta to Shubham. This transition contributed
+to the delay in releasing the v9 update addressing the v8 review comments.
+We appreciate your patience.
 ---
- drivers/iio/dac/ad5686.c | 122 +++++++++++++++++++++++++++++++++++++++++++++--
- drivers/iio/dac/ad5686.h |  12 ++++-
- 2 files changed, 127 insertions(+), 7 deletions(-)
+Changes for V9:
+Dropped the three big-endian MMIO/FIFO infrastructure patches; the
+driver now handles big-endian FIFO accesses internally.
+Replaced the async transfer-queue with a synchronous transfer path.
+Reworked error/response handling using enum i3c_error_code and proper
+-ENODEV/-EIO returns; propagate err to CCCs and priv xfers.
+Switched to the new .i3c_xfers op (reject non-SDR, report actual_len).
+Reworked DAA (incremental address assignment, -ENOSPC bound, -ENODEV
+end-of-enumeration, checked device registration).
+Avoid busy-spin with usleep_range(); use FIELD_PREP() and inline
+helpers; split the timeout macros with documented units.
+Dropped ENTHDR (SDR-only); updated MAINTAINERS, Kconfig symbol
+(AMD_AXI_I3C_MASTER), authors and binding maintainers.
 
-diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
-index 4dc681eb077d..bad214b89257 100644
---- a/drivers/iio/dac/ad5686.c
-+++ b/drivers/iio/dac/ad5686.c
-@@ -15,10 +15,13 @@
- #include <linux/export.h>
- #include <linux/gpio/consumer.h>
- #include <linux/kstrtox.h>
-+#include <linux/math64.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/sysfs.h>
-+#include <linux/units.h>
- #include <linux/wordpart.h>
- 
- #include <linux/iio/buffer.h>
-@@ -41,7 +44,8 @@ static int ad5310_control_sync(struct ad5686_state *st)
- 
- 	return ad5686_write(st, AD5686_CMD_CONTROL_REG, 0,
- 			    FIELD_PREP(AD5310_PD_MSK, pd_val & AD5686_PD_MSK) |
--			    FIELD_PREP(AD5310_REF_BIT_MSK, st->use_internal_vref ? 0 : 1));
-+			    FIELD_PREP(AD5310_REF_BIT_MSK, st->use_internal_vref ? 0 : 1) |
-+			    FIELD_PREP(AD5310_GAIN_BIT_MSK, st->double_scale ? 1 : 0));
- }
- 
- static int ad5683_control_sync(struct ad5686_state *st)
-@@ -50,7 +54,8 @@ static int ad5683_control_sync(struct ad5686_state *st)
- 
- 	return ad5686_write(st, AD5686_CMD_CONTROL_REG, 0,
- 			    FIELD_PREP(AD5683_PD_MSK, pd_val & AD5686_PD_MSK) |
--			    FIELD_PREP(AD5683_REF_BIT_MSK, st->use_internal_vref ? 0 : 1));
-+			    FIELD_PREP(AD5683_REF_BIT_MSK, st->use_internal_vref ? 0 : 1) |
-+			    FIELD_PREP(AD5683_GAIN_BIT_MSK, st->double_scale ? 1 : 0));
- }
- 
- static inline unsigned int ad5686_pd_mask_shift(const struct iio_chan_spec *chan)
-@@ -193,9 +198,14 @@ static int ad5686_read_raw(struct iio_dev *indio_dev,
- 			GENMASK(chan->scan_type.realbits - 1, 0);
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
--		*val = st->vref_mv;
--		*val2 = chan->scan_type.realbits;
--		return IIO_VAL_FRACTIONAL_LOG2;
-+		if (st->double_scale) {
-+			*val = st->scale_avail[2];
-+			*val2 = st->scale_avail[3];
-+		} else {
-+			*val = st->scale_avail[0];
-+			*val2 = st->scale_avail[1];
-+		}
-+		return IIO_VAL_INT_PLUS_NANO;
- 	}
- 	return -EINVAL;
- }
-@@ -207,6 +217,8 @@ static int ad5686_write_raw(struct iio_dev *indio_dev,
- 			    long mask)
- {
- 	struct ad5686_state *st = iio_priv(indio_dev);
-+	bool double_scale;
-+	int ret;
- 
- 	guard(mutex)(&st->lock);
- 
-@@ -217,6 +229,84 @@ static int ad5686_write_raw(struct iio_dev *indio_dev,
- 
- 		return ad5686_write(st, AD5686_CMD_WRITE_INPUT_N_UPDATE_N,
- 				    chan->address, val << chan->scan_type.shift);
-+	case IIO_CHAN_INFO_SCALE:
-+		if (val == st->scale_avail[0] && val2 == st->scale_avail[1])
-+			double_scale = false;
-+		else if (val == st->scale_avail[2] && val2 == st->scale_avail[3])
-+			double_scale = true;
-+		else
-+			return -EINVAL;
-+
-+		if (st->double_scale == double_scale)
-+			return 0; /* no change */
-+
-+		st->double_scale = double_scale;
-+		switch (st->chip_info->regmap_type) {
-+		case AD5310_REGMAP:
-+			ret = ad5310_control_sync(st);
-+			break;
-+		case AD5683_REGMAP:
-+			ret = ad5683_control_sync(st);
-+			break;
-+		case AD5686_REGMAP:
-+			if (!st->gain_gpio) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+
-+			ret = gpiod_set_value_cansleep(st->gain_gpio,
-+						       st->double_scale ? 1 : 0);
-+			break;
-+		default:
-+			ret = -EINVAL;
-+		}
-+		if (ret)
-+			st->double_scale = !double_scale; /* revert on failure */
-+		return ret;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad5686_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				    struct iio_chan_spec const *chan,
-+				    long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		return IIO_VAL_INT_PLUS_NANO;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad5686_read_avail(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     const int **vals, int *type, int *length,
-+			     long mask)
-+{
-+	struct ad5686_state *st = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		*type = IIO_VAL_INT_PLUS_NANO;
-+
-+		if (st->chip_info->regmap_type == AD5686_REGMAP && !st->gain_gpio) {
-+			/*
-+			 * GAIN pin is board-strapped, so only the current
-+			 * scale is available.
-+			 */
-+			*vals = st->double_scale ? &st->scale_avail[2] :
-+						   &st->scale_avail[0];
-+			*length = 2;
-+			return IIO_AVAIL_LIST;
-+		}
-+
-+		*vals = st->scale_avail;
-+		*length = ARRAY_SIZE(st->scale_avail);
-+		return IIO_AVAIL_LIST;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -225,6 +315,8 @@ static int ad5686_write_raw(struct iio_dev *indio_dev,
- static const struct iio_info ad5686_info = {
- 	.read_raw = ad5686_read_raw,
- 	.write_raw = ad5686_write_raw,
-+	.write_raw_get_fmt = ad5686_write_raw_get_fmt,
-+	.read_avail = ad5686_read_avail,
- };
- 
- static const struct iio_chan_spec_ext_info ad5686_ext_info[] = {
-@@ -246,6 +338,7 @@ static const struct iio_chan_spec_ext_info ad5686_ext_info[] = {
- 		.channel = chan,				\
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),\
-+		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_SCALE),\
- 		.address = addr,				\
- 		.scan_index = chan,				\
- 		.scan_type = {					\
-@@ -472,6 +565,15 @@ const struct ad5686_chip_info ad5679r_chip_info = {
- };
- EXPORT_SYMBOL_NS_GPL(ad5679r_chip_info, "IIO_AD5686");
- 
-+static void ad5686_init_scale_avail(struct ad5686_state *st)
-+{
-+	int realbits = st->chip_info->channels[0].scan_type.realbits;
-+	s64 tmp = 2ULL * st->vref_mv * NANO >> realbits;
-+
-+	st->scale_avail[2] = div_s64_rem(tmp, NANO, &st->scale_avail[3]);
-+	st->scale_avail[0] = div_s64_rem(tmp >> 1, NANO, &st->scale_avail[1]);
-+}
-+
- static irqreturn_t ad5686_trigger_handler(int irq, void *p)
- {
- 	struct iio_poll_func *pf = p;
-@@ -585,6 +687,16 @@ int ad5686_probe(struct device *dev,
- 		return dev_err_probe(dev, PTR_ERR(st->ldac_gpio),
- 				     "Failed to get LDAC GPIO\n");
- 
-+	st->double_scale = device_property_read_bool(dev, "adi,range-double");
-+	st->gain_gpio = devm_gpiod_get_optional(dev, "gain",
-+						st->double_scale ? GPIOD_OUT_HIGH :
-+								   GPIOD_OUT_LOW);
-+	if (IS_ERR(st->gain_gpio))
-+		return dev_err_probe(dev, PTR_ERR(st->gain_gpio),
-+				     "Failed to get GAIN GPIO\n");
-+
-+	ad5686_init_scale_avail(st);
-+
- 	/* Initialize masks to all ones */
- 	st->pwr_down_mask = ~0;
- 	st->pwr_down_mode = ~0;
-diff --git a/drivers/iio/dac/ad5686.h b/drivers/iio/dac/ad5686.h
-index cb884334e94a..92012e1be48f 100644
---- a/drivers/iio/dac/ad5686.h
-+++ b/drivers/iio/dac/ad5686.h
-@@ -39,9 +39,11 @@
- #define AD5686_CMD_CONTROL_REG			0x4
- #define AD5686_CMD_READBACK_ENABLE_V2		0x5
- 
-+#define AD5310_GAIN_BIT_MSK			BIT(7)
- #define AD5310_REF_BIT_MSK			BIT(8)
- #define AD5310_PD_MSK				GENMASK(10, 9)
- 
-+#define AD5683_GAIN_BIT_MSK			BIT(11)
- #define AD5683_REF_BIT_MSK			BIT(12)
- #define AD5683_PD_MSK				GENMASK(14, 13)
- 
-@@ -125,9 +127,12 @@ extern const struct ad5686_chip_info ad5679r_chip_info;
-  * @chip_info:		chip model specific constants, available modes etc
-  * @ops:		bus specific operations
-  * @ldac_gpio:		LDAC pin GPIO descriptor
-- * @vref_mv:		actual reference voltage used
-+ * @gain_gpio:		GAIN pin GPIO descriptor
-  * @pwr_down_mask:	power down mask
-  * @pwr_down_mode:	current power down mode
-+ * @scale_avail:	pre-calculated available scale values
-+ * @vref_mv:		actual reference voltage used
-+ * @double_scale:	flag to indicate the gain multiplier is applied
-  * @use_internal_vref:	set to true if the internal reference voltage is used
-  * @lock:		lock to protect access to state fields, which includes
-  *			the data buffer during regmap ops
-@@ -139,9 +144,12 @@ struct ad5686_state {
- 	const struct ad5686_chip_info	*chip_info;
- 	const struct ad5686_bus_ops	*ops;
- 	struct gpio_desc		*ldac_gpio;
--	unsigned short			vref_mv;
-+	struct gpio_desc		*gain_gpio;
- 	unsigned int			pwr_down_mask;
- 	unsigned int			pwr_down_mode;
-+	int				scale_avail[4];
-+	unsigned short			vref_mv;
-+	bool				double_scale;
- 	bool				use_internal_vref;
- 	struct mutex			lock;
- 	void				*bus_data;
+Changes for V8:
+Included dependent patch "i3c: fix big-endian FIFO transfers"
+to this series as [3/5].
+Resolved conflicts with "i3c: fix big-endian FIFO transfers".
+Updated description.
+Used time_left instead of timeout.
+Used __free(kfree) for xfer to simplify err path in multiple places.
+
+Changes for V7:
+Added i3c controller version details to commit description.
+Added Reviewed-by tag to binding patch [1/4].
+Added big-endian MMIO accessors [2/4].
+Added endianness support for i3c_readl_fifo() and i3c_writel_fifo() [3/4].
+Updated timeout macro name.
+Updated xi3c_master_wr_to_tx_fifo() and xi3c_master_rd_from_rx_fifo()
+to use i3c_writel_fifo() and i3c_readl_fifo().
+
+Changes for V6:
+Corrected the $id in the YAML file to match the filename and fix
+the dtschema warning.
+Removed typecast for xi3c_getrevisionnumber(), xi3c_wrfifolevel(),
+and xi3c_rdfifolevel().
+Replaced dynamic allocation with a static variable for pid_bcr_dcr.
+Fixed sparse warning in do_daa by typecasting the address parity value
+to u8.
+Fixed sparse warning in xi3c_master_bus_init by typecasting the pid value
+to u64 in info.pid calculation.
+
+Changes for V5:
+Renamed the xlnx,axi-i3c.yaml file into xlnx,axi-i3c-1.0.yaml.
+Used GENMASK_ULL for PID mask as it's 64bit mask.
+
+Changes for V4:
+Added h/w documentation details.
+Updated timeout macros.
+Removed type casting for xi3c_is_resp_available() macro.
+Used ioread32() and iowrite32() instead of readl() and writel()
+to keep consistency.
+Read XI3C_RESET_OFFSET reg before udelay().
+Removed xi3c_master_free_xfer() and directly used kfree().
+Skipped checking return value of i3c_master_add_i3c_dev_locked().
+Used devm_mutex_init() instead of mutex_init().
+
+Changes for V3:
+Updated commit description.
+Corrected the order of properties and removed resets property.
+Added compatible to required list.
+Added interrupts to example.
+Resolved merge conflicts.
+
+Changes for V2:
+Updated commit subject and description.
+Moved allOf to after required.
+Removed xlnx,num-targets property.
+Added mixed mode support with clock configuration.
+Converted smaller functions into inline functions.
+Used FIELD_GET() in xi3c_get_response().
+Updated xi3c_master_rd_from_rx_fifo() to use cmd->rx_buf.
+Used parity8() for address parity calculation.
+Added guards for locks.
+Dropped num_targets and updated xi3c_master_do_daa().
+Used __free(kfree) in xi3c_master_send_bdcast_ccc_cmd().
+Dropped PM runtime support.
+Updated xi3c_master_read() and xi3c_master_write() with
+xi3c_is_resp_available() check.
+Created separate functions: xi3c_master_init() and xi3c_master_reinit().
+Used xi3c_master_init() in bus initialization and xi3c_master_reinit()
+in error paths.
+Added DAA structure to xi3c_master structure.
+---
+Manikanta Guntupalli (2):
+  dt-bindings: i3c: Add AMD I3C master controller support
+  i3c: master: Add driver for AMD AXI I3C master controller
+
+ .../bindings/i3c/xlnx,axi-i3c-1.0.yaml        |   56 +
+ MAINTAINERS                                   |    8 +
+ drivers/i3c/master/Kconfig                    |   15 +
+ drivers/i3c/master/Makefile                   |    1 +
+ drivers/i3c/master/amd-i3c-master.c           | 1060 +++++++++++++++++
+ 5 files changed, 1140 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml
+ create mode 100644 drivers/i3c/master/amd-i3c-master.c
 
 -- 
-2.43.0
-
+2.34.1
 
