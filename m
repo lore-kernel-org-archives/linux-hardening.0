@@ -1,80 +1,122 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670003905E3;
-	Tue, 23 Jun 2026 17:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0D3390CBE;
+	Tue, 23 Jun 2026 17:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782237014; cv=none; b=PQM9XWNSgHRrEWm+O8CHJXrcH+Wx+QrcFq2Nev/nvufkB0zupU3/g3OPait86YgNFLIIkOFuSfUB+mqvGgXfvEZ+3yJhDYSvp7GW8tCaxyxrAl4jQsXpTn/eI+nyJ/gt53W4wKW+3fHQX1tiV6OzLNHE9vLMCWUQzGxtnMz4fR4=
+	t=1782237508; cv=none; b=iEGM6nMiEDQXTlxMJ7XGeOFTekugRn2fwd5qBPD/yCHWZOS/MqpkXpStwR7nuarXtWLCWIESex/hGZun6AkO1nlkeEuvJi/n1zF5gtmKWFZExKPeU/mA+Oe8pOukaj0VjP7SVXSc9y6dNR8GGj8bL5DEyGHGqMRZdqJGSMIMdik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782237014; c=relaxed/simple;
-	bh=+JdrjsYKUQPP+AJ1Ipz4wdn3hc3rh4DAOl755B86FG0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WPBAYxwa7E0Q1AvLmsT2ESteit/swzLq7+qKO+wIbJuQX7B6CvqVDyZyK9124bve8rY++GbwFrkur9dUrLmyVZX3wgD4mkgnM/nKv7o5CiOE1rydvOm1rELlP0lxMaOHzwCwsKjFzObWIP0BcbDY5jnMsh8N1PEABAWzooX9Tww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=none smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=FLrvvp6S; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1782237508; c=relaxed/simple;
+	bh=M+2ATMwb/KYaWbUmzlvg34hK7H4+tboghH1uw+zvY0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j8dHoN4YCC4Src/W+kgmCNS1Q4kN1C5qj/sLjkKHZCTWdaoXj9vlO60A0GXW9qtf7Ae5FtUjeZM9M1USyOJaesARQHMAtw4RpyzY1qguu9r5XrAUt7Fye7Jsn/Jm0wkGcN7rEBOyLMVuOEPwM+wrr75Q0KMQvBGkYtQSNaaC0RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEZsFdE+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="FLrvvp6S"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=+JdrjsYKUQPP+AJ1Ipz4wdn3hc3rh4DAOl755B86FG0=;
-	t=1782237012; x=1783446612; b=FLrvvp6SGxzv9oZgUN5pNguzw7NlXUIMbA807ijlz9aOwkT
-	JRjRfCmV6tg+1oT2KQYKe6CxUxhkqK9rSJYVMi4eRunD0pfyDQdAe9ppJlpQEefuSVv7icAWDexK0
-	fUK3EKLh5++kqZ+AWNJ2n5YMIz3fAqJduUMS2KgP2rk86lKOOrtfDfOBTU3RNdyyXqVyZgc5V7Xws
-	3djroDjk02KsmAllBffkV67FNmdUsRJpOxg5ceAEY9Az6E/w4DuWi/wHoOl9aKlXCvn8wxI7B4BN7
-	MNVOXDgygP/i5elV0GkHbve/5CXqkgLKstIzrfmVc1ttojzUhaz+Db2GWHqH2aiA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__ECDSA_SECP256R1_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1wc5G6-0000000Eiey-2W2y;
-	Tue, 23 Jun 2026 19:50:02 +0200
-Message-ID: <3511ab1ebd943677ba6a62c4e807db7dd762717b.camel@sipsolutions.net>
-Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
-From: Johannes Berg <johannes@sipsolutions.net>
-To: David Laight <david.laight.linux@gmail.com>, Andy Shevchenko
-	 <andriy.shevchenko@linux.intel.com>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>
-Date: Tue, 23 Jun 2026 19:50:01 +0200
-In-Reply-To: <20260623163203.195416b4@pumpkin> (sfid-20260623_173213_713027_EF574A6E)
-References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
-		<20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
-		<202606182046.AE5F6A241@keescook>	<ajTlfuOFHXlA7xdu@ashevche-desk.local>
-		<202606192025.CF68F2E@keescook>	<ajY5hg0f34C-iV3R@ashevche-desk.local>
-		<54974e4298efd26a52c9c0e9ada88d57e8695a09.camel@sipsolutions.net>
-		<ajqTpJAMFFV3H5Im@ashevche-desk.local> <20260623163203.195416b4@pumpkin>
-	 (sfid-20260623_173213_713027_EF574A6E)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEZsFdE+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FAFB1F000E9;
+	Tue, 23 Jun 2026 17:58:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782237507;
+	bh=Hp82ew7GvEjYDGjORH9xNYPaL1WUVWPKbi6D8CbyFhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZEZsFdE+APvBrpKcIEkZPRGRWol9CARYT3JQa5q/PhatOpZcZPa1yNtj3yiD/jxhk
+	 9zRpfLfhicclp95uYaRhNLKiD+FtggXECyxcr3oPpTXZ0ZPjPUENvoMCGM8vsb4961
+	 azHFdOEeGsDoKO7vcH3lAS7ueQGpBjdbuPktcFr0DfU837XJVn72eTGCos4qvjV1hc
+	 YJZfJNPGoodDDrW/xuH8uRZx0e1OFCNv0bm30BZj+Lb1SuTIEbQrW+YwyOdKhZgJoM
+	 c+p5IOIO04xsCGcjByc4B28B3zQ5Lf7dWMUwtgCzJVpU5hnAgwpuD2KO35lpfFfUKj
+	 Uxp5H2SRKTFkw==
+Date: Tue, 23 Jun 2026 17:58:25 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Demi Marie Obenour <demiobenour@gmail.com>
+Cc: linux-crypto@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, iwd@lists.linux.dev,
+	linux-hardening@vger.kernel.org, Milan Broz <gmazyland@gmail.com>,
+	Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH] crypto: af_alg - Add af_alg_restrict sysctl, defaulting
+ to 1
+Message-ID: <20260623175825.GB1850517@google.com>
+References: <20260622234803.6982-1-ebiggers@kernel.org>
+ <34e20a64-17d3-4994-89f1-6084cd4fae36@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <34e20a64-17d3-4994-89f1-6084cd4fae36@gmail.com>
 
-On Tue, 2026-06-23 at 16:32 +0100, David Laight wrote:
->=20
-> Both those seem to contain multiple expansions of is_constexpr().
-> I'd be surprised if __builtin_constant_p() wasn't good enough.
->=20
-> I also wonder what kind of mess the object code looks like.
+On Tue, Jun 23, 2026 at 01:24:01PM -0400, Demi Marie Obenour wrote:
+> I think there is room for something in-between the allowlist provided
+> here and "no restrictions".  For instance, I think it makes sense
+> to have a mode that allows modern¸ widely-used algorithms (AES-GCM,
+> ChaCha20-Poly1305, SHA-3, HMAC, etc) to all users.
+> 
+> This makes it less likely someone turns off all restrictions.
 
-You should definitely wonder less out loud and only comment when you
-have actual hard facts...
+Would it be worth the complexity when AF_ALG as a whole is deprecated?
 
-> I'd also worry whether the saturating maths in any way performs the corre=
-ct check.
-> I suspect the (non-saturated) value gets used for a kmalloc(),
-> but that has much smaller valid (and sane) limits than can come out of th=
-e above.
+> XFRM allows providing an arbitrary algorithm name, and it appears to
+> be accessible in unprivileged user namespaces.  That also needs an
+> allowlist.
 
-That's, frankly, ridiculous.
+Doesn't XFRM have a fixed list already?  The algorithm comes in as a
+string, but it has to be in the list.
 
-johannes
+> > +	{ "hmac(sha512)", true }, /* iwd, sha512hmac */
+> 
+> Should this entry have privileged = false?  sha512hmac doesn't
+> need privileges.
+
+It's for the FIPS 140-3 integrity check use case, which runs as root.
+
+> > diff --git a/crypto/algif_rng.c b/crypto/algif_rng.c
+> > index 4dfe7899f8fa..bd522915d56d 100644
+> > --- a/crypto/algif_rng.c
+> > +++ b/crypto/algif_rng.c
+> > @@ -48,10 +48,14 @@
+> >  
+> >  MODULE_LICENSE("GPL");
+> >  MODULE_AUTHOR("Stephan Mueller <smueller@chronox.de>");
+> >  MODULE_DESCRIPTION("User-space interface for random number generators");
+> >  
+> > +static const struct af_alg_allowlist_entry rng_allowlist[] = {
+> > +	{},
+> > +};
+> 
+> Can this whole file be deleted?  You wrote that it isn't actually used.
+
+That's not quite what I said.  There's still one known use case: CAVP
+testing for FIPS 140-3 certifications.  But that only accesses the drbg
+and jitterentropy RNGs and can run as root.
+
+We could consider deleting it anyway and require that the FIPS people
+use custom kernel modules.  But that is out of the scope of this patch.
+
+> > +static const struct af_alg_allowlist_entry skcipher_allowlist[] = {
+> > +	{ "adiantum(xchacha12,aes)", false }, /* cryptsetup */
+> > +	{ "adiantum(xchacha20,aes)", false }, /* cryptsetup */
+> > +	{ "cbc(aes)", true }, /* iwd */
+> > +	{ "cbc(des)", true }, /* iwd */
+> > +	{ "cbc(des3_ede)", true }, /* iwd */
+> > +	{ "ctr(aes)", true }, /* iwd */
+> > +	{ "ecb(aes)", true }, /* iwd, bluez */
+> > +	{ "ecb(des)", true }, /* iwd */
+> > +	{ "hctr2(aes)", false }, /* cryptsetup */
+> > +	{ "xts(aes)", false }, /* cryptsetup benchmark */
+> > +	{},
+> > +};
+> 
+> Do the cryptsetup ones really need to be accessible to unprivileged users?
+
+If we don't allow them, people running 'cryptsetup benchmark' will
+notice the change.  Formatting could also be affected.
+
+Requiring sudo in these cases might be feasible, but we need to strike
+the right balance.  Maybe Milan has an opinion.
+
+- Eric
