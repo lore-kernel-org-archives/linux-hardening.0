@@ -1,138 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A4E380FFE;
-	Tue, 23 Jun 2026 14:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F7B3D5679
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jun 2026 14:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782223788; cv=none; b=WfhzVxT5HLMOEIIJDbcpRaXbixuMcaH212vpTNkj/M8TP05W1M58eEppPKGk6n/v76af79b/WDm6dZAb8vh9tgkLbW82ooWcWormBgP+bb/FnKPswdtJ01e3g13/t6XbaRODai07ZpBlKIvxhoYyAxxzuML/Vs65p3WWcVBXmc0=
+	t=1782226486; cv=none; b=NSBYwIGNToyR6GJUamToIJvvZaV3gq3COwunSSuyb9e2N85FFpNhcKuZtpxGsV/ufMlbTn4GdfOBCWKL83AtuGZaCJH3AlGjDIRVeDuSMeE9Ej5ZIfDrmnjlUNYru8uoN1s7ZJqbeQvJgwAsKhU9P5frL4gDFB1Qgh4Dd2UGWak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782223788; c=relaxed/simple;
-	bh=kOprRzbM7KFPtmvL8N6apCL4mJ4W8aayvM4vio8qpao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gVlcQSJdge66bXs7sCzp1ijjgQKNNx2zk5PDJFSbbH+ox3wAO+QYwzvqRtuSDov+nY3/TT3rpPFPJ40CENBmJc3RreOfVahlaZZn5wZDOyw7I0bis0xjqiZbZjgD0t5oybFMZuOlbK6z7/alc2t+46CXNXf0AKIaci1B/89wszY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J4+J6cKe; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1782226486; c=relaxed/simple;
+	bh=L90/AkyCB9U0geyi1lWA/eHf7voiXgf417DXWgwVaXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lt0qKVW+AMB4C92xKWbMxChh7lRYlIV3RD+dKkpyBDfPy7JwtBHLcJnqqo8RCMfhz1OTsV4hMYGls/CgHgt8yCglZpEtCH7F0kYoSLxVmUgTUMlNgfMHW/f8tzjRy0Fku/h+xNV77Zh+PRExA4mjvPHmvGRIQ3DiBSsk5uIH6g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SRbupCAR; arc=none smtp.client-ip=74.125.82.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J4+J6cKe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782223786; x=1813759786;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=kOprRzbM7KFPtmvL8N6apCL4mJ4W8aayvM4vio8qpao=;
-  b=J4+J6cKevjZMWmCZxP/QqQRjUpWpKXPDvuJdto6hQcOmvSuq+HlypRhy
-   MQyeWVdw0bkKatMCAY8vQe2sZYnJT4TuOol58uGZY2apFY/z/RN6rORvW
-   VUrKffDIzoJAzzyYhD07Ct74emnzPt4/YhNt9UWNWHUpUdwkGr776oq60
-   CS8hu/wJ3oh67Ef9xpM1igrrzLrydUlq5osEcXYL05oSi0FDS/OdOPakh
-   zeaspsluW6bGhpiuYfa6L81WzXv/zfBZWAaxwMVu7bVUzYW/NaIUkhWeQ
-   j9+saLJT5aRnzKCmsG1BrMlOA4a8eDk024Fqw9R1mRramrXvexJt81MOr
-   Q==;
-X-CSE-ConnectionGUID: d0Ad45jLTmSLxd7FfSlTzg==
-X-CSE-MsgGUID: mdE/CPoZSH+9CWLzrxGgdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11826"; a="82074173"
-X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="82074173"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 07:09:44 -0700
-X-CSE-ConnectionGUID: kiNjFd8VQpmeNcjlSz3bfw==
-X-CSE-MsgGUID: h/g9ioxRRBiW564TCjXsXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="245161587"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.7])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 07:09:42 -0700
-Date: Tue, 23 Jun 2026 17:09:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
-Message-ID: <ajqTpJAMFFV3H5Im@ashevche-desk.local>
-References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
- <20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
- <202606182046.AE5F6A241@keescook>
- <ajTlfuOFHXlA7xdu@ashevche-desk.local>
- <202606192025.CF68F2E@keescook>
- <ajY5hg0f34C-iV3R@ashevche-desk.local>
- <54974e4298efd26a52c9c0e9ada88d57e8695a09.camel@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRbupCAR"
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-1390f75d8bbso6240541c88.0
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Jun 2026 07:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782226484; x=1782831284; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IY3KFhICfndG+RHDKCrSaeQPMXM8dmxeDhVM/4MoFI4=;
+        b=SRbupCARI7MYaWuFBF0iNPDW3bnl1Yvh5aNmuzOLlmacehSE3eZ1uu6844w0iwmcPl
+         YifKmvZwdTMr9m/HJTG2dV+VtEZ3mVOHtJ5I0yNml/5T3W5PVnQcldvjX6LdzKEpc8sp
+         sMssFA+3h8u0Lu9VaF7o5dEtipVvSCrxocqQT7RihS28qI7cRttyzwl0/usFYhD2+VkS
+         6IpBZjxyEonjgrO8ECMEtlRx7OjmEvimsTku0/KUa6EmITpuzbDF3oUri4V9FBj1zwbo
+         H+vHOSLgj6UDWHZb9LWhiF26YqGlYILI9eO+5bADxQZbAvuyi5eO2S+yoZzAf54etk40
+         Km3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782226484; x=1782831284;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IY3KFhICfndG+RHDKCrSaeQPMXM8dmxeDhVM/4MoFI4=;
+        b=MeWEOUBXdBoUNuU9Xg2/BwIBt1W8+0AXE38xcAG1CVwehTqpg6b5eIX1zjS1EQZx3Q
+         ZO2CqtUun2bnqLaRc3MyzFWKY1yUpEsqyV+6iAlZYfvKt1hUe0J56AaJP5bc30yyuEFq
+         VCN40xJ6aWTmDBPT8e/wRn4PgI3RhPctEBjNnk30A7EzsJffp+irGUeyM4suVvUqDnqU
+         MgIwa7CeOLx3S1yR/WClHdklYq8kUOuYmltPtOu9tVZUosqCqJL/tBnmcIErAu6R2vSG
+         zdfRzw0b0qSYwqsB7VXceRlnbPzYZlQBYAXJS5oi7urvNKKus6NO5vcNrPO5G4RSVz1H
+         Tb8g==
+X-Forwarded-Encrypted: i=1; AFNElJ+JnLRaTs1dsyUDEnRGKk3frX32MgZ1EdcFwqRgqC9N2nH8Gi3NLNYw97RSKw8Zsyjcgr06yVnWcKaP8C/dmXA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwSLE1dkaKMHBjGt6kzkNnff7JKeMJIcBFcpK6WCJyWFlt1R9N
+	6co5DNdjtSG+/lSV2pOQclietjBpx5qy0j4NIQ4AI1PMqtytH5rDJMmo2WjLbY92
+X-Gm-Gg: AfdE7clbl9rl3mq5s/pENN0tCv8I/rljuAC3oyXCjyYeFODiSQ75yMEupSWSGH2jMac
+	00CHFLbqHea7UsR6MrrP56FtGfnkDZAMkOMO7LuS2NjGYvXtN6XWbsp8cGdPjDmQK9Erca41Gpj
+	kJRIyoMnueyqqpww79OOMsGTAfhylz77hoRI6388zNW806gjtSFGS8IHYX395d8JOTbD7gH10sN
+	g9OHfEBVfcvPAjsk+YApWAKwTew3bkJOd95L7M9zT+ScuUeDmaR1hbGrBx22ZiiPKFxyDH4lBQa
+	oPGPnQPUJ8R0ghd/sjzVAc+WX6Fmjp3cRo94fIsauBki5Y+f7W1ugeRA5EKbQ9VEbJcJNA5dpVD
+	S55dy//HfIKQ8QSWxiiUL+1T2kxv5gSG3SAz8VOS2U3ZdjYzis0rh2UerHYPhJWB3bDrTZ6hg9u
+	1/CXjrfuN9BMzCXnA1Wo9Zjhc16ovKt0U8dm4UdQ==
+X-Received: by 2002:a05:7022:90d:b0:12a:6fb7:87e3 with SMTP id a92af1059eb24-139c5e033b1mr2686422c88.31.1782226484332;
+        Tue, 23 Jun 2026 07:54:44 -0700 (PDT)
+Received: from mo-Inspiron-5559.. ([2001:fb1:d9:863a:37d9:e7c4:e450:11e4])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139adca1b00sm12963863c88.2.2026.06.23.07.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 07:54:43 -0700 (PDT)
+From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	skhan@linuxfoundation.org,
+	me@brighamcampbell.com,
+	jkoolstra@xs4all.nl,
+	woradorn.laon@gmail.com
+Subject: [PATCH v3] tracing: Use seq_buf for string concatenation
+Date: Tue, 23 Jun 2026 21:51:47 +0700
+Message-ID: <20260623145147.12145-1-woradorn.laon@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <54974e4298efd26a52c9c0e9ada88d57e8695a09.camel@sipsolutions.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 22, 2026 at 01:16:29PM +0200, Johannes Berg wrote:
-> On Sat, 2026-06-20 at 09:56 +0300, Andy Shevchenko wrote:
-> > Johannes, are you okay to take a new version (I assume the wish is to h=
-ave
-> > the balanced additions)? If so, I will prepare one.
->=20
-> Sure, I can take the patches, sounds good to me.
+In preparation for removing the strlcat API[1],
+replace the string concatenation logic with a struct seq_buf,
+which tracks the current position and the remaining space internally.
 
-Will send soon, for the record the *.i file is 61 character less with the p=
-atch.
+Use seq_buf_str() to NUL-terminate before passing to early_enable_events().
 
-Was
+Link: https://github.com/KSPP/linux/issues/370 [1]
 
-size =3D __builtin_choose_expr((sizeof(int) =3D=3D sizeof(*(8 ? ((void *)((=
-long)(n_channels) * 0l)) : (int *)8))), sizeof(*(request)) + __builtin_choo=
-se_expr((sizeof(int) =3D=3D sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)=
-) : (int *)8))), (n_channels) * sizeof(*(request)->channels) + ((int)sizeof=
-(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)=
-->channels)), typeof(&((request)->channels)[0])))), "must be array");})), s=
-ize_mul(n_channels, sizeof(*(request)->channels) + ((int)sizeof(struct {_St=
-atic_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels))=
-, typeof(&((request)->channels)[0])))), "must be array");})))), __size_add(=
-sizeof(*(request)), __builtin_choose_expr((sizeof(int) =3D=3D sizeof(*(8 ? =
-((void *)((long)(n_channels) * 0l)) : (int *)8))), (n_channels) * sizeof(*(=
-request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_ty=
-pes_compatible_p(typeof(((request)->channels)), typeof(&((request)->channel=
-s)[0])))), "must be array");})), size_mul(n_channels, sizeof(*(request)->ch=
-annels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatib=
-le_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "=
-must be array");}))))));
-- size =3D __size_add(size, size_mul(sizeof(*request->ssids), n_ssids));
-- size =3D __size_add(size, size_mul(sizeof(*request->match_sets), n_match_=
-sets));
-- size =3D __size_add(size, size_mul(sizeof(*request->scan_plans), n_plans)=
-);
-- size =3D __size_add(size, ie_len);
+Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+---
+v1 -> v2: 
+	- Fixed WARN_ON when booting with empty trace_event.
+v2 -> v3: 
+	- Addressed Sashiko's concern about the compound literal backing buffer.
+	- Replaced the compund literal with an explicit declared buffer and pointed
+	seq_buf.buffer to it. This guarantees the backing storage is placed in 
+	`.init.data` and reclaimed after boot.
 
-Now
+v1: https://lore.kernel.org/all/20260620175441.223342-1-woradorn.laon@gmail.com
+v2: https://lore.kernel.org/all/20260622094623.18469-1-woradorn.laon@gmail.com
+Sashiko: https://sashiko.dev/#/patchset/20260622094623.18469-1-woradorn.laon%40gmail.com
 
-size =3D __size_add(__size_add(__size_add(__builtin_choose_expr((sizeof(int=
-) =3D=3D sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)) : (int *)8))), si=
-zeof(*(request)) + __builtin_choose_expr((sizeof(int) =3D=3D sizeof(*(8 ? (=
-(void *)((long)(n_channels) * 0l)) : (int *)8))), (n_channels) * sizeof(*(r=
-equest)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_typ=
-es_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels=
-)[0])))), "must be array");})), size_mul(n_channels, sizeof(*(request)->cha=
-nnels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatibl=
-e_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "m=
-ust be array");})))), __size_add(sizeof(*(request)), __builtin_choose_expr(=
-(sizeof(int) =3D=3D sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)) : (int=
- *)8))), (n_channels) * sizeof(*(request)->channels) + ((int)sizeof(struct =
-{_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channe=
-ls)), typeof(&((request)->channels)[0])))), "must be array");})), size_mul(=
-n_channels, sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_ass=
-ert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof=
-(&((request)->channels)[0])))), "must be array");})))))), ie_len), size_mul=
-(sizeof(*request->ssids), n_ssids)), __size_add(size_mul(sizeof(*request->m=
-atch_sets), n_match_sets), size_mul(sizeof(*request->scan_plans), n_plans))=
-);
+ kernel/trace/trace_events.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..5ab630155ab6 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -22,6 +22,7 @@
+ #include <linux/sort.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/seq_buf.h>
+ 
+ #include <trace/events/sched.h>
+ #include <trace/syscall.h>
+@@ -4501,13 +4502,20 @@ extern struct trace_event_call *__start_ftrace_events[];
+ extern struct trace_event_call *__stop_ftrace_events[];
+ 
+ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
++static struct seq_buf bootup_event_seq __initdata = {
++	.buffer = bootup_event_buf,
++	.size = COMMAND_LINE_SIZE,
++};
+ 
+ static __init int setup_trace_event(char *str)
+ {
+-	if (bootup_event_buf[0] != '\0')
+-		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
++	if (seq_buf_used(&bootup_event_seq) > 0)
++		seq_buf_puts(&bootup_event_seq, ",");
++
++	seq_buf_puts(&bootup_event_seq, str);
+ 
+-	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
++	if (seq_buf_has_overflowed(&bootup_event_seq))
++		return -ENOMEM;
+ 
+ 	trace_set_ring_buffer_expanded(NULL);
+ 	disable_tracing_selftest("running event tracing");
+@@ -4766,7 +4774,7 @@ static __init int event_trace_enable(void)
+ 	 */
+ 	__trace_early_add_events(tr);
+ 
+-	early_enable_events(tr, bootup_event_buf, false);
++	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), false);
+ 
+ 	trace_printk_start_comm();
+ 
+@@ -4794,7 +4802,7 @@ static __init int event_trace_enable_again(void)
+ 	if (!tr)
+ 		return -ENODEV;
+ 
+-	early_enable_events(tr, bootup_event_buf, true);
++	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_seq), true);
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
 
