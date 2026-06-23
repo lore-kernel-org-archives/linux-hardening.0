@@ -1,82 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADFC38D402;
-	Tue, 23 Jun 2026 17:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670003905E3;
+	Tue, 23 Jun 2026 17:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782236743; cv=none; b=sPWiLE80ZJAKx3pJeFOd5UKlfZXjOxjkc3uVY0xnVqpNlUTTBH9Vsme5CGkyPzd4cIOF6sl1iPcfUmD3Sv55u04KX57PPWvniLxPbVhHS9/F9o/L2AgXgI+s8fcoQU1WHOXJ7FiPEljgzVWGSLFDlyCt8/24knvCMg91QuY1OME=
+	t=1782237014; cv=none; b=PQM9XWNSgHRrEWm+O8CHJXrcH+Wx+QrcFq2Nev/nvufkB0zupU3/g3OPait86YgNFLIIkOFuSfUB+mqvGgXfvEZ+3yJhDYSvp7GW8tCaxyxrAl4jQsXpTn/eI+nyJ/gt53W4wKW+3fHQX1tiV6OzLNHE9vLMCWUQzGxtnMz4fR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782236743; c=relaxed/simple;
-	bh=3F9JITuCL3Q6WQ6xO8GFZEPkn54o5MhYIkDteUmsJQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QXgJA250LwXiLWLDrfBk/INuj5keUNlawOkRL0rR1VNyb7IzWjjOZw+moSUoGW0RqTtNF48/Lht+ZeLHC6q9aL+4BZMaxX6IFY0fQUDNRBgYkfQD863HZ5cytzV87agGomOu0Px8+MoecGPZiaxmznyz++6gdB/NSYgpE5YZE34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZb6fF0r; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782237014; c=relaxed/simple;
+	bh=+JdrjsYKUQPP+AJ1Ipz4wdn3hc3rh4DAOl755B86FG0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WPBAYxwa7E0Q1AvLmsT2ESteit/swzLq7+qKO+wIbJuQX7B6CvqVDyZyK9124bve8rY++GbwFrkur9dUrLmyVZX3wgD4mkgnM/nKv7o5CiOE1rydvOm1rELlP0lxMaOHzwCwsKjFzObWIP0BcbDY5jnMsh8N1PEABAWzooX9Tww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=none smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=FLrvvp6S; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZb6fF0r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8631F000E9;
-	Tue, 23 Jun 2026 17:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782236742;
-	bh=Z+KZ7eLxT5XKrkOXLovvKv/03+JktkzJGUFB56VR1HU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KZb6fF0rRvPTq0y+NX7mUS2XZkwqXbOXxp5+J+3YS1qDcDb8BilWCDG2+zBOz1SMV
-	 mbMl/oiDXG1zuZlQzVwpwdTiEFdmFCSyUoXgu+xNV4dAYf7GR47W1UP4et+BYNN0G3
-	 LvWO+F52Fbrxz6Qp405L7NSQXe738vxss7zru9Q6f29Zz9eAw2CQyKo2iXOLY6bE5Q
-	 Od8M+lZCB6/o9AKwUoFrpuIhaGLmbvhH8nuZqMJsGjlYW5OfYBet3qhk5ls4g6u4np
-	 sMwbFOYD5QCjmPLcQ2DZysn+uLEr/VWYx+oXg77XJZ+Hzm/FqjfzKyz5xZGriOf00N
-	 OMt64tfFkuw2A==
-Date: Tue, 23 Jun 2026 17:45:39 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Demi Marie Obenour <demiobenour@gmail.com>
-Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	linux-crypto@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, iwd@lists.linux.dev,
-	linux-hardening@vger.kernel.org, Milan Broz <gmazyland@gmail.com>,
-	Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH] crypto: af_alg - Add af_alg_restrict sysctl, defaulting
- to 1
-Message-ID: <20260623174539.GA1850517@google.com>
-References: <20260622234803.6982-1-ebiggers@kernel.org>
- <CABBYNZ+QLvkYkn_EcBZ4+GopyhKqJLcfCoABYcw1VamavbSvhg@mail.gmail.com>
- <20260623165208.GB1793@sol>
- <01b73988-b35c-4ce8-8463-4589fe18b0b0@gmail.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="FLrvvp6S"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=+JdrjsYKUQPP+AJ1Ipz4wdn3hc3rh4DAOl755B86FG0=;
+	t=1782237012; x=1783446612; b=FLrvvp6SGxzv9oZgUN5pNguzw7NlXUIMbA807ijlz9aOwkT
+	JRjRfCmV6tg+1oT2KQYKe6CxUxhkqK9rSJYVMi4eRunD0pfyDQdAe9ppJlpQEefuSVv7icAWDexK0
+	fUK3EKLh5++kqZ+AWNJ2n5YMIz3fAqJduUMS2KgP2rk86lKOOrtfDfOBTU3RNdyyXqVyZgc5V7Xws
+	3djroDjk02KsmAllBffkV67FNmdUsRJpOxg5ceAEY9Az6E/w4DuWi/wHoOl9aKlXCvn8wxI7B4BN7
+	MNVOXDgygP/i5elV0GkHbve/5CXqkgLKstIzrfmVc1ttojzUhaz+Db2GWHqH2aiA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__ECDSA_SECP256R1_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1wc5G6-0000000Eiey-2W2y;
+	Tue, 23 Jun 2026 19:50:02 +0200
+Message-ID: <3511ab1ebd943677ba6a62c4e807db7dd762717b.camel@sipsolutions.net>
+Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
+From: Johannes Berg <johannes@sipsolutions.net>
+To: David Laight <david.laight.linux@gmail.com>, Andy Shevchenko
+	 <andriy.shevchenko@linux.intel.com>
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Date: Tue, 23 Jun 2026 19:50:01 +0200
+In-Reply-To: <20260623163203.195416b4@pumpkin> (sfid-20260623_173213_713027_EF574A6E)
+References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
+		<20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
+		<202606182046.AE5F6A241@keescook>	<ajTlfuOFHXlA7xdu@ashevche-desk.local>
+		<202606192025.CF68F2E@keescook>	<ajY5hg0f34C-iV3R@ashevche-desk.local>
+		<54974e4298efd26a52c9c0e9ada88d57e8695a09.camel@sipsolutions.net>
+		<ajqTpJAMFFV3H5Im@ashevche-desk.local> <20260623163203.195416b4@pumpkin>
+	 (sfid-20260623_173213_713027_EF574A6E)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01b73988-b35c-4ce8-8463-4589fe18b0b0@gmail.com>
+X-malware-bazaar: not-scanned
 
-On Tue, Jun 23, 2026 at 01:29:20PM -0400, Demi Marie Obenour wrote:
-> On 6/23/26 12:52, Eric Biggers wrote:
-> > On Tue, Jun 23, 2026 at 11:04:14AM -0400, Luiz Augusto von Dentz wrote:
-> >>> +===  ==================================================================
-> >>> +0    AF_ALG is unrestricted.
-> >>> +
-> >>> +1    AF_ALG is supported with a limited list of algorithms. The list
-> >>> +     is designed for compatibility with known users such as iwd and
-> >>> +     bluez that haven't yet been fixed to use userspace crypto code.
-> >>
-> >> Is the expectation that we go shopping for userspace crypto here?
-> > 
-> > Yes, same as what 99% of userspace already does.  Probably you'll just
-> > want to link to OpenSSL, but it could be something else if you want.
-> 
-> Hard disagree on OpenSSL.  It's not a good library.
-> 
-> See <https://cryptography.io/en/latest/statements/state-of-openssl/>.
-> 
-> Distributions should ship AWS-LC and either rebuild reverse
-> dependencies when needed, or work with upstream to catch ABI breaks.
+On Tue, 2026-06-23 at 16:32 +0100, David Laight wrote:
+>=20
+> Both those seem to contain multiple expansions of is_constexpr().
+> I'd be surprised if __builtin_constant_p() wasn't good enough.
+>=20
+> I also wonder what kind of mess the object code looks like.
 
-I don't like OpenSSL either, but it's the de facto standard on most
-distros.  While perhaps distros should make that switch, there's no need
-to wait for that to move away from AF_ALG.
+You should definitely wonder less out loud and only comment when you
+have actual hard facts...
 
-- Eric
+> I'd also worry whether the saturating maths in any way performs the corre=
+ct check.
+> I suspect the (non-saturated) value gets used for a kmalloc(),
+> but that has much smaller valid (and sane) limits than can come out of th=
+e above.
+
+That's, frankly, ridiculous.
+
+johannes
