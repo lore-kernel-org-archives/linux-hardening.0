@@ -1,82 +1,49 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910652989B5
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jun 2026 15:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35CA3090E8;
+	Tue, 23 Jun 2026 15:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782228735; cv=none; b=Qi94UeXKAqoTICB7lWyyl3OoQU6lVBS+SOk8TBEMB08qOOYeT3dS9VZZqLx9h7+ysZ53WVMH/XqZh4nd2WB3+DO0MiOcuAjomWitJUfGUB36W0LX+NGEhWj34gT7z/YAkEfxVKJHLwEg/rYCC2qxtAmx/kl44Ho21fhgRSwiy6o=
+	t=1782230208; cv=none; b=lBTwLouxgdn9V42C1rmBZkFaH0yMe737UQdFw3DUBCtmU7uF3WsBzeszeWwG4YNT/h4aiEfGp1aKTKupCPGVz0zJP+cb6LxoELvSL2tkcRWg101iy+C7z5COSaRb0H+rtoRVkf6HJZIJBMlZrQeGhgYF7929gsVK4EbXm6gkS0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782228735; c=relaxed/simple;
-	bh=5XQn0m/3gLi9moDpRLDBV/PwAY+GgnG88rPcDckEboU=;
+	s=arc-20240116; t=1782230208; c=relaxed/simple;
+	bh=MOPMmBvmvgH/fPeu1s8s0Wbs9rYPlq8jdiHdrLvfqdk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pruyNGyad5v1CQd+ZYYwYnrQI0jhnqNI2vAOWiPrkv0/UfD7FCwuyxuOC4QjF/J6ht3kzNTshUYGP6Vzw/zGhVdbhADg7mJE0Y4CtbSllFQPQ0Try4NTP2SfZVL74aafs2/4GuMtggtlpu/QN1YZxeReHz/yDYxcszg4/PO1PF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q3yeJ9Rb; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=nShBpzTi/rgpAQ9KlV6adHiSGAWDmOO4TgxeZ+XUotewN3hi5VX3BAS3Po27DlTMGow/SiYd4Rq7xRxvPtpd9Pbc3G8CjJ5G6qD5Dh+KB4futJwYSbfkOpVkPRQQe+gMgcuX6hHB5xQO88mfNan4hvy0xqPY2u54Xz9UNfY8Qvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QsYuTChn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3yeJ9Rb"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-49258ac7294so234625e9.0
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Jun 2026 08:32:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782228732; x=1782833532; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0+53L7UNPV2jK/LZnIdPZ946XAJTC8u0G7Peoj+okLE=;
-        b=Q3yeJ9RbJm2PZ6xtChd7MXOgwwPUYjUwrkAzOAc+j9clXtDbwwdmBYrbvrMTBoxmjE
-         1BgYFbxd79WIceuQa8trw1Kaa/RJVTr5YNAnNMHt8ajHGEwX5HcZV9IQiMAi1B/e1ahL
-         rnOJ6WqmpU6hghDUOHaSZu1I1FcptM/1OVFB+QJ65Mgy6yU/e4Ivyb+h2Ct5MuggEjuU
-         /9UvBh5srLMMLlH/cTXkMlCHX+lPadT+bF33Kyv7FdFihRLjYGHqBufdrPsCeEcj6LmO
-         bvzloG0Pc1eY/besf4kME3lp2xlrweq/qyomiibD7j06E38H4HMMr8A8SMaUZGXFTI7S
-         9yQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782228732; x=1782833532;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0+53L7UNPV2jK/LZnIdPZ946XAJTC8u0G7Peoj+okLE=;
-        b=nWy0YcMP8yOF7j0tVtza0sxzsgSAO+nGbh7gNSWgJxFQBhZ7sb3gAkQoym5nhBUDgG
-         GKH4gI9+hVJGjuoH726DMygQQmQv7DTwWmcSbY4zi8ENWXMArtAJaT75M7FjqYpwxv3L
-         J/+UHigaEfgZlhip93YrmDDRMu6h0Y1FGXkOhc9+9DvdPhkQSA0iUx6hUAG+sycClI61
-         Tx0hF2I/LOkXnvnWV9wTxInAn11xt7rBKUv5cg4gzZKMpgZnpFUq2z/Eq2gzHjVZhV+W
-         HyIgQVISfkMsHcwlpnBD34HjKwcFSC7dAO9CtcePbGTCvfI2R57lbKOjqlHjEIgYVWhl
-         2zOQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/5nfUxNt8BpEZMxMAFaDFHBSg3/bIpizP8maDyhh2UuIvEECR2R8my62VTr7TdnbjUaw7VWvtw0NPF1Pectzc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBu288WOqPTX3K/gzKfbOrR+O7C9318axVZnSaes6+tpSwW8Da
-	xnfU2oGxa7jLglZUqfq95Di94Cwd9mHxcdneJsOr7lu4PQmMbCdAUB49
-X-Gm-Gg: AfdE7cnY1Jry+TmW8kFTJ/+dgoLmE4CHJwQI4rvFBmXksWq+1OZE38WUNdownmTV0ZP
-	Vj6ciTGE4K1DfaCMwwb6yt40e9zkbf7AIszejLsamVtNRgkRDc/vst/OQ3qSc4H1CtHsIxmKjEo
-	Vb9PtQW1D8guwrPow9PSHvP+4JIobhnp6lfJqsR6TxKVAovhzTrGm6Wzhm75LEbQZQyV4jjCNGT
-	P3wApmxhML35RZjpv9eCAOIB2i49mDTiTE7YzvrK3m4msD7QXYLV9DgglvabwCusa6Zopia+Ql9
-	W4MBR1pVCBE4KbNrFvEU3HMLPhRKiJBXJGq69WuOiebCfkb/u4aPMJRvruSkXWe0lXB8YFZHtSF
-	ZFHBt9b4EPPy1JMYn4Jlr0IWMzdBauDZngncIoUxAfJ4o8mhD4329qVqJ0+PQgh9QsU6m7cIJbt
-	Tfw4pCcE6WDGkJ0V1ROC8lBJcA9wa2P1kx0xIoVJcerI1xsgFgZg==
-X-Received: by 2002:a05:600c:3baa:b0:492:42e1:1b6a with SMTP id 5b1f17b1804b1-49242e11d31mr310507785e9.25.1782228731641;
-        Tue, 23 Jun 2026 08:32:11 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49249207dabsm537984865e9.0.2026.06.23.08.32.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2026 08:32:11 -0700 (PDT)
-Date: Tue, 23 Jun 2026 16:32:03 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Kees Cook <kees@kernel.org>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
-Message-ID: <20260623163203.195416b4@pumpkin>
-In-Reply-To: <ajqTpJAMFFV3H5Im@ashevche-desk.local>
-References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
-	<20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
-	<202606182046.AE5F6A241@keescook>
-	<ajTlfuOFHXlA7xdu@ashevche-desk.local>
-	<202606192025.CF68F2E@keescook>
-	<ajY5hg0f34C-iV3R@ashevche-desk.local>
-	<54974e4298efd26a52c9c0e9ada88d57e8695a09.camel@sipsolutions.net>
-	<ajqTpJAMFFV3H5Im@ashevche-desk.local>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QsYuTChn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 210321F000E9;
+	Tue, 23 Jun 2026 15:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782230207;
+	bh=nLEYLjeqn7OPYoPLTEzHxuJ3J+jRv39rXz92UC3ebe0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=QsYuTChn82Ii6KiDakW1WTeR12iY9RX74Ck3wCkkhUKTbwKgxy7+VxrJx0PJmPdqF
+	 FfvuoLWVXeBAdAcc7OzCZIUXhikibBRphzt5JrwBegtP9hl8iymvrWx6+iUxLTtSXI
+	 KnqliXVBVzUVr2Z0+yXhlNSChuBtyBrTroyZtUJpuRNBoq+z87umGQ2REuFLq4IJNk
+	 wufpWj+h+YSHuHjs/nxHZIB9ownHaEoq7xkgJiEWa7gsu990FXm2BMKlCxqJDq4JYN
+	 /CAJBm6xYwsL3NVoNOzAKD6uFaWmTzCdonc9xtA1xrK8c8oNU4PnrU8Mt6PNlJluVR
+	 gN/hzIgaET5Tg==
+Date: Tue, 23 Jun 2026 16:56:35 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
+ linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Michael
+ Hennerich <Michael.Hennerich@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v4 11/12] iio: dac: ad5686: add triggered buffer support
+Message-ID: <20260623165635.5997d049@jic23-huawei>
+In-Reply-To: <20260623-ad5686-new-features-v4-11-28962a57db0f@analog.com>
+References: <20260623-ad5686-new-features-v4-0-28962a57db0f@analog.com>
+	<20260623-ad5686-new-features-v4-11-28962a57db0f@analog.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -86,39 +53,119 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jun 2026 17:09:40 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+On Tue, 23 Jun 2026 11:55:51 +0100
+Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 
-> On Mon, Jun 22, 2026 at 01:16:29PM +0200, Johannes Berg wrote:
-> > On Sat, 2026-06-20 at 09:56 +0300, Andy Shevchenko wrote:  
-> > > Johannes, are you okay to take a new version (I assume the wish is to have
-> > > the balanced additions)? If so, I will prepare one.  
-> > 
-> > Sure, I can take the patches, sounds good to me.  
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > 
-> Will send soon, for the record the *.i file is 61 character less with the patch.
+> Implement trigger handler by leveraging the LDAC gpio to update all DAC
+> channels at once when it is available. Also, the multiple channel writes
+> can be flushed at once with the sync() operation.
 > 
-> Was
-> 
-> size = __builtin_choose_expr((sizeof(int) == sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)) : (int *)8))), sizeof(*(request)) + __builtin_choose_expr((sizeof(int) == sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)) : (int *)8))), (n_channels) * sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "must be array");})), size_mul(n_channels, sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "must be array");})))), __size_add(sizeof(*(request)), __builtin_choose_expr((sizeof(int) == sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)) : (int *)8))), (n_channels) * sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "must be array");})), size_mul(n_channels, sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "must be array");}))))));
-> - size = __size_add(size, size_mul(sizeof(*request->ssids), n_ssids));
-> - size = __size_add(size, size_mul(sizeof(*request->match_sets), n_match_sets));
-> - size = __size_add(size, size_mul(sizeof(*request->scan_plans), n_plans));
-> - size = __size_add(size, ie_len);
-> 
-> Now
-> 
-> size = __size_add(__size_add(__size_add(__builtin_choose_expr((sizeof(int) == sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)) : (int *)8))), sizeof(*(request)) + __builtin_choose_expr((sizeof(int) == sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)) : (int *)8))), (n_channels) * sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "must be array");})), size_mul(n_channels, sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "must be array");})))), __size_add(sizeof(*(request)), __builtin_choose_expr((sizeof(int) == sizeof(*(8 ? ((void *)((long)(n_channels) * 0l)) : (int *)8))), (n_channels) * sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "must be array");})), size_mul(n_channels, sizeof(*(request)->channels) + ((int)sizeof(struct {_Static_assert(!(!(!__builtin_types_compatible_p(typeof(((request)->channels)), typeof(&((request)->channels)[0])))), "must be array");})))))), ie_len), size_mul(sizeof(*request->ssids), n_ssids)), __size_add(size_mul(sizeof(*request->match_sets), n_match_sets), size_mul(sizeof(*request->scan_plans), n_plans)));
-> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Hi Rodrigo
 
-Both those seem to contain multiple expansions of is_constexpr().
-I'd be surprised if __builtin_constant_p() wasn't good enough.
+A follow up on the rework you did for this version,
 
-I also wonder what kind of mess the object code looks like.
+Thanks,
 
-I'd also worry whether the saturating maths in any way performs the correct check.
-I suspect the (non-saturated) value gets used for a kmalloc(),
-but that has much smaller valid (and sane) limits than can come out of the above.
+Jonathan
 
-	David
+> diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+> index db175e77b0b7..4dc681eb077d 100644
+> --- a/drivers/iio/dac/ad5686.c
+> +++ b/drivers/iio/dac/ad5686.c
+
+> @@ -467,6 +472,60 @@ const struct ad5686_chip_info ad5679r_chip_info = {
+>  };
+>  EXPORT_SYMBOL_NS_GPL(ad5679r_chip_info, "IIO_AD5686");
+>  
+> +static irqreturn_t ad5686_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct iio_buffer *buffer = indio_dev->buffer;
+> +	struct ad5686_state *st = iio_priv(indio_dev);
+> +	u16 val[AD5686_MAX_CHANNELS] = { };
+> +	unsigned int scan_count, ch, i;
+> +	bool async_update;
+> +	int ret;
+> +	u8 cmd;
+> +
+> +	ret = iio_pop_from_buffer(buffer, val);
+> +	if (ret) {
+> +		iio_trigger_notify_done(indio_dev->trig);
+
+I think I'd prefer a wrapper to this if we are going to always say
+it is IRQ_HANDLED (which is reasonable here I think)
+Something like the following (unfortunately I only just read the
+previous version thread so didn't head off the approach you have here.
+
+
+static void do_ad5686_trigger_handler(struct iio_dev *indio_dev)
+{
+	struct iio_buffer *buffer = indio_dev->buffer;
+	struct ad5686_state *st = iio_priv(indio_dev);
+	u16 val[AD5686_MAX_CHANNELS] = { };
+	int ret;
+
+	ret = iio_pop_from_buffer(buffer, val);
+	if (ret) {
+		iio_trigger_notify_done(indio_dev->trig);
+
+	guard(mutex)(&st->lock);
+
+	guts of current function
+}
+
+static irqreturn_t ad5686_trigger_handler(int irq, void *p)
+{
+	struct iio_poll_func *pf = p;
+	struct iio_dev *indio_dev = pf->indio_dev;
+
+	do_ad5686_trigger_handler(indio_dev);
+	iio_trigger_notify_done(indio_dev->trig);
+	return IRQ_HANDLED;
+}
+
+
+
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	scan_count = bitmap_weight(indio_dev->active_scan_mask,
+> +				   iio_get_masklength(indio_dev));
+> +	async_update = st->ldac_gpio && scan_count > 1;
+> +	if (async_update) {
+> +		/* use LDAC to update all channels simultaneously */
+> +		cmd = AD5686_CMD_WRITE_INPUT_N;
+> +		gpiod_set_value_cansleep(st->ldac_gpio, 0);
+> +	} else {
+> +		cmd = AD5686_CMD_WRITE_INPUT_N_UPDATE_N;
+> +	}
+> +
+> +	i = 0;
+> +	iio_for_each_active_channel(indio_dev, ch) {
+> +		ret = st->ops->write(st, cmd, indio_dev->channels[ch].address, val[i++]);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	/*
+> +	 * If sync() is available, it is called here regardless of write
+> +	 * failure to allow bus implementation to reset. In that case, partial
+> +	 * writes are unlikely as the write operations would just queue up
+> +	 * the transfers.
+> +	 */
+> +	if (st->ops->sync)
+> +		st->ops->sync(st);
+> +
+> +	if (async_update)
+> +		gpiod_set_value_cansleep(st->ldac_gpio, 1);
+> +
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
 
