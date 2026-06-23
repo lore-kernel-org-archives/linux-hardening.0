@@ -1,95 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70B431A570;
-	Tue, 23 Jun 2026 20:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5EF3976A4;
+	Tue, 23 Jun 2026 20:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782245016; cv=none; b=WI3hH5iocllqSmH5hM/YiG1CH4l/xgbupL5jgO01irSdhfU4C/VK4inegV4iHuqAm6zkOl7lXXb60vyShsqBwbuJ+iXB5mFVsVLxoSe7ZiAXN3LVPkYCCVCmlQi0qIB7JDOnLhDCgLHkUaPdIJP2Jkx14daq5OpTdmOQTHM+D0A=
+	t=1782246237; cv=none; b=fJL5tOGPYtq/5mbhNvjC8a549Oa1zjGkN7YwbYjaWWJ6RKizQTYyT5k19aeZBdroswOQOzblsOgX4Qu+ViwFNUBSH2taNSDF6zhUzIHT3I+WSLKQYTYFbsBcgBMEZE8B99qrdleKeO4za5rOM/VAiwAOunxC6P6cqteltyFMtfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782245016; c=relaxed/simple;
-	bh=raejfHvRtyuaWsDY/iLf61uT42BKgvn0NbXLzzZ5cZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TfB542I2ymKcWFUoKiUpkbTGr+KyAJtTB0RFVKk9ygCq5+KylDAUcoZ49eZ05xRNEx4IQzrebYIfsndRJbv4awBYR45nkl4rgxs68RX4N27u7atdu2hEz1Dvi4vDNqRdof7kd6CrKMtSJ1Gxx08Jh92lOG+dCTnRO+WJ1rNYpxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hdfumXSE; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1782246237; c=relaxed/simple;
+	bh=Go5eWlXJHSVntX+2CQ8j+W5AmpWJvdGUJZDOc0J/WhQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f8xxq8xZhsu+bTX5Rw0BWsjWzm8OmBpzQY7+P7C65+JIxkcEAgBL4vKFXasUjoGgou8As/iGQQiXwl+AbfnhScBx7E2bcAIzw91eafeNAeTPIGmDXz+KFoS1yyJi+vmlFDlL7pyAiD9D2r4Rz9gQvh2YFX+eZfRvkw8s1xxHd1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crdbzpKW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hdfumXSE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782245016; x=1813781016;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=raejfHvRtyuaWsDY/iLf61uT42BKgvn0NbXLzzZ5cZs=;
-  b=hdfumXSEi88P98fAk+RWTeAVmuqkyhbeQKqO/e8/GNfGE8bpdCT0Jetx
-   96UKQqr7mxIxzAZ5pmSu9Mt227/dalqrkKk6B0zT4q6ClLZ2NiPknmpdy
-   16W+yDaNn5MIuH4ctqGRcQc0Wkuh2OeKMV8I+dtFKj5duTsxE7fc4YTw8
-   PJ3UXLSqck/CRsrg9Xlco9vhjo/R/4alJ1jl+gy7b1Xf73DLfbsY3bbmd
-   5QTgwSxv/V9hd7uSLglHFs4s9RyqXFDlEUGKhaNPURkuQ2DZVqVaThryc
-   oBuNTbo2TTIdGdevc2WpSQzmuklgAgGvlSn5dlb0B5p3KzZAH1p71rN8N
-   Q==;
-X-CSE-ConnectionGUID: wq7hu0X4RNigeApJm8OtrQ==
-X-CSE-MsgGUID: cLBuiSkcSA2bMxlirVXKtA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11826"; a="83000062"
-X-IronPort-AV: E=Sophos;i="6.24,221,1774335600"; 
-   d="scan'208";a="83000062"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 13:03:35 -0700
-X-CSE-ConnectionGUID: QF0AOM7TSKiWZXfLnuLo0g==
-X-CSE-MsgGUID: U+AHMSvfQiCI8evS/Le8Lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,221,1774335600"; 
-   d="scan'208";a="273305905"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.7])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 13:03:32 -0700
-Date: Tue, 23 Jun 2026 23:03:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v1 1/2] overflow: Allow to sum a few arguments at once
-Message-ID: <ajrmkvkytdQZe83U@ashevche-desk.local>
-References: <20260617112250.2791461-1-andriy.shevchenko@linux.intel.com>
- <20260617112250.2791461-2-andriy.shevchenko@linux.intel.com>
- <202606182046.AE5F6A241@keescook>
- <ajTlfuOFHXlA7xdu@ashevche-desk.local>
- <202606192025.CF68F2E@keescook>
- <ajY5hg0f34C-iV3R@ashevche-desk.local>
- <54974e4298efd26a52c9c0e9ada88d57e8695a09.camel@sipsolutions.net>
- <ajqTpJAMFFV3H5Im@ashevche-desk.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crdbzpKW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2047A1F00A3A;
+	Tue, 23 Jun 2026 20:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782246235;
+	bh=aDOY5sMw+CXYJvAlAFZYLE2Azsgwb9nRFtjYFuPPBwI=;
+	h=From:Date:Subject:To:Cc;
+	b=crdbzpKWu4piOr9lVh/g/u0NquFNemQdB0lcLow+zRi7k4jNDwSbbZC50w4AlV3D/
+	 a/uTKjN5Bt0pTbVJ2lNjRm2fot+dRE0UpRGI5MYMrfERtjFW6q2UlstRm9QdrZixJj
+	 VSHAPlNI52HBp+IuYJLDp3y6pZfyy451Vt9POOYGHV2V7QLfy0FYEtLzpngWTL6d+X
+	 d18Htm80IiQ3WY/LuQ9YLEDFruXV7tjxCM0jaI1VVtn5YFxyD3bCll34uJ7AsYaJIg
+	 HBnKk0aHGkS2TzPBxflVm2wH/jgf9Y+hRnsFlM0/Nv1/pQj/oHzsuAevgFEfMANPF0
+	 p53IoYdCnBieg==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Tue, 23 Jun 2026 13:23:46 -0700
+Subject: [PATCH] fortify: Disable -Wstringop-overread in tests
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ajqTpJAMFFV3H5Im@ashevche-desk.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260623-fix-test_fortify-for-clang-stringop-overread-v1-1-15ee8342a953@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWN2wrCMBBEf6Xsswu90aK/IiJNsqkrkpTdWJTSf
+ 3fVp+HAzJwNlIRJ4VRtILSyck4GzaECf5vSTMjBGNq6Heqh7TDyCwtpucYsheMbLdE/rIpahNO
+ cF8wridAUMMTedY07jrEfwS4XIdv/dOfLn/Xp7uTL1wH7/gHYEpNRkAAAAA==
+X-Change-ID: 20260623-fix-test_fortify-for-clang-stringop-overread-df4b31b97f47
+To: Kees Cook <kees@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, stable@vger.kernel.org, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2215; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=Go5eWlXJHSVntX+2CQ8j+W5AmpWJvdGUJZDOc0J/WhQ=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDFlWryP37pW2NnFe2P7oyiqet3/t3ed81J4l27d5n+c/w
+ 0Nxu8++6ihlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQATWXKFkeEM14zLF1c5RhnH
+ P1iilRVZrFPUJ2R4Ovnt27/Tg7RXNs1nZLjIcX6/DSvn7dpQ+YzYw09Zj9lKdygcUJtc1nvCZc2
+ UDnYA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, Jun 23, 2026 at 05:09:44PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 22, 2026 at 01:16:29PM +0200, Johannes Berg wrote:
-> > On Sat, 2026-06-20 at 09:56 +0300, Andy Shevchenko wrote:
-> > > Johannes, are you okay to take a new version (I assume the wish is to have
-> > > the balanced additions)? If so, I will prepare one.
-> > 
-> > Sure, I can take the patches, sounds good to me.
-> 
-> Will send soon, for the record the *.i file is 61 character less with the patch.
+clang recently added support for -Wstringop-overread [1], which is on by
+default like -Wfortify-source. This breaks the usage of -Werror in the
+fortify tests, resulting in the following false positive warnings in the
+kernel build:
 
-After looking closer at the potential users, I see less benefit of this change
-than before. The other case in one of wireless driver can actually benefit from
-separate size_add() calls and temporary variables which will be reused later in
-the code. The similar approach even can be used for nl80211.c case. So for
-now I abandon this until more users come. (Of course it might be that I'm missing
-something and if somebody knows what, I would like to learn.)
+  warning: unsafe memcmp() usage lacked '__read_overflow2' warning in lib/test_fortify/read_overflow2-memcmp.c
+  warning: unsafe memcmp() usage lacked '__read_overflow' warning in lib/test_fortify/read_overflow-memcmp.c
+  warning: unsafe memchr() usage lacked '__read_overflow' warning in lib/test_fortify/read_overflow-memchr.c
 
--- 
-With Best Regards,
-Andy Shevchenko
+Examining the fortify test logs shows a warning like the following in
+each of the failed logs:
 
+  In file included from lib/test_fortify/read_overflow2-memcmp.c:5:
+  lib/test_fortify/test_fortify.h:34:2: error: 'memcmp' reading 17 bytes from a region of size 16 [-Werror,-Wstringop-overread]
+     34 |         TEST;
+        |         ^
+  lib/test_fortify/read_overflow2-memcmp.c:3:2: note: expanded from macro 'TEST'
+      3 |         memcmp(large, small, sizeof(small) + 1)
+        |         ^
+  1 error generated.
+
+Disable -Wstringop-overread for the fortify tests, as it defeats the
+purpose of testing the Linux specific implementation of fortify, like
+-Wfortify-source.
+
+Cc: stable@vger.kernel.org
+Closes: https://github.com/ClangBuiltLinux/linux/issues/2168
+Link: https://github.com/llvm/llvm-project/commit/86f2e71cb8d165b59ad31a442b2391e23826133e [1]
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ lib/test_fortify/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/test_fortify/Makefile b/lib/test_fortify/Makefile
+index 399cae880e1d..44cd5df41a81 100644
+--- a/lib/test_fortify/Makefile
++++ b/lib/test_fortify/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ ccflags-y := $(call cc-disable-warning,fortify-source)
++ccflags-y += $(call cc-disable-warning,stringop-overread)
+ 
+ quiet_cmd_test_fortify = TEST    $@
+       cmd_test_fortify = $(CONFIG_SHELL) $(src)/test_fortify.sh \
+
+---
+base-commit: 122b52f0bab007ebeb414c8280c1def17b9ed1f4
+change-id: 20260623-fix-test_fortify-for-clang-stringop-overread-df4b31b97f47
+
+Best regards,
+--  
+Cheers,
+Nathan
 
